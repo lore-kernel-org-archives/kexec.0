@@ -4,72 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 59F1FC433EF
-	for <kexec@archiver.kernel.org>; Wed,  6 Jul 2022 01:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 02716C43334
+	for <kexec@archiver.kernel.org>; Wed,  6 Jul 2022 01:56:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=GQSjLxqEM4m9eR0e0DyNe3znAJPJcpLz8AMbZskoUl8=; b=FY2MUAUErkFMJb
-	nSTubAOHDsKlBzX+6Gt3nVosKipAF9brwHO/34mVTvLdmYe4elw3g5UjkIAeVX/8+HHiXL7ZpjP/n
-	p3H69SvwH9rUQ5zA+ry4tte/a2lSdmBj1ajZJvdwC4BwYjLnEnX8Go+Yh9sSbmF6BQfnUvoWwCUt5
-	5KXszJT4KB+pZaD/LDj8igxksfYLr1XrD3Qb9MEAqxHW4Jca+a7fPg5q5jvxcfggFJ1jbzKVbmL8g
-	CLQs508TigTSHWo5TWrUL2ZOuqSjNxsFKNrsnHdbrSmfwzITInQ3AX8+aGQrG1oRZQkzKemmmHqcC
-	ij6ZSwONe/uJ7Y0h9xKw==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=syEPK/kSiJAdhU806gHiWKdNSpL9egzSEd6Im9SMMV0=; b=LnyeBdxLM+MrgaMHypVReHZJjL
+	JxiJY9xXdQnIMqMpQwWJ9BGHbZ74IOH8QARy0JkUOFncR3FcWS0Zguc8XHWIdO8VdHuZrvihV9b6L
+	mmtUFBf1WMReVWyqc0ZXmLWJofK++YnwOuBmDjDer5nEXBzjJdhGXjG+BpTbYgU5carakskMBMJBV
+	0rP6l4T5Xa6O9m+ouB/burIvHJl+LsrsNcjLoCSYXSfSy87pf726eemZ9sbc1oqt8NlFVB6JJF7Yn
+	uXav9eh5VddTPKrdAFCNmKDC/LtkDl4KdGVj/rofyOtu9Dx7x2uxSFxRfo0fZfJPAmav/frd6OmGE
+	RALKD9Lg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o8teU-005Clk-CT; Wed, 06 Jul 2022 01:16:26 +0000
+	id 1o8uGg-005HYl-Os; Wed, 06 Jul 2022 01:55:54 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o8teQ-005Ckv-Fz
-	for kexec@lists.infradead.org; Wed, 06 Jul 2022 01:16:24 +0000
+	id 1o8uGd-005HXa-OS
+	for kexec@lists.infradead.org; Wed, 06 Jul 2022 01:55:53 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1657070180;
+	s=mimecast20190719; t=1657072549;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=a/DwyB/KjYRjvge/ktUbps99y6aLqO83xElyXhGYrI4=;
-	b=WTN8QsYoZDFVxaCznUb8yy6AOuxORZM7U66LnFdwh6HW3XyQDyvVq7BgxisbOocyCkr/Gm
-	vOFBSARsyrQ7l/Ekh1uJ4PPHLNEp3kl2afNnGBZ4V3h0hszOzBtHhijMfXcUE7Yf4e41Uo
-	+sYSjmMJugyYCMcq+5deSVPKXiukm4I=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=TUxC/Tkc/tS5Ejzg3vN8DgE3TpSu5V1M1qIpJrNhK3w=;
+	b=L4SJNimfLiAQq6bg8hh/cKSYNksnfqSDnPe4UVnYMvclzmUpihfeCCwsbJ8BqK45PNm35d
+	uoYmz1B7/Z6SuMpniBZiZWbLsKFsZ5WCtTZspq5ievKALtBxuvsTosVOfjQ19ofp9jS/R5
+	ZvU0iT9yXUVf7m5eZjgXnVg0xLmw5KU=
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
+ [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-82-BBXpMsGbO_CcnyjPGWvKiA-1; Tue, 05 Jul 2022 21:16:11 -0400
-X-MC-Unique: BBXpMsGbO_CcnyjPGWvKiA-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D543380174C;
-	Wed,  6 Jul 2022 01:16:10 +0000 (UTC)
-Received: from localhost (ovpn-13-62.pek2.redhat.com [10.72.13.62])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 38FBE492C3B;
-	Wed,  6 Jul 2022 01:16:09 +0000 (UTC)
-Date: Wed, 6 Jul 2022 09:16:01 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Eric DeVolder <eric.devolder@oracle.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org,
-	ebiederm@xmission.com, dyoung@redhat.com, vgoyal@redhat.com,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, hpa@zytor.com,
-	nramas@linux.microsoft.com, thomas.lendacky@amd.com,
-	robh@kernel.org, efault@gmx.de, rppt@kernel.org, david@redhat.com,
-	sourabhjain@linux.ibm.com, konrad.wilk@oracle.com,
-	boris.ostrovsky@oracle.com
-Subject: Re: [PATCH v9 0/7] crash: Kernel handling of CPU and memory hot
- un/plug
-Message-ID: <YsTiUXjVL1ativXJ@MiWiFi-R3L-srv>
-References: <20220613224240.79400-1-eric.devolder@oracle.com>
- <51e85040-5622-dae2-dc28-f167660184f0@oracle.com>
+ us-mta-308-VXzuWHyANTamygJC5rSu8A-1; Tue, 05 Jul 2022 21:55:42 -0400
+X-MC-Unique: VXzuWHyANTamygJC5rSu8A-1
+Received: by mail-pj1-f69.google.com with SMTP id f91-20020a17090a706400b001ef890a44e0so3789617pjk.9
+        for <kexec@lists.infradead.org>; Tue, 05 Jul 2022 18:55:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TUxC/Tkc/tS5Ejzg3vN8DgE3TpSu5V1M1qIpJrNhK3w=;
+        b=olr13JZgDL7pJ6ZK0On7toiZMhB67P4+13Mo/K7rGKWJqJZooL+upuh/wn1w3d7hqU
+         CZ33ruEBsjyKXhZJtsr+SB6w31Lw28aj3ba4y1ulK74Y3iBrGYA7Zvhgr2xOGk90Gcf7
+         y76+0hHssJalN7y6nKyHFaxJtrOxCH7wSz0vJ9UbTpLouVfhFyovdVr37VNunDo2wGSV
+         Tl8QiZjMcnMKnrLnaNp32uKmce/H+MvR3sWQe/v3Yz8uk9q485k8sNkfQrj1s5E3Fy5d
+         /YIV760QHh1rzJPnbpv7TLYyfy5Y27LIr6M4fZWI8wrYOm1ZU9gksEIF+bSPtYguDH05
+         gf7A==
+X-Gm-Message-State: AJIora97eWQUxxtFjF/rBCEF2XG73yzrw/S00LcpW7JONDqRw0prXlgc
+	SsUuqNVdFA4gePAMbOxkL7sg2vVyslEvNWb5Gv31zOqAErFE5HdkFTqKel25Z7AbQGHadxCv+pV
+	W9GXhK0zoCGx0D/0yzV5K
+X-Received: by 2002:a17:90a:fa4f:b0:1ef:9203:afc3 with SMTP id dt15-20020a17090afa4f00b001ef9203afc3mr11150082pjb.141.1657072540523;
+        Tue, 05 Jul 2022 18:55:40 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1sOeTIHXFWdC6DJnwVAFSpJlFM1v3xGZvRPzcBsUnw9L4XTKx1wcPpJpMYWbJwI//00foC13A==
+X-Received: by 2002:a17:90a:fa4f:b0:1ef:9203:afc3 with SMTP id dt15-20020a17090afa4f00b001ef9203afc3mr11150057pjb.141.1657072540185;
+        Tue, 05 Jul 2022 18:55:40 -0700 (PDT)
+Received: from localhost ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id c12-20020a621c0c000000b0050dc7628178sm23572853pfc.82.2022.07.05.18.55.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Jul 2022 18:55:39 -0700 (PDT)
+Date: Wed, 6 Jul 2022 09:53:08 +0800
+From: Coiby Xu <coxu@redhat.com>
+To: Baoquan He <bhe@redhat.com>,
+	"Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Eric Biederman <ebiederm@xmission.com>,
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Subject: Re: [PATCH 1/2] kexec_file: Drop weak attribute from functions
+Message-ID: <20220706015308.heynqgictt47r3c5@Rk>
+References: <cover.1656659357.git.naveen.n.rao@linux.vnet.ibm.com>
+ <2cd7ca1fe4d6bb6ca38e3283c717878388ed6788.1656659357.git.naveen.n.rao@linux.vnet.ibm.com>
+ <YsJoGKribMH77HBQ@MiWiFi-R3L-srv>
 MIME-Version: 1.0
+In-Reply-To: <YsJoGKribMH77HBQ@MiWiFi-R3L-srv>
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=coxu@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Disposition: inline
-In-Reply-To: <51e85040-5622-dae2-dc28-f167660184f0@oracle.com>
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.9
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220705_181622_731228_F030B296 
-X-CRM114-Status: GOOD (  54.62  )
+X-CRM114-CacheID: sfid-20220705_185551_916659_DED5B7E1 
+X-CRM114-Status: GOOD (  21.07  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,319 +97,270 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 07/05/22 at 10:17am, Eric DeVolder wrote:
-> Nudge...
-> Thanks!
+Hi Baoquan and Naveen,
 
-Seems DavidH has concern and rasied it after you posted v9. Is that
-solved?
+On Mon, Jul 04, 2022 at 12:10:00PM +0800, Baoquan He wrote:
+>On 07/01/22 at 01:04pm, Naveen N. Rao wrote:
+>> Drop __weak attribute from functions in kexec_file.c:
+>> - arch_kexec_kernel_image_probe()
+>> - arch_kimage_file_post_load_cleanup()
+>> - arch_kexec_kernel_image_load()
+>> - arch_kexec_locate_mem_hole()
+>> - arch_kexec_kernel_verify_sig()
+>>
+>> arch_kexec_kernel_image_load() calls into kexec_image_load_default(), so
+>> drop the static attribute for the latter.
+>>
+>> arch_kexec_kernel_verify_sig() is not overridden by any architecture, so
+>> drop the __weak attribute.
+>
+>The dropping of arch_kexec_kernel_verify_sig() conflicts with patch 1 of
+>anotherpatchset, and the other patches in the patchset depends on the
+>patch 1.
+>
+>[PATCH v9 0/4] unify the keyrings of arm64 and s390 with x86 to verify kexec'ed kernel signature
+>
+>Hi, Naveen, Coiby,
+>
+>Please negotiate how to solve the conflict.
 
-> 
-> On 6/13/22 17:42, Eric DeVolder wrote:
-> > When the kdump service is loaded, if a CPU or memory is hot
-> > un/plugged, the crash elfcorehdr (for x86), which describes the CPUs
-> > and memory in the system, must also be updated, else the resulting
-> > vmcore is inaccurate (eg. missing either CPU context or memory
-> > regions).
-> > 
-> > The current solution utilizes udev to initiate an unload-then-reload
-> > of the kdump image (e. kernel, initrd, boot_params, puratory and
-> > elfcorehdr) by the userspace kexec utility. In previous posts I have
-> > outlined the significant performance problems related to offloading
-> > this activity to userspace.
-> > 
-> > This patchset introduces a generic crash hot un/plug handler that
-> > registers with the CPU and memory notifiers. Upon CPU or memory
-> > changes, this generic handler is invoked and performs important
-> > housekeeping, for example obtaining the appropriate lock, and then
-> > invokes an architecture specific handler to do the appropriate
-> > updates.
-> > 
-> > In the case of x86_64, the arch specific handler generates a new
-> > elfcorehdr, and overwrites the old one in memory. No involvement
-> > with userspace needed.
-> > 
-> > To realize the benefits/test this patchset, one must make a couple
-> > of minor changes to userspace:
-> > 
-> >   - Prevent udev from updating kdump crash kernel on hot un/plug changes.
-> >     Add the following as the first lines to the udev rule file
-> >     /usr/lib/udev/rules.d/98-kexec.rules:
-> > 
-> >     # The kernel handles updates to crash elfcorehdr for cpu and memory changes
-> >     SUBSYSTEM=="cpu", ATTRS{crash_hotplug}=="1", GOTO="kdump_reload_end"
-> >     SUBSYSTEM=="memory", ATTRS{crash_hotplug}=="1", GOTO="kdump_reload_end"
-> > 
-> >     These lines will cause cpu and memory hot un/plug events to be
-> >     skipped within this rule file, if the kernel has these changes
-> >     enabled.
-> > 
-> >   - Change to the kexec_file_load for loading the kdump kernel:
-> >     Eg. on RHEL: in /usr/bin/kdumpctl, change to:
-> >      standard_kexec_args="-p -d -s"
-> >     which adds the -s to select kexec_file_load syscall.
-> > 
-> > This patchset supports kexec_load with a modified kexec userspace
-> > utility, and a working changeset to the kexec userspace utility
-> > is provided here (and to use, the above change to standard_kexec_args
-> > would be, for example, to append --hotplug instead of -s).
-> > 
-> >    diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-> >    index 9826f6d..4ed395a 100644
-> >    --- a/kexec/arch/i386/crashdump-x86.c
-> >    +++ b/kexec/arch/i386/crashdump-x86.c
-> >    @@ -48,6 +48,7 @@
-> >     #include <x86/x86-linux.h>
-> >     extern struct arch_options_t arch_options;
-> >    +extern int do_hotplug;
-> >     static int get_kernel_page_offset(struct kexec_info *UNUSED(info),
-> >     				  struct crash_elf_info *elf_info)
-> >    @@ -975,6 +976,14 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
-> >     	} else {
-> >     		memsz = bufsz;
-> >     	}
-> >    +
-> >    +	/* If hotplug support enabled, use larger size to accomodate changes */
-> >    +	if (do_hotplug) {
-> >    +		long int nr_cpus = get_nr_cpus();
-> >    +		memsz = (nr_cpus + CRASH_MAX_MEMORY_RANGES) * sizeof(Elf64_Phdr);
-> >    +	}
-> >    +
-> >    +    info->elfcorehdr =
-> >     	elfcorehdr = add_buffer(info, tmp, bufsz, memsz, align, min_base,
-> >     							max_addr, -1);
-> >     	dbgprintf("Created elf header segment at 0x%lx\n", elfcorehdr);
-> >    diff --git a/kexec/crashdump-elf.c b/kexec/crashdump-elf.c
-> >    index b8bb686..5e29f7a 100644
-> >    --- a/kexec/crashdump-elf.c
-> >    +++ b/kexec/crashdump-elf.c
-> >    @@ -43,11 +43,7 @@ int FUNC(struct kexec_info *info,
-> >     	int (*get_note_info)(int cpu, uint64_t *addr, uint64_t *len);
-> >     	long int count_cpu;
-> >    -	if (xen_present())
-> >    -		nr_cpus = xen_get_nr_phys_cpus();
-> >    -	else
-> >    -		nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
-> >    -
-> >    +	nr_cpus = get_nr_cpus();
-> >     	if (nr_cpus < 0) {
-> >     		return -1;
-> >     	}
-> >    diff --git a/kexec/crashdump.h b/kexec/crashdump.h
-> >    index 18bd691..28d3278 100644
-> >    --- a/kexec/crashdump.h
-> >    +++ b/kexec/crashdump.h
-> >    @@ -57,7 +57,6 @@ unsigned long phys_to_virt(struct crash_elf_info *elf_info,
-> >     			   unsigned long long paddr);
-> >     unsigned long xen_architecture(struct crash_elf_info *elf_info);
-> >    -int xen_get_nr_phys_cpus(void);
-> >     int xen_get_note(int cpu, uint64_t *addr, uint64_t *len);
-> >     int xen_get_crashkernel_region(uint64_t *start, uint64_t *end);
-> >    diff --git a/kexec/kexec-xen.h b/kexec/kexec-xen.h
-> >    index 70fb576..f54a2dd 100644
-> >    --- a/kexec/kexec-xen.h
-> >    +++ b/kexec/kexec-xen.h
-> >    @@ -83,5 +83,6 @@ extern int __xc_interface_close(xc_interface *xch);
-> >     #endif
-> >     int xen_get_kexec_range(int range, uint64_t *start, uint64_t *end);
-> >    +int xen_get_nr_phys_cpus(void);
-> >     #endif /* KEXEC_XEN_H */
-> >    diff --git a/kexec/kexec.c b/kexec/kexec.c
-> >    index 829a6ea..3668b73 100644
-> >    --- a/kexec/kexec.c
-> >    +++ b/kexec/kexec.c
-> >    @@ -58,6 +58,7 @@
-> >     unsigned long long mem_min = 0;
-> >     unsigned long long mem_max = ULONG_MAX;
-> >    +int do_hotplug = 0;
-> >     static unsigned long kexec_flags = 0;
-> >     /* Flags for kexec file (fd) based syscall */
-> >     static unsigned long kexec_file_flags = 0;
-> >    @@ -489,6 +490,17 @@ static int add_backup_segments(struct kexec_info *info,
-> >     	return 0;
-> >     }
-> >    +long int get_nr_cpus(void)
-> >    +{
-> >    +    long int nr_cpus;
-> >    +
-> >    +	if (xen_present())
-> >    +		nr_cpus = xen_get_nr_phys_cpus();
-> >    +	else
-> >    +		nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
-> >    +    return nr_cpus;
-> >    +}
-> >    +
-> >     static char *slurp_fd(int fd, const char *filename, off_t size, off_t *nread)
-> >     {
-> >     	char *buf;
-> >    @@ -672,6 +684,14 @@ static void update_purgatory(struct kexec_info *info)
-> >     		if (info->segment[i].mem == (void *)info->rhdr.rel_addr) {
-> >     			continue;
-> >     		}
-> >    +
-> >    +		/* Don't include elfcorehdr in the checksum, if hotplug
-> >    +		 * support enabled.
-> >    +		 */
-> >    +		if (do_hotplug && (info->segment[i].mem == (void *)info->elfcorehdr)) {
-> >    +			continue;
-> >    +		}
-> >    +
-> >     		sha256_update(&ctx, info->segment[i].buf,
-> >     			      info->segment[i].bufsz);
-> >     		nullsz = info->segment[i].memsz - info->segment[i].bufsz;
-> >    @@ -1565,6 +1585,9 @@ int main(int argc, char *argv[])
-> >     		case OPT_PRINT_CKR_SIZE:
-> >     			print_crashkernel_region_size();
-> >     			return 0;
-> >    +		case OPT_HOTPLUG:
-> >    +			do_hotplug = 1;
-> >    +			break;
-> >     		default:
-> >     			break;
-> >     		}
-> >    diff --git a/kexec/kexec.h b/kexec/kexec.h
-> >    index 0f97a97..b0428cc 100644
-> >    --- a/kexec/kexec.h
-> >    +++ b/kexec/kexec.h
-> >    @@ -169,6 +169,7 @@ struct kexec_info {
-> >     	int command_line_len;
-> >     	int skip_checks;
-> >    +	unsigned long elfcorehdr;
-> >     };
-> >     struct arch_map_entry {
-> >    @@ -231,7 +232,8 @@ extern int file_types;
-> >     #define OPT_PRINT_CKR_SIZE	262
-> >     #define OPT_LOAD_LIVE_UPDATE	263
-> >     #define OPT_EXEC_LIVE_UPDATE	264
-> >    -#define OPT_MAX			265
-> >    +#define OPT_HOTPLUG		265
-> >    +#define OPT_MAX		266
-> >     #define KEXEC_OPTIONS \
-> >     	{ "help",		0, 0, OPT_HELP }, \
-> >     	{ "version",		0, 0, OPT_VERSION }, \
-> >    @@ -258,6 +260,7 @@ extern int file_types;
-> >     	{ "debug",		0, 0, OPT_DEBUG }, \
-> >     	{ "status",		0, 0, OPT_STATUS }, \
-> >     	{ "print-ckr-size",     0, 0, OPT_PRINT_CKR_SIZE }, \
-> >    +	{ "hotplug",		0, 0, OPT_HOTPLUG }, \
-> >     #define KEXEC_OPT_STR "h?vdfixyluet:pscaS"
-> >    @@ -290,6 +293,8 @@ extern unsigned long add_buffer_phys_virt(struct kexec_info *info,
-> >     	int buf_end, int phys);
-> >     extern void arch_reuse_initrd(void);
-> >    +extern long int get_nr_cpus(void);
-> >    +
-> >     extern int ifdown(void);
-> >     extern char purgatory[];
-> > 
-> > Regards,
-> > eric
-> > ---
-> > 
-> > v9: 13jun2022
-> >   - Rebased to 5.18.0
-> >   - Per Sourabh, moved crash_prepare_elf64_headers() into common
-> >     crash_core.c to avoid compile issues with kexec_load only path.
-> >   - Per David Hildebrand, replaced mutex_trylock() with mutex_lock().
-> >   - Changed the __weak arch_crash_handle_hotplug_event() to utilize
-> >     WARN_ONCE() instead of WARN(). Fix some formatting issues.
-> >   - Per Sourabh, introduced sysfs attribute crash_hotplug for memory
-> >     and CPUs; for use by userspace (udev) to determine if the kernel
-> >     performs crash hot un/plug support.
-> >   - Per Sourabh, moved the code detecting the elfcorehdr segment from
-> >     arch/x86 into crash_core:handle_hotplug_event() so both kexec_load
-> >     and kexec_file_load can benefit.
-> >   - Updated userspace kexec-tools kexec utility to reflect change to
-> >     using CRASH_MAX_MEMORY_RANGES and get_nr_cpus().
-> > 
-> > v8: 5may2022
-> >   https://lkml.org/lkml/2022/5/5/1133
-> >   - Per Borislav Petkov, eliminated CONFIG_CRASH_HOTPLUG in favor
-> >     of CONFIG_HOTPLUG_CPU || CONFIG_MEMORY_HOTPLUG, ie a new define
-> >     is not needed. Also use of IS_ENABLED() rather than #ifdef's.
-> >     Renamed crash_hotplug_handler() to handle_hotplug_event().
-> >     And other corrections.
-> >   - Per Baoquan, minimized the parameters to the arch_crash_
-> >     handle_hotplug_event() to hp_action and cpu.
-> >   - Introduce KEXEC_CRASH_HP_INVALID_CPU definition, per Baoquan.
-> >   - Per Sourabh Jain, renamed and repurposed CRASH_HOTPLUG_ELFCOREHDR_SZ
-> >     to CONFIG_CRASH_MAX_MEMORY_RANGES, mirroring kexec-tools change
-> >     by David Hildebrand. Folded this patch into the x86
-> >     kexec_file_load support patch.
-> > 
-> > v7: 13apr2022
-> >   https://lkml.org/lkml/2022/4/13/850
-> >   - Resolved parameter usage to crash_hotplug_handler(), per Baoquan.
-> > 
-> > v6: 1apr2022
-> >   https://lkml.org/lkml/2022/4/1/1203
-> >   - Reword commit messages and some comment cleanup per Baoquan.
-> >   - Changed elf_index to elfcorehdr_index for clarity.
-> >   - Minor code changes per Baoquan.
-> > 
-> > v5: 3mar2022
-> >   https://lkml.org/lkml/2022/3/3/674
-> >   - Reworded description of CRASH_HOTPLUG_ELFCOREHDR_SZ, per
-> >     David Hildenbrand.
-> >   - Refactored slightly a few patches per Baoquan recommendation.
-> > 
-> > v4: 9feb2022
-> >   https://lkml.org/lkml/2022/2/9/1406
-> >   - Refactored patches per Baoquan suggestsions.
-> >   - A few corrections, per Baoquan.
-> > 
-> > v3: 10jan2022
-> >   https://lkml.org/lkml/2022/1/10/1212
-> >   - Rebasing per Baoquan He request.
-> >   - Changed memory notifier per David Hildenbrand.
-> >   - Providing example kexec userspace change in cover letter.
-> > 
-> > RFC v2: 7dec2021
-> >   https://lkml.org/lkml/2021/12/7/1088
-> >   - Acting upon Baoquan He suggestion of removing elfcorehdr from
-> >     the purgatory list of segments, removed purgatory code from
-> >     patchset, and it is signficiantly simpler now.
-> > 
-> > RFC v1: 18nov2021
-> >   https://lkml.org/lkml/2021/11/18/845
-> >   - working patchset demonstrating kernel handling of hotplug
-> >     updates to x86 elfcorehdr for kexec_file_load
-> > 
-> > RFC: 14dec2020
-> >   https://lkml.org/lkml/2020/12/14/532
-> >   - proposed concept of allowing kernel to handle hotplug update
-> >     of elfcorehdr
-> > ---
-> > 
-> > 
-> > Eric DeVolder (7):
-> >    crash: move crash_prepare_elf64_headers
-> >    crash: prototype change for crash_prepare_elf64_headers
-> >    crash: add generic infrastructure for crash hotplug support
-> >    kexec: exclude elfcorehdr from the segment digest
-> >    kexec: exclude hot remove cpu from elfcorehdr notes
-> >    crash: memory and cpu hotplug sysfs attributes
-> >    x86/crash: Add x86 crash hotplug support
-> > 
-> >   .../admin-guide/mm/memory-hotplug.rst         |   8 +
-> >   Documentation/core-api/cpu_hotplug.rst        |  18 ++
-> >   arch/arm64/kernel/machine_kexec_file.c        |   6 +-
-> >   arch/powerpc/kexec/file_load_64.c             |   2 +-
-> >   arch/x86/Kconfig                              |  11 +
-> >   arch/x86/kernel/crash.c                       | 119 ++++++++-
-> >   drivers/base/cpu.c                            |  13 +
-> >   drivers/base/memory.c                         |  13 +
-> >   include/linux/crash_core.h                    |  12 +
-> >   include/linux/kexec.h                         |  14 +-
-> >   kernel/crash_core.c                           | 241 ++++++++++++++++++
-> >   kernel/kexec_file.c                           | 105 +-------
-> >   12 files changed, 456 insertions(+), 106 deletions(-)
-> > 
-> 
+Thanks Baoquan for letting me know of this conflict. Naveen, how about
+resolving the conflict based on which patch is merged first? If your
+patch set is going to be merged early, I will resolve the conflict in my
+patch set, and vice versa.
+
+>
+>Thanks
+>Baoquan
+>
+>>
+>> Suggested-by: Eric Biederman <ebiederm@xmission.com>
+>> Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+>> ---
+>>  arch/arm64/include/asm/kexec.h   |  4 ++-
+>>  arch/powerpc/include/asm/kexec.h |  9 +++++++
+>>  arch/s390/include/asm/kexec.h    |  3 +++
+>>  arch/x86/include/asm/kexec.h     |  6 +++++
+>>  include/linux/kexec.h            | 44 +++++++++++++++++++++++++++-----
+>>  kernel/kexec_file.c              | 35 ++-----------------------
+>>  6 files changed, 61 insertions(+), 40 deletions(-)
+>>
+>> diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+>> index 9839bfc163d714..78d272b26ebd11 100644
+>> --- a/arch/arm64/include/asm/kexec.h
+>> +++ b/arch/arm64/include/asm/kexec.h
+>> @@ -115,7 +115,9 @@ extern const struct kexec_file_ops kexec_image_ops;
+>>
+>>  struct kimage;
+>>
+>> -extern int arch_kimage_file_post_load_cleanup(struct kimage *image);
+>> +int arch_kimage_file_post_load_cleanup(struct kimage *image);
+>> +#define arch_kimage_file_post_load_cleanup arch_kimage_file_post_load_cleanup
+>> +
+>>  extern int load_other_segments(struct kimage *image,
+>>  		unsigned long kernel_load_addr, unsigned long kernel_size,
+>>  		char *initrd, unsigned long initrd_len,
+>> diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
+>> index 2aefe14e144229..1e5e9b6ec78d9d 100644
+>> --- a/arch/powerpc/include/asm/kexec.h
+>> +++ b/arch/powerpc/include/asm/kexec.h
+>> @@ -120,6 +120,15 @@ int setup_purgatory(struct kimage *image, const void *slave_code,
+>>  #ifdef CONFIG_PPC64
+>>  struct kexec_buf;
+>>
+>> +int arch_kexec_kernel_image_probe(struct kimage *image, void *buf, unsigned long buf_len);
+>> +#define arch_kexec_kernel_image_probe arch_kexec_kernel_image_probe
+>> +
+>> +int arch_kimage_file_post_load_cleanup(struct kimage *image);
+>> +#define arch_kimage_file_post_load_cleanup arch_kimage_file_post_load_cleanup
+>> +
+>> +int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf);
+>> +#define arch_kexec_locate_mem_hole arch_kexec_locate_mem_hole
+>> +
+>>  int load_crashdump_segments_ppc64(struct kimage *image,
+>>  				  struct kexec_buf *kbuf);
+>>  int setup_purgatory_ppc64(struct kimage *image, const void *slave_code,
+>> diff --git a/arch/s390/include/asm/kexec.h b/arch/s390/include/asm/kexec.h
+>> index 649ecdcc873453..8886aadc11a3a6 100644
+>> --- a/arch/s390/include/asm/kexec.h
+>> +++ b/arch/s390/include/asm/kexec.h
+>> @@ -92,5 +92,8 @@ int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
+>>  				     const Elf_Shdr *relsec,
+>>  				     const Elf_Shdr *symtab);
+>>  #define arch_kexec_apply_relocations_add arch_kexec_apply_relocations_add
+>> +
+>> +int arch_kimage_file_post_load_cleanup(struct kimage *image);
+>> +#define arch_kimage_file_post_load_cleanup arch_kimage_file_post_load_cleanup
+>>  #endif
+>>  #endif /*_S390_KEXEC_H */
+>> diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+>> index 6ad8d946cd3ebf..5ec359c1b50cb3 100644
+>> --- a/arch/x86/include/asm/kexec.h
+>> +++ b/arch/x86/include/asm/kexec.h
+>> @@ -193,6 +193,12 @@ int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
+>>  				     const Elf_Shdr *relsec,
+>>  				     const Elf_Shdr *symtab);
+>>  #define arch_kexec_apply_relocations_add arch_kexec_apply_relocations_add
+>> +
+>> +void *arch_kexec_kernel_image_load(struct kimage *image);
+>> +#define arch_kexec_kernel_image_load arch_kexec_kernel_image_load
+>> +
+>> +int arch_kimage_file_post_load_cleanup(struct kimage *image);
+>> +#define arch_kimage_file_post_load_cleanup arch_kimage_file_post_load_cleanup
+>>  #endif
+>>  #endif
+>>
+>> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+>> index ce6536f1d26997..5e0bc3f9eac3e9 100644
+>> --- a/include/linux/kexec.h
+>> +++ b/include/linux/kexec.h
+>> @@ -188,21 +188,53 @@ int kexec_purgatory_get_set_symbol(struct kimage *image, const char *name,
+>>  				   void *buf, unsigned int size,
+>>  				   bool get_value);
+>>  void *kexec_purgatory_get_symbol_addr(struct kimage *image, const char *name);
+>> +void *kexec_image_load_default(struct kimage *image);
+>> +
+>> +#ifndef arch_kexec_kernel_image_probe
+>> +static inline int
+>> +arch_kexec_kernel_image_probe(struct kimage *image, void *buf, unsigned long buf_len)
+>> +{
+>> +	return kexec_image_probe_default(image, buf, buf_len);
+>> +}
+>> +#endif
+>> +
+>> +#ifndef arch_kimage_file_post_load_cleanup
+>> +static inline int arch_kimage_file_post_load_cleanup(struct kimage *image)
+>> +{
+>> +	return kexec_image_post_load_cleanup_default(image);
+>> +}
+>> +#endif
+>> +
+>> +#ifndef arch_kexec_kernel_image_load
+>> +static inline void *arch_kexec_kernel_image_load(struct kimage *image)
+>> +{
+>> +	return kexec_image_load_default(image);
+>> +}
+>> +#endif
+>>
+>> -/* Architectures may override the below functions */
+>> -int arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
+>> -				  unsigned long buf_len);
+>> -void *arch_kexec_kernel_image_load(struct kimage *image);
+>> -int arch_kimage_file_post_load_cleanup(struct kimage *image);
+>>  #ifdef CONFIG_KEXEC_SIG
+>>  int arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+>>  				 unsigned long buf_len);
+>>  #endif
+>> -int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf);
+>>
+>>  extern int kexec_add_buffer(struct kexec_buf *kbuf);
+>>  int kexec_locate_mem_hole(struct kexec_buf *kbuf);
+>>
+>> +#ifndef arch_kexec_locate_mem_hole
+>> +/**
+>> + * arch_kexec_locate_mem_hole - Find free memory to place the segments.
+>> + * @kbuf:                       Parameters for the memory search.
+>> + *
+>> + * On success, kbuf->mem will have the start address of the memory region found.
+>> + *
+>> + * Return: 0 on success, negative errno on error.
+>> + */
+>> +static inline int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf)
+>> +{
+>> +	return kexec_locate_mem_hole(kbuf);
+>> +}
+>> +#endif
+>> +
+>>  /* Alignment required for elf header segment */
+>>  #define ELF_CORE_HEADER_ALIGN   4096
+>>
+>> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+>> index 9b2839775c837b..66e4ce29fc6961 100644
+>> --- a/kernel/kexec_file.c
+>> +++ b/kernel/kexec_file.c
+>> @@ -56,14 +56,7 @@ int kexec_image_probe_default(struct kimage *image, void *buf,
+>>  	return ret;
+>>  }
+>>
+>> -/* Architectures can provide this probe function */
+>> -int __weak arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
+>> -					 unsigned long buf_len)
+>> -{
+>> -	return kexec_image_probe_default(image, buf, buf_len);
+>> -}
+>> -
+>> -static void *kexec_image_load_default(struct kimage *image)
+>> +void *kexec_image_load_default(struct kimage *image)
+>>  {
+>>  	if (!image->fops || !image->fops->load)
+>>  		return ERR_PTR(-ENOEXEC);
+>> @@ -74,11 +67,6 @@ static void *kexec_image_load_default(struct kimage *image)
+>>  				 image->cmdline_buf_len);
+>>  }
+>>
+>> -void * __weak arch_kexec_kernel_image_load(struct kimage *image)
+>> -{
+>> -	return kexec_image_load_default(image);
+>> -}
+>> -
+>>  int kexec_image_post_load_cleanup_default(struct kimage *image)
+>>  {
+>>  	if (!image->fops || !image->fops->cleanup)
+>> @@ -87,11 +75,6 @@ int kexec_image_post_load_cleanup_default(struct kimage *image)
+>>  	return image->fops->cleanup(image->image_loader_data);
+>>  }
+>>
+>> -int __weak arch_kimage_file_post_load_cleanup(struct kimage *image)
+>> -{
+>> -	return kexec_image_post_load_cleanup_default(image);
+>> -}
+>> -
+>>  #ifdef CONFIG_KEXEC_SIG
+>>  static int kexec_image_verify_sig_default(struct kimage *image, void *buf,
+>>  					  unsigned long buf_len)
+>> @@ -104,8 +87,7 @@ static int kexec_image_verify_sig_default(struct kimage *image, void *buf,
+>>  	return image->fops->verify_sig(buf, buf_len);
+>>  }
+>>
+>> -int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+>> -					unsigned long buf_len)
+>> +int arch_kexec_kernel_verify_sig(struct kimage *image, void *buf, unsigned long buf_len)
+>>  {
+>>  	return kexec_image_verify_sig_default(image, buf, buf_len);
+>>  }
+>> @@ -616,19 +598,6 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
+>>  	return ret == 1 ? 0 : -EADDRNOTAVAIL;
+>>  }
+>>
+>> -/**
+>> - * arch_kexec_locate_mem_hole - Find free memory to place the segments.
+>> - * @kbuf:                       Parameters for the memory search.
+>> - *
+>> - * On success, kbuf->mem will have the start address of the memory region found.
+>> - *
+>> - * Return: 0 on success, negative errno on error.
+>> - */
+>> -int __weak arch_kexec_locate_mem_hole(struct kexec_buf *kbuf)
+>> -{
+>> -	return kexec_locate_mem_hole(kbuf);
+>> -}
+>> -
+>>  /**
+>>   * kexec_add_buffer - place a buffer in a kexec segment
+>>   * @kbuf:	Buffer contents and memory parameters.
+>> --
+>> 2.36.1
+>>
+>
+
+-- 
+Best regards,
+Coiby
 
 
 _______________________________________________
