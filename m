@@ -4,100 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 18BF0CCA485
-	for <kexec@archiver.kernel.org>; Thu,  7 Jul 2022 17:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8F043C433EF
+	for <kexec@archiver.kernel.org>; Thu,  7 Jul 2022 18:50:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=2KnzXNbF6rkVsc3cV9LMHZssN0KptpsZaN2w2g7uNow=; b=m0U2/M+Dhzgj31
-	sHAuHNrhQ2ZSfOlDrUqDvTf4g7DacTZtvUMULrDrH7izYCxBVT/PSsCjo8o5n+8Yja8kV4xIwE1g+
-	0ZXcCgP+yhcQNTjCm6HRfT0iYnmYB2AnHgpVLxfsinExYebVluRFIzJ+nCg/a/0n5vYtbOPx03OT1
-	6fH6IxSyD0qo6Ia9zoQh5v/1NMaoflhb9sarFKAHRK7FdZMhE7VfUqUExps1iIlWNJzi6Z8ieiCDq
-	4ypGOD2xa1+jw/5sN3bxMdtMBMnl46YYKB7Gmia7U97yP6D+PoePvG1fxqlCHKn53r817eJgJI4dy
-	TZZefCbrLOt5kh0oG2Rw==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=AAwZgs/0D1yeKtkSRvT2siqTP6emxyD1Yr1+AqVY8d8=; b=MpK6eGemLBqNwz
+	/QX+4BrneZ6BrCbizLwYZ/HGczxVfX/TK+v3Z2vxUCJycCfKPWzbNIBFTlOBQZALaRJYHW2fNOv8B
+	1fGhoedGyZmkWUNeUES8etIUy/qNe7fsae3Wv+YJPP2BKFnuqqoDgY140n73NKwvkUb5Sxr+e4LT8
+	QfiPwXTZ6tzUYxMJHFdPd4i3MA/uXXsussa5JqG00/tD3CUyoB9X1j8d6EY7q8htTzGdpVWDEMu6O
+	34QUyQW5q/353mUSvgAtuIWRpRjtHlINelrthjehnG/sYSaqFI3YWxjkh5eFje2qidRL+mdGUgceM
+	N8JUY9iu7hElpicxWc1w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o9VBS-00HCZo-6Z; Thu, 07 Jul 2022 17:20:58 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5] helo=mx0a-001b2d01.pphosted.com)
+	id 1o9WZV-00HSvr-24; Thu, 07 Jul 2022 18:49:53 +0000
+Received: from mail-wm1-x32e.google.com ([2a00:1450:4864:20::32e])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o9VBN-00HCTs-67
-	for kexec@lists.infradead.org; Thu, 07 Jul 2022 17:20:55 +0000
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-	by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 267HDVGJ002970;
-	Thu, 7 Jul 2022 17:20:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=Ot4nPpDvvpMwtvKbKIzQGZoBHybUU+TvFaQtXuiugpU=;
- b=VTmkaiz1bK5pYAhjMi4p0pRm97B5jOWCPYi7fxN/mhB6zYP/Nyu20aTFSoz4p5mWEBKJ
- obr8OWJIHkVGaXnW3f7x4sF1m3vTCZuW9YALk0TaGc8YNzLfktxAKmZF/mfpY9uJQYVO
- SFMyH6qqGiM534xHRByl31VdRrELjAdZAHoEjgFl5mTDcephOpF+LEVI5LbCnXE8bfoA
- 8ZyqOalES3ja8yqFHtQBsEgpBPXr/sEiDm9DeryDuscJ7KtkKp/oGwYUzjvyB4QX00nb
- /hC28bdd7NCmNltXRUwLUwAe/XisbSqByucpUjr/VFg4KXvME+ax4tm7/agFaIa/yVKd tg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3h63prg6g9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 Jul 2022 17:20:44 +0000
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 267HDss3003511;
-	Thu, 7 Jul 2022 17:20:43 GMT
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-	by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3h63prg6fy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 Jul 2022 17:20:43 +0000
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-	by ppma04wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 267H5YH8005327;
-	Thu, 7 Jul 2022 17:20:43 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-	by ppma04wdc.us.ibm.com with ESMTP id 3h4ud54tcj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 Jul 2022 17:20:43 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-	by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 267HKgol35651886
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 7 Jul 2022 17:20:42 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E70657805E;
-	Thu,  7 Jul 2022 17:20:41 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 45E037805C;
-	Thu,  7 Jul 2022 17:20:41 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-	by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-	Thu,  7 Jul 2022 17:20:41 +0000 (GMT)
-From: Stefan Berger <stefanb@linux.ibm.com>
-To: kexec@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Cc: nayna@linux.ibm.com, nasastry@in.ibm.com, mpe@ellerman.id.au,
-        Stefan Berger <stefanb@linux.ibm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>
-Subject: [PATCH v6 5/6] of: kexec: Refactor IMA buffer related functions to make them reusable
-Date: Thu,  7 Jul 2022 13:20:25 -0400
-Message-Id: <20220707172026.831614-6-stefanb@linux.ibm.com>
+	id 1o9WZQ-00HSuT-O9
+	for kexec@lists.infradead.org; Thu, 07 Jul 2022 18:49:51 +0000
+Received: by mail-wm1-x32e.google.com with SMTP id o19-20020a05600c4fd300b003a0489f414cso11206856wmq.4
+        for <kexec@lists.infradead.org>; Thu, 07 Jul 2022 11:49:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=By3T6Z5JDK5VvmvI0n3THPKQqdtLxJBkH/DaezIVYE0=;
+        b=UcJwhV8pPQf4CAMOaf2znH1HntdU1cBMU8tyt9pzArCbkZGGDwErnBt8m86tQK9dxa
+         HcLrCVCOdiHht2vDiwCi4rzwEvLi5Cmu6JhEAmHMJvK2W1eODp6clKPUTA4El1iWyRQY
+         6RXW5TWyrX9LsIxjY64M6+jfyEpylCJGLL3Ii2DxkW9GhJG4CtiXaB1YsrKPcnTfmvno
+         Bg7chmUDKYbyao8BwLr4ICGm+tOc99ag/ZCBIvshf5C3c9gois6pyyQuiNsTbhC2LswA
+         ZLJqpybLLTbFd5bYNrRA+1YcC1AQwEvEPq2PA5vjU57nBou97z3stLYQNuOO+lZspdfB
+         FfIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=By3T6Z5JDK5VvmvI0n3THPKQqdtLxJBkH/DaezIVYE0=;
+        b=vVjeEHt1ZvkLpiTPVFXKhxZzl0dGwc6MCnjhijY3Xf+kb/QxQSAOUiXA060cS0iRau
+         Q7EQYgr6A0lRNrciutWCBKT5wQrjr64lsbUIJwfyn84agVbT91gcfUagHoYL26Mkl2Up
+         ugskjGUoxlb2xr+u59v0wi3JrS8mGrAqbgFcSgkBw11Vj+YzyAfMo4LYUgVTx7vKog7T
+         TLp0pNXVRsVbbw5UpH03fzX0F+FAhrgsw356QAur4HYnaJAtOSWMhm7FFeobwtGD+aoV
+         bs8pUNgHXkjr+G09iHLQGjDL9R7BSrDEDiEfAhdhZzWRYVVv7gpNH/Kf5nE5UbJuX0rj
+         Xgmg==
+X-Gm-Message-State: AJIora+oMIx1fODUJL+34vdJEKb0B4nfMiXTAANREBD1gQe5M9QwL0Hm
+	Uz/Cli1WvKPlRrK9GmB3wJ6WQeQUiXk=
+X-Google-Smtp-Source: AGRyM1uvGngSRhvIh90pdnM0bN+cxnFl4K5RjbtOcM7uxxaM69tVEFlfF+Ip5tKu6NDKHKV07V4/9w==
+X-Received: by 2002:a1c:19c3:0:b0:39c:6479:3ca with SMTP id 186-20020a1c19c3000000b0039c647903camr6037084wmz.27.1657219785494;
+        Thu, 07 Jul 2022 11:49:45 -0700 (PDT)
+Received: from localhost.localdomain (host-79-53-109-127.retail.telecomitalia.it. [79.53.109.127])
+        by smtp.gmail.com with ESMTPSA id z5-20020adfe545000000b0021b81855c1csm47280088wrm.27.2022.07.07.11.49.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Jul 2022 11:49:43 -0700 (PDT)
+From: "Fabio M. De Francesco" <fmdefrancesco@gmail.com>
+To: Eric Biederman <ebiederm@xmission.com>,
+	kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: "Fabio M. De Francesco" <fmdefrancesco@gmail.com>,
+	Ira Weiny <ira.weiny@intel.com>
+Subject: [PATCH] kexec: Replace kmap() with kmap_local_page()
+Date: Thu,  7 Jul 2022 20:49:39 +0200
+Message-Id: <20220707184939.6086-1-fmdefrancesco@gmail.com>
 X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220707172026.831614-1-stefanb@linux.ibm.com>
-References: <20220707172026.831614-1-stefanb@linux.ibm.com>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: T6k_ZO6DO66qtfGMin_PME8FXs7X5OiR
-X-Proofpoint-ORIG-GUID: 3yGcmjBNFJKaEzOSPY8CP4LcqeZURBtW
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-07-07_13,2022-06-28_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
- lowpriorityscore=0 suspectscore=0 impostorscore=0 priorityscore=1501
- malwarescore=0 adultscore=0 bulkscore=0 clxscore=1015 phishscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2206140000 definitions=main-2207070068
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220707_102053_367872_A814D897 
-X-CRM114-Status: GOOD (  28.46  )
+X-CRM114-CacheID: sfid-20220707_114948_841951_30ABC3CC 
+X-CRM114-Status: GOOD (  11.43  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -114,226 +88,67 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Refactor IMA buffer related functions to make them reusable for carrying
-TPM logs across kexec.
+The use of kmap() and kmap_atomic() are being deprecated in favor of
+kmap_local_page().
 
-Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: Mimi Zohar <zohar@linux.ibm.com>
+With kmap_local_page(), the mappings are per thread, CPU local and not
+globally visible. Furthermore, the mappings can be acquired from any
+context (including interrupts).
 
+Therefore, use kmap_local_page() in aio.c because these mappings are per
+thread, CPU local, and not globally visible.
+
+Tested on a QEMU + KVM 32-bits VM booting a kernel with HIGHMEM64GB
+enabled.
+
+Suggested-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: Fabio M. De Francesco <fmdefrancesco@gmail.com>
 ---
-v6:
- - Add __init to get_kexec_buffer as suggested by Jonathan
+ kernel/kexec_core.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-v5:
- - Rebased on Jonathan McDowell's commit "b69a2afd5afc x86/kexec: Carry
-   forward IMA measurement log on kexec"
-v4:
- - Move debug output into setup_buffer()
----
- drivers/of/kexec.c | 126 ++++++++++++++++++++++++++-------------------
- 1 file changed, 74 insertions(+), 52 deletions(-)
-
-diff --git a/drivers/of/kexec.c b/drivers/of/kexec.c
-index 548dd5b1b5c1..15a82b574f36 100644
---- a/drivers/of/kexec.c
-+++ b/drivers/of/kexec.c
-@@ -117,45 +117,57 @@ static int do_get_kexec_buffer(const void *prop, int len, unsigned long *addr,
- }
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 4d34c78334ce..6f98274765d4 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -814,7 +814,7 @@ static int kimage_load_normal_segment(struct kimage *image,
+ 		if (result < 0)
+ 			goto out;
  
- #ifdef CONFIG_HAVE_IMA_KEXEC
--/**
-- * ima_get_kexec_buffer - get IMA buffer from the previous kernel
-- * @addr:	On successful return, set to point to the buffer contents.
-- * @size:	On successful return, set to the buffer size.
-- *
-- * Return: 0 on success, negative errno on error.
-- */
--int __init ima_get_kexec_buffer(void **addr, size_t *size)
-+static int __init get_kexec_buffer(const char *name, unsigned long *addr,
-+				   size_t *size)
- {
- 	int ret, len;
--	unsigned long tmp_addr;
- 	unsigned long start_pfn, end_pfn;
--	size_t tmp_size;
- 	const void *prop;
- 
--	prop = of_get_property(of_chosen, "linux,ima-kexec-buffer", &len);
-+	prop = of_get_property(of_chosen, name, &len);
- 	if (!prop)
- 		return -ENOENT;
- 
--	ret = do_get_kexec_buffer(prop, len, &tmp_addr, &tmp_size);
-+	ret = do_get_kexec_buffer(prop, len, addr, size);
- 	if (ret)
- 		return ret;
- 
--	/* Do some sanity on the returned size for the ima-kexec buffer */
--	if (!tmp_size)
-+	/* Do some sanity on the returned size for the kexec buffer */
-+	if (!*size)
- 		return -ENOENT;
- 
- 	/*
- 	 * Calculate the PFNs for the buffer and ensure
- 	 * they are with in addressable memory.
- 	 */
--	start_pfn = PHYS_PFN(tmp_addr);
--	end_pfn = PHYS_PFN(tmp_addr + tmp_size - 1);
-+	start_pfn = PHYS_PFN(*addr);
-+	end_pfn = PHYS_PFN(*addr + *size - 1);
- 	if (!page_is_ram(start_pfn) || !page_is_ram(end_pfn)) {
--		pr_warn("IMA buffer at 0x%lx, size = 0x%zx beyond memory\n",
--			tmp_addr, tmp_size);
-+		pr_warn("%s buffer at 0x%lx, size = 0x%zx beyond memory\n",
-+			name, *addr, *size);
- 		return -EINVAL;
- 	}
- 
-+	return 0;
-+}
-+
-+/**
-+ * ima_get_kexec_buffer - get IMA buffer from the previous kernel
-+ * @addr:	On successful return, set to point to the buffer contents.
-+ * @size:	On successful return, set to the buffer size.
-+ *
-+ * Return: 0 on success, negative errno on error.
-+ */
-+int __init ima_get_kexec_buffer(void **addr, size_t *size)
-+{
-+	int ret;
-+	unsigned long tmp_addr;
-+	size_t tmp_size;
-+
-+	ret = get_kexec_buffer("linux,ima-kexec-buffer", &tmp_addr, &tmp_size);
-+	if (ret)
-+		return ret;
-+
- 	*addr = __va(tmp_addr);
- 	*size = tmp_size;
- 
-@@ -188,72 +200,82 @@ int __init ima_free_kexec_buffer(void)
- }
- #endif
- 
--/**
-- * remove_ima_buffer - remove the IMA buffer property and reservation from @fdt
-- *
-- * @fdt: Flattened Device Tree to update
-- * @chosen_node: Offset to the chosen node in the device tree
-- *
-- * The IMA measurement buffer is of no use to a subsequent kernel, so we always
-- * remove it from the device tree.
-- */
--static void remove_ima_buffer(void *fdt, int chosen_node)
-+static int remove_buffer(void *fdt, int chosen_node, const char *name)
- {
- 	int ret, len;
- 	unsigned long addr;
- 	size_t size;
- 	const void *prop;
- 
--	if (!IS_ENABLED(CONFIG_HAVE_IMA_KEXEC))
--		return;
--
--	prop = fdt_getprop(fdt, chosen_node, "linux,ima-kexec-buffer", &len);
-+	prop = fdt_getprop(fdt, chosen_node, name, &len);
- 	if (!prop)
--		return;
-+		return -ENOENT;
- 
- 	ret = do_get_kexec_buffer(prop, len, &addr, &size);
--	fdt_delprop(fdt, chosen_node, "linux,ima-kexec-buffer");
-+	fdt_delprop(fdt, chosen_node, name);
- 	if (ret)
--		return;
-+		return ret;
- 
- 	ret = fdt_find_and_del_mem_rsv(fdt, addr, size);
- 	if (!ret)
--		pr_debug("Removed old IMA buffer reservation.\n");
-+		pr_debug("Remove old %s buffer reserveration", name);
-+	return ret;
- }
- 
--#ifdef CONFIG_IMA_KEXEC
- /**
-- * setup_ima_buffer - add IMA buffer information to the fdt
-- * @image:		kexec image being loaded.
-- * @fdt:		Flattened device tree for the next kernel.
-- * @chosen_node:	Offset to the chosen node.
-+ * remove_ima_buffer - remove the IMA buffer property and reservation from @fdt
-  *
-- * Return: 0 on success, or negative errno on error.
-+ * @fdt: Flattened Device Tree to update
-+ * @chosen_node: Offset to the chosen node in the device tree
-+ *
-+ * The IMA measurement buffer is of no use to a subsequent kernel, so we always
-+ * remove it from the device tree.
-  */
--static int setup_ima_buffer(const struct kimage *image, void *fdt,
--			    int chosen_node)
-+static void remove_ima_buffer(void *fdt, int chosen_node)
-+{
-+	if (!IS_ENABLED(CONFIG_HAVE_IMA_KEXEC))
-+		return;
-+
-+	remove_buffer(fdt, chosen_node, "linux,ima-kexec-buffer");
-+}
-+
-+#ifdef CONFIG_IMA_KEXEC
-+static int setup_buffer(void *fdt, int chosen_node, const char *name,
-+			phys_addr_t addr, size_t size)
- {
- 	int ret;
- 
--	if (!image->ima_buffer_size)
-+	if (!size)
- 		return 0;
- 
- 	ret = fdt_appendprop_addrrange(fdt, 0, chosen_node,
--				       "linux,ima-kexec-buffer",
--				       image->ima_buffer_addr,
--				       image->ima_buffer_size);
-+				       name, addr, size);
- 	if (ret < 0)
- 		return -EINVAL;
- 
--	ret = fdt_add_mem_rsv(fdt, image->ima_buffer_addr,
--			      image->ima_buffer_size);
-+	ret = fdt_add_mem_rsv(fdt, addr, size);
- 	if (ret)
- 		return -EINVAL;
- 
--	pr_debug("IMA buffer at 0x%pa, size = 0x%zx\n",
--		 &image->ima_buffer_addr, image->ima_buffer_size);
-+	pr_debug("%s at 0x%pa, size = 0x%zx\n", name, &addr, size);
- 
- 	return 0;
-+
-+}
-+
-+/**
-+ * setup_ima_buffer - add IMA buffer information to the fdt
-+ * @image:		kexec image being loaded.
-+ * @fdt:		Flattened device tree for the next kernel.
-+ * @chosen_node:	Offset to the chosen node.
-+ *
-+ * Return: 0 on success, or negative errno on error.
-+ */
-+static int setup_ima_buffer(const struct kimage *image, void *fdt,
-+			    int chosen_node)
-+{
-+	return setup_buffer(fdt, chosen_node, "linux,ima-kexec-buffer",
-+			    image->ima_buffer_addr, image->ima_buffer_size);
- }
- #else /* CONFIG_IMA_KEXEC */
- static inline int setup_ima_buffer(const struct kimage *image, void *fdt,
+-		ptr = kmap(page);
++		ptr = kmap_local_page(page);
+ 		/* Start with a clear page */
+ 		clear_page(ptr);
+ 		ptr += maddr & ~PAGE_MASK;
+@@ -827,7 +827,7 @@ static int kimage_load_normal_segment(struct kimage *image,
+ 			memcpy(ptr, kbuf, uchunk);
+ 		else
+ 			result = copy_from_user(ptr, buf, uchunk);
+-		kunmap(page);
++		kunmap_local(ptr);
+ 		if (result) {
+ 			result = -EFAULT;
+ 			goto out;
+@@ -878,7 +878,7 @@ static int kimage_load_crash_segment(struct kimage *image,
+ 			goto out;
+ 		}
+ 		arch_kexec_post_alloc_pages(page_address(page), 1, 0);
+-		ptr = kmap(page);
++		ptr = kmap_local_page(page);
+ 		ptr += maddr & ~PAGE_MASK;
+ 		mchunk = min_t(size_t, mbytes,
+ 				PAGE_SIZE - (maddr & ~PAGE_MASK));
+@@ -894,7 +894,7 @@ static int kimage_load_crash_segment(struct kimage *image,
+ 		else
+ 			result = copy_from_user(ptr, buf, uchunk);
+ 		kexec_flush_icache_page(page);
+-		kunmap(page);
++		kunmap_local(ptr);
+ 		arch_kexec_pre_free_pages(page_address(page), 1);
+ 		if (result) {
+ 			result = -EFAULT;
 -- 
-2.35.1
+2.36.1
 
 
 _______________________________________________
