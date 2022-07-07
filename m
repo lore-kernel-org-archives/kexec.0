@@ -4,74 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id F1C53C433EF
-	for <kexec@archiver.kernel.org>; Thu,  7 Jul 2022 23:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 10EF4C43334
+	for <kexec@archiver.kernel.org>; Thu,  7 Jul 2022 23:16:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
 	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=KcyCnWFfsIeLHETKccFqYGuXaZOV9IHMNFrS1Xx+Dog=; b=MRz74G2CQ4X7CN
-	YU6/jiRwf/tNepRnyAGf1fuinv7VKYpVgrgrsxlUGG2PetqzdJKkDPlR1rCPSl6jRBiumLCBaSiy6
-	mgItd0ueM2H+juTVwA5FOeQfZ9v6+IDl+lOnGGLhDKQ4Hb05uguNjNzq4ldDbjAhtO74CSqoRT0gc
-	wpwey3L/NvcnsciOcLsd2RkInbrVA8nzcCeDB8uM/ftpTWZpWX+pqCyud1fQ8vPoOmQsphPNfkwb3
-	C8RJnUi0PFBCwtBOk+YKlfoFwZUOXORJKgGM2PVm/c3+bbES31UjfIlDywQRNbrYzAFpEmOLjPT+d
-	SfYOY93vk4K/b+lTkIgg==;
+	List-Owner; bh=KcyCnWFfsIeLHETKccFqYGuXaZOV9IHMNFrS1Xx+Dog=; b=GgIY4AQcHYVZ+B
+	I+ycqVwvvADdHl5EhJg+eD1WzdTAESC93asIGIpKk/mfoLPuij+IMHKOQrPN20rJ88Pb1daWNTDIk
+	WjgPQ21/RlTcpQ89QII4ATnrINsw2WenFgu97zRJAiwW3vWdKfBd/j+cYV+O6gU8KEQnPrvWv6iLp
+	MmTuepvxUSrSDrxchkVJrYN7PkIyDdlGBL5BS4yl95DUhBZHFYT0aBwlbCk18QxEhQqv+LHxe4NlV
+	iBUFvGe9TbkLY2P5lGKWEssGABKDu5fsq9y/hl3a4S+EtkiJLCqKVAmaXaaKxl6/L2bDaf8n51H5o
+	w/jo21y9v8Ho67EWXcNg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o9ahW-000ePt-9K; Thu, 07 Jul 2022 23:14:26 +0000
-Received: from mail-wr1-x436.google.com ([2a00:1450:4864:20::436])
+	id 1o9aj3-000eqC-FF; Thu, 07 Jul 2022 23:16:01 +0000
+Received: from mail-wr1-x429.google.com ([2a00:1450:4864:20::429])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o9ahT-000eO5-4K
-	for kexec@lists.infradead.org; Thu, 07 Jul 2022 23:14:24 +0000
-Received: by mail-wr1-x436.google.com with SMTP id b26so28327976wrc.2
-        for <kexec@lists.infradead.org>; Thu, 07 Jul 2022 16:14:18 -0700 (PDT)
+	id 1o9aj0-000eoq-TY
+	for kexec@lists.infradead.org; Thu, 07 Jul 2022 23:16:00 +0000
+Received: by mail-wr1-x429.google.com with SMTP id v14so28313676wra.5
+        for <kexec@lists.infradead.org>; Thu, 07 Jul 2022 16:15:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
         bh=izEW/QlWsYwAv1ZochY3FjaPww57C5kdq40cLp75WW8=;
-        b=IHvyQzKUsj6cmYt0GoU0JO/vGfv/QZ0SGCghTNipvbOxddWPTpllfdqd6WPZzJ5yfS
-         nmpXVBhxWR3VLak28+xTua7DJ7ThAUcOcyyIJ0I/BJa+3tLiKD4P35J0LBuXePIy8fyg
-         acNnxmifaxhC9p/P6L5kRGRaNWrosuFX8g67kNSObnRuamv1OdAteTf1Qrves5CowcCq
-         xqEa/TaraYD8x9YnR1+vADPqqsDoNkjbqKUuQri+vRSylWapjeZmU3qnHHoSJZWjZGzS
-         o8/cRY+egbj9YuTOrmSWcqzvzems3cK2Oq6dGGFnS/LhnvQnuyG0rq/KU9shqeDo87E8
-         7pIg==
+        b=bN/UI+7lQeB65atynzKqp9nMLADS1qCkhGg5AFy7k9JTlnDD+Zfmk48B2FRQd+hC0Z
+         U4CKu5nG4vjGJCXcV2zhrMRVj5UyORVGZ0Wvcq6fki/MJbwmIrZUPJ6dJ5thhHkq+45r
+         trErrsYkpiZKrv56HldNIjMgl5ylRyWM2frA870ii9xsEWsxGBxvQw9GZER8kL4TcltL
+         A9S9IZChyrVI1WMBCy00qnuXGolCRiTd3a6aLoa4W8Ximf+e2l9LEQ0uIXtbfAokdAId
+         ANb1ZhVUMrfkHBXJMCKs8voDoToWbTf2WtwrcXSUQTDgagsSYKsBMdxLfxtkqPy6PGSe
+         /AOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
         bh=izEW/QlWsYwAv1ZochY3FjaPww57C5kdq40cLp75WW8=;
-        b=HkuDDre1TmPrSi6opqHVwk/O6c/ub7DAKDhbJfa9MCZMJBchdkMTjc6tQRhnHVUtpo
-         t0GebSRzX89p46bo1vHilT1PWX8oBWYnub0lbIMzVr1/Oxtjw+kQfuxEzHlHrT38holv
-         ibWad83q3jvNdBA602BwxBk+ATW+u+16b9e+LcJ7AjMF3Ahix2UL7IoQbGss/5SU4Qsb
-         6kFxEtQoeor52hodkKb8nuG7yuYWR1/jk8RXZ7hvJ4DQA/RgcZDhUCpkOxvWyQFcp3UC
-         BP5yI41so99Sa565YbRDrrF0ijrvEKI0+HgJvT1qtY6GVfjC43trxatCBpgkTvbvOZIy
-         no5A==
-X-Gm-Message-State: AJIora9uKR6UcRCUQ9cEfwo0gZqMpRCO/HtdXEDzwTq98Q+Crb0MJgeK
-	QYABauuibkBk1mdnrhxFn3c=
-X-Google-Smtp-Source: AGRyM1uBioqFu9xhYE1r6Pp52kKGi0yIK42RApLLOjdIK5CTwaDJdYl19OuGfydqU02oB42al4MyKA==
-X-Received: by 2002:adf:facc:0:b0:21d:8c8f:4b51 with SMTP id a12-20020adffacc000000b0021d8c8f4b51mr267095wrs.307.1657235657684;
-        Thu, 07 Jul 2022 16:14:17 -0700 (PDT)
+        b=VtglQMW+dwj37daRFHJpWipIUr+dnc8xP3HElpvTdBfKulh2UsMSjuvrVGs5ZUC/5b
+         KHZnQkIvwyzblfwdD+gY3MKaMeH0fcjKBkzJjZ1zqFSMsRuzn42ywsHLS1CAeV2HkO7i
+         m5BBzGkVQrnqZ2vwDS1zZcwY/Uty2F4wnGakKchvgmJknkP1tz3+Eq6DEJ/etFcwsxXc
+         tWUMvEU35SvjdbgNA3pzpD3ysdDvxMgx3CIBH6WsMCn+ZbKH+rR97gy+y4wb2kBw5mGs
+         g0Vu8A3Owgil9mO/SN16RBTuqXq0Ym4TvhkdzxgpKFikPCboz33q5sIjP6l2K2UH9aaM
+         Ty9w==
+X-Gm-Message-State: AJIora+5LN1ELHBhhCBKcDpmH+ZWTKGw9j6VQvwVTVXx8O3oIT2khJUR
+	l0fAhvHrKb6OpDWMbWjzgC4=
+X-Google-Smtp-Source: AGRyM1vb1t9Pd03LkoGzBnp8Qn8oJ174NaaaEi0Rd2+luP9y+glv1E3K+ONHUCDrq6cJFue2klElbQ==
+X-Received: by 2002:adf:f9c9:0:b0:21d:2cec:63e9 with SMTP id w9-20020adff9c9000000b0021d2cec63e9mr276271wrr.301.1657235755382;
+        Thu, 07 Jul 2022 16:15:55 -0700 (PDT)
 Received: from localhost.localdomain (host-79-53-109-127.retail.telecomitalia.it. [79.53.109.127])
-        by smtp.gmail.com with ESMTPSA id q6-20020a1cf306000000b003a033177655sm201922wmq.29.2022.07.07.16.14.15
+        by smtp.gmail.com with ESMTPSA id r129-20020a1c4487000000b003a0499df21asm229785wma.25.2022.07.07.16.15.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Jul 2022 16:14:16 -0700 (PDT)
+        Thu, 07 Jul 2022 16:15:54 -0700 (PDT)
 From: "Fabio M. De Francesco" <fmdefrancesco@gmail.com>
 To: Eric Biederman <ebiederm@xmission.com>,
 	kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org
 Cc: "Fabio M. De Francesco" <fmdefrancesco@gmail.com>,
 	Ira Weiny <ira.weiny@intel.com>
-Subject: [PATCH] kexec: Replace kmap() with kmap_local_page()
-Date: Fri,  8 Jul 2022 01:14:12 +0200
-Message-Id: <20220707231412.1404-1-fmdefrancesco@gmail.com>
+Subject: [PATCH v2] kexec: Replace kmap() with kmap_local_page()
+Date: Fri,  8 Jul 2022 01:15:50 +0200
+Message-Id: <20220707231550.1484-1-fmdefrancesco@gmail.com>
 X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220707_161423_231932_4B211858 
-X-CRM114-Status: GOOD (  12.54  )
+X-CRM114-CacheID: sfid-20220707_161558_984584_AF7E40E2 
+X-CRM114-Status: GOOD (  12.74  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
