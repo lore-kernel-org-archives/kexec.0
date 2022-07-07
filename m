@@ -4,103 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5E9F1CCA473
-	for <kexec@archiver.kernel.org>; Wed,  6 Jul 2022 15:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 45EF0C43334
+	for <kexec@archiver.kernel.org>; Thu,  7 Jul 2022 04:26:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=RScwAPjInaJt/ENLcFs3I7c/CCAnksxNZwIE/sRvX/A=; b=w/TTcRL0aRK/Wd
-	b00QYfYwgh04g8dZFzWEjKJsLIj5yWk4EWJ6qWBZHamRjqAmtYQ8oCCl901GNvr6bB/qXT2hYPsKA
-	X2kleumxZzWvwYJ69SeQv/8wA1ky3GBbx8bIuj0sUK8A2JPpPy93QiiX5Rn/iknFmgTx3zP5bDsDw
-	rEq5VNiBwImb2Alr129UqqFEP90VJM37q+gvlJ2LtOrjypYrtqvi3TWRedckirvysRh211Yr87jDv
-	v1d5BDQJpMZIq1ZFEkhfxVN2LsyktAx/szf9eQM7CKiUzIAVlacWs+LqTM80VH+K8YghPfXe7kVxs
-	TnMpNB928pKxQw3qeYEg==;
+	List-Owner; bh=oOg5BPdKbkN61eqEpVIi7ja3NZyAmTU5Ihbg7y9DBOg=; b=heCmNj0XevPFQC
+	KHRcADilC5f59azpVw1kgBoGH3DLzXdCk5pMsbQfU4+ZauLjTKZOH5sa0bNCpPHqgxXG9fnIHdtaC
+	baljscQjniUGOqBTvIGUU6+ULvppdJLvWi2NMWHQxCheFZmpe/SQlVftBuI+45kOglV1NeYzChkyU
+	RJE0TrqnEdxSFoOg/k3J/fXlZVWdYR8740g2L8z324re5qB4RSW1TKlZXUZFDpoxAmqNCU9ZlVDOj
+	b/2/Tyvfwi9J3qSljlxH8g7TXEMMgiLTrgMamrp5U8opVc0KPs4s9T7z7TjV5o/eAJmLCzRjeZoJ0
+	Pn2J8TIMECEVyl74eJBA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o96se-00B0Ns-Nl; Wed, 06 Jul 2022 15:23:56 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1o9J61-00DUAa-Mw; Thu, 07 Jul 2022 04:26:33 +0000
+Received: from mga14.intel.com ([192.55.52.115])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o96sW-00B0Fq-5g
-	for kexec@lists.infradead.org; Wed, 06 Jul 2022 15:23:50 +0000
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 266Dkbel009568;
-	Wed, 6 Jul 2022 15:23:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : content-transfer-encoding
- : mime-version; s=pp1; bh=MksrG9shS4R9ubTDGiwGpUBYzkdN1PukPM7LKFfZp/A=;
- b=oiXsc2+cqoFzSBI4T9zrZ8vwHFicMGDRiLuJhuckkAm+QUnrqSoH8cXp4kpwyIkINRs/
- LzUcwV7BmqoIa48y1hMocIQxrHs9T12ACVIAHY0o6rP0DVUsFPygvERmg+uawgE/MDe6
- GjAM0W+OoWUw0VnMToyd4r2+sDs3Me4vP4Bx6pAOk8PovVQQk0wwKTSU3fDLiwoD0Vrg
- vl5UHdBvS3PuCqaEeMIrMLA+23wql90nl+O1+nv419OofDBzv8FidBmQlYxtSXpsMDO/
- g39KYbEbHrgHOyR7GSTiXp9QteDVa4ahWIo1TCWduofYsUuUAo/zY0F/EYUNgAlOz2RM Vg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3h5bjwav7a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Jul 2022 15:23:41 +0000
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 266ENt0W021308;
-	Wed, 6 Jul 2022 15:23:40 GMT
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3h5bjwav6e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Jul 2022 15:23:40 +0000
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-	by ppma04wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 266FLaSg003839;
-	Wed, 6 Jul 2022 15:23:39 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-	by ppma04wdc.us.ibm.com with ESMTP id 3h4ud4w7sj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 06 Jul 2022 15:23:39 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-	by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 266FNcVw31785428
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 6 Jul 2022 15:23:38 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 632C4112061;
-	Wed,  6 Jul 2022 15:23:38 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 458A6112063;
-	Wed,  6 Jul 2022 15:23:38 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-	by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-	Wed,  6 Jul 2022 15:23:38 +0000 (GMT)
-From: Stefan Berger <stefanb@linux.ibm.com>
-To: kexec@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Cc: nayna@linux.ibm.com, nasastry@in.ibm.com, mpe@ellerman.id.au,
-        Vaibhav Jain <vaibhav@linux.ibm.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Prakhar Srivastava <prsriva@linux.microsoft.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Rob Herring <robh@kernel.org>, Ritesh Harjani <ritesh.list@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: [PATCH v5 1/6] of: check previous kernel's ima-kexec-buffer against memory bounds
-Date: Wed,  6 Jul 2022 11:23:24 -0400
-Message-Id: <20220706152329.665636-2-stefanb@linux.ibm.com>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220706152329.665636-1-stefanb@linux.ibm.com>
-References: <20220706152329.665636-1-stefanb@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: NWto52r0_-6xLLgbcPs7_-cpqJhC6t0-
-X-Proofpoint-ORIG-GUID: Cop_G-bAt8BNz_dJzMvgQmDDDNG8erSt
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	id 1o9J5y-00DU8z-7P
+	for kexec@lists.infradead.org; Thu, 07 Jul 2022 04:26:31 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1657167990; x=1688703990;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0UKCDk+QO7Jju1w2FSJQYoZZKRQ/VlNP3afiUk2ofuU=;
+  b=QHIuZGp7Tih3YLkMa9UOhYp/0zhWWbxFBJF7JxQ9EBizjREpDVhpnqg5
+   SAdaAwT6VUCRJmIyvTtjVDUgxeCmYb7WeXwNeH6yrH9APRloQVDzmUwCR
+   pdx5yq0DAfoSyF5NyzYAPZpD6HAdo3m5QytOvX4aQ2XHT858a8bm76Cih
+   ld6wsoLcqdTSlfG3sS7LGiLXl7ZSWEZ7lQtRcLKnOnvNUOVvT/+pcKeo5
+   BJtiKvmdBuZWjibVeEzTxAHAhdMIPEWWdRB9/EIdCEtIwsd0Vs0fel0gD
+   osoI42OyOA8/PyqS9Nr+d1p8SdRg0qi8Lbu/hzZbcpdiHSmpwxKijmTxH
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10400"; a="283951455"
+X-IronPort-AV: E=Sophos;i="5.92,251,1650956400"; 
+   d="scan'208";a="283951455"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2022 21:26:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,251,1650956400"; 
+   d="scan'208";a="683173227"
+Received: from lkp-server01.sh.intel.com (HELO 68b931ab7ac1) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 06 Jul 2022 21:26:22 -0700
+Received: from kbuild by 68b931ab7ac1 with local (Exim 4.95)
+	(envelope-from <lkp@intel.com>)
+	id 1o9J5p-000LXY-Rr;
+	Thu, 07 Jul 2022 04:26:21 +0000
+Date: Thu, 7 Jul 2022 12:25:53 +0800
+From: kernel test robot <lkp@intel.com>
+To: Stefan Berger <stefanb@linux.ibm.com>, kexec@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-integrity@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc: llvm@lists.linux.dev, kbuild-all@lists.01.org, nayna@linux.ibm.com,
+	nasastry@in.ibm.com, mpe@ellerman.id.au,
+	Stefan Berger <stefanb@linux.ibm.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Frank Rowand <frowand.list@gmail.com>,
+	Eric Biederman <ebiederm@xmission.com>
+Subject: Re: [PATCH v5 6/6] tpm/kexec: Duplicate TPM measurement log in
+ of-tree for kexec
+Message-ID: <202207071217.lAHS2W7R-lkp@intel.com>
+References: <20220706152329.665636-7-stefanb@linux.ibm.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-07-06_09,2022-06-28_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- bulkscore=0 suspectscore=0 mlxlogscore=999 lowpriorityscore=0
- malwarescore=0 mlxscore=0 clxscore=1011 adultscore=0 phishscore=0
- impostorscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2206140000 definitions=main-2207060057
+Content-Disposition: inline
+In-Reply-To: <20220706152329.665636-7-stefanb@linux.ibm.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220706_082348_334085_BB45F925 
-X-CRM114-Status: GOOD (  21.10  )
+X-CRM114-CacheID: sfid-20220706_212630_355129_9C50D4A4 
+X-CRM114-Status: GOOD (  12.13  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -117,92 +89,50 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Vaibhav Jain <vaibhav@linux.ibm.com>
+Hi Stefan,
 
-Presently ima_get_kexec_buffer() doesn't check if the previous kernel's
-ima-kexec-buffer lies outside the addressable memory range. This can result
-in a kernel panic if the new kernel is booted with 'mem=X' arg and the
-ima-kexec-buffer was allocated beyond that range by the previous kernel.
-The panic is usually of the form below:
+Thank you for the patch! Yet something to improve:
 
-$ sudo kexec --initrd initrd vmlinux --append='mem=16G'
+[auto build test ERROR on 03c765b0e3b4cb5063276b086c76f7a612856a9a]
 
-<snip>
- BUG: Unable to handle kernel data access on read at 0xc000c01fff7f0000
- Faulting instruction address: 0xc000000000837974
- Oops: Kernel access of bad area, sig: 11 [#1]
-<snip>
- NIP [c000000000837974] ima_restore_measurement_list+0x94/0x6c0
- LR [c00000000083b55c] ima_load_kexec_buffer+0xac/0x160
- Call Trace:
- [c00000000371fa80] [c00000000083b55c] ima_load_kexec_buffer+0xac/0x160
- [c00000000371fb00] [c0000000020512c4] ima_init+0x80/0x108
- [c00000000371fb70] [c0000000020514dc] init_ima+0x4c/0x120
- [c00000000371fbf0] [c000000000012240] do_one_initcall+0x60/0x2c0
- [c00000000371fcc0] [c000000002004ad0] kernel_init_freeable+0x344/0x3ec
- [c00000000371fda0] [c0000000000128a4] kernel_init+0x34/0x1b0
- [c00000000371fe10] [c00000000000ce64] ret_from_kernel_thread+0x5c/0x64
- Instruction dump:
- f92100b8 f92100c0 90e10090 910100a0 4182050c 282a0017 3bc00000 40810330
- 7c0802a6 fb610198 7c9b2378 f80101d0 <a1240000> 2c090001 40820614 e9240010
- ---[ end trace 0000000000000000 ]---
+url:    https://github.com/intel-lab-lkp/linux/commits/Stefan-Berger/tpm-Preserve-TPM-measurement-log-across-kexec-ppc64/20220706-232658
+base:   03c765b0e3b4cb5063276b086c76f7a612856a9a
+config: s390-randconfig-r015-20220706 (https://download.01.org/0day-ci/archive/20220707/202207071217.lAHS2W7R-lkp@intel.com/config)
+compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project f553287b588916de09c66e3e32bf75e5060f967f)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # install s390 cross compiling tool for clang build
+        # apt-get install binutils-s390x-linux-gnu
+        # https://github.com/intel-lab-lkp/linux/commit/d5d97eac90ae272727cc71409e88360b7024b343
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Stefan-Berger/tpm-Preserve-TPM-measurement-log-across-kexec-ppc64/20220706-232658
+        git checkout d5d97eac90ae272727cc71409e88360b7024b343
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=s390 SHELL=/bin/bash
 
-Fix this issue by checking returned PFN range of previous kernel's
-ima-kexec-buffer with page_is_ram() to ensure correct memory bounds.
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
 
-Fixes: 467d27824920 ("powerpc: ima: get the kexec buffer passed by the previous kernel")
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: Prakhar Srivastava <prsriva@linux.microsoft.com>
-Cc: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Ritesh Harjani <ritesh.list@gmail.com>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
-Link: https://lore.kernel.org/r/20220531041446.3334259-1-vaibhav@linux.ibm.com
----
- drivers/of/kexec.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+All errors (new ones prefixed by >>):
 
-diff --git a/drivers/of/kexec.c b/drivers/of/kexec.c
-index 8d374cc552be..91b04b04eec4 100644
---- a/drivers/of/kexec.c
-+++ b/drivers/of/kexec.c
-@@ -126,6 +126,7 @@ int ima_get_kexec_buffer(void **addr, size_t *size)
- {
- 	int ret, len;
- 	unsigned long tmp_addr;
-+	unsigned long start_pfn, end_pfn;
- 	size_t tmp_size;
- 	const void *prop;
- 
-@@ -140,6 +141,22 @@ int ima_get_kexec_buffer(void **addr, size_t *size)
- 	if (ret)
- 		return ret;
- 
-+	/* Do some sanity on the returned size for the ima-kexec buffer */
-+	if (!tmp_size)
-+		return -ENOENT;
-+
-+	/*
-+	 * Calculate the PFNs for the buffer and ensure
-+	 * they are with in addressable memory.
-+	 */
-+	start_pfn = PHYS_PFN(tmp_addr);
-+	end_pfn = PHYS_PFN(tmp_addr + tmp_size - 1);
-+	if (!page_is_ram(start_pfn) || !page_is_ram(end_pfn)) {
-+		pr_warn("IMA buffer at 0x%lx, size = 0x%zx beyond memory\n",
-+			tmp_addr, tmp_size);
-+		return -EINVAL;
-+	}
-+
- 	*addr = __va(tmp_addr);
- 	*size = tmp_size;
- 
+   /opt/cross/gcc-11.3.0-nolibc/s390x-linux/bin/s390x-linux-ld: kernel/kexec_file.o: in function `__se_sys_kexec_file_load':
+>> kexec_file.c:(.text+0xee2): undefined reference to `tpm_add_kexec_buffer'
+   /opt/cross/gcc-11.3.0-nolibc/s390x-linux/bin/s390x-linux-ld: drivers/dma/fsl-edma.o: in function `fsl_edma_probe':
+   fsl-edma.c:(.text+0x1e4): undefined reference to `devm_ioremap_resource'
+   /opt/cross/gcc-11.3.0-nolibc/s390x-linux/bin/s390x-linux-ld: fsl-edma.c:(.text+0x32a): undefined reference to `devm_ioremap_resource'
+   /opt/cross/gcc-11.3.0-nolibc/s390x-linux/bin/s390x-linux-ld: drivers/dma/idma64.o: in function `idma64_platform_probe':
+   idma64.c:(.text+0xbe): undefined reference to `devm_ioremap_resource'
+   /opt/cross/gcc-11.3.0-nolibc/s390x-linux/bin/s390x-linux-ld: drivers/crypto/ccree/cc_driver.o: in function `ccree_probe':
+   cc_driver.c:(.text+0xd4c): undefined reference to `devm_ioremap_resource'
+   /opt/cross/gcc-11.3.0-nolibc/s390x-linux/bin/s390x-linux-ld: drivers/crypto/ccree/cc_debugfs.o: in function `cc_debugfs_init':
+   cc_debugfs.c:(.text+0x1b0): undefined reference to `debugfs_create_regset32'
+   /opt/cross/gcc-11.3.0-nolibc/s390x-linux/bin/s390x-linux-ld: cc_debugfs.c:(.text+0x390): undefined reference to `debugfs_create_regset32'
+
 -- 
-2.35.1
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
 
 _______________________________________________
 kexec mailing list
