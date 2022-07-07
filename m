@@ -4,148 +4,109 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D490DC43334
-	for <kexec@archiver.kernel.org>; Thu,  7 Jul 2022 14:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4D0CDC43334
+	for <kexec@archiver.kernel.org>; Thu,  7 Jul 2022 16:11:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-ID:In-Reply-To:
-	References:Message-ID:Date:Subject:CC:To:From:Reply-To:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=oki5OnMcN1PR9Ijbm2ZqKcEQ8AgkWJT8vAnM8YQJ+MA=; b=QtmPDjAgM4Ksjg
-	TGAUdykNwvIRSyOWbU8VEWrWEgOniv5ZezHKFVkfsk7GVQCZg1ewakoekgSxxCPi6kZNgf/lfFjgx
-	cUbkj6VdyyRcKw7cIDNkuHdCdU6ea/9OZH1TkmjqpPs7of/gQhkYrb06uOAbdFJxdCGBc4qlDZbSC
-	aMcgMtHj34ZICXQLi1/XvT1abtLKvLlg/Mtp0dWzlv1jNTCprq9tFHXcpqMvCycqErlYhVi/7UR8f
-	phwHuMNAKXb/vLbKSankdHNC40Cw4A5jht5wdZxYsRAjuIng2gDre0YGQQ0FYgak3zOiyrNjUpLHm
-	twqD0XxHmRLcSDo08Tbw==;
+	List-Owner; bh=1K/aMMVoT3qfBPfxEFTa2t5G9z6TTgMBsqN1/8ISqaM=; b=ZPvqs0sMYKqK59
+	S+RVhGWX+fKZWYNZQWT8qBDZ2BIDSWW/OKegiT/2wZeLL0q/9x312cbGMRsj4FOqpi3D0jqo2EpxP
+	2ahbyvxNxoIFUclnBvAhJDWeRot8btRr8Md3QS7bG+DuFVNS0kVhoO5fxKISz0zLj25Fq5aqYGBaj
+	zFsIYMK0UQN2YUsMyEWy8ECxGuQib9/h+3Kca85+9iLy32my6e1LNMdivsunbwlCJ5qbHbZm8WMo7
+	CHKoVjKnkS6K0AIhbBms+2rqkU/bsFXo0CQyEuC0E55XL2Pfarq+nXT96CFls6N3MfRA9dxBDkTrh
+	njQgXO4w9YbVykGpzUvw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o9Snd-00Gb2A-EJ; Thu, 07 Jul 2022 14:48:13 +0000
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30] helo=mx0a-00082601.pphosted.com)
+	id 1o9U5c-00GtIo-Ci; Thu, 07 Jul 2022 16:10:52 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o9Sna-00Gaxl-4v
-	for kexec@lists.infradead.org; Thu, 07 Jul 2022 14:48:12 +0000
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-	by m0089730.ppops.net (8.17.1.5/8.17.1.5) with ESMTP id 267Eff2l032514;
-	Thu, 7 Jul 2022 07:47:51 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=fWTqm1xbnamy0fSHIztHjstv0V8ji0najamwU3YYMmI=;
- b=aFsTpluvykNNxVEofUqacly6EZaDDpwZakp5wrcdh5rCCgqI/2OstoZy2691AjAyNQtr
- 826ojG3MxB+vwT8q7amJaAh0LG90SM/5T69YrMDW2WcMx+fceIUqvT7b2gr4G0HdcHNM
- Eofk3LzB1a2wRLkbJg8pomcwmVLJpQAXxDo= 
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2043.outbound.protection.outlook.com [104.47.66.43])
-	by m0089730.ppops.net (PPS) with ESMTPS id 3h5q0skkjd-1
+	id 1o9U5Z-00GtGb-CV
+	for kexec@lists.infradead.org; Thu, 07 Jul 2022 16:10:50 +0000
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 267Fpb0X019270;
+	Thu, 7 Jul 2022 16:10:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=k2FbwF9n2WlYsbyJT6u8wd+x1qkusCWll51c/T/HkIg=;
+ b=HVp6oxP9r52mmrtl2+FUSAvdoYlihvjsRlt27n6DESdPoWQHYJ4lAdzZ88Wi4m9UAfeN
+ oyC7HOBFYKzsKUvUhjWmoxBQtLgfY4BXBMZq+u2+NHXOcgLVxkhY3F40+2VtMU8mCZ3i
+ MqPm9PWb7e4y5RKpwWG5zWmnPpLJIuPuFsg9vLLqpSG6Kli+I4FtHke8EWairzbKIbiY
+ wzx9aC0dO1EhDOvJqYgVdk/UP6iiHI5HXSSdsa9z0VD/yopbBJtxSKHGR4b4tS0O9GQZ
+ LC6sUvoc1GbecoJEKxnDgjWMzl2vKJwdaLG2V5zcv6n631PQz5ux4yE9LK9xh355uLg5 oQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3h62ge8mns-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 07 Jul 2022 07:47:51 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TFyhy7erflYWjHnlRcnnEg+prA9lKxsfJaMy44noYBY4k4iNFtB9kd7Dobr+luLhGUyHP6k7tZ4DD1X+TgohWxx+cubRkB92iAe6mfE0vuzcd/gxp40rwk9kbLanBORfIxiai+LgfLGYIICSX5yM5RxFue3DFVdXHXbwF6IZ5t1D0Pal/nw3VsO7qgFbx/fdbYQWbqRsIbh4qikrlAqCGK+0Euz0hXxLnw/0HXuzS+YNDZezw6JCd7B0Lq5INBzX+FvpM2VM7LnL1PD0jiOeoWFsCiGXqF7mkUlRk6BvT+TGNVAIMPuQIZbW8nUUYO3cD1hKCxXQjipEHsLHijTgmg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fWTqm1xbnamy0fSHIztHjstv0V8ji0najamwU3YYMmI=;
- b=nrrG7VirZUyfyTJtaP6yQZpdGHjfBk4aWJKJVv07xqxhK8x0wW6DySiEs7rioUwnHr+XbbUL258iF5RDfvK5qHdfyBsXuzeydBpvALrlBItAvxI6555VpG+YicsBdMVUksUfweg/LhpbMmyTQtgSzLwW94tvl4lECrxxo6eLPVCvuzbY095IFhJ06fDlbH4Hwhp9Z306jYIZCQdwwHUOOGMZQNVnpyZIptJUotKUmvCwKXIa0qoufcoZ45FJIKod7P3tdCIvQK8xz/F4rED2gd/ie/bXhCUCbnYI3rElEyp3Knwb55RRppJMRYCm/CV7LgXsWX0rs7TU8wy0iRgsXA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-Received: from SJ0PR15MB4552.namprd15.prod.outlook.com (2603:10b6:a03:379::12)
- by BYAPR15MB2823.namprd15.prod.outlook.com (2603:10b6:a03:15a::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.16; Thu, 7 Jul
- 2022 14:47:48 +0000
-Received: from SJ0PR15MB4552.namprd15.prod.outlook.com
- ([fe80::81f9:c21c:c5bf:e174]) by SJ0PR15MB4552.namprd15.prod.outlook.com
- ([fe80::81f9:c21c:c5bf:e174%8]) with mapi id 15.20.5417.017; Thu, 7 Jul 2022
- 14:47:48 +0000
-From: Jonathan McDowell <noodles@fb.com>
-To: Stefan Berger <stefanb@linux.ibm.com>
-CC: "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+	Thu, 07 Jul 2022 16:10:36 +0000
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 267FqNKI021028;
+	Thu, 7 Jul 2022 16:10:35 GMT
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3h62ge8mms-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 07 Jul 2022 16:10:35 +0000
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+	by ppma05wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 267G6WYQ001499;
+	Thu, 7 Jul 2022 16:10:34 GMT
+Received: from b03cxnp07027.gho.boulder.ibm.com (b03cxnp07027.gho.boulder.ibm.com [9.17.130.14])
+	by ppma05wdc.us.ibm.com with ESMTP id 3h4v50466j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 07 Jul 2022 16:10:34 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+	by b03cxnp07027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 267GAXeL19202458
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 7 Jul 2022 16:10:33 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F0163BE04F;
+	Thu,  7 Jul 2022 16:10:32 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 44C5FBE05A;
+	Thu,  7 Jul 2022 16:10:32 +0000 (GMT)
+Received: from [9.47.158.152] (unknown [9.47.158.152])
+	by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+	Thu,  7 Jul 2022 16:10:32 +0000 (GMT)
+Message-ID: <985a1b8b-5c1c-ba9c-ce6c-4968239448a2@linux.ibm.com>
+Date: Thu, 7 Jul 2022 12:10:31 -0400
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: [PATCH v5 5/6] of: kexec: Refactor IMA buffer related functions
+ to make them reusable
+Content-Language: en-US
+To: Jonathan McDowell <noodles@fb.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
         "nayna@linux.ibm.com" <nayna@linux.ibm.com>,
-        "nasastry@in.ibm.com"
-	<nasastry@in.ibm.com>,
+        "nasastry@in.ibm.com" <nasastry@in.ibm.com>,
         "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        Rob Herring
-	<robh+dt@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Frank Rowand <frowand.list@gmail.com>,
-        Mimi Zohar
-	<zohar@linux.ibm.com>
-Subject: Re: [PATCH v5 5/6] of: kexec: Refactor IMA buffer related functions
- to make them reusable
-Thread-Topic: [PATCH v5 5/6] of: kexec: Refactor IMA buffer related functions
- to make them reusable
-Thread-Index: AQHYkg4ZuWtAbugnaEeOji57YiFWIK1y/OsA
-Date: Thu, 7 Jul 2022 14:47:48 +0000
-Message-ID: <YsbyENo0bOLljuI8@noodles-fedora.dhcp.thefacebook.com>
+        Mimi Zohar <zohar@linux.ibm.com>
 References: <20220706152329.665636-1-stefanb@linux.ibm.com>
  <20220706152329.665636-6-stefanb@linux.ibm.com>
-In-Reply-To: <20220706152329.665636-6-stefanb@linux.ibm.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 59c8edce-3ace-448c-87a6-08da6027a912
-x-ms-traffictypediagnostic: BYAPR15MB2823:EE_
-x-fb-source: Internal
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:  yViPSHM/u0Jdtdlp4ZM5rCpbUdU8jJM+4McCGQvXqY5VU2M9IZA85BtCLl+oYrkuIN5sw50idKlUciarpqdo4uTqMn9wP/2POLpxKI+zR4LlXr1gPOXfkWTzThnrDvpeqF9s9v5zslAGeHgMPy221pgzvJTidlJQKfraMe3srOnwfSYS1uYPqSsuTl6RTwPaQQTAKaMpM7M7FjYZjp5iV26HBbXP0Kz7o52lt9muVwgRQyILw5GZSm0Ia5BYcAKGImwudVxVX3qlN4Q+509KQaXZnyyHlS3oW0YGpNIepA6vQvZqSzASe37bkWsDpetkCLnTnS+yimGEmYsds1feOQ7ELMObXr0RGrou3r4e/F9db83QU5BM21r5EBUWQq9c6O5E6wnaMxBcir/4SnrTdWVX3kv3XcurBwrETbRuGRooO0R7wUXqcNZgm7Gp/efcLX1DRp9KyWqm1EUv+vZtIjY2mxd9AzAcsTODxLM2fUp09VG8ukesZNSWTtU2gkemAVr8l4LfSmaWkb0ulmx+W4Itu7A2/RYdP2uvYmQvGdM8EpJeJJvP2cLaJdJt5jdC3WH7myjOqSrM47GA9V4MCt6hONVPr1I88wVZIBf0wQc3Q0WXJPTZsOdDRL07A0n9j21afreakJo6Fq2w0ciVLoBLETGDGaH5VOiM9w0cZQgvHOx6azSdrx/cDirxsqSuKnZcSYuS6V0hYwYli1qsDog/O66lugvcit3++Xevf4ZyrPPQN2mBOs5jtWyNEr8+BpnN5mcTtUps0JWUwfAX9dnIyZhPfBbINoDP0x/MnazxPTrZ8huEEFUh2qN1nig0
-x-forefront-antispam-report:  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR15MB4552.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(396003)(346002)(376002)(366004)(136003)(39860400002)(71200400001)(66446008)(26005)(9686003)(4326008)(8936002)(6512007)(66476007)(64756008)(76116006)(91956017)(478600001)(8676002)(186003)(5660300002)(316002)(7416002)(6916009)(86362001)(54906003)(66556008)(66946007)(6506007)(2906002)(6486002)(41300700001)(83380400001)(122000001)(38100700002)(38070700005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:  =?us-ascii?Q?2qU3FhIkptQHgcwuKnYQ4mpS2HyxJijI+ixmpxwYm09OfjabaPm16lxcmDhg?=
- =?us-ascii?Q?P0HuYqwsrMonp8NS7VphZx9nklhnx/nkWgydaci9W/uCwchXz9vKdc6FKv+e?=
- =?us-ascii?Q?h9I1rge7s/ozBDy2L9a7KNpzf+Xd3YDqE6xXAQ0CnLLGwbhauCccg1PgzLgK?=
- =?us-ascii?Q?dQJ4ypVL3QxvO2swk1/GJIDEQL+M18hDsPyabrfQ1EkVS6dyeCzVFZkAsWAH?=
- =?us-ascii?Q?rcVR9GfsiWCkicOqpBbBtZ8DgXBgqxub+K4+kCxrBkbdqgZriudef+OGjBZO?=
- =?us-ascii?Q?yC6dKvTYr3E+WfjSR41jQVjEtFUfOztSYXrJdfCrIRKLiJ7/SeNNloMuZErx?=
- =?us-ascii?Q?/5OngZmg1TAbWLWGrLzixuT73M74erD9SzRJVPryB0xmH/a0gKlvUxBDdj8c?=
- =?us-ascii?Q?OtsRoO/cpEoA+BOBGVsI7U8LYArzOB7OlQyUwFkTpNAPYsMT3lYO7q9hiyVw?=
- =?us-ascii?Q?1zFIkb1gDOIvAnBZURKk/KwWqyrrz2CJTwxRKyjx7LQ3QvtQTTICIDM22cSq?=
- =?us-ascii?Q?uHW1yG1gG523HHCLqcsQ+Hm42cHbpBdm0Lr6mUgT3yE0YdJ2aVuQCiWDn6dJ?=
- =?us-ascii?Q?tbGSF1is2Gv3QlfPeUnUKNrAW3iwokwI5JQB7D1syjhuOR44cpKNQosFIjDv?=
- =?us-ascii?Q?hp7xyc+Z+WK2cwy166YEiRLVoxlVvieUos4FItBHAuqEFynLfhIRg3RaafVP?=
- =?us-ascii?Q?+U/w1bjAi40jUquacOeGOSiHI9sw0qX0VksrOdLtG2D7COfDn6/P3KimVQif?=
- =?us-ascii?Q?ApmDr7CRBuLtGY5gAr2N0Tsi5CxH9b6B+zL6VBTc7zWSKt57rxOqTGuFLZAY?=
- =?us-ascii?Q?TkXDc/AZwlH9YbuHG+D+WyahJZH/vyrEYoBLTZfBUGwUqEz1QeYZuwmtGxre?=
- =?us-ascii?Q?aYv9wc+t77f2t17pvyxv4XKrUNeZGbLfLVbzX6zeLO9m9kVgLOvjJNHKJkQJ?=
- =?us-ascii?Q?48EKzAyu0lxE+jHlaUQhCWHoL4ILoYYgkCdxb44DDb7pJ1weXQK8Ca4BQrHE?=
- =?us-ascii?Q?G3CHJwMwIQClR6VY5xi/yQFSNuMRSFgYMKwHVftS7rQqVYhoicmTXLnPNaHs?=
- =?us-ascii?Q?8Jq/atRI51lpfuNfcD3Ns4Q2iGx0J6Y7zjnXTMzxs0KOKe0B/1F94vgNM/Ll?=
- =?us-ascii?Q?oEl+RIcp04LLvud6ZTXxJJP+cu3B84LbWyYEks72Adag6KUG71/7+V6kGWzK?=
- =?us-ascii?Q?XW3ZencI8+iti+LSgXCBN3eo7oCUWjzy3JRNbaTBPg3V317wx65aPv/dwmLD?=
- =?us-ascii?Q?+Jxl6Ik+7a8L2u1mnUSuGjLgJNr6o7k6IOw4J2ng7vvbuJj0Liaez66VH2RD?=
- =?us-ascii?Q?ReWqD8HdMQwgYIJmDztLeHWP7P0TIc+QwPyoX490dagZccIB5kIkNMhg1XrV?=
- =?us-ascii?Q?F6yV9SYsz1ipTGtzf7jgOHCIV22I6mo7W/sNItq/24pkwPHWrmj1wMkiDnXZ?=
- =?us-ascii?Q?4d4HQivOWZwkB0GON+rrljiZdGdCmpmxvDdE+OtPFCiIKcTefIQY2hbocDzK?=
- =?us-ascii?Q?ldqrc4JD7MoF/4OrDoloG0yjTbcalAX3LQm/eBUGlaxeB4ANG5iYv20bFdTv?=
- =?us-ascii?Q?+vgTnRXUA6cIjmTtmGWFugO3WG8BZfhiUG7DyP6q?=
-Content-ID: <AB5DC7A98AC2B749A1F85BBD39354C4E@namprd15.prod.outlook.com>
-MIME-Version: 1.0
-X-OriginatorOrg: fb.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR15MB4552.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 59c8edce-3ace-448c-87a6-08da6027a912
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jul 2022 14:47:48.2745
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pibk7k4lhF6O+5eO9Jy9tT85a5Z+bR9PUp9iNuN8rmVvVF9rr/j+IWRDlSSuP7JR
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2823
-X-Proofpoint-ORIG-GUID: VU3yRyl9B9kFVLSdk6m85_BP-ye8et8p
-X-Proofpoint-GUID: VU3yRyl9B9kFVLSdk6m85_BP-ye8et8p
+ <YsbyENo0bOLljuI8@noodles-fedora.dhcp.thefacebook.com>
+From: Stefan Berger <stefanb@linux.ibm.com>
+In-Reply-To: <YsbyENo0bOLljuI8@noodles-fedora.dhcp.thefacebook.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: _OaNNuDjz8Hd459zm8GiKq_DyNZHoUcS
+X-Proofpoint-GUID: U-3ZkHWU9gvO6dxrVjnbK-s6nuslBSZu
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
  definitions=2022-07-07_12,2022-06-28_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ mlxscore=0 adultscore=0 bulkscore=0 spamscore=0 lowpriorityscore=0
+ clxscore=1015 malwarescore=0 mlxlogscore=999 priorityscore=1501
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2206140000 definitions=main-2207070061
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220707_074810_350114_6D42D602 
-X-CRM114-Status: GOOD (  36.00  )
+X-CRM114-CacheID: sfid-20220707_091049_514238_C90A7F65 
+X-CRM114-Status: GOOD (  21.68  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -157,234 +118,58 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Jul 06, 2022 at 11:23:28AM -0400, Stefan Berger wrote:
-> Refactor IMA buffer related functions to make them reusable for carrying
-> TPM logs across kexec.
-> 
-> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: Mimi Zohar <zohar@linux.ibm.com>
-> 
-> ---
-> v5:
->  - Rebased on Jonathan McDowell's commit "b69a2afd5afc x86/kexec: Carry
->    forward IMA measurement log on kexec"
-> v4:
->  - Move debug output into setup_buffer()
-> ---
->  drivers/of/kexec.c | 125 ++++++++++++++++++++++++++-------------------
->  1 file changed, 73 insertions(+), 52 deletions(-)
-> 
-> diff --git a/drivers/of/kexec.c b/drivers/of/kexec.c
-> index 548dd5b1b5c1..404a86bb3978 100644
-> --- a/drivers/of/kexec.c
-> +++ b/drivers/of/kexec.c
-> @@ -117,45 +117,56 @@ static int do_get_kexec_buffer(const void *prop, int len, unsigned long *addr,
->  }
->  
->  #ifdef CONFIG_HAVE_IMA_KEXEC
-> -/**
-> - * ima_get_kexec_buffer - get IMA buffer from the previous kernel
-> - * @addr:	On successful return, set to point to the buffer contents.
-> - * @size:	On successful return, set to the buffer size.
-> - *
-> - * Return: 0 on success, negative errno on error.
-> - */
-> -int __init ima_get_kexec_buffer(void **addr, size_t *size)
-> +static int get_kexec_buffer(const char *name, unsigned long *addr, size_t *size)
 
-I think this new function can + should be marked __init as well; it's
-only called from the existing IMA functions and your new
-tpm_get_kexec_buffer which is already __init.
 
->  {
->  	int ret, len;
-> -	unsigned long tmp_addr;
->  	unsigned long start_pfn, end_pfn;
-> -	size_t tmp_size;
->  	const void *prop;
->  
-> -	prop = of_get_property(of_chosen, "linux,ima-kexec-buffer", &len);
-> +	prop = of_get_property(of_chosen, name, &len);
->  	if (!prop)
->  		return -ENOENT;
->  
-> -	ret = do_get_kexec_buffer(prop, len, &tmp_addr, &tmp_size);
-> +	ret = do_get_kexec_buffer(prop, len, addr, size);
->  	if (ret)
->  		return ret;
->  
-> -	/* Do some sanity on the returned size for the ima-kexec buffer */
-> -	if (!tmp_size)
-> +	/* Do some sanity on the returned size for the kexec buffer */
-> +	if (!*size)
->  		return -ENOENT;
->  
->  	/*
->  	 * Calculate the PFNs for the buffer and ensure
->  	 * they are with in addressable memory.
->  	 */
-> -	start_pfn = PHYS_PFN(tmp_addr);
-> -	end_pfn = PHYS_PFN(tmp_addr + tmp_size - 1);
-> +	start_pfn = PHYS_PFN(*addr);
-> +	end_pfn = PHYS_PFN(*addr + *size - 1);
->  	if (!page_is_ram(start_pfn) || !page_is_ram(end_pfn)) {
-> -		pr_warn("IMA buffer at 0x%lx, size = 0x%zx beyond memory\n",
-> -			tmp_addr, tmp_size);
-> +		pr_warn("%s buffer at 0x%lx, size = 0x%zx beyond memory\n",
-> +			name, *addr, *size);
->  		return -EINVAL;
->  	}
->  
-> +	return 0;
-> +}
-> +
-> +/**
-> + * ima_get_kexec_buffer - get IMA buffer from the previous kernel
-> + * @addr:	On successful return, set to point to the buffer contents.
-> + * @size:	On successful return, set to the buffer size.
-> + *
-> + * Return: 0 on success, negative errno on error.
-> + */
-> +int __init ima_get_kexec_buffer(void **addr, size_t *size)
-> +{
-> +	int ret;
-> +	unsigned long tmp_addr;
-> +	size_t tmp_size;
-> +
-> +	ret = get_kexec_buffer("linux,ima-kexec-buffer", &tmp_addr, &tmp_size);
-> +	if (ret)
-> +		return ret;
-> +
->  	*addr = __va(tmp_addr);
->  	*size = tmp_size;
->  
-> @@ -188,72 +199,82 @@ int __init ima_free_kexec_buffer(void)
->  }
->  #endif
->  
-> -/**
-> - * remove_ima_buffer - remove the IMA buffer property and reservation from @fdt
-> - *
-> - * @fdt: Flattened Device Tree to update
-> - * @chosen_node: Offset to the chosen node in the device tree
-> - *
-> - * The IMA measurement buffer is of no use to a subsequent kernel, so we always
-> - * remove it from the device tree.
-> - */
-> -static void remove_ima_buffer(void *fdt, int chosen_node)
-> +static int remove_buffer(void *fdt, int chosen_node, const char *name)
->  {
->  	int ret, len;
->  	unsigned long addr;
->  	size_t size;
->  	const void *prop;
->  
-> -	if (!IS_ENABLED(CONFIG_HAVE_IMA_KEXEC))
-> -		return;
-> -
-> -	prop = fdt_getprop(fdt, chosen_node, "linux,ima-kexec-buffer", &len);
-> +	prop = fdt_getprop(fdt, chosen_node, name, &len);
->  	if (!prop)
-> -		return;
-> +		return -ENOENT;
->  
->  	ret = do_get_kexec_buffer(prop, len, &addr, &size);
-> -	fdt_delprop(fdt, chosen_node, "linux,ima-kexec-buffer");
-> +	fdt_delprop(fdt, chosen_node, name);
->  	if (ret)
-> -		return;
-> +		return ret;
->  
->  	ret = fdt_find_and_del_mem_rsv(fdt, addr, size);
->  	if (!ret)
-> -		pr_debug("Removed old IMA buffer reservation.\n");
-> +		pr_debug("Remove old %s buffer reserveration", name);
-> +	return ret;
->  }
->  
-> -#ifdef CONFIG_IMA_KEXEC
->  /**
-> - * setup_ima_buffer - add IMA buffer information to the fdt
-> - * @image:		kexec image being loaded.
-> - * @fdt:		Flattened device tree for the next kernel.
-> - * @chosen_node:	Offset to the chosen node.
-> + * remove_ima_buffer - remove the IMA buffer property and reservation from @fdt
->   *
-> - * Return: 0 on success, or negative errno on error.
-> + * @fdt: Flattened Device Tree to update
-> + * @chosen_node: Offset to the chosen node in the device tree
-> + *
-> + * The IMA measurement buffer is of no use to a subsequent kernel, so we always
-> + * remove it from the device tree.
->   */
-> -static int setup_ima_buffer(const struct kimage *image, void *fdt,
-> -			    int chosen_node)
-> +static void remove_ima_buffer(void *fdt, int chosen_node)
-> +{
-> +	if (!IS_ENABLED(CONFIG_HAVE_IMA_KEXEC))
-> +		return;
-> +
-> +	remove_buffer(fdt, chosen_node, "linux,ima-kexec-buffer");
-> +}
-> +
-> +#ifdef CONFIG_IMA_KEXEC
-> +static int setup_buffer(void *fdt, int chosen_node, const char *name,
-> +			phys_addr_t addr, size_t size)
->  {
->  	int ret;
->  
-> -	if (!image->ima_buffer_size)
-> +	if (!size)
->  		return 0;
->  
->  	ret = fdt_appendprop_addrrange(fdt, 0, chosen_node,
-> -				       "linux,ima-kexec-buffer",
-> -				       image->ima_buffer_addr,
-> -				       image->ima_buffer_size);
-> +				       name, addr, size);
->  	if (ret < 0)
->  		return -EINVAL;
->  
-> -	ret = fdt_add_mem_rsv(fdt, image->ima_buffer_addr,
-> -			      image->ima_buffer_size);
-> +	ret = fdt_add_mem_rsv(fdt, addr, size);
->  	if (ret)
->  		return -EINVAL;
->  
-> -	pr_debug("IMA buffer at 0x%pa, size = 0x%zx\n",
-> -		 &image->ima_buffer_addr, image->ima_buffer_size);
-> +	pr_debug("%s at 0x%pa, size = 0x%zx\n", name, &addr, size);
->  
->  	return 0;
-> +
-> +}
-> +
-> +/**
-> + * setup_ima_buffer - add IMA buffer information to the fdt
-> + * @image:		kexec image being loaded.
-> + * @fdt:		Flattened device tree for the next kernel.
-> + * @chosen_node:	Offset to the chosen node.
-> + *
-> + * Return: 0 on success, or negative errno on error.
-> + */
-> +static int setup_ima_buffer(const struct kimage *image, void *fdt,
-> +			    int chosen_node)
-> +{
-> +	return setup_buffer(fdt, chosen_node, "linux,ima-kexec-buffer",
-> +			    image->ima_buffer_addr, image->ima_buffer_size);
->  }
->  #else /* CONFIG_IMA_KEXEC */
->  static inline int setup_ima_buffer(const struct kimage *image, void *fdt,
-> -- 
-> 2.35.1
+On 7/7/22 10:47, Jonathan McDowell wrote:
+> On Wed, Jul 06, 2022 at 11:23:28AM -0400, Stefan Berger wrote:
+>> Refactor IMA buffer related functions to make them reusable for carrying
+>> TPM logs across kexec.
+>>
+>> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Frank Rowand <frowand.list@gmail.com>
+>> Cc: Mimi Zohar <zohar@linux.ibm.com>
+>>
+>> ---
+>> v5:
+>>   - Rebased on Jonathan McDowell's commit "b69a2afd5afc x86/kexec: Carry
+>>     forward IMA measurement log on kexec"
+>> v4:
+>>   - Move debug output into setup_buffer()
+>> ---
+>>   drivers/of/kexec.c | 125 ++++++++++++++++++++++++++-------------------
+>>   1 file changed, 73 insertions(+), 52 deletions(-)
+>>
+>> diff --git a/drivers/of/kexec.c b/drivers/of/kexec.c
+>> index 548dd5b1b5c1..404a86bb3978 100644
+>> --- a/drivers/of/kexec.c
+>> +++ b/drivers/of/kexec.c
+>> @@ -117,45 +117,56 @@ static int do_get_kexec_buffer(const void *prop, int len, unsigned long *addr,
+>>   }
+>>   
+>>   #ifdef CONFIG_HAVE_IMA_KEXEC
+>> -/**
+>> - * ima_get_kexec_buffer - get IMA buffer from the previous kernel
+>> - * @addr:	On successful return, set to point to the buffer contents.
+>> - * @size:	On successful return, set to the buffer size.
+>> - *
+>> - * Return: 0 on success, negative errno on error.
+>> - */
+>> -int __init ima_get_kexec_buffer(void **addr, size_t *size)
+>> +static int get_kexec_buffer(const char *name, unsigned long *addr, size_t *size)
 > 
+> I think this new function can + should be marked __init as well; it's
+> only called from the existing IMA functions and your new
+> tpm_get_kexec_buffer which is already __init.
+
+Yes, right. Thanks.
+    Stefan
+
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
