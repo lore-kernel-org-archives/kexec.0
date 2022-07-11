@@ -4,64 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6B9A9C43334
-	for <kexec@archiver.kernel.org>; Mon, 11 Jul 2022 03:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B204DC43334
+	for <kexec@archiver.kernel.org>; Mon, 11 Jul 2022 07:37:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=rTkvT7jHo/xaaF7lEvBXmtIFoWaml/qIxRwk+Io2UDU=; b=zbL6jlwkaPjoDd
-	qI3o03EVOUresX/V0FDif1UfeuFadJS3Oinr/M5fvBuNCKdqI/wnUjYl7nIw7LZaeT7T5hERKFxSH
-	BZIgo9RaJKHMrsRCZ32UOhkZdRfUr/4kSeVj5oMEPlDB+v80A3WJiCJa1NnV/0Dd4E+JGbZPlkngU
-	seTMQ7GHFDQ576b9wVFr4NlTh8gNOgYiE7neXdkD9gg3MgZeY5vOZ+YjGmFbki6ISYUQx4TFZ8AEF
-	kZ0DIwLa1iSI2HIGrl7yLxDHLtTg4jEBMKDDZhGtx+8hQ1ggjGNgE786alyHRcb3ximbFiuotr+mw
-	kOqNYfx+Zg8N8qkm+UuQ==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=6htARm8a+QcwN9oCMLowt/yXYp7LiCCba1qwkS3pmKY=; b=tmR7zUUFztUAIW
+	7VTPAuNAUA7oB3bGuIvmfdocOjx8gtySeUXUv//9mUprM0XhJkVfr/XzHKRF4fpgw/2v8hIuw+67I
+	6Wt0YjmUph7QQjpkKevdd5TLSyTlSI2e/GFvKxHANY+kPV4o84yAwPco1RDGslMzxGTCOIalirDPq
+	wVSfaCqTcKQp86VDCnClPGsnt5L+Rlj8VD0wfYYh7CMI78KrOJKNtOwUIUlebDMDcaN9KjnX1h5KY
+	/6l9ODbTZP+TUG3iQaIw4Z+3SFhhAW5AGcYv1HqYQLCRUurOrSlayNsB0IF8znH8jPfF2wbd4r6hD
+	l2hBv+HKfK/dlMsfB71g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oAjj6-00FShJ-VC; Mon, 11 Jul 2022 03:04:48 +0000
-Received: from ams.source.kernel.org ([2604:1380:4601:e00::1])
-	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oAjj4-00FSey-7s
-	for kexec@lists.infradead.org; Mon, 11 Jul 2022 03:04:47 +0000
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ams.source.kernel.org (Postfix) with ESMTPS id 9A367B80D5A;
-	Mon, 11 Jul 2022 03:04:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D022CC3411E;
-	Mon, 11 Jul 2022 03:04:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1657508683;
-	bh=2qgfVdj8tvTCH2jYcKrpZ5Snk3LhfgSEv3T6kIahGWI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mbkI4rxEMLL92W1bpiBd/cttlQzNlLGKIfErZJYzed5mizc3O4JeX3w7OwxR0Hi3g
-	 vYKvR32OoSTzsZOBqt2zxcyULxu1tX0SlEAKBloPJP/8PUaTbKZQcqwQTAtEZLXaRj
-	 7xdUWBHYfOXyUCf2JWtVh3QK+fRvCgvzpiwgoMfDHV8/HtPhwIzuBes3xTJZmjLCb3
-	 qx6Ni85gFvI1A0C4PS1kgqnp2EhXEvRhWRn4Xjm+/PBMo5YRq5eAOFIzXA5u88iziA
-	 MevgLPsvMtTO3Ii6wg+K+fA1zj1lEibb837/esD2mtKfyuvFr0IUIsft5bGNXBma3c
-	 LuTG/JPhAFoGQ==
-Date: Mon, 11 Jul 2022 06:04:38 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Stefan Berger <stefanb@linux.ibm.com>
-Cc: kexec@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, nayna@linux.ibm.com,
-	nasastry@in.ibm.com, mpe@ellerman.id.au,
-	Jason Gunthorpe <jgg@ziepe.ca>, Rob Herring <robh+dt@kernel.org>,
-	Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v5 4/6] tpm: of: Make of-tree specific function commonly
- available
-Message-ID: <YsuTRny45aBxGjm5@kernel.org>
-References: <20220706152329.665636-1-stefanb@linux.ibm.com>
- <20220706152329.665636-5-stefanb@linux.ibm.com>
+	id 1oAnyd-00Gtfb-8x; Mon, 11 Jul 2022 07:37:07 +0000
+Received: from mail-m971.mail.163.com ([123.126.97.1])
+	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1oAnwf-00GsSc-66
+	for kexec@lists.infradead.org; Mon, 11 Jul 2022 07:35:06 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=Cj/Rb
+	6wa9GFxUQqhUdh2NDMpVy+s4rRoTrJKhdx+R5k=; b=Kaw7MUWjV/9FhP0wKMv1y
+	J7FdyTKnUHsOOrQAx6FUpGNRz9Vjljp4Pv0tL27WOa6KrI3fZLMZXmPVt2FGnHx2
+	dH5fGdkzMSMBedQRUdSovOj83dy9CVuPSmhSBFA2k7aJeBH2q05IVTFhGAn1ZfPh
+	Hyb8IkgCJ3TmrSIojgPr3o=
+Received: from localhost.localdomain (unknown [123.112.69.106])
+	by smtp1 (Coremail) with SMTP id GdxpCgDnPZGa0stioLW2Ng--.8571S4;
+	Mon, 11 Jul 2022 15:34:58 +0800 (CST)
+From: Jianglei Nie <niejianglei2021@163.com>
+To: bhe@redhat.com,
+	vgoyal@redhat.com,
+	dyoung@redhat.com
+Cc: kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	Jianglei Nie <niejianglei2021@163.com>
+Subject: [PATCH v3] proc/vmcore: fix potential memory leak in vmcore_init()
+Date: Mon, 11 Jul 2022 15:34:49 +0800
+Message-Id: <20220711073449.2319585-1-niejianglei2021@163.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20220706152329.665636-5-stefanb@linux.ibm.com>
+X-CM-TRANSID: GdxpCgDnPZGa0stioLW2Ng--.8571S4
+X-Coremail-Antispam: 1Uf129KBjvdXoWrKrWUtFyDCr1xAr1rCryUJrb_yoWkurb_uF
+	4UKr4xX3yrGa1fGr4UKryrJw42kr1j9rs8Xr1xCF9rJa4rKwsxWrZ7urZ3Ar9xJrsY9345
+	uw4FkFy29ry5KjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xREWrW3UUUUU==
+X-Originating-IP: [123.112.69.106]
+X-CM-SenderInfo: xqlhyxxdqjzvrlsqjii6rwjhhfrp/1tbiQwg7jFc7ajRQVQAAsL
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220710_200446_587565_22B7DDA7 
-X-CRM114-Status: GOOD (  26.40  )
+X-CRM114-CacheID: sfid-20220711_003505_606637_771AC7EC 
+X-CRM114-Status: GOOD (  10.65  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,129 +73,46 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Jul 06, 2022 at 11:23:27AM -0400, Stefan Berger wrote:
-> Simplify tpm_read_log_of() by moving reusable parts of the code into
-> an inline function that makes it commonly available so it can be
-> used also for kexec support. Call the new of_tpm_get_sml_parameters()
-> function from the TPM Open Firmware driver.
-> 
-> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> Cc: Jarkko Sakkinen <jarkko@kernel.org>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> 
-> ---
-> v4:
->  - converted to inline function
-> ---
->  drivers/char/tpm/eventlog/of.c | 31 +++++--------------------------
->  include/linux/tpm.h            | 27 +++++++++++++++++++++++++++
->  2 files changed, 32 insertions(+), 26 deletions(-)
-> 
-> diff --git a/drivers/char/tpm/eventlog/of.c b/drivers/char/tpm/eventlog/of.c
-> index a9ce66d09a75..f9462d19632e 100644
-> --- a/drivers/char/tpm/eventlog/of.c
-> +++ b/drivers/char/tpm/eventlog/of.c
-> @@ -12,6 +12,7 @@
->  
->  #include <linux/slab.h>
->  #include <linux/of.h>
-> +#include <linux/tpm.h>
->  #include <linux/tpm_eventlog.h>
->  
->  #include "../tpm.h"
-> @@ -20,11 +21,10 @@
->  int tpm_read_log_of(struct tpm_chip *chip)
->  {
->  	struct device_node *np;
-> -	const u32 *sizep;
-> -	const u64 *basep;
->  	struct tpm_bios_log *log;
->  	u32 size;
->  	u64 base;
-> +	int ret;
->  
->  	log = &chip->log;
->  	if (chip->dev.parent && chip->dev.parent->of_node)
-> @@ -35,30 +35,9 @@ int tpm_read_log_of(struct tpm_chip *chip)
->  	if (of_property_read_bool(np, "powered-while-suspended"))
->  		chip->flags |= TPM_CHIP_FLAG_ALWAYS_POWERED;
->  
-> -	sizep = of_get_property(np, "linux,sml-size", NULL);
-> -	basep = of_get_property(np, "linux,sml-base", NULL);
-> -	if (sizep == NULL && basep == NULL)
-> -		return -ENODEV;
-> -	if (sizep == NULL || basep == NULL)
-> -		return -EIO;
-> -
-> -	/*
-> -	 * For both vtpm/tpm, firmware has log addr and log size in big
-> -	 * endian format. But in case of vtpm, there is a method called
-> -	 * sml-handover which is run during kernel init even before
-> -	 * device tree is setup. This sml-handover function takes care
-> -	 * of endianness and writes to sml-base and sml-size in little
-> -	 * endian format. For this reason, vtpm doesn't need conversion
-> -	 * but physical tpm needs the conversion.
-> -	 */
-> -	if (of_property_match_string(np, "compatible", "IBM,vtpm") < 0 &&
-> -	    of_property_match_string(np, "compatible", "IBM,vtpm20") < 0) {
-> -		size = be32_to_cpup((__force __be32 *)sizep);
-> -		base = be64_to_cpup((__force __be64 *)basep);
-> -	} else {
-> -		size = *sizep;
-> -		base = *basep;
-> -	}
-> +	ret = of_tpm_get_sml_parameters(np, &base, &size);
-> +	if (ret < 0)
-> +		return ret;
->  
->  	if (size == 0) {
->  		dev_warn(&chip->dev, "%s: Event log area empty\n", __func__);
-> diff --git a/include/linux/tpm.h b/include/linux/tpm.h
-> index dfeb25a0362d..b3dff255bc58 100644
-> --- a/include/linux/tpm.h
-> +++ b/include/linux/tpm.h
-> @@ -460,4 +460,31 @@ static inline struct tpm_chip *tpm_default_chip(void)
->  	return NULL;
->  }
->  #endif
-> +
-> +#ifdef CONFIG_OF
-> +static inline int of_tpm_get_sml_parameters(struct device_node *np,
-> +					    u64 *base, u32 *size)
-> +{
-> +	const u32 *sizep;
-> +	const u64 *basep;
-> +
-> +	sizep = of_get_property(np, "linux,sml-size", NULL);
-> +	basep = of_get_property(np, "linux,sml-base", NULL);
-> +	if (sizep == NULL && basep == NULL)
-> +		return -ENODEV;
-> +	if (sizep == NULL || basep == NULL)
-> +		return -EIO;
-> +
-> +	if (of_property_match_string(np, "compatible", "IBM,vtpm") < 0 &&
-> +	    of_property_match_string(np, "compatible", "IBM,vtpm20") < 0) {
-> +		*size = be32_to_cpup((__force __be32 *)sizep);
-> +		*base = be64_to_cpup((__force __be64 *)basep);
-> +	} else {
-> +		*size = *sizep;
-> +		*base = *basep;
-> +	}
-> +	return 0;
-> +}
-> +#endif
-> +
->  #endif
-> -- 
-> 2.35.1
-> 
+elfcorehdr_alloc() allocates a memory chunk for elfcorehdr_addr with
+kzalloc(). If is_vmcore_usable() returns false, elfcorehdr_addr is a
+predefined value. If parse_crash_elf_headers() occurs some error and
+returns a negetive value, the elfcorehdr_addr should be released with
+elfcorehdr_free().
 
+We can fix by calling elfcorehdr_free() when parse_crash_elf_headers()
+fails.
 
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+Signed-off-by: Jianglei Nie <niejianglei2021@163.com>
+---
+ fs/proc/vmcore.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-BR, Jarkko
+diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+index 4eaeb645e759..125efe63f281 100644
+--- a/fs/proc/vmcore.c
++++ b/fs/proc/vmcore.c
+@@ -1569,7 +1569,7 @@ static int __init vmcore_init(void)
+ 	rc = parse_crash_elf_headers();
+ 	if (rc) {
+ 		pr_warn("Kdump: vmcore not initialized\n");
+-		return rc;
++		goto fail;
+ 	}
+ 	elfcorehdr_free(elfcorehdr_addr);
+ 	elfcorehdr_addr = ELFCORE_ADDR_ERR;
+@@ -1578,6 +1578,9 @@ static int __init vmcore_init(void)
+ 	if (proc_vmcore)
+ 		proc_vmcore->size = vmcore_size;
+ 	return 0;
++fail:
++	elfcorehdr_free(elfcorehdr_addr);
++	return rc;
+ }
+ fs_initcall(vmcore_init);
+ 
+-- 
+2.25.1
+
 
 _______________________________________________
 kexec mailing list
