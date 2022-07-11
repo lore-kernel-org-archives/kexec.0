@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 935C4C433EF
-	for <kexec@archiver.kernel.org>; Mon, 11 Jul 2022 00:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6B9A9C43334
+	for <kexec@archiver.kernel.org>; Mon, 11 Jul 2022 03:04:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=0h1OZrmBJ5GLbkgHIFwWP/PLB9ts24wwtQ9hn47BXgE=; b=keZqcKMslW6k+k
-	AYRzTEQRVmwzeWZmodI269SgMP+ZVrOKhp/0ccznOtEA7vrr3dlly8eoyXcTohQ6J+4aTIOTfLAkm
-	ogPWarryMkrprnhCoC65DJa2epdZso61OrzuJXBqlk9xOqxIirfXv1nrhR5xTAQeRDZHlp2w3MG7o
-	fobZpijuR06Fp6zWnmwlwmfAkPK8DdjA5aUIIl9JxZ6sbBK+Dsf/85RH23mqeCIQZaBnwXxIQKqSo
-	c5lB9r7s9PGArqbV11jv5A3ygZ5dxHUuFaIxnc4kHvWr9+QnQH8ZBBEqiV8dORkV9Mai7Wl0UuB6k
-	tc6BdZ/R/NSMk4oeUQ/w==;
+	List-Owner; bh=rTkvT7jHo/xaaF7lEvBXmtIFoWaml/qIxRwk+Io2UDU=; b=zbL6jlwkaPjoDd
+	qI3o03EVOUresX/V0FDif1UfeuFadJS3Oinr/M5fvBuNCKdqI/wnUjYl7nIw7LZaeT7T5hERKFxSH
+	BZIgo9RaJKHMrsRCZ32UOhkZdRfUr/4kSeVj5oMEPlDB+v80A3WJiCJa1NnV/0Dd4E+JGbZPlkngU
+	seTMQ7GHFDQ576b9wVFr4NlTh8gNOgYiE7neXdkD9gg3MgZeY5vOZ+YjGmFbki6ISYUQx4TFZ8AEF
+	kZ0DIwLa1iSI2HIGrl7yLxDHLtTg4jEBMKDDZhGtx+8hQ1ggjGNgE786alyHRcb3ximbFiuotr+mw
+	kOqNYfx+Zg8N8qkm+UuQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oAgrr-00EVKs-D3; Mon, 11 Jul 2022 00:01:39 +0000
-Received: from ams.source.kernel.org ([145.40.68.75])
+	id 1oAjj6-00FShJ-VC; Mon, 11 Jul 2022 03:04:48 +0000
+Received: from ams.source.kernel.org ([2604:1380:4601:e00::1])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oAgro-00EVGK-0f
-	for kexec@lists.infradead.org; Mon, 11 Jul 2022 00:01:37 +0000
+	id 1oAjj4-00FSey-7s
+	for kexec@lists.infradead.org; Mon, 11 Jul 2022 03:04:47 +0000
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.source.kernel.org (Postfix) with ESMTPS id 67CFDB80C6A;
-	Mon, 11 Jul 2022 00:01:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C12FC3411E;
-	Mon, 11 Jul 2022 00:01:30 +0000 (UTC)
+	by ams.source.kernel.org (Postfix) with ESMTPS id 9A367B80D5A;
+	Mon, 11 Jul 2022 03:04:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D022CC3411E;
+	Mon, 11 Jul 2022 03:04:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1657497691;
-	bh=TlKLPcBbz3RbDuAHDfDGZpSXrFAFDL26YjdPaucaCzw=;
+	s=k20201202; t=1657508683;
+	bh=2qgfVdj8tvTCH2jYcKrpZ5Snk3LhfgSEv3T6kIahGWI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TM0tqX+WVO1YhtmTQj6f3/iwtJ9vXQmF/+f23nkkdRjQm/qtjCTQE5K0/ykfIyDWz
-	 m462R4ubh/OY87QYnG0uWBV/1gTLLlqsQtRg2gd+80nU5nyvYYGMc1dFoahy1XtsDv
-	 GomSv43YdZTK/luiQlUzKeAYIC14VaQGNT14BMhNDwDSM6dVEIFBxbXhqsZhcDFXJW
-	 d+LWMuuPK7ZvTaUwyYREKLvPsN93GRqjaLwJ0q622KKFzCMTVJNHyBLc2ZpH2Sns0J
-	 QGe4GQeA3z6pVIBMoavuGt9IG2lvU9YKLXCYa82ESk3AsXkbPyH87XFvs6wYXWU5yK
-	 VEw30aJNXttSQ==
-Date: Mon, 11 Jul 2022 03:01:25 +0300
+	b=mbkI4rxEMLL92W1bpiBd/cttlQzNlLGKIfErZJYzed5mizc3O4JeX3w7OwxR0Hi3g
+	 vYKvR32OoSTzsZOBqt2zxcyULxu1tX0SlEAKBloPJP/8PUaTbKZQcqwQTAtEZLXaRj
+	 7xdUWBHYfOXyUCf2JWtVh3QK+fRvCgvzpiwgoMfDHV8/HtPhwIzuBes3xTJZmjLCb3
+	 qx6Ni85gFvI1A0C4PS1kgqnp2EhXEvRhWRn4Xjm+/PBMo5YRq5eAOFIzXA5u88iziA
+	 MevgLPsvMtTO3Ii6wg+K+fA1zj1lEibb837/esD2mtKfyuvFr0IUIsft5bGNXBma3c
+	 LuTG/JPhAFoGQ==
+Date: Mon, 11 Jul 2022 06:04:38 +0300
 From: Jarkko Sakkinen <jarkko@kernel.org>
 To: Stefan Berger <stefanb@linux.ibm.com>
 Cc: kexec@lists.infradead.org, devicetree@vger.kernel.org,
@@ -51,17 +51,17 @@ Cc: kexec@lists.infradead.org, devicetree@vger.kernel.org,
 	nasastry@in.ibm.com, mpe@ellerman.id.au,
 	Jason Gunthorpe <jgg@ziepe.ca>, Rob Herring <robh+dt@kernel.org>,
 	Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v4 3/5] tpm: of: Make of-tree specific function commonly
+Subject: Re: [PATCH v5 4/6] tpm: of: Make of-tree specific function commonly
  available
-Message-ID: <YstoVXqxE8IguTpT@kernel.org>
-References: <20220701022603.31076-1-stefanb@linux.ibm.com>
- <20220701022603.31076-4-stefanb@linux.ibm.com>
+Message-ID: <YsuTRny45aBxGjm5@kernel.org>
+References: <20220706152329.665636-1-stefanb@linux.ibm.com>
+ <20220706152329.665636-5-stefanb@linux.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20220701022603.31076-4-stefanb@linux.ibm.com>
+In-Reply-To: <20220706152329.665636-5-stefanb@linux.ibm.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220710_170136_399858_7FC114CF 
-X-CRM114-Status: GOOD (  26.83  )
+X-CRM114-CacheID: sfid-20220710_200446_587565_22B7DDA7 
+X-CRM114-Status: GOOD (  26.40  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,7 +78,7 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Jun 30, 2022 at 10:26:01PM -0400, Stefan Berger wrote:
+On Wed, Jul 06, 2022 at 11:23:27AM -0400, Stefan Berger wrote:
 > Simplify tpm_read_log_of() by moving reusable parts of the code into
 > an inline function that makes it commonly available so it can be
 > used also for kexec support. Call the new of_tpm_get_sml_parameters()
