@@ -4,59 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 068AFC43334
-	for <kexec@archiver.kernel.org>; Thu, 14 Jul 2022 06:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 74055C43334
+	for <kexec@archiver.kernel.org>; Thu, 14 Jul 2022 11:32:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=zEMa85vH4mwE63kIJp2o934H/b41xkSvrDSxo4T+Ogc=; b=svkpRRVgkqo6IH
-	MNM9pWq9CIVJuEprs/hZRb7nJMy/LNgPjJXYqnTsQrCs3ZJiU1RgdtWhQXzmwKZ6ZKA5i1Jp8ADPM
-	vG28+5w9HoJov9OZgQrJmlY7IKxTZfDkbmmspdU95US/MxA/ZHfit6c+TU0hhAH8ADkKQuJaJZdbc
-	c4aYRjKV+KncFAXv+QQPR5ycn8vQXlOeYiqnlmmb8l/kumthUKWz9XIsXpnntd3+hAJFzDM/5/EJU
-	N9jSnu+nBctaMtWDUltP1XAnrdHwTBxXbiUq21W81hP+4Uf/WMsQIop7G1gchb/effiIaZqKbIYun
-	8U5cmV71msoevZzkWOMQ==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=5VD+6pS1wGtEFIKymKK/B+HZdZBrTUXKdK7MkLj0JaQ=; b=FPGe1qlyJeb0Pg
+	OdE1O7GH2Ma1SvOea1ihFFUVys5yCrwCzkq8/pTK0IPfbzGzmH2lwOq7heW14AP7fgCF17XVodJ5H
+	EIHzhmwht3/FgjqvIoOq9z/JEw1EWrvgCAjlQ6QOx1L42oaroqWtrtW9j+UnMLMiT8SCv/yCk5si4
+	oDo+2Hkv7BtFKYtxVCo3FIOBT4a//444uFeJJDSETrhds5WdZuIoKrYO5gitpPechUQP3U/c3//+t
+	6POi2fTNzvTNuXmCzmNde/euZ4XL4Xi2BFJ8wHOt69xE37k1neqPYud3KUEo/BBTXCdMwoVQBno8w
+	3ZLeB6V86ClRAuj/TAgg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oBsll-00Bbh2-B5; Thu, 14 Jul 2022 06:56:17 +0000
-Received: from mail-m971.mail.163.com ([123.126.97.1])
-	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oBsli-00Bbaa-0t
-	for kexec@lists.infradead.org; Thu, 14 Jul 2022 06:56:15 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=6oc7w
-	O6J7QkAI8GY1btKbQzxXLENuQsZWTbIo3WwccQ=; b=qaMtvJ/XXgshzKEAJn8Vv
-	kd67+FbZYRJ+WzQWGKKxIxdhEJ1gxij1O3QMADlZn2KXA7GP6ZBfcHhmzo82xb0J
-	Zkxi21O3cyMDZYq1uG3fUDd+u4ptwG7AtCwOg7qP3nvqoAmtOcsDXqLJr5sa3mz/
-	BxnWA+j7+zcXUsd7pyl+kM=
-Received: from localhost.localdomain (unknown [123.112.69.106])
-	by smtp1 (Coremail) with SMTP id GdxpCgBHKrv3vc9iXQK9OA--.2988S4;
-	Thu, 14 Jul 2022 14:56:02 +0800 (CST)
-From: Jianglei Nie <niejianglei2021@163.com>
-To: bhe@redhat.com,
-	vgoyal@redhat.com,
-	dyoung@redhat.com
-Cc: kexec@lists.infradead.org,
+	id 1oBx4p-00Dn5t-QQ; Thu, 14 Jul 2022 11:32:15 +0000
+Received: from smtp-out2.suse.de ([2001:67c:2178:6::1d])
+	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1oBx4n-00Dn1s-2Q
+	for kexec@lists.infradead.org; Thu, 14 Jul 2022 11:32:14 +0000
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+	by smtp-out2.suse.de (Postfix) with ESMTP id DFB561FAD3;
+	Thu, 14 Jul 2022 11:32:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1657798327; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EmuMePcQGuxM9heOQ2mK6cbP7+zHaIyLwtcEh4MAP1c=;
+	b=AvC/B+2wk1WeXNFjl+3PLdV1OI8nMhJ87DzKbddyCNSSeFF7hcUtKUqqkDsb8GeOWlp+CJ
+	BJNaz95C6xbnDPgE8dUcHEZiyoidqPAGZt4rE0xjLZKd4O9pHfq/5SfvTqQWIWBc35Cxua
+	aJfk1y918cYCN+n1ok77HjixPWb74Wg=
+Received: from suse.cz (pathway.suse.cz [10.100.12.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by relay2.suse.de (Postfix) with ESMTPS id 6168E2C141;
+	Thu, 14 Jul 2022 11:32:07 +0000 (UTC)
+Date: Thu, 14 Jul 2022 13:32:07 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: kexec@lists.infradead.org, linux-rt-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	Jianglei Nie <niejianglei2021@163.com>
-Subject: [PATCH v5] proc/vmcore: fix potential memory leak in vmcore_init()
-Date: Thu, 14 Jul 2022 14:55:49 +0800
-Message-Id: <20220714065549.2344266-1-niejianglei2021@163.com>
-X-Mailer: git-send-email 2.25.1
+	Eric Biederman <ebiederm@xmission.com>,
+	Arnd Bergmann <arnd@arndb.de>, Miaohe Lin <linmiaohe@huawei.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Juri Lelli <jlelli@redhat.com>,
+	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+Subject: Re: [PATCH v4 0/2] kexec, panic: Making crash_kexec() NMI safe
+Message-ID: <20220714113207.GD2737@pathway.suse.cz>
+References: <20220630223258.4144112-1-vschneid@redhat.com>
 MIME-Version: 1.0
-X-CM-TRANSID: GdxpCgBHKrv3vc9iXQK9OA--.2988S4
-X-Coremail-Antispam: 1Uf129KBjvJXoWrKrWUtFW5Gw4xXFWfXr17Awb_yoW8JryUpF
-	1kGw48Cr95Wrn7Zr48Jw47Zw1kAa1UJayjqry3CF4ayrnxWw4vvrWFkFWF9F1Y9r10ga98
-	XFWkua1fAFZ8WF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRDl1QUUUUU=
-X-Originating-IP: [123.112.69.106]
-X-CM-SenderInfo: xqlhyxxdqjzvrlsqjii6rwjhhfrp/1tbiMgI+jFWBz85v3gAAsm
+Content-Disposition: inline
+In-Reply-To: <20220630223258.4144112-1-vschneid@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220713_235614_562438_B20D6F7A 
-X-CRM114-Status: UNSURE (   9.42  )
+X-CRM114-CacheID: sfid-20220714_043213_282809_AF203060 
+X-CRM114-Status: UNSURE (   7.63  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -74,47 +79,17 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-elfcorehdr_alloc() allocates a memory chunk for elfcorehdr_addr with
-kzalloc(). If is_vmcore_usable() returns false, elfcorehdr_addr is a
-predefined value. If parse_crash_elf_headers() gets some error and
-returns a negetive value, the elfcorehdr_addr should be released with
-elfcorehdr_free().
+On Thu 2022-06-30 23:32:56, Valentin Schneider wrote:
+> Valentin Schneider (2):
+>   kexec: Turn all kexec_mutex acquisitions into trylocks
+>   panic, kexec: Make __crash_kexec() NMI safe
 
-Fix it by calling elfcorehdr_free() when parse_crash_elf_headers() fails.
+This version looks good to me. For both patches:
 
-Acked-by: Baoquan He <bhe@redhat.com>
-Signed-off-by: Jianglei Nie <niejianglei2021@163.com>
----
- fs/proc/vmcore.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index 4eaeb645e759..390515c249dd 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -1569,15 +1569,16 @@ static int __init vmcore_init(void)
- 	rc = parse_crash_elf_headers();
- 	if (rc) {
- 		pr_warn("Kdump: vmcore not initialized\n");
--		return rc;
-+		goto fail;
- 	}
--	elfcorehdr_free(elfcorehdr_addr);
- 	elfcorehdr_addr = ELFCORE_ADDR_ERR;
- 
- 	proc_vmcore = proc_create("vmcore", S_IRUSR, NULL, &vmcore_proc_ops);
- 	if (proc_vmcore)
- 		proc_vmcore->size = vmcore_size;
--	return 0;
-+fail:
-+	elfcorehdr_free(elfcorehdr_addr);
-+	return rc;
- }
- fs_initcall(vmcore_init);
- 
--- 
-2.25.1
-
+Best Regards,
+Petr
 
 _______________________________________________
 kexec mailing list
