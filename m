@@ -4,48 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 81143C43334
-	for <kexec@archiver.kernel.org>; Tue, 19 Jul 2022 12:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B7D9DC43334
+	for <kexec@archiver.kernel.org>; Wed, 20 Jul 2022 06:02:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Subject:To:From
-	:Date:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Content-Transfer-Encoding:Content-Type:Cc:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:To
+	:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=uOXMghdH5omLuee8jVTXDjdyjgvhBeKQteLeIXwIk+c=; b=IPN/aWdfCAfDvp
-	mE+Xu6VUwkMqISwkPdAMDR48EvkAS1kGM/9CMPiVmJYU/D+saJP4Aqq9C2k7T4OkKgAtw5X7dqWqI
-	GbM2k+9E4odcWP2w/O6fcOUjGzt8qoMh7GfPwP2Z6dQVHF+B5Lk9O+MLAPYuXoth+9K6eO8J2csvh
-	3Q84nI1zN2d5qtSSqr8Hj1i6TeOnt85yR2RHBBOa5ZrjN3S8MmAtouey+rESLC4vHiOOIpby/oBn+
-	8jk8+aOOMQFrx34UJb94hnB3fEMeEzLglM4wPcKhWYq4AoHs++asHT5BZDVSWxZ0Ezzpi0xZ8cDD8
-	VdipZk/Nxs/MnJxKu94g==;
+	List-Owner; bh=zUY3e3LW75zKoWfo5IlqQYjwCRbYu26GsuD3Na15oKQ=; b=WMqb2qHP8a4UKM
+	vBNwLSjb0GR4hl6osMBlDS8CF9/8U7j1LeQl9y6LyMCxMKCP0jT6BetL186GD2T5EXdWIE9ts6Z7H
+	rS0iiNau8ZH/kcRSy0h4cz5jI7Cw3klpLzgJ56uumflNLrypU9m8qLPNJwxqudhf2oQL2++PvdpAO
+	oeFwltmDx81UILlG18jd36QIL+QsCx92XcusppFeAe6V4u/mlJcRrPIM23wS2HUPASk23A1NpvpnH
+	hm5aCDG86vocMACkcfEVOlMb8aD+j5QlAPWlSjvdkou7SU3UOnvoDj0XfWvEx5ERSsX1JXTe64U91
+	tXTXgQdxsGcBZY3iiQyA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oDmWq-008lCm-D5; Tue, 19 Jul 2022 12:40:44 +0000
-Received: from zeeaster.vergenet.net ([206.189.110.174])
+	id 1oE2nC-000s9h-Ab; Wed, 20 Jul 2022 06:02:42 +0000
+Received: from fanzine.igalia.com ([178.60.130.6] helo=fanzine2.igalia.com)
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oDmWn-008lC0-1a
-	for kexec@lists.infradead.org; Tue, 19 Jul 2022 12:40:42 +0000
-Received: from momiji.horms.nl (2a02-a46e-7b6b-703-d63d-7eff-fe99-ac9d.fixed6.kpn.net [IPv6:2a02:a46e:7b6b:703:d63d:7eff:fe99:ac9d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by zeeaster.vergenet.net (Postfix) with ESMTPSA id 92A2F20087
-	for <kexec@lists.infradead.org>; Tue, 19 Jul 2022 12:40:09 +0000 (UTC)
-Received: by momiji.horms.nl (Postfix, from userid 7100)
-	id 26A05940218; Tue, 19 Jul 2022 14:40:09 +0200 (CEST)
-Date: Tue, 19 Jul 2022 14:40:08 +0200
-From: Simon Horman <horms@verge.net.au>
-To: kexec@lists.infradead.org
-Subject: [ANNOUNCE] kexec-tools 2.0.25-rc1
-Message-ID: <YtamKFJOeyYxE7xE@vergenet.net>
+	id 1oDtIz-00C9HQ-5P; Tue, 19 Jul 2022 19:54:55 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:
+	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=v6ALRzuY4RIlvqb5/OysD83kMB2n09igJBmCmJkb/mQ=; b=QX2ndssTwYlCGQttlP6yZb1v8t
+	5s2Hg+pF+iNzzwWbJ4MQaGSaf6qkeb05PdTsq+Deth55WrA0pCBg5abgJ5rgV7rYQ1in6Q0iGiphA
+	Ny8wQRwMi4VTn4nbzPtFheSJmfPAAsWP3wO6T6rwqeMZ6FBPSZbVJscxJAF1he9ZTINlqR7pMavHd
+	JUmz54ZCbUg5czNAxrGNtKvvD4CjMf1IUILFMG1Fr7T+NXdQ+h0VrvP3Jd0esGE2WeLQ3wNsRgsoR
+	A2H70K6+3TnyaQxqB5nwJ5zwLOp0Bqh1CdPhvwI1Y5O+c66ciesYb/MZNrPpMNAzxEEfLahEMj+q0
+	vfS69Cnw==;
+Received: from 200-100-212-117.dial-up.telesp.net.br ([200.100.212.117] helo=localhost)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1oDtIK-006f8k-U4; Tue, 19 Jul 2022 21:54:15 +0200
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+To: akpm@linux-foundation.org,
+	bhe@redhat.com,
+	pmladek@suse.com,
+	kexec@lists.infradead.org
+Subject: [PATCH v2 00/13] The panic notifiers refactor strikes back - fixes/clean-ups
+Date: Tue, 19 Jul 2022 16:53:13 -0300
+Message-Id: <20220719195325.402745-1-gpiccoli@igalia.com>
+X-Mailer: git-send-email 2.37.1
 MIME-Version: 1.0
-Content-Disposition: inline
-X-Virus-Scanned: clamav-milter 0.103.6 at zeeaster
-X-Virus-Status: Clean
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220719_054041_245685_68DF86B7 
-X-CRM114-Status: UNSURE (   9.69  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20220719_125453_246529_4E1828CD 
+X-CRM114-Status: GOOD (  17.64  )
+X-Mailman-Approved-At: Tue, 19 Jul 2022 23:02:40 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -57,44 +65,98 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Cc: linux-hyperv@vger.kernel.org, linux-efi@vger.kernel.org, halves@canonical.com, peterz@infradead.org, dave.hansen@linux.intel.com, feng.tang@intel.com, mikelley@microsoft.com, will@kernel.org, arnd@arndb.de, corbet@lwn.net, paulmck@kernel.org, fabiomirmar@gmail.com, x86@kernel.org, mingo@redhat.com, stern@rowland.harvard.edu, bcm-kernel-feedback-list@broadcom.com, dyoung@redhat.com, vgoyal@redhat.com, alejandro.j.jimenez@oracle.com, keescook@chromium.org, john.ogness@linutronix.de, linux-alpha@vger.kernel.org, linux-um@lists.infradead.org, rostedt@goodmis.org, bp@alien8.de, luto@kernel.org, hidehiro.kawai.ez@hitachi.com, tglx@linutronix.de, andriy.shevchenko@linux.intel.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org, jgross@suse.com, linux-parisc@vger.kernel.org, gregkh@linuxfoundation.org, kernel@gpiccoli.net, linux-kernel@vger.kernel.org, senozhatsky@chromium.org, d.hatayama@jp.fujitsu.com, mhiramat@kernel.org, kernel-dev@igalia.com, netdev@vger.kernel.org, vkuznets@redhat.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi all,
+Hi folks, this the second iteration of the panic notifiers refactor work,
+but limited to the fixes/clean-ups in the first moment. The (full) V1 is
+available at:
+https://lore.kernel.org/lkml/20220427224924.592546-1-gpiccoli@igalia.com/
 
-I am happy to announce the release of kexec-tools 2.0.25-rc1.
+The idea of splitting the series is that, originally we had a bunch of fixes
+followed by the notifiers refactor, but this second part (the effective
+refactor) is a bit "polemic", with reviews having antagonistic goals and some
+complexities  - it might be hard to achieve consensus.
+For the curious, here is a good summary of the conflicting views and some
+strategies we might take in the refactor V2:
+https://lore.kernel.org/lkml/0d084eed-4781-c815-29c7-ac62c498e216@igalia.com/
 
-This is an incremental feature pre-release.
-
-So long as no serious problems arise I intend to release kexec-tools 2.0.25
-in a weeks time. Testing of 2.0.25-rc1 would be greatly appreciated.
-
-I do not have any outstanding changes for 2.0.25 at this time.
-And I would like to only accept bug fixes at this time and take
-features patches once 2.0.25 has been released.
-
-The pre-release can be downloaded from kernel.org:
-
-	https://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools-2.0.25-rc1.tar.xz
-	https://kernel.org/pub/linux/utils/kernel/kexec/
-
-I have also tagged it in git:
-
-	https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
-
-Thanks to everyone who has contributed to kexec.
+So splitting and sending only the simple fixes/clean-ups in a first moment
+makes sense, this way we don't prevent them to be discussed/merged/reworked
+while the more complex part is subject to scrutiny in a different (future)
+email thread.
 
 
-For reference the changes since v2.0.24 are:
+I've tried to test this series building for all affected architecture/drivers
+and also through some boot/runtime tests; below the test "matrix" used:
 
-bfab31851465 kexec-tools 2.0.25-rc1
-c3950959f428 kexec-tools: Remove duplicate ultoa() definitions and redefine it
-6cd3e94813f7 i386: pass rng seed via setup_data
-db26ac7f6a9c kexec-tools: mips: Pass initrd parameter via cmdline
-1b87ea9ccaf0 arm64/crashdump-arm64: increase CRASH_MAX_MEMORY_RANGES to 32k
-2ddfaf31fa83 kexec-tools 2.0.23.git
+Build tests (using cross-compilers): alpha, arm, arm64, parisc, um, x86_64.
+Boot/Runtime tests: x86_64 (Hyper-V and QEMU guests).
+
+Here is the link with the .config files used:
+https://people.igalia.com/gpiccoli/panic_notifiers_configs/5.19-rc7/
+(tried my best to build all the affected code).
+
+
+The series is based on 5.19-rc7; I'd like to ask that, if possible, maintainers
+take the patches here in their trees, since there is no need to merge the series
+as whole, patches are independent from each other.
+
+Regarding the CC strategy, I've tried to reduce a bit the list of CCed emails,
+given that it was huge in the first iteration. Hopefully I didn't forget
+anybody interested in the topic (my apologies if so).
+
+As usual, reviews / comments are always welcome, thanks in advance for them!
+Cheers,
+
+
+Guilherme
+
+
+
+
+Guilherme G. Piccoli (13):
+  ARM: Disable FIQs (but not IRQs) on CPUs shutdown paths
+  notifier: Add panic notifiers info and purge trailing whitespaces
+  firmware: google: Test spinlock on panic path to avoid lockups
+  soc: bcm: brcmstb: Document panic notifier action and remove useless header
+  alpha: Clean-up the panic notifier code
+  um: Improve panic notifiers consistency and ordering
+  parisc: Replace regular spinlock with spin_trylock on panic path
+  tracing: Improve panic/die notifiers
+  notifier: Show function names on notifier routines if DEBUG_NOTIFIERS is set
+  EDAC/altera: Skip the panic notifier if kdump is loaded
+  video/hyperv_fb: Avoid taking busy spinlock on panic path
+  drivers/hv/vmbus, video/hyperv_fb: Untangle and refactor Hyper-V panic notifiers
+  panic: Fixes the panic_print NMI backtrace setting
+
+ arch/alpha/kernel/setup.c           |  36 ++++-----
+ arch/arm/kernel/machine_kexec.c     |   2 +
+ arch/arm/kernel/smp.c               |   5 +-
+ arch/parisc/include/asm/pdc.h       |   1 +
+ arch/parisc/kernel/firmware.c       |  27 ++++++-
+ arch/um/drivers/mconsole_kern.c     |   7 +-
+ arch/um/kernel/um_arch.c            |   8 +-
+ drivers/edac/altera_edac.c          |  16 +++-
+ drivers/firmware/google/gsmi.c      |   8 ++
+ drivers/hv/ring_buffer.c            |  16 ++++
+ drivers/hv/vmbus_drv.c              | 109 +++++++++++++++++-----------
+ drivers/parisc/power.c              |  17 +++--
+ drivers/soc/bcm/brcmstb/pm/pm-arm.c |  16 +++-
+ drivers/video/fbdev/hyperv_fb.c     |  16 +++-
+ include/linux/hyperv.h              |   2 +
+ include/linux/notifier.h            |   8 +-
+ kernel/notifier.c                   |  22 ++++--
+ kernel/panic.c                      |  47 +++++++-----
+ kernel/trace/trace.c                |  55 +++++++-------
+ 19 files changed, 268 insertions(+), 150 deletions(-)
+
+-- 
+2.37.1
+
 
 _______________________________________________
 kexec mailing list
