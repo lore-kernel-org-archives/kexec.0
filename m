@@ -4,104 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D0EBBC43334
-	for <kexec@archiver.kernel.org>; Fri, 15 Jul 2022 16:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 20233C433EF
+	for <kexec@archiver.kernel.org>; Tue, 19 Jul 2022 12:29:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:Cc:To:
-	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=B6ciOHhta7pVNyLxl45Q7vJArxxtc9dZ6+/IAeOWLog=; b=i7uhGTrtCW0jsSaYQQa7XP117n
-	L0XY9+jT4oWi9FyKl8oTyq9A6IFtqdGs8m39Joc181fhlOlEkiXJGDRX7jZvRchNMMwZYU8mldMN/
-	7QQU5rycHwOSJyFmWkxYI9QSlO4h4698OodfdvV0E2a0eaK1VbLJjcXYBecMtKr9EHQT7mXszJ1qP
-	RGUBrHvZd0QAODoJ/Hxk/aeuj4PeJ1MH67aFXwaM2nHwvDXq7reWyMRcEAltifMFdzBruf5KAoPxy
-	Iw7KSw28HUUhZXxO40fpL8rGgTxmPwWRCh5KuhbVmN7dE58V9GVHUu4CFfLfIRF7yAOUVSUUs6HPo
-	d1FHQtQg==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=ytYVaKcVFO6h0no49VRNo14xfRazOr7t4AIViCiB2ZE=; b=eowvu1fYKA5aDy
+	fuSDXL9ly3sa6CPpbN7YkZDKlRSPljryVZTV2rKRDMqH5BmZ1d6brD3LCyd38cwbOZI2JSNLwya/w
+	lnvq8lmJVIaq605j+rTuDviq4MXstuwHQpgacqdKq5aL6ncQi/iJoG2c7V5wvGJxrrrOwxMtLQN0E
+	16I1ied7EuQv0sSeYEOpCeB0eItTyLCxTw5Y51EA2koGJSofGAtvBRutyGpH74pQ9hudJXZqSgpp+
+	8YcwGrDmWPyXm/pMYi7sJb13tJ657BRj9B1Rxg+zYdcnv3xP+3xkpPQAaCFOND6mQYuLfa8gIbMYe
+	N/24bVwcBDSgGfB5Tfwg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oCNmD-008byO-IB; Fri, 15 Jul 2022 16:02:49 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1oDmLR-008gnp-5z; Tue, 19 Jul 2022 12:28:57 +0000
+Received: from zeeaster.vergenet.net ([206.189.110.174])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oCNlL-008bXs-QY
-	for kexec@lists.infradead.org; Fri, 15 Jul 2022 16:01:58 +0000
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26FFL0YF010551;
-	Fri, 15 Jul 2022 16:01:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=Nc7U3jMNz3s5relVkPSuzWGxkTEQWd++fvh2MPtZbDU=;
- b=KQoMl8eYhN6d6yRs668JUFyi3p0AiiMq0OLhbenyevAzQ1dRl1Pn2sUWq1EOyxg3GTY+
- 4vkUAPlwg9vHxfY+YnChBcVItus4fUCjgMg4LnFV7wjc1f6WCKJZnOvT7XdhNwWo0624
- h6gPlUfhBhSdNzhOf3cIr4OIZHp8q4FBKMmtXQw9Oo9z0reD03HKMe1ex9mItzEqRWFR
- OfSSo5lIsKPVhkBXSvBHTfOGeG22u/a4lYMx+dzNPeSDwouOzNjbO2kWZg7icVWTTiAy
- J7rS8n3jKT6NmPVv1HrTgiEyN6SFl2XJI8igH1EN+G25O6BdpC5xtFRm9n0OR19rcZKO 7Q== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3hbat68vfn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 15 Jul 2022 16:01:40 +0000
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 26FFkLSm026424;
-	Fri, 15 Jul 2022 16:01:40 GMT
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3hbat68vf5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 15 Jul 2022 16:01:39 +0000
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-	by ppma02dal.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 26FFp5vB021358;
-	Fri, 15 Jul 2022 16:01:39 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-	by ppma02dal.us.ibm.com with ESMTP id 3h9am58svk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 15 Jul 2022 16:01:39 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-	by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 26FG1bhc35914158
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 15 Jul 2022 16:01:37 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B64D1136053;
-	Fri, 15 Jul 2022 16:01:37 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0F72413604F;
-	Fri, 15 Jul 2022 16:01:36 +0000 (GMT)
-Received: from [9.47.158.152] (unknown [9.47.158.152])
-	by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-	Fri, 15 Jul 2022 16:01:36 +0000 (GMT)
-Message-ID: <3a9196b3-c510-0c32-8b70-572d9c4fe69d@linux.ibm.com>
-Date: Fri, 15 Jul 2022 12:01:36 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH v5 4/6] tpm: of: Make of-tree specific function commonly
- available
-Content-Language: en-US
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: kexec@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, nayna@linux.ibm.com,
-        nasastry@in.ibm.com, mpe@ellerman.id.au,
-        Jason Gunthorpe <jgg@ziepe.ca>, Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-References: <20220706152329.665636-1-stefanb@linux.ibm.com>
- <20220706152329.665636-5-stefanb@linux.ibm.com> <YsuTRny45aBxGjm5@kernel.org>
-From: Stefan Berger <stefanb@linux.ibm.com>
-In-Reply-To: <YsuTRny45aBxGjm5@kernel.org>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Ad0o9E6xukVBHUz222-CjzD2D4HlvqOu
-X-Proofpoint-ORIG-GUID: ZqRm3DHERDE5hNRQwUZcbTuvmXWwlZGl
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	id 1oDmLL-008gmf-Qc
+	for kexec@lists.infradead.org; Tue, 19 Jul 2022 12:28:53 +0000
+Received: from momiji.horms.nl (2a02-a46e-7b6b-703-d63d-7eff-fe99-ac9d.fixed6.kpn.net [IPv6:2a02:a46e:7b6b:703:d63d:7eff:fe99:ac9d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by zeeaster.vergenet.net (Postfix) with ESMTPSA id 4AE2020087;
+	Tue, 19 Jul 2022 12:28:50 +0000 (UTC)
+Received: by momiji.horms.nl (Postfix, from userid 7100)
+	id C79A8940218; Tue, 19 Jul 2022 14:28:49 +0200 (CEST)
+Date: Tue, 19 Jul 2022 14:28:49 +0200
+From: Simon Horman <horms@kernel.org>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Simon Horman <horms@kernel.org>, kexec@lists.infradead.org
+Subject: Re: [PATCH] kexec-tools: Remove duplicate ultoa() definitions and
+ redefine it
+Message-ID: <YtajgS2XhWv4sAII@vergenet.net>
+References: <1657879514-29377-1-git-send-email-yangtiezhu@loongson.cn>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-07-15_08,2022-07-15_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- lowpriorityscore=0 mlxscore=0 phishscore=0 clxscore=1015
- priorityscore=1501 impostorscore=0 adultscore=0 bulkscore=0 spamscore=0
- suspectscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2206140000 definitions=main-2207150068
+Content-Disposition: inline
+In-Reply-To: <1657879514-29377-1-git-send-email-yangtiezhu@loongson.cn>
+Organisation: Horms Solutions BV
+X-Virus-Scanned: clamav-milter 0.103.6 at zeeaster
+X-Virus-Status: Clean
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220715_090156_247985_F70EAA06 
-X-CRM114-Status: GOOD (  28.99  )
+X-CRM114-CacheID: sfid-20220719_052852_042474_D503890D 
+X-CRM114-Status: UNSURE (   8.82  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -113,150 +62,19 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-
-
-On 7/10/22 23:04, Jarkko Sakkinen wrote:
-> On Wed, Jul 06, 2022 at 11:23:27AM -0400, Stefan Berger wrote:
->> Simplify tpm_read_log_of() by moving reusable parts of the code into
->> an inline function that makes it commonly available so it can be
->> used also for kexec support. Call the new of_tpm_get_sml_parameters()
->> function from the TPM Open Firmware driver.
->>
->> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
->> Cc: Jarkko Sakkinen <jarkko@kernel.org>
->> Cc: Jason Gunthorpe <jgg@ziepe.ca>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Frank Rowand <frowand.list@gmail.com>
->>
->> ---
->> v4:
->>   - converted to inline function
->> ---
->>   drivers/char/tpm/eventlog/of.c | 31 +++++--------------------------
->>   include/linux/tpm.h            | 27 +++++++++++++++++++++++++++
->>   2 files changed, 32 insertions(+), 26 deletions(-)
->>
->> diff --git a/drivers/char/tpm/eventlog/of.c b/drivers/char/tpm/eventlog/of.c
->> index a9ce66d09a75..f9462d19632e 100644
->> --- a/drivers/char/tpm/eventlog/of.c
->> +++ b/drivers/char/tpm/eventlog/of.c
->> @@ -12,6 +12,7 @@
->>   
->>   #include <linux/slab.h>
->>   #include <linux/of.h>
->> +#include <linux/tpm.h>
->>   #include <linux/tpm_eventlog.h>
->>   
->>   #include "../tpm.h"
->> @@ -20,11 +21,10 @@
->>   int tpm_read_log_of(struct tpm_chip *chip)
->>   {
->>   	struct device_node *np;
->> -	const u32 *sizep;
->> -	const u64 *basep;
->>   	struct tpm_bios_log *log;
->>   	u32 size;
->>   	u64 base;
->> +	int ret;
->>   
->>   	log = &chip->log;
->>   	if (chip->dev.parent && chip->dev.parent->of_node)
->> @@ -35,30 +35,9 @@ int tpm_read_log_of(struct tpm_chip *chip)
->>   	if (of_property_read_bool(np, "powered-while-suspended"))
->>   		chip->flags |= TPM_CHIP_FLAG_ALWAYS_POWERED;
->>   
->> -	sizep = of_get_property(np, "linux,sml-size", NULL);
->> -	basep = of_get_property(np, "linux,sml-base", NULL);
->> -	if (sizep == NULL && basep == NULL)
->> -		return -ENODEV;
->> -	if (sizep == NULL || basep == NULL)
->> -		return -EIO;
->> -
->> -	/*
->> -	 * For both vtpm/tpm, firmware has log addr and log size in big
->> -	 * endian format. But in case of vtpm, there is a method called
->> -	 * sml-handover which is run during kernel init even before
->> -	 * device tree is setup. This sml-handover function takes care
->> -	 * of endianness and writes to sml-base and sml-size in little
->> -	 * endian format. For this reason, vtpm doesn't need conversion
->> -	 * but physical tpm needs the conversion.
->> -	 */
-
-
-Jarkko,
-
-  can I apply your R-b tag after putting this lost comment back into the 
-inline function?
-    Stefan
-
->> -	if (of_property_match_string(np, "compatible", "IBM,vtpm") < 0 &&
->> -	    of_property_match_string(np, "compatible", "IBM,vtpm20") < 0) {
->> -		size = be32_to_cpup((__force __be32 *)sizep);
->> -		base = be64_to_cpup((__force __be64 *)basep);
->> -	} else {
->> -		size = *sizep;
->> -		base = *basep;
->> -	}
->> +	ret = of_tpm_get_sml_parameters(np, &base, &size);
->> +	if (ret < 0)
->> +		return ret;
->>   
->>   	if (size == 0) {
->>   		dev_warn(&chip->dev, "%s: Event log area empty\n", __func__);
->> diff --git a/include/linux/tpm.h b/include/linux/tpm.h
->> index dfeb25a0362d..b3dff255bc58 100644
->> --- a/include/linux/tpm.h
->> +++ b/include/linux/tpm.h
->> @@ -460,4 +460,31 @@ static inline struct tpm_chip *tpm_default_chip(void)
->>   	return NULL;
->>   }
->>   #endif
->> +
->> +#ifdef CONFIG_OF
->> +static inline int of_tpm_get_sml_parameters(struct device_node *np,
->> +					    u64 *base, u32 *size)
->> +{
->> +	const u32 *sizep;
->> +	const u64 *basep;
->> +
->> +	sizep = of_get_property(np, "linux,sml-size", NULL);
->> +	basep = of_get_property(np, "linux,sml-base", NULL);
->> +	if (sizep == NULL && basep == NULL)
->> +		return -ENODEV;
->> +	if (sizep == NULL || basep == NULL)
->> +		return -EIO;
->> +
->> +	if (of_property_match_string(np, "compatible", "IBM,vtpm") < 0 &&
->> +	    of_property_match_string(np, "compatible", "IBM,vtpm20") < 0) {
->> +		*size = be32_to_cpup((__force __be32 *)sizep);
->> +		*base = be64_to_cpup((__force __be64 *)basep);
->> +	} else {
->> +		*size = *sizep;
->> +		*base = *basep;
->> +	}
->> +	return 0;
->> +}
->> +#endif
->> +
->>   #endif
->> -- 
->> 2.35.1
->>
+On Fri, Jul 15, 2022 at 06:05:14PM +0800, Tiezhu Yang wrote:
+> There exist duplicate ultoa() definitions in many archs, remove them,
+> and also redefine ultoa() in kexec/kexec.h to make it more readable.
 > 
-> 
-> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-> 
-> BR, Jarkko
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+
+Thanks, this is very much appreciated.
+Applied.
 
 _______________________________________________
 kexec mailing list
