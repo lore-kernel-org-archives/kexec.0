@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7210AC43334
-	for <kexec@archiver.kernel.org>; Wed, 20 Jul 2022 06:03:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 792E7C43334
+	for <kexec@archiver.kernel.org>; Wed, 20 Jul 2022 06:03:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:Cc:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=BbXuBfqiKQC8A5wZD+QeRgQlbey8oXJp60naUquqLxw=; b=jH3AJtE0exjnJw
-	9m8oXzDPhlwpTMe0TkmIvM/3ltmUv6I3g3ekP2VmMKv/l+2gUgbzfpLRA21DBlv3N1ArN/xyNdHbs
-	sQdytKBMP7oLu4eUc8F2mwoemRsCMABQxufOfxGykwYXMlfsl276cnL5gOCy25dtmkKILq8S2UY+X
-	iNVujMz6hMzCSBtXO6mik6Dt3fUFA9x0qhP5wAqJZKIQL64iDfDVIIB3KxUeaPfW4tAQyNngrYwxs
-	YND9dc6zgRapMJWbjg7cxLV9ZHLodHfYEgcUv3Y1+HUxT6ZpxsjDzuCQELj+rMVOGM8zXguHYFwDI
-	EZSeEcgL+JSfzgtm0xhw==;
+	List-Owner; bh=5RYstS7LB1amotlw63eiSlgFvwsy9nYA9iph7JXXJlY=; b=l+LAj5YM16VlWA
+	p1UUkW4BHNhbBQgGGuUNhRGnMDv5J5EpGrc4nms7I42MVhm0TJRX4hg022+dWDfLfuQF/VXavpO+n
+	v2tjpbUw2RXlYqrQuefboycgk6RxT+MHAWcRTWkTcaFcaBS/Wd3d/vU30jiJ7xFuo0PieDBVRdW77
+	x0WDUtDgtnU5tIkEOw9s19USfRABwO39gqcKOlbMOBFxl448dmYG+I9S7L10JTy/YnqhHboaPSKmj
+	fimOyseoy/PnxzktL0lFLAMDppKEQyCP4pJt9vRN7BNX/Mfsvpav3HwTjKjUqyttzAs7znASIZMjE
+	bIb4KAxGtdoI8YNZdVeg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oE2nh-000sdK-HO; Wed, 20 Jul 2022 06:03:13 +0000
+	id 1oE2nk-000shV-Op; Wed, 20 Jul 2022 06:03:16 +0000
 Received: from fanzine.igalia.com ([178.60.130.6] helo=fanzine2.igalia.com)
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oDtM4-00CDDl-7L
-	for kexec@lists.infradead.org; Tue, 19 Jul 2022 19:58:06 +0000
+	id 1oDtMJ-00CDWi-Mi
+	for kexec@lists.infradead.org; Tue, 19 Jul 2022 19:58:21 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
 	s=20170329; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
 	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
 	List-Post:List-Owner:List-Archive;
-	bh=RpPIVWJSegZTJ1Zk+nlkNWLRtyKXlazgG8e/Axp3REs=; b=BSACue9cX6K/+P66zIiXJJjEw1
-	5/iLWgR55WAotKu8EaOiH4LNs2o72lpFEx7fJGuxr5yYwPlC58BJ0GCa4vhOL/lJbIAuXHBKsoVeN
-	3Yoza4x6t5HXe7ZuO8PdqXl1T8z+xyveJXIhnaHAyPw6aJB4D35Y0erYCzFov2dUweMLaAMdH0NcQ
-	zGn8eLOuWL3cmskLQhDNSk7lk4UGyMaS9CG2RTlMiHzW66iiDGgov+IvNAgMSK7+lunck0NcgRTVw
-	iEiar8HXTgrzWJ2N/aShm42Yan2nN4hNuAD+wYrIOrJGylP/Der0djf/yCd7ij+zKdwyVz1Htt47k
-	OUP1ymyA==;
+	bh=WoDhjsWh6AEBPcpDgb9UnX2r2PUFNxOqgzwoPHKQOTE=; b=JqxeulwSMdmgxDuBt1v3zEAY45
+	WqdXE6/pAG8EWcZuFCACdF7sX/7jDrBbu0PmgEYeaRFlNpW+qd1LWjeJ4piZIirK/RsFHHj/cnlcH
+	GgnI4NGs02BZbdPfGzZTpCDtPDkHpkTRMaLn71GVyJaX7q3wR72VP8Rz+G1NJYUTZEF95s45npK8c
+	qFVyt3sAFMbNsG+UOjiILy/FU9v9PLG6I/M8RPXoGfARmMgRG9GdO4let4KHUk1ZzNQVufT9CXM7r
+	e0KUZR2/6bx3NVLPFS6mcdanQ0mGb75v8l9T67h+xoBRj+xVVtzNRn+g+tG6KGK5Aw2aHmWl8++AC
+	zCZy942Q==;
 Received: from 200-100-212-117.dial-up.telesp.net.br ([200.100.212.117] helo=localhost)
 	by fanzine2.igalia.com with esmtpsa 
 	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1oDtLx-006ffw-O7; Tue, 19 Jul 2022 21:57:58 +0200
+	id 1oDtME-006fhg-H8; Tue, 19 Jul 2022 21:58:15 +0200
 From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
 To: akpm@linux-foundation.org,
 	bhe@redhat.com,
 	pmladek@suse.com,
 	kexec@lists.infradead.org
-Subject: [PATCH v2 12/13] drivers/hv/vmbus, video/hyperv_fb: Untangle and refactor Hyper-V panic notifiers
-Date: Tue, 19 Jul 2022 16:53:25 -0300
-Message-Id: <20220719195325.402745-13-gpiccoli@igalia.com>
+Subject: [PATCH v2 13/13] panic: Fixes the panic_print NMI backtrace setting
+Date: Tue, 19 Jul 2022 16:53:26 -0300
+Message-Id: <20220719195325.402745-14-gpiccoli@igalia.com>
 X-Mailer: git-send-email 2.37.1
 In-Reply-To: <20220719195325.402745-1-gpiccoli@igalia.com>
 References: <20220719195325.402745-1-gpiccoli@igalia.com>
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220719_125804_458155_A09C0CE8 
-X-CRM114-Status: GOOD (  28.08  )
+X-CRM114-CacheID: sfid-20220719_125819_776692_05239100 
+X-CRM114-Status: GOOD (  22.69  )
 X-Mailman-Approved-At: Tue, 19 Jul 2022 23:02:40 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -68,266 +68,145 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Cc: linux-hyperv@vger.kernel.org, halves@canonical.com, peterz@infradead.org, dave.hansen@linux.intel.com, feng.tang@intel.com, mikelley@microsoft.com, "K. Y. Srinivasan" <kys@microsoft.com>, will@kernel.org, Wei Liu <wei.liu@kernel.org>, Stephen Hemminger <sthemmin@microsoft.com>, arnd@arndb.de, corbet@lwn.net, paulmck@kernel.org, fabiomirmar@gmail.com, x86@kernel.org, Dexuan Cui <decui@microsoft.com>, mingo@redhat.com, stern@rowland.harvard.edu, dyoung@redhat.com, vgoyal@redhat.com, Andrea Parri <parri.andrea@gmail.com>, alejandro.j.jimenez@oracle.com, Tianyu Lan <Tianyu.Lan@microsoft.com>, keescook@chromium.org, john.ogness@linutronix.de, Haiyang Zhang <haiyangz@microsoft.com>, rostedt@goodmis.org, bp@alien8.de, luto@kernel.org, hidehiro.kawai.ez@hitachi.com, tglx@linutronix.de, andriy.shevchenko@linux.intel.com, jgross@suse.com, gregkh@linuxfoundation.org, kernel@gpiccoli.net, linux-kernel@vger.kernel.org, senozhatsky@chromium.org, d.hatayama@jp.fujitsu.com, mhiramat@kernel.org, kernel-dev@igalia.com, netdev@vger.kernel.org, vkuznets@redhat.com
+Cc: linux-hyperv@vger.kernel.org, halves@canonical.com, peterz@infradead.org, dave.hansen@linux.intel.com, feng.tang@intel.com, mikelley@microsoft.com, will@kernel.org, arnd@arndb.de, corbet@lwn.net, paulmck@kernel.org, fabiomirmar@gmail.com, x86@kernel.org, mingo@redhat.com, stern@rowland.harvard.edu, dyoung@redhat.com, vgoyal@redhat.com, alejandro.j.jimenez@oracle.com, keescook@chromium.org, john.ogness@linutronix.de, rostedt@goodmis.org, bp@alien8.de, luto@kernel.org, hidehiro.kawai.ez@hitachi.com, tglx@linutronix.de, andriy.shevchenko@linux.intel.com, jgross@suse.com, gregkh@linuxfoundation.org, kernel@gpiccoli.net, linux-kernel@vger.kernel.org, senozhatsky@chromium.org, d.hatayama@jp.fujitsu.com, mhiramat@kernel.org, kernel-dev@igalia.com, netdev@vger.kernel.org, vkuznets@redhat.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Currently Hyper-V guests are among the most relevant users of the panic
-infrastructure, like panic notifiers, kmsg dumpers, etc. The reasons rely
-both in cleaning-up procedures (closing hypervisor <-> guest connection,
-disabling some paravirtualized timer) as well as to data collection
-(sending panic information to the hypervisor) and framebuffer management.
+Commit 8d470a45d1a6 ("panic: add option to dump all CPUs backtraces in panic_print")
+introduced a setting for the "panic_print" kernel parameter to allow
+users to request a NMI backtrace on panic. Problem is that the panic_print
+handling happens after the secondary CPUs are already disabled, hence
+this option ended-up being kind of a no-op - kernel skips the NMI trace
+in idling CPUs, which is the case of offline CPUs.
 
-The thing is: some notifiers are related to others, ordering matters, some
-functionalities are duplicated and there are lots of conditionals behind
-sending panic information to the hypervisor. As part of an effort to
-clean-up the panic notifiers mechanism and better document things, we
-hereby address some of the issues/complexities of Hyper-V panic handling
-through the following changes:
+Fix it by checking the NMI backtrace bit in the panic_print prior to
+the CPU disabling function.
 
-(a) We have die and panic notifiers on vmbus_drv.c and both have goals of
-sending panic information to the hypervisor, though the panic notifier is
-also responsible for a cleaning-up procedure.
-
-This commit clears the code by splitting the panic notifier in two, one
-for closing the vmbus connection whereas the other is only for sending
-panic info to hypervisor. With that, it was possible to merge the die and
-panic notifiers in a single/well-documented function, and clear some
-conditional complexities on sending such information to the hypervisor.
-
-(b) There is a Hyper-V framebuffer panic notifier, which relies in doing
-a vmbus operation that demands a valid connection. So, we must order this
-notifier with the panic notifier from vmbus_drv.c, to guarantee that the
-framebuffer code executes before the vmbus connection is unloaded.
-
-Also, this commit removes a useless header.
-
-Although there is code rework and re-ordering, we expect that this change
-has no functional regressions but instead optimize the path and increase
-panic reliability on Hyper-V. This was tested on Hyper-V with success.
-
-Cc: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-Cc: Dexuan Cui <decui@microsoft.com>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Michael Kelley <mikelley@microsoft.com>
+Fixes: 8d470a45d1a6 ("panic: add option to dump all CPUs backtraces in panic_print")
+Cc: Feng Tang <feng.tang@intel.com>
 Cc: Petr Mladek <pmladek@suse.com>
-Cc: Stephen Hemminger <sthemmin@microsoft.com>
-Cc: Tianyu Lan <Tianyu.Lan@microsoft.com>
-Cc: Wei Liu <wei.liu@kernel.org>
-Tested-by: Fabio A M Martins <fabiomirmar@gmail.com>
 Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 
 ---
 
 
 V2:
-- Unfortunately we cannot rely in the crash shutdown (custom) handler
-to perform the vmbus unload - arm64 architecture doesn't have this
-"feature" [0]. So, in V2 we kept the notifier behavior and always
-unload the vmbus connection, no matter what - thanks Michael for
-pointing that;
-
-- Removed the Fixes tags as per Michael suggestion;
-
-- As per Petr suggestion, we abandoned the idea of distinguish among
-notifiers using an id - so, in V2 we rely in the old and good address
-comparison for that. Thanks Petr for the enriching discussion!
-
-[0] https://lore.kernel.org/lkml/427a8277-49f0-4317-d6c3-4a15d7070e55@igalia.com/
+- new patch, there was no V1 of this one.
 
 
- drivers/hv/vmbus_drv.c          | 109 +++++++++++++++++++-------------
- drivers/video/fbdev/hyperv_fb.c |   8 +++
- 2 files changed, 74 insertions(+), 43 deletions(-)
+Hi folks, thanks upfront for reviews. This is a new patch, fixing an issue
+I found in my tests, so I shoved it into this fixes series.
 
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 547ae334e5cd..75c5623e7289 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -25,7 +25,6 @@
- #include <linux/sched/task_stack.h>
+Notice that while at it, I got rid of the "crash_kexec_post_notifiers"
+local copy in panic(). This was introduced by commit b26e27ddfd2a
+("kexec: use core_param for crash_kexec_post_notifiers boot option"),
+but it is not clear from comments or commit message why this local copy
+is required.
+
+My understanding is that it's a mechanism to prevent some concurrency,
+in case some other CPU modify this variable while panic() is running.
+I find it very unlikely, hence I removed it - but if people consider
+this copy needed, I can respin this patch and keep it, even providing a
+comment about that, in order to be explict about its need.
+
+Let me know your thoughts! Cheers,
+
+Guilherme
+
+
+ kernel/panic.c | 47 +++++++++++++++++++++++++++--------------------
+ 1 file changed, 27 insertions(+), 20 deletions(-)
+
+diff --git a/kernel/panic.c b/kernel/panic.c
+index a3308af28a21..7fb604e95ef9 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -180,9 +180,6 @@ static void panic_print_sys_info(bool console_flush)
+ 		return;
+ 	}
  
- #include <linux/delay.h>
--#include <linux/notifier.h>
- #include <linux/panic_notifier.h>
- #include <linux/ptrace.h>
- #include <linux/screen_info.h>
-@@ -69,53 +68,74 @@ static int hyperv_report_reg(void)
- 	return !sysctl_record_panic_msg || !hv_panic_page;
+-	if (panic_print & PANIC_PRINT_ALL_CPU_BT)
+-		trigger_all_cpu_backtrace();
+-
+ 	if (panic_print & PANIC_PRINT_TASK_INFO)
+ 		show_state();
+ 
+@@ -199,6 +196,30 @@ static void panic_print_sys_info(bool console_flush)
+ 		ftrace_dump(DUMP_ALL);
  }
  
--static int hyperv_panic_event(struct notifier_block *nb, unsigned long val,
 +/*
-+ * The panic notifier below is responsible solely for unloading the
-+ * vmbus connection, which is necessary in a panic event.
-+ *
-+ * Notice an intrincate relation of this notifier with Hyper-V
-+ * framebuffer panic notifier exists - we need vmbus connection alive
-+ * there in order to succeed, so we need to order both with each other
-+ * [see hvfb_on_panic()] - this is done using notifiers' priorities.
++ * Helper that triggers the NMI backtrace (if set in panic_print)
++ * and then performs the secondary CPUs shutdown - we cannot have
++ * the NMI backtrace after the CPUs are off!
 + */
-+static int hv_panic_vmbus_unload(struct notifier_block *nb, unsigned long val,
- 			      void *args)
++static void panic_other_cpus_shutdown(void)
 +{
-+	vmbus_initiate_unload(true);
-+	return NOTIFY_DONE;
-+}
-+static struct notifier_block hyperv_panic_vmbus_unload_block = {
-+	.notifier_call	= hv_panic_vmbus_unload,
-+	.priority	= INT_MIN + 1, /* almost the latest one to execute */
-+};
-+
-+static int hv_die_panic_notify_crash(struct notifier_block *self,
-+				     unsigned long val, void *args);
-+
-+static struct notifier_block hyperv_die_report_block = {
-+	.notifier_call = hv_die_panic_notify_crash,
-+};
-+static struct notifier_block hyperv_panic_report_block = {
-+	.notifier_call = hv_die_panic_notify_crash,
-+};
-+
-+/*
-+ * The following callback works both as die and panic notifier; its
-+ * goal is to provide panic information to the hypervisor unless the
-+ * kmsg dumper is used [see hv_kmsg_dump()], which provides more
-+ * information but isn't always available.
-+ *
-+ * Notice that both the panic/die report notifiers are registered only
-+ * if we have the capability HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE set.
-+ */
-+static int hv_die_panic_notify_crash(struct notifier_block *self,
-+				     unsigned long val, void *args)
- {
- 	struct pt_regs *regs;
-+	bool is_die;
- 
--	vmbus_initiate_unload(true);
--
--	/*
--	 * Hyper-V should be notified only once about a panic.  If we will be
--	 * doing hv_kmsg_dump() with kmsg data later, don't do the notification
--	 * here.
--	 */
--	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE
--	    && hyperv_report_reg()) {
-+	/* Don't notify Hyper-V unless we have a die oops event or panic. */
-+	if (self == &hyperv_panic_report_block) {
-+		is_die = false;
- 		regs = current_pt_regs();
--		hyperv_report_panic(regs, val, false);
-+	} else { /* die event */
-+		if (val != DIE_OOPS)
-+			return NOTIFY_DONE;
-+
-+		is_die = true;
-+		regs = ((struct die_args *)args)->regs;
- 	}
--	return NOTIFY_DONE;
--}
--
--static int hyperv_die_event(struct notifier_block *nb, unsigned long val,
--			    void *args)
--{
--	struct die_args *die = args;
--	struct pt_regs *regs = die->regs;
--
--	/* Don't notify Hyper-V if the die event is other than oops */
--	if (val != DIE_OOPS)
--		return NOTIFY_DONE;
- 
- 	/*
--	 * Hyper-V should be notified only once about a panic.  If we will be
--	 * doing hv_kmsg_dump() with kmsg data later, don't do the notification
--	 * here.
-+	 * Hyper-V should be notified only once about a panic/die. If we will
-+	 * be calling hv_kmsg_dump() later with kmsg data, don't do the
-+	 * notification here.
- 	 */
- 	if (hyperv_report_reg())
--		hyperv_report_panic(regs, val, true);
-+		hyperv_report_panic(regs, val, is_die);
-+
- 	return NOTIFY_DONE;
- }
- 
--static struct notifier_block hyperv_die_block = {
--	.notifier_call = hyperv_die_event,
--};
--static struct notifier_block hyperv_panic_block = {
--	.notifier_call = hyperv_panic_event,
--};
--
- static const char *fb_mmio_name = "fb_range";
- static struct resource *fb_mmio;
- static struct resource *hyperv_mmio;
-@@ -1534,16 +1554,17 @@ static int vmbus_bus_init(void)
- 		if (hyperv_crash_ctl & HV_CRASH_CTL_CRASH_NOTIFY_MSG)
- 			hv_kmsg_dump_register();
- 
--		register_die_notifier(&hyperv_die_block);
-+		register_die_notifier(&hyperv_die_report_block);
-+		atomic_notifier_chain_register(&panic_notifier_list,
-+						&hyperv_panic_report_block);
- 	}
- 
- 	/*
--	 * Always register the panic notifier because we need to unload
--	 * the VMbus channel connection to prevent any VMbus
--	 * activity after the VM panics.
-+	 * Always register the vmbus unload panic notifier because we
-+	 * need to shut the VMbus channel connection on panic.
- 	 */
- 	atomic_notifier_chain_register(&panic_notifier_list,
--			       &hyperv_panic_block);
-+			       &hyperv_panic_vmbus_unload_block);
- 
- 	vmbus_request_offers();
- 
-@@ -2765,15 +2786,17 @@ static void __exit vmbus_exit(void)
- 
- 	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE) {
- 		kmsg_dump_unregister(&hv_kmsg_dumper);
--		unregister_die_notifier(&hyperv_die_block);
-+		unregister_die_notifier(&hyperv_die_report_block);
-+		atomic_notifier_chain_unregister(&panic_notifier_list,
-+						&hyperv_panic_report_block);
- 	}
- 
- 	/*
--	 * The panic notifier is always registered, hence we should
-+	 * The vmbus panic notifier is always registered, hence we should
- 	 * also unconditionally unregister it here as well.
- 	 */
- 	atomic_notifier_chain_unregister(&panic_notifier_list,
--					 &hyperv_panic_block);
-+					&hyperv_panic_vmbus_unload_block);
- 
- 	free_page((unsigned long)hv_panic_page);
- 	unregister_sysctl_table(hv_ctl_table_hdr);
-diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_fb.c
-index e1b65a01fb96..9234d31d4305 100644
---- a/drivers/video/fbdev/hyperv_fb.c
-+++ b/drivers/video/fbdev/hyperv_fb.c
-@@ -1216,7 +1216,15 @@ static int hvfb_probe(struct hv_device *hdev,
- 	par->fb_ready = true;
- 
- 	par->synchronous_fb = false;
++	if (panic_print & PANIC_PRINT_ALL_CPU_BT)
++		trigger_all_cpu_backtrace();
 +
 +	/*
-+	 * We need to be sure this panic notifier runs _before_ the
-+	 * vmbus disconnect, so order it by priority. It must execute
-+	 * before the function hv_panic_vmbus_unload() [drivers/hv/vmbus_drv.c],
-+	 * which is almost at the end of list, with priority = INT_MIN + 1.
++	 * Note that smp_send_stop() is the usual SMP shutdown function,
++	 * which unfortunately may not be hardened to work in a panic
++	 * situation. If we want to do crash dump after notifier calls
++	 * and kmsg_dump, we will need architecture dependent extra
++	 * bits in addition to stopping other CPUs, hence we rely on
++	 * crash_smp_send_stop() for that.
 +	 */
- 	par->hvfb_panic_nb.notifier_call = hvfb_on_panic;
-+	par->hvfb_panic_nb.priority = INT_MIN + 10,
- 	atomic_notifier_chain_register(&panic_notifier_list,
- 				       &par->hvfb_panic_nb);
++	if (!crash_kexec_post_notifiers)
++		smp_send_stop();
++	else
++		crash_smp_send_stop();
++}
++
+ /**
+  *	panic - halt the system
+  *	@fmt: The text string to print
+@@ -214,7 +235,6 @@ void panic(const char *fmt, ...)
+ 	long i, i_next = 0, len;
+ 	int state = 0;
+ 	int old_cpu, this_cpu;
+-	bool _crash_kexec_post_notifiers = crash_kexec_post_notifiers;
  
+ 	if (panic_on_warn) {
+ 		/*
+@@ -289,23 +309,10 @@ void panic(const char *fmt, ...)
+ 	 *
+ 	 * Bypass the panic_cpu check and call __crash_kexec directly.
+ 	 */
+-	if (!_crash_kexec_post_notifiers) {
++	if (!crash_kexec_post_notifiers)
+ 		__crash_kexec(NULL);
+ 
+-		/*
+-		 * Note smp_send_stop is the usual smp shutdown function, which
+-		 * unfortunately means it may not be hardened to work in a
+-		 * panic situation.
+-		 */
+-		smp_send_stop();
+-	} else {
+-		/*
+-		 * If we want to do crash dump after notifier calls and
+-		 * kmsg_dump, we will need architecture dependent extra
+-		 * works in addition to stopping other CPUs.
+-		 */
+-		crash_smp_send_stop();
+-	}
++	panic_other_cpus_shutdown();
+ 
+ 	/*
+ 	 * Run any panic handlers, including those that might need to
+@@ -326,7 +333,7 @@ void panic(const char *fmt, ...)
+ 	 *
+ 	 * Bypass the panic_cpu check and call __crash_kexec directly.
+ 	 */
+-	if (_crash_kexec_post_notifiers)
++	if (crash_kexec_post_notifiers)
+ 		__crash_kexec(NULL);
+ 
+ #ifdef CONFIG_VT
 -- 
 2.37.1
 
