@@ -4,58 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 792E7C43334
-	for <kexec@archiver.kernel.org>; Wed, 20 Jul 2022 06:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C8E98C43334
+	for <kexec@archiver.kernel.org>; Wed, 20 Jul 2022 06:03:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:Cc:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:To:From:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=5RYstS7LB1amotlw63eiSlgFvwsy9nYA9iph7JXXJlY=; b=l+LAj5YM16VlWA
-	p1UUkW4BHNhbBQgGGuUNhRGnMDv5J5EpGrc4nms7I42MVhm0TJRX4hg022+dWDfLfuQF/VXavpO+n
-	v2tjpbUw2RXlYqrQuefboycgk6RxT+MHAWcRTWkTcaFcaBS/Wd3d/vU30jiJ7xFuo0PieDBVRdW77
-	x0WDUtDgtnU5tIkEOw9s19USfRABwO39gqcKOlbMOBFxl448dmYG+I9S7L10JTy/YnqhHboaPSKmj
-	fimOyseoy/PnxzktL0lFLAMDppKEQyCP4pJt9vRN7BNX/Mfsvpav3HwTjKjUqyttzAs7znASIZMjE
-	bIb4KAxGtdoI8YNZdVeg==;
+	List-Owner; bh=UcwaBA5oTzv8+E4Rj0s77dtre7jiwU/pp4UYDfwoH/g=; b=PdzNL0RtLsgIjF
+	7eW13csY2/vx9UuPB0WpnYsMSYKLixwzWIoD5jAzu2vfxVr9afYOda/8F6Nelhp+1u7YfNs9IC7cy
+	jBFcoWU1UzcH3g5PDGVnPtP90g2cQmHrk6FvBjOgFZYqmdeQUYCFmxAAfMhF+DgmkOYl9bJIWZz8/
+	S3mE8Vsh/QES40P4oFS5JZShFMmxoV45Pr2CQrHVAlPpyAWECvT+yI+bb4mIy0q+oK1MuYnqJCtGz
+	CCp1bslU+b65pVliKs+2JdG5yJtinjrT6Pde3AIAb9gaLA68zMkbR+ug/DoHxT4Poxbs2kG72VqvL
+	+rJfkhisp/32aa4H4Y4A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oE2nk-000shV-Op; Wed, 20 Jul 2022 06:03:16 +0000
-Received: from fanzine.igalia.com ([178.60.130.6] helo=fanzine2.igalia.com)
+	id 1oE2nq-000sms-Rx; Wed, 20 Jul 2022 06:03:22 +0000
+Received: from mga02.intel.com ([134.134.136.20])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oDtMJ-00CDWi-Mi
-	for kexec@lists.infradead.org; Tue, 19 Jul 2022 19:58:21 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=WoDhjsWh6AEBPcpDgb9UnX2r2PUFNxOqgzwoPHKQOTE=; b=JqxeulwSMdmgxDuBt1v3zEAY45
-	WqdXE6/pAG8EWcZuFCACdF7sX/7jDrBbu0PmgEYeaRFlNpW+qd1LWjeJ4piZIirK/RsFHHj/cnlcH
-	GgnI4NGs02BZbdPfGzZTpCDtPDkHpkTRMaLn71GVyJaX7q3wR72VP8Rz+G1NJYUTZEF95s45npK8c
-	qFVyt3sAFMbNsG+UOjiILy/FU9v9PLG6I/M8RPXoGfARmMgRG9GdO4let4KHUk1ZzNQVufT9CXM7r
-	e0KUZR2/6bx3NVLPFS6mcdanQ0mGb75v8l9T67h+xoBRj+xVVtzNRn+g+tG6KGK5Aw2aHmWl8++AC
-	zCZy942Q==;
-Received: from 200-100-212-117.dial-up.telesp.net.br ([200.100.212.117] helo=localhost)
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1oDtME-006fhg-H8; Tue, 19 Jul 2022 21:58:15 +0200
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-To: akpm@linux-foundation.org,
-	bhe@redhat.com,
-	pmladek@suse.com,
-	kexec@lists.infradead.org
-Subject: [PATCH v2 13/13] panic: Fixes the panic_print NMI backtrace setting
-Date: Tue, 19 Jul 2022 16:53:26 -0300
-Message-Id: <20220719195325.402745-14-gpiccoli@igalia.com>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20220719195325.402745-1-gpiccoli@igalia.com>
-References: <20220719195325.402745-1-gpiccoli@igalia.com>
+	id 1oDtuB-00ChwY-8m
+	for kexec@lists.infradead.org; Tue, 19 Jul 2022 20:33:20 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1658262799; x=1689798799;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=20RPDLm8Al5aPVJySa70I/GMs19LDvZGqa/P5oQG5pU=;
+  b=Ek5GYUiKEs3sj0eIE/xOSgBRbeBHW2lnE65CNmQdepBIdYIulTlHWs4Q
+   TL9faDUomnM5sK157k4RUOGZkCDLF5hcwDevZMIWwQSkAtUEQAVppeYqV
+   OkHx1tHcSIXG4KfjwoXaQYnAMlQV8a8OZZkenXBnfu6XgRcQ6ivHY2b7z
+   bZt0d6yqieW8CAeLPf4L7QKpENnu+LEe3WqcFT+eNfd7ARKFLGTm7iWvd
+   XbE1ty8IgGb63derOdoI8CKwW2U2mo2k6873UlSlCST9uUN45j1bHVyHk
+   x9SaUO6wETDBQI+FO/DeAkZ5d9blgaYfZydmInI1rEbh/B5UB9Q8r7qYN
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10413"; a="273427712"
+X-IronPort-AV: E=Sophos;i="5.92,285,1650956400"; 
+   d="scan'208";a="273427712"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2022 13:33:16 -0700
+X-IronPort-AV: E=Sophos;i="5.92,285,1650956400"; 
+   d="scan'208";a="843784574"
+Received: from avandeve-mobl.amr.corp.intel.com (HELO [10.209.102.45]) ([10.209.102.45])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2022 13:33:13 -0700
+Message-ID: <e292e128-d732-e770-67d7-b6ed947cec7b@linux.intel.com>
+Date: Tue, 19 Jul 2022 13:33:13 -0700
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v2 09/13] notifier: Show function names on notifier
+ routines if DEBUG_NOTIFIERS is set
+Content-Language: en-US
+To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>, akpm@linux-foundation.org,
+ bhe@redhat.com, pmladek@suse.com, kexec@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ netdev@vger.kernel.org, x86@kernel.org, kernel-dev@igalia.com,
+ kernel@gpiccoli.net, halves@canonical.com, fabiomirmar@gmail.com,
+ alejandro.j.jimenez@oracle.com, andriy.shevchenko@linux.intel.com,
+ arnd@arndb.de, bp@alien8.de, corbet@lwn.net, d.hatayama@jp.fujitsu.com,
+ dave.hansen@linux.intel.com, dyoung@redhat.com, feng.tang@intel.com,
+ gregkh@linuxfoundation.org, mikelley@microsoft.com,
+ hidehiro.kawai.ez@hitachi.com, jgross@suse.com, john.ogness@linutronix.de,
+ keescook@chromium.org, luto@kernel.org, mhiramat@kernel.org,
+ mingo@redhat.com, paulmck@kernel.org, peterz@infradead.org,
+ rostedt@goodmis.org, senozhatsky@chromium.org, stern@rowland.harvard.edu,
+ tglx@linutronix.de, vgoyal@redhat.com, vkuznets@redhat.com, will@kernel.org,
+ Cong Wang <xiyou.wangcong@gmail.com>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Valentin Schneider <valentin.schneider@arm.com>,
+ Xiaoming Ni <nixiaoming@huawei.com>
+References: <20220719195325.402745-1-gpiccoli@igalia.com>
+ <20220719195325.402745-10-gpiccoli@igalia.com>
+From: Arjan van de Ven <arjan@linux.intel.com>
+In-Reply-To: <20220719195325.402745-10-gpiccoli@igalia.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220719_125819_776692_05239100 
-X-CRM114-Status: GOOD (  22.69  )
+X-CRM114-CacheID: sfid-20220719_133319_436913_A4D351E3 
+X-CRM114-Status: UNSURE (   9.85  )
+X-CRM114-Notice: Please train this message.
 X-Mailman-Approved-At: Tue, 19 Jul 2022 23:02:40 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -68,147 +93,25 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Cc: linux-hyperv@vger.kernel.org, halves@canonical.com, peterz@infradead.org, dave.hansen@linux.intel.com, feng.tang@intel.com, mikelley@microsoft.com, will@kernel.org, arnd@arndb.de, corbet@lwn.net, paulmck@kernel.org, fabiomirmar@gmail.com, x86@kernel.org, mingo@redhat.com, stern@rowland.harvard.edu, dyoung@redhat.com, vgoyal@redhat.com, alejandro.j.jimenez@oracle.com, keescook@chromium.org, john.ogness@linutronix.de, rostedt@goodmis.org, bp@alien8.de, luto@kernel.org, hidehiro.kawai.ez@hitachi.com, tglx@linutronix.de, andriy.shevchenko@linux.intel.com, jgross@suse.com, gregkh@linuxfoundation.org, kernel@gpiccoli.net, linux-kernel@vger.kernel.org, senozhatsky@chromium.org, d.hatayama@jp.fujitsu.com, mhiramat@kernel.org, kernel-dev@igalia.com, netdev@vger.kernel.org, vkuznets@redhat.com
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Commit 8d470a45d1a6 ("panic: add option to dump all CPUs backtraces in panic_print")
-introduced a setting for the "panic_print" kernel parameter to allow
-users to request a NMI backtrace on panic. Problem is that the panic_print
-handling happens after the secondary CPUs are already disabled, hence
-this option ended-up being kind of a no-op - kernel skips the NMI trace
-in idling CPUs, which is the case of offline CPUs.
-
-Fix it by checking the NMI backtrace bit in the panic_print prior to
-the CPU disabling function.
-
-Fixes: 8d470a45d1a6 ("panic: add option to dump all CPUs backtraces in panic_print")
-Cc: Feng Tang <feng.tang@intel.com>
-Cc: Petr Mladek <pmladek@suse.com>
-Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
-
----
+On 7/19/2022 12:53 PM, Guilherme G. Piccoli wrote:
+> Currently we have a debug infrastructure in the notifiers file, but
+> it's very simple/limited. Extend it by:
+> 
+> (a) Showing all registered/unregistered notifiers' callback names;
 
 
-V2:
-- new patch, there was no V1 of this one.
+I'm not yet convinced that this is the right direction.
+The original intent for this "debug" feature was to be lightweight enough that it could run in production, since at the time, rootkits
+liked to clobber/hijack notifiers and there were also some other signs of corruption at the time.
 
+By making something print (even at pr_info) for what are probably frequent non-error operations, you turn something that is light
+into something that's a lot more heavy and generally that's not a great idea... it'll be a performance surprise.
 
-Hi folks, thanks upfront for reviews. This is a new patch, fixing an issue
-I found in my tests, so I shoved it into this fixes series.
-
-Notice that while at it, I got rid of the "crash_kexec_post_notifiers"
-local copy in panic(). This was introduced by commit b26e27ddfd2a
-("kexec: use core_param for crash_kexec_post_notifiers boot option"),
-but it is not clear from comments or commit message why this local copy
-is required.
-
-My understanding is that it's a mechanism to prevent some concurrency,
-in case some other CPU modify this variable while panic() is running.
-I find it very unlikely, hence I removed it - but if people consider
-this copy needed, I can respin this patch and keep it, even providing a
-comment about that, in order to be explict about its need.
-
-Let me know your thoughts! Cheers,
-
-Guilherme
-
-
- kernel/panic.c | 47 +++++++++++++++++++++++++++--------------------
- 1 file changed, 27 insertions(+), 20 deletions(-)
-
-diff --git a/kernel/panic.c b/kernel/panic.c
-index a3308af28a21..7fb604e95ef9 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -180,9 +180,6 @@ static void panic_print_sys_info(bool console_flush)
- 		return;
- 	}
- 
--	if (panic_print & PANIC_PRINT_ALL_CPU_BT)
--		trigger_all_cpu_backtrace();
--
- 	if (panic_print & PANIC_PRINT_TASK_INFO)
- 		show_state();
- 
-@@ -199,6 +196,30 @@ static void panic_print_sys_info(bool console_flush)
- 		ftrace_dump(DUMP_ALL);
- }
- 
-+/*
-+ * Helper that triggers the NMI backtrace (if set in panic_print)
-+ * and then performs the secondary CPUs shutdown - we cannot have
-+ * the NMI backtrace after the CPUs are off!
-+ */
-+static void panic_other_cpus_shutdown(void)
-+{
-+	if (panic_print & PANIC_PRINT_ALL_CPU_BT)
-+		trigger_all_cpu_backtrace();
-+
-+	/*
-+	 * Note that smp_send_stop() is the usual SMP shutdown function,
-+	 * which unfortunately may not be hardened to work in a panic
-+	 * situation. If we want to do crash dump after notifier calls
-+	 * and kmsg_dump, we will need architecture dependent extra
-+	 * bits in addition to stopping other CPUs, hence we rely on
-+	 * crash_smp_send_stop() for that.
-+	 */
-+	if (!crash_kexec_post_notifiers)
-+		smp_send_stop();
-+	else
-+		crash_smp_send_stop();
-+}
-+
- /**
-  *	panic - halt the system
-  *	@fmt: The text string to print
-@@ -214,7 +235,6 @@ void panic(const char *fmt, ...)
- 	long i, i_next = 0, len;
- 	int state = 0;
- 	int old_cpu, this_cpu;
--	bool _crash_kexec_post_notifiers = crash_kexec_post_notifiers;
- 
- 	if (panic_on_warn) {
- 		/*
-@@ -289,23 +309,10 @@ void panic(const char *fmt, ...)
- 	 *
- 	 * Bypass the panic_cpu check and call __crash_kexec directly.
- 	 */
--	if (!_crash_kexec_post_notifiers) {
-+	if (!crash_kexec_post_notifiers)
- 		__crash_kexec(NULL);
- 
--		/*
--		 * Note smp_send_stop is the usual smp shutdown function, which
--		 * unfortunately means it may not be hardened to work in a
--		 * panic situation.
--		 */
--		smp_send_stop();
--	} else {
--		/*
--		 * If we want to do crash dump after notifier calls and
--		 * kmsg_dump, we will need architecture dependent extra
--		 * works in addition to stopping other CPUs.
--		 */
--		crash_smp_send_stop();
--	}
-+	panic_other_cpus_shutdown();
- 
- 	/*
- 	 * Run any panic handlers, including those that might need to
-@@ -326,7 +333,7 @@ void panic(const char *fmt, ...)
- 	 *
- 	 * Bypass the panic_cpu check and call __crash_kexec directly.
- 	 */
--	if (_crash_kexec_post_notifiers)
-+	if (crash_kexec_post_notifiers)
- 		__crash_kexec(NULL);
- 
- #ifdef CONFIG_VT
--- 
-2.37.1
 
 
 _______________________________________________
