@@ -4,75 +4,118 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 61E60C00144
-	for <kexec@archiver.kernel.org>; Mon,  1 Aug 2022 08:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C817FC19F2B
+	for <kexec@archiver.kernel.org>; Mon,  1 Aug 2022 15:44:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=blG6kwcFrmv8CdNpfIcl871Z6JCLK1D101tTSlfMXPo=; b=mvmvJNp0Zla6KQ
-	qeCAG7wKJxqflM7lDnxD6GWZEJOecZm0kvSNqsqxmYPGGzvg+un+0qFh/0Oc1Tr74fvdJa9DgcMx0
-	acpzgyHzozCe0yrv65Jf/Vex6Lgavym607brkDhIuoLn54mSucYGjdanufCkjN+WtYBKug5bPAxb+
-	+6EPVCzTNB/oh97pUAXiBhwAaBOgPhz7r7o7e5uDl545uICmswncLQ2tnybyOF4yKmPKuWJq95s9I
-	AB7yUo5IetH7heZgzJopPCSWPZcq/xbDZqt8BPsVHD59BqcOY8NHRaXBBlypNUOeAhYQcUIvV1cc5
-	XUufKHaR9clNyrYujnEA==;
+	List-Owner; bh=p+LqwSGY4UEXNrEAfcrKqZMy505zo5cPdqgByPbT2IM=; b=U/zKQ4EezUyCTo
+	/TRwCBsZSUAxKjTa0XteXThqK63C2WLaRB2Ub9FbSj1LMrqVtPvoWJAJolMLao3u0eB5IgDTurOju
+	Hb91/7WPeqA63L3tdiWV57t+bAqFO34DfyC1T3QnDGeeaLh+sjB5B134CIgAfeT3XFier19C1s/fA
+	0wSlhWS+sjZFida2V6BsVkdKZijaBf5nu/fyJjPUb1pfUfl4tpJ37+Z6wU6C52Aax7lCG/aDsOGwW
+	hegvVKS2O4LA8s0I8b7S86sk+Fi1rWpprBHSg+cE4h/U10kLdwa4abLz2AWitPNIDxU1O7etAKE07
+	HwOkVIxXEs6x0vBiOgpQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oIQgs-003udW-KX; Mon, 01 Aug 2022 08:22:18 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1oIXaN-007XxX-Pl; Mon, 01 Aug 2022 15:44:03 +0000
+Received: from mail-pj1-x102f.google.com ([2607:f8b0:4864:20::102f])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oIQfE-003ta0-L9
-	for kexec@lists.infradead.org; Mon, 01 Aug 2022 08:20:38 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1659342033;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pJH07x8QvE4r/0Wcvdf2EaLzPedOQZnkWNurVPoZ0fI=;
-	b=IRp9bzVrgUC+IB0fzcAve03sGU1JKCEeud/BY9HZXVOoRo9OtKv+aCPUd4OgvS9YP6weUy
-	+P51Hz28OHIWUubQMVKU/2sB+wIM83TJvvjezQvrqIsteUHVc/PDN9IQdHN9BDFQa7dFuB
-	GyezDTSvGByte15v4lLFtrPiSd0wf9M=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-398-wsEDCQC2NEKteI_g3du0kQ-1; Mon, 01 Aug 2022 04:20:32 -0400
-X-MC-Unique: wsEDCQC2NEKteI_g3du0kQ-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9434B1C14488;
-	Mon,  1 Aug 2022 08:20:31 +0000 (UTC)
-Received: from localhost (ovpn-12-103.pek2.redhat.com [10.72.12.103])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 10BDE492C3B;
-	Mon,  1 Aug 2022 08:20:29 +0000 (UTC)
-Date: Mon, 1 Aug 2022 16:20:25 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Zhen Lei <thunder.leizhen@huawei.com>
-Cc: Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-	"Eric W . Biederman" <ebiederm@xmission.com>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Feng Zhou <zhoufeng.zf@bytedance.com>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	Chen Zhou <dingguo.cz@antgroup.com>,
-	John Donnelly <John.p.donnelly@oracle.com>,
-	Dave Kleikamp <dave.kleikamp@oracle.com>
-Subject: Re: [PATCH v3 0/2] arm64: kdump: Function supplement and performance
- optimization
-Message-ID: <YueMyUqannVg7l9v@MiWiFi-R3L-srv>
-References: <20220711090319.1604-1-thunder.leizhen@huawei.com>
+	id 1oEIgC-00CpcZ-Ey
+	for kexec@lists.infradead.org; Wed, 20 Jul 2022 23:00:33 +0000
+Received: by mail-pj1-x102f.google.com with SMTP id gq7so2919501pjb.1
+        for <kexec@lists.infradead.org>; Wed, 20 Jul 2022 16:00:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=O60CXwG50CMNbFlPYhSbwiVpECXcVQR97MrNWudYYbU=;
+        b=GV87zx+h1LsYC4vg5VgjnB9AbrOjX45i+veof+k4QSYkZQ54zna7rGlFeOH4O/Dx5u
+         z32IGlZuePn4MH5P8UWLmLjFd1EmmjYN/+DWNoTMO1N3xjx7JwR59cN+qeQRNBnO7LKu
+         IYZVMZFPCneCJ5lua2KLUs5BT//OUWtxsAgN51D6jfGjhFyN24iIzFoUUi4zYB7uwE3z
+         B9GmsZUveR8gWujcMGePBGnnw4oU/rapQuenZ8yPATDmDwQxRoAnAd7Qc/We7bvqp5HS
+         695RMT5n0WYh1A6MVbKKIcrv4wRyKEBDHHZi5y5Tm8rXNUOiPb+zL08D3wU/GXas45Rt
+         sBzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=O60CXwG50CMNbFlPYhSbwiVpECXcVQR97MrNWudYYbU=;
+        b=7BMLvmZNNuOUaAAnd2Thu8IIG9dSEvBx4uL2nmaHuo4xmcYO8TvKZGJN5c85Oov+5Y
+         odgqMTP3L8/yXUXU7/kHWsWhK1CvFRF0WjTMUPLat8M6vNZxAI0VgR4OZaB+Tvp62B2P
+         kvkLgvc2TJWLymf+TK3+pgwfUBKVSTqLRqCHnMXQQYkODjUzN+z/CKx0tCNqIyFDuIel
+         Wn9dzsXmSQSzYVsn+uE2hKyOFJiWcDkICDSR0fcmKVyVVV0HsG6Lks7IeULdxOX1jPUV
+         2bm8W0IYpMukN2gF3AE62sUgykc+yri0UHSYsbnZkQFn7/SKf/+HiKLmn9NG6famj+ub
+         8czw==
+X-Gm-Message-State: AJIora8oUh3cMU6QcX2KE30+ANUDL6YiSCfwaExQZsIuo20dQ1GCG5dZ
+	ksf11Op40OaJq0ZNtefFeoc=
+X-Google-Smtp-Source: AGRyM1s87lbItSmnHSuhbYCOPsPC7+W+QdNmf7JWp1I8Kuwuy8PBsh19YZaIFJjUB1rZOtW9Pej3cg==
+X-Received: by 2002:a17:902:aa0b:b0:16b:c4a6:1dc9 with SMTP id be11-20020a170902aa0b00b0016bc4a61dc9mr41133063plb.83.1658358013694;
+        Wed, 20 Jul 2022 16:00:13 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id z2-20020aa79f82000000b005252ab25363sm149366pfr.206.2022.07.20.16.00.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Jul 2022 16:00:13 -0700 (PDT)
+From: Florian Fainelli <f.fainelli@gmail.com>
+To: bcm-kernel-feedback-list@broadcom.com,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	akpm@linux-foundation.org,
+	bhe@redhat.com,
+	pmladek@suse.com,
+	kexec@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org,
+	x86@kernel.org,
+	kernel-dev@igalia.com,
+	kernel@gpiccoli.net,
+	halves@canonical.com,
+	fabiomirmar@gmail.com,
+	alejandro.j.jimenez@oracle.com,
+	andriy.shevchenko@linux.intel.com,
+	arnd@arndb.de,
+	bp@alien8.de,
+	corbet@lwn.net,
+	d.hatayama@jp.fujitsu.com,
+	dave.hansen@linux.intel.com,
+	dyoung@redhat.com,
+	feng.tang@intel.com,
+	gregkh@linuxfoundation.org,
+	mikelley@microsoft.com,
+	hidehiro.kawai.ez@hitachi.com,
+	jgross@suse.com,
+	john.ogness@linutronix.de,
+	keescook@chromium.org,
+	luto@kernel.org,
+	mhiramat@kernel.org,
+	mingo@redhat.com,
+	paulmck@kernel.org,
+	peterz@infradead.org,
+	rostedt@goodmis.org,
+	senozhatsky@chromium.org,
+	stern@rowland.harvard.edu,
+	tglx@linutronix.de,
+	vgoyal@redhat.com,
+	vkuznets@redhat.com,
+	will@kernel.org,
+	Brian Norris <computersforpeace@gmail.com>,
+	Doug Berger <opendmb@gmail.com>,
+	Justin Chen <justinpopo6@gmail.com>,
+	Lee Jones <lee.jones@linaro.org>,
+	Markus Mayer <mmayer@broadcom.com>
+Subject: Re: [PATCH v2 04/13] soc: bcm: brcmstb: Document panic notifier action and remove useless header
+Date: Wed, 20 Jul 2022 16:00:09 -0700
+Message-Id: <20220720230009.2478166-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220719195325.402745-5-gpiccoli@igalia.com>
+References: <20220719195325.402745-1-gpiccoli@igalia.com> <20220719195325.402745-5-gpiccoli@igalia.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20220711090319.1604-1-thunder.leizhen@huawei.com>
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.10
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220801_012036_868292_C36A9DC2 
-X-CRM114-Status: GOOD (  22.37  )
+X-CRM114-CacheID: sfid-20220720_160032_518574_0B86301C 
+X-CRM114-Status: GOOD (  13.11  )
+X-Mailman-Approved-At: Mon, 01 Aug 2022 08:44:02 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,62 +132,32 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Catalin,
+On Tue, 19 Jul 2022 16:53:17 -0300, "Guilherme G. Piccoli" <gpiccoli@igalia.com> wrote:
+> The panic notifier of this driver is very simple code-wise, just a
+> memory write to a special position with some numeric code. But this
+> is not clear from the semantic point-of-view, and there is no public
+> documentation about that either.
+> 
+> After discussing this in the mailing-lists [0] and having Florian
+> explained it very well, document that in the code for the future
+> generations asking the same questions. Also, while at it, remove
+> a useless header.
+> 
+> [0] https://lore.kernel.org/lkml/781cafb0-8d06-8b56-907a-5175c2da196a@gmail.com
+> 
+> Cc: Brian Norris <computersforpeace@gmail.com>
+> Cc: Doug Berger <opendmb@gmail.com>
+> Cc: Justin Chen <justinpopo6@gmail.com>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Markus Mayer <mmayer@broadcom.com>
+> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+> 
+> ---
 
-On 07/11/22 at 05:03pm, Zhen Lei wrote:
-> v2 --> v3:
-> 1. Discard patch 3 in v2, a cleanup patch.
-> 
-> v1 --> v2:
-> 1. Update the commit message of Patch 1, explicitly indicates that "crashkernel=X,high"
->    is specified but "crashkernel=Y,low" is not specified.
-> 2. Drop Patch 4-5. Currently, focus on function integrity, performance optimization
->    will be considered in later versions.
-> 3. Patch 3 is not mandatory, it's just a cleanup now, although it is a must for patch 4-5.
->    But to avoid subsequent duplication of effort, I'm glad it was accepted.
-> 
-> 
-> v1:
-> After the basic functions of "support reserving crashkernel above 4G on arm64
-> kdump"(see https://lkml.org/lkml/2022/5/6/428) are implemented, we still have
-> three features to be improved.
-> 1. When crashkernel=X,high is specified but crashkernel=Y,low is not specified,
->    the default crash low memory size is provided.
-> 2. For crashkernel=X without '@offset', if the low memory fails to be allocated,
->    fall back to reserve region from high memory(above DMA zones).
-> 3. If crashkernel=X,high is used, page mapping is performed only for the crash
->    high memory, and block mapping is still used for other linear address spaces.
->    Compared to the previous version:
->    (1) For crashkernel=X[@offset], the memory above 4G is not changed to block
->        mapping, leave it to the next time.
->    (2) The implementation method is modified. Now the implementation is simpler
->        and clearer.
-
-Do you have plan to pick this series so that it can be taken into 5.20
-rc-1~3?
-
-We have back ported the basic crashkernel=high, low, support into our
-distros and have taken wide testing on arm64 servers, need this patchset
-to back port for more testing. 
-
-Thanks
-Baoquan
-
-> 
-> Zhen Lei (2):
->   arm64: kdump: Provide default size when crashkernel=Y,low is not
->     specified
->   arm64: kdump: Support crashkernel=X fall back to reserve region above
->     DMA zones
-> 
->  .../admin-guide/kernel-parameters.txt         | 10 ++-----
->  arch/arm64/mm/init.c                          | 28 +++++++++++++++++--
->  2 files changed, 28 insertions(+), 10 deletions(-)
-> 
-> -- 
-> 2.25.1
-> 
-
+Applied to https://github.com/Broadcom/stblinux/commits/drivers/next, thanks!
+--
+Florian
 
 _______________________________________________
 kexec mailing list
