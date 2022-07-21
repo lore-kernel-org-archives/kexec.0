@@ -4,138 +4,154 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6179BC433EF
-	for <kexec@archiver.kernel.org>; Thu, 21 Jul 2022 15:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 665ACC43334
+	for <kexec@archiver.kernel.org>; Thu, 21 Jul 2022 18:18:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=QNjuttmHljDcB3gtxp3s2cEun6RcbWpqH8CiG9QZRkU=; b=xdApuV6jdNtMCC
-	8qwMKnKxDRgE+Dx/K8Z3xN+okwNZeC+e6SoHI3X7+ncaDpQP2SyhZ5W4wwPoZqBPgqmOAIhrkT7NR
-	GUpagI1CWQP6kca7KlsRwLTEQdCnkSMaUEeD3e6CtdGCurDyrgU4+d3YmdCu/tZ7SCjAvA28gOujs
-	vAV+IJ1ydVb68rrrO1ulRwvbssSyy1V6mfKFsAjtDb26lwki46BTMgJeVJh09QDg7E7da7r5QNzbB
-	co7ABqsojBnIiF1hpwmyjwm9yZ+a3dPna8qQrSw0ogbkh7a9wR/sJ721p0FxTW2VTIUgqviaKv82K
-	fIy1RagPwcQn/3dVh9uw==;
+	List-Owner; bh=55dqxM/u6JZr1lEc3cVt39jBNRA65JJGI4BBap6fzvs=; b=WV7VSGsQ0cxYbq
+	LuBoedwf+xbvJe4a149D2PntBjvofG+b5FQiOMEmx6ZwSP7izUHaqyzbV/lHoW1cjaAkJFWtFt0nb
+	T+AbpgSUQsYV1q0HQuydpTzHk802vTHkPD2c0oIez8n7VbM+XeRz3dcHhEOk80ccuDKTp89OWmacV
+	P+lGZM1kIITCcNMNYlzstGtBJHyMh7tsk8WjZ+szLB5L9bm0UrhayM8mgzsRJATuf49BB+O5JEpIN
+	GQBJiJI4yMen/dSSW30TC5OFyzAcA3uHxTiY7Kz7iysl+6s2JXUnOPyCylXkdte6+yhR+uujXafOC
+	I+2OSCMHn8FIafSf/fLg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oEYM3-009H23-BG; Thu, 21 Jul 2022 15:44:47 +0000
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42])
+	id 1oEal5-00BNtO-Fx; Thu, 21 Jul 2022 18:18:47 +0000
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oEYKQ-009Frk-1z
-	for kexec@lists.infradead.org; Thu, 21 Jul 2022 15:43:07 +0000
-Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26LCsALU017692;
-	Thu, 21 Jul 2022 08:41:15 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=4ocVO5ur3EUFuUg/3NEJrYxFD/K59ocCF64tpx1SNGA=;
- b=M+DlHjrCYSSb6faq9BvXYxo2hrP9mFHGOrFosad0SjldOBJZ6PZHBPxfJFLt03muFppC
- Sm1HGNWPnlzG+UemCNH8kbCLNR6RdHUblW5zP+7o5aHHp5TmpJ/3SCNjXfJpSWsYio5R
- Vd+5FFaSb7WZLazp1AgCoi8Zp8HPYyg8mhc= 
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2171.outbound.protection.outlook.com [104.47.56.171])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3hf77415y6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 21 Jul 2022 08:41:15 -0700
+	id 1oEal2-00BNql-48
+	for kexec@lists.infradead.org; Thu, 21 Jul 2022 18:18:46 +0000
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26LIEmJM025437;
+	Thu, 21 Jul 2022 18:18:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references :
+ content-transfer-encoding : content-type : mime-version; s=corp-2022-7-12;
+ bh=/JvK+SdTxihqtBTQFphlWFKn0sxNjACbR/lXt8fOHbU=;
+ b=1Y2Sn1dlUBI4SHbjCKLZ4Hg2Z3j5pyxt+Xuqtoi6d8muEq0pJZhJooi2auVB6uThi5Wb
+ ULAMKZKcBzTbng08NhWhACnK56l4ULMeCPhHekRfe4SX4PRTz4T9tYinbDJmcU52VTt9
+ orphZ9nzV4xiRsmefGmBCbpmWWzLdfcCDA3CuaTy4izMHhdO2DpT5kgJuBYJ7QR0g2Lo
+ G5a8OEOam7FCXFsGR2rHVJaOwoH2X0kOV9qU8JYkHKkY/8PFOfMsB2cfyKy63NoveksH
+ goTP8PAOphP+rrq7DUaLwR//JR2BJrPGDek2OPtl/upzr9x44LtgaC2xcVHljZyz38a5 0Q== 
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3hbnvtndyv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 21 Jul 2022 18:18:15 +0000
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 26LH23f7039182;
+	Thu, 21 Jul 2022 18:18:14 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2100.outbound.protection.outlook.com [104.47.55.100])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3hc1k70xdh-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 21 Jul 2022 18:18:14 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Md37ZHiR6ahbdmUemY60/+udhHQrcJr+atAr1MvTuIbNvJyY1xmjd7IYKE4pXOl+0BZZev4NtD3fXv29REsLrZTeZEvaUsAIRxdLI7ckcjEaR9cItmXLxnGXgS+I/Y79jshHicvqpMJ0m+FVf1okK6AQMttOLDHh0ioEBUL6aaBNLeljyP0yS3i7ZNNKuoc14gwrlxM9DqhyIRXqlLIEtLnkOyDT11fxZ67XC0L7SoeNN7unLPv782SJJCVLO66mU0e9ZaIgxw/yIR9WZa6xTuL2JRL/lPjeCBt0DWEM7xv10Si4ijU8WNiHpAOzqhUG+45UkbcJe/DB8V15c+6mUg==
+ b=HX2MBOOcGX1M/63C0EDQBnCK+f4Fi3aj6CSnD5xe2gheFw9TeHcz17qsYwH/qeyuwCJpsd5GWCjceKipeV2IgvcQLX0cyOQxrhUVldKj1Fjcj9cJp5PFx1jOE8Njh3OcGmCHYyJ4J/qukIGn/lGb9uFX+Y+GugWq9ICASYfd08dqq8Vr4iY/gZE6m/4iJ04csKvlix8T6jFxPKCK0O/zqLZ84OdgXt4U2zv8CH1t696FJ4krhzIGqo0tRDiYW6QZhwXnq42PXCM9XfsZbcj/O/dPNY6IR+hcM280d5UHDU8mN0ojw5MVLUfg4eXZeQJCLjuRCS6Y/nBOUuAjhHo/Lw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4ocVO5ur3EUFuUg/3NEJrYxFD/K59ocCF64tpx1SNGA=;
- b=F5VFhgV7cYrJakbMr/+yZa4f1fIqr82R/QIIT1xFX6CH+mp8GYwaXjJPdUYTs0kq9e3TooRHyTxVoIYAibJyjeKpypB3MeWqahTuJbw/NG9neZLh2SEMmU5N9USwk1gADVQ5p93thd7qN2t0SO4Hh3I4u2/gtZqFoRTmwXBW0ne6mjoEjckREglDzjB07RtZUaF2u9qy5xP84fLxnq9JvMG0j2BiR2KTRrzNi3xv43Yqi0ekiwBBXLBoBnK/VKPsjkn878UUpBUrY8x4z7zoImoNBo+nfXmdPXCGCdMhEQJN1yNav9KKAcBgpHivj6CXlF2GvSYw1OhgdfXY7iGDNg==
+ bh=/JvK+SdTxihqtBTQFphlWFKn0sxNjACbR/lXt8fOHbU=;
+ b=CepQ2ATKo/bnnLRYlVLtw8tz54s9OyRqBnHHFRvaXRtEjEPDqxy1m0N8zIoXzr3w/+oJMuESscA2cB8m9fhVzXrD40uIADZPA/CcebJwdmnyZZhTcw6j+Ay5cZA/nZ8vjF6rDzQYodRcVaulgMo3XYZh3Uivmu+6ZEChiYmX9cKERd8W9nmsqJ2j1nvuoZBuwIeOgezqUCYi2hGmU5kzOZIDkHeQ7UzyaM7eaVW/oPrPuCWQubAt+yQZufQFndl7LV8CYJ4N9FQcnNKsyRj6PsJgZPYpSlDP1Uii6u2aey+oPC1CAf3igJSZ3wuoah05HNZ3knaMParrg2jXjnegwg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-Received: from MW4PR15MB4475.namprd15.prod.outlook.com (2603:10b6:303:104::16)
- by SJ0PR15MB4171.namprd15.prod.outlook.com (2603:10b6:a03:2ed::24) with
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/JvK+SdTxihqtBTQFphlWFKn0sxNjACbR/lXt8fOHbU=;
+ b=M2sls0KYaR2CEgV0rqtaUGEc2mPrcOaKEmslbDQFOeLRNcNezhMnvuw7vupsSbmvp7J9TwPRyYofGCG5awPIRqSl1k2XX3NudrJI4X5zBmxywu+4EjOZaoDtQ5pi4tByUs5uFtQVj08JfOVelcCV+yxWqyg56yOfxbApbmtsM4s=
+Received: from CO1PR10MB4531.namprd10.prod.outlook.com (2603:10b6:303:6c::22)
+ by CH0PR10MB4890.namprd10.prod.outlook.com (2603:10b6:610:c9::5) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5458.19; Thu, 21 Jul
- 2022 15:41:14 +0000
-Received: from MW4PR15MB4475.namprd15.prod.outlook.com
- ([fe80::a88e:613f:76a7:a5a2]) by MW4PR15MB4475.namprd15.prod.outlook.com
- ([fe80::a88e:613f:76a7:a5a2%9]) with mapi id 15.20.5458.019; Thu, 21 Jul 2022
- 15:41:13 +0000
-Date: Thu, 21 Jul 2022 08:41:10 -0700
-From: Martin KaFai Lau <kafai@fb.com>
-To: Slark Xiao <slark_xiao@163.com>
-Cc: corbet@lwn.net, bhe@redhat.com, vgoyal@redhat.com, dyoung@redhat.com,
-        ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
-        martin.lau@linux.dev, song@kernel.org, yhs@fb.com,
-        john.fastabend@gmail.com, kpsingh@kernel.org, sdf@google.com,
-        haoluo@google.com, jolsa@kernel.org, william.gray@linaro.org,
-        dhowells@redhat.com, peterz@infradead.org, mingo@redhat.com,
-        will@kernel.org, longman@redhat.com, boqun.feng@gmail.com,
-        tglx@linutronix.de, bigeasy@linutronix.de, kexec@lists.infradead.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, linux-cachefs@redhat.com
-Subject: Re: [PATCH v2] docs: Fix typo in comment
-Message-ID: <20220721154110.fqp7n6f7ij22vayp@kafai-mbp.dhcp.thefacebook.com>
-References: <20220721015605.20651-1-slark_xiao@163.com>
-Content-Disposition: inline
-In-Reply-To: <20220721015605.20651-1-slark_xiao@163.com>
-X-ClientProxiedBy: SJ0PR03CA0197.namprd03.prod.outlook.com
- (2603:10b6:a03:2ef::22) To MW4PR15MB4475.namprd15.prod.outlook.com
- (2603:10b6:303:104::16)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5438.15; Thu, 21 Jul
+ 2022 18:18:11 +0000
+Received: from CO1PR10MB4531.namprd10.prod.outlook.com
+ ([fe80::747b:31f7:db5e:9e0d]) by CO1PR10MB4531.namprd10.prod.outlook.com
+ ([fe80::747b:31f7:db5e:9e0d%3]) with mapi id 15.20.5458.019; Thu, 21 Jul 2022
+ 18:18:11 +0000
+From: Eric DeVolder <eric.devolder@oracle.com>
+To: linux-kernel@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org,
+        ebiederm@xmission.com, dyoung@redhat.com, bhe@redhat.com,
+        vgoyal@redhat.com
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, hpa@zytor.com, nramas@linux.microsoft.com,
+        thomas.lendacky@amd.com, robh@kernel.org, efault@gmx.de,
+        rppt@kernel.org, david@redhat.com, sourabhjain@linux.ibm.com,
+        konrad.wilk@oracle.com, boris.ostrovsky@oracle.com,
+        eric.devolder@oracle.com
+Subject: [PATCH v10 1/8] crash: introduce arch/*/asm/crash.h
+Date: Thu, 21 Jul 2022 14:17:40 -0400
+Message-Id: <20220721181747.1640-2-eric.devolder@oracle.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20220721181747.1640-1-eric.devolder@oracle.com>
+References: <20220721181747.1640-1-eric.devolder@oracle.com>
+X-ClientProxiedBy: DS7PR03CA0189.namprd03.prod.outlook.com
+ (2603:10b6:5:3b6::14) To CO1PR10MB4531.namprd10.prod.outlook.com
+ (2603:10b6:303:6c::22)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 64a307c0-99a7-4206-f7c8-08da6b2f714f
-X-MS-TrafficTypeDiagnostic: SJ0PR15MB4171:EE_
-X-FB-Source: Internal
+X-MS-Office365-Filtering-Correlation-Id: 28cb171d-e8db-4590-8b62-08da6b455ea5
+X-MS-TrafficTypeDiagnostic: CH0PR10MB4890:EE_
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 	v6da6v6fqHTGTxNkZvzqkdIAn74F3NqYZ5QWtIiSaGTJxfTEtvNuj78nhXDCUpxDe7VXpl2mVvej53ZCQg9QGFMyhngW+hMSj/9MkZUWBUbkoT+WDEjolOYpWfO+Ub8QjYiNALCezBA7W67lQyOj+o2lFGCMnIfNNp6VN+Yg7QGBSym30BpPZADPu5FVWR15rAZ09FKNTve55bzF9EYsk71PjEMcjAEedB4pAZnZezBZgAC+VhHcVe6Hm33VJqR7ycMpVKXw10yjGeXmB4EEssrR0NNAXYKlrsebXtyffj9r7qZEw0df0Bb9e89CNbu1FhA/SrU7y+7I+xSNyQuaZsZiRAq2FzN/oTx13Tjku2EgC4tJJWauIIcliC0ux8StwuUFAwil57NZzM1YIhiI4h8UAQrvNEjrHNHD8VZHWcPbICVBu8Se7DhVx15PducuJ+VN/rdyYriXoPHTa5qMP9+okbf5CCeTyaqh9ArQ51Mo5mJWyLKHqkTVsGMOFNtL4XzybjlAhz/1z9eu6RX4F8KVYTgNNHOyqrho3mzyZndcgmiVM9vBi1LjzBpDSn5B6SD7+ZaQFypVFDJ8fldmYBOG9Ai1knBWbdzhGuMhqt8umXVQApoyo1XX8j3g4NT41qiEN9sLF6U6djzkxMMioYEg/OXxfSEN3OTecKGkL59d0s5f0G1QSomFGzQR0JMYbqHhl4crIb9ad3v/SXLc/mrRmnjpnhya5St1d1bIHFXFQH0Mg/CKkY6Ng+gI/nWD
-X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR15MB4475.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(366004)(396003)(136003)(346002)(376002)(39860400002)(6486002)(4326008)(316002)(66556008)(66946007)(8676002)(66476007)(1076003)(6916009)(186003)(83380400001)(6506007)(41300700001)(9686003)(86362001)(6512007)(52116002)(478600001)(2906002)(7416002)(5660300002)(8936002)(38100700002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: 	M1dALzPSkhsfSbKZEBxXnuhJqXD/EvKTif1a8gA/v59n2leAFlNBQp8PHDOY8DHfMQKyxzcJ2akHA4AxP8djjkmaQsje6T/9KylmWLOyVVJ/yQWb2NXJczS1jCACpE0o2W/JNz+XspQ0bD+deu7eWEc1EObeuk/5V4pHFeFvCWPBMcE8i78rrAEELOX+fSYHi4ML2MDUhHcB/s7snOTbcrAtSI6jj1lt3XWG3vRUa40gZCUMhB2egEd7rkbyGCLmUmP7LjrPOR9J9rOBrh5vP9Z2FyiCIzGzr8pQ5s6zf/EJ2i6gIa1l3UaPouRBEmulNgJE9JAtGzYKgFO2k5m5Q1N6tBpKGLB72J6lnaOmAud/y7M0rEHzSsXfpEikDheFPTwNiJ63ujHfQpYKlGvkgO9vBCWk42GLoWWDx32hFS9wB7FLWA8JikiofN3Q1N/J4A6pmR62AO/qV2YgCxYpKMzBmf8Zyjjv9yX76iPUErVIMEqPhkBG859kgmFDLN3Rb1+mZKWZkaOmsYeLa+DL03jPhRN+14fK3rB2MApBDznG2/GWNNa7eNPIbR6z3SpiZOS5kl4DSt2oougWwG6mmbslVPstZzFQZ+xlrfR2sEbsnsQNcblQniFW9UYrqBC+svWc9H//f+oEMtafMWZyaD2pM/9HTVwE2CLzK0KyTzdFIQmpoQhxZRFWx9TCAXIYdt7Si/7D3ECp3p0kAUjNnV8MGz/QhvK3EYdse5YUYOXZGLJ+tGi64HFVRXnCsfx4Zap6ZK9YuNlp2LBP+Z3xmZK41yPVfZJIomOvUTD2p1I=
+X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR10MB4531.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(136003)(366004)(396003)(376002)(39860400002)(346002)(38350700002)(6512007)(316002)(8676002)(38100700002)(66556008)(66476007)(66946007)(4326008)(6486002)(41300700001)(1076003)(2906002)(52116002)(86362001)(478600001)(6666004)(83380400001)(7416002)(107886003)(186003)(8936002)(26005)(6506007)(5660300002)(2616005)(36756003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 	=?us-ascii?Q?Y50bti7IYrS6TXknATzz2o5HnK7uvWEw4nQWZNQflXsJyW4Qgwr+NWNiSIrn?=
- =?us-ascii?Q?QVGH4eXQIGB5dgB9wjQ/NmNnfrOBmSK286/wJFCcGlITKc51xM98pmelzd/Y?=
- =?us-ascii?Q?zLxBgZFiC1ilpCfh33LJAqGDvzYAsjeXx3TQJq+aOD0lB3AJYRQ03eAzL1dW?=
- =?us-ascii?Q?Gbeqgtx4rDXSf9DoZ33z1drnWubTuqgZJkuI3HThhz+CXviAzFjAAggapdPO?=
- =?us-ascii?Q?bxelLViWoWHGFVS90riswoYUnI2Rb4YEI2zldctfSQKEdVsxKgmX78aZG52G?=
- =?us-ascii?Q?ZoSxrq8+pheXzvu/+uhxvHXn6ivrnN6aH/c1wHiKQhIwPPK66u3iWv7Ffpa8?=
- =?us-ascii?Q?In+C9r6YKM9+nYE2n9V/cuCnd+7wlvtzfGi4aJgKZ2csKbKaMpP4aeYfJhiH?=
- =?us-ascii?Q?asIRp4RoQRUziJScD5CO2siAMqjNI9x7UC5Q5vOartyFR5kjcJjx5VYhdFgB?=
- =?us-ascii?Q?NaDyt/iE89G371MpP7OtPkVtFTZvqmRXRCUcBbV2Vf5Mv1AdjjCXP6ETGCco?=
- =?us-ascii?Q?6ZwerdPS/PJiHT6aLP6vQ5YlSgWlmeXuQ+6VlE5EdwVE5lPYeH/q3dG/XU35?=
- =?us-ascii?Q?1ZS8A6d7gqikvb/Bh6HcBpOcZ99ct7ZE1rTE819p30Xu7H9rhcEMFzV/I/tw?=
- =?us-ascii?Q?W7UMP5D36lO3F2Xt4MfxWFeKCU6fSeckHJAT61TXOR/7pC7GDhWPQbTYiI2T?=
- =?us-ascii?Q?Y2AQDeaXcE/WwpRvh6j5xYdppFgyEKE6qiM+gmfgi97BQfgkYaRqdvvvKLg6?=
- =?us-ascii?Q?S+19QJWypsYGCoqRLCivppYI4BW5uQHsFwGpokRksm3M3V+iuwX6QS1aPsJq?=
- =?us-ascii?Q?u8CNRLDlM4a4Tu5n4cspT2tl8oyaj7VYPBBVqfK4uqS5anbmBdDFtWv9o0Gi?=
- =?us-ascii?Q?TEPiJN13Qq/ZLA5cxn7jGLCCtLeU4sxvZqrwrgvk+cU2cOAo1DDKLhFQg8G0?=
- =?us-ascii?Q?c+zb/+Lpcr8VHYG+y6NdZdLuteygtrjN26TjyC7nzVFlBvvrdXcOwSpAWifY?=
- =?us-ascii?Q?bDXYrk1tQdOeFebrG7kqw+UEEhMEDwYKLt0rAiXIagcThUsQX0AfpPYa14RR?=
- =?us-ascii?Q?JLVxB5LsQZBmLfNONleTTb/teIviM4QY5CDJM11Kh9f9MB7qJuFpb3TjCNFJ?=
- =?us-ascii?Q?IDuj3+it2dPI/tXMD8LHhQDVmFjziofpycEhu7lcMR3td3uljXrPbsZN09KV?=
- =?us-ascii?Q?MxS8Xxkva+LK7jW3pxXaCxqu7swE21dYlOov2eMfmvtAA8vCWwAlJgvknmgN?=
- =?us-ascii?Q?rSFXBlHp/x2pzEb+/agizrIqG7xBUZhviJMJwAJCu16qzILKKxD2972qyHC9?=
- =?us-ascii?Q?9vtRlPKOFsb6EvviIxr3Rgg4a5dQPirduc6cx6B20qXfhs6GJgTZKsXwE3KW?=
- =?us-ascii?Q?Tqco6l8Rn7wPocJtfAkwZef97sEoEJP0w5KIr8yfuGcu7CBndo3pzMGLAzy6?=
- =?us-ascii?Q?53NFvY8hdBH28r8JVVwNY3mxI/1kqsYCCX5pTQqE3gWZuFKKSFu+WWNprQvN?=
- =?us-ascii?Q?kIG3T9p0ELkSUAzLKlEbEvqJhb4KWaIaJbT+QwbzbAzeynf1kiQsIYQR40nW?=
- =?us-ascii?Q?71iFuftSc26YrZBfoEkKIExRnVeb6zN37x9xzWs1pGf0OQyZmG55QRSB9aXL?=
- =?us-ascii?Q?SA=3D=3D?=
-X-OriginatorOrg: fb.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 64a307c0-99a7-4206-f7c8-08da6b2f714f
-X-MS-Exchange-CrossTenant-AuthSource: MW4PR15MB4475.namprd15.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: 	=?us-ascii?Q?mbeLSbBX8vqesed9hxgOPqs439KA+CBRPDjHUQgLeTiSJMxyCg6cezJ2MwH1?=
+ =?us-ascii?Q?kEc3UOduN+xq49fobQExBTv48RSV2HHOKfPyNjxAnYD6juLa3Hy3W6JGF3Fu?=
+ =?us-ascii?Q?Q4irpmX4FQ2VAA0K3J7KkcPsqUt2EJ9cYfX8HJtUoeNPdyM8Ik5sWaAtyRtn?=
+ =?us-ascii?Q?llnZIgPo+1PiPkCf2hoY5d3xwA8fHsEH3IksMXhw5568ioISDr7ONHPvyloI?=
+ =?us-ascii?Q?GOfhKWwrcJgldFOFGyksQRX+GVXD6k3xoRmDY9mI9q5uVunInmZl8J7nQ8Vq?=
+ =?us-ascii?Q?K35vLT6LXuKBkKT3gQERMoXO51+obSIm+3N13c0tJu0FfrtwBVPxF1r3uMfW?=
+ =?us-ascii?Q?EmgnfAjilJXNZdyyCfpKE3aXetZ3N9VpBnbfm7q1TsQDKjg9p41qAfyYUEEy?=
+ =?us-ascii?Q?2BwNXoBAIG/k8Gn+QtnjPzFfnRGWhTlXFrKtM72o1oaAjOyyA4eYJjHSUXV4?=
+ =?us-ascii?Q?HwE7hcDfWLLzRmOusiQxduhCzlQheHEMdIW4rO4b+RQTqtuxkuZfPRcvHrBV?=
+ =?us-ascii?Q?uQWamqQ2yFp31hX4qtCaeq4HSZnFxzjxugkx/OfGo1J9e3xs4RXY3DmDRa1M?=
+ =?us-ascii?Q?kvLsNFTHAtsgpXw2ym0S2GHjDaYG2MUY9q3TOhayf7M2xUjOKvdgyIGK1JGi?=
+ =?us-ascii?Q?uE8joqDFb/MaVVkZY31q6sHEDsYVd8DIYSWQoSngvIfUzuTdY9SZVT0Nlwmb?=
+ =?us-ascii?Q?ehLs8CKKQmlLi7gJtLHpZ45mbJBuDmxKn0IlvYE0Lp914je6hg+wUI6HEd0q?=
+ =?us-ascii?Q?0sbVFLvHSBrqBC4AKG6KkepDcCRPdh3XmTXD1t5YyKpjYm2ZntoAUYU36GcN?=
+ =?us-ascii?Q?bKxXR0DUDAbYhp6FfoYyh16lcKF+cvuFjj4SUiP4ZRoMGmEUNvIJItxvcqeR?=
+ =?us-ascii?Q?uNwcy6utu+98jLhoAazlyJr5aLzR84nYQZbhzwGk8F/pmT4JEw8KmCpOb3C9?=
+ =?us-ascii?Q?OikqmwoL1ToWetpEQoeO2nbVGC5/mp4+AIlfVhPsbS5mb/qclMDF7+y+wZgs?=
+ =?us-ascii?Q?mMwTreJ8uo4AbPbPG4wbnXNiMxxbyV5gsnmT+GZE4V9mvHWzK2wQtGO6Rlf1?=
+ =?us-ascii?Q?6Wwoes1zA0qMxXG9SsI0iR/fr+aVja/F+BtjwPAKLZgH8ukIB99rBpBu5uOf?=
+ =?us-ascii?Q?J+ymoz3YpV/cejDeOr9f3M2x5Jy/decAgGsIsG522JhHDYmXpW4pyeCLV+FO?=
+ =?us-ascii?Q?CDIieEpoQPZaBOUrHe9VtN9qdOTdzHaOERDBwCuXQYS6fuoU62zawAZiyGKT?=
+ =?us-ascii?Q?fICj31yfK5+OtMSCj7RNKidAcV8v6hLrx3txiokHiOMhAXEybnLnCCjJW+b6?=
+ =?us-ascii?Q?wVufR2hq7RKTYyHPk6m+A7nAK5qbIVXEcMWh+ugQ/SKNVmXuBBOqPh5+hQIV?=
+ =?us-ascii?Q?BZ0saabj/LI1MdZkBYAMZQtQIt91KaIFtK1IpedIAg6YqcrKjPrpHC0tYkmu?=
+ =?us-ascii?Q?kTaAXgj5QLHTzCqJKzrAkq6aQcnQyF9Rom/FpWbLyeZZqjUFTX6W9+PtIoiM?=
+ =?us-ascii?Q?TD1qQWDQAQBelyuzfr7ELBPxXy3nI6FiRIigyJo3+VdIxIMs0agEvb7ulUhu?=
+ =?us-ascii?Q?QaKhP3VVWnldJkVSA07KlZKgmSOvahzHBs6pMA3NlUsKGxMCoNgkhzYCLK0v?=
+ =?us-ascii?Q?4g=3D=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 28cb171d-e8db-4590-8b62-08da6b455ea5
+X-MS-Exchange-CrossTenant-AuthSource: CO1PR10MB4531.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jul 2022 15:41:13.8328
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jul 2022 18:18:11.3356
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: W4c6jqoGS6MtFsesIccWYXcaM5yTb/ZdpKcykwgEZeh24H4Jhrb87KsuxVf22HhH
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR15MB4171
-X-Proofpoint-GUID: D50t2j6ItDEkUXXW0HIQlceq6v22raip
-X-Proofpoint-ORIG-GUID: D50t2j6ItDEkUXXW0HIQlceq6v22raip
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZQmNzffypYufgaNT1Bu/XMogtxXq1CKdKX3SxwzJHHIKQKdCOnx94YuqpMM1SB/mV2dG4uNgGtlxVloWo0yzjT7QfOl2DpBCGH74yEm3sPM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB4890
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-07-21_18,2022-07-20_01,2022-06-22_01
+ definitions=2022-07-21_25,2022-07-21_02,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0
+ mlxlogscore=896 malwarescore=0 adultscore=0 mlxscore=0 spamscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2206140000 definitions=main-2207210074
+X-Proofpoint-GUID: tZHN2NTcgqb57tRsoOwO23ootZoL3KV0
+X-Proofpoint-ORIG-GUID: tZHN2NTcgqb57tRsoOwO23ootZoL3KV0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220721_084306_130960_D93E078C 
-X-CRM114-Status: GOOD (  17.27  )
+X-CRM114-CacheID: sfid-20220721_111844_185656_4AFB3481 
+X-CRM114-Status: GOOD (  19.15  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -152,32 +168,168 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Jul 21, 2022 at 09:56:05AM +0800, Slark Xiao wrote:
-> diff --git a/Documentation/bpf/map_cgroup_storage.rst b/Documentation/bpf/map_cgroup_storage.rst
-> index cab9543017bf..8e5fe532c07e 100644
-> --- a/Documentation/bpf/map_cgroup_storage.rst
-> +++ b/Documentation/bpf/map_cgroup_storage.rst
-> @@ -31,7 +31,7 @@ The map uses key of type of either ``__u64 cgroup_inode_id`` or
->      };
->  
->  ``cgroup_inode_id`` is the inode id of the cgroup directory.
-> -``attach_type`` is the the program's attach type.
-> +``attach_type`` is the program's attach type.
->  
->  Linux 5.9 added support for type ``__u64 cgroup_inode_id`` as the key type.
->  When this key type is used, then all attach types of the particular cgroup and
-> @@ -155,7 +155,7 @@ However, the BPF program can still only associate with one map of each type
->  ``BPF_MAP_TYPE_CGROUP_STORAGE`` or more than one
->  ``BPF_MAP_TYPE_PERCPU_CGROUP_STORAGE``.
->  
-> -In all versions, userspace may use the the attach parameters of cgroup and
-> +In all versions, userspace may use the attach parameters of cgroup and
->  attach type pair in ``struct bpf_cgroup_storage_key`` as the key to the BPF map
->  APIs to read or update the storage for a given attachment. For Linux 5.9
->  attach type shared storages, only the first value in the struct, cgroup inode
-For the bpf changes,
+The use of __weak is being eliminated within kexec sources.
+The technique uses macros mapped onto inline functions in
+order to replace __weak.
 
-Acked-by: Martin KaFai Lau <kafai@fb.com>
+This patchset was using __weak and so in order to replace
+__weak, this patch introduces arch/*/asm/crash.h, patterned
+after how kexec is moving away from __weak and to the macro
+definitions.
+
+No functionality changed, yet.
+
+Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+---
+ arch/arm/include/asm/crash.h     | 5 +++++
+ arch/arm64/include/asm/crash.h   | 5 +++++
+ arch/ia64/include/asm/crash.h    | 5 +++++
+ arch/m68k/include/asm/crash.h    | 5 +++++
+ arch/mips/include/asm/crash.h    | 5 +++++
+ arch/parisc/include/asm/crash.h  | 5 +++++
+ arch/powerpc/include/asm/crash.h | 5 +++++
+ arch/riscv/include/asm/crash.h   | 5 +++++
+ arch/s390/include/asm/crash.h    | 5 +++++
+ arch/sh/include/asm/crash.h      | 5 +++++
+ include/linux/crash_core.h       | 2 ++
+ 11 files changed, 52 insertions(+)
+ create mode 100644 arch/arm/include/asm/crash.h
+ create mode 100644 arch/arm64/include/asm/crash.h
+ create mode 100644 arch/ia64/include/asm/crash.h
+ create mode 100644 arch/m68k/include/asm/crash.h
+ create mode 100644 arch/mips/include/asm/crash.h
+ create mode 100644 arch/parisc/include/asm/crash.h
+ create mode 100644 arch/powerpc/include/asm/crash.h
+ create mode 100644 arch/riscv/include/asm/crash.h
+ create mode 100644 arch/s390/include/asm/crash.h
+ create mode 100644 arch/sh/include/asm/crash.h
+
+diff --git a/arch/arm/include/asm/crash.h b/arch/arm/include/asm/crash.h
+new file mode 100644
+index 000000000000..385646957d60
+--- /dev/null
++++ b/arch/arm/include/asm/crash.h
+@@ -0,0 +1,5 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_ARM_CRASH_H
++#define _ASM_ARM_CRASH_H
++
++#endif /* _ASM_ARM_CRASH_H */
+diff --git a/arch/arm64/include/asm/crash.h b/arch/arm64/include/asm/crash.h
+new file mode 100644
+index 000000000000..ec8870c1ea49
+--- /dev/null
++++ b/arch/arm64/include/asm/crash.h
+@@ -0,0 +1,5 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_ARM64_CRASH_H
++#define _ASM_ARM64_CRASH_H
++
++#endif /* _ASM_ARM64_CRASH_H */
+diff --git a/arch/ia64/include/asm/crash.h b/arch/ia64/include/asm/crash.h
+new file mode 100644
+index 000000000000..02a457cccda3
+--- /dev/null
++++ b/arch/ia64/include/asm/crash.h
+@@ -0,0 +1,5 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_IA64_CRASH_H
++#define _ASM_IA64_CRASH_H
++
++#endif /* _ASM_IA64_CRASH_H */
+diff --git a/arch/m68k/include/asm/crash.h b/arch/m68k/include/asm/crash.h
+new file mode 100644
+index 000000000000..ba6e412a1267
+--- /dev/null
++++ b/arch/m68k/include/asm/crash.h
+@@ -0,0 +1,5 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_M68K_CRASH_H
++#define _ASM_M68K_CRASH_H
++
++#endif /* _ASM_M68K_CRASH_H */
+diff --git a/arch/mips/include/asm/crash.h b/arch/mips/include/asm/crash.h
+new file mode 100644
+index 000000000000..35872522c574
+--- /dev/null
++++ b/arch/mips/include/asm/crash.h
+@@ -0,0 +1,5 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_MIPS_CRASH_H
++#define _ASM_MIPS_CRASH_H
++
++#endif /* _ASM_MIPS_CRASH_H */
+diff --git a/arch/parisc/include/asm/crash.h b/arch/parisc/include/asm/crash.h
+new file mode 100644
+index 000000000000..96833b727179
+--- /dev/null
++++ b/arch/parisc/include/asm/crash.h
+@@ -0,0 +1,5 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_PARISC_CRASH_H
++#define _ASM_PARISC_CRASH_H
++
++#endif /* _ASM_PARISC_CRASH_H */
+diff --git a/arch/powerpc/include/asm/crash.h b/arch/powerpc/include/asm/crash.h
+new file mode 100644
+index 000000000000..40ce71e56ac1
+--- /dev/null
++++ b/arch/powerpc/include/asm/crash.h
+@@ -0,0 +1,5 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_POWERPC_CRASH_H
++#define _ASM_POWERPC_CRASH_H
++
++#endif /* _ASM_POWERPC_CRASH_H */
+diff --git a/arch/riscv/include/asm/crash.h b/arch/riscv/include/asm/crash.h
+new file mode 100644
+index 000000000000..24f3aea99707
+--- /dev/null
++++ b/arch/riscv/include/asm/crash.h
+@@ -0,0 +1,5 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_RISCV_CRASH_H
++#define _ASM_RISCV_CRASH_H
++
++#endif /* _ASM_RISCV_CRASH_H */
+diff --git a/arch/s390/include/asm/crash.h b/arch/s390/include/asm/crash.h
+new file mode 100644
+index 000000000000..0db16ad4c75f
+--- /dev/null
++++ b/arch/s390/include/asm/crash.h
+@@ -0,0 +1,5 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_S390_CRASH_H
++#define _ASM_S390_CRASH_H
++
++#endif /* _ASM_S390_CRASH_H */
+diff --git a/arch/sh/include/asm/crash.h b/arch/sh/include/asm/crash.h
+new file mode 100644
+index 000000000000..f54e12f88cae
+--- /dev/null
++++ b/arch/sh/include/asm/crash.h
+@@ -0,0 +1,5 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_SH_CRASH_H
++#define _ASM_SH_CRASH_H
++
++#endif /* _ASM_SH_CRASH_H */
+diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+index de62a722431e..cb0f1916fbf5 100644
+--- a/include/linux/crash_core.h
++++ b/include/linux/crash_core.h
+@@ -6,6 +6,8 @@
+ #include <linux/elfcore.h>
+ #include <linux/elf.h>
+ 
++#include <asm/crash.h>
++
+ #define CRASH_CORE_NOTE_NAME	   "CORE"
+ #define CRASH_CORE_NOTE_HEAD_BYTES ALIGN(sizeof(struct elf_note), 4)
+ #define CRASH_CORE_NOTE_NAME_BYTES ALIGN(sizeof(CRASH_CORE_NOTE_NAME), 4)
+-- 
+2.31.1
+
 
 _______________________________________________
 kexec mailing list
