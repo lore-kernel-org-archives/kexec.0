@@ -4,147 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8A695C43334
-	for <kexec@archiver.kernel.org>; Thu, 21 Jul 2022 22:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 86A14C433EF
+	for <kexec@archiver.kernel.org>; Thu, 21 Jul 2022 23:45:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:References:
-	Message-ID:Subject:CC:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=qOYBFt7RXNS+LCUPT31DMc1U2X7Q8UO+LKOpix5Uc5g=; b=HRxeqnyUiIViC+
-	8tf7tp/Vj2iiiqo/MJU/qrcA32C07NjJv/NXHj9WoVmLoSyiDRgptpw/QEkusZyr6DIsvuvq5aoRZ
-	WNFzCXHm/7UZgYKZ9R1n73B1PCVxdSOT46ieDB7osFM76xbwgKO6zTgdb66bXiIRN0RmaCXXAgsJH
-	jtfpiQyYDc6ecAJeukw0s4SNTL/QI/LXXKwWfGXvCWwfnVxZ4NSgHMbKbPbJ3slN6LcuyhvrXtDPY
-	gEQP+UJyl8HU4v5onM37kKpnrSM9rAsVGPjTu/tBrImAr4Ppzr112FEBn77HSRNWf6WO+x6FPlc6u
-	U8n42fM/MbmW4+1Vz1DA==;
+	List-Owner; bh=g2+RSCEUti9eLSsMaLKf3E/RssaI+w6QbcPimNRuUZw=; b=RWbfAIfFn8Aw4Z
+	ToHutpdZ9hX1ahE/4M9fekcUh2d2/yImWnZuAj3HNaHLrF5gkL88KTUAcIShoNeRJ6w4nGvwsstgT
+	9f+0YRxkiaTejYxbMSXvxNaWz2F6fwBUxBA8+G4M6t3c0D3UEvaR0I6xlfSR0wE6MbRHWP5rAPu6w
+	RGkusKyS6T6r1rG6VzFuQEw0OYd0mXIZQ3PP8vKlX5z8PpQvf71VInVKXBAFOtnfrGcTwEpL0S/hM
+	URd7whprA7sDQQObs7alJ9jY5uhSe9DaerElCKj7fw5KCmXhZX5kvngYs9zkT72O6M72l/J3XSImR
+	4TjoFCkygQfufOTmIEsA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oEf0P-00CytZ-JB; Thu, 21 Jul 2022 22:50:53 +0000
-Received: from mga18.intel.com ([134.134.136.126])
+	id 1oEfrM-00DVWD-8Z; Thu, 21 Jul 2022 23:45:36 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oEf0M-00Cyr6-8Z
-	for kexec@lists.infradead.org; Thu, 21 Jul 2022 22:50:51 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1658443850; x=1689979850;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=PSZhEuOAqIq6yGhsR3NpTKMh1lewZDlmPAVmYQG7u4o=;
-  b=TNqrU3ExowpHjQNajo3IkUhnP7pE7MNZSY5YIw8oN+jejXI0q/SN/Zlm
-   bT0nwifakK3TyH310LJ6cHhDoxZE+8ZETngb88ud9czYT/wcORpa+5/Fb
-   Otm79UwGdcltNKmIC7GRoLhxRoOAz3sQpNDTQPe4/Gq8AcFgWa4fmqndb
-   CUQ8QLvUHryoAWGyfVsK4krlKJsp78+j/WMTk+W1d1QMvr5kogFfQwRpX
-   ReQL3w9c7sNs1rkj73tLYscFmEj9Qcy+aJdMK51vqVd39udqqFGct9ixe
-   qLns+8+w4CLqdDtabnnSQsYateXDIYsAelqEb+nORaXZhqBd6aIhej/NB
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10415"; a="270224099"
-X-IronPort-AV: E=Sophos;i="5.93,184,1654585200"; 
-   d="scan'208";a="270224099"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2022 15:50:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,184,1654585200"; 
-   d="scan'208";a="631354281"
-Received: from orsmsx606.amr.corp.intel.com ([10.22.229.19])
-  by orsmga001.jf.intel.com with ESMTP; 21 Jul 2022 15:50:45 -0700
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX606.amr.corp.intel.com (10.22.229.19) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.28; Thu, 21 Jul 2022 15:50:44 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.28 via Frontend Transport; Thu, 21 Jul 2022 15:50:44 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.168)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.27; Thu, 21 Jul 2022 15:50:44 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IYn2BBYu3NjnnDZGjWntXJ4dsS5SG7G3GuopJzNCcmpySpZLYOeveLDwWqYymk8SYO0aCBxMfMyDnBChIpGGZ8bBEX0zm3CzgdE3OXi//8O+eR29yn7s+eY/MrNHmTDhdvLLHWCHV+Q6ijhN96ILFgy/3R1RlGNlWSeIDJMWsrMuL1766sO9ssIMkjiayVs7juozUtDMLlYftHG6TYPiw5p5Mddaqf7Vjv9sJnSTihXx89qDO8j1Qm8kMXcYx2TwcIkhVyYB1UpcI8zqpdvjZFNMBx58nTd91LjWOTDNlIrvIA1B0xqhTGcUvX0cTMMUeP3/RdGveTQ2s4hFPaapcA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5cZSH677DaQ67zWslxoFcHCiOFBd0ePqnKYvA9RDOvg=;
- b=EnV7pZrXwfW+tadSd6MyKE1TXx8/IJLX/WaOExBL6O3oWYP46fb5z6gqO+FHN+6ca8GiRLXPPbTSyOJkpPd6TeqVfTqci4d0fmG8iLBVsAVieGh9tj/Dp8oYIUWQ2iC6XAc4eHRjBYAfnG/ipuy6PfZ3JmtKsBq93D9n2xKLCUeWc3VrJ8kPjlkT+47znqmpO9m+iBF22mVBWEBEvqBqBA6uP7L+u/czcdn0YKo4S//Ab7iwDSfvAoO+CRbDs/Km1/1rKe1e9MJhohjjAY+7SxHkB7EFcZc7S6s1n5cjoj17PxB9k1om+qpwkIwyXH/J/XigincuP47a39FkOEVgcA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM4PR11MB6311.namprd11.prod.outlook.com (2603:10b6:8:a6::21) by
- SJ0PR11MB5867.namprd11.prod.outlook.com (2603:10b6:a03:42a::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5458.18; Thu, 21 Jul
- 2022 22:50:43 +0000
-Received: from DM4PR11MB6311.namprd11.prod.outlook.com
- ([fe80::3154:e32f:e50c:4fa6]) by DM4PR11MB6311.namprd11.prod.outlook.com
- ([fe80::3154:e32f:e50c:4fa6%6]) with mapi id 15.20.5438.017; Thu, 21 Jul 2022
- 22:50:42 +0000
-Date: Thu, 21 Jul 2022 15:50:37 -0700
-From: Ira Weiny <ira.weiny@intel.com>
-To: "Fabio M. De Francesco" <fmdefrancesco@gmail.com>
-CC: Eric Biederman <ebiederm@xmission.com>, <kexec@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] kexec: Replace kmap() with kmap_local_page()
-Message-ID: <YtnYPeH8enERkI4V@iweiny-desk3>
-References: <20220707231550.1484-1-fmdefrancesco@gmail.com>
-Content-Disposition: inline
-In-Reply-To: <20220707231550.1484-1-fmdefrancesco@gmail.com>
-X-ClientProxiedBy: SJ0PR03CA0183.namprd03.prod.outlook.com
- (2603:10b6:a03:2ef::8) To DM4PR11MB6311.namprd11.prod.outlook.com
- (2603:10b6:8:a6::21)
+	id 1oEfrH-00DVRb-43
+	for kexec@lists.infradead.org; Thu, 21 Jul 2022 23:45:34 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1658447130;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AC2n/A82yx01Ti1I3w8496rsnt6uMK4t3X+Vt7cja9w=;
+	b=aCO+vq79sxHpGrIUNghUFV/yR24boBhi2ahpbqdz5WlwxN1Mr3Eahb3kn8enC6eEoijm1d
+	4zw3xQGrtk9/j36q/tkGMgkyF0za5jIGxeaMO/gtDc8gr2UI4RuAwdEW+xl/gXpdnEIJCt
+	XRqeJQmvEyxaIV+eaCtoiODbEk9DHRo=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-494-2mOxJ8tkPZG8X31SMxOeoQ-1; Thu, 21 Jul 2022 19:45:13 -0400
+X-MC-Unique: 2mOxJ8tkPZG8X31SMxOeoQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 61BF5185A7A4;
+	Thu, 21 Jul 2022 23:45:11 +0000 (UTC)
+Received: from localhost (ovpn-12-60.pek2.redhat.com [10.72.12.60])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 9D91D2166B26;
+	Thu, 21 Jul 2022 23:45:09 +0000 (UTC)
+Date: Fri, 22 Jul 2022 07:45:06 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Randy Dunlap <rdunlap@infradead.org>, Jonathan Corbet <corbet@lwn.net>,
+	Slark Xiao <slark_xiao@163.com>
+Cc: kafai <kafai@fb.com>, vgoyal <vgoyal@redhat.com>,
+	dyoung <dyoung@redhat.com>, ast <ast@kernel.org>,
+	daniel <daniel@iogearbox.net>, andrii <andrii@kernel.org>,
+	"martin.lau" <martin.lau@linux.dev>, song <song@kernel.org>,
+	yhs <yhs@fb.com>, "john.fastabend" <john.fastabend@gmail.com>,
+	kpsingh <kpsingh@kernel.org>, sdf <sdf@google.com>,
+	haoluo <haoluo@google.com>, jolsa <jolsa@kernel.org>,
+	"william.gray" <william.gray@linaro.org>,
+	dhowells <dhowells@redhat.com>, peterz <peterz@infradead.org>,
+	mingo <mingo@redhat.com>, will <will@kernel.org>,
+	longman <longman@redhat.com>, "boqun.feng" <boqun.feng@gmail.com>,
+	tglx <tglx@linutronix.de>, bigeasy <bigeasy@linutronix.de>,
+	kexec <kexec@lists.infradead.org>,
+	linux-doc <linux-doc@vger.kernel.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	bpf <bpf@vger.kernel.org>, linux-cachefs <linux-cachefs@redhat.com>
+Subject: Re: [PATCH v2] docs: Fix typo in comment
+Message-ID: <YtnlAg6Qhf7fwXXW@MiWiFi-R3L-srv>
+References: <20220721015605.20651-1-slark_xiao@163.com>
+ <20220721154110.fqp7n6f7ij22vayp@kafai-mbp.dhcp.thefacebook.com>
+ <21cac0ea.18f.182218041f7.Coremail.slark_xiao@163.com>
+ <874jzamhxe.fsf@meer.lwn.net>
+ <6ca59494-cc64-d85c-98e8-e9bef2a04c15@infradead.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ce8b3964-fc41-46fd-2be4-08da6b6b70f5
-X-MS-TrafficTypeDiagnostic: SJ0PR11MB5867:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Sc1982GBVSMiPQKE5PLnys+1fpQ0+iCX0goYw85mmWFArGn3delvCmpPz/+KEu4K9miC2jQ4icxk+XeFTROYcAVadEAWtd7hguK5/2UgA1Ryz3EG7HpGCC5lPcK046YrUkNyULplPco8GbBXCo0ZvxFsdSP/aZQpcdr22QkKYyZ6P5Q2LPcXAfr+rCTzPy924pNdaB4sDjF8cb/zoHMorwEzKFrGoNitw0KKziPLpk8Yc9lighAfjFfc20fP2tdA4OIdPzFuR4cPCyjUOmdmzVeBcVS9Kh2ImFuN96Gn9Ya4WXl83iTwtLTvMYsrzv2trDsAq6+t1FyfmRUlZFcKi72trBwuDB2S9lI5O/MABPacjoRnc4v5yYCCxSrAwp69HVi8PHerWYg66ogRjkQ8Y2KCM7r3ySxMnFPTDxvr9GzLWaD2bSja3HBpSENEGAwf7IO2ei2W8frY9fBGl8cxvzltOH6JLnD+e/e+We+ChIWi3bzt5s76NtKndOge/ntkH1V96GMtoalcHpeHcTgR2Kh0CbrIdMadjWWRXLYeH0AqQ3q5BtJLB50GYxvW2ZNUPEtfn2UcDjzrndzV6Ca3y6OuFJJFXbgKnIQcfylaJCCrj6NTTjm4b0pbVN9qFGdA7MaLbAVNT1WZJPYR+j0wzDvuwQhZ5oEcZDEf5fycjfYI+XbnA4wpcXxDMwqGN59nJSuux+YX62VYjrpv1FwYn/LOwEzQ1aFZH7njfUhAICaMTo+3p1/jKoeuwhtEgzzW
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6311.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(7916004)(346002)(39860400002)(376002)(396003)(366004)(136003)(6486002)(41300700001)(82960400001)(478600001)(6506007)(26005)(86362001)(83380400001)(6512007)(316002)(6916009)(186003)(6666004)(9686003)(5660300002)(4326008)(66476007)(33716001)(66946007)(66556008)(8936002)(8676002)(44832011)(2906002)(38100700002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ni8OKC/UDbWQ8ii3YkGEr//be4UL64XNA0WLddsZvyRKHQ6kvEGxcTaAMQ/F?=
- =?us-ascii?Q?hhP7qErNU8uj5Cx01RIM8fruXxgbK+12EFQEZWpiazZ+f0XN0jsxZsQAiUAD?=
- =?us-ascii?Q?POnuBPVOYkxDSsYFtNnpH2nedqsaBgLMqg9a00C99NePacwphYRAyX5GLZsc?=
- =?us-ascii?Q?EjBkZi7QCiOTXSdZGaiKjtVjxWGy9eFJS3R1BQd1btpy1WAhwr6w72I6mvv+?=
- =?us-ascii?Q?YM4zqRuGzuzHqvfANqGCEAT13/ZZUGyYr9wYPU/WaWBRLXQiz6jvr5Jybvxe?=
- =?us-ascii?Q?MbDFDW9WDIw1Qi+GMezUsWwRfk9Z/5yNg1M5jTXEVPGLvnrWSOOiSo4GA2kM?=
- =?us-ascii?Q?jCStnYVhC9X9J8Ldy/Pw/EbpUWyaMXTyFE4TeqCFSAb0V9N5RaTMMroUMWl0?=
- =?us-ascii?Q?56RN9w0a+g2ja1mGwuiG3lrQGcJjI/pTr8kPDRiueiLmHfGrbWwGUT5i1+Wc?=
- =?us-ascii?Q?vFjpaBkvmsHULytGEWtM2ca5/VTSuvXhC+k0EwCN0vGSuQvnZD/F3sQnq38s?=
- =?us-ascii?Q?t6WgywWYsDExeFEJJoKGqJ0I0O9b2tb1qB/iBDkRWSqViE1O6YtTJXs3mCao?=
- =?us-ascii?Q?sC6YxXXTUCM71qVTLjAQmxlVCzkKEID/dJk6gix3vK+qb9YHzvKjBihISZ4v?=
- =?us-ascii?Q?Py6Ave0m/chokWjKA4OuukHMTRHQ9ZBj1ShmpzAD6lkmfMMSHkkvjyX84c8y?=
- =?us-ascii?Q?+G+R8HmM4WmLXahXKsK8+hpwtHgWp2tz/gQBJrNnzTzDqNfrXoLIGmKOulev?=
- =?us-ascii?Q?8an29HxnDe0Bj0xr5LIEb6BFf6N0j/YMTwrYgf/TJJ2z5F6/OvaYgxAhZdRB?=
- =?us-ascii?Q?JVsHlo6Ky+Y68SF4zV4z/sMh7laSpDVPzQJaxIph7HzPxjfEfJwAgWi4k23m?=
- =?us-ascii?Q?QvVbWgWht7uvDenhR1MBNNvkmdTZPIKL5cOjEqcfpSYJqKGKVyq4/t5Ucvyd?=
- =?us-ascii?Q?ev8HmhkfpxKhP8m22RL2zlzR1E/ZNeF8gydvWqdkkseWjfjCnqYsu0sQmeU+?=
- =?us-ascii?Q?lAO1Rxjb/dUVTY4eql9E1s2NdSp+16Y2PJdZXG4sZSXriFiyqnGwFd9GKmgS?=
- =?us-ascii?Q?+aRkV9TGLyLsyoeTWxhywpiKGyEYCNQ0Ikz1gWwSuUBY7NocVaGF8RpkEddq?=
- =?us-ascii?Q?ENzz/L/ZXw8oKtlwexeS01xSbgUWKAqgOzbRvpYO1eqG0itC2s52kX4o3QjT?=
- =?us-ascii?Q?/8jXRI+Q8n1x20bY4OK6F54PU2K8Y08U0SfgxVcghhduHwVzLtTNugBibhgm?=
- =?us-ascii?Q?znyU0nmWSGOv3baKoVE0qc3p17YLkdggaFyk0+lDMxQaWbY6vSJNmm9bJoVe?=
- =?us-ascii?Q?2rqPLuDYGnfK9d74oBFR3AEF5BaJtCcaexWuBHsNePctfcQLipMw8/jW/VgF?=
- =?us-ascii?Q?nH5try0bQg/ZFapZa5PqxA6sE9D/VW8Y4OpS8ut+BpoeVi9ciR9pW/lx8GIa?=
- =?us-ascii?Q?5pN7bbnpYx6QsllQwEOanylCuuGkMyBJFAqjoe4LeaIwx4gTCFAWsSRQSC86?=
- =?us-ascii?Q?3RH08Q3B1fMj4XDMcAeTbbYAZcvrydIk/ykvOz/Il9OG+0UDWlSq1TIuK98Y?=
- =?us-ascii?Q?Quwd2bc4jcYkYGRLkchk+E0yDXtMiTUpccj1ZOf5?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: ce8b3964-fc41-46fd-2be4-08da6b6b70f5
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6311.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jul 2022 22:50:42.8540
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cZvhq19puYoP+P/zatWTlLQS/4jDU+WVMLj4Xw44kUR1KaVupM5Xxe0H90K7hmhEN13ZtU8v2tRIHmrzVaNdjg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB5867
-X-OriginatorOrg: intel.com
+Content-Disposition: inline
+In-Reply-To: <6ca59494-cc64-d85c-98e8-e9bef2a04c15@infradead.org>
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.6
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220721_155050_370005_E12A2BE5 
-X-CRM114-Status: GOOD (  23.71  )
+X-CRM114-CacheID: sfid-20220721_164531_419709_128C35DA 
+X-CRM114-Status: GOOD (  42.90  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -161,77 +97,462 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Jul 08, 2022 at 01:15:50AM +0200, Fabio M. De Francesco wrote:
-> The use of kmap() and kmap_atomic() are being deprecated in favor of
-> kmap_local_page().
+On 07/21/22 at 11:40am, Randy Dunlap wrote:
 > 
-> With kmap_local_page(), the mappings are per thread, CPU local and not
-> globally visible. Furthermore, the mappings can be acquired from any
-> context (including interrupts).
 > 
-> Therefore, use kmap_local_page() in kexec_core.c because these mappings are
-> per thread, CPU local, and not globally visible.
+> On 7/21/22 11:36, Jonathan Corbet wrote:
+> > "Slark Xiao" <slark_xiao@163.com> writes:
+> > 
+> >> May I know the maintainer of one subsystem could merge the changes
+> >> contains lots of subsystem?  I also know this could be filtered by
+> >> grep and sed command, but that patch would have dozens of maintainers
+> >> and reviewers.
+> > 
+> > Certainly I don't think I can merge a patch touching 166 files across
+> > the tree.  This will need to be broken down by subsystem, and you may
+> > well find that there are some maintainers who don't want to deal with
+> > this type of minor fix.
 > 
-> Tested on a QEMU + KVM 32-bits VM booting a kernel with HIGHMEM64GB
-> enabled.
-> 
-> Suggested-by: Ira Weiny <ira.weiny@intel.com>
+> We have also seen cases where "the the" should be replaced by "then the"
+> or some other pair of words, so some of these changes could fall into
+> that category.
 
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+It's possible. I searched in Documentation and went through each place,
+seems no typo of "then the". Below patch should clean up all the 'the the'
+typo under Documentation.
 
-> Signed-off-by: Fabio M. De Francesco <fmdefrancesco@gmail.com>
-> ---
-> 
-> v1->v2: A sentence of the commit message contained an error due to a
-> mistake in copy-pasting from a previous patch. Replace "aio.c" with
-> "kexec_core.c".
-> 
->  kernel/kexec_core.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index 4d34c78334ce..6f98274765d4 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -814,7 +814,7 @@ static int kimage_load_normal_segment(struct kimage *image,
->  		if (result < 0)
->  			goto out;
->  
-> -		ptr = kmap(page);
-> +		ptr = kmap_local_page(page);
->  		/* Start with a clear page */
->  		clear_page(ptr);
->  		ptr += maddr & ~PAGE_MASK;
-> @@ -827,7 +827,7 @@ static int kimage_load_normal_segment(struct kimage *image,
->  			memcpy(ptr, kbuf, uchunk);
->  		else
->  			result = copy_from_user(ptr, buf, uchunk);
-> -		kunmap(page);
-> +		kunmap_local(ptr);
->  		if (result) {
->  			result = -EFAULT;
->  			goto out;
-> @@ -878,7 +878,7 @@ static int kimage_load_crash_segment(struct kimage *image,
->  			goto out;
->  		}
->  		arch_kexec_post_alloc_pages(page_address(page), 1, 0);
-> -		ptr = kmap(page);
-> +		ptr = kmap_local_page(page);
->  		ptr += maddr & ~PAGE_MASK;
->  		mchunk = min_t(size_t, mbytes,
->  				PAGE_SIZE - (maddr & ~PAGE_MASK));
-> @@ -894,7 +894,7 @@ static int kimage_load_crash_segment(struct kimage *image,
->  		else
->  			result = copy_from_user(ptr, buf, uchunk);
->  		kexec_flush_icache_page(page);
-> -		kunmap(page);
-> +		kunmap_local(ptr);
->  		arch_kexec_pre_free_pages(page_address(page), 1);
->  		if (result) {
->  			result = -EFAULT;
-> -- 
-> 2.36.1
-> 
+From 60cacd213ab24981d16c292667283cf7e74f86b1 Mon Sep 17 00:00:00 2001
+From: Baoquan He <bhe@redhat.com>
+Date: Fri, 22 Jul 2022 07:26:48 +0800
+Subject: [PATCH] Documentation: Fix all occurences of the 'the the' typo
+Content-type: text/plain
+
+The fix is done with below command:
+sed -i "s/the the /the /g" `git grep -l "the the " Documentation`
+
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+ Documentation/ABI/stable/sysfs-module                         | 2 +-
+ Documentation/ABI/testing/sysfs-class-rtrs-client             | 2 +-
+ Documentation/ABI/testing/sysfs-class-rtrs-server             | 2 +-
+ Documentation/ABI/testing/sysfs-devices-platform-ACPI-TAD     | 2 +-
+ Documentation/ABI/testing/sysfs-devices-power                 | 2 +-
+ Documentation/admin-guide/kdump/vmcoreinfo.rst                | 2 +-
+ Documentation/bpf/map_cgroup_storage.rst                      | 4 ++--
+ Documentation/core-api/cpu_hotplug.rst                        | 2 +-
+ Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt       | 2 +-
+ Documentation/devicetree/bindings/clock/ti/davinci/pll.txt    | 2 +-
+ Documentation/devicetree/bindings/fpga/fpga-region.txt        | 2 +-
+ Documentation/devicetree/bindings/gpio/gpio-pisosr.txt        | 2 +-
+ Documentation/devicetree/bindings/net/qcom-emac.txt           | 2 +-
+ .../bindings/phy/amlogic,meson-axg-mipi-pcie-analog.yaml      | 2 +-
+ .../devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml   | 2 +-
+ .../devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml   | 2 +-
+ .../devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml   | 2 +-
+ .../devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml      | 2 +-
+ Documentation/devicetree/bindings/powerpc/fsl/cpus.txt        | 2 +-
+ Documentation/devicetree/bindings/powerpc/opal/power-mgt.txt  | 2 +-
+ Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt    | 2 +-
+ Documentation/devicetree/bindings/sound/tlv320adcx140.yaml    | 4 ++--
+ .../devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml      | 2 +-
+ .../devicetree/bindings/thermal/nvidia,tegra124-soctherm.txt  | 2 +-
+ Documentation/devicetree/bindings/thermal/rcar-thermal.yaml   | 2 +-
+ Documentation/driver-api/isa.rst                              | 2 +-
+ Documentation/filesystems/caching/backend-api.rst             | 2 +-
+ Documentation/locking/seqlock.rst                             | 2 +-
+ Documentation/sphinx/cdomain.py                               | 2 +-
+ 29 files changed, 31 insertions(+), 31 deletions(-)
+
+diff --git a/Documentation/ABI/stable/sysfs-module b/Documentation/ABI/stable/sysfs-module
+index 560b4a3278df..41b1f16e8795 100644
+--- a/Documentation/ABI/stable/sysfs-module
++++ b/Documentation/ABI/stable/sysfs-module
+@@ -38,7 +38,7 @@ What:		/sys/module/<MODULENAME>/srcversion
+ Date:		Jun 2005
+ Description:
+ 		If the module source has MODULE_VERSION, this file will contain
+-		the checksum of the the source code.
++		the checksum of the source code.
+ 
+ What:		/sys/module/<MODULENAME>/version
+ Date:		Jun 2005
+diff --git a/Documentation/ABI/testing/sysfs-class-rtrs-client b/Documentation/ABI/testing/sysfs-class-rtrs-client
+index 49a4157c7bf1..fecc59d1b96f 100644
+--- a/Documentation/ABI/testing/sysfs-class-rtrs-client
++++ b/Documentation/ABI/testing/sysfs-class-rtrs-client
+@@ -78,7 +78,7 @@ What:		/sys/class/rtrs-client/<session-name>/paths/<src@dst>/hca_name
+ Date:		Feb 2020
+ KernelVersion:	5.7
+ Contact:	Jack Wang <jinpu.wang@cloud.ionos.com> Danil Kipnis <danil.kipnis@cloud.ionos.com>
+-Description:	RO, Contains the the name of HCA the connection established on.
++Description:	RO, Contains the name of HCA the connection established on.
+ 
+ What:		/sys/class/rtrs-client/<session-name>/paths/<src@dst>/hca_port
+ Date:		Feb 2020
+diff --git a/Documentation/ABI/testing/sysfs-class-rtrs-server b/Documentation/ABI/testing/sysfs-class-rtrs-server
+index 3b6d5b067df0..b08601d80409 100644
+--- a/Documentation/ABI/testing/sysfs-class-rtrs-server
++++ b/Documentation/ABI/testing/sysfs-class-rtrs-server
+@@ -24,7 +24,7 @@ What:		/sys/class/rtrs-server/<session-name>/paths/<src@dst>/hca_name
+ Date:		Feb 2020
+ KernelVersion:	5.7
+ Contact:	Jack Wang <jinpu.wang@cloud.ionos.com> Danil Kipnis <danil.kipnis@cloud.ionos.com>
+-Description:	RO, Contains the the name of HCA the connection established on.
++Description:	RO, Contains the name of HCA the connection established on.
+ 
+ What:		/sys/class/rtrs-server/<session-name>/paths/<src@dst>/hca_port
+ Date:		Feb 2020
+diff --git a/Documentation/ABI/testing/sysfs-devices-platform-ACPI-TAD b/Documentation/ABI/testing/sysfs-devices-platform-ACPI-TAD
+index f7b360a61b21..bc44bc903bc8 100644
+--- a/Documentation/ABI/testing/sysfs-devices-platform-ACPI-TAD
++++ b/Documentation/ABI/testing/sysfs-devices-platform-ACPI-TAD
+@@ -74,7 +74,7 @@ Description:
+ 
+ 		Reads also cause the AC alarm timer status to be reset.
+ 
+-		Another way to reset the the status of the AC alarm timer is to
++		Another way to reset the status of the AC alarm timer is to
+ 		write (the number) 0 to this file.
+ 
+ 		If the status return value indicates that the timer has expired,
+diff --git a/Documentation/ABI/testing/sysfs-devices-power b/Documentation/ABI/testing/sysfs-devices-power
+index 1b2a2d41ff80..54195530e97a 100644
+--- a/Documentation/ABI/testing/sysfs-devices-power
++++ b/Documentation/ABI/testing/sysfs-devices-power
+@@ -303,5 +303,5 @@ Date:		Apr 2010
+ Contact:	Dominik Brodowski <linux@dominikbrodowski.net>
+ Description:
+ 		Reports the runtime PM children usage count of a device, or
+-		0 if the the children will be ignored.
++		0 if the children will be ignored.
+ 
+diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+index 8419019b6a88..6726f439958c 100644
+--- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
++++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+@@ -200,7 +200,7 @@ prb
+ 
+ A pointer to the printk ringbuffer (struct printk_ringbuffer). This
+ may be pointing to the static boot ringbuffer or the dynamically
+-allocated ringbuffer, depending on when the the core dump occurred.
++allocated ringbuffer, depending on when the core dump occurred.
+ Used by user-space tools to read the active kernel log buffer.
+ 
+ printk_rb_static
+diff --git a/Documentation/bpf/map_cgroup_storage.rst b/Documentation/bpf/map_cgroup_storage.rst
+index cab9543017bf..8e5fe532c07e 100644
+--- a/Documentation/bpf/map_cgroup_storage.rst
++++ b/Documentation/bpf/map_cgroup_storage.rst
+@@ -31,7 +31,7 @@ The map uses key of type of either ``__u64 cgroup_inode_id`` or
+     };
+ 
+ ``cgroup_inode_id`` is the inode id of the cgroup directory.
+-``attach_type`` is the the program's attach type.
++``attach_type`` is the program's attach type.
+ 
+ Linux 5.9 added support for type ``__u64 cgroup_inode_id`` as the key type.
+ When this key type is used, then all attach types of the particular cgroup and
+@@ -155,7 +155,7 @@ However, the BPF program can still only associate with one map of each type
+ ``BPF_MAP_TYPE_CGROUP_STORAGE`` or more than one
+ ``BPF_MAP_TYPE_PERCPU_CGROUP_STORAGE``.
+ 
+-In all versions, userspace may use the the attach parameters of cgroup and
++In all versions, userspace may use the attach parameters of cgroup and
+ attach type pair in ``struct bpf_cgroup_storage_key`` as the key to the BPF map
+ APIs to read or update the storage for a given attachment. For Linux 5.9
+ attach type shared storages, only the first value in the struct, cgroup inode
+diff --git a/Documentation/core-api/cpu_hotplug.rst b/Documentation/core-api/cpu_hotplug.rst
+index c6f4ba2fb32d..f75778d37488 100644
+--- a/Documentation/core-api/cpu_hotplug.rst
++++ b/Documentation/core-api/cpu_hotplug.rst
+@@ -560,7 +560,7 @@ available:
+   * cpuhp_state_remove_instance(state, node)
+   * cpuhp_state_remove_instance_nocalls(state, node)
+ 
+-The arguments are the same as for the the cpuhp_state_add_instance*()
++The arguments are the same as for the cpuhp_state_add_instance*()
+ variants above.
+ 
+ The functions differ in the way how the installed callbacks are treated:
+diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt b/Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt
+index 94d50a949be1..c0e3c3a42bea 100644
+--- a/Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt
++++ b/Documentation/devicetree/bindings/arm/msm/qcom,saw2.txt
+@@ -10,7 +10,7 @@ system, notifying them when a low power state is entered or exited.
+ Multiple revisions of the SAW hardware are supported using these Device Nodes.
+ SAW2 revisions differ in the register offset and configuration data. Also, the
+ same revision of the SAW in different SoCs may have different configuration
+-data due the the differences in hardware capabilities. Hence the SoC name, the
++data due the differences in hardware capabilities. Hence the SoC name, the
+ version of the SAW hardware in that SoC and the distinction between cpu (big
+ or Little) or cache, may be needed to uniquely identify the SAW register
+ configuration and initialization data. The compatible string is used to
+diff --git a/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt b/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
+index 36998e184821..c9894538315b 100644
+--- a/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
++++ b/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
+@@ -15,7 +15,7 @@ Required properties:
+ 	- for "ti,da850-pll1", shall be "clksrc"
+ 
+ Optional properties:
+-- ti,clkmode-square-wave: Indicates that the the board is supplying a square
++- ti,clkmode-square-wave: Indicates that the board is supplying a square
+ 	wave input on the OSCIN pin instead of using a crystal oscillator.
+ 	This property is only valid when compatible = "ti,da850-pll0".
+ 
+diff --git a/Documentation/devicetree/bindings/fpga/fpga-region.txt b/Documentation/devicetree/bindings/fpga/fpga-region.txt
+index 7d3515264838..6694ef29a267 100644
+--- a/Documentation/devicetree/bindings/fpga/fpga-region.txt
++++ b/Documentation/devicetree/bindings/fpga/fpga-region.txt
+@@ -330,7 +330,7 @@ succeeded.
+ 
+ The Device Tree Overlay will contain:
+  * "target-path" or "target"
+-   The insertion point where the the contents of the overlay will go into the
++   The insertion point where the contents of the overlay will go into the
+    live tree.  target-path is a full path, while target is a phandle.
+  * "ranges"
+     The address space mapping from processor to FPGA bus(ses).
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-pisosr.txt b/Documentation/devicetree/bindings/gpio/gpio-pisosr.txt
+index 414a01cdf715..fba3c61f6a5b 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-pisosr.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-pisosr.txt
+@@ -14,7 +14,7 @@ Optional properties:
+  - ngpios		: Number of used GPIO lines (0..n-1), default is 8.
+  - load-gpios		: GPIO pin specifier attached to load enable, this
+ 			  pin is pulsed before reading from the device to
+-			  load input pin values into the the device.
++			  load input pin values into the device.
+ 
+ For other required and optional properties of SPI slave
+ nodes please refer to ../spi/spi-bus.txt.
+diff --git a/Documentation/devicetree/bindings/net/qcom-emac.txt b/Documentation/devicetree/bindings/net/qcom-emac.txt
+index 346e6c7f47b7..e6cb2291471c 100644
+--- a/Documentation/devicetree/bindings/net/qcom-emac.txt
++++ b/Documentation/devicetree/bindings/net/qcom-emac.txt
+@@ -14,7 +14,7 @@ MAC node:
+ - mac-address : The 6-byte MAC address. If present, it is the default
+ 	MAC address.
+ - internal-phy : phandle to the internal PHY node
+-- phy-handle : phandle the the external PHY node
++- phy-handle : phandle the external PHY node
+ 
+ Internal PHY node:
+ - compatible : Should be "qcom,fsm9900-emac-sgmii" or "qcom,qdf2432-emac-sgmii".
+diff --git a/Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie-analog.yaml b/Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie-analog.yaml
+index 4d01f3124e1c..a90fa1baadab 100644
+--- a/Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie-analog.yaml
++++ b/Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie-analog.yaml
+@@ -16,7 +16,7 @@ description: |+
+   - compatible: Should be the following:
+                 "amlogic,meson-gx-hhi-sysctrl", "simple-mfd", "syscon"
+ 
+-  Refer to the the bindings described in
++  Refer to the bindings described in
+   Documentation/devicetree/bindings/mfd/syscon.yaml
+ 
+ properties:
+diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
+index c689bea7ce6e..d3a8911728d0 100644
+--- a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2400-pinctrl.yaml
+@@ -16,7 +16,7 @@ description: |+
+   - compatible:     Should be one of the following:
+                     "aspeed,ast2400-scu", "syscon", "simple-mfd"
+ 
+-  Refer to the the bindings described in
++  Refer to the bindings described in
+   Documentation/devicetree/bindings/mfd/syscon.yaml
+ 
+ properties:
+diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
+index 9db904a528ee..5d2c1b1fb7fd 100644
+--- a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2500-pinctrl.yaml
+@@ -17,7 +17,7 @@ description: |+
+   			"aspeed,ast2500-scu", "syscon", "simple-mfd"
+   			"aspeed,g5-scu", "syscon", "simple-mfd"
+ 
+-  Refer to the the bindings described in
++  Refer to the bindings described in
+   Documentation/devicetree/bindings/mfd/syscon.yaml
+ 
+ properties:
+diff --git a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml
+index 3666ac5b6518..e92686d2f062 100644
+--- a/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/aspeed,ast2600-pinctrl.yaml
+@@ -16,7 +16,7 @@ description: |+
+   - compatible: Should be one of the following:
+                 "aspeed,ast2600-scu", "syscon", "simple-mfd"
+ 
+-  Refer to the the bindings described in
++  Refer to the bindings described in
+   Documentation/devicetree/bindings/mfd/syscon.yaml
+ 
+ properties:
+diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml b/Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml
+index f005abac7079..4e52ef33a986 100644
+--- a/Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml
++++ b/Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml
+@@ -17,7 +17,7 @@ description: |+
+   - compatible: Should be the following:
+                 "amlogic,meson-gx-hhi-sysctrl", "simple-mfd", "syscon"
+ 
+-  Refer to the the bindings described in
++  Refer to the bindings described in
+   Documentation/devicetree/bindings/mfd/syscon.yaml
+ 
+ properties:
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/cpus.txt b/Documentation/devicetree/bindings/powerpc/fsl/cpus.txt
+index d63ab1dec16d..801c66069121 100644
+--- a/Documentation/devicetree/bindings/powerpc/fsl/cpus.txt
++++ b/Documentation/devicetree/bindings/powerpc/fsl/cpus.txt
+@@ -5,7 +5,7 @@ Copyright 2013 Freescale Semiconductor Inc.
+ Power Architecture CPUs in Freescale SOCs are represented in device trees as
+ per the definition in the Devicetree Specification.
+ 
+-In addition to the the Devicetree Specification definitions, the properties
++In addition to the Devicetree Specification definitions, the properties
+ defined below may be present on CPU nodes.
+ 
+ PROPERTIES
+diff --git a/Documentation/devicetree/bindings/powerpc/opal/power-mgt.txt b/Documentation/devicetree/bindings/powerpc/opal/power-mgt.txt
+index 9d619e955576..d6658d3dd15e 100644
+--- a/Documentation/devicetree/bindings/powerpc/opal/power-mgt.txt
++++ b/Documentation/devicetree/bindings/powerpc/opal/power-mgt.txt
+@@ -39,7 +39,7 @@ otherwise. The length of all the property arrays must be the same.
+ 
+ - ibm,cpu-idle-state-flags:
+ 	Array of unsigned 32-bit values containing the values of the
+-	flags associated with the the aforementioned idle-states. The
++	flags associated with the aforementioned idle-states. The
+ 	flag bits are as follows:
+ 		0x00000001 /* Decrementer would stop */
+ 		0x00000002 /* Needs timebase restore */
+diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+index b677900b3aae..658f96fbc4fe 100644
+--- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
++++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+@@ -37,7 +37,7 @@ on the Qualcomm Hexagon core.
+ - interrupt-names:
+ 	Usage: required
+ 	Value type: <stringlist>
+-	Definition: The interrupts needed depends on the the compatible
++	Definition: The interrupts needed depends on the compatible
+ 		    string:
+ 	qcom,q6v5-pil:
+ 	qcom,ipq8074-wcss-pil:
+diff --git a/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml b/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml
+index 2ad17b361db0..bc2fb1a80ed7 100644
+--- a/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml
++++ b/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml
+@@ -68,9 +68,9 @@ properties:
+        array is defined as <PDMIN1 PDMIN2 PDMIN3 PDMIN4>.
+ 
+        0 - (default) Odd channel is latched on the negative edge and even
+-       channel is latched on the the positive edge.
++       channel is latched on the positive edge.
+        1 - Odd channel is latched on the positive edge and even channel is
+-       latched on the the negative edge.
++       latched on the negative edge.
+ 
+        PDMIN1 - PDMCLK latching edge used for channel 1 and 2 data
+        PDMIN2 - PDMCLK latching edge used for channel 3 and 4 data
+diff --git a/Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml b/Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml
+index 1ab5070c751d..89a2c32c0ab2 100644
+--- a/Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml
++++ b/Documentation/devicetree/bindings/thermal/brcm,avs-ro-thermal.yaml
+@@ -16,7 +16,7 @@ description: |+
+   - compatible: Should be one of the following:
+                 "brcm,bcm2711-avs-monitor", "syscon", "simple-mfd"
+ 
+-  Refer to the the bindings described in
++  Refer to the bindings described in
+   Documentation/devicetree/bindings/mfd/syscon.yaml
+ 
+ properties:
+diff --git a/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.txt b/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.txt
+index db880e7ed713..aea4a2a178b9 100644
+--- a/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.txt
++++ b/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.txt
+@@ -96,7 +96,7 @@ critical trip point is reported back to the thermal framework to implement
+ software shutdown.
+ 
+ - the "hot" type trip points will be set to SOC_THERM hardware as the throttle
+-temperature. Once the the temperature of this thermal zone is higher
++temperature. Once the temperature of this thermal zone is higher
+ than it, it will trigger the HW throttle event.
+ 
+ Example :
+diff --git a/Documentation/devicetree/bindings/thermal/rcar-thermal.yaml b/Documentation/devicetree/bindings/thermal/rcar-thermal.yaml
+index 927de79ab4b5..00dcbdd36144 100644
+--- a/Documentation/devicetree/bindings/thermal/rcar-thermal.yaml
++++ b/Documentation/devicetree/bindings/thermal/rcar-thermal.yaml
+@@ -42,7 +42,7 @@ properties:
+     description:
+       Address ranges of the thermal registers. If more then one range is given
+       the first one must be the common registers followed by each sensor
+-      according the the datasheet.
++      according the datasheet.
+     minItems: 1
+     maxItems: 4
+ 
+diff --git a/Documentation/driver-api/isa.rst b/Documentation/driver-api/isa.rst
+index def4a7b690b5..3df1b1696524 100644
+--- a/Documentation/driver-api/isa.rst
++++ b/Documentation/driver-api/isa.rst
+@@ -100,7 +100,7 @@ I believe platform_data is available for this, but if rather not, moving
+ the isa_driver pointer to the private struct isa_dev is ofcourse fine as
+ well.
+ 
+-Then, if the the driver did not provide a .match, it matches. If it did,
++Then, if the driver did not provide a .match, it matches. If it did,
+ the driver match() method is called to determine a match.
+ 
+ If it did **not** match, dev->platform_data is reset to indicate this to
+diff --git a/Documentation/filesystems/caching/backend-api.rst b/Documentation/filesystems/caching/backend-api.rst
+index d7507becf674..3a199fc50828 100644
+--- a/Documentation/filesystems/caching/backend-api.rst
++++ b/Documentation/filesystems/caching/backend-api.rst
+@@ -122,7 +122,7 @@ volumes, calling::
+ to tell fscache that a volume has been withdrawn.  This waits for all
+ outstanding accesses on the volume to complete before returning.
+ 
+-When the the cache is completely withdrawn, fscache should be notified by
++When the cache is completely withdrawn, fscache should be notified by
+ calling::
+ 
+ 	void fscache_relinquish_cache(struct fscache_cache *cache);
+diff --git a/Documentation/locking/seqlock.rst b/Documentation/locking/seqlock.rst
+index 64405e5da63e..bfda1a5fecad 100644
+--- a/Documentation/locking/seqlock.rst
++++ b/Documentation/locking/seqlock.rst
+@@ -39,7 +39,7 @@ as the writer can invalidate a pointer that the reader is following.
+ Sequence counters (``seqcount_t``)
+ ==================================
+ 
+-This is the the raw counting mechanism, which does not protect against
++This is the raw counting mechanism, which does not protect against
+ multiple writers.  Write side critical sections must thus be serialized
+ by an external lock.
+ 
+diff --git a/Documentation/sphinx/cdomain.py b/Documentation/sphinx/cdomain.py
+index ca8ac9e59ded..a7d1866e72ff 100644
+--- a/Documentation/sphinx/cdomain.py
++++ b/Documentation/sphinx/cdomain.py
+@@ -151,7 +151,7 @@ class CObject(Base_CObject):
+     def handle_func_like_macro(self, sig, signode):
+         u"""Handles signatures of function-like macros.
+ 
+-        If the objtype is 'function' and the the signature ``sig`` is a
++        If the objtype is 'function' and the signature ``sig`` is a
+         function-like macro, the name of the macro is returned. Otherwise
+         ``False`` is returned.  """
+ 
+-- 
+2.34.1
+
 
 _______________________________________________
 kexec mailing list
