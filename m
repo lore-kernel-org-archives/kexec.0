@@ -4,78 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8C5BFC00144
-	for <kexec@archiver.kernel.org>; Mon,  1 Aug 2022 15:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AD48EC19F2B
+	for <kexec@archiver.kernel.org>; Mon,  1 Aug 2022 15:44:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
-	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=TDN4m5W3lE7/cziGxtOEvr5IdQwihiky8d17K4KPLfA=; b=cp7fFa6gPmQkbT
-	nOwD7ndDfq7++GoYkJG6W2Y4oSVv0otfTHNh5QoW9gGkUFwmXyAMLd24DQAOznqQpLm7Qy8SWEYy8
-	tyx1LmAPHoqmCY+51o3UPoBUhxtMpINYvvHWBl+3krIcoUz+7CsiTL4GR/j8kbfzuqIXyQCxXgCGH
-	TTcn1Fh0W9cQKCZZ4aYi6h3vhzR1xP6Vj+ciLV0rezdFytrpbWpNvF3+vpcykd02Uvv2O4G9HyRt/
-	EDE2tgtSuysnQbQAgp/aNHac+mJzpwBjoTYsmQczFi6B1WCXNbWfZKNZy8GXHxVXp/l2DZkBG5S55
-	JXMjMPW7FJgji6IYWl+A==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	List-Subscribe:List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:
+	In-Reply-To:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Reply-To:Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date
+	:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=fYRlnNmT4EouQaCY8ZDtmYpi8QhnBwEqwL+10+aeVEs=; b=IYdXPSUuHEjhYSYmcRjXgwlt+3
+	VXV7gX5gikqRwXkxpALdoS481JCtGegIf3ZvIhn9IGZCfi3eLeUuiRCNIF9ue5VWp5HvXRS13iCBl
+	+cXEO3itO8Ja2Sji9qLFJhjjWdEK4nKm9ijcWkXFhpLyEE0qq6z7vu5yMIutTbQ0jgOqb3GSoLbdl
+	DszuRjxUaYbHmbj7WmvnP2M8MosWm0IzFcshXZQNMl/D+urt48yWQkcP3qsr9NJug1Lt6XMPzzdaO
+	Je6WQy2Ns0Qyd1FWqyLqfEvCISn6VjwyV176RPZ1btpqB1s9TMYFCk+PnmGeeld03knfsNf3J3Bp0
+	ArMUmOZA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oIXaX-007Y2U-HY; Mon, 01 Aug 2022 15:44:13 +0000
-Received: from fanzine.igalia.com ([178.60.130.6] helo=fanzine2.igalia.com)
+	id 1oIXab-007Y4z-7D; Mon, 01 Aug 2022 15:44:17 +0000
+Received: from mail-ot1-x32b.google.com ([2607:f8b0:4864:20::32b])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oEWje-007RXY-IK
-	for kexec@lists.infradead.org; Thu, 21 Jul 2022 14:01:07 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=dlwnS1Fa3TmXXVNwd1KfMLtfg4qW+Hn+l84xHjkNFv4=; b=pM1CVIwQYxiPAKO3GfnMS+lKWM
-	v8JWyHbi4HVsskrZQxy4Ji7eppdHhD1UeK7YeES2Rza9Ju3RbEJUXwt5UYgTNVT2z9kdsVJcQZ2L8
-	N6sK3PA8ObrNJfk7XzTrJZYWeq5vb9MxU4+a7bb7dfmzv/Ic2EqZMfqBN8NDhXaiSx1krB1zjjBqE
-	D6CdkPlu8rryITQUy+7+fBeOogwYiSR19VRwipP0cOL8BciioNlXBMtGct1NVCqFcNqhkzjwMriDU
-	fmUlKR/BahxW7dR+bNhJoxAwIaR0xCbzFpxbFgpew/sJHpTkXKvif23GSxed/IZ1m99labnS42keg
-	BKnGtb8g==;
-Received: from 200-100-212-117.dial-up.telesp.net.br ([200.100.212.117] helo=[192.168.1.60])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1oEWjF-001W4c-TX; Thu, 21 Jul 2022 16:00:38 +0200
-Message-ID: <81b1f787-c3d4-1b2d-6b56-38f54947835d@igalia.com>
-Date: Thu, 21 Jul 2022 11:00:11 -0300
+	id 1oFya6-00Adla-2Z
+	for kexec@lists.infradead.org; Mon, 25 Jul 2022 13:57:14 +0000
+Received: by mail-ot1-x32b.google.com with SMTP id k25-20020a056830169900b0061c6f68f451so8690943otr.9
+        for <kexec@lists.infradead.org>; Mon, 25 Jul 2022 06:57:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+l85BsyJSU0UbHlmYMEOxONRkWum9Iis0lj7YjgVouo=;
+        b=dWdcUyQoIWk8uY6m8Acu/6HDsqLWDHzisKnne/RysGVugfZ5HKopOqqUvUSB54/4Rt
+         j/gBUlP2+2c7V9+Dko1QRuiFheGBOpKFcbrV46N4/z+JT8TxMwjN0gR5u9K3qKD9R7l6
+         ObkJQXyJa8I7owcWJxg7fumn3XAkwAHq67YL7IXKmIS3xettfQ3Et2ccEaC7rq6kBiKL
+         PQ8qWETGGw4h+UG/8upVqTuDqcF99cyOwepu1Zhl0edMRik6FCZBiqDQjq62liQbU+S+
+         /E72R4reieefw2bx13pxMm2yGNXpuW79nTNtf2gBFiYeHageOerRolZ06Y2/B2gO57j/
+         ro7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+l85BsyJSU0UbHlmYMEOxONRkWum9Iis0lj7YjgVouo=;
+        b=U4XbIfIfv5VEGimAZSXdzuLngQAp4YsPmlCBikTtTD/MtAIbUUlMVKOSZBiqAhgIzh
+         yeMjLHNiSTPB78wBP4qykPpkEjHZ3XfmUD0r0jykxVI5O59UH3RpoC7uXka4DC8Ptqje
+         Sem1w2hv6xk0FRdcOyfx/sWJIsRwArWfZi5OkPj0yCU+JyfU0CtgXVKVea33kRNNZ0tg
+         FAfaBDfaDtPdVz5gtEJIP8HbkyQoMNLZt0oRnv8IFe78ElAKHsvX8MnUYxlhBgm2JxKp
+         Z50bPgwbfXPp6RtlE0Eth2kQMg/C9XnKqcoGGCyvJpPGd/As5R+PvH1x9FLT8vNRUrWq
+         qmCw==
+X-Gm-Message-State: AJIora+io2I9Pe7VfsNP7N5xY4mvzbLHUSWplAZ/o7XeqQMfV4RzjOZk
+	hbFPgFca0Wk71qlpd7AAKbr2PA==
+X-Google-Smtp-Source: AGRyM1viWeGZygpCAGA/0LqaHJ3iwJEX7OK5ms8z7lEOosaUtO+XSEMo/iWU3So71mv+MCTq135fvw==
+X-Received: by 2002:a05:6830:43aa:b0:61c:b46d:c88a with SMTP id s42-20020a05683043aa00b0061cb46dc88amr4981097otv.19.1658757428382;
+        Mon, 25 Jul 2022 06:57:08 -0700 (PDT)
+Received: from fedora (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
+        by smtp.gmail.com with ESMTPSA id d24-20020a05680805d800b0032f63c4638esm4935090oij.2.2022.07.25.06.57.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Jul 2022 06:57:07 -0700 (PDT)
+Date: Mon, 25 Jul 2022 09:57:04 -0400
+From: William Breathitt Gray <william.gray@linaro.org>
+To: Joe Perches <joe@perches.com>
+Cc: Baoquan He <bhe@redhat.com>, Randy Dunlap <rdunlap@infradead.org>,
+	Jonathan Corbet <corbet@lwn.net>, Slark Xiao <slark_xiao@163.com>,
+	kafai <kafai@fb.com>, vgoyal <vgoyal@redhat.com>,
+	dyoung <dyoung@redhat.com>, ast <ast@kernel.org>,
+	daniel <daniel@iogearbox.net>, andrii <andrii@kernel.org>,
+	"martin.lau" <martin.lau@linux.dev>, song <song@kernel.org>,
+	yhs <yhs@fb.com>, "john.fastabend" <john.fastabend@gmail.com>,
+	kpsingh <kpsingh@kernel.org>, sdf <sdf@google.com>,
+	haoluo <haoluo@google.com>, jolsa <jolsa@kernel.org>,
+	dhowells <dhowells@redhat.com>, peterz <peterz@infradead.org>,
+	mingo <mingo@redhat.com>, will <will@kernel.org>,
+	longman <longman@redhat.com>, "boqun.feng" <boqun.feng@gmail.com>,
+	tglx <tglx@linutronix.de>, bigeasy <bigeasy@linutronix.de>,
+	kexec <kexec@lists.infradead.org>,
+	linux-doc <linux-doc@vger.kernel.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	bpf <bpf@vger.kernel.org>, linux-cachefs <linux-cachefs@redhat.com>
+Subject: Re: [PATCH v2] docs: Fix typo in comment
+Message-ID: <Yt6hMD+HIaERgrqg@fedora>
+References: <20220721015605.20651-1-slark_xiao@163.com>
+ <20220721154110.fqp7n6f7ij22vayp@kafai-mbp.dhcp.thefacebook.com>
+ <21cac0ea.18f.182218041f7.Coremail.slark_xiao@163.com>
+ <874jzamhxe.fsf@meer.lwn.net>
+ <6ca59494-cc64-d85c-98e8-e9bef2a04c15@infradead.org>
+ <YtnlAg6Qhf7fwXXW@MiWiFi-R3L-srv>
+ <5bd85a7241e6ccac7fe5647cb9cf7ef22b228943.camel@perches.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v2 07/13] parisc: Replace regular spinlock with
- spin_trylock on panic path
-Content-Language: en-US
-To: Helge Deller <deller@gmx.de>, Jeroen Roovers <jer@xs4all.nl>
-Cc: akpm@linux-foundation.org, bhe@redhat.com, pmladek@suse.com,
- kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-hyperv@vger.kernel.org, netdev@vger.kernel.org, x86@kernel.org,
- kernel-dev@igalia.com, kernel@gpiccoli.net, halves@canonical.com,
- fabiomirmar@gmail.com, alejandro.j.jimenez@oracle.com,
- andriy.shevchenko@linux.intel.com, arnd@arndb.de, bp@alien8.de,
- corbet@lwn.net, d.hatayama@jp.fujitsu.com, dave.hansen@linux.intel.com,
- dyoung@redhat.com, feng.tang@intel.com, gregkh@linuxfoundation.org,
- mikelley@microsoft.com, hidehiro.kawai.ez@hitachi.com, jgross@suse.com,
- john.ogness@linutronix.de, keescook@chromium.org, luto@kernel.org,
- mhiramat@kernel.org, mingo@redhat.com, paulmck@kernel.org,
- peterz@infradead.org, rostedt@goodmis.org, senozhatsky@chromium.org,
- stern@rowland.harvard.edu, tglx@linutronix.de, vgoyal@redhat.com,
- vkuznets@redhat.com, will@kernel.org, linux-parisc@vger.kernel.org,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-References: <20220719195325.402745-1-gpiccoli@igalia.com>
- <20220719195325.402745-8-gpiccoli@igalia.com>
- <20220720034300.6d2905b8@wim.jer>
- <76b6f764-23a9-ed0b-df3d-b9194c4acc1d@igalia.com>
- <7e5dce87-31c1-401f-324a-2aacb6996625@gmx.de>
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <7e5dce87-31c1-401f-324a-2aacb6996625@gmx.de>
+In-Reply-To: <5bd85a7241e6ccac7fe5647cb9cf7ef22b228943.camel@perches.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220721_070104_880603_739F0BD3 
-X-CRM114-Status: UNSURE (   5.16  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20220725_065710_206183_93820BCC 
+X-CRM114-Status: GOOD (  28.90  )
 X-Mailman-Approved-At: Mon, 01 Aug 2022 08:44:02 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -88,30 +104,93 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============0259420272409806407=="
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 21/07/2022 10:45, Helge Deller wrote:
-> [...]
-> Guilherme, I'd really prefer that you push the whole series at once through
-> some generic tree.
-> 
-> Helge
 
-Hmm..OK.
-
-Some maintainers will take patches from here and merge, but given your
-preference I can talk to Andrew to see if the can pick via his tree
-(along with the generic panic patches).
-
-Cheers,
+--===============0259420272409806407==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="DTlmFVa4wvwu5Zvn"
+Content-Disposition: inline
 
 
-Guilherme
+--DTlmFVa4wvwu5Zvn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Jul 25, 2022 at 06:52:15AM -0700, Joe Perches wrote:
+> On Fri, 2022-07-22 at 07:45 +0800, Baoquan He wrote:
+> > On 07/21/22 at 11:40am, Randy Dunlap wrote:
+> > > On 7/21/22 11:36, Jonathan Corbet wrote:
+> > > > "Slark Xiao" <slark_xiao@163.com> writes:
+> > > > > May I know the maintainer of one subsystem could merge the changes
+> > > > > contains lots of subsystem?  I also know this could be filtered by
+> > > > > grep and sed command, but that patch would have dozens of maintai=
+ners
+> > > > > and reviewers.
+> > > >=20
+> > > > Certainly I don't think I can merge a patch touching 166 files acro=
+ss
+> > > > the tree.  This will need to be broken down by subsystem, and you m=
+ay
+> > > > well find that there are some maintainers who don't want to deal wi=
+th
+> > > > this type of minor fix.
+> > >=20
+> > > We have also seen cases where "the the" should be replaced by "then t=
+he"
+> > > or some other pair of words, so some of these changes could fall into
+> > > that category.
+> >=20
+> > It's possible. I searched in Documentation and went through each place,
+> > seems no typo of "then the". Below patch should clean up all the 'the t=
+he'
+> > typo under Documentation.
+> []
+> > The fix is done with below command:
+> > sed -i "s/the the /the /g" `git grep -l "the the " Documentation`
+>=20
+> This command misses entries at EOL:
+>=20
+> Documentation/trace/histogram.rst:  Here's an example where we use a comp=
+ound key composed of the the
+>=20
+> Perhaps a better conversion would be 's/\bthe the\b/the/g'
+
+It would be good to check for instances that cross newlines as well;
+i.e. "the" at the end of a line followed by "the" at the start of the
+next line. However, this would require some thought to properly account
+for comment blocks ("*") and other similar prefixes that should be
+ignored.
+
+William Breathitt Gray
+
+--DTlmFVa4wvwu5Zvn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCYt6hMAAKCRC1SFbKvhIj
+K7XjAP9mCPlMDtWSBhCoUhLhlZfaG0XycbJFaNDw81dAkUz2RQD+Kobc2FhQZM+x
+KR+ZpOFEIOreTL3gE48zETF6lxcxUAI=
+=FuCv
+-----END PGP SIGNATURE-----
+
+--DTlmFVa4wvwu5Zvn--
+
+
+--===============0259420272409806407==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============0259420272409806407==--
+
