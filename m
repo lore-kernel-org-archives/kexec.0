@@ -4,154 +4,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 85BCDC19F2B
-	for <kexec@archiver.kernel.org>; Mon,  1 Aug 2022 15:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1CCB7C00144
+	for <kexec@archiver.kernel.org>; Mon,  1 Aug 2022 15:44:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:References:
-	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
+	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=T3LHxMHn3t0tosWC+zrjFBiyhPoZaH813PYescxW1+M=; b=3BJePJmqHZBCkM
-	ZiTJrsAjiNUTA0ce1SmFf/q9jVt0wHZzfYzIj3SctdnCS7i6Cgg2VHn/SbrG6UztTC2gdyKbCV6++
-	EBFfwE+K+Au2mxKJFgXYBeQqhfDXIKac1cZlResS4zbbXlukXusbC5BKJ63Kb48tNLi4q4BmGtoR9
-	sa7+2aWza8Wh2nY9maE6XsFcJ+koCpTntiRUxlvhjccf/x9qUj6o/xU5HojL1QohNQdo8v8enpyG5
-	1ZJc6Z3oEGQmhwGLHNjHNxkm0c39O1CKVcWqNsGIHp7cvt431Zv2jLnaObx+mr/L7UxhOp01Cddis
-	Z/0ArOiunzjPdi0uhP3g==;
+	List-Owner; bh=HMCOfkHmM4hFZDbpga2HBZga2PVR0MKBaS3LcX7bQX0=; b=kLMFJZPDuIAncx
+	iTrumMmLIhlHxOlbJHr0QVctr/AuIR5ldnbZv6zZRdfVdSiZMQKh0Gcx6COPZAFyl5kPoeIbqgVGy
+	aXQDpCatyuNCcYJLkJLpJ/yX5Ybn3yh2HY0lRVJ1yjFaMK/j1ER3bvsrlNRNXAgIqv6eAZ42ovDU9
+	p+X9ZL724nvJYMPz27+30YDAUf2MF9Torudks2cNk8ql8CNR+DA9ox1FMh4DYq7R2sjCC1GGOhR2K
+	6t/pRN7wH6rUg88DiqxutCdfGD7kQcjHBkllO5z+SUxs+uaxQXgjKKzqlpC1slr9JBbWgPWXf7uT2
+	a1R4njjagvfKpRscNDuA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oIXaf-007Y8l-Th; Mon, 01 Aug 2022 15:44:21 +0000
-Received: from [52.101.56.19] (helo=na01-obe.outbound.protection.outlook.com)
+	id 1oIXai-007YAl-Fv; Mon, 01 Aug 2022 15:44:24 +0000
+Received: from fanzine.igalia.com ([178.60.130.6] helo=fanzine2.igalia.com)
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oG3FE-00HFfr-5o
-	for kexec@lists.infradead.org; Mon, 25 Jul 2022 18:55:57 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jajFDOZSNj9pbUlxEAvF6km4vhQotpQK3wYd/vBzjSuGalXP5JtO5QNsxKIxGptj4Q+sISakD20TSAXnZ5u6eCwtyO2CQ3nKXl/EezKoQbev5WmoxFsxAwUV9ZYz1XTgeKC3OhX+MEL7lOtrx4kObL9ukmZCBKeOnJG41ziw9uAC3WxfA0ER3Edda5PF09f6J4z/tYnybEUxcX5hvnu55+42gbC9qdduB5ltxC+YDAyrM0PklUb+J2pCoFIgn2Ga2lPrCwH8QU8DkFpi1XQ2hfRVXWlCwWYH4StEapUcnSDfc2Jd7rUEcshz/CwXmA0IJkCWq1lbPFFvFeHBqiIETQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=X3V9EprHVaFVfAHYbvVX/PjJRxfN1vl01/MwrXXaV1Y=;
- b=G57InTKXx/69i+eJd8bJnO1zGOq/892mBsuJpwm/ZxQALP4e6zlfVG0hkKsGwyrR7hcOIRnprh3OsPzE5LcaS4BqNaAxHn3NTtogJn3KXAB7+bb8352lqpPNzDSAI9meWas9XbnlEHBBSjLLNhw2nCCqJPOMSF40o7cIWxwq5PRee0FbCgATXDs0bphVOZWUB8S3nMMESm4Macboi2QNckpOkPIcK1q8WTCqkvN8fVqZxbuzoqgtO2wlhpMp5xa+q3MFPGTbpY8zDhsKuz2/VvdFEQgJLPzA/sVd0gf0DhuK3j/THG+PM/UGStgEb7aBF4mrTSyjcpG43PYSkbGxcg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X3V9EprHVaFVfAHYbvVX/PjJRxfN1vl01/MwrXXaV1Y=;
- b=YCuL6/gfsyvYIVH5s+oV03SaNr2Npgl8fn27yGPI6rCNMUlIUk7p4HXBZ1r2HiMCYTAeO8flCOBQCKkjghghbdBEW6tIHXFRqC7VzYdYXHt+eMHt/K4Ion2nOFQJP6mLPCzNpYxPoyVzQID/R1ycSVy5l4O456TvmWqfP7Fi3VM=
-Received: from PH0PR21MB3025.namprd21.prod.outlook.com (2603:10b6:510:d2::21)
- by BY5PR21MB1506.namprd21.prod.outlook.com (2603:10b6:a03:23d::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.2; Mon, 25 Jul
- 2022 18:55:20 +0000
-Received: from PH0PR21MB3025.namprd21.prod.outlook.com
- ([fe80::ddda:3701:dfb8:6743]) by PH0PR21MB3025.namprd21.prod.outlook.com
- ([fe80::ddda:3701:dfb8:6743%4]) with mapi id 15.20.5504.001; Mon, 25 Jul 2022
- 18:55:20 +0000
-From: "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>, "akpm@linux-foundation.org"
-	<akpm@linux-foundation.org>, "bhe@redhat.com" <bhe@redhat.com>,
-	"pmladek@suse.com" <pmladek@suse.com>, "kexec@lists.infradead.org"
-	<kexec@lists.infradead.org>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, "x86@kernel.org"
-	<x86@kernel.org>, "kernel-dev@igalia.com" <kernel-dev@igalia.com>,
-	"kernel@gpiccoli.net" <kernel@gpiccoli.net>, "halves@canonical.com"
-	<halves@canonical.com>, "fabiomirmar@gmail.com" <fabiomirmar@gmail.com>,
-	"alejandro.j.jimenez@oracle.com" <alejandro.j.jimenez@oracle.com>,
-	"andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
-	"arnd@arndb.de" <arnd@arndb.de>, "bp@alien8.de" <bp@alien8.de>,
-	"corbet@lwn.net" <corbet@lwn.net>, "d.hatayama@jp.fujitsu.com"
-	<d.hatayama@jp.fujitsu.com>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "dyoung@redhat.com" <dyoung@redhat.com>,
-	"feng.tang@intel.com" <feng.tang@intel.com>, "gregkh@linuxfoundation.org"
-	<gregkh@linuxfoundation.org>, "hidehiro.kawai.ez@hitachi.com"
-	<hidehiro.kawai.ez@hitachi.com>, "jgross@suse.com" <jgross@suse.com>,
-	"john.ogness@linutronix.de" <john.ogness@linutronix.de>,
-	"keescook@chromium.org" <keescook@chromium.org>, "luto@kernel.org"
-	<luto@kernel.org>, "mhiramat@kernel.org" <mhiramat@kernel.org>,
-	"mingo@redhat.com" <mingo@redhat.com>, "paulmck@kernel.org"
-	<paulmck@kernel.org>, "peterz@infradead.org" <peterz@infradead.org>,
-	"rostedt@goodmis.org" <rostedt@goodmis.org>, "senozhatsky@chromium.org"
-	<senozhatsky@chromium.org>, "stern@rowland.harvard.edu"
-	<stern@rowland.harvard.edu>, "tglx@linutronix.de" <tglx@linutronix.de>,
-	"vgoyal@redhat.com" <vgoyal@redhat.com>, vkuznets <vkuznets@redhat.com>,
-	"will@kernel.org" <will@kernel.org>, Andrea Parri <parri.andrea@gmail.com>,
-	Dexuan Cui <decui@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, KY
- Srinivasan <kys@microsoft.com>, Stephen Hemminger <sthemmin@microsoft.com>,
-	Tianyu Lan <Tianyu.Lan@microsoft.com>, Wei Liu <wei.liu@kernel.org>
-Subject: RE: [PATCH v2 12/13] drivers/hv/vmbus, video/hyperv_fb: Untangle and
- refactor Hyper-V panic notifiers
-Thread-Topic: [PATCH v2 12/13] drivers/hv/vmbus, video/hyperv_fb: Untangle and
- refactor Hyper-V panic notifiers
-Thread-Index: AQHYm6noKMm0jEh4LkCj+vXutuSDiK2PeF0w
-Date: Mon, 25 Jul 2022 18:55:20 +0000
-Message-ID:  <PH0PR21MB3025B2542FE6212AA95D4783D7959@PH0PR21MB3025.namprd21.prod.outlook.com>
-References: <20220719195325.402745-1-gpiccoli@igalia.com>
- <20220719195325.402745-13-gpiccoli@igalia.com>
-In-Reply-To: <20220719195325.402745-13-gpiccoli@igalia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels:  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=a3b86401-864c-4326-854b-4c24128acd62;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-07-25T18:53:36Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5963b47f-de35-4067-1e51-08da6e6f3923
-x-ms-traffictypediagnostic: BY5PR21MB1506:EE_
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:  R+Q23QRTVuC0nvvMx/FIXKcsEW923wEY1jGyDBczmBQ54aBupu2Ysp/3kXhXfOb23CBOFpu9rU1hr5+qHMMNJLUT1fnTqlrurJESPGHxfSl/1QLHW4prherFvNdJSHYSWH92sGmnvz4fZV9oOYALBStWBOJLhbVeubVv2/+rRzfumbo51a6QY6AcJ8uctxjH95qauVe9BOql9pbNkL184/WF6B5S3yhWnMTlvAW+FBpJ1T87G8zQVCd2urudXPEly3j7kgkucCaV3NRIadgJYcZPg0fhefnodeIrcDIuuzaX22LWTnSSbqGFUabUSA723SYdMythRkANtjhOEz4On8fGrgiLc1gyuosFDs4A+WT/aDs6qgTVuVCy2+dwe0LnJ2VsPxnwWIwEdhLqOg5PN9jNWEFQoj5bG+6glb61zUX625HPq1LsD97EwU2GFdoJTHy6X3hdy22OjhmlxDTkSK4kdWyVSqbja/DIziHsSmCD6ETbasKPQKT7DX2583dqexXDJe/5y+MAQxKOHM10MM/e5RbcDh5lP6M429sz/1DHlHmb/fdjkWRYq8X0WubTUIKdfuCyZOSXlbFC6KJ2qrRZtvZt60m0QPeDHwyEBWTf0LcH9zF8v+C/cOoh78CWEHynKjn/YhMCuKdBYvXwZXbdIHqHgABBGDzXbDQ6yPzoFPRvpKX7JRL/YMc+UtZYaNIEM3A2JR3+3kIFJKepClkq8yPZ8qlW4rl2PkSS0jrJT5nIqe6oOEFD4h3oCxZIh/hYl1ggvegU/xw7kGe2AdDnkr/ABokKAbx0aPkQDDT8U7mTxGITJMo5FCQ8yNdpulcd1qMOMafVOATUIZ7toPuevHCaA0e7a5+38GIq6t3o0JoxlXmAy/Ku4s2WbYN0
-x-forefront-antispam-report:  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR21MB3025.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(366004)(346002)(136003)(39860400002)(376002)(396003)(451199009)(7416002)(64756008)(7406005)(5660300002)(66556008)(33656002)(52536014)(8676002)(4326008)(82960400001)(9686003)(966005)(26005)(7696005)(8936002)(110136005)(122000001)(55016003)(2906002)(66446008)(76116006)(6506007)(86362001)(316002)(66946007)(66476007)(82950400001)(8990500004)(54906003)(71200400001)(10290500003)(478600001)(41300700001)(38070700005)(186003)(83380400001)(38100700002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:  =?us-ascii?Q?a6frRVs6DITru84z+K4iCwTU/qpxkzaf2YEO4gK5SIWEpCIzY3vTjsu/7PtU?=
- =?us-ascii?Q?RVjDmpA5rJonhr6fgiMUm5uL88rCUiiEVOypPtM4SB2a3oQYFNv6eruJXktu?=
- =?us-ascii?Q?Q/jFKvIoGmZPwZ/pZDu6C/uD9gCwfvT5ZYGraYD9eSqmtQdh5FuEIumEmmjy?=
- =?us-ascii?Q?OHqpZ6amJMsFeKLZuogOrHJEext/j9l8eX8oZsSUOIDqu1WOOJYnd5njEL+L?=
- =?us-ascii?Q?ZrDLbI5Ncnr45dZWZ0fTyelJJD6UEZCdeliEiou486crYT2rTa9mTLg7hJ41?=
- =?us-ascii?Q?+3HHacSoMbrFM9aB8fmgg6bBYGlJDQhMiwjBWGXNohB1oyFZzTH1Lq95f60G?=
- =?us-ascii?Q?Hko+KvWV7wC4QoguBwg06QybhooIwWfP7lV00s3XELIwK47ugv1MfVql9tao?=
- =?us-ascii?Q?OOTWUWMyM8GrsjDp6F7nhu+4G1spEwBxGHUekMUrP8KPLoz0X/HFsSK7zNup?=
- =?us-ascii?Q?dzxCk6W07BiShhkggjdl+nT6wzUjK7iDXvkD615FQYCoAc9vh8QXAttnMcVE?=
- =?us-ascii?Q?8EUT0dOGsTeZFbYY/58zwQ8wUdJcp5P4LQN2Quz6BqJp+Nn9mxCnm7tyLtXX?=
- =?us-ascii?Q?kT3GkYGiF3EejssJhFthWn7n3kAS/vpN99/PiUv3sU05IX82UDNXUwTVwCTN?=
- =?us-ascii?Q?I2x+odz4nkKWKqFPqyd5LldCVsO8+Zzy2RrnLlFnF1PKVOwC3PZAZ1bCp0dG?=
- =?us-ascii?Q?sQrmP+y3sSNOYfyfpGhRV2bEO5HPBGTRY89p74sKXjk/azQLCDbkDE1PUfSq?=
- =?us-ascii?Q?yJ0bQotYPbTidBgkZ3Jr55CvuHLjMyACvLnB5lc/ohMBgzXShuLsixFf6szD?=
- =?us-ascii?Q?kOa0gDlZXYqsqveJS9IDptZrzcyD4AWleQb2jJ15OJFW6cABdOqD9W6JdFVM?=
- =?us-ascii?Q?RjOTQgidvvqcd3Oa9ToI0fh615iDJgZz6pyDjshsslrFC93wHwBb8zAcm0CW?=
- =?us-ascii?Q?GYeMqDUfdHlVM7mNOYzCitCEj1GgDHa2TGo9To9DmvtizPSXcQuc9eRgwZL+?=
- =?us-ascii?Q?NN6s6m8CVQWPJfiRsiMRT9CcuAfiCg5VoAAsvl0eHxfR6wMA7i35pe/mJXst?=
- =?us-ascii?Q?KGDse3jmEatEDFE8FRj7IZdLKaOJfksQjGbV1iDDC/tqpKJhUTCXk4EMsq97?=
- =?us-ascii?Q?rL8IZDf9ymsofd7+i7uoJL5/IPAlI+B1EbOjYEy4Qq80GcYLvDh6fyxjpXpf?=
- =?us-ascii?Q?2z4wIBlTQSiDxzaUBgQtpjemafgSz1mSfyxVbZVMVnhIDHmOqwuc+CYa8PJ+?=
- =?us-ascii?Q?uBzdxPRuK1hEnNN7VOraKCuf0BZ/bERy9tdy3euOjAWAF544ESFNcyVQ7mf2?=
- =?us-ascii?Q?PBkzJttGhLG36G2KyPGAkKmb5TbTKWZAEcY8kYTD4yH/rUP7WNPveah1bemn?=
- =?us-ascii?Q?QpFccrYYdv9Aqq42K3ALZb78+nlyC9SGLEUqEi8+kK6npwb7fDX5MKeSA6a6?=
- =?us-ascii?Q?7lk7qrlePLSdEUTI4OWjMZcpFldP6KUxVhwquSKuypK2lDQPJ4XZRu13rBYW?=
- =?us-ascii?Q?cNXEj4izs13gtuZv8/GOn+eLAhSrsE9fZjjjrdIIyiS7bnf8LOSz0PslvHqQ?=
- =?us-ascii?Q?Y2Tp2RZXE9nOTQMemzHC1tXvy+t5IE4U2H16Nj3YpASUfwqToUuXYAPhiGc8?=
- =?us-ascii?Q?hA=3D=3D?=
+	id 1oG6Dj-0031VQ-Ur
+	for kexec@lists.infradead.org; Mon, 25 Jul 2022 22:06:37 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=YyhxX2mWLvi9NimhQGcKzGIHUcpD9uFByKnTgfQXT2w=; b=PGkpTuxYoVATcBmmo5QpTR9OdU
+	CwxiCUUyg+Y43WZFKPZI8tVhTGlbReOvxwRy9vN5xlFY3Picc9q02QVGon0mk2qr+gc0H6DI1xkdA
+	Ocae0c8zKyVjxHiL0K7bl4oQZhe8iJrhJtaQD9dZsgzJVrcCJZAzsov/XHxJWKbmbo5ftSD95pWKz
+	UFCnlx6Icb4+P+rIPF6DDujCPBhMW2lOCenPqvqjXpVKjdwjx9mBL17sU/cCfl+FmUrx7l2Dspgvf
+	whmOYidPV6T/it/Bz3pnx0XUGVjPveeRJzlInsHK3oB41Rw1lJRpzg9VZc6aVCj990v9DlchEvxp+
+	pb2gaO3A==;
+Received: from [177.51.67.168] (helo=[192.168.43.24])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1oG6D1-006U4U-LN; Tue, 26 Jul 2022 00:05:52 +0200
+Message-ID: <da0ed272-1d47-dd1f-9ad3-46b5adba2dec@igalia.com>
+Date: Mon, 25 Jul 2022 19:05:18 -0300
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR21MB3025.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5963b47f-de35-4067-1e51-08da6e6f3923
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jul 2022 18:55:20.4749
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Ik2QAyYrx5RzPt4kkG/lM8ecfrnYXkh1BubyhHVkJDRevsDcuqK5rkyueedd3jm4vleoAYhik1ve+o+m7UWpxKigWnB65wX0M2CKOQR7LnY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR21MB1506
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v2 11/13] video/hyperv_fb: Avoid taking busy spinlock on
+ panic path
+Content-Language: en-US
+To: "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+ "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+ "bhe@redhat.com" <bhe@redhat.com>, "pmladek@suse.com" <pmladek@suse.com>,
+ "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "x86@kernel.org" <x86@kernel.org>,
+ "kernel-dev@igalia.com" <kernel-dev@igalia.com>,
+ "kernel@gpiccoli.net" <kernel@gpiccoli.net>,
+ "halves@canonical.com" <halves@canonical.com>,
+ "fabiomirmar@gmail.com" <fabiomirmar@gmail.com>,
+ "alejandro.j.jimenez@oracle.com" <alejandro.j.jimenez@oracle.com>,
+ "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
+ "arnd@arndb.de" <arnd@arndb.de>, "bp@alien8.de" <bp@alien8.de>,
+ "corbet@lwn.net" <corbet@lwn.net>,
+ "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "dyoung@redhat.com" <dyoung@redhat.com>,
+ "feng.tang@intel.com" <feng.tang@intel.com>,
+ "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+ "hidehiro.kawai.ez@hitachi.com" <hidehiro.kawai.ez@hitachi.com>,
+ "jgross@suse.com" <jgross@suse.com>,
+ "john.ogness@linutronix.de" <john.ogness@linutronix.de>,
+ "keescook@chromium.org" <keescook@chromium.org>,
+ "luto@kernel.org" <luto@kernel.org>,
+ "mhiramat@kernel.org" <mhiramat@kernel.org>,
+ "mingo@redhat.com" <mingo@redhat.com>,
+ "paulmck@kernel.org" <paulmck@kernel.org>,
+ "peterz@infradead.org" <peterz@infradead.org>,
+ "rostedt@goodmis.org" <rostedt@goodmis.org>,
+ "senozhatsky@chromium.org" <senozhatsky@chromium.org>,
+ "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ "vgoyal@redhat.com" <vgoyal@redhat.com>, vkuznets <vkuznets@redhat.com>,
+ "will@kernel.org" <will@kernel.org>, Andrea Parri <parri.andrea@gmail.com>,
+ Dexuan Cui <decui@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+ KY Srinivasan <kys@microsoft.com>, Stephen Hemminger
+ <sthemmin@microsoft.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>,
+ Wei Liu <wei.liu@kernel.org>
+References: <20220719195325.402745-1-gpiccoli@igalia.com>
+ <20220719195325.402745-12-gpiccoli@igalia.com>
+ <PH0PR21MB30252061CD7F2FD15BD77F7ED7959@PH0PR21MB3025.namprd21.prod.outlook.com>
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <PH0PR21MB30252061CD7F2FD15BD77F7ED7959@PH0PR21MB3025.namprd21.prod.outlook.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220725_115556_233332_810D4526 
-X-CRM114-Status: GOOD (  22.73  )
+X-CRM114-CacheID: sfid-20220725_150636_043697_B42747B2 
+X-CRM114-Status: UNSURE (   7.52  )
+X-CRM114-Notice: Please train this message.
 X-Mailman-Approved-At: Mon, 01 Aug 2022 08:44:02 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -169,80 +115,27 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Guilherme G. Piccoli <gpiccoli@igalia.com> Sent: Tuesday, July 19, 2022 12:53 PM
+On 25/07/2022 15:09, Michael Kelley (LINUX) wrote:
+> [...]
+>> +bool hv_ringbuffer_spinlock_busy(struct vmbus_channel *channel)
+>> +{
+>> +	struct hv_ring_buffer_info *rinfo = &channel->outbound;
+>> +
+>> +	if (spin_is_locked(&rinfo->ring_lock))
+>> +		return true;
+>> +
+>> +	return false;
 > 
-> Currently Hyper-V guests are among the most relevant users of the panic
-> infrastructure, like panic notifiers, kmsg dumpers, etc. The reasons rely
-> both in cleaning-up procedures (closing hypervisor <-> guest connection,
-> disabling some paravirtualized timer) as well as to data collection
-> (sending panic information to the hypervisor) and framebuffer management.
+> Could simplify the code as just:
 > 
-> The thing is: some notifiers are related to others, ordering matters, some
-> functionalities are duplicated and there are lots of conditionals behind
-> sending panic information to the hypervisor. As part of an effort to
-> clean-up the panic notifiers mechanism and better document things, we
-> hereby address some of the issues/complexities of Hyper-V panic handling
-> through the following changes:
-> 
-> (a) We have die and panic notifiers on vmbus_drv.c and both have goals of
-> sending panic information to the hypervisor, though the panic notifier is
-> also responsible for a cleaning-up procedure.
-> 
-> This commit clears the code by splitting the panic notifier in two, one
-> for closing the vmbus connection whereas the other is only for sending
-> panic info to hypervisor. With that, it was possible to merge the die and
-> panic notifiers in a single/well-documented function, and clear some
-> conditional complexities on sending such information to the hypervisor.
-> 
-> (b) There is a Hyper-V framebuffer panic notifier, which relies in doing
-> a vmbus operation that demands a valid connection. So, we must order this
-> notifier with the panic notifier from vmbus_drv.c, to guarantee that the
-> framebuffer code executes before the vmbus connection is unloaded.
-> 
-> Also, this commit removes a useless header.
-> 
-> Although there is code rework and re-ordering, we expect that this change
-> has no functional regressions but instead optimize the path and increase
-> panic reliability on Hyper-V. This was tested on Hyper-V with success.
-> 
-> Cc: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-> Cc: Dexuan Cui <decui@microsoft.com>
-> Cc: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-> Cc: Michael Kelley <mikelley@microsoft.com>
-> Cc: Petr Mladek <pmladek@suse.com>
-> Cc: Stephen Hemminger <sthemmin@microsoft.com>
-> Cc: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> Cc: Wei Liu <wei.liu@kernel.org>
-> Tested-by: Fabio A M Martins <fabiomirmar@gmail.com>
-> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
-> 
-> ---
-> 
-> 
-> V2:
-> - Unfortunately we cannot rely in the crash shutdown (custom) handler
-> to perform the vmbus unload - arm64 architecture doesn't have this
-> "feature" [0]. So, in V2 we kept the notifier behavior and always
-> unload the vmbus connection, no matter what - thanks Michael for
-> pointing that;
-> 
-> - Removed the Fixes tags as per Michael suggestion;
-> 
-> - As per Petr suggestion, we abandoned the idea of distinguish among
-> notifiers using an id - so, in V2 we rely in the old and good address
-> comparison for that. Thanks Petr for the enriching discussion!
-> 
-> [0]
-> https://lore.kernel.org/lkml/427a8277-49f0-4317-d6c3-4a15d7070e55@igalia.com/
-> 
-> 
->  drivers/hv/vmbus_drv.c          | 109 +++++++++++++++++++-------------
->  drivers/video/fbdev/hyperv_fb.c |   8 +++
->  2 files changed, 74 insertions(+), 43 deletions(-)
+> 	return spin_is_locked(&rinfo->ring_lock);
 > 
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Sure, makes sense! Thanks for the suggestion, I'll do that for V3.
+Cheers,
+
+
+Guilherme
 
 _______________________________________________
 kexec mailing list
