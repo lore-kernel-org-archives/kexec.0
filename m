@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D1E63C19F2A
-	for <kexec@archiver.kernel.org>; Mon,  1 Aug 2022 15:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 85BCDC19F2B
+	for <kexec@archiver.kernel.org>; Mon,  1 Aug 2022 15:44:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:References:
 	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=6BM/uUIUnuWaYkYZ3fvFX3U3/Ahy4fehBzt6POGyl1I=; b=uEt2GQ5KZFKVm0
-	0fF8YFgsTWulIhDIURQFwhw3+TCWTDYeyyg/sf8ayVyFOG9JanXhnpelNawHUjXd9uXldkBdEM+Af
-	DZaod8hUrICxbS8ABDkg69E35CfcBXF7FWT/BRBs2ynhKrHRIXpYWoKZO6nPYUTnnAG3dNcrv3dkl
-	X4Ecz0U0IjQZSH/RWGw+JPoIiczAKrK3KzBhshhFGeRd4tp4VZnawU0stQ2HvbgC7iIoXPbARzRIF
-	6JSqZ1I+h4rzZeVXnaIpA3DybM0qub9A4qT860+yjdD81UzVuJv0corkm4J4I9Tw2WsYVYk68kgvr
-	HeEI01VoQQPH3d65L2lg==;
+	List-Owner; bh=T3LHxMHn3t0tosWC+zrjFBiyhPoZaH813PYescxW1+M=; b=3BJePJmqHZBCkM
+	ZiTJrsAjiNUTA0ce1SmFf/q9jVt0wHZzfYzIj3SctdnCS7i6Cgg2VHn/SbrG6UztTC2gdyKbCV6++
+	EBFfwE+K+Au2mxKJFgXYBeQqhfDXIKac1cZlResS4zbbXlukXusbC5BKJ63Kb48tNLi4q4BmGtoR9
+	sa7+2aWza8Wh2nY9maE6XsFcJ+koCpTntiRUxlvhjccf/x9qUj6o/xU5HojL1QohNQdo8v8enpyG5
+	1ZJc6Z3oEGQmhwGLHNjHNxkm0c39O1CKVcWqNsGIHp7cvt431Zv2jLnaObx+mr/L7UxhOp01Cddis
+	Z/0ArOiunzjPdi0uhP3g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oIXad-007Y6o-HO; Mon, 01 Aug 2022 15:44:19 +0000
-Received: from mail-eastus2azlp170110002.outbound.protection.outlook.com ([2a01:111:f403:c110::2] helo=na01-obe.outbound.protection.outlook.com)
+	id 1oIXaf-007Y8l-Th; Mon, 01 Aug 2022 15:44:21 +0000
+Received: from [52.101.56.19] (helo=na01-obe.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oG2Wb-00GOyM-Ax
-	for kexec@lists.infradead.org; Mon, 25 Jul 2022 18:09:51 +0000
+	id 1oG3FE-00HFfr-5o
+	for kexec@lists.infradead.org; Mon, 25 Jul 2022 18:55:57 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jgL6fsMz9uTOWvxzy7Nuxsz01HH7FvXaYOJY6033FPO2pSukY3YaIUENSRZ6JL2XjHq/2KWUdrna+eYqU/Nb8KsEmGlPDU2Epz90KM72BPGFgBTdP3liqz6Q6rMS9qfhUyHZvANFVjtQw3mauG41DwoLQCBS0ai0450wO9yXD7mjG3ZNbGAsLIdl9PohbXQs6ezuswYcThAKxCD32YOCg8xX47suUK+xqkq70OFVTthkl6aGPzd5XW73v6J5nWVmslD+FjSu07s4IZt2LkGgnT7f/e26HGjKHxYU+u4awbTrsDxUM/W0dn73HgfJteqjotC8MAeVTGVSHY3ym+ugiQ==
+ b=jajFDOZSNj9pbUlxEAvF6km4vhQotpQK3wYd/vBzjSuGalXP5JtO5QNsxKIxGptj4Q+sISakD20TSAXnZ5u6eCwtyO2CQ3nKXl/EezKoQbev5WmoxFsxAwUV9ZYz1XTgeKC3OhX+MEL7lOtrx4kObL9ukmZCBKeOnJG41ziw9uAC3WxfA0ER3Edda5PF09f6J4z/tYnybEUxcX5hvnu55+42gbC9qdduB5ltxC+YDAyrM0PklUb+J2pCoFIgn2Ga2lPrCwH8QU8DkFpi1XQ2hfRVXWlCwWYH4StEapUcnSDfc2Jd7rUEcshz/CwXmA0IJkCWq1lbPFFvFeHBqiIETQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FVTj4d0PIpyQIm6ct7HgBykBbuSTzMESNqhhJFeLmS8=;
- b=Sow2Kbn2jK7ZJV0nwwax76JBbujG6THSl0R3vPWKXCqOnIJn59Znq0tfVWCFX6D+wLzewF5XmGrYZBMlRbz8RrGH7t8ALsLvkGGdhqCqW6GExQMQ1kKDfr1zOb/wBCOuOMfsMmTGkxOsisU5gstdVtLYEw2cTsghvzola4iOeko72cgCvmEdtI3EcIs0UMTA5Acq8DqB00zihU3f5JNZSSDxaFD6pHdaOaH1Z5d+cryrfIlb+7VxXjxj0Ft8w0LMdgGjbqVm10TFfhn2zyrQAtSSm/o8SupmE4zIDSV/eOdpe1FGGxi0u5q4v9vQ+Mp7ObRmg2tbwDq7fPUEOZGzsw==
+ bh=X3V9EprHVaFVfAHYbvVX/PjJRxfN1vl01/MwrXXaV1Y=;
+ b=G57InTKXx/69i+eJd8bJnO1zGOq/892mBsuJpwm/ZxQALP4e6zlfVG0hkKsGwyrR7hcOIRnprh3OsPzE5LcaS4BqNaAxHn3NTtogJn3KXAB7+bb8352lqpPNzDSAI9meWas9XbnlEHBBSjLLNhw2nCCqJPOMSF40o7cIWxwq5PRee0FbCgATXDs0bphVOZWUB8S3nMMESm4Macboi2QNckpOkPIcK1q8WTCqkvN8fVqZxbuzoqgtO2wlhpMp5xa+q3MFPGTbpY8zDhsKuz2/VvdFEQgJLPzA/sVd0gf0DhuK3j/THG+PM/UGStgEb7aBF4mrTSyjcpG43PYSkbGxcg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FVTj4d0PIpyQIm6ct7HgBykBbuSTzMESNqhhJFeLmS8=;
- b=aHVrP37v1LQQWGsoYnyk6I72ru19VErToBdhLeq7KFV3OhHxlBUk6Ru+ZJIt8sZPC62Hkcq7ThKsMvsQcnsHUTDJTCuj8JLZXO35UqxROq49+Ug5tSMljt3psvjJ0IEpmqLIvZLjcD5c8lpnEjkgucOb/ZLoA2PbAvyfYdqpyIg=
+ bh=X3V9EprHVaFVfAHYbvVX/PjJRxfN1vl01/MwrXXaV1Y=;
+ b=YCuL6/gfsyvYIVH5s+oV03SaNr2Npgl8fn27yGPI6rCNMUlIUk7p4HXBZ1r2HiMCYTAeO8flCOBQCKkjghghbdBEW6tIHXFRqC7VzYdYXHt+eMHt/K4Ion2nOFQJP6mLPCzNpYxPoyVzQID/R1ycSVy5l4O456TvmWqfP7Fi3VM=
 Received: from PH0PR21MB3025.namprd21.prod.outlook.com (2603:10b6:510:d2::21)
- by LV2PR21MB3229.namprd21.prod.outlook.com (2603:10b6:408:174::12) with
+ by BY5PR21MB1506.namprd21.prod.outlook.com (2603:10b6:a03:23d::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.1; Mon, 25 Jul
- 2022 18:09:28 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.2; Mon, 25 Jul
+ 2022 18:55:20 +0000
 Received: from PH0PR21MB3025.namprd21.prod.outlook.com
  ([fe80::ddda:3701:dfb8:6743]) by PH0PR21MB3025.namprd21.prod.outlook.com
  ([fe80::ddda:3701:dfb8:6743%4]) with mapi id 15.20.5504.001; Mon, 25 Jul 2022
- 18:09:28 +0000
+ 18:55:20 +0000
 From: "Michael Kelley (LINUX)" <mikelley@microsoft.com>
 To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>, "akpm@linux-foundation.org"
 	<akpm@linux-foundation.org>, "bhe@redhat.com" <bhe@redhat.com>,
@@ -82,76 +82,76 @@ CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
 	Dexuan Cui <decui@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, KY
  Srinivasan <kys@microsoft.com>, Stephen Hemminger <sthemmin@microsoft.com>,
 	Tianyu Lan <Tianyu.Lan@microsoft.com>, Wei Liu <wei.liu@kernel.org>
-Subject: RE: [PATCH v2 11/13] video/hyperv_fb: Avoid taking busy spinlock on
- panic path
-Thread-Topic: [PATCH v2 11/13] video/hyperv_fb: Avoid taking busy spinlock on
- panic path
-Thread-Index: AQHYm6nhxD3vCNgXDkaqQNF/QdvErK2PaFrg
-Date: Mon, 25 Jul 2022 18:09:28 +0000
-Message-ID:  <PH0PR21MB30252061CD7F2FD15BD77F7ED7959@PH0PR21MB3025.namprd21.prod.outlook.com>
+Subject: RE: [PATCH v2 12/13] drivers/hv/vmbus, video/hyperv_fb: Untangle and
+ refactor Hyper-V panic notifiers
+Thread-Topic: [PATCH v2 12/13] drivers/hv/vmbus, video/hyperv_fb: Untangle and
+ refactor Hyper-V panic notifiers
+Thread-Index: AQHYm6noKMm0jEh4LkCj+vXutuSDiK2PeF0w
+Date: Mon, 25 Jul 2022 18:55:20 +0000
+Message-ID:  <PH0PR21MB3025B2542FE6212AA95D4783D7959@PH0PR21MB3025.namprd21.prod.outlook.com>
 References: <20220719195325.402745-1-gpiccoli@igalia.com>
- <20220719195325.402745-12-gpiccoli@igalia.com>
-In-Reply-To: <20220719195325.402745-12-gpiccoli@igalia.com>
+ <20220719195325.402745-13-gpiccoli@igalia.com>
+In-Reply-To: <20220719195325.402745-13-gpiccoli@igalia.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels:  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=ae7ebccc-db95-447a-9683-4ffcff5d64b9;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-07-25T17:56:17Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+msip_labels:  MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=a3b86401-864c-4326-854b-4c24128acd62;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2022-07-25T18:53:36Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8c0944d6-3045-424b-a98e-08da6e68d098
-x-ms-traffictypediagnostic: LV2PR21MB3229:EE_
+x-ms-office365-filtering-correlation-id: 5963b47f-de35-4067-1e51-08da6e6f3923
+x-ms-traffictypediagnostic: BY5PR21MB1506:EE_
 x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:  KovVjc6I2VDImi0AOuGG6JEpYG7geqh58rISYn3tOctmQHdYqlqi/Rxa/lR2hQ3KwuyArJ4RnkNh1o2uzbxMtu+xkZGEC964lm045rxqxn/DG9ZJ/s9QGFhQNqHktTZt5bKGrhkuWAn0r7KaYsqMsscDPGobnyd+dLtGYguOA7YUdsvhyQthrQj3mH5AI4/m8iZlNuEMNxx0tiXyfcvYHncsn+FvKEvysr3wJK5UXVp3RDL0wgYSOnBP1D9J+2CBmJLhc28RrSSpsRZjFLIfNaeLInznFUiB2dJaRVF0W5Z0GBCNEMYC+5J8Tz/yRFowwTqCDMi95ShuG9Xk/gWjqZsQhRZ/EHt4w4wAxubAaPuASC4cUk+z6//7O+YCngCw6ynX5QVQqznFqcgghCKZqZUYk/7kvusFMxU+8UUyfInXQ6DA4PXXjS/UermJmehdwXxQmFP13/qhezx0moCi5T0g6GjpJkm9KvOf53/mAxGXBBvUtYA/zbvuhUf6xEDoXr6U/PhwuWYj2keO+dwTUPHL1SkTauqxjbN7Et6R3ZxbYJMvJzo4sjXLuxNB+zvozVR+S+Fmd9kuZrUH0UdYdFtZ/KBd3EYTUc2QkhvAT846a4KK7UqibLEPAybdhqoWB6YzI9t9zpDwriCGXeVWNZ4n3eYo3U1xJ9EEUgFXGdt2MJn8cf7nb4OsCK3/Rlkg6caOu3G1RqyaQBOQ9v6orOUwoNhXrCY8JXHw59rvvMlBEjtMu9YaKyUv8MXpOT/s7DBD/ZGFw/uN3zgusz3VXzp0Wl9/kjn0m0YhjgPbyCDtyW777ogOz7TExDs/SWG58CnygOLoTmx1+TYomnyQoF0dSRzMkR5sPbYjk9fYXWpR5GfgPpH1W+TqwIFkqrGK
-x-forefront-antispam-report:  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR21MB3025.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(39860400002)(346002)(136003)(396003)(366004)(376002)(451199009)(66946007)(4326008)(66556008)(76116006)(66446008)(64756008)(71200400001)(41300700001)(66476007)(55016003)(7696005)(52536014)(26005)(8676002)(5660300002)(10290500003)(8936002)(7406005)(83380400001)(7416002)(86362001)(2906002)(33656002)(54906003)(186003)(122000001)(82960400001)(38100700002)(9686003)(82950400001)(316002)(110136005)(478600001)(6506007)(966005)(8990500004)(38070700005);DIR:OUT;SFP:1102;
+x-microsoft-antispam-message-info:  R+Q23QRTVuC0nvvMx/FIXKcsEW923wEY1jGyDBczmBQ54aBupu2Ysp/3kXhXfOb23CBOFpu9rU1hr5+qHMMNJLUT1fnTqlrurJESPGHxfSl/1QLHW4prherFvNdJSHYSWH92sGmnvz4fZV9oOYALBStWBOJLhbVeubVv2/+rRzfumbo51a6QY6AcJ8uctxjH95qauVe9BOql9pbNkL184/WF6B5S3yhWnMTlvAW+FBpJ1T87G8zQVCd2urudXPEly3j7kgkucCaV3NRIadgJYcZPg0fhefnodeIrcDIuuzaX22LWTnSSbqGFUabUSA723SYdMythRkANtjhOEz4On8fGrgiLc1gyuosFDs4A+WT/aDs6qgTVuVCy2+dwe0LnJ2VsPxnwWIwEdhLqOg5PN9jNWEFQoj5bG+6glb61zUX625HPq1LsD97EwU2GFdoJTHy6X3hdy22OjhmlxDTkSK4kdWyVSqbja/DIziHsSmCD6ETbasKPQKT7DX2583dqexXDJe/5y+MAQxKOHM10MM/e5RbcDh5lP6M429sz/1DHlHmb/fdjkWRYq8X0WubTUIKdfuCyZOSXlbFC6KJ2qrRZtvZt60m0QPeDHwyEBWTf0LcH9zF8v+C/cOoh78CWEHynKjn/YhMCuKdBYvXwZXbdIHqHgABBGDzXbDQ6yPzoFPRvpKX7JRL/YMc+UtZYaNIEM3A2JR3+3kIFJKepClkq8yPZ8qlW4rl2PkSS0jrJT5nIqe6oOEFD4h3oCxZIh/hYl1ggvegU/xw7kGe2AdDnkr/ABokKAbx0aPkQDDT8U7mTxGITJMo5FCQ8yNdpulcd1qMOMafVOATUIZ7toPuevHCaA0e7a5+38GIq6t3o0JoxlXmAy/Ku4s2WbYN0
+x-forefront-antispam-report:  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR21MB3025.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(366004)(346002)(136003)(39860400002)(376002)(396003)(451199009)(7416002)(64756008)(7406005)(5660300002)(66556008)(33656002)(52536014)(8676002)(4326008)(82960400001)(9686003)(966005)(26005)(7696005)(8936002)(110136005)(122000001)(55016003)(2906002)(66446008)(76116006)(6506007)(86362001)(316002)(66946007)(66476007)(82950400001)(8990500004)(54906003)(71200400001)(10290500003)(478600001)(41300700001)(38070700005)(186003)(83380400001)(38100700002);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:  =?us-ascii?Q?otKPG2cvIajyqGsTEjBNKyvkL5ZTL8Rd365UjHBX8WT0SZ/25/hU+GIQUU4t?=
- =?us-ascii?Q?gNmQON/cxVlXZKNmnAzZ4umXmBRS9DZyXuk2J+jr+wCAV0F7cA7Ev19lKaJF?=
- =?us-ascii?Q?IQ6F/4TfQzS6o9EGvwY9AJM8ISvYpD+E8sVFfaRWhS1nRyRhcFP7//zo4Y8x?=
- =?us-ascii?Q?GKYX1wc703TT7E/BskPKiKWG4DBj0c/A4o4gPAh35CXqc5exY57ktPMCwXab?=
- =?us-ascii?Q?QrAylc1u0DzrkHRQgjIsfwtuVx9I+iEA0fhMfVqnJiHygAMzj9sGjJ7SgNK4?=
- =?us-ascii?Q?5EIW4zcyvCtt2h1lJgctlbL/LJm3XtLbuDEFqzStyDiLzVBR7hLwmri0HXhW?=
- =?us-ascii?Q?N6451gBXye0WqD0yE0MMK/Vl3ZZgDzbiyOOvrIM3e9WLjfJt2GZAJ9ZnU1Jg?=
- =?us-ascii?Q?favLSXL1E38c0mkemKp/pXTGQxUgIctWThhH5XToJhs/xOP/bgRfWLA9A0do?=
- =?us-ascii?Q?zG+sb+YT3fJ13gkuVOCpMu6gk19FYzgQt5PmTCkq18HZcQ2KDUFDHnds15Pv?=
- =?us-ascii?Q?YTz7FwVmX2lu24OLlbBJn0IikljUwDfD8q59uKb7Etl3dh+NF6FfBcm348N3?=
- =?us-ascii?Q?G9MouHxn+zdJbeSHoYENmYMUqqlduOyyAi7hLwlojOOtpmiwJy43swMldcPo?=
- =?us-ascii?Q?4aJCI01q+xDkZRzxto1UhzKGeNXSMSdfD8v9PQrZ34YCqU2ZDDYGy+moAce9?=
- =?us-ascii?Q?TVYdtfc3tKVITEPTWaZbImM+YlCsMKLC0QAQrgVqNddeTI3XdUqNHFY3mmnc?=
- =?us-ascii?Q?4Smcu4vqF7cw1CsJ2dosGI7lfj3QbrklXe5f/cWgzSXHBsn5NF3tnkLsYjz5?=
- =?us-ascii?Q?BWbx9VJasC+xyUB0VgqO4w7hESY7ESpUDA1B6VoY0t9BmiEMX+0pWD+pHSnK?=
- =?us-ascii?Q?glbhWFxa5umoJ8t1WLNJh6E5fXqyW9op5y8ItY+KVojNiSHt73AVsD7UH11W?=
- =?us-ascii?Q?w1RpNKRYVcWdBuOsDDijC/3c/FGxX7HD8bF9V6sgIG+Hbm7IGELrlqWa5Nb5?=
- =?us-ascii?Q?GrF9TlGdG4kQFd9UNo51wOG2KDshStmW4OWTJApXDaGu/mC27+Gh5yDxte9V?=
- =?us-ascii?Q?VzNxRcf3ew0JWrRmE/tZyn8s4OtUNLtcmeCvnigLmUTzKFka+YfCAqxU0TPq?=
- =?us-ascii?Q?lFoMCICXWg2r/SVgil55Sn75bmADI9Dm9pTeOvaQs5rdws7+8q88PnCD01cS?=
- =?us-ascii?Q?jw/GbpX41bjQlwJXzxEYLX0f++ilKB1NrvGuea+ZehYvU2mWuJtLPOXB+gM7?=
- =?us-ascii?Q?OCuWMoF0IrXiQRI/dMaPwFdv+UmByxiPkNMeUAmR7740rgMDhnv/WI2/HZyW?=
- =?us-ascii?Q?502uThB/3NGf28WvP4GswpBpdC+INXZiBMeDEmjWDw81rH59pYEE2p9jFGSP?=
- =?us-ascii?Q?tL0fBbGBBPJ+5Qps/l/MnzSVSf21ksAyBy3wqIJi8oZMNA9cNtqRhLxCV3Yn?=
- =?us-ascii?Q?ldy5W7XkHqbZB46Us6hVIwAP89b6J7yPm4hl0MX/NlOihwl9ji7AOv2Yi4ee?=
- =?us-ascii?Q?Tjls1W+xOfnfWLY4qNoPTP0k3pR0cAfJCmW2qPdE2U1ZGpMwE5aWlG20sA0w?=
- =?us-ascii?Q?fapkAaNC3v5pj0XzvOEueFAWcE3Ub/BQNYjo+dp7hRiO/LbGOUe6gII4tRzA?=
- =?us-ascii?Q?Ng=3D=3D?=
+x-ms-exchange-antispam-messagedata-0:  =?us-ascii?Q?a6frRVs6DITru84z+K4iCwTU/qpxkzaf2YEO4gK5SIWEpCIzY3vTjsu/7PtU?=
+ =?us-ascii?Q?RVjDmpA5rJonhr6fgiMUm5uL88rCUiiEVOypPtM4SB2a3oQYFNv6eruJXktu?=
+ =?us-ascii?Q?Q/jFKvIoGmZPwZ/pZDu6C/uD9gCwfvT5ZYGraYD9eSqmtQdh5FuEIumEmmjy?=
+ =?us-ascii?Q?OHqpZ6amJMsFeKLZuogOrHJEext/j9l8eX8oZsSUOIDqu1WOOJYnd5njEL+L?=
+ =?us-ascii?Q?ZrDLbI5Ncnr45dZWZ0fTyelJJD6UEZCdeliEiou486crYT2rTa9mTLg7hJ41?=
+ =?us-ascii?Q?+3HHacSoMbrFM9aB8fmgg6bBYGlJDQhMiwjBWGXNohB1oyFZzTH1Lq95f60G?=
+ =?us-ascii?Q?Hko+KvWV7wC4QoguBwg06QybhooIwWfP7lV00s3XELIwK47ugv1MfVql9tao?=
+ =?us-ascii?Q?OOTWUWMyM8GrsjDp6F7nhu+4G1spEwBxGHUekMUrP8KPLoz0X/HFsSK7zNup?=
+ =?us-ascii?Q?dzxCk6W07BiShhkggjdl+nT6wzUjK7iDXvkD615FQYCoAc9vh8QXAttnMcVE?=
+ =?us-ascii?Q?8EUT0dOGsTeZFbYY/58zwQ8wUdJcp5P4LQN2Quz6BqJp+Nn9mxCnm7tyLtXX?=
+ =?us-ascii?Q?kT3GkYGiF3EejssJhFthWn7n3kAS/vpN99/PiUv3sU05IX82UDNXUwTVwCTN?=
+ =?us-ascii?Q?I2x+odz4nkKWKqFPqyd5LldCVsO8+Zzy2RrnLlFnF1PKVOwC3PZAZ1bCp0dG?=
+ =?us-ascii?Q?sQrmP+y3sSNOYfyfpGhRV2bEO5HPBGTRY89p74sKXjk/azQLCDbkDE1PUfSq?=
+ =?us-ascii?Q?yJ0bQotYPbTidBgkZ3Jr55CvuHLjMyACvLnB5lc/ohMBgzXShuLsixFf6szD?=
+ =?us-ascii?Q?kOa0gDlZXYqsqveJS9IDptZrzcyD4AWleQb2jJ15OJFW6cABdOqD9W6JdFVM?=
+ =?us-ascii?Q?RjOTQgidvvqcd3Oa9ToI0fh615iDJgZz6pyDjshsslrFC93wHwBb8zAcm0CW?=
+ =?us-ascii?Q?GYeMqDUfdHlVM7mNOYzCitCEj1GgDHa2TGo9To9DmvtizPSXcQuc9eRgwZL+?=
+ =?us-ascii?Q?NN6s6m8CVQWPJfiRsiMRT9CcuAfiCg5VoAAsvl0eHxfR6wMA7i35pe/mJXst?=
+ =?us-ascii?Q?KGDse3jmEatEDFE8FRj7IZdLKaOJfksQjGbV1iDDC/tqpKJhUTCXk4EMsq97?=
+ =?us-ascii?Q?rL8IZDf9ymsofd7+i7uoJL5/IPAlI+B1EbOjYEy4Qq80GcYLvDh6fyxjpXpf?=
+ =?us-ascii?Q?2z4wIBlTQSiDxzaUBgQtpjemafgSz1mSfyxVbZVMVnhIDHmOqwuc+CYa8PJ+?=
+ =?us-ascii?Q?uBzdxPRuK1hEnNN7VOraKCuf0BZ/bERy9tdy3euOjAWAF544ESFNcyVQ7mf2?=
+ =?us-ascii?Q?PBkzJttGhLG36G2KyPGAkKmb5TbTKWZAEcY8kYTD4yH/rUP7WNPveah1bemn?=
+ =?us-ascii?Q?QpFccrYYdv9Aqq42K3ALZb78+nlyC9SGLEUqEi8+kK6npwb7fDX5MKeSA6a6?=
+ =?us-ascii?Q?7lk7qrlePLSdEUTI4OWjMZcpFldP6KUxVhwquSKuypK2lDQPJ4XZRu13rBYW?=
+ =?us-ascii?Q?cNXEj4izs13gtuZv8/GOn+eLAhSrsE9fZjjjrdIIyiS7bnf8LOSz0PslvHqQ?=
+ =?us-ascii?Q?Y2Tp2RZXE9nOTQMemzHC1tXvy+t5IE4U2H16Nj3YpASUfwqToUuXYAPhiGc8?=
+ =?us-ascii?Q?hA=3D=3D?=
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: PH0PR21MB3025.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8c0944d6-3045-424b-a98e-08da6e68d098
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jul 2022 18:09:28.1197
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5963b47f-de35-4067-1e51-08da6e6f3923
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jul 2022 18:55:20.4749
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rBq6wrLJkpA3uHTYypcRxdrruDnIoQeMKoz5hNlFu059lPzJxu8yJQNvSAWtACj3HusD58h4TrbzsUpQvueHdZnU9b0SS2hDxclC/zVPqg0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR21MB3229
+X-MS-Exchange-CrossTenant-userprincipalname: Ik2QAyYrx5RzPt4kkG/lM8ecfrnYXkh1BubyhHVkJDRevsDcuqK5rkyueedd3jm4vleoAYhik1ve+o+m7UWpxKigWnB65wX0M2CKOQR7LnY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR21MB1506
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220725_110949_483179_9264A334 
-X-CRM114-Status: GOOD (  22.79  )
+X-CRM114-CacheID: sfid-20220725_115556_233332_810D4526 
+X-CRM114-Status: GOOD (  22.73  )
 X-Mailman-Approved-At: Mon, 01 Aug 2022 08:44:02 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -171,24 +171,46 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: Guilherme G. Piccoli <gpiccoli@igalia.com> Sent: Tuesday, July 19, 2022 12:53 PM
 > 
-> The Hyper-V framebuffer code registers a panic notifier in order
-> to try updating its fbdev if the kernel crashed. The notifier
-> callback is straightforward, but it calls the vmbus_sendpacket()
-> routine eventually, and such function takes a spinlock for the
-> ring buffer operations.
+> Currently Hyper-V guests are among the most relevant users of the panic
+> infrastructure, like panic notifiers, kmsg dumpers, etc. The reasons rely
+> both in cleaning-up procedures (closing hypervisor <-> guest connection,
+> disabling some paravirtualized timer) as well as to data collection
+> (sending panic information to the hypervisor) and framebuffer management.
 > 
-> Panic path runs in atomic context, with local interrupts and
-> preemption disabled, and all secondary CPUs shutdown. That said,
-> taking a spinlock might cause a lockup if a secondary CPU was
-> disabled with such lock taken. Fix it here by checking if the
-> ring buffer spinlock is busy on Hyper-V framebuffer panic notifier;
-> if so, bail-out avoiding the potential lockup scenario.
+> The thing is: some notifiers are related to others, ordering matters, some
+> functionalities are duplicated and there are lots of conditionals behind
+> sending panic information to the hypervisor. As part of an effort to
+> clean-up the panic notifiers mechanism and better document things, we
+> hereby address some of the issues/complexities of Hyper-V panic handling
+> through the following changes:
+> 
+> (a) We have die and panic notifiers on vmbus_drv.c and both have goals of
+> sending panic information to the hypervisor, though the panic notifier is
+> also responsible for a cleaning-up procedure.
+> 
+> This commit clears the code by splitting the panic notifier in two, one
+> for closing the vmbus connection whereas the other is only for sending
+> panic info to hypervisor. With that, it was possible to merge the die and
+> panic notifiers in a single/well-documented function, and clear some
+> conditional complexities on sending such information to the hypervisor.
+> 
+> (b) There is a Hyper-V framebuffer panic notifier, which relies in doing
+> a vmbus operation that demands a valid connection. So, we must order this
+> notifier with the panic notifier from vmbus_drv.c, to guarantee that the
+> framebuffer code executes before the vmbus connection is unloaded.
+> 
+> Also, this commit removes a useless header.
+> 
+> Although there is code rework and re-ordering, we expect that this change
+> has no functional regressions but instead optimize the path and increase
+> panic reliability on Hyper-V. This was tested on Hyper-V with success.
 > 
 > Cc: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
 > Cc: Dexuan Cui <decui@microsoft.com>
 > Cc: Haiyang Zhang <haiyangz@microsoft.com>
 > Cc: "K. Y. Srinivasan" <kys@microsoft.com>
 > Cc: Michael Kelley <mikelley@microsoft.com>
+> Cc: Petr Mladek <pmladek@suse.com>
 > Cc: Stephen Hemminger <sthemmin@microsoft.com>
 > Cc: Tianyu Lan <Tianyu.Lan@microsoft.com>
 > Cc: Wei Liu <wei.liu@kernel.org>
@@ -197,89 +219,30 @@ From: Guilherme G. Piccoli <gpiccoli@igalia.com> Sent: Tuesday, July 19, 2022 12
 > 
 > ---
 > 
+> 
 > V2:
-> - new patch, based on the discussion in [0].
-> [0] https://lore.kernel.org/lkml/2787b476-6366-1c83-db80-0393da417497@igalia.com/
+> - Unfortunately we cannot rely in the crash shutdown (custom) handler
+> to perform the vmbus unload - arm64 architecture doesn't have this
+> "feature" [0]. So, in V2 we kept the notifier behavior and always
+> unload the vmbus connection, no matter what - thanks Michael for
+> pointing that;
 > 
->  drivers/hv/ring_buffer.c        | 16 ++++++++++++++++
->  drivers/video/fbdev/hyperv_fb.c |  8 +++++++-
->  include/linux/hyperv.h          |  2 ++
->  3 files changed, 25 insertions(+), 1 deletion(-)
+> - Removed the Fixes tags as per Michael suggestion;
 > 
-> diff --git a/drivers/hv/ring_buffer.c b/drivers/hv/ring_buffer.c
-> index 59a4aa86d1f3..9ceb3a7e8d19 100644
-> --- a/drivers/hv/ring_buffer.c
-> +++ b/drivers/hv/ring_buffer.c
-> @@ -280,6 +280,22 @@ void hv_ringbuffer_cleanup(struct hv_ring_buffer_info
-> *ring_info)
->  	ring_info->pkt_buffer_size = 0;
->  }
+> - As per Petr suggestion, we abandoned the idea of distinguish among
+> notifiers using an id - so, in V2 we rely in the old and good address
+> comparison for that. Thanks Petr for the enriching discussion!
 > 
-> +/*
-> + * Check if the ring buffer spinlock is available to take or not; used on
-> + * atomic contexts, like panic path (see the Hyper-V framebuffer driver).
-> + */
-> +
-> +bool hv_ringbuffer_spinlock_busy(struct vmbus_channel *channel)
-> +{
-> +	struct hv_ring_buffer_info *rinfo = &channel->outbound;
-> +
-> +	if (spin_is_locked(&rinfo->ring_lock))
-> +		return true;
-> +
-> +	return false;
+> [0]
+> https://lore.kernel.org/lkml/427a8277-49f0-4317-d6c3-4a15d7070e55@igalia.com/
+> 
+> 
+>  drivers/hv/vmbus_drv.c          | 109 +++++++++++++++++++-------------
+>  drivers/video/fbdev/hyperv_fb.c |   8 +++
+>  2 files changed, 74 insertions(+), 43 deletions(-)
+> 
 
-Could simplify the code as just:
-
-	return spin_is_locked(&rinfo->ring_lock);
-
-> +}
-> +EXPORT_SYMBOL_GPL(hv_ringbuffer_spinlock_busy);
-> +
->  /* Write to the ring buffer. */
->  int hv_ringbuffer_write(struct vmbus_channel *channel,
->  			const struct kvec *kv_list, u32 kv_count,
-> diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_fb.c
-> index 886c564787f1..e1b65a01fb96 100644
-> --- a/drivers/video/fbdev/hyperv_fb.c
-> +++ b/drivers/video/fbdev/hyperv_fb.c
-> @@ -783,12 +783,18 @@ static void hvfb_ondemand_refresh_throttle(struct
-> hvfb_par *par,
->  static int hvfb_on_panic(struct notifier_block *nb,
->  			 unsigned long e, void *p)
->  {
-> +	struct hv_device *hdev;
->  	struct hvfb_par *par;
->  	struct fb_info *info;
-> 
->  	par = container_of(nb, struct hvfb_par, hvfb_panic_nb);
-> -	par->synchronous_fb = true;
->  	info = par->info;
-> +	hdev = device_to_hv_device(info->device);
-> +
-> +	if (hv_ringbuffer_spinlock_busy(hdev->channel))
-> +		return NOTIFY_DONE;
-> +
-> +	par->synchronous_fb = true;
->  	if (par->need_docopy)
->  		hvfb_docopy(par, 0, dio_fb_size);
->  	synthvid_update(info, 0, 0, INT_MAX, INT_MAX);
-> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-> index 3b42264333ef..646f1da9f27e 100644
-> --- a/include/linux/hyperv.h
-> +++ b/include/linux/hyperv.h
-> @@ -1341,6 +1341,8 @@ struct hv_ring_buffer_debug_info {
->  int hv_ringbuffer_get_debuginfo(struct hv_ring_buffer_info *ring_info,
->  				struct hv_ring_buffer_debug_info *debug_info);
-> 
-> +bool hv_ringbuffer_spinlock_busy(struct vmbus_channel *channel);
-> +
->  /* Vmbus interface */
->  #define vmbus_driver_register(driver)	\
->  	__vmbus_driver_register(driver, THIS_MODULE, KBUILD_MODNAME)
-> --
-> 2.37.1
-
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 
 _______________________________________________
 kexec mailing list
