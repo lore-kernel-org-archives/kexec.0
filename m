@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A2AF5C433EF
-	for <kexec@archiver.kernel.org>; Tue, 26 Jul 2022 09:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 60793C43334
+	for <kexec@archiver.kernel.org>; Tue, 26 Jul 2022 09:38:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:MIME-Version:List-Subscribe:List-Help:
 	List-Post:List-Archive:List-Unsubscribe:List-Id:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=5VklAGSaYdVYvKIrYeK6k2fyPJOBpvnBsvVkKe6hlxQ=; b=QTKMHPpbpdJZQA
-	MVOqMwzvO1rns7iqsfFzhdJcyCH1VWV5bHjrYt8bl1rWEFoT47cPkouH/tSCZIVWPWgIe+KnXeJYf
-	zJyfmRlYhF0Fpuc8ElTDNe/9DCbV5T/0h6o/In0Sj/rjHLPHYZgrrj1ctMHWx14HcsBUkT/EpBWWD
-	WO3YJPgyspOdlAjReYsq46i+h4S0zIFlb5XK3D3mms6paaaP0RFphZz7gsVxmxXh6YVV9M1P9VkSq
-	6BALoZwqLkLcE+ik6dD5rHn/oHPlnxHuEeUAhsYkFrudnSRaIb8jmnfNTBWMmZk48IDEhoio/inFi
-	SHptHAfuIGj3j0XaIgiw==;
+	List-Owner; bh=me5swaQR+WW8yzjRb8IL05I6nWqjDX8e2+QCxERfWeY=; b=zXGUDrab8jegP7
+	8ty5kI0/4e71w30XlNbAo0+3QHL5OvaGwjfHl/BnnLaIOk64Rv07nhOcIC7FcwE/lstvuCjewuSSd
+	wrE0P0f4vcuAKMT5dIbe8egcmfmNCfwb0w8yD3s7riPeHYlosmtFrVDY3ivUReLYYdtz+1HZwKsUu
+	mv2wQZDgSZ7NIdT6iWGDkfZ7OwZ81zuRmn3Uz+uJWCYrxOWhvlrbrikH9wIHcJO1xRaDTPfkxRyFT
+	Sq+S2E/BKSJqdWBFo0JLSWI+vZTvToP1OF6PUOyCM8oNcMWYaB1iiu/WpJzP9byQ1o+F5O1c+ZbmF
+	WjjI4V9OTNoL/MBvNT3A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oGH0e-00Bera-NL; Tue, 26 Jul 2022 09:37:48 +0000
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54])
+	id 1oGH0p-00BfAC-L7; Tue, 26 Jul 2022 09:37:59 +0000
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oGH0V-00BeYd-V2; Tue, 26 Jul 2022 09:37:42 +0000
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R721e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=xianting.tian@linux.alibaba.com;NM=1;PH=DS;RN=22;SR=0;TI=SMTPD_---0VKV-LhC_1658828253;
-Received: from localhost(mailfrom:xianting.tian@linux.alibaba.com fp:SMTPD_---0VKV-LhC_1658828253)
+	id 1oGH0X-00BeeM-Ub; Tue, 26 Jul 2022 09:37:43 +0000
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=xianting.tian@linux.alibaba.com;NM=1;PH=DS;RN=22;SR=0;TI=SMTPD_---0VKUwhZc_1658828257;
+Received: from localhost(mailfrom:xianting.tian@linux.alibaba.com fp:SMTPD_---0VKUwhZc_1658828257)
           by smtp.aliyun-inc.com;
-          Tue, 26 Jul 2022 17:37:34 +0800
+          Tue, 26 Jul 2022 17:37:37 +0800
 From: Xianting Tian <xianting.tian@linux.alibaba.com>
 To: paul.walmsley@sifive.com,
 	palmer@dabbelt.com,
@@ -51,15 +51,15 @@ Cc: kexec@lists.infradead.org,
 	k-hagio-ab@nec.com,
 	hschauhan@nulltrace.org,
 	Xianting Tian <xianting.tian@linux.alibaba.com>
-Subject: [PATCH V4 1/5] RISC-V: use __smp_processor_id() instead of smp_processor_id()
-Date: Tue, 26 Jul 2022 17:37:25 +0800
-Message-Id: <20220726093729.1231867-2-xianting.tian@linux.alibaba.com>
+Subject: [PATCH V4 4/5] RISC-V: Fixup getting correct current pc
+Date: Tue, 26 Jul 2022 17:37:28 +0800
+Message-Id: <20220726093729.1231867-5-xianting.tian@linux.alibaba.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20220726093729.1231867-1-xianting.tian@linux.alibaba.com>
 References: <20220726093729.1231867-1-xianting.tian@linux.alibaba.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220726_023740_216219_56149E2D 
-X-CRM114-Status: UNSURE (   9.23  )
+X-CRM114-CacheID: sfid-20220726_023742_294336_A3F44839 
+X-CRM114-Status: UNSURE (   9.16  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -78,75 +78,94 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Use __smp_processor_id() to avoid check the preemption context when
-CONFIG_DEBUG_PREEMPT enabled, as we will enter crash kernel and no
-return.
+When use 'echo c > /proc/sysrq-trigger' to trigger kdump, riscv_crash_save_regs()
+will be called to save regs to vmcore, we found "epc" value 00ffffffa5537400
+is not a valid kernel virtual address, but is a user virtual address. Other
+regs(eg, ra, sp, gp...) are correct kernel virtual address.
+Actually 0x00ffffffb0dd9400 is the user mode PC of 'PID: 113 Comm: sh', which
+is saved in the task's stack.
 
-Without the patch,
-[  103.781044] sysrq: Trigger a crash
-[  103.784625] Kernel panic - not syncing: sysrq triggered crash
-[  103.837634] CPU1: off
-[  103.889668] CPU2: off
-[  103.933479] CPU3: off
-[  103.939424] Starting crashdump kernel...
-[  103.943442] BUG: using smp_processor_id() in preemptible [00000000] code: sh/346
-[  103.950884] caller is debug_smp_processor_id+0x1c/0x26
-[  103.956051] CPU: 0 PID: 346 Comm: sh Kdump: loaded Not tainted 5.10.113-00002-gce03f03bf4ec-dirty #149
-[  103.965355] Call Trace:
-[  103.967805] [<ffffffe00020372a>] walk_stackframe+0x0/0xa2
-[  103.973206] [<ffffffe000bcf1f4>] show_stack+0x32/0x3e
-[  103.978258] [<ffffffe000bd382a>] dump_stack_lvl+0x72/0x8e
-[  103.983655] [<ffffffe000bd385a>] dump_stack+0x14/0x1c
-[  103.988705] [<ffffffe000bdc8fe>] check_preemption_disabled+0x9e/0xaa
-[  103.995057] [<ffffffe000bdc926>] debug_smp_processor_id+0x1c/0x26
-[  104.001150] [<ffffffe000206c64>] machine_kexec+0x22/0xd0
-[  104.006463] [<ffffffe000291a7e>] __crash_kexec+0x6a/0xa4
-[  104.011774] [<ffffffe000bcf3fa>] panic+0xfc/0x2b0
-[  104.016480] [<ffffffe000656ca4>] sysrq_reset_seq_param_set+0x0/0x70
-[  104.022745] [<ffffffe000657310>] __handle_sysrq+0x8c/0x154
-[  104.028229] [<ffffffe0006577e8>] write_sysrq_trigger+0x5a/0x6a
-[  104.034061] [<ffffffe0003d90e0>] proc_reg_write+0x58/0xd4
-[  104.039459] [<ffffffe00036cff4>] vfs_write+0x7e/0x254
-[  104.044509] [<ffffffe00036d2f6>] ksys_write+0x58/0xbe
-[  104.049558] [<ffffffe00036d36a>] sys_write+0xe/0x16
-[  104.054434] [<ffffffe000201b9a>] ret_from_syscall+0x0/0x2
-[  104.067863] Will call new kernel at ecc00000 from hart id 0
-[  104.074939] FDT image at fc5ee000
-[  104.079523] Bye...
+[   21.201701] CPU: 0 PID: 113 Comm: sh Kdump: loaded Not tainted 5.18.9 #45
+[   21.201979] Hardware name: riscv-virtio,qemu (DT)
+[   21.202160] epc : 00ffffffa5537400 ra : ffffffff80088640 sp : ff20000010333b90
+[   21.202435]  gp : ffffffff810dde38 tp : ff6000000226c200 t0 : ffffffff8032be7c
+[   21.202707]  t1 : 0720072007200720 t2 : 30203a7375746174 s0 : ff20000010333cf0
+[   21.202973]  s1 : 0000000000000000 a0 : ff20000010333b98 a1 : 0000000000000001
+[   21.203243]  a2 : 0000000000000010 a3 : 0000000000000000 a4 : 28c8f0aeffea4e00
+[   21.203519]  a5 : 28c8f0aeffea4e00 a6 : 0000000000000009 a7 : ffffffff8035c9b8
+[   21.203794]  s2 : ffffffff810df0a8 s3 : ffffffff810df718 s4 : ff20000010333b98
+[   21.204062]  s5 : 0000000000000000 s6 : 0000000000000007 s7 : ffffffff80c4a468
+[   21.204331]  s8 : 00ffffffef451410 s9 : 0000000000000007 s10: 00aaaaaac0510700
+[   21.204606]  s11: 0000000000000001 t3 : ff60000001218f00 t4 : ff60000001218f00
+[   21.204876]  t5 : ff60000001218000 t6 : ff200000103338b8
+[   21.205079] status: 0000000200000020 badaddr: 0000000000000000 cause: 0000000000000008
 
-With the patch we can got clear output,
-[   67.740553] sysrq: Trigger a crash
-[   67.744166] Kernel panic - not syncing: sysrq triggered crash
-[   67.809123] CPU1: off
-[   67.865210] CPU2: off
-[   67.909075] CPU3: off
-[   67.919123] Starting crashdump kernel...
-[   67.924900] Will call new kernel at ecc00000 from hart id 0
-[   67.932045] FDT image at fc5ee000
-[   67.935560] Bye...
+With the incorrect PC, the backtrace showed by crash tool as below, the first
+stack frame is abnormal,
 
-Fixes: 0e105f1d0037 ("riscv: use hart id instead of cpu id on machine_kexec")
-Reviewed-by: Guo Ren <guoren@kernel.org>
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-Reviewed-by: Atish Patra <atishp@rivosinc.com>
+crash> bt
+PID: 113      TASK: ff60000002269600  CPU: 0    COMMAND: "sh"
+ #0 [ff2000001039bb90] __efistub_.Ldebug_info0 at 00ffffffa5537400 <-- Abnormal
+ #1 [ff2000001039bcf0] panic at ffffffff806578ba
+ #2 [ff2000001039bd50] sysrq_reset_seq_param_set at ffffffff8038c030
+ #3 [ff2000001039bda0] __handle_sysrq at ffffffff8038c5f8
+ #4 [ff2000001039be00] write_sysrq_trigger at ffffffff8038cad8
+ #5 [ff2000001039be20] proc_reg_write at ffffffff801b7edc
+ #6 [ff2000001039be40] vfs_write at ffffffff80152ba6
+ #7 [ff2000001039be80] ksys_write at ffffffff80152ece
+ #8 [ff2000001039bed0] sys_write at ffffffff80152f46
+
+With the patch, we can get current kernel mode PC, the output as below,
+
+[   17.607658] CPU: 0 PID: 113 Comm: sh Kdump: loaded Not tainted 5.18.9 #42
+[   17.607937] Hardware name: riscv-virtio,qemu (DT)
+[   17.608150] epc : ffffffff800078f8 ra : ffffffff8008862c sp : ff20000010333b90
+[   17.608441]  gp : ffffffff810dde38 tp : ff6000000226c200 t0 : ffffffff8032be68
+[   17.608741]  t1 : 0720072007200720 t2 : 666666666666663c s0 : ff20000010333cf0
+[   17.609025]  s1 : 0000000000000000 a0 : ff20000010333b98 a1 : 0000000000000001
+[   17.609320]  a2 : 0000000000000010 a3 : 0000000000000000 a4 : 0000000000000000
+[   17.609601]  a5 : ff60000001c78000 a6 : 000000000000003c a7 : ffffffff8035c9a4
+[   17.609894]  s2 : ffffffff810df0a8 s3 : ffffffff810df718 s4 : ff20000010333b98
+[   17.610186]  s5 : 0000000000000000 s6 : 0000000000000007 s7 : ffffffff80c4a468
+[   17.610469]  s8 : 00ffffffca281410 s9 : 0000000000000007 s10: 00aaaaaab5bb6700
+[   17.610755]  s11: 0000000000000001 t3 : ff60000001218f00 t4 : ff60000001218f00
+[   17.611041]  t5 : ff60000001218000 t6 : ff20000010333988
+[   17.611255] status: 0000000200000020 badaddr: 0000000000000000 cause: 0000000000000008
+
+With the correct PC, the backtrace showed by crash tool as below,
+
+crash> bt
+PID: 113      TASK: ff6000000226c200  CPU: 0    COMMAND: "sh"
+ #0 [ff20000010333b90] riscv_crash_save_regs at ffffffff800078f8 <--- Normal
+ #1 [ff20000010333cf0] panic at ffffffff806578c6
+ #2 [ff20000010333d50] sysrq_reset_seq_param_set at ffffffff8038c03c
+ #3 [ff20000010333da0] __handle_sysrq at ffffffff8038c604
+ #4 [ff20000010333e00] write_sysrq_trigger at ffffffff8038cae4
+ #5 [ff20000010333e20] proc_reg_write at ffffffff801b7ee8
+ #6 [ff20000010333e40] vfs_write at ffffffff80152bb2
+ #7 [ff20000010333e80] ksys_write at ffffffff80152eda
+ #8 [ff20000010333ed0] sys_write at ffffffff80152f52
+
+Fixes: e53d28180d4d ("RISC-V: Add kdump support")
+Co-developed-by: Guo Ren <guoren@kernel.org>
 Signed-off-by: Xianting Tian <xianting.tian@linux.alibaba.com>
 ---
- arch/riscv/kernel/machine_kexec.c | 2 +-
+ arch/riscv/kernel/crash_save_regs.S | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/riscv/kernel/machine_kexec.c b/arch/riscv/kernel/machine_kexec.c
-index df8e24559035..86d1b5f9dfb5 100644
---- a/arch/riscv/kernel/machine_kexec.c
-+++ b/arch/riscv/kernel/machine_kexec.c
-@@ -171,7 +171,7 @@ machine_kexec(struct kimage *image)
- 	struct kimage_arch *internal = &image->arch;
- 	unsigned long jump_addr = (unsigned long) image->start;
- 	unsigned long first_ind_entry = (unsigned long) &image->head;
--	unsigned long this_cpu_id = smp_processor_id();
-+	unsigned long this_cpu_id = __smp_processor_id();
- 	unsigned long this_hart_id = cpuid_to_hartid_map(this_cpu_id);
- 	unsigned long fdt_addr = internal->fdt_addr;
- 	void *control_code_buffer = page_address(image->control_code_page);
+diff --git a/arch/riscv/kernel/crash_save_regs.S b/arch/riscv/kernel/crash_save_regs.S
+index 7832fb763aba..b2a1908c0463 100644
+--- a/arch/riscv/kernel/crash_save_regs.S
++++ b/arch/riscv/kernel/crash_save_regs.S
+@@ -44,7 +44,7 @@ SYM_CODE_START(riscv_crash_save_regs)
+ 	REG_S t6,  PT_T6(a0)	/* x31 */
+ 
+ 	csrr t1, CSR_STATUS
+-	csrr t2, CSR_EPC
++	auipc t2, 0x0
+ 	csrr t3, CSR_TVAL
+ 	csrr t4, CSR_CAUSE
+ 
 -- 
 2.17.1
 
