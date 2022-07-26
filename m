@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 60793C43334
-	for <kexec@archiver.kernel.org>; Tue, 26 Jul 2022 09:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BD7B1CCA489
+	for <kexec@archiver.kernel.org>; Tue, 26 Jul 2022 09:38:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:MIME-Version:List-Subscribe:List-Help:
 	List-Post:List-Archive:List-Unsubscribe:List-Id:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=me5swaQR+WW8yzjRb8IL05I6nWqjDX8e2+QCxERfWeY=; b=zXGUDrab8jegP7
-	8ty5kI0/4e71w30XlNbAo0+3QHL5OvaGwjfHl/BnnLaIOk64Rv07nhOcIC7FcwE/lstvuCjewuSSd
-	wrE0P0f4vcuAKMT5dIbe8egcmfmNCfwb0w8yD3s7riPeHYlosmtFrVDY3ivUReLYYdtz+1HZwKsUu
-	mv2wQZDgSZ7NIdT6iWGDkfZ7OwZ81zuRmn3Uz+uJWCYrxOWhvlrbrikH9wIHcJO1xRaDTPfkxRyFT
-	Sq+S2E/BKSJqdWBFo0JLSWI+vZTvToP1OF6PUOyCM8oNcMWYaB1iiu/WpJzP9byQ1o+F5O1c+ZbmF
-	WjjI4V9OTNoL/MBvNT3A==;
+	List-Owner; bh=3oTYQuO5VNpDhZAvVl4/1LYYCER6glYOPT3bTzORp3w=; b=wQhAPR+M2kUa8N
+	e6baxTTG9vEevuMCcrDir3YhIPQG5BZQ6l0yxYUhLWdm+ZHOEbHHBYfte3aCvjfD8SnB0E/JQLUh1
+	WczbWO2TFKHo9BDoNZM56vcnEZBtFp7PZ/1qgskafRSRM/2TrgJ46Ntmd6MHl/zFMB1mVmCg7R7zX
+	j1cGBKNgFw/HXuyNyq1bKGOuDpPzjyVjF8QWo2NQL1eRQmE81TcGJBhRfepy2flE2gZ1bwrD0a2f0
+	ExstXPJ6nEsc/+u9zX8hQ1Lg7ikQWam9cc2evriZgBAX9XlCSL9TWD7zitOtln3xafu0Bn7AIeY3d
+	nqxC4yV+2fZMvo5CCkcg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oGH0p-00BfAC-L7; Tue, 26 Jul 2022 09:37:59 +0000
+	id 1oGH0s-00BfF6-0D; Tue, 26 Jul 2022 09:38:02 +0000
 Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oGH0X-00BeeM-Ub; Tue, 26 Jul 2022 09:37:43 +0000
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=xianting.tian@linux.alibaba.com;NM=1;PH=DS;RN=22;SR=0;TI=SMTPD_---0VKUwhZc_1658828257;
-Received: from localhost(mailfrom:xianting.tian@linux.alibaba.com fp:SMTPD_---0VKUwhZc_1658828257)
+	id 1oGH0X-00Becg-US; Tue, 26 Jul 2022 09:37:43 +0000
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R271e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=xianting.tian@linux.alibaba.com;NM=1;PH=DS;RN=22;SR=0;TI=SMTPD_---0VKUvcYT_1658828254;
+Received: from localhost(mailfrom:xianting.tian@linux.alibaba.com fp:SMTPD_---0VKUvcYT_1658828254)
           by smtp.aliyun-inc.com;
-          Tue, 26 Jul 2022 17:37:37 +0800
+          Tue, 26 Jul 2022 17:37:35 +0800
 From: Xianting Tian <xianting.tian@linux.alibaba.com>
 To: paul.walmsley@sifive.com,
 	palmer@dabbelt.com,
@@ -51,16 +51,15 @@ Cc: kexec@lists.infradead.org,
 	k-hagio-ab@nec.com,
 	hschauhan@nulltrace.org,
 	Xianting Tian <xianting.tian@linux.alibaba.com>
-Subject: [PATCH V4 4/5] RISC-V: Fixup getting correct current pc
-Date: Tue, 26 Jul 2022 17:37:28 +0800
-Message-Id: <20220726093729.1231867-5-xianting.tian@linux.alibaba.com>
+Subject: [PATCH V4 2/5] RISC-V: Add arch_crash_save_vmcoreinfo support
+Date: Tue, 26 Jul 2022 17:37:26 +0800
+Message-Id: <20220726093729.1231867-3-xianting.tian@linux.alibaba.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20220726093729.1231867-1-xianting.tian@linux.alibaba.com>
 References: <20220726093729.1231867-1-xianting.tian@linux.alibaba.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220726_023742_294336_A3F44839 
-X-CRM114-Status: UNSURE (   9.16  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20220726_023742_318420_65AC49C9 
+X-CRM114-Status: GOOD (  13.53  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,94 +77,85 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-When use 'echo c > /proc/sysrq-trigger' to trigger kdump, riscv_crash_save_regs()
-will be called to save regs to vmcore, we found "epc" value 00ffffffa5537400
-is not a valid kernel virtual address, but is a user virtual address. Other
-regs(eg, ra, sp, gp...) are correct kernel virtual address.
-Actually 0x00ffffffb0dd9400 is the user mode PC of 'PID: 113 Comm: sh', which
-is saved in the task's stack.
+Add arch_crash_save_vmcoreinfo(), which exports VM layout(MODULES, VMALLOC,
+VMEMMAP and KERNEL_LINK_ADDR ranges), va bits and ram base to vmcore.
 
-[   21.201701] CPU: 0 PID: 113 Comm: sh Kdump: loaded Not tainted 5.18.9 #45
-[   21.201979] Hardware name: riscv-virtio,qemu (DT)
-[   21.202160] epc : 00ffffffa5537400 ra : ffffffff80088640 sp : ff20000010333b90
-[   21.202435]  gp : ffffffff810dde38 tp : ff6000000226c200 t0 : ffffffff8032be7c
-[   21.202707]  t1 : 0720072007200720 t2 : 30203a7375746174 s0 : ff20000010333cf0
-[   21.202973]  s1 : 0000000000000000 a0 : ff20000010333b98 a1 : 0000000000000001
-[   21.203243]  a2 : 0000000000000010 a3 : 0000000000000000 a4 : 28c8f0aeffea4e00
-[   21.203519]  a5 : 28c8f0aeffea4e00 a6 : 0000000000000009 a7 : ffffffff8035c9b8
-[   21.203794]  s2 : ffffffff810df0a8 s3 : ffffffff810df718 s4 : ff20000010333b98
-[   21.204062]  s5 : 0000000000000000 s6 : 0000000000000007 s7 : ffffffff80c4a468
-[   21.204331]  s8 : 00ffffffef451410 s9 : 0000000000000007 s10: 00aaaaaac0510700
-[   21.204606]  s11: 0000000000000001 t3 : ff60000001218f00 t4 : ff60000001218f00
-[   21.204876]  t5 : ff60000001218000 t6 : ff200000103338b8
-[   21.205079] status: 0000000200000020 badaddr: 0000000000000000 cause: 0000000000000008
+Default pagetable levels and PAGE_OFFSET aren't same for different kernel
+version as below. For default pagetable levels, it sets sv57 on defaultly
+in latest kernel and do fallback to try to set sv48 on boot time if sv57
+is not supported in current hardware.
 
-With the incorrect PC, the backtrace showed by crash tool as below, the first
-stack frame is abnormal,
+For ram base, the default value is 0x80200000 for qemu riscv64 env, 0x200000
+for riscv64 SoC platform(eg, SoC platform of RISC-V XuanTie 910 CPU).
 
-crash> bt
-PID: 113      TASK: ff60000002269600  CPU: 0    COMMAND: "sh"
- #0 [ff2000001039bb90] __efistub_.Ldebug_info0 at 00ffffffa5537400 <-- Abnormal
- #1 [ff2000001039bcf0] panic at ffffffff806578ba
- #2 [ff2000001039bd50] sysrq_reset_seq_param_set at ffffffff8038c030
- #3 [ff2000001039bda0] __handle_sysrq at ffffffff8038c5f8
- #4 [ff2000001039be00] write_sysrq_trigger at ffffffff8038cad8
- #5 [ff2000001039be20] proc_reg_write at ffffffff801b7edc
- #6 [ff2000001039be40] vfs_write at ffffffff80152ba6
- #7 [ff2000001039be80] ksys_write at ffffffff80152ece
- #8 [ff2000001039bed0] sys_write at ffffffff80152f46
+ * Linux Kernel 5.18 ~
+ *      PGTABLE_LEVELS = 5
+ *      PAGE_OFFSET = 0xff60000000000000
+ * Linux Kernel 5.17 ~
+ *      PGTABLE_LEVELS = 4
+ *      PAGE_OFFSET = 0xffffaf8000000000
+ * Linux Kernel 4.19 ~
+ *      PGTABLE_LEVELS = 3
+ *      PAGE_OFFSET = 0xffffffe000000000
 
-With the patch, we can get current kernel mode PC, the output as below,
+Since these configurations change from time to time and version to version,
+it is preferable to export them via vmcoreinfo than to change the crash's
+code frequently, it can simplify the development of crash tool.
 
-[   17.607658] CPU: 0 PID: 113 Comm: sh Kdump: loaded Not tainted 5.18.9 #42
-[   17.607937] Hardware name: riscv-virtio,qemu (DT)
-[   17.608150] epc : ffffffff800078f8 ra : ffffffff8008862c sp : ff20000010333b90
-[   17.608441]  gp : ffffffff810dde38 tp : ff6000000226c200 t0 : ffffffff8032be68
-[   17.608741]  t1 : 0720072007200720 t2 : 666666666666663c s0 : ff20000010333cf0
-[   17.609025]  s1 : 0000000000000000 a0 : ff20000010333b98 a1 : 0000000000000001
-[   17.609320]  a2 : 0000000000000010 a3 : 0000000000000000 a4 : 0000000000000000
-[   17.609601]  a5 : ff60000001c78000 a6 : 000000000000003c a7 : ffffffff8035c9a4
-[   17.609894]  s2 : ffffffff810df0a8 s3 : ffffffff810df718 s4 : ff20000010333b98
-[   17.610186]  s5 : 0000000000000000 s6 : 0000000000000007 s7 : ffffffff80c4a468
-[   17.610469]  s8 : 00ffffffca281410 s9 : 0000000000000007 s10: 00aaaaaab5bb6700
-[   17.610755]  s11: 0000000000000001 t3 : ff60000001218f00 t4 : ff60000001218f00
-[   17.611041]  t5 : ff60000001218000 t6 : ff20000010333988
-[   17.611255] status: 0000000200000020 badaddr: 0000000000000000 cause: 0000000000000008
-
-With the correct PC, the backtrace showed by crash tool as below,
-
-crash> bt
-PID: 113      TASK: ff6000000226c200  CPU: 0    COMMAND: "sh"
- #0 [ff20000010333b90] riscv_crash_save_regs at ffffffff800078f8 <--- Normal
- #1 [ff20000010333cf0] panic at ffffffff806578c6
- #2 [ff20000010333d50] sysrq_reset_seq_param_set at ffffffff8038c03c
- #3 [ff20000010333da0] __handle_sysrq at ffffffff8038c604
- #4 [ff20000010333e00] write_sysrq_trigger at ffffffff8038cae4
- #5 [ff20000010333e20] proc_reg_write at ffffffff801b7ee8
- #6 [ff20000010333e40] vfs_write at ffffffff80152bb2
- #7 [ff20000010333e80] ksys_write at ffffffff80152eda
- #8 [ff20000010333ed0] sys_write at ffffffff80152f52
-
-Fixes: e53d28180d4d ("RISC-V: Add kdump support")
-Co-developed-by: Guo Ren <guoren@kernel.org>
 Signed-off-by: Xianting Tian <xianting.tian@linux.alibaba.com>
 ---
- arch/riscv/kernel/crash_save_regs.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/riscv/kernel/Makefile     |  1 +
+ arch/riscv/kernel/crash_core.c | 29 +++++++++++++++++++++++++++++
+ 2 files changed, 30 insertions(+)
+ create mode 100644 arch/riscv/kernel/crash_core.c
 
-diff --git a/arch/riscv/kernel/crash_save_regs.S b/arch/riscv/kernel/crash_save_regs.S
-index 7832fb763aba..b2a1908c0463 100644
---- a/arch/riscv/kernel/crash_save_regs.S
-+++ b/arch/riscv/kernel/crash_save_regs.S
-@@ -44,7 +44,7 @@ SYM_CODE_START(riscv_crash_save_regs)
- 	REG_S t6,  PT_T6(a0)	/* x31 */
+diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+index 33bb60a354cd..5e149df58176 100644
+--- a/arch/riscv/kernel/Makefile
++++ b/arch/riscv/kernel/Makefile
+@@ -81,6 +81,7 @@ obj-$(CONFIG_KGDB)		+= kgdb.o
+ obj-$(CONFIG_KEXEC_CORE)	+= kexec_relocate.o crash_save_regs.o machine_kexec.o
+ obj-$(CONFIG_KEXEC_FILE)	+= elf_kexec.o machine_kexec_file.o
+ obj-$(CONFIG_CRASH_DUMP)	+= crash_dump.o
++obj-$(CONFIG_CRASH_CORE)	+= crash_core.o
  
- 	csrr t1, CSR_STATUS
--	csrr t2, CSR_EPC
-+	auipc t2, 0x0
- 	csrr t3, CSR_TVAL
- 	csrr t4, CSR_CAUSE
+ obj-$(CONFIG_JUMP_LABEL)	+= jump_label.o
  
+diff --git a/arch/riscv/kernel/crash_core.c b/arch/riscv/kernel/crash_core.c
+new file mode 100644
+index 000000000000..8d7f5ff108da
+--- /dev/null
++++ b/arch/riscv/kernel/crash_core.c
+@@ -0,0 +1,29 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++#include <linux/crash_core.h>
++#include <linux/pagemap.h>
++
++void arch_crash_save_vmcoreinfo(void)
++{
++	VMCOREINFO_NUMBER(VA_BITS);
++	VMCOREINFO_NUMBER(phys_ram_base);
++
++	vmcoreinfo_append_str("NUMBER(PAGE_OFFSET)=0x%lx\n", PAGE_OFFSET);
++	vmcoreinfo_append_str("NUMBER(VMALLOC_START)=0x%lx\n", VMALLOC_START);
++	vmcoreinfo_append_str("NUMBER(VMALLOC_END)=0x%lx\n", VMALLOC_END);
++	vmcoreinfo_append_str("NUMBER(VMEMMAP_START)=0x%lx\n", VMEMMAP_START);
++	vmcoreinfo_append_str("NUMBER(VMEMMAP_END)=0x%lx\n", VMEMMAP_END);
++#ifdef CONFIG_64BIT
++	vmcoreinfo_append_str("NUMBER(MODULES_VADDR)=0x%lx\n", MODULES_VADDR);
++	vmcoreinfo_append_str("NUMBER(MODULES_END)=0x%lx\n", MODULES_END);
++#endif
++
++	if (IS_ENABLED(CONFIG_64BIT)) {
++#ifdef CONFIG_KASAN
++		vmcoreinfo_append_str("NUMBER(KASAN_SHADOW_START)=0x%lx\n", KASAN_SHADOW_START);
++		vmcoreinfo_append_str("NUMBER(KASAN_SHADOW_END)=0x%lx\n", KASAN_SHADOW_END);
++#endif
++		vmcoreinfo_append_str("NUMBER(KERNEL_LINK_ADDR)=0x%lx\n", KERNEL_LINK_ADDR);
++		vmcoreinfo_append_str("NUMBER(ADDRESS_SPACE_END)=0x%lx\n", ADDRESS_SPACE_END);
++	}
++}
 -- 
 2.17.1
 
