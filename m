@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B4348C19F2C
-	for <kexec@archiver.kernel.org>; Tue,  2 Aug 2022 12:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0F6BFC25B06
+	for <kexec@archiver.kernel.org>; Tue,  2 Aug 2022 12:19:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:MIME-Version:List-Subscribe:List-Help:
 	List-Post:List-Archive:List-Unsubscribe:List-Id:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=5VklAGSaYdVYvKIrYeK6k2fyPJOBpvnBsvVkKe6hlxQ=; b=0JZQPWt6X83BsQ
-	kQW3cMZtqArgk/jNBoUw5xeNK52sPjCAcMuUpWAfn54vP12whj+Qg9K0003lWl1SfeVpVCPZtXeUL
-	5/kxpjbXfh9yCpblZNBWuKvlAUixWgrUOAto7WSoANT0Jkp4pQB3d4tX2Y7dN1bMxlcWxZmi16CRU
-	qlcHzvv+2dvhaRhpo1e3zKFkqArqbFeBUBo6mXePIJ53g86boAru6xPdR/o/FkYyeCWNsso3+/ke2
-	nOoE2DdG4ylg5f9WmrYsjmC1XGJB8FdPp6odvc3dewfQkAOXWFscnc31S6BvslRHOxZC0HfyP3CH7
-	5mDEsMd8NvnW9LVDz9yQ==;
+	List-Owner; bh=vPxL9wI7eNYQ8sXD/NXD0M9AqYYdhBeHj9qS91dNO3Y=; b=Wrf+hpcoNkTEFw
+	g3RBCAJU9g7TOh7/LuK8F2N6zyXUa8whadrjk5XbXpFfz+cZZpXNumjipvGW8OrsNi8Kp7VHieEE3
+	J+eGWp7O2KpZbHnip/bkcttVVb/skDNlLlusHFuo5lJK8UvFnwqpAN+J+h4AozSpNAGeLsBFhN3IO
+	6hYClGiuyxiGHIYSV1yjxSNr6HgqZegb0qEBevRpSZDf+teHcraiZ6uj+dgeEV5JTmO3t5BakQ8Qn
+	eiVM3VzQUR88RR0tC3YmW97k/+YAfTIYmuy4svpttIkvVdWDy23m4yZ25EXefIg0nj3uG6RjmkRUM
+	GaAGbjmb8uXZdqUl9FOQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oIqrA-00DsAK-I8; Tue, 02 Aug 2022 12:18:40 +0000
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131])
+	id 1oIqrK-00DsKt-Fa; Tue, 02 Aug 2022 12:18:50 +0000
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oIqr0-00DryL-PM; Tue, 02 Aug 2022 12:18:34 +0000
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=xianting.tian@linux.alibaba.com;NM=1;PH=DS;RN=24;SR=0;TI=SMTPD_---0VLBjY0v_1659442702;
-Received: from localhost(mailfrom:xianting.tian@linux.alibaba.com fp:SMTPD_---0VLBjY0v_1659442702)
+	id 1oIqr2-00Ds1q-NU; Tue, 02 Aug 2022 12:18:35 +0000
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R791e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=xianting.tian@linux.alibaba.com;NM=1;PH=DS;RN=24;SR=0;TI=SMTPD_---0VLBrreT_1659442708;
+Received: from localhost(mailfrom:xianting.tian@linux.alibaba.com fp:SMTPD_---0VLBrreT_1659442708)
           by smtp.aliyun-inc.com;
-          Tue, 02 Aug 2022 20:18:23 +0800
+          Tue, 02 Aug 2022 20:18:29 +0800
 From: Xianting Tian <xianting.tian@linux.alibaba.com>
 To: paul.walmsley@sifive.com,
 	palmer@dabbelt.com,
@@ -53,15 +53,15 @@ Cc: kexec@lists.infradead.org,
 	hschauhan@nulltrace.org,
 	yixun.lan@gmail.com,
 	Xianting Tian <xianting.tian@linux.alibaba.com>
-Subject: [PATCH V5 1/6] RISC-V: use __smp_processor_id() instead of smp_processor_id()
-Date: Tue,  2 Aug 2022 20:18:13 +0800
-Message-Id: <20220802121818.2201268-2-xianting.tian@linux.alibaba.com>
+Subject: [PATCH V5 5/6] riscv: crash_core: Export kernel vm layout, phys_ram_base
+Date: Tue,  2 Aug 2022 20:18:17 +0800
+Message-Id: <20220802121818.2201268-6-xianting.tian@linux.alibaba.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20220802121818.2201268-1-xianting.tian@linux.alibaba.com>
 References: <20220802121818.2201268-1-xianting.tian@linux.alibaba.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220802_051831_070288_952D8108 
-X-CRM114-Status: UNSURE (   8.79  )
+X-CRM114-CacheID: sfid-20220802_051832_970314_67C149BA 
+X-CRM114-Status: UNSURE (   6.46  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -80,75 +80,54 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Use __smp_processor_id() to avoid check the preemption context when
-CONFIG_DEBUG_PREEMPT enabled, as we will enter crash kernel and no
-return.
+These infos are needed by the kdump crash tool. Since these values change
+from time to time, it is preferable to export them via vmcoreinfo than to
+change the crash's code frequently.
 
-Without the patch,
-[  103.781044] sysrq: Trigger a crash
-[  103.784625] Kernel panic - not syncing: sysrq triggered crash
-[  103.837634] CPU1: off
-[  103.889668] CPU2: off
-[  103.933479] CPU3: off
-[  103.939424] Starting crashdump kernel...
-[  103.943442] BUG: using smp_processor_id() in preemptible [00000000] code: sh/346
-[  103.950884] caller is debug_smp_processor_id+0x1c/0x26
-[  103.956051] CPU: 0 PID: 346 Comm: sh Kdump: loaded Not tainted 5.10.113-00002-gce03f03bf4ec-dirty #149
-[  103.965355] Call Trace:
-[  103.967805] [<ffffffe00020372a>] walk_stackframe+0x0/0xa2
-[  103.973206] [<ffffffe000bcf1f4>] show_stack+0x32/0x3e
-[  103.978258] [<ffffffe000bd382a>] dump_stack_lvl+0x72/0x8e
-[  103.983655] [<ffffffe000bd385a>] dump_stack+0x14/0x1c
-[  103.988705] [<ffffffe000bdc8fe>] check_preemption_disabled+0x9e/0xaa
-[  103.995057] [<ffffffe000bdc926>] debug_smp_processor_id+0x1c/0x26
-[  104.001150] [<ffffffe000206c64>] machine_kexec+0x22/0xd0
-[  104.006463] [<ffffffe000291a7e>] __crash_kexec+0x6a/0xa4
-[  104.011774] [<ffffffe000bcf3fa>] panic+0xfc/0x2b0
-[  104.016480] [<ffffffe000656ca4>] sysrq_reset_seq_param_set+0x0/0x70
-[  104.022745] [<ffffffe000657310>] __handle_sysrq+0x8c/0x154
-[  104.028229] [<ffffffe0006577e8>] write_sysrq_trigger+0x5a/0x6a
-[  104.034061] [<ffffffe0003d90e0>] proc_reg_write+0x58/0xd4
-[  104.039459] [<ffffffe00036cff4>] vfs_write+0x7e/0x254
-[  104.044509] [<ffffffe00036d2f6>] ksys_write+0x58/0xbe
-[  104.049558] [<ffffffe00036d36a>] sys_write+0xe/0x16
-[  104.054434] [<ffffffe000201b9a>] ret_from_syscall+0x0/0x2
-[  104.067863] Will call new kernel at ecc00000 from hart id 0
-[  104.074939] FDT image at fc5ee000
-[  104.079523] Bye...
-
-With the patch we can got clear output,
-[   67.740553] sysrq: Trigger a crash
-[   67.744166] Kernel panic - not syncing: sysrq triggered crash
-[   67.809123] CPU1: off
-[   67.865210] CPU2: off
-[   67.909075] CPU3: off
-[   67.919123] Starting crashdump kernel...
-[   67.924900] Will call new kernel at ecc00000 from hart id 0
-[   67.932045] FDT image at fc5ee000
-[   67.935560] Bye...
-
-Fixes: 0e105f1d0037 ("riscv: use hart id instead of cpu id on machine_kexec")
-Reviewed-by: Guo Ren <guoren@kernel.org>
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-Reviewed-by: Atish Patra <atishp@rivosinc.com>
 Signed-off-by: Xianting Tian <xianting.tian@linux.alibaba.com>
 ---
- arch/riscv/kernel/machine_kexec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../admin-guide/kdump/vmcoreinfo.rst          | 31 +++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-diff --git a/arch/riscv/kernel/machine_kexec.c b/arch/riscv/kernel/machine_kexec.c
-index df8e24559035..86d1b5f9dfb5 100644
---- a/arch/riscv/kernel/machine_kexec.c
-+++ b/arch/riscv/kernel/machine_kexec.c
-@@ -171,7 +171,7 @@ machine_kexec(struct kimage *image)
- 	struct kimage_arch *internal = &image->arch;
- 	unsigned long jump_addr = (unsigned long) image->start;
- 	unsigned long first_ind_entry = (unsigned long) &image->head;
--	unsigned long this_cpu_id = smp_processor_id();
-+	unsigned long this_cpu_id = __smp_processor_id();
- 	unsigned long this_hart_id = cpuid_to_hartid_map(this_cpu_id);
- 	unsigned long fdt_addr = internal->fdt_addr;
- 	void *control_code_buffer = page_address(image->control_code_page);
+diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+index 8419019b6a88..6b76284a503c 100644
+--- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
++++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+@@ -595,3 +595,34 @@ X2TLB
+ -----
+ 
+ Indicates whether the crashed kernel enabled SH extended mode.
++
++RISCV64
++=======
++
++VA_BITS
++-------
++
++The maximum number of bits for virtual addresses. Used to compute the
++virtual memory ranges.
++
++PAGE_OFFSET
++-----------
++
++Indicates the virtual kernel start address of direct-mapped RAM region.
++
++phys_ram_base
++-------------
++
++Indicates the start physical RAM address.
++
++MODULES_VADDR|MODULES_END|VMALLOC_START|VMALLOC_END|VMEMMAP_START|VMEMMAP_END
++-----------------------------------------------------------------------------
++KASAN_SHADOW_START|KASAN_SHADOW_END|KERNEL_LINK_ADDR|ADDRESS_SPACE_END
++----------------------------------------------------------------------
++
++Used to get the correct ranges:
++	MODULES_VADDR ~ MODULES_END : Kernel module space.
++	VMALLOC_START ~ VMALLOC_END : vmalloc() / ioremap() space.
++	VMEMMAP_START ~ VMEMMAP_END : vmemmap region, used for struct page array.
++	KASAN_SHADOW_START ~ KASAN_SHADOW_END : kasan shadow space.
++	KERNEL_LINK_ADDR ~ ADDRESS_SPACE_END : Kernel link and BPF space.
 -- 
 2.17.1
 
