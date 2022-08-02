@@ -4,72 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C1BBEC00140
-	for <kexec@archiver.kernel.org>; Tue,  2 Aug 2022 11:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0364AC25B07
+	for <kexec@archiver.kernel.org>; Tue,  2 Aug 2022 12:18:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:List-Subscribe:List-Help:
+	List-Post:List-Archive:List-Unsubscribe:List-Id:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=aKkGdfBf6dzjXEoJOoZg+VVPxGLYYrojN960etMnlEU=; b=pt1zjuctdEf6MK
-	5ibTRT5UXu7rVBVPnr8N2OnIEDbJOBqfyvvhS7XmBy1AKtCu3/ior+dRLBZEhSHhGsCKwSGYNo4mK
-	Cjr1OagFkfU3p84D44GVSlrpT+Xs3In3WWJ4w2V4ipqf1TWZRRpVsCzWKb+kGc66+C71a5vIo/niw
-	G/XBtblvIgV3eVRhQquItnC5O7RAaJoRjRvutJ4yK+gosInifDumwSibwlmJnDtCz54iXgEGojs8o
-	BsinBinIBzvOeiMIndHTYYcqe2LF+bdRXGOSHkfjCxDt7/3qFkcwd23SQ8bavVpWQCpZB9YdlbAz1
-	YGTzVEg4GXYdl7YUX+BA==;
+	List-Owner; bh=3oTYQuO5VNpDhZAvVl4/1LYYCER6glYOPT3bTzORp3w=; b=qhRgOTvGBYc4z+
+	rwic5jzOsBhDbPEstWU5Qh55nYaEuVxbZVmn+O4YtcDeFuDHizMXKuhl5TscTOKyjNz6w4RwlrvVq
+	7qw25qrAXBod4bKU+Bif2oPwCg1EdvuR0nCS1DQtqnO8vJEj4YNlRjJ9yb6p8p2D4gM44k3ctXz6y
+	8yhnNKxtFVr5w3DtPHF95cZ+kN/sektxtt0F3nxAi5NS/VNz1eGZ/0dWuQk0L55ZNR4DPjfsF/hjE
+	/2qWdbEpHnIrN1qosd/RU+1BxMEwZBuue2gowjB/6AMU3ZfwRq9oxIAvk7nKOLZ7Q024FeNCYBKhE
+	KhD2ksShnAR8N//9JSBw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oIpfW-00DDRU-Ml; Tue, 02 Aug 2022 11:02:34 +0000
-Received: from mail-wr1-x42d.google.com ([2a00:1450:4864:20::42d])
+	id 1oIqr5-00Ds6N-34; Tue, 02 Aug 2022 12:18:35 +0000
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oIpfT-00DDO4-Do
-	for kexec@lists.infradead.org; Tue, 02 Aug 2022 11:02:32 +0000
-Received: by mail-wr1-x42d.google.com with SMTP id l4so17442635wrm.13
-        for <kexec@lists.infradead.org>; Tue, 02 Aug 2022 04:02:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=a9f72dYH7EcyVDv+LBnMsCnVkZlmCOPJR1dVC+vHmlQ=;
-        b=PbIRsQ5mLbKfXHTSx44sIJ7Gd4sv9wPPE+08+maGOObDZIERZSne9y+IJCHxiRBpzx
-         fmOh62MqqURQDpy8ukvI91oKY8lX34tW5hQAj2D5LVcdVVesrsQn76XAzrrVMTNCspf3
-         xWJf8A7P9u3/054DS6MXNZNuyK03gSseguO6b+X/3Ihwtji3ab+KvS5gozcaUHrmSGll
-         JeHTUHxa4bMHjlkAfoUFmdsVb0Y+OvT1cviJwKv2T7j7LzTzrLLHOkmtdsmjMEo08Ngm
-         U+Obc+emsSXq1Lv1stUAf7YIcfGRvqEWeXCPTngvkFYA3Cnnkw4trTzKRdOlLR6rkhX5
-         Sydw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=a9f72dYH7EcyVDv+LBnMsCnVkZlmCOPJR1dVC+vHmlQ=;
-        b=otzZTSEJ9ellNqQgMWoMjxAORxQU9K616L4T76asHIWIUaHA1E1c6eM17W5cMmAhMx
-         n1oVS0MRW4ZjSbg6Ec7cpWebkiZJy9BNx7usz0uhpeEFAIS0bMO7jgUdqz7nAmAulwUP
-         4oylSIHV9aYS5hppsdSEsTy1N5tDWrvEsn1HbAqdjRfXzmHPskH7PEw6SRQ8kNhUwAPa
-         0zeyWUJTuUqV4cuJ/S4JOH3AdtbLjByV33LgyT7LnCgbaElNkREOHKdvcmJ3qgDFBevN
-         LrElKB9WIOypIK4zhesXP579hNtfdeKwpJIxBniHgJ45rdaRCSJrRgYHAMHGzq4hdJ3M
-         IlTg==
-X-Gm-Message-State: ACgBeo1Gb/BsIm8gvbJnnWi5sRYKOPBAGWf9UgXwkW7lb8RslB9STp/A
-	UvZOehGM6ISSlDbH9PAt/s8=
-X-Google-Smtp-Source: AA6agR6n0fiwI6OBO7K3lIW3MDPSt9E3HBA1Pv5i8qmZaUp+fqN9wXf1IAashZzOuQ8JYMX2xYt0jg==
-X-Received: by 2002:a5d:5a9a:0:b0:220:6309:5c87 with SMTP id bp26-20020a5d5a9a000000b0022063095c87mr5428877wrb.107.1659438147957;
-        Tue, 02 Aug 2022 04:02:27 -0700 (PDT)
-Received: from opensuse.localnet (host-79-27-108-198.retail.telecomitalia.it. [79.27.108.198])
-        by smtp.gmail.com with ESMTPSA id q12-20020a056000136c00b0021e47fb24a2sm14511127wrz.19.2022.08.02.04.02.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Aug 2022 04:02:26 -0700 (PDT)
-From: "Fabio M. De Francesco" <fmdefrancesco@gmail.com>
-To: Baoquan He <bhe@redhat.com>
-Cc: Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, akpm@linux-foundation.org, linux-kernel@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [PATCH v2] kexec: Replace kmap() with kmap_local_page()
-Date: Tue, 02 Aug 2022 13:02:25 +0200
-Message-ID: <5847084.alqRGMn8q6@opensuse>
-In-Reply-To: <YujTHv0xVG8DirkW@MiWiFi-R3L-srv>
-References: <20220707231550.1484-1-fmdefrancesco@gmail.com> <1923146.PYKUYFuaPT@opensuse> <YujTHv0xVG8DirkW@MiWiFi-R3L-srv>
-MIME-Version: 1.0
+	id 1oIqr0-00Drz6-TE; Tue, 02 Aug 2022 12:18:34 +0000
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=xianting.tian@linux.alibaba.com;NM=1;PH=DS;RN=24;SR=0;TI=SMTPD_---0VLBiqE1_1659442704;
+Received: from localhost(mailfrom:xianting.tian@linux.alibaba.com fp:SMTPD_---0VLBiqE1_1659442704)
+          by smtp.aliyun-inc.com;
+          Tue, 02 Aug 2022 20:18:24 +0800
+From: Xianting Tian <xianting.tian@linux.alibaba.com>
+To: paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	anup@brainfault.org,
+	heiko@sntech.de,
+	guoren@kernel.org,
+	mick@ics.forth.gr,
+	alexandre.ghiti@canonical.com,
+	bhe@redhat.com,
+	vgoyal@redhat.com,
+	dyoung@redhat.com,
+	corbet@lwn.net,
+	Conor.Dooley@microchip.com
+Cc: kexec@lists.infradead.org,
+	linux-doc@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	crash-utility@redhat.com,
+	huanyi.xj@alibaba-inc.com,
+	heinrich.schuchardt@canonical.com,
+	k-hagio-ab@nec.com,
+	hschauhan@nulltrace.org,
+	yixun.lan@gmail.com,
+	Xianting Tian <xianting.tian@linux.alibaba.com>
+Subject: [PATCH V5 2/6] RISC-V: Add arch_crash_save_vmcoreinfo support
+Date: Tue,  2 Aug 2022 20:18:14 +0800
+Message-Id: <20220802121818.2201268-3-xianting.tian@linux.alibaba.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20220802121818.2201268-1-xianting.tian@linux.alibaba.com>
+References: <20220802121818.2201268-1-xianting.tian@linux.alibaba.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220802_040231_490118_8679C0A3 
-X-CRM114-Status: GOOD (  23.72  )
+X-CRM114-CacheID: sfid-20220802_051831_183601_751E5018 
+X-CRM114-Status: GOOD (  13.09  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,56 +73,96 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-T24gbWFydGVkw6wgMiBhZ29zdG8gMjAyMiAwOTozMjo0NiBDRVNUIEJhb3F1YW4gSGUgd3JvdGU6
-Cj4gT24gMDgvMDIvMjIgYXQgMDg6MjBhbSwgRmFiaW8gTS4gRGUgRnJhbmNlc2NvIHdyb3RlOgo+
-ID4gT24gbWFydGVkw6wgMiBhZ29zdG8gMjAyMiAwNTowNjo1NCBDRVNUIEJhb3F1YW4gSGUgd3Jv
-dGU6Cj4gPiA+IE9uIDA3LzA4LzIyIGF0IDAxOjE1YW0sIEZhYmlvIE0uIERlIEZyYW5jZXNjbyB3
-cm90ZToKPiA+ID4gPiBUaGUgdXNlIG9mIGttYXAoKSBhbmQga21hcF9hdG9taWMoKSBhcmUgYmVp
-bmcgZGVwcmVjYXRlZCBpbiBmYXZvciAKb2YKPiA+ID4gPiBrbWFwX2xvY2FsX3BhZ2UoKS4KPiA+
-ID4gPiAKPiA+ID4gPiBXaXRoIGttYXBfbG9jYWxfcGFnZSgpLCB0aGUgbWFwcGluZ3MgYXJlIHBl
-ciB0aHJlYWQsIENQVSBsb2NhbCBhbmQgCm5vdAo+ID4gPiA+IGdsb2JhbGx5IHZpc2libGUuIEZ1
-cnRoZXJtb3JlLCB0aGUgbWFwcGluZ3MgY2FuIGJlIGFjcXVpcmVkIGZyb20gCmFueQo+ID4gPiA+
-IGNvbnRleHQgKGluY2x1ZGluZyBpbnRlcnJ1cHRzKS4KPiA+ID4gPiAKPiA+ID4gPiBUaGVyZWZv
-cmUsIHVzZSBrbWFwX2xvY2FsX3BhZ2UoKSBpbiBrZXhlY19jb3JlLmMgYmVjYXVzZSB0aGVzZSAK
-bWFwcGluZ3MgCj4gPiBhcmUKPiA+ID4gPiBwZXIgdGhyZWFkLCBDUFUgbG9jYWwsIGFuZCBub3Qg
-Z2xvYmFsbHkgdmlzaWJsZS4KPiA+ID4gPiAKPiA+ID4gPiBUZXN0ZWQgb24gYSBRRU1VICsgS1ZN
-IDMyLWJpdHMgVk0gYm9vdGluZyBhIGtlcm5lbCB3aXRoIEhJR0hNRU02NEdCCj4gPiA+ID4gZW5h
-YmxlZC4KPiA+ID4gCj4gPiA+IFdvbmRlcmluZyB3aGF0IGFyY2ggeW91IHRlc3RlZCB3aXRoLgo+
-ID4gCj4gPiBJJ20gc29ycnksIEkgZm9yZ290IHRvIHNheSB0aGF0IEkgdXNlIHg4Nl8zMiB3aXRo
-IDRHQiB0byA2R0IgUkFNLgo+ID4gVGhpcyBpcyB1c3VhbGx5IGFuIGluZm9ybWF0aW9uIHRoYXQg
-SSBhZGQgaW4gdGhlIGNvbW1pdCBtZXNzYWdlcyBvZiBhbGwgCnRoZSAKPiA+IHJlY2VudCBjb252
-ZXJzaW9ucyBJJ20gd29ya2luZyBvbiBhY3Jvc3MgdGhlIGVudGlyZSBrZXJuZWwuCj4gPiAKPiA+
-IEFub3RoZXIgaW1wb3J0YW50IGluZm9ybWF0aW9uIChvdmVybG9va2VkIGFnYWluIHRoaXMgdGlt
-ZSkgaXMgdGhhdCAoMSkgCj4gPiBrbWFwKCkgY29tZXMgd2l0aCBhbiBvdmVyaGVhZCBhcyBtYXBw
-aW5nIHNwYWNlIGlzIHJlc3RyaWN0ZWQgYW5kIApwcm90ZWN0ZWQgCj4gPiBieSBhIGdsb2JhbCBs
-b2NrIGZvciBzeW5jaHJvbml6YXRpb24gYW5kICgyKSBpdCBhbHNvIHJlcXVpcmVzIGdsb2JhbCAK
-VExCIAo+ID4gaW52YWxpZGF0aW9uIHdoZW4gdGhlIGttYXDigJlzIHBvb2wgd3JhcHMgYW5kIGl0
-IG1pZ2h0IGJsb2NrIHdoZW4gdGhlIAptYXBwaW5nIAo+ID4gc3BhY2UgaXMgZnVsbHkgdXRpbGl6
-ZWQgdW50aWwgYSBzbG90IGJlY29tZXMgYXZhaWxhYmxlLgo+IAo+IFRoYW5rcyBhIGxvdCBmb3Ig
-dXBkYXRlIHdpdGggbW9yZSBkZXRhaWxzLCBGYWJpby4KCllvdSdyZSB3ZWxjb21lLgoKPiBNYXli
-ZSB0aGVzZSBjYW4gYmUKPiBhZGRlZCBpbnRvIGxvZyB3aXRoIHYzIGlmIHlvdSB0aGluayB0aGV5
-IGFyZSB3b3J0aCBhZGRpbmcsIGFuZCB3aXRoIG15Cj4gQWNrIHNpbmNlIG5vIGNvZGUgY2hhbmdl
-IHJlbGF0ZWQuIFlvdSBkZWNpZGUuCgpGb3Igd2Vla3MgSSd2ZSBiZWVuIHRoaW5raW5nIHRoYXQg
-dGhlc2UgZGV0YWlscyB3ZXJlIG5vdCBuZWNlc3NhcnkgaW4gdGhlIApjb21taXQgbWVzc2FnZSBv
-ZiB0aGVzZSBjb252ZXJzaW9ucy4gTGF0ZXIgSSByZWFsaXplZCB0aGF0IGEgZmFpciBudW1iZXIg
-b2YgCm1haW50YWluZXJzIHdlcmVuJ3QgYXdhcmUgb2Ygd2h5IHdlIHNob3VsZCBjaGFuZ2Ugc29t
-ZXRoaW5nIHRoYXQgaGFkIGJlZW4gCndvcmtpbmcgInByb3Blcmx5IiBmb3IgeWVhcnMuIFBlcmhh
-cHMgdGhleSB0aG91Z2h0IHRoYXQgd2Ugd291bGQgZmFjZSB0b28gCm1hbnkgcmlza3Mgb2YgYnJl
-YWtpbmcgdGhpbmdzIHZlcnN1cyBsaXR0bGUgcmV3YXJkcy4KCkFmdGVyIGRpc2N1c3Npbmcgd2l0
-aCBHcmVnIEstSCAod2hvIHdhcyBpbml0aWFsbHkgbm90IGZvbmQgb2YgdGhlc2UgY2hhbmdlcyAK
-dG8gY29yZSBwYXJ0cyBvZiBmaXJtd2FyZSBsb2FkaW5nIG1lY2hhbmlzbSksIGhlIHN1Z2dlc3Rl
-ZCB0aGF0IGEgcHJvcGVyIApjb21taXQgbG9nIHdpdGggdGhlIG5lY2Vzc2FyeSBpbmZvcm1hdGlv
-biBjb3VsZCBoYXZlIGhlbHBlZCBoaW1zZWxmIGFuZCB0aGUgCm90aGVyIG1haW50YWluZXJzIHdo
-byBtYXkgbm90IHlldCBoYWQgdGltZSB0byBkZWVwZW4gdGhpcyB0b3BpY3MuCgpUaGlzIHBhdGNo
-IHRvICJrZXhlYyIgc2xpcHBlZCBpbiB3aXRoIG5vIHN1Y2ggYWRkaXRpb25zLgoKVGhlcmVmb3Jl
-LCBJIGFncmVlIHdpdGggeW91IGluIGZ1bGw6IEknbGwgYWRkIHRoZXNlIGluZm9ybWF0aW9uIGFu
-ZCBzZW5kIGEgCm5ldyB2ZXJzaW9uIEFTQVAuCgo+IFRoYW5rcyBhZ2FpbiBmb3IgdGhlIGVmZm9y
-dC4KClRoYW5rcyBzbyBtdWNoIGZvciB0aGUgIkFja2VkLWJ5OiIgdGFnIGZyb20geW91LgoKRmFi
-aW8gIAoKW3NuaXBdCgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
-Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Add arch_crash_save_vmcoreinfo(), which exports VM layout(MODULES, VMALLOC,
+VMEMMAP and KERNEL_LINK_ADDR ranges), va bits and ram base to vmcore.
+
+Default pagetable levels and PAGE_OFFSET aren't same for different kernel
+version as below. For default pagetable levels, it sets sv57 on defaultly
+in latest kernel and do fallback to try to set sv48 on boot time if sv57
+is not supported in current hardware.
+
+For ram base, the default value is 0x80200000 for qemu riscv64 env, 0x200000
+for riscv64 SoC platform(eg, SoC platform of RISC-V XuanTie 910 CPU).
+
+ * Linux Kernel 5.18 ~
+ *      PGTABLE_LEVELS = 5
+ *      PAGE_OFFSET = 0xff60000000000000
+ * Linux Kernel 5.17 ~
+ *      PGTABLE_LEVELS = 4
+ *      PAGE_OFFSET = 0xffffaf8000000000
+ * Linux Kernel 4.19 ~
+ *      PGTABLE_LEVELS = 3
+ *      PAGE_OFFSET = 0xffffffe000000000
+
+Since these configurations change from time to time and version to version,
+it is preferable to export them via vmcoreinfo than to change the crash's
+code frequently, it can simplify the development of crash tool.
+
+Signed-off-by: Xianting Tian <xianting.tian@linux.alibaba.com>
+---
+ arch/riscv/kernel/Makefile     |  1 +
+ arch/riscv/kernel/crash_core.c | 29 +++++++++++++++++++++++++++++
+ 2 files changed, 30 insertions(+)
+ create mode 100644 arch/riscv/kernel/crash_core.c
+
+diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+index 33bb60a354cd..5e149df58176 100644
+--- a/arch/riscv/kernel/Makefile
++++ b/arch/riscv/kernel/Makefile
+@@ -81,6 +81,7 @@ obj-$(CONFIG_KGDB)		+= kgdb.o
+ obj-$(CONFIG_KEXEC_CORE)	+= kexec_relocate.o crash_save_regs.o machine_kexec.o
+ obj-$(CONFIG_KEXEC_FILE)	+= elf_kexec.o machine_kexec_file.o
+ obj-$(CONFIG_CRASH_DUMP)	+= crash_dump.o
++obj-$(CONFIG_CRASH_CORE)	+= crash_core.o
+ 
+ obj-$(CONFIG_JUMP_LABEL)	+= jump_label.o
+ 
+diff --git a/arch/riscv/kernel/crash_core.c b/arch/riscv/kernel/crash_core.c
+new file mode 100644
+index 000000000000..8d7f5ff108da
+--- /dev/null
++++ b/arch/riscv/kernel/crash_core.c
+@@ -0,0 +1,29 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++#include <linux/crash_core.h>
++#include <linux/pagemap.h>
++
++void arch_crash_save_vmcoreinfo(void)
++{
++	VMCOREINFO_NUMBER(VA_BITS);
++	VMCOREINFO_NUMBER(phys_ram_base);
++
++	vmcoreinfo_append_str("NUMBER(PAGE_OFFSET)=0x%lx\n", PAGE_OFFSET);
++	vmcoreinfo_append_str("NUMBER(VMALLOC_START)=0x%lx\n", VMALLOC_START);
++	vmcoreinfo_append_str("NUMBER(VMALLOC_END)=0x%lx\n", VMALLOC_END);
++	vmcoreinfo_append_str("NUMBER(VMEMMAP_START)=0x%lx\n", VMEMMAP_START);
++	vmcoreinfo_append_str("NUMBER(VMEMMAP_END)=0x%lx\n", VMEMMAP_END);
++#ifdef CONFIG_64BIT
++	vmcoreinfo_append_str("NUMBER(MODULES_VADDR)=0x%lx\n", MODULES_VADDR);
++	vmcoreinfo_append_str("NUMBER(MODULES_END)=0x%lx\n", MODULES_END);
++#endif
++
++	if (IS_ENABLED(CONFIG_64BIT)) {
++#ifdef CONFIG_KASAN
++		vmcoreinfo_append_str("NUMBER(KASAN_SHADOW_START)=0x%lx\n", KASAN_SHADOW_START);
++		vmcoreinfo_append_str("NUMBER(KASAN_SHADOW_END)=0x%lx\n", KASAN_SHADOW_END);
++#endif
++		vmcoreinfo_append_str("NUMBER(KERNEL_LINK_ADDR)=0x%lx\n", KERNEL_LINK_ADDR);
++		vmcoreinfo_append_str("NUMBER(ADDRESS_SPACE_END)=0x%lx\n", ADDRESS_SPACE_END);
++	}
++}
+-- 
+2.17.1
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
