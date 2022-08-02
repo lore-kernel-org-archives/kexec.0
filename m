@@ -4,101 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1CCB7C00144
-	for <kexec@archiver.kernel.org>; Mon,  1 Aug 2022 15:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A4834C00144
+	for <kexec@archiver.kernel.org>; Tue,  2 Aug 2022 02:48:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
-	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=HMCOfkHmM4hFZDbpga2HBZga2PVR0MKBaS3LcX7bQX0=; b=kLMFJZPDuIAncx
-	iTrumMmLIhlHxOlbJHr0QVctr/AuIR5ldnbZv6zZRdfVdSiZMQKh0Gcx6COPZAFyl5kPoeIbqgVGy
-	aXQDpCatyuNCcYJLkJLpJ/yX5Ybn3yh2HY0lRVJ1yjFaMK/j1ER3bvsrlNRNXAgIqv6eAZ42ovDU9
-	p+X9ZL724nvJYMPz27+30YDAUf2MF9Torudks2cNk8ql8CNR+DA9ox1FMh4DYq7R2sjCC1GGOhR2K
-	6t/pRN7wH6rUg88DiqxutCdfGD7kQcjHBkllO5z+SUxs+uaxQXgjKKzqlpC1slr9JBbWgPWXf7uT2
-	a1R4njjagvfKpRscNDuA==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:Date:
+	Message-ID:From:References:CC:To:Subject:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Owner;
+	bh=VsVjSvr3hAixiFu0OClKYps+4OvEWg0NrqteI99ngjA=; b=xqPQ59iUz5uiUpfTvL+yRu+6l6
+	kVyNg1rvBMc7fiDpCyRdX1kL2ynpqrTE+NUKLoL8c/IS0/CGhGkZrGywa5OA/FgNjuWTxZFH3YeQY
+	otv6npsUZgEhgOjHDlDOx3aVmgSYHcktoS0WGXMTcimSB7EIfGk3ghNrmNzrPG7PMG5bprI7o3Iym
+	apq7VzKrx2XVNP0eb9tYSXcu4+H87UnHb3aQ4bUz1Aqj/Kp/nRuh39lgaPsTJYmMlc09J3bXQlsIy
+	NoLCypkM0ju4yxgKsXS6If1bknKAc1eyg/vTmORfVQIzQFL6lbubp+Z1Ljj/IFtPet9L5d9hu2zNH
+	oS5qMLTA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oIXai-007YAl-Fv; Mon, 01 Aug 2022 15:44:24 +0000
-Received: from fanzine.igalia.com ([178.60.130.6] helo=fanzine2.igalia.com)
+	id 1oIhwf-009wE7-Et; Tue, 02 Aug 2022 02:47:45 +0000
+Received: from szxga08-in.huawei.com ([45.249.212.255])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oG6Dj-0031VQ-Ur
-	for kexec@lists.infradead.org; Mon, 25 Jul 2022 22:06:37 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=YyhxX2mWLvi9NimhQGcKzGIHUcpD9uFByKnTgfQXT2w=; b=PGkpTuxYoVATcBmmo5QpTR9OdU
-	CwxiCUUyg+Y43WZFKPZI8tVhTGlbReOvxwRy9vN5xlFY3Picc9q02QVGon0mk2qr+gc0H6DI1xkdA
-	Ocae0c8zKyVjxHiL0K7bl4oQZhe8iJrhJtaQD9dZsgzJVrcCJZAzsov/XHxJWKbmbo5ftSD95pWKz
-	UFCnlx6Icb4+P+rIPF6DDujCPBhMW2lOCenPqvqjXpVKjdwjx9mBL17sU/cCfl+FmUrx7l2Dspgvf
-	whmOYidPV6T/it/Bz3pnx0XUGVjPveeRJzlInsHK3oB41Rw1lJRpzg9VZc6aVCj990v9DlchEvxp+
-	pb2gaO3A==;
-Received: from [177.51.67.168] (helo=[192.168.43.24])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1oG6D1-006U4U-LN; Tue, 26 Jul 2022 00:05:52 +0200
-Message-ID: <da0ed272-1d47-dd1f-9ad3-46b5adba2dec@igalia.com>
-Date: Mon, 25 Jul 2022 19:05:18 -0300
+	id 1oIhwa-009wCY-Mm; Tue, 02 Aug 2022 02:47:43 +0000
+Received: from dggpemm500023.china.huawei.com (unknown [172.30.72.57])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4LxfTY0zVPz1M8MB;
+	Tue,  2 Aug 2022 10:44:33 +0800 (CST)
+Received: from dggpemm500006.china.huawei.com (7.185.36.236) by
+ dggpemm500023.china.huawei.com (7.185.36.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Tue, 2 Aug 2022 10:47:33 +0800
+Received: from [10.174.178.55] (10.174.178.55) by
+ dggpemm500006.china.huawei.com (7.185.36.236) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Tue, 2 Aug 2022 10:47:32 +0800
+Subject: Re: [PATCH v3 0/2] arm64: kdump: Function supplement and performance
+ optimization
+To: Baoquan He <bhe@redhat.com>
+CC: Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+	<kexec@lists.infradead.org>, <linux-kernel@vger.kernel.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, Jonathan Corbet <corbet@lwn.net>,
+	<linux-doc@vger.kernel.org>, "Eric W . Biederman" <ebiederm@xmission.com>,
+	Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>,
+	Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou
+	<dingguo.cz@antgroup.com>, John Donnelly <John.p.donnelly@oracle.com>, "Dave
+ Kleikamp" <dave.kleikamp@oracle.com>
+References: <20220711090319.1604-1-thunder.leizhen@huawei.com>
+ <YueMyUqannVg7l9v@MiWiFi-R3L-srv>
+From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Message-ID: <a80c2b7e-a510-8e45-1f3c-7e2ddf79bc37@huawei.com>
+Date: Tue, 2 Aug 2022 10:47:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v2 11/13] video/hyperv_fb: Avoid taking busy spinlock on
- panic path
+In-Reply-To: <YueMyUqannVg7l9v@MiWiFi-R3L-srv>
 Content-Language: en-US
-To: "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
- "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
- "bhe@redhat.com" <bhe@redhat.com>, "pmladek@suse.com" <pmladek@suse.com>,
- "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "x86@kernel.org" <x86@kernel.org>,
- "kernel-dev@igalia.com" <kernel-dev@igalia.com>,
- "kernel@gpiccoli.net" <kernel@gpiccoli.net>,
- "halves@canonical.com" <halves@canonical.com>,
- "fabiomirmar@gmail.com" <fabiomirmar@gmail.com>,
- "alejandro.j.jimenez@oracle.com" <alejandro.j.jimenez@oracle.com>,
- "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
- "arnd@arndb.de" <arnd@arndb.de>, "bp@alien8.de" <bp@alien8.de>,
- "corbet@lwn.net" <corbet@lwn.net>,
- "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "dyoung@redhat.com" <dyoung@redhat.com>,
- "feng.tang@intel.com" <feng.tang@intel.com>,
- "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
- "hidehiro.kawai.ez@hitachi.com" <hidehiro.kawai.ez@hitachi.com>,
- "jgross@suse.com" <jgross@suse.com>,
- "john.ogness@linutronix.de" <john.ogness@linutronix.de>,
- "keescook@chromium.org" <keescook@chromium.org>,
- "luto@kernel.org" <luto@kernel.org>,
- "mhiramat@kernel.org" <mhiramat@kernel.org>,
- "mingo@redhat.com" <mingo@redhat.com>,
- "paulmck@kernel.org" <paulmck@kernel.org>,
- "peterz@infradead.org" <peterz@infradead.org>,
- "rostedt@goodmis.org" <rostedt@goodmis.org>,
- "senozhatsky@chromium.org" <senozhatsky@chromium.org>,
- "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "vgoyal@redhat.com" <vgoyal@redhat.com>, vkuznets <vkuznets@redhat.com>,
- "will@kernel.org" <will@kernel.org>, Andrea Parri <parri.andrea@gmail.com>,
- Dexuan Cui <decui@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
- KY Srinivasan <kys@microsoft.com>, Stephen Hemminger
- <sthemmin@microsoft.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>,
- Wei Liu <wei.liu@kernel.org>
-References: <20220719195325.402745-1-gpiccoli@igalia.com>
- <20220719195325.402745-12-gpiccoli@igalia.com>
- <PH0PR21MB30252061CD7F2FD15BD77F7ED7959@PH0PR21MB3025.namprd21.prod.outlook.com>
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <PH0PR21MB30252061CD7F2FD15BD77F7ED7959@PH0PR21MB3025.namprd21.prod.outlook.com>
+X-Originating-IP: [10.174.178.55]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpemm500006.china.huawei.com (7.185.36.236)
+X-CFilter-Loop: Reflected
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220725_150636_043697_B42747B2 
-X-CRM114-Status: UNSURE (   7.52  )
-X-CRM114-Notice: Please train this message.
-X-Mailman-Approved-At: Mon, 01 Aug 2022 08:44:02 -0700
+X-CRM114-CacheID: sfid-20220801_194741_154929_42D27EC4 
+X-CRM114-Status: GOOD (  22.00  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -115,27 +81,80 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 25/07/2022 15:09, Michael Kelley (LINUX) wrote:
-> [...]
->> +bool hv_ringbuffer_spinlock_busy(struct vmbus_channel *channel)
->> +{
->> +	struct hv_ring_buffer_info *rinfo = &channel->outbound;
->> +
->> +	if (spin_is_locked(&rinfo->ring_lock))
->> +		return true;
->> +
->> +	return false;
-> 
-> Could simplify the code as just:
-> 
-> 	return spin_is_locked(&rinfo->ring_lock);
-> 
-
-Sure, makes sense! Thanks for the suggestion, I'll do that for V3.
-Cheers,
 
 
-Guilherme
+On 2022/8/1 16:20, Baoquan He wrote:
+> Hi Catalin,
+> 
+> On 07/11/22 at 05:03pm, Zhen Lei wrote:
+>> v2 --> v3:
+>> 1. Discard patch 3 in v2, a cleanup patch.
+>>
+>> v1 --> v2:
+>> 1. Update the commit message of Patch 1, explicitly indicates that "crashkernel=X,high"
+>>    is specified but "crashkernel=Y,low" is not specified.
+>> 2. Drop Patch 4-5. Currently, focus on function integrity, performance optimization
+>>    will be considered in later versions.
+>> 3. Patch 3 is not mandatory, it's just a cleanup now, although it is a must for patch 4-5.
+>>    But to avoid subsequent duplication of effort, I'm glad it was accepted.
+>>
+>>
+>> v1:
+>> After the basic functions of "support reserving crashkernel above 4G on arm64
+>> kdump"(see https://lkml.org/lkml/2022/5/6/428) are implemented, we still have
+>> three features to be improved.
+>> 1. When crashkernel=X,high is specified but crashkernel=Y,low is not specified,
+>>    the default crash low memory size is provided.
+>> 2. For crashkernel=X without '@offset', if the low memory fails to be allocated,
+>>    fall back to reserve region from high memory(above DMA zones).
+>> 3. If crashkernel=X,high is used, page mapping is performed only for the crash
+>>    high memory, and block mapping is still used for other linear address spaces.
+>>    Compared to the previous version:
+>>    (1) For crashkernel=X[@offset], the memory above 4G is not changed to block
+>>        mapping, leave it to the next time.
+>>    (2) The implementation method is modified. Now the implementation is simpler
+>>        and clearer.
+> 
+> Do you have plan to pick this series so that it can be taken into 5.20
+> rc-1~3?
+
+Hi, Catalin:
+  Only function reserve_crashkernel() is modified in these two patches. The core
+process of the arm64 architecture is not affected. I remember you suggested that
+arm64 and x86 share the same kdump code, so these two subfeatures are needed.
+Maybe we can lay the foundation first for the people who build the road. Unifying
+the external interfaces of kdump on arm64 and x86 does not seem to hurt.
+
+
+> 
+> We have back ported the basic crashkernel=high, low, support into our
+> distros and have taken wide testing on arm64 servers, need this patchset
+> to back port for more testing. 
+> 
+> Thanks
+> Baoquan
+> 
+>>
+>> Zhen Lei (2):
+>>   arm64: kdump: Provide default size when crashkernel=Y,low is not
+>>     specified
+>>   arm64: kdump: Support crashkernel=X fall back to reserve region above
+>>     DMA zones
+>>
+>>  .../admin-guide/kernel-parameters.txt         | 10 ++-----
+>>  arch/arm64/mm/init.c                          | 28 +++++++++++++++++--
+>>  2 files changed, 28 insertions(+), 10 deletions(-)
+>>
+>> -- 
+>> 2.25.1
+>>
+> 
+> .
+> 
+
+-- 
+Regards,
+  Zhen Lei
 
 _______________________________________________
 kexec mailing list
