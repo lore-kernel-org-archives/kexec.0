@@ -4,79 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D8435C00140
-	for <kexec@archiver.kernel.org>; Tue,  2 Aug 2022 12:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1D836C19F2A
+	for <kexec@archiver.kernel.org>; Wed,  3 Aug 2022 09:55:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=OSwgImDxXIuuN66Xaew7B4nGYDSiHGYEM2dxZCPPR88=; b=SEKIZmE5iF60TC
-	z42KQOtIRbhFAFCY3k0aRsBzahmGATz7hK1YWTV4hwgEg8gb9mJ20S7cq3TR4JalfbikWyzOLSABS
-	boDEyVvrPkCwuMXDUamY9W9FhSsSRaLx85IC3/gRVzaa0YLT0ziy/NU8ioG5yw8lV9gRzgc5G/m8M
-	E0+sVCAM+rHBcBGXbNvSqn5cfSF5qcF2TrTLXGY+py+4rzBbFS1f3Na3NjLKxY/QNi9DgXpyGTsY6
-	kDdpwouhQnZvYZwUV9ti1l0D4pM1rvWjPDgFuctb8pqYbO5Hd7dW4sLs1iXEBhTdgOrZNCKkhRHWb
-	YxCP7ZfMRak9aOECEB5A==;
+	List-Owner; bh=SFUYj4aus8jLQ3sKwall7khgANfuSyCBofhKX/cxUFc=; b=eCYdnhUBC/KcF8
+	PMKGr9uk58GVNVmcRxFW8H5kCJtlCFw2KfNHQMu76ytOQLRm19/U8ZqOyF1b2TNY2kF3xRm4Cys/2
+	g8ePenTAFYY5VQ+cJIxTC+gP3LSk/LfCSbcKg4aj2BsGb5rV2teMgSyH/i3m6V0zNxXGrcpma2Cty
+	QbPkmg8LweKOsTKAbriu9r8bxegyGJyRxCnIR+Nox2DWMrA1RrY4diZ1juZV9f39HP0sOW0PY/uk0
+	sKUg9N6mSg7b8iKYBcWzGAzG14NSr10vdtx5HARNtC/vLI0ErVb9lWV7pNJ1FkcdDmqRSWf4Ki1IV
+	sBGMQB/85pqxuglkBLdw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oIrJ5-00E8E6-My; Tue, 02 Aug 2022 12:47:31 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1oJB5l-004XA1-Kh; Wed, 03 Aug 2022 09:55:05 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oIrJ3-00E89l-9K
-	for kexec@lists.infradead.org; Tue, 02 Aug 2022 12:47:31 +0000
+	id 1oJAZp-004Gsm-Ds
+	for kexec@lists.infradead.org; Wed, 03 Aug 2022 09:22:07 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1659444443;
+	s=mimecast20190719; t=1659518513;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=wbbGtoG/Vl+wjUfmVqEW8AmNwItFx5zbhZBvkq/eXg8=;
-	b=cVoWV5i+vBr2ft+yJ7EfyTt4pkUxwNGE0TYHMm7nFF+JFWT0K/exH6mpn5Q+Uu0k6x5PY3
-	s0IG/0zjZzqY8aMD8bwuEM7O3fE53rXxz+KDojJsMnId3BnYBR5ExHwVCqTCkW+gCxvsES
-	fv5Xo1ZT/4hSQRswNWKHDYn/H7iJZoA=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=wC3/PO//oorDVUr2wMWH5HeOq129lBqXeyqiPu4d5kY=;
+	b=IUq1jaoP230YZTfdJycK2v64wGmhBUyJc4jdmgRCTyEbxcvuW8FI2rw30baX528w/0GlYZ
+	jK4+41kQBKeKwi34Fdw5LB4SWsd/LzXtZ/hEKk/UgRxKdyN/Ve6mXvx2OLLb9x8xz+s7QJ
+	7rxjt8IV1GtFtRtlBXHNVeLMCOXwGpI=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-553-dOMSq3THNai4QTNWY5116w-1; Tue, 02 Aug 2022 08:47:20 -0400
-X-MC-Unique: dOMSq3THNai4QTNWY5116w-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+ us-mta-638-pfCCUwv0NiOp6IpbbF09sw-1; Wed, 03 Aug 2022 05:21:47 -0400
+X-MC-Unique: pfCCUwv0NiOp6IpbbF09sw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 48B82858F00;
-	Tue,  2 Aug 2022 12:47:19 +0000 (UTC)
-Received: from localhost (ovpn-13-104.pek2.redhat.com [10.72.13.104])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 307DF90A04;
-	Tue,  2 Aug 2022 12:47:16 +0000 (UTC)
-Date: Tue, 2 Aug 2022 20:46:57 +0800
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 20B4D1C06ED1;
+	Wed,  3 Aug 2022 09:21:46 +0000 (UTC)
+Received: from localhost (ovpn-13-216.pek2.redhat.com [10.72.13.216])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 5FB4E2026D4C;
+	Wed,  3 Aug 2022 09:21:44 +0000 (UTC)
+Date: Wed, 3 Aug 2022 17:21:41 +0800
 From: Baoquan He <bhe@redhat.com>
-To: Will Deacon <will@kernel.org>,
-	"Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Cc: Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-	"Eric W . Biederman" <ebiederm@xmission.com>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Feng Zhou <zhoufeng.zf@bytedance.com>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	Chen Zhou <dingguo.cz@antgroup.com>,
-	John Donnelly <John.p.donnelly@oracle.com>,
-	Dave Kleikamp <dave.kleikamp@oracle.com>, ardb@kernel.org
-Subject: Re: [PATCH v3 1/2] arm64: kdump: Provide default size when
- crashkernel=Y,low is not specified
-Message-ID: <YukcwUyEvOLjV00C@MiWiFi-R3L-srv>
-References: <20220711090319.1604-1-thunder.leizhen@huawei.com>
- <20220711090319.1604-2-thunder.leizhen@huawei.com>
- <20220802083703.GA26962@willie-the-truck>
- <bc2830f7-7c3c-30ea-0178-ad86922f8f5c@huawei.com>
+To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: akpm@linux-foundation.org, pmladek@suse.com, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org, x86@kernel.org, kernel-dev@igalia.com,
+	kernel@gpiccoli.net, halves@canonical.com, fabiomirmar@gmail.com,
+	alejandro.j.jimenez@oracle.com, andriy.shevchenko@linux.intel.com,
+	arnd@arndb.de, bp@alien8.de, corbet@lwn.net,
+	d.hatayama@jp.fujitsu.com, dave.hansen@linux.intel.com,
+	dyoung@redhat.com, feng.tang@intel.com, gregkh@linuxfoundation.org,
+	mikelley@microsoft.com, hidehiro.kawai.ez@hitachi.com,
+	jgross@suse.com, john.ogness@linutronix.de, keescook@chromium.org,
+	luto@kernel.org, mhiramat@kernel.org, mingo@redhat.com,
+	paulmck@kernel.org, peterz@infradead.org, rostedt@goodmis.org,
+	senozhatsky@chromium.org, stern@rowland.harvard.edu,
+	tglx@linutronix.de, vgoyal@redhat.com, vkuznets@redhat.com,
+	will@kernel.org, Arjan van de Ven <arjan@linux.intel.com>,
+	Cong Wang <xiyou.wangcong@gmail.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Valentin Schneider <valentin.schneider@arm.com>,
+	Xiaoming Ni <nixiaoming@huawei.com>
+Subject: Re: [PATCH v2 02/13] notifier: Add panic notifiers info and purge
+ trailing whitespaces
+Message-ID: <Yuo+JVGsYm1V8Asx@MiWiFi-R3L-srv>
+References: <20220719195325.402745-1-gpiccoli@igalia.com>
+ <20220719195325.402745-3-gpiccoli@igalia.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <bc2830f7-7c3c-30ea-0178-ad86922f8f5c@huawei.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
+In-Reply-To: <20220719195325.402745-3-gpiccoli@igalia.com>
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220802_054729_556363_17B6DCB1 
-X-CRM114-Status: GOOD (  30.33  )
+X-CRM114-CacheID: sfid-20220803_022205_550048_C8FEF3CE 
+X-CRM114-Status: GOOD (  18.04  )
+X-Mailman-Approved-At: Wed, 03 Aug 2022 02:52:54 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -93,72 +98,63 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 08/02/22 at 06:12pm, Leizhen (ThunderTown) wrote:
-......snip...  
-> >> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> >> index 339ee84e5a61a0b..5390f361208ccf7 100644
-> >> --- a/arch/arm64/mm/init.c
-> >> +++ b/arch/arm64/mm/init.c
-> >> @@ -96,6 +96,14 @@ phys_addr_t __ro_after_init arm64_dma_phys_limit = PHYS_MASK + 1;
-> >>  #define CRASH_ADDR_LOW_MAX		arm64_dma_phys_limit
-> >>  #define CRASH_ADDR_HIGH_MAX		(PHYS_MASK + 1)
-> >>  
-> >> +/*
-> >> + * This is an empirical value in x86_64 and taken here directly. Please
-> >> + * refer to the code comment in reserve_crashkernel_low() of x86_64 for more
-> >> + * details.
-> > 
-> > Honestly, I read that comment and I'm none the wiser. What does "due to
-> > mapping restrictions" mean? The remainder of the comment appears to be
+On 07/19/22 at 04:53pm, Guilherme G. Piccoli wrote:
+> Although many notifiers are mentioned in the comments, the panic
+> notifiers infrastructure is not. Also, the file contains some
+> trailing whitespaces. Fix both issues here.
 > 
-> Because the comments you read is addressed to CRASH_ADDR_LOW_MAX, not
-> for DEFAULT_CRASH_KERNEL_LOW_SIZE. Please see the following patch:
+> Cc: Arjan van de Ven <arjan@linux.intel.com>
+> Cc: Cong Wang <xiyou.wangcong@gmail.com>
+> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Cc: Valentin Schneider <valentin.schneider@arm.com>
+> Cc: Xiaoming Ni <nixiaoming@huawei.com>
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 > 
-> 94fb9334182284 x86/crash: Allocate enough low memory when crashkernel=high
+> ---
 > 
-> > specific to x86 and refers to jump ranges with 5-level page-tables.
-> > 
-> >> +#define DEFAULT_CRASH_KERNEL_LOW_SIZE	\
-> >> +	max(swiotlb_size_or_default() + (8UL << 20), 256UL << 20)
-> > 
-> > So why does this value make sense for arm64? We have considerable platform
-> > fragmentation^Wdiversity compared to x86 and picking a one-size-fits-all
-> > default is more likely to cause weird problems when it doesn't work imo. I'd
-> > actually prefer that the default is something that fails obviously (e.g. 0)
-> > and we force an appropriate size to be specified.
-
-The default value mainly serves the crashkernel=xM case, not just for
-crashkernel=,high specified while no crahskernel=,low. The simplest
-usage of crashkernel reservation is user only need set crashkernel=xM in
-cmdline, we will try to get available memory from low memory region
-firstly, if failed, go above 4G to find again. If we finally get memory
-from above 4G, then the default low memory is needed. E.g if
-crashkernel=512M is set, and no sufficient memory under 4G. With it,
-user don't need to know about crashkernel=,high or ,low, and even memory
-has type of high, low, or dma stuff.
-
-> > 
-> > On the other hand, if you can convince me that having a global constant is
-> > the right way forward, then please move this out of the arch code.
+> V2:
+> - no change.
 > 
-> Yes, the default value may not be the same as that of x86. For example,
-> 128 MB may be sufficient.
+>  include/linux/notifier.h | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
 > 
-> So we need to discuss first, do we need a default value? Personally, I
-> don't think it hurts.
+> diff --git a/include/linux/notifier.h b/include/linux/notifier.h
+> index aef88c2d1173..d5b01f2e3fcc 100644
+> --- a/include/linux/notifier.h
+> +++ b/include/linux/notifier.h
+> @@ -208,12 +208,12 @@ static inline int notifier_to_errno(int ret)
+>  
+>  /*
+>   *	Declared notifiers so far. I can imagine quite a few more chains
+> - *	over time (eg laptop power reset chains, reboot chain (to clean 
+> + *	over time (eg laptop power reset chains, reboot chain (to clean
+>   *	device units up), device [un]mount chain, module load/unload chain,
+> - *	low memory chain, screenblank chain (for plug in modular screenblankers) 
+> + *	low memory chain, screenblank chain (for plug in modular screenblankers)
+>   *	VC switch chains (for loadable kernel svgalib VC switch helpers) etc...
+>   */
+> - 
+> +
+>  /* CPU notfiers are defined in include/linux/cpu.h. */
+>  
+>  /* netdevice notifiers are defined in include/linux/netdevice.h */
+> @@ -224,6 +224,8 @@ static inline int notifier_to_errno(int ret)
+>  
+>  /* Virtual Terminal events are defined in include/linux/vt.h. */
+>  
+> +/* Panic notifiers are defined in include/linux/panic_notifier.h. */
+> +
 
-Yes, we can discuss. Welcome anyone to help provide information how we
-should take care to make a small but enough value. In fact, on x86_64,
-we didn't set the value at one time. It was set as 72M at the beginning,
-later Joerg found it's not enough, we finally decided to make it as
-256M. People who mind the wasting of 256M can use crashkernel=,high and
-crashkernel=,low pair to specify the value exactly.
+LGTM,
 
-commit c729de8fcea3 ("x86, kdump: Set crashkernel_low automatically")
-commit 94fb93341822 ("x86/crash: Allocate enough low memory when crashkernel=high")
+Reviewed-by: Baoquan He <bhe@redhat.com>
 
-Thanks
-Baoquan
+>  #define NETLINK_URELEASE	0x0001	/* Unicast netlink socket released */
+>  
+>  /* Console keyboard events.
+> -- 
+> 2.37.1
+> 
 
 
 _______________________________________________
