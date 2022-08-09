@@ -4,59 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6C5E9C25B06
-	for <kexec@archiver.kernel.org>; Tue,  9 Aug 2022 21:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D0CC5C19F2D
+	for <kexec@archiver.kernel.org>; Tue,  9 Aug 2022 21:13:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-ID:In-Reply-To:
 	References:Message-ID:Date:Subject:CC:To:From:Reply-To:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=8p/ix4fFdWL1kpxhFShFwZkF91/QheLy7Yy34zWpJrM=; b=PyPgaX5Tgi47VH
-	E3LQMjETVCVnGELgTKOJ5Bq/S7KLrkfonMJkO2CjeLkxBhR3t2+/uvte9nKzdII327hmRm0hSEsUG
-	MiOeYdUyiiRLMKX3Cdb3txG2xl/EpRWVzg3wKXRQJNWIW8eh3JNQp7ilJFe6YK5/R3h8sobii3h11
-	k1t0/h6toKTQG+rTpGN7KEsrOr98RI2/mGgKvcbN7VANAe1vuSI9R2QKnw613fQHZBE+XoY4S2hPO
-	ofd0m2IVbiP/PjTMviKR2mELYgenIzG2LOfNAzaZQs0rHqSWCwrmUkDdGLaWKlasGaT+Lh5jvxue3
-	6rzTFBeFzNmrglo2U9Xg==;
+	List-Owner; bh=Rd+JlrterfFnFwYdP7E8hndmQB06XIUMfAN/OIcSus0=; b=VQy+ssjkir5XCc
+	it9mnK+IBorUEg0wp3I9RZDYWTJjeZL8yPHYIOmHGHfLrZd6M/e3zQimBLUIC+RDVLzbZ8LGHMxCV
+	QMQjnQuMFzGH0wqY54OskArYRgKsVK5j3EPOA2MxQmGqwrR+0iT/AxHpmXarkyZZD09EjDz7eopZ1
+	VSJOsZlwh+1j9aUMyGiLuTFMwa2wKgXph4ZoQtdcQw+kiFKV4FXCS+wEQiMCVhViYP5+OK1yMwLrz
+	G/unT/brRjQY1XTfL821hVpn/6uLNfvVNE+iwveascRipkUhPueYAe8XEhVUhSVkrCgNh7ikCpCtL
+	VQ6dR7xpqCAZDQoHSoVg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oLWVL-006YNF-FD; Tue, 09 Aug 2022 21:11:11 +0000
-Received: from esa.microchip.iphmx.com ([68.232.154.123])
+	id 1oLWXZ-006ZCi-Do; Tue, 09 Aug 2022 21:13:29 +0000
+Received: from esa.microchip.iphmx.com ([68.232.153.233])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oLWVD-006YJV-7H; Tue, 09 Aug 2022 21:11:08 +0000
+	id 1oLWXL-006Z6K-T7; Tue, 09 Aug 2022 21:13:18 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1660079463; x=1691615463;
+  t=1660079595; x=1691615595;
   h=from:to:cc:subject:date:message-id:references:
    in-reply-to:content-id:content-transfer-encoding:
    mime-version;
-  bh=LjfbprQhLIVBSHHIY5HatDm6Qk8pHtPsTYi4oGGz8CQ=;
-  b=JcEoE8b5fnyJEIdWJGoswJCgog9ITjlGX6OiBEBLKf/66AnIashUM+k/
-   uw9v45EgrfzucWS2fxE2CmBPuhcMIzxpPjefxl7XNWipDAI4uw/KJRHoJ
-   m1PEiik3BZHP5jBkjIT4gJI8Go51k5EFamd1bNMj9HKRCuO9ZAbpWmB37
-   G65n77HJe+Oxu3uN9NHhTncPbbmA51d8AfPyLPKHI4YCe0ZVSFm2+VCpS
-   HcgIR5KvpAq6SkCFIK9lgzfmgIruUKXE2ke7uJNEeD4KntXG0+Y2VaJNm
-   Iq8wbuX1aakPGp4un+QSmTMHU9VY5NDmPGby0ZrWdI7gel3bzD0JdngFr
+  bh=R2eqGTq08XADGU3vAuUW+JBH8a+AX/zcHjRizXfhqgA=;
+  b=mrKhYgipyoJbLhdgJ0SLLDuNEMFzIqEv3toLdNv+s7inDVDH02YWxrra
+   iVjzQfZ0SZD0pVDrUBWP27bOp1rFDOndhT7z0kDRoC8seCvtl6l1bnG6M
+   mENWh0FdVfQQdUftN6oCrhP57bDOdhivT5Zq/LLGXnV4vGB5HgNAkfq3o
+   sd0Md5eWOECIw8MGjGEKw2eJ+wSUM62z9wXA5j6dNnlz6UbGZ79C/B6i1
+   4HrZtMaYjx+SM5/q1PACq7Sk+eNoxUrkdNCsa4a1GG+vNPbonz4PfEDA+
+   VSN+b7qZdwFRWED1mTerVUt3I/XRUa7e6FQGpAFTX/UarQjhXF9mEXvtA
    A==;
 X-IronPort-AV: E=Sophos;i="5.93,225,1654585200"; 
-   d="scan'208";a="171701164"
+   d="scan'208";a="185807837"
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Aug 2022 14:10:52 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 09 Aug 2022 14:13:11 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.28; Tue, 9 Aug 2022 14:10:51 -0700
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ 15.1.2375.28; Tue, 9 Aug 2022 14:13:10 -0700
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.28 via Frontend Transport; Tue, 9 Aug 2022 14:10:51 -0700
+ 15.1.2375.28 via Frontend Transport; Tue, 9 Aug 2022 14:13:10 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nkbvAqpqPW1bGkYr5ssB0CiiOHbcWulHA7XxaYOcQNnWrysdrBhGqFeUZeROATKjvakFUwF0PYaXyOYDhE1qxR1fFWktTB/73Of3OFglAYNo9rrusLAXbWY1GsY7B4L0/MlYuDWf1b4yIrga1gV6iWX1xcVbkXm+sJPzGKiQm7yg2/2qGes4NChnqDKUrkWCeQogdVjUvUsKQFxcE6mNnNnFn0dQocM1AvZbwnSAbsY92AbOycPpNgmeMXblLhHhY1W/daBT+GP0UNn/djmy9Zd2IpSSwo8BidDf0cTwzykUond0f08DjkzOTekqRpEnvIHaePpOJ5iTZDUjbq/UuQ==
+ b=gBRSpzdPNBgPVFChV7HJDs/F1+LdsQUzzMHcDBXsj7INg8QBMGbNAjdualbJjfvVzEoZ4gNWw0Ujjqm3mPviJYeeBbHsOyJ2SE7vzadmkH3ypQmJx98BG0bOAApvv+KJxVqttakWsEf7PwklgUIY9SOLP0HMaqhKJ5KLom6uylYfpqcbRxEpoUJ12JRdb8q44O9HLMcfdcjKB/HKdEGFfcQgLIFNEb4Ac6V5J8bRsiZyk/vBRYSnu7JXxl3d2S8lLeliY8UA5d1H1Z4IqEqPfo3chuK60wilXS8/r0fZnN6uIgoGYYoRBrXmPdJ3eMUnWeyTcpIcE+8aDelMYyMV1Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LjfbprQhLIVBSHHIY5HatDm6Qk8pHtPsTYi4oGGz8CQ=;
- b=CzYpSVYHUMFltVfsHij/1DL2qv28n424N73UaHHIK1yV+duOSRhgrPFu1R8LIvia7Rv7e9I6qJx8Us/iqq7zFiww6ftNJnF7nH4eht97Qv5RVbR6BRhbJzK+6SXJxsAD8bsIlVLQyYPYgGudPOrGIcfQp3qFcKQlnV1tH1QxHcPdZhjJVYnnZl6PSaH02wpz5HN85DH1ZXQkioRp5KEBlrPbdnaGH7Yq3uWGNz/i9KUUDoJnMX925goqAnAzHS3hrA4oPTr65c8uZmdokM/HfGEUvTzw7302dHRuWeJThJNSUQd1zHBIxNjxb+K/w6P3jaK/AmPye9MEOxJGjDjzzQ==
+ bh=R2eqGTq08XADGU3vAuUW+JBH8a+AX/zcHjRizXfhqgA=;
+ b=RTGdrARJiDX2kTlC4/yA3yFwu5nDl1XxFqLLD5tq78fdOaMIJT3NRxLdc5VuZj2DXNvTRrIRzX2+tbq/HWek6ft95OjWPl8bHzrOkN90iPpINg0Hl79IXzQArrjRGcLQYTURUKC0mxlYiGKQZQlo9J2K96oqKcb6vq2ZCNF9uNvfL3QWpvVSRhVRv6z7ISf1ObLzajsUJMH24aUCmHbrNZBOK9+P5yiMl2mQUI7c8PjGqbbInjsfGILYAoEex9vGiBOAwe8HMH6EpWezkIRZnYdv0rE3ptcVh6fWIivIkbhrAohgFYMvx2H3Bax+dCSQpaJlaE7rqqw2QG6kQQ6tIA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microchip.com; dmarc=pass action=none
  header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
@@ -64,17 +64,17 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=microchiptechnology.onmicrosoft.com;
  s=selector2-microchiptechnology-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LjfbprQhLIVBSHHIY5HatDm6Qk8pHtPsTYi4oGGz8CQ=;
- b=hrd+NpmkauvT7jL+p6oDx3OzT8roLzhPkTvb0GBj2X8nJHpkXh7SfOtDY8lVJF3j76xypqR156J/rGbjUcn1IEUWw2ndTZiLoxIcUT/nKUGovIT9GKSvYPFuPCNLI3Q+y0tzZFWjoiLxd5RsxIPcXgtE9qzDwYh3WkJD/XCzj3g=
+ bh=R2eqGTq08XADGU3vAuUW+JBH8a+AX/zcHjRizXfhqgA=;
+ b=MkSkmaqHerab71HQ5jRIlY9PEIQhbbFrjIOazDThWyL7us2f9N5iasQZAvX1Zrtr0o/CjxlQ/8t8CdbZznaFSLTl6gqg404ZE9mX+zXKYUDrEIgL8dft0gFTAdMfpZv5F+qzHL5R5UO8DWV9dqjA2sHiRfgV40aYouXD+NIXVdk=
 Received: from CO1PR11MB5154.namprd11.prod.outlook.com (2603:10b6:303:99::15)
- by CY4PR1101MB2293.namprd11.prod.outlook.com (2603:10b6:910:22::15) with
+ by DM4PR11MB5262.namprd11.prod.outlook.com (2603:10b6:5:389::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.16; Tue, 9 Aug
- 2022 21:10:46 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.14; Tue, 9 Aug
+ 2022 21:13:05 +0000
 Received: from CO1PR11MB5154.namprd11.prod.outlook.com
  ([fe80::ac89:75cd:26e0:51c3]) by CO1PR11MB5154.namprd11.prod.outlook.com
  ([fe80::ac89:75cd:26e0:51c3%8]) with mapi id 15.20.5504.020; Tue, 9 Aug 2022
- 21:10:46 +0000
+ 21:13:05 +0000
 From: <Conor.Dooley@microchip.com>
 To: <xianting.tian@linux.alibaba.com>, <paul.walmsley@sifive.com>,
 	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <anup@brainfault.org>,
@@ -86,16 +86,14 @@ CC: <kexec@lists.infradead.org>, <linux-doc@vger.kernel.org>,
 	<crash-utility@redhat.com>, <huanyi.xj@alibaba-inc.com>,
 	<heinrich.schuchardt@canonical.com>, <k-hagio-ab@nec.com>,
 	<hschauhan@nulltrace.org>, <yixun.lan@gmail.com>
-Subject: Re: [PATCH V5 1/6] RISC-V: use __smp_processor_id() instead of
- smp_processor_id()
-Thread-Topic: [PATCH V5 1/6] RISC-V: use __smp_processor_id() instead of
- smp_processor_id()
-Thread-Index: AQHYpmofx68ajylNiUmd0swDoyrKZq2nHCaA
-Date: Tue, 9 Aug 2022 21:10:46 +0000
-Message-ID: <4a3c8f81-6b4a-4cfc-5098-959fab87ac44@microchip.com>
+Subject: Re: [PATCH V5 4/6] RISC-V: Fixup getting correct current pc
+Thread-Topic: [PATCH V5 4/6] RISC-V: Fixup getting correct current pc
+Thread-Index: AQHYpmoWKDGeRD7OZEqsYpbx58+Qu62nHMwA
+Date: Tue, 9 Aug 2022 21:13:05 +0000
+Message-ID: <3fbfaa49-8ee9-a65c-133b-d0f072f0eb6c@microchip.com>
 References: <20220802121818.2201268-1-xianting.tian@linux.alibaba.com>
- <20220802121818.2201268-2-xianting.tian@linux.alibaba.com>
-In-Reply-To: <20220802121818.2201268-2-xianting.tian@linux.alibaba.com>
+ <20220802121818.2201268-5-xianting.tian@linux.alibaba.com>
+In-Reply-To: <20220802121818.2201268-5-xianting.tian@linux.alibaba.com>
 Accept-Language: en-IE, en-US
 Content-Language: en-IE
 X-MS-Has-Attach: 
@@ -105,65 +103,65 @@ user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microchip.com;
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0eed9c1f-99bd-413f-f2c3-08da7a4ba096
-x-ms-traffictypediagnostic: CY4PR1101MB2293:EE_
+x-ms-office365-filtering-correlation-id: 7e2267a1-f939-4957-8b94-08da7a4bf361
+x-ms-traffictypediagnostic: DM4PR11MB5262:EE_
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fCxAINMjNVxpiuj+E5jl0L1tVKyYEtmMonzmo9SP0RQD7FJslo92A2XsEakvqmZSK+VshQkA8o7OaBNFsdTjueIZLsKzA3hHXu47O9VdCO5SWnnJmnWlp+qmeycG0DQF8E/otfpHXwQNGB4EQPM2Rxzo5fI5Zm4EX/N+9vni2mrbSdSuXIBgaQZ45Gprn9UH4BQuY7a3+UjZKca2xYFVBRDe6QpkAc10QlPe4zNGIR42FIf9+FKcE1vCNjMMoqecKbOh+DL7sEAi5BIGUIhzHeEIwG/UKyV2SsT+H7qZz+dYouHkPTBtsZgwP+fyAW9il7VitdRFyfckEmgkUcHDq1DpEZ7pdP7mrybz+4vVi1k6byNLBTfs3edckDdsWKAZwFMKHx6GhDVkhMU9rYPchi+7juLQrEsWR7VH8DXQQG8OAjwExvva5q4s3FEL3IQW09TZMKSXXcjNGUC1XvWfnM35d4/FYxocRCx/S8ntlcwXd1U7TMDddLJvxh56Tn3tQesKkph6TGNpfZLtYNJlUeu8Ljk2Db0GsWT+yx1ckheYmeC9kVlUOTcjctAYqMQW0Hr39U74vT2+DkJQ+bXl9pMBDyWaFIqnvuPx/tFe2piUNKRjIg/QWxyxgc036xJfDYRkcLSS2kK2I3EzgqwEHNbFgyHFX39mG7JmbGfJOcx1FxTTrVikF84fEfoCaXEYvH/W5waXVV2wR//9h/kO67Mt+MiAmDXSqfbpn9qPUiRhCXtga70npEH9++MaP7r3jzO+B38MFZnQ3pmjhSW3BF9oFNaqVqn+8XP4wMPKeBFib3jBD9nExVo3S8zPimzB1WLsE3nTrdhsfbqIp7mXv7D0iYVReCogfE3nZ5vt+N+5Dn+SZAfBqLUuJQCWwRzfyvMgVZCa9ZSHpiQPacpZLg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB5154.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(366004)(136003)(346002)(39860400002)(376002)(396003)(478600001)(2906002)(38100700002)(6486002)(66946007)(4326008)(8936002)(66446008)(91956017)(921005)(31686004)(66556008)(66476007)(76116006)(7416002)(38070700005)(5660300002)(122000001)(53546011)(86362001)(186003)(6512007)(71200400001)(6506007)(26005)(2616005)(41300700001)(54906003)(316002)(64756008)(31696002)(110136005)(8676002)(36756003)(83380400001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+x-microsoft-antispam-message-info: KxGKAeM0XZbcTB6q7jDqnI3a3ndYyGo4r6mezeHymPQFCU0fw291G7fnuhiFtWB4b38Mah5Jaz+X/gs6jGNntFAgs2uleajPbdo0zclw9u7vvDklLCcUInZ3xlBVyrWD1QWHtplafm3iKe7K0dEyNplXSgDzYVZ6FOMDyh/hL8PLCkTi6Mz7P+22fBx02jKn6V9iejuH2l4o3BQqB3BJ4jXVz7tucZixmyRTEkdKryq1D6eKKlmi0TSE4zv17rCVF+ZEaUvOBARjXr7r9Ayxtr4DRpELTH6WS2yvoJ7q+hnlnKvwe3LZaagmRGNk3/Bgbc2Bs2LAcZa/GlkxzNk/oSQ2+TYuWxw2wBqXe9CdV5xlxJr/znY+wN4PBjpJkX4ndpJixosDkyxs5vQ/8D08j6arIBwA+DVAAdLJ7xO3VLNrMG7qMdzBuvTGRqQLhx8XtAQ5e6ZhwLbiPk7vWLJ9hnrYwoB+xyKhljc5aXcdc2k4AR3u4xgHDtRRkyhxw3VHnG3s5TU6Zjsp5xBKGpeKAju4naBazHBR6oIoyTKBT0fjDU1f3zYPSQQmL0mAuyaY+zZYSL4JgM4loZ4cVTAjk3aDNDjKCwc6QTwpmuTkiK1O0ZNOBR5AODCmhMs/wIR6U7r0+ExQ1PUZI/WUuLDkcqP1V5Zn0947z5Ysg1KZcRKNSd4SbqinnuWx2Mv35aCQAQ/1+LXOnE4UkMEVsKeftqz0IUD0W5mt1Ev+fW40a7DUOzkYyN/qiURZX8cAusWoLXluMJ9HkH6GuW3GcvifBc4EOy0+XgGCDfS0Jq+1f5NM4xKJCEe4HbaBnV4PX3O0ex6n8BXse6+CoDy6RfmjGVwXH5GJdvFOQZhhLeTcil8C1HmvNczEGvGW1U8iPHD/NHrJDmIgRnNNIYZe1AkOk1/3ji//Nokpe7iMxYMnQz57DKFoYw02daGvSJg5cKs9
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB5154.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(39860400002)(366004)(346002)(376002)(396003)(136003)(41300700001)(26005)(921005)(2906002)(53546011)(83380400001)(6512007)(2616005)(38070700005)(38100700002)(122000001)(6506007)(316002)(6486002)(186003)(71200400001)(31686004)(91956017)(66476007)(64756008)(4326008)(8676002)(36756003)(66446008)(66946007)(76116006)(66556008)(8936002)(110136005)(54906003)(86362001)(478600001)(5660300002)(7416002)(31696002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Uk1LUHZvTUNaRUtQdDRTK2p4WW5oRUZsQnJZNlB6UWt6bnlEYVFSZkNPRzkz?=
- =?utf-8?B?U1RhaDVaMlVNQ3NCaFNaT25sc0t1NkdNU2xnWGlyTGJoUlBGWjAvSk5MeHhv?=
- =?utf-8?B?MzJJOGs2bndLVDQ4elN0bElHSWV0SDk2LzVWODNBN21aNHY2WUJJTWdUYW1y?=
- =?utf-8?B?a3J0UGE2Mis5QWlHZG0vSnNWNmJCUHdDSkRjTlh1ZVZ4bHdXK3ZwcWJqTHhm?=
- =?utf-8?B?eitLU09peEFmdVBxdHA0K3pTY3M0SERlZnVFZ3dsTnJ5ZTI4Y1BXUERQYUJt?=
- =?utf-8?B?QnF0cExUS2oxc1g4eHhJRjFXNkZxY25WV1NJV0lHUEE3bXlRYnkxUTJLUVVI?=
- =?utf-8?B?RzFzeENrSEFRQXUrVzB2ekVhem1MckhGTDRoeE80b1k2eEdHWDVmcTE4d1Zo?=
- =?utf-8?B?QUg2K2Fxc3M2dk5TOGNzY2xrT3JmZG0rc0tTems0aEFaVFNJVTZCekZmT0pu?=
- =?utf-8?B?TlRKbE9UaDZvOERjTVhDSWpZY0VSU0NUL3AxLzVpb0xHWUY0b1ZEZ1NDRGhQ?=
- =?utf-8?B?Q2k0alJud3lZUjMzZVpYOWtaTnNISVovOHJ3SHUxazFNME5iM1Z6bUw2QjFx?=
- =?utf-8?B?R0g5cUJjTTRJQTRacXk0TVkxcnovRG9kR2hMbGswYSs1WERZWGRiWFJsMzVa?=
- =?utf-8?B?RzhqMXpsWDhnZW83aHJrT2grcmtLaUNOOG9TT09lN25xQ2pVV0ZBaFkza0FU?=
- =?utf-8?B?cjVCWmd6TlRNM3haNWxjRldKK29kN2VYUXlkS0ZaUGZPOEs5anp4ekQ4ODBH?=
- =?utf-8?B?MitSakNKQUVpcklnY1FhZ1RPdGU4MEpPQXpqN2ZzSVkrOFZQZURnc21hZ2J3?=
- =?utf-8?B?b2UvaTJwVkIxejBtTzFta0k5UVp0dkV0c2xMWkYvYllpelRLTUR3dDdQeEc2?=
- =?utf-8?B?a0tVRlh3OU5md1F5eVZZa0EyUmpvNDhOMjh6QjlWUkZmcGZqOGd3MnVFVGw5?=
- =?utf-8?B?OUNUdHFGVVdtcEtrVVJpWEdDTnNtdk9mc05ERGZwZDg2WktydDRvTlZEanhz?=
- =?utf-8?B?V2xtWjY1ZVhZbno2cldFYmdUdWhxMmMwaVdrRnYzMkZveUZTbk12Szd6YjFE?=
- =?utf-8?B?dStsWEpkR3hDdHRzUHZveWdrSW92QUpFVkxQTWpLZGhRV3h4TkNyRndqZHV6?=
- =?utf-8?B?RlFRN3F3c2RnbHowbnBwNWs4OUR2MzhBRmgxVEpmV2RtbkZlVkpsVFpOTmxt?=
- =?utf-8?B?eEN6cDBhNkwvMjViTGNEbm40a2IxNDBXSWFhUC9BdmlVWEZ3Q0dFeEh6RkZx?=
- =?utf-8?B?eVVIdXk4MzNJL3g3ajU5eGRtRTBuRWJyMFhpTVkweno5MVhtM3Y3c1ZHaFhW?=
- =?utf-8?B?TmF0WlNkd3ZzcUZqYVRsd1gzQi9iNUQvbG9Fc2Y2WlhSbEpZdEd2dTlSWk5n?=
- =?utf-8?B?aENwUEwyWjJaSEFiYUt5VGFLejdDSlNsTHV5ZDRyLzNJc1FYSC91WURXbWdR?=
- =?utf-8?B?SGpYdVJuWFpBOWZxVkJZWW1wcHppMTJ2M1JMekhPTXlPSDVha1M2eFRpWTZo?=
- =?utf-8?B?eWcvSktBeHNWNWY5NXdJeUlVWUt1dVNBQWE3WHEwTlBza0hhalNySS9XQnJT?=
- =?utf-8?B?Y3p3ankzQU1YeWxNN0R5cVBjUldBWERJQWgyOXE3L2FwT21MTy9XTFBuQmkw?=
- =?utf-8?B?MzhKNmthc1dDalVuR3czUWFKdkJnMVNWT05WbXNSYm5XTFVNOU4xME1zbTRW?=
- =?utf-8?B?ZnBMemovZFdFREZkWHMyMURHemxnejkwWGdlWlJBOG16VFBZci9LVUF4Rm5W?=
- =?utf-8?B?RjBCQW9FTWI2SVl0QUtSVkVXTVh5cjN5VCt6V0hyNVdCdXBpdVBXYzg3aGNS?=
- =?utf-8?B?dG0rTFJOTlB1U2VuM0Vmd2cxRmptbWVoc1VrRXBHZWxSak0yYklJby9WQ2w4?=
- =?utf-8?B?b29RSnpXbUpUMUxxMzlUMTFEbFZieVp6YnRtMklyTVMyMEp5WHdyWnpYdC9a?=
- =?utf-8?B?UjEvczhGb2pycjFjYjJSbUViWkk4a01YTUxKckFlNWVuY3Rud3Nld2NPQld5?=
- =?utf-8?B?dENFWEpIak95NWIvSjE1M1g4Tm1QcWhRVzJLRWJkZ3JNT3dZOXl4QmpZNkJY?=
- =?utf-8?B?NXAwa0FkN1M4OHI5cTdMajVOUjNXQ2txV0dmZEpKdXhSZVphWXNySUYwNGls?=
- =?utf-8?Q?rJLqXwR649WjzFMxZ/DxuBnv3?=
-Content-ID: <FBB387BA053DB04AA7A26ED5C50FD5D5@namprd11.prod.outlook.com>
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?VnJhMGw0bHdEYytRWDVJUnVXKzlXRDk5d3ZVTXhjeVkrUG9JWExueDlmYldm?=
+ =?utf-8?B?TXRKb0c4NlE0K1BSb0hWKzF5dDJiZk9UNUNIRUxXTkdBdStmd2xiNG1oV1l0?=
+ =?utf-8?B?anh5SGhoTEZpUW5PbHdtVGpFRnEzU3p3eVlKT1RoZkR0UnI3QmFPQmlvbE9G?=
+ =?utf-8?B?TXpQTHFUdithMlIvZS9GQW9yWkpsQm43ZlNLWHlFV2ZpR0FxNUpKV1lXeHdu?=
+ =?utf-8?B?bW0wS0ptWXZJZDdiNkZRVmZKemQwTm5YMmNQL0M1UDZmMVRac0U4MkxzaXNK?=
+ =?utf-8?B?emlVRnJRaDdycTdWdCtOQUtndkJRYnhVRzRUNEUrYkc1Wk9URiswczhCRDQ0?=
+ =?utf-8?B?bmlEVDZhY2VUcncxeHoyaU4rdC85VDByNE5nNXVtR2dSQkladGEvUDlmelFv?=
+ =?utf-8?B?YlpQQm1CR3FZZlBKMHRNelVhcy9EL3Rzb2dVQWFTU2Jia2c5ODMvUjByd244?=
+ =?utf-8?B?OFJoanhONXdJV0R1aC90QlNQdGh3Y3BiQURqQTNZTDBEdTJSNlFGcVdJbE45?=
+ =?utf-8?B?bnVxT0RsL1VJZEJPaGNWeDNadmNBaEdhOEE5amRzWVoyeUZUc2J0OXdNZzEx?=
+ =?utf-8?B?VVlVeG44T2NuQ1ByN0pmdVNubmEyQ0lwclU2MW5WMFBXT2dHNFhnVlU0Vyth?=
+ =?utf-8?B?M2k4cVlUSS93Y3c4Y01aclpIV0NuUk1RSmptV1hJTTIvM0F5ZG42MnhxeFQr?=
+ =?utf-8?B?cXd5NGgwdm53d1BhMVV0Ry9Va004R3ovNmxxWkR2MTh5V0s4bHZ5V1Bvcm1G?=
+ =?utf-8?B?Y1FuTS95dnYzUVk1NnYzQk9Ybkc1L3JIRDJLUDJ4K1VxU1pQZnN6WFZHbll6?=
+ =?utf-8?B?UXNVVkpHR3RTT2RWVHlOUkt1NDZES2kzSUV2VllWWmVqZGE4TUFiRHZXd0s1?=
+ =?utf-8?B?bzlsaWVzdmI3UHNMOXg1SStaS0ZUWlRRV0c0VXdjaTNGeXRFakRxbU1DanRX?=
+ =?utf-8?B?dUVNN3NvWmliRU5tdDVsU1NINGxKbFF4VXhRSytjWTE5MGNNRTI2dEx4Nk1G?=
+ =?utf-8?B?TU55dTYxK3hIdmVOVjVjUkdYekkwb3lMa1phVXlFZ0c3THJ3UVFINmxOZ1Ny?=
+ =?utf-8?B?TkFRbmVxd2UrdnlKNkNnalhFVGI4V1hPSVgvMzNmc1NIMmFrY2lPY1dJalRY?=
+ =?utf-8?B?c1ZFczZKZTlZRnlCL1dQWDIvT1BqSEJ0ZEV1V1NMOEsrR01XMjU4cXdBeVJ4?=
+ =?utf-8?B?TSs0NEgwZ3lKcTFpK094V0thWXVKME4xbG9GRWtoZkhZblV4QWpkczBjRmFj?=
+ =?utf-8?B?YWxPOUFWdDRsMTBoL0xkZlJpanh4MDk3dlZnT0NNSHRoTm5NNmdBZkloclJS?=
+ =?utf-8?B?WVdScTZIU3dpbEt6K1J5T0g0blE1KzVONVlLcU04TkFjd1JMTTF2RnNiT3c0?=
+ =?utf-8?B?WEgwQy9SYUFjL05KMlBtM0xmeWU5RE1lZUlmNXRwVmZqcDVDMG16bDY3a3pX?=
+ =?utf-8?B?aG40OTZIYlF2Z1cwUExSVEtKdncxVGpDdjRYQU5wRUluc2xlOThkMlQzNFVK?=
+ =?utf-8?B?bnhRMzJtWEtQQkRmdUNacHlkSndROTZWK2dHL2ZrSXRPcGpXaWRzblhiWi84?=
+ =?utf-8?B?MkhaOUVWdFFaNTZSc2o5STIzdWJERkE0N0U2ek1zYlRBa3N4VmZMMVdkeXRH?=
+ =?utf-8?B?YzBJelgzeW1oK2gvSGlLTHkxdytuNUtaSHBSdW1Tcm11a1hIQS9ZQUZ6UGlm?=
+ =?utf-8?B?WVlsVENWSTYreU1rcVJoZFVpSVpGYmVIM0llQVdLLzZLTkxrZDFUSTB2REY2?=
+ =?utf-8?B?VW1MMkR3dGhGMzJ1YWdUYkJBYzdvMG1QMTFHZzJJZzVKVUowcUdac01QcllY?=
+ =?utf-8?B?Y3dNdk5ZZURpZCtMWGVJdVJ4dHdKZWpObHMyTTlsKzIvUkFaRHh4MXFZUnp5?=
+ =?utf-8?B?UVdZajdVTU1kR1hLQW1xVVFjMXRWcG4xQnd5YSs1dllmT3dya0RlZjVzalN6?=
+ =?utf-8?B?anFJWHZ4MlQ5ODZZNUFINzBERXZWVFNFemdySjN3UUNETXRZV0x5RGF1NGJm?=
+ =?utf-8?B?UTl6Snoyc0pVZzkxSUdjNTRkb3NKNDE1blBleHlVeHRwZmhOSUlhSG9rYnhC?=
+ =?utf-8?B?YWVNR2grYng2YUFjMFVYc05EdXlDaVE5T2xGR3NQS1pXaHp1b0hyaTZLU283?=
+ =?utf-8?Q?MHOnDhZFMkXGuPwSmp3clj+38?=
+Content-ID: <414BA810584B9C4793C814D331FD7416@namprd11.prod.outlook.com>
 MIME-Version: 1.0
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB5154.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0eed9c1f-99bd-413f-f2c3-08da7a4ba096
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Aug 2022 21:10:46.1104
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7e2267a1-f939-4957-8b94-08da7a4bf361
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Aug 2022 21:13:05.0105
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Tg/hzpn6CCkO8n2jOU5led7dr1MoPN+O1SUqOnWGfahJor74GqD4kGM59e3SUaScMcXT/l/h9yNur5tYE+kZrhjWQ9Zqn0nxurDnUOQKmh8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1101MB2293
+X-MS-Exchange-CrossTenant-userprincipalname: RC3v01IqREVqrRcocYGw4P/w8CEyRvFsowZjqUvyhAp75BhFQ0O1LcYtsERHjx6Eqqau3iKMppe/cya4OaxN70I0K2DkvVuUm7ZvW6Dj0KA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB5262
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220809_141103_589367_6115FC51 
-X-CRM114-Status: GOOD (  19.02  )
+X-CRM114-CacheID: sfid-20220809_141315_978367_4051B63A 
+X-CRM114-Status: GOOD (  12.56  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -181,83 +179,101 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 On 02/08/2022 13:18, Xianting Tian wrote:
-> [PATCH V5 1/6] RISC-V: use __smp_processor_id() instead of smp_processor_id()
-
-FWIW this subject is very non specific -  its not easy to tell what
-it's about. How about something something like:
-
-RISC-V: kexec: fix use of smp_processor_id() in preemptible context
-
-
-> Use __smp_processor_id() to avoid check the preemption context when
-> CONFIG_DEBUG_PREEMPT enabled, as we will enter crash kernel and no
-> return.
+> When use 'echo c > /proc/sysrq-trigger' to trigger kdump, riscv_crash_save_regs()
+> will be called to save regs to vmcore, we found "epc" value 00ffffffa5537400
+> is not a valid kernel virtual address, but is a user virtual address. Other
+> regs(eg, ra, sp, gp...) are correct kernel virtual address.
+> Actually 0x00ffffffb0dd9400 is the user mode PC of 'PID: 113 Comm: sh', which
+> is saved in the task's stack.
 > 
-> Without the patch,
-> [  103.781044] sysrq: Trigger a crash
-> [  103.784625] Kernel panic - not syncing: sysrq triggered crash
-> [  103.837634] CPU1: off
-> [  103.889668] CPU2: off
-> [  103.933479] CPU3: off
-> [  103.939424] Starting crashdump kernel...
-> [  103.943442] BUG: using smp_processor_id() in preemptible [00000000] code: sh/346
-> [  103.950884] caller is debug_smp_processor_id+0x1c/0x26
-> [  103.956051] CPU: 0 PID: 346 Comm: sh Kdump: loaded Not tainted 5.10.113-00002-gce03f03bf4ec-dirty #149
-> [  103.965355] Call Trace:
-> [  103.967805] [<ffffffe00020372a>] walk_stackframe+0x0/0xa2
-> [  103.973206] [<ffffffe000bcf1f4>] show_stack+0x32/0x3e
-> [  103.978258] [<ffffffe000bd382a>] dump_stack_lvl+0x72/0x8e
-> [  103.983655] [<ffffffe000bd385a>] dump_stack+0x14/0x1c
-> [  103.988705] [<ffffffe000bdc8fe>] check_preemption_disabled+0x9e/0xaa
-> [  103.995057] [<ffffffe000bdc926>] debug_smp_processor_id+0x1c/0x26
-> [  104.001150] [<ffffffe000206c64>] machine_kexec+0x22/0xd0
-> [  104.006463] [<ffffffe000291a7e>] __crash_kexec+0x6a/0xa4
-> [  104.011774] [<ffffffe000bcf3fa>] panic+0xfc/0x2b0
-> [  104.016480] [<ffffffe000656ca4>] sysrq_reset_seq_param_set+0x0/0x70
-> [  104.022745] [<ffffffe000657310>] __handle_sysrq+0x8c/0x154
-> [  104.028229] [<ffffffe0006577e8>] write_sysrq_trigger+0x5a/0x6a
-> [  104.034061] [<ffffffe0003d90e0>] proc_reg_write+0x58/0xd4
-> [  104.039459] [<ffffffe00036cff4>] vfs_write+0x7e/0x254
-> [  104.044509] [<ffffffe00036d2f6>] ksys_write+0x58/0xbe
-> [  104.049558] [<ffffffe00036d36a>] sys_write+0xe/0x16
-> [  104.054434] [<ffffffe000201b9a>] ret_from_syscall+0x0/0x2
-> [  104.067863] Will call new kernel at ecc00000 from hart id 0
-> [  104.074939] FDT image at fc5ee000
-> [  104.079523] Bye...
+> [   21.201701] CPU: 0 PID: 113 Comm: sh Kdump: loaded Not tainted 5.18.9 #45
+> [   21.201979] Hardware name: riscv-virtio,qemu (DT)
+> [   21.202160] epc : 00ffffffa5537400 ra : ffffffff80088640 sp : ff20000010333b90
+> [   21.202435]  gp : ffffffff810dde38 tp : ff6000000226c200 t0 : ffffffff8032be7c
+> [   21.202707]  t1 : 0720072007200720 t2 : 30203a7375746174 s0 : ff20000010333cf0
+> [   21.202973]  s1 : 0000000000000000 a0 : ff20000010333b98 a1 : 0000000000000001
+> [   21.203243]  a2 : 0000000000000010 a3 : 0000000000000000 a4 : 28c8f0aeffea4e00
+> [   21.203519]  a5 : 28c8f0aeffea4e00 a6 : 0000000000000009 a7 : ffffffff8035c9b8
+> [   21.203794]  s2 : ffffffff810df0a8 s3 : ffffffff810df718 s4 : ff20000010333b98
+> [   21.204062]  s5 : 0000000000000000 s6 : 0000000000000007 s7 : ffffffff80c4a468
+> [   21.204331]  s8 : 00ffffffef451410 s9 : 0000000000000007 s10: 00aaaaaac0510700
+> [   21.204606]  s11: 0000000000000001 t3 : ff60000001218f00 t4 : ff60000001218f00
+> [   21.204876]  t5 : ff60000001218000 t6 : ff200000103338b8
+> [   21.205079] status: 0000000200000020 badaddr: 0000000000000000 cause: 0000000000000008
 > 
-> With the patch we can got clear output,
-> [   67.740553] sysrq: Trigger a crash
-> [   67.744166] Kernel panic - not syncing: sysrq triggered crash
-> [   67.809123] CPU1: off
-> [   67.865210] CPU2: off
-> [   67.909075] CPU3: off
-> [   67.919123] Starting crashdump kernel...
-> [   67.924900] Will call new kernel at ecc00000 from hart id 0
-> [   67.932045] FDT image at fc5ee000
-> [   67.935560] Bye...
+> With the incorrect PC, the backtrace showed by crash tool as below, the first
+> stack frame is abnormal,
 > 
-> Fixes: 0e105f1d0037 ("riscv: use hart id instead of cpu id on machine_kexec")
-> Reviewed-by: Guo Ren <guoren@kernel.org>
-> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-> Reviewed-by: Atish Patra <atishp@rivosinc.com>
+> crash> bt
+> PID: 113      TASK: ff60000002269600  CPU: 0    COMMAND: "sh"
+>  #0 [ff2000001039bb90] __efistub_.Ldebug_info0 at 00ffffffa5537400 <-- Abnormal
+>  #1 [ff2000001039bcf0] panic at ffffffff806578ba
+>  #2 [ff2000001039bd50] sysrq_reset_seq_param_set at ffffffff8038c030
+>  #3 [ff2000001039bda0] __handle_sysrq at ffffffff8038c5f8
+>  #4 [ff2000001039be00] write_sysrq_trigger at ffffffff8038cad8
+>  #5 [ff2000001039be20] proc_reg_write at ffffffff801b7edc
+>  #6 [ff2000001039be40] vfs_write at ffffffff80152ba6
+>  #7 [ff2000001039be80] ksys_write at ffffffff80152ece
+>  #8 [ff2000001039bed0] sys_write at ffffffff80152f46
+> 
+> With the patch, we can get current kernel mode PC, the output as below,
+> 
+> [   17.607658] CPU: 0 PID: 113 Comm: sh Kdump: loaded Not tainted 5.18.9 #42
+> [   17.607937] Hardware name: riscv-virtio,qemu (DT)
+> [   17.608150] epc : ffffffff800078f8 ra : ffffffff8008862c sp : ff20000010333b90
+> [   17.608441]  gp : ffffffff810dde38 tp : ff6000000226c200 t0 : ffffffff8032be68
+> [   17.608741]  t1 : 0720072007200720 t2 : 666666666666663c s0 : ff20000010333cf0
+> [   17.609025]  s1 : 0000000000000000 a0 : ff20000010333b98 a1 : 0000000000000001
+> [   17.609320]  a2 : 0000000000000010 a3 : 0000000000000000 a4 : 0000000000000000
+> [   17.609601]  a5 : ff60000001c78000 a6 : 000000000000003c a7 : ffffffff8035c9a4
+> [   17.609894]  s2 : ffffffff810df0a8 s3 : ffffffff810df718 s4 : ff20000010333b98
+> [   17.610186]  s5 : 0000000000000000 s6 : 0000000000000007 s7 : ffffffff80c4a468
+> [   17.610469]  s8 : 00ffffffca281410 s9 : 0000000000000007 s10: 00aaaaaab5bb6700
+> [   17.610755]  s11: 0000000000000001 t3 : ff60000001218f00 t4 : ff60000001218f00
+> [   17.611041]  t5 : ff60000001218000 t6 : ff20000010333988
+> [   17.611255] status: 0000000200000020 badaddr: 0000000000000000 cause: 0000000000000008
+> 
+> With the correct PC, the backtrace showed by crash tool as below,
+> 
+> crash> bt
+> PID: 113      TASK: ff6000000226c200  CPU: 0    COMMAND: "sh"
+>  #0 [ff20000010333b90] riscv_crash_save_regs at ffffffff800078f8 <--- Normal
+>  #1 [ff20000010333cf0] panic at ffffffff806578c6
+>  #2 [ff20000010333d50] sysrq_reset_seq_param_set at ffffffff8038c03c
+>  #3 [ff20000010333da0] __handle_sysrq at ffffffff8038c604
+>  #4 [ff20000010333e00] write_sysrq_trigger at ffffffff8038cae4
+>  #5 [ff20000010333e20] proc_reg_write at ffffffff801b7ee8
+>  #6 [ff20000010333e40] vfs_write at ffffffff80152bb2
+>  #7 [ff20000010333e80] ksys_write at ffffffff80152eda
+>  #8 [ff20000010333ed0] sys_write at ffffffff80152f52
+> 
+> Fixes: e53d28180d4d ("RISC-V: Add kdump support")
+
+This patch is also a fix, but not at the start of the series which
+(I think) makes it less likely to be picked up for an auto-backport.
+
+As it doesn't seem to depend on the prior patches, can you move this
+up to 2/6 in the series?
+
+> Co-developed-by: Guo Ren <guoren@kernel.org>
 > Signed-off-by: Xianting Tian <xianting.tian@linux.alibaba.com>
 > ---
->  arch/riscv/kernel/machine_kexec.c | 2 +-
+>  arch/riscv/kernel/crash_save_regs.S | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/riscv/kernel/machine_kexec.c b/arch/riscv/kernel/machine_kexec.c
-> index df8e24559035..86d1b5f9dfb5 100644
-> --- a/arch/riscv/kernel/machine_kexec.c
-> +++ b/arch/riscv/kernel/machine_kexec.c
-> @@ -171,7 +171,7 @@ machine_kexec(struct kimage *image)
->  	struct kimage_arch *internal = &image->arch;
->  	unsigned long jump_addr = (unsigned long) image->start;
->  	unsigned long first_ind_entry = (unsigned long) &image->head;
-> -	unsigned long this_cpu_id = smp_processor_id();
-> +	unsigned long this_cpu_id = __smp_processor_id();
->  	unsigned long this_hart_id = cpuid_to_hartid_map(this_cpu_id);
->  	unsigned long fdt_addr = internal->fdt_addr;
->  	void *control_code_buffer = page_address(image->control_code_page);
+> diff --git a/arch/riscv/kernel/crash_save_regs.S b/arch/riscv/kernel/crash_save_regs.S
+> index 7832fb763aba..b2a1908c0463 100644
+> --- a/arch/riscv/kernel/crash_save_regs.S
+> +++ b/arch/riscv/kernel/crash_save_regs.S
+> @@ -44,7 +44,7 @@ SYM_CODE_START(riscv_crash_save_regs)
+>  	REG_S t6,  PT_T6(a0)	/* x31 */
+>  
+>  	csrr t1, CSR_STATUS
+> -	csrr t2, CSR_EPC
+> +	auipc t2, 0x0
+>  	csrr t3, CSR_TVAL
+>  	csrr t4, CSR_CAUSE
+>  
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
