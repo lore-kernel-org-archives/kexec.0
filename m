@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4684DC25B07
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0156AC25B0C
 	for <kexec@archiver.kernel.org>; Thu, 11 Aug 2022 07:42:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:MIME-Version:List-Subscribe:List-Help:
-	List-Post:List-Archive:List-Unsubscribe:List-Id:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=5VklAGSaYdVYvKIrYeK6k2fyPJOBpvnBsvVkKe6hlxQ=; b=pXiWlCmGT8Nutc
-	FuHpcfpVkKG4Gr6qqcMeq5JAQl3uln1OojbXxo7d6w+/KHpngtXuy7h9l1G9jeCmLV/wjycmG/ttC
-	/euxkbfhauBHHDuANBCzd1GwnxDIDJM9/QFlQ9kaR91h6EwnjgUFC9xNXuxSnAiWSmjSYYY0emnNw
-	eGeyY3Tq3Bf6bIIjQ9HZG7T/ciRL2i72Uyr7ZYwfSh4InTV765+ZPToK500JBTPmdSnG7Cg2CXBHa
-	S4wAGiNj5wRePt1DGAyUwJh1vENpIHMaQD2X8Xz5kiHd6HLBArRHcLbAcSL0A5acec8Sh78jabW28
-	erjNU9avvfHnWMeRrnCw==;
+	List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:Subject:Cc:To
+	:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=LSvdmI/KunnoXRzDH3wSW7z9EQXY518uSss4ayxaLMM=; b=R3HZrdrk7eP1/X
+	lNDQpaOBzG8h25ywGLu6PNO3TzzjbhEYf85bpcfwTAhzys5zunIBcGFZki2g2nwG8vJN4VZ0OLo37
+	VkpwWCaAkunXJe3K07JEbEac19wRchh7YNTXxVbSmtGMbUjlxm06p11O69TeBJIfW6MSDgGxZyFv1
+	SlwUI10PitmEjYAgeJ7c6Mc47BM23pvsGpgYTt6OReC6HeY5aaCHJFDxyQAxgKxLmiL9Tu5KX8NpW
+	xHaHyLRh/ovkONQ/tQ5HB1fqgYMlRJFVjch2dcnl2OR5flI8LHwrGPh8iBdof/qrbT3tNAWEsNRhC
+	iTaLZbFzHa1uL/KGf11w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oM2pa-009lsW-6H; Thu, 11 Aug 2022 07:42:14 +0000
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54])
+	id 1oM2pc-009lzz-Tj; Thu, 11 Aug 2022 07:42:17 +0000
+Received: from out199-9.us.a.mail.aliyun.com ([47.90.199.9])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oM2pN-009lcS-7G; Thu, 11 Aug 2022 07:42:03 +0000
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=xianting.tian@linux.alibaba.com;NM=1;PH=DS;RN=23;SR=0;TI=SMTPD_---0VLyMVg9_1660203714;
-Received: from localhost(mailfrom:xianting.tian@linux.alibaba.com fp:SMTPD_---0VLyMVg9_1660203714)
+	id 1oM2pN-009lb7-AP; Thu, 11 Aug 2022 07:42:03 +0000
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R301e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=xianting.tian@linux.alibaba.com;NM=1;PH=DS;RN=23;SR=0;TI=SMTPD_---0VLyDAKe_1660203712;
+Received: from localhost(mailfrom:xianting.tian@linux.alibaba.com fp:SMTPD_---0VLyDAKe_1660203712)
           by smtp.aliyun-inc.com;
-          Thu, 11 Aug 2022 15:41:55 +0800
+          Thu, 11 Aug 2022 15:41:53 +0800
 From: Xianting Tian <xianting.tian@linux.alibaba.com>
 To: paul.walmsley@sifive.com,
 	palmer@dabbelt.com,
@@ -52,16 +52,13 @@ Cc: kexec@lists.infradead.org,
 	hschauhan@nulltrace.org,
 	yixun.lan@gmail.com,
 	Xianting Tian <xianting.tian@linux.alibaba.com>
-Subject: [PATCH V6 1/6] RISC-V: kexec: Fixup use of smp_processor_id() in preemptible context
-Date: Thu, 11 Aug 2022 15:41:45 +0800
-Message-Id: <20220811074150.3020189-2-xianting.tian@linux.alibaba.com>
+Subject: [PATCH V6 0/6] RISC-V fixups to work with crash tool
+Date: Thu, 11 Aug 2022 15:41:44 +0800
+Message-Id: <20220811074150.3020189-1-xianting.tian@linux.alibaba.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220811074150.3020189-1-xianting.tian@linux.alibaba.com>
-References: <20220811074150.3020189-1-xianting.tian@linux.alibaba.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220811_004201_511829_7AEB756D 
-X-CRM114-Status: UNSURE (   8.80  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20220811_004201_654530_F4D5212B 
+X-CRM114-Status: GOOD (  12.68  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,75 +76,68 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Use __smp_processor_id() to avoid check the preemption context when
-CONFIG_DEBUG_PREEMPT enabled, as we will enter crash kernel and no
-return.
+I ever sent the patch 1 in the link:
+https://patchwork.kernel.org/project/linux-riscv/patch/20220708073150.352830-3-xianting.tian@linux.alibaba.com/
+And patch 2,3 in the link:
+https://patchwork.kernel.org/project/linux-riscv/patch/20220714113300.367854-2-xianting.tian@linux.alibaba.com/
+https://patchwork.kernel.org/project/linux-riscv/patch/20220714113300.367854-3-xianting.tian@linux.alibaba.com/
 
-Without the patch,
-[  103.781044] sysrq: Trigger a crash
-[  103.784625] Kernel panic - not syncing: sysrq triggered crash
-[  103.837634] CPU1: off
-[  103.889668] CPU2: off
-[  103.933479] CPU3: off
-[  103.939424] Starting crashdump kernel...
-[  103.943442] BUG: using smp_processor_id() in preemptible [00000000] code: sh/346
-[  103.950884] caller is debug_smp_processor_id+0x1c/0x26
-[  103.956051] CPU: 0 PID: 346 Comm: sh Kdump: loaded Not tainted 5.10.113-00002-gce03f03bf4ec-dirty #149
-[  103.965355] Call Trace:
-[  103.967805] [<ffffffe00020372a>] walk_stackframe+0x0/0xa2
-[  103.973206] [<ffffffe000bcf1f4>] show_stack+0x32/0x3e
-[  103.978258] [<ffffffe000bd382a>] dump_stack_lvl+0x72/0x8e
-[  103.983655] [<ffffffe000bd385a>] dump_stack+0x14/0x1c
-[  103.988705] [<ffffffe000bdc8fe>] check_preemption_disabled+0x9e/0xaa
-[  103.995057] [<ffffffe000bdc926>] debug_smp_processor_id+0x1c/0x26
-[  104.001150] [<ffffffe000206c64>] machine_kexec+0x22/0xd0
-[  104.006463] [<ffffffe000291a7e>] __crash_kexec+0x6a/0xa4
-[  104.011774] [<ffffffe000bcf3fa>] panic+0xfc/0x2b0
-[  104.016480] [<ffffffe000656ca4>] sysrq_reset_seq_param_set+0x0/0x70
-[  104.022745] [<ffffffe000657310>] __handle_sysrq+0x8c/0x154
-[  104.028229] [<ffffffe0006577e8>] write_sysrq_trigger+0x5a/0x6a
-[  104.034061] [<ffffffe0003d90e0>] proc_reg_write+0x58/0xd4
-[  104.039459] [<ffffffe00036cff4>] vfs_write+0x7e/0x254
-[  104.044509] [<ffffffe00036d2f6>] ksys_write+0x58/0xbe
-[  104.049558] [<ffffffe00036d36a>] sys_write+0xe/0x16
-[  104.054434] [<ffffffe000201b9a>] ret_from_syscall+0x0/0x2
-[  104.067863] Will call new kernel at ecc00000 from hart id 0
-[  104.074939] FDT image at fc5ee000
-[  104.079523] Bye...
+This patch set just put these patches together, and with three new patch 4, 5, 6.
+these six patches are the fixups for machine_kexec, kernel mode PC for vmcore
+and improvements for vmcoreinfo, memory layout dump and fixup schedule out issue
+in machine_crash_shutdown().
 
-With the patch we can got clear output,
-[   67.740553] sysrq: Trigger a crash
-[   67.744166] Kernel panic - not syncing: sysrq triggered crash
-[   67.809123] CPU1: off
-[   67.865210] CPU2: off
-[   67.909075] CPU3: off
-[   67.919123] Starting crashdump kernel...
-[   67.924900] Will call new kernel at ecc00000 from hart id 0
-[   67.932045] FDT image at fc5ee000
-[   67.935560] Bye...
+The main changes in the six patchs as below,
+Patch 1: Fixup use of smp_processor_id() in preemptible context, to cleanup
+         the console prints.
+Patch 2: Fixup to get correct kernel mode PC for kernel mode regs for vmcore.
+Patch 3: Fixup schedule out issue in machine_crash_shutdown()
+Patch 4: Add modules to virtual kernel memory layout dump.
+Patch 5: Add VM layout, va bits, ram base to vmcoreinfo, which can simplify
+         the development of crash tool as ARM64 already did
+         (arch/arm64/kernel/crash_core.c).
+Patch 6: Updates vmcoreinfo.rst for vmcoreinfo export for RISCV64.
 
-Fixes: 0e105f1d0037 ("riscv: use hart id instead of cpu id on machine_kexec")
-Reviewed-by: Guo Ren <guoren@kernel.org>
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-Reviewed-by: Atish Patra <atishp@rivosinc.com>
-Signed-off-by: Xianting Tian <xianting.tian@linux.alibaba.com>
----
- arch/riscv/kernel/machine_kexec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+With these six patches(patch 2 is must), crash tool can work well to analyze
+a vmcore. The patches for crash tool for RISCV64 is in the link:
+https://lore.kernel.org/linux-riscv/20220801043040.2003264-1-xianting.tian@linux.alibaba.com/
 
-diff --git a/arch/riscv/kernel/machine_kexec.c b/arch/riscv/kernel/machine_kexec.c
-index df8e24559035..86d1b5f9dfb5 100644
---- a/arch/riscv/kernel/machine_kexec.c
-+++ b/arch/riscv/kernel/machine_kexec.c
-@@ -171,7 +171,7 @@ machine_kexec(struct kimage *image)
- 	struct kimage_arch *internal = &image->arch;
- 	unsigned long jump_addr = (unsigned long) image->start;
- 	unsigned long first_ind_entry = (unsigned long) &image->head;
--	unsigned long this_cpu_id = smp_processor_id();
-+	unsigned long this_cpu_id = __smp_processor_id();
- 	unsigned long this_hart_id = cpuid_to_hartid_map(this_cpu_id);
- 	unsigned long fdt_addr = internal->fdt_addr;
- 	void *control_code_buffer = page_address(image->control_code_page);
+------
+Changes v1 -> v2:
+  1, remove the patch "Add a fast call path of crash_kexec()" from this series
+     of patches, as it already applied to riscv git.
+     https://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git/commit/?h=for-next&id=3f1901110a89b0e2e13adb2ac8d1a7102879ea98
+  2, add 'Reviewed-by' based on the comments of v1.
+Changes v2 -> v3:
+  use "riscv" instead of "riscv64" in patch 5 subject line.
+Changes v3 -> v4:
+  use "riscv" instead of "riscv64" in the summary of patch 5 subject line.
+Changes v4 -> v5:
+  add a new patch "RISC-V: Fixup schedule out issue in machine_crash_shutdown()" 
+Changes v5 -> v6:
+  1, move "fixup" patches to the start of the patch set.
+  2, change patch 1, 2, 6's subject to make it tell more what it's about. 
+  3, add Fixes for patch 3.
+  4, adjuest the changes format for patch 6.
+
+
+Xianting Tian (6):
+  RISC-V: kexec: Fixup use of smp_processor_id() in preemptible context
+  RISC-V: Fixup get incorrect user mode PC for kernel mode regs
+  RISC-V: Fixup schedule out issue in machine_crash_shutdown()
+  RISC-V: Add modules to virtual kernel memory layout dump
+  RISC-V: Add arch_crash_save_vmcoreinfo support
+  Documentation: kdump: describe VMCOREINFO export for RISCV64
+
+ .../admin-guide/kdump/vmcoreinfo.rst          | 31 +++++++++++++++++++
+ arch/riscv/kernel/Makefile                    |  1 +
+ arch/riscv/kernel/crash_core.c                | 29 +++++++++++++++++
+ arch/riscv/kernel/crash_save_regs.S           |  2 +-
+ arch/riscv/kernel/machine_kexec.c             | 28 ++++++++++++++---
+ arch/riscv/mm/init.c                          |  4 +++
+ 6 files changed, 89 insertions(+), 6 deletions(-)
+ create mode 100644 arch/riscv/kernel/crash_core.c
+
 -- 
 2.17.1
 
