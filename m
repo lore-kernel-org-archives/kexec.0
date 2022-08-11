@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A9858C19F2D
-	for <kexec@archiver.kernel.org>; Thu, 11 Aug 2022 07:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6BD7DC19F2D
+	for <kexec@archiver.kernel.org>; Thu, 11 Aug 2022 07:42:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:MIME-Version:List-Subscribe:List-Help:
 	List-Post:List-Archive:List-Unsubscribe:List-Id:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=O79NpY53hJYIOkuKxiTGUiQGrAiN+7OSmPJdXEPXz4k=; b=xICszJBH6lZHZT
-	5tuBRiDMx9kU6s2PMitzEaib512CcSyTCZco5VYpv9VIGGyo4UNaiS0JFa+uBOlK3REaFW5D8YtEG
-	jFOhjf5Fbr1TKl2Dau23/Jko8ZK3lR0J+3XsViRvg101vhXCk7JlXtj8wyTNEgfa22dTKxHTkUUdU
-	zNWZNEb66NCuE8Zs75a4CgM/nb2sEcXk5JkRN0CcDoNwiT6OD6kow7d7b7Qf6OarrvDnh9rSs2YA1
-	JUKrTVzaFRCwGWj8iRRPgetZigWQFEwiZEn2QGJVrcHD7kE38rjIv4GZfFZ58k5AnYWwxkSU0QPUx
-	hL6vpMzk3Txo/18G5FGQ==;
+	List-Owner; bh=lcUEDVSgF+vIsc0UpiEYmljTcN8Kw5PIZaRFWI5AC84=; b=uD0mk+6WAqz5Sr
+	WBrvJiyR4x5lKNCvy1kICrfaNSkcy/lYVd5nAcYcVYue2hmJd3GyCcuvZ163xOjH6rryYe1CpbIrO
+	gDqt4zmyNNNd+RKGiHCCxQ3jP8U4iI/r4kJ6eYyF55vgHYjrT8shJEDetwx+gA+NwXu0K6N8355Wf
+	PPzXK3/XaN5bFbs7hEiofaDphf03tJkLCrtmF565HrAo46qAnk3onv1VjYM0YlmAid0ucLYlB7ROt
+	mcI0Vbu3oOM9pEsKyut4Vlo1Ni/YYKbKXguYs/at+TuxT0rOAied4ghEdEpI2BXWgEh2RaWlzX0V1
+	ZJ0SKwCgpHnsOw257znw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oM2pi-009mDp-Dl; Thu, 11 Aug 2022 07:42:22 +0000
-Received: from out199-10.us.a.mail.aliyun.com ([47.90.199.10])
+	id 1oM2pl-009mIt-Ns; Thu, 11 Aug 2022 07:42:25 +0000
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oM2pP-009lfV-9a; Thu, 11 Aug 2022 07:42:05 +0000
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R501e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=xianting.tian@linux.alibaba.com;NM=1;PH=DS;RN=23;SR=0;TI=SMTPD_---0VLyDALP_1660203715;
-Received: from localhost(mailfrom:xianting.tian@linux.alibaba.com fp:SMTPD_---0VLyDALP_1660203715)
+	id 1oM2pT-009lrn-6r; Thu, 11 Aug 2022 07:42:15 +0000
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=xianting.tian@linux.alibaba.com;NM=1;PH=DS;RN=23;SR=0;TI=SMTPD_---0VLyDZ1R_1660203721;
+Received: from localhost(mailfrom:xianting.tian@linux.alibaba.com fp:SMTPD_---0VLyDZ1R_1660203721)
           by smtp.aliyun-inc.com;
-          Thu, 11 Aug 2022 15:41:56 +0800
+          Thu, 11 Aug 2022 15:42:02 +0800
 From: Xianting Tian <xianting.tian@linux.alibaba.com>
 To: paul.walmsley@sifive.com,
 	palmer@dabbelt.com,
@@ -52,15 +52,15 @@ Cc: kexec@lists.infradead.org,
 	hschauhan@nulltrace.org,
 	yixun.lan@gmail.com,
 	Xianting Tian <xianting.tian@linux.alibaba.com>
-Subject: [PATCH V6 2/6] RISC-V: Fixup get incorrect user mode PC for kernel mode regs
-Date: Thu, 11 Aug 2022 15:41:46 +0800
-Message-Id: <20220811074150.3020189-3-xianting.tian@linux.alibaba.com>
+Subject: [PATCH V6 6/6] Documentation: kdump: describe VMCOREINFO export for RISCV64
+Date: Thu, 11 Aug 2022 15:41:50 +0800
+Message-Id: <20220811074150.3020189-7-xianting.tian@linux.alibaba.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20220811074150.3020189-1-xianting.tian@linux.alibaba.com>
 References: <20220811074150.3020189-1-xianting.tian@linux.alibaba.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220811_004203_632421_88C5EFE2 
-X-CRM114-Status: UNSURE (   8.94  )
+X-CRM114-CacheID: sfid-20220811_004213_803452_B8CD7E8D 
+X-CRM114-Status: UNSURE (   6.15  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -79,94 +79,61 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-When use 'echo c > /proc/sysrq-trigger' to trigger kdump, riscv_crash_save_regs()
-will be called to save regs for vmcore, we found "epc" value 00ffffffa5537400
-is not a valid kernel virtual address, but is a user virtual address. Other
-regs(eg, ra, sp, gp...) are correct kernel virtual address.
-Actually 0x00ffffffb0dd9400 is the user mode PC of 'PID: 113 Comm: sh', which
-is saved in the task's stack.
+The following interrelated definitions and ranges are needed by the kdump
+crash tool, they are exported by "arch/riscv/kernel/crash_core.c":
+    VA_BITS, PAGE_OFFSET, phys_ram_base
+    MODULES_VADDR ~ MODULES_END,
+    VMALLOC_START ~ VMALLOC_END,
+    VMEMMAP_START ~ VMEMMAP_END
+    KASAN_SHADOW_START ~ KASAN_SHADOW_END,
+    KERNEL_LINK_ADDR ~ ADDRESS_SPACE_END
 
-[   21.201701] CPU: 0 PID: 113 Comm: sh Kdump: loaded Not tainted 5.18.9 #45
-[   21.201979] Hardware name: riscv-virtio,qemu (DT)
-[   21.202160] epc : 00ffffffa5537400 ra : ffffffff80088640 sp : ff20000010333b90
-[   21.202435]  gp : ffffffff810dde38 tp : ff6000000226c200 t0 : ffffffff8032be7c
-[   21.202707]  t1 : 0720072007200720 t2 : 30203a7375746174 s0 : ff20000010333cf0
-[   21.202973]  s1 : 0000000000000000 a0 : ff20000010333b98 a1 : 0000000000000001
-[   21.203243]  a2 : 0000000000000010 a3 : 0000000000000000 a4 : 28c8f0aeffea4e00
-[   21.203519]  a5 : 28c8f0aeffea4e00 a6 : 0000000000000009 a7 : ffffffff8035c9b8
-[   21.203794]  s2 : ffffffff810df0a8 s3 : ffffffff810df718 s4 : ff20000010333b98
-[   21.204062]  s5 : 0000000000000000 s6 : 0000000000000007 s7 : ffffffff80c4a468
-[   21.204331]  s8 : 00ffffffef451410 s9 : 0000000000000007 s10: 00aaaaaac0510700
-[   21.204606]  s11: 0000000000000001 t3 : ff60000001218f00 t4 : ff60000001218f00
-[   21.204876]  t5 : ff60000001218000 t6 : ff200000103338b8
-[   21.205079] status: 0000000200000020 badaddr: 0000000000000000 cause: 0000000000000008
+This patch just add the description of VMCOREINFO export for RISCV64.
 
-With the incorrect PC, the backtrace showed by crash tool as below, the first
-stack frame is abnormal,
-
-crash> bt
-PID: 113      TASK: ff60000002269600  CPU: 0    COMMAND: "sh"
- #0 [ff2000001039bb90] __efistub_.Ldebug_info0 at 00ffffffa5537400 <-- Abnormal
- #1 [ff2000001039bcf0] panic at ffffffff806578ba
- #2 [ff2000001039bd50] sysrq_reset_seq_param_set at ffffffff8038c030
- #3 [ff2000001039bda0] __handle_sysrq at ffffffff8038c5f8
- #4 [ff2000001039be00] write_sysrq_trigger at ffffffff8038cad8
- #5 [ff2000001039be20] proc_reg_write at ffffffff801b7edc
- #6 [ff2000001039be40] vfs_write at ffffffff80152ba6
- #7 [ff2000001039be80] ksys_write at ffffffff80152ece
- #8 [ff2000001039bed0] sys_write at ffffffff80152f46
-
-With the patch, we can get current kernel mode PC, the output as below,
-
-[   17.607658] CPU: 0 PID: 113 Comm: sh Kdump: loaded Not tainted 5.18.9 #42
-[   17.607937] Hardware name: riscv-virtio,qemu (DT)
-[   17.608150] epc : ffffffff800078f8 ra : ffffffff8008862c sp : ff20000010333b90
-[   17.608441]  gp : ffffffff810dde38 tp : ff6000000226c200 t0 : ffffffff8032be68
-[   17.608741]  t1 : 0720072007200720 t2 : 666666666666663c s0 : ff20000010333cf0
-[   17.609025]  s1 : 0000000000000000 a0 : ff20000010333b98 a1 : 0000000000000001
-[   17.609320]  a2 : 0000000000000010 a3 : 0000000000000000 a4 : 0000000000000000
-[   17.609601]  a5 : ff60000001c78000 a6 : 000000000000003c a7 : ffffffff8035c9a4
-[   17.609894]  s2 : ffffffff810df0a8 s3 : ffffffff810df718 s4 : ff20000010333b98
-[   17.610186]  s5 : 0000000000000000 s6 : 0000000000000007 s7 : ffffffff80c4a468
-[   17.610469]  s8 : 00ffffffca281410 s9 : 0000000000000007 s10: 00aaaaaab5bb6700
-[   17.610755]  s11: 0000000000000001 t3 : ff60000001218f00 t4 : ff60000001218f00
-[   17.611041]  t5 : ff60000001218000 t6 : ff20000010333988
-[   17.611255] status: 0000000200000020 badaddr: 0000000000000000 cause: 0000000000000008
-
-With the correct PC, the backtrace showed by crash tool as below,
-
-crash> bt
-PID: 113      TASK: ff6000000226c200  CPU: 0    COMMAND: "sh"
- #0 [ff20000010333b90] riscv_crash_save_regs at ffffffff800078f8 <--- Normal
- #1 [ff20000010333cf0] panic at ffffffff806578c6
- #2 [ff20000010333d50] sysrq_reset_seq_param_set at ffffffff8038c03c
- #3 [ff20000010333da0] __handle_sysrq at ffffffff8038c604
- #4 [ff20000010333e00] write_sysrq_trigger at ffffffff8038cae4
- #5 [ff20000010333e20] proc_reg_write at ffffffff801b7ee8
- #6 [ff20000010333e40] vfs_write at ffffffff80152bb2
- #7 [ff20000010333e80] ksys_write at ffffffff80152eda
- #8 [ff20000010333ed0] sys_write at ffffffff80152f52
-
-Fixes: e53d28180d4d ("RISC-V: Add kdump support")
-Co-developed-by: Guo Ren <guoren@kernel.org>
 Signed-off-by: Xianting Tian <xianting.tian@linux.alibaba.com>
 ---
- arch/riscv/kernel/crash_save_regs.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../admin-guide/kdump/vmcoreinfo.rst          | 31 +++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-diff --git a/arch/riscv/kernel/crash_save_regs.S b/arch/riscv/kernel/crash_save_regs.S
-index 7832fb763aba..b2a1908c0463 100644
---- a/arch/riscv/kernel/crash_save_regs.S
-+++ b/arch/riscv/kernel/crash_save_regs.S
-@@ -44,7 +44,7 @@ SYM_CODE_START(riscv_crash_save_regs)
- 	REG_S t6,  PT_T6(a0)	/* x31 */
+diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+index 8419019b6a88..1e71e6710404 100644
+--- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
++++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+@@ -595,3 +595,34 @@ X2TLB
+ -----
  
- 	csrr t1, CSR_STATUS
--	csrr t2, CSR_EPC
-+	auipc t2, 0x0
- 	csrr t3, CSR_TVAL
- 	csrr t4, CSR_CAUSE
- 
+ Indicates whether the crashed kernel enabled SH extended mode.
++
++RISCV64
++=======
++
++VA_BITS
++-------
++
++The maximum number of bits for virtual addresses. Used to compute the
++virtual memory ranges.
++
++PAGE_OFFSET
++-----------
++
++Indicates the virtual kernel start address of direct-mapped RAM region.
++
++phys_ram_base
++-------------
++
++Indicates the start physical RAM address.
++
++----------------------------------------------------------------------------------------------------------------------------------------------------
++MODULES_VADDR|MODULES_END|VMALLOC_START|VMALLOC_END|VMEMMAP_START|VMEMMAP_END|KASAN_SHADOW_START|KASAN_SHADOW_END|KERNEL_LINK_ADDR|ADDRESS_SPACE_END
++----------------------------------------------------------------------------------------------------------------------------------------------------
++
++Used to get the correct ranges:
++
++  * MODULES_VADDR ~ MODULES_END : Kernel module space.
++  * VMALLOC_START ~ VMALLOC_END : vmalloc() / ioremap() space.
++  * VMEMMAP_START ~ VMEMMAP_END : vmemmap region, used for struct page array.
++  * KASAN_SHADOW_START ~ KASAN_SHADOW_END : kasan shadow space.
++  * KERNEL_LINK_ADDR ~ ADDRESS_SPACE_END : Kernel link and BPF space.
 -- 
 2.17.1
 
