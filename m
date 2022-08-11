@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0156AC25B0C
-	for <kexec@archiver.kernel.org>; Thu, 11 Aug 2022 07:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A9858C19F2D
+	for <kexec@archiver.kernel.org>; Thu, 11 Aug 2022 07:42:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:MIME-Version:List-Subscribe:List-Help:
-	List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:Subject:Cc:To
-	:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=LSvdmI/KunnoXRzDH3wSW7z9EQXY518uSss4ayxaLMM=; b=R3HZrdrk7eP1/X
-	lNDQpaOBzG8h25ywGLu6PNO3TzzjbhEYf85bpcfwTAhzys5zunIBcGFZki2g2nwG8vJN4VZ0OLo37
-	VkpwWCaAkunXJe3K07JEbEac19wRchh7YNTXxVbSmtGMbUjlxm06p11O69TeBJIfW6MSDgGxZyFv1
-	SlwUI10PitmEjYAgeJ7c6Mc47BM23pvsGpgYTt6OReC6HeY5aaCHJFDxyQAxgKxLmiL9Tu5KX8NpW
-	xHaHyLRh/ovkONQ/tQ5HB1fqgYMlRJFVjch2dcnl2OR5flI8LHwrGPh8iBdof/qrbT3tNAWEsNRhC
-	iTaLZbFzHa1uL/KGf11w==;
+	List-Post:List-Archive:List-Unsubscribe:List-Id:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=O79NpY53hJYIOkuKxiTGUiQGrAiN+7OSmPJdXEPXz4k=; b=xICszJBH6lZHZT
+	5tuBRiDMx9kU6s2PMitzEaib512CcSyTCZco5VYpv9VIGGyo4UNaiS0JFa+uBOlK3REaFW5D8YtEG
+	jFOhjf5Fbr1TKl2Dau23/Jko8ZK3lR0J+3XsViRvg101vhXCk7JlXtj8wyTNEgfa22dTKxHTkUUdU
+	zNWZNEb66NCuE8Zs75a4CgM/nb2sEcXk5JkRN0CcDoNwiT6OD6kow7d7b7Qf6OarrvDnh9rSs2YA1
+	JUKrTVzaFRCwGWj8iRRPgetZigWQFEwiZEn2QGJVrcHD7kE38rjIv4GZfFZ58k5AnYWwxkSU0QPUx
+	hL6vpMzk3Txo/18G5FGQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oM2pc-009lzz-Tj; Thu, 11 Aug 2022 07:42:17 +0000
-Received: from out199-9.us.a.mail.aliyun.com ([47.90.199.9])
+	id 1oM2pi-009mDp-Dl; Thu, 11 Aug 2022 07:42:22 +0000
+Received: from out199-10.us.a.mail.aliyun.com ([47.90.199.10])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oM2pN-009lb7-AP; Thu, 11 Aug 2022 07:42:03 +0000
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R301e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=xianting.tian@linux.alibaba.com;NM=1;PH=DS;RN=23;SR=0;TI=SMTPD_---0VLyDAKe_1660203712;
-Received: from localhost(mailfrom:xianting.tian@linux.alibaba.com fp:SMTPD_---0VLyDAKe_1660203712)
+	id 1oM2pP-009lfV-9a; Thu, 11 Aug 2022 07:42:05 +0000
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R501e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=xianting.tian@linux.alibaba.com;NM=1;PH=DS;RN=23;SR=0;TI=SMTPD_---0VLyDALP_1660203715;
+Received: from localhost(mailfrom:xianting.tian@linux.alibaba.com fp:SMTPD_---0VLyDALP_1660203715)
           by smtp.aliyun-inc.com;
-          Thu, 11 Aug 2022 15:41:53 +0800
+          Thu, 11 Aug 2022 15:41:56 +0800
 From: Xianting Tian <xianting.tian@linux.alibaba.com>
 To: paul.walmsley@sifive.com,
 	palmer@dabbelt.com,
@@ -52,13 +52,16 @@ Cc: kexec@lists.infradead.org,
 	hschauhan@nulltrace.org,
 	yixun.lan@gmail.com,
 	Xianting Tian <xianting.tian@linux.alibaba.com>
-Subject: [PATCH V6 0/6] RISC-V fixups to work with crash tool
-Date: Thu, 11 Aug 2022 15:41:44 +0800
-Message-Id: <20220811074150.3020189-1-xianting.tian@linux.alibaba.com>
+Subject: [PATCH V6 2/6] RISC-V: Fixup get incorrect user mode PC for kernel mode regs
+Date: Thu, 11 Aug 2022 15:41:46 +0800
+Message-Id: <20220811074150.3020189-3-xianting.tian@linux.alibaba.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20220811074150.3020189-1-xianting.tian@linux.alibaba.com>
+References: <20220811074150.3020189-1-xianting.tian@linux.alibaba.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220811_004201_654530_F4D5212B 
-X-CRM114-Status: GOOD (  12.68  )
+X-CRM114-CacheID: sfid-20220811_004203_632421_88C5EFE2 
+X-CRM114-Status: UNSURE (   8.94  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,68 +79,94 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-I ever sent the patch 1 in the link:
-https://patchwork.kernel.org/project/linux-riscv/patch/20220708073150.352830-3-xianting.tian@linux.alibaba.com/
-And patch 2,3 in the link:
-https://patchwork.kernel.org/project/linux-riscv/patch/20220714113300.367854-2-xianting.tian@linux.alibaba.com/
-https://patchwork.kernel.org/project/linux-riscv/patch/20220714113300.367854-3-xianting.tian@linux.alibaba.com/
+When use 'echo c > /proc/sysrq-trigger' to trigger kdump, riscv_crash_save_regs()
+will be called to save regs for vmcore, we found "epc" value 00ffffffa5537400
+is not a valid kernel virtual address, but is a user virtual address. Other
+regs(eg, ra, sp, gp...) are correct kernel virtual address.
+Actually 0x00ffffffb0dd9400 is the user mode PC of 'PID: 113 Comm: sh', which
+is saved in the task's stack.
 
-This patch set just put these patches together, and with three new patch 4, 5, 6.
-these six patches are the fixups for machine_kexec, kernel mode PC for vmcore
-and improvements for vmcoreinfo, memory layout dump and fixup schedule out issue
-in machine_crash_shutdown().
+[   21.201701] CPU: 0 PID: 113 Comm: sh Kdump: loaded Not tainted 5.18.9 #45
+[   21.201979] Hardware name: riscv-virtio,qemu (DT)
+[   21.202160] epc : 00ffffffa5537400 ra : ffffffff80088640 sp : ff20000010333b90
+[   21.202435]  gp : ffffffff810dde38 tp : ff6000000226c200 t0 : ffffffff8032be7c
+[   21.202707]  t1 : 0720072007200720 t2 : 30203a7375746174 s0 : ff20000010333cf0
+[   21.202973]  s1 : 0000000000000000 a0 : ff20000010333b98 a1 : 0000000000000001
+[   21.203243]  a2 : 0000000000000010 a3 : 0000000000000000 a4 : 28c8f0aeffea4e00
+[   21.203519]  a5 : 28c8f0aeffea4e00 a6 : 0000000000000009 a7 : ffffffff8035c9b8
+[   21.203794]  s2 : ffffffff810df0a8 s3 : ffffffff810df718 s4 : ff20000010333b98
+[   21.204062]  s5 : 0000000000000000 s6 : 0000000000000007 s7 : ffffffff80c4a468
+[   21.204331]  s8 : 00ffffffef451410 s9 : 0000000000000007 s10: 00aaaaaac0510700
+[   21.204606]  s11: 0000000000000001 t3 : ff60000001218f00 t4 : ff60000001218f00
+[   21.204876]  t5 : ff60000001218000 t6 : ff200000103338b8
+[   21.205079] status: 0000000200000020 badaddr: 0000000000000000 cause: 0000000000000008
 
-The main changes in the six patchs as below,
-Patch 1: Fixup use of smp_processor_id() in preemptible context, to cleanup
-         the console prints.
-Patch 2: Fixup to get correct kernel mode PC for kernel mode regs for vmcore.
-Patch 3: Fixup schedule out issue in machine_crash_shutdown()
-Patch 4: Add modules to virtual kernel memory layout dump.
-Patch 5: Add VM layout, va bits, ram base to vmcoreinfo, which can simplify
-         the development of crash tool as ARM64 already did
-         (arch/arm64/kernel/crash_core.c).
-Patch 6: Updates vmcoreinfo.rst for vmcoreinfo export for RISCV64.
+With the incorrect PC, the backtrace showed by crash tool as below, the first
+stack frame is abnormal,
 
-With these six patches(patch 2 is must), crash tool can work well to analyze
-a vmcore. The patches for crash tool for RISCV64 is in the link:
-https://lore.kernel.org/linux-riscv/20220801043040.2003264-1-xianting.tian@linux.alibaba.com/
+crash> bt
+PID: 113      TASK: ff60000002269600  CPU: 0    COMMAND: "sh"
+ #0 [ff2000001039bb90] __efistub_.Ldebug_info0 at 00ffffffa5537400 <-- Abnormal
+ #1 [ff2000001039bcf0] panic at ffffffff806578ba
+ #2 [ff2000001039bd50] sysrq_reset_seq_param_set at ffffffff8038c030
+ #3 [ff2000001039bda0] __handle_sysrq at ffffffff8038c5f8
+ #4 [ff2000001039be00] write_sysrq_trigger at ffffffff8038cad8
+ #5 [ff2000001039be20] proc_reg_write at ffffffff801b7edc
+ #6 [ff2000001039be40] vfs_write at ffffffff80152ba6
+ #7 [ff2000001039be80] ksys_write at ffffffff80152ece
+ #8 [ff2000001039bed0] sys_write at ffffffff80152f46
 
-------
-Changes v1 -> v2:
-  1, remove the patch "Add a fast call path of crash_kexec()" from this series
-     of patches, as it already applied to riscv git.
-     https://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git/commit/?h=for-next&id=3f1901110a89b0e2e13adb2ac8d1a7102879ea98
-  2, add 'Reviewed-by' based on the comments of v1.
-Changes v2 -> v3:
-  use "riscv" instead of "riscv64" in patch 5 subject line.
-Changes v3 -> v4:
-  use "riscv" instead of "riscv64" in the summary of patch 5 subject line.
-Changes v4 -> v5:
-  add a new patch "RISC-V: Fixup schedule out issue in machine_crash_shutdown()" 
-Changes v5 -> v6:
-  1, move "fixup" patches to the start of the patch set.
-  2, change patch 1, 2, 6's subject to make it tell more what it's about. 
-  3, add Fixes for patch 3.
-  4, adjuest the changes format for patch 6.
+With the patch, we can get current kernel mode PC, the output as below,
 
+[   17.607658] CPU: 0 PID: 113 Comm: sh Kdump: loaded Not tainted 5.18.9 #42
+[   17.607937] Hardware name: riscv-virtio,qemu (DT)
+[   17.608150] epc : ffffffff800078f8 ra : ffffffff8008862c sp : ff20000010333b90
+[   17.608441]  gp : ffffffff810dde38 tp : ff6000000226c200 t0 : ffffffff8032be68
+[   17.608741]  t1 : 0720072007200720 t2 : 666666666666663c s0 : ff20000010333cf0
+[   17.609025]  s1 : 0000000000000000 a0 : ff20000010333b98 a1 : 0000000000000001
+[   17.609320]  a2 : 0000000000000010 a3 : 0000000000000000 a4 : 0000000000000000
+[   17.609601]  a5 : ff60000001c78000 a6 : 000000000000003c a7 : ffffffff8035c9a4
+[   17.609894]  s2 : ffffffff810df0a8 s3 : ffffffff810df718 s4 : ff20000010333b98
+[   17.610186]  s5 : 0000000000000000 s6 : 0000000000000007 s7 : ffffffff80c4a468
+[   17.610469]  s8 : 00ffffffca281410 s9 : 0000000000000007 s10: 00aaaaaab5bb6700
+[   17.610755]  s11: 0000000000000001 t3 : ff60000001218f00 t4 : ff60000001218f00
+[   17.611041]  t5 : ff60000001218000 t6 : ff20000010333988
+[   17.611255] status: 0000000200000020 badaddr: 0000000000000000 cause: 0000000000000008
 
-Xianting Tian (6):
-  RISC-V: kexec: Fixup use of smp_processor_id() in preemptible context
-  RISC-V: Fixup get incorrect user mode PC for kernel mode regs
-  RISC-V: Fixup schedule out issue in machine_crash_shutdown()
-  RISC-V: Add modules to virtual kernel memory layout dump
-  RISC-V: Add arch_crash_save_vmcoreinfo support
-  Documentation: kdump: describe VMCOREINFO export for RISCV64
+With the correct PC, the backtrace showed by crash tool as below,
 
- .../admin-guide/kdump/vmcoreinfo.rst          | 31 +++++++++++++++++++
- arch/riscv/kernel/Makefile                    |  1 +
- arch/riscv/kernel/crash_core.c                | 29 +++++++++++++++++
- arch/riscv/kernel/crash_save_regs.S           |  2 +-
- arch/riscv/kernel/machine_kexec.c             | 28 ++++++++++++++---
- arch/riscv/mm/init.c                          |  4 +++
- 6 files changed, 89 insertions(+), 6 deletions(-)
- create mode 100644 arch/riscv/kernel/crash_core.c
+crash> bt
+PID: 113      TASK: ff6000000226c200  CPU: 0    COMMAND: "sh"
+ #0 [ff20000010333b90] riscv_crash_save_regs at ffffffff800078f8 <--- Normal
+ #1 [ff20000010333cf0] panic at ffffffff806578c6
+ #2 [ff20000010333d50] sysrq_reset_seq_param_set at ffffffff8038c03c
+ #3 [ff20000010333da0] __handle_sysrq at ffffffff8038c604
+ #4 [ff20000010333e00] write_sysrq_trigger at ffffffff8038cae4
+ #5 [ff20000010333e20] proc_reg_write at ffffffff801b7ee8
+ #6 [ff20000010333e40] vfs_write at ffffffff80152bb2
+ #7 [ff20000010333e80] ksys_write at ffffffff80152eda
+ #8 [ff20000010333ed0] sys_write at ffffffff80152f52
 
+Fixes: e53d28180d4d ("RISC-V: Add kdump support")
+Co-developed-by: Guo Ren <guoren@kernel.org>
+Signed-off-by: Xianting Tian <xianting.tian@linux.alibaba.com>
+---
+ arch/riscv/kernel/crash_save_regs.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/riscv/kernel/crash_save_regs.S b/arch/riscv/kernel/crash_save_regs.S
+index 7832fb763aba..b2a1908c0463 100644
+--- a/arch/riscv/kernel/crash_save_regs.S
++++ b/arch/riscv/kernel/crash_save_regs.S
+@@ -44,7 +44,7 @@ SYM_CODE_START(riscv_crash_save_regs)
+ 	REG_S t6,  PT_T6(a0)	/* x31 */
+ 
+ 	csrr t1, CSR_STATUS
+-	csrr t2, CSR_EPC
++	auipc t2, 0x0
+ 	csrr t3, CSR_TVAL
+ 	csrr t4, CSR_CAUSE
+ 
 -- 
 2.17.1
 
