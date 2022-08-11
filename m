@@ -4,70 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E10C6C00140
-	for <kexec@archiver.kernel.org>; Wed, 10 Aug 2022 22:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7C8A3C00140
+	for <kexec@archiver.kernel.org>; Thu, 11 Aug 2022 00:46:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Cc:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Owner;
-	bh=t2COo/ehhp0bwwBUp/3jI2gKWPYSyYg8UpFNX+j8nmg=; b=e3ldqs+GV4NOdH/+8vColSzuNW
-	J+yWSfuV9k9mq4RyCaFVcnkIU8CXGhW0eoFjVzINoV37JsgGs9owoRdAPKsRw6RxKXUaw+cMy0vQL
-	tUacTvunIvkos7cOcBsXDf0uqLQa4vvPcN2j7U0Y1NHM173qQtkQf8X/eonDpzatLHXfzpieMwa/A
-	DXj0M4voFwFyZ5VE/VBhHVqkb1u8uOQEjLkf6BRiCqcGURvNUe3lMrcVl/0V6t2vNi75FRfpmg3QC
-	KHKoKh11tRExiB/urPnGfX4kNlM3pRTHEuk7Tw+/NCqKmcRpXouSra8jO8PwXevY4SKZxTeuzZ1vj
-	WIGACKZg==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=o5XzHJR7GBtc5kP3Qd/a1N4pVhKft1oSxOCcl70lO7g=; b=N6BT52S0XCUuqU
+	IcNqx44yr+8d4V6zLnLn+peWfsypWqxJG6+LDqC8c48aVt1tIaf+plsNpdxyPobZhN5JKA/L1I9vH
+	AfnAAtMjPS9CYiCsSgS7BF2xm3I+lxnZYe4we0fMb6UzHaljRWO6QurYbyUJKoHp7lJ3rPptb4s88
+	UWYEqyhhutx0zyOk3OMcMeZbl1iBX17fQvslfvsM1657eLWFBVe2ALAuUa67jA+53ApidmXC5QCAa
+	8oDnx4HbA2O0BBrv0j9WhnZoWh7UXlTnm5OAq/QxW0T1WpiXMaOEyWxXLgQKBf74jKI8jD1GKEovb
+	aDzJ+nK1SWMx0yqvb1/A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oLuPp-00G3fk-9V; Wed, 10 Aug 2022 22:43:05 +0000
-Received: from mail-vs1-xe2c.google.com ([2607:f8b0:4864:20::e2c])
+	id 1oLwKt-000gtr-Ft; Thu, 11 Aug 2022 00:46:07 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oLuPk-00G3ZQ-TK
-	for kexec@lists.infradead.org; Wed, 10 Aug 2022 22:43:03 +0000
-Received: by mail-vs1-xe2c.google.com with SMTP id 129so16646487vsq.8
-        for <kexec@lists.infradead.org>; Wed, 10 Aug 2022 15:42:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc;
-        bh=L4ZmggSO9xHQTCWry0uFo08uI+EmJkg/0BB5nnCkh3Y=;
-        b=aX9pLcIEAc1nli+FHFsC5tPwZPjklSSZmircj44vG203GOZKv6+Y+XxZcy0Bu+lZM6
-         Qox4k8oEApJMkelWTdJjQvsvvyuZ7ixCy6z+YOE4mQoAOHKvqNmDcFuwWfyTYuYKCmG2
-         SY7S8hSkpGUK0S1ZVA/79OiUdS4laBaSJ54+L9cTEcA44bJFrY83B1kZ0AU0VokcLNAJ
-         aguYALmo0I+JyG2PTLiO+QBAtw40fSX14crH3NNmbR0NhKDj3+Ojxoju2oOyIZoy/rZ2
-         y3C0Ddt2uH+VDHglR9oypvbQrgT2OkPlw191qeYKJenp8bKeEzIfXJPQkq8cn3wKwvSr
-         ypEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-message-state:from:to:cc;
-        bh=L4ZmggSO9xHQTCWry0uFo08uI+EmJkg/0BB5nnCkh3Y=;
-        b=llXzUbg7jHeCYKkOQwI9o0Gp3DDwZiZ93CbLpLHgQRiXbMKDZLEC7AxlBBAFm2x4Af
-         jVTl5dO7snWCZsLZBOZsW+7hZOLWH90iqD29C/K8g4zkDigJsjwdH2oDPI0PQuCf2+Hr
-         4XKrl9rTetHjE4G3sqMljemBwo0sidXKsqgUHjRyIgwlVKW/2MHa7tMUE4oPQH3wCueg
-         FAki06CwveUyBXp3tUJ5Wwo7bs38KxL6YJXtwWEcGtmdvJjUf4EidBRn/Ec6ctnM+i+l
-         sRp2Z2T7pP6PpPp6EFJriCAUfoNUsU70EmWcITOOn7tegUw5b2UqXzAsWoclLPpoR2up
-         GGRg==
-X-Gm-Message-State: ACgBeo0/utC5cZphnWLCUqYihFOr0KK90NJH5ITdJ9TJ4mtXX+XZU5IO
-	0D8bPl8p79lgjZus/yMVdY/BMzs3PP0U4KwVSr268UE055XGaA==
-X-Google-Smtp-Source: AA6agR7J4bZ19mEDkEkoHie80VQ/whHmbVQMk6vfdIOdX4uLuq+CAgWZvOqYt0ajmLhcLffAFqv2ZXZCcfhyjf95RWE=
-X-Received: by 2002:a67:de84:0:b0:385:5a6b:15ae with SMTP id
- r4-20020a67de84000000b003855a6b15aemr12843253vsk.2.1660171376692; Wed, 10 Aug
- 2022 15:42:56 -0700 (PDT)
-MIME-Version: 1.0
+	id 1oLwKq-000gdT-Bw
+	for kexec@lists.infradead.org; Thu, 11 Aug 2022 00:46:05 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1660178759;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mb6LvVDNkIGuE2f7Qq0kKvwOfpEUqHsNTOyvM74HAMA=;
+	b=W4h2YZjUJDfKWIGWUVHpzwV1PMJh7HAdupHd85BzxZ/DN4tN2lsyYnVZF6aMHneyeAPglM
+	w+avF1j9iWOdQWoUQuHjrDMaJ9rOCXC+F3Lel/YoAc79nkbyVFjiMoIE6PQAnUSjarbmnM
+	s4O+3kJ/ZA88wdwKZZlIA+zmWNMGTJE=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-482-DZFnXh6RPGyR82J4DCjfhw-1; Wed, 10 Aug 2022 20:45:58 -0400
+X-MC-Unique: DZFnXh6RPGyR82J4DCjfhw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 60BF185A596;
+	Thu, 11 Aug 2022 00:45:58 +0000 (UTC)
+Received: from localhost (ovpn-12-110.pek2.redhat.com [10.72.12.110])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id AA4901121319;
+	Thu, 11 Aug 2022 00:45:57 +0000 (UTC)
+Date: Thu, 11 Aug 2022 08:45:54 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Donny Xia <donnyxia@google.com>
+Cc: dyoung@redhat.com, vgoyal@redhat.com, kexec@lists.infradead.org
+Subject: Re: Question about the size of VMCOREINFO
+Message-ID: <20220811004554.GE373960@MiWiFi-R3L-srv>
 References: <CAKE-ki_vO=2SXGsX8cjX+89MP09Tku4KyNANPTiEPKUx7y-LpA@mail.gmail.com>
+MIME-Version: 1.0
 In-Reply-To: <CAKE-ki_vO=2SXGsX8cjX+89MP09Tku4KyNANPTiEPKUx7y-LpA@mail.gmail.com>
-From: Donny Xia <donnyxia@google.com>
-Date: Wed, 10 Aug 2022 15:42:45 -0700
-Message-ID: <CAKE-ki_LDGQDdMJ5MFcw-C83CPVPd98XRY1u-vwGvLbCW0j_+Q@mail.gmail.com>
-Subject: Fwd: Question about the size of VMCOREINFO
-To: kexec@lists.infradead.org
-X-Bad-Reply: References and In-Reply-To but no 'Re:' in Subject.
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.3
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220810_154301_008480_D02FE19B 
-X-CRM114-Status: GOOD (  10.04  )
+X-CRM114-CacheID: sfid-20220810_174604_550880_98E443D7 
+X-CRM114-Status: GOOD (  14.90  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,31 +79,24 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-HTML email was blocked. Forward to the email list.
+Hi,
 
+On 08/10/22 at 03:39pm, Donny Xia wrote:
+> Hello Kdump Maintainers,
+> 
+> We utilize the kexec and kdump feature heavily to collect the crash dump
+> file when the kernel crashes. We write some customized values into
+> VMCOREINFO and we find that eventually the size of the data we write
+> exceeds the size of VMCOREINFO. I find that the size of VMCOREINFO is one
+> page, which I believe is 4k. I am wondering is there any specific reason to
+> choose this size? Is it possible to use a bigger number? Any suggestions
+> about it would be appreciated.
 
----------- Forwarded message ---------
-From: Donny Xia <donnyxia@google.com>
-Date: Wed, Aug 10, 2022 at 3:39 PM
-Subject: Question about the size of VMCOREINFO
-To: <dyoung@redhat.com>
-Cc: <bhe@redhat.com>, <vgoyal@redhat.com>, <kexec@lists.infradead.org>
+No specific reason. Just our current usage of vmcoreinfo_data is enough to
+cover our need. I don't see why you can't enlarge it to, e.g 2 pages or
+more. Have you tried? E.g allocate more pages and change
+VMCOREINFO_BYTES to the corresponding value.
 
-
-Hello Kdump Maintainers,
-
-We utilize the kexec and kdump feature heavily to collect the crash
-dump file when the kernel crashes. We write some customized values
-into VMCOREINFO and we find that eventually the size of the data we
-write exceeds the size of VMCOREINFO. I find that the size of
-VMCOREINFO is one page, which I believe is 4k. I am wondering is there
-any specific reason to choose this size? Is it possible to use a
-bigger number? Any suggestions about it would be appreciated.
-
-Thanks.
-
-Regards,
-Donny Xia
 
 _______________________________________________
 kexec mailing list
