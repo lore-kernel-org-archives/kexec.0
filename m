@@ -4,84 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D1183C00140
-	for <kexec@archiver.kernel.org>; Thu, 11 Aug 2022 03:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5EAE2C00140
+	for <kexec@archiver.kernel.org>; Thu, 11 Aug 2022 03:37:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=cjCA/KTHuyXdWfxhKuFV+evLpB5Sf3xFhWA8UE640aE=; b=0Fzb1dekZkc74w
-	DwJGqEyPr1V85bApFcQItqbeWPKu08C0KfUCSnkv1geoZc9UO6yOZ0QMWFaTN6ZB4G9acQbgXpucY
-	gOhUMLDMWQadLWjZkKwnB9IECsc6Lp5U55HqJwAQQDWv9f26g5BFKI3UzWIbbMMh7EuqhkLoRJVmJ
-	74pffEh/SOs6m/Qgv+fX8zVogel9DCauQOoYTJHoD/1fzKIC6yZQ0Tk7xKTtK6qeUePbSLcNMNTou
-	F2uzvOOTeayOLxO/1LVAfNJaD6tmJqu9TKhRzY5QHd6zJw7qAtZ6TAfyk8AqRnXo7Y6NL1f3p4peM
-	3LauEM6WBDpPKJdqvQRQ==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:Date:Message-ID:From:
+	References:Cc:To:Subject:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=yUla4zazo/cQ7ODLsGtEpw+VVHYXJH9B2rvT0n9KYag=; b=2DYv/qzzYrzZRvOAFgKej5yEXi
+	dh2pXha+7/5Cq1/zT6LpfqU8T8RVhBvBm2AmJojHTS10/MiZgKLTTVX97ovg5fS4jiZIfuZ8qZ1N2
+	dNT4KdQeNElhINx1u5fML65QAnDE7xOjWDbewUILISl5OPPzNmDAJpqb35dwS+XKnfuSixx+94DOD
+	AbPLgWolZ7mljCn7BksDx8FjVULiunXbUtZKz0/mpsuLEhh1CizxWxbq0cTg0p8m3BQZKriWh8shE
+	2i6ICvXStT6X+J+Y02VId2vJEsXBWy2JXoNCCBTO9mOTOjoSi5Kg96FxWh/9DZ/ctHCJwAxRh4++I
+	vGnn2dHQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oLyXK-004gCn-Fh; Thu, 11 Aug 2022 03:07:06 +0000
-Received: from mail-pg1-x531.google.com ([2607:f8b0:4864:20::531])
+	id 1oLz0y-004sWu-5D; Thu, 11 Aug 2022 03:37:44 +0000
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oLyXH-004g9F-L3; Thu, 11 Aug 2022 03:07:05 +0000
-Received: by mail-pg1-x531.google.com with SMTP id r22so13631687pgm.5;
-        Wed, 10 Aug 2022 20:07:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc;
-        bh=LmnOiDMX3xGrA/oiBCR1NQTWs1yu4LdDCazzpBCjFtQ=;
-        b=H5cnkUVNltB7wWsF6EV6zhRHqMdbHRl1/9X0CDEmIn8sQxFUTqE3GaaBiao9RVv2Mz
-         GWFL+fetVlJKW24AtbvGfvy+ha6lP+7aSEb6M/IgtNFMnQUj9oK6w8bnLM4z+77rsjHZ
-         MRrtvBp8y8vyFudVo2+O9wjHDVEB9Sv3UpJbLXpDTfhjTxtHkflOHqPlh3slyuFq0hSO
-         s+W6AVm5/scjepfNTCg7e+IerJuZBjTapd0T5672TOKc2FVLrnIC/0BPN0dWSX2qIGjC
-         PpH1AyDTbPS0p3IdtusCKRavn/bxNhTlDX2GHN0uoXdU47oMbRAhkFK4Ue92EdUAtYRh
-         N9iA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=LmnOiDMX3xGrA/oiBCR1NQTWs1yu4LdDCazzpBCjFtQ=;
-        b=EB9OY94GdNxG3/476pCvzcDGhAMHtY7bqk5zW5LqgPF4RQg83VZw1hbbKWuq+2K/sh
-         7weRF/JbKKvUag+OPe/kvoSpkJnM830z5/uRWkhtTiBUoheY1TmO4LZFKNNVJ4YWKGrW
-         Kd8Rd/IGO7cYfsslhLjrqZERL/r0vFV1MBDDbi8CzpuNCOFKZJI9eYFncK0b34WMAJZx
-         pSDA7uT+Nj+Rna2QuzEOymqPBndV51r3Ng0riHMmr/Vf6pVhqo2NfL5+O/e6WZ+thC6X
-         pZ5NauEiFownC/6hvGAl1aFhXlJwR7IwkIpNdGmNg+HaCnO2DzUcTjh7Y0673Z5l09nV
-         tY4w==
-X-Gm-Message-State: ACgBeo2mSQF52QrlSE1l/mUePp+/3fdAIx+5SkdoBOt3HW1RuJ3OdsbN
-	oGNOkd3N5Fx97xumlER+lYg=
-X-Google-Smtp-Source: AA6agR5B0U4yEPzcfEMvg4EWSUMEiB5V88JgPoOag+aXjmtx75T7wOxR3QgN0r7Desc6C3h37KfZtA==
-X-Received: by 2002:a63:4d0e:0:b0:412:1877:9820 with SMTP id a14-20020a634d0e000000b0041218779820mr25457368pgb.177.1660187220938;
-        Wed, 10 Aug 2022 20:07:00 -0700 (PDT)
-Received: from debian.me (subs02-180-214-232-7.three.co.id. [180.214.232.7])
-        by smtp.gmail.com with ESMTPSA id oj7-20020a17090b4d8700b001df264610c4sm10902763pjb.0.2022.08.10.20.07.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Aug 2022 20:07:00 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id EB139103BCD; Thu, 11 Aug 2022 10:06:55 +0700 (WIB)
-Date: Thu, 11 Aug 2022 10:06:55 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Xianting Tian <xianting.tian@linux.alibaba.com>
-Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-	anup@brainfault.org, heiko@sntech.de, guoren@kernel.org,
-	mick@ics.forth.gr, alexandre.ghiti@canonical.com, bhe@redhat.com,
-	vgoyal@redhat.com, dyoung@redhat.com, corbet@lwn.net,
-	Conor.Dooley@microchip.com, kexec@lists.infradead.org,
-	linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, crash-utility@redhat.com,
-	huanyi.xj@alibaba-inc.com, heinrich.schuchardt@canonical.com,
-	k-hagio-ab@nec.com, hschauhan@nulltrace.org, yixun.lan@gmail.com
+	id 1oLz0u-004sVs-8T; Thu, 11 Aug 2022 03:37:42 +0000
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R541e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=xianting.tian@linux.alibaba.com;NM=1;PH=DS;RN=24;SR=0;TI=SMTPD_---0VLxQ5Q3_1660189052;
+Received: from B-LB6YLVDL-0141.local(mailfrom:xianting.tian@linux.alibaba.com fp:SMTPD_---0VLxQ5Q3_1660189052)
+          by smtp.aliyun-inc.com;
+          Thu, 11 Aug 2022 11:37:34 +0800
 Subject: Re: [PATCH V5 5/6] riscv: crash_core: Export kernel vm layout,
  phys_ram_base
-Message-ID: <YvRyT5f5uH7LBs4H@debian.me>
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ anup@brainfault.org, heiko@sntech.de, guoren@kernel.org, mick@ics.forth.gr,
+ alexandre.ghiti@canonical.com, bhe@redhat.com, vgoyal@redhat.com,
+ dyoung@redhat.com, corbet@lwn.net, Conor.Dooley@microchip.com,
+ kexec@lists.infradead.org, linux-doc@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ crash-utility@redhat.com, huanyi.xj@alibaba-inc.com,
+ heinrich.schuchardt@canonical.com, k-hagio-ab@nec.com,
+ hschauhan@nulltrace.org, yixun.lan@gmail.com
 References: <20220802121818.2201268-1-xianting.tian@linux.alibaba.com>
  <20220802121818.2201268-6-xianting.tian@linux.alibaba.com>
+ <YvRyT5f5uH7LBs4H@debian.me>
+From: Xianting Tian <xianting.tian@linux.alibaba.com>
+Message-ID: <81bf1acd-307c-b093-44c2-280c70f44e08@linux.alibaba.com>
+Date: Thu, 11 Aug 2022 11:37:32 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20220802121818.2201268-6-xianting.tian@linux.alibaba.com>
+In-Reply-To: <YvRyT5f5uH7LBs4H@debian.me>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220810_200703_734885_7E7B1CFB 
-X-CRM114-Status: GOOD (  11.14  )
+X-CRM114-CacheID: sfid-20220810_203740_490688_629BC2C8 
+X-CRM114-Status: GOOD (  15.02  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -93,57 +64,52 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Aug 02, 2022 at 08:18:17PM +0800, Xianting Tian wrote:
-> These infos are needed by the kdump crash tool. Since these values change
-> from time to time, it is preferable to export them via vmcoreinfo than to
-> change the crash's code frequently.
-> 
-
-I have to agree with Conor.Dooley, that this patch is misleading (I see
-documentation instead of real export). So IMO, the patch subject should
-be "Documentation: kdump: describe VMCOREINFO export for RISCV64".
-
-For MODULES_VADDR and friends, the doc can be improved, like:
-
-diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-index 6b76284a503ca5..6694acc32c3588 100644
---- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
-+++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-@@ -615,14 +615,13 @@ phys_ram_base
- 
- Indicates the start physical RAM address.
- 
--MODULES_VADDR|MODULES_END|VMALLOC_START|VMALLOC_END|VMEMMAP_START|VMEMMAP_END
-------------------------------------------------------------------------------
--KASAN_SHADOW_START|KASAN_SHADOW_END|KERNEL_LINK_ADDR|ADDRESS_SPACE_END
------------------------------------------------------------------------
-+MODULES_VADDR|MODULES_END|VMALLOC_START|VMALLOC_END|VMEMMAP_START|VMEMMAP_END|KASAN_SHADOW_START|KASAN_SHADOW_END|KERNEL_LINK_ADDR|ADDRESS_SPACE_END
-+----------------------------------------------------------------------------------------------------------------------------------------------------
- 
- Used to get the correct ranges:
--	MODULES_VADDR ~ MODULES_END : Kernel module space.
--	VMALLOC_START ~ VMALLOC_END : vmalloc() / ioremap() space.
--	VMEMMAP_START ~ VMEMMAP_END : vmemmap region, used for struct page array.
--	KASAN_SHADOW_START ~ KASAN_SHADOW_END : kasan shadow space.
--	KERNEL_LINK_ADDR ~ ADDRESS_SPACE_END : Kernel link and BPF space.
-+
-+  * MODULES_VADDR ~ MODULES_END : Kernel module space.
-+  * VMALLOC_START ~ VMALLOC_END : vmalloc() / ioremap() space.
-+  * VMEMMAP_START ~ VMEMMAP_END : vmemmap region, used for struct page array.
-+  * KASAN_SHADOW_START ~ KASAN_SHADOW_END : kasan shadow space.
-+  * KERNEL_LINK_ADDR ~ ADDRESS_SPACE_END : Kernel link and BPF space.
-
-Thanks.
-
--- 
-An old man doll... just what I always wanted! - Clara
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+CuWcqCAyMDIyLzgvMTEg5LiK5Y2IMTE6MDYsIEJhZ2FzIFNhbmpheWEg5YaZ6YGTOgo+IE9uIFR1
+ZSwgQXVnIDAyLCAyMDIyIGF0IDA4OjE4OjE3UE0gKzA4MDAsIFhpYW50aW5nIFRpYW4gd3JvdGU6
+Cj4+IFRoZXNlIGluZm9zIGFyZSBuZWVkZWQgYnkgdGhlIGtkdW1wIGNyYXNoIHRvb2wuIFNpbmNl
+IHRoZXNlIHZhbHVlcyBjaGFuZ2UKPj4gZnJvbSB0aW1lIHRvIHRpbWUsIGl0IGlzIHByZWZlcmFi
+bGUgdG8gZXhwb3J0IHRoZW0gdmlhIHZtY29yZWluZm8gdGhhbiB0bwo+PiBjaGFuZ2UgdGhlIGNy
+YXNoJ3MgY29kZSBmcmVxdWVudGx5Lgo+Pgo+IEkgaGF2ZSB0byBhZ3JlZSB3aXRoIENvbm9yLkRv
+b2xleSwgdGhhdCB0aGlzIHBhdGNoIGlzIG1pc2xlYWRpbmcgKEkgc2VlCj4gZG9jdW1lbnRhdGlv
+biBpbnN0ZWFkIG9mIHJlYWwgZXhwb3J0KS4gU28gSU1PLCB0aGUgcGF0Y2ggc3ViamVjdCBzaG91
+bGQKPiBiZSAiRG9jdW1lbnRhdGlvbjoga2R1bXA6IGRlc2NyaWJlIFZNQ09SRUlORk8gZXhwb3J0
+IGZvciBSSVNDVjY0Ii4KPgo+IEZvciBNT0RVTEVTX1ZBRERSIGFuZCBmcmllbmRzLCB0aGUgZG9j
+IGNhbiBiZSBpbXByb3ZlZCwgbGlrZToKPgo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Fk
+bWluLWd1aWRlL2tkdW1wL3ZtY29yZWluZm8ucnN0IGIvRG9jdW1lbnRhdGlvbi9hZG1pbi1ndWlk
+ZS9rZHVtcC92bWNvcmVpbmZvLnJzdAo+IGluZGV4IDZiNzYyODRhNTAzY2E1Li42Njk0YWNjMzJj
+MzU4OCAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2FkbWluLWd1aWRlL2tkdW1wL3ZtY29y
+ZWluZm8ucnN0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9hZG1pbi1ndWlkZS9rZHVtcC92bWNvcmVp
+bmZvLnJzdAo+IEBAIC02MTUsMTQgKzYxNSwxMyBAQCBwaHlzX3JhbV9iYXNlCj4gICAKPiAgIElu
+ZGljYXRlcyB0aGUgc3RhcnQgcGh5c2ljYWwgUkFNIGFkZHJlc3MuCj4gICAKPiAtTU9EVUxFU19W
+QUREUnxNT0RVTEVTX0VORHxWTUFMTE9DX1NUQVJUfFZNQUxMT0NfRU5EfFZNRU1NQVBfU1RBUlR8
+Vk1FTU1BUF9FTkQKPiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiAtS0FTQU5fU0hBRE9XX1NUQVJU
+fEtBU0FOX1NIQURPV19FTkR8S0VSTkVMX0xJTktfQUREUnxBRERSRVNTX1NQQUNFX0VORAo+IC0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tCj4gK01PRFVMRVNfVkFERFJ8TU9EVUxFU19FTkR8Vk1BTExPQ19TVEFSVHxW
+TUFMTE9DX0VORHxWTUVNTUFQX1NUQVJUfFZNRU1NQVBfRU5EfEtBU0FOX1NIQURPV19TVEFSVHxL
+QVNBTl9TSEFET1dfRU5EfEtFUk5FTF9MSU5LX0FERFJ8QUREUkVTU19TUEFDRV9FTkQKPiArLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+ICAgCj4gICBVc2VkIHRvIGdldCB0aGUg
+Y29ycmVjdCByYW5nZXM6Cj4gLQlNT0RVTEVTX1ZBRERSIH4gTU9EVUxFU19FTkQgOiBLZXJuZWwg
+bW9kdWxlIHNwYWNlLgo+IC0JVk1BTExPQ19TVEFSVCB+IFZNQUxMT0NfRU5EIDogdm1hbGxvYygp
+IC8gaW9yZW1hcCgpIHNwYWNlLgo+IC0JVk1FTU1BUF9TVEFSVCB+IFZNRU1NQVBfRU5EIDogdm1l
+bW1hcCByZWdpb24sIHVzZWQgZm9yIHN0cnVjdCBwYWdlIGFycmF5Lgo+IC0JS0FTQU5fU0hBRE9X
+X1NUQVJUIH4gS0FTQU5fU0hBRE9XX0VORCA6IGthc2FuIHNoYWRvdyBzcGFjZS4KPiAtCUtFUk5F
+TF9MSU5LX0FERFIgfiBBRERSRVNTX1NQQUNFX0VORCA6IEtlcm5lbCBsaW5rIGFuZCBCUEYgc3Bh
+Y2UuCj4gKwo+ICsgICogTU9EVUxFU19WQUREUiB+IE1PRFVMRVNfRU5EIDogS2VybmVsIG1vZHVs
+ZSBzcGFjZS4KPiArICAqIFZNQUxMT0NfU1RBUlQgfiBWTUFMTE9DX0VORCA6IHZtYWxsb2MoKSAv
+IGlvcmVtYXAoKSBzcGFjZS4KPiArICAqIFZNRU1NQVBfU1RBUlQgfiBWTUVNTUFQX0VORCA6IHZt
+ZW1tYXAgcmVnaW9uLCB1c2VkIGZvciBzdHJ1Y3QgcGFnZSBhcnJheS4KPiArICAqIEtBU0FOX1NI
+QURPV19TVEFSVCB+IEtBU0FOX1NIQURPV19FTkQgOiBrYXNhbiBzaGFkb3cgc3BhY2UuCj4gKyAg
+KiBLRVJORUxfTElOS19BRERSIH4gQUREUkVTU19TUEFDRV9FTkQgOiBLZXJuZWwgbGluayBhbmQg
+QlBGIHNwYWNlLgpUaGFua3MgZm9yIHRoZSBjb21tZW50LCBJIHdpbGwgZml4IGl0IGluIFY2Cj4K
+PiBUaGFua3MuCj4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
+aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
