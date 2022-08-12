@@ -4,78 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4004CC19F2A
-	for <kexec@archiver.kernel.org>; Thu, 11 Aug 2022 16:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 18099C25B0F
+	for <kexec@archiver.kernel.org>; Fri, 12 Aug 2022 03:25:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
 	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:Mime-Version:Message-ID:To:From:CC:In-Reply-To:
-	Subject:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:List-Owner;
-	bh=XhUA3t9841A3Q/IdRmVi+bnDtg4GOZ+4APtOchqqxoA=; b=elwgKORgv4y2yiYzZA03gXuf48
-	VCGFejUz+v22pZhJmV255y5sY2vaw8xoaQawrShhyHWEeEwDeRvFPgH9war6MBYKOTKvysxJoZeiZ
-	qWrInaT2fQJpvYAga2Uf7fuYAYSgL350Bo5kOYbsORbwLrRtW7RBtPmqXgtzM4qUfF7fBNuFXO/lK
-	6zdJsAYrgEHktUyQ4av89btsIqqzDV247cxMoJTDPoKQ6iShUf5hUejvV7DRknulYC+PVisb5/BTX
-	gRTWzi9ogp8VJ5kIV8n9hmtrtiQV6GHwCCXR3kssR8VRKHiprKaNP9vXuPZe8NEsCEAGhHrBG0z2m
-	6bn6t/vA==;
+	List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:Date:Message-ID:From:
+	References:Cc:To:Subject:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=c46QRswzvNMJibdyIurLtHekkimF5eFCfl3dNnD8C3Q=; b=37IrQJMBMhRiYb3b0c3x0IjREq
+	j3hx6r9nOQWW2/QWa20FtOQQu4NUfMkOlcB9NcTFax/wyttOJe5+ddBo8fBWyt765fa/fYlkmUf6L
+	obvkN6u2smnaJ7XRP9DK2hM+cF0Ox56PfTT5I848wZ4NEqrara6qHMrnir2T0gVvCT5V/dkIL/PD9
+	EN8kp+12Q76pdQQxZqbynM1untk0fFCE+SSmGrhiuLNLAAT+/VnDjrMJ4s6hmV4TygzD6NirzhzZr
+	La+I+QjlCrZvoax2XgPa24NKN3BH7JJ9gbrWrS+1dGx5w35F8VxrtYwjMLERQIRDVo3NZGLAHgabV
+	1c3wTEow==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oMArz-00EsGn-QI; Thu, 11 Aug 2022 16:17:15 +0000
-Received: from mail-pg1-x52a.google.com ([2607:f8b0:4864:20::52a])
+	id 1oMLIn-00DWh0-S3; Fri, 12 Aug 2022 03:25:37 +0000
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oMArr-00Es9m-DW
-	for kexec@lists.infradead.org; Thu, 11 Aug 2022 16:17:13 +0000
-Received: by mail-pg1-x52a.google.com with SMTP id r22so15126313pgm.5
-        for <kexec@lists.infradead.org>; Thu, 11 Aug 2022 09:17:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc;
-        bh=LqFU2f8KAu+do04+BY0xxELDBXMNilTFkQt1GBEIGfQ=;
-        b=M5SXggdeqf0Sn+7PKP3FO4FHCkolQIZytuNY0IW7NgfUhG79K4Od/gB7Szl7KHQL+r
-         kTCRgbFg95uEt8+VQKU8ifpiY1ZIAky3r70c5WTg3HLWYimywWKGCCn+A95AuGspzuQV
-         qfsifv+llmMzI8thj3td00cNGT+SGje0tl2Se1dXm4CZ/kReQmcG2nRuuemdxi12tSSH
-         HDsYkirsnxMdijIA8hr0QzDwt9nGwC1qGh65zuTzvnZc0WA2A/yLtHp1dxnevra9o0zC
-         16k0kVcmgrPXcwm/MTIArxDUvbO+uBI7nZqJ+9LljkiQGnfz15iK3YHAuivCE3i1BAe1
-         H1AA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc;
-        bh=LqFU2f8KAu+do04+BY0xxELDBXMNilTFkQt1GBEIGfQ=;
-        b=q3HFLu37csbv+RThpiv3mIxXFl8W9eXXh0IOkU3cUqzb36EwzleUzBOHSRiTucVmwG
-         UCvFyG1h9P67nPczyLaxEO4UeeFQUTSpkTQhsj9ij3FM+HQU0uCp9vx6Z+pZJumcL+uq
-         4inBKMB0TPqRNh4OU0ypV8cgzGFdhSU2L2CrAfBIPUw3KPSjB66u9IBiYEFXXH3NPxDb
-         YWWtHiUv5dAK3pcelLi0pCHpHL/U84cjreokllUyPhT2mUW2nFuja+STO/WR5Hf+uKYY
-         tn7T0M+5n+n1EIlRj+X+YzP+PCopNq2jSSARoh3c6okZyYNbQZk22y+2PrPAntAsIAN4
-         O5Gw==
-X-Gm-Message-State: ACgBeo0jKFtYC4zJG+GZINtK+R3yPBoNcXadRvpEtYur/i08ERn6uajG
-	hCJIBszkKYWhOgtV7dbWP/oBdg==
-X-Google-Smtp-Source: AA6agR4xlbNk9dH0j5rGK3Ka8Aw9IWX4A2wg8u1+lijEpKLCaXufEaSJjqRMp8RD42B6JjtYpF9QvQ==
-X-Received: by 2002:a05:6a00:b41:b0:52f:59dc:75 with SMTP id p1-20020a056a000b4100b0052f59dc0075mr40627pfo.33.1660234624258;
-        Thu, 11 Aug 2022 09:17:04 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id d14-20020a170902654e00b0016ed715d244sm15093049pln.300.2022.08.11.09.17.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Aug 2022 09:17:03 -0700 (PDT)
-Date: Thu, 11 Aug 2022 09:17:03 -0700 (PDT)
-X-Google-Original-Date: Thu, 11 Aug 2022 09:12:03 PDT (-0700)
+	id 1oMLH9-00DNhv-7Q; Fri, 12 Aug 2022 03:23:57 +0000
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=xianting.tian@linux.alibaba.com;NM=1;PH=DS;RN=22;SR=0;TI=SMTPD_---0VM04yDW_1660274624;
+Received: from B-LB6YLVDL-0141.local(mailfrom:xianting.tian@linux.alibaba.com fp:SMTPD_---0VM04yDW_1660274624)
+          by smtp.aliyun-inc.com;
+          Fri, 12 Aug 2022 11:23:45 +0800
 Subject: Re: [PATCH V6 0/6] RISC-V fixups to work with crash tool
-In-Reply-To: <20220811074150.3020189-1-xianting.tian@linux.alibaba.com>
-CC: Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
-  anup@brainfault.org, heiko@sntech.de, guoren@kernel.org, mick@ics.forth.gr,
-  alexandre.ghiti@canonical.com, bhe@redhat.com, vgoyal@redhat.com, dyoung@redhat.com, corbet@lwn.net,
-  Conor.Dooley@microchip.com, kexec@lists.infradead.org, linux-doc@vger.kernel.org,
-  linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, crash-utility@redhat.com,
-  heinrich.schuchardt@canonical.com, k-hagio-ab@nec.com, hschauhan@nulltrace.org, yixun.lan@gmail.com,
-  xianting.tian@linux.alibaba.com
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: xianting.tian@linux.alibaba.com
-Message-ID: <mhng-f5fdaa37-e99a-4214-a297-ec81f0fed0c1@palmer-mbp2014>
-Mime-Version: 1.0 (MHng)
+To: Palmer Dabbelt <palmer@dabbelt.com>, Conor.Dooley@microchip.com
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
+ anup@brainfault.org, heiko@sntech.de, guoren@kernel.org, mick@ics.forth.gr,
+ alexandre.ghiti@canonical.com, bhe@redhat.com, vgoyal@redhat.com,
+ dyoung@redhat.com, corbet@lwn.net, Conor.Dooley@microchip.com,
+ kexec@lists.infradead.org, linux-doc@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ crash-utility@redhat.com, heinrich.schuchardt@canonical.com,
+ k-hagio-ab@nec.com, hschauhan@nulltrace.org, yixun.lan@gmail.com
+References: <mhng-f5fdaa37-e99a-4214-a297-ec81f0fed0c1@palmer-mbp2014>
+From: Xianting Tian <xianting.tian@linux.alibaba.com>
+Message-ID: <f4f82b84-d224-ed8d-d54d-a55f2eddeb31@linux.alibaba.com>
+Date: Fri, 12 Aug 2022 11:23:43 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.14.0
+MIME-Version: 1.0
+In-Reply-To: <mhng-f5fdaa37-e99a-4214-a297-ec81f0fed0c1@palmer-mbp2014>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220811_091711_489914_36206C8F 
-X-CRM114-Status: GOOD (  26.90  )
+X-CRM114-CacheID: sfid-20220811_202355_475308_DC7F4B74 
+X-CRM114-Status: GOOD (  23.25  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,82 +60,88 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, 11 Aug 2022 00:41:44 PDT (-0700), xianting.tian@linux.alibaba.com wrote:
-> I ever sent the patch 1 in the link:
-> https://patchwork.kernel.org/project/linux-riscv/patch/20220708073150.352830-3-xianting.tian@linux.alibaba.com/
-> And patch 2,3 in the link:
-> https://patchwork.kernel.org/project/linux-riscv/patch/20220714113300.367854-2-xianting.tian@linux.alibaba.com/
-> https://patchwork.kernel.org/project/linux-riscv/patch/20220714113300.367854-3-xianting.tian@linux.alibaba.com/
->
-> This patch set just put these patches together, and with three new patch 4, 5, 6.
-> these six patches are the fixups for machine_kexec, kernel mode PC for vmcore
-> and improvements for vmcoreinfo, memory layout dump and fixup schedule out issue
-> in machine_crash_shutdown().
->
-> The main changes in the six patchs as below,
-> Patch 1: Fixup use of smp_processor_id() in preemptible context, to cleanup
->          the console prints.
-> Patch 2: Fixup to get correct kernel mode PC for kernel mode regs for vmcore.
-> Patch 3: Fixup schedule out issue in machine_crash_shutdown()
-> Patch 4: Add modules to virtual kernel memory layout dump.
-> Patch 5: Add VM layout, va bits, ram base to vmcoreinfo, which can simplify
->          the development of crash tool as ARM64 already did
->          (arch/arm64/kernel/crash_core.c).
-> Patch 6: Updates vmcoreinfo.rst for vmcoreinfo export for RISCV64.
->
-> With these six patches(patch 2 is must), crash tool can work well to analyze
-> a vmcore. The patches for crash tool for RISCV64 is in the link:
-> https://lore.kernel.org/linux-riscv/20220801043040.2003264-1-xianting.tian@linux.alibaba.com/
->
-> ------
-> Changes v1 -> v2:
->   1, remove the patch "Add a fast call path of crash_kexec()" from this series
->      of patches, as it already applied to riscv git.
->      https://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git/commit/?h=for-next&id=3f1901110a89b0e2e13adb2ac8d1a7102879ea98
->   2, add 'Reviewed-by' based on the comments of v1.
-> Changes v2 -> v3:
->   use "riscv" instead of "riscv64" in patch 5 subject line.
-> Changes v3 -> v4:
->   use "riscv" instead of "riscv64" in the summary of patch 5 subject line.
-> Changes v4 -> v5:
->   add a new patch "RISC-V: Fixup schedule out issue in machine_crash_shutdown()"
-> Changes v5 -> v6:
->   1, move "fixup" patches to the start of the patch set.
->   2, change patch 1, 2, 6's subject to make it tell more what it's about.
->   3, add Fixes for patch 3.
->   4, adjuest the changes format for patch 6.
->
->
-> Xianting Tian (6):
->   RISC-V: kexec: Fixup use of smp_processor_id() in preemptible context
->   RISC-V: Fixup get incorrect user mode PC for kernel mode regs
->   RISC-V: Fixup schedule out issue in machine_crash_shutdown()
->   RISC-V: Add modules to virtual kernel memory layout dump
->   RISC-V: Add arch_crash_save_vmcoreinfo support
->   Documentation: kdump: describe VMCOREINFO export for RISCV64
->
->  .../admin-guide/kdump/vmcoreinfo.rst          | 31 +++++++++++++++++++
->  arch/riscv/kernel/Makefile                    |  1 +
->  arch/riscv/kernel/crash_core.c                | 29 +++++++++++++++++
->  arch/riscv/kernel/crash_save_regs.S           |  2 +-
->  arch/riscv/kernel/machine_kexec.c             | 28 ++++++++++++++---
->  arch/riscv/mm/init.c                          |  4 +++
->  6 files changed, 89 insertions(+), 6 deletions(-)
->  create mode 100644 arch/riscv/kernel/crash_core.c
-
-Thank.  I've taken the first 4 onto for-next, which is still targeted 
-for 5.20, as they're fixes.  I'm not opposed to taking the documentation 
-patch for this cycle as well, it just needs some going-over as the 
-wording looks very odd (or at least it does to me right now, maybe I'm 
-just still half asleep).  Patch 5 is a new feature, and given that it's 
-being spun during the merge window it's too late.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+CuWcqCAyMDIyLzgvMTIg5LiK5Y2IMTI6MTcsIFBhbG1lciBEYWJiZWx0IOWGmemBkzoKPiBPbiBU
+aHUsIDExIEF1ZyAyMDIyIDAwOjQxOjQ0IFBEVCAoLTA3MDApLCAKPiB4aWFudGluZy50aWFuQGxp
+bnV4LmFsaWJhYmEuY29tIHdyb3RlOgo+PiBJIGV2ZXIgc2VudCB0aGUgcGF0Y2ggMSBpbiB0aGUg
+bGluazoKPj4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wcm9qZWN0L2xpbnV4LXJpc2N2
+L3BhdGNoLzIwMjIwNzA4MDczMTUwLjM1MjgzMC0zLXhpYW50aW5nLnRpYW5AbGludXguYWxpYmFi
+YS5jb20vIAo+Pgo+PiBBbmQgcGF0Y2ggMiwzIGluIHRoZSBsaW5rOgo+PiBodHRwczovL3BhdGNo
+d29yay5rZXJuZWwub3JnL3Byb2plY3QvbGludXgtcmlzY3YvcGF0Y2gvMjAyMjA3MTQxMTMzMDAu
+MzY3ODU0LTIteGlhbnRpbmcudGlhbkBsaW51eC5hbGliYWJhLmNvbS8gCj4+Cj4+IGh0dHBzOi8v
+cGF0Y2h3b3JrLmtlcm5lbC5vcmcvcHJvamVjdC9saW51eC1yaXNjdi9wYXRjaC8yMDIyMDcxNDEx
+MzMwMC4zNjc4NTQtMy14aWFudGluZy50aWFuQGxpbnV4LmFsaWJhYmEuY29tLyAKPj4KPj4KPj4g
+VGhpcyBwYXRjaCBzZXQganVzdCBwdXQgdGhlc2UgcGF0Y2hlcyB0b2dldGhlciwgYW5kIHdpdGgg
+dGhyZWUgbmV3IAo+PiBwYXRjaCA0LCA1LCA2Lgo+PiB0aGVzZSBzaXggcGF0Y2hlcyBhcmUgdGhl
+IGZpeHVwcyBmb3IgbWFjaGluZV9rZXhlYywga2VybmVsIG1vZGUgUEMgCj4+IGZvciB2bWNvcmUK
+Pj4gYW5kIGltcHJvdmVtZW50cyBmb3Igdm1jb3JlaW5mbywgbWVtb3J5IGxheW91dCBkdW1wIGFu
+ZCBmaXh1cCAKPj4gc2NoZWR1bGUgb3V0IGlzc3VlCj4+IGluIG1hY2hpbmVfY3Jhc2hfc2h1dGRv
+d24oKS4KPj4KPj4gVGhlIG1haW4gY2hhbmdlcyBpbiB0aGUgc2l4IHBhdGNocyBhcyBiZWxvdywK
+Pj4gUGF0Y2ggMTogRml4dXAgdXNlIG9mIHNtcF9wcm9jZXNzb3JfaWQoKSBpbiBwcmVlbXB0aWJs
+ZSBjb250ZXh0LCB0byAKPj4gY2xlYW51cAo+PiDCoMKgwqDCoMKgwqDCoMKgIHRoZSBjb25zb2xl
+IHByaW50cy4KPj4gUGF0Y2ggMjogRml4dXAgdG8gZ2V0IGNvcnJlY3Qga2VybmVsIG1vZGUgUEMg
+Zm9yIGtlcm5lbCBtb2RlIHJlZ3MgZm9yIAo+PiB2bWNvcmUuCj4+IFBhdGNoIDM6IEZpeHVwIHNj
+aGVkdWxlIG91dCBpc3N1ZSBpbiBtYWNoaW5lX2NyYXNoX3NodXRkb3duKCkKPj4gUGF0Y2ggNDog
+QWRkIG1vZHVsZXMgdG8gdmlydHVhbCBrZXJuZWwgbWVtb3J5IGxheW91dCBkdW1wLgo+PiBQYXRj
+aCA1OiBBZGQgVk0gbGF5b3V0LCB2YSBiaXRzLCByYW0gYmFzZSB0byB2bWNvcmVpbmZvLCB3aGlj
+aCBjYW4gCj4+IHNpbXBsaWZ5Cj4+IMKgwqDCoMKgwqDCoMKgwqAgdGhlIGRldmVsb3BtZW50IG9m
+IGNyYXNoIHRvb2wgYXMgQVJNNjQgYWxyZWFkeSBkaWQKPj4gwqDCoMKgwqDCoMKgwqDCoCAoYXJj
+aC9hcm02NC9rZXJuZWwvY3Jhc2hfY29yZS5jKS4KPj4gUGF0Y2ggNjogVXBkYXRlcyB2bWNvcmVp
+bmZvLnJzdCBmb3Igdm1jb3JlaW5mbyBleHBvcnQgZm9yIFJJU0NWNjQuCj4+Cj4+IFdpdGggdGhl
+c2Ugc2l4IHBhdGNoZXMocGF0Y2ggMiBpcyBtdXN0KSwgY3Jhc2ggdG9vbCBjYW4gd29yayB3ZWxs
+IHRvIAo+PiBhbmFseXplCj4+IGEgdm1jb3JlLiBUaGUgcGF0Y2hlcyBmb3IgY3Jhc2ggdG9vbCBm
+b3IgUklTQ1Y2NCBpcyBpbiB0aGUgbGluazoKPj4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGlu
+dXgtcmlzY3YvMjAyMjA4MDEwNDMwNDAuMjAwMzI2NC0xLXhpYW50aW5nLnRpYW5AbGludXguYWxp
+YmFiYS5jb20vIAo+Pgo+Pgo+PiAtLS0tLS0KPj4gQ2hhbmdlcyB2MSAtPiB2MjoKPj4gwqAgMSwg
+cmVtb3ZlIHRoZSBwYXRjaCAiQWRkIGEgZmFzdCBjYWxsIHBhdGggb2YgY3Jhc2hfa2V4ZWMoKSIg
+ZnJvbSAKPj4gdGhpcyBzZXJpZXMKPj4gwqDCoMKgwqAgb2YgcGF0Y2hlcywgYXMgaXQgYWxyZWFk
+eSBhcHBsaWVkIHRvIHJpc2N2IGdpdC4KPj4gaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2Nt
+L2xpbnV4L2tlcm5lbC9naXQvcmlzY3YvbGludXguZ2l0L2NvbW1pdC8/aD1mb3ItbmV4dCZpZD0z
+ZjE5MDExMTBhODliMGUyZTEzYWRiMmFjOGQxYTcxMDI4NzllYTk4Cj4+IMKgIDIsIGFkZCAnUmV2
+aWV3ZWQtYnknIGJhc2VkIG9uIHRoZSBjb21tZW50cyBvZiB2MS4KPj4gQ2hhbmdlcyB2MiAtPiB2
+MzoKPj4gwqAgdXNlICJyaXNjdiIgaW5zdGVhZCBvZiAicmlzY3Y2NCIgaW4gcGF0Y2ggNSBzdWJq
+ZWN0IGxpbmUuCj4+IENoYW5nZXMgdjMgLT4gdjQ6Cj4+IMKgIHVzZSAicmlzY3YiIGluc3RlYWQg
+b2YgInJpc2N2NjQiIGluIHRoZSBzdW1tYXJ5IG9mIHBhdGNoIDUgc3ViamVjdCAKPj4gbGluZS4K
+Pj4gQ2hhbmdlcyB2NCAtPiB2NToKPj4gwqAgYWRkIGEgbmV3IHBhdGNoICJSSVNDLVY6IEZpeHVw
+IHNjaGVkdWxlIG91dCBpc3N1ZSBpbiAKPj4gbWFjaGluZV9jcmFzaF9zaHV0ZG93bigpIgo+PiBD
+aGFuZ2VzIHY1IC0+IHY2Ogo+PiDCoCAxLCBtb3ZlICJmaXh1cCIgcGF0Y2hlcyB0byB0aGUgc3Rh
+cnQgb2YgdGhlIHBhdGNoIHNldC4KPj4gwqAgMiwgY2hhbmdlIHBhdGNoIDEsIDIsIDYncyBzdWJq
+ZWN0IHRvIG1ha2UgaXQgdGVsbCBtb3JlIHdoYXQgaXQncyAKPj4gYWJvdXQuCj4+IMKgIDMsIGFk
+ZCBGaXhlcyBmb3IgcGF0Y2ggMy4KPj4gwqAgNCwgYWRqdWVzdCB0aGUgY2hhbmdlcyBmb3JtYXQg
+Zm9yIHBhdGNoIDYuCj4+Cj4+Cj4+IFhpYW50aW5nIFRpYW4gKDYpOgo+PiDCoCBSSVNDLVY6IGtl
+eGVjOiBGaXh1cCB1c2Ugb2Ygc21wX3Byb2Nlc3Nvcl9pZCgpIGluIHByZWVtcHRpYmxlIGNvbnRl
+eHQKPj4gwqAgUklTQy1WOiBGaXh1cCBnZXQgaW5jb3JyZWN0IHVzZXIgbW9kZSBQQyBmb3Iga2Vy
+bmVsIG1vZGUgcmVncwo+PiDCoCBSSVNDLVY6IEZpeHVwIHNjaGVkdWxlIG91dCBpc3N1ZSBpbiBt
+YWNoaW5lX2NyYXNoX3NodXRkb3duKCkKPj4gwqAgUklTQy1WOiBBZGQgbW9kdWxlcyB0byB2aXJ0
+dWFsIGtlcm5lbCBtZW1vcnkgbGF5b3V0IGR1bXAKPj4gwqAgUklTQy1WOiBBZGQgYXJjaF9jcmFz
+aF9zYXZlX3ZtY29yZWluZm8gc3VwcG9ydAo+PiDCoCBEb2N1bWVudGF0aW9uOiBrZHVtcDogZGVz
+Y3JpYmUgVk1DT1JFSU5GTyBleHBvcnQgZm9yIFJJU0NWNjQKPj4KPj4gwqAuLi4vYWRtaW4tZ3Vp
+ZGUva2R1bXAvdm1jb3JlaW5mby5yc3TCoMKgwqDCoMKgwqDCoMKgwqAgfCAzMSArKysrKysrKysr
+KysrKysrKysrCj4+IMKgYXJjaC9yaXNjdi9rZXJuZWwvTWFrZWZpbGXCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqAgMSArCj4+IMKgYXJjaC9yaXNjdi9rZXJuZWwvY3Jh
+c2hfY29yZS5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwgMjkgKysrKysrKysrKysr
+KysrKysKPj4gwqBhcmNoL3Jpc2N2L2tlcm5lbC9jcmFzaF9zYXZlX3JlZ3MuU8KgwqDCoMKgwqDC
+oMKgwqDCoMKgIHzCoCAyICstCj4+IMKgYXJjaC9yaXNjdi9rZXJuZWwvbWFjaGluZV9rZXhlYy5j
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwgMjggKysrKysrKysrKysrKystLS0KPj4gwqBhcmNo
+L3Jpc2N2L21tL2luaXQuY8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgIHzCoCA0ICsrKwo+PiDCoDYgZmlsZXMgY2hhbmdlZCwgODkgaW5zZXJ0aW9ucygr
+KSwgNiBkZWxldGlvbnMoLSkKPj4gwqBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9yaXNjdi9rZXJu
+ZWwvY3Jhc2hfY29yZS5jCj4KPiBUaGFuay7CoCBJJ3ZlIHRha2VuIHRoZSBmaXJzdCA0IG9udG8g
+Zm9yLW5leHQsIHdoaWNoIGlzIHN0aWxsIHRhcmdldGVkIAo+IGZvciA1LjIwLCBhcyB0aGV5J3Jl
+IGZpeGVzLsKgIEknbSBub3Qgb3Bwb3NlZCB0byB0YWtpbmcgdGhlIAo+IGRvY3VtZW50YXRpb24g
+cGF0Y2ggZm9yIHRoaXMgY3ljbGUgYXMgd2VsbCwgaXQganVzdCBuZWVkcyBzb21lIAo+IGdvaW5n
+LW92ZXIgYXMgdGhlIHdvcmRpbmcgbG9va3MgdmVyeSBvZGQgKG9yIGF0IGxlYXN0IGl0IGRvZXMg
+dG8gbWUgCj4gcmlnaHQgbm93LCBtYXliZSBJJ20ganVzdCBzdGlsbCBoYWxmIGFzbGVlcCkuwqAg
+UGF0Y2ggNSBpcyBhIG5ldyAKPiBmZWF0dXJlLCBhbmQgZ2l2ZW4gdGhhdCBpdCdzIGJlaW5nIHNw
+dW4gZHVyaW5nIHRoZSBtZXJnZSB3aW5kb3cgaXQncyAKPiB0b28gbGF0ZS4KClRoYW5rIHlvdSBQ
+YWxtZXIsIENvbm9yLgpJIHNhdyBwYXRjaCA1LDYgYWxyZWFkeSBtZXJnZWQgdG8gUGFsbWVyJ3Mg
+cmlzY3YtY3Jhc2ggYnJhbmNoLApodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgv
+a2VybmVsL2dpdC9wYWxtZXIvbGludXguZ2l0L2xvZy8/aD1yaXNjdi1jcmFzaApMb29raW5nIGZv
+cndhcmQgdG8gYmUgbWVyZ2VkIHRvIDYuMSg/KS4gdGhhbmtzLgoKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0Bs
+aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
+dGluZm8va2V4ZWMK
