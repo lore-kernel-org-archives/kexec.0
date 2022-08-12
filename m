@@ -4,73 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 59496C00140
-	for <kexec@archiver.kernel.org>; Fri, 12 Aug 2022 09:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A825DC25B0E
+	for <kexec@archiver.kernel.org>; Fri, 12 Aug 2022 16:43:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=K70Kvni1MBP/dMNuHFf31s6/fAxq1Dq4nLQcn1uQwd8=; b=qWsl/IculkAdhI
-	ecDKzQU42Q1QAqLdItIpzJi/qncQhqZruDjnlIQgoLmwyWrVqG8qZzgR/iBu377+3pQU/5JKL85Hi
-	XShBf/aigEERyoYKzMY262o4NWr60aNOGa8KnL2r++jFL7uJj5N52djfEW5F94AGw79VQid7OKyEv
-	tztAUKv3psx2ymrE01jxZ26E5fMPzv9F6Pdy0MyAzC5QX8AbOHWBKf8teDlSI/XzGYsVj4rpezaSp
-	uTJwALwPAuKx6Bt8oPfEbzdcRZgEKlw3P/v5kxSFrf5JZzD2ezvF05ggKI1FnIFyP3XTqEEmQ+cLk
-	vaMVtJ3jdQ2Shx5/0Gww==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=TZtpV8L/vPASnFIYOLi91+lTV0eTdte4JTIk/NIay9s=; b=AszXvvEU5uEbfp
+	1a5wNGxaGd9REqsB6NTiYlTYqtluhE7/o2eqQaR9rOzDiEQMxZFQ9m+X2Lg2uDCTk0jYO0PFahNpX
+	N4ukOTticEG1e/ipY4vG/GDXPj/CzU+wgr4hEm/lL5o2nBGYbadFgVBQrMWbiJAh3LQK/AYpzajNs
+	fLyZEPLIZgQVmQfN5jKF4ipBeFnIxSj7e/kBgjkURlrdbe9HR90uRGz9gXn6/NgpLql4JxTgLMsew
+	j/Jakb6lGZ73kVMDQJ8jGqGs7EMMlhS79HdPfjwYKj/gSb54btpJ8MnUU65j2W2v1sXbvW2u1PjqJ
+	DAcCEyM9dF04q/JB5VPQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oMRFJ-003vSU-V7; Fri, 12 Aug 2022 09:46:25 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1oMXl7-00B1f1-Dt; Fri, 12 Aug 2022 16:43:41 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5] helo=mx0a-001b2d01.pphosted.com)
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oMRFG-003vLD-HZ
-	for kexec@lists.infradead.org; Fri, 12 Aug 2022 09:46:24 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1660297579;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2c/iImSQTA02RBtmBVV2RGW771GUr2pXHiaSO81S20w=;
-	b=HQpUYVEdR3WLm+PlU9DgFKIYTH4MJ7HcTU05DjKaXs40+PRKunpxjh60YXCjl0C0dd0Y6B
-	mBcyHe8xXcXLtp6KTUG7UXdDYBpTq7NPfVnYLWVUXf/x/BWgcIePlepsdvVBU/k3iV9VsV
-	9MpDzm+JN7RjBUKy2UhIoH2oTdlfYUA=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-211-2Wxmoo5wOzabgm-izal5tA-1; Fri, 12 Aug 2022 05:46:15 -0400
-X-MC-Unique: 2Wxmoo5wOzabgm-izal5tA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 29815811E75;
-	Fri, 12 Aug 2022 09:46:14 +0000 (UTC)
-Received: from localhost (ovpn-12-160.pek2.redhat.com [10.72.12.160])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id E44A42166B26;
-	Fri, 12 Aug 2022 09:46:12 +0000 (UTC)
-Date: Fri, 12 Aug 2022 17:46:09 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Eric DeVolder <eric.devolder@oracle.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org,
-	ebiederm@xmission.com, dyoung@redhat.com, vgoyal@redhat.com,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, hpa@zytor.com,
-	nramas@linux.microsoft.com, thomas.lendacky@amd.com,
-	robh@kernel.org, efault@gmx.de, rppt@kernel.org, david@redhat.com,
-	sourabhjain@linux.ibm.com, konrad.wilk@oracle.com,
-	boris.ostrovsky@oracle.com
-Subject: Re: [PATCH v10 1/8] crash: introduce arch/*/asm/crash.h
-Message-ID: <YvYhYdV6F2zH4o3X@MiWiFi-R3L-srv>
-References: <20220721181747.1640-1-eric.devolder@oracle.com>
- <20220721181747.1640-2-eric.devolder@oracle.com>
- <YvCCOY+mRshu1tHi@MiWiFi-R3L-srv>
- <52d40562-ee6f-bb89-6d21-2d6baf67053d@oracle.com>
+	id 1oMXl1-00B1TK-My
+	for kexec@lists.infradead.org; Fri, 12 Aug 2022 16:43:37 +0000
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+	by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 27CGdYwi017656;
+	Fri, 12 Aug 2022 16:43:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=W1kP0PQIOg8AznSGh3VKLzr+YxR+U4p2hGMeCUapCEo=;
+ b=DhTWcU81TTD8AtxrX2FUkeGhlqYOpCrEuARXSBl/WaO0WrVbgYmY8OK2Lla95kx55QV/
+ Gn01sJxspo51uvKmyokSrAgEbX9riRkx97dahF++wsyVO2aqetZ4OCOnqwVOPr9tmg/2
+ R3c0iP6Q+bICKrZvEUDFEogpYW9DSx/zSjDy1oBzfZtu2IBfIs7ljuit3CEWNVKs5xXD
+ 4qEDJeVSLwBIkbYjJ5KlxE8gfOhIzW0oTkP47BkiPP89hZ921o2k1XrXKE47gi5J7wAl
+ MKsc+/utp6K77CdhtHzr7055vOJ8Zwvm7hlxrbrdeh6E91jkJRyr37i8ADn/T763aRHU lg== 
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+	by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3hwtd20k9b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 12 Aug 2022 16:43:25 +0000
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+	by ppma01dal.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 27CGZjN4010612;
+	Fri, 12 Aug 2022 16:43:12 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+	by ppma01dal.us.ibm.com with ESMTP id 3huwvry194-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 12 Aug 2022 16:43:12 +0000
+Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
+	by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 27CGhBg410814012
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 12 Aug 2022 16:43:11 GMT
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 23FA428058;
+	Fri, 12 Aug 2022 16:43:11 +0000 (GMT)
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0A69D28059;
+	Fri, 12 Aug 2022 16:43:10 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+	by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
+	Fri, 12 Aug 2022 16:43:10 +0000 (GMT)
+From: Stefan Berger <stefanb@linux.ibm.com>
+To: kexec@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Cc: nayna@linux.ibm.com, nasastry@in.ibm.com, mpe@ellerman.id.au,
+        Stefan Berger <stefanb@linux.ibm.com>
+Subject: [PATCH v7 0/6] tpm: Preserve TPM measurement log across kexec (ppc64)
+Date: Fri, 12 Aug 2022 12:42:59 -0400
+Message-Id: <20220812164305.2056641-1-stefanb@linux.ibm.com>
+X-Mailer: git-send-email 2.37.1
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <52d40562-ee6f-bb89-6d21-2d6baf67053d@oracle.com>
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.6
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 5ijKvv2nNsPSA_-Jv3zP-e4i4QPuup8r
+X-Proofpoint-GUID: 5ijKvv2nNsPSA_-Jv3zP-e4i4QPuup8r
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-08-12_10,2022-08-11_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
+ bulkscore=0 lowpriorityscore=0 priorityscore=1501 mlxscore=0
+ impostorscore=0 malwarescore=0 clxscore=1015 mlxlogscore=572 adultscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2207270000 definitions=main-2208120044
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220812_024622_805407_37B9476C 
-X-CRM114-Status: GOOD (  19.08  )
+X-CRM114-CacheID: sfid-20220812_094335_904718_4EBC603A 
+X-CRM114-Status: GOOD (  19.36  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,49 +101,71 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 08/08/22 at 10:18am, Eric DeVolder wrote:
-> 
-> 
-> On 8/7/22 22:25, Baoquan He wrote:
-> > Hi Eric,
-> > 
-> > On 07/21/22 at 02:17pm, Eric DeVolder wrote:
-> > > The use of __weak is being eliminated within kexec sources.
-> > > The technique uses macros mapped onto inline functions in
-> > > order to replace __weak.
-> > > 
-> > > This patchset was using __weak and so in order to replace
-> > > __weak, this patch introduces arch/*/asm/crash.h, patterned
-> > > after how kexec is moving away from __weak and to the macro
-> > > definitions.
-> > 
-> > Are you going to replace __weak in kexec of arll ARCHes? I don't see
-> > your point why all these empty header files are introduced. Wondering
-> > what's impacted if not adding these empty files?
-> 
-> Hi Baoquan,
-> In this patchset, to file include/linux/crash_core.h I added the line #include <asm/crash.h>.
-> I patterned this after how include/linux/kexec.h does #include <asm/kexec.h>.
+The of-tree subsystem does not currently preserve the IBM vTPM 1.2 and
+vTPM 2.0 measurement logs across a kexec on PowerVM and PowerKVM. This
+series fixes this for the kexec_file_load() syscall using the flattened
+device tree (fdt) to carry the TPM measurement log's buffer across kexec.
 
-I am sorry, Eric, it looks not so good. I understand you want to pattern
-asm/kexe.h, but we need consider reality. Introducing a dozen of empty
-header file and not being able to tell when they will be filled doesn't
-make sense.
+   Stefan
 
-Includig <asm/crash.h> where needed is much simpler. I doubt if your way
-can pass other reviewers' line. Can you reconsider?
+v7:
+ - Added Nageswara's Tested-by tags
+ - Added back original comment to inline function and removed Jarkko's R-b tag
 
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 77f5f3591760..b0577bdcc491 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -15,6 +15,7 @@
- 
- #include <asm/page.h>
- #include <asm/sections.h>
-+#include <asm/crash.h>
- 
- #include <crypto/sha1.h>
+v6:
+ - Add __init to get_kexec_buffer as suggested by Jonathan
+ - Fixed issue detected by kernel test robot
+
+v5:
+ - Rebased on 1 more patch that would otherwise create merge conflicts
+
+v4:
+ - Rebased on 2 patches that would otherwise create merge conflicts;
+   posting these patches in this series with several tags removed so
+   krobot can test the series already
+ - Changes to individual patches documented in patch descripitons
+
+v3:
+ - Moved TPM Open Firmware related function to drivers/char/tpm/eventlog/tpm_of.c
+
+v2:
+ - rearranged patches
+ - fixed compilation issues for x86
+
+
+Jonathan McDowell (1):
+  x86/kexec: Carry forward IMA measurement log on kexec
+
+Palmer Dabbelt (1):
+  drivers: of: kexec ima: Support 32-bit platforms
+
+Stefan Berger (3):
+  tpm: of: Make of-tree specific function commonly available
+  of: kexec: Refactor IMA buffer related functions to make them reusable
+  tpm/kexec: Duplicate TPM measurement log in of-tree for kexec
+
+Vaibhav Jain (1):
+  of: check previous kernel's ima-kexec-buffer against memory bounds
+
+ arch/x86/Kconfig                      |   1 +
+ arch/x86/include/uapi/asm/bootparam.h |   9 +
+ arch/x86/kernel/e820.c                |   6 +-
+ arch/x86/kernel/kexec-bzimage64.c     |  42 +++-
+ arch/x86/kernel/setup.c               |  63 +++++
+ drivers/char/tpm/eventlog/of.c        |  31 +--
+ drivers/of/kexec.c                    | 342 ++++++++++++++++++++++----
+ include/linux/ima.h                   |   5 +
+ include/linux/kexec.h                 |   6 +
+ include/linux/of.h                    |  11 +-
+ include/linux/tpm.h                   |  36 +++
+ kernel/kexec_file.c                   |   6 +
+ security/integrity/ima/ima_kexec.c    |   2 +-
+ 13 files changed, 478 insertions(+), 82 deletions(-)
+
+
+base-commit: 3d7cb6b04c3f3115719235cc6866b10326de34cd
+-- 
+2.35.1
 
 
 _______________________________________________
