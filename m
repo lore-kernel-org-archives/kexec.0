@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A5E9BC25B0F
-	for <kexec@archiver.kernel.org>; Sat, 13 Aug 2022 03:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6C856C00140
+	for <kexec@archiver.kernel.org>; Sat, 13 Aug 2022 03:18:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:MIME-Version:List-Subscribe:List-Help:
 	List-Post:List-Archive:List-Unsubscribe:List-Id:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=MhncDG30xP4DSdyR4ua67ls3srUcyp/6NR9mg2cNA34=; b=dX49+iT1qW2Y3A
-	EhyO/Bcs/1Lr7ldF5r6EgEWV0mx7W1pT3mANKlYlJtY647DReGovG8AJjdN/2glXNYz0S2x+XPzx3
-	jnsaLRtn3GFEQynTbGx1g7WkiB/LY0FbtWgM7LCKhPK+LFwmCoeQoJ/I+Gcz06u9OQBGjuqfF9OGA
-	z/tWaZo7Vd8CQn9Nmy8xZfZKz/QKyf8OUmarPmdX6qRCmQzHRfoM5RDLtKpEQ73VGqgwMs+JBidOR
-	mH8bKLFFCA7P4YBYZmOxDyM45Szsy1AeSPYP73X+rx8GhAjDMWeKjYH4DGZgJ580jcJN93+g1CL3f
-	C2dMgoZ84LNiEaGVLUdg==;
+	List-Owner; bh=qlloJ/rnZr1h1jX7lSboof+9ET7/OcC6RoRbODebt/U=; b=MsuhpxAZwkZhOJ
+	ZkS/b3IOkTYIqn/tYR9LV0m1PbwhXsPRch0sxwUgSXVjkniH+Kkcw9TSqSjxrCoKByiyW56xxCCCn
+	yt+O7L7WzuyGI71Al9ykuOEEV9QOawejmOMTQSYlQ9CahWGWVYRXlmOHvHwtGFVJvG20KyAEPJXC1
+	TcIK3efMC7mwzSRlDifweid8R7Q4SgjBhGL6c/gv/rgYepG1F8WcaAXD2rKTrSWywVQBZvg1GhgMl
+	e3iYruKfdi3Xg8iYg1Hf3trSOoovrcz43hQb1lOmd8uMcawPYUpqaxzVk18hYF1JxiGyD2DsyScoi
+	yOqfQu3wb41+ZBvrXq7A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oMhfB-003wEX-LK; Sat, 13 Aug 2022 03:18:13 +0000
+	id 1oMhfI-003wLN-0w; Sat, 13 Aug 2022 03:18:20 +0000
 Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oMhf0-003w0H-Ui; Sat, 13 Aug 2022 03:18:08 +0000
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R591e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=xianting.tian@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0VM4jZjW_1660360677;
-Received: from localhost(mailfrom:xianting.tian@linux.alibaba.com fp:SMTPD_---0VM4jZjW_1660360677)
+	id 1oMhf3-003w22-8x; Sat, 13 Aug 2022 03:18:10 +0000
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R501e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=xianting.tian@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0VM4rqkj_1660360680;
+Received: from localhost(mailfrom:xianting.tian@linux.alibaba.com fp:SMTPD_---0VM4rqkj_1660360680)
           by smtp.aliyun-inc.com;
-          Sat, 13 Aug 2022 11:17:58 +0800
+          Sat, 13 Aug 2022 11:18:01 +0800
 From: Xianting Tian <xianting.tian@linux.alibaba.com>
 To: crash-utility@redhat.com,
 	mick@ics.forth.gr,
@@ -42,15 +42,15 @@ Cc: linux-riscv@lists.infradead.org,
 	huanyi.xj@alibaba-inc.com,
 	lifang_xia@linux.alibaba.com,
 	Xianting Tian <xianting.tian@linux.alibaba.com>
-Subject: [Crash-utility][PATCH V3 2/9] RISCV64: Make crash tool enter command line and support some commands
-Date: Sat, 13 Aug 2022 11:17:46 +0800
-Message-Id: <20220813031753.3097720-3-xianting.tian@linux.alibaba.com>
+Subject: [Crash-utility][PATCH V3 5/9] RISCV64: Add 'bt' command support
+Date: Sat, 13 Aug 2022 11:17:49 +0800
+Message-Id: <20220813031753.3097720-6-xianting.tian@linux.alibaba.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20220813031753.3097720-1-xianting.tian@linux.alibaba.com>
 References: <20220813031753.3097720-1-xianting.tian@linux.alibaba.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220812_201803_393678_B5563252 
-X-CRM114-Status: GOOD (  20.36  )
+X-CRM114-CacheID: sfid-20220812_201805_540705_BA093DDA 
+X-CRM114-Status: GOOD (  16.07  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -68,1290 +68,410 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-1. Add riscv64_init() implementation, do all necessary machine-specific setup,
-   which will be called multiple times during initialization.
-2. Add riscv64 sv39/48/57 pagetable macro definitions, the function of converting
-   virtual address to a physical address via 4K page table.
-   For 2M and 1G pagesize, they will be implemented in the future(currently not supported).
-3. Add the implementation of the vtop command, which is used to convert a
-   virtual address to a physical address(call the functions defined in 2).
-4. Add the implementation to get virtual memory layout, va_bits, phys_ram_base
-   from vmcoreinfo. As these configurations changes from time to time, we send
-   a Linux kernel patch to export these configurations, which can simplify the
-   development of crash tool.
-   The Linux patch (patch 5 of the patch set):
-	https://lore.kernel.org/linux-riscv/20220811074150.3020189-1-xianting.tian@linux.alibaba.com/
-5. Add riscv64_get_smp_cpus() implementation, get the number of cpus.
-6. Add riscv64_get_page_size() implementation, get page size.
-And so on.
+1, Add the implementation to get stack frame from active & inactive
+   task's stack.
+2, Add 'bt -l' command support get a line number associated with a
+   current pc address.
+3, Add 'bt -f' command support to display all stack data contained
+   in a frame
 
-With this patch, we can enter crash command line, and run "vtop", "mod", "rd",
-"*", "p", "kmem" ...
+With the patch, we can get the backtrace,
+crash> bt
+PID: 113      TASK: ff6000000226c200  CPU: 0    COMMAND: "sh"
+ #0 [ff20000010333b90] riscv_crash_save_regs at ffffffff800078f8
+ #1 [ff20000010333cf0] panic at ffffffff806578c6
+ #2 [ff20000010333d50] sysrq_reset_seq_param_set at ffffffff8038c03c
+ #3 [ff20000010333da0] __handle_sysrq at ffffffff8038c604
+ #4 [ff20000010333e00] write_sysrq_trigger at ffffffff8038cae4
+ #5 [ff20000010333e20] proc_reg_write at ffffffff801b7ee8
+ #6 [ff20000010333e40] vfs_write at ffffffff80152bb2
+ #7 [ff20000010333e80] ksys_write at ffffffff80152eda
+ #8 [ff20000010333ed0] sys_write at ffffffff80152f52
 
-Tested on QEMU RISCV64 end and SoC platform of T-head Xuantie 910 CPU.
+crash> bt -l
+PID: 113      TASK: ff6000000226c200  CPU: 0    COMMAND: "sh"
+ #0 [ff20000010333b90] riscv_crash_save_regs at ffffffff800078f8
+    /buildroot/qemu_riscv64_virt_defconfig/build/linux-custom/arch/riscv/kernel/crash_save_regs.S: 47
+ #1 [ff20000010333cf0] panic at ffffffff806578c6
+    /buildroot/qemu_riscv64_virt_defconfig/build/linux-custom/kernel/panic.c: 276
+ ... ...
 
-      KERNEL: vmlinux
-    DUMPFILE: vmcore
-        CPUS: 1
-        DATE: Fri Jul 15 10:24:25 CST 2022
-      UPTIME: 00:00:33
-LOAD AVERAGE: 0.05, 0.01, 0.00
-       TASKS: 41
-    NODENAME: buildroot
-     RELEASE: 5.18.9
-     VERSION: #30 SMP Fri Jul 15 09:47:03 CST 2022
-     MACHINE: riscv64  (unknown Mhz)
-      MEMORY: 1 GB
-       PANIC: "Kernel panic - not syncing: sysrq triggered crash"
-         PID: 113
-     COMMAND: "sh"
-        TASK: ff60000002269600  [THREAD_INFO: ff60000002269600]
-         CPU: 0
-       STATE: TASK_RUNNING (PANIC)
+crash> bt -f
+PID: 113      TASK: ff6000000226c200  CPU: 0    COMMAND: "sh"
+ #0 [ff20000010333b90] riscv_crash_save_regs at ffffffff800078f8
+    [PC: ffffffff800078f8 RA: ffffffff806578c6 SP: ff20000010333b90 SIZE: 352]
+    ff20000010333b90: ff20000010333bb0 ffffffff800078f8
+    ff20000010333ba0: ffffffff8008862c ff20000010333b90
+    ff20000010333bb0: ffffffff810dde38 ff6000000226c200
+    ff20000010333bc0: ffffffff8032be68 0720072007200720
+ ... ...
 
-crash> p mem_map
-mem_map = $1 = (struct page *) 0xff6000003effbf00
-
-crash> p /x *(struct page *) 0xff6000003effbf00
-$5 = {
-  flags = 0x1000,
-  {
-    {
-      {
-        lru = {
-          next = 0xff6000003effbf08,
-          prev = 0xff6000003effbf08
-        },
-        {
-          __filler = 0xff6000003effbf08,
-          mlock_count = 0x3effbf08
-        }
-      },
-      mapping = 0x0,
-      index = 0x0,
-      private = 0x0
-    },
-
-crash> mod
-     MODULE       NAME             BASE         SIZE  OBJECT FILE
-ffffffff0113e740  nvme_core  ffffffff01133000  98304  (not loaded)  [CONFIG_KALLSYMS]
-ffffffff011542c0  nvme       ffffffff0114c000  61440  (not loaded)  [CONFIG_KALLSYMS]
-
-crash> rd ffffffff0113e740 8
-ffffffff0113e740:  0000000000000000 ffffffff810874f8   .........t......
-ffffffff0113e750:  ffffffff011542c8 726f635f656d766e   .B......nvme_cor
-ffffffff0113e760:  0000000000000065 0000000000000000   e...............
-ffffffff0113e770:  0000000000000000 0000000000000000   ................
-
-crash> vtop ffffffff0113e740
-VIRTUAL           PHYSICAL
-ffffffff0113e740  8254d740
-
-   PGD: ffffffff810e9ff8 => 2ffff001
-  P4D: 0000000000000000 => 000000002fffec01
-  PUD: 00005605c2957470 => 0000000020949801
-  PMD: 00007fff7f1750c0 => 0000000020947401
-   PTE: 0 => 209534e7
- PAGE: 000000008254d000
-
-  PTE     PHYSICAL  FLAGS
-209534e7  8254d000  (PRESENT|READ|WRITE|GLOBAL|ACCESSED|DIRTY)
-
-      PAGE       PHYSICAL      MAPPING       INDEX CNT FLAGS
-ff6000003f0777d8 8254d000                0        0  1 0
-
-Tested-by: Yixun Lan <yixun.lan@gmail.com>
 Signed-off-by: Xianting Tian <xianting.tian@linux.alibaba.com>
 ---
- defs.h     |   97 +++++
- diskdump.c |   10 +
- riscv64.c  | 1000 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 1107 insertions(+)
+ netdump.c |  13 +++
+ riscv64.c | 283 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 296 insertions(+)
 
-diff --git a/defs.h b/defs.h
-index e4cad63..9326797 100644
---- a/defs.h
-+++ b/defs.h
-@@ -3494,6 +3494,85 @@ struct arm64_stackframe {
- #define _64BIT_
- #define MACHINE_TYPE		"RISCV64"
+diff --git a/netdump.c b/netdump.c
+index 4ec12a0..01af145 100644
+--- a/netdump.c
++++ b/netdump.c
+@@ -42,6 +42,7 @@ static void get_netdump_regs_ppc64(struct bt_info *, ulong *, ulong *);
+ static void get_netdump_regs_arm(struct bt_info *, ulong *, ulong *);
+ static void get_netdump_regs_arm64(struct bt_info *, ulong *, ulong *);
+ static void get_netdump_regs_mips(struct bt_info *, ulong *, ulong *);
++static void get_netdump_regs_riscv(struct bt_info *, ulong *, ulong *);
+ static void check_dumpfile_size(char *);
+ static int proc_kcore_init_32(FILE *, int);
+ static int proc_kcore_init_64(FILE *, int);
+@@ -2675,6 +2676,10 @@ get_netdump_regs(struct bt_info *bt, ulong *eip, ulong *esp)
+ 		return get_netdump_regs_mips(bt, eip, esp);
+ 		break;
  
-+typedef struct { ulong pgd; } pgd_t;
-+typedef struct { ulong p4d; } p4d_t;
-+typedef struct { ulong pud; } pud_t;
-+typedef struct { ulong pmd; } pmd_t;
-+typedef struct { ulong pte; } pte_t;
-+typedef signed int s32;
++	case EM_RISCV:
++		get_netdump_regs_riscv(bt, eip, esp);
++		break;
 +
-+/* arch/riscv/include/asm/pgtable-64.h */
-+#define PGD_SHIFT_L3		(30)
-+#define PGD_SHIFT_L4		(39)
-+#define PGD_SHIFT_L5		(48)
-+
-+#define P4D_SHIFT		(39)
-+#define PUD_SHIFT		(30)
-+#define PMD_SHIFT		(21)
-+
-+#define PTRS_PER_PGD		(512)
-+#define PTRS_PER_P4D		(512)
-+#define PTRS_PER_PUD		(512)
-+#define PTRS_PER_PMD		(512)
-+#define PTRS_PER_PTE		(512)
-+
-+/*
-+ * Mask for bit 0~53(PROT and PPN) of PTE
-+ * 63 6261  60    54  53 10  9 8 7 6 5 4 3 2 1 0
-+ * N  PBMT  Reserved  P P N  RSW D A G U X W R V
-+ */
-+#define PTE_PFN_PROT_MASK	0x3FFFFFFFFFFFFF
-+
-+/*
-+ * 3-levels / 4K pages
-+ *
-+ * sv39
-+ * PGD  |  PMD  |  PTE  |  OFFSET  |
-+ *  9   |   9   |   9   |    12    |
-+ */
-+#define pgd_index_l3_4k(addr) (((addr) >> PGD_SHIFT_L3) & (PTRS_PER_PGD - 1))
-+#define pmd_index_l3_4k(addr) (((addr) >> PMD_SHIFT) & (PTRS_PER_PMD - 1))
-+#define pte_index_l3_4k(addr) (((addr) >> PAGESHIFT()) & (PTRS_PER_PTE - 1))
-+
-+/*
-+ * 4-levels / 4K pages
-+ *
-+ * sv48
-+ * PGD  |  PUD  |  PMD  |   PTE   |  OFFSET  |
-+ *  9   |   9   |   9   |    9    |    12    |
-+ */
-+#define pgd_index_l4_4k(addr) (((addr) >> PGD_SHIFT_L4) & (PTRS_PER_PGD - 1))
-+#define pud_index_l4_4k(addr) (((addr) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
-+#define pmd_index_l4_4k(addr) (((addr) >> PMD_SHIFT) & (PTRS_PER_PMD - 1))
-+#define pte_index_l4_4k(addr) (((addr) >> PAGESHIFT()) & (PTRS_PER_PTE - 1))
-+
-+/*
-+ * 5-levels / 4K pages
-+ *
-+ * sv57
-+ * PGD  |  P4D  |  PUD  |  PMD  |   PTE   |  OFFSET  |
-+ *  9   |   9   |   9   |   9   |    9    |    12    |
-+ */
-+#define pgd_index_l5_4k(addr) (((addr) >> PGD_SHIFT_L5) & (PTRS_PER_PGD - 1))
-+#define p4d_index_l5_4k(addr) (((addr) >> P4D_SHIFT) & (PTRS_PER_P4D - 1))
-+#define pud_index_l5_4k(addr) (((addr) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
-+#define pmd_index_l5_4k(addr) (((addr) >> PMD_SHIFT) & (PTRS_PER_PMD - 1))
-+#define pte_index_l5_4k(addr) (((addr) >> PAGESHIFT()) & (PTRS_PER_PTE - 1))
-+
-+#define VM_L3_4K	(0x2)
-+#define VM_L3_2M	(0x4)
-+#define VM_L3_1G	(0x8)
-+#define VM_L4_4K	(0x10)
-+#define VM_L4_2M	(0x20)
-+#define VM_L4_1G	(0x40)
-+#define VM_L5_4K	(0x80)
-+#define VM_L5_2M	(0x100)
-+#define VM_L5_1G	(0x200)
-+
-+#define VM_FLAGS	(VM_L3_4K | VM_L3_2M | VM_L3_1G | \
-+			 VM_L4_4K | VM_L4_2M | VM_L4_1G | \
-+			 VM_L5_4K | VM_L5_2M | VM_L5_1G)
-+
- /*
-  * Direct memory mapping
-  */
-@@ -3545,6 +3624,14 @@ struct arm64_stackframe {
- #define PHYS_MASK_SHIFT 	_MAX_PHYSMEM_BITS
- #define PHYS_MASK		(((1UL) << PHYS_MASK_SHIFT) - 1)
+ 	default:
+ 		error(FATAL, 
+ 		   "support for ELF machine type %d not available\n",
+@@ -2931,6 +2936,8 @@ display_regs_from_elf_notes(int cpu, FILE *ofp)
+ 		mips_display_regs_from_elf_notes(cpu, ofp);
+ 	} else if (machine_type("MIPS64")) {
+ 		mips64_display_regs_from_elf_notes(cpu, ofp);
++	} else if (machine_type("RISCV64")) {
++		riscv64_display_regs_from_elf_notes(cpu, ofp);
+ 	}
+ }
  
-+#define IS_LAST_P4D_READ(p4d)	((ulong)(p4d) == machdep->machspec->last_p4d_read)
-+#define FILL_P4D(P4D, TYPE, SIZE)					      \
-+    if (!IS_LAST_P4D_READ(P4D)) {					      \
-+	    readmem((ulonglong)((ulong)(P4D)), TYPE, machdep->machspec->p4d,  \
-+		     SIZE, "p4d page", FAULT_ON_ERROR);                       \
-+	    machdep->machspec->last_p4d_read = (ulong)(P4D);                  \
-+    }
-+
- #endif  /* RISCV64 */
- 
- #ifdef X86
-@@ -6811,6 +6898,10 @@ struct machine_specific {
- 	ulong _page_soft;
- 
- 	ulong _pfn_shift;
-+	ulong va_bits;
-+	char *p4d;
-+	ulong last_p4d_read;
-+	ulong struct_page_size;
- 
- 	struct riscv64_register *crash_task_regs;
- };
-@@ -6834,6 +6925,12 @@ struct machine_specific {
- #define _PAGE_PROT_NONE _PAGE_READ
- #define _PAGE_PFN_SHIFT 10
- 
-+/* from 'struct pt_regs' definitions of RISC-V arch */
-+#define RISCV64_REGS_EPC  0
-+#define RISCV64_REGS_RA   1
-+#define RISCV64_REGS_SP   2
-+#define RISCV64_REGS_FP   8
-+
- #endif /* RISCV64 */
- 
- /*
-diff --git a/diskdump.c b/diskdump.c
-index 28503bc..cf5f5d9 100644
---- a/diskdump.c
-+++ b/diskdump.c
-@@ -1531,6 +1531,12 @@ get_diskdump_regs_mips(struct bt_info *bt, ulong *eip, ulong *esp)
+@@ -3877,6 +3884,12 @@ get_netdump_regs_mips(struct bt_info *bt, ulong *eip, ulong *esp)
  	machdep->get_stack_frame(bt, eip, esp);
  }
  
 +static void
-+get_diskdump_regs_riscv64(struct bt_info *bt, ulong *eip, ulong *esp)
++get_netdump_regs_riscv(struct bt_info *bt, ulong *eip, ulong *esp)
 +{
 +	machdep->get_stack_frame(bt, eip, esp);
 +}
 +
- static void
- get_diskdump_regs_sparc64(struct bt_info *bt, ulong *eip, ulong *esp)
+ int 
+ is_partial_netdump(void)
  {
-@@ -1610,6 +1616,10 @@ get_diskdump_regs(struct bt_info *bt, ulong *eip, ulong *esp)
- 		get_diskdump_regs_sparc64(bt, eip, esp);
- 		break;
- 
-+	case EM_RISCV:
-+		get_diskdump_regs_riscv64(bt, eip, esp);
-+		break;
-+
- 	default:
- 		error(FATAL, "%s: unsupported machine type: %s\n",
- 			DISKDUMP_VALID() ? "diskdump" : "compressed kdump",
 diff --git a/riscv64.c b/riscv64.c
-index 4f858a4..1b1b122 100644
+index 11145d1..cdeac61 100644
 --- a/riscv64.c
 +++ b/riscv64.c
-@@ -16,10 +16,320 @@
- #ifdef RISCV64
- 
- #include <elf.h>
-+#include <math.h>
-+
-+static ulong riscv64_get_page_size(void);
-+static int riscv64_vtop_3level_4k(ulong *pgd, ulong vaddr,
-+				   physaddr_t *paddr, int verbose);
-+static int riscv64_vtop_4level_4k(ulong *pgd, ulong vaddr,
-+				   physaddr_t *paddr, int verbose);
-+static int riscv64_vtop_5level_4k(ulong *pgd, ulong vaddr,
-+				   physaddr_t *paddr, int verbose);
-+static void riscv64_page_type_init(void);
-+static int riscv64_is_kvaddr(ulong vaddr);
-+static int riscv64_is_uvaddr(ulong vaddr, struct task_context *tc);
-+static int riscv64_uvtop(struct task_context *tc, ulong vaddr,
-+			  physaddr_t *paddr, int verbose);
-+static int riscv64_kvtop(struct task_context *tc, ulong kvaddr,
-+			  physaddr_t *paddr, int verbose);
-+static void riscv64_cmd_mach(void);
-+static int riscv64_translate_pte(ulong, void *, ulonglong);
-+static int riscv64_init_active_task_regs(void);
-+static int riscv64_get_crash_notes(void);
-+static int riscv64_get_elf_notes(void);
-+static void riscv64_get_va_range(struct machine_specific *ms);
-+static void riscv64_get_va_bits(struct machine_specific *ms);
-+static void riscv64_get_struct_page_size(struct machine_specific *ms);
-+
-+#define REG_FMT 	"%016lx"
-+#define SZ_2G		0x80000000
-+
-+/*
-+ * Holds registers during the crash.
-+ */
-+static struct riscv64_register *panic_task_regs;
-+
-+/* from arch/riscv/include/asm/stacktrace.h */
-+struct stackframe {
-+	ulong fp;
-+	ulong ra;
-+};
-+
-+static struct machine_specific riscv64_machine_specific = {
-+	._page_present = (1 << 0),
-+	._page_read = (1 << 1),
-+	._page_write = (1 << 2),
-+	._page_exec = (1 << 3),
-+	._page_user = (1 << 4),
-+	._page_global = (1 << 5),
-+	._page_accessed = (1 << 6),
-+	._page_dirty = (1 << 7),
-+	._page_soft = (1 << 8),
-+
-+	.va_bits = 0,
-+	.struct_page_size = 0,
-+};
-+
-+static void
-+pt_level_alloc(char **lvl, char *name)
-+{
-+	size_t sz = PAGESIZE();
-+	void *pointer = malloc(sz);
-+
-+	if (!pointer)
-+		error(FATAL, name);
-+	*lvl = pointer;
-+}
-+
-+static ulong
-+riscv64_get_page_size(void)
-+{
-+	return memory_page_size();
-+}
-+
-+static ulong
-+riscv64_vmalloc_start(void)
-+{
-+	return ((ulong)VMALLOC_START);
-+}
-+
-+/* Get the size of struct page {} */
-+static void riscv64_get_struct_page_size(struct machine_specific *ms)
-+{
-+	char *string;
-+
-+	string = pc->read_vmcoreinfo("SIZE(page)");
-+	if (string) {
-+		ms->struct_page_size = atol(string);
-+		free(string);
-+	}
-+}
-+
-+static void
-+riscv64_cmd_mach(void)
-+{
-+	/* TODO: */
-+}
-+
-+static int
-+riscv64_verify_symbol(const char *name, ulong value, char type)
-+{
-+	/* TODO: */
-+	return TRUE;
-+}
- 
- void
- riscv64_dump_machdep_table(ulong arg)
- {
-+	/* TODO: */
-+}
-+
-+static ulong
-+riscv64_processor_speed(void)
-+{
-+	/* TODO: */
-+	return 0;
-+}
-+
-+static unsigned long riscv64_get_kernel_version(void)
-+{
-+	char *string;
-+	char buf[BUFSIZE];
-+	char *p1, *p2;
-+
-+	if (THIS_KERNEL_VERSION)
-+		return THIS_KERNEL_VERSION;
-+
-+	string = pc->read_vmcoreinfo("OSRELEASE");
-+	if (string) {
-+		strcpy(buf, string);
-+
-+		p1 = p2 = buf;
-+		while (*p2 != '.')
-+			p2++;
-+		*p2 = NULLCHAR;
-+		kt->kernel_version[0] = atoi(p1);
-+
-+		p1 = ++p2;
-+		while (*p2 != '.')
-+			p2++;
-+		*p2 = NULLCHAR;
-+		kt->kernel_version[1] = atoi(p1);
-+
-+		p1 = ++p2;
-+		while ((*p2 >= '0') && (*p2 <= '9'))
-+			p2++;
-+		*p2 = NULLCHAR;
-+		kt->kernel_version[2] = atoi(p1);
-+		free(string);
-+	}
-+	return THIS_KERNEL_VERSION;
-+}
-+
-+static void
-+riscv64_get_phys_ram_base(struct machine_specific *ms)
-+{
-+	unsigned long kernel_version = riscv64_get_kernel_version();
-+
-+	/*
-+	 * phys_ram_base is defined in Linux kernel since 5.14.
-+	 */
-+	if (kernel_version >= LINUX(5,14,0)) {
-+		char *string;
-+		if ((string = pc->read_vmcoreinfo("NUMBER(phys_ram_base)"))) {
-+			ms->phys_base = atol(string);
-+			free(string);
-+		} else
-+			error(FATAL, "cannot read phys_ram_base\n");
-+	} else
-+		/*
-+		 * For qemu rv64 env and hardware platform, default phys base
-+		 * may different, eg,
-+		 *	hardware platform: 0x200000
-+		 *	qemu   rv64   env: 0x80200000
-+		 *
-+		 * But we only can set one default value, in this case, qemu
-+		 * rv64 env may can't work.
-+		 */
-+		ms->phys_base = 0x200000;
-+}
-+
-+static void riscv64_get_va_bits(struct machine_specific *ms)
-+{
-+	unsigned long kernel_version = riscv64_get_kernel_version();
-+
-+	/*
-+	 * VA_BITS is defined in Linux kernel since 5.17. So we use the
-+	 * default va bits 39 when Linux version < 5.17.
-+	 */
-+	if (kernel_version >= LINUX(5,17,0)) {
-+		char *string;
-+		if ((string = pc->read_vmcoreinfo("NUMBER(VA_BITS)"))) {
-+			ms->va_bits = atol(string);
-+			free(string);
-+		}
-+	} else
-+		ms->va_bits = 39;
-+}
-+
-+static void riscv64_get_va_range(struct machine_specific *ms)
-+{
-+	unsigned long kernel_version = riscv64_get_kernel_version();
-+	char *string;
-+
-+	if ((string = pc->read_vmcoreinfo("NUMBER(PAGE_OFFSET)"))) {
-+		ms->page_offset = htol(string, QUIET, NULL);
-+		free(string);
-+	} else
-+		goto error;
-+
-+	if ((string = pc->read_vmcoreinfo("NUMBER(VMALLOC_START)"))) {
-+		ms->vmalloc_start_addr = htol(string, QUIET, NULL);
-+		free(string);
-+	} else
-+		goto error;
-+
-+	if ((string = pc->read_vmcoreinfo("NUMBER(VMALLOC_END)"))) {
-+		ms->vmalloc_end = htol(string, QUIET, NULL);
-+                free(string);
-+	} else
-+		goto error;
-+
-+	if ((string = pc->read_vmcoreinfo("NUMBER(VMEMMAP_START)"))) {
-+		ms->vmemmap_vaddr = htol(string, QUIET, NULL);
-+		free(string);
-+	} else
-+		goto error;
-+
-+	if ((string = pc->read_vmcoreinfo("NUMBER(VMEMMAP_END)"))) {
-+		ms->vmemmap_end = htol(string, QUIET, NULL);
-+		free(string);
-+	} else
-+		goto error;
-+
-+	if ((string = pc->read_vmcoreinfo("NUMBER(KERNEL_LINK_ADDR)"))) {
-+		ms->kernel_link_addr = htol(string, QUIET, NULL);
-+		free(string);
-+	} else
-+		goto error;
-+
-+	if ((string = pc->read_vmcoreinfo("NUMBER(ADDRESS_SPACE_END)"))) {
-+		ms->address_space_end = htol(string, QUIET, NULL);
-+		free(string);
-+	} else
-+		goto error;
-+
-+	/*
-+	 * From Linux 5.13, the kernel mapping is moved to the last 2GB
-+	 * of the address space, modules use the 2GB memory range right
-+	 * before the kernel. Before Linux 5.13, modules area is embedded
-+	 * in vmalloc area.
-+	 *
-+	 */
-+	if (kernel_version >= LINUX(5,13,0)) {
-+		if ((string = pc->read_vmcoreinfo("NUMBER(MODULES_VADDR)"))) {
-+			ms->modules_vaddr = htol(string, QUIET, NULL);
-+			free(string);
-+		} else
-+			goto error;
-+
-+		if ((string = pc->read_vmcoreinfo("NUMBER(MODULES_END)"))) {
-+			ms->modules_end = htol(string, QUIET, NULL);
-+			free(string);
-+		} else
-+			goto error;
-+	} else {
-+		ms->modules_vaddr = ms->vmalloc_start_addr;
-+		ms->modules_end = ms->vmalloc_end;
-+	}
-+
-+	if (CRASHDEBUG(1)) {
-+		fprintf(fp, "vmemmap	: 0x%lx - 0x%lx\n",
-+			ms->vmemmap_vaddr, ms->vmemmap_end);
-+		fprintf(fp, "vmalloc	: 0x%lx - 0x%lx\n",
-+			ms->vmalloc_start_addr, ms->vmalloc_end);
-+		fprintf(fp, "mudules	: 0x%lx - 0x%lx\n",
-+			ms->modules_vaddr, ms->modules_end);
-+		fprintf(fp, "lowmem	: 0x%lx -\n", ms->page_offset);
-+		fprintf(fp, "kernel	: 0x%lx - 0x%lx\n",
-+			ms->kernel_link_addr, ms->address_space_end);
-+	}
-+	return;
-+error:
-+	error(FATAL, "cannot get vm layout\n");
-+}
-+
-+static int
-+riscv64_is_kvaddr(ulong vaddr)
-+{
-+	if (IS_VMALLOC_ADDR(vaddr))
-+		return TRUE;
-+
-+	return (vaddr >= machdep->kvbase);
-+}
-+
-+static int
-+riscv64_is_uvaddr(ulong vaddr, struct task_context *unused)
-+{
-+	if (IS_VMALLOC_ADDR(vaddr))
-+		return FALSE;
-+
-+	return (vaddr < machdep->kvbase);
-+}
-+
-+static int
-+riscv64_is_task_addr(ulong task)
-+{
-+	if (tt->flags & THREAD_INFO)
-+		return IS_KVADDR(task);
-+
-+	return (IS_KVADDR(task) && ALIGNED_STACK_OFFSET(task) == 0);
-+}
-+
-+static int
-+riscv64_get_smp_cpus(void)
-+{
-+	return (get_cpus_present() > 0) ? get_cpus_present() : kt->cpus;
- }
- 
- /*
-@@ -33,11 +343,701 @@ riscv64_IS_VMALLOC_ADDR(ulong vaddr)
- 		(vaddr >= MODULES_VADDR && vaddr <= MODULES_END));
+@@ -33,6 +33,17 @@ static int riscv64_uvtop(struct task_context *tc, ulong vaddr,
+ static int riscv64_kvtop(struct task_context *tc, ulong kvaddr,
+ 			  physaddr_t *paddr, int verbose);
+ static void riscv64_cmd_mach(void);
++static void riscv64_stackframe_init(void);
++static void riscv64_back_trace_cmd(struct bt_info *bt);
++static int riscv64_get_dumpfile_stack_frame(struct bt_info *bt,
++					     ulong *nip, ulong *ksp);
++static void riscv64_get_stack_frame(struct bt_info *bt, ulong *pcp,
++				     ulong *spp);
++static int riscv64_get_frame(struct bt_info *bt, ulong *pcp,
++			      ulong *spp);
++static void riscv64_display_full_frame(struct bt_info *bt,
++				        struct riscv64_unwind_frame *current,
++				        struct riscv64_unwind_frame *previous);
+ static int riscv64_translate_pte(ulong, void *, ulonglong);
+ static int riscv64_init_active_task_regs(void);
+ static int riscv64_get_crash_notes(void);
+@@ -504,6 +515,275 @@ no_page:
+ 	return FALSE;
  }
  
 +/*
-+ * Translate a PTE, returning TRUE if the page is present.
-+ * If a physaddr pointer is passed in, don't print anything.
++ * 'bt -f' command output
++ * Display all stack data contained in a frame
 + */
-+static int
-+riscv64_translate_pte(ulong pte, void *physaddr, ulonglong unused)
++static void
++riscv64_display_full_frame(struct bt_info *bt, struct riscv64_unwind_frame *current,
++			  struct riscv64_unwind_frame *previous)
 +{
-+	char ptebuf[BUFSIZE];
-+	char physbuf[BUFSIZE];
++	int i, u_idx;
++	ulong *up;
++	ulong words, addr;
 +	char buf[BUFSIZE];
-+	int page_present;
-+	int len1, len2, others;
-+	ulong paddr;
 +
-+	paddr = PTOB(pte >> _PAGE_PFN_SHIFT);
-+	page_present = !!(pte & _PAGE_PRESENT);
++	if (previous->sp < current->sp)
++		return;
 +
-+	if (physaddr) {
-+		*(ulong *)physaddr = paddr;
-+		return page_present;
++	if (!(INSTACK(previous->sp, bt) && INSTACK(current->sp, bt)))
++		return;
++
++	words = (previous->sp - current->sp) / sizeof(ulong) + 1;
++	addr = current->sp;
++	u_idx = (current->sp - bt->stackbase) / sizeof(ulong);
++
++	for (i = 0; i < words; i++, u_idx++) {
++		if (!(i & 1))
++			fprintf(fp, "%s    %lx: ", i ? "\n" : "", addr);
++
++		up = (ulong *)(&bt->stackbuf[u_idx*sizeof(ulong)]);
++		fprintf(fp, "%s ", format_stack_entry(bt, buf, *up, 0));
++		addr += sizeof(ulong);
 +	}
-+
-+	sprintf(ptebuf, "%lx", pte);
-+	len1 = MAX(strlen(ptebuf), strlen("PTE"));
-+	fprintf(fp, "%s  ", mkstring(buf, len1, CENTER | LJUST, "PTE"));
-+
-+	if (!page_present)
-+		return page_present;
-+
-+	sprintf(physbuf, "%lx", paddr);
-+	len2 = MAX(strlen(physbuf), strlen("PHYSICAL"));
-+	fprintf(fp, "%s  ", mkstring(buf, len2, CENTER | LJUST, "PHYSICAL"));
-+
-+	fprintf(fp, "FLAGS\n");
-+	fprintf(fp, "%s  %s  ",
-+		mkstring(ptebuf, len1, CENTER | RJUST, NULL),
-+		mkstring(physbuf, len2, CENTER | RJUST, NULL));
-+
-+	fprintf(fp, "(");
-+	others = 0;
-+
-+#define CHECK_PAGE_FLAG(flag)				\
-+	if ((_PAGE_##flag) && (pte & _PAGE_##flag))	\
-+		fprintf(fp, "%s" #flag, others++ ? "|" : "")
-+	if (pte) {
-+		CHECK_PAGE_FLAG(PRESENT);
-+		CHECK_PAGE_FLAG(READ);
-+		CHECK_PAGE_FLAG(WRITE);
-+		CHECK_PAGE_FLAG(EXEC);
-+		CHECK_PAGE_FLAG(USER);
-+		CHECK_PAGE_FLAG(GLOBAL);
-+		CHECK_PAGE_FLAG(ACCESSED);
-+		CHECK_PAGE_FLAG(DIRTY);
-+		CHECK_PAGE_FLAG(SOFT);
-+	} else {
-+		fprintf(fp, "no mapping");
-+	}
-+
-+	fprintf(fp, ")\n");
-+
-+	return page_present;
++	fprintf(fp, "\n");
 +}
 +
 +static void
-+riscv64_page_type_init(void)
++riscv64_stackframe_init(void)
 +{
-+	ulong va_bits = machdep->machspec->va_bits;
++	long task_struct_thread = MEMBER_OFFSET("task_struct", "thread");
++
++	/* from arch/riscv/include/asm/processor.h */
++	long thread_reg_ra = MEMBER_OFFSET("thread_struct", "ra");
++	long thread_reg_sp = MEMBER_OFFSET("thread_struct", "sp");
++	long thread_reg_fp = MEMBER_OFFSET("thread_struct", "s");
++
++	if ((task_struct_thread == INVALID_OFFSET) ||
++	    (thread_reg_ra == INVALID_OFFSET) ||
++	    (thread_reg_sp == INVALID_OFFSET) ||
++	    (thread_reg_fp == INVALID_OFFSET) )
++		error(FATAL,
++		      "cannot determine thread_struct offsets\n");
++
++	ASSIGN_OFFSET(task_struct_thread_context_pc) =
++		task_struct_thread + thread_reg_ra;
++	ASSIGN_OFFSET(task_struct_thread_context_sp) =
++		task_struct_thread + thread_reg_sp;
++	ASSIGN_OFFSET(task_struct_thread_context_fp) =
++		task_struct_thread + thread_reg_fp;
++}
++
++static void
++riscv64_dump_backtrace_entry(struct bt_info *bt, struct syment *sym,
++			     struct riscv64_unwind_frame *current,
++			     struct riscv64_unwind_frame *previous, int level)
++{
++	const char *name = sym ? sym->name : "(invalid)";
++	struct load_module *lm;
++	char *name_plus_offset = NULL;
++	struct syment *symp;
++	ulong symbol_offset;
++	char buf[BUFSIZE];
++
++	if (bt->flags & BT_SYMBOL_OFFSET) {
++		symp = value_search(current->pc, &symbol_offset);
++
++		if (symp && symbol_offset)
++			name_plus_offset =
++				value_to_symstr(current->pc, buf, bt->radix);
++	}
++
++	fprintf(fp, "%s#%d [%016lx] %s at %016lx",
++		level < 10 ? " " : "",
++		level,
++		current->sp,
++		name_plus_offset ? name_plus_offset : name,
++		current->pc);
++
++	if (module_symbol(current->pc, NULL, &lm, NULL, 0))
++		fprintf(fp, " [%s]", lm->mod_name);
++
++	fprintf(fp, "\n");
 +
 +	/*
-+	 * For RISCV64 arch, any level of PTE may be a leaf PTE,
-+	 * so in addition to 4KiB pages,
-+	 * Sv39 supports 2 MiB megapages, 1 GiB gigapages;
-+	 * Sv48 supports 2 MiB megapages, 1 GiB gigapages, 512 GiB terapages;
-+	 * Sv57 supports 2 MiB megapages, 1 GiB gigapages, 512 GiB terapages, and 256 TiB petapages.
-+	 *
-+	 * refs to riscv-privileged spec.
-+	 *
-+	 * We just support 4KiB, 2MiB, 1GiB now.
++	 * 'bt -l', get a line number associated with a current pc address.
 +	 */
-+	switch (machdep->pagesize)
-+	{
-+	case 0x1000:		// 4 KiB
-+		machdep->flags |= (va_bits == 57 ? VM_L5_4K :
-+				  (va_bits == 48 ? VM_L4_4K : VM_L3_4K));
-+		break;
-+	case 0x200000:		// 2 MiB
-+		/* TODO: */
-+	case 0x40000000: 	// 1 GiB
-+		/* TODO: */
-+	default:
-+		if (machdep->pagesize)
-+			error(FATAL, "invalid/unsupported page size: %d\n",
-+			      machdep->pagesize);
-+		else
-+			error(FATAL, "cannot determine page size\n");
-+	}
-+}
-+
-+static int
-+riscv64_vtop_3level_4k(ulong *pgd, ulong vaddr, physaddr_t *paddr, int verbose)
-+{
-+	ulong *pgd_ptr, pgd_val;
-+	ulong pmd_val;
-+	ulong pte_val, pte_pfn;
-+	ulong pt_phys;
-+
-+	/* PGD */
-+	pgd_ptr = pgd + pgd_index_l3_4k(vaddr);
-+	FILL_PGD(pgd, KVADDR, PAGESIZE());
-+	pgd_val = ULONG(machdep->pgd + PAGEOFFSET(pgd_ptr));
-+	if (verbose)
-+		fprintf(fp, "   PGD: %lx => %lx\n", (ulong)pgd_ptr, pgd_val);
-+	if (!pgd_val)
-+		goto no_page;
-+	pgd_val &= PTE_PFN_PROT_MASK;
-+	pt_phys = (pgd_val >> _PAGE_PFN_SHIFT) << PAGESHIFT();
-+
-+	/* PMD */
-+	FILL_PMD(PAGEBASE(pt_phys), PHYSADDR, PAGESIZE());
-+	pmd_val = ULONG(machdep->pmd + PAGEOFFSET(sizeof(pmd_t) *
-+			pmd_index_l3_4k(vaddr)));
-+	if (verbose)
-+		fprintf(fp, "  PMD: %016lx => %016lx\n", pt_phys, pmd_val);
-+	if (!pmd_val)
-+		goto no_page;
-+	pmd_val &= PTE_PFN_PROT_MASK;
-+	pt_phys = (pmd_val >> _PAGE_PFN_SHIFT) << PAGESHIFT();
-+
-+	/* PTE */
-+	FILL_PTBL(PAGEBASE(pt_phys), PHYSADDR, PAGESIZE());
-+	pte_val = ULONG(machdep->ptbl + PAGEOFFSET(sizeof(pte_t) *
-+			pte_index_l3_4k(vaddr)));
-+	if (verbose)
-+		fprintf(fp, "   PTE: %lx => %lx\n", pt_phys, pte_val);
-+	if (!pte_val)
-+		goto no_page;
-+	pte_val &= PTE_PFN_PROT_MASK;
-+	pte_pfn = pte_val >> _PAGE_PFN_SHIFT;
-+
-+	if (!(pte_val & _PAGE_PRESENT)) {
-+		if (verbose) {
-+			fprintf(fp, "\n");
-+			riscv64_translate_pte((ulong)pte_val, 0, 0);
-+		}
-+		fprintf(fp, " PAGE: %016lx not present\n\n", PAGEBASE(*paddr));
-+		return FALSE;
++	if (bt->flags & BT_LINE_NUMBERS) {
++		get_line_number(current->pc, buf, FALSE);
++		if (strlen(buf))
++			fprintf(fp, "    %s\n", buf);
 +	}
 +
-+	*paddr = PTOB(pte_pfn) + PAGEOFFSET(vaddr);
-+
-+	if (verbose) {
-+		fprintf(fp, " PAGE: %016lx\n\n", PAGEBASE(*paddr));
-+		riscv64_translate_pte(pte_val, 0, 0);
++	/* bt -f */
++	if (bt->flags & BT_FULL) {
++		fprintf(fp, "    "
++			"[PC: %016lx RA: %016lx SP: %016lx SIZE: %ld]\n",
++			current->pc,
++			previous->pc,
++			current->sp,
++			previous->sp - current->sp);
++		riscv64_display_full_frame(bt, current, previous);
 +	}
-+
-+	return TRUE;
-+no_page:
-+	fprintf(fp, "invalid\n");
-+	return FALSE;
-+}
-+
-+static int
-+riscv64_vtop_4level_4k(ulong *pgd, ulong vaddr, physaddr_t *paddr, int verbose)
-+{
-+	ulong *pgd_ptr, pgd_val;
-+	ulong pud_val;
-+	ulong pmd_val;
-+	ulong pte_val, pte_pfn;
-+	ulong pt_phys;
-+
-+	/* PGD */
-+	pgd_ptr = pgd + pgd_index_l4_4k(vaddr);
-+	FILL_PGD(pgd, KVADDR, PAGESIZE());
-+	pgd_val = ULONG(machdep->pgd + PAGEOFFSET(pgd_ptr));
-+	if (verbose)
-+		fprintf(fp, "   PGD: %lx => %lx\n", (ulong)pgd_ptr, pgd_val);
-+	if (!pgd_val)
-+		goto no_page;
-+	pgd_val &= PTE_PFN_PROT_MASK;
-+	pt_phys = (pgd_val >> _PAGE_PFN_SHIFT) << PAGESHIFT();
-+
-+	/* PUD */
-+	FILL_PUD(PAGEBASE(pt_phys), PHYSADDR, PAGESIZE());
-+	pud_val = ULONG(machdep->pud + PAGEOFFSET(sizeof(pud_t) *
-+			pud_index_l4_4k(vaddr)));
-+	if (verbose)
-+		fprintf(fp, "  PUD: %016lx => %016lx\n", pt_phys, pud_val);
-+	if (!pud_val)
-+		goto no_page;
-+	pud_val &= PTE_PFN_PROT_MASK;
-+	pt_phys = (pud_val >> _PAGE_PFN_SHIFT) << PAGESHIFT();
-+
-+	/* PMD */
-+	FILL_PMD(PAGEBASE(pt_phys), PHYSADDR, PAGESIZE());
-+	pmd_val = ULONG(machdep->pmd + PAGEOFFSET(sizeof(pmd_t) *
-+			pmd_index_l4_4k(vaddr)));
-+	if (verbose)
-+		fprintf(fp, "  PMD: %016lx => %016lx\n", pt_phys, pmd_val);
-+	if (!pmd_val)
-+		goto no_page;
-+	pmd_val &= PTE_PFN_PROT_MASK;
-+	pt_phys = (pmd_val >> _PAGE_PFN_SHIFT) << PAGESHIFT();
-+
-+	/* PTE */
-+	FILL_PTBL(PAGEBASE(pt_phys), PHYSADDR, PAGESIZE());
-+	pte_val = ULONG(machdep->ptbl + PAGEOFFSET(sizeof(pte_t) *
-+			pte_index_l4_4k(vaddr)));
-+	if (verbose)
-+		fprintf(fp, "   PTE: %lx => %lx\n", pt_phys, pte_val);
-+	if (!pte_val)
-+		goto no_page;
-+	pte_val &= PTE_PFN_PROT_MASK;
-+	pte_pfn = pte_val >> _PAGE_PFN_SHIFT;
-+
-+	if (!(pte_val & _PAGE_PRESENT)) {
-+		if (verbose) {
-+			fprintf(fp, "\n");
-+			riscv64_translate_pte((ulong)pte_val, 0, 0);
-+		}
-+		fprintf(fp, " PAGE: %016lx not present\n\n", PAGEBASE(*paddr));
-+		return FALSE;
-+	}
-+
-+	*paddr = PTOB(pte_pfn) + PAGEOFFSET(vaddr);
-+
-+	if (verbose) {
-+		fprintf(fp, " PAGE: %016lx\n\n", PAGEBASE(*paddr));
-+		riscv64_translate_pte(pte_val, 0, 0);
-+	}
-+
-+	return TRUE;
-+no_page:
-+	fprintf(fp, "invalid\n");
-+	return FALSE;
-+}
-+
-+static int
-+riscv64_vtop_5level_4k(ulong *pgd, ulong vaddr, physaddr_t *paddr, int verbose)
-+{
-+	ulong *pgd_ptr, pgd_val;
-+	ulong p4d_val;
-+	ulong pud_val;
-+	ulong pmd_val;
-+	ulong pte_val, pte_pfn;
-+	ulong pt_phys;
-+
-+	/* PGD */
-+	pgd_ptr = pgd + pgd_index_l5_4k(vaddr);
-+	FILL_PGD(pgd, KVADDR, PAGESIZE());
-+	pgd_val = ULONG(machdep->pgd + PAGEOFFSET(pgd_ptr));
-+	if (verbose)
-+		fprintf(fp, "   PGD: %lx => %lx\n", (ulong)pgd_ptr, pgd_val);
-+	if (!pgd_val)
-+		goto no_page;
-+	pgd_val &= PTE_PFN_PROT_MASK;
-+	pt_phys = (pgd_val >> _PAGE_PFN_SHIFT) << PAGESHIFT();
-+
-+	/* P4D */
-+	FILL_P4D(PAGEBASE(pt_phys), PHYSADDR, PAGESIZE());
-+	p4d_val = ULONG(machdep->machspec->p4d + PAGEOFFSET(sizeof(p4d_t) *
-+			p4d_index_l5_4k(vaddr)));
-+	if (verbose)
-+		fprintf(fp, "  P4D: %016lx => %016lx\n", pt_phys, p4d_val);
-+	if (!p4d_val)
-+		goto no_page;
-+	p4d_val &= PTE_PFN_PROT_MASK;
-+	pt_phys = (p4d_val >> _PAGE_PFN_SHIFT) << PAGESHIFT();
-+
-+	/* PUD */
-+	FILL_PUD(PAGEBASE(pt_phys), PHYSADDR, PAGESIZE());
-+	pud_val = ULONG(machdep->pud + PAGEOFFSET(sizeof(pud_t) *
-+			pud_index_l5_4k(vaddr)));
-+	if (verbose)
-+		fprintf(fp, "  PUD: %016lx => %016lx\n", pt_phys, pud_val);
-+	if (!pud_val)
-+		goto no_page;
-+	pud_val &= PTE_PFN_PROT_MASK;
-+	pt_phys = (pud_val >> _PAGE_PFN_SHIFT) << PAGESHIFT();
-+
-+	/* PMD */
-+	FILL_PMD(PAGEBASE(pt_phys), PHYSADDR, PAGESIZE());
-+	pmd_val = ULONG(machdep->pmd + PAGEOFFSET(sizeof(pmd_t) *
-+			pmd_index_l4_4k(vaddr)));
-+	if (verbose)
-+		fprintf(fp, "  PMD: %016lx => %016lx\n", pt_phys, pmd_val);
-+	if (!pmd_val)
-+		goto no_page;
-+	pmd_val &= PTE_PFN_PROT_MASK;
-+	pt_phys = (pmd_val >> _PAGE_PFN_SHIFT) << PAGESHIFT();
-+
-+	/* PTE */
-+	FILL_PTBL(PAGEBASE(pt_phys), PHYSADDR, PAGESIZE());
-+	pte_val = ULONG(machdep->ptbl + PAGEOFFSET(sizeof(pte_t) *
-+			pte_index_l4_4k(vaddr)));
-+	if (verbose)
-+		fprintf(fp, "   PTE: %lx => %lx\n", pt_phys, pte_val);
-+	if (!pte_val)
-+		goto no_page;
-+	pte_val &= PTE_PFN_PROT_MASK;
-+	pte_pfn = pte_val >> _PAGE_PFN_SHIFT;
-+
-+	if (!(pte_val & _PAGE_PRESENT)) {
-+		if (verbose) {
-+			fprintf(fp, "\n");
-+			riscv64_translate_pte((ulong)pte_val, 0, 0);
-+		}
-+		printf("!_PAGE_PRESENT\n");
-+		return FALSE;
-+	}
-+
-+	*paddr = PTOB(pte_pfn) + PAGEOFFSET(vaddr);
-+
-+	if (verbose) {
-+		fprintf(fp, " PAGE: %016lx\n\n", PAGEBASE(*paddr));
-+		riscv64_translate_pte(pte_val, 0, 0);
-+	}
-+
-+	return TRUE;
-+no_page:
-+	fprintf(fp, "invalid\n");
-+	return FALSE;
-+}
-+
-+static int
-+riscv64_init_active_task_regs(void)
-+{
-+	int retval;
-+
-+	retval = riscv64_get_crash_notes();
-+	if (retval == TRUE)
-+		return retval;
-+
-+	return riscv64_get_elf_notes();
 +}
 +
 +/*
-+ * Retrieve task registers for the time of the crash.
++ * Unroll a kernel stack.
 + */
-+static int
-+riscv64_get_crash_notes(void)
++static void
++riscv64_back_trace_cmd(struct bt_info *bt)
 +{
-+	struct machine_specific *ms = machdep->machspec;
-+	ulong crash_notes;
-+	Elf64_Nhdr *note;
-+	ulong offset;
-+	char *buf, *p;
-+	ulong *notes_ptrs;
-+	ulong i;
++	struct riscv64_unwind_frame current, previous;
++	struct stackframe curr_frame;
++	int level = 0;
 +
-+	/*
-+	 * crash_notes contains per cpu memory for storing cpu states
-+	 * in case of system crash.
-+	 */
-+	if (!symbol_exists("crash_notes"))
-+		return FALSE;
++	if (bt->flags & BT_REGS_NOT_FOUND)
++		return;
 +
-+	crash_notes = symbol_value("crash_notes");
++	current.pc = bt->instptr;
++	current.sp = bt->stkptr;
++	current.fp = bt->frameptr;
 +
-+	notes_ptrs = (ulong *)GETBUF(kt->cpus*sizeof(notes_ptrs[0]));
++	if (!INSTACK(current.sp, bt))
++		return;
 +
-+	/*
-+	 * Read crash_notes for the first CPU. crash_notes are in standard ELF
-+	 * note format.
-+	 */
-+	if (!readmem(crash_notes, KVADDR, &notes_ptrs[kt->cpus-1],
-+	    sizeof(notes_ptrs[kt->cpus-1]), "crash_notes",
-+		     RETURN_ON_ERROR)) {
-+		error(WARNING, "cannot read crash_notes\n");
-+		FREEBUF(notes_ptrs);
-+		return FALSE;
-+	}
++	for (;;) {
++		struct syment *symbol = NULL;
++		struct stackframe *frameptr;
++		ulong low, high;
++		ulong offset;
 +
-+	if (symbol_exists("__per_cpu_offset")) {
++		if (CRASHDEBUG(8))
++			fprintf(fp, "level %d pc %#lx sp %lx fp 0x%lx\n",
++				level, current.pc, current.sp, current.fp);
 +
-+		/*
-+		 * Add __per_cpu_offset for each cpu to form the pointer to the notes
-+		 */
-+		for (i = 0; i < kt->cpus; i++)
-+			notes_ptrs[i] = notes_ptrs[kt->cpus-1] + kt->__per_cpu_offset[i];
-+	}
-+
-+	buf = GETBUF(SIZE(note_buf));
-+
-+	if (!(panic_task_regs = calloc((size_t)kt->cpus, sizeof(*panic_task_regs))))
-+		error(FATAL, "cannot calloc panic_task_regs space\n");
-+
-+	for (i = 0; i < kt->cpus; i++) {
-+
-+		if (!readmem(notes_ptrs[i], KVADDR, buf, SIZE(note_buf), "note_buf_t",
-+			     RETURN_ON_ERROR)) {
-+			error(WARNING,
-+				"cannot find NT_PRSTATUS note for cpu: %d\n", i);
-+			goto fail;
++		/* Validate frame pointer */
++		low = current.sp + sizeof(struct stackframe);
++		high = bt->stacktop;
++		if (current.fp < low || current.fp > high || current.fp & 0x7) {
++			if (CRASHDEBUG(8))
++				fprintf(fp, "fp 0x%lx sp 0x%lx low 0x%lx high 0x%lx\n",
++					current.fp, current.sp, low, high);
++			return;
 +		}
 +
-+		/*
-+		 * Do some sanity checks for this note before reading registers from it.
-+		 */
-+		note = (Elf64_Nhdr *)buf;
-+		p = buf + sizeof(Elf64_Nhdr);
-+
-+		/*
-+		 * dumpfiles created with qemu won't have crash_notes, but there will
-+		 * be elf notes; dumpfiles created by kdump do not create notes for
-+		 * offline cpus.
-+		 */
-+		if (note->n_namesz == 0 && (DISKDUMP_DUMPFILE() || KDUMP_DUMPFILE())) {
-+			if (DISKDUMP_DUMPFILE())
-+				note = diskdump_get_prstatus_percpu(i);
-+			else if (KDUMP_DUMPFILE())
-+				note = netdump_get_prstatus_percpu(i);
-+			if (note) {
-+				/*
-+				 * SIZE(note_buf) accounts for a "final note", which is a
-+				 * trailing empty elf note header.
-+				 */
-+				long notesz = SIZE(note_buf) - sizeof(Elf64_Nhdr);
-+
-+				if (sizeof(Elf64_Nhdr) + roundup(note->n_namesz, 4) +
-+				    note->n_descsz == notesz)
-+					BCOPY((char *)note, buf, notesz);
-+			} else {
-+				error(WARNING,
-+					"cannot find NT_PRSTATUS note for cpu: %d\n", i);
-+				continue;
-+			}
-+		}
-+
-+		/*
-+		 * Check the sanity of NT_PRSTATUS note only for each online cpu.
-+		 */
-+		if (note->n_type != NT_PRSTATUS) {
-+			error(WARNING, "invalid NT_PRSTATUS note (n_type != NT_PRSTATUS)\n");
-+			goto fail;
-+		}
-+		if (!STRNEQ(p, "CORE")) {
-+			error(WARNING, "invalid NT_PRSTATUS note (name != \"CORE\"\n");
-+			goto fail;
-+		}
-+
-+		/*
-+		 * Find correct location of note data. This contains elf_prstatus
-+		 * structure which has registers etc. for the crashed task.
-+		 */
-+		offset = sizeof(Elf64_Nhdr);
-+		offset = roundup(offset + note->n_namesz, 4);
-+		p = buf + offset; /* start of elf_prstatus */
-+
-+		BCOPY(p + OFFSET(elf_prstatus_pr_reg), &panic_task_regs[i],
-+		      sizeof(panic_task_regs[i]));
-+	}
-+
-+	/*
-+	 * And finally we have the registers for the crashed task. This is
-+	 * used later on when dumping backtrace.
-+	 */
-+	ms->crash_task_regs = panic_task_regs;
-+
-+	FREEBUF(buf);
-+	FREEBUF(notes_ptrs);
-+	return TRUE;
-+
-+fail:
-+	FREEBUF(buf);
-+	FREEBUF(notes_ptrs);
-+	free(panic_task_regs);
-+	return FALSE;
-+}
-+
-+static int
-+riscv64_get_elf_notes(void)
-+{
-+	struct machine_specific *ms = machdep->machspec;
-+	int i;
-+
-+	if (!DISKDUMP_DUMPFILE() && !KDUMP_DUMPFILE())
-+		return FALSE;
-+
-+	panic_task_regs = calloc(kt->cpus, sizeof(*panic_task_regs));
-+	if (!panic_task_regs)
-+		error(FATAL, "cannot calloc panic_task_regs space\n");
-+
-+	for (i = 0; i < kt->cpus; i++) {
-+		Elf64_Nhdr *note = NULL;
-+		size_t len;
-+
-+		if (DISKDUMP_DUMPFILE())
-+			note = diskdump_get_prstatus_percpu(i);
-+		else if (KDUMP_DUMPFILE())
-+			note = netdump_get_prstatus_percpu(i);
-+
-+		if (!note) {
-+			error(WARNING,
-+				"cannot find NT_PRSTATUS note for cpu: %d\n", i);
-+			continue;
-+		}
-+
-+		len = sizeof(Elf64_Nhdr);
-+		len = roundup(len + note->n_namesz, 4);
-+
-+		BCOPY((char *)note + len + OFFSET(elf_prstatus_pr_reg),
-+		      &panic_task_regs[i], sizeof(panic_task_regs[i]));
-+	}
-+
-+	ms->crash_task_regs = panic_task_regs;
-+
-+	return TRUE;
-+}
-+
-+/*
-+ * Translates a user virtual address to its physical address.
-+ */
-+static int
-+riscv64_uvtop(struct task_context *tc, ulong uvaddr, physaddr_t *paddr, int verbose)
-+{
-+	ulong mm, active_mm;
-+	ulong *pgd;
-+
-+	if (!tc)
-+		error(FATAL, "current context invalid\n");
-+
-+	*paddr = 0;
-+
-+	if (is_kernel_thread(tc->task) && IS_KVADDR(uvaddr)) {
-+		readmem(tc->task + OFFSET(task_struct_active_mm),
-+			KVADDR, &active_mm, sizeof(void *),
-+			"task active_mm contents", FAULT_ON_ERROR);
-+
-+		if (!active_mm)
-+			error(FATAL,
-+			      "no active_mm for this kernel thread\n");
-+
-+		readmem(active_mm + OFFSET(mm_struct_pgd),
-+			KVADDR, &pgd, sizeof(long),
-+			"mm_struct pgd", FAULT_ON_ERROR);
-+	} else {
-+		if ((mm = task_mm(tc->task, TRUE)))
-+			pgd = ULONG_PTR(tt->mm_struct + OFFSET(mm_struct_pgd));
-+		else
-+			readmem(tc->mm_struct + OFFSET(mm_struct_pgd),
-+				KVADDR, &pgd, sizeof(long), "mm_struct pgd",
-+				FAULT_ON_ERROR);
-+	}
-+
-+	switch (machdep->flags & VM_FLAGS)
-+	{
-+	case VM_L3_4K:
-+		return riscv64_vtop_3level_4k(pgd, uvaddr, paddr, verbose);
-+	case VM_L4_4K:
-+		return riscv64_vtop_4level_4k(pgd, uvaddr, paddr, verbose);
-+	case VM_L5_4K:
-+		return riscv64_vtop_5level_4k(pgd, uvaddr, paddr, verbose);
-+	default:
-+		return FALSE;
-+	}
-+}
-+
-+static int
-+riscv64_kvtop(struct task_context *tc, ulong kvaddr, physaddr_t *paddr, int verbose)
-+{
-+	ulong kernel_pgd;
-+
-+	if (!IS_KVADDR(kvaddr))
-+		return FALSE;
-+
-+	if (!vt->vmalloc_start) {
-+		*paddr = VTOP(kvaddr);
-+		return TRUE;
-+	}
-+
-+	if (!IS_VMALLOC_ADDR(kvaddr)) {
-+		*paddr = VTOP(kvaddr);
-+		if (!verbose)
-+			return TRUE;
-+	}
-+
-+	kernel_pgd = vt->kernel_pgd[0];
-+	*paddr = 0;
-+
-+	switch (machdep->flags & VM_FLAGS)
-+	{
-+	case VM_L3_4K:
-+		return riscv64_vtop_3level_4k((ulong *)kernel_pgd, kvaddr, paddr, verbose);
-+	case VM_L4_4K:
-+		return riscv64_vtop_4level_4k((ulong *)kernel_pgd, kvaddr, paddr, verbose);
-+	case VM_L5_4K:
-+		return riscv64_vtop_5level_4k((ulong *)kernel_pgd, kvaddr, paddr, verbose);
-+	default:
-+		return FALSE;
-+	}
-+}
-+
- void
- riscv64_init(int when)
- {
-+	switch (when) {
-+	case SETUP_ENV:
-+		machdep->process_elf_notes = process_elf64_notes;
-+		break;
-+
-+	case PRE_SYMTAB:
-+		machdep->verify_symbol = riscv64_verify_symbol;
-+		machdep->machspec = &riscv64_machine_specific;
-+		if (pc->flags & KERNEL_DEBUG_QUERY)
++		symbol = value_search(current.pc, &offset);
++		if (!symbol)
 +			return;
 +
-+		machdep->verify_paddr = generic_verify_paddr;
-+		machdep->ptrs_per_pgd = PTRS_PER_PGD;
-+		break;
++		frameptr = (struct stackframe *)current.fp - 1;
++		if (!readmem((ulong)frameptr, KVADDR, &curr_frame,
++		    sizeof(curr_frame), "get stack frame", RETURN_ON_ERROR))
++			return;
 +
-+	case PRE_GDB:
-+		machdep->pagesize = riscv64_get_page_size();
-+		machdep->pageshift = ffs(machdep->pagesize) - 1;
-+		machdep->pageoffset = machdep->pagesize - 1;
-+		machdep->pagemask = ~((ulonglong)machdep->pageoffset);
-+		machdep->stacksize = machdep->pagesize << THREAD_SIZE_ORDER;
++		previous.pc = curr_frame.ra;
++		previous.fp = curr_frame.fp;
++		previous.sp = current.fp;
 +
-+		riscv64_get_phys_ram_base(machdep->machspec);
-+		riscv64_get_struct_page_size(machdep->machspec);
-+		riscv64_get_va_bits(machdep->machspec);
-+		riscv64_get_va_range(machdep->machspec);
++		riscv64_dump_backtrace_entry(bt, symbol, &current, &previous, level++);
 +
-+		pt_level_alloc(&machdep->pgd, "cannot malloc pgd space.");
-+		pt_level_alloc(&machdep->machspec->p4d, "cannot malloc p4d space.");
-+		pt_level_alloc(&machdep->pud, "cannot malloc pud space.");
-+		pt_level_alloc(&machdep->pmd, "cannot malloc pmd space.");
-+		pt_level_alloc(&machdep->ptbl, "cannot malloc ptbl space.");
++		current.pc = previous.pc;
++		current.fp = previous.fp;
++		current.sp = previous.sp;
 +
-+		machdep->last_pgd_read = 0;
-+		machdep->machspec->last_p4d_read = 0;
-+		machdep->last_pud_read = 0;
-+		machdep->last_pmd_read = 0;
-+		machdep->last_ptbl_read = 0;
-+
-+		machdep->kvbase = machdep->machspec->page_offset;
-+		machdep->identity_map_base = machdep->kvbase;
-+		machdep->is_kvaddr = riscv64_is_kvaddr;
-+		machdep->is_uvaddr = riscv64_is_uvaddr;
-+		machdep->uvtop = riscv64_uvtop;
-+		machdep->kvtop = riscv64_kvtop;
-+		machdep->cmd_mach = riscv64_cmd_mach;
-+
-+		machdep->vmalloc_start = riscv64_vmalloc_start;
-+		machdep->processor_speed = riscv64_processor_speed;
-+		machdep->get_stackbase = generic_get_stackbase;
-+		machdep->get_stacktop = generic_get_stacktop;
-+		machdep->translate_pte = riscv64_translate_pte;
-+		machdep->memory_size = generic_memory_size;
-+		machdep->is_task_addr = riscv64_is_task_addr;
-+		machdep->get_smp_cpus = riscv64_get_smp_cpus;
-+		machdep->value_to_symbol = generic_machdep_value_to_symbol;
-+		machdep->show_interrupts = generic_show_interrupts;
-+		machdep->get_irq_affinity = generic_get_irq_affinity;
-+		machdep->init_kernel_pgd = NULL; /* pgd set by symbol_value("swapper_pg_dir") */
-+		break;
-+
-+	case POST_GDB:
-+		machdep->section_size_bits = _SECTION_SIZE_BITS;
-+		machdep->max_physmem_bits = _MAX_PHYSMEM_BITS;
-+		riscv64_page_type_init();
-+
-+		if (!machdep->hz)
-+			machdep->hz = 250;
-+
-+		if (symbol_exists("irq_desc"))
-+			ARRAY_LENGTH_INIT(machdep->nr_irqs, irq_desc,
-+					  "irq_desc", NULL, 0);
-+		else if (kernel_symbol_exists("nr_irqs"))
-+			get_symbol_data("nr_irqs", sizeof(unsigned int),
-+					&machdep->nr_irqs);
-+
-+		MEMBER_OFFSET_INIT(elf_prstatus_pr_reg, "elf_prstatus",
-+				   "pr_reg");
-+
-+		STRUCT_SIZE_INIT(note_buf, "note_buf_t");
-+		break;
-+
-+	case POST_VM:
-+		/*
-+		 * crash_notes contains machine specific information about the
-+		 * crash. In particular, it contains CPU registers at the time
-+		 * of the crash. We need this information to extract correct
-+		 * backtraces from the panic task.
-+		 */
-+		if (!ACTIVE() && !riscv64_init_active_task_regs())
-+			error(WARNING,
-+				"cannot retrieve registers for active task%s\n\n",
-+				kt->cpus > 1 ? "s" : "");
-+		break;
++		if (CRASHDEBUG(8))
++			fprintf(fp, "next %d pc %#lx sp %#lx fp %lx\n",
++				level, current.pc, current.sp, current.fp);
 +	}
- }
- 
++}
++
 +/*
-+ * 'help -r' command output
++ * Get a stack frame combination of pc and ra from the most relevant spot.
 + */
- void
- riscv64_display_regs_from_elf_notes(int cpu, FILE *ofp)
++static void
++riscv64_get_stack_frame(struct bt_info *bt, ulong *pcp, ulong *spp)
++{
++	ulong ksp = 0, nip = 0;
++	int ret = 0;
++
++	if (DUMPFILE() && is_task_active(bt->task))
++		ret = riscv64_get_dumpfile_stack_frame(bt, &nip, &ksp);
++	else
++		ret = riscv64_get_frame(bt, &nip, &ksp);
++
++	if (!ret)
++		error(WARNING, "cannot determine starting stack frame for task %lx\n",
++			bt->task);
++
++	if (pcp)
++		*pcp = nip;
++	if (spp)
++		*spp = ksp;
++}
++
++/*
++ * Get the starting point for the active cpu in a diskdump.
++ */
++static int
++riscv64_get_dumpfile_stack_frame(struct bt_info *bt, ulong *nip, ulong *ksp)
++{
++	const struct machine_specific *ms = machdep->machspec;
++	struct riscv64_register *regs;
++	ulong epc, sp;
++
++	if (!ms->crash_task_regs) {
++		bt->flags |= BT_REGS_NOT_FOUND;
++		return FALSE;
++	}
++
++	/*
++	 * We got registers for panic task from crash_notes. Just return them.
++	 */
++	regs = &ms->crash_task_regs[bt->tc->processor];
++	epc = regs->regs[RISCV64_REGS_EPC];
++	sp = regs->regs[RISCV64_REGS_SP];
++
++	/*
++	 * Set stack frame ptr.
++	 */
++	bt->frameptr = regs->regs[RISCV64_REGS_FP];
++
++	if (nip)
++		*nip = epc;
++	if (ksp)
++		*ksp = sp;
++
++	bt->machdep = regs;
++
++	return TRUE;
++}
++
++/*
++ * Do the work for riscv64_get_stack_frame() for non-active tasks.
++ * Get SP and PC values for idle tasks.
++ */
++static int
++riscv64_get_frame(struct bt_info *bt, ulong *pcp, ulong *spp)
++{
++	if (!bt->tc || !(tt->flags & THREAD_INFO))
++		return FALSE;
++
++	if (!readmem(bt->task + OFFSET(task_struct_thread_context_pc),
++		     KVADDR, pcp, sizeof(*pcp),
++		     "thread_struct.ra",
++		     RETURN_ON_ERROR))
++		return FALSE;
++
++	if (!readmem(bt->task + OFFSET(task_struct_thread_context_sp),
++		     KVADDR, spp, sizeof(*spp),
++		     "thread_struct.sp",
++		     RETURN_ON_ERROR))
++		return FALSE;
++
++	if (!readmem(bt->task + OFFSET(task_struct_thread_context_fp),
++		     KVADDR, &bt->frameptr, sizeof(bt->frameptr),
++		     "thread_struct.fp",
++		     RETURN_ON_ERROR))
++		return FALSE;
++
++	return TRUE;
++}
++
+ static int
+ riscv64_vtop_4level_4k(ulong *pgd, ulong vaddr, physaddr_t *paddr, int verbose)
  {
+@@ -984,6 +1264,8 @@ riscv64_init(int when)
+ 		machdep->uvtop = riscv64_uvtop;
+ 		machdep->kvtop = riscv64_kvtop;
+ 		machdep->cmd_mach = riscv64_cmd_mach;
++		machdep->get_stack_frame = riscv64_get_stack_frame;
++		machdep->back_trace = riscv64_back_trace_cmd;
+ 
+ 		machdep->vmalloc_start = riscv64_vmalloc_start;
+ 		machdep->processor_speed = riscv64_processor_speed;
+@@ -1004,6 +1286,7 @@ riscv64_init(int when)
+ 	case POST_GDB:
+ 		machdep->section_size_bits = _SECTION_SIZE_BITS;
+ 		machdep->max_physmem_bits = _MAX_PHYSMEM_BITS;
++		riscv64_stackframe_init();
+ 		riscv64_page_type_init();
+ 
+ 		if (!machdep->hz)
 -- 
 2.17.1
 
