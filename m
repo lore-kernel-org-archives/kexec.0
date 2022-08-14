@@ -4,54 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6B713C00140
-	for <kexec@archiver.kernel.org>; Sat, 13 Aug 2022 03:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5EF9DC25B06
+	for <kexec@archiver.kernel.org>; Sun, 14 Aug 2022 19:16:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:List-Subscribe:List-Help:
-	List-Post:List-Archive:List-Unsubscribe:List-Id:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=zj5d2JXA6a4U7ocpoQ/U/R5KWhKacWl8yz2Nc0W1ui0=; b=Xyt7DwtEJ+5Yx2
-	LkstRHtK75zTyTXZrK2PH7a7hkvYgDxlBFhZ7qdNIj3x16XT78od6LNUSysvq0zQiS7Q8PkQGsH3v
-	xd4fuO7rmU4zEnG6KrAKiqFooWE8u/8BrnITK17RI2RG8v4sUYgmg5KOTrV1MmlIvvVxUzPwj82Ks
-	ePNGAx8EhykVB+FWjn4Z6ImZWOjLnObU3F12oeKG7pRobDeCrUCOEQLGKoLKDVZCedgF4DvdSwHfl
-	Fbb9+GMv88oxqkfZzbo+iH/R6eUzZGLGf//7wn4kfx6PdkT+2D2beA2k6nebcvslUmp8c53+gANUu
-	CI+O74tr9A9mkJrgVBxA==;
+	List-Owner; bh=yVIT+Q21U5GbxZoh90he3223GqMgoh3asZgCNQrQZtA=; b=SNwyf86KjDcYDp
+	5ExswFVghcd75clsych+DrT6a7rzmsrIJa7q3oiq8GF2tg1CURnBm+i7QyPX5pN5Hay/hlbuLGy3S
+	fNLo5uKClQEHrybL2xdMs6Tt4RhCUHKdd0iFSB5HjOdMtZT6SrZG5yMYGRzLlpGXrJ9cLqKfE7sOI
+	VoBJZcK7WHzU6eBLHeZq+ylnDcNfqTKfwDK80uql8nLuhPysRWYjBDxkxD9yav2hvwjsIwzYYh3fr
+	UgO/0Oiir80jqOCa6bv8lAiCQkm8QQmmjXm/prwxfewX8nZhhU+/qtMIJWj1qkCwtTH+vdOqqUGBY
+	Yfuykz25JO04es2rUojQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oMhfX-003wh3-Pv; Sat, 13 Aug 2022 03:18:35 +0000
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45])
+	id 1oNJ61-008lxS-RI; Sun, 14 Aug 2022 19:16:25 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oMhf5-003w3L-Nj; Sat, 13 Aug 2022 03:18:11 +0000
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=xianting.tian@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0VM4qiDf_1660360682;
-Received: from localhost(mailfrom:xianting.tian@linux.alibaba.com fp:SMTPD_---0VM4qiDf_1660360682)
-          by smtp.aliyun-inc.com;
-          Sat, 13 Aug 2022 11:18:03 +0800
-From: Xianting Tian <xianting.tian@linux.alibaba.com>
-To: crash-utility@redhat.com,
-	mick@ics.forth.gr,
-	heinrich.schuchardt@canonical.com,
-	guoren@kernel.org,
-	k-hagio-ab@nec.com,
-	yixun.lan@gmail.com,
-	lijiang@redhat.com
-Cc: linux-riscv@lists.infradead.org,
-	kexec@lists.infradead.org,
-	hschauhan@nulltrace.org,
-	huanyi.xj@alibaba-inc.com,
-	lifang_xia@linux.alibaba.com,
-	Xianting Tian <xianting.tian@linux.alibaba.com>
-Subject: [Crash-utility][PATCH V3 7/9] RISCV64: Add 'help -m/M' command support
-Date: Sat, 13 Aug 2022 11:17:51 +0800
-Message-Id: <20220813031753.3097720-8-xianting.tian@linux.alibaba.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220813031753.3097720-1-xianting.tian@linux.alibaba.com>
-References: <20220813031753.3097720-1-xianting.tian@linux.alibaba.com>
+	id 1oNJ5o-008lsm-4h
+	for kexec@lists.infradead.org; Sun, 14 Aug 2022 19:16:13 +0000
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 832BE60ED2;
+	Sun, 14 Aug 2022 19:16:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5606CC433D6;
+	Sun, 14 Aug 2022 19:16:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1660504568;
+	bh=ABHWdeN5kbBwaABRfpPqr1SEtY3rGLBqaZeYRMLDsT8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Puy8147/8znYlJOJjSUEn4IoSaBuj/qpm22FygIauQQyraPpj5VVII3+X2IOAaZ4W
+	 zoT3jc4/7g0rl7pcoRl+id1es5i6vJxtVxLI3J8fsrDNRM5BKAzLjRhpSdjgmElPxL
+	 s6dHJJlm4IIC1QgfwBDaFuVUkH9DfKTVWiM9AAVDnou9bkR4aT9ucEuvgaNkX5IApA
+	 Q4VZnzT1AZZV+gz0Ap8FtzEhzFRH7LvXc3rS/JzNrdQo3MwrbtX+96j4ixoNakTVat
+	 39kJlFrO5suoEsuP/InDICTBoElmUxxZ7DNXt5E+uoiFfqvq0xmxM3zhQiK8Uh/w6G
+	 GfuRSll7/60NQ==
+Date: Sun, 14 Aug 2022 22:16:05 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Stefan Berger <stefanb@linux.ibm.com>
+Cc: kexec@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, nayna@linux.ibm.com,
+	nasastry@in.ibm.com, mpe@ellerman.id.au,
+	Jason Gunthorpe <jgg@ziepe.ca>, Rob Herring <robh+dt@kernel.org>,
+	Frank Rowand <frowand.list@gmail.com>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	Nageswara R Sastry <rnsastry@linux.ibm.com>
+Subject: Re: [PATCH v7 4/6] tpm: of: Make of-tree specific function commonly
+ available
+Message-ID: <YvlJ9T+a0b18rRos@kernel.org>
+References: <20220812164305.2056641-1-stefanb@linux.ibm.com>
+ <20220812164305.2056641-5-stefanb@linux.ibm.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20220812164305.2056641-5-stefanb@linux.ibm.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220812_201808_148745_7A54D4B6 
-X-CRM114-Status: UNSURE (   5.80  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20220814_121612_304529_675738C5 
+X-CRM114-Status: GOOD (  26.90  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -63,147 +75,147 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Add riscv64_dump_machdep_table() implementation, display machdep_table.
+On Fri, Aug 12, 2022 at 12:43:03PM -0400, Stefan Berger wrote:
+> Simplify tpm_read_log_of() by moving reusable parts of the code into
+> an inline function that makes it commonly available so it can be
+> used also for kexec support. Call the new of_tpm_get_sml_parameters()
+> function from the TPM Open Firmware driver.
+> 
+> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+> Cc: Jarkko Sakkinen <jarkko@kernel.org>
+> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> Tested-by: Nageswara R Sastry <rnsastry@linux.ibm.com>
+> 
+> ---
+> v7:
+>  - Added original comment back into inlined function
+> 
+> v4:
+>  - converted to inline function
+> ---
+>  drivers/char/tpm/eventlog/of.c | 31 +++++------------------------
+>  include/linux/tpm.h            | 36 ++++++++++++++++++++++++++++++++++
+>  2 files changed, 41 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/char/tpm/eventlog/of.c b/drivers/char/tpm/eventlog/of.c
+> index a9ce66d09a75..f9462d19632e 100644
+> --- a/drivers/char/tpm/eventlog/of.c
+> +++ b/drivers/char/tpm/eventlog/of.c
+> @@ -12,6 +12,7 @@
+>  
+>  #include <linux/slab.h>
+>  #include <linux/of.h>
+> +#include <linux/tpm.h>
+>  #include <linux/tpm_eventlog.h>
+>  
+>  #include "../tpm.h"
+> @@ -20,11 +21,10 @@
+>  int tpm_read_log_of(struct tpm_chip *chip)
+>  {
+>  	struct device_node *np;
+> -	const u32 *sizep;
+> -	const u64 *basep;
+>  	struct tpm_bios_log *log;
+>  	u32 size;
+>  	u64 base;
+> +	int ret;
+>  
+>  	log = &chip->log;
+>  	if (chip->dev.parent && chip->dev.parent->of_node)
+> @@ -35,30 +35,9 @@ int tpm_read_log_of(struct tpm_chip *chip)
+>  	if (of_property_read_bool(np, "powered-while-suspended"))
+>  		chip->flags |= TPM_CHIP_FLAG_ALWAYS_POWERED;
+>  
+> -	sizep = of_get_property(np, "linux,sml-size", NULL);
+> -	basep = of_get_property(np, "linux,sml-base", NULL);
+> -	if (sizep == NULL && basep == NULL)
+> -		return -ENODEV;
+> -	if (sizep == NULL || basep == NULL)
+> -		return -EIO;
+> -
+> -	/*
+> -	 * For both vtpm/tpm, firmware has log addr and log size in big
+> -	 * endian format. But in case of vtpm, there is a method called
+> -	 * sml-handover which is run during kernel init even before
+> -	 * device tree is setup. This sml-handover function takes care
+> -	 * of endianness and writes to sml-base and sml-size in little
+> -	 * endian format. For this reason, vtpm doesn't need conversion
+> -	 * but physical tpm needs the conversion.
+> -	 */
+> -	if (of_property_match_string(np, "compatible", "IBM,vtpm") < 0 &&
+> -	    of_property_match_string(np, "compatible", "IBM,vtpm20") < 0) {
+> -		size = be32_to_cpup((__force __be32 *)sizep);
+> -		base = be64_to_cpup((__force __be64 *)basep);
+> -	} else {
+> -		size = *sizep;
+> -		base = *basep;
+> -	}
+> +	ret = of_tpm_get_sml_parameters(np, &base, &size);
+> +	if (ret < 0)
+> +		return ret;
+>  
+>  	if (size == 0) {
+>  		dev_warn(&chip->dev, "%s: Event log area empty\n", __func__);
+> diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+> index dfeb25a0362d..6356baaa1393 100644
+> --- a/include/linux/tpm.h
+> +++ b/include/linux/tpm.h
+> @@ -460,4 +460,40 @@ static inline struct tpm_chip *tpm_default_chip(void)
+>  	return NULL;
+>  }
+>  #endif
+> +
+> +#ifdef CONFIG_OF
+> +static inline int of_tpm_get_sml_parameters(struct device_node *np,
+> +					    u64 *base, u32 *size)
+> +{
+> +	const u32 *sizep;
+> +	const u64 *basep;
+> +
+> +	sizep = of_get_property(np, "linux,sml-size", NULL);
+> +	basep = of_get_property(np, "linux,sml-base", NULL);
+> +	if (sizep == NULL && basep == NULL)
+> +		return -ENODEV;
+> +	if (sizep == NULL || basep == NULL)
+> +		return -EIO;
+> +
+> +	/*
+> +	 * For both vtpm/tpm, firmware has log addr and log size in big
+> +	 * endian format. But in case of vtpm, there is a method called
+> +	 * sml-handover which is run during kernel init even before
+> +	 * device tree is setup. This sml-handover function takes care
+> +	 * of endianness and writes to sml-base and sml-size in little
+> +	 * endian format. For this reason, vtpm doesn't need conversion
+> +	 * but physical tpm needs the conversion.
+> +	 */
+> +	if (of_property_match_string(np, "compatible", "IBM,vtpm") < 0 &&
+> +	    of_property_match_string(np, "compatible", "IBM,vtpm20") < 0) {
+> +		*size = be32_to_cpup((__force __be32 *)sizep);
+> +		*base = be64_to_cpup((__force __be64 *)basep);
+> +	} else {
+> +		*size = *sizep;
+> +		*base = *basep;
+> +	}
+> +	return 0;
+> +}
+> +#endif
+> +
+>  #endif
+> -- 
+> 2.35.1
+> 
 
-crash> help -m
-              flags: 80 ()
-             kvbase: ff60000000000000
-  identity_map_base: ff60000000000000
-           pagesize: 4096
-          pageshift: 12
-           pagemask: fffffffffffff000
-         pageoffset: fff
-        pgdir_shift: 48
-       ptrs_per_pgd: 512
-       ptrs_per_pte: 512
-          stacksize: 16384
-                 hz: 250
-            memsize: 1071644672 (0x3fe00000)
-               bits: 64
-         back_trace: riscv64_back_trace_cmd()
-    processor_speed: riscv64_processor_speed()
-              uvtop: riscv64_uvtop()
-              kvtop: riscv64_kvtop()
-    get_stack_frame: riscv64_get_stack_frame()
-      get_stackbase: generic_get_stackbase()
-       get_stacktop: generic_get_stacktop()
-      translate_pte: riscv64_translate_pte()
-        memory_size: generic_memory_size()
-      vmalloc_start: riscv64_vmalloc_start()
-       is_task_addr: riscv64_is_task_addr()
-      verify_symbol: riscv64_verify_symbol()
-         dis_filter: generic_dis_filter()
-           dump_irq: generic_dump_irq()
-    show_interrupts: generic_show_interrupts()
-   get_irq_affinity: generic_get_irq_affinity()
-           cmd_mach: riscv64_cmd_mach()
-       get_smp_cpus: riscv64_get_smp_cpus()
-          is_kvaddr: riscv64_is_kvaddr()
-          is_uvaddr: riscv64_is_uvaddr()
-       verify_paddr: generic_verify_paddr()
-    init_kernel_pgd: NULL
-    value_to_symbol: generic_machdep_value_to_symbol()
-  line_number_hooks: NULL
-      last_pgd_read: ffffffff810e9000
-      last_p4d_read: 81410000
-      last_pud_read: 81411000
-      last_pmd_read: 81412000
-     last_ptbl_read: 81415000
-                pgd: 560d586f3ab0
-                p4d: 560d586f4ac0
-                pud: 560d586f5ad0
-                pmd: 560d586f6ae0
-               ptbl: 560d586f7af0
-  section_size_bits: 27
-   max_physmem_bits: 56
-  sections_per_root: 0
-           machspec: 560d57d204a0
+Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
 
-Signed-off-by: Xianting Tian <xianting.tian@linux.alibaba.com>
----
- riscv64.c | 60 ++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 59 insertions(+), 1 deletion(-)
-
-diff --git a/riscv64.c b/riscv64.c
-index 2e6e6dd..566f48f 100644
---- a/riscv64.c
-+++ b/riscv64.c
-@@ -132,7 +132,65 @@ riscv64_verify_symbol(const char *name, ulong value, char type)
- void
- riscv64_dump_machdep_table(ulong arg)
- {
--	/* TODO: */
-+	int others = 0;
-+
-+	fprintf(fp, "              flags: %lx (", machdep->flags);
-+	if (machdep->flags & KSYMS_START)
-+		fprintf(fp, "%sKSYMS_START", others++ ? "|" : "");
-+	fprintf(fp, ")\n");
-+
-+	fprintf(fp, "             kvbase: %lx\n", machdep->kvbase);
-+	fprintf(fp, "  identity_map_base: %lx\n", machdep->identity_map_base);
-+	fprintf(fp, "           pagesize: %d\n", machdep->pagesize);
-+	fprintf(fp, "          pageshift: %d\n", machdep->pageshift);
-+	fprintf(fp, "           pagemask: %llx\n", machdep->pagemask);
-+	fprintf(fp, "         pageoffset: %lx\n", machdep->pageoffset);
-+	fprintf(fp, "        pgdir_shift: %ld\n", machdep->machspec->va_bits - 9);
-+	fprintf(fp, "       ptrs_per_pgd: %u\n", PTRS_PER_PGD);
-+	fprintf(fp, "       ptrs_per_pte: %d\n", PTRS_PER_PTE);
-+	fprintf(fp, "          stacksize: %ld\n", machdep->stacksize);
-+	fprintf(fp, "                 hz: %d\n", machdep->hz);
-+	fprintf(fp, "            memsize: %ld (0x%lx)\n",
-+		machdep->memsize, machdep->memsize);
-+	fprintf(fp, "               bits: %d\n", machdep->bits);
-+	fprintf(fp, "         back_trace: riscv64_back_trace_cmd()\n");
-+	fprintf(fp, "    processor_speed: riscv64_processor_speed()\n");
-+	fprintf(fp, "              uvtop: riscv64_uvtop()\n");
-+	fprintf(fp, "              kvtop: riscv64_kvtop()\n");
-+	fprintf(fp, "    get_stack_frame: riscv64_get_stack_frame()\n");
-+	fprintf(fp, "      get_stackbase: generic_get_stackbase()\n");
-+	fprintf(fp, "       get_stacktop: generic_get_stacktop()\n");
-+	fprintf(fp, "      translate_pte: riscv64_translate_pte()\n");
-+	fprintf(fp, "        memory_size: generic_memory_size()\n");
-+	fprintf(fp, "      vmalloc_start: riscv64_vmalloc_start()\n");
-+	fprintf(fp, "       is_task_addr: riscv64_is_task_addr()\n");
-+	fprintf(fp, "      verify_symbol: riscv64_verify_symbol()\n");
-+	fprintf(fp, "         dis_filter: generic_dis_filter()\n");
-+	fprintf(fp, "           dump_irq: generic_dump_irq()\n");
-+	fprintf(fp, "    show_interrupts: generic_show_interrupts()\n");
-+	fprintf(fp, "   get_irq_affinity: generic_get_irq_affinity()\n");
-+	fprintf(fp, "           cmd_mach: riscv64_cmd_mach()\n");
-+	fprintf(fp, "       get_smp_cpus: riscv64_get_smp_cpus()\n");
-+	fprintf(fp, "          is_kvaddr: riscv64_is_kvaddr()\n");
-+	fprintf(fp, "          is_uvaddr: riscv64_is_uvaddr()\n");
-+	fprintf(fp, "       verify_paddr: generic_verify_paddr()\n");
-+	fprintf(fp, "    init_kernel_pgd: NULL\n");
-+	fprintf(fp, "    value_to_symbol: generic_machdep_value_to_symbol()\n");
-+	fprintf(fp, "  line_number_hooks: NULL\n");
-+	fprintf(fp, "      last_pgd_read: %lx\n", machdep->last_pgd_read);
-+	fprintf(fp, "      last_p4d_read: %lx\n", machdep->machspec->last_p4d_read);
-+	fprintf(fp, "      last_pud_read: %lx\n", machdep->last_pud_read);
-+	fprintf(fp, "      last_pmd_read: %lx\n", machdep->last_pmd_read);
-+	fprintf(fp, "     last_ptbl_read: %lx\n", machdep->last_ptbl_read);
-+	fprintf(fp, "                pgd: %lx\n", (ulong)machdep->pgd);
-+	fprintf(fp, "                p4d: %lx\n", (ulong)machdep->machspec->p4d);
-+	fprintf(fp, "                pud: %lx\n", (ulong)machdep->pud);
-+	fprintf(fp, "                pmd: %lx\n", (ulong)machdep->pmd);
-+	fprintf(fp, "               ptbl: %lx\n", (ulong)machdep->ptbl);
-+	fprintf(fp, "  section_size_bits: %ld\n", machdep->section_size_bits);
-+	fprintf(fp, "   max_physmem_bits: %ld\n", machdep->max_physmem_bits);
-+	fprintf(fp, "  sections_per_root: %ld\n", machdep->sections_per_root);
-+	fprintf(fp, "           machspec: %lx\n", (ulong)machdep->machspec);
- }
- 
- static ulong
--- 
-2.17.1
-
+BR, Jarkkko
 
 _______________________________________________
 kexec mailing list
