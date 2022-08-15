@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8878DC00140
-	for <kexec@archiver.kernel.org>; Mon, 15 Aug 2022 12:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B9460C00140
+	for <kexec@archiver.kernel.org>; Mon, 15 Aug 2022 12:05:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:From:Cc:To
 	:Subject:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=fGaQa7TIelj2Hta+3cK1hZx25RJwqvxhn8QkTH2uCbo=; b=fvHxQHMvvwNO5i
-	huTHZH5bRq58y1lslXAH+G5qOQ/fsvMGOikE6Z3DOUMKxIGNh+LzuvCRU6jDBI1mOypLzJFFQPZHP
-	iEL7NZ8e2PPJShfgHE0g12oRfnS7PRRPPpP3poRENVxiw2dXmr/bcKKnx7BUSJBHB4o1X6E+6vOaF
-	hobNAiuOLNBweWJ03mXpadI10GaHpXyapVSyCZufKthmnTs5NymXhLzbrgIGdWB59LDKqD4VpnjHf
-	LzwAZ/+PzS+LDQPfChc9Ci8Z6JjBXtnkAYRo0RvPs8jkH4EEAqzHVefgR9Bci/Jz7js7ofoiHVq/u
-	SPBosdfKdX9lgFPdZ3kA==;
+	List-Owner; bh=AokqcXzwXl2ysSAMr1pvEF0PcjKfUUd8fNNCqqX0oLk=; b=SxiQrTVenmON4k
+	xnAPQY22yTrCq5bz3BHyvkhJWP0L7+Xyr/oMqtBvZHveRfEVUGqC/t0xqWujP68jni8lqlFl2N5Df
+	7Dlynp4woRx4u60SQjcUm0VQJUAbmCTA5bsf9qDWvbGYX7yz/BGBldbWGbBLTx9E7l1uHEjvODyrw
+	euD6WokRhtWvlMgijPiAfdjeCNkTUOoZyFRgrTtuWleRpUgSEWgglUmi43twZloG7Ss5KJZB95IBw
+	n9Dq7wauTG++8F96SuqiKE1Tn9N8DQWpTD0osVV3FtKVjWMAHf1yGyhzvuLN6xpWPlhzpFd3eGtfZ
+	aniPWU+LKEKxEzSzT3xg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oNYqR-00Fr5L-Fp; Mon, 15 Aug 2022 12:05:23 +0000
+	id 1oNYqZ-00FrDL-8I; Mon, 15 Aug 2022 12:05:31 +0000
 Received: from ams.source.kernel.org ([2604:1380:4601:e00::1])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oNYqI-00Fqtd-OH
-	for kexec@lists.infradead.org; Mon, 15 Aug 2022 12:05:17 +0000
+	id 1oNYqM-00Fqxb-1W
+	for kexec@lists.infradead.org; Mon, 15 Aug 2022 12:05:20 +0000
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.source.kernel.org (Postfix) with ESMTPS id D9BC9B80E23;
-	Mon, 15 Aug 2022 12:05:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50C47C433D6;
-	Mon, 15 Aug 2022 12:05:08 +0000 (UTC)
+	by ams.source.kernel.org (Postfix) with ESMTPS id BAE1DB80E5C;
+	Mon, 15 Aug 2022 12:05:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C0D3C43470;
+	Mon, 15 Aug 2022 12:05:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1660565108;
-	bh=Sw+cA+559yU/ZC5FRtFdlW2zU6hQfO0hHbzrE84Cyyo=;
+	s=korg; t=1660565115;
+	bh=EUC4sSKfzYNDljl5oAunAa5TqJSEvmj1PV4kCsObKjU=;
 	h=Subject:To:Cc:From:Date:From;
-	b=anWlOb9iPk/KAbspktUbfnOXPweuWeVXfWyI9Pnwzlb+v+yztjNg60oVHLvQpK6p/
-	 uNxsMqfzF52LBh2aTE1u06lTbwpwZNSfyUcnOAB/+hIO6NO+Iqh9y3GC/7k3RpbpA4
-	 hb1/kCKsbeImsoLf8FXk4fQ9jIeFTxqE4DKL5sBo=
-Subject: Patch "arm64: kexec_file: use more system keyrings to verify kernel image signature" has been added to the 5.18-stable tree
+	b=IUIh2rOktXKsQ9W7ZX5lyZQMgBgbTzp1p6BThU+YRv/XVyJqf+IV5pXY7/igQYlk5
+	 z9Fir1OOzAP1be82zWJarbPYYKfLalREHC9Pm13QHbOT/8BrCpkw9Q+e5ZAtdCwpWm
+	 DctFNfv3/1uiAJsCb4cZS2dkOx6CCkPKb9PIDXh4=
+Subject: Patch "arm64: kexec_file: use more system keyrings to verify kernel image signature" has been added to the 5.19-stable tree
 To: bhe@redhat.com,coxu@redhat.com,gregkh@linuxfoundation.org,kexec@lists.infradead.org,msuchanek@suse.de,will@kernel.org,zohar@linux.ibm.com
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
-Date: Mon, 15 Aug 2022 14:05:06 +0200
-Message-ID: <1660565106108239@kroah.com>
+Date: Mon, 15 Aug 2022 14:05:12 +0200
+Message-ID: <1660565112180188@kroah.com>
 MIME-Version: 1.0
 X-stable: commit
 X-Patchwork-Hint: ignore 
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220815_050515_538216_74DDAB31 
-X-CRM114-Status: GOOD (  17.32  )
+X-CRM114-CacheID: sfid-20220815_050518_571484_B25DBD85 
+X-CRM114-Status: GOOD (  17.22  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -72,12 +72,12 @@ This is a note to let you know that I've just added the patch titled
 
     arm64: kexec_file: use more system keyrings to verify kernel image signature
 
-to the 5.18-stable tree which can be found at:
+to the 5.19-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
      arm64-kexec_file-use-more-system-keyrings-to-verify-kernel-image-signature.patch
-and it can be found in the queue-5.18 subdirectory.
+and it can be found in the queue-5.19 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
@@ -155,9 +155,9 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 Patches currently in stable-queue which might be from coxu@redhat.com are
 
-queue-5.18/arm64-kexec_file-use-more-system-keyrings-to-verify-kernel-image-signature.patch
-queue-5.18/kexec-keys-s390-make-use-of-built-in-and-secondary-k.patch
-queue-5.18/kexec-clean-up-arch_kexec_kernel_verify_sig.patch
+queue-5.19/arm64-kexec_file-use-more-system-keyrings-to-verify-kernel-image-signature.patch
+queue-5.19/kexec-keys-s390-make-use-of-built-in-and-secondary-k.patch
+queue-5.19/kexec-clean-up-arch_kexec_kernel_verify_sig.patch
 
 _______________________________________________
 kexec mailing list
