@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0F5A5C25B0E
-	for <kexec@archiver.kernel.org>; Mon, 15 Aug 2022 20:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4EC84C25B08
+	for <kexec@archiver.kernel.org>; Mon, 15 Aug 2022 20:47:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=nSiQTB02lR6GeO4zEJ75vS1eLqZQc6nUArmZdEJzPRo=; b=W7CJSMQc2dW3aR
-	0puTylg8sSRqAGZtmnIm0BjP8+9FN3CEw7pwtcKkmRsFeXJ4Xlz1zLO13dSCaW1HKDfzFkxNEelS5
-	Ig1uBkUrs8XYMRtfXYu1GFi05OCH6Rh3AowlwWnlLZo1RDyzIvjE91XpDg/QMOZghvRN0TU8pCddz
-	FJU7nWSoORNGn8hrIh9zkPwrLpd3C9bmEITJit31a7BBKxD1G0mwXQHgDllAbYoN6vGnwAW0k94bs
-	iIo4A7sDcrln1vycWco9UA7JD90n6UwQ+Bs5Xsck+8B60p6GCZCw8kqcQXT6Xk06XbdWxKLTmNsxL
-	4SxWOgOe4LBAt365DOWA==;
+	List-Owner; bh=nSiQTB02lR6GeO4zEJ75vS1eLqZQc6nUArmZdEJzPRo=; b=U3ODvZ+2H0wU22
+	khH8WRLXHJaX+90yK8HCIEOsI5ki6IOVeNUEBZ0eAU3rSkqWItukK9Rl51n2dAwuE0qfTjgrCet6l
+	z8zvjJZIbUTN1NV4Rm/5KR3byphqOuGvYqQTStHS0TAKrYlde2G10Qd8RzjWoyPud5zEu2xcCnOHE
+	RwOk0uR/kdSXGgCXej5K3Qjs4erdkB27rDpMFYVuPmDzI5XKHQ6E/bWUc2i4+rwCGstgCTncwF/vR
+	pGbJpgoJfpeW5+qYWZrxpEWLSovbvzyrjL9S7vlpGdKb7rXVFGCt+T+RTPdEtoBXGpHG4iE9csLz7
+	l9Fo93mcCzs9EWVetzDQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oNgIh-004TXD-LG; Mon, 15 Aug 2022 20:03:04 +0000
+	id 1oNgz9-0053Jb-K6; Mon, 15 Aug 2022 20:46:55 +0000
 Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oNgIb-004TTa-4D
-	for kexec@lists.infradead.org; Mon, 15 Aug 2022 20:02:58 +0000
+	id 1oNgz6-0053GF-40
+	for kexec@lists.infradead.org; Mon, 15 Aug 2022 20:46:53 +0000
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 141D5612E1;
-	Mon, 15 Aug 2022 20:02:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0708C433C1;
-	Mon, 15 Aug 2022 20:02:54 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 6200D6125C;
+	Mon, 15 Aug 2022 20:46:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EB81C433C1;
+	Mon, 15 Aug 2022 20:46:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1660593775;
+	s=korg; t=1660596411;
 	bh=VHaLffJQoHaI+IOtGGNDfDZgg2sKNs5qPuw8gRU1Og8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=J1JwuGdCa+ibvAmw02UbD58s1FCY22nDrZzh7I5wQi8wFYXc1m5JFaRz9oPXnZyEX
-	 TVKTKq1lgQpUlspYS/D73eAzzPQam7Qo2hcW0BQHJvZ3q1wAFCeHqbol0O7h+aW24/
-	 T/Qn3S8puWLcB4x+nGA4jCW1vx+SD4jeGMUpcDkM=
+	b=GtGLWgOW9FIRgUgUPm1+jviG+EZDWvBIho5/fW/fMws1nL+zPHWP3OPdL+PfS80V3
+	 yrQPXEvpAT0p+3XOabZcE7kgCRfk5E/9VaXIDCCnkVrOnKJ1Uq/6q8v/I3FIHQbJKr
+	 9thRezn4ozh0N/29GqL5q7zA+afB0+a0KvI65EKM=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: linux-kernel@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -54,17 +54,17 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Heiko Carstens <hca@linux.ibm.com>,
 	Mimi Zohar <zohar@linux.ibm.com>,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.18 1004/1095] kexec, KEYS, s390: Make use of built-in and secondary keyring for signature verification
-Date: Mon, 15 Aug 2022 20:06:43 +0200
-Message-Id: <20220815180510.636878336@linuxfoundation.org>
+Subject: [PATCH 5.19 1071/1157] kexec, KEYS, s390: Make use of built-in and secondary keyring for signature verification
+Date: Mon, 15 Aug 2022 20:07:07 +0200
+Message-Id: <20220815180522.963428530@linuxfoundation.org>
 X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20220815180429.240518113@linuxfoundation.org>
-References: <20220815180429.240518113@linuxfoundation.org>
+In-Reply-To: <20220815180439.416659447@linuxfoundation.org>
+References: <20220815180439.416659447@linuxfoundation.org>
 User-Agent: quilt/0.67
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220815_130257_324857_3DCF2E97 
-X-CRM114-Status: GOOD (  13.48  )
+X-CRM114-CacheID: sfid-20220815_134652_399731_7D323493 
+X-CRM114-Status: GOOD (  13.37  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
