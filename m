@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CBE64C00140
-	for <kexec@archiver.kernel.org>; Mon, 15 Aug 2022 11:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1B8F2C00140
+	for <kexec@archiver.kernel.org>; Mon, 15 Aug 2022 12:05:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:From:Cc:To
 	:Subject:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=1CAJ2ykni84cNYD0RIjpGNdB6siaTRNnnT0m3UDVilY=; b=fFFk6e6vVBX+FW
-	017grjPt6yn8JYAHf0xLSpepHt9d4PhaYE2myxpIs0NFgJStd2P+SG3bl5Guvn/f13lYKwX7h++1P
-	B05C7X2UI5hh+e3KJ/Vm3QwZ8rggw54MxRf9R4GlpZsEq4zDv13MjDzItkUbVweIky7x+pvxhLCYc
-	VdIjCdstaO1ZzwLjWkg2OfLCZruPnT3snkx8lv5bOHDJQjlVzHCKWt77pAnkd4h/igS1wIZQJdSPA
-	zekgy5OFY2Q9S7QOPe4oF2eg4Dgf9z5Yl3oPXM1n9Ud+VwyFMtMOnf+2yyWRYrgwQ5KB0ZxAuqE/C
-	JsIZw20956NxJg70ZL2A==;
+	List-Owner; bh=J0qVZItlzb+9RBAx63nvM96RiQUuv/PkzWwePVCMYJQ=; b=ybWKPysi7L7VR6
+	yUC2MDKVcgMCyZJm+Awsu59HDtLPt+1+23pm/QQ3XJEM07xiuTQ54mfqTBUIQtDJzcwVHW5al23n9
+	oRh4WP/nBfglkF1hl6UsVsOOfz0JExpqKiqWBw37AKkSqQf+/q22o2qiYdvVNj68327ScvBYJagg5
+	o+7CQ0LyWycoQ1u+cPQxfIFV46FJ2omi4Z3PFz4faTWnWUhFCfbamxbOV2WOm638gO1AAfDh2dbvV
+	EOzJC+jMZrvIEoJaCF08EFRpb580bMvqggk42fQ/sQpQzL7BkhtztFny73c+Zoo0gk53vQgU5ku9t
+	iBwByheWAPaWWJWOfqJw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oNXq8-00F3i3-MI; Mon, 15 Aug 2022 11:01:00 +0000
-Received: from dfw.source.kernel.org ([139.178.84.217])
+	id 1oNYpz-00Fqj3-D9; Mon, 15 Aug 2022 12:04:55 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oNXpb-00F3F5-3L
-	for kexec@lists.infradead.org; Mon, 15 Aug 2022 11:00:29 +0000
+	id 1oNYpt-00FqfJ-Pq
+	for kexec@lists.infradead.org; Mon, 15 Aug 2022 12:04:53 +0000
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 4A3AB6110F;
-	Mon, 15 Aug 2022 11:00:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E0F5C433D6;
-	Mon, 15 Aug 2022 11:00:25 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 2A0EF61179;
+	Mon, 15 Aug 2022 12:04:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39A6CC433D6;
+	Mon, 15 Aug 2022 12:04:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1660561225;
-	bh=HRuOOcBQD05g4ZM3OI4Cal83GlkDdaDFartm2XUyyQY=;
+	s=korg; t=1660565088;
+	bh=JLhc44m2/VgyXyX9ITNb5JD0ThdL5p5VjfOMwXpFohk=;
 	h=Subject:To:Cc:From:Date:From;
-	b=WAVtCpowVTckwlOy9oBbVF7/hKkNinC+tuwOt/bSd5Bbp95pIwgOs+A+i6tpf2DRg
-	 n5T29fmM09csZHT49yuI5Mez6lQKuT3Ax37hLzwmGvMiBawGtjPpkbYeu8X+JUD8RZ
-	 0/XhXeykMo//DIyJBJtOA0oWr824pFFKWCk+7irM=
-Subject: Patch "kexec, KEYS, s390: Make use of built-in and secondary keyring for signature verification" has been added to the 5.4-stable tree
-To: bhe@redhat.com,coxu@redhat.com,gregkh@linuxfoundation.org,hca@linux.ibm.com,jlee@suse.com,kexec@lists.infradead.org,msuchanek@suse.de,prudo@linux.ibm.com,zohar@linux.ibm.com
+	b=mM++Q/BIrJk78rt9jlQguAaTqgh7a5zfn5gDj2D6SjkGr7jpFGg8TSTpWb7r6Owrb
+	 XTf/GcP3ozWVsIm9PlERiAd5QP+dE8a/g8ijqaUebDBRRRZPSUk/b57WTX4vSAkcGN
+	 ePbUHIgmxpWRAq8NiTEumCuCFoDwuniBEpLDlj88=
+Subject: Patch "arm64: kexec_file: use more system keyrings to verify kernel image signature" has been added to the 5.4-stable tree
+To: bhe@redhat.com,coxu@redhat.com,gregkh@linuxfoundation.org,kexec@lists.infradead.org,msuchanek@suse.de,will@kernel.org,zohar@linux.ibm.com
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
-Date: Mon, 15 Aug 2022 13:00:22 +0200
-Message-ID: <16605612226641@kroah.com>
+Date: Mon, 15 Aug 2022 14:04:46 +0200
+Message-ID: <1660565086196122@kroah.com>
 MIME-Version: 1.0
 X-stable: commit
 X-Patchwork-Hint: ignore 
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220815_040027_341321_A9DD90BC 
-X-CRM114-Status: GOOD (  15.23  )
+X-CRM114-CacheID: sfid-20220815_050449_962156_469781EF 
+X-CRM114-Status: GOOD (  17.22  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -70,90 +70,93 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 This is a note to let you know that I've just added the patch titled
 
-    kexec, KEYS, s390: Make use of built-in and secondary keyring for signature verification
+    arm64: kexec_file: use more system keyrings to verify kernel image signature
 
 to the 5.4-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     kexec-keys-s390-make-use-of-built-in-and-secondary-keyring-for-signature-verification.patch
+     arm64-kexec_file-use-more-system-keyrings-to-verify-kernel-image-signature.patch
 and it can be found in the queue-5.4 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From 0828c4a39be57768b8788e8cbd0d84683ea757e5 Mon Sep 17 00:00:00 2001
-From: Michal Suchanek <msuchanek@suse.de>
-Date: Thu, 14 Jul 2022 21:40:27 +0800
-Subject: kexec, KEYS, s390: Make use of built-in and secondary keyring for signature verification
+From 0d519cadf75184a24313568e7f489a7fc9b1be3b Mon Sep 17 00:00:00 2001
+From: Coiby Xu <coxu@redhat.com>
+Date: Thu, 14 Jul 2022 21:40:26 +0800
+Subject: arm64: kexec_file: use more system keyrings to verify kernel image signature
 
-From: Michal Suchanek <msuchanek@suse.de>
+From: Coiby Xu <coxu@redhat.com>
 
-commit 0828c4a39be57768b8788e8cbd0d84683ea757e5 upstream.
+commit 0d519cadf75184a24313568e7f489a7fc9b1be3b upstream.
 
-commit e23a8020ce4e ("s390/kexec_file: Signature verification prototype")
-adds support for KEXEC_SIG verification with keys from platform keyring
-but the built-in keys and secondary keyring are not used.
+Currently, when loading a kernel image via the kexec_file_load() system
+call, arm64 can only use the .builtin_trusted_keys keyring to verify
+a signature whereas x86 can use three more keyrings i.e.
+.secondary_trusted_keys, .machine and .platform keyrings. For example,
+one resulting problem is kexec'ing a kernel image  would be rejected
+with the error "Lockdown: kexec: kexec of unsigned images is restricted;
+see man kernel_lockdown.7".
 
-Add support for the built-in keys and secondary keyring as x86 does.
+This patch set enables arm64 to make use of the same keyrings as x86 to
+verify the signature kexec'ed kernel image.
 
-Fixes: e23a8020ce4e ("s390/kexec_file: Signature verification prototype")
-Cc: stable@vger.kernel.org
-Cc: Philipp Rudo <prudo@linux.ibm.com>
+Fixes: 732b7b93d849 ("arm64: kexec_file: add kernel signature verification support")
+Cc: stable@vger.kernel.org # 105e10e2cf1c: kexec_file: drop weak attribute from functions
+Cc: stable@vger.kernel.org # 34d5960af253: kexec: clean up arch_kexec_kernel_verify_sig
+Cc: stable@vger.kernel.org # 83b7bb2d49ae: kexec, KEYS: make the code in bzImage64_verify_sig generic
+Acked-by: Baoquan He <bhe@redhat.com>
 Cc: kexec@lists.infradead.org
 Cc: keyrings@vger.kernel.org
 Cc: linux-security-module@vger.kernel.org
+Co-developed-by: Michal Suchanek <msuchanek@suse.de>
 Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-Reviewed-by: "Lee, Chun-Yi" <jlee@suse.com>
-Acked-by: Baoquan He <bhe@redhat.com>
+Acked-by: Will Deacon <will@kernel.org>
 Signed-off-by: Coiby Xu <coxu@redhat.com>
-Acked-by: Heiko Carstens <hca@linux.ibm.com>
 Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/s390/kernel/machine_kexec_file.c |   18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+ arch/arm64/kernel/kexec_image.c |   11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
 
---- a/arch/s390/kernel/machine_kexec_file.c
-+++ b/arch/s390/kernel/machine_kexec_file.c
-@@ -29,6 +29,7 @@ int s390_verify_sig(const char *kernel,
- 	const unsigned long marker_len = sizeof(MODULE_SIG_STRING) - 1;
- 	struct module_signature *ms;
- 	unsigned long sig_len;
-+	int ret;
- 
- 	/* Skip signature verification when not secure IPLed. */
- 	if (!ipl_secure_flag)
-@@ -63,11 +64,18 @@ int s390_verify_sig(const char *kernel,
- 		return -EBADMSG;
- 	}
- 
--	return verify_pkcs7_signature(kernel, kernel_len,
--				      kernel + kernel_len, sig_len,
--				      VERIFY_USE_PLATFORM_KEYRING,
--				      VERIFYING_MODULE_SIGNATURE,
--				      NULL, NULL);
-+	ret = verify_pkcs7_signature(kernel, kernel_len,
-+				     kernel + kernel_len, sig_len,
-+				     VERIFY_USE_SECONDARY_KEYRING,
-+				     VERIFYING_MODULE_SIGNATURE,
-+				     NULL, NULL);
-+	if (ret == -ENOKEY && IS_ENABLED(CONFIG_INTEGRITY_PLATFORM_KEYRING))
-+		ret = verify_pkcs7_signature(kernel, kernel_len,
-+					     kernel + kernel_len, sig_len,
-+					     VERIFY_USE_PLATFORM_KEYRING,
-+					     VERIFYING_MODULE_SIGNATURE,
-+					     NULL, NULL);
-+	return ret;
+--- a/arch/arm64/kernel/kexec_image.c
++++ b/arch/arm64/kernel/kexec_image.c
+@@ -14,7 +14,6 @@
+ #include <linux/kexec.h>
+ #include <linux/pe.h>
+ #include <linux/string.h>
+-#include <linux/verification.h>
+ #include <asm/byteorder.h>
+ #include <asm/cpufeature.h>
+ #include <asm/image.h>
+@@ -113,18 +112,10 @@ static void *image_load(struct kimage *i
+ 	return ERR_PTR(ret);
  }
- #endif /* CONFIG_KEXEC_SIG */
  
+-#ifdef CONFIG_KEXEC_IMAGE_VERIFY_SIG
+-static int image_verify_sig(const char *kernel, unsigned long kernel_len)
+-{
+-	return verify_pefile_signature(kernel, kernel_len, NULL,
+-				       VERIFYING_KEXEC_PE_SIGNATURE);
+-}
+-#endif
+-
+ const struct kexec_file_ops kexec_image_ops = {
+ 	.probe = image_probe,
+ 	.load = image_load,
+ #ifdef CONFIG_KEXEC_IMAGE_VERIFY_SIG
+-	.verify_sig = image_verify_sig,
++	.verify_sig = kexec_kernel_verify_pe_sig,
+ #endif
+ };
 
 
-Patches currently in stable-queue which might be from msuchanek@suse.de are
+Patches currently in stable-queue which might be from coxu@redhat.com are
 
 queue-5.4/kexec-keys-s390-make-use-of-built-in-and-secondary-keyring-for-signature-verification.patch
+queue-5.4/arm64-kexec_file-use-more-system-keyrings-to-verify-kernel-image-signature.patch
 
 _______________________________________________
 kexec mailing list
