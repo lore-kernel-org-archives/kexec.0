@@ -4,72 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 38476C32773
-	for <kexec@archiver.kernel.org>; Fri, 19 Aug 2022 09:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1210EC32772
+	for <kexec@archiver.kernel.org>; Fri, 19 Aug 2022 09:42:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
+	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=lhvTG9xoaOXH1VfF4rX+mP0ZtzGmz2Cd16Ve/UGrtBg=; b=mu6ashkxEVyGCa
-	0icR8J6i5jGCqE+D0TIqAf+9In0OEK8cpIjJNZ+zS6rOWuPTzwnXi8Qseb7lCBYzj9xda2gQJeXao
-	n+ncENsSf6hkYsjz58Cuv6VKgbEUSWMX7U51qPFjMnoaHnBDld406iVGZWrSutl2czsyuMePneBLB
-	xsyvCP19RbQOP47JXX0A5NcwG3jzIwcBOTS6Qp+NhuV3eLn9OxcuTCX0yUjJZoM3O3R4g6TEnQyu3
-	VQ2UIbz8vIXhL8BNpanpn0XnXmFoavlX+8TOrjeIT8B/QzWDPq/hxnYr8iJfaadZ6LeQOq5z+eKgm
-	yUgQdszyf3oUU1W8McrQ==;
+	List-Owner; bh=ZCVpzEyNiH3fgmUkyJx+V9J2iESgMTrT/UMeAX1NgrU=; b=pDXWY47788CLcO
+	JHwKq3rK7mVsErtyqP90S1Zb8/zifstJL3NIIaVu1Q1GuNP1HAJRjQj/mDfo7XCaU8WbXp/pA9PKM
+	7bcsIUNM089Pu4V5I+UhcBfxPloR9FqwMF0r6pyXaZhDy7cstzsLaxhCYvXVJbrCHEydVfEu9QgNd
+	eqBljC6zz5KcUaH0T3sAOyIqF6Ghkw63UK6VN+RWQYn7Ag6+n69s34EC1bh5J1ydmEhPJlIEKgs8r
+	0FwYtGXJ0sL35Nefe33MlIh2903/IGYjocXibdKAl5k7p9RhROeL2juPm3hJL85rqmkZqScO7tQdL
+	zwtToZGk2H/H2cGmN5zA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oOyWb-0058Bo-NJ; Fri, 19 Aug 2022 09:42:45 +0000
-Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
+	id 1oOyWg-0058Ra-JB; Fri, 19 Aug 2022 09:42:50 +0000
+Received: from fanzine.igalia.com ([178.60.130.6] helo=fanzine2.igalia.com)
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oOMtj-004Pij-Uk
-	for kexec@lists.infradead.org; Wed, 17 Aug 2022 17:32:09 +0000
-Received: from zn.tnic (p200300ea971b98b0329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:971b:98b0:329c:23ff:fea6:a903])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2A7411EC04E4;
-	Wed, 17 Aug 2022 19:31:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-	t=1660757517;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-	bh=dUKj+X8ljKS3x0J7PLstLS2kOGr7pWVjrGVNsA+POsw=;
-	b=OCrRjecizgJkhIrUuxZqNNRqYD/0fFaYs2TDejeDXW/mmrrYLWtuimSo/AnlefpOtU+AMj
-	bsL7N758/zQeINPpMpOiI/ASS6nWSKedONPjIH0T9YfOo5o9ytEmycBmsrGT973RrHO3j/
-	FA4Bt5FgbzcF1qKWUonHjI/9nn6LXBk=
-Date: Wed, 17 Aug 2022 19:31:53 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: akpm@linux-foundation.org, bhe@redhat.com, pmladek@suse.com,
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-	x86@kernel.org, kernel-dev@igalia.com, kernel@gpiccoli.net,
-	halves@canonical.com, fabiomirmar@gmail.com,
-	alejandro.j.jimenez@oracle.com, andriy.shevchenko@linux.intel.com,
-	arnd@arndb.de, corbet@lwn.net, d.hatayama@jp.fujitsu.com,
-	dave.hansen@linux.intel.com, dyoung@redhat.com, feng.tang@intel.com,
-	gregkh@linuxfoundation.org, mikelley@microsoft.com,
-	hidehiro.kawai.ez@hitachi.com, jgross@suse.com,
-	john.ogness@linutronix.de, keescook@chromium.org, luto@kernel.org,
-	mhiramat@kernel.org, mingo@redhat.com, paulmck@kernel.org,
-	peterz@infradead.org, rostedt@goodmis.org, senozhatsky@chromium.org,
-	stern@rowland.harvard.edu, tglx@linutronix.de, vgoyal@redhat.com,
-	vkuznets@redhat.com, will@kernel.org, linux-edac@vger.kernel.org,
-	Dinh Nguyen <dinguyen@kernel.org>, Tony Luck <tony.luck@intel.com>
-Subject: Re: [PATCH v2 10/13] EDAC/altera: Skip the panic notifier if kdump
- is loaded
-Message-ID: <Yv0mCY04heUXsGiC@zn.tnic>
-References: <20220719195325.402745-1-gpiccoli@igalia.com>
- <20220719195325.402745-11-gpiccoli@igalia.com>
+	id 1oOPgK-006LMw-Nb
+	for kexec@lists.infradead.org; Wed, 17 Aug 2022 20:30:30 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=gmQnAmGV0yJc75So19A4rCEM0sxOrtpi2lPtl/yZEKg=; b=JbxSHZNkdEfXBjQmNN5rGI/OwF
+	aDS9BIivkV6Mz0U7oNRPgqlNWDVZdLBMvEK4or9u9F8CpZ5/lmyGvOdyHUqzk4Kh84BZ1Ai2cRMRD
+	vRNg+I2f2MTS9wNKgf2+L1eylZSYzBG8FVmKwjEVZr3Abn8CZwSze+D2Mc3LB6zWfML8DYXrq/ZGT
+	1/olIIKBFpL2TAcYS/ecLPQiAHkbNzplNDHKUFna7C8OmeLHDWlIf+QXwfuHY4TWlgfiCPbeUINau
+	SS3JJRVVPRad1gggN43ntHtkqkkToLbF5W+SUlu4GnmHAFHo3SXxacXlIAjO3QLNNZ2MpkOMtU/L6
+	RAAUvXTA==;
+Received: from [179.232.144.59] (helo=[192.168.0.5])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1oOPfe-00AvIf-BO; Wed, 17 Aug 2022 22:29:46 +0200
+Message-ID: <7f016d7f-a546-a45d-c65c-bc35269b4faa@igalia.com>
+Date: Wed, 17 Aug 2022 17:28:34 -0300
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20220719195325.402745-11-gpiccoli@igalia.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH v2 10/13] EDAC/altera: Skip the panic notifier if kdump is
+ loaded
+Content-Language: en-US
+To: Borislav Petkov <bp@alien8.de>
+Cc: akpm@linux-foundation.org, bhe@redhat.com, pmladek@suse.com,
+ kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, netdev@vger.kernel.org, x86@kernel.org,
+ kernel-dev@igalia.com, kernel@gpiccoli.net, halves@canonical.com,
+ fabiomirmar@gmail.com, alejandro.j.jimenez@oracle.com,
+ andriy.shevchenko@linux.intel.com, arnd@arndb.de, corbet@lwn.net,
+ d.hatayama@jp.fujitsu.com, dave.hansen@linux.intel.com, dyoung@redhat.com,
+ feng.tang@intel.com, gregkh@linuxfoundation.org, mikelley@microsoft.com,
+ hidehiro.kawai.ez@hitachi.com, jgross@suse.com, john.ogness@linutronix.de,
+ keescook@chromium.org, luto@kernel.org, mhiramat@kernel.org,
+ mingo@redhat.com, paulmck@kernel.org, peterz@infradead.org,
+ rostedt@goodmis.org, senozhatsky@chromium.org, stern@rowland.harvard.edu,
+ tglx@linutronix.de, vgoyal@redhat.com, vkuznets@redhat.com, will@kernel.org,
+ linux-edac@vger.kernel.org, Dinh Nguyen <dinguyen@kernel.org>,
+ Tony Luck <tony.luck@intel.com>
+References: <20220719195325.402745-1-gpiccoli@igalia.com>
+ <20220719195325.402745-11-gpiccoli@igalia.com> <Yv0mCY04heUXsGiC@zn.tnic>
+ <46137c67-25b4-6657-33b7-cffdc7afc0d7@igalia.com> <Yv1C0Y25u2IB7PCs@zn.tnic>
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <Yv1C0Y25u2IB7PCs@zn.tnic>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220817_103208_174447_47478F82 
-X-CRM114-Status: UNSURE (   9.76  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20220817_133028_793897_F33C5060 
+X-CRM114-Status: GOOD (  15.36  )
 X-Mailman-Approved-At: Fri, 19 Aug 2022 02:42:41 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -87,29 +90,51 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Jul 19, 2022 at 04:53:23PM -0300, Guilherme G. Piccoli wrote:
-> The altera_edac panic notifier performs some data collection with
-> regards errors detected; such code relies in the regmap layer to
-> perform reads/writes, so the code is abstracted and there is some
-> risk level to execute that, since the panic path runs in atomic
-> context, with interrupts/preemption and secondary CPUs disabled.
+On 17/08/2022 16:34, Borislav Petkov wrote:
+> [...]
 > 
-> Users want the information collected in this panic notifier though,
-> so in order to balance the risk/benefit, let's skip the altera panic
-> notifier if kdump is loaded. While at it, remove a useless header
-> and encompass a macro inside the sole ifdef block it is used.
+> What is "the failure risk for kdump"?
+> 
+> Some of the notifiers which run before kdump might fail and thus prevent
+> the machine from kdumping?
+>
 
-How does the fact that kdump is loaded, obviate the need to print
-information about the errors?
+Exactly; some notifiers could break the machine and prevent a successful
+kdump. The EDAC one is consider medium risk, due to invasive operations
+(register readings on panic situation).
 
-Are you suggesting that people who have the whole vmcore would be able
-to piece together the error information?
 
--- 
-Regards/Gruss,
-    Boris.
+> [...] 
+> My question stands: if kdump is loaded and the s10_edac_dberr_handler()
+> does not read the the fatal errors and they don't get shown in dmesg
+> before the machine panics, how do you intend to show that information to
+> the user?
+> 
+> Because fatal errors are something you absolutely wanna show, at least,
+> in dmesg!
+> 
+> I don't think you can "read" the errors from vmcore - they need to be
+> read from the hw registers before the machine dies.
+> 
 
-https://people.kernel.org/tglx/notes-about-netiquette
+My understanding is the same as yours, i.e., this is not possible to
+collect from vmcore, it requires register reading. But again: if you
+kdump your machine today, you won't collect this information, patch
+changed nothing in that regard.
+
+The one thing it changes is that you'd skip the altera register dump if
+kdump is set AND you managed to also set "crash_kexec_post_notifiers".
+
+In case you / Dinh / Tony disagrees with the patch, it's fine and we can
+discard it, but then this notifier couldn't run early in the refactor we
+are doing, it'd postponed to run later. This are is full of trade-offs,
+we just need to choose what compromise solution is preferred by the
+majority of developers =)
+
+Cheers,
+
+
+Guilherme
 
 _______________________________________________
 kexec mailing list
