@@ -4,64 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D66A5C32771
-	for <kexec@archiver.kernel.org>; Fri, 19 Aug 2022 15:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0FDC0C32774
+	for <kexec@archiver.kernel.org>; Fri, 19 Aug 2022 15:40:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=/rgSIFn3dRykzqGcE2n47MB3yjrQ5K4jr5tCJHWh1AA=; b=XnNWHyo8hsfAra
-	JkrvAPSISzk5k3ywLneLwM40DlimmG/7uJA2879E3O91fTldXHzOtIY41KrXbT1zptUSjeop1Syuq
-	VaEyickG5hKMETx1jTghUNvMXbQMlVWaEg/92QSzdiEIaYGkHUosKZfvIDb3xdyMY8oWT0wS5rVHt
-	TxmapGaNuTnixCNrvEgKiHAmEdnzuU5P9r9vRkjYLqPsYhWA+hwuGIuzUNCKDttFeZGjOryS9Z3+R
-	x1G9wIPEDa1YHKq30pvUE5ON2ABA2g6d/lJ6l2Z+xv3clPVbrh1mdWY6FIOaTjfxusUUSaYm1YZCR
-	yzM9t7hZZ1pLSdW9tA6g==;
+	List-Owner; bh=PfG/s+Ye1Iqqj5yu7Qg0E+tFpNEe7s1XRAzKXX+EMcM=; b=TR8ZZHxS9daq09
+	zz1YiJuJ43cPIhNIdkhkgmQA9XPG6IDF857BWN/y066fi14Ne+v52xsHVdCOzuhUvrGjaA0eSjFcU
+	+Tucb6uBJK3eonyr3NzquqwIiFVhX+QpF+FdhoeynBE4Nz+UT41njNG/L4HRy5nx+Yw8+BmTXLSIi
+	QKKBzWHws8rqOoZYvcpS2eTigjqYclqGzCoLlpQy9KXvOT9GBfixcVBroktxvnfPwHG/8WvVKuiid
+	wktrffCvsbgC9b9aPs76mKRPb0CyqluQyD5M8Fn6mijrFxVlQ8tK9Lpxw0boT7V2orTXVSAqOub7e
+	/Gh7N7KgljbLfVpAUwQw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oP46z-00A0Ii-K0; Fri, 19 Aug 2022 15:40:41 +0000
-Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
+	id 1oP472-00A0K6-0x; Fri, 19 Aug 2022 15:40:44 +0000
+Received: from ams.source.kernel.org ([145.40.68.75])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oP46x-00A0H4-Ou
-	for kexec@lists.infradead.org; Fri, 19 Aug 2022 15:40:41 +0000
+	id 1oP46y-00A0GJ-Kb
+	for kexec@lists.infradead.org; Fri, 19 Aug 2022 15:40:42 +0000
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 49C30615ED;
-	Fri, 19 Aug 2022 15:40:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C4B0C433D6;
-	Fri, 19 Aug 2022 15:40:38 +0000 (UTC)
+	by ams.source.kernel.org (Postfix) with ESMTPS id EB5A8B827F8;
+	Fri, 19 Aug 2022 15:40:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E7E1C433D6;
+	Fri, 19 Aug 2022 15:40:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1660923638;
-	bh=q01TiepYCgbd3YDF3Teq86Su7fa1NExU5eO/8Pw2Xpc=;
+	s=korg; t=1660923635;
+	bh=ADw06pRCuPZeTUd/Uq+mdKxMJyGKpyXRKWJnc9JYbVQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=inDF4Cwoo7ABxjN+YhYvvw4ANZWmqd2vqAXHKruCZ9hMbOoG3d77t1Mx8bjNe8XkG
-	 FGRGlLeINtiwKZMyhh3G0GbKQ75ICa5lZMHvNHWuRr/rbKsOlp65YF9q9JuGFOs06x
-	 AFg0PtkbzT9bVA2bv/QBJyymTc1V1Yu3SNfD/n7k=
+	b=nu20RNv9VJoxpLokxAeyAerqCgc+iqB8+HJuQ4aGjnVT4hUOxbDy1k5szatvLNQed
+	 UeEMpSbwwsobB1ArymgHQXE8ZKfRXP+bxgpWenbLGIPII4BaleH74hKeTxyDrA1D7s
+	 Dto1yCoUrqWilifHwRx1XMxs2XKzDaMWgR6JDd3o=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: linux-kernel@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	stable@vger.kernel.org,
-	Baoquan He <bhe@redhat.com>,
 	kexec@lists.infradead.org,
 	keyrings@vger.kernel.org,
 	linux-security-module@vger.kernel.org,
 	Michal Suchanek <msuchanek@suse.de>,
-	Will Deacon <will@kernel.org>,
 	Coiby Xu <coxu@redhat.com>,
 	Mimi Zohar <zohar@linux.ibm.com>
-Subject: [PATCH 5.18 6/6] arm64: kexec_file: use more system keyrings to verify kernel image signature
-Date: Fri, 19 Aug 2022 17:40:18 +0200
-Message-Id: <20220819153710.669386636@linuxfoundation.org>
+Subject: [PATCH 5.18 5/6] kexec, KEYS: make the code in bzImage64_verify_sig generic
+Date: Fri, 19 Aug 2022 17:40:17 +0200
+Message-Id: <20220819153710.636766408@linuxfoundation.org>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20220819153710.430046927@linuxfoundation.org>
 References: <20220819153710.430046927@linuxfoundation.org>
 User-Agent: quilt/0.67
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220819_084039_888955_AA68C74B 
-X-CRM114-Status: GOOD (  13.95  )
+X-CRM114-CacheID: sfid-20220819_084040_977147_AAEE0B98 
+X-CRM114-Status: GOOD (  15.16  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,67 +78,119 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: Coiby Xu <coxu@redhat.com>
 
-commit 0d519cadf75184a24313568e7f489a7fc9b1be3b upstream.
+commit c903dae8941deb55043ee46ded29e84e97cd84bb upstream.
 
-Currently, when loading a kernel image via the kexec_file_load() system
-call, arm64 can only use the .builtin_trusted_keys keyring to verify
-a signature whereas x86 can use three more keyrings i.e.
-.secondary_trusted_keys, .machine and .platform keyrings. For example,
-one resulting problem is kexec'ing a kernel image  would be rejected
-with the error "Lockdown: kexec: kexec of unsigned images is restricted;
-see man kernel_lockdown.7".
+commit 278311e417be ("kexec, KEYS: Make use of platform keyring for
+signature verify") adds platform keyring support on x86 kexec but not
+arm64.
 
-This patch set enables arm64 to make use of the same keyrings as x86 to
-verify the signature kexec'ed kernel image.
+The code in bzImage64_verify_sig uses the keys on the
+.builtin_trusted_keys, .machine, if configured and enabled,
+.secondary_trusted_keys, also if configured, and .platform keyrings
+to verify the signed kernel image as PE file.
 
-Fixes: 732b7b93d849 ("arm64: kexec_file: add kernel signature verification support")
-Cc: stable@vger.kernel.org # 105e10e2cf1c: kexec_file: drop weak attribute from functions
-Cc: stable@vger.kernel.org # 34d5960af253: kexec: clean up arch_kexec_kernel_verify_sig
-Cc: stable@vger.kernel.org # 83b7bb2d49ae: kexec, KEYS: make the code in bzImage64_verify_sig generic
-Acked-by: Baoquan He <bhe@redhat.com>
 Cc: kexec@lists.infradead.org
 Cc: keyrings@vger.kernel.org
 Cc: linux-security-module@vger.kernel.org
-Co-developed-by: Michal Suchanek <msuchanek@suse.de>
-Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-Acked-by: Will Deacon <will@kernel.org>
+Reviewed-by: Michal Suchanek <msuchanek@suse.de>
 Signed-off-by: Coiby Xu <coxu@redhat.com>
 Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/kernel/kexec_image.c |   11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+ arch/x86/kernel/kexec-bzimage64.c |   20 +-------------------
+ include/linux/kexec.h             |    7 +++++++
+ kernel/kexec_file.c               |   17 +++++++++++++++++
+ 3 files changed, 25 insertions(+), 19 deletions(-)
 
---- a/arch/arm64/kernel/kexec_image.c
-+++ b/arch/arm64/kernel/kexec_image.c
-@@ -14,7 +14,6 @@
- #include <linux/kexec.h>
- #include <linux/pe.h>
- #include <linux/string.h>
+--- a/arch/x86/kernel/kexec-bzimage64.c
++++ b/arch/x86/kernel/kexec-bzimage64.c
+@@ -17,7 +17,6 @@
+ #include <linux/kernel.h>
+ #include <linux/mm.h>
+ #include <linux/efi.h>
 -#include <linux/verification.h>
- #include <asm/byteorder.h>
- #include <asm/cpufeature.h>
- #include <asm/image.h>
-@@ -130,18 +129,10 @@ static void *image_load(struct kimage *i
- 	return NULL;
+ 
+ #include <asm/bootparam.h>
+ #include <asm/setup.h>
+@@ -528,28 +527,11 @@ static int bzImage64_cleanup(void *loade
+ 	return 0;
  }
  
--#ifdef CONFIG_KEXEC_IMAGE_VERIFY_SIG
--static int image_verify_sig(const char *kernel, unsigned long kernel_len)
+-#ifdef CONFIG_KEXEC_BZIMAGE_VERIFY_SIG
+-static int bzImage64_verify_sig(const char *kernel, unsigned long kernel_len)
 -{
--	return verify_pefile_signature(kernel, kernel_len, NULL,
--				       VERIFYING_KEXEC_PE_SIGNATURE);
+-	int ret;
+-
+-	ret = verify_pefile_signature(kernel, kernel_len,
+-				      VERIFY_USE_SECONDARY_KEYRING,
+-				      VERIFYING_KEXEC_PE_SIGNATURE);
+-	if (ret == -ENOKEY && IS_ENABLED(CONFIG_INTEGRITY_PLATFORM_KEYRING)) {
+-		ret = verify_pefile_signature(kernel, kernel_len,
+-					      VERIFY_USE_PLATFORM_KEYRING,
+-					      VERIFYING_KEXEC_PE_SIGNATURE);
+-	}
+-	return ret;
 -}
 -#endif
 -
- const struct kexec_file_ops kexec_image_ops = {
- 	.probe = image_probe,
- 	.load = image_load,
- #ifdef CONFIG_KEXEC_IMAGE_VERIFY_SIG
--	.verify_sig = image_verify_sig,
+ const struct kexec_file_ops kexec_bzImage64_ops = {
+ 	.probe = bzImage64_probe,
+ 	.load = bzImage64_load,
+ 	.cleanup = bzImage64_cleanup,
+ #ifdef CONFIG_KEXEC_BZIMAGE_VERIFY_SIG
+-	.verify_sig = bzImage64_verify_sig,
 +	.verify_sig = kexec_kernel_verify_pe_sig,
  #endif
  };
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -19,6 +19,7 @@
+ #include <asm/io.h>
+ 
+ #include <uapi/linux/kexec.h>
++#include <linux/verification.h>
+ 
+ /* Location of a reserved region to hold the crash kernel.
+  */
+@@ -212,6 +213,12 @@ static inline void *arch_kexec_kernel_im
+ }
+ #endif
+ 
++#ifdef CONFIG_KEXEC_SIG
++#ifdef CONFIG_SIGNED_PE_FILE_VERIFICATION
++int kexec_kernel_verify_pe_sig(const char *kernel, unsigned long kernel_len);
++#endif
++#endif
++
+ extern int kexec_add_buffer(struct kexec_buf *kbuf);
+ int kexec_locate_mem_hole(struct kexec_buf *kbuf);
+ 
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -123,6 +123,23 @@ void kimage_file_post_load_cleanup(struc
+ }
+ 
+ #ifdef CONFIG_KEXEC_SIG
++#ifdef CONFIG_SIGNED_PE_FILE_VERIFICATION
++int kexec_kernel_verify_pe_sig(const char *kernel, unsigned long kernel_len)
++{
++	int ret;
++
++	ret = verify_pefile_signature(kernel, kernel_len,
++				      VERIFY_USE_SECONDARY_KEYRING,
++				      VERIFYING_KEXEC_PE_SIGNATURE);
++	if (ret == -ENOKEY && IS_ENABLED(CONFIG_INTEGRITY_PLATFORM_KEYRING)) {
++		ret = verify_pefile_signature(kernel, kernel_len,
++					      VERIFY_USE_PLATFORM_KEYRING,
++					      VERIFYING_KEXEC_PE_SIGNATURE);
++	}
++	return ret;
++}
++#endif
++
+ static int kexec_image_verify_sig(struct kimage *image, void *buf,
+ 				  unsigned long buf_len)
+ {
 
 
 
