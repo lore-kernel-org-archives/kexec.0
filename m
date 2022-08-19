@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 114E0C32793
-	for <kexec@archiver.kernel.org>; Wed, 24 Aug 2022 13:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C213BC00140
+	for <kexec@archiver.kernel.org>; Wed, 24 Aug 2022 13:06:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:Cc:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=gUVcW61sMQ5m9c2/5PPF7j2AB5kuJkvHu+hUJwo0QMQ=; b=N1Mpt0r5qYcHD/
-	YsF0dPsKa/yJ2CqNDgchFKtvxB7N9VDsxZ8tUcPyw21ToaCPw0vuLAWnONJmvQRs+qNQLRthgzDx0
-	3cW1Jm2U5to8U4xgnTQ/meYzMLi6u3fvuwBSwUu1OKu0m5IL2dWLhnfwEYxfy5EAy122X/Q20t54v
-	ThewFJ1/gbK8R3UtUgY6xkl+TQIxqejFvEuan0eWpILJ04mcm/K812PuNjEGzJ4KxLXDT+KEW58+P
-	HxJl2vZAKgxbnno8YkdF5AIVEe7EpTH4WXB5JVMhp8QosEDdk46OIMVnAGxt2C9tqccTgYTXSYlUw
-	b7nvkxpcTjju3nZaEQDQ==;
+	List-Owner; bh=sLXZd0ifpfvnV8XoiEsT20Bw1511wMKLIYuf+P73D2U=; b=Cc/5FKjOtPxRLX
+	Zp0YLjNMDAFwVrmWBp5d/Cu6FrxKTfIDROooOLpN6S3XEyCAVHWjS0EbEZr72lDKoBEzFHyKvRI1y
+	IYnXiQ0S9oPO3LcJur21/C1ciXiHOQJCm5mJh/uLhPRbu1Y6afz4nhb62AtU2NeUcp/zwnlHjMLGH
+	JsTsyyquxA9hpPhaYOErsz8HMQ8mn+4uizzjM4tVl5Ri7KY3tKh8MfwJ4xjQ2kC4b+aBIZEBif2e/
+	lyecUjHEBU+xg3pIBJNcf7KNJqQ3862Zj7xldy3ST1btTdg6vj5zRBGrPzQm99tctw9hioSi9T1YD
+	QMpp5z550BjcE20+acDA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oQq5G-00D5wR-QQ; Wed, 24 Aug 2022 13:06:14 +0000
+	id 1oQq5M-00D610-4C; Wed, 24 Aug 2022 13:06:20 +0000
 Received: from fanzine.igalia.com ([178.60.130.6] helo=fanzine2.igalia.com)
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oPAOE-00CpJT-Ud
-	for kexec@lists.infradead.org; Fri, 19 Aug 2022 22:22:56 +0000
+	id 1oPAOo-00CpiS-Ji
+	for kexec@lists.infradead.org; Fri, 19 Aug 2022 22:23:32 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
 	s=20170329; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
 	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
 	List-Post:List-Owner:List-Archive;
-	bh=bzGFkTIN1eV205ENSSxwAqghJ7GC09NvM0cYNIKPVVQ=; b=AzhVCmuSU/fFLe+lgazLXq461g
-	rWlTcBz9vzc3hztKuV11gnmPJswp6BdDA2jApg28Fy+Uo2w61g7jZlJSXeOqTAQYbVZxSGy9JipuB
-	6w7S/xilAxGAmXMMVnsYag9AJ+2gUD82er23HSQWvozHBeiRK2SK9iQGsZSKhn9yyPpV8Pco+4beC
-	LVCpCvRAuYF1FRW9z15Q1dRf5AvSGwUDCjCSlsSDONAkH3xZJOPZl/xFtZVkciKJXIQWlQoy0I/lV
-	RZgBWuBnkOilm2cYi45ZELRyofmCUHbAX09+35QI1M15oTbM/cFqG5awxE9GY4iottk4EyI2EzvjL
-	nk7fIA2w==;
+	bh=d2an8K4S3oBRBmk7SIJDz4Oai1o8VvWFhnH8gpD08U0=; b=X2+kGd13kauJptBzv6orQ1U7yS
+	4aVfkn5eFTKuYn33XLrObdbdfBscRW7PnPpTi00KjX722oTJFFbDGBByOFk/diOtlqyJUfXp1qqtk
+	wdAyoKW3PdYKCTsCYnvnraOEqwCd466jDzHdiLOwLKF9ZjNoUljXl9a8OK3JS3DA64x+It+MtEgjo
+	9j46jITNnxNXwQM8p6iXaD+6u+VxqJqBPZbsVtVKQDuWHrqQ2/urSChnRWiPaMvc2L+ukkn4Fmyax
+	j1lFef3s95ENI6oiTnHSrbeqhX4dTAauX2TwiB5awED4vpx4s2jm8I3rnXNRpHJaRpI5R0QmdmdLU
+	O+2sMEDw==;
 Received: from [179.232.144.59] (helo=localhost)
 	by fanzine2.igalia.com with esmtpsa 
 	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1oPAO6-00Cb4O-O3; Sat, 20 Aug 2022 00:22:51 +0200
+	id 1oPAOh-00Cb6O-5U; Sat, 20 Aug 2022 00:23:25 +0200
 From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
 To: akpm@linux-foundation.org,
 	bhe@redhat.com,
 	pmladek@suse.com,
 	kexec@lists.infradead.org
-Subject: [PATCH V3 06/11] tracing: Improve panic/die notifiers
-Date: Fri, 19 Aug 2022 19:17:26 -0300
-Message-Id: <20220819221731.480795-7-gpiccoli@igalia.com>
+Subject: [PATCH V3 07/11] notifiers: Add tracepoints to the notifiers infrastructure
+Date: Fri, 19 Aug 2022 19:17:27 -0300
+Message-Id: <20220819221731.480795-8-gpiccoli@igalia.com>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20220819221731.480795-1-gpiccoli@igalia.com>
 References: <20220819221731.480795-1-gpiccoli@igalia.com>
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220819_152255_036592_DDC22277 
-X-CRM114-Status: GOOD (  14.48  )
+X-CRM114-CacheID: sfid-20220819_152330_690056_78167D19 
+X-CRM114-Status: GOOD (  15.92  )
 X-Mailman-Approved-At: Wed, 24 Aug 2022 06:05:59 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -68,122 +68,159 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Cc: linux-hyperv@vger.kernel.org, halves@canonical.com, peterz@infradead.org, dave.hansen@linux.intel.com, feng.tang@intel.com, mikelley@microsoft.com, will@kernel.org, arnd@arndb.de, corbet@lwn.net, paulmck@kernel.org, fabiomirmar@gmail.com, x86@kernel.org, mingo@redhat.com, stern@rowland.harvard.edu, dyoung@redhat.com, vgoyal@redhat.com, alejandro.j.jimenez@oracle.com, keescook@chromium.org, john.ogness@linutronix.de, rostedt@goodmis.org, bp@alien8.de, luto@kernel.org, hidehiro.kawai.ez@hitachi.com, tglx@linutronix.de, andriy.shevchenko@linux.intel.com, jgross@suse.com, gregkh@linuxfoundation.org, kernel@gpiccoli.net, linux-kernel@vger.kernel.org, xuqiang36@huawei.com, senozhatsky@chromium.org, d.hatayama@jp.fujitsu.com, Sergei Shtylyov <sergei.shtylyov@gmail.com>, mhiramat@kernel.org, kernel-dev@igalia.com, netdev@vger.kernel.org, vkuznets@redhat.com
+Cc: linux-hyperv@vger.kernel.org, halves@canonical.com, peterz@infradead.org, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, dave.hansen@linux.intel.com, feng.tang@intel.com, mikelley@microsoft.com, will@kernel.org, arnd@arndb.de, corbet@lwn.net, paulmck@kernel.org, fabiomirmar@gmail.com, x86@kernel.org, mingo@redhat.com, stern@rowland.harvard.edu, dyoung@redhat.com, Valentin Schneider <valentin.schneider@arm.com>, vgoyal@redhat.com, Xiaoming Ni <nixiaoming@huawei.com>, alejandro.j.jimenez@oracle.com, keescook@chromium.org, john.ogness@linutronix.de, rostedt@goodmis.org, bp@alien8.de, luto@kernel.org, hidehiro.kawai.ez@hitachi.com, Cong Wang <xiyou.wangcong@gmail.com>, tglx@linutronix.de, andriy.shevchenko@linux.intel.com, Arjan van de Ven <arjan@linux.intel.com>, jgross@suse.com, gregkh@linuxfoundation.org, kernel@gpiccoli.net, linux-kernel@vger.kernel.org, xuqiang36@huawei.com, senozhatsky@chromium.org, d.hatayama@jp.fujitsu.com, mhiramat@kernel.org, kernel-dev@igalia.com, netdev@vger.kernel.org, vkuznets@redhat.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Currently the tracing dump_on_oops feature is implemented through
-separate notifiers, one for die/oops and the other for panic;
-given they have the same functionality, let's unify them.
+Currently there is no way to show the callback names for registered,
+unregistered or executed notifiers. This is very useful for debug
+purposes, hence add this functionality here in the form of notifiers'
+tracepoints, one per operation.
 
-Also improve the function comment and change the priority of the
-notifier to make it execute earlier, avoiding showing useless trace
-data (like the callback names for the other notifiers); finally,
-we also removed an unnecessary header inclusion.
-
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Cc: Arjan van de Ven <arjan@linux.intel.com>
+Cc: Cong Wang <xiyou.wangcong@gmail.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Valentin Schneider <valentin.schneider@arm.com>
+Cc: Xiaoming Ni <nixiaoming@huawei.com>
 Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 
 ---
 
 V3:
-- Removed goto usage, as per Steven suggestion (thanks!).
+- Yet another major change - thanks to Arjan's great suggestion,
+refactored the code to make use of tracepoints instead of guarding
+the output with a Kconfig debug setting.
 
 V2:
-- Different approach; instead of using IDs to distinguish die and
-panic events, rely on address comparison like other notifiers do
-and as per Petr's suggestion;
+- Major improvement thanks to the great idea from Xiaoming - changed
+all the ksym wheel reinvention to printk %ps modifier;
 
-- Removed ACK from Steven since the code changed.
+- Instead of ifdefs, using IS_ENABLED() - thanks Steven.
+
+- Removed an unlikely() hint on debug path.
 
 
- kernel/trace/trace.c | 55 ++++++++++++++++++++++----------------------
- 1 file changed, 27 insertions(+), 28 deletions(-)
+ include/trace/events/notifiers.h | 69 ++++++++++++++++++++++++++++++++
+ kernel/notifier.c                |  6 +++
+ 2 files changed, 75 insertions(+)
+ create mode 100644 include/trace/events/notifiers.h
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index d3005279165d..0bacdbcb132f 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -19,7 +19,6 @@
- #include <linux/kallsyms.h>
- #include <linux/security.h>
- #include <linux/seq_file.h>
--#include <linux/notifier.h>
- #include <linux/irqflags.h>
- #include <linux/debugfs.h>
- #include <linux/tracefs.h>
-@@ -9776,40 +9775,40 @@ static __init int tracer_init_tracefs(void)
- 
- fs_initcall(tracer_init_tracefs);
- 
--static int trace_panic_handler(struct notifier_block *this,
--			       unsigned long event, void *unused)
--{
--	if (ftrace_dump_on_oops)
--		ftrace_dump(ftrace_dump_on_oops);
--	return NOTIFY_OK;
--}
-+static int trace_die_panic_handler(struct notifier_block *self,
-+				unsigned long ev, void *unused);
- 
- static struct notifier_block trace_panic_notifier = {
--	.notifier_call  = trace_panic_handler,
--	.next           = NULL,
--	.priority       = 150   /* priority: INT_MAX >= x >= 0 */
-+	.notifier_call = trace_die_panic_handler,
-+	.priority = INT_MAX - 1,
- };
- 
--static int trace_die_handler(struct notifier_block *self,
--			     unsigned long val,
--			     void *data)
--{
--	switch (val) {
--	case DIE_OOPS:
--		if (ftrace_dump_on_oops)
--			ftrace_dump(ftrace_dump_on_oops);
--		break;
--	default:
--		break;
--	}
--	return NOTIFY_OK;
--}
--
- static struct notifier_block trace_die_notifier = {
--	.notifier_call = trace_die_handler,
--	.priority = 200
-+	.notifier_call = trace_die_panic_handler,
-+	.priority = INT_MAX - 1,
- };
- 
+diff --git a/include/trace/events/notifiers.h b/include/trace/events/notifiers.h
+new file mode 100644
+index 000000000000..e8f30631aef5
+--- /dev/null
++++ b/include/trace/events/notifiers.h
+@@ -0,0 +1,69 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM notifiers
++
++#if !defined(_TRACE_NOTIFIERS_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_NOTIFIERS_H
++
++#include <linux/tracepoint.h>
++
++DECLARE_EVENT_CLASS(notifiers_info,
++
++	TP_PROTO(void *cb),
++
++	TP_ARGS(cb),
++
++	TP_STRUCT__entry(
++		__field(void *, cb)
++	),
++
++	TP_fast_assign(
++		__entry->cb = cb;
++	),
++
++	TP_printk("%ps", __entry->cb)
++);
++
 +/*
-+ * The idea is to execute the following die/panic callback early, in order
-+ * to avoid showing irrelevant information in the trace (like other panic
-+ * notifier functions); we are the 2nd to run, after hung_task/rcu_stall
-+ * warnings get disabled (to prevent potential log flooding).
++ * notifiers_register - called upon notifier callback registration
++ *
++ * @cb:		callback pointer
++ *
 + */
-+static int trace_die_panic_handler(struct notifier_block *self,
-+				unsigned long ev, void *unused)
-+{
-+	if (!ftrace_dump_on_oops)
-+		return NOTIFY_DONE;
++DEFINE_EVENT(notifiers_info, notifiers_register,
 +
-+	/* The die notifier requires DIE_OOPS to trigger */
-+	if (self == &trace_die_notifier && ev != DIE_OOPS)
-+		return NOTIFY_DONE;
++	TP_PROTO(void *cb),
 +
-+	ftrace_dump(ftrace_dump_on_oops);
++	TP_ARGS(cb)
++);
 +
-+	return NOTIFY_DONE;
-+}
++/*
++ * notifiers_unregister - called upon notifier callback unregistration
++ *
++ * @cb:		callback pointer
++ *
++ */
++DEFINE_EVENT(notifiers_info, notifiers_unregister,
++
++	TP_PROTO(void *cb),
++
++	TP_ARGS(cb)
++);
++
++/*
++ * notifiers_run - called upon notifier callback execution
++ *
++ * @cb:		callback pointer
++ *
++ */
++DEFINE_EVENT(notifiers_info, notifiers_run,
++
++	TP_PROTO(void *cb),
++
++	TP_ARGS(cb)
++);
++
++#endif /* _TRACE_NOTIFIERS_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+diff --git a/kernel/notifier.c b/kernel/notifier.c
+index 0d5bd62c480e..2f2783f59a31 100644
+--- a/kernel/notifier.c
++++ b/kernel/notifier.c
+@@ -7,6 +7,9 @@
+ #include <linux/vmalloc.h>
+ #include <linux/reboot.h>
+ 
++#define CREATE_TRACE_POINTS
++#include <trace/events/notifiers.h>
 +
  /*
-  * printk is set to max of 1024, we really don't need it that big.
-  * Nothing should be printing 1000 characters anyway.
+  *	Notifier list for kernel code which wants to be called
+  *	at shutdown. This is used to stop any idling DMA operations
+@@ -37,6 +40,7 @@ static int notifier_chain_register(struct notifier_block **nl,
+ 	}
+ 	n->next = *nl;
+ 	rcu_assign_pointer(*nl, n);
++	trace_notifiers_register((void*)n->notifier_call);
+ 	return 0;
+ }
+ 
+@@ -46,6 +50,7 @@ static int notifier_chain_unregister(struct notifier_block **nl,
+ 	while ((*nl) != NULL) {
+ 		if ((*nl) == n) {
+ 			rcu_assign_pointer(*nl, n->next);
++			trace_notifiers_unregister((void*)n->notifier_call);
+ 			return 0;
+ 		}
+ 		nl = &((*nl)->next);
+@@ -84,6 +89,7 @@ static int notifier_call_chain(struct notifier_block **nl,
+ 			continue;
+ 		}
+ #endif
++		trace_notifiers_run((void*)nb->notifier_call);
+ 		ret = nb->notifier_call(nb, val, v);
+ 
+ 		if (nr_calls)
 -- 
 2.37.2
 
