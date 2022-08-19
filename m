@@ -4,53 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 99065C32771
-	for <kexec@archiver.kernel.org>; Fri, 19 Aug 2022 14:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EB778C32771
+	for <kexec@archiver.kernel.org>; Fri, 19 Aug 2022 15:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:From:Cc:To
-	:Subject:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=NUBzP+67Q9KRnOGm+EJed1h1NEffyiGHFdmQaxDiOzs=; b=KxQzddgapZhRH/
-	CUDSleN1qE0zveSsiOsK2mK/2/XlKjmldr91X4Vw/E1+8QtUSZIMynr4xzd9VJy0HKmva+FfgKkpn
-	NpMxzHlxa4FDWP3pGeyI4l85+n+TzoMNg8U9A+W0SeLadvxXGemmnnLo40oxSRRVS3pc1M8H9W7cy
-	rR6Gn4UK9avhwgiayM+THUCx74SGgLhMUtzJ2dBziL5eUfadWpTThprSzWc4B3yEFAqOS90UjWF+W
-	qQ8Fy+Y8JugVaZAZM04UaJCYkvB1bE0fBTiNzqQeNFvPIBGZ7B6V7Mo+eU/wkPXBWtjcmMridGXC9
-	cDLybAuVhOJe040ttO0A==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=PfG/s+Ye1Iqqj5yu7Qg0E+tFpNEe7s1XRAzKXX+EMcM=; b=aWK8t9fmAqdAeb
+	RGb/Xwd8TYsZZ6FKbJtuIDmpdKnyihDJCQB0AOm9dE1nUisxDhYwMPSecLYTyJW8bVwmgqB4d9lpt
+	nTWwLBxILPQyGhGpMA9dY4EXTMYl7JGaU9F1N0cl4+srvIL17lagOQbT+xGyxEBNEJ57Y2RhoNeKB
+	pR8gf4oySYgLkx5vaWYba2WhYAWCn/L5B2XiD0uLmG54m99Lx1bc1bP9VOswQ+ebzQxlUH4wRdgJd
+	03N/5ZneMqQoFCRYWDbqcCOhV4erUpDaTta6BI2E20fWYcXyTyjgmMLr0liHTvmQbp8g1JYS14ACu
+	fLY2CoLPkZIrNyxDbWyg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oP3Gt-009cgM-If; Fri, 19 Aug 2022 14:46:51 +0000
+	id 1oP46C-009zot-34; Fri, 19 Aug 2022 15:39:52 +0000
 Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oP3Gp-009ccZ-9A
-	for kexec@lists.infradead.org; Fri, 19 Aug 2022 14:46:49 +0000
+	id 1oP469-009zmi-2u
+	for kexec@lists.infradead.org; Fri, 19 Aug 2022 15:39:50 +0000
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id C4C80614E5;
-	Fri, 19 Aug 2022 14:46:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEA8DC433D7;
-	Fri, 19 Aug 2022 14:46:45 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 9A9646162D;
+	Fri, 19 Aug 2022 15:39:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD584C4314B;
+	Fri, 19 Aug 2022 15:39:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1660920406;
-	bh=1zE+WwmtthRY/iuJ3U9CtSGkfNX09V0vTD/I4Q8Xwlg=;
-	h=Subject:To:Cc:From:Date:From;
-	b=WIYLSkwKHhWiv9vAgdnvDFrwfACzWK+onX9g/zRsNq7Kr09Qos3VwPITZLpxpLPrj
-	 jT/eA38Z+KYS2nY0JI/DhTd/pCURIlIQBUROVT7RjGkvvD8hW+VxoRifFKnMZ/0I/P
-	 7ChCVFSTaT7MXfYNd35FEd70myhyIiVTUB3P7elU=
-Subject: Patch "kexec, KEYS: make the code in bzImage64_verify_sig generic" has been added to the 5.18-stable tree
-To: coxu@redhat.com,gregkh@linuxfoundation.org,kexec@lists.infradead.org,msuchanek@suse.de,zohar@linux.ibm.com
-Cc: <stable-commits@vger.kernel.org>
-From: <gregkh@linuxfoundation.org>
-Date: Fri, 19 Aug 2022 16:46:28 +0200
-Message-ID: <166092038816017@kroah.com>
+	s=korg; t=1660923588;
+	bh=ADw06pRCuPZeTUd/Uq+mdKxMJyGKpyXRKWJnc9JYbVQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=GObXdGItgM49Vv4iy/DHgcbZGw0WwMWQdLdayWxyiCuT+akEZOMkmlnab6U4FUD3X
+	 qakePs4Bcn4dsM3GualuVlIHuFHskTCXt1NxRIobF1kwJ2pIrdQd5s1ZqxQiy9wY7c
+	 CcM6nBx/bpFz0WiMRfqGhRbgippJfbOBWsalV79o=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	stable@vger.kernel.org,
+	kexec@lists.infradead.org,
+	keyrings@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	Michal Suchanek <msuchanek@suse.de>,
+	Coiby Xu <coxu@redhat.com>,
+	Mimi Zohar <zohar@linux.ibm.com>
+Subject: [PATCH 5.19 6/7] kexec, KEYS: make the code in bzImage64_verify_sig generic
+Date: Fri, 19 Aug 2022 17:39:22 +0200
+Message-Id: <20220819153711.785888674@linuxfoundation.org>
+X-Mailer: git-send-email 2.37.2
+In-Reply-To: <20220819153711.552247994@linuxfoundation.org>
+References: <20220819153711.552247994@linuxfoundation.org>
+User-Agent: quilt/0.67
 MIME-Version: 1.0
-X-stable: commit
-X-Patchwork-Hint: ignore 
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220819_074647_522769_C0F1EBAE 
-X-CRM114-Status: GOOD (  18.85  )
+X-CRM114-CacheID: sfid-20220819_083949_260344_AFA7F5FF 
+X-CRM114-Status: GOOD (  15.39  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -66,27 +75,6 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
-
-
-This is a note to let you know that I've just added the patch titled
-
-    kexec, KEYS: make the code in bzImage64_verify_sig generic
-
-to the 5.18-stable tree which can be found at:
-    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
-
-The filename of the patch is:
-     kexec-keys-make-the-code-in-bzimage64_verify_sig-generic.patch
-and it can be found in the queue-5.18 subdirectory.
-
-If you, or anyone else, feels it should not be added to the stable tree,
-please let <stable@vger.kernel.org> know about it.
-
-
-From c903dae8941deb55043ee46ded29e84e97cd84bb Mon Sep 17 00:00:00 2001
-From: Coiby Xu <coxu@redhat.com>
-Date: Thu, 14 Jul 2022 21:40:25 +0800
-Subject: kexec, KEYS: make the code in bzImage64_verify_sig generic
 
 From: Coiby Xu <coxu@redhat.com>
 
@@ -205,10 +193,6 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  {
 
 
-Patches currently in stable-queue which might be from coxu@redhat.com are
-
-queue-5.18/arm64-kexec_file-use-more-system-keyrings-to-verify-kernel-image-signature.patch
-queue-5.18/kexec-keys-make-the-code-in-bzimage64_verify_sig-generic.patch
 
 _______________________________________________
 kexec mailing list
