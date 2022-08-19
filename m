@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0FDC0C32774
-	for <kexec@archiver.kernel.org>; Fri, 19 Aug 2022 15:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 69001C32771
+	for <kexec@archiver.kernel.org>; Fri, 19 Aug 2022 15:41:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=PfG/s+Ye1Iqqj5yu7Qg0E+tFpNEe7s1XRAzKXX+EMcM=; b=TR8ZZHxS9daq09
-	zz1YiJuJ43cPIhNIdkhkgmQA9XPG6IDF857BWN/y066fi14Ne+v52xsHVdCOzuhUvrGjaA0eSjFcU
-	+Tucb6uBJK3eonyr3NzquqwIiFVhX+QpF+FdhoeynBE4Nz+UT41njNG/L4HRy5nx+Yw8+BmTXLSIi
-	QKKBzWHws8rqOoZYvcpS2eTigjqYclqGzCoLlpQy9KXvOT9GBfixcVBroktxvnfPwHG/8WvVKuiid
-	wktrffCvsbgC9b9aPs76mKRPb0CyqluQyD5M8Fn6mijrFxVlQ8tK9Lpxw0boT7V2orTXVSAqOub7e
-	/Gh7N7KgljbLfVpAUwQw==;
+	List-Owner; bh=7wM4X12aPxZG39xHNIcigQxqkaEWESEFV9ZjJw84iek=; b=LR18e5SskzLUW6
+	Cqtv70eoET3tkQ7Rfnk4KDWS6J/pOuJDJpIGRT7Yn3FzmcbFOTw+ku73vuoh3+C1HCD4NRkwhtdUY
+	90ZjZoMWxwUIKMNbmGLRrfb7IVSBhsJ90A+n8mgizrn8BYGZ1NJt+gZmbYyHLBMfKVeQ1ytYBKqyG
+	EFB9VDZ1FRBXENdHbSZOODKyfnu6XgS55zQ0xRpkOWh2c9miFXx+NzFMoS3e4tXfQicLwSKYrVvSp
+	o2GePmKVWKeC7/U9RsHYF33PPYlp9616Em0Gqi+M6WFrYux/a4zJTj+vykQSyEpnxmOF45LBhnc1o
+	htoB1tgPZoT7ly7JHzKg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oP472-00A0K6-0x; Fri, 19 Aug 2022 15:40:44 +0000
-Received: from ams.source.kernel.org ([145.40.68.75])
+	id 1oP47K-00A0XN-LP; Fri, 19 Aug 2022 15:41:02 +0000
+Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oP46y-00A0GJ-Kb
-	for kexec@lists.infradead.org; Fri, 19 Aug 2022 15:40:42 +0000
+	id 1oP47H-00A0Uh-If
+	for kexec@lists.infradead.org; Fri, 19 Aug 2022 15:41:01 +0000
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.source.kernel.org (Postfix) with ESMTPS id EB5A8B827F8;
-	Fri, 19 Aug 2022 15:40:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E7E1C433D6;
-	Fri, 19 Aug 2022 15:40:35 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 1B66561639;
+	Fri, 19 Aug 2022 15:40:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39D8CC433C1;
+	Fri, 19 Aug 2022 15:40:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1660923635;
-	bh=ADw06pRCuPZeTUd/Uq+mdKxMJyGKpyXRKWJnc9JYbVQ=;
+	s=korg; t=1660923658;
+	bh=hc73Cztag373h5z9qzhWH4LIzO2kQuPhp2WyLHsG8rU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nu20RNv9VJoxpLokxAeyAerqCgc+iqB8+HJuQ4aGjnVT4hUOxbDy1k5szatvLNQed
-	 UeEMpSbwwsobB1ArymgHQXE8ZKfRXP+bxgpWenbLGIPII4BaleH74hKeTxyDrA1D7s
-	 Dto1yCoUrqWilifHwRx1XMxs2XKzDaMWgR6JDd3o=
+	b=mFNPpfzeZlUGTyRhrcJfJ0ivK3EafM9JsB7zj+N0a7XsTvT1feQIiX56A501IzckC
+	 6aLEjtjg6tmBeKZjZbljyXG4VrG+YOerA6+zO2YSYr8ri9u4FwvDDvVfEKK9/0jHZa
+	 jOVNpYNjfrzPveQFv6pfVFiHpL071m2q6/WUaVug=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: linux-kernel@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -49,17 +49,17 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Michal Suchanek <msuchanek@suse.de>,
 	Coiby Xu <coxu@redhat.com>,
 	Mimi Zohar <zohar@linux.ibm.com>
-Subject: [PATCH 5.18 5/6] kexec, KEYS: make the code in bzImage64_verify_sig generic
-Date: Fri, 19 Aug 2022 17:40:17 +0200
-Message-Id: <20220819153710.636766408@linuxfoundation.org>
+Subject: [PATCH 5.15 13/14] kexec, KEYS: make the code in bzImage64_verify_sig generic
+Date: Fri, 19 Aug 2022 17:40:29 +0200
+Message-Id: <20220819153712.107081653@linuxfoundation.org>
 X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20220819153710.430046927@linuxfoundation.org>
-References: <20220819153710.430046927@linuxfoundation.org>
+In-Reply-To: <20220819153711.658766010@linuxfoundation.org>
+References: <20220819153711.658766010@linuxfoundation.org>
 User-Agent: quilt/0.67
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220819_084040_977147_AAEE0B98 
-X-CRM114-Status: GOOD (  15.16  )
+X-CRM114-CacheID: sfid-20220819_084059_716028_7F00EA95 
+X-CRM114-Status: GOOD (  14.79  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -150,9 +150,9 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  #include <uapi/linux/kexec.h>
 +#include <linux/verification.h>
  
- /* Location of a reserved region to hold the crash kernel.
-  */
-@@ -212,6 +213,12 @@ static inline void *arch_kexec_kernel_im
+ #ifdef CONFIG_KEXEC_CORE
+ #include <linux/list.h>
+@@ -206,6 +207,12 @@ static inline void *arch_kexec_kernel_im
  }
  #endif
  
