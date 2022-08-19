@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C213BC00140
-	for <kexec@archiver.kernel.org>; Wed, 24 Aug 2022 13:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 81A16C00140
+	for <kexec@archiver.kernel.org>; Wed, 24 Aug 2022 13:06:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:Cc:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=sLXZd0ifpfvnV8XoiEsT20Bw1511wMKLIYuf+P73D2U=; b=Cc/5FKjOtPxRLX
-	Zp0YLjNMDAFwVrmWBp5d/Cu6FrxKTfIDROooOLpN6S3XEyCAVHWjS0EbEZr72lDKoBEzFHyKvRI1y
-	IYnXiQ0S9oPO3LcJur21/C1ciXiHOQJCm5mJh/uLhPRbu1Y6afz4nhb62AtU2NeUcp/zwnlHjMLGH
-	JsTsyyquxA9hpPhaYOErsz8HMQ8mn+4uizzjM4tVl5Ri7KY3tKh8MfwJ4xjQ2kC4b+aBIZEBif2e/
-	lyecUjHEBU+xg3pIBJNcf7KNJqQ3862Zj7xldy3ST1btTdg6vj5zRBGrPzQm99tctw9hioSi9T1YD
-	QMpp5z550BjcE20+acDA==;
+	List-Owner; bh=6erz5vHwSuqNstAw6Bp2RJBHh+U5wm9VlH68hMpWSuw=; b=FQKoyB9iXcvSuB
+	4M3ozlsBLX9efm512tqJLDXmoo5yzyUd88u2+aNTcT8K24T8OW56XVTnfNeZvedN+oM36FFH3ENmQ
+	nYJslLCIRJrjujVpw58U5eY4s6DLS2mBRixOo/05lJmSnVGmW62uWot6AihN4o59sjRtMwS6XSdSt
+	Is/iwytcC6S3FYG9hYj/I9R73u5rs5vN9v0N+1XX3+9xWYYzWU8GjBpJ+YcUORO63UFkdkI0v0AIO
+	zzrLJQP372/zNEE0OriB7KpzDdzEn2onX5RWl1d520yOd7jeDedHR4n0uqNz7xxm9Z9/CIfDEfYm2
+	JLBtUsuxhKfCPjAJFopQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oQq5M-00D610-4C; Wed, 24 Aug 2022 13:06:20 +0000
+	id 1oQq5Q-00D648-Ti; Wed, 24 Aug 2022 13:06:24 +0000
 Received: from fanzine.igalia.com ([178.60.130.6] helo=fanzine2.igalia.com)
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oPAOo-00CpiS-Ji
-	for kexec@lists.infradead.org; Fri, 19 Aug 2022 22:23:32 +0000
+	id 1oPAP9-00CptP-Ef
+	for kexec@lists.infradead.org; Fri, 19 Aug 2022 22:23:53 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
 	s=20170329; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
 	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
 	List-Post:List-Owner:List-Archive;
-	bh=d2an8K4S3oBRBmk7SIJDz4Oai1o8VvWFhnH8gpD08U0=; b=X2+kGd13kauJptBzv6orQ1U7yS
-	4aVfkn5eFTKuYn33XLrObdbdfBscRW7PnPpTi00KjX722oTJFFbDGBByOFk/diOtlqyJUfXp1qqtk
-	wdAyoKW3PdYKCTsCYnvnraOEqwCd466jDzHdiLOwLKF9ZjNoUljXl9a8OK3JS3DA64x+It+MtEgjo
-	9j46jITNnxNXwQM8p6iXaD+6u+VxqJqBPZbsVtVKQDuWHrqQ2/urSChnRWiPaMvc2L+ukkn4Fmyax
-	j1lFef3s95ENI6oiTnHSrbeqhX4dTAauX2TwiB5awED4vpx4s2jm8I3rnXNRpHJaRpI5R0QmdmdLU
-	O+2sMEDw==;
+	bh=OonmUPZkO/emCOphZ8VnLPwYmag4wEjaMQk7IMB+RMQ=; b=frivb87m1aODDLexRXHjILEpy0
+	zypuxM1lUa2+Sde0ChP8r+SpXKZTYYQ06rsm4azbLcf835GhtiU/63eTRWcbzZyjLucvdKKHJYKiK
+	/euCL6+qpMh2bq+mDBCmd4zfYMRfG4Tqf1qA8tyF9Sf9mTKWE49sFBT6zlM+mWR7kHQzFnNnWU6MW
+	lkll9FniO4rDprJKDPgb+tUp2okPeMrFiVLU/alXFetoW59OAkLnidfuhStQMFD628z2AmR0v5dqg
+	u9NF7VPoqZwVRcG9G6dqJ9Zqmry2mF8HYNj1eMF0SH2Nd3PIvrPYCM3Wwvafygev10hLlqXwn+n1L
+	GJahVPlA==;
 Received: from [179.232.144.59] (helo=localhost)
 	by fanzine2.igalia.com with esmtpsa 
 	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1oPAOh-00Cb6O-5U; Sat, 20 Aug 2022 00:23:25 +0200
+	id 1oPAP0-00Cb74-3H; Sat, 20 Aug 2022 00:23:47 +0200
 From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
 To: akpm@linux-foundation.org,
 	bhe@redhat.com,
 	pmladek@suse.com,
 	kexec@lists.infradead.org
-Subject: [PATCH V3 07/11] notifiers: Add tracepoints to the notifiers infrastructure
-Date: Fri, 19 Aug 2022 19:17:27 -0300
-Message-Id: <20220819221731.480795-8-gpiccoli@igalia.com>
+Subject: [PATCH V3 08/11] EDAC/altera: Skip the panic notifier if kdump is loaded
+Date: Fri, 19 Aug 2022 19:17:28 -0300
+Message-Id: <20220819221731.480795-9-gpiccoli@igalia.com>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20220819221731.480795-1-gpiccoli@igalia.com>
 References: <20220819221731.480795-1-gpiccoli@igalia.com>
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220819_152330_690056_78167D19 
-X-CRM114-Status: GOOD (  15.92  )
+X-CRM114-CacheID: sfid-20220819_152351_529091_B2F4C172 
+X-CRM114-Status: GOOD (  13.54  )
 X-Mailman-Approved-At: Wed, 24 Aug 2022 06:05:59 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -68,159 +68,99 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Cc: linux-hyperv@vger.kernel.org, halves@canonical.com, peterz@infradead.org, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, dave.hansen@linux.intel.com, feng.tang@intel.com, mikelley@microsoft.com, will@kernel.org, arnd@arndb.de, corbet@lwn.net, paulmck@kernel.org, fabiomirmar@gmail.com, x86@kernel.org, mingo@redhat.com, stern@rowland.harvard.edu, dyoung@redhat.com, Valentin Schneider <valentin.schneider@arm.com>, vgoyal@redhat.com, Xiaoming Ni <nixiaoming@huawei.com>, alejandro.j.jimenez@oracle.com, keescook@chromium.org, john.ogness@linutronix.de, rostedt@goodmis.org, bp@alien8.de, luto@kernel.org, hidehiro.kawai.ez@hitachi.com, Cong Wang <xiyou.wangcong@gmail.com>, tglx@linutronix.de, andriy.shevchenko@linux.intel.com, Arjan van de Ven <arjan@linux.intel.com>, jgross@suse.com, gregkh@linuxfoundation.org, kernel@gpiccoli.net, linux-kernel@vger.kernel.org, xuqiang36@huawei.com, senozhatsky@chromium.org, d.hatayama@jp.fujitsu.com, mhiramat@kernel.org, kernel-dev@igalia.com, netdev@vger.kernel.org, vkuznets@redhat.com
+Cc: linux-hyperv@vger.kernel.org, halves@canonical.com, peterz@infradead.org, dave.hansen@linux.intel.com, feng.tang@intel.com, mikelley@microsoft.com, will@kernel.org, arnd@arndb.de, corbet@lwn.net, paulmck@kernel.org, fabiomirmar@gmail.com, x86@kernel.org, mingo@redhat.com, stern@rowland.harvard.edu, dyoung@redhat.com, vgoyal@redhat.com, alejandro.j.jimenez@oracle.com, keescook@chromium.org, john.ogness@linutronix.de, Dinh Nguyen <dinguyen@kernel.org>, rostedt@goodmis.org, bp@alien8.de, luto@kernel.org, hidehiro.kawai.ez@hitachi.com, tglx@linutronix.de, andriy.shevchenko@linux.intel.com, linux-edac@vger.kernel.org, jgross@suse.com, Tony Luck <tony.luck@intel.com>, gregkh@linuxfoundation.org, kernel@gpiccoli.net, linux-kernel@vger.kernel.org, xuqiang36@huawei.com, senozhatsky@chromium.org, d.hatayama@jp.fujitsu.com, mhiramat@kernel.org, kernel-dev@igalia.com, netdev@vger.kernel.org, vkuznets@redhat.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Currently there is no way to show the callback names for registered,
-unregistered or executed notifiers. This is very useful for debug
-purposes, hence add this functionality here in the form of notifiers'
-tracepoints, one per operation.
+The altera_edac panic notifier performs some data collection with
+regards errors detected; such code relies in the regmap layer to
+perform reads/writes, so the code is abstracted and there is some
+risk level to execute that, since the panic path runs in atomic
+context, with interrupts/preemption and secondary CPUs disabled.
 
-Cc: Arjan van de Ven <arjan@linux.intel.com>
-Cc: Cong Wang <xiyou.wangcong@gmail.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Xiaoming Ni <nixiaoming@huawei.com>
+Users want the information collected in this panic notifier though,
+so in order to balance the risk/benefit, let's skip the altera panic
+notifier if kdump is loaded. While at it, remove a useless header
+and encompass a macro inside the sole ifdef block it is used.
+
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Acked-by: Dinh Nguyen <dinguyen@kernel.org>
 Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 
 ---
 
 V3:
-- Yet another major change - thanks to Arjan's great suggestion,
-refactored the code to make use of tracepoints instead of guarding
-the output with a Kconfig debug setting.
+- added the ack tag from Dinh - thanks!
+- had a good discussion with Boris about that in V2 [0],
+hopefully we can continue and reach a consensus in this V3.
+[0] https://lore.kernel.org/lkml/46137c67-25b4-6657-33b7-cffdc7afc0d7@igalia.com/
 
 V2:
-- Major improvement thanks to the great idea from Xiaoming - changed
-all the ksym wheel reinvention to printk %ps modifier;
-
-- Instead of ifdefs, using IS_ENABLED() - thanks Steven.
-
-- Removed an unlikely() hint on debug path.
+- new patch, based on the discussion in [1].
+[1] https://lore.kernel.org/lkml/62a63fc2-346f-f375-043a-fa21385279df@igalia.com/
 
 
- include/trace/events/notifiers.h | 69 ++++++++++++++++++++++++++++++++
- kernel/notifier.c                |  6 +++
- 2 files changed, 75 insertions(+)
- create mode 100644 include/trace/events/notifiers.h
+ drivers/edac/altera_edac.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/include/trace/events/notifiers.h b/include/trace/events/notifiers.h
-new file mode 100644
-index 000000000000..e8f30631aef5
---- /dev/null
-+++ b/include/trace/events/notifiers.h
-@@ -0,0 +1,69 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM notifiers
-+
-+#if !defined(_TRACE_NOTIFIERS_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_NOTIFIERS_H
-+
-+#include <linux/tracepoint.h>
-+
-+DECLARE_EVENT_CLASS(notifiers_info,
-+
-+	TP_PROTO(void *cb),
-+
-+	TP_ARGS(cb),
-+
-+	TP_STRUCT__entry(
-+		__field(void *, cb)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->cb = cb;
-+	),
-+
-+	TP_printk("%ps", __entry->cb)
-+);
-+
-+/*
-+ * notifiers_register - called upon notifier callback registration
-+ *
-+ * @cb:		callback pointer
-+ *
-+ */
-+DEFINE_EVENT(notifiers_info, notifiers_register,
-+
-+	TP_PROTO(void *cb),
-+
-+	TP_ARGS(cb)
-+);
-+
-+/*
-+ * notifiers_unregister - called upon notifier callback unregistration
-+ *
-+ * @cb:		callback pointer
-+ *
-+ */
-+DEFINE_EVENT(notifiers_info, notifiers_unregister,
-+
-+	TP_PROTO(void *cb),
-+
-+	TP_ARGS(cb)
-+);
-+
-+/*
-+ * notifiers_run - called upon notifier callback execution
-+ *
-+ * @cb:		callback pointer
-+ *
-+ */
-+DEFINE_EVENT(notifiers_info, notifiers_run,
-+
-+	TP_PROTO(void *cb),
-+
-+	TP_ARGS(cb)
-+);
-+
-+#endif /* _TRACE_NOTIFIERS_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-diff --git a/kernel/notifier.c b/kernel/notifier.c
-index 0d5bd62c480e..2f2783f59a31 100644
---- a/kernel/notifier.c
-+++ b/kernel/notifier.c
-@@ -7,6 +7,9 @@
- #include <linux/vmalloc.h>
- #include <linux/reboot.h>
+diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+index e7e8e624a436..741fe5539154 100644
+--- a/drivers/edac/altera_edac.c
++++ b/drivers/edac/altera_edac.c
+@@ -16,7 +16,6 @@
+ #include <linux/kernel.h>
+ #include <linux/mfd/altera-sysmgr.h>
+ #include <linux/mfd/syscon.h>
+-#include <linux/notifier.h>
+ #include <linux/of_address.h>
+ #include <linux/of_irq.h>
+ #include <linux/of_platform.h>
+@@ -24,6 +23,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/regmap.h>
+ #include <linux/types.h>
++#include <linux/kexec.h>
+ #include <linux/uaccess.h>
  
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/notifiers.h>
+ #include "altera_edac.h"
+@@ -2063,22 +2063,30 @@ static const struct irq_domain_ops a10_eccmgr_ic_ops = {
+ };
+ 
+ /************** Stratix 10 EDAC Double Bit Error Handler ************/
+-#define to_a10edac(p, m) container_of(p, struct altr_arria10_edac, m)
+-
+ #ifdef CONFIG_64BIT
+ /* panic routine issues reboot on non-zero panic_timeout */
+ extern int panic_timeout;
+ 
++#define to_a10edac(p, m) container_of(p, struct altr_arria10_edac, m)
 +
  /*
-  *	Notifier list for kernel code which wants to be called
-  *	at shutdown. This is used to stop any idling DMA operations
-@@ -37,6 +40,7 @@ static int notifier_chain_register(struct notifier_block **nl,
- 	}
- 	n->next = *nl;
- 	rcu_assign_pointer(*nl, n);
-+	trace_notifiers_register((void*)n->notifier_call);
- 	return 0;
- }
+  * The double bit error is handled through SError which is fatal. This is
+  * called as a panic notifier to printout ECC error info as part of the panic.
++ *
++ * Notice that if kdump is set, we take the risk avoidance approach and
++ * skip the notifier, given that users are expected to have access to a
++ * full vmcore.
+  */
+ static int s10_edac_dberr_handler(struct notifier_block *this,
+ 				  unsigned long event, void *ptr)
+ {
+-	struct altr_arria10_edac *edac = to_a10edac(this, panic_notifier);
++	struct altr_arria10_edac *edac;
+ 	int err_addr, dberror;
  
-@@ -46,6 +50,7 @@ static int notifier_chain_unregister(struct notifier_block **nl,
- 	while ((*nl) != NULL) {
- 		if ((*nl) == n) {
- 			rcu_assign_pointer(*nl, n->next);
-+			trace_notifiers_unregister((void*)n->notifier_call);
- 			return 0;
- 		}
- 		nl = &((*nl)->next);
-@@ -84,6 +89,7 @@ static int notifier_call_chain(struct notifier_block **nl,
- 			continue;
- 		}
- #endif
-+		trace_notifiers_run((void*)nb->notifier_call);
- 		ret = nb->notifier_call(nb, val, v);
- 
- 		if (nr_calls)
++	if (kexec_crash_loaded())
++		return NOTIFY_DONE;
++
++	edac = to_a10edac(this, panic_notifier);
+ 	regmap_read(edac->ecc_mgr_map, S10_SYSMGR_ECC_INTSTAT_DERR_OFST,
+ 		    &dberror);
+ 	regmap_write(edac->ecc_mgr_map, S10_SYSMGR_UE_VAL_OFST, dberror);
 -- 
 2.37.2
 
