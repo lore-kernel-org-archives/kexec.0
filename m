@@ -4,66 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5F439C32774
-	for <kexec@archiver.kernel.org>; Mon, 22 Aug 2022 17:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 35672C32774
+	for <kexec@archiver.kernel.org>; Tue, 23 Aug 2022 09:31:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=NeaGa/U7K1mNdsnAK2Mx1jn/cgEikhOUNKGksu0Wo5c=; b=h+8UlqxBHNLuZq
-	T2x542VXHJmV0farJ9actLszUZ+5sB834Cl8uzp0V/eoG7KwprgIVN4Ycoj7qPhdNehnktz3JUFPo
-	y1oZDYuHq/jRjTXs/udpDpG8zWUA53H7MQBWAVbuqM98dRfpF9obDt5YF7ejCMMdapvPV5gCCeODv
-	c+kR02QYTXXNAadJdWrq4C3QlHQp0KeGlaP7g+CFR0+gjv+vlobIc/D3JphWeFPVoSUdc6PckYMJG
-	fC3+yb8guA/Jat3HNiWYN92VDCXhXPKfTPEHAVR7vw0r9BIRhAH6E0vDWvBwYcBxw6QNXBKY+MD09
-	K81hSI6KqFYf1O8iJrww==;
+	List-Owner; bh=ZnEhXQQhxjWnOvgwxDJHTOm5d3eBugAqqDcMeCfLafY=; b=xVXOrwSEj/wrbe
+	TZxWrVSisnomPo2HQK/500yFvwkw5/jvr5vr6SQftzhsSH3hHx7R49kqDsYzr4m2TOVf2dM2xnY/7
+	7TTXeCbcVUF92n8Zgf4k43Z5sYM52lW+W8bb+FL8dOdl26BAVrpO6+a4N7gnaghucf+A58pz9zkfb
+	UgJRsbzkS1aaaiIfdcBofl5Tu4TaBVOESTLKYc3RRSDYJtKb06ViN+LsoYyYT+cvL3WyQ/ji162pP
+	gKxCSN4xyUN6DR1TFTvfs/aw3SZbZYSniDM9peFXQr5BKhPRWlNg9MkT7SCcDSsVH79EzAEwuQsJR
+	yQAMkvAXIyXul8luebJQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oQBi4-00DJwg-2T; Mon, 22 Aug 2022 17:59:36 +0000
-Received: from mail-oi1-f169.google.com ([209.85.167.169])
+	id 1oQQFy-004VNj-NZ; Tue, 23 Aug 2022 09:31:34 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oQBhw-00DJsS-Qf
-	for kexec@lists.infradead.org; Mon, 22 Aug 2022 17:59:30 +0000
-Received: by mail-oi1-f169.google.com with SMTP id t140so4269797oie.8
-        for <kexec@lists.infradead.org>; Mon, 22 Aug 2022 10:59:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc;
-        bh=3TuVf54GgPydYoGd51XaXL3tfz0KadvwC9z8/Fy+sls=;
-        b=hgvua+12L2VIN0tNlQocbDZvR5fuHrpDL+nG46APdTYyd5Rj2gPlzCIdbf5wUyueTZ
-         QGevLQb9guHrnkERbMrMH8ECoYFbtMl5ukQbrPOmSqctbGsFdCRkBqnnAPH/Y0/5V9tK
-         CiSzcyvsy6zsIxDds2Qg72ZtTDHucln0iQSjQiuMAcBhHLy/zjP4hCMNYhyXlqxU5yDH
-         JM1u3kpy4ZwfxDBEPscl+BfahxIkaftV3R4U+xNDx5/nWX5KKlzeCio+rAL6XVsJNc7Q
-         FnzR5/XOUQ1IR6ml4NslyQgPxAWVD3lO+X/kx/N6YsZklgvwaHu2x1rehbGRKm8JAefm
-         AIQA==
-X-Gm-Message-State: ACgBeo0pUTP0/ZIIhaHzdMhgYhCujBYjy5++yGXGBNLo9pHC0y4BUGbP
-	liVeNm6Bjp8EP6JdiNRc9g==
-X-Google-Smtp-Source: AA6agR602WMERbYZ3uSCPQSQ/AhC9EWTsVLdvnnS5HXY696Jr8IN6ZBdolcGmNue7hlW5WqBeaMdnQ==
-X-Received: by 2002:a05:6808:302b:b0:2f9:eeef:f03 with SMTP id ay43-20020a056808302b00b002f9eeef0f03mr11736503oib.128.1661191166666;
-        Mon, 22 Aug 2022 10:59:26 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id r11-20020a4a964b000000b0041b49c19a00sm2478019ooi.18.2022.08.22.10.59.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Aug 2022 10:59:26 -0700 (PDT)
-Received: (nullmailer pid 62586 invoked by uid 1000);
-	Mon, 22 Aug 2022 17:59:24 -0000
-Date: Mon, 22 Aug 2022 12:59:24 -0500
-From: Rob Herring <robh@kernel.org>
-To: Stefan Berger <stefanb@linux.ibm.com>
-Cc: kexec@lists.infradead.org, mpe@ellerman.id.au, devicetree@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Nageswara R Sastry <rnsastry@linux.ibm.com>, linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org, nayna@linux.ibm.com, nasastry@in.ibm.com, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v7 6/6] tpm/kexec: Duplicate TPM measurement log in
- of-tree for kexec
-Message-ID: <20220822175924.GA62553-robh@kernel.org>
-References: <20220812164305.2056641-1-stefanb@linux.ibm.com>
- <20220812164305.2056641-7-stefanb@linux.ibm.com>
+	id 1oQQCr-004TgK-5X
+	for kexec@lists.infradead.org; Tue, 23 Aug 2022 09:28:29 +0000
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id D22F361342;
+	Tue, 23 Aug 2022 09:28:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE792C433C1;
+	Tue, 23 Aug 2022 09:28:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1661246896;
+	bh=QdEMINy4DpflPJbO9OpDwJFttTM7M9zPcsVxmvhY6PU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=NsIBZnRv52wiDsJ0+Elba6BTP6RyWoGLIraj348FHlb57TvvEL7ahMuR3Nu22wkhA
+	 YqpV1c7nCO02SirpHbNV4RgquTEuXkZZdglp6iWvY0fpzTP4P9orSG9A9VbIh/25Z5
+	 gf6jvoMa72Dn6caMfj7DFhpfBbQE1TqPUhhaGqFU=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	stable@vger.kernel.org,
+	Philipp Rudo <prudo@linux.ibm.com>,
+	kexec@lists.infradead.org,
+	keyrings@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	Michal Suchanek <msuchanek@suse.de>,
+	"Lee, Chun-Yi" <jlee@suse.com>,
+	Baoquan He <bhe@redhat.com>,
+	Coiby Xu <coxu@redhat.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Mimi Zohar <zohar@linux.ibm.com>
+Subject: [PATCH 5.4 254/389] kexec, KEYS, s390: Make use of built-in and secondary keyring for signature verification
+Date: Tue, 23 Aug 2022 10:25:32 +0200
+Message-Id: <20220823080126.207983967@linuxfoundation.org>
+X-Mailer: git-send-email 2.37.2
+In-Reply-To: <20220823080115.331990024@linuxfoundation.org>
+References: <20220823080115.331990024@linuxfoundation.org>
+User-Agent: quilt/0.67
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20220812164305.2056641-7-stefanb@linux.ibm.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220822_105929_043566_794440FC 
-X-CRM114-Status: GOOD (  26.66  )
+X-CRM114-CacheID: sfid-20220823_022827_542752_20EF10C2 
+X-CRM114-Status: GOOD (  11.95  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,56 +80,69 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, 12 Aug 2022 12:43:05 -0400, Stefan Berger wrote:
-> The memory area of the TPM measurement log is currently not properly
-> duplicated for carrying it across kexec when an Open Firmware
-> Devicetree is used. Therefore, the contents of the log get corrupted.
-> Fix this for the kexec_file_load() syscall by allocating a buffer and
-> copying the contents of the existing log into it. The new buffer is
-> preserved across the kexec and a pointer to it is available when the new
-> kernel is started. To achieve this, store the allocated buffer's address
-> in the flattened device tree (fdt) under the name linux,tpm-kexec-buffer
-> and search for this entry early in the kernel startup before the TPM
-> subsystem starts up. Adjust the pointer in the of-tree stored under
-> linux,sml-base to point to this buffer holding the preserved log. The TPM
-> driver can then read the base address from this entry when making the log
-> available. Invalidate the log by removing 'linux,sml-base' from the
-> devicetree if anything goes wrong with updating the buffer.
-> 
-> Use subsys_initcall() to call the function to restore the buffer even if
-> the TPM subsystem or driver are not used. This allows the buffer to be
-> carried across the next kexec without involvement of the TPM subsystem
-> and ensures a valid buffer pointed to by the of-tree.
-> 
-> Use the subsys_initcall(), rather than an ealier initcall, since
-> page_is_ram() in get_kexec_buffer() only starts working at this stage.
-> 
-> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Tested-by: Nageswara R Sastry <rnsastry@linux.ibm.com>
-> 
-> ---
-> v6:
->  - Define prototype for tpm_add_kexec_buffer under same config options
->    as drivers/of/kexec.c is compiled, provide inline function otherwise.
->    (kernel test robot)
-> 
-> v4:
->  - Added #include <linux/vmalloc.h> due to parisc
->  - Use phys_addr_t for physical address rather than void *
->  - Remove linux,sml-base if the buffer cannot be updated after a kexec
->  - Added __init to functions where possible
-> ---
->  drivers/of/kexec.c    | 216 +++++++++++++++++++++++++++++++++++++++++-
->  include/linux/kexec.h |   6 ++
->  include/linux/of.h    |   9 +-
->  kernel/kexec_file.c   |   6 ++
->  4 files changed, 234 insertions(+), 3 deletions(-)
-> 
+From: Michal Suchanek <msuchanek@suse.de>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+commit 0828c4a39be57768b8788e8cbd0d84683ea757e5 upstream.
+
+commit e23a8020ce4e ("s390/kexec_file: Signature verification prototype")
+adds support for KEXEC_SIG verification with keys from platform keyring
+but the built-in keys and secondary keyring are not used.
+
+Add support for the built-in keys and secondary keyring as x86 does.
+
+Fixes: e23a8020ce4e ("s390/kexec_file: Signature verification prototype")
+Cc: stable@vger.kernel.org
+Cc: Philipp Rudo <prudo@linux.ibm.com>
+Cc: kexec@lists.infradead.org
+Cc: keyrings@vger.kernel.org
+Cc: linux-security-module@vger.kernel.org
+Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+Reviewed-by: "Lee, Chun-Yi" <jlee@suse.com>
+Acked-by: Baoquan He <bhe@redhat.com>
+Signed-off-by: Coiby Xu <coxu@redhat.com>
+Acked-by: Heiko Carstens <hca@linux.ibm.com>
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ arch/s390/kernel/machine_kexec_file.c |   18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
+
+--- a/arch/s390/kernel/machine_kexec_file.c
++++ b/arch/s390/kernel/machine_kexec_file.c
+@@ -29,6 +29,7 @@ int s390_verify_sig(const char *kernel,
+ 	const unsigned long marker_len = sizeof(MODULE_SIG_STRING) - 1;
+ 	struct module_signature *ms;
+ 	unsigned long sig_len;
++	int ret;
+ 
+ 	/* Skip signature verification when not secure IPLed. */
+ 	if (!ipl_secure_flag)
+@@ -63,11 +64,18 @@ int s390_verify_sig(const char *kernel,
+ 		return -EBADMSG;
+ 	}
+ 
+-	return verify_pkcs7_signature(kernel, kernel_len,
+-				      kernel + kernel_len, sig_len,
+-				      VERIFY_USE_PLATFORM_KEYRING,
+-				      VERIFYING_MODULE_SIGNATURE,
+-				      NULL, NULL);
++	ret = verify_pkcs7_signature(kernel, kernel_len,
++				     kernel + kernel_len, sig_len,
++				     VERIFY_USE_SECONDARY_KEYRING,
++				     VERIFYING_MODULE_SIGNATURE,
++				     NULL, NULL);
++	if (ret == -ENOKEY && IS_ENABLED(CONFIG_INTEGRITY_PLATFORM_KEYRING))
++		ret = verify_pkcs7_signature(kernel, kernel_len,
++					     kernel + kernel_len, sig_len,
++					     VERIFY_USE_PLATFORM_KEYRING,
++					     VERIFYING_MODULE_SIGNATURE,
++					     NULL, NULL);
++	return ret;
+ }
+ #endif /* CONFIG_KEXEC_SIG */
+ 
+
+
 
 _______________________________________________
 kexec mailing list
