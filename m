@@ -4,95 +4,137 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4810CC32796
-	for <kexec@archiver.kernel.org>; Wed, 24 Aug 2022 19:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B85C3C3F6B0
+	for <kexec@archiver.kernel.org>; Wed, 24 Aug 2022 21:59:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
-	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=SoO6L2cqH+HOo45cQljV+ep2PaW2WCFS++dCzKA85PI=; b=T5ykPJR4LjyVv4
-	4Y8UpzxverbnZSiGfmpF3g9deU8RZO3vP5b3iNB2nIBe1+FdIzZDwNBosbcrTeXNtjSoOTpX1xDEU
-	FLbaelMr0VDKGKwBrXBL5aUKmKoJp4Q4TkB1DMT7940BOV44CZ2VRE1RukkRy/7oQ/F1d7J55B6y5
-	m6pHPEtCc5dO3bDnX+JZyQl4+TwQh1uGbSJs43w9vGyPg/Fg0VlnBuAyHYGz/YknFNjddFdpUn1rF
-	4jKVuGFjP6DZPFSOfT9WAhyruYYZCdgvA5tYtL4pcWy4szZzTjSk95ELMNV280umlUR9HaedMKxdp
-	iy34pcWOxjv7OnkzOQww==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:
+	References:Cc:To:Subject:Date:Message-ID:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Owner;
+	bh=61k3sgi7KrRoXAKWWCSA+PptlHK9Q+scwzSslVupwtA=; b=e3Sc6fyyvtg96rOulSEmBV5K/v
+	phj4NRrS54xhi0FTRY4FN6ufCbxvSG5LmMQLhXla98uHiXL/NAFZ1bJgZ+BpidtVrri+idtlhOIjh
+	8we6JjYDWqoc8xtsP/CNDQgh9OQZJDSmIeVoEdV/jmICK2yhbnuJTTXjkDn8yBByqVZ4ZmrLmLj9e
+	L+7mMrP4XaKydMh4BK3A533spTYBxGJgAuT+afMC0hPjKI0hipfjkNuIpEspcxq6u8DZ1FG8aBzn1
+	i19jsZIJ6fm13JpoYgBkH0jf/tJuHCMWiFsQz+3AIMcDOKgIt0hnaOpS72moJqIPY/EoNBOHYRhZB
+	yd/uZI5A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oQvc1-00FY6C-CM; Wed, 24 Aug 2022 19:00:25 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1oQyPR-001ynG-R2; Wed, 24 Aug 2022 21:59:37 +0000
+Received: from mail-bn8nam04on2063.outbound.protection.outlook.com ([40.107.100.63] helo=NAM04-BN8-obe.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oQvby-00FXzF-4A
-	for kexec@lists.infradead.org; Wed, 24 Aug 2022 19:00:23 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1661367618;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FIiUmby88Yb55/rny3f+ooD+63bbUsdXMXTOH9q/LhQ=;
-	b=RlO1muGemGIILsyAVvvdS/sByQ3gxIcV/a1ytp8Fowrza3IuDzUmyLhtuDvUMtf6tm7fJ5
-	1CVMaydJciZL6u7VW/cPVsvUCJRfFschEnZHa7sLF+iaZEaYQA3JpJz5e73IwwnuWm6fZQ
-	fenDrWKfjPsqxW3/KW8yiF8wlEfPLYY=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-613-k-goXsQQOqWFsLa8uFNtcA-1; Wed, 24 Aug 2022 15:00:17 -0400
-X-MC-Unique: k-goXsQQOqWFsLa8uFNtcA-1
-Received: by mail-wm1-f70.google.com with SMTP id r10-20020a1c440a000000b003a538a648a9so9754065wma.5
-        for <kexec@lists.infradead.org>; Wed, 24 Aug 2022 12:00:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc;
-        bh=FIiUmby88Yb55/rny3f+ooD+63bbUsdXMXTOH9q/LhQ=;
-        b=RgJ1ErDNZJqKhFkXlWwnAiDMtPd1TLle4P9VppyMUYzuSe5vqt1Wkuas1T8QtW8XpE
-         mYdf2Mc+I4mO7f5p4Ayv4clf11ISMrsKt2EIU4clg1yzJjx72HQ5ieNOE2A54jqZRGin
-         5o79wOJQTUdgoXXIaUyPRlodkTXtiHtgEMYTbJsmtVhKdpgKRLBQYPU/5g0LtfmMIGlw
-         AfL9eedkh2RgW1XcjgHJIlJKUY6mb8p80MbBZbZC4aTXhbJvFTFk/r9n00wCxl8I1k04
-         1h6vapnCfEknDPh/16HslQ1zIbQau3elv6XPqqQFFF3Iox+9Dsel3YGY8pNpemffLpa5
-         282Q==
-X-Gm-Message-State: ACgBeo2tc4+tUFn9HoORrXDjClx7gM4FBq1reRf38bpR9aDLNf8R2n0W
-	6w5mpkFuRkXGmkBjdoN5rZ4oFCmgp5x1LEz4vETczCnqaiYfL9PS8mGY48UtgYlgTyat4VzfIvX
-	nru5jRTHaWMKQecUW809s
-X-Received: by 2002:a7b:c451:0:b0:3a6:829a:6102 with SMTP id l17-20020a7bc451000000b003a6829a6102mr5173771wmi.12.1661367616198;
-        Wed, 24 Aug 2022 12:00:16 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR5ZOVK4qpWVvOkODaq4ZLUaZhRYxNGGEB2PU/jsgu2M5tKioth0d58LkEi9N7bWMamVaYBo2w==
-X-Received: by 2002:a7b:c451:0:b0:3a6:829a:6102 with SMTP id l17-20020a7bc451000000b003a6829a6102mr5173682wmi.12.1661367614025;
-        Wed, 24 Aug 2022 12:00:14 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c707:c500:5445:cf40:2e32:6e73? (p200300cbc707c5005445cf402e326e73.dip0.t-ipconnect.de. [2003:cb:c707:c500:5445:cf40:2e32:6e73])
-        by smtp.gmail.com with ESMTPSA id w5-20020a5d5445000000b0021e571a99d5sm17290174wrv.17.2022.08.24.12.00.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Aug 2022 12:00:13 -0700 (PDT)
-Message-ID: <693dc564-349b-7174-b096-53d2107f27a8@redhat.com>
-Date: Wed, 24 Aug 2022 21:00:11 +0200
-MIME-Version: 1.0
+	id 1oQyPP-001ykD-5p
+	for kexec@lists.infradead.org; Wed, 24 Aug 2022 21:59:36 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JJmMCaIAxV3+tHVkotc0iXcBMm4qLq94yagN4IY9e+yh8XLJul8CwFNKHdtxP6mIwIYXzsR8SOd5KTiFJOKcaaEiimIb1aewesbKhGg/7f9dbFxn3piKKrjjinlPt9P53TemLxh7VoFvTN/3leVtdTtIzN52xjv7ilvbWY86W9xUIraxfazks5H2nLc6ntSZYOZ7C2wHQcLVLs0rw/Vw2006Eb77CqPZl2QO2X/nlgo+CxHjY4Olah/lJsLeHldaE1KY/w6rbu0HKUBMR5HyExDF+HV4sywfgROtpxictSrrd/LV6N34VQsDe/92r0+6xLKM0h0zc7Xd6mw2DE516Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WtRgwr//724AGR28U6k3UdiY6o46PlgQzN3ZTB2Gq64=;
+ b=F8dNbkfOZlvVxXC8uXrKysHSu8ZS/b+K43L9XYg9XVsVznOoixMzDYN89HiiBHr2+f8VfvWrPsZakHXNMdgKaaKQIolHiZq5FdcdpY1vBTwgiZtZZ5jh8peckp3GUzdLVziNuGr/k7FRpr2i+s/JgUxI1bW9Q01kPyvWsNFFt08sBa7I4adLtvo+m4aAt6Qmryc1dwy35cIokF/Ubn315SpFfrlLW6y4pzWbuIj2JL6OvtahlSFJkIwsP/VI/PhTOVe3vBugpiYVO/hfIF42sNRf/0st0VXupHKR/ikdyjikESZAWfu4rvsrRBmqehtcRXsgLI8Y5HQvWZLEmWxBvA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WtRgwr//724AGR28U6k3UdiY6o46PlgQzN3ZTB2Gq64=;
+ b=sHbAgk5fVXXhRqEMIkKAVIRygWxXMrznqTAH5UAxEWrB7psm8cEWPpbhdsojmVY+ZHytG+RWPIbo8F3s9+yBXH6+qUJobkgltLfYxVH9MtZAHkDH5taKzRoIrr5FtgD3dO1A8pfoYE/F2KZ9O5DWf+siK+EGBk448TmTpI1u8eWUy/tLzXZCFjqnn5yE1ftNY83asPWmGGzGxEO0d7IvjDSLAbALtpy2Qn3mrEI/DvgVrwLpCiwqcDebwViswm2RJ1TPhC5yO3L1IpMPrCdnn3AuEhvj5zhBrdtBukJRxNIkP+g8P17XvjfKxiK14pFoWG/Gd2W4G4TQY2CasWthsQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BY5PR12MB4130.namprd12.prod.outlook.com (2603:10b6:a03:20b::16)
+ by BYAPR12MB3590.namprd12.prod.outlook.com (2603:10b6:a03:ae::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5546.19; Wed, 24 Aug
+ 2022 21:59:28 +0000
+Received: from BY5PR12MB4130.namprd12.prod.outlook.com
+ ([fe80::508d:221c:9c9e:e1a5]) by BY5PR12MB4130.namprd12.prod.outlook.com
+ ([fe80::508d:221c:9c9e:e1a5%8]) with mapi id 15.20.5566.014; Wed, 24 Aug 2022
+ 21:59:27 +0000
+Message-ID: <0db131cf-013e-6f0e-c90b-5c1e840d869c@nvidia.com>
+Date: Wed, 24 Aug 2022 14:59:25 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.12.0
-Subject: Re: [PATCH RFC 2/2] checkpatch: warn on usage of VM_BUG_ON() and
- friends
-To: Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 1/2] coding-style.rst: document BUG() and WARN() rules
+ ("do not crash the kernel")
+Content-Language: en-US
+To: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
 Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, kexec@lists.infradead.org,
  Linus Torvalds <torvalds@linux-foundation.org>,
  Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>,
  David Laight <David.Laight@ACULAB.COM>, Jonathan Corbet <corbet@lwn.net>,
- Andy Whitcroft <apw@canonical.com>, Dwaipayan Ray <dwaipayanray1@gmail.com>,
+ Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
+ Dwaipayan Ray <dwaipayanray1@gmail.com>,
  Lukas Bulwahn <lukas.bulwahn@gmail.com>, Baoquan He <bhe@redhat.com>,
  Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>
 References: <20220824163100.224449-1-david@redhat.com>
- <20220824163100.224449-3-david@redhat.com>
- <3c250aa26020b2f336fd575a58d06ba26faf1f14.camel@perches.com>
-From: David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-In-Reply-To: <3c250aa26020b2f336fd575a58d06ba26faf1f14.camel@perches.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
+ <20220824163100.224449-2-david@redhat.com>
+From: John Hubbard <jhubbard@nvidia.com>
+In-Reply-To: <20220824163100.224449-2-david@redhat.com>
+X-ClientProxiedBy: SJ0PR13CA0142.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c6::27) To BY5PR12MB4130.namprd12.prod.outlook.com
+ (2603:10b6:a03:20b::16)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c84b96ef-6d36-4b79-5912-08da861bea1d
+X-MS-TrafficTypeDiagnostic: BYAPR12MB3590:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 	hzmIg0jqfbg5m3lOl6N7isTfas1o0J5Im6mEd9gcKy15QmqfJRSLdsvTbAHybEgXTmz1ZOFO8UsX0ved94Q7gU5kvbxBRoe5H1VUOOmxKl1m+yV0w4ZHmx/v3E0Wmrimhpk8/865F+PjP6fXj0j+6j03fl2G2XNlvVi+fyFKUBFYc9y6KwiTeSUISPHE6NBg3hR1VmCFl8lSYP6iAIOgzg13366n+5jFdsDbQQSsvwVyI7jYo93GN+dOz632Pf0C6tWRqmHFXczdOUwYba/e8cJvntFchOaCpMa0++ioSwBdM5ajLilxEUCkVY16PeH0xcqFGEjc/K7sI6ZnezSfXguW2fL5DlZrANkPqQdHynJ42/WXbq961UBM5bce/r9eZF4gDyeEyikaGd7dwXKaa2wBlDPIBpnB4gYVuNJIu0jNvV9pAJ5ioYK1fAHbX+4bHC8xBKBD6coGN14Q3/y/H4+TPRT6Dv/OVVkm3/kLHAXFQAP06pg9cQFxhDeeZMc559aTSl20zUbcmZrf5HXrWRe4Te71+FCYpRWOfLhwqgYmEPXsOJNeKoNZ76pDtuyb8DHqbcoN2WpEcQFD0Qa/2YpmACP0vj/5fs8uS3bt9K8/KZSmAteXj776N2RXJGNzm3FlmcUfuk3bhVxdwLwo/Dm0xXI6jbuG8zB7mDqt8PpNo23GXo+bQ+dwPcUK+yDl9iyvJnlYu1YPNHVM9uh5Cn9v16RkcGTUT6TdQgI/AYTy90kH3uHHC/Uxz4DQkVT+dNdGNTWIkYQWHSfM/ZFE74yWR6h704BR1cc60j/aI1s=
+X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR12MB4130.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(376002)(366004)(396003)(136003)(39860400002)(346002)(26005)(31696002)(86362001)(38100700002)(8936002)(54906003)(36756003)(316002)(7416002)(6486002)(66946007)(31686004)(478600001)(6506007)(8676002)(66476007)(66556008)(2616005)(4326008)(186003)(5660300002)(53546011)(83380400001)(2906002)(41300700001)(6512007)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 	=?utf-8?B?a1hBNm9OaVdGZlFsaUR5djNSQ1o2SnNKWnVidUFTd1ZTYmJUQTlCZzlPWjVx?=
+ =?utf-8?B?NEtSbmxZYjFQeElFYkhMaVF3bWN4NFBJN1M1ekswekRKaXVBZjJEamZwTW5n?=
+ =?utf-8?B?OG5zQ3NORWl1blFCRmtoc1FBUGtCa2RvQ1pqRURMOEtsS2kxTmVwQVc2czli?=
+ =?utf-8?B?czF5dnI3YnhyQTh0Ulh2U2h1bUZRQkZUMWVKZzVSWFZBcGM5OHNWb1RNbXl2?=
+ =?utf-8?B?aG5FQUsyTHN1Q3dVU1dZSzBmVkQ0eFRZUGNQaURTeCttNklnQzAxYVhrZjRl?=
+ =?utf-8?B?MVRXZjU3M2RFL2xtL0ZOMGtDZ29jSG1wTW9CT0VBYmluc005K1JVTW1IK3Fx?=
+ =?utf-8?B?Y2dTbGhEU0JzWHBTbm1nakpPcGdsVW9vZmFqRmRXY0FnV2t5cnlpVXdLK3Yx?=
+ =?utf-8?B?a3VvZjRzWXRDVWlkcEM0VDc1Y2hXZHJYR1cvU25WdFczNVN0Q2pvQm10MTRQ?=
+ =?utf-8?B?UEZTYVRKRmNGYXFlNUpBR1BNL1ozZkg3b21UTGVyUnBrckwybkswWlRweFEz?=
+ =?utf-8?B?djhRVUx2Q0Fjb3ladnBsM01rRlR2ZHo0TklmOVFtS0FzN29WWU5FQUF0Y0FL?=
+ =?utf-8?B?dmpJVzVLYWJSeXNNSUF1OGoxMVBzUFl5Qk1PVVFPQnZPcVRMWVBZYldhR1Jn?=
+ =?utf-8?B?Nk5ZbmQwMjlacVkvRTg1MnZpT0JnWVpZNDhHbnpUclQ0ZmpuSVZsK2dqSSti?=
+ =?utf-8?B?T1JwdGdMazhjbkRDR2Fzem5PcThoMS80c2lFWUVmLzRkM2Z6OFExcDIyemR6?=
+ =?utf-8?B?RzhWQUF4TDZ0QkdkcGUxOFpRWk1LR3BFalJZVDdybnpZTkRpbVNsb1o0ZFoz?=
+ =?utf-8?B?cWVFVS9iVmo3R1JjdG9LdmExbmNnYzZzOTA0bHg0UHl5WUptYWxNMGVDZnFJ?=
+ =?utf-8?B?bm42MTZYcHBidFlEVUN2Vzk1RWFWUzQzTTd0ZDlPbXVXTld4QUxQaFU2OWlm?=
+ =?utf-8?B?aHNSYUM4UmNQV3RJNm5JVUpRWndzcmFMWkx1dHQ4clc0NERpM0R0RHZ1WjVR?=
+ =?utf-8?B?S1p3U01LZ0U4cjNKaGI2Z3k4N0NqNHI3Wk5DcmhvTkhoeEM2TlF1SHBZOWJV?=
+ =?utf-8?B?N2FtMnFFZS85TEhYc3EwZDVwUWpHQlZBSklNMmFaT2FYRVd2WTRCbW5RRWo1?=
+ =?utf-8?B?Vkd1NlBNQldMQnFVeGFqZktlQzZCa0Q3YzdwUXVwcHlFdklPQzFDb2x0Ky9H?=
+ =?utf-8?B?ZVB2SE55eWUrM3JUY0Z5YmFQc01rYjdpZTNqZlRQQ1Jjdnd1MXlEODF1TW1H?=
+ =?utf-8?B?cUtqQ2RibEJZM2ZlalA1TFJDMFlvajNqdEt3NVA0SExFSm5McmtmUXg2bk9w?=
+ =?utf-8?B?Q2NoNUl1dk5TR2hIWFVJNGIzcHVZV3Z3Z0drM3VtQUsrLzZsa0J2VXllMkdB?=
+ =?utf-8?B?ZU1vVS9JTHRCNjJWMTM3UUlvd1F1SjJJb2hMU3hHYVJaTkhvQTNDK09POTNw?=
+ =?utf-8?B?U1J5NzFaQWtLNXBVanB1aDF1RzlSUExVeENqMi9CZjhEM3pZd21rVHRaM3NI?=
+ =?utf-8?B?TnlMY09wengxUm5aazljTUxSUy9Mam5nWXZDd25yaXlhQW5mS1NsdU5QZU1B?=
+ =?utf-8?B?N1ZMdFhmVEt6ZXdveGcrd05VdW9jWFU0eGY1bHVMQmlZNDAyN2xtbkxqblJu?=
+ =?utf-8?B?Wm9jci9xMldGRlZNWTVBM1Rrc2Vrck9PaVoxUW5UVzNKQ2NNblpEWTdpVkVF?=
+ =?utf-8?B?Q2ZYZ05QN05LcjNrd0xnU0wxZm02QkxMMkFIdTU4R0FSNTNTcWFHUUt4UWpo?=
+ =?utf-8?B?U1dmRkl3ZGhJZmEwUjhQcW9EbkZPSXBYR29TeUhHR3VzM2VhMWlGck5oUFdB?=
+ =?utf-8?B?Yll2dnVGaWJDWXlFZHJHMngxZjN1MWpBOUxoK1ZjcXVRVC93TU1td0Z1UTJC?=
+ =?utf-8?B?dDI4WHJNWjcxSTlLaGd3alI2Mi9EUG5nREtxdlIvM05MT1ZMRHBTWWZTSFVO?=
+ =?utf-8?B?SHV5SnFUMmxwTllsRXRiY3hCRHp3bnhEYUNlbkpKZU9GdUZnanYyVzlZbSt1?=
+ =?utf-8?B?bVkwNnMxZVFnZ0RTY3RuZThtS0Z5N2p0U0FhQjM5UXBCU3Z6NS9HZGRidTJI?=
+ =?utf-8?B?NHpLbGlOdFJsZDM3VWhzZnl3dU5kTDgzZmVwc1BRd0R1K2NYcTY2Z28yNGVM?=
+ =?utf-8?Q?0I0eL0InS/RRilKyGH++SVqvE?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c84b96ef-6d36-4b79-5912-08da861bea1d
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR12MB4130.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2022 21:59:27.8252
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 59q+8kcAnee4WpOp5lb4eHbnUBNQmiSlUCI1x/t6+nUP3rfKEJKfxoelTJsN8btWXvSyNKajIxDl0dh0Y35fGQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3590
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220824_120022_249670_BF4E219F 
-X-CRM114-Status: GOOD (  21.11  )
+X-CRM114-CacheID: sfid-20220824_145935_243675_616EF8F2 
+X-CRM114-Status: GOOD (  18.08  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -109,59 +151,83 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 24.08.22 18:52, Joe Perches wrote:
-> On Wed, 2022-08-24 at 18:31 +0200, David Hildenbrand wrote:
->> checkpatch does not point out that VM_BUG_ON() and friends should be
->> avoided, however, Linus notes:
->>
->>     VM_BUG_ON() has the exact same semantics as BUG_ON. It is literally
->>     no different, the only difference is "we can make the code smaller
->>     because these are less important". [1]
->>
->> So let's warn on VM_BUG_ON() and friends as well. While at it, make it
->> clearer that the kernel really shouldn't be crashed.
->>
->> Note that there are some other *_BUG_ON flavors, but they are not all
->> bad: for example, KVM_BUG_ON() only triggers a WARN_ON_ONCE and then
->> flags KVM as being buggy, so we'll not care about them for now here.
-> []
->> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> []
->> @@ -4695,12 +4695,12 @@ sub process {
->>  			}
->>  		}
->>  
->> -# avoid BUG() or BUG_ON()
->> -		if ($line =~ /\b(?:BUG|BUG_ON)\b/) {
->> +# do not use BUG(), BUG_ON(), VM_BUG_ON() and friends.
->> +		if ($line =~ /\b(?:BUG|BUG_ON|VM_BUG_ON|VM_BUG_ON_[A-Z]+)\b/) {
-> 
-> Perhaps better as something like the below to pick up more variants
-> 
-> 		if ($line =~ /\b(?!KVM_|BUILD_)(?:[A-Z_]*_)?BUG(?:_ON)?(?:_[A-Z_]+)?\s*\(/
+On 8/24/22 09:30, David Hildenbrand wrote:
+> diff --git a/Documentation/process/coding-style.rst b/Documentation/process/coding-style.rst
+> index 03eb53fd029a..a6d81ff578fe 100644
+> --- a/Documentation/process/coding-style.rst
+> +++ b/Documentation/process/coding-style.rst
+> @@ -1186,6 +1186,33 @@ expression used.  For instance:
+>  	#endif /* CONFIG_SOMETHING */
+>  
 
-... then I'll have to scan the other cases if they do something similar
-as KVM. ... well, okay, I'll do it. :)
+I like the idea of adding this documentation, and this is the right
+place. Naturally, if one likes something, one must immediately change
+it. :) Therefore, here is an alternative writeup that I think captures
+what you and the email threads were saying.
 
-> 
->>  			my $msg_level = \&WARN;
->>  			$msg_level = \&CHK if ($file);
->>  			&{$msg_level}("AVOID_BUG",
->> -				      "Avoid crashing the kernel - try using WARN_ON & recovery code rather than BUG() or BUG_ON()\n" . $herecurr);
-> 
-> and maybe:
-> 
-> 				      "Do not crash the kernel unless it is unavoidable - use WARN_ON_ONCE & recovery code (if reasonable) rather than BUG() or variants\n" . $herecurr);
-> 
-> 
+How's this sound?
 
-Yes, thanks!
+diff --git a/Documentation/process/coding-style.rst b/Documentation/process/coding-style.rst
+index 03eb53fd029a..32df0d503388 100644
+--- a/Documentation/process/coding-style.rst
++++ b/Documentation/process/coding-style.rst
+@@ -1185,6 +1185,53 @@ expression used.  For instance:
+        ...
+        #endif /* CONFIG_SOMETHING */
+ 
++22) Do not crash the kernel
++---------------------------
++
++Use WARN() rather than BUG()
++****************************
++
++Do not add new code that uses any of the BUG() variants, such as BUG(),
++BUG_ON(), or VM_BUG_ON(). Instead, use a WARN*() variant, preferably
++WARN_ON_ONCE(), and possibly with recovery code. Recovery code is not required
++if there is no reasonable way to at least partially recover.
++
++Use WARN_ON_ONCE() rather than WARN() or WARN_ON()
++**************************************************
++
++WARN_ON_ONCE() is generally preferred over WARN() or WARN_ON(), because it is
++common for a given warning condition, if it occurs at all, to occur multiple
++times. (For example, once per file, or once per struct page.) This can fill up
++and wrap the kernel log, and can even slow the system enough that the excessive
++logging turns into its own, additional problem.
++
++Do not WARN lightly
++*******************
++
++WARN*() is intended for unexpected, this-should-never-happen situations. WARN*()
++macros are not to be used for anything that is expected to happen during normal
++operation. These are not pre- or post-condition asserts, for example. Again:
++WARN*() must not be used for a condition that is expected to trigger easily, for
++example, by user space actions. pr_warn_once() is a possible alternative, if you
++need to notify the user of a problem.
++
++Do not worry about panic_on_warn users
++**************************************
++
++A few more words about panic_on_warn: Remember that ``panic_on_warn`` is an
++available kernel option, and that many users set this option. This is why there
++is a "Do not WARN lightly" writeup, above. However, the existence of
++panic_on_warn users is not a valid reason to avoid the judicious use WARN*().
++That is because, whoever enables panic_on_warn has explicitly asked the kernel
++to crash if a WARN*() fires, and such users must be prepared to deal with the
++consequences of a system that is somewhat more likely to crash.
++
++Use BUILD_BUG_ON() for compile-time assertions
++**********************************************
++
++The use of BUILD_BUG_ON() is acceptable and encouraged, because it is a
++compile-time assertion that has no effect at runtime.
+
+
+thanks,
 
 -- 
-Thanks,
-
-David / dhildenb
-
+John Hubbard
+NVIDIA
 
 _______________________________________________
 kexec mailing list
