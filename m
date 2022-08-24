@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4E2CEC32792
-	for <kexec@archiver.kernel.org>; Wed, 24 Aug 2022 16:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F25E6C32796
+	for <kexec@archiver.kernel.org>; Wed, 24 Aug 2022 16:31:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=EqNAGeiiJ+BNT6jbTZqbMn4HNx4794WnaxNWYyGhNOw=; b=QPIuUkEos8DCxe
-	MY5eWYxMYyqQqK5Z7nnBhGilBZLYkKmrFNeO5qaMe8TvvpYmgdx/Kbzg8W1hWa4GNuVT+xkgQksL+
-	OdjwekZkEHFjLYuNfI9+bsucULq8DVZNe+Jpw426oKdJBLWHj1+rcRH2bWsteoBIkjYocBua6B2wL
-	2dog52wGcW1ORMXZXp/kKihpEiEkMgM0DSXujWuPNifhTBIa1+cFRh74jMbjeUax5ykDlilDUy1dO
-	OW70P2VZha9lfGE8ZSHn6s7ipVROUR77UteIQhcNfHeBGQxTq+uAsHU+3fmScYRcbdBLg7i1slHOT
-	7TN0k5U+8W/mPnDeNBxg==;
+	List-Owner; bh=qjL60r2T7n7hOwNRO1qdBqiAriO+HETHjT7+JWlqD2M=; b=IwjWYiUtUBTUKr
+	88XQqjloWKda8SvN3hNWhlYY15CpqN1QTVdWJ3UChhKEzLyI5ozgy7CCegKJ0pLZOZNGMVzXS5eih
+	7rbnxPoOSADK8N/s8m2ZQD3q/M6VDVZEfPOzHMLAcUnPMd1ptHX/EC0iX0EJnOgbbi2io+nONn5MA
+	LrtLK0Y1ruO5Nq5RZ19LWPEB2vhl6SbWnzVYkMV05I+LbKE+IXUI7RUOAF0YpKlBp1iCBwrR28GqN
+	YPD+fBoo5gLtZcO+hz+Yy5XeapYg+4qLbmeHVwnuOA/X9zolE4JKWfm6buoeFpprze8mh2ESjPhbv
+	K4UfXZbJZ3X/GpeFHaUg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oQtHi-00EQjX-Gf; Wed, 24 Aug 2022 16:31:18 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1oQtHm-00EQm2-2r; Wed, 24 Aug 2022 16:31:22 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oQtHf-00EQhU-0y
-	for kexec@lists.infradead.org; Wed, 24 Aug 2022 16:31:16 +0000
+	id 1oQtHj-00EQjV-65
+	for kexec@lists.infradead.org; Wed, 24 Aug 2022 16:31:20 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1661358674;
+	s=mimecast20190719; t=1661358678;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ccVMBc1bD/9NWDqLeOT+0fK/B1IszQ6Qg39orye31v0=;
-	b=dgvABez0p3XYkLA9PjnCa+4TgrOQBxukLB5JFvYYsXC9gVyD9VPz3JKBks2clRo6l2EoJP
-	hZCyMawYf3pyY3fvC8B+Au2p47IC0fBzpGcP2T/St3j7OttU2LxuxR+UWPoKSwU6LXgg46
-	N3ingq8aTFueAwxViD0sVxMBQ6fv4Tg=
+	bh=UXUvPXR+b9lqF8hwT6ic9kgmL6Hea0lIAs1c1MqWYvI=;
+	b=Yn8RmJZfrerJVOXwNn6g6Ly4TiLU9hv1swfdAmw+EaIVR3RsoDGANuoY46weDECwivXqTP
+	eZX3gXM7b9s5waqPy6cK7ac7bF4L0V3KR97hFEV8fKDZh/W8UU3U9cub6nBSAthH+PEsE2
+	9WboibqG/JAcdVFoEg79+6rPcXDH/m8=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-155-4RXzuCA-Oau5cEr7hNCxNQ-1; Wed, 24 Aug 2022 12:31:11 -0400
-X-MC-Unique: 4RXzuCA-Oau5cEr7hNCxNQ-1
+ us-mta-552-SCBzPGAuN0qxwGul-CpxkQ-1; Wed, 24 Aug 2022 12:31:14 -0400
+X-MC-Unique: SCBzPGAuN0qxwGul-CpxkQ-1
 Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5EDFF18A6580;
-	Wed, 24 Aug 2022 16:31:10 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 140248039A1;
+	Wed, 24 Aug 2022 16:31:14 +0000 (UTC)
 Received: from t480s.redhat.com (unknown [10.39.193.5])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 76918403348;
-	Wed, 24 Aug 2022 16:31:06 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 9EF3840315A;
+	Wed, 24 Aug 2022 16:31:10 +0000 (UTC)
 From: David Hildenbrand <david@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: linux-mm@kvack.org,
@@ -66,16 +66,16 @@ Cc: linux-mm@kvack.org,
 	Baoquan He <bhe@redhat.com>,
 	Vivek Goyal <vgoyal@redhat.com>,
 	Dave Young <dyoung@redhat.com>
-Subject: [PATCH RFC 1/2] coding-style.rst: document BUG() and WARN() rules ("do not crash the kernel")
-Date: Wed, 24 Aug 2022 18:30:59 +0200
-Message-Id: <20220824163100.224449-2-david@redhat.com>
+Subject: [PATCH RFC 2/2] checkpatch: warn on usage of VM_BUG_ON() and friends
+Date: Wed, 24 Aug 2022 18:31:00 +0200
+Message-Id: <20220824163100.224449-3-david@redhat.com>
 In-Reply-To: <20220824163100.224449-1-david@redhat.com>
 References: <20220824163100.224449-1-david@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 2.85 on 10.11.54.10
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220824_093115_171292_20E56B36 
-X-CRM114-Status: GOOD (  22.76  )
+X-CRM114-CacheID: sfid-20220824_093119_320739_0029A7C2 
+X-CRM114-Status: GOOD (  15.67  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -92,106 +92,47 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Linus notes [1] that the introduction of new code that uses VM_BUG_ON()
-is just as bad as BUG_ON(), because it will crash the kernel on
-distributions that enable CONFIG_DEBUG_VM (like Fedora):
+checkpatch does not point out that VM_BUG_ON() and friends should be
+avoided, however, Linus notes:
 
     VM_BUG_ON() has the exact same semantics as BUG_ON. It is literally
     no different, the only difference is "we can make the code smaller
-    because these are less important". [2]
+    because these are less important". [1]
 
-This resulted in a more generic discussion about usage of BUG() and
-friends. While there might be corner cases that still deserve a BUG_ON(),
-most BUG_ON() cases should simply use WARN_ON_ONCE() and implement a
-recovery path if reasonable:
+So let's warn on VM_BUG_ON() and friends as well. While at it, make it
+clearer that the kernel really shouldn't be crashed.
 
-    The only possible case where BUG_ON can validly be used is "I have
-    some fundamental data corruption and cannot possibly return an
-    error". [2]
+Note that there are some other *_BUG_ON flavors, but they are not all
+bad: for example, KVM_BUG_ON() only triggers a WARN_ON_ONCE and then
+flags KVM as being buggy, so we'll not care about them for now here.
 
-As a very good approximation is the general rule:
-
-    "absolutely no new BUG_ON() calls _ever_" [2]
-
-... not even if something really shouldn't ever happen and is merely for
-documenting that an invariant always has to hold.
-
-There is only one good BUG_ON():
-
-    Now, that said, there is one very valid sub-form of BUG_ON():
-    BUILD_BUG_ON() is absolutely 100% fine. [2]
-
-While WARN will also crash the machine with panic_on_warn set, that's
-exactly to be expected:
-
-    So we have two very different cases: the "virtual machine with good
-    logging where a dead machine is fine" - use 'panic_on_warn'. And
-    the actual real hardware with real drivers, running real loads by
-    users. [3]
-
-The basic idea is that warnings will similarly get reported by users
-and be found during testing. However, in contrast to a BUG(), there is a
-way to actually influence the expected behavior (e.g., panic_on_warn)
-and to eventually keep the machine alive to extract some debug info.
-
-Ingo notes that not all WARN_ON_ONCE cases need recovery. If we don't ever
-expect this code to trigger in any case, recovery code is not really
-helpful.
-
-    I'd prefer to keep all these warnings 'simple' - i.e. no attempted
-    recovery & control flow, unless we ever expect these to trigger.
-    [4]
-
-There have been different rules floating around that were never properly
-documented. Let's try to clarify.
-
-[1] https://lkml.kernel.org/r/CAHk-=wiEAH+ojSpAgx_Ep=NKPWHU8AdO3V56BXcCsU97oYJ1EA@mail.gmail.com
-[2] https://lore.kernel.org/r/CAHk-=wg40EAZofO16Eviaj7mfqDhZ2gVEbvfsMf6gYzspRjYvw@mail.gmail.com
-[3] https://lore.kernel.org/r/CAHk-=wgF7K2gSSpy=m_=K3Nov4zaceUX9puQf1TjkTJLA2XC_g@mail.gmail.com
+[1] https://lore.kernel.org/r/CAHk-=wg40EAZofO16Eviaj7mfqDhZ2gVEbvfsMf6gYzspRjYvw@mail.gmail.com
 
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- Documentation/process/coding-style.rst | 27 ++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ scripts/checkpatch.pl | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/process/coding-style.rst b/Documentation/process/coding-style.rst
-index 03eb53fd029a..a6d81ff578fe 100644
---- a/Documentation/process/coding-style.rst
-+++ b/Documentation/process/coding-style.rst
-@@ -1186,6 +1186,33 @@ expression used.  For instance:
- 	#endif /* CONFIG_SOMETHING */
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 79e759aac543..4c18acf17032 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -4695,12 +4695,12 @@ sub process {
+ 			}
+ 		}
  
+-# avoid BUG() or BUG_ON()
+-		if ($line =~ /\b(?:BUG|BUG_ON)\b/) {
++# do not use BUG(), BUG_ON(), VM_BUG_ON() and friends.
++		if ($line =~ /\b(?:BUG|BUG_ON|VM_BUG_ON|VM_BUG_ON_[A-Z]+)\b/) {
+ 			my $msg_level = \&WARN;
+ 			$msg_level = \&CHK if ($file);
+ 			&{$msg_level}("AVOID_BUG",
+-				      "Avoid crashing the kernel - try using WARN_ON & recovery code rather than BUG() or BUG_ON()\n" . $herecurr);
++				      "Do not crash the kernel unless it is unavoidable - use WARN_ON_ONCE & recovery code (if reasonable) rather than BUG(), BUG_ON(), VM_BUG_ON(), ...\n" . $herecurr);
+ 		}
  
-+22) Do not crash the kernel
-+---------------------------
-+
-+Do not add new code that uses BUG(), BUG_ON(), VM_BUG_ON(), ... to crash
-+the kernel if certain conditions are not met. Instead, use WARN_ON_ONCE()
-+with recovery code (if reasonable) instead. Unavoidable data corruption /
-+security issues might be a very rare exception to this rule and need good
-+justification.
-+
-+There is no need for WARN_ON_ONCE() recovery code if we never expect it to
-+possibly trigger unless something goes seriously wrong or some other code
-+is changed to break invariants. Note that VM_WARN_ON_ONCE() cannot be used
-+in conditionals.
-+
-+Usage of WARN() and friends is fine for something that is not expected to
-+be triggered easily. ``panic_on_warn`` users are not an excuse to not use
-+WARN(): whoever enables ``panic_on_warn`` explicitly asked the kernel to
-+crash in this case.
-+
-+However, WARN() and friends should not be used for something that is
-+expected to trigger easily, for example, by user space. pr_warn_once()
-+might be a reasonable replacement to notify the user.
-+
-+Note that BUILD_BUG_ON() is perfectly fine because it will make compilation
-+fail instead of crashing the kernel.
-+
-+
- Appendix I) References
- ----------------------
- 
+ # avoid LINUX_VERSION_CODE
 -- 
 2.37.1
 
