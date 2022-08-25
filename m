@@ -4,65 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BA32EC28D13
-	for <kexec@archiver.kernel.org>; Thu, 25 Aug 2022 07:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2559EC28D13
+	for <kexec@archiver.kernel.org>; Thu, 25 Aug 2022 09:59:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Subject:From:References:Cc:
+	To:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=sTdgKdTxpB4+Zt7t477VcKELWnVZnIRHxW9ThLdD1is=; b=wy+E/qS4UoD46k
-	IRpdxNB9H5nriqfHJmMAF/o9lM+4oARKGrpqZxJf2Xg4I1Dcjnvogv8CRhYQ5r8/WJmQSGdr4vQSs
-	JPaoGdFemVPjzEIigHCq8axpgYJo1xua1CFjfarIj1Yn3xGXjyUWG+TKbC/1CQNdChHhmf1Ww68G5
-	+1jF5Tz/eknmDdCdLac9+JcWOxore4EN4G272R8l7lvyhpvTXVkgqRQ2jYIaQ0KqhS1hLzKXGFXaR
-	XFRFiro2eZAWTM3V8KlOnYvU2+xnz0FqKtkyhBcRn0SwmkypF4gMY1F2iTnIjsLGSHAeAmE02vZ5J
-	eYfYYnkdhUbLWOHz91/Q==;
+	List-Owner; bh=wwHweV937GjKux082MASOrplQMDWlynKq26xTp7isVU=; b=HD5ylJT/4POtwU
+	kTerpuLr3lgjSN0GFu/WZJNwdL+28dsdFM4qDwVba9xZckP9ykUVOto74l9FrL7zpktsXGR4s3XhM
+	k1Rzu6lnMzc5VKRc1aMgHAM8F5eTJl7W0d3e9z+8KGp9JP6B2ZoaDeBr9Q1SdRGPBzrkHIEdkdnT1
+	gzBRJuLV55DHzdT3kvQAgIBQUbnILkUUFCau9rNpllPOofFI+DulqauOy2zgHpv8biESPWunCY4CT
+	32/zWenAl/9/kxE6ooiGfHMfjEJWe3UdXwLJaU0MXRjPYc2DQ7u6JXkF5sKU4oXzlVxR8imvC1YBK
+	+mjbirl1ORUOtJqbxsyA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oR7bd-009d7W-77; Thu, 25 Aug 2022 07:48:49 +0000
-Received: from ams.source.kernel.org ([145.40.68.75])
+	id 1oR9dd-00Bcot-6m; Thu, 25 Aug 2022 09:59:01 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oR7bZ-009d0d-L0; Thu, 25 Aug 2022 07:48:47 +0000
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ams.source.kernel.org (Postfix) with ESMTPS id 38A45B826BF;
-	Thu, 25 Aug 2022 07:48:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FB93C433D7;
-	Thu, 25 Aug 2022 07:48:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1661413719;
-	bh=dQKKQ6rhEloN80vnbe6U+fegbAvUdopbeJMAvtIxeJs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HfTOxogQpjcTXyROKDnxZKor+jiOMfeJ+0KNfJwxtE3mgA0Xmwl+LnH+mBtCHpG69
-	 aHlFw5k+hSqJ7HSRxVX8hY3Uas7I4miAePUMWXRUHRhycnej5Zlr5iytNWZIKmbZJq
-	 OtrJhVALfvEfkefQwiUP8TGEKUWJ2tZlQthU0dsxmnxjyi7q/uFF1P1rT0jYZ6AAsx
-	 pcDJFM3Y5G9vyU4YChRDMBGPZOk1c42KFzw8XFec3PY0XiETXK078KXrWcV21LOrbh
-	 MoEXRYIQOsKJUeEcqFPacnMQo+L94HDVrm3L9ecAH/6HT3N0zEyJGojIqlCE8bf0Ca
-	 e/6RTdOYHV/0A==
-Date: Thu, 25 Aug 2022 10:48:21 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Baoquan He <bhe@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org, Ard Biesheuvel <ardb@kernel.org>,
-	kexec@lists.infradead.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Guanghui Feng <guanghuifeng@linux.alibaba.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mike Rapoport <rppt@linux.ibm.com>, Will Deacon <will@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	Mike Rapoport <mike.rapoport@gmail.com>
-Subject: Re: [PATCH 0/5] arm64/mm: remap crash kernel with base pages even if
- rodata_full disabled
-Message-ID: <YwcpRQvNErbTq1XB@kernel.org>
-References: <20220819041156.873873-1-rppt@kernel.org>
- <YwcmKAink5XvoaTe@MiWiFi-R3L-srv>
+	id 1oR9dY-00Bcgc-T5
+	for kexec@lists.infradead.org; Thu, 25 Aug 2022 09:59:00 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1661421532;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sXEuh/C7EhMT4N5IVCTMgJSlHVPtxpuWjvzgdztQOwA=;
+	b=FyYafbFkTwL/yGrlVFUCKT4YjfwfnI7ZlkozTJ2e2AFuQQ9kdkSEIcovrum9Rq4hthtpiJ
+	dDWKpP0h9SlzziymOCHgTfyAZHgQJzPquw55v/oaYuhXHa+0NP+WJErOOIWkI9eDQF/y5V
+	+I4kDsOmkwpyKuPhNfX65drDz3NJnKo=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-125-AjyfCUtrPxq_kq02qxNoaA-1; Thu, 25 Aug 2022 05:58:51 -0400
+X-MC-Unique: AjyfCUtrPxq_kq02qxNoaA-1
+Received: by mail-wr1-f69.google.com with SMTP id l25-20020adfa399000000b002252058bad2so3282864wrb.11
+        for <kexec@lists.infradead.org>; Thu, 25 Aug 2022 02:58:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:subject:organization:from
+         :references:cc:to:content-language:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc;
+        bh=sXEuh/C7EhMT4N5IVCTMgJSlHVPtxpuWjvzgdztQOwA=;
+        b=QK+w6egPWbjmLMkGvcu4JFieHgoubFkaYeH49g2aZLCBzWkvMLGlOe1zlAR1PZDY9d
+         R6/Epw4DFRrdbRXKdARH5h+lfQY7qW4Qs38+DKUfwV2mlGri7xT1Cij7S0iGKPBVsARW
+         dLRnPKPHxNeL+ktbj3A9z4DDM/NjjgXLDx7jQ6LFJTF+4tQh40VHdx2guq1+29M656ss
+         5JJ6MVoOPeq5jeckg6gRONEE6n8xFiWwXiBzH0JtxECdDZ/sZ1ZDgvWzd5ZNhu0+2S2y
+         vzwSYFlbhCqqNJ6tSAs2QWsCmaTl9TblQ3clc3NZwe4+k0H0e05VAMGGLBArt+siVtxB
+         BuXw==
+X-Gm-Message-State: ACgBeo3sLiWNNxXg9UUIcA8ghwZC/RONkzKnHe4Fo6Hx4ivArWuYl0It
+	eSv5oIJgFPyJj4wc942e3rofSWeMiwsK/o+UQ85//QLBTnRam492KtoCrapKeBAzxSY1kucdMfS
+	1evXmVOMk3vQUSR5Rng3G
+X-Received: by 2002:adf:fe09:0:b0:225:6c9a:1925 with SMTP id n9-20020adffe09000000b002256c9a1925mr1689592wrr.546.1661421530148;
+        Thu, 25 Aug 2022 02:58:50 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR4zjV5/uX5zJoDDQGvyv88ADNp860yGdsGm+iTCH+1DVQ3YBmb2/7qZdaBeUnu1fynPZfG7sQ==
+X-Received: by 2002:adf:fe09:0:b0:225:6c9a:1925 with SMTP id n9-20020adffe09000000b002256c9a1925mr1689579wrr.546.1661421529892;
+        Thu, 25 Aug 2022 02:58:49 -0700 (PDT)
+Received: from ?IPV6:2a09:80c0:192:0:20af:34be:985b:b6c8? ([2a09:80c0:192:0:20af:34be:985b:b6c8])
+        by smtp.gmail.com with ESMTPSA id e20-20020a5d5954000000b0021e42e7c7dbsm19557923wri.83.2022.08.25.02.58.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Aug 2022 02:58:49 -0700 (PDT)
+Message-ID: <b1103c81-0c56-0e9b-711c-246e431db151@redhat.com>
+Date: Thu, 25 Aug 2022 11:58:48 +0200
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <YwcmKAink5XvoaTe@MiWiFi-R3L-srv>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+To: Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, kexec@lists.infradead.org,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>,
+ David Laight <David.Laight@ACULAB.COM>, Jonathan Corbet <corbet@lwn.net>,
+ Andy Whitcroft <apw@canonical.com>, Dwaipayan Ray <dwaipayanray1@gmail.com>,
+ Lukas Bulwahn <lukas.bulwahn@gmail.com>, Baoquan He <bhe@redhat.com>,
+ Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>
+References: <20220824163100.224449-1-david@redhat.com>
+ <20220824163100.224449-3-david@redhat.com>
+ <3c250aa26020b2f336fd575a58d06ba26faf1f14.camel@perches.com>
+From: David Hildenbrand <david@redhat.com>
+Organization: Red Hat
+Subject: Re: [PATCH RFC 2/2] checkpatch: warn on usage of VM_BUG_ON() and
+ friends
+In-Reply-To: <3c250aa26020b2f336fd575a58d06ba26faf1f14.camel@perches.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220825_004846_034885_3FFFE4C6 
-X-CRM114-Status: GOOD (  32.40  )
+X-CRM114-CacheID: sfid-20220825_025857_064575_216C989E 
+X-CRM114-Status: GOOD (  16.33  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,76 +109,103 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Baoquan,
-
-On Thu, Aug 25, 2022 at 03:35:04PM +0800, Baoquan He wrote:
-> Add kexec list in CC
+On 24.08.22 18:52, Joe Perches wrote:
+> On Wed, 2022-08-24 at 18:31 +0200, David Hildenbrand wrote:
+>> checkpatch does not point out that VM_BUG_ON() and friends should be
+>> avoided, however, Linus notes:
+>>
+>>     VM_BUG_ON() has the exact same semantics as BUG_ON. It is literally
+>>     no different, the only difference is "we can make the code smaller
+>>     because these are less important". [1]
+>>
+>> So let's warn on VM_BUG_ON() and friends as well. While at it, make it
+>> clearer that the kernel really shouldn't be crashed.
+>>
+>> Note that there are some other *_BUG_ON flavors, but they are not all
+>> bad: for example, KVM_BUG_ON() only triggers a WARN_ON_ONCE and then
+>> flags KVM as being buggy, so we'll not care about them for now here.
+> []
+>> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> []
+>> @@ -4695,12 +4695,12 @@ sub process {
+>>  			}
+>>  		}
+>>  
+>> -# avoid BUG() or BUG_ON()
+>> -		if ($line =~ /\b(?:BUG|BUG_ON)\b/) {
+>> +# do not use BUG(), BUG_ON(), VM_BUG_ON() and friends.
+>> +		if ($line =~ /\b(?:BUG|BUG_ON|VM_BUG_ON|VM_BUG_ON_[A-Z]+)\b/) {
 > 
-> On 08/19/22 at 07:11am, Mike Rapoport wrote:
-> > From: Mike Rapoport <mike.rapoport@gmail.com>
-> > 
-> > Hi,
-> > 
-> > There were several rounds of discussion how to remap with base pages only
-> > the crash kernel area, the latest one here:
-> > 
-> > https://lore.kernel.org/all/1656777473-73887-1-git-send-email-guanghuifeng@linux.alibaba.com
-> > 
-> > and this is my attempt to allow having both large pages in the linear map
-> > and protection for the crash kernel memory.
-> > 
-> > For server systems it is important to protect crash kernel memory for
-> > post-mortem analysis, and for that protection to work the crash kernel
-> > memory should be mapped with base pages in the linear map. 
-> > 
-> > On the systems with ZONE_DMA/DMA32 enabled, crash kernel reservation
-> > happens after the linear map is created and the current code forces using
-> > base pages for the entire linear map, which results in performance
-> > degradation.
-> > 
-> > These patches enable remapping of the crash kernel area with base pages
-> > while keeping large pages in the rest of the linear map.
-> > 
-> > The idea is to align crash kernel reservation to PUD boundaries, remap that
-> > PUD and then free the extra memory.
+> Perhaps better as something like the below to pick up more variants
 > 
-> Hi Mike,
-> 
-> Thanks for the effort to work on this issue. While I have to say this
-> isnt's good because it can only be made relying on a prerequisite that
-> there's big enough memory. If on a system, say 2G memory, it's not easy
-> to succeed on getting one 1G memory. While we only require far smaller
-> region than 1G, e.g about 200M which should be easy to get. So the way
-> taken in this patchset is too quirky and will cause regression on
-> systemswith small memory. This kind of sytems with small memory exists
-> widely on virt guest instance.
 
-I don't agree there is a regression. If the PUD-aligned allocation fails,
-there is a fallback to the allocation of the exact size requested for crash
-kernel. This allocation just won't get protected.
+Trying to find more possible variants and exceptions
 
-Also please note, that the changes are only for the case when user didn't
-force base-size pages in the linear map, so anything that works now will
-work the same way with this set applied.
- 
-> The crashkernel reservation happens after linear map because the
-> reservation needs to know the dma zone boundary, arm64_dma_phys_limit.
-> If we can deduce that before bootmem_init(), the reservation can be
-> done before linear map. I will make an attempt on that. If still can't
-> be accepted, we would like to take off the crashkernel region protection
-> on arm64 for now.
+$ git grep -h -o -E "\b[a-zA-Z]+_BUG(_ON(_[a-zA-Z]+)*)?\(" | sort | uniq
+AA_BUG(
+-> Ok, no BUG()
+ASM_BUG(
+-> Bad
+BUILD_BUG(
+BUILD_BUG_ON(
+BUILD_BUG_ON_INVALID(
+BUILD_BUG_ON_MSG(
+BUILD_BUG_ON_ZERO(
+-> Ok
+CI_BUG_ON(
+-> Bad with CONFIG_DRM_I915_DEBUG
+DCCP_BUG(
+DCCP_BUG_ON(
+-> Ok, no BUG()
+do_BUG(
+-> BUG implementation, ok.
+GEM_BUG_ON(
+-> Bad with CONFIG_DRM_I915_DEBUG_GEM_ONCE
+GLOCK_BUG_ON(
+-> Bad
+handle_BUG(
+-> BUG implementation, ok.
+IDA_BUG_ON(
+KVM_BUG(
+KVM_BUG_ON(
+-> Ok, no BUG()
+lkdtm_BUG(
+paravirt_BUG(
+-> bad
+PROM_BUG(
+-> unused, will remove
+RWLOCK_BUG_ON(
+-> Ok, no BUG()
+snd_BUG(
+snd_BUG_ON(
+-> Ok, no BUG()
+SNIC_BUG_ON(
+-> Bad
+SPIN_BUG_ON(
+-> Ok, no BUG()
+UNWINDER_BUG(
+UNWINDER_BUG_ON(
+VIRTUAL_BUG_ON(
+VM_BUG_ON(
+VM_BUG_ON_FOLIO(
+VM_BUG_ON_MM(
+VM_BUG_ON_PAGE(
+VM_BUG_ON_PGFLAGS(
+VM_BUG_ON_VMA(
+XA_BUG_ON(
+-> Bad
 
-I doubt it would be easy because arm64_dma_phys_limit is determined after
-parsing of the device tree and there might be memory allocations of
-possibly unmapped memory during the parsing.
- 
-> Thanks
-> Baoquan
-> 
+So an extended versions of your proposal like (ignoring do_BUG and handle_BUG, people are smart enough to figure that out)
+
+if ($line =~ /\b(?!AA_|BUILD_|DCCP_|IDA_|KVM_|RWLOCK_|snd_|SPIN_)(?:[a-zA-Z_]*_)?BUG(?:_ON)?(?:_[A-Z_]+)?\s*\(/
+
+?
 
 -- 
-Sincerely yours,
-Mike.
+Thanks,
+
+David / dhildenb
+
 
 _______________________________________________
 kexec mailing list
