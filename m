@@ -4,100 +4,154 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 40EFEECAAA6
-	for <kexec@archiver.kernel.org>; Fri, 26 Aug 2022 17:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 51C4AECAAD7
+	for <kexec@archiver.kernel.org>; Fri, 26 Aug 2022 17:37:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Subject:From:References:Cc:
-	To:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=v+yV6aqDRbHFb+t6KAuJImO+zwLculOYSi+8PbOt7F0=; b=XRmAssIuKfwIDL
-	pVSKo4heo2u4epUYJQVjwp2ZVcLhyh1+u7tFfbOb0DSaKnLlx16W5tUKrUNpahuYFB+R7qOgkqtP4
-	apOhwfm8g7PraHIBYB/0LfS42dBQOuLkDMWAxFs+T6Fhw2huZB57vc6PoVF3gGmrCFUCpxeo7wxY0
-	dgQQ/LYbZOEWIe7MHdyAOeSIBwFnyNiWbuAoDWEx9zX0uQTNljlqPZuSJRZn3c0Z2B0oiAMgxcdna
-	dQUKKSC0uAoWuW93OcLxMcH1UDGlvy/LuiIVaUFa7kFFWC99pDc2ALHDILgdhjh5sIgcsQreI/OC6
-	UnV6g1CYawJ/8P+UJDmA==;
+	List-Owner; bh=4N5MqfIokeQTgOm6JeGksytdrGe+gG1XIY438xT3F64=; b=ZEhTqQAVsP+G7+
+	xi7V3DHPmesXy3jK4QJKq+bEQPPiEpL2KLqZlTc+jnzpf7jG8mqttoEllN9OKVXbrrGuAyFEIRHoP
+	XNAeDZQTVldJcRtHApOMrYnhU+y/W8Q0ivRfONg0zRImUSh+jxu80SyFXRfVtotVwFRVBRuUQO7k8
+	gKz/b9G2oyheBBsKnk93dHOh/Rqiw2MTgLzIkrYgld2IaFQAE5EqGNxo/lrwjVWScc4hj5JBLEgkC
+	0vpkUwmUOMUXYG9Hvyt16IzSugWFtjxD9/1tlou+E5G6g3TQgs809rPrC4LYpMCv3A3R3gQnYek0R
+	sLfIJDdeyn/Y3jflOARA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oRcin-008nZc-LG; Fri, 26 Aug 2022 17:02:17 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1oRdH8-009CWF-7M; Fri, 26 Aug 2022 17:37:46 +0000
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oRcil-008nXM-1d
-	for kexec@lists.infradead.org; Fri, 26 Aug 2022 17:02:16 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1661533333;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jD7hXmOLkBQH1CWMlWymLxkZmC0QqnhEG6nyPcsh0A4=;
-	b=bypObj559IH4z7MrGVS3Qv9JSBQy7ch8+Qpc3MLUJFbeDuM9hMTUm8fK5xiux2AtqOq3SE
-	poSeqmra5L+F6NXGoeEozNbRJth+T1Ff9WLASHl4KSbEMPPTFz8q448Nz/X+T23pu6yF3D
-	ccIEbPZwMAYqkHJLrF1rNic5vv2IIZQ=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-320-ynmldYMROgGyB4mZGCEmGg-1; Fri, 26 Aug 2022 13:02:09 -0400
-X-MC-Unique: ynmldYMROgGyB4mZGCEmGg-1
-Received: by mail-wm1-f72.google.com with SMTP id b4-20020a05600c4e0400b003a5a96f1756so4346031wmq.0
-        for <kexec@lists.infradead.org>; Fri, 26 Aug 2022 10:02:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:subject:organization:from
-         :references:cc:to:content-language:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc;
-        bh=jD7hXmOLkBQH1CWMlWymLxkZmC0QqnhEG6nyPcsh0A4=;
-        b=YL+49fhovnhmiIhigu4gxYODxAKo8i0h2BQ+J3/HmRM05lsWBTdD+4UFiYlsGFK5Bz
-         W0+R00tNapqVOxmNMPH/7g500+7UNf6WE6muenHVW/irBTtYwG4mHWxVaxfF/etCs2o+
-         YZw7oXvWbkIJEKDG2CZRQM1xqc5WJYRzn70hUj42ZmYTTmkursvXbVkTkbHOqQWaBQt9
-         gpnLAUEjToynrA7glM5tLieG9/kQzMbufB4R0lBmDijdNDzoi34xzI2WykV+NLvCLDEh
-         9stgNELdtDwKriv0QgS+yMXvsLfTMeKtLWn5eufPkwuLgTfXIM+m4AlvifO79zcPsMVJ
-         hnyA==
-X-Gm-Message-State: ACgBeo0e87kOLHNgVUls8SkDtyxPWhJiSRwu5Fxr5z3MhiAZueYTV8gT
-	QL09xd1rMUk4OQZP75x9cWRTWUzXHhG4lpIgpMAMTq0enWWKovcGKDrC7ny/s5uQiTasnExnhMT
-	wnt9saT2+qNuEjByyAmJM
-X-Received: by 2002:a05:600c:8a7:b0:3a6:85b1:2275 with SMTP id l39-20020a05600c08a700b003a685b12275mr360785wmp.30.1661533328599;
-        Fri, 26 Aug 2022 10:02:08 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR4qNFSQdWdKklLyf6JGMNF43WaQ/tj38zI60Lf4fb7qD47lrMKlJqT7hUbr1HvAPU4X99wkqw==
-X-Received: by 2002:a05:600c:8a7:b0:3a6:85b1:2275 with SMTP id l39-20020a05600c08a700b003a685b12275mr360750wmp.30.1661533328294;
-        Fri, 26 Aug 2022 10:02:08 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c708:f600:abad:360:c840:33fa? (p200300cbc708f600abad0360c84033fa.dip0.t-ipconnect.de. [2003:cb:c708:f600:abad:360:c840:33fa])
-        by smtp.gmail.com with ESMTPSA id l3-20020a1ced03000000b003a32251c3f9sm277131wmh.5.2022.08.26.10.02.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Aug 2022 10:02:07 -0700 (PDT)
-Message-ID: <fe7aee66-d9f7-e472-a13f-e4c5aa176cca@redhat.com>
-Date: Fri, 26 Aug 2022 19:02:06 +0200
+	id 1oRdH1-009CQR-QI
+	for kexec@lists.infradead.org; Fri, 26 Aug 2022 17:37:42 +0000
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 27QGkWLB026688;
+	Fri, 26 Aug 2022 17:37:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references :
+ content-transfer-encoding : content-type : mime-version; s=corp-2022-7-12;
+ bh=SSI02Kvjz2DuO1lgXWrrogCUjF8aRiFXD+Uo5LMbfUs=;
+ b=Kh79aQQ9181bPPV9rnnvYbvKTkDnDjQcBMn0e87uJSG9xIzE+AG8eRn5xPiPe0zRBU/w
+ v38N1DeSMfr1o89QWox5CYVovO5iKomKWHQc2cAgoakRVYbd1ly0M3W+AkkF34lmK/hM
+ l8TfMmAXl4nQCDLjjXYHRf68qfGBOGqcodli5gdwfCCrw51AImv1fcv9u1qBf47xpQFp
+ KLzC58H+MqJgRPlgLvyavmdZyb/D2lw9GlibNy24Ux23Xgk4yQRIM4vzEB8UNMjAqPaI
+ P5IBF/FX9RnMlkLmdlsVSxJzejQANAPMwa5mInQ3lRP7vtYDODK39L2nERkcLnmZniZH aw== 
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3j5aww7p2h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 26 Aug 2022 17:37:17 +0000
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 27QGTqlj029855;
+	Fri, 26 Aug 2022 17:37:16 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2169.outbound.protection.outlook.com [104.47.58.169])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3j5n5r401b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 26 Aug 2022 17:37:16 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iYDeXKV7ZMO6vDRJNo8EeBINBiajWE3bzcpxX5wU9VCPM0r7f3zikHB24b3Ykdz8m2MfayCRldzsLCK2D0Oxj/X2iJ2Rp9X0v4rb7CJJ/mX73GyQPFU6zbf0SrCwiA9NXraAynfjTFagc50/JKZQpJ3D0MISXCWiPeh6ls8Zj3jU2UPn15jtELuVO7c/wq1oZcuIm3gXWOkFOKc7L+V148npjVIyCLeLB53jl5e4U3B+j7ybhmEmCdC8eVTBtGcXrNQGJlYt0ZR2lLy3eUKGb6Jirtio4bM4S7vO7TMXIXX/9obBoanJAKzWwCyoy5hakR4a6GmInuudWdM5AUhgwg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SSI02Kvjz2DuO1lgXWrrogCUjF8aRiFXD+Uo5LMbfUs=;
+ b=eWfO24DphHbpZPjlQj6YSUAY8FBZF/K7szKP6dquzbCiGaiGTehG1/AO8rBBFUx6LkFjp1o4oRkbebJPZoy5oSZ402GgIU/p7oIMy6NAFfBQiqhzbQiKiEoZF5gKVSg6EqhdU5mnIL7GieSIeuHFYFv/cF+G3rhAYmz7LP8MoSTcIa3wXAxkERRudYs+GPHyajFAYYhgG0ycwe5TRY6u4cxfthYW5SZ81BeLIGIvnp8nFZX8aR39JdPGVq8ykxU+Bd2FFzMsJgbMNcB8ra83v+AuF9mLBII9M8l5wYjOEEcPBAR31MUs1k/qaNh2XksAL+OQ1pohhuZuricnqzBBGQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SSI02Kvjz2DuO1lgXWrrogCUjF8aRiFXD+Uo5LMbfUs=;
+ b=OhqOeZeFNLuOmVXi2vRUb+OXgmKsLZz2lytwZ2JK7D5zjpoCp2JZco2ak/MjhKUvlV5l+vU9sIAzpQwzHPUIJvtECFXmnefQV8P/eUwXPfp2A38MYThwzJPBoOIld/hSfHp+ltsNTiRtpqvzXiYcsPu14o1N/rYHc0cHhmDya/Y=
+Received: from CO1PR10MB4531.namprd10.prod.outlook.com (2603:10b6:303:6c::22)
+ by DM4PR10MB6231.namprd10.prod.outlook.com (2603:10b6:8:8e::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5546.22; Fri, 26 Aug
+ 2022 17:37:14 +0000
+Received: from CO1PR10MB4531.namprd10.prod.outlook.com
+ ([fe80::4d5c:c5e9:7d20:43c2]) by CO1PR10MB4531.namprd10.prod.outlook.com
+ ([fe80::4d5c:c5e9:7d20:43c2%9]) with mapi id 15.20.5566.016; Fri, 26 Aug 2022
+ 17:37:14 +0000
+From: Eric DeVolder <eric.devolder@oracle.com>
+To: linux-kernel@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org,
+        ebiederm@xmission.com, dyoung@redhat.com, bhe@redhat.com,
+        vgoyal@redhat.com
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, hpa@zytor.com, nramas@linux.microsoft.com,
+        thomas.lendacky@amd.com, robh@kernel.org, efault@gmx.de,
+        rppt@kernel.org, david@redhat.com, sourabhjain@linux.ibm.com,
+        konrad.wilk@oracle.com, boris.ostrovsky@oracle.com,
+        eric.devolder@oracle.com
+Subject: [PATCH v11 2/7] crash: prototype change for crash_prepare_elf64_headers
+Date: Fri, 26 Aug 2022 13:36:59 -0400
+Message-Id: <20220826173704.1895-3-eric.devolder@oracle.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20220826173704.1895-1-eric.devolder@oracle.com>
+References: <20220826173704.1895-1-eric.devolder@oracle.com>
+X-ClientProxiedBy: BY5PR20CA0008.namprd20.prod.outlook.com
+ (2603:10b6:a03:1f4::21) To CO1PR10MB4531.namprd10.prod.outlook.com
+ (2603:10b6:303:6c::22)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-To: Dave Young <dyoung@redhat.com>
-Cc: John Hubbard <jhubbard@nvidia.com>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-doc@vger.kernel.org, kexec@lists.infradead.org,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>,
- David Laight <David.Laight@aculab.com>, Jonathan Corbet <corbet@lwn.net>,
- Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
- Dwaipayan Ray <dwaipayanray1@gmail.com>,
- Lukas Bulwahn <lukas.bulwahn@gmail.com>, Baoquan He <bhe@redhat.com>,
- Vivek Goyal <vgoyal@redhat.com>, Stephen Johnston <sjohnsto@redhat.com>,
- Prarit Bhargava <prarit@redhat.com>
-References: <20220824163100.224449-1-david@redhat.com>
- <20220824163100.224449-2-david@redhat.com>
- <0db131cf-013e-6f0e-c90b-5c1e840d869c@nvidia.com>
- <ea380cf0-acda-aaba-fb63-2834da91b66b@redhat.com>
- <CALu+AoThhou7z+JCyv44AxGWDLDt2b7h0W6wcKRsJyLvSR1iQA@mail.gmail.com>
-From: David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-Subject: Re: [PATCH RFC 1/2] coding-style.rst: document BUG() and WARN() rules
- ("do not crash the kernel")
-In-Reply-To: <CALu+AoThhou7z+JCyv44AxGWDLDt2b7h0W6wcKRsJyLvSR1iQA@mail.gmail.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 21c2d612-e870-492e-74bc-08da87899cde
+X-MS-TrafficTypeDiagnostic: DM4PR10MB6231:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 	R5T89YZPZOq6LDhTritJe7WHU/3D8HbskqrtOrbQDgEhtK7mmpZP4vq4goEcVFq0MKimgZfdFrIalqextYl0A/g0XZGAS6AZGqatp0dwYg+z8n2YwN93SNOUtfzuZgZ8efGO5dc0OODN/SdItyyMYYlFy4PWjTdeo106Tm0+NS6ore+0wB8unRP9d39gfkXkxKqXNIONYHm4khpJOgZS9hzf9HErpfQO+d5xhb8Vs1JaRFJnHK+bnFIbGICdcsdLlBAmVWHT62CVHq65d8aUNLMRJ3jDyux2NCnHwsxTqRK8AcI94zAvGL+P8e48tWawc3p808GBm0NC/+WFgURdtYdxfa4gDJ7OxI8nD9/ql1TFYcrh8WYjspH6tAF9dwwW2iXhkjhIKY28Dqmop7pFN/xe77Qvq6HMYvdGo381WxRjzAmPo6FKShEVkN6t2RHgePethaM02aRdP0IzaOHtJfK629tAiSL0cgJT/JLS8DsH+tJrrmaYK4J9afAAqqlOwKv5VBYUguKzjTXL7tAUlotOaIfFYDsRjTmrTijxi1ayk/hxK/tJPlJnzQAjk5ncg7Hz8X6wiY/OUamP/KB/vA8Vvc+TlX57GOlwCDBw2Jcu1EgO5eKc8KYc/78DlB5wQm4gNBf62d5O5qD07/cehIJTszynD3L2UMnO+Y+VilgGA+5zMVI37djqkvQHCH7QcfigV/J74ai7Gw7SAR68bg==
+X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR10MB4531.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(136003)(366004)(39860400002)(376002)(396003)(346002)(36756003)(5660300002)(86362001)(66476007)(2616005)(6666004)(316002)(4326008)(66556008)(66946007)(8676002)(8936002)(83380400001)(7416002)(2906002)(478600001)(38100700002)(6486002)(26005)(41300700001)(6512007)(107886003)(186003)(6506007)(1076003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 	=?us-ascii?Q?R5khCiGiMoIzt5S8wLgnTKUOwKWV471WPRfVCjDRj/ksvcgEQVvYI4+/18XA?=
+ =?us-ascii?Q?N5g7L/YKk8Fb9h2MyRuz6l2FCqiOBsa9ELusL92UnCqFFi4VOI2ZkEMwFD7k?=
+ =?us-ascii?Q?7dl7A7r3JLp7zZxxVXVJ1TNCHwDk9CjmYJ82UyiUnZGtwLtsmIbKPoUjH4Wd?=
+ =?us-ascii?Q?qIgfN1hEaMS5G/p9Egj8M2tS4JeiiArUOQHAezD4NZg4To73uZGopqrnQNVE?=
+ =?us-ascii?Q?Rw3AGhZFH+HkrPNItQnkVTkRze1X+eRWJmtZHBcs60ILDbNX7ZCd9a5J/ipV?=
+ =?us-ascii?Q?taZQQfR5Pwb11IvqjpwSnINpDFaCpxC49T7Ng6xl7qaU7SZfxqqPjmaUvDSf?=
+ =?us-ascii?Q?xq2Z2VgObH4DV6PdgLnDbqCeF6zs2i+oUyVLzsYI35awzgTYUfg1vFrIWjwj?=
+ =?us-ascii?Q?mXyMrPdlU7YPk7Cixh3JKwTAO6/WXjvQ9e7hTk0T7rwgCXOg2eEM0qBgY5HD?=
+ =?us-ascii?Q?MpXEgcSVpVePwO7yY+1vepjtQhizShu7wuAjxVYZBKL9t7yrLRQ9zJJ5Uv+M?=
+ =?us-ascii?Q?6+pyA/hqtq6ub7T2vmnqQIb+oVA7Mssdtr4VEsPDtDYrTp99KKP1ng7Q1Qup?=
+ =?us-ascii?Q?rdUbb2ct74UWCEkY6XVv8YoSrhoDHcrAjk+UigHvcTbvcUmHoDCxnuD9Zo8t?=
+ =?us-ascii?Q?PiEL/c/rvgpxTy0OU4y0avB/64EHwI72I3E3R4a2kXl8ulC+d9H17QVrfKnZ?=
+ =?us-ascii?Q?BW+wbCiWQvfQuq1qMMYI57fBwNbEwe0z0055I44EhddEiwO1ZBCiUJG92DPl?=
+ =?us-ascii?Q?OtCO7zsEbtMiziWAIc9cBfOnPMhNqfu31DrBdIo/he6StThRTykF2NPss2ja?=
+ =?us-ascii?Q?d++fy2ZBel1DldyJ1+aEpLGJTfTLWmYTRiihWvEwbQj88U6e+xYSKfGzu3cv?=
+ =?us-ascii?Q?P3+sOPh1Tlqybunth1siI7QiNJI81DUYgQJI7wksVpiFUwuhU8b/X0ZUQqNQ?=
+ =?us-ascii?Q?XPA+Y0FxznHTa0XtgMxSn2gJwMZ4LeiVBizatx/461zhLbh7Jo3hvemJJSCk?=
+ =?us-ascii?Q?sCu4ADzqJLck26lrp3Tm6wpNafjULDHSmodspxlRPHPCnTF5AFFIUws69KL4?=
+ =?us-ascii?Q?8BBs2MbvOEw/rOW0oWWEs2b8joEK7QpWTkoHlp9JizOyzWtcYDrwXdkMtKq+?=
+ =?us-ascii?Q?TzbddZX9JUHsQ9ZY/IJLEHOUiHJhNJIxtbWJeI2mkmXW5nRHO4XnxwdF0ti+?=
+ =?us-ascii?Q?yg3MBPFHxh4/GEsQP0SsjQFWI+p+BKl8kKrHqHcgFfbqlQMJ78ChpIJPkk9g?=
+ =?us-ascii?Q?yNsWe7z/pSTJyBD1csgqADFY3D5oojNkUh4UlS8T5o6pZdrEvNr9JVRd0tL5?=
+ =?us-ascii?Q?Px0s16u5xE4QlyFiWouFauo0G3NcYGPF8R9SHc0orngc1alf2anScr9IXOwn?=
+ =?us-ascii?Q?2wlJ3ORyAcYySSp7zJ6TT4HX80DPND4DhxxZwWYR65BB0x+KSA+pbk/A8LVZ?=
+ =?us-ascii?Q?2F69D50b/WYrddFuKUb8V8xqyzmp0J/axLJAg7kKQQWHKoyauuz9frMkyx8F?=
+ =?us-ascii?Q?fbFkKbM+urqLnOz5+t2hg5ZroxQguD8oiVlJV1MuQQFtkvSQrfx7Tdwi5vVh?=
+ =?us-ascii?Q?w+gkFCH8LsKwEPfgy12o8XaIeExyCDixNj+BZMr4vemJ/7JeUAioSfUcvXfc?=
+ =?us-ascii?Q?qA=3D=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 21c2d612-e870-492e-74bc-08da87899cde
+X-MS-Exchange-CrossTenant-AuthSource: CO1PR10MB4531.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Aug 2022 17:37:14.0304
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: B6OkQBM3/J77g4ITjoVwRfpOlPSdXaiqZYAgJJ7L26t4+p8GQ9LPvRv9WMk0quwQnGGa1yRG3Tw0QY6Alpag7Fgw81q+lRQ6JL5A6p0bRHo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR10MB6231
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-08-26_10,2022-08-25_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ phishscore=0 adultscore=0 mlxscore=0 bulkscore=0 suspectscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2207270000 definitions=main-2208260070
+X-Proofpoint-GUID: QB6vjJea_W6vRM4IpRELhIr1yYt-MpHC
+X-Proofpoint-ORIG-GUID: QB6vjJea_W6vRM4IpRELhIr1yYt-MpHC
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220826_100215_225133_807E89C1 
-X-CRM114-Status: GOOD (  32.66  )
+X-CRM114-CacheID: sfid-20220826_103739_986399_92781DBF 
+X-CRM114-Status: GOOD (  18.67  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -114,88 +168,150 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 26.08.22 03:43, Dave Young wrote:
-> Hi David,
-> 
-> [Added more people in cc]
-> 
+From within crash_prepare_elf64_headers() there is a need to
+reference the struct kimage hotplug members. As such, this
+change passes the struct kimage as a parameter to the
+crash_prepare_elf64_headers(). The hotplug members are added
+in "crash: add generic infrastructure for crash hotplug support".
 
-Hi Dave,
+This is preparation for later patch, no functionality change.
 
-thanks for your input!
+Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+Acked-by: Baoquan He <bhe@redhat.com>
+Acked-by: David Hildenbrand <david@redhat.com>
+---
+ arch/arm64/kernel/machine_kexec_file.c | 6 +++---
+ arch/powerpc/kexec/file_load_64.c      | 2 +-
+ arch/riscv/kernel/elf_kexec.c          | 7 ++++---
+ arch/x86/kernel/crash.c                | 2 +-
+ include/linux/kexec.h                  | 7 +++++--
+ kernel/crash_core.c                    | 4 ++--
+ 6 files changed, 16 insertions(+), 12 deletions(-)
 
-[...]
-
->> Side note: especially with kdump() I feel like we might see much more
->> widespread use of panic_on_warn to be able to actually extract debug
->> information in a controlled manner -- for example on enterprise distros.
->> ... which would then make these systems more likely to crash, because
->> there is no way to distinguish a rather harmless warning from a severe
->> warning :/ . But let's see if some kdump() folks will share their
->> opinion as reply to the cover letter.
-> 
-> I can understand the intention of this patch, and I totally agree that
-> BUG() should be used carefully, this is a good proposal if we can
-> clearly define the standard about when to use BUG().  But I do have
-
-Essentially, the general rule from Linus is "absolutely no new BUG_ON()
-calls ever" -- but I think the consensus in that thread was that there
-are corner cases when it comes to unavoidable data corruption/security
-issues. And these are rare cases, not the usual case where we'd have
-used BUG_ON()/VM_BUG_ON().
-
-> some worries,  I think this standard is different for different sub
-> components, it is not clear to me at least,  so this may introduce an
-> unstable running kernel and cause troubles (eg. data corruption) with
-> a WARN instead of a BUG. Probably it would be better to say "Do not
-> WARN lightly, and do not hesitate to use BUG if it is really needed"?
-
-
-Well, I don't make the rules, I document them and share them for general
-awareness/comments :) Documenting this is valuable, because there seem
-to be quite some different opinions floating around in the community --
-and I've been learning different rules from different people over the years.
-
-> 
-> About "patch_on_warn", it will depend on the admin/end user to set it,
-> it is not a good idea for distribution to set it. It seems we are
-> leaving it to end users to take the risk of a kernel panic even with
-> all kernel WARN even if it is sometimes not necessary.
-
-My question would be what we could add/improve to keep systems with
-kdump armed running as expected for end users, that is most probably:
-
-1) don't crash on harmless WARN() that can just be reported and the
-   machine will continue running mostly fine without real issues.
-2) crash on severe issues (previously BUG) such that we can properly
-   capture a system dump via kdump. The restart the machine.
-
-Of course, once one would run into 2), one could try reproducing with
-"panic_on_warn" to get a reasonable system dump. But I guess that's not
-what enterprise customers expect.
-
-
-One wild idea (in the cover letter) was to add something new that can be
-configured by user space and that expresses that something is more
-severe than just some warning that can be recovered easily. But it can
-eventually be recovered to keep the system running to some degree. But
-still, it's configurable if we want to trigger a panic or let the system
-run.
-
-John mentioned PANIC_ON().
-
-
-What would be your expectation for kdump users under which conditions we
-want to trigger kdump and when not?
-
-Regarding panic_on_warn, how often do e.g., RHEL users observe warnings
-that we're not able to catch during testing, such that "panic_on_warn"
-would be a real no-go?
-
+diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+index 889951291cc0..7f5f8243928e 100644
+--- a/arch/arm64/kernel/machine_kexec_file.c
++++ b/arch/arm64/kernel/machine_kexec_file.c
+@@ -39,7 +39,7 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
+ 	return kexec_image_post_load_cleanup_default(image);
+ }
+ 
+-static int prepare_elf_headers(void **addr, unsigned long *sz)
++static int prepare_elf_headers(struct kimage *image, void **addr, unsigned long *sz)
+ {
+ 	struct crash_mem *cmem;
+ 	unsigned int nr_ranges;
+@@ -64,7 +64,7 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
+ 	}
+ 
+ 	/* Exclude crashkernel region */
+-	ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
++	ret = crash_exclude_mem_range(image, cmem, crashk_res.start, crashk_res.end);
+ 	if (ret)
+ 		goto out;
+ 
+@@ -74,7 +74,7 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
+ 			goto out;
+ 	}
+ 
+-	ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
++	ret = crash_prepare_elf64_headers(image, cmem, true, addr, sz);
+ 
+ out:
+ 	kfree(cmem);
+diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
+index 349a781cea0b..a0af9966a8f0 100644
+--- a/arch/powerpc/kexec/file_load_64.c
++++ b/arch/powerpc/kexec/file_load_64.c
+@@ -798,7 +798,7 @@ static int load_elfcorehdr_segment(struct kimage *image, struct kexec_buf *kbuf)
+ 		goto out;
+ 
+ 	/* Setup elfcorehdr segment */
+-	ret = crash_prepare_elf64_headers(cmem, false, &headers, &headers_sz);
++	ret = crash_prepare_elf64_headers(image, cmem, false, &headers, &headers_sz);
+ 	if (ret) {
+ 		pr_err("Failed to prepare elf headers for the core\n");
+ 		goto out;
+diff --git a/arch/riscv/kernel/elf_kexec.c b/arch/riscv/kernel/elf_kexec.c
+index 0cb94992c15b..ffde73228108 100644
+--- a/arch/riscv/kernel/elf_kexec.c
++++ b/arch/riscv/kernel/elf_kexec.c
+@@ -118,7 +118,8 @@ static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
+ 	return 0;
+ }
+ 
+-static int prepare_elf_headers(void **addr, unsigned long *sz)
++static int prepare_elf_headers(struct kimage *image,
++	void **addr, unsigned long *sz)
+ {
+ 	struct crash_mem *cmem;
+ 	unsigned int nr_ranges;
+@@ -140,7 +141,7 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
+ 	/* Exclude crashkernel region */
+ 	ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
+ 	if (!ret)
+-		ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
++		ret = crash_prepare_elf64_headers(image, cmem, true, addr, sz);
+ 
+ out:
+ 	kfree(cmem);
+@@ -212,7 +213,7 @@ static void *elf_kexec_load(struct kimage *image, char *kernel_buf,
+ 
+ 	/* Add elfcorehdr */
+ 	if (image->type == KEXEC_TYPE_CRASH) {
+-		ret = prepare_elf_headers(&headers, &headers_sz);
++		ret = prepare_elf_headers(image, &headers, &headers_sz);
+ 		if (ret) {
+ 			pr_err("Preparing elf core header failed\n");
+ 			goto out;
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index 9730c88530fc..9ceb93c176a6 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -265,7 +265,7 @@ static int prepare_elf_headers(struct kimage *image, void **addr,
+ 		goto out;
+ 
+ 	/* By default prepare 64bit headers */
+-	ret =  crash_prepare_elf64_headers(cmem, IS_ENABLED(CONFIG_X86_64), addr, sz);
++	ret =  crash_prepare_elf64_headers(image, cmem, IS_ENABLED(CONFIG_X86_64), addr, sz);
+ 
+ out:
+ 	vfree(cmem);
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 13e6c4b58f07..4eefa631e0ae 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -253,8 +253,11 @@ struct crash_mem {
+ extern int crash_exclude_mem_range(struct crash_mem *mem,
+ 				   unsigned long long mstart,
+ 				   unsigned long long mend);
+-extern int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_map,
+-				       void **addr, unsigned long *sz);
++extern int crash_prepare_elf64_headers(struct kimage *image,
++				   struct crash_mem *mem,
++				   int need_kernel_map,
++				   void **addr,
++				   unsigned long *sz);
+ 
+ #ifndef arch_kexec_apply_relocations_add
+ /*
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 8c8c82386e8d..0f8aa659cca4 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -315,8 +315,8 @@ static int __init parse_crashkernel_dummy(char *arg)
+ }
+ early_param("crashkernel", parse_crashkernel_dummy);
+ 
+-int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_map,
+-			  void **addr, unsigned long *sz)
++int crash_prepare_elf64_headers(struct kimage *image, struct crash_mem *mem,
++			  int need_kernel_map, void **addr, unsigned long *sz)
+ {
+ 	Elf64_Ehdr *ehdr;
+ 	Elf64_Phdr *phdr;
 -- 
-Thanks,
-
-David / dhildenb
+2.31.1
 
 
 _______________________________________________
