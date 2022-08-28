@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8D893C0502E
-	for <kexec@archiver.kernel.org>; Sun, 28 Aug 2022 00:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2F331C0502E
+	for <kexec@archiver.kernel.org>; Sun, 28 Aug 2022 00:56:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=2wh73s//kWnfZ4Jt98UpEa4UidTB817pBHQ2NqUabtI=; b=S1QmECHFLUDgea
-	tIV0RZErlN0DmnB4KRy01vyNJZtImssyKXn7jgcRSRGKYR+On2/DUVGVa8gNowPeKKD0jwqvo6Tj1
-	cySGWi+UncCJDLdtSJkC5fKWbv3PUbnbH6VuSGzNFmfByaLV3T7OhKkcnQqavBga9yfyS+wWd+y16
-	Jc3UzB1sbiEtRaTWuO5Jbqn55KwnG3IbKm99aSmSm3wfTSS28+UQFr8C7gkGqlLrP2Fb3f81urCL1
-	7K5MXJpPuc7rTPcPm//K/5VojetFPJjslWmeMzBRgcHkF2IjY11kWcL73Nzthv8MrDUzHXPhGxWtS
-	PGCT1ZaYcXsul54bq6gQ==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=ziOvOKkHNHmT/zNU4jHg/LhU3Ei0ZLjNwdToNhzKOBE=; b=hC/X72zNJgjOX4
+	fi9fHDGgiz6E0jEohHVGxNtGbM6dxd/B1uIXEZPfmXORxoJQBaRTRr7nnSZmsN6IywdzgS6FX+oyz
+	llh/FIm6p+zJcLQpLntPGjkViuHSHid3Ufx4Qku7CiBiv+iF9shfOSEX/HhSn/w1W0p5dgd7ARIka
+	KsbjjLiJwVtIDWYL1NUM5D2QNj0W4quBSaIAFS7q8R3gw4YuWbAOyXfev80oRwAVAs8x7jslZzMVk
+	OrW9DpRgCH/fL49ujhJJOUqAT9612l5z+Rq3F8lCrdZTfuH+wBryAc3pNUM2A2qsr24praDnTwt/9
+	RC95qWNJNWO3+t7FDNIQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oS6b4-0073L0-NZ; Sun, 28 Aug 2022 00:56:18 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1oS6bV-00744A-H8; Sun, 28 Aug 2022 00:56:45 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oS6ap-00730I-AE
-	for kexec@lists.infradead.org; Sun, 28 Aug 2022 00:56:10 +0000
+	id 1oS6as-007383-4w
+	for kexec@lists.infradead.org; Sun, 28 Aug 2022 00:56:11 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1661648159;
+	s=mimecast20190719; t=1661648165;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=/aXd9q+Zc8DWwaDqektlrQ5X6iOwLmERxEPTmIKuNb8=;
-	b=HGKeiTRsUl0RlRFKgR124EBnnRWDNldrITt+mh1EQ5xwxnfCYkdFuXmK51+TpAmXgSTepC
-	NcyuB4nyD9HIPMrQGsoUtergspYfnXfuCf+MaB+vW8fIHXEe1EpYrrW9CAzL/rLwNM7ZDa
-	dO3GaV8LqC7vLXgWxhXi+poKI1eM9Ms=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rvB61AUUyCy58XPpSF7Tow+QnKoMMfrS9peNbMrYXNU=;
+	b=RigKhlLV3+IVVcOljiDUoR3nqg7ozWJjOef/HnnlUZu7xuMLP1AJNrSTQmLF44bnW71Zd5
+	Rk/noGd3xZBzbpC2mZb2ELQF0bO9WuxqhGsGr2LGH6BZCUEzAwJ47U0APiWzYZCVvmsZLc
+	b5yzonzc2EQW3osG6mSblExUOfw8piQ=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-425-kYNRH9X8Pau8Ncm8C5akcw-1; Sat, 27 Aug 2022 20:55:55 -0400
-X-MC-Unique: kYNRH9X8Pau8Ncm8C5akcw-1
+ us-mta-58-_BgS1K4mNWeHtQcoMRrjUw-1; Sat, 27 Aug 2022 20:56:02 -0400
+X-MC-Unique: _BgS1K4mNWeHtQcoMRrjUw-1
 Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C81A9800124;
-	Sun, 28 Aug 2022 00:55:54 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8CFEE801231;
+	Sun, 28 Aug 2022 00:56:01 +0000 (UTC)
 Received: from MiWiFi-R3L-srv.redhat.com (ovpn-12-25.pek2.redhat.com [10.72.12.25])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id EBDCF492C3B;
-	Sun, 28 Aug 2022 00:55:48 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 6F22A492C3B;
+	Sun, 28 Aug 2022 00:55:55 +0000 (UTC)
 From: Baoquan He <bhe@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org,
@@ -61,14 +62,16 @@ Cc: linux-arm-kernel@lists.infradead.org,
 	wangkefeng.wang@huawei.com,
 	kexec@lists.infradead.org,
 	Baoquan He <bhe@redhat.com>
-Subject: [PATCH 0/2] arm64, kdump: enforce to take 4G as the crashkernel low memory end
-Date: Sun, 28 Aug 2022 08:55:43 +0800
-Message-Id: <20220828005545.94389-1-bhe@redhat.com>
+Subject: [PATCH 1/2] arm64, kdump: enforce to take 4G as the crashkernel low memory end
+Date: Sun, 28 Aug 2022 08:55:44 +0800
+Message-Id: <20220828005545.94389-2-bhe@redhat.com>
+In-Reply-To: <20220828005545.94389-1-bhe@redhat.com>
+References: <20220828005545.94389-1-bhe@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 2.85 on 10.11.54.10
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220827_175603_604187_2F7D535A 
-X-CRM114-Status: GOOD (  17.88  )
+X-CRM114-CacheID: sfid-20220827_175606_336349_CF61D686 
+X-CRM114-Status: GOOD (  19.08  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -128,75 +131,124 @@ memory zone.
 2) CONFIG_ZONE_DMA or CONFIG_ZONE_DMA32 are enabled:
    limit = 4G  (generic case)
 
-Justification:
-==============
-In fact, kdump kernel doesn't need to cover all peripherals'
-addressing bits. Only device taken as dump target need be taken care of
-and its addressing bits need be satified. Currently, there are two kinds
-of dumping, dumped to local storage disk or dumped through network card to
-remove storage server. It means only storage disk or netowrk card taken
-as dump target need be consider if their addressing bits are satisfied.
-For saving memory, we usually generate kdump specific initramfs including
-necessary kernel modules for dump target devices. All other unnecessary
-kernel modules are excluded and their correspondent devices won't be
-initialized during kdump kernel bootup.
-
-So far, only Raspberry Pi 4 has some peripherals whcih can only address
-30 bits memory range as reported in [2]. Devices on all other arm64 systems
-can address 32bits memory range.
-
-So by enforcing to take 4G as the crashkernel low memory end, the only
-risk is if RPi4 owns storage disk or network card which can't address
-32bits memory range because they could be set as dump target. Even if
-RPi4 truly has storage devices or network card which can only address 30
-bits memory range, it should be a corner case. We can document it since
-crashkernel is more taken as a feature on server. Besides, RPi4 still can
-use crashkernel=xM@yM to sepcify a location for 32bits addressing if it
-really has that kind of storage device or network card and kdump is expected.
-
 [1]
 https://lore.kernel.org/all/YrIIJkhKWSuAqkCx@arm.com/T/#u
 
-[2]
-[PATCH v6 0/4] Raspberry Pi 4 DMA addressing support
-https://lore.kernel.org/linux-arm-kernel/20190911182546.17094-1-nsaenzjulienne@suse.de/T/
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+ arch/arm64/mm/init.c | 24 ++++++++++++++----------
+ arch/arm64/mm/mmu.c  | 38 ++++++++++++++++++++++----------------
+ 2 files changed, 36 insertions(+), 26 deletions(-)
 
-
-======
-Question to Nicolas:
-
-Hi Nicolas,
-
-In cover letter of [2] patchset, you told RPi4 has peripherals which
-can only address 30bits range. In below sentence, do you mean "the PCIe,
-V3D, GENET" can't address 32bit range, or they have wider view of
-address space the same as 40-bit DMA channels? I am confused about that.
-
-And the storage device or network card on RPi4 can address 32bit range
-or 32bit range, do we have document or do you happen to know that?
-
-"""
-The new Raspberry Pi 4 has up to 4GB of memory but most peripherals can
-only address the first GB: their DMA address range is
-0xc0000000-0xfc000000 which is aliased to the first GB of physical
-memory 0x00000000-0x3c000000. Note that only some peripherals have these
-limitations: the PCIe, V3D, GENET, and 40-bit DMA channels have a wider
-view of the address space by virtue of being hooked up trough a second
-interconnect.
-"""
-
-
-Baoquan He (2):
-  arm64, kdump: enforce to take 4G as the crashkernel low memory end
-  arm64: remove unneed defer_reserve_crashkernel() and crash_mem_map
-
- arch/arm64/include/asm/memory.h |  5 ----
- arch/arm64/mm/init.c            | 24 ++++++++-------
- arch/arm64/mm/mmu.c             | 53 ++++++++++++++-------------------
- 3 files changed, 36 insertions(+), 46 deletions(-)
-
-
-base-commit: 10d4879f9ef01cc6190fafe4257d06f375bab92c
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index b9af30be813e..8ae55afdd11c 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -90,10 +90,22 @@ phys_addr_t __ro_after_init arm64_dma_phys_limit;
+ phys_addr_t __ro_after_init arm64_dma_phys_limit = PHYS_MASK + 1;
+ #endif
+ 
++static phys_addr_t __init crash_addr_low_max(void)
++{
++	phys_addr_t low_mem_mask = U32_MAX;
++	phys_addr_t phys_start = memblock_start_of_DRAM();
++
++	if ((!IS_ENABLED(CONFIG_ZONE_DMA) && !IS_ENABLED(CONFIG_ZONE_DMA32)) ||
++	     (phys_start > U32_MAX))
++		low_mem_mask = PHYS_ADDR_MAX;
++
++	return min(low_mem_mask, memblock_end_of_DRAM() - 1) + 1;
++}
++
+ /* Current arm64 boot protocol requires 2MB alignment */
+ #define CRASH_ALIGN			SZ_2M
+ 
+-#define CRASH_ADDR_LOW_MAX		arm64_dma_phys_limit
++#define CRASH_ADDR_LOW_MAX		crash_addr_low_max()
+ #define CRASH_ADDR_HIGH_MAX		(PHYS_MASK + 1)
+ 
+ static int __init reserve_crashkernel_low(unsigned long long low_size)
+@@ -389,8 +401,7 @@ void __init arm64_memblock_init(void)
+ 
+ 	early_init_fdt_scan_reserved_mem();
+ 
+-	if (!defer_reserve_crashkernel())
+-		reserve_crashkernel();
++	reserve_crashkernel();
+ 
+ 	high_memory = __va(memblock_end_of_DRAM() - 1) + 1;
+ }
+@@ -434,13 +445,6 @@ void __init bootmem_init(void)
+ 	 */
+ 	dma_contiguous_reserve(arm64_dma_phys_limit);
+ 
+-	/*
+-	 * request_standard_resources() depends on crashkernel's memory being
+-	 * reserved, so do it here.
+-	 */
+-	if (defer_reserve_crashkernel())
+-		reserve_crashkernel();
+-
+ 	memblock_dump_all();
+ }
+ 
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index e7ad44585f40..cdd338fa2115 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -547,13 +547,12 @@ static void __init map_mem(pgd_t *pgdp)
+ 	memblock_mark_nomap(kernel_start, kernel_end - kernel_start);
+ 
+ #ifdef CONFIG_KEXEC_CORE
+-	if (crash_mem_map) {
+-		if (defer_reserve_crashkernel())
+-			flags |= NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
+-		else if (crashk_res.end)
+-			memblock_mark_nomap(crashk_res.start,
+-			    resource_size(&crashk_res));
+-	}
++	if (crashk_res.end)
++		memblock_mark_nomap(crashk_res.start,
++				    resource_size(&crashk_res));
++	if (crashk_low_res.end)
++		memblock_mark_nomap(crashk_low_res.start,
++				    resource_size(&crashk_low_res));
+ #endif
+ 
+ 	/* map all the memory banks */
+@@ -589,16 +588,23 @@ static void __init map_mem(pgd_t *pgdp)
+ 	 * through /sys/kernel/kexec_crash_size interface.
+ 	 */
+ #ifdef CONFIG_KEXEC_CORE
+-	if (crash_mem_map && !defer_reserve_crashkernel()) {
+-		if (crashk_res.end) {
+-			__map_memblock(pgdp, crashk_res.start,
+-				       crashk_res.end + 1,
+-				       PAGE_KERNEL,
+-				       NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS);
+-			memblock_clear_nomap(crashk_res.start,
+-					     resource_size(&crashk_res));
+-		}
++	if (crashk_res.end) {
++		__map_memblock(pgdp, crashk_res.start,
++			       crashk_res.end + 1,
++			       PAGE_KERNEL,
++			       NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS);
++		memblock_clear_nomap(crashk_res.start,
++				     resource_size(&crashk_res));
+ 	}
++	if (crashk_low_res.end) {
++		__map_memblock(pgdp, crashk_low_res.start,
++			       crashk_low_res.end + 1,
++			       PAGE_KERNEL,
++			       NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS);
++		memblock_clear_nomap(crashk_low_res.start,
++				     resource_size(&crashk_low_res));
++	}
++
+ #endif
+ }
+ 
 -- 
 2.34.1
 
