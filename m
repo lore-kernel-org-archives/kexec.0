@@ -4,154 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 31743ECAAD7
-	for <kexec@archiver.kernel.org>; Fri, 26 Aug 2022 17:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8D893C0502E
+	for <kexec@archiver.kernel.org>; Sun, 28 Aug 2022 00:56:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=fqVddyhzaZX5bfHHEAnCumKD10N5pWQKJXZecyEiLqA=; b=M6N/6gzwNaaiAC
-	uE3kPeh3uZf8Bpk2Nu99MU2HjCsUB4gORArFc6ltG0L8DBDHQRDq5Xd4XeoIOXmJg0r5tS+gTo7OO
-	GD8/h7jqbmmnZgCllvuyDyJKJ8SSBkxcT7FobKb9DZy7duNk1mPiE2veEaP/ygno6fgVppjsCC+g7
-	LRQG9wnOQ2ECXwlaI9KWkvA4qX3b5DuJ3TcEq+TnV9LtJOqkI8gYgQx0U/X78T8oPypYxV1OYWye6
-	pPIeJPDhbreM2Kj/SOyouoSVadZS1bEMouLZ30oWr1V1G7khotTILJAOuCpFVt+bVpBSkoP6G87du
-	W2WhfaomqM/VPIbw3pcw==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=2wh73s//kWnfZ4Jt98UpEa4UidTB817pBHQ2NqUabtI=; b=S1QmECHFLUDgea
+	tIV0RZErlN0DmnB4KRy01vyNJZtImssyKXn7jgcRSRGKYR+On2/DUVGVa8gNowPeKKD0jwqvo6Tj1
+	cySGWi+UncCJDLdtSJkC5fKWbv3PUbnbH6VuSGzNFmfByaLV3T7OhKkcnQqavBga9yfyS+wWd+y16
+	Jc3UzB1sbiEtRaTWuO5Jbqn55KwnG3IbKm99aSmSm3wfTSS28+UQFr8C7gkGqlLrP2Fb3f81urCL1
+	7K5MXJpPuc7rTPcPm//K/5VojetFPJjslWmeMzBRgcHkF2IjY11kWcL73Nzthv8MrDUzHXPhGxWtS
+	PGCT1ZaYcXsul54bq6gQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oRdIG-009Doh-Cy; Fri, 26 Aug 2022 17:38:56 +0000
-Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
+	id 1oS6b4-0073L0-NZ; Sun, 28 Aug 2022 00:56:18 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oRdID-009DlH-7e
-	for kexec@lists.infradead.org; Fri, 26 Aug 2022 17:38:54 +0000
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 27QGOg2F006811;
-	Fri, 26 Aug 2022 17:37:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references :
- content-transfer-encoding : content-type : mime-version; s=corp-2022-7-12;
- bh=hJR+z5+PKkE9yMIG0msVzK+xiEtugcpwR8U4VtuWpl8=;
- b=RPnush0iy690Sh+o7HpPpd/WyIrDu0z4Na8dWYguk1GnE/hpEXYE107yONk4RR++ecJj
- CQKf9uzT26symYxvWa7n2Wy8IyALNasyOlZfwWKBcsPIXSr7wwdiexTuaQXyWWRbytT8
- YJNeCV8DqlSKpNktNYSqAa5i9QB8298Y0D0Slx+U6eOs9hgWntQkr8uNcz0d2cV0r6L3
- daLhPWe3FIDqiL1/JcwJ+Mu/pzxQi1dPgU+j8ZqB1UAVJfyx7NzTZ6mtvk5lJUSmLxky
- bElJSHChinRCWpeZb3dk+U1YJNPWFqdLfYgWFIx9H+rj8NMIPdxgpKa7sxKHkJmd8bEy YQ== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3j4w2429es-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 26 Aug 2022 17:37:20 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 27QGtEYI018949;
-	Fri, 26 Aug 2022 17:37:19 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2168.outbound.protection.outlook.com [104.47.58.168])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3j5n59c82s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 26 Aug 2022 17:37:19 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fYVtApUxPV8jC6xa42AZCbLsRxBIgdF2i7WEgyt4kIg29qmlHVZDAulbamtirGmtJO4/V1UyJ543EE3zrGCwQ1JlpPydHQzkm7IRDgzSoHCp8gsI7v9yarTmieMVkhQIUndi6PqfBzk8uzYRnNpZkFcBON+mlgHhM1/ciiBOqGtFU9pa633PBay1WSj3HiqZmFND2iP+2UDggbrKuvKQ3H20ADIn/afrWtPHOZ4u8GQLqMAlZAnG0QwFUrw2vDFf+FZ/NAvASrJKwl/3IwJh29ZgmCve1BWiJ4CIzd/cREgR6Gk+DGuxr4/qchDSq8eAcPFLEOPNsPnTyY3SNDHH+Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hJR+z5+PKkE9yMIG0msVzK+xiEtugcpwR8U4VtuWpl8=;
- b=DQ7/ghAuSuHlGjIw1n7Uizxbi0q3RJaD7fRVcqJr+QR8Ql/LCbsP/kguGZ4KrWjs5yhQcNIkObXUZ+Twxg9mVipNYSKo+nsPqvWV0xPLjfyZfZGIY2EAKpUn1t4K1Oggzl7cyUCcqSyrc7RN/GwwVaLQA/JiieMeWXjngLdK6rjXMncbSx/pLnraivr683ngtVHml+fq9YE6BGKB9ZpKWE0swcwEg8zPGdyFdCP++tV1K7lUW49X4Iy6bBOLREW0BNZPL2FubUQuyvTGcRWTPHKQnGqqQSlbAsgj7Nj7Eiaq0QaiFHRlskYGRGYscYAEZLmRlLQjg+bBQdP8wZhc8A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hJR+z5+PKkE9yMIG0msVzK+xiEtugcpwR8U4VtuWpl8=;
- b=L3BNDh1gHYtYambee5QIdf5kzw+a6TQhzQUSrx/QQE41LueoDf1xPUGBVUgcJdroAVPSU1ddR8RYrQ6ILyy1Xf44LsI7vU0HpBFMt1xuYvmNuKWvimNj2+NEFkLoCNyWhyG1d5ZpfhOsjdRz7BnH7L047q3UtUtKno7Ne9vsxv0=
-Received: from CO1PR10MB4531.namprd10.prod.outlook.com (2603:10b6:303:6c::22)
- by DM4PR10MB6231.namprd10.prod.outlook.com (2603:10b6:8:8e::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5546.22; Fri, 26 Aug
- 2022 17:37:16 +0000
-Received: from CO1PR10MB4531.namprd10.prod.outlook.com
- ([fe80::4d5c:c5e9:7d20:43c2]) by CO1PR10MB4531.namprd10.prod.outlook.com
- ([fe80::4d5c:c5e9:7d20:43c2%9]) with mapi id 15.20.5566.016; Fri, 26 Aug 2022
- 17:37:16 +0000
-From: Eric DeVolder <eric.devolder@oracle.com>
-To: linux-kernel@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org,
-        ebiederm@xmission.com, dyoung@redhat.com, bhe@redhat.com,
-        vgoyal@redhat.com
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com, nramas@linux.microsoft.com,
-        thomas.lendacky@amd.com, robh@kernel.org, efault@gmx.de,
-        rppt@kernel.org, david@redhat.com, sourabhjain@linux.ibm.com,
-        konrad.wilk@oracle.com, boris.ostrovsky@oracle.com,
-        eric.devolder@oracle.com
-Subject: [PATCH v11 3/7] crash: add generic infrastructure for crash hotplug support
-Date: Fri, 26 Aug 2022 13:37:00 -0400
-Message-Id: <20220826173704.1895-4-eric.devolder@oracle.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20220826173704.1895-1-eric.devolder@oracle.com>
-References: <20220826173704.1895-1-eric.devolder@oracle.com>
-X-ClientProxiedBy: BY5PR20CA0019.namprd20.prod.outlook.com
- (2603:10b6:a03:1f4::32) To CO1PR10MB4531.namprd10.prod.outlook.com
- (2603:10b6:303:6c::22)
+	id 1oS6ap-00730I-AE
+	for kexec@lists.infradead.org; Sun, 28 Aug 2022 00:56:10 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1661648159;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=/aXd9q+Zc8DWwaDqektlrQ5X6iOwLmERxEPTmIKuNb8=;
+	b=HGKeiTRsUl0RlRFKgR124EBnnRWDNldrITt+mh1EQ5xwxnfCYkdFuXmK51+TpAmXgSTepC
+	NcyuB4nyD9HIPMrQGsoUtergspYfnXfuCf+MaB+vW8fIHXEe1EpYrrW9CAzL/rLwNM7ZDa
+	dO3GaV8LqC7vLXgWxhXi+poKI1eM9Ms=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-425-kYNRH9X8Pau8Ncm8C5akcw-1; Sat, 27 Aug 2022 20:55:55 -0400
+X-MC-Unique: kYNRH9X8Pau8Ncm8C5akcw-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C81A9800124;
+	Sun, 28 Aug 2022 00:55:54 +0000 (UTC)
+Received: from MiWiFi-R3L-srv.redhat.com (ovpn-12-25.pek2.redhat.com [10.72.12.25])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id EBDCF492C3B;
+	Sun, 28 Aug 2022 00:55:48 +0000 (UTC)
+From: Baoquan He <bhe@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org,
+	catalin.marinas@arm.com,
+	ardb@kernel.org,
+	rppt@kernel.org,
+	guanghuifeng@linux.alibaba.com,
+	mark.rutland@arm.com,
+	will@kernel.org,
+	linux-mm@kvack.org,
+	thunder.leizhen@huawei.com,
+	wangkefeng.wang@huawei.com,
+	kexec@lists.infradead.org,
+	Baoquan He <bhe@redhat.com>
+Subject: [PATCH 0/2] arm64, kdump: enforce to take 4G as the crashkernel low memory end
+Date: Sun, 28 Aug 2022 08:55:43 +0800
+Message-Id: <20220828005545.94389-1-bhe@redhat.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: fc904859-2f12-443f-acd1-08da87899e7f
-X-MS-TrafficTypeDiagnostic: DM4PR10MB6231:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 	efkzO5hUfHTqo8jH6HOoqswrrvrSUO3nBJqDzRrICDTqU7D6XK9oozRQYljjXInS3442+V11ojmEivafGrDX2XsJ4DMmMMgp+JfbscfOE5X6TmRQSvaR8x1LepiwlMDemXHvKzZi5b8EFwEoJbu+RSIEdKy+gW0IBmAepILgtTLRwvVyNxFpIuBg4If8TJKVtC0ZpGq8y8PK679V0YMLmwBWuVxpGIL9zOnBFYSQHWkpAuhXSSlJFjPL27jqLRfF8eI8K6vki+I4/XgZAzDZLy7BPEFWA7gUqiYaRyPl3/5WdeDVnbFQtTAiN4BEmmZvLFb+VtKxSCWpngQVQ4ZoKtOTRYl4IrmZWphcHEk+3VKJ45fgThWIWWFhNNF8M0KbYVeOglPlwOCp1V2LcO4/zsY1mwAT7OuNeEbAj4CbhPYXfGgIT2Tef9cq3FbSR1KinIaXNOGlPt5ForleBgIEf+pwT9Znh5KMR4XDm6A9wVo7NLYG8T0FZj1hf7oVNCq+qXPTnHf/13kCLzNQTz6E7fi9HDs8zxfnyHnDCCOVvgN7MjHntMp6gqCuBLx01qfnT5me3M56wSK4+l9NJjqyyrawX3eeNANVL+PnO4tfkxK3BIcDWQpumaXdyvc0IYW3woLxR2PSxVUMEJjCIrumNspnMH5SoKHj0HbsdFThzC7tXc13IQ5qincodHO4hY3v5iF1BUk1wQfQl+EXIg0DmiQyI/5Y9sIqlEcy1fKR1m5hT+Jw6oEj3I/jYqexwv2e
-X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR10MB4531.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(136003)(366004)(39860400002)(376002)(396003)(346002)(36756003)(5660300002)(86362001)(66476007)(2616005)(6666004)(316002)(4326008)(66556008)(66946007)(8676002)(8936002)(83380400001)(7416002)(2906002)(478600001)(38100700002)(6486002)(26005)(41300700001)(6512007)(107886003)(186003)(6506007)(1076003)(41533002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 	=?us-ascii?Q?XfVYX1MiC1rZ5p9uooRkwk+vRRv5RLCFzVpB6H84Gs5SDZUzripiKg7w2z1M?=
- =?us-ascii?Q?G+zkmS8/4CWDvbUdOmalZ+kY2fkIpFuYhY7fY4NqVWenK1bqi4qH8HIDVhQ0?=
- =?us-ascii?Q?xhh7/bpmlcqXxZNRjA3bnm5Vifjrvc2qmlETJW0uP4yW/8F4FpefOPTp5L2B?=
- =?us-ascii?Q?SDjMmIfvo+1KaUA7GKLnixq5or92rZID5Qzs5sP31gO/vboigU7v6+oHR0yH?=
- =?us-ascii?Q?4jlsqRLVz1C7mnIDdjgqNNmKB8XMAMJKdzs7esZl12CWG5K1Pz39ttL6X7xl?=
- =?us-ascii?Q?/XPK2V/uLRgGq98rsww7PZbEgDOrF15f+ssRn5n47RguvB8LmyIbpdiQg+1f?=
- =?us-ascii?Q?mp8/h4bjN+TqK7dkXCDwMDXhCcxK2+maRPL709kRGforU2UBDBdNBaBxjOWr?=
- =?us-ascii?Q?mjrh6y5w7En7FKtn/5CHIGmBxlEi1SgbceHoOK/l5Uxd12jXVR7cibkmd9Ht?=
- =?us-ascii?Q?McegnASPcnpPk4BQ42SCdSPDCx6ruGrH+EQSKVHv4cQlQld8QvH9Ly0/V2NA?=
- =?us-ascii?Q?Z0u3EBnrW5iIviA1+IVUaEJJYxw9qW8pmzje5a/usu7Ht+OEaY1OEQ+syBkS?=
- =?us-ascii?Q?c11xI7yJiMzSRktaoyltpdG1JvXs+gRGqFqO6ULgd8Cz6SGBL5bms7Zgwp2V?=
- =?us-ascii?Q?Hbxb1t2Z03rXmlMTeQWs+YS2h5Vbnet+8UWkIQP8aCEcABRqDsIUeazYl8Na?=
- =?us-ascii?Q?lxzxmRCx1uh3ZAO5Mg0p5RsNCPAKVTZCndMj4/kiwm8JnkuH/Az0GzlswTH8?=
- =?us-ascii?Q?q2Cr9bA1ALkXUdtAcUl2qI70bo8T3uwgyiN/nnXv4H7FWiwN9xOGPEXbn2pN?=
- =?us-ascii?Q?sR8ZmfM2uFvKhzyNOe4vcmNpJEc2RPuR9XwxnwnnrkZ1nECt/M+yjQ7LB7W9?=
- =?us-ascii?Q?H7boVV545NXgKxRQ2q+YdQvlcONiQmhDN0jGZfqN5SxxzT7RoEET9ir34ttT?=
- =?us-ascii?Q?b9DSvvKKyQOaf3J37WqkWUiHSSb7pyp7DsFzkHcodYoLwLJXocagrNSKyMb3?=
- =?us-ascii?Q?O8UDuwL6wbDlfy4CYgTbQ09ikrfRMlhvhX5TTZjufnR7qBKUR3C/RoZKz47a?=
- =?us-ascii?Q?WIHvJN6bzcjgNyh1ExT3zNyK+swCIlKdy0zvljEYteiaS/sYCouGPLNK0bez?=
- =?us-ascii?Q?2r6O4B8IDGzCMowxv1WzUF3wRtoqwq4Di8uIq9GmBy+jwUO5Sh/4eFr2OuRB?=
- =?us-ascii?Q?IJ+GrQMAS4HJ8MzESeqQsIWuiTw3w6KlzOWMjdAQ6vRMhhEdiQRHF6UPo1m9?=
- =?us-ascii?Q?Cz9GSmB0T1DotRLRWJ4tw5rWhzBu39XtI/9Mr0SefOtQaZWnir0eGkYdgGlz?=
- =?us-ascii?Q?1kzV2PTJoF9TViM+WWZob5t3fa/YD/A0MAYhzjWllG8g+Ace7gR+x17hD1XL?=
- =?us-ascii?Q?GJiWKl+3xefg5UksWVefZ0TQm1o22bog7tOWd7kxL9BdL8xNoL6M1721aU86?=
- =?us-ascii?Q?o9UzCCLEK4JUVGyOkg+/reeDRVYIZcewyAuo0PbiI5ABvAyBm48dx064YiZT?=
- =?us-ascii?Q?ZGw2oeIHEPcJsB4PiF/kaI5XJh3FpR7AWpu7sT1Mx/rt6NEnbwH26qs/aPz+?=
- =?us-ascii?Q?nJCnBh3Wa+CATRd1d8g0iS6wqErcAiIYWagl50e72inHg3L07qmhHps4c/Ms?=
- =?us-ascii?Q?4w=3D=3D?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fc904859-2f12-443f-acd1-08da87899e7f
-X-MS-Exchange-CrossTenant-AuthSource: CO1PR10MB4531.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Aug 2022 17:37:16.7658
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LdGp9DjXFeUemhpjEooraj6CvkXcol7j1S8/MZaWaNHnh5w0NBOrEVYP3bNdFYwcGle465VKkj9bBabP45JQ6lSXxo7GfXRJFC/Z+zVGyg8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR10MB6231
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-08-26_10,2022-08-25_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0 spamscore=0
- adultscore=0 phishscore=0 bulkscore=0 malwarescore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2207270000
- definitions=main-2208260070
-X-Proofpoint-ORIG-GUID: xvIVCjmpyOR7dgSEL-Cs2lZTEYA9gbma
-X-Proofpoint-GUID: xvIVCjmpyOR7dgSEL-Cs2lZTEYA9gbma
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.10
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220826_103853_294172_AF78F179 
-X-CRM114-Status: GOOD (  29.26  )
+X-CRM114-CacheID: sfid-20220827_175603_604187_2F7D535A 
+X-CRM114-Status: GOOD (  17.88  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -168,247 +85,120 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-CPU and memory change notifications are received in order to
-regenerate the elfcorehdr.
+Problem:
+=======
+On arm64, block and section mapping is supported to build page tables.
+However, currently it enforces to take base page mapping for the whole
+linear mapping if CONFIG_ZONE_DMA or CONFIG_ZONE_DMA32 is enabled and
+crashkernel kernel parameter is set. This will cause longer time of the
+linear mapping process during bootup and severe performance degradation
+during running time.
 
-To support cpu hotplug, a callback is registered to capture the
-CPUHP_AP_ONLINE_DYN online and offline events via
-cpuhp_setup_state_nocalls().
+Root cause:
+==========
+On arm64, crashkernel reservation relies on knowing the upper limit of
+low memory zone because it needs to reserve memory in the zone so that
+devices' DMA addressing in kdump kernel can be satisfied. However, the
+limit on arm64 is variant. And the upper limit can only be decided late
+till bootmem_init() is called.
 
-To support memory hotplug, a notifier is registered to capture the
-MEM_ONLINE and MEM_OFFLINE events via register_memory_notifier().
+And we need to map the crashkernel region with base page granularity when
+doing linear mapping, because kdump needs to protect the crashkernel region
+via set_memory_valid(,0) after kdump kernel loading. However, arm64 doesn't
+support well on splitting the built block or section mapping due to some
+cpu reststriction [1]. And unfortunately, the linear mapping is done before
+bootmem_init().
 
-The cpu callback and memory notifiers call handle_hotplug_event()
-which performs needed tasks and then dispatches the event to the
-architecture specific arch_crash_handle_hotplug_event(). During the
-process, the kexec_mutex is held.
+To resolve the above conflict on arm64, the compromise is enforcing to
+take base page mapping for the entire linear mapping if crashkernel is
+set, and CONFIG_ZONE_DMA or CONFIG_ZONE_DMA32 is enabed. Hence
+performance is sacrificed.
 
-Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
----
- include/linux/crash_core.h |   8 +++
- include/linux/kexec.h      |  26 +++++++
- kernel/crash_core.c        | 134 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 168 insertions(+)
+Solution:
+=========
+To fix the problem, we should always take 4G as the crashkernel low
+memory end in case CONFIG_ZONE_DMA or CONFIG_ZONE_DMA32 is enabled.
+With this, we don't need to defer the crashkernel reservation till
+bootmem_init() is called to set the arm64_dma_phys_limit. As long as
+memblock init is done, we can conclude what is the upper limit of low
+memory zone.
 
-diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-index de62a722431e..3b99e69b011f 100644
---- a/include/linux/crash_core.h
-+++ b/include/linux/crash_core.h
-@@ -84,4 +84,12 @@ int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
- int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
- 		unsigned long long *crash_size, unsigned long long *crash_base);
- 
-+#define KEXEC_CRASH_HP_REMOVE_CPU		0
-+#define KEXEC_CRASH_HP_ADD_CPU			1
-+#define KEXEC_CRASH_HP_REMOVE_MEMORY	2
-+#define KEXEC_CRASH_HP_ADD_MEMORY		3
-+#define KEXEC_CRASH_HP_INVALID_CPU		-1U
-+
-+struct kimage;
-+
- #endif /* LINUX_CRASH_CORE_H */
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 4eefa631e0ae..9597b41136ec 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -374,6 +374,13 @@ struct kimage {
- 	struct purgatory_info purgatory_info;
- #endif
- 
-+#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_MEMORY_HOTPLUG)
-+	bool hotplug_event;
-+	unsigned int offlinecpu;
-+	bool elfcorehdr_index_valid;
-+	int elfcorehdr_index;
-+#endif
-+
- #ifdef CONFIG_IMA_KEXEC
- 	/* Virtual address of IMA measurement buffer for kexec syscall */
- 	void *ima_buffer;
-@@ -503,6 +510,25 @@ static inline int arch_kexec_post_alloc_pages(void *vaddr, unsigned int pages, g
- static inline void arch_kexec_pre_free_pages(void *vaddr, unsigned int pages) { }
- #endif
- 
-+#ifndef arch_map_crash_pages
-+static inline void *arch_map_crash_pages(unsigned long paddr,
-+		unsigned long size)
-+{
-+	return NULL;
-+}
-+#endif
-+
-+#ifndef arch_unmap_crash_pages
-+static inline void arch_unmap_crash_pages(void **ptr) { }
-+#endif
-+
-+#ifndef arch_crash_handle_hotplug_event
-+static inline void arch_crash_handle_hotplug_event(struct kimage *image,
-+		unsigned int hp_action)
-+{
-+}
-+#endif
-+
- #else /* !CONFIG_KEXEC_CORE */
- struct pt_regs;
- struct task_struct;
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 0f8aa659cca4..455150205ded 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -11,6 +11,8 @@
- #include <linux/vmalloc.h>
- #include <linux/sizes.h>
- #include <linux/kexec.h>
-+#include <linux/memory.h>
-+#include <linux/cpuhotplug.h>
- 
- #include <asm/page.h>
- #include <asm/sections.h>
-@@ -18,6 +20,7 @@
- #include <crypto/sha1.h>
- 
- #include "kallsyms_internal.h"
-+#include "kexec_internal.h"
- 
- /* vmcoreinfo stuff */
- unsigned char *vmcoreinfo_data;
-@@ -611,3 +614,134 @@ static int __init crash_save_vmcoreinfo_init(void)
- }
- 
- subsys_initcall(crash_save_vmcoreinfo_init);
-+
-+#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_MEMORY_HOTPLUG)
-+/*
-+ * To accurately reflect hot un/plug changes, the elfcorehdr (which
-+ * is passed to the crash kernel via the elfcorehdr= parameter)
-+ * must be updated with the new list of CPUs and memories.
-+ *
-+ * In order to make changes to elfcorehdr, two conditions are needed:
-+ * First, the segment containing the elfcorehdr must be large enough
-+ * to permit a growing number of resources. The elfcorehdr memory is
-+ * typically based on CONFIG_NR_CPUS and CONFIG_CRASH_MAX_MEMORY_RANGES.
-+ * Second, purgatory must explicitly exclude the elfcorehdr from the
-+ * list of segments it checks (since the elfcorehdr changes and thus
-+ * would require an update to purgatory itself to update the digest).
-+ */
-+static void handle_hotplug_event(unsigned int hp_action, unsigned int cpu)
-+{
-+	/* Obtain lock while changing crash information */
-+	mutex_lock(&kexec_mutex);
-+
-+	/* Check kdump is loaded */
-+	if (kexec_crash_image) {
-+		struct kimage *image = kexec_crash_image;
-+
-+		if (hp_action == KEXEC_CRASH_HP_ADD_CPU ||
-+			hp_action == KEXEC_CRASH_HP_REMOVE_CPU)
-+			pr_debug("crash hp: hp_action %u, cpu %u\n", hp_action, cpu);
-+		else
-+			pr_debug("crash hp: hp_action %u", hp_action);
-+
-+		/*
-+		 * When the struct kimage is alloced, it is wiped to zero, so
-+		 * the elfcorehdr_index_valid defaults to false. Find the
-+		 * segment containing the elfcorehdr, if not already found.
-+		 * This works for both the kexec_load and kexec_file_load paths.
-+		 */
-+		if (!image->elfcorehdr_index_valid) {
-+			unsigned char *ptr;
-+			unsigned long mem, memsz;
-+			unsigned int n;
-+
-+			for (n = 0; n < image->nr_segments; n++) {
-+				mem = image->segment[n].mem;
-+				memsz = image->segment[n].memsz;
-+				ptr = arch_map_crash_pages(mem, memsz);
-+				if (ptr) {
-+					/* The segment containing elfcorehdr */
-+					if (memcmp(ptr, ELFMAG, SELFMAG) == 0) {
-+						image->elfcorehdr_index = (int)n;
-+						image->elfcorehdr_index_valid = true;
-+					}
-+				}
-+				arch_unmap_crash_pages((void **)&ptr);
-+			}
-+		}
-+
-+		if (!image->elfcorehdr_index_valid) {
-+			pr_err("crash hp: unable to locate elfcorehdr segment");
-+			goto out;
-+		}
-+
-+		/* Needed in order for the segments to be updated */
-+		arch_kexec_unprotect_crashkres();
-+
-+		/* Flag to differentiate between normal load and hotplug */
-+		image->hotplug_event = true;
-+
-+		/* Now invoke arch-specific update handler */
-+		arch_crash_handle_hotplug_event(image, hp_action);
-+
-+		/* No longer handling a hotplug event */
-+		image->hotplug_event = false;
-+
-+		/* Change back to read-only */
-+		arch_kexec_protect_crashkres();
-+	}
-+
-+out:
-+	/* Release lock now that update complete */
-+	mutex_unlock(&kexec_mutex);
-+}
-+
-+static int crash_memhp_notifier(struct notifier_block *nb, unsigned long val, void *v)
-+{
-+	switch (val) {
-+	case MEM_ONLINE:
-+		handle_hotplug_event(KEXEC_CRASH_HP_ADD_MEMORY, 0);
-+		break;
-+
-+	case MEM_OFFLINE:
-+		handle_hotplug_event(KEXEC_CRASH_HP_REMOVE_MEMORY, 0);
-+		break;
-+	}
-+	return NOTIFY_OK;
-+}
-+
-+static struct notifier_block crash_memhp_nb = {
-+	.notifier_call = crash_memhp_notifier,
-+	.priority = 0
-+};
-+
-+static int crash_cpuhp_online(unsigned int cpu)
-+{
-+	handle_hotplug_event(KEXEC_CRASH_HP_ADD_CPU, cpu);
-+	return 0;
-+}
-+
-+static int crash_cpuhp_offline(unsigned int cpu)
-+{
-+	handle_hotplug_event(KEXEC_CRASH_HP_REMOVE_CPU, cpu);
-+	return 0;
-+}
-+
-+static int __init crash_hotplug_init(void)
-+{
-+	int result = 0;
-+
-+	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
-+		register_memory_notifier(&crash_memhp_nb);
-+
-+	if (IS_ENABLED(CONFIG_HOTPLUG_CPU))
-+		result = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
-+						   "crash/cpuhp",
-+						   crash_cpuhp_online,
-+						   crash_cpuhp_offline);
-+
-+	return result;
-+}
-+
-+subsys_initcall(crash_hotplug_init);
-+#endif
+1) both CONFIG_ZONE_DMA or CONFIG_ZONE_DMA32 are disabled or memblock_start_of_DRAM() > 4G
+  limit = PHYS_ADDR_MAX+1  (Corner cases)
+2) CONFIG_ZONE_DMA or CONFIG_ZONE_DMA32 are enabled:
+   limit = 4G  (generic case)
+
+Justification:
+==============
+In fact, kdump kernel doesn't need to cover all peripherals'
+addressing bits. Only device taken as dump target need be taken care of
+and its addressing bits need be satified. Currently, there are two kinds
+of dumping, dumped to local storage disk or dumped through network card to
+remove storage server. It means only storage disk or netowrk card taken
+as dump target need be consider if their addressing bits are satisfied.
+For saving memory, we usually generate kdump specific initramfs including
+necessary kernel modules for dump target devices. All other unnecessary
+kernel modules are excluded and their correspondent devices won't be
+initialized during kdump kernel bootup.
+
+So far, only Raspberry Pi 4 has some peripherals whcih can only address
+30 bits memory range as reported in [2]. Devices on all other arm64 systems
+can address 32bits memory range.
+
+So by enforcing to take 4G as the crashkernel low memory end, the only
+risk is if RPi4 owns storage disk or network card which can't address
+32bits memory range because they could be set as dump target. Even if
+RPi4 truly has storage devices or network card which can only address 30
+bits memory range, it should be a corner case. We can document it since
+crashkernel is more taken as a feature on server. Besides, RPi4 still can
+use crashkernel=xM@yM to sepcify a location for 32bits addressing if it
+really has that kind of storage device or network card and kdump is expected.
+
+[1]
+https://lore.kernel.org/all/YrIIJkhKWSuAqkCx@arm.com/T/#u
+
+[2]
+[PATCH v6 0/4] Raspberry Pi 4 DMA addressing support
+https://lore.kernel.org/linux-arm-kernel/20190911182546.17094-1-nsaenzjulienne@suse.de/T/
+
+
+======
+Question to Nicolas:
+
+Hi Nicolas,
+
+In cover letter of [2] patchset, you told RPi4 has peripherals which
+can only address 30bits range. In below sentence, do you mean "the PCIe,
+V3D, GENET" can't address 32bit range, or they have wider view of
+address space the same as 40-bit DMA channels? I am confused about that.
+
+And the storage device or network card on RPi4 can address 32bit range
+or 32bit range, do we have document or do you happen to know that?
+
+"""
+The new Raspberry Pi 4 has up to 4GB of memory but most peripherals can
+only address the first GB: their DMA address range is
+0xc0000000-0xfc000000 which is aliased to the first GB of physical
+memory 0x00000000-0x3c000000. Note that only some peripherals have these
+limitations: the PCIe, V3D, GENET, and 40-bit DMA channels have a wider
+view of the address space by virtue of being hooked up trough a second
+interconnect.
+"""
+
+
+Baoquan He (2):
+  arm64, kdump: enforce to take 4G as the crashkernel low memory end
+  arm64: remove unneed defer_reserve_crashkernel() and crash_mem_map
+
+ arch/arm64/include/asm/memory.h |  5 ----
+ arch/arm64/mm/init.c            | 24 ++++++++-------
+ arch/arm64/mm/mmu.c             | 53 ++++++++++++++-------------------
+ 3 files changed, 36 insertions(+), 46 deletions(-)
+
+
+base-commit: 10d4879f9ef01cc6190fafe4257d06f375bab92c
 -- 
-2.31.1
+2.34.1
 
 
 _______________________________________________
