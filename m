@@ -4,64 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 11865ECAAD4
-	for <kexec@archiver.kernel.org>; Mon, 29 Aug 2022 04:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C237FECAAD2
+	for <kexec@archiver.kernel.org>; Mon, 29 Aug 2022 08:44:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:
-	References:Cc:To:Subject:Date:Message-ID:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Owner;
-	bh=b/mavo8tiVocpEQ7ti8olU0vir26VRfO0jBY8jIF3W4=; b=ZY9Fe5zDHgmlxYXY+Lm3lFbmK6
-	qNv6tyE84xVDzUP5Qe4uaZfXm2JBp9k/utxf6E3bpSxgBQW4PdsJ39HByYeMh1/X3+rpNk1VAcsBW
-	lUtXAo/AMwEqWmfxf3rfusNLUDiL6prSohPUcDgcx1RgQnyXSfK6MhfL0lmHhdukLabK63qKsqy8E
-	GOzw8EkGjgAZBEwjPcYw58btztfFjPXB/grkSfa6CThZJGpJEkmn97KvsKFRDMYbRxdkLC8kI7drs
-	K9ggJG91/8Su1KitZ6NS7jjZBZrvWEl8i2QDFBgw06EJuFJGxbgv8QkfihFMXnqWHMiaaXJptyALK
-	gtGt/5hw==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:Subject:From:References:Cc:
+	To:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=gWlPqSRS9KR4HVSecajeI3yqydQv52XU4NmayBNk9Nw=; b=jMKlNlCmYh+jEa
+	JtuHBQ5ch52XAFj+UrDNvSxlgyN3bcerUD7fznoxB+yJ7GFBfHwtXFmFeHPBgOP15ILOdh5ieN7LP
+	1F5Lw6Rlxn47+bd05HVxmQJkhuOSjXZUOB/FVP7zoe7kOjx99SgIk1Xi1T6WuynFUPcHonTIhvq0H
+	jZWK/V8u9NGAR2y8KBirPACfX56E51zdLTAx6JlLtchy9sC5M6YYtQ0mkjpvex10pOz6AMe1AbU0v
+	/yccqBJzokDKmKtIuOJDHjKWcDiOw38bD3o7GJBwcHqdIOPvt8sCHbJ/Yd9pZp9G3QDJWgyhhjYP5
+	8KAFUVPJvvYE5QF75VZw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oSWiS-004cRC-SD; Mon, 29 Aug 2022 04:49:41 +0000
-Received: from mail-bn1nam07on2089.outbound.protection.outlook.com ([40.107.212.89] helo=NAM02-BN1-obe.outbound.protection.outlook.com)
+	id 1oSaNs-006Lgi-KF; Mon, 29 Aug 2022 08:44:41 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oSWiO-004cJM-0c
-	for kexec@lists.infradead.org; Mon, 29 Aug 2022 04:49:38 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=H93hO5FhwarH305UnIbL0ZfsqfvcWfCeF5TaFqW5U+4nTNS2YE4CPXioHe71cBt3ATGk1sUCfwbKsy7bTBJ0fuK8xfrQ7WPIi4xX1BCFEUfldHVGYXBuOO96eh+70gKlNGNY+ksL2c0U3SP3FZaTPKoec3O4Ef5ly2NQvRXkFgynN2UxbBU4+qQlJDRRonh0THdXMfIDY+5+MMIHdncAO7XSVBdblnpPiLB58FTytzg+QjVk5VumJ9+KJYfFx7tZ+bKwpHCJDOW+7sH6/Wy364bD9Ekj0R+C6uTDHjIVvP1okrjf7gYvZDX7znfpzeNHFZHgZYTP/qJsrfGWjkm6JQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=d1pEKSkZ/UOkimi9/VzrGKxP/TWuLvr/DDzFV8JVRYk=;
- b=QO1L9oMbpsCX6jA61BUq8cB6k911B3L+S6EHtA0DBMB9din2xyLTYOpDh/sAc+olihPqRfgY6jPYOQlbAAubvOILeEZNGwQ/2jtgeJb/QFXIyrs06fX7bAB8ElYgRcPHQNRjVAW/yERj/+GFHvN6S7PsxuUU6+X03rj5QYSNC7z+bWE4SqDWoW7nGpAIzsz67uat0fULP5pHudtC9KrkmJKjTj+wHOTql9ZTKcDJrHmazgiV0RpcSeQ3CKWqhoudAYp3ElPDoe9OSo74ofTqwuXWRylFz+qfL6Gsw8oAkbh+/hrBteR/fEJ7dHMFWG8a+3rNMiGBPPGJbz8e7vcDQg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d1pEKSkZ/UOkimi9/VzrGKxP/TWuLvr/DDzFV8JVRYk=;
- b=QK/Hv/ats2SadJQM+OBeev7LbDoV0dVoWv760eIc+fFaL15HVB4bKrsdS+6cpd7kGDtetSPZwyqGx1r6pwyVsDpV6X8GAQ61OOcWgO/VEDTWfWmQ2j4lXOz0+omNOd+SzDcFIl7OSN5pO1yFxEVr8U3vBqQV8jWOkU6OO0SiHQP6/kQZLZ76loepdqubt2tDOdw1FaYBLIqN5+k/RZUHMmmQ60tPnbw96RC71vNwwSLN1u9UPsOXpv3zwR3LMcrprw1n0sJwDWhImc8SFPZsaAos7XyTaWhXqxNfL31r3lER0aP8xlLxgg6j6MHGQyxuYZUnckX8v6WOZ9jwCdOdoA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BY5PR12MB4130.namprd12.prod.outlook.com (2603:10b6:a03:20b::16)
- by SA0PR12MB4527.namprd12.prod.outlook.com (2603:10b6:806:73::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5566.15; Mon, 29 Aug
- 2022 04:49:26 +0000
-Received: from BY5PR12MB4130.namprd12.prod.outlook.com
- ([fe80::508d:221c:9c9e:e1a5]) by BY5PR12MB4130.namprd12.prod.outlook.com
- ([fe80::508d:221c:9c9e:e1a5%8]) with mapi id 15.20.5566.021; Mon, 29 Aug 2022
- 04:49:26 +0000
-Message-ID: <29fb251b-4622-4eb6-538d-bab6ac6a76f6@nvidia.com>
-Date: Sun, 28 Aug 2022 21:49:23 -0700
+	id 1oSaNj-006LXS-E4
+	for kexec@lists.infradead.org; Mon, 29 Aug 2022 08:44:34 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1661762665;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vPEg5v/H0IBgzngITeel1OJt2CG88lxD/qPQRp0fsMA=;
+	b=O6PCDsxefRksLG1eZnl+3j9pUcn54ufw9HKjamyfbCpdf62ed54tKaYXWYO88HFfuay+Nb
+	GdlQ4a1o1wjIQTwhudnmn6Y+MNfarpWNUBawCwJn7cm0cT/Dd30T92ZFashZ/D6YES2N46
+	Eba7iYeRe/LykqgdBqVPG+pmcBbC45U=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-266-_QH4UOO8Oo2OOQT5Lq4DKQ-1; Mon, 29 Aug 2022 04:44:24 -0400
+X-MC-Unique: _QH4UOO8Oo2OOQT5Lq4DKQ-1
+Received: by mail-wr1-f71.google.com with SMTP id i27-20020adfa51b000000b00226d0b29adfso722985wrb.0
+        for <kexec@lists.infradead.org>; Mon, 29 Aug 2022 01:44:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:subject:organization:from
+         :references:cc:to:content-language:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc;
+        bh=vPEg5v/H0IBgzngITeel1OJt2CG88lxD/qPQRp0fsMA=;
+        b=qmylS+gU6zdTTTdYLZorZNF20CzE58p/phvB7nxSdtZgdwchwd7wac79bpFICwhDFF
+         AZHH5+x6rdUbVJ9jbm80kOMV7nUCafLpaIXoEdyeUq3LHR7HYE9NoGLmO2PScLbO1pWm
+         3O7FQ8s4oh+//AOIlpzyBbjRF43I0LFcUmxWW/I8LpqHjiRT0eP+VMyndcH4d1iYQQDx
+         yfvIEJyeM3a8EVrlvEViKtAmnPTVtANGAi/Ep8Mjy1ff8zQlMgOC9FBQWykfc8EfgZIG
+         6LfXkYk5WWaWe8eCDOWKhKsW4cHEglzLjNcV4GF6gD377NQBS7ZxFu3rBXroLitoAuKx
+         ZjsA==
+X-Gm-Message-State: ACgBeo0nqGYr22bY2fc9pgi8FGUr3ms3Eci2RC/9e82TXkhLkQt+7Nm2
+	7T0XcwCvj5NyY/RQABn//879ZjbV9EUeWv+ppv1ya40VPU3P4dHyuJIyKa4CmM0ZdlYIWLD1mAc
+	qgbyY2arXAYwO7dmC0H9K
+X-Received: by 2002:a05:600c:3c96:b0:3a6:58b2:a98 with SMTP id bg22-20020a05600c3c9600b003a658b20a98mr6350285wmb.43.1661762662972;
+        Mon, 29 Aug 2022 01:44:22 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR6c1LM+DxjJvvwYlIG2gEu159GGRwHgGF9FOKgQMdRa/igmdp6O6MHWsDvlzNRJvTHJLqlTwg==
+X-Received: by 2002:a05:600c:3c96:b0:3a6:58b2:a98 with SMTP id bg22-20020a05600c3c9600b003a658b20a98mr6350269wmb.43.1661762662680;
+        Mon, 29 Aug 2022 01:44:22 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c707:3900:658b:bed0:4260:4c25? (p200300cbc7073900658bbed042604c25.dip0.t-ipconnect.de. [2003:cb:c707:3900:658b:bed0:4260:4c25])
+        by smtp.gmail.com with ESMTPSA id j9-20020a05600c190900b003a2e92edeccsm9148897wmq.46.2022.08.29.01.44.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Aug 2022 01:44:22 -0700 (PDT)
+Message-ID: <acd6cd81-d2fd-70bb-0cc4-9a63b71c51eb@redhat.com>
+Date: Mon, 29 Aug 2022 10:44:21 +0200
+MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.12.0
-Subject: Re: [PATCH RFC 1/2] coding-style.rst: document BUG() and WARN() rules
- ("do not crash the kernel")
-Content-Language: en-US
 To: Linus Torvalds <torvalds@linux-foundation.org>,
  Dave Young <dyoung@redhat.com>
-Cc: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+Cc: John Hubbard <jhubbard@nvidia.com>, linux-kernel@vger.kernel.org,
  linux-mm@kvack.org, linux-doc@vger.kernel.org, kexec@lists.infradead.org,
  Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>,
  David Laight <David.Laight@aculab.com>, Jonathan Corbet <corbet@lwn.net>,
@@ -78,71 +90,17 @@ References: <20220824163100.224449-1-david@redhat.com>
  <fe7aee66-d9f7-e472-a13f-e4c5aa176cca@redhat.com>
  <CALu+AoRwVfr=9KabOLUQigWwCtP5RLQ1YaKbG75ZVM9E-bW2ZQ@mail.gmail.com>
  <CAHk-=wit-DmhMfQErY29JSPjFgebx_Ld+pnerc4J2Ag990WwAA@mail.gmail.com>
-From: John Hubbard <jhubbard@nvidia.com>
+From: David Hildenbrand <david@redhat.com>
+Organization: Red Hat
+Subject: Re: [PATCH RFC 1/2] coding-style.rst: document BUG() and WARN() rules
+ ("do not crash the kernel")
 In-Reply-To: <CAHk-=wit-DmhMfQErY29JSPjFgebx_Ld+pnerc4J2Ag990WwAA@mail.gmail.com>
-X-ClientProxiedBy: SJ0PR03CA0361.namprd03.prod.outlook.com
- (2603:10b6:a03:3a1::6) To BY5PR12MB4130.namprd12.prod.outlook.com
- (2603:10b6:a03:20b::16)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6a3f56d2-19e4-4579-9e39-08da8979d9d0
-X-MS-TrafficTypeDiagnostic: SA0PR12MB4527:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 	wfC+C1Qc1ZH8YUyTaIHTYT9anO8OyqvbR5N3rQVgP3SRS8XxsYjS4BFc1UE39G8XwBCKBCtcLS7vMYLYx38CaiQi4PDRbFw3rg8fb0Xnf5Fkb9c00OHYULj1asqVko8lr4YWLauY0GhNIgwba0/ifYnQu33macmDeY5a2kRoKaXz3SpPx6Drc/IdcK60inyafQzVn5qXNXKmMkzJaLxUJxTSM5M9FKAvG3NGAU5WWMg+GZMND1VuICG1HVVwaRUJvbo0kWySzoDTmesJdVt1dXos94ej3WhQnqd+uofz7UUodl0NQ0UTVnAEU74wZ7DWLlbfMi1rhmxRGbBiYEevVmIOq5O/XTkun73MuincUy1xIs45wnphDhNVpQJxpq+l3/NS+TMG0TRKOb9H/GCl9HT0WLZU6N/Sz+xVQf0id4jG3r7ulqAvKVYUYW1w38q5pLTE75Xf0+LzlxJiZMyraN4+BDmAiAkdw9/V1eFvxcPVfoa5uCO3vJsp9Y4GajhaQxWqKo/xLApuePOejYv878gj5j7Rd+G48tN3NlmB6ADvRoA7HU2bDv456VOPDzPA8vfQSyjrdfYsrK1vfLYQq/VPTdxgGntjiR66f7XviXvykGm+sioRYPUVzwk2Nd3Q92Fa/BI3G0Bt9TAJVXKZFRw+hyxb1YnIqFpNnc2j8DBWQdqPKJNLckP/b7RMxX6PEYHH+nZLU7ZcKfgxyUqwaKBXb9CevYs6pdKP3GhnriIxiGb0ydT5lmA+H5PSSVICfsGBDwczEyEA42ix8i5Zm/+IvDLn78tHeavAlL86h1c=
-X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR12MB4130.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(39860400002)(346002)(136003)(366004)(376002)(396003)(6506007)(53546011)(38100700002)(2906002)(6666004)(2616005)(83380400001)(6512007)(186003)(26005)(6486002)(86362001)(8676002)(4326008)(66476007)(31696002)(66556008)(66946007)(110136005)(31686004)(54906003)(316002)(36756003)(7416002)(41300700001)(8936002)(478600001)(5660300002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 	=?utf-8?B?Qk9uSEdOUnByaS9rYXN4NytyUHZKUzhDOTAzOHk1eDZkODNVOGdma0VaN2Uw?=
- =?utf-8?B?VTRTM1owdElOb2RTcGQvbFZ2b1hjTyt5cCt2N2E1d1pCOThVTnZUbTZwbUNa?=
- =?utf-8?B?aWVoR0xCRmNQeTRuLzZUWDRSK2orVE1abXJYNFdFbnFmQmxHYWM4cm5vcVBU?=
- =?utf-8?B?MnVkQUN5Sy9WOFRsekwvRDNzY1FuNktFWWhPQUV6bFh5YlhMK0ZxZGZtb0I3?=
- =?utf-8?B?UC84dTduTHg3YVlkWHdSVGE2NW8zR0hHMzVlRmExS2lMMWUwQzBOcC9YTEFN?=
- =?utf-8?B?OXFVNGRHN3FIWjR6WE5JaHVhS0FHeTNVWmgzZGFwSUZGZ2x5clRuMjdiZmpK?=
- =?utf-8?B?MmllRUZBVVRxQnNETFM3QUxXWnlwMHU0KytFcHB5eWxQS2ExL3lIWmpBK3ZU?=
- =?utf-8?B?a3pRbUtIR0xGNnZRRVlTVG9ISU15dEVOb3VkSjk4VGNrVHFTNXZvWWZRTHJy?=
- =?utf-8?B?eVd1NjUwS0N5YmVrWTl5eGtzbWpqVzNjYU11UkE2WmhtTmZScUUxZUVUczF4?=
- =?utf-8?B?VmZ6ZWFoTmszeVpQTzh0Q3lVQkRkVy81OXZtWTBGQzY4aml6OUp6RFZvRWRS?=
- =?utf-8?B?K2t0NE53NU1TczQ1WkVIQ2hMeW9INVNBYWsvdFRTVE5Qb1lrM1RMSDBML2Fs?=
- =?utf-8?B?Nk1SZXk5SnZ1Zyt6QmFqOHBmTnZ1WUZoUXJFNGhDNWFoUzdpV3g2MmZDT2JS?=
- =?utf-8?B?cnE3a3FOV0Z3Yk1aZm54VWh5ZDRhQjhLVEhtRVVNL0tzK3loMXZtZlArVWFJ?=
- =?utf-8?B?ZDFoZlJhK2xTdFUzbFVCUGI4blNIVk9SNmh6NEhKMVJ5RWE4bTREQy9OVEhL?=
- =?utf-8?B?N1RtRUdWV1NrSVk2NXNiRW5pOHBRSWFpUkx3bEliQVFtalF1NlQ4ckcyQWwr?=
- =?utf-8?B?OG95SnJGVVVCVUNZemdSN095SGxYSTRsejRla2N6VVZGVWh3OXlvT09meVBt?=
- =?utf-8?B?Z1pVckxCRkcrejJ4Tkh2UEZVSG0zRFRLOFFwQjk3UDlRYWlkcHZDRmdUTFBz?=
- =?utf-8?B?VG1hOHhOckRNdlBRUlpBT2JscW5CZWdHN1hVOS9VWEZRTlArRkM1OStmaTNQ?=
- =?utf-8?B?ak5paHB5ZFVLU25yTVFzOW4zSmhNQ0JRMUt4VE5wNm51RHF2OFlMYmM4cHRK?=
- =?utf-8?B?TDM1emNhYko3alBDbFlDREJmM014VEhMdW9mZ0lKbU1HclN1c1VqQkwzazlK?=
- =?utf-8?B?OEtwb3Ywc3hvZUJxQytKQys1bEZtQmYyRGl6ODBIZGhsL2R1ak11K0QxLzlK?=
- =?utf-8?B?Y2RIQUxoRHdGanJodFdRajhMdW52TEVKV0lLei9TY1V1NzlmOVJTVE5CTVBC?=
- =?utf-8?B?UDYwYU1JbW12WVhQL3BlRHFGQUN2cGNidERzcVYzNTFwK2t4VTI2KzhLNTVy?=
- =?utf-8?B?eEtVOTYyZk5qTlUrVXRDbTlSSDB3aVRicjVWMXhtWFBtVy8ycFdVZ0xaS0lS?=
- =?utf-8?B?QVY3MEwrV1V3bVk0UmtSWlJWQWVNYVpvNXZHRVliUnBuYWpTMFoySVJpVkJn?=
- =?utf-8?B?REMzSStRUFBTdzd6MkxEdFNVa3A3OXRxb1FUdHVyNjVndm5NNzJhY3hvQVlu?=
- =?utf-8?B?VUJ6cTU3czJwTWdLTmFTbi9jbG5YeEQ2blg0SnUraVhUUnQ2V3BBekZLaW1y?=
- =?utf-8?B?ZHNKVXNrUTBHeW9ndlcxdS9ndzVGQ2V5aEt5bjBLV3FOcDZIMnF3QW0yTjNi?=
- =?utf-8?B?RUcydVVkZnZ2TWNPelhLT2g5aWg2WkFwTWdhMVNtVW5wSTBnOWZwZ1BSNGJT?=
- =?utf-8?B?NUpHTEwwdGhzR1NQOEpUeWZiTlp2UEQxUFBTWTJTWUQ2aXRxWWJaS1huQUtM?=
- =?utf-8?B?RnlrUWVjdGhxSEVWMWNHM3JucitDdGU3M3pWbTVadE9BUGw3Wjhtc2EwTGw4?=
- =?utf-8?B?RjNrS0dpR3M3cDRLamoyS05QSVFJcytVVzAza0RtbDZLQzNQM0RzVkpRc2hC?=
- =?utf-8?B?Y0NmK0Zac2prdi9NSkk0b1Ayb2l5dS85cDJkUDR3S09tL1hDb0plL1p2MmVB?=
- =?utf-8?B?UmIrc21qVEhTYktkSTJOcTB1VmVVU1JhTVl3Zmh2UEtVcjlpVGFadnNSSUY5?=
- =?utf-8?B?eTZqZGVxUEVwNllhcHR3QWJQVU56aFFNTzYwTXNkNXd2WEF0dktYK0Zid0tM?=
- =?utf-8?Q?vux+bVDldY+C7N6utjri709di?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6a3f56d2-19e4-4579-9e39-08da8979d9d0
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR12MB4130.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2022 04:49:26.6440
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OSjE7okJxyagNioC0qkyNgjRaYR/GN8+PsYUqQgHsqPoVrraNaOwZRjSi/o49KMyPn+GLZV9xpi38dThupqXhQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4527
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220828_214936_104867_BB2DED7C 
-X-CRM114-Status: GOOD (  16.18  )
+X-CRM114-CacheID: sfid-20220829_014431_596452_51B2282C 
+X-CRM114-Status: GOOD (  32.32  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -159,7 +117,7 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 8/28/22 20:07, Linus Torvalds wrote:
+On 29.08.22 05:07, Linus Torvalds wrote:
 > On Sun, Aug 28, 2022 at 6:56 PM Dave Young <dyoung@redhat.com> wrote:
 >>
 >>> John mentioned PANIC_ON().
@@ -174,31 +132,64 @@ On 8/28/22 20:07, Linus Torvalds wrote:
 > We're trying to get rid of BUG_ON() because it kills the machine.
 > 
 > Not replace it with another bogus thing that kills a machine.
-
-OK, this guidance, and the write-up that follows it, is all very clear,
-except for one point...
-
 > 
 > So no PANIC_ON(). We used to have "panic()" many many years ago, we
 > got rid of it. We're not re-introducing it.
+> 
+> People who want to panic on warnings can do so. WARN_ON() _becomes_
+> PANIC for those people. But those people are the "we have a million
+> machines, we want to just fail things on any sign of trouble, and we
+> have MIS people who can look at the logs".
+> 
+> And it's not like we need to get rid of _all_ BUG_ON() cases. If you
+> have a "this is major internal corruption, there's no way we can
+> continue", then BUG_ON() is appropriate. It will try to kill that
+> process and try to keep the machine running, and again, the kind of
+> people who don't care about one machine (because - again - they have
+> millions of them) can just turn that into a panic-and-reboot
+> situation.
+> 
+> But the kind of people for whom the machine they are on IS THEIR ONLY
+> MACHINE - whether it be a workstation, a laptop, or a cellphone -
+> there is absolutely zero situation where "let's just kill the machine"
+> is *EVER* approproate. Even a BUG_ON() will try to continue as well as
+> it can after killing the current thread, but it's going to be iffy,
+> because locking etc.
+> 
+> So WARN_ON_ONCE() is the thing to aim for. BUG_ON() is the thing for
+> "oops, I really don't know what to do, and I physically *cannot*
+> continue" (and that is *not* "I'm too lazy to do error handling").
+> 
+> There is no room for PANIC. None. Ever.
 
-...here. I count ~1000 calls to panic() in today's kernel, to a 
-function in kernel/panic.c that shows no hint of being removed, nor
-even deprecated. 
+Let me clearer what I had in mind, avoiding the PANIC_ON terminology
+John raised. I was wondering if it would make sense to
 
-$ git grep -nw panic\( | wc -l
-1321
+1) Be able to specify a severity for WARN (developer decision)
 
-Could you please clarify that point? (I'm not trying to debate 
-policy, but rather, to figure out what we should write in the
-documentation of the policy.)
+2) Be able to specify a severity for panic_on_warn (admin decision)
+
+Distributions with kdump could keep a mode whereby severe warnings
+(e.g., former BUG_ON) would properly kdump+reboot and harmless warnings
+(e.g., clean recovery path) would WARN once + continue.
+
+I agree that whether to panic should in most cases be a decision of the
+admin, not the developer.
 
 
-thanks,
+Now, that's a different discussion then the documentation update at
+hand, and I primary wanted to raise awareness for the kdump people, and
+ask them if a stronger move towards WARN_ON_ONCE will affect
+them/customer expectations.
+
+I'll work with John to document the current rules to reflect everything
+you said here.
 
 -- 
-John Hubbard
-NVIDIA
+Thanks,
+
+David / dhildenb
+
 
 _______________________________________________
 kexec mailing list
