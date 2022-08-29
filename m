@@ -4,70 +4,145 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0A626ECAAA2
-	for <kexec@archiver.kernel.org>; Mon, 29 Aug 2022 04:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 11865ECAAD4
+	for <kexec@archiver.kernel.org>; Mon, 29 Aug 2022 04:49:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:List-Subscribe:List-Help:
-	List-Post:List-Archive:List-Unsubscribe:List-Id:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=WbzXNE8V2cxVdz+wU9AYKLt2ltRvwPGrS3KoO0bjbwI=; b=lPhnV4T5vwkIlq
-	mhh93UwSf1ATU8+htX5xqzNefKnHpoazhMc4NYHxTEiIZCTOJM0WgLV0sTODYkWCS6Oka28hiTVuY
-	PydW34y5xWHLkoTIna9MPs0xjYNpS1QkJQ+Za9JUuhfeS7Rf+68LSBfxcXOpPpXxjKplhDPAx+H9C
-	Zo3t/Ay6L9Xjj+31fMxD+R6YJpxMLW8N79JYpQ/PK8iUu3PhUyoL4hVkdkTVDdh6iBTYbozHYoQ+I
-	7XVpvsAD80C8O7Df9SuCyi4r/MQgCHjYc2hQyEKtCIBbkTThdTOtGu7CD+/dnz45+TMhL46Ac1NW9
-	PWUzC9ek4fXMwBuAVGRQ==;
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:
+	References:Cc:To:Subject:Date:Message-ID:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Owner;
+	bh=b/mavo8tiVocpEQ7ti8olU0vir26VRfO0jBY8jIF3W4=; b=ZY9Fe5zDHgmlxYXY+Lm3lFbmK6
+	qNv6tyE84xVDzUP5Qe4uaZfXm2JBp9k/utxf6E3bpSxgBQW4PdsJ39HByYeMh1/X3+rpNk1VAcsBW
+	lUtXAo/AMwEqWmfxf3rfusNLUDiL6prSohPUcDgcx1RgQnyXSfK6MhfL0lmHhdukLabK63qKsqy8E
+	GOzw8EkGjgAZBEwjPcYw58btztfFjPXB/grkSfa6CThZJGpJEkmn97KvsKFRDMYbRxdkLC8kI7drs
+	K9ggJG91/8Su1KitZ6NS7jjZBZrvWEl8i2QDFBgw06EJuFJGxbgv8QkfihFMXnqWHMiaaXJptyALK
+	gtGt/5hw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oSWWX-004Y5m-9C; Mon, 29 Aug 2022 04:37:21 +0000
-Received: from mail.loongson.cn ([114.242.206.163] helo=loongson.cn)
-	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oSWWN-004Xym-Gn
-	for kexec@lists.infradead.org; Mon, 29 Aug 2022 04:37:15 +0000
-Received: from bogon.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxvmtvQgxjO6YLAA--.39821S3;
-	Mon, 29 Aug 2022 12:37:06 +0800 (CST)
-From: Youling Tang <tangyouling@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Baoquan He <bhe@redhat.com>,
-	Eric Biederman <ebiederm@xmission.com>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>,
-	Guo Ren <guoren@kernel.org>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	kexec@lists.infradead.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] LoongArch: Add kexec support
-Date: Mon, 29 Aug 2022 12:37:01 +0800
-Message-Id: <1661747823-23745-2-git-send-email-tangyouling@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1661747823-23745-1-git-send-email-tangyouling@loongson.cn>
-References: <1661747823-23745-1-git-send-email-tangyouling@loongson.cn>
-X-CM-TRANSID: AQAAf8DxvmtvQgxjO6YLAA--.39821S3
-X-Coremail-Antispam: 1UD129KBjvAXoW3uF45Xr4rAFWrKw48tFykAFb_yoW8JrWkKo
-	ZFqa1UKw18KryUCw1Ykr98JFWDXryqgr93ZrW3ZwsxWry2yryYqr90kryYy34xtw1kW3yx
-	C343Zwsxu397Jrn5n29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-	AaLaJ3UjIYCTnIWjp_UUUOe7k0a2IF6w4kM7kC6x804xWl14x267AKxVW5JVWrJwAFc2x0
-	x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87
-	I2jVAFwI0_Jr4l82xGYIkIc2x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY
-	1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20x
-	vEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280
-	aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzV
-	Aqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S
-	6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mx
-	kIecxEwVAFwVW8XwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s02
-	6c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw
-	0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvE
-	c7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14
-	v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x
-	07bcR6wUUUUU=
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
+	id 1oSWiS-004cRC-SD; Mon, 29 Aug 2022 04:49:41 +0000
+Received: from mail-bn1nam07on2089.outbound.protection.outlook.com ([40.107.212.89] helo=NAM02-BN1-obe.outbound.protection.outlook.com)
+	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1oSWiO-004cJM-0c
+	for kexec@lists.infradead.org; Mon, 29 Aug 2022 04:49:38 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=H93hO5FhwarH305UnIbL0ZfsqfvcWfCeF5TaFqW5U+4nTNS2YE4CPXioHe71cBt3ATGk1sUCfwbKsy7bTBJ0fuK8xfrQ7WPIi4xX1BCFEUfldHVGYXBuOO96eh+70gKlNGNY+ksL2c0U3SP3FZaTPKoec3O4Ef5ly2NQvRXkFgynN2UxbBU4+qQlJDRRonh0THdXMfIDY+5+MMIHdncAO7XSVBdblnpPiLB58FTytzg+QjVk5VumJ9+KJYfFx7tZ+bKwpHCJDOW+7sH6/Wy364bD9Ekj0R+C6uTDHjIVvP1okrjf7gYvZDX7znfpzeNHFZHgZYTP/qJsrfGWjkm6JQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=d1pEKSkZ/UOkimi9/VzrGKxP/TWuLvr/DDzFV8JVRYk=;
+ b=QO1L9oMbpsCX6jA61BUq8cB6k911B3L+S6EHtA0DBMB9din2xyLTYOpDh/sAc+olihPqRfgY6jPYOQlbAAubvOILeEZNGwQ/2jtgeJb/QFXIyrs06fX7bAB8ElYgRcPHQNRjVAW/yERj/+GFHvN6S7PsxuUU6+X03rj5QYSNC7z+bWE4SqDWoW7nGpAIzsz67uat0fULP5pHudtC9KrkmJKjTj+wHOTql9ZTKcDJrHmazgiV0RpcSeQ3CKWqhoudAYp3ElPDoe9OSo74ofTqwuXWRylFz+qfL6Gsw8oAkbh+/hrBteR/fEJ7dHMFWG8a+3rNMiGBPPGJbz8e7vcDQg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=d1pEKSkZ/UOkimi9/VzrGKxP/TWuLvr/DDzFV8JVRYk=;
+ b=QK/Hv/ats2SadJQM+OBeev7LbDoV0dVoWv760eIc+fFaL15HVB4bKrsdS+6cpd7kGDtetSPZwyqGx1r6pwyVsDpV6X8GAQ61OOcWgO/VEDTWfWmQ2j4lXOz0+omNOd+SzDcFIl7OSN5pO1yFxEVr8U3vBqQV8jWOkU6OO0SiHQP6/kQZLZ76loepdqubt2tDOdw1FaYBLIqN5+k/RZUHMmmQ60tPnbw96RC71vNwwSLN1u9UPsOXpv3zwR3LMcrprw1n0sJwDWhImc8SFPZsaAos7XyTaWhXqxNfL31r3lER0aP8xlLxgg6j6MHGQyxuYZUnckX8v6WOZ9jwCdOdoA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BY5PR12MB4130.namprd12.prod.outlook.com (2603:10b6:a03:20b::16)
+ by SA0PR12MB4527.namprd12.prod.outlook.com (2603:10b6:806:73::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5566.15; Mon, 29 Aug
+ 2022 04:49:26 +0000
+Received: from BY5PR12MB4130.namprd12.prod.outlook.com
+ ([fe80::508d:221c:9c9e:e1a5]) by BY5PR12MB4130.namprd12.prod.outlook.com
+ ([fe80::508d:221c:9c9e:e1a5%8]) with mapi id 15.20.5566.021; Mon, 29 Aug 2022
+ 04:49:26 +0000
+Message-ID: <29fb251b-4622-4eb6-538d-bab6ac6a76f6@nvidia.com>
+Date: Sun, 28 Aug 2022 21:49:23 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH RFC 1/2] coding-style.rst: document BUG() and WARN() rules
+ ("do not crash the kernel")
+Content-Language: en-US
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+ Dave Young <dyoung@redhat.com>
+Cc: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-doc@vger.kernel.org, kexec@lists.infradead.org,
+ Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>,
+ David Laight <David.Laight@aculab.com>, Jonathan Corbet <corbet@lwn.net>,
+ Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
+ Dwaipayan Ray <dwaipayanray1@gmail.com>,
+ Lukas Bulwahn <lukas.bulwahn@gmail.com>, Baoquan He <bhe@redhat.com>,
+ Vivek Goyal <vgoyal@redhat.com>, Stephen Johnston <sjohnsto@redhat.com>,
+ Prarit Bhargava <prarit@redhat.com>
+References: <20220824163100.224449-1-david@redhat.com>
+ <20220824163100.224449-2-david@redhat.com>
+ <0db131cf-013e-6f0e-c90b-5c1e840d869c@nvidia.com>
+ <ea380cf0-acda-aaba-fb63-2834da91b66b@redhat.com>
+ <CALu+AoThhou7z+JCyv44AxGWDLDt2b7h0W6wcKRsJyLvSR1iQA@mail.gmail.com>
+ <fe7aee66-d9f7-e472-a13f-e4c5aa176cca@redhat.com>
+ <CALu+AoRwVfr=9KabOLUQigWwCtP5RLQ1YaKbG75ZVM9E-bW2ZQ@mail.gmail.com>
+ <CAHk-=wit-DmhMfQErY29JSPjFgebx_Ld+pnerc4J2Ag990WwAA@mail.gmail.com>
+From: John Hubbard <jhubbard@nvidia.com>
+In-Reply-To: <CAHk-=wit-DmhMfQErY29JSPjFgebx_Ld+pnerc4J2Ag990WwAA@mail.gmail.com>
+X-ClientProxiedBy: SJ0PR03CA0361.namprd03.prod.outlook.com
+ (2603:10b6:a03:3a1::6) To BY5PR12MB4130.namprd12.prod.outlook.com
+ (2603:10b6:a03:20b::16)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 6a3f56d2-19e4-4579-9e39-08da8979d9d0
+X-MS-TrafficTypeDiagnostic: SA0PR12MB4527:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 	wfC+C1Qc1ZH8YUyTaIHTYT9anO8OyqvbR5N3rQVgP3SRS8XxsYjS4BFc1UE39G8XwBCKBCtcLS7vMYLYx38CaiQi4PDRbFw3rg8fb0Xnf5Fkb9c00OHYULj1asqVko8lr4YWLauY0GhNIgwba0/ifYnQu33macmDeY5a2kRoKaXz3SpPx6Drc/IdcK60inyafQzVn5qXNXKmMkzJaLxUJxTSM5M9FKAvG3NGAU5WWMg+GZMND1VuICG1HVVwaRUJvbo0kWySzoDTmesJdVt1dXos94ej3WhQnqd+uofz7UUodl0NQ0UTVnAEU74wZ7DWLlbfMi1rhmxRGbBiYEevVmIOq5O/XTkun73MuincUy1xIs45wnphDhNVpQJxpq+l3/NS+TMG0TRKOb9H/GCl9HT0WLZU6N/Sz+xVQf0id4jG3r7ulqAvKVYUYW1w38q5pLTE75Xf0+LzlxJiZMyraN4+BDmAiAkdw9/V1eFvxcPVfoa5uCO3vJsp9Y4GajhaQxWqKo/xLApuePOejYv878gj5j7Rd+G48tN3NlmB6ADvRoA7HU2bDv456VOPDzPA8vfQSyjrdfYsrK1vfLYQq/VPTdxgGntjiR66f7XviXvykGm+sioRYPUVzwk2Nd3Q92Fa/BI3G0Bt9TAJVXKZFRw+hyxb1YnIqFpNnc2j8DBWQdqPKJNLckP/b7RMxX6PEYHH+nZLU7ZcKfgxyUqwaKBXb9CevYs6pdKP3GhnriIxiGb0ydT5lmA+H5PSSVICfsGBDwczEyEA42ix8i5Zm/+IvDLn78tHeavAlL86h1c=
+X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR12MB4130.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(39860400002)(346002)(136003)(366004)(376002)(396003)(6506007)(53546011)(38100700002)(2906002)(6666004)(2616005)(83380400001)(6512007)(186003)(26005)(6486002)(86362001)(8676002)(4326008)(66476007)(31696002)(66556008)(66946007)(110136005)(31686004)(54906003)(316002)(36756003)(7416002)(41300700001)(8936002)(478600001)(5660300002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 	=?utf-8?B?Qk9uSEdOUnByaS9rYXN4NytyUHZKUzhDOTAzOHk1eDZkODNVOGdma0VaN2Uw?=
+ =?utf-8?B?VTRTM1owdElOb2RTcGQvbFZ2b1hjTyt5cCt2N2E1d1pCOThVTnZUbTZwbUNa?=
+ =?utf-8?B?aWVoR0xCRmNQeTRuLzZUWDRSK2orVE1abXJYNFdFbnFmQmxHYWM4cm5vcVBU?=
+ =?utf-8?B?MnVkQUN5Sy9WOFRsekwvRDNzY1FuNktFWWhPQUV6bFh5YlhMK0ZxZGZtb0I3?=
+ =?utf-8?B?UC84dTduTHg3YVlkWHdSVGE2NW8zR0hHMzVlRmExS2lMMWUwQzBOcC9YTEFN?=
+ =?utf-8?B?OXFVNGRHN3FIWjR6WE5JaHVhS0FHeTNVWmgzZGFwSUZGZ2x5clRuMjdiZmpK?=
+ =?utf-8?B?MmllRUZBVVRxQnNETFM3QUxXWnlwMHU0KytFcHB5eWxQS2ExL3lIWmpBK3ZU?=
+ =?utf-8?B?a3pRbUtIR0xGNnZRRVlTVG9ISU15dEVOb3VkSjk4VGNrVHFTNXZvWWZRTHJy?=
+ =?utf-8?B?eVd1NjUwS0N5YmVrWTl5eGtzbWpqVzNjYU11UkE2WmhtTmZScUUxZUVUczF4?=
+ =?utf-8?B?VmZ6ZWFoTmszeVpQTzh0Q3lVQkRkVy81OXZtWTBGQzY4aml6OUp6RFZvRWRS?=
+ =?utf-8?B?K2t0NE53NU1TczQ1WkVIQ2hMeW9INVNBYWsvdFRTVE5Qb1lrM1RMSDBML2Fs?=
+ =?utf-8?B?Nk1SZXk5SnZ1Zyt6QmFqOHBmTnZ1WUZoUXJFNGhDNWFoUzdpV3g2MmZDT2JS?=
+ =?utf-8?B?cnE3a3FOV0Z3Yk1aZm54VWh5ZDRhQjhLVEhtRVVNL0tzK3loMXZtZlArVWFJ?=
+ =?utf-8?B?ZDFoZlJhK2xTdFUzbFVCUGI4blNIVk9SNmh6NEhKMVJ5RWE4bTREQy9OVEhL?=
+ =?utf-8?B?N1RtRUdWV1NrSVk2NXNiRW5pOHBRSWFpUkx3bEliQVFtalF1NlQ4ckcyQWwr?=
+ =?utf-8?B?OG95SnJGVVVCVUNZemdSN095SGxYSTRsejRla2N6VVZGVWh3OXlvT09meVBt?=
+ =?utf-8?B?Z1pVckxCRkcrejJ4Tkh2UEZVSG0zRFRLOFFwQjk3UDlRYWlkcHZDRmdUTFBz?=
+ =?utf-8?B?VG1hOHhOckRNdlBRUlpBT2JscW5CZWdHN1hVOS9VWEZRTlArRkM1OStmaTNQ?=
+ =?utf-8?B?ak5paHB5ZFVLU25yTVFzOW4zSmhNQ0JRMUt4VE5wNm51RHF2OFlMYmM4cHRK?=
+ =?utf-8?B?TDM1emNhYko3alBDbFlDREJmM014VEhMdW9mZ0lKbU1HclN1c1VqQkwzazlK?=
+ =?utf-8?B?OEtwb3Ywc3hvZUJxQytKQys1bEZtQmYyRGl6ODBIZGhsL2R1ak11K0QxLzlK?=
+ =?utf-8?B?Y2RIQUxoRHdGanJodFdRajhMdW52TEVKV0lLei9TY1V1NzlmOVJTVE5CTVBC?=
+ =?utf-8?B?UDYwYU1JbW12WVhQL3BlRHFGQUN2cGNidERzcVYzNTFwK2t4VTI2KzhLNTVy?=
+ =?utf-8?B?eEtVOTYyZk5qTlUrVXRDbTlSSDB3aVRicjVWMXhtWFBtVy8ycFdVZ0xaS0lS?=
+ =?utf-8?B?QVY3MEwrV1V3bVk0UmtSWlJWQWVNYVpvNXZHRVliUnBuYWpTMFoySVJpVkJn?=
+ =?utf-8?B?REMzSStRUFBTdzd6MkxEdFNVa3A3OXRxb1FUdHVyNjVndm5NNzJhY3hvQVlu?=
+ =?utf-8?B?VUJ6cTU3czJwTWdLTmFTbi9jbG5YeEQ2blg0SnUraVhUUnQ2V3BBekZLaW1y?=
+ =?utf-8?B?ZHNKVXNrUTBHeW9ndlcxdS9ndzVGQ2V5aEt5bjBLV3FOcDZIMnF3QW0yTjNi?=
+ =?utf-8?B?RUcydVVkZnZ2TWNPelhLT2g5aWg2WkFwTWdhMVNtVW5wSTBnOWZwZ1BSNGJT?=
+ =?utf-8?B?NUpHTEwwdGhzR1NQOEpUeWZiTlp2UEQxUFBTWTJTWUQ2aXRxWWJaS1huQUtM?=
+ =?utf-8?B?RnlrUWVjdGhxSEVWMWNHM3JucitDdGU3M3pWbTVadE9BUGw3Wjhtc2EwTGw4?=
+ =?utf-8?B?RjNrS0dpR3M3cDRLamoyS05QSVFJcytVVzAza0RtbDZLQzNQM0RzVkpRc2hC?=
+ =?utf-8?B?Y0NmK0Zac2prdi9NSkk0b1Ayb2l5dS85cDJkUDR3S09tL1hDb0plL1p2MmVB?=
+ =?utf-8?B?UmIrc21qVEhTYktkSTJOcTB1VmVVU1JhTVl3Zmh2UEtVcjlpVGFadnNSSUY5?=
+ =?utf-8?B?eTZqZGVxUEVwNllhcHR3QWJQVU56aFFNTzYwTXNkNXd2WEF0dktYK0Zid0tM?=
+ =?utf-8?Q?vux+bVDldY+C7N6utjri709di?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6a3f56d2-19e4-4579-9e39-08da8979d9d0
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR12MB4130.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2022 04:49:26.6440
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: OSjE7okJxyagNioC0qkyNgjRaYR/GN8+PsYUqQgHsqPoVrraNaOwZRjSi/o49KMyPn+GLZV9xpi38dThupqXhQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4527
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220828_213711_992498_C46CA271 
-X-CRM114-Status: GOOD (  27.41  )
+X-CRM114-CacheID: sfid-20220828_214936_104867_BB2DED7C 
+X-CRM114-Status: GOOD (  16.18  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,472 +154,51 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Add three new files, kexec.h, machine_kexec.c and relocate_kernel.S to the
-LoongArch architecture that add support for the kexec re-boot mechanis
-(CONFIG_KEXEC) on LoongArch platforms.
+On 8/28/22 20:07, Linus Torvalds wrote:
+> On Sun, Aug 28, 2022 at 6:56 PM Dave Young <dyoung@redhat.com> wrote:
+>>
+>>> John mentioned PANIC_ON().
+>>
+>> I would vote for PANIC_ON(), it sounds like a good idea, because
+>> BUG_ON() is not obvious and, PANIC_ON() can alert the code author that
+>> this will cause a kernel panic and one will be more careful before
+>> using it.
+> 
+> People, NO.
+> 
+> We're trying to get rid of BUG_ON() because it kills the machine.
+> 
+> Not replace it with another bogus thing that kills a machine.
 
-Supports loading vmlinux (vmlinux.elf) in ELF format and vmlinux.efi in
-PE format.
+OK, this guidance, and the write-up that follows it, is all very clear,
+except for one point...
 
-I tested this on  LoongArch 3A5000 machine and works as expected,
+> 
+> So no PANIC_ON(). We used to have "panic()" many many years ago, we
+> got rid of it. We're not re-introducing it.
 
- $ sudo kexec -l /boot/vmlinux.efi --reuse-cmdline
- $ sudo kexec -e
+...here. I count ~1000 calls to panic() in today's kernel, to a 
+function in kernel/panic.c that shows no hint of being removed, nor
+even deprecated. 
 
-Signed-off-by: Youling Tang <tangyouling@loongson.cn>
----
- arch/loongarch/Kconfig                  |  11 ++
- arch/loongarch/include/asm/kexec.h      |  58 ++++++++
- arch/loongarch/kernel/Makefile          |   2 +
- arch/loongarch/kernel/head.S            |   7 +-
- arch/loongarch/kernel/machine_kexec.c   | 178 ++++++++++++++++++++++++
- arch/loongarch/kernel/relocate_kernel.S | 125 +++++++++++++++++
- 6 files changed, 380 insertions(+), 1 deletion(-)
- create mode 100644 arch/loongarch/include/asm/kexec.h
- create mode 100644 arch/loongarch/kernel/machine_kexec.c
- create mode 100644 arch/loongarch/kernel/relocate_kernel.S
+$ git grep -nw panic\( | wc -l
+1321
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 45364cffc793..903c82fa958d 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -409,6 +409,17 @@ config FORCE_MAX_ZONEORDER
- 	  The page size is not necessarily 4KB.  Keep this in mind
- 	  when choosing a value for this option.
- 
-+config KEXEC
-+	bool "Kexec system call"
-+	select KEXEC_CORE
-+	help
-+	  kexec is a system call that implements the ability to shutdown your
-+	  current kernel, and to start another kernel.  It is like a reboot
-+	  but it is independent of the system firmware.   And like a reboot
-+	  you can start any kernel with it, not just Linux.
-+
-+	  The name comes from the similarity to the exec system call.
-+
- config SECCOMP
- 	bool "Enable seccomp to safely compute untrusted bytecode"
- 	depends on PROC_FS
-diff --git a/arch/loongarch/include/asm/kexec.h b/arch/loongarch/include/asm/kexec.h
-new file mode 100644
-index 000000000000..5c9e7b5eccb8
---- /dev/null
-+++ b/arch/loongarch/include/asm/kexec.h
-@@ -0,0 +1,58 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * kexec.h for kexec
-+ *
-+ * Copyright (C) 2022 Loongson Technology Corporation Limited
-+ */
-+
-+#ifndef _ASM_KEXEC_H
-+#define _ASM_KEXEC_H
-+
-+#include <asm/stacktrace.h>
-+#include <asm/page.h>
-+
-+/* Maximum physical address we can use pages from */
-+#define KEXEC_SOURCE_MEMORY_LIMIT (-1UL)
-+/* Maximum address we can reach in physical address mode */
-+#define KEXEC_DESTINATION_MEMORY_LIMIT (-1UL)
-+ /* Maximum address we can use for the control code buffer */
-+#define KEXEC_CONTROL_MEMORY_LIMIT (-1UL)
-+
-+/* Reserve a page for the control code buffer */
-+#define KEXEC_CONTROL_PAGE_SIZE PAGE_SIZE
-+
-+/* The native architecture */
-+#define KEXEC_ARCH KEXEC_ARCH_LOONGARCH
-+
-+static inline void crash_setup_regs(struct pt_regs *newregs,
-+				    struct pt_regs *oldregs)
-+{
-+	if (oldregs)
-+		memcpy(newregs, oldregs, sizeof(*newregs));
-+	else
-+		prepare_frametrace(newregs);
-+}
-+
-+#define ARCH_HAS_KIMAGE_ARCH
-+
-+struct kimage_arch {
-+	unsigned long boot_flag;
-+	unsigned long fdt_addr;
-+};
-+
-+typedef void (*do_kexec_t)(unsigned long boot_flag,
-+			   unsigned long fdt_addr,
-+			   unsigned long first_ind_entry,
-+			   unsigned long jump_addr);
-+
-+struct kimage;
-+extern const unsigned char relocate_new_kernel[];
-+extern const size_t relocate_new_kernel_size;
-+
-+#ifdef CONFIG_SMP
-+extern atomic_t kexec_ready_to_reboot;
-+extern const unsigned char kexec_smp_wait[];
-+extern void kexec_reboot(void);
-+#endif
-+
-+#endif /* !_ASM_KEXEC_H */
-diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
-index a213e994db68..20b64ac3f128 100644
---- a/arch/loongarch/kernel/Makefile
-+++ b/arch/loongarch/kernel/Makefile
-@@ -17,6 +17,8 @@ obj-$(CONFIG_CPU_HAS_FPU)	+= fpu.o
- obj-$(CONFIG_MODULES)		+= module.o module-sections.o
- obj-$(CONFIG_STACKTRACE)	+= stacktrace.o
- 
-+obj-$(CONFIG_KEXEC)             += machine_kexec.o relocate_kernel.o
-+
- obj-$(CONFIG_PROC_FS)		+= proc.o
- 
- obj-$(CONFIG_SMP)		+= smp.o
-diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-index 01bac62a6442..22bdf4928325 100644
---- a/arch/loongarch/kernel/head.S
-+++ b/arch/loongarch/kernel/head.S
-@@ -20,7 +20,12 @@
- 
- _head:
- 	.word	MZ_MAGIC		/* "MZ", MS-DOS header */
--	.org	0x3c			/* 0x04 ~ 0x3b reserved */
-+	.org	0x8
-+	.quad	0			/* Image load offset from start of RAM */
-+	.dword	_end - _text		/* Effective size of kernel image */
-+	.quad	0
-+	.dword	kernel_entry		/* Kernel entry point */
-+	.org	0x3c			/* 0x28 ~ 0x3b reserved */
- 	.long	pe_header - _head	/* Offset to the PE header */
- 
- pe_header:
-diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kernel/machine_kexec.c
-new file mode 100644
-index 000000000000..4ffcd4cd9c8c
---- /dev/null
-+++ b/arch/loongarch/kernel/machine_kexec.c
-@@ -0,0 +1,178 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * machine_kexec.c for kexec
-+ *
-+ * Copyright (C) 2022 Loongson Technology Corporation Limited
-+ */
-+#include <linux/compiler.h>
-+#include <linux/cpu.h>
-+#include <linux/kexec.h>
-+#include <linux/mm.h>
-+#include <linux/delay.h>
-+#include <linux/libfdt.h>
-+#include <linux/of_fdt.h>
-+
-+#include <asm/bootinfo.h>
-+#include <asm/cacheflush.h>
-+#include <asm/page.h>
-+
-+/* 0x100000 ~ 0x200000 is safe */
-+#define KEXEC_CTRL_CODE	TO_CACHE(0x100000UL)
-+#define KEXEC_BLOB_ADDR	TO_CACHE(0x108000UL)
-+
-+static unsigned long reboot_code_buffer;
-+#ifdef CONFIG_SMP
-+void (*relocated_kexec_smp_wait)(void *);
-+atomic_t kexec_ready_to_reboot = ATOMIC_INIT(0);
-+#endif
-+
-+static unsigned long jump_addr;
-+static unsigned long first_ind_entry;
-+static unsigned long boot_flag;
-+static unsigned long fdt_addr;
-+
-+static void kexec_image_info(const struct kimage *kimage)
-+{
-+	unsigned long i;
-+
-+	pr_debug("kexec kimage info:\n");
-+	pr_debug("\ttype:        %d\n", kimage->type);
-+	pr_debug("\tstart:       %lx\n", kimage->start);
-+	pr_debug("\thead:        %lx\n", kimage->head);
-+	pr_debug("\tnr_segments: %lu\n", kimage->nr_segments);
-+
-+	for (i = 0; i < kimage->nr_segments; i++) {
-+		pr_debug("\t    segment[%lu]: %016lx - %016lx", i,
-+			kimage->segment[i].mem,
-+			kimage->segment[i].mem + kimage->segment[i].memsz);
-+		pr_debug("\t\t0x%lx bytes, %lu pages\n",
-+			(unsigned long)kimage->segment[i].memsz,
-+			(unsigned long)kimage->segment[i].memsz /  PAGE_SIZE);
-+	}
-+}
-+
-+int machine_kexec_prepare(struct kimage *kimage)
-+{
-+	int i;
-+	void *dtb = (void *)KEXEC_BLOB_ADDR;
-+
-+	kexec_image_info(kimage);
-+
-+	/* Find the Flattened Device Tree */
-+	for (i = 0; i < kimage->nr_segments; i++) {
-+		if (!fdt_check_header(kimage->segment[i].buf)) {
-+			memcpy(dtb, kimage->segment[i].buf, SZ_64K);
-+			kimage->arch.boot_flag = fw_arg0;
-+			kimage->arch.fdt_addr = (unsigned long) dtb;
-+			break;
-+		}
-+		continue;
-+	}
-+
-+	/* kexec need a safe page to save reboot_code_buffer */
-+	kimage->control_code_page = virt_to_page((void *)KEXEC_CTRL_CODE);
-+
-+	reboot_code_buffer =
-+	  (unsigned long)page_address(kimage->control_code_page);
-+	memcpy((void *)reboot_code_buffer, relocate_new_kernel,
-+	       relocate_new_kernel_size);
-+
-+	/* All secondary cpus now may jump to kexec_smp_wait cycle */
-+	relocated_kexec_smp_wait = reboot_code_buffer +
-+		(void *)(kexec_smp_wait - relocate_new_kernel);
-+
-+	return 0;
-+}
-+
-+void machine_kexec_cleanup(struct kimage *kimage)
-+{
-+}
-+
-+#ifdef CONFIG_SMP
-+void kexec_reboot(void)
-+{
-+	do_kexec_t do_kexec = NULL;
-+
-+	/* All secondary cpus go to kexec_smp_wait */
-+	if (smp_processor_id() > 0) {
-+		relocated_kexec_smp_wait(NULL);
-+		unreachable();
-+	}
-+
-+	do_kexec = (void *)reboot_code_buffer;
-+	do_kexec(boot_flag, fdt_addr, first_ind_entry, jump_addr);
-+
-+	unreachable();
-+}
-+
-+static void kexec_shutdown_secondary(void *)
-+{
-+	local_irq_disable();
-+	while (!atomic_read(&kexec_ready_to_reboot))
-+		cpu_relax();
-+
-+	kexec_reboot();
-+}
-+
-+void machine_crash_shutdown(struct pt_regs *regs)
-+{
-+}
-+#endif
-+
-+void machine_shutdown(void)
-+{
-+	smp_call_function(kexec_shutdown_secondary, NULL, 0);
-+}
-+
-+void machine_kexec(struct kimage *image)
-+{
-+	unsigned long entry;
-+	unsigned long *ptr;
-+	struct kimage_arch *internal = &image->arch;
-+
-+	boot_flag = internal->boot_flag;
-+	fdt_addr = internal->fdt_addr;
-+
-+	jump_addr = (unsigned long)phys_to_virt(image->start);
-+
-+	first_ind_entry = (unsigned long)phys_to_virt(image->head & PAGE_MASK);
-+
-+	/*
-+	 * The generic kexec code builds a page list with physical
-+	 * addresses. they are directly accessible through XKPRANGE
-+	 * hence the phys_to_virt() call.
-+	 */
-+	for (ptr = &image->head; (entry = *ptr) && !(entry & IND_DONE);
-+	     ptr = (entry & IND_INDIRECTION) ?
-+	       phys_to_virt(entry & PAGE_MASK) : ptr + 1) {
-+		if (*ptr & IND_SOURCE || *ptr & IND_INDIRECTION ||
-+		    *ptr & IND_DESTINATION)
-+			*ptr = (unsigned long) phys_to_virt(*ptr);
-+	}
-+
-+	/* Mark offline before disabling local irq. */
-+	set_cpu_online(smp_processor_id(), false);
-+
-+	/* we do not want to be bothered. */
-+	local_irq_disable();
-+
-+	pr_notice("Will call new kernel at %lx\n", jump_addr);
-+	pr_notice("FDT image at %lx\n", fdt_addr);
-+	pr_notice("Bye ...\n");
-+
-+	/* Make reboot code buffer available to the boot CPU. */
-+	flush_cache_all();
-+
-+	atomic_set(&kexec_ready_to_reboot, 1);
-+
-+	/*
-+	 * We know we were online, and there will be no incoming IPIs at
-+	 * this point.
-+	 */
-+	set_cpu_online(smp_processor_id(), true);
-+
-+	/* Ensure remote CPUs observe that we're online before rebooting. */
-+	smp_mb__after_atomic();
-+
-+	kexec_reboot();
-+}
-diff --git a/arch/loongarch/kernel/relocate_kernel.S b/arch/loongarch/kernel/relocate_kernel.S
-new file mode 100644
-index 000000000000..d1f242f74ea8
---- /dev/null
-+++ b/arch/loongarch/kernel/relocate_kernel.S
-@@ -0,0 +1,125 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * relocate_kernel.S for kexec
-+ *
-+ * Copyright (C) 2022 Loongson Technology Corporation Limited
-+ */
-+
-+#include <linux/kexec.h>
-+
-+#include <asm/asm.h>
-+#include <asm/asmmacro.h>
-+#include <asm/regdef.h>
-+#include <asm/loongarch.h>
-+#include <asm/stackframe.h>
-+#include <asm/addrspace.h>
-+
-+#define IPI_REG_BASE 0x1fe01000
-+
-+SYM_CODE_START(relocate_new_kernel)
-+	/*
-+	 * s0: Boot flag passed to the new kernel
-+	 * s1: Virt address of the FDT image
-+	 * s2: Pointer to the current entry
-+	 * s3: Virt address to jump to after relocation
-+	 */
-+	move		s0, a0
-+	move		s1, a1
-+	move		s2, a2
-+	move		s3, a3
-+
-+process_entry:
-+	PTR_L		s4, s2, 0
-+	PTR_ADDI	s2, s2, SZREG
-+
-+	/* destination page */
-+	andi		s5, s4, IND_DESTINATION
-+	beqz		s5, 1f
-+	li.w		t0, ~0x1
-+	and		s6, s4, t0	/* store destination addr in s6 */
-+	b		process_entry
-+
-+1:
-+	/* indirection page, update s2	*/
-+	andi		s5, s4, IND_INDIRECTION
-+	beqz		s5, 1f
-+	li.w		t0, ~0x2
-+	and		s2, s4, t0
-+	b		process_entry
-+
-+1:
-+	/* done page */
-+	andi		s5, s4, IND_DONE
-+	beqz		s5, 1f
-+	b		done
-+1:
-+	/* source page */
-+	andi		s5, s4, IND_SOURCE
-+	beqz		s5, process_entry
-+	li.w		t0, ~0x8
-+	and		s4, s4, t0
-+	li.w		s8, (1 << _PAGE_SHIFT) / SZREG
-+
-+copy_word:
-+	/* copy page word by word */
-+	REG_L		s7, s4, 0
-+	REG_S		s7, s6, 0
-+	PTR_ADDI	s6, s6, SZREG
-+	PTR_ADDI	s4, s4, SZREG
-+	LONG_ADDI	s8, s8, -1
-+	beqz		s8, process_entry
-+	b		copy_word
-+	b		process_entry
-+
-+done:
-+	dbar		0
-+
-+	move		a0, s0
-+	move		a1, s1
-+	/* jump to the new kernel */
-+	jr		s3
-+SYM_CODE_END(relocate_new_kernel)
-+
-+#ifdef CONFIG_SMP
-+/*
-+ * Other CPUs should wait until code is relocated and
-+ * then start at entry (?) point.
-+ */
-+SYM_CODE_START(kexec_smp_wait)
-+	li.d		t0, IPI_REG_BASE
-+	li.d		t1, UNCACHE_BASE
-+	or		t0, t0, t1
-+
-+	/*
-+	 * s1:initfn
-+	 * t0:base t1:cpuid t2:node t3:core t4:count
-+	 */
-+	csrrd		t1, LOONGARCH_CSR_CPUID
-+	andi		t1, t1, CSR_CPUID_COREID
-+	andi		t3, t1, 0x3
-+	slli.w		t3, t3, 8              /* get core id */
-+	or		t0, t0, t3
-+	andi		t2, t1, 0x3c
-+	slli.d		t2, t2, 42             /* get node id */
-+	or		t0, t0, t2
-+
-+1:	li.w		t4, 0x100              /* wait for init loop */
-+2:	addi.w		t4, t4, -1             /* limit mailbox access */
-+	bnez		t4, 2b
-+	ld.w		s1, t0, 0x20           /* check PC as an indicator */
-+	beqz		s1, 1b
-+	ld.d		s1, t0, 0x20           /* get PC via mailbox */
-+	ld.d		sp, t0, 0x28           /* get SP via mailbox */
-+	ld.d		tp, t0, 0x30           /* get TP via mailbox */
-+
-+	li.d		t0, CACHE_BASE
-+	or		s1, s1, t0
-+	jr		s1                     /* jump to initial PC */
-+SYM_CODE_END(kexec_smp_wait)
-+#endif
-+
-+relocate_new_kernel_end:
-+
-+SYM_DATA_START(relocate_new_kernel_size)
-+	PTR		relocate_new_kernel_end - relocate_new_kernel
-+SYM_DATA_END(relocate_new_kernel_size)
+Could you please clarify that point? (I'm not trying to debate 
+policy, but rather, to figure out what we should write in the
+documentation of the policy.)
+
+
+thanks,
+
 -- 
-2.36.0
-
+John Hubbard
+NVIDIA
 
 _______________________________________________
 kexec mailing list
