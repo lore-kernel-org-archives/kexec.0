@@ -4,68 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 13B49ECAAD8
-	for <kexec@archiver.kernel.org>; Tue, 30 Aug 2022 07:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 919BFECAAA1
+	for <kexec@archiver.kernel.org>; Tue, 30 Aug 2022 08:31:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=weyU76IMOu/2QthERPgncyVByL+R3getREv17nj9LBU=; b=GtBT8huJF+7I/O
-	kDH7a0nXyQBrF7gN18w3HxyR+u08IxxQENOwxpkS+oAp1G74r8ToVV925Fcy11LJuyWa4pMlo/wEC
-	BGGBgAGH9cpCr2ag934iFhRurDyKoXt4arKp/rMEkUslevxyfDglySqBMoIifcs4i4vu/JBPOpmUf
-	UhF8eHkdTAq+85rHpWFHHzsJwlKeYnHAwjMAxgeTjKUXNolFQXl/8Oar2qCkEGVI/L6cp2GnIYIo3
-	QV/Sycy91Rrldk4FjiZ4ZqIfjwsVDY5WQeGanC3TjnVXGTDZ7wLLKWa8Dcfp1438lu+wCD41dwmw8
-	G10Wdrz5KlmiB/ClHYJA==;
+	List-Owner; bh=NkLTDlpfQ2rg0U6/Bq0Z7QseK04SDXCQrrSPNW5mTSY=; b=vM0CidvqRg1oUI
+	9FOwH1svDERr+a9lFSZbvFNmycNqhEf5dhj3+BLCDTrjp7Q8V0lQ+4fuSmYKPjRnSOCu9Z+6jVCgj
+	g3FvDH9KNeIOJ8r6rxefhe8brr7ceH6/WfB49JHRlbtbfAGwdQ7Z86f9XXTbC0CklwBBqTI164gLd
+	i4KiCNcJHou8Tty6pMBh4dKoRL9GWNTGQa4LlrVv3iVsDm4whp0ZZNZ8mDquCCrvsjQsnZFU4RSHV
+	mEH3ENUnULXV6vNwxGhALgmk2vskiinlyCchehD5FZdXLEebYPctxtayXb+dIVuzr6/zxeG1f/FgP
+	3DwNxODm0sL2IrUYvWlw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oSvou-00Eon5-DW; Tue, 30 Aug 2022 07:38:00 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1oSwec-00FEQn-6L; Tue, 30 Aug 2022 08:31:26 +0000
+Received: from mail-io1-xd30.google.com ([2607:f8b0:4864:20::d30])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oSvo7-00EoR2-5t
-	for kexec@lists.infradead.org; Tue, 30 Aug 2022 07:37:20 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1661845030;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b3NkIhLQKy7eVJi/82pOIjWmNoom7j0EFy9fhBJw9/E=;
-	b=Roya8zx70vPkBsb1Zvq+qSKlmhfqtZjIa6axvY596iluh8/pw5SHUSk8AywZ/tCyv+RJ4y
-	dky+Ws/maRK071TBpbsM31qVFLaDEIa8c4hOwm+6Mu90uCVPCToZ9KX2/Pg9LFyLebYZAv
-	46Y5t3QP+cxoDLLV6NcfMyNHRMMA438=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-204-cTciaf-dNbaNxSJAY5f-0Q-1; Tue, 30 Aug 2022 03:37:07 -0400
-X-MC-Unique: cTciaf-dNbaNxSJAY5f-0Q-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 403DB1019C88;
-	Tue, 30 Aug 2022 07:37:07 +0000 (UTC)
-Received: from localhost (ovpn-12-78.pek2.redhat.com [10.72.12.78])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 8383A492C3B;
-	Tue, 30 Aug 2022 07:37:06 +0000 (UTC)
-Date: Tue, 30 Aug 2022 15:37:03 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Yun Levi <ppbuk5246@gmail.com>
-Cc: will@kernel.org, chenzhou10@huawei.com, nramas@linux.microsoft.com,
-	thunder.leizhen@huawei.com, linux-arm-kernel@lists.infradead.org,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	kexec@lists.infradead.org
-Subject: Re: [PATCH-RESEND] arm64/kexec: Fix missing extra range for
- crashkres_low.
-Message-ID: <Yw2+H9MNpf3Ve0eJ@MiWiFi-R3L-srv>
-References: <20220803151217.75962-1-ppbuk5246@gmail.com>
- <CAM7-yPTdihLsPjDKM-0OEszxNd8n0bgeRseiEkCsSZW-uuaRvw@mail.gmail.com>
+	id 1oSwdw-00FE8t-Dp; Tue, 30 Aug 2022 08:30:45 +0000
+Received: by mail-io1-xd30.google.com with SMTP id d68so8615892iof.11;
+        Tue, 30 Aug 2022 01:30:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=XOQ1w4vm4/BAxEC+jX3EtH/zHfW8KGtqf6yAkxCZrGU=;
+        b=gcdkuigXVR/vglMBclXyxN6RKU1Cq6mDJqZck+kETu/wpBTgNg/NLwx+KVkgCiSTCa
+         QnBaQMICJzda/l5FgnBEN6vk8KZoN0e8/6hW9nr8bmr+HdhOgDcbvfiPhxFUM096SsmS
+         aabZxgI2yDhhk8IJbABimf9O4pDaxkZX/0ALC4cYNyQ+zGbklZQGJzyXqZ3R7fL25aCy
+         hZvKl/PKJdoaLepvAWzauAspBgUcRPHodvQlaFu7cnJIapB6zTnDwwL4sYT6Mrlmjuj/
+         D7i6BlTAiY5oTQsrDib61dL9iFaqWDAsIcuyaBPXxSHYgDEEHctyEMnoH9h3Aih6Oif4
+         MIKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=XOQ1w4vm4/BAxEC+jX3EtH/zHfW8KGtqf6yAkxCZrGU=;
+        b=MYJagrdxJSA7SotMumCkpOVOczZEczqidTxv4JHkQwsOVhd3k4jKlHqCWA1qTx+kdE
+         YO1V7hH8PbX6ELbgBt0Jwoz6IEl+CrktEFqsBBpgxCh67oS7yXwHe5i04AhV6J+RSeBP
+         Xu8l0FuBPq+VXHi9m7G2dw7v0B7KxPmr079P6bPUINoq5IdcVrx2Vc5H2ZNpUxVWNOH0
+         ORsDfuiiW9b9/diUtj1DrDKQx9wRb33kqr9GtGtpqjrAqMT77v4z1KqCPIl9pnObmFCN
+         5LtW+1kvAsqSLeSxnv6QlkQFvuAuR+PtqjJHDCLx3pgPMS6luJUMDZ9VCOaKSRIaTJ0V
+         jmrg==
+X-Gm-Message-State: ACgBeo2ZgQHAUN27VIBYagXG1eLecYTEgGmYdiHe7g4Y+a5r5pxkciXw
+	CG5yYdAgltz6smilGyvSYHjPfJmj1UQ42aBFE/4=
+X-Google-Smtp-Source: AA6agR6MMrtKGn8FUnHIBa7I3kqhhl++k8Y3Jd9D30PcbuoGF4u50BtNrbh/zQRgOvad1+8DaTFKulwW2xYhi2TMrIA=
+X-Received: by 2002:a6b:8d8a:0:b0:689:4bb8:d59e with SMTP id
+ p132-20020a6b8d8a000000b006894bb8d59emr10535278iod.16.1661848242253; Tue, 30
+ Aug 2022 01:30:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAM7-yPTdihLsPjDKM-0OEszxNd8n0bgeRseiEkCsSZW-uuaRvw@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.10
+References: <20220803151217.75962-1-ppbuk5246@gmail.com> <CAM7-yPTdihLsPjDKM-0OEszxNd8n0bgeRseiEkCsSZW-uuaRvw@mail.gmail.com>
+ <Yw2+H9MNpf3Ve0eJ@MiWiFi-R3L-srv>
+In-Reply-To: <Yw2+H9MNpf3Ve0eJ@MiWiFi-R3L-srv>
+From: Yun Levi <ppbuk5246@gmail.com>
+Date: Tue, 30 Aug 2022 17:30:29 +0900
+Message-ID: <CAM7-yPRoBofD9+avRj1SH_GFogAnmJ7U8jJjbViH_hgOFBTX0w@mail.gmail.com>
+Subject: Re: [PATCH-RESEND] arm64/kexec: Fix missing extra range for crashkres_low.
+To: Baoquan He <bhe@redhat.com>
+Cc: will@kernel.org, chenzhou10@huawei.com, nramas@linux.microsoft.com, 
+	thunder.leizhen@huawei.com, linux-arm-kernel@lists.infradead.org, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, kexec@lists.infradead.org
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220830_003717_637583_66099473 
-X-CRM114-Status: GOOD (  16.65  )
+X-CRM114-CacheID: sfid-20220830_013044_509323_F6FEE10F 
+X-CRM114-Status: UNSURE (   8.04  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,47 +86,20 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 08/30/22 at 01:28pm, Yun Levi wrote:
-> Like crashk_res, Calling crash_exclude_mem_range function with
-> crashk_low_res area would need extra crash_mem range too.
-> Add one extra crash_mem range when crashk_low_res is used.
-> 
-> Signed-off-by: Levi Yun <ppbuk5246@gmail.com>
-> ---
->  arch/arm64/kernel/machine_kexec_file.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/arm64/kernel/machine_kexec_file.c
-> b/arch/arm64/kernel/machine_kexec_file.c
-> index 889951291cc0..378aee04e7d4 100644
-> --- a/arch/arm64/kernel/machine_kexec_file.c
-> +++ b/arch/arm64/kernel/machine_kexec_file.c
-> @@ -51,6 +51,9 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
->         for_each_mem_range(i, &start, &end)
->                 nr_ranges++;
-> 
-> +       if (crashk_low_res.end)
-> +               nr_ranges++; /**< for exclusion of
-> crashkernel=size,low region */
-> +
+> Right, excluding crashkernel region may cause memory region splitting,
+> so we need extra slot for that.
+>
+> Meanwhile, can you fix above code comment mess? Otherwise, this looks
+> good to me.
 
-Right, excluding crashkernel region may cause memory region splitting,
-so we need extra slot for that.
+Thanks! I'll remove the comment.
 
-Meanwhile, can you fix above code comment mess? Otherwise, this looks
-good to me. 
+> Or we can add extra 2 slots like we do in x86, it just add another 16
+> bytes temporarily.
 
-Or we can add extra 2 slots like we do in x86, it just add another 16
-bytes temporarily.
+Agree. I'll send the patch again by modifying nr_ranges' initialized value as 2.
 
-
->         cmem = kmalloc(struct_size(cmem, ranges, nr_ranges), GFP_KERNEL);
->         if (!cmem)
->                 return -ENOMEM;
-> --
-> 2.35.1
-> 
-
+Thanks!
 
 _______________________________________________
 kexec mailing list
