@@ -4,88 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2EA49ECAAA1
-	for <kexec@archiver.kernel.org>; Mon, 29 Aug 2022 17:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 76C03ECAAD4
+	for <kexec@archiver.kernel.org>; Tue, 30 Aug 2022 01:53:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=onO7XjGX/jVXrurs4QmujwnNqZNR3/W6HdistASkLd0=; b=tQVQXesMC/mP+O
-	1cff2cNOnXX6qjZ54dfRPuSw7tDVS5qywSWKUAy9W3GyaEJrVvvWOhFl+BWMhTrlR9oEYoEOfCqov
-	ZZk7yQcRwarQXpRr710urW/SYf6rkouGHPMB5goEtC25bIWLRRUl1r7Wg/vK7p385J3gnS1mgdgOq
-	yN/aJqw4LdviMcyDY+FxE156c5diq2PmlG2hrO+PoEBb2TTyjfnpkjnkJzG2AXCSns//5hrf3H+g1
-	i1LkzpxeHO0UwYP4j7+Yo8Xg56xMKAJzmIh7n1CPN2TEIHXS7rs24mKnzPNnf/Ic0bct9+kUCa7Gg
-	9hcfzaOCSqa9PnWFo51Q==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:Date:Message-ID:From:Cc:
+	References:To:Subject:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=XDCqGtpGh/KJja7vlPKQwBu9cLe2SA8jBSE1rypB9U0=; b=gbdq+PSecWk332rPT5ME4HATfR
+	XkcL4gqhcjtUv2vFqVcexm+sHNn06KN2XrWq54RELOLiUZ2lewowKC1nK0F+X26RJxtjCfEFpDzAj
+	UYhTVxQjjMkrUcooQBgerqUXHS33siqKxkyObnYAT379WaEHQnbzm9ubE+NtWW2ez24YahAU7EuwK
+	TiZID+pNKWCbfMR9wSjiGxOc/koYlMQfnWstEqsUTq1Oyf+XlMTEFFlHkaT6qxtQjKrwtqZrvBS0V
+	o/U/+L7s+2eGxsGpn0sDSR5JZt1eNyKYGk/IkMWeOvhQlW52EM3mQlOmWbsr84GvUpYX0JvJOSTkS
+	+3C4UQcw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oSiYA-00C2bV-6l; Mon, 29 Aug 2022 17:27:50 +0000
-Received: from mail-ej1-x62b.google.com ([2a00:1450:4864:20::62b])
-	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oSiY7-00C2ak-55
-	for kexec@lists.infradead.org; Mon, 29 Aug 2022 17:27:48 +0000
-Received: by mail-ej1-x62b.google.com with SMTP id cu2so17181237ejb.0
-        for <kexec@lists.infradead.org>; Mon, 29 Aug 2022 10:27:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=gXzsOE1CShzICjrF5qGy2ierXGFwu1QBu0gbN37zalE=;
-        b=Ut/Yn1l3ZfKq3kllusnwCW49U1+1e9wmphOxJZL9GkGYiMI92RHLiKlBhN3oEZvanI
-         7JYgCGOtlhsspYwQS7VYStSwZpo7WvkVcklDEeY8RpOVreWefdxEoXKv29L7rmxzpHKR
-         /hWDL1eQgn7kgPaex1M/knUHaYiw/VvWxr2uY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=gXzsOE1CShzICjrF5qGy2ierXGFwu1QBu0gbN37zalE=;
-        b=0t24yFXtVjSlLNwmJj7XYqcF3mNiWc8PGlj/mPygM4pC8/KAu2g7uioppYblJ6KsGC
-         DXveWffPZzVJvwItUW96B91AdQucvpqPhdTbjhMSqvlYZ7XTpr8oi2zhcOVcNYq0L7/k
-         Y82r6J+A+eDvoZIsnOPLHhNHUxNFKq6Gp2FEAhF3trOlx16Iu0rInIVD5cGfWuqgRs9p
-         fYScK9xSqQ9PnpYWehj+g17/ZUpZ5uHzhSm0BgP7GdNbiifVgj508uw8b9sA+ATtNblN
-         npKPxNFmVuzhSEJF2kUJb7AbcP7yRDopuBdu9ZkVuXDc2PTnrBHCknviorIHoLlJ1WzC
-         wuYQ==
-X-Gm-Message-State: ACgBeo3uT/Yy9AxL2KTzGjIelJ/seFSHLBelFWOGa5VYp0rO9f3Z2ANb
-	px74nLsjv9IRg5zJQdiSW1ZJDoRenUHqPb6V
-X-Google-Smtp-Source: AA6agR65rThHmWOQem/zJ1p1qPQ8v7h9OsSOU9kT1jF+beNRvOxkkBvCwLaiCIv13kLdiaJn/mZ8RA==
-X-Received: by 2002:a17:907:6890:b0:741:a4d6:c57b with SMTP id qy16-20020a170907689000b00741a4d6c57bmr1438064ejc.753.1661794064803;
-        Mon, 29 Aug 2022 10:27:44 -0700 (PDT)
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com. [209.85.128.44])
-        by smtp.gmail.com with ESMTPSA id 1-20020a170906210100b00731582babcasm4730048ejt.71.2022.08.29.10.27.44
-        for <kexec@lists.infradead.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Aug 2022 10:27:44 -0700 (PDT)
-Received: by mail-wm1-f44.google.com with SMTP id v7-20020a1cac07000000b003a6062a4f81so8567062wme.1
-        for <kexec@lists.infradead.org>; Mon, 29 Aug 2022 10:27:44 -0700 (PDT)
-X-Received: by 2002:a05:600c:657:b0:3a5:e4e6:ee24 with SMTP id
- p23-20020a05600c065700b003a5e4e6ee24mr7189742wmm.68.1661793592665; Mon, 29
- Aug 2022 10:19:52 -0700 (PDT)
+	id 1oSqRP-00DWa2-Ve; Tue, 30 Aug 2022 01:53:24 +0000
+Received: from mail.loongson.cn ([114.242.206.163] helo=loongson.cn)
+	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1oSqRK-00DWXt-4R
+	for kexec@lists.infradead.org; Tue, 30 Aug 2022 01:53:22 +0000
+Received: from localhost.localdomain (unknown [111.9.175.10])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx9OGFbQ1jgyYMAA--.53275S3;
+	Tue, 30 Aug 2022 09:53:10 +0800 (CST)
+Subject: Re: [PATCH 1/3] LoongArch: Add kexec support
+To: Youling Tang <tangyouling@loongson.cn>,
+ Huacai Chen <chenhuacai@kernel.org>, Baoquan He <bhe@redhat.com>,
+ Eric Biederman <ebiederm@xmission.com>
+References: <1661747823-23745-1-git-send-email-tangyouling@loongson.cn>
+ <1661747823-23745-2-git-send-email-tangyouling@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, Vivek Goyal <vgoyal@redhat.com>,
+ Dave Young <dyoung@redhat.com>, Guo Ren <guoren@kernel.org>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, kexec@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+From: Jinyang He <hejinyang@loongson.cn>
+Message-ID: <e981e841-c43c-bbc5-a0f9-1077be9811cb@loongson.cn>
+Date: Tue, 30 Aug 2022 09:53:09 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-References: <20220824163100.224449-1-david@redhat.com> <20220824163100.224449-2-david@redhat.com>
- <0db131cf-013e-6f0e-c90b-5c1e840d869c@nvidia.com> <ea380cf0-acda-aaba-fb63-2834da91b66b@redhat.com>
- <CALu+AoThhou7z+JCyv44AxGWDLDt2b7h0W6wcKRsJyLvSR1iQA@mail.gmail.com>
- <fe7aee66-d9f7-e472-a13f-e4c5aa176cca@redhat.com> <CALu+AoRwVfr=9KabOLUQigWwCtP5RLQ1YaKbG75ZVM9E-bW2ZQ@mail.gmail.com>
- <CAHk-=wit-DmhMfQErY29JSPjFgebx_Ld+pnerc4J2Ag990WwAA@mail.gmail.com> <29fb251b-4622-4eb6-538d-bab6ac6a76f6@nvidia.com>
-In-Reply-To: <29fb251b-4622-4eb6-538d-bab6ac6a76f6@nvidia.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 29 Aug 2022 10:19:36 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whScqgJaP71QBBS9ik0kUrZBDLw+ZvzF4AxEo7eviGwaw@mail.gmail.com>
-Message-ID: <CAHk-=whScqgJaP71QBBS9ik0kUrZBDLw+ZvzF4AxEo7eviGwaw@mail.gmail.com>
-Subject: Re: [PATCH RFC 1/2] coding-style.rst: document BUG() and WARN() rules
- ("do not crash the kernel")
-To: John Hubbard <jhubbard@nvidia.com>
-Cc: Dave Young <dyoung@redhat.com>, David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-doc@vger.kernel.org, kexec@lists.infradead.org, 
-	Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, 
-	David Laight <David.Laight@aculab.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>, 
-	Dwaipayan Ray <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>, 
-	Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, 
-	Stephen Johnston <sjohnsto@redhat.com>, Prarit Bhargava <prarit@redhat.com>
+In-Reply-To: <1661747823-23745-2-git-send-email-tangyouling@loongson.cn>
+X-CM-TRANSID: AQAAf8Cx9OGFbQ1jgyYMAA--.53275S3
+X-Coremail-Antispam: 1UD129KBjvAXoW3uF45Xr45Kw1xWw4fXr1kZrb_yoW8GF4fWo
+	ZxtF47Kw48KryUCw15G3srXFZIqryDKrZ3Z39rA398Wry2y34jqr1Yk34YyryfKwsYgws7
+	G347u395ua97Jrn5n29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
+	AaLaJ3UjIYCTnIWjp_UUUYp7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20EY4v20xva
+	j40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2
+	x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8
+	JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
+	4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
+	Yx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
+	WUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY02Avz4vE14v_KwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUChFxUUUUU=
+X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220829_102747_208907_745FB0F6 
-X-CRM114-Status: GOOD (  11.51  )
+X-CRM114-CacheID: sfid-20220829_185319_331807_D5603400 
+X-CRM114-Status: GOOD (  48.44  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,29 +77,493 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sun, Aug 28, 2022 at 9:49 PM John Hubbard <jhubbard@nvidia.com> wrote:
+Hi, Youling,
+
+
+On 08/29/2022 12:37 PM, Youling Tang wrote:
+> Add three new files, kexec.h, machine_kexec.c and relocate_kernel.S to the
+> LoongArch architecture that add support for the kexec re-boot mechanis
+> (CONFIG_KEXEC) on LoongArch platforms.
 >
-> ...here. I count ~1000 calls to panic() in today's kernel, to a
-> function in kernel/panic.c that shows no hint of being removed, nor
-> even deprecated.
+> Supports loading vmlinux (vmlinux.elf) in ELF format and vmlinux.efi in
+> PE format.
+>
+> I tested this on  LoongArch 3A5000 machine and works as expected,
+>
+>   $ sudo kexec -l /boot/vmlinux.efi --reuse-cmdline
+>   $ sudo kexec -e
+>
+> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+> ---
+>   arch/loongarch/Kconfig                  |  11 ++
+>   arch/loongarch/include/asm/kexec.h      |  58 ++++++++
+>   arch/loongarch/kernel/Makefile          |   2 +
+>   arch/loongarch/kernel/head.S            |   7 +-
+>   arch/loongarch/kernel/machine_kexec.c   | 178 ++++++++++++++++++++++++
+>   arch/loongarch/kernel/relocate_kernel.S | 125 +++++++++++++++++
+>   6 files changed, 380 insertions(+), 1 deletion(-)
+>   create mode 100644 arch/loongarch/include/asm/kexec.h
+>   create mode 100644 arch/loongarch/kernel/machine_kexec.c
+>   create mode 100644 arch/loongarch/kernel/relocate_kernel.S
+>
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 45364cffc793..903c82fa958d 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -409,6 +409,17 @@ config FORCE_MAX_ZONEORDER
+>   	  The page size is not necessarily 4KB.  Keep this in mind
+>   	  when choosing a value for this option.
+>   
+> +config KEXEC
+> +	bool "Kexec system call"
+> +	select KEXEC_CORE
+> +	help
+> +	  kexec is a system call that implements the ability to shutdown your
+> +	  current kernel, and to start another kernel.  It is like a reboot
+> +	  but it is independent of the system firmware.   And like a reboot
+> +	  you can start any kernel with it, not just Linux.
+> +
+> +	  The name comes from the similarity to the exec system call.
+> +
+>   config SECCOMP
+>   	bool "Enable seccomp to safely compute untrusted bytecode"
+>   	depends on PROC_FS
+> diff --git a/arch/loongarch/include/asm/kexec.h b/arch/loongarch/include/asm/kexec.h
+> new file mode 100644
+> index 000000000000..5c9e7b5eccb8
+> --- /dev/null
+> +++ b/arch/loongarch/include/asm/kexec.h
+> @@ -0,0 +1,58 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * kexec.h for kexec
+> + *
+> + * Copyright (C) 2022 Loongson Technology Corporation Limited
+> + */
+> +
+> +#ifndef _ASM_KEXEC_H
+> +#define _ASM_KEXEC_H
+> +
+> +#include <asm/stacktrace.h>
+> +#include <asm/page.h>
+> +
+> +/* Maximum physical address we can use pages from */
+> +#define KEXEC_SOURCE_MEMORY_LIMIT (-1UL)
+> +/* Maximum address we can reach in physical address mode */
+> +#define KEXEC_DESTINATION_MEMORY_LIMIT (-1UL)
+> + /* Maximum address we can use for the control code buffer */
+> +#define KEXEC_CONTROL_MEMORY_LIMIT (-1UL)
+> +
+> +/* Reserve a page for the control code buffer */
+> +#define KEXEC_CONTROL_PAGE_SIZE PAGE_SIZE
+> +
+> +/* The native architecture */
+> +#define KEXEC_ARCH KEXEC_ARCH_LOONGARCH
+> +
+> +static inline void crash_setup_regs(struct pt_regs *newregs,
+> +				    struct pt_regs *oldregs)
+> +{
+> +	if (oldregs)
+> +		memcpy(newregs, oldregs, sizeof(*newregs));
+> +	else
+> +		prepare_frametrace(newregs);
+> +}
+> +
+> +#define ARCH_HAS_KIMAGE_ARCH
+> +
+> +struct kimage_arch {
+> +	unsigned long boot_flag;
+> +	unsigned long fdt_addr;
+> +};
+> +
+> +typedef void (*do_kexec_t)(unsigned long boot_flag,
+> +			   unsigned long fdt_addr,
+> +			   unsigned long first_ind_entry,
+> +			   unsigned long jump_addr);
+> +
+> +struct kimage;
+> +extern const unsigned char relocate_new_kernel[];
+> +extern const size_t relocate_new_kernel_size;
+> +
+> +#ifdef CONFIG_SMP
+> +extern atomic_t kexec_ready_to_reboot;
+> +extern const unsigned char kexec_smp_wait[];
+> +extern void kexec_reboot(void);
+> +#endif
+> +
+> +#endif /* !_ASM_KEXEC_H */
+> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
+> index a213e994db68..20b64ac3f128 100644
+> --- a/arch/loongarch/kernel/Makefile
+> +++ b/arch/loongarch/kernel/Makefile
+> @@ -17,6 +17,8 @@ obj-$(CONFIG_CPU_HAS_FPU)	+= fpu.o
+>   obj-$(CONFIG_MODULES)		+= module.o module-sections.o
+>   obj-$(CONFIG_STACKTRACE)	+= stacktrace.o
+>   
+> +obj-$(CONFIG_KEXEC)             += machine_kexec.o relocate_kernel.o
+> +
+>   obj-$(CONFIG_PROC_FS)		+= proc.o
+>   
+>   obj-$(CONFIG_SMP)		+= smp.o
+> diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
+> index 01bac62a6442..22bdf4928325 100644
+> --- a/arch/loongarch/kernel/head.S
+> +++ b/arch/loongarch/kernel/head.S
+> @@ -20,7 +20,12 @@
+>   
+>   _head:
+>   	.word	MZ_MAGIC		/* "MZ", MS-DOS header */
+> -	.org	0x3c			/* 0x04 ~ 0x3b reserved */
+> +	.org	0x8
+> +	.quad	0			/* Image load offset from start of RAM */
+> +	.dword	_end - _text		/* Effective size of kernel image */
+> +	.quad	0
+> +	.dword	kernel_entry		/* Kernel entry point */
+> +	.org	0x3c			/* 0x28 ~ 0x3b reserved */
+>   	.long	pe_header - _head	/* Offset to the PE header */
+>   
+>   pe_header:
+> diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kernel/machine_kexec.c
+> new file mode 100644
+> index 000000000000..4ffcd4cd9c8c
+> --- /dev/null
+> +++ b/arch/loongarch/kernel/machine_kexec.c
+> @@ -0,0 +1,178 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * machine_kexec.c for kexec
+> + *
+> + * Copyright (C) 2022 Loongson Technology Corporation Limited
+> + */
+> +#include <linux/compiler.h>
+> +#include <linux/cpu.h>
+> +#include <linux/kexec.h>
+> +#include <linux/mm.h>
+> +#include <linux/delay.h>
+> +#include <linux/libfdt.h>
+> +#include <linux/of_fdt.h>
+> +
+> +#include <asm/bootinfo.h>
+> +#include <asm/cacheflush.h>
+> +#include <asm/page.h>
+> +
+> +/* 0x100000 ~ 0x200000 is safe */
+> +#define KEXEC_CTRL_CODE	TO_CACHE(0x100000UL)
+> +#define KEXEC_BLOB_ADDR	TO_CACHE(0x108000UL)
+> +
+> +static unsigned long reboot_code_buffer;
+> +#ifdef CONFIG_SMP
+> +void (*relocated_kexec_smp_wait)(void *);
+> +atomic_t kexec_ready_to_reboot = ATOMIC_INIT(0);
+> +#endif
+> +
+> +static unsigned long jump_addr;
+> +static unsigned long first_ind_entry;
+> +static unsigned long boot_flag;
+> +static unsigned long fdt_addr;
+> +
+> +static void kexec_image_info(const struct kimage *kimage)
+> +{
+> +	unsigned long i;
+> +
+> +	pr_debug("kexec kimage info:\n");
+> +	pr_debug("\ttype:        %d\n", kimage->type);
+> +	pr_debug("\tstart:       %lx\n", kimage->start);
+> +	pr_debug("\thead:        %lx\n", kimage->head);
+> +	pr_debug("\tnr_segments: %lu\n", kimage->nr_segments);
+> +
+> +	for (i = 0; i < kimage->nr_segments; i++) {
+> +		pr_debug("\t    segment[%lu]: %016lx - %016lx", i,
+> +			kimage->segment[i].mem,
+> +			kimage->segment[i].mem + kimage->segment[i].memsz);
+> +		pr_debug("\t\t0x%lx bytes, %lu pages\n",
+> +			(unsigned long)kimage->segment[i].memsz,
+> +			(unsigned long)kimage->segment[i].memsz /  PAGE_SIZE);
+> +	}
+> +}
+> +
+> +int machine_kexec_prepare(struct kimage *kimage)
+> +{
+> +	int i;
+> +	void *dtb = (void *)KEXEC_BLOB_ADDR;
+> +
+> +	kexec_image_info(kimage);
+> +
+> +	/* Find the Flattened Device Tree */
+> +	for (i = 0; i < kimage->nr_segments; i++) {
+> +		if (!fdt_check_header(kimage->segment[i].buf)) {
+> +			memcpy(dtb, kimage->segment[i].buf, SZ_64K);
+> +			kimage->arch.boot_flag = fw_arg0;
+> +			kimage->arch.fdt_addr = (unsigned long) dtb;
+> +			break;
+> +		}
+> +		continue;
+> +	}
+> +
+> +	/* kexec need a safe page to save reboot_code_buffer */
+> +	kimage->control_code_page = virt_to_page((void *)KEXEC_CTRL_CODE);
+> +
+> +	reboot_code_buffer =
+> +	  (unsigned long)page_address(kimage->control_code_page);
+> +	memcpy((void *)reboot_code_buffer, relocate_new_kernel,
+> +	       relocate_new_kernel_size);
+It copys same content to KEXEC_CTRL_CODE each time, could we do this at 
+boot time?
 
-Heh. I guess we never finished the panic() removal.
+BTW, our system always keep the low-2MB no used, on mips-loongson or
+LoongArch. Is that necessary on LoongArch? We cannot use parameter
+'mem=YYM' normally but 'mem=YYM@2M' is ok. And the low-2MB is not
+in virtual memory management, although we can get it in kernel.
 
-It's been decades, I suspect we ended up deciding that the bootup
-failures might as well continue to panic.
+In kexec/kdump process, we can follows kimage_alloc_control_pages().
+When the boot cpu copy complete the second-kernels, all cpus can jump
+to a kernel-entry-trampoline which is in kernel image. Then we don't
+worry about the code can be destroyed. The kernel-entry-trampoline
+get its cpuid, keep non-boot cpus do as kexec_smp_wait and let boot
+cpu go kernel-entry. In this way we can drop the low-2MB IMO.
 
-Anyway, please don't use it. It's one of those things that should
-never ever trigger, and mainly for something like "oops, I ran out of
-memory during boot" etc.
+> +
+> +	/* All secondary cpus now may jump to kexec_smp_wait cycle */
+> +	relocated_kexec_smp_wait = reboot_code_buffer +
+> +		(void *)(kexec_smp_wait - relocate_new_kernel);
+> +
+> +	return 0;
+> +}
+> +
+> +void machine_kexec_cleanup(struct kimage *kimage)
+> +{
+> +}
+> +
+> +#ifdef CONFIG_SMP
+> +void kexec_reboot(void)
+> +{
+> +	do_kexec_t do_kexec = NULL;
+> +
+> +	/* All secondary cpus go to kexec_smp_wait */
+> +	if (smp_processor_id() > 0) {
+> +		relocated_kexec_smp_wait(NULL);
+> +		unreachable();
+> +	}
+> +
+> +	do_kexec = (void *)reboot_code_buffer;
+> +	do_kexec(boot_flag, fdt_addr, first_ind_entry, jump_addr);
+> +
+> +	unreachable();
+> +}
+> +
+> +static void kexec_shutdown_secondary(void *)
+> +{
+> +	local_irq_disable();
+> +	while (!atomic_read(&kexec_ready_to_reboot))
+> +		cpu_relax();
+> +
+> +	kexec_reboot();
+> +}
+> +
+> +void machine_crash_shutdown(struct pt_regs *regs)
+> +{
+> +}
+> +#endif
+> +
+> +void machine_shutdown(void)
+> +{
+> +	smp_call_function(kexec_shutdown_secondary, NULL, 0);
+> +}
+> +
+> +void machine_kexec(struct kimage *image)
+> +{
+> +	unsigned long entry;
+> +	unsigned long *ptr;
+> +	struct kimage_arch *internal = &image->arch;
+> +
+> +	boot_flag = internal->boot_flag;
+> +	fdt_addr = internal->fdt_addr;
+> +
+> +	jump_addr = (unsigned long)phys_to_virt(image->start);
+> +
+> +	first_ind_entry = (unsigned long)phys_to_virt(image->head & PAGE_MASK);
+> +
+> +	/*
+> +	 * The generic kexec code builds a page list with physical
+> +	 * addresses. they are directly accessible through XKPRANGE
+> +	 * hence the phys_to_virt() call.
+> +	 */
+> +	for (ptr = &image->head; (entry = *ptr) && !(entry & IND_DONE);
+> +	     ptr = (entry & IND_INDIRECTION) ?
+> +	       phys_to_virt(entry & PAGE_MASK) : ptr + 1) {
+> +		if (*ptr & IND_SOURCE || *ptr & IND_INDIRECTION ||
+> +		    *ptr & IND_DESTINATION)
+> +			*ptr = (unsigned long) phys_to_virt(*ptr);
+> +	}
+> +
+> +	/* Mark offline before disabling local irq. */
+> +	set_cpu_online(smp_processor_id(), false);
+> +
+> +	/* we do not want to be bothered. */
+> +	local_irq_disable();
+> +
+> +	pr_notice("Will call new kernel at %lx\n", jump_addr);
+> +	pr_notice("FDT image at %lx\n", fdt_addr);
+> +	pr_notice("Bye ...\n");
+> +
+> +	/* Make reboot code buffer available to the boot CPU. */
+> +	flush_cache_all();
+> +
+> +	atomic_set(&kexec_ready_to_reboot, 1);
+> +
+> +	/*
+> +	 * We know we were online, and there will be no incoming IPIs at
+> +	 * this point.
+> +	 */
+> +	set_cpu_online(smp_processor_id(), true);
+> +
+> +	/* Ensure remote CPUs observe that we're online before rebooting. */
+> +	smp_mb__after_atomic();
+> +
+> +	kexec_reboot();
+> +}
+> diff --git a/arch/loongarch/kernel/relocate_kernel.S b/arch/loongarch/kernel/relocate_kernel.S
+> new file mode 100644
+> index 000000000000..d1f242f74ea8
+> --- /dev/null
+> +++ b/arch/loongarch/kernel/relocate_kernel.S
+> @@ -0,0 +1,125 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * relocate_kernel.S for kexec
+> + *
+> + * Copyright (C) 2022 Loongson Technology Corporation Limited
+> + */
+> +
+> +#include <linux/kexec.h>
+> +
+> +#include <asm/asm.h>
+> +#include <asm/asmmacro.h>
+> +#include <asm/regdef.h>
+> +#include <asm/loongarch.h>
+> +#include <asm/stackframe.h>
+> +#include <asm/addrspace.h>
+> +
+> +#define IPI_REG_BASE 0x1fe01000
+> +
+> +SYM_CODE_START(relocate_new_kernel)
+> +	/*
+> +	 * s0: Boot flag passed to the new kernel
+> +	 * s1: Virt address of the FDT image
+> +	 * s2: Pointer to the current entry
+> +	 * s3: Virt address to jump to after relocation
+> +	 */
+> +	move		s0, a0
+> +	move		s1, a1
+> +	move		s2, a2
+> +	move		s3, a3
+> +
+> +process_entry:
+> +	PTR_L		s4, s2, 0
+> +	PTR_ADDI	s2, s2, SZREG
+> +
+> +	/* destination page */
+> +	andi		s5, s4, IND_DESTINATION
+> +	beqz		s5, 1f
+> +	li.w		t0, ~0x1
+> +	and		s6, s4, t0	/* store destination addr in s6 */
+> +	b		process_entry
+> +
+> +1:
+> +	/* indirection page, update s2	*/
+> +	andi		s5, s4, IND_INDIRECTION
+> +	beqz		s5, 1f
+> +	li.w		t0, ~0x2
+> +	and		s2, s4, t0
+> +	b		process_entry
+> +
+> +1:
+> +	/* done page */
+> +	andi		s5, s4, IND_DONE
+> +	beqz		s5, 1f
+> +	b		done
+> +1:
+> +	/* source page */
+> +	andi		s5, s4, IND_SOURCE
+> +	beqz		s5, process_entry
+> +	li.w		t0, ~0x8
+> +	and		s4, s4, t0
+> +	li.w		s8, (1 << _PAGE_SHIFT) / SZREG
+> +
+> +copy_word:
+> +	/* copy page word by word */
+> +	REG_L		s7, s4, 0
+> +	REG_S		s7, s6, 0
+> +	PTR_ADDI	s6, s6, SZREG
+> +	PTR_ADDI	s4, s4, SZREG
+> +	LONG_ADDI	s8, s8, -1
+> +	beqz		s8, process_entry
+> +	b		copy_word
+> +	b		process_entry
+> +
+> +done:
+> +	dbar		0
+ibar, too?
+> +
+> +	move		a0, s0
+> +	move		a1, s1
+> +	/* jump to the new kernel */
+> +	jr		s3
+> +SYM_CODE_END(relocate_new_kernel)
+> +
+> +#ifdef CONFIG_SMP
+> +/*
+> + * Other CPUs should wait until code is relocated and
+> + * then start at entry (?) point.
+> + */
+> +SYM_CODE_START(kexec_smp_wait)
+> +	li.d		t0, IPI_REG_BASE
+> +	li.d		t1, UNCACHE_BASE
+> +	or		t0, t0, t1
+> +
+> +	/*
+> +	 * s1:initfn
+> +	 * t0:base t1:cpuid t2:node t3:core t4:count
+> +	 */
+> +	csrrd		t1, LOONGARCH_CSR_CPUID
+> +	andi		t1, t1, CSR_CPUID_COREID
+> +	andi		t3, t1, 0x3
+> +	slli.w		t3, t3, 8              /* get core id */
+> +	or		t0, t0, t3
+> +	andi		t2, t1, 0x3c
+> +	slli.d		t2, t2, 42             /* get node id */
+> +	or		t0, t0, t2
+> +
+> +1:	li.w		t4, 0x100              /* wait for init loop */
+> +2:	addi.w		t4, t4, -1             /* limit mailbox access */
+> +	bnez		t4, 2b
+> +	ld.w		s1, t0, 0x20           /* check PC as an indicator */
+Can we do this with iocsr*?
 
-Oh, I'm sure it's crept into other places too, but that doesn't make it ok.
+Thanks,
+Jinyang
+> +	beqz		s1, 1b
+> +	ld.d		s1, t0, 0x20           /* get PC via mailbox */
+> +	ld.d		sp, t0, 0x28           /* get SP via mailbox */
+> +	ld.d		tp, t0, 0x30           /* get TP via mailbox */
+> +
+> +	li.d		t0, CACHE_BASE
+> +	or		s1, s1, t0
+> +	jr		s1                     /* jump to initial PC */
+> +SYM_CODE_END(kexec_smp_wait)
+> +#endif
+> +
+> +relocate_new_kernel_end:
+> +
+> +SYM_DATA_START(relocate_new_kernel_size)
+> +	PTR		relocate_new_kernel_end - relocate_new_kernel
+> +SYM_DATA_END(relocate_new_kernel_size)
 
-                 Linus
 
 _______________________________________________
 kexec mailing list
