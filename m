@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 89135ECAAD5
-	for <kexec@archiver.kernel.org>; Wed, 31 Aug 2022 02:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 43739ECAAA1
+	for <kexec@archiver.kernel.org>; Wed, 31 Aug 2022 03:27:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=kzw6B81T2giwmtaf7p8PdLCFMMu5HS5DZrY3y7wzR/I=; b=V0eZ+Ri8FRVuKY
-	bZ5HUTUVjDi11Uf75UovpK93G7JvAnDmPKAIYJ3HyMRr7hecgqYc7fkzNHi7D3POOc2wu1QJCVY85
-	6TDNfl4JlFmYZO0/KyXRMzjUMs63FnjhnCycc46Y5RsoBWjixyCWN0aBpNfZk7RYdkDq7EomyOn38
-	9r7T3jB/AL185YhkBEVYDBVX2iaX7pa0hq4LxK4QwcMqsL8tU9UAo/ack+P4Uh1oYp+RgDS6bDvLv
-	PhF/f6F8NuvmmyKTZaub5OYrTj/S2hA8hZWeZ3H9mhzLrywZbXdPHZvyI8xS8rCytkTp985q2JmQ8
-	FKhqsuF6vBnAM8o/Ch8w==;
+	List-Owner; bh=ZO/YpC9yA3Ty4FLGDbRi7ABszgNmAaZi7TdzbCvHR1w=; b=eyQq82GUxFknun
+	4ieUL7QYxR16e8EUIv8bXRZNsdSn4ZayZ0senZ1XTffI9qSKBYyJnusS6yjrPG5d0FuId6SBGfRsJ
+	P8GRHkUtWlqauwLM0EXOfBWybiBt7FWj1xrdaZ92NBydB7YXonCU8B/iLLv3bOve8bkxk7dk6hHcQ
+	TzWTJUHrELQ9QvY0x6+Gij+CTSzm1U7XqW/laS7TfVxHYaD81E5kTdvFrdJz5vfRXdnvjQy6qQoyQ
+	c0RkeFXzG1UQ/urXFs5Dj9t8+yZfhixwVx0jp0X8y7fKbKzZVuad5DCBU/rp6J9c1BHQwXVrMTR6N
+	Xq11tZ6+4gOgBrWa5mFA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oTDok-003KKm-1F; Wed, 31 Aug 2022 02:51:02 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1oTENQ-003V8E-I5; Wed, 31 Aug 2022 03:26:52 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oTDog-003KJU-0j
-	for kexec@lists.infradead.org; Wed, 31 Aug 2022 02:50:59 +0000
+	id 1oTENI-003V6h-8z
+	for kexec@lists.infradead.org; Wed, 31 Aug 2022 03:26:47 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1661914256;
+	s=mimecast20190719; t=1661916400;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9I0C4e+VVn0o0q8ciL18IhupcMfqpgdsCo10tdjY7jU=;
-	b=Ib+m+PNJTFTBBB5X6DzkniXV5WBejQU5F/XXm9244oWqjd13Mv92CE9QtELupZ7UazDhAn
-	ZdKICacMBImZTKWSUYC51iy4W055PzTrrQbhE0SlkZZZu4suioZoKYao4rORa/4Q0azLmh
-	6GO/z4d/PwKlCgWyduh0HsZ/0UjaO1g=
+	bh=kELsNQInWQRbaN2n5gtMbiLypzFZyTW3G6NHOnHK/mc=;
+	b=aYnjJYZSmYOe9QFfW0qlTtMtEGbBUz0vKpR34Eh5p38xznQeBtf1MvQXeKhprTq+NKAFeg
+	t/pdjUSEWdMMMeJOHHp9mXWKPGrHO1Z5t4oX2R51RLEtxayOgHU+xvIPFkIU36uxkBy4l9
+	RJDzSBUcCG+bVKL18HmXKDoWLZK+LS4=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-607-C2FAifgcMmqorM936gQpQw-1; Tue, 30 Aug 2022 22:50:50 -0400
-X-MC-Unique: C2FAifgcMmqorM936gQpQw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+ us-mta-636-eorvqPp0NOKWNOAsWYuzAg-1; Tue, 30 Aug 2022 23:26:36 -0400
+X-MC-Unique: eorvqPp0NOKWNOAsWYuzAg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B1536801231;
-	Wed, 31 Aug 2022 02:50:49 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9E62785A585;
+	Wed, 31 Aug 2022 03:26:35 +0000 (UTC)
 Received: from localhost (ovpn-13-50.pek2.redhat.com [10.72.13.50])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 2C57F141511A;
-	Wed, 31 Aug 2022 02:50:48 +0000 (UTC)
-Date: Wed, 31 Aug 2022 10:50:45 +0800
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 2F09B2166B2A;
+	Wed, 31 Aug 2022 03:26:34 +0000 (UTC)
+Date: Wed, 31 Aug 2022 11:26:30 +0800
 From: Baoquan He <bhe@redhat.com>
 To: Eric DeVolder <eric.devolder@oracle.com>
 Cc: linux-kernel@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org,
@@ -58,17 +58,18 @@ Cc: linux-kernel@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org,
 	robh@kernel.org, efault@gmx.de, rppt@kernel.org, david@redhat.com,
 	sourabhjain@linux.ibm.com, konrad.wilk@oracle.com,
 	boris.ostrovsky@oracle.com
-Subject: Re: [PATCH v11 1/7] crash: move crash_prepare_elf64_headers
-Message-ID: <Yw7MhU957+cPQ50/@MiWiFi-R3L-srv>
+Subject: Re: [PATCH v11 3/7] crash: add generic infrastructure for crash
+ hotplug support
+Message-ID: <Yw7U5jYKcwZ+cMpu@MiWiFi-R3L-srv>
 References: <20220826173704.1895-1-eric.devolder@oracle.com>
- <20220826173704.1895-2-eric.devolder@oracle.com>
+ <20220826173704.1895-4-eric.devolder@oracle.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20220826173704.1895-2-eric.devolder@oracle.com>
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.7
+In-Reply-To: <20220826173704.1895-4-eric.devolder@oracle.com>
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.6
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220830_195058_164394_A682A6C0 
-X-CRM114-Status: GOOD (  27.19  )
+X-CRM114-CacheID: sfid-20220830_202644_440407_651FD945 
+X-CRM114-Status: GOOD (  41.03  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,250 +86,257 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 08/26/22 at 01:36pm, Eric DeVolder wrote:
-> At the outcome of this patch set, the crash_prepare_elf64_headers()
-> is utilized on both the kexec_file_load and kexec_load paths. As
-> such, need to move this function out of kexec_file.c and into a
-> common location crash_core.c.
+On 08/26/22 at 01:37pm, Eric DeVolder wrote:
+> CPU and memory change notifications are received in order to
+> regenerate the elfcorehdr.
 > 
-> No functionality change.
+> To support cpu hotplug, a callback is registered to capture the
+> CPUHP_AP_ONLINE_DYN online and offline events via
+> cpuhp_setup_state_nocalls().
+> 
+> To support memory hotplug, a notifier is registered to capture the
+> MEM_ONLINE and MEM_OFFLINE events via register_memory_notifier().
+> 
+> The cpu callback and memory notifiers call handle_hotplug_event()
+> which performs needed tasks and then dispatches the event to the
+> architecture specific arch_crash_handle_hotplug_event(). During the
+> process, the kexec_mutex is held.
 > 
 > Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
-
-LGTM,
-
-Baoquan He <bhe@redhat.com>
-
 > ---
->  kernel/crash_core.c | 100 ++++++++++++++++++++++++++++++++++++++++++++
->  kernel/kexec_file.c |  99 -------------------------------------------
->  2 files changed, 100 insertions(+), 99 deletions(-)
+>  include/linux/crash_core.h |   8 +++
+>  include/linux/kexec.h      |  26 +++++++
+>  kernel/crash_core.c        | 134 +++++++++++++++++++++++++++++++++++++
+>  3 files changed, 168 insertions(+)
 > 
+> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+> index de62a722431e..3b99e69b011f 100644
+> --- a/include/linux/crash_core.h
+> +++ b/include/linux/crash_core.h
+> @@ -84,4 +84,12 @@ int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
+>  int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
+>  		unsigned long long *crash_size, unsigned long long *crash_base);
+>  
+> +#define KEXEC_CRASH_HP_REMOVE_CPU		0
+> +#define KEXEC_CRASH_HP_ADD_CPU			1
+> +#define KEXEC_CRASH_HP_REMOVE_MEMORY	2
+                                        ~~
+                                        Nitpick, These arenot aligned, 
+> +#define KEXEC_CRASH_HP_ADD_MEMORY		3
+> +#define KEXEC_CRASH_HP_INVALID_CPU		-1U
+> +
+> +struct kimage;
+> +
+>  #endif /* LINUX_CRASH_CORE_H */
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index 4eefa631e0ae..9597b41136ec 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -374,6 +374,13 @@ struct kimage {
+>  	struct purgatory_info purgatory_info;
+>  #endif
+>  
+> +#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_MEMORY_HOTPLUG)
+> +	bool hotplug_event;
+> +	unsigned int offlinecpu;
+> +	bool elfcorehdr_index_valid;
+> +	int elfcorehdr_index;
+> +#endif
+> +
+>  #ifdef CONFIG_IMA_KEXEC
+>  	/* Virtual address of IMA measurement buffer for kexec syscall */
+>  	void *ima_buffer;
+> @@ -503,6 +510,25 @@ static inline int arch_kexec_post_alloc_pages(void *vaddr, unsigned int pages, g
+>  static inline void arch_kexec_pre_free_pages(void *vaddr, unsigned int pages) { }
+>  #endif
+>  
+> +#ifndef arch_map_crash_pages
+> +static inline void *arch_map_crash_pages(unsigned long paddr,
+> +		unsigned long size)
+> +{
+> +	return NULL;
+> +}
+> +#endif
+> +
+> +#ifndef arch_unmap_crash_pages
+> +static inline void arch_unmap_crash_pages(void **ptr) { }
+> +#endif
+> +
+> +#ifndef arch_crash_handle_hotplug_event
+> +static inline void arch_crash_handle_hotplug_event(struct kimage *image,
+> +		unsigned int hp_action)
+> +{
+> +}
+> +#endif
+> +
+>  #else /* !CONFIG_KEXEC_CORE */
+>  struct pt_regs;
+>  struct task_struct;
 > diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index 07b26df453a9..8c8c82386e8d 100644
+> index 0f8aa659cca4..455150205ded 100644
 > --- a/kernel/crash_core.c
 > +++ b/kernel/crash_core.c
-> @@ -10,6 +10,7 @@
->  #include <linux/utsname.h>
+> @@ -11,6 +11,8 @@
 >  #include <linux/vmalloc.h>
 >  #include <linux/sizes.h>
-> +#include <linux/kexec.h>
+>  #include <linux/kexec.h>
+> +#include <linux/memory.h>
+> +#include <linux/cpuhotplug.h>
 >  
 >  #include <asm/page.h>
 >  #include <asm/sections.h>
-> @@ -314,6 +315,105 @@ static int __init parse_crashkernel_dummy(char *arg)
->  }
->  early_param("crashkernel", parse_crashkernel_dummy);
+> @@ -18,6 +20,7 @@
+>  #include <crypto/sha1.h>
 >  
-> +int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_map,
-> +			  void **addr, unsigned long *sz)
+>  #include "kallsyms_internal.h"
+> +#include "kexec_internal.h"
+>  
+>  /* vmcoreinfo stuff */
+>  unsigned char *vmcoreinfo_data;
+> @@ -611,3 +614,134 @@ static int __init crash_save_vmcoreinfo_init(void)
+>  }
+>  
+>  subsys_initcall(crash_save_vmcoreinfo_init);
+> +
+> +#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_MEMORY_HOTPLUG)
+> +/*
+> + * To accurately reflect hot un/plug changes, the elfcorehdr (which
+> + * is passed to the crash kernel via the elfcorehdr= parameter)
+> + * must be updated with the new list of CPUs and memories.
+> + *
+> + * In order to make changes to elfcorehdr, two conditions are needed:
+> + * First, the segment containing the elfcorehdr must be large enough
+> + * to permit a growing number of resources. The elfcorehdr memory is
+> + * typically based on CONFIG_NR_CPUS and CONFIG_CRASH_MAX_MEMORY_RANGES.
+> + * Second, purgatory must explicitly exclude the elfcorehdr from the
+> + * list of segments it checks (since the elfcorehdr changes and thus
+> + * would require an update to purgatory itself to update the digest).
+> + */
+> +static void handle_hotplug_event(unsigned int hp_action, unsigned int cpu)
 > +{
-> +	Elf64_Ehdr *ehdr;
-> +	Elf64_Phdr *phdr;
-> +	unsigned long nr_cpus = num_possible_cpus(), nr_phdr, elf_sz;
-> +	unsigned char *buf;
-> +	unsigned int cpu, i;
-> +	unsigned long long notes_addr;
-> +	unsigned long mstart, mend;
+> +	/* Obtain lock while changing crash information */
+> +	mutex_lock(&kexec_mutex);
 > +
-> +	/* extra phdr for vmcoreinfo ELF note */
-> +	nr_phdr = nr_cpus + 1;
-> +	nr_phdr += mem->nr_ranges;
+> +	/* Check kdump is loaded */
+> +	if (kexec_crash_image) {
+> +		struct kimage *image = kexec_crash_image;
 > +
-> +	/*
-> +	 * kexec-tools creates an extra PT_LOAD phdr for kernel text mapping
-> +	 * area (for example, ffffffff80000000 - ffffffffa0000000 on x86_64).
-> +	 * I think this is required by tools like gdb. So same physical
-> +	 * memory will be mapped in two ELF headers. One will contain kernel
-> +	 * text virtual addresses and other will have __va(physical) addresses.
-> +	 */
+> +		if (hp_action == KEXEC_CRASH_HP_ADD_CPU ||
+> +			hp_action == KEXEC_CRASH_HP_REMOVE_CPU)
+> +			pr_debug("crash hp: hp_action %u, cpu %u\n", hp_action, cpu);
+> +		else
+> +			pr_debug("crash hp: hp_action %u", hp_action);
+                                                       ^~ "\n" missed
+> +		/*
+> +		 * When the struct kimage is alloced, it is wiped to zero, so
+                                             ~~~~ alloced is confusing, s/alloced/allocated/
+                                            We can accept alloc being used, alloced is a little weird.
+> +		 * the elfcorehdr_index_valid defaults to false. Find the
+> +		 * segment containing the elfcorehdr, if not already found.
+> +		 * This works for both the kexec_load and kexec_file_load paths.
+> +		 */
+> +		if (!image->elfcorehdr_index_valid) {
+> +			unsigned char *ptr;
+> +			unsigned long mem, memsz;
+> +			unsigned int n;
 > +
-> +	nr_phdr++;
-> +	elf_sz = sizeof(Elf64_Ehdr) + nr_phdr * sizeof(Elf64_Phdr);
-> +	elf_sz = ALIGN(elf_sz, ELF_CORE_HEADER_ALIGN);
+> +			for (n = 0; n < image->nr_segments; n++) {
+> +				mem = image->segment[n].mem;
+> +				memsz = image->segment[n].memsz;
+> +				ptr = arch_map_crash_pages(mem, memsz);
+OK, I see. You want to avoid the over 80 chars line, so introducing
+two local variables. We may be able to tolerate that in this case. No
+strong opinion, let's see if other people have concern about it.
+
+Other than these nitpicks, this patch looks good to me.
+Acked-by: Baoquan He <bhe@redhat.com>
+
+> +				if (ptr) {
+> +					/* The segment containing elfcorehdr */
+> +					if (memcmp(ptr, ELFMAG, SELFMAG) == 0) {
+> +						image->elfcorehdr_index = (int)n;
+> +						image->elfcorehdr_index_valid = true;
+> +					}
+> +				}
+> +				arch_unmap_crash_pages((void **)&ptr);
+> +			}
+> +		}
 > +
-> +	buf = vzalloc(elf_sz);
-> +	if (!buf)
-> +		return -ENOMEM;
+> +		if (!image->elfcorehdr_index_valid) {
+> +			pr_err("crash hp: unable to locate elfcorehdr segment");
+> +			goto out;
+> +		}
 > +
-> +	ehdr = (Elf64_Ehdr *)buf;
-> +	phdr = (Elf64_Phdr *)(ehdr + 1);
-> +	memcpy(ehdr->e_ident, ELFMAG, SELFMAG);
-> +	ehdr->e_ident[EI_CLASS] = ELFCLASS64;
-> +	ehdr->e_ident[EI_DATA] = ELFDATA2LSB;
-> +	ehdr->e_ident[EI_VERSION] = EV_CURRENT;
-> +	ehdr->e_ident[EI_OSABI] = ELF_OSABI;
-> +	memset(ehdr->e_ident + EI_PAD, 0, EI_NIDENT - EI_PAD);
-> +	ehdr->e_type = ET_CORE;
-> +	ehdr->e_machine = ELF_ARCH;
-> +	ehdr->e_version = EV_CURRENT;
-> +	ehdr->e_phoff = sizeof(Elf64_Ehdr);
-> +	ehdr->e_ehsize = sizeof(Elf64_Ehdr);
-> +	ehdr->e_phentsize = sizeof(Elf64_Phdr);
+> +		/* Needed in order for the segments to be updated */
+> +		arch_kexec_unprotect_crashkres();
 > +
-> +	/* Prepare one phdr of type PT_NOTE for each present CPU */
-> +	for_each_present_cpu(cpu) {
-> +		phdr->p_type = PT_NOTE;
-> +		notes_addr = per_cpu_ptr_to_phys(per_cpu_ptr(crash_notes, cpu));
-> +		phdr->p_offset = phdr->p_paddr = notes_addr;
-> +		phdr->p_filesz = phdr->p_memsz = sizeof(note_buf_t);
-> +		(ehdr->e_phnum)++;
-> +		phdr++;
+> +		/* Flag to differentiate between normal load and hotplug */
+> +		image->hotplug_event = true;
+> +
+> +		/* Now invoke arch-specific update handler */
+> +		arch_crash_handle_hotplug_event(image, hp_action);
+> +
+> +		/* No longer handling a hotplug event */
+> +		image->hotplug_event = false;
+> +
+> +		/* Change back to read-only */
+> +		arch_kexec_protect_crashkres();
 > +	}
 > +
-> +	/* Prepare one PT_NOTE header for vmcoreinfo */
-> +	phdr->p_type = PT_NOTE;
-> +	phdr->p_offset = phdr->p_paddr = paddr_vmcoreinfo_note();
-> +	phdr->p_filesz = phdr->p_memsz = VMCOREINFO_NOTE_SIZE;
-> +	(ehdr->e_phnum)++;
-> +	phdr++;
+> +out:
+> +	/* Release lock now that update complete */
+> +	mutex_unlock(&kexec_mutex);
+> +}
 > +
-> +	/* Prepare PT_LOAD type program header for kernel text region */
-> +	if (need_kernel_map) {
-> +		phdr->p_type = PT_LOAD;
-> +		phdr->p_flags = PF_R|PF_W|PF_X;
-> +		phdr->p_vaddr = (unsigned long) _text;
-> +		phdr->p_filesz = phdr->p_memsz = _end - _text;
-> +		phdr->p_offset = phdr->p_paddr = __pa_symbol(_text);
-> +		ehdr->e_phnum++;
-> +		phdr++;
+> +static int crash_memhp_notifier(struct notifier_block *nb, unsigned long val, void *v)
+> +{
+> +	switch (val) {
+> +	case MEM_ONLINE:
+> +		handle_hotplug_event(KEXEC_CRASH_HP_ADD_MEMORY, 0);
+> +		break;
+> +
+> +	case MEM_OFFLINE:
+> +		handle_hotplug_event(KEXEC_CRASH_HP_REMOVE_MEMORY, 0);
+> +		break;
 > +	}
+> +	return NOTIFY_OK;
+> +}
 > +
-> +	/* Go through all the ranges in mem->ranges[] and prepare phdr */
-> +	for (i = 0; i < mem->nr_ranges; i++) {
-> +		mstart = mem->ranges[i].start;
-> +		mend = mem->ranges[i].end;
+> +static struct notifier_block crash_memhp_nb = {
+> +	.notifier_call = crash_memhp_notifier,
+> +	.priority = 0
+> +};
 > +
-> +		phdr->p_type = PT_LOAD;
-> +		phdr->p_flags = PF_R|PF_W|PF_X;
-> +		phdr->p_offset  = mstart;
-> +
-> +		phdr->p_paddr = mstart;
-> +		phdr->p_vaddr = (unsigned long) __va(mstart);
-> +		phdr->p_filesz = phdr->p_memsz = mend - mstart + 1;
-> +		phdr->p_align = 0;
-> +		ehdr->e_phnum++;
-> +		pr_debug("Crash PT_LOAD ELF header. phdr=%p vaddr=0x%llx, paddr=0x%llx, sz=0x%llx e_phnum=%d p_offset=0x%llx\n",
-> +			phdr, phdr->p_vaddr, phdr->p_paddr, phdr->p_filesz,
-> +			ehdr->e_phnum, phdr->p_offset);
-> +		phdr++;
-> +	}
-> +
-> +	*addr = buf;
-> +	*sz = elf_sz;
+> +static int crash_cpuhp_online(unsigned int cpu)
+> +{
+> +	handle_hotplug_event(KEXEC_CRASH_HP_ADD_CPU, cpu);
 > +	return 0;
 > +}
 > +
->  Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
->  			  void *data, size_t data_len)
->  {
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index 1d546dc97c50..8017eeb43036 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -1217,102 +1217,3 @@ int crash_exclude_mem_range(struct crash_mem *mem,
->  	mem->nr_ranges++;
->  	return 0;
->  }
-> -
-> -int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_map,
-> -			  void **addr, unsigned long *sz)
-> -{
-> -	Elf64_Ehdr *ehdr;
-> -	Elf64_Phdr *phdr;
-> -	unsigned long nr_cpus = num_possible_cpus(), nr_phdr, elf_sz;
-> -	unsigned char *buf;
-> -	unsigned int cpu, i;
-> -	unsigned long long notes_addr;
-> -	unsigned long mstart, mend;
-> -
-> -	/* extra phdr for vmcoreinfo ELF note */
-> -	nr_phdr = nr_cpus + 1;
-> -	nr_phdr += mem->nr_ranges;
-> -
-> -	/*
-> -	 * kexec-tools creates an extra PT_LOAD phdr for kernel text mapping
-> -	 * area (for example, ffffffff80000000 - ffffffffa0000000 on x86_64).
-> -	 * I think this is required by tools like gdb. So same physical
-> -	 * memory will be mapped in two ELF headers. One will contain kernel
-> -	 * text virtual addresses and other will have __va(physical) addresses.
-> -	 */
-> -
-> -	nr_phdr++;
-> -	elf_sz = sizeof(Elf64_Ehdr) + nr_phdr * sizeof(Elf64_Phdr);
-> -	elf_sz = ALIGN(elf_sz, ELF_CORE_HEADER_ALIGN);
-> -
-> -	buf = vzalloc(elf_sz);
-> -	if (!buf)
-> -		return -ENOMEM;
-> -
-> -	ehdr = (Elf64_Ehdr *)buf;
-> -	phdr = (Elf64_Phdr *)(ehdr + 1);
-> -	memcpy(ehdr->e_ident, ELFMAG, SELFMAG);
-> -	ehdr->e_ident[EI_CLASS] = ELFCLASS64;
-> -	ehdr->e_ident[EI_DATA] = ELFDATA2LSB;
-> -	ehdr->e_ident[EI_VERSION] = EV_CURRENT;
-> -	ehdr->e_ident[EI_OSABI] = ELF_OSABI;
-> -	memset(ehdr->e_ident + EI_PAD, 0, EI_NIDENT - EI_PAD);
-> -	ehdr->e_type = ET_CORE;
-> -	ehdr->e_machine = ELF_ARCH;
-> -	ehdr->e_version = EV_CURRENT;
-> -	ehdr->e_phoff = sizeof(Elf64_Ehdr);
-> -	ehdr->e_ehsize = sizeof(Elf64_Ehdr);
-> -	ehdr->e_phentsize = sizeof(Elf64_Phdr);
-> -
-> -	/* Prepare one phdr of type PT_NOTE for each present CPU */
-> -	for_each_present_cpu(cpu) {
-> -		phdr->p_type = PT_NOTE;
-> -		notes_addr = per_cpu_ptr_to_phys(per_cpu_ptr(crash_notes, cpu));
-> -		phdr->p_offset = phdr->p_paddr = notes_addr;
-> -		phdr->p_filesz = phdr->p_memsz = sizeof(note_buf_t);
-> -		(ehdr->e_phnum)++;
-> -		phdr++;
-> -	}
-> -
-> -	/* Prepare one PT_NOTE header for vmcoreinfo */
-> -	phdr->p_type = PT_NOTE;
-> -	phdr->p_offset = phdr->p_paddr = paddr_vmcoreinfo_note();
-> -	phdr->p_filesz = phdr->p_memsz = VMCOREINFO_NOTE_SIZE;
-> -	(ehdr->e_phnum)++;
-> -	phdr++;
-> -
-> -	/* Prepare PT_LOAD type program header for kernel text region */
-> -	if (need_kernel_map) {
-> -		phdr->p_type = PT_LOAD;
-> -		phdr->p_flags = PF_R|PF_W|PF_X;
-> -		phdr->p_vaddr = (unsigned long) _text;
-> -		phdr->p_filesz = phdr->p_memsz = _end - _text;
-> -		phdr->p_offset = phdr->p_paddr = __pa_symbol(_text);
-> -		ehdr->e_phnum++;
-> -		phdr++;
-> -	}
-> -
-> -	/* Go through all the ranges in mem->ranges[] and prepare phdr */
-> -	for (i = 0; i < mem->nr_ranges; i++) {
-> -		mstart = mem->ranges[i].start;
-> -		mend = mem->ranges[i].end;
-> -
-> -		phdr->p_type = PT_LOAD;
-> -		phdr->p_flags = PF_R|PF_W|PF_X;
-> -		phdr->p_offset  = mstart;
-> -
-> -		phdr->p_paddr = mstart;
-> -		phdr->p_vaddr = (unsigned long) __va(mstart);
-> -		phdr->p_filesz = phdr->p_memsz = mend - mstart + 1;
-> -		phdr->p_align = 0;
-> -		ehdr->e_phnum++;
-> -		pr_debug("Crash PT_LOAD ELF header. phdr=%p vaddr=0x%llx, paddr=0x%llx, sz=0x%llx e_phnum=%d p_offset=0x%llx\n",
-> -			phdr, phdr->p_vaddr, phdr->p_paddr, phdr->p_filesz,
-> -			ehdr->e_phnum, phdr->p_offset);
-> -		phdr++;
-> -	}
-> -
-> -	*addr = buf;
-> -	*sz = elf_sz;
-> -	return 0;
-> -}
+> +static int crash_cpuhp_offline(unsigned int cpu)
+> +{
+> +	handle_hotplug_event(KEXEC_CRASH_HP_REMOVE_CPU, cpu);
+> +	return 0;
+> +}
+> +
+> +static int __init crash_hotplug_init(void)
+> +{
+> +	int result = 0;
+> +
+> +	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
+> +		register_memory_notifier(&crash_memhp_nb);
+> +
+> +	if (IS_ENABLED(CONFIG_HOTPLUG_CPU))
+> +		result = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
+> +						   "crash/cpuhp",
+> +						   crash_cpuhp_online,
+> +						   crash_cpuhp_offline);
+> +
+> +	return result;
+> +}
+> +
+> +subsys_initcall(crash_hotplug_init);
+> +#endif
 > -- 
 > 2.31.1
 > 
