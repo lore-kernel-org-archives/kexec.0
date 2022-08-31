@@ -4,73 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5AD3CECAAD5
-	for <kexec@archiver.kernel.org>; Wed, 31 Aug 2022 01:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id ADC6BECAAA1
+	for <kexec@archiver.kernel.org>; Wed, 31 Aug 2022 01:51:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=dPI/3vIjZkAjQWgj19HP16ZCXGaEmquql2mqgonum1w=; b=lJMuFZlFgQSua4
-	P0yMgg2DIOHd7pJhIBFQQ8UDADcwssOgx5ktdyDWkVv1m155G++jlYypmsa8TDuVgwgIxyAYQAjoH
-	d4d5YpnCtUqp3gvNA94yfZRdkFDvzPtJni73TWMsui671ZQjW5vkB43Xd8sBBHOMI4jOotdiPuL+S
-	jGu0mIfQ/+jw2HKvOvjlOpRWT2WVdljRR7JRj1/oZ4YPGrzcE4r3CUtKG0RtEwdv937f0a0VB39fs
-	EiTP1x1vQlYqBtjkjYi5IZqEGh9sMI+G4dhj5BHA+LVDasxx69QirWMUP24f8mzvi+gUWlfprQ6bw
-	hU2vAhjlVm2+q+/HcyTA==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:Date:
+	Message-ID:From:References:CC:To:Subject:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Owner;
+	bh=peTvdP2SXF/IQ2PDjhSRTJrDrru75C2gas5OtD64L88=; b=mKjRocBzSkwOlSMIe6lel7MKWj
+	ScsEaAwVJDVEiak0H/cdrc73t/AHtHSvATaHPShkG8nUiU6UG44rwm0JBu2xGIrFRh5sGQCwiq2uT
+	C8lkD+vBf1C3gox/d4thySpti9MjgHEfCB5MIUtOYhfpAmcFnTWeQxCsgtRC7qdcn/i4QzT0Kq2vJ
+	WygqBVXQ+pmtfunv0ujrebVoibuaXaKMAe5dVyH5/X7Vcg8wGF7GWk3RNX+t3fDqbC3GhUGUIZvYF
+	JUw2FxMdYWCNgVqZ45/7KGl80/CsLVXsrXhWyC4RVgUHSi+J6BiZjUnxvHeZ9KLC+FkOLkbGB2l9Y
+	0krxqvzg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oTCrb-0035cq-6O; Wed, 31 Aug 2022 01:49:55 +0000
-Received: from mail-yb1-xb30.google.com ([2607:f8b0:4864:20::b30])
+	id 1oTCsY-0035y9-Rg; Wed, 31 Aug 2022 01:50:54 +0000
+Received: from szxga02-in.huawei.com ([45.249.212.188])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oTCrP-0035ZZ-5a; Wed, 31 Aug 2022 01:49:44 +0000
-Received: by mail-yb1-xb30.google.com with SMTP id f18so2157513yba.1;
-        Tue, 30 Aug 2022 18:49:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=WBgIYiK0R8MyjOrBW9Qr0NQe4i20glZFZfsxiGjR9Js=;
-        b=UrrZ3gdP0DYEzt2tLaTueomDMpcDl9rxoco194EQny8lyNhVtuVOjWt0NhoRhkcQXf
-         MToHlti/EMdQyxSlvPHLd299yLJj/5rpKMd99Ugqaqyqp332oBu0v9TF1tStCO4Wf1pZ
-         hybPkjtxwYlWHqdBAuPxA9U3Czk1LSlkvi9cOeEfNBPmTQiGChjDHINeA9IfVG0Hw92s
-         z0dRDzENZOXd0RuKe0vP6cyFn2Fs8RWXdhLBUnCzlub4yMsxiTb4hHdJ6bQj+6KJFEm1
-         cagvjZcos4RlGUx1EOi9Liz2wC9KfP40z2qkwmEAGrX1lljSKkdJ/Tw4/VKjlJQqCLdw
-         00xQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=WBgIYiK0R8MyjOrBW9Qr0NQe4i20glZFZfsxiGjR9Js=;
-        b=JO+3pkCcEFhKaSbUc1vygAEc1LReWeZP02hxwxttVyYWw92ZZ1ZtFYisJWQ9bFF99o
-         +s2cACoRQ/oUanRVOQL9DPc5XyF45pA1b0gsFy0GcXCCERMaMPccCBj/NEPlUDirTFds
-         ACvCRGz1A5IzzKdrbQNciKUHgI9yTaS4tBNfBgUEt2x7vEGBkkt5jDKEuMG38mAFOGq1
-         9nccMH+uqIpkaI2Cu7ZFsVu822fO2YvtkH8h66362fR96C2fYBeXKkNzP/3GJ5p13pzw
-         WqaF+5E99ceo2Oj2guNh0sstNAbxcL0vY1vN9I+IexLF0HPTFlhI9RlynI1xuiQ0mCbH
-         22UQ==
-X-Gm-Message-State: ACgBeo0iIAH00LaraOVcogvuycTHgZePExsM1AufOUtAilo8fAvMbIY4
-	zLY4vyXUMX2sfEfHFYEcCsLkn0h4axSfAHBWMmc=
-X-Google-Smtp-Source: AA6agR5v+P0bjKc/LRs/ofzxWFzyP4hxcvl7IhyadMjop5OY67JxjkkGONKU+jN+FlyzR2h3D89Cee0OXwhomiRh1XQ=
-X-Received: by 2002:a25:9948:0:b0:67b:fc24:642d with SMTP id
- n8-20020a259948000000b0067bfc24642dmr12933701ybo.42.1661910581149; Tue, 30
- Aug 2022 18:49:41 -0700 (PDT)
+	id 1oTCsS-0035tX-Cj; Wed, 31 Aug 2022 01:50:52 +0000
+Received: from dggpemm500021.china.huawei.com (unknown [172.30.72.57])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4MHRr71C7LzlWYR;
+	Wed, 31 Aug 2022 09:47:19 +0800 (CST)
+Received: from dggpemm500006.china.huawei.com (7.185.36.236) by
+ dggpemm500021.china.huawei.com (7.185.36.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 31 Aug 2022 09:50:43 +0800
+Received: from [10.174.178.55] (10.174.178.55) by
+ dggpemm500006.china.huawei.com (7.185.36.236) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 31 Aug 2022 09:50:42 +0800
+Subject: Re: [PATCH 1/2] arm64, kdump: enforce to take 4G as the crashkernel
+ low memory end
+To: Baoquan He <bhe@redhat.com>, <linux-kernel@vger.kernel.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <catalin.marinas@arm.com>,
+	<ardb@kernel.org>, <rppt@kernel.org>, <guanghuifeng@linux.alibaba.com>,
+	<mark.rutland@arm.com>, <will@kernel.org>, <linux-mm@kvack.org>,
+	<wangkefeng.wang@huawei.com>, <kexec@lists.infradead.org>
+References: <20220828005545.94389-1-bhe@redhat.com>
+ <20220828005545.94389-2-bhe@redhat.com>
+From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Message-ID: <077ab34d-9d64-5cab-7a44-1c7222032db4@huawei.com>
+Date: Wed, 31 Aug 2022 09:50:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <CAM7-yPTdihLsPjDKM-0OEszxNd8n0bgeRseiEkCsSZW-uuaRvw@mail.gmail.com>
- <20220830092839.3197-1-ppbuk5246@gmail.com> <Yw49m7Hpq+NIZYWw@arm.com>
- <CAM7-yPQjjwM_fCgojYHbrhE4GFCX22VLoCiTVkorNG6hQDj9EQ@mail.gmail.com>
- <Yw62//C+LmH+BcEh@MiWiFi-R3L-srv> <CAM7-yPRKC8hGSoSe34+RbCuRDdv88QsFzD=VznM2v9yu0YZMWA@mail.gmail.com>
-In-Reply-To: <CAM7-yPRKC8hGSoSe34+RbCuRDdv88QsFzD=VznM2v9yu0YZMWA@mail.gmail.com>
-From: Yun Levi <ppbuk5246@gmail.com>
-Date: Wed, 31 Aug 2022 10:49:30 +0900
-Message-ID: <CAM7-yPRp7wpP1a=SrH4o2SBijF4ZfxkLTe7vpRXq_D_y1Kz-1g@mail.gmail.com>
-Subject: [PATCH v2-RESEND] arm64/kexec: Fix missing extra range for crashkres_low.
-To: Baoquan He <bhe@redhat.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org, nramas@linux.microsoft.com, 
-	thunder.leizhen@huawei.com, linux-arm-kernel@lists.infradead.org, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, kexec@lists.infradead.org
+In-Reply-To: <20220828005545.94389-2-bhe@redhat.com>
+Content-Language: en-US
+X-Originating-IP: [10.174.178.55]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpemm500006.china.huawei.com (7.185.36.236)
+X-CFilter-Loop: Reflected
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220830_184943_246379_3619C661 
-X-CRM114-Status: GOOD (  10.49  )
+X-CRM114-CacheID: sfid-20220830_185048_837611_A99A57D9 
+X-CRM114-Status: GOOD (  30.90  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,36 +76,183 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Like crashk_res, Calling crash_exclude_mem_range function with
-crashk_low_res area would need extra crash_mem range too.
 
-Add one more extra cmem slot in case of crashk_low_res is used.
 
-Signed-off-by: Levi Yun <ppbuk5246@gmail.com>
-Fixes: 944a45abfabc ("arm64: kdump: Reimplement crashkernel=X")
-Cc: stable@vger.kernel.org
-Acked-by: Baoquan He <bhe@redhat.com>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
----
- arch/arm64/kernel/machine_kexec_file.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 2022/8/28 8:55, Baoquan He wrote:
+> Problem:
+> =======
+> On arm64, block and section mapping is supported to build page tables.
+> However, currently it enforces to take base page mapping for the whole
+> linear mapping if CONFIG_ZONE_DMA or CONFIG_ZONE_DMA32 is enabled and
+> crashkernel kernel parameter is set. This will cause longer time of the
+> linear mapping process during bootup and severe performance degradation
+> during running time.
+> 
+> Root cause:
+> ==========
+> On arm64, crashkernel reservation relies on knowing the upper limit of
+> low memory zone because it needs to reserve memory in the zone so that
+> devices' DMA addressing in kdump kernel can be satisfied. However, the
+> limit on arm64 is variant. And the upper limit can only be decided late
+> till bootmem_init() is called.
+> 
+> And we need to map the crashkernel region with base page granularity when
+> doing linear mapping, because kdump needs to protect the crashkernel region
+> via set_memory_valid(,0) after kdump kernel loading. However, arm64 doesn't
+> support well on splitting the built block or section mapping due to some
+> cpu reststriction [1]. And unfortunately, the linear mapping is done before
+> bootmem_init().
+> 
+> To resolve the above conflict on arm64, the compromise is enforcing to
+> take base page mapping for the entire linear mapping if crashkernel is
+> set, and CONFIG_ZONE_DMA or CONFIG_ZONE_DMA32 is enabed. Hence
+> performance is sacrificed.
+> 
+> Solution:
+> =========
+> To fix the problem, we should always take 4G as the crashkernel low
+> memory end in case CONFIG_ZONE_DMA or CONFIG_ZONE_DMA32 is enabled.
+> With this, we don't need to defer the crashkernel reservation till
+> bootmem_init() is called to set the arm64_dma_phys_limit. As long as
+> memblock init is done, we can conclude what is the upper limit of low
+> memory zone.
+> 
+> 1) both CONFIG_ZONE_DMA or CONFIG_ZONE_DMA32 are disabled or memblock_start_of_DRAM() > 4G
+>   limit = PHYS_ADDR_MAX+1  (Corner cases)
+> 2) CONFIG_ZONE_DMA or CONFIG_ZONE_DMA32 are enabled:
+>    limit = 4G  (generic case)
 
-diff --git a/arch/arm64/kernel/machine_kexec_file.c
-b/arch/arm64/kernel/machine_kexec_file.c
-index 889951291cc0..a11a6e14ba89 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -47,7 +47,7 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
-  u64 i;
-  phys_addr_t start, end;
+If Raspberry Pi 4 doesn't need to be considered:
+Reviewed-by: Zhen Lei <thunder.leizhen@huawei.com>
 
-- nr_ranges = 1; /* for exclusion of crashkernel region */
-+ nr_ranges = 2; /* for exclusion of crashkernel region */
-  for_each_mem_range(i, &start, &end)
-  nr_ranges++;
+In fact, I also think, for the sake of a niche scene, sacrificing the mass scene,
+the cart is put before the horse.
+
+
+> 
+> [1]
+> https://lore.kernel.org/all/YrIIJkhKWSuAqkCx@arm.com/T/#u
+> 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> ---
+>  arch/arm64/mm/init.c | 24 ++++++++++++++----------
+>  arch/arm64/mm/mmu.c  | 38 ++++++++++++++++++++++----------------
+>  2 files changed, 36 insertions(+), 26 deletions(-)
+> 
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index b9af30be813e..8ae55afdd11c 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -90,10 +90,22 @@ phys_addr_t __ro_after_init arm64_dma_phys_limit;
+>  phys_addr_t __ro_after_init arm64_dma_phys_limit = PHYS_MASK + 1;
+>  #endif
+>  
+> +static phys_addr_t __init crash_addr_low_max(void)
+> +{
+> +	phys_addr_t low_mem_mask = U32_MAX;
+> +	phys_addr_t phys_start = memblock_start_of_DRAM();
+> +
+> +	if ((!IS_ENABLED(CONFIG_ZONE_DMA) && !IS_ENABLED(CONFIG_ZONE_DMA32)) ||
+> +	     (phys_start > U32_MAX))
+> +		low_mem_mask = PHYS_ADDR_MAX;
+> +
+> +	return min(low_mem_mask, memblock_end_of_DRAM() - 1) + 1;
+> +}
+> +
+>  /* Current arm64 boot protocol requires 2MB alignment */
+>  #define CRASH_ALIGN			SZ_2M
+>  
+> -#define CRASH_ADDR_LOW_MAX		arm64_dma_phys_limit
+> +#define CRASH_ADDR_LOW_MAX		crash_addr_low_max()
+>  #define CRASH_ADDR_HIGH_MAX		(PHYS_MASK + 1)
+>  
+>  static int __init reserve_crashkernel_low(unsigned long long low_size)
+> @@ -389,8 +401,7 @@ void __init arm64_memblock_init(void)
+>  
+>  	early_init_fdt_scan_reserved_mem();
+>  
+> -	if (!defer_reserve_crashkernel())
+> -		reserve_crashkernel();
+> +	reserve_crashkernel();
+>  
+>  	high_memory = __va(memblock_end_of_DRAM() - 1) + 1;
+>  }
+> @@ -434,13 +445,6 @@ void __init bootmem_init(void)
+>  	 */
+>  	dma_contiguous_reserve(arm64_dma_phys_limit);
+>  
+> -	/*
+> -	 * request_standard_resources() depends on crashkernel's memory being
+> -	 * reserved, so do it here.
+> -	 */
+> -	if (defer_reserve_crashkernel())
+> -		reserve_crashkernel();
+> -
+>  	memblock_dump_all();
+>  }
+>  
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index e7ad44585f40..cdd338fa2115 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -547,13 +547,12 @@ static void __init map_mem(pgd_t *pgdp)
+>  	memblock_mark_nomap(kernel_start, kernel_end - kernel_start);
+>  
+>  #ifdef CONFIG_KEXEC_CORE
+> -	if (crash_mem_map) {
+> -		if (defer_reserve_crashkernel())
+> -			flags |= NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
+> -		else if (crashk_res.end)
+> -			memblock_mark_nomap(crashk_res.start,
+> -			    resource_size(&crashk_res));
+> -	}
+> +	if (crashk_res.end)
+> +		memblock_mark_nomap(crashk_res.start,
+> +				    resource_size(&crashk_res));
+> +	if (crashk_low_res.end)
+> +		memblock_mark_nomap(crashk_low_res.start,
+> +				    resource_size(&crashk_low_res));
+>  #endif
+>  
+>  	/* map all the memory banks */
+> @@ -589,16 +588,23 @@ static void __init map_mem(pgd_t *pgdp)
+>  	 * through /sys/kernel/kexec_crash_size interface.
+>  	 */
+>  #ifdef CONFIG_KEXEC_CORE
+> -	if (crash_mem_map && !defer_reserve_crashkernel()) {
+> -		if (crashk_res.end) {
+> -			__map_memblock(pgdp, crashk_res.start,
+> -				       crashk_res.end + 1,
+> -				       PAGE_KERNEL,
+> -				       NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS);
+> -			memblock_clear_nomap(crashk_res.start,
+> -					     resource_size(&crashk_res));
+> -		}
+> +	if (crashk_res.end) {
+> +		__map_memblock(pgdp, crashk_res.start,
+> +			       crashk_res.end + 1,
+> +			       PAGE_KERNEL,
+> +			       NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS);
+> +		memblock_clear_nomap(crashk_res.start,
+> +				     resource_size(&crashk_res));
+>  	}
+> +	if (crashk_low_res.end) {
+> +		__map_memblock(pgdp, crashk_low_res.start,
+> +			       crashk_low_res.end + 1,
+> +			       PAGE_KERNEL,
+> +			       NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS);
+> +		memblock_clear_nomap(crashk_low_res.start,
+> +				     resource_size(&crashk_low_res));
+> +	}
+> +
+>  #endif
+>  }
+>  
+> 
 
 -- 
-2.35.1
+Regards,
+  Zhen Lei
 
 _______________________________________________
 kexec mailing list
