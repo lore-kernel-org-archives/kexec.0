@@ -4,67 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6BD2EC6FA82
-	for <kexec@archiver.kernel.org>; Mon,  5 Sep 2022 01:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1E4ACC6FA82
+	for <kexec@archiver.kernel.org>; Mon,  5 Sep 2022 02:24:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:Date:Message-ID:From:Cc:
-	References:To:Subject:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=C+aQR+7mm6/PwLR+L30aDNJe87lpyBRuIGMZEYKUgFM=; b=VYHEtEUaL0B0W5Rzp0XMDEIqKA
-	NBmjziGOTtDoIOM4bRFWsfsVdHQPSmEyfuYm+ZGGJbk4rcIHDxz05w+J9t1Q64IcpPqN9RCbyPAlB
-	O79yJcVdmLOKUkqxZrShZL6dTB5Nr4y6R1WyfODzbu0LQoFO9P4h6vr2yCy6+/LGpc6SRZwHAHwb7
-	mEcU+k0LDiVBW5OcuksWdpXRaY9A9cd9kP7OZex1ZLx67Qg3i+PNYsLao/BUB0aeMFeItzutOkgT9
-	6pwS78Syan//oWCuhc4/lYdirHlCaDDPub1K/YmgUwXJI6uNHCmcihFG6Z8NM3D4TavgzOAmBb91M
-	UHIcJN8w==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=xVy2vjJVTNxJ3/56XnIZ/EJJsCHIjm34j4vsg23UTAA=; b=sPgySyepcHR5wW
+	SW2CPj1ojGc09z0hnMrGdEjpdzH6nzjRR2bvlSorqPGLk+xvjGIKXqlf05S9hloAvhdOVjyhtTYXv
+	UlOqaOy2WR5M+aZZNdgaIiqWzuf1LPjdZ3AbYOdFKxdsJqz049NV5BHUPBXbPLaMvwViM9xQhUjcR
+	dq/rywhs0OymksMCuiNB1hKCEbe0XsVgJ9WskerkmQIxt1ellYItd2XiiTji/sOWnOmhtNPiSwoQH
+	NtzxWvEYa3NZ+pIm/4zWkBVLRqpWJheo3uYNXaMqGZpSJIOisgP4RLSh6prho7DElUaw/r/coH9ue
+	nb4AbmtEA6/IRtFEHYeg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oV12J-004ZIz-DZ; Mon, 05 Sep 2022 01:36:27 +0000
-Received: from mail.loongson.cn ([114.242.206.163] helo=loongson.cn)
-	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oV0UA-003GHF-Mv
-	for kexec@lists.infradead.org; Mon, 05 Sep 2022 01:01:13 +0000
-Received: from [10.130.0.193] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxBOJSShVjKlQRAA--.6168S3;
-	Mon, 05 Sep 2022 09:01:08 +0800 (CST)
-Subject: Re: [PATCH 1/3] LoongArch: Add kexec support
-To: Huacai Chen <chenhuacai@kernel.org>
-References: <1661747823-23745-1-git-send-email-tangyouling@loongson.cn>
- <1661747823-23745-2-git-send-email-tangyouling@loongson.cn>
-Cc: Baoquan He <bhe@redhat.com>, Eric Biederman <ebiederm@xmission.com>,
- WANG Xuerui <kernel@xen0n.name>, Vivek Goyal <vgoyal@redhat.com>,
- Dave Young <dyoung@redhat.com>, Guo Ren <guoren@kernel.org>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, kexec@lists.infradead.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-From: Youling Tang <tangyouling@loongson.cn>
-Message-ID: <c4dbb14a-5580-1e47-3d15-5d2079e88404@loongson.cn>
-Date: Mon, 5 Sep 2022 09:01:06 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	id 1oV1mf-005exF-Ug; Mon, 05 Sep 2022 02:24:22 +0000
+Received: from ams.source.kernel.org ([2604:1380:4601:e00::1])
+	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1oV14G-004dZe-Qr
+	for kexec@lists.infradead.org; Mon, 05 Sep 2022 01:38:32 +0000
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ams.source.kernel.org (Postfix) with ESMTPS id C21B4B80E77
+	for <kexec@lists.infradead.org>; Mon,  5 Sep 2022 01:38:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C872DC43143
+	for <kexec@lists.infradead.org>; Mon,  5 Sep 2022 01:38:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1662341899;
+	bh=UHudl16cELwuX7Z3/+rEMyKy63GhTzZ0tFNlT5OB+Hw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Hlqya0pPMvFo1gukdzyc74eSXq0h4DRL2qDKplIYmLRvNqExmE7cDWlD4o4JSFllt
+	 ziUnL1RBr/8HXRBvv4smI/oIJBWVGGQ/jJJ3Bu3iRH/nexlrawPooXbaVEp0ozai8P
+	 vu5CnZ61OVAUwIj39gs1k71NqoddzGKHMH4szGusPz+h7mji0sZPw4czKcpHaOmuTJ
+	 aCaR0gon4I/FnJaQSSGF6GLLenPBnQ23SldXA6v/zppgVtSKGptxm07pZ8FBHDg0dk
+	 AVMCiVkNjTxrmddMfKvpN2hrK/ytL4aCeJjrKgaxpkWw7kvXZCGb5gzoXGtX/+LDWR
+	 4JfvfP4HxQbrA==
+Received: by mail-vs1-f46.google.com with SMTP id k2so7510662vsk.8
+        for <kexec@lists.infradead.org>; Sun, 04 Sep 2022 18:38:19 -0700 (PDT)
+X-Gm-Message-State: ACgBeo0h1B41wwZ+Nf+Oenu+gAGoaDOR+pM6ykBxKFvJv2BcHk2xt1ZQ
+	JXc8wYPcO2N0jdMc3rp7UUv4pAuHREsMiSbExA0=
+X-Google-Smtp-Source: AA6agR4wJSSFEzDVY3VKjhTnQg2KWQlj6tIHiaooMo/oFVZbP3V2WXszWukAMkdykxCpNptDnhOBCk/bWYOHe0GIkbg=
+X-Received: by 2002:a67:df81:0:b0:390:21a3:823a with SMTP id
+ x1-20020a67df81000000b0039021a3823amr13291532vsk.70.1662341898497; Sun, 04
+ Sep 2022 18:38:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1661747823-23745-2-git-send-email-tangyouling@loongson.cn>
-X-CM-TRANSID: AQAAf8DxBOJSShVjKlQRAA--.6168S3
-X-Coremail-Antispam: 1UD129KBjvJXoW3Xw47WFW7Xr13AFy3uFWxJFb_yoWfGw1Dp3
-	WqkF4DKr4kXF1xtryFqw15Zr98Xw1kWa12g3W7Ka4rJFsFqrnxXrn7Xr9FqF4kK395KFWI
-	qF1S9asa9a1UG3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9vb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I
-	8E87Iv6xkF7I0E14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r
-	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xK
-	xwCYjI0SjxkI62AI1cAE67vIY487MxkIecxEwVAFwVWkMxAIw28IcxkI7VAKI48JMxC20s
-	026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_
-	JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14
-	v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xva
-	j40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JV
-	W8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU5s6pJUUUUU==
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
+References: <1661747823-23745-1-git-send-email-tangyouling@loongson.cn>
+ <1661747823-23745-3-git-send-email-tangyouling@loongson.cn>
+ <CAAhV-H6LkcnS4Z7YP=kfAkuDzKys57=6frsY0+T11ucKrWPuPw@mail.gmail.com> <ec447291-078f-d1ea-6c5a-21b092965e81@loongson.cn>
+In-Reply-To: <ec447291-078f-d1ea-6c5a-21b092965e81@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Mon, 5 Sep 2022 09:38:07 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4D60bGk7wr0oSw-5oJqTv_ntLtifHfdxLUdVA7ExDiLg@mail.gmail.com>
+Message-ID: <CAAhV-H4D60bGk7wr0oSw-5oJqTv_ntLtifHfdxLUdVA7ExDiLg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] LoongArch: Add kdump support
+To: Youling Tang <tangyouling@loongson.cn>
+Cc: Baoquan He <bhe@redhat.com>, Eric Biederman <ebiederm@xmission.com>, 
+	WANG Xuerui <kernel@xen0n.name>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, 
+	Guo Ren <guoren@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>, kexec@lists.infradead.org, 
+	loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220904_180111_434994_4E880756 
-X-CRM114-Status: GOOD (  37.20  )
+X-CRM114-CacheID: sfid-20220904_183829_727962_E54DFFC0 
+X-CRM114-Status: GOOD (  58.91  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,292 +79,466 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+Hi, Youling,
 
+On Mon, Sep 5, 2022 at 8:54 AM Youling Tang <tangyouling@loongson.cn> wrote:
+>
+> Hi, Huacai
+>
+> On 09/04/2022 08:21 PM, Huacai Chen wrote:
+> > Hi, Youling,
+> >
+> > I think crash.c can be merged into crash_dump.c
+>
+> Most architectures only implement copy_oldmem_page() in crash_dump.c,
+> I'm not sure if merging crash.c into crash_dump.c will break its
+> consistency?
+>
+> Thanks,
+> Youling
+Yes, you are right, crash.c cannot be merged into crash_dump.c, but it
+can be merged into machine_kexec.c, as arm64 and riscv do.
 
-On 08/29/2022 12:37 PM, Youling Tang wrote:
-> Add three new files, kexec.h, machine_kexec.c and relocate_kernel.S to the
-> LoongArch architecture that add support for the kexec re-boot mechanis
-> (CONFIG_KEXEC) on LoongArch platforms.
+Huacai
 >
-> Supports loading vmlinux (vmlinux.elf) in ELF format and vmlinux.efi in
-> PE format.
+> >
+> > Huacai
+> >
+> > On Mon, Aug 29, 2022 at 12:37 PM Youling Tang <tangyouling@loongson.cn> wrote:
+> >>
+> >> This patch adds support for kdump, the kernel will reserve a region
+> >> for the crash kernel and jump there on panic.
+> >>
+> >> Arch-specific functions are added to allow for implementing a crash
+> >> dump file interface, /proc/vmcore, which can be viewed as a ELF file.
+> >>
+> >> A user space tool, like kexec-tools, is responsible for allocating a
+> >> separate region for the core's ELF header within crash kdump kernel
+> >> memory and filling it in when executing kexec_load().
+> >>
+> >> Then, its location will be advertised to crash dump kernel via a new
+> >> device-tree property, "linux,elfcorehdr", and crash dump kernel preserves
+> >> the region for later use with fdt_reserve_elfcorehdr() at boot time.
+> >>
+> >> At the same time, it will also limit the crash kdump kernel to the
+> >> crashkernel area via a new device-tree property, "linux, usable-memory-range",
+> >> so as not to destroy the original kernel dump data.
+> >>
+> >> On crash dump kernel, /proc/vmcore will access the primary kernel's memory
+> >> with copy_oldmem_page().
+> >>
+> >> I tested this on  LoongArch 3A5000 machine and works as expected (Suggest
+> >> crashkernel parameter is "crashkernel=512M@2320M"), you may test it by
+> >> triggering a crash through /proc/sysrq_trigger:
+> >>
+> >>  $ sudo kexec -p /boot/vmlinux-kdump --reuse-cmdline --append="nr_cpus=1"
+> >>  # echo c > /proc/sysrq_trigger
+> >>
+> >> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+> >> ---
+> >>  arch/loongarch/Kconfig                  |  22 ++++++
+> >>  arch/loongarch/Makefile                 |   4 +
+> >>  arch/loongarch/kernel/Makefile          |   3 +-
+> >>  arch/loongarch/kernel/crash.c           | 100 ++++++++++++++++++++++++
+> >>  arch/loongarch/kernel/crash_dump.c      |  19 +++++
+> >>  arch/loongarch/kernel/machine_kexec.c   |  12 ++-
+> >>  arch/loongarch/kernel/mem.c             |   6 ++
+> >>  arch/loongarch/kernel/relocate_kernel.S |   6 ++
+> >>  arch/loongarch/kernel/setup.c           |  49 ++++++++++++
+> >>  arch/loongarch/kernel/traps.c           |   4 +
+> >>  10 files changed, 217 insertions(+), 8 deletions(-)
+> >>  create mode 100644 arch/loongarch/kernel/crash.c
+> >>  create mode 100644 arch/loongarch/kernel/crash_dump.c
+> >>
+> >> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> >> index 903c82fa958d..7c1b07a5b5bd 100644
+> >> --- a/arch/loongarch/Kconfig
+> >> +++ b/arch/loongarch/Kconfig
+> >> @@ -420,6 +420,28 @@ config KEXEC
+> >>
+> >>           The name comes from the similarity to the exec system call.
+> >>
+> >> +config CRASH_DUMP
+> >> +       bool "Build kdump crash kernel"
+> >> +       help
+> >> +         Generate crash dump after being started by kexec. This should
+> >> +         be normally only set in special crash dump kernels which are
+> >> +         loaded in the main kernel with kexec-tools into a specially
+> >> +         reserved region and then later executed after a crash by
+> >> +         kdump/kexec.
+> >> +
+> >> +         For more details see Documentation/admin-guide/kdump/kdump.rst
+> >> +
+> >> +config PHYSICAL_START
+> >> +       hex "Physical address where the kernel is loaded"
+> >> +       default "0x9000000091000000" if 64BIT
+> >> +       depends on CRASH_DUMP
+> >> +       help
+> >> +         This gives the XKPRANGE address where the kernel is loaded.
+> >> +         If you plan to use kernel for capturing the crash dump change
+> >> +         this value to start of the reserved region (the "X" value as
+> >> +         specified in the "crashkernel=YM@XM" command line boot parameter
+> >> +         passed to the panic-ed kernel).
+> >> +
+> >>  config SECCOMP
+> >>         bool "Enable seccomp to safely compute untrusted bytecode"
+> >>         depends on PROC_FS
+> >> diff --git a/arch/loongarch/Makefile b/arch/loongarch/Makefile
+> >> index 4bc47f47cfd8..7dabd580426d 100644
+> >> --- a/arch/loongarch/Makefile
+> >> +++ b/arch/loongarch/Makefile
+> >> @@ -48,7 +48,11 @@ KBUILD_CFLAGS_MODULE         += -fplt -Wa,-mla-global-with-abs,-mla-local-with-abs
+> >>  cflags-y += -ffreestanding
+> >>  cflags-y += $(call cc-option, -mno-check-zero-division)
+> >>
+> >> +ifdef CONFIG_PHYSICAL_START
+> >> +load-y         = $(CONFIG_PHYSICAL_START)
+> >> +else
+> >>  load-y         = 0x9000000000200000
+> >> +endif
+> >>  bootvars-y     = VMLINUX_LOAD_ADDRESS=$(load-y)
+> >>
+> >>  drivers-$(CONFIG_PCI)          += arch/loongarch/pci/
+> >> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
+> >> index 20b64ac3f128..df5aea129364 100644
+> >> --- a/arch/loongarch/kernel/Makefile
+> >> +++ b/arch/loongarch/kernel/Makefile
+> >> @@ -17,7 +17,8 @@ obj-$(CONFIG_CPU_HAS_FPU)     += fpu.o
+> >>  obj-$(CONFIG_MODULES)          += module.o module-sections.o
+> >>  obj-$(CONFIG_STACKTRACE)       += stacktrace.o
+> >>
+> >> -obj-$(CONFIG_KEXEC)             += machine_kexec.o relocate_kernel.o
+> >> +obj-$(CONFIG_KEXEC)             += machine_kexec.o relocate_kernel.o crash.o
+> >> +obj-$(CONFIG_CRASH_DUMP)        += crash_dump.o
+> >>
+> >>  obj-$(CONFIG_PROC_FS)          += proc.o
+> >>
+> >> diff --git a/arch/loongarch/kernel/crash.c b/arch/loongarch/kernel/crash.c
+> >> new file mode 100644
+> >> index 000000000000..b4f249ec6301
+> >> --- /dev/null
+> >> +++ b/arch/loongarch/kernel/crash.c
+> >> @@ -0,0 +1,100 @@
+> >> +// SPDX-License-Identifier: GPL-2.0
+> >> +/*
+> >> + * Copyright (C) 2022 Loongson Technology Corporation Limited
+> >> + *
+> >> + * Derived from MIPS
+> >> + */
+> >> +#include <linux/kernel.h>
+> >> +#include <linux/smp.h>
+> >> +#include <linux/reboot.h>
+> >> +#include <linux/crash_dump.h>
+> >> +#include <linux/delay.h>
+> >> +#include <linux/irq.h>
+> >> +#include <linux/types.h>
+> >> +#include <linux/sched.h>
+> >> +#include <linux/sched/task_stack.h>
+> >> +#include <asm/cacheflush.h>
+> >> +#include <asm/kexec.h>
+> >> +
+> >> +static cpumask_t cpus_in_crash = CPU_MASK_NONE;
+> >> +
+> >> +#ifdef CONFIG_SMP
+> >> +static void crash_shutdown_secondary(void *passed_regs)
+> >> +{
+> >> +       struct pt_regs *regs = passed_regs;
+> >> +       int cpu = smp_processor_id();
+> >> +
+> >> +       /*
+> >> +        * If we are passed registers, use those.  Otherwise get the
+> >> +        * regs from the last interrupt, which should be correct, as
+> >> +        * we are in an interrupt.  But if the regs are not there,
+> >> +        * pull them from the top of the stack.  They are probably
+> >> +        * wrong, but we need something to keep from crashing again.
+> >> +        */
+> >> +       if (!regs)
+> >> +               regs = get_irq_regs();
+> >> +       if (!regs)
+> >> +               regs = task_pt_regs(current);
+> >> +
+> >> +       local_irq_disable();
+> >> +       if (!cpumask_test_cpu(cpu, &cpus_in_crash))
+> >> +               crash_save_cpu(regs, cpu);
+> >> +       cpumask_set_cpu(cpu, &cpus_in_crash);
+> >> +
+> >> +       while (!atomic_read(&kexec_ready_to_reboot))
+> >> +               cpu_relax();
+> >> +
+> >> +       kexec_reboot();
+> >> +}
+> >> +
+> >> +/* Override the weak function in kernel/panic.c */
+> >> +void crash_smp_send_stop(void)
+> >> +{
+> >> +       static int cpus_stopped;
+> >> +       unsigned long timeout;
+> >> +       unsigned int ncpus;
+> >> +
+> >> +       /*
+> >> +        * This function can be called twice in panic path, but obviously
+> >> +        * we execute this only once.
+> >> +        */
+> >> +       if (cpus_stopped)
+> >> +               return;
+> >> +
+> >> +       cpus_stopped = 1;
+> >> +
+> >> +        /* Excluding the panic cpu */
+> >> +       ncpus = num_online_cpus() - 1;
+> >> +
+> >> +       smp_call_function(crash_shutdown_secondary, NULL, 0);
+> >> +       smp_wmb();
+> >> +
+> >> +       /*
+> >> +        * The crash CPU sends an IPI and wait for other CPUs to
+> >> +        * respond. Delay of at least 10 seconds.
+> >> +        */
+> >> +       pr_emerg("Sending IPI to other cpus...\n");
+> >> +       timeout = USEC_PER_SEC * 10;
+> >> +       while ((cpumask_weight(&cpus_in_crash) < ncpus) && timeout--) {
+> >> +               cpu_relax();
+> >> +               udelay(1);
+> >> +       }
+> >> +}
+> >> +
+> >> +#endif
+> >> +
+> >> +void machine_crash_shutdown(struct pt_regs *regs)
+> >> +{
+> >> +       int crashing_cpu;
+> >> +
+> >> +       local_irq_disable();
+> >> +
+> >> +       crashing_cpu = smp_processor_id();
+> >> +       crash_save_cpu(regs, crashing_cpu);
+> >> +
+> >> +       /* shutdown non-crashing cpus */
+> >> +       crash_smp_send_stop();
+> >> +       cpumask_set_cpu(crashing_cpu, &cpus_in_crash);
+> >> +
+> >> +       pr_info("Starting crashdump kernel...\n");
+> >> +}
+> >> diff --git a/arch/loongarch/kernel/crash_dump.c b/arch/loongarch/kernel/crash_dump.c
+> >> new file mode 100644
+> >> index 000000000000..13e5d2f7870d
+> >> --- /dev/null
+> >> +++ b/arch/loongarch/kernel/crash_dump.c
+> >> @@ -0,0 +1,19 @@
+> >> +// SPDX-License-Identifier: GPL-2.0
+> >> +#include <linux/highmem.h>
+> >> +#include <linux/crash_dump.h>
+> >> +#include <linux/io.h>
+> >> +
+> >> +ssize_t copy_oldmem_page(struct iov_iter *iter, unsigned long pfn,
+> >> +                        size_t csize, unsigned long offset)
+> >> +{
+> >> +       void  *vaddr;
+> >> +
+> >> +       if (!csize)
+> >> +               return 0;
+> >> +
+> >> +       vaddr = kmap_local_pfn(pfn);
+> >> +       csize = copy_to_iter(vaddr + offset, csize, iter);
+> >> +       kunmap_local(vaddr);
+> >> +
+> >> +       return csize;
+> >> +}
+> >> diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kernel/machine_kexec.c
+> >> index 4ffcd4cd9c8c..f793a3ff09a3 100644
+> >> --- a/arch/loongarch/kernel/machine_kexec.c
+> >> +++ b/arch/loongarch/kernel/machine_kexec.c
+> >> @@ -69,7 +69,7 @@ int machine_kexec_prepare(struct kimage *kimage)
+> >>                 continue;
+> >>         }
+> >>
+> >> -       /* kexec need a safe page to save reboot_code_buffer */
+> >> +       /* kexec/kdump need a safe page to save reboot_code_buffer */
+> >>         kimage->control_code_page = virt_to_page((void *)KEXEC_CTRL_CODE);
+> >>
+> >>         reboot_code_buffer =
+> >> @@ -113,10 +113,6 @@ static void kexec_shutdown_secondary(void *)
+> >>
+> >>         kexec_reboot();
+> >>  }
+> >> -
+> >> -void machine_crash_shutdown(struct pt_regs *regs)
+> >> -{
+> >> -}
+> >>  #endif
+> >>
+> >>  void machine_shutdown(void)
+> >> @@ -135,7 +131,8 @@ void machine_kexec(struct kimage *image)
+> >>
+> >>         jump_addr = (unsigned long)phys_to_virt(image->start);
+> >>
+> >> -       first_ind_entry = (unsigned long)phys_to_virt(image->head & PAGE_MASK);
+> >> +       if (image->type == KEXEC_TYPE_DEFAULT)
+> >> +               first_ind_entry = (unsigned long)phys_to_virt(image->head & PAGE_MASK);
+> >>
+> >>         /*
+> >>          * The generic kexec code builds a page list with physical
+> >> @@ -167,7 +164,8 @@ void machine_kexec(struct kimage *image)
+> >>
+> >>         /*
+> >>          * We know we were online, and there will be no incoming IPIs at
+> >> -        * this point.
+> >> +        * this point. Mark online again before rebooting so that the crash
+> >> +        * analysis tool will see us correctly.
+> >>          */
+> >>         set_cpu_online(smp_processor_id(), true);
+> >>
+> >> diff --git a/arch/loongarch/kernel/mem.c b/arch/loongarch/kernel/mem.c
+> >> index 7423361b0ebc..c6def6ff81c8 100644
+> >> --- a/arch/loongarch/kernel/mem.c
+> >> +++ b/arch/loongarch/kernel/mem.c
+> >> @@ -5,6 +5,7 @@
+> >>  #include <linux/efi.h>
+> >>  #include <linux/initrd.h>
+> >>  #include <linux/memblock.h>
+> >> +#include <linux/of_fdt.h>
+> >>
+> >>  #include <asm/bootinfo.h>
+> >>  #include <asm/loongson.h>
+> >> @@ -61,4 +62,9 @@ void __init memblock_init(void)
+> >>
+> >>         /* Reserve the initrd */
+> >>         reserve_initrd_mem();
+> >> +
+> >> +       /* Mainly reserved memory for the elf core head */
+> >> +       early_init_fdt_scan_reserved_mem();
+> >> +       /* Parse linux,usable-memory-range is for crash dump kernel */
+> >> +       early_init_dt_check_for_usable_mem_range();
+> >>  }
+> >> diff --git a/arch/loongarch/kernel/relocate_kernel.S b/arch/loongarch/kernel/relocate_kernel.S
+> >> index d1f242f74ea8..4ee5ac4ac2d7 100644
+> >> --- a/arch/loongarch/kernel/relocate_kernel.S
+> >> +++ b/arch/loongarch/kernel/relocate_kernel.S
+> >> @@ -28,6 +28,12 @@ SYM_CODE_START(relocate_new_kernel)
+> >>         move            s2, a2
+> >>         move            s3, a3
+> >>
+> >> +       /*
+> >> +        * In case of a kdump/crash kernel, the indirection page is not
+> >> +        * populated as the kernel is directly copied to a reserved location
+> >> +        */
+> >> +       beqz            s2, done
+> >> +
+> >>  process_entry:
+> >>         PTR_L           s4, s2, 0
+> >>         PTR_ADDI        s2, s2, SZREG
+> >> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+> >> index f938aae3e92c..ea34b77e402f 100644
+> >> --- a/arch/loongarch/kernel/setup.c
+> >> +++ b/arch/loongarch/kernel/setup.c
+> >> @@ -19,6 +19,8 @@
+> >>  #include <linux/memblock.h>
+> >>  #include <linux/initrd.h>
+> >>  #include <linux/ioport.h>
+> >> +#include <linux/kexec.h>
+> >> +#include <linux/crash_dump.h>
+> >>  #include <linux/root_dev.h>
+> >>  #include <linux/console.h>
+> >>  #include <linux/pfn.h>
+> >> @@ -186,6 +188,50 @@ static int __init early_parse_mem(char *p)
+> >>  }
+> >>  early_param("mem", early_parse_mem);
+> >>
+> >> +static void __init loongarch_parse_crashkernel(void)
+> >> +{
+> >> +#ifdef CONFIG_KEXEC
+> >> +       unsigned long long start;
+> >> +       unsigned long long total_mem;
+> >> +       unsigned long long crash_size, crash_base;
+> >> +       int ret;
+> >> +
+> >> +       total_mem = memblock_phys_mem_size();
+> >> +       ret = parse_crashkernel(boot_command_line, total_mem,
+> >> +                               &crash_size, &crash_base);
+> >> +       if (ret != 0 || crash_size <= 0)
+> >> +               return;
+> >> +
+> >> +
+> >> +       start = memblock_phys_alloc_range(crash_size, 1, crash_base,
+> >> +                                       crash_base + crash_size);
+> >> +       if (start != crash_base) {
+> >> +               pr_warn("Invalid memory region reserved for crash kernel\n");
+> >> +               return;
+> >> +       }
+> >> +
+> >> +       crashk_res.start = crash_base;
+> >> +       crashk_res.end   = crash_base + crash_size - 1;
+> >> +#endif
+> >> +}
+> >> +
+> >> +static void __init request_crashkernel(struct resource *res)
+> >> +{
+> >> +#ifdef CONFIG_KEXEC
+> >> +       int ret;
+> >> +
+> >> +       if (crashk_res.start == crashk_res.end)
+> >> +               return;
+> >> +
+> >> +       ret = request_resource(res, &crashk_res);
+> >> +       if (!ret)
+> >> +               pr_info("Reserving %ldMB of memory at %ldMB for crashkernel\n",
+> >> +                       (unsigned long)((crashk_res.end -
+> >> +                                        crashk_res.start + 1) >> 20),
+> >> +                       (unsigned long)(crashk_res.start  >> 20));
+> >> +#endif
+> >> +}
+> >> +
+> >>  void __init platform_init(void)
+> >>  {
+> >>         efi_init();
+> >> @@ -229,6 +275,8 @@ static void __init arch_mem_init(char **cmdline_p)
+> >>
+> >>         check_kernel_sections_mem();
+> >>
+> >> +       loongarch_parse_crashkernel();
+> >> +
+> >>         /*
+> >>          * In order to reduce the possibility of kernel panic when failed to
+> >>          * get IO TLB memory under CONFIG_SWIOTLB, it is better to allocate
+> >> @@ -290,6 +338,7 @@ static void __init resource_init(void)
+> >>                 request_resource(res, &code_resource);
+> >>                 request_resource(res, &data_resource);
+> >>                 request_resource(res, &bss_resource);
+> >> +               request_crashkernel(res);
+> >>         }
+> >>  }
+> >>
+> >> diff --git a/arch/loongarch/kernel/traps.c b/arch/loongarch/kernel/traps.c
+> >> index aa1c95aaf595..0e610872f3f4 100644
+> >> --- a/arch/loongarch/kernel/traps.c
+> >> +++ b/arch/loongarch/kernel/traps.c
+> >> @@ -10,6 +10,7 @@
+> >>  #include <linux/entry-common.h>
+> >>  #include <linux/init.h>
+> >>  #include <linux/kernel.h>
+> >> +#include <linux/kexec.h>
+> >>  #include <linux/module.h>
+> >>  #include <linux/extable.h>
+> >>  #include <linux/mm.h>
+> >> @@ -246,6 +247,9 @@ void __noreturn die(const char *str, struct pt_regs *regs)
+> >>
+> >>         oops_exit();
+> >>
+> >> +       if (regs && kexec_should_crash(current))
+> >> +               crash_kexec(regs);
+> >> +
+> >>         if (in_interrupt())
+> >>                 panic("Fatal exception in interrupt");
+> >>
+> >> --
+> >> 2.36.0
+> >>
 >
-> I tested this on  LoongArch 3A5000 machine and works as expected,
->
->  $ sudo kexec -l /boot/vmlinux.efi --reuse-cmdline
->  $ sudo kexec -e
->
-> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
-> ---
->  arch/loongarch/Kconfig                  |  11 ++
->  arch/loongarch/include/asm/kexec.h      |  58 ++++++++
->  arch/loongarch/kernel/Makefile          |   2 +
->  arch/loongarch/kernel/head.S            |   7 +-
->  arch/loongarch/kernel/machine_kexec.c   | 178 ++++++++++++++++++++++++
->  arch/loongarch/kernel/relocate_kernel.S | 125 +++++++++++++++++
->  6 files changed, 380 insertions(+), 1 deletion(-)
->  create mode 100644 arch/loongarch/include/asm/kexec.h
->  create mode 100644 arch/loongarch/kernel/machine_kexec.c
->  create mode 100644 arch/loongarch/kernel/relocate_kernel.S
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 45364cffc793..903c82fa958d 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -409,6 +409,17 @@ config FORCE_MAX_ZONEORDER
->  	  The page size is not necessarily 4KB.  Keep this in mind
->  	  when choosing a value for this option.
->
-> +config KEXEC
-> +	bool "Kexec system call"
-> +	select KEXEC_CORE
-> +	help
-> +	  kexec is a system call that implements the ability to shutdown your
-> +	  current kernel, and to start another kernel.  It is like a reboot
-> +	  but it is independent of the system firmware.   And like a reboot
-> +	  you can start any kernel with it, not just Linux.
-> +
-> +	  The name comes from the similarity to the exec system call.
-> +
->  config SECCOMP
->  	bool "Enable seccomp to safely compute untrusted bytecode"
->  	depends on PROC_FS
-> diff --git a/arch/loongarch/include/asm/kexec.h b/arch/loongarch/include/asm/kexec.h
-> new file mode 100644
-> index 000000000000..5c9e7b5eccb8
-> --- /dev/null
-> +++ b/arch/loongarch/include/asm/kexec.h
-> @@ -0,0 +1,58 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * kexec.h for kexec
-> + *
-> + * Copyright (C) 2022 Loongson Technology Corporation Limited
-> + */
-> +
-> +#ifndef _ASM_KEXEC_H
-> +#define _ASM_KEXEC_H
-> +
-> +#include <asm/stacktrace.h>
-> +#include <asm/page.h>
-> +
-> +/* Maximum physical address we can use pages from */
-> +#define KEXEC_SOURCE_MEMORY_LIMIT (-1UL)
-> +/* Maximum address we can reach in physical address mode */
-> +#define KEXEC_DESTINATION_MEMORY_LIMIT (-1UL)
-> + /* Maximum address we can use for the control code buffer */
-> +#define KEXEC_CONTROL_MEMORY_LIMIT (-1UL)
-> +
-> +/* Reserve a page for the control code buffer */
-> +#define KEXEC_CONTROL_PAGE_SIZE PAGE_SIZE
-> +
-> +/* The native architecture */
-> +#define KEXEC_ARCH KEXEC_ARCH_LOONGARCH
-> +
-> +static inline void crash_setup_regs(struct pt_regs *newregs,
-> +				    struct pt_regs *oldregs)
-> +{
-> +	if (oldregs)
-> +		memcpy(newregs, oldregs, sizeof(*newregs));
-> +	else
-> +		prepare_frametrace(newregs);
-> +}
-> +
-> +#define ARCH_HAS_KIMAGE_ARCH
-> +
-> +struct kimage_arch {
-> +	unsigned long boot_flag;
-> +	unsigned long fdt_addr;
-> +};
-> +
-> +typedef void (*do_kexec_t)(unsigned long boot_flag,
-> +			   unsigned long fdt_addr,
-> +			   unsigned long first_ind_entry,
-> +			   unsigned long jump_addr);
-> +
-> +struct kimage;
-> +extern const unsigned char relocate_new_kernel[];
-> +extern const size_t relocate_new_kernel_size;
-> +
-> +#ifdef CONFIG_SMP
-> +extern atomic_t kexec_ready_to_reboot;
-> +extern const unsigned char kexec_smp_wait[];
-> +extern void kexec_reboot(void);
-> +#endif
-> +
-> +#endif /* !_ASM_KEXEC_H */
-> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
-> index a213e994db68..20b64ac3f128 100644
-> --- a/arch/loongarch/kernel/Makefile
-> +++ b/arch/loongarch/kernel/Makefile
-> @@ -17,6 +17,8 @@ obj-$(CONFIG_CPU_HAS_FPU)	+= fpu.o
->  obj-$(CONFIG_MODULES)		+= module.o module-sections.o
->  obj-$(CONFIG_STACKTRACE)	+= stacktrace.o
->
-> +obj-$(CONFIG_KEXEC)             += machine_kexec.o relocate_kernel.o
-> +
->  obj-$(CONFIG_PROC_FS)		+= proc.o
->
->  obj-$(CONFIG_SMP)		+= smp.o
-> diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-> index 01bac62a6442..22bdf4928325 100644
-> --- a/arch/loongarch/kernel/head.S
-> +++ b/arch/loongarch/kernel/head.S
-> @@ -20,7 +20,12 @@
->
->  _head:
->  	.word	MZ_MAGIC		/* "MZ", MS-DOS header */
-> -	.org	0x3c			/* 0x04 ~ 0x3b reserved */
-> +	.org	0x8
-> +	.quad	0			/* Image load offset from start of RAM */
-> +	.dword	_end - _text		/* Effective size of kernel image */
-> +	.quad	0
-> +	.dword	kernel_entry		/* Kernel entry point */
-> +	.org	0x3c			/* 0x28 ~ 0x3b reserved */
->  	.long	pe_header - _head	/* Offset to the PE header */
->
->  pe_header:
-> diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kernel/machine_kexec.c
-> new file mode 100644
-> index 000000000000..4ffcd4cd9c8c
-> --- /dev/null
-> +++ b/arch/loongarch/kernel/machine_kexec.c
-> @@ -0,0 +1,178 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * machine_kexec.c for kexec
-> + *
-> + * Copyright (C) 2022 Loongson Technology Corporation Limited
-> + */
-> +#include <linux/compiler.h>
-> +#include <linux/cpu.h>
-> +#include <linux/kexec.h>
-> +#include <linux/mm.h>
-> +#include <linux/delay.h>
-> +#include <linux/libfdt.h>
-> +#include <linux/of_fdt.h>
-> +
-> +#include <asm/bootinfo.h>
-> +#include <asm/cacheflush.h>
-> +#include <asm/page.h>
-> +
-> +/* 0x100000 ~ 0x200000 is safe */
-> +#define KEXEC_CTRL_CODE	TO_CACHE(0x100000UL)
-> +#define KEXEC_BLOB_ADDR	TO_CACHE(0x108000UL)
-> +
-> +static unsigned long reboot_code_buffer;
-> +#ifdef CONFIG_SMP
-> +void (*relocated_kexec_smp_wait)(void *);
-> +atomic_t kexec_ready_to_reboot = ATOMIC_INIT(0);
-> +#endif
-> +
-> +static unsigned long jump_addr;
-> +static unsigned long first_ind_entry;
-> +static unsigned long boot_flag;
-> +static unsigned long fdt_addr;
-> +
-> +static void kexec_image_info(const struct kimage *kimage)
-> +{
-> +	unsigned long i;
-> +
-> +	pr_debug("kexec kimage info:\n");
-> +	pr_debug("\ttype:        %d\n", kimage->type);
-> +	pr_debug("\tstart:       %lx\n", kimage->start);
-> +	pr_debug("\thead:        %lx\n", kimage->head);
-> +	pr_debug("\tnr_segments: %lu\n", kimage->nr_segments);
-> +
-> +	for (i = 0; i < kimage->nr_segments; i++) {
-> +		pr_debug("\t    segment[%lu]: %016lx - %016lx", i,
-> +			kimage->segment[i].mem,
-> +			kimage->segment[i].mem + kimage->segment[i].memsz);
-> +		pr_debug("\t\t0x%lx bytes, %lu pages\n",
-> +			(unsigned long)kimage->segment[i].memsz,
-> +			(unsigned long)kimage->segment[i].memsz /  PAGE_SIZE);
-> +	}
-> +}
-> +
-> +int machine_kexec_prepare(struct kimage *kimage)
-> +{
-> +	int i;
-> +	void *dtb = (void *)KEXEC_BLOB_ADDR;
-> +
-> +	kexec_image_info(kimage);
-> +
-> +	/* Find the Flattened Device Tree */
-> +	for (i = 0; i < kimage->nr_segments; i++) {
-> +		if (!fdt_check_header(kimage->segment[i].buf)) {
-> +			memcpy(dtb, kimage->segment[i].buf, SZ_64K);
-> +			kimage->arch.boot_flag = fw_arg0;
-> +			kimage->arch.fdt_addr = (unsigned long) dtb;
-> +			break;
-> +		}
-> +		continue;
-> +	}
-> +
-> +	/* kexec need a safe page to save reboot_code_buffer */
-> +	kimage->control_code_page = virt_to_page((void *)KEXEC_CTRL_CODE);
-> +
-> +	reboot_code_buffer =
-> +	  (unsigned long)page_address(kimage->control_code_page);
-> +	memcpy((void *)reboot_code_buffer, relocate_new_kernel,
-> +	       relocate_new_kernel_size);
-> +
-> +	/* All secondary cpus now may jump to kexec_smp_wait cycle */
-> +	relocated_kexec_smp_wait = reboot_code_buffer +
-> +		(void *)(kexec_smp_wait - relocate_new_kernel);
-> +
-> +	return 0;
-> +}
-> +
-> +void machine_kexec_cleanup(struct kimage *kimage)
-> +{
-> +}
-> +
-> +#ifdef CONFIG_SMP
-> +void kexec_reboot(void)
-> +{
-> +	do_kexec_t do_kexec = NULL;
-> +
-> +	/* All secondary cpus go to kexec_smp_wait */
-> +	if (smp_processor_id() > 0) {
-> +		relocated_kexec_smp_wait(NULL);
-> +		unreachable();
-> +	}
-> +
-> +	do_kexec = (void *)reboot_code_buffer;
-> +	do_kexec(boot_flag, fdt_addr, first_ind_entry, jump_addr);
-> +
-> +	unreachable();
-> +}
-
-self-check,
-kexec_reboot() is in! SMP needs to be used, modified as follows:
-
-void kexec_reboot(void)
-{
-         do_kexec_t do_kexec = NULL;
-
-#ifdef CONFIG_SMP
-         /* All secondary cpus go to kexec_smp_wait */
-         if (smp_processor_id() > 0) {
-                 relocated_kexec_smp_wait(NULL);
-                 unreachable();
-         }
-#endif
-
-         do_kexec = (void *)reboot_code_buffer;
-         do_kexec(boot_flag, fdt_addr, first_ind_entry, jump_addr);
-
-         unreachable();
-}
-
-Youling
-
 
 _______________________________________________
 kexec mailing list
