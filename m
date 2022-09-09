@@ -4,69 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9B4F0C6FA89
-	for <kexec@archiver.kernel.org>; Fri,  9 Sep 2022 08:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EAF69ECAAA1
+	for <kexec@archiver.kernel.org>; Fri,  9 Sep 2022 09:03:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=3wy+mMCbY1XcDBhtTbYgRA7o0r+5NCiT824w75PG72I=; b=jZqTSc2J0OYk+s
-	tU9GFHfJz58xH6vJOGfOFIe/qHOaqkcTX9EMlWO2F3Jw2vY2E9Ud4f7pKTtvTWXm/0e8bK6vS1j5S
-	Oe7n72pVvipg1KlDFF5Z0Gr2porYfXiDiuLrnm/+MEv64p37z/+hmGnclBvnk3n//FKoHxtOXaqFG
-	Z50wki2C7k+2D9az1h/tWVWAHGSmnu8yiEOq80sv82iUrA9qzjjwSaS08xNfFGQ2c7X7/b5lNORiT
-	98dV3qUxqRy4CCH3mSB2wcrOH1hPzeHSd0glP3T159Skp7wkQLr/iXDWZJbKDftfJjmfZanN3kSIL
-	0YBzRwMfOkog56BTLCow==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:Date:Message-ID:From:Cc:
+	References:To:Subject:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=1i71MRU4CE6NT/SaNQRNkUP8fY+rPXFiZERrJDbRnk8=; b=sQcyVHQ3g3yHtsaDHHOI5gOX3I
+	hYvf7A0oAOvWzaITFMQYGqdVpbHlEd2imd8lSz81iPstK70Hjno0X3O9vUkJL4pFKTP24da70DezF
+	CAnvtLQsv7A6Udj/qQOzD/aQ4FNoSVQ+VxGdX3P1i2MA/4UB5z8IGn0fuasCr3SOyH7h4VDMa/cbl
+	4NQtMG9MrhUf+jq2bwlwpQD8NfRG/gTglTcoU/PxL7wC0rhAEFIVsb0H3XDfERwjeXH2iCDLSCJaX
+	s2xjHY1qg0PHhCuvSIE8XajP07FJa9J7mZjF0NJ65EmFfCaSp7FmatoIznWEsGF0HCPeWLazBEXe3
+	i+XZkhUg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oWZBc-00EVzZ-9f; Fri, 09 Sep 2022 08:16:28 +0000
-Received: from ams.source.kernel.org ([145.40.68.75])
-	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oWZBX-00EVyh-NH
-	for kexec@lists.infradead.org; Fri, 09 Sep 2022 08:16:26 +0000
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ams.source.kernel.org (Postfix) with ESMTPS id 013E5B823BB
-	for <kexec@lists.infradead.org>; Fri,  9 Sep 2022 08:16:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF7CEC43141
-	for <kexec@lists.infradead.org>; Fri,  9 Sep 2022 08:16:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1662711380;
-	bh=CHIyMtupOO9kHMIN63IbrAbpQUkWgns3dVl7r3DXaDA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=bjYxe9xrW9UYqmlp458qDiQS2k+l7d4l9tW7UV+fHihaiCfaCJzyp8WuohCEQOWZU
-	 vYjS8ezQSiqpQJO30aYtbLIuFqHKXIm3x49oTkKecK7b2Cb8GYRBt7atHoOEBYuL+b
-	 I2wUWWi2IplJB+UPUb82mAhrvBuxqySYH4/aaYgxnX6prjrNRdOU6oTCMs6etrClSB
-	 3KbTmIoxP6z+8X9Aa+0hIG7wQogMjxxV1Lc7y2y2aVzoRZf5/tLVX9+bhG6zwdLNB0
-	 zQXmYc5Zh7ua81erIQWixMbF2UDN+5j3rfWhndqDeI2pWtR7/8cMWBU4qmWUmv+Ope
-	 atDz2FjOq70sA==
-Received: by mail-vk1-f175.google.com with SMTP id i67so411435vkb.2
-        for <kexec@lists.infradead.org>; Fri, 09 Sep 2022 01:16:20 -0700 (PDT)
-X-Gm-Message-State: ACgBeo3lTBKjvP4PMHrbtHk9U1HUs8UCzONN507ZOdEalZLnmXAzs8Zi
-	QWUQ/2nt2sRqtNlrqtCFqgPjuVZCwcUe+Ad4P8A=
-X-Google-Smtp-Source: AA6agR7ZEi59uN2mII6SrX/WS+z85TKJDzKG6mcoqsE5Zu8RXsAdLZ4SPrbAQ4oo9Zhgd3kYfeBUmW3prvrZC70ccAU=
-X-Received: by 2002:ac5:c3c3:0:b0:39f:c1eb:85d2 with SMTP id
- t3-20020ac5c3c3000000b0039fc1eb85d2mr2759107vkk.18.1662711379480; Fri, 09 Sep
- 2022 01:16:19 -0700 (PDT)
+	id 1oWZv7-00EsFn-CP; Fri, 09 Sep 2022 09:03:29 +0000
+Received: from mail.loongson.cn ([114.242.206.163] helo=loongson.cn)
+	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1oWZv3-00EsDh-4i
+	for kexec@lists.infradead.org; Fri, 09 Sep 2022 09:03:27 +0000
+Received: from [10.130.0.193] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx9OFUARtjn0gVAA--.19271S3;
+	Fri, 09 Sep 2022 17:03:17 +0800 (CST)
+Subject: Re: [PATCH v2 2/3] LoongArch: Add kdump support
+To: Huacai Chen <chenhuacai@kernel.org>
+References: <1662693621-31053-1-git-send-email-tangyouling@loongson.cn>
+ <1662693621-31053-3-git-send-email-tangyouling@loongson.cn>
+ <CAAhV-H6FDXeGzoyRaTLsWJTK-ocAszE794U0+DLP1LqBBBQo2Q@mail.gmail.com>
+Cc: Baoquan He <bhe@redhat.com>, Eric Biederman <ebiederm@xmission.com>,
+ WANG Xuerui <kernel@xen0n.name>, Vivek Goyal <vgoyal@redhat.com>,
+ Dave Young <dyoung@redhat.com>, Guo Ren <guoren@kernel.org>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, Jinyang He <hejinyang@loongson.cn>,
+ kexec@lists.infradead.org, loongarch@lists.linux.dev,
+ LKML <linux-kernel@vger.kernel.org>
+From: Youling Tang <tangyouling@loongson.cn>
+Message-ID: <ab9054f2-a0d5-f6d4-7093-87a9f71e4cbb@loongson.cn>
+Date: Fri, 9 Sep 2022 17:03:16 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-References: <1662693621-31053-1-git-send-email-tangyouling@loongson.cn> <1662693621-31053-2-git-send-email-tangyouling@loongson.cn>
-In-Reply-To: <1662693621-31053-2-git-send-email-tangyouling@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 9 Sep 2022 16:16:08 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5nb5c6+wsSqWRUN176nBhgQVk18pKEDZ_7Qr752Scj=w@mail.gmail.com>
-Message-ID: <CAAhV-H5nb5c6+wsSqWRUN176nBhgQVk18pKEDZ_7Qr752Scj=w@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] LoongArch: Add kexec support
-To: Youling Tang <tangyouling@loongson.cn>
-Cc: Baoquan He <bhe@redhat.com>, Eric Biederman <ebiederm@xmission.com>, 
-	WANG Xuerui <kernel@xen0n.name>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, 
-	Guo Ren <guoren@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	Jinyang He <hejinyang@loongson.cn>, kexec@lists.infradead.org, 
-	loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <CAAhV-H6FDXeGzoyRaTLsWJTK-ocAszE794U0+DLP1LqBBBQo2Q@mail.gmail.com>
+X-CM-TRANSID: AQAAf8Cx9OFUARtjn0gVAA--.19271S3
+X-Coremail-Antispam: 1UD129KBjvAXoW3tr4DXry7Aryktr13Gw4UJwb_yoW8Gw4fAo
+	WftF1xtw1xGry7trs8Ca4qvFW3K3s0krsxA3y3Aw43WFn0ya4j9r1UKFWYyrW7Ja1kWw47
+	Ga43XrWjva97Xrn5n29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
+	AaLaJ3UjIYCTnIWjp_UUUYL7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20EY4v20xva
+	j40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2
+	x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8
+	Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
+	xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr
+	0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
+	n2IY04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21lc2xSY4AK67AK6r4fMxAIw28IcxkI7VAKI4
+	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
+	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjx
+	v20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20E
+	Y4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267
+	AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjC385UUUUU==
+X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220909_011624_076994_52AEB4E9 
-X-CRM114-Status: GOOD (  48.86  )
+X-CRM114-CacheID: sfid-20220909_020325_558470_15CBA263 
+X-CRM114-Status: GOOD (  42.52  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,488 +78,286 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi, Youling,
-
-On Fri, Sep 9, 2022 at 11:20 AM Youling Tang <tangyouling@loongson.cn> wrote:
->
-> Add three new files, kexec.h, machine_kexec.c and relocate_kernel.S to the
-> LoongArch architecture that add support for the kexec re-boot mechanis
-> (CONFIG_KEXEC) on LoongArch platforms.
->
-> Supports loading vmlinux (vmlinux.elf) in ELF format and vmlinux.efi in
-> PE format.
->
-> I tested this on  LoongArch 3A5000 machine and works as expected,
->
->  $ sudo kexec -l /boot/vmlinux.efi --reuse-cmdline
->  $ sudo kexec -e
->
-> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
-> ---
->  arch/loongarch/Kconfig                  |  11 ++
->  arch/loongarch/include/asm/kexec.h      |  58 ++++++++
->  arch/loongarch/kernel/Makefile          |   2 +
->  arch/loongarch/kernel/head.S            |   7 +-
->  arch/loongarch/kernel/machine_kexec.c   | 188 ++++++++++++++++++++++++
->  arch/loongarch/kernel/relocate_kernel.S | 106 +++++++++++++
->  6 files changed, 371 insertions(+), 1 deletion(-)
->  create mode 100644 arch/loongarch/include/asm/kexec.h
->  create mode 100644 arch/loongarch/kernel/machine_kexec.c
->  create mode 100644 arch/loongarch/kernel/relocate_kernel.S
->
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 9b1f2ab878e9..08e063aaf847 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -422,6 +422,17 @@ config ARCH_IOREMAP
->           protection support. However, you can enable LoongArch DMW-based
->           ioremap() for better performance.
->
-> +config KEXEC
-> +       bool "Kexec system call"
-> +       select KEXEC_CORE
-> +       help
-> +         kexec is a system call that implements the ability to shutdown your
-> +         current kernel, and to start another kernel.  It is like a reboot
-> +         but it is independent of the system firmware.   And like a reboot
-> +         you can start any kernel with it, not just Linux.
-> +
-> +         The name comes from the similarity to the exec system call.
-> +
->  config SECCOMP
->         bool "Enable seccomp to safely compute untrusted bytecode"
->         depends on PROC_FS
-> diff --git a/arch/loongarch/include/asm/kexec.h b/arch/loongarch/include/asm/kexec.h
-> new file mode 100644
-> index 000000000000..f23506725e00
-> --- /dev/null
-> +++ b/arch/loongarch/include/asm/kexec.h
-> @@ -0,0 +1,58 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * kexec.h for kexec
-> + *
-> + * Copyright (C) 2022 Loongson Technology Corporation Limited
-> + */
-> +
-> +#ifndef _ASM_KEXEC_H
-> +#define _ASM_KEXEC_H
-> +
-> +#include <asm/stacktrace.h>
-> +#include <asm/page.h>
-> +
-> +/* Maximum physical address we can use pages from */
-> +#define KEXEC_SOURCE_MEMORY_LIMIT (-1UL)
-> +/* Maximum address we can reach in physical address mode */
-> +#define KEXEC_DESTINATION_MEMORY_LIMIT (-1UL)
-> + /* Maximum address we can use for the control code buffer */
-> +#define KEXEC_CONTROL_MEMORY_LIMIT (-1UL)
-> +
-> +/* Reserve a page for the control code buffer */
-> +#define KEXEC_CONTROL_PAGE_SIZE PAGE_SIZE
-> +
-> +/* The native architecture */
-> +#define KEXEC_ARCH KEXEC_ARCH_LOONGARCH
-> +
-> +static inline void crash_setup_regs(struct pt_regs *newregs,
-> +                                   struct pt_regs *oldregs)
-> +{
-> +       if (oldregs)
-> +               memcpy(newregs, oldregs, sizeof(*newregs));
-> +       else
-> +               prepare_frametrace(newregs);
-> +}
-> +
-> +#define ARCH_HAS_KIMAGE_ARCH
-> +
-> +struct kimage_arch {
-> +       unsigned long boot_flag;
-> +       unsigned long fdt_addr;
-> +};
-I prefer to change boot_flag to efi_boot, the latter is better to
-correspond the current usage, and keeps consistency with efistub.
-
-> +
-> +typedef void (*do_kexec_t)(unsigned long boot_flag,
-> +                          unsigned long fdt_addr,
-> +                          unsigned long first_ind_entry,
-> +                          unsigned long jump_addr);
-I prefer change the order of jump_addr and first_ind_entry here.
-
-> +
-> +struct kimage;
-> +extern const unsigned char relocate_new_kernel[];
-> +extern const size_t relocate_new_kernel_size;
-> +extern void kexec_reboot(void);
-> +
-> +#ifdef CONFIG_SMP
-> +extern atomic_t kexec_ready_to_reboot;
-> +extern const unsigned char kexec_smp_wait[];
-> +#endif
-> +
-> +#endif /* !_ASM_KEXEC_H */
-> diff --git a/arch/loongarch/kernel/Makefile b/arch/loongarch/kernel/Makefile
-> index 7225916dd378..17dc8ce6b5ce 100644
-> --- a/arch/loongarch/kernel/Makefile
-> +++ b/arch/loongarch/kernel/Makefile
-> @@ -17,6 +17,8 @@ obj-$(CONFIG_CPU_HAS_FPU)     += fpu.o
->  obj-$(CONFIG_MODULES)          += module.o module-sections.o
->  obj-$(CONFIG_STACKTRACE)       += stacktrace.o
->
-> +obj-$(CONFIG_KEXEC)             += machine_kexec.o relocate_kernel.o
-> +
->  obj-$(CONFIG_PROC_FS)          += proc.o
->
->  obj-$(CONFIG_SMP)              += smp.o
-> diff --git a/arch/loongarch/kernel/head.S b/arch/loongarch/kernel/head.S
-> index eb3f641d5915..0f786d670e66 100644
-> --- a/arch/loongarch/kernel/head.S
-> +++ b/arch/loongarch/kernel/head.S
-> @@ -20,7 +20,12 @@
->
->  _head:
->         .word   MZ_MAGIC                /* "MZ", MS-DOS header */
-> -       .org    0x3c                    /* 0x04 ~ 0x3b reserved */
-> +       .org    0x8
-> +       .quad   0                       /* Image load offset from start of RAM */
-> +       .dword  _end - _text            /* Effective size of kernel image */
-> +       .quad   0
-> +       .dword  kernel_entry            /* Kernel entry point */
-> +       .org    0x3c                    /* 0x28 ~ 0x3b reserved */
->         .long   pe_header - _head       /* Offset to the PE header */
-As discussed before, I prefer kernel entry point before kernel image size.
-
->
->  pe_header:
-> diff --git a/arch/loongarch/kernel/machine_kexec.c b/arch/loongarch/kernel/machine_kexec.c
-> new file mode 100644
-> index 000000000000..7b3fea506c6d
-> --- /dev/null
-> +++ b/arch/loongarch/kernel/machine_kexec.c
-> @@ -0,0 +1,188 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * machine_kexec.c for kexec
-> + *
-> + * Copyright (C) 2022 Loongson Technology Corporation Limited
-> + */
-> +#include <linux/compiler.h>
-> +#include <linux/cpu.h>
-> +#include <linux/kexec.h>
-> +#include <linux/mm.h>
-> +#include <linux/delay.h>
-> +#include <linux/libfdt.h>
-> +#include <linux/of_fdt.h>
-> +
-> +#include <asm/bootinfo.h>
-> +#include <asm/cacheflush.h>
-> +#include <asm/page.h>
-> +
-> +/* 0x100000 ~ 0x200000 is safe */
-> +#define KEXEC_CTRL_CODE        TO_CACHE(0x100000UL)
-> +#define KEXEC_BLOB_ADDR        TO_CACHE(0x108000UL)
-> +
-> +static unsigned long reboot_code_buffer;
-> +
-> +#ifdef CONFIG_SMP
-> +static void (*relocated_kexec_smp_wait)(void *);
-> +atomic_t kexec_ready_to_reboot = ATOMIC_INIT(0);
-> +#endif
-> +
-> +static unsigned long jump_addr;
-> +static unsigned long first_ind_entry;
-> +static unsigned long boot_flag;
-> +static unsigned long fdt_addr;
-Keep the same order as do_kexec() may be better.
-
-> +
-> +static void kexec_image_info(const struct kimage *kimage)
-> +{
-> +       unsigned long i;
-> +
-> +       pr_debug("kexec kimage info:\n");
-> +       pr_debug("\ttype:        %d\n", kimage->type);
-> +       pr_debug("\tstart:       %lx\n", kimage->start);
-> +       pr_debug("\thead:        %lx\n", kimage->head);
-> +       pr_debug("\tnr_segments: %lu\n", kimage->nr_segments);
-> +
-> +       for (i = 0; i < kimage->nr_segments; i++) {
-> +               pr_debug("\t    segment[%lu]: %016lx - %016lx", i,
-> +                       kimage->segment[i].mem,
-> +                       kimage->segment[i].mem + kimage->segment[i].memsz);
-> +               pr_debug("\t\t0x%lx bytes, %lu pages\n",
-> +                       (unsigned long)kimage->segment[i].memsz,
-> +                       (unsigned long)kimage->segment[i].memsz /  PAGE_SIZE);
-> +       }
-> +}
-> +
-> +int machine_kexec_prepare(struct kimage *kimage)
-> +{
-> +       int i;
-> +       void *dtb = (void *)KEXEC_BLOB_ADDR;
-> +
-> +       kexec_image_info(kimage);
-> +
-> +       /* Find the Flattened Device Tree */
-> +       for (i = 0; i < kimage->nr_segments; i++) {
-> +               if (!fdt_check_header(kimage->segment[i].buf)) {
-> +                       memcpy(dtb, kimage->segment[i].buf, SZ_64K);
-> +                       kimage->arch.boot_flag = fw_arg0;
-> +                       kimage->arch.fdt_addr = (unsigned long) dtb;
-> +                       break;
-> +               }
-> +               continue;
-> +       }
-> +
-> +       /* kexec need a safe page to save reboot_code_buffer */
-> +       kimage->control_code_page = virt_to_page((void *)KEXEC_CTRL_CODE);
-> +
-> +       reboot_code_buffer =
-> +         (unsigned long)page_address(kimage->control_code_page);
-> +       memcpy((void *)reboot_code_buffer, relocate_new_kernel,
-> +              relocate_new_kernel_size);
-> +
-> +#ifdef CONFIG_SMP
-> +       /* All secondary cpus now may jump to kexec_smp_wait cycle */
-> +       relocated_kexec_smp_wait = reboot_code_buffer +
-> +               (void *)(kexec_smp_wait - relocate_new_kernel);
-> +#endif
-> +
-> +       return 0;
-> +}
-> +
-> +void machine_kexec_cleanup(struct kimage *kimage)
-> +{
-> +}
-> +
-> +void kexec_reboot(void)
-> +{
-> +       do_kexec_t do_kexec = NULL;
-> +
-The old implementation has an "ibar" here, I suppose it is still needed?
-
-> +#ifdef CONFIG_SMP
-> +       /* All secondary cpus go to kexec_smp_wait */
-> +       if (smp_processor_id() > 0) {
-> +               relocated_kexec_smp_wait(NULL);
-> +               unreachable();
-> +       }
-> +#endif
-> +
-> +       do_kexec = (void *)reboot_code_buffer;
-> +       do_kexec(boot_flag, fdt_addr, first_ind_entry, jump_addr);
-> +
-> +       unreachable();
-> +}
-> +
-> +
-> +#ifdef CONFIG_SMP
-> +static void kexec_shutdown_secondary(void *)
-> +{
-> +       local_irq_disable();
-> +       while (!atomic_read(&kexec_ready_to_reboot))
-> +               cpu_relax();
-> +
-> +       kexec_reboot();
-The old implementation has an unreachable() after kexec_reboot(), but
-I don't know whether it is really needed.
-
-> +}
-> +#endif
-> +
-> +void machine_crash_shutdown(struct pt_regs *regs)
-> +{
-> +}
-> +
-> +void machine_shutdown(void)
-> +{
-> +#ifdef CONFIG_SMP
-> +       smp_call_function(kexec_shutdown_secondary, NULL, 0);
-> +#endif
-> +}
-> +
-> +void machine_kexec(struct kimage *image)
-> +{
-> +       unsigned long entry;
-> +       unsigned long *ptr;
-> +       struct kimage_arch *internal = &image->arch;
-> +
-> +       boot_flag = internal->boot_flag;
-> +       fdt_addr = internal->fdt_addr;
-> +
-> +       jump_addr = (unsigned long)phys_to_virt(image->start);
-> +
-> +       first_ind_entry = (unsigned long)phys_to_virt(image->head & PAGE_MASK);
-> +
-> +       /*
-> +        * The generic kexec code builds a page list with physical
-> +        * addresses. they are directly accessible through XKPRANGE
-> +        * hence the phys_to_virt() call.
-> +        */
-> +       for (ptr = &image->head; (entry = *ptr) && !(entry & IND_DONE);
-> +            ptr = (entry & IND_INDIRECTION) ?
-> +              phys_to_virt(entry & PAGE_MASK) : ptr + 1) {
-> +               if (*ptr & IND_SOURCE || *ptr & IND_INDIRECTION ||
-> +                   *ptr & IND_DESTINATION)
-> +                       *ptr = (unsigned long) phys_to_virt(*ptr);
-> +       }
-> +
-> +       /* Mark offline before disabling local irq. */
-> +       set_cpu_online(smp_processor_id(), false);
-> +
-> +       /* we do not want to be bothered. */
-> +       local_irq_disable();
-> +
-> +       pr_notice("Will call new kernel at %lx\n", jump_addr);
-> +       pr_notice("FDT image at %lx\n", fdt_addr);
-> +       pr_notice("Bye ...\n");
-> +
-> +       /* Make reboot code buffer available to the boot CPU. */
-> +       flush_cache_all();
-> +
-> +#ifdef CONFIG_SMP
-> +       atomic_set(&kexec_ready_to_reboot, 1);
-> +#endif
-> +
-> +       /*
-> +        * We know we were online, and there will be no incoming IPIs at
-> +        * this point.
-> +        */
-> +       set_cpu_online(smp_processor_id(), true);
-> +
-> +       /* Ensure remote CPUs observe that we're online before rebooting. */
-> +       smp_mb__after_atomic();
-> +
-> +       kexec_reboot();
-> +}
-> diff --git a/arch/loongarch/kernel/relocate_kernel.S b/arch/loongarch/kernel/relocate_kernel.S
-> new file mode 100644
-> index 000000000000..05a0c1ccfab6
-> --- /dev/null
-> +++ b/arch/loongarch/kernel/relocate_kernel.S
-> @@ -0,0 +1,106 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * relocate_kernel.S for kexec
-> + *
-> + * Copyright (C) 2022 Loongson Technology Corporation Limited
-> + */
-> +
-> +#include <linux/kexec.h>
-> +
-> +#include <asm/asm.h>
-> +#include <asm/asmmacro.h>
-> +#include <asm/regdef.h>
-> +#include <asm/loongarch.h>
-> +#include <asm/stackframe.h>
-> +#include <asm/addrspace.h>
-> +
-> +SYM_CODE_START(relocate_new_kernel)
-> +       /*
-> +        * s0: Boot flag passed to the new kernel
-> +        * s1: Virt address of the FDT image
-> +        * s2: Pointer to the current entry
-"Pointer to the current entry" can be "Pointer to the current
-indirection page entry"? And I think we needn't backup Ax to Sx except
-this one in the assembly below.
-
-Huacai
-
-> +        * s3: Virt address to jump to after relocation
-> +        */
-> +       move            s0, a0
-> +       move            s1, a1
-> +       move            s2, a2
-> +       move            s3, a3
-> +
-> +process_entry:
-> +       PTR_L           s4, s2, 0
-> +       PTR_ADDI        s2, s2, SZREG
-> +
-> +       /* destination page */
-> +       andi            s5, s4, IND_DESTINATION
-> +       beqz            s5, 1f
-> +       li.w            t0, ~0x1
-> +       and             s6, s4, t0      /* store destination addr in s6 */
-> +       b               process_entry
-> +
-> +1:
-> +       /* indirection page, update s2  */
-> +       andi            s5, s4, IND_INDIRECTION
-> +       beqz            s5, 1f
-> +       li.w            t0, ~0x2
-> +       and             s2, s4, t0
-> +       b               process_entry
-> +
-> +1:
-> +       /* done page */
-> +       andi            s5, s4, IND_DONE
-> +       beqz            s5, 1f
-> +       b               done
-> +1:
-> +       /* source page */
-> +       andi            s5, s4, IND_SOURCE
-> +       beqz            s5, process_entry
-> +       li.w            t0, ~0x8
-> +       and             s4, s4, t0
-> +       li.w            s8, (1 << _PAGE_SHIFT) / SZREG
-> +
-> +copy_word:
-> +       /* copy page word by word */
-> +       REG_L           s7, s4, 0
-> +       REG_S           s7, s6, 0
-> +       PTR_ADDI        s6, s6, SZREG
-> +       PTR_ADDI        s4, s4, SZREG
-> +       LONG_ADDI       s8, s8, -1
-> +       beqz            s8, process_entry
-> +       b               copy_word
-> +       b               process_entry
-> +
-> +done:
-> +       ibar            0
-> +       dbar            0
-> +
-> +       move            a0, s0
-> +       move            a1, s1
-> +       /* jump to the new kernel */
-> +       jr              s3
-> +SYM_CODE_END(relocate_new_kernel)
-> +
-> +#ifdef CONFIG_SMP
-> +/*
-> + * Other CPUs should wait until code is relocated and
-> + * then start at entry (?) point.
-> + */
-> +SYM_CODE_START(kexec_smp_wait)
-> +1:     li.w            t0, 0x100                       /* wait for init loop */
-> +2:     addi.w          t0, t0, -1                      /* limit mailbox access */
-> +       bnez            t0, 2b
-> +       li.w            t1, LOONGARCH_IOCSR_MBUF0
-> +       iocsrrd.w       s1, t1                          /* check PC as an indicator */
-> +       beqz            s1, 1b
-> +       iocsrrd.d       s1, t1                          /* get PC via mailbox */
-> +
-> +       li.d            t0, CACHE_BASE
-> +       or              s1, s1, t0                      /* s1 = TO_CACHE(s1) */
-> +       jr              s1                              /* jump to initial PC */
-> +SYM_CODE_END(kexec_smp_wait)
-> +#endif
-> +
-> +relocate_new_kernel_end:
-> +
-> +SYM_DATA_START(relocate_new_kernel_size)
-> +       PTR             relocate_new_kernel_end - relocate_new_kernel
-> +SYM_DATA_END(relocate_new_kernel_size)
-> --
-> 2.36.0
->
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGnvvIxIdWFjYWkKCk9uIDA5LzA5LzIwMjIgMDQ6MTUgUE0sIEh1YWNhaSBDaGVuIHdyb3RlOgo+
+IEhpLCBZb3VsaW5nLAo+Cj4gT24gRnJpLCBTZXAgOSwgMjAyMiBhdCAxMToyMCBBTSBZb3VsaW5n
+IFRhbmcgPHRhbmd5b3VsaW5nQGxvb25nc29uLmNuPiB3cm90ZToKPj4KPj4gVGhpcyBwYXRjaCBh
+ZGRzIHN1cHBvcnQgZm9yIGtkdW1wLCB0aGUga2VybmVsIHdpbGwgcmVzZXJ2ZSBhIHJlZ2lvbgo+
+PiBmb3IgdGhlIGNyYXNoIGtlcm5lbCBhbmQganVtcCB0aGVyZSBvbiBwYW5pYy4KPj4KPj4gQXJj
+aC1zcGVjaWZpYyBmdW5jdGlvbnMgYXJlIGFkZGVkIHRvIGFsbG93IGZvciBpbXBsZW1lbnRpbmcg
+YSBjcmFzaAo+PiBkdW1wIGZpbGUgaW50ZXJmYWNlLCAvcHJvYy92bWNvcmUsIHdoaWNoIGNhbiBi
+ZSB2aWV3ZWQgYXMgYSBFTEYgZmlsZS4KPj4KPj4gQSB1c2VyIHNwYWNlIHRvb2wsIGxpa2Uga2V4
+ZWMtdG9vbHMsIGlzIHJlc3BvbnNpYmxlIGZvciBhbGxvY2F0aW5nIGEKPj4gc2VwYXJhdGUgcmVn
+aW9uIGZvciB0aGUgY29yZSdzIEVMRiBoZWFkZXIgd2l0aGluIGNyYXNoIGtkdW1wIGtlcm5lbAo+
+PiBtZW1vcnkgYW5kIGZpbGxpbmcgaXQgaW4gd2hlbiBleGVjdXRpbmcga2V4ZWNfbG9hZCgpLgo+
+Pgo+PiBUaGVuLCBpdHMgbG9jYXRpb24gd2lsbCBiZSBhZHZlcnRpc2VkIHRvIGNyYXNoIGR1bXAg
+a2VybmVsIHZpYSBhIG5ldwo+PiBkZXZpY2UtdHJlZSBwcm9wZXJ0eSwgImxpbnV4LGVsZmNvcmVo
+ZHIiLCBhbmQgY3Jhc2ggZHVtcCBrZXJuZWwgcHJlc2VydmVzCj4+IHRoZSByZWdpb24gZm9yIGxh
+dGVyIHVzZSB3aXRoIGZkdF9yZXNlcnZlX2VsZmNvcmVoZHIoKSBhdCBib290IHRpbWUuCj4+Cj4+
+IEF0IHRoZSBzYW1lIHRpbWUsIGl0IHdpbGwgYWxzbyBsaW1pdCB0aGUgY3Jhc2gga2R1bXAga2Vy
+bmVsIHRvIHRoZQo+PiBjcmFzaGtlcm5lbCBhcmVhIHZpYSBhIG5ldyBkZXZpY2UtdHJlZSBwcm9w
+ZXJ0eSwgImxpbnV4LCB1c2FibGUtbWVtb3J5LXJhbmdlIiwKPj4gc28gYXMgbm90IHRvIGRlc3Ry
+b3kgdGhlIG9yaWdpbmFsIGtlcm5lbCBkdW1wIGRhdGEuCj4+Cj4+IE9uIGNyYXNoIGR1bXAga2Vy
+bmVsLCAvcHJvYy92bWNvcmUgd2lsbCBhY2Nlc3MgdGhlIHByaW1hcnkga2VybmVsJ3MgbWVtb3J5
+Cj4+IHdpdGggY29weV9vbGRtZW1fcGFnZSgpLgo+Pgo+PiBJIHRlc3RlZCB0aGlzIG9uICBMb29u
+Z0FyY2ggM0E1MDAwIG1hY2hpbmUgYW5kIHdvcmtzIGFzIGV4cGVjdGVkIChTdWdnZXN0Cj4+IGNy
+YXNoa2VybmVsIHBhcmFtZXRlciBpcyAiY3Jhc2hrZXJuZWw9NTEyTUAyNTYwTSIpLCB5b3UgbWF5
+IHRlc3QgaXQgYnkKPj4gdHJpZ2dlcmluZyBhIGNyYXNoIHRocm91Z2ggL3Byb2Mvc3lzcnFfdHJp
+Z2dlcjoKPj4KPj4gICQgc3VkbyBrZXhlYyAtcCAvYm9vdC92bWxpbnV4LWtkdW1wIC0tcmV1c2Ut
+Y21kbGluZSAtLWFwcGVuZD0ibnJfY3B1cz0xIgo+PiAgIyBlY2hvIGMgPiAvcHJvYy9zeXNycV90
+cmlnZ2VyCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IFlvdWxpbmcgVGFuZyA8dGFuZ3lvdWxpbmdAbG9v
+bmdzb24uY24+Cj4+IC0tLQo+PiAgYXJjaC9sb29uZ2FyY2gvS2NvbmZpZyAgICAgICAgICAgICAg
+ICAgIHwgMjIgKysrKysrCj4+ICBhcmNoL2xvb25nYXJjaC9NYWtlZmlsZSAgICAgICAgICAgICAg
+ICAgfCAgNCArKwo+PiAgYXJjaC9sb29uZ2FyY2gva2VybmVsL01ha2VmaWxlICAgICAgICAgIHwg
+IDEgKwo+PiAgYXJjaC9sb29uZ2FyY2gva2VybmVsL2NyYXNoX2R1bXAuYyAgICAgIHwgMTkgKysr
+KysKPj4gIGFyY2gvbG9vbmdhcmNoL2tlcm5lbC9tYWNoaW5lX2tleGVjLmMgICB8IDk1ICsrKysr
+KysrKysrKysrKysrKysrKysrLS0KPj4gIGFyY2gvbG9vbmdhcmNoL2tlcm5lbC9tZW0uYyAgICAg
+ICAgICAgICB8ICA2ICsrCj4+ICBhcmNoL2xvb25nYXJjaC9rZXJuZWwvcmVsb2NhdGVfa2VybmVs
+LlMgfCAgNiArKwo+PiAgYXJjaC9sb29uZ2FyY2gva2VybmVsL3NldHVwLmMgICAgICAgICAgIHwg
+NDkgKysrKysrKysrKysrKwo+PiAgYXJjaC9sb29uZ2FyY2gva2VybmVsL3RyYXBzLmMgICAgICAg
+ICAgIHwgIDQgKysKPj4gIDkgZmlsZXMgY2hhbmdlZCwgMjAwIGluc2VydGlvbnMoKyksIDYgZGVs
+ZXRpb25zKC0pCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9sb29uZ2FyY2gva2VybmVsL2Ny
+YXNoX2R1bXAuYwo+Pgo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9sb29uZ2FyY2gvS2NvbmZpZyBiL2Fy
+Y2gvbG9vbmdhcmNoL0tjb25maWcKPj4gaW5kZXggMDhlMDYzYWFmODQ3Li40ZWVlZWJmODg4YzEg
+MTAwNjQ0Cj4+IC0tLSBhL2FyY2gvbG9vbmdhcmNoL0tjb25maWcKPj4gKysrIGIvYXJjaC9sb29u
+Z2FyY2gvS2NvbmZpZwo+PiBAQCAtNDMzLDYgKzQzMywyOCBAQCBjb25maWcgS0VYRUMKPj4KPj4g
+ICAgICAgICAgIFRoZSBuYW1lIGNvbWVzIGZyb20gdGhlIHNpbWlsYXJpdHkgdG8gdGhlIGV4ZWMg
+c3lzdGVtIGNhbGwuCj4+Cj4+ICtjb25maWcgQ1JBU0hfRFVNUAo+PiArICAgICAgIGJvb2wgIkJ1
+aWxkIGtkdW1wIGNyYXNoIGtlcm5lbCIKPj4gKyAgICAgICBoZWxwCj4+ICsgICAgICAgICBHZW5l
+cmF0ZSBjcmFzaCBkdW1wIGFmdGVyIGJlaW5nIHN0YXJ0ZWQgYnkga2V4ZWMuIFRoaXMgc2hvdWxk
+Cj4+ICsgICAgICAgICBiZSBub3JtYWxseSBvbmx5IHNldCBpbiBzcGVjaWFsIGNyYXNoIGR1bXAg
+a2VybmVscyB3aGljaCBhcmUKPj4gKyAgICAgICAgIGxvYWRlZCBpbiB0aGUgbWFpbiBrZXJuZWwg
+d2l0aCBrZXhlYy10b29scyBpbnRvIGEgc3BlY2lhbGx5Cj4+ICsgICAgICAgICByZXNlcnZlZCBy
+ZWdpb24gYW5kIHRoZW4gbGF0ZXIgZXhlY3V0ZWQgYWZ0ZXIgYSBjcmFzaCBieQo+PiArICAgICAg
+ICAga2R1bXAva2V4ZWMuCj4+ICsKPj4gKyAgICAgICAgIEZvciBtb3JlIGRldGFpbHMgc2VlIERv
+Y3VtZW50YXRpb24vYWRtaW4tZ3VpZGUva2R1bXAva2R1bXAucnN0Cj4+ICsKPj4gK2NvbmZpZyBQ
+SFlTSUNBTF9TVEFSVAo+PiArICAgICAgIGhleCAiUGh5c2ljYWwgYWRkcmVzcyB3aGVyZSB0aGUg
+a2VybmVsIGlzIGxvYWRlZCIKPj4gKyAgICAgICBkZWZhdWx0ICIweDkwMDAwMDAwYTAwMDAwMDAi
+IGlmIDY0QklUCj4+ICsgICAgICAgZGVwZW5kcyBvbiBDUkFTSF9EVU1QCj4+ICsgICAgICAgaGVs
+cAo+PiArICAgICAgICAgVGhpcyBnaXZlcyB0aGUgWEtQUkFOR0UgYWRkcmVzcyB3aGVyZSB0aGUg
+a2VybmVsIGlzIGxvYWRlZC4KPj4gKyAgICAgICAgIElmIHlvdSBwbGFuIHRvIHVzZSBrZXJuZWwg
+Zm9yIGNhcHR1cmluZyB0aGUgY3Jhc2ggZHVtcCBjaGFuZ2UKPj4gKyAgICAgICAgIHRoaXMgdmFs
+dWUgdG8gc3RhcnQgb2YgdGhlIHJlc2VydmVkIHJlZ2lvbiAodGhlICJYIiB2YWx1ZSBhcwo+PiAr
+ICAgICAgICAgc3BlY2lmaWVkIGluIHRoZSAiY3Jhc2hrZXJuZWw9WU1AWE0iIGNvbW1hbmQgbGlu
+ZSBib290IHBhcmFtZXRlcgo+PiArICAgICAgICAgcGFzc2VkIHRvIHRoZSBwYW5pYy1lZCBrZXJu
+ZWwpLgo+PiArCj4+ICBjb25maWcgU0VDQ09NUAo+PiAgICAgICAgIGJvb2wgIkVuYWJsZSBzZWNj
+b21wIHRvIHNhZmVseSBjb21wdXRlIHVudHJ1c3RlZCBieXRlY29kZSIKPj4gICAgICAgICBkZXBl
+bmRzIG9uIFBST0NfRlMKPj4gZGlmZiAtLWdpdCBhL2FyY2gvbG9vbmdhcmNoL01ha2VmaWxlIGIv
+YXJjaC9sb29uZ2FyY2gvTWFrZWZpbGUKPj4gaW5kZXggNjliMzliYTNhMDlkLi4yMjQyNzRjMTY0
+NGUgMTAwNjQ0Cj4+IC0tLSBhL2FyY2gvbG9vbmdhcmNoL01ha2VmaWxlCj4+ICsrKyBiL2FyY2gv
+bG9vbmdhcmNoL01ha2VmaWxlCj4+IEBAIC02Niw3ICs2NiwxMSBAQCBlbmRpZgo+PiAgY2ZsYWdz
+LXkgKz0gLWZmcmVlc3RhbmRpbmcKPj4gIGNmbGFncy15ICs9ICQoY2FsbCBjYy1vcHRpb24sIC1t
+bm8tY2hlY2stemVyby1kaXZpc2lvbikKPj4KPj4gK2lmZGVmIENPTkZJR19QSFlTSUNBTF9TVEFS
+VAo+PiArbG9hZC15ICAgICAgICAgPSAkKENPTkZJR19QSFlTSUNBTF9TVEFSVCkKPj4gK2Vsc2UK
+Pj4gIGxvYWQteSAgICAgICAgID0gMHg5MDAwMDAwMDAwMjAwMDAwCj4+ICtlbmRpZgo+PiAgYm9v
+dHZhcnMteSAgICAgPSBWTUxJTlVYX0xPQURfQUREUkVTUz0kKGxvYWQteSkKPj4KPj4gIGRyaXZl
+cnMtJChDT05GSUdfUENJKSAgICAgICAgICArPSBhcmNoL2xvb25nYXJjaC9wY2kvCj4+IGRpZmYg
+LS1naXQgYS9hcmNoL2xvb25nYXJjaC9rZXJuZWwvTWFrZWZpbGUgYi9hcmNoL2xvb25nYXJjaC9r
+ZXJuZWwvTWFrZWZpbGUKPj4gaW5kZXggMTdkYzhjZTZiNWNlLi43OWVlZTdkYjE0MTQgMTAwNjQ0
+Cj4+IC0tLSBhL2FyY2gvbG9vbmdhcmNoL2tlcm5lbC9NYWtlZmlsZQo+PiArKysgYi9hcmNoL2xv
+b25nYXJjaC9rZXJuZWwvTWFrZWZpbGUKPj4gQEAgLTE4LDYgKzE4LDcgQEAgb2JqLSQoQ09ORklH
+X01PRFVMRVMpICAgICAgICAgKz0gbW9kdWxlLm8gbW9kdWxlLXNlY3Rpb25zLm8KPj4gIG9iai0k
+KENPTkZJR19TVEFDS1RSQUNFKSAgICAgICArPSBzdGFja3RyYWNlLm8KPj4KPj4gIG9iai0kKENP
+TkZJR19LRVhFQykgICAgICAgICAgICAgKz0gbWFjaGluZV9rZXhlYy5vIHJlbG9jYXRlX2tlcm5l
+bC5vCj4+ICtvYmotJChDT05GSUdfQ1JBU0hfRFVNUCkgICAgICAgICs9IGNyYXNoX2R1bXAubwo+
+Pgo+PiAgb2JqLSQoQ09ORklHX1BST0NfRlMpICAgICAgICAgICs9IHByb2Mubwo+Pgo+PiBkaWZm
+IC0tZ2l0IGEvYXJjaC9sb29uZ2FyY2gva2VybmVsL2NyYXNoX2R1bXAuYyBiL2FyY2gvbG9vbmdh
+cmNoL2tlcm5lbC9jcmFzaF9kdW1wLmMKPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4gaW5kZXgg
+MDAwMDAwMDAwMDAwLi4xM2U1ZDJmNzg3MGQKPj4gLS0tIC9kZXYvbnVsbAo+PiArKysgYi9hcmNo
+L2xvb25nYXJjaC9rZXJuZWwvY3Jhc2hfZHVtcC5jCj4+IEBAIC0wLDAgKzEsMTkgQEAKPj4gKy8v
+IFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wCj4+ICsjaW5jbHVkZSA8bGludXgvaGln
+aG1lbS5oPgo+PiArI2luY2x1ZGUgPGxpbnV4L2NyYXNoX2R1bXAuaD4KPj4gKyNpbmNsdWRlIDxs
+aW51eC9pby5oPgo+PiArCj4+ICtzc2l6ZV90IGNvcHlfb2xkbWVtX3BhZ2Uoc3RydWN0IGlvdl9p
+dGVyICppdGVyLCB1bnNpZ25lZCBsb25nIHBmbiwKPj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+IHNpemVfdCBjc2l6ZSwgdW5zaWduZWQgbG9uZyBvZmZzZXQpCj4+ICt7Cj4+ICsgICAgICAgdm9p
+ZCAgKnZhZGRyOwo+PiArCj4+ICsgICAgICAgaWYgKCFjc2l6ZSkKPj4gKyAgICAgICAgICAgICAg
+IHJldHVybiAwOwo+PiArCj4+ICsgICAgICAgdmFkZHIgPSBrbWFwX2xvY2FsX3BmbihwZm4pOwo+
+PiArICAgICAgIGNzaXplID0gY29weV90b19pdGVyKHZhZGRyICsgb2Zmc2V0LCBjc2l6ZSwgaXRl
+cik7Cj4+ICsgICAgICAga3VubWFwX2xvY2FsKHZhZGRyKTsKPj4gKwo+PiArICAgICAgIHJldHVy
+biBjc2l6ZTsKPj4gK30KPj4gZGlmZiAtLWdpdCBhL2FyY2gvbG9vbmdhcmNoL2tlcm5lbC9tYWNo
+aW5lX2tleGVjLmMgYi9hcmNoL2xvb25nYXJjaC9rZXJuZWwvbWFjaGluZV9rZXhlYy5jCj4+IGlu
+ZGV4IDdiM2ZlYTUwNmM2ZC4uODQ3YzRkMDI1ZmVkIDEwMDY0NAo+PiAtLS0gYS9hcmNoL2xvb25n
+YXJjaC9rZXJuZWwvbWFjaGluZV9rZXhlYy5jCj4+ICsrKyBiL2FyY2gvbG9vbmdhcmNoL2tlcm5l
+bC9tYWNoaW5lX2tleGVjLmMKPj4gQEAgLTYsMTEgKzYsMTYgQEAKPj4gICAqLwo+PiAgI2luY2x1
+ZGUgPGxpbnV4L2NvbXBpbGVyLmg+Cj4+ICAjaW5jbHVkZSA8bGludXgvY3B1Lmg+Cj4+IC0jaW5j
+bHVkZSA8bGludXgva2V4ZWMuaD4KPj4gLSNpbmNsdWRlIDxsaW51eC9tbS5oPgo+PiArI2luY2x1
+ZGUgPGxpbnV4L2NyYXNoX2R1bXAuaD4KPj4gICNpbmNsdWRlIDxsaW51eC9kZWxheS5oPgo+PiAr
+I2luY2x1ZGUgPGxpbnV4L2lycS5oPgo+PiArI2luY2x1ZGUgPGxpbnV4L2tleGVjLmg+Cj4+ICAj
+aW5jbHVkZSA8bGludXgvbGliZmR0Lmg+Cj4+ICsjaW5jbHVkZSA8bGludXgvbW0uaD4KPj4gICNp
+bmNsdWRlIDxsaW51eC9vZl9mZHQuaD4KPj4gKyNpbmNsdWRlIDxsaW51eC9yZWJvb3QuaD4KPj4g
+KyNpbmNsdWRlIDxsaW51eC9zY2hlZC5oPgo+PiArI2luY2x1ZGUgPGxpbnV4L3NjaGVkL3Rhc2tf
+c3RhY2suaD4KPj4KPj4gICNpbmNsdWRlIDxhc20vYm9vdGluZm8uaD4KPj4gICNpbmNsdWRlIDxh
+c20vY2FjaGVmbHVzaC5oPgo+PiBAQCAtMjEsNiArMjYsNyBAQAo+PiAgI2RlZmluZSBLRVhFQ19C
+TE9CX0FERFIgICAgICAgIFRPX0NBQ0hFKDB4MTA4MDAwVUwpCj4+Cj4+ICBzdGF0aWMgdW5zaWdu
+ZWQgbG9uZyByZWJvb3RfY29kZV9idWZmZXI7Cj4+ICtzdGF0aWMgY3B1bWFza190IGNwdXNfaW5f
+Y3Jhc2ggPSBDUFVfTUFTS19OT05FOwo+Pgo+PiAgI2lmZGVmIENPTkZJR19TTVAKPj4gIHN0YXRp
+YyB2b2lkICgqcmVsb2NhdGVkX2tleGVjX3NtcF93YWl0KSh2b2lkICopOwo+PiBAQCAtNzAsNyAr
+NzYsNyBAQCBpbnQgbWFjaGluZV9rZXhlY19wcmVwYXJlKHN0cnVjdCBraW1hZ2UgKmtpbWFnZSkK
+Pj4gICAgICAgICAgICAgICAgIGNvbnRpbnVlOwo+PiAgICAgICAgIH0KPj4KPj4gLSAgICAgICAv
+KiBrZXhlYyBuZWVkIGEgc2FmZSBwYWdlIHRvIHNhdmUgcmVib290X2NvZGVfYnVmZmVyICovCj4+
+ICsgICAgICAgLyoga2V4ZWMva2R1bXAgbmVlZCBhIHNhZmUgcGFnZSB0byBzYXZlIHJlYm9vdF9j
+b2RlX2J1ZmZlciAqLwo+PiAgICAgICAgIGtpbWFnZS0+Y29udHJvbF9jb2RlX3BhZ2UgPSB2aXJ0
+X3RvX3BhZ2UoKHZvaWQgKilLRVhFQ19DVFJMX0NPREUpOwo+Pgo+PiAgICAgICAgIHJlYm9vdF9j
+b2RlX2J1ZmZlciA9Cj4+IEBAIC0xMTksMTAgKzEyNSw4NSBAQCBzdGF0aWMgdm9pZCBrZXhlY19z
+aHV0ZG93bl9zZWNvbmRhcnkodm9pZCAqKQo+Pgo+PiAgICAgICAgIGtleGVjX3JlYm9vdCgpOwo+
+PiAgfQo+PiAtI2VuZGlmCj4+ICsKPj4gK3N0YXRpYyB2b2lkIGNyYXNoX3NodXRkb3duX3NlY29u
+ZGFyeSh2b2lkICpwYXNzZWRfcmVncykKPj4gK3sKPj4gKyAgICAgICBzdHJ1Y3QgcHRfcmVncyAq
+cmVncyA9IHBhc3NlZF9yZWdzOwo+PiArICAgICAgIGludCBjcHUgPSBzbXBfcHJvY2Vzc29yX2lk
+KCk7Cj4+ICsKPj4gKyAgICAgICAvKgo+PiArICAgICAgICAqIElmIHdlIGFyZSBwYXNzZWQgcmVn
+aXN0ZXJzLCB1c2UgdGhvc2UuICBPdGhlcndpc2UgZ2V0IHRoZQo+PiArICAgICAgICAqIHJlZ3Mg
+ZnJvbSB0aGUgbGFzdCBpbnRlcnJ1cHQsIHdoaWNoIHNob3VsZCBiZSBjb3JyZWN0LCBhcwo+PiAr
+ICAgICAgICAqIHdlIGFyZSBpbiBhbiBpbnRlcnJ1cHQuICBCdXQgaWYgdGhlIHJlZ3MgYXJlIG5v
+dCB0aGVyZSwKPj4gKyAgICAgICAgKiBwdWxsIHRoZW0gZnJvbSB0aGUgdG9wIG9mIHRoZSBzdGFj
+ay4gIFRoZXkgYXJlIHByb2JhYmx5Cj4+ICsgICAgICAgICogd3JvbmcsIGJ1dCB3ZSBuZWVkIHNv
+bWV0aGluZyB0byBrZWVwIGZyb20gY3Jhc2hpbmcgYWdhaW4uCj4+ICsgICAgICAgICovCj4+ICsg
+ICAgICAgaWYgKCFyZWdzKQo+PiArICAgICAgICAgICAgICAgcmVncyA9IGdldF9pcnFfcmVncygp
+Owo+PiArICAgICAgIGlmICghcmVncykKPj4gKyAgICAgICAgICAgICAgIHJlZ3MgPSB0YXNrX3B0
+X3JlZ3MoY3VycmVudCk7Cj4+ICsKPj4gKyAgICAgICBsb2NhbF9pcnFfZGlzYWJsZSgpOwo+PiAr
+ICAgICAgIGlmICghY3B1bWFza190ZXN0X2NwdShjcHUsICZjcHVzX2luX2NyYXNoKSkKPj4gKyAg
+ICAgICAgICAgICAgIGNyYXNoX3NhdmVfY3B1KHJlZ3MsIGNwdSk7Cj4+ICsgICAgICAgY3B1bWFz
+a19zZXRfY3B1KGNwdSwgJmNwdXNfaW5fY3Jhc2gpOwo+PiArCj4+ICsgICAgICAgd2hpbGUgKCFh
+dG9taWNfcmVhZCgma2V4ZWNfcmVhZHlfdG9fcmVib290KSkKPj4gKyAgICAgICAgICAgICAgIGNw
+dV9yZWxheCgpOwo+PiArCj4+ICsgICAgICAga2V4ZWNfcmVib290KCk7Cj4+ICt9Cj4+ICsKPj4g
+K3ZvaWQgY3Jhc2hfc21wX3NlbmRfc3RvcCh2b2lkKQo+PiArewo+PiArICAgICAgIHN0YXRpYyBp
+bnQgY3B1c19zdG9wcGVkOwo+PiArICAgICAgIHVuc2lnbmVkIGxvbmcgdGltZW91dDsKPj4gKyAg
+ICAgICB1bnNpZ25lZCBpbnQgbmNwdXM7Cj4+ICsKPj4gKyAgICAgICAvKgo+PiArICAgICAgICAq
+IFRoaXMgZnVuY3Rpb24gY2FuIGJlIGNhbGxlZCB0d2ljZSBpbiBwYW5pYyBwYXRoLCBidXQgb2J2
+aW91c2x5Cj4+ICsgICAgICAgICogd2UgZXhlY3V0ZSB0aGlzIG9ubHkgb25jZS4KPj4gKyAgICAg
+ICAgKi8KPj4gKyAgICAgICBpZiAoY3B1c19zdG9wcGVkKQo+PiArICAgICAgICAgICAgICAgcmV0
+dXJuOwo+PiArCj4+ICsgICAgICAgY3B1c19zdG9wcGVkID0gMTsKPj4gKwo+PiArICAgICAgICAv
+KiBFeGNsdWRpbmcgdGhlIHBhbmljIGNwdSAqLwo+PiArICAgICAgIG5jcHVzID0gbnVtX29ubGlu
+ZV9jcHVzKCkgLSAxOwo+PiArCj4+ICsgICAgICAgc21wX2NhbGxfZnVuY3Rpb24oY3Jhc2hfc2h1
+dGRvd25fc2Vjb25kYXJ5LCBOVUxMLCAwKTsKPj4gKyAgICAgICBzbXBfd21iKCk7Cj4+ICsKPj4g
+KyAgICAgICAvKgo+PiArICAgICAgICAqIFRoZSBjcmFzaCBDUFUgc2VuZHMgYW4gSVBJIGFuZCB3
+YWl0IGZvciBvdGhlciBDUFVzIHRvCj4+ICsgICAgICAgICogcmVzcG9uZC4gRGVsYXkgb2YgYXQg
+bGVhc3QgMTAgc2Vjb25kcy4KPj4gKyAgICAgICAgKi8KPj4gKyAgICAgICBwcl9lbWVyZygiU2Vu
+ZGluZyBJUEkgdG8gb3RoZXIgY3B1cy4uLlxuIik7Cj4+ICsgICAgICAgdGltZW91dCA9IFVTRUNf
+UEVSX1NFQyAqIDEwOwo+PiArICAgICAgIHdoaWxlICgoY3B1bWFza193ZWlnaHQoJmNwdXNfaW5f
+Y3Jhc2gpIDwgbmNwdXMpICYmIHRpbWVvdXQtLSkgewo+PiArICAgICAgICAgICAgICAgY3B1X3Jl
+bGF4KCk7Cj4+ICsgICAgICAgICAgICAgICB1ZGVsYXkoMSk7Cj4+ICsgICAgICAgfQo+PiArfQo+
+PiArI2VuZGlmIC8qIGRlZmluZWQoQ09ORklHX1NNUCkgKi8KPj4KPj4gIHZvaWQgbWFjaGluZV9j
+cmFzaF9zaHV0ZG93bihzdHJ1Y3QgcHRfcmVncyAqcmVncykKPj4gIHsKPj4gKyAgICAgICBpbnQg
+Y3Jhc2hpbmdfY3B1Owo+PiArCj4+ICsgICAgICAgbG9jYWxfaXJxX2Rpc2FibGUoKTsKPj4gKwo+
+PiArICAgICAgIGNyYXNoaW5nX2NwdSA9IHNtcF9wcm9jZXNzb3JfaWQoKTsKPj4gKyAgICAgICBj
+cmFzaF9zYXZlX2NwdShyZWdzLCBjcmFzaGluZ19jcHUpOwo+PiArCj4+ICsjaWZkZWYgQ09ORklH
+X1NNUAo+PiArICAgICAgIC8qIHNodXRkb3duIG5vbi1jcmFzaGluZyBjcHVzICovCj4+ICsgICAg
+ICAgY3Jhc2hfc21wX3NlbmRfc3RvcCgpOwo+PiArI2VuZGlmCj4+ICsgICAgICAgY3B1bWFza19z
+ZXRfY3B1KGNyYXNoaW5nX2NwdSwgJmNwdXNfaW5fY3Jhc2gpOwo+PiArCj4+ICsgICAgICAgcHJf
+aW5mbygiU3RhcnRpbmcgY3Jhc2hkdW1wIGtlcm5lbC4uLlxuIik7Cj4+ICB9Cj4+Cj4+ICB2b2lk
+IG1hY2hpbmVfc2h1dGRvd24odm9pZCkKPj4gQEAgLTE0Myw3ICsyMjQsOCBAQCB2b2lkIG1hY2hp
+bmVfa2V4ZWMoc3RydWN0IGtpbWFnZSAqaW1hZ2UpCj4+Cj4+ICAgICAgICAganVtcF9hZGRyID0g
+KHVuc2lnbmVkIGxvbmcpcGh5c190b192aXJ0KGltYWdlLT5zdGFydCk7Cj4+Cj4+IC0gICAgICAg
+Zmlyc3RfaW5kX2VudHJ5ID0gKHVuc2lnbmVkIGxvbmcpcGh5c190b192aXJ0KGltYWdlLT5oZWFk
+ICYgUEFHRV9NQVNLKTsKPj4gKyAgICAgICBpZiAoaW1hZ2UtPnR5cGUgPT0gS0VYRUNfVFlQRV9E
+RUZBVUxUKQo+PiArICAgICAgICAgICAgICAgZmlyc3RfaW5kX2VudHJ5ID0gKHVuc2lnbmVkIGxv
+bmcpcGh5c190b192aXJ0KGltYWdlLT5oZWFkICYgUEFHRV9NQVNLKTsKPiBUaGUgb2xkIGltcGxl
+bWVudGF0aW9uIHVzZXMgImtleGVjX2luZGlyZWN0aW9uX3BhZ2UgPSAodW5zaWduZWQKPiBsb25n
+KSZpbWFnZS0+aGVhZCIgaW4gdGhlIGtkdW1wIGNhc2UsIHdlIGRvbid0IG5lZWQgdGhhdCBub3c/
+CgpUaGUga2R1bXAgb3BlcmF0aW9uIHdpbGwgY29weSB0aGUgZW50aXJlIGtlcm5lbCB0byB0aGUg
+Q3Jhc2hrZXJuZWwgYXJlYQosIHNvIHRoZXJlIGlzIG5vIG5lZWQgdG8gZ28gdGhyb3VnaCB0aGlz
+IGluZGlyZWN0IHBhZ2UuICBEZXRlcm1pbmUKd2hldGhlciB0aGUgZmlyc3RfaW5kX2VudHJ5IHBh
+cmFtZXRlciBpcyAwIHRvIHBlcmZvcm0gdGhlIGNvcHkgYWN0aW9uCmluIHJlbG9jYXRlX25ld19r
+ZXJuZWwuCgpZb3VsaW5nLgo+Cj4gSHVhY2FpCj4+Cj4+ICAgICAgICAgLyoKPj4gICAgICAgICAg
+KiBUaGUgZ2VuZXJpYyBrZXhlYyBjb2RlIGJ1aWxkcyBhIHBhZ2UgbGlzdCB3aXRoIHBoeXNpY2Fs
+Cj4+IEBAIC0xNzcsNyArMjU5LDggQEAgdm9pZCBtYWNoaW5lX2tleGVjKHN0cnVjdCBraW1hZ2Ug
+KmltYWdlKQo+Pgo+PiAgICAgICAgIC8qCj4+ICAgICAgICAgICogV2Uga25vdyB3ZSB3ZXJlIG9u
+bGluZSwgYW5kIHRoZXJlIHdpbGwgYmUgbm8gaW5jb21pbmcgSVBJcyBhdAo+PiAtICAgICAgICAq
+IHRoaXMgcG9pbnQuCj4+ICsgICAgICAgICogdGhpcyBwb2ludC4gTWFyayBvbmxpbmUgYWdhaW4g
+YmVmb3JlIHJlYm9vdGluZyBzbyB0aGF0IHRoZSBjcmFzaAo+PiArICAgICAgICAqIGFuYWx5c2lz
+IHRvb2wgd2lsbCBzZWUgdXMgY29ycmVjdGx5Lgo+PiAgICAgICAgICAqLwo+PiAgICAgICAgIHNl
+dF9jcHVfb25saW5lKHNtcF9wcm9jZXNzb3JfaWQoKSwgdHJ1ZSk7Cj4+Cj4+IGRpZmYgLS1naXQg
+YS9hcmNoL2xvb25nYXJjaC9rZXJuZWwvbWVtLmMgYi9hcmNoL2xvb25nYXJjaC9rZXJuZWwvbWVt
+LmMKPj4gaW5kZXggNzQyMzM2MWIwZWJjLi5jNmRlZjZmZjgxYzggMTAwNjQ0Cj4+IC0tLSBhL2Fy
+Y2gvbG9vbmdhcmNoL2tlcm5lbC9tZW0uYwo+PiArKysgYi9hcmNoL2xvb25nYXJjaC9rZXJuZWwv
+bWVtLmMKPj4gQEAgLTUsNiArNSw3IEBACj4+ICAjaW5jbHVkZSA8bGludXgvZWZpLmg+Cj4+ICAj
+aW5jbHVkZSA8bGludXgvaW5pdHJkLmg+Cj4+ICAjaW5jbHVkZSA8bGludXgvbWVtYmxvY2suaD4K
+Pj4gKyNpbmNsdWRlIDxsaW51eC9vZl9mZHQuaD4KPj4KPj4gICNpbmNsdWRlIDxhc20vYm9vdGlu
+Zm8uaD4KPj4gICNpbmNsdWRlIDxhc20vbG9vbmdzb24uaD4KPj4gQEAgLTYxLDQgKzYyLDkgQEAg
+dm9pZCBfX2luaXQgbWVtYmxvY2tfaW5pdCh2b2lkKQo+Pgo+PiAgICAgICAgIC8qIFJlc2VydmUg
+dGhlIGluaXRyZCAqLwo+PiAgICAgICAgIHJlc2VydmVfaW5pdHJkX21lbSgpOwo+PiArCj4+ICsg
+ICAgICAgLyogTWFpbmx5IHJlc2VydmVkIG1lbW9yeSBmb3IgdGhlIGVsZiBjb3JlIGhlYWQgKi8K
+Pj4gKyAgICAgICBlYXJseV9pbml0X2ZkdF9zY2FuX3Jlc2VydmVkX21lbSgpOwo+PiArICAgICAg
+IC8qIFBhcnNlIGxpbnV4LHVzYWJsZS1tZW1vcnktcmFuZ2UgaXMgZm9yIGNyYXNoIGR1bXAga2Vy
+bmVsICovCj4+ICsgICAgICAgZWFybHlfaW5pdF9kdF9jaGVja19mb3JfdXNhYmxlX21lbV9yYW5n
+ZSgpOwo+PiAgfQo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9sb29uZ2FyY2gva2VybmVsL3JlbG9jYXRl
+X2tlcm5lbC5TIGIvYXJjaC9sb29uZ2FyY2gva2VybmVsL3JlbG9jYXRlX2tlcm5lbC5TCj4+IGlu
+ZGV4IDA1YTBjMWNjZmFiNi4uMGJjYTc1MThiY2EyIDEwMDY0NAo+PiAtLS0gYS9hcmNoL2xvb25n
+YXJjaC9rZXJuZWwvcmVsb2NhdGVfa2VybmVsLlMKPj4gKysrIGIvYXJjaC9sb29uZ2FyY2gva2Vy
+bmVsL3JlbG9jYXRlX2tlcm5lbC5TCj4+IEBAIC0yNiw2ICsyNiwxMiBAQCBTWU1fQ09ERV9TVEFS
+VChyZWxvY2F0ZV9uZXdfa2VybmVsKQo+PiAgICAgICAgIG1vdmUgICAgICAgICAgICBzMiwgYTIK
+Pj4gICAgICAgICBtb3ZlICAgICAgICAgICAgczMsIGEzCj4+Cj4+ICsgICAgICAgLyoKPj4gKyAg
+ICAgICAgKiBJbiBjYXNlIG9mIGEga2R1bXAvY3Jhc2gga2VybmVsLCB0aGUgaW5kaXJlY3Rpb24g
+cGFnZSBpcyBub3QKPj4gKyAgICAgICAgKiBwb3B1bGF0ZWQgYXMgdGhlIGtlcm5lbCBpcyBkaXJl
+Y3RseSBjb3BpZWQgdG8gYSByZXNlcnZlZCBsb2NhdGlvbgo+PiArICAgICAgICAqLwo+PiArICAg
+ICAgIGJlcXogICAgICAgICAgICBzMiwgZG9uZQo+PiArCj4+ICBwcm9jZXNzX2VudHJ5Ogo+PiAg
+ICAgICAgIFBUUl9MICAgICAgICAgICBzNCwgczIsIDAKPj4gICAgICAgICBQVFJfQURESSAgICAg
+ICAgczIsIHMyLCBTWlJFRwo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9sb29uZ2FyY2gva2VybmVsL3Nl
+dHVwLmMgYi9hcmNoL2xvb25nYXJjaC9rZXJuZWwvc2V0dXAuYwo+PiBpbmRleCAwNThjMjMyYzEx
+ZTguLjY5NzRiODg0NDZhOCAxMDA2NDQKPj4gLS0tIGEvYXJjaC9sb29uZ2FyY2gva2VybmVsL3Nl
+dHVwLmMKPj4gKysrIGIvYXJjaC9sb29uZ2FyY2gva2VybmVsL3NldHVwLmMKPj4gQEAgLTE5LDYg
+KzE5LDggQEAKPj4gICNpbmNsdWRlIDxsaW51eC9tZW1ibG9jay5oPgo+PiAgI2luY2x1ZGUgPGxp
+bnV4L2luaXRyZC5oPgo+PiAgI2luY2x1ZGUgPGxpbnV4L2lvcG9ydC5oPgo+PiArI2luY2x1ZGUg
+PGxpbnV4L2tleGVjLmg+Cj4+ICsjaW5jbHVkZSA8bGludXgvY3Jhc2hfZHVtcC5oPgo+PiAgI2lu
+Y2x1ZGUgPGxpbnV4L3Jvb3RfZGV2Lmg+Cj4+ICAjaW5jbHVkZSA8bGludXgvY29uc29sZS5oPgo+
+PiAgI2luY2x1ZGUgPGxpbnV4L3Bmbi5oPgo+PiBAQCAtMTg1LDYgKzE4Nyw1MCBAQCBzdGF0aWMg
+aW50IF9faW5pdCBlYXJseV9wYXJzZV9tZW0oY2hhciAqcCkKPj4gIH0KPj4gIGVhcmx5X3BhcmFt
+KCJtZW0iLCBlYXJseV9wYXJzZV9tZW0pOwo+Pgo+PiArc3RhdGljIHZvaWQgX19pbml0IGxvb25n
+YXJjaF9wYXJzZV9jcmFzaGtlcm5lbCh2b2lkKQo+PiArewo+PiArI2lmZGVmIENPTkZJR19LRVhF
+Qwo+PiArICAgICAgIHVuc2lnbmVkIGxvbmcgbG9uZyBzdGFydDsKPj4gKyAgICAgICB1bnNpZ25l
+ZCBsb25nIGxvbmcgdG90YWxfbWVtOwo+PiArICAgICAgIHVuc2lnbmVkIGxvbmcgbG9uZyBjcmFz
+aF9zaXplLCBjcmFzaF9iYXNlOwo+PiArICAgICAgIGludCByZXQ7Cj4+ICsKPj4gKyAgICAgICB0
+b3RhbF9tZW0gPSBtZW1ibG9ja19waHlzX21lbV9zaXplKCk7Cj4+ICsgICAgICAgcmV0ID0gcGFy
+c2VfY3Jhc2hrZXJuZWwoYm9vdF9jb21tYW5kX2xpbmUsIHRvdGFsX21lbSwKPj4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAmY3Jhc2hfc2l6ZSwgJmNyYXNoX2Jhc2UpOwo+PiArICAg
+ICAgIGlmIChyZXQgIT0gMCB8fCBjcmFzaF9zaXplIDw9IDApCj4+ICsgICAgICAgICAgICAgICBy
+ZXR1cm47Cj4+ICsKPj4gKwo+PiArICAgICAgIHN0YXJ0ID0gbWVtYmxvY2tfcGh5c19hbGxvY19y
+YW5nZShjcmFzaF9zaXplLCAxLCBjcmFzaF9iYXNlLAo+PiArICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgY3Jhc2hfYmFzZSArIGNyYXNoX3NpemUpOwo+PiArICAgICAgIGlm
+IChzdGFydCAhPSBjcmFzaF9iYXNlKSB7Cj4+ICsgICAgICAgICAgICAgICBwcl93YXJuKCJJbnZh
+bGlkIG1lbW9yeSByZWdpb24gcmVzZXJ2ZWQgZm9yIGNyYXNoIGtlcm5lbFxuIik7Cj4+ICsgICAg
+ICAgICAgICAgICByZXR1cm47Cj4+ICsgICAgICAgfQo+PiArCj4+ICsgICAgICAgY3Jhc2hrX3Jl
+cy5zdGFydCA9IGNyYXNoX2Jhc2U7Cj4+ICsgICAgICAgY3Jhc2hrX3Jlcy5lbmQgICA9IGNyYXNo
+X2Jhc2UgKyBjcmFzaF9zaXplIC0gMTsKPj4gKyNlbmRpZgo+PiArfQo+PiArCj4+ICtzdGF0aWMg
+dm9pZCBfX2luaXQgcmVxdWVzdF9jcmFzaGtlcm5lbChzdHJ1Y3QgcmVzb3VyY2UgKnJlcykKPj4g
+K3sKPj4gKyNpZmRlZiBDT05GSUdfS0VYRUMKPj4gKyAgICAgICBpbnQgcmV0Owo+PiArCj4+ICsg
+ICAgICAgaWYgKGNyYXNoa19yZXMuc3RhcnQgPT0gY3Jhc2hrX3Jlcy5lbmQpCj4+ICsgICAgICAg
+ICAgICAgICByZXR1cm47Cj4+ICsKPj4gKyAgICAgICByZXQgPSByZXF1ZXN0X3Jlc291cmNlKHJl
+cywgJmNyYXNoa19yZXMpOwo+PiArICAgICAgIGlmICghcmV0KQo+PiArICAgICAgICAgICAgICAg
+cHJfaW5mbygiUmVzZXJ2aW5nICVsZE1CIG9mIG1lbW9yeSBhdCAlbGRNQiBmb3IgY3Jhc2hrZXJu
+ZWxcbiIsCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICh1bnNpZ25lZCBsb25nKSgoY3Jhc2hr
+X3Jlcy5lbmQgLQo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNy
+YXNoa19yZXMuc3RhcnQgKyAxKSA+PiAyMCksCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICh1
+bnNpZ25lZCBsb25nKShjcmFzaGtfcmVzLnN0YXJ0ICA+PiAyMCkpOwo+PiArI2VuZGlmCj4+ICt9
+Cj4+ICsKPj4gIHZvaWQgX19pbml0IHBsYXRmb3JtX2luaXQodm9pZCkKPj4gIHsKPj4gICAgICAg
+ICBlZmlfaW5pdCgpOwo+PiBAQCAtMjI4LDYgKzI3NCw4IEBAIHN0YXRpYyB2b2lkIF9faW5pdCBh
+cmNoX21lbV9pbml0KGNoYXIgKipjbWRsaW5lX3ApCj4+Cj4+ICAgICAgICAgY2hlY2tfa2VybmVs
+X3NlY3Rpb25zX21lbSgpOwo+Pgo+PiArICAgICAgIGxvb25nYXJjaF9wYXJzZV9jcmFzaGtlcm5l
+bCgpOwo+PiArCj4+ICAgICAgICAgLyoKPj4gICAgICAgICAgKiBJbiBvcmRlciB0byByZWR1Y2Ug
+dGhlIHBvc3NpYmlsaXR5IG9mIGtlcm5lbCBwYW5pYyB3aGVuIGZhaWxlZCB0bwo+PiAgICAgICAg
+ICAqIGdldCBJTyBUTEIgbWVtb3J5IHVuZGVyIENPTkZJR19TV0lPVExCLCBpdCBpcyBiZXR0ZXIg
+dG8gYWxsb2NhdGUKPj4gQEAgLTI4OSw2ICszMzcsNyBAQCBzdGF0aWMgdm9pZCBfX2luaXQgcmVz
+b3VyY2VfaW5pdCh2b2lkKQo+PiAgICAgICAgICAgICAgICAgcmVxdWVzdF9yZXNvdXJjZShyZXMs
+ICZjb2RlX3Jlc291cmNlKTsKPj4gICAgICAgICAgICAgICAgIHJlcXVlc3RfcmVzb3VyY2UocmVz
+LCAmZGF0YV9yZXNvdXJjZSk7Cj4+ICAgICAgICAgICAgICAgICByZXF1ZXN0X3Jlc291cmNlKHJl
+cywgJmJzc19yZXNvdXJjZSk7Cj4+ICsgICAgICAgICAgICAgICByZXF1ZXN0X2NyYXNoa2VybmVs
+KHJlcyk7Cj4+ICAgICAgICAgfQo+PiAgfQo+Pgo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9sb29uZ2Fy
+Y2gva2VybmVsL3RyYXBzLmMgYi9hcmNoL2xvb25nYXJjaC9rZXJuZWwvdHJhcHMuYwo+PiBpbmRl
+eCBhYTFjOTVhYWY1OTUuLjBlNjEwODcyZjNmNCAxMDA2NDQKPj4gLS0tIGEvYXJjaC9sb29uZ2Fy
+Y2gva2VybmVsL3RyYXBzLmMKPj4gKysrIGIvYXJjaC9sb29uZ2FyY2gva2VybmVsL3RyYXBzLmMK
+Pj4gQEAgLTEwLDYgKzEwLDcgQEAKPj4gICNpbmNsdWRlIDxsaW51eC9lbnRyeS1jb21tb24uaD4K
+Pj4gICNpbmNsdWRlIDxsaW51eC9pbml0Lmg+Cj4+ICAjaW5jbHVkZSA8bGludXgva2VybmVsLmg+
+Cj4+ICsjaW5jbHVkZSA8bGludXgva2V4ZWMuaD4KPj4gICNpbmNsdWRlIDxsaW51eC9tb2R1bGUu
+aD4KPj4gICNpbmNsdWRlIDxsaW51eC9leHRhYmxlLmg+Cj4+ICAjaW5jbHVkZSA8bGludXgvbW0u
+aD4KPj4gQEAgLTI0Niw2ICsyNDcsOSBAQCB2b2lkIF9fbm9yZXR1cm4gZGllKGNvbnN0IGNoYXIg
+KnN0ciwgc3RydWN0IHB0X3JlZ3MgKnJlZ3MpCj4+Cj4+ICAgICAgICAgb29wc19leGl0KCk7Cj4+
+Cj4+ICsgICAgICAgaWYgKHJlZ3MgJiYga2V4ZWNfc2hvdWxkX2NyYXNoKGN1cnJlbnQpKQo+PiAr
+ICAgICAgICAgICAgICAgY3Jhc2hfa2V4ZWMocmVncyk7Cj4+ICsKPj4gICAgICAgICBpZiAoaW5f
+aW50ZXJydXB0KCkpCj4+ICAgICAgICAgICAgICAgICBwYW5pYygiRmF0YWwgZXhjZXB0aW9uIGlu
+IGludGVycnVwdCIpOwo+Pgo+PiAtLQo+PiAyLjM2LjAKPj4KCgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlz
+dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2tleGVjCg==
