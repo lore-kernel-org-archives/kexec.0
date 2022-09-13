@@ -4,94 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6706DC6FA8A
-	for <kexec@archiver.kernel.org>; Mon, 12 Sep 2022 13:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7040FECAAA1
+	for <kexec@archiver.kernel.org>; Tue, 13 Sep 2022 02:11:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
 	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
 	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
 	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=aoeBJ9Ir25X1hcKOlQ1stzx4YPnLL3AfJr8dQHJgTtU=; b=rFCTyBIOkUQrfn
-	h/Mk+8J4H/TOzr33nhfC5yjjv/go9nHl+IOMmjZlUHF+5OAIfAHbGOiAYVDASouPFKd+0VPLVCvIB
-	V4qf1Yvjf9UWKyyTCHzUlv6tC1+E0rykIO/aUz5KNwpFoAo47u/OwoyFrIiYE+iNye0ziekCn/pjV
-	tsSYGlb8v0Gy98AEfymsLdvUKwrqbWWun+ZQ1bkx7RjYpVe3nTIbq6dCw+p/QN/isgMzGFT5ItCMY
-	suPwLKUVkD9KR7tXmgg5gUgZF8UZxvbxpok/NvVYDi1aftOaa7T4Ung4uSc0MP2KStJ5nvLN1Lg2Z
-	LRmxS59Qau1V0WIMoWrw==;
+	List-Owner; bh=fR7GA2WO3LZ+GVO+07IbqkfURG9gABypPUogaO+9OPw=; b=cYlYYGLsFwQHT9
+	8coC0UoVxMT7ivKnvjadIysJf2uLZ4pcfuuIdoNtD7ITykRnqL2ByV3gTWh9AAP657wUQlXc4u7b6
+	0xQMm1jTO1x05ZgWXKHPBh6kpDoXGlSsA/biFNgPOkFxngTtPg7aiXGs565KccfA/6JRb2KXm9Cty
+	Bgl2S9kEggGFhymRq7J299rLoLWzKL94KDBpyjK6YeFlJfluMxBUKl2oc+H3PrAokj9A1PHb+nVf9
+	wL6x5/8ZhsUqpf+tmbraj6cuWTeRpTEUH/b0uRu1D/akz56z1ae7fnd7fEjwOWOt+WpPk63GEEQPC
+	PIBgp0JH+q/7fPiP21DA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oXj3r-009zpy-9U; Mon, 12 Sep 2022 13:01:15 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1oXvOQ-000Ap9-Va; Tue, 13 Sep 2022 02:11:19 +0000
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oXj3n-009zly-Fg
-	for kexec@lists.infradead.org; Mon, 12 Sep 2022 13:01:13 +0000
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28CBtgMg030115;
-	Mon, 12 Sep 2022 13:00:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=qMiB5o6S9kg5JxvAdo4/TOmyv7/p5G29pPyRmWvJdzg=;
- b=nH2qaTd8wIeOU8VULuowa+Njcnv9TwH4RxFZ0mo+AqAiYx4kf7aIDj5mylYien9v+1VA
- agE/Y4Pg1x/Ax1aVsKz9aJ7w8Qgx0Wrjp2/cyHrxvYfZoELobEGhahSKwtG1RIuTCNpp
- rQOKfBk27Rr4PBIMuH+gBMwLNCKxaPrBQ0rm6UvSHWKnnSrf+bdTIGIRXP5fBDV/GvaF
- aBDfshOlj9OO4dNOpLpGMwkBBgYfDK+gqM4N4hV+DvVPovJcrHv69QIwBd8pg3v4z7pS
- JDBOm6H+VDuD2LYpNfzEpF2Frp4iCZfcGLQiGvunHXCjcbzUvyPKrkRHX93xHPGCmfpS 7Q== 
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3jj0kvht1p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 Sep 2022 13:00:51 +0000
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-	by ppma02dal.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 28CCodle014458;
-	Mon, 12 Sep 2022 13:00:48 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-	by ppma02dal.us.ibm.com with ESMTP id 3jgj79gchy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 12 Sep 2022 13:00:48 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-	by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 28CD0lXT62587292
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 12 Sep 2022 13:00:47 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 96EB1AC05E;
-	Mon, 12 Sep 2022 13:00:47 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6C50EAC059;
-	Mon, 12 Sep 2022 13:00:47 +0000 (GMT)
-Received: from [9.47.158.152] (unknown [9.47.158.152])
-	by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-	Mon, 12 Sep 2022 13:00:47 +0000 (GMT)
-Message-ID: <ce08b0af-fb1b-0ade-61ac-f66e95d6eb6a@linux.ibm.com>
-Date: Mon, 12 Sep 2022 09:00:47 -0400
+	id 1oXvOM-000Ahg-QZ
+	for kexec@lists.infradead.org; Tue, 13 Sep 2022 02:11:17 +0000
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R481e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=xianting.tian@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0VPboHmJ_1663035063;
+Received: from 30.225.65.150(mailfrom:xianting.tian@linux.alibaba.com fp:SMTPD_---0VPboHmJ_1663035063)
+          by smtp.aliyun-inc.com;
+          Tue, 13 Sep 2022 10:11:04 +0800
+Message-ID: <8c298bd7-434b-393e-0a04-7fc6956d5eb1@linux.alibaba.com>
+Date: Tue, 13 Sep 2022 10:11:02 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-Subject: Re: [PATCH v8 0/4] tpm: Preserve TPM measurement log across kexec
- (ppc64)
-Content-Language: en-US
-To: Rob Herring <robh+dt@kernel.org>
-Cc: nayna@linux.ibm.com, nasastry@in.ibm.com, mpe@ellerman.id.au,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>
-References: <20220901214610.768645-1-stefanb@linux.ibm.com>
-From: Stefan Berger <stefanb@linux.ibm.com>
-In-Reply-To: <20220901214610.768645-1-stefanb@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: G-yXCW8Yz-bo8gyXPoEYlv6_u612-ggY
-X-Proofpoint-ORIG-GUID: G-yXCW8Yz-bo8gyXPoEYlv6_u612-ggY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
- definitions=2022-09-12_08,2022-09-12_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- spamscore=0 mlxlogscore=915 mlxscore=0 phishscore=0 impostorscore=0
- clxscore=1015 suspectscore=0 lowpriorityscore=0 priorityscore=1501
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2207270000 definitions=main-2209120041
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.12.0
+Subject: Re: [PATCH V3 0/9] Support RISCV64 arch and common commands
+To: lijiang <lijiang@redhat.com>, =?UTF-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+IA==?=
+ =?UTF-8?B?5LiA5LuBKQ==?= <k-hagio-ab@nec.com>
+Cc: "Discussion list for crash utility usage, maintenance and development"
+ <crash-utility@redhat.com>, Nick Kossifidis <mick@ics.forth.gr>,
+ heinrich.schuchardt@canonical.com, guoren@kernel.org,
+ Yixun Lan <yixun.lan@gmail.com>, kexec@lists.infradead.org,
+ hschauhan@nulltrace.org, huanyi.xj@alibaba-inc.com,
+ lifang_xia@linux.alibaba.com
+References: <20220813031753.3097720-1-xianting.tian@linux.alibaba.com>
+ <CANU+Zyd+276V6uDsWcyCtB+sfdu2xObvnh9Sxmr4d=UOt27nNQ@mail.gmail.com>
+From: Xianting Tian <xianting.tian@linux.alibaba.com>
+In-Reply-To: <CANU+Zyd+276V6uDsWcyCtB+sfdu2xObvnh9Sxmr4d=UOt27nNQ@mail.gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220912_060112_025863_233579D9 
-X-CRM114-Status: GOOD (  23.69  )
+X-CRM114-CacheID: sfid-20220912_191115_077432_53ABC5FC 
+X-CRM114-Status: UNSURE (   4.28  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -103,75 +62,16 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-
-Hi Rob,
-
-   can you take this series in your tree?
-
-Regards,
-    Stefan
-
-On 9/1/22 17:46, Stefan Berger wrote:
-> The of-tree subsystem does not currently preserve the IBM vTPM 1.2 and
-> vTPM 2.0 measurement logs across a kexec on PowerVM and PowerKVM. This
-> series fixes this for the kexec_file_load() syscall using the flattened
-> device tree (fdt) to carry the TPM measurement log's buffer across kexec.
-> 
->     Stefan
-> 
-> v8:
->   - Added Jarkko's, Coiby's, and Rob's tags
->   - Rebase on v6.0-rc3 that absorbed 2 already upstreamed patches
-> 
-> v7:
->   - Added Nageswara's Tested-by tags
->   - Added back original comment to inline function and removed Jarkko's R-b tag
-> 
-> v6:
->   - Add __init to get_kexec_buffer as suggested by Jonathan
->   - Fixed issue detected by kernel test robot
-> 
-> v5:
->   - Rebased on 1 more patch that would otherwise create merge conflicts
-> 
-> v4:
->   - Rebased on 2 patches that would otherwise create merge conflicts;
->     posting these patches in this series with several tags removed so
->     krobot can test the series already
->   - Changes to individual patches documented in patch descripitons
-> 
-> v3:
->   - Moved TPM Open Firmware related function to drivers/char/tpm/eventlog/tpm_of.c
-> 
-> v2:
->   - rearranged patches
->   - fixed compilation issues for x86
-> 
-> Palmer Dabbelt (1):
->    drivers: of: kexec ima: Support 32-bit platforms
-> 
-> Stefan Berger (3):
->    tpm: of: Make of-tree specific function commonly available
->    of: kexec: Refactor IMA buffer related functions to make them reusable
->    tpm/kexec: Duplicate TPM measurement log in of-tree for kexec
-> 
->   drivers/char/tpm/eventlog/of.c |  31 +--
->   drivers/of/kexec.c             | 336 ++++++++++++++++++++++++++++-----
->   include/linux/kexec.h          |   6 +
->   include/linux/of.h             |   9 +-
->   include/linux/tpm.h            |  36 ++++
->   kernel/kexec_file.c            |   6 +
->   6 files changed, 346 insertions(+), 78 deletions(-)
-> 
-> 
-> base-commit: b90cb1053190353cc30f0fef0ef1f378ccc063c5
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+CuWcqCAyMDIyLzkvOSDkuIvljYg1OjIxLCBsaWppYW5nIOWGmemBkzoKPiBCdXQgYW55d2F5LCB0
+aGVzZSBpc3N1ZXMgY2FuIGJlIGltcHJvdmVkIHdpdGggbGF0ZXIgcGF0Y2hlcywgc28gZm9yIAo+
+IHRoZSB2MzogQUNLLgoKVGhhbmtzIExpIEppYW5nIGZvciB0aGUgY29tbWVudHMgYW5kIEFDSywK
+Ck5vdyBJIHJlY2VpdmVkIHR3byBBQ0tzIGZvciB5b3UgYW5kIEthenUsIENvdWxkIEkga25vdyB3
+aGVuIHRoaXMgcGF0Y2ggCnNldCBjYW4gYmUgbWVyZ2VkIHRvIHRoZSBtYWlubGluZT8KCnRoYW5r
+cwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVj
+IG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
