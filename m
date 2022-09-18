@@ -4,103 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1886BECAAD3
-	for <kexec@archiver.kernel.org>; Mon, 19 Sep 2022 07:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A5775C6FA8B
+	for <kexec@archiver.kernel.org>; Mon, 19 Sep 2022 12:59:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
+	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=+1FO1SEn4hPdpMbKvZscjxF89aVH58QDYfyh31qh8Ls=; b=NzuKNU8bstloii
-	WQA7FqGsjh/ccj4zRjF52zbQrejyhmghhB+dROb7cbzq+6g6zQZc7mxvNYtMdh2mf0VFZ6XPSBkbD
-	CgweRfHyMnvB7juSDyRUDBXgEXDKAjTZ1RuaRnDXZCW6pDfRaw1px5Gv+t/A3hAbqxkeytqNeloOi
-	/S+pwnD6aLerbRgaI/aL8p1UqCmGJgSshrV6DzUs8h4cUy7oEClYCFFLq6dQeaeehKAwOJtvCaZXz
-	AJjEzKa0SRMQbKsacyG1ns8sIGGBC8vdw36j27Olj3C1FmhRkvSDQKn+3lKlmqIqg+MmqMVI7SURX
-	csAaxtZTOOD75Ateoi+g==;
+	List-Owner; bh=kOaRvPVgWCOa+PQrKQxwj4prjxtoBS5xXpjChrJrEjY=; b=gQPXO3znLTWyR8
+	65K5E9aCB/OImP1Wr0xXIJ+Mk6kgIOtoHwWubTKYeJyjdlfRKCCuWiefAcPm0zzzup31N5H+1cmig
+	5Q54w36x7/70Wfwk+Z9tuFUpFM2aXnsBOSGMdEgrEY/vnXue8PWXWT3+RYs1pNtMB5iNRBlIvYZVq
+	cuuCaOssIRfNKpuP/t4kHdhEP21lZS0o6acoZlnDjIy6bnFx+qFLpTl7CHwWsILgllwxN34p0DmPP
+	4Y8gNhG93hcKrqAF+EqcJZZv138Si5G0JH9HyukTgERYGTcbJG+hFiuC+duJoPbmdXwXB7lZE76oG
+	KGTd6zs3nm3EKCXOFiBw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oaArv-0093ly-LU; Mon, 19 Sep 2022 07:07:03 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5] helo=mx0a-001b2d01.pphosted.com)
+	id 1oaGMm-00Bm3R-86; Mon, 19 Sep 2022 12:59:16 +0000
+Received: from fanzine.igalia.com ([178.60.130.6] helo=fanzine2.igalia.com)
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oaArs-0093ix-7c
-	for kexec@lists.infradead.org; Mon, 19 Sep 2022 07:07:02 +0000
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-	by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28J44Ip4010901;
-	Mon, 19 Sep 2022 07:06:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=apL1ap4jky84AethjsdOSKCPtGVBdqAWIK1p77PB8Sw=;
- b=famm+QqHa13DtIquwUd/XzIGpgoddseEqB3u5eI+9WmBrMrzEdINu1xKxepN1zObAuiC
- 5dh+IYiOeMgAaBOpUvPLdnPem4XzEAYAUmixiuPGFrOWAY9eI+i7ymINo1BhVtJ+NU/k
- p6R9dvLYu9xPL+ip1HEeoAMrp/d5FabwvMn7ZLwA5zghTVSthn8Er6M62ptc1Rhr+S3I
- 67iegYXw3GlgVn+qm3dwzSX4yZGQG0OBg8c8s3t+ICdTixcuU7iepC4kdwLqCEHmK3s4
- wLb5nhanp8J3E9LUPqFk+QXd2lRBrHSapu9pGbBvQg8FPTgK4pTmKfcY1ZJgc/3SROC/ 5w== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3jph30bs64-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 Sep 2022 07:06:28 +0000
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 28J6HKLc009049;
-	Mon, 19 Sep 2022 07:06:28 GMT
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-	by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3jph30bs5f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 Sep 2022 07:06:28 +0000
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-	by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 28J757xL006131;
-	Mon, 19 Sep 2022 07:06:26 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-	by ppma04fra.de.ibm.com with ESMTP id 3jn5v91fwb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 19 Sep 2022 07:06:26 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-	by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 28J76NPU43319734
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 19 Sep 2022 07:06:23 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CA8BD42047;
-	Mon, 19 Sep 2022 07:06:23 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 24A2C42045;
-	Mon, 19 Sep 2022 07:06:18 +0000 (GMT)
-Received: from [9.43.61.137] (unknown [9.43.61.137])
-	by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-	Mon, 19 Sep 2022 07:06:17 +0000 (GMT)
-Message-ID: <78100f92-afd7-52b6-d5e5-17eb2de72a9a@linux.ibm.com>
-Date: Mon, 19 Sep 2022 12:36:16 +0530
+	id 1oZuvK-00Gp9K-E9
+	for kexec@lists.infradead.org; Sun, 18 Sep 2022 14:05:31 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=oqYUV0dWvcAo5VH7CFm/kLo2npwHY9kSddzY1OFsLfY=; b=UCgpbY6iwSSbEjm0uugXupccuO
+	/lpQvNeWhP9/TfyCqoizhm6858ZNRSEeaQJYMCSVwsj/4UlJBP8nyESONeNp1HUuwStFD50uCGR1T
+	08kEXe2PM2g73CwCScXcvthVd+D0nna9bnbHMvSD92cxC08Xt/3gNgPbORYTdAmU9BabBtZ43d5eA
+	cABINOw87ofdrfB5BwdVaGEn4lJADJ927HqqT0D4CUh4xhQgnHJbgeJDDuMb3kpCgeXNCJ2on8cVb
+	VGuvsSm/K+mUtlpn6zhKBSxfSHCBHYgent29etDa1GxW8ot9ijBmlOYteMYuMxI63Vcpfo8xiwx2x
+	FuPaZ43g==;
+Received: from 201-27-35-168.dsl.telesp.net.br ([201.27.35.168] helo=[192.168.1.60])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1oZuvC-0081LD-2V; Sun, 18 Sep 2022 16:05:21 +0200
+Message-ID: <afe16869-d5de-2072-52ba-cde61181fc11@igalia.com>
+Date: Sun, 18 Sep 2022 11:04:49 -0300
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.1
-Subject: Re: [PATCH v12 7/7] x86/crash: Add x86 crash hotplug support
-To: Eric DeVolder <eric.devolder@oracle.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, kexec@lists.infradead.org, ebiederm@xmission.com,
-        dyoung@redhat.com, bhe@redhat.com, vgoyal@redhat.com
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com, nramas@linux.microsoft.com,
-        thomas.lendacky@amd.com, robh@kernel.org, efault@gmx.de,
-        rppt@kernel.org, david@redhat.com, konrad.wilk@oracle.com,
-        boris.ostrovsky@oracle.com
-References: <20220909210509.6286-1-eric.devolder@oracle.com>
- <20220909210509.6286-8-eric.devolder@oracle.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH V3 06/11] tracing: Improve panic/die notifiers
 Content-Language: en-US
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-In-Reply-To: <20220909210509.6286-8-eric.devolder@oracle.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: U2h9PPsJ5beRGFeCmQgsZkOg4m_EEH2L
-X-Proofpoint-ORIG-GUID: JN_t5p287PK97cVCV0eUgWrWmT-IEx3S
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
- definitions=2022-09-19_03,2022-09-16_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 impostorscore=0
- priorityscore=1501 suspectscore=0 mlxlogscore=999 malwarescore=0
- phishscore=0 adultscore=0 spamscore=0 lowpriorityscore=0 bulkscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2209130000 definitions=main-2209190046
+To: rostedt@goodmis.org, stern@rowland.harvard.edu
+Cc: kexec@lists.infradead.org, pmladek@suse.com, akpm@linux-foundation.org,
+ linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ netdev@vger.kernel.org, x86@kernel.org, kernel-dev@igalia.com,
+ kernel@gpiccoli.net, halves@canonical.com, fabiomirmar@gmail.com,
+ bhe@redhat.com, alejandro.j.jimenez@oracle.com,
+ andriy.shevchenko@linux.intel.com, arnd@arndb.de, bp@alien8.de,
+ corbet@lwn.net, d.hatayama@jp.fujitsu.com, dave.hansen@linux.intel.com,
+ dyoung@redhat.com, feng.tang@intel.com, gregkh@linuxfoundation.org,
+ mikelley@microsoft.com, hidehiro.kawai.ez@hitachi.com, jgross@suse.com,
+ john.ogness@linutronix.de, keescook@chromium.org, luto@kernel.org,
+ mhiramat@kernel.org, mingo@redhat.com, paulmck@kernel.org,
+ peterz@infradead.org, senozhatsky@chromium.org, tglx@linutronix.de,
+ vgoyal@redhat.com, vkuznets@redhat.com, will@kernel.org,
+ xuqiang36@huawei.com, Sergei Shtylyov <sergei.shtylyov@gmail.com>
+References: <20220819221731.480795-1-gpiccoli@igalia.com>
+ <20220819221731.480795-7-gpiccoli@igalia.com>
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <20220819221731.480795-7-gpiccoli@igalia.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220919_000700_452455_7F26C147 
-X-CRM114-Status: GOOD (  44.99  )
+X-CRM114-CacheID: sfid-20220918_070530_504073_409FF44B 
+X-CRM114-Status: GOOD (  12.29  )
+X-Mailman-Approved-At: Mon, 19 Sep 2022 05:59:14 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -112,211 +82,51 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-
-On 10/09/22 02:35, Eric DeVolder wrote:
-> For x86_64, when CPU or memory is hot un/plugged, the crash
-> elfcorehdr, which describes the CPUs and memory in the system,
-> must also be updated.
->
-> When loading the crash kernel via kexec_load or kexec_file_load,
-> the elfcorehdr is identified at run time in
-> crash_core:handle_hotplug_event().
->
-> To update the elfcorehdr for x86_64, a new elfcorehdr must be
-> generated from the available CPUs and memory. The new elfcorehdr
-> is prepared into a buffer, and then installed over the top of
-> the existing elfcorehdr.
->
-> In the patch 'kexec: exclude elfcorehdr from the segment digest'
-> the need to update purgatory due to the change in elfcorehdr was
-> eliminated.  As a result, no changes to purgatory or boot_params
-> (as the elfcorehdr= kernel command line parameter pointer
-> remains unchanged and correct) are needed, just elfcorehdr.
->
-> To accommodate a growing number of resources via hotplug, the
-> elfcorehdr segment must be sufficiently large enough to accommodate
-> changes, see the CRASH_MAX_MEMORY_RANGES configure item.
->
-> With this change, crash hotplug for kexec_file_load syscall
-> is supported. The kexec_load is also supported, but also
-> requires a corresponding change to userspace kexec-tools.
->
-> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
-> Acked-by: Baoquan He <bhe@redhat.com>
+On 19/08/2022 19:17, Guilherme G. Piccoli wrote:
+> Currently the tracing dump_on_oops feature is implemented through
+> separate notifiers, one for die/oops and the other for panic;
+> given they have the same functionality, let's unify them.
+> 
+> Also improve the function comment and change the priority of the
+> notifier to make it execute earlier, avoiding showing useless trace
+> data (like the callback names for the other notifiers); finally,
+> we also removed an unnecessary header inclusion.
+> 
+> Cc: Petr Mladek <pmladek@suse.com>
+> Cc: Sergei Shtylyov <sergei.shtylyov@gmail.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+> 
 > ---
->   arch/x86/Kconfig             |  11 ++++
->   arch/x86/include/asm/kexec.h |  20 +++++++
->   arch/x86/kernel/crash.c      | 102 +++++++++++++++++++++++++++++++++++
->   3 files changed, 133 insertions(+)
->
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index f9920f1341c8..cdfc9b2fdf98 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -2056,6 +2056,17 @@ config CRASH_DUMP
->   	  (CONFIG_RELOCATABLE=y).
->   	  For more details see Documentation/admin-guide/kdump/kdump.rst
->   
-> +config CRASH_MAX_MEMORY_RANGES
-> +	depends on CRASH_DUMP && KEXEC_FILE && (HOTPLUG_CPU || MEMORY_HOTPLUG)
-> +	int
-> +	default 32768
-> +	help
-> +	  For the kexec_file_load path, specify the maximum number of
-> +	  memory regions, eg. as represented by the 'System RAM' entries
-> +	  in /proc/iomem, that the elfcorehdr buffer/segment can accommodate.
-> +	  This value is combined with NR_CPUS and multiplied by Elf64_Phdr
-> +	  size to determine the final buffer size.
-> +
->   config KEXEC_JUMP
->   	bool "kexec jump"
->   	depends on KEXEC && HIBERNATION
-> diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-> index a3760ca796aa..432073385b2d 100644
-> --- a/arch/x86/include/asm/kexec.h
-> +++ b/arch/x86/include/asm/kexec.h
-> @@ -212,6 +212,26 @@ typedef void crash_vmclear_fn(void);
->   extern crash_vmclear_fn __rcu *crash_vmclear_loaded_vmcss;
->   extern void kdump_nmi_shootdown_cpus(void);
->   
-> +void *arch_map_crash_pages(unsigned long paddr, unsigned long size);
-> +#define arch_map_crash_pages arch_map_crash_pages
-> +
-> +void arch_unmap_crash_pages(void **ptr);
-> +#define arch_unmap_crash_pages arch_unmap_crash_pages
-> +
-> +void arch_crash_handle_hotplug_event(struct kimage *image,
-> +		unsigned int hp_action);
-> +#define arch_crash_handle_hotplug_event arch_crash_handle_hotplug_event
-> +
-> +#ifdef CONFIG_HOTPLUG_CPU
-> +static inline int crash_hotplug_cpu_support(void) { return 1; }
-> +#define crash_hotplug_cpu_support crash_hotplug_cpu_support
-> +#endif
-> +
-> +#ifdef CONFIG_MEMORY_HOTPLUG
-> +static inline int crash_hotplug_memory_support(void) { return 1; }
-> +#define crash_hotplug_memory_support crash_hotplug_memory_support
-> +#endif
-> +
->   #endif /* __ASSEMBLY__ */
->   
->   #endif /* _ASM_X86_KEXEC_H */
-> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-> index 9ceb93c176a6..8fc7d678ac72 100644
-> --- a/arch/x86/kernel/crash.c
-> +++ b/arch/x86/kernel/crash.c
-> @@ -25,6 +25,7 @@
->   #include <linux/slab.h>
->   #include <linux/vmalloc.h>
->   #include <linux/memblock.h>
-> +#include <linux/highmem.h>
->   
->   #include <asm/processor.h>
->   #include <asm/hardirq.h>
-> @@ -397,7 +398,18 @@ int crash_load_segments(struct kimage *image)
->   	image->elf_headers = kbuf.buffer;
->   	image->elf_headers_sz = kbuf.bufsz;
->   
-> +#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_MEMORY_HOTPLUG)
-> +	/* Ensure elfcorehdr segment large enough for hotplug changes */
-> +	kbuf.memsz =
-> +		(CONFIG_NR_CPUS_DEFAULT + CONFIG_CRASH_MAX_MEMORY_RANGES) *
-> +			sizeof(Elf64_Phdr);
-> +	/* Mark as usable to crash kernel, else crash kernel fails on boot */
-> +	image->elf_headers_sz = kbuf.memsz;
-> +	image->elfcorehdr_index = image->nr_segments;
-> +	image->elfcorehdr_index_valid = true;
-> +#else
->   	kbuf.memsz = kbuf.bufsz;
-> +#endif
->   	kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
->   	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
->   	ret = kexec_add_buffer(&kbuf);
-> @@ -412,3 +424,93 @@ int crash_load_segments(struct kimage *image)
->   	return ret;
->   }
->   #endif /* CONFIG_KEXEC_FILE */
-> +
-> +#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_MEMORY_HOTPLUG)
-> +/*
-> + * NOTE: The addresses and sizes passed to this routine have
-> + * already been fully aligned on page boundaries. There is no
-> + * need for massaging the address or size.
-> + */
-> +void *arch_map_crash_pages(unsigned long paddr, unsigned long size)
-> +{
-> +	void *ptr = NULL;
-> +
-> +	if (size > 0) {
-> +		struct page *page = pfn_to_page(paddr >> PAGE_SHIFT);
-> +
-> +		ptr = kmap_local_page(page);
-> +	}
-> +
-> +	return ptr;
-> +}
-> +
-> +void arch_unmap_crash_pages(void **ptr)
-> +{
-> +	if (ptr) {
-> +		if (*ptr)
-> +			kunmap_local(*ptr);
-> +		*ptr = NULL;
-> +	}
-> +}
-> +
-> +/**
-> + * arch_crash_handle_hotplug_event() - Handle hotplug elfcorehdr changes
-> + * @image: the active struct kimage
-> + * @hp_action: the hot un/plug action being handled
-> + *
-> + * To accurately reflect hot un/plug changes, the new elfcorehdr
-> + * is prepared in a kernel buffer, and then it is written on top
-> + * of the existing/old elfcorehdr.
-> + */
-> +void arch_crash_handle_hotplug_event(struct kimage *image,
-> +	unsigned int hp_action)
-> +{
-> +	struct kexec_segment *ksegment;
-> +	unsigned char *ptr = NULL;
-> +	unsigned long elfsz = 0;
-> +	void *elfbuf = NULL;
-> +	unsigned long mem, memsz;
-> +
-> +	/*
-> +	 * Elfcorehdr_index_valid checked in crash_core:handle_hotplug_event()
-> +	 */
-> +	ksegment = &image->segment[image->elfcorehdr_index];
-> +	mem = ksegment->mem;
-> +	memsz = ksegment->memsz;
-> +
-> +	/*
-> +	 * Create the new elfcorehdr reflecting the changes to CPU and/or
-> +	 * memory resources.
-> +	 */
-> +	if (prepare_elf_headers(image, &elfbuf, &elfsz)) {
-> +		pr_err("crash hp: unable to prepare elfcore headers");
-> +		goto out;
+> 
+> V3:
+> - Removed goto usage, as per Steven suggestion (thanks!).
+> 
+> V2:
+> - Different approach; instead of using IDs to distinguish die and
+> panic events, rely on address comparison like other notifiers do
+> and as per Petr's suggestion;
+> 
+> - Removed ACK from Steven since the code changed.
+> 
+> [...]
 
-On PowerPC, while preparing the elf core header the memblock structure 
-is used to prepare program header for memory regions of elfcorehdr. 
-Since the above arch specific hotplug handler gets invoked when memory 
-is marked offline (MEM_OFFLINE) which is before memblock structure gets 
-updated so on PowerPC the above handler may not work for memory hotplug 
-case.
+Hi Steve, Alan - sorry for the ping (and I'm aware you're OOO Steve, saw
+your auto-response email heh).
 
-Just wondering which data structure is used to get the list of memory 
-regions while preparing program header for memory regions of elfcorehdr 
-on other architectures?
+So, is this version good enough? Appreciate the reviews and in case it's
+good, let me know your preference for picking it in your tree - I could
+resend the patch alone if you prefer (not in the series), for example.
 
 Thanks,
-Sourabh Jain
+
+
+Guilherme
 
 _______________________________________________
 kexec mailing list
