@@ -4,67 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A713EC54EE9
-	for <kexec@archiver.kernel.org>; Mon, 19 Sep 2022 12:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1ABE4C6FA8B
+	for <kexec@archiver.kernel.org>; Mon, 19 Sep 2022 12:59:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=MgIjZEmnguIxG1RPJmZU7uRcXNjss+4esakOFtVVJDo=; b=vIXs92EO4CH6HE
-	TGkX13c2OnxhgMwlTQU85yMKywRKQ0aKmW1QyVxN8OrA3LQfLv4V2DejGTiSV3VWU8AvMTyxPtPkK
-	Ogae6U1uiP2eD4MU/7Ct43m/S12BDo/XMpHxS+kaWbZKF0EP+5Wy4my1h0PV0gIq1tKb0GEhKDPCS
-	inOTzrxBf1GcWdKeC5c43r0XpcSku0+O9eV1qhxXyK0FCgVvp9LGGiVb8kdTcKL1Y43JkxVRWiUIb
-	KFSn+q7Tg3keGwrSk6nu0I6nhKOdsnT4mfbHxylMqR71QceVV9/Qbq5Ui6X/Q/ahdjDZr2IEuvluk
-	j/dtpxGUYzOjEbumv3og==;
+	List-Owner; bh=iYUkm7cfsy2Ok3oBpPVvckSZyAGoooDH9oAl71NEShg=; b=k259ElXdmuYcl+
+	OPRyqJNNTMcgPeHS2wDMmePBetS9WYDUZOq094inZ//nBgIHqngt8lqvkH4fNbMIHm2/PkxkN21wP
+	VkNk64gpWLXifG/4YZIoHADvC/FNnZZQJ4p6LGBWYeeIVyIw8goDZzkCfBdwZnTYc3sN6Qo1vE17i
+	2HuXa7i+D4F4kKJw5QCJbBVC0/jnl/Q9NETjgA+OJW5MWTzTPxOAI+8Hi9p9PJ1XjAfGpHPDZa0SF
+	GSKTU7Va+bHHMIV0apWmw6PM3xSFq0/wGuFLvOJZ7Aa4S48QSmg5QBld0P+kg9ex3t3naoQqkZHlc
+	Fbt1ODf7tdtHuVMEczWQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oaGMy-00BmAF-P1; Mon, 19 Sep 2022 12:59:28 +0000
-Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
+	id 1oaGN3-00BmDe-5x; Mon, 19 Sep 2022 12:59:33 +0000
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oaBf0-009c3r-TO
-	for kexec@lists.infradead.org; Mon, 19 Sep 2022 07:57:51 +0000
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id C57206091F
-	for <kexec@lists.infradead.org>; Mon, 19 Sep 2022 07:57:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 675FCC43140
-	for <kexec@lists.infradead.org>; Mon, 19 Sep 2022 07:57:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1663574264;
-	bh=aWEmcMD2EVkjI/69rwQSa4Htx9oQ6En1TadDdnLvIbI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Jy5FqR+/CEB+S7DN7nLWdp8mGCpVmedCZYtJ+gzg69QOpBn0qNB1M5015QmHArPUR
-	 ZoPgJz6kU1J8rkit9oUOUC2uZcyDby32UYaRqR9nNQUoEa2/FFvwgG90bJ7Th3ehPL
-	 wTpmGga5BV0oQkTuLdtvBrfkLhwjgNVKR2UrfvKBww0ZA/xxJ8HIykaUJIqCnEfJ2y
-	 03tlx1/WBHq5s8Wy+k1wcf4HD60ebknOqiI7tmiDPOF3Tm7L+UkYDpHouDSQfpDzH0
-	 MwpbcMVH2oXs7XzJg1mzsxmKU7fgp4cc3tDwHAmjG8dYacdKurpFEpHTAxn0V6KDHk
-	 dy49iUgdiJ7Ag==
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-12803ac8113so60741723fac.8
-        for <kexec@lists.infradead.org>; Mon, 19 Sep 2022 00:57:44 -0700 (PDT)
-X-Gm-Message-State: ACgBeo24uHLCJTI7KZ1YWZCHBQkZLCnlyO+lG1K7akEqZBp575o4M4X8
-	tDJQ7WrzRGfkXnwzIzFEWsu1tY4h61pmPTjqc50=
-X-Google-Smtp-Source: AA6agR6IKXFmcMGVCA+cj9nNOy0mTF66Lh/oz+FZUWDJVJLV8iPItzjvmFLZKwEudPZ09vDhmt7SNjN1c5OFv4tlMBM=
-X-Received: by 2002:a05:6870:a78e:b0:12b:542b:e5b2 with SMTP id
- x14-20020a056870a78e00b0012b542be5b2mr14450597oao.112.1663574263215; Mon, 19
- Sep 2022 00:57:43 -0700 (PDT)
+	id 1oaACE-008ePC-3o
+	for kexec@lists.infradead.org; Mon, 19 Sep 2022 06:24:04 +0000
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=xianting.tian@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0VQ75VyV_1663568629;
+Received: from 30.225.66.25(mailfrom:xianting.tian@linux.alibaba.com fp:SMTPD_---0VQ75VyV_1663568629)
+          by smtp.aliyun-inc.com;
+          Mon, 19 Sep 2022 14:23:50 +0800
+Message-ID: <c25e1602-ee95-dac8-023a-2d163f959f1a@linux.alibaba.com>
+Date: Mon, 19 Sep 2022 14:23:49 +0800
 MIME-Version: 1.0
-References: <20220914075224.2710923-1-xianting.tian@linux.alibaba.com>
-In-Reply-To: <20220914075224.2710923-1-xianting.tian@linux.alibaba.com>
-From: Guo Ren <guoren@kernel.org>
-Date: Mon, 19 Sep 2022 15:57:30 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTTTpxeEuQak4aNywtPA=4r0tkv7k0EiR0XrE5qpVu3Kng@mail.gmail.com>
-Message-ID: <CAJF2gTTTpxeEuQak4aNywtPA=4r0tkv7k0EiR0XrE5qpVu3Kng@mail.gmail.com>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.12.0
 Subject: Re: [PATCH] RISC-V: Add support for riscv kexec/kdump on kexec-tools
-To: Xianting Tian <xianting.tian@linux.alibaba.com>, Nick Kossifidis <mick@ics.forth.gr>
-Cc: horms@kernel.org, kexec@lists.infradead.org, yixun.lan@gmail.com, 
-	huanyi.xj@alibaba-inc.com
+To: horms@kernel.org, kexec@lists.infradead.org, mick@ics.forth.gr,
+ yixun.lan@gmail.com
+Cc: huanyi.xj@alibaba-inc.com, guoren@kernel.org
+References: <20220914075224.2710923-1-xianting.tian@linux.alibaba.com>
+From: Xianting Tian <xianting.tian@linux.alibaba.com>
+In-Reply-To: <20220914075224.2710923-1-xianting.tian@linux.alibaba.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220919_005747_359852_16E9D673 
-X-CRM114-Status: GOOD (  41.32  )
-X-Mailman-Approved-At: Mon, 19 Sep 2022 05:59:25 -0700
+X-CRM114-CacheID: sfid-20220918_232358_756622_59A885D0 
+X-CRM114-Status: GOOD (  41.63  )
+X-Mailman-Approved-At: Mon, 19 Sep 2022 05:59:31 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,1544 +56,799 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-F.Y.I Nick Kossifidis
-
-The first author should be him.
-
-On Wed, Sep 14, 2022 at 3:52 PM Xianting Tian
-<xianting.tian@linux.alibaba.com> wrote:
->
-> This patch adds support for loading the ELF kernel image. It parses
-> the current/provided device tree to determine the system's memory
-> layout, and /proc/iomem for the various kernel segments.
->
-> This patch was firstly developed by Nick Kossifidis, and two fixes (
->    1: fail to find free memory area for dtb load when using initrd image,
->       lists.infradead.org/pipermail/linux-riscv/2022-August/018398.html;
->    2: fix memory range size calculation,
->        kexec/arch/riscv/crashdump-riscv.c:line 85
-> ) are contributed by Yixun Lan, Xianting Tian.
->
-> Tested on Qemu's rv64 virt machine and SoC of T-Head RISC-V Xuantie 910 CPU.
->
-> Tested-by: Yixun Lan <yixun.lan@gmail.com>
-> Signed-off-by: Xianting Tian <xianting.tian@linux.alibaba.com>
-> Signed-off-by: Yixun Lan <yixun.lan@gmail.com>
-> Signed-off-by: Nick Kossifidis <mick@ics.forth.gr>
-> ---
->  configure.ac                            |   3 +
->  include/elf.h                           |   3 +-
->  kexec/Makefile                          |   1 +
->  kexec/arch/riscv/Makefile               |  35 ++
->  kexec/arch/riscv/crashdump-riscv.c      | 140 ++++++++
->  kexec/arch/riscv/include/arch/options.h |  43 +++
->  kexec/arch/riscv/kexec-elf-riscv.c      | 255 ++++++++++++++
->  kexec/arch/riscv/kexec-riscv.c          | 365 +++++++++++++++++++
->  kexec/arch/riscv/kexec-riscv.h          |  32 ++
->  kexec/dt-ops.c                          | 442 +++++++++++++++++++++++-
->  kexec/dt-ops.h                          |   7 +
->  kexec/kexec-syscall.h                   |   4 +
->  purgatory/Makefile                      |   1 +
->  purgatory/arch/riscv/Makefile           |   7 +
->  14 files changed, 1336 insertions(+), 2 deletions(-)
->  create mode 100644 kexec/arch/riscv/Makefile
->  create mode 100644 kexec/arch/riscv/crashdump-riscv.c
->  create mode 100644 kexec/arch/riscv/include/arch/options.h
->  create mode 100644 kexec/arch/riscv/kexec-elf-riscv.c
->  create mode 100644 kexec/arch/riscv/kexec-riscv.c
->  create mode 100644 kexec/arch/riscv/kexec-riscv.h
->  create mode 100644 purgatory/arch/riscv/Makefile
->
-> diff --git a/configure.ac b/configure.ac
-> index 0d825ef..7cc55b0 100644
-> --- a/configure.ac
-> +++ b/configure.ac
-> @@ -58,6 +58,9 @@ case $target_cpu in
->         hppa*)
->                 ARCH="hppa"
->                 ;;
-> +       riscv32|riscv64 )
-> +               ARCH="riscv"
-> +               ;;
->         * )
->                 AC_MSG_ERROR([unsupported architecture $target_cpu])
->                 ;;
-> diff --git a/include/elf.h b/include/elf.h
-> index b7677a2..123f167 100644
-> --- a/include/elf.h
-> +++ b/include/elf.h
-> @@ -259,7 +259,8 @@ typedef struct
->  #define EM_ARC_A5      93              /* ARC Cores Tangent-A5 */
->  #define EM_XTENSA      94              /* Tensilica Xtensa Architecture */
->  #define EM_AARCH64     183             /* ARM AARCH64 */
-> -#define EM_NUM         184
-> +#define EM_RISCV       243             /* RISC-V */
-> +#define EM_NUM         244
->
->  /* If it is necessary to assign new unofficial EM_* values, please
->     pick large random numbers (0x8523, 0xa7f2, etc.) to minimize the
-> diff --git a/kexec/Makefile b/kexec/Makefile
-> index e69e309..ca17831 100644
-> --- a/kexec/Makefile
-> +++ b/kexec/Makefile
-> @@ -88,6 +88,7 @@ include $(srcdir)/kexec/arch/mips/Makefile
->  include $(srcdir)/kexec/arch/cris/Makefile
->  include $(srcdir)/kexec/arch/ppc/Makefile
->  include $(srcdir)/kexec/arch/ppc64/Makefile
-> +include $(srcdir)/kexec/arch/riscv/Makefile
->  include $(srcdir)/kexec/arch/s390/Makefile
->  include $(srcdir)/kexec/arch/sh/Makefile
->  include $(srcdir)/kexec/arch/x86_64/Makefile
-> diff --git a/kexec/arch/riscv/Makefile b/kexec/arch/riscv/Makefile
-> new file mode 100644
-> index 0000000..f26cc90
-> --- /dev/null
-> +++ b/kexec/arch/riscv/Makefile
-> @@ -0,0 +1,35 @@
-> +#
-> +# kexec riscv
-> +#
-> +riscv_KEXEC_SRCS =  kexec/arch/riscv/kexec-riscv.c
-> +riscv_KEXEC_SRCS += kexec/arch/riscv/kexec-elf-riscv.c
-> +riscv_KEXEC_SRCS += kexec/arch/riscv/crashdump-riscv.c
-> +
-> +riscv_MEM_REGIONS = kexec/mem_regions.c
-> +
-> +riscv_DT_OPS += kexec/dt-ops.c
-> +
-> +riscv_ARCH_REUSE_INITRD =
-> +
-> +riscv_CPPFLAGS += -I $(srcdir)/kexec/
-> +
-> +dist += kexec/arch/riscv/Makefile $(riscv_KEXEC_SRCS)                  \
-> +       kexec/arch/riscv/kexec-riscv.h                                  \
-> +       kexec/arch/riscv/include/arch/options.h
-> +
-> +ifdef HAVE_LIBFDT
-> +
-> +LIBS += -lfdt
-> +
-> +else
-> +
-> +include $(srcdir)/kexec/libfdt/Makefile.libfdt
-> +
-> +libfdt_SRCS += $(LIBFDT_SRCS:%=kexec/libfdt/%)
-> +
-> +riscv_CPPFLAGS += -I$(srcdir)/kexec/libfdt
-> +
-> +riscv_KEXEC_SRCS += $(libfdt_SRCS)
-> +
-> +endif
-> +
-> diff --git a/kexec/arch/riscv/crashdump-riscv.c b/kexec/arch/riscv/crashdump-riscv.c
-> new file mode 100644
-> index 0000000..3ed4fe3
-> --- /dev/null
-> +++ b/kexec/arch/riscv/crashdump-riscv.c
-> @@ -0,0 +1,140 @@
-> +#include <errno.h>
-> +#include <linux/elf.h>
-> +#include <unistd.h>
-> +
-> +#include "kexec.h"
-> +#include "crashdump.h"
-> +#include "kexec-elf.h"
-> +#include "mem_regions.h"
-> +
-> +static struct crash_elf_info elf_info = {
-> +#if __riscv_xlen == 64
-> +       .class          = ELFCLASS64,
-> +#else
-> +       .class          = ELFCLASS32,
-> +#endif
-> +       .data           = ELFDATA2LSB,
-> +       .machine        = EM_RISCV,
-> +};
-> +
-> +static struct memory_ranges crash_mem_ranges = {0};
-> +struct memory_range elfcorehdr_mem = {0};
-> +
-> +static unsigned long long get_page_offset(struct kexec_info *info)
-> +{
-> +       unsigned long long vaddr_off = 0;
-> +       unsigned long long page_size = sysconf(_SC_PAGESIZE);
-> +       unsigned long long init_start = get_kernel_sym("_sinittext");
-> +
-> +       /*
-> +        * Begining of init section is aligned to page size
-> +        */
-> +       vaddr_off = init_start - page_size;
-> +
-> +       return vaddr_off;
-> +}
-> +
-> +int load_elfcorehdr(struct kexec_info *info)
-> +{
-> +       struct memory_range crashkern_range = {0};
-> +       struct memory_range *ranges = NULL;
-> +       unsigned long start = 0;
-> +       unsigned long end = 0;
-> +       unsigned long buf_size = 0;
-> +       unsigned long elfcorehdr_addr = 0;
-> +       void* buf = NULL;
-> +       int i = 0;
-> +       int ret = 0;
-> +
-> +       ret = parse_iomem_single("Kernel code\n", &start, NULL);
-> +       if (ret) {
-> +               fprintf(stderr, "Cannot determine kernel physical base addr\n");
-> +               return -EINVAL;
-> +       }
-> +       elf_info.kern_paddr_start = start;
-> +
-> +       ret = parse_iomem_single("Kernel bss\n", NULL, &end);
-> +       if (ret) {
-> +               fprintf(stderr, "Cannot determine kernel physical bss addr\n");
-> +               return -EINVAL;
-> +       }
-> +       elf_info.kern_paddr_start = start;
-> +       elf_info.kern_size = end - start;
-> +
-> +       elf_info.kern_vaddr_start = get_kernel_sym("_text");
-> +       if (!elf_info.kern_vaddr_start) {
-> +               elf_info.kern_vaddr_start = UINT64_MAX;
-> +       }
-> +
-> +       elf_info.page_offset = get_page_offset(info);
-> +       dbgprintf("page_offset:   %016llx\n", elf_info.page_offset);
-> +
-> +       ret = parse_iomem_single("Crash kernel\n", &start, &end);
-> +       if (ret) {
-> +               fprintf(stderr, "Cannot determine kernel physical bss addr\n");
-> +               return -EINVAL;
-> +       }
-> +       crashkern_range.start = start;
-> +       crashkern_range.end = end;
-> +       crashkern_range.type = RANGE_RESERVED;
-> +
-> +       ranges = info->memory_range;
-> +       for (i = 0; i < info->memory_ranges; i++) {
-> +               ret = mem_regions_alloc_and_add(&crash_mem_ranges,
-> +                                               ranges[i].start,
-> +                                               ranges[i].end - ranges[i].start + 1,
-> +                                               ranges[i].type);
-> +               if (ret ) {
-> +                       fprintf(stderr, "Could not create crash_mem_ranges\n");
-> +                       return ret;
-> +               }
-> +       }
-> +
-> +       ret = mem_regions_alloc_and_exclude(&crash_mem_ranges,
-> +                                           &crashkern_range);
-> +       if (ret) {
-> +               fprintf(stderr, "Could not exclude crashkern_range\n");
-> +               return ret;
-> +       }
-> +
-> +#if __riscv_xlen == 64
-> +       crash_create_elf64_headers(info, &elf_info, crash_mem_ranges.ranges,
-> +                                  crash_mem_ranges.size, &buf, &buf_size,
-> +                                  ELF_CORE_HEADER_ALIGN);
-> +
-> +#else
-> +       crash_create_elf32_headers(info, &elf_info, crash_mem_ranges.ranges,
-> +                                  crash_mem_ranges.size, &buf, &buf_size,
-> +                                  ELF_CORE_HEADER_ALIGN);
-> +#endif
-> +
-> +
-> +       elfcorehdr_addr = add_buffer_phys_virt(info, buf, buf_size,
-> +                                              buf_size, 0,
-> +                                              crashkern_range.start,
-> +                                              crashkern_range.end,
-> +                                              -1, 0);
-> +
-> +       elfcorehdr_mem.start = elfcorehdr_addr;
-> +       elfcorehdr_mem.end = elfcorehdr_addr + buf_size - 1;
-> +
-> +       dbgprintf("%s: elfcorehdr 0x%llx-0x%llx\n", __func__,
-> +                 elfcorehdr_mem.start, elfcorehdr_mem.end);
-> +
-> +       return 0;
-> +}
-> +
-> +int is_crashkernel_mem_reserved(void)
-> +{
-> +       uint64_t start = 0;
-> +       uint64_t end = 0;
-> +
-> +       return parse_iomem_single("Crash kernel\n", &start, &end) == 0 ?
-> +              (start != end) : 0;
-> +}
-> +
-> +int get_crash_kernel_load_range(uint64_t *start, uint64_t *end)
-> +{
-> +       return parse_iomem_single("Crash kernel\n", start, end);
-> +}
-> +
-> diff --git a/kexec/arch/riscv/include/arch/options.h b/kexec/arch/riscv/include/arch/options.h
-> new file mode 100644
-> index 0000000..7c24184
-> --- /dev/null
-> +++ b/kexec/arch/riscv/include/arch/options.h
-> @@ -0,0 +1,43 @@
-> +#ifndef KEXEC_ARCH_RISCV_OPTIONS_H
-> +#define KEXEC_ARCH_RISCV_OPTIONS_H
-> +
-> +#define OPT_APPEND             ((OPT_MAX)+0)
-> +#define OPT_DTB                        ((OPT_MAX)+1)
-> +#define OPT_INITRD             ((OPT_MAX)+2)
-> +#define OPT_CMDLINE            ((OPT_MAX)+3)
-> +#define OPT_REUSE_CMDLINE      ((OPT_MAX)+4)
-> +#define OPT_ARCH_MAX           ((OPT_MAX)+5)
-> +
-> +/* Options relevant to the architecture (excluding loader-specific ones),
-> + * in this case none:
-> + */
-> +#define KEXEC_ARCH_OPTIONS \
-> +       KEXEC_OPTIONS \
-> +       { "append",             1, 0, OPT_APPEND}, \
-> +       { "dtb",                1, 0, OPT_DTB }, \
-> +       { "initrd",             1, 0, OPT_INITRD }, \
-> +       { "command-line",       1, 0, OPT_CMDLINE}, \
-> +       { "reuse-cmdline",      0, NULL, OPT_REUSE_CMDLINE }, \
-> +
-> +
-> +#define KEXEC_ARCH_OPT_STR KEXEC_OPT_STR ""
-> +
-> +/* The following two #defines list ALL of the options added by all of the
-> + * architecture's loaders.
-> + * o   main() uses this complete list to scan for its options, ignoring
-> + *     arch-specific/loader-specific ones.
-> + * o   Then, arch_process_options() uses this complete list to scan for its
-> + *     options, ignoring general/loader-specific ones.
-> + * o   Then, the file_type[n].load re-scans for options, using
-> + *     KEXEC_ARCH_OPTIONS plus its loader-specific options subset.
-> + *     Any unrecognised options cause an error here.
-> + *
-> + * This is done so that main()'s/arch_process_options()'s getopt_long() calls
-> + * don't choose a kernel filename from random arguments to options they don't
-> + * recognise -- as they now recognise (if not act upon) all possible options.
-> + */
-> +#define KEXEC_ALL_OPTIONS KEXEC_ARCH_OPTIONS
-> +
-> +#define KEXEC_ALL_OPT_STR KEXEC_ARCH_OPT_STR
-> +
-> +#endif /* KEXEC_ARCH_RISCV_OPTIONS_H */
-> diff --git a/kexec/arch/riscv/kexec-elf-riscv.c b/kexec/arch/riscv/kexec-elf-riscv.c
-> new file mode 100644
-> index 0000000..f3c011c
-> --- /dev/null
-> +++ b/kexec/arch/riscv/kexec-elf-riscv.c
-> @@ -0,0 +1,255 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2019 FORTH-ICS/CARV
-> + *              Nick Kossifidis <mick@ics.forth.gr>
-> + */
-> +
-> +#include "kexec.h"
-> +#include "dt-ops.h"            /* For dtb_set/clear_initrd() */
-> +#include <elf.h>               /* For ELF header handling */
-> +#include <errno.h>             /* For EFBIG/EINVAL */
-> +#include <unistd.h>            /* For getpagesize() */
-> +#include "kexec-syscall.h"     /* For KEXEC_ON_CRASH */
-> +#include "kexec-riscv.h"
-> +
-> +
-> +/*********\
-> +* HELPERS *
-> +\*********/
-> +
-> +/*
-> + * Go through the available physical memory regions and
-> + * find one that can hold an image of the specified size.
-> + * Note: This is called after get_memory_ranges so
-> + * info->memory_range[] should be populated. Also note that
-> + * memory ranges are sorted, so we'll return the first region
-> + * that's big enough for holding the image.
-> + */
-> +static int elf_riscv_find_pbase(struct kexec_info *info, off_t *addr,
-> +                               off_t size)
-> +{
-> +       int i = 0;
-> +       off_t start = 0;
-> +       off_t end = 0;
-> +       int ret = 0;
-> +
-> +       /*
-> +        * If this image is for a crash kernel, use the region
-> +        * the primary kernel has already reserved for us.
-> +        */
-> +       if (info->kexec_flags & KEXEC_ON_CRASH) {
-> +               ret = get_crash_kernel_load_range((uint64_t *) &start,
-> +                                                 (uint64_t *) &end);
-> +               if (!ret) {
-> +                       /*
-> +                        * Kernel should be aligned to the nearest
-> +                        * hugepage (2MB for RV64, 4MB for RV32).
-> +                        */
-> +#if __riscv_xlen == 64
-> +                       start = _ALIGN_UP(start, 0x200000);
-> +#else
-> +                       start = _ALIGN_UP(start, 0x400000);
-> +#endif
-> +                       if (end > start && ((end - start) >= size)) {
-> +                               *addr = start;
-> +                               return 0;
-> +                       }
-> +
-> +                       return -EFBIG;
-> +               } else
-> +                       return ENOCRASHKERNEL;
-> +       }
-> +
-> +       for (i = 0; i < info->memory_ranges; i++) {
-> +               if (info->memory_range[i].type != RANGE_RAM)
-> +                       continue;
-> +
-> +               start = info->memory_range[i].start;
-> +               end = info->memory_range[i].end;
-> +
-> +#if __riscv_xlen == 64
-> +               start = _ALIGN_UP(start, 0x200000);
-> +#else
-> +               start = _ALIGN_UP(start, 0x400000);
-> +#endif
-> +
-> +               if (end > start && ((end - start) >= size)) {
-> +                       *addr = start;
-> +                       return 0;
-> +               }
-> +       }
-> +
-> +       return -EFBIG;
-> +}
-> +
-> +/**************\
-> +* ENTRY POINTS *
-> +\**************/
-> +
-> +int elf_riscv_probe(const char *buf, off_t len)
-> +{
-> +       struct mem_ehdr ehdr = {0};
-> +       int ret = 0;
-> +
-> +       ret = build_elf_exec_info(buf, len, &ehdr, 0);
-> +       if (ret < 0)
-> +               goto cleanup;
-> +
-> +       if (ehdr.e_machine != EM_RISCV) {
-> +               fprintf(stderr, "Not for this architecture.\n");
-> +               ret = -EINVAL;
-> +               goto cleanup;
-> +       }
-> +
-> +       ret = 0;
-> +
-> + cleanup:
-> +       free_elf_info(&ehdr);
-> +       return ret;
-> +}
-> +
-> +void elf_riscv_usage(void)
-> +{
-> +}
-> +
-> +int elf_riscv_load(int argc, char **argv, const char *buf, off_t len,
-> +                  struct kexec_info *info)
-> +{
-> +       struct mem_ehdr ehdr = {0};
-> +       struct mem_phdr *phdr = NULL;
-> +       off_t new_base_addr = 0;
-> +       off_t kernel_size = 0;
-> +       off_t page_size = getpagesize();
-> +       off_t max_addr = 0;
-> +       off_t old_base_addr = 0;
-> +       off_t old_start_addr = 0;
-> +       int i = 0;
-> +       int ret = 0;
-> +
-> +       if (info->file_mode) {
-> +               fprintf(stderr, "kexec_file not supported on this "
-> +                               "architecture\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       /* Parse the ELF file */
-> +       ret = build_elf_exec_info(buf, len, &ehdr, 0);
-> +       if (ret < 0) {
-> +               fprintf(stderr, "ELF exec parse failed\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       max_addr = elf_max_addr(&ehdr);
-> +       old_base_addr = max_addr;
-> +       old_start_addr = max_addr;
-> +
-> +       /*
-> +        * Get the memory footprint, base physical
-> +        * and start address of the ELF image
-> +        */
-> +       for (i = 0; i < ehdr.e_phnum; i++) {
-> +               phdr = &ehdr.e_phdr[i];
-> +               if (phdr->p_type != PT_LOAD)
-> +                       continue;
-> +
-> +               /*
-> +                * Note: According to ELF spec the loadable regions
-> +                * are sorted on p_vaddr, not p_paddr.
-> +                */
-> +               if (old_base_addr > phdr->p_paddr)
-> +                       old_base_addr = phdr->p_paddr;
-> +
-> +               if (phdr->p_vaddr == ehdr.e_entry ||
-> +                   phdr->p_paddr == ehdr.e_entry)
-> +                       old_start_addr = phdr->p_paddr;
-> +
-> +               kernel_size += _ALIGN_UP(phdr->p_memsz, page_size);
-> +       }
-> +
-> +       if (old_base_addr == max_addr || kernel_size == 0) {
-> +               fprintf(stderr, "No loadable segments present on the "
-> +                               "provided ELF image\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       if (old_start_addr == max_addr) {
-> +               fprintf(stderr, "Could not find the entry point address of "
-> +                               "provided ELF image\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       dbgprintf("Got ELF with total memsz %luKB\n"
-> +                 "Base paddr: 0x%lX, start_addr: 0x%lX\n",
-> +                 kernel_size / 1024, old_base_addr, old_start_addr);
-> +
-> +       /* Get a continuous physical region that can hold the kernel */
-> +       ret = elf_riscv_find_pbase(info, &new_base_addr, kernel_size);
-> +       if (ret < 0) {
-> +               fprintf(stderr, "Could not find a memory region for the "
-> +                               "provided ELF image\n");
-> +               return ret;
-> +       }
-> +
-> +       dbgprintf("New base paddr for the ELF: 0x%lX\n", new_base_addr);
-> +
-> +       /* Re-set the base physical address of the ELF */
-> +       for (i = 0; i < ehdr.e_phnum; i++) {
-> +               phdr = &ehdr.e_phdr[i];
-> +               if (phdr->p_type != PT_LOAD)
-> +                       continue;
-> +
-> +               phdr->p_paddr -= old_base_addr;
-> +               phdr->p_paddr += new_base_addr;
-> +       }
-> +
-> +       /* Re-set the entry point address */
-> +       ehdr.e_entry = (old_start_addr - old_base_addr) + new_base_addr;
-> +       info->entry = (void *) ehdr.e_entry;
-> +       dbgprintf("New entry point for the ELF: 0x%llX\n", ehdr.e_entry);
-> +
-> +
-> +       /* Load the ELF executable */
-> +       ret = elf_exec_load(&ehdr, info);
-> +       if (ret < 0) {
-> +               fprintf(stderr, "ELF exec load failed\n");
-> +               return ret;
-> +       }
-> +
-> +       ret = load_extra_segments(info, new_base_addr,
-> +                                 kernel_size, max_addr);
-> +       return ret;
-> +}
-> +
-> +
-> +/*******\
-> +* STUBS *
-> +\*******/
-> +
-> +int machine_verify_elf_rel(struct mem_ehdr *ehdr)
-> +{
-> +       if (ehdr->ei_data != ELFDATA2LSB)
-> +               return 0;
-> +#if __riscv_xlen == 64
-> +       if (ehdr->ei_class != ELFCLASS64)
-> +#else
-> +       if (ehdr->ei_class != ELFCLASS32)
-> +#endif
-> +               return 0;
-> +       if (ehdr->e_machine != EM_RISCV)
-> +               return 0;
-> +       return 1;
-> +}
-> +
-> +void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr),
-> +                          struct mem_sym *UNUSED(sym),
-> +                          unsigned long r_type,
-> +                          void *UNUSED(location),
-> +                          unsigned long UNUSED(address),
-> +                          unsigned long UNUSED(value))
-> +{
-> +       switch (r_type) {
-> +       default:
-> +               die("Unknown rela relocation: %lu\n", r_type);
-> +               break;
-> +       }
-> +}
-> diff --git a/kexec/arch/riscv/kexec-riscv.c b/kexec/arch/riscv/kexec-riscv.c
-> new file mode 100644
-> index 0000000..fe5dd2d
-> --- /dev/null
-> +++ b/kexec/arch/riscv/kexec-riscv.c
-> @@ -0,0 +1,365 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2019 FORTH-ICS/CARV
-> + *              Nick Kossifidis <mick@ics.forth.gr>
-> + */
-> +
-> +#include "kexec-syscall.h"     /* For KEXEC_ARCH_RISCV */
-> +#include "kexec.h"             /* For OPT_MAX and concat_cmdline() */
-> +#include "mem_regions.h"       /* For mem_regions_sort() */
-> +#include "dt-ops.h"            /* For dtb_set_bootargs() */
-> +#include <arch/options.h>      /* For KEXEC_ARCH_OPTIONS */
-> +#include <getopt.h>            /* For struct option */
-> +#include <sys/stat.h>          /* For stat() and struct stat */
-> +#include <stdlib.h>            /* For free() */
-> +#include <errno.h>             /* For EINVAL */
-> +#include <libfdt.h>            /* For DeviceTree handling */
-> +#include "kexec-riscv.h"
-> +
-> +const struct arch_map_entry arches[] = {
-> +       { "riscv32", KEXEC_ARCH_RISCV },
-> +       { "riscv64", KEXEC_ARCH_RISCV },
-> +       { NULL, 0 },
-> +};
-> +
-> +
-> +struct file_type file_type[] = {
-> +       {"elf-riscv", elf_riscv_probe, elf_riscv_load, elf_riscv_usage},
-> +};
-> +int file_types = sizeof(file_type) / sizeof(file_type[0]);
-> +
-> +static const char riscv_opts_usage[] =
-> +"      --append=STRING         Append STRING to the kernel command line.\n"
-> +"      --dtb=FILE              Use FILE as the device tree blob.\n"
-> +"      --initrd=FILE           Use FILE as the kernel initial ramdisk.\n"
-> +"      --cmdline=STRING        Use STRING as the kernel's command line.\n"
-> +"      --reuse-cmdline         Use kernel command line from running system.\n";
-> +
-> +static struct riscv_opts arch_options = {0};
-> +static struct fdt_image provided_fdt = {0};
-> +static struct memory_ranges sysmem_ranges = {0};
-> +
-> +/****************\
-> +* COMMON HELPERS *
-> +\****************/
-> +
-> +int load_extra_segments(struct kexec_info *info, uint64_t kernel_base,
-> +                       uint64_t kernel_size, uint64_t max_addr)
-> +{
-> +       struct fdt_image *fdt = arch_options.fdt;
-> +       char *initrd_buf = NULL;
-> +       off_t initrd_size = 0;
-> +       uint64_t initrd_base = 0;
-> +       uint64_t start = 0;
-> +       uint64_t end = 0;
-> +       uint64_t min_usable = kernel_base + kernel_size;
-> +       uint64_t max_usable = max_addr;
-> +       int ret = 0;
-> +
-> +       /* Prepare the device tree */
-> +       if (info->kexec_flags & KEXEC_ON_CRASH) {
-> +               ret = load_elfcorehdr(info);
-> +               if (ret) {
-> +                       fprintf(stderr, "Couldn't create elfcorehdr\n");
-> +                       return ret;
-> +               }
-> +
-> +               ret = dtb_add_range_property(&fdt->buf, &fdt->size,
-> +                                            elfcorehdr_mem.start, elfcorehdr_mem.end,
-> +                                            "chosen", "linux,elfcorehdr");
-> +               if (ret) {
-> +                       fprintf(stderr, "Couldn't add elfcorehdr to fdt\n");
-> +                       return ret;
-> +               }
-> +
-> +               ret = get_crash_kernel_load_range(&start, &end);
-> +               if (ret) {
-> +                       fprintf(stderr, "Couldn't get crashkenel region\n");
-> +                       return ret;
-> +               }
-> +
-> +               ret = dtb_add_range_property(&fdt->buf, &fdt->size, start, end,
-> +                                            "memory", "linux,usable-memory");
-> +               if (ret) {
-> +                       fprintf(stderr, "Couldn't add usable-memory to fdt\n");
-> +                       return ret;
-> +               }
-> +
-> +               max_usable = end;
-> +       } else {
-> +               /*
-> +                * Make sure we remove elfcorehdr and usable-memory
-> +                * when switching from crash kernel to a normal one.
-> +                */
-> +               dtb_delete_property(fdt->buf, "chosen", "linux,elfcorehdr");
-> +               dtb_delete_property(fdt->buf, "memory", "linux,usable-memory");
-> +       }
-> +
-> +       /* Do we need to include an initrd image ? */
-> +       if (!arch_options.initrd_path && !arch_options.initrd_end)
-> +               dtb_clear_initrd(&fdt->buf, &fdt->size);
-> +       else if (arch_options.initrd_path) {
-> +               if (arch_options.initrd_end)
-> +                       fprintf(stderr, "Warning: An initrd image was provided"
-> +                                       ", will ignore reuseinitrd\n");
-> +
-> +               initrd_buf = slurp_file(arch_options.initrd_path,
-> +                                       &initrd_size);
-> +               if (!initrd_buf) {
-> +                       fprintf(stderr, "Couldn't read provided initrd\n");
-> +                       return -EINVAL;
-> +               }
-> +
-> +               initrd_base = add_buffer_phys_virt(info, initrd_buf,
-> +                                                  initrd_size,
-> +                                                  initrd_size, 0,
-> +                                                  min_usable,
-> +                                                  max_usable, -1, 0);
-> +
-> +               dtb_set_initrd(&fdt->buf, &fdt->size, initrd_base,
-> +                              initrd_base + initrd_size);
-> +
-> +               dbgprintf("Base addr for initrd image: 0x%lX\n", initrd_base);
-> +               min_usable = initrd_base;
-> +               max_usable = initrd_base;
-> +       }
-> +
-> +       /* Add device tree */
-> +       add_buffer_phys_virt(info, fdt->buf, fdt->size, fdt->size, 0,
-> +                            min_usable, max_usable, -1, 0);
-> +
-> +       return 0;
-> +}
-> +
-> +
-> +/**************\
-> +* ENTRY POINTS *
-> +\**************/
-> +
-> +void arch_usage(void)
-> +{
-> +       printf(riscv_opts_usage);
-> +}
-> +
-> +int arch_process_options(int argc, char **argv)
-> +{
-> +       static const struct option options[] = {
-> +               KEXEC_ARCH_OPTIONS
-> +               { 0 },
-> +       };
-> +       static const char short_options[] = KEXEC_ARCH_OPT_STR;
-> +       struct stat st = {0};
-> +       char *append = NULL;
-> +       char *cmdline = NULL;
-> +       void *tmp = NULL;
-> +       off_t tmp_size = 0;
-> +       int opt = 0;
-> +       int ret = 0;
-> +
-> +       while ((opt = getopt_long(argc, argv, short_options,
-> +                                 options, 0)) != -1) {
-> +               switch (opt) {
-> +               case OPT_APPEND:
-> +                       append = optarg;
-> +                       break;
-> +               case OPT_CMDLINE:
-> +                       if (cmdline)
-> +                               fprintf(stderr,
-> +                                       "Warning: Kernel's cmdline "
-> +                                       "set twice !\n");
-> +                       cmdline = optarg;
-> +                       break;
-> +               case OPT_REUSE_CMDLINE:
-> +                       if (cmdline)
-> +                               fprintf(stderr,
-> +                                       "Warning: Kernel's cmdline "
-> +                                       "set twice !\n");
-> +                       cmdline = get_command_line();
-> +                       break;
-> +               case OPT_DTB:
-> +                       ret = stat(optarg, &st);
-> +                       if (ret) {
-> +                               fprintf(stderr,
-> +                                       "Could not find the provided dtb !\n");
-> +                               return -EINVAL;
-> +                       }
-> +                       arch_options.fdt_path = optarg;
-> +                       break;
-> +               case OPT_INITRD:
-> +                       ret = stat(optarg, &st);
-> +                       if (ret) {
-> +                               fprintf(stderr,
-> +                                       "Could not find the provided "
-> +                                       "initrd image !\n");
-> +                               return -EINVAL;
-> +                       }
-> +                       arch_options.initrd_path = optarg;
-> +                       break;
-> +               default:
-> +                       break;
-> +               }
-> +       }
-> +
-> +       /* Handle Kernel's command line */
-> +       if (append && !cmdline)
-> +               fprintf(stderr, "Warning: No cmdline provided, "
-> +                               "using append string as cmdline\n");
-> +       if (!append && !cmdline)
-> +               fprintf(stderr, "Warning: No cmdline or append string "
-> +                               "provided\n");
-> +
-> +       if (append || cmdline)
-> +               /*
-> +                * Note that this also handles the case where "cmdline"
-> +                * or "append" is NULL.
-> +                */
-> +               arch_options.cmdline = concat_cmdline(cmdline, append);
-> +
-> +       /* Handle FDT image */
-> +       if (!arch_options.fdt_path) {
-> +               ret = stat("/sys/firmware/fdt", &st);
-> +               if (ret) {
-> +                       fprintf(stderr, "No dtb provided and "
-> +                                       "/sys/firmware/fdt is not present\n");
-> +                       return -EINVAL;
-> +               }
-> +               fprintf(stderr, "Warning: No dtb provided, "
-> +                               "using /sys/firmware/fdt\n");
-> +               arch_options.fdt_path = "/sys/firmware/fdt";
-> +       }
-> +
-> +       tmp = slurp_file(arch_options.fdt_path, &tmp_size);
-> +       if (!tmp) {
-> +               fprintf(stderr, "Couldn't read provided fdt\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       ret = fdt_check_header(tmp);
-> +       if (ret) {
-> +               fprintf(stderr, "Got an ivalid fdt image !\n");
-> +               free(tmp);
-> +               return -EINVAL;
-> +       }
-> +       provided_fdt.buf = tmp;
-> +       provided_fdt.size = tmp_size;
-> +
-> +       if (arch_options.cmdline) {
-> +               ret = dtb_set_bootargs(&provided_fdt.buf, &provided_fdt.size,
-> +                                      arch_options.cmdline);
-> +               if (ret < 0) {
-> +                       fprintf(stderr, "Could not set bootargs on "
-> +                                       "the fdt image\n");
-> +                       return ret;
-> +               }
-> +       }
-> +
-> +       arch_options.fdt = &provided_fdt;
-> +
-> +       return 0;
-> +}
-> +
-> +/*
-> + * This one is called after arch_process_options so we already
-> + * have an fdt image in place.
-> + */
-> +void arch_reuse_initrd(void)
-> +{
-> +       const uint32_t *prop32 = NULL;
-> +       uint32_t addr_cells = 0;
-> +       const void *prop = 0;
-> +       int prop_size = 0;
-> +       uint64_t initrd_start = 0;
-> +       uint64_t initrd_end = 0;
-> +       int chosen_offset = 0;
-> +       struct fdt_image *fdt = &provided_fdt;
-> +
-> +       chosen_offset = fdt_subnode_offset(fdt->buf, 0, "chosen");
-> +       if (chosen_offset < 0) {
-> +               fprintf(stderr, "No /chosen node found on fdt image "
-> +                               "unable to reuse initrd\n");
-> +               return;
-> +       }
-> +
-> +       prop32 = fdt_getprop(fdt->buf, 0, "#address-cells", NULL);
-> +       if (!prop32) {
-> +               fprintf(stderr, "No #address-cells property on root node\n");
-> +               return;
-> +       }
-> +       addr_cells = be32_to_cpu(*prop32);
-> +
-> +       prop = fdt_getprop(fdt->buf, chosen_offset,
-> +                          "linux,initrd-start", &prop_size);
-> +       if (!prop) {
-> +               fprintf(stderr, "Could not get linux,initrd-start\n");
-> +               return;
-> +       }
-> +       dtb_extract_int_property(&initrd_start, prop, addr_cells);
-> +
-> +       prop = fdt_getprop(fdt->buf, chosen_offset,
-> +                          "linux,initrd-end", &prop_size);
-> +       if (!prop) {
-> +               fprintf(stderr, "Could not get linux,initrd-end\n");
-> +               return;
-> +       }
-> +       dtb_extract_int_property(&initrd_end, prop, addr_cells);
-> +
-> +       arch_options.initrd_start = initrd_start;
-> +       arch_options.initrd_end = initrd_end;
-> +       dbgprintf("initrd_start: 0x%lX, initrd_end: 0x%lX\n",
-> +                 initrd_start, initrd_end);
-> +
-> +}
-> +
-> +int get_memory_ranges(struct memory_range **range, int *num_ranges,
-> +                     unsigned long kexec_flags)
-> +{
-> +       const struct fdt_image *fdt = &provided_fdt;
-> +       struct memory_ranges *extra_ranges = NULL;
-> +       int i = 0;
-> +       int ret = 0;
-> +
-> +       if (arch_options.initrd_start && arch_options.initrd_end) {
-> +               int initrd_size = arch_options.initrd_end - arch_options.initrd_start;
-> +               dbgprintf("Marking current intird image as reserved\n");
-> +               ret = mem_regions_alloc_and_add(extra_ranges,
-> +                                               arch_options.initrd_start,
-> +                                               initrd_size,
-> +                                               RANGE_RESERVED);
-> +               if (ret)
-> +                       return ret;
-> +       }
-> +
-> +       ret = dtb_get_memory_ranges(fdt->buf, &sysmem_ranges, extra_ranges);
-> +       if (ret) {
-> +               fprintf(stderr, "Could not get memory ranges from device tree (%i) !\n", ret);
-> +               return ret;
-> +       }
-> +
-> +       *range = sysmem_ranges.ranges;
-> +       *num_ranges = sysmem_ranges.size;
-> +
-> +       dbgprintf("Memory regions:\n");
-> +       for (i = 0; i < sysmem_ranges.size; i++) {
-> +               dbgprintf("\t0x%llx - 0x%llx : %s (%i)\n",
-> +                         sysmem_ranges.ranges[i].start,
-> +                         sysmem_ranges.ranges[i].end,
-> +                         sysmem_ranges.ranges[i].type == RANGE_RESERVED ?
-> +                         "RANGE_RESERVED" : "RANGE_RAM",
-> +                         sysmem_ranges.ranges[i].type);
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +/*******\
-> +* STUBS *
-> +\*******/
-> +
-> +int arch_compat_trampoline(struct kexec_info *UNUSED(info))
-> +{
-> +       return 0;
-> +}
-> +
-> +void arch_update_purgatory(struct kexec_info *UNUSED(info))
-> +{
-> +}
-> diff --git a/kexec/arch/riscv/kexec-riscv.h b/kexec/arch/riscv/kexec-riscv.h
-> new file mode 100644
-> index 0000000..c4323a6
-> --- /dev/null
-> +++ b/kexec/arch/riscv/kexec-riscv.h
-> @@ -0,0 +1,32 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2019 FORTH-ICS/CARV
-> + *              Nick Kossifidis <mick@ics.forth.gr>
-> + */
-> +
-> +struct fdt_image {
-> +       char    *buf;
-> +       off_t   size;
-> +};
-> +
-> +struct riscv_opts {
-> +       char *cmdline;
-> +       char *fdt_path;
-> +       char *initrd_path;
-> +       uint64_t initrd_start;
-> +       uint64_t initrd_end;
-> +       struct fdt_image *fdt;
-> +};
-> +
-> +/* crashdump-riscv.c */
-> +extern struct memory_range elfcorehdr_mem;
-> +int load_elfcorehdr(struct kexec_info *info);
-> +
-> +/* kexec-riscv.c */
-> +int load_extra_segments(struct kexec_info *info, uint64_t kernel_base,
-> +                       uint64_t kernel_size, uint64_t max_addr);
-> +
-> +int elf_riscv_probe(const char *buf, off_t len);
-> +void elf_riscv_usage(void);
-> +int elf_riscv_load(int argc, char **argv, const char *buf, off_t len,
-> +                  struct kexec_info *info);
-> diff --git a/kexec/dt-ops.c b/kexec/dt-ops.c
-> index 0a96b75..3e285ab 100644
-> --- a/kexec/dt-ops.c
-> +++ b/kexec/dt-ops.c
-> @@ -4,9 +4,11 @@
->  #include <libfdt.h>
->  #include <stdio.h>
->  #include <stdlib.h>
-> +#include <stdbool.h>
->
->  #include "kexec.h"
->  #include "dt-ops.h"
-> +#include "mem_regions.h"
->
->  static const char n_chosen[] = "chosen";
->
-> @@ -95,7 +97,7 @@ int dtb_set_property(char **dtb, off_t *dtb_size, const char *node,
->
->         strcpy(new_node, "/");
->         strcat(new_node, node);
-> -
-> +
->         nodeoffset = fdt_path_offset(new_dtb, new_node);
->
->         if (nodeoffset == -FDT_ERR_NOTFOUND) {
-> @@ -174,3 +176,441 @@ int dtb_delete_property(char *dtb, const char *node, const char *prop)
->         free(new_node);
->         return result;
->  }
-> +
-> +static int dtb_get_num_cells(char *dtb, int nodeoffset, uint32_t *addr_cells,
-> +                            uint32_t *size_cells, bool recursive)
-> +{
-> +       const uint32_t *prop32 = NULL;
-> +       int curr_offset = nodeoffset;
-> +       int prop_len = 0;
-> +       *addr_cells = 0;
-> +       *size_cells = 0;
-> +
-> +       do {
-> +               prop32 = fdt_getprop(dtb, curr_offset, "#address-cells", &prop_len);
-> +               curr_offset = fdt_parent_offset(dtb, curr_offset);
-> +       } while (!prop32 && prop_len == -FDT_ERR_NOTFOUND && recursive);
-> +
-> +       if (!prop32) {
-> +               dbgprintf("Could not get #address-cells property for %s (%s)\n",
-> +                         fdt_get_name(dtb, nodeoffset, NULL), fdt_strerror(nodeoffset));
-> +               return -EINVAL;
-> +       }
-> +       *addr_cells = fdt32_to_cpu(*prop32);
-> +
-> +       curr_offset = nodeoffset;
-> +       do {
-> +               prop32 = fdt_getprop(dtb, curr_offset, "#size-cells", &prop_len);
-> +               curr_offset = fdt_parent_offset(dtb, curr_offset);
-> +       } while (!prop32 && prop_len == -FDT_ERR_NOTFOUND && recursive);
-> +
-> +       if (!prop32) {
-> +               dbgprintf("Could not get #size-cells property for %s (%s)\n",
-> +                         fdt_get_name(dtb, nodeoffset, NULL), fdt_strerror(nodeoffset));
-> +               return -EINVAL;
-> +       }
-> +       *size_cells = fdt32_to_cpu(*prop32);
-> +
-> +       dbgprintf("%s: #address-cells:%d #size-cells:%d\n",
-> +                fdt_get_name(dtb, nodeoffset, NULL), *addr_cells, *size_cells);
-> +
-> +       return 0;
-> +}
-> +
-> +void dtb_extract_int_property(uint64_t *val, const void *buf, uint32_t cells)
-> +{
-> +       const uint32_t *prop32 = NULL;
-> +       const uint64_t *prop64 = NULL;
-> +
-> +       if (cells == 1) {
-> +               prop32 = (const uint32_t *) buf;
-> +               *val = (uint64_t) be32_to_cpu(*prop32);
-> +       } else {
-> +               /* Skip any leading cells */
-> +               prop64 = (const uint64_t *) (uint32_t *)buf + cells - 2;
-> +               *val = (uint64_t) be64_to_cpu(*prop64);
-> +       }
-> +}
-> +
-> +void dtb_fill_int_property(void *buf, uint64_t val, uint32_t cells)
-> +{
-> +       uint32_t prop32 = 0;
-> +       uint64_t prop64 = 0;
-> +
-> +       if (cells == 1) {
-> +               prop32 = cpu_to_fdt32((uint32_t) val);
-> +               memcpy(buf, &prop32, sizeof(uint32_t));
-> +       } else {
-> +               prop64 = cpu_to_fdt64(val);
-> +               /* Skip any leading cells */
-> +               memcpy((uint64_t *)(uint32_t *)buf + cells - 2,
-> +                      &prop64, sizeof(uint64_t));
-> +       }
-> +}
-> +
-> +int dtb_add_range_property(char **dtb, off_t *dtb_size, uint64_t start, uint64_t end,
-> +                          const char *parent, const char *name)
-> +{
-> +       uint32_t addr_cells = 0;
-> +       uint32_t size_cells = 0;
-> +       char *nodepath = NULL;
-> +       void *prop = NULL;
-> +       int nodeoffset = 0;
-> +       int prop_size = 0;
-> +       int ret = 0;
-> +
-> +       nodepath = malloc(strlen("/") + strlen(parent) + 1);
-> +       if (!nodepath) {
-> +               dbgprintf("%s: malloc failed\n", __func__);
-> +               return -ENOMEM;
-> +       }
-> +
-> +       strcpy(nodepath, "/");
-> +       strcat(nodepath, parent);
-> +
-> +       nodeoffset = fdt_path_offset(*dtb, nodepath);
-> +       if (nodeoffset < 0) {
-> +               dbgprintf("%s: fdt_path_offset(%s) failed: %s\n", __func__,
-> +                         nodepath, fdt_strerror(nodeoffset));
-> +               free(nodepath);
-> +               return nodeoffset;
-> +       }
-> +       free(nodepath);
-> +
-> +       ret = dtb_get_num_cells(*dtb, nodeoffset, &addr_cells, &size_cells, true);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       /* Can the range fit with the given address/size cells ? */
-> +       if ((addr_cells == 1) && (start >= (1ULL << 32)))
-> +               return -EINVAL;
-> +
-> +       if ((size_cells == 1) && ((end - start + 1) >= (1ULL << 32)))
-> +               return -EINVAL;
-> +
-> +       prop_size = sizeof(uint32_t) * (addr_cells + size_cells);
-> +       prop = malloc(prop_size);
-> +
-> +       dtb_fill_int_property(prop, start, addr_cells);
-> +       dtb_fill_int_property((void *)((uint32_t *)prop + addr_cells),
-> +                             end - start + 1, size_cells);
-> +
-> +       /* Add by node path name */
-> +       return dtb_set_property(dtb, dtb_size, parent, name, prop, prop_size);
-> +}
-> +
-> +/************************\
-> +* MEMORY RANGES HANDLING *
-> +\************************/
-> +
-> +static int dtb_add_memory_range(struct memory_ranges *mem_ranges, uint64_t start,
-> +                               uint64_t end, unsigned type)
-> +{
-> +       struct memory_range this_region = {0};
-> +       struct memory_range *ranges = mem_ranges->ranges;
-> +       int i = 0;
-> +       int ret = 0;
-> +
-> +       if (start == end) {
-> +               dbgprintf("Ignoring empty region\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       /* Check if we are adding an existing region */
-> +       for (i = 0; i < mem_ranges->size; i++) {
-> +               if (start == ranges[i].start && end == ranges[i].end) {
-> +                       dbgprintf("Duplicate: 0x%lx - 0x%lx\n", start, end);
-> +
-> +                       if (type == ranges[i].type)
-> +                               return 0;
-> +                       else if (type == RANGE_RESERVED) {
-> +                               ranges[i].type = RANGE_RESERVED;
-> +                               return 0;
-> +                       }
-> +
-> +                       dbgprintf("Conflicting types for region: 0x%lx - 0x%lx\n",
-> +                                 start, end);
-> +                       return -EINVAL;
-> +               }
-> +       }
-> +
-> +       /*
-> +        * Reserved regions may be part of an existing /memory
-> +        * region and shouldn't overlap according to spec, so
-> +        * since we add /memory regions first, we can exclude
-> +        * reserved regions here from the existing /memory regions
-> +        * included in ranges[], so that we don't have the same
-> +        * region twice.
-> +        */
-> +       if (type == RANGE_RESERVED) {
-> +               this_region.start = start;
-> +               this_region.end = end - 1;
-> +               this_region.type = type;
-> +               ret = mem_regions_exclude(mem_ranges, &this_region);
-> +               if (ret)
-> +                       return ret;
-> +       }
-> +
-> +       ret = mem_regions_alloc_and_add(mem_ranges, start,
-> +                                       end - start, type);
-> +
-> +       return ret;
-> +}
-> +
-> +static int dtb_add_memory_region(char *dtb, int nodeoffset,
-> +                                struct memory_ranges *mem_ranges, int type)
-> +{
-> +       uint32_t root_addr_cells = 0;
-> +       uint32_t root_size_cells = 0;
-> +       uint64_t addr = 0;
-> +       uint64_t size = 0;
-> +       const char *reg = NULL;
-> +       int prop_size = 0;
-> +       int offset = 0;
-> +       int entry_size = 0;
-> +       int num_entries = 0;
-> +       int ret = 0;
-> +
-> +       /*
-> +        * Get address-cells and size-cells properties (according to
-> +        * binding spec these are the same as in the root node)
-> +        */
-> +       ret = dtb_get_num_cells(dtb, 0, &root_addr_cells, &root_size_cells, false);
-> +       if (ret < 0) {
-> +               dbgprintf("No address/size cells on root node !\n");
-> +               return ret;
-> +       }
-> +
-> +       /*
-> +        * Parse the reg array, acording to device tree spec it includes
-> +        * an arbitary number of <address><size> pairs
-> +        */
-> +       entry_size = (root_addr_cells + root_size_cells) * sizeof(uint32_t);
-> +       reg = fdt_getprop(dtb, nodeoffset, "reg", &prop_size);
-> +       if (!reg) {
-> +               dbgprintf("Warning: Malformed memory region with no reg property (%s) !\n",
-> +                         fdt_get_name(dtb, nodeoffset, NULL));
-> +               return -EINVAL;
-> +       }
-> +
-> +       num_entries = prop_size / entry_size;
-> +       dbgprintf("Got region with %i entries: %s\n", num_entries,
-> +                 fdt_get_name(dtb, nodeoffset, NULL));
-> +
-> +       for (num_entries--; num_entries >= 0; num_entries--) {
-> +               offset = num_entries * entry_size;
-> +
-> +               dtb_extract_int_property(&addr, reg + offset,
-> +                                        root_addr_cells);
-> +               offset += root_addr_cells * sizeof(uint32_t);
-> +
-> +               dtb_extract_int_property(&size, reg + offset,
-> +                                        root_size_cells);
-> +
-> +               ret = dtb_add_memory_range(mem_ranges, addr,
-> +                                          addr + size, type);
-> +               if (ret)
-> +                       return ret;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int dtb_parse_memory_reservations_table(char *dtb, struct memory_ranges *mem_ranges)
-> +{
-> +       int total_memrsrv = 0;
-> +       uint64_t addr = 0;
-> +       uint64_t size = 0;
-> +       int ret = 0;
-> +       int i = 0;
-> +
-> +       total_memrsrv = fdt_num_mem_rsv(dtb);
-> +       for (i = 0; i < total_memrsrv; i++) {
-> +               ret = fdt_get_mem_rsv(dtb, i, &addr, &size);
-> +               if (ret)
-> +                       continue;
-> +               ret = dtb_add_memory_range(mem_ranges, addr, addr + size - 1,
-> +                                          RANGE_RESERVED);
-> +               if (ret)
-> +                       return ret;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int dtb_get_reserved_memory_node(char *dtb)
-> +{
-> +       uint32_t root_addr_cells = 0;
-> +       uint32_t root_size_cells = 0;
-> +       uint32_t addr_cells = 0;
-> +       uint32_t size_cells = 0;
-> +       int prop_size = 0;
-> +       int nodeoffset = 0;
-> +       int ret = 0;
-> +
-> +       /* Get address / size cells from root node */
-> +       ret = dtb_get_num_cells(dtb, 0, &root_addr_cells, &root_size_cells, false);
-> +       if (ret < 0) {
-> +               dbgprintf("No address/size cells on root node !\n");
-> +               return ret;
-> +       }
-> +
-> +       /* This calls fdt_next_node internaly */
-> +       nodeoffset = fdt_subnode_offset(dtb, 0, "reserved-memory");
-> +       if (nodeoffset == -FDT_ERR_NOTFOUND) {
-> +               return nodeoffset;
-> +       } else if (nodeoffset < 0) {
-> +               dbgprintf("Error while looking for reserved-memory: %s\n",
-> +                       fdt_strerror(nodeoffset));
-> +               return nodeoffset;
-> +       }
-> +
-> +       /* Look for the ranges property */
-> +       fdt_getprop(dtb, nodeoffset, "ranges", &prop_size);
-> +       if (prop_size < 0) {
-> +               fprintf(stderr, "Malformed reserved-memory node (no ranges property) !\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       /* Verify address-cells / size-cells */
-> +       ret = dtb_get_num_cells(dtb, nodeoffset, &addr_cells, &size_cells, false);
-> +       if (ret < 0) {
-> +               dbgprintf("No address/size cells property on reserved-memory node\n");
-> +               return ret;
-> +       }
-> +
-> +       if (addr_cells != root_addr_cells) {
-> +               fprintf(stderr, "Invalid #address-cells property on reserved-memory node\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       if (size_cells != root_size_cells) {
-> +               fprintf(stderr, "Invalid #size-cells property on reserved-memory node\n");
-> +               return -EINVAL;
-> +
-> +       }
-> +
-> +       return nodeoffset;
-> +}
-> +
-> +static int dtb_parse_reserved_memory_node(char *dtb, struct memory_ranges *mem_ranges)
-> +{
-> +       int nodeoffset = 0;
-> +       int node_depth = 0;
-> +       int parent_depth = 0;
-> +       int ret = 0;
-> +
-> +       nodeoffset = dtb_get_reserved_memory_node(dtb);
-> +       if (nodeoffset == -FDT_ERR_NOTFOUND)
-> +               return 0;
-> +       else if (nodeoffset < 0)
-> +               return nodeoffset;
-> +
-> +       /* Got the parent node, check for sub-nodes */
-> +
-> +       /* fdt_next_node() increases or decreases depth */
-> +       node_depth = parent_depth;
-> +       nodeoffset = fdt_next_node(dtb, nodeoffset, &node_depth);
-> +       if (ret < 0) {
-> +               dbgprintf("Unable to get next node: %s\n",
-> +                         fdt_strerror(ret));
-> +               return -EINVAL;
-> +       }
-> +
-> +       while (node_depth != parent_depth) {
-> +
-> +               ret = dtb_add_memory_region(dtb, nodeoffset,
-> +                                           mem_ranges, RANGE_RESERVED);
-> +               if (ret)
-> +                       return ret;
-> +
-> +               nodeoffset = fdt_next_node(dtb, nodeoffset, &node_depth);
-> +               if (ret < 0) {
-> +                       dbgprintf("Unable to get next node: %s\n",
-> +                                 fdt_strerror(ret));
-> +                       return -EINVAL;
-> +               }
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int dtb_parse_memory_nodes(char *dtb, struct memory_ranges *mem_ranges)
-> +{
-> +       int nodeoffset = 0;
-> +       int num_regions = 0;
-> +       const char* dev_type = 0;
-> +       int prop_size = 0;
-> +       int ret = 0;
-> +
-> +       for (; ; num_regions++) {
-> +               nodeoffset = fdt_subnode_offset(dtb, nodeoffset,
-> +                                                "memory");
-> +               if (nodeoffset < 0)
-> +                       break;
-> +
-> +               dbgprintf("Got memory node at depth: %i\n", fdt_node_depth(dtb, nodeoffset));
-> +
-> +               /* Look for the device_type  property */
-> +               dev_type = fdt_getprop(dtb, nodeoffset, "device_type", &prop_size);
-> +               if (prop_size < 0) {
-> +                       fprintf(stderr, "Malformed /memory node (no device-type property) !\n");
-> +                       return -EINVAL;
-> +               }
-> +
-> +               if (strncmp(dev_type, "memory", prop_size)) {
-> +                       dbgprintf("Got unknown dev_type property: %s\n", dev_type);
-> +                       continue;
-> +               }
-> +
-> +               ret = dtb_add_memory_region(dtb, nodeoffset, mem_ranges, RANGE_RAM);
-> +               if (ret)
-> +                       return ret;
-> +       }
-> +
-> +       if (!num_regions) {
-> +               dbgprintf("Malformed dtb, no /memory nodes present !\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       dbgprintf("Got %i /memory nodes\n", num_regions);
-> +
-> +       return 0;
-> +}
-> +
-> +int dtb_get_memory_ranges(char *dtb, struct memory_ranges *mem_ranges, struct memory_ranges *extra_ranges)
-> +{
-> +       int i = 0;
-> +       int ret = 0;
-> +
-> +       /* Fill mem_ranges[] by parsing the device tree */
-> +       ret = dtb_parse_memory_nodes(dtb, mem_ranges);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret = dtb_parse_memory_reservations_table(dtb, mem_ranges);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret = dtb_parse_reserved_memory_node(dtb, mem_ranges);
-> +       if (ret)
-> +               return ret;
-> +
-> +       /* Append any extra ranges provided by the caller (e.g. initrd) */
-> +       for (i = 0; extra_ranges != NULL && i < extra_ranges->size; i++) {
-> +               dbgprintf("Adding extra range: 0x%llx - 0x%llx (%s)\n",
-> +                         extra_ranges->ranges[i].start,
-> +                         extra_ranges->ranges[i].end,
-> +                         extra_ranges->ranges[i].type == RANGE_RESERVED ?
-> +                          "RANGE_RESERVED" : "RANGE_RAM");
-> +
-> +               ret = dtb_add_memory_range(mem_ranges, extra_ranges->ranges[i].start,
-> +                                extra_ranges->ranges[i].end, extra_ranges->ranges[i].type);
-> +               if (ret)
-> +                       return ret;
-> +       }
-> +
-> +       mem_regions_sort(mem_ranges);
-> +
-> +       return 0;
-> +}
-> diff --git a/kexec/dt-ops.h b/kexec/dt-ops.h
-> index 03659ce..3014205 100644
-> --- a/kexec/dt-ops.h
-> +++ b/kexec/dt-ops.h
-> @@ -11,4 +11,11 @@ int dtb_set_property(char **dtb, off_t *dtb_size, const char *node,
->
->  int dtb_delete_property(char *dtb, const char *node, const char *prop);
->
-> +void dtb_extract_int_property(uint64_t *val, const void *buf, uint32_t cells);
-> +void dtb_fill_int_property(void *buf, uint64_t val, uint32_t cells);
-> +int dtb_add_range_property(char **dtb, off_t *dtb_size, uint64_t start, uint64_t end,
-> +                           const char *node, const char* parent);
-> +int dtb_get_memory_ranges(char *dtb, struct memory_ranges *mem_ranges,
-> +                         struct memory_ranges *extra_ranges);
-> +
->  #endif
-> diff --git a/kexec/kexec-syscall.h b/kexec/kexec-syscall.h
-> index bea29d4..2e99e2b 100644
-> --- a/kexec/kexec-syscall.h
-> +++ b/kexec/kexec-syscall.h
-> @@ -134,6 +134,7 @@ static inline long kexec_file_load(int kernel_fd, int initrd_fd,
->  #define KEXEC_ARCH_MIPS_LE (10 << 16)
->  #define KEXEC_ARCH_MIPS    ( 8 << 16)
->  #define KEXEC_ARCH_CRIS    (76 << 16)
-> +#define KEXEC_ARCH_RISCV   (243 << 16)
->
->  #define KEXEC_MAX_SEGMENTS 16
->
-> @@ -177,5 +178,8 @@ static inline long kexec_file_load(int kernel_fd, int initrd_fd,
->  #if defined(__arm64__)
->  #define KEXEC_ARCH_NATIVE      KEXEC_ARCH_ARM64
->  #endif
-> +#if defined(__riscv__) || defined(__riscv)
-> +#define KEXEC_ARCH_NATIVE      KEXEC_ARCH_RISCV
-> +#endif
->
->  #endif /* KEXEC_SYSCALL_H */
-> diff --git a/purgatory/Makefile b/purgatory/Makefile
-> index 15adb12..11694e5 100644
-> --- a/purgatory/Makefile
-> +++ b/purgatory/Makefile
-> @@ -25,6 +25,7 @@ include $(srcdir)/purgatory/arch/ia64/Makefile
->  include $(srcdir)/purgatory/arch/mips/Makefile
->  include $(srcdir)/purgatory/arch/ppc/Makefile
->  include $(srcdir)/purgatory/arch/ppc64/Makefile
-> +include $(srcdir)/purgatory/arch/riscv/Makefile
->  include $(srcdir)/purgatory/arch/s390/Makefile
->  include $(srcdir)/purgatory/arch/sh/Makefile
->  include $(srcdir)/purgatory/arch/x86_64/Makefile
-> diff --git a/purgatory/arch/riscv/Makefile b/purgatory/arch/riscv/Makefile
-> new file mode 100644
-> index 0000000..8bded71
-> --- /dev/null
-> +++ b/purgatory/arch/riscv/Makefile
-> @@ -0,0 +1,7 @@
-> +#
-> +# Purgatory riscv
-> +#
-> +
-> +riscv_PURGATORY_SRCS =
-> +
-> +dist += purgatory/arch/sh/Makefile $(riscv_PURGATORY_SRCS)
-> --
-> 2.17.1
->
-
-
--- 
-Best Regards
- Guo Ren
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+U29ycnkgZm9yIHRoZSBkaXN0dXJiLCBDb3VsZCBJIGdldCB0aGUgY29tbWVudHMgZm9yIHRoaXMg
+cGF0Y2g/Cgp0aGFua3MKCuWcqCAyMDIyLzkvMTQg5LiL5Y2IMzo1MiwgWGlhbnRpbmcgVGlhbiDl
+hpnpgZM6Cj4gVGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIGxvYWRpbmcgdGhlIEVMRiBrZXJu
+ZWwgaW1hZ2UuIEl0IHBhcnNlcwo+IHRoZSBjdXJyZW50L3Byb3ZpZGVkIGRldmljZSB0cmVlIHRv
+IGRldGVybWluZSB0aGUgc3lzdGVtJ3MgbWVtb3J5Cj4gbGF5b3V0LCBhbmQgL3Byb2MvaW9tZW0g
+Zm9yIHRoZSB2YXJpb3VzIGtlcm5lbCBzZWdtZW50cy4KPgo+IFRoaXMgcGF0Y2ggd2FzIGZpcnN0
+bHkgZGV2ZWxvcGVkIGJ5IE5pY2sgS29zc2lmaWRpcywgYW5kIHR3byBmaXhlcyAoCj4gICAgIDE6
+IGZhaWwgdG8gZmluZCBmcmVlIG1lbW9yeSBhcmVhIGZvciBkdGIgbG9hZCB3aGVuIHVzaW5nIGlu
+aXRyZCBpbWFnZSwKPiAgICAgICAgbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1haWwvbGludXgt
+cmlzY3YvMjAyMi1BdWd1c3QvMDE4Mzk4Lmh0bWw7Cj4gICAgIDI6IGZpeCBtZW1vcnkgcmFuZ2Ug
+c2l6ZSBjYWxjdWxhdGlvbiwKPiAgICAgICAgIGtleGVjL2FyY2gvcmlzY3YvY3Jhc2hkdW1wLXJp
+c2N2LmM6bGluZSA4NQo+ICkgYXJlIGNvbnRyaWJ1dGVkIGJ5IFlpeHVuIExhbiwgWGlhbnRpbmcg
+VGlhbi4KPgo+IFRlc3RlZCBvbiBRZW11J3MgcnY2NCB2aXJ0IG1hY2hpbmUgYW5kIFNvQyBvZiBU
+LUhlYWQgUklTQy1WIFh1YW50aWUgOTEwIENQVS4KPgo+IFRlc3RlZC1ieTogWWl4dW4gTGFuIDx5
+aXh1bi5sYW5AZ21haWwuY29tPgo+IFNpZ25lZC1vZmYtYnk6IFhpYW50aW5nIFRpYW4gPHhpYW50
+aW5nLnRpYW5AbGludXguYWxpYmFiYS5jb20+Cj4gU2lnbmVkLW9mZi1ieTogWWl4dW4gTGFuIDx5
+aXh1bi5sYW5AZ21haWwuY29tPgo+IFNpZ25lZC1vZmYtYnk6IE5pY2sgS29zc2lmaWRpcyA8bWlj
+a0BpY3MuZm9ydGguZ3I+Cj4gLS0tCj4gICBjb25maWd1cmUuYWMgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgfCAgIDMgKwo+ICAgaW5jbHVkZS9lbGYuaCAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIHwgICAzICstCj4gICBrZXhlYy9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICAg
+fCAgIDEgKwo+ICAga2V4ZWMvYXJjaC9yaXNjdi9NYWtlZmlsZSAgICAgICAgICAgICAgIHwgIDM1
+ICsrCj4gICBrZXhlYy9hcmNoL3Jpc2N2L2NyYXNoZHVtcC1yaXNjdi5jICAgICAgfCAxNDAgKysr
+KysrKysKPiAgIGtleGVjL2FyY2gvcmlzY3YvaW5jbHVkZS9hcmNoL29wdGlvbnMuaCB8ICA0MyAr
+KysKPiAgIGtleGVjL2FyY2gvcmlzY3Yva2V4ZWMtZWxmLXJpc2N2LmMgICAgICB8IDI1NSArKysr
+KysrKysrKysrKwo+ICAga2V4ZWMvYXJjaC9yaXNjdi9rZXhlYy1yaXNjdi5jICAgICAgICAgIHwg
+MzY1ICsrKysrKysrKysrKysrKysrKysKPiAgIGtleGVjL2FyY2gvcmlzY3Yva2V4ZWMtcmlzY3Yu
+aCAgICAgICAgICB8ICAzMiArKwo+ICAga2V4ZWMvZHQtb3BzLmMgICAgICAgICAgICAgICAgICAg
+ICAgICAgIHwgNDQyICsrKysrKysrKysrKysrKysrKysrKysrLQo+ICAga2V4ZWMvZHQtb3BzLmgg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA3ICsKPiAgIGtleGVjL2tleGVjLXN5c2NhbGwu
+aCAgICAgICAgICAgICAgICAgICB8ICAgNCArCj4gICBwdXJnYXRvcnkvTWFrZWZpbGUgICAgICAg
+ICAgICAgICAgICAgICAgfCAgIDEgKwo+ICAgcHVyZ2F0b3J5L2FyY2gvcmlzY3YvTWFrZWZpbGUg
+ICAgICAgICAgIHwgICA3ICsKPiAgIDE0IGZpbGVzIGNoYW5nZWQsIDEzMzYgaW5zZXJ0aW9ucygr
+KSwgMiBkZWxldGlvbnMoLSkKPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBrZXhlYy9hcmNoL3Jpc2N2
+L01ha2VmaWxlCj4gICBjcmVhdGUgbW9kZSAxMDA2NDQga2V4ZWMvYXJjaC9yaXNjdi9jcmFzaGR1
+bXAtcmlzY3YuYwo+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGtleGVjL2FyY2gvcmlzY3YvaW5jbHVk
+ZS9hcmNoL29wdGlvbnMuaAo+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGtleGVjL2FyY2gvcmlzY3Yv
+a2V4ZWMtZWxmLXJpc2N2LmMKPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBrZXhlYy9hcmNoL3Jpc2N2
+L2tleGVjLXJpc2N2LmMKPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBrZXhlYy9hcmNoL3Jpc2N2L2tl
+eGVjLXJpc2N2LmgKPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBwdXJnYXRvcnkvYXJjaC9yaXNjdi9N
+YWtlZmlsZQo+Cj4gZGlmZiAtLWdpdCBhL2NvbmZpZ3VyZS5hYyBiL2NvbmZpZ3VyZS5hYwo+IGlu
+ZGV4IDBkODI1ZWYuLjdjYzU1YjAgMTAwNjQ0Cj4gLS0tIGEvY29uZmlndXJlLmFjCj4gKysrIGIv
+Y29uZmlndXJlLmFjCj4gQEAgLTU4LDYgKzU4LDkgQEAgY2FzZSAkdGFyZ2V0X2NwdSBpbgo+ICAg
+CWhwcGEqKQo+ICAgCQlBUkNIPSJocHBhIgo+ICAgCQk7Owo+ICsJcmlzY3YzMnxyaXNjdjY0ICkK
+PiArCQlBUkNIPSJyaXNjdiIKPiArCQk7Owo+ICAgCSogKQo+ICAgCQlBQ19NU0dfRVJST1IoW3Vu
+c3VwcG9ydGVkIGFyY2hpdGVjdHVyZSAkdGFyZ2V0X2NwdV0pCj4gICAJCTs7Cj4gZGlmZiAtLWdp
+dCBhL2luY2x1ZGUvZWxmLmggYi9pbmNsdWRlL2VsZi5oCj4gaW5kZXggYjc2NzdhMi4uMTIzZjE2
+NyAxMDA2NDQKPiAtLS0gYS9pbmNsdWRlL2VsZi5oCj4gKysrIGIvaW5jbHVkZS9lbGYuaAo+IEBA
+IC0yNTksNyArMjU5LDggQEAgdHlwZWRlZiBzdHJ1Y3QKPiAgICNkZWZpbmUgRU1fQVJDX0E1CTkz
+CQkvKiBBUkMgQ29yZXMgVGFuZ2VudC1BNSAqLwo+ICAgI2RlZmluZSBFTV9YVEVOU0EJOTQJCS8q
+IFRlbnNpbGljYSBYdGVuc2EgQXJjaGl0ZWN0dXJlICovCj4gICAjZGVmaW5lIEVNX0FBUkNINjQJ
+MTgzCQkvKiBBUk0gQUFSQ0g2NCAqLwo+IC0jZGVmaW5lIEVNX05VTQkJMTg0Cj4gKyNkZWZpbmUg
+RU1fUklTQ1YJMjQzCQkvKiBSSVNDLVYgKi8KPiArI2RlZmluZSBFTV9OVU0JCTI0NAo+ICAgCj4g
+ICAvKiBJZiBpdCBpcyBuZWNlc3NhcnkgdG8gYXNzaWduIG5ldyB1bm9mZmljaWFsIEVNXyogdmFs
+dWVzLCBwbGVhc2UKPiAgICAgIHBpY2sgbGFyZ2UgcmFuZG9tIG51bWJlcnMgKDB4ODUyMywgMHhh
+N2YyLCBldGMuKSB0byBtaW5pbWl6ZSB0aGUKPiBkaWZmIC0tZ2l0IGEva2V4ZWMvTWFrZWZpbGUg
+Yi9rZXhlYy9NYWtlZmlsZQo+IGluZGV4IGU2OWUzMDkuLmNhMTc4MzEgMTAwNjQ0Cj4gLS0tIGEv
+a2V4ZWMvTWFrZWZpbGUKPiArKysgYi9rZXhlYy9NYWtlZmlsZQo+IEBAIC04OCw2ICs4OCw3IEBA
+IGluY2x1ZGUgJChzcmNkaXIpL2tleGVjL2FyY2gvbWlwcy9NYWtlZmlsZQo+ICAgaW5jbHVkZSAk
+KHNyY2Rpcikva2V4ZWMvYXJjaC9jcmlzL01ha2VmaWxlCj4gICBpbmNsdWRlICQoc3JjZGlyKS9r
+ZXhlYy9hcmNoL3BwYy9NYWtlZmlsZQo+ICAgaW5jbHVkZSAkKHNyY2Rpcikva2V4ZWMvYXJjaC9w
+cGM2NC9NYWtlZmlsZQo+ICtpbmNsdWRlICQoc3JjZGlyKS9rZXhlYy9hcmNoL3Jpc2N2L01ha2Vm
+aWxlCj4gICBpbmNsdWRlICQoc3JjZGlyKS9rZXhlYy9hcmNoL3MzOTAvTWFrZWZpbGUKPiAgIGlu
+Y2x1ZGUgJChzcmNkaXIpL2tleGVjL2FyY2gvc2gvTWFrZWZpbGUKPiAgIGluY2x1ZGUgJChzcmNk
+aXIpL2tleGVjL2FyY2gveDg2XzY0L01ha2VmaWxlCj4gZGlmZiAtLWdpdCBhL2tleGVjL2FyY2gv
+cmlzY3YvTWFrZWZpbGUgYi9rZXhlYy9hcmNoL3Jpc2N2L01ha2VmaWxlCj4gbmV3IGZpbGUgbW9k
+ZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi5mMjZjYzkwCj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBi
+L2tleGVjL2FyY2gvcmlzY3YvTWFrZWZpbGUKPiBAQCAtMCwwICsxLDM1IEBACj4gKyMKPiArIyBr
+ZXhlYyByaXNjdgo+ICsjCj4gK3Jpc2N2X0tFWEVDX1NSQ1MgPSAga2V4ZWMvYXJjaC9yaXNjdi9r
+ZXhlYy1yaXNjdi5jCj4gK3Jpc2N2X0tFWEVDX1NSQ1MgKz0ga2V4ZWMvYXJjaC9yaXNjdi9rZXhl
+Yy1lbGYtcmlzY3YuYwo+ICtyaXNjdl9LRVhFQ19TUkNTICs9IGtleGVjL2FyY2gvcmlzY3YvY3Jh
+c2hkdW1wLXJpc2N2LmMKPiArCj4gK3Jpc2N2X01FTV9SRUdJT05TID0ga2V4ZWMvbWVtX3JlZ2lv
+bnMuYwo+ICsKPiArcmlzY3ZfRFRfT1BTICs9IGtleGVjL2R0LW9wcy5jCj4gKwo+ICtyaXNjdl9B
+UkNIX1JFVVNFX0lOSVRSRCA9Cj4gKwo+ICtyaXNjdl9DUFBGTEFHUyArPSAtSSAkKHNyY2Rpcikv
+a2V4ZWMvCj4gKwo+ICtkaXN0ICs9IGtleGVjL2FyY2gvcmlzY3YvTWFrZWZpbGUgJChyaXNjdl9L
+RVhFQ19TUkNTKQkJCVwKPiArCWtleGVjL2FyY2gvcmlzY3Yva2V4ZWMtcmlzY3YuaAkJCQkJXAo+
+ICsJa2V4ZWMvYXJjaC9yaXNjdi9pbmNsdWRlL2FyY2gvb3B0aW9ucy5oCj4gKwo+ICtpZmRlZiBI
+QVZFX0xJQkZEVAo+ICsKPiArTElCUyArPSAtbGZkdAo+ICsKPiArZWxzZQo+ICsKPiAraW5jbHVk
+ZSAkKHNyY2Rpcikva2V4ZWMvbGliZmR0L01ha2VmaWxlLmxpYmZkdAo+ICsKPiArbGliZmR0X1NS
+Q1MgKz0gJChMSUJGRFRfU1JDUzolPWtleGVjL2xpYmZkdC8lKQo+ICsKPiArcmlzY3ZfQ1BQRkxB
+R1MgKz0gLUkkKHNyY2Rpcikva2V4ZWMvbGliZmR0Cj4gKwo+ICtyaXNjdl9LRVhFQ19TUkNTICs9
+ICQobGliZmR0X1NSQ1MpCj4gKwo+ICtlbmRpZgo+ICsKPiBkaWZmIC0tZ2l0IGEva2V4ZWMvYXJj
+aC9yaXNjdi9jcmFzaGR1bXAtcmlzY3YuYyBiL2tleGVjL2FyY2gvcmlzY3YvY3Jhc2hkdW1wLXJp
+c2N2LmMKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAuLjNlZDRmZTMKPiAt
+LS0gL2Rldi9udWxsCj4gKysrIGIva2V4ZWMvYXJjaC9yaXNjdi9jcmFzaGR1bXAtcmlzY3YuYwo+
+IEBAIC0wLDAgKzEsMTQwIEBACj4gKyNpbmNsdWRlIDxlcnJuby5oPgo+ICsjaW5jbHVkZSA8bGlu
+dXgvZWxmLmg+Cj4gKyNpbmNsdWRlIDx1bmlzdGQuaD4KPiArCj4gKyNpbmNsdWRlICJrZXhlYy5o
+Igo+ICsjaW5jbHVkZSAiY3Jhc2hkdW1wLmgiCj4gKyNpbmNsdWRlICJrZXhlYy1lbGYuaCIKPiAr
+I2luY2x1ZGUgIm1lbV9yZWdpb25zLmgiCj4gKwo+ICtzdGF0aWMgc3RydWN0IGNyYXNoX2VsZl9p
+bmZvIGVsZl9pbmZvID0gewo+ICsjaWYgX19yaXNjdl94bGVuID09IDY0Cj4gKwkuY2xhc3MJCT0g
+RUxGQ0xBU1M2NCwKPiArI2Vsc2UKPiArCS5jbGFzcwkJPSBFTEZDTEFTUzMyLAo+ICsjZW5kaWYK
+PiArCS5kYXRhCQk9IEVMRkRBVEEyTFNCLAo+ICsJLm1hY2hpbmUJPSBFTV9SSVNDViwKPiArfTsK
+PiArCj4gK3N0YXRpYyBzdHJ1Y3QgbWVtb3J5X3JhbmdlcyBjcmFzaF9tZW1fcmFuZ2VzID0gezB9
+Owo+ICtzdHJ1Y3QgbWVtb3J5X3JhbmdlIGVsZmNvcmVoZHJfbWVtID0gezB9Owo+ICsKPiArc3Rh
+dGljIHVuc2lnbmVkIGxvbmcgbG9uZyBnZXRfcGFnZV9vZmZzZXQoc3RydWN0IGtleGVjX2luZm8g
+KmluZm8pCj4gK3sKPiArCXVuc2lnbmVkIGxvbmcgbG9uZyB2YWRkcl9vZmYgPSAwOwo+ICsJdW5z
+aWduZWQgbG9uZyBsb25nIHBhZ2Vfc2l6ZSA9IHN5c2NvbmYoX1NDX1BBR0VTSVpFKTsKPiArCXVu
+c2lnbmVkIGxvbmcgbG9uZyBpbml0X3N0YXJ0ID0gZ2V0X2tlcm5lbF9zeW0oIl9zaW5pdHRleHQi
+KTsKPiArCj4gKwkvKgo+ICsJICogQmVnaW5pbmcgb2YgaW5pdCBzZWN0aW9uIGlzIGFsaWduZWQg
+dG8gcGFnZSBzaXplCj4gKwkgKi8KPiArCXZhZGRyX29mZiA9IGluaXRfc3RhcnQgLSBwYWdlX3Np
+emU7Cj4gKwo+ICsJcmV0dXJuIHZhZGRyX29mZjsKPiArfQo+ICsKPiAraW50IGxvYWRfZWxmY29y
+ZWhkcihzdHJ1Y3Qga2V4ZWNfaW5mbyAqaW5mbykKPiArewo+ICsJc3RydWN0IG1lbW9yeV9yYW5n
+ZSBjcmFzaGtlcm5fcmFuZ2UgPSB7MH07Cj4gKwlzdHJ1Y3QgbWVtb3J5X3JhbmdlICpyYW5nZXMg
+PSBOVUxMOwo+ICsJdW5zaWduZWQgbG9uZyBzdGFydCA9IDA7Cj4gKwl1bnNpZ25lZCBsb25nIGVu
+ZCA9IDA7Cj4gKwl1bnNpZ25lZCBsb25nIGJ1Zl9zaXplID0gMDsKPiArCXVuc2lnbmVkIGxvbmcg
+ZWxmY29yZWhkcl9hZGRyID0gMDsKPiArCXZvaWQqIGJ1ZiA9IE5VTEw7Cj4gKwlpbnQgaSA9IDA7
+Cj4gKwlpbnQgcmV0ID0gMDsKPiArCj4gKwlyZXQgPSBwYXJzZV9pb21lbV9zaW5nbGUoIktlcm5l
+bCBjb2RlXG4iLCAmc3RhcnQsIE5VTEwpOwo+ICsJaWYgKHJldCkgewo+ICsJCWZwcmludGYoc3Rk
+ZXJyLCAiQ2Fubm90IGRldGVybWluZSBrZXJuZWwgcGh5c2ljYWwgYmFzZSBhZGRyXG4iKTsKPiAr
+CQlyZXR1cm4gLUVJTlZBTDsKPiArCX0KPiArCWVsZl9pbmZvLmtlcm5fcGFkZHJfc3RhcnQgPSBz
+dGFydDsKPiArCj4gKwlyZXQgPSBwYXJzZV9pb21lbV9zaW5nbGUoIktlcm5lbCBic3NcbiIsIE5V
+TEwsICZlbmQpOwo+ICsJaWYgKHJldCkgewo+ICsJCWZwcmludGYoc3RkZXJyLCAiQ2Fubm90IGRl
+dGVybWluZSBrZXJuZWwgcGh5c2ljYWwgYnNzIGFkZHJcbiIpOwo+ICsJCXJldHVybiAtRUlOVkFM
+Owo+ICsJfQo+ICsJZWxmX2luZm8ua2Vybl9wYWRkcl9zdGFydCA9IHN0YXJ0Owo+ICsJZWxmX2lu
+Zm8ua2Vybl9zaXplID0gZW5kIC0gc3RhcnQ7Cj4gKwo+ICsJZWxmX2luZm8ua2Vybl92YWRkcl9z
+dGFydCA9IGdldF9rZXJuZWxfc3ltKCJfdGV4dCIpOwo+ICsJaWYgKCFlbGZfaW5mby5rZXJuX3Zh
+ZGRyX3N0YXJ0KSB7Cj4gKwkJZWxmX2luZm8ua2Vybl92YWRkcl9zdGFydCA9IFVJTlQ2NF9NQVg7
+Cj4gKwl9Cj4gKwo+ICsJZWxmX2luZm8ucGFnZV9vZmZzZXQgPSBnZXRfcGFnZV9vZmZzZXQoaW5m
+byk7Cj4gKwlkYmdwcmludGYoInBhZ2Vfb2Zmc2V0OiAgICUwMTZsbHhcbiIsIGVsZl9pbmZvLnBh
+Z2Vfb2Zmc2V0KTsKPiArCj4gKwlyZXQgPSBwYXJzZV9pb21lbV9zaW5nbGUoIkNyYXNoIGtlcm5l
+bFxuIiwgJnN0YXJ0LCAmZW5kKTsKPiArCWlmIChyZXQpIHsKPiArCQlmcHJpbnRmKHN0ZGVyciwg
+IkNhbm5vdCBkZXRlcm1pbmUga2VybmVsIHBoeXNpY2FsIGJzcyBhZGRyXG4iKTsKPiArCQlyZXR1
+cm4gLUVJTlZBTDsKPiArCX0KPiArCWNyYXNoa2Vybl9yYW5nZS5zdGFydCA9IHN0YXJ0Owo+ICsJ
+Y3Jhc2hrZXJuX3JhbmdlLmVuZCA9IGVuZDsKPiArCWNyYXNoa2Vybl9yYW5nZS50eXBlID0gUkFO
+R0VfUkVTRVJWRUQ7Cj4gKwo+ICsJcmFuZ2VzID0gaW5mby0+bWVtb3J5X3JhbmdlOwo+ICsJZm9y
+IChpID0gMDsgaSA8IGluZm8tPm1lbW9yeV9yYW5nZXM7IGkrKykgewo+ICsJCXJldCA9IG1lbV9y
+ZWdpb25zX2FsbG9jX2FuZF9hZGQoJmNyYXNoX21lbV9yYW5nZXMsCj4gKwkJCQkJCXJhbmdlc1tp
+XS5zdGFydCwKPiArCQkJCQkJcmFuZ2VzW2ldLmVuZCAtIHJhbmdlc1tpXS5zdGFydCArIDEsCj4g
+KwkJCQkJCXJhbmdlc1tpXS50eXBlKTsKPiArCQlpZiAocmV0ICkgewo+ICsJCQlmcHJpbnRmKHN0
+ZGVyciwgIkNvdWxkIG5vdCBjcmVhdGUgY3Jhc2hfbWVtX3Jhbmdlc1xuIik7Cj4gKwkJCXJldHVy
+biByZXQ7Cj4gKwkJfQo+ICsJfQo+ICsKPiArCXJldCA9IG1lbV9yZWdpb25zX2FsbG9jX2FuZF9l
+eGNsdWRlKCZjcmFzaF9tZW1fcmFuZ2VzLAo+ICsJCQkJCSAgICAmY3Jhc2hrZXJuX3JhbmdlKTsK
+PiArCWlmIChyZXQpIHsKPiArCQlmcHJpbnRmKHN0ZGVyciwgIkNvdWxkIG5vdCBleGNsdWRlIGNy
+YXNoa2Vybl9yYW5nZVxuIik7Cj4gKwkJcmV0dXJuIHJldDsKPiArCX0KPiArCj4gKyNpZiBfX3Jp
+c2N2X3hsZW4gPT0gNjQKPiArCWNyYXNoX2NyZWF0ZV9lbGY2NF9oZWFkZXJzKGluZm8sICZlbGZf
+aW5mbywgY3Jhc2hfbWVtX3Jhbmdlcy5yYW5nZXMsCj4gKwkJCQkgICBjcmFzaF9tZW1fcmFuZ2Vz
+LnNpemUsICZidWYsICZidWZfc2l6ZSwKPiArCQkJCSAgIEVMRl9DT1JFX0hFQURFUl9BTElHTik7
+Cj4gKwo+ICsjZWxzZQo+ICsJY3Jhc2hfY3JlYXRlX2VsZjMyX2hlYWRlcnMoaW5mbywgJmVsZl9p
+bmZvLCBjcmFzaF9tZW1fcmFuZ2VzLnJhbmdlcywKPiArCQkJCSAgIGNyYXNoX21lbV9yYW5nZXMu
+c2l6ZSwgJmJ1ZiwgJmJ1Zl9zaXplLAo+ICsJCQkJICAgRUxGX0NPUkVfSEVBREVSX0FMSUdOKTsK
+PiArI2VuZGlmCj4gKwo+ICsKPiArCWVsZmNvcmVoZHJfYWRkciA9IGFkZF9idWZmZXJfcGh5c192
+aXJ0KGluZm8sIGJ1ZiwgYnVmX3NpemUsCj4gKwkJCQkJICAgICAgIGJ1Zl9zaXplLCAwLAo+ICsJ
+CQkJCSAgICAgICBjcmFzaGtlcm5fcmFuZ2Uuc3RhcnQsCj4gKwkJCQkJICAgICAgIGNyYXNoa2Vy
+bl9yYW5nZS5lbmQsCj4gKwkJCQkJICAgICAgIC0xLCAwKTsKPiArCj4gKwllbGZjb3JlaGRyX21l
+bS5zdGFydCA9IGVsZmNvcmVoZHJfYWRkcjsKPiArCWVsZmNvcmVoZHJfbWVtLmVuZCA9IGVsZmNv
+cmVoZHJfYWRkciArIGJ1Zl9zaXplIC0gMTsKPiArCj4gKwlkYmdwcmludGYoIiVzOiBlbGZjb3Jl
+aGRyIDB4JWxseC0weCVsbHhcbiIsIF9fZnVuY19fLAo+ICsJCSAgZWxmY29yZWhkcl9tZW0uc3Rh
+cnQsIGVsZmNvcmVoZHJfbWVtLmVuZCk7Cj4gKwo+ICsJcmV0dXJuIDA7Cj4gK30KPiArCj4gK2lu
+dCBpc19jcmFzaGtlcm5lbF9tZW1fcmVzZXJ2ZWQodm9pZCkKPiArewo+ICsJdWludDY0X3Qgc3Rh
+cnQgPSAwOwo+ICsJdWludDY0X3QgZW5kID0gMDsKPiArCj4gKwlyZXR1cm4gcGFyc2VfaW9tZW1f
+c2luZ2xlKCJDcmFzaCBrZXJuZWxcbiIsICZzdGFydCwgJmVuZCkgPT0gMCA/Cj4gKwkgICAgICAg
+KHN0YXJ0ICE9IGVuZCkgOiAwOwo+ICt9Cj4gKwo+ICtpbnQgZ2V0X2NyYXNoX2tlcm5lbF9sb2Fk
+X3JhbmdlKHVpbnQ2NF90ICpzdGFydCwgdWludDY0X3QgKmVuZCkKPiArewo+ICsJcmV0dXJuIHBh
+cnNlX2lvbWVtX3NpbmdsZSgiQ3Jhc2gga2VybmVsXG4iLCBzdGFydCwgZW5kKTsKPiArfQo+ICsK
+PiBkaWZmIC0tZ2l0IGEva2V4ZWMvYXJjaC9yaXNjdi9pbmNsdWRlL2FyY2gvb3B0aW9ucy5oIGIv
+a2V4ZWMvYXJjaC9yaXNjdi9pbmNsdWRlL2FyY2gvb3B0aW9ucy5oCj4gbmV3IGZpbGUgbW9kZSAx
+MDA2NDQKPiBpbmRleCAwMDAwMDAwLi43YzI0MTg0Cj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL2tl
+eGVjL2FyY2gvcmlzY3YvaW5jbHVkZS9hcmNoL29wdGlvbnMuaAo+IEBAIC0wLDAgKzEsNDMgQEAK
+PiArI2lmbmRlZiBLRVhFQ19BUkNIX1JJU0NWX09QVElPTlNfSAo+ICsjZGVmaW5lIEtFWEVDX0FS
+Q0hfUklTQ1ZfT1BUSU9OU19ICj4gKwo+ICsjZGVmaW5lIE9QVF9BUFBFTkQJCSgoT1BUX01BWCkr
+MCkKPiArI2RlZmluZSBPUFRfRFRCCQkJKChPUFRfTUFYKSsxKQo+ICsjZGVmaW5lIE9QVF9JTklU
+UkQJCSgoT1BUX01BWCkrMikKPiArI2RlZmluZSBPUFRfQ01ETElORQkJKChPUFRfTUFYKSszKQo+
+ICsjZGVmaW5lIE9QVF9SRVVTRV9DTURMSU5FCSgoT1BUX01BWCkrNCkKPiArI2RlZmluZSBPUFRf
+QVJDSF9NQVgJCSgoT1BUX01BWCkrNSkKPiArCj4gKy8qIE9wdGlvbnMgcmVsZXZhbnQgdG8gdGhl
+IGFyY2hpdGVjdHVyZSAoZXhjbHVkaW5nIGxvYWRlci1zcGVjaWZpYyBvbmVzKSwKPiArICogaW4g
+dGhpcyBjYXNlIG5vbmU6Cj4gKyAqLwo+ICsjZGVmaW5lIEtFWEVDX0FSQ0hfT1BUSU9OUyBcCj4g
+KwlLRVhFQ19PUFRJT05TIFwKPiArCXsgImFwcGVuZCIsCQkxLCAwLCBPUFRfQVBQRU5EfSwgXAo+
+ICsJeyAiZHRiIiwJCTEsIDAsIE9QVF9EVEIgfSwgXAo+ICsJeyAiaW5pdHJkIiwJCTEsIDAsIE9Q
+VF9JTklUUkQgfSwgXAo+ICsJeyAiY29tbWFuZC1saW5lIiwJMSwgMCwgT1BUX0NNRExJTkV9LCBc
+Cj4gKwl7ICJyZXVzZS1jbWRsaW5lIiwJMCwgTlVMTCwgT1BUX1JFVVNFX0NNRExJTkUgfSwgXAo+
+ICsKPiArCj4gKyNkZWZpbmUgS0VYRUNfQVJDSF9PUFRfU1RSIEtFWEVDX09QVF9TVFIgIiIKPiAr
+Cj4gKy8qIFRoZSBmb2xsb3dpbmcgdHdvICNkZWZpbmVzIGxpc3QgQUxMIG9mIHRoZSBvcHRpb25z
+IGFkZGVkIGJ5IGFsbCBvZiB0aGUKPiArICogYXJjaGl0ZWN0dXJlJ3MgbG9hZGVycy4KPiArICog
+bwltYWluKCkgdXNlcyB0aGlzIGNvbXBsZXRlIGxpc3QgdG8gc2NhbiBmb3IgaXRzIG9wdGlvbnMs
+IGlnbm9yaW5nCj4gKyAqCWFyY2gtc3BlY2lmaWMvbG9hZGVyLXNwZWNpZmljIG9uZXMuCj4gKyAq
+IG8JVGhlbiwgYXJjaF9wcm9jZXNzX29wdGlvbnMoKSB1c2VzIHRoaXMgY29tcGxldGUgbGlzdCB0
+byBzY2FuIGZvciBpdHMKPiArICoJb3B0aW9ucywgaWdub3JpbmcgZ2VuZXJhbC9sb2FkZXItc3Bl
+Y2lmaWMgb25lcy4KPiArICogbwlUaGVuLCB0aGUgZmlsZV90eXBlW25dLmxvYWQgcmUtc2NhbnMg
+Zm9yIG9wdGlvbnMsIHVzaW5nCj4gKyAqCUtFWEVDX0FSQ0hfT1BUSU9OUyBwbHVzIGl0cyBsb2Fk
+ZXItc3BlY2lmaWMgb3B0aW9ucyBzdWJzZXQuCj4gKyAqCUFueSB1bnJlY29nbmlzZWQgb3B0aW9u
+cyBjYXVzZSBhbiBlcnJvciBoZXJlLgo+ICsgKgo+ICsgKiBUaGlzIGlzIGRvbmUgc28gdGhhdCBt
+YWluKCkncy9hcmNoX3Byb2Nlc3Nfb3B0aW9ucygpJ3MgZ2V0b3B0X2xvbmcoKSBjYWxscwo+ICsg
+KiBkb24ndCBjaG9vc2UgYSBrZXJuZWwgZmlsZW5hbWUgZnJvbSByYW5kb20gYXJndW1lbnRzIHRv
+IG9wdGlvbnMgdGhleSBkb24ndAo+ICsgKiByZWNvZ25pc2UgLS0gYXMgdGhleSBub3cgcmVjb2du
+aXNlIChpZiBub3QgYWN0IHVwb24pIGFsbCBwb3NzaWJsZSBvcHRpb25zLgo+ICsgKi8KPiArI2Rl
+ZmluZSBLRVhFQ19BTExfT1BUSU9OUyBLRVhFQ19BUkNIX09QVElPTlMKPiArCj4gKyNkZWZpbmUg
+S0VYRUNfQUxMX09QVF9TVFIgS0VYRUNfQVJDSF9PUFRfU1RSCj4gKwo+ICsjZW5kaWYgLyogS0VY
+RUNfQVJDSF9SSVNDVl9PUFRJT05TX0ggKi8KPiBkaWZmIC0tZ2l0IGEva2V4ZWMvYXJjaC9yaXNj
+di9rZXhlYy1lbGYtcmlzY3YuYyBiL2tleGVjL2FyY2gvcmlzY3Yva2V4ZWMtZWxmLXJpc2N2LmMK
+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAuLmYzYzAxMWMKPiAtLS0gL2Rl
+di9udWxsCj4gKysrIGIva2V4ZWMvYXJjaC9yaXNjdi9rZXhlYy1lbGYtcmlzY3YuYwo+IEBAIC0w
+LDAgKzEsMjU1IEBACj4gKy8qIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wICovCj4g
+Ky8qCj4gKyAqIENvcHlyaWdodCAoQykgMjAxOSBGT1JUSC1JQ1MvQ0FSVgo+ICsgKiAgICAgICAg
+ICAgICAgTmljayBLb3NzaWZpZGlzIDxtaWNrQGljcy5mb3J0aC5ncj4KPiArICovCj4gKwo+ICsj
+aW5jbHVkZSAia2V4ZWMuaCIKPiArI2luY2x1ZGUgImR0LW9wcy5oIgkJLyogRm9yIGR0Yl9zZXQv
+Y2xlYXJfaW5pdHJkKCkgKi8KPiArI2luY2x1ZGUgPGVsZi5oPgkJLyogRm9yIEVMRiBoZWFkZXIg
+aGFuZGxpbmcgKi8KPiArI2luY2x1ZGUgPGVycm5vLmg+CQkvKiBGb3IgRUZCSUcvRUlOVkFMICov
+Cj4gKyNpbmNsdWRlIDx1bmlzdGQuaD4JCS8qIEZvciBnZXRwYWdlc2l6ZSgpICovCj4gKyNpbmNs
+dWRlICJrZXhlYy1zeXNjYWxsLmgiCS8qIEZvciBLRVhFQ19PTl9DUkFTSCAqLwo+ICsjaW5jbHVk
+ZSAia2V4ZWMtcmlzY3YuaCIKPiArCj4gKwo+ICsvKioqKioqKioqXAo+ICsqIEhFTFBFUlMgKgo+
+ICtcKioqKioqKioqLwo+ICsKPiArLyoKPiArICogR28gdGhyb3VnaCB0aGUgYXZhaWxhYmxlIHBo
+eXNpY2FsIG1lbW9yeSByZWdpb25zIGFuZAo+ICsgKiBmaW5kIG9uZSB0aGF0IGNhbiBob2xkIGFu
+IGltYWdlIG9mIHRoZSBzcGVjaWZpZWQgc2l6ZS4KPiArICogTm90ZTogVGhpcyBpcyBjYWxsZWQg
+YWZ0ZXIgZ2V0X21lbW9yeV9yYW5nZXMgc28KPiArICogaW5mby0+bWVtb3J5X3JhbmdlW10gc2hv
+dWxkIGJlIHBvcHVsYXRlZC4gQWxzbyBub3RlIHRoYXQKPiArICogbWVtb3J5IHJhbmdlcyBhcmUg
+c29ydGVkLCBzbyB3ZSdsbCByZXR1cm4gdGhlIGZpcnN0IHJlZ2lvbgo+ICsgKiB0aGF0J3MgYmln
+IGVub3VnaCBmb3IgaG9sZGluZyB0aGUgaW1hZ2UuCj4gKyAqLwo+ICtzdGF0aWMgaW50IGVsZl9y
+aXNjdl9maW5kX3BiYXNlKHN0cnVjdCBrZXhlY19pbmZvICppbmZvLCBvZmZfdCAqYWRkciwKPiAr
+CQkJCW9mZl90IHNpemUpCj4gK3sKPiArCWludCBpID0gMDsKPiArCW9mZl90IHN0YXJ0ID0gMDsK
+PiArCW9mZl90IGVuZCA9IDA7Cj4gKwlpbnQgcmV0ID0gMDsKPiArCj4gKwkvKgo+ICsJICogSWYg
+dGhpcyBpbWFnZSBpcyBmb3IgYSBjcmFzaCBrZXJuZWwsIHVzZSB0aGUgcmVnaW9uCj4gKwkgKiB0
+aGUgcHJpbWFyeSBrZXJuZWwgaGFzIGFscmVhZHkgcmVzZXJ2ZWQgZm9yIHVzLgo+ICsJICovCj4g
+KwlpZiAoaW5mby0+a2V4ZWNfZmxhZ3MgJiBLRVhFQ19PTl9DUkFTSCkgewo+ICsJCXJldCA9IGdl
+dF9jcmFzaF9rZXJuZWxfbG9hZF9yYW5nZSgodWludDY0X3QgKikgJnN0YXJ0LAo+ICsJCQkJCQkg
+ICh1aW50NjRfdCAqKSAmZW5kKTsKPiArCQlpZiAoIXJldCkgewo+ICsJCQkvKgo+ICsJCQkgKiBL
+ZXJuZWwgc2hvdWxkIGJlIGFsaWduZWQgdG8gdGhlIG5lYXJlc3QKPiArCQkJICogaHVnZXBhZ2Ug
+KDJNQiBmb3IgUlY2NCwgNE1CIGZvciBSVjMyKS4KPiArCQkJICovCj4gKyNpZiBfX3Jpc2N2X3hs
+ZW4gPT0gNjQKPiArCQkJc3RhcnQgPSBfQUxJR05fVVAoc3RhcnQsIDB4MjAwMDAwKTsKPiArI2Vs
+c2UKPiArCQkJc3RhcnQgPSBfQUxJR05fVVAoc3RhcnQsIDB4NDAwMDAwKTsKPiArI2VuZGlmCj4g
+KwkJCWlmIChlbmQgPiBzdGFydCAmJiAoKGVuZCAtIHN0YXJ0KSA+PSBzaXplKSkgewo+ICsJCQkJ
+KmFkZHIgPSBzdGFydDsKPiArCQkJCXJldHVybiAwOwo+ICsJCQl9Cj4gKwo+ICsJCQlyZXR1cm4g
+LUVGQklHOwo+ICsJCX0gZWxzZQo+ICsJCQlyZXR1cm4gRU5PQ1JBU0hLRVJORUw7Cj4gKwl9Cj4g
+Kwo+ICsJZm9yIChpID0gMDsgaSA8IGluZm8tPm1lbW9yeV9yYW5nZXM7IGkrKykgewo+ICsJCWlm
+IChpbmZvLT5tZW1vcnlfcmFuZ2VbaV0udHlwZSAhPSBSQU5HRV9SQU0pCj4gKwkJCWNvbnRpbnVl
+Owo+ICsKPiArCQlzdGFydCA9IGluZm8tPm1lbW9yeV9yYW5nZVtpXS5zdGFydDsKPiArCQllbmQg
+PSBpbmZvLT5tZW1vcnlfcmFuZ2VbaV0uZW5kOwo+ICsKPiArI2lmIF9fcmlzY3ZfeGxlbiA9PSA2
+NAo+ICsJCXN0YXJ0ID0gX0FMSUdOX1VQKHN0YXJ0LCAweDIwMDAwMCk7Cj4gKyNlbHNlCj4gKwkJ
+c3RhcnQgPSBfQUxJR05fVVAoc3RhcnQsIDB4NDAwMDAwKTsKPiArI2VuZGlmCj4gKwo+ICsJCWlm
+IChlbmQgPiBzdGFydCAmJiAoKGVuZCAtIHN0YXJ0KSA+PSBzaXplKSkgewo+ICsJCQkqYWRkciA9
+IHN0YXJ0Owo+ICsJCQlyZXR1cm4gMDsKPiArCQl9Cj4gKwl9Cj4gKwo+ICsJcmV0dXJuIC1FRkJJ
+RzsKPiArfQo+ICsKPiArLyoqKioqKioqKioqKioqXAo+ICsqIEVOVFJZIFBPSU5UUyAqCj4gK1wq
+KioqKioqKioqKioqKi8KPiArCj4gK2ludCBlbGZfcmlzY3ZfcHJvYmUoY29uc3QgY2hhciAqYnVm
+LCBvZmZfdCBsZW4pCj4gK3sKPiArCXN0cnVjdCBtZW1fZWhkciBlaGRyID0gezB9Owo+ICsJaW50
+IHJldCA9IDA7Cj4gKwo+ICsJcmV0ID0gYnVpbGRfZWxmX2V4ZWNfaW5mbyhidWYsIGxlbiwgJmVo
+ZHIsIDApOwo+ICsJaWYgKHJldCA8IDApCj4gKwkJZ290byBjbGVhbnVwOwo+ICsKPiArCWlmIChl
+aGRyLmVfbWFjaGluZSAhPSBFTV9SSVNDVikgewo+ICsJCWZwcmludGYoc3RkZXJyLCAiTm90IGZv
+ciB0aGlzIGFyY2hpdGVjdHVyZS5cbiIpOwo+ICsJCXJldCA9IC1FSU5WQUw7Cj4gKwkJZ290byBj
+bGVhbnVwOwo+ICsJfQo+ICsKPiArCXJldCA9IDA7Cj4gKwo+ICsgY2xlYW51cDoKPiArCWZyZWVf
+ZWxmX2luZm8oJmVoZHIpOwo+ICsJcmV0dXJuIHJldDsKPiArfQo+ICsKPiArdm9pZCBlbGZfcmlz
+Y3ZfdXNhZ2Uodm9pZCkKPiArewo+ICt9Cj4gKwo+ICtpbnQgZWxmX3Jpc2N2X2xvYWQoaW50IGFy
+Z2MsIGNoYXIgKiphcmd2LCBjb25zdCBjaGFyICpidWYsIG9mZl90IGxlbiwKPiArCQkgICBzdHJ1
+Y3Qga2V4ZWNfaW5mbyAqaW5mbykKPiArewo+ICsJc3RydWN0IG1lbV9laGRyIGVoZHIgPSB7MH07
+Cj4gKwlzdHJ1Y3QgbWVtX3BoZHIgKnBoZHIgPSBOVUxMOwo+ICsJb2ZmX3QgbmV3X2Jhc2VfYWRk
+ciA9IDA7Cj4gKwlvZmZfdCBrZXJuZWxfc2l6ZSA9IDA7Cj4gKwlvZmZfdCBwYWdlX3NpemUgPSBn
+ZXRwYWdlc2l6ZSgpOwo+ICsJb2ZmX3QgbWF4X2FkZHIgPSAwOwo+ICsJb2ZmX3Qgb2xkX2Jhc2Vf
+YWRkciA9IDA7Cj4gKwlvZmZfdCBvbGRfc3RhcnRfYWRkciA9IDA7Cj4gKwlpbnQgaSA9IDA7Cj4g
+KwlpbnQgcmV0ID0gMDsKPiArCj4gKwlpZiAoaW5mby0+ZmlsZV9tb2RlKSB7Cj4gKwkJZnByaW50
+ZihzdGRlcnIsICJrZXhlY19maWxlIG5vdCBzdXBwb3J0ZWQgb24gdGhpcyAiCj4gKwkJCQkiYXJj
+aGl0ZWN0dXJlXG4iKTsKPiArCQlyZXR1cm4gLUVJTlZBTDsKPiArCX0KPiArCj4gKwkvKiBQYXJz
+ZSB0aGUgRUxGIGZpbGUgKi8KPiArCXJldCA9IGJ1aWxkX2VsZl9leGVjX2luZm8oYnVmLCBsZW4s
+ICZlaGRyLCAwKTsKPiArCWlmIChyZXQgPCAwKSB7Cj4gKwkJZnByaW50ZihzdGRlcnIsICJFTEYg
+ZXhlYyBwYXJzZSBmYWlsZWRcbiIpOwo+ICsJCXJldHVybiAtRUlOVkFMOwo+ICsJfQo+ICsKPiAr
+CW1heF9hZGRyID0gZWxmX21heF9hZGRyKCZlaGRyKTsKPiArCW9sZF9iYXNlX2FkZHIgPSBtYXhf
+YWRkcjsKPiArCW9sZF9zdGFydF9hZGRyID0gbWF4X2FkZHI7Cj4gKwo+ICsJLyoKPiArCSAqIEdl
+dCB0aGUgbWVtb3J5IGZvb3RwcmludCwgYmFzZSBwaHlzaWNhbAo+ICsJICogYW5kIHN0YXJ0IGFk
+ZHJlc3Mgb2YgdGhlIEVMRiBpbWFnZQo+ICsJICovCj4gKwlmb3IgKGkgPSAwOyBpIDwgZWhkci5l
+X3BobnVtOyBpKyspIHsKPiArCQlwaGRyID0gJmVoZHIuZV9waGRyW2ldOwo+ICsJCWlmIChwaGRy
+LT5wX3R5cGUgIT0gUFRfTE9BRCkKPiArCQkJY29udGludWU7Cj4gKwo+ICsJCS8qCj4gKwkJICog
+Tm90ZTogQWNjb3JkaW5nIHRvIEVMRiBzcGVjIHRoZSBsb2FkYWJsZSByZWdpb25zCj4gKwkJICog
+YXJlIHNvcnRlZCBvbiBwX3ZhZGRyLCBub3QgcF9wYWRkci4KPiArCQkgKi8KPiArCQlpZiAob2xk
+X2Jhc2VfYWRkciA+IHBoZHItPnBfcGFkZHIpCj4gKwkJCW9sZF9iYXNlX2FkZHIgPSBwaGRyLT5w
+X3BhZGRyOwo+ICsKPiArCQlpZiAocGhkci0+cF92YWRkciA9PSBlaGRyLmVfZW50cnkgfHwKPiAr
+CQkgICAgcGhkci0+cF9wYWRkciA9PSBlaGRyLmVfZW50cnkpCj4gKwkJCW9sZF9zdGFydF9hZGRy
+ID0gcGhkci0+cF9wYWRkcjsKPiArCj4gKwkJa2VybmVsX3NpemUgKz0gX0FMSUdOX1VQKHBoZHIt
+PnBfbWVtc3osIHBhZ2Vfc2l6ZSk7Cj4gKwl9Cj4gKwo+ICsJaWYgKG9sZF9iYXNlX2FkZHIgPT0g
+bWF4X2FkZHIgfHwga2VybmVsX3NpemUgPT0gMCkgewo+ICsJCWZwcmludGYoc3RkZXJyLCAiTm8g
+bG9hZGFibGUgc2VnbWVudHMgcHJlc2VudCBvbiB0aGUgIgo+ICsJCQkJInByb3ZpZGVkIEVMRiBp
+bWFnZVxuIik7Cj4gKwkJcmV0dXJuIC1FSU5WQUw7Cj4gKwl9Cj4gKwo+ICsJaWYgKG9sZF9zdGFy
+dF9hZGRyID09IG1heF9hZGRyKSB7Cj4gKwkJZnByaW50ZihzdGRlcnIsICJDb3VsZCBub3QgZmlu
+ZCB0aGUgZW50cnkgcG9pbnQgYWRkcmVzcyBvZiAiCj4gKwkJCQkicHJvdmlkZWQgRUxGIGltYWdl
+XG4iKTsKPiArCQlyZXR1cm4gLUVJTlZBTDsKPiArCX0KPiArCj4gKwlkYmdwcmludGYoIkdvdCBF
+TEYgd2l0aCB0b3RhbCBtZW1zeiAlbHVLQlxuIgo+ICsJCSAgIkJhc2UgcGFkZHI6IDB4JWxYLCBz
+dGFydF9hZGRyOiAweCVsWFxuIiwKPiArCQkgIGtlcm5lbF9zaXplIC8gMTAyNCwgb2xkX2Jhc2Vf
+YWRkciwgb2xkX3N0YXJ0X2FkZHIpOwo+ICsKPiArCS8qIEdldCBhIGNvbnRpbnVvdXMgcGh5c2lj
+YWwgcmVnaW9uIHRoYXQgY2FuIGhvbGQgdGhlIGtlcm5lbCAqLwo+ICsJcmV0ID0gZWxmX3Jpc2N2
+X2ZpbmRfcGJhc2UoaW5mbywgJm5ld19iYXNlX2FkZHIsIGtlcm5lbF9zaXplKTsKPiArCWlmIChy
+ZXQgPCAwKSB7Cj4gKwkJZnByaW50ZihzdGRlcnIsICJDb3VsZCBub3QgZmluZCBhIG1lbW9yeSBy
+ZWdpb24gZm9yIHRoZSAiCj4gKwkJCQkicHJvdmlkZWQgRUxGIGltYWdlXG4iKTsKPiArCQlyZXR1
+cm4gcmV0Owo+ICsJfQo+ICsKPiArCWRiZ3ByaW50ZigiTmV3IGJhc2UgcGFkZHIgZm9yIHRoZSBF
+TEY6IDB4JWxYXG4iLCBuZXdfYmFzZV9hZGRyKTsKPiArCj4gKwkvKiBSZS1zZXQgdGhlIGJhc2Ug
+cGh5c2ljYWwgYWRkcmVzcyBvZiB0aGUgRUxGICovCj4gKwlmb3IgKGkgPSAwOyBpIDwgZWhkci5l
+X3BobnVtOyBpKyspIHsKPiArCQlwaGRyID0gJmVoZHIuZV9waGRyW2ldOwo+ICsJCWlmIChwaGRy
+LT5wX3R5cGUgIT0gUFRfTE9BRCkKPiArCQkJY29udGludWU7Cj4gKwo+ICsJCXBoZHItPnBfcGFk
+ZHIgLT0gb2xkX2Jhc2VfYWRkcjsKPiArCQlwaGRyLT5wX3BhZGRyICs9IG5ld19iYXNlX2FkZHI7
+Cj4gKwl9Cj4gKwo+ICsJLyogUmUtc2V0IHRoZSBlbnRyeSBwb2ludCBhZGRyZXNzICovCj4gKwll
+aGRyLmVfZW50cnkgPSAob2xkX3N0YXJ0X2FkZHIgLSBvbGRfYmFzZV9hZGRyKSArIG5ld19iYXNl
+X2FkZHI7Cj4gKwlpbmZvLT5lbnRyeSA9ICh2b2lkICopIGVoZHIuZV9lbnRyeTsKPiArCWRiZ3By
+aW50ZigiTmV3IGVudHJ5IHBvaW50IGZvciB0aGUgRUxGOiAweCVsbFhcbiIsIGVoZHIuZV9lbnRy
+eSk7Cj4gKwo+ICsKPiArCS8qIExvYWQgdGhlIEVMRiBleGVjdXRhYmxlICovCj4gKwlyZXQgPSBl
+bGZfZXhlY19sb2FkKCZlaGRyLCBpbmZvKTsKPiArCWlmIChyZXQgPCAwKSB7Cj4gKwkJZnByaW50
+ZihzdGRlcnIsICJFTEYgZXhlYyBsb2FkIGZhaWxlZFxuIik7Cj4gKwkJcmV0dXJuIHJldDsKPiAr
+CX0KPiArCj4gKwlyZXQgPSBsb2FkX2V4dHJhX3NlZ21lbnRzKGluZm8sIG5ld19iYXNlX2FkZHIs
+Cj4gKwkJCQkgIGtlcm5lbF9zaXplLCBtYXhfYWRkcik7Cj4gKwlyZXR1cm4gcmV0Owo+ICt9Cj4g
+Kwo+ICsKPiArLyoqKioqKipcCj4gKyogU1RVQlMgKgo+ICtcKioqKioqKi8KPiArCj4gK2ludCBt
+YWNoaW5lX3ZlcmlmeV9lbGZfcmVsKHN0cnVjdCBtZW1fZWhkciAqZWhkcikKPiArewo+ICsJaWYg
+KGVoZHItPmVpX2RhdGEgIT0gRUxGREFUQTJMU0IpCj4gKwkJcmV0dXJuIDA7Cj4gKyNpZiBfX3Jp
+c2N2X3hsZW4gPT0gNjQKPiArCWlmIChlaGRyLT5laV9jbGFzcyAhPSBFTEZDTEFTUzY0KQo+ICsj
+ZWxzZQo+ICsJaWYgKGVoZHItPmVpX2NsYXNzICE9IEVMRkNMQVNTMzIpCj4gKyNlbmRpZgo+ICsJ
+CXJldHVybiAwOwo+ICsJaWYgKGVoZHItPmVfbWFjaGluZSAhPSBFTV9SSVNDVikKPiArCQlyZXR1
+cm4gMDsKPiArCXJldHVybiAxOwo+ICt9Cj4gKwo+ICt2b2lkIG1hY2hpbmVfYXBwbHlfZWxmX3Jl
+bChzdHJ1Y3QgbWVtX2VoZHIgKlVOVVNFRChlaGRyKSwKPiArCQkJICAgc3RydWN0IG1lbV9zeW0g
+KlVOVVNFRChzeW0pLAo+ICsJCQkgICB1bnNpZ25lZCBsb25nIHJfdHlwZSwKPiArCQkJICAgdm9p
+ZCAqVU5VU0VEKGxvY2F0aW9uKSwKPiArCQkJICAgdW5zaWduZWQgbG9uZyBVTlVTRUQoYWRkcmVz
+cyksCj4gKwkJCSAgIHVuc2lnbmVkIGxvbmcgVU5VU0VEKHZhbHVlKSkKPiArewo+ICsJc3dpdGNo
+IChyX3R5cGUpIHsKPiArCWRlZmF1bHQ6Cj4gKwkJZGllKCJVbmtub3duIHJlbGEgcmVsb2NhdGlv
+bjogJWx1XG4iLCByX3R5cGUpOwo+ICsJCWJyZWFrOwo+ICsJfQo+ICt9Cj4gZGlmZiAtLWdpdCBh
+L2tleGVjL2FyY2gvcmlzY3Yva2V4ZWMtcmlzY3YuYyBiL2tleGVjL2FyY2gvcmlzY3Yva2V4ZWMt
+cmlzY3YuYwo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMC4uZmU1ZGQyZAo+
+IC0tLSAvZGV2L251bGwKPiArKysgYi9rZXhlYy9hcmNoL3Jpc2N2L2tleGVjLXJpc2N2LmMKPiBA
+QCAtMCwwICsxLDM2NSBAQAo+ICsvKiBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMCAq
+Lwo+ICsvKgo+ICsgKiBDb3B5cmlnaHQgKEMpIDIwMTkgRk9SVEgtSUNTL0NBUlYKPiArICogICAg
+ICAgICAgICAgIE5pY2sgS29zc2lmaWRpcyA8bWlja0BpY3MuZm9ydGguZ3I+Cj4gKyAqLwo+ICsK
+PiArI2luY2x1ZGUgImtleGVjLXN5c2NhbGwuaCIJLyogRm9yIEtFWEVDX0FSQ0hfUklTQ1YgKi8K
+PiArI2luY2x1ZGUgImtleGVjLmgiCQkvKiBGb3IgT1BUX01BWCBhbmQgY29uY2F0X2NtZGxpbmUo
+KSAqLwo+ICsjaW5jbHVkZSAibWVtX3JlZ2lvbnMuaCIJLyogRm9yIG1lbV9yZWdpb25zX3NvcnQo
+KSAqLwo+ICsjaW5jbHVkZSAiZHQtb3BzLmgiCQkvKiBGb3IgZHRiX3NldF9ib290YXJncygpICov
+Cj4gKyNpbmNsdWRlIDxhcmNoL29wdGlvbnMuaD4JLyogRm9yIEtFWEVDX0FSQ0hfT1BUSU9OUyAq
+Lwo+ICsjaW5jbHVkZSA8Z2V0b3B0Lmg+CQkvKiBGb3Igc3RydWN0IG9wdGlvbiAqLwo+ICsjaW5j
+bHVkZSA8c3lzL3N0YXQuaD4JCS8qIEZvciBzdGF0KCkgYW5kIHN0cnVjdCBzdGF0ICovCj4gKyNp
+bmNsdWRlIDxzdGRsaWIuaD4JCS8qIEZvciBmcmVlKCkgKi8KPiArI2luY2x1ZGUgPGVycm5vLmg+
+CQkvKiBGb3IgRUlOVkFMICovCj4gKyNpbmNsdWRlIDxsaWJmZHQuaD4JCS8qIEZvciBEZXZpY2VU
+cmVlIGhhbmRsaW5nICovCj4gKyNpbmNsdWRlICJrZXhlYy1yaXNjdi5oIgo+ICsKPiArY29uc3Qg
+c3RydWN0IGFyY2hfbWFwX2VudHJ5IGFyY2hlc1tdID0gewo+ICsJeyAicmlzY3YzMiIsIEtFWEVD
+X0FSQ0hfUklTQ1YgfSwKPiArCXsgInJpc2N2NjQiLCBLRVhFQ19BUkNIX1JJU0NWIH0sCj4gKwl7
+IE5VTEwsIDAgfSwKPiArfTsKPiArCj4gKwo+ICtzdHJ1Y3QgZmlsZV90eXBlIGZpbGVfdHlwZVtd
+ID0gewo+ICsJeyJlbGYtcmlzY3YiLCBlbGZfcmlzY3ZfcHJvYmUsIGVsZl9yaXNjdl9sb2FkLCBl
+bGZfcmlzY3ZfdXNhZ2V9LAo+ICt9Owo+ICtpbnQgZmlsZV90eXBlcyA9IHNpemVvZihmaWxlX3R5
+cGUpIC8gc2l6ZW9mKGZpbGVfdHlwZVswXSk7Cj4gKwo+ICtzdGF0aWMgY29uc3QgY2hhciByaXNj
+dl9vcHRzX3VzYWdlW10gPQo+ICsiCS0tYXBwZW5kPVNUUklORwkJQXBwZW5kIFNUUklORyB0byB0
+aGUga2VybmVsIGNvbW1hbmQgbGluZS5cbiIKPiArIgktLWR0Yj1GSUxFCQlVc2UgRklMRSBhcyB0
+aGUgZGV2aWNlIHRyZWUgYmxvYi5cbiIKPiArIgktLWluaXRyZD1GSUxFCQlVc2UgRklMRSBhcyB0
+aGUga2VybmVsIGluaXRpYWwgcmFtZGlzay5cbiIKPiArIgktLWNtZGxpbmU9U1RSSU5HCVVzZSBT
+VFJJTkcgYXMgdGhlIGtlcm5lbCdzIGNvbW1hbmQgbGluZS5cbiIKPiArIgktLXJldXNlLWNtZGxp
+bmUJCVVzZSBrZXJuZWwgY29tbWFuZCBsaW5lIGZyb20gcnVubmluZyBzeXN0ZW0uXG4iOwo+ICsK
+PiArc3RhdGljIHN0cnVjdCByaXNjdl9vcHRzIGFyY2hfb3B0aW9ucyA9IHswfTsKPiArc3RhdGlj
+IHN0cnVjdCBmZHRfaW1hZ2UgcHJvdmlkZWRfZmR0ID0gezB9Owo+ICtzdGF0aWMgc3RydWN0IG1l
+bW9yeV9yYW5nZXMgc3lzbWVtX3JhbmdlcyA9IHswfTsKPiArCj4gKy8qKioqKioqKioqKioqKioq
+XAo+ICsqIENPTU1PTiBIRUxQRVJTICoKPiArXCoqKioqKioqKioqKioqKiovCj4gKwo+ICtpbnQg
+bG9hZF9leHRyYV9zZWdtZW50cyhzdHJ1Y3Qga2V4ZWNfaW5mbyAqaW5mbywgdWludDY0X3Qga2Vy
+bmVsX2Jhc2UsCj4gKwkJCXVpbnQ2NF90IGtlcm5lbF9zaXplLCB1aW50NjRfdCBtYXhfYWRkcikK
+PiArewo+ICsJc3RydWN0IGZkdF9pbWFnZSAqZmR0ID0gYXJjaF9vcHRpb25zLmZkdDsKPiArCWNo
+YXIgKmluaXRyZF9idWYgPSBOVUxMOwo+ICsJb2ZmX3QgaW5pdHJkX3NpemUgPSAwOwo+ICsJdWlu
+dDY0X3QgaW5pdHJkX2Jhc2UgPSAwOwo+ICsJdWludDY0X3Qgc3RhcnQgPSAwOwo+ICsJdWludDY0
+X3QgZW5kID0gMDsKPiArCXVpbnQ2NF90IG1pbl91c2FibGUgPSBrZXJuZWxfYmFzZSArIGtlcm5l
+bF9zaXplOwo+ICsJdWludDY0X3QgbWF4X3VzYWJsZSA9IG1heF9hZGRyOwo+ICsJaW50IHJldCA9
+IDA7Cj4gKwo+ICsJLyogUHJlcGFyZSB0aGUgZGV2aWNlIHRyZWUgKi8KPiArCWlmIChpbmZvLT5r
+ZXhlY19mbGFncyAmIEtFWEVDX09OX0NSQVNIKSB7Cj4gKwkJcmV0ID0gbG9hZF9lbGZjb3JlaGRy
+KGluZm8pOwo+ICsJCWlmIChyZXQpIHsKPiArCQkJZnByaW50ZihzdGRlcnIsICJDb3VsZG4ndCBj
+cmVhdGUgZWxmY29yZWhkclxuIik7Cj4gKwkJCXJldHVybiByZXQ7Cj4gKwkJfQo+ICsKPiArCQly
+ZXQgPSBkdGJfYWRkX3JhbmdlX3Byb3BlcnR5KCZmZHQtPmJ1ZiwgJmZkdC0+c2l6ZSwKPiArCQkJ
+CQkgICAgIGVsZmNvcmVoZHJfbWVtLnN0YXJ0LCBlbGZjb3JlaGRyX21lbS5lbmQsCj4gKwkJCQkJ
+ICAgICAiY2hvc2VuIiwgImxpbnV4LGVsZmNvcmVoZHIiKTsKPiArCQlpZiAocmV0KSB7Cj4gKwkJ
+CWZwcmludGYoc3RkZXJyLCAiQ291bGRuJ3QgYWRkIGVsZmNvcmVoZHIgdG8gZmR0XG4iKTsKPiAr
+CQkJcmV0dXJuIHJldDsKPiArCQl9Cj4gKwo+ICsJCXJldCA9IGdldF9jcmFzaF9rZXJuZWxfbG9h
+ZF9yYW5nZSgmc3RhcnQsICZlbmQpOwo+ICsJCWlmIChyZXQpIHsKPiArCQkJZnByaW50ZihzdGRl
+cnIsICJDb3VsZG4ndCBnZXQgY3Jhc2hrZW5lbCByZWdpb25cbiIpOwo+ICsJCQlyZXR1cm4gcmV0
+Owo+ICsJCX0KPiArCj4gKwkJcmV0ID0gZHRiX2FkZF9yYW5nZV9wcm9wZXJ0eSgmZmR0LT5idWYs
+ICZmZHQtPnNpemUsIHN0YXJ0LCBlbmQsCj4gKwkJCQkJICAgICAibWVtb3J5IiwgImxpbnV4LHVz
+YWJsZS1tZW1vcnkiKTsKPiArCQlpZiAocmV0KSB7Cj4gKwkJCWZwcmludGYoc3RkZXJyLCAiQ291
+bGRuJ3QgYWRkIHVzYWJsZS1tZW1vcnkgdG8gZmR0XG4iKTsKPiArCQkJcmV0dXJuIHJldDsKPiAr
+CQl9Cj4gKwo+ICsJCW1heF91c2FibGUgPSBlbmQ7Cj4gKwl9IGVsc2Ugewo+ICsJCS8qCj4gKwkJ
+ICogTWFrZSBzdXJlIHdlIHJlbW92ZSBlbGZjb3JlaGRyIGFuZCB1c2FibGUtbWVtb3J5Cj4gKwkJ
+ICogd2hlbiBzd2l0Y2hpbmcgZnJvbSBjcmFzaCBrZXJuZWwgdG8gYSBub3JtYWwgb25lLgo+ICsJ
+CSAqLwo+ICsJCWR0Yl9kZWxldGVfcHJvcGVydHkoZmR0LT5idWYsICJjaG9zZW4iLCAibGludXgs
+ZWxmY29yZWhkciIpOwo+ICsJCWR0Yl9kZWxldGVfcHJvcGVydHkoZmR0LT5idWYsICJtZW1vcnki
+LCAibGludXgsdXNhYmxlLW1lbW9yeSIpOwo+ICsJfQo+ICsKPiArCS8qIERvIHdlIG5lZWQgdG8g
+aW5jbHVkZSBhbiBpbml0cmQgaW1hZ2UgPyAqLwo+ICsJaWYgKCFhcmNoX29wdGlvbnMuaW5pdHJk
+X3BhdGggJiYgIWFyY2hfb3B0aW9ucy5pbml0cmRfZW5kKQo+ICsJCWR0Yl9jbGVhcl9pbml0cmQo
+JmZkdC0+YnVmLCAmZmR0LT5zaXplKTsKPiArCWVsc2UgaWYgKGFyY2hfb3B0aW9ucy5pbml0cmRf
+cGF0aCkgewo+ICsJCWlmIChhcmNoX29wdGlvbnMuaW5pdHJkX2VuZCkKPiArCQkJZnByaW50Zihz
+dGRlcnIsICJXYXJuaW5nOiBBbiBpbml0cmQgaW1hZ2Ugd2FzIHByb3ZpZGVkIgo+ICsJCQkJCSIs
+IHdpbGwgaWdub3JlIHJldXNlaW5pdHJkXG4iKTsKPiArCj4gKwkJaW5pdHJkX2J1ZiA9IHNsdXJw
+X2ZpbGUoYXJjaF9vcHRpb25zLmluaXRyZF9wYXRoLAo+ICsJCQkJCSZpbml0cmRfc2l6ZSk7Cj4g
+KwkJaWYgKCFpbml0cmRfYnVmKSB7Cj4gKwkJCWZwcmludGYoc3RkZXJyLCAiQ291bGRuJ3QgcmVh
+ZCBwcm92aWRlZCBpbml0cmRcbiIpOwo+ICsJCQlyZXR1cm4gLUVJTlZBTDsKPiArCQl9Cj4gKwo+
+ICsJCWluaXRyZF9iYXNlID0gYWRkX2J1ZmZlcl9waHlzX3ZpcnQoaW5mbywgaW5pdHJkX2J1ZiwK
+PiArCQkJCQkJICAgaW5pdHJkX3NpemUsCj4gKwkJCQkJCSAgIGluaXRyZF9zaXplLCAwLAo+ICsJ
+CQkJCQkgICBtaW5fdXNhYmxlLAo+ICsJCQkJCQkgICBtYXhfdXNhYmxlLCAtMSwgMCk7Cj4gKwo+
+ICsJCWR0Yl9zZXRfaW5pdHJkKCZmZHQtPmJ1ZiwgJmZkdC0+c2l6ZSwgaW5pdHJkX2Jhc2UsCj4g
+KwkJCSAgICAgICBpbml0cmRfYmFzZSArIGluaXRyZF9zaXplKTsKPiArCj4gKwkJZGJncHJpbnRm
+KCJCYXNlIGFkZHIgZm9yIGluaXRyZCBpbWFnZTogMHglbFhcbiIsIGluaXRyZF9iYXNlKTsKPiAr
+CQltaW5fdXNhYmxlID0gaW5pdHJkX2Jhc2U7Cj4gKwkJbWF4X3VzYWJsZSA9IGluaXRyZF9iYXNl
+Owo+ICsJfQo+ICsKPiArCS8qIEFkZCBkZXZpY2UgdHJlZSAqLwo+ICsJYWRkX2J1ZmZlcl9waHlz
+X3ZpcnQoaW5mbywgZmR0LT5idWYsIGZkdC0+c2l6ZSwgZmR0LT5zaXplLCAwLAo+ICsJCQkgICAg
+IG1pbl91c2FibGUsIG1heF91c2FibGUsIC0xLCAwKTsKPiArCj4gKwlyZXR1cm4gMDsKPiArfQo+
+ICsKPiArCj4gKy8qKioqKioqKioqKioqKlwKPiArKiBFTlRSWSBQT0lOVFMgKgo+ICtcKioqKioq
+KioqKioqKiovCj4gKwo+ICt2b2lkIGFyY2hfdXNhZ2Uodm9pZCkKPiArewo+ICsJcHJpbnRmKHJp
+c2N2X29wdHNfdXNhZ2UpOwo+ICt9Cj4gKwo+ICtpbnQgYXJjaF9wcm9jZXNzX29wdGlvbnMoaW50
+IGFyZ2MsIGNoYXIgKiphcmd2KQo+ICt7Cj4gKwlzdGF0aWMgY29uc3Qgc3RydWN0IG9wdGlvbiBv
+cHRpb25zW10gPSB7Cj4gKwkJS0VYRUNfQVJDSF9PUFRJT05TCj4gKwkJeyAwIH0sCj4gKwl9Owo+
+ICsJc3RhdGljIGNvbnN0IGNoYXIgc2hvcnRfb3B0aW9uc1tdID0gS0VYRUNfQVJDSF9PUFRfU1RS
+Owo+ICsJc3RydWN0IHN0YXQgc3QgPSB7MH07Cj4gKwljaGFyICphcHBlbmQgPSBOVUxMOwo+ICsJ
+Y2hhciAqY21kbGluZSA9IE5VTEw7Cj4gKwl2b2lkICp0bXAgPSBOVUxMOwo+ICsJb2ZmX3QgdG1w
+X3NpemUgPSAwOwo+ICsJaW50IG9wdCA9IDA7Cj4gKwlpbnQgcmV0ID0gMDsKPiArCj4gKwl3aGls
+ZSAoKG9wdCA9IGdldG9wdF9sb25nKGFyZ2MsIGFyZ3YsIHNob3J0X29wdGlvbnMsCj4gKwkJCQkg
+IG9wdGlvbnMsIDApKSAhPSAtMSkgewo+ICsJCXN3aXRjaCAob3B0KSB7Cj4gKwkJY2FzZSBPUFRf
+QVBQRU5EOgo+ICsJCQlhcHBlbmQgPSBvcHRhcmc7Cj4gKwkJCWJyZWFrOwo+ICsJCWNhc2UgT1BU
+X0NNRExJTkU6Cj4gKwkJCWlmIChjbWRsaW5lKQo+ICsJCQkJZnByaW50ZihzdGRlcnIsCj4gKwkJ
+CQkJIldhcm5pbmc6IEtlcm5lbCdzIGNtZGxpbmUgIgo+ICsJCQkJCSJzZXQgdHdpY2UgIVxuIik7
+Cj4gKwkJCWNtZGxpbmUgPSBvcHRhcmc7Cj4gKwkJCWJyZWFrOwo+ICsJCWNhc2UgT1BUX1JFVVNF
+X0NNRExJTkU6Cj4gKwkJCWlmIChjbWRsaW5lKQo+ICsJCQkJZnByaW50ZihzdGRlcnIsCj4gKwkJ
+CQkJIldhcm5pbmc6IEtlcm5lbCdzIGNtZGxpbmUgIgo+ICsJCQkJCSJzZXQgdHdpY2UgIVxuIik7
+Cj4gKwkJCWNtZGxpbmUgPSBnZXRfY29tbWFuZF9saW5lKCk7Cj4gKwkJCWJyZWFrOwo+ICsJCWNh
+c2UgT1BUX0RUQjoKPiArCQkJcmV0ID0gc3RhdChvcHRhcmcsICZzdCk7Cj4gKwkJCWlmIChyZXQp
+IHsKPiArCQkJCWZwcmludGYoc3RkZXJyLAo+ICsJCQkJCSJDb3VsZCBub3QgZmluZCB0aGUgcHJv
+dmlkZWQgZHRiICFcbiIpOwo+ICsJCQkJcmV0dXJuIC1FSU5WQUw7Cj4gKwkJCX0KPiArCQkJYXJj
+aF9vcHRpb25zLmZkdF9wYXRoID0gb3B0YXJnOwo+ICsJCQlicmVhazsKPiArCQljYXNlIE9QVF9J
+TklUUkQ6Cj4gKwkJCXJldCA9IHN0YXQob3B0YXJnLCAmc3QpOwo+ICsJCQlpZiAocmV0KSB7Cj4g
+KwkJCQlmcHJpbnRmKHN0ZGVyciwKPiArCQkJCQkiQ291bGQgbm90IGZpbmQgdGhlIHByb3ZpZGVk
+ICIKPiArCQkJCQkiaW5pdHJkIGltYWdlICFcbiIpOwo+ICsJCQkJcmV0dXJuIC1FSU5WQUw7Cj4g
+KwkJCX0KPiArCQkJYXJjaF9vcHRpb25zLmluaXRyZF9wYXRoID0gb3B0YXJnOwo+ICsJCQlicmVh
+azsKPiArCQlkZWZhdWx0Ogo+ICsJCQlicmVhazsKPiArCQl9Cj4gKwl9Cj4gKwo+ICsJLyogSGFu
+ZGxlIEtlcm5lbCdzIGNvbW1hbmQgbGluZSAqLwo+ICsJaWYgKGFwcGVuZCAmJiAhY21kbGluZSkK
+PiArCQlmcHJpbnRmKHN0ZGVyciwgIldhcm5pbmc6IE5vIGNtZGxpbmUgcHJvdmlkZWQsICIKPiAr
+CQkJCSJ1c2luZyBhcHBlbmQgc3RyaW5nIGFzIGNtZGxpbmVcbiIpOwo+ICsJaWYgKCFhcHBlbmQg
+JiYgIWNtZGxpbmUpCj4gKwkJZnByaW50ZihzdGRlcnIsICJXYXJuaW5nOiBObyBjbWRsaW5lIG9y
+IGFwcGVuZCBzdHJpbmcgIgo+ICsJCQkJInByb3ZpZGVkXG4iKTsKPiArCj4gKwlpZiAoYXBwZW5k
+IHx8IGNtZGxpbmUpCj4gKwkJLyoKPiArCQkgKiBOb3RlIHRoYXQgdGhpcyBhbHNvIGhhbmRsZXMg
+dGhlIGNhc2Ugd2hlcmUgImNtZGxpbmUiCj4gKwkJICogb3IgImFwcGVuZCIgaXMgTlVMTC4KPiAr
+CQkgKi8KPiArCQlhcmNoX29wdGlvbnMuY21kbGluZSA9IGNvbmNhdF9jbWRsaW5lKGNtZGxpbmUs
+IGFwcGVuZCk7Cj4gKwo+ICsJLyogSGFuZGxlIEZEVCBpbWFnZSAqLwo+ICsJaWYgKCFhcmNoX29w
+dGlvbnMuZmR0X3BhdGgpIHsKPiArCQlyZXQgPSBzdGF0KCIvc3lzL2Zpcm13YXJlL2ZkdCIsICZz
+dCk7Cj4gKwkJaWYgKHJldCkgewo+ICsJCQlmcHJpbnRmKHN0ZGVyciwgIk5vIGR0YiBwcm92aWRl
+ZCBhbmQgIgo+ICsJCQkJCSIvc3lzL2Zpcm13YXJlL2ZkdCBpcyBub3QgcHJlc2VudFxuIik7Cj4g
+KwkJCXJldHVybiAtRUlOVkFMOwo+ICsJCX0KPiArCQlmcHJpbnRmKHN0ZGVyciwgIldhcm5pbmc6
+IE5vIGR0YiBwcm92aWRlZCwgIgo+ICsJCQkJInVzaW5nIC9zeXMvZmlybXdhcmUvZmR0XG4iKTsK
+PiArCQlhcmNoX29wdGlvbnMuZmR0X3BhdGggPSAiL3N5cy9maXJtd2FyZS9mZHQiOwo+ICsJfQo+
+ICsKPiArCXRtcCA9IHNsdXJwX2ZpbGUoYXJjaF9vcHRpb25zLmZkdF9wYXRoLCAmdG1wX3NpemUp
+Owo+ICsJaWYgKCF0bXApIHsKPiArCQlmcHJpbnRmKHN0ZGVyciwgIkNvdWxkbid0IHJlYWQgcHJv
+dmlkZWQgZmR0XG4iKTsKPiArCQlyZXR1cm4gLUVJTlZBTDsKPiArCX0KPiArCj4gKwlyZXQgPSBm
+ZHRfY2hlY2tfaGVhZGVyKHRtcCk7Cj4gKwlpZiAocmV0KSB7Cj4gKwkJZnByaW50ZihzdGRlcnIs
+ICJHb3QgYW4gaXZhbGlkIGZkdCBpbWFnZSAhXG4iKTsKPiArCQlmcmVlKHRtcCk7Cj4gKwkJcmV0
+dXJuIC1FSU5WQUw7Cj4gKwl9Cj4gKwlwcm92aWRlZF9mZHQuYnVmID0gdG1wOwo+ICsJcHJvdmlk
+ZWRfZmR0LnNpemUgPSB0bXBfc2l6ZTsKPiArCj4gKwlpZiAoYXJjaF9vcHRpb25zLmNtZGxpbmUp
+IHsKPiArCQlyZXQgPSBkdGJfc2V0X2Jvb3RhcmdzKCZwcm92aWRlZF9mZHQuYnVmLCAmcHJvdmlk
+ZWRfZmR0LnNpemUsCj4gKwkJCQkgICAgICAgYXJjaF9vcHRpb25zLmNtZGxpbmUpOwo+ICsJCWlm
+IChyZXQgPCAwKSB7Cj4gKwkJCWZwcmludGYoc3RkZXJyLCAiQ291bGQgbm90IHNldCBib290YXJn
+cyBvbiAiCj4gKwkJCQkJInRoZSBmZHQgaW1hZ2VcbiIpOwo+ICsJCQlyZXR1cm4gcmV0Owo+ICsJ
+CX0KPiArCX0KPiArCj4gKwlhcmNoX29wdGlvbnMuZmR0ID0gJnByb3ZpZGVkX2ZkdDsKPiArCj4g
+KwlyZXR1cm4gMDsKPiArfQo+ICsKPiArLyoKPiArICogVGhpcyBvbmUgaXMgY2FsbGVkIGFmdGVy
+IGFyY2hfcHJvY2Vzc19vcHRpb25zIHNvIHdlIGFscmVhZHkKPiArICogaGF2ZSBhbiBmZHQgaW1h
+Z2UgaW4gcGxhY2UuCj4gKyAqLwo+ICt2b2lkIGFyY2hfcmV1c2VfaW5pdHJkKHZvaWQpCj4gK3sK
+PiArCWNvbnN0IHVpbnQzMl90ICpwcm9wMzIgPSBOVUxMOwo+ICsJdWludDMyX3QgYWRkcl9jZWxs
+cyA9IDA7Cj4gKwljb25zdCB2b2lkICpwcm9wID0gMDsKPiArCWludCBwcm9wX3NpemUgPSAwOwo+
+ICsJdWludDY0X3QgaW5pdHJkX3N0YXJ0ID0gMDsKPiArCXVpbnQ2NF90IGluaXRyZF9lbmQgPSAw
+Owo+ICsJaW50IGNob3Nlbl9vZmZzZXQgPSAwOwo+ICsJc3RydWN0IGZkdF9pbWFnZSAqZmR0ID0g
+JnByb3ZpZGVkX2ZkdDsKPiArCj4gKwljaG9zZW5fb2Zmc2V0ID0gZmR0X3N1Ym5vZGVfb2Zmc2V0
+KGZkdC0+YnVmLCAwLCAiY2hvc2VuIik7Cj4gKwlpZiAoY2hvc2VuX29mZnNldCA8IDApIHsKPiAr
+CQlmcHJpbnRmKHN0ZGVyciwgIk5vIC9jaG9zZW4gbm9kZSBmb3VuZCBvbiBmZHQgaW1hZ2UgIgo+
+ICsJCQkJInVuYWJsZSB0byByZXVzZSBpbml0cmRcbiIpOwo+ICsJCXJldHVybjsKPiArCX0KPiAr
+Cj4gKwlwcm9wMzIgPSBmZHRfZ2V0cHJvcChmZHQtPmJ1ZiwgMCwgIiNhZGRyZXNzLWNlbGxzIiwg
+TlVMTCk7Cj4gKwlpZiAoIXByb3AzMikgewo+ICsJCWZwcmludGYoc3RkZXJyLCAiTm8gI2FkZHJl
+c3MtY2VsbHMgcHJvcGVydHkgb24gcm9vdCBub2RlXG4iKTsKPiArCQlyZXR1cm47Cj4gKwl9Cj4g
+KwlhZGRyX2NlbGxzID0gYmUzMl90b19jcHUoKnByb3AzMik7Cj4gKwo+ICsJcHJvcCA9IGZkdF9n
+ZXRwcm9wKGZkdC0+YnVmLCBjaG9zZW5fb2Zmc2V0LAo+ICsJCQkgICAibGludXgsaW5pdHJkLXN0
+YXJ0IiwgJnByb3Bfc2l6ZSk7Cj4gKwlpZiAoIXByb3ApIHsKPiArCQlmcHJpbnRmKHN0ZGVyciwg
+IkNvdWxkIG5vdCBnZXQgbGludXgsaW5pdHJkLXN0YXJ0XG4iKTsKPiArCQlyZXR1cm47Cj4gKwl9
+Cj4gKwlkdGJfZXh0cmFjdF9pbnRfcHJvcGVydHkoJmluaXRyZF9zdGFydCwgcHJvcCwgYWRkcl9j
+ZWxscyk7Cj4gKwo+ICsJcHJvcCA9IGZkdF9nZXRwcm9wKGZkdC0+YnVmLCBjaG9zZW5fb2Zmc2V0
+LAo+ICsJCQkgICAibGludXgsaW5pdHJkLWVuZCIsICZwcm9wX3NpemUpOwo+ICsJaWYgKCFwcm9w
+KSB7Cj4gKwkJZnByaW50ZihzdGRlcnIsICJDb3VsZCBub3QgZ2V0IGxpbnV4LGluaXRyZC1lbmRc
+biIpOwo+ICsJCXJldHVybjsKPiArCX0KPiArCWR0Yl9leHRyYWN0X2ludF9wcm9wZXJ0eSgmaW5p
+dHJkX2VuZCwgcHJvcCwgYWRkcl9jZWxscyk7Cj4gKwo+ICsJYXJjaF9vcHRpb25zLmluaXRyZF9z
+dGFydCA9IGluaXRyZF9zdGFydDsKPiArCWFyY2hfb3B0aW9ucy5pbml0cmRfZW5kID0gaW5pdHJk
+X2VuZDsKPiArCWRiZ3ByaW50ZigiaW5pdHJkX3N0YXJ0OiAweCVsWCwgaW5pdHJkX2VuZDogMHgl
+bFhcbiIsCj4gKwkJICBpbml0cmRfc3RhcnQsIGluaXRyZF9lbmQpOwo+ICsKPiArfQo+ICsKPiAr
+aW50IGdldF9tZW1vcnlfcmFuZ2VzKHN0cnVjdCBtZW1vcnlfcmFuZ2UgKipyYW5nZSwgaW50ICpu
+dW1fcmFuZ2VzLAo+ICsJCSAgICAgIHVuc2lnbmVkIGxvbmcga2V4ZWNfZmxhZ3MpCj4gK3sKPiAr
+CWNvbnN0IHN0cnVjdCBmZHRfaW1hZ2UgKmZkdCA9ICZwcm92aWRlZF9mZHQ7Cj4gKwlzdHJ1Y3Qg
+bWVtb3J5X3JhbmdlcyAqZXh0cmFfcmFuZ2VzID0gTlVMTDsKPiArCWludCBpID0gMDsKPiArCWlu
+dCByZXQgPSAwOwo+ICsKPiArCWlmIChhcmNoX29wdGlvbnMuaW5pdHJkX3N0YXJ0ICYmIGFyY2hf
+b3B0aW9ucy5pbml0cmRfZW5kKSB7Cj4gKwkJaW50IGluaXRyZF9zaXplID0gYXJjaF9vcHRpb25z
+LmluaXRyZF9lbmQgLSBhcmNoX29wdGlvbnMuaW5pdHJkX3N0YXJ0Owo+ICsJCWRiZ3ByaW50Zigi
+TWFya2luZyBjdXJyZW50IGludGlyZCBpbWFnZSBhcyByZXNlcnZlZFxuIik7Cj4gKwkJcmV0ID0g
+bWVtX3JlZ2lvbnNfYWxsb2NfYW5kX2FkZChleHRyYV9yYW5nZXMsCj4gKwkJCQkJCWFyY2hfb3B0
+aW9ucy5pbml0cmRfc3RhcnQsCj4gKwkJCQkJCWluaXRyZF9zaXplLAo+ICsJCQkJCQlSQU5HRV9S
+RVNFUlZFRCk7Cj4gKwkJaWYgKHJldCkKPiArCQkJcmV0dXJuIHJldDsKPiArCX0KPiArCj4gKwly
+ZXQgPSBkdGJfZ2V0X21lbW9yeV9yYW5nZXMoZmR0LT5idWYsICZzeXNtZW1fcmFuZ2VzLCBleHRy
+YV9yYW5nZXMpOwo+ICsJaWYgKHJldCkgewo+ICsJCWZwcmludGYoc3RkZXJyLCAiQ291bGQgbm90
+IGdldCBtZW1vcnkgcmFuZ2VzIGZyb20gZGV2aWNlIHRyZWUgKCVpKSAhXG4iLCByZXQpOwo+ICsJ
+CXJldHVybiByZXQ7Cj4gKwl9Cj4gKwo+ICsJKnJhbmdlID0gc3lzbWVtX3Jhbmdlcy5yYW5nZXM7
+Cj4gKwkqbnVtX3JhbmdlcyA9IHN5c21lbV9yYW5nZXMuc2l6ZTsKPiArCj4gKwlkYmdwcmludGYo
+Ik1lbW9yeSByZWdpb25zOlxuIik7Cj4gKwlmb3IgKGkgPSAwOyBpIDwgc3lzbWVtX3Jhbmdlcy5z
+aXplOyBpKyspIHsKPiArCQlkYmdwcmludGYoIlx0MHglbGx4IC0gMHglbGx4IDogJXMgKCVpKVxu
+IiwKPiArCQkJICBzeXNtZW1fcmFuZ2VzLnJhbmdlc1tpXS5zdGFydCwKPiArCQkJICBzeXNtZW1f
+cmFuZ2VzLnJhbmdlc1tpXS5lbmQsCj4gKwkJCSAgc3lzbWVtX3Jhbmdlcy5yYW5nZXNbaV0udHlw
+ZSA9PSBSQU5HRV9SRVNFUlZFRCA/Cj4gKwkJCSAgIlJBTkdFX1JFU0VSVkVEIiA6ICJSQU5HRV9S
+QU0iLAo+ICsJCQkgIHN5c21lbV9yYW5nZXMucmFuZ2VzW2ldLnR5cGUpOwo+ICsJfQo+ICsKPiAr
+CXJldHVybiAwOwo+ICt9Cj4gKwo+ICsvKioqKioqKlwKPiArKiBTVFVCUyAqCj4gK1wqKioqKioq
+Lwo+ICsKPiAraW50IGFyY2hfY29tcGF0X3RyYW1wb2xpbmUoc3RydWN0IGtleGVjX2luZm8gKlVO
+VVNFRChpbmZvKSkKPiArewo+ICsJcmV0dXJuIDA7Cj4gK30KPiArCj4gK3ZvaWQgYXJjaF91cGRh
+dGVfcHVyZ2F0b3J5KHN0cnVjdCBrZXhlY19pbmZvICpVTlVTRUQoaW5mbykpCj4gK3sKPiArfQo+
+IGRpZmYgLS1naXQgYS9rZXhlYy9hcmNoL3Jpc2N2L2tleGVjLXJpc2N2LmggYi9rZXhlYy9hcmNo
+L3Jpc2N2L2tleGVjLXJpc2N2LmgKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAw
+MDAuLmM0MzIzYTYKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIva2V4ZWMvYXJjaC9yaXNjdi9rZXhl
+Yy1yaXNjdi5oCj4gQEAgLTAsMCArMSwzMiBAQAo+ICsvKiBTUERYLUxpY2Vuc2UtSWRlbnRpZmll
+cjogR1BMLTIuMCAqLwo+ICsvKgo+ICsgKiBDb3B5cmlnaHQgKEMpIDIwMTkgRk9SVEgtSUNTL0NB
+UlYKPiArICogICAgICAgICAgICAgIE5pY2sgS29zc2lmaWRpcyA8bWlja0BpY3MuZm9ydGguZ3I+
+Cj4gKyAqLwo+ICsKPiArc3RydWN0IGZkdF9pbWFnZSB7Cj4gKwljaGFyCSpidWY7Cj4gKwlvZmZf
+dAlzaXplOwo+ICt9Owo+ICsKPiArc3RydWN0IHJpc2N2X29wdHMgewo+ICsJY2hhciAqY21kbGlu
+ZTsKPiArCWNoYXIgKmZkdF9wYXRoOwo+ICsJY2hhciAqaW5pdHJkX3BhdGg7Cj4gKwl1aW50NjRf
+dCBpbml0cmRfc3RhcnQ7Cj4gKwl1aW50NjRfdCBpbml0cmRfZW5kOwo+ICsJc3RydWN0IGZkdF9p
+bWFnZSAqZmR0Owo+ICt9Owo+ICsKPiArLyogY3Jhc2hkdW1wLXJpc2N2LmMgKi8KPiArZXh0ZXJu
+IHN0cnVjdCBtZW1vcnlfcmFuZ2UgZWxmY29yZWhkcl9tZW07Cj4gK2ludCBsb2FkX2VsZmNvcmVo
+ZHIoc3RydWN0IGtleGVjX2luZm8gKmluZm8pOwo+ICsKPiArLyoga2V4ZWMtcmlzY3YuYyAqLwo+
+ICtpbnQgbG9hZF9leHRyYV9zZWdtZW50cyhzdHJ1Y3Qga2V4ZWNfaW5mbyAqaW5mbywgdWludDY0
+X3Qga2VybmVsX2Jhc2UsCj4gKwkJCXVpbnQ2NF90IGtlcm5lbF9zaXplLCB1aW50NjRfdCBtYXhf
+YWRkcik7Cj4gKwo+ICtpbnQgZWxmX3Jpc2N2X3Byb2JlKGNvbnN0IGNoYXIgKmJ1Ziwgb2ZmX3Qg
+bGVuKTsKPiArdm9pZCBlbGZfcmlzY3ZfdXNhZ2Uodm9pZCk7Cj4gK2ludCBlbGZfcmlzY3ZfbG9h
+ZChpbnQgYXJnYywgY2hhciAqKmFyZ3YsIGNvbnN0IGNoYXIgKmJ1Ziwgb2ZmX3QgbGVuLAo+ICsJ
+CSAgIHN0cnVjdCBrZXhlY19pbmZvICppbmZvKTsKPiBkaWZmIC0tZ2l0IGEva2V4ZWMvZHQtb3Bz
+LmMgYi9rZXhlYy9kdC1vcHMuYwo+IGluZGV4IDBhOTZiNzUuLjNlMjg1YWIgMTAwNjQ0Cj4gLS0t
+IGEva2V4ZWMvZHQtb3BzLmMKPiArKysgYi9rZXhlYy9kdC1vcHMuYwo+IEBAIC00LDkgKzQsMTEg
+QEAKPiAgICNpbmNsdWRlIDxsaWJmZHQuaD4KPiAgICNpbmNsdWRlIDxzdGRpby5oPgo+ICAgI2lu
+Y2x1ZGUgPHN0ZGxpYi5oPgo+ICsjaW5jbHVkZSA8c3RkYm9vbC5oPgo+ICAgCj4gICAjaW5jbHVk
+ZSAia2V4ZWMuaCIKPiAgICNpbmNsdWRlICJkdC1vcHMuaCIKPiArI2luY2x1ZGUgIm1lbV9yZWdp
+b25zLmgiCj4gICAKPiAgIHN0YXRpYyBjb25zdCBjaGFyIG5fY2hvc2VuW10gPSAiY2hvc2VuIjsK
+PiAgIAo+IEBAIC05NSw3ICs5Nyw3IEBAIGludCBkdGJfc2V0X3Byb3BlcnR5KGNoYXIgKipkdGIs
+IG9mZl90ICpkdGJfc2l6ZSwgY29uc3QgY2hhciAqbm9kZSwKPiAgIAo+ICAgCXN0cmNweShuZXdf
+bm9kZSwgIi8iKTsKPiAgIAlzdHJjYXQobmV3X25vZGUsIG5vZGUpOwo+IC0JCj4gKwo+ICAgCW5v
+ZGVvZmZzZXQgPSBmZHRfcGF0aF9vZmZzZXQobmV3X2R0YiwgbmV3X25vZGUpOwo+ICAgCj4gICAJ
+aWYgKG5vZGVvZmZzZXQgPT0gLUZEVF9FUlJfTk9URk9VTkQpIHsKPiBAQCAtMTc0LDMgKzE3Niw0
+NDEgQEAgaW50IGR0Yl9kZWxldGVfcHJvcGVydHkoY2hhciAqZHRiLCBjb25zdCBjaGFyICpub2Rl
+LCBjb25zdCBjaGFyICpwcm9wKQo+ICAgCWZyZWUobmV3X25vZGUpOwo+ICAgCXJldHVybiByZXN1
+bHQ7Cj4gICB9Cj4gKwo+ICtzdGF0aWMgaW50IGR0Yl9nZXRfbnVtX2NlbGxzKGNoYXIgKmR0Yiwg
+aW50IG5vZGVvZmZzZXQsIHVpbnQzMl90ICphZGRyX2NlbGxzLAo+ICsJCQkgICAgIHVpbnQzMl90
+ICpzaXplX2NlbGxzLCBib29sIHJlY3Vyc2l2ZSkKPiArewo+ICsJY29uc3QgdWludDMyX3QgKnBy
+b3AzMiA9IE5VTEw7Cj4gKwlpbnQgY3Vycl9vZmZzZXQgPSBub2Rlb2Zmc2V0Owo+ICsJaW50IHBy
+b3BfbGVuID0gMDsKPiArCSphZGRyX2NlbGxzID0gMDsKPiArCSpzaXplX2NlbGxzID0gMDsKPiAr
+Cj4gKwlkbyB7Cj4gKwkJcHJvcDMyID0gZmR0X2dldHByb3AoZHRiLCBjdXJyX29mZnNldCwgIiNh
+ZGRyZXNzLWNlbGxzIiwgJnByb3BfbGVuKTsKPiArCQljdXJyX29mZnNldCA9IGZkdF9wYXJlbnRf
+b2Zmc2V0KGR0YiwgY3Vycl9vZmZzZXQpOwo+ICsJfSB3aGlsZSAoIXByb3AzMiAmJiBwcm9wX2xl
+biA9PSAtRkRUX0VSUl9OT1RGT1VORCAmJiByZWN1cnNpdmUpOwo+ICsKPiArCWlmICghcHJvcDMy
+KSB7Cj4gKwkJZGJncHJpbnRmKCJDb3VsZCBub3QgZ2V0ICNhZGRyZXNzLWNlbGxzIHByb3BlcnR5
+IGZvciAlcyAoJXMpXG4iLAo+ICsJCQkgIGZkdF9nZXRfbmFtZShkdGIsIG5vZGVvZmZzZXQsIE5V
+TEwpLCBmZHRfc3RyZXJyb3Iobm9kZW9mZnNldCkpOwo+ICsJCXJldHVybiAtRUlOVkFMOwo+ICsJ
+fQo+ICsJKmFkZHJfY2VsbHMgPSBmZHQzMl90b19jcHUoKnByb3AzMik7Cj4gKwo+ICsJY3Vycl9v
+ZmZzZXQgPSBub2Rlb2Zmc2V0Owo+ICsJZG8gewo+ICsJCXByb3AzMiA9IGZkdF9nZXRwcm9wKGR0
+YiwgY3Vycl9vZmZzZXQsICIjc2l6ZS1jZWxscyIsICZwcm9wX2xlbik7Cj4gKwkJY3Vycl9vZmZz
+ZXQgPSBmZHRfcGFyZW50X29mZnNldChkdGIsIGN1cnJfb2Zmc2V0KTsKPiArCX0gd2hpbGUgKCFw
+cm9wMzIgJiYgcHJvcF9sZW4gPT0gLUZEVF9FUlJfTk9URk9VTkQgJiYgcmVjdXJzaXZlKTsKPiAr
+Cj4gKwlpZiAoIXByb3AzMikgewo+ICsJCWRiZ3ByaW50ZigiQ291bGQgbm90IGdldCAjc2l6ZS1j
+ZWxscyBwcm9wZXJ0eSBmb3IgJXMgKCVzKVxuIiwKPiArCQkJICBmZHRfZ2V0X25hbWUoZHRiLCBu
+b2Rlb2Zmc2V0LCBOVUxMKSwgZmR0X3N0cmVycm9yKG5vZGVvZmZzZXQpKTsKPiArCQlyZXR1cm4g
+LUVJTlZBTDsKPiArCX0KPiArCSpzaXplX2NlbGxzID0gZmR0MzJfdG9fY3B1KCpwcm9wMzIpOwo+
+ICsKPiArCWRiZ3ByaW50ZigiJXM6ICNhZGRyZXNzLWNlbGxzOiVkICNzaXplLWNlbGxzOiVkXG4i
+LAo+ICsJCSBmZHRfZ2V0X25hbWUoZHRiLCBub2Rlb2Zmc2V0LCBOVUxMKSwgKmFkZHJfY2VsbHMs
+ICpzaXplX2NlbGxzKTsKPiArCj4gKwlyZXR1cm4gMDsKPiArfQo+ICsKPiArdm9pZCBkdGJfZXh0
+cmFjdF9pbnRfcHJvcGVydHkodWludDY0X3QgKnZhbCwgY29uc3Qgdm9pZCAqYnVmLCB1aW50MzJf
+dCBjZWxscykKPiArewo+ICsJY29uc3QgdWludDMyX3QgKnByb3AzMiA9IE5VTEw7Cj4gKwljb25z
+dCB1aW50NjRfdCAqcHJvcDY0ID0gTlVMTDsKPiArCj4gKwlpZiAoY2VsbHMgPT0gMSkgewo+ICsJ
+CXByb3AzMiA9IChjb25zdCB1aW50MzJfdCAqKSBidWY7Cj4gKwkJKnZhbCA9ICh1aW50NjRfdCkg
+YmUzMl90b19jcHUoKnByb3AzMik7Cj4gKwl9IGVsc2Ugewo+ICsJCS8qIFNraXAgYW55IGxlYWRp
+bmcgY2VsbHMgKi8KPiArCQlwcm9wNjQgPSAoY29uc3QgdWludDY0X3QgKikgKHVpbnQzMl90ICop
+YnVmICsgY2VsbHMgLSAyOwo+ICsJCSp2YWwgPSAodWludDY0X3QpIGJlNjRfdG9fY3B1KCpwcm9w
+NjQpOwo+ICsJfQo+ICt9Cj4gKwo+ICt2b2lkIGR0Yl9maWxsX2ludF9wcm9wZXJ0eSh2b2lkICpi
+dWYsIHVpbnQ2NF90IHZhbCwgdWludDMyX3QgY2VsbHMpCj4gK3sKPiArCXVpbnQzMl90IHByb3Az
+MiA9IDA7Cj4gKwl1aW50NjRfdCBwcm9wNjQgPSAwOwo+ICsKPiArCWlmIChjZWxscyA9PSAxKSB7
+Cj4gKwkJcHJvcDMyID0gY3B1X3RvX2ZkdDMyKCh1aW50MzJfdCkgdmFsKTsKPiArCQltZW1jcHko
+YnVmLCAmcHJvcDMyLCBzaXplb2YodWludDMyX3QpKTsKPiArCX0gZWxzZSB7Cj4gKwkJcHJvcDY0
+ID0gY3B1X3RvX2ZkdDY0KHZhbCk7Cj4gKwkJLyogU2tpcCBhbnkgbGVhZGluZyBjZWxscyAqLwo+
+ICsJCW1lbWNweSgodWludDY0X3QgKikodWludDMyX3QgKilidWYgKyBjZWxscyAtIDIsCj4gKwkJ
+ICAgICAgICZwcm9wNjQsIHNpemVvZih1aW50NjRfdCkpOwo+ICsJfQo+ICt9Cj4gKwo+ICtpbnQg
+ZHRiX2FkZF9yYW5nZV9wcm9wZXJ0eShjaGFyICoqZHRiLCBvZmZfdCAqZHRiX3NpemUsIHVpbnQ2
+NF90IHN0YXJ0LCB1aW50NjRfdCBlbmQsCj4gKwkJCSAgIGNvbnN0IGNoYXIgKnBhcmVudCwgY29u
+c3QgY2hhciAqbmFtZSkKPiArewo+ICsJdWludDMyX3QgYWRkcl9jZWxscyA9IDA7Cj4gKwl1aW50
+MzJfdCBzaXplX2NlbGxzID0gMDsKPiArCWNoYXIgKm5vZGVwYXRoID0gTlVMTDsKPiArCXZvaWQg
+KnByb3AgPSBOVUxMOwo+ICsJaW50IG5vZGVvZmZzZXQgPSAwOwo+ICsJaW50IHByb3Bfc2l6ZSA9
+IDA7Cj4gKwlpbnQgcmV0ID0gMDsKPiArCj4gKwlub2RlcGF0aCA9IG1hbGxvYyhzdHJsZW4oIi8i
+KSArIHN0cmxlbihwYXJlbnQpICsgMSk7Cj4gKwlpZiAoIW5vZGVwYXRoKSB7Cj4gKwkJZGJncHJp
+bnRmKCIlczogbWFsbG9jIGZhaWxlZFxuIiwgX19mdW5jX18pOwo+ICsJCXJldHVybiAtRU5PTUVN
+Owo+ICsJfQo+ICsKPiArCXN0cmNweShub2RlcGF0aCwgIi8iKTsKPiArCXN0cmNhdChub2RlcGF0
+aCwgcGFyZW50KTsKPiArCj4gKwlub2Rlb2Zmc2V0ID0gZmR0X3BhdGhfb2Zmc2V0KCpkdGIsIG5v
+ZGVwYXRoKTsKPiArCWlmIChub2Rlb2Zmc2V0IDwgMCkgewo+ICsJCWRiZ3ByaW50ZigiJXM6IGZk
+dF9wYXRoX29mZnNldCglcykgZmFpbGVkOiAlc1xuIiwgX19mdW5jX18sCj4gKwkJCSAgbm9kZXBh
+dGgsIGZkdF9zdHJlcnJvcihub2Rlb2Zmc2V0KSk7Cj4gKwkJZnJlZShub2RlcGF0aCk7Cj4gKwkJ
+cmV0dXJuIG5vZGVvZmZzZXQ7Cj4gKwl9Cj4gKwlmcmVlKG5vZGVwYXRoKTsKPiArCj4gKwlyZXQg
+PSBkdGJfZ2V0X251bV9jZWxscygqZHRiLCBub2Rlb2Zmc2V0LCAmYWRkcl9jZWxscywgJnNpemVf
+Y2VsbHMsIHRydWUpOwo+ICsJaWYgKHJldCA8IDApCj4gKwkJcmV0dXJuIHJldDsKPiArCj4gKwkv
+KiBDYW4gdGhlIHJhbmdlIGZpdCB3aXRoIHRoZSBnaXZlbiBhZGRyZXNzL3NpemUgY2VsbHMgPyAq
+Lwo+ICsJaWYgKChhZGRyX2NlbGxzID09IDEpICYmIChzdGFydCA+PSAoMVVMTCA8PCAzMikpKQo+
+ICsJCXJldHVybiAtRUlOVkFMOwo+ICsKPiArCWlmICgoc2l6ZV9jZWxscyA9PSAxKSAmJiAoKGVu
+ZCAtIHN0YXJ0ICsgMSkgPj0gKDFVTEwgPDwgMzIpKSkKPiArCQlyZXR1cm4gLUVJTlZBTDsKPiAr
+Cj4gKwlwcm9wX3NpemUgPSBzaXplb2YodWludDMyX3QpICogKGFkZHJfY2VsbHMgKyBzaXplX2Nl
+bGxzKTsKPiArCXByb3AgPSBtYWxsb2MocHJvcF9zaXplKTsKPiArCj4gKwlkdGJfZmlsbF9pbnRf
+cHJvcGVydHkocHJvcCwgc3RhcnQsIGFkZHJfY2VsbHMpOwo+ICsJZHRiX2ZpbGxfaW50X3Byb3Bl
+cnR5KCh2b2lkICopKCh1aW50MzJfdCAqKXByb3AgKyBhZGRyX2NlbGxzKSwKPiArCQkJICAgICAg
+ZW5kIC0gc3RhcnQgKyAxLCBzaXplX2NlbGxzKTsKPiArCj4gKwkvKiBBZGQgYnkgbm9kZSBwYXRo
+IG5hbWUgKi8KPiArCXJldHVybiBkdGJfc2V0X3Byb3BlcnR5KGR0YiwgZHRiX3NpemUsIHBhcmVu
+dCwgbmFtZSwgcHJvcCwgcHJvcF9zaXplKTsKPiArfQo+ICsKPiArLyoqKioqKioqKioqKioqKioq
+KioqKioqKlwKPiArKiBNRU1PUlkgUkFOR0VTIEhBTkRMSU5HICoKPiArXCoqKioqKioqKioqKioq
+KioqKioqKioqKi8KPiArCj4gK3N0YXRpYyBpbnQgZHRiX2FkZF9tZW1vcnlfcmFuZ2Uoc3RydWN0
+IG1lbW9yeV9yYW5nZXMgKm1lbV9yYW5nZXMsIHVpbnQ2NF90IHN0YXJ0LAo+ICsJCQkJdWludDY0
+X3QgZW5kLCB1bnNpZ25lZCB0eXBlKQo+ICt7Cj4gKwlzdHJ1Y3QgbWVtb3J5X3JhbmdlIHRoaXNf
+cmVnaW9uID0gezB9Owo+ICsJc3RydWN0IG1lbW9yeV9yYW5nZSAqcmFuZ2VzID0gbWVtX3Jhbmdl
+cy0+cmFuZ2VzOwo+ICsJaW50IGkgPSAwOwo+ICsJaW50IHJldCA9IDA7Cj4gKwo+ICsJaWYgKHN0
+YXJ0ID09IGVuZCkgewo+ICsJCWRiZ3ByaW50ZigiSWdub3JpbmcgZW1wdHkgcmVnaW9uXG4iKTsK
+PiArCQlyZXR1cm4gLUVJTlZBTDsKPiArCX0KPiArCj4gKwkvKiBDaGVjayBpZiB3ZSBhcmUgYWRk
+aW5nIGFuIGV4aXN0aW5nIHJlZ2lvbiAqLwo+ICsJZm9yIChpID0gMDsgaSA8IG1lbV9yYW5nZXMt
+PnNpemU7IGkrKykgewo+ICsJCWlmIChzdGFydCA9PSByYW5nZXNbaV0uc3RhcnQgJiYgZW5kID09
+IHJhbmdlc1tpXS5lbmQpIHsKPiArCQkJZGJncHJpbnRmKCJEdXBsaWNhdGU6IDB4JWx4IC0gMHgl
+bHhcbiIsIHN0YXJ0LCBlbmQpOwo+ICsKPiArCQkJaWYgKHR5cGUgPT0gcmFuZ2VzW2ldLnR5cGUp
+Cj4gKwkJCQlyZXR1cm4gMDsKPiArCQkJZWxzZSBpZiAodHlwZSA9PSBSQU5HRV9SRVNFUlZFRCkg
+ewo+ICsJCQkJcmFuZ2VzW2ldLnR5cGUgPSBSQU5HRV9SRVNFUlZFRDsKPiArCQkJCXJldHVybiAw
+Owo+ICsJCQl9Cj4gKwo+ICsJCQlkYmdwcmludGYoIkNvbmZsaWN0aW5nIHR5cGVzIGZvciByZWdp
+b246IDB4JWx4IC0gMHglbHhcbiIsCj4gKwkJCQkgIHN0YXJ0LCBlbmQpOwo+ICsJCQlyZXR1cm4g
+LUVJTlZBTDsKPiArCQl9Cj4gKwl9Cj4gKwo+ICsJLyoKPiArCSAqIFJlc2VydmVkIHJlZ2lvbnMg
+bWF5IGJlIHBhcnQgb2YgYW4gZXhpc3RpbmcgL21lbW9yeQo+ICsJICogcmVnaW9uIGFuZCBzaG91
+bGRuJ3Qgb3ZlcmxhcCBhY2NvcmRpbmcgdG8gc3BlYywgc28KPiArCSAqIHNpbmNlIHdlIGFkZCAv
+bWVtb3J5IHJlZ2lvbnMgZmlyc3QsIHdlIGNhbiBleGNsdWRlCj4gKwkgKiByZXNlcnZlZCByZWdp
+b25zIGhlcmUgZnJvbSB0aGUgZXhpc3RpbmcgL21lbW9yeSByZWdpb25zCj4gKwkgKiBpbmNsdWRl
+ZCBpbiByYW5nZXNbXSwgc28gdGhhdCB3ZSBkb24ndCBoYXZlIHRoZSBzYW1lCj4gKwkgKiByZWdp
+b24gdHdpY2UuCj4gKwkgKi8KPiArCWlmICh0eXBlID09IFJBTkdFX1JFU0VSVkVEKSB7Cj4gKwkJ
+dGhpc19yZWdpb24uc3RhcnQgPSBzdGFydDsKPiArCQl0aGlzX3JlZ2lvbi5lbmQgPSBlbmQgLSAx
+Owo+ICsJCXRoaXNfcmVnaW9uLnR5cGUgPSB0eXBlOwo+ICsJCXJldCA9IG1lbV9yZWdpb25zX2V4
+Y2x1ZGUobWVtX3JhbmdlcywgJnRoaXNfcmVnaW9uKTsKPiArCQlpZiAocmV0KQo+ICsJCQlyZXR1
+cm4gcmV0Owo+ICsJfQo+ICsKPiArCXJldCA9IG1lbV9yZWdpb25zX2FsbG9jX2FuZF9hZGQobWVt
+X3Jhbmdlcywgc3RhcnQsCj4gKwkJCQkJZW5kIC0gc3RhcnQsIHR5cGUpOwo+ICsKPiArCXJldHVy
+biByZXQ7Cj4gK30KPiArCj4gK3N0YXRpYyBpbnQgZHRiX2FkZF9tZW1vcnlfcmVnaW9uKGNoYXIg
+KmR0YiwgaW50IG5vZGVvZmZzZXQsCj4gKwkJCQkgc3RydWN0IG1lbW9yeV9yYW5nZXMgKm1lbV9y
+YW5nZXMsIGludCB0eXBlKQo+ICt7Cj4gKwl1aW50MzJfdCByb290X2FkZHJfY2VsbHMgPSAwOwo+
+ICsJdWludDMyX3Qgcm9vdF9zaXplX2NlbGxzID0gMDsKPiArCXVpbnQ2NF90IGFkZHIgPSAwOwo+
+ICsJdWludDY0X3Qgc2l6ZSA9IDA7Cj4gKwljb25zdCBjaGFyICpyZWcgPSBOVUxMOwo+ICsJaW50
+IHByb3Bfc2l6ZSA9IDA7Cj4gKwlpbnQgb2Zmc2V0ID0gMDsKPiArCWludCBlbnRyeV9zaXplID0g
+MDsKPiArCWludCBudW1fZW50cmllcyA9IDA7Cj4gKwlpbnQgcmV0ID0gMDsKPiArCj4gKwkvKgo+
+ICsJICogR2V0IGFkZHJlc3MtY2VsbHMgYW5kIHNpemUtY2VsbHMgcHJvcGVydGllcyAoYWNjb3Jk
+aW5nIHRvCj4gKwkgKiBiaW5kaW5nIHNwZWMgdGhlc2UgYXJlIHRoZSBzYW1lIGFzIGluIHRoZSBy
+b290IG5vZGUpCj4gKwkgKi8KPiArCXJldCA9IGR0Yl9nZXRfbnVtX2NlbGxzKGR0YiwgMCwgJnJv
+b3RfYWRkcl9jZWxscywgJnJvb3Rfc2l6ZV9jZWxscywgZmFsc2UpOwo+ICsJaWYgKHJldCA8IDAp
+IHsKPiArCQlkYmdwcmludGYoIk5vIGFkZHJlc3Mvc2l6ZSBjZWxscyBvbiByb290IG5vZGUgIVxu
+Iik7Cj4gKwkJcmV0dXJuIHJldDsKPiArCX0KPiArCj4gKwkvKgo+ICsJICogUGFyc2UgdGhlIHJl
+ZyBhcnJheSwgYWNvcmRpbmcgdG8gZGV2aWNlIHRyZWUgc3BlYyBpdCBpbmNsdWRlcwo+ICsJICog
+YW4gYXJiaXRhcnkgbnVtYmVyIG9mIDxhZGRyZXNzPjxzaXplPiBwYWlycwo+ICsJICovCj4gKwll
+bnRyeV9zaXplID0gKHJvb3RfYWRkcl9jZWxscyArIHJvb3Rfc2l6ZV9jZWxscykgKiBzaXplb2Yo
+dWludDMyX3QpOwo+ICsJcmVnID0gZmR0X2dldHByb3AoZHRiLCBub2Rlb2Zmc2V0LCAicmVnIiwg
+JnByb3Bfc2l6ZSk7Cj4gKwlpZiAoIXJlZykgewo+ICsJCWRiZ3ByaW50ZigiV2FybmluZzogTWFs
+Zm9ybWVkIG1lbW9yeSByZWdpb24gd2l0aCBubyByZWcgcHJvcGVydHkgKCVzKSAhXG4iLAo+ICsJ
+CQkgIGZkdF9nZXRfbmFtZShkdGIsIG5vZGVvZmZzZXQsIE5VTEwpKTsKPiArCQlyZXR1cm4gLUVJ
+TlZBTDsKPiArCX0KPiArCj4gKwludW1fZW50cmllcyA9IHByb3Bfc2l6ZSAvIGVudHJ5X3NpemU7
+Cj4gKwlkYmdwcmludGYoIkdvdCByZWdpb24gd2l0aCAlaSBlbnRyaWVzOiAlc1xuIiwgbnVtX2Vu
+dHJpZXMsCj4gKwkJICBmZHRfZ2V0X25hbWUoZHRiLCBub2Rlb2Zmc2V0LCBOVUxMKSk7Cj4gKwo+
+ICsJZm9yIChudW1fZW50cmllcy0tOyBudW1fZW50cmllcyA+PSAwOyBudW1fZW50cmllcy0tKSB7
+Cj4gKwkJb2Zmc2V0ID0gbnVtX2VudHJpZXMgKiBlbnRyeV9zaXplOwo+ICsKPiArCQlkdGJfZXh0
+cmFjdF9pbnRfcHJvcGVydHkoJmFkZHIsIHJlZyArIG9mZnNldCwKPiArCQkJCQkgcm9vdF9hZGRy
+X2NlbGxzKTsKPiArCQlvZmZzZXQgKz0gcm9vdF9hZGRyX2NlbGxzICogc2l6ZW9mKHVpbnQzMl90
+KTsKPiArCj4gKwkJZHRiX2V4dHJhY3RfaW50X3Byb3BlcnR5KCZzaXplLCByZWcgKyBvZmZzZXQs
+Cj4gKwkJCQkJIHJvb3Rfc2l6ZV9jZWxscyk7Cj4gKwo+ICsJCXJldCA9IGR0Yl9hZGRfbWVtb3J5
+X3JhbmdlKG1lbV9yYW5nZXMsIGFkZHIsCj4gKwkJCQkJICAgYWRkciArIHNpemUsIHR5cGUpOwo+
+ICsJCWlmIChyZXQpCj4gKwkJCXJldHVybiByZXQ7Cj4gKwl9Cj4gKwo+ICsJcmV0dXJuIDA7Cj4g
+K30KPiArCj4gK3N0YXRpYyBpbnQgZHRiX3BhcnNlX21lbW9yeV9yZXNlcnZhdGlvbnNfdGFibGUo
+Y2hhciAqZHRiLCBzdHJ1Y3QgbWVtb3J5X3JhbmdlcyAqbWVtX3JhbmdlcykKPiArewo+ICsJaW50
+IHRvdGFsX21lbXJzcnYgPSAwOwo+ICsJdWludDY0X3QgYWRkciA9IDA7Cj4gKwl1aW50NjRfdCBz
+aXplID0gMDsKPiArCWludCByZXQgPSAwOwo+ICsJaW50IGkgPSAwOwo+ICsKPiArCXRvdGFsX21l
+bXJzcnYgPSBmZHRfbnVtX21lbV9yc3YoZHRiKTsKPiArCWZvciAoaSA9IDA7IGkgPCB0b3RhbF9t
+ZW1yc3J2OyBpKyspIHsKPiArCQlyZXQgPSBmZHRfZ2V0X21lbV9yc3YoZHRiLCBpLCAmYWRkciwg
+JnNpemUpOwo+ICsJCWlmIChyZXQpCj4gKwkJCWNvbnRpbnVlOwo+ICsJCXJldCA9IGR0Yl9hZGRf
+bWVtb3J5X3JhbmdlKG1lbV9yYW5nZXMsIGFkZHIsIGFkZHIgKyBzaXplIC0gMSwKPiArCQkJCQkg
+ICBSQU5HRV9SRVNFUlZFRCk7Cj4gKwkJaWYgKHJldCkKPiArCQkJcmV0dXJuIHJldDsKPiArCX0K
+PiArCj4gKwlyZXR1cm4gMDsKPiArfQo+ICsKPiArc3RhdGljIGludCBkdGJfZ2V0X3Jlc2VydmVk
+X21lbW9yeV9ub2RlKGNoYXIgKmR0YikKPiArewo+ICsJdWludDMyX3Qgcm9vdF9hZGRyX2NlbGxz
+ID0gMDsKPiArCXVpbnQzMl90IHJvb3Rfc2l6ZV9jZWxscyA9IDA7Cj4gKwl1aW50MzJfdCBhZGRy
+X2NlbGxzID0gMDsKPiArCXVpbnQzMl90IHNpemVfY2VsbHMgPSAwOwo+ICsJaW50IHByb3Bfc2l6
+ZSA9IDA7Cj4gKwlpbnQgbm9kZW9mZnNldCA9IDA7Cj4gKwlpbnQgcmV0ID0gMDsKPiArCj4gKwkv
+KiBHZXQgYWRkcmVzcyAvIHNpemUgY2VsbHMgZnJvbSByb290IG5vZGUgKi8KPiArCXJldCA9IGR0
+Yl9nZXRfbnVtX2NlbGxzKGR0YiwgMCwgJnJvb3RfYWRkcl9jZWxscywgJnJvb3Rfc2l6ZV9jZWxs
+cywgZmFsc2UpOwo+ICsJaWYgKHJldCA8IDApIHsKPiArCQlkYmdwcmludGYoIk5vIGFkZHJlc3Mv
+c2l6ZSBjZWxscyBvbiByb290IG5vZGUgIVxuIik7Cj4gKwkJcmV0dXJuIHJldDsKPiArCX0KPiAr
+Cj4gKwkvKiBUaGlzIGNhbGxzIGZkdF9uZXh0X25vZGUgaW50ZXJuYWx5ICovCj4gKwlub2Rlb2Zm
+c2V0ID0gZmR0X3N1Ym5vZGVfb2Zmc2V0KGR0YiwgMCwgInJlc2VydmVkLW1lbW9yeSIpOwo+ICsJ
+aWYgKG5vZGVvZmZzZXQgPT0gLUZEVF9FUlJfTk9URk9VTkQpIHsKPiArCQlyZXR1cm4gbm9kZW9m
+ZnNldDsKPiArCX0gZWxzZSBpZiAobm9kZW9mZnNldCA8IDApIHsKPiArCQlkYmdwcmludGYoIkVy
+cm9yIHdoaWxlIGxvb2tpbmcgZm9yIHJlc2VydmVkLW1lbW9yeTogJXNcbiIsCj4gKwkJCWZkdF9z
+dHJlcnJvcihub2Rlb2Zmc2V0KSk7Cj4gKwkJcmV0dXJuIG5vZGVvZmZzZXQ7Cj4gKwl9Cj4gKwo+
+ICsJLyogTG9vayBmb3IgdGhlIHJhbmdlcyBwcm9wZXJ0eSAqLwo+ICsJZmR0X2dldHByb3AoZHRi
+LCBub2Rlb2Zmc2V0LCAicmFuZ2VzIiwgJnByb3Bfc2l6ZSk7Cj4gKwlpZiAocHJvcF9zaXplIDwg
+MCkgewo+ICsJCWZwcmludGYoc3RkZXJyLCAiTWFsZm9ybWVkIHJlc2VydmVkLW1lbW9yeSBub2Rl
+IChubyByYW5nZXMgcHJvcGVydHkpICFcbiIpOwo+ICsJCXJldHVybiAtRUlOVkFMOwo+ICsJfQo+
+ICsKPiArCS8qIFZlcmlmeSBhZGRyZXNzLWNlbGxzIC8gc2l6ZS1jZWxscyAqLwo+ICsJcmV0ID0g
+ZHRiX2dldF9udW1fY2VsbHMoZHRiLCBub2Rlb2Zmc2V0LCAmYWRkcl9jZWxscywgJnNpemVfY2Vs
+bHMsIGZhbHNlKTsKPiArCWlmIChyZXQgPCAwKSB7Cj4gKwkJZGJncHJpbnRmKCJObyBhZGRyZXNz
+L3NpemUgY2VsbHMgcHJvcGVydHkgb24gcmVzZXJ2ZWQtbWVtb3J5IG5vZGVcbiIpOwo+ICsJCXJl
+dHVybiByZXQ7Cj4gKwl9Cj4gKwo+ICsJaWYgKGFkZHJfY2VsbHMgIT0gcm9vdF9hZGRyX2NlbGxz
+KSB7Cj4gKwkJZnByaW50ZihzdGRlcnIsICJJbnZhbGlkICNhZGRyZXNzLWNlbGxzIHByb3BlcnR5
+IG9uIHJlc2VydmVkLW1lbW9yeSBub2RlXG4iKTsKPiArCQlyZXR1cm4gLUVJTlZBTDsKPiArCX0K
+PiArCj4gKwlpZiAoc2l6ZV9jZWxscyAhPSByb290X3NpemVfY2VsbHMpIHsKPiArCQlmcHJpbnRm
+KHN0ZGVyciwgIkludmFsaWQgI3NpemUtY2VsbHMgcHJvcGVydHkgb24gcmVzZXJ2ZWQtbWVtb3J5
+IG5vZGVcbiIpOwo+ICsJCXJldHVybiAtRUlOVkFMOwo+ICsKPiArCX0KPiArCj4gKwlyZXR1cm4g
+bm9kZW9mZnNldDsKPiArfQo+ICsKPiArc3RhdGljIGludCBkdGJfcGFyc2VfcmVzZXJ2ZWRfbWVt
+b3J5X25vZGUoY2hhciAqZHRiLCBzdHJ1Y3QgbWVtb3J5X3JhbmdlcyAqbWVtX3JhbmdlcykKPiAr
+ewo+ICsJaW50IG5vZGVvZmZzZXQgPSAwOwo+ICsJaW50IG5vZGVfZGVwdGggPSAwOwo+ICsJaW50
+IHBhcmVudF9kZXB0aCA9IDA7Cj4gKwlpbnQgcmV0ID0gMDsKPiArCj4gKwlub2Rlb2Zmc2V0ID0g
+ZHRiX2dldF9yZXNlcnZlZF9tZW1vcnlfbm9kZShkdGIpOwo+ICsJaWYgKG5vZGVvZmZzZXQgPT0g
+LUZEVF9FUlJfTk9URk9VTkQpCj4gKwkJcmV0dXJuIDA7Cj4gKwllbHNlIGlmIChub2Rlb2Zmc2V0
+IDwgMCkKPiArCQlyZXR1cm4gbm9kZW9mZnNldDsKPiArCj4gKwkvKiBHb3QgdGhlIHBhcmVudCBu
+b2RlLCBjaGVjayBmb3Igc3ViLW5vZGVzICovCj4gKwo+ICsJLyogZmR0X25leHRfbm9kZSgpIGlu
+Y3JlYXNlcyBvciBkZWNyZWFzZXMgZGVwdGggKi8KPiArCW5vZGVfZGVwdGggPSBwYXJlbnRfZGVw
+dGg7Cj4gKwlub2Rlb2Zmc2V0ID0gZmR0X25leHRfbm9kZShkdGIsIG5vZGVvZmZzZXQsICZub2Rl
+X2RlcHRoKTsKPiArCWlmIChyZXQgPCAwKSB7Cj4gKwkJZGJncHJpbnRmKCJVbmFibGUgdG8gZ2V0
+IG5leHQgbm9kZTogJXNcbiIsCj4gKwkJCSAgZmR0X3N0cmVycm9yKHJldCkpOwo+ICsJCXJldHVy
+biAtRUlOVkFMOwo+ICsJfQo+ICsKPiArCXdoaWxlIChub2RlX2RlcHRoICE9IHBhcmVudF9kZXB0
+aCkgewo+ICsKPiArCQlyZXQgPSBkdGJfYWRkX21lbW9yeV9yZWdpb24oZHRiLCBub2Rlb2Zmc2V0
+LAo+ICsJCQkJCSAgICBtZW1fcmFuZ2VzLCBSQU5HRV9SRVNFUlZFRCk7Cj4gKwkJaWYgKHJldCkK
+PiArCQkJcmV0dXJuIHJldDsKPiArCj4gKwkJbm9kZW9mZnNldCA9IGZkdF9uZXh0X25vZGUoZHRi
+LCBub2Rlb2Zmc2V0LCAmbm9kZV9kZXB0aCk7Cj4gKwkJaWYgKHJldCA8IDApIHsKPiArCQkJZGJn
+cHJpbnRmKCJVbmFibGUgdG8gZ2V0IG5leHQgbm9kZTogJXNcbiIsCj4gKwkJCQkgIGZkdF9zdHJl
+cnJvcihyZXQpKTsKPiArCQkJcmV0dXJuIC1FSU5WQUw7Cj4gKwkJfQo+ICsJfQo+ICsKPiArCXJl
+dHVybiAwOwo+ICt9Cj4gKwo+ICtzdGF0aWMgaW50IGR0Yl9wYXJzZV9tZW1vcnlfbm9kZXMoY2hh
+ciAqZHRiLCBzdHJ1Y3QgbWVtb3J5X3JhbmdlcyAqbWVtX3JhbmdlcykKPiArewo+ICsJaW50IG5v
+ZGVvZmZzZXQgPSAwOwo+ICsJaW50IG51bV9yZWdpb25zID0gMDsKPiArCWNvbnN0IGNoYXIqIGRl
+dl90eXBlID0gMDsKPiArCWludCBwcm9wX3NpemUgPSAwOwo+ICsJaW50IHJldCA9IDA7Cj4gKwo+
+ICsJZm9yICg7IDsgbnVtX3JlZ2lvbnMrKykgewo+ICsJCW5vZGVvZmZzZXQgPSBmZHRfc3Vibm9k
+ZV9vZmZzZXQoZHRiLCBub2Rlb2Zmc2V0LAo+ICsJCQkJCQkgIm1lbW9yeSIpOwo+ICsJCWlmIChu
+b2Rlb2Zmc2V0IDwgMCkKPiArCQkJYnJlYWs7Cj4gKwo+ICsJCWRiZ3ByaW50ZigiR290IG1lbW9y
+eSBub2RlIGF0IGRlcHRoOiAlaVxuIiwgZmR0X25vZGVfZGVwdGgoZHRiLCBub2Rlb2Zmc2V0KSk7
+Cj4gKwo+ICsJCS8qIExvb2sgZm9yIHRoZSBkZXZpY2VfdHlwZSAgcHJvcGVydHkgKi8KPiArCQlk
+ZXZfdHlwZSA9IGZkdF9nZXRwcm9wKGR0Yiwgbm9kZW9mZnNldCwgImRldmljZV90eXBlIiwgJnBy
+b3Bfc2l6ZSk7Cj4gKwkJaWYgKHByb3Bfc2l6ZSA8IDApIHsKPiArCQkJZnByaW50ZihzdGRlcnIs
+ICJNYWxmb3JtZWQgL21lbW9yeSBub2RlIChubyBkZXZpY2UtdHlwZSBwcm9wZXJ0eSkgIVxuIik7
+Cj4gKwkJCXJldHVybiAtRUlOVkFMOwo+ICsJCX0KPiArCj4gKwkJaWYgKHN0cm5jbXAoZGV2X3R5
+cGUsICJtZW1vcnkiLCBwcm9wX3NpemUpKSB7Cj4gKwkJCWRiZ3ByaW50ZigiR290IHVua25vd24g
+ZGV2X3R5cGUgcHJvcGVydHk6ICVzXG4iLCBkZXZfdHlwZSk7Cj4gKwkJCWNvbnRpbnVlOwo+ICsJ
+CX0KPiArCj4gKwkJcmV0ID0gZHRiX2FkZF9tZW1vcnlfcmVnaW9uKGR0Yiwgbm9kZW9mZnNldCwg
+bWVtX3JhbmdlcywgUkFOR0VfUkFNKTsKPiArCQlpZiAocmV0KQo+ICsJCQlyZXR1cm4gcmV0Owo+
+ICsJfQo+ICsKPiArCWlmICghbnVtX3JlZ2lvbnMpIHsKPiArCQlkYmdwcmludGYoIk1hbGZvcm1l
+ZCBkdGIsIG5vIC9tZW1vcnkgbm9kZXMgcHJlc2VudCAhXG4iKTsKPiArCQlyZXR1cm4gLUVJTlZB
+TDsKPiArCX0KPiArCj4gKwlkYmdwcmludGYoIkdvdCAlaSAvbWVtb3J5IG5vZGVzXG4iLCBudW1f
+cmVnaW9ucyk7Cj4gKwo+ICsJcmV0dXJuIDA7Cj4gK30KPiArCj4gK2ludCBkdGJfZ2V0X21lbW9y
+eV9yYW5nZXMoY2hhciAqZHRiLCBzdHJ1Y3QgbWVtb3J5X3JhbmdlcyAqbWVtX3Jhbmdlcywgc3Ry
+dWN0IG1lbW9yeV9yYW5nZXMgKmV4dHJhX3JhbmdlcykKPiArewo+ICsJaW50IGkgPSAwOwo+ICsJ
+aW50IHJldCA9IDA7Cj4gKwo+ICsJLyogRmlsbCBtZW1fcmFuZ2VzW10gYnkgcGFyc2luZyB0aGUg
+ZGV2aWNlIHRyZWUgKi8KPiArCXJldCA9IGR0Yl9wYXJzZV9tZW1vcnlfbm9kZXMoZHRiLCBtZW1f
+cmFuZ2VzKTsKPiArCWlmIChyZXQpCj4gKwkJcmV0dXJuIHJldDsKPiArCj4gKwlyZXQgPSBkdGJf
+cGFyc2VfbWVtb3J5X3Jlc2VydmF0aW9uc190YWJsZShkdGIsIG1lbV9yYW5nZXMpOwo+ICsJaWYg
+KHJldCkKPiArCQlyZXR1cm4gcmV0Owo+ICsKPiArCXJldCA9IGR0Yl9wYXJzZV9yZXNlcnZlZF9t
+ZW1vcnlfbm9kZShkdGIsIG1lbV9yYW5nZXMpOwo+ICsJaWYgKHJldCkKPiArCQlyZXR1cm4gcmV0
+Owo+ICsKPiArCS8qIEFwcGVuZCBhbnkgZXh0cmEgcmFuZ2VzIHByb3ZpZGVkIGJ5IHRoZSBjYWxs
+ZXIgKGUuZy4gaW5pdHJkKSAqLwo+ICsJZm9yIChpID0gMDsgZXh0cmFfcmFuZ2VzICE9IE5VTEwg
+JiYgaSA8IGV4dHJhX3Jhbmdlcy0+c2l6ZTsgaSsrKSB7Cj4gKwkJZGJncHJpbnRmKCJBZGRpbmcg
+ZXh0cmEgcmFuZ2U6IDB4JWxseCAtIDB4JWxseCAoJXMpXG4iLAo+ICsJCQkgIGV4dHJhX3Jhbmdl
+cy0+cmFuZ2VzW2ldLnN0YXJ0LAo+ICsJCQkgIGV4dHJhX3Jhbmdlcy0+cmFuZ2VzW2ldLmVuZCwK
+PiArCQkJICBleHRyYV9yYW5nZXMtPnJhbmdlc1tpXS50eXBlID09IFJBTkdFX1JFU0VSVkVEID8K
+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAiUkFOR0VfUkVTRVJWRUQiIDogIlJBTkdFX1JB
+TSIpOwo+ICsKPiArCQlyZXQgPSBkdGJfYWRkX21lbW9yeV9yYW5nZShtZW1fcmFuZ2VzLCBleHRy
+YV9yYW5nZXMtPnJhbmdlc1tpXS5zdGFydCwKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICBleHRyYV9yYW5nZXMtPnJhbmdlc1tpXS5lbmQsIGV4dHJhX3Jhbmdlcy0+cmFuZ2VzW2ld
+LnR5cGUpOwo+ICsJCWlmIChyZXQpCj4gKwkJCXJldHVybiByZXQ7Cj4gKwl9Cj4gKwo+ICsJbWVt
+X3JlZ2lvbnNfc29ydChtZW1fcmFuZ2VzKTsKPiArCj4gKwlyZXR1cm4gMDsKPiArfQo+IGRpZmYg
+LS1naXQgYS9rZXhlYy9kdC1vcHMuaCBiL2tleGVjL2R0LW9wcy5oCj4gaW5kZXggMDM2NTljZS4u
+MzAxNDIwNSAxMDA2NDQKPiAtLS0gYS9rZXhlYy9kdC1vcHMuaAo+ICsrKyBiL2tleGVjL2R0LW9w
+cy5oCj4gQEAgLTExLDQgKzExLDExIEBAIGludCBkdGJfc2V0X3Byb3BlcnR5KGNoYXIgKipkdGIs
+IG9mZl90ICpkdGJfc2l6ZSwgY29uc3QgY2hhciAqbm9kZSwKPiAgIAo+ICAgaW50IGR0Yl9kZWxl
+dGVfcHJvcGVydHkoY2hhciAqZHRiLCBjb25zdCBjaGFyICpub2RlLCBjb25zdCBjaGFyICpwcm9w
+KTsKPiAgIAo+ICt2b2lkIGR0Yl9leHRyYWN0X2ludF9wcm9wZXJ0eSh1aW50NjRfdCAqdmFsLCBj
+b25zdCB2b2lkICpidWYsIHVpbnQzMl90IGNlbGxzKTsKPiArdm9pZCBkdGJfZmlsbF9pbnRfcHJv
+cGVydHkodm9pZCAqYnVmLCB1aW50NjRfdCB2YWwsIHVpbnQzMl90IGNlbGxzKTsKPiAraW50IGR0
+Yl9hZGRfcmFuZ2VfcHJvcGVydHkoY2hhciAqKmR0Yiwgb2ZmX3QgKmR0Yl9zaXplLCB1aW50NjRf
+dCBzdGFydCwgdWludDY0X3QgZW5kLAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICBjb25z
+dCBjaGFyICpub2RlLCBjb25zdCBjaGFyKiBwYXJlbnQpOwo+ICtpbnQgZHRiX2dldF9tZW1vcnlf
+cmFuZ2VzKGNoYXIgKmR0Yiwgc3RydWN0IG1lbW9yeV9yYW5nZXMgKm1lbV9yYW5nZXMsCj4gKwkJ
+CSAgc3RydWN0IG1lbW9yeV9yYW5nZXMgKmV4dHJhX3Jhbmdlcyk7Cj4gKwo+ICAgI2VuZGlmCj4g
+ZGlmZiAtLWdpdCBhL2tleGVjL2tleGVjLXN5c2NhbGwuaCBiL2tleGVjL2tleGVjLXN5c2NhbGwu
+aAo+IGluZGV4IGJlYTI5ZDQuLjJlOTllMmIgMTAwNjQ0Cj4gLS0tIGEva2V4ZWMva2V4ZWMtc3lz
+Y2FsbC5oCj4gKysrIGIva2V4ZWMva2V4ZWMtc3lzY2FsbC5oCj4gQEAgLTEzNCw2ICsxMzQsNyBA
+QCBzdGF0aWMgaW5saW5lIGxvbmcga2V4ZWNfZmlsZV9sb2FkKGludCBrZXJuZWxfZmQsIGludCBp
+bml0cmRfZmQsCj4gICAjZGVmaW5lIEtFWEVDX0FSQ0hfTUlQU19MRSAoMTAgPDwgMTYpCj4gICAj
+ZGVmaW5lIEtFWEVDX0FSQ0hfTUlQUyAgICAoIDggPDwgMTYpCj4gICAjZGVmaW5lIEtFWEVDX0FS
+Q0hfQ1JJUyAgICAoNzYgPDwgMTYpCj4gKyNkZWZpbmUgS0VYRUNfQVJDSF9SSVNDViAgICgyNDMg
+PDwgMTYpCj4gICAKPiAgICNkZWZpbmUgS0VYRUNfTUFYX1NFR01FTlRTIDE2Cj4gICAKPiBAQCAt
+MTc3LDUgKzE3OCw4IEBAIHN0YXRpYyBpbmxpbmUgbG9uZyBrZXhlY19maWxlX2xvYWQoaW50IGtl
+cm5lbF9mZCwgaW50IGluaXRyZF9mZCwKPiAgICNpZiBkZWZpbmVkKF9fYXJtNjRfXykKPiAgICNk
+ZWZpbmUgS0VYRUNfQVJDSF9OQVRJVkUJS0VYRUNfQVJDSF9BUk02NAo+ICAgI2VuZGlmCj4gKyNp
+ZiBkZWZpbmVkKF9fcmlzY3ZfXykgfHwgZGVmaW5lZChfX3Jpc2N2KQo+ICsjZGVmaW5lIEtFWEVD
+X0FSQ0hfTkFUSVZFCUtFWEVDX0FSQ0hfUklTQ1YKPiArI2VuZGlmCj4gICAKPiAgICNlbmRpZiAv
+KiBLRVhFQ19TWVNDQUxMX0ggKi8KPiBkaWZmIC0tZ2l0IGEvcHVyZ2F0b3J5L01ha2VmaWxlIGIv
+cHVyZ2F0b3J5L01ha2VmaWxlCj4gaW5kZXggMTVhZGIxMi4uMTE2OTRlNSAxMDA2NDQKPiAtLS0g
+YS9wdXJnYXRvcnkvTWFrZWZpbGUKPiArKysgYi9wdXJnYXRvcnkvTWFrZWZpbGUKPiBAQCAtMjUs
+NiArMjUsNyBAQCBpbmNsdWRlICQoc3JjZGlyKS9wdXJnYXRvcnkvYXJjaC9pYTY0L01ha2VmaWxl
+Cj4gICBpbmNsdWRlICQoc3JjZGlyKS9wdXJnYXRvcnkvYXJjaC9taXBzL01ha2VmaWxlCj4gICBp
+bmNsdWRlICQoc3JjZGlyKS9wdXJnYXRvcnkvYXJjaC9wcGMvTWFrZWZpbGUKPiAgIGluY2x1ZGUg
+JChzcmNkaXIpL3B1cmdhdG9yeS9hcmNoL3BwYzY0L01ha2VmaWxlCj4gK2luY2x1ZGUgJChzcmNk
+aXIpL3B1cmdhdG9yeS9hcmNoL3Jpc2N2L01ha2VmaWxlCj4gICBpbmNsdWRlICQoc3JjZGlyKS9w
+dXJnYXRvcnkvYXJjaC9zMzkwL01ha2VmaWxlCj4gICBpbmNsdWRlICQoc3JjZGlyKS9wdXJnYXRv
+cnkvYXJjaC9zaC9NYWtlZmlsZQo+ICAgaW5jbHVkZSAkKHNyY2RpcikvcHVyZ2F0b3J5L2FyY2gv
+eDg2XzY0L01ha2VmaWxlCj4gZGlmZiAtLWdpdCBhL3B1cmdhdG9yeS9hcmNoL3Jpc2N2L01ha2Vm
+aWxlIGIvcHVyZ2F0b3J5L2FyY2gvcmlzY3YvTWFrZWZpbGUKPiBuZXcgZmlsZSBtb2RlIDEwMDY0
+NAo+IGluZGV4IDAwMDAwMDAuLjhiZGVkNzEKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvcHVyZ2F0
+b3J5L2FyY2gvcmlzY3YvTWFrZWZpbGUKPiBAQCAtMCwwICsxLDcgQEAKPiArIwo+ICsjIFB1cmdh
+dG9yeSByaXNjdgo+ICsjCj4gKwo+ICtyaXNjdl9QVVJHQVRPUllfU1JDUyA9Cj4gKwo+ICtkaXN0
+ICs9IHB1cmdhdG9yeS9hcmNoL3NoL01ha2VmaWxlICQocmlzY3ZfUFVSR0FUT1JZX1NSQ1MpCgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWls
+aW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
