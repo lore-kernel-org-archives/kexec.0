@@ -4,59 +4,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 85AFDC54EE9
-	for <kexec@archiver.kernel.org>; Mon, 19 Sep 2022 04:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1886BECAAD3
+	for <kexec@archiver.kernel.org>; Mon, 19 Sep 2022 07:07:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:List-Subscribe:List-Help:
-	List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:Subject:Cc:To
-	:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=nk0UP67kijZpj6kH4U8ujxMe8YjFSDC+JzXZurXlSoE=; b=DuMkoJpYbB68UI
-	0ByTakUJh7mug5nYiZgtDFFomxYHwzhErlFR8DVOTHXQMCg6jFiE5rRnPzVlTCWzVvvEwkQuMvjgl
-	296APTGEDRxWqs2e8qhxkNcgOoYfZeNy7Ghte4mxORldBhCfpQgicf+hVFBUrrA9mraQW1Ax/SkwR
-	87KC0JBGnCFYudknEE45N8IsJ2l6OGeoHiVLaSrL8EEDv/Ja3mQj9MMHOO+xvL9TpqZamF9g2k2BE
-	ipnryzfYgGdhIU/MkX7ncTwopfpmlkcr2gjglwtLO+CGZ05fQzeGRAt8b3RMo30ArkwGpVtahdmeY
-	KS8cuv5HxWu3dAkokCsg==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=+1FO1SEn4hPdpMbKvZscjxF89aVH58QDYfyh31qh8Ls=; b=NzuKNU8bstloii
+	WQA7FqGsjh/ccj4zRjF52zbQrejyhmghhB+dROb7cbzq+6g6zQZc7mxvNYtMdh2mf0VFZ6XPSBkbD
+	CgweRfHyMnvB7juSDyRUDBXgEXDKAjTZ1RuaRnDXZCW6pDfRaw1px5Gv+t/A3hAbqxkeytqNeloOi
+	/S+pwnD6aLerbRgaI/aL8p1UqCmGJgSshrV6DzUs8h4cUy7oEClYCFFLq6dQeaeehKAwOJtvCaZXz
+	AJjEzKa0SRMQbKsacyG1ns8sIGGBC8vdw36j27Olj3C1FmhRkvSDQKn+3lKlmqIqg+MmqMVI7SURX
+	csAaxtZTOOD75Ateoi+g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oa8gv-007hhp-Pf; Mon, 19 Sep 2022 04:47:33 +0000
-Received: from mail.loongson.cn ([114.242.206.163] helo=loongson.cn)
-	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oa8gq-007haB-HK
-	for kexec@lists.infradead.org; Mon, 19 Sep 2022 04:47:31 +0000
-Received: from bogon.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxYOJV9CdjkHsdAA--.46496S2;
-	Mon, 19 Sep 2022 12:47:17 +0800 (CST)
-From: Youling Tang <tangyouling@loongson.cn>
-To: Kazuhito Hagio <k-hagio-ab@nec.com>
-Cc: kexec-ml <kexec@lists.infradead.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	tangyouling@loongson.cn
-Subject: [PATCH] makedumpfile: Add initial LoongArch64 support
-Date: Mon, 19 Sep 2022 12:47:17 +0800
-Message-Id: <1663562837-20075-1-git-send-email-tangyouling@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf8CxYOJV9CdjkHsdAA--.46496S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3Gr17XryxCw1UGw1DAF43KFg_yoW3Cw15pF
-	y5Ca93Kr48KFy7Gw4fGa45Xr13Jr1I9F1aqF92qrW09F1xZr40gr1IkFZxZFW8Jrs5WFyI
-	qrs5Ja4jg3ZrJaUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUka14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_Gryl
-	42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
-	WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAK
-	I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
-	4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY
-	6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUOVyxUUUUU=
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
+	id 1oaArv-0093ly-LU; Mon, 19 Sep 2022 07:07:03 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5] helo=mx0a-001b2d01.pphosted.com)
+	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1oaArs-0093ix-7c
+	for kexec@lists.infradead.org; Mon, 19 Sep 2022 07:07:02 +0000
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+	by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28J44Ip4010901;
+	Mon, 19 Sep 2022 07:06:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=apL1ap4jky84AethjsdOSKCPtGVBdqAWIK1p77PB8Sw=;
+ b=famm+QqHa13DtIquwUd/XzIGpgoddseEqB3u5eI+9WmBrMrzEdINu1xKxepN1zObAuiC
+ 5dh+IYiOeMgAaBOpUvPLdnPem4XzEAYAUmixiuPGFrOWAY9eI+i7ymINo1BhVtJ+NU/k
+ p6R9dvLYu9xPL+ip1HEeoAMrp/d5FabwvMn7ZLwA5zghTVSthn8Er6M62ptc1Rhr+S3I
+ 67iegYXw3GlgVn+qm3dwzSX4yZGQG0OBg8c8s3t+ICdTixcuU7iepC4kdwLqCEHmK3s4
+ wLb5nhanp8J3E9LUPqFk+QXd2lRBrHSapu9pGbBvQg8FPTgK4pTmKfcY1ZJgc/3SROC/ 5w== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3jph30bs64-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 19 Sep 2022 07:06:28 +0000
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 28J6HKLc009049;
+	Mon, 19 Sep 2022 07:06:28 GMT
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+	by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3jph30bs5f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 19 Sep 2022 07:06:28 +0000
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+	by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 28J757xL006131;
+	Mon, 19 Sep 2022 07:06:26 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+	by ppma04fra.de.ibm.com with ESMTP id 3jn5v91fwb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 19 Sep 2022 07:06:26 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+	by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 28J76NPU43319734
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 19 Sep 2022 07:06:23 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CA8BD42047;
+	Mon, 19 Sep 2022 07:06:23 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 24A2C42045;
+	Mon, 19 Sep 2022 07:06:18 +0000 (GMT)
+Received: from [9.43.61.137] (unknown [9.43.61.137])
+	by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+	Mon, 19 Sep 2022 07:06:17 +0000 (GMT)
+Message-ID: <78100f92-afd7-52b6-d5e5-17eb2de72a9a@linux.ibm.com>
+Date: Mon, 19 Sep 2022 12:36:16 +0530
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.1
+Subject: Re: [PATCH v12 7/7] x86/crash: Add x86 crash hotplug support
+To: Eric DeVolder <eric.devolder@oracle.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, kexec@lists.infradead.org, ebiederm@xmission.com,
+        dyoung@redhat.com, bhe@redhat.com, vgoyal@redhat.com
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, hpa@zytor.com, nramas@linux.microsoft.com,
+        thomas.lendacky@amd.com, robh@kernel.org, efault@gmx.de,
+        rppt@kernel.org, david@redhat.com, konrad.wilk@oracle.com,
+        boris.ostrovsky@oracle.com
+References: <20220909210509.6286-1-eric.devolder@oracle.com>
+ <20220909210509.6286-8-eric.devolder@oracle.com>
+Content-Language: en-US
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+In-Reply-To: <20220909210509.6286-8-eric.devolder@oracle.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: U2h9PPsJ5beRGFeCmQgsZkOg4m_EEH2L
+X-Proofpoint-ORIG-GUID: JN_t5p287PK97cVCV0eUgWrWmT-IEx3S
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
+ definitions=2022-09-19_03,2022-09-16_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 impostorscore=0
+ priorityscore=1501 suspectscore=0 mlxlogscore=999 malwarescore=0
+ phishscore=0 adultscore=0 spamscore=0 lowpriorityscore=0 bulkscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2209130000 definitions=main-2209190046
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220918_214729_008888_7AB37B9C 
-X-CRM114-Status: GOOD (  20.12  )
+X-CRM114-CacheID: sfid-20220919_000700_452455_7F26C147 
+X-CRM114-Status: GOOD (  44.99  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -68,249 +112,211 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Patch adds support for LoongArch64 in makedumpfile. It takes care of
-vmalloc, module and directly map kernel memory region's translation.
-Currently we only support 3 leverl 16K pages and VA_BITS as 48.
 
-The changes were tested on a LoongArch64 Loongson-3A5000 processor.
-The dump compression and filtering (for all dump levels 1,2,4,8,16
-and 31) tests are succussfull.
+On 10/09/22 02:35, Eric DeVolder wrote:
+> For x86_64, when CPU or memory is hot un/plugged, the crash
+> elfcorehdr, which describes the CPUs and memory in the system,
+> must also be updated.
+>
+> When loading the crash kernel via kexec_load or kexec_file_load,
+> the elfcorehdr is identified at run time in
+> crash_core:handle_hotplug_event().
+>
+> To update the elfcorehdr for x86_64, a new elfcorehdr must be
+> generated from the available CPUs and memory. The new elfcorehdr
+> is prepared into a buffer, and then installed over the top of
+> the existing elfcorehdr.
+>
+> In the patch 'kexec: exclude elfcorehdr from the segment digest'
+> the need to update purgatory due to the change in elfcorehdr was
+> eliminated.  As a result, no changes to purgatory or boot_params
+> (as the elfcorehdr= kernel command line parameter pointer
+> remains unchanged and correct) are needed, just elfcorehdr.
+>
+> To accommodate a growing number of resources via hotplug, the
+> elfcorehdr segment must be sufficiently large enough to accommodate
+> changes, see the CRASH_MAX_MEMORY_RANGES configure item.
+>
+> With this change, crash hotplug for kexec_file_load syscall
+> is supported. The kexec_load is also supported, but also
+> requires a corresponding change to userspace kexec-tools.
+>
+> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+> Acked-by: Baoquan He <bhe@redhat.com>
+> ---
+>   arch/x86/Kconfig             |  11 ++++
+>   arch/x86/include/asm/kexec.h |  20 +++++++
+>   arch/x86/kernel/crash.c      | 102 +++++++++++++++++++++++++++++++++++
+>   3 files changed, 133 insertions(+)
+>
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index f9920f1341c8..cdfc9b2fdf98 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -2056,6 +2056,17 @@ config CRASH_DUMP
+>   	  (CONFIG_RELOCATABLE=y).
+>   	  For more details see Documentation/admin-guide/kdump/kdump.rst
+>   
+> +config CRASH_MAX_MEMORY_RANGES
+> +	depends on CRASH_DUMP && KEXEC_FILE && (HOTPLUG_CPU || MEMORY_HOTPLUG)
+> +	int
+> +	default 32768
+> +	help
+> +	  For the kexec_file_load path, specify the maximum number of
+> +	  memory regions, eg. as represented by the 'System RAM' entries
+> +	  in /proc/iomem, that the elfcorehdr buffer/segment can accommodate.
+> +	  This value is combined with NR_CPUS and multiplied by Elf64_Phdr
+> +	  size to determine the final buffer size.
+> +
+>   config KEXEC_JUMP
+>   	bool "kexec jump"
+>   	depends on KEXEC && HIBERNATION
+> diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+> index a3760ca796aa..432073385b2d 100644
+> --- a/arch/x86/include/asm/kexec.h
+> +++ b/arch/x86/include/asm/kexec.h
+> @@ -212,6 +212,26 @@ typedef void crash_vmclear_fn(void);
+>   extern crash_vmclear_fn __rcu *crash_vmclear_loaded_vmcss;
+>   extern void kdump_nmi_shootdown_cpus(void);
+>   
+> +void *arch_map_crash_pages(unsigned long paddr, unsigned long size);
+> +#define arch_map_crash_pages arch_map_crash_pages
+> +
+> +void arch_unmap_crash_pages(void **ptr);
+> +#define arch_unmap_crash_pages arch_unmap_crash_pages
+> +
+> +void arch_crash_handle_hotplug_event(struct kimage *image,
+> +		unsigned int hp_action);
+> +#define arch_crash_handle_hotplug_event arch_crash_handle_hotplug_event
+> +
+> +#ifdef CONFIG_HOTPLUG_CPU
+> +static inline int crash_hotplug_cpu_support(void) { return 1; }
+> +#define crash_hotplug_cpu_support crash_hotplug_cpu_support
+> +#endif
+> +
+> +#ifdef CONFIG_MEMORY_HOTPLUG
+> +static inline int crash_hotplug_memory_support(void) { return 1; }
+> +#define crash_hotplug_memory_support crash_hotplug_memory_support
+> +#endif
+> +
+>   #endif /* __ASSEMBLY__ */
+>   
+>   #endif /* _ASM_X86_KEXEC_H */
+> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> index 9ceb93c176a6..8fc7d678ac72 100644
+> --- a/arch/x86/kernel/crash.c
+> +++ b/arch/x86/kernel/crash.c
+> @@ -25,6 +25,7 @@
+>   #include <linux/slab.h>
+>   #include <linux/vmalloc.h>
+>   #include <linux/memblock.h>
+> +#include <linux/highmem.h>
+>   
+>   #include <asm/processor.h>
+>   #include <asm/hardirq.h>
+> @@ -397,7 +398,18 @@ int crash_load_segments(struct kimage *image)
+>   	image->elf_headers = kbuf.buffer;
+>   	image->elf_headers_sz = kbuf.bufsz;
+>   
+> +#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_MEMORY_HOTPLUG)
+> +	/* Ensure elfcorehdr segment large enough for hotplug changes */
+> +	kbuf.memsz =
+> +		(CONFIG_NR_CPUS_DEFAULT + CONFIG_CRASH_MAX_MEMORY_RANGES) *
+> +			sizeof(Elf64_Phdr);
+> +	/* Mark as usable to crash kernel, else crash kernel fails on boot */
+> +	image->elf_headers_sz = kbuf.memsz;
+> +	image->elfcorehdr_index = image->nr_segments;
+> +	image->elfcorehdr_index_valid = true;
+> +#else
+>   	kbuf.memsz = kbuf.bufsz;
+> +#endif
+>   	kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
+>   	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+>   	ret = kexec_add_buffer(&kbuf);
+> @@ -412,3 +424,93 @@ int crash_load_segments(struct kimage *image)
+>   	return ret;
+>   }
+>   #endif /* CONFIG_KEXEC_FILE */
+> +
+> +#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_MEMORY_HOTPLUG)
+> +/*
+> + * NOTE: The addresses and sizes passed to this routine have
+> + * already been fully aligned on page boundaries. There is no
+> + * need for massaging the address or size.
+> + */
+> +void *arch_map_crash_pages(unsigned long paddr, unsigned long size)
+> +{
+> +	void *ptr = NULL;
+> +
+> +	if (size > 0) {
+> +		struct page *page = pfn_to_page(paddr >> PAGE_SHIFT);
+> +
+> +		ptr = kmap_local_page(page);
+> +	}
+> +
+> +	return ptr;
+> +}
+> +
+> +void arch_unmap_crash_pages(void **ptr)
+> +{
+> +	if (ptr) {
+> +		if (*ptr)
+> +			kunmap_local(*ptr);
+> +		*ptr = NULL;
+> +	}
+> +}
+> +
+> +/**
+> + * arch_crash_handle_hotplug_event() - Handle hotplug elfcorehdr changes
+> + * @image: the active struct kimage
+> + * @hp_action: the hot un/plug action being handled
+> + *
+> + * To accurately reflect hot un/plug changes, the new elfcorehdr
+> + * is prepared in a kernel buffer, and then it is written on top
+> + * of the existing/old elfcorehdr.
+> + */
+> +void arch_crash_handle_hotplug_event(struct kimage *image,
+> +	unsigned int hp_action)
+> +{
+> +	struct kexec_segment *ksegment;
+> +	unsigned char *ptr = NULL;
+> +	unsigned long elfsz = 0;
+> +	void *elfbuf = NULL;
+> +	unsigned long mem, memsz;
+> +
+> +	/*
+> +	 * Elfcorehdr_index_valid checked in crash_core:handle_hotplug_event()
+> +	 */
+> +	ksegment = &image->segment[image->elfcorehdr_index];
+> +	mem = ksegment->mem;
+> +	memsz = ksegment->memsz;
+> +
+> +	/*
+> +	 * Create the new elfcorehdr reflecting the changes to CPU and/or
+> +	 * memory resources.
+> +	 */
+> +	if (prepare_elf_headers(image, &elfbuf, &elfsz)) {
+> +		pr_err("crash hp: unable to prepare elfcore headers");
+> +		goto out;
 
-Signed-off-by: Youling Tang <tangyouling@loongson.cn>
----
-Note: kexec/kdump support patch see link [1]:
-[1] Link: https://lore.kernel.org/loongarch/1663210426-15446-1-git-send-email-tangyouling@loongson.cn/T/#t
+On PowerPC, while preparing the elf core header the memblock structure 
+is used to prepare program header for memory regions of elfcorehdr. 
+Since the above arch specific hotplug handler gets invoked when memory 
+is marked offline (MEM_OFFLINE) which is before memblock structure gets 
+updated so on PowerPC the above handler may not work for memory hotplug 
+case.
 
- Makefile           |   2 +-
- arch/loongarch64.c | 113 +++++++++++++++++++++++++++++++++++++++++++++
- makedumpfile.h     |  58 +++++++++++++++++++++++
- 3 files changed, 172 insertions(+), 1 deletion(-)
- create mode 100644 arch/loongarch64.c
+Just wondering which data structure is used to get the list of memory 
+regions while preparing program header for memory regions of elfcorehdr 
+on other architectures?
 
-diff --git a/Makefile b/Makefile
-index 370a97c..e07f466 100644
---- a/Makefile
-+++ b/Makefile
-@@ -47,7 +47,7 @@ endif
- SRC_BASE = makedumpfile.c makedumpfile.h diskdump_mod.h sadump_mod.h sadump_info.h
- SRC_PART = print_info.c dwarf_info.c elf_info.c erase_info.c sadump_info.c cache.c tools.c printk.c detect_cycle.c
- OBJ_PART=$(patsubst %.c,%.o,$(SRC_PART))
--SRC_ARCH = arch/arm.c arch/arm64.c arch/x86.c arch/x86_64.c arch/ia64.c arch/ppc64.c arch/s390x.c arch/ppc.c arch/sparc64.c arch/mips64.c
-+SRC_ARCH = arch/arm.c arch/arm64.c arch/x86.c arch/x86_64.c arch/ia64.c arch/ppc64.c arch/s390x.c arch/ppc.c arch/sparc64.c arch/mips64.c arch/loongarch64.c
- OBJ_ARCH=$(patsubst %.c,%.o,$(SRC_ARCH))
- 
- LIBS = -ldw -lbz2 -ldl -lelf -lz
-diff --git a/arch/loongarch64.c b/arch/loongarch64.c
-new file mode 100644
-index 0000000..42a02ab
---- /dev/null
-+++ b/arch/loongarch64.c
-@@ -0,0 +1,113 @@
-+/*
-+ * loongarch64.c
-+ *
-+ * Copyright (C) 2022 Loongson Technology Corporation Limited
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+#ifdef __loongarch64__
-+
-+#include "../print_info.h"
-+#include "../elf_info.h"
-+#include "../makedumpfile.h"
-+
-+int
-+get_phys_base_loongarch64(void)
-+{
-+	info->phys_base = 0ULL;
-+
-+	DEBUG_MSG("phys_base    : %lx\n", info->phys_base);
-+
-+	return TRUE;
-+}
-+
-+int
-+get_machdep_info_loongarch64(void)
-+{
-+	info->section_size_bits = _SECTION_SIZE_BITS;
-+
-+	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
-+	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
-+		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
-+	else
-+		info->max_physmem_bits = _MAX_PHYSMEM_BITS;
-+
-+	/* Check if we can get SECTION_SIZE_BITS from vmcoreinfo */
-+	if (NUMBER(SECTION_SIZE_BITS) != NOT_FOUND_NUMBER)
-+		info->section_size_bits = NUMBER(SECTION_SIZE_BITS);
-+	else
-+		info->section_size_bits = _SECTION_SIZE_BITS;
-+
-+	DEBUG_MSG("max_physmem_bits : %ld\n", info->max_physmem_bits);
-+	DEBUG_MSG("section_size_bits: %ld\n", info->section_size_bits);
-+
-+	return TRUE;
-+}
-+
-+int
-+get_versiondep_info_loongarch64(void)
-+{
-+	info->page_offset  = _PAGE_OFFSET;
-+
-+	DEBUG_MSG("page_offset : %lx\n", info->page_offset);
-+
-+	return TRUE;
-+}
-+
-+unsigned long long
-+vaddr_to_paddr_loongarch64(unsigned long vaddr)
-+{
-+	unsigned long long paddr = NOT_PADDR;
-+	pgd_t *pgda, pgdv;
-+	pmd_t *pmda, pmdv;
-+	pte_t *ptea, ptev;
-+
-+	if (vaddr >= _XKPRANGE && vaddr < _XKVRANGE)
-+		return vaddr & ((1ULL << MAX_PHYSMEM_BITS()) - 1);
-+
-+	if (SYMBOL(swapper_pg_dir) == NOT_FOUND_SYMBOL) {
-+		ERRMSG("Can't get the symbol of swapper_pg_dir.\n");
-+		return NOT_PADDR;
-+	}
-+
-+	pgda = pgd_offset(SYMBOL(swapper_pg_dir), vaddr);
-+	if (!readmem(VADDR, (unsigned long long)pgda, &pgdv, sizeof(pgdv))) {
-+		ERRMSG("Can't read pgd\n");
-+		return NOT_PADDR;
-+	}
-+
-+	pmda = pmd_offset(&pgdv, vaddr);
-+	if (!readmem(VADDR, (unsigned long long)pmda, &pmdv, sizeof(pmdv))) {
-+		ERRMSG("Can't read pmd\n");
-+		return NOT_PADDR;
-+	}
-+
-+	if (pmdv & _PAGE_HUGE) {
-+		paddr = (pmdv & PMD_MASK) + (vaddr & (PMD_SIZE - 1));
-+		return paddr;
-+	}
-+
-+	ptea = pte_offset(&pmdv, vaddr);
-+	if (!readmem(VADDR, (unsigned long long)ptea, &ptev, sizeof(ptev))) {
-+		ERRMSG("Can't read pte\n");
-+		return NOT_PADDR;
-+	}
-+
-+	if (!(ptev & _PAGE_PRESENT)) {
-+		ERRMSG("Can't get a valid pte.\n");
-+		return NOT_PADDR;
-+	}
-+
-+	paddr = PAGEBASE(ptev) + (vaddr & (PAGESIZE() - 1));
-+	return paddr;
-+}
-+
-+#endif /* loongarch64 */
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 49b9242..a70b1de 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -1013,6 +1013,42 @@ typedef unsigned long pgd_t;
- 
- #endif		/* mips64 */
- 
-+#ifdef __loongarch64__
-+#define KVBASE			(0x8000000000000000ULL)
-+#define _PAGE_OFFSET		(0x9000000000000000ULL)
-+#define _XKPRANGE		(0x8000000000000000ULL)
-+#define _XKVRANGE		(0xc000000000000000ULL)
-+#define _SECTION_SIZE_BITS	(29)
-+#define _MAX_PHYSMEM_BITS	(48)
-+#define _PAGE_HUGE		(1 << 6) /* HUGE is a PMD bit */
-+#define _PAGE_PRESENT		(1 << 7)
-+
-+typedef unsigned long pte_t;
-+typedef unsigned long pmd_t;
-+typedef unsigned long pgd_t;
-+
-+#define PAGE_MASK		(~(PAGESIZE() - 1))
-+#define PMD_MASK		(~(PMD_SIZE - 1))
-+#define PMD_SHIFT		((PAGESHIFT() - 3) * 2 + 3)
-+#define PMD_SIZE		(1UL << PMD_SHIFT)
-+#define PGDIR_SHIFT		((PAGESHIFT() - 3) * 3 + 3)
-+#define PTRS_PER_PTE		(1 << (PAGESHIFT() - 3))
-+#define PTRS_PER_PMD		PTRS_PER_PTE
-+#define PTRS_PER_PGD		PTRS_PER_PTE
-+
-+#define pte_index(vaddr)		(((vaddr) >> PAGESHIFT()) & (PTRS_PER_PTE - 1))
-+#define pmd_page_paddr(pmd)		(pmd & (int32_t)PAGE_MASK)
-+#define pte_offset(dir, vaddr)		((pte_t *)pmd_page_paddr((*dir)) + pte_index(vaddr))
-+
-+#define pmd_index(vaddr)		(((vaddr) >> PMD_SHIFT) & (PTRS_PER_PMD - 1))
-+#define pgd_page_paddr(pgd)		(pgd & (int32_t)PAGE_MASK)
-+#define pmd_offset(pgd, vaddr)		((pmd_t *)pgd_page_paddr((*pgd)) + pmd_index(vaddr))
-+
-+#define pgd_index(vaddr)		(((vaddr) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1))
-+#define pgd_offset(pgdir, vaddr)	((pgd_t *)(pgdir) + pgd_index(vaddr))
-+
-+#endif          /* loongarch64 */
-+
- /*
-  * The function of dependence on machine
-  */
-@@ -1184,6 +1220,22 @@ unsigned long long vaddr_to_paddr_mips64(unsigned long vaddr);
- #define arch_crashkernel_mem_size()	stub_false()
- #endif		/* mips64 */
- 
-+#ifdef __loongarch64__ /* loongarch64 */
-+int get_phys_base_loongarch64(void);
-+int get_machdep_info_loongarch64(void);
-+int get_versiondep_info_loongarch64(void);
-+unsigned long long vaddr_to_paddr_loongarch64(unsigned long vaddr);
-+#define find_vmemmap()		stub_false()
-+#define get_phys_base()		get_phys_base_loongarch64()
-+#define get_machdep_info()	get_machdep_info_loongarch64()
-+#define get_versiondep_info()   get_versiondep_info_loongarch64()
-+#define get_kaslr_offset(X)	stub_false()
-+#define vaddr_to_paddr(X)       vaddr_to_paddr_loongarch64(X)
-+#define paddr_to_vaddr(X)	paddr_to_vaddr_general(X)
-+#define is_phys_addr(X)		stub_true_ul(X)
-+#define arch_crashkernel_mem_size()	stub_false()
-+#endif		/* loongarch64 */
-+
- typedef unsigned long long mdf_pfn_t;
- 
- #ifndef ARCH_PFN_OFFSET
-@@ -2318,6 +2370,12 @@ int get_xen_info_ia64(void);
- #define get_xen_info_arch(X) FALSE
- #endif	/* mips64 */
- 
-+#ifdef __loongarch64__ /* loongarch64 */
-+#define kvtop_xen(X)	FALSE
-+#define get_xen_basic_info_arch(X) FALSE
-+#define get_xen_info_arch(X) FALSE
-+#endif	/* loongarch64 */
-+
- struct cycle {
- 	mdf_pfn_t start_pfn;
- 	mdf_pfn_t end_pfn;
--- 
-2.36.0
-
+Thanks,
+Sourabh Jain
 
 _______________________________________________
 kexec mailing list
