@@ -4,68 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 313A9C6FA86
-	for <kexec@archiver.kernel.org>; Thu, 22 Sep 2022 10:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6B5F2C6FA82
+	for <kexec@archiver.kernel.org>; Fri, 23 Sep 2022 07:44:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:Date:Message-ID:From:Cc:
-	References:To:Subject:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=BfoUC6Pe0Ax/o0zUFG34whW4fndb1nK442I86ZqCJZM=; b=o9Yq3AL+1ktMrVcpj+uGTZYvE8
-	tzWjHqfQAc2sSaYEdnX7euGMDKXgF5HnUscZte117PLYmhlbhZSoPmhDJTA9I073wlLAqE5j+C1+P
-	3SxdtOosAC2i2LYsO1f/Fm9F6WG8F9dqlwLif16Km7fMd56ejCNWLCLBw5r1cywonhSeQ06GRCXD2
-	mC6OnL4g1mLM/WAJQNFOoyM2irV4WgOA1wS47D5BDGm+MPNnS4N7ySMPrTIexpjm298ldnGJ5HpBV
-	eAJ2FjOZP5mZuvf6Z+NzI+f/zyckn0BVfLROP8hjfv2VzMVGPxnpU59LnWRM73Nc1qKGLhPMwEgpJ
-	yU5bTplQ==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:List-Subscribe:List-Help:
+	List-Post:List-Archive:List-Unsubscribe:List-Id:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=4ZZ8iKlMD+VPhLWLOWYSwZ7/yCE5WOODggcTwAKmdgs=; b=F0QologFf0e9Mi
+	WEQUikMHtOCmQYIu6w8JYTRKLmkIjtmbzZEV3CsIqFWCAjCPvxUFPSxkup2hwRMCz+eUcs/a8702k
+	NBRAgsWE4gQYfs9D0AB6VXkPlAu2E+Km8c+85lRFNnnxrTryfiBIZmNHzgnWf9k8wRCCNZCFl/J3d
+	Hv/NmJJj5xtUS4aJN5PseSK3hSbm/SvOceTxF3Gy4IqR/PO5Wn8BdDvalHI+8owNgTrxC4mV3ps+T
+	YnxCoNZYTbYfy/CcLif9iy31DAKmRG5M5ucvymNrXY/XV6DcDVz4I0RBXCihjn0c1Arr75o/jbR0X
+	r2kPhXXr8pESjOasI+uA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1obJUE-00ExHn-JA; Thu, 22 Sep 2022 10:31:18 +0000
+	id 1obdMg-002l6W-Kb; Fri, 23 Sep 2022 07:44:50 +0000
 Received: from mail.loongson.cn ([114.242.206.163] helo=loongson.cn)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1obJU9-00ExEG-4h
-	for kexec@lists.infradead.org; Thu, 22 Sep 2022 10:31:16 +0000
-Received: from [10.130.0.193] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx32tdOSxj5w0gAA--.48410S3;
-	Thu, 22 Sep 2022 18:30:54 +0800 (CST)
-Subject: Re: [PATCH v3 1/3] LoongArch: Add kexec support
-To: Xi Ruoyao <xry111@xry111.site>, Huacai Chen <chenhuacai@kernel.org>,
- Baoquan He <bhe@redhat.com>, Eric Biederman <ebiederm@xmission.com>
-References: <1663210426-15446-1-git-send-email-tangyouling@loongson.cn>
- <1663210426-15446-2-git-send-email-tangyouling@loongson.cn>
- <bfe4fed8b1da17561214cf9f2cf5acdf0e74d0ea.camel@xry111.site>
-Cc: WANG Xuerui <kernel@xen0n.name>, Vivek Goyal <vgoyal@redhat.com>,
- Dave Young <dyoung@redhat.com>, Guo Ren <guoren@kernel.org>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, kexec@lists.infradead.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+	id 1obdMd-002l4q-L6
+	for kexec@lists.infradead.org; Fri, 23 Sep 2022 07:44:49 +0000
+Received: from bogon.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxT+DpYy1jsI4gAA--.57695S5;
+	Fri, 23 Sep 2022 15:44:44 +0800 (CST)
 From: Youling Tang <tangyouling@loongson.cn>
-Message-ID: <75a059e8-108f-93f5-5d4e-01b09224f419@loongson.cn>
-Date: Thu, 22 Sep 2022 18:30:53 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
-MIME-Version: 1.0
-In-Reply-To: <bfe4fed8b1da17561214cf9f2cf5acdf0e74d0ea.camel@xry111.site>
-X-CM-TRANSID: AQAAf8Bx32tdOSxj5w0gAA--.48410S3
-X-Coremail-Antispam: 1UD129KBjvdXoWrtFW3JryfAF4UWw48tF48Crg_yoWDKrbE9w
-	47Wrn5GF1fXrsrtan8Kr13tF98t3y0vF1YgryIv3y5A348tw48W39IywnYyF1kXrWkAanx
-	Ars8ZrZYyw1I9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUb-xYjsxI4VWkKwAYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I
-	6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-	8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0
-	cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I
-	8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-	64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJw
-	Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l
-	c7I2V7IY0VAS07AlzVAYIcxG8wCY02Avz4vE14v_Gw1l42xK82IYc2Ij64vIr41l4I8I3I
-	0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
-	GVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
-	0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0
-	rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r
-	4UJbIYCTnIWIevJa73UjIFyTuYvjxUgHanUUUUU
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Baoquan He <bhe@redhat.com>,
+	Eric Biederman <ebiederm@xmission.com>
+Cc: WANG Xuerui <kernel@xen0n.name>,
+	Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>,
+	Guo Ren <guoren@kernel.org>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	kexec@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 3/3] LoongArch: Enable CONFIG_KEXEC
+Date: Fri, 23 Sep 2022 15:44:33 +0800
+Message-Id: <1663919073-26849-4-git-send-email-tangyouling@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1663919073-26849-1-git-send-email-tangyouling@loongson.cn>
+References: <1663919073-26849-1-git-send-email-tangyouling@loongson.cn>
+X-CM-TRANSID: AQAAf8CxT+DpYy1jsI4gAA--.57695S5
+X-Coremail-Antispam: 1UD129KBjvdXoWrZF48WFWUJr1xAw4rXr1fJFb_yoWxCFg_JF
+	y7Gw4Dur48Ja97uw4xXw4rGw4DA3W7ZF1FkF17Zr1xX3Wagr13tw4DJ3W7C3ZYgayDWrs3
+	ZaykAF9Fkr10yjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbg8YjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I
+	6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7
+	IE14v26r1rM28IrcIa0xkI8VCY1x0267AKxVW5JVCq3wA2ocxC64kIII0Yj41l84x0c7CE
+	w4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6x
+	kF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIE
+	c7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I
+	8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCF
+	s4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACI402YVCY1x02628vn2kIc2xKxwCY02
+	Avz4vE14v_GF4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAq
+	x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r
+	43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF
+	7I0E14v26F4j6r4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI
+	0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7I
+	U8t73DUUUUU==
 X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220922_033113_589457_D7F19FCC 
-X-CRM114-Status: GOOD (  14.17  )
+X-CRM114-CacheID: sfid-20220923_004448_062031_9B1C0FBB 
+X-CRM114-Status: UNSURE (   5.00  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,45 +81,33 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi, Ruoyao
+Defaults enable CONFIG_KEXEC to convenient kexec operations.
 
-On 09/22/2022 06:00 PM, Xi Ruoyao wrote:
-> On Thu, 2022-09-15 at 10:53 +0800, Youling Tang wrote:
->> +int machine_kexec_prepare(struct kimage *kimage)
->> +{
->> +       int i;
->> +       void *dtb = (void *)KEXEC_BLOB_ADDR;
->> +
->> +       kexec_image_info(kimage);
->> +
->> +       /* Find the Flattened Device Tree */
->> +       for (i = 0; i < kimage->nr_segments; i++) {
->> +               if (!fdt_check_header(kimage->segment[i].buf)) {
->
-> Hi Youling,
->
-> When I build Huacai's tree
-> (https://github.com/loongson/linux/commits/loongarch-next), there is a
-> strange error linking vmlinux:
->
-> ld: arch/loongarch/kernel/machine_kexec.o: in function `machine_kexec_prepare':
-> /home/xry111/git-repos/linux/arch/loongarch/kernel/machine_kexec.c:70: undefined reference to `fdt_check_header'
->
-> Not sure why...
+Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+---
+ arch/loongarch/configs/loongson3_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-This is because of the problem after efistub removes the fdt
-modification, I will reimplement kexec/kdump. This build error can be
-avoided by turning off CONFIG_KEXEC temporarily, tomorrow I will submit
-a new kexec/kdump implementation.
-
-Thanks,
-Youling.
->
+diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
+index f67127246aa8..c96ce646d84a 100644
+--- a/arch/loongarch/configs/loongson3_defconfig
++++ b/arch/loongarch/configs/loongson3_defconfig
+@@ -46,6 +46,7 @@ CONFIG_SMP=y
+ CONFIG_HOTPLUG_CPU=y
+ CONFIG_NR_CPUS=64
+ CONFIG_NUMA=y
++CONFIG_KEXEC=y
+ CONFIG_PAGE_SIZE_16KB=y
+ CONFIG_HZ_250=y
+ CONFIG_ACPI=y
+-- 
+2.36.0
 
 
 _______________________________________________
