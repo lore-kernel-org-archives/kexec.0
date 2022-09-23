@@ -4,77 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6EEA0C6FA83
-	for <kexec@archiver.kernel.org>; Fri, 23 Sep 2022 17:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3DF2BC07E9D
+	for <kexec@archiver.kernel.org>; Fri, 23 Sep 2022 17:12:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=aiKWCz/zJkIR4sYEXW5hWAK5APFsWvcDjbHSUtZqwSQ=; b=KMh4HlI7W5Vo82
-	U1FWdV9gW3rirtNpWKGr+oYrFfhABs9XJeN61KrCKQDBCLruIQ/5Q0yb99oQaC7A8R+m8fTguzahT
-	DVjAAxpvmqM+JBJQV8+JHsUjAuQhO2aPdrBN5ruABHAPtBFO8ByO++Ytzp/FXbQuYbBAv5lNQX2Ui
-	wxBstY+HdrWSh2MUuFSz5cd+ArLEBSp7qKLq+1Dvkh0WSC0jRiT73H45GeWmvgiTceu60Xcec/AjH
-	V/Jow4oQnwMHMs311DV+tqJcNRq/qaD5G3mbil/ALq4VY5zZeZKHaJFpsMfubNTKo327Ym5HGSKdU
-	rHXSMjZCUBP0e9O3Teqg==;
+	List-Owner; bh=vw6AcBZEi/pTDPJmj8uzkq1djTh1eNLcNs2JhFA40no=; b=1osXlmWEXzgH02
+	BYznlYbF+CepaYtZc0W6jNW7MHX7iIgReQIY23FjfHChfxaykTLe86LQF4TxnEYLreAiFPZvzsy/+
+	G60fMQZxRt+SFfwS5VEWcpr59U9IKh6uJwFzvFvSAIN63ByPJtl8U6csjAfmkjC5sUJWzEnHQhyMg
+	TSDhZHyuyPe6zc9U4SkiB8TNlXbXubxLHtmApPzP1X1L6CkPp5A34weL75d8+921O4Gks1L6xvddu
+	oSBAZRjqJ+9DwApgYW43l/aYOooa6AseSqpY2bWHFQRxyiUlTVU3CCVeGt3XpLP5DekErp/US0pDI
+	EcQCce9jxajhbFhgi7JA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1obmDU-0054st-KM; Fri, 23 Sep 2022 17:11:56 +0000
-Received: from smtp-out1.suse.de ([2001:67c:2178:6::1c])
+	id 1obmDX-0054uT-Cp; Fri, 23 Sep 2022 17:11:59 +0000
+Received: from smtp-out2.suse.de ([2001:67c:2178:6::1d])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1obmCb-0054OB-Kt
-	for kexec@lists.infradead.org; Fri, 23 Sep 2022 17:11:05 +0000
+	id 1obmCb-0054NN-3h; Fri, 23 Sep 2022 17:11:06 +0000
 Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-	by smtp-out1.suse.de (Postfix) with ESMTP id 4ACD221A39;
-	Fri, 23 Sep 2022 17:10:52 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTP id 55B881F88D;
+	Fri, 23 Sep 2022 17:10:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1663953052; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1663953047; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Rmyc7+NXxSKrvuh1Oxes12NMTBkZbYvg0p3QHUHFwAk=;
-	b=0okAljIZr+W1vgFvro+h1w1DeSfzGLvmWklZkBfsdvj9UzlpIN1exoRqL6t4SYtpO7Zy7M
-	GT4b51Wjs1iuS+A75vliMgkqEkea4NCiNvKHTw5JCCgI50weB8OTkbTqHh1N6QOljA8XQ3
-	TR7/ki4fwb1uHc2z227q7ITjzA9G9p0=
+	bh=kZ/YYHNzdKPwO2QBOPiFCZwcjPwHWC0adPlN029tkmU=;
+	b=nIDionofPDQgJxiYQ0Pk4pEtgPRoGNy4FZ3o1D13hyrwpLj9M4szj8/2AnmK/U8EAxk6Hu
+	UzGmk+tW22YOJQs9p3CEUTSy4OpUDa6NHKtcmMVKSAwZxJOqM6gRfmwSHJSdnhGEYivlVV
+	MVIK+CNLF0UWle1ojTxKSf2yD7hpJMI=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1663953052;
+	s=susede2_ed25519; t=1663953047;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Rmyc7+NXxSKrvuh1Oxes12NMTBkZbYvg0p3QHUHFwAk=;
-	b=symqT+AAemfpN0Bky/MVOHY5dYy0iRKssfzEGEcxb1JR2M6MH9k9AKE2/u91O0fNo5aHXz
-	CFf6Wvd+5VdRspAA==
+	bh=kZ/YYHNzdKPwO2QBOPiFCZwcjPwHWC0adPlN029tkmU=;
+	b=TWbQblKX0kI2H5b/OGyX+Vi8p0K3NUf2RfRz65l5J1qILsJcTRJUvbi6ZLgYdcjb6nHLoZ
+	zhe9FhIbISUvcPDw==
 Received: from kitsune.suse.cz (kitsune.suse.cz [10.100.12.127])
-	by relay2.suse.de (Postfix) with ESMTP id 0AC0D2C171;
-	Fri, 23 Sep 2022 17:10:52 +0000 (UTC)
+	by relay2.suse.de (Postfix) with ESMTP id D6B562C15D;
+	Fri, 23 Sep 2022 17:10:46 +0000 (UTC)
 From: Michal Suchanek <msuchanek@suse.de>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>,
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+	Paul Mackerras <paulus@samba.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@de.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>,
 	x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
 	"H. Peter Anvin" <hpa@zytor.com>,
 	Eric Biederman <ebiederm@xmission.com>,
-	Michal Suchanek <msuchanek@suse.de>,
-	Coiby Xu <coxu@redhat.com>,
 	Mimi Zohar <zohar@linux.ibm.com>,
-	kexec@lists.infradead.org (open list:KEXEC),
-	keyrings@vger.kernel.org,
-	linux-security-module@vger.kernel.org
-Subject: [PATCH 5.15 5/6] kexec, KEYS: make the code in bzImage64_verify_sig generic
-Date: Fri, 23 Sep 2022 19:10:33 +0200
-Message-Id: <7f9c49c652d30c1093aeb4bac42c27dd88610388.1663951201.git.msuchanek@suse.de>
+	"Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+	Michal Suchanek <msuchanek@suse.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Baoquan He <bhe@redhat.com>,
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)),
+	linuxppc-dev@lists.ozlabs.org (open list:LINUX FOR POWERPC (32-BIT AND 64-BIT)),
+	linux-s390@vger.kernel.org (open list:S390),
+	kexec@lists.infradead.org (open list:KEXEC)
+Subject: [PATCH 5.15 2/6] kexec_file: drop weak attribute from functions
+Date: Fri, 23 Sep 2022 19:10:30 +0200
+Message-Id: <d02bd8aa5bb98d7e6e40454cda91c0eb07a3e0d7.1663951201.git.msuchanek@suse.de>
 X-Mailer: git-send-email 2.35.3
 In-Reply-To: <cover.1663951201.git.msuchanek@suse.de>
 References: <cover.1663951201.git.msuchanek@suse.de>
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220923_101101_876804_C498687A 
-X-CRM114-Status: GOOD (  13.37  )
+X-CRM114-CacheID: sfid-20220923_101101_494997_707F0196 
+X-CRM114-Status: GOOD (  16.50  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,127 +103,259 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Coiby Xu <coxu@redhat.com>
+From: "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
 
-commit c903dae8941deb55043ee46ded29e84e97cd84bb upstream.
+commit 65d9a9a60fd71be964effb2e94747a6acb6e7015 upstream.
 
-commit 278311e417be ("kexec, KEYS: Make use of platform keyring for
-signature verify") adds platform keyring support on x86 kexec but not
-arm64.
+As requested
+(http://lkml.kernel.org/r/87ee0q7b92.fsf@email.froward.int.ebiederm.org),
+this series converts weak functions in kexec to use the #ifdef approach.
 
-The code in bzImage64_verify_sig uses the keys on the
-.builtin_trusted_keys, .machine, if configured and enabled,
-.secondary_trusted_keys, also if configured, and .platform keyrings
-to verify the signed kernel image as PE file.
+Quoting the 3e35142ef99fe ("kexec_file: drop weak attribute from
+arch_kexec_apply_relocations[_add]") changelog:
 
-Cc: kexec@lists.infradead.org
-Cc: keyrings@vger.kernel.org
-Cc: linux-security-module@vger.kernel.org
-Reviewed-by: Michal Suchanek <msuchanek@suse.de>
-Signed-off-by: Coiby Xu <coxu@redhat.com>
+: Since commit d1bcae833b32f1 ("ELF: Don't generate unused section symbols")
+: [1], binutils (v2.36+) started dropping section symbols that it thought
+: were unused.  This isn't an issue in general, but with kexec_file.c, gcc
+: is placing kexec_arch_apply_relocations[_add] into a separate
+: .text.unlikely section and the section symbol ".text.unlikely" is being
+: dropped.  Due to this, recordmcount is unable to find a non-weak symbol in
+: .text.unlikely to generate a relocation record against.
+
+This patch (of 2);
+
+Drop __weak attribute from functions in kexec_file.c:
+- arch_kexec_kernel_image_probe()
+- arch_kimage_file_post_load_cleanup()
+- arch_kexec_kernel_image_load()
+- arch_kexec_locate_mem_hole()
+- arch_kexec_kernel_verify_sig()
+
+arch_kexec_kernel_image_load() calls into kexec_image_load_default(), so
+drop the static attribute for the latter.
+
+arch_kexec_kernel_verify_sig() is not overridden by any architecture, so
+drop the __weak attribute.
+
+Link: https://lkml.kernel.org/r/cover.1656659357.git.naveen.n.rao@linux.vnet.ibm.com
+Link: https://lkml.kernel.org/r/2cd7ca1fe4d6bb6ca38e3283c717878388ed6788.1656659357.git.naveen.n.rao@linux.vnet.ibm.com
+Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Suggested-by: Eric Biederman <ebiederm@xmission.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Michal Suchanek <msuchanek@suse.de>
 ---
- arch/x86/kernel/kexec-bzimage64.c | 20 +-------------------
- include/linux/kexec.h             |  7 +++++++
- kernel/kexec_file.c               | 17 +++++++++++++++++
- 3 files changed, 25 insertions(+), 19 deletions(-)
+ arch/arm64/include/asm/kexec.h   |  4 ++-
+ arch/powerpc/include/asm/kexec.h |  9 +++++++
+ arch/s390/include/asm/kexec.h    |  3 +++
+ arch/x86/include/asm/kexec.h     |  6 +++++
+ include/linux/kexec.h            | 44 +++++++++++++++++++++++++++-----
+ kernel/kexec_file.c              | 35 ++-----------------------
+ 6 files changed, 61 insertions(+), 40 deletions(-)
 
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index 170d0fd68b1f..f299b48f9c9f 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -17,7 +17,6 @@
- #include <linux/kernel.h>
- #include <linux/mm.h>
- #include <linux/efi.h>
--#include <linux/verification.h>
+diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+index 00dbcc71aeb2..91d81824f869 100644
+--- a/arch/arm64/include/asm/kexec.h
++++ b/arch/arm64/include/asm/kexec.h
+@@ -103,7 +103,9 @@ extern const struct kexec_file_ops kexec_image_ops;
  
- #include <asm/bootparam.h>
- #include <asm/setup.h>
-@@ -528,28 +527,11 @@ static int bzImage64_cleanup(void *loader_data)
- 	return 0;
- }
+ struct kimage;
  
--#ifdef CONFIG_KEXEC_BZIMAGE_VERIFY_SIG
--static int bzImage64_verify_sig(const char *kernel, unsigned long kernel_len)
--{
--	int ret;
--
--	ret = verify_pefile_signature(kernel, kernel_len,
--				      VERIFY_USE_SECONDARY_KEYRING,
--				      VERIFYING_KEXEC_PE_SIGNATURE);
--	if (ret == -ENOKEY && IS_ENABLED(CONFIG_INTEGRITY_PLATFORM_KEYRING)) {
--		ret = verify_pefile_signature(kernel, kernel_len,
--					      VERIFY_USE_PLATFORM_KEYRING,
--					      VERIFYING_KEXEC_PE_SIGNATURE);
--	}
--	return ret;
--}
--#endif
--
- const struct kexec_file_ops kexec_bzImage64_ops = {
- 	.probe = bzImage64_probe,
- 	.load = bzImage64_load,
- 	.cleanup = bzImage64_cleanup,
- #ifdef CONFIG_KEXEC_BZIMAGE_VERIFY_SIG
--	.verify_sig = bzImage64_verify_sig,
-+	.verify_sig = kexec_kernel_verify_pe_sig,
+-extern int arch_kimage_file_post_load_cleanup(struct kimage *image);
++int arch_kimage_file_post_load_cleanup(struct kimage *image);
++#define arch_kimage_file_post_load_cleanup arch_kimage_file_post_load_cleanup
++
+ extern int load_other_segments(struct kimage *image,
+ 		unsigned long kernel_load_addr, unsigned long kernel_size,
+ 		char *initrd, unsigned long initrd_len,
+diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
+index 88d0d7cf3a79..6152fa220054 100644
+--- a/arch/powerpc/include/asm/kexec.h
++++ b/arch/powerpc/include/asm/kexec.h
+@@ -119,6 +119,15 @@ int setup_purgatory(struct kimage *image, const void *slave_code,
+ #ifdef CONFIG_PPC64
+ struct kexec_buf;
+ 
++int arch_kexec_kernel_image_probe(struct kimage *image, void *buf, unsigned long buf_len);
++#define arch_kexec_kernel_image_probe arch_kexec_kernel_image_probe
++
++int arch_kimage_file_post_load_cleanup(struct kimage *image);
++#define arch_kimage_file_post_load_cleanup arch_kimage_file_post_load_cleanup
++
++int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf);
++#define arch_kexec_locate_mem_hole arch_kexec_locate_mem_hole
++
+ int load_crashdump_segments_ppc64(struct kimage *image,
+ 				  struct kexec_buf *kbuf);
+ int setup_purgatory_ppc64(struct kimage *image, const void *slave_code,
+diff --git a/arch/s390/include/asm/kexec.h b/arch/s390/include/asm/kexec.h
+index 63098df81c9f..d13bd221cd37 100644
+--- a/arch/s390/include/asm/kexec.h
++++ b/arch/s390/include/asm/kexec.h
+@@ -92,5 +92,8 @@ int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
+ 				     const Elf_Shdr *relsec,
+ 				     const Elf_Shdr *symtab);
+ #define arch_kexec_apply_relocations_add arch_kexec_apply_relocations_add
++
++int arch_kimage_file_post_load_cleanup(struct kimage *image);
++#define arch_kimage_file_post_load_cleanup arch_kimage_file_post_load_cleanup
  #endif
- };
+ #endif /*_S390_KEXEC_H */
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index c7c924e15011..5b6e2ae54906 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -193,6 +193,12 @@ int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
+ 				     const Elf_Shdr *relsec,
+ 				     const Elf_Shdr *symtab);
+ #define arch_kexec_apply_relocations_add arch_kexec_apply_relocations_add
++
++void *arch_kexec_kernel_image_load(struct kimage *image);
++#define arch_kexec_kernel_image_load arch_kexec_kernel_image_load
++
++int arch_kimage_file_post_load_cleanup(struct kimage *image);
++#define arch_kimage_file_post_load_cleanup arch_kimage_file_post_load_cleanup
+ #endif
+ #endif
+ 
 diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 46f113961dbc..1dd7b679fcf9 100644
+index cf042d41c87b..f1e5327a7bf8 100644
 --- a/include/linux/kexec.h
 +++ b/include/linux/kexec.h
-@@ -19,6 +19,7 @@
- #include <asm/io.h>
- 
- #include <uapi/linux/kexec.h>
-+#include <linux/verification.h>
- 
- #ifdef CONFIG_KEXEC_CORE
- #include <linux/list.h>
-@@ -206,6 +207,12 @@ static inline void *arch_kexec_kernel_image_load(struct kimage *image)
- }
- #endif
- 
-+#ifdef CONFIG_KEXEC_SIG
-+#ifdef CONFIG_SIGNED_PE_FILE_VERIFICATION
-+int kexec_kernel_verify_pe_sig(const char *kernel, unsigned long kernel_len);
-+#endif
-+#endif
+@@ -182,21 +182,53 @@ int kexec_purgatory_get_set_symbol(struct kimage *image, const char *name,
+ 				   void *buf, unsigned int size,
+ 				   bool get_value);
+ void *kexec_purgatory_get_symbol_addr(struct kimage *image, const char *name);
++void *kexec_image_load_default(struct kimage *image);
 +
- extern int kexec_add_buffer(struct kexec_buf *kbuf);
- int kexec_locate_mem_hole(struct kexec_buf *kbuf);
- 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 8d73d6d4f0a6..289bb20e6075 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -123,6 +123,23 @@ void kimage_file_post_load_cleanup(struct kimage *image)
- }
- 
- #ifdef CONFIG_KEXEC_SIG
-+#ifdef CONFIG_SIGNED_PE_FILE_VERIFICATION
-+int kexec_kernel_verify_pe_sig(const char *kernel, unsigned long kernel_len)
++#ifndef arch_kexec_kernel_image_probe
++static inline int
++arch_kexec_kernel_image_probe(struct kimage *image, void *buf, unsigned long buf_len)
 +{
-+	int ret;
-+
-+	ret = verify_pefile_signature(kernel, kernel_len,
-+				      VERIFY_USE_SECONDARY_KEYRING,
-+				      VERIFYING_KEXEC_PE_SIGNATURE);
-+	if (ret == -ENOKEY && IS_ENABLED(CONFIG_INTEGRITY_PLATFORM_KEYRING)) {
-+		ret = verify_pefile_signature(kernel, kernel_len,
-+					      VERIFY_USE_PLATFORM_KEYRING,
-+					      VERIFYING_KEXEC_PE_SIGNATURE);
-+	}
-+	return ret;
++	return kexec_image_probe_default(image, buf, buf_len);
 +}
 +#endif
 +
- static int kexec_image_verify_sig(struct kimage *image, void *buf,
- 				  unsigned long buf_len)
++#ifndef arch_kimage_file_post_load_cleanup
++static inline int arch_kimage_file_post_load_cleanup(struct kimage *image)
++{
++	return kexec_image_post_load_cleanup_default(image);
++}
++#endif
++
++#ifndef arch_kexec_kernel_image_load
++static inline void *arch_kexec_kernel_image_load(struct kimage *image)
++{
++	return kexec_image_load_default(image);
++}
++#endif
+ 
+-/* Architectures may override the below functions */
+-int arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
+-				  unsigned long buf_len);
+-void *arch_kexec_kernel_image_load(struct kimage *image);
+-int arch_kimage_file_post_load_cleanup(struct kimage *image);
+ #ifdef CONFIG_KEXEC_SIG
+ int arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+ 				 unsigned long buf_len);
+ #endif
+-int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf);
+ 
+ extern int kexec_add_buffer(struct kexec_buf *kbuf);
+ int kexec_locate_mem_hole(struct kexec_buf *kbuf);
+ 
++#ifndef arch_kexec_locate_mem_hole
++/**
++ * arch_kexec_locate_mem_hole - Find free memory to place the segments.
++ * @kbuf:                       Parameters for the memory search.
++ *
++ * On success, kbuf->mem will have the start address of the memory region found.
++ *
++ * Return: 0 on success, negative errno on error.
++ */
++static inline int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf)
++{
++	return kexec_locate_mem_hole(kbuf);
++}
++#endif
++
+ /* Alignment required for elf header segment */
+ #define ELF_CORE_HEADER_ALIGN   4096
+ 
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index f7a4fd4d243f..620021679405 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -62,14 +62,7 @@ int kexec_image_probe_default(struct kimage *image, void *buf,
+ 	return ret;
+ }
+ 
+-/* Architectures can provide this probe function */
+-int __weak arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
+-					 unsigned long buf_len)
+-{
+-	return kexec_image_probe_default(image, buf, buf_len);
+-}
+-
+-static void *kexec_image_load_default(struct kimage *image)
++void *kexec_image_load_default(struct kimage *image)
  {
+ 	if (!image->fops || !image->fops->load)
+ 		return ERR_PTR(-ENOEXEC);
+@@ -80,11 +73,6 @@ static void *kexec_image_load_default(struct kimage *image)
+ 				 image->cmdline_buf_len);
+ }
+ 
+-void * __weak arch_kexec_kernel_image_load(struct kimage *image)
+-{
+-	return kexec_image_load_default(image);
+-}
+-
+ int kexec_image_post_load_cleanup_default(struct kimage *image)
+ {
+ 	if (!image->fops || !image->fops->cleanup)
+@@ -93,11 +81,6 @@ int kexec_image_post_load_cleanup_default(struct kimage *image)
+ 	return image->fops->cleanup(image->image_loader_data);
+ }
+ 
+-int __weak arch_kimage_file_post_load_cleanup(struct kimage *image)
+-{
+-	return kexec_image_post_load_cleanup_default(image);
+-}
+-
+ #ifdef CONFIG_KEXEC_SIG
+ static int kexec_image_verify_sig_default(struct kimage *image, void *buf,
+ 					  unsigned long buf_len)
+@@ -110,8 +93,7 @@ static int kexec_image_verify_sig_default(struct kimage *image, void *buf,
+ 	return image->fops->verify_sig(buf, buf_len);
+ }
+ 
+-int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+-					unsigned long buf_len)
++int arch_kexec_kernel_verify_sig(struct kimage *image, void *buf, unsigned long buf_len)
+ {
+ 	return kexec_image_verify_sig_default(image, buf, buf_len);
+ }
+@@ -616,19 +598,6 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
+ 	return ret == 1 ? 0 : -EADDRNOTAVAIL;
+ }
+ 
+-/**
+- * arch_kexec_locate_mem_hole - Find free memory to place the segments.
+- * @kbuf:                       Parameters for the memory search.
+- *
+- * On success, kbuf->mem will have the start address of the memory region found.
+- *
+- * Return: 0 on success, negative errno on error.
+- */
+-int __weak arch_kexec_locate_mem_hole(struct kexec_buf *kbuf)
+-{
+-	return kexec_locate_mem_hole(kbuf);
+-}
+-
+ /**
+  * kexec_add_buffer - place a buffer in a kexec segment
+  * @kbuf:	Buffer contents and memory parameters.
 -- 
 2.35.3
 
