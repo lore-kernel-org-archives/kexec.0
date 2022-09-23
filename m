@@ -4,67 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 261C6C6FA86
-	for <kexec@archiver.kernel.org>; Fri, 23 Sep 2022 09:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0B44CC6FA8B
+	for <kexec@archiver.kernel.org>; Fri, 23 Sep 2022 12:47:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:Date:Message-ID:From:Cc:
-	References:To:Subject:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Miv/XLo+kxtKgkCgNL23Ac99T6dV4OY4fi5HAEdTEh4=; b=wv9JJDwP3qOVZH61oOTpdnkqZx
-	pP/Ur4BnCcE/Zk6KSwmsLKg3Yg6VZ/fZQSSiNzK6vYkPIAIbM00wn06fpG+zu6V3TuNFMjQfU76CT
-	zro9jipr5vMTiPK7cnO7lfWR2qvyFzLrX3rY0k2gnKDimRC6tg0zizercRW7IwWDkhX26OcA1wzOv
-	nBmyb3Ye80Pvo8mmZdKAvs2tVKvT2RQEXq9L8Vxla++TkpyVpR23AP1x4d/xoq4eQoLbmNTPtpAw9
-	TifVwRTYaWWeSW82qz2T5NmX+VX+1KHwTrqcNReOM5Aqp3aXlgNZa/ujl5U4KwhO3+pQDixvblQJy
-	5hJeLwww==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=vbF5Is8YJ9YKCM2i2nnHPfft9AnnuLOypc8lz8HQhFc=; b=y5SktGIOlnAYAC
+	NM5vXES3/m2seUeotIIAbnufMO6dlcSDN2vS1J1+TbfHhO4fOlvNayHOuFt+e/3OLzLjPeGGMXnX+
+	9u9WpU02L+28l6rmuHHaFn5/nk5yGdBs8+mkLw1ylLC7TCcFa/JVFXpPjajMjyIZrjxyoe9ZA/bXw
+	ydF14+RiyR+8w97v1Vm9/81UIILhrjuBkqxGhuDp75JDtFRe5uqMw0LLZjZdigzyRafCkbTZaRp6f
+	tXHL783PlV8NZozmf2dlrRqMJ1TTiHebx6klwGvD/MuhyzwqG2UUy7uAiMF7JqVl6blougsI9N7V9
+	CIRkpkDfBqssHYd6GNeA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1obenO-003EcR-8S; Fri, 23 Sep 2022 09:16:30 +0000
-Received: from mail.loongson.cn ([114.242.206.163] helo=loongson.cn)
-	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1obenK-003EZr-4x
-	for kexec@lists.infradead.org; Fri, 23 Sep 2022 09:16:28 +0000
-Received: from [10.130.0.193] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxXWteeS1jbpggAA--.60757S3;
-	Fri, 23 Sep 2022 17:16:18 +0800 (CST)
-Subject: Re: [PATCH v4 0/3] LoongArch: Add kexec/kdump support
-To: Huacai Chen <chenhuacai@kernel.org>,
- Eric Biederman <ebiederm@xmission.com>
-References: <1663919073-26849-1-git-send-email-tangyouling@loongson.cn>
-Cc: Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>,
- WANG Xuerui <kernel@xen0n.name>, Vivek Goyal <vgoyal@redhat.com>,
- Dave Young <dyoung@redhat.com>, Guo Ren <guoren@kernel.org>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, kexec@lists.infradead.org,
- loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-From: Youling Tang <tangyouling@loongson.cn>
-Message-ID: <711d53ae-197f-3c55-d09d-2f40e6886ad1@loongson.cn>
-Date: Fri, 23 Sep 2022 17:16:14 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	id 1obi5X-004I3T-Am; Fri, 23 Sep 2022 12:47:27 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
+	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1obi5Q-004I2G-4c
+	for kexec@lists.infradead.org; Fri, 23 Sep 2022 12:47:21 +0000
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 1B45C60F95;
+	Fri, 23 Sep 2022 12:47:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08D80C433D6;
+	Fri, 23 Sep 2022 12:47:17 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="mVadCDwO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1663937235;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=0XZD8LDMJASSC7UauO6KTgoZrlLkiFhayn6tNIWF9Wg=;
+	b=mVadCDwOb9H1+p2R8xTl1afqX/2BDScs4q/yO2HhbKHM5UebgOrSYbrzAEGK2EhRN6FwEd
+	NgguTL2imGsrQVQT1tU57f9os1s6k6sAP2o07Juzp5Otk2fcDN5VkaWafH92m8R22TnRuL
+	h2+j/eReoxecHZUvT1UljHdOJfvpWaw=
+Received: 	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id a5c274d4 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Fri, 23 Sep 2022 12:47:15 +0000 (UTC)
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>,
+	linux-m68k@lists.linux-m68k.org,
+	kexec@lists.infradead.org,
+	Simon Horman <horms@verge.net.au>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Subject: [PATCH kexec-tools] m68k: pass rng seed via BI_VIRT_RNG_SEED
+Date: Fri, 23 Sep 2022 14:46:43 +0200
+Message-Id: <20220923124642.3942806-1-Jason@zx2c4.com>
 MIME-Version: 1.0
-In-Reply-To: <1663919073-26849-1-git-send-email-tangyouling@loongson.cn>
-X-CM-TRANSID: AQAAf8BxXWteeS1jbpggAA--.60757S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxAF13uFW3AFWUKr4Duw4kWFg_yoWrCrW3pF
-	4kCr1rKr4kGrn3J3Wxtr13uF95Zwn7Ga1ag3ZFy348ZFnFqr1UZrnYqF9rZF1qqw4fGr40
-	qFnYgw129a4DGaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9qb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I
-	8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-	64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJw
-	Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l
-	c7I2V7IY0VAS07AlzVAYIcxG8wCY02Avz4vE14v_GFWl42xK82IYc2Ij64vIr41l4I8I3I
-	0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
-	GVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
-	0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0
-	rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r
-	4UJbIYCTnIWIevJa73UjIFyTuYvjxUyq-eDUUUU
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220923_021626_607858_B2C6C77D 
-X-CRM114-Status: GOOD (  29.01  )
+X-CRM114-CacheID: sfid-20220923_054720_296461_32BB8F0C 
+X-CRM114-Status: GOOD (  20.97  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,110 +69,234 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+In order to pass fresh entropy to kexec'd kernels, use BI_VIRT_RNG_SEED
+for passing a seed, with the same semantics that kexec-tools currently
+uses for i386's setup_data.
 
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+---
+Geert - I don't have a toolchain for testing this. Could you verify it
+works, if you have a chance? -Jason
 
-On 09/23/2022 03:44 PM, Youling Tang wrote:
-> This patch series to support kexec/kdump (only 64bit).
->
-> Kexec is a system call that enables you to load and boot into another kernel
-> from the currently running kernel. This is useful for kernel developers or
-> other people who need to reboot very quickly without waiting for the whole
-> BIOS boot process to finish.
->
-> Kdump uses kexec to quickly boot to a dump-capture kernel whenever a
-> dump of the system kernel's memory needs to be taken (for example, when
-> the system panics). The system kernel's memory image is preserved across
-> the reboot and is accessible to the dump-capture kernel.
->
-> For details, see Documentation/admin-guide/kdump/kdump.rst.
->
-> User tools kexec-tools see link [1].
->
-> TODO:
-> Currently kdump does not support the same binary image, the production kernel
-> and the capture kernel will be generated with different configurations. I will
-> support kernel relocation support in the near future. Then will go to implement
-> the same binary support based on kernel relocation support.
->
-> [1] Link: https://github.com/tangyouling/kexec-tools
->
-> Changes in v4:
->  After applying the following series of patches [1], the following
->  modifications need to be made:
->  - Adjust the number of parameters and the content of the parameters passed.
->  - Removed build and processing of fdt.
->  - Add handling of command line segments.
->  - Use the command line argument "elfcorehdr=" instead of the "linux,elfcorehdr"
->    member in fdt.
->  - Use the command line argument "mem=" instead of the "linux, usable-memory-range"
->    member in fdt.
->  - Use the command line argument "initrd=" instead of the "linux,initrd-start" and
->    "linux,initrd-end" members of fdt.
+ kexec/arch/m68k/bootinfo.c       | 22 ++++++++++++++++++++++
+ kexec/arch/m68k/bootinfo.h       |  6 ++++++
+ kexec/arch/m68k/kexec-elf-m68k.c |  1 +
+ 3 files changed, 29 insertions(+)
 
-For the command line "initrd=start,size" method:
-We need to move the reserve_initrd_mem call after parse_early_param to
-make sure we can get the correct start and size.
-
-Youling.
-
->  - Removed handling of "linux,elfcorehdr" and "linux, usable-memory-range".
->  - Add handling of "elfcorehdr=".
->  - Modify the handling of "mem=".
->  - Add implementation of reserve_oldmem_region.
->  - Reimplemented kexec-tools (note that kexec-tools needs to be updated).
->
->    Link [1]: https://lore.kernel.org/loongarch/20220920183554.3870247-1-ardb@kernel.org/T/#md02ad4a1510586b2df177cbce4422434eff2d457
->    [PATCH v2 0/8] efi: disentangle the generic EFI stub from FDT
->
-> Changes in v3:
->  - Adjust the PE header (note that kexec-tools needs to be updated).
->  - Add ibar in kexec_reboot().
->  - boot_flag is replaced by efi_boot.
->  - Adjust do_kexec parameter passing order.
->  - Adjust the order of static variables to be consistent with do_kexec.
->  - Remove a-series register save.
->  - Some comments and register usage modification.
->  - Add the opening and closing of the cpu core state.
->  - Add a call to cpu_device_up to turn it on when the cpu core state is offline.
->
-> Changes in v2:
->  - Add ibar.
->  - Access via IOCSR.
->  - Remove the settings of the tp, sp registers.
->  - Remove the crash.c file and merge the relevant code into machine_kexec.c.
->  - Adjust the use of CONFIG_SMP macro to avoid build errors under !SMP
->    configuration.
->  - Change the default value of PHYSICAL_START of the capture kernel to
->    0x90000000a0000000.
->
-> Youling Tang (3):
->   LoongArch: Add kexec support
->   LoongArch: Add kdump support
->   LoongArch: Enable CONFIG_KEXEC
->
->  arch/loongarch/Kconfig                     |  33 +++
->  arch/loongarch/Makefile                    |   4 +
->  arch/loongarch/configs/loongson3_defconfig |   1 +
->  arch/loongarch/include/asm/kexec.h         |  60 ++++
->  arch/loongarch/kernel/Makefile             |   3 +
->  arch/loongarch/kernel/crash_dump.c         |  19 ++
->  arch/loongarch/kernel/head.S               |   6 +-
->  arch/loongarch/kernel/machine_kexec.c      | 309 +++++++++++++++++++++
->  arch/loongarch/kernel/mem.c                |   1 +
->  arch/loongarch/kernel/relocate_kernel.S    | 112 ++++++++
->  arch/loongarch/kernel/setup.c              | 123 +++++++-
->  arch/loongarch/kernel/traps.c              |   4 +
->  12 files changed, 664 insertions(+), 11 deletions(-)
->  create mode 100644 arch/loongarch/include/asm/kexec.h
->  create mode 100644 arch/loongarch/kernel/crash_dump.c
->  create mode 100644 arch/loongarch/kernel/machine_kexec.c
->  create mode 100644 arch/loongarch/kernel/relocate_kernel.S
->
+diff --git a/kexec/arch/m68k/bootinfo.c b/kexec/arch/m68k/bootinfo.c
+index 18bf226..74e65a0 100644
+--- a/kexec/arch/m68k/bootinfo.c
++++ b/kexec/arch/m68k/bootinfo.c
+@@ -135,40 +135,45 @@ void bootinfo_print(void)
+ 		size = bi->size;
+ 		switch (tag) {
+ 		case BI_MACHTYPE:
+ 			printf("BI_MACHTYPE: 0x%08x\n", bi->machtype);
+ 			break;
+ 
+ 		case BI_MEMCHUNK:
+ 			printf("BI_MEMCHUNK: 0x%08x bytes at 0x%08x\n",
+ 			       bi->mem_info.size, bi->mem_info.addr);
+ 			break;
+ 
+ 		case BI_RAMDISK:
+ 			printf("BI_RAMDISK: 0x%08x bytes at 0x%08x\n",
+ 			       bi->mem_info.size, bi->mem_info.addr);
+ 			break;
+ 
+ 		case BI_COMMAND_LINE:
+ 			printf("BI_COMMAND_LINE: %s\n", bi->string);
+ 			break;
+ 
++		case BI_VIRT_RNG_SEED:
++			/* These are secret, so never print them to the console */
++			printf("BI_VIRT_RNG_SEED: 0x%08x bytes\n", be16_to_cpu(bi->bytes.len));
++			break;
++
+ 		default:
+ 			printf("BI tag 0x%04x size %u\n", tag, size);
+ 			break;
+ 		}
+ 		bi = bi_next(bi, size);
+ 	}
+ }
+ 
+ int bootinfo_get_memory_ranges(struct memory_range **range)
+ {
+ 	struct memory_range *ranges;
+ 	unsigned int i;
+ 	struct bi_rec *bi;
+ 
+ 	ranges = xmalloc(num_memchunks * sizeof(struct memory_range));
+ 	for (i = 0, bi = NULL;
+ 	     i < num_memchunks && (bi = bi_find(bi, BI_MEMCHUNK)); i++) {
+ 		ranges[i].start = bi->mem_info.addr;
+ 		ranges[i].end = bi->mem_info.addr + bi->mem_info.size - 1;
+ 		ranges[i].type = RANGE_RAM;
+@@ -195,40 +200,57 @@ void bootinfo_set_cmdline(const char *cmdline)
+ 	memcpy(bi->string, cmdline, size);
+ }
+ 
+ void bootinfo_set_ramdisk(unsigned long ramdisk_addr,
+ 			  unsigned long ramdisk_size)
+ {
+ 	struct bi_rec *bi;
+ 
+ 	/* Remove existing ramdisk records */
+ 	bi_remove(BI_RAMDISK);
+ 
+ 	if (!ramdisk_size)
+ 		return;
+ 
+ 	/* Add new ramdisk record */
+ 	bi = bi_add(BI_RAMDISK, sizeof(bi->mem_info));
+ 	bi->mem_info.addr = ramdisk_addr;
+ 	bi->mem_info.size = ramdisk_size;
+ }
+ 
++void bootinfo_add_rng_seed(void)
++{
++	struct bi_rec *bi;
++	enum { RNG_SEED_LEN = 32 };
++
++	/* Remove existing rng seed records */
++	bi_remove(BI_VIRT_RNG_SEED);
++
++	/* Add new rng seed record */
++	bi = bi_add(BI_VIRT_RNG_SEED, sizeof(bi->bytes) + RNG_SEED_LEN);
++	if (getrandom(bi->bytes.data, RNG_SEED_LEN, GRND_NONBLOCK) != RNG_SEED_LEN) {
++		bi_remove(BI_VIRT_RNG_SEED);
++		return;
++	}
++	bi->bytes.len = cpu_to_be16(RNG_SEED_LEN);
++}
++
+ 
+     /*
+      * Check the bootinfo version in the kernel image
+      * All failures are non-fatal, as kexec may be used to load
+      * non-Linux images
+      */
+ 
+ void bootinfo_check_bootversion(const struct kexec_info *info)
+ {
+ 	struct bi_rec *bi;
+ 	const struct bootversion *bv;
+ 	uint16_t major, minor;
+ 	unsigned int i;
+ 
+ 	bv = info->segment[0].buf;
+ 	if (bv->magic != BOOTINFOV_MAGIC) {
+ 		printf("WARNING: No bootversion in kernel image\n");
+ 		return;
+ 	}
+ 
+diff --git a/kexec/arch/m68k/bootinfo.h b/kexec/arch/m68k/bootinfo.h
+index b6f453d..6dff2ad 100644
+--- a/kexec/arch/m68k/bootinfo.h
++++ b/kexec/arch/m68k/bootinfo.h
+@@ -1,43 +1,49 @@
+ #include <asm/bootinfo.h>
++#include <asm/bootinfo-virt.h>
+ 
+ #define DEFAULT_BOOTINFO_FILE	"/proc/bootinfo"
+ #define MAX_BOOTINFO_SIZE	1536
+ 
+ 
+     /*
+      *  Convenience overlay of several struct bi_record variants
+      */
+ 
+ struct bi_rec {
+ 	__be16 tag;
+ 	__be16 size;
+ 	union {
+ 		__be32 data[0];
+ 		/* shorthands for the types we use */
+ 		__be32 machtype;
+ 		struct {
+ 			__be32 addr;
+ 			__be32 size;
+ 		} mem_info;
+ 		char string[0];
++		struct {
++			__be16 len;
++			u8 data[0];
++		} bytes;
+ 	};
+ };
+ 
+ 
+     /*
+      *  We only support the "new" tagged bootinfo (v2)
+      */
+ 
+ #define SUPPORTED_BOOTINFO_VERSION	2
+ 
+ 
+ extern const char *bootinfo_file;
+ 
+ extern void bootinfo_load(void);
+ extern void bootinfo_print(void);
+ extern int bootinfo_get_memory_ranges(struct memory_range **range);
+ extern void bootinfo_set_cmdline(const char *cmdline);
+ extern void bootinfo_set_ramdisk(unsigned long ramdisk_addr,
+ 				 unsigned long ramdisk_size);
++extern void bootinfo_add_rng_seed(void);
+ extern void bootinfo_check_bootversion(const struct kexec_info *info);
+ extern void add_bootinfo(struct kexec_info *info, unsigned long addr);
+diff --git a/kexec/arch/m68k/kexec-elf-m68k.c b/kexec/arch/m68k/kexec-elf-m68k.c
+index 8d00eb9..a2bf7ee 100644
+--- a/kexec/arch/m68k/kexec-elf-m68k.c
++++ b/kexec/arch/m68k/kexec-elf-m68k.c
+@@ -145,38 +145,39 @@ int elf_m68k_load(int argc, char **argv, const char *buf, off_t len,
+ 	bootinfo_addr = segment_end(info, info->nr_segments - 1) + 1;
+ 
+ 	/* Load ramdisk */
+ 	if (ramdisk_file) {
+ 		void *ramdisk = slurp_decompress_file(ramdisk_file,
+ 						      &ramdisk_size);
+ 		/* Store ramdisk at top of first memory chunk */
+ 		ramdisk_addr = _ALIGN_DOWN(info->memory_range[0].end -
+ 					   ramdisk_size + 1,
+ 					   PAGE_SIZE);
+ 		if (!buf)
+ 			die("Ramdisk load failed\n");
+ 		add_buffer(info, ramdisk, ramdisk_size, ramdisk_size,
+ 			   PAGE_SIZE, ramdisk_addr, info->memory_range[0].end,
+ 			   1);
+ 	}
+ 
+ 	/* Update and add bootinfo */
+ 	bootinfo_set_cmdline(cmdline);
+ 	bootinfo_set_ramdisk(ramdisk_addr, ramdisk_size);
++	bootinfo_add_rng_seed();
+ 	if (kexec_debug)
+ 		bootinfo_print();
+ 	add_bootinfo(info, bootinfo_addr);
+ 
+ 	/*
+ 	 * Check if the kernel (and bootinfo) exceed 4 MiB, as current kernels
+ 	 * don't support that.
+ 	 * As the segments are still unsorted, the bootinfo is located in the
+ 	 * last segment.
+ 	 */
+ 	if (segment_end(info, info->nr_segments - 1) >= virt_to_phys(4 MiB - 1))
+ 		printf("WARNING: Kernel is larger than 4 MiB\n");
+ 
+ 	/* Check struct bootversion at start of kernel */
+ 	bootinfo_check_bootversion(info);
+ 
+ 	return 0;
+ }
+-- 
+2.37.3
 
 
 _______________________________________________
