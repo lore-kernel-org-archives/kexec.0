@@ -4,70 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C0780ECAAD8
-	for <kexec@archiver.kernel.org>; Fri, 23 Sep 2022 12:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3592CC6FA82
+	for <kexec@archiver.kernel.org>; Fri, 23 Sep 2022 13:07:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Cc:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Owner;
-	bh=7RPzwDH1+fz7ji0dotcdz0qICkPup/xQU4RIvETdNgY=; b=2SzL/qlqIefSEzhPTR/cDZJYzI
-	wNWJ2V3cS9aGmU90O45QFO2aAyQZCwBkL6Bim2lxQJx4+s93UhQVrz534w9AP5ZMGhNbvBx0zj6aF
-	ABbfW/42NP5gnFGE3Q8TfXavGGKYTlejn7L1A1UgQp882dv8YJTzrs3Qk98fCIR5B2EKy1/Cp9TRR
-	+nZcbsqwTdBL9oC0ETJpWUrJFbiCqhUj1U4BDYw68b6BKVTpgg9AU5HZS5AfSkYRrZe7VPRjuZiSi
-	kRlFtP+gJt1DC5EtuD9488bCSM+8qFQ6HI6pFj/Ur1saetprU4ez29vyal1z7t3IklEfHgQRha6iV
-	cXcVSABw==;
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=ijunJ3TLvPn/cZLfaf6XeXec1tmHwGvBws+hPbW/s94=; b=SnXTxd5UorC4m5
+	IL0YQmgnkycX63sCsO8H7J6I8vwavoYFGt6lWc9baaoLyu6axkSfqT46B95IUhYEtlfIFnHLFcXnz
+	ERGDjzEdhKQQRaVN6jrypsNliWKWbpJoRo6lkSy2Nf+A498wtxhk0vs1773hsrNUVnrY4UPN4gJcH
+	CcNpUxVrrYlXFeG37WMUeidHWFXD85RA5F69g1e7o//lMBeL+jdI/Eq1tfLqyyP1Dsymr0lTd5l4T
+	8bREqydD28CkKyKQZ9IFrQ4kneV37DZyesYRA+q26OT/HjeRhpgEZVBCfehDOxSjXO1CTqzQN8xdM
+	Wqj7A5Kn280a5MNwonbg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1obiBd-004Kuy-3N; Fri, 23 Sep 2022 12:53:45 +0000
-Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
+	id 1obiP3-004ODf-LK; Fri, 23 Sep 2022 13:07:37 +0000
+Received: from mail-qt1-f170.google.com ([209.85.160.170])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1obiBZ-004Ktd-VC
-	for kexec@lists.infradead.org; Fri, 23 Sep 2022 12:53:43 +0000
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 341E6621AA
-	for <kexec@lists.infradead.org>; Fri, 23 Sep 2022 12:53:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F384C433D6
-	for <kexec@lists.infradead.org>; Fri, 23 Sep 2022 12:53:40 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="EnUv5rQf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1663937617;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nLbY6ODoYVoZFTe6xNbVnO76pCYvWYbmh/vjo3Dz0B4=;
-	b=EnUv5rQfpn7WazacqxuDct3GlGS4b5FZluX705VcyjZkuE8ujKHIkCYdiYA2FMwOb4igId
-	PM7BWWzn6coiMEYKeE5QJ7vxm80iJ1O5ZPB0XS1YKEO+XqPxUxCdw1yp94OGWgOY6ro9H7
-	hnVgwrsgvyP3XBdMdo+ebDy1Ytey1vU=
-Received: 	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 18897a9c (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO)
-	for <kexec@lists.infradead.org>;
-	Fri, 23 Sep 2022 12:53:37 +0000 (UTC)
-Received: by mail-vk1-f181.google.com with SMTP id b15so96612vkp.2
-        for <kexec@lists.infradead.org>; Fri, 23 Sep 2022 05:53:36 -0700 (PDT)
-X-Gm-Message-State: ACrzQf0vBtXVuUPdWAy9GwcejiHFnl7JbTw2zr2wu+DStf42kcZEX24j
-	TFK3iNuu+uG3uDbSEtWjSc46zpQgPN+ACU0sqmc=
-X-Google-Smtp-Source: AMsMyM49F2E1RfHUIS29gKKqtrhnKDF7bU4c1ATOUKbLDO4SdTHVfoTpPsFM6N9D7ksMiGb0DrIWFULscllGaTv7usU=
-X-Received: by 2002:a1f:19cf:0:b0:375:6144:dc41 with SMTP id
- 198-20020a1f19cf000000b003756144dc41mr3668869vkz.3.1663937615691; Fri, 23 Sep
- 2022 05:53:35 -0700 (PDT)
+	id 1obiP0-004OCK-FV
+	for kexec@lists.infradead.org; Fri, 23 Sep 2022 13:07:36 +0000
+Received: by mail-qt1-f170.google.com with SMTP id a20so8315951qtw.10
+        for <kexec@lists.infradead.org>; Fri, 23 Sep 2022 06:07:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=ZNyXMIvKvz26rH9+eBnc8eA2/7RfdXl9+K1RY2dFtLE=;
+        b=iA0pRXDi3XIGf97dhozoTyyf14wDdhIDiNFD9zZFV1Y1jjl3tcOXSBKCwUC8BFJVD2
+         J+8ItyaloS541U9/vWglHcYm+F6wXwaH/uXKHgI+IUJfN6lF147sLulCAPpwuJyGsch/
+         hbHNo5jmedkOUXEs8vf3nlggjsxSUE1zJ2ytuve80jX5sHd/rGcgCzDuDAHgNzpLBJHe
+         x3qVU6CqfGQ0DZM0tweS8xG0txvPy8fa+HweW1NY7krtdXN6HQ+JKLldVLeLf46p4r7O
+         fIjyceRe9QUsr96A47MqK0LWqvDXK7b+WDPB9LhGZPQEReHaBtMK2d4OOSWTliKhe8sX
+         7r6g==
+X-Gm-Message-State: ACrzQf2zhkHwXot/1yB5AJoh3hoZdTakJJVEcWm5xL4nUTiLSAPQBt0z
+	NLKGj9iRV3MXipohYYrzWvVRszbLp8hFmA==
+X-Google-Smtp-Source: AMsMyM7GAWvRwMgyNGcel3rfUZcRxTpf8eHNIY0HJZkhmsNzE++ply8CduLS1jk2dVxZuatO55IPtQ==
+X-Received: by 2002:a05:622a:14d0:b0:35c:c205:7d25 with SMTP id u16-20020a05622a14d000b0035cc2057d25mr6963914qtx.5.1663938451833;
+        Fri, 23 Sep 2022 06:07:31 -0700 (PDT)
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com. [209.85.219.176])
+        by smtp.gmail.com with ESMTPSA id o67-20020a374146000000b006ced5d3f921sm5531878qka.52.2022.09.23.06.07.31
+        for <kexec@lists.infradead.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 Sep 2022 06:07:31 -0700 (PDT)
+Received: by mail-yb1-f176.google.com with SMTP id e81so16970503ybb.13
+        for <kexec@lists.infradead.org>; Fri, 23 Sep 2022 06:07:31 -0700 (PDT)
+X-Received: by 2002:a05:6902:45:b0:6ae:ce15:a08d with SMTP id
+ m5-20020a056902004500b006aece15a08dmr8740635ybh.380.1663938451159; Fri, 23
+ Sep 2022 06:07:31 -0700 (PDT)
 MIME-Version: 1.0
 References: <20220923124642.3942806-1-Jason@zx2c4.com>
 In-Reply-To: <20220923124642.3942806-1-Jason@zx2c4.com>
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date: Fri, 23 Sep 2022 14:53:24 +0200
-X-Gmail-Original-Message-ID: <CAHmME9rH5=JViW6dDyiaFZvuCaFpHZwXSC7xDNj6MEH6rb7+Tg@mail.gmail.com>
-Message-ID: <CAHmME9rH5=JViW6dDyiaFZvuCaFpHZwXSC7xDNj6MEH6rb7+Tg@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 23 Sep 2022 15:07:19 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdU-KyOXg_nEa=gur-X5vjBimOM+zZ-g-xqYhAV-wBOfSA@mail.gmail.com>
+Message-ID: <CAMuHMdU-KyOXg_nEa=gur-X5vjBimOM+zZ-g-xqYhAV-wBOfSA@mail.gmail.com>
 Subject: Re: [PATCH kexec-tools] m68k: pass rng seed via BI_VIRT_RNG_SEED
-To: Geert Uytterhoeven <geert@linux-m68k.org>, linux-m68k@lists.linux-m68k.org, 
-	kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: linux-m68k@lists.linux-m68k.org, kexec@lists.infradead.org, 
+	Simon Horman <horms@verge.net.au>, Laurent Vivier <Laurent@vivier.eu>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220923_055342_285064_9D696338 
-X-CRM114-Status: GOOD (  15.48  )
+X-CRM114-CacheID: sfid-20220923_060734_535992_A1B12DA3 
+X-CRM114-Status: GOOD (  29.01  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,21 +83,146 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+Hi Jason,
+
 On Fri, Sep 23, 2022 at 2:47 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
-> Geert - I don't have a toolchain for testing this. Could you verify it
-> works, if you have a chance? -Jason
+> In order to pass fresh entropy to kexec'd kernels, use BI_VIRT_RNG_SEED
+> for passing a seed, with the same semantics that kexec-tools currently
+> uses for i386's setup_data.
 >
->  kexec/arch/m68k/bootinfo.c       | 22 ++++++++++++++++++++++
->  kexec/arch/m68k/bootinfo.h       |  6 ++++++
->  kexec/arch/m68k/kexec-elf-m68k.c |  1 +
->  3 files changed, 29 insertions(+)
->
-> diff --git a/kexec/arch/m68k/bootinfo.c b/kexec/arch/m68k/bootinfo.c
-> index 18bf226..74e65a0 100644
+> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+
+Thanks for your patch!
+
 > --- a/kexec/arch/m68k/bootinfo.c
 > +++ b/kexec/arch/m68k/bootinfo.c
+> @@ -135,40 +135,45 @@ void bootinfo_print(void)
+>                 size = bi->size;
+>                 switch (tag) {
+>                 case BI_MACHTYPE:
+>                         printf("BI_MACHTYPE: 0x%08x\n", bi->machtype);
+>                         break;
+>
+>                 case BI_MEMCHUNK:
+>                         printf("BI_MEMCHUNK: 0x%08x bytes at 0x%08x\n",
+>                                bi->mem_info.size, bi->mem_info.addr);
+>                         break;
+>
+>                 case BI_RAMDISK:
+>                         printf("BI_RAMDISK: 0x%08x bytes at 0x%08x\n",
+>                                bi->mem_info.size, bi->mem_info.addr);
+>                         break;
 
-I forgot to add `#include <sys/random.h>` I suspect.
+Hmm, lots of context.
+
+>
+>                 case BI_COMMAND_LINE:
+>                         printf("BI_COMMAND_LINE: %s\n", bi->string);
+>                         break;
+>
+> +               case BI_VIRT_RNG_SEED:
+
+This won't work as expected: BI_VIRT_* tags are only valid if the
+machine type is MACH_VIRT.
+
+Worse, this will trigger for other platform-specific tags using the same value:
+
+    arch/m68k/include/uapi/asm/bootinfo-amiga.h:#define
+BI_AMIGA_CHIPSET    0x8006  /* native chipset present (__be32) */
+    arch/m68k/include/uapi/asm/bootinfo-mac.h:#define BI_MAC_SCCBASE
+             0x8006  /* Mac SCC base address */
+    arch/m68k/include/uapi/asm/bootinfo-virt.h:#define
+BI_VIRT_RNG_SEED     0x8006
+
+> +                       /* These are secret, so never print them to the console */
+> +                       printf("BI_VIRT_RNG_SEED: 0x%08x bytes\n", be16_to_cpu(bi->bytes.len));
+> +                       break;
+> +
+>                 default:
+>                         printf("BI tag 0x%04x size %u\n", tag, size);
+>                         break;
+>                 }
+>                 bi = bi_next(bi, size);
+>         }
+>  }
+
+>  }
+>
+> +void bootinfo_add_rng_seed(void)
+> +{
+> +       struct bi_rec *bi;
+> +       enum { RNG_SEED_LEN = 32 };
+> +
+> +       /* Remove existing rng seed records */
+> +       bi_remove(BI_VIRT_RNG_SEED);
+> +
+> +       /* Add new rng seed record */
+> +       bi = bi_add(BI_VIRT_RNG_SEED, sizeof(bi->bytes) + RNG_SEED_LEN);
+
+Likewise, this will destroy existing BI_AMIGA_CHIPSET and BI_MAC_SCCBASE
+tags, breaking Amiga and Mac.
+
+> +       if (getrandom(bi->bytes.data, RNG_SEED_LEN, GRND_NONBLOCK) != RNG_SEED_LEN) {
+> +               bi_remove(BI_VIRT_RNG_SEED);
+> +               return;
+> +       }
+> +       bi->bytes.len = cpu_to_be16(RNG_SEED_LEN);
+> +}
+> +
+>
+
+As random seeds can now be generic, I think it makes sense to introduce
+a machine-independent BI_RND_SEED.
+In hindsight, we should have done this from the beginning...
+
+> --- a/kexec/arch/m68k/bootinfo.h
+> +++ b/kexec/arch/m68k/bootinfo.h
+> @@ -1,43 +1,49 @@
+>  #include <asm/bootinfo.h>
+> +#include <asm/bootinfo-virt.h>
+>
+>  #define DEFAULT_BOOTINFO_FILE  "/proc/bootinfo"
+>  #define MAX_BOOTINFO_SIZE      1536
+>
+>
+>      /*
+>       *  Convenience overlay of several struct bi_record variants
+>       */
+>
+>  struct bi_rec {
+>         __be16 tag;
+>         __be16 size;
+>         union {
+>                 __be32 data[0];
+>                 /* shorthands for the types we use */
+>                 __be32 machtype;
+>                 struct {
+>                         __be32 addr;
+>                         __be32 size;
+>                 } mem_info;
+>                 char string[0];
+> +               struct {
+> +                       __be16 len;
+> +                       u8 data[0];
+> +               } bytes;
+
+I'd rather call this rng_seed, to avoid confusion between "data"
+and "bytes",
+
+>         };
+>  };
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
 _______________________________________________
 kexec mailing list
