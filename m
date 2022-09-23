@@ -4,70 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 17B25C6FA82
-	for <kexec@archiver.kernel.org>; Fri, 23 Sep 2022 16:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8E347ECAAD8
+	for <kexec@archiver.kernel.org>; Fri, 23 Sep 2022 16:42:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=+7rT/cCMER6d3bgG4eDF9y7Qz+ATTmFlm5+It6y4gKQ=; b=KOxgtsbP32vC+3
-	zku3/fW3+3M3IZFSumt0tDXd6JcRoTky0kG5EBuUAB8OzGTBwwufNjEjbmxNV1Lv+dYrxMsEbqeZj
-	H2RdLXeQyUdD2rpoTqemN22UkTee0G/xPJksLoFPWCsGY/I70eLgF1Zw0wWFY+6oNCJN88S/hBPyY
-	6+k9VnA/14+x4hz7Yqp7z28KVNRnfpOMSZawJInd9It9Ye7nPpCfewm3Ojd6MVw2IjtfPlkzg1dxg
-	f/fAPiC4+9c0jrLMNU+3L4bqLQMxUvSqvYlCoengTwmZfb75nqOFxzDruQni69OFlWpOW9jljNzhl
-	XPSJy5EEjebmVv2R/hOw==;
+	List-Owner; bh=nVNGcBpzHK6NJ/6tzHTaebBladCx2sza2I3zjL4LueM=; b=IMTcpEqcL40pj0
+	RIVtWkayLYNoh4xZ8njKtGjebMTlxDTrxKTu+wieMjEeONWpNox6SOsS0ShCHaeAPoVY2AbQ3yeJx
+	meYPK7MOX3/aA/RjcZ6sYlq5tjnA3zHhszxg7sqZCvXpwoqyh58r7AT5DyB8ke47o1UVP9VpAFeev
+	0Trm5LNK9cZ7wStvO2e4wEn/ny6K768nADsoCxtC4B4m4l7DhzwcBFf80tYIozM5FM2q4S4gH/aWP
+	rLtByDY/SN2IMOn4w12ukJsuomfC5U3EgKOv4pfjjy7dWxWEFpsoTi69nr7p0n7Kvi3NH5lah3v3x
+	J+l+i0O6v3qqLXVt1PJg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oblgi-0050Xj-Q0; Fri, 23 Sep 2022 16:38:04 +0000
-Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
+	id 1oblkc-00514b-Ex; Fri, 23 Sep 2022 16:42:06 +0000
+Received: from ams.source.kernel.org ([2604:1380:4601:e00::1])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oblgf-0050VV-LT
-	for kexec@lists.infradead.org; Fri, 23 Sep 2022 16:38:03 +0000
+	id 1oblkZ-005146-B9
+	for kexec@lists.infradead.org; Fri, 23 Sep 2022 16:42:05 +0000
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 70D6E60E1F
-	for <kexec@lists.infradead.org>; Fri, 23 Sep 2022 16:37:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82768C433D7
-	for <kexec@lists.infradead.org>; Fri, 23 Sep 2022 16:37:54 +0000 (UTC)
+	by ams.source.kernel.org (Postfix) with ESMTPS id BA495B82E8E;
+	Fri, 23 Sep 2022 16:42:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8053C433D6;
+	Fri, 23 Sep 2022 16:41:59 +0000 (UTC)
 Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="jUpCTdkn"
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="RQzpPKDq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1663951072;
+	t=1663951318;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=5wP8/olBSLeZ3q606VAu09uERiOChlp35MnSGyQzTko=;
-	b=jUpCTdkn6lFuOUG4Xm5w7INmLzpwBjSVWKcOMBM2J1C+WgQHx9mDCjm+5AeA0QRtdYi5o7
-	bf9Gp7FRWMuYrtydUPWMOY/KCrBxX5tv6qub8aINXYelBvjvGs3cKlNah8k6y/RFoVHFvM
-	RXiRlCRAMznIjovNbffQmFkNX6FXoOc=
-Received: 	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 31784704 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO)
-	for <kexec@lists.infradead.org>;
-	Fri, 23 Sep 2022 16:37:51 +0000 (UTC)
-Received: by mail-vs1-f54.google.com with SMTP id p4so482792vsa.9
-        for <kexec@lists.infradead.org>; Fri, 23 Sep 2022 09:37:51 -0700 (PDT)
-X-Gm-Message-State: ACrzQf2/lN7E6JA3TpFgbBVgsMRawDvv+NzNE0SUVXhUzfyB+1E3HNkt
-	8BKIuMN4hd/l4Ou8Tj9eet1Gz/XS4d5z17sBi9w=
-X-Google-Smtp-Source: AMsMyM7eN2EDq1uQGB8dxgn+o1qMJqL3vgUJ+mhmpsliSYOasMapWuSBuPqh+9pW5XD74Nw7X3FXTP0jwu9GuyopkgE=
-X-Received: by 2002:a67:c289:0:b0:398:cdc:c3ef with SMTP id
- k9-20020a67c289000000b003980cdcc3efmr4185299vsj.76.1663951070524; Fri, 23 Sep
- 2022 09:37:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220923124642.3942806-1-Jason@zx2c4.com> <CAMuHMdU-KyOXg_nEa=gur-X5vjBimOM+zZ-g-xqYhAV-wBOfSA@mail.gmail.com>
-In-Reply-To: <CAMuHMdU-KyOXg_nEa=gur-X5vjBimOM+zZ-g-xqYhAV-wBOfSA@mail.gmail.com>
+	bh=2yUgpm5yrsqs4xGg1DubmtpMZjC6mIbGkERiGED1ouw=;
+	b=RQzpPKDqJJy+nM1qAe6dN3QrAtMhQBuE4QdfAT+2uGBFkwxBgRNDI7xVZsgIPhcWhGsNFz
+	SxAPfafJACQl4AWghDFzTxN/9YeotIa9gxlDMm6Jm5BcBRg5mADgcxmN87nsDnrVjWFeVc
+	/XoR6Hoh6CUPWkjS8msB5RMGg7xMv6Y=
+Received: 	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id edc4341e (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Fri, 23 Sep 2022 16:41:57 +0000 (UTC)
 From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date: Fri, 23 Sep 2022 18:37:39 +0200
-X-Gmail-Original-Message-ID: <CAHmME9ow+ivvQaCnPqRNiYRn4+fuGksKyRAEWtBa-6yhyg9OTA@mail.gmail.com>
-Message-ID: <CAHmME9ow+ivvQaCnPqRNiYRn4+fuGksKyRAEWtBa-6yhyg9OTA@mail.gmail.com>
-Subject: Re: [PATCH kexec-tools] m68k: pass rng seed via BI_VIRT_RNG_SEED
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-m68k@lists.linux-m68k.org, kexec@lists.infradead.org, 
-	Simon Horman <horms@verge.net.au>, Laurent Vivier <Laurent@vivier.eu>
+To: Geert Uytterhoeven <geert@linux-m68k.org>,
+	linux-m68k@lists.linux-m68k.org,
+	kexec@lists.infradead.org,
+	Simon Horman <horms@verge.net.au>,
+	Laurent Vivier <Laurent@vivier.eu>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Subject: [PATCH v2] m68k: pass rng seed via BI_RNG_SEED
+Date: Fri, 23 Sep 2022 18:41:52 +0200
+Message-Id: <20220923164152.4079868-1-Jason@zx2c4.com>
+In-Reply-To: <CAHmME9ow+ivvQaCnPqRNiYRn4+fuGksKyRAEWtBa-6yhyg9OTA@mail.gmail.com>
+References: <CAHmME9ow+ivvQaCnPqRNiYRn4+fuGksKyRAEWtBa-6yhyg9OTA@mail.gmail.com>
+MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220923_093801_995679_21E9D1A0 
-X-CRM114-Status: GOOD (  16.10  )
+X-CRM114-CacheID: sfid-20220923_094203_714837_C9A4BDF7 
+X-CRM114-Status: GOOD (  16.22  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,24 +78,106 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Geert,
+In order to pass fresh entropy to kexec'd kernels, use BI_RNG_SEED
+for passing a seed, with the same semantics that kexec-tools currently
+uses for i386's setup_data.
 
-On Fri, Sep 23, 2022 at 3:07 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> This won't work as expected: BI_VIRT_* tags are only valid if the
-> machine type is MACH_VIRT.
-> Worse, this will trigger for other platform-specific tags using the same value:
-> Likewise, this will destroy existing BI_AMIGA_CHIPSET and BI_MAC_SCCBASE
-> tags, breaking Amiga and Mac.
-> As random seeds can now be generic, I think it makes sense to introduce
-> a machine-independent BI_RND_SEED.
-> In hindsight, we should have done this from the beginning...
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+---
+Geert - this hasn't been compile tested yet and also depends on changes
+that haven't yet landed upstream. Posting this preliminarily now. -Jason
 
-Yes, I agree. I thought that would be rejected, though, which is why I
-didn't do that before. I'll send a patch switching over to that.
-There's no point in keeping the old one around, I don't think, so I'll
-just move everything over to the new.
+ kexec/arch/m68k/bootinfo.c       | 23 +++++++++++++++++++++++
+ kexec/arch/m68k/bootinfo.h       |  5 +++++
+ kexec/arch/m68k/kexec-elf-m68k.c |  1 +
+ 3 files changed, 29 insertions(+)
 
-Jason
+diff --git a/kexec/arch/m68k/bootinfo.c b/kexec/arch/m68k/bootinfo.c
+index 18bf226..086a34b 100644
+--- a/kexec/arch/m68k/bootinfo.c
++++ b/kexec/arch/m68k/bootinfo.c
+@@ -2,6 +2,7 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
++#include <sys/random.h>
+ 
+ #include "../../kexec.h"
+ 
+@@ -152,6 +153,11 @@ void bootinfo_print(void)
+ 			printf("BI_COMMAND_LINE: %s\n", bi->string);
+ 			break;
+ 
++		case BI_RNG_SEED:
++			/* These are secret, so never print them to the console */
++			printf("BI_RNG_SEED: 0x%08x bytes\n", be16_to_cpu(bi->rng_seed.len));
++			break;
++
+ 		default:
+ 			printf("BI tag 0x%04x size %u\n", tag, size);
+ 			break;
+@@ -212,6 +218,23 @@ void bootinfo_set_ramdisk(unsigned long ramdisk_addr,
+ 	bi->mem_info.size = ramdisk_size;
+ }
+ 
++void bootinfo_add_rng_seed(void)
++{
++	enum { RNG_SEED_LEN = 32 };
++	struct bi_rec *bi;
++
++	/* Remove existing rng seed records */
++	bi_remove(BI_RNG_SEED);
++
++	/* Add new rng seed record */
++	bi = bi_add(BI_RNG_SEED, sizeof(bi->rng_seed) + RNG_SEED_LEN);
++	if (getrandom(bi->rng_seed.data, RNG_SEED_LEN, GRND_NONBLOCK) != RNG_SEED_LEN) {
++		bi_remove(BI_RNG_SEED);
++		return;
++	}
++	bi->rng_seed.len = cpu_to_be16(RNG_SEED_LEN);
++}
++
+ 
+     /*
+      * Check the bootinfo version in the kernel image
+diff --git a/kexec/arch/m68k/bootinfo.h b/kexec/arch/m68k/bootinfo.h
+index b6f453d..90f75ad 100644
+--- a/kexec/arch/m68k/bootinfo.h
++++ b/kexec/arch/m68k/bootinfo.h
+@@ -20,6 +20,10 @@ struct bi_rec {
+ 			__be32 size;
+ 		} mem_info;
+ 		char string[0];
++		struct {
++			__be16 len;
++			u8 data[0];
++		} rng_seed;
+ 	};
+ };
+ 
+@@ -39,5 +43,6 @@ extern int bootinfo_get_memory_ranges(struct memory_range **range);
+ extern void bootinfo_set_cmdline(const char *cmdline);
+ extern void bootinfo_set_ramdisk(unsigned long ramdisk_addr,
+ 				 unsigned long ramdisk_size);
++extern void bootinfo_add_rng_seed(void);
+ extern void bootinfo_check_bootversion(const struct kexec_info *info);
+ extern void add_bootinfo(struct kexec_info *info, unsigned long addr);
+diff --git a/kexec/arch/m68k/kexec-elf-m68k.c b/kexec/arch/m68k/kexec-elf-m68k.c
+index 8d00eb9..a2bf7ee 100644
+--- a/kexec/arch/m68k/kexec-elf-m68k.c
++++ b/kexec/arch/m68k/kexec-elf-m68k.c
+@@ -162,6 +162,7 @@ int elf_m68k_load(int argc, char **argv, const char *buf, off_t len,
+ 	/* Update and add bootinfo */
+ 	bootinfo_set_cmdline(cmdline);
+ 	bootinfo_set_ramdisk(ramdisk_addr, ramdisk_size);
++	bootinfo_add_rng_seed();
+ 	if (kexec_debug)
+ 		bootinfo_print();
+ 	add_bootinfo(info, bootinfo_addr);
+-- 
+2.37.3
+
 
 _______________________________________________
 kexec mailing list
