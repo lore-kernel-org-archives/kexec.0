@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6B5F2C6FA82
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6E5BEC6FA86
 	for <kexec@archiver.kernel.org>; Fri, 23 Sep 2022 07:44:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:MIME-Version:List-Subscribe:List-Help:
-	List-Post:List-Archive:List-Unsubscribe:List-Id:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=4ZZ8iKlMD+VPhLWLOWYSwZ7/yCE5WOODggcTwAKmdgs=; b=F0QologFf0e9Mi
-	WEQUikMHtOCmQYIu6w8JYTRKLmkIjtmbzZEV3CsIqFWCAjCPvxUFPSxkup2hwRMCz+eUcs/a8702k
-	NBRAgsWE4gQYfs9D0AB6VXkPlAu2E+Km8c+85lRFNnnxrTryfiBIZmNHzgnWf9k8wRCCNZCFl/J3d
-	Hv/NmJJj5xtUS4aJN5PseSK3hSbm/SvOceTxF3Gy4IqR/PO5Wn8BdDvalHI+8owNgTrxC4mV3ps+T
-	YnxCoNZYTbYfy/CcLif9iy31DAKmRG5M5ucvymNrXY/XV6DcDVz4I0RBXCihjn0c1Arr75o/jbR0X
-	r2kPhXXr8pESjOasI+uA==;
+	List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:Subject:Cc:To
+	:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=4zJ7/rFmrfTGorvRY7HM1HFMkeL4i3K9ohzF2FslwNM=; b=ljPGRytnAvEseD
+	+ZCqxHhIADlQlFLkKJGjogqMKo6bJnZh4EwbmQXWZBZCLxvr21bCp9ZHX62rV+m3aUb0HgILaKmiE
+	txGr09/77smGCTkDk0FIuXJl8N46bkvqzJfhpi+WIQQWQw1rm5YJO8ccFpCit/0F4paaesiBwYvkx
+	aufRunTXfMkoTt3qjiETPolQyAgS8FieuCjOpGL3wsYdooF+WdN5R+h+H0oP135McNgWZl0XYox5/
+	JFNLZSKCGOq+5gbT0ua6gww/W4gyIKoGzuTl+9c7AQzgR37rnbW5ao9yf04Y9PupG3JbujgpDEXRg
+	QE6Ua/Eyg91gNIXwT69w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1obdMg-002l6W-Kb; Fri, 23 Sep 2022 07:44:50 +0000
+	id 1obdMh-002l6f-Ns; Fri, 23 Sep 2022 07:44:51 +0000
 Received: from mail.loongson.cn ([114.242.206.163] helo=loongson.cn)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1obdMd-002l4q-L6
-	for kexec@lists.infradead.org; Fri, 23 Sep 2022 07:44:49 +0000
+	id 1obdMd-002l4h-Ld
+	for kexec@lists.infradead.org; Fri, 23 Sep 2022 07:44:50 +0000
 Received: from bogon.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxT+DpYy1jsI4gAA--.57695S5;
-	Fri, 23 Sep 2022 15:44:44 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxT+DpYy1jsI4gAA--.57695S2;
+	Fri, 23 Sep 2022 15:44:41 +0800 (CST)
 From: Youling Tang <tangyouling@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	Ard Biesheuvel <ardb@kernel.org>,
@@ -41,35 +41,31 @@ Cc: WANG Xuerui <kernel@xen0n.name>,
 	kexec@lists.infradead.org,
 	loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 3/3] LoongArch: Enable CONFIG_KEXEC
-Date: Fri, 23 Sep 2022 15:44:33 +0800
-Message-Id: <1663919073-26849-4-git-send-email-tangyouling@loongson.cn>
+Subject: [PATCH v4 0/3] LoongArch: Add kexec/kdump support
+Date: Fri, 23 Sep 2022 15:44:30 +0800
+Message-Id: <1663919073-26849-1-git-send-email-tangyouling@loongson.cn>
 X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1663919073-26849-1-git-send-email-tangyouling@loongson.cn>
-References: <1663919073-26849-1-git-send-email-tangyouling@loongson.cn>
-X-CM-TRANSID: AQAAf8CxT+DpYy1jsI4gAA--.57695S5
-X-Coremail-Antispam: 1UD129KBjvdXoWrZF48WFWUJr1xAw4rXr1fJFb_yoWxCFg_JF
-	y7Gw4Dur48Ja97uw4xXw4rGw4DA3W7ZF1FkF17Zr1xX3Wagr13tw4DJ3W7C3ZYgayDWrs3
-	ZaykAF9Fkr10yjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbg8YjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I
-	6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7
-	IE14v26r1rM28IrcIa0xkI8VCY1x0267AKxVW5JVCq3wA2ocxC64kIII0Yj41l84x0c7CE
-	w4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6x
-	kF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIE
-	c7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I
-	8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCF
-	s4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACI402YVCY1x02628vn2kIc2xKxwCY02
-	Avz4vE14v_GF4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAq
-	x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r
-	43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF
-	7I0E14v26F4j6r4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI
-	0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7I
-	U8t73DUUUUU==
+X-CM-TRANSID: AQAAf8CxT+DpYy1jsI4gAA--.57695S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxGFW3Xw4rCFWkZF1kWrWDtwb_yoWrXFyfpF
+	48Crn5Kr4kGFn3t3Z7Jr17uFyrZwn7Ga13W3ZFy348ZF12gF1UZr9YvFnrZFyDtw4fKr4I
+	qFnYgw429a4UG3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvSb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
+	jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I
+	8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+	64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVW8JVWxJw
+	Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkI
+	wI1lc2xSY4AK67AK6r4xMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI
+	8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AK
+	xVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI
+	8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280
+	aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43
+	ZEXa7IU5dl1PUUUUU==
 X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220923_004448_062031_9B1C0FBB 
-X-CRM114-Status: UNSURE (   5.00  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20220923_004448_125701_7D2F4B48 
+X-CRM114-Status: GOOD (  20.16  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,25 +83,95 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Defaults enable CONFIG_KEXEC to convenient kexec operations.
+This patch series to support kexec/kdump (only 64bit).
 
-Signed-off-by: Youling Tang <tangyouling@loongson.cn>
----
- arch/loongarch/configs/loongson3_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Kexec is a system call that enables you to load and boot into another kernel
+from the currently running kernel. This is useful for kernel developers or
+other people who need to reboot very quickly without waiting for the whole
+BIOS boot process to finish.
 
-diff --git a/arch/loongarch/configs/loongson3_defconfig b/arch/loongarch/configs/loongson3_defconfig
-index f67127246aa8..c96ce646d84a 100644
---- a/arch/loongarch/configs/loongson3_defconfig
-+++ b/arch/loongarch/configs/loongson3_defconfig
-@@ -46,6 +46,7 @@ CONFIG_SMP=y
- CONFIG_HOTPLUG_CPU=y
- CONFIG_NR_CPUS=64
- CONFIG_NUMA=y
-+CONFIG_KEXEC=y
- CONFIG_PAGE_SIZE_16KB=y
- CONFIG_HZ_250=y
- CONFIG_ACPI=y
+Kdump uses kexec to quickly boot to a dump-capture kernel whenever a
+dump of the system kernel's memory needs to be taken (for example, when
+the system panics). The system kernel's memory image is preserved across
+the reboot and is accessible to the dump-capture kernel.
+
+For details, see Documentation/admin-guide/kdump/kdump.rst.
+
+User tools kexec-tools see link [1].
+
+TODO:
+Currently kdump does not support the same binary image, the production kernel
+and the capture kernel will be generated with different configurations. I will
+support kernel relocation support in the near future. Then will go to implement
+the same binary support based on kernel relocation support.
+
+[1] Link: https://github.com/tangyouling/kexec-tools
+
+Changes in v4:
+ After applying the following series of patches [1], the following
+ modifications need to be made:
+ - Adjust the number of parameters and the content of the parameters passed.
+ - Removed build and processing of fdt.
+ - Add handling of command line segments.
+ - Use the command line argument "elfcorehdr=" instead of the "linux,elfcorehdr"
+   member in fdt.
+ - Use the command line argument "mem=" instead of the "linux, usable-memory-range"
+   member in fdt.
+ - Use the command line argument "initrd=" instead of the "linux,initrd-start" and
+   "linux,initrd-end" members of fdt.
+ - Removed handling of "linux,elfcorehdr" and "linux, usable-memory-range".
+ - Add handling of "elfcorehdr=".
+ - Modify the handling of "mem=".
+ - Add implementation of reserve_oldmem_region.
+ - Reimplemented kexec-tools (note that kexec-tools needs to be updated).
+
+   Link [1]: https://lore.kernel.org/loongarch/20220920183554.3870247-1-ardb@kernel.org/T/#md02ad4a1510586b2df177cbce4422434eff2d457
+   [PATCH v2 0/8] efi: disentangle the generic EFI stub from FDT
+
+Changes in v3:
+ - Adjust the PE header (note that kexec-tools needs to be updated).
+ - Add ibar in kexec_reboot().
+ - boot_flag is replaced by efi_boot.
+ - Adjust do_kexec parameter passing order.
+ - Adjust the order of static variables to be consistent with do_kexec.
+ - Remove a-series register save.
+ - Some comments and register usage modification.
+ - Add the opening and closing of the cpu core state.
+ - Add a call to cpu_device_up to turn it on when the cpu core state is offline.
+
+Changes in v2:
+ - Add ibar.
+ - Access via IOCSR.
+ - Remove the settings of the tp, sp registers.
+ - Remove the crash.c file and merge the relevant code into machine_kexec.c.
+ - Adjust the use of CONFIG_SMP macro to avoid build errors under !SMP
+   configuration.
+ - Change the default value of PHYSICAL_START of the capture kernel to
+   0x90000000a0000000.
+
+Youling Tang (3):
+  LoongArch: Add kexec support
+  LoongArch: Add kdump support
+  LoongArch: Enable CONFIG_KEXEC
+
+ arch/loongarch/Kconfig                     |  33 +++
+ arch/loongarch/Makefile                    |   4 +
+ arch/loongarch/configs/loongson3_defconfig |   1 +
+ arch/loongarch/include/asm/kexec.h         |  60 ++++
+ arch/loongarch/kernel/Makefile             |   3 +
+ arch/loongarch/kernel/crash_dump.c         |  19 ++
+ arch/loongarch/kernel/head.S               |   6 +-
+ arch/loongarch/kernel/machine_kexec.c      | 309 +++++++++++++++++++++
+ arch/loongarch/kernel/mem.c                |   1 +
+ arch/loongarch/kernel/relocate_kernel.S    | 112 ++++++++
+ arch/loongarch/kernel/setup.c              | 123 +++++++-
+ arch/loongarch/kernel/traps.c              |   4 +
+ 12 files changed, 664 insertions(+), 11 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/kexec.h
+ create mode 100644 arch/loongarch/kernel/crash_dump.c
+ create mode 100644 arch/loongarch/kernel/machine_kexec.c
+ create mode 100644 arch/loongarch/kernel/relocate_kernel.S
+
 -- 
 2.36.0
 
