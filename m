@@ -4,65 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D52C1C04A95
-	for <kexec@archiver.kernel.org>; Wed, 28 Sep 2022 06:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EB1C7C32771
+	for <kexec@archiver.kernel.org>; Wed, 28 Sep 2022 06:53:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=eTv+Gmh5BkjG0BaLPE0OL2cunwRvh0EAmMBDqu5wIHI=; b=ZHmyKHjmvI6PTq
-	i+2Q4nVSofhDnSNCz5BnyEoU574GlRAL/jb6VsRR38PpNn8pRwixHow315pE4WvBuJ1OgPHy/0Pgw
-	lSC/ap0xluVkib5Mmqxj2kUQMh9Xc5ElZDmxMox5EF5EICKnIlsHQTdot7zNg4hnDt2GB6uL7nQUM
-	YnvlylXwBN1LLtKp8lfUqMmgoux8h+pG+8WdBLsAZtQ9XjM2xQWH8/a3TP+AFo4kU/11wk1Glqd9D
-	WrScy3EYBKOOaZeRbCYXsHgqF9ESJ9kY2Tx9BOBgLvVpNe1C+zEj9CUSbDlTi3yhGnkQDkzGM2ES8
-	KkLmXKt+IhVswkSxaKLA==;
+	List-Owner; bh=C16/+1P5P8lIk/NM2KlKUSBQvMnBs8LpI4aM9I8RwuU=; b=I1miiC010ofd1d
+	KS+qffTkRkv2g6RUR4X8nFazAurMYukEsPOIRLDJIU2LJrlCPpex27qnn4BBEXoQZO/W6SU+hGs8j
+	3Vd6c4Bix70A0F+FJYfrs7VImZSgdw96CXi8W1ZwTUT2nQjry/PjQ/QOngT57ghnwFvyADEXOcJod
+	JrlHZ5AtWhAc8ZnbsR5+O7b6ydEQY/Khx62gCVPnfzZWG1xC2Pnaiu3TqS7tvK83l8n6Z/s3/jxMk
+	Nt2fH0NQvQkEUODl+j/udKaJm/8zp9unSIY7T2wchleHXPClLDy7dlHQmKEkHE323HcNgCCLwXo3d
+	hb+QYa89SADyDbg8uk7w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1odQtE-00EKVX-65; Wed, 28 Sep 2022 06:49:52 +0000
+	id 1odQwQ-00ELwq-0E; Wed, 28 Sep 2022 06:53:10 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1odQsU-00EK9s-Rh
-	for kexec@lists.infradead.org; Wed, 28 Sep 2022 06:49:08 +0000
+	id 1odQw8-00ELos-Pz
+	for kexec@lists.infradead.org; Wed, 28 Sep 2022 06:52:55 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1664347744;
+	s=mimecast20190719; t=1664347972;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Y6zUQ1QeMABO48yK91yy+7BFQ5QVaCICeA10q23nqLI=;
-	b=fl458RDdswT0vWHafvQEQgPnpAfFaPdRyf6fI3T9ObhOvtGYDZkAMxp5EUC37xcNvUFTRW
-	47Gdfz8LJ7FrhffAEpKTy0ligtAfnP3gVIyAOgeBxSpSf+0ysupHsJXACFFJVSILTzBZOs
-	exwd1aP96Tlr3TwzIIAct+EEMETdNwA=
+	bh=IlaSZc33GONrE9IArKtEWlpurS3hEknJV/JTkyz5RZ0=;
+	b=fMSi2p/Dxx1NLMA1zMoWp6v1pMcR0uJ3OttPFFrJ6ifrCOFab37ufz1BHJIaAy1x0vnHAn
+	tIvjAc46BrmsNDfyVB5gkutgLmIUJ/kWjwVx2C3bZgrutqeAQlTiE7F3BTH11zgGNNyTvV
+	cfLPOmvGC8CC/kh66Rb0pXlcP+JXzRw=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-434-nxBisCmmNtS3aDH23RHAfw-1; Wed, 28 Sep 2022 02:48:58 -0400
-X-MC-Unique: nxBisCmmNtS3aDH23RHAfw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+ us-mta-292-7yyPjbgSNVaEGE3qQ-_5FA-1; Wed, 28 Sep 2022 02:52:47 -0400
+X-MC-Unique: 7yyPjbgSNVaEGE3qQ-_5FA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DB28E85A5A6;
-	Wed, 28 Sep 2022 06:48:57 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4C7FD185A79C;
+	Wed, 28 Sep 2022 06:52:47 +0000 (UTC)
 Received: from localhost (ovpn-13-211.pek2.redhat.com [10.72.13.211])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 961F82024CB7;
-	Wed, 28 Sep 2022 06:48:56 +0000 (UTC)
-Date: Wed, 28 Sep 2022 14:48:53 +0800
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 772D5422A9;
+	Wed, 28 Sep 2022 06:52:45 +0000 (UTC)
+Date: Wed, 28 Sep 2022 14:52:42 +0800
 From: Baoquan He <bhe@redhat.com>
-To: cgel.zte@gmail.com
-Cc: ebiederm@xmission.com, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org, ye xingchen <ye.xingchen@zte.com.cn>,
-	Zeal Robot <zealci@zte.com.cn>
-Subject: Re: [PATCH linux-next] kexec: Remove the unneeded result variable
-Message-ID: <YzPuVVm5TwOilkGW@MiWiFi-R3L-srv>
-References: <20220908010352.342820-1-ye.xingchen@zte.com.cn>
+To: Chen Lifu <chenlifu@huawei.com>
+Cc: linux@armlinux.org.uk, akpm@linux-foundation.org, pmladek@suse.com,
+	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] ARM: kexec: Make machine_crash_nonpanic_core()
+ static
+Message-ID: <YzPvOjGWHxdcGUjh@MiWiFi-R3L-srv>
+References: <20220816074250.3991633-1-chenlifu@huawei.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20220908010352.342820-1-ye.xingchen@zte.com.cn>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
+In-Reply-To: <20220816074250.3991633-1-chenlifu@huawei.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220927_234907_021632_322C7983 
-X-CRM114-Status: GOOD (  15.79  )
+X-CRM114-CacheID: sfid-20220927_235252_925363_AC254CA9 
+X-CRM114-Status: GOOD (  19.45  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,55 +80,48 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 09/08/22 at 01:03am, cgel.zte@gmail.com wrote:
-> From: ye xingchen <ye.xingchen@zte.com.cn>
+On 08/16/22 at 03:42pm, Chen Lifu wrote:
+> This symbol is not used outside of the file, so mark it static.
 > 
-> Return the value kimage_add_entry() directly instead of storing it in
-> another redundant variable.
+> Fixes the following warning:
 > 
-> Reported-by: Zeal Robot <zealci@zte.com.cn>
-> Signed-off-by: ye xingchen <ye.xingchen@zte.com.cn>
+> arch/arm/kernel/machine_kexec.c:76:6: warning: symbol 'machine_crash_nonpanic_core' was not declared. Should it be static?
+> 
+> Signed-off-by: Chen Lifu <chenlifu@huawei.com>
 
 LGTM,
 
 Acked-by: Baoquan He <bhe@redhat.com>
 
 > ---
->  kernel/kexec_core.c | 10 ++--------
->  1 file changed, 2 insertions(+), 8 deletions(-)
+>  arch/arm/kernel/machine_kexec.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index ca2743f9c634..969e8f52f7da 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -561,23 +561,17 @@ static int kimage_add_entry(struct kimage *image, kimage_entry_t entry)
->  static int kimage_set_destination(struct kimage *image,
->  				   unsigned long destination)
->  {
-> -	int result;
-> -
->  	destination &= PAGE_MASK;
-> -	result = kimage_add_entry(image, destination | IND_DESTINATION);
+> diff --git a/arch/arm/kernel/machine_kexec.c b/arch/arm/kernel/machine_kexec.c
+> index f567032a09c0..a2e9ac763a9f 100644
+> --- a/arch/arm/kernel/machine_kexec.c
+> +++ b/arch/arm/kernel/machine_kexec.c
+> @@ -71,11 +71,11 @@ int machine_kexec_prepare(struct kimage *image)
 >  
-> -	return result;
-> +	return kimage_add_entry(image, destination | IND_DESTINATION);
+>  void machine_kexec_cleanup(struct kimage *image)
+>  {
 >  }
 >  
->  
->  static int kimage_add_page(struct kimage *image, unsigned long page)
+> -void machine_crash_nonpanic_core(void *unused)
+> +static void machine_crash_nonpanic_core(void *unused)
 >  {
-> -	int result;
-> -
->  	page &= PAGE_MASK;
-> -	result = kimage_add_entry(image, page | IND_SOURCE);
+>  	struct pt_regs regs;
 >  
-> -	return result;
-> +	return kimage_add_entry(image, page | IND_SOURCE);
->  }
->  
->  
+>  	crash_setup_regs(&regs, get_irq_regs());
+>  	printk(KERN_DEBUG "CPU %u will stop doing anything useful since another CPU has crashed\n",
 > -- 
-> 2.25.1
+> 2.37.1
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 > 
 
 
