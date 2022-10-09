@@ -4,80 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A804AC433F5
-	for <kexec@archiver.kernel.org>; Sat,  8 Oct 2022 02:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 95FF4C433F5
+	for <kexec@archiver.kernel.org>; Sun,  9 Oct 2022 03:23:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=H/MRaekY8S9lLdB9ckG5ewKW3lOHY7BuiwxxBmz9Hw0=; b=K7pWkFRBenKLZI
-	fNIpWrbI9EDxAH7hEoZ/uEAm+JdM/OEP0HFfGFtEeXLnO0mbwK+6vOIzvO1efSR+uiSqkTcgUGcAs
-	bkFUOjjcDfD7cIqnpUiuhvSS9yZM9X/AqrWYz0+0RvtoJfrn3OLWI0+Snchtaf+MB45M4J7Vtd2Ze
-	iFKaXylZ3OegxvoTMzj3VOt90T5yYO5MQ33rYW2+kkAMFxb8rxzcrLeepK5ea3ZPMXGr5Xxq2gTuJ
-	PHquIq9myD6cA8Q1qayNLtJpPkoPytYZW70JEdG5FpguQR/3mtiPLFB6QPnMIVy7BTSGvjkY8uCNZ
-	LEbMeTRYafJMnNr7k0uw==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:Date:Message-ID:From:Cc:
+	References:To:Subject:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=asOiEM8AF9XI+KqUzRAU6PZFOxP+oJAeYri7QfJzQK8=; b=mvugp6wucItJ81nqDms03i3NYP
+	OX/jondzoT5W/EbrmWtaScpdfzFZkbFLFjkHLHUiVBIDKpeHZ2slb1gl0LpVBqX1iT727bpqIse/0
+	dW6Qs2T5bXD1u018qh1Q3gAw1fLQnZ1jyA6J/Fr5qpigtndrd6EU45IrAucQEo8oT70XgTN0sKy+x
+	rSnRrj3IeIQXrhlwe6nl+M7aUMlatX7EW82Jr9ovQLM3SYXGpXTAGbek9db+c33PmCnCiVvB2draw
+	s3X1K87TatKYned0jCTDScnSClcD4yTZoyrgTPAoGdtyHmgVWHzXo2HopwmavdBSxgKknHZ5yqblW
+	hSNlpANg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1ogzgX-00BSn5-72; Sat, 08 Oct 2022 02:35:29 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
-	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1ogzgU-00BSlk-Ni
-	for kexec@lists.infradead.org; Sat, 08 Oct 2022 02:35:28 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1665196523;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5IsnY8coRZJSVHdnCDXDDkPFYnnu8TF82UevKAb/afk=;
-	b=FIAxGAj5YBSV8DzDyu69+s1BexeWBABIYER9irL3wDNdEnVusPzjf7SXhkAzJYSJmSkhds
-	VbL7QTVuuenBgDFBfvBTs8Ooosztw7pnSnYB7AB6DZAvswA/UrfBF6Px2H2P9fI8Nyj7I5
-	GX8c1/awNLS+uuf2+p8dYgPGJWGwVx8=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-502-AoMLW116PyS1BS81jRxTAg-1; Fri, 07 Oct 2022 22:35:20 -0400
-X-MC-Unique: AoMLW116PyS1BS81jRxTAg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3367B3C0E219;
-	Sat,  8 Oct 2022 02:35:19 +0000 (UTC)
-Received: from localhost (ovpn-12-36.pek2.redhat.com [10.72.12.36])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 100679D474;
-	Sat,  8 Oct 2022 02:35:18 +0000 (UTC)
-Date: Sat, 8 Oct 2022 10:35:14 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Eric DeVolder <eric.devolder@oracle.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Andrew Morton <akpm@linux-foundation.org>, david@redhat.com,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	kexec@lists.infradead.org, ebiederm@xmission.com, dyoung@redhat.com,
-	vgoyal@redhat.com, tglx@linutronix.de, mingo@redhat.com,
-	dave.hansen@linux.intel.com, hpa@zytor.com,
-	nramas@linux.microsoft.com, thomas.lendacky@amd.com,
-	robh@kernel.org, efault@gmx.de, rppt@kernel.org,
-	sourabhjain@linux.ibm.com, linux-mm@kvack.org
-Subject: Re: [PATCH v12 7/7] x86/crash: Add x86 crash hotplug support
-Message-ID: <Y0Dh4ieUUZ4oXa1/@MiWiFi-R3L-srv>
-References: <20220909210509.6286-1-eric.devolder@oracle.com>
- <20220909210509.6286-8-eric.devolder@oracle.com>
- <Yx7XEcXZ8PwwQW95@nazgul.tnic>
- <cb343eef-46be-2d67-b93a-84c75be86325@oracle.com>
- <YzRxPAoN+XmOfJzV@zn.tnic>
- <fd08c13d-a917-4cd6-85ec-267e0fe74c41@oracle.com>
- <Yzceb/y3SSFMuALR@zn.tnic>
- <d6386653-eb71-188c-8a09-5db46b4e42d4@oracle.com>
- <YzcqE1RVtPcuLlxN@zn.tnic>
+	id 1ohMuK-00EqGk-3p; Sun, 09 Oct 2022 03:23:16 +0000
+Received: from mail.loongson.cn ([114.242.206.163] helo=loongson.cn)
+	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1ohMuC-00EqFi-Fh
+	for kexec@lists.infradead.org; Sun, 09 Oct 2022 03:23:10 +0000
+Received: from [10.130.0.193] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxbWuGPkJj5wspAA--.37080S3;
+	Sun, 09 Oct 2022 11:22:47 +0800 (CST)
+Subject: Re: [PATCH 0/5] Add LoongArch port support
+To: Simon Horman <horms@kernel.org>
+References: <1664332106-4845-1-git-send-email-tangyouling@loongson.cn>
+ <Yz2gb5cuoTnX6XhJ@vergenet.net>
+Cc: kexec@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>
+From: Youling Tang <tangyouling@loongson.cn>
+Message-ID: <a242ac4a-eba7-df05-f09b-48391a939d6f@loongson.cn>
+Date: Sun, 9 Oct 2022 11:22:46 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <YzcqE1RVtPcuLlxN@zn.tnic>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
+In-Reply-To: <Yz2gb5cuoTnX6XhJ@vergenet.net>
+X-CM-TRANSID: AQAAf8CxbWuGPkJj5wspAA--.37080S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7GF4xWFW3Gry5tFWxZFW8JFb_yoW3GFb_KF
+	ZFvF1kCFy3JF12y3WFkryrC34vqa40vF4Fy39rWr17JFn5Cry8Jrs09r9IyF1ftFW8Xrn5
+	X39avw4qvr1YgjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbIxYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
+	6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+	8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0
+	cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
+	C2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r
+	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487
+	MxkIecxEwVAFwVW8GwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s
+	026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_
+	Jrv_JF1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20x
+	vEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE
+	14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa
+	7IU8ZqXJUUUUU==
+X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221007_193526_873334_CDE91846 
-X-CRM114-Status: GOOD (  29.94  )
+X-CRM114-CacheID: sfid-20221008_202308_962673_78901308 
+X-CRM114-Status: GOOD (  14.13  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,81 +72,35 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 09/30/22 at 07:40pm, Borislav Petkov wrote:
-> On Fri, Sep 30, 2022 at 12:11:26PM -0500, Eric DeVolder wrote:
-> > There is of course a way to enumerate the memory regions in use on the
-> > machine, that is not what this code needs. In order to compute the maximum
-> > buffer size needed (this buffer size is computed once), the count of the
-> > maximum number of memory regions possible (even if not currently in use) is
-> > what is needed.
-> 
-> Isn't that max number documented somewhere in memory hotplug docs?
+Hi, Simon
 
-Memory hptlug is not limited by a certin or a max number of memory
-regions, but limited by how large of the linear mapping range which
-physical can be mapped into.
+On 10/05/2022 11:19 PM, Simon Horman wrote:
+> On Wed, Sep 28, 2022 at 10:28:21AM +0800, Youling Tang wrote:
+>> This patch series to support kexec/kdump (only 64bit).
+>>
+>> Note: Kernel kexec/kdump support patch see link [1]:
+>> Link [1]: https://lore.kernel.org/loongarch/711d53ae-197f-3c55-d09d-2f40e6886ad1@loongson.cn/T/#t
+>
+> Thanks,
+>
+> in principle this looks good to me.
+> But I am wondering if you could provide a patch to .github/workflows/build.yml
 
-E.g on x86_64, with 4-level page tables, it has 64TB linear mapping
-range by default. On principle, we can add 64TB of phisical memory
-into system altogether from booting and memory hotplug. While with
-KASLR enabled, it has 10TB of linear mapping range by default, see
-CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING. Means there's only 10TB
-phisical memory being allowed to be added into system.
+The LoongArch architecture is not yet integrated into ubuntu-20.04, and
+it may not be possible to build LoongArch directly on that system via
+build.yml.
 
-For the Kconfig CRASH_MAX_MEMORY_RANGES Eric added, it's meaningful to
-me to set a fixed value which is enough in reality. For extreme testing
-with special purpose, it could be broken easily, people need decide by
-self whether the CONFIG_CRASH_MAX_MEMORY_RANGES is enlarged or not.
-E.g on x86_64, we make a system with memory smaller than 64G, this will
-cause the memory block size being probed as 256M. Then we hot added many
-Tera Bytes of physical memory every second memory block after bootup with
-a shell shell script. It could be easier to manipulate this with virtiomem.
-Please see function probe_memory_block_size() on x86_64 about the memory
-block size probing. However, I don't think on real system, this kind of
-system could really exist, with a tiny memory booted up, a huge memory
-hot added sparsely.
+Can we not add LoongArch to build.yml for now when it is not integrated
+into ubuntu?
 
-> 
-> Because then you don't need that Kconfig item either. Imagine you're a
-> distro kernel distributor and you want crash to work on all machines
-> your kernel works.
-> 
-> So you go and set that number to max. And that would be the 99% of the
-> kernel configs out there.
-> 
-> Which means, you can just set it to max without a Kconfig item.
-> 
-> > Oh, that would be an error of haste on my part. This should be:
-> >   depends on CRASH_DUMP && MEMORY_HOTPLUG
-> 
-> You need a Kconfig item which enables all this gunk as MEMORY_HOTPLUG is
-> not a omnipresent feature. And that Kconfig item should depend on the
-> other Kconfig items of the technology you need.
-> 
-> > Baoquan pointed me to:
-> > 
-> > https://lore.kernel.org/lkml/cover.1656659357.git.naveen.n.rao@linux.vnet.ibm.com/T/
-> 
-> In that thread says:
-> 
-> "- arch_kexec_apply_relocations_add() is only overridden by x86 and s390.
->   Retain the function prototype for those and move the weak
->   implementation into the header as a static inline for other
->   architectures."
-> 
-> So yes, that's even better.
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> https://people.kernel.org/tglx/notes-about-netiquette
-> 
+Thanks,
+Youling.
+>
 
 
 _______________________________________________
