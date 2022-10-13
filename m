@@ -4,81 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 69942C433FE
-	for <kexec@archiver.kernel.org>; Thu, 13 Oct 2022 02:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 40D9DC4332F
+	for <kexec@archiver.kernel.org>; Thu, 13 Oct 2022 05:25:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:References:
+	In-Reply-To:Subject:CC:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=gRAoNYATPcAXzvQfF9/kM7s3TrfveAcNtOMLcszz5cQ=; b=bpkN1E1aahInnq
-	/vKPSZaQIoOSKYo7z1ywcbjG2xyx3Mo3wPqOLBRHckoFShhFSuwhiSzNDYQevdI5JBPs0MoXb7KWi
-	7/wjWUrc7b33mH2BVJrSWjOcg7FI3Pn+JP6LQxb0Wrd70FecQwJfXhtpEDsL8qVCk1MPm8Pqfm5xx
-	vIB/6WJj1LoumD8i8b3ml7Z7MjbR5LhbypdfCkf6E2WCLcWSi4zwco2EfF0P4MmsUoLrhw0kpyMiS
-	98Tgm29LVO/Hh0vZF1A5+47xP3m248sItAnrJ651jAIR5FeRdCQsQCqBLWVu4S1Ck0xHDchPs86to
-	PJP1s2WUbnZxq4wUEWrA==;
+	List-Owner; bh=FiJGqgx5+ED2Sw8iiu+sbmJRYsasqogedG1uyatCPB0=; b=J47mj4kS2mJzsb
+	GHPKuK/JHVJejCSXdX91NZvHXFySdOyWKGaep2kyqq87k8oWR/7czr8ub357sb5gCAgOp4heQjg+b
+	DhZsCzJJ5O1e4Sh6L+DnGEIZ1Py87NyxP7T/MBP7e2mju8/8e99uC6hyV4aS6FrMJzcmSCR3MUeX1
+	XMrXX61R7uiJ2hyx+63YE2Lpsmmxxnj83sPjRIXkvV2JAmqoxLgxTVMh5sG3CINgXaosBUru33+a1
+	0pi9XZFWpT8chMCkIUmDIGghDqCW3exAkpzOZ4UAwpbzcora4rAb0CpCqA2KG68INaJQxRM5E0Xgh
+	SeO1QilQNtY0a9QX+iZg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oioQ5-00AQJJ-OA; Thu, 13 Oct 2022 02:58:01 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1oiqiI-00Ahus-Q6; Thu, 13 Oct 2022 05:24:58 +0000
+Received: from ams.source.kernel.org ([2604:1380:4601:e00::1])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oioQ1-00AQHc-M2
-	for kexec@lists.infradead.org; Thu, 13 Oct 2022 02:58:00 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1665629872;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8r6RnStRQqo5NB/KrjFNVz2NdBUb9m52H/iX7wovmR8=;
-	b=BMWF0OCRfC9A8hJsbasqrl9I1SWyWTLnBj6itb7UVnQ56y/dc3Sf4FWSWVjzVE4fd6jbHs
-	Q2zsG9uKSiYY2M80g+NY4g9z3vh44DYfJ3YxOox34prF6teeGLAN4XlOMapVC3RCswx29u
-	o1adleVwI5BzjzmsQz5gBcceoLi1J04=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-177-XLfnMYOyMX6ON2Jqjhde1Q-1; Wed, 12 Oct 2022 22:57:49 -0400
-X-MC-Unique: XLfnMYOyMX6ON2Jqjhde1Q-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	id 1oiqiE-00AhuG-HB; Thu, 13 Oct 2022 05:24:56 +0000
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 21B381C05AF3;
-	Thu, 13 Oct 2022 02:57:43 +0000 (UTC)
-Received: from localhost (ovpn-12-120.pek2.redhat.com [10.72.12.120])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 8432F492B0F;
-	Thu, 13 Oct 2022 02:57:37 +0000 (UTC)
-Date: Thu, 13 Oct 2022 10:57:28 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Eric DeVolder <eric.devolder@oracle.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Andrew Morton <akpm@linux-foundation.org>, david@redhat.com,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	kexec@lists.infradead.org, ebiederm@xmission.com, dyoung@redhat.com,
-	vgoyal@redhat.com, tglx@linutronix.de, mingo@redhat.com,
-	dave.hansen@linux.intel.com, hpa@zytor.com,
-	nramas@linux.microsoft.com, thomas.lendacky@amd.com,
-	robh@kernel.org, efault@gmx.de, rppt@kernel.org,
-	sourabhjain@linux.ibm.com, linux-mm@kvack.org
-Subject: Re: [PATCH v12 7/7] x86/crash: Add x86 crash hotplug support
-Message-ID: <Y0d+mFivS+88+Chr@MiWiFi-R3L-srv>
-References: <cb343eef-46be-2d67-b93a-84c75be86325@oracle.com>
- <YzRxPAoN+XmOfJzV@zn.tnic>
- <fd08c13d-a917-4cd6-85ec-267e0fe74c41@oracle.com>
- <Yzceb/y3SSFMuALR@zn.tnic>
- <d6386653-eb71-188c-8a09-5db46b4e42d4@oracle.com>
- <YzcqE1RVtPcuLlxN@zn.tnic>
- <Y0Dh4ieUUZ4oXa1/@MiWiFi-R3L-srv>
- <Y0b9apyIs+RpSo1e@zn.tnic>
- <53aed03e-2eed-09b1-9532-fe4e497ea47d@oracle.com>
- <Y0cmaPTKQuWtwIRh@zn.tnic>
+	by ams.source.kernel.org (Postfix) with ESMTPS id C4D79B81CFD;
+	Thu, 13 Oct 2022 05:24:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C56DEC433D6;
+	Thu, 13 Oct 2022 05:24:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1665638691;
+	bh=9G19LVgt3OG5TfZZzGAbZgZXMYsC/NBKH20RV4NIGuU=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=m1tVLvQco2ug6IGhCyfoduhhSLnt4397igtRBqcmbyKVL4+kGQPf7cMqlXeF4dFfr
+	 fDvk7jXaDnU7q2+i1Y2zuaqqjnX6pdinQeE5jREMLwG3/Fa4OTb999zzkfe2iiuX2t
+	 6A43oHVP1mSz7n1Hdy0MuoK9WkUZ2FKiVLWWyE8i28+KmCjmvaUMskQO9ijyeIv6Vh
+	 BvKwevysYS7ZOeaBvo4bjIsfcnN4vcIKQaUhDbXlYKGLwUhhcMHUiHryACnbNF6M/o
+	 SHMx+qBOo+0iL9wlqdTd6hILFmVu/2kDGmuRii1vYXG4V//kXnq6j/UON80/VJ2V87
+	 tk8HtvtAe7LyA==
+Date: Thu, 13 Oct 2022 06:24:47 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Xianting Tian <xianting.tian@linux.alibaba.com>,
+ Conor Dooley <conor.dooley@microchip.com>
+CC: Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>,
+ aou@eecs.berkeley.edu, anup@brainfault.org, heiko@sntech.de,
+ guoren@kernel.org, mick@ics.forth.gr, alexandre.ghiti@canonical.com,
+ bhe@redhat.com, vgoyal@redhat.com, dyoung@redhat.com, corbet@lwn.net,
+ kexec@lists.infradead.org, linux-doc@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ crash-utility@redhat.com, heinrich.schuchardt@canonical.com,
+ k-hagio-ab@nec.com, hschauhan@nulltrace.org, yixun.lan@gmail.com
+Subject: Re: [PATCH V6 0/6] RISC-V fixups to work with crash tool
+User-Agent: K-9 Mail for Android
+In-Reply-To: <55606b89-13f2-5e3b-9176-bacbec8c36d1@linux.alibaba.com>
+References: <mhng-f5fdaa37-e99a-4214-a297-ec81f0fed0c1@palmer-mbp2014> <f8d3ae66-73a8-db89-c4c4-918610fb5f35@linux.alibaba.com> <Y0aOcsf06a2+ExrU@wendy> <55606b89-13f2-5e3b-9176-bacbec8c36d1@linux.alibaba.com>
+Message-ID: <22AAF52E-8CC8-4D11-99CB-88DE4D113444@kernel.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Y0cmaPTKQuWtwIRh@zn.tnic>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221012_195758_641166_E4CA5DB4 
-X-CRM114-Status: GOOD (  23.50  )
+X-CRM114-CacheID: sfid-20221012_222454_906661_A15363A8 
+X-CRM114-Status: GOOD (  25.05  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,96 +73,117 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 10/12/22 at 10:41pm, Borislav Petkov wrote:
-> On Wed, Oct 12, 2022 at 03:19:19PM -0500, Eric DeVolder wrote:
-> > We run here QEMU with the ability for 1024 DIMM slots.
-> 
-> QEMU, haha.
-> 
-> What is the highest count of DIMM slots which are hotpluggable on a
-> real, *physical* system today? Are you saying you can have 1K DIMM slots
-> on a board?
-
-The concern to range number mainly is on Virt guest systems. On
-baremetal system, basically only very high end server support memory hotplug.
-I ever visited customer's lab and saw one server, it owns 8 slots, on
-each slot a box containing about 20 cpus and 2T memory at most can be
-plugged in at one time. So people won't make too many slots for
-hotplugging since it's too expensive.
-
-I checked user space kexec code, the maximum memory range number is
-honored to x86_64 because of a HPE SGI system. After that, nobody
-complains about it. Please see below user space kexec-tools commit in
-https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
-
-The memory ranges may be not all made by different DIMM slots, could be
-firmware reservatoin, e.g efi/BIOS diggged out physical memory, or the
-cpu logical address space is occupied by pci or other stuffs. I don't
-have a HPE SGI system at hand to check.
-
-commit 4a6d67d9e938a7accf128aff23f8ad4bda67f729
-Author: Xunlei Pang <xlpang@redhat.com>
-Date:   Thu Mar 23 19:16:59 2017 +0800
-
-    x86: Support large number of memory ranges
-    
-    We got a problem on one SGI 64TB machine, the current kexec-tools
-    failed to work due to the insufficient ranges(MAX_MEMORY_RANGES)
-    allowed which is defined as 1024(less than the ranges on the machine).
-    The kcore header is insufficient due to the same reason as well.
-    
-    To solve this, this patch simply doubles "MAX_MEMORY_RANGES" and
-    "KCORE_ELF_HEADERS_SIZE".
-    
-    Signed-off-by: Xunlei Pang <xlpang@redhat.com>
-    Tested-by: Frank Ramsay <frank.ramsay@hpe.com>
-    Signed-off-by: Simon Horman <horms@verge.net.au>
-
-diff --git a/kexec/arch/i386/kexec-x86.h b/kexec/arch/i386/kexec-x86.h
-index 33df3524f4e2..51855f8db762 100644
---- a/kexec/arch/i386/kexec-x86.h
-+++ b/kexec/arch/i386/kexec-x86.h
-@@ -1,7 +1,7 @@
- #ifndef KEXEC_X86_H
- #define KEXEC_X86_H
- 
--#define MAX_MEMORY_RANGES 1024
-+#define MAX_MEMORY_RANGES 2048
-
-> 
-> I hardly doubt that.
-
-The questioning is reasonable. 32K truly looks too much. 
-
-Now CONFIG_NR_CPUS has the maximum number as 8192. And user space 
-kexec-tools has maximum memory range number as 2048. We can take
-the current 8192 + 2048  = 10K as default value conservatively. Or
-take 8192 + 2048 * 2 = 12K which has two times of maximum memory range
-bumber in kexec-tools. What do you think?
-
-> 
-> > So, for example, 1TiB requires 1024 DIMMs of 1GiB each with 128MiB
-> > memblocks, that results in 8K possible memory regions. So just going
-> > to 4TiB reaches 32K memory regions.
-> 
-> Lemme see if I understand this correctly: when a system like that
-> crashes, you want to kdump *all* those 4TiB in a vmcore? How long would
-> that dump take to complete? A day?
-
-That is not a problem. The time of vmcore dumping mainly depends on the
-actual memory size, not on memory range numbers. when dumping vmcore,
-people use makedumpfile to filter zero page, free page, cache page, or user
-date page according to configuration. If memory is huge, they can use
-nr_cpus=x to enable multiple cpu to do multi-thread dumping. Kdump now
-support more than 10 TB vmcore dumping.
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+CgpPbiAxMyBPY3RvYmVyIDIwMjIgMDM6Mjg6MDkgSVNULCBYaWFudGluZyBUaWFuIDx4aWFudGlu
+Zy50aWFuQGxpbnV4LmFsaWJhYmEuY29tPiB3cm90ZToKPgo+5ZyoIDIwMjIvMTAvMTIg5LiL5Y2I
+NTo1MiwgQ29ub3IgRG9vbGV5IOWGmemBkzoKPj4gT24gV2VkLCBPY3QgMTIsIDIwMjIgYXQgMDU6
+NDI6MzdQTSArMDgwMCwgWGlhbnRpbmcgVGlhbiB3cm90ZToKPj4+IOWcqCAyMDIyLzgvMTIg5LiK
+5Y2IMTI6MTcsIFBhbG1lciBEYWJiZWx0IOWGmemBkzoKPj4+PiBPbiBUaHUsIDExIEF1ZyAyMDIy
+IDAwOjQxOjQ0IFBEVCAoLTA3MDApLAo+Pj4+IHhpYW50aW5nLnRpYW5AbGludXguYWxpYmFiYS5j
+b20gd3JvdGU6Cj4+Pj4+IEkgZXZlciBzZW50IHRoZSBwYXRjaCAxIGluIHRoZSBsaW5rOgo+Pj4+
+PiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3Byb2plY3QvbGludXgtcmlzY3YvcGF0Y2gv
+MjAyMjA3MDgwNzMxNTAuMzUyODMwLTMteGlhbnRpbmcudGlhbkBsaW51eC5hbGliYWJhLmNvbS8K
+Pj4+Pj4gCj4+Pj4+IEFuZCBwYXRjaCAyLDMgaW4gdGhlIGxpbms6Cj4+Pj4+IGh0dHBzOi8vcGF0
+Y2h3b3JrLmtlcm5lbC5vcmcvcHJvamVjdC9saW51eC1yaXNjdi9wYXRjaC8yMDIyMDcxNDExMzMw
+MC4zNjc4NTQtMi14aWFudGluZy50aWFuQGxpbnV4LmFsaWJhYmEuY29tLwo+Pj4+PiAKPj4+Pj4g
+aHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wcm9qZWN0L2xpbnV4LXJpc2N2L3BhdGNoLzIw
+MjIwNzE0MTEzMzAwLjM2Nzg1NC0zLXhpYW50aW5nLnRpYW5AbGludXguYWxpYmFiYS5jb20vCj4+
+Pj4+IAo+Pj4+PiAKPj4+Pj4gVGhpcyBwYXRjaCBzZXQganVzdCBwdXQgdGhlc2UgcGF0Y2hlcyB0
+b2dldGhlciwgYW5kIHdpdGggdGhyZWUgbmV3Cj4+Pj4+IHBhdGNoIDQsIDUsIDYuCj4+Pj4+IHRo
+ZXNlIHNpeCBwYXRjaGVzIGFyZSB0aGUgZml4dXBzIGZvciBtYWNoaW5lX2tleGVjLCBrZXJuZWwg
+bW9kZSBQQwo+Pj4+PiBmb3Igdm1jb3JlCj4+Pj4+IGFuZCBpbXByb3ZlbWVudHMgZm9yIHZtY29y
+ZWluZm8sIG1lbW9yeSBsYXlvdXQgZHVtcCBhbmQgZml4dXAKPj4+Pj4gc2NoZWR1bGUgb3V0IGlz
+c3VlCj4+Pj4+IGluIG1hY2hpbmVfY3Jhc2hfc2h1dGRvd24oKS4KPj4+Pj4gCj4+Pj4+IFRoZSBt
+YWluIGNoYW5nZXMgaW4gdGhlIHNpeCBwYXRjaHMgYXMgYmVsb3csCj4+Pj4+IFBhdGNoIDE6IEZp
+eHVwIHVzZSBvZiBzbXBfcHJvY2Vzc29yX2lkKCkgaW4gcHJlZW1wdGlibGUgY29udGV4dCwgdG8K
+Pj4+Pj4gY2xlYW51cAo+Pj4+PiAgwqDCoMKgwqDCoMKgwqDCoCB0aGUgY29uc29sZSBwcmludHMu
+Cj4+Pj4+IFBhdGNoIDI6IEZpeHVwIHRvIGdldCBjb3JyZWN0IGtlcm5lbCBtb2RlIFBDIGZvciBr
+ZXJuZWwgbW9kZSByZWdzCj4+Pj4+IGZvciB2bWNvcmUuCj4+Pj4+IFBhdGNoIDM6IEZpeHVwIHNj
+aGVkdWxlIG91dCBpc3N1ZSBpbiBtYWNoaW5lX2NyYXNoX3NodXRkb3duKCkKPj4+Pj4gUGF0Y2gg
+NDogQWRkIG1vZHVsZXMgdG8gdmlydHVhbCBrZXJuZWwgbWVtb3J5IGxheW91dCBkdW1wLgo+Pj4+
+PiBQYXRjaCA1OiBBZGQgVk0gbGF5b3V0LCB2YSBiaXRzLCByYW0gYmFzZSB0byB2bWNvcmVpbmZv
+LCB3aGljaCBjYW4KPj4+Pj4gc2ltcGxpZnkKPj4+Pj4gIMKgwqDCoMKgwqDCoMKgwqAgdGhlIGRl
+dmVsb3BtZW50IG9mIGNyYXNoIHRvb2wgYXMgQVJNNjQgYWxyZWFkeSBkaWQKPj4+Pj4gIMKgwqDC
+oMKgwqDCoMKgwqAgKGFyY2gvYXJtNjQva2VybmVsL2NyYXNoX2NvcmUuYykuCj4+Pj4+IFBhdGNo
+IDY6IFVwZGF0ZXMgdm1jb3JlaW5mby5yc3QgZm9yIHZtY29yZWluZm8gZXhwb3J0IGZvciBSSVND
+VjY0Lgo+Pj4+PiAKPj4+Pj4gV2l0aCB0aGVzZSBzaXggcGF0Y2hlcyhwYXRjaCAyIGlzIG11c3Qp
+LCBjcmFzaCB0b29sIGNhbiB3b3JrIHdlbGwgdG8KPj4+Pj4gYW5hbHl6ZQo+Pj4+PiBhIHZtY29y
+ZS4gVGhlIHBhdGNoZXMgZm9yIGNyYXNoIHRvb2wgZm9yIFJJU0NWNjQgaXMgaW4gdGhlIGxpbms6
+Cj4+Pj4+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LXJpc2N2LzIwMjIwODAxMDQzMDQw
+LjIwMDMyNjQtMS14aWFudGluZy50aWFuQGxpbnV4LmFsaWJhYmEuY29tLwo+Pj4+PiAKPj4+Pj4g
+Cj4+Pj4+IC0tLS0tLQo+Pj4+PiBDaGFuZ2VzIHYxIC0+IHYyOgo+Pj4+PiAgwqAgMSwgcmVtb3Zl
+IHRoZSBwYXRjaCAiQWRkIGEgZmFzdCBjYWxsIHBhdGggb2YgY3Jhc2hfa2V4ZWMoKSIgZnJvbQo+
+Pj4+PiB0aGlzIHNlcmllcwo+Pj4+PiAgwqDCoMKgwqAgb2YgcGF0Y2hlcywgYXMgaXQgYWxyZWFk
+eSBhcHBsaWVkIHRvIHJpc2N2IGdpdC4KPj4+Pj4gaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIv
+c2NtL2xpbnV4L2tlcm5lbC9naXQvcmlzY3YvbGludXguZ2l0L2NvbW1pdC8/aD1mb3ItbmV4dCZp
+ZD0zZjE5MDExMTBhODliMGUyZTEzYWRiMmFjOGQxYTcxMDI4NzllYTk4Cj4+Pj4+ICDCoCAyLCBh
+ZGQgJ1Jldmlld2VkLWJ5JyBiYXNlZCBvbiB0aGUgY29tbWVudHMgb2YgdjEuCj4+Pj4+IENoYW5n
+ZXMgdjIgLT4gdjM6Cj4+Pj4+ICDCoCB1c2UgInJpc2N2IiBpbnN0ZWFkIG9mICJyaXNjdjY0IiBp
+biBwYXRjaCA1IHN1YmplY3QgbGluZS4KPj4+Pj4gQ2hhbmdlcyB2MyAtPiB2NDoKPj4+Pj4gIMKg
+IHVzZSAicmlzY3YiIGluc3RlYWQgb2YgInJpc2N2NjQiIGluIHRoZSBzdW1tYXJ5IG9mIHBhdGNo
+IDUgc3ViamVjdAo+Pj4+PiBsaW5lLgo+Pj4+PiBDaGFuZ2VzIHY0IC0+IHY1Ogo+Pj4+PiAgwqAg
+YWRkIGEgbmV3IHBhdGNoICJSSVNDLVY6IEZpeHVwIHNjaGVkdWxlIG91dCBpc3N1ZSBpbgo+Pj4+
+PiBtYWNoaW5lX2NyYXNoX3NodXRkb3duKCkiCj4+Pj4+IENoYW5nZXMgdjUgLT4gdjY6Cj4+Pj4+
+ICDCoCAxLCBtb3ZlICJmaXh1cCIgcGF0Y2hlcyB0byB0aGUgc3RhcnQgb2YgdGhlIHBhdGNoIHNl
+dC4KPj4+Pj4gIMKgIDIsIGNoYW5nZSBwYXRjaCAxLCAyLCA2J3Mgc3ViamVjdCB0byBtYWtlIGl0
+IHRlbGwgbW9yZSB3aGF0IGl0J3MKPj4+Pj4gYWJvdXQuCj4+Pj4+ICDCoCAzLCBhZGQgRml4ZXMg
+Zm9yIHBhdGNoIDMuCj4+Pj4+ICDCoCA0LCBhZGp1ZXN0IHRoZSBjaGFuZ2VzIGZvcm1hdCBmb3Ig
+cGF0Y2ggNi4KPj4+Pj4gCj4+Pj4+IAo+Pj4+PiBYaWFudGluZyBUaWFuICg2KToKPj4+Pj4gIMKg
+IFJJU0MtVjoga2V4ZWM6IEZpeHVwIHVzZSBvZiBzbXBfcHJvY2Vzc29yX2lkKCkgaW4gcHJlZW1w
+dGlibGUgY29udGV4dAo+Pj4+PiAgwqAgUklTQy1WOiBGaXh1cCBnZXQgaW5jb3JyZWN0IHVzZXIg
+bW9kZSBQQyBmb3Iga2VybmVsIG1vZGUgcmVncwo+Pj4+PiAgwqAgUklTQy1WOiBGaXh1cCBzY2hl
+ZHVsZSBvdXQgaXNzdWUgaW4gbWFjaGluZV9jcmFzaF9zaHV0ZG93bigpCj4+Pj4+ICDCoCBSSVND
+LVY6IEFkZCBtb2R1bGVzIHRvIHZpcnR1YWwga2VybmVsIG1lbW9yeSBsYXlvdXQgZHVtcAo+Pj4+
+PiAgwqAgUklTQy1WOiBBZGQgYXJjaF9jcmFzaF9zYXZlX3ZtY29yZWluZm8gc3VwcG9ydAo+Pj4+
+PiAgwqAgRG9jdW1lbnRhdGlvbjoga2R1bXA6IGRlc2NyaWJlIFZNQ09SRUlORk8gZXhwb3J0IGZv
+ciBSSVNDVjY0Cj4+Pj4+IAo+Pj4+PiAgwqAuLi4vYWRtaW4tZ3VpZGUva2R1bXAvdm1jb3JlaW5m
+by5yc3TCoMKgwqDCoMKgwqDCoMKgwqAgfCAzMSArKysrKysrKysrKysrKysrKysrCj4+Pj4+ICDC
+oGFyY2gvcmlzY3Yva2VybmVsL01ha2VmaWxlwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgfMKgIDEgKwo+Pj4+PiAgwqBhcmNoL3Jpc2N2L2tlcm5lbC9jcmFzaF9jb3JlLmPC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfCAyOSArKysrKysrKysrKysrKysrKwo+Pj4+
+PiAgwqBhcmNoL3Jpc2N2L2tlcm5lbC9jcmFzaF9zYXZlX3JlZ3MuU8KgwqDCoMKgwqDCoMKgwqDC
+oMKgIHzCoCAyICstCj4+Pj4+ICDCoGFyY2gvcmlzY3Yva2VybmVsL21hY2hpbmVfa2V4ZWMuY8Kg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8IDI4ICsrKysrKysrKysrKysrLS0tCj4+Pj4+ICDCoGFy
+Y2gvcmlzY3YvbW0vaW5pdC5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqAgfMKgIDQgKysrCj4+Pj4+ICDCoDYgZmlsZXMgY2hhbmdlZCwgODkgaW5zZXJ0
+aW9ucygrKSwgNiBkZWxldGlvbnMoLSkKPj4+Pj4gIMKgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gv
+cmlzY3Yva2VybmVsL2NyYXNoX2NvcmUuYwo+Pj4+IFRoYW5rLsKgIEkndmUgdGFrZW4gdGhlIGZp
+cnN0IDQgb250byBmb3ItbmV4dCwgd2hpY2ggaXMgc3RpbGwgdGFyZ2V0ZWQKPj4+PiBmb3IgNS4y
+MCwgYXMgdGhleSdyZSBmaXhlcy7CoCBJJ20gbm90IG9wcG9zZWQgdG8gdGFraW5nIHRoZSBkb2N1
+bWVudGF0aW9uCj4+Pj4gcGF0Y2ggZm9yIHRoaXMgY3ljbGUgYXMgd2VsbCwgaXQganVzdCBuZWVk
+cyBzb21lIGdvaW5nLW92ZXIgYXMgdGhlCj4+Pj4gd29yZGluZyBsb29rcyB2ZXJ5IG9kZCAob3Ig
+YXQgbGVhc3QgaXQgZG9lcyB0byBtZSByaWdodCBub3csIG1heWJlIEknbQo+Pj4+IGp1c3Qgc3Rp
+bGwgaGFsZiBhc2xlZXApLsKgIFBhdGNoIDUgaXMgYSBuZXcgZmVhdHVyZSwgYW5kIGdpdmVuIHRo
+YXQgaXQncwo+Pj4+IGJlaW5nIHNwdW4gZHVyaW5nIHRoZSBtZXJnZSB3aW5kb3cgaXQncyB0b28g
+bGF0ZS4KPj4+IEhpIFBhbG1lcgo+Pj4gCj4+PiBEbyB5b3UgcGxhbiB0byBtZXJnZSB0aGUgdHdv
+IHBhdGNoIHRvIExpbnV4IDYuMSB0byBzdXBwb3J0IGNyYXNoIHRvb2wgd29yaz8KPj4+IHRoYW5r
+cwo+Pj4gCj4+PiAgwqAgUklTQy1WOiBrZXhlYzogRml4dXAgdXNlIG9mIHNtcF9wcm9jZXNzb3Jf
+aWQoKSBpbiBwcmVlbXB0aWJsZSBjb250ZXh0Cj4+IDM1NzYyOGU2OGY1YyAoIlJJU0MtVjoga2V4
+ZWM6IEZpeHVwIHVzZSBvZiBzbXBfcHJvY2Vzc29yX2lkKCkgaW4gcHJlZW1wdGlibGUgY29udGV4
+dCIKPj4gCj4+PiAgwqAgUklTQy1WOiBGaXh1cCBnZXQgaW5jb3JyZWN0IHVzZXIgbW9kZSBQQyBm
+b3Iga2VybmVsIG1vZGUgcmVncwo+PiA1OWMwMjZjMzU5YzMgKCJSSVNDLVY6IEZpeHVwIGdldCBp
+bmNvcnJlY3QgdXNlciBtb2RlIFBDIGZvciBrZXJuZWwgbW9kZSByZWdzIikKPj4gCj4+IEhleSBY
+aWFudGluZywgdGhvc2UgdHdvIGNvbW1pdHMgYWxyZWFkeSBzZWVtIHRvIGhhdmUgYmVlbiBhcHBs
+aWVkLCBkbwo+PiB5b3UgcGVyaGFwcyBpbnN0ZWFkIG1lYW4gdGhlIGRvY3VtZW50YXRpb24gcGF0
+Y2ggYW5kIHRoZSBhZGRpdGlvbiBvZgo+PiBzdXBwb3J0IGZvciBhcmNoX2NyYXNoX3NhdmVfdm1j
+b3JlaW5mbz8gSSByZWNhbGxlZCBhc2tpbmcgaWYgeW91IG5lZWRlZAo+PiB0byByZXNwaW4gYXQg
+dGhlIHRpbWUsIGJ1dCBkbyBub3Qgc2VlIGEgcmVzcG9uc2U6Cj4+IGh0dHBzOi8vbG9yZS5rZXJu
+ZWwub3JnL2xpbnV4LXJpc2N2LzM5ZmRjODVlLWIyZDUtODYzYy00ODc4LTRiMzM4MGQ3NmJjNEBt
+aWNyb2NoaXAuY29tLwo+PiBJSVJDIEJhZ2FzIGhhZCBzb21lIG91dHN0YW5kaW5nIGNvbW1lbnRz
+IG9uIHRoZSBkb2N1bWVudGF0aW9uIGNoYW5nZQo+PiB0b28uIFdhcyBJIGluY29ycmVjdD8KPgo+
+U29ycnksIEl0IGlzIHRoZSB0d28gcGF0Y2hlczoKPgo+wqAgUklTQy1WOiBBZGQgYXJjaF9jcmFz
+aF9zYXZlX3ZtY29yZWluZm8gc3VwcG9ydAo+wqAgRG9jdW1lbnRhdGlvbjoga2R1bXA6IGRlc2Ny
+aWJlIFZNQ09SRUlORk8gZXhwb3J0IGZvciBSSVNDVjY0Cj4KPkkgc2F3IFBhbG1lciBhbHJlYWR5
+IG1lcmdlZCB0aGUgdHdvIHBhdGNoZXMgdG8gaGlzIHJpc2N2LWNyYXNoIGJyYW5jaCwgaXQgbWVh
+bnMgdGhleSBhcmUgT0s/CgpEdW5ubywgYnV0IG5vIGhhcm0gaW4gcmVzZW5kaW5nIGdpdmVuIGl0
+J3MgYmVlbiBhIHdoaWxlIGN5Y2xlIHNpbmNlIHRoZW4uCgo+Cj5odHRwczovL2dpdC5rZXJuZWwu
+b3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9wYWxtZXIvbGludXguZ2l0L2xvZy8/aD1yaXNj
+di1jcmFzaAo+Cj5JIHNhdyBCYWdhcydzIGNvbW1lbnRzLCBJIHdpbGwgc2VuZCBuZXcgdmVyc2lv
+biBwYXRjaCBmb3IgdGhlIHR3byBwYXRjaGVzLCB0aGFua3MgZm9yIHRoZSByZW1pbmRlci4KPgo+
+PiAKPj4gVGhhbmtzLAo+PiBDb25vci4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQu
+b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
