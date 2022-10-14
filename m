@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6C837C4332F
-	for <kexec@archiver.kernel.org>; Fri, 14 Oct 2022 13:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7BCAEC43219
+	for <kexec@archiver.kernel.org>; Fri, 14 Oct 2022 13:42:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:MIME-Version:List-Subscribe:List-Help:
 	List-Post:List-Archive:List-Unsubscribe:List-Id:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=azThDphqkIrkr7sQLTE7Me7kyEv+B7PDHN5ZPzv9yPY=; b=BT6w4FvW7HiavW
-	C1ZteS+S1cg45ZfWVy0M0ygmuE6Ff6bQfzwiU1d8TNn64AulYxuit1LxzGYp4U7HKQc4569sMfgEs
-	HRlHoNfuBze+xx1gPGy35zTp7z6B0QKWGvOR7FKNqIjErmeZCIQUs71GvBQfJjyCAvxKX7QN+/UeW
-	jA/mHk80DCXk4KVTf5QC/4Z+BVLnJr472Uy8/xvKQQZ4R9S4LwiQv1DT4WOYGnq0ULLg+L9rN7Obd
-	nUG42ewBloDsglnc3eTup7VpzgCv1P+XTS7537Y9Iy+u2ntbB7bMksMAejqCQLvUYA+HjgLyB3Y39
-	mfB9RlgkGbXqJmP4mpkw==;
+	List-Owner; bh=uTjTEyHlQdaTz5HGf2mEr8y2J25jyGpDlUGH/xCT7GA=; b=zmZ0jH3ZJmPExe
+	LHd/llR+qb5rxEgI/2bveIBBOdXuUQgT+YIVSwpkjy1/8T3SJm1YO9BltFb4PPpY2ggB/KVbDhbiZ
+	slWs6ON3slPYiAn5CBIZmIUbM5bRnOgLGjtYG3bi60h7JcAdu93KRbpaCjJdwJBjLliUC4ZsNfZuB
+	NG7AgE0s0WU2AKvqXB1gA8LHH0sj9Ogut8FGS6eP7i7mU7an7qyrU9PFcxI/1VOepz7VbTTLdV7Yc
+	7xny4S3iTuLTfALxlTMBiE9fBFiI/v5wVmnONCsloqxcQ/w9PbwokYWZ0VSTVsPiQyuq0VR7wHqx8
+	niMG2kA6ItDdIT1GlEcA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1ojKx2-00Eo2l-0Q; Fri, 14 Oct 2022 13:42:12 +0000
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54])
+	id 1ojKx4-00Eo4L-EN; Fri, 14 Oct 2022 13:42:14 +0000
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1ojKwu-00EnyK-LH; Fri, 14 Oct 2022 13:42:07 +0000
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=xianting.tian@linux.alibaba.com;NM=1;PH=DS;RN=24;SR=0;TI=SMTPD_---0VS82Wbl_1665754917;
-Received: from localhost.localdomain(mailfrom:xianting.tian@linux.alibaba.com fp:SMTPD_---0VS82Wbl_1665754917)
+	id 1ojKwx-00Enyh-DH; Fri, 14 Oct 2022 13:42:08 +0000
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=xianting.tian@linux.alibaba.com;NM=1;PH=DS;RN=24;SR=0;TI=SMTPD_---0VS82WcB_1665754918;
+Received: from localhost.localdomain(mailfrom:xianting.tian@linux.alibaba.com fp:SMTPD_---0VS82WcB_1665754918)
           by smtp.aliyun-inc.com;
-          Fri, 14 Oct 2022 21:41:58 +0800
+          Fri, 14 Oct 2022 21:41:59 +0800
 From: Xianting Tian <xianting.tian@linux.alibaba.com>
 To: paul.walmsley@sifive.com,
 	palmer@dabbelt.com,
@@ -53,15 +53,16 @@ Cc: kexec@lists.infradead.org,
 	hschauhan@nulltrace.org,
 	yixun.lan@gmail.com,
 	Xianting Tian <xianting.tian@linux.alibaba.com>
-Subject: [PATCH V2 1/2] RISC-V: Add arch_crash_save_vmcoreinfo support
-Date: Fri, 14 Oct 2022 21:41:38 +0800
-Message-Id: <20221014134139.5151-2-xianting.tian@linux.alibaba.com>
+Subject: [PATCH V2 2/2] Documentation: kdump: describe VMCOREINFO export for RISCV64
+Date: Fri, 14 Oct 2022 21:41:39 +0800
+Message-Id: <20221014134139.5151-3-xianting.tian@linux.alibaba.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20221014134139.5151-1-xianting.tian@linux.alibaba.com>
 References: <20221014134139.5151-1-xianting.tian@linux.alibaba.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221014_064205_440109_E2F64447 
-X-CRM114-Status: GOOD (  13.11  )
+X-CRM114-CacheID: sfid-20221014_064207_636355_94ADE1D7 
+X-CRM114-Status: UNSURE (   5.06  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,85 +80,62 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Add arch_crash_save_vmcoreinfo(), which exports VM layout(MODULES, VMALLOC,
-VMEMMAP and KERNEL_LINK_ADDR ranges), va bits and ram base for vmcore.
+The following interrelated definitions and ranges are needed by the kdump
+crash tool, they are exported by "arch/riscv/kernel/crash_core.c":
+    VA_BITS,
+    PAGE_OFFSET,
+    phys_ram_base,
+    MODULES_VADDR ~ MODULES_END,
+    VMALLOC_START ~ VMALLOC_END,
+    VMEMMAP_START ~ VMEMMAP_END,
+    KASAN_SHADOW_START ~ KASAN_SHADOW_END,
+    KERNEL_LINK_ADDR ~ ADDRESS_SPACE_END
 
-Default pagetable levels and PAGE_OFFSET aren't same for different kernel
-version as below. For default pagetable levels, it sets sv57 on defaultly
-in latest kernel and do fallback to try to set sv48 on boot time if sv57
-is not supported in current hardware.
-
-For ram base, the default value is 0x80200000 for qemu riscv64 env, 0x200000
-for riscv64 SoC platform(eg, SoC platform of RISC-V XuanTie 910 CPU).
-
- * Linux Kernel 5.18 ~
- *      PGTABLE_LEVELS = 5
- *      PAGE_OFFSET = 0xff60000000000000
- * Linux Kernel 5.17 ~
- *      PGTABLE_LEVELS = 4
- *      PAGE_OFFSET = 0xffffaf8000000000
- * Linux Kernel 4.19 ~
- *      PGTABLE_LEVELS = 3
- *      PAGE_OFFSET = 0xffffffe000000000
-
-Since these configurations change from time to time and version to version,
-it is preferable to export them via vmcoreinfo than to change the crash's
-code frequently, it can simplify the development of crash tool.
+Document these RISCV64 exports above.
 
 Signed-off-by: Xianting Tian <xianting.tian@linux.alibaba.com>
 ---
- arch/riscv/kernel/Makefile     |  1 +
- arch/riscv/kernel/crash_core.c | 29 +++++++++++++++++++++++++++++
- 2 files changed, 30 insertions(+)
- create mode 100644 arch/riscv/kernel/crash_core.c
+ .../admin-guide/kdump/vmcoreinfo.rst          | 30 +++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
-index db6e4b1294ba..4cf303a779ab 100644
---- a/arch/riscv/kernel/Makefile
-+++ b/arch/riscv/kernel/Makefile
-@@ -81,6 +81,7 @@ obj-$(CONFIG_KGDB)		+= kgdb.o
- obj-$(CONFIG_KEXEC_CORE)	+= kexec_relocate.o crash_save_regs.o machine_kexec.o
- obj-$(CONFIG_KEXEC_FILE)	+= elf_kexec.o machine_kexec_file.o
- obj-$(CONFIG_CRASH_DUMP)	+= crash_dump.o
-+obj-$(CONFIG_CRASH_CORE)	+= crash_core.o
+diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+index 6726f439958c..8e2e164cf3db 100644
+--- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
++++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+@@ -595,3 +595,33 @@ X2TLB
+ -----
  
- obj-$(CONFIG_JUMP_LABEL)	+= jump_label.o
- 
-diff --git a/arch/riscv/kernel/crash_core.c b/arch/riscv/kernel/crash_core.c
-new file mode 100644
-index 000000000000..8d7f5ff108da
---- /dev/null
-+++ b/arch/riscv/kernel/crash_core.c
-@@ -0,0 +1,29 @@
-+// SPDX-License-Identifier: GPL-2.0-only
+ Indicates whether the crashed kernel enabled SH extended mode.
 +
-+#include <linux/crash_core.h>
-+#include <linux/pagemap.h>
++RISCV64
++=======
 +
-+void arch_crash_save_vmcoreinfo(void)
-+{
-+	VMCOREINFO_NUMBER(VA_BITS);
-+	VMCOREINFO_NUMBER(phys_ram_base);
++VA_BITS
++-------
 +
-+	vmcoreinfo_append_str("NUMBER(PAGE_OFFSET)=0x%lx\n", PAGE_OFFSET);
-+	vmcoreinfo_append_str("NUMBER(VMALLOC_START)=0x%lx\n", VMALLOC_START);
-+	vmcoreinfo_append_str("NUMBER(VMALLOC_END)=0x%lx\n", VMALLOC_END);
-+	vmcoreinfo_append_str("NUMBER(VMEMMAP_START)=0x%lx\n", VMEMMAP_START);
-+	vmcoreinfo_append_str("NUMBER(VMEMMAP_END)=0x%lx\n", VMEMMAP_END);
-+#ifdef CONFIG_64BIT
-+	vmcoreinfo_append_str("NUMBER(MODULES_VADDR)=0x%lx\n", MODULES_VADDR);
-+	vmcoreinfo_append_str("NUMBER(MODULES_END)=0x%lx\n", MODULES_END);
-+#endif
++The maximum number of bits for virtual addresses. Used to compute the
++virtual memory ranges.
 +
-+	if (IS_ENABLED(CONFIG_64BIT)) {
-+#ifdef CONFIG_KASAN
-+		vmcoreinfo_append_str("NUMBER(KASAN_SHADOW_START)=0x%lx\n", KASAN_SHADOW_START);
-+		vmcoreinfo_append_str("NUMBER(KASAN_SHADOW_END)=0x%lx\n", KASAN_SHADOW_END);
-+#endif
-+		vmcoreinfo_append_str("NUMBER(KERNEL_LINK_ADDR)=0x%lx\n", KERNEL_LINK_ADDR);
-+		vmcoreinfo_append_str("NUMBER(ADDRESS_SPACE_END)=0x%lx\n", ADDRESS_SPACE_END);
-+	}
-+}
++PAGE_OFFSET
++-----------
++
++Indicates the virtual kernel start address of direct-mapped RAM region.
++
++phys_ram_base
++-------------
++
++Indicates the start physical RAM address.
++
++MODULES_VADDR|MODULES_END|VMALLOC_START|VMALLOC_END|VMEMMAP_START|VMEMMAP_END|KASAN_SHADOW_START|KASAN_SHADOW_END|KERNEL_LINK_ADDR|ADDRESS_SPACE_END
++----------------------------------------------------------------------------------------------------------------------------------------------------
++
++Used to get the correct ranges:
++
++  * MODULES_VADDR ~ MODULES_END : Kernel module space.
++  * VMALLOC_START ~ VMALLOC_END : vmalloc() / ioremap() space.
++  * VMEMMAP_START ~ VMEMMAP_END : vmemmap region, used for struct page array.
++  * KASAN_SHADOW_START ~ KASAN_SHADOW_END : kasan shadow space.
++  * KERNEL_LINK_ADDR ~ ADDRESS_SPACE_END : Kernel link and BPF space.
 -- 
 2.17.1
 
