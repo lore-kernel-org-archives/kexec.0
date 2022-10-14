@@ -4,87 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4D4ECC433FE
-	for <kexec@archiver.kernel.org>; Fri, 14 Oct 2022 13:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 56B77C4332F
+	for <kexec@archiver.kernel.org>; Fri, 14 Oct 2022 13:42:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
-	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=8A11qBai111xhtLBf3GUlt4BhIcdkyPa/mKjvtVP4kg=; b=LanqqhbupOaBxV
-	ClpzkEDDkQJuq52oTZGf4+uitRtoBp/UVJO4En//pU6tNUDRC18F36KSWBVaSi43orXtBHE1nqKRv
-	jV5KtKP2EQo9Qg6e418mo3pSXySKvDYF+bGWPh8Iwd2SzVUwnaAc5+fXhxX2RVfVvbPP504wsp3WS
-	ADvBOVtaVfiPgl6x5Eet6VUAzfDVtsHlEXqGGiRlIIWtTlmU00B27JcjJFfj1CjS2CHhbQnLMh9gS
-	gYfbFLiwuHDkHFm7EeRDoYl37CRoxJHVrDNDSIbbpUsOuyKrPGz2UJqGzNLTdm0jAb+v4ud/3UX6A
-	O39CJG1BwBMSTrYhy9qA==;
+	Content-Transfer-Encoding:Content-Type:MIME-Version:List-Subscribe:List-Help:
+	List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:Subject:Cc:To
+	:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=nfaM2WX4lWuMjbY8HY5PterpNPf/+DgDC7RCIAsh5bU=; b=sC3Hk3fNbc/0eN
+	nvy75Kp/9rlxg4MLo9XrX9LNxNC7XpwhVffYertmGkDtDCne4KxpQbIVo8zub+snFMYIoPoaWUxmq
+	GwuQCl1peQZ9AhU75km/9OIqOL9ST03Mwfzhi+veKd9PLg+L6UUE+ukT5tKqJkLSVXkhlgNsJhsXN
+	mTPS6lZCtVP40HRTrLMWOpJPRN97Q25rSwhGkCl7neZj+ePcPGGgrxTimWlz19KPUK0KqWLHx2krX
+	8sWXE1ssW77CSi8IqIdhGp8mdAsPPtUxPHcTcL2MjE3laPavs+mG/pPOqw0PNdopLLCnnaW9O47xh
+	Pv3LaQxjoLonEM1Xiuqg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1ojKf5-00El4j-61; Fri, 14 Oct 2022 13:23:39 +0000
-Received: from mail-pf1-x42e.google.com ([2607:f8b0:4864:20::42e])
+	id 1ojKwz-00Eo1R-Id; Fri, 14 Oct 2022 13:42:09 +0000
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1ojKf2-00El3U-Ik; Fri, 14 Oct 2022 13:23:37 +0000
-Received: by mail-pf1-x42e.google.com with SMTP id p14so4903804pfq.5;
-        Fri, 14 Oct 2022 06:23:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=H4xjddBFiOmnGZiEUX+Vkve3fnj+3YiCzJcAITektSg=;
-        b=poRwLrKa8hytQgqfDrCIrlZsIKc/WjHdmwh5WVCOLwwN5YTtz0Sj6kNQQfbTZtVsyo
-         iHncZ6EQWssbnwHf1jWsb0BjS5kHSBMH6eacY0aisCxYT+TAqpafPfK0qsaPAanoG3N5
-         4pzcJr6YeJ9C4ip+7tEKw+Hm0Cz7HUUxjnhgqvqX9gqmuDFEBzkh2SfwBFMpmdAhpIO8
-         7DOshSJ9Y9PKsxRnUWBcJK7J2IbQmUHrM5nbu7HFCmJEQywaVU83Gi1hhRf+xAK2hsjc
-         HtW0I9BQdcsLYJabD/FLJdmlGOEKMXFzgWP4pyvlWIGBvolmvingHAasKl43QnbIQWCf
-         VV5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=H4xjddBFiOmnGZiEUX+Vkve3fnj+3YiCzJcAITektSg=;
-        b=R5ElF2oIyKwVMXfh8SPWeKUV+D6h4h3F752XaGHsH7O5SX/XvDAbVpIM2582PG63Vv
-         RziE5ncAh/qBXrqe/jCbzaWiaUPkhR6dXHv7cb1nUjAab3K6A+6MBygfHHfnXsNmYC4r
-         yGyE8NR7rb+YGX2yIyCQD04m7C5L1j5aTrYeHntJIoPw6R3w0MF52Qi36YjQA4EF3dAl
-         PNCmMQO2jQDWhBbj5FwnPYRp/sYxMNSO7pYFLdmgWTySL+jZ/qzJS7eLs1qfjVxw9Est
-         a7iosIvfeTsTc74F7cVSsRFHS15visLiBBZSvrhUbLc6EXJwzcTd+1V0Ieq9FBWkCC6R
-         Oqww==
-X-Gm-Message-State: ACrzQf127qthHndYjCQHZUtsO/MR745pwlj8qhl1XH5zbOGRLa35Diz4
-	BJpxrxQFRdxxqCwvLo92Jxw=
-X-Google-Smtp-Source: AMsMyM47NgsJUD3wlIBoNzJ/JovZeZncfRVPxI7Qv48gn0JbBAbhB6rbDZS5KFk4nKXRKDgbyhfZPw==
-X-Received: by 2002:a63:f07:0:b0:440:5c6e:5833 with SMTP id e7-20020a630f07000000b004405c6e5833mr4625962pgl.375.1665753814898;
-        Fri, 14 Oct 2022 06:23:34 -0700 (PDT)
-Received: from [192.168.43.80] (subs02-180-214-232-68.three.co.id. [180.214.232.68])
-        by smtp.gmail.com with ESMTPSA id n18-20020aa79852000000b005631af4ece2sm1665778pfq.182.2022.10.14.06.23.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Oct 2022 06:23:34 -0700 (PDT)
-Message-ID: <7353e949-17cc-ed8e-7e98-b3f3e0840623@gmail.com>
-Date: Fri, 14 Oct 2022 20:23:26 +0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.3
-Subject: Re: [PATCH 2/2] Documentation: kdump: describe VMCOREINFO export for
- RISCV64
-To: Conor Dooley <conor@kernel.org>
-Cc: Xianting Tian <xianting.tian@linux.alibaba.com>,
- paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
- anup@brainfault.org, heiko@sntech.de, guoren@kernel.org, mick@ics.forth.gr,
- alexandre.ghiti@canonical.com, bhe@redhat.com, vgoyal@redhat.com,
- dyoung@redhat.com, corbet@lwn.net, Conor.Dooley@microchip.com,
- kexec@lists.infradead.org, linux-doc@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- crash-utility@redhat.com, heinrich.schuchardt@canonical.com,
- k-hagio-ab@nec.com, hschauhan@nulltrace.org, yixun.lan@gmail.com
-References: <20221014074810.4471-1-xianting.tian@linux.alibaba.com>
- <20221014074810.4471-3-xianting.tian@linux.alibaba.com>
- <Y0ldrJ91ac0um3++@debian.me> <Y0lfuixXue4k4poY@spud>
-Content-Language: en-US
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-In-Reply-To: <Y0lfuixXue4k4poY@spud>
+	id 1ojKwu-00EnyE-D5; Fri, 14 Oct 2022 13:42:07 +0000
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=xianting.tian@linux.alibaba.com;NM=1;PH=DS;RN=24;SR=0;TI=SMTPD_---0VS82WXR_1665754904;
+Received: from localhost.localdomain(mailfrom:xianting.tian@linux.alibaba.com fp:SMTPD_---0VS82WXR_1665754904)
+          by smtp.aliyun-inc.com;
+          Fri, 14 Oct 2022 21:41:56 +0800
+From: Xianting Tian <xianting.tian@linux.alibaba.com>
+To: paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	anup@brainfault.org,
+	heiko@sntech.de,
+	guoren@kernel.org,
+	mick@ics.forth.gr,
+	alexandre.ghiti@canonical.com,
+	bhe@redhat.com,
+	vgoyal@redhat.com,
+	dyoung@redhat.com,
+	corbet@lwn.net,
+	Conor.Dooley@microchip.com,
+	bagasdotme@gmail.com
+Cc: kexec@lists.infradead.org,
+	linux-doc@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	crash-utility@redhat.com,
+	heinrich.schuchardt@canonical.com,
+	k-hagio-ab@nec.com,
+	hschauhan@nulltrace.org,
+	yixun.lan@gmail.com,
+	Xianting Tian <xianting.tian@linux.alibaba.com>
+Subject: [PATCH V2 0/2] Support VMCOREINFO export for RISCV64
+Date: Fri, 14 Oct 2022 21:41:37 +0800
+Message-Id: <20221014134139.5151-1-xianting.tian@linux.alibaba.com>
+X-Mailer: git-send-email 2.17.1
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221014_062336_647269_0F671FD2 
-X-CRM114-Status: UNSURE (   9.71  )
+X-CRM114-CacheID: sfid-20221014_064204_663368_BD691617 
+X-CRM114-Status: UNSURE (   5.05  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -97,32 +72,38 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 10/14/22 20:10, Conor Dooley wrote:
-> Without whitespace highlighting, your change threw me for a sec.. But
-> yeah, having the overline is inconsistent with other headings in the
-> doc.
-> 
-> What I wanted to ask about was the linelength as I don't know anything
-> about rst. Is it possible to avoid having the ~150 character line or is
-> that a necessary evil?
-> 
+As disscussed in below patch set, the patch of 'describe VMCOREINFO export in Documentation'
+need to update according to Bagas's comments. 
+https://lore.kernel.org/linux-riscv/22AAF52E-8CC8-4D11-99CB-88DE4D113444@kernel.org/
 
-I think the section describes correct range exports; however since there
-are many such ranges with distinct purposes, it is better to split the
-section into multiple sections describing each range.
+As others patches in above patch set already applied, so this patch set only contains below two
+patches.
 
-If we go without splitting, the 150-character header is necessary (I don't
-know how to split the header text line without trigger any warnings).
+------
+Changes:
+   Fix commit message in patch 2: use "Document these RISCV64 exports above" instead of
+   "This patch just add the description of VMCOREINFO export for RISCV64."
+V1 -> V2:
+   Remove unnecessary overline above header text in patch 2.
 
-Thanks.
+Xianting Tian (2):
+  RISC-V: Add arch_crash_save_vmcoreinfo support
+  Documentation: kdump: describe VMCOREINFO export for RISCV64
+
+ .../admin-guide/kdump/vmcoreinfo.rst          | 30 ++++++++++++++++++
+ arch/riscv/kernel/Makefile                    |  1 +
+ arch/riscv/kernel/crash_core.c                | 29 +++++++++++++++++
+ 3 files changed, 61 insertions(+)
+ create mode 100644 arch/riscv/kernel/crash_core.c
 
 -- 
-An old man doll... just what I always wanted! - Clara
+2.17.1
 
 
 _______________________________________________
