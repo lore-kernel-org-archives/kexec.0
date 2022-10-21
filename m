@@ -4,147 +4,136 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BA231C433FE
-	for <kexec@archiver.kernel.org>; Thu, 20 Oct 2022 17:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0FBC1C4332F
+	for <kexec@archiver.kernel.org>; Fri, 21 Oct 2022 02:17:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-ID:In-Reply-To:
+	References:Message-ID:Date:Subject:CC:To:From:Reply-To:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=AhB0KArLc9+KP8ucqbbCf4dZMknad+OsI3GQOvbT+HM=; b=40gaPR0Aw4JCmR
-	Nm7ZSXPsRgNZBY016Wdz6wV/RPq01Se4J1x8CeqPkjLTk5sdy3Xuflv24r0pFcwl/WDlGUzrfjn9H
-	dD5NN1rLMoAH/ws8g758R8Pz0BoRhA38BHoY+p9GCyogSikhedm7wOU/kxOs0rXf6EzH11j84F/dy
-	cFRWYM7ySGAb9Hkxy/MWIyeOqkIVIYxiui4XRH/+RVe0NEa3NWQ/wk0JAinajLDpakWZssXdiGMUr
-	WfjQdmxUM2Zkyn1HHZUNEIMKmZrxvKCe1vPTHvLTh5RpekrglVnEvLk89L7Gh/3qswij15erboOoD
-	7BuruF4jGjpE0gFNmqqw==;
+	List-Owner; bh=pLb3aT0lP1GxFS54dJT1cx2dmkXDeG0PhtobTBQwYpw=; b=ZsYlJ+a9QUR662
+	ufbtugk26sdCb/4RKhjCiDUe65QRTCHJotxxFrpTRe1EQV6I2PtMcpbrX6l3KqfqgwTW5IfUEKTDC
+	/j4WMgCClPWzbcEZtMF9As6tNuoYun3ZZVi4ebbckr6vtK4rvIlPu3c2Cj0cafOQwVsowN3m22iTG
+	t7H2FAiSzv/wCIu/KGjRBAFDOGY4UtvGhgu+14VHG1e+vcX1KIBUjbTag6unvF45uz6i8zJ/kv06J
+	w0gGVNyyo03qUN5Jz3gZZBWOdWaI2VxogllniBoUPSCIR81kxi9FMiU2HxzCbojOMMu3eRJ3z6+o1
+	iaLw1ow6kriO+sp+IGfQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1olYyQ-000jtw-G8; Thu, 20 Oct 2022 17:04:50 +0000
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
+	id 1olhb4-004Naj-KA; Fri, 21 Oct 2022 02:17:18 +0000
+Received: from mail-os0jpn01on2067.outbound.protection.outlook.com ([40.107.113.67] helo=JPN01-OS0-obe.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1olYxt-000jd4-P1
-	for kexec@lists.infradead.org; Thu, 20 Oct 2022 17:04:19 +0000
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 29KGwtJT020000
-	for <kexec@lists.infradead.org>; Thu, 20 Oct 2022 17:04:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references :
- content-transfer-encoding : content-type : mime-version; s=corp-2022-7-12;
- bh=DwT5hJd1u9gICNkZH53txSsSL6JXd9askVTMLGAtBSQ=;
- b=oGLFiDRBNHcpAM/fqBBAiptM68t/6f8dw4RtePrecST3cixrCZg2Dqs/pTzANOjYUQpm
- iC3CkwASv38Pfb5hZx0lmKqa4pilw0llPkl6vY5DxjAepNjjAC3anoF5C/0PqF6yh/DT
- 5igVjesjLI9WZZN60e1gVzcXWUAy3ObMLwowoJ8E9Rj37OIyD3FRJ5mozf2J1OrJXmEu
- ERnWA75ckAWmIuEReor4niLULZqK2Rg0x0VmsTmoLdZANzGFUG/VTcMGm/r33YM7bQGs
- waEafjxgOabEVfTmczoqMyXhX2F5JD7gnYykw0IkeBnAVROyCIk5nNNEwpf29cWazFaD MQ== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3k7mw3nxry-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-	for <kexec@lists.infradead.org>; Thu, 20 Oct 2022 17:04:16 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 29KFS15Z027412
-	for <kexec@lists.infradead.org>; Thu, 20 Oct 2022 17:04:16 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2102.outbound.protection.outlook.com [104.47.58.102])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3k8htjs159-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-	for <kexec@lists.infradead.org>; Thu, 20 Oct 2022 17:04:16 +0000
+	id 1olhaz-004NYJ-70; Fri, 21 Oct 2022 02:17:15 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bBnCDEld8rEql04+UXLs15k09xE6ctAbpEjP7Gfoi7DYVp8P6pQ2Cs6e12Fui2LH9f8oK30lwWnLtpSD6NHsjWN8tKQQ1E5IKwI5Luow0deXbaVxuFP8wHGbTLi670c3iqltJpzQlHMkEOe8EZxFtXUYLfMuWsO7A4vcWZjpEiHKy4GISyOEIMMgNxJ3cUuS4E05tuBRECDRkHNh8wEiau5P28gRNgni2ss+fflsCoXdZ0e+gme6BT6gVa7XAN9k4sJB+vX8g11cuA2hqS/6hQXR0gu+S7HSH/2xNmLNfAztPKt5i3gN2t/f5NbIJVB6rZJiPZKVopIqyIoF/6rsrA==
+ b=mGQLgi9m5BdegdgtPc9hnTILlz0WQ2uU24rYRbNdjyAGZ44uBJjr6ASbnKZ6XyEQ704i9X8t/U2ji3z8i3N2Fee0jVUkL+obIq3/HxmcfhX6EXcfVKv2vloswNZpMEElaG2w6ygzY1J7vh7vwWnzcecKaO1qmOUl/D5lryCZ7f4PUSUwq9GmkJMKNOsZXwmplLHK/4RSVeqPojYQU2YMR4PIUaGWMJGD9rDn5ioqOQA5+aXcLa1fj1ooiehMXg+WBdzgHQKBCIxX9TsNsoOk2CYmQTdOEx3nFHjrtBqhyb92tvahZtVyYIPjIVzQqXfv7ayHLWa6HGLsKWEy851JTA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DwT5hJd1u9gICNkZH53txSsSL6JXd9askVTMLGAtBSQ=;
- b=U7FtI9zmuzaNk/a8bbsDph2fTLjyuHJBlWQVnnGV1RQ8A1WzflXuyRFooK2VW5r7WOd9chpmDbFv5ZithSwo6viN4BUHK8AP/kPcIAssriRkqNyboMUcggGZmtlUGHUWeqerVLO6lqKZQrPmSOp6iMnmvrKQCV3ssKyJaSR5LpJnt2CN5J647lM+5oj+YGYLWDkfxd0bCr0eihUejJ1Jg9ER6Fr0cz4sMsyGiHLWldFmbwZ7DuiqjnqCpTxIXW/qeoa8PyuFOhwi06qPR86pQ3e1Rf3dO10Qr2cI2lb5AjEC0i92f3Vq3nURFIQCEQVm7SNTbrAUkQVracczwRCFIw==
+ bh=FKKr4nUg6tu5K77nmZwqZjPh9bGx3xtR1+GCdoBDHUc=;
+ b=AfslAtfaO06LGRK1sNs6fUyduN9uhN2TtOspSzvEcKtkYfuzW9HNVlSWlRDwIjC0iCKYS2ERvjclLFa4zLwA2jOK+XF7Ehr2zAs0DrZoENllyln3MDk44AbsDMNxIIe2EvqsMawxqzc4jtsdm/puLhaWIsHdnhADIx2kHIkmBzF4oz/AdG8vH5FGgwME6S7bxrvvwacaFXnoTYlXKCYBKZnqFiY0QgDT6b55JYQ6eEHMOZ1BXsGP1Gte0QjX9WR7eLINdKGF0qB/IV0QhcQzDc+rHOhXOpRCUGkH9dwQJ7pNBnPDCvZeGVLxzJIXJgYzQUuB6dJRWgbDdCag/AKpvQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ smtp.mailfrom=nec.com; dmarc=pass action=none header.from=nec.com; dkim=pass
+ header.d=nec.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nec.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DwT5hJd1u9gICNkZH53txSsSL6JXd9askVTMLGAtBSQ=;
- b=XsQ0c+f8rawW78z/irqbKvnGq8rSZrHOjnq5nf4gyLXWkCXRGXKi2113747/7RLEpR+A3Nmu136qzJqpWZ7AL59GbIj1LMnkBKRr3lMfeIqHAiO7f+Jg0aJJJQNDI6L9kCNVsHeY5qTLfUm4td87ZCwb9zz9B8nR8dj4luKR2OY=
-Received: from CO1PR10MB4531.namprd10.prod.outlook.com (2603:10b6:303:6c::22)
- by DS0PR10MB6727.namprd10.prod.outlook.com (2603:10b6:8:13a::15) with
+ bh=FKKr4nUg6tu5K77nmZwqZjPh9bGx3xtR1+GCdoBDHUc=;
+ b=kak8Xz4DhilcELHZXY0AeldpeHCYsgqdfr/JTkeDCLw1Q/UnbfEvgvTPfDdqNnvmsOz+WD1+16k62QEL4oaodnZ+83LO0Dk7vQNLHW70HMFdxlJtOMXm7YjUF95MeHdpoJsCDYmWUXUqsyD6TKCQntIRW8CYcYzYNkhdnU3hMcQ=
+Received: from TYYPR01MB6777.jpnprd01.prod.outlook.com (2603:1096:400:cc::9)
+ by TYBPR01MB5439.jpnprd01.prod.outlook.com (2603:1096:404:8029::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.29; Thu, 20 Oct
- 2022 17:04:14 +0000
-Received: from CO1PR10MB4531.namprd10.prod.outlook.com
- ([fe80::f7b2:af85:fe37:31a7]) by CO1PR10MB4531.namprd10.prod.outlook.com
- ([fe80::f7b2:af85:fe37:31a7%9]) with mapi id 15.20.5723.034; Thu, 20 Oct 2022
- 17:04:14 +0000
-From: Eric DeVolder <eric.devolder@oracle.com>
-To: kexec@lists.infradead.org
-Cc: boris.ostrovsky@oracle.com, eric.devolder@oracle.com
-Subject: [PATCH v1 7/7] crashdump/x86: utilize get_elfcorehdrsz()
-Date: Thu, 20 Oct 2022 13:03:44 -0400
-Message-Id: <20221020170344.1962-8-eric.devolder@oracle.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20221020170344.1962-1-eric.devolder@oracle.com>
-References: <20221020170344.1962-1-eric.devolder@oracle.com>
-X-ClientProxiedBy: SN1PR12CA0077.namprd12.prod.outlook.com
- (2603:10b6:802:20::48) To CO1PR10MB4531.namprd10.prod.outlook.com
- (2603:10b6:303:6c::22)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.34; Fri, 21 Oct
+ 2022 02:17:03 +0000
+Received: from TYYPR01MB6777.jpnprd01.prod.outlook.com
+ ([fe80::1f99:8d77:182b:f149]) by TYYPR01MB6777.jpnprd01.prod.outlook.com
+ ([fe80::1f99:8d77:182b:f149%6]) with mapi id 15.20.5723.035; Fri, 21 Oct 2022
+ 02:17:03 +0000
+From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
+	<k-hagio-ab@nec.com>
+To: Xianting Tian <xianting.tian@linux.alibaba.com>
+CC: "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+	"kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+	"hschauhan@nulltrace.org" <hschauhan@nulltrace.org>,
+	"lifang_xia@linux.alibaba.com" <lifang_xia@linux.alibaba.com>,
+	"crash-utility@redhat.com" <crash-utility@redhat.com>, "mick@ics.forth.gr"
+	<mick@ics.forth.gr>, "heinrich.schuchardt@canonical.com"
+	<heinrich.schuchardt@canonical.com>, "guoren@kernel.org" <guoren@kernel.org>,
+	"yixun.lan@gmail.com" <yixun.lan@gmail.com>, "lijiang@redhat.com"
+	<lijiang@redhat.com>
+Subject: Re: [Crash-utility][PATCH V4 1/9] Add RISCV64 framework code support
+Thread-Topic: [Crash-utility][PATCH V4 1/9] Add RISCV64 framework code support
+Thread-Index: AQHY5CZdVCBWrb7lWkSZ0txIm6wOBK4YHhwA
+Date: Fri, 21 Oct 2022 02:17:02 +0000
+Message-ID: <4022d4a1-8967-3d09-e158-5a6f78f73655@nec.com>
+References: <20221020015014.46085-1-xianting.tian@linux.alibaba.com>
+ <20221020015014.46085-2-xianting.tian@linux.alibaba.com>
+In-Reply-To: <20221020015014.46085-2-xianting.tian@linux.alibaba.com>
+Accept-Language: ja-JP, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nec.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYYPR01MB6777:EE_|TYBPR01MB5439:EE_
+x-ms-office365-filtering-correlation-id: 302202b6-02cd-4667-6c64-08dab30a57cf
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:  acWt8vCtbMbyXAayDTWudM145HblGiWHC3e5qdly/cqFQqYVLgS8p8mznYzwCOBe1dK6USi31YpcYxj17EFfJaX/oG+xyd0uv82YkF3ipoVkVeXN0JTwRJKkLcQhzrpIJ8/62/LRiA26v+gtkvLRRNIzxyEoM4wNGPM5YYJe50FhyL7oRx68zFGIEiB8QbGwv0HDxWpyz8Zeq/iqb6+dI5Zn3hEQp5f7gk6bl/4d601k9W3SbF56sGxW3kmYY2vCLmoAJ6L6TSw7wbbG0dqrgnz0nQPW/ibpOminxiJNy52bUky4m84BIm9+An65r6+JN/gQHx+6Fg9Xz4AwbkylELELsaZz+/yzGCuQlJPdj5TWsU+e/aW8j/ABNw690EzT5tL0JyT31uY/CBgw3f+kktRkGbyxRnenoiLFoWWjsmzTnRaiacL5VYyORKwBW6cBmPgzH1j9pgW74Q0NbZD02RlEaS2jH334NoJreoGT1DOm2++dg/B359/svgrNM8SxiDBHTiZ5lomQEe70N3qzSSxhA7JExQMac32ytTIvDUrBR2cRtyzWDbeDjjWGybBK0PKafNmxar8MJJqTpNlTmlOvRywm9w1GQfgl4fezSJDlgGyeBD3WS7PVzvy1CiHzJOsTr7hdTGqscpFntsj8Dh+WL0oaiMbP8mJMExulzb5+5ipT1cfSFR5IFQsTE6JyR0KOaX5GKvocW3OwxAqqvWEww0dPrSdG13IlM+ys0sen4HTTazO8KvfWjs9E9RZFMM77l8B0foN0BNAwQY5A6x0y/WT8SzR7iOi/PZzvCv8=
+x-forefront-antispam-report:  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYYPR01MB6777.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(346002)(396003)(136003)(39860400002)(366004)(376002)(451199015)(31696002)(2906002)(41300700001)(36756003)(86362001)(71200400001)(478600001)(8936002)(85182001)(64756008)(76116006)(4326008)(6916009)(7416002)(8676002)(66556008)(5660300002)(66476007)(6486002)(66446008)(66946007)(55236004)(53546011)(2616005)(38070700005)(26005)(38100700002)(122000001)(6512007)(54906003)(82960400001)(6506007)(186003)(31686004)(316002)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:  =?utf-8?B?Z0tiZFRlaTZMT1JGejB3eVVqRWRxWjdoQjZTV0lGTlZzV0xOZ1NwRVlRVE1V?=
+ =?utf-8?B?eUlqRU9tM1RaaDBocjhWWVFBeXNnWTNDWnl3WW9BUStVZmhBaWw0RDZmbUFW?=
+ =?utf-8?B?V1BqNUVsaU5YNTFnSVNmQnpZMXZ1Z2tVeXN5QndSL3dTbnVEMU5YS2tQc2ZC?=
+ =?utf-8?B?alF4WFlFWDY0RDQxcWRiZmtUaVRMbkcrMDZyL0Q1M1JvamRYU1ZTbEVUVC96?=
+ =?utf-8?B?SDlpRzdYTlNPMk9sRGFjV3lSRWYySi82Q0xsVnlxUmZMTjJKNll1RjZCdklG?=
+ =?utf-8?B?QXNQZkt5NHlRQWFjTWFIYnpLekQ0NjR4Yi9TVFdXTVNDeFN4Njl3TENyQm9a?=
+ =?utf-8?B?dUVHSmQxTDl3cStlSUJXUVdmMElGV05aOUprUldSbTZjemtJdmJzVTlFTzdv?=
+ =?utf-8?B?RmdmL3RPRmRoM3BsYkRCd2JNbVBhR3M2elUzYXFDb3BLNTgxRXB4aE1iNHFz?=
+ =?utf-8?B?UllEcVpUSXZKYmU5cEVVcTdPQTh4cnhFQnJvNmhkTkNHc0lKTEFvL0p5MXJC?=
+ =?utf-8?B?Zko3ekQzOGlsTHJBUVBqdFFRbUo2cWlMb2N4ZWpoQnlvNmNYOEE5cXlvQXNj?=
+ =?utf-8?B?NlRETk90RUllM0FuMFA2STFUaFpGWVFSSENmbXBvZ0RLaU8wMlB6TW1iUVJV?=
+ =?utf-8?B?T2ZpdEVZUlA2eEljSGprVFNkSWpqL1FVR3BIVzV0cXJuZzBFY2JBSjQyaS9X?=
+ =?utf-8?B?UU1vOUtCVzFka2R5bzZjbk9qRmVVSGRHb0VHSkhNM2pMb2JBYXptME5CLzVi?=
+ =?utf-8?B?U2JPZDJpSXpGeEc1NU5rRVRidy91aFc3KzFYbW1lZzU2VG9PMWhFWDhQY3BF?=
+ =?utf-8?B?S0pMWkhidDdUblhjWkpITHRwQlJ5ZnI5bDU0WXMvd2xNcVlZMDA1ZTVuNUQ3?=
+ =?utf-8?B?UENyTHI0TGRXZ3o3NGQ0dW1zd3l6RzhDcVovNWtRM1MyMU5BUCtnTDRDWjNn?=
+ =?utf-8?B?Y2h3OU9UYW54MUFOaHlJSkdxeTM0LzZiMVh0M3VOSmZpWk1RNE9abjNtd2k4?=
+ =?utf-8?B?VFMwU1YzM09PeXVzSXNMc1pkZFVkeEJaQjhNN1JQTGxZRVZ1VXFOaVpuY3Yz?=
+ =?utf-8?B?VUdlOGgxNEdrTGFhQk5wTVVUbS83bDNYbEFtNU9TRHpvVE9lWUFzVDU2VGVT?=
+ =?utf-8?B?WVgrUzQyVGtnSXNsZ1dveWlhcGVwbHdUaUgrakFjcnBRY2kwNFFFWHRJaVY2?=
+ =?utf-8?B?VVUxWmwydUkvMTRjVys5VnJkV3ZxNTB2TTV0Y3ZCdThkRCs4OUlidlQwSEkw?=
+ =?utf-8?B?d0cxd1hnNU5KMlpIMVp0TG1jMjZOL2JSVDZ5K3hsYlBmYmJHaGp1TWdBenQ5?=
+ =?utf-8?B?Y25BMUZFcjcrdEJ1SG03ekdqQUdqQlVFZlhzWnVDaG9uUWJpclhLSE9YUEtC?=
+ =?utf-8?B?NTdOa094a1pZSmUwWVo0V0grTWJrZFl5bVlBTXpxZG5oTXp3MTh0a1JQdWlC?=
+ =?utf-8?B?Y1kxSkhPS2NmRWVlOEs3UzJMbkZaT0dUREQxTEtjb1pCZ3ZxOUhHWGhHVGkx?=
+ =?utf-8?B?S25rQmhBb09qK2RCbWZrNjJuMG8xQzBxM0xBYkN2bDBNS0R2a2k0RFlJL3c5?=
+ =?utf-8?B?WUdwVDIya1RBcGVidHFjM2lCeVFmRHYvOEplcVJLSDZpeG01TU1UV1hiVTVx?=
+ =?utf-8?B?VytiMnhRa1ZuZXhEN0Q0YXYvVTEyREorR3VBMkppMmNGYUFSNytPZUxxQ1ZS?=
+ =?utf-8?B?K3c2UkgrMmIwK0NRZm1GZ3hmY2xiQWM1bVlqejNMSmZJUGYrRnJocE05S2xo?=
+ =?utf-8?B?ZFk3RlU0ekYrVDdWT2VIdnEveURRakczRGU5RXFOWHNoNDRQNlVlcXpHNnh4?=
+ =?utf-8?B?QitUektnVHY3eERvVHh1TFZXTWIyZXphODdkYTM3dkJweGZMOTJWSFZwVkhK?=
+ =?utf-8?B?L2V5QmdtZDU2dllkR0NQMTVLdlhaQzdUbjNQdTg3S1p1b2xDNUZQYWNodWsx?=
+ =?utf-8?B?VFE5NmVxL1hncjhEajR4QWJFa2NybmlpdmJHRnMxUWZzMXIrbXNvcDRMTkpU?=
+ =?utf-8?B?NWdzUUVRUE5lMUsveThpNzZBalRpQTE1RkloQUxnZ1d0alBhSVlLRXFyQTFH?=
+ =?utf-8?B?NS9ISkl3b0FrWVVLVmN2dXduMHZ3NU5lbExvTUNqeFU2Y0Ftam1CRWN4elJH?=
+ =?utf-8?Q?UA/wxATuXpfnqBtxrEFjq3Gdq?=
+Content-ID: <6C3F18ADBC70F8429587FB826412120E@jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PR10MB4531:EE_|DS0PR10MB6727:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4d50936b-86d6-4dff-f381-08dab2bd1dbd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 	revsccOEff4Rl7mtiuCdAnayT4lyW4wiSBf4uqnaC9U6S6g2wOwJd1WiyVag6pxoAs8jwEnHd6rGA1aIoBqIF9VruXqfDNyG2h/qKySmOYknNmjYti+Hw78U9TOXO+PcNlLCWJo7vKr37x+keOJ1hUAjvNcjVJnI9z8f0yyGC2mAisHwUbfFaBEzvrWV9Ai3EnX6hNCSQNj4guTC54G5x8u2K4WJusC7IyOrKrIwsFKsZ3D1AghhhLkR9QuaCSfoL/Ry6VUndtiRvb6loWOw+W4dy18QBEz8ivUJqxrSmX3kXnE1UvczdEv0bk9F7Mg7fRMNn1LcWeclXejuQqEqW1Uhwf5WEZvfvVrUAPBHwNG8XN02+bGwgGhjv6JnXyGGWRWvgxTNVf9IOZgOLww3ei4RA4OzkYUvOA9bdL9Prv44PFwcdLnLNSIZN+fiKOsek1jS3/Bqsz0dTT93e3OkhLcCwi0PnCAMVilLGoxrtTiCZ6TwDR1baHmYE7VtxFvek4qngkmoTSIAtHJG9S4cyNqBPQpIgK714N1AAeunKD05emhsEag8Rh/bbqczQlfHpxTREMl9uALOKF7q5aJdmJJFv9roOthgLjpRW/Zs2g1Ht/GjPzKIiW1C0ROH9KAAk6DGSxRsd3LwhuiI4ZxOgyWMHVA/mTd1U4jt4PN3m/FnrzLLjZeYZSeJHSsijapycfErusJod7dAslzm4SycTw==
-X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR10MB4531.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(396003)(376002)(39860400002)(346002)(366004)(136003)(451199015)(6916009)(1076003)(316002)(2616005)(186003)(36756003)(6506007)(4326008)(8936002)(4744005)(26005)(66476007)(41300700001)(6512007)(2906002)(6666004)(107886003)(66946007)(66556008)(8676002)(5660300002)(86362001)(6486002)(478600001)(38100700002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 	=?us-ascii?Q?8A9hsDpJgEAnhoiPPnkrCCsijDzY74Z86k/orNgCdrsEr3evQf1piwUlZmXD?=
- =?us-ascii?Q?chc6FTwfyhZSPuWE28kJvkDXZG9DZSIYFfgWny2T0MQCfSrQ7nI6rLcCeGpk?=
- =?us-ascii?Q?xehHiJbQb2HiXndncPiYSsjviPQABRaRHlsFa8jwRGcy7AJuLTqUz1g0KcP2?=
- =?us-ascii?Q?iE5z3He/tFtJ7RO46NJw1vw5IqKFt7W9K6BnXTPkaaB+eBxpn1L8DTn7wo0Z?=
- =?us-ascii?Q?MFJhnW0qeiWPxfisDaJQdL2Sc5rcVVocEVcnLohts2B8bNGRpIQiBr2eyREr?=
- =?us-ascii?Q?AjOviwbICCPLdgA8PZu1YZtYXpyVKaLwg4i0uPCX28tmKW9PSN02mrg+dUOy?=
- =?us-ascii?Q?JHTsxGNcW8mvNp+BH+e2MtPUrPKn/1eHgob+7VPGmlQcy+9LVXZ/ieEP0ZGC?=
- =?us-ascii?Q?LExv3P76z8v/Qbe8tH0LPUpkRC0B1f49b0ZzdgkRDsKmW7NjNDWV4SQYSV6B?=
- =?us-ascii?Q?ItDmTGBlFuCxeABCfD3Jt/FyDhxQQzbF3P+x/P3guiI2N9LhRZz2Ztf/87OY?=
- =?us-ascii?Q?yUEtAiNWwGJv48iNiz1F+/Xo0a46aWzDUxIDWyMtXKek8dkbylojZxaOgAR8?=
- =?us-ascii?Q?0pZL2ldROzrG/cIvuoI3uqXwcuNpk5X/mNx+aBjHc9UnLOpL/zEkqAqgkPh6?=
- =?us-ascii?Q?L4Vt+APS6CC/PbU5/dali7XN5F13jbq+MM7EUNpLciwyo1NZlemObtqx6ESC?=
- =?us-ascii?Q?xcWSRaApILC366JC0+GQjVBSa0pL+Iu5VcZpwNFGYuXbPA+zpdsW14pSxjXA?=
- =?us-ascii?Q?0+qGKWxdHq5NzvkZAvv9Ncjq0yp9XKBDa6iZ4PLUgBm/sAvETQIA+jajJJK5?=
- =?us-ascii?Q?OJUYv1m+/KREZn6OqUGu4/WEGhN/NOPTmT1iTCKr48q+k1vHHKMcfDaLU1K0?=
- =?us-ascii?Q?L+Atth4WYq/6UYy2nIZtJQNdyEsD5qYnf1NPKt1cxeroDqhKuAkBqffl/dMz?=
- =?us-ascii?Q?Xj9NOrtyCj2bHRwMAI6gbD9zMTfMZS3PwfoqUHYBaXhhcqD2g3zHtoPvhFIw?=
- =?us-ascii?Q?wKiIWM/vh9lnJCMg26GL+ifyc32l20lwAizHcNzDbb2Yj2JJVMS9E6oX3yqR?=
- =?us-ascii?Q?1xLnAngzg1G07DxIIAuBOD2g0CvlIEf2fAkX508nC6uobtr/DbxbNwKwcMWZ?=
- =?us-ascii?Q?K2Ka5snxoUsFr1CqoLmJitya65wxL4ERBTCflaknZczpdMV9TWZ40Q76HNqK?=
- =?us-ascii?Q?8F7KgvpyATU/8D6CHWG3zNqIMk+f1WIexgUL2jIY27jyJapxlB+sAQe2BVUl?=
- =?us-ascii?Q?G2CmnHDA4rGH28iyFUTtocN3ViA/f4zmhxm6YKr8sylKvSOZ3WeaFlT1+7/L?=
- =?us-ascii?Q?ulLxlfVn5HDUWw2leNnrjvdrk/a+IH1cDX/A98yFDCMUNhXl9mBR0oOid//a?=
- =?us-ascii?Q?fWv093zsUO+YM8pXmk4Ka0hHQ1bHHCFd8XujISCmEO+/DY8gu5wq9K0U+957?=
- =?us-ascii?Q?EjILlStGfcpLnId8lMQZ9jKDqzytg+CAVXzzuzWIGSRIpVwdglufsGZ7HLCH?=
- =?us-ascii?Q?bFMWSC3kCg3mHevtorndyUakXwBy33KT+fWaIO+EVVXXMzArx3Dm+yGU8p9u?=
- =?us-ascii?Q?/PUVuchpovSxyj/dMXAs7KUAn5FimIijx5tgx4iEKRBA2kis1dGUGXiVMK5v?=
- =?us-ascii?Q?vg=3D=3D?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4d50936b-86d6-4dff-f381-08dab2bd1dbd
-X-MS-Exchange-CrossTenant-AuthSource: CO1PR10MB4531.namprd10.prod.outlook.com
+X-OriginatorOrg: nec.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Oct 2022 17:04:14.4678
+X-MS-Exchange-CrossTenant-AuthSource: TYYPR01MB6777.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 302202b6-02cd-4667-6c64-08dab30a57cf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Oct 2022 02:17:03.0122
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6OVbP7ambVsEbyE0rTZW2Ku4cQRZgK6LGYekfEjaZbuM4UFECF6EF+iwo60a938Bnvj5NEeInRLBeqf7UraD2wrDWZP2lCGrpx1LGPmmwzk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB6727
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-10-20_08,2022-10-20_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
- suspectscore=0 spamscore=0 adultscore=0 mlxscore=0 malwarescore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2209130000 definitions=main-2210200101
-X-Proofpoint-ORIG-GUID: a1jbOGvJiOrXa0DUPy4D4Yxce2TCMrIE
-X-Proofpoint-GUID: a1jbOGvJiOrXa0DUPy4D4Yxce2TCMrIE
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: e67df547-9d0d-4f4d-9161-51c6ed1f7d11
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: YpQq1CReDjjRx38WQUZiGVfShXgQ6SYB2GDiiVlqlmYSHVPIHlILAo9WMxhvR38Klohcfdg+jlOLH0j9y6ZZbQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYBPR01MB5439
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221020_100418_005792_0F7EA723 
-X-CRM114-Status: GOOD (  16.44  )
+X-CRM114-CacheID: sfid-20221020_191713_725471_EEEEDCA6 
+X-CRM114-Status: GOOD (  13.90  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -161,35 +150,74 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Call get_elfcorehdrsz() to obtain the size of the elfcorehdr
-buffer.
+On 2022/10/20 10:50, Xianting Tian wrote:
 
-Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
----
- kexec/arch/i386/crashdump-x86.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+> diff --git a/README b/README
+> index 5abbce1..d589e72 100644
+> --- a/README
+> +++ b/README
+> @@ -37,7 +37,7 @@
+>     These are the current prerequisites:
+>   
+>     o  At this point, x86, ia64, x86_64, ppc64, ppc, arm, arm64, alpha, mips,
+> -     mips64, s390 and s390x-based kernels are supported.  Other architectures
+> +     mips64, riscv64, s390 and s390x-based kernels are supported.  Other architectures
+>        may be addressed in the future.
 
-diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-index cb86ca7..29d4ba5 100644
---- a/kexec/arch/i386/crashdump-x86.c
-+++ b/kexec/arch/i386/crashdump-x86.c
-@@ -957,6 +957,12 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
- 		memsz = bufsz;
- 	}
- 
-+	/* Adjust size of buffer according to hotplug and user */
-+	sz = get_elfcorehdrsz(&elf_info, bufsz, CRASH_MAX_MEMORY_RANGES);
-+	if (sz > memsz)
-+		memsz = sz;
-+	memsz = _ALIGN(memsz, align);
-+
- 	/* Record the location of the elfcorehdr for hotplug handling */
- 	info->elfcorehdr =
- 	elfcorehdr = add_buffer(info, tmp, bufsz, memsz, align, min_base,
--- 
-2.31.1
+Sentences in the README are wrapped within 80 characters, I will change
+this to:
+
++     mips64, riscv64, s390 and s390x-based kernels are supported.  Other
++     architectures may be addressed in the future.
+
+>   
+>     o  One size fits all -- the utility can be run on any Linux kernel version
+> @@ -98,6 +98,8 @@
+>        arm64 dumpfiles may be built by typing "make target=ARM64".
+>     o  On an x86_64 host, an x86_64 binary that can be used to analyze
+>        ppc64le dumpfiles may be built by typing "make target=PPC64".
+> +  o  On an x86_64 host, an x86_64 binary that can be used to analyze
+> +     riscv64 dumpfiles may be built by typing "make target=RISCV64".
+>   
+>     Traditionally when vmcores are compressed via the makedumpfile(8) facility
+>     the libz compression library is used, and by default the crash utility
 
 
+> diff --git a/help.c b/help.c
+> index 99214c1..253c71b 100644
+> --- a/help.c
+> +++ b/help.c
+> @@ -9512,7 +9512,7 @@ char *README[] = {
+>   "  These are the current prerequisites: ",
+>   "",
+>   "  o  At this point, x86, ia64, x86_64, ppc64, ppc, arm, arm64, alpha, mips,",
+> -"     mips64, s390 and s390x-based kernels are supported.  Other architectures",
+> +"     mips64, riscv64, s390 and s390x-based kernels are supported.  Other architectures",
+>   "     may be addressed in the future.",
+>   "",
+>   "  o  One size fits all -- the utility can be run on any Linux kernel version",
+
+Same as above.
+
+And help.c lacks this part, will add:
+
+@@ -9572,6 +9572,8 @@ README_ENTER_DIRECTORY,
+  "     arm64 dumpfiles may be built by typing \"make target=ARM64\".",
+  "  o  On an x86_64 host, an x86_64 binary that can be used to analyze",
+  "     ppc64le dumpfiles may be built by typing \"make target=PPC64\".",
++"  o  On an x86_64 host, an x86_64 binary that can be used to analyze",
++"     riscv64 dumpfiles may be built by typing \"make target=RISCV64\".",
+  "",
+  "  Traditionally when vmcores are compressed via the makedumpfile(8) facility",
+  "  the libz compression library is used, and by default the crash utility",
+
+
+With these, the v4 crash patch set looks good to me.
+
+Acked-by: Kazuhito Hagio <k-hagio-ab@nec.com>
+
+Thanks,
+Kazu
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
