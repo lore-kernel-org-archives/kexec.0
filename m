@@ -4,77 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 59B42C433FE
-	for <kexec@archiver.kernel.org>; Fri, 21 Oct 2022 13:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E22ACC4321E
+	for <kexec@archiver.kernel.org>; Fri, 21 Oct 2022 15:27:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
-	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=IIxUwfuLmz/GBpZyrfT6KRYQ9tBk+egx52G2teneEqg=; b=h4GVq90EYyyayT
-	Bv2ohd/q1gSwNeayaaaUG3SsVyDJj4u2WarW5kU7APHJ3cNPp9E9GTn+1HoewghGyRV2IAj0VTgbB
-	exbzN3yMayx18CJwIdfCWT8X/m6c1S3KI0K0+qzDTiqZYigSkgYqTenkZvQ6BpzlRHu2K/xnBQu/m
-	a10UOFCXzj+4ntPqcAZlJ0zWQZHqB63v1zqkbZ80UeIzezcLVm24ruzz6EnRj7idiS6SWY9oFpifK
-	M2Kn0OaGAou/HZuCuzQPCQX+XvwIM49tTdi3oDHHPqZKd/9L1BT0mM7Ipxqx94ducdY4Hv5kGbF6m
-	ncZTz/lzoAAqqyhrcM+A==;
+	List-Owner; bh=ClZHywcXrEYtIjYyTVIOAgX0MoIOnL6IeKVlEV1tL94=; b=QUlNr2bhy0Q/O9
+	5wRAFO/nMGSO8DGIwQc8aq50/A5z5CdlG9c+O55deSILsC4U3V0q70SUqDgXkMJlEMgHbis62bGvq
+	wi25NsI00R+lDLl9P01SKeOqJcPRjM+uvEWHFX6NtbypaigBTm5UoPaxXJLinn1noj7SKxVhpxkLq
+	LduCx8PIleTmBnTVXq3OhcyJRbAxFK7e+PEabyrflOGx8VrWfcBu6dYqK+88+wO5GZdTuPXCvIiUm
+	AZXRUNhH+xKOES8X79mCxiCsKwnQA6Z+pecgdVCkN/eB8gnrZ7/WJyOtKxwMjr37vudFEV9xQR4yP
+	7Xh3QySY5+D8IHE2EJqQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1olsUB-008Koz-Tx; Fri, 21 Oct 2022 13:54:55 +0000
-Received: from fanzine.igalia.com ([178.60.130.6] helo=fanzine2.igalia.com)
+	id 1oltvh-008g9C-QW; Fri, 21 Oct 2022 15:27:25 +0000
+Received: from zeeaster.vergenet.net ([206.189.110.174])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oleB7-002Jcw-1o
-	for kexec@lists.infradead.org; Thu, 20 Oct 2022 22:38:18 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=d1uOCKlJdY/yPHuKmQEyZZ8R2iRmAZNykCdT1OMy84s=; b=hJjRN+9eKGnr+4+zGPmG0xStZx
-	DmKNQolz1r3Thm99kcT1Fcvq4mgQkSJybJHt8PGV+yx11j0adMDpX7hfA+sKiBWFu2OT7ZriVR1ok
-	75kxOAypPBWZMPpz6uhcBMSY5v1VVEDF8C4NtQDNIh4VHhT1oHNC1yOARuc616zpMcb3XprYd8rzu
-	nn5Qb5sU7mv5UN9uyWAiyT/xQN1hlt444TE2NmGkdoOEW2RCmqIc0fxs+l0cRPzvL7lTIK7qT7fZD
-	Eora7w2UPe0L4BShALsNWJwPbcaNYASxhknHkqEkkCQ9TksN+FzK2opjCm7aQ22UUu9w7e35d31f3
-	7O5hk7fA==;
-Received: from [179.113.159.85] (helo=[192.168.1.60])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1oleAu-002Whx-TJ; Fri, 21 Oct 2022 00:38:06 +0200
-Message-ID: <ec384313-e19b-379b-4dd5-23ec8cefc9b0@igalia.com>
-Date: Thu, 20 Oct 2022 19:37:48 -0300
+	id 1oltvc-008g82-62
+	for kexec@lists.infradead.org; Fri, 21 Oct 2022 15:27:21 +0000
+Received: from madeliefje.horms.nl (2a02-a44a-2918-403-201-8eff-fe22-8fea.fixed6.kpn.net [IPv6:2a02:a44a:2918:403:201:8eff:fe22:8fea])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by zeeaster.vergenet.net (Postfix) with ESMTPSA id D69F1201F8;
+	Fri, 21 Oct 2022 15:27:10 +0000 (UTC)
+Received: by madeliefje.horms.nl (Postfix, from userid 7100)
+	id 4F3394555; Fri, 21 Oct 2022 17:27:10 +0200 (CEST)
+Date: Fri, 21 Oct 2022 17:27:10 +0200
+From: Simon Horman <horms@kernel.org>
+To: Xianting Tian <xianting.tian@linux.alibaba.com>
+Cc: horms@kernel.org, kexec@lists.infradead.org, mick@ics.forth.gr,
+	yixun.lan@gmail.com, guoren@kernel.org
+Subject: Re: [PATCH V2] RISC-V: Add support for riscv kexec/kdump on
+ kexec-tools
+Message-ID: <Y1K6TsGGC3KnFlf8@vergenet.net>
+References: <20221020031548.47587-1-xianting.tian@linux.alibaba.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
-Subject: Re: [PATCH V3 06/11] tracing: Improve panic/die notifiers
-Content-Language: en-US
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: akpm@linux-foundation.org, bhe@redhat.com, pmladek@suse.com,
- kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-hyperv@vger.kernel.org, netdev@vger.kernel.org, x86@kernel.org,
- kernel-dev@igalia.com, kernel@gpiccoli.net, halves@canonical.com,
- fabiomirmar@gmail.com, alejandro.j.jimenez@oracle.com,
- andriy.shevchenko@linux.intel.com, arnd@arndb.de, bp@alien8.de,
- corbet@lwn.net, d.hatayama@jp.fujitsu.com, dave.hansen@linux.intel.com,
- dyoung@redhat.com, feng.tang@intel.com, gregkh@linuxfoundation.org,
- mikelley@microsoft.com, hidehiro.kawai.ez@hitachi.com, jgross@suse.com,
- john.ogness@linutronix.de, keescook@chromium.org, luto@kernel.org,
- mhiramat@kernel.org, mingo@redhat.com, paulmck@kernel.org,
- peterz@infradead.org, senozhatsky@chromium.org, stern@rowland.harvard.edu,
- tglx@linutronix.de, vgoyal@redhat.com, vkuznets@redhat.com, will@kernel.org,
- xuqiang36@huawei.com, Sergei Shtylyov <sergei.shtylyov@gmail.com>
-References: <20220819221731.480795-1-gpiccoli@igalia.com>
- <20220819221731.480795-7-gpiccoli@igalia.com>
- <20221020172908.25c6e3a5@gandalf.local.home>
- <6e2396d1-d0b2-0d1e-d146-f3ad7f2b39f8@igalia.com>
- <20221020182249.691bb82a@gandalf.local.home>
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <20221020182249.691bb82a@gandalf.local.home>
+Content-Disposition: inline
+In-Reply-To: <20221020031548.47587-1-xianting.tian@linux.alibaba.com>
+Organisation: Horms Solutions BV
+X-Virus-Scanned: clamav-milter 0.103.7 at zeeaster
+X-Virus-Status: Clean
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221020_153817_431862_68177DCC 
-X-CRM114-Status: UNSURE (   8.68  )
-X-CRM114-Notice: Please train this message.
-X-Mailman-Approved-At: Fri, 21 Oct 2022 06:53:58 -0700
+X-CRM114-CacheID: sfid-20221021_082720_408606_BA65CA1D 
+X-CRM114-Status: GOOD (  20.52  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,28 +67,81 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 20/10/2022 19:22, Steven Rostedt wrote:
-> On Thu, 20 Oct 2022 18:53:43 -0300
-> "Guilherme G. Piccoli" <gpiccoli@igalia.com> wrote:
+On Thu, Oct 20, 2022 at 11:15:48AM +0800, Xianting Tian wrote:
+> From: Nick Kossifidis <mick@ics.forth.gr>
 > 
->> Could you pick it in your tree? Or do you prefer that I re-send as a
->> solo patch, with your ACK?
+> This patch adds support for loading the ELF kernel image. It parses
+> the current/provided device tree to determine the system's memory
+> layout, and /proc/iomem for the various kernel segments.
 > 
-> I wasn't sure there were any dependencies on this. If not, I can take it.
+> This patch was firstly developed by Nick Kossifidis, and two fixes (
+>    1: fail to find free memory area for dtb load when using initrd image,
+>       lists.infradead.org/pipermail/linux-riscv/2022-August/018398.html;
+>    2: fix memory range size calculation,
+>        kexec/arch/riscv/crashdump-riscv.c:line 85
+> ) are contributed by Yixun Lan, Xianting Tian.
 > 
-> -- Steve
+> Tested on Qemu's rv64 virt machine and SoC of T-Head RISC-V Xuantie 910 CPU.
 
-Thank you! No dependency at all...I just piled a bunch of independent
-panic notifiers fixes, so they can be reviewed by the maintainers and
-picked individually.
+Hi,
 
-Some maintainers though prefer them to be sent individually, as solo
-patches...hence my question.
+thanks for some patch.
 
-Cheers,
+Some minor feedback follows.
 
+Separately, I'll post a patch to add RISC-V builds to the github
+workflow. If you could include that in V3 I'd be most grateful.
 
-Guilherme
+> 
+> Tested-by: Yixun Lan <yixun.lan@gmail.com>
+> Co-developed-by: Xianting Tian <xianting.tian@linux.alibaba.com>
+> Co-developed-by: Yixun Lan <yixun.lan@gmail.com>
+> Signed-off-by: Nick Kossifidis <mick@ics.forth.gr>
+
+...
+
+> +	ret = mem_regions_alloc_and_add(mem_ranges, start,
+> +					end - start, type);
+
+mem_regions_alloc_and_add isn't always available.
+f.e. on mips this causes a build failure.
+
+Ref: https://github.com/horms/kexec-tools/actions/runs/3298491143/jobs/5440677595
+
+...
+
+> +int dtb_get_memory_ranges(char *dtb, struct memory_ranges *mem_ranges, struct memory_ranges *extra_ranges)
+> +{
+
+...
+
+> +	mem_regions_sort(mem_ranges);
+
+Likewise, mem_regions_sort isn't always available.
+f.e. on mips this causes a build failure.
+
+...
+
+> diff --git a/purgatory/arch/riscv/Makefile b/purgatory/arch/riscv/Makefile
+> new file mode 100644
+> index 0000000..8bded71
+> --- /dev/null
+> +++ b/purgatory/arch/riscv/Makefile
+> @@ -0,0 +1,7 @@
+> +#
+> +# Purgatory riscv
+> +#
+> +
+> +riscv_PURGATORY_SRCS =
+> +
+> +dist += purgatory/arch/sh/Makefile $(riscv_PURGATORY_SRCS)
+
+s/sh/riscv/
+
+Else the distribution tarball won't include this Makefile
+
+You can exercise this using:
+  make distcheck DISTCHECK_CONFIGURE_FLAGS="--host=riscv64-linux-gnu"
 
 _______________________________________________
 kexec mailing list
