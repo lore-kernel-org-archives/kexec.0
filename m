@@ -4,99 +4,176 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 51CD0C433FE
-	for <kexec@archiver.kernel.org>; Wed, 26 Oct 2022 14:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 13767C38A2D
+	for <kexec@archiver.kernel.org>; Wed, 26 Oct 2022 19:42:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
 	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:Subject:From:References:Cc:To:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=/rDuVdfcaZ1j30GaEjmForZB1uJD9KODR79F10VjWjo=; b=TNIyRJI6RmYb4L
-	LLccZVTp9bLlh3CmLYbbhzQqWXzvl8WTZB+l5BGT+aWN+IkPBkMBt4j6v4FexsirBI0WvFYR6v0Wh
-	mMn5eOpAlgFhX3Schv8aSxato1AINz6ergPGj8NF54qtiH1lCM4k/T1tnKUMwvSX5IRmnXpMRBbs5
-	CMk5mb1cFmF5H37VYQSF7XnB5mTu9wI3XScRsItsq1+c8qCpck65MwugcH3wIqm/S/2C6T/YZofSd
-	fwB45xuNPcImeKkYtqkl2ESskYffQSZ4lHpb+CWUCYTi6wZXRAQvK/th12v8B2FG5MMv+ZsI/wwWN
-	rGVCx17VVes+RHWhEyWQ==;
+	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:Cc:To:
+	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=yZfQfg9q/NQiuML6DU2HtOjjPw8a5iDozignCjqlYlU=; b=BBGpvPht3eqWem4Lmvv3NYmcRc
+	/hzwHTv2bp+9p3VWQuE0cElg/F754EFNme9fLDERW8cwS0p/Uf8erLc2ZOtdKActMpt7oaOusAu/S
+	7kd/dik7aaH6zBzb9npWgSbuLABl5zjQmOTWcHQxlMTdotAY5i5dxm00ezXEFG4Iedq6cf6zcexoN
+	h9mqAMsSrWgenWgNQQIQD7G6zgXQLxNe+MlCS7ui6PL3m86bH2iKK0wkLoKndRkib4B2NB9h/G2qI
+	9/N5mzq7CNIplymGp1ZXTN5JgpSx1bwjbeiRTWZsdrGLewAk7nRxrfE/1++s5pYhkdBYuawFcn3FN
+	/yEoEGqg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1onhnk-009lLe-Q5; Wed, 26 Oct 2022 14:54:40 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1onmHz-00Aob6-Vd; Wed, 26 Oct 2022 19:42:12 +0000
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1onhnh-009lJ7-2P
-	for kexec@lists.infradead.org; Wed, 26 Oct 2022 14:54:38 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1666796075;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8jRuzj8aI2I9CbJusoP/+rcWnTpr8peB8CRFVJrzDj8=;
-	b=e+rJYr5JnsAEdSHO+sqs7TgNNbkpckzOXkM/r3ynanMfLwFysJN/UV2p/y6vn1tB3JeZ87
-	oizkrh8v4HAXIfWNSDqauc5Dq944YYXmhFQuiO2UWtvwBymRbld9kgR7viuLvQvmMIjWQJ
-	E1DKfGLKs2ubvBmn1xi6Kb0E4J9aZJw=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-665-5-2pEYeRNs2232TE05D6bQ-1; Wed, 26 Oct 2022 10:54:34 -0400
-X-MC-Unique: 5-2pEYeRNs2232TE05D6bQ-1
-Received: by mail-wr1-f70.google.com with SMTP id c18-20020adfa312000000b002364fabf2ceso6077961wrb.2
-        for <kexec@lists.infradead.org>; Wed, 26 Oct 2022 07:54:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:subject:organization:from
-         :references:cc:to:content-language:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8jRuzj8aI2I9CbJusoP/+rcWnTpr8peB8CRFVJrzDj8=;
-        b=ceT/OYSyVeu0L9kXQtOrhRtspt1BQXNk0PuiFMM0ao0dr7zSMYpdvglD6v+5czZbn8
-         I+memT8EQRFBRPFnfQi6zghEEpPHDrU14l8WORiAmI7Yxj5/Hm0T1H0kfNLMfqJa1rt9
-         3sSe5zjwFR+0Nx0eQEY3Kjb5FZdNhywPlGpbMZvYBIQZKbBOINpVwQqjdDkPkUTSD0SX
-         rqHEU01PhHXyg/2nMFTQ0ckr3dUZqQD2lGcEZA3AxXQV72kTukmTWd+hrjn4ei8j6I3d
-         BgsD7UBOLe3T91lDDsqpXKdHhDpDNrrPOrfCGCBl4+3z0EWssXdsl7fOvV9ZzRBlMpwE
-         qPWg==
-X-Gm-Message-State: ACrzQf1eURiJIJYzd6HdNFqP/zCwEZXiXVtfj/rt3dsN6r+H1BOnok8W
-	N5IYj5sbxkTwvQH/KG1Lexio+jyrsdcbdw0IIJzRhylA3Cn3M0JCl05nI+0nRZ6oHoSWNsbudp0
-	d8iWRy0/hUmq3AAky6mOr
-X-Received: by 2002:adf:f6c9:0:b0:236:547f:698a with SMTP id y9-20020adff6c9000000b00236547f698amr18358541wrp.180.1666796073170;
-        Wed, 26 Oct 2022 07:54:33 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM58Oi6r6VCYZDISEQe29opH4/96LoWRdQ0kTHG43cIiSkE59tlwcXeKwFPxUQIGviW/ZHEPNw==
-X-Received: by 2002:adf:f6c9:0:b0:236:547f:698a with SMTP id y9-20020adff6c9000000b00236547f698amr18358523wrp.180.1666796072882;
-        Wed, 26 Oct 2022 07:54:32 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c706:5b00:c9f4:7535:9360:70d7? (p200300cbc7065b00c9f47535936070d7.dip0.t-ipconnect.de. [2003:cb:c706:5b00:c9f4:7535:9360:70d7])
-        by smtp.gmail.com with ESMTPSA id j9-20020adfe509000000b0023647841c5bsm5663674wrm.60.2022.10.26.07.54.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Oct 2022 07:54:32 -0700 (PDT)
-Message-ID: <d2ce1bed-a053-4840-2e84-643b678392c1@redhat.com>
-Date: Wed, 26 Oct 2022 16:54:30 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-To: Baoquan He <bhe@redhat.com>, Borislav Petkov <bp@alien8.de>
-Cc: Eric DeVolder <eric.devolder@oracle.com>,
- Oscar Salvador <osalvador@suse.de>, Andrew Morton
- <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, x86@kernel.org,
- kexec@lists.infradead.org, ebiederm@xmission.com, dyoung@redhat.com,
- vgoyal@redhat.com, tglx@linutronix.de, mingo@redhat.com,
- dave.hansen@linux.intel.com, hpa@zytor.com, nramas@linux.microsoft.com,
- thomas.lendacky@amd.com, robh@kernel.org, efault@gmx.de, rppt@kernel.org,
- sourabhjain@linux.ibm.com, linux-mm@kvack.org
-References: <fd08c13d-a917-4cd6-85ec-267e0fe74c41@oracle.com>
- <Yzceb/y3SSFMuALR@zn.tnic> <d6386653-eb71-188c-8a09-5db46b4e42d4@oracle.com>
- <YzcqE1RVtPcuLlxN@zn.tnic> <Y0Dh4ieUUZ4oXa1/@MiWiFi-R3L-srv>
- <Y0b9apyIs+RpSo1e@zn.tnic> <53aed03e-2eed-09b1-9532-fe4e497ea47d@oracle.com>
- <Y0cmaPTKQuWtwIRh@zn.tnic> <Y0d+mFivS+88+Chr@MiWiFi-R3L-srv>
- <Y1e7Hw0PRDI9NxU9@zn.tnic> <Y1lIoTBNvHrKX5K9@MiWiFi-R3L-srv>
-From: David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-Subject: Re: [PATCH v12 7/7] x86/crash: Add x86 crash hotplug support
-In-Reply-To: <Y1lIoTBNvHrKX5K9@MiWiFi-R3L-srv>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+	id 1onmHw-00AoWF-D4; Wed, 26 Oct 2022 19:42:09 +0000
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 29QIobHB020594;
+	Wed, 26 Oct 2022 19:41:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2022-7-12;
+ bh=lBIDfYERkNAr4lL9jFCw7JLd+2Oz04DuNQGPV8zUJzY=;
+ b=WVZ8//flnAvBme21Y1FnpXixMqCzvFWrUTtI8kBzmxUyFkI4DJbIfkLERfFy8WIoycpy
+ PoyuWlow4DdFjtCwoG4w5RlM/vJ1BVErwGGE/gCAa7I8J323UhY+6woAxgxEalFJcD4T
+ ukBNMJa3aW6WhluCgIhn2hLz7AP9uulufk0lgvM++OsnxxhCG1UkdWCrtasRVaokjjxF
+ +USCsoGNhFnq47cWEEv7PaVDSaIqu0HgcYCxikha+d68+eVM52+hpjNHzjyc/JtzSTtj
+ OjpxxMsTg/GUJBZMjTW9JPv/GamAWT7E4NHUJFnDtZnEkt/4P3NvPyVXvDji0s11M6PN 5w== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3kfahe84er-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 26 Oct 2022 19:41:45 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 29QInFbZ011678;
+	Wed, 26 Oct 2022 19:41:43 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2101.outbound.protection.outlook.com [104.47.55.101])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3kfagq9atd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 26 Oct 2022 19:41:43 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IoEWs5wupnVSq1Ul4cYut/KY3V67fMBp2VIIHa6hHFyzLtG9u9N3pVWOzQYzWx6viSyzDS0kPsZaZx4lJy45NYKWnDyjgLG02qXb2LT9o3uj67E/592cdQwrKMdxPxUB9fkuEczJ1ku5NKrw8jGOapRNAcibxoomrVUADQ/RrBTmEdel/MEW661tFJBTElhCsaE9D4gslXq56sVTFdXmS/iOJUNWPCwoSNfId2uhi2rvFYyri3kdcbqjR+LocUXBo1Ak2RgQvKcyct6nXlIu2aRBm4ME7jwciS1AF6mtUm2UkqpixZ/X3o5/6XFk0P8wWxBxDdnGJDA2fmuuGC2JDw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lBIDfYERkNAr4lL9jFCw7JLd+2Oz04DuNQGPV8zUJzY=;
+ b=mU41k3F1j0Wr/9KAf55eGuLL+Nzc3QSC87eoZxs/swnfuYDh6L8/rrWBkKDxn5oIashXJlSp1jIz95XLYE5JbM2lNsDuTKgtCEl+7GWyvFzLfdeyEw2VO99E7D0v7lSzXsfVEp3f307j26c96X+WLT1PW9cJM2odyAvnct3hePD/MRzq5eWSDXzP6N+H8SxwWRsupflGwKtUQymMfvLGH6QU3TDynRBN5ewwhCeENAeMk+YipTWKxVRFf1g2ZTziYERaMPvXyFAq6hhM+SyK5IqMXHJusy1xYFMgjpbT+1kxmq/Tu6W14nEsppRJ/LGNtdqfQ/IJHBDrxyz4pwmdjA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lBIDfYERkNAr4lL9jFCw7JLd+2Oz04DuNQGPV8zUJzY=;
+ b=tmAMzSY09zedK0UZ7RYnyCyJcTjI3k/8dXFU0SQJzCYjoXRAYbXX+KT9B1/M/zRPPzdAMZPcYfDBcWcWkisodImejhWI/9v0fUl9Vv3W1/fMqWK+qZ6G//FxKiPFtefKAKKtqQQw0yeSqejKdiy5sP7Zli/NrABcB8aC0W+hlSo=
+Received: from CO1PR10MB4722.namprd10.prod.outlook.com (2603:10b6:303:9e::12)
+ by PH7PR10MB5830.namprd10.prod.outlook.com (2603:10b6:510:127::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.29; Wed, 26 Oct
+ 2022 19:41:41 +0000
+Received: from CO1PR10MB4722.namprd10.prod.outlook.com
+ ([fe80::4cb8:f380:67:fe9e]) by CO1PR10MB4722.namprd10.prod.outlook.com
+ ([fe80::4cb8:f380:67:fe9e%4]) with mapi id 15.20.5723.033; Wed, 26 Oct 2022
+ 19:41:41 +0000
+Message-ID: <46618e3c-def1-8502-47b4-9cd132f95c53@oracle.com>
+Date: Wed, 26 Oct 2022 14:41:34 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.4.0
+Subject: Re: [PATCH v3 0/2] arm64: kdump: Function supplement and performance
+ optimization
 Content-Language: en-US
+To: Catalin Marinas <catalin.marinas@arm.com>, Baoquan He <bhe@redhat.com>
+Cc: Will Deacon <will@kernel.org>,
+        "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>,
+        Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, Jonathan Corbet <corbet@lwn.net>,
+        linux-doc@vger.kernel.org,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Feng Zhou <zhoufeng.zf@bytedance.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Chen Zhou
+ <dingguo.cz@antgroup.com>,
+        Dave Kleikamp <dave.kleikamp@oracle.com>,
+        "samasth.norway.ananda" <samasth.norway.ananda@oracle.com>,
+        John Donnelly <john.p.donnelly@oracle.com>
+References: <20220711090319.1604-1-thunder.leizhen@huawei.com>
+ <YueMyUqannVg7l9v@MiWiFi-R3L-srv>
+ <a80c2b7e-a510-8e45-1f3c-7e2ddf79bc37@huawei.com>
+ <1d89e2cb-de26-0f85-7a2a-f68599a1b143@oracle.com>
+ <Y0fsi4+T6k/OO0hx@MiWiFi-R3L-srv> <Y0mOaLL6wO2Mp7dy@arm.com>
+From: john.p.donnelly@oracle.com
+In-Reply-To: <Y0mOaLL6wO2Mp7dy@arm.com>
+X-ClientProxiedBy: DM6PR18CA0028.namprd18.prod.outlook.com
+ (2603:10b6:5:15b::41) To CO1PR10MB4722.namprd10.prod.outlook.com
+ (2603:10b6:303:9e::12)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PR10MB4722:EE_|PH7PR10MB5830:EE_
+X-MS-Office365-Filtering-Correlation-Id: 01bdd319-11d0-445b-0e12-08dab78a1ab7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 	dgQYqNjrSlb6eo0aLFI/TXuqJXC4hA4JRqQ+uyHwMMtfwtCfcQ58Ak9WR9ATd73h56sG8LMVIRf2wJEePiyb7JhB4+T5RdofKFA3FdmXACpr+S2IHTdYYakBz8YuDBuQcAU6BORnngj4Pe2hKJMwD7u7JOviagVIhHAXl2yY6QbsQfz4bBth32wJnabG/NKBFl8ySTs6x8wHKhUF0aGAARfHOAtFO1jeNCpMh10fEZhwEzccEJtKT9/20tMpds0UgZZ9DPG2ZGalalsKbdZ3lnMt0omHxAc04eymoNnhjG8OvsW5aRmb8S25hmNKTLIFiOUWiU/g7X28gq8atyy39TctDPHqu+FVC0vrd3UOfHFJCXVhSiCefFobXU0RgsR2xx3XcKOTreLInJuIu8FXSWOtFJZFE1TB7L1+ryR8Pdbu3uQxVHYjeU4U86AQ0jIoEXLdGdHT5SQcHSwE28GmIh6u6d7C1nKnB625qRsZLmFkSRZXZd9JdGN7TpElqSQj26MlZ1/6R5iOS+zUWmmBNhxu6a3k0BiCavGzUeNhNlq1WDSmAhzG1Jo8nt/tIxOVVWEFG5uKeLNUdn5bZA4fcOyGVX4F2sX78kcKfVPU+48m1WZ3ZQvisbJqqJeLyz5sBI6ol2olTlQTv5nYBWHsjR7gUwDifjQZ3kwjMCb70iTZcoUEXpLB9sY6SZ2Ypjno0HITFIj2qQEHOgyVbSyHxtDgccQ6Lp5j6Wpk20xViQnLn6Im4GRmY4wIP+GRvqsKmDsCrT4TBnW9op8iQoHJeA==
+X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR10MB4722.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(136003)(376002)(366004)(346002)(39860400002)(396003)(451199015)(66946007)(54906003)(8676002)(38100700002)(478600001)(6486002)(2616005)(186003)(110136005)(41300700001)(7416002)(53546011)(316002)(6506007)(66476007)(86362001)(5660300002)(26005)(6666004)(66556008)(31686004)(107886003)(36756003)(2906002)(4326008)(31696002)(9686003)(83380400001)(8936002)(6512007)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 	=?utf-8?B?M2lZQnljZUNYYzNOWVVGUUhEVkVnRnlhR25CZUNmMW1qN1d5NGI2NTVFOUxx?=
+ =?utf-8?B?ZTBKU1lYTUVEU2poaVd6Z25BMHR5cTVhelZxWjNLdjAwNnE2clNockVCTG1Q?=
+ =?utf-8?B?NGtyRWhQN2xLUTlKN1VIaXhRUDUwaVhoM0dTVHZkZk9UODJoTGFhMlVPZHcy?=
+ =?utf-8?B?QkVmendHSDBxZms4OE5iV04zMG5UaVc1blVCN1IyVVVOV3RGKy9LV2gvdFpx?=
+ =?utf-8?B?TzlPaUMrMjNqOExvbGF0NGl6SWRRZnFUUDF3Tk5iaitibzJTTktIeUZKU3Vi?=
+ =?utf-8?B?Mkhic29LZGNTamVQMFhyMU5pZ3JQU2hhK3duRjJnZml5M3JENU53UGF6WG1O?=
+ =?utf-8?B?b0lKYnl5SGtjTVAzaTAzR1VPS2w2bFY2eGlZVmY3Y3A2MXhIUXhnSUxCRGNR?=
+ =?utf-8?B?SVNFcDZWUDFiZUlxMStFV0hSVk1hV1g1RGpXdXY2cnNLSFRwWUUrMXhSWUlo?=
+ =?utf-8?B?MEhpTk0yamY5N2pHM01zMkVra3lTZVRjcG5CQUk1OGVoSEtxT2t1dm9adkFq?=
+ =?utf-8?B?SnI1RFB3anpaOHpIbklJbEhYYWNETXRmeUhYY1dSck5nQW12TUNMell4NEJo?=
+ =?utf-8?B?VEhwaDlKZjl3bWJLa0ZyWDlQWlh0SHNtSTJKNCtpSDZWc3RKeE5iL2YvTExY?=
+ =?utf-8?B?cVo0MXoxQjhvTHpJVk1HRUpMQnJsUERBTlhiZXh6c0d1VG1UdHFTMVhKV0hF?=
+ =?utf-8?B?OGdiYkVFS0FVVVIrbWNJY3pjOXhabG9vbURWenlJbmtxS2JqWWZibTA2dmZP?=
+ =?utf-8?B?WFRhNndMM205Z2dvNUlEdzlCdjVIY3hNSk1jRTM1U04rQXBKbjBNL1VXL1A1?=
+ =?utf-8?B?cWNjK2tUYTUyTWh2dU9uSUxJMjRTUE9pWndGUHlvaWZzTlhWZDllWnk0akNw?=
+ =?utf-8?B?Q0x2ZXJsYndmUWkrQzRtOGFMbldnQk9RdEd5cVdoTzd0OFNxd1Q4WmdQTkpU?=
+ =?utf-8?B?SXpaVDFhdm1tajdxOGN0K2g4M0xXaExVNmM3cGdRNmtEeXlvT2tFTzFXSzds?=
+ =?utf-8?B?ditnOHRHYW9zNU5CK2d6VjV2WUxJS01VV1lheTRJMXo0WFJMTmc4bGk2ZVNS?=
+ =?utf-8?B?cHhObVNQSmpDSDI1cVhkMU10M0l1UTVvek9renIvSXZMZTUzalJndnZIOG9P?=
+ =?utf-8?B?ak5aMzVRMlhzR3FMeHhvUkZjL2FXYXphUU5WYmhHNUZWSitUV1I2N1I4Yk9G?=
+ =?utf-8?B?dEV5OURYYkNTdUlZQzZtN29oMkZHellCMmF4Vlk5V3F6TWgwQ1RmTDh4WEgr?=
+ =?utf-8?B?Q0lWMGw2MTErOHVUZmt6R3RjY25rbXZSVTRPeWFXRWlsYklvaVVGZTQ1Sisy?=
+ =?utf-8?B?Y3BXNFZ4Y1VPdnBDSDhDZ0FaM3JzUjZ1TzBEdUxJcTZKb3p2Q2tVZVo4SDJR?=
+ =?utf-8?B?cE1lUWFXaDI4Z2xIQzlzVEhFaWFmZnQwOUE0cVpSOFVmanJhSmt5dkhZV1Jq?=
+ =?utf-8?B?OS9QTW5FeHJHUUNRUUlFb0owYmhaZVgyS0ZMemRMWGkwN1pvWXBhbWordjY0?=
+ =?utf-8?B?ZTZQRkdxaG5hN1owcEF2MzFTc0U4eTZwMkVLUGdrVHRhS29lRTJVaXQxdWJ0?=
+ =?utf-8?B?VVByUDQvMmVUTmlPa29Bczgvcmd2SDZ5cUMvRVE3NTVxdENUa1VNdVJZNXRW?=
+ =?utf-8?B?S3pEOTd3b2IwcUtsUVNMa3ZXa0RUOE5wMWduVlc3VDVWcVkvMGpaTmE5VWhW?=
+ =?utf-8?B?ejBhcmkxVmlLT0piQVpiTFZtNmxSdEtxLzh0T2Q2VVRRNzBpSXNGZmp4dXI5?=
+ =?utf-8?B?YUdkOFZkeFNaY2Z0djgyU2dHdlNqbW55WHJXRjhNVlBhd2tmdDhmZXBNWUJ4?=
+ =?utf-8?B?YmlQSlZiV1doNzJCT0czOEtTNW44dUhQTW9wZlVBRkdYMDdrNUNuTTlWWWFX?=
+ =?utf-8?B?cXJsbUVXelJhMlVYL1BXSGgyQU9oTloxd1lWeG1lVXVrTjlwY0wxR3VBNDFa?=
+ =?utf-8?B?SkdVK2xvaXpNRkxjZkNzaTE5TmVmWUw2UTIyL2g0VWg2ZkdTeDdsMTY3clFm?=
+ =?utf-8?B?cW5DWm1zVDdnQTRxQW1mUXU2eXJEb1JrTmgxOFNxWkYzZkwraHp1NS9Fckc2?=
+ =?utf-8?B?VDR5d2lNcU1BTEF5c0lBZU5ocE55a2Evb3hPQUs4QTlOUGtmQnA2NkQ0MEY5?=
+ =?utf-8?B?L25wRXB2dm5ZUUZnbjgzU2FtZ2JQV2QrRFY1aUVLbVVCem9wSFQwaTgrUTR0?=
+ =?utf-8?B?RFE9PQ==?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 01bdd319-11d0-445b-0e12-08dab78a1ab7
+X-MS-Exchange-CrossTenant-AuthSource: CO1PR10MB4722.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Oct 2022 19:41:40.9639
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: DfHC0ey1A6pfRjskTVQm/Ho9W1KUxcl8yZmxjcbWlQuL1CYxtF6FZeu8Ot/N+jFq/nxRVQkKJZ9LWU5L+3Hujl0oH4MFD2/qOfJ/LDZ8X3I=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB5830
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-10-26_08,2022-10-26_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
+ adultscore=0 malwarescore=0 mlxscore=0 suspectscore=0 bulkscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2210170000 definitions=main-2210260109
+X-Proofpoint-GUID: ueBG7zw6j8rwTBwsFkC-nJFBPHmVJtJ5
+X-Proofpoint-ORIG-GUID: ueBG7zw6j8rwTBwsFkC-nJFBPHmVJtJ5
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221026_075437_222326_D90C6470 
-X-CRM114-Status: GOOD (  18.29  )
+X-CRM114-CacheID: sfid-20221026_124208_503069_B6B85932 
+X-CRM114-Status: GOOD (  19.95  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -113,58 +190,44 @@ Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 26.10.22 16:48, Baoquan He wrote:
-> On 10/25/22 at 12:31pm, Borislav Petkov wrote:
->> On Thu, Oct 13, 2022 at 10:57:28AM +0800, Baoquan He wrote:
->>> The concern to range number mainly is on Virt guest systems.
+On 10/14/22 11:29 AM, Catalin Marinas wrote:
+> On Thu, Oct 13, 2022 at 06:46:35PM +0800, Baoquan He wrote:
+>> On 10/06/22 at 09:55am, john.p.donnelly@oracle.com wrote:
+>>> What is the progress of this series ?
+>>>
+>>> Without this patch set we are seeing  larger crashkernel=896M failures on
+>>> Arm  with Linux-6.0.rc7.  This larger value is needed for
+>>> iSCSI booted systems with certain network adapters.
 >>
->> And why would virt emulate 1K hotpluggable DIMM slots and not emulate a
->> real machine?
-
-IIRC, ACPI only allows for 256 slots. PPC dlpar might provide more.
-
+>> This change is located in arch/arm64 folder, I have pinged arm64
+>> maintainer to consider merging this patchset. Not sure if they are
+>> still thinking, or ignore this.
+>>
+>> Hi Catalin, Will,
+>>
+>> Ping again!
+>>
+>> Do you have plan to accept this patchset? It's very important for
+>> crashkernel setting on arm64 with a simple and default syntax.
 > 
-> Well, currently, mem hotpug is an important feature on virt system to
-> dynamically increase/shrink memory on the system. If only emulating real
-> machine, it won't be different than bare metal system.
+> I'll look at it once the merging window closes. I saw discussions on
+> this thread and I ignored it until you all agreed ;).
 > 
-> IIRC, the ballon driver or virtio-mem feature can add memory board, e.g
-> 1G, block size is 128M, 8 blocks added. When shrinking this 1G memory
-> later, it will take best effort way to hot remove memory. Means if any
-> memory block is occupied, it will be kept there. Finally we could only
-> remove every second blocks, 4 blocks altogether. Then the left
-> un-removed blocks will produce 4 separate memory regions. Like this, a
-> virt guest could have many memory regions in kernel after memory
-> being added/removed.
-> 
-> If I am wrong, Please correct me, David.
 
-Yes, virtio-mem (but also PPC dlpar) can result in many individual 
-memory blocks with holes in between after hotunplug. Hotplug OTOH, 
-usually tries to "plug" these holes and reduce the total number of 
-memory blocks. It might be rare that our range will be heavily 
-fragmented after unplug, but it's certainly possible.
 
-[...]
+Hi,
 
-> 
-> Yes, now assume we have a HPE SGI system and it has memory hotplug
-> capacity. The system itself has already got memory regions more than
-> 1024. Then when we hot add extra memory board, we want to include the
-> newly added memory regions into elfcorehdr so that it will be dumped out
-> in kdump kernel.
-> 
-> That's why I earlier suggested 2048 for number of memory regions.
+Do you have a timeline for this ?  This crashkernel > 4G for Arm item 
+has been lingering for 3 years. I think it is time for it to be 
+incorporated.
 
-The more the better, unless "it hurts". Assuming a single memory block 
-is 128 MiB, that would be 256 GiB.
 
-Usually, on big systems, the memory block size is 2 GiB. So 4 TiB.
-
--- 
 Thanks,
 
-David / dhildenb
+John.
+
+
+
 
 
 _______________________________________________
