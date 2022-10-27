@@ -4,82 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 01AF8FA3740
-	for <kexec@archiver.kernel.org>; Thu, 27 Oct 2022 19:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2234DFA3740
+	for <kexec@archiver.kernel.org>; Thu, 27 Oct 2022 19:29:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
 	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
 	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:Cc:To:
 	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=kdfyQD5kxqEClQAmvm+9DE24xaw4jmUOcnu2Qz9XpWE=; b=4Kb/deWi5ZtFMT+jSWXjWmDI0L
-	mypIz47ystz64J5FW9nGtB2v+zxsnljpoCjEmV/Wt7wXP7C5k295WE5sA80ijGwxc4kybYFu8jMWx
-	naRzGIE9CskA4tH2cnI25rbh71CzmFUpoVRbdUYxPJHyRcM9yvgyc9TfbichtTxhig9TgbRHPNeLM
-	ZqhqVUnnY3dSITR2NdKkGZaliyMZ/ec1y3Pa/C6XLTLzbAmFVE/AONtaP+S73RSXneN3+sdqCL3s8
-	XNO7RfJGxhmkmJOdS9tvQhrcKLsf+bWzwH3H0MR6Hqa9blyN7ENQO9Rii/o4C+kFRQs4qWiVi/LPc
-	i6ALG41g==;
+	bh=GA33CH0zZM0vUGW6dvfCsZvClEezQ6CCbqE0RvD7dKo=; b=kH5Nthm2LTrZ/kxJ2YAqA4kpiw
+	8JzfY0cjc/+bKulhLj4O7/CJC6A6gSROjx+R/LPNxh7DFb6joHan0e+Y9TqmKFcgaD2UI/o9+AW5Q
+	6+PkuX3qZVVU2l7ZDOm8CzYRWagIaFBAo+QnpcY8Crnua8cyEgsUDH0sqEHSTJTO+T084YUn9w+wH
+	kCpnG7PB1kOjPF5K2zSHeHtKgTkXbO3OYrfU+5rWnQK1JP0zxnA9Uui9mskPH3cWcl+suJCJyQF3q
+	8KdTHpVT0BX1FNNrBQ7EeQzmQy22YcKdoqL8J1EQl7B2BWki4d68dJvdpm4W4P8aHpHkGkdk3r3uu
+	mVjlZMvw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oo8Ui-00Ef5Q-KP; Thu, 27 Oct 2022 19:24:48 +0000
+	id 1oo8Z4-00EfmV-Qi; Thu, 27 Oct 2022 19:29:18 +0000
 Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oo8Ud-00Ef36-Eu
-	for kexec@lists.infradead.org; Thu, 27 Oct 2022 19:24:45 +0000
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 29RHmxcw019860;
-	Thu, 27 Oct 2022 19:24:21 GMT
+	id 1oo8Z2-00Efm9-Bt
+	for kexec@lists.infradead.org; Thu, 27 Oct 2022 19:29:17 +0000
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 29RHmpFN001416;
+	Thu, 27 Oct 2022 19:28:46 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
  subject : to : cc : references : from : in-reply-to : content-type :
  content-transfer-encoding : mime-version; s=corp-2022-7-12;
- bh=BkV6uakP1scn33KV/Gu5BiWL6Y23N6fyhftpzmzJPwU=;
- b=Tw41MHpuk6XqZU4M9VKFOmYxNUaWWXq9hWJ+lJVQC0NOkV6z96RTJ/XdSC1Cdz5hpp8m
- mJWCvGT1lsTPyPGXxIt4P9yUTz+AF9m3cgbI1/W1BWlGAa4eGLkZYdFjdBOOp1U1e5xR
- ahHbNb28300rTN3B7JQ/bJOHRnJIYYCAEuP8O5A4zCriMKZdP0Y6RpR9Nrx/KIyCGVSs
- phbTuExWVCsMLoV2qxwVGmZJdHj2JRB9JlVqmNxxl1pMgSspRMFGVHbzsnEIqTkmCF+o
- 3a3PMg8p56faDQe8zBsQR/U8w7TYz9cJdZ29tY6z+LYRdY0R1hF/25+n391ZPxC3IJYN KQ== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3kfax7tys4-1
+ bh=LMItJ3yW6sPPg7eShJZXRLDCBZK8f/z3Elqr4S5Peo4=;
+ b=2tPCucoB+O7dNoAQo4PcWalZdvY/bKm678rpuY+IpF6zOJGEuPSDwQm2W3NJBcVh7KHY
+ YcfRGhZgLNnhHd6XWnvCSvgWykEkjfhiz9WlcfS+nbSnQn37SljKLMWa+n6e2xOIDvrD
+ ixMj1wwoZXOLQrqbeyABeWu+hbzHv/S8ZEZwBE+BHGKf0UDwgu0eZVlWxKPee8Vmf6oL
+ TrMxU0f88Qz0HVOcOvxc/3XKjQcSjBw7lMMRCK6sTWIFzAihZehFP/rR3ZVVJlIqXDuL
+ cv0613qGu4jbspZft9pO78Ij4mVobHsVPWY6RApNicLthZIPuxpzdKOvp+VexMzfIdxD Bw== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3kfawru54r-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 27 Oct 2022 19:24:20 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 29RIWawx017633;
-	Thu, 27 Oct 2022 19:24:20 GMT
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2170.outbound.protection.outlook.com [104.47.57.170])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3kfaggtj93-1
+	Thu, 27 Oct 2022 19:28:46 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 29RIT3LN026553;
+	Thu, 27 Oct 2022 19:28:45 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2108.outbound.protection.outlook.com [104.47.55.108])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3kfagqb8ac-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 27 Oct 2022 19:24:19 +0000
+	Thu, 27 Oct 2022 19:28:45 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DK3JN5hUhPR0bhULEtHsOaIY04ar2baB/QOyarehFAtj+G6LRNlRWSavQVx8pSytZixv1xPs6/nwVO4IjAj/cAKK3mxpd7dJS7ZXLpgRJ4Nvu/btTxAvdZPW2X1VDjsMHkpaH3iSoOLqKyWBa7JAp93sRVbIAixiwlefzQHKneEKsgZufasDzqjMCJqRjiG2ISbZliZlx27Ek2CU2i6FQ+G+EfXQhhdGFE4myFT+2xNiiW1h2JmuGf/6xs2YSqw8cottTRPPsnm7+Bbc1DJKHOfZ0ievhGXxRRPBN2GAO76APp+JcXnQzTnLVgTQJEsWN8MccRBdMU8c5OedTtf9cg==
+ b=ag5gYQyHJEIR/ysyuMXj3a46oIg0582+NCbSA8FLlasN/8HH5Bhfa5QzLSF4Do1oOq3X9jFX1M8OZ1MAJla/DmlHU2FMrXFtoB+292gkl54rTQOMTrGbnq+LbiaWBx1d9s3rbL+4NmFk8YTXJIfS9aSasV5DfjDfLkTk5+AaB7lM38/72BtZ0fwQeKJqE+Fdxuo5kLohZnpo5psRtXwSXIYuUEa3jkMt3DekVjhm/bgGQGdBW2dzYFd6QpZGOgLwE8Zpn2NM7vXd56nJClF17DlAlzxvmqDzyLoupnl0X7Fi740k+eAkoEWJdN9K6YCpcx7Uu4N7X5uhlDAzJbXbYQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BkV6uakP1scn33KV/Gu5BiWL6Y23N6fyhftpzmzJPwU=;
- b=EP6B5gQLaB0Jhe65xUviGmsgP51OCBmxMfzXxK6heSgmQAO544xSG50o5ng2qjXXWtAfa/l5pZ6EjO2tygeBgn0enRAS3FbzeQnq83A5NNHsAM0fqBYSsC/DTYhcWR1iflFaIHrTE+NIi6I8B2C9U3ct3rnNmpwV9lzocRKoLe6sRtJfk1av8xkuYCnFQXT3NeoFtJJm0y3+03X3PKE9n52xEGXVR0zz5pKl2L9cZ6b/B55Dyz5p12Zv/Koc3PCwdOhOzbKWKIdrmRc5tboJDRNjBDyDZD2G2Tth0iE7aPnC95tViZzHtg1bUzBhKWFF4ceUjJD/TVcwptx2lzheaw==
+ bh=LMItJ3yW6sPPg7eShJZXRLDCBZK8f/z3Elqr4S5Peo4=;
+ b=WCZBCpg21l4VynYFACyMKerA5+DG5zBGAOLsOfml3gSijVJMNeoHG+5lQMakzLmeifxvTETxSYsfrRXh5wPx4+Rp0m6Ds2MaA2XgI2lgb8p9/T6cZz45fd5mxMrmxT9ZoTg8BWPSi80Bg0/spxwOEny9rYL3oBehue6+HK8DxZqQ+1sb1azArbhH0B02Dt7VY8t9JNKiydcMajVw/4IcEpgHOVP2MOXe2nbnhI883LL1mX4S+dFqnWy86Gnsj0PwBAKiIN7FICyxYx1QW9L7v+Wo5chjKEV1lXUCQeatDRta1ntJteSlkhUAzAxO0EJwBzNUcaGUp2UeCGVGQBqXXA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BkV6uakP1scn33KV/Gu5BiWL6Y23N6fyhftpzmzJPwU=;
- b=R1d7+kK9GeYedGZ3XgNc7h9PJtV5bjcjDiFrkct+EeY+YyV7vme0WTm6/tNMuJcLnbWrGvSaFO/fG/UF+NOGjPmkcrLyVRn9JRS6L0ZC4V2ZOrjJ4vXdZrIl18uOIBVwOd296101VqESJNRgs6i4FsZhOMZjQqrmbIDkANy7/O8=
+ bh=LMItJ3yW6sPPg7eShJZXRLDCBZK8f/z3Elqr4S5Peo4=;
+ b=IQS6PGnpTYUQy9CWSl+oOxWx01WPQCPDN5BkDinnrzX//2moxZIc3a2U74ch3QKhFDcBktxdfVqXnSzvnzzAppy66yFFqr5GFLAmRqIFmh5gOls9oVWCpYe9yTmd6yaB/Xt8VFECZeRciC+IAS+omV0Mq2zZQ7bTiVOjy1GrvIo=
 Received: from CO1PR10MB4531.namprd10.prod.outlook.com (2603:10b6:303:6c::22)
- by CH0PR10MB4844.namprd10.prod.outlook.com (2603:10b6:610:c0::10) with
+ by SA1PR10MB6470.namprd10.prod.outlook.com (2603:10b6:806:29f::6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.28; Thu, 27 Oct
- 2022 19:24:17 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.29; Thu, 27 Oct
+ 2022 19:28:41 +0000
 Received: from CO1PR10MB4531.namprd10.prod.outlook.com
  ([fe80::f7b2:af85:fe37:31a7]) by CO1PR10MB4531.namprd10.prod.outlook.com
  ([fe80::f7b2:af85:fe37:31a7%9]) with mapi id 15.20.5769.014; Thu, 27 Oct 2022
- 19:24:17 +0000
-Message-ID: <35c98ca6-10f8-b248-78c5-99fce7e66c65@oracle.com>
-Date: Thu, 27 Oct 2022 14:24:11 -0500
+ 19:28:41 +0000
+Message-ID: <368a61e7-818b-2ee4-8c8b-22218373622d@oracle.com>
+Date: Thu, 27 Oct 2022 14:28:34 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.1
 Subject: Re: [PATCH v12 7/7] x86/crash: Add x86 crash hotplug support
 Content-Language: en-US
-To: Baoquan He <bhe@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        david@redhat.com
+To: Baoquan He <bhe@redhat.com>, David Hildenbrand <david@redhat.com>,
+        Borislav Petkov <bp@alien8.de>
 Cc: Oscar Salvador <osalvador@suse.de>,
         Andrew Morton <akpm@linux-foundation.org>,
         linux-kernel@vger.kernel.org, x86@kernel.org,
@@ -88,87 +88,88 @@ Cc: Oscar Salvador <osalvador@suse.de>,
         dave.hansen@linux.intel.com, hpa@zytor.com, nramas@linux.microsoft.com,
         thomas.lendacky@amd.com, robh@kernel.org, efault@gmx.de,
         rppt@kernel.org, sourabhjain@linux.ibm.com, linux-mm@kvack.org
-References: <fd08c13d-a917-4cd6-85ec-267e0fe74c41@oracle.com>
- <Yzceb/y3SSFMuALR@zn.tnic> <d6386653-eb71-188c-8a09-5db46b4e42d4@oracle.com>
+References: <d6386653-eb71-188c-8a09-5db46b4e42d4@oracle.com>
  <YzcqE1RVtPcuLlxN@zn.tnic> <Y0Dh4ieUUZ4oXa1/@MiWiFi-R3L-srv>
  <Y0b9apyIs+RpSo1e@zn.tnic> <53aed03e-2eed-09b1-9532-fe4e497ea47d@oracle.com>
  <Y0cmaPTKQuWtwIRh@zn.tnic> <Y0d+mFivS+88+Chr@MiWiFi-R3L-srv>
  <Y1e7Hw0PRDI9NxU9@zn.tnic> <Y1lIoTBNvHrKX5K9@MiWiFi-R3L-srv>
+ <d2ce1bed-a053-4840-2e84-643b678392c1@redhat.com>
+ <Y1qNBDY99Ypan9Ok@MiWiFi-R3L-srv>
 From: Eric DeVolder <eric.devolder@oracle.com>
-In-Reply-To: <Y1lIoTBNvHrKX5K9@MiWiFi-R3L-srv>
-X-ClientProxiedBy: BYAPR05CA0039.namprd05.prod.outlook.com
- (2603:10b6:a03:74::16) To CO1PR10MB4531.namprd10.prod.outlook.com
+In-Reply-To: <Y1qNBDY99Ypan9Ok@MiWiFi-R3L-srv>
+X-ClientProxiedBy: SN6PR2101CA0008.namprd21.prod.outlook.com
+ (2603:10b6:805:106::18) To CO1PR10MB4531.namprd10.prod.outlook.com
  (2603:10b6:303:6c::22)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PR10MB4531:EE_|CH0PR10MB4844:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6c7320c7-9194-4ae8-3556-08dab850d6f6
+X-MS-TrafficTypeDiagnostic: CO1PR10MB4531:EE_|SA1PR10MB6470:EE_
+X-MS-Office365-Filtering-Correlation-Id: b3686153-9224-4393-cf83-08dab8517466
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 	lS/IwJHN3Wme7tXwNunCgjtADD8gzhwIV5P/UNK8KPUtwMxNF7umPkSu/7QltFEDuIRrz9rLTg3VcsVGXGWWtuhYVLG3ttmeA/SNC3YidYplPaU+41CW2vlZi7Pw4bvhZbnkXv5d59liU0NUih+RIope1BAA5U+krnpbhRWo+dIPzdackEF4tSJt08GYZ1w2PwPkjl+IdtR7q4N1QaceZJX8TZqsQAVY5c4L1DbytChVvost+bToGr33eSUPc58m+dmN7htTWI3gem8140+QSkrdOeqHeAJkoI2AjEUEaaMERjDWC+hopSEr3fyB0WB3y+Y8tm7rO0zWGVoyBnNW25/zhPcxZaXEnmnTeDn6QfGOMGIOQ97hA7e8Dt1ptIbBDSpOjLSeNb/FFMg6F5bKNObPSS1cPRYM09/a02O30EY8z1pwqAFkN5K6jaQ1JlOCn8PDi5h4BqKA6u/pPA5khSG821WeNIYjWZy0RHLikbHVy5aqNdd3+3yzfNKevJg2R1KFr2ijLWcS3PAlTdu47Gvg0zvqRkl8gi7se6pMCxHZuBFRGOUEk/bQEpviD6lCaABwpD95omV4wXAsOr5r5m4LeEMNEDEqydZS8UUWeQo6xy9AxxfprzWex35QB2Yt94lNNRPUW0xCRa3nnIJxCg85TuDrHl4y2gcGLl4IkT/4goWwujNrk4Sgkd5rKna63asxK7eXxpBt4AzW6JYWUxak1/e/g4kw4ZGPwFaaLiBJmSB13BtuoVRCyhjOwglke/78nCeqqtLQJWmrvw8lie0IvFJy+nu6c+eTp56XXCHM0r8HitgcehbIn9GeXgLFqzGIsHMiW+J5ZEbBg5T3PA==
-X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR10MB4531.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(346002)(376002)(366004)(396003)(39860400002)(136003)(451199015)(45080400002)(316002)(66946007)(7416002)(2906002)(53546011)(6512007)(6506007)(6666004)(8676002)(4326008)(41300700001)(6486002)(36756003)(478600001)(66476007)(38100700002)(966005)(31696002)(110136005)(66556008)(54906003)(31686004)(86362001)(5660300002)(8936002)(83380400001)(186003)(2616005)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: 	6Lm+8TpD83wJVYdw9I1d9rXdTmjGaL6yN7jFzg4d+ZBk5mS4Q4liadiuz22OMNtvXrbkvkEULA2u0hI4c7NBLltqDy5vxIhqJeG2AeXb45bLrf3AYW87DwTp1KaiI16rz0hJFbUaWOJa9bZnT2fm2G57uxeQHTo297kB4ZqEnTM/zEUlIcLZJLERwa7Ydt4gKHgwO1yrxAS+yDlWXHvFOf/O+2WzXScRlBdcmzP/EXWbLmaTQ0Q5d8MP33lt3wiFUX901y+mvFhKwPlanfh+U0uESl/HAt2JT5IqeVUMzBSfEO2Vj2TzE9RkbtbqyzltZoCtI8CUlwzGd+KgQGniWsjXqqJrZcesavssKIXLMDChKDb8M4LhaE+e0XaAKSp6o7Pw9/V8ZLEStfhkAEK5AYc7VfhTN2NjqHNZ+CsQYwHn8pDvIGV9bvouyL1iyaF2qZ50GlIePGHlkdB/VwFjZtFH5anjguxqq/GqhOMGrh/cIOIVBFstIijoBE+uPieBeRXK4cuEcz6JMdRyVtdRM2ggQ4u+5gXqrjvHISqxVAc5xl5RcjESRbem6P2AmEGAPQAJFvCzWFgW/yisUgW3Kob5LMXce4BVVc/KbcDu+jzP5+R++NtC498udfuNIjcVZKttk5Epnn52g2S82q8+ckSxU+sVe+/dXjbxP0fEdme2QS3DO5u/NEoWqkhmBC6852pl1lTV/m1xyYrSoLhuSwPYthb1W4p2YqwgLD3pBXH00Hb+Ip3jS2y+NrwWYF1avo0xuLGxrPeChRnfikQjsi+lEp3rae08cA88aYYZMWg=
+X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR10MB4531.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(346002)(366004)(376002)(39860400002)(396003)(136003)(451199015)(31686004)(31696002)(36756003)(86362001)(41300700001)(8936002)(5660300002)(7416002)(2906002)(186003)(83380400001)(2616005)(38100700002)(54906003)(316002)(66946007)(66556008)(66476007)(4326008)(8676002)(110136005)(6512007)(53546011)(6506007)(6666004)(478600001)(6486002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 	=?utf-8?B?cWZSMXF1cTAzUXhPUCtDRFJQYVpvL010UytscEE3cm9tUmhqTytNK2V1NFU3?=
- =?utf-8?B?L0hyeVZWMUloU3c5VVV6cWRiZU5VTnFZZ3BlUVk4cXZ5NmxoRUozWmhJYktt?=
- =?utf-8?B?VUdHRFpMamo1eFJNUWxsWThid2dpSVg3R2QxUmFBczQ1WXYxMGdLRmQvU2gx?=
- =?utf-8?B?cTloYWIyR01BekNzeDRGLzllNFBrOHRpanVBSXVycm5uekxULzVOV1Y4R2M0?=
- =?utf-8?B?azdJOGlBeHArQjBBVmR0RzViWFN1RWhHWlZzekNlb1UzeWh1STJLRHl3NVlD?=
- =?utf-8?B?bDh1ZWNwT2RRbjZSK2pkeDJ3TG1ERDJQS3FqK0gxUkQ1aVowTVFpUDFWZkQ0?=
- =?utf-8?B?ZHNDR0tONEJGQVBjbWtKaURpcmVvVVJsU0w4b0NtK3FVRGwxR3ljOG83MXVI?=
- =?utf-8?B?bG9GZ0lFQWR6RmpMVzlHaHJPVnhGZlE2bVF0NXJoRkxQbXVzQmVYVEhIenpt?=
- =?utf-8?B?VmNOSi9WaDlNcGJCVUpMOHlhcDNyM0RJSE80c2h4ZW10L1loTVBiZTFWWVEr?=
- =?utf-8?B?YWN3WUt5cWo4aXNPRkQ1alNkRDBjZmVxci9KZ1ZSUnFTcGRKaE1wck5IQmtx?=
- =?utf-8?B?cFFhWXk3SjNXSzFjV0xPcmxSa2xma1MyY3pxdlU0Y1BpVzdVTXZ2b2VGSVdo?=
- =?utf-8?B?c2JabVdia2dSWHk3Qm9aejZMcW1sME9YemxlUTluNHhBcE8yTDRMQ2o0dDlz?=
- =?utf-8?B?VnM1cktNMDdHUksxNkozRUJIZDkrcmw2cDJvWm5mWGZxYm1FNUlHNGE1Nngw?=
- =?utf-8?B?eHhYWkk1NWFud1EyS1lsQVFRekUrRUhSNWVMNjQvR3N0WCtxUjZldmFpckZt?=
- =?utf-8?B?Rk9MUHI2WURZOG56UklIZklYMkRnY0JIUnk5MlpDd3RoUXlsTHMwaC9PUnZ2?=
- =?utf-8?B?RUZqWVViK1UvOTF4NFJYNmNDaVhQUDJqY0RZRUlMRGh6WmRCVU11L2QzUUVU?=
- =?utf-8?B?TkVhUkhaNWF0cWxtcTFYYnRoVGJkS2Y5dnA0cGxvZnpQQVJ3TGFnSFFNU0Jz?=
- =?utf-8?B?N2ZFL1lDeEpsV2gySTU2NUJHakZMZ3RQSXFQZFJVc2RCRkZ3Unp1M2FGNjNO?=
- =?utf-8?B?Z0lQTi9WNzVmbSs3UXJXS0JORzhmMmI2aTFGVnJVM2ZmdEdxb0VEbWNXOU51?=
- =?utf-8?B?Mm52OXc2b0hzSis4U3dhQm9ldVNwOGx6eXRtK3pTcU4xSU1BUWtDV3Q0UE5x?=
- =?utf-8?B?eEw1eExMNmE5MjhCYnlBOHExL2ZOWVFxbHgrZkJoOURqeHAzMHNnVjRhY29m?=
- =?utf-8?B?K0FhcENRV0cvazR3YkZUbmxhRTNOaXF2VzJQV1FVSUZYK3BSMkVJc2JLSmts?=
- =?utf-8?B?djJPWWd6eFhnNnpQS3E2R2NpTUNyY2t6ZHFTK1FGd3EwRWtpSXRIVzl6RjMz?=
- =?utf-8?B?ZEIzdEdSV0EvTmdud21Wck10YklMSDhlZXBDUm5zM3R4YU5ock45alR0cng1?=
- =?utf-8?B?ZnZRRnZJOGtmV0VaT0NVcEFldThqQ29lWkRiZzdMY0owUzJic0RGRFU1d3NT?=
- =?utf-8?B?YnVLMzVFZncwR3VHMTBMaG5pdTg1aDRmYy9vQkR4MmFsRHdOTUFJOG1ETGdH?=
- =?utf-8?B?akdRN1pIcUVkNzRQZzdicGw0dkFPRHNjclNOYmtwUXVwZ0RnVW5odnN5L3ov?=
- =?utf-8?B?ZnM4OXlIajlGSCtDR2UyOUUyMVZwVjdLRS8rcWVtZTdFNml0SWFZdndqWFJR?=
- =?utf-8?B?MzFueDREbFZONlhEMW1DNW03dmkwQ2tRaUp5OEorcC8vbmN2ZWcwUTFuYk03?=
- =?utf-8?B?b0lad3ROVmR0VlFJNVJPMGxyNVVCR3FjcTJEeEhIWGlNbys1eVd1alFGbStY?=
- =?utf-8?B?OEJaQ2d6dVc3MEMzTWkybk83VVVPSTRUTTMzTDZPRWdKQ0pNMDNIZ1dKaTJm?=
- =?utf-8?B?YllLMlFEL09WRlJvVVhsUERUUWRDMkRrR0IyT3R5NjR0WG1XS3lPVkRLU1Fq?=
- =?utf-8?B?T2F2c2UrdXRqVytQMmczMlBsTWZ6S3l4bDY2UUFkRC9ZNnk4ekkxNk9yR3py?=
- =?utf-8?B?MlhJaVpvTVFNM0dCQitVV2VrVUg5YmNNNEhXKzcvTmxUekVlS052bEhBMi9K?=
- =?utf-8?B?MnRvWEZwRzFiM3ZFUkRYUkJwV1NVTS81VUtramRPTmNiL1RJcWtMb2h3OUZp?=
- =?utf-8?B?U0sycnBXcmVFSGx3Rm45OFVBODhkQTduK21kUGV0ZmE4S1AzcDRLNzR4ZDUw?=
- =?utf-8?Q?HOv2sHRCWEqsz9ELI0Ql4KU=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: 	=?utf-8?B?alZhTjVNTHJTL0hHNy9FRkpNMFZxcHF4Sk5TdyszZXdNeVpwRlRiUXBLTU1U?=
+ =?utf-8?B?ckMzU3M3N08zUDMrMDhsanZ3S1FLNGUvT3ZGcS9ScitCcEl2ZGU4R3drbEZG?=
+ =?utf-8?B?bVFmVDZqc0E2Y3RrS1cyNWVSRVNyUjFYZjZDNFBSUExSSG9Kby82a2JkOGxS?=
+ =?utf-8?B?czhMeTBuMEJMbDJSQkN0b09ZamhiR2Q3SXZlcWJNcjR6YVEzRXZOSW5DVnlk?=
+ =?utf-8?B?NllLVkYwNWdvK0VhMTl0SVRRRGtLa1J2MFFtMUg1c2VlRW1nRW1Yc3ZXS2lO?=
+ =?utf-8?B?RmREeTZDL0NHZGREN2trVnExeGxONVdta1gydldUM3FycHpwalIvYWRzam85?=
+ =?utf-8?B?enJjd0hKWTRKb0ttSzBYWVNDUUNjcXhRcUFsaFUvWEdwbllSNDQxcGJkRWZo?=
+ =?utf-8?B?VXB4TUN3eWdEREY3dnY4SFFxSVBITDlHdVJkcmNMQzBkZUFFUmRnODAxejlJ?=
+ =?utf-8?B?cGE4ZlB3UzhhUk8wMGF2VWhSdE9OUTRFREhwZ3JiY2w4anRGWEhPSmkySndz?=
+ =?utf-8?B?THNmOGxOcjJvR3hyK3lkZGtMMkg4QkQrWGp2KzNkb0JyQ0dqS3k1cTR3U25V?=
+ =?utf-8?B?YzJJQUpScXJRUi9JaGlhMXl0dTUvYnJMQ1JvaENtMlVLdFpyeWpQaTdWR0p4?=
+ =?utf-8?B?ZVhlZVRnNUNMTFlEd0FkNnVQeU9JVTBDNytFUFgrYjIzNVdBa0N2YitObzJZ?=
+ =?utf-8?B?UzlPekdNbzdoY21RZEQ0SUhPT2Q4RG9YUXR4UGtyVnBxNk1hOXAvNS9CZFlQ?=
+ =?utf-8?B?QXVXbXJTS1d5S1JlV0FsV3ErMEN0WFZtbkcxLzg1M1hRQmE3bzNRZ3lwZERD?=
+ =?utf-8?B?Y0tIT0lzM2x4UHZod2dFeWdHQ014RzFiRVJGOXNsbHpvVzh6T3hKTDh4dkx1?=
+ =?utf-8?B?VzhYRkpBaklUTE5DMWNhcVo3M1hzdjJQQ1V6bEhUZzdsWThtcmhuWHRzdE9a?=
+ =?utf-8?B?SDRZTTBUeFdnM3pDMVczK0pZRVEwT1BKMkZ3NEo5SVBHbnNRd01OOWdyYTdL?=
+ =?utf-8?B?eDBKOVRIRlQ4djAzbnhPeVptYWs1NFROenlpNWVHOU1yUWJIOFU1MG1xamt1?=
+ =?utf-8?B?aVM3WDdMRytJU1lBZlpPOXdWZnJRSmFvNDNHSmlVR1RLeEI0alpVRU45MHpG?=
+ =?utf-8?B?UzFGRjBrNXRoSXJJQ21IRlBiSXU5TkxpZ3dhYnMzYUxKUnJVckZ6ZjBzcDdo?=
+ =?utf-8?B?VC9aa3ZSSGVZRWVQOXZHdlFNWjYxbFNkWm9EOHJZY21VMnBLd0o0WGVaZklG?=
+ =?utf-8?B?K0laK0V5aUVMdkptWUQyWDlEd1pHZkd2WTVHejQrbDQyZ1B5YTg4UFh5TEtr?=
+ =?utf-8?B?S0tkZTBXN21rNlFNalAzNlBIamFOUUhaRkIvZllvcEpOci9VNkdEait4elV1?=
+ =?utf-8?B?cE5zQWpFb3NRVnFuLzBXakF2dXNBQkFDRG5laWVWZlp5N1NZYjR1N28zbjhn?=
+ =?utf-8?B?T2JESzgza2R3aW9IMUVUeVRPa2JlYzJuTHBiTEZkNGhhaTUrR2gxSEk1eVlJ?=
+ =?utf-8?B?and3UkZZREhrbUtmSGZURjlLTk81YmhhUWNJbk5XL3E5dnpXeUgzUXFjZTRs?=
+ =?utf-8?B?T3VMSElUMVdFa2NpWTBZRkJibkU3ZXhrcEh3OEMxL0lCR2J0Zk0wYlVhSGJ4?=
+ =?utf-8?B?bm1pcjdIelIzL21iazRYL1VHTjRoUjdHSDdTNVhwVGpEVHYwYlpVVUlBVm9x?=
+ =?utf-8?B?Q3BRd3V1YTFrb2RJaHhrV3d6YUxHSWpvU1VLSFoyNU5xQ0xPaGYra1dVSzJG?=
+ =?utf-8?B?SjNrVWtwTzhTYmYvY3E3bU9QMEJVS2hCMWhXWmFwSFBIbXNvRmpOZHJSdmdj?=
+ =?utf-8?B?ZW1aaTBsdFNRWWF0aUkwcHR4aGhRYURKRXBQcit3elRJcWtLNGh4SzNvK2N4?=
+ =?utf-8?B?Z0Jybkp4NG5wanJSSkd5OTF3dkxFaDVoeGMydDFTTiswallYVUVsRlJ4RmlW?=
+ =?utf-8?B?a0srMUpSVzNoNGF1dmc3bEl4NTFBS3loaS9DNGlteGZON0lxSkRBdTltUkt1?=
+ =?utf-8?B?cHFkbnVBRm45ZlVia2MxclJrOW5OVldkQVRJY2loMG9GbjFZbXNOL1BtN21m?=
+ =?utf-8?B?d0crakgxSVB4YlZycFJLSDhTYXZOUlQ0OC9PY01yT29CZjA1WHRjcTVEckt1?=
+ =?utf-8?B?cUFVWTFNcmQwdktFckNzZ3F3b09iYVdDeEtjOGs4WW1tVGNkL3o3emVLMmJi?=
+ =?utf-8?Q?sYcPbVHqvbm3/VCopl8Z0DA=3D?=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6c7320c7-9194-4ae8-3556-08dab850d6f6
+X-MS-Exchange-CrossTenant-Network-Message-Id: b3686153-9224-4393-cf83-08dab8517466
 X-MS-Exchange-CrossTenant-AuthSource: CO1PR10MB4531.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Oct 2022 19:24:17.2057
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Oct 2022 19:28:41.3602
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OcpLl1skerAyDebGj7IzsCPTUt2nshcpua4IAIuQMktynxdsjyDy2Jbr+f3fxWmUeFPHVBSCnpM6+HmXMuUxidNvO2duWOwzYggJgyt3s+E=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB4844
+X-MS-Exchange-CrossTenant-UserPrincipalName: kyigMhipPU/Joi6pbVHKM2R3dkNC++iMn9j8QvxOHcHmWlcEb/SZ36usfZxHyeH2FCCw4J8MSgdgXscgowGV59nvdAhb7wkwWWCh0LyAOZc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB6470
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
  definitions=2022-10-27_07,2022-10-27_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 malwarescore=0
- phishscore=0 mlxlogscore=999 mlxscore=0 spamscore=0 suspectscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 mlxlogscore=999
+ spamscore=0 phishscore=0 bulkscore=0 malwarescore=0 suspectscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2210170000
  definitions=main-2210270110
-X-Proofpoint-GUID: OdAakxnJtcNwxObkgsCF364J8jGXb1ud
-X-Proofpoint-ORIG-GUID: OdAakxnJtcNwxObkgsCF364J8jGXb1ud
+X-Proofpoint-ORIG-GUID: AYD_Lf8TJOeKc0C-T2sTSUCzcKKvAZe2
+X-Proofpoint-GUID: AYD_Lf8TJOeKc0C-T2sTSUCzcKKvAZe2
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221027_122443_671298_C5C41CB5 
-X-CRM114-Status: GOOD (  33.05  )
+X-CRM114-CacheID: sfid-20221027_122916_532757_72927B06 
+X-CRM114-Status: GOOD (  26.36  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -187,195 +188,83 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 
 
-On 10/26/22 09:48, Baoquan He wrote:
-> On 10/25/22 at 12:31pm, Borislav Petkov wrote:
->> On Thu, Oct 13, 2022 at 10:57:28AM +0800, Baoquan He wrote:
->>> The concern to range number mainly is on Virt guest systems.
+On 10/27/22 08:52, Baoquan He wrote:
+> On 10/26/22 at 04:54pm, David Hildenbrand wrote:
+>> On 26.10.22 16:48, Baoquan He wrote:
+>>> On 10/25/22 at 12:31pm, Borislav Petkov wrote:
+>>>> On Thu, Oct 13, 2022 at 10:57:28AM +0800, Baoquan He wrote:
+>>>>> The concern to range number mainly is on Virt guest systems.
+>>>>
+>>>> And why would virt emulate 1K hotpluggable DIMM slots and not emulate a
+>>>> real machine?
 >>
->> And why would virt emulate 1K hotpluggable DIMM slots and not emulate a
->> real machine?
-> 
-> Well, currently, mem hotpug is an important feature on virt system to
-> dynamically increase/shrink memory on the system. If only emulating real
-> machine, it won't be different than bare metal system.
-> 
-> IIRC, the ballon driver or virtio-mem feature can add memory board, e.g
-> 1G, block size is 128M, 8 blocks added. When shrinking this 1G memory
-> later, it will take best effort way to hot remove memory. Means if any
-> memory block is occupied, it will be kept there. Finally we could only
-> remove every second blocks, 4 blocks altogether. Then the left
-> un-removed blocks will produce 4 separate memory regions. Like this, a
-> virt guest could have many memory regions in kernel after memory
-> being added/removed.
-> 
-> If I am wrong, Please correct me, David.
-> 
+>> IIRC, ACPI only allows for 256 slots. PPC dlpar might provide more.
 >>
->>> On baremetal system, basically only very high end server support
->>> memory hotplug. I ever visited customer's lab and saw one server,
->>> it owns 8 slots, on each slot a box containing about 20 cpus and 2T
->>> memory at most can be plugged in at one time. So people won't make too
->>> many slots for hotplugging since it's too expensive.
->>
->> There you have it - the persuading argument.
-
-So after re-reading the exchanges, many times, I think I realized that I have introduced confusion 
-by using "hotplug", and specifically "memory hotplug" and DIMMs in the same breath, and thus that 
-perhaps equated hotplug with ACPI DIMMs in these discussions.
-
-Allow me to state that "hotplug" in this patch series refers to CPU and memory hot un/plug, and does 
-*not* explicitly refer to any particular underlying technology to generate CPU and/or memory hot 
-un/plug events.
-
-For example, I have been using DIMMs as my example because that has been my test vehicle for 
-exercising this code; as such I think the discussion cornered itself into real world vs virt 
-discussion about DIMMs, with no end in sight. To be plain, this patch series does not intend to 
-convey or change anything specific about ACPI DIMMs.
-
-In reality, when I state "hotplug" in these patches, I am talking generically and therefore 
-inclusive of any technology that can hot un/plug CPUs or memory. For memory specifically, this 
-includes ACPI DIMMs (whether baremetal or QEMU), ballooning, virtio-mem, PPC dlpar (per David), 
-Microsoft DynamicMemory, and the upcoming CXL.mem technology. Probably others that I am not aware. 
-Any of these technologies can add or remove memory from a bare metal and/or virtual system.
-
-I apologize.
-
-What is important is the number of memory regions (ie. /proc/iomem entries) that can be considered 
-to be the maximum. There is no kernel definition of such. The need to identify a maximum number is 
-so that the buffer containing the elfcorehdr can be sized and allocated at kdump load time, *once*. 
-This elfcorehdr buffer is then modified/updated repeatedly as hot un/plug events occur. It is *not* 
-re-allocated on each hot un/plug event; that is what the current solution does, sort of.
-
->>
->>> I checked user space kexec code, the maximum memory range number is
->>> honored to x86_64 because of a HPE SGI system. After that, nobody
->>> complains about it. Please see below user space kexec-tools commit in
->>> https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
 >>>
->>> The memory ranges may be not all made by different DIMM slots, could be
->>> firmware reservatoin, e.g efi/BIOS diggged out physical memory,
->> 			    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>>> Well, currently, mem hotpug is an important feature on virt system to
+>>> dynamically increase/shrink memory on the system. If only emulating real
+>>> machine, it won't be different than bare metal system.
+>>>
+>>> IIRC, the ballon driver or virtio-mem feature can add memory board, e.g
+>>> 1G, block size is 128M, 8 blocks added. When shrinking this 1G memory
+>>> later, it will take best effort way to hot remove memory. Means if any
+>>> memory block is occupied, it will be kept there. Finally we could only
+>>> remove every second blocks, 4 blocks altogether. Then the left
+>>> un-removed blocks will produce 4 separate memory regions. Like this, a
+>>> virt guest could have many memory regions in kernel after memory
+>>> being added/removed.
+>>>
+>>> If I am wrong, Please correct me, David.
 >>
->> I don't know what that means.
+>> Yes, virtio-mem (but also PPC dlpar) can result in many individual memory
+>> blocks with holes in between after hotunplug. Hotplug OTOH, usually tries to
+>> "plug" these holes and reduce the total number of memory blocks. It might be
+>> rare that our range will be heavily fragmented after unplug, but it's
+>> certainly possible.
 >>
->> If it is firmware crap, you want to exclude that from kdump anyway.
-> 
-> Yes, now assume we have a HPE SGI system and it has memory hotplug
-> capacity. The system itself has already got memory regions more than
-> 1024. Then when we hot add extra memory board, we want to include the
-> newly added memory regions into elfcorehdr so that it will be dumped out
-> in kdump kernel.
-> 
-> That's why I earlier suggested 2048 for number of memory regions.
-> 
+>> [...]
 >>
->>> Now CONFIG_NR_CPUS has the maximum number as 8192. And user space
->>> kexec-tools has maximum memory range number as 2048. We can take
->>> the current 8192 + 2048  = 10K as default value conservatively. Or
->>> take 8192 + 2048 * 2 = 12K which has two times of maximum memory range
->>> bumber in kexec-tools. What do you think?
+>>>
+>>> Yes, now assume we have a HPE SGI system and it has memory hotplug
+>>> capacity. The system itself has already got memory regions more than
+>>> 1024. Then when we hot add extra memory board, we want to include the
+>>> newly added memory regions into elfcorehdr so that it will be dumped out
+>>> in kdump kernel.
+>>>
+>>> That's why I earlier suggested 2048 for number of memory regions.
 >>
->> I still think that we should stick to reality and support what is
->> possible not what is potentially and theoretically there.
+>> The more the better, unless "it hurts". Assuming a single memory block is
+>> 128 MiB, that would be 256 GiB.
+>>
+>> Usually, on big systems, the memory block size is 2 GiB. So 4 TiB.
 > 
-> Yes, agree. We should try to get a number which satisfies needs in
-> reality.
-
-
+> Thanks a lot for these valuable inputs, David.
 > 
-> For Kconfig CRASH_MAX_MEMORY_RANGES in this patch, I have three items to
-> suggest:
+> Hi Boris, Eric
 > 
-> 1) the name is not good, it doesn't reflect the fact that it's the
-> number of program headers of elfcorehdr which includes the cpu note
-> numbers and memory region numers.
-
-The total number of program headers is, generally speaking, the number of CPUs and the number of 
-memory regions (plug one for VMCOREINFO and maybe a few others). The NR_CPUS_DEFAULT conveys the 
-maximum number of CPUs possible, and likewise the CRASH_MAX_MEMORY_RANGES is intended to convey the 
-maximum number of memory regions possible.
-
-It is not misnamed, imho; rather, I think due to the confusion I outline above, misunderstood.
-
+> So what's your suggested value for the Kconfig option?
 > 
-> 2) default cpu number, I suggest 512 or 1024. The biggest number I
-> ever saw in reality is 384. On virt system, it won't be too big. Below
-> is abstracted from arch/x86/Kconfig. A smaller one is also OK, we can
-> enlarge it when people really have a super machine and run into the
-> problem.
+> 1) cpu number, 1024?
+> 2) memory regions, 2048?
 > 
->     config NR_CPUS_DEFAULT
->             int
->             depends on X86_64
->             default 8192 if  MAXSMP
->             default   64 if  SMP
->             default    1 if !SMP
-
-I'm all for making this a sane number, I'm just not sure this patch series is the place to do this?
-
-> 
-> 3) For memory regions, I would suggest 2048. Likewise, smaller value is
-> also fine, we can enlarge it when a real system run into this.
-
-As David points out, if the memblock size if 128MiB, then 2048 allows for 256GiB, which I believe to 
-be too low for a maximum default. I'd at least target 1TiB with 128MiB memblock size, which would 
-put the number at 8192.
-
-Should the memblock size be 2GiB, for really big systems, then 8192 entries allow handling 16GiB.
-
-With sizeof(elf64_phdr) of 64 bytes, that means the elfcorehdr buffer/memory segment is essentially 
-512KiB.
-
-Be aware, in reality, that if the system was fully populated, it would not actually consume all 8192 
-phdrs. Rather /proc/iomem would essentially show a large contiguous address space which would 
-require just a single phdr. The reason to consider having the larger number of phdrs is so that if 
-the memory becomes fragmented due to hot un/plug events, then you need the phdrs to record the 
-sparse mapping. The sadistic case is that every other memblock is offlined/removed, not likely, but 
-possible.
-
-
-> 
-> I made a draft here for reference, with my undertanding. Please feel
-> free to change it.
+> About below draft, any comment? We can decide a value based on our
+> knowledge, can adjust later if any real system has more than the number.
 > 
 > +config CRASH_ELF_CORE_PHDRS_NUM
 > +       depends on CRASH_DUMP && KEXEC_FILE && (HOTPLUG_CPU || MEMORY_HOTPLUG)
 > +       int
 > +       default 3072
-> +	help
+> +       help
 > +         For the kexec_file_load path, specify the default number of
 > +         phdr for the vmcore. E.g the memory regions represented by the
 > +         'System RAM' entries in /proc/iomem, the cpu notes of each
 > +         present cpu stored in /sys/devices/system/cpu/cpuX/crash_notes.
 > 
 > Thanks
+> Baoquan
 > 
 
-I'd prefer keeping CRASH_MAX_MEMORY_RANGES as that allow the maximum phdr number value to be 
-reflective of CPUs and/or memory; not all systems support both CPU and memory hotplug. For example, 
-I have queued up this change to reflect this:
-
-     if (IS_ENABLED(CONFIG_HOTPLUG_CPU) || IS_ENABLED(CONFIG_MEMORY_HOTPLUG)) {
-         /* Ensure elfcorehdr segment large enough for hotplug changes */
-         unsigned long pnum = 2; /* VMCOREINFO and kernel_map */
-         if (IS_ENABLED(CONFIG_HOTPLUG_CPU))
-             pnum += CONFIG_NR_CPUS_DEFAULT;
-         if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
-             pnum += CONFIG_CRASH_MAX_MEMORY_RANGES;
-         if (pnum < (unsigned long)PN_XNUM) {
-             kbuf.memsz = pnum * sizeof(Elf64_Phdr);
-             kbuf.memsz += sizeof(Elf64_Ehdr);
-             image->elfcorehdr_index = image->nr_segments;
-             image->elfcorehdr_index_valid = true;
-             /* Mark as usable to crash kernel, else crash kernel fails on boot *
-             image->elf_headers_sz = kbuf.memsz;
-         } else {
-             pr_err("number of Phdrs %lu exceeds max %lu\n", pnum, (unsigned long
-         }
-     }
-
-I hope this helps clarify my intentions with this patch series.
-Thanks,
+I prefer to keep CRASH_MAX_MEMORY_RANGES, as explained in my response to your message on October 26.
 eric
 
 _______________________________________________
