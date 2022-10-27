@@ -4,129 +4,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D1D6DFA373E
-	for <kexec@archiver.kernel.org>; Thu, 27 Oct 2022 00:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9D93EFA3740
+	for <kexec@archiver.kernel.org>; Thu, 27 Oct 2022 13:52:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-ID:In-Reply-To:
-	References:Message-ID:Date:Subject:To:From:Reply-To:Cc:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=kvIVtevBhwsT07D8FPz0ogwl1iO6WzlAp/rQE7ij0dU=; b=U0assKqpHRY05j
-	as1mnAiXFRculibWrojQiPjLoQ21iyaCsBl85bW2x55jc2hR+OvRhlu/6aFpvvNPaTKNFVbiYMdkR
-	pTFK0zTnffKHykTVha02mYH3RAjN5x0UsegT99XEO2qPRO4p2eFnRNF5YcA+i1gr4lVP8vOqUS0Re
-	Yu6YR7u8x1E7x3hMYZXhNWZuZBwMpqItTyTvjGP5pmct0jcdWU3YvyeG2xpBbdJNMnH1LVHJmA3g1
-	9LTsXVLABWfbyqUb/tpLA8Jbq7SvXsC79ogkKCIKdNKRPJ17mzt4p7GbvFGuEqz+ZXtChxeT3OE8Y
-	xPN5hBAfmVaHKivIg9Uw==;
+	List-Owner; bh=f56KHz4VEV4BA/hEI1e7B72H8mJIpM8Epq9c2BL0ueA=; b=CuqjyTe+p4rAR/
+	161K0xyD0H4kJnO+gQvi/+ZQLr9L80Rb5XrghQRPRMJB/mQqd1Cvf9R//SSZFmcDHaJ9RM00q67Zl
+	1pUIBKzWea//XjlLkQtOceMxg7a3alNgJYoh7nFaoI2c/FSGK9B/zH7x5sFJT5Y8P3YvgwhE6m4bk
+	/KPz3/CF/cZYbE9EGeaqyRp6hPw5PdPd9JQswJW0TSn7SyUw+oaB1wY5CifoZG9olZLcYSNWP1DdT
+	4+QvpKBmiO5fVQUUjlCmTYrZiVPObqNtuJFj8Kq2SsceFPdpERn65A4nWvdvVQWC6ErgDwUi3HJuZ
+	f4OUM1mjm81yZRbsCpXA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1onqxM-00BNr7-GK; Thu, 27 Oct 2022 00:41:12 +0000
-Received: from mail-tycjpn01on2057.outbound.protection.outlook.com ([40.107.114.57] helo=JPN01-TYC-obe.outbound.protection.outlook.com)
+	id 1oo3JD-00DhoD-Hh; Thu, 27 Oct 2022 13:52:35 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1onqxE-00BNpe-Uh
-	for kexec@lists.infradead.org; Thu, 27 Oct 2022 00:41:11 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=l4eLCYBjXiCD9wC9XUNvr7jqVIPuxpF1T/+mD1A+YoVfwONEDcN6Ue7VaRjMdi06lLbTg/dO2mr+SVT+zsYTnRpca8fOoBLCepf9n099vFrPh0q5NE8TAfxAu28fLt7qz6jaYPAPpY2HdzCoUewTVw18e3glBO88UwJIXtD1t3DB2wyt33U1UxmBxXblcjMo8eYR0Lqb6NBw1ev0wGPCvYhhElMC6G2JU7TNmSj3wbx/fWBqRnryfFyaCJi2dv+ff4tmUSLlweKQR5t799viIzbfuNixQahGmY6umK7XtvTqAiLRGSuvsh7I8QrFqHhCpTZH8zuO1zxHIKsFr0xVfw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mRXSEjjOgC4q59gRe8yWo9ynOK3QbUffIh9ZXo8yi38=;
- b=Jgs+xbhSdUlRksGic1YE2nTQ7G5I4cOyWIwkcqwGyBidAE+9tUyj+H2Pn5t+W2qHJ2c3yLdSrjVleRMow3c6Wk7ivoSsmJ4YnIVo3qP3ExqnxucjO/MbhEobWpMrIzT1kK22LYWDLeegLRg6EphwdrCC/0GJxVIae+550+wE9JVgdK/hjUr6xlqOt+1p3ao0unFDc7cPFkcgGYn/28g0kIovT7saoJ9EXBmAXFDu3tL0OHsn6I9I1wctd7rdUJdKZjmyNYah8EwMJXISFD884LhulL2g/faAYZJjdSavygWRFg04QqovqGO2FKZLeIg/8jA9SmkHLA8M9VB5ZncQPQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nec.com; dmarc=pass action=none header.from=nec.com; dkim=pass
- header.d=nec.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nec.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mRXSEjjOgC4q59gRe8yWo9ynOK3QbUffIh9ZXo8yi38=;
- b=fTleXYiA0DtJHp9ScV+l0OFEKLStAUP+apSZeWVrTPfmR0JIbqSxl13ZQ84r0jj15rAjm2IEd5CpsfpFZ0A6kXQsNuHVTpessPNiW99373lVlh2Of3Ul4+3MFYmWoNidHQGiHxvvnGOjtkEhIc/rrGLmTRJKlAZiwVgx9yZctaQ=
-Received: from TYYPR01MB6777.jpnprd01.prod.outlook.com (2603:1096:400:cc::9)
- by TY1PR01MB10834.jpnprd01.prod.outlook.com (2603:1096:400:324::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.28; Thu, 27 Oct
- 2022 00:40:50 +0000
-Received: from TYYPR01MB6777.jpnprd01.prod.outlook.com
- ([fe80::1f99:8d77:182b:f149]) by TYYPR01MB6777.jpnprd01.prod.outlook.com
- ([fe80::1f99:8d77:182b:f149%5]) with mapi id 15.20.5746.028; Thu, 27 Oct 2022
- 00:40:50 +0000
-From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
-	<k-hagio-ab@nec.com>
-To: Leonidas Spyropoulos <artafinde@archlinux.org>,
-	"kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Subject: Re: [PATCH] Makefile: Remove version from /usr/share/makedumpfile
-Thread-Topic: [PATCH] Makefile: Remove version from /usr/share/makedumpfile
-Thread-Index: AQHY5TeRi3sJqFTIh0uBMvmNJDmGUq4c1TwAgASZ2YA=
-Date: Thu, 27 Oct 2022 00:40:50 +0000
-Message-ID: <c11dcd13-e146-1ef7-18e2-e03cab19630a@nec.com>
-References: <20221021102459.28070-1-artafinde@archlinux.org>
- <8952f78a-fec5-e9b2-7823-33e126aa209d@nec.com>
-In-Reply-To: <8952f78a-fec5-e9b2-7823-33e126aa209d@nec.com>
-Accept-Language: ja-JP, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nec.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYYPR01MB6777:EE_|TY1PR01MB10834:EE_
-x-ms-office365-filtering-correlation-id: 523d98e3-c9c0-4ead-b691-08dab7b3e59e
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:  hinckqhloUSU9UauGpIfMsiB4dhy7XdMFgsUaBshLs2IK5flTgtQ3KQkBIA/GNZ0/u3eYbN3++aCyXmG9Af0lOqAbMmugPMSGu97azrE62eNULXgsUlSBwO+1lZaO7nvUR0CTe08Jbkx87q+vT9Gxa6vhrXoCJ3GF+hDegPYJOErGentTfGxuKZBusmTjL0RQ+u0afDgLEgof5fdOjNhzolUm4uVrKgFpuVffMstCVJBoKjom6mzfr2ctekyBcCMR1J4nsUbANuLXZntLVL6K6+32Hzz6P3LcyJwlQqgmrQTzoaJn/LiHGVq6FOIYCEvH8ampLlmR2AC5R9r1tRZ6w7QODyH2+RxKrxyMrS0iFUGjwj5UytFt3nYbs9ebnv3N0t8zOzWGuj4k/CrShXaXOniCD7wka2sj5JYOuYrFYbuOCkhBzFyQKkPBXhjPqzAg65RNbXpKeg+I59HFBTimBisR7QOFCa4KV7fxnQLSsw4ADeXnlOSG05HRwpzz1I40qC5vgIQC6cI2XqwWPhv3nKMXhylVnJZhLkajtA9b+B/SDzBzT8iOulM6HMjLgodO+IBGh3fDlwWPTM6guzsi/gIn5SkCwJDgl+mL4cTAsMIX4zGAkoPu2NyW/hPCM1z3ydElgPwq45/sg03k/2IDSy0zw5RTYs921gH8eRoYLPCirAkCAmt6qdzY85HoY5J4lwCEOfJONfzv31/kCdg2aBsdZnAPN6SUVBJ9L9DyiBTmcJZxMI2V0h9gSfZ8C9GPR0+IctZjTquCzfRTg9WmDz6bJo8OO+hfpe6WhJeiamZAnyccOlzwAmo7f81r7Ee
-x-forefront-antispam-report:  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYYPR01MB6777.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(376002)(396003)(136003)(39860400002)(366004)(346002)(451199015)(66446008)(64756008)(186003)(66556008)(41300700001)(2616005)(478600001)(76116006)(66946007)(66476007)(2906002)(82960400001)(8676002)(122000001)(38070700005)(71200400001)(38100700002)(6486002)(86362001)(31696002)(316002)(110136005)(6512007)(6506007)(53546011)(4744005)(31686004)(966005)(8936002)(85182001)(26005)(36756003)(5660300002)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:  =?utf-8?B?SlNxazlPaElIMFRXNHVnNmZYaWRmSkpOT25Qaks4bXByYkMvYktzcFl3YjFo?=
- =?utf-8?B?ZEx2SHZmYk9yQzF2RlFmQ1FzTGxvQVRQZFlxaTRQdHNyVlhpQldoUUtRbFlC?=
- =?utf-8?B?RG1VKzZ4dnRSTDVobk4vVFZvOUhvY1FncXkxei9UUG1DWFBjVDdISUlJMVp5?=
- =?utf-8?B?V1BKM2lWRkJWcU9mU3Y4a0p2Ync4NmczdytKbGt4Q1hHZW10TVIrcjdVN1NQ?=
- =?utf-8?B?TGlnRTNCUk1GQ0pjQ3J4ekVocGw1SlptT3liQnAyb0grOXR2Q3ZuODJHeWZm?=
- =?utf-8?B?QzUwdEtLRUlGN0JJODJlaEpVV2Npc3NCc1VuTXFCbzlHMnMyQm5pUkE5TFIz?=
- =?utf-8?B?aHBrS3ZlMlJ4M1ZEUzdvWmxIQkh6L3ZSd1NlSTdOc3JiVXVTei9oRXY5K01r?=
- =?utf-8?B?RHNCZERUdWlGam5iWTlndThGSmJ0YitOejRBenkweSt1Skk0UFRpN1N3K0RJ?=
- =?utf-8?B?aDFUTDk5VmFHbVpnc0dJUjI4ajloWmN1R1M3M2swMGpjYUZzQkhST0d5OEY5?=
- =?utf-8?B?ak1NNXd2bW5lK25hak9WajM1ZUxDcGQ2OWZmVmR3NzF4VjhpK0c3RWJHdGxX?=
- =?utf-8?B?STFhUUdqN3hWL1c1UzVGZytQblpuMk9DNXlkUUpkbklvU2t3c0kwSUpJRWlK?=
- =?utf-8?B?MzJZNFVucTlRMXBkdWM3Wi9ia084WnNCWjFtbXZobFBLbE5oVGxhUEE2S0Rq?=
- =?utf-8?B?QVVJMDVUMnJzU2FiR2ZPY2h0MWhhUnpHRVQ4aE1ncXR1cnk0NFBFdmM1WmlD?=
- =?utf-8?B?SndwUTllMUpPWEF6Z0VCeENQd2NFaFh5MlhiVjJneWRIQWt2WG44byt1WkJV?=
- =?utf-8?B?dFdTeVFwdmpWRnRCQnFBL091SXc0SHI4eTdLMlJmMFovVS9vRkRpQ3ZhM2Fn?=
- =?utf-8?B?RjBCMHZSQkJLb25MU29vNFN5RDBpNEltaUlta0xNcFl5WnVrUExNRGs3OTJ4?=
- =?utf-8?B?Zm0wZ3hsenk3NjgxdUcvamc4TzZRRjVHVW45Qk1BNWxIUG9CalltbEdrK2JW?=
- =?utf-8?B?R1orcW51MXZDL3lpODJ3MDl3SGNaUGdwZzJTZTJ6d2FMQkV5REJWR0Nwek9P?=
- =?utf-8?B?R3JKS1p1ZWR2RFFEZEloeXhHK3BDa0hqRHVhVnM5cjlGWnJMWExCVGhWQkNx?=
- =?utf-8?B?dDZuZHRlbGtaU3NzKzQyMmpram1SZ0M5SGUraGxtTjBsMDBkeTRTU2JyeUJO?=
- =?utf-8?B?MFJWbzFucE1jN1Y1bGZudENTT3p3OW9Wd3N5bnlOQURlbklyRWx6V0IrVkxk?=
- =?utf-8?B?MSt6UFY2NGlJMGxLU0NEV0xIVzVSVEk4TjRVQThGK0pvemtEbkJBYmJDcEwr?=
- =?utf-8?B?QnBaRndQRDlobjZMa3piRzFrNE1Ya0ppdWo3OWxmMGdUR3VjZDB6YWpTam81?=
- =?utf-8?B?ODl1dm5qaE92dmNBUTVjOUJwQkFwaTNUMTkwNmgrdlQvcnBFZjNLRS9JNG10?=
- =?utf-8?B?bnF6cW5IM1NmeUEyK2wvVHVCMy82RVA0S2lNcXV5bUNTSmJuUVpSSDBzckVN?=
- =?utf-8?B?Y3Zpby9zM1d5SDk0TUEvbWpCVURwRHd3MDNadVZBamZXaEUrYVZ0c0kwVXB5?=
- =?utf-8?B?YmhKTHphQzB2R053NnlaNmdFS21LV1hTNUZ3cFN4R3FvY3dzZHVjRjhjTmd5?=
- =?utf-8?B?US9yNmNHVTVLcUYwbFdhczZvTXhodUhzZ1pOUUQ5dUtzdnpFZzRvYU95MERq?=
- =?utf-8?B?RDBFYWRldkRvdmJFeFdwby9vNFU2bVZjRXV1WHhkVkpjaHI2aWYwUmZVUGpF?=
- =?utf-8?B?ZUNRT2NUZFNmTlRzOEhWdXJBcjVTMjBna1F1WHJiUEp4YnlWRldDc0w4dnJ4?=
- =?utf-8?B?U08vQWNNMmc5bThUVGYxVktyQWt1a0ZNZFlKUnQzRENuOHljQTNQN2doQlJS?=
- =?utf-8?B?QVpnMDhzbjlld3I3OWxWci9SdUMxSlJqYytxZ2JEZHNSUGxQV1U5K0pMR0hN?=
- =?utf-8?B?SnFyVUlMbW1TSzhibnpHMWZuQTJURWlvUGNyNlp6MEp6Yms1bXNJcHRFay92?=
- =?utf-8?B?V0s0SlMzVjdxSGN2WENnTzNucjBSNVZBbGhhTUhNdkpsekVyVExiaDIzOEVm?=
- =?utf-8?B?ekVhM1hYV3l3emp4ZE5oNFg1WHhleldBRGtzZUlLY3J2dEFlNFk3aHBDZ0gv?=
- =?utf-8?Q?MJ/QsYaGWiWmZQnaqJLPzwA0N?=
-Content-ID: <1744E0336F565C44BB6D778E24C03E9D@jpnprd01.prod.outlook.com>
+	id 1oo3J6-00DhlK-FP
+	for kexec@lists.infradead.org; Thu, 27 Oct 2022 13:52:29 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1666878745;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=J3Fq153B9PaKBw4UwH16xPw9HcajjAUr3ziTEO7//xc=;
+	b=EUWqv0PHAXrMcYgQBcsuPkfzeECtCNz9rC+MtHAc5jT0qSfJLF2X9LIIU0LgRfIgHEwn9w
+	xkX90Gt2M4no7qivMlq6V4kOki5osh3RtGONEbjjmpsVzFbeegmKhHTPYgdJfaYmOY26zm
+	cVU2M3KmaDY57pr8wMkQJaWx2N5WUZs=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-58-rzb8YtayMOebD4r3zSmchA-1; Thu, 27 Oct 2022 09:52:24 -0400
+X-MC-Unique: rzb8YtayMOebD4r3zSmchA-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 646E32A59558;
+	Thu, 27 Oct 2022 13:52:22 +0000 (UTC)
+Received: from localhost (ovpn-12-121.pek2.redhat.com [10.72.12.121])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 8429F403162;
+	Thu, 27 Oct 2022 13:52:08 +0000 (UTC)
+Date: Thu, 27 Oct 2022 21:52:04 +0800
+From: Baoquan He <bhe@redhat.com>
+To: David Hildenbrand <david@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Eric DeVolder <eric.devolder@oracle.com>
+Cc: Oscar Salvador <osalvador@suse.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	kexec@lists.infradead.org, ebiederm@xmission.com, dyoung@redhat.com,
+	vgoyal@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+	dave.hansen@linux.intel.com, hpa@zytor.com,
+	nramas@linux.microsoft.com, thomas.lendacky@amd.com,
+	robh@kernel.org, efault@gmx.de, rppt@kernel.org,
+	sourabhjain@linux.ibm.com, linux-mm@kvack.org
+Subject: Re: [PATCH v12 7/7] x86/crash: Add x86 crash hotplug support
+Message-ID: <Y1qNBDY99Ypan9Ok@MiWiFi-R3L-srv>
+References: <d6386653-eb71-188c-8a09-5db46b4e42d4@oracle.com>
+ <YzcqE1RVtPcuLlxN@zn.tnic>
+ <Y0Dh4ieUUZ4oXa1/@MiWiFi-R3L-srv>
+ <Y0b9apyIs+RpSo1e@zn.tnic>
+ <53aed03e-2eed-09b1-9532-fe4e497ea47d@oracle.com>
+ <Y0cmaPTKQuWtwIRh@zn.tnic>
+ <Y0d+mFivS+88+Chr@MiWiFi-R3L-srv>
+ <Y1e7Hw0PRDI9NxU9@zn.tnic>
+ <Y1lIoTBNvHrKX5K9@MiWiFi-R3L-srv>
+ <d2ce1bed-a053-4840-2e84-643b678392c1@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nec.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYYPR01MB6777.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 523d98e3-c9c0-4ead-b691-08dab7b3e59e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Oct 2022 00:40:50.5603
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: e67df547-9d0d-4f4d-9161-51c6ed1f7d11
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vudxg8wqIYbVgXESfZKGspm078HBvYAxjjTGAexgGl9odjR4GgHSbQN/JMLwI+njj+5AVG4f5tAWEZWxw2OYjQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB10834
+Content-Disposition: inline
+In-Reply-To: <d2ce1bed-a053-4840-2e84-643b678392c1@redhat.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221026_174105_824511_2F27E874 
-X-CRM114-Status: GOOD (  14.49  )
+X-CRM114-CacheID: sfid-20221027_065228_640017_F85C0A34 
+X-CRM114-Status: GOOD (  27.22  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -138,27 +90,87 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-T24gMjAyMi8xMC8yNCAxMToyNSwgSEFHSU8gS0FaVUhJVE8o6JCp5bC+IOS4gOS7gSkgd3JvdGU6
-DQo+IE9uIDIwMjIvMTAvMjEgMTk6MjQsIExlb25pZGFzIFNweXJvcG91bG9zIHdyb3RlOg0KPj4g
-VmVyc2lvbiBzcGVjaWZpYyBwYXRocyBkb2Vzbid0IG1ha2Ugc2Vuc2UgYXQNCj4+IC91c3Ivc2hh
-cmUvbWFrZWR1bXBmaWxlLiBUaGlzIGFzc3VtZXMgeW91IHdpbGwgaGF2ZSBvbmx5IG9uZSB2ZXJz
-aW9uDQo+PiBpbnN0YWxsZWQgd2hpY2ggb24gYSBub3JtYWwgc3lzdGVtIGl0IG1ha2VzIHNlbnNl
-IGFuZCBkZXZzIGNhbiBhbHdheXMNCj4+IHNwZWNpZnkgZGlmZmVyZW50IERFU1RESVIgcGVyIHZl
-cnNpb25zLg0KPj4NCj4+IEZpeGVzOiAjMTANCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBMZW9uaWRh
-cyBTcHlyb3BvdWxvcyA8YXJ0YWZpbmRlQGFyY2hsaW51eC5vcmc+DQo+IA0KPiBUaGFua3MgZm9y
-IHRoZSBwYXRjaC4NCj4gDQo+IEkgYWdyZWUuDQo+IA0KPiBUaGUgcGF0Y2ggWzFdIGludHJvZHVj
-ZWQgdGhlIGRpcmVjdG9yeSB3aXRoICR7VkVSU0lPTn0sIGJ1dCBtYWtlZHVtcGZpbGUNCj4gaGFz
-IGJhY2t3YXJkIGNvbXBhdGliaWxpdHkgYW5kIHRoZSBkaXJlY3RvcnkgZG9lcyBub3QgaGF2ZSBh
-bnkgZGF0YSB0aGF0DQo+IGhhcyB2ZXJzaW9uIHJlc3RyYWludCwgc28gSSBkb24ndCBzZWUgYW55
-IHJlYXNvbi4gIEFsc28gSSBkaWRuJ3QgZmluZCBhbnkNCj4gZGlzY3Vzc2lvbiBpbiB0aGUgbGlz
-dCBhcmNoaXZlLg0KPiANCj4gSSB3aWxsIG1lcmdlIHRoaXMgYSBmZXcgZGF5cyBsYXRlciBpZiBu
-byBvYmplY3Rpb24uDQoNCkFwcGxpZWQuDQpodHRwczovL2dpdGh1Yi5jb20vbWFrZWR1bXBmaWxl
-L21ha2VkdW1wZmlsZS9jb21taXQvZjFkODRhNWQ2OWQ4MWJjN2E4OWFlZmFlNTA0YmU4OGRmMWU1
-MDY5Mw0KDQpUaGFua3MsDQpLYXp1Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3Jn
-Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On 10/26/22 at 04:54pm, David Hildenbrand wrote:
+> On 26.10.22 16:48, Baoquan He wrote:
+> > On 10/25/22 at 12:31pm, Borislav Petkov wrote:
+> > > On Thu, Oct 13, 2022 at 10:57:28AM +0800, Baoquan He wrote:
+> > > > The concern to range number mainly is on Virt guest systems.
+> > > 
+> > > And why would virt emulate 1K hotpluggable DIMM slots and not emulate a
+> > > real machine?
+> 
+> IIRC, ACPI only allows for 256 slots. PPC dlpar might provide more.
+> 
+> > 
+> > Well, currently, mem hotpug is an important feature on virt system to
+> > dynamically increase/shrink memory on the system. If only emulating real
+> > machine, it won't be different than bare metal system.
+> > 
+> > IIRC, the ballon driver or virtio-mem feature can add memory board, e.g
+> > 1G, block size is 128M, 8 blocks added. When shrinking this 1G memory
+> > later, it will take best effort way to hot remove memory. Means if any
+> > memory block is occupied, it will be kept there. Finally we could only
+> > remove every second blocks, 4 blocks altogether. Then the left
+> > un-removed blocks will produce 4 separate memory regions. Like this, a
+> > virt guest could have many memory regions in kernel after memory
+> > being added/removed.
+> > 
+> > If I am wrong, Please correct me, David.
+> 
+> Yes, virtio-mem (but also PPC dlpar) can result in many individual memory
+> blocks with holes in between after hotunplug. Hotplug OTOH, usually tries to
+> "plug" these holes and reduce the total number of memory blocks. It might be
+> rare that our range will be heavily fragmented after unplug, but it's
+> certainly possible.
+> 
+> [...]
+> 
+> > 
+> > Yes, now assume we have a HPE SGI system and it has memory hotplug
+> > capacity. The system itself has already got memory regions more than
+> > 1024. Then when we hot add extra memory board, we want to include the
+> > newly added memory regions into elfcorehdr so that it will be dumped out
+> > in kdump kernel.
+> > 
+> > That's why I earlier suggested 2048 for number of memory regions.
+> 
+> The more the better, unless "it hurts". Assuming a single memory block is
+> 128 MiB, that would be 256 GiB.
+> 
+> Usually, on big systems, the memory block size is 2 GiB. So 4 TiB.
+
+Thanks a lot for these valuable inputs, David.
+
+Hi Boris, Eric
+
+So what's your suggested value for the Kconfig option?
+
+1) cpu number, 1024?
+2) memory regions, 2048?
+
+About below draft, any comment? We can decide a value based on our
+knowledge, can adjust later if any real system has more than the number.
+
++config CRASH_ELF_CORE_PHDRS_NUM
++       depends on CRASH_DUMP && KEXEC_FILE && (HOTPLUG_CPU || MEMORY_HOTPLUG)
++       int
++       default 3072
++       help
++         For the kexec_file_load path, specify the default number of
++         phdr for the vmcore. E.g the memory regions represented by the
++         'System RAM' entries in /proc/iomem, the cpu notes of each
++         present cpu stored in /sys/devices/system/cpu/cpuX/crash_notes.
+
+Thanks
+Baoquan
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
