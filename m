@@ -4,45 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A62BDC38A02
-	for <kexec@archiver.kernel.org>; Fri, 28 Oct 2022 22:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C12F7C433FE
+	for <kexec@archiver.kernel.org>; Sat, 29 Oct 2022 04:27:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=DmgskkIq040NLm+cBmup1yi3dxrN/fsdAJgTzPSnae4=; b=4UUChQ1fZL74k7
-	Cz7haOXx1bOS2X+ngrJRnBIXosjL8nLmomkTtLDo3xkvLutQgoa9PaDGUkYJeJK/EVDBaSINNmYo7
-	7WGvQkvggmwLDwZvv/nXujetodtbeF3gUcmrwRdN+Xr1DHAzaheK2h1aDDvnc2C56IhlVorYnKgqO
-	UjJY3YO/xNGnFdZ4nT78219pPpCpEhI7xoyvdP8aSaVdiAZPzkGdWo23N2MMXJ+AMCihxuLY2Gc66
-	YZh1pBH5Gwhd3dGZOO/zHW5C3ANIMxkYf7g42INbOTQTQJ+7vWfLHuBjMPO86c8G3udLFe1rXVIlk
-	MXMEYhC8CmkS/6zv3Ipg==;
+	List-Owner; bh=PJDKchNDzBYuzC3DnDt16Q2JiU2HaojeG3vlVglDFZI=; b=v4YU+d4IlxfjMf
+	ZJblZA8lLW/FV8RmEPLDFnhUUWN0BgkNGFZ1wRad7uFLoz5H/iGBAE2acmYKVaviluoJakT/jUQ5S
+	6l5SsuABxgOR954kIn8TDulwscM5v1FKZJb4yj1CWWHy4DsjBwwaNgMkX+6Nyj3TbeAUcGl7HYnVP
+	KljrWEDR9iLUkI+jYcoHu/ue6HIN/pAFRaKvZOF0LsWP81+KOSWP8dux40AZMQ6XI7WoZ5mWLelAU
+	OZVIKGJx1GlhGBZ6qfAULGak1xDaVdJyZaffU3S+AY/Uk+2Se7qhZup5gQgCLGHf9wdlFVZdqf7DN
+	OsSe+Fm6Uqd78OuJzzpA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1ooXhh-0038Es-Q7; Fri, 28 Oct 2022 22:19:53 +0000
-Received: from mail.skyhub.de ([5.9.137.197])
+	id 1oodRc-004cJf-TD; Sat, 29 Oct 2022 04:27:40 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1ooXhe-0038CT-K8
-	for kexec@lists.infradead.org; Fri, 28 Oct 2022 22:19:52 +0000
-Received: from zn.tnic (p200300ea9733e788329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9733:e788:329c:23ff:fea6:a903])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 80CE61EC0528;
-	Sat, 29 Oct 2022 00:19:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-	t=1666995581;
+	id 1oodRa-004cIl-AT
+	for kexec@lists.infradead.org; Sat, 29 Oct 2022 04:27:39 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1667017654;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-	bh=TfhnsJUpPMTXVXSAObYcxWoYzhndg9xgfrbCtO8qJg8=;
-	b=biUeAUKviqathMxYm+Bwp2HnXAPF3Q0cZ9xpG1gNXK2n1zQAT9gAJrA9ecY15dFOwNJx72
-	BU9WupVYS4qRsVX/NFtxogp54qzVsLcpqjfMgYq/IgphWfOW+vlZEeyWrDj9T5skvB3j4c
-	k6GBeC0u8oqcEm6ue0er+Ip0x7VnrnU=
-Date: Sat, 29 Oct 2022 00:19:36 +0200
-From: Borislav Petkov <bp@alien8.de>
+	 in-reply-to:in-reply-to:references:references;
+	bh=cedcTZ1KpEk62+3k25jmR+oGeA+YiQNW5lkM4QZGEoQ=;
+	b=aW6uU+0kXrpxqUTSGg2AHs7aBYqb1W2EKSfJ5dXe0Tt0Jm7tDzelfZAcPjU66upuhVMwhz
+	8jwuDqMSt/CQpTA3TYYcX7T9IdY0gkbVI4Kn3/CFI/BKfWwV5i+5ofLiiLZC0bdzKTM5uJ
+	tnIwBi4h9wM7clstWGP16K/iyj8ivvw=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-91-xVGiBf9dPrKuARqV1j353A-1; Sat, 29 Oct 2022 00:27:22 -0400
+X-MC-Unique: xVGiBf9dPrKuARqV1j353A-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EC16329AA2F8;
+	Sat, 29 Oct 2022 04:27:21 +0000 (UTC)
+Received: from localhost (ovpn-12-24.pek2.redhat.com [10.72.12.24])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 6FBCA40C6EC3;
+	Sat, 29 Oct 2022 04:27:14 +0000 (UTC)
+Date: Sat, 29 Oct 2022 12:27:05 +0800
+From: Baoquan He <bhe@redhat.com>
 To: Eric DeVolder <eric.devolder@oracle.com>
-Cc: Baoquan He <bhe@redhat.com>, david@redhat.com,
+Cc: David Hildenbrand <david@redhat.com>, Borislav Petkov <bp@alien8.de>,
 	Oscar Salvador <osalvador@suse.de>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	linux-kernel@vger.kernel.org, x86@kernel.org,
@@ -53,24 +61,24 @@ Cc: Baoquan He <bhe@redhat.com>, david@redhat.com,
 	robh@kernel.org, efault@gmx.de, rppt@kernel.org,
 	sourabhjain@linux.ibm.com, linux-mm@kvack.org
 Subject: Re: [PATCH v12 7/7] x86/crash: Add x86 crash hotplug support
-Message-ID: <Y1xVeP/RtG37zLYm@zn.tnic>
-References: <Y0d+mFivS+88+Chr@MiWiFi-R3L-srv>
+Message-ID: <Y1yrmbHnHeXTTiYn@MiWiFi-R3L-srv>
+References: <Y0Dh4ieUUZ4oXa1/@MiWiFi-R3L-srv>
+ <Y0b9apyIs+RpSo1e@zn.tnic>
+ <53aed03e-2eed-09b1-9532-fe4e497ea47d@oracle.com>
+ <Y0cmaPTKQuWtwIRh@zn.tnic>
+ <Y0d+mFivS+88+Chr@MiWiFi-R3L-srv>
  <Y1e7Hw0PRDI9NxU9@zn.tnic>
  <Y1lIoTBNvHrKX5K9@MiWiFi-R3L-srv>
- <35c98ca6-10f8-b248-78c5-99fce7e66c65@oracle.com>
- <Y1uspLb7fLdtnQq+@zn.tnic>
- <d91f8728-6a63-415d-577c-bd76e69ec7f6@oracle.com>
- <Y1wL+ZrvD5gTZaKN@zn.tnic>
- <ca43bd5f-8a74-9412-3d4b-52c7d5e54978@oracle.com>
- <Y1w76RwZUKUvsS7A@zn.tnic>
- <43f16833-add1-80c3-3bf8-5a6a05e75be6@oracle.com>
+ <d2ce1bed-a053-4840-2e84-643b678392c1@redhat.com>
+ <Y1qNBDY99Ypan9Ok@MiWiFi-R3L-srv>
+ <368a61e7-818b-2ee4-8c8b-22218373622d@oracle.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <43f16833-add1-80c3-3bf8-5a6a05e75be6@oracle.com>
+In-Reply-To: <368a61e7-818b-2ee4-8c8b-22218373622d@oracle.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221028_151950_846221_5A2F394D 
-X-CRM114-Status: UNSURE (   8.87  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20221028_212738_463105_3A839F75 
+X-CRM114-Status: GOOD (  34.81  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,33 +95,95 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Oct 28, 2022 at 04:22:54PM -0500, Eric DeVolder wrote:
-> /*
->  * For the kexec_file_load() syscall path, specify the maximum number of
->  * memory regions that the elfcorehdr buffer/segment can accommodate.
->  * These regions are obtained via walk_system_ram_res(); eg. the
->  * 'System RAM' entries in /proc/iomem.
->  * This value is combined with NR_CPUS and multiplied by sizeof(Elf64_Phdr)
+On 10/27/22 at 02:28pm, Eric DeVolder wrote:
+> 
+> 
+> On 10/27/22 08:52, Baoquan He wrote:
+> > On 10/26/22 at 04:54pm, David Hildenbrand wrote:
+> > > On 26.10.22 16:48, Baoquan He wrote:
+> > > > On 10/25/22 at 12:31pm, Borislav Petkov wrote:
+> > > > > On Thu, Oct 13, 2022 at 10:57:28AM +0800, Baoquan He wrote:
+> > > > > > The concern to range number mainly is on Virt guest systems.
+> > > > > 
+> > > > > And why would virt emulate 1K hotpluggable DIMM slots and not emulate a
+> > > > > real machine?
+> > > 
+> > > IIRC, ACPI only allows for 256 slots. PPC dlpar might provide more.
+> > > 
+> > > > 
+> > > > Well, currently, mem hotpug is an important feature on virt system to
+> > > > dynamically increase/shrink memory on the system. If only emulating real
+> > > > machine, it won't be different than bare metal system.
+> > > > 
+> > > > IIRC, the ballon driver or virtio-mem feature can add memory board, e.g
+> > > > 1G, block size is 128M, 8 blocks added. When shrinking this 1G memory
+> > > > later, it will take best effort way to hot remove memory. Means if any
+> > > > memory block is occupied, it will be kept there. Finally we could only
+> > > > remove every second blocks, 4 blocks altogether. Then the left
+> > > > un-removed blocks will produce 4 separate memory regions. Like this, a
+> > > > virt guest could have many memory regions in kernel after memory
+> > > > being added/removed.
+> > > > 
+> > > > If I am wrong, Please correct me, David.
+> > > 
+> > > Yes, virtio-mem (but also PPC dlpar) can result in many individual memory
+> > > blocks with holes in between after hotunplug. Hotplug OTOH, usually tries to
+> > > "plug" these holes and reduce the total number of memory blocks. It might be
+> > > rare that our range will be heavily fragmented after unplug, but it's
+> > > certainly possible.
+> > > 
+> > > [...]
+> > > 
+> > > > 
+> > > > Yes, now assume we have a HPE SGI system and it has memory hotplug
+> > > > capacity. The system itself has already got memory regions more than
+> > > > 1024. Then when we hot add extra memory board, we want to include the
+> > > > newly added memory regions into elfcorehdr so that it will be dumped out
+> > > > in kdump kernel.
+> > > > 
+> > > > That's why I earlier suggested 2048 for number of memory regions.
+> > > 
+> > > The more the better, unless "it hurts". Assuming a single memory block is
+> > > 128 MiB, that would be 256 GiB.
+> > > 
+> > > Usually, on big systems, the memory block size is 2 GiB. So 4 TiB.
+> > 
+> > Thanks a lot for these valuable inputs, David.
+> > 
+> > Hi Boris, Eric
+> > 
+> > So what's your suggested value for the Kconfig option?
+> > 
+> > 1) cpu number, 1024?
+> > 2) memory regions, 2048?
+> > 
+> > About below draft, any comment? We can decide a value based on our
+> > knowledge, can adjust later if any real system has more than the number.
+> > 
+> > +config CRASH_ELF_CORE_PHDRS_NUM
+> > +       depends on CRASH_DUMP && KEXEC_FILE && (HOTPLUG_CPU || MEMORY_HOTPLUG)
+> > +       int
+> > +       default 3072
+> > +       help
+> > +         For the kexec_file_load path, specify the default number of
+> > +         phdr for the vmcore. E.g the memory regions represented by the
+> > +         'System RAM' entries in /proc/iomem, the cpu notes of each
+> > +         present cpu stored in /sys/devices/system/cpu/cpuX/crash_notes.
+> > 
+> > Thanks
+> > Baoquan
+> > 
+> 
+> I prefer to keep CRASH_MAX_MEMORY_RANGES, as explained in my response to your message on October 26.
+> eric
 
-NR_CPUS_DEFAULT
+Ah, sorry, I mixed it up with NR_CPUS. I went on an office outing
+yesterday, glad to see you and Boris have made an agreement on the code
+change and value. Thanks.
 
->  * to determine the final elfcorehdr memory buffer/segment size.
->  * The value 8192, for example, covers a (sparsely populated) 1TiB system
->  * consisting of 128MiB memblock size, while resulting in an elfcorehdr
->  * memory buffer/segment size under 1MiB.
 
-... and it is a sane choice trying to accomodate both actual baremetal
-and VM configurations."
+> 
 
-Yeah, it's a good start.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
 
 _______________________________________________
 kexec mailing list
