@@ -4,58 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 45373C43217
-	for <kexec@archiver.kernel.org>; Fri,  4 Nov 2022 10:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A37A6C433FE
+	for <kexec@archiver.kernel.org>; Fri,  4 Nov 2022 11:32:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=T71LkabXVOvKqU3uMPLuazKXcTpdpS8qyqgSiYeL8k4=; b=gUl07HTvi5CYdP
-	fvxPWaKxJPbZEYgWzAEAahq3QGFZLkN0aXKvphtXdVTZG9aXTvIYfvQtfhqLha4FrOSIqRUrmWa2v
-	LX6YRXnhshjQTj9Pk0Fd7lWC/497A1BmihYIZXuf+T0Opke1VHsm8Bjjm3t2X+0agDeWBJJThHb0c
-	JbJqrvW9OCZQLU8Ywy8v2dPDwGfs1q/Kbbx5TXAM6CzKdRuy0RSDQAV06383MoVD4ZOT1lDdoG0hW
-	icRAHyiGagEZACteRnUzsRNMtrZ9kQN6qFGPcZ1bRGDsUvSaA1+gSIMryQOM+oUxTtwt1FHxkLft5
-	GrSQkEGmMOyYC1MaTQ8Q==;
+	List-Owner; bh=qp55Z2U1iW5p0YI5M7nYazKRfV3qThpJ2YViwENqBPc=; b=JO9JGHksWwwSMQ
+	96wt9F9wgcgTCp6F18/QsW5vlLVhOFFn+vpvZoVf2P1G3/cxpXoRAan47xQoMPvlXZjRdqGaRQOeI
+	omGUV4gR4LveiH6+iJ6ZCVzuL9QQAferJqeWLpuyfrPDZC//od+jTd3zeeBBGt6ng7YQEcfFaAHnD
+	+mZ0Kon5lOTWzAjUCLKXJJLLtbvvhePJQ/IuvTDrqUPl+6uyXMxNE1Bg+rEosXkuwOcn6N9sjpO6i
+	7+/lfb9Rjq5//XQc4vCsNSIV9FTsisqBHO76oZ5O0ccvgFSk5CoVVIzLA+lsUZXK2ZYYOjw0UbKaj
+	B7cTs8/Rt2cEuBcI/G4g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oqtUw-003AOg-PY; Fri, 04 Nov 2022 10:00:26 +0000
-Received: from szxga02-in.huawei.com ([45.249.212.188])
+	id 1oquvd-003M3D-2U; Fri, 04 Nov 2022 11:32:05 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oqtUr-003AKw-FZ; Fri, 04 Nov 2022 10:00:23 +0000
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.54])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4N3bhS6M9MzHvZ2;
-	Fri,  4 Nov 2022 17:59:52 +0800 (CST)
-Received: from kwepemm600010.china.huawei.com (7.193.23.86) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 4 Nov 2022 18:00:13 +0800
-Received: from ubuntu1804.huawei.com (10.67.174.174) by
- kwepemm600010.china.huawei.com (7.193.23.86) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 4 Nov 2022 18:00:12 +0800
-From: Li Huafei <lihuafei1@huawei.com>
-To: <paul.walmsley@sifive.com>, <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
-	<lizhengyu3@huawei.com>, <liaochang1@huawei.com>,
-	<u.kleine-koenig@pengutronix.de>, <rdunlap@infradead.org>
-CC: <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<kexec@lists.infradead.org>, <lihuafei1@huawei.com>
-Subject: [PATCH 2/2] RISC-V: kexec: Fix memory leak of elf header buffer
-Date: Fri, 4 Nov 2022 17:56:58 +0800
-Message-ID: <20221104095658.141222-2-lihuafei1@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20221104095658.141222-1-lihuafei1@huawei.com>
-References: <20221104095658.141222-1-lihuafei1@huawei.com>
+	id 1oquva-003M24-Uv
+	for kexec@lists.infradead.org; Fri, 04 Nov 2022 11:32:04 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1667561520;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=s1xZ0vxushGJcgjg7hlatryVRu1/dXqezckzHs4WjGk=;
+	b=YFij6ncPxzzxIacLVyV77dF6KNEGvgMI7wQ1YekXo+b36iZYxJMwHyw5qz2DIRv2YfaLQF
+	qpSHJGvrmRzr0uWIf0O7igd7wiYlkFsx1inuWY/RRJGYOoQfE8gZVvbrPx66/TX8bogSUm
+	oYG6oC0M0y3EBGZ3jdxJ2AHVAogVvbw=
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
+ [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-27-pAAwjEn5MkmaTqOPpb-Blw-1; Fri, 04 Nov 2022 07:30:29 -0400
+X-MC-Unique: pAAwjEn5MkmaTqOPpb-Blw-1
+Received: by mail-pl1-f200.google.com with SMTP id o7-20020a170902d4c700b001868cdac9adso3407010plg.13
+        for <kexec@lists.infradead.org>; Fri, 04 Nov 2022 04:30:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=s1xZ0vxushGJcgjg7hlatryVRu1/dXqezckzHs4WjGk=;
+        b=ydU1G+Rte0iDBjzUycDzhDWUEPcdbzChI+CUZCoDy/hO1VIKzDDOb7c85Pv2i/M4p/
+         z9Xs1coMqHzq/1WM23UHCWyBuvxga32Mw9KEUgn7XhvHEcF7amUftv7+luZ1Zl0Uy9tB
+         dOJTeK4rh4iHQFwZwOEDeC+ZhnjDNI6SbJLwCblVy0tL2ROwsuGKD8NBg5NCUX1CZH5h
+         qsFAp02Ft36naARbD7htgL8T5jJrTSkWFCZjPSGJstsswyIsFUBTN6wSkWuGD+dlIJ3N
+         PNffpPkc2ckFFJEzRLEGX6HcMcJ2EuqOYGmQg8pix80gzAZBqI7z1PZXS6xl5ywc4llz
+         dc8Q==
+X-Gm-Message-State: ACrzQf1iiubvFXrOzir5LOlG3eAcYYZN1n4VB+2m03X3xdu3DYROibpo
+	QBhJL2fPJdkHJRXhJSXt5yLrLDxr/iJ+Lp7ovjJsTcNtiIsc4PUBHjFqWFXrYONOshHkgtWFptW
+	SREbD6aeNAh6a62kdB7VikKMeLSPmD7qu6RukhrCweNOrHqVAF8fFOkvxAUlt3qPXMnw=
+X-Received: by 2002:a17:90b:4f8a:b0:213:48f0:296f with SMTP id qe10-20020a17090b4f8a00b0021348f0296fmr53282548pjb.140.1667561428293;
+        Fri, 04 Nov 2022 04:30:28 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM6fOg7xKewtpqLLbefucY7Lfg8o27pnyZIU+pw2e82M8AAb+KPN1hlYZS75bLeAcvDS/QbLoA==
+X-Received: by 2002:a17:90b:4f8a:b0:213:48f0:296f with SMTP id qe10-20020a17090b4f8a00b0021348f0296fmr53282509pjb.140.1667561427911;
+        Fri, 04 Nov 2022 04:30:27 -0700 (PDT)
+Received: from localhost ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id p12-20020a170902a40c00b00186b1bfbe79sm2429710plq.66.2022.11.04.04.30.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Nov 2022 04:30:27 -0700 (PDT)
+From: Coiby Xu <coxu@redhat.com>
+To: kexec@lists.infradead.org
+Cc: Milan Broz <gmazyland@gmail.com>,
+	Thomas Staudt <tstaudt@de.ibm.com>,
+	Kairui Song <ryncsn@gmail.com>,
+	dm-devel@redhat.com,
+	Jan Pazdziora <jpazdziora@redhat.com>,
+	Pingfan Liu <kernelfans@gmail.com>,
+	Baoquan He <bhe@redhat.com>,
+	Dave Young <dyoung@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	Vivek Goyal <vgoyal@redhat.com>
+Subject: [RFC v2 2/5] crash_dump: save the LUKS volume key temporarily
+Date: Fri,  4 Nov 2022 19:29:57 +0800
+Message-Id: <20221104113000.487098-3-coxu@redhat.com>
+X-Mailer: git-send-email 2.37.3
+In-Reply-To: <20221104113000.487098-1-coxu@redhat.com>
+References: <20221104113000.487098-1-coxu@redhat.com>
 MIME-Version: 1.0
-X-Originating-IP: [10.67.174.174]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemm600010.china.huawei.com (7.193.23.86)
-X-CFilter-Loop: Reflected
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221104_030021_724755_CA1BA592 
-X-CRM114-Status: UNSURE (   9.24  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20221104_043203_114762_48E5D3AA 
+X-CRM114-Status: GOOD (  17.54  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -72,53 +106,179 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-This is reported by kmemleak detector:
+After having the volume key, crytpsetup/systemd-cryptsetup saves the
+volume key as a logon key to its thread keyring and this key is
+destroyed immediately with the terminated thread. So a temporary copy of
+the volume key is needed in order to later save it to kdump reserved
+memory when the crash kernel is loaded later.
 
-unreferenced object 0xff2000000403d000 (size 4096):
-  comm "kexec", pid 146, jiffies 4294900633 (age 64.792s)
-  hex dump (first 32 bytes):
-    7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00  .ELF............
-    04 00 f3 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<00000000566ca97c>] kmemleak_vmalloc+0x3c/0xbe
-    [<00000000979283d8>] __vmalloc_node_range+0x3ac/0x560
-    [<00000000b4b3712a>] __vmalloc_node+0x56/0x62
-    [<00000000854f75e2>] vzalloc+0x2c/0x34
-    [<00000000e9a00db9>] crash_prepare_elf64_headers+0x80/0x30c
-    [<0000000067e8bf48>] elf_kexec_load+0x3e8/0x4ec
-    [<0000000036548e09>] kexec_image_load_default+0x40/0x4c
-    [<0000000079fbe1b4>] sys_kexec_file_load+0x1c4/0x322
-    [<0000000040c62c03>] ret_from_syscall+0x0/0x2
+crytpsetup/systemd-cryptsetup will write the key description to
+/sys/kernel/crash_luks_volume_key so the kernel will read the logon key
+and save a temporary copy for later user. kdump has 1 hour at maximum to
+get the temporary copy before the key gets wiped. And after kdump
+retrieves the key, the key will be wiped immediately.
 
-In elf_kexec_load(), a buffer is allocated via vzalloc() to store elf
-headers.  While it's not freed back to system when kdump kernel is
-reloaded or unloaded, or when image->elf_header is successfully set and
-then fails to load kdump kernel for some reason. Fix it by freeing the
-buffer in arch_kimage_file_post_load_cleanup().
-
-Fixes: 8acea455fafa ("RISC-V: Support for kexec_file on panic")
-Signed-off-by: Li Huafei <lihuafei1@huawei.com>
+Signed-off-by: Coiby Xu <coxu@redhat.com>
 ---
- arch/riscv/kernel/elf_kexec.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ include/linux/crash_core.h |  2 +
+ kernel/crash_dump.c        | 88 ++++++++++++++++++++++++++++++++++++++
+ kernel/ksysfs.c            | 19 ++++++++
+ 3 files changed, 109 insertions(+)
 
-diff --git a/arch/riscv/kernel/elf_kexec.c b/arch/riscv/kernel/elf_kexec.c
-index ff30fcb43f47..5372b708fae2 100644
---- a/arch/riscv/kernel/elf_kexec.c
-+++ b/arch/riscv/kernel/elf_kexec.c
-@@ -26,6 +26,10 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
- 	kvfree(image->arch.fdt);
- 	image->arch.fdt = NULL;
+diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+index de62a722431e..596d83b8f362 100644
+--- a/include/linux/crash_core.h
++++ b/include/linux/crash_core.h
+@@ -83,5 +83,7 @@ int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
+ 		unsigned long long *crash_size, unsigned long long *crash_base);
+ int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
+ 		unsigned long long *crash_size, unsigned long long *crash_base);
++int crash_sysfs_luks_volume_key_write(const char *key_des, size_t count);
++int crash_pass_temp_luks_volume_key(void **addr, unsigned long *sz);
  
-+	vfree(image->elf_headers);
-+	image->elf_headers = NULL;
-+	image->elf_headers_sz = 0;
-+
- 	return kexec_image_post_load_cleanup_default(image);
+ #endif /* LINUX_CRASH_CORE_H */
+diff --git a/kernel/crash_dump.c b/kernel/crash_dump.c
+index 92da32275af5..9c202bffbb8d 100644
+--- a/kernel/crash_dump.c
++++ b/kernel/crash_dump.c
+@@ -5,6 +5,7 @@
+ #include <linux/errno.h>
+ #include <linux/export.h>
+ 
++#include <keys/user-type.h>
+ /*
+  * stores the physical address of elf header of crash image
+  *
+@@ -39,3 +40,90 @@ static int __init setup_elfcorehdr(char *arg)
+ 	return end > arg ? 0 : -EINVAL;
  }
+ early_param("elfcorehdr", setup_elfcorehdr);
++
++static u8 *luks_volume_key;
++static unsigned int luks_volume_key_size;
++
++void wipe_luks_volume_key(void)
++{
++	if (luks_volume_key) {
++		memset(luks_volume_key, 0, luks_volume_key_size * sizeof(u8));
++		kfree(luks_volume_key);
++		luks_volume_key = NULL;
++	}
++}
++
++static void _wipe_luks_volume_key(struct work_struct *dummy)
++{
++	wipe_luks_volume_key();
++}
++
++static DECLARE_DELAYED_WORK(wipe_luks_volume_key_work, _wipe_luks_volume_key);
++
++static unsigned __read_mostly wipe_key_delay = 3600; /* 1 hour */
++
++static int crash_save_temp_luks_volume_key(const char *key_desc, size_t count)
++{
++	const struct user_key_payload *ukp;
++	struct key *key;
++
++
++	if (luks_volume_key) {
++		memset(luks_volume_key, 0, luks_volume_key_size * sizeof(u8));
++		kfree(luks_volume_key);
++	}
++
++	pr_debug("Requesting key %s", key_desc);
++	key = request_key(&key_type_logon, key_desc, NULL);
++
++	if (IS_ERR(key)) {
++		pr_debug("No such key %s", key_desc);
++		return PTR_ERR(key);
++	}
++
++	ukp = user_key_payload_locked(key);
++	if (!ukp)
++		return -EKEYREVOKED;
++
++	luks_volume_key = kmalloc(ukp->datalen, GFP_KERNEL);
++	if (!luks_volume_key)
++		return -ENOMEM;
++	memcpy(luks_volume_key, ukp->data, ukp->datalen);
++	luks_volume_key_size = ukp->datalen;
++	pr_debug("LUKS master key (size=%u): %8ph\n", luks_volume_key_size, luks_volume_key);
++	schedule_delayed_work(&wipe_luks_volume_key_work,
++			      round_jiffies_relative(wipe_key_delay * HZ));
++	return 0;
++}
++
++int crash_sysfs_luks_volume_key_write(const char *key_desc, size_t count)
++{
++	if (!is_kdump_kernel())
++		return crash_save_temp_luks_volume_key(key_desc, count);
++	return -EINVAL;
++}
++EXPORT_SYMBOL(crash_sysfs_luks_volume_key_write);
++
++int crash_pass_temp_luks_volume_key(void **addr, unsigned long *sz)
++{
++	unsigned long luks_key_sz;
++	unsigned char *buf;
++	unsigned int *size_ptr;
++
++	if (!luks_volume_key)
++		return -EINVAL;
++
++	luks_key_sz = sizeof(unsigned int) + luks_volume_key_size * sizeof(u8);
++
++	buf = vzalloc(luks_key_sz);
++	if (!buf)
++		return -ENOMEM;
++
++	size_ptr = (unsigned int *)buf;
++	memcpy(size_ptr, &luks_volume_key_size, sizeof(unsigned int));
++	memcpy(size_ptr + 1, luks_volume_key, luks_volume_key_size * sizeof(u8));
++	*addr = buf;
++	*sz = luks_key_sz;
++	wipe_luks_volume_key();
++	return 0;
++}
+diff --git a/kernel/ksysfs.c b/kernel/ksysfs.c
+index b1292a57c2a5..e7a7433cb951 100644
+--- a/kernel/ksysfs.c
++++ b/kernel/ksysfs.c
+@@ -135,6 +135,24 @@ static ssize_t vmcoreinfo_show(struct kobject *kobj,
+ }
+ KERNEL_ATTR_RO(vmcoreinfo);
  
++static ssize_t crash_luks_volume_key_show(struct kobject *kobj,
++					  struct kobj_attribute *attr,
++					  char *buf)
++{
++	return 0;
++}
++
++static ssize_t crash_luks_volume_key_store(struct kobject *kobj,
++					   struct kobj_attribute *attr,
++					   const char *buf, size_t count)
++{
++	int ret;
++
++	ret = crash_sysfs_luks_volume_key_write(buf, count);
++	return ret < 0 ? ret : count;
++}
++KERNEL_ATTR_RW(crash_luks_volume_key);
++
+ #endif /* CONFIG_CRASH_CORE */
+ 
+ /* whether file capabilities are enabled */
+@@ -223,6 +241,7 @@ static struct attribute * kernel_attrs[] = {
+ #endif
+ #ifdef CONFIG_CRASH_CORE
+ 	&vmcoreinfo_attr.attr,
++	&crash_luks_volume_key_attr.attr,
+ #endif
+ #ifndef CONFIG_TINY_RCU
+ 	&rcu_expedited_attr.attr,
 -- 
-2.17.1
+2.37.3
 
 
 _______________________________________________
