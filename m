@@ -4,54 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 37607C4332F
-	for <kexec@archiver.kernel.org>; Mon,  7 Nov 2022 01:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6D9C9C4332F
+	for <kexec@archiver.kernel.org>; Mon,  7 Nov 2022 06:55:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:CC:To:
-	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=v+hPk8ZOSM6VXT93mcBkROAIsZ6vdsj3h0eYpfMokVI=; b=OvhdCFMb+g4smB
-	3AHn/5n+m7wWB5oLpkK67Z1xN2WQ1xAentcXY+WJfZEsWzD5GwRAK/VMsSvvWyoOF48k9dcriUWBm
-	ViR9aWFiE+ffgx2HZXhqbTST4RGRya3nsa3zkp8oqf8zI/liuGloRkggix288Q1lW9yewi0KnqYdI
-	YTW/y+LeeAmWsKGkw/KMe/3ZtUt1yxB1LOCNkseWkzdMxm/O6UNhCGa514SdYkoHG7NnjfQUSHP2e
-	jXlIRw93vRxoCLo4Hqb8ssol8Tg5n8tmIT21TQmLsUkPGMatfhcmj3utLt1IWI9EftMjNVsyVbSVf
-	nm1Jb+wa9D9q0cu+IXBA==;
+	List-Owner; bh=MOUcqrYVqhiuipNzAhiu3BoO79IGVrBMwXvXAm91t/A=; b=yGf4Zgnzxr8d92
+	8Z4KLTzXpHC5ymXdiVYl/3Lis2H32QA9VdwMFO6z9uTI9SOOACaHcE2PbAla5070A2c+sktloFBL9
+	F7fbuyOVQJ90Hgzy/3d0Coh+MntF206scq4COrEjKTvRDXyL2POGan6brpNzr0gjKh5Dbt09kNgvS
+	L4by2E5N8hrgQ7nkYH1Hrqe1vAeGO0ZAha28nmUUry/kxy94qxFdAyT1rlG4ymGH+VDQeSxKzdlCe
+	XVw7aeh6RyXhRgCh05gZB1V6+4tUyLAdP9+Qgc6dU6HfMnlvrhKHC+LRj8mpCG8+p0NUV2J9BFeB0
+	R4Madp4hInpX1gn+a4nw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1orqy5-00Aqgv-BU; Mon, 07 Nov 2022 01:30:29 +0000
-Received: from szxga01-in.huawei.com ([45.249.212.187])
+	id 1orw2a-00CCWN-VE; Mon, 07 Nov 2022 06:55:28 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1orqxv-00Aqa3-1y; Mon, 07 Nov 2022 01:30:20 +0000
-Received: from kwepemi500012.china.huawei.com (unknown [172.30.72.54])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4N5D8m0dV2zpSsn;
-	Mon,  7 Nov 2022 09:26:32 +0800 (CST)
-Received: from [10.67.110.108] (10.67.110.108) by
- kwepemi500012.china.huawei.com (7.221.188.12) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Mon, 7 Nov 2022 09:30:09 +0800
-Message-ID: <3b34d898-4690-c774-e92f-69796f9f5d37@huawei.com>
-Date: Mon, 7 Nov 2022 09:30:08 +0800
+	id 1orw2Q-00CCVC-DF
+	for kexec@lists.infradead.org; Mon, 07 Nov 2022 06:55:21 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1667804112;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=y18m8azyHOn5Ibl6TKD7X9UraJRtgy45vbRa6wrCY5k=;
+	b=costeaCCyaZRD2q38KINlbWp/COWJRR9AzOO/wainKRgqxSsuqzBCFmnaAGOMsPI1QeHjb
+	znOpj/L4uSEHdZXi2gL2GZXdoTKZQXAMkwIwnK/QsKLPZQW9nroE4uhhBjh6LAiZbrZVwm
+	5vDJhfhy3HzsSWPV0n2EV8C06O9v4ec=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-551-MOKVxNP8MaKpLHqKTTeStg-1; Mon, 07 Nov 2022 01:55:10 -0500
+X-MC-Unique: MOKVxNP8MaKpLHqKTTeStg-1
+Received: by mail-ed1-f70.google.com with SMTP id z9-20020a05640235c900b0046358415c4fso7574161edc.9
+        for <kexec@lists.infradead.org>; Sun, 06 Nov 2022 22:55:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=y18m8azyHOn5Ibl6TKD7X9UraJRtgy45vbRa6wrCY5k=;
+        b=LnOMTvk8NLKCBU2nrHIJofCpr5huLDKfgErlp3ju2OPlENMLFentRacsVovwlRM3po
+         31IWNX6BUERChshPZB3djvlaRuPcFnKvVRb+S6SDm2jmSa67wnFY0BEx5bSPlf8CDQsT
+         S61xhkPibMAqtl3Eo5FJ+ei+l0s+PZmXLo9p/xyicV5daugU/K6qdNfK12opEJ8rmqjv
+         fHHyAvhyB1IpChTQ6jMy2xIQVS84MYoDfCCSBEk4T7fRRnQTgkJlzYH8rzvmO1sjNfzH
+         6JwoIkFWnT7RwnzH6V/3BaSmALUFajNrw9vXCgF79U08qm3jb5oXZ9f11oCWIPnRPZGd
+         S6Eg==
+X-Gm-Message-State: ANoB5pkAERUzUqfcSrd45ULl/yyw1GDEapnRXDSSpfOEUl1EG51AELGl
+	0ueMLzpFTAsQuisQ8HNaDMSWMzAh02jnm7UB74A+JAIH+Q1rc3M3q4R4e25C1iugDw7whr2q7Bs
+	YM+7CldoO05/vX1pYcbaIkI37xr1TWRrXLd1J
+X-Received: by 2002:a17:906:3ada:b0:7ae:566e:3a1c with SMTP id z26-20020a1709063ada00b007ae566e3a1cmr8250025ejd.223.1667804108999;
+        Sun, 06 Nov 2022 22:55:08 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf6uXDuXJgOmXAKWQ2kw35atMalXsKsAYB/O9QnMHiEi9sGLW0X78hBV93ehTpTac+itcHRs4D2V0w/vPKwvWQE=
+X-Received: by 2002:a17:906:3ada:b0:7ae:566e:3a1c with SMTP id
+ z26-20020a1709063ada00b007ae566e3a1cmr8250014ejd.223.1667804108772; Sun, 06
+ Nov 2022 22:55:08 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH 1/2] RISC-V: kexec: Fix memory leak of fdt buffer
-To: Li Huafei <lihuafei1@huawei.com>, <paul.walmsley@sifive.com>,
-	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <lizhengyu3@huawei.com>,
-	<u.kleine-koenig@pengutronix.de>, <rdunlap@infradead.org>
-CC: <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<kexec@lists.infradead.org>
-References: <20221104095658.141222-1-lihuafei1@huawei.com>
-From: "liaochang (A)" <liaochang1@huawei.com>
-In-Reply-To: <20221104095658.141222-1-lihuafei1@huawei.com>
-X-Originating-IP: [10.67.110.108]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemi500012.china.huawei.com (7.221.188.12)
-X-CFilter-Loop: Reflected
+References: <3acf1cc7a974cb4fb9b77b39311c6714@tfwno.gf> <Y2XUNive2KMwTjUF@MiWiFi-R3L-srv>
+ <CALu+AoTVtO=-tzbgjeVRQ3uO0yGUPWKPuAiLn0CpaAq_=xr-sw@mail.gmail.com> <2f43e1e583a92e1592c48a15a763e1f7@tfwno.gf>
+In-Reply-To: <2f43e1e583a92e1592c48a15a763e1f7@tfwno.gf>
+From: Dave Young <dyoung@redhat.com>
+Date: Mon, 7 Nov 2022 14:54:31 +0800
+Message-ID: <CALu+AoQqb23tnNS6VY4+Q5Mz85NDFfWOP_aynoz7fcoMvzNeKg@mail.gmail.com>
+Subject: Re: Bug: kexec on Lenovo ThinkPad T480 disables EFI mode
+To: ns@tfwno.gf
+Cc: Baoquan He <bhe@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221106_173019_480369_39158886 
-X-CRM114-Status: GOOD (  14.74  )
+X-CRM114-CacheID: sfid-20221106_225518_567126_D21D3ADF 
+X-CRM114-Status: GOOD (  46.10  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -63,71 +89,108 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-CgrlnKggMjAyMi8xMS80IDE3OjU2LCBMaSBIdWFmZWkg5YaZ6YGTOgo+IFRoaXMgaXMgcmVwb3J0
-ZWQgYnkga21lbWxlYWsgZGV0ZWN0b3I6Cj4gCj4gdW5yZWZlcmVuY2VkIG9iamVjdCAweGZmNjAw
-MDAwODI4NjQwMDAgKHNpemUgOTU4OCk6Cj4gICBjb21tICJrZXhlYyIsIHBpZCAxNDYsIGppZmZp
-ZXMgNDI5NDkwMDYzNCAoYWdlIDY0Ljc4OHMpCj4gICBoZXggZHVtcCAoZmlyc3QgMzIgYnl0ZXMp
-Ogo+ICAgICBkMCAwZCBmZSBlZCAwMCAwMCAxMiBlZCAwMCAwMCAwMCA0OCAwMCAwMCAxMSA0MCAg
-Li4uLi4uLi4uLi5ILi4uQAo+ICAgICAwMCAwMCAwMCAyOCAwMCAwMCAwMCAxMSAwMCAwMCAwMCAw
-MiAwMCAwMCAwMCAwMCAgLi4uKC4uLi4uLi4uLi4uLgo+ICAgYmFja3RyYWNlOgo+ICAgICBbPDAw
-MDAwMDAwZjk1YjE3YzQ+XSBrbWVtbGVha19hbGxvYysweDM0LzB4M2UKPiAgICAgWzwwMDAwMDAw
-MGI5ZWM4ZTNlPl0ga21hbGxvY19vcmRlcisweDljLzB4YzQKPiAgICAgWzwwMDAwMDAwMGE5NWNm
-MDJlPl0ga21hbGxvY19vcmRlcl90cmFjZSsweDM0LzB4YjYKPiAgICAgWzwwMDAwMDAwMGYwMWU2
-OGI0Pl0gX19rbWFsbG9jKzB4NWMyLzB4NjJhCj4gICAgIFs8MDAwMDAwMDAyYmQ0OTdiMj5dIGt2
-bWFsbG9jX25vZGUrMHg2Ni8weGQ2Cj4gICAgIFs8MDAwMDAwMDA5MDY1NDJmYT5dIG9mX2tleGVj
-X2FsbG9jX2FuZF9zZXR1cF9mZHQrMHhhNi8weDZlYQo+ICAgICBbPDAwMDAwMDAwZTExNjZiZGU+
-XSBlbGZfa2V4ZWNfbG9hZCsweDIwNi8weDRlYwo+ICAgICBbPDAwMDAwMDAwMzY1NDhlMDk+XSBr
-ZXhlY19pbWFnZV9sb2FkX2RlZmF1bHQrMHg0MC8weDRjCj4gICAgIFs8MDAwMDAwMDA3OWZiZTFi
-ND5dIHN5c19rZXhlY19maWxlX2xvYWQrMHgxYzQvMHgzMjIKPiAgICAgWzwwMDAwMDAwMDQwYzYy
-YzAzPl0gcmV0X2Zyb21fc3lzY2FsbCsweDAvMHgyCj4gCj4gSW4gZWxmX2tleGVjX2xvYWQoKSwg
-YSBidWZmZXIgaXMgYWxsb2NhdGVkIHZpYSBrdm1hbGxvYygpIHRvIHN0b3JlIGZkdC4KPiBXaGls
-ZSBpdCdzIG5vdCBmcmVlZCBiYWNrIHRvIHN5c3RlbSB3aGVuIGtleGVjIGtlcm5lbCBpcyByZWxv
-YWRlZCBvcgo+IHVubG9hZGVkLiAgVGhlbiBtZW1vcnkgbGVhayBpcyBjYXVzZWQuICBGaXggaXQg
-YnkgaW50cm9kdWNpbmcgcmlzY3YKPiBzcGVjaWZpYyBmdW5jdGlvbiBhcmNoX2tpbWFnZV9maWxl
-X3Bvc3RfbG9hZF9jbGVhbnVwKCksIGFuZCBmcmVlaW5nIHRoZQo+IGJ1ZmZlciB0aGVyZS4KPiAK
-PiBGaXhlczogNjI2MTU4NmUwYzkxICgiUklTQy1WOiBBZGQga2V4ZWNfZmlsZSBzdXBwb3J0IikK
-PiBTaWduZWQtb2ZmLWJ5OiBMaSBIdWFmZWkgPGxpaHVhZmVpMUBodWF3ZWkuY29tPgo+IC0tLQo+
-ICBhcmNoL3Jpc2N2L2luY2x1ZGUvYXNtL2tleGVjLmggfCAgNSArKysrKwo+ICBhcmNoL3Jpc2N2
-L2tlcm5lbC9lbGZfa2V4ZWMuYyAgfCAxMCArKysrKysrKysrCj4gIDIgZmlsZXMgY2hhbmdlZCwg
-MTUgaW5zZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1naXQgYS9hcmNoL3Jpc2N2L2luY2x1ZGUvYXNt
-L2tleGVjLmggYi9hcmNoL3Jpc2N2L2luY2x1ZGUvYXNtL2tleGVjLmgKPiBpbmRleCBlZWUyNjBl
-OGFiMzAuLjJiNTY3NjljYjUzMCAxMDA2NDQKPiAtLS0gYS9hcmNoL3Jpc2N2L2luY2x1ZGUvYXNt
-L2tleGVjLmgKPiArKysgYi9hcmNoL3Jpc2N2L2luY2x1ZGUvYXNtL2tleGVjLmgKPiBAQCAtMzks
-NiArMzksNyBAQCBjcmFzaF9zZXR1cF9yZWdzKHN0cnVjdCBwdF9yZWdzICpuZXdyZWdzLAo+ICAj
-ZGVmaW5lIEFSQ0hfSEFTX0tJTUFHRV9BUkNICj4gIAo+ICBzdHJ1Y3Qga2ltYWdlX2FyY2ggewo+
-ICsJdm9pZCAqZmR0OyAvKiBGb3IgQ09ORklHX0tFWEVDX0ZJTEUgKi8KPiAgCXVuc2lnbmVkIGxv
-bmcgZmR0X2FkZHI7Cj4gIH07Cj4gIAo+IEBAIC02Miw2ICs2MywxMCBAQCBpbnQgYXJjaF9rZXhl
-Y19hcHBseV9yZWxvY2F0aW9uc19hZGQoc3RydWN0IHB1cmdhdG9yeV9pbmZvICpwaSwKPiAgCQkJ
-CSAgICAgY29uc3QgRWxmX1NoZHIgKnJlbHNlYywKPiAgCQkJCSAgICAgY29uc3QgRWxmX1NoZHIg
-KnN5bXRhYik7Cj4gICNkZWZpbmUgYXJjaF9rZXhlY19hcHBseV9yZWxvY2F0aW9uc19hZGQgYXJj
-aF9rZXhlY19hcHBseV9yZWxvY2F0aW9uc19hZGQKPiArCj4gK3N0cnVjdCBraW1hZ2U7Cj4gK2lu
-dCBhcmNoX2tpbWFnZV9maWxlX3Bvc3RfbG9hZF9jbGVhbnVwKHN0cnVjdCBraW1hZ2UgKmltYWdl
-KTsKPiArI2RlZmluZSBhcmNoX2tpbWFnZV9maWxlX3Bvc3RfbG9hZF9jbGVhbnVwIGFyY2hfa2lt
-YWdlX2ZpbGVfcG9zdF9sb2FkX2NsZWFudXAKPiAgI2VuZGlmCj4gIAo+ICAjZW5kaWYKPiBkaWZm
-IC0tZ2l0IGEvYXJjaC9yaXNjdi9rZXJuZWwvZWxmX2tleGVjLmMgYi9hcmNoL3Jpc2N2L2tlcm5l
-bC9lbGZfa2V4ZWMuYwo+IGluZGV4IDBjYjk0OTkyYzE1Yi4uZmYzMGZjYjQzZjQ3IDEwMDY0NAo+
-IC0tLSBhL2FyY2gvcmlzY3Yva2VybmVsL2VsZl9rZXhlYy5jCj4gKysrIGIvYXJjaC9yaXNjdi9r
-ZXJuZWwvZWxmX2tleGVjLmMKPiBAQCAtMjEsNiArMjEsMTQgQEAKPiAgI2luY2x1ZGUgPGxpbnV4
-L21lbWJsb2NrLmg+Cj4gICNpbmNsdWRlIDxhc20vc2V0dXAuaD4KPiAgCj4gK2ludCBhcmNoX2tp
-bWFnZV9maWxlX3Bvc3RfbG9hZF9jbGVhbnVwKHN0cnVjdCBraW1hZ2UgKmltYWdlKQo+ICt7Cj4g
-KwlrdmZyZWUoaW1hZ2UtPmFyY2guZmR0KTsKPiArCWltYWdlLT5hcmNoLmZkdCA9IE5VTEw7Cj4g
-Kwo+ICsJcmV0dXJuIGtleGVjX2ltYWdlX3Bvc3RfbG9hZF9jbGVhbnVwX2RlZmF1bHQoaW1hZ2Up
-Owo+ICt9CgpHb29kIGNhdGNoLExHVE0KClJldmlld2VkLWJ5OiBMaWFvIENoYW5nIDxsaWFvY2hh
-bmcxQGh1YXdlaS5jb20+Cgo+ICsKPiAgc3RhdGljIGludCByaXNjdl9rZXhlY19lbGZfbG9hZChz
-dHJ1Y3Qga2ltYWdlICppbWFnZSwgc3RydWN0IGVsZmhkciAqZWhkciwKPiAgCQkJCXN0cnVjdCBr
-ZXhlY19lbGZfaW5mbyAqZWxmX2luZm8sIHVuc2lnbmVkIGxvbmcgb2xkX3BiYXNlLAo+ICAJCQkJ
-dW5zaWduZWQgbG9uZyBuZXdfcGJhc2UpCj4gQEAgLTI5OCw2ICszMDYsOCBAQCBzdGF0aWMgdm9p
-ZCAqZWxmX2tleGVjX2xvYWQoc3RydWN0IGtpbWFnZSAqaW1hZ2UsIGNoYXIgKmtlcm5lbF9idWYs
-Cj4gIAkJcHJfZXJyKCJFcnJvciBhZGQgRFRCIGtidWYgcmV0PSVkXG4iLCByZXQpOwo+ICAJCWdv
-dG8gb3V0X2ZyZWVfZmR0Owo+ICAJfQo+ICsJLyogQ2FjaGUgdGhlIGZkdCBidWZmZXIgYWRkcmVz
-cyBmb3IgbWVtb3J5IGNsZWFudXAgKi8KPiArCWltYWdlLT5hcmNoLmZkdCA9IGZkdDsKPiAgCXBy
-X25vdGljZSgiTG9hZGVkIGRldmljZSB0cmVlIGF0IDB4JWx4XG4iLCBrYnVmLm1lbSk7Cj4gIAln
-b3RvIG91dDsKPiAgCgotLSAKQlIsCkxpYW8sIENoYW5nCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMu
-aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2tleGVjCg==
+Hi,
+
+On Sat, 5 Nov 2022 at 22:16, <ns@tfwno.gf> wrote:
+>
+> On 2022-11-05 05:49, Dave Young wrote:
+> > Baoquan, thanks for cc me.
+> >
+> > On Sat, 5 Nov 2022 at 11:10, Baoquan He <bhe@redhat.com> wrote:
+> >>
+> >> Add Dave to CC
+> >>
+> >> On 10/28/22 at 01:02pm, ns@tfwno.gf wrote:
+> >> > Greetings,
+> >> >
+> >> > I've been hitting a bug on my Lenovo ThinkPad T480 where kexecing will
+> >> > cause EFI mode (if that's the right term for it) to be unconditionally
+> >> > disabled, even when not using the --noefi option to kexec.
+> >> >
+> >> > What I mean by "EFI mode" being disabled, more than just EFI runtime
+> >> > services, is that basically nothing about the system's EFI is visible
+> >> > post-kexec. Normally you have a message like this in dmesg when the
+> >> > system is booted in EFI mode:
+> >> >
+> >> > [    0.000000] efi: EFI v2.70 by EDK II
+> >> > [    0.000000] efi: SMBIOS=0x7f98a000 ACPI=0x7fb7e000 ACPI 2.0=0x7fb7e014
+> >> > MEMATTR=0x7ec63018
+> >> > (obviously not the real firmware of the machine I'm talking about, but I
+> >> > can also send that if it would be of any help)
+> >> >
+> >> > No such message pops up in my dmesg as a result of this bug, & this
+> >> > causes some fallout like being unable to find the system's DMI
+> >> > information:
+> >> >
+> >> > <6>[    0.000000] DMI not present or invalid.
+> >> >
+> >> > The efivarfs module also fails to load with -ENODEV.
+> >> >
+> >> > I've tried also booting with efi=runtime explicitly but it doesn't
+> >> > change anything. The kernel still does not print the name of the EFI
+> >> > firmware, DMI is still missing, & efivarfs still fails to load.
+> >> >
+> >> > I've been using the kexec_load syscall for all these tests, if it's
+> >> > important.
+> >> >
+> >> > Also, to make it very clear, all this only ever happens post-kexec. When
+> >> > booting straight from UEFI (with the EFI stub), all the aforementioned
+> >> > stuff that fails works perfectly fine (i.e. name of firmware is printed,
+> >> > DMI is properly found, & efivarfs loads & mounts just fine).
+> >> >
+> >> > This is reproducible with a vanilla 6.1-rc2 kernel. I've been trying to
+> >> > bisect it, but it seems like it goes pretty far back. I've got vanilla
+> >> > mainline kernel builds dating back to 5.17 that have the exact same
+> >> > issue. It might be worth noting that during this testing, I made sure
+> >> > the version of the kernel being kexeced & the kernel kexecing were the
+> >> > same version. It may not have been a problem in older kernels, but that
+> >> > would be difficult to test for me (a pretty important driver for this
+> >> > machine was only merged during v5.17-rc4). So it may not have been a
+> >> > regression & just a hidden problem since time immemorial.
+> >> >
+> >> > I am willing to test any patches I may get to further debug or fix
+> >> > this issue, preferably based on the current state of torvalds/linux.git.
+> >> > I can build & test kernels quite a few times per day.
+> >> >
+> >> > I can also send any important materials (kernel config, dmesg, firmware
+> >> > information, so on & so forth) on request. I'll also just mention I'm
+> >> > using kexec-tools 2.0.24 upfront, if it matters.
+> >
+> > Can you check the efi runtime in sysfs:
+> > ls /sys/firmware/efi/runtime-map/
+> >
+> > If nothing then maybe you did not enable CONFIG_EFI_RUNTIME_MAP=y, it
+> > is needed for kexec UEFI boot on x86_64.
+>
+> Oh my, it really is that simple.
+>
+> Indeed, enabling this in the pre-kexec kernel fixes it all up. I had
+> blindly disabled it in my quest to downsize the pre-kexec kernel to
+> reduce boot time (it only runs a bootloader). In hindsight, the firmware
+> drivers section is not really a good section to tweak on a whim.
+>
+> I'm terribly sorry to have taken your time to "fix" this "bug". But I
+> must ask, is there any reason why this is a visible config option, or at
+> least not gated behind CONFIG_EXPERT? drivers/firmware/efi/runtime-map.c
+> is pretty tiny, & considering it depends on CONFIG_KEXEC_CORE, one
+> probably wants to have kexec work properly if they can even enable it.
+
+Glad to know it works with the .config tweaking. I can not recall any
+reason for that though.
+
+Since it sits in the efi code path, let's see how Ard thinks about
+your proposal.
+
+Thanks
+Dave
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
