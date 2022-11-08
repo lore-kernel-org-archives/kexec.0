@@ -4,67 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C08E8C4332F
-	for <kexec@archiver.kernel.org>; Tue,  8 Nov 2022 02:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7B71CC4332F
+	for <kexec@archiver.kernel.org>; Tue,  8 Nov 2022 23:26:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:Date:
-	Message-ID:From:References:CC:To:Subject:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Owner;
-	bh=0PSrW6We8LyNiWnyGMEPbaMc42nBggwb9YqtU+mF5Wo=; b=e4CYqpqTxGqjfAizBBdjJROn95
-	0julAMsuV14tjUYoDTqc687WeDHv11wUvcM/PHfHEsOUSiNjvt+syOfm7J3fQNtkRg4eXg/uKW+7u
-	4FIFMlBvsFGQenUygQE7JQml1klyZOb+IEKwz572SRxUaFFNX8NCn7IfFq9+K97ORK6nrXnB/lFw0
-	ClloNohimhwtrY2wysCcqhZN5MOxTkXcEKlx2yFsyfqoC06otoUqm+UtH8nNcOF96QaXvX4cu8LAt
-	qZDtuoK2MrlZypyBuizBakFIKi1eA2QZVbCmlUslH+EaNQD6GvmaA5Ku2gZCCe7NSNYu8N2O7gxb9
-	thVEdZiA==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=/hvDygNwoBqFQk3+IYHvKSuDtToNcyUCb3czZRUs1V8=; b=hQOCE9JBGDTHVq
+	T4gWrWUskrpRYueKRfhpQTR0JHh8+U5tAK7xX3oh+xxYV8I4ibbzto0gZTVnY0OdNP/j0r1O4jTyt
+	o4FMWN0nQ5K0CKBsVEAiWJ/t+ioto05dm1CXTkUH90Lt2Gb+R0LmqN9tH5/csOO1M1rqHFb7HfD2g
+	LdE+QjpToJ5PHYLy3wAPUuvkUbOIHvxCCT/Qvi2VCYtt1lJuKLXEuSvH+Xh3g+sJe3MANHRV5edP+
+	FXEbNzkIbqaMbfVNCFj0y1Xe/igxsStYvsYEMPQeyVEyiq1IFM+pGcfvQKqjr2K6vHQwHzZRg0A00
+	V/zE2TVOR4BOdcGrn6GA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1osEe7-002Afx-TB; Tue, 08 Nov 2022 02:47:27 +0000
-Received: from szxga02-in.huawei.com ([45.249.212.188])
+	id 1osXzJ-00966V-6G; Tue, 08 Nov 2022 23:26:37 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1osEe4-002Aeg-EN; Tue, 08 Nov 2022 02:47:26 +0000
-Received: from dggpemm500023.china.huawei.com (unknown [172.30.72.53])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4N5svP1nkBzRp3H;
-	Tue,  8 Nov 2022 10:47:13 +0800 (CST)
-Received: from dggpemm500006.china.huawei.com (7.185.36.236) by
- dggpemm500023.china.huawei.com (7.185.36.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 8 Nov 2022 10:47:20 +0800
-Received: from [10.174.178.55] (10.174.178.55) by
- dggpemm500006.china.huawei.com (7.185.36.236) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 8 Nov 2022 10:47:19 +0800
-Subject: Re: [PATCH v3 1/2] arm64: kdump: Provide default size when
- crashkernel=Y,low is not specified
-To: Catalin Marinas <catalin.marinas@arm.com>
-CC: Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal
-	<vgoyal@redhat.com>, <kexec@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, Will Deacon <will@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, Jonathan Corbet <corbet@lwn.net>,
-	<linux-doc@vger.kernel.org>, "Eric W . Biederman" <ebiederm@xmission.com>,
-	Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou
-	<dingguo.cz@antgroup.com>, John Donnelly <John.p.donnelly@oracle.com>, "Dave
- Kleikamp" <dave.kleikamp@oracle.com>
-References: <20220711090319.1604-1-thunder.leizhen@huawei.com>
- <20220711090319.1604-2-thunder.leizhen@huawei.com> <Y2k98lFhtUP2u1VM@arm.com>
-From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <1dd20529-e346-cd64-d93d-54231c8b3d38@huawei.com>
-Date: Tue, 8 Nov 2022 10:47:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+	id 1osXy1-0095Pm-Ju
+	for kexec@lists.infradead.org; Tue, 08 Nov 2022 23:25:19 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1667949912;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mi+8/yG2AkmYuv7ZYdDMOOQ0yi94luJeVwqutgIMn6w=;
+	b=eQ7Cu07zArXHDJExN9RBQuC2BvttQMP2LQPAwrfCCj3qrS9gLRdAB4e3DLcAoMXuBhDFCc
+	m7KGI4AdZZ804AlDKOjF+Ds/eVQSbErvHIn+c1qybHVLnvgMPRKjFNafMwIEpjlY32R389
+	qfYMs/wWvGw+0iFu/idBPCRQWxJNRzc=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-647-nMF4z_RKNwacwH8JffDQXg-1; Tue, 08 Nov 2022 18:25:09 -0500
+X-MC-Unique: nMF4z_RKNwacwH8JffDQXg-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2F300380673C;
+	Tue,  8 Nov 2022 23:25:09 +0000 (UTC)
+Received: from localhost (ovpn-12-86.pek2.redhat.com [10.72.12.86])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 767F4492B05;
+	Tue,  8 Nov 2022 23:25:08 +0000 (UTC)
+Date: Wed, 9 Nov 2022 07:25:05 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Stephen Brennan <stephen.s.brennan@oracle.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH] vmcoreinfo: Warn if we exceed vmcoreinfo data size
+Message-ID: <Y2rlUVGv6ua7tK/1@MiWiFi-R3L-srv>
+References: <20221027205008.312534-1-stephen.s.brennan@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <Y2k98lFhtUP2u1VM@arm.com>
-Content-Language: en-US
-X-Originating-IP: [10.174.178.55]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemm500006.china.huawei.com (7.185.36.236)
-X-CFilter-Loop: Reflected
+Content-Disposition: inline
+In-Reply-To: <20221027205008.312534-1-stephen.s.brennan@oracle.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221107_184724_858294_EDB44A0D 
-X-CRM114-Status: GOOD (  21.55  )
+X-CRM114-CacheID: sfid-20221108_152517_764388_715D73BA 
+X-CRM114-Status: GOOD (  18.49  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,92 +79,40 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-
-
-On 2022/11/8 1:18, Catalin Marinas wrote:
-> On Mon, Jul 11, 2022 at 05:03:18PM +0800, Zhen Lei wrote:
->> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
->> index 2522b11e593f239..65a2c3a22a4b57d 100644
->> --- a/Documentation/admin-guide/kernel-parameters.txt
->> +++ b/Documentation/admin-guide/kernel-parameters.txt
->> @@ -843,7 +843,7 @@
->>  			available.
->>  			It will be ignored if crashkernel=X is specified.
->>  	crashkernel=size[KMG],low
->> -			[KNL, X86-64] range under 4G. When crashkernel=X,high
->> +			[KNL, X86-64, ARM64] range under 4G. When crashkernel=X,high
->>  			is passed, kernel could allocate physical memory region
->>  			above 4G, that cause second kernel crash on system
->>  			that require some amount of low memory, e.g. swiotlb
->> @@ -857,12 +857,6 @@
->>  			It will be ignored when crashkernel=X,high is not used
->>  			or memory reserved is below 4G.
->>  
->> -			[KNL, ARM64] range in low memory.
->> -			This one lets the user specify a low range in the
->> -			DMA zone for the crash dump kernel.
->> -			It will be ignored when crashkernel=X,high is not used
->> -			or memory reserved is located in the DMA zones.
->> -
->>  	cryptomgr.notests
->>  			[KNL] Disable crypto self-tests
->>  
->> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
->> index 339ee84e5a61a0b..5390f361208ccf7 100644
->> --- a/arch/arm64/mm/init.c
->> +++ b/arch/arm64/mm/init.c
->> @@ -96,6 +96,14 @@ phys_addr_t __ro_after_init arm64_dma_phys_limit = PHYS_MASK + 1;
->>  #define CRASH_ADDR_LOW_MAX		arm64_dma_phys_limit
->>  #define CRASH_ADDR_HIGH_MAX		(PHYS_MASK + 1)
->>  
->> +/*
->> + * This is an empirical value in x86_64 and taken here directly. Please
->> + * refer to the code comment in reserve_crashkernel_low() of x86_64 for more
->> + * details.
->> + */
->> +#define DEFAULT_CRASH_KERNEL_LOW_SIZE	\
->> +	max(swiotlb_size_or_default() + (8UL << 20), 256UL << 20)
->> +
->>  static int __init reserve_crashkernel_low(unsigned long long low_size)
->>  {
->>  	unsigned long long low_base;
->> @@ -147,7 +155,9 @@ static void __init reserve_crashkernel(void)
->>  		 * is not allowed.
->>  		 */
->>  		ret = parse_crashkernel_low(cmdline, 0, &crash_low_size, &crash_base);
->> -		if (ret && (ret != -ENOENT))
->> +		if (ret == -ENOENT)
->> +			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
->> +		else if (ret)
->>  			return;
+On 10/27/22 at 01:50pm, Stephen Brennan wrote:
+> Though vmcoreinfo is intended to be small, at just one page, useful
+> information is still added to it, so we risk running out of space.
+> Currently there is no runtime check to see whether the vmcoreinfo buffer
+> has been exhausted. Add a warning for this case.
 > 
-> BTW, since we want a default low allocation, I think we should change
-> the checking logic slightly. Currently we have:
+> Currently, my static checking tool[1] indicates that a good upper bound
+> for vmcoreinfo size is currently 3415 bytes, but the best time to add
+> warnings is before the risk becomes too high.
 > 
-> 	if ((crash_base >= CRASH_ADDR_LOW_MAX) &&
-> 	     crash_low_size && reserve_crashkernel_low(crash_low_size)) {
-> 		...
+> [1] https://github.com/brenns10/kernel_stuff/blob/master/vmcoreinfosize/vmcoreinfosize.py
 > 
-> If crash_base is just below CRASH_ADDR_LOW_MAX, we deem it sufficient
-> but a crashkernel trying to allocate 64MB of swiotlb may fail. So maybe
-> change this to crash_base >= CRASH_ADDR_LOW_MAX - crash_low_size.
-
-The equal sign needs to be removed.
-
-The situation should be the allocation of "crashkernel=X,high".
-
-This possibility is too small, the high memory is unlikely to be that small.
-memblock_phys_alloc_range() always search for memory block from high addresses
-to low addresses. In the initial phase, high-end memory is not fragmented.
-
-Of course, the modification can make people look more reassuring. OK, I'll
-update it.
-
+> Signed-off-by: Stephen Brennan <stephen.s.brennan@oracle.com>
+> ---
+>  kernel/crash_core.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index a0eb4d5cf557..87ef6096823f 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -383,6 +383,9 @@ void vmcoreinfo_append_str(const char *fmt, ...)
+>  	memcpy(&vmcoreinfo_data[vmcoreinfo_size], buf, r);
+>  
+>  	vmcoreinfo_size += r;
+> +
+> +	WARN_ONCE(vmcoreinfo_size == VMCOREINFO_BYTES,
+> +		  "vmcoreinfo data exceeds allocated size, truncating");
+>  }
 
--- 
-Regards,
-  Zhen Lei
+Yeah, sounds like a good idea. Thanks.
+
+Acked-by: Baoquan He <bhe@redhat.com>
+
 
 _______________________________________________
 kexec mailing list
