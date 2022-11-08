@@ -4,59 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A4CE3C433FE
-	for <kexec@archiver.kernel.org>; Mon,  7 Nov 2022 17:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4D4D9C4332F
+	for <kexec@archiver.kernel.org>; Tue,  8 Nov 2022 02:07:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=6L9dRQpuVUw0/sFDVjGNyiArqJrs0/gQDbgXaSgzRNA=; b=RNDdVEgwQpitPr
-	9VQx54NSLx8MhXdHg9UWMwZ74oijrqRJNyMVgPeRg6U2CKZuTwebb4jZ/ae8O8FEGryfTO6T/7rd5
-	joLMmreGILLcg9sNfmx/U0afmIymmR5zKvmr3I1flfG9p+PlhY1DcqoNmAcEFJk3SKZm9gH9NZuPF
-	62wdqMBuzssyO9BPpVEAQn20bTSNpoUmJYY/7UYbLdOYfmwoicOVbPbi4kwEmse+o2HnKffjbfE15
-	jB+SopYoD6jTfagTpp6wLB7lvkFlbwxy8vR7rjBdoCa+nf0a7G1K9itnBgSzSi70Zlr18Agby34iq
-	K1aZ4LwNRkSWCuzBYr1w==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:Date:
+	Message-ID:From:References:CC:To:Subject:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Owner;
+	bh=B831p0WXRApj+EYGhYxVGMW252SpWUePkKUPTlZTxLE=; b=fA+mGzWzgVz5SdprSFLLT2ChG+
+	bByZ/8cinKxdma0JJN8knV4Zjv5MYDAKbws96YydT531uXxUyrRqpmUGWXsJgrZ9itRIh9Sn4HGQL
+	BnJE0IP5rM96AyRzcWeNbaDO1b2ks/uK8t79lSLrhPoo1ih8OPtuGIrck1zJWUPPBM3o0dSTHlcmQ
+	ouQuz4ed10wvl3Ku3RDKpi73rBfx9NRZSmZzHnvyAvG8IthIiVMH4jcAhIiCQGUCI/O4EqHVGPiW1
+	dJsAYp2yPOnEgabPaJCWxahGr5Lp/6YKVJNAOKPp4+ISdJO0OkZop+7fwg1h2uLE6dPH8D/2mCNs5
+	H3hDHsjg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1os5ls-00Gc8h-Ny; Mon, 07 Nov 2022 17:18:52 +0000
-Received: from dfw.source.kernel.org ([139.178.84.217])
+	id 1osE0y-001wNe-QD; Tue, 08 Nov 2022 02:07:00 +0000
+Received: from szxga03-in.huawei.com ([45.249.212.189])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1os5lp-00Gc0e-F7; Mon, 07 Nov 2022 17:18:50 +0000
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id F3E7A61052;
-	Mon,  7 Nov 2022 17:18:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B513C433C1;
-	Mon,  7 Nov 2022 17:18:45 +0000 (UTC)
-Date: Mon, 7 Nov 2022 17:18:42 +0000
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Zhen Lei <thunder.leizhen@huawei.com>
-Cc: Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-	"Eric W . Biederman" <ebiederm@xmission.com>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Feng Zhou <zhoufeng.zf@bytedance.com>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	Chen Zhou <dingguo.cz@antgroup.com>,
-	John Donnelly <John.p.donnelly@oracle.com>,
-	Dave Kleikamp <dave.kleikamp@oracle.com>
-Subject: Re: [PATCH v3 1/2] arm64: kdump: Provide default size when
- crashkernel=Y,low is not specified
-Message-ID: <Y2k98lFhtUP2u1VM@arm.com>
+	id 1osE0t-001wLk-LR; Tue, 08 Nov 2022 02:06:57 +0000
+Received: from dggpemm500022.china.huawei.com (unknown [172.30.72.56])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4N5rx81X4gzJnYV;
+	Tue,  8 Nov 2022 10:03:40 +0800 (CST)
+Received: from dggpemm500006.china.huawei.com (7.185.36.236) by
+ dggpemm500022.china.huawei.com (7.185.36.162) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Tue, 8 Nov 2022 10:06:40 +0800
+Received: from [10.174.178.55] (10.174.178.55) by
+ dggpemm500006.china.huawei.com (7.185.36.236) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Tue, 8 Nov 2022 10:06:39 +0800
+Subject: Re: [PATCH v3 2/2] arm64: kdump: Support crashkernel=X fall back to
+ reserve region above DMA zones
+To: Catalin Marinas <catalin.marinas@arm.com>
+CC: Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal
+	<vgoyal@redhat.com>, <kexec@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, Will Deacon <will@kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, Jonathan Corbet <corbet@lwn.net>,
+	<linux-doc@vger.kernel.org>, "Eric W . Biederman" <ebiederm@xmission.com>,
+	Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>,
+	Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou
+	<dingguo.cz@antgroup.com>, John Donnelly <John.p.donnelly@oracle.com>, "Dave
+ Kleikamp" <dave.kleikamp@oracle.com>
 References: <20220711090319.1604-1-thunder.leizhen@huawei.com>
- <20220711090319.1604-2-thunder.leizhen@huawei.com>
+ <20220711090319.1604-3-thunder.leizhen@huawei.com> <Y2k8yuUghrbQE6da@arm.com>
+From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Message-ID: <6b20a203-6aab-2b87-9b95-814aeb79b5bd@huawei.com>
+Date: Tue, 8 Nov 2022 10:06:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20220711090319.1604-2-thunder.leizhen@huawei.com>
+In-Reply-To: <Y2k8yuUghrbQE6da@arm.com>
+Content-Language: en-US
+X-Originating-IP: [10.174.178.55]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpemm500006.china.huawei.com (7.185.36.236)
+X-CFilter-Loop: Reflected
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221107_091849_605295_9862C566 
-X-CRM114-Status: GOOD (  25.82  )
+X-CRM114-CacheID: sfid-20221107_180656_086683_A2F4A5C9 
+X-CRM114-Status: GOOD (  19.65  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -73,75 +81,77 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Jul 11, 2022 at 05:03:18PM +0800, Zhen Lei wrote:
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 2522b11e593f239..65a2c3a22a4b57d 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -843,7 +843,7 @@
->  			available.
->  			It will be ignored if crashkernel=X is specified.
->  	crashkernel=size[KMG],low
-> -			[KNL, X86-64] range under 4G. When crashkernel=X,high
-> +			[KNL, X86-64, ARM64] range under 4G. When crashkernel=X,high
->  			is passed, kernel could allocate physical memory region
->  			above 4G, that cause second kernel crash on system
->  			that require some amount of low memory, e.g. swiotlb
-> @@ -857,12 +857,6 @@
->  			It will be ignored when crashkernel=X,high is not used
->  			or memory reserved is below 4G.
->  
-> -			[KNL, ARM64] range in low memory.
-> -			This one lets the user specify a low range in the
-> -			DMA zone for the crash dump kernel.
-> -			It will be ignored when crashkernel=X,high is not used
-> -			or memory reserved is located in the DMA zones.
-> -
->  	cryptomgr.notests
->  			[KNL] Disable crypto self-tests
->  
-> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> index 339ee84e5a61a0b..5390f361208ccf7 100644
-> --- a/arch/arm64/mm/init.c
-> +++ b/arch/arm64/mm/init.c
-> @@ -96,6 +96,14 @@ phys_addr_t __ro_after_init arm64_dma_phys_limit = PHYS_MASK + 1;
->  #define CRASH_ADDR_LOW_MAX		arm64_dma_phys_limit
->  #define CRASH_ADDR_HIGH_MAX		(PHYS_MASK + 1)
->  
-> +/*
-> + * This is an empirical value in x86_64 and taken here directly. Please
-> + * refer to the code comment in reserve_crashkernel_low() of x86_64 for more
-> + * details.
-> + */
-> +#define DEFAULT_CRASH_KERNEL_LOW_SIZE	\
-> +	max(swiotlb_size_or_default() + (8UL << 20), 256UL << 20)
-> +
->  static int __init reserve_crashkernel_low(unsigned long long low_size)
->  {
->  	unsigned long long low_base;
-> @@ -147,7 +155,9 @@ static void __init reserve_crashkernel(void)
->  		 * is not allowed.
->  		 */
->  		ret = parse_crashkernel_low(cmdline, 0, &crash_low_size, &crash_base);
-> -		if (ret && (ret != -ENOENT))
-> +		if (ret == -ENOENT)
-> +			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
-> +		else if (ret)
->  			return;
 
-BTW, since we want a default low allocation, I think we should change
-the checking logic slightly. Currently we have:
 
-	if ((crash_base >= CRASH_ADDR_LOW_MAX) &&
-	     crash_low_size && reserve_crashkernel_low(crash_low_size)) {
-		...
+On 2022/11/8 1:13, Catalin Marinas wrote:
+> On Mon, Jul 11, 2022 at 05:03:19PM +0800, Zhen Lei wrote:
+>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+>> index 5390f361208ccf7..8539598f9e58b4d 100644
+>> --- a/arch/arm64/mm/init.c
+>> +++ b/arch/arm64/mm/init.c
+>> @@ -138,6 +138,7 @@ static void __init reserve_crashkernel(void)
+>>  	unsigned long long crash_max = CRASH_ADDR_LOW_MAX;
+>>  	char *cmdline = boot_command_line;
+>>  	int ret;
+>> +	bool fixed_base;
+>>  
+>>  	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
+>>  		return;
+>> @@ -166,15 +167,28 @@ static void __init reserve_crashkernel(void)
+>>  		return;
+>>  	}
+>>  
+>> +	fixed_base = !!crash_base;
+>>  	crash_size = PAGE_ALIGN(crash_size);
+>>  
+>>  	/* User specifies base address explicitly. */
+>> -	if (crash_base)
+>> +	if (fixed_base)
+>>  		crash_max = crash_base + crash_size;
+> 
+> Not a fan of '!!', it is converted automatically. If you don't like the
+> conversion, just initialise fixed_base to false and here:
+> 
+> 	if (crash_base) {
+> 		fixed_base = true;
 
-If crash_base is just below CRASH_ADDR_LOW_MAX, we deem it sufficient
-but a crashkernel trying to allocate 64MB of swiotlb may fail. So maybe
-change this to crash_base >= CRASH_ADDR_LOW_MAX - crash_low_size.
+OK, This way would be better.
+
+> 		crash_max = crash_base + crash_size;
+> 	}
+> 
+>> +retry:
+>>  	crash_base = memblock_phys_alloc_range(crash_size, CRASH_ALIGN,
+>>  					       crash_base, crash_max);
+>>  	if (!crash_base) {
+>> +		/*
+>> +		 * Attempt to fully allocate low memory failed, fall back
+>> +		 * to high memory, the minimum required low memory will be
+>> +		 * reserved later.
+>> +		 */
+> 
+> I'm not sure this comment makes sense. If !crash_base, it doesn't mean
+> the kernel failed to fully allocate low memory. crash_max here could be
+> CRASH_ADDR_HIGH_MAX if crashkerne=X,high was specified. Maybe says
+> something like "If the first attempt was for low memory, fall back to
+> high ..."
+
+This description is accurate. I'll update. Thanks.
+
+> 
+>> +		if (!fixed_base && (crash_max == CRASH_ADDR_LOW_MAX)) {
+>> +			crash_max = CRASH_ADDR_HIGH_MAX;
+>> +			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
+>> +			goto retry;
+>> +		}
+> 
+> The retry logic looks fine, it only happens once as crash_max is
+> updated.
+> 
 
 -- 
-Catalin
+Regards,
+  Zhen Lei
 
 _______________________________________________
 kexec mailing list
