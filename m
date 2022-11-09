@@ -4,66 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CC9E6C433FE
-	for <kexec@archiver.kernel.org>; Wed,  9 Nov 2022 01:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B4670C4332F
+	for <kexec@archiver.kernel.org>; Wed,  9 Nov 2022 09:01:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=q8lyrFzYNRz+cYiuqeT8D+ZJU/igxz91nfX6Xqg+Fd4=; b=1sAPgzidE+E9Gg
-	koVb3KGs8DNygRua5B/WvGoXs5K7m6DGruEMyJKnM3nX/Eb7u+wSubwdVHR6WkiFtcnSE4ZVWFrWb
-	ntLpWLvSILZZJNBTvmP6/WiemL15R6iWFFszKzJSBsS8ml/HKWKqiFTakrI2ykwgP+Mj816IG2aeM
-	1YSkMEQ0sJ8xyl+vOJHrnis6lfv2RxmyPeuOzUQE615qwHFfEJ/s4JaTSRs/xZ1KxuiXtK0+ltH0g
-	dSJQNhzLGuVmNVBfwPPvk1wEfFvWz7qYpTGzZYtQEFiBnwr7SaweAZ0E0wPccyQw1noO9QUoroYZn
-	phs7E8kEChLv+CflPPyQ==;
+	List-Owner; bh=agqU1PjN6DT9qdUI4+0ANGX81996umevopxT8rlojio=; b=W7+32xMLWPJ2A4
+	QSb9Pd6uuBM4VJyzHYUWPpPZVRAz5bnhWo2sZkS1Q0Dgfczm/7iTLAYhk9/gsSVVyGSdTvnIcbVbY
+	ekc9wvSaEw5bBRR3t3VNgxS0F3LFNdyzjthY8iXiXiGLN8GJa522cmowQt+H/mtqYAHQECh71HmIG
+	/3qdrHreOs63N6tG6eoypwAZbOtwBCX+0g8urigoX+dF6HXVnch8P0atteXXHYGxG0C4qUCILNbxo
+	Nhe4j8EDGXzo9eG1a+rBxyBeVM3zHC2SSJ/5PDe+EkMKfilz7TT/rz2bxVfhQXSQtyFgObiIjDLIf
+	DGDBTjkNKMrR3xWkhdYg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1osZW5-009Wib-S9; Wed, 09 Nov 2022 01:04:33 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1osgxY-00C66l-Ef; Wed, 09 Nov 2022 09:01:24 +0000
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1osZVz-009Whu-Ez
-	for kexec@lists.infradead.org; Wed, 09 Nov 2022 01:04:28 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1667955866;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eZkmt97VpqvS5xcPVLVRJGY6/QQzPHRetf9QxFFBydg=;
-	b=gcSxPhHslI6u4Vvj6433avj+cKzz0JRrX6J2ai0PWGbau+iwAajnWRH5951+umt5K7cpOC
-	ufWuwN31QIwuOY90qey52TvyVphlOYZKOecmLYdwMqYG1B3OHiBSjDgAsxhlL2NHgXZPvT
-	3wOI66shuIBOevPBEfmqLTiIAaKoj6I=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-248-NK3vfayPPYianvDJCSSdgg-1; Tue, 08 Nov 2022 20:04:24 -0500
-X-MC-Unique: NK3vfayPPYianvDJCSSdgg-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8E209185A7AA;
-	Wed,  9 Nov 2022 01:04:20 +0000 (UTC)
-Received: from localhost (ovpn-12-86.pek2.redhat.com [10.72.12.86])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id BAC114B3FC6;
-	Wed,  9 Nov 2022 01:04:19 +0000 (UTC)
-Date: Wed, 9 Nov 2022 09:04:16 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Stephen Brennan <stephen.s.brennan@oracle.com>,
-	Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] vmcoreinfo: Warn if we exceed vmcoreinfo data size
-Message-ID: <Y2r8kFZVZP1ou1qZ@MiWiFi-R3L-srv>
-References: <20221027205008.312534-1-stephen.s.brennan@oracle.com>
- <20221108154846.11584119794413c7682280fc@linux-foundation.org>
+	id 1osgxO-00C5vr-TA
+	for kexec@lists.infradead.org; Wed, 09 Nov 2022 09:01:17 +0000
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R991e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=xianting.tian@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0VUNEgVk_1667984463;
+Received: from 30.221.96.243(mailfrom:xianting.tian@linux.alibaba.com fp:SMTPD_---0VUNEgVk_1667984463)
+          by smtp.aliyun-inc.com;
+          Wed, 09 Nov 2022 17:01:04 +0800
+Message-ID: <f120e4f0-1db9-fc6a-85dd-f42b58ca4d88@linux.alibaba.com>
+Date: Wed, 9 Nov 2022 17:01:03 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20221108154846.11584119794413c7682280fc@linux-foundation.org>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.12.0
+Subject: Re: [Crash-utility][PATCH V4 1/9] Add RISCV64 framework code support
+To: lijiang <lijiang@redhat.com>,
+ "crash-utility@redhat.com" <crash-utility@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+ "hschauhan@nulltrace.org" <hschauhan@nulltrace.org>,
+ "lifang_xia@linux.alibaba.com" <lifang_xia@linux.alibaba.com>,
+ "mick@ics.forth.gr" <mick@ics.forth.gr>,
+ "heinrich.schuchardt@canonical.com" <heinrich.schuchardt@canonical.com>,
+ "guoren@kernel.org" <guoren@kernel.org>,
+ "yixun.lan@gmail.com" <yixun.lan@gmail.com>,
+ =?UTF-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+IOS4gOS7gSk=?= <k-hagio-ab@nec.com>
+References: <20221020015014.46085-1-xianting.tian@linux.alibaba.com>
+ <20221020015014.46085-2-xianting.tian@linux.alibaba.com>
+ <4022d4a1-8967-3d09-e158-5a6f78f73655@nec.com>
+ <4bccb5c9-6385-23d9-d496-65f9bd06beb2@linux.alibaba.com>
+ <b5209fda-17c2-9271-c40e-1a0343a725a2@nec.com>
+ <CANU+Zye-oDirOROVms1XODVunBf4rErQT1tGAY=62pZeufQUTw@mail.gmail.com>
+From: Xianting Tian <xianting.tian@linux.alibaba.com>
+In-Reply-To: <CANU+Zye-oDirOROVms1XODVunBf4rErQT1tGAY=62pZeufQUTw@mail.gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221108_170427_600133_3B451C3C 
-X-CRM114-Status: GOOD (  23.85  )
+X-CRM114-CacheID: sfid-20221109_010115_140352_EBDF5961 
+X-CRM114-Status: GOOD (  10.72  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -75,77 +67,74 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 11/08/22 at 03:48pm, Andrew Morton wrote:
-> On Thu, 27 Oct 2022 13:50:08 -0700 Stephen Brennan <stephen.s.brennan@oracle.com> wrote:
-> 
-> > Though vmcoreinfo is intended to be small, at just one page, useful
-> > information is still added to it, so we risk running out of space.
-> > Currently there is no runtime check to see whether the vmcoreinfo buffer
-> > has been exhausted. Add a warning for this case.
-> > 
-> > Currently, my static checking tool[1] indicates that a good upper bound
-> > for vmcoreinfo size is currently 3415 bytes, but the best time to add
-> > warnings is before the risk becomes too high.
-> > 
-> > ...
-> >
-> > --- a/kernel/crash_core.c
-> > +++ b/kernel/crash_core.c
-> > @@ -383,6 +383,9 @@ void vmcoreinfo_append_str(const char *fmt, ...)
-> >  	memcpy(&vmcoreinfo_data[vmcoreinfo_size], buf, r);
-> >  
-> >  	vmcoreinfo_size += r;
-> > +
-> > +	WARN_ONCE(vmcoreinfo_size == VMCOREINFO_BYTES,
-> > +		  "vmcoreinfo data exceeds allocated size, truncating");
-> >  }
-> 
-> Seems that vmcoreinfo_append_str() will truncate (ie: corrupt) the
-> final entry when limiting the overall data size to VMCOREINFO_BYTES. 
-> And that final entry will be missing any terminating \n or \0.
-> 
-> Is all this desirable, or should we be checking for (and warning about)
-> sufficient space _before_ appending this string?
-
-
-Hmm, once we really reach that point, truncated vmcoreinfo should not be
-useful for later vmcore dumping and analyzing. As we can see, the
-arch_crash_save_vmcoreinfo() is called at the end of
-crash_save_vmcoreinfo_init(). E.g on x86_64, the phys_base,
-init_top_pgt, etc are very important for memory layout analyzing.
-Fortunatly this insufficient vmcoreinfo page won't impact the normal
-kernel running.
-
-So, the current change looks good to me.
-
-My further thinking is if we should print the truncated or first skipped
-entry in the warning so that people know better what's happening, even
-though whatever we will do is to increase one page for vmcoreinfo buffer.
-Not strong opinion though.
-
-
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index a0eb4d5cf557..8ba4dd90694d 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -383,6 +383,9 @@ void vmcoreinfo_append_str(const char *fmt, ...)
- 	memcpy(&vmcoreinfo_data[vmcoreinfo_size], buf, r);
- 
- 	vmcoreinfo_size += r;
-+
-+	WARN_ONCE(vmcoreinfo_size == VMCOREINFO_BYTES,
-+		  "vmcoreinfo data exceeds allocated size when adding: %s\n", buf);
- }
- 
- /*
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+CuWcqCAyMDIyLzExLzMg5LiL5Y2IMTozMiwgbGlqaWFuZyDlhpnpgZM6Cj4gT24gRnJpLCBPY3Qg
+MjEsIDIwMjIgYXQgMTA6NTcgQU0gSEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQo+IDxr
+LWhhZ2lvLWFiQG5lYy5jb20+IHdyb3RlOgo+PiBPbiAyMDIyLzEwLzIxIDExOjQyLCBYaWFudGlu
+ZyBUaWFuIHdyb3RlOgo+Pj4g5ZyoIDIwMjIvMTAvMjEg5LiK5Y2IMTA6MTcsIEhBR0lPIEtBWlVI
+SVRPKOiQqeWwviDkuIDku4EpIOWGmemBkzoKPj4+PiBPbiAyMDIyLzEwLzIwIDEwOjUwLCBYaWFu
+dGluZyBUaWFuIHdyb3RlOgo+Pj4+Cj4+Pj4+IGRpZmYgLS1naXQgYS9SRUFETUUgYi9SRUFETUUK
+Pj4+Pj4gaW5kZXggNWFiYmNlMS4uZDU4OWU3MiAxMDA2NDQKPj4+Pj4gLS0tIGEvUkVBRE1FCj4+
+Pj4+ICsrKyBiL1JFQURNRQo+Pj4+PiBAQCAtMzcsNyArMzcsNyBAQAo+Pj4+PiAgICAgICBUaGVz
+ZSBhcmUgdGhlIGN1cnJlbnQgcHJlcmVxdWlzaXRlczoKPj4+Pj4gICAgICAgbyAgQXQgdGhpcyBw
+b2ludCwgeDg2LCBpYTY0LCB4ODZfNjQsIHBwYzY0LCBwcGMsIGFybSwgYXJtNjQsIGFscGhhLCBt
+aXBzLAo+Pj4+PiAtICAgICBtaXBzNjQsIHMzOTAgYW5kIHMzOTB4LWJhc2VkIGtlcm5lbHMgYXJl
+IHN1cHBvcnRlZC4gIE90aGVyIGFyY2hpdGVjdHVyZXMKPj4+Pj4gKyAgICAgbWlwczY0LCByaXNj
+djY0LCBzMzkwIGFuZCBzMzkweC1iYXNlZCBrZXJuZWxzIGFyZSBzdXBwb3J0ZWQuICBPdGhlciBh
+cmNoaXRlY3R1cmVzCj4+Pj4+ICAgICAgICAgIG1heSBiZSBhZGRyZXNzZWQgaW4gdGhlIGZ1dHVy
+ZS4KPj4+PiBTZW50ZW5jZXMgaW4gdGhlIFJFQURNRSBhcmUgd3JhcHBlZCB3aXRoaW4gODAgY2hh
+cmFjdGVycywgSSB3aWxsIGNoYW5nZQo+Pj4gdGhhbmtzLAo+Pj4KPj4+IERvIHlvdSBuZWVkIG1l
+IHRvIHNlbmQgVjUgcGF0Y2ggc2V0IHRvIGZpeCB0aGlzPwo+PiBObywgSSB3aWxsIGFtZW5kIHRo
+ZXNlIHdoZW4gYXBwbHlpbmcuCj4+Cj4gT24gdGhlIGtlcm5lbCBzaWRlLCBzb21lIHJlbGV2YW50
+IGtlcm5lbCBwYXRjaGVzIGdvdCBhY2ssICBpdCBzZWVtcwo+IHRoZXkgd29uJ3QgIGNoYW5nZSBh
+bnltb3JlLgo+Cj4gQW5kIHRoZSBWNCBsb29rcyBnb29kIHRvIG1lLCBzbzogQWNrLgpUaGFua3Ms
+wqAgTGludXgga2VucmVsIFJJU0MtViBtYWludGFpbmVyIHN0aWxsIGRvbid0IGFwcGx5IHRoZSBr
+ZXJuZWwgCnBhdGNoLMKgIGxldCdzIHdhaXQuCj4KPiBUaGFua3MuCj4gTGlhbmJvCj4KPj4gVGhh
+bmtzLAo+PiBLYXp1Cj4+Cj4+Pj4gdGhpcyB0bzoKPj4+Pgo+Pj4+ICsgICAgIG1pcHM2NCwgcmlz
+Y3Y2NCwgczM5MCBhbmQgczM5MHgtYmFzZWQga2VybmVscyBhcmUgc3VwcG9ydGVkLiAgT3RoZXIK
+Pj4+PiArICAgICBhcmNoaXRlY3R1cmVzIG1heSBiZSBhZGRyZXNzZWQgaW4gdGhlIGZ1dHVyZS4K
+Pj4+Pgo+Pj4+PiAgICAgICBvICBPbmUgc2l6ZSBmaXRzIGFsbCAtLSB0aGUgdXRpbGl0eSBjYW4g
+YmUgcnVuIG9uIGFueSBMaW51eCBrZXJuZWwgdmVyc2lvbgo+Pj4+PiBAQCAtOTgsNiArOTgsOCBA
+QAo+Pj4+PiAgICAgICAgICBhcm02NCBkdW1wZmlsZXMgbWF5IGJlIGJ1aWx0IGJ5IHR5cGluZyAi
+bWFrZSB0YXJnZXQ9QVJNNjQiLgo+Pj4+PiAgICAgICBvICBPbiBhbiB4ODZfNjQgaG9zdCwgYW4g
+eDg2XzY0IGJpbmFyeSB0aGF0IGNhbiBiZSB1c2VkIHRvIGFuYWx5emUKPj4+Pj4gICAgICAgICAg
+cHBjNjRsZSBkdW1wZmlsZXMgbWF5IGJlIGJ1aWx0IGJ5IHR5cGluZyAibWFrZSB0YXJnZXQ9UFBD
+NjQiLgo+Pj4+PiArICBvICBPbiBhbiB4ODZfNjQgaG9zdCwgYW4geDg2XzY0IGJpbmFyeSB0aGF0
+IGNhbiBiZSB1c2VkIHRvIGFuYWx5emUKPj4+Pj4gKyAgICAgcmlzY3Y2NCBkdW1wZmlsZXMgbWF5
+IGJlIGJ1aWx0IGJ5IHR5cGluZyAibWFrZSB0YXJnZXQ9UklTQ1Y2NCIuCj4+Pj4+ICAgICAgIFRy
+YWRpdGlvbmFsbHkgd2hlbiB2bWNvcmVzIGFyZSBjb21wcmVzc2VkIHZpYSB0aGUgbWFrZWR1bXBm
+aWxlKDgpIGZhY2lsaXR5Cj4+Pj4+ICAgICAgIHRoZSBsaWJ6IGNvbXByZXNzaW9uIGxpYnJhcnkg
+aXMgdXNlZCwgYW5kIGJ5IGRlZmF1bHQgdGhlIGNyYXNoIHV0aWxpdHkKPj4+Pj4gZGlmZiAtLWdp
+dCBhL2hlbHAuYyBiL2hlbHAuYwo+Pj4+PiBpbmRleCA5OTIxNGMxLi4yNTNjNzFiIDEwMDY0NAo+
+Pj4+PiAtLS0gYS9oZWxwLmMKPj4+Pj4gKysrIGIvaGVscC5jCj4+Pj4+IEBAIC05NTEyLDcgKzk1
+MTIsNyBAQCBjaGFyICpSRUFETUVbXSA9IHsKPj4+Pj4gICAgICIgIFRoZXNlIGFyZSB0aGUgY3Vy
+cmVudCBwcmVyZXF1aXNpdGVzOiAiLAo+Pj4+PiAgICAgIiIsCj4+Pj4+ICAgICAiICBvICBBdCB0
+aGlzIHBvaW50LCB4ODYsIGlhNjQsIHg4Nl82NCwgcHBjNjQsIHBwYywgYXJtLCBhcm02NCwgYWxw
+aGEsIG1pcHMsIiwKPj4+Pj4gLSIgICAgIG1pcHM2NCwgczM5MCBhbmQgczM5MHgtYmFzZWQga2Vy
+bmVscyBhcmUgc3VwcG9ydGVkLiAgT3RoZXIgYXJjaGl0ZWN0dXJlcyIsCj4+Pj4+ICsiICAgICBt
+aXBzNjQsIHJpc2N2NjQsIHMzOTAgYW5kIHMzOTB4LWJhc2VkIGtlcm5lbHMgYXJlIHN1cHBvcnRl
+ZC4gIE90aGVyIGFyY2hpdGVjdHVyZXMiLAo+Pj4+PiAgICAgIiAgICAgbWF5IGJlIGFkZHJlc3Nl
+ZCBpbiB0aGUgZnV0dXJlLiIsCj4+Pj4+ICAgICAiIiwKPj4+Pj4gICAgICIgIG8gIE9uZSBzaXpl
+IGZpdHMgYWxsIC0tIHRoZSB1dGlsaXR5IGNhbiBiZSBydW4gb24gYW55IExpbnV4IGtlcm5lbCB2
+ZXJzaW9uIiwKPj4+PiBTYW1lIGFzIGFib3ZlLgo+Pj4+Cj4+Pj4gQW5kIGhlbHAuYyBsYWNrcyB0
+aGlzIHBhcnQsIHdpbGwgYWRkOgo+Pj4+Cj4+Pj4gQEAgLTk1NzIsNiArOTU3Miw4IEBAIFJFQURN
+RV9FTlRFUl9ESVJFQ1RPUlksCj4+Pj4gICAgICIgICAgIGFybTY0IGR1bXBmaWxlcyBtYXkgYmUg
+YnVpbHQgYnkgdHlwaW5nIFwibWFrZSB0YXJnZXQ9QVJNNjRcIi4iLAo+Pj4+ICAgICAiICBvICBP
+biBhbiB4ODZfNjQgaG9zdCwgYW4geDg2XzY0IGJpbmFyeSB0aGF0IGNhbiBiZSB1c2VkIHRvIGFu
+YWx5emUiLAo+Pj4+ICAgICAiICAgICBwcGM2NGxlIGR1bXBmaWxlcyBtYXkgYmUgYnVpbHQgYnkg
+dHlwaW5nIFwibWFrZSB0YXJnZXQ9UFBDNjRcIi4iLAo+Pj4+ICsiICBvICBPbiBhbiB4ODZfNjQg
+aG9zdCwgYW4geDg2XzY0IGJpbmFyeSB0aGF0IGNhbiBiZSB1c2VkIHRvIGFuYWx5emUiLAo+Pj4+
+ICsiICAgICByaXNjdjY0IGR1bXBmaWxlcyBtYXkgYmUgYnVpbHQgYnkgdHlwaW5nIFwibWFrZSB0
+YXJnZXQ9UklTQ1Y2NFwiLiIsCj4+Pj4gICAgICIiLAo+Pj4+ICAgICAiICBUcmFkaXRpb25hbGx5
+IHdoZW4gdm1jb3JlcyBhcmUgY29tcHJlc3NlZCB2aWEgdGhlIG1ha2VkdW1wZmlsZSg4KSBmYWNp
+bGl0eSIsCj4+Pj4gICAgICIgIHRoZSBsaWJ6IGNvbXByZXNzaW9uIGxpYnJhcnkgaXMgdXNlZCwg
+YW5kIGJ5IGRlZmF1bHQgdGhlIGNyYXNoIHV0aWxpdHkiLAo+Pj4+Cj4+Pj4KPj4+PiBXaXRoIHRo
+ZXNlLCB0aGUgdjQgY3Jhc2ggcGF0Y2ggc2V0IGxvb2tzIGdvb2QgdG8gbWUuCj4+Pj4KPj4+PiBB
+Y2tlZC1ieTogS2F6dWhpdG8gSGFnaW8gPGstaGFnaW8tYWJAbmVjLmNvbT4KPj4+Pgo+Pj4+IFRo
+YW5rcywKPj4+PiBLYXp1CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
+Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
