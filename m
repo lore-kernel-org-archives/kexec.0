@@ -4,161 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1200AC43217
-	for <kexec@archiver.kernel.org>; Wed,  9 Nov 2022 17:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 771C1C433FE
+	for <kexec@archiver.kernel.org>; Wed,  9 Nov 2022 21:31:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:Subject:From:References:Cc:
-	To:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=v3hlv4qtb2Mb792mCoIG+tOL+nTzyqwBqPy7dSS3Jgs=; b=IeiBgVAwpTl/FCO3ddbhObd5LW
-	MDPbKGhJQV1rvbwORY1+49hMIwU9lRsWQoGI1SE5DIMqyqzCV/qf5eBdzR0KvUI5JDNOeJCfxFHxj
-	6HcB24udx9v4wQdcZcAWb5iQ2wswKYN/crI7pwMaD6023EhnI/IN/nSNn5dcE0JrX1gX44kvgXQMX
-	yUh4QPGQVhUZocoZvyGHQRvI1ClJYh6TK8o5UVrsA6mYoseQFXcOBreAC0M98pkAWO88wqPwFmPa+
-	hAggrUgj4+QaFe7lC6WqjS30drIbDHQJd7x7pd/XXY2eZmh9BhEEMEckuw4jrPHy6o12qPazUMFBx
-	dwSO+Z2Q==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=fmIKUfo/SVSQ+/KMoHuiOIhLGVsE1nril60p35FaDt0=; b=dmJ0rZrVLkhCMw
+	NMUWURKYkGmIY/2bxkqAQStvwhlhg+CJT7skpmiBVXa8HiGfoGy7nY5AS9xZ8wQYaMIwoOjVpBHje
+	9A2nYVoIR2IgZcNmb92RKQPLexXEaHVXQutTMbvIp1/ySGBtphK/FxnAl8HtxqfPNlBgEpD9BDdQ6
+	Jt1V9Ba7ApRJ1KcmGMLIrcU7exGheBn4WnvgyTo0uLRxThatvYHealaqg7g2g7IkgnK533mQgE4Bu
+	w+vaflh5Eyi3JrBQPbFGr2wjOV/vX1/h5FbVa7TqFIuH7Xg7I0xjDlqWHXax5nIL4rhfT3gXzPn+s
+	/qOgg8uOZMLj8g1QPFFg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1osorU-00FXFe-FP; Wed, 09 Nov 2022 17:27:40 +0000
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
+	id 1ossfa-00HQzx-Av; Wed, 09 Nov 2022 21:31:38 +0000
+Received: from mail.skyhub.de ([5.9.137.197])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1osorQ-00FXBK-28
-	for kexec@lists.infradead.org; Wed, 09 Nov 2022 17:27:37 +0000
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2A9H83Kr008999;
-	Wed, 9 Nov 2022 17:27:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- to : cc : references : from : subject : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2022-7-12;
- bh=LjXpbo6yqjv9+iLmisGk2PrtV5e3hSqCk6xfg3sZ/jg=;
- b=LDn+9shFrJYeRCAyqpV4Dg32cVqAyZXV9+FHteprhgArTcis4+OV3U/KLYwVzeEMg9GS
- ScCu9/KYSit/5nW9k9esfLVo+k3MWkSO3Yue2YGlkqSSc15OJP+dmJmU1LyLclzR+gY6
- To7eCCQr3Q30ACg/qiN/v9BjN4wfiel9BcaK+hzvq9TU5+wgrwTRqUoPvz1pIldbriqO
- sK/CZNQAZ7jeuZYYjCpadd7rA7CnzmGTy/aIoIbcCw37QDndIZK0MsWt0bvXN9IqqMkV
- dzS6FZ3Chk8iyIfd66vZFLDfBF8SXBXvv6BQqi39W8WNRxCnxYaUnMdg+k60/X/hlki/ jQ== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3krgba01we-54
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 09 Nov 2022 17:27:25 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 2A9FoEAP040128;
-	Wed, 9 Nov 2022 17:00:20 GMT
-Received: from nam04-mw2-obe.outbound.protection.outlook.com (mail-mw2nam04lp2171.outbound.protection.outlook.com [104.47.73.171])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3kpcqhreme-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 09 Nov 2022 17:00:20 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=C758SO9nwL+dlq/KV/8iObMP4rVlp4NEdJvrFEIQ41xa2XedlxcFPN+CTjwE6Bu9RGxIdk8FOfleMAXLnwQ0II0rq4V2O4y+ZPqqvs8vOGX45sJubv/W5VdC6DIXu2C1oLxk42uM3SThk4wL0QEtA1CxMRTZjl42rpV1rmGLiZ9PmicO0+8kSjzIADlxOw22Qkr2yplTkkmDbqWVGrkv7xB7N4LHXyLb32gM6qwBvolsQZIhamWISc7IpmCQV7bGZEBMGjFid2Pp5hAVZNC9aY+LLXA0ecjjwqbOx0Rdc7+0CtS5v9On4nRffmWuS/+HAN15TzrFnkYVHjGaJrWasg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LjXpbo6yqjv9+iLmisGk2PrtV5e3hSqCk6xfg3sZ/jg=;
- b=Qgppd88kvSBEAGiX54DuzJQn7DQ6wrPPoI2HcnpX7l/V7JJ76ZRqJZiZbvNiYIcxH7Dw+9P8PHyKa4Ckv/8rDoGFxHAUshH9/QSkXhbra8TjJDkDsH+3PCoHyttH5DSL/lHBPJcC5A76IoL2n05qR9/N/jmfVYpYFIjz0RhaDJoXxgQs++sOnFSzQA0U9ut7Hgk0DIKBDsGCzlGnVKxq7XXT4PYju/YW+IyLRG0JOI7F1PKdqN/zSkghlyu/5viZ90WhIkhP5CJAfacOHYrqCvpmyCMtaWEblpNYh5aI2oh3PpraiWlV25qdFsVY/yF+j+YAeidRqzjBK341yYlA0A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LjXpbo6yqjv9+iLmisGk2PrtV5e3hSqCk6xfg3sZ/jg=;
- b=DXYP+GhI8TB4YGproFJBsRUo91UEJ7hJY2Nu8ITFloBBsGnTgX5mtpNVQYYFplrxF9zeXmzw0z/58SrmF1QWowiIa4Bo9YpEWM6VMoMrRwGoSp8SNQTTMktSZbQeu18z/lgFZG4Gx/t4Yu2B8hKpMbt4l+9kt15JjqYDXXftcIY=
-Received: from CH2PR10MB4166.namprd10.prod.outlook.com (2603:10b6:610:78::20)
- by CH2PR10MB4229.namprd10.prod.outlook.com (2603:10b6:610:7a::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5791.27; Wed, 9 Nov
- 2022 17:00:17 +0000
-Received: from CH2PR10MB4166.namprd10.prod.outlook.com
- ([fe80::36b6:3767:c15f:3b24]) by CH2PR10MB4166.namprd10.prod.outlook.com
- ([fe80::36b6:3767:c15f:3b24%9]) with mapi id 15.20.5791.027; Wed, 9 Nov 2022
- 17:00:16 +0000
-Message-ID: <0493ebb4-a0d1-efc3-b725-b6494f602a37@oracle.com>
-Date: Wed, 9 Nov 2022 09:00:14 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.0
-Content-Language: en-US
-To: Baoquan He <bhe@redhat.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>
-References: <20221027205008.312534-1-stephen.s.brennan@oracle.com>
- <20221108154846.11584119794413c7682280fc@linux-foundation.org>
- <Y2r8kFZVZP1ou1qZ@MiWiFi-R3L-srv>
-From: Stephen Brennan <stephen.s.brennan@oracle.com>
-Subject: Re: [PATCH] vmcoreinfo: Warn if we exceed vmcoreinfo data size
-In-Reply-To: <Y2r8kFZVZP1ou1qZ@MiWiFi-R3L-srv>
-X-ClientProxiedBy: SA0PR12CA0006.namprd12.prod.outlook.com
- (2603:10b6:806:6f::11) To CH2PR10MB4166.namprd10.prod.outlook.com
- (2603:10b6:610:78::20)
+	id 1ossfW-00HQu3-ED
+	for kexec@lists.infradead.org; Wed, 09 Nov 2022 21:31:37 +0000
+Received: from zn.tnic (p200300ea9733e7bc329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9733:e7bc:329c:23ff:fea6:a903])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 094B61EC063F;
+	Wed,  9 Nov 2022 22:31:21 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+	t=1668029481;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+	bh=ZVuAEP7EZJD1bSmxJ8gb2o1Y328HRP3H25tj29o45V8=;
+	b=VhK+4kugpuZrqOzjcVJFEOya0RABF34TBESQEqw49x4MCk5qbzJJ6ucw6BjfZRhyR4tORv
+	+FL/nQEEWAKdEmR/dKv48qF9AYwFzl4FDSlTjNKg0l210qAK07k8SvfsgiJUD9b5cJxGTR
+	9Tgq13YrK2qJ2FjhI+ikBtQOxn+IB8c=
+Date: Wed, 9 Nov 2022 22:31:16 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Eric DeVolder <eric.devolder@oracle.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org,
+	ebiederm@xmission.com, dyoung@redhat.com, bhe@redhat.com,
+	vgoyal@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+	dave.hansen@linux.intel.com, hpa@zytor.com,
+	nramas@linux.microsoft.com, thomas.lendacky@amd.com,
+	robh@kernel.org, efault@gmx.de, rppt@kernel.org, david@redhat.com,
+	sourabhjain@linux.ibm.com, konrad.wilk@oracle.com,
+	boris.ostrovsky@oracle.com
+Subject: Re: [PATCH v13 7/7] x86/crash: add x86 crash hotplug support
+Message-ID: <Y2wcJOehWcG7w5c4@zn.tnic>
+References: <20221031193604.28779-1-eric.devolder@oracle.com>
+ <20221031193604.28779-8-eric.devolder@oracle.com>
+ <Y2A4TqyOaPYBu4Hk@zn.tnic>
+ <1c11a429-b5a9-fb55-fbef-b49e760e2d1e@oracle.com>
+ <Y2I3zQ9ZU+C9Kgf7@zn.tnic>
+ <cd820d8a-7ce9-c32f-fc84-bbf20dd7d6e5@oracle.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PR10MB4166:EE_|CH2PR10MB4229:EE_
-X-MS-Office365-Filtering-Correlation-Id: ab1d753b-a977-477c-6226-08dac273e02f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 	Q3+LZjhih0QmoPmeDzP6plvQs9Fxmh0I1OTnvluz+17/KNhspPTOm+mOkVLFlBEaDQ2kM9hLjwXDgzlP7vJzHuxgusL4ET+rAmdqhohwU0yrAi9DakcNqzS3hV4/4RJKg+PqUuRIBDbncQSvYRdrP8iJ8KfBFaSYyVS9ocB/lYyD8w61Ji/Wvh/cOsyD+X/f/0kd7ujOSUnhWdK6gRqemiWyoMmhI4gGdU/US2lGZa54HQRoUiETrnbg93jo+MnPuVm25hdDgVL182RVOHZzmTZLaoYxmopdD6hb/stRIhjdFLE/FVZUSyoXEM25bSAZBU72hkw2MeCNH7N2Jk7UQ+N/8nNGl3f3cydOj8Fw+bp6IgOAAtfMsewC09cWM3XK9IkMrO4g9Ww6EsXq/jQQFDHhoBBDGZBxHk8JOBM4rA2UPZfvuh9km1zmEJW4tZgSHREGf0l96do8H0s9mfBJ3RE839ZhuGkx//13hKmrTEVop+P+DyNlSr4b+PpnO4b5QwfBmIFEhXxDQXA/ZZHEGaSjJb9tQLJPxzcN665bTn+LTB+QpNdBEIjfmuRYwtnvXT/eo01G1AIbtkYOIf2iENgjqTYGYr/8ilpHpqTW/ZSI0nSdZyPXvkexb2T/SZrs2e/DVB13zsKY0WnNIcYZUf4g8HlMlTiusRDBl+eMn+MQRVLUSnmNFWGcD6OqhkViVOq47rLdCEoH8PNKdjfuLzBGbELOHTqyjNhlVcz4hbQPn9Zcte6AGBVN+5imOQjipJqsWv7vXN7nbp+EGpvMQ+uIHBW0ImNVgymqieX9znA=
-X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR10MB4166.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(346002)(396003)(39860400002)(376002)(366004)(136003)(451199015)(6486002)(5660300002)(478600001)(83380400001)(38100700002)(316002)(36756003)(4326008)(8676002)(110136005)(2906002)(66556008)(66476007)(66946007)(54906003)(41300700001)(2616005)(186003)(31686004)(26005)(6506007)(53546011)(8936002)(31696002)(6512007)(86362001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 	=?utf-8?B?eFpJTUZWTGJOeHBiU08zb3BpUnpMMVRLb2hVQ2lKZm9pcERCSWdhR0VpTUMr?=
- =?utf-8?B?V0ViYXJnMXVXNmUyd2xKZUswWm5rVElkclFSbWJJUjVPamVyd3NIK1hUTHhS?=
- =?utf-8?B?ZXhmSDhkQXQ0MTI5aHZlVVRMRXQ1MGNXZFJneVpmRk1lWkFWU05GaHhnT1Z3?=
- =?utf-8?B?ZS9sWi9lMUZYUVBlTDBFTWl2QUhvNUtGWkVOZWk4L0wyWDByRGJLNG1GNEZI?=
- =?utf-8?B?SGVoclRpY3YvZDZIdzROMUdHRjRkWW5kYmFydVowYllGaEh3dWcyWk1vTFFT?=
- =?utf-8?B?eUZJTkZZQmJBRU1sejRla2svOUpYcXRzRjBYSkpYNGQ1VkgyTDJLTmMzbFN3?=
- =?utf-8?B?emF5S0VFTDk5dmN6Y1pTczFsVnFqdENDSzlhVDArYWErM0N4MEhDYTNPMys5?=
- =?utf-8?B?V3RpSDZzNk9uUjRKR05wcHl5NXdKZkhQWEdiZU45VmFIbTREZUxkSVRuRWRp?=
- =?utf-8?B?SndibGIwN01JeDB1V3lDWVJPd29RWitMR2pHN2kyVUtVSU9HZUNCa1JFczNn?=
- =?utf-8?B?ak0zOTk4YjRRUkFzMDFRQWphSVZxeWZzaW9Sb3NObERFdTUweEMwRGFadUFW?=
- =?utf-8?B?aUNIRnlkRUNpWHYvSTFkbkxEVzFSVExrUzAvcHI2QU1xWkFqcGhWU2ZlbzFz?=
- =?utf-8?B?bjU5SjdRRll1QVlMT2wrR241RkwvWG9TaGlsaUhRWHF3bHBNRWFFWWV4R3hW?=
- =?utf-8?B?ZzgwOXFSV0JQTDJSQ0llbkhZc044R0dxcU9kNEQ1elIyWGR3c0QwYzRrc3pz?=
- =?utf-8?B?REdpS3RFeHpNbGxTVU56MkVoeWkzYkg2eWQ0QTZNMVFQdjdweDA3R094anpV?=
- =?utf-8?B?MkNzNzVpUDRPUWt0QTNqNzhRM3dtWUNTdUUza0RmWG5nU1I2YmtpM1JubHAv?=
- =?utf-8?B?N0RLSGcyOWxtdTFPdmg2RTRpRjZITEdUNyttOEVhL1p2VmRWc2IvVWM2aUZK?=
- =?utf-8?B?M2NFWWtYR2pRbnJudDByQTFEaUE5d0ZrazNQZUpqTy9EeTlHZURRaUtmdklo?=
- =?utf-8?B?eG1XejFlQS8xT00rRXF3WXlpY2p2UDFNcVRSNkpoTW5zL2FCeko2VFRKcTFN?=
- =?utf-8?B?dWtVRXFCUi9hVk1HZmVTbUlMYWF3bko0LzZGVlpDQUp6WHVwaTJRY09ORzVl?=
- =?utf-8?B?Q0h4ODc5NXVaQS9abFJRL0NTbDJkSjdLSTFiN1Vsa2F4WXVTdENwckpLVFFE?=
- =?utf-8?B?ZUtsdEhGb0RUdmQxQ0xVUUJGYnliN01ScE01NnJkazdRbGtQczZRNWV3NUpw?=
- =?utf-8?B?T0R5aTIxYXlZR0pUa3huQVVFOW83WS9TT0I1OHROOW1YWGR2dVZnMy9wVXlz?=
- =?utf-8?B?SjFvRXZ3c1VWaXZvUjVud2ZETDJ0SjRlZ29rZTk5OUlZV0o1WEdiKzgzVkNM?=
- =?utf-8?B?ZTliSFR4MWwrWEZlOXRWUlI2endqU3MwaFYyQ2txZ1grckNFSXBMSG9yVmRW?=
- =?utf-8?B?ck5oM2NBajg2eG9PeG5wTmV0ZndPdWVrYWV0Z01FS1NQOWxBS2xzeXRLNlpr?=
- =?utf-8?B?TndhYjJrRndCYzBpNU5rUXQ0ZnhNRmlrWGVIRHAvQTA3ejhHV1ljdlI3d1lz?=
- =?utf-8?B?cHlIblk4eFVDQUVzWlRZNmxXb2JxYVY4aksrdTJNYVBnRi80N3krOG1ic0hj?=
- =?utf-8?B?N3lwUXRTMGF6OUd4Q3ZUM1YvQzhHSUp4RVh2YXVUVUMwcEFUTlh1L1JpTVlm?=
- =?utf-8?B?UEQ1QS9razVnd3FPMWpPYVg3cTVaQ2EzVWV6ODNUY3ZRYWtLdzh0T3pSZDNo?=
- =?utf-8?B?RGY5ODNqNnlMSzFXZjJPUnJiNmhLdTM4TzlPUHBiTUdRREs3eldzZ3hGZkNa?=
- =?utf-8?B?MmQ0QVlueXhySENLYkUycmlLZlhaY2hSOFNERHZLRE1ZR2VzdFRDenlXWHZh?=
- =?utf-8?B?TlJKZzN3dUN1akZWQm4rNG1RYzdSa0I2djNDTEFPSk5ad0hQakVlL2E0N3hq?=
- =?utf-8?B?NHJ4Wkpub3AzSGZsNHFXc0RjdkIwa0pKSk82VGlkeXVybkhBVzF5R1ZIZTFy?=
- =?utf-8?B?RVJ5OExyV1FtRXZ4MlRXelVJMGFHbHVyYnl6MVBzK3dYQytvNUVZcG12YytV?=
- =?utf-8?B?T2krN3hXbVVPNEh2RjlyckIza2pqVmlNb3FyTGkrYXZveUoyZ05GRnJMSXVt?=
- =?utf-8?B?cjZhdElqdTE3V3NNWit5UXZYNi9aOGhvVW1CVkY2RkxLRnRkbVJwUmU5R0I4?=
- =?utf-8?B?c2c9PQ==?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ab1d753b-a977-477c-6226-08dac273e02f
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR10MB4166.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Nov 2022 17:00:16.6606
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WoFpzYHGVjfm3uawLqccF6TcXD8QYP2lmryvzpKfvyy7hfTk+Xg/fG906c6oNqnschcz5qRcEahTKy8rIUf5imA/3K4c8Ntnn4+oDsGNtD8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR10MB4229
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-11-09_06,2022-11-09_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0 mlxscore=0
- suspectscore=0 spamscore=0 malwarescore=0 bulkscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2210170000
- definitions=main-2211090129
-X-Proofpoint-GUID: G_xolXzJrZHD-ReIVI8uCBnjVpJPslU1
-X-Proofpoint-ORIG-GUID: G_xolXzJrZHD-ReIVI8uCBnjVpJPslU1
+Content-Disposition: inline
+In-Reply-To: <cd820d8a-7ce9-c32f-fc84-bbf20dd7d6e5@oracle.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221109_092736_280068_0CA0122D 
-X-CRM114-Status: GOOD (  29.82  )
+X-CRM114-CacheID: sfid-20221109_133135_770868_BE7D70E2 
+X-CRM114-Status: GOOD (  15.20  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -170,87 +75,73 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 11/8/22 17:04, Baoquan He wrote:
-> On 11/08/22 at 03:48pm, Andrew Morton wrote:
->> On Thu, 27 Oct 2022 13:50:08 -0700 Stephen Brennan <stephen.s.brennan@oracle.com> wrote:
->>
->>> Though vmcoreinfo is intended to be small, at just one page, useful
->>> information is still added to it, so we risk running out of space.
->>> Currently there is no runtime check to see whether the vmcoreinfo buffer
->>> has been exhausted. Add a warning for this case.
->>>
->>> Currently, my static checking tool[1] indicates that a good upper bound
->>> for vmcoreinfo size is currently 3415 bytes, but the best time to add
->>> warnings is before the risk becomes too high.
->>>
->>> ...
->>>
->>> --- a/kernel/crash_core.c
->>> +++ b/kernel/crash_core.c
->>> @@ -383,6 +383,9 @@ void vmcoreinfo_append_str(const char *fmt, ...)
->>>   	memcpy(&vmcoreinfo_data[vmcoreinfo_size], buf, r);
->>>   
->>>   	vmcoreinfo_size += r;
->>> +
->>> +	WARN_ONCE(vmcoreinfo_size == VMCOREINFO_BYTES,
->>> +		  "vmcoreinfo data exceeds allocated size, truncating");
->>>   }
->>
->> Seems that vmcoreinfo_append_str() will truncate (ie: corrupt) the
->> final entry when limiting the overall data size to VMCOREINFO_BYTES.
->> And that final entry will be missing any terminating \n or \0.
->>
->> Is all this desirable, or should we be checking for (and warning about)
->> sufficient space _before_ appending this string?
-> 
-> 
-> Hmm, once we really reach that point, truncated vmcoreinfo should not be
-> useful for later vmcore dumping and analyzing. As we can see, the
-> arch_crash_save_vmcoreinfo() is called at the end of
-> crash_save_vmcoreinfo_init(). E.g on x86_64, the phys_base,
-> init_top_pgt, etc are very important for memory layout analyzing.
-> Fortunatly this insufficient vmcoreinfo page won't impact the normal
-> kernel running.
-> 
-> So, the current change looks good to me.
-> 
-> My further thinking is if we should print the truncated or first skipped
-> entry in the warning so that people know better what's happening, even
-> though whatever we will do is to increase one page for vmcoreinfo buffer.
-> Not strong opinion though.
+On Wed, Nov 09, 2022 at 09:48:33AM -0600, Eric DeVolder wrote:
+> ...
+> which then defaults HOTPLUG_CPU to on and thus this code/ifdef in question.
 
-This is a bit nicer, it would save us needing to figure it out from the
-stack. Of course, regardless of _which_ line puts us over the limit, it
-seems like the response is the same: increase the size or remove info. It's
-just a matter of how much to increase or how much to remove.
+defconfig can sometimes lag reality. In this case, the majority of
+machines have SMP=y because the majority of machines out there are,
+well, multicore.
 
-I'm happy with it either way.
+> So at this point, I'm still not sure if you want the ifdef line:
+>  - removed altogether
+>  - transitioned to CRASH_HOTPLUG
+>  - leave as is
 
-Thanks,
-Stephen
+So let's think out loud:
 
-> 
-> 
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index a0eb4d5cf557..8ba4dd90694d 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -383,6 +383,9 @@ void vmcoreinfo_append_str(const char *fmt, ...)
->   	memcpy(&vmcoreinfo_data[vmcoreinfo_size], buf, r);
->   
->   	vmcoreinfo_size += r;
-> +
-> +	WARN_ONCE(vmcoreinfo_size == VMCOREINFO_BYTES,
-> +		  "vmcoreinfo data exceeds allocated size when adding: %s\n", buf);
->   }
->   
->   /*
-> 
+* the majority of machines will have CONFIG_HOTPLUG_CPU=y because
+they're SMP machines and we want the elfcorehdr updates to happen when
+CPUs get offlined or onlined.
+
+CONFIG_MEMORY_HOTPLUG is most likely going to be =n on the majority of
+machines out there.
+
+(Note how the deciding factor for all this is what would make sense on
+the prevailing majority of machines out there.)
+
+And memory hotplug will be off for the simple reason that not so many
+machines have memory hotplug hardware capability.
+
+Which then means, IMHO, this functionality should be separate: have a
+CPU hotplug callback and a memory hotplug callback.
+
+And you kinda do that in
+
+Subject: [PATCH v13 3/7] crash: add generic infrastructure for crash hotplug support
+
+but then this all calls into a single handle_hotplug_event() and that
+hp_action doesn't really matter.
+
+It is used in the call to
+
+  arch_crash_handle_hotplug_event(image, hp_action);
+
+but that hp_action argument is unused in the x86 version.
+
+IOW, you can do this callback regardless whether it is a CPU or memory
+hotplug event.
+
+So thinking about it, a single CONFIG_CRASH_HOTPLUG which unifies those
+CPU and memory hotplug callback functionality makes most sense to me.
+Because you don't really differentiate between the two in the callback
+actions.
+
+Anyway, this is how I see it from here. I could very well be missing an
+aspect, of course.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
 
 _______________________________________________
 kexec mailing list
