@@ -4,166 +4,161 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 59422C4332F
-	for <kexec@archiver.kernel.org>; Wed,  9 Nov 2022 15:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1200AC43217
+	for <kexec@archiver.kernel.org>; Wed,  9 Nov 2022 17:27:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
 	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:Cc:To:
-	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:Subject:From:References:Cc:
+	To:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=/VmFR8uS3fgrW5m3L7QNdBpuJ1WBv+tRzYrXUe34/94=; b=yCwfHPULmb9HOWl3y5jBbYjvop
-	HY701GkHcTUFptRhTCi/JW5a/nUl61m8Qw3dU7sX8NdTvCYf/rVrKS7+jbAzYN1ciDbGNVDPHeS8D
-	IP0iMsjbWmo5e13tbRxvQTtdQEXpTwT1lckyvlqWCZS22w72acp2lKjN89bVku8XCsLX+8sydmS7Q
-	O4EgoXy1qCvN5uSmdqYR54ipNO/kM1avNclX9lUd8S6B45t+CKA6ivSXniy0RGqquwILA5i48nD7n
-	yuK0/foH9MNwpxvPIDC5bmMVTZTOgxrJ5QpstJ3XnlAqQ+IdimoFKisxd/OrTT7EnXZ81Gt2L8V4i
-	QoKS7x/w==;
+	bh=v3hlv4qtb2Mb792mCoIG+tOL+nTzyqwBqPy7dSS3Jgs=; b=IeiBgVAwpTl/FCO3ddbhObd5LW
+	MDPbKGhJQV1rvbwORY1+49hMIwU9lRsWQoGI1SE5DIMqyqzCV/qf5eBdzR0KvUI5JDNOeJCfxFHxj
+	6HcB24udx9v4wQdcZcAWb5iQ2wswKYN/crI7pwMaD6023EhnI/IN/nSNn5dcE0JrX1gX44kvgXQMX
+	yUh4QPGQVhUZocoZvyGHQRvI1ClJYh6TK8o5UVrsA6mYoseQFXcOBreAC0M98pkAWO88wqPwFmPa+
+	hAggrUgj4+QaFe7lC6WqjS30drIbDHQJd7x7pd/XXY2eZmh9BhEEMEckuw4jrPHy6o12qPazUMFBx
+	dwSO+Z2Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1osnLl-00Eluw-Gu; Wed, 09 Nov 2022 15:50:49 +0000
-Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
+	id 1osorU-00FXFe-FP; Wed, 09 Nov 2022 17:27:40 +0000
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1osnLc-00ElfK-Om
-	for kexec@lists.infradead.org; Wed, 09 Nov 2022 15:50:42 +0000
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2A9FllXo029498;
-	Wed, 9 Nov 2022 15:50:09 GMT
+	id 1osorQ-00FXBK-28
+	for kexec@lists.infradead.org; Wed, 09 Nov 2022 17:27:37 +0000
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2A9H83Kr008999;
+	Wed, 9 Nov 2022 17:27:30 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
+ to : cc : references : from : subject : in-reply-to : content-type :
  content-transfer-encoding : mime-version; s=corp-2022-7-12;
- bh=gBKlWJyK96uSEmTPaJ6xAQ2sDli4RNPEwvLVTZxN4lo=;
- b=upvrJOnGp38kciwuo3/FRNvXF8oith6sjUTsqyGxcA+/Y7ko4tTef6B1lytvdBN9Nfc3
- l/RNiNFL4DuFJbMb1jGNqGJhYyoFhckpaP7Jkb2l0pb7WcXWOpO21qn26ueH9u/mjqlW
- EK0ZO5MVr0rzC1seFkZmg2ODOXxtNXafRP+RbAiQOJsOwGNFv1ZshQZqwJE1E5cQr1K1
- RMRxbewwhlO/idxNmloAbRw9oIuyFF7w7wKbx2ubNDKN5BuKlQ+7gFJpm4YOJ4EP8G7F
- MQ672otaPPL2JsGkZRhcWNLLo5jGvKsYn160QBd1YZXT55/elfemUmBRll9gyh2EwPmi FA== 
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3krf5mg0b7-1
+ bh=LjXpbo6yqjv9+iLmisGk2PrtV5e3hSqCk6xfg3sZ/jg=;
+ b=LDn+9shFrJYeRCAyqpV4Dg32cVqAyZXV9+FHteprhgArTcis4+OV3U/KLYwVzeEMg9GS
+ ScCu9/KYSit/5nW9k9esfLVo+k3MWkSO3Yue2YGlkqSSc15OJP+dmJmU1LyLclzR+gY6
+ To7eCCQr3Q30ACg/qiN/v9BjN4wfiel9BcaK+hzvq9TU5+wgrwTRqUoPvz1pIldbriqO
+ sK/CZNQAZ7jeuZYYjCpadd7rA7CnzmGTy/aIoIbcCw37QDndIZK0MsWt0bvXN9IqqMkV
+ dzS6FZ3Chk8iyIfd66vZFLDfBF8SXBXvv6BQqi39W8WNRxCnxYaUnMdg+k60/X/hlki/ jQ== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3krgba01we-54
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 09 Nov 2022 15:50:04 +0000
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 2A9EH918036389;
-	Wed, 9 Nov 2022 15:48:43 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2105.outbound.protection.outlook.com [104.47.58.105])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3kpcyqen6t-1
+	Wed, 09 Nov 2022 17:27:25 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 2A9FoEAP040128;
+	Wed, 9 Nov 2022 17:00:20 GMT
+Received: from nam04-mw2-obe.outbound.protection.outlook.com (mail-mw2nam04lp2171.outbound.protection.outlook.com [104.47.73.171])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3kpcqhreme-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 09 Nov 2022 15:48:43 +0000
+	Wed, 09 Nov 2022 17:00:20 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Iw7BnbvBS6ss3rY3QVH73Cprau2AfIttpOwCNDGy/FXOA90b1S440xrw1UC/HA3Sa3OpSEvIiFqvYLk/hSU7EXcBOTCRB+EY2qEt6xmneoKLz/e7tgXdKR/VvpGukMM8WBzI1Q+F54i+CXzi1dFS5M0AV9yhq4nQG1WDFbTRwoLi33hneVHvEYY8ilcIEAP+xiIaQ2N8rA5g3prakZNHTSfVTYl/sAzrRl9L7OGQ6bs7cPI2/nDj1nISIEx4hRJHL/+qWa+Zgr2MGOdprpdDbJLG/YUHBcaTwxnDH6nV4E+egKEHLeFAWWWTw7KqENynPPZvtUVrWk8ua+drsGPOZQ==
+ b=C758SO9nwL+dlq/KV/8iObMP4rVlp4NEdJvrFEIQ41xa2XedlxcFPN+CTjwE6Bu9RGxIdk8FOfleMAXLnwQ0II0rq4V2O4y+ZPqqvs8vOGX45sJubv/W5VdC6DIXu2C1oLxk42uM3SThk4wL0QEtA1CxMRTZjl42rpV1rmGLiZ9PmicO0+8kSjzIADlxOw22Qkr2yplTkkmDbqWVGrkv7xB7N4LHXyLb32gM6qwBvolsQZIhamWISc7IpmCQV7bGZEBMGjFid2Pp5hAVZNC9aY+LLXA0ecjjwqbOx0Rdc7+0CtS5v9On4nRffmWuS/+HAN15TzrFnkYVHjGaJrWasg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gBKlWJyK96uSEmTPaJ6xAQ2sDli4RNPEwvLVTZxN4lo=;
- b=WpL1oy/npvpA3RQ6glE/nVV+6/E0w4RxK5NaQn6LGCPuKQwL2E6dca3AV+Axsgy+L2S1G/WHkZEAWVZEjm0A3GaM0K9CloQAGSaRaZo46DWEo841PLsCRrKG/RV9w0zRpWGqwiTwwyXvtO9+dPdJw6hPvM7ZvCO+H5C+P2OnSfrpPLfnArH0gBkw60Eskmq+4Hge4acFIHUpVD4WsfcKGYjnH8RTrQSaZf18Mn7OFa/SVodLAXXnMEWfrAyCHkAVnk/a148tpxjsUvPCpjznH6WFZD5ghIidv7mMcCzfnfDmEEEhX1YMBKIwjpoebNas+4qQNDB5l6bUr6udUm94xw==
+ bh=LjXpbo6yqjv9+iLmisGk2PrtV5e3hSqCk6xfg3sZ/jg=;
+ b=Qgppd88kvSBEAGiX54DuzJQn7DQ6wrPPoI2HcnpX7l/V7JJ76ZRqJZiZbvNiYIcxH7Dw+9P8PHyKa4Ckv/8rDoGFxHAUshH9/QSkXhbra8TjJDkDsH+3PCoHyttH5DSL/lHBPJcC5A76IoL2n05qR9/N/jmfVYpYFIjz0RhaDJoXxgQs++sOnFSzQA0U9ut7Hgk0DIKBDsGCzlGnVKxq7XXT4PYju/YW+IyLRG0JOI7F1PKdqN/zSkghlyu/5viZ90WhIkhP5CJAfacOHYrqCvpmyCMtaWEblpNYh5aI2oh3PpraiWlV25qdFsVY/yF+j+YAeidRqzjBK341yYlA0A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gBKlWJyK96uSEmTPaJ6xAQ2sDli4RNPEwvLVTZxN4lo=;
- b=jwyesztJ7qUYOA33ew5/Yg62BUeWdr00jG/pxgntHm1gKj1AIsm/BwmqJjRmafkBgtZkfTAJJuZU4zCfG1fD54RJkgwUbOC+SvAoEWDCihr1ACwTPSe+x/o6dwYVFY/RqimGXvj5952eYlSsgoJkfeJsuwZbg5urOv3B6h9C1Z8=
-Received: from CO1PR10MB4531.namprd10.prod.outlook.com (2603:10b6:303:6c::22)
- by DS0PR10MB6246.namprd10.prod.outlook.com (2603:10b6:8:d2::12) with
+ bh=LjXpbo6yqjv9+iLmisGk2PrtV5e3hSqCk6xfg3sZ/jg=;
+ b=DXYP+GhI8TB4YGproFJBsRUo91UEJ7hJY2Nu8ITFloBBsGnTgX5mtpNVQYYFplrxF9zeXmzw0z/58SrmF1QWowiIa4Bo9YpEWM6VMoMrRwGoSp8SNQTTMktSZbQeu18z/lgFZG4Gx/t4Yu2B8hKpMbt4l+9kt15JjqYDXXftcIY=
+Received: from CH2PR10MB4166.namprd10.prod.outlook.com (2603:10b6:610:78::20)
+ by CH2PR10MB4229.namprd10.prod.outlook.com (2603:10b6:610:7a::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.12; Wed, 9 Nov
- 2022 15:48:41 +0000
-Received: from CO1PR10MB4531.namprd10.prod.outlook.com
- ([fe80::f7b2:af85:fe37:31a7]) by CO1PR10MB4531.namprd10.prod.outlook.com
- ([fe80::f7b2:af85:fe37:31a7%9]) with mapi id 15.20.5791.027; Wed, 9 Nov 2022
- 15:48:41 +0000
-Message-ID: <cd820d8a-7ce9-c32f-fc84-bbf20dd7d6e5@oracle.com>
-Date: Wed, 9 Nov 2022 09:48:33 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.1
-Subject: Re: [PATCH v13 7/7] x86/crash: add x86 crash hotplug support
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5791.27; Wed, 9 Nov
+ 2022 17:00:17 +0000
+Received: from CH2PR10MB4166.namprd10.prod.outlook.com
+ ([fe80::36b6:3767:c15f:3b24]) by CH2PR10MB4166.namprd10.prod.outlook.com
+ ([fe80::36b6:3767:c15f:3b24%9]) with mapi id 15.20.5791.027; Wed, 9 Nov 2022
+ 17:00:16 +0000
+Message-ID: <0493ebb4-a0d1-efc3-b725-b6494f602a37@oracle.com>
+Date: Wed, 9 Nov 2022 09:00:14 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.0
 Content-Language: en-US
-To: Borislav Petkov <bp@alien8.de>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org,
-        ebiederm@xmission.com, dyoung@redhat.com, bhe@redhat.com,
-        vgoyal@redhat.com, tglx@linutronix.de, mingo@redhat.com,
-        dave.hansen@linux.intel.com, hpa@zytor.com, nramas@linux.microsoft.com,
-        thomas.lendacky@amd.com, robh@kernel.org, efault@gmx.de,
-        rppt@kernel.org, david@redhat.com, sourabhjain@linux.ibm.com,
-        konrad.wilk@oracle.com, boris.ostrovsky@oracle.com
-References: <20221031193604.28779-1-eric.devolder@oracle.com>
- <20221031193604.28779-8-eric.devolder@oracle.com> <Y2A4TqyOaPYBu4Hk@zn.tnic>
- <1c11a429-b5a9-fb55-fbef-b49e760e2d1e@oracle.com> <Y2I3zQ9ZU+C9Kgf7@zn.tnic>
-From: Eric DeVolder <eric.devolder@oracle.com>
-In-Reply-To: <Y2I3zQ9ZU+C9Kgf7@zn.tnic>
-X-ClientProxiedBy: SA9PR11CA0009.namprd11.prod.outlook.com
- (2603:10b6:806:6e::14) To CO1PR10MB4531.namprd10.prod.outlook.com
- (2603:10b6:303:6c::22)
+To: Baoquan He <bhe@redhat.com>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>
+References: <20221027205008.312534-1-stephen.s.brennan@oracle.com>
+ <20221108154846.11584119794413c7682280fc@linux-foundation.org>
+ <Y2r8kFZVZP1ou1qZ@MiWiFi-R3L-srv>
+From: Stephen Brennan <stephen.s.brennan@oracle.com>
+Subject: Re: [PATCH] vmcoreinfo: Warn if we exceed vmcoreinfo data size
+In-Reply-To: <Y2r8kFZVZP1ou1qZ@MiWiFi-R3L-srv>
+X-ClientProxiedBy: SA0PR12CA0006.namprd12.prod.outlook.com
+ (2603:10b6:806:6f::11) To CH2PR10MB4166.namprd10.prod.outlook.com
+ (2603:10b6:610:78::20)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PR10MB4531:EE_|DS0PR10MB6246:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0cd595f6-fa74-420c-02f3-08dac269dfc1
+X-MS-TrafficTypeDiagnostic: CH2PR10MB4166:EE_|CH2PR10MB4229:EE_
+X-MS-Office365-Filtering-Correlation-Id: ab1d753b-a977-477c-6226-08dac273e02f
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 	7RBEXq87shcv+14M8qSJyEOscKRgog7xiy3IMi9T+dxQfZy2n89i6r5Ct4N51QKhJLRDXZfhs8BTNItp5QEW9BkCZ+8XmYBExmtXx8ZjDXpW5zDRf7BeF8PClbNgZxzCcFbykpCDaBtazYhNyGSty8HIxwFcY9hM4/YFuGiMVyzMdi3pBP+AiRY68ppXoZG/ocMJVJl11SnMA7dYeakIQ9J0i16rj53oI1vkHlboKh6r6RwvjmlTjM0IhNsFoGOgr6dwj9ls+tla0XuFb9LRy7vqEKqAyL3XG13+9CThJDKDMXxqL6ned1fLkkwvJ8m6ZwFdig1qxAIz63IOJMytAX/ovkeYJicumbEJsuV4P4BUZf+DRkOEZVhSJKcSlt85YJpk6h0yMUmYbRGXT3415BSjveXUKGOsQYcABr33JRRE1saNA98OZoOqEy4GbkTF9PqfWZLDh5BC+AmliDT5zhMHAIRk8cS1xWpiYmtIXjQ7EHIRyiWD02csce3CIIeHqwYOpQYKGgCyYo1YbxuifrTFvn3NPbuweBko2gDVE92ZBJaBlB1+qcTNNb5dnT72G8Cifc6zL3WLzWttVUYVhl5fqia7Q/AG86dMZeca8NiwP34XUdCuXoflXpCZXWwVPxOSuxTJhE9yDAW8gIVSSKqempYvHr8VDnGFzd2GP+vFaQEwTdse9yU7xlzZSMgAFDY4pY1ciz9T16gBruMnkf4ExC4T2PjnTN+/qSD5M4YyAC/7h/2L5n+Yice9+lfP8v1x19h9MCC2r4llVaMmcPGouy2NhFCFQiEMJ0844zA=
-X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR10MB4531.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(136003)(376002)(346002)(396003)(366004)(39860400002)(451199015)(478600001)(38100700002)(2906002)(6486002)(2616005)(83380400001)(186003)(6666004)(107886003)(6512007)(53546011)(6506007)(36756003)(316002)(66476007)(66556008)(4326008)(8676002)(31686004)(66946007)(86362001)(31696002)(8936002)(5660300002)(7416002)(6916009)(41300700001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: 	Q3+LZjhih0QmoPmeDzP6plvQs9Fxmh0I1OTnvluz+17/KNhspPTOm+mOkVLFlBEaDQ2kM9hLjwXDgzlP7vJzHuxgusL4ET+rAmdqhohwU0yrAi9DakcNqzS3hV4/4RJKg+PqUuRIBDbncQSvYRdrP8iJ8KfBFaSYyVS9ocB/lYyD8w61Ji/Wvh/cOsyD+X/f/0kd7ujOSUnhWdK6gRqemiWyoMmhI4gGdU/US2lGZa54HQRoUiETrnbg93jo+MnPuVm25hdDgVL182RVOHZzmTZLaoYxmopdD6hb/stRIhjdFLE/FVZUSyoXEM25bSAZBU72hkw2MeCNH7N2Jk7UQ+N/8nNGl3f3cydOj8Fw+bp6IgOAAtfMsewC09cWM3XK9IkMrO4g9Ww6EsXq/jQQFDHhoBBDGZBxHk8JOBM4rA2UPZfvuh9km1zmEJW4tZgSHREGf0l96do8H0s9mfBJ3RE839ZhuGkx//13hKmrTEVop+P+DyNlSr4b+PpnO4b5QwfBmIFEhXxDQXA/ZZHEGaSjJb9tQLJPxzcN665bTn+LTB+QpNdBEIjfmuRYwtnvXT/eo01G1AIbtkYOIf2iENgjqTYGYr/8ilpHpqTW/ZSI0nSdZyPXvkexb2T/SZrs2e/DVB13zsKY0WnNIcYZUf4g8HlMlTiusRDBl+eMn+MQRVLUSnmNFWGcD6OqhkViVOq47rLdCEoH8PNKdjfuLzBGbELOHTqyjNhlVcz4hbQPn9Zcte6AGBVN+5imOQjipJqsWv7vXN7nbp+EGpvMQ+uIHBW0ImNVgymqieX9znA=
+X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR10MB4166.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(346002)(396003)(39860400002)(376002)(366004)(136003)(451199015)(6486002)(5660300002)(478600001)(83380400001)(38100700002)(316002)(36756003)(4326008)(8676002)(110136005)(2906002)(66556008)(66476007)(66946007)(54906003)(41300700001)(2616005)(186003)(31686004)(26005)(6506007)(53546011)(8936002)(31696002)(6512007)(86362001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 	=?utf-8?B?RHJrOHMzaWRuaWN1akRlUVBmR3drZDRmQ2dtMmNScFlhUkxmbnJ5SldENmFZ?=
- =?utf-8?B?UFVBd0lFbnlRd1JpdnA1QXg3Q05JejIxc3JqY2JJZVREMlhHWFplV2ozdG4w?=
- =?utf-8?B?YmluWlE2VEgvWnZUbHBqb01KQ213VmJQMFl6OTI3SDBLdHM2b21tNGhFZXha?=
- =?utf-8?B?QnJDZlZTdlZtcjJMNCswV3cvY05aNW1qOXBTUWtaUFZLdnE3MDM2Nm5qSFNN?=
- =?utf-8?B?bnlxT2ZIelJsU2ZZaWtPSktKT0k4UlhqMVFJVGFPN3lhMnRscHJRSEd0T0hm?=
- =?utf-8?B?bk5DTnMxMHdYbUFBVWY4YWlSVkl1N2UzQ25KQTNQdkUvRmcxSmtrdVF2ZlBO?=
- =?utf-8?B?dzZtekxIYnF1bVAzSE5jMGdodmh1VllyV0JGeHdTb0JHVmFqbFIyL1hoUjAx?=
- =?utf-8?B?b1RGM1BLWC9zNWE5RElVQ0pVQk40Ri9CZjF3RmlrWWRLMjdhbXhvMG56b3lQ?=
- =?utf-8?B?SENkTTluSzRpU2JNNmVlVTBhTnh6cktxTUZkUlp2NlRPcW9XNHlJMGRwTFBV?=
- =?utf-8?B?TVdXNjUwVkUxR3ExOGJaaVdmUzB6Y3hTa2ZCaHdXc1dwaFpWT2hXZ3VCaXBl?=
- =?utf-8?B?YmZqditXN0VhU2Zpck9PZzAwNC9XbWl1MS9IRkhqYmF1YTFLVnFGOEtUcUJK?=
- =?utf-8?B?RjVlQnZCZEJ6dU9WS2dFRlJJN2ZWQ1JKUkxNTHFRN2tTWjd4dXErQWxobzdI?=
- =?utf-8?B?RlNPdXgrQkxvQkJkRnpYeDZiY0FYV2VkMkdLUEhvbEFscXNRZ2MxN2Y0TTFX?=
- =?utf-8?B?eEVyTlpzUE9WY0N4dEhQaU45WVd5K3IyVjlVL3VZTit6bC8zeklFdVFIVjlm?=
- =?utf-8?B?c0RxMnBSalJKMUpWRnUya1RXQTVjNVRyWXRQa3g2bzVJanFjWkZ6Si9lVmgr?=
- =?utf-8?B?UXRmRVV0RHdVaHl5YzJEUHlJMU1KYXFuRmJoL3cxVUFlWEJWNTJaQjlyS3dq?=
- =?utf-8?B?ZmYxMnB3U25NVEo3dG83WFZRZ2dqMVE1elF5S0Q4WjZXUUVOVWV4eHA4SDJ1?=
- =?utf-8?B?L2FiQjNTNW1FaTJ4TzZIcmxldVJLV3YvdFduM3ROZUp1UkljWTE0VHMrbHd1?=
- =?utf-8?B?cVYzeFVjc0ZZQzFqOEV1L1ZhTG1aeE9wRmk5T1NlT09pdDIwL1dDbmVHT04y?=
- =?utf-8?B?TGp6cHJocnYrc1A0ZDA4VWcxdG5UeGRQOVV2K1ovdSsxdy9PTmliQ0pUa096?=
- =?utf-8?B?UnZsREppUTRYcDE3M1hpdkk1eERtOWpOdnBVS0J2QWJoWXNDZzZxSmYxZzlm?=
- =?utf-8?B?Rm9tSWYrV2ZMazAwUFN2ejBTRklRbklBbmxDZVB1a3NMV3pJcUh5VFQ1QzZu?=
- =?utf-8?B?Y2M4dnZlVnVidDdWMXlHOWNhWWhWUldJRkFOSURlWjJJZHowb0NBTGZIWUtx?=
- =?utf-8?B?ekVTajFUSTUxWmdiUTcvYmU3cDdDWXZtVCtTeFRhY2E1MXBQRjVkZHhqa01V?=
- =?utf-8?B?VXFRaDVQR1RZNmJrVmRqQWIyNXFISlI0UkpZNlc1WWpHREdKd1BDN1IyWUF1?=
- =?utf-8?B?aW9xWEdXNVR1QVZ5cUVteWRSOGlIMkozOGxlVXNlV0lDTDRPVVpzWUsxakI1?=
- =?utf-8?B?NU9QVXlhai9JZERhZVdvTHgwczgzNVRtVWhpbWM3cE1DQzl5SXBEdHVpZVoy?=
- =?utf-8?B?VGVWUFhCUFE3RE8xK0ovRXlsQ2lJckQyZis1a2ZYR2JLWjg1bVZoT29RTk9I?=
- =?utf-8?B?RlM5S0k0SWUxSmNGNGtSM0dUVTFYYzFVb0hJcEtoQU1ZVHA3am1HcHMrZ2Y4?=
- =?utf-8?B?bGh2bmlUSjNvTThjcnVacEFRbTRJQndpTkZaZzY1Q3pzMDBVdW9ncWwvYm4r?=
- =?utf-8?B?NUdqRytSOXpBVVl6MGk3QndLRy9vSUhkSWJFWnRtUW9zSHVMV01NOUFaNHZD?=
- =?utf-8?B?cU9BanhlVFR1YVZuendQRWNOWXRYT2x4dzcycW1SNC91NXJhMjdHcWowd0xX?=
- =?utf-8?B?ZmM0bDlQSVpsQkY2eTlTUWc4VmNXQ1d4Rk1BblJYdGNDeHpiM2FValR4aWN1?=
- =?utf-8?B?d211dThYdytqNHlnZk1lb09EQTJPYUZ1R3ZpZEJERERjVE1ONS9pZnNLbENn?=
- =?utf-8?B?WFhUWlllbEJEK1hsKzRNRndMaFVSTnFBMW5yVG04UXJwUnNiMFE5S2dJYi9u?=
- =?utf-8?B?cHYrN0xlRUNWcDhJU0N2Qk5ORm1wdzBTeDFtS1psL1YvcXhvWEkwYnZXb3pn?=
- =?utf-8?Q?tb8sPrKOhIKqFhwrOxS6nec=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: 	=?utf-8?B?eFpJTUZWTGJOeHBiU08zb3BpUnpMMVRLb2hVQ2lKZm9pcERCSWdhR0VpTUMr?=
+ =?utf-8?B?V0ViYXJnMXVXNmUyd2xKZUswWm5rVElkclFSbWJJUjVPamVyd3NIK1hUTHhS?=
+ =?utf-8?B?ZXhmSDhkQXQ0MTI5aHZlVVRMRXQ1MGNXZFJneVpmRk1lWkFWU05GaHhnT1Z3?=
+ =?utf-8?B?ZS9sWi9lMUZYUVBlTDBFTWl2QUhvNUtGWkVOZWk4L0wyWDByRGJLNG1GNEZI?=
+ =?utf-8?B?SGVoclRpY3YvZDZIdzROMUdHRjRkWW5kYmFydVowYllGaEh3dWcyWk1vTFFT?=
+ =?utf-8?B?eUZJTkZZQmJBRU1sejRla2svOUpYcXRzRjBYSkpYNGQ1VkgyTDJLTmMzbFN3?=
+ =?utf-8?B?emF5S0VFTDk5dmN6Y1pTczFsVnFqdENDSzlhVDArYWErM0N4MEhDYTNPMys5?=
+ =?utf-8?B?V3RpSDZzNk9uUjRKR05wcHl5NXdKZkhQWEdiZU45VmFIbTREZUxkSVRuRWRp?=
+ =?utf-8?B?SndibGIwN01JeDB1V3lDWVJPd29RWitMR2pHN2kyVUtVSU9HZUNCa1JFczNn?=
+ =?utf-8?B?ak0zOTk4YjRRUkFzMDFRQWphSVZxeWZzaW9Sb3NObERFdTUweEMwRGFadUFW?=
+ =?utf-8?B?aUNIRnlkRUNpWHYvSTFkbkxEVzFSVExrUzAvcHI2QU1xWkFqcGhWU2ZlbzFz?=
+ =?utf-8?B?bjU5SjdRRll1QVlMT2wrR241RkwvWG9TaGlsaUhRWHF3bHBNRWFFWWV4R3hW?=
+ =?utf-8?B?ZzgwOXFSV0JQTDJSQ0llbkhZc044R0dxcU9kNEQ1elIyWGR3c0QwYzRrc3pz?=
+ =?utf-8?B?REdpS3RFeHpNbGxTVU56MkVoeWkzYkg2eWQ0QTZNMVFQdjdweDA3R094anpV?=
+ =?utf-8?B?MkNzNzVpUDRPUWt0QTNqNzhRM3dtWUNTdUUza0RmWG5nU1I2YmtpM1JubHAv?=
+ =?utf-8?B?N0RLSGcyOWxtdTFPdmg2RTRpRjZITEdUNyttOEVhL1p2VmRWc2IvVWM2aUZK?=
+ =?utf-8?B?M2NFWWtYR2pRbnJudDByQTFEaUE5d0ZrazNQZUpqTy9EeTlHZURRaUtmdklo?=
+ =?utf-8?B?eG1XejFlQS8xT00rRXF3WXlpY2p2UDFNcVRSNkpoTW5zL2FCeko2VFRKcTFN?=
+ =?utf-8?B?dWtVRXFCUi9hVk1HZmVTbUlMYWF3bko0LzZGVlpDQUp6WHVwaTJRY09ORzVl?=
+ =?utf-8?B?Q0h4ODc5NXVaQS9abFJRL0NTbDJkSjdLSTFiN1Vsa2F4WXVTdENwckpLVFFE?=
+ =?utf-8?B?ZUtsdEhGb0RUdmQxQ0xVUUJGYnliN01ScE01NnJkazdRbGtQczZRNWV3NUpw?=
+ =?utf-8?B?T0R5aTIxYXlZR0pUa3huQVVFOW83WS9TT0I1OHROOW1YWGR2dVZnMy9wVXlz?=
+ =?utf-8?B?SjFvRXZ3c1VWaXZvUjVud2ZETDJ0SjRlZ29rZTk5OUlZV0o1WEdiKzgzVkNM?=
+ =?utf-8?B?ZTliSFR4MWwrWEZlOXRWUlI2endqU3MwaFYyQ2txZ1grckNFSXBMSG9yVmRW?=
+ =?utf-8?B?ck5oM2NBajg2eG9PeG5wTmV0ZndPdWVrYWV0Z01FS1NQOWxBS2xzeXRLNlpr?=
+ =?utf-8?B?TndhYjJrRndCYzBpNU5rUXQ0ZnhNRmlrWGVIRHAvQTA3ejhHV1ljdlI3d1lz?=
+ =?utf-8?B?cHlIblk4eFVDQUVzWlRZNmxXb2JxYVY4aksrdTJNYVBnRi80N3krOG1ic0hj?=
+ =?utf-8?B?N3lwUXRTMGF6OUd4Q3ZUM1YvQzhHSUp4RVh2YXVUVUMwcEFUTlh1L1JpTVlm?=
+ =?utf-8?B?UEQ1QS9razVnd3FPMWpPYVg3cTVaQ2EzVWV6ODNUY3ZRYWtLdzh0T3pSZDNo?=
+ =?utf-8?B?RGY5ODNqNnlMSzFXZjJPUnJiNmhLdTM4TzlPUHBiTUdRREs3eldzZ3hGZkNa?=
+ =?utf-8?B?MmQ0QVlueXhySENLYkUycmlLZlhaY2hSOFNERHZLRE1ZR2VzdFRDenlXWHZh?=
+ =?utf-8?B?TlJKZzN3dUN1akZWQm4rNG1RYzdSa0I2djNDTEFPSk5ad0hQakVlL2E0N3hq?=
+ =?utf-8?B?NHJ4Wkpub3AzSGZsNHFXc0RjdkIwa0pKSk82VGlkeXVybkhBVzF5R1ZIZTFy?=
+ =?utf-8?B?RVJ5OExyV1FtRXZ4MlRXelVJMGFHbHVyYnl6MVBzK3dYQytvNUVZcG12YytV?=
+ =?utf-8?B?T2krN3hXbVVPNEh2RjlyckIza2pqVmlNb3FyTGkrYXZveUoyZ05GRnJMSXVt?=
+ =?utf-8?B?cjZhdElqdTE3V3NNWit5UXZYNi9aOGhvVW1CVkY2RkxLRnRkbVJwUmU5R0I4?=
+ =?utf-8?B?c2c9PQ==?=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0cd595f6-fa74-420c-02f3-08dac269dfc1
-X-MS-Exchange-CrossTenant-AuthSource: CO1PR10MB4531.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ab1d753b-a977-477c-6226-08dac273e02f
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR10MB4166.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Nov 2022 15:48:41.1419
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Nov 2022 17:00:16.6606
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xRop5+vlNhNG7edFoCA5qgSTny8utnPeSgIvDK9ZSnfw1YrZUii1aQYm/a6ml+vg+/pXRhNuM4XBhUBRq5xZgTo69FqoSCbBqJaADJ+ouJw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB6246
+X-MS-Exchange-CrossTenant-UserPrincipalName: WoFpzYHGVjfm3uawLqccF6TcXD8QYP2lmryvzpKfvyy7hfTk+Xg/fG906c6oNqnschcz5qRcEahTKy8rIUf5imA/3K4c8Ntnn4+oDsGNtD8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR10MB4229
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
  definitions=2022-11-09_06,2022-11-09_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 malwarescore=0
- adultscore=0 mlxscore=0 mlxlogscore=999 phishscore=0 suspectscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0 mlxscore=0
+ suspectscore=0 spamscore=0 malwarescore=0 bulkscore=0 phishscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2210170000
- definitions=main-2211090120
-X-Proofpoint-GUID: Bo36abczxZ5O0rlpxj_9lBdKRYMVcUxu
-X-Proofpoint-ORIG-GUID: Bo36abczxZ5O0rlpxj_9lBdKRYMVcUxu
+ definitions=main-2211090129
+X-Proofpoint-GUID: G_xolXzJrZHD-ReIVI8uCBnjVpJPslU1
+X-Proofpoint-ORIG-GUID: G_xolXzJrZHD-ReIVI8uCBnjVpJPslU1
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221109_075040_830457_C7432B01 
-X-CRM114-Status: GOOD (  29.88  )
+X-CRM114-CacheID: sfid-20221109_092736_280068_0CA0122D 
+X-CRM114-Status: GOOD (  29.82  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -180,69 +175,82 @@ Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-
-
-On 11/2/22 04:26, Borislav Petkov wrote:
-> On Tue, Nov 01, 2022 at 10:45:00AM -0500, Eric DeVolder wrote:
->> As I'm re-reading that message, I suspect now the preference is to just to
->> strike this ifdiffery line in this file and have the code always present?
+On 11/8/22 17:04, Baoquan He wrote:
+> On 11/08/22 at 03:48pm, Andrew Morton wrote:
+>> On Thu, 27 Oct 2022 13:50:08 -0700 Stephen Brennan <stephen.s.brennan@oracle.com> wrote:
 >>
->> If the preference is actually for CRASH_HOTPLUG, then let me know.
+>>> Though vmcoreinfo is intended to be small, at just one page, useful
+>>> information is still added to it, so we risk running out of space.
+>>> Currently there is no runtime check to see whether the vmcoreinfo buffer
+>>> has been exhausted. Add a warning for this case.
+>>>
+>>> Currently, my static checking tool[1] indicates that a good upper bound
+>>> for vmcoreinfo size is currently 3415 bytes, but the best time to add
+>>> warnings is before the risk becomes too high.
+>>>
+>>> ...
+>>>
+>>> --- a/kernel/crash_core.c
+>>> +++ b/kernel/crash_core.c
+>>> @@ -383,6 +383,9 @@ void vmcoreinfo_append_str(const char *fmt, ...)
+>>>   	memcpy(&vmcoreinfo_data[vmcoreinfo_size], buf, r);
+>>>   
+>>>   	vmcoreinfo_size += r;
+>>> +
+>>> +	WARN_ONCE(vmcoreinfo_size == VMCOREINFO_BYTES,
+>>> +		  "vmcoreinfo data exceeds allocated size, truncating");
+>>>   }
+>>
+>> Seems that vmcoreinfo_append_str() will truncate (ie: corrupt) the
+>> final entry when limiting the overall data size to VMCOREINFO_BYTES.
+>> And that final entry will be missing any terminating \n or \0.
+>>
+>> Is all this desirable, or should we be checking for (and warning about)
+>> sufficient space _before_ appending this string?
 > 
-> Well, it is this part:
 > 
-> "But on a plain simple laptop or workstation which has CPU hotplug,
-> would it make sense for the crash ranges to get updated too when CPUs
-> are offlined?
+> Hmm, once we really reach that point, truncated vmcoreinfo should not be
+> useful for later vmcore dumping and analyzing. As we can see, the
+> arch_crash_save_vmcoreinfo() is called at the end of
+> crash_save_vmcoreinfo_init(). E.g on x86_64, the phys_base,
+> init_top_pgt, etc are very important for memory layout analyzing.
+> Fortunatly this insufficient vmcoreinfo page won't impact the normal
+> kernel running.
 > 
-> If so, I think you want this code present there too, without a Kconfig
-> item."
+> So, the current change looks good to me.
 > 
-> IOW, if this thing doesn't make sense to have on the majority of
-> machines out there - and memory hotplug machines are not the majority -
-> then it should be behind a Kconfig item which is default off and gets
-> enabled only when the user selects crash and memory hotplug...
+> My further thinking is if we should print the truncated or first skipped
+> entry in the warning so that people know better what's happening, even
+> though whatever we will do is to increase one page for vmcoreinfo buffer.
+> Not strong opinion though.
+
+This is a bit nicer, it would save us needing to figure it out from the
+stack. Of course, regardless of _which_ line puts us over the limit, it
+seems like the response is the same: increase the size or remove info. It's
+just a matter of how much to increase or how much to remove.
+
+I'm happy with it either way.
+
+Thanks,
+Stephen
+
 > 
-> I'd say.
 > 
-Boris,
-I apologize for the delay in responding, I've been away for the past week.
-
-I'm re-reading the thread on this topic, and I apologize for backing up a bit,
-but as I read the last paragraph again, your contention is that the bit of
-code in this file *should* be behind a Kconfig item, and default to off, as
-"memory hotplug machines are not the majority".
-
-Does this mean then that I need to introduce CRASH_HOTPLUG again, so it can be
-default off?
-
-Examining arch/x86/configs/x86_64_defconfig, neither HOTPLUG_CPU or MEMORY_HOTPLUG are present, but 
-CONFIG_SMP=y.
-
-And in examining arch/x86/Kconfig, I see:
-
-config HOTPLUG_CPU
-     def_bool y
-     depends on SMP
-
-which then defaults HOTPLUG_CPU to on and thus this code/ifdef in question.
-
-And as a reminder, the '#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_MEMORY_HOTPLUG)' shows up 
-in only three locations: include/linux/kexec.h,  kernel/crash_core.c and arch/x86/kernel/crash.c.
-
-And we resolved in this thread last week that this patch series is useful for cpu and/or memory hotplug.
-
-So at this point, I'm still not sure if you want the ifdef line:
-  - removed altogether
-  - transitioned to CRASH_HOTPLUG
-  - leave as is
-
-If I could get clarity on that, that would be much appreciated!
-Thanks!
-eric
-
-
-
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index a0eb4d5cf557..8ba4dd90694d 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -383,6 +383,9 @@ void vmcoreinfo_append_str(const char *fmt, ...)
+>   	memcpy(&vmcoreinfo_data[vmcoreinfo_size], buf, r);
+>   
+>   	vmcoreinfo_size += r;
+> +
+> +	WARN_ONCE(vmcoreinfo_size == VMCOREINFO_BYTES,
+> +		  "vmcoreinfo data exceeds allocated size when adding: %s\n", buf);
+>   }
+>   
+>   /*
+> 
 
 _______________________________________________
 kexec mailing list
