@@ -4,78 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1FBBEC433FE
-	for <kexec@archiver.kernel.org>; Thu, 10 Nov 2022 21:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9AA39C433FE
+	for <kexec@archiver.kernel.org>; Fri, 11 Nov 2022 01:36:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
-	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=EwJkn1sbdh4IyDmssSaIIELvAtMcfq0mu2g7e8j7CdA=; b=a3vKf9Qh8mzfLd
-	6WA51X6T+5S599wz+JhLu46v9jtFFdUVDKUbvHoeWw8o3y7SwLeJ/AYSq0hEFrOUs5iIHItgPCAxz
-	MPlu4F1YTMxqopguNPk0cVfe5jnO8MzVnqiU0T0q0Zsno2YvSF5sckaO9g+hw1KVt6fuMh7QSOfeM
-	tQC+BOJZVvhPF+JWftRG3lr48sJCYqzFzv3c3Y6roDavAw+pg3xKtzi9QNn/3GRuJKC37AWKkDbkP
-	PA/EQFM84PNM2Mo9kAbJlNvXTRi8TjLfykmfPPZ/jBArIY8YEZHFzrJ4jEVb2HM7+lVS+pd9eXNL9
-	LiPfGKXTxmMimFnysFKA==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=XrPOYfk02dI7VQtCHQPLe28JDBz3WkBCoWorp8T6VLU=; b=v6GohhGXhuqqeH
+	34cLFDs8htv9C4k5Pr/Lto0rxfDhOT19umxx9q6S9MC2cY0DOgndomgW9ccZFIumTh7reUekELdFI
+	cq7n9IQm7OM7Uvle28KHRT23Op4YhzCMVJS1iMlb3w3h2QgtwrQ64U3VLuEhSwLE2nttKGaONhcgz
+	ThaprFpXf3tVaQQdEnAOj0nUZjkuROIIOTvemha0MVNe6DIzlf10bP5dcJh35towaQ45a4yP5FPLZ
+	DvP9p39T53a4iag4+YLwx/4HRrXWfN3QkAQq6iPbN2Bql2LRiNOcTyM1bbsYUgwgzZCBQltB5XkWK
+	v/L0UOWZdmytWXbqLcAA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1otFAv-00AUTr-Lv; Thu, 10 Nov 2022 21:33:29 +0000
-Received: from fanzine2.igalia.com ([213.97.179.56])
+	id 1otIxe-00Bo6d-VN; Fri, 11 Nov 2022 01:36:02 +0000
+Received: from ams.source.kernel.org ([145.40.68.75])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1otFAq-00AUR7-Hk
-	for kexec@lists.infradead.org; Thu, 10 Nov 2022 21:33:26 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=mfrkgBO2aFdDwc60CdgvE9S9ISnTxlrxLXKGcZohYPI=; b=C7Ilm2+a2l4r1r95htrUrU37I8
-	lMIJfaotnuBNkxcfo4/L/pbfE1f4ut7sTpCE8twAbc6ox3p9lD5UCf6EbqODhn+RXuk0rOjq/CPD1
-	gcMYRMHiKRXaf1saqM/QWQ9BVE544pdXfFSX63kSa1R4SYF+2I0Zfm1eeXHATzRLw8samu/6/7mLA
-	jPSHUUIfOHyeN4n9ZnjnqbDFAbHkbgGkhIlll/Uf4ZbIvtL1dmYb/eCcTtoK3nFDp8YQPkTz68fRV
-	pUOXd0Ajaw6fsDOP8nAyPc1AMybspZ1ZsThb5k67Q5izC8rPwc2Z6S8O8dFA4iM+dNUe2WOkBIrKk
-	mgZOxJVg==;
-Received: from [177.102.6.147] (helo=[192.168.1.60])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1otFAU-00FmBO-VZ; Thu, 10 Nov 2022 22:33:03 +0100
-Message-ID: <efdaf27e-753e-e84f-dd7d-965101563679@igalia.com>
-Date: Thu, 10 Nov 2022 18:32:54 -0300
+	id 1otIxb-00Bo5L-7q
+	for kexec@lists.infradead.org; Fri, 11 Nov 2022 01:36:01 +0000
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ams.source.kernel.org (Postfix) with ESMTPS id 0D851B823D8;
+	Fri, 11 Nov 2022 01:35:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2127BC433D6;
+	Fri, 11 Nov 2022 01:35:56 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="Nob2uOYR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1668130553;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=4rp5D2BB0lIb8zOROgUIXIM5QS26CXMfzvc7/8uxz3A=;
+	b=Nob2uOYRaYlnBHuitPG5AZKD++mElZmN2NcUxd7ZtnlT1ZABEfJDpSFTZ3dEmW6iTYpgNu
+	jL9j0t52VaB2AN1jClGoCF+BCt1y9GYRQKjZXSci8WLHd6t7evd2lBljbFWsE0uNE8rWU9
+	DCoAqS4bXouG2d/UgZ+3l8TNJGdpZ4M=
+Received: 	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id d0321a36 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Fri, 11 Nov 2022 01:35:53 +0000 (UTC)
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>,
+	linux-m68k@lists.linux-m68k.org,
+	kexec@lists.infradead.org,
+	Simon Horman <horms@verge.net.au>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Subject: [PATCH v2 RESEND kexec-tools] m68k: pass rng seed via BI_RNG_SEED
+Date: Fri, 11 Nov 2022 02:35:33 +0100
+Message-Id: <20221111013532.494463-1-Jason@zx2c4.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
-Subject: Re: [PATCH V3 10/11] drivers/hv/vmbus, video/hyperv_fb: Untangle and
- refactor Hyper-V panic notifiers
-Content-Language: en-US
-To: "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
- Wei Liu <wei.liu@kernel.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Cc: "bhe@redhat.com" <bhe@redhat.com>,
- "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
- "pmladek@suse.com" <pmladek@suse.com>,
- "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "x86@kernel.org" <x86@kernel.org>,
- "kernel-dev@igalia.com" <kernel-dev@igalia.com>,
- "kernel@gpiccoli.net" <kernel@gpiccoli.net>,
- Andrea Parri <parri.andrea@gmail.com>, Dexuan Cui <decui@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, KY Srinivasan <kys@microsoft.com>,
- Stephen Hemminger <sthemmin@microsoft.com>,
- Tianyu Lan <Tianyu.Lan@microsoft.com>
-References: <20220819221731.480795-1-gpiccoli@igalia.com>
- <20220819221731.480795-11-gpiccoli@igalia.com>
- <BYAPR21MB16880251FC59B60542D2D996D75A9@BYAPR21MB1688.namprd21.prod.outlook.com>
- <ae0a1017-7ec6-9615-7154-ea34c7bd2248@igalia.com>
- <SN6PR2101MB1693BC627B22432BA42EEBC2D7299@SN6PR2101MB1693.namprd21.prod.outlook.com>
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <SN6PR2101MB1693BC627B22432BA42EEBC2D7299@SN6PR2101MB1693.namprd21.prod.outlook.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221110_133324_593803_96CA842E 
-X-CRM114-Status: UNSURE (   9.74  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20221110_173559_936099_2BD140A7 
+X-CRM114-Status: GOOD (  15.21  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -92,43 +74,105 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-[Trimming long CC list]
+In order to pass fresh entropy to kexec'd kernels, use BI_RNG_SEED
+for passing a seed, with the same semantics that kexec-tools currently
+uses for i386's setup_data.
 
-Hi Wei / Michael, just out of curiosity, did this (and patch 9) ended-up
-being queued in hyperv-next?
+Link: https://git.kernel.org/torvalds/c/dc63a086daee92c63e3
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+---
+Seems like this was forgotten about, so resending.
 
-Thanks in advance,
+ kexec/arch/m68k/bootinfo.c       | 23 +++++++++++++++++++++++
+ kexec/arch/m68k/bootinfo.h       |  5 +++++
+ kexec/arch/m68k/kexec-elf-m68k.c |  1 +
+ 3 files changed, 29 insertions(+)
 
+diff --git a/kexec/arch/m68k/bootinfo.c b/kexec/arch/m68k/bootinfo.c
+index 18bf226..086a34b 100644
+--- a/kexec/arch/m68k/bootinfo.c
++++ b/kexec/arch/m68k/bootinfo.c
+@@ -2,6 +2,7 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
++#include <sys/random.h>
+ 
+ #include "../../kexec.h"
+ 
+@@ -152,6 +153,11 @@ void bootinfo_print(void)
+ 			printf("BI_COMMAND_LINE: %s\n", bi->string);
+ 			break;
+ 
++		case BI_RNG_SEED:
++			/* These are secret, so never print them to the console */
++			printf("BI_RNG_SEED: 0x%08x bytes\n", be16_to_cpu(bi->rng_seed.len));
++			break;
++
+ 		default:
+ 			printf("BI tag 0x%04x size %u\n", tag, size);
+ 			break;
+@@ -212,6 +218,23 @@ void bootinfo_set_ramdisk(unsigned long ramdisk_addr,
+ 	bi->mem_info.size = ramdisk_size;
+ }
+ 
++void bootinfo_add_rng_seed(void)
++{
++	enum { RNG_SEED_LEN = 32 };
++	struct bi_rec *bi;
++
++	/* Remove existing rng seed records */
++	bi_remove(BI_RNG_SEED);
++
++	/* Add new rng seed record */
++	bi = bi_add(BI_RNG_SEED, sizeof(bi->rng_seed) + RNG_SEED_LEN);
++	if (getrandom(bi->rng_seed.data, RNG_SEED_LEN, GRND_NONBLOCK) != RNG_SEED_LEN) {
++		bi_remove(BI_RNG_SEED);
++		return;
++	}
++	bi->rng_seed.len = cpu_to_be16(RNG_SEED_LEN);
++}
++
+ 
+     /*
+      * Check the bootinfo version in the kernel image
+diff --git a/kexec/arch/m68k/bootinfo.h b/kexec/arch/m68k/bootinfo.h
+index b6f453d..90f75ad 100644
+--- a/kexec/arch/m68k/bootinfo.h
++++ b/kexec/arch/m68k/bootinfo.h
+@@ -20,6 +20,10 @@ struct bi_rec {
+ 			__be32 size;
+ 		} mem_info;
+ 		char string[0];
++		struct {
++			__be16 len;
++			u8 data[0];
++		} rng_seed;
+ 	};
+ };
+ 
+@@ -39,5 +43,6 @@ extern int bootinfo_get_memory_ranges(struct memory_range **range);
+ extern void bootinfo_set_cmdline(const char *cmdline);
+ extern void bootinfo_set_ramdisk(unsigned long ramdisk_addr,
+ 				 unsigned long ramdisk_size);
++extern void bootinfo_add_rng_seed(void);
+ extern void bootinfo_check_bootversion(const struct kexec_info *info);
+ extern void add_bootinfo(struct kexec_info *info, unsigned long addr);
+diff --git a/kexec/arch/m68k/kexec-elf-m68k.c b/kexec/arch/m68k/kexec-elf-m68k.c
+index 8d00eb9..a2bf7ee 100644
+--- a/kexec/arch/m68k/kexec-elf-m68k.c
++++ b/kexec/arch/m68k/kexec-elf-m68k.c
+@@ -162,6 +162,7 @@ int elf_m68k_load(int argc, char **argv, const char *buf, off_t len,
+ 	/* Update and add bootinfo */
+ 	bootinfo_set_cmdline(cmdline);
+ 	bootinfo_set_ramdisk(ramdisk_addr, ramdisk_size);
++	bootinfo_add_rng_seed();
+ 	if (kexec_debug)
+ 		bootinfo_print();
+ 	add_bootinfo(info, bootinfo_addr);
+-- 
+2.38.1
 
-Guilherme
-
-On 17/10/2022 12:26, Michael Kelley (LINUX) wrote:
-> From: Guilherme G. Piccoli <gpiccoli@igalia.com> Sent: Tuesday, October 4, 2022 10:20 AM
->>
->> On 04/10/2022 13:24, Michael Kelley (LINUX) wrote:
->>> [...]
->>>
->>> Tested this patch in combination with Patch 9 in this series.  Verified
->>> that both the panic and die paths work correctly with notification to
->>> Hyper-V via hyperv_report_panic() or via hv_kmsg_dump().  Hyper-V
->>> framebuffer is updated as expected, though I did not reproduce
->>> a case where the ring buffer lock is held.  vmbus_initiate_unload() runs
->>> as expected.
->>>
->>> Tested-by: Michael Kelley <mikelley@microsoft.com>
->>>
->>
->> Thanks a lot for the tests/review Michael!
->>
->> Do you think Hyper-V folks could add both patches in hv tree? If you
->> prefer, I can re-send them individually.
->>
-> 
-> Wei Liu:  Could you pick up Patch 9 and Patch 10 from this series in the
-> hyperv-next tree?
-> 
-> Michael
-> 
 
 _______________________________________________
 kexec mailing list
