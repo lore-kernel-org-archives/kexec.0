@@ -4,81 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 03D58C4332F
-	for <kexec@archiver.kernel.org>; Thu, 17 Nov 2022 15:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D48D3C433FE
+	for <kexec@archiver.kernel.org>; Thu, 17 Nov 2022 15:43:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
 	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=7OZgOphWYO9rGtiH4jN6eF8h6muZYm8eurHYY2Zek/A=; b=WSGZe+pKEduXb3
-	JLGey/Pr2ZDvmqaoTbt+xlxym5Y2zyFwE6ou4B3Ca/jljWVoJituHKe8Lgdo/8NgdEJXNrPypWy1p
-	Gy2gC/skizXFhiSrd0uPuuSVNFeYhwbh+h9TQUsl49hCG6bPB4cOtjcb94rZKCjpQ1iuBc8lstU8u
-	1kXb7YIPqCeeqsl6tGqfhE48y1NAOndJ0Jd8yBn2UdYFmgnv6FJylihbsMvXrnsDywhgvj9ijE1Rx
-	tNCeUPoVzVfHlU8hmyqcYjLqTqWH5YeWyF9Hdc+HQDsaEvHaLphf2UQJ9KI0eSfSW+pceUo+8qVbM
-	ot1+KLDyOT9LcoUL+i5w==;
+	List-Owner; bh=MqZxBCN1cioYgNZy0Th8WiV0PQoMLNUi+QYUg7uQAOc=; b=MzU1HhwQ4sRaOt
+	wnCC8oDgOysQ1/KWb3L/xYc4tO6cRhUnBOGAx3Oghl7uELUsJi1az98UKk1EB9GtmGg3OSScq9yAq
+	FAanZx47vJ2eniNwTofARc0NYJCmFwGUzKjfPE3lTKubP/ouPQnKbUvyOYvsFuW7DK4aZALWTtXNv
+	O7LqQRZZ58s6LJFuOqadqEjwaYdVaxfrDHGicDDR5L70Ch64544pf8mD0tgEye+OtI00x7G+w0ZXy
+	ZH1haPYM6HkL6Y3NPQRFVADwwkuBBJey9zP5vwRoMEnm+q8SKDA4gEnL2B/uAwkR0FyoQzMf3cq6E
+	LGqhrLdkvvPj8c9XG/oQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1ovgbs-00F9D9-J8; Thu, 17 Nov 2022 15:15:24 +0000
-Received: from mail-io1-xd29.google.com ([2607:f8b0:4864:20::d29])
+	id 1ovh2y-00FTtR-EC; Thu, 17 Nov 2022 15:43:24 +0000
+Received: from ams.source.kernel.org ([145.40.68.75])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1ovgbq-00F9BQ-Eb
-	for kexec@lists.infradead.org; Thu, 17 Nov 2022 15:15:24 +0000
-Received: by mail-io1-xd29.google.com with SMTP id z3so1576258iof.3
-        for <kexec@lists.infradead.org>; Thu, 17 Nov 2022 07:15:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=0mda3tRJT+iEZZZtBKUMBVJCht+1W2dmNcWwzB9SAAk=;
-        b=enDxqfxXT+UPRRkUoQ0pVpD4o1W5OZKMjO8TbYuZUg/EpmK5WvwM+tyhjnAfthIuWA
-         P1j//kNZxtlDxkx1Ioxdba0X6zL6huywLOEp9wSSg0WWthpiEWIZElc0JsinjKRrMbeo
-         hdAvB7d/tZJAv25MpanKHPy42mT2MjorJ44DA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0mda3tRJT+iEZZZtBKUMBVJCht+1W2dmNcWwzB9SAAk=;
-        b=WtEs4ebcCCX03ifix9dwvy1cowO6MZ1CoZ+sxuiREShOi7oadS6rvh3lixGg/ebvgT
-         WIrOmS4JAFtWrciOJ803ew2u8Yqy9XIGhtmmfC2d5MLbrE3ikACLeq6YQQrfF7QOsmgg
-         RQoZvxUIOs/xI/UZSelo8IdJOzA/yn62yjgrI8EvANtumvbYYuj48WUpzJIZsPq+VUIT
-         D4ucFyT7d6+G1sDUh/tUE9Xfr/L4nklpLQEP/rixbc1GGJqCcV9eRFzEj+6fvIPVsBkE
-         F58OpoF2eYPPnj1/dEzstv/rWpfN80231hFwOnZtZzX+1YiGmKMgwIPOh8+ICOfmnyeI
-         y4iQ==
-X-Gm-Message-State: ANoB5pkqFC/zPKVUjS0vBL6N8ZGNs8DnT7BJ/faECKFGhp72o1tLAfD9
-	eXqfsjvAIPuYoBTw7B3DYzJrA0HldyvACA==
-X-Google-Smtp-Source: AA0mqf4i8Cq0kUhGebAz2n9nePu0YnH3UxlTYOOAvdRzr/twPpF08gv4Nh5CLWxrM6PUyHcHI4v9Rg==
-X-Received: by 2002:a02:ac81:0:b0:375:f7b:7219 with SMTP id x1-20020a02ac81000000b003750f7b7219mr1076384jan.295.1668698120173;
-        Thu, 17 Nov 2022 07:15:20 -0800 (PST)
-Received: from mail-io1-f41.google.com (mail-io1-f41.google.com. [209.85.166.41])
-        by smtp.gmail.com with ESMTPSA id m22-20020a02a156000000b003751b68b84esm326542jah.32.2022.11.17.07.15.18
-        for <kexec@lists.infradead.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Nov 2022 07:15:19 -0800 (PST)
-Received: by mail-io1-f41.google.com with SMTP id p184so1545606iof.11
-        for <kexec@lists.infradead.org>; Thu, 17 Nov 2022 07:15:18 -0800 (PST)
-X-Received: by 2002:a02:c897:0:b0:374:100a:b0c7 with SMTP id
- m23-20020a02c897000000b00374100ab0c7mr1243939jao.185.1668698118410; Thu, 17
- Nov 2022 07:15:18 -0800 (PST)
+	id 1ovh2w-00FTr7-0F; Thu, 17 Nov 2022 15:43:23 +0000
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ams.source.kernel.org (Postfix) with ESMTPS id 73F77B820D1;
+	Thu, 17 Nov 2022 15:43:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFE49C43141;
+	Thu, 17 Nov 2022 15:43:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1668699798;
+	bh=IlMz1HuDGTEi4UcjN5UC5MjvYMpLuVoL5C47NsVRGi8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=MV8KXCxPDxlnaKY59Ujsn17Jn1JdwF3WvZA/R6qSE+Vgo8B1k3a66PghuhUHoUAss
+	 q1qmQjdYWZ66do8Iotpe05/KaXsL/OOazs1FQlD5C0ptx+UgOdPtPy9PTTgN0cJ685
+	 sY5Yb7RLF2M2NYHHcEIT0vHf4q1CLDMkOVgYiJB7hM9K7cBlsRxDWVerLGrMYdr0o4
+	 zwWhRKYct7ge6cD3RECAtdsoAXfvaNmc9lYCMT1w7N0VL2GX9ZmgIMb2CBQtQ5a9UL
+	 osTF3yuuWf753W3Muwm9jNqMGvDF+HBrLhW/rdAm7AbW2yTaQLoymAeOKqA7ghtOtj
+	 dwvVHqvAKTJxA==
+Received: by mail-ed1-f41.google.com with SMTP id f7so3098033edc.6;
+        Thu, 17 Nov 2022 07:43:18 -0800 (PST)
+X-Gm-Message-State: ANoB5pnMlwSxm3xuW9ToAvF6LqUurpfHJizhgPAi+f+JHUoORp8s8XkF
+	63ucWYIR0P8fLyQ4KunviqKXMVYokCPlimR5WmI=
+X-Google-Smtp-Source: AA0mqf6yeL/kc+GepGU3lHwiws6jGGEpvGMgRGXApxJyDYVtsnBS08Lxnq97WJBlvE5zOz5GgDwYWXD1f3rHkpU/XMM=
+X-Received: by 2002:a05:6402:1a:b0:467:30ad:c4ca with SMTP id
+ d26-20020a056402001a00b0046730adc4camr2658516edu.285.1668699796927; Thu, 17
+ Nov 2022 07:43:16 -0800 (PST)
 MIME-Version: 1.0
-References: <20221114-disable-kexec-reset-v1-0-fb51d20cf871@chromium.org>
- <20221114-disable-kexec-reset-v1-2-fb51d20cf871@chromium.org> <20221117160650.16e06b37@rotkaeppchen>
-In-Reply-To: <20221117160650.16e06b37@rotkaeppchen>
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Thu, 17 Nov 2022 16:15:07 +0100
-X-Gmail-Original-Message-ID: <CANiDSCvyQ66mXbhEgj_qnE_zR4frsxtu1bXaukDrEG0FjrE4yw@mail.gmail.com>
-Message-ID: <CANiDSCvyQ66mXbhEgj_qnE_zR4frsxtu1bXaukDrEG0FjrE4yw@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] kexec: Introduce kexec_reboot_disabled
-To: Philipp Rudo <prudo@redhat.com>
-Cc: Eric Biederman <ebiederm@xmission.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>, linux-kernel@vger.kernel.org, 
-	kexec@lists.infradead.org, Ross Zwisler <zwisler@kernel.org>, linux-doc@vger.kernel.org, 
-	"Joel Fernandes (Google)" <joel@joelfernandes.org>, Steven Rostedt <rostedt@goodmis.org>
+References: <20221026144208.373504-1-xianting.tian@linux.alibaba.com> <20221026144208.373504-2-xianting.tian@linux.alibaba.com>
+In-Reply-To: <20221026144208.373504-2-xianting.tian@linux.alibaba.com>
+From: Guo Ren <guoren@kernel.org>
+Date: Thu, 17 Nov 2022 23:43:05 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTS4XzZXLR_+mhWUce3HFNP0KrVdBAexq+RAxuHrThuhEg@mail.gmail.com>
+Message-ID: <CAJF2gTS4XzZXLR_+mhWUce3HFNP0KrVdBAexq+RAxuHrThuhEg@mail.gmail.com>
+Subject: Re: [PATCH V5 1/2] RISC-V: Add arch_crash_save_vmcoreinfo support
+To: Xianting Tian <xianting.tian@linux.alibaba.com>
+Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	anup@brainfault.org, heiko@sntech.de, mick@ics.forth.gr, 
+	alexandre.ghiti@canonical.com, bhe@redhat.com, vgoyal@redhat.com, 
+	dyoung@redhat.com, corbet@lwn.net, Conor.Dooley@microchip.com, 
+	bagasdotme@gmail.com, kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	crash-utility@redhat.com, heinrich.schuchardt@canonical.com, 
+	k-hagio-ab@nec.com, hschauhan@nulltrace.org, yixun.lan@gmail.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221117_071522_544530_E60CD59F 
-X-CRM114-Status: GOOD (  35.94  )
+X-CRM114-CacheID: sfid-20221117_074322_360360_FD5754AA 
+X-CRM114-Status: GOOD (  22.39  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -95,157 +85,89 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Philipp
+Tested-by: Guo Ren <guoren@kernel.org>
 
-Thanks for your review!
-
-On Thu, 17 Nov 2022 at 16:07, Philipp Rudo <prudo@redhat.com> wrote:
+On Wed, Oct 26, 2022 at 10:42 PM Xianting Tian
+<xianting.tian@linux.alibaba.com> wrote:
 >
-> Hi Ricardo,
+> Add arch_crash_save_vmcoreinfo(), which exports VM layout(MODULES, VMALLOC,
+> VMEMMAP ranges and KERNEL_LINK_ADDR), va bits and ram base for vmcore.
 >
-> all in all I think this patch makes sense. However, there is one point
-> I don't like...
+> Default pagetable levels and PAGE_OFFSET aren't same for different kernel
+> version as below. For pagetable levels, it sets sv57 by default and falls
+> back to setting sv48 at boot time if sv57 is not supported by the hardware.
 >
-> On Mon, 14 Nov 2022 14:18:39 +0100
-> Ricardo Ribalda <ribalda@chromium.org> wrote:
+> For ram base, the default value is 0x80200000 for qemu riscv64 env and,
+> for example, is 0x200000 on the XuanTie 910 CPU.
 >
-> > Create a new toogle that disables LINUX_REBOOT_CMD_KEXEC, reducing the
-> > attack surface to a system.
-> >
-> > Without this toogle, an attacker can only reboot into a different kernel
-> > if they can create a panic().
-> >
-> > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> >
-> > diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-> > index 97394bd9d065..25d019682d33 100644
-> > --- a/Documentation/admin-guide/sysctl/kernel.rst
-> > +++ b/Documentation/admin-guide/sysctl/kernel.rst
-> > @@ -462,6 +462,17 @@ altered.
-> >  Generally used together with the `modules_disabled`_ sysctl.
-> >
-> >
-> > +kexec_reboot_disabled
-> > +=====================
-> > +
-> > +A toggle indicating if ``LINUX_REBOOT_CMD_KEXEC`` has been disabled.
-> > +This value defaults to 0 (false: ``LINUX_REBOOT_CMD_KEXEC`` enabled),
-> > +but can be set to 1 (true: ``LINUX_REBOOT_CMD_KEXEC`` disabled).
-> > +Once true, kexec can no longer be used for reboot and the toggle
-> > +cannot be set back to false.
-> > +This toggle does not affect the use of kexec during a crash.
-> > +
-> > +
-> >  kptr_restrict
-> >  =============
-> >
-> > diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> > index 41a686996aaa..15c3fad8918b 100644
-> > --- a/include/linux/kexec.h
-> > +++ b/include/linux/kexec.h
-> > @@ -407,6 +407,7 @@ extern int kimage_crash_copy_vmcoreinfo(struct kimage *image);
-> >  extern struct kimage *kexec_image;
-> >  extern struct kimage *kexec_crash_image;
-> >  extern int kexec_load_disabled;
-> > +extern int kexec_reboot_disabled;
-> >
-> >  #ifndef kexec_flush_icache_page
-> >  #define kexec_flush_icache_page(page)
-> > diff --git a/kernel/kexec.c b/kernel/kexec.c
-> > index cb8e6e6f983c..43063f803d81 100644
-> > --- a/kernel/kexec.c
-> > +++ b/kernel/kexec.c
-> > @@ -196,6 +196,10 @@ static inline int kexec_load_check(unsigned long nr_segments,
-> >       if (!capable(CAP_SYS_BOOT) || kexec_load_disabled)
-> >               return -EPERM;
-> >
-> > +     /* Check if the system admin has disabled kexec reboot. */
-> > +     if (!(flags & KEXEC_ON_CRASH) && kexec_reboot_disabled)
-> > +             return -EPERM;
+>  * Linux Kernel 5.18 ~
+>  *      PGTABLE_LEVELS = 5
+>  *      PAGE_OFFSET = 0xff60000000000000
+>  * Linux Kernel 5.17 ~
+>  *      PGTABLE_LEVELS = 4
+>  *      PAGE_OFFSET = 0xffffaf8000000000
+>  * Linux Kernel 4.19 ~
+>  *      PGTABLE_LEVELS = 3
+>  *      PAGE_OFFSET = 0xffffffe000000000
 >
-> ... Allowing to load a crashkernel doesn't make sense in my opinion. If
-> an attacker is capable of creating a malicious kernel, planting it on
-> the victims system and then find a way to boot it via kexec this
-> attacker also knows how to load the malicious kernel as crashkernel and
-> trigger a panic. So you haven't really gained anything. That's why I
-> would simply drop this hunk (and the corresponding one from
-> kexec_file_load) and let users who worry about this use a combination of
-> kexec_load_disabled and kexec_reboot_disabled.
-
-If for whatever reason your sysadmin configured kexec_reboot_disabed
-it can be nice that when a user try to load it they get a warning.
-It is easier to debug than waiting two steps later when they run kexec -e....
-
-That is why I added it. But i am also ok removing it
-
+> Since these configurations change from time to time and version to version,
+> it is preferable to export them via vmcoreinfo than to change the crash's
+> code frequently, it can simplify the development of crash tool.
 >
-> Thanks
-> Philipp
+> Signed-off-by: Xianting Tian <xianting.tian@linux.alibaba.com>
+> ---
+>  arch/riscv/kernel/Makefile     |  1 +
+>  arch/riscv/kernel/crash_core.c | 21 +++++++++++++++++++++
+>  2 files changed, 22 insertions(+)
+>  create mode 100644 arch/riscv/kernel/crash_core.c
 >
-> > +
-> >       /* Permit LSMs and IMA to fail the kexec */
-> >       result = security_kernel_load_data(LOADING_KEXEC_IMAGE, false);
-> >       if (result < 0)
-> > diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> > index ca2743f9c634..fe82e2525705 100644
-> > --- a/kernel/kexec_core.c
-> > +++ b/kernel/kexec_core.c
-> > @@ -929,6 +929,7 @@ int kimage_load_segment(struct kimage *image,
-> >  struct kimage *kexec_image;
-> >  struct kimage *kexec_crash_image;
-> >  int kexec_load_disabled;
-> > +int kexec_reboot_disabled;
-> >  #ifdef CONFIG_SYSCTL
-> >  static struct ctl_table kexec_core_sysctls[] = {
-> >       {
-> > @@ -941,6 +942,16 @@ static struct ctl_table kexec_core_sysctls[] = {
-> >               .extra1         = SYSCTL_ONE,
-> >               .extra2         = SYSCTL_ONE,
-> >       },
-> > +     {
-> > +             .procname       = "kexec_reboot_disabled",
-> > +             .data           = &kexec_reboot_disabled,
-> > +             .maxlen         = sizeof(int),
-> > +             .mode           = 0644,
-> > +             /* only handle a transition from default "0" to "1" */
-> > +             .proc_handler   = proc_dointvec_minmax,
-> > +             .extra1         = SYSCTL_ONE,
-> > +             .extra2         = SYSCTL_ONE,
-> > +     },
-> >       { }
-> >  };
-> >
-> > @@ -1138,7 +1149,7 @@ int kernel_kexec(void)
-> >
-> >       if (!kexec_trylock())
-> >               return -EBUSY;
-> > -     if (!kexec_image) {
-> > +     if (!kexec_image || kexec_reboot_disabled) {
-> >               error = -EINVAL;
-> >               goto Unlock;
-> >       }
-> > diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> > index 45637511e0de..583fba6de5cb 100644
-> > --- a/kernel/kexec_file.c
-> > +++ b/kernel/kexec_file.c
-> > @@ -333,6 +333,11 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
-> >       if (!capable(CAP_SYS_BOOT) || kexec_load_disabled)
-> >               return -EPERM;
-> >
-> > +     /* Check if the system admin has disabled kexec reboot. */
-> > +     if (!(flags & (KEXEC_FILE_ON_CRASH | KEXEC_FILE_UNLOAD))
-> > +         && kexec_reboot_disabled)
-> > +             return -EPERM;
-> > +
-> >       /* Make sure we have a legal set of flags */
-> >       if (flags != (flags & KEXEC_FILE_FLAGS))
-> >               return -EINVAL;
-> >
+> diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+> index db6e4b1294ba..4cf303a779ab 100644
+> --- a/arch/riscv/kernel/Makefile
+> +++ b/arch/riscv/kernel/Makefile
+> @@ -81,6 +81,7 @@ obj-$(CONFIG_KGDB)            += kgdb.o
+>  obj-$(CONFIG_KEXEC_CORE)       += kexec_relocate.o crash_save_regs.o machine_kexec.o
+>  obj-$(CONFIG_KEXEC_FILE)       += elf_kexec.o machine_kexec_file.o
+>  obj-$(CONFIG_CRASH_DUMP)       += crash_dump.o
+> +obj-$(CONFIG_CRASH_CORE)       += crash_core.o
+>
+>  obj-$(CONFIG_JUMP_LABEL)       += jump_label.o
+>
+> diff --git a/arch/riscv/kernel/crash_core.c b/arch/riscv/kernel/crash_core.c
+> new file mode 100644
+> index 000000000000..b351a3c01355
+> --- /dev/null
+> +++ b/arch/riscv/kernel/crash_core.c
+> @@ -0,0 +1,21 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +
+> +#include <linux/crash_core.h>
+> +#include <linux/pagemap.h>
+> +
+> +void arch_crash_save_vmcoreinfo(void)
+> +{
+> +       VMCOREINFO_NUMBER(VA_BITS);
+> +       VMCOREINFO_NUMBER(phys_ram_base);
+> +
+> +       vmcoreinfo_append_str("NUMBER(PAGE_OFFSET)=0x%lx\n", PAGE_OFFSET);
+> +       vmcoreinfo_append_str("NUMBER(VMALLOC_START)=0x%lx\n", VMALLOC_START);
+> +       vmcoreinfo_append_str("NUMBER(VMALLOC_END)=0x%lx\n", VMALLOC_END);
+> +       vmcoreinfo_append_str("NUMBER(VMEMMAP_START)=0x%lx\n", VMEMMAP_START);
+> +       vmcoreinfo_append_str("NUMBER(VMEMMAP_END)=0x%lx\n", VMEMMAP_END);
+> +#ifdef CONFIG_64BIT
+> +       vmcoreinfo_append_str("NUMBER(MODULES_VADDR)=0x%lx\n", MODULES_VADDR);
+> +       vmcoreinfo_append_str("NUMBER(MODULES_END)=0x%lx\n", MODULES_END);
+> +#endif
+> +       vmcoreinfo_append_str("NUMBER(KERNEL_LINK_ADDR)=0x%lx\n", KERNEL_LINK_ADDR);
+> +}
+> --
+> 2.17.1
 >
 
 
 -- 
-Ricardo Ribalda
+Best Regards
+ Guo Ren
 
 _______________________________________________
 kexec mailing list
