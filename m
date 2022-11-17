@@ -4,71 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D48D3C433FE
-	for <kexec@archiver.kernel.org>; Thu, 17 Nov 2022 15:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C8853C433FE
+	for <kexec@archiver.kernel.org>; Thu, 17 Nov 2022 15:47:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=MqZxBCN1cioYgNZy0Th8WiV0PQoMLNUi+QYUg7uQAOc=; b=MzU1HhwQ4sRaOt
-	wnCC8oDgOysQ1/KWb3L/xYc4tO6cRhUnBOGAx3Oghl7uELUsJi1az98UKk1EB9GtmGg3OSScq9yAq
-	FAanZx47vJ2eniNwTofARc0NYJCmFwGUzKjfPE3lTKubP/ouPQnKbUvyOYvsFuW7DK4aZALWTtXNv
-	O7LqQRZZ58s6LJFuOqadqEjwaYdVaxfrDHGicDDR5L70Ch64544pf8mD0tgEye+OtI00x7G+w0ZXy
-	ZH1haPYM6HkL6Y3NPQRFVADwwkuBBJey9zP5vwRoMEnm+q8SKDA4gEnL2B/uAwkR0FyoQzMf3cq6E
-	LGqhrLdkvvPj8c9XG/oQ==;
+	List-Owner; bh=95hXijphoTKhwet1NnM2XqwXdSvwhqojZyeDhUt1x3I=; b=KnsOBjrsllDMfd
+	KBdp8VJqsP1WxKjKOXaj14G8fivguc2UNtKKrw5Mczlnms2IQMcK1r5DD4CPGEY2cfnKPhbpRM60n
+	Bm/JBlaOjiW0lE9Pmx7rSm5mtbIJB7GJ9iLb4UEj/G3he9c9Oqr0+BPJyA7PPKDO/5YFbMicb4D2b
+	g6NBqaFMKyhR4YF9QW7d1Mhcu/n8MCLmKMIbgjzsQo7Lg/nV1hy/qagimsO7d40PqtbXo7yMV3BcK
+	lbVbaiQ7Or1RUtclx1bxk8Er0tzJN3SsDPTlTuvTjjYxUEloOoqIyk900QugvunD5HkV1lgO3/dMZ
+	Mthq7MwaZj58mKODuF1g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1ovh2y-00FTtR-EC; Thu, 17 Nov 2022 15:43:24 +0000
-Received: from ams.source.kernel.org ([145.40.68.75])
+	id 1ovh6P-00FVc7-PB; Thu, 17 Nov 2022 15:46:57 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1ovh2w-00FTr7-0F; Thu, 17 Nov 2022 15:43:23 +0000
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	id 1ovh6C-00FVTp-6M
+	for kexec@lists.infradead.org; Thu, 17 Nov 2022 15:46:45 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1668700000;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=O5HKEB3fHlBEv/KV0IugSFogCrFrsWVhqrP69OBbPPg=;
+	b=McEvdY8OOFdxsXMXOuqfUmLD9L6lcKST+CeMwCYcmUQXNnfNYKauGd4A7Vk3CXBHXgwnyC
+	gcuIB7kgaFvLqlEvFJKjGeF2dlue/oO8js/TLg1n87P1xAxUVbNd7TFJczCWLC0L4v6d2O
+	OQTfXTxYLL9Oj9F0bq4ZfY4KqGjZrqY=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-621-1Rth89DTNc6P3eYwTF55Pg-1; Thu, 17 Nov 2022 10:46:30 -0500
+X-MC-Unique: 1Rth89DTNc6P3eYwTF55Pg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by ams.source.kernel.org (Postfix) with ESMTPS id 73F77B820D1;
-	Thu, 17 Nov 2022 15:43:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFE49C43141;
-	Thu, 17 Nov 2022 15:43:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1668699798;
-	bh=IlMz1HuDGTEi4UcjN5UC5MjvYMpLuVoL5C47NsVRGi8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=MV8KXCxPDxlnaKY59Ujsn17Jn1JdwF3WvZA/R6qSE+Vgo8B1k3a66PghuhUHoUAss
-	 q1qmQjdYWZ66do8Iotpe05/KaXsL/OOazs1FQlD5C0ptx+UgOdPtPy9PTTgN0cJ685
-	 sY5Yb7RLF2M2NYHHcEIT0vHf4q1CLDMkOVgYiJB7hM9K7cBlsRxDWVerLGrMYdr0o4
-	 zwWhRKYct7ge6cD3RECAtdsoAXfvaNmc9lYCMT1w7N0VL2GX9ZmgIMb2CBQtQ5a9UL
-	 osTF3yuuWf753W3Muwm9jNqMGvDF+HBrLhW/rdAm7AbW2yTaQLoymAeOKqA7ghtOtj
-	 dwvVHqvAKTJxA==
-Received: by mail-ed1-f41.google.com with SMTP id f7so3098033edc.6;
-        Thu, 17 Nov 2022 07:43:18 -0800 (PST)
-X-Gm-Message-State: ANoB5pnMlwSxm3xuW9ToAvF6LqUurpfHJizhgPAi+f+JHUoORp8s8XkF
-	63ucWYIR0P8fLyQ4KunviqKXMVYokCPlimR5WmI=
-X-Google-Smtp-Source: AA0mqf6yeL/kc+GepGU3lHwiws6jGGEpvGMgRGXApxJyDYVtsnBS08Lxnq97WJBlvE5zOz5GgDwYWXD1f3rHkpU/XMM=
-X-Received: by 2002:a05:6402:1a:b0:467:30ad:c4ca with SMTP id
- d26-20020a056402001a00b0046730adc4camr2658516edu.285.1668699796927; Thu, 17
- Nov 2022 07:43:16 -0800 (PST)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5F1A4101A528;
+	Thu, 17 Nov 2022 15:46:29 +0000 (UTC)
+Received: from rotkaeppchen (unknown [10.39.193.156])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 150ED40C83EB;
+	Thu, 17 Nov 2022 15:46:26 +0000 (UTC)
+Date: Thu, 17 Nov 2022 16:46:12 +0100
+From: Philipp Rudo <prudo@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+ linux-kernel@vger.kernel.org, ribalda@google.com, zwisler@google.com,
+ robdclark@gmail.com, Eric Biederman <ebiederm@xmission.com>,
+ kexec@lists.infradead.org
+Subject: Re: [PATCH RFC] kexec: Freeze processes before kexec
+Message-ID: <20221117164612.65832e37@rotkaeppchen>
+In-Reply-To: <20221116151610.7294a9e8@gandalf.local.home>
+References: <20221116195624.124092-1-joel@joelfernandes.org>
+	<20221116151610.7294a9e8@gandalf.local.home>
+Organization: Red Hat inc.
 MIME-Version: 1.0
-References: <20221026144208.373504-1-xianting.tian@linux.alibaba.com> <20221026144208.373504-2-xianting.tian@linux.alibaba.com>
-In-Reply-To: <20221026144208.373504-2-xianting.tian@linux.alibaba.com>
-From: Guo Ren <guoren@kernel.org>
-Date: Thu, 17 Nov 2022 23:43:05 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTS4XzZXLR_+mhWUce3HFNP0KrVdBAexq+RAxuHrThuhEg@mail.gmail.com>
-Message-ID: <CAJF2gTS4XzZXLR_+mhWUce3HFNP0KrVdBAexq+RAxuHrThuhEg@mail.gmail.com>
-Subject: Re: [PATCH V5 1/2] RISC-V: Add arch_crash_save_vmcoreinfo support
-To: Xianting Tian <xianting.tian@linux.alibaba.com>
-Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
-	anup@brainfault.org, heiko@sntech.de, mick@ics.forth.gr, 
-	alexandre.ghiti@canonical.com, bhe@redhat.com, vgoyal@redhat.com, 
-	dyoung@redhat.com, corbet@lwn.net, Conor.Dooley@microchip.com, 
-	bagasdotme@gmail.com, kexec@lists.infradead.org, linux-doc@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	crash-utility@redhat.com, heinrich.schuchardt@canonical.com, 
-	k-hagio-ab@nec.com, hschauhan@nulltrace.org, yixun.lan@gmail.com
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221117_074322_360360_FD5754AA 
-X-CRM114-Status: GOOD (  22.39  )
+X-CRM114-CacheID: sfid-20221117_074644_370673_70BB6059 
+X-CRM114-Status: GOOD (  16.71  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,89 +82,40 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Tested-by: Guo Ren <guoren@kernel.org>
+Hi Steve,
 
-On Wed, Oct 26, 2022 at 10:42 PM Xianting Tian
-<xianting.tian@linux.alibaba.com> wrote:
->
-> Add arch_crash_save_vmcoreinfo(), which exports VM layout(MODULES, VMALLOC,
-> VMEMMAP ranges and KERNEL_LINK_ADDR), va bits and ram base for vmcore.
->
-> Default pagetable levels and PAGE_OFFSET aren't same for different kernel
-> version as below. For pagetable levels, it sets sv57 by default and falls
-> back to setting sv48 at boot time if sv57 is not supported by the hardware.
->
-> For ram base, the default value is 0x80200000 for qemu riscv64 env and,
-> for example, is 0x200000 on the XuanTie 910 CPU.
->
->  * Linux Kernel 5.18 ~
->  *      PGTABLE_LEVELS = 5
->  *      PAGE_OFFSET = 0xff60000000000000
->  * Linux Kernel 5.17 ~
->  *      PGTABLE_LEVELS = 4
->  *      PAGE_OFFSET = 0xffffaf8000000000
->  * Linux Kernel 4.19 ~
->  *      PGTABLE_LEVELS = 3
->  *      PAGE_OFFSET = 0xffffffe000000000
->
-> Since these configurations change from time to time and version to version,
-> it is preferable to export them via vmcoreinfo than to change the crash's
-> code frequently, it can simplify the development of crash tool.
->
-> Signed-off-by: Xianting Tian <xianting.tian@linux.alibaba.com>
-> ---
->  arch/riscv/kernel/Makefile     |  1 +
->  arch/riscv/kernel/crash_core.c | 21 +++++++++++++++++++++
->  2 files changed, 22 insertions(+)
->  create mode 100644 arch/riscv/kernel/crash_core.c
->
-> diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
-> index db6e4b1294ba..4cf303a779ab 100644
-> --- a/arch/riscv/kernel/Makefile
-> +++ b/arch/riscv/kernel/Makefile
-> @@ -81,6 +81,7 @@ obj-$(CONFIG_KGDB)            += kgdb.o
->  obj-$(CONFIG_KEXEC_CORE)       += kexec_relocate.o crash_save_regs.o machine_kexec.o
->  obj-$(CONFIG_KEXEC_FILE)       += elf_kexec.o machine_kexec_file.o
->  obj-$(CONFIG_CRASH_DUMP)       += crash_dump.o
-> +obj-$(CONFIG_CRASH_CORE)       += crash_core.o
->
->  obj-$(CONFIG_JUMP_LABEL)       += jump_label.o
->
-> diff --git a/arch/riscv/kernel/crash_core.c b/arch/riscv/kernel/crash_core.c
-> new file mode 100644
-> index 000000000000..b351a3c01355
-> --- /dev/null
-> +++ b/arch/riscv/kernel/crash_core.c
-> @@ -0,0 +1,21 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +
-> +#include <linux/crash_core.h>
-> +#include <linux/pagemap.h>
-> +
-> +void arch_crash_save_vmcoreinfo(void)
-> +{
-> +       VMCOREINFO_NUMBER(VA_BITS);
-> +       VMCOREINFO_NUMBER(phys_ram_base);
-> +
-> +       vmcoreinfo_append_str("NUMBER(PAGE_OFFSET)=0x%lx\n", PAGE_OFFSET);
-> +       vmcoreinfo_append_str("NUMBER(VMALLOC_START)=0x%lx\n", VMALLOC_START);
-> +       vmcoreinfo_append_str("NUMBER(VMALLOC_END)=0x%lx\n", VMALLOC_END);
-> +       vmcoreinfo_append_str("NUMBER(VMEMMAP_START)=0x%lx\n", VMEMMAP_START);
-> +       vmcoreinfo_append_str("NUMBER(VMEMMAP_END)=0x%lx\n", VMEMMAP_END);
-> +#ifdef CONFIG_64BIT
-> +       vmcoreinfo_append_str("NUMBER(MODULES_VADDR)=0x%lx\n", MODULES_VADDR);
-> +       vmcoreinfo_append_str("NUMBER(MODULES_END)=0x%lx\n", MODULES_END);
-> +#endif
-> +       vmcoreinfo_append_str("NUMBER(KERNEL_LINK_ADDR)=0x%lx\n", KERNEL_LINK_ADDR);
-> +}
-> --
-> 2.17.1
->
+On Wed, 16 Nov 2022 15:16:10 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
+> On Wed, 16 Nov 2022 19:56:24 +0000
+> "Joel Fernandes (Google)" <joel@joelfernandes.org> wrote:
+> 
+> > --- a/kernel/kexec_core.c
+> > +++ b/kernel/kexec_core.c
+> > @@ -1175,6 +1175,12 @@ int kernel_kexec(void)
+> >  	} else
+> >  #endif
+> >  	{
+> > +		error = freeze_processes();
+> > +		if (error) {
+> > +			error = -EBUSY;
+> > +			goto Unlock;
+> > +		}  
+> 
+> If this is the path of a kernel panic, do we really want to check the
+> return error of freeze_processes()? We are panicing, there's not much more
+> we can do.
 
--- 
-Best Regards
- Guo Ren
+kernel_kexec isn't called during panic. We don't need to worry about it
+here.
+
+Having that said I think this is a problem in the device driver _not_
+in kexec. In my opinion it's the job of the driver to prevent such
+races during shutdown.
+
+Thanks
+Philipp
+
 
 _______________________________________________
 kexec mailing list
