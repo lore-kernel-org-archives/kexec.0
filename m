@@ -4,70 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 15E58C433FE
-	for <kexec@archiver.kernel.org>; Fri, 18 Nov 2022 00:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4B3A5C433FE
+	for <kexec@archiver.kernel.org>; Fri, 18 Nov 2022 08:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=TR+xFxEs8/+wc4XzT6uyC70yoRWyMbdR+DZOu1Dt134=; b=jL8zlIBgbwzjSZ
-	KEZYOFvwFmJTr1ZbgvJz+BFdaCzp3ADdC3XwhL8G6JIfIdzzPlJhZHuK/WBLUXX5bpPsan2V7Q2Qc
-	VvOCQfQIueMUqU9uNIV6lYsPwCSC571NR63ikHk4gqUoEKxQNAP5WBBUC/i6cKNT/dxSfLVU/OB3V
-	O1Jzfj0zFb30OSBj1gj58n4RbtLoqU6LpUA/7hsQH1Wi8wA3cFpsKcGhFTXE9k4w17tUcgpvv5OaP
-	2levdBkcv9TAoVeN6A5xVjqQwsVuaGD5FwrE/m0ejH9jEQptch0xlwK1kEaoXasvAdT0kuH0Irf6X
-	UbNlvC5c86gUxegwILFA==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Subject:To:From:Date:
+	Message-ID:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From
+	:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=SNxLdc7kbikdRg203DcA1k3dGrWNT7+nkauk+JNRxnM=; b=Q5yl4MDdj/Hcay
+	kJd1GXc62/vOYsWSlN7i9sH2vkSyPmjOv4EPlYDsO6feRcaqC7HoWr+tx0cOfpPgVHeIkK5thYeAo
+	AlkmSHJA61qkYJ2Zwv4IDqSywYCK6v9J1nFS+LqjlPSOi65G14KkpN8Nbgc/ujzXiVqmDhkrC3haa
+	NDjVwLAiY8mAO4zpIK8DbdLzOuuve7jxgG+YQI5g/gKx65YGT78zCcqQdicv00MLfJjUIetP4EH+y
+	eAW33rP+CM93/+yMhxLsTa9s1RKjSF5PHYdQ6s0tuF5D29b39IZXyaaPUE7udhaPOgq8jZhHYxLqO
+	5VnXtgZQhYgCfNHv/awQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1ovoyy-000qvM-M5; Fri, 18 Nov 2022 00:11:48 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1ovx9p-002tt5-3m; Fri, 18 Nov 2022 08:55:33 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1ovoyv-000quA-E4
-	for kexec@lists.infradead.org; Fri, 18 Nov 2022 00:11:46 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1668730302;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t75IuiAQcMlm4oCjhALxycpb3Fn6D89zCbLbH8xoMhU=;
-	b=RZcU4J8/NRVL5oMka86uKBamtnu9yaG6aFk5SsE9We4SOmaETV3qgrHQgbELjM8qwIWjfi
-	LqyCeYI6/4sYYf1oHFnzGvkzjcbHkNuSiqkQBrc/DfeHpU+ZZKLT8nPMv/3E7UfqW5Loa/
-	n/Tg+atdPWgclgCG0/554EGjQOHjZs8=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-300-gFkoYcibN7O9y4IdUg4itA-1; Thu, 17 Nov 2022 19:11:39 -0500
-X-MC-Unique: gFkoYcibN7O9y4IdUg4itA-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6114B1C068CC;
-	Fri, 18 Nov 2022 00:11:38 +0000 (UTC)
-Received: from localhost (ovpn-12-17.pek2.redhat.com [10.72.12.17])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 0DDC1492B04;
-	Fri, 18 Nov 2022 00:11:37 +0000 (UTC)
-Date: Fri, 18 Nov 2022 08:11:33 +0800
-From: Baoquan He <bhe@redhat.com>
-To: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu
-Cc: Xianting Tian <xianting.tian@linux.alibaba.com>, anup@brainfault.org,
-	heiko@sntech.de, guoren@kernel.org, mick@ics.forth.gr,
-	alexandre.ghiti@canonical.com, vgoyal@redhat.com, dyoung@redhat.com,
-	corbet@lwn.net, Conor.Dooley@microchip.com, bagasdotme@gmail.com,
-	kexec@lists.infradead.org, linux-doc@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	crash-utility@redhat.com, heinrich.schuchardt@canonical.com,
-	k-hagio-ab@nec.com, hschauhan@nulltrace.org, yixun.lan@gmail.com
-Subject: Re: [PATCH V5 0/2] Support VMCOREINFO export for RISCV64
-Message-ID: <Y3bNtRekTdzVMMdK@MiWiFi-R3L-srv>
-References: <20221026144208.373504-1-xianting.tian@linux.alibaba.com>
+	id 1ovx9n-002tsQ-IM
+	for kexec@bombadil.infradead.org; Fri, 18 Nov 2022 08:55:31 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:MIME-Version:Subject:To:From:Date:Message-ID:Sender:Reply-To:Cc:Content-ID:
+	Content-Description:In-Reply-To:References;
+	bh=0BgaW9t8GFER5QecxVkFsHrVi3gO/4V5KAZgJaiRYBs=; b=FjMM6V1ozcYFu1kdJP/fq/PWl0
+	4y00MaUg/1FZhnxQ2ACDq2VntddoqFD57KYzdat0fL4knXCWPZE+JF1zdH1QliuCk0lVJBFTwvqt/
+	zWOj/okmMazapAbBVQBeFVmlSacj2H9Z7SboBQFcZPLHee/dQm2DVwi6JQbsAQNX4InemZMrax3TT
+	fn3iARCnRiAKrLdm6zNRIumV5NmZQoJ+N850Qu33OcOBS8XAfqz3FP72VxSUvy8CqRNzDfQxov01v
+	3Dygjr3kc0Vwm88l2LVi/Nw3ydBG/G+px8FRPduu9lAF2rxnXddUbw3Pp1KbmAsKDUMjqrYchB88z
+	ODJ6E8Wg==;
+Received: from mail.axisfairfi.com ([94.177.230.134])
+	by desiato.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1ovx9j-001vIJ-R2
+	for kexec@lists.infradead.org; Fri, 18 Nov 2022 08:55:29 +0000
+Received: by mail.axisfairfi.com (Postfix, from userid 1001)
+	id 73B578288E; Fri, 18 Nov 2022 08:55:10 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=axisfairfi.com;
+	s=mail; t=1668761710;
+	bh=0BgaW9t8GFER5QecxVkFsHrVi3gO/4V5KAZgJaiRYBs=;
+	h=Date:From:To:Subject:From;
+	b=hvwgii88j7ooQ3Fo72xrei/xtyMLf10eG6/Y4rxJ621/j2kbfT9bgWVxilIbekQJI
+	 9ANQyvUGKAF4GkjQciB6sgTqprAuZMf8SCc/udDd35EKEnWvyuWIkFn1LkcEW5G0+k
+	 CjLUZLKA+hP8Em7LK7zLFPxa0CtQ2LGJxhNA8GcVViGUeQ4kJ/HYaQM4DYQv81NgDK
+	 INIt6RiPbYhWOrroaxhucgTf+ut+PGFD2ul62znPLM0gckZcvHTmMcPB+2bcCv/80p
+	 jqJnkuiQA4GPk8cuX/yxQAN71z3het5sgzcI0qtxHzBx4vhztZNVXc2yExERbwvlk0
+	 WW+mY5Y/QNiNg==
+Received: by mail.axisfairfi.com for <kexec@lists.infradead.org>; Fri, 18 Nov 2022 08:55:10 GMT
+Message-ID: <20221118074500-0.1.b.gvq.0.7f4cn0rwnd@axisfairfi.com>
+Date: Fri, 18 Nov 2022 08:55:10 GMT
+From: "Zbynek Spacek" <zbynek.spacek@axisfairfi.com>
+To: <kexec@lists.infradead.org>
+Subject: Silikonmischungen
+X-Mailer: mail.axisfairfi.com
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20221026144208.373504-1-xianting.tian@linux.alibaba.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221117_161145_583671_B7F22E9B 
-X-CRM114-Status: UNSURE (   8.63  )
+X-CRM114-CacheID: sfid-20221118_085528_189647_ED0EF6BC 
+X-CRM114-Status: UNSURE (   1.09  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -85,22 +79,20 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi risc-v maintainers,
+Good morning,
 
-On 10/26/22 at 10:42pm, Xianting Tian wrote:
-> As disscussed in below patch set, the patch of 'describe VMCOREINFO export in Documentation'
-> need to update according to Bagas's comments. 
-> https://lore.kernel.org/linux-riscv/22AAF52E-8CC8-4D11-99CB-88DE4D113444@kernel.org/
-> 
-> As others patches in above patch set already applied, so this patch set only contains below two
-> patches.
+do you need intermediates for processing, plastics (e.g. rubber) or silicone mixtures?
 
-Could you pick this patchset into risc-v tree since it has got acks
-and two Tested-by?
+We provide a wide range of silicone rubbers with various properties, silicone mixtures from renowned manufacturers such as Wacker, Elastosil LR and dyes, stabilizers, primers and anti-adhesive additives.
 
-Thanks
-Baoquan
+We also produce technical silicone compounds with increased resistance to oils, resistant to high temperatures and water vapor, conductive and many more.
 
+We provide fast order fulfillment, timely deliveries and cost optimization.
+
+Can I introduce what we can offer you?
+
+
+Zbynek Spacek
 
 _______________________________________________
 kexec mailing list
