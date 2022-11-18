@@ -4,70 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6BC1AC4332F
-	for <kexec@archiver.kernel.org>; Thu, 17 Nov 2022 16:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 15E58C433FE
+	for <kexec@archiver.kernel.org>; Fri, 18 Nov 2022 00:11:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=suBt78yyvDs0v92SmQxY0u8X6eao0z3TFnnkJEJy0vY=; b=taKCPrcBIS1La4
-	uyn1whXvDCuTUyZK8l51Z/+Y0MMekb3SqM6XXxu/cKmnz57cp3yO1LwK+obMO4VgkKfWtAfMfKT2Z
-	053OYxEM2aVe1svyGZl9Aoue5qr0WUyIPjIbcV2ZZccPAuVzRR4Vz9N//fKChhb3ZgOoK1ueYD2oa
-	j+TwuqAxSlSbpmJQ03xL9U3WJ88el0tOW0MMzgUMBfhhJDGi2RM/eYiF69KaK9w0+jfWenstQedrD
-	LGOnfsr/ypZLCYVlqc8Cumi/yBlfXO5DxlxtWY6m8JoguQJPrVJMozijGyYIsEgh4etiFvCVrZrmN
-	f7jm3OlGASlrbYunLR0w==;
+	List-Owner; bh=TR+xFxEs8/+wc4XzT6uyC70yoRWyMbdR+DZOu1Dt134=; b=jL8zlIBgbwzjSZ
+	KEZYOFvwFmJTr1ZbgvJz+BFdaCzp3ADdC3XwhL8G6JIfIdzzPlJhZHuK/WBLUXX5bpPsan2V7Q2Qc
+	VvOCQfQIueMUqU9uNIV6lYsPwCSC571NR63ikHk4gqUoEKxQNAP5WBBUC/i6cKNT/dxSfLVU/OB3V
+	O1Jzfj0zFb30OSBj1gj58n4RbtLoqU6LpUA/7hsQH1Wi8wA3cFpsKcGhFTXE9k4w17tUcgpvv5OaP
+	2levdBkcv9TAoVeN6A5xVjqQwsVuaGD5FwrE/m0ejH9jEQptch0xlwK1kEaoXasvAdT0kuH0Irf6X
+	UbNlvC5c86gUxegwILFA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1ovhTh-00FkL0-2l; Thu, 17 Nov 2022 16:11:01 +0000
-Received: from mail-oa1-x2c.google.com ([2001:4860:4864:20::2c])
+	id 1ovoyy-000qvM-M5; Fri, 18 Nov 2022 00:11:48 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1ovhQg-00Fhyy-MA
-	for kexec@lists.infradead.org; Thu, 17 Nov 2022 16:07:56 +0000
-Received: by mail-oa1-x2c.google.com with SMTP id 586e51a60fabf-13c2cfd1126so2633119fac.10
-        for <kexec@lists.infradead.org>; Thu, 17 Nov 2022 08:07:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=IfbrclEAp02esXRgMf8hzV0FzaiwXcfG62c3P4EwgX8=;
-        b=UxHb4bJ//EU5zUhNXovBeJy4qD5iIdUsIyQ6yLuY8MZWZcff0PUAtFRT14kWCYS7gd
-         9xuSPojPdwLHgRtO7goU7i1sFRH9liTF0s9wQ0DaICrY0L/K4CUQcgsfEbnR2pugt9Nt
-         unrjlagX+fskga5pdUM50zgvK3fsexdggS0D4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IfbrclEAp02esXRgMf8hzV0FzaiwXcfG62c3P4EwgX8=;
-        b=rSvTz4wZMEF1FSC6HSbKIL6+NfYklk8/meM1J8t834TenQx7zwPGslDtlvN5qWV/NK
-         UuUDEJeIqtSuY5sim4hAklYbjFShnbnBjWx/7ll5Y8fgC0jUcIuqXBj1Yk9ZiFH5Ag1s
-         9UKx72bX7BrlPhpWP6g4Kh+WxTGF1Xt+mZDZPTLDSrdYTJUItqPVVCo6Vy38nGfZs2LS
-         vTmxR+zbHWK6CdkYNCjpDvP3enCj5QWhbh1+uf/AhiAIlUbM9yFZVCeX7KE6C/0bRr6z
-         MiUZdYyN4uEV+M3KNCT3HGnkPCGcrRChEDSoiUQDes2KNmzxZnZSlVGOz8fzBgGZ9cpR
-         WDpA==
-X-Gm-Message-State: ANoB5pntGCrcUCl50iMpK3E6bG64/1jjdH/oo3Iyvsb+Q+gQcJhrLBFw
-	S7uMWdNJMiG/QvUNg4adNoTEqry9VnoD+DPGpVdZfA==
-X-Google-Smtp-Source: AA0mqf5S3LgZfCLc4YtVrcbwVLzwn4/DKEsp6EZSD6SjAfrWNkOloiskr4sgD9Kt4Ed41+Y7uFRmCGgJzGWcEMkK/T8=
-X-Received: by 2002:a05:6870:bacb:b0:13a:dd16:9b83 with SMTP id
- js11-20020a056870bacb00b0013add169b83mr4660609oab.15.1668701270248; Thu, 17
- Nov 2022 08:07:50 -0800 (PST)
+	id 1ovoyv-000quA-E4
+	for kexec@lists.infradead.org; Fri, 18 Nov 2022 00:11:46 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1668730302;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=t75IuiAQcMlm4oCjhALxycpb3Fn6D89zCbLbH8xoMhU=;
+	b=RZcU4J8/NRVL5oMka86uKBamtnu9yaG6aFk5SsE9We4SOmaETV3qgrHQgbELjM8qwIWjfi
+	LqyCeYI6/4sYYf1oHFnzGvkzjcbHkNuSiqkQBrc/DfeHpU+ZZKLT8nPMv/3E7UfqW5Loa/
+	n/Tg+atdPWgclgCG0/554EGjQOHjZs8=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-300-gFkoYcibN7O9y4IdUg4itA-1; Thu, 17 Nov 2022 19:11:39 -0500
+X-MC-Unique: gFkoYcibN7O9y4IdUg4itA-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6114B1C068CC;
+	Fri, 18 Nov 2022 00:11:38 +0000 (UTC)
+Received: from localhost (ovpn-12-17.pek2.redhat.com [10.72.12.17])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 0DDC1492B04;
+	Fri, 18 Nov 2022 00:11:37 +0000 (UTC)
+Date: Fri, 18 Nov 2022 08:11:33 +0800
+From: Baoquan He <bhe@redhat.com>
+To: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu
+Cc: Xianting Tian <xianting.tian@linux.alibaba.com>, anup@brainfault.org,
+	heiko@sntech.de, guoren@kernel.org, mick@ics.forth.gr,
+	alexandre.ghiti@canonical.com, vgoyal@redhat.com, dyoung@redhat.com,
+	corbet@lwn.net, Conor.Dooley@microchip.com, bagasdotme@gmail.com,
+	kexec@lists.infradead.org, linux-doc@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	crash-utility@redhat.com, heinrich.schuchardt@canonical.com,
+	k-hagio-ab@nec.com, hschauhan@nulltrace.org, yixun.lan@gmail.com
+Subject: Re: [PATCH V5 0/2] Support VMCOREINFO export for RISCV64
+Message-ID: <Y3bNtRekTdzVMMdK@MiWiFi-R3L-srv>
+References: <20221026144208.373504-1-xianting.tian@linux.alibaba.com>
 MIME-Version: 1.0
-References: <20221116195624.124092-1-joel@joelfernandes.org>
- <20221116151610.7294a9e8@gandalf.local.home> <20221117164612.65832e37@rotkaeppchen>
-In-Reply-To: <20221117164612.65832e37@rotkaeppchen>
-From: Joel Fernandes <joel@joelfernandes.org>
-Date: Thu, 17 Nov 2022 16:07:39 +0000
-Message-ID: <CAEXW_YSQsc96XZJ3Ht0DHx5TUANUDjStiYMOB0GgQ0jO66uynQ@mail.gmail.com>
-Subject: Re: [PATCH RFC] kexec: Freeze processes before kexec
-To: Philipp Rudo <prudo@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org, ribalda@google.com, 
-	zwisler@google.com, robdclark@gmail.com, 
-	Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org
+Content-Disposition: inline
+In-Reply-To: <20221026144208.373504-1-xianting.tian@linux.alibaba.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221117_080754_894018_C9084AE1 
-X-CRM114-Status: GOOD (  20.20  )
+X-CRM114-CacheID: sfid-20221117_161145_583671_B7F22E9B 
+X-CRM114-Status: UNSURE (   8.63  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,47 +85,22 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Nov 17, 2022 at 3:46 PM Philipp Rudo <prudo@redhat.com> wrote:
+Hi risc-v maintainers,
 
-> On Wed, 16 Nov 2022 15:16:10 -0500
-> Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> > On Wed, 16 Nov 2022 19:56:24 +0000
-> > "Joel Fernandes (Google)" <joel@joelfernandes.org> wrote:
-> >
-> > > --- a/kernel/kexec_core.c
-> > > +++ b/kernel/kexec_core.c
-> > > @@ -1175,6 +1175,12 @@ int kernel_kexec(void)
-> > >     } else
-> > >  #endif
-> > >     {
-> > > +           error = freeze_processes();
-> > > +           if (error) {
-> > > +                   error = -EBUSY;
-> > > +                   goto Unlock;
-> > > +           }
-> >
-> > If this is the path of a kernel panic, do we really want to check the
-> > return error of freeze_processes()? We are panicing, there's not much more
-> > we can do.
->
-> kernel_kexec isn't called during panic. We don't need to worry about it
-> here.
+On 10/26/22 at 10:42pm, Xianting Tian wrote:
+> As disscussed in below patch set, the patch of 'describe VMCOREINFO export in Documentation'
+> need to update according to Bagas's comments. 
+> https://lore.kernel.org/linux-riscv/22AAF52E-8CC8-4D11-99CB-88DE4D113444@kernel.org/
+> 
+> As others patches in above patch set already applied, so this patch set only contains below two
+> patches.
 
-Indeed, sorry for my hasty comment and for misleading Steve. This is
-seen to happen when doing manual kexec from the reboot(2) system call.
-During a regular panic, machine_shutdown() is not called so this would
-not happen. However, for testing, the crash is a hurdle.
+Could you pick this patchset into risc-v tree since it has got acks
+and two Tested-by?
 
-> Having that said I think this is a problem in the device driver _not_
-> in kexec. In my opinion it's the job of the driver to prevent such
-> races during shutdown.
+Thanks
+Baoquan
 
-Thanks a lot for your input. Rob, what do you think?
-
-thanks,
-
- - Joel
 
 _______________________________________________
 kexec mailing list
