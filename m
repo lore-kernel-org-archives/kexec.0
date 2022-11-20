@@ -4,73 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9CB70C4332F
-	for <kexec@archiver.kernel.org>; Sun, 20 Nov 2022 12:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CB516C433FE
+	for <kexec@archiver.kernel.org>; Sun, 20 Nov 2022 23:25:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=mUaEFhYVk9v0WdxeXEwCwJos2LiEz/bFpgNaxOzojiw=; b=mWFR/ATs6VUU82
-	d52L7PvQiAcqbBXQa6zaw5G0+j/IpQoBh2lAzZCib7la/bR4hsUKn3UHAb0DkoJo6/9tHedyK6Wi+
-	xXYx2KTY8UgmuHetngRgsW6Zx7FozQwi7D5E03JG0yw2Ht5X7vUMjokQMn7jg2LhEzFZmLERDS3X4
-	CULn1o6ScPMlu6RWo0poXlhzQDkiY8ntYW8qtR9gFdpuv9E+k7FfrQ9sTmwp4zD4QxRt57aqsThpz
-	MI0+BV30UKIKXU5miUfUIv8q0IXo5pijWBUoGIf9ZwB8wnZCEFDsuRYDazz4ut4KeHJS7r38chP3S
-	RC1KoAyTeRYnN5SmczSg==;
+	Content-Transfer-Encoding:Content-Type:Cc:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:To
+	:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=xbX3Uf0ZocHIBO+A2/qDb9pm3qO8Oqx4jl5SwuU8euo=; b=sMCz3Y/GaUyfGm
+	ayFM1Fx2fg8E5zJY+A6w0c3k0yXWtGR1idP+ny6ptIILOBZtihG24Pg44PM5baQQnhNNkMB3c3wyk
+	YjTLCbhoUuVTAE87u5+VXpzMZiHnLnyPLMFU4XHrho3pS3jInGqAFGXJqzgeEea5/sDvHNHmdP7q4
+	YWH/i0BjYSFWlaOxgeNwT5672wvozo8iBywQiMRElSUDX05C8UFDRPZ5CAYw7qJibIMxP4KMWK/FS
+	Eyt7zlKJNKbrsiZvRs/mq3A3l3Cq2VuS5C4CJqu5Ja6oCECQ89yXXXv6By0wDXqz6QDw7tjSsl7dB
+	rIX5DPOSQR/Wj7TU0uRw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1owj2Y-0049TW-3y; Sun, 20 Nov 2022 12:03:14 +0000
-Received: from mail-wr1-f44.google.com ([209.85.221.44])
+	id 1owtgo-007aEu-Gc; Sun, 20 Nov 2022 23:25:30 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5] helo=mx0a-001b2d01.pphosted.com)
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1owj2K-0049Sd-QM
-	for kexec@lists.infradead.org; Sun, 20 Nov 2022 12:03:02 +0000
-Received: by mail-wr1-f44.google.com with SMTP id cl5so16049786wrb.9
-        for <kexec@lists.infradead.org>; Sun, 20 Nov 2022 04:02:59 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eV1Oa0Nh6c9ac4bh/SaLTCNd0mYOTPlWSGUePJeqfO8=;
-        b=2I4iMmKqa36yimJrFDMlhrbR0TUNe0Vr/IY/e7/EshCxl0iUsEb1hYPrCOtwFmmj/E
-         s3rU57/pQQqeVIMsGg9jM7k+x8jI4VjmCWcGNQt+qBgEML49Erv7o3K3bfINpYg4LTPi
-         XLkXElcIF88RcBiqNRf4CfKJ7oDaoOwRvuMSKkzzrQtMAa2YccvlP/Dp6de/FNZI2SnJ
-         ZHM50eJnirNM1Va77dKjX+jf6bSjsVPLoO2iCXW/ElCrTJu2I0QlY+yxz2YEIE5BcxHF
-         inF88heA8vclTJR5MdDDLLafR0vAyjkYZPII95MqPoFF04A2eIB17HlKqN4ZThLjG4Mv
-         V7VQ==
-X-Gm-Message-State: ANoB5plcr0UnWrjk5rp7We3UuI1zQozatbdc+y/iAnR0aOmi2Qa2tXy1
-	NWPvpufsj/GGXiBpGSyw18U=
-X-Google-Smtp-Source: AA0mqf53oeJRAwYbEa1QS3NFkwEcjQtV/KqcmNAUM9nbg9dGXf5V7IYKIW1WWpvaRAwRTEyBycRREQ==
-X-Received: by 2002:adf:f601:0:b0:236:55a7:348f with SMTP id t1-20020adff601000000b0023655a7348fmr8761858wrp.331.1668945778206;
-        Sun, 20 Nov 2022 04:02:58 -0800 (PST)
-Received: from localhost ([2a00:23c8:6c0c:ff01:8fbf:89fd:a697:2959])
-        by smtp.gmail.com with ESMTPSA id iv7-20020a05600c548700b003cf87623c16sm17169617wmb.4.2022.11.20.04.02.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Nov 2022 04:02:57 -0800 (PST)
-From: Breno Leitao <leitao@debian.org>
-To: tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	pawan.kumar.gupta@linux.intel.com
-Cc: leit@meta.com,
-	cascardo@canonical.com,
-	hpa@zytor.com,
-	jpoimboe@kernel.org,
-	peterz@infradead.org,
-	x86@kernel.org,
-	kexec@lists.infradead.org
-Subject: [PATCH] x86/bugs: Explicitly clear speculative MSR bits
-Date: Sun, 20 Nov 2022 12:02:55 +0000
-Message-Id: <20221120120255.13054-1-leitao@debian.org>
+	id 1owtgj-007aB5-Ov
+	for kexec@lists.infradead.org; Sun, 20 Nov 2022 23:25:27 +0000
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+	by mx0b-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2AKIm0oq004928;
+	Sun, 20 Nov 2022 23:25:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=OeykIeKsiEdhFXOlNQDo29+n6oblNzJKBTP6z+Z658c=;
+ b=iwPEPv+dB06ajxzc98bY3FCfynLiTKdLfEpgeYPb/k7IIMJgVIqiHuCyoizDIIf5lILz
+ GVtjcDXnStbLo2T108itpmBLvRPBqTMj1C1gqn7xQ5YrMFHw+Ti5hui4AErfiT1Knclr
+ vox84iEyRFsTPC+npAAbGhxVh/k5ZdlJd2LfIV7V7wQGEgp7DNp1MjSmpXWQQIcI0IXe
+ 8Y0NqpMWAwOsMEFvfwS2jGnhJMp/JAVVpOml/sIFwWsnA5WvdRxS8MCCxSM8rCOGipgg
+ Qg13nX5ENtdiNkWX5UOSUQ5O7UgAxIOT6aGmOUfzLzWCs5bXQE8X+4gLrhcQ9eqcvUrT fw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3ky9311rkg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 20 Nov 2022 23:25:17 +0000
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2AKNPGur001378;
+	Sun, 20 Nov 2022 23:25:16 GMT
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+	by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3ky9311rk4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 20 Nov 2022 23:25:16 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+	by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2AKNKUxU026988;
+	Sun, 20 Nov 2022 23:25:14 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+	by ppma03ams.nl.ibm.com with ESMTP id 3kxps8st0e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 20 Nov 2022 23:25:14 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+	by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2AKNPCcr32834234
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 20 Nov 2022 23:25:12 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 27A9EAE051;
+	Sun, 20 Nov 2022 23:25:12 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F218BAE04D;
+	Sun, 20 Nov 2022 23:25:09 +0000 (GMT)
+Received: from sjain014.ibmuc.com (unknown [9.43.9.248])
+	by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+	Sun, 20 Nov 2022 23:25:09 +0000 (GMT)
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+To: linuxppc-dev@ozlabs.org, mpe@ellerman.id.au
+Subject: [PATCH v5 0/6] In kernel handling of CPU hotplug events for crash kernel
+Date: Mon, 21 Nov 2022 04:55:02 +0530
+Message-Id: <20221120232508.327554-1-sourabhjain@linux.ibm.com>
 X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20221118194602.vpo4xjm4s7knm7ja@desk>
-References: <20221118194602.vpo4xjm4s7knm7ja@desk>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: afmmt3s4TbSyp-nR9D7-_xIlou-d1zDg
+X-Proofpoint-ORIG-GUID: BRTKl8kN5t-8rGc7ug6CgvqRjLmnOVae
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-11-20_13,2022-11-18_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
+ impostorscore=0 mlxlogscore=999 lowpriorityscore=0 malwarescore=0
+ adultscore=0 clxscore=1011 bulkscore=0 suspectscore=0 priorityscore=1501
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2210170000 definitions=main-2211200194
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221120_040300_868886_492FE53E 
-X-CRM114-Status: GOOD (  18.13  )
+X-CRM114-CacheID: sfid-20221120_152526_206561_10B49930 
+X-CRM114-Status: GOOD (  20.60  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,71 +100,99 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Cc: eric.devolder@oracle.com, kexec@lists.infradead.org, bhe@redhat.com, hbathini@linux.ibm.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Currently x86_spec_ctrl_base is read at boot time, and speculative bits
-are set if configs are enable, such as MSR[SPEC_CTRL_IBRS] is enabled if
-CONFIG_CPU_IBRS_ENTRY is configured. These MSR bits are not cleared if
-the CONFIGs are not set.
+This patch series implements the crash hotplug handler on PowerPC introduced
+by https://lkml.org/lkml/2022/10/31/854 patch series.
 
-This is a problem when kexec-ing a kernel that has the mitigation
-disabled, from a kernel that has the mitigation enabled. In this case,
-the MSR bits are carried forward and not cleared at the boot of the new
-kernel. This might have some performance degradation that is hard to
-find.
 
-This problem does not happen if the machine is (hard) rebooted, because
-the bit will be cleared by default.
+The Problem:
+============
+Post hotplug/DLPAR events the capture kernel holds stale information about the
+system. Dump collection with stale capture kernel might end up in dump capture
+failure or an inaccurate dump collection.
 
-This patch also defines a SPEC_CTRL_MASK macro, so, we can easily track
-and clear if eventually some new mitigation show up.
 
-Suggested-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Signed-off-by: Breno Leitao <leitao@debian.org>
+Existing solution:
+==================
+The existing solution to keep the capture kernel up-to-date by monitoring
+hotplug event via udev rule and trigger a full capture kernel reload for
+every hotplug event.
+
+Shortcomings:
+------------------------------------------------
+- Leaves a window where kernel crash might not lead to a successful dump
+  collection.
+- Reloading all kexec components for each hotplug is inefficient.
+- udev rules are prone to races if hotplug events are frequent.
+
+More about issues with an existing solution is posted here:
+ - https://lkml.org/lkml/2020/12/14/532
+ - https://lists.ozlabs.org/pipermail/linuxppc-dev/2022-February/240254.html
+
+Proposed Solution:
+==================
+Instead of reloading all kexec segments on hotplug event, this patch series
+focuses on updating only the relevant kexec segment. Once the kexec segments
+are loaded in the kernel reserved area then an arch-specific hotplug handler
+will update the relevant kexec segment based on hotplug event type.
+
 ---
- arch/x86/include/asm/msr-index.h |  3 +++
- arch/x86/kernel/cpu/bugs.c       | 10 +++++++++-
- 2 files changed, 12 insertions(+), 1 deletion(-)
+Changelog:
 
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index 10ac52705892..672de926281e 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -54,6 +54,9 @@
- #define SPEC_CTRL_RRSBA_DIS_S_SHIFT	6	   /* Disable RRSBA behavior */
- #define SPEC_CTRL_RRSBA_DIS_S		BIT(SPEC_CTRL_RRSBA_DIS_S_SHIFT)
- 
-+#define SPEC_CTRL_MASK			(SPEC_CTRL_IBRS | SPEC_CTRL_STIBP | SPEC_CTRL_SSBD \
-+							| SPEC_CTRL_RRSBA_DIS_S)
-+
- #define MSR_IA32_PRED_CMD		0x00000049 /* Prediction Command */
- #define PRED_CMD_IBPB			BIT(0)	   /* Indirect Branch Prediction Barrier */
- 
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 3e3230cccaa7..970b277d02a6 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -137,8 +137,16 @@ void __init check_bugs(void)
- 	 * have unknown values. AMD64_LS_CFG MSR is cached in the early AMD
- 	 * init code as it is not enumerated and depends on the family.
- 	 */
--	if (boot_cpu_has(X86_FEATURE_MSR_SPEC_CTRL))
-+	if (boot_cpu_has(X86_FEATURE_MSR_SPEC_CTRL)) {
- 		rdmsrl(MSR_IA32_SPEC_CTRL, x86_spec_ctrl_base);
-+		/*
-+		 * Previously running software may have some controls turned ON.
-+		 * Clear them and let kernel decide which controls to use.
-+		 */
-+		x86_spec_ctrl_base &= ~SPEC_CTRL_MASK;
-+		wrmsrl(MSR_IA32_SPEC_CTRL, x86_spec_ctrl_base);
-+	}
-+
- 
- 	/* Select the proper CPU mitigations before patching alternatives: */
- 	spectre_v1_select_mitigation();
+v5 -> v6
+  - Added crash memory hotplug support
+
+v4 -> v5:
+  - Replace COFNIG_CRASH_HOTPLUG with CONFIG_HOTPLUG_CPU.
+  - Move fdt segment identification for kexec_load case to load path
+    instead of crash hotplug handler
+  - Keep new attribute defined under kimage_arch to track FDT segment
+    under CONFIG_HOTPLUG_CPU config.
+
+v3 -> v4:
+  - Update the logic to find the additional space needed for hotadd CPUs post
+    kexec load. Refer "[RFC v4 PATCH 4/5] powerpc/crash hp: add crash hotplug
+    support for kexec_file_load" patch to know more about the change.
+  - Fix a couple of typo.
+  - Replace pr_err to pr_info_once to warn user about memory hotplug
+    support.
+  - In crash hotplug handle exit the for loop if FDT segment is found.
+
+v2 -> v3
+  - Move fdt_index and fdt_index_vaild variables to kimage_arch struct.
+  - Rebase patche on top of https://lkml.org/lkml/2022/3/3/674 [v5]
+  - Fixed warning reported by checpatch script
+
+v1 -> v2:
+  - Use generic hotplug handler introduced by https://lkml.org/lkml/2022/2/9/1406, a
+    significant change from v1.
+---
+
+Sourabh Jain (6):
+  powerpc/kexec: turn some static helper functions public
+  powerpc/crash: update kimage_arch struct
+  crash: add phdr for possible CPUs in elfcorehdr
+  powerpc/crash: add crash CPU hotplug support
+  crash: forward memory_notify args to arch crash hotplug handler
+  powerpc/kexec: add crash memory hotplug support
+
+ arch/powerpc/include/asm/kexec.h        |  19 ++
+ arch/powerpc/include/asm/kexec_ranges.h |   1 +
+ arch/powerpc/kexec/core_64.c            | 293 ++++++++++++++++++++++++
+ arch/powerpc/kexec/elf_64.c             |  72 +++++-
+ arch/powerpc/kexec/file_load_64.c       | 179 ++-------------
+ arch/powerpc/kexec/ranges.c             |  60 +++++
+ arch/x86/include/asm/kexec.h            |   2 +-
+ arch/x86/kernel/crash.c                 |   3 +-
+ include/linux/kexec.h                   |   3 +-
+ kernel/crash_core.c                     |  25 +-
+ 10 files changed, 477 insertions(+), 180 deletions(-)
+
 -- 
 2.38.1
 
