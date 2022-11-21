@@ -4,87 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 208CFC433FE
-	for <kexec@archiver.kernel.org>; Mon, 21 Nov 2022 07:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 366C3C4332F
+	for <kexec@archiver.kernel.org>; Mon, 21 Nov 2022 08:31:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=kFPzPW5jfnuIlRWLVfhEbn2GXxV3Dqwk3+DRw++52/4=; b=pnaXd+qMHERW82
-	5k0ilWAH/BcgQjkCASIPqbtFp22olsxtCmhv90gvV9f5sED19jlIKO8R62IHMXE43yytIMTwBpSn2
-	bZHXqgHUs+8BxgxPW5GeDOQglHf3L/XB7+CsMdPZlnOZWI+xeD0T3ofBwxMT+kY9Xwh44CTalVIH2
-	08Mo/RLxoygeXI9u62tCMj/JYi06gxbUMxxOUuYwZ+3ZlMB1xT6Hd/bnQAWr0Wv6bhnKEmF0NpVAd
-	oBrujENdRqmGcD5OPPy0/09aLl212A413sOvbbEZephWbTtjxpgUt3QEXsMfARKTTgtRBVjhN/WfV
-	EZf7DvkL0/tJFRBkVI7w==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=YWAuF7aH/xKGJKEoGvkN7bRQfEpjdQxQsO44L6oZEcU=; b=FbTTJLCRwBjQb4
+	s7zi6RamkPwjWP4lQNBDA0gdOFZbyvCxmLCQ4Xx5zsfZ9TJxPO4pSC2TjX7B1jihVYIBM+SMJmQK1
+	XeTkmhm/mnDpeXitSD9kpxkNaWmka5LOzg8cFKtz1IeKjClARKPWJteOkRnyls1soQSBZjI1kQBOm
+	CqP1x0L2G5+WPSdpI6/NzaDRlHrSSBAmQTs6Fh0SgDfIlsIyN2bCv0sxRsAlRxObudNJkAGoNScqK
+	RJDuF2GHRXotHiwoLcl0FJNgC8rlGF3HcQps5fPM8Bqq8ILgkp/r7VWi1h5xCRme3HsZm55PWtVCT
+	dNwH3z0ffrYcDFbaqS+Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1ox1Jj-00APkx-C5; Mon, 21 Nov 2022 07:34:11 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1ox2DU-00BI29-AT; Mon, 21 Nov 2022 08:31:48 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1ox1Fk-00ANNU-07
-	for kexec@lists.infradead.org; Mon, 21 Nov 2022 07:30:05 +0000
+	id 1ox2DQ-00BHze-N7
+	for kexec@lists.infradead.org; Mon, 21 Nov 2022 08:31:46 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1669015803;
+	s=mimecast20190719; t=1669019502;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=PzrpIQOcRog587drqyOgalYCERQdLn/ggTvNzPloyBI=;
-	b=EPkjRyXWT5vkFhJ/ZsTMPPTuUQ2QklPSIK3fcoJpFsF65XlEPREGYVARJl9HxE64ejkFCu
-	c+PqjWsBBC6kEBK9ToeJoOMQ7LKLHwtlOCkkm6tPK5seuX694EekQ8PDJdTpsfucrCo4sn
-	M3U5u7cz6Y6yJD8iDY9e1iX7tc43W/o=
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
- [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-197-8aUfFjx7Np6zpKAt1vn8fA-1; Mon, 21 Nov 2022 02:29:57 -0500
-X-MC-Unique: 8aUfFjx7Np6zpKAt1vn8fA-1
-Received: by mail-pl1-f197.google.com with SMTP id t3-20020a170902e84300b00186ab03043dso8913850plg.20
-        for <kexec@lists.infradead.org>; Sun, 20 Nov 2022 23:29:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PzrpIQOcRog587drqyOgalYCERQdLn/ggTvNzPloyBI=;
-        b=pVCTD03GNDaZZtaVxCZ1rqcfdRnQLsPAar/1U9GiO6SZkp2Y12qMP8HDOTbKgkl/kn
-         Akxl5gt2KBusuIK6zQgVqwlviW+xJwo5+6ltjhB6rwkdR568FZDFZWfF0NNFTuAGb0F4
-         wenf7PTfOysZg7QECkQbIjC4OeKCOOc1xA8WXfb88fLcA1YPT30eKQRhls0Scl+yM5hG
-         H+MhRchd61FP18suI6HPy3BFtNwjSW2y7aG4tVsqJzJhN6iw0+KCPjRAl+d/zU1kHKwF
-         nuo6MCZlBw3shWsySNqX1/NEGVp5O5VbAIylUwEdEG4+m9LOf/sYgtTwyhsFYf0wa5eJ
-         4xvA==
-X-Gm-Message-State: ANoB5pmCOvoMtY1nYt7rHSrF/fWXqcrK82jPp2EChZCU3E+26/iIVhtB
-	WNlVgflVXwr1bYBAgqGk6x4eSofU7qFWST7Za3C0rAMUw4Fjwo6Q99C5rrdCbRLupQEtsOh0MZz
-	k22xXntjFveZ0s+76MFolsahbIx02MaFNiAe1yj9xXSmN9g2jtxzRB5xPVpfTmGu4BSI=
-X-Received: by 2002:a17:902:bcc7:b0:188:f42e:6a90 with SMTP id o7-20020a170902bcc700b00188f42e6a90mr926396pls.127.1669015795944;
-        Sun, 20 Nov 2022 23:29:55 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf7EcYX61iVqKcEdoBRAEQ94b78zalp2WbshZ4Dz+5rKx3bpryPWxZ9XpTzupJLi96mob2prPA==
-X-Received: by 2002:a17:902:bcc7:b0:188:f42e:6a90 with SMTP id o7-20020a170902bcc700b00188f42e6a90mr926361pls.127.1669015795583;
-        Sun, 20 Nov 2022 23:29:55 -0800 (PST)
-Received: from localhost ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id s16-20020a170902a51000b001869f2120a5sm8886857plq.34.2022.11.20.23.29.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Nov 2022 23:29:54 -0800 (PST)
-From: Coiby Xu <coxu@redhat.com>
-To: kexec@lists.infradead.org
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>,
-	Jiri Bohac <jbohac@suse.cz>,
-	David Howells <dhowells@redhat.com>,
-	linux-integrity@vger.kernel.org,
-	Eric Biederman <ebiederm@xmission.com>,
-	James Morris <jmorris@namei.org>,
-	Matthew Garrett <mjg59@google.com>,
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] lockdown: kexec_file: prevent unsigned kernel image when KEXEC_SIG not enabled
-Date: Mon, 21 Nov 2022 15:29:47 +0800
-Message-Id: <20221121072947.836672-1-coxu@redhat.com>
-X-Mailer: git-send-email 2.38.1
+	 in-reply-to:in-reply-to:references:references;
+	bh=lS+1v4t3MHKdnVMtm8dzAIaMzgKu70EAh1YPkpsaRUY=;
+	b=XxQgJdoJ/j9i+ORlW4umhf4SnpO2RSSO/Eseb9ystQ/LDA/iP2/izaFr0HjBCxN1GwIGDS
+	rEzHKks0Al4esUIcwtQfNyuqMMOTBQgy4CHOhoo0WlxSwh1P+ZPXDXK3F2l8UABEM6A0YQ
+	D/C+NoCzVPP8u2UAgc1fuLaa7i46NWI=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-616-5tZ5hloXMymn1Pe7RqWmjg-1; Mon, 21 Nov 2022 03:31:40 -0500
+X-MC-Unique: 5tZ5hloXMymn1Pe7RqWmjg-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5F6B887B2A0;
+	Mon, 21 Nov 2022 08:31:39 +0000 (UTC)
+Received: from localhost (ovpn-13-22.pek2.redhat.com [10.72.13.22])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id CF436492CA2;
+	Mon, 21 Nov 2022 08:31:37 +0000 (UTC)
+Date: Mon, 21 Nov 2022 16:31:32 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Zhen Lei <thunder.leizhen@huawei.com>
+Cc: Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+	"Eric W . Biederman" <ebiederm@xmission.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Feng Zhou <zhoufeng.zf@bytedance.com>,
+	Kefeng Wang <wangkefeng.wang@huawei.com>,
+	Chen Zhou <dingguo.cz@antgroup.com>,
+	John Donnelly <John.p.donnelly@oracle.com>,
+	Dave Kleikamp <dave.kleikamp@oracle.com>
+Subject: Re: [PATCH v4 2/2] arm64: kdump: Support crashkernel=X fall back to
+ reserve region above DMA zones
+Message-ID: <Y3s3ZCYj+ZbI3whB@MiWiFi-R3L-srv>
+References: <20221116121044.1690-1-thunder.leizhen@huawei.com>
+ <20221116121044.1690-3-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+Content-Disposition: inline
+In-Reply-To: <20221116121044.1690-3-thunder.leizhen@huawei.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221120_233004_156301_4BF3151D 
-X-CRM114-Status: GOOD (  15.41  )
+X-CRM114-CacheID: sfid-20221121_003144_872512_677A8E0F 
+X-CRM114-Status: GOOD (  28.70  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -101,84 +90,123 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-A kernel builder may not enable KEXEC_SIG and some architectures like
-ppc64 simply don't have KEXEC_SIG. In these cases, unless both
-IMA_ARCH_POLICY and secure boot also enabled, lockdown doesn't prevent
-unsigned kernel image from being kexec'ed via the kexec_file_load
-syscall whereas it could prevent one via the kexec_load syscall. Mandate
-signature verification for those cases.
+On 11/16/22 at 08:10pm, Zhen Lei wrote:
+> For crashkernel=X without '@offset', select a region within DMA zones
+> first, and fall back to reserve region above DMA zones. This allows
+> users to use the same configuration on multiple platforms.
+> 
+> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+> Acked-by: Baoquan He <bhe@redhat.com>
+> ---
+>  Documentation/admin-guide/kernel-parameters.txt |  2 +-
+>  arch/arm64/mm/init.c                            | 17 ++++++++++++++++-
+>  2 files changed, 17 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index a7b7147447b8bf8..ef6d922ed26b9dc 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -842,7 +842,7 @@
+>  			memory region [offset, offset + size] for that kernel
+>  			image. If '@offset' is omitted, then a suitable offset
+>  			is selected automatically.
+> -			[KNL, X86-64] Select a region under 4G first, and
+> +			[KNL, X86-64, ARM64] Select a region under 4G first, and
+>  			fall back to reserve region above 4G when '@offset'
+>  			hasn't been specified.
+>  			See Documentation/admin-guide/kdump/kdump.rst for further details.
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index ba7227179822d10..58a0bb2c17f18cf 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -132,6 +132,7 @@ static void __init reserve_crashkernel(void)
+>  	unsigned long long crash_max = CRASH_ADDR_LOW_MAX;
+>  	char *cmdline = boot_command_line;
+>  	int ret;
+> +	bool fixed_base = false;
+>  
+>  	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
+>  		return;
+> @@ -163,12 +164,26 @@ static void __init reserve_crashkernel(void)
+>  	crash_size = PAGE_ALIGN(crash_size);
+>  
+>  	/* User specifies base address explicitly. */
+> -	if (crash_base)
+> +	if (crash_base) {
+> +		fixed_base = true;
+>  		crash_max = crash_base + crash_size;
+> +	}
+>  
+> +retry:
+>  	crash_base = memblock_phys_alloc_range(crash_size, CRASH_ALIGN,
+>  					       crash_base, crash_max);
 
-Fixes: 155bdd30af17 ("kexec_file: Restrict at runtime if the kernel is locked down")
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: Jiri Bohac <jbohac@suse.cz>
-Cc: David Howells <dhowells@redhat.com>
-Cc: kexec@lists.infradead.org
-Cc: linux-integrity@vger.kernel.org
-Signed-off-by: Coiby Xu <coxu@redhat.com>
----
- kernel/kexec_file.c | 31 +++++++++++++++++++++----------
- 1 file changed, 21 insertions(+), 10 deletions(-)
+This pachset looks good to me. While we observed a unexpected case,
+where a reserved region cross the high and low meomry region. I noticed
+Catalin has pointed that out. Even with the suggested code, we could
+have the kernel parameters like: crashkernel=512M,high
+crashkernel=128M,low, we finally have [4G-126M, 4G+386M], [1G, 1G+128M]
+regions in running kernel. This looks strange.
 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 45637511e0de..04d56b6e6459 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -125,6 +125,20 @@ void kimage_file_post_load_cleanup(struct kimage *image)
- 	image->image_loader_data = NULL;
- }
+I am wondering if we can specify explicit search_base in
+memblock_phys_alloc_range() to avoid above case. Like this,
+crashkernel,high region will only exist in high memory, crashkernel,low
+region only exists in low memory region. I made a draft patch based on
+this patchset to present what the code looks like.
+
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 58a0bb2c17f1..fd9d35e17a62 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -127,7 +127,7 @@ static int __init reserve_crashkernel_low(unsigned long long low_size)
+  */
+ static void __init reserve_crashkernel(void)
+ {
+-	unsigned long long crash_base, crash_size;
++	unsigned long long crash_base, crash_size, search_base;
+ 	unsigned long long crash_low_size = 0;
+ 	unsigned long long crash_max = CRASH_ADDR_LOW_MAX;
+ 	char *cmdline = boot_command_line;
+@@ -155,6 +155,7 @@ static void __init reserve_crashkernel(void)
+ 		else if (ret)
+ 			return;
  
-+static int mandate_signatute_verification(void)
-+{
-+	/*
-+	 * If IMA is guaranteed to appraise a signature on the kexec
-+	 * image, permit it even if the kernel is otherwise locked
-+	 * down.
-+	 */
-+	if (!ima_appraise_signature(READING_KEXEC_IMAGE) &&
-+	    security_locked_down(LOCKDOWN_KEXEC))
-+		return -EPERM;
-+
-+	return 0;
-+}
-+
- #ifdef CONFIG_KEXEC_SIG
- #ifdef CONFIG_SIGNED_PE_FILE_VERIFICATION
- int kexec_kernel_verify_pe_sig(const char *kernel, unsigned long kernel_len)
-@@ -168,14 +182,9 @@ kimage_validate_signature(struct kimage *image)
- 			return ret;
- 		}
- 
--		/*
--		 * If IMA is guaranteed to appraise a signature on the kexec
--		 * image, permit it even if the kernel is otherwise locked
--		 * down.
--		 */
--		if (!ima_appraise_signature(READING_KEXEC_IMAGE) &&
--		    security_locked_down(LOCKDOWN_KEXEC))
--			return -EPERM;
-+		ret = mandate_signatute_verification();
-+		if (ret)
-+			return ret;
- 
- 		pr_debug("kernel signature verification failed (%d).\n", ret);
++		search_base = CRASH_ADDR_LOW_MAX;
+ 		crash_max = CRASH_ADDR_HIGH_MAX;
+ 	} else if (ret || !crash_size) {
+ 		/* The specified value is invalid */
+@@ -166,12 +167,13 @@ static void __init reserve_crashkernel(void)
+ 	/* User specifies base address explicitly. */
+ 	if (crash_base) {
+ 		fixed_base = true;
++		search_base = crash_base;
+ 		crash_max = crash_base + crash_size;
  	}
-@@ -211,10 +220,12 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
  
- #ifdef CONFIG_KEXEC_SIG
- 	ret = kimage_validate_signature(image);
--
-+#else
-+	ret = mandate_signatute_verification();
-+#endif
- 	if (ret)
- 		goto out;
--#endif
-+
- 	/* It is possible that there no initramfs is being loaded */
- 	if (!(flags & KEXEC_FILE_NO_INITRAMFS)) {
- 		ret = kernel_read_file_from_fd(initrd_fd, 0, &image->initrd_buf,
--- 
-2.38.1
+ retry:
+ 	crash_base = memblock_phys_alloc_range(crash_size, CRASH_ALIGN,
+-					       crash_base, crash_max);
++					       search_base, crash_max);
+ 	if (!crash_base) {
+ 		/*
+ 		 * If the first attempt was for low memory, fall back to
+@@ -180,6 +182,7 @@ static void __init reserve_crashkernel(void)
+ 		 */
+ 		if (!fixed_base && (crash_max == CRASH_ADDR_LOW_MAX)) {
+ 			crash_max = CRASH_ADDR_HIGH_MAX;
++			search_base = CRASH_ADDR_LOW_MAX;
+ 			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
+ 			goto retry;
+ 		}
+@@ -189,7 +192,7 @@ static void __init reserve_crashkernel(void)
+ 		return;
+ 	}
+ 
+-	if ((crash_base > CRASH_ADDR_LOW_MAX - crash_low_size) &&
++	if ((crash_base > CRASH_ADDR_LOW_MAX) &&
+ 	     crash_low_size && reserve_crashkernel_low(crash_low_size)) {
+ 		memblock_phys_free(crash_base, crash_size);
+ 		return;
 
 
 _______________________________________________
