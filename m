@@ -4,68 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 48FF0C4332F
-	for <kexec@archiver.kernel.org>; Mon, 21 Nov 2022 12:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3F9A6C4332F
+	for <kexec@archiver.kernel.org>; Mon, 21 Nov 2022 14:15:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:Date:
-	Message-ID:From:References:CC:To:Subject:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Owner;
-	bh=1LVWS1DOkA3FnP4UtSHb7nAiXc0c2nc89kX4ITnjq4k=; b=essvvs9/T9K0tkzCICfKKPvs4Q
-	I80x+zWjvHKoVcu9Nz/L6YJWTdtlM09AiVOZfj+l6oRfQY7ioYyNjQEEwPlfzOD1BLpuBxdhOpB1X
-	sx1LruI0EcpYyJa8RTgB7BscLSOJxo9LLsPMI+9DT61zAyTNY0M8K7K5S+WNR0wZDdtkSsgUlQ3PC
-	ih8/QlvkFEtNMsjJm+lia7oS3XOGh1wSZJ/0ElKC6hzLATjH3K8tMK+SAFMT644scymCY2clBYbET
-	o1fKKDVHMflyvxrmmTQeNpocHDMbFPbbFtLdxC0PGDIpTlu9uMl0VbCRWTgdyL17eSXZ1JcFkW/zY
-	MpOXxuwA==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=dMXircbEQYnKyFqEoSpC1RyyrnwU8SJ1B9+ZwMAMZ0s=; b=ynpU0n7hyb7W90
+	HmzrNCqn1jad3TkKotcBy+9hNOjCIAT2Sx/PFKk5Oi+4RAjfD7RqipVEQn1m9Sbf0l6A5gmjnjyTY
+	U5QWHYA5yWExODfKGW/Px44P0kw7ajxfiDbu9l/IOLrwgG9CLe7ScuMtI9PtT3pw49jL7LGwPiN+v
+	Pcew1+LaSVprYUoXBeP33CkZ09tt5/5gB3trsUFqe5BOYl8e+xJsDYYPZWMdHsOWjKhAzsYtaGQ/h
+	z9ZEVgM3vSs2krzwxteqPIEFI6NwpgrAH3WLz8WG8YsZn8SMIbsaLomrzMBQHqIMLtXrV/RQCLTQ9
+	PGgggi3Y583mF4YqUm6Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1ox5TM-00DA2y-Bd; Mon, 21 Nov 2022 12:00:24 +0000
-Received: from szxga01-in.huawei.com ([45.249.212.187])
+	id 1ox7Zy-00EKRu-WA; Mon, 21 Nov 2022 14:15:23 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1ox5TJ-00D9xc-Hf; Mon, 21 Nov 2022 12:00:23 +0000
-Received: from dggpemm500024.china.huawei.com (unknown [172.30.72.56])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4NG5Xv5FzGzmW5v;
-	Mon, 21 Nov 2022 19:59:43 +0800 (CST)
-Received: from dggpemm500006.china.huawei.com (7.185.36.236) by
- dggpemm500024.china.huawei.com (7.185.36.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Mon, 21 Nov 2022 20:00:12 +0800
-Received: from [10.174.178.55] (10.174.178.55) by
- dggpemm500006.china.huawei.com (7.185.36.236) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Mon, 21 Nov 2022 20:00:11 +0800
-Subject: Re: [PATCH v4 2/2] arm64: kdump: Support crashkernel=X fall back to
- reserve region above DMA zones
-To: Baoquan He <bhe@redhat.com>
-CC: Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	<kexec@lists.infradead.org>, <linux-kernel@vger.kernel.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, Jonathan Corbet <corbet@lwn.net>,
-	<linux-doc@vger.kernel.org>, "Eric W . Biederman" <ebiederm@xmission.com>,
-	Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou
-	<dingguo.cz@antgroup.com>, John Donnelly <John.p.donnelly@oracle.com>, "Dave
- Kleikamp" <dave.kleikamp@oracle.com>
-References: <20221116121044.1690-1-thunder.leizhen@huawei.com>
- <20221116121044.1690-3-thunder.leizhen@huawei.com>
- <Y3s3ZCYj+ZbI3whB@MiWiFi-R3L-srv>
-From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <0c3358aa-251f-cd47-e6d6-6408abacdea5@huawei.com>
-Date: Mon, 21 Nov 2022 20:00:11 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+	id 1ox7Us-00EHgL-32
+	for kexec@lists.infradead.org; Mon, 21 Nov 2022 14:10:08 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1669039803;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tPJ5E7l4jJrNWCryX/q/ZcjaW73VrvghRDDiwoLs83Q=;
+	b=Wrn/crxOUQMNJgTTLfbsY69QJciCZ17+sWqf9yO2tkuJ5TvX+zUP711Dov9E/QXoxUfFv7
+	EHLh+tc37YRrmTizNZizHh8vTR8gNUt7Zu3bbLen+IC7+4B0c5Pna3sxufkakO63HfGcl3
+	wVQg1PScVuy7oMfIQWudbshsgUji3eA=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-83-7Jyxb0-nMIK7VOQ1mJhcyQ-1; Mon, 21 Nov 2022 09:09:55 -0500
+X-MC-Unique: 7Jyxb0-nMIK7VOQ1mJhcyQ-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 486EE2A2AD7C;
+	Mon, 21 Nov 2022 14:09:55 +0000 (UTC)
+Received: from rotkaeppchen (unknown [10.39.195.28])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 9B2D6492B06;
+	Mon, 21 Nov 2022 14:09:53 +0000 (UTC)
+Date: Mon, 21 Nov 2022 15:09:48 +0100
+From: Philipp Rudo <prudo@redhat.com>
+To: Ricardo Ribalda <ribalda@chromium.org>
+Cc: Eric Biederman <ebiederm@xmission.com>, Jonathan Corbet
+ <corbet@lwn.net>, Sergey Senozhatsky <senozhatsky@chromium.org>,
+ linux-kernel@vger.kernel.org, kexec@lists.infradead.org, Ross Zwisler
+ <zwisler@kernel.org>, linux-doc@vger.kernel.org, "Joel Fernandes (Google)"
+ <joel@joelfernandes.org>, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v1 2/2] kexec: Introduce kexec_reboot_disabled
+Message-ID: <20221121150948.6f7c1f1f@rotkaeppchen>
+In-Reply-To: <CANiDSCvyQ66mXbhEgj_qnE_zR4frsxtu1bXaukDrEG0FjrE4yw@mail.gmail.com>
+References: <20221114-disable-kexec-reset-v1-0-fb51d20cf871@chromium.org>
+	<20221114-disable-kexec-reset-v1-2-fb51d20cf871@chromium.org>
+	<20221117160650.16e06b37@rotkaeppchen>
+	<CANiDSCvyQ66mXbhEgj_qnE_zR4frsxtu1bXaukDrEG0FjrE4yw@mail.gmail.com>
+Organization: Red Hat inc.
 MIME-Version: 1.0
-In-Reply-To: <Y3s3ZCYj+ZbI3whB@MiWiFi-R3L-srv>
-Content-Language: en-US
-X-Originating-IP: [10.174.178.55]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemm500006.china.huawei.com (7.185.36.236)
-X-CFilter-Loop: Reflected
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221121_040021_953782_496763B7 
-X-CRM114-Status: GOOD (  30.39  )
+X-CRM114-CacheID: sfid-20221121_061006_300085_D26B1239 
+X-CRM114-Status: GOOD (  48.74  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,142 +85,203 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+Hi Ricardo,
 
+On Thu, 17 Nov 2022 16:15:07 +0100
+Ricardo Ribalda <ribalda@chromium.org> wrote:
 
-On 2022/11/21 16:31, Baoquan He wrote:
-> On 11/16/22 at 08:10pm, Zhen Lei wrote:
->> For crashkernel=X without '@offset', select a region within DMA zones
->> first, and fall back to reserve region above DMA zones. This allows
->> users to use the same configuration on multiple platforms.
->>
->> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
->> Acked-by: Baoquan He <bhe@redhat.com>
->> ---
->>  Documentation/admin-guide/kernel-parameters.txt |  2 +-
->>  arch/arm64/mm/init.c                            | 17 ++++++++++++++++-
->>  2 files changed, 17 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
->> index a7b7147447b8bf8..ef6d922ed26b9dc 100644
->> --- a/Documentation/admin-guide/kernel-parameters.txt
->> +++ b/Documentation/admin-guide/kernel-parameters.txt
->> @@ -842,7 +842,7 @@
->>  			memory region [offset, offset + size] for that kernel
->>  			image. If '@offset' is omitted, then a suitable offset
->>  			is selected automatically.
->> -			[KNL, X86-64] Select a region under 4G first, and
->> +			[KNL, X86-64, ARM64] Select a region under 4G first, and
->>  			fall back to reserve region above 4G when '@offset'
->>  			hasn't been specified.
->>  			See Documentation/admin-guide/kdump/kdump.rst for further details.
->> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
->> index ba7227179822d10..58a0bb2c17f18cf 100644
->> --- a/arch/arm64/mm/init.c
->> +++ b/arch/arm64/mm/init.c
->> @@ -132,6 +132,7 @@ static void __init reserve_crashkernel(void)
->>  	unsigned long long crash_max = CRASH_ADDR_LOW_MAX;
->>  	char *cmdline = boot_command_line;
->>  	int ret;
->> +	bool fixed_base = false;
->>  
->>  	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
->>  		return;
->> @@ -163,12 +164,26 @@ static void __init reserve_crashkernel(void)
->>  	crash_size = PAGE_ALIGN(crash_size);
->>  
->>  	/* User specifies base address explicitly. */
->> -	if (crash_base)
->> +	if (crash_base) {
->> +		fixed_base = true;
->>  		crash_max = crash_base + crash_size;
->> +	}
->>  
->> +retry:
->>  	crash_base = memblock_phys_alloc_range(crash_size, CRASH_ALIGN,
->>  					       crash_base, crash_max);
+> Hi Philipp
 > 
-> This pachset looks good to me. While we observed a unexpected case,
-> where a reserved region cross the high and low meomry region. I noticed
-> Catalin has pointed that out. Even with the suggested code, we could
-> have the kernel parameters like: crashkernel=512M,high
-> crashkernel=128M,low, we finally have [4G-126M, 4G+386M], [1G, 1G+128M]
-> regions in running kernel. This looks strange.
+> Thanks for your review!
 
-Is high-end memory fragmented? Add boot option memblock=debug and watch?
+happy to help.
 
 > 
-> I am wondering if we can specify explicit search_base in
-> memblock_phys_alloc_range() to avoid above case. Like this,
-> crashkernel,high region will only exist in high memory, crashkernel,low
-> region only exists in low memory region. I made a draft patch based on
-> this patchset to present what the code looks like.
-
-Looks good to me.
-
+> On Thu, 17 Nov 2022 at 16:07, Philipp Rudo <prudo@redhat.com> wrote:
+> >
+> > Hi Ricardo,
+> >
+> > all in all I think this patch makes sense. However, there is one point
+> > I don't like...
+> >
+> > On Mon, 14 Nov 2022 14:18:39 +0100
+> > Ricardo Ribalda <ribalda@chromium.org> wrote:
+> >  
+> > > Create a new toogle that disables LINUX_REBOOT_CMD_KEXEC, reducing the
+> > > attack surface to a system.
+> > >
+> > > Without this toogle, an attacker can only reboot into a different kernel
+> > > if they can create a panic().
+> > >
+> > > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> > >
+> > > diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+> > > index 97394bd9d065..25d019682d33 100644
+> > > --- a/Documentation/admin-guide/sysctl/kernel.rst
+> > > +++ b/Documentation/admin-guide/sysctl/kernel.rst
+> > > @@ -462,6 +462,17 @@ altered.
+> > >  Generally used together with the `modules_disabled`_ sysctl.
+> > >
+> > >
+> > > +kexec_reboot_disabled
+> > > +=====================
+> > > +
+> > > +A toggle indicating if ``LINUX_REBOOT_CMD_KEXEC`` has been disabled.
+> > > +This value defaults to 0 (false: ``LINUX_REBOOT_CMD_KEXEC`` enabled),
+> > > +but can be set to 1 (true: ``LINUX_REBOOT_CMD_KEXEC`` disabled).
+> > > +Once true, kexec can no longer be used for reboot and the toggle
+> > > +cannot be set back to false.
+> > > +This toggle does not affect the use of kexec during a crash.
+> > > +
+> > > +
+> > >  kptr_restrict
+> > >  =============
+> > >
+> > > diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> > > index 41a686996aaa..15c3fad8918b 100644
+> > > --- a/include/linux/kexec.h
+> > > +++ b/include/linux/kexec.h
+> > > @@ -407,6 +407,7 @@ extern int kimage_crash_copy_vmcoreinfo(struct kimage *image);
+> > >  extern struct kimage *kexec_image;
+> > >  extern struct kimage *kexec_crash_image;
+> > >  extern int kexec_load_disabled;
+> > > +extern int kexec_reboot_disabled;
+> > >
+> > >  #ifndef kexec_flush_icache_page
+> > >  #define kexec_flush_icache_page(page)
+> > > diff --git a/kernel/kexec.c b/kernel/kexec.c
+> > > index cb8e6e6f983c..43063f803d81 100644
+> > > --- a/kernel/kexec.c
+> > > +++ b/kernel/kexec.c
+> > > @@ -196,6 +196,10 @@ static inline int kexec_load_check(unsigned long nr_segments,
+> > >       if (!capable(CAP_SYS_BOOT) || kexec_load_disabled)
+> > >               return -EPERM;
+> > >
+> > > +     /* Check if the system admin has disabled kexec reboot. */
+> > > +     if (!(flags & KEXEC_ON_CRASH) && kexec_reboot_disabled)
+> > > +             return -EPERM;  
+> >
+> > ... Allowing to load a crashkernel doesn't make sense in my opinion. If
+> > an attacker is capable of creating a malicious kernel, planting it on
+> > the victims system and then find a way to boot it via kexec this
+> > attacker also knows how to load the malicious kernel as crashkernel and
+> > trigger a panic. So you haven't really gained anything. That's why I
+> > would simply drop this hunk (and the corresponding one from
+> > kexec_file_load) and let users who worry about this use a combination of
+> > kexec_load_disabled and kexec_reboot_disabled.  
 > 
-> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> index 58a0bb2c17f1..fd9d35e17a62 100644
-> --- a/arch/arm64/mm/init.c
-> +++ b/arch/arm64/mm/init.c
-> @@ -127,7 +127,7 @@ static int __init reserve_crashkernel_low(unsigned long long low_size)
->   */
->  static void __init reserve_crashkernel(void)
->  {
-> -	unsigned long long crash_base, crash_size;
-> +	unsigned long long crash_base, crash_size, search_base;
+> If for whatever reason your sysadmin configured kexec_reboot_disabed
+> it can be nice that when a user try to load it they get a warning.
+> It is easier to debug than waiting two steps later when they run kexec -e....
 
-search_base needs to be initialized to 0.
+I'm having second thoughts about this patch. My main problem is that I
+don't see a real use case where kexec_reboot_disabled is advantageous
+over kexec_load_disabled. The point is that disabling
+LINUX_REBOOT_CMD_KEXEC is almost identical to toggling kexec_load_disabled without
+a loaded kernel (when you don't have a kernel loaded you cannot reboot
+into it). With this the main use case of kexec_reboot_disabled is
+already covered by kexec_load_disabled.
 
->  	unsigned long long crash_low_size = 0;
->  	unsigned long long crash_max = CRASH_ADDR_LOW_MAX;
->  	char *cmdline = boot_command_line;
-> @@ -155,6 +155,7 @@ static void __init reserve_crashkernel(void)
->  		else if (ret)
->  			return;
->  
-> +		search_base = CRASH_ADDR_LOW_MAX;
->  		crash_max = CRASH_ADDR_HIGH_MAX;
->  	} else if (ret || !crash_size) {
->  		/* The specified value is invalid */
-> @@ -166,12 +167,13 @@ static void __init reserve_crashkernel(void)
->  	/* User specifies base address explicitly. */
->  	if (crash_base) {
->  		fixed_base = true;
-> +		search_base = crash_base;
->  		crash_max = crash_base + crash_size;
->  	}
->  
->  retry:
->  	crash_base = memblock_phys_alloc_range(crash_size, CRASH_ALIGN,
-> -					       crash_base, crash_max);
-> +					       search_base, crash_max);
->  	if (!crash_base) {
->  		/*
->  		 * If the first attempt was for low memory, fall back to
-> @@ -180,6 +182,7 @@ static void __init reserve_crashkernel(void)
->  		 */
->  		if (!fixed_base && (crash_max == CRASH_ADDR_LOW_MAX)) {
->  			crash_max = CRASH_ADDR_HIGH_MAX;
-> +			search_base = CRASH_ADDR_LOW_MAX;
->  			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
->  			goto retry;
->  		}
-> @@ -189,7 +192,7 @@ static void __init reserve_crashkernel(void)
->  		return;
->  	}
->  
-> -	if ((crash_base > CRASH_ADDR_LOW_MAX - crash_low_size) &&
-> +	if ((crash_base > CRASH_ADDR_LOW_MAX) &&
->  	     crash_low_size && reserve_crashkernel_low(crash_low_size)) {
->  		memblock_phys_free(crash_base, crash_size);
->  		return;
+However, there are two differences
+
+1) with kexec_reboot_disable you can still (re-)load a crash kernel
+e.g. to update the initramfs after a config change. But as discussed in
+my first mail this comes on the cost that an attacker could still load a
+malicious crash kernel and then 'panic into it'.
+ 
+2) kexec_load_disabled also prevents unloading of a loaded kernel. So
+once loaded kexec_load_disabled cannot prevent the reboot into this
+kernel.
+
+
+For 1) I doubt that this is desired at all. My expectation is that on
+systems where a sysadmin restricts a user to reboot via kexec the
+sysadmin also wants to prevent the user to load an arbitrary crash
+kernel. Especially as this still keeps the loophole open you are trying
+to close.
+
+So only 2) is left as real benefit. But that is an extremely specific
+scenario. How often does this scenario happen in real life? What
+problem does kexec_reboot_disable solve different implementation
+(also in userspace) cannot?
+
+Sorry about being this pedantic but you want to introduce some new uapi
+which will be hard if not impossible to change once introduced. That's
+why I want to be a 100% sure it is really needed.
+
+Thanks
+Philipp
+
+
+> That is why I added it. But i am also ok removing it
 > 
-> .
+> >
+> > Thanks
+> > Philipp
+> >  
+> > > +
+> > >       /* Permit LSMs and IMA to fail the kexec */
+> > >       result = security_kernel_load_data(LOADING_KEXEC_IMAGE, false);
+> > >       if (result < 0)
+> > > diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> > > index ca2743f9c634..fe82e2525705 100644
+> > > --- a/kernel/kexec_core.c
+> > > +++ b/kernel/kexec_core.c
+> > > @@ -929,6 +929,7 @@ int kimage_load_segment(struct kimage *image,
+> > >  struct kimage *kexec_image;
+> > >  struct kimage *kexec_crash_image;
+> > >  int kexec_load_disabled;
+> > > +int kexec_reboot_disabled;
+> > >  #ifdef CONFIG_SYSCTL
+> > >  static struct ctl_table kexec_core_sysctls[] = {
+> > >       {
+> > > @@ -941,6 +942,16 @@ static struct ctl_table kexec_core_sysctls[] = {
+> > >               .extra1         = SYSCTL_ONE,
+> > >               .extra2         = SYSCTL_ONE,
+> > >       },
+> > > +     {
+> > > +             .procname       = "kexec_reboot_disabled",
+> > > +             .data           = &kexec_reboot_disabled,
+> > > +             .maxlen         = sizeof(int),
+> > > +             .mode           = 0644,
+> > > +             /* only handle a transition from default "0" to "1" */
+> > > +             .proc_handler   = proc_dointvec_minmax,
+> > > +             .extra1         = SYSCTL_ONE,
+> > > +             .extra2         = SYSCTL_ONE,
+> > > +     },
+> > >       { }
+> > >  };
+> > >
+> > > @@ -1138,7 +1149,7 @@ int kernel_kexec(void)
+> > >
+> > >       if (!kexec_trylock())
+> > >               return -EBUSY;
+> > > -     if (!kexec_image) {
+> > > +     if (!kexec_image || kexec_reboot_disabled) {
+> > >               error = -EINVAL;
+> > >               goto Unlock;
+> > >       }
+> > > diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> > > index 45637511e0de..583fba6de5cb 100644
+> > > --- a/kernel/kexec_file.c
+> > > +++ b/kernel/kexec_file.c
+> > > @@ -333,6 +333,11 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+> > >       if (!capable(CAP_SYS_BOOT) || kexec_load_disabled)
+> > >               return -EPERM;
+> > >
+> > > +     /* Check if the system admin has disabled kexec reboot. */
+> > > +     if (!(flags & (KEXEC_FILE_ON_CRASH | KEXEC_FILE_UNLOAD))
+> > > +         && kexec_reboot_disabled)
+> > > +             return -EPERM;
+> > > +
+> > >       /* Make sure we have a legal set of flags */
+> > >       if (flags != (flags & KEXEC_FILE_FLAGS))
+> > >               return -EINVAL;
+> > >  
+> >  
+> 
 > 
 
--- 
-Regards,
-  Zhen Lei
 
 _______________________________________________
 kexec mailing list
