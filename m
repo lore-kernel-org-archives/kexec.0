@@ -4,64 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 96E51C4332F
-	for <kexec@archiver.kernel.org>; Tue, 22 Nov 2022 13:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 49043C433FE
+	for <kexec@archiver.kernel.org>; Tue, 22 Nov 2022 13:23:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
 	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=JRP7Bge2Ua4s8DQZafLMGAB4smt3TiDJAghhIH8t8VY=; b=eECe+OudGQEewk
-	X5/7ZBTsViy5KCk2V6T0ULALNoHD9YNdv5EjZfdOYMGJfIvUw4X2I4FrHUlN6j1gYAaGlLnySuQqC
-	BrT/klyVvOU+htZeCrR3LFayOHVgpaif5OKKzvEUHj2aVGVpWugKjyGiZ3Y7nnfnlPnZc+IfgAEUz
-	HllSh5LwlYXTw35AnuYY7sngR1zBIBMwOeEC++Xt1UJo9aQZK4z/KFqAYhaZnPprFmdeWFSqLglfP
-	FvCGkZYkuAfiVxgv/hp+of+e+oWTnYcBWm5cX+Oku6LwWYMxlP4ykdqcFDaGPpanFk7LHdda/v+m8
-	oYKm6RTsrJZvCrotSmMQ==;
+	List-Owner; bh=UhwaQjh+Ia/mFtN/5LUyTZC+iVCvaI8pf7D82ZuYA1w=; b=rCZtr+xwdzOV70
+	Cc38qVmhx00bSg0r42bY8REMjqrPmKMypIt5y6YW89isqiBh8H1qai8/5yQmEZh627jpkqKlXc6+o
+	GvYeBagh4R88lOyy8f3La2WXTS1J8kfhOsUWWydFWEMGkeQGNKKpBa4ZIfIXdudRavlIljwqPSlKF
+	fLBo7Kt4G8LZgSeqd5rwxYMT09WwmA7f3t/RqJzfhBXX8VlwqVqKqfRgKnDoRRVv5BjqEgQA9Uzue
+	XBM1TDTFvP45YOQj+W5A3D0eu31wgoJveYgbLqDO284XOOVDKzG50CGdXnXyYEbVKeSlsAwAQFL+b
+	kJffwLACujkmYl1JV08g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oxTBW-009b2k-Da; Tue, 22 Nov 2022 13:19:34 +0000
+	id 1oxTEv-009cVW-OE; Tue, 22 Nov 2022 13:23:05 +0000
 Received: from fanzine2.igalia.com ([213.97.179.56])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oxTBT-009ay2-Mm
-	for kexec@lists.infradead.org; Tue, 22 Nov 2022 13:19:33 +0000
+	id 1oxTEr-009cR6-JM
+	for kexec@lists.infradead.org; Tue, 22 Nov 2022 13:23:03 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
 	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
 	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
 	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=R807ln6AiqSe+3HbtFqvP+BN4yO/wv214XfFb1EqQbE=; b=Cp5ZsrWKUviJGN4iZ8ebliVHg8
-	XrD6kI035Ghf8BzClosXhfrvpUT0ccJIjXAhcibCXTJJVHOmcjEudO8HrNxwxDY4LcOHn7GYCCtfk
-	BC3tGylzbaNaAdZElIA5USHN/F2smve6g5ln8xoWhExRWWSnECmaNJNn+ElT/FOs/j98JrYfJoQ4i
-	p9IDt8Vn7K7Ufj9PJMpWBR7alvG8NSJF0gLKedddixCXJ1DyxBrmrkjA3oP1kGou//EySNS1qoBRL
-	qY1gtI7dbROFyTMfUVdD3j0ezj2gdIGyfpX9V4eRXtNgYm2yljfNkOazXccZrYxBNMqguPjyfQJH9
-	nrm/6fsg==;
+	bh=FY+JqUTCgihErrGkfvd81tTDafGHo4/Ls5aZBztvCRI=; b=AYvzjRrTruNeQnueKgELb+zCk8
+	UVbGiVtGj9aoxeLpY3IHAd6Yyk/0XAO+o2htBjsFecMi89SKtq9feHUApjGt4pHm9mbOA9I+V6mQy
+	eA1GZ6fQ6GWJNN3dCHh8ww04qprqnImBnhWQLBqyOQGGeGjftBRgox+qxDxtDwCs7Pe3JTcckNuWw
+	22NGy7Gh2WlrpbVnmNlxHaFUiSJQ0FGaPuTPCZR61CqiCeq1X2BlTCgPo3VjT41nAbu/kZbhSbP3E
+	nCOY/8g75zWymxjFr1MTnfhgzD0q7u7PDtf6dQ4r8PSil1SrtlAunMWnkjmPGBICS5bbVJH8nkYfS
+	sle/jWGg==;
 Received: from [177.102.6.147] (helo=[192.168.1.60])
 	by fanzine2.igalia.com with esmtpsa 
 	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1oxTBH-006xGt-Ne; Tue, 22 Nov 2022 14:19:19 +0100
-Message-ID: <c6b543d2-8569-7f7a-56fb-2f5899b6504c@igalia.com>
-Date: Tue, 22 Nov 2022 10:19:15 -0300
+	id 1oxTEh-006xXr-3p; Tue, 22 Nov 2022 14:22:52 +0100
+Message-ID: <3f0bc380-e6c9-d1fa-a22f-6ba9051d4219@igalia.com>
+Date: Tue, 22 Nov 2022 10:22:45 -0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.2
-Subject: Re: [PATCH V3 02/11] notifier: Add panic notifiers info and purge
- trailing whitespaces
+Subject: Re: [PATCH V3 03/11] alpha: Clean-up the panic notifier code
 Content-Language: en-US
-To: akpm@linux-foundation.org
+To: linux-alpha@vger.kernel.org, Richard Henderson <rth@gcc.gnu.org>,
+ Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
+ <mattst88@gmail.com>, richard.henderson@linaro.org
 Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
- pmladek@suse.com, bhe@redhat.com, linux-hyperv@vger.kernel.org,
- netdev@vger.kernel.org, x86@kernel.org, kernel-dev@igalia.com,
- kernel@gpiccoli.net
+ linux-hyperv@vger.kernel.org, netdev@vger.kernel.org, x86@kernel.org,
+ kernel-dev@igalia.com, kernel@gpiccoli.net, Petr Mladek <pmladek@suse.com>
 References: <20220819221731.480795-1-gpiccoli@igalia.com>
- <20220819221731.480795-3-gpiccoli@igalia.com>
+ <20220819221731.480795-4-gpiccoli@igalia.com>
 From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <20220819221731.480795-3-gpiccoli@igalia.com>
+In-Reply-To: <20220819221731.480795-4-gpiccoli@igalia.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221122_051931_768775_F82E40C0 
-X-CRM114-Status: UNSURE (   9.75  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20221122_052301_699391_AC589103 
+X-CRM114-Status: GOOD (  12.59  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,38 +78,42 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 On 19/08/2022 19:17, Guilherme G. Piccoli wrote:
-> Although many notifiers are mentioned in the comments, the panic
-> notifiers infrastructure is not. Also, the file contains some
-> trailing whitespaces. Fix both issues here.
+> The alpha panic notifier has some code issues, not following
+> the conventions of other notifiers. Also, it might halt the
+> machine but still it is set to run as early as possible, which
+> doesn't seem to be a good idea.
 > 
-> Cc: Arjan van de Ven <arjan@linux.intel.com>
-> Cc: Cong Wang <xiyou.wangcong@gmail.com>
-> Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> Cc: Valentin Schneider <valentin.schneider@arm.com>
-> Cc: Xiaoming Ni <nixiaoming@huawei.com>
-> Reviewed-by: Baoquan He <bhe@redhat.com>
+> So, let's clean the code and set the notifier to run as the
+> latest, following the same approach other architectures are
+> doing - also, remove the unnecessary include of a header already
+> included indirectly.
+> 
+> Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
+> Cc: Matt Turner <mattst88@gmail.com>
+> Cc: Richard Henderson <rth@gcc.gnu.org>
+> Reviewed-by: Petr Mladek <pmladek@suse.com>
 > Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 > 
 > ---
 > 
 > V3:
-> - Added Baoquan review tag - thanks!
-> 
-> V2:
 > - No changes.
 > 
+> V2:
+> - Fixed rth email address;
+> - Added Petr's review tag - thanks!
 > 
 
-Hi Andrew, do you think it makes sense to merge this one for v6.2/next?
-I don't see anything else required here, lemme know otherwise.
+Hi Alpha maintainers, is there anything else to be done here? I'd really
+appreciate any advice on how to get this merged.
 
-Thanks,
+I'm also adding here Richard's linaro email (and trimming huge CC list).
+
+Thanks in advance!
+Cheers,
 
 
 Guilherme
-
-
-P.S. Trimmed a bit the huge CC list, but kept all MLs.
 
 _______________________________________________
 kexec mailing list
