@@ -4,103 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9CC01C4332F
-	for <kexec@archiver.kernel.org>; Tue, 22 Nov 2022 15:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7DC13C433FE
+	for <kexec@archiver.kernel.org>; Tue, 22 Nov 2022 17:00:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=wxIBE9Ne0tKJl5OculMt0F4WDtScUQ4eC+kbslCzACU=; b=cgs/uH7TEE9Mjc
-	QgkTFiUEgwxQtTp7svuN5f7lQHysU0PPiLNOaqLXv9oE7lDTweXkTmF+4DEMjD/cLHwv++TvHr52j
-	9btLEiv2278RPn3So7K0j4TrPS4fLDzz31nVT5ek425b2/A2b5Zt72w1VQBf+JUF2ZJI0IVaqXrY/
-	cH4PPWZQJIb2UYT0iZrYPoUovSM/r1I07nUjp97y/OVrKERHN41IxOE/8yWx1ttfHXfhmslWM+6Um
-	0yzChPdcnt0ewXwVmtgJay2QmZLppufBoY4+K1+/W+yxiEsExwZLQAP7dGxNSyYlnARf4VRoug6XX
-	PH7eD9gpt1ZI9YoWfizQ==;
+	List-Owner; bh=7DfW3j3OpVlHzo5shtrI0fmeCuoJ/6qXuRSvOWauY60=; b=izNN1wl5HCypsW
+	e5vY6CCBhYsDxrhp7SWtpy9WMCapQD+1dkPxFq0N2IfjA2FXm1WEm85H+NDdxCL5g5z/9P66anzPd
+	BEp429OEGRbZkgNgif5cpL/5RGQ0HL41dv4kANNzunRQfJnWPa3VFseICctflVB5g5bUHmpF1KcgI
+	++NjsDXBsuHXXCqUBTwxUi7RsHGnVBV5wyt8+MSRaHQobk6impgZ2tIjRcGQBvsZCTGiPEI0vJABB
+	PUCvoNzQfADNxyUNuoxRy+YZ8ZeQY52rTKtODfZwIdRUS7ueWUQIp/c9LSprJjcrmlDI0oR/7Tfw4
+	9pC9mmqGQ74PmEDWFUsg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oxUzZ-00AG4N-TB; Tue, 22 Nov 2022 15:15:21 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1oxWdX-00AuEM-M9; Tue, 22 Nov 2022 17:00:43 +0000
+Received: from mail-ed1-f43.google.com ([209.85.208.43])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oxUzW-00AG0a-4X
-	for kexec@lists.infradead.org; Tue, 22 Nov 2022 15:15:20 +0000
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2AMEX8k6015368;
-	Tue, 22 Nov 2022 15:15:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=rhBffdYPdTlauIRdEqJ7HG27aUNvBoJ3ie8MoayMT0A=;
- b=Wzi0acL257X8dP/rxKmZmg57Y+ydh0es7VHIINK7/7cFxyJd7CIpXs4ncHfO6JjPpa2z
- KxdbbeHYIU//WczBldj/Ak0evZQvSELJEKEDAsee8heHL/49xXM8t0za2xj6AIDeMLC1
- aflp/o42v5+IfxGOPKimLJd5pVdFRseXvdlTcs2WUAVWCCeZkW57sQK2HMJhW5pmj7Dj
- 96RCz+TBEd21bZBvSnHkczCatnGJ/avSWdmi/5qX91RL/QxD0maOravzZ7XqXUg8Qs9J
- fznNFslcDKUoJ540AsQs7NBiqipTIUKj/nIa7DZ4bNoCpHcSFPZLZ7W59eWQFW91YwEL aw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3m0x7ywpq1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Nov 2022 15:15:12 +0000
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2AMCMT7p024785;
-	Tue, 22 Nov 2022 15:15:11 GMT
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3m0x7ywpp4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Nov 2022 15:15:11 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-	by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2AMF5AFb014275;
-	Tue, 22 Nov 2022 15:15:09 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-	by ppma04ams.nl.ibm.com with ESMTP id 3kxps8vdww-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Nov 2022 15:15:09 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-	by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2AMFFlAI51511710
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 22 Nov 2022 15:15:47 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7C9F2A4040;
-	Tue, 22 Nov 2022 15:15:06 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C13F9A4051;
-	Tue, 22 Nov 2022 15:15:05 +0000 (GMT)
-Received: from localhost (unknown [9.171.79.173])
-	by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-	Tue, 22 Nov 2022 15:15:05 +0000 (GMT)
-Date: Tue, 22 Nov 2022 16:15:04 +0100
-From: Vasily Gorbik <gor@linux.ibm.com>
-To: Coiby Xu <coxu@redhat.com>
-Cc: kexec@lists.infradead.org, Matthew Garrett <mjg59@srcf.ucam.org>,
-        Jiri Bohac <jbohac@suse.cz>, David Howells <dhowells@redhat.com>,
-        Philipp Rudo <prudo@redhat.com>, linux-s390@vger.kernel.org,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>, James Morris <jmorris@namei.org>,
-        Matthew Garrett <mjg59@google.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>
-Subject: Re: [PATCH] lockdown: s390: kexec_file: don't skip signature
- verification when not secure IPLed
-Message-ID: <your-ad-here.call-01669130104-ext-3635@work.hours>
-References: <20221121072715.836323-1-coxu@redhat.com>
+	id 1oxVcd-00AVkd-Tf
+	for kexec@lists.infradead.org; Tue, 22 Nov 2022 15:55:45 +0000
+Received: by mail-ed1-f43.google.com with SMTP id l24so8660998edj.8
+        for <kexec@lists.infradead.org>; Tue, 22 Nov 2022 07:55:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Hh7zIHNaqUt9tu7IfYlCEpfnwk9Rt/70h7f9hwLslZg=;
+        b=uCWq70gSKiJ7vbGuMiTQbm/IkW++Q/DWUv+O+ZkM0cmBi/QjKaWshfcIOGWNKE+Ej4
+         mNwIa3JqB89IFeZKHJU18CUoSZZc/d6r4kgJ+lQ1K340N3i95yNtiiPh9ZkpNLY7PzUV
+         WiiFzsh8KYTOEB9rm0mlPjpGKbqe7zoBOvGODtfHdf6UZ9KsTG/I0EeQ595o7E3sl1sg
+         IvARnPIFPlJUlfOICFCca1cNteGRBAAm6I1Dlinf/B1SdqL/leK6Bwwi8nif4Y158+GQ
+         XsHafZsfasGoJLRKw+ElCzdZRg32AlkLTpUymXTI45j0WyNNtoT9KNwMEoYk4uJ8phtL
+         c+CA==
+X-Gm-Message-State: ANoB5pn7YJPwzU2p0HZBccwlULWd7l/CBS0kBgZq5smy/MsZowmMOJnQ
+	McklNJFXrRlZfw+zrpHaRH7cipvmxeH68A==
+X-Google-Smtp-Source: AA0mqf4U1I4JMoEEF0wIL4tk5IpLvSks1ktxEnC/K38OFNasdNQirn0whv78F+3gAE6LhjBCkH/0/A==
+X-Received: by 2002:a05:6402:448c:b0:461:7378:3501 with SMTP id er12-20020a056402448c00b0046173783501mr4618015edb.35.1669132538817;
+        Tue, 22 Nov 2022 07:55:38 -0800 (PST)
+Received: from gmail.com (fwdproxy-cln-000.fbsv.net. [2a03:2880:31ff::face:b00c])
+        by smtp.gmail.com with ESMTPSA id jt12-20020a170906ca0c00b007aec44edcfcsm6148933ejb.75.2022.11.22.07.55.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Nov 2022 07:55:38 -0800 (PST)
+Date: Tue, 22 Nov 2022 07:55:36 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, leit@meta.com, cascardo@canonical.com,
+	hpa@zytor.com, jpoimboe@kernel.org, peterz@infradead.org,
+	x86@kernel.org, kexec@lists.infradead.org
+Subject: Re: [PATCH] x86/bugs: Explicitly clear speculative MSR bits
+Message-ID: <Y3zw+LK5C2esYU8o@gmail.com>
+References: <20221118194602.vpo4xjm4s7knm7ja@desk>
+ <20221120120255.13054-1-leitao@debian.org>
+ <20221121222031.uo2n7fv7ojusxvr4@desk>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20221121072715.836323-1-coxu@redhat.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Xmuclpu3WEszRI2qNbRBVQlm7RMy6X6b
-X-Proofpoint-ORIG-GUID: hqOy_mHrsET4QwN4av8WH--pPNhPAy8G
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-11-22_09,2022-11-18_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- malwarescore=0 mlxscore=0 mlxlogscore=999 spamscore=0 phishscore=0
- bulkscore=0 suspectscore=0 priorityscore=1501 clxscore=1011
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2210170000 definitions=main-2211220113
+In-Reply-To: <20221121222031.uo2n7fv7ojusxvr4@desk>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221122_071518_546911_144ED542 
-X-CRM114-Status: GOOD (  17.66  )
+X-CRM114-CacheID: sfid-20221122_075543_971252_2455EA60 
+X-CRM114-Status: GOOD (  15.33  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -117,32 +82,33 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Nov 21, 2022 at 03:27:15PM +0800, Coiby Xu wrote:
-> --- a/arch/s390/kernel/machine_kexec_file.c
-> +++ b/arch/s390/kernel/machine_kexec_file.c
-> @@ -33,10 +33,6 @@ int s390_verify_sig(const char *kernel, unsigned long kernel_len)
->  	unsigned long sig_len;
->  	int ret;
->  
-> -	/* Skip signature verification when not secure IPLed. */
-> -	if (!ipl_secure_flag)
-> -		return 0;
+On Mon, Nov 21, 2022 at 02:20:31PM -0800, Pawan Gupta wrote:
+> On Sun, Nov 20, 2022 at 12:02:55PM +0000, Breno Leitao wrote:
+...
+> > diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+> > index 3e3230cccaa7..970b277d02a6 100644
+> > --- a/arch/x86/kernel/cpu/bugs.c
+> > +++ b/arch/x86/kernel/cpu/bugs.c
+> > @@ -137,8 +137,16 @@ void __init check_bugs(void)
+> > 	 * have unknown values. AMD64_LS_CFG MSR is cached in the early AMD
+> > 	 * init code as it is not enumerated and depends on the family.
+> > 	 */
+> > -	if (boot_cpu_has(X86_FEATURE_MSR_SPEC_CTRL))
+> > +	if (boot_cpu_has(X86_FEATURE_MSR_SPEC_CTRL)) {
+> > 		rdmsrl(MSR_IA32_SPEC_CTRL, x86_spec_ctrl_base);
+> > +		/*
+> > +		 * Previously running software may have some controls turned ON.
+> > +		 * Clear them and let kernel decide which controls to use.
+> > +		 */
+> > +		x86_spec_ctrl_base &= ~SPEC_CTRL_MASK;
+> > +		wrmsrl(MSR_IA32_SPEC_CTRL, x86_spec_ctrl_base);
+> > +	}
+> > +
+> 
+> Nit, extra newline.
 
-Looking at s390_verify_sig() especially before commit 0828c4a39be5
-("kexec, KEYS, s390: Make use of built-in and secondary keyring for
-signature verification") I think this condition actually expresses
-2 things:
-1. the firmware is secure IPL capable and secure IPL keys are
-   provided and present in platform keyring.
-2. secure IPL is enabled.
-
-Wouldn't this change have implications for machines with older firmware
-which doesn't support secure IPL? In this case platform keyring won't
-have any secure IPL keys (since firmware doesn't provide them)
-and any properly signed kernels will be rejected for kexec in this
-function. Unless secure IPL keys are also present in built-in or secondary
-keyring (which is possible after commit 0828c4a39be5) - is that what
-distributions normally do?
+Thanks. If no other comment about the diff come until tomorrow, I will
+send a v2 without this extra line.
 
 _______________________________________________
 kexec mailing list
