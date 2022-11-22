@@ -4,65 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 05228C433FE
-	for <kexec@archiver.kernel.org>; Tue, 22 Nov 2022 13:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 40C8AC433FE
+	for <kexec@archiver.kernel.org>; Tue, 22 Nov 2022 13:35:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:References:Cc:To:From:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
 	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=jdS44/8kp4oDPSLLaw+EAyjULeY2vpYz4tHRQiy3828=; b=z8bnZooeEBmSxD
-	Vj5wR5NVyea+OHV/wJdrFF03QQjOZceOAdpr3ivjkAUcWw0UT5I2xFWQC3cHYJKsdOyrRge6/aLwt
-	f6gcT13vNsFRhSCTA6DuVYqHZjZOmZg1KJcrdBaVx8MOUk9Dd1iysPUKPbbJnpExhqpzBFxHx8yR/
-	SQ5iLbKxe4QSujV0xknmqFlCYe1HM/jJqrtS+6FwCUcn4lbsF3lgf/mtL6JvzSpv/GYgJXA1DYVDv
-	V4N8hm6ADnsyq2eVnkHzcNJCPr/4bSQ55sHtRb5SDEDgDaljHQhVlX84mfiZhVLIszEmcacbjg35T
-	tZTEbzkOgG6iV16wa0nw==;
+	List-Owner; bh=K5psJqE4H7X36L5IfPFI8/mxkaFR3/avimUXtDPFVGw=; b=vkK9VZZ1MUdGW8
+	HS1GsB54oUeAnbMEuItHl/He/v5N0utAxJ5QkWhOS9Cs6ufMAmO5EbyoL97SpwyLm9lrV+dTB6MdW
+	njb6vRn7lH8FPhRSLSKzOQqH50fZ0VFphLWY022N96D7vm/EhwCLY/yXqZSM25OqEC13LJ0UKvhL8
+	B3IEBzE2rsfmCwUQQnTCAB/qPhVQaFamL6oG+r4+jpmQNmRdL3rFd0K6Yb/PSYNXH/efWdCFeGH8o
+	OuGwI/A2eSWoYMKmvgp33/ttVZ2AARh4EFTL7m78Ek6W4or+XIj1ErEHzN2SQs1lQsFsdXPlhloEf
+	btnV0qaFgy4lcmABPyMQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oxTP2-009fb8-SB; Tue, 22 Nov 2022 13:33:32 +0000
+	id 1oxTRE-009fxi-74; Tue, 22 Nov 2022 13:35:48 +0000
 Received: from fanzine2.igalia.com ([213.97.179.56])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oxTOz-009fa1-Pu
-	for kexec@lists.infradead.org; Tue, 22 Nov 2022 13:33:31 +0000
+	id 1oxTRA-009fx4-Qz
+	for kexec@lists.infradead.org; Tue, 22 Nov 2022 13:35:46 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:References:
-	Cc:To:From:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=wwK1w0+91VyguQf6bkuN05BbJdwqncc33oWAjgq88to=; b=cWFBDVu7Z4yOUp25p3/Rhx9Bdl
-	jXtrRVKBSjhnWmi0UBLDnpAlDvXqGeWjL/lxbSKH+uqaeAwWzcbHIrtkhECJxYdDZpE4RliW2Gh4x
-	0/f3g9/x1wbiB9QUTEvtOjTOqAUc4SO/040zHb8itMT2OK3t5HlVE3jD1cD2lrhtmpvhhnSLWJnbZ
-	s/WcYjk5HX14UrkxoX6LpW5vikmrG3MVrL2vaLT0p8q7fLHd9kSpgnZPPaTI21DWwW9pUcTLSWM9E
-	hoFQtO+kfOmLkrxuBnmDqqu6KrhXivaaMip3Jlygj/6+1rpd4WB4L9vQGppRnXC27E08J5D7zPV2w
-	wG1mgrmQ==;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=rSYIGGtjZljFBal86Avbxge1dAX05jgxf9qrktsTsB8=; b=MX800+aYXTdyYof4USzixvuPvg
+	9FbkPgWEf4yn5YKSZ6YZvZYMUIrJ83siHY3JDQnjBib+dAZOvIjPcv4rwFWWZmC8nuU/CNyqTv37J
+	LI9uahtiyTlFT5sg3l2Jt6DAPlbV/eGuCYZHMx1mJgP8y9VUP0QV5AhKWiiwBT3/TtAdOZxoHUjGo
+	wBjoV4n84SXGRfQJ1FQgM2titKAX9RMXtyQrLP2E1UPM76R5ywtg8b8JzSylFz4KM6CKbhsW2RDhw
+	2Wuo/c750D1OMJECUK35f1MTpZl3Tuqe5CqaKSXYSU2Si3ILxqlcvyZFxEYL6RqkDNw1VeQ19rA9/
+	QwSDYHeg==;
 Received: from [177.102.6.147] (helo=[192.168.1.60])
 	by fanzine2.igalia.com with esmtpsa 
 	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1oxTOp-006y6v-Gr; Tue, 22 Nov 2022 14:33:19 +0100
-Message-ID: <eaba1a1a-31cd-932f-277c-267699d7be30@igalia.com>
-Date: Tue, 22 Nov 2022 10:33:12 -0300
+	id 1oxTR5-006yBT-L8; Tue, 22 Nov 2022 14:35:39 +0100
+Message-ID: <831175d7-1b30-de61-d6c5-cbb91e4fdcfb@igalia.com>
+Date: Tue, 22 Nov 2022 10:35:34 -0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.2
-Subject: Re: [PATCH V3 08/11] EDAC/altera: Skip the panic notifier if kdump is
- loaded
+Subject: Re: [PATCH V3 11/11] panic: Fixes the panic_print NMI backtrace
+ setting
 Content-Language: en-US
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-To: Dinh Nguyen <dinguyen@kernel.org>, Tony Luck <tony.luck@intel.com>,
- linux-edac@vger.kernel.org, bp@alien8.de
-Cc: kexec@lists.infradead.org, pmladek@suse.com,
- linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
- netdev@vger.kernel.org, x86@kernel.org, kernel-dev@igalia.com,
- kernel@gpiccoli.net
+To: akpm@linux-foundation.org, bhe@redhat.com, pmladek@suse.com,
+ feng.tang@intel.com
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, netdev@vger.kernel.org, x86@kernel.org,
+ kernel-dev@igalia.com, kernel@gpiccoli.net
 References: <20220819221731.480795-1-gpiccoli@igalia.com>
- <20220819221731.480795-9-gpiccoli@igalia.com>
- <742d2a7e-efee-e212-178e-ba642ec94e2a@igalia.com>
-In-Reply-To: <742d2a7e-efee-e212-178e-ba642ec94e2a@igalia.com>
+ <20220819221731.480795-12-gpiccoli@igalia.com>
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <20220819221731.480795-12-gpiccoli@igalia.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221122_053329_846466_EA17C803 
-X-CRM114-Status: GOOD (  14.91  )
+X-CRM114-CacheID: sfid-20221122_053544_904083_A6D41439 
+X-CRM114-Status: GOOD (  21.57  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,58 +77,60 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 18/09/2022 11:10, Guilherme G. Piccoli wrote:
-> On 19/08/2022 19:17, Guilherme G. Piccoli wrote:
->> The altera_edac panic notifier performs some data collection with
->> regards errors detected; such code relies in the regmap layer to
->> perform reads/writes, so the code is abstracted and there is some
->> risk level to execute that, since the panic path runs in atomic
->> context, with interrupts/preemption and secondary CPUs disabled.
->>
->> Users want the information collected in this panic notifier though,
->> so in order to balance the risk/benefit, let's skip the altera panic
->> notifier if kdump is loaded. While at it, remove a useless header
->> and encompass a macro inside the sole ifdef block it is used.
->>
->> Cc: Borislav Petkov <bp@alien8.de>
->> Cc: Petr Mladek <pmladek@suse.com>
->> Cc: Tony Luck <tony.luck@intel.com>
->> Acked-by: Dinh Nguyen <dinguyen@kernel.org>
->> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
->>
->> ---
->>
->> V3:
->> - added the ack tag from Dinh - thanks!
->> - had a good discussion with Boris about that in V2 [0],
->> hopefully we can continue and reach a consensus in this V3.
->> [0] https://lore.kernel.org/lkml/46137c67-25b4-6657-33b7-cffdc7afc0d7@igalia.com/
->>
->> V2:
->> - new patch, based on the discussion in [1].
->> [1] https://lore.kernel.org/lkml/62a63fc2-346f-f375-043a-fa21385279df@igalia.com/
->>
->> [...]
+On 19/08/2022 19:17, Guilherme G. Piccoli wrote:
+> Commit 8d470a45d1a6 ("panic: add option to dump all CPUs backtraces in panic_print")
+> introduced a setting for the "panic_print" kernel parameter to allow
+> users to request a NMI backtrace on panic. Problem is that the panic_print
+> handling happens after the secondary CPUs are already disabled, hence
+> this option ended-up being kind of a no-op - kernel skips the NMI trace
+> in idling CPUs, which is the case of offline CPUs.
 > 
-> Hi Dinh, Tony, Boris - sorry for the ping.
+> Fix it by checking the NMI backtrace bit in the panic_print prior to
+> the CPU disabling function.
 > 
-> Appreciate reviews on this one - Dinh already ACKed the patch but Boris
-> raised some points in the past version [0], so any opinions or
-> discussions are welcome!
+> Fixes: 8d470a45d1a6 ("panic: add option to dump all CPUs backtraces in panic_print")
+> Cc: Feng Tang <feng.tang@intel.com>
+> Cc: Petr Mladek <pmladek@suse.com>
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+> 
+> ---
+> 
+> V3:
+> - No changes.
+> 
+> V2:
+> - new patch, there was no V1 of this one.
+> 
+> Hi folks, thanks upfront for reviews. This is a new patch, fixing an issue
+> I found in my tests, so I shoved it into this fixes series.
+> 
+> Notice that while at it, I got rid of the "crash_kexec_post_notifiers"
+> local copy in panic(). This was introduced by commit b26e27ddfd2a
+> ("kexec: use core_param for crash_kexec_post_notifiers boot option"),
+> but it is not clear from comments or commit message why this local copy
+> is required.
+> 
+> My understanding is that it's a mechanism to prevent some concurrency,
+> in case some other CPU modify this variable while panic() is running.
+> I find it very unlikely, hence I removed it - but if people consider
+> this copy needed, I can respin this patch and keep it, even providing a
+> comment about that, in order to be explict about its need.
+> 
+> Let me know your thoughts! Cheers,
+> 
+> Guilherme
+> 
+> 
 
+Hi folks, bi-monthly ping - apologies for the noise heh
 
-Hi folks, monthly ping heheh
-Apologies for the re-pings, please let me know if there is anything
-required to move on this patch.
+Is there anything suggested so we can get this fix merged in 6.2? Any
+suggestions / reviews are much appreciated.
 
-Cheers,
+Tnx in advance,
 
 
 Guilherme
-
-
-P.S. I've been trimming the huge CC list in the series, done it here as
-well.
 
 _______________________________________________
 kexec mailing list
