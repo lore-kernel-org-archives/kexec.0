@@ -4,64 +4,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7DDAAC433FE
-	for <kexec@archiver.kernel.org>; Tue, 22 Nov 2022 15:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9CC01C4332F
+	for <kexec@archiver.kernel.org>; Tue, 22 Nov 2022 15:15:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=oF5PnrGNkCqmORqBPIGvwcpQcJw3osGLiQm4j8e1IwM=; b=Y7t/XZ/aAwu8eX
-	h5zAbd+83o6qganef6ALZDnGLO/9d3FUP3Rd/z/4M+aZfr9jaDnVbAtO01YFMxTShcZwQ71v7IG5P
-	rTTvTC3Es6ZivWXkJSVFTm2I05GfjhatjNDePH7z0VoKtIUh1E3vbXbWkZDOfRHTn7unNFiqTlHfO
-	FFiuNcaRFUkpKiRifBNeg9By959Y1ZMwwK+hKhS6Gupndbn1bq9T15Gaj2MbcAdgjlMverbOytaK5
-	FKhxwGDZvCPzgEdmWWE7Zzr/f0l7evUKR+R42+OQ9hw3G7+kbeC+fRa12mB/I8XvjtMOjhYq5mqEe
-	KADaOV6lmUTr0l9eq8uQ==;
+	List-Owner; bh=wxIBE9Ne0tKJl5OculMt0F4WDtScUQ4eC+kbslCzACU=; b=cgs/uH7TEE9Mjc
+	QgkTFiUEgwxQtTp7svuN5f7lQHysU0PPiLNOaqLXv9oE7lDTweXkTmF+4DEMjD/cLHwv++TvHr52j
+	9btLEiv2278RPn3So7K0j4TrPS4fLDzz31nVT5ek425b2/A2b5Zt72w1VQBf+JUF2ZJI0IVaqXrY/
+	cH4PPWZQJIb2UYT0iZrYPoUovSM/r1I07nUjp97y/OVrKERHN41IxOE/8yWx1ttfHXfhmslWM+6Um
+	0yzChPdcnt0ewXwVmtgJay2QmZLppufBoY4+K1+/W+yxiEsExwZLQAP7dGxNSyYlnARf4VRoug6XX
+	PH7eD9gpt1ZI9YoWfizQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oxUrg-00ACcv-1Y; Tue, 22 Nov 2022 15:07:12 +0000
-Received: from mail.skyhub.de ([5.9.137.197])
+	id 1oxUzZ-00AG4N-TB; Tue, 22 Nov 2022 15:15:21 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oxUrZ-00ACV3-Aq
-	for kexec@lists.infradead.org; Tue, 22 Nov 2022 15:07:07 +0000
-Received: from zn.tnic (p200300ea9733e79b329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9733:e79b:329c:23ff:fea6:a903])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 14C1C1EC04E2;
-	Tue, 22 Nov 2022 16:06:48 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-	t=1669129608;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-	bh=5yMV1ZCNV3SL3KeDjf/6/5dfqDL8Ilh1prBf3IRM6ZU=;
-	b=Wx1aIkqqyXz34T4ijeYsjo3X4fIguA60r9PaSI5S4+6cUmM14EhfTJMcwsE9KXP70C9FwM
-	BhiTrP9Sz7nraeCt/sT3Gowww7prx3tsfmZUcBL5oLO9iCscr/hsHZ+emgo9QKxcUukwZ1
-	6w0KNHT8mxHXL5v7BJ0K0Cm25jdAlpw=
-Date: Tue, 22 Nov 2022 16:06:42 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Rabara Niravkumar L <niravkumar.l.rabara@intel.com>
-Cc: Dinh Nguyen <dinguyen@kernel.org>, linux-edac@vger.kernel.org,
-	kexec@lists.infradead.org, pmladek@suse.com,
-	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org, x86@kernel.org, kernel-dev@igalia.com,
-	kernel@gpiccoli.net
-Subject: Re: [PATCH V3 08/11] EDAC/altera: Skip the panic notifier if kdump
- is loaded
-Message-ID: <Y3zlghMzlc1kzVJx@zn.tnic>
-References: <20220819221731.480795-1-gpiccoli@igalia.com>
- <20220819221731.480795-9-gpiccoli@igalia.com>
- <742d2a7e-efee-e212-178e-ba642ec94e2a@igalia.com>
- <eaba1a1a-31cd-932f-277c-267699d7be30@igalia.com>
+	id 1oxUzW-00AG0a-4X
+	for kexec@lists.infradead.org; Tue, 22 Nov 2022 15:15:20 +0000
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2AMEX8k6015368;
+	Tue, 22 Nov 2022 15:15:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=rhBffdYPdTlauIRdEqJ7HG27aUNvBoJ3ie8MoayMT0A=;
+ b=Wzi0acL257X8dP/rxKmZmg57Y+ydh0es7VHIINK7/7cFxyJd7CIpXs4ncHfO6JjPpa2z
+ KxdbbeHYIU//WczBldj/Ak0evZQvSELJEKEDAsee8heHL/49xXM8t0za2xj6AIDeMLC1
+ aflp/o42v5+IfxGOPKimLJd5pVdFRseXvdlTcs2WUAVWCCeZkW57sQK2HMJhW5pmj7Dj
+ 96RCz+TBEd21bZBvSnHkczCatnGJ/avSWdmi/5qX91RL/QxD0maOravzZ7XqXUg8Qs9J
+ fznNFslcDKUoJ540AsQs7NBiqipTIUKj/nIa7DZ4bNoCpHcSFPZLZ7W59eWQFW91YwEL aw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3m0x7ywpq1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 22 Nov 2022 15:15:12 +0000
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2AMCMT7p024785;
+	Tue, 22 Nov 2022 15:15:11 GMT
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3m0x7ywpp4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 22 Nov 2022 15:15:11 +0000
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+	by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2AMF5AFb014275;
+	Tue, 22 Nov 2022 15:15:09 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+	by ppma04ams.nl.ibm.com with ESMTP id 3kxps8vdww-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 22 Nov 2022 15:15:09 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+	by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2AMFFlAI51511710
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 22 Nov 2022 15:15:47 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7C9F2A4040;
+	Tue, 22 Nov 2022 15:15:06 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C13F9A4051;
+	Tue, 22 Nov 2022 15:15:05 +0000 (GMT)
+Received: from localhost (unknown [9.171.79.173])
+	by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+	Tue, 22 Nov 2022 15:15:05 +0000 (GMT)
+Date: Tue, 22 Nov 2022 16:15:04 +0100
+From: Vasily Gorbik <gor@linux.ibm.com>
+To: Coiby Xu <coxu@redhat.com>
+Cc: kexec@lists.infradead.org, Matthew Garrett <mjg59@srcf.ucam.org>,
+        Jiri Bohac <jbohac@suse.cz>, David Howells <dhowells@redhat.com>,
+        Philipp Rudo <prudo@redhat.com>, linux-s390@vger.kernel.org,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>, James Morris <jmorris@namei.org>,
+        Matthew Garrett <mjg59@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>
+Subject: Re: [PATCH] lockdown: s390: kexec_file: don't skip signature
+ verification when not secure IPLed
+Message-ID: <your-ad-here.call-01669130104-ext-3635@work.hours>
+References: <20221121072715.836323-1-coxu@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <eaba1a1a-31cd-932f-277c-267699d7be30@igalia.com>
+In-Reply-To: <20221121072715.836323-1-coxu@redhat.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Xmuclpu3WEszRI2qNbRBVQlm7RMy6X6b
+X-Proofpoint-ORIG-GUID: hqOy_mHrsET4QwN4av8WH--pPNhPAy8G
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-11-22_09,2022-11-18_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
+ malwarescore=0 mlxscore=0 mlxlogscore=999 spamscore=0 phishscore=0
+ bulkscore=0 suspectscore=0 priorityscore=1501 clxscore=1011
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2210170000 definitions=main-2211220113
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221122_070705_554422_C5E9ACBA 
-X-CRM114-Status: GOOD (  26.10  )
+X-CRM114-CacheID: sfid-20221122_071518_546911_144ED542 
+X-CRM114-Status: GOOD (  17.66  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,79 +117,32 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Nov 22, 2022 at 10:33:12AM -0300, Guilherme G. Piccoli wrote:
+On Mon, Nov 21, 2022 at 03:27:15PM +0800, Coiby Xu wrote:
+> --- a/arch/s390/kernel/machine_kexec_file.c
+> +++ b/arch/s390/kernel/machine_kexec_file.c
+> @@ -33,10 +33,6 @@ int s390_verify_sig(const char *kernel, unsigned long kernel_len)
+>  	unsigned long sig_len;
+>  	int ret;
+>  
+> -	/* Skip signature verification when not secure IPLed. */
+> -	if (!ipl_secure_flag)
+> -		return 0;
 
-Leaving in the whole thing for newly added people.
+Looking at s390_verify_sig() especially before commit 0828c4a39be5
+("kexec, KEYS, s390: Make use of built-in and secondary keyring for
+signature verification") I think this condition actually expresses
+2 things:
+1. the firmware is secure IPL capable and secure IPL keys are
+   provided and present in platform keyring.
+2. secure IPL is enabled.
 
-> On 18/09/2022 11:10, Guilherme G. Piccoli wrote:
-> > On 19/08/2022 19:17, Guilherme G. Piccoli wrote:
-> >> The altera_edac panic notifier performs some data collection with
-> >> regards errors detected; such code relies in the regmap layer to
-> >> perform reads/writes, so the code is abstracted and there is some
-> >> risk level to execute that, since the panic path runs in atomic
-> >> context, with interrupts/preemption and secondary CPUs disabled.
-> >>
-> >> Users want the information collected in this panic notifier though,
-> >> so in order to balance the risk/benefit, let's skip the altera panic
-> >> notifier if kdump is loaded. While at it, remove a useless header
-> >> and encompass a macro inside the sole ifdef block it is used.
-> >>
-> >> Cc: Borislav Petkov <bp@alien8.de>
-> >> Cc: Petr Mladek <pmladek@suse.com>
-> >> Cc: Tony Luck <tony.luck@intel.com>
-> >> Acked-by: Dinh Nguyen <dinguyen@kernel.org>
-> >> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
-> >>
-> >> ---
-> >>
-> >> V3:
-> >> - added the ack tag from Dinh - thanks!
-> >> - had a good discussion with Boris about that in V2 [0],
-> >> hopefully we can continue and reach a consensus in this V3.
-> >> [0] https://lore.kernel.org/lkml/46137c67-25b4-6657-33b7-cffdc7afc0d7@igalia.com/
-> >>
-> >> V2:
-> >> - new patch, based on the discussion in [1].
-> >> [1] https://lore.kernel.org/lkml/62a63fc2-346f-f375-043a-fa21385279df@igalia.com/
-> >>
-> >> [...]
-> > 
-> > Hi Dinh, Tony, Boris - sorry for the ping.
-> > 
-> > Appreciate reviews on this one - Dinh already ACKed the patch but Boris
-> > raised some points in the past version [0], so any opinions or
-> > discussions are welcome!
-> 
-> 
-> Hi folks, monthly ping heheh
-> Apologies for the re-pings, please let me know if there is anything
-> required to move on this patch.
-
-Looking at this again, I really don't like the sprinkling of
-
-	if (kexec_crash_loaded())
-
-in unrelated code. And I still think that the real fix here is to kill
-this
-
-	edac->panic_notifier
-
-thing. And replace it with simply logging the error from the double bit
-error interrupt handle. That DBERR IRQ thing altr_edac_a10_irq_handler().
-Because this is what this panic notifier does - dump double-bit errors.
-
-Now, if Dinh doesn't move, I guess we can ask Tony and/or Rabara (he has
-sent a patch for this driver recently and Altera belongs to Intel now)
-to find someone who can test such a change and we (you could give it a
-try first :)) can do that change.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Wouldn't this change have implications for machines with older firmware
+which doesn't support secure IPL? In this case platform keyring won't
+have any secure IPL keys (since firmware doesn't provide them)
+and any properly signed kernels will be rejected for kexec in this
+function. Unless secure IPL keys are also present in built-in or secondary
+keyring (which is possible after commit 0828c4a39be5) - is that what
+distributions normally do?
 
 _______________________________________________
 kexec mailing list
