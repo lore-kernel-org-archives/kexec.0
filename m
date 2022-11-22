@@ -4,67 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 45A83C433FE
-	for <kexec@archiver.kernel.org>; Mon, 21 Nov 2022 22:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7F1D0C43217
+	for <kexec@archiver.kernel.org>; Tue, 22 Nov 2022 02:29:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=KkAPF3H0BYjxDnBMfHpHHW29PlyB7osLy6zhuLxlYIg=; b=n8AEkumaV5X+P3MP8P1988WFxR
-	47EZMntwgP1ZCi/NsrnpQC061rF7qVmZIcFzUAk4eDhEEXE4x9KT+Xtr9Qenq2auQaQWz0fEUSY6w
-	i4EBi0y79G89GyvvTuyu+woX/mN9HkYvqmUG4kyKzHp+I8x675qcaSZhhzVeQDfrwxTEqDo8D51o8
-	vpUsBXcv+gsReSnD77wIwgPpG+FP2/iZWfeUFfm5qMnKmOqIifWhjaAbGCKfE10vEVcARhM3Y8ufb
-	FU+lslRXFgHU9HwyGZ+zWX53QhWVqrcIXIFLahYCilAPEUwPObDMziX3/iO4z+Ar7mAeUuTGgrsYx
-	2DGJ2rIw==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=ATgV8888TyTRFTJljrYRsEGBx6EgLI5cIUm66GarmJY=; b=D+or0N4BtcSPwe
+	fwXQjjTsApKvvJkvrzpJOc2APNf9vT/IpJPeb3wBO/oh6giKhdgLM6NQQpb7oMnX3hPwVfNXss2WA
+	6pxRhE+d5PtrKhkS7FNxX49O6gXbtbWF+Lm98J5+W+HvpQIb5t0HTcp1U5676MFwYhea9HZI0uyR7
+	nhh+ex5GxlQUW403d1V1LjvuGyYdclnXMQ0RVAwomCCI6kGojEspkUQ0E34rDYhcfBBEL7APrVwi7
+	HFKCFGqfz2vqPKrjRvVHXnDhAvOTYm6Hpf418IS590jqjm8DHjvp/67muwqeLV85zshM6J4MFXAXz
+	vZkOKNh1NdHoJ/21BZwQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oxF9Z-000nOG-Jl; Mon, 21 Nov 2022 22:20:37 +0000
-Received: from mga03.intel.com ([134.134.136.65])
+	id 1oxJ22-002SKj-KX; Tue, 22 Nov 2022 02:29:06 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oxF9W-000nMN-Tm
-	for kexec@lists.infradead.org; Mon, 21 Nov 2022 22:20:36 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669069234; x=1700605234;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=xlW8y8zryooJmHhhVNbAI7pzH6YQli4bZCBZJRowLKg=;
-  b=jrFXapKgamRXRT5UqKGCcUW7DX4Ry8I7USaFiSLpbqiPmEhdPOeosYLv
-   HdoxwNglv6UC3tpdc9jXDJuqlWH19JcOq8+NOkI4c6mWv2DqseoJ+ZsPD
-   actBB0IPqhr39lD3SbxkSmYv9cqHxBWsNbGdUWJ3WbJAdQ2iCKSdEqyV8
-   l9J/Q/CWzCj63mhuILzgRS/f5BLulbkaGnazdHZTyWx05Z4Fe7BAZX3GZ
-   s+f5xN6Seb+PO/wOZtqOWFQy6OLp2mcKqeKcIKOlWQxiiViJ4UuTtevNZ
-   +dB9PvhRS++uIYFHza24ISUAb99SwNtAJhJZi9dk0g9FdZTiNgwrEFlzy
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10538"; a="315495589"
-X-IronPort-AV: E=Sophos;i="5.96,182,1665471600"; 
-   d="scan'208";a="315495589"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2022 14:20:33 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10538"; a="747086731"
-X-IronPort-AV: E=Sophos;i="5.96,182,1665471600"; 
-   d="scan'208";a="747086731"
-Received: from kmlindbe-mobl.amr.corp.intel.com (HELO desk) ([10.212.209.190])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2022 14:20:32 -0800
-Date: Mon, 21 Nov 2022 14:20:31 -0800
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Breno Leitao <leitao@debian.org>
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, leit@meta.com, cascardo@canonical.com,
-	hpa@zytor.com, jpoimboe@kernel.org, peterz@infradead.org,
-	x86@kernel.org, kexec@lists.infradead.org
-Subject: Re: [PATCH] x86/bugs: Explicitly clear speculative MSR bits
-Message-ID: <20221121222031.uo2n7fv7ojusxvr4@desk>
-References: <20221118194602.vpo4xjm4s7knm7ja@desk>
- <20221120120255.13054-1-leitao@debian.org>
+	id 1oxJ1z-002SIi-MR
+	for kexec@lists.infradead.org; Tue, 22 Nov 2022 02:29:05 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1669084142;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hEmhWIzG88GfbOvn0VVAGamAN6Tv4nOnLrUclwx8MGE=;
+	b=ASfLAThrJGEgSjV3Qyp3+u9TNAGK5Z9JVT7Pz2Rsf0I1t4vVzk0GLjri1H3/wGcZUjKjTl
+	NY3IZr71GQqxGVe1DFZydAD6dgn3MNMYx3Kv/9H20IRymh1JDyaJf+xEk+MlzhedLH7TMJ
+	Rdb6XBPWHqBt5Tgz+GR2NkwzNnVMrJ4=
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
+ [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-222-_25qrA3WPayla9ji4TCIiQ-1; Mon, 21 Nov 2022 21:29:00 -0500
+X-MC-Unique: _25qrA3WPayla9ji4TCIiQ-1
+Received: by mail-pj1-f70.google.com with SMTP id n9-20020a17090a2bc900b0021010dca313so6820102pje.7
+        for <kexec@lists.infradead.org>; Mon, 21 Nov 2022 18:29:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hEmhWIzG88GfbOvn0VVAGamAN6Tv4nOnLrUclwx8MGE=;
+        b=c06+/UKIlis13VZuy/oOfwVTg6Y5CvZKQDpV4NWHjwEq0BvF5iYHmeeBrc8ri+DvdS
+         OydUh+Yp1EkqB079PMTfV7pQqKCsviI42FR0JsoOa0ZbrBBMa/6h6//XqvBrEDQ0LfWi
+         vbpJxXK+Uh9jExuXdULCCfUU/RzjqSzPRpWaXAE242+z6tUhx79xYqP3c0X77pXuLhgE
+         07HGxZF3l7epl1i4HJ6gSdb2TQg7v1Lxtk42Pk2pvvgDtJJ0dULSlVEc55sJEHpJ91Pg
+         /heLsmI7up4IT694+sNk7fnoqdFR1EtqaxKVIgV4NdY1XkqtoYCcT/Am0vkhDatsHaa3
+         4UUg==
+X-Gm-Message-State: ANoB5pkYlZVC9FcltRSaMquzXUXs3tn5nHZ7Vm9G6gyRVa2MJUVS7vdN
+	nfYUQYbkbuJbMyp/B5RqU8LmRVPvlMdUTjM6x2hUB45fxk1nGwDAD2HY4/9i5R4moeV81sjB3nG
+	dV3rUCGe8wr/fEjg/4yInNjfFcHB95EyB5z7O41FZzZdoCehmjNEsM1qDx6MMSEtXGbs=
+X-Received: by 2002:a17:90a:5918:b0:213:ff:1cda with SMTP id k24-20020a17090a591800b0021300ff1cdamr22749682pji.86.1669084139397;
+        Mon, 21 Nov 2022 18:28:59 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf64JiXXabiXu4vcDpmIq38bPW0Ra2Qsb9SUEESTKt8MF2CRsg61tFBxLECGkJJFsOUhhUh8Dw==
+X-Received: by 2002:a17:90a:5918:b0:213:ff:1cda with SMTP id k24-20020a17090a591800b0021300ff1cdamr22749644pji.86.1669084138958;
+        Mon, 21 Nov 2022 18:28:58 -0800 (PST)
+Received: from localhost ([240e:3a1:2e3:6280:f5b8:e7c9:62bf:459])
+        by smtp.gmail.com with ESMTPSA id a27-20020aa794bb000000b0056e8eb09d57sm9393859pfl.63.2022.11.21.18.28.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Nov 2022 18:28:58 -0800 (PST)
+From: Coiby Xu <coxu@redhat.com>
+To: kexec@lists.infradead.org
+Cc: Mimi Zohar <zohar@linux.ibm.com>,
+	Matthew Garrett <mjg59@srcf.ucam.org>,
+	Jiri Bohac <jbohac@suse.cz>,
+	David Howells <dhowells@redhat.com>,
+	linux-integrity@vger.kernel.org,
+	Eric Biederman <ebiederm@xmission.com>,
+	Matthew Garrett <mjg59@google.com>,
+	James Morris <jmorris@namei.org>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] lockdown: kexec_file: prevent unsigned kernel image when KEXEC_SIG not enabled
+Date: Tue, 22 Nov 2022 10:28:55 +0800
+Message-Id: <20221122022855.888910-1-coxu@redhat.com>
+X-Mailer: git-send-email 2.38.1
+In-Reply-To: <20221121072947.836672-1-coxu@redhat.com>
+References: <20221121072947.836672-1-coxu@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20221120120255.13054-1-leitao@debian.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221121_142035_065133_0F7A6C72 
-X-CRM114-Status: GOOD (  17.38  )
+X-CRM114-CacheID: sfid-20221121_182903_837858_B88260DE 
+X-CRM114-Status: GOOD (  16.06  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,74 +100,92 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sun, Nov 20, 2022 at 12:02:55PM +0000, Breno Leitao wrote:
->Currently x86_spec_ctrl_base is read at boot time, and speculative bits
->are set if configs are enable, such as MSR[SPEC_CTRL_IBRS] is enabled if
->CONFIG_CPU_IBRS_ENTRY is configured. These MSR bits are not cleared if
->the CONFIGs are not set.
+A kernel builder may not enable KEXEC_SIG and some architectures like
+ppc64 simply don't have KEXEC_SIG. In these cases, unless both
+IMA_ARCH_POLICY and secure boot also enabled, lockdown doesn't prevent
+unsigned kernel image from being kexec'ed via the kexec_file_load
+syscall whereas it could prevent one via the kexec_load syscall. Mandate
+signature verification for those cases.
 
-Also when the CONFIGs are set but the mitigations are disabled at
-runtime e.g. using mitigations=off parameter.
+Fixes: 155bdd30af17 ("kexec_file: Restrict at runtime if the kernel is locked down")
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>
+Cc: Jiri Bohac <jbohac@suse.cz>
+Cc: David Howells <dhowells@redhat.com>
+Cc: kexec@lists.infradead.org
+Cc: linux-integrity@vger.kernel.org
+Signed-off-by: Coiby Xu <coxu@redhat.com>
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+---
+v2
+ - collect reviewed-by tag from Mimi
+ - s/mandate_signatute_verification/mandate_signature_verification [Mimi]
+ - return the status of kexec_image_verify_sig correctly when signature
+   verification is not mandated
+---
+ kernel/kexec_file.c | 26 +++++++++++++++++---------
+ 1 file changed, 17 insertions(+), 9 deletions(-)
 
->This is a problem when kexec-ing a kernel that has the mitigation
->disabled, from a kernel that has the mitigation enabled. In this case,
->the MSR bits are carried forward and not cleared at the boot of the new
->kernel. This might have some performance degradation that is hard to
->find.
->
->This problem does not happen if the machine is (hard) rebooted, because
->the bit will be cleared by default.
->
->This patch also defines a SPEC_CTRL_MASK macro, so, we can easily track
->and clear if eventually some new mitigation show up.
->
->Suggested-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
->Signed-off-by: Breno Leitao <leitao@debian.org>
->---
-> arch/x86/include/asm/msr-index.h |  3 +++
-> arch/x86/kernel/cpu/bugs.c       | 10 +++++++++-
-> 2 files changed, 12 insertions(+), 1 deletion(-)
->
->diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
->index 10ac52705892..672de926281e 100644
->--- a/arch/x86/include/asm/msr-index.h
->+++ b/arch/x86/include/asm/msr-index.h
->@@ -54,6 +54,9 @@
-> #define SPEC_CTRL_RRSBA_DIS_S_SHIFT	6	   /* Disable RRSBA behavior */
-> #define SPEC_CTRL_RRSBA_DIS_S		BIT(SPEC_CTRL_RRSBA_DIS_S_SHIFT)
->
->+#define SPEC_CTRL_MASK			(SPEC_CTRL_IBRS | SPEC_CTRL_STIBP | SPEC_CTRL_SSBD \
->+							| SPEC_CTRL_RRSBA_DIS_S)
->+
-> #define MSR_IA32_PRED_CMD		0x00000049 /* Prediction Command */
-> #define PRED_CMD_IBPB			BIT(0)	   /* Indirect Branch Prediction Barrier */
->
->diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
->index 3e3230cccaa7..970b277d02a6 100644
->--- a/arch/x86/kernel/cpu/bugs.c
->+++ b/arch/x86/kernel/cpu/bugs.c
->@@ -137,8 +137,16 @@ void __init check_bugs(void)
-> 	 * have unknown values. AMD64_LS_CFG MSR is cached in the early AMD
-> 	 * init code as it is not enumerated and depends on the family.
-> 	 */
->-	if (boot_cpu_has(X86_FEATURE_MSR_SPEC_CTRL))
->+	if (boot_cpu_has(X86_FEATURE_MSR_SPEC_CTRL)) {
-> 		rdmsrl(MSR_IA32_SPEC_CTRL, x86_spec_ctrl_base);
->+		/*
->+		 * Previously running software may have some controls turned ON.
->+		 * Clear them and let kernel decide which controls to use.
->+		 */
->+		x86_spec_ctrl_base &= ~SPEC_CTRL_MASK;
->+		wrmsrl(MSR_IA32_SPEC_CTRL, x86_spec_ctrl_base);
->+	}
->+
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 45637511e0de..dcde7a50fbeb 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -125,6 +125,17 @@ void kimage_file_post_load_cleanup(struct kimage *image)
+ 	image->image_loader_data = NULL;
+ }
+ 
++static bool mandate_signature_verification(void)
++{
++	/*
++	 * If IMA is guaranteed to appraise a signature on the kexec
++	 * image, permit it even if the kernel is otherwise locked
++	 * down.
++	 */
++	return !ima_appraise_signature(READING_KEXEC_IMAGE) &&
++	       security_locked_down(LOCKDOWN_KEXEC);
++}
++
+ #ifdef CONFIG_KEXEC_SIG
+ #ifdef CONFIG_SIGNED_PE_FILE_VERIFICATION
+ int kexec_kernel_verify_pe_sig(const char *kernel, unsigned long kernel_len)
+@@ -168,13 +179,7 @@ kimage_validate_signature(struct kimage *image)
+ 			return ret;
+ 		}
+ 
+-		/*
+-		 * If IMA is guaranteed to appraise a signature on the kexec
+-		 * image, permit it even if the kernel is otherwise locked
+-		 * down.
+-		 */
+-		if (!ima_appraise_signature(READING_KEXEC_IMAGE) &&
+-		    security_locked_down(LOCKDOWN_KEXEC))
++		if (mandate_signature_verification())
+ 			return -EPERM;
+ 
+ 		pr_debug("kernel signature verification failed (%d).\n", ret);
+@@ -211,10 +216,13 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 
+ #ifdef CONFIG_KEXEC_SIG
+ 	ret = kimage_validate_signature(image);
+-
++#else
++	if (mandate_signature_verification())
++		ret = -EPERM;
++#endif
+ 	if (ret)
+ 		goto out;
+-#endif
++
+ 	/* It is possible that there no initramfs is being loaded */
+ 	if (!(flags & KEXEC_FILE_NO_INITRAMFS)) {
+ 		ret = kernel_read_file_from_fd(initrd_fd, 0, &image->initrd_buf,
+-- 
+2.38.1
 
-Nit, extra newline.
 
 _______________________________________________
 kexec mailing list
