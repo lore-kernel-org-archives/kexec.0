@@ -4,63 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 40C8AC433FE
-	for <kexec@archiver.kernel.org>; Tue, 22 Nov 2022 13:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7DDAAC433FE
+	for <kexec@archiver.kernel.org>; Tue, 22 Nov 2022 15:07:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
-	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=K5psJqE4H7X36L5IfPFI8/mxkaFR3/avimUXtDPFVGw=; b=vkK9VZZ1MUdGW8
-	HS1GsB54oUeAnbMEuItHl/He/v5N0utAxJ5QkWhOS9Cs6ufMAmO5EbyoL97SpwyLm9lrV+dTB6MdW
-	njb6vRn7lH8FPhRSLSKzOQqH50fZ0VFphLWY022N96D7vm/EhwCLY/yXqZSM25OqEC13LJ0UKvhL8
-	B3IEBzE2rsfmCwUQQnTCAB/qPhVQaFamL6oG+r4+jpmQNmRdL3rFd0K6Yb/PSYNXH/efWdCFeGH8o
-	OuGwI/A2eSWoYMKmvgp33/ttVZ2AARh4EFTL7m78Ek6W4or+XIj1ErEHzN2SQs1lQsFsdXPlhloEf
-	btnV0qaFgy4lcmABPyMQ==;
+	List-Owner; bh=oF5PnrGNkCqmORqBPIGvwcpQcJw3osGLiQm4j8e1IwM=; b=Y7t/XZ/aAwu8eX
+	h5zAbd+83o6qganef6ALZDnGLO/9d3FUP3Rd/z/4M+aZfr9jaDnVbAtO01YFMxTShcZwQ71v7IG5P
+	rTTvTC3Es6ZivWXkJSVFTm2I05GfjhatjNDePH7z0VoKtIUh1E3vbXbWkZDOfRHTn7unNFiqTlHfO
+	FFiuNcaRFUkpKiRifBNeg9By959Y1ZMwwK+hKhS6Gupndbn1bq9T15Gaj2MbcAdgjlMverbOytaK5
+	FKhxwGDZvCPzgEdmWWE7Zzr/f0l7evUKR+R42+OQ9hw3G7+kbeC+fRa12mB/I8XvjtMOjhYq5mqEe
+	KADaOV6lmUTr0l9eq8uQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oxTRE-009fxi-74; Tue, 22 Nov 2022 13:35:48 +0000
-Received: from fanzine2.igalia.com ([213.97.179.56])
+	id 1oxUrg-00ACcv-1Y; Tue, 22 Nov 2022 15:07:12 +0000
+Received: from mail.skyhub.de ([5.9.137.197])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oxTRA-009fx4-Qz
-	for kexec@lists.infradead.org; Tue, 22 Nov 2022 13:35:46 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=rSYIGGtjZljFBal86Avbxge1dAX05jgxf9qrktsTsB8=; b=MX800+aYXTdyYof4USzixvuPvg
-	9FbkPgWEf4yn5YKSZ6YZvZYMUIrJ83siHY3JDQnjBib+dAZOvIjPcv4rwFWWZmC8nuU/CNyqTv37J
-	LI9uahtiyTlFT5sg3l2Jt6DAPlbV/eGuCYZHMx1mJgP8y9VUP0QV5AhKWiiwBT3/TtAdOZxoHUjGo
-	wBjoV4n84SXGRfQJ1FQgM2titKAX9RMXtyQrLP2E1UPM76R5ywtg8b8JzSylFz4KM6CKbhsW2RDhw
-	2Wuo/c750D1OMJECUK35f1MTpZl3Tuqe5CqaKSXYSU2Si3ILxqlcvyZFxEYL6RqkDNw1VeQ19rA9/
-	QwSDYHeg==;
-Received: from [177.102.6.147] (helo=[192.168.1.60])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1oxTR5-006yBT-L8; Tue, 22 Nov 2022 14:35:39 +0100
-Message-ID: <831175d7-1b30-de61-d6c5-cbb91e4fdcfb@igalia.com>
-Date: Tue, 22 Nov 2022 10:35:34 -0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
-Subject: Re: [PATCH V3 11/11] panic: Fixes the panic_print NMI backtrace
- setting
-Content-Language: en-US
-To: akpm@linux-foundation.org, bhe@redhat.com, pmladek@suse.com,
- feng.tang@intel.com
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-hyperv@vger.kernel.org, netdev@vger.kernel.org, x86@kernel.org,
- kernel-dev@igalia.com, kernel@gpiccoli.net
+	id 1oxUrZ-00ACV3-Aq
+	for kexec@lists.infradead.org; Tue, 22 Nov 2022 15:07:07 +0000
+Received: from zn.tnic (p200300ea9733e79b329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9733:e79b:329c:23ff:fea6:a903])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 14C1C1EC04E2;
+	Tue, 22 Nov 2022 16:06:48 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+	t=1669129608;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+	bh=5yMV1ZCNV3SL3KeDjf/6/5dfqDL8Ilh1prBf3IRM6ZU=;
+	b=Wx1aIkqqyXz34T4ijeYsjo3X4fIguA60r9PaSI5S4+6cUmM14EhfTJMcwsE9KXP70C9FwM
+	BhiTrP9Sz7nraeCt/sT3Gowww7prx3tsfmZUcBL5oLO9iCscr/hsHZ+emgo9QKxcUukwZ1
+	6w0KNHT8mxHXL5v7BJ0K0Cm25jdAlpw=
+Date: Tue, 22 Nov 2022 16:06:42 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Rabara Niravkumar L <niravkumar.l.rabara@intel.com>
+Cc: Dinh Nguyen <dinguyen@kernel.org>, linux-edac@vger.kernel.org,
+	kexec@lists.infradead.org, pmladek@suse.com,
+	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org, x86@kernel.org, kernel-dev@igalia.com,
+	kernel@gpiccoli.net
+Subject: Re: [PATCH V3 08/11] EDAC/altera: Skip the panic notifier if kdump
+ is loaded
+Message-ID: <Y3zlghMzlc1kzVJx@zn.tnic>
 References: <20220819221731.480795-1-gpiccoli@igalia.com>
- <20220819221731.480795-12-gpiccoli@igalia.com>
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <20220819221731.480795-12-gpiccoli@igalia.com>
+ <20220819221731.480795-9-gpiccoli@igalia.com>
+ <742d2a7e-efee-e212-178e-ba642ec94e2a@igalia.com>
+ <eaba1a1a-31cd-932f-277c-267699d7be30@igalia.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <eaba1a1a-31cd-932f-277c-267699d7be30@igalia.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221122_053544_904083_A6D41439 
-X-CRM114-Status: GOOD (  21.57  )
+X-CRM114-CacheID: sfid-20221122_070705_554422_C5E9ACBA 
+X-CRM114-Status: GOOD (  26.10  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,60 +78,79 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 19/08/2022 19:17, Guilherme G. Piccoli wrote:
-> Commit 8d470a45d1a6 ("panic: add option to dump all CPUs backtraces in panic_print")
-> introduced a setting for the "panic_print" kernel parameter to allow
-> users to request a NMI backtrace on panic. Problem is that the panic_print
-> handling happens after the secondary CPUs are already disabled, hence
-> this option ended-up being kind of a no-op - kernel skips the NMI trace
-> in idling CPUs, which is the case of offline CPUs.
-> 
-> Fix it by checking the NMI backtrace bit in the panic_print prior to
-> the CPU disabling function.
-> 
-> Fixes: 8d470a45d1a6 ("panic: add option to dump all CPUs backtraces in panic_print")
-> Cc: Feng Tang <feng.tang@intel.com>
-> Cc: Petr Mladek <pmladek@suse.com>
-> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
-> 
-> ---
-> 
-> V3:
-> - No changes.
-> 
-> V2:
-> - new patch, there was no V1 of this one.
-> 
-> Hi folks, thanks upfront for reviews. This is a new patch, fixing an issue
-> I found in my tests, so I shoved it into this fixes series.
-> 
-> Notice that while at it, I got rid of the "crash_kexec_post_notifiers"
-> local copy in panic(). This was introduced by commit b26e27ddfd2a
-> ("kexec: use core_param for crash_kexec_post_notifiers boot option"),
-> but it is not clear from comments or commit message why this local copy
-> is required.
-> 
-> My understanding is that it's a mechanism to prevent some concurrency,
-> in case some other CPU modify this variable while panic() is running.
-> I find it very unlikely, hence I removed it - but if people consider
-> this copy needed, I can respin this patch and keep it, even providing a
-> comment about that, in order to be explict about its need.
-> 
-> Let me know your thoughts! Cheers,
-> 
-> Guilherme
-> 
-> 
+On Tue, Nov 22, 2022 at 10:33:12AM -0300, Guilherme G. Piccoli wrote:
 
-Hi folks, bi-monthly ping - apologies for the noise heh
+Leaving in the whole thing for newly added people.
 
-Is there anything suggested so we can get this fix merged in 6.2? Any
-suggestions / reviews are much appreciated.
+> On 18/09/2022 11:10, Guilherme G. Piccoli wrote:
+> > On 19/08/2022 19:17, Guilherme G. Piccoli wrote:
+> >> The altera_edac panic notifier performs some data collection with
+> >> regards errors detected; such code relies in the regmap layer to
+> >> perform reads/writes, so the code is abstracted and there is some
+> >> risk level to execute that, since the panic path runs in atomic
+> >> context, with interrupts/preemption and secondary CPUs disabled.
+> >>
+> >> Users want the information collected in this panic notifier though,
+> >> so in order to balance the risk/benefit, let's skip the altera panic
+> >> notifier if kdump is loaded. While at it, remove a useless header
+> >> and encompass a macro inside the sole ifdef block it is used.
+> >>
+> >> Cc: Borislav Petkov <bp@alien8.de>
+> >> Cc: Petr Mladek <pmladek@suse.com>
+> >> Cc: Tony Luck <tony.luck@intel.com>
+> >> Acked-by: Dinh Nguyen <dinguyen@kernel.org>
+> >> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+> >>
+> >> ---
+> >>
+> >> V3:
+> >> - added the ack tag from Dinh - thanks!
+> >> - had a good discussion with Boris about that in V2 [0],
+> >> hopefully we can continue and reach a consensus in this V3.
+> >> [0] https://lore.kernel.org/lkml/46137c67-25b4-6657-33b7-cffdc7afc0d7@igalia.com/
+> >>
+> >> V2:
+> >> - new patch, based on the discussion in [1].
+> >> [1] https://lore.kernel.org/lkml/62a63fc2-346f-f375-043a-fa21385279df@igalia.com/
+> >>
+> >> [...]
+> > 
+> > Hi Dinh, Tony, Boris - sorry for the ping.
+> > 
+> > Appreciate reviews on this one - Dinh already ACKed the patch but Boris
+> > raised some points in the past version [0], so any opinions or
+> > discussions are welcome!
+> 
+> 
+> Hi folks, monthly ping heheh
+> Apologies for the re-pings, please let me know if there is anything
+> required to move on this patch.
 
-Tnx in advance,
+Looking at this again, I really don't like the sprinkling of
 
+	if (kexec_crash_loaded())
 
-Guilherme
+in unrelated code. And I still think that the real fix here is to kill
+this
+
+	edac->panic_notifier
+
+thing. And replace it with simply logging the error from the double bit
+error interrupt handle. That DBERR IRQ thing altr_edac_a10_irq_handler().
+Because this is what this panic notifier does - dump double-bit errors.
+
+Now, if Dinh doesn't move, I guess we can ask Tony and/or Rabara (he has
+sent a patch for this driver recently and Altera belongs to Intel now)
+to find someone who can test such a change and we (you could give it a
+try first :)) can do that change.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
 
 _______________________________________________
 kexec mailing list
