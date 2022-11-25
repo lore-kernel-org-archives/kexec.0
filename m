@@ -4,72 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AE38AC4332F
-	for <kexec@archiver.kernel.org>; Fri, 25 Nov 2022 03:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 73D49C4332F
+	for <kexec@archiver.kernel.org>; Fri, 25 Nov 2022 05:53:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=fUz2wMqdI9ejRNRPnMQiBXukM8ydMKQgf3+fU6kU+/g=; b=K+7BkLN1UcBpbo
-	p52rfR2bVpkjkY1I5+OE8x3a2LObSLAMSwAdD1RPE+kBSvSKFcox4OK0eQHmzoH8c02Sd3k91PywL
-	HmV6zkBdZY1sg20s/E7JbGO8RNX14cc1ytBs3nd/83lNPgr5DLUiqi8PNvZ62BIJM2AnAZ4y4hDIc
-	L+9h8q7DS4QBVU7I/2kqEyVp7e+HgtvernT2w0Z0xa2lO8dvytcMYcGRbKgCMlDmPNdbWByg6wPWR
-	XCuT7qE4hyndGSgyRXtUb33lsMq5bFmFukV/QNZeodNQxwMJbRnRZbiqANi8w5WKUIzi1Tgx8M5AL
-	9HEwR60FReGwPE4ra0QQ==;
+	List-Owner; bh=vCv7JDLtQngqsWE+gbo/caEjs8NJksyeOn8No3fRuTw=; b=QanxRCkQADgx9L
+	xmTWwS63OSTI/QNCfR3gXNWSa7Vd803Ca6jll63QL06ITqS25Epl8AaWBEgUhaovD9DcjMFYOG9IJ
+	g4mv9Ub20CJ5pQ/ZTP/XPg8/QxEZxZh7x8AKl6yiMUT8BAnfeYU+Rk1nFfxOe+RtRXewhXGel2RFx
+	U5yJSAdgUBvT6dY0rhLx5oscSoXTZN3QE7JbWhyt4kRWp1CBne4SrRdAZUWoBJg1oTyLbXI88sKpT
+	IDbKXJKPbhhKUAkXRdP4QMg1xbUhrGpARl4uogTK8r53JG/gexe/ibpX02NxdL3yYBth7AFngErQD
+	TzVdhU2H+IEo2ru+9SDg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oyPMq-00CLzZ-Ub; Fri, 25 Nov 2022 03:27:08 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1oyReI-00DPGJ-21; Fri, 25 Nov 2022 05:53:18 +0000
+Received: from mail-io1-xd2e.google.com ([2607:f8b0:4864:20::d2e])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oyPMo-00CLy5-7l
-	for kexec@lists.infradead.org; Fri, 25 Nov 2022 03:27:08 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1669346824;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JwS+i6RHG4xio2GVK1XiM/i9nFbjB+wVt/xavPQmn3c=;
-	b=OzSloXY0dPSrpbOnXEPgh0zSdhRpKLAGAKQe95DDY/XctkTcf9wo9O89mKqu68WwZ42ZHS
-	5+HtFKdvRb3oy22v5Isb2wIGNFp0nDNZyXcONI47gtpxvR9zbJJ1o1iYfcaJLJ/fdsbL4v
-	Tn9Pn8kd5P8g4hNisFlKOMCDp5p6zq8=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-76-BDApgZi3M5KZkQ13ZWGYHQ-1; Thu, 24 Nov 2022 22:27:00 -0500
-X-MC-Unique: BDApgZi3M5KZkQ13ZWGYHQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 521AC3804507;
-	Fri, 25 Nov 2022 03:26:59 +0000 (UTC)
-Received: from localhost (ovpn-12-208.pek2.redhat.com [10.72.12.208])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id C5DF540C6DC7;
-	Fri, 25 Nov 2022 03:26:57 +0000 (UTC)
-Date: Fri, 25 Nov 2022 11:26:53 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Eric DeVolder <eric.devolder@oracle.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org,
-	ebiederm@xmission.com, dyoung@redhat.com, vgoyal@redhat.com,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, hpa@zytor.com,
-	nramas@linux.microsoft.com, thomas.lendacky@amd.com,
-	robh@kernel.org, efault@gmx.de, rppt@kernel.org, david@redhat.com,
-	sourabhjain@linux.ibm.com, konrad.wilk@oracle.com,
-	boris.ostrovsky@oracle.com
-Subject: Re: [PATCH v14 3/7] crash: add generic infrastructure for crash
- hotplug support
-Message-ID: <Y4A1/cSekXUTFriC@MiWiFi-R3L-srv>
-References: <20221116214643.6384-1-eric.devolder@oracle.com>
- <20221116214643.6384-4-eric.devolder@oracle.com>
+	id 1oyReE-00DPDj-MT
+	for kexec@lists.infradead.org; Fri, 25 Nov 2022 05:53:16 +0000
+Received: by mail-io1-xd2e.google.com with SMTP id r81so2436266iod.2
+        for <kexec@lists.infradead.org>; Thu, 24 Nov 2022 21:53:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=amPWWEFgQMUoD5tXmLx5llUvLdBnUG7bs8YG8SWtoRg=;
+        b=RQNBCAq2S/xTo8MWnHo7e/TiCOfCQ4nI1ZMz1bX7kONWnjzFYQ20LTu1jhUBXdQpaY
+         TKCFVjqV6UlFYcoP+2qt5WrtazvLB461HiCl/7Ilyo1w8PV/TQsj+kmUobr7Jpuw9tJM
+         /MN7nJProEtKIIHbjsMBSDhfgT4xyN2L+SNfU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=amPWWEFgQMUoD5tXmLx5llUvLdBnUG7bs8YG8SWtoRg=;
+        b=A4N9I3UtSYPTxrnAMeczLQDgeCx8rYWS2qzXhujnJsc+ZbNpe/fwWxCu2YnVc/eUSt
+         oR/8Xf+wTXA4GqoZ1VB1NknZE2quLDT5pypUAHyISnfsq3hzVbGw4wCrMCQ+qGyyl4CZ
+         ULUl1YTHSR789zD+OD5/8Hs2Eqna4U78ZlIqz6y7Lt/P0y4L4WKIhbWa0V8+0w4w0JHQ
+         DRPoAruTQrHgofr73p4Jsxh6XQ/7NXBBlt+EIaci8xVcf2DVgWRclmFtus3vZ2vrHWxh
+         IGGyk59KdJE70su2dl4d7f7HGwNHknIs7gFCJsJv1PhwSmPBBc2qABkldN2ZpXf23nTN
+         b5MA==
+X-Gm-Message-State: ANoB5pnH5j+ZqoxbD4eS/rEJTvjBF6gH6WNL0vNyOZs37WuLHRpWrhTU
+	V7Oq+pjxMDCxpoNTpTT4cIcjechsJVRuGPqj
+X-Google-Smtp-Source: AA0mqf7+5a4SR0EDSZcJ5XR/lpdXeOIK/3JmE2LzZOS0yk0meoXyD1/d7nKJ8qi6QP+vh4BNxjOKOg==
+X-Received: by 2002:a05:6638:3475:b0:389:8572:7f61 with SMTP id q53-20020a056638347500b0038985727f61mr1269998jav.1.1669355592133;
+        Thu, 24 Nov 2022 21:53:12 -0800 (PST)
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com. [209.85.166.53])
+        by smtp.gmail.com with ESMTPSA id r4-20020a0566022b8400b006ccc36c963fsm1126694iov.43.2022.11.24.21.53.10
+        for <kexec@lists.infradead.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Nov 2022 21:53:11 -0800 (PST)
+Received: by mail-io1-f53.google.com with SMTP id e189so2442725iof.1
+        for <kexec@lists.infradead.org>; Thu, 24 Nov 2022 21:53:10 -0800 (PST)
+X-Received: by 2002:a02:c897:0:b0:374:100a:b0c7 with SMTP id
+ m23-20020a02c897000000b00374100ab0c7mr7889534jao.185.1669355590403; Thu, 24
+ Nov 2022 21:53:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20221116214643.6384-4-eric.devolder@oracle.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
+References: <20221124-kexec-noalloc-v1-0-d78361e99aec@chromium.org> <Y4AvTEZiNXfFU1Wv@MiWiFi-R3L-srv>
+In-Reply-To: <Y4AvTEZiNXfFU1Wv@MiWiFi-R3L-srv>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Fri, 25 Nov 2022 06:52:59 +0100
+X-Gmail-Original-Message-ID: <CANiDSCsgFYvShoTo9xAPe0wqSJgTnB7ZgzXmNqD+L2cKdsVoRg@mail.gmail.com>
+Message-ID: <CANiDSCsgFYvShoTo9xAPe0wqSJgTnB7ZgzXmNqD+L2cKdsVoRg@mail.gmail.com>
+Subject: Re: [PATCH] kexec: Enable runtime allocation of crash_image
+To: Baoquan He <bhe@redhat.com>
+Cc: Eric Biederman <ebiederm@xmission.com>, Philipp Rudo <prudo@redhat.com>, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>, Ross Zwisler <zwisler@kernel.org>, kexec@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221124_192706_374148_BBF123B5 
-X-CRM114-Status: GOOD (  37.18  )
+X-CRM114-CacheID: sfid-20221124_215314_781334_12CB55AC 
+X-CRM114-Status: GOOD (  37.31  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,238 +93,195 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 11/16/22 at 04:46pm, Eric DeVolder wrote:
-......
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index ebf46c3b8f8b..b4dbc21f9081 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -32,6 +32,7 @@ extern note_buf_t __percpu *crash_notes;
->  #include <linux/compat.h>
->  #include <linux/ioport.h>
->  #include <linux/module.h>
-> +#include <linux/highmem.h>
->  #include <asm/kexec.h>
->  
->  /* Verify architecture specific macros are defined */
-> @@ -374,6 +375,13 @@ struct kimage {
->  	struct purgatory_info purgatory_info;
->  #endif
->  
-> +#ifdef CONFIG_CRASH_HOTPLUG
+Hi Baoquan
 
-This kernel config CRASH_HOTPLUG is added in patch 7, but we have used
-it in the previous patch, not sure if this is acceptable.
+Thanks for your review!
 
-> +	bool hotplug_event;
-> +	unsigned int offlinecpu;
-> +	bool elfcorehdr_index_valid;
-> +	int elfcorehdr_index;
-> +#endif
-> +
->  #ifdef CONFIG_IMA_KEXEC
->  	/* Virtual address of IMA measurement buffer for kexec syscall */
->  	void *ima_buffer;
-> @@ -503,6 +511,34 @@ static inline int arch_kexec_post_alloc_pages(void *vaddr, unsigned int pages, g
->  static inline void arch_kexec_pre_free_pages(void *vaddr, unsigned int pages) { }
->  #endif
->  
-> +#ifndef arch_map_crash_pages
-> +/*
-> + * NOTE: The addresses and sizes passed to this routine have
-> + * already been fully aligned on page boundaries. There is no
-> + * need for massaging the address or size.
-> + */
-> +static inline void *arch_map_crash_pages(unsigned long paddr,
-> +					unsigned long size)
-> +{
-> +	if (size > 0)
-> +		return kmap_local_page(pfn_to_page(paddr >> PAGE_SHIFT));
-> +	else
-> +		return NULL;
-> +}
-> +#endif
-> +
-> +#ifndef arch_unmap_crash_pages
-> +static inline void arch_unmap_crash_pages(void *ptr)
-> +{
-> +	if (ptr)
-> +		kunmap_local(ptr);
-> +}
-> +#endif
-> +
-> +#ifndef arch_crash_handle_hotplug_event
-> +static inline void arch_crash_handle_hotplug_event(struct kimage *image) { }
-> +#endif
-> +
->  #else /* !CONFIG_KEXEC_CORE */
->  struct pt_regs;
->  struct task_struct;
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index 8c648fd5897a..4e7221226976 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -11,6 +11,8 @@
->  #include <linux/vmalloc.h>
->  #include <linux/sizes.h>
->  #include <linux/kexec.h>
-> +#include <linux/memory.h>
-> +#include <linux/cpuhotplug.h>
->  
->  #include <asm/page.h>
->  #include <asm/sections.h>
-> @@ -18,6 +20,7 @@
->  #include <crypto/sha1.h>
->  
->  #include "kallsyms_internal.h"
-> +#include "kexec_internal.h"
->  
->  /* vmcoreinfo stuff */
->  unsigned char *vmcoreinfo_data;
-> @@ -612,3 +615,139 @@ static int __init crash_save_vmcoreinfo_init(void)
->  }
->  
->  subsys_initcall(crash_save_vmcoreinfo_init);
-> +
-> +#ifdef CONFIG_CRASH_HOTPLUG
-> +#undef pr_fmt
-> +#define pr_fmt(fmt) "crash hp: " fmt
-> +/*
-> + * To accurately reflect hot un/plug changes, the elfcorehdr (which
-> + * is passed to the crash kernel via the elfcorehdr= parameter)
-> + * must be updated with the new list of CPUs and memories.
-> + *
-> + * In order to make changes to elfcorehdr, two conditions are needed:
-> + * First, the segment containing the elfcorehdr must be large enough
-> + * to permit a growing number of resources; the elfcorehdr memory size
-> + * is based on NR_CPUS_DEFAULT and CRASH_MAX_MEMORY_RANGES.
-> + * Second, purgatory must explicitly exclude the elfcorehdr from the
-> + * list of segments it checks (since the elfcorehdr changes and thus
-> + * would require an update to purgatory itself to update the digest).
-> + */
-> +static void handle_hotplug_event(unsigned int hp_action, unsigned int cpu)
-> +{
-> +	/* Obtain lock while changing crash information */
-> +	if (kexec_trylock()) {
-> +
-> +		/* Check kdump is loaded */
-> +		if (kexec_crash_image) {
-> +			struct kimage *image = kexec_crash_image;
-> +
-> +			if (hp_action == KEXEC_CRASH_HP_ADD_CPU ||
-> +				hp_action == KEXEC_CRASH_HP_REMOVE_CPU)
-> +				pr_debug("hp_action %u, cpu %u\n", hp_action, cpu);
-> +			else
-> +				pr_debug("hp_action %u\n", hp_action);
-> +
-> +			/*
-> +			 * When the struct kimage is allocated, it is wiped to zero, so
-> +			 * the elfcorehdr_index_valid defaults to false. Find the
-> +			 * segment containing the elfcorehdr, if not already found.
-> +			 * This works for both the kexec_load and kexec_file_load paths.
-> +			 */
-> +			if (!image->elfcorehdr_index_valid) {
-> +				unsigned long mem, memsz;
-> +				unsigned char *ptr;
-> +				unsigned int n;
-> +
-> +				for (n = 0; n < image->nr_segments; n++) {
-> +					mem = image->segment[n].mem;
-> +					memsz = image->segment[n].memsz;
-> +					ptr = arch_map_crash_pages(mem, memsz);
-> +					if (ptr) {
-> +						/* The segment containing elfcorehdr */
-> +						if (memcmp(ptr, ELFMAG, SELFMAG) == 0) {
-> +							image->elfcorehdr_index = (int)n;
-> +							image->elfcorehdr_index_valid = true;
-> +						}
-> +					}
-> +					arch_unmap_crash_pages((void *)ptr);
-> +				}
-> +			}
-> +
-> +			if (!image->elfcorehdr_index_valid) {
-> +				pr_err("unable to locate elfcorehdr segment");
-> +				goto out;
-> +			}
-> +
-> +			/* Needed in order for the segments to be updated */
-> +			arch_kexec_unprotect_crashkres();
-> +
-> +			/* Flag to differentiate between normal load and hotplug */
-> +			image->hotplug_event = true;
-> +
-> +			/* Now invoke arch-specific update handler */
-> +			arch_crash_handle_hotplug_event(image);
-> +
-> +			/* No longer handling a hotplug event */
-> +			image->hotplug_event = false;
-> +
-> +			/* Change back to read-only */
-> +			arch_kexec_protect_crashkres();
-> +		}
-> +
-> +out:
-> +		/* Release lock now that update complete */
-> +		kexec_unlock();
-> +	}
-> +}
-> +
-> +static int crash_memhp_notifier(struct notifier_block *nb, unsigned long val, void *v)
-> +{
-> +	switch (val) {
-> +	case MEM_ONLINE:
-> +		handle_hotplug_event(KEXEC_CRASH_HP_ADD_MEMORY,
-> +			KEXEC_CRASH_HP_INVALID_CPU);
-> +		break;
-> +
-> +	case MEM_OFFLINE:
-> +		handle_hotplug_event(KEXEC_CRASH_HP_REMOVE_MEMORY,
-> +			KEXEC_CRASH_HP_INVALID_CPU);
-> +		break;
-> +	}
-> +	return NOTIFY_OK;
-> +}
-> +
-> +static struct notifier_block crash_memhp_nb = {
-> +	.notifier_call = crash_memhp_notifier,
-> +	.priority = 0
-> +};
-> +
-> +static int crash_cpuhp_online(unsigned int cpu)
-> +{
-> +	handle_hotplug_event(KEXEC_CRASH_HP_ADD_CPU, cpu);
-> +	return 0;
-> +}
-> +
-> +static int crash_cpuhp_offline(unsigned int cpu)
-> +{
-> +	handle_hotplug_event(KEXEC_CRASH_HP_REMOVE_CPU, cpu);
-> +	return 0;
-> +}
-> +
-> +static int __init crash_hotplug_init(void)
-> +{
-> +	int result = 0;
-> +
-> +	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
-> +		register_memory_notifier(&crash_memhp_nb);
-> +
-> +	if (IS_ENABLED(CONFIG_HOTPLUG_CPU))
-> +		result = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
-> +						   "crash/cpuhp",
-> +						   crash_cpuhp_online,
-> +						   crash_cpuhp_offline);
-> +
-> +	return result;
-> +}
-> +
-> +subsys_initcall(crash_hotplug_init);
-> +#endif
-> -- 
-> 2.31.1
-> 
+On Fri, 25 Nov 2022 at 03:58, Baoquan He <bhe@redhat.com> wrote:
+>
+> On 11/24/22 at 11:23pm, Ricardo Ribalda wrote:
+> > Usually crash_image is defined statically via the crashkernel parameter
+> > or DT.
+> >
+> > But if the crash kernel is not used, or is smaller than then
+> > area pre-allocated that memory is wasted.
+> >
+> > Also, if the crash kernel was not defined at bootime, there is no way to
+> > use the crash kernel.
+> >
+> > Enable runtime allocation of the crash_image if the crash_image is not
+> > defined statically. Following the same memory allocation/validation path
+> > that for the reboot kexec kernel.
+>
+> We don't check if the crashkernel memory region is valid in kernel, but
+> we do have done the check in kexec-tools utility. Since both kexec_load and
+> kexec_file_load need go through path of kexec-tools loading, we haven't
+> got problem with lack of the checking in kernel.
 
+Not sure if I follow you.
+
+We currently check if the crash kernel is in the right place at
+sanity_check_segment_list()
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/kexec_core.c#n239
+
+
+>
+> However, even though we want to do the check, doing like below is much
+> easier and more reasonable.
+>
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index 45637511e0de..4d1339bd2ccf 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -344,6 +344,8 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+>
+>         dest_image = &kexec_image;
+>         if (flags & KEXEC_FILE_ON_CRASH) {
+> +               if (!crash_memory_valid())
+> +                       return -EINVAL;
+>                 dest_image = &kexec_crash_image;
+>                 if (kexec_crash_image)
+>                         arch_kexec_unprotect_crashkres();
+>
+> So, I am wondering if there is an issue encountered if we don't do the
+> check in kernel.
+>
+> Thanks
+> Baoquan
+>
+> >
+> > ---
+> >
+> > To: Eric Biederman <ebiederm@xmission.com>
+> > Cc: kexec@lists.infradead.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: Ross Zwisler <zwisler@kernel.org>
+> > Cc: Philipp Rudo <prudo@redhat.com>
+> > Cc: Baoquan He <bhe@redhat.com>
+> > ---
+> >  include/linux/kexec.h | 1 +
+> >  kernel/kexec.c        | 9 +++++----
+> >  kernel/kexec_core.c   | 5 +++++
+> >  kernel/kexec_file.c   | 7 ++++---
+> >  4 files changed, 15 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> > index 41a686996aaa..98ca9a32bc8e 100644
+> > --- a/include/linux/kexec.h
+> > +++ b/include/linux/kexec.h
+> > @@ -427,6 +427,7 @@ extern int kexec_load_disabled;
+> >  extern bool kexec_in_progress;
+> >
+> >  int crash_shrink_memory(unsigned long new_size);
+> > +bool __crash_memory_valid(void);
+> >  ssize_t crash_get_memory_size(void);
+> >
+> >  #ifndef arch_kexec_protect_crashkres
+> > diff --git a/kernel/kexec.c b/kernel/kexec.c
+> > index cb8e6e6f983c..b5c17db25e88 100644
+> > --- a/kernel/kexec.c
+> > +++ b/kernel/kexec.c
+> > @@ -28,7 +28,7 @@ static int kimage_alloc_init(struct kimage **rimage, unsigned long entry,
+> >       struct kimage *image;
+> >       bool kexec_on_panic = flags & KEXEC_ON_CRASH;
+> >
+> > -     if (kexec_on_panic) {
+> > +     if (kexec_on_panic && __crash_memory_valid()) {
+> >               /* Verify we have a valid entry point */
+> >               if ((entry < phys_to_boot_phys(crashk_res.start)) ||
+> >                   (entry > phys_to_boot_phys(crashk_res.end)))
+> > @@ -44,7 +44,7 @@ static int kimage_alloc_init(struct kimage **rimage, unsigned long entry,
+> >       image->nr_segments = nr_segments;
+> >       memcpy(image->segment, segments, nr_segments * sizeof(*segments));
+> >
+> > -     if (kexec_on_panic) {
+> > +     if (kexec_on_panic && __crash_memory_valid()) {
+> >               /* Enable special crash kernel control page alloc policy. */
+> >               image->control_page = crashk_res.start;
+> >               image->type = KEXEC_TYPE_CRASH;
+> > @@ -101,7 +101,7 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
+> >
+> >       if (flags & KEXEC_ON_CRASH) {
+> >               dest_image = &kexec_crash_image;
+> > -             if (kexec_crash_image)
+> > +             if (kexec_crash_image && __crash_memory_valid())
+> >                       arch_kexec_unprotect_crashkres();
+> >       } else {
+> >               dest_image = &kexec_image;
+> > @@ -157,7 +157,8 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
+> >       image = xchg(dest_image, image);
+> >
+> >  out:
+> > -     if ((flags & KEXEC_ON_CRASH) && kexec_crash_image)
+> > +     if ((flags & KEXEC_ON_CRASH) && kexec_crash_image &&
+> > +         __crash_memory_valid())
+> >               arch_kexec_protect_crashkres();
+> >
+> >       kimage_free(image);
+> > diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> > index ca2743f9c634..77083c9760fb 100644
+> > --- a/kernel/kexec_core.c
+> > +++ b/kernel/kexec_core.c
+> > @@ -1004,6 +1004,11 @@ void crash_kexec(struct pt_regs *regs)
+> >       }
+> >  }
+> >
+> > +bool __crash_memory_valid(void)
+> > +{
+> > +     return crashk_res.end != crashk_res.start;
+> > +}
+> > +
+> >  ssize_t crash_get_memory_size(void)
+> >  {
+> >       ssize_t size = 0;
+> > diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> > index 45637511e0de..0671f4f370ff 100644
+> > --- a/kernel/kexec_file.c
+> > +++ b/kernel/kexec_file.c
+> > @@ -280,7 +280,7 @@ kimage_file_alloc_init(struct kimage **rimage, int kernel_fd,
+> >
+> >       image->file_mode = 1;
+> >
+> > -     if (kexec_on_panic) {
+> > +     if (kexec_on_panic && __crash_memory_valid()) {
+> >               /* Enable special crash kernel control page alloc policy. */
+> >               image->control_page = crashk_res.start;
+> >               image->type = KEXEC_TYPE_CRASH;
+> > @@ -345,7 +345,7 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+> >       dest_image = &kexec_image;
+> >       if (flags & KEXEC_FILE_ON_CRASH) {
+> >               dest_image = &kexec_crash_image;
+> > -             if (kexec_crash_image)
+> > +             if (kexec_crash_image && __crash_memory_valid())
+> >                       arch_kexec_unprotect_crashkres();
+> >       }
+> >
+> > @@ -408,7 +408,8 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+> >  exchange:
+> >       image = xchg(dest_image, image);
+> >  out:
+> > -     if ((flags & KEXEC_FILE_ON_CRASH) && kexec_crash_image)
+> > +     if ((flags & KEXEC_FILE_ON_CRASH) && kexec_crash_image &&
+> > +         __crash_memory_valid())
+> >               arch_kexec_protect_crashkres();
+> >
+> >       kexec_unlock();
+> >
+> > ---
+> > base-commit: 4312098baf37ee17a8350725e6e0d0e8590252d4
+> > change-id: 20221124-kexec-noalloc-3cab3cbe000f
+> >
+> > Best regards,
+> > --
+> > Ricardo Ribalda <ribalda@chromium.org>
+> >
+>
+
+
+--
+Ricardo Ribalda
 
 _______________________________________________
 kexec mailing list
