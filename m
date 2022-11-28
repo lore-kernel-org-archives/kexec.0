@@ -4,79 +4,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 23DB7C4332F
-	for <kexec@archiver.kernel.org>; Mon, 28 Nov 2022 17:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 57790C4332F
+	for <kexec@archiver.kernel.org>; Mon, 28 Nov 2022 17:16:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Mime-Version:References:In-Reply-To:
+	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=pvE5j5aaKvuv9ERbwEzkl090sO+S2smB03+UWsNEVHc=; b=2uOenaogilHsaG
-	KI7K1146HV52m4UUGerRnk9xFtMSOJ+QaktXy2JH64xch6tZd/D8niJYKoVVsCVWksve6OKjRfwIb
-	Rx+/WOUu/TZuIuudslvu/+DNV5A1QeJvMby3xCDv5dLHm0wSxw9n1uEbJQOE0I3R+kz/XtU3QqSJA
-	xQteQBtW9ofBjcasBNAF7MvA+eQziqPEkDSnV7hDyK1jg9c0+qBS1Iu29AmR8Ggj8o1dgY/fdoS/t
-	jfNWnpKSD2vjXUP6skNzdtJ9fFwhLFodN43oynk+4srGa2vSqdAlhrKQAsKtbnQdHG2dhhOba0I8k
-	4GQ4KfTFlEC/2u0f0W9g==;
+	List-Owner; bh=DIn1o3/laasU/6yBdHGXoplxRBOgoeqYB+SCVkg7qoc=; b=oZJqH87Thu1tjy
+	gwWv7BysuhErh1zClZ2GwdV7sf0vxox36WWRUP57GPfrnPROZ5Ef2FrilxkAN4SJh2ILdhkaFZda/
+	uBsAMWIlATLBoFi0HAV5xUZgKAXYbSXoe1DrNK4iEx5DS3H1Lls9QPJ+eCIdcwpKfeYDCzuf9bkcw
+	0LhEd243fmhogbZmy7jIfU5wY802RbJwkU9mOHTplQi9RGD4dV9FJ8n5jQepOn6ziBLLc6y12LBQW
+	EsZDW4tHYKv546STnTyoLvjR4zrCzuk9tFQ72ox1GFNffqNGRekilrw4okvA5+whk7gp+OEOtirZM
+	sXW5mDamDSC+H3sAT4Bg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1ozhbH-002zpW-RF; Mon, 28 Nov 2022 17:07:23 +0000
-Received: from mail-il1-x12c.google.com ([2607:f8b0:4864:20::12c])
+	id 1ozhjz-0031gt-LQ; Mon, 28 Nov 2022 17:16:23 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1ozhbE-002zoF-SI
-	for kexec@lists.infradead.org; Mon, 28 Nov 2022 17:07:22 +0000
-Received: by mail-il1-x12c.google.com with SMTP id g7so5341248ile.0
-        for <kexec@lists.infradead.org>; Mon, 28 Nov 2022 09:07:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=GHJMh6Kwz/c8rDuMiqvdkoEztpfDMDpqxSBDvuVtmUw=;
-        b=f3IgZyUh04bd/HrLhhDVNhrHJSGitfIszkqHV7HEpPgw2VGZWdc2kMSmIk30yzxQJ7
-         di33kDapY4MdUgplczekFczkKFBlOVm1it32ldUPFgspl9eXMgV6Czr/IRlbZZylpVMg
-         MfQvv/FkObcAePfhYAbqWCwoSPd6Oiqtc8jec=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GHJMh6Kwz/c8rDuMiqvdkoEztpfDMDpqxSBDvuVtmUw=;
-        b=dPVEPrL5g6jxuqQpD2pGq8qdwvvyUVq2dYO0/12T0+jAOxc6E25yL7p3mke5rW8FKV
-         4+t9D5qrPMHOKW1YNuDENbvEmz4LLlu2qy7FeVsojt3LJimfYuq75GII8F/a0ZK0Ke8s
-         8FekUhrWedL8aK2GqQyoIlhu/duaDYX8jOXlCyOirGIUpaPxq7CxlO3RQ3gy6PzOQ8xP
-         8mNEHGMwk1wbBiD0sZabXBXYKFV7mR+8LWo6rHYdoxJeDwV9mXPCM3F7jRwFKM/9LYRw
-         Y9VjWEL+QMuunvV/dQdOeSL002TA0v12es8x5k/k2yuq7izcbin4+/ICK9S9FBDBBabU
-         qPnA==
-X-Gm-Message-State: ANoB5pk3BI0S/zWgejWYhljOo3rhb07WP2cPnanEGnM65xyNNGAoVKqA
-	kn84yJGEbf9hnOYSt+GGMAUAuxFhkoXDxtkG
-X-Google-Smtp-Source: AA0mqf7iFfLIcyllQHdYZ84bt9eEqjh3Bl8P6eyyevoo6GDdXRHhwytYzXCkwH0GdMYiiZxNZtWZyg==
-X-Received: by 2002:a05:6e02:c86:b0:303:cc0:689d with SMTP id b6-20020a056e020c8600b003030cc0689dmr3351040ile.73.1669655238910;
-        Mon, 28 Nov 2022 09:07:18 -0800 (PST)
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com. [209.85.166.49])
-        by smtp.gmail.com with ESMTPSA id i14-20020a056e02054e00b003030e36d9bfsm1282088ils.46.2022.11.28.09.07.17
-        for <kexec@lists.infradead.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Nov 2022 09:07:18 -0800 (PST)
-Received: by mail-io1-f49.google.com with SMTP id r81so8081890iod.2
-        for <kexec@lists.infradead.org>; Mon, 28 Nov 2022 09:07:17 -0800 (PST)
-X-Received: by 2002:a02:c994:0:b0:375:7eda:8c7e with SMTP id
- b20-20020a02c994000000b003757eda8c7emr18987027jap.27.1669655237043; Mon, 28
- Nov 2022 09:07:17 -0800 (PST)
-MIME-Version: 1.0
-References: <20221124-kexec-noalloc-v1-0-d78361e99aec@chromium.org> <20221128180003.49747650@rotkaeppchen>
-In-Reply-To: <20221128180003.49747650@rotkaeppchen>
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Mon, 28 Nov 2022 18:07:06 +0100
-X-Gmail-Original-Message-ID: <CANiDSCuwE8_bVErcKV0UcvaPjMx4vbgXzhw2dY69_x2GcB0VxQ@mail.gmail.com>
-Message-ID: <CANiDSCuwE8_bVErcKV0UcvaPjMx4vbgXzhw2dY69_x2GcB0VxQ@mail.gmail.com>
-Subject: Re: [PATCH] kexec: Enable runtime allocation of crash_image
-To: Philipp Rudo <prudo@redhat.com>
-Cc: Eric Biederman <ebiederm@xmission.com>, Baoquan He <bhe@redhat.com>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>, Ross Zwisler <zwisler@kernel.org>, kexec@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
+	id 1ozhjw-0031ds-6g
+	for kexec@lists.infradead.org; Mon, 28 Nov 2022 17:16:21 +0000
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2ASFvbRZ032038;
+	Mon, 28 Nov 2022 17:16:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=RZJVGDX/6B5Oe0iNQFvKjIT62omfWmQKvG7j7+mkPXg=;
+ b=K3Iy9/sJ/sx1tmzXN7yRnRY+uDt7IvrHNw05L6MvmciQAs3HawKBYsgTo8427zAmPH+F
+ IMRqOtQayO6L/xm44knAHK2uDCaE4mFfkPcEKAxYNZfbtobPQ96ELI9xAQVIcelO/TBm
+ KEXMv1TjyK7DVSEhRctWywQEcijWuasrXB6IfqQIPCbK5WQx1CbN3HddcVaECwWi8yfA
+ xgmMSpvggCAK1wtz+yNryWivvRps9BRpbiKzd/QQSJA+JLNkwansm1crg0zn0X+GmOmO
+ YyVP5S0nNh7YUrpQNXnBHRWZvL/O4bAdeJr//XiPHC7XZy5XLFrMrh/fk1AngH0viBKt EA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3m3vjdfpg3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Nov 2022 17:16:12 +0000
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2ASGrMPK002723;
+	Mon, 28 Nov 2022 17:16:12 GMT
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3m3vjdfpf7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Nov 2022 17:16:12 +0000
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+	by ppma01dal.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2ASH9NBV027840;
+	Mon, 28 Nov 2022 17:16:10 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+	by ppma01dal.us.ibm.com with ESMTP id 3m3ae9tmf2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Nov 2022 17:16:10 +0000
+Received: from smtpav06.dal12v.mail.ibm.com ([9.208.128.130])
+	by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2ASHG5Sv23724522
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 28 Nov 2022 17:16:05 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 098E958055;
+	Mon, 28 Nov 2022 17:16:09 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5DC3058043;
+	Mon, 28 Nov 2022 17:16:08 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.26.105])
+	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 28 Nov 2022 17:16:08 +0000 (GMT)
+Message-ID: <2204915d319ff9acf80f68ccba8600aaeb5578d7.camel@linux.ibm.com>
+Subject: Re: [PATCH] lockdown: kexec_file: prevent unsigned kernel image
+ when KEXEC_SIG not enabled
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Coiby Xu <coxu@redhat.com>
+Cc: kexec@lists.infradead.org, Matthew Garrett <mjg59@srcf.ucam.org>,
+        Jiri
+ Bohac <jbohac@suse.cz>, David Howells <dhowells@redhat.com>,
+        linux-integrity@vger.kernel.org,
+        Eric Biederman <ebiederm@xmission.com>,
+        James Morris <jmorris@namei.org>, Matthew Garrett <mjg59@google.com>,
+        open
+ list <linux-kernel@vger.kernel.org>
+Date: Mon, 28 Nov 2022 12:16:08 -0500
+In-Reply-To: <20221122023606.nrifkrng5nbfmkka@Rk>
+References: <20221121072947.836672-1-coxu@redhat.com>
+	 <5d98172d77a8a0f1e3daab44ad51bf38978cc053.camel@linux.ibm.com>
+	 <20221122023606.nrifkrng5nbfmkka@Rk>
+X-Mailer: Evolution 3.28.5 (3.28.5-18.el8) 
+Mime-Version: 1.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: mqijHTnZy1VBf3pmbGa_r2tIH2ydgGu9
+X-Proofpoint-ORIG-GUID: irI5J7NUXvt-rvRcC-babNVDtv_cJtnT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-11-28_14,2022-11-28_02,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 mlxlogscore=709 bulkscore=0 spamscore=0 suspectscore=0
+ clxscore=1015 impostorscore=0 phishscore=0 lowpriorityscore=0 adultscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2210170000 definitions=main-2211280126
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221128_090720_941722_C97D044F 
-X-CRM114-Status: GOOD (  42.54  )
+X-CRM114-CacheID: sfid-20221128_091620_515244_81807691 
+X-CRM114-Status: GOOD (  25.01  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -93,189 +118,52 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Philipp
+On Tue, 2022-11-22 at 10:36 +0800, Coiby Xu wrote:
+> Hi Mimi,
+> 
+> On Mon, Nov 21, 2022 at 01:23:57PM -0500, Mimi Zohar wrote:
+> >Hi Coiby,
+> >
+> >On Mon, 2022-11-21 at 15:29 +0800, Coiby Xu wrote:
+> >> A kernel builder may not enable KEXEC_SIG and some architectures like
+> >> ppc64 simply don't have KEXEC_SIG. In these cases, unless both
+> >> IMA_ARCH_POLICY and secure boot also enabled, lockdown doesn't prevent
+> >> unsigned kernel image from being kexec'ed via the kexec_file_load
+> >> syscall whereas it could prevent one via the kexec_load syscall. Mandate
+> >> signature verification for those cases.
+> >>
+> >> Fixes: 155bdd30af17 ("kexec_file: Restrict at runtime if the kernel is locked down")
+> >> Cc: Matthew Garrett <mjg59@srcf.ucam.org>
+> >> Cc: Jiri Bohac <jbohac@suse.cz>
+> >> Cc: David Howells <dhowells@redhat.com>
+> >> Cc: kexec@lists.infradead.org
+> >> Cc: linux-integrity@vger.kernel.org
+> >> Signed-off-by: Coiby Xu <coxu@redhat.com>
+> >
+> >Other than correcting the function name to mandate_signature_verificati
+> >on(),
+> 
+> Applied to v2, thanks for correcting me! Btw, I realize I overwrote the
+> return code of kexec_image_verify_sig with
+> mandate_signature_verification's. v2 has fixed this issue as well.
+> 
+> >
+> >Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> 
+> And thanks for the review!
 
+You're welcome.
 
-Thanks for your review.
-
-
-On Mon, 28 Nov 2022 at 18:00, Philipp Rudo <prudo@redhat.com> wrote:
->
-> Hi Ricardo,
->
-> On Thu, 24 Nov 2022 23:23:36 +0100
-> Ricardo Ribalda <ribalda@chromium.org> wrote:
->
-> > Usually crash_image is defined statically via the crashkernel parameter
-> > or DT.
-> >
-> > But if the crash kernel is not used, or is smaller than then
-> > area pre-allocated that memory is wasted.
-> >
-> > Also, if the crash kernel was not defined at bootime, there is no way to
-> > use the crash kernel.
-> >
-> > Enable runtime allocation of the crash_image if the crash_image is not
-> > defined statically. Following the same memory allocation/validation path
-> > that for the reboot kexec kernel.
-> >
-> > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
->
-> I don't think this patch will work as intended. For one you omit
-> setting the image->type to KEXEC_TYPE_CRASH. But when you grep for that
-> type you will find that there is a lot of special handling done for it.
-> I don't believe that this can simply be skipped without causing
-> problems.
->
-> Furthermore I think you have missed one important detail. The memory
-> reserved for the crash kernel is not just a buffer for the image but
-> the memory it runs in! For that it has to be a continuous piece of
-> physical memory with usually some additional arch specific limitations.
-> When allocated dynamically all those limitations need to be considered.
-> But a standard kexec doesn't care about those limitations as it doesn't
-> care about the os running before itself. It can simply overwrite the
-> memory when booting. But if the crash kernel does the same it will
-> corrupt the dump it is supposed to generate.
-
-Right now, I do not intend to use it to fetch a kdump, I am using it
-as the image that will run when the system crashes.
-
-It seems to work fine on the two devices that I am using for tests.
-
->
-> Thanks
-> Philipp
->
-> > ---
-> > kexec: Enable runtime allocation of crash_image
-> >
-> > To: Eric Biederman <ebiederm@xmission.com>
-> > Cc: kexec@lists.infradead.org
-> > Cc: linux-kernel@vger.kernel.org
-> > Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
-> > Cc: linux-kernel@vger.kernel.org
-> > Cc: Ross Zwisler <zwisler@kernel.org>
-> > Cc: Philipp Rudo <prudo@redhat.com>
-> > Cc: Baoquan He <bhe@redhat.com>
-> > ---
-> >  include/linux/kexec.h | 1 +
-> >  kernel/kexec.c        | 9 +++++----
-> >  kernel/kexec_core.c   | 5 +++++
-> >  kernel/kexec_file.c   | 7 ++++---
-> >  4 files changed, 15 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> > index 41a686996aaa..98ca9a32bc8e 100644
-> > --- a/include/linux/kexec.h
-> > +++ b/include/linux/kexec.h
-> > @@ -427,6 +427,7 @@ extern int kexec_load_disabled;
-> >  extern bool kexec_in_progress;
-> >
-> >  int crash_shrink_memory(unsigned long new_size);
-> > +bool __crash_memory_valid(void);
-> >  ssize_t crash_get_memory_size(void);
-> >
-> >  #ifndef arch_kexec_protect_crashkres
-> > diff --git a/kernel/kexec.c b/kernel/kexec.c
-> > index cb8e6e6f983c..b5c17db25e88 100644
-> > --- a/kernel/kexec.c
-> > +++ b/kernel/kexec.c
-> > @@ -28,7 +28,7 @@ static int kimage_alloc_init(struct kimage **rimage, unsigned long entry,
-> >       struct kimage *image;
-> >       bool kexec_on_panic = flags & KEXEC_ON_CRASH;
-> >
-> > -     if (kexec_on_panic) {
-> > +     if (kexec_on_panic && __crash_memory_valid()) {
-> >               /* Verify we have a valid entry point */
-> >               if ((entry < phys_to_boot_phys(crashk_res.start)) ||
-> >                   (entry > phys_to_boot_phys(crashk_res.end)))
-> > @@ -44,7 +44,7 @@ static int kimage_alloc_init(struct kimage **rimage, unsigned long entry,
-> >       image->nr_segments = nr_segments;
-> >       memcpy(image->segment, segments, nr_segments * sizeof(*segments));
-> >
-> > -     if (kexec_on_panic) {
-> > +     if (kexec_on_panic && __crash_memory_valid()) {
-> >               /* Enable special crash kernel control page alloc policy. */
-> >               image->control_page = crashk_res.start;
-> >               image->type = KEXEC_TYPE_CRASH;
-> > @@ -101,7 +101,7 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
-> >
-> >       if (flags & KEXEC_ON_CRASH) {
-> >               dest_image = &kexec_crash_image;
-> > -             if (kexec_crash_image)
-> > +             if (kexec_crash_image && __crash_memory_valid())
-> >                       arch_kexec_unprotect_crashkres();
-> >       } else {
-> >               dest_image = &kexec_image;
-> > @@ -157,7 +157,8 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
-> >       image = xchg(dest_image, image);
-> >
-> >  out:
-> > -     if ((flags & KEXEC_ON_CRASH) && kexec_crash_image)
-> > +     if ((flags & KEXEC_ON_CRASH) && kexec_crash_image &&
-> > +         __crash_memory_valid())
-> >               arch_kexec_protect_crashkres();
-> >
-> >       kimage_free(image);
-> > diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> > index ca2743f9c634..77083c9760fb 100644
-> > --- a/kernel/kexec_core.c
-> > +++ b/kernel/kexec_core.c
-> > @@ -1004,6 +1004,11 @@ void crash_kexec(struct pt_regs *regs)
-> >       }
-> >  }
-> >
-> > +bool __crash_memory_valid(void)
-> > +{
-> > +     return crashk_res.end != crashk_res.start;
-> > +}
-> > +
-> >  ssize_t crash_get_memory_size(void)
-> >  {
-> >       ssize_t size = 0;
-> > diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> > index 45637511e0de..0671f4f370ff 100644
-> > --- a/kernel/kexec_file.c
-> > +++ b/kernel/kexec_file.c
-> > @@ -280,7 +280,7 @@ kimage_file_alloc_init(struct kimage **rimage, int kernel_fd,
-> >
-> >       image->file_mode = 1;
-> >
-> > -     if (kexec_on_panic) {
-> > +     if (kexec_on_panic && __crash_memory_valid()) {
-> >               /* Enable special crash kernel control page alloc policy. */
-> >               image->control_page = crashk_res.start;
-> >               image->type = KEXEC_TYPE_CRASH;
-> > @@ -345,7 +345,7 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
-> >       dest_image = &kexec_image;
-> >       if (flags & KEXEC_FILE_ON_CRASH) {
-> >               dest_image = &kexec_crash_image;
-> > -             if (kexec_crash_image)
-> > +             if (kexec_crash_image && __crash_memory_valid())
-> >                       arch_kexec_unprotect_crashkres();
-> >       }
-> >
-> > @@ -408,7 +408,8 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
-> >  exchange:
-> >       image = xchg(dest_image, image);
-> >  out:
-> > -     if ((flags & KEXEC_FILE_ON_CRASH) && kexec_crash_image)
-> > +     if ((flags & KEXEC_FILE_ON_CRASH) && kexec_crash_image &&
-> > +         __crash_memory_valid())
-> >               arch_kexec_protect_crashkres();
-> >
-> >       kexec_unlock();
-> >
-> > ---
-> > base-commit: 4312098baf37ee17a8350725e6e0d0e8590252d4
-> > change-id: 20221124-kexec-noalloc-3cab3cbe000f
-> >
-> > Best regards,
->
-
+Without either IMA_ARCH or KEXEC_SIG enabled, the kexec selftest
+test_kexec_file_load.sh properly failed with "kexec_file_load failed
+[PASS]", but from the informational messages output, it isn't clear why
+it failed.  This should be corrected.
 
 -- 
-Ricardo Ribalda
+thanks,
+
+Mimi
+
 
 _______________________________________________
 kexec mailing list
