@@ -4,104 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 57790C4332F
-	for <kexec@archiver.kernel.org>; Mon, 28 Nov 2022 17:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0788CC433FE
+	for <kexec@archiver.kernel.org>; Mon, 28 Nov 2022 22:04:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Mime-Version:References:In-Reply-To:
-	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=DIn1o3/laasU/6yBdHGXoplxRBOgoeqYB+SCVkg7qoc=; b=oZJqH87Thu1tjy
-	gwWv7BysuhErh1zClZ2GwdV7sf0vxox36WWRUP57GPfrnPROZ5Ef2FrilxkAN4SJh2ILdhkaFZda/
-	uBsAMWIlATLBoFi0HAV5xUZgKAXYbSXoe1DrNK4iEx5DS3H1Lls9QPJ+eCIdcwpKfeYDCzuf9bkcw
-	0LhEd243fmhogbZmy7jIfU5wY802RbJwkU9mOHTplQi9RGD4dV9FJ8n5jQepOn6ziBLLc6y12LBQW
-	EsZDW4tHYKv546STnTyoLvjR4zrCzuk9tFQ72ox1GFNffqNGRekilrw4okvA5+whk7gp+OEOtirZM
-	sXW5mDamDSC+H3sAT4Bg==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=hB+4rbsDYWj5nznL/+8IBey/crSWBsL7L0EQ3pi8scs=; b=3DJZ47pQrG4hFThH9bOc4Fe0m0
+	3HGrNS7Vho0bOkehSIJAz+Q5/fXd2K9qH5XOpht0taNtFPhGXukzJzy/gJJBd2jpKFhc31H7Odrav
+	GzDDIKupyjuAS6oHrUVN5HTtyEYX0LwmQq6FVb/Awq7r4ypJRZm45kJcrzSSwba/Rli0kmY+iEnPi
+	CHImN11jZa5WsWV09pYV7QRunOUVzsZZAr2lNPMXCAO/QA7t16GVswtoTtAdXtZl6dun1ysoZGR49
+	BfbCP2qnFvRlvOVHkciBSXeLXS39hh5F0cWN/KihkKiz9CRf2KeGTSVUsqNQTFCw5BrqoNc9kdY9c
+	4DcrQ4Eg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1ozhjz-0031gt-LQ; Mon, 28 Nov 2022 17:16:23 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1ozmEc-004bFx-DE; Mon, 28 Nov 2022 22:04:18 +0000
+Received: from mga01.intel.com ([192.55.52.88])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1ozhjw-0031ds-6g
-	for kexec@lists.infradead.org; Mon, 28 Nov 2022 17:16:21 +0000
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2ASFvbRZ032038;
-	Mon, 28 Nov 2022 17:16:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=RZJVGDX/6B5Oe0iNQFvKjIT62omfWmQKvG7j7+mkPXg=;
- b=K3Iy9/sJ/sx1tmzXN7yRnRY+uDt7IvrHNw05L6MvmciQAs3HawKBYsgTo8427zAmPH+F
- IMRqOtQayO6L/xm44knAHK2uDCaE4mFfkPcEKAxYNZfbtobPQ96ELI9xAQVIcelO/TBm
- KEXMv1TjyK7DVSEhRctWywQEcijWuasrXB6IfqQIPCbK5WQx1CbN3HddcVaECwWi8yfA
- xgmMSpvggCAK1wtz+yNryWivvRps9BRpbiKzd/QQSJA+JLNkwansm1crg0zn0X+GmOmO
- YyVP5S0nNh7YUrpQNXnBHRWZvL/O4bAdeJr//XiPHC7XZy5XLFrMrh/fk1AngH0viBKt EA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3m3vjdfpg3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Nov 2022 17:16:12 +0000
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2ASGrMPK002723;
-	Mon, 28 Nov 2022 17:16:12 GMT
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3m3vjdfpf7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Nov 2022 17:16:12 +0000
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-	by ppma01dal.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2ASH9NBV027840;
-	Mon, 28 Nov 2022 17:16:10 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-	by ppma01dal.us.ibm.com with ESMTP id 3m3ae9tmf2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 28 Nov 2022 17:16:10 +0000
-Received: from smtpav06.dal12v.mail.ibm.com ([9.208.128.130])
-	by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2ASHG5Sv23724522
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 28 Nov 2022 17:16:05 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 098E958055;
-	Mon, 28 Nov 2022 17:16:09 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5DC3058043;
-	Mon, 28 Nov 2022 17:16:08 +0000 (GMT)
-Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.26.105])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 28 Nov 2022 17:16:08 +0000 (GMT)
-Message-ID: <2204915d319ff9acf80f68ccba8600aaeb5578d7.camel@linux.ibm.com>
-Subject: Re: [PATCH] lockdown: kexec_file: prevent unsigned kernel image
- when KEXEC_SIG not enabled
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Coiby Xu <coxu@redhat.com>
-Cc: kexec@lists.infradead.org, Matthew Garrett <mjg59@srcf.ucam.org>,
-        Jiri
- Bohac <jbohac@suse.cz>, David Howells <dhowells@redhat.com>,
-        linux-integrity@vger.kernel.org,
-        Eric Biederman <ebiederm@xmission.com>,
-        James Morris <jmorris@namei.org>, Matthew Garrett <mjg59@google.com>,
-        open
- list <linux-kernel@vger.kernel.org>
-Date: Mon, 28 Nov 2022 12:16:08 -0500
-In-Reply-To: <20221122023606.nrifkrng5nbfmkka@Rk>
-References: <20221121072947.836672-1-coxu@redhat.com>
-	 <5d98172d77a8a0f1e3daab44ad51bf38978cc053.camel@linux.ibm.com>
-	 <20221122023606.nrifkrng5nbfmkka@Rk>
-X-Mailer: Evolution 3.28.5 (3.28.5-18.el8) 
-Mime-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: mqijHTnZy1VBf3pmbGa_r2tIH2ydgGu9
-X-Proofpoint-ORIG-GUID: irI5J7NUXvt-rvRcC-babNVDtv_cJtnT
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-11-28_14,2022-11-28_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 mlxlogscore=709 bulkscore=0 spamscore=0 suspectscore=0
- clxscore=1015 impostorscore=0 phishscore=0 lowpriorityscore=0 adultscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2210170000 definitions=main-2211280126
+	id 1ozmEY-004bFO-Jl
+	for kexec@lists.infradead.org; Mon, 28 Nov 2022 22:04:16 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1669673054; x=1701209054;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1NX8/rrplpuBi+H/jJ7Dp/ujozhkTOqEtdjoz83dFXk=;
+  b=JCVdxerPkuke8qSgGxEqBwGpGlN5XeZXRVcoXTR9I5qJsr5ywIHzJZDE
+   OQhpM7p2JHlU7OiqxUlPoyqgEoFBskm71G6jZPmL+zynAclMvlCLCrOuU
+   ZFXq6Jpjm6AYdw1wkq2gTsWocK44N8ohFm+UE853Hs8eB7gjURyLjCW63
+   3vc4+Rk0suYxZ6GyfViwG9HOnfGesulPf7mAlLkK+tCM1EtQqwIi/HuOP
+   jnZHP1+neWD6mmPXT54RAb9HXCTWp+/d6yaC623akvecnOgHJ2+HEIxVU
+   bzWKhF0kQtlKOcEh//uwNbVnidWtjE/PCHWGSglu5lifKZnVTsF3/CVAW
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10545"; a="341874234"
+X-IronPort-AV: E=Sophos;i="5.96,201,1665471600"; 
+   d="scan'208";a="341874234"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2022 14:04:02 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10545"; a="645657431"
+X-IronPort-AV: E=Sophos;i="5.96,201,1665471600"; 
+   d="scan'208";a="645657431"
+Received: from gmeghash-mobl2.amr.corp.intel.com (HELO desk) ([10.209.19.254])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2022 14:04:01 -0800
+Date: Mon, 28 Nov 2022 14:03:58 -0800
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Breno Leitao <leitao@debian.org>, tglx@linutronix.de, mingo@redhat.com,
+	dave.hansen@linux.intel.com, hpa@zytor.com, jpoimboe@kernel.org,
+	peterz@infradead.org, x86@kernel.org, cascardo@canonical.com,
+	leit@meta.com, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] x86/bugs: Explicitly clear speculative MSR bits
+Message-ID: <20221128220358.n5vk6youcdl2er35@desk>
+References: <20221124104650.533427-1-leitao@debian.org>
+ <Y4QD8o8kWb1V4osq@zn.tnic>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <Y4QD8o8kWb1V4osq@zn.tnic>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221128_091620_515244_81807691 
-X-CRM114-Status: GOOD (  25.01  )
+X-CRM114-CacheID: sfid-20221128_140414_686352_42E8FC3D 
+X-CRM114-Status: GOOD (  32.97  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -113,57 +77,124 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, 2022-11-22 at 10:36 +0800, Coiby Xu wrote:
-> Hi Mimi,
-> 
-> On Mon, Nov 21, 2022 at 01:23:57PM -0500, Mimi Zohar wrote:
-> >Hi Coiby,
-> >
-> >On Mon, 2022-11-21 at 15:29 +0800, Coiby Xu wrote:
-> >> A kernel builder may not enable KEXEC_SIG and some architectures like
-> >> ppc64 simply don't have KEXEC_SIG. In these cases, unless both
-> >> IMA_ARCH_POLICY and secure boot also enabled, lockdown doesn't prevent
-> >> unsigned kernel image from being kexec'ed via the kexec_file_load
-> >> syscall whereas it could prevent one via the kexec_load syscall. Mandate
-> >> signature verification for those cases.
-> >>
-> >> Fixes: 155bdd30af17 ("kexec_file: Restrict at runtime if the kernel is locked down")
-> >> Cc: Matthew Garrett <mjg59@srcf.ucam.org>
-> >> Cc: Jiri Bohac <jbohac@suse.cz>
-> >> Cc: David Howells <dhowells@redhat.com>
-> >> Cc: kexec@lists.infradead.org
-> >> Cc: linux-integrity@vger.kernel.org
-> >> Signed-off-by: Coiby Xu <coxu@redhat.com>
-> >
-> >Other than correcting the function name to mandate_signature_verificati
-> >on(),
-> 
-> Applied to v2, thanks for correcting me! Btw, I realize I overwrote the
-> return code of kexec_image_verify_sig with
-> mandate_signature_verification's. v2 has fixed this issue as well.
-> 
-> >
-> >Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-> 
-> And thanks for the review!
+On Mon, Nov 28, 2022 at 01:42:26AM +0100, Borislav Petkov wrote:
+>On Thu, Nov 24, 2022 at 02:46:50AM -0800, Breno Leitao wrote:
+>> Currently x86_spec_ctrl_base is read at boot time, and speculative bits
+>> are set if configs are enable, such as MSR[SPEC_CTRL_IBRS] is enabled if
+>> CONFIG_CPU_IBRS_ENTRY is configured. These MSR bits are not cleared if
+>> the mitigations are disabled.
+>>
+>> This is a problem when kexec-ing a kernel that has the mitigation
+>> disabled, from a kernel that has the mitigation enabled. In this case,
+>> the MSR bits are carried forward and not cleared at the boot of the new
+>> kernel. This might have some performance degradation that is hard to
+>> find.
+>>
+>> This problem does not happen if the machine is (hard) rebooted, because
+>> the bit will be cleared by default.
+>>
+>> This patch also defines a SPEC_CTRL_MASK macro, so, we can easily track
+>> and clear if eventually some new mitigation shows up.
+>
+>Just remove that sentence - the macro's function is kinda obvious from
+>the diff itself.
+>
+>> Suggested-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+>> Signed-off-by: Breno Leitao <leitao@debian.org>
+>> ---
+>>  arch/x86/include/asm/msr-index.h | 3 +++
+>>  arch/x86/kernel/cpu/bugs.c       | 9 ++++++++-
+>>  2 files changed, 11 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+>> index 4a2af82553e4..704f49580ee1 100644
+>> --- a/arch/x86/include/asm/msr-index.h
+>> +++ b/arch/x86/include/asm/msr-index.h
+>> @@ -54,6 +54,9 @@
+>>  #define SPEC_CTRL_RRSBA_DIS_S_SHIFT	6	   /* Disable RRSBA behavior */
+>>  #define SPEC_CTRL_RRSBA_DIS_S		BIT(SPEC_CTRL_RRSBA_DIS_S_SHIFT)
+>>
+>> +#define SPEC_CTRL_MASK			(SPEC_CTRL_IBRS | SPEC_CTRL_STIBP | SPEC_CTRL_SSBD \
+>> +							| SPEC_CTRL_RRSBA_DIS_S)
+>
+>Call that SPEC_CTRL_MITIGATIONS_MASK or so to denote what it is - a
+>mask of the SPEC_CTRL bits which the kernel toggles when controlling
+>mitigations.
+>
+>A comment above it wouldn't hurt either.
+>
+>> +
+>>  #define MSR_IA32_PRED_CMD		0x00000049 /* Prediction Command */
+>>  #define PRED_CMD_IBPB			BIT(0)	   /* Indirect Branch Prediction Barrier */
+>>
+>> diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+>> index 3e3230cccaa7..88957da1029b 100644
+>> --- a/arch/x86/kernel/cpu/bugs.c
+>> +++ b/arch/x86/kernel/cpu/bugs.c
+>> @@ -137,8 +137,15 @@ void __init check_bugs(void)
+>>  	 * have unknown values. AMD64_LS_CFG MSR is cached in the early AMD
+>>  	 * init code as it is not enumerated and depends on the family.
+>>  	 */
+>> -	if (boot_cpu_has(X86_FEATURE_MSR_SPEC_CTRL))
+>> +	if (boot_cpu_has(X86_FEATURE_MSR_SPEC_CTRL)) {
+>>  		rdmsrl(MSR_IA32_SPEC_CTRL, x86_spec_ctrl_base);
+>> +		/*
+>> +		 * Previously running software may have some controls turned ON.
+>
+>"Previously running software, like kexec for example, ..."
+>
+>> +		 * Clear them and let kernel decide which controls to use.
+>
+>"Clear them and let the mitigations setup below set them based on configuration."
+>
+>> +		 */
+>> +		x86_spec_ctrl_base &= ~SPEC_CTRL_MASK;
+>> +		wrmsrl(MSR_IA32_SPEC_CTRL, x86_spec_ctrl_base);
+>
+>So this WRMSR will happen on the BSP only but the SPEC_CTRL MSR is
+>per-CPU. As is x86_spec_ctrl_current which tracks it.
+>
+>So I'd say you don't need that WRMSR here - the proper value will get
+>replicated eventually everywhere...
 
-You're welcome.
+This patch is particularly for the case when user intends to turn off
+the mitigations like with mitigations=off. In that case we need the
+WRMSR because mitigation selection will simply return without writing to
+the MSR on BSP.
 
-Without either IMA_ARCH or KEXEC_SIG enabled, the kexec selftest
-test_kexec_file_load.sh properly failed with "kexec_file_load failed
-[PASS]", but from the informational messages output, it isn't clear why
-it failed.  This should be corrected.
+As part of AP init x86_spec_ctrl_setup_ap() writes to the MSR even
+when the mitigation is turned off, so AP's should have been fine, but I
+think there is a subtle bug there as well. For below call:
 
--- 
-thanks,
+x86_spec_ctrl_setup_ap(void)
+{
+	write_spec_ctrl_current(x86_spec_ctrl_base, true);
 
-Mimi
+When x86_spec_ctrl_base is 0 MSR won't be written because of a check in
+write_spec_ctrl_current() that doesn't write the MSR when the new value
+(0) is same as x86_spec_ctrl_current (initialized to 0).
 
+Below should fix the problem with APs:
+
+---
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index 3e3230cccaa7..cfc2ed2661fc 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -66,7 +66,7 @@ static DEFINE_MUTEX(spec_ctrl_mutex);
+   */
+  void write_spec_ctrl_current(u64 val, bool force)
+  {
+-	if (this_cpu_read(x86_spec_ctrl_current) == val)
++	if (!force && this_cpu_read(x86_spec_ctrl_current) == val)
+  		return;
+  
+  	this_cpu_write(x86_spec_ctrl_current, val);
 
 _______________________________________________
 kexec mailing list
