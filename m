@@ -4,60 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 39FDAC4332F
-	for <kexec@archiver.kernel.org>; Mon, 28 Nov 2022 16:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 96DE9C433FE
+	for <kexec@archiver.kernel.org>; Mon, 28 Nov 2022 17:00:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=PrCVF8aLq4ouS1mBhoBa1mj9FEmDVv16MgUvMVv1/WA=; b=vEt/DETWdwpcv7
-	zUSeTr9AaHlEipTHzyPrZL5XnjlArfQ4yjt/BvlAEWOsTouKbEitIrsVhymWvvcnfKPwI6K7QzlVM
-	LVP8nbNFLuOIEqlZYu7wjK+c9KhrP/2J3S2i4geCr09cByTHSkg03RqbHMZSZtgaIKk7bH+2ptdh4
-	OyIYTXENcL3SlMln4sCjWF0cqSpnncu5aJw5kqYmGhB6vhiItNf2bCmjv5vV9LSEuN/KDtIpSFZlC
-	fI8lkuRCbw0QlcEElthg/nilRx4LnToZldVKXvnkutWygDgkGttajAzgxrQw8HUtnT0jHHixhoNcG
-	/OTrPNkyPNFVSFvX1MnQ==;
+	List-Owner; bh=HAXd8OhkaiVYqQcyw5Z9aCW3qesJRrWlLaFnpnDLpgY=; b=cDhhGkzf3PP+Hj
+	865r2CFuA0YL0Rml2XyfOeElQ4A2n4HzhvE4scI663Jnuz4vWiKUq/81gmuOyF2AeVBn9POupv3ME
+	XhPZhNvsUuxDe6NdBgoi5GQXMlxTmJ9vUewemC8rw5xRPcFOUZ1vcKcbkvdfUUvanXdCz2GkOgnlX
+	VbXgGLDZEtxeiqgGu5VFWvnOZkq6EdvDrffqy5BX8lZJK2U+9dUXzqSx+M1uSEC2vBKADCz/n0ABQ
+	74trqeisVTMuipf2EF9xyojTeRMiLrm1pNj8eLb3VZcqc14pee0IBzYywSDVXRoUsIaQEZZEa3624
+	+Qr8isM8HAXXpZM1l/vw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1ozhCr-002seR-7J; Mon, 28 Nov 2022 16:42:09 +0000
-Received: from ams.source.kernel.org ([145.40.68.75])
+	id 1ozhUS-002xtv-8b; Mon, 28 Nov 2022 17:00:20 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1ozhCo-002sbN-2P
-	for kexec@lists.infradead.org; Mon, 28 Nov 2022 16:42:07 +0000
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	id 1ozhUP-002xsm-3d
+	for kexec@lists.infradead.org; Mon, 28 Nov 2022 17:00:18 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1669654814;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NME0TFQassPLZ6q9eoRbrinyHRx5W6+wC31wvAX9gRQ=;
+	b=Y6kN/52txccHjNZRzeLBnyhZRR9YmzB5pE/j9/tvYhUiLJqGOLm+yp+XjJocdH1NnTVMcY
+	ZJNO/y8ThHmZ2mJZ9IXO1COlV0EKWGLPlwM8Ea5eIhhBpHkOmcyi34T3tHOgx/PQJCaacw
+	giH6b4DWp4GJVz4nh2DsTJA/n9ATsoE=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-232-iyQyau1CPS6ZeD0vzcZlrg-1; Mon, 28 Nov 2022 12:00:10 -0500
+X-MC-Unique: iyQyau1CPS6ZeD0vzcZlrg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by ams.source.kernel.org (Postfix) with ESMTPS id DD0D7B80E1A;
-	Mon, 28 Nov 2022 16:42:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A00CCC433D7;
-	Mon, 28 Nov 2022 16:42:01 +0000 (UTC)
-Date: Mon, 28 Nov 2022 11:42:00 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Philipp Rudo <prudo@redhat.com>
-Cc: Ricardo Ribalda <ribalda@chromium.org>, Eric Biederman
- <ebiederm@xmission.com>, Jonathan Corbet <corbet@lwn.net>, Sergey
- Senozhatsky <senozhatsky@chromium.org>, linux-kernel@vger.kernel.org,
- kexec@lists.infradead.org, Ross Zwisler <zwisler@kernel.org>,
- linux-doc@vger.kernel.org, "Joel Fernandes (Google)"
- <joel@joelfernandes.org>
-Subject: Re: [PATCH v1 2/2] kexec: Introduce kexec_reboot_disabled
-Message-ID: <20221128114200.72b3e2fe@gandalf.local.home>
-In-Reply-To: <20221124160115.23ae7928@rotkaeppchen>
-References: <20221114-disable-kexec-reset-v1-0-fb51d20cf871@chromium.org>
-	<20221114-disable-kexec-reset-v1-2-fb51d20cf871@chromium.org>
-	<20221117160650.16e06b37@rotkaeppchen>
-	<CANiDSCvyQ66mXbhEgj_qnE_zR4frsxtu1bXaukDrEG0FjrE4yw@mail.gmail.com>
-	<20221121150948.6f7c1f1f@rotkaeppchen>
-	<CANiDSCtqYykAjRinx9r4O+DxdTBA=OQSjF8URmM6X54nN7pDUA@mail.gmail.com>
-	<20221124124000.5af23cad@rotkaeppchen>
-	<CANiDSCvO+6TrM900Z_Jr4QL=c1uHS21deto7cU9W4mr7KimhJQ@mail.gmail.com>
-	<20221124160115.23ae7928@rotkaeppchen>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4B73629ABA1A;
+	Mon, 28 Nov 2022 17:00:10 +0000 (UTC)
+Received: from rotkaeppchen (unknown [10.39.195.61])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id E33652166B2E;
+	Mon, 28 Nov 2022 17:00:07 +0000 (UTC)
+Date: Mon, 28 Nov 2022 18:00:03 +0100
+From: Philipp Rudo <prudo@redhat.com>
+To: Ricardo Ribalda <ribalda@chromium.org>
+Cc: Eric Biederman <ebiederm@xmission.com>, Baoquan He <bhe@redhat.com>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>, Ross Zwisler
+ <zwisler@kernel.org>, kexec@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kexec: Enable runtime allocation of crash_image
+Message-ID: <20221128180003.49747650@rotkaeppchen>
+In-Reply-To: <20221124-kexec-noalloc-v1-0-d78361e99aec@chromium.org>
+References: <20221124-kexec-noalloc-v1-0-d78361e99aec@chromium.org>
+Organization: Red Hat inc.
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221128_084206_305469_0BA3E8B3 
-X-CRM114-Status: GOOD (  18.62  )
+X-CRM114-CacheID: sfid-20221128_090017_261630_B1F2E663 
+X-CRM114-Status: GOOD (  34.15  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,53 +81,171 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, 24 Nov 2022 16:01:15 +0100
-Philipp Rudo <prudo@redhat.com> wrote:
+Hi Ricardo,
 
-> No, I think the implementation is fine. I'm currently only struggling
-> to understand what problem kexec_reboot_disabled solves that cannot be
-> solved by kexec_load_disabled.
+On Thu, 24 Nov 2022 23:23:36 +0100
+Ricardo Ribalda <ribalda@chromium.org> wrote:
 
-Hi Philipp,
+> Usually crash_image is defined statically via the crashkernel parameter
+> or DT.
+> 
+> But if the crash kernel is not used, or is smaller than then
+> area pre-allocated that memory is wasted.
+> 
+> Also, if the crash kernel was not defined at bootime, there is no way to
+> use the crash kernel.
+> 
+> Enable runtime allocation of the crash_image if the crash_image is not
+> defined statically. Following the same memory allocation/validation path
+> that for the reboot kexec kernel.
+> 
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 
-Thanks for working with us on this.
+I don't think this patch will work as intended. For one you omit
+setting the image->type to KEXEC_TYPE_CRASH. But when you grep for that
+type you will find that there is a lot of special handling done for it.
+I don't believe that this can simply be skipped without causing
+problems.
 
-Let me try to explain our use case. We want kexec/kdump enabled, but we
-really do not want kexec used for any other purpose. We must have the kexec
-kernel loaded at boot up and not afterward.
+Furthermore I think you have missed one important detail. The memory
+reserved for the crash kernel is not just a buffer for the image but
+the memory it runs in! For that it has to be a continuous piece of
+physical memory with usually some additional arch specific limitations.
+When allocated dynamically all those limitations need to be considered.
+But a standard kexec doesn't care about those limitations as it doesn't
+care about the os running before itself. It can simply overwrite the
+memory when booting. But if the crash kernel does the same it will
+corrupt the dump it is supposed to generate.
 
-Your recommendation of:
+Thanks
+Philipp
 
-  kexec -p dump_kernel
-  echo 1 > /proc/sys/kernel/kexec_load_disabled
+> ---
+> kexec: Enable runtime allocation of crash_image
+> 
+> To: Eric Biederman <ebiederm@xmission.com>
+> Cc: kexec@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: Ross Zwisler <zwisler@kernel.org>
+> Cc: Philipp Rudo <prudo@redhat.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> ---
+>  include/linux/kexec.h | 1 +
+>  kernel/kexec.c        | 9 +++++----
+>  kernel/kexec_core.c   | 5 +++++
+>  kernel/kexec_file.c   | 7 ++++---
+>  4 files changed, 15 insertions(+), 7 deletions(-)
+> 
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index 41a686996aaa..98ca9a32bc8e 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -427,6 +427,7 @@ extern int kexec_load_disabled;
+>  extern bool kexec_in_progress;
+>  
+>  int crash_shrink_memory(unsigned long new_size);
+> +bool __crash_memory_valid(void);
+>  ssize_t crash_get_memory_size(void);
+>  
+>  #ifndef arch_kexec_protect_crashkres
+> diff --git a/kernel/kexec.c b/kernel/kexec.c
+> index cb8e6e6f983c..b5c17db25e88 100644
+> --- a/kernel/kexec.c
+> +++ b/kernel/kexec.c
+> @@ -28,7 +28,7 @@ static int kimage_alloc_init(struct kimage **rimage, unsigned long entry,
+>  	struct kimage *image;
+>  	bool kexec_on_panic = flags & KEXEC_ON_CRASH;
+>  
+> -	if (kexec_on_panic) {
+> +	if (kexec_on_panic && __crash_memory_valid()) {
+>  		/* Verify we have a valid entry point */
+>  		if ((entry < phys_to_boot_phys(crashk_res.start)) ||
+>  		    (entry > phys_to_boot_phys(crashk_res.end)))
+> @@ -44,7 +44,7 @@ static int kimage_alloc_init(struct kimage **rimage, unsigned long entry,
+>  	image->nr_segments = nr_segments;
+>  	memcpy(image->segment, segments, nr_segments * sizeof(*segments));
+>  
+> -	if (kexec_on_panic) {
+> +	if (kexec_on_panic && __crash_memory_valid()) {
+>  		/* Enable special crash kernel control page alloc policy. */
+>  		image->control_page = crashk_res.start;
+>  		image->type = KEXEC_TYPE_CRASH;
+> @@ -101,7 +101,7 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
+>  
+>  	if (flags & KEXEC_ON_CRASH) {
+>  		dest_image = &kexec_crash_image;
+> -		if (kexec_crash_image)
+> +		if (kexec_crash_image && __crash_memory_valid())
+>  			arch_kexec_unprotect_crashkres();
+>  	} else {
+>  		dest_image = &kexec_image;
+> @@ -157,7 +157,8 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
+>  	image = xchg(dest_image, image);
+>  
+>  out:
+> -	if ((flags & KEXEC_ON_CRASH) && kexec_crash_image)
+> +	if ((flags & KEXEC_ON_CRASH) && kexec_crash_image &&
+> +	    __crash_memory_valid())
+>  		arch_kexec_protect_crashkres();
+>  
+>  	kimage_free(image);
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index ca2743f9c634..77083c9760fb 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -1004,6 +1004,11 @@ void crash_kexec(struct pt_regs *regs)
+>  	}
+>  }
+>  
+> +bool __crash_memory_valid(void)
+> +{
+> +	return crashk_res.end != crashk_res.start;
+> +}
+> +
+>  ssize_t crash_get_memory_size(void)
+>  {
+>  	ssize_t size = 0;
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index 45637511e0de..0671f4f370ff 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -280,7 +280,7 @@ kimage_file_alloc_init(struct kimage **rimage, int kernel_fd,
+>  
+>  	image->file_mode = 1;
+>  
+> -	if (kexec_on_panic) {
+> +	if (kexec_on_panic && __crash_memory_valid()) {
+>  		/* Enable special crash kernel control page alloc policy. */
+>  		image->control_page = crashk_res.start;
+>  		image->type = KEXEC_TYPE_CRASH;
+> @@ -345,7 +345,7 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+>  	dest_image = &kexec_image;
+>  	if (flags & KEXEC_FILE_ON_CRASH) {
+>  		dest_image = &kexec_crash_image;
+> -		if (kexec_crash_image)
+> +		if (kexec_crash_image && __crash_memory_valid())
+>  			arch_kexec_unprotect_crashkres();
+>  	}
+>  
+> @@ -408,7 +408,8 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+>  exchange:
+>  	image = xchg(dest_image, image);
+>  out:
+> -	if ((flags & KEXEC_FILE_ON_CRASH) && kexec_crash_image)
+> +	if ((flags & KEXEC_FILE_ON_CRASH) && kexec_crash_image &&
+> +	    __crash_memory_valid())
+>  		arch_kexec_protect_crashkres();
+>  
+>  	kexec_unlock();
+> 
+> ---
+> base-commit: 4312098baf37ee17a8350725e6e0d0e8590252d4
+> change-id: 20221124-kexec-noalloc-3cab3cbe000f
+> 
+> Best regards,
 
-can work, and we will probably add it. But we are taking the paranoid
-approach, and what I learned in security 101 ;-) and that is, only open up
-the minimal attack surface as possible.
-
-Yes, it's highly unlikely that the above would crash. But as with most
-security vulnerabilities, it's not going to be an attacker that creates a
-new gadget here, but probably another script in the future that causes this
-to be delayed or something, and a new window of opportunity will arise for
-an attacker. Maybe, that new window only works for non panic kernels. Yes,
-this is a contrived scenario, but the work vs risk is very low in adding
-this feature.
-
-Perhaps the attack surface that a reboot kexec could be, is that the
-attacker gets the ability at boot up to load the kexec for reboot and not panic.
-Then the attack must wait for the victim to reboot their machine before
-they have access to the new kernel. Again, I admit this is contrived, but
-just because I can't think of a real situation that this could be a problem
-doesn't mean that one doesn't exist.
-
-In other words, if we never want to allow a kexec reboot, why allow it at
-all from the beginning? The above allows it, until we don't. That alone
-makes us nervous. Whereas this patch is rather trivial and doesn't add
-complexity.
-
-Thanks for your time, we appreciate it.
-
--- Steve
 
 _______________________________________________
 kexec mailing list
