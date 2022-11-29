@@ -4,44 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4F18FC4332F
-	for <kexec@archiver.kernel.org>; Tue, 29 Nov 2022 05:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4E9A7C4321E
+	for <kexec@archiver.kernel.org>; Tue, 29 Nov 2022 13:45:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:To:In-Reply-To:Cc:References:Message-Id
-	:Date:Subject:Mime-Version:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=FTa5IVRkIYjkL2nabGSiAu/2LAaTXdLUxrt798WfD7Q=; b=Vbdgv4LTD4gHRD
-	adxUFJgZc5626rv+cJhaaMAcW0dfjxpGIz9XwT4umMViRxKpP8Di9RvVSUVpj/oqi2KoyOL+tFpg6
-	LNEyWs5FnLveYGLy3j+jQS5lQwTda/8ecwkfeh65fJ1prVTYgW47LqZOfpWpoJT4r+FCW65TaBlyJ
-	NCyjHTvadcG+d+bP2XBWQPma0elypiLKICNSR4KZl0bf4rDBMZgqROuExmlq1i/XF51x9cZrz5GtT
-	mf/uyRfzUh7xHKc5YICvx0s95xcT1ZmbQ2VHMBLVIuOgl76z/NSXKWy13TgsD9qiBLoq8pjWmptLZ
-	Q8zPc9U8JSsjjXhnTUag==;
+	List-Owner; bh=+z+QNYupazzkA7hB3tkcjFoxi7J/YaLSSqIp1iU46i8=; b=0z9GZyNPUwD/7L
+	pHmlyk0BhmOuAt8muwMCVXKMZYzsPPIO+ZUQvMdkw60tmllVG3TCGEPVv7frd5eFVPS5gA0e6ghzh
+	/Okr7bLJBFis7j3FHsIdR1YpaSYKlE3ob8yamJqq+lpvD3igmCpIPeIstXFzOlkuAj3HvsXpJ4+qw
+	Av6bzOCFFZUJ34seADU428k+ReNr8ktK+E28q/OgMRihJxrbwD7KVkT0f+6Tbou4ALcowla12U8dN
+	D+tgSw+hALq6if5KtVI65d0bsbBTzSG/A6grHRbUJqnTYMJ9t4gtUI0EU8OdYAQkx2yCy3I8GgN4p
+	CFGn6B1TCPamjHRT7UOQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1ozt6C-006PAa-NS; Tue, 29 Nov 2022 05:24:04 +0000
-Received: from mailsrv.cs.umass.edu ([128.119.240.136])
+	id 1p00v5-008vpH-68; Tue, 29 Nov 2022 13:45:07 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1ozt69-006Oc9-Ou
-	for kexec@lists.infradead.org; Tue, 29 Nov 2022 05:24:03 +0000
-Received: from smtpclient.apple (c-24-62-201-179.hsd1.ma.comcast.net [24.62.201.179])
-	by mailsrv.cs.umass.edu (Postfix) with ESMTPSA id 79307401AF67;
-	Tue, 29 Nov 2022 00:22:55 -0500 (EST)
-From: Eliot Moss <moss@roc.cs.umass.edu>
-Mime-Version: 1.0 (1.0)
-Subject: Re: nvdimm,pmem: makedumpfile: __vtop4_x86_64: Can't get a valid pte.
-Date: Tue, 29 Nov 2022 00:22:44 -0500
-Message-Id: <70F971CF-1A96-4D87-B70C-B971C2A1747C@roc.cs.umass.edu>
-References: <bd310eeb-7da1-ffe5-a25e-b4871ff3485d@fujitsu.com>
-Cc: Moss@cs.umass.edu, kexec@lists.infradead.org, linux-mm@kvack.org,
- nvdimm@lists.linux.dev, dan.j.williams@intel.com
-In-Reply-To: <bd310eeb-7da1-ffe5-a25e-b4871ff3485d@fujitsu.com>
-To: lizhijian@fujitsu.com
-X-Mailer: iPhone Mail (20B101)
+	id 1p00v1-008vlI-Ti
+	for kexec@lists.infradead.org; Tue, 29 Nov 2022 13:45:05 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1669729500;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JlXgqzr1YlJyffb0kfUdxdiKnbkpAW53h4Ow+kGUHhA=;
+	b=W1nFH2MqAQvAgvRntPY+nqSHHhz+/Hlcw+pA7fVjbx1gLFQpnsiQsQ8mr6zHJBaofqo8dy
+	dI+prGG6F9gaiqPtjKsIcKCsxNzqnUzE7fMXTefOg3Z2QS+Pa3xKbXkZNi+DbZxB+1Of6I
+	aDx09JiMHxuDpZYCBmCNCmVnNPb8BB4=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-287-was1dM1HP_Kgaik-HxG6Rg-1; Tue, 29 Nov 2022 08:44:56 -0500
+X-MC-Unique: was1dM1HP_Kgaik-HxG6Rg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D75F58339C5;
+	Tue, 29 Nov 2022 13:44:55 +0000 (UTC)
+Received: from rotkaeppchen (unknown [10.39.192.193])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 3BE1FC15BA4;
+	Tue, 29 Nov 2022 13:44:54 +0000 (UTC)
+Date: Tue, 29 Nov 2022 14:44:50 +0100
+From: Philipp Rudo <prudo@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ricardo Ribalda <ribalda@chromium.org>, Eric Biederman
+ <ebiederm@xmission.com>, Jonathan Corbet <corbet@lwn.net>, Sergey
+ Senozhatsky <senozhatsky@chromium.org>, linux-kernel@vger.kernel.org,
+ kexec@lists.infradead.org, Ross Zwisler <zwisler@kernel.org>,
+ linux-doc@vger.kernel.org, "Joel Fernandes (Google)"
+ <joel@joelfernandes.org>
+Subject: Re: [PATCH v1 2/2] kexec: Introduce kexec_reboot_disabled
+Message-ID: <20221129144450.75a7181e@rotkaeppchen>
+In-Reply-To: <20221128114200.72b3e2fe@gandalf.local.home>
+References: <20221114-disable-kexec-reset-v1-0-fb51d20cf871@chromium.org>
+	<20221114-disable-kexec-reset-v1-2-fb51d20cf871@chromium.org>
+	<20221117160650.16e06b37@rotkaeppchen>
+	<CANiDSCvyQ66mXbhEgj_qnE_zR4frsxtu1bXaukDrEG0FjrE4yw@mail.gmail.com>
+	<20221121150948.6f7c1f1f@rotkaeppchen>
+	<CANiDSCtqYykAjRinx9r4O+DxdTBA=OQSjF8URmM6X54nN7pDUA@mail.gmail.com>
+	<20221124124000.5af23cad@rotkaeppchen>
+	<CANiDSCvO+6TrM900Z_Jr4QL=c1uHS21deto7cU9W4mr7KimhJQ@mail.gmail.com>
+	<20221124160115.23ae7928@rotkaeppchen>
+	<20221128114200.72b3e2fe@gandalf.local.home>
+Organization: Red Hat inc.
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221128_212401_958973_9B0655E5 
-X-CRM114-Status: GOOD (  19.92  )
+X-CRM114-CacheID: sfid-20221129_054504_091907_DE877E09 
+X-CRM114-Status: GOOD (  39.78  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -53,67 +87,109 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-R2xhZCB5b3UgZm91bmQgaXQuIEFueSB0aG91Z2h0cy9yZWFjdGlvbnM/ICBFTQoKU2VudCBmcm9t
-IG15IGlQaG9uZQoKPiBPbiBOb3YgMjksIDIwMjIsIGF0IDEyOjE3IEFNLCBsaXpoaWppYW5AZnVq
-aXRzdS5jb20gd3JvdGU6Cj4gCj4g77u/Cj4gCj4+IE9uIDI4LzExLzIwMjIgMjM6MDMsIEVsaW90
-IE1vc3Mgd3JvdGU6Cj4+PiBPbiAxMS8yOC8yMDIyIDk6NDYgQU0sIGxpemhpamlhbkBmdWppdHN1
-LmNvbSB3cm90ZToKPj4+IAo+Pj4gCj4+PiBPbiAyOC8xMS8yMDIyIDIwOjUzLCBFbGlvdCBNb3Nz
-IHdyb3RlOgo+Pj4+IE9uIDExLzI4LzIwMjIgNzowNCBBTSwgbGl6aGlqaWFuQGZ1aml0c3UuY29t
-IHdyb3RlOgo+Pj4+PiBIaSBmb2xrcywKPj4+Pj4gCj4+Pj4+IEknbSBnb2luZyB0byBtYWtlIGNy
-YXNoIGNvcmVkdW1wIHN1cHBvcnQgcG1lbSByZWdpb24uIFNvCj4+Pj4+IEkgaGF2ZSBtb2RpZmll
-ZCBrZXhlYy10b29scyB0byBhZGQgcG1lbSByZWdpb24gdG8gUFRfTE9BRCBvZiB2bWNvcmUuCj4+
-Pj4+IAo+Pj4+PiBCdXQgaXQgZmFpbGVkIGF0IG1ha2VkdW1wZmlsZSwgbG9nIGFyZSBhcyBmb2xs
-b3dpbmc6Cj4+Pj4+IAo+Pj4+PiBJbiBteSBlbnZpcm9ubWVudCwgaSBmb3VuZCB0aGUgbGFzdCA1
-MTIgcGFnZXMgaW4gcG1lbSByZWdpb24gd2lsbCBjYXVzZSB0aGUgZXJyb3IuCj4+Pj4gCj4+Pj4g
-SSB3b25kZXIgaWYgYW4gaXNzdWUgSSByZXBvcnRlZCBpcyByZWxhdGVkOiB3aGVuIHNldCB1cCB0
-byBtYXAKPj4+PiAyTWIgKGh1Z2UpIHBhZ2VzLCB0aGUgbGFzdCAyTWIgb2YgYSBsYXJnZSByZWdp
-b24gZ290IG1hcHBlZCBhcwo+Pj4+IDRLYiBwYWdlcywgYW5kIHRoZW4gbGF0ZXIsIGhhbGYgb2Yg
-YSBsYXJnZSByZWdpb24gd2FzIHRyZWF0ZWQKPj4+PiB0aGF0IHdheS4KPj4+PiAKPj4+IENvdWxk
-IHlvdSBzaGFyZSB0aGUgdXJsL2xpbmsgPyBJJ2QgbGlrZSB0byB0YWtlIGEgbG9vawo+PiAKPj4g
-SXQgd2FzIGluIGEgcHJldmlvdXMgZW1haWwgdG8gdGhlIG52ZGltbSBsaXN0LiAgdGhlIHRpdGxl
-IHdhczoKPj4gCj4+ICJQb3NzaWJsZSBQTUQgKGh1Z2UgcGFnZXMpIGJ1ZyBpbiBmcyBkYXgiCj4+
-IAo+PiBBbmQgaGVyZSBpcyB0aGUgYm9keS4gIEkganVzdCBzZW50IGRpcmVjdGx5IHRvIHRoZSBs
-aXN0IHNvIHRoZXJlCj4+IGlzIG5vIFVSTCAoaWYgSSBzaG91bGQgYmUgZW5nYWdpbmcgaW4gYSBk
-aWZmZXJlbnQgd2F5LCBwbGVhc2UgbGV0IG1lIGtub3cpOgo+IAo+IEkgZm91bmQgaXQgOikgYXQK
-PiBodHRwczovL3d3dy5tYWlsLWFyY2hpdmUuY29tL252ZGltbUBsaXN0cy5saW51eC5kZXYvbXNn
-MDI3NDMuaHRtbAo+IAo+IAo+PiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQo+PiBGb2xrcyAtIEkg
-cG9zdGVkIGFscmVhZHkgb24gbnZkaW1tLCBidXQgcGVyaGFwcyB0aGUgdG9waWMgZGlkIG5vdCBx
-dWl0ZSBncmFiCj4+IGFueW9uZSdzIGF0dGVudGlvbi4gIEkgaGFkIGhhZCBzb21lIHRyb3VibGUg
-ZmlndXJpbmcgYWxsIHRoZSBkZXRhaWxzIHRvIGdldAo+PiBkYXggbWFwcGluZyBvZiBmaWxlcyBm
-cm9tIGFuIHhmcyBmaWxlIHN5c3RlbSB3aXRoIHVuZGVybHlpbmcgT3B0YW5lIERDIG1lbW9yeQo+
-PiBnb2luZywgYnV0IG5vdyBoYXZlIHRoYXQgd29ya2luZyByZWxpYWJseS4gIEJ1dCB0aGVyZSBp
-cyBhbiBvZGQgYmVoYXZpb3I6Cj4+IAo+PiBXaGVuIGZpcnN0IG1hcHBpbmcgYSBmaWxlLCBJIHJl
-cXVlc3QgbWFwcGluZyBhIDMyIEdiIHJhbmdlLCBhbGlnbmVkIG9uIGEgMSBHYgo+PiAoYW5kIHRo
-dXMgY2xlYXJseSBvbiBhIDIgTWIpIGJvdW5kYXJ5Lgo+PiAKPj4gRm9yIGVhY2ggZ3JvdXAgb2Yg
-OCBHYiwgdGhlIGZpcnN0IDQwOTUgZW50cmllcyBtYXAgd2l0aCBhIDIgTWIgaHVnZSAoUE1EKQo+
-PiBwYWdlLiAgVGhlIDQwOTZ0aCBvbmUgZG9lcyBGQUxMQkFDSy4gIEkgc3VzcGVjdCBzb21lIHBy
-b2JsZW0gaW4KPj4gZGF4LmM6Z3JhYl9tYXBwaW5nX2VudHJ5IG9yIGl0cyBjYWxsZWVzLCBidXQg
-YW0gbm90IHBlcnNvbmFsbHkgd2VsbCBlbm91Z2gKPj4gdmVyc2VkIGluIGVpdGhlciB0aGUgZGF4
-IGNvZGUgb3IgdGhlIHhhcnJheSBpbXBsZW1lbnRhdGlvbiB0byBkaWcgZnVydGhlci4KPj4gCj4+
-IAo+PiBJZiB5b3UnZCBsaWtlIGEgc2Vjb25kIHB1enpsZSDwn5iEIC4uLiBhZnRlciBjb21wbGV0
-aW5nIHRoaXMgbWFwcGluZywgYW5vdGhlcgo+PiB0aHJlYWQgYWNjZXNzZXMgdGhlIHdob2xlIHJh
-bmdlIHNlcXVlbnRpYWxseS4gIFRoaXMgcmVzdWx0cyBpbiBOT1BBR0UgZmF1bHQKPj4gaGFuZGxp
-bmcgZm9yIHRoZSBmaXJzdCA0MDk1KzQwOTUgMk0gcmVnaW9ucyB0aGF0IHByZXZpb3VzbHkgcmVz
-dWx0ZWQgaW4KPj4gTk9QQUdFIC0tIHNvIGZhciBzbyBnb29kLiAgQnV0IGl0IGdpdmVzIEZBTExC
-QUNLIGZvciB0aGUgdXBwZXIgMTYgR2IgKGV4Y2VwdAo+PiB0aGUgdHdvIFBNRCByZWdpb25zIGl0
-IGFscmFkeSBnYXZlIEZBTExCQUNLIGZvcikuCj4+IAo+PiAKPj4gSSBjYW4gcHJvdmlkZSB0cmFj
-ZSBvdXRwdXQgZnJvbSBhIHJ1biBpZiB5b3UnZCBsaWtlIGFuZCBhbGwgdGhlIG5kY3RsLCBnZGlz
-awo+PiAtbCwgZmRpc2sgLWwsIGFuZCB4ZnNfaW5mbyBkZXRhaWxzIGlmIHlvdSBsaWtlLgo+PiAK
-Pj4gCj4+IEluIG15IGFwcGxpY2F0aW9uLCBpdCB3b3VsZCBiZSBuaWNlIGlmIGRheC5jIGNvdWxk
-IGRlbGl2ZXIgMSBHYiBQVUQgc2l6ZQo+PiBtYXBwaW5ncyBhcyB3ZWxsLCB0aG91Z2ggaXQgd291
-bGQgYXBwZWFyIHRoYXQgdGhhdCB3b3VsZCByZXF1aXJlIG1vcmUgc3VyZ2VyeQo+PiBvbiBkYXgu
-Yy4gIEl0IHdvdWxkIGJlIHNvbWV3aGF0IGFuYWxvZ291cyB0byB3aGF0J3MgYWxyZWFkeSB0aGVy
-ZSwgb2YgY291cnNlLAo+PiBidXQgSSBkb24ndCBtZWFuIHRvIG1pbmltaXplIHRoZSBwb3NzaWJs
-ZSB0cmlja2luZXNzIG9mIGl0LiAgSSByZWFsaXplIEkKPj4gc2hvdWxkIHN1Ym1pdCB0aGF0IHJl
-cXVlc3QgYXMgYSBzZXBhcmF0ZSB0aHJlYWQg8J+YhCB3aGljaCBJIGludGVuZCB0byBkbwo+PiBs
-YXRlci4KPj4gPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KPj4gCj4+IFJlZ2FyZHMgLSBFbGlvdCBN
-b3NzCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4
-ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Hi Steven,
+
+On Mon, 28 Nov 2022 11:42:00 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> On Thu, 24 Nov 2022 16:01:15 +0100
+> Philipp Rudo <prudo@redhat.com> wrote:
+> 
+> > No, I think the implementation is fine. I'm currently only struggling
+> > to understand what problem kexec_reboot_disabled solves that cannot be
+> > solved by kexec_load_disabled.  
+> 
+> Hi Philipp,
+> 
+> Thanks for working with us on this.
+> 
+> Let me try to explain our use case. We want kexec/kdump enabled, but we
+> really do not want kexec used for any other purpose. We must have the kexec
+> kernel loaded at boot up and not afterward.
+> 
+> Your recommendation of:
+> 
+>   kexec -p dump_kernel
+>   echo 1 > /proc/sys/kernel/kexec_load_disabled
+> 
+> can work, and we will probably add it. But we are taking the paranoid
+> approach, and what I learned in security 101 ;-) and that is, only open up
+> the minimal attack surface as possible.
+
+Well that's sort of my problem. When you go all in on paranoia I would
+expect that you also restrict the crash kernel. Otherwise you keep most
+of the attack surface. But disabling 'reboot' of the crash kernel is
+quite intrusive and probably not what you want. That's why I think it
+is better do the restriction on the 'load' rather than the 'reboot'
+path.
+
+One solution for that is the script above. But that pushes all the
+responsibilities concerning syncing and error handling to the sysadmin.
+Depending on your level of paranoia that might be too risky. Personally
+I think it's fine as the kernel alone cannot fix all potential security
+problems. In my opinion this has to be done in the layer that is
+responsible for the task done. So when a security problem arises due to
+ill syncing when starting different services it's the job of the init
+system to fix the issue.
+
+An alternative approach and sort of compromise I see is to convert
+kexec_load_disabled from a simple on/off switch to a counter on how
+often a kexec load can be made (in practice a tristate on/off/one-shot
+should be sufficient). Ideally the reboot and panic path will
+have separate counters. With that you could for example use
+kexec_load_limit.reboot=0 and kexec_load_limit.panic=1 to disable the
+load of images for reboot while still allow to load a crash kernel
+once. With this you have the flexibility you need while also preventing
+a race where an attacker overwrites your crash kernel before you can
+toggle the switch. What do you think?
+
+> Yes, it's highly unlikely that the above would crash. But as with most
+> security vulnerabilities, it's not going to be an attacker that creates a
+> new gadget here, but probably another script in the future that causes this
+> to be delayed or something, and a new window of opportunity will arise for
+> an attacker. Maybe, that new window only works for non panic kernels. Yes,
+> this is a contrived scenario, but the work vs risk is very low in adding
+> this feature.
+
+True, but that problem is not limited to userspace. For example see
+Ricardos other patch [1] where he treats the load of a crash kernel
+just like a standard load. In my opinion he creates such a gadget in
+that patch.
+
+[1] https://lore.kernel.org/all/20221124-kexec-noalloc-v1-0-d78361e99aec@chromium.org/
+
+Thanks
+Philipp
+
+> Perhaps the attack surface that a reboot kexec could be, is that the
+> attacker gets the ability at boot up to load the kexec for reboot and not panic.
+> Then the attack must wait for the victim to reboot their machine before
+> they have access to the new kernel. Again, I admit this is contrived, but
+> just because I can't think of a real situation that this could be a problem
+> doesn't mean that one doesn't exist.
+> 
+> In other words, if we never want to allow a kexec reboot, why allow it at
+> all from the beginning? The above allows it, until we don't. That alone
+> makes us nervous. Whereas this patch is rather trivial and doesn't add
+> complexity.
+> 
+> Thanks for your time, we appreciate it.
+> 
+> -- Steve
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
