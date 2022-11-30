@@ -4,77 +4,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 63904C433FE
-	for <kexec@archiver.kernel.org>; Wed, 30 Nov 2022 15:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 24886C4708C
+	for <kexec@archiver.kernel.org>; Wed, 30 Nov 2022 16:29:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
-	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=m7Vgi+FOleYF1IpY0sdmTKnCFDt9d+S3FyfDtY2wSTw=; b=ZTzen5skmDDEZc
-	v0Wtxa350dHbJqncA6QOFQsuo08QVUnbR9kKHbEKxyhIh3FL+/mB2aNWO1lP2LMg6vA+KA2krr7CQ
-	lGTRkrMhckGIZRIV6UNU8JRj2SnKOc9CwmcjvO6SdfqHnUYfrsaLbhtdEiu/Oq8F7gdYloT3PjRE2
-	AjuNYGQ15a33LgMv5m+IfMzBdgoK/4zCdZ/by++uE3jX7RMyD/RIIHn+cZtdfRGStXsFy/+Y68DTK
-	KlHc0WkJqD7pcVtSMTb/XsjeactM53Ry0oxQvn+iBTaxLEj/40ljeU/OMrWPvn2u5LqOjvTIMNKFv
-	nTLR6LI/zN1oThG6BZoQ==;
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Message-Id:Date:From:MIME-Version
+	:Subject:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=bGW9r/+BC46diN9HaE5GVMT+rwMB5qm2B5Qod9z+Wto=; b=vjubXZxln1VG0M
+	fIzH31u79HUBAtIdOislaBFUbw3mNh7IcEIS4Spp94FFzRyiOr+vEJGc0kj+f3N0HgW4/Q9E8yQ+Q
+	4Q9AY5XAsj8p6MvK3eiKgSViWkcQFZObASMGeL94vdyoe98P198uRnEQ7cO5c7LsOx6Y9M5shpo6f
+	3FcDaG4UDR5iOGHj2KqVHWoiaosGdpoyvqFJcLUanoomxd33S2XFjOoNLhxs9rKyAqrWU/0G5Kduv
+	1ekgJCBt8AHbPD6H2Rnzpbf8Q+20SX3Gl/HeOcTCZCHCaQfzNCQmH8rVCTfCIDpKIzy5crFMybX/C
+	zECii824ChmPhplLhCjw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1p0PPl-0009Pr-Jk; Wed, 30 Nov 2022 15:54:25 +0000
-Received: from mga12.intel.com ([192.55.52.136])
+	id 1p0Py0-000SX2-5o; Wed, 30 Nov 2022 16:29:48 +0000
+Received: from mail-ej1-x636.google.com ([2a00:1450:4864:20::636])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1p0PPi-0009Ja-95
-	for kexec@lists.infradead.org; Wed, 30 Nov 2022 15:54:24 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669823662; x=1701359662;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=DepN27OpZlgbeuoWYTFKVyj3/uCClQNbsv2Ccqz0OMY=;
-  b=RgTunAD5a8pg7Q+UP1a2KdnGTx0o1f5fS+zmnTn/Gbznpbr3583M7e42
-   fe3344N21f9NyHtpkVBsStpS3Ne66cIoEIv//QaxIorugvadWl9twJqWN
-   og6xs3/0lkdqs3IbouIjgXFQz0jfPEYrUlE5iQDAXdIbzf2VzSW7Ko+yn
-   f7kQ8p44tW4WxGxLNCwe4AGEUeMPWeD23eav/YKfFvA4epbW7xtLdkhUG
-   0A8O2uEvBwW/fvHXq5jOlUicDrWVrSx0/IjI7dR4OFNvvfNQUx4td+9HW
-   nsmv7hwDm9EYEYxMukOiVk+4ehqmyeYvzmvRSmZCwgRlCDIJrU9TRZLO2
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="295126304"
-X-IronPort-AV: E=Sophos;i="5.96,206,1665471600"; 
-   d="scan'208";a="295126304"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 07:54:14 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="707693261"
-X-IronPort-AV: E=Sophos;i="5.96,206,1665471600"; 
-   d="scan'208";a="707693261"
-Received: from schaud2-mobl1.amr.corp.intel.com (HELO [10.209.164.68]) ([10.209.164.68])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 07:54:12 -0800
-Message-ID: <62a3dbbd-3144-d560-17de-cada6a34502b@linux.intel.com>
-Date: Wed, 30 Nov 2022 09:54:11 -0600
+	id 1p0Pxw-000STv-6o
+	for kexec@lists.infradead.org; Wed, 30 Nov 2022 16:29:46 +0000
+Received: by mail-ej1-x636.google.com with SMTP id td2so28536908ejc.5
+        for <kexec@lists.infradead.org>; Wed, 30 Nov 2022 08:29:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=cc:to:message-id:date:from:content-transfer-encoding:mime-version
+         :subject:from:to:cc:subject:date:message-id:reply-to;
+        bh=Pw5kShSF3E0E3sfHSq2rS1swDqNHSyrtWf4koh3J7SU=;
+        b=Kk+o2yEg5yzW1D+dnF/cIcgc8Gk9rEgcTR8uPovDjDPf1PkKrRWq/BDqdOQ2U4PJof
+         ZYGyAjHsFgdoX7pMpAU4oGFrUDqQMiu5dEU45Q/vOO5Tz9XhHc2ar79+I0QgPDAmMc8x
+         s4z36cBy3fIOu4yKj4AB0btoe+F32/JxNjF18=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:message-id:date:from:content-transfer-encoding:mime-version
+         :subject:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Pw5kShSF3E0E3sfHSq2rS1swDqNHSyrtWf4koh3J7SU=;
+        b=dp7K5imvP6qNbo0MoRfLZMHdyBUirM4K4Z6weosN8AluaDLDEd6xf9aU+O6MvI2iiV
+         6TDv9wNjvj+5fu13hlvcVkuoNe0ZMMzPl2dgHqXy0ZQOafVPyLYIfRGvRrB+tTwfOjq4
+         aQZDyz5MX5QnBDLnWyLbevHqqW+lrBxbkYCpWgePDxRyWQN2me2y5568MdfUzaqUUMWM
+         VOmX4KC6tRyidSFrT7bfBHiYecCYm37yXp/yaWbzAc1z5XqzB0VBKhgvkXMi8HmIuk6t
+         gqWTp4u2FY7LfXDXIXoLTWD2jRnKE149Y/Pau2FRG/75s2SLsukQS8s+JaopjpGSnh+M
+         wHpg==
+X-Gm-Message-State: ANoB5pleDVARfqeg1EUs4Nnb8IuOt0n3+JjF5w8VTuRisq0kz3eKzIlE
+	TEbUmxnMaj1qHvLnTOtS9sQP4A==
+X-Google-Smtp-Source: AA0mqf5Uqj/CD0/FukZXXIc0vRyTLddNiAbe2JXdXsEHuMwbmXDMwhTREvJcq30MxLXV+1w0b73ssg==
+X-Received: by 2002:a17:906:2302:b0:7b9:de77:f0ef with SMTP id l2-20020a170906230200b007b9de77f0efmr31418299eja.5.1669825782653;
+        Wed, 30 Nov 2022 08:29:42 -0800 (PST)
+Received: from alco.roam.corp.google.com (80.71.134.83.ipv4.parknet.dk. [80.71.134.83])
+        by smtp.gmail.com with ESMTPSA id cz15-20020a0564021caf00b004589da5e5cesm786114edb.41.2022.11.30.08.29.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Nov 2022 08:29:42 -0800 (PST)
+Subject:  [PATCH v7 0/2] ASoC: SOF: Fix deadlock when shutdown a frozen userspace
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.4.2
-Subject: Re: [PATCH v6 2/2] ASoC: SOF: Fix deadlock when shutdown a frozen
- userspace
-Content-Language: en-US
-To: Ricardo Ribalda <ribalda@chromium.org>,
- Chromeos Kdump <chromeos-kdump@google.com>,
- Liam Girdwood <lgirdwood@gmail.com>, Eric Biederman <ebiederm@xmission.com>,
- Daniel Baluta <daniel.baluta@nxp.com>, Mark Brown <broonie@kernel.org>,
- Bard Liao <yung-chuan.liao@linux.intel.com>, Jaroslav Kysela
- <perex@perex.cz>, Kai Vehmanen <kai.vehmanen@linux.intel.com>,
- Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+X-B4-Tracking: v=1; b=H4sIAN+Eh2MC/3XOzWrDMAwH8FcpPs/Dlr/SnvYeYwfZVhpDm4C9Br
+ aSd5+247DRQfwFP0lP0agWauJyeopKe2llWzmEl5NIC65XkiVzFqAAtIYg25rlXIm+SWoibQ3AZM
+ ALBhEbyVhxTQuT9XG78XAp7XOrX38Hds3tvbtr11JJF6zXaLynBG9pqdu9PO6vW72KD960w1gD6z
+ yhBUd49t50tBlrwxqBMgajE2rb0Xas7e/n7LyNYQaMHe3G2rG2lLmimiKqjvZj7VkbOivnzOwtun
+ /6OI4f1ZmnceIBAAA=
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Wed, 30 Nov 2022 17:29:19 +0100
+Message-Id: <20221127-snd-freeze-v7-0-127c582f1ca4@chromium.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
  Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
- Takashi Iwai <tiwai@suse.com>, Steven Rostedt <rostedt@goodmis.org>
-Cc: stable@vger.kernel.org, linux-kernel@vger.kernel.org,
- alsa-devel@alsa-project.org, kexec@lists.infradead.org,
- sound-open-firmware@alsa-project.org
-References: <20221127-snd-freeze-v6-0-3e90553f64a5@chromium.org>
- <20221127-snd-freeze-v6-2-3e90553f64a5@chromium.org>
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-In-Reply-To: <20221127-snd-freeze-v6-2-3e90553f64a5@chromium.org>
+ Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+ Jaroslav Kysela <perex@perex.cz>, Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+ Chromeos Kdump <chromeos-kdump@google.com>, Mark Brown <broonie@kernel.org>,
+ Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+ Eric Biederman <ebiederm@xmission.com>,
+ Bard Liao <yung-chuan.liao@linux.intel.com>,
+ Daniel Baluta <daniel.baluta@nxp.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Takashi Iwai <tiwai@suse.com>
+Cc: alsa-devel@alsa-project.org, sound-open-firmware@alsa-project.org,
+ kexec@lists.infradead.org, stable@vger.kernel.org,
+ Ricardo Ribalda <ribalda@chromium.org>, linux-kernel@vger.kernel.org
+X-Mailer: b4 0.11.0-dev-696ae
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2556; i=ribalda@chromium.org;
+ h=from:subject:message-id; bh=fWR7ZhQQr5ar1fWGLk9Z4Z/KnsEAhZyZVnGAD/1s2QE=;
+ b=owEBbQKS/ZANAwAKAdE30T7POsSIAcsmYgBjh4Tj1YJB5e2N7FcWhOjD8LaBqVFgwZ6IzdIM0xvp
+ aiGFuduJAjMEAAEKAB0WIQREDzjr+/4oCDLSsx7RN9E+zzrEiAUCY4eE4wAKCRDRN9E+zzrEiCKbD/
+ 9ABaeeu+udLacBhMTu+U8I0v2fMtTFzWs53fP+KTDnJE63jhi466UEK2Eu6YjLxuiFFGwoA1H9rm2F
+ K2d3T8RyD7FP9KkvaYEU3hdCAqEoYCWqTpseaJwBD1p0TGN2KlklISkClKwEecScrguxuDnBpNc0AO
+ IguSucJL9GHuRLPh2bmPzfqk9fXTmWHuXvMQSEbTFm08p7/8tnXD6c4DrF8y2kEkP8UOMYwRvlL3IL
+ jQClmEBBVFU9iGyCJlDnZufqBXd2FKl0G/Lle5yT9G4Aa8mXz0vTp7S4ESFrFPTVuZ6cr9a4BeDxF1
+ j/q77JY7hvMgmblwDTVpIZPgjoMeNhRvryvPDahtEaj1ysEwkwVR75y7sOPJipu/zHaL/G+c2hL8sf
+ efcLlAxITUlGn+K0htYH8F5Rwc3rgK+wmpd/KyshA1HS0vjx9os/T4qJXAoPcLo5v7rXB4nJs/udeN
+ NcI98QsNdnRVKpAjwvU8n+jhscLK4Mjf6WXo6ho5aWnkGpRU/bBcaw9IprIt8saDDtjAElFH7/nEL/
+ nAx/38CAt8kk5W9Ps6ixILZQLU0QpH9FGz9idFMKpPOQBQaCxbAGub5JOXKA971+4QARa0ecT9mNoh
+ HunOaLUT93bmfokQX9++oCdDrS1PKPCPc5SCFGB0AR0a2iI5fzOf3jzWj4Sg==
+X-Developer-Key: i=ribalda@chromium.org; a=openpgp;
+ fpr=9EC3BB66E2FC129A6F90B39556A0D81F9F782DA9
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221130_075422_358769_6CF6399E 
-X-CRM114-Status: GOOD (  11.28  )
+X-CRM114-CacheID: sfid-20221130_082944_308437_DA2554B7 
+X-CRM114-Status: GOOD (  12.11  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,34 +114,73 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+Since: 83bfc7e793b5 ("ASoC: SOF: core: unregister clients and machine drivers in .shutdown")
+we wait for all the workloads to be completed during shutdown. This was done to 
+avoid a stall once the device is started again.
 
+Unfortunately this has the side effect of stalling kexec(), if the userspace
+is frozen. Let's handle that case.
 
-On 11/30/22 09:47, Ricardo Ribalda wrote:
-> During kexec(), the userspace is frozen. Therefore we cannot wait for it
-> to complete.
-> 
-> Avoid running snd_sof_machine_unregister during shutdown.
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To: Liam Girdwood <lgirdwood@gmail.com>
+To: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
+To: Bard Liao <yung-chuan.liao@linux.intel.com>
+To: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+To: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+To: Daniel Baluta <daniel.baluta@nxp.com>
+To: Mark Brown <broonie@kernel.org>
+To: Jaroslav Kysela <perex@perex.cz>
+To: Takashi Iwai <tiwai@suse.com>
+To: Eric Biederman <ebiederm@xmission.com>
+To: Chromeos Kdump <chromeos-kdump@google.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: stable@vger.kernel.org
+Cc: sound-open-firmware@alsa-project.org
+Cc: alsa-devel@alsa-project.org
+Cc: linux-kernel@vger.kernel.org
+Cc: kexec@lists.infradead.org
+Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+---
+Changes in v7:
+- Fix commit message (Thanks Pierre-Louis).
+- Link to v6: https://lore.kernel.org/r/20221127-snd-freeze-v6-0-3e90553f64a5@chromium.org
 
-That's not what you are doing below - you only unregister clients
-conditionally.
+Changes in v6:
+- Check if we are in kexec with the userspace frozen.
+- Link to v5: https://lore.kernel.org/r/20221127-snd-freeze-v5-0-4ededeb08ba0@chromium.org
 
-I don't know if that's a stale commit message and can't reconcile it
-either with the initial discussions in this thread where we were
-referring to snd_card_disconnect(), etc?
+Changes in v5:
+- Edit subject prefix.
+- Link to v4: https://lore.kernel.org/r/20221127-snd-freeze-v4-0-51ca64b7f2ab@chromium.org
 
-Confused.
+Changes in v4:
+- Do not call snd_sof_machine_unregister from shutdown.
+- Link to v3: https://lore.kernel.org/r/20221127-snd-freeze-v3-0-a2eda731ca14@chromium.org
 
-> @@ -484,7 +485,8 @@ int snd_sof_device_shutdown(struct device *dev)
->  	 * make sure clients and machine driver(s) are unregistered to force
->  	 * all userspace devices to be closed prior to the DSP shutdown sequence
->  	 */
-> -	sof_unregister_clients(sdev);
-> +	if (!kexec_with_frozen_processes())
-> +		sof_unregister_clients(sdev);
->  
->  	snd_sof_machine_unregister(sdev, pdata);
->  
-> 
+Changes in v3:
+- Wrap pm_freezing in a function.
+- Link to v2: https://lore.kernel.org/r/20221127-snd-freeze-v2-0-d8a425ea9663@chromium.org
+
+Changes in v2:
+- Only use pm_freezing if CONFIG_FREEZER .
+- Link to v1: https://lore.kernel.org/r/20221127-snd-freeze-v1-0-57461a366ec2@chromium.org
+
+---
+Ricardo Ribalda (2):
+      kexec: Introduce kexec_with_frozen_processes
+      ASoC: SOF: Fix deadlock when shutdown a frozen userspace
+
+ include/linux/kexec.h | 3 +++
+ kernel/kexec_core.c   | 5 +++++
+ sound/soc/sof/core.c  | 4 +++-
+ 3 files changed, 11 insertions(+), 1 deletion(-)
+---
+base-commit: 4312098baf37ee17a8350725e6e0d0e8590252d4
+change-id: 20221127-snd-freeze-1ee143228326
+
+Best regards,
+-- 
+Ricardo Ribalda <ribalda@chromium.org>
 
 _______________________________________________
 kexec mailing list
