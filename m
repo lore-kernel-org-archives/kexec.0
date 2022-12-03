@@ -4,81 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B8831C47088
-	for <kexec@archiver.kernel.org>; Sat,  3 Dec 2022 00:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6AF9AC47089
+	for <kexec@archiver.kernel.org>; Sat,  3 Dec 2022 01:00:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:To:From:Cc:MIME-Version:Date:Message-Id
-	:Subject:References:In-Reply-To:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References:Date:
+	Message-Id:From:Subject:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=rCI7R8/YDgN/9v9f9xo8aXySpjJ8t7t6a6U8qdA5DTM=; b=ug2vOpDJeMLbdS
-	YLaxK2kaphIg1WmeL3FstmosPTVkkcB872PM3dXlcFCbEZmqrWflQBn5L4/FBI6SBqdaNXC9o6lLw
-	FQLCAmc+LESXO359dbFvICFvaaiGWw661IeRzks10kWXCgTKxU2hD3LyQ6HguOth1M/pVhy52w4Uc
-	fiuqxvCN5ZcQZDHYmvEzGWXxi827DlfRwVep4u3QNqveCWDSTHoi2GXXU7ysaX7eCKzK0nxjm+dYt
-	vptewNTofgfOcxltmnhycWoE31KARFHM7pw369VtyVHQfhO+a+pZIb/vIToNntIfPZjlzsRpR7W/P
-	pShhr9J1dXa1qkaiwRHg==;
+	List-Owner; bh=jq84G2CM4gMhVa9iL/2+0Q6w2IAHhlYgQDRe/u55UCk=; b=zXdoAQgc5uiiDq
+	4sDITuPBlJfDORgCCLShzX/mImhny0i5PcuVTf6JvN6C5suub3PRh6QPr2RH6hYv7/8HESroteD6R
+	FXe2eskqRxoiOFEZLEmyClYDtGzzdNbrrfkuYSmhRYpQxZ46ElQQ3k3G43FS/8IDMgqGnewUlTTHO
+	/Ol9NLOJs/NGZ4afISO1/bHupollLOzndoJeoweEqrq6qnRnniFTMSWaN/LYYjrfwE9D4wAZBSHAi
+	38BO+O4hogXUoAHXJs7ITg2X6Y3Gu8X4xhfCHkDw+z9fKBYcwhCiOTnnkOkE7RQTTrjtZgz/4lvhs
+	TpWOSbPFKxovsqQOptSQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1p1Gpz-001rpj-6G; Sat, 03 Dec 2022 00:57:03 +0000
-Received: from mail-pf1-x435.google.com ([2607:f8b0:4864:20::435])
+	id 1p1GtC-001sMC-RF; Sat, 03 Dec 2022 01:00:22 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1p1Gpu-001roE-Vr
-	for kexec@lists.infradead.org; Sat, 03 Dec 2022 00:57:00 +0000
-Received: by mail-pf1-x435.google.com with SMTP id c15so6385403pfb.13
-        for <kexec@lists.infradead.org>; Fri, 02 Dec 2022 16:56:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20210112.gappssmtp.com; s=20210112;
-        h=to:from:cc:content-transfer-encoding:mime-version:date:message-id
-         :subject:references:in-reply-to:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=18IZ0m5toh803lbdbvk/IEmYiB7S5eI1v1wKhdMmz6I=;
-        b=FxQVJ80S9QkHllGqaVUvnNBiW1xUrcSiYTno/9plqqGOFfeEqGXXEiGXeRlhf57k4O
-         wP4zI/rjXepwujEZ5K0JDERtkOORTHTVW3murD7yOKYk8Rhu/0O9KizxLx868HXw4WzC
-         hKwXODCFYDscH+gB6BFDyA2nHgRN+gug8OK2pFNSBzDVGu1H5v9Aajo1g9JTZL/GORFv
-         WDY2evnKAQunFA+yeuF5UHiF7vo2oobtvTKYpGpIr59gP1UqjFZtpdn3Q02Q1ksrxtj6
-         J8pBdK+4Q1NyTg6LZRIL69Dbyl0B1iTcJEeXtC57Mab4rMxHsXCIktj6tsebfqma8Keo
-         6nTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:from:cc:content-transfer-encoding:mime-version:date:message-id
-         :subject:references:in-reply-to:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=18IZ0m5toh803lbdbvk/IEmYiB7S5eI1v1wKhdMmz6I=;
-        b=gBNuadNwmQ57xRsF9oWxn88fRjDnOSbonpo6xDWXRrdM/n6rQs2xBNyIqQOSYJL2cL
-         s1WZOvcdyqRZNYinnoETAYI+Ky36q8fCqkZ8tIizKP37Oot3C+vjDSIebJkQFoDzSxq4
-         mDKPdXjUdriAeCWj13bPIJIxShYvh43tJ4cjgOLcuL1+0GFyZwF/J3NW4hdk0d2Zkm/u
-         fgGVudVWi4kBkHco9g/B+vJXfy1TcgslSVpuc+QJ10eI2cnpduRmk/+6iQO/XECSM22q
-         JbIYPmqAqDCDU/WRe2IS9FKoUQftWvWdIbMoRk4dQZFu+Ydmp2OXNhdHKhc/1af/BNFg
-         JGTQ==
-X-Gm-Message-State: ANoB5pmHLEUJ7j9M/Bkp+TLHx/dMPUklO7r1b5ku4K3oa+/NE/1TgKRF
-	rBAmmi1AlI3GBobyHRUyFSLn8A==
-X-Google-Smtp-Source: AA0mqf7l8GDn2HO87/kOUsruTegFJYC7NPmDdYxV0Oo4X9myc0x/MCYGm6AFgGQ18JfhnX017FqfFw==
-X-Received: by 2002:a63:ce10:0:b0:478:5e53:4742 with SMTP id y16-20020a63ce10000000b004785e534742mr13351694pgf.471.1670029015924;
-        Fri, 02 Dec 2022 16:56:55 -0800 (PST)
-Received: from localhost ([50.221.140.188])
-        by smtp.gmail.com with ESMTPSA id x28-20020aa79a5c000000b0056b8181861esm5859524pfj.19.2022.12.02.16.56.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Dec 2022 16:56:55 -0800 (PST)
-In-Reply-To: <20221026144208.373504-1-xianting.tian@linux.alibaba.com>
-References: <20221026144208.373504-1-xianting.tian@linux.alibaba.com>
-Subject: Re: [PATCH V5 0/2] Support VMCOREINFO export for RISCV64
-Message-Id: <167002857934.4256.16584443879212253129.b4-ty@rivosinc.com>
-Date: Fri, 02 Dec 2022 16:49:39 -0800
+	id 1p1GtA-001sLh-52; Sat, 03 Dec 2022 01:00:21 +0000
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 4D81761CD3;
+	Sat,  3 Dec 2022 01:00:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 91984C433B5;
+	Sat,  3 Dec 2022 01:00:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1670029216;
+	bh=MGsPTcfIDMe8NsW+WgRecjSM7wji1B+lYnN8B7L988E=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=DnOIfI/oz3QrsMN5TuUpL4+k48Cgf1oo2sPSBBvl6Mo2HqJPMaI4tz0CSTIIMRaIS
+	 SRZTLFxi/xfJ97DlMF+60OXNAFRBpTu16M8+4yWIsMp2wnMsFUhHyGQTVDuhRpOfzE
+	 aUSYPDS3QoRdCA/VDPMI1Q+qjhIi8g4eU32SuTTunZnYJI54tig6yhCL3uTtsnPWSv
+	 wXKqPBGKxfustW6KDKNC461eKxZ/w+M8KuoeYuT3g0KVrPZcvtEG8p2A4AjKoB+AEI
+	 h8MyMtL+i41gbjgKPFmN0FJVqltNSLhB0aKd0g8xHKHlUREnuYDKx8nlGNgSd3saoC
+	 CvQZOE7R7ptAA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 75819C395EC;
+	Sat,  3 Dec 2022 01:00:16 +0000 (UTC)
 MIME-Version: 1.0
-X-Mailer: b4 0.11.0-dev-e660e
-Cc: hschauhan@nulltrace.org, yixun.lan@gmail.com, kexec@lists.infradead.org,
-  heinrich.schuchardt@canonical.com, linux-doc@vger.kernel.org, crash-utility@redhat.com,
-  linux-kernel@vger.kernel.org, k-hagio-ab@nec.com, linux-riscv@lists.infradead.org
-From: Palmer Dabbelt <palmer@rivosinc.com>
-To: mick@ics.forth.gr, corbet@lwn.net, alexandre.ghiti@canonical.com,
-  vgoyal@redhat.com, bhe@redhat.com, Paul Walmsley <paul.walmsley@sifive.com>,
-  Conor Dooley <conor.dooley@microchip.com>, bagasdotme@gmail.com, dyoung@redhat.com, Palmer Dabbelt <palmer@dabbelt.com>,
-  heiko@sntech.de, Xianting Tian <xianting.tian@linux.alibaba.com>, guoren@kernel.org,
-  anup@brainfault.org, aou@eecs.berkeley.edu
+Subject: Re: [PATCH V5 0/2] Support VMCOREINFO export for RISCV64
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id:  <167002921647.19521.1698989789137180552.git-patchwork-notify@kernel.org>
+Date: Sat, 03 Dec 2022 01:00:16 +0000
+References: <20221026144208.373504-1-xianting.tian@linux.alibaba.com>
+In-Reply-To: <20221026144208.373504-1-xianting.tian@linux.alibaba.com>
+To: Xianting Tian <xianting.tian@linux.alibaba.com>
+Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, anup@brainfault.org,
+ heiko@sntech.de, guoren@kernel.org, mick@ics.forth.gr,
+ alexandre.ghiti@canonical.com, bhe@redhat.com, vgoyal@redhat.com,
+ dyoung@redhat.com, corbet@lwn.net, Conor.Dooley@microchip.com,
+ bagasdotme@gmail.com, kexec@lists.infradead.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, crash-utility@redhat.com,
+ heinrich.schuchardt@canonical.com, k-hagio-ab@nec.com,
+ hschauhan@nulltrace.org, yixun.lan@gmail.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221202_165659_038255_51A06B5D 
-X-CRM114-Status: UNSURE (   6.91  )
+X-CRM114-CacheID: sfid-20221202_170020_254182_38DAEBC8 
+X-CRM114-Status: UNSURE (   8.73  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -96,7 +81,12 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, 26 Oct 2022 22:42:06 +0800, Xianting Tian wrote:
+Hello:
+
+This series was applied to riscv/linux.git (for-next)
+by Palmer Dabbelt <palmer@rivosinc.com>:
+
+On Wed, 26 Oct 2022 22:42:06 +0800 you wrote:
 > As disscussed in below patch set, the patch of 'describe VMCOREINFO export in Documentation'
 > need to update according to Bagas's comments.
 > https://lore.kernel.org/linux-riscv/22AAF52E-8CC8-4D11-99CB-88DE4D113444@kernel.org/
@@ -106,16 +96,18 @@ On Wed, 26 Oct 2022 22:42:06 +0800, Xianting Tian wrote:
 > 
 > [...]
 
-Applied, thanks!
+Here is the summary with links:
+  - [V5,1/2] RISC-V: Add arch_crash_save_vmcoreinfo support
+    https://git.kernel.org/riscv/c/649d6b1019a2
+  - [V5,2/2] Documentation: kdump: describe VMCOREINFO export for RISCV64
+    https://git.kernel.org/riscv/c/c5b4216929eb
 
-[1/2] RISC-V: Add arch_crash_save_vmcoreinfo support
-      https://git.kernel.org/palmer/c/649d6b1019a2
-[2/2] Documentation: kdump: describe VMCOREINFO export for RISCV64
-      https://git.kernel.org/palmer/c/c5b4216929eb
-
-Best regards,
+You are awesome, thank you!
 -- 
-Palmer Dabbelt <palmer@rivosinc.com>
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
 
 _______________________________________________
 kexec mailing list
