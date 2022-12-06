@@ -4,76 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EA686C63705
-	for <kexec@archiver.kernel.org>; Wed,  7 Dec 2022 13:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 11837C4708E
+	for <kexec@archiver.kernel.org>; Wed,  7 Dec 2022 15:08:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=zg3IRfCPy9Ukz4/prSXLWvsNRCxcKF2sMFCJWT69AsA=; b=Ef4Y5duRK1MV+8
-	37K+tcMaj1niQdx5ZuAMBMTW1n6s+phgCyJNhTu0+W8+mojI57HMTGwjfYWSpj/mDMHQbZXeIlQdi
-	00S+SXGy9gdEuWuHUDqjxzvdVwCV2/g3hCrypnSJj2ftUjyULIqgaXYcf39S/fWvok4zyKgDY/iOI
-	efqg2+yaw8QO896LoIOokDG93uautAcDYZFZW580Mcy4y6u+coSA2CEQkt4nqdYM3gNrcslTL8mWu
-	tuGATNn2yiP5VgSetgyD7hxyaiCIkGZ2Z6pucFeRk8Y/DR0u5AucMkigo8n45LySaW4NwmdYqDy4Q
-	wGj4cPEOs/kzmuxrRcZQ==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	List-Subscribe:List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:
+	In-Reply-To:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Reply-To:Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date
+	:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=Zb/vhYnRQ7kECQ/3eJJ16WK1CZ1eqWixpilh0xrS2M8=; b=Yvm5cYmY5D9Zdr7nwRezwWOONi
+	T3H0Uv0lHVxs+T4G03qJgGbMpybmTOpc+htCT2k9Dw3QbIHvhyDjyG1tCQjl7Cs1ZgbVaWVbrMuY7
+	QGYcPZd025XMI/EgBnM5E+m+WBByDEoTRYYA/VRb7t1vTz6b68ndI5mFkq5Z6LhZOfr3RVxqIKNQK
+	Ou7gNjib84j7sdB0XtaNIbXjHQ5JrQrU2FAlB/dKNJTvm7H9d27DTI3iX0e00Oabp17P0+EpzxWkx
+	KAecL4q4HPie31ne6MFXgaJd0XACbisZK7kY35bXiXIVKi68PpNssaIFjv5f4U7K8iAq3sy9b1Sc+
+	lYhHBVXA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1p2uvu-004KXI-MQ; Wed, 07 Dec 2022 13:57:58 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1p2w1q-005aEj-M3; Wed, 07 Dec 2022 15:08:10 +0000
+Received: from ams.source.kernel.org ([2604:1380:4601:e00::1])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1p2uvr-004KQc-QV
-	for kexec@lists.infradead.org; Wed, 07 Dec 2022 13:57:57 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1670421474;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3+JlsJ+T+0zmdcrgV//HeWy7oKJHU0vdTnsFfLVk0g0=;
-	b=BfPKCejh4tSy0D8eI7bSP5g5Y7nM+fePrVvo0dsA2hMozWA93Wk8cs+IM0lSfm0CvO+mWu
-	vNC4NTCNdqzUKmuH0sFflnKwDBx+AdS2r89JePV280lNj9IADDy1+RQSYJ7bRDp3I6XI8y
-	dtkNmFnIQ1QnbttFnwbxSXqZPhzwfrU=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-255-2ktB4nM3PwGAN1inS689RA-1; Wed, 07 Dec 2022 08:57:53 -0500
-X-MC-Unique: 2ktB4nM3PwGAN1inS689RA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	id 1p2h01-004kB5-Pl; Tue, 06 Dec 2022 23:05:19 +0000
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id AC8D43C38FE8;
-	Wed,  7 Dec 2022 13:57:52 +0000 (UTC)
-Received: from localhost (ovpn-13-181.pek2.redhat.com [10.72.13.181])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id A30E340C2064;
-	Wed,  7 Dec 2022 13:57:51 +0000 (UTC)
-Date: Wed, 7 Dec 2022 21:57:48 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Eric DeVolder <eric.devolder@oracle.com>, linux-kernel@vger.kernel.org,
-	x86@kernel.org, kexec@lists.infradead.org, ebiederm@xmission.com,
-	dyoung@redhat.com, vgoyal@redhat.com, tglx@linutronix.de,
-	mingo@redhat.com, dave.hansen@linux.intel.com, hpa@zytor.com,
-	nramas@linux.microsoft.com, thomas.lendacky@amd.com,
-	robh@kernel.org, efault@gmx.de, rppt@kernel.org, david@redhat.com,
-	sourabhjain@linux.ibm.com, konrad.wilk@oracle.com,
-	boris.ostrovsky@oracle.com
-Subject: Re: [PATCH v14 3/7] crash: add generic infrastructure for crash
- hotplug support
-Message-ID: <Y5Cb3KGDXijyBXfM@MiWiFi-R3L-srv>
-References: <20221116214643.6384-1-eric.devolder@oracle.com>
- <20221116214643.6384-4-eric.devolder@oracle.com>
- <Y4A1/cSekXUTFriC@MiWiFi-R3L-srv>
- <Y5BkL8x01KWoF502@zn.tnic>
- <Y5CIvcZLuokwyGYT@MiWiFi-R3L-srv>
- <Y5CKNqtDm5VT+gsz@zn.tnic>
+	by ams.source.kernel.org (Postfix) with ESMTPS id 78E19B81AB8;
+	Tue,  6 Dec 2022 23:05:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50D9EC433D7;
+	Tue,  6 Dec 2022 23:05:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1670367914;
+	bh=og+XXRY2fcLp4gyF1cWGrNQBduIHbwxbJ9D95CNM7Ok=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=umT7knoeOpvPszf6KmB4AiA4y/HSTcRedLIFNwXhTf0A1KEFJzXgh4Zz8XEpILLLl
+	 w8OeIYneZ+B52rdVoywZiSMDpKBn4knhvD14tNPX6NGrewdF5r6AyQxbM3hWv3rL7C
+	 6lAqtIKwdtfsGeMOtupyCHk14w4fHcyB4sewVB00bPCiWwQ2oFxzjd+PANn1Rrfy70
+	 YFVdIatqoVfh+WPvf0vkDIpScqmvBy2odt7AO35IttAOAeZRULI18c59y+r/ZCqxAX
+	 H3FTqf54Pbxf/VuHXasDtm6Hjif4p4SmWoqtLg/2VZHYimxkyT/JIvWbSTnln+UvO4
+	 jb/UP6+RRIpmw==
+Date: Tue, 6 Dec 2022 23:05:06 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Palmer Dabbelt <palmer@rivosinc.com>,
+	Xianting Tian <xianting.tian@linux.alibaba.com>
+Cc: mick@ics.forth.gr, corbet@lwn.net, alexandre.ghiti@canonical.com,
+	vgoyal@redhat.com, bhe@redhat.com,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Conor Dooley <conor.dooley@microchip.com>, bagasdotme@gmail.com,
+	dyoung@redhat.com, Palmer Dabbelt <palmer@dabbelt.com>,
+	heiko@sntech.de, Xianting Tian <xianting.tian@linux.alibaba.com>,
+	guoren@kernel.org, anup@brainfault.org, aou@eecs.berkeley.edu,
+	hschauhan@nulltrace.org, yixun.lan@gmail.com,
+	kexec@lists.infradead.org, heinrich.schuchardt@canonical.com,
+	linux-doc@vger.kernel.org, crash-utility@redhat.com,
+	linux-kernel@vger.kernel.org, k-hagio-ab@nec.com,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH V5 0/2] Support VMCOREINFO export for RISCV64
+Message-ID: <Y4/KoiFhdvRBDdzH@spud>
+References: <20221026144208.373504-1-xianting.tian@linux.alibaba.com>
+ <167002857934.4256.16584443879212253129.b4-ty@rivosinc.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Y5CKNqtDm5VT+gsz@zn.tnic>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
+In-Reply-To: <167002857934.4256.16584443879212253129.b4-ty@rivosinc.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221207_055755_970535_BCBFC9EE 
-X-CRM114-Status: GOOD (  12.83  )
+X-CRM114-CacheID: sfid-20221206_150518_003241_84C48531 
+X-CRM114-Status: GOOD (  14.96  )
+X-Mailman-Approved-At: Wed, 07 Dec 2022 07:08:10 -0800
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,28 +78,81 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============5317574350187163548=="
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 12/07/22 at 01:42pm, Borislav Petkov wrote:
-> On Wed, Dec 07, 2022 at 08:36:13PM +0800, Baoquan He wrote:
-> > Below is my last reply to Eric about my thinking on this.
-> 
-> Yes, I saw that.
-> 
-> So think about it: if a CONFIG_ item is not present, what does that mean
-> for the code which is enclosed around it?
 
-Ignored by compiler.
+--===============5317574350187163548==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="wfcBHXZ3OW3XTejR"
+Content-Disposition: inline
 
-I thought we usually need to introduce the kernel config option, then
-add code related to it, so that is a wrong idea. It would be helpful to
-tell this somewhere in document.
 
+--wfcBHXZ3OW3XTejR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hey Palmer, Xianting,
+
+On Fri, Dec 02, 2022 at 04:49:39PM -0800, Palmer Dabbelt wrote:
+> On Wed, 26 Oct 2022 22:42:06 +0800, Xianting Tian wrote:
+> > As disscussed in below patch set, the patch of 'describe VMCOREINFO exp=
+ort in Documentation'
+> > need to update according to Bagas's comments.
+> > https://lore.kernel.org/linux-riscv/22AAF52E-8CC8-4D11-99CB-88DE4D11344=
+4@kernel.org/
+> >=20
+> > As others patches in above patch set already applied, so this patch set=
+ only contains below two
+> > patches.
+> >=20
+> > [...]
+>=20
+> Applied, thanks!
+>=20
+> [1/2] RISC-V: Add arch_crash_save_vmcoreinfo support
+>       https://git.kernel.org/palmer/c/649d6b1019a2
+
+So this patch seems to be causing issues for the nommu build:
+https://lore.kernel.org/oe-kbuild-all/202212062250.tR0otHcz-lkp@intel.com/
+
+I had a bit of a poke at trying to see if there were some headers we
+could pull in before actually checking the .config only to see:
+# CONFIG_MMU is not set
+
+Do we have to wrap the whole thing in a `#ifdef CONFIG_MMU` to fix
+compilation here?
+
+Thanks,
+Conor.
+
+
+--wfcBHXZ3OW3XTejR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCY4/KogAKCRB4tDGHoIJi
+0pEgAQDO1wUgu3/ufYbAAAOzCbPjVQcdX8ujzegnAAh5TgId0gD/ZtqmgZf/j7Cp
+hVtujGiLlEEzQkgyBIg36ipLFTYYsQ8=
+=gIhU
+-----END PGP SIGNATURE-----
+
+--wfcBHXZ3OW3XTejR--
+
+
+--===============5317574350187163548==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============5317574350187163548==--
+
