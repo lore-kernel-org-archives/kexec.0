@@ -4,48 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4DFAFC4708E
-	for <kexec@archiver.kernel.org>; Wed,  7 Dec 2022 15:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A4BBAC63703
+	for <kexec@archiver.kernel.org>; Wed,  7 Dec 2022 15:56:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Subject:To:From
-	:Date:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=q4eoPKeHff40fBRl4Oz3P4DSS3IV+on84DjzrsnZsKo=; b=UQhdFnrwO8mYYQ
-	lXbfuaxYAScJn4nAI2x/xRFqYyjkgczF4skQcfGE1UoJQ8STlltC7Jkn/QFFbyH6/NBInLcHxGw5N
-	VVx7vXzdneLBaMHYeBHcJAS3sYKJFzsm9VtPWpbSQlkUL29pKHe9mKTyP8FTjlIa3LZPpJ3/2U2EP
-	oIrUP7dxrxYG9QthsrqFurBmaXkXh41fqRNUgJXejxgXni4xmWXfFa/W2FZjA5jukkPUgBMEtHlWM
-	PTk9nrs+hfuaCYate0OH9wQkJChMPz1h8c2+OAZ/QwUWK598ubB9dqBjnMX/WlBtqRAJl620LqQBm
-	3DXTp2NUgY3gwj+l1K2w==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=zHCLCBIVsAbAI2czYM6OVIaCAzEoPwm0Xf5O7U4RMuQ=; b=ZS1CmhOJr/Gem7
+	9FfKqFUKpihB+BW4iqUwbwy3cbYaRIJZwD3JkleNGFdCbs+WWlkEAMMRr7cCHoJ4w7Ud0xgjLEFKk
+	w7JXIFWLLOwzL6G1zw6ISO5VOGJA+yo6qq+cFWs/I5siliSNkn53kVDpgiqh6FYydOzScx77Ms2pb
+	VdQiNvzlsBvh+wPCa6RHPfiQ0sUPvlqxUmbkVsEKwHHic6PRkdN/XMVYz7dpOou6XX29Sy2kQlonu
+	bmtoBgljmWCYjErSJncAnMXO/7DyLt8DcKmluAab16Exa1A9K1C2C80TInNp2p42bB/RioIgnJHnv
+	DfpQ2PTGvNJhoXJkGNlQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1p2w65-005da0-Fv; Wed, 07 Dec 2022 15:12:33 +0000
-Received: from zeeaster.vergenet.net ([206.189.110.174])
+	id 1p2wmO-006FJI-H6; Wed, 07 Dec 2022 15:56:16 +0000
+Received: from mail.skyhub.de ([5.9.137.197])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1p2w61-005dWs-W2
-	for kexec@lists.infradead.org; Wed, 07 Dec 2022 15:12:31 +0000
-Received: from momiji.horms.nl (86-93-216-223.fixed.kpn.net [86.93.216.223])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	id 1p2wmL-006FEE-DQ
+	for kexec@lists.infradead.org; Wed, 07 Dec 2022 15:56:14 +0000
+Received: from zn.tnic (p200300ea9733e711329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9733:e711:329c:23ff:fea6:a903])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by zeeaster.vergenet.net (Postfix) with ESMTPSA id A297020199
-	for <kexec@lists.infradead.org>; Wed,  7 Dec 2022 15:12:28 +0000 (UTC)
-Received: by momiji.horms.nl (Postfix, from userid 7100)
-	id 5AB019401DB; Wed,  7 Dec 2022 16:12:28 +0100 (CET)
-Date: Wed, 7 Dec 2022 16:12:28 +0100
-From: Simon Horman <horms@kernel.org>
-To: kexec@lists.infradead.org
-Subject: [ANNOUNCE] kexec-tools 2.0.26-rc1
-Message-ID: <Y5CtXNsfr4AQUSTy@vergenet.net>
+	by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D1E991EC0513;
+	Wed,  7 Dec 2022 16:56:11 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+	t=1670428571;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+	bh=JedNHJvTEEw3ngTfwq+GhcMA8oL9D/gBR+soBVALxbA=;
+	b=GKj+moEuIiUJgoIjdqmbjvmbgbpbKy4esY6NqqiZ0Y+hVPmlLWCZdkwD9ik5rVUU7jkoCv
+	jy4xPiZ/9Gj+76MXrkbgx7kXEmGXewJacn2aSUe7zH3ZiRgiPHFLdz0wpkl+lkCeR/fpfq
+	dFF4+cq2L5WT0/xLo5JmQPUQsYCxkFY=
+Date: Wed, 7 Dec 2022 16:56:11 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Baoquan He <bhe@redhat.com>
+Cc: Eric DeVolder <eric.devolder@oracle.com>, linux-kernel@vger.kernel.org,
+	x86@kernel.org, kexec@lists.infradead.org, ebiederm@xmission.com,
+	dyoung@redhat.com, vgoyal@redhat.com, tglx@linutronix.de,
+	mingo@redhat.com, dave.hansen@linux.intel.com, hpa@zytor.com,
+	nramas@linux.microsoft.com, thomas.lendacky@amd.com,
+	robh@kernel.org, efault@gmx.de, rppt@kernel.org, david@redhat.com,
+	sourabhjain@linux.ibm.com, konrad.wilk@oracle.com,
+	boris.ostrovsky@oracle.com
+Subject: Re: [PATCH v14 3/7] crash: add generic infrastructure for crash
+ hotplug support
+Message-ID: <Y5C3mzQLviL54IK6@zn.tnic>
+References: <20221116214643.6384-1-eric.devolder@oracle.com>
+ <20221116214643.6384-4-eric.devolder@oracle.com>
+ <Y4A1/cSekXUTFriC@MiWiFi-R3L-srv>
+ <Y5BkL8x01KWoF502@zn.tnic>
+ <Y5CIvcZLuokwyGYT@MiWiFi-R3L-srv>
+ <Y5CKNqtDm5VT+gsz@zn.tnic>
+ <Y5Cb3KGDXijyBXfM@MiWiFi-R3L-srv>
 MIME-Version: 1.0
 Content-Disposition: inline
-X-Virus-Scanned: clamav-milter 0.103.7 at zeeaster
-X-Virus-Status: Clean
+In-Reply-To: <Y5Cb3KGDXijyBXfM@MiWiFi-R3L-srv>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221207_071230_411015_6A4EC8CB 
-X-CRM114-Status: UNSURE (   9.63  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20221207_075613_625545_E00127E6 
+X-CRM114-Status: GOOD (  10.57  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -62,43 +82,27 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi all,
+On Wed, Dec 07, 2022 at 09:57:48PM +0800, Baoquan He wrote:
+> I thought we usually need to introduce the kernel config option, then
+> add code related to it, so that is a wrong idea.
 
-I am happy to announce the release of kexec-tools 2.0.26-rc1.
+It depends: sometimes it is prudent to add the code behind an ifdeffery
+first but have it not being buildable so that you don't have to deal
+with build breakages but rather concentrate on adding the facilities
+first.
 
-This is an incremental feature pre-release.
+And you add the Kconfig item only in the end where everything is in
+place and it should build properly then.
 
-So long as no serious problems arise I intend to release kexec-tools 2.0.26
-in a weeks time. Testing of 2.0.26-rc1 would be greatly appreciated.
+> It would be helpful to tell this somewhere in document.
 
-I do not have any outstanding changes for 2.0.26 at this time.
-And I would like to only accept bug fixes at this time and take
-features patches once 2.0.26 has been released.
+Feel free. I mean, it is pretty obvious but if it helps, it wouldn't hurt.
 
-The pre-release can be downloaded from kernel.org:
+-- 
+Regards/Gruss,
+    Boris.
 
-	https://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools-2.0.26-rc1.tar.xz
-	https://kernel.org/pub/linux/utils/kernel/kexec/
-
-I have also tagged it in git:
-
-	https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
-
-Thanks to everyone who has contributed to kexec.
-
-
-For reference the changes since v2.0.25 are:
-
-ffb186b83420 kexec-tools 2.0.26-rc1
-b9de05184816 m68k: pass rng seed via BI_RNG_SEED
-b0381b817910 workflow: update to checkout@v3
-834be38cc044 LoongArch: Remove redundant cmdline parameters when using --reuse-cmdline option
-84138f41efd5 LoongArch: Add purgatory framework code
-615b6757dcab LoongArch: PE format image loading support
-1c8bf2dc0127 LoongArch: Add kexec/kdump support
-dceb1d8926e6 config: Add LoongArch architecture support in config.guess and config.sub files
-6b6187f546f0 ppc64: remove rma_top limit
-bc38df5e8e24 kexec-tools 2.0.25.git
+https://people.kernel.org/tglx/notes-about-netiquette
 
 _______________________________________________
 kexec mailing list
