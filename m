@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CEE02C4708D
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C605FC3A5A7
 	for <kexec@archiver.kernel.org>; Wed,  7 Dec 2022 01:25:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
@@ -13,25 +13,25 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Message-ID:From:References:CC:To:Subject:Reply-To:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
 	:Resent-Message-ID:List-Owner;
-	bh=r8q8eZNogxQTB+t/f7BZTYfS8WQRrp4+dliqznIcx7k=; b=UgUg1vRs/cKYlZgS9ayn50JBCW
-	O1DXWSp8AxzZlnDu5qPPDxN00vAXH9wTxUh7VkjVfP0ARxRRJN2sBDWtAggV92cSEj/+QHsOVeUZn
-	ktdmmQg/lw+KP/IGaW51AYkUtuFVWk+7/xAu0ADA399hS5OhMEz3pvlHGv/sVZ0pWOnsyJb8Fld9z
-	gY2KbZJLA3TwEYMd/HIM0SR1mcViS4Vwg2bAJiQOXs1CLF7gFQT9v3wCX09iiDjVqSuChEXqiXhZ7
-	toYok/8f0wzo7hK004arCpzr+8v09IEfnlHwygbE+e7TrlgNBYQEeYoqh+I6LCRTlrD5Wh3J7Sqti
-	yLSX6pMg==;
+	bh=r8q8eZNogxQTB+t/f7BZTYfS8WQRrp4+dliqznIcx7k=; b=LNFmIdCbaL6tTsjlccDaBW/xG2
+	JBn0NPzRfhjhOWcZ3ORxIQFyVjijyj2gpjQWok6Zau8gXMOrwnaGWJmFlUmDfF1vaG0xIQ5Eedquv
+	DXz5MH2ShyhWpz1caIt+ZnDJBJLVcejUBWd8FDGDOJyOd3bs+Gxuz9i9bqcWqXzy5alHAwvstUMTh
+	PcmPUcUuZJxm5hcVm8stxMkjuQsvfoN1Cte/882NskFQzmixIdVqdp7e65LyV/VAD3WZSHO/5iiT5
+	iasg+P8XuYEKCSW/bF82YB1MGkE73lSBfq2zAWQNAXiglc2gb+iP1/RGqZiIB3IP1MpPfoysoM5FY
+	aaSG0hnw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1p2jBn-007QJM-CL; Wed, 07 Dec 2022 01:25:35 +0000
-Received: from szxga01-in.huawei.com ([45.249.212.187])
+	id 1p2jBk-007QCG-Vx; Wed, 07 Dec 2022 01:25:32 +0000
+Received: from szxga02-in.huawei.com ([45.249.212.188])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1p2jBj-007QBv-Cx; Wed, 07 Dec 2022 01:25:33 +0000
-Received: from kwepemm600010.china.huawei.com (unknown [172.30.72.54])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4NRfhk3wPKzmWK8;
-	Wed,  7 Dec 2022 09:24:38 +0800 (CST)
+	id 1p2jBe-007Q2e-Vs; Wed, 07 Dec 2022 01:25:29 +0000
+Received: from kwepemm600010.china.huawei.com (unknown [172.30.72.53])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4NRfhS69xNzRpRj;
+	Wed,  7 Dec 2022 09:24:24 +0800 (CST)
 Received: from [10.67.110.237] (10.67.110.237) by
  kwepemm600010.china.huawei.com (7.193.23.86) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Wed, 7 Dec 2022 09:25:27 +0800
+ 15.1.2375.31; Wed, 7 Dec 2022 09:25:14 +0800
 Subject: Re: [PATCH 1/2] RISC-V: kexec: Fix memory leak of fdt buffer
 To: Palmer Dabbelt <palmer@rivosinc.com>, <aou@eecs.berkeley.edu>,
 	<liaochang1@huawei.com>, <rdunlap@infradead.org>,
@@ -42,20 +42,20 @@ CC: <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
 References: <20221104095658.141222-1-lihuafei1@huawei.com>
  <167027930833.25586.2671834159281320615.b4-ty@rivosinc.com>
 From: Li Huafei <lihuafei1@huawei.com>
-Message-ID: <75925d58-ee92-e0f0-d1df-d8bd1d3fcfe3@huawei.com>
-Date: Wed, 7 Dec 2022 09:25:26 +0800
+Message-ID: <e1826450-296d-733e-c99d-318af7a236b0@huawei.com>
+Date: Wed, 7 Dec 2022 09:24:56 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.9.0
 MIME-Version: 1.0
 In-Reply-To: <167027930833.25586.2671834159281320615.b4-ty@rivosinc.com>
 Content-Language: en-US
 X-Originating-IP: [10.67.110.237]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
  kwepemm600010.china.huawei.com (7.193.23.86)
 X-CFilter-Loop: Reflected
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221206_172531_624296_6CB94CCD 
-X-CRM114-Status: GOOD (  11.66  )
+X-CRM114-CacheID: sfid-20221206_172527_224179_ACA2BB86 
+X-CRM114-Status: GOOD (  11.18  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
