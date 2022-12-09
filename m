@@ -4,154 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6E66CC04FDE
-	for <kexec@archiver.kernel.org>; Fri,  9 Dec 2022 15:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0D89FC4167B
+	for <kexec@archiver.kernel.org>; Fri,  9 Dec 2022 16:00:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:Message-ID:
+	In-Reply-To:Subject:cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=VxpKKzdIFlhKnO1jWt6nGUuXx7gSXgi5ezU9mVE1fJo=; b=gb4g69pHxaTJ2F
-	7R2OzHkvjjyQU0MiW0BS0egPcclDooHrftdnWRriU1z08ifUWg559oL6O60YU2GGkJF8TA3XMg2IG
-	4lQC2yMqPrTbEul6VXcgcnot1OoUWsNlzE4ESehr5I+ezX2i0dRM/t0b3j8QdNr7NL1cnJ0zrPeS5
-	jvbgjD4ykEplQOYORNHdyFrNtl7iZ9R/JZq8gXKme2CzBIFjlsy4wE5aNmaDE/7hAh5JGRcSJShr1
-	Z9bWLC5at2UbbW4pCV/QHfvBqWZGngp4IMpDMhJHMYRqo4CZLsY+kZrrf5S6TIYV3+ka7O13VrGWq
-	QwiYZ0eCU3ZrYNOSNLhQ==;
+	List-Owner; bh=SsIZmpQEZfC9QzeGP0dAIAFFjcfkZ7yNQcOe+FownK8=; b=oa4TNGPk0hvwsS
+	lJ04m3fU/SpP9w9Z/wmObNJhRi1mIFBkZbMJ/qOeV1+GEL/WJ/WdO0GTOogu5UHKxneQV3QJleXo9
+	CJktnLX72zDGZgv5pSUHzgdHkvUcItwEcPXLoDsVBn79ymyW5ZG4tfFqqm74QrdPkDPujEwoj99UN
+	BBBPty9pAos4k9+wCLO0aGqMn7cFh77mxZuKBhR3bc/bwvTJiBHsBgPzzDK31H9xSiwxDCMWYbbay
+	IDxvQjfFOL0zcKAbtIkVbSv8UeNyw3t7yNj/S0hyvcn1Sovw+SLfwPsM7+v1XefjUnrqKKYkkCAKE
+	e6urGfP0s/buOjRuC0gg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1p3fal-0097sN-0S; Fri, 09 Dec 2022 15:47:15 +0000
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
+	id 1p3fnd-009EtU-19; Fri, 09 Dec 2022 16:00:33 +0000
+Received: from mga02.intel.com ([134.134.136.20])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1p3fRV-009312-CU
-	for kexec@lists.infradead.org; Fri, 09 Dec 2022 15:37:44 +0000
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2B9EwtSQ029286;
-	Fri, 9 Dec 2022 15:37:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references :
- content-transfer-encoding : content-type : mime-version; s=corp-2022-7-12;
- bh=d23r4n2Btep+R5WHICPBqORV09vcN9s/Nkv2eSfUn2o=;
- b=EKq1dRmyuXYb6H8HvT2Q39QKgKUwOaAF3oXZN+/ldMQPThWlg8vpcKqyDDZTYtiRYIOW
- JGmlqTESAE1rujqR7qr97LOl9A+SkYpWZwqpoJtFGyCBaICN4UOzWgCvymYaJN/c7rIb
- MGFagtkkQYoV35L/ax0Xixek/9isWstOdI/A2L/ij1cY1LN4BOtlcOXnFWqygec4iHsr
- do6Dll9huJ2y05mQyZgwLYYMxIPfc6n1apssANmVlAPHvG96UeeEjFFqQBpKrM1f3ujH
- cPhfCRoAh+4zFU/SqEcFWsDDtUJsro2yife/wwxs9CV4rtjaioWF17estzHJGqLRsQMr Lw== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3mawj6vgg0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 09 Dec 2022 15:37:27 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 2B9EIGGm006770;
-	Fri, 9 Dec 2022 15:37:26 GMT
-Received: from nam04-mw2-obe.outbound.protection.outlook.com (mail-mw2nam04lp2170.outbound.protection.outlook.com [104.47.73.170])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3maa81gh86-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 09 Dec 2022 15:37:26 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q0vRNuY4MfLE3+tyc5oSuLcTDdgAxd8vA9oYmIjLHs2jDSwgRyhRMaXXTv2cCWZn1HWfXLtmESFQmekYUZxx1TWbi8CtennTdP4n3QB/AHYaVOEQ8CvEkxGSJWYbKfvsXuWytRdWBPqbFbRMbhSCPqeAK9zbQvFD3K/WifzjTF8fbUX4vfInb1sUdrnK4ARfheIDLva9mtNom7vCd2XX85xcKbLdyfK10uzFrddEriJSDMWtoJUTG9iAKCT2uq5tydgqU9tbVWDRg0bQj0yBWAuQuIz3Zy3OQfbu77Sr1DD1p+u/a31RCSk0JtEvw1oxNyXOGcU8SB7AXAv7tczicg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=d23r4n2Btep+R5WHICPBqORV09vcN9s/Nkv2eSfUn2o=;
- b=KxoRRjnRC7gI2gGq63snLMqqu69dqh+UwhqHXNTFxAXZwamZyyXSu/xn3eeYv6aJ1MZDTDu7ubEp3RsqMaVdva37+Wa4yMT7sdVATVeDpZL+JSb1sIYLOO/gRitJkQgh7drxMhmozYBsY6HtPvWaLHu22oN5c+bBvBnuk2BigX37iAbtU5UoJm622Kj74GRxARPfHluZ6TxRPLs8R+xamaF7c2m+8535cRkL1ll704rsvc6mpksPRo/hgLEdsEr7sen5mzVW39nyNbqsmNdqVpCHFV8tPMTQihKTVmAVBqX85OYDXIPu2UiPfGy7AaA8ohowtjsR0E9VQKpM6yquvg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d23r4n2Btep+R5WHICPBqORV09vcN9s/Nkv2eSfUn2o=;
- b=QZG55ahRn9Kj1fkpTVargm6gYYEM0BFS6cCIVNfSfab5VAM0o8THHacYuoUdSKv525mHeJ3IyrQKA2hBrZWEwY8Wq/c9FgqBDaIzOzuHd2TSsMihiZFCoy10cawiy3gMTtrs5b8X8p0Xp4Z3lvwPf5DqoVgsp++9yObhAei0bYM=
-Received: from CO1PR10MB4531.namprd10.prod.outlook.com (2603:10b6:303:6c::22)
- by BL3PR10MB6116.namprd10.prod.outlook.com (2603:10b6:208:3bb::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5880.18; Fri, 9 Dec
- 2022 15:37:23 +0000
-Received: from CO1PR10MB4531.namprd10.prod.outlook.com
- ([fe80::e301:fde6:85e5:b45a]) by CO1PR10MB4531.namprd10.prod.outlook.com
- ([fe80::e301:fde6:85e5:b45a%9]) with mapi id 15.20.5880.018; Fri, 9 Dec 2022
- 15:37:21 +0000
-From: Eric DeVolder <eric.devolder@oracle.com>
-To: linux-kernel@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org,
-        ebiederm@xmission.com, dyoung@redhat.com, bhe@redhat.com,
-        vgoyal@redhat.com
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com, nramas@linux.microsoft.com,
-        thomas.lendacky@amd.com, robh@kernel.org, efault@gmx.de,
-        rppt@kernel.org, david@redhat.com, sourabhjain@linux.ibm.com,
-        konrad.wilk@oracle.com, boris.ostrovsky@oracle.com,
-        eric.devolder@oracle.com
-Subject: [PATCH v15 6/7] crash: memory and cpu hotplug sysfs attributes
-Date: Fri,  9 Dec 2022 10:36:55 -0500
-Message-Id: <20221209153656.3284-7-eric.devolder@oracle.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20221209153656.3284-1-eric.devolder@oracle.com>
-References: <20221209153656.3284-1-eric.devolder@oracle.com>
-X-ClientProxiedBy: SA0PR11CA0097.namprd11.prod.outlook.com
- (2603:10b6:806:d1::12) To CO1PR10MB4531.namprd10.prod.outlook.com
- (2603:10b6:303:6c::22)
+	id 1p3bx8-007Esb-1x
+	for kexec@lists.infradead.org; Fri, 09 Dec 2022 11:54:07 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1670586846; x=1702122846;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=i6l99AsOk7Ek/fC/JJlzKRTZl8kQmivMJCaJu9pD6WY=;
+  b=hQTzn2LyIPSe8KQnHl02l/jFceoN4kzfOTCrMVq1HebJPcUb9VUlEMqJ
+   1sBSEFYnMalabsiOAjZvrAYhVUED9chmCjNmRj2Qn0rz+3HiREHer3gSm
+   bjlbqy71R/FCYmXOSj3d73q9NyUr38n9HW7WrKJZplsHYhlKkHwDnSjJt
+   YsQRUS8ADABGwWRaZ1wAjRmiJxd+txvD51pL3BiE0csr0D+lPIy2tZfQB
+   LLlnpPnbhbr+Y1Z/F1fqsymtKSE10wEIvUA1yJwUCBoE3G31N9RcEdLx3
+   VBxRfaLBrfNFbEEglmzVebqbRZeiSlYlrqslilzzQiP3hFAqTa1Gm1fGZ
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10555"; a="305085953"
+X-IronPort-AV: E=Sophos;i="5.96,230,1665471600"; 
+   d="scan'208";a="305085953"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2022 03:53:59 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10555"; a="736191278"
+X-IronPort-AV: E=Sophos;i="5.96,230,1665471600"; 
+   d="scan'208";a="736191278"
+Received: from eliteleevi.tm.intel.com ([10.237.54.20])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2022 03:53:50 -0800
+Date: Fri, 9 Dec 2022 13:53:31 +0200 (EET)
+From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+X-X-Sender: kvehmane@eliteleevi.tm.intel.com
+To: Ricardo Ribalda <ribalda@chromium.org>
+cc: Oliver Neukum <oneukum@suse.com>, Juergen Gross <jgross@suse.com>, 
+    Mark Brown <broonie@kernel.org>, 
+    Chromeos Kdump <chromeos-kdump@google.com>, 
+    Daniel Baluta <daniel.baluta@nxp.com>, 
+    Christophe Leroy <christophe.leroy@csgroup.eu>, 
+    Len Brown <len.brown@intel.com>, Ard Biesheuvel <ardb@kernel.org>, 
+    Ranjani Sridharan <ranjani.sridharan@linux.intel.com>, 
+    "Rafael J. Wysocki" <rafael@kernel.org>, 
+    Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
+    Nicholas Piggin <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+    Eric Biederman <ebiederm@xmission.com>, 
+    Dave Hansen <dave.hansen@linux.intel.com>, 
+    Jaroslav Kysela <perex@perex.cz>, Joel Fernandes <joel@joelfernandes.org>, 
+    Liam Girdwood <lgirdwood@gmail.com>, 
+    Peter Ujfalusi <peter.ujfalusi@linux.intel.com>, 
+    Pavel Machek <pavel@ucw.cz>, 
+    Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, 
+    Kai Vehmanen <kai.vehmanen@linux.intel.com>, 
+    Steven Rostedt <rostedt@goodmis.org>, 
+    "K. Y. Srinivasan" <kys@microsoft.com>, Ingo Molnar <mingo@redhat.com>, 
+    Bjorn Helgaas <bhelgaas@google.com>, Dexuan Cui <decui@microsoft.com>, 
+    Takashi Iwai <tiwai@suse.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+    Bard Liao <yung-chuan.liao@linux.intel.com>, 
+    Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+    Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+    x86@kernel.org, kexec@lists.infradead.org, 
+    Alsa-devel <alsa-devel@alsa-project.org>, stable@vger.kernel.org, 
+    sound-open-firmware@alsa-project.org, linuxppc-dev@lists.ozlabs.org, 
+    linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org, 
+    linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+    linux-efi@vger.kernel.org, xen-devel@lists.xenproject.org
+Subject: Re: [PATCH v8 3/3] ASoC: SOF: Fix deadlock when shutdown a frozen
+ userspace
+In-Reply-To: <CANiDSCtm7dCst_atiWk=ZcK_D3=VzvD0+kWXVQr4gEn--JjGkw@mail.gmail.com>
+Message-ID: <alpine.DEB.2.22.394.2212091349310.3532114@eliteleevi.tm.intel.com>
+References: <20221127-snd-freeze-v8-0-3bc02d09f2ce@chromium.org> <20221127-snd-freeze-v8-3-3bc02d09f2ce@chromium.org> <716e5175-7a44-7ae8-b6bb-10d9807552e6@suse.com> <CANiDSCtwSb50sjn5tM7jJ6W2UpeKzpuzng+RdJuywiC3-j2zdg@mail.gmail.com>
+ <d3730d1d-6f92-700a-06c4-0e0a35e270b0@suse.com> <CANiDSCtm7dCst_atiWk=ZcK_D3=VzvD0+kWXVQr4gEn--JjGkw@mail.gmail.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7 02160 Espoo
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PR10MB4531:EE_|BL3PR10MB6116:EE_
-X-MS-Office365-Filtering-Correlation-Id: c7e3c043-cda5-4aa7-73d9-08dad9fb431e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 	j7QZW/GAHC0DQxDG7cIAkIooDeglLX6VsMWbfCbuLtgoWIJVQ71dmjGTdUDd6MqRXnDuY2i06WZfgDop2QDH5kPg3XA/81K5A8P4JfD8AlSEGA51+Jjpzj1E12sBlNKJy6NTt29sWk1oofPeAjl3gTYsHg9AIGeRO6P7Ua6Eqz8kN6SqS0AFRJY/+nGMZQVvoVIM+hAm2QNndphwuTBD6lWhK7jvAl7g1lcsoO1kB3NoXcUxw8SqEwn/7Zf/MaJmBMxuFeJw+HnXJVznuM5cBlWgxLWcdjw5SmQRFvEZK6v3B4PhZuloNh3gulNPsnBxZmDb/p/MwllFdUVtZu2HpiGpW5BhaasZMHQ6RZdO4Gnqj6KiuL/5f5zm2aYt8G0B7CheX38TrqSX5WcRTuy8g3WOYbro1/VaQ+pCaccaUhYwNtNti79LeTgwUrZ34Xxw7RkOlU1hrq09gmLpDODophCdtDad30mURLuM1NLBSXQz4/R9p+LPzFpjewgr07RdQ7DUu2PzI6RPA7Z14mWYiSYhJjd+gO9g6bGW5GW485C7GGgIi4QvaGRdGInw/cqGGvrxnY8msum191zYwPIlNS0QlP9VJ4g+dk6icaEDnuZRbgK0aNeQH2oXqEkgGcgumM1GfUIW998Q3BJeyR52LA==
-X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR10MB4531.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(136003)(366004)(346002)(396003)(39860400002)(376002)(451199015)(8936002)(2906002)(26005)(83380400001)(6506007)(7416002)(5660300002)(6486002)(186003)(38100700002)(1076003)(6512007)(316002)(66476007)(2616005)(66946007)(66556008)(36756003)(41300700001)(86362001)(8676002)(4326008)(6666004)(107886003)(478600001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 	=?us-ascii?Q?BLBlXG6BLpqPXmjWzsTEv1nEyhISd65LA2DvIRFjFyLAWpuo9aEkfyl7567R?=
- =?us-ascii?Q?pAPbbyIhXKcOAx3AWctMtmSryMzdxrADuqAOZ/UOUU0v6kB8yaGyW9IFEyTf?=
- =?us-ascii?Q?1MRDmGWeVsrKnOq1LetcM8iMvO+Q3Kp0uw9+zMukZUICXJXVuwTDiNdbWmOn?=
- =?us-ascii?Q?kIwIQ3/wwHd1JDsY6ZaNaaiywBnJeRgrg3iFwp30U6tfa3C0T1dRnOOfWa8Z?=
- =?us-ascii?Q?JjBEUWYJf0qGHmam2kHhJPKwR5FK9vqApZCCYYHsR50sIu1QOdxt5O00tFNH?=
- =?us-ascii?Q?rxxmJpY1buRveYztEFUQ2M2waSoRuGJWbr1JrBs9X33voTnwotDtT8ctisDZ?=
- =?us-ascii?Q?HZwrkfbIic9zH1d/DOrd5iAS1WFgsJe+dFdCwQyxaQKbqO8Bp4i/1P2qSua0?=
- =?us-ascii?Q?LcA8ZH/JdZgUol6/7AiVGx0FfIP3zyT+xdX7wlhAwfHBpWo68jSLAMSG8vXl?=
- =?us-ascii?Q?yI0JQk2Yjx1GgyOtwHu4XOLDRSE7jPKpo4WS9hv9XNY64Mtmum1PS0UKTSuN?=
- =?us-ascii?Q?hPyio5SMTyVHZCRLEnn0SJ02U50PZMF4VNy1ow70EwppCT16sHTUEYWtxDR5?=
- =?us-ascii?Q?d96lfxVXiGDYTBDlz+zWQ9gYpbn+V+f6jR3LwSH6N791zxTRNvAWaNahO9ay?=
- =?us-ascii?Q?PbkzMhLc2yWpREhocDI6hA1XZi2N/BOKfeZpE3w/X+hjriT2ELsIxhhl4aRV?=
- =?us-ascii?Q?2oyfHo7Sq6mRWfa0qdvU4CThI6BZmdbrTgYru5QHsctzkwnvDqXKuvPdtXR/?=
- =?us-ascii?Q?0mkYoJU7lVmKWL0nmfaREjBbXlZjAJ2sn+rOypGO4G3tctXfISS4/JRAouz6?=
- =?us-ascii?Q?BCIj/KZMIm8Ip/Ey6UY2LF1eDPm9RWf3LdNWH5PNtV2DaMgRdlWpGzVtrzro?=
- =?us-ascii?Q?C0E2t9VzscoQsm+o/5fxJ4yBMK/dv1zfKu/o4VEh1TFrsjIkcV5MGWWgt3Rh?=
- =?us-ascii?Q?vDZZsqg94srKmXS7WGk1WG3w7hhGUCgyRpEyOJWPDjwtl0CYiCQB+0MLxq/G?=
- =?us-ascii?Q?G3LlAITQeHg+8QmlQPSxUep9R3AYvec15dqTQw/iZC+5Y+uBRA0pyB80hFkm?=
- =?us-ascii?Q?KTNh2O0r0WCntvRt9Nh8l6wGRCiwBZJV1dnJoeMohENblMT+etYqHSMBCOG5?=
- =?us-ascii?Q?EK/3zFrizKXluQM39p+kMYayWdW96L2jjJ2w5RwgurFwN6IxdltCW+5n38/f?=
- =?us-ascii?Q?LG/TK9o1s+U6WojlJkXW7LJq0TmHl3mn2LkP0c7LCuol61Ku0Jm2mIiGDo9q?=
- =?us-ascii?Q?J1ytAcu/j1ii1vVRGwa6vEHP8OhgiaAUjRDk9M7Jb6AuXTeLZ2VD+uYpyGKd?=
- =?us-ascii?Q?BUipoqrmZXaJT+fVnalWr0YCgTxTiL+4Wt+LXp9nyyMhmt8eAMJ+dilzVuL6?=
- =?us-ascii?Q?hYHfIlzajthqjE3bVXQsRH/AA5xas1j99dqAjBzj5WS9o8pa/doBz72gd7m2?=
- =?us-ascii?Q?IfaGiMtKtPOWggOiLGyHY2XuOKKuCpIEAKgNoHjH72w6YvLg1pqtiP2+MCwd?=
- =?us-ascii?Q?smKz01aI93VbeEf9oRZvplRNvrl/CBSdXx81DR/z6iFaNV9+Fr49RE3SR4OX?=
- =?us-ascii?Q?Yc32Rc1iwrtrcT68k+pzSvtv8VIEmGToG6o23/aZr7nT1fkQLrWSHCJakQvz?=
- =?us-ascii?Q?6w=3D=3D?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c7e3c043-cda5-4aa7-73d9-08dad9fb431e
-X-MS-Exchange-CrossTenant-AuthSource: CO1PR10MB4531.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Dec 2022 15:37:21.3840
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0FaXDNthPPaiQ7oq9imSrcpUt35UC+69ZZiAusE1874MuUGSOfBEYRd1kZtYmo2CK5vbxeNS2iqx/1wcc40qlA3r7Y4+WkjkEbt1oE3iQOw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR10MB6116
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-12-09_08,2022-12-08_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 adultscore=0
- suspectscore=0 mlxlogscore=999 malwarescore=0 phishscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2210170000
- definitions=main-2212090066
-X-Proofpoint-GUID: DR6szevIhxLDDNdfKKwQMqyixoxdKt0B
-X-Proofpoint-ORIG-GUID: DR6szevIhxLDDNdfKKwQMqyixoxdKt0B
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221209_073741_576566_04F18151 
-X-CRM114-Status: GOOD (  23.91  )
+X-CRM114-CacheID: sfid-20221209_035406_178746_E2697B53 
+X-CRM114-Status: GOOD (  19.31  )
+X-Mailman-Approved-At: Fri, 09 Dec 2022 08:00:32 -0800
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -168,227 +112,38 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-This introduces the crash_hotplug attribute for memory and CPUs
-for use by userspace.  This change directly facilitates the udev
-rule for managing userspace re-loading of the crash kernel upon
-hot un/plug changes.
+Hi,
 
-For memory, this changeset introduces the crash_hotplug attribute
-to the /sys/devices/system/memory directory. For example:
+On Thu, 1 Dec 2022, Ricardo Ribalda wrote:
 
- # udevadm info --attribute-walk /sys/devices/system/memory/memory81
-  looking at device '/devices/system/memory/memory81':
-    KERNEL=="memory81"
-    SUBSYSTEM=="memory"
-    DRIVER==""
-    ATTR{online}=="1"
-    ATTR{phys_device}=="0"
-    ATTR{phys_index}=="00000051"
-    ATTR{removable}=="1"
-    ATTR{state}=="online"
-    ATTR{valid_zones}=="Movable"
+> On Thu, 1 Dec 2022 at 14:22, 'Oliver Neukum' via Chromeos Kdump <chromeos-kdump@google.com> wrote:
+> >
+> > On 01.12.22 14:03, Ricardo Ribalda wrote:
+> > > This patchset does not modify this behaviour. It simply fixes the
+> > > stall for kexec().
+> > >
+> > > The  patch that introduced the stall:
+> > > 83bfc7e793b5 ("ASoC: SOF: core: unregister clients and machine drivers
+> > > in .shutdown")
+> >
+> > That patch is problematic. I would go as far as saying that
+> > it needs to be reverted.
+> 
+> It fixes a real issue. We have not had any complaints until we tried
+> to kexec in the platform.
+> I wont recommend reverting it until we have an alternative implementation.
+> 
+> kexec is far less common than suspend/reboot.
 
-  looking at parent device '/devices/system/memory':
-    KERNELS=="memory"
-    SUBSYSTEMS==""
-    DRIVERS==""
-    ATTRS{auto_online_blocks}=="offline"
-    ATTRS{block_size_bytes}=="8000000"
-    ATTRS{crash_hotplug}=="1"
+I've posted an alternative to ALSA list that reverts the problematic
+patch and fixes the problem (the patch was originally addressing)
+in a different way:
 
-For CPUs, this changeset introduces the crash_hotplug attribute
-to the /sys/devices/system/cpu directory. For example:
+https://mailman.alsa-project.org/pipermail/alsa-devel/2022-December/209776.html
 
- # udevadm info --attribute-walk /sys/devices/system/cpu/cpu0
-  looking at device '/devices/system/cpu/cpu0':
-    KERNEL=="cpu0"
-    SUBSYSTEM=="cpu"
-    DRIVER=="processor"
-    ATTR{crash_notes}=="277c38600"
-    ATTR{crash_notes_size}=="368"
-    ATTR{online}=="1"
+No changes outside sound/soc/ are needed with this approach.
 
-  looking at parent device '/devices/system/cpu':
-    KERNELS=="cpu"
-    SUBSYSTEMS==""
-    DRIVERS==""
-    ATTRS{crash_hotplug}=="1"
-    ATTRS{isolated}==""
-    ATTRS{kernel_max}=="8191"
-    ATTRS{nohz_full}=="  (null)"
-    ATTRS{offline}=="4-7"
-    ATTRS{online}=="0-3"
-    ATTRS{possible}=="0-7"
-    ATTRS{present}=="0-3"
-
-With these sysfs attributes in place, it is possible to efficiently
-instruct the udev rule to skip crash kernel reloading.
-
-For example, the following is the proposed udev rule change for RHEL
-system 98-kexec.rules (as the first lines of the rule file):
-
- # The kernel handles updates to crash elfcorehdr for cpu and memory changes
- SUBSYSTEM=="cpu", ATTRS{crash_hotplug}=="1", GOTO="kdump_reload_end"
- SUBSYSTEM=="memory", ATTRS{crash_hotplug}=="1", GOTO="kdump_reload_end"
-
-When examined in the context of 98-kexec.rules, the above change
-tests if crash_hotplug is set, and if so, it skips the userspace
-initiated unload-then-reload of the crash kernel.
-
-Cpu and memory checks are separated in accordance with
-CONFIG_HOTPLUG_CPU and CONFIG_MEMORY_HOTPLUG kernel config options.
-If an architecture supports, for example, memory hotplug but not
-CPU hotplug, then the /sys/devices/system/memory/crash_hotplug
-attribute file is present, but the /sys/devices/system/cpu/crash_hotplug
-attribute file will NOT be present. Thus the udev rule will skip
-userspace processing of memory hot un/plug events, but the udev
-rule will fail for CPU events, thus allowing userspace to process
-cpu hot un/plug events (ie the unload-then-reload of the kdump
-capture kernel).
-
-Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
-Acked-by: Baoquan He <bhe@redhat.com>
----
- .../admin-guide/mm/memory-hotplug.rst          |  8 ++++++++
- Documentation/core-api/cpu_hotplug.rst         | 18 ++++++++++++++++++
- drivers/base/cpu.c                             | 14 ++++++++++++++
- drivers/base/memory.c                          | 13 +++++++++++++
- include/linux/kexec.h                          |  8 ++++++++
- 5 files changed, 61 insertions(+)
-
-diff --git a/Documentation/admin-guide/mm/memory-hotplug.rst b/Documentation/admin-guide/mm/memory-hotplug.rst
-index a3c9e8ad8fa0..15fd1751a63c 100644
---- a/Documentation/admin-guide/mm/memory-hotplug.rst
-+++ b/Documentation/admin-guide/mm/memory-hotplug.rst
-@@ -293,6 +293,14 @@ The following files are currently defined:
- 		       Availability depends on the CONFIG_ARCH_MEMORY_PROBE
- 		       kernel configuration option.
- ``uevent``	       read-write: generic udev file for device subsystems.
-+``crash_hotplug``      read-only: when changes to the system memory map
-+		       occur due to hot un/plug of memory, this file contains
-+		       '1' if the kernel updates the kdump capture kernel memory
-+		       map itself (via elfcorehdr), or '0' if userspace must update
-+		       the kdump capture kernel memory map.
-+
-+		       Availability depends on the CONFIG_MEMORY_HOTPLUG kernel
-+		       configuration option.
- ====================== =========================================================
- 
- .. note::
-diff --git a/Documentation/core-api/cpu_hotplug.rst b/Documentation/core-api/cpu_hotplug.rst
-index f75778d37488..0c8dc3fe5f94 100644
---- a/Documentation/core-api/cpu_hotplug.rst
-+++ b/Documentation/core-api/cpu_hotplug.rst
-@@ -750,6 +750,24 @@ will receive all events. A script like::
- 
- can process the event further.
- 
-+When changes to the CPUs in the system occur, the sysfs file
-+/sys/devices/system/cpu/crash_hotplug contains '1' if the kernel
-+updates the kdump capture kernel list of CPUs itself (via elfcorehdr),
-+or '0' if userspace must update the kdump capture kernel list of CPUs.
-+
-+The availability depends on the CONFIG_HOTPLUG_CPU kernel configuration
-+option.
-+
-+To skip userspace processing of CPU hot un/plug events for kdump
-+(ie the unload-then-reload to obtain a current list of CPUs), this sysfs
-+file can be used in a udev rule as follows:
-+
-+ SUBSYSTEM=="cpu", ATTRS{crash_hotplug}=="1", GOTO="kdump_reload_end"
-+
-+For a cpu hot un/plug event, if the architecture supports kernel updates
-+of the elfcorehdr (which contains the list of CPUs), then the rule skips
-+the unload-then-reload of the kdump capture kernel.
-+
- Kernel Inline Documentations Reference
- ======================================
- 
-diff --git a/drivers/base/cpu.c b/drivers/base/cpu.c
-index 4c98849577d4..fedbf87f9d13 100644
---- a/drivers/base/cpu.c
-+++ b/drivers/base/cpu.c
-@@ -293,6 +293,17 @@ static ssize_t print_cpus_nohz_full(struct device *dev,
- static DEVICE_ATTR(nohz_full, 0444, print_cpus_nohz_full, NULL);
- #endif
- 
-+#ifdef CONFIG_HOTPLUG_CPU
-+#include <linux/kexec.h>
-+static ssize_t crash_hotplug_show(struct device *dev,
-+				     struct device_attribute *attr,
-+				     char *buf)
-+{
-+	return sprintf(buf, "%d\n", crash_hotplug_cpu_support());
-+}
-+static DEVICE_ATTR_ADMIN_RO(crash_hotplug);
-+#endif
-+
- static void cpu_device_release(struct device *dev)
- {
- 	/*
-@@ -469,6 +480,9 @@ static struct attribute *cpu_root_attrs[] = {
- #ifdef CONFIG_NO_HZ_FULL
- 	&dev_attr_nohz_full.attr,
- #endif
-+#ifdef CONFIG_HOTPLUG_CPU
-+	&dev_attr_crash_hotplug.attr,
-+#endif
- #ifdef CONFIG_GENERIC_CPU_AUTOPROBE
- 	&dev_attr_modalias.attr,
- #endif
-diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-index 9aa0da991cfb..226be3134ffe 100644
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -483,6 +483,16 @@ static ssize_t auto_online_blocks_store(struct device *dev,
- 
- static DEVICE_ATTR_RW(auto_online_blocks);
- 
-+#ifdef CONFIG_MEMORY_HOTPLUG
-+#include <linux/kexec.h>
-+static ssize_t crash_hotplug_show(struct device *dev,
-+				       struct device_attribute *attr, char *buf)
-+{
-+	return sprintf(buf, "%d\n", crash_hotplug_memory_support());
-+}
-+static DEVICE_ATTR_RO(crash_hotplug);
-+#endif
-+
- /*
-  * Some architectures will have custom drivers to do this, and
-  * will not need to do it from userspace.  The fake hot-add code
-@@ -881,6 +891,9 @@ static struct attribute *memory_root_attrs[] = {
- 
- 	&dev_attr_block_size_bytes.attr,
- 	&dev_attr_auto_online_blocks.attr,
-+#ifdef CONFIG_MEMORY_HOTPLUG
-+	&dev_attr_crash_hotplug.attr,
-+#endif
- 	NULL
- };
- 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 389444cb03cc..4d096bc97597 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -515,6 +515,14 @@ static inline void arch_kexec_pre_free_pages(void *vaddr, unsigned int pages) {
- static inline void arch_crash_handle_hotplug_event(struct kimage *image) { }
- #endif
- 
-+#ifndef crash_hotplug_cpu_support
-+static inline int crash_hotplug_cpu_support(void) { return 0; }
-+#endif
-+
-+#ifndef crash_hotplug_memory_support
-+static inline int crash_hotplug_memory_support(void) { return 0; }
-+#endif
-+
- #else /* !CONFIG_KEXEC_CORE */
- struct pt_regs;
- struct task_struct;
--- 
-2.31.1
-
+Br, Kai
 
 _______________________________________________
 kexec mailing list
