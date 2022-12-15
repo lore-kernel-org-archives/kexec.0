@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id F0569C4167B
-	for <kexec@archiver.kernel.org>; Thu, 15 Dec 2022 18:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 830CEC4332F
+	for <kexec@archiver.kernel.org>; Thu, 15 Dec 2022 18:24:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=gFU7a/7lchjKOExlU/PhumTTPCJulpFdbLvrVabrhu8=; b=mMaRKuuJrw4iFA
-	j/CkORXT1A3etrn84okfGdCQvRD5m2zZuPCfWUcwmrBDXlwLSYPsDlqCVsFZHKn6E37tBnmbPuI6K
-	vRRTgEWs6dKKHFHNBo76vfMlrUxyjM4OJbcl2hhyDaPNAk3U0x2/+OeyOI+J8X20H8MLwHSFD51MP
-	EJLdX1Ob8V2OAsxaJEKqHCw1Mc5+M8vsBd1LViC6kDlI3sajD2f11fV40EdSK+U7TKPqbTHk0nTXk
-	01DfNf2LaPBisZMPb+M1iyRHO8B1l+n3RD4ojzf1vVqUi+O8yOTxNXilZjtHz7+QE5z7Hj7prsb9L
-	a35B5x7+oRy+aio9Rfbg==;
+	List-Owner; bh=c83JOKa3BKotduGaLlaYPeRqT7BbaofoClrdI7iBZIY=; b=c2MZuzSFDgeIwH
+	ZxISxLdDuegYmc+rRaSy0WtJ34m3NR2T4RCfzOgAPUwZXPOJe7pcOF9iyyyNgY55UltarDDfjw5R8
+	fJtgN+SLUywSavdKymsW7sG/NKpQ1y+tRKwXC2TFkLspCUqb3h+hg0i2sVzf2MZVx4+5gREibnIQL
+	IiZt8C3RpKmnViutlNlWOPSkQrvcd+bKansgB2sduAqY8LbpTXnoVtDMR9bg2jvigQO9gTeYZsd/6
+	lssnwNRpcw7X2uWL1yDi51gNTY4We4VWUFctME38I/V4YJzjjCSnc5ssF+yzMwNFeUOkNHrHmbPqg
+	P26twI+7+osCyXe37cxg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1p5stc-00AoV4-57; Thu, 15 Dec 2022 18:23:52 +0000
-Received: from ams.source.kernel.org ([145.40.68.75])
+	id 1p5ste-00AoWg-Pa; Thu, 15 Dec 2022 18:23:54 +0000
+Received: from ams.source.kernel.org ([2604:1380:4601:e00::1])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1p5stZ-00AoSz-DI
-	for kexec@lists.infradead.org; Thu, 15 Dec 2022 18:23:51 +0000
+	id 1p5sta-00AoTt-W2
+	for kexec@lists.infradead.org; Thu, 15 Dec 2022 18:23:52 +0000
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.source.kernel.org (Postfix) with ESMTPS id C6820B81C39;
+	by ams.source.kernel.org (Postfix) with ESMTPS id AE3B8B81C3B;
+	Thu, 15 Dec 2022 18:23:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C0C2C433EF;
 	Thu, 15 Dec 2022 18:23:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50AA7C433D2;
-	Thu, 15 Dec 2022 18:23:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1671128626;
-	bh=b2movO2QDbJENwvsGD8QiYwsUZPp0zsJc8kXD8M/tfM=;
+	s=k20201202; t=1671128628;
+	bh=EzpeGu7n5zTSaE1MJ3GyQVMhUoUmeNkelZBjZU+Lqgs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hpSboetvljJzT63/IrlGiNOoqueazi0K6h+vUaIhfAanjtpjBAkBTKVgJJG/2RWQc
-	 hiLxABCFF8bWCWPfpJPqwLg7hb258NlP2t951bgnQWjs5C5EtyGqiIoJKdq6glnQjO
-	 aoyTTVFxNQdiMpaXRYuoMGBlBxcDDoKsqxmKXrWrPRnXy7PCGYffORUVHfCo/GrueN
-	 5yDYYcD1RPbhUTVekdJBe/9+c4aCtRDItoFN8EjGv/xz8kt9V61Tsqy38PVNfj4JXk
-	 l7xuVmhzhHHkm86E8wFqTwgZSMt4n9paAa/oivBrIw/6P6MKOj9IxhYINqy9n/KysN
-	 P87CCcvHMoE8A==
+	b=V4jObftwCzhu9BbVq2qRzfBiVdRpA1YZBwORx0UiCJXPN4LlDTw3G3ccC6W8rrSpx
+	 N//3en4df78W/YWsp/VLnlfLBn4VdD3V9IEdxM/C0myOxIYlQ0c0bkSYXrerfwq19z
+	 tiyAKB4Hs7zgfe2Tw5nrGWrkVpYSqFkYlziL9SHoWVXJMq1rPwjnJeV8wfXPFMAKn0
+	 mNoK4WfcHKWoFPG03j5SjAxu3s6q8KO/c6qgdQgWAWxDRLkWUpRu+ZQ/isN949U7gO
+	 FY2x1wxoZEiUlx5ygL5wQxnoLf4+IYH7cvOaMPDZj7qaRVFtj39Fet5BFhRCefAAdo
+	 Hz+niQwNZaDkA==
 From: Bjorn Helgaas <helgaas@kernel.org>
 To: Eric Biederman <ebiederm@xmission.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>,
@@ -53,16 +53,16 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 1/2] x86/kexec: Remove unnecessary arch_kexec_kernel_image_load()
-Date: Thu, 15 Dec 2022 12:23:38 -0600
-Message-Id: <20221215182339.129803-2-helgaas@kernel.org>
+Subject: [PATCH 2/2] kexec: Remove unnecessary arch_kexec_kernel_image_load()
+Date: Thu, 15 Dec 2022 12:23:39 -0600
+Message-Id: <20221215182339.129803-3-helgaas@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20221215182339.129803-1-helgaas@kernel.org>
 References: <20221215182339.129803-1-helgaas@kernel.org>
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221215_102349_818697_554D7E83 
-X-CRM114-Status: GOOD (  10.18  )
+X-CRM114-CacheID: sfid-20221215_102351_347780_28ADCA37 
+X-CRM114-Status: GOOD (  13.70  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,72 +81,72 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-The x86 implementation of arch_kexec_kernel_image_load() is functionally
-identical to the generic arch_kexec_kernel_image_load().
+arch_kexec_kernel_image_load() only calls kexec_image_load_default(), and
+there are no arch-specific implementations.
 
-Remove it and use the generic arch_kexec_kernel_image_load().  No
-functional change intended.
+Remove the unnecessary arch_kexec_kernel_image_load() and make
+kexec_image_load_default() static .
+
+No functional change intended.
+
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+
+kexec: make static
 
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- arch/x86/include/asm/kexec.h       |  3 ---
- arch/x86/kernel/machine_kexec_64.c | 11 -----------
- include/linux/kexec.h              |  2 --
- 3 files changed, 16 deletions(-)
+ include/linux/kexec.h | 6 ------
+ kernel/kexec_file.c   | 6 +++---
+ 2 files changed, 3 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index a3760ca796aa..5b77bbc28f96 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -200,9 +200,6 @@ int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
- 				     const Elf_Shdr *symtab);
- #define arch_kexec_apply_relocations_add arch_kexec_apply_relocations_add
- 
--void *arch_kexec_kernel_image_load(struct kimage *image);
--#define arch_kexec_kernel_image_load arch_kexec_kernel_image_load
--
- int arch_kimage_file_post_load_cleanup(struct kimage *image);
- #define arch_kimage_file_post_load_cleanup arch_kimage_file_post_load_cleanup
- #endif
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index 0611fd83858e..1a3e2c05a8a5 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -374,17 +374,6 @@ void machine_kexec(struct kimage *image)
- /* arch-dependent functionality related to kexec file-based syscall */
- 
- #ifdef CONFIG_KEXEC_FILE
--void *arch_kexec_kernel_image_load(struct kimage *image)
--{
--	if (!image->fops || !image->fops->load)
--		return ERR_PTR(-ENOEXEC);
--
--	return image->fops->load(image, image->kernel_buf,
--				 image->kernel_buf_len, image->initrd_buf,
--				 image->initrd_buf_len, image->cmdline_buf,
--				 image->cmdline_buf_len);
--}
--
- /*
-  * Apply purgatory relocations.
-  *
 diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 5dd4343c1bbe..c08d5d52223a 100644
+index c08d5d52223a..8844e7debfa4 100644
 --- a/include/linux/kexec.h
 +++ b/include/linux/kexec.h
-@@ -207,12 +207,10 @@ static inline int arch_kimage_file_post_load_cleanup(struct kimage *image)
+@@ -190,7 +190,6 @@ int kexec_purgatory_get_set_symbol(struct kimage *image, const char *name,
+ 				   void *buf, unsigned int size,
+ 				   bool get_value);
+ void *kexec_purgatory_get_symbol_addr(struct kimage *image, const char *name);
+-void *kexec_image_load_default(struct kimage *image);
+ 
+ #ifndef arch_kexec_kernel_image_probe
+ static inline int
+@@ -207,11 +206,6 @@ static inline int arch_kimage_file_post_load_cleanup(struct kimage *image)
  }
  #endif
  
--#ifndef arch_kexec_kernel_image_load
- static inline void *arch_kexec_kernel_image_load(struct kimage *image)
- {
- 	return kexec_image_load_default(image);
- }
--#endif
- 
+-static inline void *arch_kexec_kernel_image_load(struct kimage *image)
+-{
+-	return kexec_image_load_default(image);
+-}
+-
  #ifdef CONFIG_KEXEC_SIG
  #ifdef CONFIG_SIGNED_PE_FILE_VERIFICATION
+ int kexec_kernel_verify_pe_sig(const char *kernel, unsigned long kernel_len);
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index dd5983010b7b..39ddf09ab573 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -65,7 +65,7 @@ int kexec_image_probe_default(struct kimage *image, void *buf,
+ 	return ret;
+ }
+ 
+-void *kexec_image_load_default(struct kimage *image)
++static void *kexec_image_load_default(struct kimage *image)
+ {
+ 	if (!image->fops || !image->fops->load)
+ 		return ERR_PTR(-ENOEXEC);
+@@ -249,8 +249,8 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 	/* IMA needs to pass the measurement list to the next kernel. */
+ 	ima_add_kexec_buffer(image);
+ 
+-	/* Call arch image load handlers */
+-	ldata = arch_kexec_kernel_image_load(image);
++	/* Call image load handler */
++	ldata = kexec_image_load_default(image);
+ 
+ 	if (IS_ERR(ldata)) {
+ 		ret = PTR_ERR(ldata);
 -- 
 2.25.1
 
