@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 98B64C4332F
-	for <kexec@archiver.kernel.org>; Sat, 17 Dec 2022 15:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1A7DFC4332F
+	for <kexec@archiver.kernel.org>; Sat, 17 Dec 2022 15:30:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=ZGnDG0k/u4nZu2dJLI36jXYwQqVFjJLKuwkKqJrL+UY=; b=4UvxnurBo3JjXF
-	vWnx4xtMaC2CinXDwcT0X6cv85X4hob/y1/6dah+kd0QBP59LrEnLxVOFfbKBErIqORMVcxNhyfiL
-	+b3mKfgWNOj7OmhZEEPLNi1uM8Pl5Rmsrw0YfuLYy5VWp61kmVEhU4ZXeZOaZFmPBErp1mZdN93jY
-	p7ekGDBDzUvFsssufkJNsITEmaRquvRLgaAVr9ZHAMvtfHbPcGaqx+w7QSI+KWvNSTnFbHhlbOV2L
-	u9vy4rqk8ZiVopsdvXabe6Lrmn6DOnkw/Au5PZOOnIUrswzy2ewRnB6wDSGOQ2G60N0WidAFfF2mA
-	0rWbe90SO07e+/0qpsjA==;
+	List-Owner; bh=wHOxs/cJpGowU35tsFH02poprPtktYkkxyv+VhHOI4k=; b=j3wNoenh8aCHTb
+	8zo38+63XS4TeD215kItZxyjwtBKO3PKgYBWJ4Ot1zNg7LrCaOWglyI3UV5a9AAJldzolEfEDtdB2
+	pNxH174gQh8dN5j2hl+YYvDm+1V/gjaaN/ozyqlHsEJpTcnVZyvd44O3blfl3vh9/AXHS6KNePcJo
+	5rSEFAUIszjvM7SuHQUTWcrFAQs5E/VzjpQnQZjnFBoyglUqJvEr4ynTNSZKECqAqROk15z07Geyi
+	zYDVCYMEWBdVsxsS3HP7gwpi6STw10Hp6EUS/jrL+w2A1NaTh1m86DSr/RADdHo7XZB4GG7Fi5SNo
+	NKzvyf8hJBmEMTZ2sQSQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1p6Z8e-00Aamp-QU; Sat, 17 Dec 2022 15:30:12 +0000
-Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
+	id 1p6Z8w-00Aatd-OD; Sat, 17 Dec 2022 15:30:30 +0000
+Received: from ams.source.kernel.org ([2604:1380:4601:e00::1])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1p6Z8S-00Aaim-To
-	for kexec@lists.infradead.org; Sat, 17 Dec 2022 15:30:11 +0000
+	id 1p6Z8s-00AarY-MS
+	for kexec@lists.infradead.org; Sat, 17 Dec 2022 15:30:28 +0000
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 7C3B360C16;
-	Sat, 17 Dec 2022 15:30:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E006C43396;
-	Sat, 17 Dec 2022 15:29:58 +0000 (UTC)
+	by ams.source.kernel.org (Postfix) with ESMTPS id 56D11B803F6;
+	Sat, 17 Dec 2022 15:30:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A119C43392;
+	Sat, 17 Dec 2022 15:30:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1671291000;
-	bh=h5S1/BnZHF2ZLzb0VuOYYkvTeHbY827TxoAKiSCnIOs=;
+	s=k20201202; t=1671291022;
+	bh=J8PB7ageuGwzTFlKPjGTsoyLoPto2P7bxNGDSxJPy0A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nCHIUu0pu99v5I581Nt9UzactrqSnpI42rX1FxwnZRI/d6fep22S3mNXEqUgTkPvm
-	 /taW6nD69C2YTOhhb3g91ossrRdDNOj2gqu+/ma0YKpko4zrtaSUL2dpMBWVxfphx/
-	 QzUGVsEcXGqO08kcg05ENVJpnmQosNWnBssQ+lHT+RitRnV/HXRy/JNwDrFb+WEdtV
-	 qOdxzaFlfqzubs5uw9fvCzKCD3vJpB971cj2fvpICU3hPqFLEKlkG6n/9pM1y31pgR
-	 eke0m1s+Xl915cwO679cu3Dp0teBno5ORwjmSceGj+RF0gYSoeyGxX+rrTyu9OguJx
-	 N9uIWUI+8p3pw==
+	b=YQa7xbe5Q6kM9ex0h5dasnxuijJnMIcBlbqMe4fy/8dNpYeXZAG+GTivLrvlfjuy+
+	 j9LwxGCaWZ4a7fb7Rxc7/d6UEPlmkeUsTkqtkFcDP8Hx63Wo/0ld21sF10j26Iwweb
+	 NEtXBYHE1xdBOEiK2vY5t3Jq88LpkEpH6RjW5u2DJY8MlUFWurRrI+tWm4mZo1Hf/X
+	 o7E1PuH7aKiLX+/rjeNWZmN05pJAgFx2TWLh6FjDdlZAsGdsRISM+vOfw+p0s1OY0X
+	 Ci6cPBBUKYV7PNTirzRB5TVk16QNTKWhUh6hCj3M074ktrDZ93yDh8oQvBKQcakJBZ
+	 JCtY0fr+D7BuA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -61,18 +61,18 @@ Cc: Jianglei Nie <niejianglei2021@163.com>,
 	Sasha Levin <sashal@kernel.org>,
 	kexec@lists.infradead.org,
 	linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 5/9] proc/vmcore: fix potential memory leak in vmcore_init()
-Date: Sat, 17 Dec 2022 10:29:43 -0500
-Message-Id: <20221217152949.99146-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 5/8] proc/vmcore: fix potential memory leak in vmcore_init()
+Date: Sat, 17 Dec 2022 10:30:07 -0500
+Message-Id: <20221217153012.99273-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221217152949.99146-1-sashal@kernel.org>
-References: <20221217152949.99146-1-sashal@kernel.org>
+In-Reply-To: <20221217153012.99273-1-sashal@kernel.org>
+References: <20221217153012.99273-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221217_073009_192799_8026B1D3 
-X-CRM114-Status: GOOD (  12.90  )
+X-CRM114-CacheID: sfid-20221217_073027_082447_CFB4C08D 
+X-CRM114-Status: GOOD (  12.91  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -132,10 +132,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index b1102a31a108..18e50c207561 100644
+index f5dfedc01552..7f53c4d56e23 100644
 --- a/fs/proc/vmcore.c
 +++ b/fs/proc/vmcore.c
-@@ -1554,6 +1554,7 @@ static int __init vmcore_init(void)
+@@ -1533,6 +1533,7 @@ static int __init vmcore_init(void)
  		return rc;
  	rc = parse_crash_elf_headers();
  	if (rc) {
