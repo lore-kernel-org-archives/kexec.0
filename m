@@ -4,61 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8CA1EC10F1B
-	for <kexec@archiver.kernel.org>; Wed, 21 Dec 2022 15:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D6B7DC4167B
+	for <kexec@archiver.kernel.org>; Wed, 21 Dec 2022 19:46:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
-	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References:Message-Id
+	:MIME-Version:Subject:Date:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=1432PFZzO0ucak5O5NsXPRgjTxt2L/11I+FMnfnLi8I=; b=lwx6hcmLzi6hjz
-	oiaz0cT1StgrAGGrfT/NcpBKTZHTtum+UUAHzzXmv7xtghhNDNKTfJBgQIh8YGM+GSzbl3lbQe+Cs
-	L+5Smooxzz7WHjRjgqzj4kTefCB7KMzOuoeXWPtmE1uxm6CRupX2/pdcQAPlSAEvf/JCmKIorpIOI
-	Nn1FYP674+6xKNoNk7S9peMFFJXqfMdemlfeqiDDideqLrm3WlYJEk1zIs3VCmZ90OCJ+JkY+c4xg
-	9hIdKB8V9NX1o1ABDoKpaIQS8Ozww3+7sL4f4Kr8IYgW2JMWSO93vwDxVnKTWNO37DeogdKYpqg4x
-	EvypLRfJ7J6wvP6krx4A==;
+	List-Owner; bh=HRfCE5l5cYogFreAwW5rftvsMqbxFL9cqJy/bZ2Jo7E=; b=2t55sILM6c3cMw
+	PxfAuXYUiFa0cNmVIGjVO8onb40OjXqA3rXimCvJzt1oVj9x2VaDFys8S7Z6h6hzDNIrUPZQSFV5n
+	PvrdHyIwXjGztJdukRJZhargPF4rjq+RSWucxOjWGGluKVR3WdJX2Gd2dlMyyNToP57ip7/3Yf6Nw
+	+Wtg8JYSsGfWkArKd1fwA39MziHDvjtCZxoo85DLj4KXMxcUknvRae3P9isw/MNmqWhKcibSZCJsJ
+	c5p2fqybm5P9pECKkZkNUUyykfyaWGCU8tTMVgXbA6LIfoGbMluSvLK1LhHUp/RNHEAZtAslQtAQT
+	D3oUOHn4xqrTHBn4spYQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1p81JX-00GcWO-E0; Wed, 21 Dec 2022 15:47:27 +0000
-Received: from fanzine2.igalia.com ([213.97.179.56])
+	id 1p852l-001Nnw-Ha; Wed, 21 Dec 2022 19:46:23 +0000
+Received: from mail-ed1-x52f.google.com ([2a00:1450:4864:20::52f])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1p81JT-00GcJS-Uz
-	for kexec@lists.infradead.org; Wed, 21 Dec 2022 15:47:25 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=WMvM3oIiYKel5HPXqZ0wwZClubdzV5QaZHrYn2xq4Js=; b=H4uE0QPetyV6wWmK/W9fnNlXos
-	2pHteCy74MP5gpU+YESUl4xuXHRtqxahK3xludCQtQzK9OfPx7qLa1KLs3ELbFpW5I1kC9wGCk8Fu
-	mfLAT/rdyCAeILUFWL9GFbqc5S1m40SeI6STM5OAGJV3wWotRcHS07RJVFZdtsNWK08FZh0yuCuS3
-	vT0OTlvGTTqDEwV+vCZKMoaQW0BXkl1NgU53OX138Wmvlk708ggE4hCA3dmkWSmr6HTYBO+Vdi6LD
-	8z6ZV9wfcjka58WIZIlLC2WUs8XleCxfvahrHIPNtjdf3XKpz6htcRr6Y/kWDDdX3rnh6exvvy0BD
-	kktjH1YQ==;
-Received: from [177.103.98.201] (helo=[192.168.1.60])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1p81J8-007ZDo-1S; Wed, 21 Dec 2022 16:47:02 +0100
-Message-ID: <efe7e25e-8b05-90e7-fc02-4f1dc84fe324@igalia.com>
-Date: Wed, 21 Dec 2022 12:46:51 -0300
+	id 1p852b-001NWN-JH
+	for kexec@lists.infradead.org; Wed, 21 Dec 2022 19:46:15 +0000
+Received: by mail-ed1-x52f.google.com with SMTP id i15so27580edf.2
+        for <kexec@lists.infradead.org>; Wed, 21 Dec 2022 11:46:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xv7lgqcsWR7csyQW/ua9GbEMjmdKQM2eL6DIBrKZNHc=;
+        b=RQbFTmSpCufgNXH4cjE/NEaU/tEsNuzVOXIbI8CwMamw5qAWhVCN2G0OePZAGiA7kj
+         1F+gYgX+YqQxgMX8QnWDLWOUT9frqU8rVVDlo2XOFQL2RcFmTwvlLp/ylO6/Ec1sZ1je
+         yQOoeN3E69nDmdnkj/Bn6C32nSB4lRotDVDZs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xv7lgqcsWR7csyQW/ua9GbEMjmdKQM2eL6DIBrKZNHc=;
+        b=EgFHL0c8BXtnEubFhAI76aj1r7+WIJAHOfzSnfz5FVoNH6VGgdQ0cd9S0oIA4kRGau
+         td9CWwf/qfC+UTK+1VItAAcuROzmJg45q1KhhDDPobzHhzD1hW3xZ3mpGX3aam16d/P9
+         vLrRpY1Fi+qFdaWROWJ8lH/e3+U5WjjmSLRgaGK9+dxxavmSzuj1MH/kEv0ZrUtYvY+x
+         NOHDaHWMAwCDHAYOlVDoXjGzYK8D9kJdzkR5d0N8q35PPrDyEpg0xr+BmuVG0LmRI272
+         GcIVqZ/wcelEvZ5UtKdKdBwFshUN4bdVTITfkdy5Ue5gb0gMrvalJFyebmNAoHvG8E1l
+         uWMQ==
+X-Gm-Message-State: AFqh2kpjILgF/3bQkFwRXbKrhWHqkobtfnQ9AoKmWe+sxJWXuhFx14z/
+	OQh2zbU/8nJcfs13kYzo6efshg==
+X-Google-Smtp-Source: AMrXdXsRzDD7P90Vqn5PD1Ce6iPmD51XQ9bLvdWSr569JN4lv564Sm7Wg5IUnhiukQhDGHLKUieQhg==
+X-Received: by 2002:a50:fd10:0:b0:46d:aef2:3350 with SMTP id i16-20020a50fd10000000b0046daef23350mr3127946eds.26.1671651971256;
+        Wed, 21 Dec 2022 11:46:11 -0800 (PST)
+Received: from alco.roam.corp.google.com (80.71.134.83.ipv4.parknet.dk. [80.71.134.83])
+        by smtp.gmail.com with ESMTPSA id f24-20020a056402005800b0046cbcc86bdesm7382008edu.7.2022.12.21.11.46.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Dec 2022 11:46:11 -0800 (PST)
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Wed, 21 Dec 2022 20:45:57 +0100
+Subject: [PATCH v5 1/3] Documentation: sysctl: Correct kexec_load_disabled
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: kdump kernel randomly hang with tick_periodic call trace on bare
- metal system
-Content-Language: en-US
-To: Baoquan He <bhe@redhat.com>
-Cc: x86@kernel.org, kexec@lists.infradead.org,
- Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-References: <Y6FJgh3fOYoF0wSV@MiWiFi-R3L-srv>
- <Y6FK++b4buO5EgjD@MiWiFi-R3L-srv> <Y6FNTFbH9DbhEogg@MiWiFi-R3L-srv>
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <Y6FNTFbH9DbhEogg@MiWiFi-R3L-srv>
+Message-Id: <20221114-disable-kexec-reset-v5-1-1bd37caf3c75@chromium.org>
+References: <20221114-disable-kexec-reset-v5-0-1bd37caf3c75@chromium.org>
+In-Reply-To: <20221114-disable-kexec-reset-v5-0-1bd37caf3c75@chromium.org>
+To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ Eric Biederman <ebiederm@xmission.com>, Jonathan Corbet <corbet@lwn.net>,
+ Philipp Rudo <prudo@redhat.com>
+Cc: Ross Zwisler <zwisler@kernel.org>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Steven Rostedt <rostedt@goodmis.org>, kexec@lists.infradead.org,
+ Ricardo Ribalda <ribalda@chromium.org>,
+ "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+X-Mailer: b4 0.11.0-dev-696ae
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1258; i=ribalda@chromium.org;
+ h=from:subject:message-id; bh=U6cVA0f3MVv7jTHbprLKEENRfx9C5MeH7N8/eIFjhzo=;
+ b=owEBbQKS/ZANAwAKAdE30T7POsSIAcsmYgBjo2J7s4JnwPmuL15uZ+xM4QsaksUW5vucOTw7PXPE
+ fZ88t7CJAjMEAAEKAB0WIQREDzjr+/4oCDLSsx7RN9E+zzrEiAUCY6NiewAKCRDRN9E+zzrEiDaJD/
+ 0bTQsbJRZ8Zw4ky/CUdrnkq+0uRbLoHVXu1ml36UHUihbFPSWbVefZ5p1bYmwIZmSzSEOemUBtbWdT
+ eCmm343+ZRdig25r3HYVQIPjfZmV3J4KTW1CW2kJ/RYT7TV+eqt/2WIoUfoJ+caPbmQMSk2sX9JKNe
+ iijWrC7+ouZanLCd/BxoBeKuuYxs23zGypKigm9U8VNs+DkSs81Bzs3scnfDafdqogSPF8hXbIbarZ
+ oYujynTcfBNl3PXB6y3B6cJqOY/XAekyQrlGk2qzoIdtLj1ehxmNAcSQb9+iFt5B1oCkklY6C/E2XX
+ Nasw1eCd8feM4nAnrK7M5JGDx676PMd/68QY1M1yPkv4/4eQei8ivJydAsQTcda25vtz6qRzt3oziG
+ 5aPY9IuCSwEUB/A49HgpyPNeO3QQyjM/JRlwFsngYGpwhUoLjMHpkW2ic3AlmQyZz3dxm92CG0nH80
+ 9HJmFnuxPGB1Zps0f8nXKPz8DHobHLJPNu8nwBs6F2O2o5m6u0I3dlHrcwLEQS1eG7KZWLLfA93nPc
+ BGj1rKeM5vda3r4fqTGmqxUFj5yoH5KqsYwSG8iPQfUQMSVO07eiyfXsDi2RZdrO8JPAG/120gdoY1
+ Tqqx7ihn4UKRARwU+N4J0xr0tgvT6t1e8J1doKvNiEfsUHBHmrvedZ9miHuw==
+X-Developer-Key: i=ribalda@chromium.org; a=openpgp;
+ fpr=9EC3BB66E2FC129A6F90B39556A0D81F9F782DA9
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221221_074724_091360_7CADF6E6 
-X-CRM114-Status: UNSURE (   8.37  )
+X-CRM114-CacheID: sfid-20221221_114613_674426_07E3BD10 
+X-CRM114-Status: UNSURE (   9.50  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -76,39 +109,35 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 20/12/2022 02:51, Baoquan He wrote:
-> On 12/20/22 at 01:41pm, Baoquan He wrote:
->> On one intel bare metal system, I can randomly reproduce the kdump hang
->> as below with tick_periodic call trace. Attach the kernel config for
->> reference.
-> 
-> Forgot mentioning this random hang is also caused by adding
-> 'nr_cpus=2' into normal kernel's cmdline, then triggering crash will get
-> kdump kernel hang as below kdump log shown.
-> 
+kexec_load_disabled affects both ``kexec_load`` and ``kexec_file_load``
+syscalls. Make it explicit.
 
-The weird thing is that you seem to be using "nr_cpus=1" instead - this
-is the cmdline from the log:
+Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+---
+ Documentation/admin-guide/sysctl/kernel.rst | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-"nr_cpus=2 irqpoll nr_cpus=1 reset_devices cgroup_disable=memory mce=off
-numa=off udev.children-max=2 panic=10 acpi_no_memhotplug
-transparent_hugepage=never nokaslr hest_disable novmcoredd cma=0
-hugetlb_cma=0 disable_cpu_apicid=16 [...]"
+diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+index 98d1b198b2b4..97394bd9d065 100644
+--- a/Documentation/admin-guide/sysctl/kernel.rst
++++ b/Documentation/admin-guide/sysctl/kernel.rst
+@@ -450,9 +450,10 @@ this allows system administrators to override the
+ kexec_load_disabled
+ ===================
+ 
+-A toggle indicating if the ``kexec_load`` syscall has been disabled.
+-This value defaults to 0 (false: ``kexec_load`` enabled), but can be
+-set to 1 (true: ``kexec_load`` disabled).
++A toggle indicating if the syscalls ``kexec_load`` and
++``kexec_file_load`` have been disabled.
++This value defaults to 0 (false: ``kexec_*load`` enabled), but can be
++set to 1 (true: ``kexec_*load`` disabled).
+ Once true, kexec can no longer be used, and the toggle cannot be set
+ back to false.
+ This allows a kexec image to be loaded before disabling the syscall,
 
-You seems to pass twice the "nr_cpus" thing, and I guess kernel pick the
-last one?
-
-Also, what is "disable_cpu_apicid=16"? Could this be related?
-
-
-Thanks for the report!
-Cheers,
-
-
-Guilherme
-
-
-
+-- 
+2.39.0.314.g84b9a713c41-goog-b4-0.11.0-dev-696ae
 
 _______________________________________________
 kexec mailing list
