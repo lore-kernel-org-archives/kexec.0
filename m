@@ -4,50 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1F6B3C4332F
-	for <kexec@archiver.kernel.org>; Wed, 21 Dec 2022 02:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 35189C4332F
+	for <kexec@archiver.kernel.org>; Wed, 21 Dec 2022 06:03:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:Cc:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Subject:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=AOOg1qTRV5TSNHV9sWdtnC61WNbnMAD2b9TJ8eZKU3w=; b=wVVbTIukiagNH0
-	lHajtL8j1IawNsZJ1nJ1VIblacVSkXZ5Ik1Q22/j/XZbDnKQa2yzpoD6dNWIDB+kj9FvgczW7tMv2
-	eII84sa4ia4sf79LQ7yqker/7i49Iu1nDNbUQFJFCPiVMfqo/QIKr2HFvTL2BFSkK9lKmeQxJ6D4l
-	G1jRna62+VI722WSDlBxmE5ePg3OeToceAPL0a6JE1diLfToU/FFwn4cpkELFxluyAeFLUGwG2c/C
-	vHZCjYgOu9ZJlIaIAdaiUrdil8TUmUClBkB0BEmg3Br0z7jKJBOADsg75a0MI2EDCzSPVz8aP9RBT
-	tHyY0XiZwtVkc01z25fw==;
+	List-Owner; bh=jJco6gifr2PMUMZYSs7iRLopekd63j9Sl6HCtfkyTkA=; b=B8MTZsDauAlFWq
+	BdUi2B8kAwJnlyuQ+veStf/94y27vP7HUr8g/8OUSKlJijkepaboUD0b340oSyKy3+R0Gj0lv6Lco
+	vN0cV7q1fGP6CqWmpZ3aqRWww75nqMob1rDgvDPWRj8AZtYQDjgpMYrZSEIEjRURpQ44fElIMriA8
+	YCZ1ViNGKUC4ZDygJOJObfEcUxFJRoTb1WJy4XsT9smaITd6fEd0FfCUezsLu7i9ZG+TTby4lrZve
+	BZE3cxKYCKioVgvQo4dV6TQcTmN30127rabCJ4ZNVTP3QaK6wxi3+8g2Y+pjOS824T/b/f0zAmJmI
+	82fVcmib6QzifrI1oY2Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1p7pE0-008Bbh-B4; Wed, 21 Dec 2022 02:52:56 +0000
-Received: from dfw.source.kernel.org ([139.178.84.217])
+	id 1p7sBo-00AL8E-II; Wed, 21 Dec 2022 06:02:52 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1p7pDu-008BLe-9Y
-	for kexec@lists.infradead.org; Wed, 21 Dec 2022 02:52:52 +0000
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	id 1p7sBP-00AKdA-32
+	for kexec@lists.infradead.org; Wed, 21 Dec 2022 06:02:28 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1671602545;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xFARvs3vX7F5UIgsIk8mEBbeBoqPfv+G3BzvbbBHE5g=;
+	b=AxeJLbeC2q2KjRkpfVxrcacdHhLBz7P2AsCcEbfCXdrOMpugnn1z3IWZb75w/3QPqJwkt/
+	ydCbgEX34sAno8Obc3o2q3we963H7G6QJENs9RDZY+tX/loXAxC+xHUgmlniiXwINUvO1w
+	XedjzOL49BH8VGHt219vTaeb1Iaiwy4=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-540-H8M4KejGNnGeLNOea66BPA-1; Wed, 21 Dec 2022 01:02:22 -0500
+X-MC-Unique: H8M4KejGNnGeLNOea66BPA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 6FCFA615D2;
-	Wed, 21 Dec 2022 02:52:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A91FC433D2;
-	Wed, 21 Dec 2022 02:52:39 +0000 (UTC)
-Date: Tue, 20 Dec 2022 21:52:37 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Subject: Re: [PATCH v3 3/3] kexec: Introduce parameters load_limit_reboot
- and load_limit_panic
-Message-ID: <20221220215237.7efc96b8@gandalf.local.home>
-In-Reply-To: <CANiDSCtgkQKUN6BtCsYc1Yn5UxwsFsCnMrraxpjjpXEErhUyhA@mail.gmail.com>
-References: <20221114-disable-kexec-reset-v3-0-4ef4e929adf6@chromium.org>
-	<20221114-disable-kexec-reset-v3-3-4ef4e929adf6@chromium.org>
-	<20221220192208.4d0c934f@gandalf.local.home>
-	<CANiDSCtgkQKUN6BtCsYc1Yn5UxwsFsCnMrraxpjjpXEErhUyhA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8B042858F09;
+	Wed, 21 Dec 2022 06:02:21 +0000 (UTC)
+Received: from localhost (ovpn-12-50.pek2.redhat.com [10.72.12.50])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id AFB5040C2064;
+	Wed, 21 Dec 2022 06:02:20 +0000 (UTC)
+Date: Wed, 21 Dec 2022 14:02:17 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Eric Biederman <ebiederm@xmission.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 0/2] kexec: Remove unnecessary arch hook
+Message-ID: <Y6KhaSHMsQoT3kfR@MiWiFi-R3L-srv>
+References: <Y52Qg8OvU1UsGZGC@MiWiFi-R3L-srv>
+ <20221217155842.GA389338@bhelgaas>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20221217155842.GA389338@bhelgaas>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221220_185250_454857_48C97E07 
-X-CRM114-Status: GOOD (  26.84  )
+X-CRM114-CacheID: sfid-20221220_220227_250637_216D5733 
+X-CRM114-Status: GOOD (  17.39  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -59,138 +79,32 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Cc: Jonathan Corbet <corbet@lwn.net>, Philipp Rudo <prudo@redhat.com>, linux-doc@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Sergey Senozhatsky <senozhatsky@chromium.org>, Eric Biederman <ebiederm@xmission.com>, Ross Zwisler <zwisler@kernel.org>, "Joel Fernandes
- \(Google\)" <joel@joelfernandes.org>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, 21 Dec 2022 02:22:57 +0100
-Ricardo Ribalda <ribalda@chromium.org> wrote:
-
-> > > +     kexec_core.load_limit_reboot=
-> > > +     kexec_core.load_limit_panic=
-> > > +                     [KNL]
-> > > +                     This parameter specifies a limit to the number of times
-> > > +                     a kexec kernel can be loaded.
-> > > +                     Format: <int>
-> > > +                     -1  = Unlimited.
-> > > +                     int = Number of times kexec can be called.
-> > > +
-> > > +                     During runtime, this parameter can be modified with a  
-> >  
-> > > +                     value smaller than the current one (but not -1).  
-> >
-> > Perhaps state:
-> >                         smaller positive value than the current one or if
-> >                         current is currently -1.  
+On 12/17/22 at 09:58am, Bjorn Helgaas wrote:
+> On Sat, Dec 17, 2022 at 05:48:51PM +0800, Baoquan He wrote:
+> > On 12/15/22 at 12:23pm, Bjorn Helgaas wrote:
+> > > From: Bjorn Helgaas <bhelgaas@google.com>
+> > > 
+> > > There are no arch-specific things in arch_kexec_kernel_image_load(), so
+> > > remove it and just use the generic version.
+> > 
+> > I ever posted below patch to do the same thing, Andrew only picked the
+> > memory leak fixing patch.
+> > 
+> > [PATCH v2 2/2] kexec_file: clean up arch_kexec_kernel_image_load
+> > https://lore.kernel.org/all/20220223113225.63106-3-bhe@redhat.com/T/#u
 > 
-> I find it a bit complicated..
-> What about:
-> 
->  During runtime this parameter can be modified with a more restrictive value
+> Indeed!  Sorry, I wasn't aware of your previous work.  If you repost
+> it, cc me and I'll be glad to help review it.
 
-Sure. That's better than the original.
+When tried to rebase my old patch to the latest kernel, I realized this
+patchset is what I can end up with. I would like to ack this patchset
+to make it merged. Thanks a lot for the effort.
 
-
-> > > +module_param_cb(load_limit_reboot, &load_limit_ops, &load_limit_reboot, 0644);
-> > > +MODULE_PARM_DESC(load_limit_reboot, "Maximum attempts to load a kexec reboot kernel");
-> > > +
-> > > +module_param_cb(load_limit_panic, &load_limit_ops, &load_limit_panic, 0644);
-> > > +MODULE_PARM_DESC(load_limit_reboot, "Maximum attempts to load a kexec panic kernel");  
-> >
-> > Wait, why the module params if this can not be a module?
-> >
-> > The kernel/kexec.c is decided via CONFIG_KEXEC_CORE which is bool. Either
-> > builtin or not at all. No module selection possible.
-> >
-> > For kernel parameters, we should just use __setup(), right?  
-> 
-> Isn't __setup() only kernel parameter and then it cannot be updated on runtime?
-
-Yes, but then we use sysctl.
-
-> 
-> What about using late_param_cb? and remove MODULE_PARAM_DESC ?
-> 
-> I think this is how these parameters work
-> 
-> $ ls /sys/module/kernel/parameters/
-> consoleblank  crash_kexec_post_notifiers  ignore_rlimit_data
-> initcall_debug  module_blacklist  panic  panic_on_warn  panic_print
-> pause_on_oops
-
-Well, I think those are more leftovers and not something we want to add to.
-
-I believe sysctl is the better option, and a more common one:
-
-$ ls /proc/sys/kernel/
-acct                           perf_event_max_contexts_per_stack
-acpi_video_flags               perf_event_max_sample_rate
-auto_msgmni                    perf_event_max_stack
-bootloader_type                perf_event_mlock_kb
-bootloader_version             perf_event_paranoid
-bpf_stats_enabled              pid_max
-cad_pid                        poweroff_cmd
-cap_last_cap                   print-fatal-signals
-core_pattern                   printk
-core_pipe_limit                printk_delay
-core_uses_pid                  printk_devkmsg
-ctrl-alt-del                   printk_ratelimit
-dmesg_restrict                 printk_ratelimit_burst
-domainname                     pty
-firmware_config                random
-ftrace_dump_on_oops            randomize_va_space
-ftrace_enabled                 real-root-dev
-hardlockup_all_cpu_backtrace   sched_autogroup_enabled
-hardlockup_panic               sched_child_runs_first
-hostname                       sched_deadline_period_max_us
-hotplug                        sched_deadline_period_min_us
-hung_task_all_cpu_backtrace    sched_energy_aware
-hung_task_check_count          sched_rr_timeslice_ms
-hung_task_check_interval_secs  sched_rt_period_us
-hung_task_panic                sched_rt_runtime_us
-hung_task_timeout_secs         sched_util_clamp_max
-hung_task_warnings             sched_util_clamp_min
-io_delay_type                  sched_util_clamp_min_rt_default
-kexec_load_disabled            seccomp
-keys                           sem
-kptr_restrict                  sem_next_id
-max_lock_depth                 shmall
-max_rcu_stall_to_panic         shmmax
-modprobe                       shmmni
-modules_disabled               shm_next_id
-msgmax                         shm_rmid_forced
-msgmnb                         softlockup_all_cpu_backtrace
-msgmni                         softlockup_panic
-msg_next_id                    soft_watchdog
-ngroups_max                    stack_tracer_enabled
-nmi_watchdog                   sysctl_writes_strict
-ns_last_pid                    sysrq
-numa_balancing                 tainted
-oops_all_cpu_backtrace         task_delayacct
-osrelease                      threads-max
-ostype                         timer_migration
-overflowgid                    traceoff_on_warning
-overflowuid                    tracepoint_printk
-panic                          unknown_nmi_panic
-panic_on_io_nmi                unprivileged_bpf_disabled
-panic_on_oops                  usermodehelper
-panic_on_rcu_stall             version
-panic_on_unrecovered_nmi       watchdog
-panic_on_warn                  watchdog_cpumask
-panic_print                    watchdog_thresh
-perf_cpu_time_max_percent      yama
-
-
-
-> I could pass the flags and then check for flags & (KEXEC_ON_CRASH |
-> KEXEC_FILE_ON_CRASH)... but not sure if it is better
-
-It keeps the processing in a single place, which helps avoid bugs like this.
-
--- Steve
 
 _______________________________________________
 kexec mailing list
