@@ -4,87 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 86808C4332F
-	for <kexec@archiver.kernel.org>; Fri, 30 Dec 2022 06:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 99992C4332F
+	for <kexec@archiver.kernel.org>; Fri, 30 Dec 2022 07:00:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=g5kCXexNT/j9en/dYd3SOR7JbrWJnjM+9qmsTwQ7ADA=; b=h1SkyNyv3wi0ol
-	X2EM04E1jg2Xs8aBkV/axUvjpyVWW5X3Qa9Nqsc2eFffLvwlahlXoNbzV6U97oT7dsuUGMTojTitB
-	YuAltjXUGPcRbVp78c/Ft+jytf/V1Pay1FRgrRoI+rot18L5simAJTWnX9mPJnOc2Bu5dyynt5q1v
-	6Hx4uSYaNAX/PuDoksBClSpYenZhc1TGiHwgFU7k5BVvZBcBgz7y6O0snEKlDss+poAmC7SrCX1iy
-	8qUU1qW6frSFu5YkC5MMYpC3M7WJ36QIhieENrgaV2ODBsx4l5NhZ/QwgCLlcEZm5kZAB81eBkYs2
-	C8tsa8Q2nG7Wj9mB5Bxw==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=31xNkDIRBvXFIo74I/NBL21KdQuuXLyqRqMTD46dcXU=; b=22WQf5T+oH2jKJWclRYRKSaUAl
+	UcUXsVKqqF7cKnyP6g1HFCNyjj+/h4R9xE5S2sYKFTAbBfemDRQDOxhyiOpItn0bWM+11eL59XAd5
+	yPDj2OiRxuBb5SODYVdz7BvrFkhwO/R9oS21tEPA+451kuRfjOY+Vf4PLzcIPJHfIH2g3oFG6iuOX
+	MTNCv2faQKXnVSSELNM6HjMUzK0CXRyMuCPNn93aXqrF0VRAvxDpRCHrmEZipuqga+ltP+PfpgulT
+	jHb5SpyxfeLOi4wTm0O6YqCInf92Z6A4oCKROqMRXIQADfslUWA9qYiwYvqAX8KL9chrM4ZOe28LO
+	8oiVqc+w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pB9Mi-006fPV-0e; Fri, 30 Dec 2022 06:59:40 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1pB9Nq-006fwP-Dn; Fri, 30 Dec 2022 07:00:50 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pB9MB-006f52-8H
-	for kexec@lists.infradead.org; Fri, 30 Dec 2022 06:59:09 +0000
+	id 1pB9Nm-006fuF-R5
+	for kexec@lists.infradead.org; Fri, 30 Dec 2022 07:00:48 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1672383543;
+	s=mimecast20190719; t=1672383645;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xfQVFUk68QjEj99AgM4T7hbGZN2TqICY24ExGXMOCJA=;
-	b=NazmobyWMN61Lb2ehOtmz3K44iWPZpI1U2K+919Ugi94z2hE0Rfx3FA0OZ4x6dRluUX/gw
-	yzbyiich/pmiggyqiso8gHy2GXSN4o6LdNzOEVuVNE4PiXd5QOz81wKMJxV3nI3UdDjzBN
-	fRPEg9lmIbafTSNj6V49We++8kd/zbs=
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
- [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=ImmGCQvbrQbubKMSG6ameYopLxKvK1Dq+0f6WyefBN0=;
+	b=PLsrvzqtuBnIHo4dbMjzVBqyS9yiSm6oYVJ2/u+NVZIzKqcsajnI1PM0AFESvI+SBiUdx0
+	C2dNuDQz33gl475etGYByzMij8y1rbwR3u3eKmAT5mecN6DeQQLwkaxz+MZUc/fF5rr3wg
+	5dyF09kiHrugjUereTQ4SFFi5LhCoKk=
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
+ [209.85.210.199]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-410-yi0Zy9OcNEiLwRfkiq7nqQ-1; Fri, 30 Dec 2022 01:59:02 -0500
-X-MC-Unique: yi0Zy9OcNEiLwRfkiq7nqQ-1
-Received: by mail-pl1-f200.google.com with SMTP id m13-20020a170902f64d00b001899a70c8f1so15224420plg.14
-        for <kexec@lists.infradead.org>; Thu, 29 Dec 2022 22:59:02 -0800 (PST)
+ us-mta-607-q7OmBS7HNwCsyomu5iY9YA-1; Fri, 30 Dec 2022 02:00:44 -0500
+X-MC-Unique: q7OmBS7HNwCsyomu5iY9YA-1
+Received: by mail-pf1-f199.google.com with SMTP id k21-20020aa78215000000b00575ab46ca2cso10425479pfi.20
+        for <kexec@lists.infradead.org>; Thu, 29 Dec 2022 23:00:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xfQVFUk68QjEj99AgM4T7hbGZN2TqICY24ExGXMOCJA=;
-        b=yPd84ZAmqCzLhHseyXHXC7FZa6PwdYlyfzDI10/FNhx0pBUoe385dJ5wmbupm5y1wu
-         dbpIf+OSj19ZuTxcY1BoyCJgA9wTEM8KdGb+cQd1xKrPb1LusqNcGAROuLRV/+lKNKJm
-         PzwWASKA25aeIuzjLz5R2a3g13GZ+m6lQ/bVVbFiN+IpBEND9btXf6Uy2/QVLyE+3i/8
-         FLtpTnWTUGbUf5tWcQ4HWupBwsUq19BA2kEISHkSkZdjK5FHKr46ftujMuWHTXAbaDr2
-         VXACNLD4UdzsjnnTeoPszI7O3/80l+7i9/+7qdt2pFE4aU3efeakJ/j8Hz7vGdWmQijz
-         nNKA==
-X-Gm-Message-State: AFqh2krRM1fxGK1rNKotFCFNdJx/BmLGAyQL9OpCX/tS8oDMEZlW1MJ0
-	uyZ45ja0GzQjBhZcnByjh+eEU2RL4sKRuUQetzFPXd3fwffVjdti7WIVx+ff1jtQDENgT/QTLBu
-	tZSrof4+utSEcdaeelnG0NN9XPmndW0+prQyzM7RzN03enhPh7Fb71hy+6nHD6o/B9K0=
-X-Received: by 2002:a17:902:d3d3:b0:192:8f38:7492 with SMTP id w19-20020a170902d3d300b001928f387492mr10901750plb.13.1672383539923;
-        Thu, 29 Dec 2022 22:58:59 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXvgQSu4eJrF7t9Ee8jFtrdmW2Mfrqq37xxbhi3CqTIuwlP91hv2uCBIjFGbYTi7mF+inP0IYw==
-X-Received: by 2002:a17:902:d3d3:b0:192:8f38:7492 with SMTP id w19-20020a170902d3d300b001928f387492mr10901731plb.13.1672383539523;
-        Thu, 29 Dec 2022 22:58:59 -0800 (PST)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ImmGCQvbrQbubKMSG6ameYopLxKvK1Dq+0f6WyefBN0=;
+        b=6/mlgaU99E23/dErEpSgZud+6Z3R945As+NfyHQXIZI7SzXkKpS39FAhwPgmTaM9jM
+         ZaluJMiLpB/fwRpjIuK4CLEbQsyKQXHgIuNQoALDV/GRpmHBNValnMVF8eY3KeDZoMUr
+         F7k9zrDNLan5aoL0KLWfPiOZwmRcCnt49Fp670ToSw3d7SM9wQ5G1l/YolDO6l5thEV4
+         xP9wh1hxMvdti11Se+OPm5XD3ZSQ0x+m9huzfuFYJ1t0C3tSSvDtkSO78AJfznjUTmAi
+         JUu+aqdQQg0IHScozwB1VZbgQrHeu8LBVi4OyjmF+CpXFQ+YyqvJb32g7HpALSajZM1l
+         1CSw==
+X-Gm-Message-State: AFqh2kpjMyBaN0hv48VRTtV8H3S7rUU6j+/B27NzvJQSxMgnsuvcwlQm
+	diMyZq89hGf6nELZzlh+p9GBJEAhaX9DpEsCP7Qe0mUwIZWV/pMEEs2aejvF4aMbx1Zj1ioGsPH
+	T7aHwauZ96vwydbnMzh4p
+X-Received: by 2002:a17:902:f30a:b0:192:5d9b:5881 with SMTP id c10-20020a170902f30a00b001925d9b5881mr21193548ple.31.1672383643007;
+        Thu, 29 Dec 2022 23:00:43 -0800 (PST)
+X-Google-Smtp-Source: AMrXdXuFyJMAfM2ex+xnuBDCSnUVb8vWNZEix+IQzpCxtuyT8dY7U9e4J7L3ewHS7tRYBThynAwxpw==
+X-Received: by 2002:a17:902:f30a:b0:192:5d9b:5881 with SMTP id c10-20020a170902f30a00b001925d9b5881mr21193531ple.31.1672383642759;
+        Thu, 29 Dec 2022 23:00:42 -0800 (PST)
 Received: from localhost ([240e:478:10:2273:12cf:a540:d79b:db49])
-        by smtp.gmail.com with ESMTPSA id ij6-20020a170902ab4600b00176e6f553efsm14012757plb.84.2022.12.29.22.58.57
+        by smtp.gmail.com with ESMTPSA id b7-20020a170902650700b00189c536c72asm14085355plk.148.2022.12.29.23.00.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Dec 2022 22:58:59 -0800 (PST)
+        Thu, 29 Dec 2022 23:00:42 -0800 (PST)
+Date: Fri, 30 Dec 2022 15:00:28 +0800
 From: Coiby Xu <coxu@redhat.com>
-To: kexec@lists.infradead.org
-Cc: Mimi Zohar <zohar@linux.ibm.com>,
+To: Mimi Zohar <zohar@linux.ibm.com>
+Cc: kexec@lists.infradead.org, Matthew Garrett <mjg59@srcf.ucam.org>,
+	Jiri Bohac <jbohac@suse.cz>, David Howells <dhowells@redhat.com>,
 	linux-integrity@vger.kernel.org,
-	Shuah Khan <shuah@kernel.org>,
-	linux-kselftest@vger.kernel.org (open list:KERNEL SELFTEST FRAMEWORK),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 2/2] selftests/kexec: enable lockdown tests
-Date: Fri, 30 Dec 2022 14:58:50 +0800
-Message-Id: <20221230065850.897967-2-coxu@redhat.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20221230065850.897967-1-coxu@redhat.com>
-References: <20221230065850.897967-1-coxu@redhat.com>
+	Eric Biederman <ebiederm@xmission.com>,
+	James Morris <jmorris@namei.org>,
+	Matthew Garrett <mjg59@google.com>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] lockdown: kexec_file: prevent unsigned kernel image when
+ KEXEC_SIG not enabled
+Message-ID: <20221230070028.7i4w57xmhwa44c4z@Rk>
+References: <20221121072947.836672-1-coxu@redhat.com>
+ <5d98172d77a8a0f1e3daab44ad51bf38978cc053.camel@linux.ibm.com>
+ <20221122023606.nrifkrng5nbfmkka@Rk>
+ <2204915d319ff9acf80f68ccba8600aaeb5578d7.camel@linux.ibm.com>
 MIME-Version: 1.0
+In-Reply-To: <2204915d319ff9acf80f68ccba8600aaeb5578d7.camel@linux.ibm.com>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20221229_225907_408321_8359CEA8 
-X-CRM114-Status: GOOD (  12.15  )
+X-CRM114-CacheID: sfid-20221229_230046_999665_3D1FBF03 
+X-CRM114-Status: GOOD (  17.49  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -96,165 +101,66 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-When lockdown is enabled, kexec_load syscall should always fail.
+On Mon, Nov 28, 2022 at 12:16:08PM -0500, Mimi Zohar wrote:
+>On Tue, 2022-11-22 at 10:36 +0800, Coiby Xu wrote:
+>> Hi Mimi,
+>>
+>> On Mon, Nov 21, 2022 at 01:23:57PM -0500, Mimi Zohar wrote:
+>> >Hi Coiby,
+>> >
+>> >On Mon, 2022-11-21 at 15:29 +0800, Coiby Xu wrote:
+>> >> A kernel builder may not enable KEXEC_SIG and some architectures like
+>> >> ppc64 simply don't have KEXEC_SIG. In these cases, unless both
+>> >> IMA_ARCH_POLICY and secure boot also enabled, lockdown doesn't prevent
+>> >> unsigned kernel image from being kexec'ed via the kexec_file_load
+>> >> syscall whereas it could prevent one via the kexec_load syscall. Mandate
+>> >> signature verification for those cases.
+>> >>
+>> >> Fixes: 155bdd30af17 ("kexec_file: Restrict at runtime if the kernel is locked down")
+>> >> Cc: Matthew Garrett <mjg59@srcf.ucam.org>
+>> >> Cc: Jiri Bohac <jbohac@suse.cz>
+>> >> Cc: David Howells <dhowells@redhat.com>
+>> >> Cc: kexec@lists.infradead.org
+>> >> Cc: linux-integrity@vger.kernel.org
+>> >> Signed-off-by: Coiby Xu <coxu@redhat.com>
+>> >
+>> >Other than correcting the function name to mandate_signature_verificati
+>> >on(),
+>>
+>> Applied to v2, thanks for correcting me! Btw, I realize I overwrote the
+>> return code of kexec_image_verify_sig with
+>> mandate_signature_verification's. v2 has fixed this issue as well.
+>>
+>> >
+>> >Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+>>
+>> And thanks for the review!
+>
+>You're welcome.
+>
+>Without either IMA_ARCH or KEXEC_SIG enabled, the kexec selftest
+>test_kexec_file_load.sh properly failed with "kexec_file_load failed
+>[PASS]", but from the informational messages output, it isn't clear why
+>it failed.  This should be corrected.
 
-For kexec_file_load, when lockdown is enabled, it should
- - fail of missing PE signature when KEXEC_SIG is enabled
- - fail of missing IMA signature when KEXEC_SIG is disabled
+Thanks for the suggestion! I've added some tests in v3 and now the
+message is "# kexec_file_load failed (missing IMA sig) [PASS]".
 
-Before this patch, test_kexec_load.sh fails (false positive) and
-test_kexec_file_load.sh fails without a reason when lockdown enabled and
-KEXEC_SIG disabled,
+>
+>-- 
+>thanks,
+>
+>Mimi
+>
 
-    # kexec_load failed [FAIL]
-    not ok 1 selftests: kexec: test_kexec_load.sh # exit=1
-    # kexec_file_load failed [PASS]
-    ok 2 selftests: kexec: test_kexec_file_load.sh
-
-After this patch, test_kexec_load.sh succeeds and
-test_kexec_file_load.sh fails with the correct reason when lockdown
-enabled and KEXEC_SIG disabled,
-
-    # kexec_load failed [PASS]
-    ok 1 selftests: kexec: test_kexec_load.sh
-    # kexec_file_load failed (missing IMA sig) [PASS]
-    ok 2 selftests: kexec: test_kexec_file_load.sh
-
-Cc: kexec@lists.infradead.org
-Cc: linux-integrity@vger.kernel.org
-Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
-Signed-off-by: Coiby Xu <coxu@redhat.com>
----
- .../selftests/kexec/kexec_common_lib.sh       | 16 +++++++++++
- .../selftests/kexec/test_kexec_file_load.sh   | 27 +++++++++++++++++++
- .../selftests/kexec/test_kexec_load.sh        | 12 ++++++---
- 3 files changed, 52 insertions(+), 3 deletions(-)
-
-diff --git a/tools/testing/selftests/kexec/kexec_common_lib.sh b/tools/testing/selftests/kexec/kexec_common_lib.sh
-index 641ef05863b2..06c298b46788 100755
---- a/tools/testing/selftests/kexec/kexec_common_lib.sh
-+++ b/tools/testing/selftests/kexec/kexec_common_lib.sh
-@@ -110,6 +110,22 @@ get_secureboot_mode()
- 	return $secureboot_mode;
- }
- 
-+is_lockdown_enabled()
-+{
-+	local ret=0
-+
-+	if [ -f /sys/kernel/security/lockdown ] \
-+	     && ! grep -qs "\[none\]" /sys/kernel/security/lockdown; then
-+		ret=1
-+	fi
-+
-+	if [ $ret -eq 0 ]; then
-+		log_info "lockdown not enabled"
-+	fi
-+
-+	return $ret
-+}
-+
- require_root_privileges()
- {
- 	if [ $(id -ru) -ne 0 ]; then
-diff --git a/tools/testing/selftests/kexec/test_kexec_file_load.sh b/tools/testing/selftests/kexec/test_kexec_file_load.sh
-index c9ccb3c93d72..790f96938083 100755
---- a/tools/testing/selftests/kexec/test_kexec_file_load.sh
-+++ b/tools/testing/selftests/kexec/test_kexec_file_load.sh
-@@ -139,6 +139,16 @@ kexec_file_load_test()
- 			log_fail "$succeed_msg (missing IMA sig)"
- 		fi
- 
-+		if [ $lockdown -eq 1 ] && [ $kexec_sig_enabled -eq 1 ] \
-+		     && [ $pe_signed -eq 0 ]; then
-+			log_fail "$succeed_msg (missing PE sig)"
-+		fi
-+
-+		if [ $lockdown -eq 1 ] && [ $kexec_sig_enabled -eq 0 ] && [ $ima_signed -eq 0 ] \
-+		     && [ $ima_modsig -eq 0 ]; then
-+			log_fail "$succeed_msg (missing IMA sig)"
-+		fi
-+
- 		if [ $pe_sig_required -eq 0 ] && [ $ima_appraise -eq 1 ] \
- 		    && [ $ima_sig_required -eq 0 ] && [ $ima_signed -eq 0 ] \
- 	            && [ $ima_read_policy -eq 0 ]; then
-@@ -181,6 +191,16 @@ kexec_file_load_test()
- 		log_pass "$failed_msg (possibly missing IMA sig)"
- 	fi
- 
-+	if [ $lockdown -eq 1 ] && [ $kexec_sig_enabled -eq 1 ] \
-+	    && [ $pe_signed -eq 0 ]; then
-+		log_pass "$failed_msg (missing PE sig)"
-+	fi
-+
-+	if [ $lockdown -eq 1 ] && [ $kexec_sig_enabled -eq 0 ] \
-+	    && [ $ima_signed -eq 0 ] && [ $ima_modsig -eq 0 ]; then
-+		log_pass "$failed_msg (missing IMA sig)"
-+	fi
-+
- 	log_pass "$failed_msg"
- 	return 0
- }
-@@ -215,6 +235,10 @@ kconfig_enabled "CONFIG_KEXEC_SIG_FORCE=y" \
- 	"kexec signed kernel image required"
- kexec_sig_required=$?
- 
-+kconfig_enabled "CONFIG_KEXEC_SIG=y" \
-+	"KEXEC_SIG enabled"
-+kexec_sig_enabled=$?
-+
- kconfig_enabled "CONFIG_KEXEC_BZIMAGE_VERIFY_SIG=y" \
- 	"PE signed kernel image required"
- pe_sig_required=$?
-@@ -225,6 +249,9 @@ ima_sig_required=$?
- get_secureboot_mode
- secureboot=$?
- 
-+is_lockdown_enabled
-+lockdown=$?
-+
- # Are there pe and ima signatures
- if [ "$(get_arch)" == 'ppc64le' ]; then
- 	pe_signed=0
-diff --git a/tools/testing/selftests/kexec/test_kexec_load.sh b/tools/testing/selftests/kexec/test_kexec_load.sh
-index 49c6aa929137..0542887866c0 100755
---- a/tools/testing/selftests/kexec/test_kexec_load.sh
-+++ b/tools/testing/selftests/kexec/test_kexec_load.sh
-@@ -28,18 +28,24 @@ arch_policy=$?
- get_secureboot_mode
- secureboot=$?
- 
--# kexec_load should fail in secure boot mode and CONFIG_IMA_ARCH_POLICY enabled
-+is_lockdown_enabled
-+lockdown=$?
-+
-+# kexec_load should fail in either
-+#   a) secure boot mode and CONFIG_IMA_ARCH_POLICY enabled
-+# or
-+#   b) lockdown enabled
- kexec --load $KERNEL_IMAGE > /dev/null 2>&1
- if [ $? -eq 0 ]; then
- 	kexec --unload
--	if [ $secureboot -eq 1 ] && [ $arch_policy -eq 1 ]; then
-+	if [ $secureboot -eq 1 -a $arch_policy -eq 1 ] || [ $lockdown -eq 1 ]; then
- 		log_fail "kexec_load succeeded"
- 	elif [ $ima_appraise -eq 0 -o $arch_policy -eq 0 ]; then
- 		log_info "Either IMA or the IMA arch policy is not enabled"
- 	fi
- 	log_pass "kexec_load succeeded"
- else
--	if [ $secureboot -eq 1 ] && [ $arch_policy -eq 1 ] ; then
-+	if [ $secureboot -eq 1 -a $arch_policy -eq 1 ] || [ $lockdown -eq 1 ]; then
- 		log_pass "kexec_load failed"
- 	else
- 		log_fail "kexec_load failed"
 -- 
-2.38.1
+Best regards,
+Coiby
 
 
 _______________________________________________
