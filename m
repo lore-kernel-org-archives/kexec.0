@@ -4,72 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C207BC4332F
-	for <kexec@archiver.kernel.org>; Wed,  4 Jan 2023 18:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 11850C4708E
+	for <kexec@archiver.kernel.org>; Thu,  5 Jan 2023 17:21:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
-	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=CsVt3D4acTn1nIGr8+0jeCr0/VVfpoejK54fwP2nL8U=; b=fcMjkCmhhcbwHX
-	4+JTGVJwUU5OnmJkbS+cznabPAAdFirtTRS9m//PsqBmJgnd1NYPvZgE9M88AsaF6LKqe9dO6apcq
-	XtyhMcCHYy8Lo8udpJA2W2u6jDl/Bskfid/E6GTYqgJbXcada/vPlE49yL0HvxXkyvh+nBuY9fOGH
-	i37mE5V426AVlQf+rpQ1SiRkkPcMaoR1JXHllauABL/N2fnSL/wcaQzX1x5DHpVWawz4QCobolMEt
-	WHfxbrJ1fXAoCoQUlnhya9H1ZRMVn3itSHycuLztEc9YbunMRTfdPjwMywvllxfYQ3dyStOzXQ9J3
-	AIKbJTZkM4ym5GQ7aJTA==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	List-Subscribe:List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:
+	In-Reply-To:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Reply-To:Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date
+	:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=vmAsHfkdvrhf/bWxhrbIJ1K1Aqe1sdvwk1/JYosuTGo=; b=tguR5+OEKeVOL2Sx06UDUki1nK
+	P6bV53utOJFZ/4AdDJMFZcHiqqb8AXqCCjM2senYSqQQELmhL3ZPWJJJpFrgh630OvhSl2XNAYmuy
+	H/A6XsT46uTAMcrfAqXCruQEIpznh6popGrbpihyhEAcCfx3osgrkvyJ5zJe+GmwLTMHlesd2Fw1M
+	qCjL8yiVFucFda+HgJDvzMdVx6s3ZmNmdypdJ9cybypCArWPsdRKFXZbBgqJkR9cBw+WGDvee2OrA
+	FcYLIed0wTj2f4lUtyFZQNfzKxpOKwp8i+bivI0UhQgJkAqHSyhZbzIywz7KiKb4zObIkQs1BzLcm
+	Mfqd1mPg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pD8qI-00BAqf-SI; Wed, 04 Jan 2023 18:50:26 +0000
-Received: from mga14.intel.com ([192.55.52.115])
+	id 1pDTvU-00CskD-Ro; Thu, 05 Jan 2023 17:21:12 +0000
+Received: from mail-pg1-x52c.google.com ([2607:f8b0:4864:20::52c])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pD8df-00B1Uq-AB
-	for kexec@lists.infradead.org; Wed, 04 Jan 2023 18:37:28 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1672857443; x=1704393443;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ML+G8wE8HvVBjGchvfSyQ+8atDsoyJghtlCJAdYi6HE=;
-  b=R5sNtni3RFtsxbMawpisaK0/3z0IpVgAJDAv4k3Pup41ZhZRTb6KA7Tg
-   dOTccavs5x6bCToXawS4nmVxvBs98obK2IKSKLkY0+QSjqAf1DYfu//vv
-   bQD3ajz78CXCJop7SFeN/aDrfSj+pY+7ivp0cADLN3ANv1CfEvL1QqyzJ
-   KxsNQayUFkd5asecmB/vfXFrCGswNfZ3iQFVP2s2K5x4SCcDFq9basER2
-   QcrdB7pGmWwbeRzFJuX+p4adVmXw5qxnIzrL75LAoP0wGbeNed8cI8vTs
-   la4kQYVjzp5/BaKry5+BjYJM0OMcQ9kTdgCPg+iRQF2lLc9YpkaMd76gU
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="322085772"
-X-IronPort-AV: E=Sophos;i="5.96,300,1665471600"; 
-   d="scan'208";a="322085772"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2023 10:37:13 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="687619182"
-X-IronPort-AV: E=Sophos;i="5.96,300,1665471600"; 
-   d="scan'208";a="687619182"
-Received: from cheungbr-mobl.amr.corp.intel.com (HELO [10.209.91.155]) ([10.209.91.155])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2023 10:37:13 -0800
-Message-ID: <e587eebc-5f28-0a63-9200-b67ba20ea347@intel.com>
-Date: Wed, 4 Jan 2023 10:37:12 -0800
+	id 1pCKkg-00BWke-Cq
+	for kexec@lists.infradead.org; Mon, 02 Jan 2023 13:21:19 +0000
+Received: by mail-pg1-x52c.google.com with SMTP id h192so13492533pgc.7
+        for <kexec@lists.infradead.org>; Mon, 02 Jan 2023 05:21:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=aSkWLDZTpnagtlRlVfYNfgcz9t18lpyMm2kr1NP8PFs=;
+        b=QZ/xZHVbUbW+EUjQjZSe1C/+Aif6Wa/hyyCwiIGIiJ0IT2DSPokiKWNFFY5Vr0qoUi
+         l9TS2twjCl6FsSoLe8W0BsZ+naFrE2g4rget/c+2z+CSuN9OnNUxwP5cp4O95rtenx8j
+         nEPfv2k+nqKVlY/JHM9ELKcHGqCNlIute5Y4MPhZUamn2Wd4OQCx6bQi9q4mFoq+wliK
+         em4m8WYX6qMs1BG5KlogmCjg+cSFr5JVZ3oRucX++XRU3EWdFs7wGQ1TXo8eMyk2fr4Q
+         pFhmwZ0P5QZ6Y+eEmdt9ylXU3jJ8Ozprt5HmVm2RKbn64glFSRXsbQPx1dCCGb7fNKoU
+         aoNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aSkWLDZTpnagtlRlVfYNfgcz9t18lpyMm2kr1NP8PFs=;
+        b=I9l5iz7So1/0yFQBZ8hBYELfS2/MtUh4luWkNQF2VtzDtRUGo7pqwIIpxy9ZcE0VVs
+         LDzRqgK9yge6To/OZCO5lb90r7WXgvg6Ar2/swW3Dak5fZ5HvcByiz31Y4jo/ugKDdKm
+         XB/0Jky7rgU0O4rN145QTJQ9kAY5Q4MhSNkAqy+fDzi6Y3LvSuDc0tFCv91bAkeDhrnr
+         Ohs2Fir373Z+u+Flc/McRVLRJZxZMQ7t3cgBLVfd/7b4eWPF+zUvxzN/a4yCfYKAa3kV
+         Tn0dEilmbkuwCbVEWX7IBd3UYOidJa9uA5q3eRB3FJAETP8emh3p1+MnIq+UAQkvuYNe
+         gAeA==
+X-Gm-Message-State: AFqh2kqvPyC7WlAQX/NlXY+Voqv1pRXJOf2ppZbWxWkDccbZC7W8wEcZ
+	IvRDNDJiH14X6JA4nMPXqos=
+X-Google-Smtp-Source: AMrXdXu7X4w4321RqAMqeENd1IZfT405t/lzS0zBr2+2eQ+BtgL8g0kQ4sN33qtvjKFSHRe7xqbNYw==
+X-Received: by 2002:a62:65c3:0:b0:566:900d:6073 with SMTP id z186-20020a6265c3000000b00566900d6073mr38705046pfb.24.1672665675995;
+        Mon, 02 Jan 2023 05:21:15 -0800 (PST)
+Received: from debian.me (subs02-180-214-232-84.three.co.id. [180.214.232.84])
+        by smtp.gmail.com with ESMTPSA id g25-20020aa796b9000000b0057627521e82sm6248544pfk.195.2023.01.02.05.21.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Jan 2023 05:21:15 -0800 (PST)
+Received: by debian.me (Postfix, from userid 1000)
+	id C61C51017FB; Mon,  2 Jan 2023 20:21:11 +0700 (WIB)
+Date: Mon, 2 Jan 2023 20:21:11 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Ricardo Ribalda <ribalda@chromium.org>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Jonathan Corbet <corbet@lwn.net>, Philipp Rudo <prudo@redhat.com>
+Cc: Ross Zwisler <zwisler@kernel.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Steven Rostedt <rostedt@goodmis.org>, kexec@lists.infradead.org,
+	"Joel Fernandes (Google)" <joel@joelfernandes.org>,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v5 3/3] kexec: Introduce sysctl parameters
+ kexec_load_limit_*
+Message-ID: <Y7LaR1GcoQ8uVsGh@debian.me>
+References: <20221114-disable-kexec-reset-v5-0-1bd37caf3c75@chromium.org>
+ <20221114-disable-kexec-reset-v5-3-1bd37caf3c75@chromium.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH 0/2] kexec: Remove unnecessary arch hook
-Content-Language: en-US
-To: Baoquan He <bhe@redhat.com>, Bjorn Helgaas <helgaas@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-Cc: Eric Biederman <ebiederm@xmission.com>,
- Thomas Gleixner <tglx@linutronix.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin"
- <hpa@zytor.com>, x86@kernel.org, kexec@lists.infradead.org,
- linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-References: <20221215182339.129803-1-helgaas@kernel.org>
- <Y6KiH2Nf/hMiaPmD@MiWiFi-R3L-srv> <Y7TwnyixithmnizI@MiWiFi-R3L-srv>
-From: Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <Y7TwnyixithmnizI@MiWiFi-R3L-srv>
+In-Reply-To: <20221114-disable-kexec-reset-v5-3-1bd37caf3c75@chromium.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230104_103727_824472_6F7922DC 
-X-CRM114-Status: UNSURE (   9.47  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20230102_052118_477101_F6DE9DED 
+X-CRM114-Status: GOOD (  15.16  )
+X-Mailman-Approved-At: Thu, 05 Jan 2023 02:05:39 -0800
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,21 +94,103 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============2445571757724810257=="
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 1/3/23 19:21, Baoquan He wrote:
->> Since it cleans up the last arch specific version of
->> arch_kexec_kernel_image_load in x86, maybe this patchset can go into x86
->> branch?
-> Could you consider picking this patchset into x86 branch? This is a
-> clean up on kexec, while the last ARCH using it is x86.
 
-I'll stick it in my queue to take a closer look.
+--===============2445571757724810257==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Je/2KglVQyb0wHc8"
+Content-Disposition: inline
+
+
+--Je/2KglVQyb0wHc8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Dec 21, 2022 at 08:45:59PM +0100, Ricardo Ribalda wrote:
+
+> +=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +-1 Unlimited calls to kexec. This is the default setting.
+> +N  Number of calls left.
+> +=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +kexec_load_limit_reboot
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+
+You need to match the length of table borders and section underline:
+
+---- >8 ----
+diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/ad=
+min-guide/sysctl/kernel.rst
+index a3922dffbd474b..a64b340c3ae509 100644
+--- a/Documentation/admin-guide/sysctl/kernel.rst
++++ b/Documentation/admin-guide/sysctl/kernel.rst
+@@ -469,13 +469,13 @@ This parameter specifies a limit to the number of tim=
+es the syscalls
+ image. It can only be set with a more restrictive value than the
+ current one.
+=20
+-=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+--1 Unlimited calls to kexec. This is the default setting.
+-N  Number of calls left.
+-=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++-1  Unlimited calls to kexec. This is the default setting.
++N   Number of calls left.
++=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+=20
+ kexec_load_limit_reboot
+-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+=20
+ Similar functionality as ``kexec_load_limit_panic``, but for a crash
+ image.
+
+Thanks.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--Je/2KglVQyb0wHc8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCY7LaQwAKCRD2uYlJVVFO
+ox6mAPwJd+dr2pYcjPBSrmh2DO+4fkJEDz4cr9YmilzKXxOD9AEAvEwnvgKAVF+2
+eX+sEuilG5QdLjp0nsxuui3Xf/UYkwM=
+=LOUf
+-----END PGP SIGNATURE-----
+
+--Je/2KglVQyb0wHc8--
+
+
+--===============2445571757724810257==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============2445571757724810257==--
+
