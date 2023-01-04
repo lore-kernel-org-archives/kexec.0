@@ -4,64 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 87E89C4708E
-	for <kexec@archiver.kernel.org>; Wed,  4 Jan 2023 16:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 73903C4332F
+	for <kexec@archiver.kernel.org>; Wed,  4 Jan 2023 16:52:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References:Message-Id
 	:MIME-Version:Subject:Date:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=xMgjSz2zwSS9ov1srgiY4UVVx+RvmZ7BH/XNE0Gzbkw=; b=yYU63saa8I4Bou
-	XfYs9sYdLKbujV4TTswZSqLWNPwcPsLXULYffqAbXWFjdjARNwRsBibJI6SLP0I149JMe1MHo+1KH
-	t6n225AbGTtm9LrON+cjEHtdpv4tf3D3fVqcNHg6onmzGEGR8mIMdtnCOEivc/GZz1MWw0FEqGbvq
-	9EeIaCvxzYporn+kJEU50Iw20HKK3GCBivUMkDled37rpMamYCLy6K5kA505szphLmIUFqa+Oxg+x
-	yJyr63VQg7hZreMmP1w5naS6k/a1JVc0vLJlAmqss5QgBnBg2P0DUqeCFEYc8owYZZWY2UFmnUkvV
-	u4X7zSFfIKZ/izlB26Cw==;
+	List-Owner; bh=wMgAJqt/12sfwW3uWZGG6WMbZ8V4KtbbSeMIqG4Bi3w=; b=w+NNHexdcQFEXq
+	PrLb/PgFxJrfiWi1J9l7efq4WWxQl43zBUvTmHiQSzT7Uep5Z03INsX+pCR5F67uGhwJPkDZ76JUN
+	yoM8+IVQmtD7TYIMvJ7QHcUq+FdQia01xQ9CFIbPGjrL8M0teMoHF+O4NBSqDQBC/CN+2ZY4o058l
+	MvfYtMk40pgKmsl09l+W3WGUNzxcf2voB0ucdVvb08XsEj+Ddt93ezAAiL37jiA8nhc37L2gcWMfg
+	5lk8Q0r6NxPjaPoW9MiRPdmjs1FfFltDw663QuIMZd0ZeoG+WKVB5A7QV0GAcUvFJTkA5d5czExKE
+	S2IYK5cfswOqBJc+T13w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pD70N-00AVd4-ES; Wed, 04 Jan 2023 16:52:43 +0000
-Received: from mail-ej1-x62b.google.com ([2a00:1450:4864:20::62b])
+	id 1pD70P-00AVdl-Hh; Wed, 04 Jan 2023 16:52:45 +0000
+Received: from mail-ej1-x634.google.com ([2a00:1450:4864:20::634])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pD4vC-009lJy-Ac
-	for kexec@lists.infradead.org; Wed, 04 Jan 2023 14:39:17 +0000
-Received: by mail-ej1-x62b.google.com with SMTP id ud5so83172688ejc.4
-        for <kexec@lists.infradead.org>; Wed, 04 Jan 2023 06:39:11 -0800 (PST)
+	id 1pD4vD-009lKt-MK
+	for kexec@lists.infradead.org; Wed, 04 Jan 2023 14:39:18 +0000
+Received: by mail-ej1-x634.google.com with SMTP id gh17so83155897ejb.6
+        for <kexec@lists.infradead.org>; Wed, 04 Jan 2023 06:39:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=UgxvQK67tmMrLA74uOg//Gx6503PSr9SD0hLGo86OJA=;
-        b=OsU1DngzOr4hhp/EoveJQE3TgkyHrAPpIqNakGYzicuHh+CEyyLyykYhfaAoqGFAP0
-         LYbScr1P7QayvqjcETjQvA86XknilwM/8QYVJvo5EC3i5qtaTrRhxUBFdaiU4bPIhAxz
-         Hbe9lGwRtmdSmOtj1sxtys51p9R+230EoGueY=
+        bh=7ktTgqCg5vZndbEsq2NE84RTVG7aeSaApbDApUiy3yI=;
+        b=bAo5rEoMeLXb+zWJpWccSUbC/52Xl5JUcRb7B7ldPjmJu8yrGJebcgfu2mvn6DoQOH
+         DJpreAUPSRM8Os5s1oTyh3CCfi6WZSJnNqxdwx043PELATrAMnUMkGjBMipqFxsD6I2u
+         shiCmP+MHLcOSwobb1InBZKdfL043vctCbYng=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UgxvQK67tmMrLA74uOg//Gx6503PSr9SD0hLGo86OJA=;
-        b=n+im8PO6Rqd90jkOLq4n3J4Qi/UXYrSz3FyRwlS6GPc5Mfv+vm12PeB8UrsN/jfwzh
-         Cbode/Gmg13JvmhWrbPncSmKXJjuFLZM3MzwsUJHecZkPrC+5lFDhCxW5MJOjn6TPdQI
-         mL5Gt6d1WaeJPzbw8OUYtXjAnpq8B3sSJAZHczDaVbvheFkEKbcA0aHGdHkNyhZLwtxf
-         +fJ40k11ozXESrrdU55jBscGIlMs0PUwSWvKUNKFUF6I1+Oit6jfO6qt8juOA+5smPRw
-         byJ2MqoioRjyvBp823/KSG5t99HkoZTdKtSK6XRHQdNlzsHx5DwsMthNxnYpS61AA7Y3
-         ENxg==
-X-Gm-Message-State: AFqh2kqYU2WLUue8v3xNBprvZFH2CgTbNXrgfcgUfq4ELUWv5YTuC5zB
-	kb6l9Iw36HjXOwFkjA1SudOiuA==
-X-Google-Smtp-Source: AMrXdXvnkGuCKVUdw8um3IaAa5qydCD325lajLfPnGFPmg5PN8jHu5yo2Sbj1UcOE9OWka3RWtYWTw==
-X-Received: by 2002:a17:907:a643:b0:83c:7308:b2ed with SMTP id vu3-20020a170907a64300b0083c7308b2edmr41277617ejc.17.1672843150377;
-        Wed, 04 Jan 2023 06:39:10 -0800 (PST)
+        bh=7ktTgqCg5vZndbEsq2NE84RTVG7aeSaApbDApUiy3yI=;
+        b=gfSULNTJ/X9IH1PcDGC+jGPCCEAvgVQwJlcuiEa32UNWdgv3z5+6muuJlL/92JpxHS
+         Ed1SSHMwuT1J52Yoikz9o2Ksz/qbXIve2DV1G5a4ruWw4CBhk2aS2qXOu8XanLtkhM1m
+         QOZFJ1+3Ag6L4yDARUMMFa2MvmAbV50CVeejEuOq6b+B3fXBp9zVmhxWFLgg99BZ6oC5
+         H8hlJ+3pHr4W246RblC/2WuyzZWhG5YUKXVX3VuMAloRLrmIQbQDPR6GaDggGA89vf55
+         RB5CV2AI9OzzerfsgcoQJsheAOF4pmj4Z8k3gZm3XaEOh5r7vwKBJTa1SwA5YqaEYwfl
+         5TOA==
+X-Gm-Message-State: AFqh2krxMnPzjQm28Uz7ws0ee3mppAVxNlGC+wJsxh0K/69stYurinEb
+	/2iA3KWNKPsUtMABG6euHlxzFg==
+X-Google-Smtp-Source: AMrXdXuNx+d3v0Nfvuk68oEYdAFWRimFrEchPyE6TlxN7ROhq+mc7cuwNsyL8lc4Y9VgL1LLJfST/g==
+X-Received: by 2002:a17:906:b150:b0:7c1:2931:2263 with SMTP id bt16-20020a170906b15000b007c129312263mr43585109ejb.71.1672843151848;
+        Wed, 04 Jan 2023 06:39:11 -0800 (PST)
 Received: from alco.roam.corp.google.com ([2620:0:1059:10:a438:c7da:62e0:36f4])
-        by smtp.gmail.com with ESMTPSA id c8-20020a170906924800b0078de26f66b9sm15386659ejx.114.2023.01.04.06.39.08
+        by smtp.gmail.com with ESMTPSA id c8-20020a170906924800b0078de26f66b9sm15386659ejx.114.2023.01.04.06.39.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jan 2023 06:39:09 -0800 (PST)
+        Wed, 04 Jan 2023 06:39:11 -0800 (PST)
 From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Wed, 04 Jan 2023 15:38:47 +0100
-Subject: [PATCH v6 2/3] kexec: Factor out kexec_load_permitted
+Date: Wed, 04 Jan 2023 15:38:48 +0100
+Subject: [PATCH v6 3/3] kexec: Introduce sysctl parameters kexec_load_limit_*
 MIME-Version: 1.0
-Message-Id: <20221114-disable-kexec-reset-v6-2-6a8531a09b9a@chromium.org>
+Message-Id: <20221114-disable-kexec-reset-v6-3-6a8531a09b9a@chromium.org>
 References: <20221114-disable-kexec-reset-v6-0-6a8531a09b9a@chromium.org>
 In-Reply-To: <20221114-disable-kexec-reset-v6-0-6a8531a09b9a@chromium.org>
 To: Philipp Rudo <prudo@redhat.com>, Eric Biederman <ebiederm@xmission.com>,
@@ -75,24 +75,24 @@ Cc: Ricardo Ribalda <ribalda@chromium.org>, linux-doc@vger.kernel.org,
  Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
  Ross Zwisler <zwisler@kernel.org>
 X-Mailer: b4 0.11.0-dev-696ae
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2784; i=ribalda@chromium.org;
- h=from:subject:message-id; bh=k6P1smlJYbqtcVyvGezj5oVw/cqtzE+zRS/qzT0ctCc=;
- b=owEBbQKS/ZANAwAKAdE30T7POsSIAcsmYgBjtY+F5BhkliZFvYK5Ym2wT15gzQ6IywHdyBQuZv9D
- Oz2Fl7SJAjMEAAEKAB0WIQREDzjr+/4oCDLSsx7RN9E+zzrEiAUCY7WPhQAKCRDRN9E+zzrEiCV9D/
- 43PHdTJ87hSQ5gRjDLnN9QhBf/0sdKtpQSIVJtwjRwJj0fKVXNwKAbxnZGaKGFbK0+D6XWur5dsPhx
- zICLrbRMjNO5zu2acdEIcX0Ixyc1goxQxCWSvLbPGI13Gu0zXck2k1aGNHQxbrHsLsoMWv1eJmz7ur
- 0A1lsCo+Tm3tAmEnvQh2aD6k3XqJloCXOAzXoiwo3JjNn7aUKZmMnNEOVMiMhnEORyLIkQanA6I6pL
- XJ8jguQA6h/Bp8Xn5ykknlVGxjJvu4Nn6rvEnUKm+kp7L1k8iiUK7HcFRf4VPocxKiILNgowAGfnlR
- mTGEFPqHMTv+Ht+GLfRhqEOd31vGL8VkT0ermM6YAqLuhXIONQn4Jaewcdw90K31Teiw5Y1mdal9tj
- J1IkZa48R7TpCMYFTXf7SibBowvNWa9Vrz8vbrM7SE3cjIUTs0JvqP6Vav0a2TmgMgKdcOPkNgDP6F
- EotJDSYyCD9L+VjV54ebwcd6Tw94km8BKQtiR8AdwBHagfrBuQIYUJtBL5nWYP7hP8HiQt4P4Ubj7c
- kk5rmipLfXeDwJNM5L+L3kUi38k3o9hch06PSlNgWkhmhBSPAlLZxWZ8qTXYLWRpyfFX35Qzx6p1xD
- bjTLM5g5f84UHd42O5GYOj3SQoPP2t4muxbQhIIms/wq5G20v9tluc/GAVQQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7913; i=ribalda@chromium.org;
+ h=from:subject:message-id; bh=pwr4lQSQU6e2iagP33ihhaoD9RG5CubbrBaEaThEAKM=;
+ b=owEBbQKS/ZANAwAKAdE30T7POsSIAcsmYgBjtY+HjBoWaxGoO7sxgdVTlJcthgWB365UeesT8qSd
+ hvqseBiJAjMEAAEKAB0WIQREDzjr+/4oCDLSsx7RN9E+zzrEiAUCY7WPhwAKCRDRN9E+zzrEiAunD/
+ 91AfbnoUWa9e8aD0UKHg+GAqqRrXozPx01fMTG3wC2iUZxj/n2uMz/Y8QbTHYctYbTfVMTpx/jHg2K
+ cbSS6gGr5ybyMAggEcwWMSPfYWS/rVzPFf6T8G0NpDwWEnbQ4QjHDaULMlPg5AXL5uReOCp0qh/CjQ
+ k2MK/1noz9a6dzcMqHd25iw6UGm2HWY4VXSD7on2U1hzxCAixuddN5gPd8lwBxwpueWdRaq3EIX+BI
+ 0ECi9pmjTjN7BwiLeVDOPm8xI9hmn3SKhv/onx0MyBdYds4qYDZOgCxUWI/2/d+qa2V14UkKigfeQR
+ g3c3YrWsOeWJTcCKad5PaGmNHk110c3wU8EZ5hCWcUXAMWyJbWXDh7GAOF6m8AVPtSsT2b++X9JQJw
+ UUCys+nCBZmTEDOHNkS7ghuK3Q3YsjemCdfKa1LjHE1YSC18fK737LAKLRi3qv+vfFAQUX9HWBxWy7
+ u2hkB6tkUVgrTIwmEC9BzneUHH6HUJIffKaBjcCpSklvHyU0VFnXEkMbJFIy8JkDT31zzdfVe0jilF
+ yyWg2218E4cEthc8vrS0HQuGe/Rl5rCO/l2Z7k4ZB//JKMuQX9c7W4RoBIMSEp0xHdOJwxtHOSflS/
+ xpS7m2cyXFO00X1x4m7hB6Mqmfn60Bhin0EGNy91xeKIdJLNMd5B15HPhzpA==
 X-Developer-Key: i=ribalda@chromium.org; a=openpgp;
  fpr=9EC3BB66E2FC129A6F90B39556A0D81F9F782DA9
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230104_063914_449132_42D7048E 
-X-CRM114-Status: GOOD (  16.15  )
+X-CRM114-CacheID: sfid-20230104_063915_952654_180BB8D2 
+X-CRM114-Status: GOOD (  32.73  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -109,87 +109,254 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Both syscalls (kexec and kexec_file) do the same check, lets factor it
-out.
+kexec allows replacing the current kernel with a different one. This is
+usually a source of concerns for sysadmins that want to harden a system.
+
+Linux already provides a way to disable loading new kexec kernel via
+kexec_load_disabled, but that control is very coard, it is all or
+nothing and does not make distinction between a panic kexec and a
+normal kexec.
+
+This patch introduces new sysctl parameters, with finner tunning to
+specify how many times a kexec kernel can be loaded. The sysadmin can
+set different limits for kexec panic and kexec reboot kernels. The
+value can be modified at runtime via sysctl, but only with a stricter
+value.
+
+With these new parameters on place, a system with loadpin and verity
+enabled, using the following kernel parameters:
+sysctl.kexec_load_limit_reboot=0 sysct.kexec_load_limit_panic=1
+can have a good warranty that if initrd tries to load a panic kernel,
+a malitious user will have small chances to replace that kernel with a
+different one, even if they can trigger timeouts on the disk where the
+panic kernel lives.
 
 Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 ---
- include/linux/kexec.h |  3 ++-
- kernel/kexec.c        |  2 +-
- kernel/kexec_core.c   | 11 ++++++++++-
- kernel/kexec_file.c   |  2 +-
- 4 files changed, 14 insertions(+), 4 deletions(-)
+ Documentation/admin-guide/sysctl/kernel.rst | 18 ++++++
+ include/linux/kexec.h                       |  2 +-
+ kernel/kexec.c                              |  4 +-
+ kernel/kexec_core.c                         | 87 ++++++++++++++++++++++++++++-
+ kernel/kexec_file.c                         | 11 ++--
+ 5 files changed, 114 insertions(+), 8 deletions(-)
 
+diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+index 97394bd9d065..d5fb4b6ef405 100644
+--- a/Documentation/admin-guide/sysctl/kernel.rst
++++ b/Documentation/admin-guide/sysctl/kernel.rst
+@@ -461,6 +461,24 @@ allowing a system to set up (and later use) an image without it being
+ altered.
+ Generally used together with the `modules_disabled`_ sysctl.
+ 
++kexec_load_limit_panic
++======================
++
++This parameter specifies a limit to the number of times the syscalls
++``kexec_load`` and ``kexec_file_load`` can be called with a crash
++image. It can only be set with a more restrictive value than the
++current one.
++
++== ======================================================
++-1 Unlimited calls to kexec. This is the default setting.
++N  Number of calls left.
++== ======================================================
++
++kexec_load_limit_reboot
++=======================
++
++Similar functionality as ``kexec_load_limit_panic``, but for a normal
++image.
+ 
+ kptr_restrict
+ =============
 diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 41a686996aaa..182e0c11b87b 100644
+index 182e0c11b87b..791e65829f86 100644
 --- a/include/linux/kexec.h
 +++ b/include/linux/kexec.h
-@@ -406,7 +406,8 @@ extern int kimage_crash_copy_vmcoreinfo(struct kimage *image);
- 
+@@ -407,7 +407,7 @@ extern int kimage_crash_copy_vmcoreinfo(struct kimage *image);
  extern struct kimage *kexec_image;
  extern struct kimage *kexec_crash_image;
--extern int kexec_load_disabled;
-+
-+bool kexec_load_permitted(void);
+ 
+-bool kexec_load_permitted(void);
++bool kexec_load_permitted(int kexec_image_type);
  
  #ifndef kexec_flush_icache_page
  #define kexec_flush_icache_page(page)
 diff --git a/kernel/kexec.c b/kernel/kexec.c
-index cb8e6e6f983c..ce1bca874a8d 100644
+index ce1bca874a8d..92d301f98776 100644
 --- a/kernel/kexec.c
 +++ b/kernel/kexec.c
-@@ -193,7 +193,7 @@ static inline int kexec_load_check(unsigned long nr_segments,
+@@ -190,10 +190,12 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
+ static inline int kexec_load_check(unsigned long nr_segments,
+ 				   unsigned long flags)
+ {
++	int image_type = (flags & KEXEC_ON_CRASH) ?
++			 KEXEC_TYPE_CRASH : KEXEC_TYPE_DEFAULT;
  	int result;
  
  	/* We only trust the superuser with rebooting the system. */
--	if (!capable(CAP_SYS_BOOT) || kexec_load_disabled)
-+	if (!kexec_load_permitted())
+-	if (!kexec_load_permitted())
++	if (!kexec_load_permitted(image_type))
  		return -EPERM;
  
  	/* Permit LSMs and IMA to fail the kexec */
 diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index ca2743f9c634..a1efc70f4158 100644
+index a1efc70f4158..951541d78ca8 100644
 --- a/kernel/kexec_core.c
 +++ b/kernel/kexec_core.c
-@@ -928,7 +928,7 @@ int kimage_load_segment(struct kimage *image,
+@@ -926,10 +926,64 @@ int kimage_load_segment(struct kimage *image,
+ 	return result;
+ }
  
++struct kexec_load_limit {
++	/* Mutex protects the limit count. */
++	struct mutex mutex;
++	int limit;
++};
++
++static struct kexec_load_limit load_limit_reboot = {
++	.mutex = __MUTEX_INITIALIZER(load_limit_reboot.mutex),
++	.limit = -1,
++};
++
++static struct kexec_load_limit load_limit_panic = {
++	.mutex = __MUTEX_INITIALIZER(load_limit_panic.mutex),
++	.limit = -1,
++};
++
  struct kimage *kexec_image;
  struct kimage *kexec_crash_image;
--int kexec_load_disabled;
-+static int kexec_load_disabled;
+ static int kexec_load_disabled;
++
  #ifdef CONFIG_SYSCTL
++static int kexec_limit_handler(struct ctl_table *table, int write,
++			       void *buffer, size_t *lenp, loff_t *ppos)
++{
++	struct kexec_load_limit *limit = table->data;
++	int val;
++	struct ctl_table tmp = {
++		.data = &val,
++		.maxlen = sizeof(val),
++		.mode = table->mode,
++	};
++	int ret;
++
++	if (write) {
++		ret = proc_dointvec(&tmp, write, buffer, lenp, ppos);
++		if (ret)
++			return ret;
++
++		if (val < 0)
++			return -EINVAL;
++
++		mutex_lock(&limit->mutex);
++		if (limit->limit != -1 && val >= limit->limit)
++			ret = -EINVAL;
++		else
++			limit->limit = val;
++		mutex_unlock(&limit->mutex);
++
++		return ret;
++	}
++
++	mutex_lock(&limit->mutex);
++	val = limit->limit;
++	mutex_unlock(&limit->mutex);
++
++	return proc_dointvec(&tmp, write, buffer, lenp, ppos);
++}
++
  static struct ctl_table kexec_core_sysctls[] = {
  	{
-@@ -952,6 +952,15 @@ static int __init kexec_core_sysctl_init(void)
+ 		.procname	= "kexec_load_disabled",
+@@ -941,6 +995,18 @@ static struct ctl_table kexec_core_sysctls[] = {
+ 		.extra1		= SYSCTL_ONE,
+ 		.extra2		= SYSCTL_ONE,
+ 	},
++	{
++		.procname	= "kexec_load_limit_panic",
++		.data		= &load_limit_panic,
++		.mode		= 0644,
++		.proc_handler	= kexec_limit_handler,
++	},
++	{
++		.procname	= "kexec_load_limit_reboot",
++		.data		= &load_limit_reboot,
++		.mode		= 0644,
++		.proc_handler	= kexec_limit_handler,
++	},
+ 	{ }
+ };
+ 
+@@ -952,13 +1018,30 @@ static int __init kexec_core_sysctl_init(void)
  late_initcall(kexec_core_sysctl_init);
  #endif
  
-+bool kexec_load_permitted(void)
-+{
-+	/*
-+	 * Only the superuser can use the kexec syscall and if it has not
-+	 * been disabled.
-+	 */
-+	return capable(CAP_SYS_BOOT) && !kexec_load_disabled;
-+}
+-bool kexec_load_permitted(void)
++bool kexec_load_permitted(int kexec_image_type)
+ {
++	struct kexec_load_limit *limit;
 +
+ 	/*
+ 	 * Only the superuser can use the kexec syscall and if it has not
+ 	 * been disabled.
+ 	 */
+-	return capable(CAP_SYS_BOOT) && !kexec_load_disabled;
++	if (!capable(CAP_SYS_BOOT) || kexec_load_disabled)
++		return false;
++
++	/* Check limit counter and decrease it.*/
++	limit = (kexec_image_type == KEXEC_TYPE_CRASH) ?
++		&load_limit_panic : &load_limit_reboot;
++	mutex_lock(&limit->mutex);
++	if (!limit->limit) {
++		mutex_unlock(&limit->mutex);
++		return false;
++	}
++	if (limit->limit != -1)
++		limit->limit--;
++	mutex_unlock(&limit->mutex);
++
++	return true;
+ }
+ 
  /*
-  * No panic_cpu check version of crash_kexec().  This function is called
-  * only when panic_cpu holds the current CPU number; this is the only CPU
 diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 45637511e0de..29efa43ea951 100644
+index 29efa43ea951..70e1e99038ee 100644
 --- a/kernel/kexec_file.c
 +++ b/kernel/kexec_file.c
-@@ -330,7 +330,7 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+@@ -326,11 +326,13 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+ 		unsigned long, cmdline_len, const char __user *, cmdline_ptr,
+ 		unsigned long, flags)
+ {
+-	int ret = 0, i;
++	int image_type = (flags & KEXEC_FILE_ON_CRASH) ?
++			 KEXEC_TYPE_CRASH : KEXEC_TYPE_DEFAULT;
  	struct kimage **dest_image, *image;
++	int ret = 0, i;
  
  	/* We only trust the superuser with rebooting the system. */
--	if (!capable(CAP_SYS_BOOT) || kexec_load_disabled)
-+	if (!kexec_load_permitted())
+-	if (!kexec_load_permitted())
++	if (!kexec_load_permitted(image_type))
  		return -EPERM;
  
  	/* Make sure we have a legal set of flags */
+@@ -342,11 +344,12 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+ 	if (!kexec_trylock())
+ 		return -EBUSY;
+ 
+-	dest_image = &kexec_image;
+-	if (flags & KEXEC_FILE_ON_CRASH) {
++	if (image_type == KEXEC_TYPE_CRASH) {
+ 		dest_image = &kexec_crash_image;
+ 		if (kexec_crash_image)
+ 			arch_kexec_unprotect_crashkres();
++	} else {
++		dest_image = &kexec_image;
+ 	}
+ 
+ 	if (flags & KEXEC_FILE_UNLOAD)
 
 -- 
 2.39.0.314.g84b9a713c41-goog-b4-0.11.0-dev-696ae
