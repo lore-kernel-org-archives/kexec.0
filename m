@@ -4,63 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1F8D1C54EBD
-	for <kexec@archiver.kernel.org>; Tue, 10 Jan 2023 02:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 36674C46467
+	for <kexec@archiver.kernel.org>; Wed, 11 Jan 2023 12:51:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:Cc:List-Subscribe:List-Help:List-Post:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=f2GEiJze/5lmzg4dSUsoKI+HAcySWGerqCOChAMOe5g=; b=POs6NwwHX1WwRq
-	22suCXVA0ybwrXgsYAcWw5o5K818jYtsl8hkOUOju7Nczd+q10RY2BjmmyfLPbQ/HFx3R81p9VGnI
-	4sfVFIIULhB0ByB8UlML1yAIt9ms4wVcNa5u7hJoTZLDcx6HPNjWkdAahRYJge1d1/N6CxOxoCLSw
-	zvqSSKNLPy1Hc1awt0kU60KnBiPDy7428kTs1+Yh9Xn0tGPIo2fF0lJ/LaB4MhcCzvhS4pzGDEpH2
-	EggdZ9yVuIS+ArZFCtPl6/I1QmlP7ZhnVk5JJ4MUya6XHfddClAJ97KlV4mTuJhwHkCSLkv7oviFL
-	Orxdf0B+Sav8vYmMzS0Q==;
+	List-Owner; bh=3GU19hhDp4jQLZJjcTeSNCHwsb02ILdtAGoV0Ps/E3U=; b=joJYtaI4OyeUJ4
+	fyQIYAombulak3ooIokm0RHZy1fiamxVzshgPB3RrJLiwr2ZRsctpKWzQhaSo+dy1gDI+5Dt/LSex
+	+QyN8RLWkQiKzw4oq22Qkqj59X4XNTDmFdqR/Uffqjpo2YcmmXqnWNbtcfd8j/n3axu4x6P1124LQ
+	6gr3UWqwr1OkcWngl8pEQE2TK9mTP7sine/5aHQQU7YKG4uUjWvrUdkZLKoEkwKPibWRNYyxZcJzE
+	oVa6hldoi8fiNdVy4jmcyIemrwYjMuCoruZFqoJnuhhLLIEyJe9ho9UG+FrzhvLMl6h6P6fB9wXkW
+	rVOQT3pigfR+vP/BondQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pF4Rh-004zkK-N4; Tue, 10 Jan 2023 02:33:01 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1pFaZf-00BMWF-Pe; Wed, 11 Jan 2023 12:51:23 +0000
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pF4Rf-004zjd-8z
-	for kexec@lists.infradead.org; Tue, 10 Jan 2023 02:33:00 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1673317978;
+	id 1pFaZV-00BMTW-CH
+	for kexec@lists.infradead.org; Wed, 11 Jan 2023 12:51:19 +0000
+Received: from zn.tnic (p5de8e9fe.dip0.t-ipconnect.de [93.232.233.254])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AB20E1EC068D;
+	Wed, 11 Jan 2023 13:51:07 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+	t=1673441467;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=l94HaeBEBiFD5ilSjwcw6DDx5RLDQlnkVXrKy/YYH8k=;
-	b=L4F3reB/4Rl8V1jFlOW9ZUWRrRWx2NakYi6nKk/7myFMHzRG8MPTWTn/l5Ix7UBjlGHDEk
-	JnD9l+5XutszrCpC+dxhZirpzPcwQcX4XVcizy7SbUyTOflhGyoGNhF2qAhXlxl4XpD0AG
-	wxHU0AlcR6dpVpE85ZfgZmXXwdeLU4o=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-142-tXc1h2RJOnCvWpTl6LAxOg-1; Mon, 09 Jan 2023 21:32:55 -0500
-X-MC-Unique: tXc1h2RJOnCvWpTl6LAxOg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A42F33804062;
-	Tue, 10 Jan 2023 02:32:54 +0000 (UTC)
-Received: from localhost (ovpn-12-27.pek2.redhat.com [10.72.12.27])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id CBCFF2166B26;
-	Tue, 10 Jan 2023 02:32:53 +0000 (UTC)
-Date: Tue, 10 Jan 2023 10:32:49 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Ricardo Ribalda <ribalda@chromium.org>, akpm@linux-foundation.org
-Subject: Re: [PATCH v6 0/3] kexec: Add new parameter to limit the access to
- kexec
-Message-ID: <Y7zOUdQdbV+c+6P2@fedora>
-References: <20221114-disable-kexec-reset-v6-0-6a8531a09b9a@chromium.org>
+	 content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+	bh=vO5zTy5BAn2/tS5FaOPoFVGJ+RHNwETq6LModQlJjBY=;
+	b=geq1j2jz4IduM2C983TeYVLyHxWFG5sAfGc2JKecLsTpFYI0fyqx+reKyDhEMmrZN2FqTD
+	0kxtTPpqCpHyVuxnfoaflp5KUwkNjggd9pmLX7HTlcd2BhRF72HN2cXl7E4CT20x3sQ1Pl
+	539x9nvRpVvLTVxq1JSPLDrdA99VtDk=
+Date: Wed, 11 Jan 2023 13:51:03 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Breno Leitao <leitao@debian.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+	hpa@zytor.com, jpoimboe@kernel.org, peterz@infradead.org,
+	x86@kernel.org, cascardo@canonical.com, leit@meta.com,
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] x86/bugs: Explicitly clear speculative MSR bits
+Message-ID: <Y76wtwWN1+XPbnQx@zn.tnic>
+References: <20221128153148.1129350-1-leitao@debian.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20221114-disable-kexec-reset-v6-0-6a8531a09b9a@chromium.org>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
+In-Reply-To: <20221128153148.1129350-1-leitao@debian.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230109_183259_411868_AF501551 
-X-CRM114-Status: GOOD (  22.09  )
+X-CRM114-CacheID: sfid-20230111_045114_714481_552BE05E 
+X-CRM114-Status: GOOD (  28.04  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -72,89 +67,86 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Cc: Jonathan Corbet <corbet@lwn.net>, Petr Tesarik <petr@tesarici.cz>, Philipp Rudo <prudo@redhat.com>, linux-doc@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, Eric Biederman <ebiederm@xmission.com>, Bagas Sanjaya <bagasdotme@gmail.com>, Ross Zwisler <zwisler@kernel.org>, "Joel Fernandes \(Google\)" <joel@joelfernandes.org>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 01/04/23 at 03:38pm, Ricardo Ribalda wrote:
-> Add two parameter to specify how many times a kexec kernel can be loaded.
+On Mon, Nov 28, 2022 at 07:31:48AM -0800, Breno Leitao wrote:
+> Currently x86_spec_ctrl_base is read at boot time, and speculative bits
+> are set if configs are enable, such as MSR[SPEC_CTRL_IBRS] is enabled if
+> CONFIG_CPU_IBRS_ENTRY is configured. These MSR bits are not cleared if
+> the mitigations are disabled.
 > 
-> These parameter allow hardening the system.
+> This is a problem when kexec-ing a kernel that has the mitigation
+> disabled, from a kernel that has the mitigation enabled. In this case,
+> the MSR bits are carried forward and not cleared at the boot of the new
+> kernel. This might have some performance degradation that is hard to
+> find.
 > 
-> While we are at it, fix a documentation issue and refactor some code.
-
-The whole series looks good to me, thx.
-
-Acked-by: Baoquan He <bhe@redhat.com>
-
+> This problem does not happen if the machine is (hard) rebooted, because
+> the bit will be cleared by default.
 > 
-> To: Jonathan Corbet <corbet@lwn.net>
-> To: Eric Biederman <ebiederm@xmission.com>
-> Cc: linux-doc@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: kexec@lists.infradead.org
-> Cc: Joel Fernandes (Google) <joel@joelfernandes.org>
-> Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Ross Zwisler <zwisler@kernel.org>
-> To: Philipp Rudo <prudo@redhat.com>
-> To: Guilherme G. Piccoli <gpiccoli@igalia.com>
-> Cc: Bagas Sanjaya <bagasdotme@gmail.com>
-> Cc: Petr Tesarik <petr@tesarici.cz>
-> Cc: Baoquan He <bhe@redhat.com>
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> 
+> Suggested-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 > ---
-> Changes in v6:
-> - Fix kexec type on kexec_file
-> - Match the length of the table borders to the sections underline (Thanks Bagas!)
-> - Fix typo on kexec_load_limit_reboot (Thanks Petr!)
-> - Improve commit message (Thanks Baoquan!)
-> - Link to v5: https://lore.kernel.org/r/20221114-disable-kexec-reset-v5-0-1bd37caf3c75@chromium.org
+>  arch/x86/include/asm/msr-index.h |  4 ++++
+>  arch/x86/kernel/cpu/bugs.c       | 10 +++++++++-
+>  2 files changed, 13 insertions(+), 1 deletion(-)
 > 
-> Changes in v5:
-> - Remove maxlen from ctl_table. Thanks Steven!
-> - Link to v4: https://lore.kernel.org/r/20221114-disable-kexec-reset-v4-0-ab809c8d988c@chromium.org
-> 
-> Changes in v4 (Thanks Steven!):
-> - Uses sysctl instead or module_parameters
-> - Pass image type instead of boolean to permitted
-> - Fix typo on flag handling
-> - Return -EINVAL for values that does not change the current value.
-> - Link to v3: https://lore.kernel.org/r/20221114-disable-kexec-reset-v3-0-4ef4e929adf6@chromium.org
-> 
-> Changes in v3:
-> - s/paramter/parameter/ Thanks Ghilherme!
-> - s/permited/permitted/ Thanks Joel!
-> - Link to v2: https://lore.kernel.org/r/20221114-disable-kexec-reset-v2-0-c498313c1bb5@chromium.org
-> 
-> Changes in v2:
-> - Instead of kexec_reboot_disabled, add two new counters (Thanks Philipp!)
-> - Link to v1: https://lore.kernel.org/r/20221114-disable-kexec-reset-v1-0-fb51d20cf871@chromium.org
-> 
-> ---
-> Ricardo Ribalda (3):
->       Documentation: sysctl: Correct kexec_load_disabled
->       kexec: Factor out kexec_load_permitted
->       kexec: Introduce sysctl parameters kexec_load_limit_*
-> 
->  Documentation/admin-guide/sysctl/kernel.rst | 25 +++++++-
->  include/linux/kexec.h                       |  3 +-
->  kernel/kexec.c                              |  4 +-
->  kernel/kexec_core.c                         | 94 ++++++++++++++++++++++++++++-
->  kernel/kexec_file.c                         | 11 ++--
->  5 files changed, 127 insertions(+), 10 deletions(-)
-> ---
-> base-commit: 479174d402bcf60789106eedc4def3957c060bad
-> change-id: 20221114-disable-kexec-reset-19b7e117338f
-> 
-> Best regards,
-> -- 
-> Ricardo Ribalda <ribalda@chromium.org>
-> 
+> diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+> index 4a2af82553e4..22986a8f18bc 100644
+> --- a/arch/x86/include/asm/msr-index.h
+> +++ b/arch/x86/include/asm/msr-index.h
+> @@ -54,6 +54,10 @@
+>  #define SPEC_CTRL_RRSBA_DIS_S_SHIFT	6	   /* Disable RRSBA behavior */
+>  #define SPEC_CTRL_RRSBA_DIS_S		BIT(SPEC_CTRL_RRSBA_DIS_S_SHIFT)
+>  
+> +/* A mask for bits which the kernel toggles when controlling mitigations */
+> +#define SPEC_CTRL_MITIGATIONS_MASK	(SPEC_CTRL_IBRS | SPEC_CTRL_STIBP | SPEC_CTRL_SSBD \
+> +							| SPEC_CTRL_RRSBA_DIS_S)
 
+SPEC_CTRL_RRSBA_DIS_S is a disable bit and I presume it needs to stay enabled.
+Only when spec_ctrl_disable_kernel_rrsba() runs. And I'd say perf-wise it
+doesn't cost that much...
+
+Pawan?
+
+> +
+>  #define MSR_IA32_PRED_CMD		0x00000049 /* Prediction Command */
+>  #define PRED_CMD_IBPB			BIT(0)	   /* Indirect Branch Prediction Barrier */
+>  
+> diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+> index 3e3230cccaa7..4030358216c8 100644
+> --- a/arch/x86/kernel/cpu/bugs.c
+> +++ b/arch/x86/kernel/cpu/bugs.c
+> @@ -137,8 +137,16 @@ void __init check_bugs(void)
+>  	 * have unknown values. AMD64_LS_CFG MSR is cached in the early AMD
+>  	 * init code as it is not enumerated and depends on the family.
+>  	 */
+> -	if (boot_cpu_has(X86_FEATURE_MSR_SPEC_CTRL))
+> +	if (boot_cpu_has(X86_FEATURE_MSR_SPEC_CTRL)) {
+>  		rdmsrl(MSR_IA32_SPEC_CTRL, x86_spec_ctrl_base);
+> +		/*
+> +		 * Previously running software, like kexec for example, may
+> +		 * have some controls turned ON.
+> +		 * Clear them and let the mitigations setup below set them
+> +		 * based on configuration.
+> +		 */
+
+                /*
+                 * Previously running kernel (kexec), may have some controls
+                 * turned ON. Clear them and let the mitigations setup below
+                 * rediscover them based on configuration.
+                 */
+
+There's no "previously running software, like kexec".
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
 
 _______________________________________________
 kexec mailing list
