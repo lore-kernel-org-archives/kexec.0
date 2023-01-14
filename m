@@ -4,25 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A7A89C54EBE
-	for <kexec@archiver.kernel.org>; Sat, 14 Jan 2023 01:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1BAAFC6379F
+	for <kexec@archiver.kernel.org>; Sat, 14 Jan 2023 01:46:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=ky3hkJPC/VflCSRR0vck8fRh8xoW9/yr3UuR9ht1RhM=; b=ppgRl4jkESwRsi
-	xOmZu29QzxoWAWPAArfVwtBQdVDYNf4f5vnvwrXKUOoSsz9IMzABhtOrCiFwr3DRv9+oUpFrNHvL1
-	byRNRSejhkj5qPFXYOiypVZTvHZXNAM9Hqbry9/4UJ7GrCsyVe3jpZxqv43R494jURod4HEXPi05z
-	Iyj7ZG0BFvansKyRjcxolg69pBQB8hnM5F6Gt8KVMQFZZ4amzs11Yf4Dbms9vkneP4KYcc5WCjoZT
-	oQ0WAwjZ719B48MSkynOsP2E90DAqP8S+7k/8bW6quO7mPwluB5phi3NsAv9vlq3N0UGEwIw7QM1v
-	xcOlgUT/vyQ+oUoZlIjw==;
+	List-Owner; bh=FR4bDUASe5J2jiLvmiuBFvFsNC2MC628MbjhJjwv9L8=; b=LfIwyLHZGzWvCw
+	BjCJPSZYhDI5BuEQ/C9sginDGJTh3E0t03PngF617VRpBHTkwu6teneqT9DeMnzvbXfYfWWYnz3jl
+	dFtDBW5zudvalz12rGuDb2KvZQMI2zUVrvm1Eq9v2thiA7bIhg5F6AcoJ6ZX0HloD7z9AHM1Ekwok
+	C2JJOW8PSySoDzfsdoxzJMarxJE/pCe+NqpeedUgsJAtZfoe4wu4HAy1j3+OqolQFrLNNqfUXPeD1
+	DYa7mHmn4aS3XUGBYDoxfcgMRFZU0LHaUv6Vp///bdn7k6U9QZaLUBICkOfp64T6JfN6NHq1LtitZ
+	e4sV+ruWBTgjKb/sD5yA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pGVct-0050dt-D1; Sat, 14 Jan 2023 01:46:31 +0000
+	id 1pGVcu-0050fH-FH; Sat, 14 Jan 2023 01:46:32 +0000
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pGUUt-004twN-Gz; Sat, 14 Jan 2023 00:34:11 +0000
+	id 1pGUUs-004tvz-UW; Sat, 14 Jan 2023 00:34:10 +0000
 From: Luis Chamberlain <mcgrof@kernel.org>
 To: hch@infradead.org,
 	djwong@kernel.org,
@@ -41,9 +41,9 @@ Cc: mchehab@kernel.org,
 	kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Luis Chamberlain <mcgrof@kernel.org>
-Subject: [RFC v3 14/24] nfs: replace kthread freezing with auto fs freezing
-Date: Fri, 13 Jan 2023 16:33:59 -0800
-Message-Id: <20230114003409.1168311-15-mcgrof@kernel.org>
+Subject: [RFC v3 02/24] fs: add frozen sb state helpers
+Date: Fri, 13 Jan 2023 16:33:47 -0800
+Message-Id: <20230114003409.1168311-3-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.37.1
 In-Reply-To: <20230114003409.1168311-1-mcgrof@kernel.org>
 References: <20230114003409.1168311-1-mcgrof@kernel.org>
@@ -64,163 +64,135 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The kernel power management now supports allowing the VFS
-to handle filesystem freezing freezes and thawing. Take advantage
-of that and remove the kthread freezing. This is needed so that we
-properly really stop IO in flight without races after userspace
-has been frozen. Without this we rely on kthread freezing and
-its semantics are loose and error prone.
+Provide helpers so that we can check a superblock frozen state.
+This will make subsequent changes easier to read. This makes
+no functional changes.
 
-The filesystem therefore is in charge of properly dealing with
-quiescing of the filesystem through its callbacks if it thinks
-it knows better than how the VFS handles it.
-
-The following Coccinelle rule was used as to remove the now superflous
-freezer calls:
-
-spatch --sp-file fs-freeze-cleanup.cocci --in-place --timeout 120 --dir fs/nfs --jobs 12 --use-gitgrep
-
-@ remove_set_freezable @
-expression time;
-statement S, S2;
-expression task, current;
-@@
-
-(
--       set_freezable();
-|
--       if (try_to_freeze())
--               continue;
-|
--       try_to_freeze();
-|
--       freezable_schedule();
-+       schedule();
-|
--       freezable_schedule_timeout(time);
-+       schedule_timeout(time);
-|
--       if (freezing(task)) { S }
-|
--       if (freezing(task)) { S }
--       else
-	    { S2 }
-|
--       freezing(current)
-)
-
-@ remove_wq_freezable @
-expression WQ_E, WQ_ARG1, WQ_ARG2, WQ_ARG3, WQ_ARG4;
-identifier fs_wq_fn;
-@@
-
-(
-    WQ_E = alloc_workqueue(WQ_ARG1,
--                              WQ_ARG2 | WQ_FREEZABLE,
-+                              WQ_ARG2,
-			   ...);
-|
-    WQ_E = alloc_workqueue(WQ_ARG1,
--                              WQ_ARG2 | WQ_FREEZABLE | WQ_ARG3,
-+                              WQ_ARG2 | WQ_ARG3,
-			   ...);
-|
-    WQ_E = alloc_workqueue(WQ_ARG1,
--                              WQ_ARG2 | WQ_ARG3 | WQ_FREEZABLE,
-+                              WQ_ARG2 | WQ_ARG3,
-			   ...);
-|
-    WQ_E = alloc_workqueue(WQ_ARG1,
--                              WQ_ARG2 | WQ_ARG3 | WQ_FREEZABLE | WQ_ARG4,
-+                              WQ_ARG2 | WQ_ARG3 | WQ_ARG4,
-			   ...);
-|
-	    WQ_E =
--               WQ_ARG1 | WQ_FREEZABLE
-+               WQ_ARG1
-|
-	    WQ_E =
--               WQ_ARG1 | WQ_FREEZABLE | WQ_ARG3
-+               WQ_ARG1 | WQ_ARG3
-|
-    fs_wq_fn(
--               WQ_FREEZABLE | WQ_ARG2 | WQ_ARG3
-+               WQ_ARG2 | WQ_ARG3
-    )
-|
-    fs_wq_fn(
--               WQ_FREEZABLE | WQ_ARG2
-+               WQ_ARG2
-    )
-|
-    fs_wq_fn(
--               WQ_FREEZABLE
-+               0
-    )
-)
-
-@ add_auto_flag @
-expression E1;
-identifier fs_type;
-@@
-
-struct file_system_type fs_type = {
-	.fs_flags = E1
-+                   | FS_AUTOFREEZE
-	,
-};
-
-Generated-by: Coccinelle SmPL
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- fs/nfs/callback.c   | 4 ----
- fs/nfs/fs_context.c | 4 ++--
- 2 files changed, 2 insertions(+), 6 deletions(-)
+ fs/ext4/ext4_jbd2.c |  2 +-
+ fs/gfs2/sys.c       |  2 +-
+ fs/quota/quota.c    |  4 ++--
+ fs/super.c          |  4 ++--
+ fs/xfs/xfs_trans.c  |  3 +--
+ include/linux/fs.h  | 22 ++++++++++++++++++++++
+ 6 files changed, 29 insertions(+), 8 deletions(-)
 
-diff --git a/fs/nfs/callback.c b/fs/nfs/callback.c
-index 456af7d230cf..f5ba4d6bf2a7 100644
---- a/fs/nfs/callback.c
-+++ b/fs/nfs/callback.c
-@@ -77,8 +77,6 @@ nfs4_callback_svc(void *vrqstp)
- 	int err;
- 	struct svc_rqst *rqstp = vrqstp;
+diff --git a/fs/ext4/ext4_jbd2.c b/fs/ext4/ext4_jbd2.c
+index 77f318ec8abb..ef441f15053b 100644
+--- a/fs/ext4/ext4_jbd2.c
++++ b/fs/ext4/ext4_jbd2.c
+@@ -72,7 +72,7 @@ static int ext4_journal_check_start(struct super_block *sb)
  
--	set_freezable();
--
- 	while (!kthread_freezable_should_stop(NULL)) {
+ 	if (sb_rdonly(sb))
+ 		return -EROFS;
+-	WARN_ON(sb->s_writers.frozen == SB_FREEZE_COMPLETE);
++	WARN_ON(sb_is_frozen(sb));
+ 	journal = EXT4_SB(sb)->s_journal;
+ 	/*
+ 	 * Special case here: if the journal has aborted behind our
+diff --git a/fs/gfs2/sys.c b/fs/gfs2/sys.c
+index d0b80552a678..b98be03d0d1e 100644
+--- a/fs/gfs2/sys.c
++++ b/fs/gfs2/sys.c
+@@ -146,7 +146,7 @@ static ssize_t uuid_show(struct gfs2_sbd *sdp, char *buf)
+ static ssize_t freeze_show(struct gfs2_sbd *sdp, char *buf)
+ {
+ 	struct super_block *sb = sdp->sd_vfs;
+-	int frozen = (sb->s_writers.frozen == SB_UNFROZEN) ? 0 : 1;
++	int frozen = sb_is_unfrozen(sb) ? 0 : 1;
  
- 		if (signal_pending(current))
-@@ -109,8 +107,6 @@ nfs41_callback_svc(void *vrqstp)
- 	int error;
- 	DEFINE_WAIT(wq);
+ 	return snprintf(buf, PAGE_SIZE, "%d\n", frozen);
+ }
+diff --git a/fs/quota/quota.c b/fs/quota/quota.c
+index 052f143e2e0e..d8147c21bf03 100644
+--- a/fs/quota/quota.c
++++ b/fs/quota/quota.c
+@@ -890,13 +890,13 @@ static struct super_block *quotactl_block(const char __user *special, int cmd)
+ 	sb = user_get_super(dev, excl);
+ 	if (!sb)
+ 		return ERR_PTR(-ENODEV);
+-	if (thawed && sb->s_writers.frozen != SB_UNFROZEN) {
++	if (thawed && sb_is_unfrozen(sb)) {
+ 		if (excl)
+ 			up_write(&sb->s_umount);
+ 		else
+ 			up_read(&sb->s_umount);
+ 		wait_event(sb->s_writers.wait_unfrozen,
+-			   sb->s_writers.frozen == SB_UNFROZEN);
++			   sb_is_unfrozen(sb));
+ 		put_super(sb);
+ 		goto retry;
+ 	}
+diff --git a/fs/super.c b/fs/super.c
+index a31a41b313f3..fdcf5a87af0a 100644
+--- a/fs/super.c
++++ b/fs/super.c
+@@ -883,7 +883,7 @@ int reconfigure_super(struct fs_context *fc)
  
--	set_freezable();
--
- 	while (!kthread_freezable_should_stop(NULL)) {
+ 	if (fc->sb_flags_mask & ~MS_RMT_MASK)
+ 		return -EINVAL;
+-	if (sb->s_writers.frozen != SB_UNFROZEN)
++	if (!(sb_is_unfrozen(sb)))
+ 		return -EBUSY;
  
- 		if (signal_pending(current))
-diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-index 9bcd53d5c7d4..04753962db9a 100644
---- a/fs/nfs/fs_context.c
-+++ b/fs/nfs/fs_context.c
-@@ -1583,7 +1583,7 @@ struct file_system_type nfs_fs_type = {
- 	.init_fs_context	= nfs_init_fs_context,
- 	.parameters		= nfs_fs_parameters,
- 	.kill_sb		= nfs_kill_super,
--	.fs_flags		= FS_RENAME_DOES_D_MOVE|FS_BINARY_MOUNTDATA,
-+	.fs_flags		= FS_RENAME_DOES_D_MOVE|FS_BINARY_MOUNTDATA | FS_AUTOFREEZE,
- };
- MODULE_ALIAS_FS("nfs");
- EXPORT_SYMBOL_GPL(nfs_fs_type);
-@@ -1595,7 +1595,7 @@ struct file_system_type nfs4_fs_type = {
- 	.init_fs_context	= nfs_init_fs_context,
- 	.parameters		= nfs_fs_parameters,
- 	.kill_sb		= nfs_kill_super,
--	.fs_flags		= FS_RENAME_DOES_D_MOVE|FS_BINARY_MOUNTDATA,
-+	.fs_flags		= FS_RENAME_DOES_D_MOVE|FS_BINARY_MOUNTDATA | FS_AUTOFREEZE,
- };
- MODULE_ALIAS_FS("nfs4");
- MODULE_ALIAS("nfs4");
+ 	retval = security_sb_remount(sb, fc->security);
+@@ -907,7 +907,7 @@ int reconfigure_super(struct fs_context *fc)
+ 			down_write(&sb->s_umount);
+ 			if (!sb->s_root)
+ 				return 0;
+-			if (sb->s_writers.frozen != SB_UNFROZEN)
++			if (!sb_is_unfrozen(sb))
+ 				return -EBUSY;
+ 			remount_ro = !sb_rdonly(sb);
+ 		}
+diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
+index 7bd16fbff534..ceb4890a4c96 100644
+--- a/fs/xfs/xfs_trans.c
++++ b/fs/xfs/xfs_trans.c
+@@ -267,8 +267,7 @@ xfs_trans_alloc(
+ 	 * Zero-reservation ("empty") transactions can't modify anything, so
+ 	 * they're allowed to run while we're frozen.
+ 	 */
+-	WARN_ON(resp->tr_logres > 0 &&
+-		mp->m_super->s_writers.frozen == SB_FREEZE_COMPLETE);
++	WARN_ON(resp->tr_logres > 0 && sb_is_frozen(mp->m_super));
+ 	ASSERT(!(flags & XFS_TRANS_RES_FDBLKS) ||
+ 	       xfs_has_lazysbcount(mp));
+ 
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 5042f5ab74a4..c0cab61f9f9a 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1604,6 +1604,28 @@ static inline bool sb_start_intwrite_trylock(struct super_block *sb)
+ 	return __sb_start_write_trylock(sb, SB_FREEZE_FS);
+ }
+ 
++/**
++ * sb_is_frozen - is superblock frozen
++ * @sb: the super to check
++ *
++ * Returns true if the super is frozen.
++ */
++static inline bool sb_is_frozen(struct super_block *sb)
++{
++	return sb->s_writers.frozen == SB_FREEZE_COMPLETE;
++}
++
++/**
++ * sb_is_unfrozen - is superblock unfrozen
++ * @sb: the super to check
++ *
++ * Returns true if the super is unfrozen.
++ */
++static inline bool sb_is_unfrozen(struct super_block *sb)
++{
++	return sb->s_writers.frozen == SB_UNFROZEN;
++}
++
+ bool inode_owner_or_capable(struct user_namespace *mnt_userns,
+ 			    const struct inode *inode);
+ 
 -- 
 2.35.1
 
