@@ -4,25 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 16BF4C3DA78
-	for <kexec@archiver.kernel.org>; Sat, 14 Jan 2023 01:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3F302C54EBE
+	for <kexec@archiver.kernel.org>; Sat, 14 Jan 2023 01:46:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=5SxG33Lc/HOm3iEEKtfAfvnrMgDyP9hXUzWuzqI4nGY=; b=Ls0+0i/nQoMn2S
-	/RU5pZjnasR/XiSDsS8KtPBgnc2VCNRvaOnmwoTbxAzLqVJ1AWEyAXfD/6tlD9oeHCEkrBrQCTGXw
-	V7z4o4/Q6Zg0Gid8tQ+kgxVQXjEJruDfFenPdI8MBaJn38zHzmBF9hBlFH0NjF4+JVTUKzFFTv9g8
-	bWcs9V05FDbfMxC8dtVM3ivLzEs7bSSVFJ11MQuKfkSNEWrwym+aDJL5GVjlWXyGHXBT/HG1qj+xL
-	JyCotWzuZIwKgRW5OkGXEVb+k97v4utUTh+/hyVNfxZ89Q9mjZqD1qQEtcZZojVy1PArGDjxQ7TlQ
-	79d2/jPa2yI0dvmUUXqg==;
+	List-Owner; bh=sUndMu9XXHv8MCTxfWIAEsakAIRuPTioaD+R87nJajQ=; b=m2FKw70jpYa+zt
+	Id2gTpwCf0S/nNuVcsbz8qRjt2yeVRNZZfCwaEdMqVmQaiQEL66NYIoUgj8Ei+PVQ0r/NTYxTPTei
+	+3juf74GmpY2wN/p0UbIuqghP5hdwi/hxAZZFCxeINWLjwLnCzplFoOZu5U1bZqn4NfLd5OXD5sK5
+	N0sOCdol2Mlt/OqO6GQ1hqWXLpAT91ve3uTQi4UkQB4mSLaOEtWvVkLKkqecd6QSKdqRIYzAhoLrO
+	dNWyZhRlLV2r6qPBHT+RkS4gMWBAePCR/0nulv+DwtUHFCSI8Ayoju5y9LZ7H3CVOtR3IAf947/ld
+	hE+y2vaxBk+A9G88a+aw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pGVd0-0050nj-Dx; Sat, 14 Jan 2023 01:46:38 +0000
+	id 1pGVd3-0050tk-Av; Sat, 14 Jan 2023 01:46:41 +0000
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pGUUt-004twH-CP; Sat, 14 Jan 2023 00:34:11 +0000
+	id 1pGUUt-004twT-LL; Sat, 14 Jan 2023 00:34:11 +0000
 From: Luis Chamberlain <mcgrof@kernel.org>
 To: hch@infradead.org,
 	djwong@kernel.org,
@@ -41,9 +41,9 @@ Cc: mchehab@kernel.org,
 	kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Luis Chamberlain <mcgrof@kernel.org>
-Subject: [RFC v3 11/24] gfs2: replace kthread freezing with auto fs freezing
-Date: Fri, 13 Jan 2023 16:33:56 -0800
-Message-Id: <20230114003409.1168311-12-mcgrof@kernel.org>
+Subject: [RFC v3 17/24] ksmbd: replace kthread freezing with auto fs freezing
+Date: Fri, 13 Jan 2023 16:34:02 -0800
+Message-Id: <20230114003409.1168311-18-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.37.1
 In-Reply-To: <20230114003409.1168311-1-mcgrof@kernel.org>
 References: <20230114003409.1168311-1-mcgrof@kernel.org>
@@ -78,7 +78,7 @@ it knows better than how the VFS handles it.
 The following Coccinelle rule was used as to remove the now superflous
 freezer calls:
 
-spatch --sp-file fs-freeze-cleanup.cocci --in-place --timeout 120 --dir fs/gfs2 --jobs 12 --use-gitgrep
+spatch --sp-file fs-freeze-cleanup.cocci --in-place --timeout 120 --dir fs/nfs --jobs 12 --use-gitgrep
 
 @ remove_set_freezable @
 expression time;
@@ -173,102 +173,37 @@ struct file_system_type fs_type = {
 Generated-by: Coccinelle SmPL
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- fs/gfs2/glock.c      | 6 +++---
- fs/gfs2/log.c        | 2 --
- fs/gfs2/main.c       | 4 ++--
- fs/gfs2/ops_fstype.c | 4 ++--
- fs/gfs2/quota.c      | 2 --
- 5 files changed, 7 insertions(+), 11 deletions(-)
+ fs/ksmbd/connection.c    | 3 ---
+ fs/ksmbd/transport_tcp.c | 2 --
+ 2 files changed, 5 deletions(-)
 
-diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
-index 524f3c96b9a4..7ad1a1229ae3 100644
---- a/fs/gfs2/glock.c
-+++ b/fs/gfs2/glock.c
-@@ -2459,14 +2459,14 @@ int __init gfs2_glock_init(void)
- 	if (ret < 0)
- 		return ret;
+diff --git a/fs/ksmbd/connection.c b/fs/ksmbd/connection.c
+index fd0a288af299..4ed17de1423e 100644
+--- a/fs/ksmbd/connection.c
++++ b/fs/ksmbd/connection.c
+@@ -292,9 +292,6 @@ int ksmbd_conn_handler_loop(void *p)
  
--	glock_workqueue = alloc_workqueue("glock_workqueue", WQ_MEM_RECLAIM |
--					  WQ_HIGHPRI | WQ_FREEZABLE, 0);
-+	glock_workqueue = alloc_workqueue("glock_workqueue",
-+					  WQ_MEM_RECLAIM | WQ_HIGHPRI, 0);
- 	if (!glock_workqueue) {
- 		rhashtable_destroy(&gl_hash_table);
- 		return -ENOMEM;
- 	}
- 	gfs2_delete_workqueue = alloc_workqueue("delete_workqueue",
--						WQ_MEM_RECLAIM | WQ_FREEZABLE,
-+						WQ_MEM_RECLAIM,
- 						0);
- 	if (!gfs2_delete_workqueue) {
- 		destroy_workqueue(glock_workqueue);
-diff --git a/fs/gfs2/log.c b/fs/gfs2/log.c
-index 1fcc829f02ab..213fafc367f4 100644
---- a/fs/gfs2/log.c
-+++ b/fs/gfs2/log.c
-@@ -1330,8 +1330,6 @@ int gfs2_logd(void *data)
+ 	conn->last_active = jiffies;
+ 	while (ksmbd_conn_alive(conn)) {
+-		if (try_to_freeze())
+-			continue;
+-
+ 		kvfree(conn->request_buf);
+ 		conn->request_buf = NULL;
  
- 		t = gfs2_tune_get(sdp, gt_logd_secs) * HZ;
+diff --git a/fs/ksmbd/transport_tcp.c b/fs/ksmbd/transport_tcp.c
+index 4c6bd0b69979..dadb4f306428 100644
+--- a/fs/ksmbd/transport_tcp.c
++++ b/fs/ksmbd/transport_tcp.c
+@@ -305,8 +305,6 @@ static int ksmbd_tcp_readv(struct tcp_transport *t, struct kvec *iov_orig,
+ 	ksmbd_msg.msg_controllen = 0;
  
+ 	for (total_read = 0; to_read; total_read += length, to_read -= length) {
 -		try_to_freeze();
 -
- 		do {
- 			prepare_to_wait(&sdp->sd_logd_waitq, &wait,
- 					TASK_INTERRUPTIBLE);
-diff --git a/fs/gfs2/main.c b/fs/gfs2/main.c
-index afcb32854f14..43d4748ad183 100644
---- a/fs/gfs2/main.c
-+++ b/fs/gfs2/main.c
-@@ -153,12 +153,12 @@ static int __init init_gfs2_fs(void)
- 
- 	error = -ENOMEM;
- 	gfs_recovery_wq = alloc_workqueue("gfs_recovery",
--					  WQ_MEM_RECLAIM | WQ_FREEZABLE, 0);
-+					  WQ_MEM_RECLAIM, 0);
- 	if (!gfs_recovery_wq)
- 		goto fail_wq1;
- 
- 	gfs2_control_wq = alloc_workqueue("gfs2_control",
--					  WQ_UNBOUND | WQ_FREEZABLE, 0);
-+					  WQ_UNBOUND, 0);
- 	if (!gfs2_control_wq)
- 		goto fail_wq2;
- 
-diff --git a/fs/gfs2/ops_fstype.c b/fs/gfs2/ops_fstype.c
-index c0cf1d2d0ef5..8f5a63148eaf 100644
---- a/fs/gfs2/ops_fstype.c
-+++ b/fs/gfs2/ops_fstype.c
-@@ -1740,7 +1740,7 @@ static void gfs2_kill_sb(struct super_block *sb)
- 
- struct file_system_type gfs2_fs_type = {
- 	.name = "gfs2",
--	.fs_flags = FS_REQUIRES_DEV,
-+	.fs_flags = FS_REQUIRES_DEV | FS_AUTOFREEZE,
- 	.init_fs_context = gfs2_init_fs_context,
- 	.parameters = gfs2_fs_parameters,
- 	.kill_sb = gfs2_kill_sb,
-@@ -1750,7 +1750,7 @@ MODULE_ALIAS_FS("gfs2");
- 
- struct file_system_type gfs2meta_fs_type = {
- 	.name = "gfs2meta",
--	.fs_flags = FS_REQUIRES_DEV,
-+	.fs_flags = FS_REQUIRES_DEV | FS_AUTOFREEZE,
- 	.init_fs_context = gfs2_meta_init_fs_context,
- 	.owner = THIS_MODULE,
- };
-diff --git a/fs/gfs2/quota.c b/fs/gfs2/quota.c
-index 1ed17226d9ed..710764af9d04 100644
---- a/fs/gfs2/quota.c
-+++ b/fs/gfs2/quota.c
-@@ -1555,8 +1555,6 @@ int gfs2_quotad(void *data)
- 		quotad_check_timeo(sdp, "sync", gfs2_quota_sync, t,
- 				   &quotad_timeo, &tune->gt_quota_quantum);
- 
--		try_to_freeze();
--
- bypass:
- 		t = min(quotad_timeo, statfs_timeo);
- 
+ 		if (!ksmbd_conn_alive(conn)) {
+ 			total_read = -ESHUTDOWN;
+ 			break;
 -- 
 2.35.1
 
