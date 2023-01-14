@@ -4,25 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6CF84C3DA78
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D80B1C54EBE
 	for <kexec@archiver.kernel.org>; Sat, 14 Jan 2023 01:46:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=BEo4SZE+MAta5C3Ty35u8X7bs7qdh3vhOu846Nz8Di8=; b=tghJCfaQj0FhV+
-	m/GmrHIxWrSWW0lR6U1rC/WUf8pMoExCtWogWaL+Oh4QWqfwiO6Mt8PtcZise5e3QIPFhhZDEPAlh
-	IUIfwpuRMc8mQAUaEPCnReTur5NxBDikbWaJy/8kdOvyWAsSib046XTZ1+tdyGYuiOoOXOKZPAwF4
-	e0ZCH9gKQXRfZ6DszHSkWWcmTobGpzH48+8eBFUB8fkzFdIvywFYAd/yLZLcLz7nfmfrHQOScYqy+
-	RR/Cr7eZSyYGJjjujokO+OKDevHikSZxt6k6ddMNnlLZijfiGKech25vNbxbbi2E4GT0PqjK4KZp/
-	LEHc+HtoE9BJxIziYvMw==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=6Y/KfGA1u/Ysk8mP0WUE8/wjMUv9QF8a0GDHLxmYmkY=; b=NKssahr0PMzQLK
+	6npw+DR1b6ExtYNWhCl+Delk3Vv6QC1N9d97ukwi0ssS1TvpM2PgfKB7fRfaojZUvSvqxGRFAhmsR
+	YFyfnFWUXsGseqUCZ3QoGCCDdCFgB+4FK/NCp9u8yPmLgLqwUvFzUZi6ocjfVFNdWr2gEfc5XbhXO
+	Ry1tYROrEcLxz1MJ/0UROsNa2qzOKPRBzJUuKvxgGwZ299NAE2cl84UDz0GpMpnFTUiqcjeCpPXQl
+	ghfDVf8ZjPPupAAp8wXdXbw8oC7/LHJrGavvprTzfrxskRQi/uXxcMbVscu/Iy5tbPiSoqvxAxlwQ
+	3ONGcR5w49SCJY5Q+Z5Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pGVci-0050TE-9p; Sat, 14 Jan 2023 01:46:20 +0000
+	id 1pGVcj-0050Te-6h; Sat, 14 Jan 2023 01:46:21 +0000
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pGUUt-004twX-OK; Sat, 14 Jan 2023 00:34:11 +0000
+	id 1pGUUs-004tvv-Pm; Sat, 14 Jan 2023 00:34:10 +0000
 From: Luis Chamberlain <mcgrof@kernel.org>
 To: hch@infradead.org,
 	djwong@kernel.org,
@@ -41,12 +41,10 @@ Cc: mchehab@kernel.org,
 	kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Luis Chamberlain <mcgrof@kernel.org>
-Subject: [RFC v3 19/24] jbd2: replace kthread freezing with auto fs freezing
-Date: Fri, 13 Jan 2023 16:34:04 -0800
-Message-Id: <20230114003409.1168311-20-mcgrof@kernel.org>
+Subject: [RFC v3 00/24] vfs: provide automatic kernel freeze / resume 
+Date: Fri, 13 Jan 2023 16:33:45 -0800
+Message-Id: <20230114003409.1168311-1-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20230114003409.1168311-1-mcgrof@kernel.org>
-References: <20230114003409.1168311-1-mcgrof@kernel.org>
 MIME-Version: 1.0
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -64,202 +62,125 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The kernel power management now supports allowing the VFS
-to handle filesystem freezing freezes and thawing. Take advantage
-of that and remove the kthread freezing. This is needed so that we
-properly really stop IO in flight without races after userspace
-has been frozen. Without this we rely on kthread freezing and
-its semantics are loose and error prone.
+Darrick J. Wong poked me about the status of the fs freez work, he's
+right, it's been too long since the last spin. The last v2 attempt happened
+in April 2021 [0], this just takes the feedback from Christoph and spins it
+again. I've only done basic build tests on x86_64, and haven't yet run time
+tested the stuff, but given the size of this set its better to review early
+before getting stuck on details. So this is what I've ended up with so far.
 
-The filesystem therefore is in charge of properly dealing with
-quiescing of the filesystem through its callbacks if it thinks
-it knows better than how the VFS handles it.
+Please help me paint the bike shed, and figure out the stuff perhaps
+I had not considered yet. The locking stuff is really the important thing
+here.
 
-The following Coccinelle rule was used as to remove the now superflous
-freezer calls:
+I'd like to re-iterate that tons of areas of the kernel are using the
+kthread freezer stuff for things it probably has no reason to use it, so
+once we remove this from the fs, it should be easy to start trimming this
+from other parts of the kernel. The kthread freezer stuff was put in place
+originally stop IO in flight for fs. Other parts of the kernels should
+have no business using this stuff after all this work is done.
 
-spatch --sp-file fs-freeze-cleanup.cocci --in-place --timeout 120 --dir fs/jbd2 --jobs 12 --use-gitgrep
+[0] https://lore.kernel.org/all/20210417001026.23858-1-mcgrof@kernel.org/
 
-@ remove_set_freezable @
-expression time;
-statement S, S2;
-expression task, current;
-@@
+Changes since the last v2:
+  * instead of having different semantics for lock / unlocked freeze
+    and thaw calls, this unifies the semantics by requiring the lock
+    prior to freeze / thaw
+  * uses grab_active_super() now in all all places which need to freeze
+    or thaw, this includes filesystems, this is to match the locking
+    requirements, and so to not add new heuristics over defining if the
+    superblock might be in a good state for freeze/thaw.
+  * drops SB_FREEZE_COMPLETE_AUTO in favor of just checking for a flag
+    to be able to determine if userspace initiated the freeze or if its
+    auto (by the kernel pm)
+  * folded the pm calls for the VFS so that instead of one call which
+    has a one-liner with two routines, we use the same one-liner on the
+    pm side of things.
+  * split the FS stuff by using a enw temporary flag, so to enable
+    easier review of the FS changes
+  * more filesystems use the freezer API now so this also converts them
+    over
+  * adjusted the coccinelle rule to use the new flag and in the end
+    removes it
 
-(
--       set_freezable();
-|
--       if (try_to_freeze())
--               continue;
-|
--       try_to_freeze();
-|
--       freezable_schedule();
-+       schedule();
-|
--       freezable_schedule_timeout(time);
-+       schedule_timeout(time);
-|
--       if (freezing(task)) { S }
-|
--       if (freezing(task)) { S }
--       else
-	    { S2 }
-|
--       freezing(current)
-)
+This is all here too:
 
-@ remove_wq_freezable @
-expression WQ_E, WQ_ARG1, WQ_ARG2, WQ_ARG3, WQ_ARG4;
-identifier fs_wq_fn;
-@@
+https://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/linux-next.git/log/?h=20231010-fs-freeze-v5
 
-(
-    WQ_E = alloc_workqueue(WQ_ARG1,
--                              WQ_ARG2 | WQ_FREEZABLE,
-+                              WQ_ARG2,
-			   ...);
-|
-    WQ_E = alloc_workqueue(WQ_ARG1,
--                              WQ_ARG2 | WQ_FREEZABLE | WQ_ARG3,
-+                              WQ_ARG2 | WQ_ARG3,
-			   ...);
-|
-    WQ_E = alloc_workqueue(WQ_ARG1,
--                              WQ_ARG2 | WQ_ARG3 | WQ_FREEZABLE,
-+                              WQ_ARG2 | WQ_ARG3,
-			   ...);
-|
-    WQ_E = alloc_workqueue(WQ_ARG1,
--                              WQ_ARG2 | WQ_ARG3 | WQ_FREEZABLE | WQ_ARG4,
-+                              WQ_ARG2 | WQ_ARG3 | WQ_ARG4,
-			   ...);
-|
-	    WQ_E =
--               WQ_ARG1 | WQ_FREEZABLE
-+               WQ_ARG1
-|
-	    WQ_E =
--               WQ_ARG1 | WQ_FREEZABLE | WQ_ARG3
-+               WQ_ARG1 | WQ_ARG3
-|
-    fs_wq_fn(
--               WQ_FREEZABLE | WQ_ARG2 | WQ_ARG3
-+               WQ_ARG2 | WQ_ARG3
-    )
-|
-    fs_wq_fn(
--               WQ_FREEZABLE | WQ_ARG2
-+               WQ_ARG2
-    )
-|
-    fs_wq_fn(
--               WQ_FREEZABLE
-+               0
-    )
-)
+Luis Chamberlain (24):
+  fs: unify locking semantics for fs freeze / thaw
+  fs: add frozen sb state helpers
+  fs: distinguish between user initiated freeze and kernel initiated
+    freeze
+  fs: add iterate_supers_excl() and iterate_supers_reverse_excl()
+  fs: add automatic kernel fs freeze / thaw and remove kthread freezing
+  xfs: replace kthread freezing with auto fs freezing
+  btrfs: replace kthread freezing with auto fs freezing
+  ext4: replace kthread freezing with auto fs freezing
+  f2fs: replace kthread freezing with auto fs freezing
+  cifs: replace kthread freezing with auto fs freezing
+  gfs2: replace kthread freezing with auto fs freezing
+  jfs: replace kthread freezing with auto fs freezing
+  nilfs2: replace kthread freezing with auto fs freezing
+  nfs: replace kthread freezing with auto fs freezing
+  nfsd: replace kthread freezing with auto fs freezing
+  ubifs: replace kthread freezing with auto fs freezing
+  ksmbd: replace kthread freezing with auto fs freezing
+  jffs2: replace kthread freezing with auto fs freezing
+  jbd2: replace kthread freezing with auto fs freezing
+  coredump: drop freezer usage
+  ecryptfs: replace kthread freezing with auto fs freezing
+  fscache: replace kthread freezing with auto fs freezing
+  lockd: replace kthread freezing with auto fs freezing
+  fs: remove FS_AUTOFREEZE
 
-@ add_auto_flag @
-expression E1;
-identifier fs_type;
-@@
+ block/bdev.c             |   9 +-
+ fs/btrfs/disk-io.c       |   4 +-
+ fs/btrfs/scrub.c         |   2 +-
+ fs/cifs/cifsfs.c         |  10 +-
+ fs/cifs/connect.c        |   8 --
+ fs/cifs/dfs_cache.c      |   2 +-
+ fs/coredump.c            |   2 +-
+ fs/ecryptfs/kthread.c    |   1 -
+ fs/ext4/ext4_jbd2.c      |   2 +-
+ fs/ext4/super.c          |   3 -
+ fs/f2fs/gc.c             |  12 +-
+ fs/f2fs/segment.c        |   6 +-
+ fs/fscache/main.c        |   2 +-
+ fs/gfs2/glock.c          |   6 +-
+ fs/gfs2/glops.c          |   2 +-
+ fs/gfs2/log.c            |   2 -
+ fs/gfs2/main.c           |   4 +-
+ fs/gfs2/quota.c          |   2 -
+ fs/gfs2/super.c          |  11 +-
+ fs/gfs2/sys.c            |  12 +-
+ fs/gfs2/util.c           |   7 +-
+ fs/ioctl.c               |  14 ++-
+ fs/jbd2/journal.c        |  54 ++++-----
+ fs/jffs2/background.c    |   3 +-
+ fs/jfs/jfs_logmgr.c      |  11 +-
+ fs/jfs/jfs_txnmgr.c      |  31 ++----
+ fs/ksmbd/connection.c    |   3 -
+ fs/ksmbd/transport_tcp.c |   2 -
+ fs/lockd/clntproc.c      |   1 -
+ fs/lockd/svc.c           |   3 -
+ fs/nfs/callback.c        |   4 -
+ fs/nfsd/nfssvc.c         |   2 -
+ fs/nilfs2/segment.c      |  48 ++++----
+ fs/quota/quota.c         |   4 +-
+ fs/super.c               | 232 ++++++++++++++++++++++++++++++++-------
+ fs/ubifs/commit.c        |   4 -
+ fs/xfs/xfs_log.c         |   3 +-
+ fs/xfs/xfs_log_cil.c     |   2 +-
+ fs/xfs/xfs_mru_cache.c   |   2 +-
+ fs/xfs/xfs_pwork.c       |   2 +-
+ fs/xfs/xfs_super.c       |  14 +--
+ fs/xfs/xfs_trans.c       |   3 +-
+ fs/xfs/xfs_trans_ail.c   |   3 -
+ include/linux/fs.h       |  53 ++++++++-
+ kernel/power/process.c   |  15 ++-
+ 45 files changed, 393 insertions(+), 229 deletions(-)
 
-struct file_system_type fs_type = {
-	.fs_flags = E1
-+                   | FS_AUTOFREEZE
-	,
-};
-
-Generated-by: Coccinelle SmPL
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- fs/jbd2/journal.c | 54 ++++++++++++++++++-----------------------------
- 1 file changed, 20 insertions(+), 34 deletions(-)
-
-diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-index e80c781731f8..99a4db5b40fc 100644
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -169,6 +169,8 @@ static int kjournald2(void *arg)
- {
- 	journal_t *journal = arg;
- 	transaction_t *transaction;
-+	DEFINE_WAIT(wait);
-+	int should_sleep = 1;
- 
- 	/*
- 	 * Set up an interval timer which can be used to trigger a commit wakeup
-@@ -176,8 +178,6 @@ static int kjournald2(void *arg)
- 	 */
- 	timer_setup(&journal->j_commit_timer, commit_timeout, 0);
- 
--	set_freezable();
--
- 	/* Record that the journal thread is running */
- 	journal->j_task = current;
- 	wake_up(&journal->j_wait_done_commit);
-@@ -212,41 +212,27 @@ static int kjournald2(void *arg)
- 	}
- 
- 	wake_up(&journal->j_wait_done_commit);
--	if (freezing(current)) {
--		/*
--		 * The simpler the better. Flushing journal isn't a
--		 * good idea, because that depends on threads that may
--		 * be already stopped.
--		 */
--		jbd2_debug(1, "Now suspending kjournald2\n");
-+	/*
-+	 * We assume on resume that commits are already there,
-+	 * so we don't sleep
-+	 */
-+
-+	prepare_to_wait(&journal->j_wait_commit, &wait,
-+			TASK_INTERRUPTIBLE);
-+	if (journal->j_commit_sequence != journal->j_commit_request)
-+		should_sleep = 0;
-+	transaction = journal->j_running_transaction;
-+	if (transaction && time_after_eq(jiffies,
-+					transaction->t_expires))
-+		should_sleep = 0;
-+	if (journal->j_flags & JBD2_UNMOUNT)
-+		should_sleep = 0;
-+	if (should_sleep) {
- 		write_unlock(&journal->j_state_lock);
--		try_to_freeze();
-+		schedule();
- 		write_lock(&journal->j_state_lock);
--	} else {
--		/*
--		 * We assume on resume that commits are already there,
--		 * so we don't sleep
--		 */
--		DEFINE_WAIT(wait);
--		int should_sleep = 1;
--
--		prepare_to_wait(&journal->j_wait_commit, &wait,
--				TASK_INTERRUPTIBLE);
--		if (journal->j_commit_sequence != journal->j_commit_request)
--			should_sleep = 0;
--		transaction = journal->j_running_transaction;
--		if (transaction && time_after_eq(jiffies,
--						transaction->t_expires))
--			should_sleep = 0;
--		if (journal->j_flags & JBD2_UNMOUNT)
--			should_sleep = 0;
--		if (should_sleep) {
--			write_unlock(&journal->j_state_lock);
--			schedule();
--			write_lock(&journal->j_state_lock);
--		}
--		finish_wait(&journal->j_wait_commit, &wait);
- 	}
-+	finish_wait(&journal->j_wait_commit, &wait);
- 
- 	jbd2_debug(1, "kjournald2 wakes\n");
- 
 -- 
 2.35.1
 
