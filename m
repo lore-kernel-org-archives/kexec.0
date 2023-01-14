@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 973A8C3DA78
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5BD3CC6379F
 	for <kexec@archiver.kernel.org>; Sat, 14 Jan 2023 01:46:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
@@ -12,17 +12,17 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=8oAl8lAA7ItNwqk1pAOPZmkFUv8bWtDQIdkYtAVDm+A=; b=3ULNCJfxihOQ2t
-	xI4JTgyD9BNF2G49KKWjQ6jkpetORW9AbR7vz9PpQ1sE/RDVa/uCHxzH1R2m2GSdPuhzrBmRYQeUu
-	3x+sXdzJLjmP6cZTfhqZiRrh9oqUJ+bjtGvuK+Q04QkL3AjHLffbnjWAwggOvnnwUqYa5nvo4igJn
-	1Naunun4T2/mrPXcWNWsWK/fDgjpvYHiveqtzS5WV7EENnPhRX7LLmrhn2cPN6XSIvf0YdpZLEGf6
-	B0lWhlCjjnlVX70C/H4o7AAA18BgX116l2dpaEjzr7xpuz6DjFLQc+Uln4WTLKIH+F2k6NHVMY/80
-	v/HhpF7dN8W4QkMwCPfw==;
+	List-Owner; bh=OTEvjl7eJW0SHs5vMpBGBbFxBWBQ+4trN/YFHGo3JkI=; b=a8AlYTP1tvOaAX
+	U/77R4vgmsR2B2gVuxLns/1pqnudsewQI7NVBqnjf1V75S26u3OgVyrLd0RNBWB/kZY+Ar2G+GizV
+	iwAboj3VyQFAvSEVnf7VCCJYmzvKe4yXfJymiIRXEEkOWYQ1uK1sQiFnM6Ly+5fPYsWPaHEHzrEd7
+	9ypVBanvJUy5kfYnV2BSUG5jJ/L0ou9k0M2cRkroN5Ud3PqTMqUgFC3MGQqD0mxFPCaOzecbu208h
+	5ERpKwcYStFz4No62bO+WO8UUPqb3qZD2w3rxBO2QHDFFsmjNljIuuZRmNC5KDyQSqeL5XDRGGAL4
+	ScFpzwWkvfytImgNxhgQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pGVcl-0050Ut-6Z; Sat, 14 Jan 2023 01:46:23 +0000
+	id 1pGVck-0050U8-58; Sat, 14 Jan 2023 01:46:22 +0000
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pGUUt-004twJ-Dw; Sat, 14 Jan 2023 00:34:11 +0000
+	id 1pGUUt-004twL-FW; Sat, 14 Jan 2023 00:34:11 +0000
 From: Luis Chamberlain <mcgrof@kernel.org>
 To: hch@infradead.org,
 	djwong@kernel.org,
@@ -41,9 +41,9 @@ Cc: mchehab@kernel.org,
 	kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Luis Chamberlain <mcgrof@kernel.org>
-Subject: [RFC v3 12/24] jfs: replace kthread freezing with auto fs freezing
-Date: Fri, 13 Jan 2023 16:33:57 -0800
-Message-Id: <20230114003409.1168311-13-mcgrof@kernel.org>
+Subject: [RFC v3 13/24] nilfs2: replace kthread freezing with auto fs freezing
+Date: Fri, 13 Jan 2023 16:33:58 -0800
+Message-Id: <20230114003409.1168311-14-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.37.1
 In-Reply-To: <20230114003409.1168311-1-mcgrof@kernel.org>
 References: <20230114003409.1168311-1-mcgrof@kernel.org>
@@ -78,7 +78,7 @@ it knows better than how the VFS handles it.
 The following Coccinelle rule was used as to remove the now superflous
 freezer calls:
 
-spatch --sp-file fs-freeze-cleanup.cocci --in-place --timeout 120 --dir fs/jfs --jobs 12 --use-gitgrep
+spatch --sp-file fs-freeze-cleanup.cocci --in-place --timeout 120 --dir fs/nilfs2 --jobs 12 --use-gitgrep
 
 @ remove_set_freezable @
 expression time;
@@ -173,102 +173,79 @@ struct file_system_type fs_type = {
 Generated-by: Coccinelle SmPL
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- fs/jfs/jfs_logmgr.c | 11 +++--------
- fs/jfs/jfs_txnmgr.c | 31 +++++++++----------------------
- fs/jfs/super.c      |  2 +-
- 3 files changed, 13 insertions(+), 31 deletions(-)
+ fs/nilfs2/segment.c | 48 +++++++++++++++++++--------------------------
+ 1 file changed, 20 insertions(+), 28 deletions(-)
 
-diff --git a/fs/jfs/jfs_logmgr.c b/fs/jfs/jfs_logmgr.c
-index 695415cbfe98..32df79fc09a2 100644
---- a/fs/jfs/jfs_logmgr.c
-+++ b/fs/jfs/jfs_logmgr.c
-@@ -2317,14 +2317,9 @@ int jfsIOWait(void *arg)
- 			spin_lock_irq(&log_redrive_lock);
- 		}
+diff --git a/fs/nilfs2/segment.c b/fs/nilfs2/segment.c
+index f7a14ed12a66..1c48aa9c7f56 100644
+--- a/fs/nilfs2/segment.c
++++ b/fs/nilfs2/segment.c
+@@ -2541,6 +2541,8 @@ static int nilfs_segctor_thread(void *arg)
+ 	struct nilfs_sc_info *sci = (struct nilfs_sc_info *)arg;
+ 	struct the_nilfs *nilfs = sci->sc_super->s_fs_info;
+ 	int timeout = 0;
++	DEFINE_WAIT(wait);
++	int should_sleep = 1;
  
--		if (freezing(current)) {
--			spin_unlock_irq(&log_redrive_lock);
--			try_to_freeze();
--		} else {
--			set_current_state(TASK_INTERRUPTIBLE);
--			spin_unlock_irq(&log_redrive_lock);
--			schedule();
--		}
-+		set_current_state(TASK_INTERRUPTIBLE);
-+		spin_unlock_irq(&log_redrive_lock);
+ 	sci->sc_timer_task = current;
+ 
+@@ -2572,38 +2574,28 @@ static int nilfs_segctor_thread(void *arg)
+ 		timeout = 0;
+ 	}
+ 
++	prepare_to_wait(&sci->sc_wait_daemon, &wait,
++			TASK_INTERRUPTIBLE);
+ 
+-	if (freezing(current)) {
++	if (sci->sc_seq_request != sci->sc_seq_done)
++		should_sleep = 0;
++	else if (sci->sc_flush_request)
++		should_sleep = 0;
++	else if (sci->sc_state & NILFS_SEGCTOR_COMMIT)
++		should_sleep = time_before(jiffies,
++				sci->sc_timer.expires);
++
++	if (should_sleep) {
+ 		spin_unlock(&sci->sc_state_lock);
+-		try_to_freeze();
 +		schedule();
- 	} while (!kthread_should_stop());
- 
- 	jfs_info("jfsIOWait being killed!");
-diff --git a/fs/jfs/jfs_txnmgr.c b/fs/jfs/jfs_txnmgr.c
-index ffd4feece078..6c6dee3a16cc 100644
---- a/fs/jfs/jfs_txnmgr.c
-+++ b/fs/jfs/jfs_txnmgr.c
-@@ -2696,6 +2696,7 @@ int jfs_lazycommit(void *arg)
- 	struct tblock *tblk;
- 	unsigned long flags;
- 	struct jfs_sb_info *sbi;
-+	DECLARE_WAITQUEUE(wq, current);
- 
- 	do {
- 		LAZY_LOCK(flags);
-@@ -2742,19 +2743,11 @@ int jfs_lazycommit(void *arg)
- 		}
- 		/* In case a wakeup came while all threads were active */
- 		jfs_commit_thread_waking = 0;
+ 		spin_lock(&sci->sc_state_lock);
+-	} else {
+-		DEFINE_WAIT(wait);
+-		int should_sleep = 1;
 -
--		if (freezing(current)) {
--			LAZY_UNLOCK(flags);
--			try_to_freeze();
--		} else {
--			DECLARE_WAITQUEUE(wq, current);
+-		prepare_to_wait(&sci->sc_wait_daemon, &wait,
+-				TASK_INTERRUPTIBLE);
 -
--			add_wait_queue(&jfs_commit_thread_wait, &wq);
--			set_current_state(TASK_INTERRUPTIBLE);
--			LAZY_UNLOCK(flags);
+-		if (sci->sc_seq_request != sci->sc_seq_done)
+-			should_sleep = 0;
+-		else if (sci->sc_flush_request)
+-			should_sleep = 0;
+-		else if (sci->sc_state & NILFS_SEGCTOR_COMMIT)
+-			should_sleep = time_before(jiffies,
+-					sci->sc_timer.expires);
+-
+-		if (should_sleep) {
+-			spin_unlock(&sci->sc_state_lock);
 -			schedule();
--			remove_wait_queue(&jfs_commit_thread_wait, &wq);
+-			spin_lock(&sci->sc_state_lock);
 -		}
-+		add_wait_queue(&jfs_commit_thread_wait, &wq);
-+		set_current_state(TASK_INTERRUPTIBLE);
-+		LAZY_UNLOCK(flags);
-+		schedule();
-+		remove_wait_queue(&jfs_commit_thread_wait, &wq);
- 	} while (!kthread_should_stop());
- 
- 	if (!list_empty(&TxAnchor.unlock_queue))
-@@ -2931,15 +2924,9 @@ int jfs_sync(void *arg)
- 		}
- 		/* Add anon_list2 back to anon_list */
- 		list_splice_init(&TxAnchor.anon_list2, &TxAnchor.anon_list);
+-		finish_wait(&sci->sc_wait_daemon, &wait);
+-		timeout = ((sci->sc_state & NILFS_SEGCTOR_COMMIT) &&
+-			   time_after_eq(jiffies, sci->sc_timer.expires));
 -
--		if (freezing(current)) {
--			TXN_UNLOCK();
--			try_to_freeze();
--		} else {
--			set_current_state(TASK_INTERRUPTIBLE);
--			TXN_UNLOCK();
--			schedule();
--		}
-+		set_current_state(TASK_INTERRUPTIBLE);
-+		TXN_UNLOCK();
-+		schedule();
- 	} while (!kthread_should_stop());
+-		if (nilfs_sb_dirty(nilfs) && nilfs_sb_need_update(nilfs))
+-			set_nilfs_discontinued(nilfs);
+ 	}
++	finish_wait(&sci->sc_wait_daemon, &wait);
++	timeout = ((sci->sc_state & NILFS_SEGCTOR_COMMIT) &&
++		   time_after_eq(jiffies, sci->sc_timer.expires));
++
++	if (nilfs_sb_dirty(nilfs) && nilfs_sb_need_update(nilfs))
++		set_nilfs_discontinued(nilfs);
+ 	goto loop;
  
- 	jfs_info("jfs_sync being killed");
-diff --git a/fs/jfs/super.c b/fs/jfs/super.c
-index d2f82cb7db1b..8ca77aa0b6f9 100644
---- a/fs/jfs/super.c
-+++ b/fs/jfs/super.c
-@@ -906,7 +906,7 @@ static struct file_system_type jfs_fs_type = {
- 	.name		= "jfs",
- 	.mount		= jfs_do_mount,
- 	.kill_sb	= kill_block_super,
--	.fs_flags	= FS_REQUIRES_DEV,
-+	.fs_flags	= FS_REQUIRES_DEV | FS_AUTOFREEZE,
- };
- MODULE_ALIAS_FS("jfs");
- 
+  end_thread:
 -- 
 2.35.1
 
