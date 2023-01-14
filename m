@@ -4,25 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3F302C54EBE
-	for <kexec@archiver.kernel.org>; Sat, 14 Jan 2023 01:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6AE8CC3DA78
+	for <kexec@archiver.kernel.org>; Sat, 14 Jan 2023 01:46:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=sUndMu9XXHv8MCTxfWIAEsakAIRuPTioaD+R87nJajQ=; b=m2FKw70jpYa+zt
-	Id2gTpwCf0S/nNuVcsbz8qRjt2yeVRNZZfCwaEdMqVmQaiQEL66NYIoUgj8Ei+PVQ0r/NTYxTPTei
-	+3juf74GmpY2wN/p0UbIuqghP5hdwi/hxAZZFCxeINWLjwLnCzplFoOZu5U1bZqn4NfLd5OXD5sK5
-	N0sOCdol2Mlt/OqO6GQ1hqWXLpAT91ve3uTQi4UkQB4mSLaOEtWvVkLKkqecd6QSKdqRIYzAhoLrO
-	dNWyZhRlLV2r6qPBHT+RkS4gMWBAePCR/0nulv+DwtUHFCSI8Ayoju5y9LZ7H3CVOtR3IAf947/ld
-	hE+y2vaxBk+A9G88a+aw==;
+	List-Owner; bh=kf6qO6eZlTZ6G3iXHSa85kejV/hcnHCq0+gmS6lkJ0k=; b=fiAiWa6a5lPaIu
+	WZuYhwsSB+Pd2LY4/tUHF67DFglVT8hgktIRjtFeFLinUY4goJqx6k+wen00MQWD/IEFPQXSpWYJ3
+	aUPIyaTk8HdWUeZ/1mEZdt7KTylYqj/e4IkyxWxxUU9ZaqtrpGr4jQ6JrZ4c+BeQZk+mnHgbARDSU
+	aW63FYsbfmL6CnHoxTKdITMF3XFYLMmBXKkpc8ovbiIs5KTTyTCxwLBluqARd9pknv7F2a8JEFnXz
+	FkCnYYsryJ/bC67AdullqVl+R6smfvJp0LELE8r1sfs0wvBDxZi7q+9TggXeE1dxfFHEVxOnu3mzI
+	NEqpwK4ilrckpUltQQwQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pGVd3-0050tk-Av; Sat, 14 Jan 2023 01:46:41 +0000
+	id 1pGVd6-0050yp-OD; Sat, 14 Jan 2023 01:46:44 +0000
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pGUUt-004twT-LL; Sat, 14 Jan 2023 00:34:11 +0000
+	id 1pGUUt-004twV-Ml; Sat, 14 Jan 2023 00:34:11 +0000
 From: Luis Chamberlain <mcgrof@kernel.org>
 To: hch@infradead.org,
 	djwong@kernel.org,
@@ -41,9 +41,9 @@ Cc: mchehab@kernel.org,
 	kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Luis Chamberlain <mcgrof@kernel.org>
-Subject: [RFC v3 17/24] ksmbd: replace kthread freezing with auto fs freezing
-Date: Fri, 13 Jan 2023 16:34:02 -0800
-Message-Id: <20230114003409.1168311-18-mcgrof@kernel.org>
+Subject: [RFC v3 18/24] jffs2: replace kthread freezing with auto fs freezing
+Date: Fri, 13 Jan 2023 16:34:03 -0800
+Message-Id: <20230114003409.1168311-19-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.37.1
 In-Reply-To: <20230114003409.1168311-1-mcgrof@kernel.org>
 References: <20230114003409.1168311-1-mcgrof@kernel.org>
@@ -78,7 +78,7 @@ it knows better than how the VFS handles it.
 The following Coccinelle rule was used as to remove the now superflous
 freezer calls:
 
-spatch --sp-file fs-freeze-cleanup.cocci --in-place --timeout 120 --dir fs/nfs --jobs 12 --use-gitgrep
+spatch --sp-file fs-freeze-cleanup.cocci --in-place --timeout 120 --dir fs/jffs2 --jobs 12 --use-gitgrep
 
 @ remove_set_freezable @
 expression time;
@@ -173,37 +173,30 @@ struct file_system_type fs_type = {
 Generated-by: Coccinelle SmPL
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- fs/ksmbd/connection.c    | 3 ---
- fs/ksmbd/transport_tcp.c | 2 --
- 2 files changed, 5 deletions(-)
+ fs/jffs2/background.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/ksmbd/connection.c b/fs/ksmbd/connection.c
-index fd0a288af299..4ed17de1423e 100644
---- a/fs/ksmbd/connection.c
-+++ b/fs/ksmbd/connection.c
-@@ -292,9 +292,6 @@ int ksmbd_conn_handler_loop(void *p)
+diff --git a/fs/jffs2/background.c b/fs/jffs2/background.c
+index 6da92ecaf66d..e29fdf1ed878 100644
+--- a/fs/jffs2/background.c
++++ b/fs/jffs2/background.c
+@@ -87,7 +87,6 @@ static int jffs2_garbage_collect_thread(void *_c)
  
- 	conn->last_active = jiffies;
- 	while (ksmbd_conn_alive(conn)) {
--		if (try_to_freeze())
--			continue;
--
- 		kvfree(conn->request_buf);
- 		conn->request_buf = NULL;
+ 	set_user_nice(current, 10);
  
-diff --git a/fs/ksmbd/transport_tcp.c b/fs/ksmbd/transport_tcp.c
-index 4c6bd0b69979..dadb4f306428 100644
---- a/fs/ksmbd/transport_tcp.c
-+++ b/fs/ksmbd/transport_tcp.c
-@@ -305,8 +305,6 @@ static int ksmbd_tcp_readv(struct tcp_transport *t, struct kvec *iov_orig,
- 	ksmbd_msg.msg_controllen = 0;
+-	set_freezable();
+ 	for (;;) {
+ 		sigprocmask(SIG_UNBLOCK, &hupmask, NULL);
+ 	again:
+@@ -119,7 +118,7 @@ static int jffs2_garbage_collect_thread(void *_c)
  
- 	for (total_read = 0; to_read; total_read += length, to_read -= length) {
--		try_to_freeze();
--
- 		if (!ksmbd_conn_alive(conn)) {
- 			total_read = -ESHUTDOWN;
- 			break;
+ 		/* Put_super will send a SIGKILL and then wait on the sem.
+ 		 */
+-		while (signal_pending(current) || freezing(current)) {
++		while (signal_pending(current) ||) {
+ 			unsigned long signr;
+ 
+ 			if (try_to_freeze())
 -- 
 2.35.1
 
