@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 824D8C678D7
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5BFA5C67871
 	for <kexec@archiver.kernel.org>; Sat, 14 Jan 2023 01:46:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
@@ -12,17 +12,17 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=1dMoqb/2Jvl12ipZAz5MU4c+wBzjXNjtkpzC9BTjDAo=; b=oC+3mjn9t98yau
-	f0g4rrcyzmF0y84XbpB1bDaRlf95QHeRQiOLM5i/oXEMtPN5pISudwcO+zUqukfOh50Cr3LsxiEBc
-	dxgI//25UADIikWat18q5SeEzega9DDawdMYs2bbBhK3nuxaMJ0oPKKexQ6Ew8Mp9TDJXI2x7KwBE
-	3kCpsi2jmcFE9zFPwyHVPmgFsCDTpmSVNPENR22e2CZnPOf4qBLKjjr0zM+zDiJgnhDipIydQoUR+
-	pZKrg39E+JfsXWeNsX5X4QHK+o5IkCv7B9AwFFXlN1jxOwEu8CrHAAlr9UqYLDrMkRQ4B6WaRqL8u
-	EMTlJ1rC6blCUSxcaT5Q==;
+	List-Owner; bh=a5wVxYKGhLv945ifbuJoTJvINM9MmsQcI6avf6zGEl0=; b=NA8EIer2VuZb6u
+	3YL056eINbU332ndwjT+/ukmxntgZ7Xmt1XwvxGKOZrCS7IIfzkpV+InReq6W0lB1wTOrdzL3oV9g
+	KicUn/I+4LurHj9NEeKQ7raER8vePxucQBK1QPlpx7KBdkaL07sdXmzrtLSEIqNU68r8rs0P7DXdL
+	Lq9SlmQQShF/FyJ+FweQ1MvIqeLQiUR6R1rnGk7oJdGeJmX6teBLptVjZ0gONvQcamPUI/b3yu7WJ
+	8+RuQKkx02p5uSiNcDbJxB/SNapIxn+4d5MoW8fDUQzJXT+0wHZM5IocqyeS2deY08Oessj22SfuV
+	NUjtPVsYQM3yVptpq7xA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pGVch-0050Sm-Ds; Sat, 14 Jan 2023 01:46:19 +0000
+	id 1pGVcg-0050SV-Ib; Sat, 14 Jan 2023 01:46:18 +0000
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pGUUt-004twc-RB; Sat, 14 Jan 2023 00:34:11 +0000
+	id 1pGUUt-004tw5-36; Sat, 14 Jan 2023 00:34:11 +0000
 From: Luis Chamberlain <mcgrof@kernel.org>
 To: hch@infradead.org,
 	djwong@kernel.org,
@@ -41,9 +41,9 @@ Cc: mchehab@kernel.org,
 	kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Luis Chamberlain <mcgrof@kernel.org>
-Subject: [RFC v3 21/24] ecryptfs: replace kthread freezing with auto fs freezing
-Date: Fri, 13 Jan 2023 16:34:06 -0800
-Message-Id: <20230114003409.1168311-22-mcgrof@kernel.org>
+Subject: [RFC v3 05/24] fs: add automatic kernel fs freeze / thaw and remove kthread freezing
+Date: Fri, 13 Jan 2023 16:33:50 -0800
+Message-Id: <20230114003409.1168311-6-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.37.1
 In-Reply-To: <20230114003409.1168311-1-mcgrof@kernel.org>
 References: <20230114003409.1168311-1-mcgrof@kernel.org>
@@ -64,143 +64,189 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The kernel power management now supports allowing the VFS
-to handle filesystem freezing freezes and thawing. Take advantage
-of that and remove the kthread freezing. This is needed so that we
-properly really stop IO in flight without races after userspace
-has been frozen. Without this we rely on kthread freezing and
-its semantics are loose and error prone.
+Add support to automatically handle freezing and thawing filesystems
+during the kernel's suspend/resume cycle.
 
-The filesystem therefore is in charge of properly dealing with
-quiescing of the filesystem through its callbacks if it thinks
-it knows better than how the VFS handles it.
+This is needed so that we properly really stop IO in flight without
+races after userspace has been frozen. Without this we rely on
+kthread freezing and its semantics are loose and error prone.
+For instance, even though a kthread may use try_to_freeze() and end
+up being frozen we have no way of being sure that everything that
+has been spawned asynchronously from it (such as timers) have also
+been stopped as well.
 
-The following Coccinelle rule was used as to remove the now superflous
-freezer calls:
+A long term advantage of also adding filesystem freeze / thawing
+supporting during suspend / hibernation is that long term we may
+be able to eventually drop the kernel's thread freezing completely
+as it was originally added to stop disk IO in flight as we hibernate
+or suspend.
 
-spatch --sp-file fs-freeze-cleanup.cocci --in-place --timeout 120 --dir fs/ecryptfs/ --jobs 12 --use-gitgrep
+This does not remove the superflous freezer calls on all filesystems.
+Each filesystem must remove all the kthread freezer stuff and peg
+the fs_type flags as supporting auto-freezing with the FS_AUTOFREEZE
+flag.
 
-@ remove_set_freezable @
-expression time;
-statement S, S2;
-expression task, current;
-@@
+Subsequent patches remove the kthread freezer usage from each
+filesystem, one at a time to make all this work bisectable.
+Once all filesystems remove the usage of the kthread freezer we
+can remove the FS_AUTOFREEZE flag.
 
-(
--       set_freezable();
-|
--       if (try_to_freeze())
--               continue;
-|
--       try_to_freeze();
-|
--       freezable_schedule();
-+       schedule();
-|
--       freezable_schedule_timeout(time);
-+       schedule_timeout(time);
-|
--       if (freezing(task)) { S }
-|
--       if (freezing(task)) { S }
--       else
-	    { S2 }
-|
--       freezing(current)
-)
-
-@ remove_wq_freezable @
-expression WQ_E, WQ_ARG1, WQ_ARG2, WQ_ARG3, WQ_ARG4;
-identifier fs_wq_fn;
-@@
-
-(
-    WQ_E = alloc_workqueue(WQ_ARG1,
--                              WQ_ARG2 | WQ_FREEZABLE,
-+                              WQ_ARG2,
-			   ...);
-|
-    WQ_E = alloc_workqueue(WQ_ARG1,
--                              WQ_ARG2 | WQ_FREEZABLE | WQ_ARG3,
-+                              WQ_ARG2 | WQ_ARG3,
-			   ...);
-|
-    WQ_E = alloc_workqueue(WQ_ARG1,
--                              WQ_ARG2 | WQ_ARG3 | WQ_FREEZABLE,
-+                              WQ_ARG2 | WQ_ARG3,
-			   ...);
-|
-    WQ_E = alloc_workqueue(WQ_ARG1,
--                              WQ_ARG2 | WQ_ARG3 | WQ_FREEZABLE | WQ_ARG4,
-+                              WQ_ARG2 | WQ_ARG3 | WQ_ARG4,
-			   ...);
-|
-	    WQ_E =
--               WQ_ARG1 | WQ_FREEZABLE
-+               WQ_ARG1
-|
-	    WQ_E =
--               WQ_ARG1 | WQ_FREEZABLE | WQ_ARG3
-+               WQ_ARG1 | WQ_ARG3
-|
-    fs_wq_fn(
--               WQ_FREEZABLE | WQ_ARG2 | WQ_ARG3
-+               WQ_ARG2 | WQ_ARG3
-    )
-|
-    fs_wq_fn(
--               WQ_FREEZABLE | WQ_ARG2
-+               WQ_ARG2
-    )
-|
-    fs_wq_fn(
--               WQ_FREEZABLE
-+               0
-    )
-)
-
-@ add_auto_flag @
-expression E1;
-identifier fs_type;
-@@
-
-struct file_system_type fs_type = {
-	.fs_flags = E1
-+                   | FS_AUTOFREEZE
-	,
-};
-
-Generated-by: Coccinelle SmPL
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- fs/ecryptfs/kthread.c | 1 -
- fs/ecryptfs/main.c    | 2 +-
- 2 files changed, 1 insertion(+), 2 deletions(-)
+ fs/super.c             | 69 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/fs.h     | 14 +++++++++
+ kernel/power/process.c | 15 ++++++++-
+ 3 files changed, 97 insertions(+), 1 deletion(-)
 
-diff --git a/fs/ecryptfs/kthread.c b/fs/ecryptfs/kthread.c
-index ae4cb4e2e134..ff1226615f03 100644
---- a/fs/ecryptfs/kthread.c
-+++ b/fs/ecryptfs/kthread.c
-@@ -41,7 +41,6 @@ static struct task_struct *ecryptfs_kthread;
-  */
- static int ecryptfs_threadfn(void *ignored)
- {
--	set_freezable();
- 	while (1)  {
- 		struct ecryptfs_open_req *req;
+diff --git a/fs/super.c b/fs/super.c
+index 2f77fcb6e555..e8af4c8269ad 100644
+--- a/fs/super.c
++++ b/fs/super.c
+@@ -1853,3 +1853,72 @@ int thaw_super(struct super_block *sb, bool usercall)
+ 	return 0;
+ }
+ EXPORT_SYMBOL(thaw_super);
++
++#ifdef CONFIG_PM_SLEEP
++static bool super_should_freeze(struct super_block *sb)
++{
++	if (!(sb->s_type->fs_flags & FS_AUTOFREEZE))
++		return false;
++	/*
++	 * We don't freeze virtual filesystems, we skip those filesystems with
++	 * no backing device.
++	 */
++	if (sb->s_bdi == &noop_backing_dev_info)
++		return false;
++
++	return true;
++}
++
++int fs_suspend_freeze_sb(struct super_block *sb, void *priv)
++{
++	int error = 0;
++
++	if (!grab_lock_super(sb)) {
++		pr_err("%s (%s): freezing failed to grab_super()\n",
++		       sb->s_type->name, sb->s_id);
++		return -ENOTTY;
++	}
++
++	if (!super_should_freeze(sb))
++		goto out;
++
++	pr_info("%s (%s): freezing\n", sb->s_type->name, sb->s_id);
++
++	error = freeze_super(sb, false);
++	if (!error)
++		lockdep_sb_freeze_release(sb);
++	else if (error != -EBUSY)
++		pr_notice("%s (%s): Unable to freeze, error=%d",
++			  sb->s_type->name, sb->s_id, error);
++
++out:
++	deactivate_locked_super(sb);
++	return error;
++}
++
++int fs_suspend_thaw_sb(struct super_block *sb, void *priv)
++{
++	int error = 0;
++
++	if (!grab_lock_super(sb)) {
++		pr_err("%s (%s): thawing failed to grab_super()\n",
++		       sb->s_type->name, sb->s_id);
++		return -ENOTTY;
++	}
++
++	if (!super_should_freeze(sb))
++		goto out;
++
++	pr_info("%s (%s): thawing\n", sb->s_type->name, sb->s_id);
++
++	error = thaw_super(sb, false);
++	if (error && error != -EBUSY)
++		pr_notice("%s (%s): Unable to unfreeze, error=%d",
++			  sb->s_type->name, sb->s_id, error);
++
++out:
++	deactivate_locked_super(sb);
++	return error;
++}
++
++#endif
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index f168e72f6ca1..e5bee359e804 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2231,6 +2231,7 @@ struct file_system_type {
+ #define FS_DISALLOW_NOTIFY_PERM	16	/* Disable fanotify permission events */
+ #define FS_ALLOW_IDMAP         32      /* FS has been updated to handle vfs idmappings. */
+ #define FS_RENAME_DOES_D_MOVE	32768	/* FS will handle d_move() during rename() internally. */
++#define FS_AUTOFREEZE           (1<<16)	/*  temporary as we phase kthread freezer out */
+ 	int (*init_fs_context)(struct fs_context *);
+ 	const struct fs_parameter_spec *parameters;
+ 	struct dentry *(*mount) (struct file_system_type *, int,
+@@ -2306,6 +2307,19 @@ extern int user_statfs(const char __user *, struct kstatfs *);
+ extern int fd_statfs(int, struct kstatfs *);
+ extern int freeze_super(struct super_block *super, bool usercall);
+ extern int thaw_super(struct super_block *super, bool usercall);
++#ifdef CONFIG_PM_SLEEP
++int fs_suspend_freeze_sb(struct super_block *sb, void *priv);
++int fs_suspend_thaw_sb(struct super_block *sb, void *priv);
++#else
++static inline int fs_suspend_freeze_sb(struct super_block *sb, void *priv)
++{
++	return 0;
++}
++static inline int fs_suspend_thaw_sb(struct super_block *sb, void *priv)
++{
++	return 0;
++}
++#endif
+ extern __printf(2, 3)
+ int super_setup_bdi_name(struct super_block *sb, char *fmt, ...);
+ extern int super_setup_bdi(struct super_block *sb);
+diff --git a/kernel/power/process.c b/kernel/power/process.c
+index 6c1c7e566d35..1dd6b0b6b4e5 100644
+--- a/kernel/power/process.c
++++ b/kernel/power/process.c
+@@ -140,6 +140,16 @@ int freeze_processes(void)
  
-diff --git a/fs/ecryptfs/main.c b/fs/ecryptfs/main.c
-index 2dc927ba067f..a91f5184edb7 100644
---- a/fs/ecryptfs/main.c
-+++ b/fs/ecryptfs/main.c
-@@ -637,7 +637,7 @@ static struct file_system_type ecryptfs_fs_type = {
- 	.name = "ecryptfs",
- 	.mount = ecryptfs_mount,
- 	.kill_sb = ecryptfs_kill_block_super,
--	.fs_flags = 0
-+	.fs_flags = 0| FS_AUTOFREEZE
- };
- MODULE_ALIAS_FS("ecryptfs");
+ 	BUG_ON(in_atomic());
+ 
++	pr_info("Freezing filesystems ... ");
++	error = iterate_supers_reverse_excl(fs_suspend_freeze_sb, NULL);
++	if (error) {
++		pr_cont("failed\n");
++		iterate_supers_excl(fs_suspend_thaw_sb, NULL);
++		thaw_processes();
++		return error;
++	}
++	pr_cont("done.\n");
++
+ 	/*
+ 	 * Now that the whole userspace is frozen we need to disable
+ 	 * the OOM killer to disallow any further interference with
+@@ -149,8 +159,10 @@ int freeze_processes(void)
+ 	if (!error && !oom_killer_disable(msecs_to_jiffies(freeze_timeout_msecs)))
+ 		error = -EBUSY;
+ 
+-	if (error)
++	if (error) {
++		iterate_supers_excl(fs_suspend_thaw_sb, NULL);
+ 		thaw_processes();
++	}
+ 	return error;
+ }
+ 
+@@ -188,6 +200,7 @@ void thaw_processes(void)
+ 	pm_nosig_freezing = false;
+ 
+ 	oom_killer_enable();
++	iterate_supers_excl(fs_suspend_thaw_sb, NULL);
+ 
+ 	pr_info("Restarting tasks ... ");
  
 -- 
 2.35.1
