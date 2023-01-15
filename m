@@ -4,66 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C7ABDC3DA78
-	for <kexec@archiver.kernel.org>; Sat, 14 Jan 2023 02:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1C967C63797
+	for <kexec@archiver.kernel.org>; Sun, 15 Jan 2023 15:02:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=9jrw/AeaHsuhymT+rYBkTDpcumKzwYoJRduY3NZXnIY=; b=3H6TI0e9W/7EVO
-	DlXK6Ls8P8kQmynfS06AiXMm+NKDwg8kRdX6lCHlKz0Jyh1aJ+8EPUs/1GgnM2c6OOP1tHrBP4xxB
-	9h4eBDuxm7IWnNChdZRYitntOqr5d+GQVDUmuVZVsv/MBHCUttmqGbmN/9WDMXb0c7IgZSQqEP/aO
-	YPDfQ5qlT6JoGgtdLmPEsCTjgu6LyehlbvNVjJZlg47NlMxvEPpQs/j18DYd9dG6/a+lsy+PQGcqu
-	53cP/BiEb0Te6NDLt9zT1zz5tdO+nPfyF+CXJSfIf6TdI9ioJ2lyEYaBX9U+GifB+iZQVkaJLHvM0
-	/eKexZkicqlp7cQGE4gA==;
+	Content-Transfer-Encoding:Content-Type:Cc:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:To
+	:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=fMqbZsQ3toqz+2iAZII0XRqEjAgl+5HAZtsf3E5nOow=; b=YyMtfGUTXlwTMQ
+	hd8gTkZefcIy8wgtA4g3b8u8UVge7fsLbas1Ap/zjLC5JQMKH1y3AKabD+2qMsIzav7lAerjxBRcV
+	TNsrJ5gP9Vaqss0Xs6Eft45ZtPZyslxfc8sVlWFZjFOy5ceozxyf4p0X8FRcicullWpfUZ3fXqGyt
+	UY4NcO5rIGlIJFowycTkyckGjdTxO7KcQRvAkdamaD4UfqjDel5arornG8jPw4rs+eWX91KsMGCd/
+	aT1uGFctWdbLuwm6yyrwY1BBtF4T/QWC9qc+tXdhujDvU2jBuVPUym4KLvFrvaDB10r75fun/rjVZ
+	8tY/G6qxR6u5tKK6doPw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pGVyk-0053ZE-TC; Sat, 14 Jan 2023 02:09:07 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1pH4Wl-007Wu9-Eb; Sun, 15 Jan 2023 15:02:31 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pGVyh-0053Yf-GQ
-	for kexec@lists.infradead.org; Sat, 14 Jan 2023 02:09:05 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1673662142;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=g8WiLAQd4MrQTQlOR2IKuo321XRp1L/d4bWTe2T6IDM=;
-	b=QQ7JIfW/3bamzwRbWkDI9efRfLnIcXlfQVVEsb5oqu3w2+7kRPAmXh+evc/tXExfP5T50E
-	cNig7dX6KAVD87YfzhK7pvBoTlXFJfhT41Dj6vqtJ7DdE0e2Ja3vuLLK8Ez7xNuzF9YGj+
-	9bCLe5hIBEeoz9XRyLLVOzO00buS33w=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-70-TKwmIIxSNEuMo0Ffe4OBxQ-1; Fri, 13 Jan 2023 21:08:58 -0500
-X-MC-Unique: TKwmIIxSNEuMo0Ffe4OBxQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 01C7B811E6E;
-	Sat, 14 Jan 2023 02:08:58 +0000 (UTC)
-Received: from localhost (ovpn-12-229.pek2.redhat.com [10.72.12.229])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 44DDF4085720;
-	Sat, 14 Jan 2023 02:08:56 +0000 (UTC)
-Date: Sat, 14 Jan 2023 10:08:53 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org
-Subject: Re: kdump kernel randomly hang with tick_periodic call trace on bare
- metal system
-Message-ID: <Y8IOtY2x8XQT+Owd@fedora>
-References: <Y6FJgh3fOYoF0wSV@MiWiFi-R3L-srv>
- <Y6FK++b4buO5EgjD@MiWiFi-R3L-srv>
- <87mt6rjrra.ffs@tglx>
+	id 1pH4We-007WtE-Gt
+	for kexec@lists.infradead.org; Sun, 15 Jan 2023 15:02:26 +0000
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30FAsl0K006055;
+	Sun, 15 Jan 2023 15:02:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=ODhq6s860fFNt2uHl85E85IqHf9K6XrSxViCwNbalbY=;
+ b=PCGSEW2CO7ty302TaXYXd33s5NRh3Rtm1bbgNRKnW0OkQha5cD7u4/JwShJnpEOgZHwS
+ Cn3Yv/jCPZRPawnM8GxTzwmjMECRlsCzcU0gsSl0firshfgVVf7SBIdUqj5wc2Q+dO3/
+ DVroWgq2GaYP7DD7XNyHEKV9lL+jB8MmwbCSuc3d4IOcqaRlA5FLrv/uSnKN2+sTFXLm
+ c1FpOA8BFX7DaEJD7HDShQB+dsse+4YCeyFTfssfiNJTURNrE3RiqwcwNMXD82mZmxc3
+ AkSAje56UAnxZG9GdEjKa8OV52b+7cKL3nlLIekfb/BBhlJhiLDOukUX7naTCdehmzco Qg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3n4g5bjru5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 15 Jan 2023 15:02:17 +0000
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 30FF2Hr1029054;
+	Sun, 15 Jan 2023 15:02:17 GMT
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3n4g5bjrtn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 15 Jan 2023 15:02:17 +0000
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+	by ppma04ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 30F1sdg2004735;
+	Sun, 15 Jan 2023 15:02:14 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma04ams.nl.ibm.com (PPS) with ESMTPS id 3n3m16hd2t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 15 Jan 2023 15:02:14 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 30FF2Bv924314536
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 15 Jan 2023 15:02:11 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 383582004B;
+	Sun, 15 Jan 2023 15:02:11 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3EFCE20040;
+	Sun, 15 Jan 2023 15:02:08 +0000 (GMT)
+Received: from sjain014.ibmuc.com (unknown [9.43.71.156])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Sun, 15 Jan 2023 15:02:07 +0000 (GMT)
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+To: linuxppc-dev@ozlabs.org, mpe@ellerman.id.au
+Subject: [PATCH v7 0/8] In kernel handling of CPU hotplug events for crash kernel
+Date: Sun, 15 Jan 2023 20:31:58 +0530
+Message-Id: <20230115150206.431528-1-sourabhjain@linux.ibm.com>
+X-Mailer: git-send-email 2.39.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: I_yp-fRH5091w4HVEIXoLLuxgJIiT93j
+X-Proofpoint-ORIG-GUID: mQT7ZHO265hu1Kt_qwNMTM5J-OB01u_8
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <87mt6rjrra.ffs@tglx>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.923,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-01-15_11,2023-01-13_02,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
+ priorityscore=1501 suspectscore=0 phishscore=0 spamscore=0
+ lowpriorityscore=0 impostorscore=0 adultscore=0 mlxscore=0 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2301150116
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230113_180903_788122_5E9CFC9B 
-X-CRM114-Status: GOOD (  27.47  )
+X-CRM114-CacheID: sfid-20230115_070224_774238_20889C36 
+X-CRM114-Status: GOOD (  20.75  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -75,108 +100,106 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Cc: eric.devolder@oracle.com, bhe@redhat.com, kexec@lists.infradead.org, ldufour@linux.ibm.com, hbathini@linux.ibm.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 01/09/23 at 10:57pm, Thomas Gleixner wrote:
-> On Tue, Dec 20 2022 at 13:41, Baoquan He wrote:
-> > On one intel bare metal system, I can randomly reproduce the kdump hang
-> > as below with tick_periodic call trace. Attach the kernel config for
-> > reference.
-> 
-> This has absolutely nothing to do with x2apic IPI shorthands
-> 
-> > [    0.045980] Spurious LAPIC timer interrupt on cpu 0
-> 
-> So here the CPU receives a spurious Local APIC timer interrupt, but
-> that's a red herring.
-> 
-> > [    1.152690] BUG: kernel NULL pointer dereference, address: 0000000000000088
-> > [    1.159634] #PF: supervisor read access in kernel mode
-> > [    1.164757] #PF: error_code(0x0000) - not-present page
-> > [    1.169882] PGD 0 P4D 0 
-> > [    1.172407] Oops: 0000 [#1] PREEMPT SMP PTI
-> > [    1.176578] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 6.0.11-300.fc37.x86_64 #1
-> > [    1.183870] Hardware name: Dell Inc. PowerEdge R410/0N051F, BIOS 1.11.0 07/20/2012
-> > [    1.191420] RIP: 0010:tick_periodic+0x23/0x80
-> 
-> I'm willing to bet that this is caused by the following line in tick_periodic():
-> 
->     update_process_times(user_mode(get_irq_regs()));
-> 
->        user_mode() is invoked with a NULL pointer. user_mode() accesses
->        regs->cs. CS is at offset 0x88....
-> 
-> The reason for this is here:
-> 
-> > [    1.280648]  tick_handle_periodic+0x1f/0x70
-> > [    1.284821]  timer_interrupt+0x14/0x20
-> > [    1.288561]  __handle_irq_event_percpu+0x46/0x190
-> > [    1.293253]  handle_irq_event+0x34/0x70
-> > [    1.297080]  handle_level_irq+0xa8/0x180
-> > [    1.300993]  resend_irqs+0x5d/0x70
-> > [    1.304386]  tasklet_action_common.constprop.0+0xab/0xe0
-> > [    1.309686]  __do_softirq+0xfb/0x319
-> > [    1.313254]  __irq_exit_rcu+0xd7/0x140
-> > [    1.316993]  common_interrupt+0xb9/0xd0
-> 
-> For some reason the timer interrupt is resent in software. I assume it is
-> the HPET interrupt because that's what just got initialized.
-> 
-> > [    1.143537] clocksource: hpet: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 133484882848 ns
-> 
-> and the callchain below just confirms that:
-> 
-> > [    1.393315]  _raw_spin_unlock_irqrestore+0x19/0x40
-> > [    1.398093]  __setup_irq+0x443/0x6d0
-> > [    1.401659]  request_threaded_irq+0x109/0x170
-> > [    1.406005]  hpet_time_init+0x2d/0x4b
-> > [    1.409661]  x86_late_time_init+0x17/0x34
-> > [    1.413658]  start_kernel+0x8cf/0x97f
-> 
-> The software resend code does not go through the regular interrupt entry
-> path which explains why get_irq_regs() returns NULL.
-> 
-> That software resend is bogus especially since the timer interrupt is
-> a level interrupt. As dmesg does not say anything about the APIC
-> delivery mode I assume this goes through i8259, which fails to set the
-> IRQ_LEVEL flag on all interrupt lines.
-> 
-> The below should fix this.
+This patch series implements the crash hotplug handler on PowerPC introduced
+by https://lkml.org/lkml/2022/12/9/520 patch series.
 
-Sorry for late reply, just notice this mail.
+The Problem:
+============
+Post hotplug/DLPAR events the capture kernel holds stale information about the
+system. Dump collection with stale capture kernel might end up in dump capture
+failure or an inaccurate dump collection.
 
-Thanks a lot for checking this and providing a fix, I will reserve the
-lab machine and give it a shot, will feedback once finished. 
+Existing solution:
+==================
+The existing solution to keep the capture kernel up-to-date by monitoring
+hotplug event via udev rule and trigger a full capture kernel reload for
+every hotplug event.
 
-> ---
-> --- a/arch/x86/kernel/i8259.c
-> +++ b/arch/x86/kernel/i8259.c
-> @@ -114,6 +114,7 @@ static void make_8259A_irq(unsigned int
->  	disable_irq_nosync(irq);
->  	io_apic_irqs &= ~(1<<irq);
->  	irq_set_chip_and_handler(irq, &i8259A_chip, handle_level_irq);
-> +	irq_set_status_flags(irq, IRQ_LEVEL);
->  	enable_irq(irq);
->  	lapic_assign_legacy_vector(irq, true);
->  }
-> --- a/arch/x86/kernel/irqinit.c
-> +++ b/arch/x86/kernel/irqinit.c
-> @@ -65,8 +65,10 @@ void __init init_ISA_irqs(void)
->  
->  	legacy_pic->init(0);
->  
-> -	for (i = 0; i < nr_legacy_irqs(); i++)
-> +	for (i = 0; i < nr_legacy_irqs(); i++) {
->  		irq_set_chip_and_handler(i, chip, handle_level_irq);
-> +		irq_set_status_flags(i, IRQ_LEVEL);
-> +	}
->  }
->  
->  void __init init_IRQ(void)
-> 
+Shortcomings:
+------------------------------------------------
+- Leaves a window where kernel crash might not lead to a successful dump
+  collection.
+- Reloading all kexec components for each hotplug is inefficient.
+- udev rules are prone to races if hotplug events are frequent.
+
+More about issues with an existing solution is posted here:
+ - https://lkml.org/lkml/2020/12/14/532
+ - https://lists.ozlabs.org/pipermail/linuxppc-dev/2022-February/240254.html
+
+Proposed Solution:
+==================
+Instead of reloading all kexec segments on hotplug event, this patch series
+focuses on updating only the relevant kexec segment. Once the kexec segments
+are loaded in the kernel reserved area then an arch-specific hotplug handler
+will update the relevant kexec segment based on hotplug event type.
+
+---
+Changelog:
+
+v6 -> v7
+  - added a new config to configure this feature
+  - pass hotplug action type to arch specific handler
+
+v5 -> v6
+  - Added crash memory hotplug support
+
+v4 -> v5:
+  - Replace COFNIG_CRASH_HOTPLUG with CONFIG_HOTPLUG_CPU.
+  - Move fdt segment identification for kexec_load case to load path
+    instead of crash hotplug handler
+  - Keep new attribute defined under kimage_arch to track FDT segment
+    under CONFIG_HOTPLUG_CPU config.
+
+v3 -> v4:
+  - Update the logic to find the additional space needed for hotadd CPUs post
+    kexec load. Refer "[RFC v4 PATCH 4/5] powerpc/crash hp: add crash hotplug
+    support for kexec_file_load" patch to know more about the change.
+  - Fix a couple of typo.
+  - Replace pr_err to pr_info_once to warn user about memory hotplug
+    support.
+  - In crash hotplug handle exit the for loop if FDT segment is found.
+
+v2 -> v3
+  - Move fdt_index and fdt_index_vaild variables to kimage_arch struct.
+  - Rebase patche on top of https://lkml.org/lkml/2022/3/3/674 [v5]
+  - Fixed warning reported by checpatch script
+
+v1 -> v2:
+  - Use generic hotplug handler introduced by https://lkml.org/lkml/2022/2/9/1406, a
+    significant change from v1.
+---
+
+Sourabh Jain (8):
+  powerpc/kexec: turn some static helper functions public
+  powerpc/crash hp: introduce a new config option CRASH_HOTPLUG
+  powerpc/crash: update kimage_arch struct
+  crash: add phdr for possible CPUs in elfcorehdr
+  crash: pass hotplug action type to arch crash hotplug handler
+  powerpc/crash: add crash CPU hotplug support
+  crash: forward memory_notify args to arch crash hotplug handler
+  powerpc/kexec: add crash memory hotplug support
+
+ arch/powerpc/Kconfig                    |  12 +
+ arch/powerpc/include/asm/kexec.h        |  17 ++
+ arch/powerpc/include/asm/kexec_ranges.h |   1 +
+ arch/powerpc/kexec/core_64.c            | 290 ++++++++++++++++++++++++
+ arch/powerpc/kexec/elf_64.c             |  73 +++++-
+ arch/powerpc/kexec/file_load_64.c       | 179 ++-------------
+ arch/powerpc/kexec/ranges.c             |  60 +++++
+ arch/x86/include/asm/kexec.h            |   3 +-
+ arch/x86/kernel/crash.c                 |   5 +-
+ include/linux/kexec.h                   |   6 +-
+ kernel/crash_core.c                     |  23 +-
+ 11 files changed, 491 insertions(+), 178 deletions(-)
+
+-- 
+2.39.0
 
 
 _______________________________________________
