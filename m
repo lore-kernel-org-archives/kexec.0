@@ -4,93 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4D4A1C63797
-	for <kexec@archiver.kernel.org>; Sun, 15 Jan 2023 15:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 089DDC46467
+	for <kexec@archiver.kernel.org>; Mon, 16 Jan 2023 09:08:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:Cc:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:To:From:Reply-To:Content-ID:Content-Description:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=/2YbzzkixUhETe4HlwYdc5ZtFQ3esuNi2PKVcM+K2qU=; b=zxkr4jT5MI17O+
-	IAgjIcXWpSj6n8okUn7L+5MTBQ2KQlHnbjj+VxO4VJdup6qtGzH8MvQKkaFKQQLeFwdkyH7iOp8CV
-	i86/OHWQHEnmXnwFQMcKyur2CZ//9+HrkLfe9j4Q//EhdqA03sz1MA+z1ls88SBZ2zos6qMDqNiZ3
-	czI2wmvpjaHj74deM2qmJ/EIc4I1nhLHKIan78hY4HugTCHoWC8VLpM77kyqIT5VmCZWsMuyTu0pJ
-	84CeIkwIEnRrpwhHsAOtdfNFZoxst1g2SKS32tozLFG8yZ07eUIA4OrBwe3/XEMKtvaDoRyBBr+JA
-	ACtN/CdGK7ddoMGHlkbQ==;
+	List-Owner; bh=QzrlcUQNEBwODtT7Aoq0ZPaIZhdnkNizpK5hXb7Ui4c=; b=TYl2jq4jdH21Nf
+	ull45Dr+3lqD2VRR68GemRQxMMqDP71xlc+cfeESxglnwFS70av9rXnwJRq+kH+1UC/sFl+8MTAlv
+	a9Wk/R7LMJYAZMAqxMHlOFesHm0/ZYbtt6PpkS36McwxY4JjeFFLvQvkWfij3iV6hT/MR/PcxP1X+
+	zN2jegvQMdhDkgZjGk0ZdCJLt27+04fs3Y+3tZ2ADnIXn2cPcp5XXmjib1hTsBDT3eWa8UEK1D66g
+	Q4AtnkerItDwkOHBy5ct2zPN6wLTd9AW3oWkaHZzwhK3cBCT1wUJc24zmpCCoSR9jeIDjQChBmYv9
+	T5kTdT52b9nUmjnoSUOQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pH4X6-007X5K-N1; Sun, 15 Jan 2023 15:02:52 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1pHLTV-009Hno-9k; Mon, 16 Jan 2023 09:08:17 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pH4X2-007X2u-UY
-	for kexec@lists.infradead.org; Sun, 15 Jan 2023 15:02:50 +0000
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30FBCBog028902;
-	Sun, 15 Jan 2023 15:02:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=cDQq49eWA5yZxK7uGmk3KFF/POt1WhzrerVrW0bbOxw=;
- b=mXe2ijskywI8XmVhWy1ln229zEJmQYH1feIub/GOR9aC0TerXu1g6zKiZgI0Vi/JvZKE
- zvhIJjFdCjpARRVtKCeiq77msKHq8NiT99re2OlJTGz0GVrP9NMreoTJBr7h6QfnXnKJ
- cq+aFG3o0z35fizdQHA9oKEQFO2kDEM0T3oEoDaZ0DhfmJ/R6h624/cXEstv7Uo3OqHA
- pCNcZJWAM1Z0meNW//rnL0AAfBp63IScfIHNrperTq5SW7MALaIh45r/hnAoFds/ygiH
- M88tC+w2AQEf0nutU5R8qAxHqM7nBacpk/urpdq4bnkiXn3fEmAvDrudB8NTp8MXymV7 xA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3n4gdbtkqp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 15 Jan 2023 15:02:46 +0000
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 30FF1CNs002657;
-	Sun, 15 Jan 2023 15:02:45 GMT
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3n4gdbtkq7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 15 Jan 2023 15:02:45 +0000
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-	by ppma03fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 30FAXwDX006702;
-	Sun, 15 Jan 2023 15:02:43 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma03fra.de.ibm.com (PPS) with ESMTPS id 3n3m16h0n1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 15 Jan 2023 15:02:42 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 30FF2daK21168518
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 15 Jan 2023 15:02:39 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 460A22004E;
-	Sun, 15 Jan 2023 15:02:39 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4C96920040;
-	Sun, 15 Jan 2023 15:02:36 +0000 (GMT)
-Received: from sjain014.ibmuc.com (unknown [9.43.71.156])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Sun, 15 Jan 2023 15:02:35 +0000 (GMT)
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-To: linuxppc-dev@ozlabs.org, mpe@ellerman.id.au
-Subject: [PATCH v7 8/8] powerpc/kexec: add crash memory hotplug support
-Date: Sun, 15 Jan 2023 20:32:06 +0530
-Message-Id: <20230115150206.431528-9-sourabhjain@linux.ibm.com>
-X-Mailer: git-send-email 2.39.0
-In-Reply-To: <20230115150206.431528-1-sourabhjain@linux.ibm.com>
-References: <20230115150206.431528-1-sourabhjain@linux.ibm.com>
+	id 1pHLTR-009HnE-Fh
+	for kexec@lists.infradead.org; Mon, 16 Jan 2023 09:08:14 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1673860092;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EhNtDGcG//mdtydJKucfV/j4UIPaaTtUrl93zQqW3/Q=;
+	b=eI9XqN2HtS9LpydnWogHKHXEmc6O8rt0OukBBgiTieu3GYwETq0+oTeeqjGF5fOriTJbqQ
+	POdrCAURNq9z9bFmHO/QDuNp5mAeDGkmZ58OgjKLjJeWg+bLknBTR3c3LASVwxBe2Ny0BB
+	Sg0KQ6MBzXzj6y+PrgWvfzi6/LTnsoc=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-459-L03yREz4NIyoNfyqJcejvg-1; Mon, 16 Jan 2023 04:08:10 -0500
+X-MC-Unique: L03yREz4NIyoNfyqJcejvg-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A3229183B3C0;
+	Mon, 16 Jan 2023 09:08:09 +0000 (UTC)
+Received: from localhost (ovpn-12-229.pek2.redhat.com [10.72.12.229])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id C9DED492B10;
+	Mon, 16 Jan 2023 09:08:08 +0000 (UTC)
+Date: Mon, 16 Jan 2023 17:08:05 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org
+Subject: Re: kdump kernel randomly hang with tick_periodic call trace on bare
+ metal system
+Message-ID: <Y8UT9d88Eh6C9Cfe@fedora>
+References: <Y6FJgh3fOYoF0wSV@MiWiFi-R3L-srv>
+ <Y6FK++b4buO5EgjD@MiWiFi-R3L-srv>
+ <87mt6rjrra.ffs@tglx>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: lOrSzKXvCulCQ0K7Y6IV_CrU5DpLGgE9
-X-Proofpoint-ORIG-GUID: a7aVh0Xa50-T_A3u2QQHf3dWwU4xanVP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.923,Hydra:6.0.562,FMLib:17.11.122.1
- definitions=2023-01-15_11,2023-01-13_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 suspectscore=0 bulkscore=0 impostorscore=0 mlxscore=0
- lowpriorityscore=0 clxscore=1015 mlxlogscore=999 adultscore=0
- malwarescore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2301150116
+Content-Disposition: inline
+In-Reply-To: <87mt6rjrra.ffs@tglx>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230115_070249_017485_3FBF41E3 
-X-CRM114-Status: GOOD (  35.09  )
+X-CRM114-CacheID: sfid-20230116_010813_615186_C13B8F6F 
+X-CRM114-Status: GOOD (  29.67  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,268 +75,118 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Cc: eric.devolder@oracle.com, bhe@redhat.com, kexec@lists.infradead.org, ldufour@linux.ibm.com, hbathini@linux.ibm.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Extend PowerPC arch crash hotplug handler to support memory hotplug
-events. Since elfcorehdr is used to exchange the memory info between the
-kernels hence it needs to be recreated to reflect the changes due to
-memory hotplug events.
+Hi Thomas,
 
-The way memory hotplug events are handled on PowerPC and the notifier call
-chain used in generic code to trigger the arch crash handler, the process
-to recreate the elfcorehdr is different for memory add and remove events.
+On 01/09/23 at 10:57pm, Thomas Gleixner wrote:
+> On Tue, Dec 20 2022 at 13:41, Baoquan He wrote:
+> > On one intel bare metal system, I can randomly reproduce the kdump hang
+> > as below with tick_periodic call trace. Attach the kernel config for
+> > reference.
+> 
+> This has absolutely nothing to do with x2apic IPI shorthands
+> 
+> > [    0.045980] Spurious LAPIC timer interrupt on cpu 0
+> 
+> So here the CPU receives a spurious Local APIC timer interrupt, but
+> that's a red herring.
+> 
+> > [    1.152690] BUG: kernel NULL pointer dereference, address: 0000000000000088
+> > [    1.159634] #PF: supervisor read access in kernel mode
+> > [    1.164757] #PF: error_code(0x0000) - not-present page
+> > [    1.169882] PGD 0 P4D 0 
+> > [    1.172407] Oops: 0000 [#1] PREEMPT SMP PTI
+> > [    1.176578] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 6.0.11-300.fc37.x86_64 #1
+> > [    1.183870] Hardware name: Dell Inc. PowerEdge R410/0N051F, BIOS 1.11.0 07/20/2012
+> > [    1.191420] RIP: 0010:tick_periodic+0x23/0x80
+> 
+> I'm willing to bet that this is caused by the following line in tick_periodic():
+> 
+>     update_process_times(user_mode(get_irq_regs()));
+> 
+>        user_mode() is invoked with a NULL pointer. user_mode() accesses
+>        regs->cs. CS is at offset 0x88....
+> 
+> The reason for this is here:
+> 
+> > [    1.280648]  tick_handle_periodic+0x1f/0x70
+> > [    1.284821]  timer_interrupt+0x14/0x20
+> > [    1.288561]  __handle_irq_event_percpu+0x46/0x190
+> > [    1.293253]  handle_irq_event+0x34/0x70
+> > [    1.297080]  handle_level_irq+0xa8/0x180
+> > [    1.300993]  resend_irqs+0x5d/0x70
+> > [    1.304386]  tasklet_action_common.constprop.0+0xab/0xe0
+> > [    1.309686]  __do_softirq+0xfb/0x319
+> > [    1.313254]  __irq_exit_rcu+0xd7/0x140
+> > [    1.316993]  common_interrupt+0xb9/0xd0
+> 
+> For some reason the timer interrupt is resent in software. I assume it is
+> the HPET interrupt because that's what just got initialized.
+> 
+> > [    1.143537] clocksource: hpet: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 133484882848 ns
+> 
+> and the callchain below just confirms that:
+> 
+> > [    1.393315]  _raw_spin_unlock_irqrestore+0x19/0x40
+> > [    1.398093]  __setup_irq+0x443/0x6d0
+> > [    1.401659]  request_threaded_irq+0x109/0x170
+> > [    1.406005]  hpet_time_init+0x2d/0x4b
+> > [    1.409661]  x86_late_time_init+0x17/0x34
+> > [    1.413658]  start_kernel+0x8cf/0x97f
+> 
+> The software resend code does not go through the regular interrupt entry
+> path which explains why get_irq_regs() returns NULL.
+> 
+> That software resend is bogus especially since the timer interrupt is
+> a level interrupt. As dmesg does not say anything about the APIC
+> delivery mode I assume this goes through i8259, which fails to set the
+> IRQ_LEVEL flag on all interrupt lines.
+> 
+> The below should fix this.
 
-In the hot remove case, the memory region is first marked offline then the
-notifier call chain is triggered (same is used to initiate arch crash
-hotplug handler) and at last the memblock structure is updated. Whereas
-in the hot add case, memblock structure is updated before the notifier
-call chain is triggered.
+I got the machine where this random hang often happen, and built the
+latest upstream kernel to test. W/o this fix, kdump kernel will hang 
+when calling tick_periodic 6 of 10 times. With this patch applied, I
+tried about 30 times, kdump kernel all booted up and vmcore dumping 
+succeeded.
 
-On PowerPC, memblock structure is used to identify the memory ranges for
-elfcorehdr. In case of memory hot remove the memblock structure is updated
-after the arch crash hotplug handler is triggered, hence an additional
-step is taken to ensure that memory ranges used to build elfcorehdr do
-not include hot removed memory. Whereas no such extra steps are needed
-for the hot add case because memblock structure is updated before the
-arch crash hotplug handler is triggered.
+So this patch fix the issue I met, thanks a lot. And please feel free to
+add:
 
-The hot removed memory is explicitly removed from the memory ranges list
-before creating elfcorehdr for the hot remove case.
+Tested-by: Baoquan He <bhe@redhat.com>
 
-To accommodate a growing number of memory regions, elfcorehdr is built
-with additional buffer space to hold max memory regions.
 
-The changes done here will also work for the kexec_load system call given
-that the kexec tool builds the elfcoredhr with additional space to
-accommodate future memory regions as it is done for kexec_file_load
-system call.
-
-Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
----
- arch/powerpc/include/asm/kexec_ranges.h |  1 +
- arch/powerpc/kexec/core_64.c            | 59 ++++++++++++++++++++++--
- arch/powerpc/kexec/file_load_64.c       | 12 ++++-
- arch/powerpc/kexec/ranges.c             | 60 +++++++++++++++++++++++++
- 4 files changed, 127 insertions(+), 5 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/kexec_ranges.h b/arch/powerpc/include/asm/kexec_ranges.h
-index f83866a19e870..802abf580cf0f 100644
---- a/arch/powerpc/include/asm/kexec_ranges.h
-+++ b/arch/powerpc/include/asm/kexec_ranges.h
-@@ -7,6 +7,7 @@
- void sort_memory_ranges(struct crash_mem *mrngs, bool merge);
- struct crash_mem *realloc_mem_ranges(struct crash_mem **mem_ranges);
- int add_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size);
-+int remove_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size);
- int add_tce_mem_ranges(struct crash_mem **mem_ranges);
- int add_initrd_mem_range(struct crash_mem **mem_ranges);
- #ifdef CONFIG_PPC_64S_HASH_MMU
-diff --git a/arch/powerpc/kexec/core_64.c b/arch/powerpc/kexec/core_64.c
-index 1f807b29db93f..0516fb5dd543f 100644
---- a/arch/powerpc/kexec/core_64.c
-+++ b/arch/powerpc/kexec/core_64.c
-@@ -19,6 +19,7 @@
- #include <linux/of.h>
- #include <linux/libfdt.h>
- #include <linux/memblock.h>
-+#include <linux/memory.h>
- 
- #include <asm/page.h>
- #include <asm/current.h>
-@@ -571,6 +572,60 @@ int update_cpus_node(void *fdt)
- }
- 
- #if defined(CONFIG_CRASH_HOTPLUG)
-+int update_crash_elfcorehdr(struct kimage *image, unsigned int hp_action, void *arg)
-+{
-+	int ret;
-+	struct crash_mem *cmem = NULL;
-+	struct kexec_segment *ksegment;
-+	unsigned long elfsz;
-+	void *elfbuf = NULL;
-+	void *mem;
-+	unsigned long memsz;
-+	char *ptr;
-+	struct memory_notify *mn = (struct memory_notify *) arg;
-+	unsigned long base_addr;
-+	unsigned long size;
-+
-+	ksegment = &image->segment[image->elfcorehdr_index];
-+	mem = (void *) ksegment->mem;
-+	memsz = ksegment->memsz;
-+
-+	ret = get_crash_memory_ranges(&cmem);
-+	if (ret) {
-+		pr_err("crash hp: failed to get crash mem range\n");
-+		return -1;
-+	}
-+
-+	if (hp_action == KEXEC_CRASH_HP_REMOVE_MEMORY) {
-+		base_addr = PFN_PHYS(mn->start_pfn);
-+		size = mn->nr_pages * PAGE_SIZE;
-+		ret = remove_mem_range(&cmem, base_addr, size);
-+		if (ret)
-+			return -1;
-+	}
-+
-+	ret = crash_prepare_elf64_headers(image, cmem, false, &elfbuf, &elfsz);
-+	if (ret) {
-+		pr_err("crash hp: failed to prepare elf header\n");
-+		return -1;
-+	}
-+
-+	if (elfsz > memsz) {
-+		pr_err("crash hp: updated crash elfcorehdr elfsz %lu > memsz %lu", elfsz, memsz);
-+		return -1;
-+	}
-+
-+	ptr = __va(mem);
-+	if (ptr) {
-+		xchg(&kexec_crash_image, NULL);
-+		memcpy((void *)ptr, elfbuf, elfsz);
-+		xchg(&kexec_crash_image, image);
-+	}
-+
-+	vfree(elfbuf);
-+	return 0;
-+}
-+
- /**
-  * arch_crash_hotplug_handler() - Handle hotplug kexec segements changes FDT, elfcorehdr
-  * @image: the active struct kimage
-@@ -588,9 +643,8 @@ void arch_crash_handle_hotplug_event(struct kimage *image, unsigned int hp_actio
- 	if (hp_action == KEXEC_CRASH_HP_REMOVE_CPU)
- 		return;
- 
--	/* crash update on memory hotplug is not support yet */
- 	if (hp_action == KEXEC_CRASH_HP_REMOVE_MEMORY || hp_action == KEXEC_CRASH_HP_ADD_MEMORY) {
--		pr_info_once("crash hp: crash update is not supported with memory hotplug\n");
-+		update_crash_elfcorehdr(image, hp_action, arg);
- 		return;
- 	}
- 
-@@ -605,7 +659,6 @@ void arch_crash_handle_hotplug_event(struct kimage *image, unsigned int hp_actio
- 	/* Temporarily invalidate the crash image while it is replaced */
- 	xchg(&kexec_crash_image, NULL);
- 
--	/* update FDT to refelect changes to CPU resrouces */
- 	if (update_cpus_node(fdt))
- 		pr_err("crash hp: failed to update crash FDT");
- 
-diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
-index 725f74d1b928c..5ec5d0b1ec904 100644
---- a/arch/powerpc/kexec/file_load_64.c
-+++ b/arch/powerpc/kexec/file_load_64.c
-@@ -21,6 +21,8 @@
- #include <linux/memblock.h>
- #include <linux/slab.h>
- #include <linux/vmalloc.h>
-+#include <linux/elf.h>
-+
- #include <asm/setup.h>
- #include <asm/drmem.h>
- #include <asm/firmware.h>
-@@ -735,7 +737,13 @@ static int load_elfcorehdr_segment(struct kimage *image, struct kexec_buf *kbuf)
- 
- 	kbuf->buffer = headers;
- 	kbuf->mem = KEXEC_BUF_MEM_UNKNOWN;
--	kbuf->bufsz = kbuf->memsz = headers_sz;
-+	kbuf->bufsz = headers_sz;
-+/* Additional buffer space to accommodate future memory ranges */
-+#if defined(CONFIG_MEMORY_HOTPLUG)
-+	kbuf->memsz = PN_XNUM * sizeof(Elf64_Phdr);
-+#else
-+	kbuf->memsz = headers_sz;
-+#endif
- 	kbuf->top_down = false;
- 
- 	ret = kexec_add_buffer(kbuf);
-@@ -745,7 +753,7 @@ static int load_elfcorehdr_segment(struct kimage *image, struct kexec_buf *kbuf)
- 	}
- 
- 	image->elf_load_addr = kbuf->mem;
--	image->elf_headers_sz = headers_sz;
-+	image->elf_headers_sz = kbuf->memsz;
- 	image->elf_headers = headers;
- out:
- 	kfree(cmem);
-diff --git a/arch/powerpc/kexec/ranges.c b/arch/powerpc/kexec/ranges.c
-index 5fc53a5fcfdf6..2bb90874df781 100644
---- a/arch/powerpc/kexec/ranges.c
-+++ b/arch/powerpc/kexec/ranges.c
-@@ -234,6 +234,66 @@ int add_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size)
- 	return __add_mem_range(mem_ranges, base, size);
- }
- 
-+/**
-+ * remove_mem_range - Removes the given memory range from the range list.
-+ * @mem_ranges:    Range list to remove the memory range to.
-+ * @base:          Base address of the range to remove.
-+ * @size:          Size of the memory range to remove.
-+ *
-+ * (Re)allocates memory, if needed.
-+ *
-+ * Returns 0 on success, negative errno on error.
-+ */
-+int remove_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size)
-+{
-+	int ret = 0;
-+	unsigned int i;
-+	struct crash_mem *mem_rngs = *mem_ranges;
-+	u64 mstart, mend;
-+	u64 range_start, range_end;
-+
-+	if (!size)
-+		return 0;
-+
-+	range_start = base;
-+	range_end = base + size - 1;
-+
-+	for (i = 0; i < mem_rngs->nr_ranges; i++) {
-+		mstart = mem_rngs->ranges[i].start;
-+		mend = mem_rngs->ranges[i].end;
-+
-+		if (!(range_start >= mstart && range_end <= mend))
-+			continue;
-+
-+		if (range_start == mstart) {
-+			if (range_end == mend) {
-+				for (; i < mem_rngs->nr_ranges - 1; i++) {
-+					mem_rngs->ranges[i].start = mem_rngs->ranges[i+1].start;
-+					mem_rngs->ranges[i].end = mem_rngs->ranges[i+1].end;
-+				}
-+				mem_rngs->nr_ranges--;
-+				goto out;
-+			}
-+			mem_rngs->ranges[i].start = range_end + 1;
-+			goto out;
-+		} else if (range_end == mend)  {
-+			mem_rngs->ranges[i].end = range_start - 1;
-+			goto out;
-+		} else {
-+			size = mem_rngs->ranges[i].end - range_end;
-+			mem_rngs->ranges[i].end = range_start - 1;
-+			if (add_mem_range(mem_ranges, range_end + 1, size))
-+				goto error;
-+			goto out;
-+		}
-+	}
-+error:
-+	return -1;
-+
-+out:
-+	return ret;
-+}
-+
- /**
-  * add_tce_mem_ranges - Adds tce-table range to the given memory ranges list.
-  * @mem_ranges:         Range list to add the memory range(s) to.
--- 
-2.39.0
+> 
+> ---
+> --- a/arch/x86/kernel/i8259.c
+> +++ b/arch/x86/kernel/i8259.c
+> @@ -114,6 +114,7 @@ static void make_8259A_irq(unsigned int
+>  	disable_irq_nosync(irq);
+>  	io_apic_irqs &= ~(1<<irq);
+>  	irq_set_chip_and_handler(irq, &i8259A_chip, handle_level_irq);
+> +	irq_set_status_flags(irq, IRQ_LEVEL);
+>  	enable_irq(irq);
+>  	lapic_assign_legacy_vector(irq, true);
+>  }
+> --- a/arch/x86/kernel/irqinit.c
+> +++ b/arch/x86/kernel/irqinit.c
+> @@ -65,8 +65,10 @@ void __init init_ISA_irqs(void)
+>  
+>  	legacy_pic->init(0);
+>  
+> -	for (i = 0; i < nr_legacy_irqs(); i++)
+> +	for (i = 0; i < nr_legacy_irqs(); i++) {
+>  		irq_set_chip_and_handler(i, chip, handle_level_irq);
+> +		irq_set_status_flags(i, IRQ_LEVEL);
+> +	}
+>  }
+>  
+>  void __init init_IRQ(void)
+> 
 
 
 _______________________________________________
