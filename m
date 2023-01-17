@@ -4,65 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 031C2C46467
-	for <kexec@archiver.kernel.org>; Mon, 16 Jan 2023 16:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B1FFDC6379F
+	for <kexec@archiver.kernel.org>; Tue, 17 Jan 2023 03:49:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=P5Z5T9ng8ZVadmFgUONFFHo9puTDM9Y5rlyZzad5uKc=; b=cRVh/OFhQTgwRp
-	vZoTadP1SzEGLJKJJFIjPCGca66mPiH1cojMWeHl2TW4sYewddoAIKrwK4+l+bHQAsUWjg1A5XD8p
-	Bt/E8CYQ7uY9kFyUMOnmeCd3aJ+LG0kt2vwkgSmf8RrRclVx76j2KzoVcWLDYcCrfl7h4oF77psZd
-	7JxK78JNR5w9GlBP4wo9poqkwwDx/SUo/xKzyz45sASs1AY2awNQQClj3fpC5/Xdtetr6sLPimfBy
-	m9p+8gBwA7Hh24i8p+I/vQlxYhOR/4HEpX4sYKM1sgz4WLmQnzEZRV1aVoYlvrWM9USoqjgMFL2QD
-	u7kb2Hif8uKR9tX3DSmA==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=px49JrRf5IHX+dr9udBWOrAfU7BLClKOTF3ii2p4IGQ=; b=3LH89CJ7CxwH7g
+	WOVgmOY5Kq6yhGypGysDP3Za5/kovTy0pO+VGVvuTghn/zNGdwkKUxZXXI/z7GeZpJXXVFMzHNsAx
+	6fR7c3PTmqlUtI7Wk6rz3mHk2BvY/8jbZTf/7ez/ZwmBehZsMGg40S0HXdhtHeOoB9VDmmuA7H4r0
+	v4X2M9zY//fpaki0HDs+n4dGfBfdigjoLZITECy4XE8NfB7aNb+SwGlA17P7FLTT6S5nouicaVgz0
+	66LflLW+NFlVKBnVBbOqKZDIhLd2N73oo3Lamezr8LmtbGDohjSSNOuE04rDnIJ6ZiPPoXrZSJ6jK
+	TglKfr2YtGcnY51ki6ng==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pHSNI-00BNOq-18; Mon, 16 Jan 2023 16:30:20 +0000
-Received: from bee.tesarici.cz ([2a03:3b40:fe:2d4::1])
+	id 1pHcyl-00CnuV-Ow; Tue, 17 Jan 2023 03:49:43 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pHSNE-00BNLX-FN
-	for kexec@lists.infradead.org; Mon, 16 Jan 2023 16:30:18 +0000
-Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-b985-910f-39e1-703f.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:b985:910f:39e1:703f])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	id 1pHcyj-00Cnrn-DM
+	for kexec@lists.infradead.org; Tue, 17 Jan 2023 03:49:42 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1673927374;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=d6j1pwwcrVA2VMufpYBThaFRk5AuLZLztdhG3ETtdEQ=;
+	b=A1pDL7CN0KnjNTcIMeWF1nL38uaufyJJW8q2uSvizgA2f+Zk6RshYtvmPXyNUodODH0MN0
+	w9KN8MaQBTWgWROWdTqXaxaPs9mTRI9XQ7gnoZPNhfF+O+/aGLUQqW0oCIYuv1kqfUEoHw
+	ajjhKWgraqnJyHF9E+204ON64ahlZng=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-592-m9NhwEysOritgPQaMb4Hkg-1; Mon, 16 Jan 2023 22:49:30 -0500
+X-MC-Unique: m9NhwEysOritgPQaMb4Hkg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by bee.tesarici.cz (Postfix) with ESMTPSA id E0D0413E0C9;
-	Mon, 16 Jan 2023 17:30:08 +0100 (CET)
-Authentication-Results: mail.tesarici.cz; dmarc=fail (p=none dis=none) header.from=tesarici.cz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tesarici.cz; s=mail;
-	t=1673886609; bh=EWAvrD4RojL0LVOAIJLliUiQp4sAh2O0X95WyClxam4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=alOM8Qzex40r+j9quWCOGy7tiIciq8Q7+8fiyc9/pZhoxFF5X9wUKW3NqU+Iaq7p6
-	 KTq6Qtohzbxc0PzE/MYr3dh7tf5HLtLEgZT1nUAC/zHWMSubGnajgAAgxK8TRiObis
-	 G79qPHNI/lz08EJ9YJBczwh6sM5qfg7MxLxKlOCD/2tjLUjtoibZQaBH8v2SHAKYhd
-	 fUDUzxjcAN/l7nU9lijkPyZY+eZ/YYDyWchZBnZ4BF/VldaIFy+tGTwKkYixVn4zjn
-	 svympXbsTq8lyZUVakVP6liCaCU9Bo1OblIWUdR/3JR4PQ30FnveEN58ml2GozYFIL
-	 xKShC5ULUX+fw==
-Date: Mon, 16 Jan 2023 17:30:05 +0100
-From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
-To: Eric DeVolder <eric.devolder@oracle.com>
-Cc: Sourabh Jain <sourabhjain@linux.ibm.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, kexec@lists.infradead.org, ebiederm@xmission.com,
- dyoung@redhat.com, bhe@redhat.com, vgoyal@redhat.com, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
- nramas@linux.microsoft.com, thomas.lendacky@amd.com, robh@kernel.org,
- efault@gmx.de, rppt@kernel.org, david@redhat.com, konrad.wilk@oracle.com,
- boris.ostrovsky@oracle.com
-Subject: Re: [PATCH v15 1/7] crash: move crash_prepare_elf64_headers()
-Message-ID: <20230116173005.21bd7b67@meshulam.tesarici.cz>
-In-Reply-To: <b3f3a4e5-35e7-2cb4-f754-f425da094f28@oracle.com>
-References: <20221209153656.3284-1-eric.devolder@oracle.com>
-	<20221209153656.3284-2-eric.devolder@oracle.com>
-	<09567e13-c5ed-d1b9-027c-9340fce6a0a8@linux.ibm.com>
-	<b3f3a4e5-35e7-2cb4-f754-f425da094f28@oracle.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.35; x86_64-suse-linux-gnu)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D72FD185A794;
+	Tue, 17 Jan 2023 03:49:29 +0000 (UTC)
+Received: from fedora.redhat.com (ovpn-12-229.pek2.redhat.com [10.72.12.229])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 336091415108;
+	Tue, 17 Jan 2023 03:49:24 +0000 (UTC)
+From: Baoquan He <bhe@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: kexec@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	thunder.leizhen@huawei.com,
+	John.p.donnelly@oracle.com,
+	wangkefeng.wang@huawei.com,
+	Baoquan He <bhe@redhat.com>
+Subject: [PATCH 0/2] arm64: kdump: simplify the reservation behaviour of crashkernel=,high
+Date: Tue, 17 Jan 2023 11:49:19 +0800
+Message-Id: <20230117034921.185150-1-bhe@redhat.com>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230116_083017_088950_47E12260 
-X-CRM114-Status: GOOD (  15.34  )
+X-CRM114-CacheID: sfid-20230116_194941_559106_81CC40C9 
+X-CRM114-Status: GOOD (  11.32  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,40 +81,39 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Eric,
+After crashkernel=,high support was added, our QE engineer surprisingly
+found the reserved crashkernel high region could cross the high low
+memory boundary. E.g on system with 4G as boundary, the crashkernel high
+region is [4G-64M, 4G+448M]. After investigation, I noticed on arm64,
+the area near 4G is contiguous. Not like x86, its firmware occupies the
+cpu address space below 4G. When memblock searches for available memory
+region top down, it could find a region across 4G boundary. Finally, we
+actually got two memory regions in low memory. This complicates the
+crashkernel=,high behaviour, people will be confused by this.
 
-On Thu, 12 Jan 2023 11:23:18 -0600
-Eric DeVolder <eric.devolder@oracle.com> wrote:
+In this patchset, simpliyfy the behaviour of crashkernel=,high. When
+trying to reserve memory region for crashkernel high, we only search for
+the region in high memory, e.g above 4G. If failed, try searching in low
+memory. This makes sure the crashkernel high memory limited in high
+memory, confusion is removed.
 
->[...]
-> After looking into this for a bit, to allow hotplug without kexec_file would require quite a bit of 
-> code movement. Why? Because hotplug is basically built on top of (part of) the infrastructure that 
-> was needed for kexec_file.
-> 
-> I'd be inclined to suggest that KEXEC_FILE be a required dependency for CRASH_HOTPLUG, ie:
-> 
->   config CRASH_HOTPLUG
->          bool "Update the crash elfcorehdr on system configuration changes"
->          default n
-> -       depends on CRASH_DUMP && (HOTPLUG_CPU || MEMORY_HOTPLUG)
-> +       depends on CRASH_DUMP && KEXEC_FILE && (HOTPLUG_CPU || MEMORY_HOTPLUG)
-> 
-> 
-> If that isn't feasible, then it would appear quite a bit of surgery is needed to properly separate 
-> out the items hotplug needs from kexec_file.
-> 
-> Thoughts?
+In patch 2, I add code comment above several crashkernel reservation
+case to ease code reading. I put them in a separate patch 2 because I
+want the code change in patch 1 to be straightforward and simpler for
+reviewing.
 
-I would have thought that CPU hotplug can be handled in the kernel only
-if the crash image was loaded by the kernel with kexec_file_load(2).
-When the image is loaded with kexec_load(2), then all data structures
-are prepared by the user-space utility kexec(8), and the kernel
-generally has no idea how to handle them.
+Please help review and check if this is helpful and worth.
 
-In short, I believe that by definition there must be this dependency of
-CRASH_HOTPLUG on KEXEC_FILE.
+Baoquan He (2):
+  arm64: kdump: simplify the reservation behaviour of crashkernel=,high
+  arm64/kdump: add code comments for crashkernel reservation cases
 
-Petr T
+ arch/arm64/mm/init.c | 43 ++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 36 insertions(+), 7 deletions(-)
+
+-- 
+2.34.1
+
 
 _______________________________________________
 kexec mailing list
