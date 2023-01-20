@@ -4,66 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8DDBDC678D4
-	for <kexec@archiver.kernel.org>; Thu, 19 Jan 2023 21:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EAF23C05027
+	for <kexec@archiver.kernel.org>; Fri, 20 Jan 2023 09:03:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:References
-	:In-Reply-To:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=u2xf8LkyXtAEl9OYuW9dLpd2sRS3YXinaixv5fDmMv8=; b=BzFBT0L8/2wv8I
-	kcovLvC6b2ee87SrGNBMuqzMWDtth5tQ3HWoT6zUAj/75bM4ecLHwwCBaXQ7GJyCBNO6CPO5BVwXP
-	mjBlvCIf7DV9szS7pame5uz8BP0DYraAn4hbWQFfrBI35rFus4Yo6MuOhD7IWhpnJ+UwacwUHUcMu
-	nUzFTKmDC2AS6FXzKY+qC/O8XyJlT9lyJZbwkZmj26VPBsgb4dKGAIAq5ZT7UDJ8qwvGIaa2oPRmr
-	cX4/0yxBOgoUBffynr9YJyk1aGS4Z4BaQyn9oBwLTxx2GHauXvl9Kn5BjMpcO+8+MbMz8LzUj0V+x
-	6WAb5rcABuNzAX6guADA==;
+	List-Owner; bh=TAi4x0aJQkVJnH/EwJGBafE7MNHBdTOjppKOD0BOkZg=; b=xpEJPWPgm8SFFo
+	5aSvb17CGcZuSXrP598pne8/7wMIp0+YIUV42VM/IPcdhUJcR3+Gzpn6+8qskRa+IrwfgKVkwmrCj
+	c6K47/NEe37Nne+OlabQ+Lt1PrUHLdWn+8XybK0qO2blytcXOCQqhAchNuDKiFXayRlGZuGNbcpNU
+	NR5fiFYlHmmHXVW9fr7mnQkzJJojxy2SIfd1LG93W/XBGAGu0YJ4gIxYR9G/H6+UDrlRZx7lbNdZR
+	yK4c6M/cJ1ek3i4Wk/jUAK9QuUSIrIeTzLeaTFpQgzIpikAQQj6HSeXZ6LrdjdlJ20WlDRLfCAK+J
+	Mc3a40YtUOWGwBzHx10g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pIcVP-007IrY-SY; Thu, 19 Jan 2023 21:31:31 +0000
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+	id 1pInJF-009BgE-8C; Fri, 20 Jan 2023 09:03:41 +0000
+Received: from zeeaster.vergenet.net ([206.189.110.174])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pIcVM-007Iql-Pk
-	for kexec@lists.infradead.org; Thu, 19 Jan 2023 21:31:30 +0000
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1674163887;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BpLGkp7TW3vMSv6Ch08YsOSSkac6mSrH3tdNKGcKrTA=;
-	b=WqVmr62Yz1+gEStX8aVtZcB/rMuQyay0eAvJoqhCGlQhsGot5ok21q1YXXEMAb7SYBGWZW
-	qWEeYlQWJe5D4jHo4oxzM8+TDwtoGtlGXUidZFwgeJY7UK9iPqCJ9uaJ4IYnhX3uodnHVw
-	6kdqG4RR8HpSbJFL4uPOo2HEYhqdaWnLEiCdal/Tdi4lDQYkVrr3SJmKklPil85Rivz9pq
-	oIT+JyWINCxt+Ppn6kpXFStKSx7959F99J28QW3EbND5qG0mBk0y2JX45drpPx90i3m5iO
-	ZGWtLOGmVx6uAfJ9npqjlBgEUamWpdMLv8uM1SIs/o5pVnmytIkMWTHgq5UMFQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1674163887;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BpLGkp7TW3vMSv6Ch08YsOSSkac6mSrH3tdNKGcKrTA=;
-	b=2JSBiIV6G3QTOfLM2pkSn1rkkucbgtYAFO0EXPd97m9XM8NDKyvvaZsMTlFAOzLTVgS+/z
-	EDySbq6Ge3jhaWBQ==
-To: Eric DeVolder <eric.devolder@oracle.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, kexec@lists.infradead.org, ebiederm@xmission.com,
- dyoung@redhat.com, bhe@redhat.com, vgoyal@redhat.com
-Cc: mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
- hpa@zytor.com, nramas@linux.microsoft.com, thomas.lendacky@amd.com,
- robh@kernel.org, efault@gmx.de, rppt@kernel.org, david@redhat.com,
- sourabhjain@linux.ibm.com, konrad.wilk@oracle.com,
- boris.ostrovsky@oracle.com, eric.devolder@oracle.com
-Subject: Re: [PATCH v17 3/6] crash: add generic infrastructure for crash
- hotplug support
-In-Reply-To: <20230118213544.2128-4-eric.devolder@oracle.com>
-References: <20230118213544.2128-1-eric.devolder@oracle.com>
- <20230118213544.2128-4-eric.devolder@oracle.com>
-Date: Thu, 19 Jan 2023 22:31:26 +0100
-Message-ID: <878rhyi53l.ffs@tglx>
+	id 1pInJ8-009Bc9-FS; Fri, 20 Jan 2023 09:03:36 +0000
+Received: from momiji.horms.nl (86-93-216-223.fixed.kpn.net [86.93.216.223])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by zeeaster.vergenet.net (Postfix) with ESMTPSA id EBCFE20095;
+	Fri, 20 Jan 2023 09:02:53 +0000 (UTC)
+Received: by momiji.horms.nl (Postfix, from userid 7100)
+	id 0E8C794030F; Fri, 20 Jan 2023 10:02:53 +0100 (CET)
+Date: Fri, 20 Jan 2023 10:02:52 +0100
+From: Simon Horman <horms@kernel.org>
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com,
+	will@kernel.org, thunder.leizhen@huawei.com,
+	John.p.donnelly@oracle.com, wangkefeng.wang@huawei.com
+Subject: Re: [PATCH 2/2] arm64/kdump: add code comments for crashkernel
+ reservation cases
+Message-ID: <Y8pYvBvDonUya1mx@vergenet.net>
+References: <20230117034921.185150-1-bhe@redhat.com>
+ <20230117034921.185150-3-bhe@redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20230117034921.185150-3-bhe@redhat.com>
+Organisation: Horms Solutions BV
+X-Virus-Scanned: clamav-milter 0.103.7 at zeeaster
+X-Virus-Status: Clean
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230119_133129_019462_BD7F944D 
-X-CRM114-Status: GOOD (  14.66  )
+X-CRM114-CacheID: sfid-20230120_010334_706806_6C8E9397 
+X-CRM114-Status: GOOD (  24.79  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,59 +69,71 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Eric!
+On Tue, Jan 17, 2023 at 11:49:21AM +0800, Baoquan He wrote:
+> This will help understand codes on crashkernel reservations on arm64.
 
-On Wed, Jan 18 2023 at 16:35, Eric DeVolder wrote:
-> CPU and memory change notifications are received in order to
-> regenerate the elfcorehdr.
->
-> To support cpu hotplug, a callback is registered to capture the
-> CPUHP_AP_ONLINE_DYN online and offline events via
-> cpuhp_setup_state_nocalls().
+FWIIW, I think you can fold this into the first patch.
 
-This sentence does not make sense. The callback is not registered to
-capture CPUHP_AP_ONLINE_DYN events.
+And, although I have no good idea at this moment, I do wonder
+if the logic can be simplified - I for one really needed the
+comments to understand the retry logic.
 
-What this does is: It installs a dynamic CPU hotplug state with
-callbacks for online and offline. These callbacks store information
-about a CPU coming up and going down. Right?
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> ---
+>  arch/arm64/mm/init.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index 26a05af2bfa8..f88ad17cb20d 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -177,6 +177,10 @@ static void __init reserve_crashkernel(void)
+>  	crash_base = memblock_phys_alloc_range(crash_size, CRASH_ALIGN,
+>  					       search_base, crash_max);
+>  	if (!crash_base) {
+> +		/*
+> +		 * For crashkernel=size[KMG]@offset[KMG], print out failure
+> +		 * message if can't reserve the specified region.
+> +		 */
+>  		if (fixed_base) {
+>  			pr_warn("cannot reserve crashkernel region [0x%llx-0x%llx]\n",
+>  				search_base, crash_max);
+> @@ -188,6 +192,11 @@ static void __init reserve_crashkernel(void)
+>  		 * high memory, the minimum required low memory will be
+>  		 * reserved later.
+>  		 */
+> +		/*
+> +		 * For crashkernel=size[KMG], if the first attempt was for
+> +		 * low memory, fall back to high memory, the minimum required
+> +		 * low memory will be reserved later.
+> +		 */
 
-But why are they required and what's the value?
+I think this duplicates the preceding comment.
+Perhaps just replace the earlier comment with this one.
 
-This changelog tells WHAT it does and not WHY. I can see the WHAT from
-the patch itself. 
-
-Don't tell me the WHY is in the cover letter. The cover letter is not
-part of the commits and changelogs have to be self contained.
-
-Now let me cite from your cover letter:
-
-> When the kdump service is loaded, if a CPU or memory is hot
-> un/plugged, the crash elfcorehdr, which describes the CPUs
-> and memory in the system, must also be updated, else the resulting
-> vmcore is inaccurate (eg. missing either CPU context or memory
-> regions).
-
-The CPU hotplug state you are using for this is patently inaccurate
-too. With your approach the CPU is tracked as online very late in the
-hotplug process and tracked as offline very early on unplug.
-
-So if the kernel crashes before/after the plug/unplug tracking event
-then your recorded state is bogus and given the amount of callbacks
-between the real online/offline and the recording point there is a
-pretty large window.
-
-You can argue that this is better than the current state and considered
-good enough for whatever reason, but such information wants to be in the
-changelog, no?
-
-Thanks,
-
-        tglx
-
-Hint: The requirements for changelogs are well documented in Documentation/process/
-
-
+>  		if (!high && crash_max == CRASH_ADDR_LOW_MAX) {
+>  			crash_max = CRASH_ADDR_HIGH_MAX;
+>  			search_base = CRASH_ADDR_LOW_MAX;
+> @@ -195,6 +204,10 @@ static void __init reserve_crashkernel(void)
+>  			goto retry;
+>  		}
+>  
+> +		/*
+> +		 * For crashkernel=size[KMG],high, if the first attempt was for
+> +		 * high memory, fall back to low memory.
+> +		 */
+>  		if (high && (crash_max == CRASH_ADDR_HIGH_MAX)) {
+>  			crash_max = CRASH_ADDR_LOW_MAX;
+>  			search_base = 0;
+> -- 
+> 2.34.1
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
 _______________________________________________
 kexec mailing list
