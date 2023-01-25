@@ -4,8 +4,8 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 00181C27C76
-	for <kexec@archiver.kernel.org>; Wed, 25 Jan 2023 13:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A8123C54EAA
+	for <kexec@archiver.kernel.org>; Wed, 25 Jan 2023 13:13:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
@@ -13,57 +13,71 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	References:Mime-Version:In-Reply-To:Date:Reply-To:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
 	:Resent-Message-ID:List-Owner;
-	bh=TtKcDkqvLyPPVJgf9dQOCajddyplz9x2lFNS5+ZK6gw=; b=vVSXpIQrxs7394GAnUiStL6NMm
-	ttH8KDfcMmPJiwDv9ATh5bO2PdK2xK2XctjDa4LnetWMKnpjCuRkjh/SO+dCohVzhgYgx6sGf37LO
-	8bTTnOGns7b5LUiH3ZwlItM/TP4bVSLV+3vIOjdJGPbmyABYNmOEi882vZrh9x+QU9dYDUIClRBX9
-	XvKWMe+4F4PJ9q2/WcEtG0t3bLkgqTeSlc0CU+hRXsENdRdE14fygugRSkLTgSGr4ZKDpb/ee64Fi
-	NkRxrN8Dv7NwusE+mjUyMNA+K70BUJdr8MM5KP0OQuUrtRDKXS08Mfd6q+lqBMSuxvZQRefR0+bVK
-	Awdacz7A==;
+	bh=1jYZ8a4Tf0TJKVHR+rkQgl48lmBTBoMzs4KOvBjKuwg=; b=Wfw8cMwLoMBNAjlupEv6hL+MTY
+	RFJ3enRbMETOl7mqsT/jnHxRXD/bPPjrpCl7yHPkMPKnDpN0e1btofkzuzucTDRqGThZgJ9fJWdvV
+	pHG387U+spgFzVbXBls1s+Q3/5suCIwpeaH71aG8wLM3Us/WcplKPdG3E7vQVcO51d01Sfwm+Ihnj
+	DlirBkOA60x2plCmwQ3ZDexfqXWGM8Fp0XpbHJQZLe7fVksLuXDQWod9209U5enlZ/vTpEetmvk6J
+	GBy/Q80B5C04L/JFoDK3VNQh+MwsZiEyhNWm2qeUgoqmLO0kCPr67pEQWoW/uFnRj1CXXo/6GKvDv
+	AOmoCDfw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pKfay-007MaC-9o; Wed, 25 Jan 2023 13:13:44 +0000
-Received: from mail-yb1-xb4a.google.com ([2607:f8b0:4864:20::b4a])
+	id 1pKfaz-007May-Sv; Wed, 25 Jan 2023 13:13:45 +0000
+Received: from casper.infradead.org ([90.155.50.34])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pKbJ6-006UA7-Nx
-	for kexec@lists.infradead.org; Wed, 25 Jan 2023 08:39:04 +0000
-Received: by mail-yb1-xb4a.google.com with SMTP id z9-20020a25ba49000000b007d4416e3667so19410074ybj.23
-        for <kexec@lists.infradead.org>; Wed, 25 Jan 2023 00:38:59 -0800 (PST)
+	id 1pKbJO-006UNB-JI
+	for kexec@bombadil.infradead.org; Wed, 25 Jan 2023 08:39:18 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Type:Cc:To:From:Subject:
+	Message-ID:References:Mime-Version:In-Reply-To:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=mVuGMhZwlEMXe0FAwC4rLE7OnnAfe6cAroxVvXklBMk=; b=CAi5NHana2F69EPEMaqSDQLLCs
+	v8fwQVXfEspdrqOsDfF5qyP5Rp24+6jCbRWGgYCqaswUbwzzwBt1/C0a7LvHJ7vTmhlf5i+J9tlUv
+	TxpFNnZ/PvAJcoARJtpjDpFOionWYjoknWzVk63jnWSgARDz16t1f7/Ko4fodXEyG6BEwE5svty8m
+	ILdaWPN8cLfJayMh5TpzL+OuiwCNbwng2cQTYm9nlCTDCLAVGXyIxQO92gJXunev3iWTFlBg+Lyka
+	j1kMKq3tv3CJXve8WQTtXxup05lhUK6nYeWguCG8tKTtYyBQn+tMcm1id/3C47aJDimZoa3OGJxwi
+	ZA6NYvhw==;
+Received: from mail-yb1-xb49.google.com ([2607:f8b0:4864:20::b49])
+	by casper.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1pKbJI-005mZX-2V
+	for kexec@lists.infradead.org; Wed, 25 Jan 2023 08:39:16 +0000
+Received: by mail-yb1-xb49.google.com with SMTP id a14-20020a5b0ace000000b007bf99065fcbso19067244ybr.2
+        for <kexec@lists.infradead.org>; Wed, 25 Jan 2023 00:39:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ralp0YsbeintaJ1+3rV0BJxcsbdnu/jVKuNhvnt0T5Y=;
-        b=FpW3ZfeoZ58NaZWfySIfB+f4+MM7GrKuq9uCXe+gfhjrC0bvKaL2kAypJ/pJdIrezU
-         Ru0cU0KNklRfuYrJ3SKXkdPgNjMfodaxcsFUMH2z2VP+LqiGmmBZi4WNjYcaaYQLe2mC
-         v6uAPWcErh2g6vXcpQB3pwh9XmkkPfWLDi2bI5mgZlrfFBGfjeQ9Wv8iIQeddGuuYJGy
-         vGYSJIu//+24XGZjzB+Q3VYOxZ5pJZ/HCGoJ5h7l6e1K0sxINKIjiYRXApyFQ3GXR7xJ
-         ZclVjCWVjm/7Pu3pZxJbkPLxrnDwpix1sMzuU+AEqB9vICm+UZCWtOUOt5GLju8+nccL
-         rTTw==
+        bh=mVuGMhZwlEMXe0FAwC4rLE7OnnAfe6cAroxVvXklBMk=;
+        b=VwtVZ3ffN/XX+4OSphvkCPu5LWSZpevMhnHytsAi7M7gsxKAkKbzq3/Ez6cAZGs+/z
+         JzIcfmxATmRyceN+/Zt8AqltlXqbiRJWNjswPpQNjZE22YwQ3Z8QnOSAOet+uqjmXlIE
+         OyZz8lnbt23bEWFA19bN7QyWM6BlHY9bxVkgVCuFfE21FaJHoilx3LiQj39QBuuIrUeb
+         wQOUdgl76g8l+p4COnuz8oTsyo6A7P+o3cLtEEcXBMjD1VU3kk8/P76KYyyBr91hidcu
+         b/JvxTM3TLDOWOtw79r0Hu/8F/9388RbMrqUiDk2vbRh2AxEmOh9ht/7njQAxt7Q0X5z
+         07nA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ralp0YsbeintaJ1+3rV0BJxcsbdnu/jVKuNhvnt0T5Y=;
-        b=75CFOGyvwXEkyOTYHz9muqtC6VAEiEDxRDSNMTgcpfkYykYFXNmS19r4qEKyl0Zshx
-         Chqnj4t2l3r/eJvoi+7S26s0Q8gYXs7cFDWAXfju8p0XyW2VW62MYoABa7cSuMvBCEwm
-         4k7l4BYG0nsfDVabzVvdST4knlVY/YvZqeDO2eBOmsbjLYUIK86hia6akzTXzAP9/Yor
-         xTJHj1mob/110eqAKY6E+fcvW06USud214N5NEarx7g7m3Pt0is88jnv/E/lL9tibqFv
-         SHl3AaBaHEggxk9shztBdbSwiLFGb3weWAghMXEhJRCU/2y1OXu5I/U2ZhhzXXzip6Ho
-         xq4A==
-X-Gm-Message-State: AO0yUKVkNqGUBEuYStE0pShrrKPu6AiyaBsUZahOgdkyiXIL0EU38tdb
-	jn+xgdz0sa/FU/AC1RZR+mvUIsPcnD4=
-X-Google-Smtp-Source: AK7set8/stQqnGGz4OB/vqyDOBLoBX54VTTeagu3mMK0HzymWEEvjI0ujOzPLr/zvAsu1DJMDE0YK80W9/s=
+        bh=mVuGMhZwlEMXe0FAwC4rLE7OnnAfe6cAroxVvXklBMk=;
+        b=4OcPHBAqjAHTdhGd21Z+DWYK+3Xay8u1x7zU/lEigWJQPl7kKl5YDDfwzoJ0FkdX9O
+         ZhH+6SLuz3cW5yOWx47civIIRCQFYB7I9x4sHVIICMZxSIiP2mBepfnXux/iWVJ5NDP7
+         tGpII21NGESddQ8vD6lEy4nxZyWGjuuJv0lU87GoQgSlSkKYiES0JHEcLm0/1geL69nk
+         z+8Rl8RECd8UaepWvSwBIqS2DuusOj3Bs/pOeN3XelNnslLeBXtsCB/+eJPqOvkdPjcz
+         ct52seB3iwprLB6dA0Jhz3o4D6IHyk7vGfadGm1a0eXfEpeOnmDf12J8L1kSsdyzAL6u
+         +9Cg==
+X-Gm-Message-State: AO0yUKWQMz6tP6uwR+031yfMWnhQzWATs03vUwzCvffF4VLJacMhChow
+	zsq35ZcBVAl4SUhQyq6GbRPoA7WThtQ=
+X-Google-Smtp-Source: AK7set/eGcbmxK47Xow2TUKC1msmny+SAO+Fcyz1BhvcA/uBRY0Kash94Ztfh9nd8yz0OXKqanY9SYPz0MI=
 X-Received: from surenb-desktop.mtv.corp.google.com ([2620:15c:211:200:f7b0:20e8:ce66:f98])
- (user=surenb job=sendgmr) by 2002:a81:3e07:0:b0:506:6185:4fad with SMTP id
- l7-20020a813e07000000b0050661854fadmr450398ywa.451.1674635938431; Wed, 25 Jan
- 2023 00:38:58 -0800 (PST)
-Date: Wed, 25 Jan 2023 00:38:46 -0800
+ (user=surenb job=sendgmr) by 2002:a25:c247:0:b0:80b:6201:bee7 with SMTP id
+ s68-20020a25c247000000b0080b6201bee7mr702095ybf.340.1674635945821; Wed, 25
+ Jan 2023 00:39:05 -0800 (PST)
+Date: Wed, 25 Jan 2023 00:38:49 -0800
 In-Reply-To: <20230125083851.27759-1-surenb@google.com>
 Mime-Version: 1.0
 References: <20230125083851.27759-1-surenb@google.com>
 X-Mailer: git-send-email 2.39.1.405.gd4c25cc71f-goog
-Message-ID: <20230125083851.27759-2-surenb@google.com>
-Subject: [PATCH v2 1/6] mm: introduce vma->vm_flags modifier functions
+Message-ID: <20230125083851.27759-5-surenb@google.com>
+Subject: [PATCH v2 4/6] mm: replace vma->vm_flags indirect modification in ksm_madvise
 From: Suren Baghdasaryan <surenb@google.com>
 To: akpm@linux-foundation.org
 Cc: michel@lespinasse.org, jglisse@google.com, mhocko@suse.com, vbabka@suse.cz, 
@@ -126,8 +140,8 @@ Cc: michel@lespinasse.org, jglisse@google.com, mhocko@suse.com, vbabka@suse.cz,
 	selinux@vger.kernel.org, alsa-devel@alsa-project.org, kernel-team@android.com, 
 	surenb@google.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230125_003900_859517_9082C806 
-X-CRM114-Status: GOOD (  12.84  )
+X-CRM114-CacheID: sfid-20230125_083912_638490_C963F7A4 
+X-CRM114-Status: GOOD (  12.52  )
 X-Mailman-Approved-At: Wed, 25 Jan 2023 05:13:42 -0800
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -145,86 +159,96 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-vm_flags are among VMA attributes which affect decisions like VMA merging
-and splitting. Therefore all vm_flags modifications are performed after
-taking exclusive mmap_lock to prevent vm_flags updates racing with such
-operations. Introduce modifier functions for vm_flags to be used whenever
-flags are updated. This way we can better check and control correct
-locking behavior during these updates.
+Replace indirect modifications to vma->vm_flags with calls to modifier
+functions to be able to track flag changes and to keep vma locking
+correctness. Add a BUG_ON check in ksm_madvise() to catch indirect
+vm_flags modification attempts.
 
 Signed-off-by: Suren Baghdasaryan <surenb@google.com>
 ---
- include/linux/mm.h       | 37 +++++++++++++++++++++++++++++++++++++
- include/linux/mm_types.h |  8 +++++++-
- 2 files changed, 44 insertions(+), 1 deletion(-)
+ arch/powerpc/kvm/book3s_hv_uvmem.c | 5 ++++-
+ arch/s390/mm/gmap.c                | 5 ++++-
+ mm/khugepaged.c                    | 2 ++
+ mm/ksm.c                           | 2 ++
+ 4 files changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index c2f62bdce134..b71f2809caac 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -627,6 +627,43 @@ static inline void vma_init(struct vm_area_struct *vma, struct mm_struct *mm)
- 	INIT_LIST_HEAD(&vma->anon_vma_chain);
- }
- 
-+/* Use when VMA is not part of the VMA tree and needs no locking */
-+static inline void init_vm_flags(struct vm_area_struct *vma,
-+				 unsigned long flags)
-+{
-+	vma->vm_flags = flags;
-+}
-+
-+/* Use when VMA is part of the VMA tree and modifications need coordination */
-+static inline void reset_vm_flags(struct vm_area_struct *vma,
-+				  unsigned long flags)
-+{
-+	mmap_assert_write_locked(vma->vm_mm);
-+	init_vm_flags(vma, flags);
-+}
-+
-+static inline void set_vm_flags(struct vm_area_struct *vma,
-+				unsigned long flags)
-+{
-+	mmap_assert_write_locked(vma->vm_mm);
-+	vma->vm_flags |= flags;
-+}
-+
-+static inline void clear_vm_flags(struct vm_area_struct *vma,
-+				  unsigned long flags)
-+{
-+	mmap_assert_write_locked(vma->vm_mm);
-+	vma->vm_flags &= ~flags;
-+}
-+
-+static inline void mod_vm_flags(struct vm_area_struct *vma,
-+				unsigned long set, unsigned long clear)
-+{
-+	mmap_assert_write_locked(vma->vm_mm);
-+	vma->vm_flags |= set;
-+	vma->vm_flags &= ~clear;
-+}
-+
- static inline void vma_set_anonymous(struct vm_area_struct *vma)
+diff --git a/arch/powerpc/kvm/book3s_hv_uvmem.c b/arch/powerpc/kvm/book3s_hv_uvmem.c
+index 1d67baa5557a..325a7a47d348 100644
+--- a/arch/powerpc/kvm/book3s_hv_uvmem.c
++++ b/arch/powerpc/kvm/book3s_hv_uvmem.c
+@@ -393,6 +393,7 @@ static int kvmppc_memslot_page_merge(struct kvm *kvm,
  {
- 	vma->vm_ops = NULL;
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 2d6d790d9bed..6c7c70bf50dd 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -491,7 +491,13 @@ struct vm_area_struct {
- 	 * See vmf_insert_mixed_prot() for discussion.
- 	 */
- 	pgprot_t vm_page_prot;
--	unsigned long vm_flags;		/* Flags, see mm.h. */
-+
-+	/*
-+	 * Flags, see mm.h.
-+	 * WARNING! Do not modify directly.
-+	 * Use {init|reset|set|clear|mod}_vm_flags() functions instead.
-+	 */
+ 	unsigned long gfn = memslot->base_gfn;
+ 	unsigned long end, start = gfn_to_hva(kvm, gfn);
 +	unsigned long vm_flags;
+ 	int ret = 0;
+ 	struct vm_area_struct *vma;
+ 	int merge_flag = (merge) ? MADV_MERGEABLE : MADV_UNMERGEABLE;
+@@ -409,12 +410,14 @@ static int kvmppc_memslot_page_merge(struct kvm *kvm,
+ 			ret = H_STATE;
+ 			break;
+ 		}
++		vm_flags = vma->vm_flags;
+ 		ret = ksm_madvise(vma, vma->vm_start, vma->vm_end,
+-			  merge_flag, &vma->vm_flags);
++			  merge_flag, &vm_flags);
+ 		if (ret) {
+ 			ret = H_STATE;
+ 			break;
+ 		}
++		reset_vm_flags(vma, vm_flags);
+ 		start = vma->vm_end;
+ 	} while (end > vma->vm_end);
  
- 	/*
- 	 * For areas with an address space and backing store,
+diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
+index 3a695b8a1e3c..d5eb47dcdacb 100644
+--- a/arch/s390/mm/gmap.c
++++ b/arch/s390/mm/gmap.c
+@@ -2587,14 +2587,17 @@ int gmap_mark_unmergeable(void)
+ {
+ 	struct mm_struct *mm = current->mm;
+ 	struct vm_area_struct *vma;
++	unsigned long vm_flags;
+ 	int ret;
+ 	VMA_ITERATOR(vmi, mm, 0);
+ 
+ 	for_each_vma(vmi, vma) {
++		vm_flags = vma->vm_flags;
+ 		ret = ksm_madvise(vma, vma->vm_start, vma->vm_end,
+-				  MADV_UNMERGEABLE, &vma->vm_flags);
++				  MADV_UNMERGEABLE, &vm_flags);
+ 		if (ret)
+ 			return ret;
++		reset_vm_flags(vma, vm_flags);
+ 	}
+ 	mm->def_flags &= ~VM_MERGEABLE;
+ 	return 0;
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index 8abc59345bf2..76b24cd0c179 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -354,6 +354,8 @@ struct attribute_group khugepaged_attr_group = {
+ int hugepage_madvise(struct vm_area_struct *vma,
+ 		     unsigned long *vm_flags, int advice)
+ {
++	/* vma->vm_flags can be changed only using modifier functions */
++	BUG_ON(vm_flags == &vma->vm_flags);
+ 	switch (advice) {
+ 	case MADV_HUGEPAGE:
+ #ifdef CONFIG_S390
+diff --git a/mm/ksm.c b/mm/ksm.c
+index 04f1c8c2df11..992b2be9f5e6 100644
+--- a/mm/ksm.c
++++ b/mm/ksm.c
+@@ -2573,6 +2573,8 @@ int ksm_madvise(struct vm_area_struct *vma, unsigned long start,
+ 	struct mm_struct *mm = vma->vm_mm;
+ 	int err;
+ 
++	/* vma->vm_flags can be changed only using modifier functions */
++	BUG_ON(vm_flags == &vma->vm_flags);
+ 	switch (advice) {
+ 	case MADV_MERGEABLE:
+ 		/*
 -- 
 2.39.1
 
