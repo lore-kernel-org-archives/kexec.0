@@ -4,57 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 133A0C54EAA
-	for <kexec@archiver.kernel.org>; Wed, 25 Jan 2023 13:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 776CFC54E94
+	for <kexec@archiver.kernel.org>; Wed, 25 Jan 2023 13:13:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=atsifUTs/eJMC79XHeJNp7jdwL75SA7pkXmzdLvq5GA=; b=CKbgN59dKvqx6O
-	rxqStDxXCxbnwhZqpVi/HCvcEv0x44XftdvS/VQQJmbsMGxML5D7sfgLfdejRVN+owR+fPdCYJugi
-	1yumSusG0afvaXT//oYqpAbhIOoqSgkJaSqU3SBakQ3OG881E1LrAShHx+OX+J+hQyu0wURwhRO85
-	sMCu50pUCJ8MNeHNR57Y+AX5tvPpyvjEDhCB/ql1pHcywAPjCLSeUignlV9bKlijRu90tSHsG/CPd
-	YQiUXcFQeliT0Uv/ev8LbdQnLFYotEXe8qEmqdm+4Ze6czvA2m6JgiDPUwW2QL2HGUg1ZnrSfeO+A
-	o0qHgpgdZLFo442wb9fQ==;
+	List-Owner; bh=bwEaZKFAHfpm1aFQwIRuTsXU0Lx4yIC+xiWOpHNzuFk=; b=l3XYERlpftMXwm
+	vmFHuizBROsbWdGdCX3jtNvWCumjJc07rCRovfnh3pPvNiH7ee804H4b+g7yRfOQue1GG6VW8BHRg
+	2v+yhs9MWmwrBGAXAuOZjZ5irRRpRKcVMdTgavi3bCg/s/2QsqMchWIQw/o/gdVNiIH03pEcTlOG5
+	mAd9TlfTMGia1YbTqWLyztpGhaGFGIt9e25wlhEipjiCvwk4ycVH+MrAWwuXkFAcxdq6zvZ4adw72
+	mwhh5doJK18qSFiCf2FAghukzV3ObngrQgZqP+VdpT2xwPhn92C9rDiDVPnvynf1cA5kscR3pQZUR
+	+iDWA7jrBh//dewtJY/g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pKfao-007MVA-K2; Wed, 25 Jan 2023 13:13:34 +0000
-Received: from smtp-out1.suse.de ([2001:67c:2178:6::1c])
+	id 1pKfar-007MWw-W8; Wed, 25 Jan 2023 13:13:38 +0000
+Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pKcJA-006fYG-Gv; Wed, 25 Jan 2023 09:43:11 +0000
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	id 1pKbmw-006Yid-8f; Wed, 25 Jan 2023 09:09:50 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=hk+0OseVD3OO+ksIzhtEU5LrZV8KXEqXC3zpbOGn/ls=; b=L8qSvLf3dSoKSiW2HygcIYLOca
+	21DCM8/DXgLnxfiohHpsT3lhw9RWtU9FTk5Q6obziletdupyk3K9yzioMkIYd3jrdHr1S7LLdHH60
+	lZs07uhtEIXDyuP/MuCEsO9tg/Dya8cSzK7mCmRjV2qBie+7+Y5IGxB0daAwFzjqMhaFzpySf6YXo
+	2vEVk+F84A4V2/U10C6G40hQA6YENiuXDX3aMgZ9vALWKqZFZvyNzBmwUbYJ2TrPobnkNV5WcsTzh
+	MlPPu5bEJs9JKwDVT1dVMYwpGrr2HHxIHWMyvY2cQrGsAsrDt+nZKoGt/dS9qSUmXOpPkxoiUPomG
+	V0Od16xg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1pKbmm-005neJ-75; Wed, 25 Jan 2023 09:09:40 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id ED8EF21C83;
-	Wed, 25 Jan 2023 09:43:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1674639787; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/H7fv8j3//amIhsuvsnszBORL7yxYM5gHjte1pGnd6k=;
-	b=mZDjQNB1hPzvcXQvGHeFauKnSuc1ap67S0f/lHhQc+tBAiRuxTH6kOAY66JaEQ5pw8N/I3
-	vRWRMVylkxH5+7xZzlUtSs4JuzUBNvi7rrHJ3BhzsHOyBEZ29ADyT+w2tbmr+7dVhJit8H
-	Gvojz3/KsEomLEifDjwU2dmewO/7emc=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 8FA761358F;
-	Wed, 25 Jan 2023 09:43:06 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id usqPIqr50GPHIgAAMHmgww
-	(envelope-from <mhocko@suse.com>); Wed, 25 Jan 2023 09:43:06 +0000
-Date: Wed, 25 Jan 2023 10:43:05 +0100
-From: Michal Hocko <mhocko@suse.com>
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D33DC30073F;
+	Wed, 25 Jan 2023 10:09:37 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 673382C247607; Wed, 25 Jan 2023 10:09:37 +0100 (CET)
+Date: Wed, 25 Jan 2023 10:09:37 +0100
+From: Peter Zijlstra <peterz@infradead.org>
 To: Suren Baghdasaryan <surenb@google.com>
 Cc: akpm@linux-foundation.org, michel@lespinasse.org, jglisse@google.com,
-	vbabka@suse.cz, hannes@cmpxchg.org, mgorman@techsingularity.net,
-	dave@stgolabs.net, willy@infradead.org, liam.howlett@oracle.com,
-	peterz@infradead.org, ldufour@linux.ibm.com, paulmck@kernel.org,
+	mhocko@suse.com, vbabka@suse.cz, hannes@cmpxchg.org,
+	mgorman@techsingularity.net, dave@stgolabs.net, willy@infradead.org,
+	liam.howlett@oracle.com, ldufour@linux.ibm.com, paulmck@kernel.org,
 	luto@kernel.org, songliubraving@fb.com, peterx@redhat.com,
 	david@redhat.com, dhowells@redhat.com, hughd@google.com,
 	bigeasy@linutronix.de, kent.overstreet@linux.dev,
@@ -121,17 +118,14 @@ Cc: akpm@linux-foundation.org, michel@lespinasse.org, jglisse@google.com,
 	linux-perf-users@vger.kernel.org, kasan-dev@googlegroups.com,
 	selinux@vger.kernel.org, alsa-devel@alsa-project.org,
 	kernel-team@android.com
-Subject: Re: [PATCH v2 6/6] mm: export dump_mm()
-Message-ID: <Y9D5qS02j/fPLP/6@dhcp22.suse.cz>
+Subject: Re: [PATCH v2 1/6] mm: introduce vma->vm_flags modifier functions
+Message-ID: <Y9Dx0cPXF2yoLwww@hirez.programming.kicks-ass.net>
 References: <20230125083851.27759-1-surenb@google.com>
- <20230125083851.27759-7-surenb@google.com>
+ <20230125083851.27759-2-surenb@google.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20230125083851.27759-7-surenb@google.com>
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230125_014308_757573_E513128B 
-X-CRM114-Status: GOOD (  12.72  )
-X-Mailman-Approved-At: Wed, 25 Jan 2023 05:13:28 -0800
+In-Reply-To: <20230125083851.27759-2-surenb@google.com>
+X-Mailman-Approved-At: Wed, 25 Jan 2023 05:13:36 -0800
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -148,38 +142,26 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed 25-01-23 00:38:51, Suren Baghdasaryan wrote:
-> mmap_assert_write_locked() is used in vm_flags modifiers. Because
-> mmap_assert_write_locked() uses dump_mm() and vm_flags are sometimes
-> modified from from inside a module, it's necessary to export
-> dump_mm() function.
-> 
-> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+On Wed, Jan 25, 2023 at 12:38:46AM -0800, Suren Baghdasaryan wrote:
 
-Acked-by: Michal Hocko <mhocko@suse.com>
+> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+> index 2d6d790d9bed..6c7c70bf50dd 100644
+> --- a/include/linux/mm_types.h
+> +++ b/include/linux/mm_types.h
+> @@ -491,7 +491,13 @@ struct vm_area_struct {
+>  	 * See vmf_insert_mixed_prot() for discussion.
+>  	 */
+>  	pgprot_t vm_page_prot;
+> -	unsigned long vm_flags;		/* Flags, see mm.h. */
+> +
+> +	/*
+> +	 * Flags, see mm.h.
+> +	 * WARNING! Do not modify directly.
+> +	 * Use {init|reset|set|clear|mod}_vm_flags() functions instead.
+> +	 */
+> +	unsigned long vm_flags;
 
-> ---
->  mm/debug.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/mm/debug.c b/mm/debug.c
-> index 9d3d893dc7f4..96d594e16292 100644
-> --- a/mm/debug.c
-> +++ b/mm/debug.c
-> @@ -215,6 +215,7 @@ void dump_mm(const struct mm_struct *mm)
->  		mm->def_flags, &mm->def_flags
->  	);
->  }
-> +EXPORT_SYMBOL(dump_mm);
->  
->  static bool page_init_poisoning __read_mostly = true;
->  
-> -- 
-> 2.39.1
-
--- 
-Michal Hocko
-SUSE Labs
+We have __private and ACCESS_PRIVATE() to help with enforcing this.
 
 _______________________________________________
 kexec mailing list
