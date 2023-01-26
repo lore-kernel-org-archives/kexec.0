@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 395E8C61DA4
-	for <kexec@archiver.kernel.org>; Fri, 27 Jan 2023 16:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 01108C61DB3
+	for <kexec@archiver.kernel.org>; Fri, 27 Jan 2023 16:38:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=M+MlFckLiSDXjdLGS6ZHuqDFzhG9HI/qEdbYFoE4F4Q=; b=xLxxM0D/65wj+e
-	M+PEVUr0sUdGf8f3wkVyrc6h0UkKIDoH/Comrd7NQVbd17fbI5kaaTRdF46X4Qfk7D0pSba3tPTpU
-	I/AsI21U99umPn1ssCC7/8u9SLsPxymjMw98OUEp3j3j/+GnotwvnChmspR4CzDjCYmr6VmJVi27D
-	rzjWi1oHgbiK8xmjh3rtzk/rNfuKfwJdw+44UiRH7z1rQfXBFq7PhKUbYHzdnENCZ03KunS4Tq8KS
-	GdTlEtTWv0Z8RAYtsUrjOFTJGTkT1TxzT2Lz0+UzA4Rn1r1lYAE1PjYPizhtXKcXaAxt3mfsusI3P
-	KGuoyZkKzHxsipyNLnAw==;
+	List-Owner; bh=ZbLrl27ocLuMpQGGmd38Jpvn1+TvxPf8PzmVS7KE9sA=; b=oQri1ksuI4pXFF
+	W6XHVDGac9Xj9EKk5OsCYlNoZyRAFD/iftEFsDXT6Qpgw482Ym8yP6wSzsXzLuE6h95DUn6UWJiar
+	w69UtOxQ5fBReYa11i82a4GEjRFj31Os6npUhlKcwnQ66ph8Xq7xIB48bdX0puobtTP6RKmyZU/h8
+	ImaybHXaVHJd1Zb1tTqZMzD95ew6yqacWJJ3jpilqVxOg3ccgCm8F8VfWIjuwzRvh+r5uv13zOx8F
+	Nupqt2PWd13fd7l6MUGrba3OCRiQjKqkIWaINACUEpyhPToReG3/orIE3ISKMS57X/m2tcfvN4H/o
+	M6lh+w1wnh3fI0jsOKCQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pLRju-00Fk0w-Lt; Fri, 27 Jan 2023 16:38:10 +0000
+	id 1pLRjx-00Fk39-A3; Fri, 27 Jan 2023 16:38:13 +0000
 Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pL3Yb-00BHPC-Ds; Thu, 26 Jan 2023 14:48:54 +0000
+	id 1pL3bQ-00BIed-0o; Thu, 26 Jan 2023 14:51:49 +0000
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id E1F826183C;
-	Thu, 26 Jan 2023 14:48:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05241C4339B;
-	Thu, 26 Jan 2023 14:48:14 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 4EA0C61756;
+	Thu, 26 Jan 2023 14:51:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3695EC433EF;
+	Thu, 26 Jan 2023 14:51:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1674744532;
-	bh=WNohoknU9nLfbwIXeO77neZ4yMyv64MASZK2UIAfOfc=;
+	s=k20201202; t=1674744706;
+	bh=vTtNm5B4uxkFGkyUcD6bt7bUv740cC5zoLQ3n4iCXig=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OyaVsT5ePzTFS76R1FH5KLxOUgzscan6sLv55lgf+totKkalpj5P4hTJ0CFzpg2nB
-	 FjnAcEI6WBL0tfwF/TTw8b+wwY6a9pfQDEoFaNDhDzv4Bx4E//TKL2HIis05iqFTqA
-	 6cWnwUhcKJagQmydnhE9MWdKN98RZA7QH0/g2op6Qc+WX5kkWc6P8AxP1IQok4d4Iv
-	 rC+rDq5bfpCpp87TX2zmlNbavkxhh4pjEZT5VQ1/5GQQQR5j3P3SiDxYUla0TLmDmY
-	 tHoanGw9DWG+oAt/RnrhsxsQ7gltrsJN75kvWssUX4MOKayClNcjWM9UluK5fqquNs
-	 P9OGQuC06AeFQ==
-Date: Thu, 26 Jan 2023 16:48:04 +0200
+	b=r54XDevqCxaIthjhpV90e/3PReNDit6CxkjYziBMldcr+DpwGPcGH7s0yFhPlYu8B
+	 NohDoJ7KVIUCX5Zs7V0ydKB7t9XQRchAYOCR8XLnEbVPCZ8e7MIHv0UEcp73VODAq8
+	 aFhcsGcrVCc28IZRly/gODnl3cguu4R9trJCc4u2GtQ9ygUwR4IFSGftEKj188geBR
+	 3987kGANtDLWA/GzBI6W69E/F450ClXU14kAngo3y+A1wCivQR2InkOef4HeCwIwVj
+	 QYEspA95Wv7WS3mfCUr9QMGnsDd2HsZvTUBOWl52ZSZiQBqHvpwy1Yy3PsmXixNWVQ
+	 B28KDvwGClVRQ==
+Date: Thu, 26 Jan 2023 16:50:59 +0200
 From: Mike Rapoport <rppt@kernel.org>
 To: Suren Baghdasaryan <surenb@google.com>
 Cc: akpm@linux-foundation.org, michel@lespinasse.org, jglisse@google.com,
@@ -114,16 +114,17 @@ Cc: akpm@linux-foundation.org, michel@lespinasse.org, jglisse@google.com,
 	linux-perf-users@vger.kernel.org, kasan-dev@googlegroups.com,
 	selinux@vger.kernel.org, alsa-devel@alsa-project.org,
 	kernel-team@android.com
-Subject: Re: [PATCH v2 6/6] mm: export dump_mm()
-Message-ID: <Y9KSpNJ4y0GMwkrW@kernel.org>
+Subject: Re: [PATCH v2 1/6] mm: introduce vma->vm_flags modifier functions
+Message-ID: <Y9KTUw/04FmBVplw@kernel.org>
 References: <20230125083851.27759-1-surenb@google.com>
- <20230125083851.27759-7-surenb@google.com>
+ <20230125083851.27759-2-surenb@google.com>
+ <Y9JFFYjfJf9uDijE@kernel.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20230125083851.27759-7-surenb@google.com>
+In-Reply-To: <Y9JFFYjfJf9uDijE@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230126_064853_586485_503E2E69 
-X-CRM114-Status: GOOD (  14.75  )
+X-CRM114-CacheID: sfid-20230126_065148_192434_64BE08C3 
+X-CRM114-Status: GOOD (  19.65  )
 X-Mailman-Approved-At: Fri, 27 Jan 2023 08:38:04 -0800
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -141,35 +142,45 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Jan 25, 2023 at 12:38:51AM -0800, Suren Baghdasaryan wrote:
-> mmap_assert_write_locked() is used in vm_flags modifiers. Because
-> mmap_assert_write_locked() uses dump_mm() and vm_flags are sometimes
-> modified from from inside a module, it's necessary to export
-> dump_mm() function.
+On Thu, Jan 26, 2023 at 11:17:09AM +0200, Mike Rapoport wrote:
+> On Wed, Jan 25, 2023 at 12:38:46AM -0800, Suren Baghdasaryan wrote:
+> > vm_flags are among VMA attributes which affect decisions like VMA merging
+> > and splitting. Therefore all vm_flags modifications are performed after
+> > taking exclusive mmap_lock to prevent vm_flags updates racing with such
+> > operations. Introduce modifier functions for vm_flags to be used whenever
+> > flags are updated. This way we can better check and control correct
+> > locking behavior during these updates.
+> > 
+> > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> > ---
+> >  include/linux/mm.h       | 37 +++++++++++++++++++++++++++++++++++++
+> >  include/linux/mm_types.h |  8 +++++++-
+> >  2 files changed, 44 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/include/linux/mm.h b/include/linux/mm.h
+> > index c2f62bdce134..b71f2809caac 100644
+> > --- a/include/linux/mm.h
+> > +++ b/include/linux/mm.h
+> > @@ -627,6 +627,43 @@ static inline void vma_init(struct vm_area_struct *vma, struct mm_struct *mm)
+> >  	INIT_LIST_HEAD(&vma->anon_vma_chain);
+> >  }
+> >  
+> > +/* Use when VMA is not part of the VMA tree and needs no locking */
+> > +static inline void init_vm_flags(struct vm_area_struct *vma,
+> > +				 unsigned long flags)
 > 
-> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> I'd suggest to make it vm_flags_init() etc.
 
-Acked-by: Mike Rapoport (IBM) <rppt@kernel.org>
+Thinking more about it, it will be even clearer to name these vma_flags_xyz()
 
-> ---
->  mm/debug.c | 1 +
->  1 file changed, 1 insertion(+)
+> Except that
 > 
-> diff --git a/mm/debug.c b/mm/debug.c
-> index 9d3d893dc7f4..96d594e16292 100644
-> --- a/mm/debug.c
-> +++ b/mm/debug.c
-> @@ -215,6 +215,7 @@ void dump_mm(const struct mm_struct *mm)
->  		mm->def_flags, &mm->def_flags
->  	);
->  }
-> +EXPORT_SYMBOL(dump_mm);
->  
->  static bool page_init_poisoning __read_mostly = true;
->  
-> -- 
-> 2.39.1
+> Acked-by: Mike Rapoport (IBM) <rppt@kernel.org>
 > 
+
+--
+Sincerely yours,
+Mike.
 
 _______________________________________________
 kexec mailing list
