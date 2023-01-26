@@ -4,50 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C9425C54EED
-	for <kexec@archiver.kernel.org>; Thu, 26 Jan 2023 07:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1FDCFC05027
+	for <kexec@archiver.kernel.org>; Thu, 26 Jan 2023 09:23:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=/cfIKVs0EnYKOBmTy1liV9Ptk2v45krj1uRg7CsXqJ0=; b=ynC3nySYKtW13u
-	1ONsJpuWTxhHKnq5z/U+83zLA+joOu5cZIPrwb1yGtIQuOXiBCwv5FU1X0TiumbiDnGpf7ktcupLh
-	qGsA5u9f5HjCXU3UjoNYRK5JH8Lu98fNCWsHNFPcT0obajXJbfNQkp+ZU+O8qyzKkvyUZLLfxeJHH
-	vn718qtKyGSA1oetY7RZ74thBbNuL7g+zbMgYFHBhm/FyJrqvePHsO4+I+/ZGAP6D18E3JgmM8M9N
-	CL7awwXgRVnnLL84/+6AP8rMF73L1NJh0XZpgoRoXcj+1sYret1I8ApORKOoLyBU3QTuTGssevVb/
-	Cdp/+bKG3AAtQqMbqd/w==;
+	List-Owner; bh=to7e0z+WhWsd0VkGYr09yvGAlCKtDB7CS0KfMPaqvYs=; b=ztF9qNu/0Uv6j/
+	M5d4f1WzIVi3oStCKQkC/z7sPinrhAxxJou0taHP3Q/zsAzFiAL3V7bGN+nDFe5Xa+FRyWUilzpsK
+	htsN2wuTSBpuRrI+cXI26gRdR5nNgWbQEPefEPwD8915t0avdUmpLPhnclNI/9AOdZnqgVskidcl1
+	KVFvEejdy97B3AbCyKGapclqT+0IRl1XHZhMuv9C+NWdJlTV7Y/zRByQ1ti/zTKbBiDJm3e7M57Jy
+	UocpIyeo1iakR6aTcS21FyRcx5DCUclwSP4wuB6CkwQWNrfSE54isdbym3HR+n6i8xVgV/VcIRZu5
+	QwkMyiSWHdt+8KcgkmZg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pKwKt-009nz8-TR; Thu, 26 Jan 2023 07:06:15 +0000
-Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
+	id 1pKyTW-00AHE5-FW; Thu, 26 Jan 2023 09:23:18 +0000
+Received: from ams.source.kernel.org ([2604:1380:4601:e00::1])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pKkeU-008M0V-KA; Wed, 25 Jan 2023 18:37:42 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=j8xmcwaWWp8ClSuIcWbfPO9W4DI7+K1SIXYR1hupOAY=; b=uqNynxzucz1vO4Sybud/wnfqlG
-	XxsLNOwKfxMMQq2z+2mEwSQepA2Cgl288rz8ppyGnCDD245OrpnK+lLHo83C85yAJqJOOkyy9NCp4
-	qmW1PdDBkKx7H5H7CuTrTaW668Ax6XD7hJfO7woN7MoWAjzhSqQRaCuht1RFhZ03cdOhzx8vskmyo
-	utYjRqoPln+RK+MIFkiqDBv2fEqneNERI4c9/pWDfp7yn00dEjgBzAOu+9ajSFVQvgY4Ml53E7t5d
-	4KvoHjjGbdeWlMlk7Lgwsa8VGdyruWiJYIAak7bpfijYPXdYqIwuOD9Kmo+xWyNX8MhOoxpc82QLY
-	/xONblxA==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pKkeP-0066hH-0o; Wed, 25 Jan 2023 18:37:37 +0000
-Date: Wed, 25 Jan 2023 18:37:36 +0000
-From: Matthew Wilcox <willy@infradead.org>
+	id 1pKyOT-00AGAb-GR; Thu, 26 Jan 2023 09:18:07 +0000
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ams.source.kernel.org (Postfix) with ESMTPS id C2FD8B818BE;
+	Thu, 26 Jan 2023 09:18:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B686C433EF;
+	Thu, 26 Jan 2023 09:17:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1674724682;
+	bh=A3jqgSV9WUxdb3ZkujtLcqAQwnfqkoU5ybDSQdNw5cg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sky5enLFwJr3DfJ9b2ymbv/d7rE2oypuJvDM2cNeWmTa68+LJkoJeMjxMVF911xjR
+	 /p46Fe2/pbyCsXipax42/Hou3ZWrY6fA7yy3y0E4tly4hSn7A+WSEbwQZyXAjmF/fy
+	 t3crMkotzOdGBKQN+I5JbdstqSnsQJbVUv4CaD/JnI/YsWTl+N0fRV5BPO+OqFre41
+	 7ERJV1xNKFLVanuVeJ94drHEBHBdP99mIJAbLamNbCF2r05esRYyfEqSbQFmRXAtIl
+	 xm2AXIIoDKu6q2SCf9/o5Ej3L+rCFY/nYnTN8yhQCyREfEIhRdSCFxGuw7sIOiHW7k
+	 L6KyLx8xuXeew==
+Date: Thu, 26 Jan 2023 11:17:09 +0200
+From: Mike Rapoport <rppt@kernel.org>
 To: Suren Baghdasaryan <surenb@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, akpm@linux-foundation.org,
-	michel@lespinasse.org, jglisse@google.com, mhocko@suse.com,
-	vbabka@suse.cz, hannes@cmpxchg.org, mgorman@techsingularity.net,
-	dave@stgolabs.net, liam.howlett@oracle.com, ldufour@linux.ibm.com,
-	paulmck@kernel.org, luto@kernel.org, songliubraving@fb.com,
-	peterx@redhat.com, david@redhat.com, dhowells@redhat.com,
-	hughd@google.com, bigeasy@linutronix.de, kent.overstreet@linux.dev,
-	punit.agrawal@bytedance.com, lstoakes@gmail.com,
-	peterjung1337@gmail.com, rientjes@google.com,
+Cc: akpm@linux-foundation.org, michel@lespinasse.org, jglisse@google.com,
+	mhocko@suse.com, vbabka@suse.cz, hannes@cmpxchg.org,
+	mgorman@techsingularity.net, dave@stgolabs.net, willy@infradead.org,
+	liam.howlett@oracle.com, peterz@infradead.org,
+	ldufour@linux.ibm.com, paulmck@kernel.org, luto@kernel.org,
+	songliubraving@fb.com, peterx@redhat.com, david@redhat.com,
+	dhowells@redhat.com, hughd@google.com, bigeasy@linutronix.de,
+	kent.overstreet@linux.dev, punit.agrawal@bytedance.com,
+	lstoakes@gmail.com, peterjung1337@gmail.com, rientjes@google.com,
 	axelrasmussen@google.com, joelaf@google.com, minchan@google.com,
 	jannh@google.com, shakeelb@google.com, tatashin@google.com,
 	edumazet@google.com, gthelen@google.com, gurua@google.com,
@@ -110,15 +115,16 @@ Cc: Peter Zijlstra <peterz@infradead.org>, akpm@linux-foundation.org,
 	selinux@vger.kernel.org, alsa-devel@alsa-project.org,
 	kernel-team@android.com
 Subject: Re: [PATCH v2 1/6] mm: introduce vma->vm_flags modifier functions
-Message-ID: <Y9F28J9njAtwifuL@casper.infradead.org>
+Message-ID: <Y9JFFYjfJf9uDijE@kernel.org>
 References: <20230125083851.27759-1-surenb@google.com>
  <20230125083851.27759-2-surenb@google.com>
- <Y9Dx0cPXF2yoLwww@hirez.programming.kicks-ass.net>
- <CAJuCfpEcVCZaCGzc-Wim25eaV5e6YG1YJAAdKwZ6JHViB0z8aw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CAJuCfpEcVCZaCGzc-Wim25eaV5e6YG1YJAAdKwZ6JHViB0z8aw@mail.gmail.com>
-X-Mailman-Approved-At: Wed, 25 Jan 2023 23:06:10 -0800
+In-Reply-To: <20230125083851.27759-2-surenb@google.com>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20230126_011805_858246_8740A5A6 
+X-CRM114-Status: GOOD (  21.87  )
+X-Mailman-Approved-At: Thu, 26 Jan 2023 01:23:17 -0800
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -135,32 +141,97 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Jan 25, 2023 at 08:49:50AM -0800, Suren Baghdasaryan wrote:
-> On Wed, Jan 25, 2023 at 1:10 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> > > +     /*
-> > > +      * Flags, see mm.h.
-> > > +      * WARNING! Do not modify directly.
-> > > +      * Use {init|reset|set|clear|mod}_vm_flags() functions instead.
-> > > +      */
-> > > +     unsigned long vm_flags;
-> >
-> > We have __private and ACCESS_PRIVATE() to help with enforcing this.
+On Wed, Jan 25, 2023 at 12:38:46AM -0800, Suren Baghdasaryan wrote:
+> vm_flags are among VMA attributes which affect decisions like VMA merging
+> and splitting. Therefore all vm_flags modifications are performed after
+> taking exclusive mmap_lock to prevent vm_flags updates racing with such
+> operations. Introduce modifier functions for vm_flags to be used whenever
+> flags are updated. This way we can better check and control correct
+> locking behavior during these updates.
 > 
-> Thanks for pointing this out, Peter! I guess for that I'll need to
-> convert all read accesses and provide get_vm_flags() too? That will
-> cause some additional churt (a quick search shows 801 hits over 248
-> files) but maybe it's worth it? I think Michal suggested that too in
-> another patch. Should I do that while we are at it?
+> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> ---
+>  include/linux/mm.h       | 37 +++++++++++++++++++++++++++++++++++++
+>  include/linux/mm_types.h |  8 +++++++-
+>  2 files changed, 44 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index c2f62bdce134..b71f2809caac 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -627,6 +627,43 @@ static inline void vma_init(struct vm_area_struct *vma, struct mm_struct *mm)
+>  	INIT_LIST_HEAD(&vma->anon_vma_chain);
+>  }
+>  
+> +/* Use when VMA is not part of the VMA tree and needs no locking */
+> +static inline void init_vm_flags(struct vm_area_struct *vma,
+> +				 unsigned long flags)
 
-Here's a trick I saw somewhere in the VFS:
+I'd suggest to make it vm_flags_init() etc.
+Except that
 
-	union {
-		const vm_flags_t vm_flags;
-		vm_flags_t __private __vm_flags;
-	};
+Acked-by: Mike Rapoport (IBM) <rppt@kernel.org>
 
-Now it can be read by anybody but written only by those using
-ACCESS_PRIVATE.
+> +{
+> +	vma->vm_flags = flags;
+> +}
+> +
+> +/* Use when VMA is part of the VMA tree and modifications need coordination */
+> +static inline void reset_vm_flags(struct vm_area_struct *vma,
+> +				  unsigned long flags)
+> +{
+> +	mmap_assert_write_locked(vma->vm_mm);
+> +	init_vm_flags(vma, flags);
+> +}
+> +
+> +static inline void set_vm_flags(struct vm_area_struct *vma,
+> +				unsigned long flags)
+> +{
+> +	mmap_assert_write_locked(vma->vm_mm);
+> +	vma->vm_flags |= flags;
+> +}
+> +
+> +static inline void clear_vm_flags(struct vm_area_struct *vma,
+> +				  unsigned long flags)
+> +{
+> +	mmap_assert_write_locked(vma->vm_mm);
+> +	vma->vm_flags &= ~flags;
+> +}
+> +
+> +static inline void mod_vm_flags(struct vm_area_struct *vma,
+> +				unsigned long set, unsigned long clear)
+> +{
+> +	mmap_assert_write_locked(vma->vm_mm);
+> +	vma->vm_flags |= set;
+> +	vma->vm_flags &= ~clear;
+> +}
+> +
+>  static inline void vma_set_anonymous(struct vm_area_struct *vma)
+>  {
+>  	vma->vm_ops = NULL;
+> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+> index 2d6d790d9bed..6c7c70bf50dd 100644
+> --- a/include/linux/mm_types.h
+> +++ b/include/linux/mm_types.h
+> @@ -491,7 +491,13 @@ struct vm_area_struct {
+>  	 * See vmf_insert_mixed_prot() for discussion.
+>  	 */
+>  	pgprot_t vm_page_prot;
+> -	unsigned long vm_flags;		/* Flags, see mm.h. */
+> +
+> +	/*
+> +	 * Flags, see mm.h.
+> +	 * WARNING! Do not modify directly.
+> +	 * Use {init|reset|set|clear|mod}_vm_flags() functions instead.
+> +	 */
+> +	unsigned long vm_flags;
+>  
+>  	/*
+>  	 * For areas with an address space and backing store,
+> -- 
+> 2.39.1
+> 
+> 
 
 _______________________________________________
 kexec mailing list
