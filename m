@@ -4,66 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AAFAEC05027
-	for <kexec@archiver.kernel.org>; Wed,  1 Feb 2023 11:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 53E6CC38142
+	for <kexec@archiver.kernel.org>; Wed,  1 Feb 2023 17:08:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:References
-	:In-Reply-To:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=T3hpRvumQJbIi2R/5DownO4ZmgQ+Q+hnlVNncSCWhGs=; b=AG0TavSIHMeaDo
-	XthRi+ZWXsncB840BGJz3A44g4RLQm1uKWB+ktmSqSGEoflW107OjtNFOAbeL5ccefJmJ3wnDCWnK
-	c/fqX6174YnQpcFne0XE+yIK7VriSukcDXulalhhm/WxAdXSyID1j+22sV8mWDHGY3s8T6+Jrme0j
-	mbB+2A0fI6OSzphTwUDPAKi9Rqpve9TNVpoEMa9EGqjgZV1ZSSd22cnpyN2Dl6d742o8BGHl1pblY
-	cq2JYyGe9N6YFc5lTtqvAKG/IxVPvb2c0DvzuborWdXUFHfEbNmi6IaxI7xP/lfz66CQZ0+f64R4q
-	VrHA7v/f5cuGDePQPkcg==;
+	List-Owner; bh=gnDrdRUYFm1CEu5FtaQWAttGTGyQLqjuYTt9b1+leAo=; b=XU8UVukIlxUkNk
+	MD5I5kyOP9g/xdo2al0Uz7GBUR7gvTKAetUztreoY3GnkZeKbMsNCrB8GSlSJ+KnpgH8ZmOEhJ2g8
+	4hity8T6y4ZZ+zgKLJFMhvgpLHp+ysG0++AF1wKzQbdFbkHz4dotKtM3poGXv40AqDdco7yOnEElh
+	F7djNZLhJ1hniWPFG577mI/kOS5tBTQnzEZ4/mWAEHTXLAkFE2KypnLGG2jQYIwkdSz2/JmyAkt1z
+	TvUMdyyaLc7P81bk1JirCqTT6SZTNpd7i8OEjIKR165IMJc+6k5fskBCsVovVbD3gtKe5TIrfgyog
+	Zw4TmoK5scV3iortEL4Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pNBMo-00BUOW-4J; Wed, 01 Feb 2023 11:33:30 +0000
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+	id 1pNGaa-00CyBG-HL; Wed, 01 Feb 2023 17:08:04 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pNBMk-00BUJe-Vc
-	for kexec@lists.infradead.org; Wed, 01 Feb 2023 11:33:28 +0000
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1675251198;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nI1PAwKddaSlonMOIonB4C8xfAlPiE+lPzih70stM2Q=;
-	b=DEP0O1kN6+ScaSW6M0RPcv/dP/fRnYqSxB1GUlqBk3fBf5Rz31zEVvaXsgLWhJ3l0q9qDf
-	p88rrVpmb+uDEhJ2WEcn/qm6KA/lyhhRAj6y546vrUFf1H1Iub12F036/L18p7LH3HenTA
-	1j4JwR2ZNFJwx7Enz0GGndT0LLLTWFqZ+c3NH936h5hv2vKTWnSDBmu7k2HZ2hBSnBYK/F
-	44KVo0WHhUmy2nuj306rJt6lbcdmSUf/9ljZJK+GcdkB8hbz5J7ufdlsSbo9LCDru/renp
-	2sjsLwwMD2shZgKiEZn5BOXr8MHczLZp7SaYQBQqRZ9Hd1lpMnkt/oqj6vsBkQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1675251198;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nI1PAwKddaSlonMOIonB4C8xfAlPiE+lPzih70stM2Q=;
-	b=Ig6VyHyEiPO2YkxAMHiu3NPx6My5ePCG7Qh0v6zCmtEwdojwebYra/4Lti5kIshJvQsSNN
-	Haz3abKT7gzfHVCw==
-To: Eric DeVolder <eric.devolder@oracle.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, kexec@lists.infradead.org, ebiederm@xmission.com,
- dyoung@redhat.com, bhe@redhat.com, vgoyal@redhat.com
-Cc: mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
- hpa@zytor.com, nramas@linux.microsoft.com, thomas.lendacky@amd.com,
- robh@kernel.org, efault@gmx.de, rppt@kernel.org, david@redhat.com,
- sourabhjain@linux.ibm.com, konrad.wilk@oracle.com,
- boris.ostrovsky@oracle.com, eric.devolder@oracle.com
-Subject: Re: [PATCH v18 5/7] kexec: exclude hot remove cpu from elfcorehdr
- notes
-In-Reply-To: <20230131224236.122805-6-eric.devolder@oracle.com>
-References: <20230131224236.122805-1-eric.devolder@oracle.com>
- <20230131224236.122805-6-eric.devolder@oracle.com>
-Date: Wed, 01 Feb 2023 12:33:17 +0100
-Message-ID: <87sffpzkle.ffs@tglx>
+	id 1pNGaX-00CyAC-EZ; Wed, 01 Feb 2023 17:08:03 +0000
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id B2D2D6187D;
+	Wed,  1 Feb 2023 17:08:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8840DC433D2;
+	Wed,  1 Feb 2023 17:07:58 +0000 (UTC)
+Date: Wed, 1 Feb 2023 17:07:55 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, will@kernel.org,
+	thunder.leizhen@huawei.com, John.p.donnelly@oracle.com,
+	wangkefeng.wang@huawei.com
+Subject: Re: [PATCH 1/2] arm64: kdump: simplify the reservation behaviour of
+ crashkernel=,high
+Message-ID: <Y9qca12Y/oCxcaFW@arm.com>
+References: <20230117034921.185150-1-bhe@redhat.com>
+ <20230117034921.185150-2-bhe@redhat.com>
+ <Y9AXKgJvUuilsWUX@arm.com>
+ <Y9n/PTEv7oOObuLi@MiWiFi-R3L-srv>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <Y9n/PTEv7oOObuLi@MiWiFi-R3L-srv>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230201_033327_182577_0539336D 
-X-CRM114-Status: GOOD (  11.58  )
+X-CRM114-CacheID: sfid-20230201_090801_555896_3C223533 
+X-CRM114-Status: GOOD (  29.93  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,63 +67,59 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Eric!
+On Wed, Feb 01, 2023 at 01:57:17PM +0800, Baoquan He wrote:
+> On 01/24/23 at 05:36pm, Catalin Marinas wrote:
+> > On Tue, Jan 17, 2023 at 11:49:20AM +0800, Baoquan He wrote:
+> > > On arm64, reservation for 'crashkernel=xM,high' is taken by searching for
+> > > suitable memory region up down. If the 'xM' of crashkernel high memory
+> > > is reserved from high memory successfully, it will try to reserve
+> > > crashkernel low memory later accoringly. Otherwise, it will try to search
+> > > low memory area for the 'xM' suitable region.
+> > > 
+> > > While we observed an unexpected case where a reserved region crosses the
+> > > high and low meomry boundary. E.g on a system with 4G as low memory end,
+> > > user added the kernel parameters like: 'crashkernel=512M,high', it could
+> > > finally have [4G-126M, 4G+386M], [1G, 1G+128M] regions in running kernel.
+> > > This looks very strange because we have two low memory regions
+> > > [4G-126M, 4G] and [1G, 1G+128M]. Much explanation need be given to tell
+> > > why that happened.
+> > > 
+> > > Here, for crashkernel=xM,high, search the high memory for the suitable
+> > > region above the high and low memory boundary. If failed, try reserving
+> > > the suitable region below the boundary. Like this, the crashkernel high
+> > > region will only exist in high memory, and crashkernel low region only
+> > > exists in low memory. The reservation behaviour for crashkernel=,high is
+> > > clearer and simpler.
+> > 
+> > Well, I guess it depends on how you look at the 'high' option: is it
+> > permitting to go into high addresses or forcing high addresses only?
+> > IIUC the x86 implementation has a similar behaviour to the arm64 one, it
+> > allows allocation across boundary.
+> 
+> Hmm, x86 has no chance to allocate a memory region across 4G boundary
+> because it reserves many small regions to map firmware, pci bus, etc
+> near 4G. E.g one x86 system has /proc/iomem as below. I haven't seen a
+> x86 system which doesn't look like this.
+> 
+> [root@ ~]# cat /proc/iomem 
+[...]
+> fffc0000-ffffffff : Reserved
+> 100000000-13fffffff : System RAM
 
-On Tue, Jan 31 2023 at 17:42, Eric DeVolder wrote:
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -366,6 +366,14 @@ int crash_prepare_elf64_headers(struct kimage *image, struct crash_mem *mem,
->  
->  	/* Prepare one phdr of type PT_NOTE for each present CPU */
->  	for_each_present_cpu(cpu) {
-> +#ifdef CONFIG_CRASH_HOTPLUG
-> +		if (IS_ENABLED(CONFIG_HOTPLUG_CPU)) {
-> +			/* Skip the soon-to-be offlined cpu */
-> +			if ((image->hp_action == KEXEC_CRASH_HP_REMOVE_CPU) &&
-> +				(cpu == image->offlinecpu))
-> +				continue;
-> +		}
-> +#endif
+Ah, that's why we don't see this problem on x86.
 
-I'm failing to see how the above is correct in any way. Look at the
-following sequence of events:
+Alright, for consistency I'm fine with having the same logic on arm64. I
+guess we don't need the additional check on whether the 'high'
+allocation reserved at least 128MB in the 'low' range. If it succeeded
+and the start is below 4GB, it's guaranteed that it got the full
+allocation in the 'low' range. I haven't checked whether your patch
+cleaned this up already, if not please do in the next version.
 
-     1) Offline CPU$N
+And as already asked, please fold the comments with the same patch, it's
+easier to read.
 
-        -> Prepare elf headers with CPU$N excluded
-
-     2) Another hotplug operation != 'Online CPU$N'
-
-        -> Prepare elf headers with CPU$N included
-
-Also in case of loading the crash kernel in the situation where not all
-present CPUs are online (think boot time SMT disable) then your
-resulting crash image will contain all present CPUs and none of the
-offline CPUs are excluded.
-
-How does that make any sense at all?
-
-This image->hp_action and image->offlinecpu dance is engineering
-voodoo. You just can do:
-
-        for_each_present_cpu(cpu) {
-            if (!cpu_online(cpu))
-            	continue;
-            do_stuff(cpu);
-
-which does the right thing in all situations and can be further
-simplified to:
-
-        for_each_online_cpu(cpu) {
-            do_stuff(cpu);
-
-without the need for ifdefs or whatever.
-
-No?
-
-Thanks,
-
-        tglx
+-- 
+Catalin
 
 _______________________________________________
 kexec mailing list
