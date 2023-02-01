@@ -4,93 +4,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2A57BC636D4
-	for <kexec@archiver.kernel.org>; Wed,  1 Feb 2023 06:39:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4E402C636D4
+	for <kexec@archiver.kernel.org>; Wed,  1 Feb 2023 07:03:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:Cc:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=tQso905vCm0lYbsB6U6yJneI3ABrS61RswVnNMF1Smo=; b=QhEBiMwl8Fe+FW
-	Q00MNjEACj4dQ/czZSLU1PEXyHbnJLdkRpaNsDl85K1ldusbuysF/Y333sH9+oiCXCZnF/AZ7ohFj
-	IksobVdq9RMPhC51Z1nRhs1K3ywbBV6rSUbl5Ji0UMaPfMtXZjoE0DyjNm8CW14Mf5ECDTnwH3+XI
-	czh3JEco93/TK0yZnrOzw8Pw2RauyIicvRhzyouvyA8zX8TiQs9rEnSi4DlrpjBspQTFFDv2kFhvD
-	nn+GS+R2Uv4Dq1T0b3vlhWiVbfFuloqSF6d2SYS81hkLz/1AqvZOmECotjQM6s9QvW6iqmRnIzl3M
-	mtpJPTrKfbXkbzHFQLMQ==;
+	List-Owner; bh=oQRDs7Z3tCuVAFPFu4ixbI0Asw1yqSn8X/ZxPTrr5Yo=; b=0rEjdxFXRh5o6z
+	CTsqX7uZzZXq1TyYX+aElYTPT2Owv2Jhe4Nztw5PUUuJAwmYPR/rICzNfyYr9y/+5tHKoF60k1moc
+	hMrAy76/606GJmLcBA2p8H7BhErz4qnYfQZrmkOnkOBII7P3iO5wd4vhqBUTblMKVpI8zMOg4nPZm
+	ypqbN0gbQXCnn5cxT4vsjgmxei1/ZGbhLQHqPQdvFa09XWsp1WilNloDGk7gVtBN9t+DDVkeKqemz
+	CG21pfr7mAh5EayEOlHgaPmbC4iiCISLhdMILKbDXYkTTQNIkEso01ULeA3Pt1/kx/bAMhpvdy3N6
+	yMGm+gqXjFZSPTE4KfnA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pN6m1-00AUFV-HX; Wed, 01 Feb 2023 06:39:13 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1pN79g-00AYKO-NK; Wed, 01 Feb 2023 07:03:40 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pN6lw-00AUBc-J0
-	for kexec@lists.infradead.org; Wed, 01 Feb 2023 06:39:10 +0000
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3116Wjrf026417;
-	Wed, 1 Feb 2023 06:39:06 GMT
+	id 1pN79b-00AYJ8-8c
+	for kexec@lists.infradead.org; Wed, 01 Feb 2023 07:03:39 +0000
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31171nY3016283;
+	Wed, 1 Feb 2023 07:03:31 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=pp1;
- bh=y3JyE/ljorhE+CyyIGMX0cM54uIomDXd1zy4tiS5wuM=;
- b=JwCu/A9IGhkfw51RX2We2GBKKPM//FXOLSIJ6CCKR9b3Rq/6lxtcfignI+46UBfvJ0YO
- 6XjOAarPzFSfkVFDk3evSzYmidn0vbAfkwAam/llh/gxOa2jnctHLhAH3yxaVdzYotwV
- gN+ISGV3QdbwKC7kDx0Ubvj/TIvY3KJtiOEWUiGOvEVjyibkg/s2dT5Pb2w5KssYu5WL
- OWbgdJLBBvZWSGoBDeT4/uw0zCm870RFfojbMAw4Es9TTYioPHoCBBSiLe/M3dlSHJjr
- zqeHJBpG1iRP84ri1huIqxuZVohz3dcSC0wqPJpx9p4O2XD8aeVscFeNJcluDU5Q3H4R 7g== 
+ bh=mpbH1FF9XKtv7r8y6PNxOe9mv3yz5K4hANUnccS09fE=;
+ b=f/4wOUxEwX/w7Wt8uIOMW0POALtPWpQbPlynY0fUXzlbLYWOOszTrz9JB0UfLC1JMBM9
+ GGscu3TUIS9Gjs08frIg9LYo2G9X/XNrypN1XBj/lr+fQfQiIN2cFAWJZ0lJqggfzM4x
+ qfsxVw410mCmtt8dYYAf5us9FesFrODYHQz2x79h/rCNKLAEAdnbZ9eCsXabxIQdKn21
+ bZvaYPidKmKvoK6YxM7cJ1e31BEfrEc/CZVMRYU/UXPfWaHa1qfmIgl/btDWZMlVRmYk
+ y9sS/XSvJXNgNbK/ypQEJkdJYFVG7D2/EAx4o7pfDt7kok4kzmPCupVgnpCJpCCn0wME LQ== 
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nfjwdg4s9-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nfkb10154-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 01 Feb 2023 06:39:05 +0000
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3116aTwB003997;
+	Wed, 01 Feb 2023 07:03:30 +0000
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 311723RY016828;
+	Wed, 1 Feb 2023 07:03:30 GMT
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nfkb10147-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 01 Feb 2023 07:03:30 +0000
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+	by ppma04ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3116IeL3026867;
 	Wed, 1 Feb 2023 06:39:05 GMT
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nfjwdg4rd-1
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma04ams.nl.ibm.com (PPS) with ESMTPS id 3ncvs7mdw3-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Wed, 01 Feb 2023 06:39:05 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-	by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 30VEGXlP013445;
-	Wed, 1 Feb 2023 06:39:02 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3ncvtycd84-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 01 Feb 2023 06:39:02 +0000
 Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3116cxbO44958020
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3116d1se21954962
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 1 Feb 2023 06:38:59 GMT
+	Wed, 1 Feb 2023 06:39:01 GMT
 Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 61FAD2004B;
+	by IMSVA (Postfix) with ESMTP id 41F6B2004D;
+	Wed,  1 Feb 2023 06:39:01 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BBEB82004B;
 	Wed,  1 Feb 2023 06:38:59 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4CD1F2004F;
-	Wed,  1 Feb 2023 06:38:57 +0000 (GMT)
 Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.ibm.com.com (unknown [9.43.109.52])
 	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  1 Feb 2023 06:38:57 +0000 (GMT)
+	Wed,  1 Feb 2023 06:38:59 +0000 (GMT)
 From: Sourabh Jain <sourabhjain@linux.ibm.com>
 To: linuxppc-dev@ozlabs.org, mpe@ellerman.id.au
-Subject: [PATCH v8 7/8] crash: forward memory_notify args to arch crash hotplug handler
-Date: Wed,  1 Feb 2023 12:08:40 +0530
-Message-Id: <20230201063841.965316-8-sourabhjain@linux.ibm.com>
+Subject: [PATCH v8 8/8] powerpc/kexec: add crash memory hotplug support
+Date: Wed,  1 Feb 2023 12:08:41 +0530
+Message-Id: <20230201063841.965316-9-sourabhjain@linux.ibm.com>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230201063841.965316-1-sourabhjain@linux.ibm.com>
 References: <20230201063841.965316-1-sourabhjain@linux.ibm.com>
 MIME-Version: 1.0
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: F5eB6k2ymfWmUNExIuhzjYS8ePdUzkti
-X-Proofpoint-ORIG-GUID: 5wntXt5cg04OnEd7nNn7BSk6Ih_0o-u0
+X-Proofpoint-ORIG-GUID: _ufs1nwUeino9MW_g7ZqJclIlI9ExnZ-
+X-Proofpoint-GUID: hXsxEh1CqZnvWHhHeWbaUfpGF-Rfutb-
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
  definitions=2023-02-01_02,2023-01-31_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- priorityscore=1501 mlxscore=0 adultscore=0 bulkscore=0 malwarescore=0
- lowpriorityscore=0 clxscore=1015 mlxlogscore=999 suspectscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2302010056
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 clxscore=1015 lowpriorityscore=0 impostorscore=0
+ malwarescore=0 phishscore=0 mlxscore=0 suspectscore=0 mlxlogscore=999
+ bulkscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2302010061
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230131_223908_676711_EBDF2D58 
-X-CRM114-Status: GOOD (  25.74  )
+X-CRM114-CacheID: sfid-20230131_230335_671710_304EB3A5 
+X-CRM114-Status: GOOD (  37.54  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -108,192 +108,291 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The way memory hot remove is handled on PowerPC, it is hard to update
-the elfcorehdr without memory_notify args.
+Extend PowerPC arch crash hotplug handler to support memory hotplug
+events. Since elfcorehdr is used to exchange the memory info between the
+kernels hence it needs to be recreated to reflect the changes due to
+memory hotplug events.
 
-On PowePC memblock data structure is used to prepare elfcorehdr for kdump.
-Since the notifier used for memory hotplug crash handler get initiated
-before the memblock data structure update happens (as depicted below),
-the newly prepared elfcorehdr still holds the old memory regions. So if
-the system crash with obsolete elfcorehdr, makedumpfile failed to collect
-vmcore.
+The way memory hotplug events are handled on PowerPC and the notifier call
+chain used in generic code to trigger the arch crash handler, the process
+to recreate the elfcorehdr is different for memory add and remove events.
 
-Sequence of actions done on PowerPC to serve the memory hot remove:
+In the hot remove case, the memory region is first marked offline then the
+notifier call chain is triggered (same is used to initiate arch crash
+hotplug handler) and at last the memblock structure is updated. Whereas
+in the hot add case, memblock structure is updated before the notifier
+call chain is triggered.
 
- Initiate memory hot remove
-          |
-          v
- offline pages
-          |
-          v
- initiate memory notify call chain
- for MEM_OFFLINE event.
- (same is used for crash update)
-          |
-          v
- prepare new elfcorehdr for kdump using
- memblock data structure
-          |
-          v
- update memblock data structure
+On PowerPC, memblock structure is used to identify the memory ranges for
+elfcorehdr. In case of memory hot remove the memblock structure is updated
+after the arch crash hotplug handler is triggered, hence an additional
+step is taken to ensure that memory ranges used to build elfcorehdr do
+not include hot removed memory. Whereas no such extra steps are needed
+for the hot add case because memblock structure is updated before the
+arch crash hotplug handler is triggered.
 
-How passing memory_notify to arch crash hotplug handler will help?
+The hot removed memory is explicitly removed from the memory ranges list
+before creating elfcorehdr for the hot remove case.
 
-memory_notify holds the start PFN and page count, with that base address
-and size of hot unplugged memory can calculated and same can be use to
-avoid hot unplugged memory region to get added in the elfcorehdr.
+To accommodate a growing number of memory regions, elfcorehdr is built
+with additional buffer space to hold max memory regions.
+
+The changes done here will also work for the kexec_load system call given
+that the kexec tool builds the elfcoredhr with additional space to
+accommodate future memory regions as it is done for kexec_file_load
+system call.
 
 Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
 ---
- arch/powerpc/include/asm/kexec.h |  2 +-
- arch/powerpc/kexec/core_64.c     |  3 ++-
- arch/x86/include/asm/kexec.h     |  3 ++-
- arch/x86/kernel/crash.c          |  4 +++-
- include/linux/kexec.h            |  6 +++++-
- kernel/crash_core.c              | 14 +++++++-------
- 6 files changed, 20 insertions(+), 12 deletions(-)
+ arch/powerpc/include/asm/kexec_ranges.h |  1 +
+ arch/powerpc/kexec/core_64.c            | 59 ++++++++++++++++++++++--
+ arch/powerpc/kexec/file_load_64.c       | 36 ++++++++++++++-
+ arch/powerpc/kexec/ranges.c             | 60 +++++++++++++++++++++++++
+ 4 files changed, 151 insertions(+), 5 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
-index c2b8debc11a61..f49eec264e545 100644
---- a/arch/powerpc/include/asm/kexec.h
-+++ b/arch/powerpc/include/asm/kexec.h
-@@ -108,7 +108,7 @@ int get_crash_memory_ranges(struct crash_mem **mem_ranges);
- int machine_kexec_post_load(struct kimage *image);
- #define machine_kexec_post_load machine_kexec_post_load
- 
--void arch_crash_handle_hotplug_event(struct kimage *image, unsigned int hp_action);
-+void arch_crash_handle_hotplug_event(struct kimage *image, unsigned int hp_action, void *arg);
- #define arch_crash_handle_hotplug_event arch_crash_handle_hotplug_event
- 
- #endif
+diff --git a/arch/powerpc/include/asm/kexec_ranges.h b/arch/powerpc/include/asm/kexec_ranges.h
+index f83866a19e870..802abf580cf0f 100644
+--- a/arch/powerpc/include/asm/kexec_ranges.h
++++ b/arch/powerpc/include/asm/kexec_ranges.h
+@@ -7,6 +7,7 @@
+ void sort_memory_ranges(struct crash_mem *mrngs, bool merge);
+ struct crash_mem *realloc_mem_ranges(struct crash_mem **mem_ranges);
+ int add_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size);
++int remove_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size);
+ int add_tce_mem_ranges(struct crash_mem **mem_ranges);
+ int add_initrd_mem_range(struct crash_mem **mem_ranges);
+ #ifdef CONFIG_PPC_64S_HASH_MMU
 diff --git a/arch/powerpc/kexec/core_64.c b/arch/powerpc/kexec/core_64.c
-index 5fdc9fe4e7fe0..27a360120bc55 100644
+index 27a360120bc55..d877b8c2e7427 100644
 --- a/arch/powerpc/kexec/core_64.c
 +++ b/arch/powerpc/kexec/core_64.c
-@@ -620,11 +620,12 @@ int update_cpus_node(void *fdt)
+@@ -19,6 +19,7 @@
+ #include <linux/of.h>
+ #include <linux/libfdt.h>
+ #include <linux/memblock.h>
++#include <linux/memory.h>
+ 
+ #include <asm/page.h>
+ #include <asm/current.h>
+@@ -616,6 +617,60 @@ int update_cpus_node(void *fdt)
+ }
+ 
+ #if defined(CONFIG_CRASH_HOTPLUG)
++int update_crash_elfcorehdr(struct kimage *image, unsigned int hp_action, void *arg)
++{
++	int ret;
++	struct crash_mem *cmem = NULL;
++	struct kexec_segment *ksegment;
++	unsigned long elfsz;
++	void *elfbuf = NULL;
++	void *mem;
++	unsigned long memsz;
++	char *ptr;
++	struct memory_notify *mn = (struct memory_notify *) arg;
++	unsigned long base_addr;
++	unsigned long size;
++
++	ksegment = &image->segment[image->elfcorehdr_index];
++	mem = (void *) ksegment->mem;
++	memsz = ksegment->memsz;
++
++	ret = get_crash_memory_ranges(&cmem);
++	if (ret) {
++		pr_err("crash hp: failed to get crash mem range\n");
++		return -1;
++	}
++
++	if (hp_action == KEXEC_CRASH_HP_REMOVE_MEMORY) {
++		base_addr = PFN_PHYS(mn->start_pfn);
++		size = mn->nr_pages * PAGE_SIZE;
++		ret = remove_mem_range(&cmem, base_addr, size);
++		if (ret)
++			return -1;
++	}
++
++	ret = crash_prepare_elf64_headers(image, cmem, false, &elfbuf, &elfsz);
++	if (ret) {
++		pr_err("crash hp: failed to prepare elf header\n");
++		return -1;
++	}
++
++	if (elfsz > memsz) {
++		pr_err("crash hp: updated crash elfcorehdr elfsz %lu > memsz %lu", elfsz, memsz);
++		return -1;
++	}
++
++	ptr = __va(mem);
++	if (ptr) {
++		xchg(&kexec_crash_image, NULL);
++		memcpy((void *)ptr, elfbuf, elfsz);
++		xchg(&kexec_crash_image, image);
++	}
++
++	vfree(elfbuf);
++	return 0;
++}
++
+ /**
   * arch_crash_hotplug_handler() - Handle hotplug kexec segements changes FDT, elfcorehdr
   * @image: the active struct kimage
-  * @hp_action: the hot un/plug action being handled
-+ * @arg: struct memory_notify data handler
-  *
-  * To accurately reflect CPU hot un/plug changes, the FDT must be updated with the
-  * new list of CPUs.
-  */
--void arch_crash_handle_hotplug_event(struct kimage *image, unsigned int hp_action)
-+void arch_crash_handle_hotplug_event(struct kimage *image, unsigned int hp_action, void *arg)
- {
- 	void *fdt;
+@@ -633,9 +688,8 @@ void arch_crash_handle_hotplug_event(struct kimage *image, unsigned int hp_actio
+ 	if (hp_action == KEXEC_CRASH_HP_REMOVE_CPU)
+ 		return;
  
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index ec33a592a2ddd..171edb8167a12 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -213,7 +213,8 @@ extern crash_vmclear_fn __rcu *crash_vmclear_loaded_vmcss;
- extern void kdump_nmi_shootdown_cpus(void);
+-	/* crash update on memory hotplug is not support yet */
+ 	if (hp_action == KEXEC_CRASH_HP_REMOVE_MEMORY || hp_action == KEXEC_CRASH_HP_ADD_MEMORY) {
+-		pr_info_once("crash hp: crash update is not supported with memory hotplug\n");
++		update_crash_elfcorehdr(image, hp_action, arg);
+ 		return;
+ 	}
  
- #ifdef CONFIG_CRASH_HOTPLUG
--void arch_crash_handle_hotplug_event(struct kimage *image, unsigned int hp_action);
-+void arch_crash_handle_hotplug_event(struct kimage *image,
-+				     unsigned int hp_action, void *arg);
- #define arch_crash_handle_hotplug_event arch_crash_handle_hotplug_event
+@@ -650,7 +704,6 @@ void arch_crash_handle_hotplug_event(struct kimage *image, unsigned int hp_actio
+ 	/* Temporarily invalidate the crash image while it is replaced */
+ 	xchg(&kexec_crash_image, NULL);
  
- #ifdef CONFIG_HOTPLUG_CPU
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index c0b5afad37565..bbe8e3cd0c61d 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -464,12 +464,14 @@ int crash_load_segments(struct kimage *image)
-  * arch_crash_handle_hotplug_event() - Handle hotplug elfcorehdr changes
-  * @image: the active struct kimage
-  * @hp_action: the hot un/plug action being handled
-+ * @arg: struct memory_notify data handler
-  *
-  * To accurately reflect hot un/plug changes, the new elfcorehdr
-  * is prepared in a kernel buffer, and then it is written on top
-  * of the existing/old elfcorehdr.
-  */
--void arch_crash_handle_hotplug_event(struct kimage *image, unsigned int hp_action)
-+void arch_crash_handle_hotplug_event(struct kimage *image,
-+				     unsigned int hp_action, void *arg)
- {
- 	void *elfbuf = NULL, *old_elfcorehdr;
- 	unsigned long nr_mem_ranges;
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 5461a4ad50e2a..fe33f6aeed843 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -509,7 +509,11 @@ static inline void arch_kexec_pre_free_pages(void *vaddr, unsigned int pages) {
- #endif
+-	/* update FDT to refelect changes to CPU resrouces */
+ 	if (update_cpus_node(fdt))
+ 		pr_err("crash hp: failed to update crash FDT");
  
- #ifndef arch_crash_handle_hotplug_event
--static inline void arch_crash_handle_hotplug_event(struct kimage *image, unsigned int hp_action) { }
-+static inline void arch_crash_handle_hotplug_event(struct kimage *image,
-+						   unsigned int hp_action,
-+						   void *arg)
+diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
+index ceac592be72b9..4b96c6017cf1b 100644
+--- a/arch/powerpc/kexec/file_load_64.c
++++ b/arch/powerpc/kexec/file_load_64.c
+@@ -21,6 +21,8 @@
+ #include <linux/memblock.h>
+ #include <linux/slab.h>
+ #include <linux/vmalloc.h>
++#include <linux/elf.h>
++
+ #include <asm/setup.h>
+ #include <asm/drmem.h>
+ #include <asm/firmware.h>
+@@ -704,6 +706,30 @@ static void update_backup_region_phdr(struct kimage *image, Elf64_Ehdr *ehdr)
+ 	}
+ }
+ 
++/* get_max_phdr - Find the total number of Phdr needed to represent the
++ *		  max memory in the kdump elfcorehdr.
++ *
++ * @cmem: crash memory ranges in the system.
++ */
++static int get_max_phdr(struct crash_mem *cmem)
 +{
++	int max_lmb;
++
++	/* In the worst case, a Phdr is needed for every other LMB to be represented
++	 * as an individual crash range.
++	 */
++	max_lmb = memory_hotplug_max() / 2 * drmem_lmb_size();
++
++	/* Do not cross the Phdr max limit of the elf header.
++	 * Avoid counting Phdr for crash ranges (cmem->nr_ranges) which
++	 * are already part of elfcorehdr.
++	 */
++	if (max_lmb > PN_XNUM)
++		return PN_XNUM - cmem->nr_ranges;
++
++	return max_lmb - cmem->nr_ranges;
 +}
- #endif
++
+ /**
+  * load_elfcorehdr_segment - Setup crash memory ranges and initialize elfcorehdr
+  *                           segment needed to load kdump kernel.
+@@ -735,7 +761,13 @@ static int load_elfcorehdr_segment(struct kimage *image, struct kexec_buf *kbuf)
  
- #else /* !CONFIG_KEXEC_CORE */
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 3aede7187c8b4..f19978dcb1e65 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -727,7 +727,7 @@ subsys_initcall(crash_save_vmcoreinfo_init);
-  * list of segments it checks (since the elfcorehdr changes and thus
-  * would require an update to purgatory itself to update the digest).
-  */
--static void handle_hotplug_event(unsigned int hp_action, unsigned int cpu)
-+static void handle_hotplug_event(unsigned int hp_action, unsigned int cpu, void *arg)
- {
- 	/* Obtain lock while changing crash information */
- 	if (kexec_trylock()) {
-@@ -789,7 +789,7 @@ static void handle_hotplug_event(unsigned int hp_action, unsigned int cpu)
- 					cpu : KEXEC_CRASH_HP_INVALID_CPU;
+ 	kbuf->buffer = headers;
+ 	kbuf->mem = KEXEC_BUF_MEM_UNKNOWN;
+-	kbuf->bufsz = kbuf->memsz = headers_sz;
++	kbuf->bufsz = headers_sz;
++/* Additional buffer space to accommodate future memory ranges */
++#if defined(CONFIG_MEMORY_HOTPLUG)
++	kbuf->memsz = headers_sz + get_max_phdr(cmem) * sizeof(Elf64_Phdr);
++#else
++	kbuf->memsz = headers_sz;
++#endif
+ 	kbuf->top_down = false;
  
- 			/* Now invoke arch-specific update handler */
--			arch_crash_handle_hotplug_event(image, hp_action);
-+			arch_crash_handle_hotplug_event(image, hp_action, arg);
- 
- 			/* No longer handling a hotplug event */
- 			image->hotplug_event = false;
-@@ -804,17 +804,17 @@ static void handle_hotplug_event(unsigned int hp_action, unsigned int cpu)
+ 	ret = kexec_add_buffer(kbuf);
+@@ -745,7 +777,7 @@ static int load_elfcorehdr_segment(struct kimage *image, struct kexec_buf *kbuf)
  	}
+ 
+ 	image->elf_load_addr = kbuf->mem;
+-	image->elf_headers_sz = headers_sz;
++	image->elf_headers_sz = kbuf->memsz;
+ 	image->elf_headers = headers;
+ out:
+ 	kfree(cmem);
+diff --git a/arch/powerpc/kexec/ranges.c b/arch/powerpc/kexec/ranges.c
+index 5fc53a5fcfdf6..2bb90874df781 100644
+--- a/arch/powerpc/kexec/ranges.c
++++ b/arch/powerpc/kexec/ranges.c
+@@ -234,6 +234,66 @@ int add_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size)
+ 	return __add_mem_range(mem_ranges, base, size);
  }
  
--static int crash_memhp_notifier(struct notifier_block *nb, unsigned long val, void *v)
-+static int crash_memhp_notifier(struct notifier_block *nb, unsigned long val, void *arg)
- {
- 	switch (val) {
- 	case MEM_ONLINE:
- 		handle_hotplug_event(KEXEC_CRASH_HP_ADD_MEMORY,
--			KEXEC_CRASH_HP_INVALID_CPU);
-+			KEXEC_CRASH_HP_INVALID_CPU, arg);
- 		break;
- 
- 	case MEM_OFFLINE:
- 		handle_hotplug_event(KEXEC_CRASH_HP_REMOVE_MEMORY,
--			KEXEC_CRASH_HP_INVALID_CPU);
-+			KEXEC_CRASH_HP_INVALID_CPU, arg);
- 		break;
- 	}
- 	return NOTIFY_OK;
-@@ -827,13 +827,13 @@ static struct notifier_block crash_memhp_nb = {
- 
- static int crash_cpuhp_online(unsigned int cpu)
- {
--	handle_hotplug_event(KEXEC_CRASH_HP_ADD_CPU, cpu);
-+	handle_hotplug_event(KEXEC_CRASH_HP_ADD_CPU, cpu, NULL);
- 	return 0;
- }
- 
- static int crash_cpuhp_offline(unsigned int cpu)
- {
--	handle_hotplug_event(KEXEC_CRASH_HP_REMOVE_CPU, cpu);
-+	handle_hotplug_event(KEXEC_CRASH_HP_REMOVE_CPU, cpu, NULL);
- 	return 0;
- }
- 
++/**
++ * remove_mem_range - Removes the given memory range from the range list.
++ * @mem_ranges:    Range list to remove the memory range to.
++ * @base:          Base address of the range to remove.
++ * @size:          Size of the memory range to remove.
++ *
++ * (Re)allocates memory, if needed.
++ *
++ * Returns 0 on success, negative errno on error.
++ */
++int remove_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size)
++{
++	int ret = 0;
++	unsigned int i;
++	struct crash_mem *mem_rngs = *mem_ranges;
++	u64 mstart, mend;
++	u64 range_start, range_end;
++
++	if (!size)
++		return 0;
++
++	range_start = base;
++	range_end = base + size - 1;
++
++	for (i = 0; i < mem_rngs->nr_ranges; i++) {
++		mstart = mem_rngs->ranges[i].start;
++		mend = mem_rngs->ranges[i].end;
++
++		if (!(range_start >= mstart && range_end <= mend))
++			continue;
++
++		if (range_start == mstart) {
++			if (range_end == mend) {
++				for (; i < mem_rngs->nr_ranges - 1; i++) {
++					mem_rngs->ranges[i].start = mem_rngs->ranges[i+1].start;
++					mem_rngs->ranges[i].end = mem_rngs->ranges[i+1].end;
++				}
++				mem_rngs->nr_ranges--;
++				goto out;
++			}
++			mem_rngs->ranges[i].start = range_end + 1;
++			goto out;
++		} else if (range_end == mend)  {
++			mem_rngs->ranges[i].end = range_start - 1;
++			goto out;
++		} else {
++			size = mem_rngs->ranges[i].end - range_end;
++			mem_rngs->ranges[i].end = range_start - 1;
++			if (add_mem_range(mem_ranges, range_end + 1, size))
++				goto error;
++			goto out;
++		}
++	}
++error:
++	return -1;
++
++out:
++	return ret;
++}
++
+ /**
+  * add_tce_mem_ranges - Adds tce-table range to the given memory ranges list.
+  * @mem_ranges:         Range list to add the memory range(s) to.
 -- 
 2.39.1
 
