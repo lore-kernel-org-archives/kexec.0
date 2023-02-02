@@ -4,72 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6FEB8C636CD
-	for <kexec@archiver.kernel.org>; Sat,  4 Feb 2023 06:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E0C48C636CC
+	for <kexec@archiver.kernel.org>; Sun,  5 Feb 2023 11:44:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:To:Date:Message-Id:Subject:Mime-Version
-	:From:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=xFlMr0dogz9NSKYYxo4gEgiZut39WRAFvSZ/fmfIY1U=; b=jPAj3v8yMH2rO6
-	has4/v2dZHUiLBtt2j3/4AKG8XRjNox/Horai6dBtCPwW63yhZPqVhrEc1yY6LT+oiAOmUrveo2w0
-	Qze7+6EBzBSgFOuwxYlEi7SgJgUiP59j8BHEvvEgF3Pv9WDADLe4vpj+Ije8NDtAzF3uK0qAYxjL0
-	E93lBj5KT20IZ8DWPin7e5WRAw7bLpFhQ8uNKV5O8EAm0nXvUzFIgY7mZDYWLjmANH4Euj6sHMrwd
-	+pg2h3ZW//zDd0ZWtQaxKls8EW23Fg+MeVjq3mKcn9az0B57Km5pwOpcofM6lcbUITO5xbNi7fCg2
-	lfe96xwzfm+agNgnCwaA==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	List-Subscribe:List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:
+	In-Reply-To:MIME-Version:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+	List-Owner; bh=Odk86bVTjUVKcvYIgpdeeaBh1H3hF2hq/Fc2whXAgww=; b=craO1XIUnSkIn0
+	reSrKGQSo28F1S/fKUGeNIad/mpWI9QrTi8eLKOY5cgtLMJSsOHvOls5kLmebGhuhZwUsk2hkukoU
+	EcxAL/OOk89QC/oSKS/ynNM3BM+BxFTbToa8n7l9UB/YqXREWw1q6kwZFo0e25vrCrxCBllN9P5r5
+	XEd9MH26cTC43FH1AfdM1/UdcLTpovS/XgD5kGz7GCIXSW50++2L5WUaDnXnjMOZ6oXFJNd0dbw3i
+	z3nz/GLK/MPZlQ+6yOtiM0sZH1jOkpRYQpPoZYtgcV/UPKWcpWBzgbgV8NcmiSolNm3T258L4pubV
+	rSImUPTy2/PhKDVKHzKg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pOCJV-004aG8-N6; Sat, 04 Feb 2023 06:46:17 +0000
-Received: from mail-pj1-x102b.google.com ([2607:f8b0:4864:20::102b])
-	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pOCJS-004aFl-HH
-	for kexec@lists.infradead.org; Sat, 04 Feb 2023 06:46:15 +0000
-Received: by mail-pj1-x102b.google.com with SMTP id ge21-20020a17090b0e1500b002308aac5b5eso982453pjb.4
-        for <kexec@lists.infradead.org>; Fri, 03 Feb 2023 22:46:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:date:message-id:subject:mime-version:content-transfer-encoding
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=TY5RTQSF5wOJD3pV9s/wHYnsrIWrQcdAYTC5xFu9fOM=;
-        b=aO4zwHTPgdrJVwninSB+8FzOWnv4pOjoIY6PNlfn4XpOa85Ydn+IMopnrTrW5R45tf
-         RTAFr8HiOJ6HRr+O77O5TcHvkZCU0CAMtbOJENbTRenP05+9Vc0wfAu4J1eJAfSXmMn3
-         pEpCBpx2LU7t56HWYvsZkaibxpC7f6I/vh0mvwARyPXx7qOBiwL69LHBWdViCyZYy1vb
-         e1aJnUen4Hs5Zm2AgBiZQ8GUM2IkOFA/ZlWlePlHRAB9XbItwaOzcTxCfZp/f+h6zAhM
-         9WYDasg0jIDYDfC2sDF/efLnsnKoxLlYPwc/+kG1lO3GnvigeafQOnA144iQ1KRFIz41
-         IiFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:date:message-id:subject:mime-version:content-transfer-encoding
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TY5RTQSF5wOJD3pV9s/wHYnsrIWrQcdAYTC5xFu9fOM=;
-        b=l0dv4hdYYfy3wObJSpzkgFeSo2mryp80i0gtoqgAYDbZSa1MJPjc8Aqt8YJPcEZF+Z
-         eTDlva6QWTpjDcq7Ab0J4ZYCM+mz+N+izAxo9R7hqVEi1jo9kuPGHrcgTwbN/IotMH/1
-         lM4sVPxH4yDgd2rO/SgnNjqpOYf8G3G9eWBplvi86IxCmtdlTZWtfPurgXNoGtyHEghB
-         DTVrQ/nauItQopUb3WClIFZUIJpmKsG14sYiyVOj0U0gcZFIfEQ07B7+BsMIIGvbqFcf
-         I0cdmfXys/z9O7b/GopRhcU3VjSKtJ8YK6vrfUjoFyS4/LZYtgdbZdTEf+W6ehjjiYoY
-         63Hg==
-X-Gm-Message-State: AO0yUKX2s3j5QDPYaPIZMxJy9Uc/LivZok6YRq4R0m1ri9hzB9E9/HdC
-	hU1DQR49Ij1puOKFvIrBVuEJ/GS9ATpqZA==
-X-Google-Smtp-Source: AK7set9m3m2wBrh91/xgEUka8lvxq67iOAgJslUnz5P0mxjv1Mj0BkQ0bYaLo74g40XN/duz1wuK2w==
-X-Received: by 2002:a17:902:ea03:b0:196:5cfe:70b2 with SMTP id s3-20020a170902ea0300b001965cfe70b2mr15178244plg.52.1675493172140;
-        Fri, 03 Feb 2023 22:46:12 -0800 (PST)
-Received: from smtpclient.apple (cpe-104-32-24-134.socal.res.rr.com. [104.32.24.134])
-        by smtp.gmail.com with ESMTPSA id f8-20020a170902ab8800b00198f6e1f9f7sm361358plr.232.2023.02.03.22.46.11
-        for <kexec@lists.infradead.org>
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 03 Feb 2023 22:46:11 -0800 (PST)
-From: Yishen Miao <mys721tx@gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.400.51.1.1\))
-Subject: Unified Kernel Image Support
-Message-Id: <5D04A23B-9A82-4186-AFA8-7E3A0FBBDF86@gmail.com>
-Date: Fri, 3 Feb 2023 22:46:01 -0800
+	id 1pOdRW-006J3A-M5; Sun, 05 Feb 2023 11:44:22 +0000
+Received: from [139.28.40.42] (helo=tarta.nabijaczleweli.xyz)
+	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1pNiqA-00HOjV-Qp
+	for kexec@lists.infradead.org; Thu, 02 Feb 2023 23:18:04 +0000
+Received: from tarta.nabijaczleweli.xyz (unknown [192.168.1.250])
+	by tarta.nabijaczleweli.xyz (Postfix) with ESMTPSA id 270C9B76;
+	Fri,  3 Feb 2023 00:10:19 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nabijaczleweli.xyz;
+	s=202211; t=1675379419;
+	bh=FQVAlkyCMXUqDcJJP8aCvHjOobANB8oK8qKNl39neOo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=b/ncWqljVLvi2LHfT4lMDhilzJLZYb80yGnfWuNJn2vHwLSlJUGIo06RAyZvV5h9g
+	 x1YB/VBZP7DVnpSCEt7DjBsPA862i5sa5ivr99busK2FI+h3W74m3l+I3ap/e0b6QY
+	 LzwpCf2MV4RRJ/lbbSjdlYgPtn5+ntERsWzlI+vVdDDAaW0HhUqB5Dbmohll2PIUgt
+	 wV3JgaSwHGs7dyxIfbyk08Hkc9b0X1EJMdc2QXBjjUlPoJKddTLd7IkbwgSDKO+oJI
+	 EBH0DPjDIOLmwVaNWv2HNZLH75+X9z8clSy2jvhWLq+ymgTTsMl377AM5thF5K4PW8
+	 qdF3lI0QAW5oA==
+Date: Fri, 3 Feb 2023 00:10:18 +0100
+From: Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>
 To: kexec@lists.infradead.org
-X-Mailer: Apple Mail (2.3731.400.51.1.1)
+Cc: 1030248@bugs.debian.org
+Subject: [PATCH] kexec: make -a the default
+Message-ID: <20230202231018.fnyq4ech4tiivgbi@tarta.nabijaczleweli.xyz>
+Mail-Followup-To: kexec@lists.infradead.org, 1030248@bugs.debian.org
+MIME-Version: 1.0
+In-Reply-To: <20230201151658.wvalwoz2jmjejcll@babtop.nabijaczleweli.xyz>
+User-Agent: NeoMutt/20220429
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230203_224614_610042_F648828F 
-X-CRM114-Status: UNSURE (   5.42  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20230202_151803_083650_9741E69A 
+X-CRM114-Status: GOOD (  18.13  )
+X-Mailman-Approved-At: Sun, 05 Feb 2023 03:44:17 -0800
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,28 +63,164 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============5760071681250635273=="
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hello all,
 
-I am experimenting kexec on my box. It uses systemd-boot as the bootloader and boots from a unified kernel image (objcopy'ed cmdline, kernel, initrdramfs, and microcode updates). As of kexec-tools 2.0.25 and systemd 252.5, when I rum systemctl kexec, it returns the following:
-
-
-# sudo systemctl kexec
-Running /usr/bin/kexec --load "/efi/EFI/Linux/ArchLinux-linux.efi" --append "root=UUID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"(null)
-Cannot determine the file type of /efi/EFI/Linux/ArchLinux-linux.efi
-
-It seems that systemctl successfully identified the UKI from systemd-boot, however, kexec could not recognize it.
-
-Are there any plans to add UKI support to kexec? Your response is greatly appreciated!
+--===============5760071681250635273==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="b2jixbnmiefkvht6"
+Content-Disposition: inline
 
 
-Best,
-mys_721tx
+--b2jixbnmiefkvht6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+AFAICT, there's no downside to this, and running into this each time
+I want to kexec (and, presumably, a significant chunk of the population,
+since lockdown is quite popular) on some machines,
+then going to the manual, then finding out I want the /auto/ flag(!)
+is quite annoying:
+  # kexec -l /boot/vmlinuz-6.1.0-3-amd64 --initrd /boot/initrd.img-6.1.0-3-=
+amd64 --reuse-cmdline
+  kexec_load failed: Operation not permitted
+  entry       =3D 0x46eff7760 flags =3D 0x3e0000
+  nr_segments =3D 7
+  segment[0].buf   =3D 0x557cd303efa0
+  segment[0].bufsz =3D 0x70
+  segment[0].mem   =3D 0x100000
+  segment[0].memsz =3D 0x1000
+  segment[1].buf   =3D 0x557cd3046fe0
+  segment[1].bufsz =3D 0x190
+  segment[1].mem   =3D 0x101000
+  segment[1].memsz =3D 0x1000
+  segment[2].buf   =3D 0x557cd303f6e0
+  segment[2].bufsz =3D 0x30
+  segment[2].mem   =3D 0x102000
+  segment[2].memsz =3D 0x1000
+  segment[3].buf   =3D 0x7f658fa37010
+  segment[3].bufsz =3D 0x12a51b5
+  segment[3].mem   =3D 0x46a55a000
+  segment[3].memsz =3D 0x12a6000
+  segment[4].buf   =3D 0x7f6590ce1210
+  segment[4].bufsz =3D 0x7e99e0
+  segment[4].mem   =3D 0x46b800000
+  segment[4].memsz =3D 0x377c000
+  segment[5].buf   =3D 0x557cd3039350
+  segment[5].bufsz =3D 0x42fa
+  segment[5].mem   =3D 0x46eff2000
+  segment[5].memsz =3D 0x5000
+  segment[6].buf   =3D 0x557cd3032000
+  segment[6].bufsz =3D 0x70e0
+  segment[6].mem   =3D 0x46eff7000
+  segment[6].memsz =3D 0x9000
+
+Closes: https://bugs.debian.org/1030248
+Signed-off-by: Ahelenia Ziemia=C5=84ska <nabijaczleweli@nabijaczleweli.xyz>
+---
+ kexec/kexec.8 | 4 ++--
+ kexec/kexec.c | 8 ++++----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/kexec/kexec.8 b/kexec/kexec.8
+index 3ebede6..66453b8 100644
+--- a/kexec/kexec.8
++++ b/kexec/kexec.8
+@@ -151,14 +151,14 @@ Specify that the new kernel is of this
+ Specify that the new KEXEC_FILE_LOAD syscall should be used exclusively.
+ .TP
+ .BI \-c\ (\-\-kexec-syscall)
+-Specify that the old KEXEC_LOAD syscall should be used exclusively (the de=
+fault).
++Specify that the old KEXEC_LOAD syscall should be used exclusively.
+ .TP
+ .BI \-a\ (\-\-kexec-syscall-auto)
+ Try the new KEXEC_FILE_LOAD syscall first and when it is not supported or =
+the
+ kernel does not understand the supplied image fall back to the old KEXEC_L=
+OAD
+ interface.
+=20
+-There is no one single interface that always works.
++There is no one single interface that always works, so this is the default.
+=20
+ KEXEC_FILE_LOAD is required on systems that use locked-down secure boot to
+ verify the kernel signature.  KEXEC_LOAD may be also disabled in the kernel
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index 0e92d96..36bb2ad 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -1049,11 +1049,11 @@ void usage(void)
+ 	       "                      to original kernel.\n"
+ 	       " -s, --kexec-file-syscall Use file based syscall for kexec operat=
+ion\n"
+ 	       " -c, --kexec-syscall  Use the kexec_load syscall for for compatib=
+ility\n"
+-	       "                      with systems that don't support -s (default=
+)\n"
++	       "                      with systems that don't support -s\n"
+ 	       " -a, --kexec-syscall-auto  Use file based syscall for kexec and f=
+all\n"
+ 	       "                      back to the compatibility syscall when file=
+ based\n"
+ 	       "                      syscall is not supported or the kernel did =
+not\n"
+-	       "                      understand the image\n"
++	       "                      understand the image (default)\n"
+ 	       " -d, --debug          Enable debugging to help spot a failure.\n"
+ 	       " -S, --status         Return 1 if the type (by default crash) is =
+loaded,\n"
+ 	       "                      0 if not.\n"
+@@ -1407,8 +1407,8 @@ int main(int argc, char *argv[])
+ 	int do_ifdown =3D 0, skip_ifdown =3D 0;
+ 	int do_unload =3D 0;
+ 	int do_reuse_initrd =3D 0;
+-	int do_kexec_file_syscall =3D 0;
+-	int do_kexec_fallback =3D 0;
++	int do_kexec_file_syscall =3D 1;
++	int do_kexec_fallback =3D 1;
+ 	int skip_checks =3D 0;
+ 	int do_status =3D 0;
+ 	void *entry =3D 0;
+--=20
+2.30.2
+
+--b2jixbnmiefkvht6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEfWlHToQCjFzAxEFjvP0LAY0mWPEFAmPcQtkACgkQvP0LAY0m
+WPFCsw/6AsVIggwSH3LUQwPHaSIWBeDPZDNpflpnqv0tpawIO4Jsvg8A4vvy15Cv
+O96zh5kE38zikkF9DhPje3iHy3TDcIWKhJFj5vbAbZHPOX7tEkfa0DWx2RboUFAn
+kvDsKfGTpus6qZGZhWco6Z3Ac9W02nRkIxuqS94id3a2DC6ME8zhqF24kyH430y/
+IkdFso+RHt8YLpOguKTSXMbvxVSFhrtKPTmBAgZ/f+Ac6EUXSXfbCN+0YTHmWj9j
+HU1uIsH3TEDEsKs/nSA8jln5gPuempWfeOOEIRqVy33zbOvMSlVLh0UErgP1PO11
+KPWV489Wx0d+MJpiuXgsJJ2ctjGIshGJ3mwr3bnr/QQw1WB3vqT4SmIcGgD9Z1vW
+zzRjci/zHi1KnWww0sFrRM/ngc5Xl84zyzl6zIzRuJcShyzL5S1ES0O+gGYdIn16
+ibGpB6GsejhjZJ57RyvlwGK8cjFRRRX6orG/Pi0GSiV1pEjw/mOcdv1EMzfmpE2r
+q9z96hdQ0onfWP9J5EMMfUP8pkcV2q+8oSlqoRkGd03jANgFBO9T+QeZejXI6fx8
+7N1ROEkGACP7a0r1Lt/m0A4b8lyRBRCSzm2ZfJVAldsNqTg+7YeCf1aYz1DjKQyw
+Zszhk8sNA3R1FLfsZTNybSlnMglz3rgTI3JF/0BiKJtlpiApuiw=
+=f62s
+-----END PGP SIGNATURE-----
+
+--b2jixbnmiefkvht6--
+
+
+--===============5760071681250635273==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============5760071681250635273==--
+
