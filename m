@@ -4,50 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 18C53C05027
-	for <kexec@archiver.kernel.org>; Fri,  3 Feb 2023 17:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6FEB8C636CD
+	for <kexec@archiver.kernel.org>; Sat,  4 Feb 2023 06:46:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=QLrX1UC1CZx8tyeh6Rh5WLsqEtBb4lzsChTU6B8B/s8=; b=bYR+Lz8NQr24Pi
-	8RZzwWhMODJhkopqyjcm213Ro62ujI0lE9hcVVACtC97cYdtco1aUaIskyGlK+I5JOdy6aWccHYRV
-	+TIg/byA+DCPNcTT89pXZJybuPJwZA+IH1bmIVY7xMOftLqC/X8l88+2g5nmzH3WoSbLwOebLWpTU
-	3BLANzEUK7PsRkO/WcHJnW/f1Wmwpx+HQy1cUgZvAW66rM9AUE0E5nnj2ym2cmgC79tkEZIyY2RrC
-	3xcjdnG6xWcU4CDE499mHpWAAO9Cjuds/K86X5FZERaeXrVxh8IflUhoRJWPE3beKJRUtF5QGspG3
-	MlPIhVJztl/iKxq6LswQ==;
+	List-Archive:List-Unsubscribe:List-Id:To:Date:Message-Id:Subject:Mime-Version
+	:From:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=xFlMr0dogz9NSKYYxo4gEgiZut39WRAFvSZ/fmfIY1U=; b=jPAj3v8yMH2rO6
+	has4/v2dZHUiLBtt2j3/4AKG8XRjNox/Horai6dBtCPwW63yhZPqVhrEc1yY6LT+oiAOmUrveo2w0
+	Qze7+6EBzBSgFOuwxYlEi7SgJgUiP59j8BHEvvEgF3Pv9WDADLe4vpj+Ije8NDtAzF3uK0qAYxjL0
+	E93lBj5KT20IZ8DWPin7e5WRAw7bLpFhQ8uNKV5O8EAm0nXvUzFIgY7mZDYWLjmANH4Euj6sHMrwd
+	+pg2h3ZW//zDd0ZWtQaxKls8EW23Fg+MeVjq3mKcn9az0B57Km5pwOpcofM6lcbUITO5xbNi7fCg2
+	lfe96xwzfm+agNgnCwaA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pO0Ch-0037vr-F3; Fri, 03 Feb 2023 17:50:27 +0000
-Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
+	id 1pOCJV-004aG8-N6; Sat, 04 Feb 2023 06:46:17 +0000
+Received: from mail-pj1-x102b.google.com ([2607:f8b0:4864:20::102b])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pO0Ce-0037uM-4v; Fri, 03 Feb 2023 17:50:25 +0000
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 5497961FA3;
-	Fri,  3 Feb 2023 17:50:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32A4BC433EF;
-	Fri,  3 Feb 2023 17:50:18 +0000 (UTC)
-Date: Fri, 3 Feb 2023 17:50:15 +0000
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Baoquan He <bhe@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, horms@kernel.org,
-	thunder.leizhen@huawei.com, John.p.donnelly@oracle.com,
-	will@kernel.org
-Subject: Re: [PATCH v2] arm64: kdump: simplify the reservation behaviour of
- crashkernel=,high
-Message-ID: <Y91JV7wNu1QQh1Ag@arm.com>
-References: <20230203075723.114538-1-bhe@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20230203075723.114538-1-bhe@redhat.com>
+	id 1pOCJS-004aFl-HH
+	for kexec@lists.infradead.org; Sat, 04 Feb 2023 06:46:15 +0000
+Received: by mail-pj1-x102b.google.com with SMTP id ge21-20020a17090b0e1500b002308aac5b5eso982453pjb.4
+        for <kexec@lists.infradead.org>; Fri, 03 Feb 2023 22:46:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:date:message-id:subject:mime-version:content-transfer-encoding
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TY5RTQSF5wOJD3pV9s/wHYnsrIWrQcdAYTC5xFu9fOM=;
+        b=aO4zwHTPgdrJVwninSB+8FzOWnv4pOjoIY6PNlfn4XpOa85Ydn+IMopnrTrW5R45tf
+         RTAFr8HiOJ6HRr+O77O5TcHvkZCU0CAMtbOJENbTRenP05+9Vc0wfAu4J1eJAfSXmMn3
+         pEpCBpx2LU7t56HWYvsZkaibxpC7f6I/vh0mvwARyPXx7qOBiwL69LHBWdViCyZYy1vb
+         e1aJnUen4Hs5Zm2AgBiZQ8GUM2IkOFA/ZlWlePlHRAB9XbItwaOzcTxCfZp/f+h6zAhM
+         9WYDasg0jIDYDfC2sDF/efLnsnKoxLlYPwc/+kG1lO3GnvigeafQOnA144iQ1KRFIz41
+         IiFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:date:message-id:subject:mime-version:content-transfer-encoding
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TY5RTQSF5wOJD3pV9s/wHYnsrIWrQcdAYTC5xFu9fOM=;
+        b=l0dv4hdYYfy3wObJSpzkgFeSo2mryp80i0gtoqgAYDbZSa1MJPjc8Aqt8YJPcEZF+Z
+         eTDlva6QWTpjDcq7Ab0J4ZYCM+mz+N+izAxo9R7hqVEi1jo9kuPGHrcgTwbN/IotMH/1
+         lM4sVPxH4yDgd2rO/SgnNjqpOYf8G3G9eWBplvi86IxCmtdlTZWtfPurgXNoGtyHEghB
+         DTVrQ/nauItQopUb3WClIFZUIJpmKsG14sYiyVOj0U0gcZFIfEQ07B7+BsMIIGvbqFcf
+         I0cdmfXys/z9O7b/GopRhcU3VjSKtJ8YK6vrfUjoFyS4/LZYtgdbZdTEf+W6ehjjiYoY
+         63Hg==
+X-Gm-Message-State: AO0yUKX2s3j5QDPYaPIZMxJy9Uc/LivZok6YRq4R0m1ri9hzB9E9/HdC
+	hU1DQR49Ij1puOKFvIrBVuEJ/GS9ATpqZA==
+X-Google-Smtp-Source: AK7set9m3m2wBrh91/xgEUka8lvxq67iOAgJslUnz5P0mxjv1Mj0BkQ0bYaLo74g40XN/duz1wuK2w==
+X-Received: by 2002:a17:902:ea03:b0:196:5cfe:70b2 with SMTP id s3-20020a170902ea0300b001965cfe70b2mr15178244plg.52.1675493172140;
+        Fri, 03 Feb 2023 22:46:12 -0800 (PST)
+Received: from smtpclient.apple (cpe-104-32-24-134.socal.res.rr.com. [104.32.24.134])
+        by smtp.gmail.com with ESMTPSA id f8-20020a170902ab8800b00198f6e1f9f7sm361358plr.232.2023.02.03.22.46.11
+        for <kexec@lists.infradead.org>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 03 Feb 2023 22:46:11 -0800 (PST)
+From: Yishen Miao <mys721tx@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.400.51.1.1\))
+Subject: Unified Kernel Image Support
+Message-Id: <5D04A23B-9A82-4186-AFA8-7E3A0FBBDF86@gmail.com>
+Date: Fri, 3 Feb 2023 22:46:01 -0800
+To: kexec@lists.infradead.org
+X-Mailer: Apple Mail (2.3731.400.51.1.1)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230203_095024_282656_490F6354 
-X-CRM114-Status: GOOD (  19.39  )
+X-CRM114-CacheID: sfid-20230203_224614_610042_F648828F 
+X-CRM114-Status: UNSURE (   5.42  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -64,48 +86,22 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Feb 03, 2023 at 03:57:23PM +0800, Baoquan He wrote:
-> On arm64, reservation for 'crashkernel=xM,high' is taken by searching for
-> suitable memory region top down. If the 'xM' of crashkernel high memory
-> is reserved from high memory successfully, it will try to reserve
-> crashkernel low memory later accoringly. Otherwise, it will try to search
-> low memory area for the 'xM' suitable region. Please see the details in
-> Documentation/admin-guide/kernel-parameters.txt.
-> 
-> While we observed an unexpected case where a reserved region crosses the
-> high and low meomry boundary. E.g on a system with 4G as low memory end,
-> user added the kernel parameters like: 'crashkernel=512M,high', it could
-> finally have [4G-126M, 4G+386M], [1G, 1G+128M] regions in running kernel.
-> The crossing 4G boudary of crashkernel high region will bring issues:
-> 
-> 1) For crashkernel=x,high, if getting crashkernel high region across
-> 4G boudary, then user will see two memory regions under 4G, and one
-> memory region above 4G. The two crashkernel low memory regions are
-> confusing.
+Hello all,
 
-Looking at your patch, I just realised that the 4G boundary between
-'low' and 'high' reservations is not always true. On RPi4, that would be
-1GB, the limit of ZONE_DMA. Are there user-space tools that rely on this
-32-bit boundary? If they do, they'd get confused on RPi4, not sure they
-have the notion of the actual ZONE_DMA that the kernel has enabled. If
-we do want ,high to mean always 4G or higher, we'd need to change the
-logic a bit so that the search_base starts from 4G rather than
-CRASH_ADDR_LOW_MAX. We could leave the latter when ,high was not
-specified.
+I am experimenting kexec on my box. It uses systemd-boot as the bootloader and boots from a unified kernel image (objcopy'ed cmdline, kernel, initrdramfs, and microcode updates). As of kexec-tools 2.0.25 and systemd 252.5, when I rum systemctl kexec, it returns the following:
 
-> 2) If people explicityly specify "crashkernel=x,high crashkernel=y,low"
-> and y <= 128M, when crashkernel high region crosses 4G boudary and the
-> part below 4G of crashkernel high reservation is bigger than y, the
-> expected crahskernel low reservation will be skipped. But the expected
-> crashkernel high reservation is shrank and could not satisfy user space
-> requirement.
 
-I guess if the user passes both high and low, we should honour that and
-ignore any y <= 128M checks.
+# sudo systemctl kexec
+Running /usr/bin/kexec --load "/efi/EFI/Linux/ArchLinux-linux.efi" --append "root=UUID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"(null)
+Cannot determine the file type of /efi/EFI/Linux/ArchLinux-linux.efi
 
--- 
-Catalin
+It seems that systemctl successfully identified the UKI from systemd-boot, however, kexec could not recognize it.
 
+Are there any plans to add UKI support to kexec? Your response is greatly appreciated!
+
+
+Best,
+mys_721tx
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
