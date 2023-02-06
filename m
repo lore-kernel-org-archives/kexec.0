@@ -4,98 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6F012C05027
-	for <kexec@archiver.kernel.org>; Mon,  6 Feb 2023 05:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 180D8C61DA4
+	for <kexec@archiver.kernel.org>; Mon,  6 Feb 2023 05:57:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
 	Content-Transfer-Encoding:Cc:List-Subscribe:List-Help:List-Post:List-Archive:
 	List-Unsubscribe:List-Id:In-Reply-To:From:References:To:Subject:MIME-Version:
 	Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=dNJEle6jA1qZKxvvzcwCi2L6XZoc1yCjKIHaFSnjiI8=; b=IsJHQfDHypkSI+DFaaDtgTYW0X
-	ZVh/4SKbPciUz2l6BZBpcK6CjR4hnDTpRgNxn6daEfWwF/gLEx13lqnGaTdpX1NbCzmHsglYBXlN3
-	4FzRQfcat+ZllkABVe7iaT7SdKBErkM8GAC/Ys4zHvEalSZKTe4VQYwHJUnBF+MsqzrrTza73djGJ
-	vCB43EhXm2hW8C0pA2cHqFXsBu20APGKnMWgCFzdkj/7fMQnFY+XX6uSudpG6hPPfi7VTvlqmFpAD
-	RE7X74Jaxss4tpNpN+Zg1ir5FBUiiuEJYxPTOOEdLd6JlukgxUpScgYaeh44FyqHlOMVeKdRKr6iY
-	ZA8YySEQ==;
+	bh=7IeWH6sFYKKiCnuelZd4mTF66cwB3uiIy4freIIUgxc=; b=f/mIJdbio1Xhyz5cVg3Hp05riQ
+	BHZsl3LeyV24B9Uz38gw2docmc+a6gc8kKCDOFcdculg5DHMJsngTZR7R20eG7mGRJc1vqKoxad9g
+	PadUWRpt/nkjJBvZHEpLAtIPD10wQkBajnqvJ/IBwzIhgUCkkTf3oBkypgHtxP/wCRmuZPgWpCV2Y
+	QWbFY9WfAtontEwk23dYzMeJqhBGlRExq9AsCeVFNtP7tZ/cp9NIZzwwPoxb7bGqVO9IAYNcmYXRN
+	W/NWGEpaab1EMIKh3areOxU5JUwTN20O/Jc/qZ8XYCtYuYIsQeVNGTX/L7wRj2oIAaj+HTf6TbtNY
+	yL7GWZAg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pOuQM-007Pes-73; Mon, 06 Feb 2023 05:52:18 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5] helo=mx0a-001b2d01.pphosted.com)
+	id 1pOuUq-007PtI-D8; Mon, 06 Feb 2023 05:56:56 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pOuQI-007PeL-Eq
-	for kexec@lists.infradead.org; Mon, 06 Feb 2023 05:52:16 +0000
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-	by mx0b-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3164lh6c008356;
-	Mon, 6 Feb 2023 05:52:09 GMT
+	id 1pOuUn-007Pso-Le
+	for kexec@lists.infradead.org; Mon, 06 Feb 2023 05:56:55 +0000
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3165hlPN018778;
+	Mon, 6 Feb 2023 05:56:50 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
  mime-version : subject : to : cc : references : from : in-reply-to :
  content-type : content-transfer-encoding; s=pp1;
- bh=TNBrOuYeGXUZ+FxiHBwkI9EpB5hcMv2AzThHSZOzXaI=;
- b=WClQZXZ8p7k9uo4TvWlcoOiw5jaYKF0M7mz258a5zJXlp8kTXOP0KSuN2GBjJju7V4FQ
- WMtbcmfbcJ6JCqr9Mo4Vp8SUfPJAKOHVPaDAuQRArtuDdzhl2Mg/NA3xZgAcWCNi7Of/
- sl3sjLP8fuU+B4Sy7I2cvwFWyvCWfnHimxH7PxIsfAh1ciRhRnIebqRnwXegK2PBfDdu
- Bst0hLezAV5gBxsJudS51HuOoy+++nEWRY0K5k/uIbSTBQUsgmCtLYbngjQ0dFjZz8p6
- JKenyeJcWAiFOyzBksZEJQ3qwKVkV8GKGQNQQX57KVLP72WvvceUkbT4vLn7djAWILPx jg== 
+ bh=Sqfa2bqL5xnRmev75H8A4wZhFuZ4ofjlnHS7iEBugnM=;
+ b=RQXarUHMxWtJPigMXD/D314udQK9SNX8V2mSvLTbngQLlVxCD4JRebwlf+Tjsyku79pV
+ iIbEim09bEevWIql8TFnVKzRcQyKPzxTX2aXt+AHIsu08X5Nv1nNK3PEpEs8L93jpyKO
+ w8KJsOtXsU6Yc2wgfAZiMXv0unmsX10bKn7LErm3RVcbjR0i4URU5Hjo1wqJgXPsSAqr
+ nc6vABOc631GeqHiYfiztdJ4cueWyI3lRw9TvgjA7/4apE4sN5sGhZ8ELYiMjgrUZanQ
+ U6X8IWWtPNLLdeJwWK76R52l0onLEMSxrpKRugyUIDzwbpWADkIF1XLDwa/56Mg81fMI Cw== 
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3njtu8984m-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3njund075g-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 06 Feb 2023 05:52:08 +0000
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3165o3Tr014133;
-	Mon, 6 Feb 2023 05:52:08 GMT
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-	by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3njtu89845-1
+	Mon, 06 Feb 2023 05:56:50 +0000
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3165sO9j024828;
+	Mon, 6 Feb 2023 05:56:49 GMT
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3njund0759-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 06 Feb 2023 05:52:08 +0000
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-	by ppma04fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 315Kd0op020355;
-	Mon, 6 Feb 2023 05:52:06 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma04fra.de.ibm.com (PPS) with ESMTPS id 3nhf06sdv9-1
+	Mon, 06 Feb 2023 05:56:49 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+	by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 315NMWZ6001826;
+	Mon, 6 Feb 2023 05:56:47 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3nhf06hyk3-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 06 Feb 2023 05:52:06 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3165q2tc30605774
+	Mon, 06 Feb 2023 05:56:47 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3165uhZs41288094
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 6 Feb 2023 05:52:02 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B75D420043;
-	Mon,  6 Feb 2023 05:52:02 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 106CB20040;
-	Mon,  6 Feb 2023 05:52:01 +0000 (GMT)
+	Mon, 6 Feb 2023 05:56:43 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A9A072004E;
+	Mon,  6 Feb 2023 05:56:43 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E838020040;
+	Mon,  6 Feb 2023 05:56:41 +0000 (GMT)
 Received: from [9.43.108.31] (unknown [9.43.108.31])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  6 Feb 2023 05:52:00 +0000 (GMT)
-Message-ID: <39fbad5f-9341-395d-de43-fb0a25c30f0b@linux.ibm.com>
-Date: Mon, 6 Feb 2023 11:22:00 +0530
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  6 Feb 2023 05:56:41 +0000 (GMT)
+Message-ID: <c7946991-347b-67ec-5158-4013bb5b396b@linux.ibm.com>
+Date: Mon, 6 Feb 2023 11:26:41 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
 Subject: Re: [PATCH v8 4/8] crash: add phdr for possible CPUs in elfcorehdr
+Content-Language: en-US
 To: Eric DeVolder <eric.devolder@oracle.com>, linuxppc-dev@ozlabs.org,
         mpe@ellerman.id.au
 References: <20230201063841.965316-1-sourabhjain@linux.ibm.com>
  <20230201063841.965316-5-sourabhjain@linux.ibm.com>
  <401813b1-9834-f8bc-e035-2fef309d3fa6@oracle.com>
-Content-Language: en-US
 From: Sourabh Jain <sourabhjain@linux.ibm.com>
 In-Reply-To: <401813b1-9834-f8bc-e035-2fef309d3fa6@oracle.com>
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: jWhynz-cvW5nBUHxoMhJDnKgJMkkBqRn
-X-Proofpoint-ORIG-GUID: NbLuFEt3V94A3M1_pb0kU3AY_HHkBh2l
+X-Proofpoint-GUID: QBJEuSBIG-scMfYpDDJ_bUD6mey5NPBX
+X-Proofpoint-ORIG-GUID: _i5BLMOxk0xZl1SRw7djIJEq5Q0YKrGS
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
  definitions=2023-02-06_02,2023-02-03_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 malwarescore=0 suspectscore=0 lowpriorityscore=0
- bulkscore=0 adultscore=0 phishscore=0 impostorscore=0 mlxscore=0
- spamscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2212070000 definitions=main-2302060047
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 bulkscore=0 phishscore=0 adultscore=0 impostorscore=0
+ mlxlogscore=999 suspectscore=0 clxscore=1015 priorityscore=1501
+ spamscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2302060047
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230205_215214_854448_0C950F7A 
-X-CRM114-Status: GOOD (  24.44  )
+X-CRM114-CacheID: sfid-20230205_215653_850975_AEE6049C 
+X-CRM114-Status: GOOD (  27.48  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -140,14 +140,17 @@ X29ubGluZV9jcHUoKSBpcyBnb2luZyB0byB0aGUgCj4gbWluaW11bSBudW1iZXIgb2YgbmVlZGVk
 LCB3aGVyZWFzIHlvdXIgYXBwcm9hY2ggb2YgCj4gZm9yX2VhY2hfcG9zc2libGVfY3B1KCkgd291
 bGQgYmUgdG8gdGhlIG1heGltdW0gbnVtYmVyIG5lZWRlZC4KPgo+IFdoYXQgd291bGQgYmUgdGhl
 IHJhbWlmaWNhdGlvbnMgdG8gcHBjIGZvciBtb3ZpbmcgdG93YXJkcyAKPiBmb3JfZWFjaF9vbmxp
-bmVfY3B1KCk/CgpJIHdhcyBpbiB0aGUgaW1wcmVzc2lvbiB0aGF0IGlmIENQVSBub3RlcyBhcmUg
-bWlzc2luZyBmb3Igb2ZmbGluZSBDUFVzIAppbiB0aGUgZWxmY29yZWhkciB0aGVuIG1ha2VkdW1w
-ZmlsZSB3aWxsIG1lc3MgdXAgdGhlCkNQVSBJRHMuCgpCdXQgc29tZWhvdyByZXBsYWNpbmcgZm9y
-X2VhY2hfcHJlc2VudF9jcHUgd2l0aCBmb3JfZWFjaF9vbmxpbmVfY3B1IAp3b3JrZWQgb24gUG93
-ZXJQQywgZXZlbiBhZnRlciBkaXNhYmxpbmcgYSBjb3VwbGUgb2YgQ1BVcy4KClNvIHRoaW5ncyBh
-cmUgZmluZSBpZiB3ZSBwYWNrIFBUX0xPQUQgZm9yIG9ubGluZSBDUFVzIGluc3RlYWQgb2YgcHJl
-c2VudCAKQ1BVcyBidXQsCkkgbmVlZCB0byBpbnZlc3RpZ2F0ZSBob3cgbWFrZWR1bXBmaWxlIGlz
-IGFibGUgdG8gbWFwIFBUX0xPQUQgdG8gb25saW5lIApDUFVzLgoKLSBTb3VyYWJoIEphaW4KCgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWls
-aW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+bmVfY3B1KCk/Cj4KPiBJbiBteSBuZXh0IHBhdGNoIHNlcmllcywgSSBoYXZlIGZpbmFsbHkgZmln
+dXJlZCBvdXQgaG93IHRvIHVzZSBjcHVocCAKPiBmcmFtZXdvcmsgdG8gd2hlcmUgaXQgaXMgcG9z
+c2libGUgdG8gdXNlIGZvcl9lYWNoX29ubGluZV9jcHUoKSBoZXJlLCAKPiBidXQgdGhhdCBpcyBh
+dCBvZGRzIHdpdGggeW91ciBjaGFuZ2VzIGhlcmUuCkkgd2FzIGluIHRoZSBpbXByZXNzaW9uIHRo
+YXQgaWYgQ1BVIG5vdGVzIGFyZSBtaXNzaW5nIGZvciBvZmZsaW5lIENQVXMgCmluIHRoZSBlbGZj
+b3JlaGRyIHRoZW4gbWFrZWR1bXBmaWxlIHdpbGwgbWVzcyB1cCB0aGUKQ1BVIElEcy4KCkJ1dCBz
+b21laG93IHJlcGxhY2luZyBmb3JfZWFjaF9wcmVzZW50X2NwdSB3aXRoIGZvcl9lYWNoX29ubGlu
+ZV9jcHUgCndvcmtlZCBvbiBQb3dlclBDLCBldmVuIGFmdGVyIGRpc2FibGluZyBhIGNvdXBsZSBv
+ZiBDUFVzLgoKU28gdGhpbmdzIGFyZSBmaW5lIGlmIHdlIHBhY2sgUFRfTE9BRCBmb3Igb25saW5l
+IENQVXMgaW5zdGVhZCBvZiBwcmVzZW50IApDUFVzIGJ1dCwKSSBuZWVkIHRvIGludmVzdGlnYXRl
+IGhvdyBtYWtlZHVtcGZpbGUgaXMgYWJsZSB0byBtYXAgUFRfTE9BRCB0byBvbmxpbmUgCkNQVXMu
+CgotIFNvdXJhYmggSmFpbgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
+cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
