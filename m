@@ -4,77 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6A6C4C636D3
-	for <kexec@archiver.kernel.org>; Mon,  6 Feb 2023 17:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D562FC636CC
+	for <kexec@archiver.kernel.org>; Tue,  7 Feb 2023 03:59:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:To:References:Message-Id:Cc:Date:
-	In-Reply-To:From:Subject:Mime-Version:Reply-To:Content-ID:Content-Description
-	:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=Lqt2gjXf1zmYeOBHmVXwIffnEzlXX25WNPwMG+m1buo=; b=tj1YLHbwLyzrBZ
-	3gD1Cu4jgPJHRVoF93r2GiUjhVPMV7MdhrY4j0MA2zX2iTobnJQm4tGf1IBlUq/mzywoP8xUkfLeq
-	hE+z36QC2+ME6GWSa53mRSa+ZBNGxD3/8BYeKU1aHuccNSXELe367HuQuTBss5Mrj/P2sa5gL7O0F
-	hJ2h2Uv6L2p1n9ovecIpC9+Ee4BnNAY7dphyg4tHKaQeiCQmPHCcTdMgAKaUxkP4YTa30B4q+WRY4
-	JsXC0A7HoBR+30w4OkuUidHFc8GTYDQ0hYOQp4z4wn/yO4azsjfmJNGC0SWjv+Ce5Q4nm/dbSbPXL
-	Di1/xJWcOUitWf9frjMA==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=r6nvzagra8B8AE21x9bRWxJk3tXSDWms+OlqrjydiKs=; b=mF4cA7mnPD4Cv1
+	vSHeSnZmq4/xLBp5jxt8M62XuQ676iYnANwfqww1cEoJHmWLJPAfdHPQ2OQTtQORTSRRj8YhghfiS
+	huX9uotSdJ+zSapivLf9G86HrkP8osj/SMzkjXxQRERqd0FOi2uQXRH2ujrRwS8UF1+QEbbwFkcLO
+	x84/HRptpHYW9Z+CsxenBbaeBqQdMmOloKNPhIdhKdasL9gZwDBCBLA4sG2YG1tQ/3BlyloVTJNM/
+	z2IqokPVHycwUagHemReEeVCQKXuRXaNNJB1GuwvbEuhBFC+dH8Mxi3I9GpQozooO+tgk8MkmesXY
+	Ofr/i+VVSKCcUaaZVjmA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pP5Yz-009Xyt-RI; Mon, 06 Feb 2023 17:45:57 +0000
-Received: from mail-pl1-x62a.google.com ([2607:f8b0:4864:20::62a])
+	id 1pPF8w-00Ahc7-5z; Tue, 07 Feb 2023 03:59:42 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pP5Yv-009Xxx-Ry
-	for kexec@lists.infradead.org; Mon, 06 Feb 2023 17:45:55 +0000
-Received: by mail-pl1-x62a.google.com with SMTP id r8so12956304pls.2
-        for <kexec@lists.infradead.org>; Mon, 06 Feb 2023 09:45:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QUlkqzlWqGkCJ4BbYya51xWhyTnod5O743o0UfxJk40=;
-        b=H+6t6vFnGRAVvhNX1HPOc9SKSuB+jjRmTgdP5gbLzXgqkwu1hi7KAewRn0GU6xyw/q
-         AK3HT+pZFfZAnrnVo+fP0mUK2RB+6+iakQLRqPMjjHKb/W5EZ0SfHA9d3AoaJP9Xhwgn
-         ZMfYY5HvP2iIKSvE8oAb1+1ZMuti2pSssWyoW8Szb+f0XeDida4i71KzHPut5Zc4OJC1
-         ndU499ul5LurOicLCNoBwHzy+T1BG1KxQI/gd6Ca+28ntOztiULT/LCSLVg417Nk3Il4
-         F2qMv29gmC24ZR5sKxk/RCoxsE2JAUnBFAlM/TVBvFvF+NX9+r0vM3qRnDMnM/GF4cmL
-         kqVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QUlkqzlWqGkCJ4BbYya51xWhyTnod5O743o0UfxJk40=;
-        b=dTzU67sEqxbi29/Htfmrp32Uxk8o63Pnelr8tM4YnwtOIu5qG1PpmJmwQ9OWetyod0
-         CrQOkFKgdWb9cI7ZuWvFMzxVV8Rn9fBUsBObtt2j9ZoVHqWSZvpyfeA9v3vssmZ7RgVE
-         a2KROxbqEgvrEiP1bGSgnZHivl7ZRJYJmb6Nw/K9EBjYr+gzcmAxhu6jrJvsVE8VolID
-         HuxSXD66/dR02cbJ3HoEf5yzVSdU88h3kaHqTAmQWgQJeMCf5vNGXlC+3vODvJoyZ3AT
-         UNtiM3YtkZFRfBidkluGv6yw59l562AXTF/IuNXbx/gFxrqBdqBnW9D1/66UQduUQpOF
-         UcKA==
-X-Gm-Message-State: AO0yUKXchyfwUlFTu4kAvwNzTpraa7WEa0sSHgjzdQVRCUVjtOfGNPeo
-	9DifMET5e1OKISOnXnYAuAKnldMfpILYyA==
-X-Google-Smtp-Source: AK7set+B5vnfy/sIGeol+YkwMPoPjc62uNuGyY7AliBi7HTEhlKVB159vHlE7tNGPTfGcbfuS4i7gA==
-X-Received: by 2002:a17:902:f109:b0:199:cb9:ce81 with SMTP id e9-20020a170902f10900b001990cb9ce81mr297130plb.16.1675705549415;
-        Mon, 06 Feb 2023 09:45:49 -0800 (PST)
-Received: from smtpclient.apple (yishen-mbp.mcdb.ucsb.edu. [128.111.208.67])
-        by smtp.gmail.com with ESMTPSA id d3-20020a170902b70300b00193020e8a90sm7166386pls.294.2023.02.06.09.45.48
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 06 Feb 2023 09:45:48 -0800 (PST)
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.400.51.1.1\))
-Subject: Re: Unified Kernel Image Support
-From: Yishen Miao <mys721tx@gmail.com>
-In-Reply-To: <20230206173320.103a9d21@rotkaeppchen>
-Date: Mon, 6 Feb 2023 09:45:37 -0800
-Cc: Baoquan He <bhe@redhat.com>,
- kexec@lists.infradead.org
-Message-Id: <1DC56DB1-780D-45B8-964A-DDD54B0FCDDE@gmail.com>
-References: <5D04A23B-9A82-4186-AFA8-7E3A0FBBDF86@gmail.com>
- <Y+DGJfYEJpbee/bM@MiWiFi-R3L-srv> <20230206173320.103a9d21@rotkaeppchen>
-To: Philipp Rudo <prudo@redhat.com>
-X-Mailer: Apple Mail (2.3731.400.51.1.1)
+	id 1pPF8t-00Ahaz-8w
+	for kexec@lists.infradead.org; Tue, 07 Feb 2023 03:59:41 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1675742374;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0p27cbppODhlJwN0bXzqedqZnAVkCEQHc1O/mLg04Ro=;
+	b=arBDndeclV3UNTC+pnzxJ/pKmt7Pd322hKBBl/BCAxB/ece3lRifMAd+AHERr8xxcIjwqp
+	9gZnjFyphflhJ6wfGACO+DgAGFA1B4ZtA92MSVB5xgrnJ9pSVZg9UP1YXWocHs+lUwREYo
+	+dBWLY6UV5W1a6rGQdi/PZCsq9n0CQc=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-271-lo_UqUuCNx6qqsXgSxrnPw-1; Mon, 06 Feb 2023 22:59:30 -0500
+X-MC-Unique: lo_UqUuCNx6qqsXgSxrnPw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0AC6685CBE0;
+	Tue,  7 Feb 2023 03:59:30 +0000 (UTC)
+Received: from localhost (ovpn-12-71.pek2.redhat.com [10.72.12.71])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 3C7CE1121314;
+	Tue,  7 Feb 2023 03:59:28 +0000 (UTC)
+Date: Tue, 7 Feb 2023 11:59:24 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, horms@kernel.org,
+	thunder.leizhen@huawei.com, John.p.donnelly@oracle.com,
+	will@kernel.org
+Subject: Re: [PATCH v2] arm64: kdump: simplify the reservation behaviour of
+ crashkernel=,high
+Message-ID: <Y+HMnP9Yxi4C7KzF@MiWiFi-R3L-srv>
+References: <20230203075723.114538-1-bhe@redhat.com>
+ <Y91JV7wNu1QQh1Ag@arm.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <Y91JV7wNu1QQh1Ag@arm.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230206_094553_944471_50F98267 
-X-CRM114-Status: GOOD (  33.37  )
+X-CRM114-CacheID: sfid-20230206_195939_596995_A8B4B053 
+X-CRM114-Status: GOOD (  30.19  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,104 +82,73 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Baoquan and Philipp,
+On 02/03/23 at 05:50pm, Catalin Marinas wrote:
+> On Fri, Feb 03, 2023 at 03:57:23PM +0800, Baoquan He wrote:
+> > On arm64, reservation for 'crashkernel=xM,high' is taken by searching for
+> > suitable memory region top down. If the 'xM' of crashkernel high memory
+> > is reserved from high memory successfully, it will try to reserve
+> > crashkernel low memory later accoringly. Otherwise, it will try to search
+> > low memory area for the 'xM' suitable region. Please see the details in
+> > Documentation/admin-guide/kernel-parameters.txt.
+> > 
+> > While we observed an unexpected case where a reserved region crosses the
+> > high and low meomry boundary. E.g on a system with 4G as low memory end,
+> > user added the kernel parameters like: 'crashkernel=512M,high', it could
+> > finally have [4G-126M, 4G+386M], [1G, 1G+128M] regions in running kernel.
+> > The crossing 4G boudary of crashkernel high region will bring issues:
+> > 
+> > 1) For crashkernel=x,high, if getting crashkernel high region across
+> > 4G boudary, then user will see two memory regions under 4G, and one
+> > memory region above 4G. The two crashkernel low memory regions are
+> > confusing.
+> 
+> Looking at your patch, I just realised that the 4G boundary between
+> 'low' and 'high' reservations is not always true. On RPi4, that would be
+> 1GB, the limit of ZONE_DMA. Are there user-space tools that rely on this
+> 32-bit boundary? If they do, they'd get confused on RPi4, not sure they
+> have the notion of the actual ZONE_DMA that the kernel has enabled. If
+> we do want ,high to mean always 4G or higher, we'd need to change the
+> logic a bit so that the search_base starts from 4G rather than
+> CRASH_ADDR_LOW_MAX. We could leave the latter when ,high was not
+> specified.
 
-I did some digging and the UKI spec seems to suggest the .initrd section is the complete cpio image. [1]
+Oh, there could be misunderstanding here. In the current arm64, the
+boundary of high memory and low memory is CRASH_ADDR_LOW_MAX. It means
+on RPi4, it's 1G. While on all other systems, it's 4G. I use 4G as
+boundary in patch log, because systems I know and kdump need support are
+all product systems at work, e.g system in baremetal server, or guest
+instance in cloud. Sorry for that, with the current crashkernel handling
+code in arm64, we should cover RPi4 too so that any description is kept
+consistent with code implementation.
 
-The following commands should make a usable UKI. [2]
+I took 4G mainly because I took it as an example people can easily
+understand. I should use a generic term. So RPi4 still uses 1G as
+boundary of high and low memory.
 
-$ cat esp/cpu_manufacturer-ucode.img esp/initramfs-linux.img > /tmp/combined_initrd.img
-$ osrel_offs=$(objdump -h "/usr/lib/systemd/boot/efi/linuxx64.efi.stub" | awk 'NF==7 {size=strtonum("0x"$3); offset=strtonum("0x"$4)} END {print size + offset}')
-$ cmdline_offs=$((osrel_offs + $(stat -Lc%s "/usr/lib/os-release")))
-$ splash_offs=$((cmdline_offs + $(stat -Lc%s "/etc/kernel/cmdline")))
-$ linux_offs=$((splash_offs + $(stat -Lc%s "/usr/share/systemd/bootctl/splash-arch.bmp")))
-$ initrd_offs=$((linux_offs + $(stat -Lc%s "vmlinuz-file")))
-$ objcopy \
---add-section .osrel="/usr/lib/os-release" --change-section-vma .osrel=$(printf 0x%x $osrel_offs) \
---add-section .cmdline="/etc/kernel/cmdline" \
---change-section-vma .cmdline=$(printf 0x%x $cmdline_offs) \
---add-section .splash="/usr/share/systemd/bootctl/splash-arch.bmp" \
---change-section-vma .splash=$(printf 0x%x $splash_offs) \
---add-section .linux="vmlinuz-file" \
---change-section-vma .linux=$(printf 0x%x $linux_offs) \
---add-section .initrd="/tmp/combined_initrd.img" \
---change-section-vma .initrd=$(printf 0x%x $initrd_offs) \
-"/usr/lib/systemd/boot/efi/linuxx64.efi.stub" "linux.efi"
+Talking about RPi4, how do you think about my below patchset? I replied
+to you in another mail to ask you for help to check below patchset, and
+decide which solution we should take to address the base page mapping
+for the whole system when crashkernel is set. That mail could be missed.
 
-While the .cmdline section in a UKI cannot be changed per se, it is relative simple to generate a new image with the updated .cmdline. If the user is signing their own binaries for Secure Boot, this should allow them to edit the .cmdline in a roundabout way.
-
-Hope these helps!
-
-Best,
-mys_721tx
-
-[1] https://uapi-group.org/specifications/specs/unified_kernel_image/
-[2] https://wiki.archlinux.org/title/Unified_kernel_image
+https://lore.kernel.org/all/Y9zaJim2oGgXMiOS@MiWiFi-R3L-srv/T/#u
+==
+arm64, kdump: enforce to take 4G as the crashkernel low memory end
+https://lore.kernel.org/all/20220828005545.94389-1-bhe@redhat.com/T/#u
 
 
+> 
+> > 2) If people explicityly specify "crashkernel=x,high crashkernel=y,low"
+> > and y <= 128M, when crashkernel high region crosses 4G boudary and the
+> > part below 4G of crashkernel high reservation is bigger than y, the
+> > expected crahskernel low reservation will be skipped. But the expected
+> > crashkernel high reservation is shrank and could not satisfy user space
+> > requirement.
+> 
+> I guess if the user passes both high and low, we should honour that and
+> ignore any y <= 128M checks.
 
-> On Feb 6, 2023, at 08:33, Philipp Rudo <prudo@redhat.com> wrote:
-> 
-> Hi,
-> 
-> On Mon, 6 Feb 2023 17:19:33 +0800
-> Baoquan He <bhe@redhat.com> wrote:
-> 
->> On 02/03/23 at 10:46pm, Yishen Miao wrote:
->>> Hello all,
->>> 
->>> I am experimenting kexec on my box. It uses systemd-boot as the bootloader and boots from a unified kernel image (objcopy'ed cmdline, kernel, initrdramfs, and microcode updates). As of kexec-tools 2.0.25 and systemd 252.5, when I rum systemctl kexec, it returns the following:
->>> 
->>> 
->>> # sudo systemctl kexec
->>> Running /usr/bin/kexec --load "/efi/EFI/Linux/ArchLinux-linux.efi" --append "root=UUID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"(null)
->>> Cannot determine the file type of /efi/EFI/Linux/ArchLinux-linux.efi
->>> 
->>> It seems that systemctl successfully identified the UKI from systemd-boot, however, kexec could not recognize it.
->>> 
->>> Are there any plans to add UKI support to kexec? Your response is greatly appreciated!  
->> 
->> My colleageus mentioned UKI recently. We have plan to support it, while
->> haven't started to work on that.
-> 
-> I've looked into UKI recently. In order to provide some base support
-> one should only need to teach kexec_file_load the new file format [1].
-> However that still leaves two fundamental issues which limit the
-> usefulness of that support.
-> 
-> 1) The way I understand it the initrd contained in the UKI is only a
-> stub that is supposed to read further "modules" from disk which
-> together form the initrd needed for the given hardware/system
-> configuration. The problem is that the kexec_file_load syscall only
-> accepts one fd for the kernel and one fd for the initrd. So to support
-> multiple modules we would either need to introduce a new syscall or
-> define a uABI that allows to pass multiple initrds via this one fd.
-> Either way it's a new user interface and should be designed with care.
-> 
-> 2) As the kernel command line is part of the UKI and is protected by
-> the signature it cannot be changed by users. So to support kdump with a
-> UKI a distro would need to find one crashkernel= parameter that works
-> for all users which is impossible. Thus before kdump can be supported
-> with UKI there needs to be a  mechanism in place that allows users to
-> edit the command line. Others have the same problem. There is an open
-> issue on github [2] to add this support.
-> 
-> So all in all I believe there will be kexec support for UKI but I don't
-> see it to come anytime soon.
-> 
-> Thanks
-> Philipp
-> 
-> [1] ...and kexec-tools if you like to support kexec_load. But as the
-> main use case for UKI is together with Secure Boot I don't think that's
-> necessary.
-> 
-> [2] https://github.com/systemd/systemd/issues/24539
-> 
->> I have a testing machine at hand right now, just finished teseting
->> upstream patches. If you have the detailed steps about how to make UKI,
->> privately or publicly, I can try it now, and see what we can do.
-> 
+Yes, agree. In this v2 patch and the earlier v1, the 'y<=128M' checking
+has been removed.
 
 
 _______________________________________________
