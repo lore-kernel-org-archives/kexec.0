@@ -4,79 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B9DB3C636CC
-	for <kexec@archiver.kernel.org>; Wed,  8 Feb 2023 03:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F1D0CC636CC
+	for <kexec@archiver.kernel.org>; Wed,  8 Feb 2023 06:34:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=699nqBRwMiKcXjDWR87JgFpbwcjcHggDcK1B38/IoXY=; b=WhHN7PoxoVW2RI
-	qlbtkmr4nE4dHIq1v1TDcuz/grmDM1uz0f8UGl1nIfJY4PKZscQKEBSNJaAL2CujUsdt3w+3QKb/y
-	ev92p38qpPybnAQs1309mJ9Q34Wyill09PKHg+PLZ0C3R88k+ZK1xQBFiFuPx6JjNBC3zF8e+xe2c
-	qkCbAK4z9ZZZ726iJ8vw+d8/jJK0hEDFAb1i9vxDc+A+8XyJx5L49ccgEt2qpYsownn0+FhgGE+hX
-	T7+uQngkRr7oq9FP4cdm8DriDSzsrAae0P40AJEyOlZRDoeopSty1CHkxpTeJY8FqM9zqv1UhyBGz
-	NkuLxVpap4PR/RLwfavA==;
+	List-Owner; bh=95KpgZEf7GeI6nJX8UrrTQ+uLIVyojJEtmpQtpRM3JA=; b=D6fgX2TN2vt6/W
+	hqIDMShde9ilWn2PHs5aVBXprIN/sFnR4n0lCnqQMCRKUuyJBaWiOucM8ijwvVTBCgkKYpEix2pjn
+	f3wIWMZtysB2RolclPWCWIPNVznsh7mYZTBKDVa7MJsJ5+mU0MI3xRV8m9WqZPTFyzF9y089D4Ded
+	zZxEA55AYZfISCRTOgcYezI/NA9mowvV5kIQXwemMlqE83fTtqVPHyqeBiUWq6cYRINyhu+gqJlea
+	VhCNzGrut2WFC4ZeQjtcLrPtQjnDz5fUSo5CoJJnpFQ/kjBKBCS1B0BOcaQIs21M9QBsSgOuH+/OC
+	2sC/jj7+tAfYVutjMRdg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pPb34-00Dvqu-Kc; Wed, 08 Feb 2023 03:23:06 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1pPe1x-00EJS9-UC; Wed, 08 Feb 2023 06:34:09 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pPb30-00DvqO-Ql
-	for kexec@lists.infradead.org; Wed, 08 Feb 2023 03:23:04 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1675826580;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jKy/o+5cZSY3/YKKP0OIsZmwMUuIuaZSjY7d+rn8ZG8=;
-	b=e5PvOnxzcbddkTRPD2Vq/iWCI85Lj7l+r14N8mDGYVi7aw7Uq/kFVIVP7nEeJg87AE7ys/
-	tA4tqeGON0z/AfyFMkKeHFazLMr2Xb6FkmLDG4a4BzT8hHmYxxmoI7RFPhw0vMr3g70aqv
-	/LUZUSnu8hjsejVkTd9ZHwopmsqj4xY=
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
- [209.85.166.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-627-395khHkOPKS5E1jEM1gDVA-1; Tue, 07 Feb 2023 22:21:00 -0500
-X-MC-Unique: 395khHkOPKS5E1jEM1gDVA-1
-Received: by mail-il1-f200.google.com with SMTP id i23-20020a056e021d1700b003111192e89aso12049398ila.10
-        for <kexec@lists.infradead.org>; Tue, 07 Feb 2023 19:21:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jKy/o+5cZSY3/YKKP0OIsZmwMUuIuaZSjY7d+rn8ZG8=;
-        b=Wq3lufXQGEuckqpHdru09JAvthaggPMZ2RaHfbLBRPRfdtnm4JOQeDlkRn+0YRlCm9
-         b6ckIxM+7l5vREaeZWAs8ObzfP7yMjverlPKLXgly2cQFNCS0/BloUR+6RIMq80vbb3B
-         N2BNiP01X4LJHCBGq5l6LT+Xuwi922H2mv1yhg4szJ12VfLT45COGUr2Ksk0eN5YKVhK
-         LNz6IuvGJUJlBtCdHcrUlVaLN8fKn1LjP5Kqb5rfwJV1/8v/DZlCSEaS7acQhMEi6z1l
-         SoWX5UA+h586XxqGg/U1xh3qIUQsKbaSrUKZJmvcAABM3TMV66jGCVyTTaZny6vO7ifF
-         qPKQ==
-X-Gm-Message-State: AO0yUKU7IhMOZmjM8SqRxtTOr9imIuhf8k6u7HgiJz71oMbDrlxyE3xH
-	EHGK7UVxJdY5uTEM1qTeCVm8nEF//2HDa5hArlCYFmE66g9Q4t9CWMkEHYSYUtFHSPBUGGJ9GP4
-	/OD8AAyNI5eVesC6clsXS7H+Ax9WPL7k4Ksly
-X-Received: by 2002:a6b:6607:0:b0:704:56dd:23f3 with SMTP id a7-20020a6b6607000000b0070456dd23f3mr3527496ioc.14.1675826459540;
-        Tue, 07 Feb 2023 19:20:59 -0800 (PST)
-X-Google-Smtp-Source: AK7set/UwsZYbMlanvB4UcjI1F/JUX0gta7GPWxL7Oe1C53V1PHRQaeLjG3kAmsf4TUdJpssaERDYxGDeL1iz5xfLZM=
-X-Received: by 2002:a6b:6607:0:b0:704:56dd:23f3 with SMTP id
- a7-20020a6b6607000000b0070456dd23f3mr3527492ioc.14.1675826459228; Tue, 07 Feb
- 2023 19:20:59 -0800 (PST)
+	id 1pPe1r-00EJE3-AJ
+	for kexec@lists.infradead.org; Wed, 08 Feb 2023 06:34:08 +0000
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3186CGv1014784;
+	Wed, 8 Feb 2023 06:31:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=6WTnmzOQn8b7vOuctp9jBKS8+nyvfqOnEMVWaeldgUo=;
+ b=Tki3W33W+aINsYap8NAi0z7US2SKiSlQw1QjyP5T6md0BWWIPTjHQ6Cm/X/SdphGkj4a
+ nnv2t+x+FjlnumuGhjvP5PQUl1hTg194gkx3vCiTqQvjenL6s/J4NtcnfgW9Sz+21UlX
+ KmVTyhUunYJtNrWq4WppbxKaeW3J3NbfneEO6gTRqn7iXi7dTQoLkL31wUNPIPBdW7US
+ ZhgIthtl1EBoAa7L6gR1iuiOZAvt7melnaqivj7xLwwX8F9ZIxwBOXkxgA9+v4WOEFXp
+ 2YZvlwgMGqlcNlJjdRBB7u7tMnvMR5CGAEVEPSAlZ/bLroRyvgQL9sYBBN6Mp+5365bK tQ== 
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nm68mrdtn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 08 Feb 2023 06:31:57 +0000
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+	by ppma05fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3181r8Sx027510;
+	Wed, 8 Feb 2023 06:31:55 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma05fra.de.ibm.com (PPS) with ESMTPS id 3nhf06u609-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 08 Feb 2023 06:31:55 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3186Vp5451708374
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 8 Feb 2023 06:31:51 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 560422004F;
+	Wed,  8 Feb 2023 06:31:51 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8B57020040;
+	Wed,  8 Feb 2023 06:31:50 +0000 (GMT)
+Received: from [9.43.122.167] (unknown [9.43.122.167])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  8 Feb 2023 06:31:50 +0000 (GMT)
+Message-ID: <4166eda1-96d9-bda7-4956-031e90d43eda@linux.ibm.com>
+Date: Wed, 8 Feb 2023 12:01:49 +0530
 MIME-Version: 1.0
-References: <20230207220842.Xerbq%steffen@sdaoden.eu>
-In-Reply-To: <20230207220842.Xerbq%steffen@sdaoden.eu>
-From: RuiRui Yang <ruyang@redhat.com>
-Date: Wed, 8 Feb 2023 11:21:13 +0800
-Message-ID: <CALu+AoTogTF8rYteoJ9JTc8By9_F4k0SdrmS5bZVV_9F3AZQmQ@mail.gmail.com>
-Subject: Re: question on microcode loading
-To: Steffen Nurpmeso <steffen@sdaoden.eu>
-Cc: kexec@lists.infradead.org, Eugene Syromiatnikov <esyr@redhat.com>, 
-	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Borislav Petkov <bp@alien8.de>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH] ppc64: add --reuse-cmdline parameter support
+Content-Language: en-US
+To: Simon Horman <horms@kernel.org>
+Cc: kexec@lists.infradead.org, hbathini@linux.ibm.com
+References: <20230201085331.1004355-1-sourabhjain@linux.ibm.com>
+ <Y+JpRdQ81Mt57EPK@vergenet.net>
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+In-Reply-To: <Y+JpRdQ81Mt57EPK@vergenet.net>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: QgLZJWIveanc9iEUKUYhOl-CdIp4FaBT
+X-Proofpoint-ORIG-GUID: QgLZJWIveanc9iEUKUYhOl-CdIp4FaBT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-02-08_02,2023-02-06_03,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 spamscore=0
+ malwarescore=0 suspectscore=0 priorityscore=1501 mlxlogscore=900
+ bulkscore=0 phishscore=0 lowpriorityscore=0 impostorscore=0 adultscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2302080058
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230207_192302_969375_E1B9E732 
-X-CRM114-Status: GOOD (  19.37  )
+X-CRM114-CacheID: sfid-20230207_223403_407774_2A14A050 
+X-CRM114-Status: GOOD (  15.08  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -88,135 +99,27 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Ccing x86 and more people.
 
-On Wed, 8 Feb 2023 at 06:09, Steffen Nurpmeso <steffen@sdaoden.eu> wrote:
->
-> Hello!
->
-> First a thank you for kexec, i use it for a homegrown boot
-> solution, where stage1 EFI_STUB kernel is used with busybox and
-> cryptsetup to unlock an encrypted device, and then boots into
-> stage2 via kexec -- a wonderful and easy solution that makes me
-> happy (for years)!
->
-> A bit lengthy now.
-> There is only one question regarding CPU microcode loading: it
-> seems the microcode is not "updated early" with kexec upon "boot".
-> This is a homegrown kernel, with built-in firmware
->
->   CONFIG_EXTRA_FIRMWARE="intel-ucode/06-8e-0a ..."
->
-> but also with the firmware (prefix)in(g) the initrd
->
->     {
->             # Microcode update must be uncompressed and first
->             [ -f ../../boot/early-ucode.cpio ] && ./$BB cat ../../boot/early-ucode.cpio
->             # Followed by (possibly compressed) normal initrd
->             ./$BB find . | ./$BB cpio -H newc -o | ./$BB gzip -9 -n
->     } > ../.initrd
->
-> (ie early-ucode.cpio exists) like here:
->
->   #?0|kent:/boot# cpio -t <.kent.initrd.0
->   kernel
->   kernel/x86
->   kernel/x86/microcode
->   kernel/x86/microcode/.enuineIntel.align.0123456789abc
->   kernel/x86/microcode/GenuineIntel.bin
->   11020 blocks
->   #?0|kent:/boot# dd if=.kent.initrd.0 skip=5642240 bs=1|gunzip|cpio -t
->   .
->   init
->   linux-init-s1.sh
->   sys
->   run
->   proc
->   mnt
->   dev
->   dev/console
->   bin
->   bin/sh
->   etc
->   etc/mdev.sh
->   etc/mdev.conf
->   linux-init-lib.sh
->   linux-init-s2.sh
->   cryptsetup.static
->   busybox.static
->   4491733+0 records in
->   4491733+0 records out
->   4491733 bytes (4.5 MB, 4.3 MiB) copied, 5.67558 s, 791 kB/s
->   18439 blocks
->
-> If stage2 then boots it goes like
->
->   Feb  6 17:38:15 (none) kernel: Linux version 6.1.9-ideapad (ports@kent) (gcc (CRUX-x86_64-multilib) 12.2.0, GNU ld (GNU Binutils) 2.39) #1 SMP PREEMPT_DYNAMIC Sat Feb  4 20:40:06 CET 2023
->   Feb  6 17:38:15 (none) kernel: Command line: rtw88_pci.disable_aspm=1 rc.hostname=kent
->   Feb  6 17:38:15 (none) kernel: KERNEL supported cpus:
->   Feb  6 17:38:15 (none) kernel:   Intel GenuineIntel
->   ...
->   Feb  6 17:38:15 (none) kernel: Freeing SMP alternatives memory: 48K
->   Feb  6 17:38:15 (none) kernel: smpboot: CPU0: Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz (family: 0x6, model: 0x8e, stepping: 0xa)
->   ..
->   Feb  6 17:38:15 (none) kernel: .... node  #0, CPUs:      #1 #2 #3 #4
->   Feb  6 17:38:15 (none) kernel: MDS CPU bug present and SMT on, data leak possible. See[..]
->   Feb  6 17:38:15 (none) kernel: MMIO Stale Data CPU bug present and SMT on, data leak possible. See[..]
->   Feb  6 17:38:15 (none) kernel:  #5 #6 #7
->   Feb  6 17:38:15 (none) kernel: smp: Brought up 1 node, 8 CPUs
->   Feb  6 17:38:15 (none) kernel: smpboot: Max logical packages: 1
->   Feb  6 17:38:15 (none) kernel: smpboot: Total of 8 processors activated (28811.00 BogoMIPS)
->   ...
->   Feb  6 17:38:15 (none) kernel: Unpacking initramfs...
->   ...
->   Feb  6 17:38:15 (none) kernel: Freeing initrd memory: 9900K
->   ...
->   Feb  6 17:38:16 (none) kernel: microcode: sig=0x806ea, pf=0x80, revision=0xf0
->   Feb  6 17:38:16 (none) kernel: microcode: Microcode Update Driver: v2.2.
->
-> Ie microcode comes late (SMT is later disabled)  It (seems) ok
-> after suspend/resume (due to
->   Feb  7 01:30:12 (none) /root/bin/zzz.sh:
->     echo mem > /sys/power/state
->   Feb  7 20:11:26 (none) /root/bin/zzz.sh:
->     echo off > /sys/devices/system/cpu/smt/control
-> ):
->
->   Feb  7 01:30:12 (none) kernel: PM: suspend entry (deep)
->   ...
->   Feb  7 20:11:23 (none) kernel: ACPI: PM: Preparing to enter system sleep state S3
->   Feb  7 20:11:23 (none) kernel: ACPI: EC: event blocked
->   Feb  7 20:11:23 (none) kernel: ACPI: EC: EC stopped
->   Feb  7 20:11:23 (none) kernel: ACPI: PM: Saving platform NVS memory
->   Feb  7 20:11:23 (none) kernel: Disabling non-boot CPUs ...
->   Feb  7 20:11:23 (none) kernel: smpboot: CPU 1 is now offline
->   Feb  7 20:11:23 (none) kernel: smpboot: CPU 2 is now offline
->   Feb  7 20:11:23 (none) kernel: smpboot: CPU 3 is now offline
->   Feb  7 20:11:23 (none) kernel: [Firmware Bug]: TSC ADJUST differs: CPU0 0 --> -720144233. Restoring
->   Feb  7 20:11:23 (none) kernel: microcode: microcode updated early to revision 0xf0, date = 2021-11-12
->   Feb  7 20:11:23 (none) kernel: ACPI: PM: Low-level resume complete
->
-> I wonder whether anything can be done about that.
->
-> Thank you.
->
-> --steffen
-> |
-> |Der Kragenbaer,                The moon bear,
-> |der holt sich munter           he cheerfully and one by one
-> |einen nach dem anderen runter  wa.ks himself off
-> |(By Robert Gernhardt)
->
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
->
+On 07/02/23 20:37, Simon Horman wrote:
+> On Wed, Feb 01, 2023 at 02:23:31PM +0530, Sourabh Jain wrote:
+>> An option to copy the command line arguments from running kernel
+>> to kexec'd kernel. This option works for both kexec and kdump.
+>>
+>> In case --append=<args> or --command-line=<args> is provided along
+>> with --reuse-cmdline parameter then args listed against append and
+>> command-line parameter will be combined with command line argument
+>> from running kernel.
+>>
+>> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+
+Thanks for accepting the patch.
+
+- Sourabh Jain
 
 
 _______________________________________________
