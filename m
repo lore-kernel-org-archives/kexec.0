@@ -4,67 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 55594C05027
-	for <kexec@archiver.kernel.org>; Wed,  8 Feb 2023 13:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7A4E3C05027
+	for <kexec@archiver.kernel.org>; Wed,  8 Feb 2023 19:57:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:References
-	:In-Reply-To:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:List-Subscribe:List-Help:
+	List-Post:List-Archive:List-Unsubscribe:List-Id:References:In-Reply-To:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=4ErkOhp9FF52sDtj0oS5eLHOSD/WMfVbXkW/5SaKQGM=; b=USfFHyRb9B6ojA
-	9z3645CA207x8ZZTF4DIcbPVT7ifNOiSU1QJeGiyEGiWiOt3H/PG4VxnX8V9JyLjuUxnSv9ZspL1u
-	YAnEQ3C/o0y4x8JdFxYRDoz3xApttkw8GHm0V98SRw1/VXI4c1k1SFHuXSTAsjKDUoB4CnXvhGQSS
-	FtsjPnGXYDQzTfk5XtwM7egI/sfngZ/Dec0/3i9qwUPaGqzBPQTxZnxr7SeUdy+iESewNvjbdvdFd
-	5M74H2kFKV72Zf6dtzen7XAw2LV6moxjiiwHK3iHQNHMTQwL8zI14/vlFVAd3OK8N+oO9CVMn/LhB
-	2iCQfNtiFHLaGg1ZB4FA==;
+	List-Owner; bh=Muutq6k+G+YzcUECa9m9kP6C1m7lQkz3FPcBlVF5TVw=; b=AeqxegChyQ0s+O
+	ZMJ8s/XcGvj2YXDKq5L5n+Kw2kYtZLj63mtjo09ssNXv2uzfnN19d65C04bm/CGxZou+zpa40Wizt
+	QJd0hOPIcTQ7Z8IsFNi5A2Am1FYEzH/raWg7ZtVWJdptXmbd/6PHcwNjtuXs1nACi5uAQN3AokojW
+	CXhJiRqZomCZjHN5HLKug8eGosZEhxW/SXkeePfH5+3vzRHNquQ9F5T+aw2gGrbHcay3a15TZlWMQ
+	TslawA+p7NFWsdpFQ5D7n8LNQjE7jejpQmFBM4Cr0d90H1dm63qCHxXOEGLmCJ9mPvrzxbc6DqAKa
+	KU5kThG57Fmfm/KClw2A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pPkki-00Fo7c-Px; Wed, 08 Feb 2023 13:44:48 +0000
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+	id 1pPqZJ-00Goci-DD; Wed, 08 Feb 2023 19:57:25 +0000
+Received: from sdaoden.eu ([217.144.132.164])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pPkkg-00Fo4N-5x
-	for kexec@lists.infradead.org; Wed, 08 Feb 2023 13:44:47 +0000
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1675863873;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=i8F4anSaAXOgaD7d2SXNTwzuF6VCoNge2r+vc3EHUuw=;
-	b=jza22pT4f+uyQ+xvhLROf+nawi64DF8K4bQV/5xIE1VXfuRmBDEhtuaOsVKfdsUL83UhJF
-	LlMuQe26cozAAFD43T1MgHuaEfTgp8odHGJ2pXgCt6Lk+0xeWvZ6l0aqiiHSWUQWylmbVB
-	gFQ5kR9azZGf4DsWHaU8m1+VZqDpi+ehDzJoFz8Ap+LHverBvY5sHq0k/L7Z5bw2pWIMiV
-	2u6VBhqWAh6xeN12ERHy745IzOQo1AFYjFTjah24UjAjFqtMyOHpz+CCyJMbKHkO4Nex8C
-	CgnqJUjXLuT10ocz6JfVFxtWGnd0tBA1W2hDrvQ1ghwehA2FedgikW7j+8HRlQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1675863873;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=i8F4anSaAXOgaD7d2SXNTwzuF6VCoNge2r+vc3EHUuw=;
-	b=vCi+2bWwXSLRxMWFjtnYZTiNH4pFrBS/pZXytPYxbX4+sRUdN1fSg6tCxzU+cE1091n3vl
-	/5nLMLIT1UmlB9Dw==
-To: Eric DeVolder <eric.devolder@oracle.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, kexec@lists.infradead.org, ebiederm@xmission.com,
- dyoung@redhat.com, bhe@redhat.com, vgoyal@redhat.com
-Cc: mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
- hpa@zytor.com, nramas@linux.microsoft.com, thomas.lendacky@amd.com,
- robh@kernel.org, efault@gmx.de, rppt@kernel.org, david@redhat.com,
- sourabhjain@linux.ibm.com, konrad.wilk@oracle.com,
- boris.ostrovsky@oracle.com
-Subject: Re: [PATCH v18 5/7] kexec: exclude hot remove cpu from elfcorehdr
- notes
-In-Reply-To: <dd03f47a-0017-6239-04e9-e796dca03c0c@oracle.com>
-References: <20230131224236.122805-1-eric.devolder@oracle.com>
- <20230131224236.122805-6-eric.devolder@oracle.com> <87sffpzkle.ffs@tglx>
- <dd03f47a-0017-6239-04e9-e796dca03c0c@oracle.com>
-Date: Wed, 08 Feb 2023 14:44:32 +0100
-Message-ID: <87h6vw2rwf.ffs@tglx>
-MIME-Version: 1.0
+	id 1pPqZD-00GobL-Kb
+	for kexec@lists.infradead.org; Wed, 08 Feb 2023 19:57:21 +0000
+Date: Wed, 08 Feb 2023 20:57:09 +0100
+Author: Steffen Nurpmeso <steffen@sdaoden.eu>
+From: Steffen Nurpmeso <steffen@sdaoden.eu>
+To: Borislav Petkov <bp@alien8.de>
+Cc: RuiRui Yang <ruyang@redhat.com>, kexec@lists.infradead.org,
+ Eugene Syromiatnikov <esyr@redhat.com>,
+ "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+ Steffen Nurpmeso <steffen@sdaoden.eu>
+Subject: Re: question on microcode loading
+Message-ID: <20230208195709.7QK3K%steffen@sdaoden.eu>
+In-Reply-To: <Y+N4qE2CD9Vu6maw@zn.tnic>
+References: <20230207220842.Xerbq%steffen@sdaoden.eu>
+ <CALu+AoTogTF8rYteoJ9JTc8By9_F4k0SdrmS5bZVV_9F3AZQmQ@mail.gmail.com>
+ <Y+N4qE2CD9Vu6maw@zn.tnic>
+Mail-Followup-To: Borislav Petkov <bp@alien8.de>,
+ RuiRui Yang <ruyang@redhat.com>, kexec@lists.infradead.org,
+ Eugene Syromiatnikov <esyr@redhat.com>,
+ "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+ Steffen Nurpmeso <steffen@sdaoden.eu>
+User-Agent: s-nail v14.9.24-403-gdc9ff6b368
+OpenPGP: id=EE19E1C1F2F7054F8D3954D8308964B51883A0DD;
+ url=https://ftp.sdaoden.eu/steffen.asc; preference=signencrypt
+BlahBlahBlah: Any stupid boy can crush a beetle. But all the professors in
+ the world can make no bugs.
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230208_054446_370795_3DB68A0F 
-X-CRM114-Status: GOOD (  11.48  )
+X-CRM114-CacheID: sfid-20230208_115719_840142_56179511 
+X-CRM114-Status: UNSURE (   6.37  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,52 +64,64 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Eric!
+Borislav Petkov wrote in
+ <Y+N4qE2CD9Vu6maw@zn.tnic>:
+ |On Wed, Feb 08, 2023 at 11:21:13AM +0800, RuiRui Yang wrote:
+ |>> There is only one question regarding CPU microcode loading: it
+ |>> seems the microcode is not "updated early" with kexec upon "boot".
+ |
+ |You lost me here: when you load a kernel and you have builtin microcode
+ |or have supplied it through initrd, it should update.
 
-On Tue, Feb 07 2023 at 11:23, Eric DeVolder wrote:
-> On 2/1/23 05:33, Thomas Gleixner wrote:
->
-> So my latest solution is introduce two new CPUHP states, CPUHP_AP_ELFCOREHDR_ONLINE
-> for onlining and CPUHP_BP_ELFCOREHDR_OFFLINE for offlining. I'm open to better names.
->
-> The CPUHP_AP_ELFCOREHDR_ONLINE needs to be placed after CPUHP_BRINGUP_CPU. My
-> attempts at locating this state failed when inside the STARTING section, so I located
-> this just inside the ONLINE sectoin. The crash hotplug handler is registered on
-> this state as the callback for the .startup method.
->
-> The CPUHP_BP_ELFCOREHDR_OFFLINE needs to be placed before CPUHP_TEARDOWN_CPU, and I
-> placed it at the end of the PREPARE section. This crash hotplug handler is also
-> registered on this state as the callback for the .teardown method.
+Ok.  That was what i always hoped.  I have never seen "microcode
+updated early" for kexec-booted kernels.
 
-TBH, that's still overengineered. Something like this:
+(For all CPUs i have it does not make a difference regarding
+/sys/devices/system/cpu/vulnerabilities/*, only SMT on/off changes
+things; ie, CPU microcode is not newest but seems to offer
+mitigations already; and likewise new microcode does not mitigate
+the remaining vulnerabilities; and it unfortunately seems FINEIBT
+is not backported to 6.1, but that off-topic.)
 
-bool cpu_is_alive(unsigned int cpu)
-{
-	struct cpuhp_cpu_state *st = per_cpu_ptr(&cpuhp_state, cpu);
+I only wanted to ask once, as the message comes so late, when all
+CPUs are in use.  (And the "updated early" _does_ come after
+suspend/resume.  And i am no kernel / hardware hacker.)
 
-	return data_race(st->state) <= CPUHP_AP_IDLE_DEAD;
-}
+ |>> This is a homegrown kernel, with built-in firmware
+ |
+ |Yeah, this is kinda confusing. When you kexec a kernel, it should be
+ |just the same as when you boot a k^ernel normally.
 
-and use this to query the actual state at crash time. That spares all
-those callback heuristics.
+Very lucky for that kexec possibility, thanks.
+I have not seen the "normal" case for long, at least not the log
+(it goes nowhere), and the screen scrolls too fast.  (And there is
+no scrollback buffer, and i think i am 
 
-> I'm making my way though percpu crash_notes, elfcorehdr, vmcoreinfo,
-> makedumpfile and (the consumer of it all) the userspace crash utility,
-> in order to understand the impact of moving from for_each_present_cpu()
-> to for_each_online_cpu().
+ |If you can give simplified reproduction instructions, I could give it a
+ |try...
 
-Is the packing actually worth the trouble? What's the actual win?
+Well it is a simple kernel with enough built-in to boot stage1 so
+i can run cryptsetup, and then (optionally) kexec-boot stage2
+(same (maybe newer) kernel but on encrypted device).  Formerly all
+static, but now network/firewall, sound etc are modules.
+Three small somewhat simple scripts with text-only config files.
+But upon interest i can very well post them?  (I like it!  No
+extra boot loader, no systemd here.)
 
-Thanks,
+Thank you.  And ciao!
 
-        tglx
-
-
+--steffen
+|
+|Der Kragenbaer,                The moon bear,
+|der holt sich munter           he cheerfully and one by one
+|einen nach dem anderen runter  wa.ks himself off
+|(By Robert Gernhardt)
 
 _______________________________________________
 kexec mailing list
