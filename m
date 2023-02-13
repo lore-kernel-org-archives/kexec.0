@@ -4,73 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8C45BC636D4
-	for <kexec@archiver.kernel.org>; Mon, 13 Feb 2023 12:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id ECB89C636D4
+	for <kexec@archiver.kernel.org>; Mon, 13 Feb 2023 23:49:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:References
-	:In-Reply-To:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=l2m52/FYjEUAOwOlm/28TeQr2IWPF53aXz66NPA/fzE=; b=DJXCjR0I1aohAf
-	LS5eimDqGcY63SrvDean+EHwRjOFeX76vBYaI4xpjdIhCVjs8ocDdNaKEoRAg0J5D7biJGlHoznAn
-	Dg9sJp1zvRvkymJU1YrRmUfelkIxS87r7ab+pkwPAJ1mgTh8T2eC2UJDQ5GWvmob73y5Ce+gr3yhS
-	qo8agh64NUpYoIWJKEFLH1OzDPmL+ORMRi7aXDRsBazM5mndvdVJhzSb86NPGEvu/TE+TDuKpSQBw
-	PLkA7VD3B94aZR+/a6Hl5z7n1t8hgZePMvKGfHMejOKGSl4cIabpnMc1sOYHTpHDADVti40ZjS8+k
-	P8dYLGNOOkwvRKHDTxFQ==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=hb9lJY0HD52+w6pVhiQPpCZmGb5UUX0ociy61rIJMhY=; b=BuUjqevp5lBV6X
+	gNvPQoRATfI8QjUXy0wjTlG6LDFfmmgJmip4135Uo7PKBvZwgK1PBOXRbmH+9CmKbzPsc3oc0UUvX
+	SEU83MdiiSUBZXY23fNxCDWWO3JEUodbD/nh4zAgYahowPMZcgNV/c9rFxUYf3lKuoAXvbY0rNzTx
+	qTZlRKCx0j2xBDBYsDYmgrx4hru869bjjZX8fxi8152SC4iugjFTrT/5G340wN23aZlRAS/ix0cdQ
+	OtZu9BJiazvG+aAcBtRgOdqVUV25y2PO4vpbamU6OQOLGwVT4pwtlLZc77Mx52eU2sR5yfrMAP8YE
+	to+bZCM5E5twhPCtH8HA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pRYKO-00EiWo-KZ; Mon, 13 Feb 2023 12:53:04 +0000
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+	id 1pRiZJ-00GoBX-FG; Mon, 13 Feb 2023 23:49:09 +0000
+Received: from mga04.intel.com ([192.55.52.120])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pRYKL-00EiTO-9s
-	for kexec@lists.infradead.org; Mon, 13 Feb 2023 12:53:02 +0000
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1676292771;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kt2OK2YUgy+eskKKqGKLmdkLvjzs+zgQaWcCfhotpwU=;
-	b=zNus41ARORGE+j8gBIE7+HCsLeoYY24/UX8ZgfuousAFn2ZfI00dzrRknT+bPn/9BHgx40
-	0L6yleX8ptxdrzJUDisilt93HRA/MHZJ1M8DEt3VT/SbASd7yhdvhy/6vvPaydCUbRW3Jo
-	tUMe4hEM9nzqDh+NvSrEk64TUT2y75VhsNJoTb8ITlxylKLTpGT8r5c75st12amJRRyygR
-	q8b5IJ5M+LLx9I8uUqnT6LA5nOGzDNSMaerXbvrmVmUvFGWJdzogrnq9TLkbp0nMIrZBx0
-	6WpvYPXcMpBqipnyCNonv8yAE73HpT5hTESf/Kl9ef/LrF5C1LAiwdAap9z+zA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1676292771;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kt2OK2YUgy+eskKKqGKLmdkLvjzs+zgQaWcCfhotpwU=;
-	b=SX8v1GdsioisJ0hWeYrj3TpgQwWdojaqpeRg8G+z0RejSrdLoDQjdPGC4yrqQCl7YwPp25
-	6iD0WeSTmPOcV0CA==
-To: Sourabh Jain <sourabhjain@linux.ibm.com>, Eric DeVolder
- <eric.devolder@oracle.com>, linux-kernel@vger.kernel.org, x86@kernel.org,
- kexec@lists.infradead.org, ebiederm@xmission.com, dyoung@redhat.com,
- bhe@redhat.com, vgoyal@redhat.com
-Cc: mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
- hpa@zytor.com, nramas@linux.microsoft.com, thomas.lendacky@amd.com,
- robh@kernel.org, efault@gmx.de, rppt@kernel.org, david@redhat.com,
- konrad.wilk@oracle.com, boris.ostrovsky@oracle.com
-Subject: Re: [PATCH v18 5/7] kexec: exclude hot remove cpu from elfcorehdr
- notes
-In-Reply-To: <f7c0269b-05e7-c706-f111-c768d4a13b72@linux.ibm.com>
-References: <20230131224236.122805-1-eric.devolder@oracle.com>
- <20230131224236.122805-6-eric.devolder@oracle.com> <87sffpzkle.ffs@tglx>
- <dd03f47a-0017-6239-04e9-e796dca03c0c@oracle.com> <87h6vw2rwf.ffs@tglx>
- <7580421a-648a-2c4b-3c33-82e7622d9585@oracle.com>
- <d465173e-a31a-c4d6-af51-59d9ff0c2edc@linux.ibm.com>
- <24034f33-739b-e5f5-40c0-8d5abeb1ad89@oracle.com>
- <18c57fd0-2ad0-361a-9a53-ac49c372f021@linux.ibm.com>
- <b3d5c730-60ee-8f1c-978c-e3df41e3a3f1@oracle.com>
- <f7c0269b-05e7-c706-f111-c768d4a13b72@linux.ibm.com>
-Date: Mon, 13 Feb 2023 13:52:50 +0100
-Message-ID: <87ttzpzpzx.ffs@tglx>
+	id 1pRiZ0-00Go32-4A
+	for kexec@lists.infradead.org; Mon, 13 Feb 2023 23:48:51 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1676332130; x=1707868130;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=yDoVpTAUfuRLKHuvAYJkruKvIjru3gmVTwuDctec5C8=;
+  b=JmV95gSo7HnnndpdAXP+h97bfm5anWetDA1p7sXzvTxRYW5dsJen/AHV
+   fjNELz58EHLaM2bttaL8aKpNWkI/IraIX7NBtLAGC/o50g3hLoKbkuaxv
+   qlzQIQn+jnb6Cr1olzmjoinOakcq+KuasQe3sqKz8PyTDUW/mHhiHMKHG
+   9PIzTzxdn1BtIEvjtmd2///iYQWKCOXrMnfc6RTOCcXjzUkGFhs+Z3L+V
+   LisrYFd7/2ZifjKOHlLlUl0VsKYgxtcse0ztzYP9SnxPz2g0PqmXA3wGk
+   nGDn+bF4PgNzaFj42sTt4qdDS9lziuEQIHlXgvXjF1i6uOR24XiJpcp5B
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10620"; a="329658417"
+X-IronPort-AV: E=Sophos;i="5.97,294,1669104000"; 
+   d="scan'208";a="329658417"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2023 15:48:48 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10620"; a="668965311"
+X-IronPort-AV: E=Sophos;i="5.97,294,1669104000"; 
+   d="scan'208";a="668965311"
+Received: from iannetti-mobl.ger.corp.intel.com (HELO box.shutemov.name) ([10.252.49.216])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2023 15:48:46 -0800
+Received: by box.shutemov.name (Postfix, from userid 1000)
+	id 5BB7810CA33; Tue, 14 Feb 2023 02:48:43 +0300 (+03)
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Dave Hansen <dave.hansen@intel.com>,
+	Borislav Petkov <bp@alien8.de>
+Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Isaku Yamahata <isaku.yamahata@intel.com>,
+	x86@kernel.org,
+	linux-coco@lists.linux.dev,
+	kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCH 0/2] Kexec enabling in TDX guest
+Date: Tue, 14 Feb 2023 02:48:34 +0300
+Message-Id: <20230213234836.3683-1-kirill.shutemov@linux.intel.com>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230213_045301_511177_D0DAFDDD 
-X-CRM114-Status: UNSURE (   4.71  )
+X-CRM114-CacheID: sfid-20230213_154850_263263_431678ED 
+X-CRM114-Status: UNSURE (   9.75  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -88,28 +86,29 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Feb 13 2023 at 10:10, Sourabh Jain wrote:
-> The sysconf document says _SC_NPROCESSORS_CONF is processors configured, 
-> isn't that equivalent to possible CPUs?
+The patch brings basic enabling of kexec in TDX guests.
 
-glibc tries to evaluate that in the following order:
+By "basic enabling" I mean, kexec in the guests with a single CPU.
+TDX guests use ACPI MADT MPWK to bring up secondary CPUs. The mechanism
+doesn't allow to put a CPU back offline if it has woken up.
 
-  1) /sys/devices/system/cpu/cpu*
+We are looking into this, but it might take time.
 
-     That's present CPUs not possible CPUs
+Kirill A. Shutemov (2):
+  x86/kexec: Preserve CR4.MCE during kexec
+  x86/tdx: Convert shared memory back to private on kexec
 
-  2) /proc/stat
+ arch/x86/coco/tdx/Makefile           |  1 +
+ arch/x86/coco/tdx/kexec.c            | 82 ++++++++++++++++++++++++++++
+ arch/x86/include/asm/tdx.h           |  4 ++
+ arch/x86/kernel/machine_kexec_64.c   |  2 +
+ arch/x86/kernel/relocate_kernel_64.S |  6 +-
+ 5 files changed, 94 insertions(+), 1 deletion(-)
+ create mode 100644 arch/x86/coco/tdx/kexec.c
 
-     That's online CPUs
+-- 
+2.39.1
 
-  3) sched_getaffinity()
-
-     That's online CPUs at best. In the worst case it's an affinity mask
-     which is set on a process group
-
-Thanks,
-
-        tglx
 
 _______________________________________________
 kexec mailing list
