@@ -4,73 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2F82EC636CC
-	for <kexec@archiver.kernel.org>; Mon, 13 Feb 2023 23:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 60CAFC61DA4
+	for <kexec@archiver.kernel.org>; Tue, 14 Feb 2023 09:01:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=GaEoMfs9jyZAaC8vTPQMzsMIJL4w0idmc64l2troO4w=; b=kmbvKJvLOslVNe
-	KmM7GX6HemYgmWln1Jma2h5Jxuv40TdUEQmaNqNBfJgFG2oTk8XUwrdwTJH3hqpBo5hShmzxek3Wt
-	KnBTevZ6VRypFeXn7z1Zgg2CbZUVvS3KmEaxdHS3sVvlswB+HRilybFerUirDjxIlPSNZTUb7qKzU
-	9xtSP76mfkSfG+A+iJup/zNMeudos9r0vCb3J4t75DPDYoLd6uzteqwhGddHvkMpPHkB7N89S6dPw
-	ggG4B3H35EgEY5oY4wrtZc2Ujta7WMBueIEHj35JzwXCiK8dVn6C42PKlzkoQLEXuoZk3csELM21T
-	sFM0jxebywKLILTmgRzQ==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Subject:To:From:Date:
+	Message-ID:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From
+	:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=xsgorHrlIDblhV27SCeG1HsszmazWpbz+NTzWwicqKI=; b=K1GBSfiGI7n8xe
+	lpKlIhWBWPAo8Sn2IUbKEnCQWB1qoEXf9GM0mXEU8JUe4ghoLSJj2IU/JHaxBsH/pEB45R4ZkbHaK
+	cPu5VWwYFaJLT0a6sE39psAZnviPI4vvw2/HKnPJjoNRRTzxXH74sbXPyExhPHaQ8oD+13R1BoK6y
+	ckfZtIJGZJqlCwWtjUJwq3d1Ku3RNx7h4iPVVFa+aUOv+QcezZ7kZneUfm40+r0XEOo/T1QSb6r4U
+	2TwqoF3rq0Vq5IcPRsesUsMTcJ2HB6+0LKEtYcsF1CYTS+GBuKhEjHU2q7kEh6G97Qjs1tP4Puioa
+	bkH9Dd8urNciQGeHEGAA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pRiZf-00GoIC-6D; Mon, 13 Feb 2023 23:49:31 +0000
-Received: from mga07.intel.com ([134.134.136.100])
+	id 1pRrBh-000cTX-P9; Tue, 14 Feb 2023 09:01:21 +0000
+Received: from mail.culbokie.pl ([217.61.97.164])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pRiZD-00Go8Q-Rs
-	for kexec@lists.infradead.org; Mon, 13 Feb 2023 23:49:05 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676332143; x=1707868143;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=0x8prcfOkEmACeYEiOgHUm+WyjDXkIRz6t1uNF7BUGU=;
-  b=DEU4gkRe/LLVPz4mbmoDkRzEjfxFbx3I8SLNirxLNL96qdWaDD15dR26
-   lkOcvo9DsLQEL09c7WQdokTlK3piGVyHkYW8iQreseYHUnBrjt85LtUCS
-   fQDksFjPUHK5tEtSPPMRj42RwY3I/Fb5BdFmopd2plqZ/bKHuOt+Pcu3Z
-   9WmOx09Em9RfwgCtJHM33EyyvQWtQcaK4r5DrGUru1h6WCMDLyPpKcrz7
-   Q0585VAobnBCGTTm/xwZrgn9gwVHC5fvRxUEwjMosn+HwK2Z6pyZimU0M
-   1fFa63JS+f3I/qrdhd/F/3HFpfpYpGVFMGMUaQEcmAPVaq3IAc7QDAr1c
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10620"; a="395645605"
-X-IronPort-AV: E=Sophos;i="5.97,294,1669104000"; 
-   d="scan'208";a="395645605"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2023 15:48:48 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10620"; a="732672802"
-X-IronPort-AV: E=Sophos;i="5.97,294,1669104000"; 
-   d="scan'208";a="732672802"
-Received: from iannetti-mobl.ger.corp.intel.com (HELO box.shutemov.name) ([10.252.49.216])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2023 15:48:46 -0800
-Received: by box.shutemov.name (Postfix, from userid 1000)
-	id 62E0010CA34; Tue, 14 Feb 2023 02:48:43 +0300 (+03)
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Dave Hansen <dave.hansen@intel.com>,
-	Borislav Petkov <bp@alien8.de>
-Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Isaku Yamahata <isaku.yamahata@intel.com>,
-	x86@kernel.org,
-	linux-coco@lists.linux.dev,
-	kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH 1/2] x86/kexec: Preserve CR4.MCE during kexec
-Date: Tue, 14 Feb 2023 02:48:35 +0300
-Message-Id: <20230213234836.3683-2-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230213234836.3683-1-kirill.shutemov@linux.intel.com>
-References: <20230213234836.3683-1-kirill.shutemov@linux.intel.com>
+	id 1pRrBb-000cPQ-KQ
+	for kexec@lists.infradead.org; Tue, 14 Feb 2023 09:01:17 +0000
+Received: by mail.culbokie.pl (Postfix, from userid 1001)
+	id 2A50983CEC; Tue, 14 Feb 2023 09:00:59 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=culbokie.pl; s=mail;
+	t=1676365268; bh=cNbZL9WXZbgcQtzgDCharPn7EQBjUHnC1FAZ/+OQVjk=;
+	h=Date:From:To:Subject:From;
+	b=5NAjyobs42A98AtqMusFXN8Zo9pvxC4bmt4q6c+ffeyrOJSwprIxChE8oO7cMwPEw
+	 jXAaSTAkk1nm3AkiHqXXOJxWURoxLLJXOSppNaO7TPxRL6ZpWcZWppTDofVYKg5mDB
+	 Zbtdy77CNj4+KBHEYWC3MLB0ka9og0Y70iQMLnmgR9AnCOQSo+Tqzwdhd5ayB9iXGl
+	 YisMv1XhnySRXOQlhMiZjY2hYpgDvtvA4WW/67MjcfQmk4RfEgvmElM3wxGVDP9cTK
+	 51JWFq1C/He9FOOTOfnoPI5JzkqRMRB5TKr5CH6jCcJzlxHWxzjorBL+UH3AiyA4PL
+	 Qx5HNnXJu8iRw==
+Received: by mail.culbokie.pl for <kexec@lists.infradead.org>; Tue, 14 Feb 2023 09:00:28 GMT
+Message-ID: <20230214074504-0.1.1n.40ug.0.rk6n7a012g@culbokie.pl>
+Date: Tue, 14 Feb 2023 09:00:28 GMT
+From: =?UTF-8?Q?"Pawe=C5=82_Kamieniecki"?= <pawel.kamieniecki@culbokie.pl>
+To: <kexec@lists.infradead.org>
+Subject: Prezentacja
+X-Mailer: mail.culbokie.pl
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230213_154903_987115_529A5202 
-X-CRM114-Status: UNSURE (   8.15  )
+X-CRM114-CacheID: sfid-20230214_010115_872969_349E3AFD 
+X-CRM114-Status: UNSURE (   1.27  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -83,44 +59,22 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-TDX guests are not allowed to clear CR4.MCE. Attempt to clear it leads
-to #VE.
-
-Preserve the flag during kexec.
-
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
----
- arch/x86/kernel/relocate_kernel_64.S | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index 4a73351f87f8..18f19dcc40e9 100644
---- a/arch/x86/kernel/relocate_kernel_64.S
-+++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -145,8 +145,12 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
- 	 * Set cr4 to a known state:
- 	 *  - physical address extension enabled
- 	 *  - 5-level paging, if it was enabled before
-+	 *  - Preserve MCE, if it was set. Clearing MCE may fault in some
-+	 *    environments.
- 	 */
--	movl	$X86_CR4_PAE, %eax
-+	movq	%cr4, %rax
-+	andl	$X86_CR4_MCE, %eax
-+	orl	$X86_CR4_PAE, %eax
- 	testq	$X86_CR4_LA57, %r13
- 	jz	1f
- 	orl	$X86_CR4_LA57, %eax
--- 
-2.39.1
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+RHppZcWEIGRvYnJ5IQoKQ3p5IG3Ds2fFgmJ5bSBwcnplZHN0YXdpxIcgcm96d2nEhXphbmllLCBr
+dMOzcmUgdW1vxbxsaXdpYSBtb25pdG9yaW5nIGthxbxkZWdvIGF1dGEgdyBjemFzaWUgcnplY3p5
+d2lzdHltIHcgdHltIGplZ28gcG96eWNqxJksIHp1xbx5Y2llIHBhbGl3YSBpIHByemViaWVnPwoK
+RG9kYXRrb3dvIG5hc3plIG5hcnrEmWR6aWUgbWluaW1hbGl6dWplIGtvc3p0eSB1dHJ6eW1hbmlh
+IHNhbW9jaG9kw7N3LCBza3JhY2EgY3phcyBwcnplamF6ZMOzdywgYSB0YWvFvGUgdHdvcnplbmll
+IHBsYW51IHRyYXMgY3p5IGRvc3Rhdy4KClogbmFzemVqIHdpZWR6eSBpIGRvxZt3aWFkY3plbmlh
+IGtvcnp5c3RhIGp1xbwgcG9uYWQgNDkgdHlzLiBLbGllbnTDs3cuIE1vbml0b3J1amVteSA4MDkg
+MDAwIHBvamF6ZMOzdyBuYSBjYcWCeW0gxZt3aWVjaWUsIGNvIGplc3QgbmFzesSFIG5hamxlcHN6
+xIUgd2l6eXTDs3drxIUuCgpCYXJkem8gcHJvc3rEmSBvIGUtbWFpbGEgendyb3RuZWdvLCBqZcWb
+bGkgbW9nbGliecWbbXkgd3Nww7NsbmllIG9tw7N3acSHIHBvdGVuY2phxYIgd3lrb3J6eXN0YW5p
+YSB0YWtpZWdvIHJvendpxIV6YW5pYSB3IFBhxYRzdHdhIGZpcm1pZS4KCgpQb3pkcmF3aWFtLApQ
+YXdlxYIgS2FtaWVuaWVja2kKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0
+dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
