@@ -4,63 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4B9E8C61DA4
-	for <kexec@archiver.kernel.org>; Wed, 15 Feb 2023 03:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EAE2AC677F1
+	for <kexec@archiver.kernel.org>; Wed, 15 Feb 2023 15:40:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:CC:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
+	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=6OkSHffDbWO9789S89qywPxvQRzyYNLHbwtuJITewWI=; b=n9JFQOtGJyn9U8
-	N26agr1h46JXCHr5VkZVVGvvhMdOWu6mple2t3hMYAVX832RB0kDP2CkkwW8Kx3sIluMARo781fGi
-	yzjQwqm61PmlTI4eAMeog7ypnRs0L/Vo/wmjWQ9jToNid6oKmg6AewUI7GuTVdPJBt8a4J7PxK7cl
-	yPuuznG3P1iPzZvzrRFr8c/fT4nDLeA05RIs8MZwE85efcgFVwhJJjnHIUjv6DfLfcqHo/zdfKgeA
-	HCiPLEbKdkeWAboJYTBS+/8osU8BzQSd4VraYQKeRYBbuUFKhh/aQvH+jGsMaf0l2h0hKQeUZ9gGe
-	3PEALiN7A9Wc2cFJCyCA==;
+	List-Owner; bh=D9Ag0R+eP2e14dA61hdtLXx4Rtb/d0p97/gB0CJmVNY=; b=lPXKx2kMvYJmhw
+	T9r6Kd/SWGBt7IFYhD/lj8MdFBzf8AdNqTolkuhajvasrhTnVfxsrauWgwxTNCQyQR8pfGThvunhL
+	g69UdghfpBLqxJhJVTnQV58ASAh84PwfI/c0z4yND0TqOdXwMHmfkFs/uWYWnPN7NWYGbkRJg1mKM
+	tcFbUGqQRhs1K5Jx8WsqHuILkGCJkAZBQeVMWxHnTnuNL32CoByQmyt4/qDn0M1L/TJ+1PggtywAn
+	fTVL5eRpo4C4DH8z6DQDBOpDiU7P6heYJJhGA8JO/ND3kilj3TYcJcFwZ1w/lTfXUnfL3ei9vYEM5
+	TmesCL5WJ3q8Ssz1UexQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pS86k-004U2m-Qo; Wed, 15 Feb 2023 03:05:22 +0000
-Received: from szxga02-in.huawei.com ([45.249.212.188])
+	id 1pSJtD-006PRc-8X; Wed, 15 Feb 2023 15:40:11 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pS86h-004U1G-P7
-	for kexec@lists.infradead.org; Wed, 15 Feb 2023 03:05:21 +0000
-Received: from kwepemi500024.china.huawei.com (unknown [172.30.72.54])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4PGjYX52CNzRs5G;
-	Wed, 15 Feb 2023 11:02:40 +0800 (CST)
-Received: from [10.174.179.163] (10.174.179.163) by
- kwepemi500024.china.huawei.com (7.221.188.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.17; Wed, 15 Feb 2023 11:05:12 +0800
-Message-ID: <abe55a65-1ab9-39ca-2cca-3190c6ba2e21@huawei.com>
-Date: Wed, 15 Feb 2023 11:05:11 +0800
+	id 1pSJt9-006PRU-Gg
+	for kexec@bombadil.infradead.org; Wed, 15 Feb 2023 15:40:07 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=i7LKngPzc/hrmVl4gzBZXU9fkDYg01lrfToW/TF07cs=; b=XkKzSng3pS1l9IfAcyAPJlskUp
+	T9+WCms+PPCekqFY6ANX8hSk0gNd4B2rmyX2/SIQX9r+Y16MC8+ACQjTuC81tFjH/PRs85o8mpToz
+	dXjN/UiETE5P0YW+Exu17ozEwlCQ68gqK8tD1eySum1j3FrSWKNYWm+vgKCzs7fD+5CTQ42AIqc0K
+	yYig2nnVpzFXila79Rdc64Y8A2q+SwrKFq+TCsl4YyHw4w5CO90fkpMIfrtackWLIaxgdXstNszjn
+	SWqZArteLGBXLSE/WZLEs1HH7+byU6AzEwLLtZ1S6Nxgx7BWPABGHbYMmWvXKj1Kw9JhoCdsA5dqD
+	UKrWRBqQ==;
+Received: from fanzine2.igalia.com ([213.97.179.56])
+	by desiato.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
+	id 1pSJsP-009yJC-13
+	for kexec@lists.infradead.org;
+	Wed, 15 Feb 2023 15:40:06 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=i7LKngPzc/hrmVl4gzBZXU9fkDYg01lrfToW/TF07cs=; b=PYgxf7xd2iJA2O9fL3Ig5ZUpPY
+	fanBc6tEOZsGwe4k5hiiZnOqQG0z7GIX6jVRBbYCc3GnFncqzPVsYMWO/dAoqXVDFWTmsCtoLjwww
+	69PRVjORixfmCakpyMiRlZUdgYg9BYrmDMYcEiTQGUWaK8C+IUfHVuGtk+Y+nRaXPmvZDjhMz0/vX
+	IXF7XeVgQyJGVANG++EQmailfaE5FPUa36BymSLRhzPDguJlcZxmWMYl4FqYqpyEDHQQKuchvOmDz
+	6YJyNy0g9bCnH3WyCCV8b9L+0b9LVSEI5FhE/54LwGlkVMN0dBvIAjBbrHKXf2svDQ/7PGTynbBQT
+	nHJjhKqA==;
+Received: from [187.10.60.16] (helo=[192.168.1.60])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1pSJsZ-00372S-HW; Wed, 15 Feb 2023 16:39:31 +0100
+Message-ID: <b04fc583-c3d1-8c3d-3831-9c765a74a705@igalia.com>
+Date: Wed, 15 Feb 2023 12:39:22 -0300
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.2
-Subject: Re: [PATCH v3] x86/kdump: Handle blocked NMIs interrupt to avoid
- kdump crashes
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH v4] panic: Fixes the panic_print NMI backtrace setting
 Content-Language: en-US
-To: Baoquan He <bhe@redhat.com>, Peter Zijlstra <peterz@infradead.org>
-CC: <mingo@redhat.com>, <bp@alien8.de>, <jroedel@suse.de>, <vbabka@suse.cz>,
-	<hpa@zytor.com>, <tglx@linutronix.de>, <eric.devolder@oracle.com>,
-	<tiwai@suse.de>, <keescook@chromium.org>, <dave.hansen@linux.intel.com>,
-	<linux-kernel@vger.kernel.org>, <x86@kernel.org>, <liwei391@huawei.com>,
-	<xiexiuqi@huawei.com>, <kexec@lists.infradead.org>
-References: <20230202014053.3604176-1-zengheng4@huawei.com>
- <Y9t9wvQ0HRwCs1Xh@hirez.programming.kicks-ass.net>
- <e57ba121-5bcc-e63b-691d-3e3d998e9e48@huawei.com>
- <Y+tZE8ixmlIDYrOu@hirez.programming.kicks-ass.net>
- <Y+wu5UJTzVIYrsbK@MiWiFi-R3L-srv>
-From: Zeng Heng <zengheng4@huawei.com>
-In-Reply-To: <Y+wu5UJTzVIYrsbK@MiWiFi-R3L-srv>
-X-Originating-IP: [10.174.179.163]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemi500024.china.huawei.com (7.221.188.100)
-X-CFilter-Loop: Reflected
+To: Petr Mladek <pmladek@suse.com>
+Cc: akpm@linux-foundation.org, bhe@redhat.com, linux-kernel@vger.kernel.org,
+ kexec@lists.infradead.org, dyoung@redhat.com, d.hatayama@jp.fujitsu.com,
+ feng.tang@intel.com, hidehiro.kawai.ez@hitachi.com, keescook@chromium.org,
+ mikelley@microsoft.com, vgoyal@redhat.com, kernel-dev@igalia.com,
+ kernel@gpiccoli.net, stable@vger.kernel.org
+References: <20230210203510.1734835-1-gpiccoli@igalia.com>
+ <Y+ue4OsyrGSx5ujB@alley>
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <Y+ue4OsyrGSx5ujB@alley>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230214_190520_005047_430E4A9A 
-X-CRM114-Status: UNSURE (   8.45  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20230215_154003_840880_F5CBED4D 
+X-CRM114-Status: GOOD (  19.67  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -72,36 +87,83 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-CuWcqCAyMDIzLzIvMTUgOTowMSwgQmFvcXVhbiBIZSDlhpnpgZM6Cj4gQWRkIGtleGVjIGxpc3Qg
-dG8gQ0MuCj4KPiBPbiAwMi8xNC8yMyBhdCAxMDo0OWFtLCBQZXRlciBaaWpsc3RyYSB3cm90ZToK
-Pj4gT24gVHVlLCBGZWIgMTQsIDIwMjMgYXQgMDU6MzA6NDZQTSArMDgwMCwgWmVuZyBIZW5nIHdy
-b3RlOgo+Pgo+Pj4+IEkgbmV2ZXIgcmVtZW1iZXIgdGhlIHNodXRkb3duIHBhdGhzIC0tIGRvIHdl
-IGZvcmNlIHdpcGUgdGhlIFBNVQo+Pj4+IHJlZ2lzdGVycyBzb21ld2hlcmUgYmVmb3JlIHRoaXM/
-Cj4+PiBJIGhhdmUgY2hlY2tlZCB0aGUgcGFuaWMgcHJvY2VzcywgYW5kIHRoZXJlIGlzIG5vIHdp
-cGUgb3BlcmF0aW9uIGZvciBQTVUKPj4+IHJlZ2lzdGVycywKPj4+Cj4+PiB3aGljaCBjYXVzZXMg
-dGhlIHdhdGNoZG9nIGJpdGVzLgo+Pj4KPj4+IERvIHlvdSBtZWFuIHdlIHNob3VsZCBkaXJlY3Rs
-eSBkaXNhYmxlIFBNVSByZWdpc3RlcnMgaW5zdGVhZCBvZiBjYWxsaW5nCj4+PiBgaXJldF90b19z
-ZWxmYCB0bwo+Pj4KPj4+IGNvbnN1bWUgYmxvY2tlZCBOTUkgaW50ZXJydXB0cyA/Cj4+IElmIHlv
-dSBkb24ndCB3aXBlIHRoZSBQTVUsIHRoZXJlIHdpbGwgYmUgbWFueSBhbmQgY29udGludW91cyBO
-TUlzLCBhCj4+IHNpbmdsZSBJUkVULXRvLVNFTEYgaXNuJ3QgZ29pbmcgdG8gc2FmZSB5b3UuCj4+
-Cj4+IEFueXdheSwgSSBoYWQgYSBiaXQgb2YgYSBncmVwIGFyb3VuZCBhbmQgSSBmaW5kIHdlIGhh
-dmU6Cj4+Cj4+ICAgIGtlcm5lbC9ldmVudHMvY29yZS5jOiAgIHJlZ2lzdGVyX3JlYm9vdF9ub3Rp
-ZmllcigmcGVyZl9yZWJvb3Rfbm90aWZpZXIpOwo+Pgo+PiB3aGljaCBzaG91bGQgZW5kIHVwIGtp
-bGxpbmcgYWxsIHRoZSBQTVUgYWN0aXZpdHkuIFNvbWV3aGVyZSBhcm91bmQgdGhlcmUKPj4gdGhl
-cmUncyBhbHNvIGEgQ09ORklHX0tFWEVDX0NPUkUgaWZkZWYsIHNvIEknbSB0aGlua2luZyBpdCBn
-ZXRzIGNhbGxlZAo+PiBvbiB0aGUgcGFuaWMtPmNyYXNoLWtlcm5lbCBwYXRoIHRvbz8KPiBObywg
-cmVib290X25vdGlmaWVyX2xpc3QgaXMgb25seSBoYW5kbGVkIGluIGtleGVjIHJlYm9vdC9yZWJv
-b3QgcGF0aCwKPiBwbGVhc2Ugc2VlIGtlcm5lbF9yZXN0YXJ0X3ByZXBhcmUoKSBpbnZvY2F0aW9u
-LiBLZHVtcCBwYXRoIG9ubHkgc2h1dGRvd24KPiBrZXkgY29tcG9uZW50IGxpa2UgY3B1LCBpbnRl
-cnJ1cHQgY29udHJvbGxlci4KCkkgd291bGQgcmVwbGFjZSBpcmV0X3RvX3NlbGYoKSB3aXRoIHBl
-cmZfZXZlbnRfZXhpdF9jcHUoKSBpbiBrZHVtcCBzaHV0ZG93bgoKcGF0aCAoaW4gbmF0aXZlX21h
-Y2hpbmVfY3Jhc2hfc2h1dGRvd24oKSkuCgoKQWZ0ZXIgdGVzdCwgSSB3b3VsZCBzZW5kIHY0IGxh
-dGVyLgoKVGhhbmtzIGFsbCwKClplbmcgSGVuZwoKCgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5m
-cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tl
-eGVjCg==
+On 14/02/2023 11:46, Petr Mladek wrote:
+> [...]
+>> My understanding is that it's a mechanism to prevent some concurrency,
+>> in case some other CPU modify this variable while panic() is running.
+>> I find it very unlikely, hence I removed it - but if people consider
+>> this copy needed, I can respin this patch and keep it, even providing a
+>> comment about that, in order to be explict about its need.
+> 
+> Yes, I think that it makes the behavior consistent even when the
+> global variable manipulated in parallel.
+> 
+> I would personally prefer to keep the local copy. Better safe
+> than sorry.
+> 
+
+Hi Petr, thanks for your review!
+OK, we could keep this local copy, makes sense...even adding a comment,
+to make its purpose really clear.
+
+
+>> [...]
+>> @@ -211,9 +211,6 @@ static void panic_print_sys_info(bool console_flush)
+>>  		return;
+>>  	}
+>>  
+>> -	if (panic_print & PANIC_PRINT_ALL_CPU_BT)
+>> -		trigger_all_cpu_backtrace();
+>> -
+> 
+> Sigh, this is yet another PANIC_PRINT_ action that need special
+> timing. We should handle both the same way.
+> 
+> What about the following? The parameter @mask says what
+> actions are allowed at the given time.
+> < ..code..> 
+
+I think your approach is interesting, it's very "organized".
+
+But I think it's a bit conflicting with that purpose we had on notifiers
+refactor, to deprecate "bogus" usages of panic_print, as in
+https://lore.kernel.org/lkml/20220427224924.592546-26-gpiccoli@igalia.com/ .
+
+So, the idea of my approach is to allow:
+
+(a) Easy removal of panic_print_sys_info() of panic(), once we move it
+to a panic notifier;
+
+(b) Better separate and identify the "bogus" cases. The CPU backtrace
+one is less a bogus case in my opinion, more a "complicated" one, since
+it's related with the CPUs stop routines. But the console flush, as we
+discussed, it's clearly something that calls for a new parameter (and
+such param was added in the refactor patch).
+
+
+In the end, I think your approach is interesting but it's kinda like
+we're adding the fix to later, on refactor, entirely remove/rework it.
+With my approach we wouldn't be calling panic_print_sys_info() again
+(3rd time!) on panic(), and also would be more natural to move it later
+to a new panic notifier.
+
+What you / others think? If your approach is in the end preferred, it's
+fine by me - I'd just ask you to submit as a full patch so we can get it
+merged as a fix in 6.3, if possible (and backport it to the 6.1/6.2
+stable). Now, if my approach is fine, I can resubmit as a V5 keeping the
+local variable - lemme know.
+
+Cheers,
+
+
+Guilherme
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
