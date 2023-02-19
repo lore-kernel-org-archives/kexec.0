@@ -4,199 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1CE2FC636CC
-	for <kexec@archiver.kernel.org>; Thu, 16 Feb 2023 19:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3E185C05027
+	for <kexec@archiver.kernel.org>; Sun, 19 Feb 2023 10:26:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:
-	References:Cc:To:Subject:Date:Message-ID:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Owner;
-	bh=84PPRqBXI4RQoJCNAnc5YnL81+oR4NXvikwGmJb6lS0=; b=2Ih8dU8m+LtPksTQa0hypJYf1S
-	tmH4NmxIGX4UTD49xBT0sH60LoDavSy4V3j0ieKUGXMNL4TwK94VUiO06etTH/IJI+ENyKsQ5j4en
-	imVpb3aOcTWtEuUXFtZp+LArtni3G1ZUoGjr2TAA+p9dEkD/H+KbYI7x+a0KmTyNRV7W52//gaFe/
-	+cFLeCkedqTcH0KIBqj1Wz4FTu7LlU99+akqXUQAP9L0YmevKFHHTQFwtqsK+CXHSVHhV0rTfYezR
-	LZkUVgnCkRE9IeD+l+M2jlgLNS9PQSwx1G6/1m1Dg6+nSeHTkL9VKamIrmhuliho2ZbALI2B1n6v+
-	37P8KBRA==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=uefogfJUbyz07UT6f23TU6mzdH/9jOyCHXQ/5+ZNiuE=; b=ATTGxHM8p6yvNo
+	1UUyr1wVmChUjZtFdKLhnjXd80fR4Ek+1cJmkEK9jGRPckLY/jBaCDgrV/O9q7Vt2y3tOBW+wrHYz
+	6GwtiCCj91btugJdv4n/slGUuGB+szE2t/mkFpc3gI446K++4oA6ZfZ0ZeMm1pWbMf60V73dzLEKx
+	VRvQT/2JGkMtyGb1gJXh6DfHs11JZICFWA/GNk5+Q8DZCbNd8oTo47ISiPcR+JYRPshisBB31sB6Z
+	L5b62598YLVD54QYmWLI40Vy7tsLjuxDBMVRaJiTMBokNdBPNMPL7lewxnS6HhlFGqja0AfctUzmm
+	hhUtEH40M6xIOqyJ8fWA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pSkDs-00BgG8-A2; Thu, 16 Feb 2023 19:47:16 +0000
-Received: from esa5.hc3370-68.iphmx.com ([216.71.155.168])
+	id 1pTgtQ-001JG3-CX; Sun, 19 Feb 2023 10:26:04 +0000
+Received: from mout.web.de ([212.227.17.12])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pSkDo-00BgE6-CY
-	for kexec@lists.infradead.org; Thu, 16 Feb 2023 19:47:14 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1676576832;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=TCRQcZRZ7Ua5eAd3BDPD+hDqFi+gKwPur3OXltXTHuU=;
-  b=ALz3yQIb7qdGIocHsUHmQ2Ka1E6Sok3sTH8V3+GLi8eP5IUC2FUxP8rC
-   p4dYDb1yshFiYh1nTJv39Wtc5ytqCsFJ0gLFxKrU/YP+ZjfcxIhgEelFL
-   0M/oB4jVEwMS5UDCC8cA4tXBjtpT0OYhpQPwQwVHZ4HA7S3uKz0jzjAcl
-   g=;
-X-IronPort-RemoteIP: 104.47.73.175
-X-IronPort-MID: 96207302
-X-IronPort-Reputation: None
-X-IronPort-Listener: OutboundMail
-X-IronPort-SenderGroup: RELAY_O365
-X-IronPort-MailFlowPolicy: $RELAYED
-IronPort-Data: A9a23:cevFY6hp0rw5/Ovw+55Cun1VX161CBAKZh0ujC45NGQN5FlHY01je
- htvUG6DPP3eY2H8co93PYiz9EpSsZ+DztJkHgNrrS4wEnsb9cadCdqndUqhZCn6wu8v7q5Ex
- 55HNoSfdpBcolv0/ErF3m3J9CEkvU2wbuOgTrWCYmYpHlUMpB4J0XpLg/Q+jpNjne+3CgaMv
- cKai8DEMRqu1iUc3lg8sspvkzsy+qWt0N8klgZmP6sT5gaAzyN94K83fsldEVOpGuG4IcbiL
- wrz5OnR1n/U+R4rFuSknt7TGqHdauePVeQmoiM+t5mK2nCulARrukoIHKN0hXNsoyeIh7hMJ
- OBl7vRcf+uL0prkw4zxWzEAe8130DYvFLXveRBTuuTLp6HKnueFL1yDwyjaMKVBktubD12i+
- tRHCykJURWjwN6o45WebcRg3NscIJfkadZ3VnFIlVk1DN4AaLWbH+Dv2oUd2z09wMdTAfzZe
- swVLyJ1awjNaAFOPVFRD48imOCvhT/0dDgwRFC9/PJrpTSMilMqluGybbI5efTTLSlRtm+eq
- njL4CLSBRYCOcbE4TGE7mitlqnEmiaTtIc6RePirqEx2Af7Kmo7FjlLeXSiuuCCmmW9ApFfJ
- WoEvXsKov1nnKCsZpynN/Gim1aHvwQdX94WCO0n9AyIzbT85wefG3hCTzhdZdhgv8gzLRQm3
- 0GE2dPgAyditpWUT26Q8vGfqjbaESINBWYGZCICHU0J7rHLu4gvjgPGSN95Gb+8iNTzXzLt2
- yiXtzc3gqQ7ic8NyrX9/FbbjjbqrZ/MJiYp6QHHdmak6B5lfomjZpzu5VWzxfdbJYWECEiIu
- XEEktSXxOEIEZyJ0ieKRY0lDOH3z/WIKjvRhRhoBZZJ3zCs/WOzOItX6zZWIEZyLt1CfT7vf
- V+VtQ5PjLdQMWunZodzYpmtEIIry6b6HNjoX/ySacBBCrB1dQma7GRtaFSW0mTFjkchi+c8N
- I2dfMLqCmwVYZmL1xKzTuYZlLo0nCY3wDuPQYihlkv6l72DeHSSVLEJdkOUafw057+FpwOT9
- MtDM8yNyFNUV+iWjjTrzLP/5GsidRATba0aYeQOHgJfCmKKwF0cNsI=
-IronPort-HdrOrdr: A9a23:Ode076nmzuf5lWsgD/9zMmGYBT3pDfIW3DAbv31ZSRFFG/Fwwf
- re+8jzsiWE6wr5OUtBpTnuAsK9qB/nn6KdgrNxAV7BZmbbUTCTXeVfBOLZqlXd8kvFm9K1vp
- 0PT0ERMrHN5fcRt7ed3OEVeexQouVuUcqT9ILj80s=
-X-IronPort-AV: E=Sophos;i="5.97,302,1669093200"; 
-   d="scan'208";a="96207302"
-Received: from mail-mw2nam04lp2175.outbound.protection.outlook.com (HELO NAM04-MW2-obe.outbound.protection.outlook.com) ([104.47.73.175])
-  by ob1.hc3370-68.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 16 Feb 2023 14:46:58 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mCbB27RCObTJMDzYh7fTYCPJS2rXI9VPa3xI+lscjuch3UNyveHx5gqdebq/HIamTJ9Ow5AlkAU1GJ9+KrP2QInobLPqFuQytsfLndOIa0EkcBy/+F2uTqh36+nzkyRw7T1loINEc3I+axYvV9pJN2PT5QPmBSa1uzdxObWkU2ZSY9qjZOOtWsjeEodhgWyljltcXoa/TEzAt/xFJxKgQsEcdy5hLFh4gakqLbOufWSuFRMrghjxbpwnHI8GB5qBkOHBUjoSQiJvuiFaLJvK1Wz27jQT6zqyS8NIybsDmNkw2NHagIgt2I1aiPas2ModE2I8Ge/C448VVlYvYqAZ4g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TCRQcZRZ7Ua5eAd3BDPD+hDqFi+gKwPur3OXltXTHuU=;
- b=bonWX60Q9OaAr/z7/Xc+gT+Vd+oep/Rc6p6SF/3J8viCT3aijJ+rt1fVAo10l798F82iSLEjDEzHWGxMxroNR6zTrtQmyopqrLz86KOyz0DrvD03eEfe/A06LTRgqT4nU5TgIeHbUs5AqEhbyrtDb4eluONFMPSi4EHJEU8nc6HVLaArjjxExWLFx9x3uZcSdqluTRaR3l+DDveFdV4BEHN917teGWYflU5BKE/6ed+SNetP2ijK0H4tTMFiNkWvvjuU3LHX7FJ+NfQFPU2+bG0kHuPiYhun8pCy4gHYYPMSe8qF8+CwN2gb9eJhsehikZIcbSKHSwBKC3KhUaeVoA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=citrix.com; dmarc=pass action=none header.from=citrix.com;
- dkim=pass header.d=citrix.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=citrix.onmicrosoft.com; s=selector2-citrix-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TCRQcZRZ7Ua5eAd3BDPD+hDqFi+gKwPur3OXltXTHuU=;
- b=pvaxAhDuWvJdxEcOGISI3afIDzCXsh2+hlaQ2YwjScyYqitChuN4hORRRUuoCywChKNc2G089P/t5cjTHdG9tW8c0ye8bMzZ5LYzi67/KvU9wsJr/nq49GXSGIBPwBYeqmD2q6qDKQ8GapfyIZLRzMYsOoys+X/IkphWOSC8FgM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=citrix.com;
-Received: from BYAPR03MB3623.namprd03.prod.outlook.com (2603:10b6:a02:aa::12)
- by PH0PR03MB6398.namprd03.prod.outlook.com (2603:10b6:510:a8::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6111.13; Thu, 16 Feb
- 2023 19:46:56 +0000
-Received: from BYAPR03MB3623.namprd03.prod.outlook.com
- ([fe80::8299:f95f:934b:29e8]) by BYAPR03MB3623.namprd03.prod.outlook.com
- ([fe80::8299:f95f:934b:29e8%7]) with mapi id 15.20.6086.024; Thu, 16 Feb 2023
- 19:46:56 +0000
-Message-ID: <1144340e-dd95-ee3b-dabb-579f9a65b3c7@citrix.com>
-Date: Thu, 16 Feb 2023 19:46:48 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH 1/2] x86/kexec: Preserve CR4.MCE during kexec
-Content-Language: en-GB
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Dave Hansen <dave.hansen@intel.com>, Borislav Petkov <bp@alien8.de>
-Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>,
- Isaku Yamahata <isaku.yamahata@intel.com>, x86@kernel.org,
- linux-coco@lists.linux.dev, kexec@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20230213234836.3683-1-kirill.shutemov@linux.intel.com>
- <20230213234836.3683-2-kirill.shutemov@linux.intel.com>
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-In-Reply-To: <20230213234836.3683-2-kirill.shutemov@linux.intel.com>
-X-ClientProxiedBy: LNXP265CA0074.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:76::14) To BYAPR03MB3623.namprd03.prod.outlook.com
- (2603:10b6:a02:aa::12)
+	id 1pTgtH-001JEB-Tk
+	for kexec@lists.infradead.org; Sun, 19 Feb 2023 10:25:58 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
+	t=1676802345; i=julian.winkler1@web.de;
+	bh=evvdKUDXgntYlASQ7AH1wMB9d5KDjtK7KSm+7v3bYwk=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=g4ubDXrgJgYj/Yx2XhZBgbz6ZXHgEGzrXy/s3BU0OxWzo3fRCOajs/TB1uvWcRFsi
+	 J3meUOGWrB1lAZx2N1Kx9WHQ7RGnymRHNnE9kdJJA02uop9/89zHaX4smmLiH8EKX3
+	 /V6pIuieXkQKKZ+Z30wblWPFTqw6UBfh49Uv9Si6yV1HdB2Ux7tR3bD2NyJjG+kCnG
+	 qqRmdhLk25buiD33es0Di0HPAOzYs7Xv9bZgTGLwls5XIsiTq6kO56D4zdZ0oNSSd8
+	 BVlJz6apEF03BuLQvKBMrn86gnBlWWmoTOAGk6MMPuZSLyLQayPHDgLk80fT9JN6l9
+	 YRzqX+mDkyfcA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from aspire-e.fritz.box ([86.103.18.206]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MbTL1-1owHnV3Nsn-00bkwn; Sun, 19
+ Feb 2023 11:20:40 +0100
+From: Julian Winkler <julian.winkler1@web.de>
+To: kexec@lists.infradead.org
+Cc: Julian Winkler <julian.winkler1@web.de>
+Subject: [PATCH] x86: add devicetree support
+Date: Sun, 19 Feb 2023 11:18:13 +0100
+Message-Id: <20230219101813.903377-1-julian.winkler1@web.de>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR03MB3623:EE_|PH0PR03MB6398:EE_
-X-MS-Office365-Filtering-Correlation-Id: fff599f7-d570-412b-4547-08db10568efc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 	GDca0lYL6HV3c5gWwtAGx3McnSZOj/0lCwc/FEWr4f3sejF/tE4XNq3SjXpVcBtXP+HlXuKc+CoCHt4kRTlhefiIiDIvfqTBN20PSmJX7w0FN2pe5i/VHHEboC+duuyv6Q0ePDgTK9fBdIfGFWtw0lJreJwTq110eu+ARkRaO9F8yjHOILBubopQiA2IcBFpGbNHDoMPa9zrAnUl4yCr86m95EzVulCyEq18ICyRt4CUMCrqNXyktKOhpnKKiKlQOg4VJB/SU0aLJ1MJA0lvDjTJP1R4f6hOYZeX0VNVLB7uTVYwF6Unow9yGh3KoXsAxg29QXmvTUEsvj5Q4/b/il/saFsBq7f6Nvodyt2X/gjJocBQtafnc771ntNj+5E5ikKCJ55D4ozhUGc3T+uS83+zaZ1iZvFd6yyh2fHj4YTzs8v0RA7ntHVPzZjn7khj4THj8TaurrXXoBl5mPPwQwSEi0pr6tonlFiIhwdGpLeoTZV42RoI7cU1WGMB669lN6q7DUwFmZDai5D9D/GhG/HfYvmpVeUG0/+ySAxlk34r5gVYDpKcDZqZo9bibnekhJ5QNHz0U+6GkZnVIYk+8+dZNx2Q268ke3a6OBjs8QyxePU7WALJzh0vHJidRrRltBEwAoDHYjThTUPE/+HtEBYKC8UUYQF5s6OOodjK09z1QtVdasEUZ+aLdZQ3eUywSwgNcoNaQLGdbNetFTSkJYX9c6mCA9YaSghymvSOVuQ=
-X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3623.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(376002)(39860400002)(136003)(396003)(346002)(366004)(451199018)(2906002)(478600001)(31696002)(86362001)(31686004)(6486002)(66899018)(6512007)(186003)(26005)(6666004)(7416002)(53546011)(6506007)(36756003)(4744005)(5660300002)(2616005)(8676002)(66556008)(66946007)(4326008)(66476007)(38100700002)(8936002)(41300700001)(316002)(82960400001)(110136005)(54906003)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 	=?utf-8?B?bTQ3b2d1UjZiNjJieWdJNGdsZmpGYlpEM2lBK05GbEFMeWdLNThLTTNKak5m?=
- =?utf-8?B?WlZQOTRVMUpNbER3ZU5ubC91OHE3SHMvVXlVNzJUeEszWVNJdTRSVFVjbk9V?=
- =?utf-8?B?aVdZYlNZZXdtckhqRmxuTklwNXRCeEx3cmlSUEtWVXZ0Rk1qOTVYMEw5MnFZ?=
- =?utf-8?B?c05ObXRiYlUvVHhHcWgwTlp5Ris0bkFWOStycDlHM2M1Tng1RWtOb3BuM0Rq?=
- =?utf-8?B?WUNzc1d6b3R1L2FmK3o2QXRNNCt6bXVzL1hZV0huWC9nczJkbVZxSGYwWFFO?=
- =?utf-8?B?eUdac0pQQkxKQnJrNVhxWk5GcUF0MUM2Z1lUaGZjbE9wbER2NkJOLzJiTVBu?=
- =?utf-8?B?c3dmWTBuWktWUUo4MzdoMVRucE5jYXNHMnRJZlRHb3VjcC9XMUNmSFlJQUta?=
- =?utf-8?B?bEFoVTdpVVRRcXRTZmc2cnBsbEtpSHVrUHM3R1BnYzdodjZJc044RzBJQVYw?=
- =?utf-8?B?QVdyQXVOQVFYYzF6aEhLTDBHbHlFcEJyQ1Z6enZLcHl1dGx0Z3YyYURDMmhF?=
- =?utf-8?B?c2hpTFJ4dElPR2xvRjV2MUZmSlpoS1dJQnIxbzM1NVFtVDFnUm92Zm5mVWJT?=
- =?utf-8?B?dWxPdUVLem1jeStIWGhqMFVFUHVYQkNSdHlQUHJnYjRlaUVjcDhxV3NSQ0pK?=
- =?utf-8?B?YktLL2NDUDVGc0Y2a29DTWRjeEtNWEEyTStEM0tONzFXVEdtR2RSR3VvaXRX?=
- =?utf-8?B?K0RNS0ZWMjArK1ZLdFJhZmRDc280VDBIUFA1ckgvc2hWVFNPUkJPekY5a2lW?=
- =?utf-8?B?ZHQvamNFaW15WGhKNytBUVVXYmNrSjFTVW91ZWZMa2VSQkV1K0djc2Q1NVBs?=
- =?utf-8?B?RnEvZzhMdTVrVDNERkdxckpYSitQZFlzQTV1ZEgwOFB0enc5Nmd0VFJLdkZG?=
- =?utf-8?B?aS9xRlN5OTczVUNoSkxIaW9HMzN2WTl5SGJOdllEQWtoWkJrb2xFa21ZVjVi?=
- =?utf-8?B?dFBMSjFLeGVSdC9DQTlwa1hmbHZSek5tbFVxTWlQZE5YWGJ3eTQzMkFsb3Y5?=
- =?utf-8?B?TmJjdlJrTGVOSFFlTUtOM0hJL0V3bVhvbjMzLzh5c3FjUnhyR2NCekMwQkpJ?=
- =?utf-8?B?STZ5WlpPdmM0RTlHWkZqa1N5ZFN4TXE1QlMyemZqSGJRQUZQaWpNYjJqTE5P?=
- =?utf-8?B?clB3RmlXUmdObUNhZGxjenE4UndvVTM2dlJQRk9oS0lDQ3JqM1pIbnVyd2E2?=
- =?utf-8?B?TkNnZlBORUxTMDNmSG8yNzFTMXR1ZzdDS3h2M3owNzlJNmI4K1FQRzFodFhZ?=
- =?utf-8?B?Qk9XVzRkbjI1NGREM2xyQTY4V1JHdkd0K0hKNzg3WkRKZ3ZRdDc3Y3NXalBX?=
- =?utf-8?B?Q3g5WktkeFVicllDeTBBN1FQdFlib2laYXZYN2VVNkc2aDV4cHJtOVQydXdT?=
- =?utf-8?B?ajBORU9nbzNBOW5mLzNNZVQ2dEg5cDVXZk5hUEtSK1l3VnFZZlVzQVRBbDdL?=
- =?utf-8?B?anN3ZGJrQnZIS25ZZ0NjWG9FblJzTkdTaFlLdGR5enJKcmNiRm9NT0xlWUhm?=
- =?utf-8?B?ZGUvUlRHZ040YzZQWFIydFBqOGtpMHFKZ3k0dFh0aWM1blhIRS9IampHV3FX?=
- =?utf-8?B?ZVcydUdSQnVUZ1JTa1p1VVJLNnRHRG5xVW9RWXVFSkhFNzhzS0hoSGJyWmRm?=
- =?utf-8?B?eTh0blJFNzZENnMzWnJ1ZVFER2k5WGMwOVhSTExEaVJ5dkJSbks0dTlsWTIr?=
- =?utf-8?B?NytwSXhBcTRBdEM4NVZJZi9FMk54TVRjZVJzdkRkZkM2L05NeUdvRlBYNU9j?=
- =?utf-8?B?emx4MXh2RlZNbkxvdW4xemgyTXhhdHFEZTZJN203MFdZUUgybGtFSkgzUlRM?=
- =?utf-8?B?b2Q1VGhrT21oRFg5T3FEdmZQSFY3TndaR3hkMTBHMmpOOXhmZ05teTJFWnNU?=
- =?utf-8?B?UmdjV2UreWc3bWxiSFhBZ211OGRZVFcxRVdpU3VVaTNqNm5xZzNlVnl4Q1pt?=
- =?utf-8?B?bXpraVROaldwOUVGUGtHYzlYZzdVbnk3MzVXMXFkY1phSW9DWXZkWTR5N3ZO?=
- =?utf-8?B?T1FKVU16eDIzbE1HSnNKbXVIYzlBckovMEh4SDNOem91aHBMeTgxZW1KeGsr?=
- =?utf-8?B?WnR6bTVyOTdSSXIxbWFGTVRnODl0RHgvc00xVEwzdmpVRVJFTzRoSTVESTIx?=
- =?utf-8?B?RkxiSGJwN0FyMlc1UG1vaEFHRnpKZ1BNbDgzRHNvWGgxVE53M3RZSURUTDQr?=
- =?utf-8?B?L3c9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 	=?utf-8?B?MTd3TXVwUEg3b3BqNVJHd29ac0k5WEcxTUh5ZmxEVGtXS3pkQ0FpQ2JDOE1D?=
- =?utf-8?B?TU9BcGxhRTEzUlZhUmI5R2cwSEhpU2xrOHlCUXVJb1FkVWg1S0dNSkJzbFJW?=
- =?utf-8?B?bVg1RVJrRWxwTHZZd05XaXpUTk81TERBZkNFWUtxVnVvRW5VVmxMQUVPYzla?=
- =?utf-8?B?bms2VmlsMFZMdVN3MytoVUQ4RlhKS205N0k3TWZ5akJTbm5PWm8vNEo5S1Jp?=
- =?utf-8?B?aisvOWhDUnhBZWptRlIvTVMvc2cxdmV6MHFZQ0ZvNEgvdG5wbmI4QWl4YjRx?=
- =?utf-8?B?SFJicDZBMENncEloQ0NWN1AyeW42T0Y0RWRiYmRtOERiZDNBWjkxeXZ6Qk9o?=
- =?utf-8?B?NERKUUROalR1Yi84dHlMNXpDWUJjdVpJYmlWSmgzWDMvaWNkOGdNSjB2bWk4?=
- =?utf-8?B?a0RBRzBrTnpZNG9GVFlFdktLVitXRjlzQ1lTb0FaenBHbGdzbVZZSGVWVzdI?=
- =?utf-8?B?NDFubXM2Z1IybHFKc2xKMVBnamRPZGNUWFBxYndxWVoxamVNQ2lhek9aL014?=
- =?utf-8?B?UVB5dUg1U014QVpTSkQzZ09CVmh5ZUNUS3lZVzZ3QmREcHZCNlhXYUU3Y3Bh?=
- =?utf-8?B?SFUwenZmQ1M1WEZyUURpQTRrWWxzNTd4bmhTWk5FRHBEMzFSNStMZW5NMDlm?=
- =?utf-8?B?YUQ4QTk0WmlDZHVJeEx4cW1PcmhPZnpMeGR3eEsvWUR4U3BlVVczdG8yemM0?=
- =?utf-8?B?dXgyYi95UHVNekVGVGxQbzdmcWdLQk9XK0tReEkweUxnYTdEa3hDcy9rVGZL?=
- =?utf-8?B?bEhkUVY3L3VHdldOdXZML2V5Q2JxaW9mcEZaRHNOYkMvdEJjaEJNeDA3S0pF?=
- =?utf-8?B?bkdhVHc4cnJSNUdHZ1JvZm9hWnk0b3JoNXZjRGtGMFliLzVqZzRYUVVQVW45?=
- =?utf-8?B?UWlGd21id2VXOHl5cFFkdzhiTGlOUVBhdjRSZmNUdmdEd0hocHlITU9HM3RB?=
- =?utf-8?B?OUp3eWVxVStVOEtBbDljNmVEbzlDZHgvK2NiYW9pZHIvUEM4dmpURWphYVR0?=
- =?utf-8?B?dG95bTZSQzBHWHdBeEhESUVpM0RYVUxCSVRSRlFTNTBTd3lPempqSUFJNkZI?=
- =?utf-8?B?QmdlUk5jOGptTFBVQWlTdjhlbjZLY0tqQzdVaGtJRzI5RmpDSzdGNGd2ZnJD?=
- =?utf-8?B?dGhXalQzREdBNko2d0pGM1gxQ21VVEJCQWNFcHZOdDVzakFTTHZ0UUV0SWdE?=
- =?utf-8?B?dDVqZDY3TGJ5aFR1UkcyTnExZGhVT2RhK2hWL2hTcGFCZjJlZjNTeHBzeENY?=
- =?utf-8?B?ckc3WVJBS1RKQlQ5Nndvdi9uSVBxU2pobGt3dTNvek93enZjMWtJQnFxTUhy?=
- =?utf-8?B?cHRaeGE0NEY1K0lpT0pyN2JIMUtzM09nTnlGZjdOQ0tPNFBQdnpyK2o3OG5j?=
- =?utf-8?B?MkdHYURFY1k2Tmc9PQ==?=
-X-OriginatorOrg: citrix.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fff599f7-d570-412b-4547-08db10568efc
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR03MB3623.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Feb 2023 19:46:56.1279
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 335836de-42ef-43a2-b145-348c2ee9ca5b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ZXAySr9VLpe/IHRoBlUuoe74GKjQfULJ+73nKMeMWOyfmTu5H3ktYovpIWXN0xkV4akw9QyjmH2W19PGoFbpJ/A8rcDE1Zvoo/FlmAL/5RE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR03MB6398
+X-Provags-ID: V03:K1:T71mylQQr+Fv7j+zjd1dm6EA9gFQG9L3A2T17jebTJdLejR6qA2
+ bNrzAzTthzuq+THdmhFPtmLvRvC26FT5f5SNQMGSx4oWzxDlsAFaDQvjoGXBSAMyL8b+KqB
+ 8eLzf5YZRhJ7ZghVr9frOxvgToCVS62pLqzmZ9JEsaVEDwBtJgYHqLCgqOrAfAh/9arzxd5
+ xPpxkU0xLvxXa9NZp0zrw==
+UI-OutboundReport: notjunk:1;M01:P0:Jea2cMbDQ/Q=;T4j8dIsadbsP+YK9S1dlK5t/Pbi
+ TAN/ERyF/vkXD5KC3PXM/3PEDRWobkBlvKZTsjYRD596o9/ihXbaEoJ9PZzwa815QwqGCDYQw
+ VnUE5aRHw9fRaxw3wNCKRHXUPTrehgHVCf4QAxa3WQdKOOGfeHg5dq1n4YMGUmyxG6asYDp8X
+ 3463k0nzP6LxW0VYx5dY+fcXVxCQLMLNHrRsDP1zRffupGdZPvcc02iZaQneeihPOQZxjQu7G
+ O5HCuLAnBuY0qt1oKyAdkST2pIcOvmXqxyZCI+ALr2SC4TcRBLob+ffnn3jTZ+I857B/dQWN1
+ ZPWhNyVTsLzh6daYmrblZGJdRBFNmLw+X1K3yOynbuCzfkBo2iwb6/gSeqqJlGshTsQ+EpbYr
+ fRcMAZapeGoEUw5q0P3xbyhP8cK9dI0bwUZZOaNubP9CW41QDJ+7Vxvn1A5T0fq3ZDWSAhRWr
+ 2OWwzcf8/df6dC/01owkCeEuJKJKJO+V8o3vo5QDjoUPDbHZyadYUAIPfMzHS198D/1cPLmpv
+ tV40510w3kW6q080j4hFOcfs4XDTS3gducAUZjUtQhINqXhXAcWT+ONxbNGnEiXCUrtaA0akW
+ NKoU9jGIMLHUzHlENI57opS8Axhsi7HCI9CwlacWNftpcMVJqIg5MPnY7aEo0ksyLf5nyrI6V
+ dSnD7i0jCqq9wxqdbpgtMBt2HQfKN1og03EuIdCqTnKDgsLBP4v3mtPfX6MujenWWa+ztRv3N
+ /rgOxtICHe4jTt7qKTdWjNXtJvPVGCfvNguAcWQvjJUsHo+j4HLKYYnqPXUBnk71HNnEUNxly
+ ecNzLxu/sUFidjQppV+WvtGTXKRq4OVsLFjwLk54YUmxO7vKw8BNfSc380swLyuCaE22qzUQE
+ 7reT9G51X5gleUC2rW/sklYlo3xFZIkBD1uIHnq3Ih0mEZ5spTW4MU647wykytHsLaZMaS07t
+ /JA6r6+X7Fz17cCqUcjzOpcSYko=
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230216_114712_534059_181AB4A4 
-X-CRM114-Status: UNSURE (   8.74  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20230219_022556_465526_A03ECC1D 
+X-CRM114-Status: GOOD (  15.28  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -208,28 +80,216 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-T24gMTMvMDIvMjAyMyAxMTo0OCBwbSwgS2lyaWxsIEEuIFNodXRlbW92IHdyb3RlOgo+IFREWCBn
-dWVzdHMgYXJlIG5vdCBhbGxvd2VkIHRvIGNsZWFyIENSNC5NQ0UuIEF0dGVtcHQgdG8gY2xlYXIg
-aXQgbGVhZHMKPiB0byAjVkUuCj4KPiBQcmVzZXJ2ZSB0aGUgZmxhZyBkdXJpbmcga2V4ZWMuCj4K
-PiBTaWduZWQtb2ZmLWJ5OiBLaXJpbGwgQS4gU2h1dGVtb3YgPGtpcmlsbC5zaHV0ZW1vdkBsaW51
-eC5pbnRlbC5jb20+CgpUaGF0J3MgdW5mb3J0dW5hdGUgZm9yIFREWCwgYnV0IGluIGEgbm9uLVRE
-WCBzeXN0ZW0geW91IG11c3QgbmV2ZXIKbWFpbnRhaW4gQ1I0Lk1DRSBpbnRvIGtleGVjLgoKQXN5
-bmMgZXZlbnRzLCBpbmNsdWRpbmcgTk1JcywgY2Fubm90IGJlIHRha2VuIGJldHdlZW4gdGhpcyBw
-b2ludCBhbmQgdGhlCnRhcmdldCBoYXZpbmcgc2V0IGl0c2VsZiB1cCBpbnRvIGl0J3MgaW50ZW5k
-ZWQgb3BlcmF0aW5nIG1vZGUuwqAgRHVyaW5nCnRoaXMgcGVyaW9kIHlvdSBnZXQgYWxsIGtpbmRz
-IG9mIGZ1biB3aXRoIHR5cGUgY29uZnVzaW9uIGluIHRoZSBJRFQvVFNTCmFuZC9vciBub3QgaGF2
-aW5nIGEgc2FmZSBzdGFjayB0byBzZXJ2aWNlIHRoZSBldmVudC4KCkEgY2xlYW4gc2h1dGRvd24g
-ZnJvbSBub3QgaGF2aW5nIG1hY2hpbmUgY2hlY2tzIGVuYWJsZWQgaXMgZmFyCnByZWZlcmFibGUg
-dG8gdHJ5aW5nIHRvIGRlbGl2ZXIgYW4gI01DIGluIHB1cmdhdG9yeS4KClRoYXQsIG9yIHlvdSdy
-ZSB3ZWxjb21lIHRvIGRlYnVnIHRoZSBuZXh0IGJ1ZyByZXBvcnQgSSBnZXQgd2hlcmUKKGFtYXpp
-bmdseSkgYW4gTk1JIG1hbmFnZWQgdG8gaGl0IHdpdGggYSBnb29kIHN0YWNrIGluIHRoZSBuZXcg
-Y29udGV4dCwKYnV0IG1vc3Qgb2YgdGhlIG9sZCBjb250ZXh0IChJRFQsIFRTUyBhbmQgLnRleHQp
-IHN0aWxsIGludGFjdCBlbm91Z2ggdG8Kc3RhcnQgZW1pdHRpbmcgYSB2ZXJ5IGNvbmZ1c2VkIG9v
-cHMgb250byBzZXJpYWwuLi4KCn5BbmRyZXcKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRl
-YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Since linux kernel has dropped support for simple firmware interface
+(SFI), the only way of boot newer versions on intel MID platform is
+using devicetree
+---
+ kexec/arch/i386/include/arch/options.h |  4 +++-
+ kexec/arch/i386/kexec-beoboot-x86.c    |  2 +-
+ kexec/arch/i386/kexec-bzImage.c        | 21 ++++++++++++++++++++-
+ kexec/arch/i386/kexec-x86.h            |  1 +
+ kexec/arch/i386/x86-linux-setup.c      | 15 +++++++++++++++
+ kexec/arch/i386/x86-linux-setup.h      |  2 ++
+ kexec/arch/x86_64/kexec-bzImage64.c    |  2 +-
+ 7 files changed, 43 insertions(+), 4 deletions(-)
+
+diff --git a/kexec/arch/i386/include/arch/options.h b/kexec/arch/i386/include/arch/options.h
+index 0e57951..89e0a95 100644
+--- a/kexec/arch/i386/include/arch/options.h
++++ b/kexec/arch/i386/include/arch/options.h
+@@ -33,6 +33,7 @@
+ #define OPT_PASS_MEMMAP_CMDLINE	(OPT_ARCH_MAX+11)
+ #define OPT_NOEFI		(OPT_ARCH_MAX+12)
+ #define OPT_REUSE_VIDEO_TYPE	(OPT_ARCH_MAX+13)
++#define OPT_DTB			(OPT_ARCH_MAX+14)
+
+ /* Options relevant to the architecture (excluding loader-specific ones): */
+ #define KEXEC_ARCH_OPTIONS \
+@@ -76,7 +77,8 @@
+ 	{ "args-none",		0, NULL, OPT_ARGS_NONE },	\
+ 	{ "module",		1, 0, OPT_MOD },		\
+ 	{ "real-mode",		0, NULL, OPT_REAL_MODE },	\
+-	{ "entry-32bit",	0, NULL, OPT_ENTRY_32BIT },
++	{ "entry-32bit",	0, NULL, OPT_ENTRY_32BIT },	\
++	{ "dtb",		1, NULL, OPT_DTB },
+
+ #define KEXEC_ALL_OPT_STR KEXEC_ARCH_OPT_STR
+
+diff --git a/kexec/arch/i386/kexec-beoboot-x86.c b/kexec/arch/i386/kexec-beoboot-x86.c
+index b121834..d949ab8 100644
+--- a/kexec/arch/i386/kexec-beoboot-x86.c
++++ b/kexec/arch/i386/kexec-beoboot-x86.c
+@@ -125,7 +125,7 @@ int beoboot_load(int argc, char **argv, const char *buf, off_t UNUSED(len),
+ 		kernel,        bb_header.kernel_size,
+ 		command_line,  bb_header.cmdline_size,
+ 		initrd,        bb_header.initrd_size,
+-		real_mode_entry);
++		0, 0, real_mode_entry);
+
+ 	return result;
+ }
+diff --git a/kexec/arch/i386/kexec-bzImage.c b/kexec/arch/i386/kexec-bzImage.c
+index df8985d..1b8f20c 100644
+--- a/kexec/arch/i386/kexec-bzImage.c
++++ b/kexec/arch/i386/kexec-bzImage.c
+@@ -95,6 +95,7 @@ void bzImage_usage(void)
+ 		"    --reuse-cmdline       Use kernel command line from running system.\n"
+ 		"    --initrd=FILE         Use FILE as the kernel's initial ramdisk.\n"
+ 		"    --ramdisk=FILE        Use FILE as the kernel's initial ramdisk.\n"
++		"    --dtb=FILE            Use FILE as devicetree.\n"
+ 		);
+
+ }
+@@ -103,6 +104,7 @@ int do_bzImage_load(struct kexec_info *info,
+ 	const char *kernel, off_t kernel_len,
+ 	const char *command_line, off_t command_line_len,
+ 	const char *initrd, off_t initrd_len,
++	const char *dtb, off_t dtb_len,
+ 	int real_mode_entry)
+ {
+ 	struct x86_linux_header setup_header;
+@@ -373,6 +375,10 @@ int do_bzImage_load(struct kexec_info *info,
+ 		setup_linux_system_parameters(info, real_mode);
+ 	}
+
++	if (dtb) {
++		setup_linux_dtb(info, real_mode, dtb, dtb_len);
++	}
++
+ 	return 0;
+ }
+
+@@ -381,13 +387,15 @@ int bzImage_load(int argc, char **argv, const char *buf, off_t len,
+ {
+ 	char *command_line = NULL;
+ 	char *tmp_cmdline = NULL;
+-	const char *ramdisk, *append = NULL;
++	const char *ramdisk, *append = NULL, *dtb;
+ 	char *ramdisk_buf;
+ 	off_t ramdisk_length;
+ 	int command_line_len;
+ 	int real_mode_entry;
+ 	int opt;
+ 	int result;
++	char *dtb_buf;
++	off_t dtb_length;
+
+ 	/* See options.h -- add any more there, too. */
+ 	static const struct option options[] = {
+@@ -398,6 +406,7 @@ int bzImage_load(int argc, char **argv, const char *buf, off_t len,
+ 		{ "initrd",		1, 0, OPT_RAMDISK },
+ 		{ "ramdisk",		1, 0, OPT_RAMDISK },
+ 		{ "real-mode",		0, 0, OPT_REAL_MODE },
++		{ "dtb",		1, 0, OPT_DTB },
+ 		{ 0, 			0, 0, 0 },
+ 	};
+ 	static const char short_options[] = KEXEC_ARCH_OPT_STR "d";
+@@ -405,6 +414,8 @@ int bzImage_load(int argc, char **argv, const char *buf, off_t len,
+ 	real_mode_entry = 0;
+ 	ramdisk = 0;
+ 	ramdisk_length = 0;
++	dtb = 0;
++	dtb_length = 0;
+ 	while((opt = getopt_long(argc, argv, short_options, options, 0)) != -1) {
+ 		switch(opt) {
+ 		default:
+@@ -424,6 +435,9 @@ int bzImage_load(int argc, char **argv, const char *buf, off_t len,
+ 		case OPT_REAL_MODE:
+ 			real_mode_entry = 1;
+ 			break;
++		case OPT_DTB:
++			dtb = optarg;
++			break;
+ 		}
+ 	}
+ 	command_line = concat_cmdline(tmp_cmdline, append);
+@@ -441,10 +455,15 @@ int bzImage_load(int argc, char **argv, const char *buf, off_t len,
+ 	if (ramdisk) {
+ 		ramdisk_buf = slurp_file(ramdisk, &ramdisk_length);
+ 	}
++	dtb_buf = 0;
++	if (dtb) {
++		dtb_buf = slurp_file(dtb, &dtb_length);
++	}
+ 	result = do_bzImage_load(info,
+ 		buf, len,
+ 		command_line, command_line_len,
+ 		ramdisk_buf, ramdisk_length,
++		dtb_buf, dtb_length,
+ 		real_mode_entry);
+
+ 	free(command_line);
+diff --git a/kexec/arch/i386/kexec-x86.h b/kexec/arch/i386/kexec-x86.h
+index 71e4329..46e2898 100644
+--- a/kexec/arch/i386/kexec-x86.h
++++ b/kexec/arch/i386/kexec-x86.h
+@@ -79,6 +79,7 @@ int do_bzImage_load(struct kexec_info *info,
+ 	const char *kernel, off_t kernel_len,
+ 	const char *command_line, off_t command_line_len,
+ 	const char *initrd, off_t initrd_len,
++	const char *dtb, off_t dtb_len,
+ 	int real_mode_entry);
+
+ int beoboot_probe(const char *buf, off_t len);
+diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
+index 14263b0..9a281dc 100644
+--- a/kexec/arch/i386/x86-linux-setup.c
++++ b/kexec/arch/i386/x86-linux-setup.c
+@@ -954,3 +954,18 @@ void setup_linux_system_parameters(struct kexec_info *info,
+ 	/* Always try to fill acpi_rsdp_addr */
+ 	real_mode->acpi_rsdp_addr = get_acpi_rsdp();
+ }
++
++void setup_linux_dtb(struct kexec_info *info, struct x86_linux_param_header *real_mode,
++				   const char *dtb_buf, int dtb_len)
++{
++	struct setup_data *sd;
++
++	sd = xmalloc(sizeof(struct setup_data) + dtb_len);
++	sd->next = 0;
++	sd->len = dtb_len;
++	sd->type = SETUP_DTB;
++	memcpy(sd->data, dtb_buf, dtb_len);
++
++
++	add_setup_data(info, real_mode, sd);
++}
+diff --git a/kexec/arch/i386/x86-linux-setup.h b/kexec/arch/i386/x86-linux-setup.h
+index 0c651e5..b5e1ad5 100644
+--- a/kexec/arch/i386/x86-linux-setup.h
++++ b/kexec/arch/i386/x86-linux-setup.h
+@@ -21,6 +21,8 @@ static inline void setup_linux_bootloader_parameters(
+ }
+ void setup_linux_system_parameters(struct kexec_info *info,
+ 	struct x86_linux_param_header *real_mode);
++void setup_linux_dtb(struct kexec_info *info, struct x86_linux_param_header *real_mode,
++				   const char *dtb_buf, int dtb_len);
+ int get_bootparam(void *buf, off_t offset, size_t size);
+
+
+diff --git a/kexec/arch/x86_64/kexec-bzImage64.c b/kexec/arch/x86_64/kexec-bzImage64.c
+index ba8dc48..aba4e3b 100644
+--- a/kexec/arch/x86_64/kexec-bzImage64.c
++++ b/kexec/arch/x86_64/kexec-bzImage64.c
+@@ -386,7 +386,7 @@ int bzImage64_load(int argc, char **argv, const char *buf, off_t len,
+ 	if (entry_16bit || entry_32bit)
+ 		result = do_bzImage_load(info, buf, len, command_line,
+ 					command_line_len, ramdisk_buf,
+-					ramdisk_length, entry_16bit);
++					ramdisk_length, 0, 0, entry_16bit);
+ 	else
+ 		result = do_bzImage64_load(info, buf, len, command_line,
+ 					command_line_len, ramdisk_buf,
+--
+2.39.1
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
