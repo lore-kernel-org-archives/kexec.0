@@ -4,63 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 19C0FC64ED8
-	for <kexec@archiver.kernel.org>; Fri, 24 Feb 2023 09:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F3AE9C61DA4
+	for <kexec@archiver.kernel.org>; Fri, 24 Feb 2023 14:30:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:List-Subscribe:List-Help:
-	List-Post:List-Archive:List-Unsubscribe:List-Id:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=noY6YyDSMeEdx4w8MpbEsBVo5N2sKVskW02SmIIzEiA=; b=sGcj2EfqZYwG1M
-	4NEdJnl968uKGZSmqJ5UgFKAOlQUeJXYUPg1BX2V93SBvToi8+uVkY6TFWl9PwTPXe4pLXBrpCC5a
-	U8itFmq7wc8hTlZztcRUuzsAu/wKXYUScWrXuatMZEpG8ODbC23qnZqdGBw2W+gej0HZtp8hM09mh
-	pKD5qPp6gcyyvQZwGZsnIXtupMIhX/r8ISMWPGD27VaUlTIYbkY0doLVlcWvtqZOHzntdP05I/tAL
-	SPswiFTAPviHIIUMYnZ6TyLFa00ujfZNqsotrRG9vumRctr7cYt/gep5Zj+9lEdZ+M5SBXQoAIKqj
-	N7gmud9+eTm06wFOYMIQ==;
+	List-Owner; bh=nlOaCNhcJTRWlX92HI9zmFZoU6/AOO9t4vASh67PtW4=; b=StMRmsC7iPJHGP
+	M7HmMynJimve3SCgNqmJjnoqnh0X/GQOjWGNI6W0pr0c56tK5hvx1S4bxK8f0RfyZ2dHtCM+dup/U
+	HktuBQyd+mz/9Y/UThHgCX0/wZWap8lxOd9TpmC7+juRFxJ1+icv2t9EL1cZRGqeSMQ/bYl4D7b/N
+	xlNwrce0LNQprDjKXzilCMeD7k8kAjZof+X+O+kF7Dr+2/BtBdxX61PtOVWTCpydW5KGHrJ2Q4G1e
+	koDFbnGEtm4xYu0sCRQsOkmeexsS7/Lq/QaEL/w7rAjgY/PC6jKk/zhvdg4pGhB4Z8/TFgpIGAOXw
+	77E7Q76XGnGRJxqlpDrg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pVUjZ-001kmN-SU; Fri, 24 Feb 2023 09:51:21 +0000
-Received: from mail.loongson.cn ([114.242.206.163] helo=loongson.cn)
-	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pVUjV-001kj4-Ic
-	for kexec@lists.infradead.org; Fri, 24 Feb 2023 09:51:19 +0000
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxYeWPiPhjlqIEAA--.3660S3;
-	Fri, 24 Feb 2023 17:51:11 +0800 (CST)
-Received: from bogon.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxUuWNiPhjInw6AA--.5816S3;
-	Fri, 24 Feb 2023 17:51:09 +0800 (CST)
-From: Youling Tang <tangyouling@loongson.cn>
-To: Simon Horman <horms@kernel.org>
-Cc: kexec@lists.infradead.org
-Subject: [PATCH 2/2] LoongArch: kdump: Set up kernel image segment
-Date: Fri, 24 Feb 2023 17:51:08 +0800
-Message-Id: <1677232268-2451-2-git-send-email-tangyouling@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1677232268-2451-1-git-send-email-tangyouling@loongson.cn>
-References: <1677232268-2451-1-git-send-email-tangyouling@loongson.cn>
-X-CM-TRANSID: AQAAf8DxUuWNiPhjInw6AA--.5816S3
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxXry8GFW5WF4xGrWkJr1UWrg_yoWrKF1fpF
-	y7AFykGr4rWwnxtr97Ja98Zwn5X3s7Gr12qFyayry8uF4DXr1UXw18XasrXF1Utw4rKryI
-	qrn5twn09a18Xw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-	qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-	b7AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-	1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
-	x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-	e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
-	IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4U
-	McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2
-	IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v2
-	6r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67
-	AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IY
-	s7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr
-	0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1QVy3UUUUU==
+	id 1pVZ5V-002lvx-F2; Fri, 24 Feb 2023 14:30:17 +0000
+Received: from mga12.intel.com ([192.55.52.136])
+	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1pVZ5R-002luA-Hl
+	for kexec@lists.infradead.org; Fri, 24 Feb 2023 14:30:14 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1677249013; x=1708785013;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8oT9KIiIwHATiu37VBCkX8K+98mUm7+5JCf02Wuh6IQ=;
+  b=IhfZWVxghcb0YGlhu8vN5jd7CZE8gV0HahsqG0LZpRQNGBsvMUj0ovne
+   cNzNVDOGwkYF2mpFXiIK7cA7d0WBnF82ZbqWmpEf1+UMq484gKLAN+n1h
+   Tmx6v/k8yeWVtc4+f9vJI+vxYOOxArJYPxpcJYPmah8HU/bLor2Gm7Q1t
+   yr5fcCICm4oC5M/pUFOlM/D9ibalqVuQY99i0QSPnA3BJS5RzPA5W7ENf
+   o4qcbWbi4zTxLvry9O5kCkU9FxrljJyQmS4cyPEUVcoOYBQoKHHifX6Zf
+   9tRg9KV01qenwQV3UmVN9Kr7RMReZ8FKMbswG7jq7+2oSl+YcDA4uirfl
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10630"; a="313118674"
+X-IronPort-AV: E=Sophos;i="5.97,324,1669104000"; 
+   d="scan'208";a="313118674"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2023 06:30:09 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10630"; a="815759493"
+X-IronPort-AV: E=Sophos;i="5.97,324,1669104000"; 
+   d="scan'208";a="815759493"
+Received: from rkris18-mobl.amr.corp.intel.com (HELO box.shutemov.name) ([10.252.56.190])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2023 06:30:06 -0800
+Received: by box.shutemov.name (Postfix, from userid 1000)
+	id 52A9910A5FE; Fri, 24 Feb 2023 17:30:04 +0300 (+03)
+Date: Fri, 24 Feb 2023 17:30:04 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: Dave Hansen <dave.hansen@intel.com>, Borislav Petkov <bp@alien8.de>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Isaku Yamahata <isaku.yamahata@intel.com>, x86@kernel.org,
+	linux-coco@lists.linux.dev, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] Kexec enabling in TDX guest
+Message-ID: <20230224143004.xqhpv6upn2fkqkjp@box.shutemov.name>
+References: <20230213234836.3683-1-kirill.shutemov@linux.intel.com>
+ <6b09a3505bf3deaa11906a2ecb9d15c4ec427ea2.camel@infradead.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <6b09a3505bf3deaa11906a2ecb9d15c4ec427ea2.camel@infradead.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230224_015118_020846_D2FB73BB 
-X-CRM114-Status: GOOD (  14.05  )
+X-CRM114-CacheID: sfid-20230224_063013_609783_A5D9C0E0 
+X-CRM114-Status: GOOD (  19.19  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -72,127 +80,36 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On LoongArch, we can use the same kernel image as 1st kernel when
-[1] is merged, but we have to modify the entry point as well as
-segments' addresses in the kernel's elf header (or pei format
-vmlinux.efi) in order to load them into correct places.
+On Wed, Feb 22, 2023 at 10:26:22AM +0000, David Woodhouse wrote:
+> On Tue, 2023-02-14 at 02:48 +0300, Kirill A. Shutemov wrote:
+> > The patch brings basic enabling of kexec in TDX guests.
+> > 
+> > By "basic enabling" I mean, kexec in the guests with a single CPU.
+> > TDX guests use ACPI MADT MPWK to bring up secondary CPUs. The mechanism
+> > doesn't allow to put a CPU back offline if it has woken up.
+> > 
+> > We are looking into this, but it might take time.
+> 
+> Can't we park the secondary CPUs in a purgatory-like thing of their own
+> and wake them from there when we want them?
+> 
+> Patches for that were floating around once, although the primary reason
+> then was latency, and we decided to address that differently by doing
+> the bringup in parallel instead.
 
-[1]: https://lore.kernel.org/loongarch/1677150391-12838-1-git-send-email-tangyouling@loongson.cn/T/#t
+That's plan B. It is suboptimal. kexec() can happen into something that is
+not Linux which will not be able to wake up CPUs.
 
-Signed-off-by: Youling Tang <tangyouling@loongson.cn>
----
- kexec/arch/loongarch/crashdump-loongarch.c | 22 ++++++++++++++++++++++
- kexec/arch/loongarch/crashdump-loongarch.h |  1 +
- kexec/arch/loongarch/kexec-elf-loongarch.c |  8 ++++++++
- kexec/arch/loongarch/kexec-loongarch.c     |  3 ++-
- kexec/arch/loongarch/kexec-pei-loongarch.c |  7 +++++++
- 5 files changed, 40 insertions(+), 1 deletion(-)
+Ideally, it has to be addressed on BIOS level: it has to provide a way to
+offline CPUs, putting it back to pre-wakeup state.
 
-diff --git a/kexec/arch/loongarch/crashdump-loongarch.c b/kexec/arch/loongarch/crashdump-loongarch.c
-index aaf6cf3..81250e4 100644
---- a/kexec/arch/loongarch/crashdump-loongarch.c
-+++ b/kexec/arch/loongarch/crashdump-loongarch.c
-@@ -183,6 +183,28 @@ int load_crashdump_segments(struct kexec_info *info)
- 	return 0;
- }
- 
-+/*
-+ * e_entry and p_paddr are actually in virtual address space.
-+ * Those values will be translated to physcal addresses by using
-+ * virt_to_phys() in add_segment().
-+ * So let's fix up those values for later use so the memory base will be
-+ * correctly replaced with crash_reserved_mem[usablemem_rgns.size - 1].start.
-+ */
-+void fixup_elf_addrs(struct mem_ehdr *ehdr)
-+{
-+	struct mem_phdr *phdr;
-+	int i;
-+
-+	ehdr->e_entry += crash_reserved_mem[usablemem_rgns.size - 1].start;
-+
-+	for (i = 0; i < ehdr->e_phnum; i++) {
-+		phdr = &ehdr->e_phdr[i];
-+		if (phdr->p_type != PT_LOAD)
-+			continue;
-+		phdr->p_paddr += crash_reserved_mem[usablemem_rgns.size - 1].start;
-+	}
-+}
-+
- int get_crash_kernel_load_range(uint64_t *start, uint64_t *end)
- {
- 	if (!usablemem_rgns.size)
-diff --git a/kexec/arch/loongarch/crashdump-loongarch.h b/kexec/arch/loongarch/crashdump-loongarch.h
-index 3eb4e0a..25ff24b 100644
---- a/kexec/arch/loongarch/crashdump-loongarch.h
-+++ b/kexec/arch/loongarch/crashdump-loongarch.h
-@@ -8,6 +8,7 @@ extern struct memory_range elfcorehdr_mem;
- 
- int load_crashdump_segments(struct kexec_info *info);
- int is_crashkernel_mem_reserved(void);
-+void fixup_elf_addrs(struct mem_ehdr *ehdr);
- int get_crash_kernel_load_range(uint64_t *start, uint64_t *end);
- 
- #define PAGE_OFFSET	0x9000000000000000ULL
-diff --git a/kexec/arch/loongarch/kexec-elf-loongarch.c b/kexec/arch/loongarch/kexec-elf-loongarch.c
-index 2bf128f..45387ca 100644
---- a/kexec/arch/loongarch/kexec-elf-loongarch.c
-+++ b/kexec/arch/loongarch/kexec-elf-loongarch.c
-@@ -90,6 +90,14 @@ int elf_loongarch_load(int argc, char **argv, const char *kernel_buf,
- 		}
- 	}
- 
-+	/* load the kernel */
-+	if (info->kexec_flags & KEXEC_ON_CRASH)
-+		/*
-+		 * offset addresses in elf header in order to load
-+		 * vmlinux (elf_exec) into crash kernel's memory.
-+		 */
-+		fixup_elf_addrs(&ehdr);
-+
- 	info->entry = (void *)virt_to_phys(ehdr.e_entry);
- 
- 	result = elf_exec_load(&ehdr, info);
-diff --git a/kexec/arch/loongarch/kexec-loongarch.c b/kexec/arch/loongarch/kexec-loongarch.c
-index 4c7361c..f47c998 100644
---- a/kexec/arch/loongarch/kexec-loongarch.c
-+++ b/kexec/arch/loongarch/kexec-loongarch.c
-@@ -253,7 +253,8 @@ unsigned long loongarch_locate_kernel_segment(struct kexec_info *info)
- 		unsigned long hole_end;
- 
- 		hole = (crash_reserved_mem[usablemem_rgns.size - 1].start < mem_min ?
--				mem_min : crash_reserved_mem[usablemem_rgns.size - 1].start);
-+				mem_min : crash_reserved_mem[usablemem_rgns.size - 1].start) +
-+				loongarch_mem.text_offset;
- 		hole = _ALIGN_UP(hole, MiB(1));
- 		hole_end = hole + loongarch_mem.text_offset + loongarch_mem.image_size;
- 
-diff --git a/kexec/arch/loongarch/kexec-pei-loongarch.c b/kexec/arch/loongarch/kexec-pei-loongarch.c
-index f86ac61..1a11103 100644
---- a/kexec/arch/loongarch/kexec-pei-loongarch.c
-+++ b/kexec/arch/loongarch/kexec-pei-loongarch.c
-@@ -66,6 +66,13 @@ int pei_loongarch_load(int argc, char **argv, const char *buf,
- 
- 	kernel_entry = virt_to_phys(loongarch_header_kernel_entry(header));
- 
-+	if (info->kexec_flags & KEXEC_ON_CRASH)
-+		/*
-+		 * offset addresses in order to load vmlinux.efi into
-+		 * crash kernel's memory.
-+		 */
-+		kernel_entry += crash_reserved_mem[usablemem_rgns.size - 1].start;
-+
- 	dbgprintf("%s: kernel_segment: %016lx\n", __func__, kernel_segment);
- 	dbgprintf("%s: kernel_entry:   %016lx\n", __func__, kernel_entry);
- 	dbgprintf("%s: image_size:     %016lx\n", __func__,
 -- 
-2.37.1
-
+  Kiryl Shutsemau / Kirill A. Shutemov
 
 _______________________________________________
 kexec mailing list
