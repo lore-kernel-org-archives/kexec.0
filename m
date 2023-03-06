@@ -4,83 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 95B14C61DA4
-	for <kexec@archiver.kernel.org>; Mon,  6 Mar 2023 03:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3F907C678DB
+	for <kexec@archiver.kernel.org>; Mon,  6 Mar 2023 03:05:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=r0lIzWCvjjrpBUzwXy6rUH7CcDFid+pj9XOMU889LIY=; b=P558fddTDC4XWe
-	+xW+JDzhquVwY22dGFfYq7thrNtjeUbvyoRTR3ZlKI/XyrCBDyfGwbv7MZfyTXTAMb39yOzG6/3rE
-	rE/PqsAKTj+6tDhOy8spy8DGvCOWV5GGFUQqwRpcNox7EidJWsIaILh3K3y0ylIWYg9OZey3+8QSk
-	45+Gmzx+A9huSRnP+bNRUf4X6/YTAgxfqZXPuUDhRrtRliSURTGY7zuk6enQqkGZ+WabG/q45FfXv
-	g/Ohlh8jh5oaDwHXlu+EEQSaXfF4fV7NJkQg7niiIIBWIJiE0gDSI0mqyNF4kI12ejZg+/fbCIUBa
-	0PYNO6agWgxP6uSl0idQ==;
+	List-Owner; bh=7QKeiembOD1Ne+FblG0CEznSgGlrOLX0XRdn0EAXVSk=; b=iN+d8w5CgbD/M1
+	sOYmjURZytLlhZi642cmyVvZUExVfiDeBVYAU6YGgt5c9hWc0w19kNxN8CYTQ4yPAFfgKLLksyESN
+	rEGkgvvEQertFkYF5QlOBWfh+PzTsN7rFHAO0b3Hym2wT7hViurJ+7MWWRLzUyPtnptz7u3wcXPZ1
+	d/9ptqeiosmJVW9p4B0mxxK9TeNXH95YuQyjHoD6yxhx/1DdzBUjs5VoDnCSakrsJ4e+15HMrbNea
+	wnD6I2m4j/TEpmqPTMcl5xp/tMjtnJvUMHtMPAaoRDc9zH34vkl0utyZnES0lva0pd+omVtTgJUJB
+	jmrPzAE/CL/0JXwitzKA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pZ19R-00B3C7-Mv; Mon, 06 Mar 2023 03:04:37 +0000
-Received: from mail-pj1-x1031.google.com ([2607:f8b0:4864:20::1031])
+	id 1pZ1A3-00B3Wv-Hd; Mon, 06 Mar 2023 03:05:17 +0000
+Received: from mail-pj1-x1033.google.com ([2607:f8b0:4864:20::1033])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pZ18W-00B2Sz-Ut; Mon, 06 Mar 2023 03:03:42 +0000
-Received: by mail-pj1-x1031.google.com with SMTP id qa18-20020a17090b4fd200b0023750b675f5so11788140pjb.3;
-        Sun, 05 Mar 2023 19:03:40 -0800 (PST)
+	id 1pZ18a-00B2VH-6C; Mon, 06 Mar 2023 03:03:46 +0000
+Received: by mail-pj1-x1033.google.com with SMTP id 6-20020a17090a190600b00237c5b6ecd7so11775936pjg.4;
+        Sun, 05 Mar 2023 19:03:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678071819;
+        d=gmail.com; s=20210112; t=1678071822;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=B4a3X2UJpGVkEkCKZLpiC6CtZYdkpIrB0sY2y8ZRSlA=;
-        b=OPG09K+PyjQAJLkndvQbGSHh8ZsyrlhmGiMtf07LeNaFj9x6p7KSLTNYv+9Ooqsi4h
-         ldBdZ7+yd4X2es3XcAG9Mna/yr+K2lqcKbXIZvAK4Rnv70RoJikbkIUxeI4orZZSPw7r
-         hmwdG5CY7Qu3xxuHsQjsWxnmeGKgwrgHCpkXVAdIF1uAG6WwS6NBHkUM7l1yOrPhHNsu
-         YXUQ3GjmheCJ8PA+LTPOqlMjoMZ0qWht6iSLsPqKJg5JSPOZij47TfFa0TwtH9lBZhdW
-         Ppv8m1TETpG5bvn8Mju3NX36eNpg/mE1Cull9ER3VT9630GoqoMj4Ph7CQ1/3b5vpFZl
-         OJWg==
+        bh=KOC/FNu2kgiTh2xy+eQd0EULhBRFBbwS09u1PSCaics=;
+        b=NaKYVckZLYfiEuAigzcP2ETDA+KCnwCeEG6JErjf5qgu7EvyJy413kzlsIjrrmFzwB
+         TIMrVi28isX3LNq1vvN8kZtZv772oFypAlZ7V2rmarNnARWhk/O32RHBNeAY38G4pjLf
+         mfogJfCiYVCDZ6szaAOYjF/PBNoCcpkYyCRiPwbqyGxeNhjak22jX5BYnpyFrg9F966K
+         eVFGlYDCvp/OlbnBgWUGbnn9L+jhQpxcHWsL0Wew/SDtoNrqBHZMlGn906K6whpqUEGd
+         8annz1k4T1diofzyCnJvehBAZY1p1l+QOSiPrVJq6BtFBmT0AtmiHJR3WssGA6z4qWeZ
+         2hgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678071819;
+        d=1e100.net; s=20210112; t=1678071822;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=B4a3X2UJpGVkEkCKZLpiC6CtZYdkpIrB0sY2y8ZRSlA=;
-        b=uOYy75O61aKcSfBg6bhQiNre8Ms4ks6aXTul4XvaC6h5+aRpWuCyMM8BaAJSG6D7PS
-         afdZi993CqCA2sNYVcCIn0Al8SsYHJrahaiU0EFES0Fzbse6/rXcTJkpio2EnIcRq+0Z
-         LUG2J2d5RNVHvjLeg4QnSvPxYckHUjGsH112kDpokemo0eGyIyQrcprMj0viYh6lnAjf
-         rM2ozht1X6eKXSdyr3m1eFxMSTcbgTv4w8FcDvD9b2S9vEbSlfvO+YDFMtYN9cnZRny8
-         LDmMM+A8O44/qzu8NCLEIy/5HWBLzUOEWjGxS3Paw+BWANUNVGemgRWmbCfiy9K3TTpL
-         McmA==
-X-Gm-Message-State: AO0yUKUYRI1WQdHSCik39dZHYEfMjV7k65ahSQ6enEPHZ1hhOTmGYPgG
-	04D8YH4yN6jrBrQPCpz6QjYZJChj6A==
-X-Google-Smtp-Source: AK7set88DNyYROwb3m9fSv9kZYyr9WinWKZoWYmcxYffbwht/af+J2U9qH/KesKw6say2sKAElKZ5w==
-X-Received: by 2002:a17:903:258b:b0:19a:973b:b615 with SMTP id jb11-20020a170903258b00b0019a973bb615mr8486498plb.36.1678071819212;
-        Sun, 05 Mar 2023 19:03:39 -0800 (PST)
+        bh=KOC/FNu2kgiTh2xy+eQd0EULhBRFBbwS09u1PSCaics=;
+        b=HugLNUc9pGDgmnfBK1lR3RS1RlJbCPdsUwbmR/SnWrDp7H5Gy8NifAvTebmTc8kWAm
+         pTxTKDlNN6qPbfo9CFiILJghqWP8V5VN/avsDMuxS7PWu39JEqJRsxaq1+SQqUBDL3xQ
+         M62WWQwIozmZqyiQlvNFaMqHhx/bKeBJmz0bnQAJOg60EAiqMNHMznnyv4HPOE8OcP40
+         7B34ndOAe0rKV2yBVdYi8ytse6YJZZR0xPuLkIiCN1ryLrT8ckPSFstLnlQq3p9Sos17
+         I/wU/5xPHkRoJ90fyqV+XVZN+OxMZS3UafTaru0P5Dcxk3O2YvCKkD8D584hSu2u5JlQ
+         /HkQ==
+X-Gm-Message-State: AO0yUKW38mP68AVVN/KahP0mMj35vkZ7drZMu7hn9jSaWNLVJg+SCBd3
+	tkhSJ9hz3uYmXt/bIDQA2Z9IoEbGxQ==
+X-Google-Smtp-Source: AK7set9pFHfjgHVn9nJVc+fD+gdveI9XYNbDTQrxdQyJRmLKk2YuM3aJ0xZd+cpaGIwqbkF6D36UKQ==
+X-Received: by 2002:a17:902:c40a:b0:19a:5958:15e7 with SMTP id k10-20020a170902c40a00b0019a595815e7mr10254558plk.15.1678071822090;
+        Sun, 05 Mar 2023 19:03:42 -0800 (PST)
 Received: from piliu.users.ipa.redhat.com ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id jy16-20020a17090342d000b0019719f752c5sm5410439plb.59.2023.03.05.19.03.35
+        by smtp.gmail.com with ESMTPSA id jy16-20020a17090342d000b0019719f752c5sm5410439plb.59.2023.03.05.19.03.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Mar 2023 19:03:38 -0800 (PST)
+        Sun, 05 Mar 2023 19:03:41 -0800 (PST)
 From: Pingfan Liu <kernelfans@gmail.com>
-To: linux-arm-kernel@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
 Cc: Pingfan Liu <kernelfans@gmail.com>,
-	Will Deacon <will@kernel.org>,
-	Nick Terrell <terrelln@fb.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Eric Biggers <ebiggers@google.com>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
 	Ard Biesheuvel <ardb@kernel.org>,
 	kexec@lists.infradead.org
-Subject: [PATCH 3/6] arm64: Kconfig: Pick decompressing method for kexec file load
-Date: Mon,  6 Mar 2023 11:03:02 +0800
-Message-Id: <20230306030305.15595-4-kernelfans@gmail.com>
+Subject: [PATCH 4/6] lib/decompress: Keep decompress routines based on selection
+Date: Mon,  6 Mar 2023 11:03:03 +0800
+Message-Id: <20230306030305.15595-5-kernelfans@gmail.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230306030305.15595-1-kernelfans@gmail.com>
 References: <20230306030305.15595-1-kernelfans@gmail.com>
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230305_190341_066852_94C17287 
-X-CRM114-Status: GOOD (  12.38  )
+X-CRM114-CacheID: sfid-20230305_190344_250505_A7935CCC 
+X-CRM114-Status: GOOD (  10.54  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,119 +91,76 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-After introducing the zboot image, kexec file load should be able to
-decompress the Image.gz. (Do in the later patch)
+At present, many decompressing routines in lib/decompress*.c are in
+__section(".init.text"). But they are required to decompress the kernel
+image when kexec file load compressed kernel.
 
-Unlike efi_zboot_entry() which knows the decompression method at the
-built time, kexec may loads compressed kernels with variant compression
-methods, hence it is helpful to include as many decompression method as
-possible.  Here provide an opportunity to let users select at their
-will.
-
-Besides this, introduce an extra config option 'HAVE_KEXEC_DECOMPRESS' to
-distinguish the reference to decompression routine between kexec and boot.
-(used in later patch to keep the routine out of .init.text section)
+To solve this issue, define 'INIT' conditional based on the macro
+CONFIG_HAVE_KEXEC_DECOMPRESS. Also make lib/decompress.c adopt this way.
 
 Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Nick Terrell <terrelln@fb.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Eric Biggers <ebiggers@google.com>
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Yury Norov <yury.norov@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Ard Biesheuvel <ardb@kernel.org>
 Cc: kexec@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
+To: linux-kernel@vger.kernel.org
 ---
- arch/arm64/Kconfig | 59 ++++++++++++++++++++++++++++++++++++++++++++++
- lib/Kconfig        |  3 +++
- 2 files changed, 62 insertions(+)
+ include/linux/decompress/mm.h | 9 ++++++++-
+ lib/decompress.c              | 5 +++--
+ 2 files changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index c5ccca26a408..58a65bdaeffa 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -1419,6 +1419,65 @@ config KEXEC_FILE
- 	  for kernel and initramfs as opposed to list of segments as
- 	  accepted by previous system call.
+diff --git a/include/linux/decompress/mm.h b/include/linux/decompress/mm.h
+index 9192986b1a73..33d8fd13a5c6 100644
+--- a/include/linux/decompress/mm.h
++++ b/include/linux/decompress/mm.h
+@@ -92,11 +92,18 @@ MALLOC_VISIBLE void free(void *where)
+ #define large_malloc(a) vmalloc(a)
+ #define large_free(a) vfree(a)
  
-+menu "Decompress method for kexec file load"
+-#define INIT __init
+ #define STATIC
+ 
+ #include <linux/init.h>
+ 
++#ifndef CONFIG_HAVE_KEXEC_DECOMPRESS
++#define INIT __init
++#else
++#define INIT
++#undef __initconst
++#define __initconst
++#endif
 +
-+config KEXEC_DECOMPRESS_GZIP
-+	bool "gzip"
-+	depends on KEXEC_FILE
-+	select DECOMPRESS_GZIP
-+	select HAVE_KEXEC_DECOMPRESS
-+	help
-+	  Enable to load the zboot image compressed by gzip
-+
-+config KEXEC_DECOMPRESS_BZIP2
-+	bool "bzip2"
-+	depends on KEXEC_FILE
-+	select DECOMPRESS_BZIP2
-+	select HAVE_KEXEC_DECOMPRESS
-+	help
-+	  Enable to load the zboot image compressed by bzip2
-+
-+config KEXEC_DECOMPRESS_LZMA
-+	bool "lzma"
-+	depends on KEXEC_FILE
-+	select DECOMPRESS_LZMA
-+	select HAVE_KEXEC_DECOMPRESS
-+	help
-+	  Enable to load the zboot image compressed by lzma
-+
-+config KEXEC_DECOMPRESS_XZ
-+	bool "xz"
-+	depends on KEXEC_FILE
-+	select DECOMPRESS_XZ
-+	select HAVE_KEXEC_DECOMPRESS
-+	help
-+	  Enable to load the zboot image compressed by xz
-+
-+config KEXEC_DECOMPRESS_LZO
-+	bool "lzo"
-+	depends on KEXEC_FILE
-+	select DECOMPRESS_LZO
-+	select HAVE_KEXEC_DECOMPRESS
-+	help
-+	  Enable to load the zboot image compressed by lzo
-+
-+config KEXEC_DECOMPRESS_LZ4
-+	bool "lz4"
-+	depends on KEXEC_FILE
-+	select DECOMPRESS_LZ4
-+	select HAVE_KEXEC_DECOMPRESS
-+	help
-+	  Enable to load the zboot image compressed by lz4
-+
-+config KEXEC_DECOMPRESS_ZSTD
-+	bool "zstd"
-+	depends on KEXEC_FILE
-+	select DECOMPRESS_ZSTD
-+	select HAVE_KEXEC_DECOMPRESS
-+	help
-+	  Enable to load the zboot image compressed by zstd
-+endmenu
-+
- config KEXEC_SIG
- 	bool "Verify kernel signature during kexec_file_load() syscall"
- 	depends on KEXEC_FILE
-diff --git a/lib/Kconfig b/lib/Kconfig
-index ce2abffb9ed8..18ab33511ee1 100644
---- a/lib/Kconfig
-+++ b/lib/Kconfig
-@@ -304,6 +304,9 @@ config RANDOM32_SELFTEST
- #
- # compression support is select'ed if needed
- #
-+config HAVE_KEXEC_DECOMPRESS
-+	bool
-+
- config 842_COMPRESS
- 	select CRC32
- 	tristate
+ #endif /* STATIC */
+ 
+ #endif /* DECOMPR_MM_H */
+diff --git a/lib/decompress.c b/lib/decompress.c
+index 8dd6f87e885f..33f097fe4b51 100644
+--- a/lib/decompress.c
++++ b/lib/decompress.c
+@@ -6,6 +6,7 @@
+  */
+ 
+ #include <linux/decompress/generic.h>
++#include <linux/decompress/mm.h>
+ 
+ #include <linux/decompress/bunzip2.h>
+ #include <linux/decompress/unlzma.h>
+@@ -60,7 +61,7 @@ static const struct compress_format compressed_formats[] __initconst = {
+ 	{ {0, 0}, NULL, NULL }
+ };
+ 
+-decompress_fn __init decompress_method(const unsigned char *inbuf, long len,
++decompress_fn INIT decompress_method(const unsigned char *inbuf, long len,
+ 				const char **name)
+ {
+ 	const struct compress_format *cf;
+@@ -83,7 +84,7 @@ decompress_fn __init decompress_method(const unsigned char *inbuf, long len,
+ 	return cf->decompressor;
+ }
+ 
+-decompress_fn __init decompress_method_by_name(const unsigned char *name)
++decompress_fn INIT decompress_method_by_name(const unsigned char *name)
+ {
+ 	const struct compress_format *cf;
+ 
 -- 
 2.31.1
 
