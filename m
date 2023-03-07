@@ -4,103 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4028CC678D4
-	for <kexec@archiver.kernel.org>; Tue,  7 Mar 2023 09:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E2606C6FA99
+	for <kexec@archiver.kernel.org>; Tue,  7 Mar 2023 22:44:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=k2TFkWUAS1vfXopnelGLlLiy6Soeq7ZT8mAR5QtE3+o=; b=BlKnGmoHxDeREV
-	dmLvYC2yFn64U2SjYGi32ATKYXegLeWEcIWy3DunFhZUZeaJo3MMTRiHAv/eBDdh9lSPbUeBYnd4A
-	zVtGnTe3AIJyHFBOjq3XT7CEhxPHCHXNq3o88xtICt3WBPDggsEa47wnjwj2PwA0Ubl6YHm3GxQqB
-	lS+BMhkaxWyAMqZVdiyXqH4LwHpGvga5H2Gf8MxmF8BS6wbatIHIPXdjj9CB8t+kkUm6szs50tLOI
-	lWurvsxdBCf0JkHaL9FTzY1ALWs/4yUIGQFYVM8WRtco0Vr+ZAEP7ZzK1i6UR80idiAgZrOBswTfP
-	IbIiS7xEiPeJY3Qqc59A==;
+	List-Owner; bh=bpnrf2YE0ZWqX1Xh+NpSUlT7FZ0qW3lGBoU+symatDA=; b=cipqTpvVC6Nfce
+	f6FyDbE3POGQz30LlpqA6fjuVCMlB5d/QAthdiIenlJuLimR+ouszjX7g3QhwrRWDvd8+HyKGzCdu
+	vo2vxBR0QRNaj+WMAO6yIbFEOCuTrXiThJDewpodXHb0MAoIXX4aydBJDk8VtQsLslNpc+iGt9yRX
+	6EnL8uQrSEUDG3J2YcXp+4Uasq7N3ugHfPZKhbW9WNFhHpZCySPWfwW9qXHY+grdLJETqKpLYbCIR
+	XkuwEViW137+B2gdCfXESS07yULL4LXBVk8n9TEebnZSq28zIR2cKgMYzwaxNwveV91fCSe940nR9
+	6gXx1tj3HJJPpsOAoAbw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pZTBY-00Gp3M-M0; Tue, 07 Mar 2023 09:00:40 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1pZg37-002kQ0-Up; Tue, 07 Mar 2023 22:44:49 +0000
+Received: from ams.source.kernel.org ([145.40.68.75])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pZTBV-00Gp2d-A4
-	for kexec@lists.infradead.org; Tue, 07 Mar 2023 09:00:38 +0000
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3278EDpk011019;
-	Tue, 7 Mar 2023 09:00:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=sjyp27yd+u1WP09IS2rhBU8r0yuFSmfQ4TdgCFDrkRY=;
- b=dM0zdl9isAhjcch5QkQoFdQ9QiGlGcYFQ6RP45u4Np9y+2TwS4EKPpOfAkGG0nQh1eUe
- lA6CMlP/igYWknj8RGPZGInAu/jcmS0b0k7sTfht0tY/x4d1MM86YnJ0wAmuRUpwwsx2
- 0f0/I+clTd/xR/V7O5RH2erXTIHx70JObaWdWrQVjvWphzayBlSEB+8FY3zsCgC5XEn8
- i42PasHEvVOsfjmIjBMWHawn4t1PDJ8sa/cYAqcHGOCx81xvrNzNNQgJX6UcjQJlkO7j
- Rr+md297pFIGrdnokjabe04xXl6FcG4zNCcPPawVdKn+JJ4bNp7UBbbTk9foinb/mEdV pQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3p50n4yf4q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 Mar 2023 09:00:21 +0000
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3277NGtP001589;
-	Tue, 7 Mar 2023 09:00:21 GMT
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3p50n4yf3g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 Mar 2023 09:00:21 +0000
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-	by ppma03fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3270DVPm002520;
-	Tue, 7 Mar 2023 09:00:18 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma03fra.de.ibm.com (PPS) with ESMTPS id 3p41c3u41w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 Mar 2023 09:00:18 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 32790Eri59048280
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 7 Mar 2023 09:00:15 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 687422004D;
-	Tue,  7 Mar 2023 09:00:14 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4EA8020040;
-	Tue,  7 Mar 2023 09:00:10 +0000 (GMT)
-Received: from [9.43.86.225] (unknown [9.43.86.225])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  7 Mar 2023 09:00:10 +0000 (GMT)
-Message-ID: <53343c55-c59f-fee7-22f5-94de15a1d18c@linux.ibm.com>
-Date: Tue, 7 Mar 2023 14:30:09 +0530
+	id 1pZg34-002kNX-BI
+	for kexec@lists.infradead.org; Tue, 07 Mar 2023 22:44:48 +0000
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ams.source.kernel.org (Postfix) with ESMTPS id 0380CB81AC7;
+	Tue,  7 Mar 2023 22:44:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 911EAC433EF;
+	Tue,  7 Mar 2023 22:44:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1678229083;
+	bh=Sgx5i2lNaUlucKD5NKA2BLD/U0/3cRA/AXWf2ibpr9Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=OGh3xeI87gXT1hHLaVnvQondnXYfVRlajcTagX08FAmNdHpngQjDpurlwrdhu7iEN
+	 yhTTsHog1FtnJf6/IyXhcYYm4xGWqchKwTw+P9IDV5I8I48beHwhhdcNZhKhM2MriK
+	 Xz0GEj4Sh9H6mqf5g29G6NLMwFaJcAlYZKU6JQHk+cePybMk8IDJxHs5jS93TLJO7a
+	 aYdEMAWHyAq/67lU9NtCv+XXZX1RlmarIz+PJwe3wmRhWjWcwEM1M+qq5uJm2WZaoX
+	 C/dUva5LbQWzC7Rg/Q7zqgxDgC7UpfNdfAdXCh1boc/5/Hp03T13bW8gxzJ+F5XM6K
+	 uMQVeq7vbIgyg==
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Eric Biederman <ebiederm@xmission.com>,
+	Dave Hansen <dave.hansen@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Baoquan He <bhe@redhat.com>,
+	x86@kernel.org,
+	kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH v2 1/2] x86/kexec: Remove unnecessary arch_kexec_kernel_image_load()
+Date: Tue,  7 Mar 2023 16:44:15 -0600
+Message-Id: <20230307224416.907040-2-helgaas@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20230307224416.907040-1-helgaas@kernel.org>
+References: <20230307224416.907040-1-helgaas@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH v19 7/7] x86/crash: optimize cpu changes
-Content-Language: en-US
-To: Eric DeVolder <eric.devolder@oracle.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, kexec@lists.infradead.org, ebiederm@xmission.com,
-        dyoung@redhat.com, bhe@redhat.com, vgoyal@redhat.com
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com, nramas@linux.microsoft.com,
-        thomas.lendacky@amd.com, robh@kernel.org, efault@gmx.de,
-        rppt@kernel.org, david@redhat.com, konrad.wilk@oracle.com,
-        boris.ostrovsky@oracle.com
-References: <20230306162228.8277-1-eric.devolder@oracle.com>
- <20230306162228.8277-8-eric.devolder@oracle.com>
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-In-Reply-To: <20230306162228.8277-8-eric.devolder@oracle.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 84xdR1RfuFvvetxdCOa8JqRtX7qirWJs
-X-Proofpoint-GUID: 3VQw42llU9aYtWCrm9EDe93uSRRcFkii
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-07_02,2023-03-06_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- mlxlogscore=999 bulkscore=0 phishscore=0 priorityscore=1501 clxscore=1015
- impostorscore=0 suspectscore=0 lowpriorityscore=0 spamscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
- definitions=main-2303070077
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230307_010037_476687_44515AF7 
-X-CRM114-Status: GOOD (  32.83  )
+X-CRM114-CacheID: sfid-20230307_144446_730128_A274D2AE 
+X-CRM114-Status: GOOD (  10.72  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -112,67 +76,92 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-On 06/03/23 21:52, Eric DeVolder wrote:
-> This patch is dependent upon the patch 'crash: change
-> crash_prepare_elf64_headers() to for_each_possible_cpu()'. With that
-> patch, crash_prepare_elf64_headers() writes out an ELF cpu PT_NOTE
-> for all possible cpus, thus further cpu changes to the elfcorehdr
-> are not needed.
->
-> This change works for kexec_file_load() and kexec_load() syscalls.
-> For kexec_file_load(), crash_prepare_elf64_headers() is utilized
-> directly and thus all ELF cpu PT_NOTEs are in the elfcorehdr already.
-> This is the kimage->file_mode term.
-> For kexec_load() syscall, one cpu or memory change will cause the
-> elfcorehdr to be updated via crash_prepare_elf64_headers() and at
-> that point all ELF cpu PT_NOTEs are in the elfcorehdr. This is the
-> kimage->elfcorehdr_updated term.
->
-> This code is intentionally *NOT* hoisted into
-> crash_handle_hotplug_event() as it would prevent the arch-specific
-> handler from running for cpu changes. This would break PPC, for
-> example, which needs to update other information besides the
-> elfcorehdr, on cpu changes.
->
-> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
-> ---
->   arch/x86/kernel/crash.c | 10 ++++++++++
->   1 file changed, 10 insertions(+)
->
-> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-> index c9aaec9de775..82ea2b1bdc61 100644
-> --- a/arch/x86/kernel/crash.c
-> +++ b/arch/x86/kernel/crash.c
-> @@ -471,6 +471,16 @@ void arch_crash_handle_hotplug_event(struct kimage *image)
->   	unsigned long mem, memsz;
->   	unsigned long elfsz = 0;
->   
-> +	/* As crash_prepare_elf64_headers() has already described all
-> +	 * possible cpus, there is no need to update the elfcorehdr
-> +	 * for additional cpu changes. This works for both kexec_load()
-> +	 * and kexec_file_load() syscalls.
-> +	 */
-> +	if ((image->file_mode || image->elfcorehdr_updated) &&
-> +		((image->hp_action == KEXEC_CRASH_HP_ADD_CPU) ||
-> +		(image->hp_action == KEXEC_CRASH_HP_REMOVE_CPU)))
-> +		return;
+The x86 implementation of arch_kexec_kernel_image_load() is functionally
+identical to the generic arch_kexec_kernel_image_load():
 
-I like the idea of having elfcorehdr_updated to track elfcoredhr segment 
-updates.
-It handles the possible CPU thing for kexec_load syscall nicely.
+  arch_kexec_kernel_image_load                # x86
+    if (!image->fops || !image->fops->load)
+      return ERR_PTR(-ENOEXEC);
+    return image->fops->load(image, image->kernel_buf, ...)
 
-Thanks for incorporating the possible CPU change.
+  arch_kexec_kernel_image_load                # generic
+    kexec_image_load_default
+      if (!image->fops || !image->fops->load)
+	return ERR_PTR(-ENOEXEC);
+      return image->fops->load(image, image->kernel_buf, ...)
 
-The patch series looks good to me.
-Reviewed-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+Remove the x86-specific version and use the generic
+arch_kexec_kernel_image_load().  No functional change intended.
 
-- Sourabh Jain
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ arch/x86/include/asm/kexec.h       |  3 ---
+ arch/x86/kernel/machine_kexec_64.c | 11 -----------
+ include/linux/kexec.h              |  2 --
+ 3 files changed, 16 deletions(-)
+
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index a3760ca796aa..5b77bbc28f96 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -200,9 +200,6 @@ int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
+ 				     const Elf_Shdr *symtab);
+ #define arch_kexec_apply_relocations_add arch_kexec_apply_relocations_add
+ 
+-void *arch_kexec_kernel_image_load(struct kimage *image);
+-#define arch_kexec_kernel_image_load arch_kexec_kernel_image_load
+-
+ int arch_kimage_file_post_load_cleanup(struct kimage *image);
+ #define arch_kimage_file_post_load_cleanup arch_kimage_file_post_load_cleanup
+ #endif
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index 0611fd83858e..1a3e2c05a8a5 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -374,17 +374,6 @@ void machine_kexec(struct kimage *image)
+ /* arch-dependent functionality related to kexec file-based syscall */
+ 
+ #ifdef CONFIG_KEXEC_FILE
+-void *arch_kexec_kernel_image_load(struct kimage *image)
+-{
+-	if (!image->fops || !image->fops->load)
+-		return ERR_PTR(-ENOEXEC);
+-
+-	return image->fops->load(image, image->kernel_buf,
+-				 image->kernel_buf_len, image->initrd_buf,
+-				 image->initrd_buf_len, image->cmdline_buf,
+-				 image->cmdline_buf_len);
+-}
+-
+ /*
+  * Apply purgatory relocations.
+  *
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 6883c5922701..4746bc9d39c9 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -207,12 +207,10 @@ static inline int arch_kimage_file_post_load_cleanup(struct kimage *image)
+ }
+ #endif
+ 
+-#ifndef arch_kexec_kernel_image_load
+ static inline void *arch_kexec_kernel_image_load(struct kimage *image)
+ {
+ 	return kexec_image_load_default(image);
+ }
+-#endif
+ 
+ #ifdef CONFIG_KEXEC_SIG
+ #ifdef CONFIG_SIGNED_PE_FILE_VERIFICATION
+-- 
+2.25.1
 
 
 _______________________________________________
