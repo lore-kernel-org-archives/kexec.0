@@ -4,70 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 233E2C61DA4
-	for <kexec@archiver.kernel.org>; Tue,  7 Mar 2023 03:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 10C0EC678D4
+	for <kexec@archiver.kernel.org>; Tue,  7 Mar 2023 08:09:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=/w7846YCFhmCHx4P8rxxpgy2sxIZr1rIBOUr4tLlMys=; b=RTGK7Y126zI4k9
-	YR6Db0vwasgPk1Smgt22ojlTa+uYovdVpDShLlbDq8fBPl6baBZQwDqDwHYoILk+uu1TDi6kmD/LS
-	xEHJTTxv1j/P5e2HQRtq9f2JDDSmkpkqYGrz3VG966mfh0tKzi/qnJp684dsUAHhYRByJQqLhXkoa
-	JYTrSFngwzO49+k499ZkaXTsQbAOb//sAeb7b6aIxEhlxI5FZ+b1oC/B6mEAmaMM7Xbv1sd6GGzn2
-	mfklpk48uMN6+sMPg6Z91mCAsr3TQ/vaj8TxewQ3hO/NdC1bS4I+bhtvjPj1C+uUSVV3htdMWwtrQ
-	5Rxn9FKCtVYlxZEIx55w==;
+	List-Owner; bh=hnU323V3AtwNKZMLtdnbFX2j5FQBcVGB4fyvz3ipGPs=; b=PfWs7UFKKAXvDr
+	T9N7T2tAo2l2Pg8DG5buVhK7nbVZAowxjEpMNEfcQnsD82rg5pY2BxQ++VKTsHWd0Rhk8tgIJLaUT
+	0T1UNwLDK1n7MHloVuvgGmRgJoJtX3EgHXD+SNU9QsV4MfEyCjFwSyzaChSzNqhsFtnMov4zK5ZHk
+	NGRo4NbHsSrOHfcqPGcgyZv0UDItnZLCtBM8qWakrOiIv9et6wz3/J0URg3HX1rfdgmTYAc46LlGy
+	ZOPaNNmA7pZmaoEY75nYLu+XBWN/ygXrN6P74q8skgtWkmzd1kYzcYMmH634A7IbOhINk5r94d7IV
+	6uCs+LoT2hnVZN8Cz64A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pZO0D-00G2vt-5V; Tue, 07 Mar 2023 03:28:37 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1pZSOG-00GcVk-9P; Tue, 07 Mar 2023 08:09:44 +0000
+Received: from mail-pl1-x633.google.com ([2607:f8b0:4864:20::633])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pZO05-00G2uc-G5
-	for kexec@lists.infradead.org; Tue, 07 Mar 2023 03:28:31 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1678159703;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=krvsyVnQOzCxSAiThCfP2vsIzesMA2g4BaaJjjXhtwU=;
-	b=h2B6Ohdsu8bbqpwHvgdSgbTfc/o4oq16U0676T4+IN0pc5p6wiIWsocwTMsGK4Fe6b9/Vk
-	62lz+Hmp5S+j1ZyDy+rJ1McmeAxb+HSz7q0385KDtK9DXriLWXySf573fNNhfOlarzDXyF
-	WaLz/0TkOoC2XpvcYbbsrPGOxV4M4zQ=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-84-BUI5Cx3DNvOqU4M_SoKz1A-1; Mon, 06 Mar 2023 22:28:19 -0500
-X-MC-Unique: BUI5Cx3DNvOqU4M_SoKz1A-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 55EF3101A52E;
-	Tue,  7 Mar 2023 03:28:19 +0000 (UTC)
-Received: from localhost (ovpn-12-63.pek2.redhat.com [10.72.12.63])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 6CFB71121314;
-	Tue,  7 Mar 2023 03:28:18 +0000 (UTC)
-Date: Tue, 7 Mar 2023 11:28:15 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Philipp Rudo <prudo@redhat.com>
-Cc: Youling Tang <tangyouling@loongson.cn>, Simon Horman <horms@kernel.org>,
+	id 1pZSNb-00Gc5X-Va; Tue, 07 Mar 2023 08:09:05 +0000
+Received: by mail-pl1-x633.google.com with SMTP id x11so8698112pln.12;
+        Tue, 07 Mar 2023 00:09:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678176541;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=M5zZrovIRs5zLJv0G+iS2mKyTpyGJ8bky1sIW7/neCY=;
+        b=m8OxLTzPl5iPiawWVFI1+BNlPyv1wKgsXEbJBkslhBiY8dheVnaRyijBo9KRfTFDbi
+         3U7n6UD3qANq8Z20nnwhlw65qmr7pZgXP/3UckK6C0K9jDL+sv4cBg1r8Al98rHprBtJ
+         qo7D3GQvUCmNJRd4MJ/vmGiYLIYeku3p74VVfC/+LreVUNFlnRW+MJZIbY+pJRVhmoGx
+         XbFYrkHyf+DedkljOOdxhPvgeFsjR5cKXybth7jwsyAmcBgRN5kIuAZ4TERj+j0fdzr3
+         WxTesprLD0E+Tq2HDV0sk2cI3pBHiG7ih24DE0Oi6BgenAILg9t0e+5Ve0vGKp3zOl+2
+         HbVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678176541;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M5zZrovIRs5zLJv0G+iS2mKyTpyGJ8bky1sIW7/neCY=;
+        b=nROfuOCQX2kOtCAGe/CwOF2Xe3AyHojcEL+xpJXZisvoPRlTcRERdmr7BROG8m6SOj
+         lsMx51LMV+UgceiITJa5O7Qo/QEshAh/sz/9s54Vl3NG+gYhBCSxEp7Al6iFiUZK9iHt
+         1g6X/w7+1GX9J3MOC5nRDboLMDG+Lr9YrgTant2GXT5EzYLrdsGKJQhjSQ3Hv1NUUwzE
+         DVhP7Kw7M5x1RYihdNhf5i93ANysBWUo7NBdFc9Pi3Q1SKiYi7TuJeZEOplbGkaSMPGV
+         gFzOio/kchi8HR8M5hb18rxIPwZOWSjvEg+VUHZZ+e5BURCVI3PX3t5gBP37LBbanmux
+         I7wg==
+X-Gm-Message-State: AO0yUKU/LEGJ7gSgQx2/eQy2vWJH8493axFG9zKrH5RMzhlH6HDcsfc9
+	NHnw10HVY7hAdvLhbAFXrA==
+X-Google-Smtp-Source: AK7set8Z+BUR8AwsCrasOZRglrMO4TGwh/SjdjgmzTf5p3052x3E2Cc9Q5pK4PgMa8K9mB8ivsTYQw==
+X-Received: by 2002:a05:6a21:78a6:b0:cc:5f27:d003 with SMTP id bf38-20020a056a2178a600b000cc5f27d003mr14752364pzc.56.1678176541057;
+        Tue, 07 Mar 2023 00:09:01 -0800 (PST)
+Received: from piliu.users.ipa.redhat.com ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id e1-20020a631e01000000b004fb681ea0e1sm7290405pge.84.2023.03.07.00.08.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Mar 2023 00:09:00 -0800 (PST)
+Date: Tue, 7 Mar 2023 16:08:55 +0800
+From: Pingfan Liu <kernelfans@gmail.com>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
 	kexec@lists.infradead.org
-Subject: Re: [PATCH 1/2] kexec: Default __NR_kexec_file_load is set to
- undefined
-Message-ID: <ZAavT+pFKb00lKD8@MiWiFi-R3L-srv>
-References: <1677232268-2451-1-git-send-email-tangyouling@loongson.cn>
- <20230227161919.7c4884cd@rotkaeppchen>
- <Y/4CaolPP0U4h6bB@MiWiFi-R3L-srv>
- <20230303120319.67307b61@rotkaeppchen>
+Subject: Re: [PATCH 0/6] arm64: make kexec_file able to load zboot image
+Message-ID: <ZAbxF+4ekAfSmoUE@piliu.users.ipa.redhat.com>
+References: <20230306030305.15595-1-kernelfans@gmail.com>
+ <CAMj1kXGmjVvNXk6QJON_Tb+ya6WAm6GrHm6=GD0K23rm+7uDNA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20230303120319.67307b61@rotkaeppchen>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
 Content-Disposition: inline
+In-Reply-To: <CAMj1kXGmjVvNXk6QJON_Tb+ya6WAm6GrHm6=GD0K23rm+7uDNA@mail.gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230306_192829_768787_6CA24C21 
-X-CRM114-Status: GOOD (  29.23  )
+X-CRM114-CacheID: sfid-20230307_000904_073187_009CD7B1 
+X-CRM114-Status: GOOD (  38.71  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,67 +93,127 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 03/03/23 at 12:03pm, Philipp Rudo wrote:
-> Hi Baoquan,
-> 
-> On Tue, 28 Feb 2023 21:32:26 +0800
-> Baoquan He <bhe@redhat.com> wrote:
-> 
-> > Hi Philipp,
-> > 
-> > On 02/27/23 at 04:19pm, Philipp Rudo wrote:
-> > ...... 
-> > > > diff --git a/kexec/kexec-syscall.h b/kexec/kexec-syscall.h
-> > > > index be6ccd5..ea77936 100644
-> > > > --- a/kexec/kexec-syscall.h
-> > > > +++ b/kexec/kexec-syscall.h
-> > > > @@ -59,9 +59,7 @@
-> > > >  #endif
-> > > >  #endif /*ifndef __NR_kexec_load*/
-> > > >  
-> > > > -#ifdef __arm__
-> > > >  #undef __NR_kexec_file_load
-> > > > -#endif
-> > > >  
-> > > >  #ifndef __NR_kexec_file_load  
-> > > 
-> > > I don't think this will work as intended. 
-> > > 
-> > > On the top of the file sys/syscall.h gets included. In there
-> > > architectures that support kexec_file_load define __NR_kexec_file_load.
-> > > This also means that if an architecture doesn't support kexec_file_load
-> > > __NR_kexec_file_load shouldn't be defined in the first place. Thus I
-> > > suggest that you find out why sys/syscall.h defines
-> > > __NR_kexec_file_load for LoongArch even when the system call is not
-> > > supported and fix it there.  
-> > 
-> > Checking whether LoongArch has defined __NR_kexec_file_load sounds a
-> > good suggestion. Wondering why we still need add __NR_kexec_file_load
-> > definition in kexec-tools. E.g below s390 kexec_file support you added.
-> > <sys/syscall.h> sometime won't be found or __NR_kexec_file_load could be
-> > not defined yet?
-> > 
-> > commit d4a948c268272cf37c71be820fb02bf40e56292b
-> > Author: Philipp Rudo <prudo@linux.ibm.com>
-> > Date:   Wed May 16 14:27:18 2018 +0200
-> > 
-> >     kexec/s390: Add support for kexec_file_load
-> > 
-> 
-> To be honest I don't remember why I have added it back then. Most
-> likely I simply copied what others have done before.
-> 
-> The benefit in having the extra definition I see is that you don't need
-> to rebuild glibc when you implement the syscall and don't use the
-> generic unistd.h. But that is something only few people should ever
-> encounter.
+Hi Ard,
 
-OK, got it. From the code, the adding won't cuase issue, but a double
-insurance, not sure if it's redundant. Someone interested can
-investigate and clean up if needed.
+Thanks for sharing your idea. Please see the comment.
 
-Thanks for the information.
+On Mon, Mar 06, 2023 at 09:08:03AM +0100, Ard Biesheuvel wrote:
+> (cc Mark)
+> 
+> Hello Pingfan,
+> 
+> Thanks for working on this.
+> 
+> On Mon, 6 Mar 2023 at 04:03, Pingfan Liu <kernelfans@gmail.com> wrote:
+> >
+> > After introducing zboot image, kexec_file can not load and jump to the
+> > new style image. Hence it demands a method to load the new kernel.
+> >
+> > The crux of the problem lies in when and how to decompress the Image.gz.
+> > There are three possible courses to take: -1. in user space, but hard to
+> > achieve due to the signature verification inside the kernel.
+> 
+> That depends. The EFI zboot image encapsulates another PE/COFF image,
+> which could be signed as well.
+> 
+> So there are at least three other options here:
+> - sign the encapsulated image with the same key as the zboot image
+> - sign the encapsulated image with a key that is only valid for kexec boot
+> - sign the encapsulated image with an ephemeral key that is only valid
+> for a kexec'ing an image that was produced by the same kernel build
+> 
+> >  -2. at the
+> > boot time, let the efi_zboot_entry() handles it, which means a simulated
+> > EFI service should be provided to that entry, especially about how to be
+> > aware of the memory layout.
+> 
+> This is actually an idea I intend to explore: with the EFI runtime
+> services regions mapped 1:1, it wouldn't be too hard to implement a
+> minimal environment that can run the zboot image under the previous
 
+The idea of the minimal environment lools amazing. After digging
+more deeply into it, I think it means to implement most of the function
+members in efi_boot_services, besides that, some UEFI protocols due to
+the reference of efi_call_proto(). So a clear boundary between zboot and
+its dependent EFI service is demanded before the work.
+
+> kernel up to the point where it call ExitBootServices(), after which
+> kexec() would take over.
+> 
+
+IIUC, after kexec switches to efi_zboot_entry(), it will not return,
+right?
+
+> >  -3. in kernel space, during the file load
+> > of the zboot image. At that point, the kernel masters the whole memory
+> > information, and easily allocates a suitable memory for the decompressed
+> > kernel image. (I think this is similar to what grub does today).
+> >
+> 
+> GRUB just calls LoadImage(), and the decompression code runs in the EFI context.
+> 
+
+Ah, thanks for the correcting. I had made an wrong assumption of grub
+based on [1], from which, I thought that grub is the case "For
+compatibility with non-EFI loaders, the payload can be decompressed and
+executed by the loader as well, provided that the loader implements the
+decompression algorithm and that non-EFI boot is supported by the
+encapsulated image" 
+
+
+[1]: https://www.phoronix.com/news/Linux-6.1-Generic-EFI-Zboot
+
+
+Eager to find a solution to kexec a zboot image. Hope it will come soon.
+
+
+Thanks,
+
+	Pingfan
+> > The core of this series is [5/6].  [3,6/6] handles the config option.
+> > The assumption of [3/6] is kexec_file_load is independent of zboot,
+> > especially it can load kernel images compressed with different
+> > compression method.  [6/6] is if EFI_ZBOOT, the corresponding
+> > decompression method should be included.
+> >
+> >
+> > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > Cc: Will Deacon <will@kernel.org>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Ard Biesheuvel <ardb@kernel.org>
+> > Cc: kexec@lists.infradead.org
+> > To: linux-arm-kernel@lists.infradead.org
+> > To: linux-kernel@vger.kernel.org
+> >
+> > Pingfan Liu (6):
+> >   arm64: kexec: Rename kexec_image.c to kexec_raw_image.c
+> >   lib/decompress: Introduce decompress_method_by_name()
+> >   arm64: Kconfig: Pick decompressing method for kexec file load
+> >   lib/decompress: Keep decompress routines based on selection
+> >   arm64: kexec: Introduce zboot image loader
+> >   init/Kconfig: Select decompressing method if compressing kernel
+> >
+> >  arch/arm64/Kconfig                            |  59 ++++++
+> >  arch/arm64/include/asm/kexec.h                |   4 +-
+> >  arch/arm64/kernel/Makefile                    |   2 +-
+> >  .../{kexec_image.c => kexec_raw_image.c}      |   2 +-
+> >  arch/arm64/kernel/kexec_zboot_image.c         | 186 ++++++++++++++++++
+> >  arch/arm64/kernel/machine_kexec.c             |   1 +
+> >  arch/arm64/kernel/machine_kexec_file.c        |   3 +-
+> >  include/linux/decompress/generic.h            |   2 +
+> >  include/linux/decompress/mm.h                 |   9 +-
+> >  include/linux/zboot.h                         |  26 +++
+> >  init/Kconfig                                  |   7 +
+> >  lib/Kconfig                                   |   3 +
+> >  lib/decompress.c                              |  17 +-
+> >  13 files changed, 314 insertions(+), 7 deletions(-)
+> >  rename arch/arm64/kernel/{kexec_image.c => kexec_raw_image.c} (98%)
+> >  create mode 100644 arch/arm64/kernel/kexec_zboot_image.c
+> >  create mode 100644 include/linux/zboot.h
+> >
+> > --
+> > 2.31.1
+> >
 
 _______________________________________________
 kexec mailing list
