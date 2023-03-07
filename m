@@ -4,77 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9745BC678D5
-	for <kexec@archiver.kernel.org>; Tue,  7 Mar 2023 08:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4028CC678D4
+	for <kexec@archiver.kernel.org>; Tue,  7 Mar 2023 09:00:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
 	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
 	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
 	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=CH+wSE3n83msYvBI1bEKO2tBHDKAGMVEG1l4uJv7ZcU=; b=qR0shyRLR/FyUg
-	RjxfIHFBFm4jZCiNJauFCUqPbPhkMRNZIoSmsx+YIIRyYiV9OkpNsjJwJXfQvV0MybhxeQ9rmr3ge
-	6z0PRvDT8VyHZ9Dg1w4J7nJ3917GAXY2rrunwH7FZ9m1ky/r+DH9HaH0cQcp1l227V7Qxn+jG/lQh
-	yccG3L5My6hoaF52IN+RQTa2/9WvfIqdqRjvBMR9/mLrCPIjw14Pw0jxd9l1dI3xShMduzeN8pNdy
-	hSdAO6ccaepzuPC31QLkp+hmEZb8isveg5IjjTvtPeNHCMmNbz8Kxeoa92Ih67t+Ja3E5ATzDK5a9
-	tF7DDECzNtRYcA6ckxJQ==;
+	List-Owner; bh=k2TFkWUAS1vfXopnelGLlLiy6Soeq7ZT8mAR5QtE3+o=; b=BlKnGmoHxDeREV
+	dmLvYC2yFn64U2SjYGi32ATKYXegLeWEcIWy3DunFhZUZeaJo3MMTRiHAv/eBDdh9lSPbUeBYnd4A
+	zVtGnTe3AIJyHFBOjq3XT7CEhxPHCHXNq3o88xtICt3WBPDggsEa47wnjwj2PwA0Ubl6YHm3GxQqB
+	lS+BMhkaxWyAMqZVdiyXqH4LwHpGvga5H2Gf8MxmF8BS6wbatIHIPXdjj9CB8t+kkUm6szs50tLOI
+	lWurvsxdBCf0JkHaL9FTzY1ALWs/4yUIGQFYVM8WRtco0Vr+ZAEP7ZzK1i6UR80idiAgZrOBswTfP
+	IbIiS7xEiPeJY3Qqc59A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pZT0k-00GnGc-5I; Tue, 07 Mar 2023 08:49:30 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1pZTBY-00Gp3M-M0; Tue, 07 Mar 2023 09:00:40 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pZT0h-00GnFT-4U
-	for kexec@lists.infradead.org; Tue, 07 Mar 2023 08:49:28 +0000
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3278832D013880;
-	Tue, 7 Mar 2023 08:49:08 GMT
+	id 1pZTBV-00Gp2d-A4
+	for kexec@lists.infradead.org; Tue, 07 Mar 2023 09:00:38 +0000
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3278EDpk011019;
+	Tue, 7 Mar 2023 09:00:22 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
  mime-version : subject : to : cc : references : from : in-reply-to :
  content-type : content-transfer-encoding; s=pp1;
- bh=6mGG0WTaQn/PNFPFt9pxB866ZLdmwgCMdNTy93Z/y3w=;
- b=nCcvcBWkK8rFJtEJxcak7T7ZLrt2ut/bJDmGvwleVjov4hsotRWQiH4Lawyke3iLu+74
- nZoRVqA3q11SlRwnXbMajHM+TlRqnxhvqderoqZSwHSU+RyJeqnTYj20be6b5/s4KX8A
- qYs3+1/ZkE8ZrpkxBzZQYGaNozitKvrk1QlA1M1qqsYqyGlF/7hY0eVwTkAY4AEF4rPn
- bJXERX8WePDAwN2nidZm7yjdNkdks+O0yBeYqKbIpgCysHxk4p80+YTb85OFSCRs45lG
- FzOVoVuQQRs9wVjQr4e10ki/jiUDk056nok4usei4WOqNDQfuvOpeMLiCflubF4Q3AOz Cw== 
+ bh=sjyp27yd+u1WP09IS2rhBU8r0yuFSmfQ4TdgCFDrkRY=;
+ b=dM0zdl9isAhjcch5QkQoFdQ9QiGlGcYFQ6RP45u4Np9y+2TwS4EKPpOfAkGG0nQh1eUe
+ lA6CMlP/igYWknj8RGPZGInAu/jcmS0b0k7sTfht0tY/x4d1MM86YnJ0wAmuRUpwwsx2
+ 0f0/I+clTd/xR/V7O5RH2erXTIHx70JObaWdWrQVjvWphzayBlSEB+8FY3zsCgC5XEn8
+ i42PasHEvVOsfjmIjBMWHawn4t1PDJ8sa/cYAqcHGOCx81xvrNzNNQgJX6UcjQJlkO7j
+ Rr+md297pFIGrdnokjabe04xXl6FcG4zNCcPPawVdKn+JJ4bNp7UBbbTk9foinb/mEdV pQ== 
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3p4uafcr2h-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3p50n4yf4q-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 Mar 2023 08:49:08 +0000
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3278imFH038763;
-	Tue, 7 Mar 2023 08:49:07 GMT
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3p4uafcr1b-1
+	Tue, 07 Mar 2023 09:00:21 +0000
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3277NGtP001589;
+	Tue, 7 Mar 2023 09:00:21 GMT
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3p50n4yf3g-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 Mar 2023 08:49:07 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-	by ppma04ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3271gUji005556;
-	Tue, 7 Mar 2023 08:49:05 GMT
+	Tue, 07 Mar 2023 09:00:21 +0000
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+	by ppma03fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3270DVPm002520;
+	Tue, 7 Mar 2023 09:00:18 GMT
 Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma04ams.nl.ibm.com (PPS) with ESMTPS id 3p41brbync-1
+	by ppma03fra.de.ibm.com (PPS) with ESMTPS id 3p41c3u41w-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 Mar 2023 08:49:04 +0000
+	Tue, 07 Mar 2023 09:00:18 +0000
 Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3278n2qH52166956
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 32790Eri59048280
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 7 Mar 2023 08:49:02 GMT
+	Tue, 7 Mar 2023 09:00:15 GMT
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 65E2920040;
-	Tue,  7 Mar 2023 08:49:02 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 687422004D;
+	Tue,  7 Mar 2023 09:00:14 +0000 (GMT)
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0F94620043;
-	Tue,  7 Mar 2023 08:48:58 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 4EA8020040;
+	Tue,  7 Mar 2023 09:00:10 +0000 (GMT)
 Received: from [9.43.86.225] (unknown [9.43.86.225])
 	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  7 Mar 2023 08:48:57 +0000 (GMT)
-Message-ID: <c9db3d66-f74d-fcab-837e-bfcabae8bce7@linux.ibm.com>
-Date: Tue, 7 Mar 2023 14:18:57 +0530
+	Tue,  7 Mar 2023 09:00:10 +0000 (GMT)
+Message-ID: <53343c55-c59f-fee7-22f5-94de15a1d18c@linux.ibm.com>
+Date: Tue, 7 Mar 2023 14:30:09 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH v19 6/7] crash: change crash_prepare_elf64_headers() to
- for_each_possible_cpu()
+Subject: Re: [PATCH v19 7/7] x86/crash: optimize cpu changes
+Content-Language: en-US
 To: Eric DeVolder <eric.devolder@oracle.com>, linux-kernel@vger.kernel.org,
         x86@kernel.org, kexec@lists.infradead.org, ebiederm@xmission.com,
         dyoung@redhat.com, bhe@redhat.com, vgoyal@redhat.com
@@ -84,24 +84,23 @@ Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
         rppt@kernel.org, david@redhat.com, konrad.wilk@oracle.com,
         boris.ostrovsky@oracle.com
 References: <20230306162228.8277-1-eric.devolder@oracle.com>
- <20230306162228.8277-7-eric.devolder@oracle.com>
-Content-Language: en-US
+ <20230306162228.8277-8-eric.devolder@oracle.com>
 From: Sourabh Jain <sourabhjain@linux.ibm.com>
-In-Reply-To: <20230306162228.8277-7-eric.devolder@oracle.com>
+In-Reply-To: <20230306162228.8277-8-eric.devolder@oracle.com>
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: aFXcfKvsaQRm2Wg0p0ZMYNHRsyk6M2qi
-X-Proofpoint-ORIG-GUID: rPcoXFfS1QFZIKh2XnQsMPTySvp16jpZ
+X-Proofpoint-ORIG-GUID: 84xdR1RfuFvvetxdCOa8JqRtX7qirWJs
+X-Proofpoint-GUID: 3VQw42llU9aYtWCrm9EDe93uSRRcFkii
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.219,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
  definitions=2023-03-07_02,2023-03-06_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1015
- phishscore=0 adultscore=0 lowpriorityscore=0 priorityscore=1501
- suspectscore=0 spamscore=0 mlxscore=0 impostorscore=0 bulkscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2303070077
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ mlxlogscore=999 bulkscore=0 phishscore=0 priorityscore=1501 clxscore=1015
+ impostorscore=0 suspectscore=0 lowpriorityscore=0 spamscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
+ definitions=main-2303070077
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230307_004927_212381_D1560537 
-X-CRM114-Status: GOOD (  36.98  )
+X-CRM114-CacheID: sfid-20230307_010037_476687_44515AF7 
+X-CRM114-Status: GOOD (  32.83  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -118,94 +117,63 @@ Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hello Eric,
 
 On 06/03/23 21:52, Eric DeVolder wrote:
-> The function crash_prepare_elf64_headers() generates the elfcorehdr
-> which describes the cpus and memory in the system for the crash kernel.
-> In particular, it writes out ELF PT_NOTEs for memory regions and the
-> cpus in the system.
+> This patch is dependent upon the patch 'crash: change
+> crash_prepare_elf64_headers() to for_each_possible_cpu()'. With that
+> patch, crash_prepare_elf64_headers() writes out an ELF cpu PT_NOTE
+> for all possible cpus, thus further cpu changes to the elfcorehdr
+> are not needed.
 >
-> With respect to the cpus, the current implementation utilizes
-> for_each_present_cpu() which means that as cpus are added and removed,
-> the elfcorehdr must again be updated to reflect the new set of cpus.
+> This change works for kexec_file_load() and kexec_load() syscalls.
+> For kexec_file_load(), crash_prepare_elf64_headers() is utilized
+> directly and thus all ELF cpu PT_NOTEs are in the elfcorehdr already.
+> This is the kimage->file_mode term.
+> For kexec_load() syscall, one cpu or memory change will cause the
+> elfcorehdr to be updated via crash_prepare_elf64_headers() and at
+> that point all ELF cpu PT_NOTEs are in the elfcorehdr. This is the
+> kimage->elfcorehdr_updated term.
 >
-> The reasoning behind the change to use for_each_possible_cpu(), is:
+> This code is intentionally *NOT* hoisted into
+> crash_handle_hotplug_event() as it would prevent the arch-specific
+> handler from running for cpu changes. This would break PPC, for
+> example, which needs to update other information besides the
+> elfcorehdr, on cpu changes.
 >
-> - At kernel boot time, all percpu crash_notes are allocated for all
->    possible cpus; that is, crash_notes are not allocated dynamically
->    when cpus are plugged/unplugged. Thus the crash_notes for each
->    possible cpu are always available.
->
-> - The crash_prepare_elf64_headers() creates an ELF PT_NOTE per cpu.
->    Changing to for_each_possible_cpu() is valid as the crash_notes
->    pointed to by each cpu PT_NOTE are present and always valid.
->
-> Furthermore, examining a common crash processing path of:
->
->   kernel panic -> crash kernel -> makedumpfile -> 'crash' analyzer
->             elfcorehdr      /proc/vmcore     vmcore
->
-> reveals how the ELF cpu PT_NOTEs are utilized:
->
-> - Upon panic, each cpu is sent an IPI and shuts itself down, recording
->   its state in its crash_notes. When all cpus are shutdown, the
->   crash kernel is launched with a pointer to the elfcorehdr.
->
-> - The crash kernel via linux/fs/proc/vmcore.c does not examine or
->   use the contents of the PT_NOTEs, it exposes them via /proc/vmcore.
->
-> - The makedumpfile utility uses /proc/vmcore and reads the cpu
->   PT_NOTEs to craft a nr_cpus variable, which is reported in a
->   header but otherwise generally unused. Makedumpfile creates the
->   vmcore.
->
-> - The 'crash' dump analyzer does not appear to reference the cpu
->   PT_NOTEs. Instead it looks-up the cpu_[possible|present|onlin]_mask
->   symbols and directly examines those structure contents from vmcore
->   memory. From that information it is able to determine which cpus
->   are present and online, and locate the corresponding crash_notes.
->   Said differently, it appears that 'crash' analyzer does not rely
->   on the ELF PT_NOTEs for cpus; rather it obtains the information
->   directly via kernel symbols and the memory within the vmcore.
->
-> (There maybe other vmcore generating and analysis tools that do use
-> these PT_NOTEs, but 'makedumpfile' and 'crash' seems to be the most
-> common solution.)
->
-> This change results in the benefit of having all cpus described in
-> the elfcorehdr, and therefore reducing the need to re-generate the
-> elfcorehdr on cpu changes, at the small expense of an additional
-> 56 bytes per PT_NOTE for not-present-but-possible cpus.
->
-> On systems where kexec_file_load() syscall is utilized, all the above
-> is valid. On systems where kexec_load() syscall is utilized, there
-> may be the need for the elfcorehdr to be regenerated once. The reason
-> being that some archs only populate the 'present' cpus in the
-> /sys/devices/system/cpus entries, which the userspace 'kexec' utility
-> uses to generate the userspace-supplied elfcorehdr. In this situation,
-> one memory or cpu change will rewrite the elfcorehdr via the
-> crash_prepare_elf64_headers() function and now all possible cpus will
-> be described, just as with kexec_file_load() syscall.
->
-> Suggested-by: Sourabh Jain <sourabhjain@linux.ibm.com>
 > Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
 > ---
->   kernel/crash_core.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>   arch/x86/kernel/crash.c | 10 ++++++++++
+>   1 file changed, 10 insertions(+)
 >
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index dba4b75f7541..537b199a8774 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -365,7 +365,7 @@ int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_map,
->   	ehdr->e_phentsize = sizeof(Elf64_Phdr);
+> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> index c9aaec9de775..82ea2b1bdc61 100644
+> --- a/arch/x86/kernel/crash.c
+> +++ b/arch/x86/kernel/crash.c
+> @@ -471,6 +471,16 @@ void arch_crash_handle_hotplug_event(struct kimage *image)
+>   	unsigned long mem, memsz;
+>   	unsigned long elfsz = 0;
 >   
->   	/* Prepare one phdr of type PT_NOTE for each present CPU */
-We need to change this comment as well.
-> -	for_each_present_cpu(cpu) {
-> +	for_each_possible_cpu(cpu) {
+> +	/* As crash_prepare_elf64_headers() has already described all
+> +	 * possible cpus, there is no need to update the elfcorehdr
+> +	 * for additional cpu changes. This works for both kexec_load()
+> +	 * and kexec_file_load() syscalls.
+> +	 */
+> +	if ((image->file_mode || image->elfcorehdr_updated) &&
+> +		((image->hp_action == KEXEC_CRASH_HP_ADD_CPU) ||
+> +		(image->hp_action == KEXEC_CRASH_HP_REMOVE_CPU)))
+> +		return;
+
+I like the idea of having elfcorehdr_updated to track elfcoredhr segment 
+updates.
+It handles the possible CPU thing for kexec_load syscall nicely.
+
+Thanks for incorporating the possible CPU change.
+
+The patch series looks good to me.
+Reviewed-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+
 - Sourabh Jain
+
 
 _______________________________________________
 kexec mailing list
