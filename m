@@ -4,58 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1BAABC678D5
-	for <kexec@archiver.kernel.org>; Wed,  8 Mar 2023 12:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id ADEE5C64EC4
+	for <kexec@archiver.kernel.org>; Thu,  9 Mar 2023 09:06:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=dntxumuKCC1/E949VaAuJbJk53QaG9TnebNXh3USHl4=; b=0hTujEfuH0ZH+a
-	GUU/6idbY82U/JAlXErYx0J2mgDUOzSyEw0dFlA9xO58VuacLboFAuohbXzGnN//Db+G9SD3DFg+l
-	o59WHcwJVNm7qcL5p6ZXEcCEs8eAhXHZrsmDVl+pMIB+SLC9F+9E0sTwd7CF5WvcHxOGpAJAcuQQc
-	Equv7zZ204uH/c1TmtPXLG022YhN8nVNfIlghKJa/jxWisxaMxV0FA8og78GMcqsUmQek6eShxFlF
-	tz5lN5R1sKYSTQtUY5LjiQO/K7rcRzQlEgodKJyq5VFLC8v+nRESE1HrAkURMEaVgY0XEteWfk+E1
-	ERns2/Y/Td5aFZvvAYVg==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Subject:To:From:Date:
+	Message-ID:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From
+	:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=q9SiAQKsD0xBNjf8n8QQTv0jK76Tobc5kaiOcjMr7d0=; b=YeAY8Qp1oXHmM6
+	Sj4JbOp9/UCgd95ES2G5+os6qeYzQPOdy+GXdBUJzYJo6iQfSrHjgCLzVOI7j1iaFSzYaOIAZoILe
+	dk8hnu0k6NnGOXIUgUE/x9avY3RmBbmsq5+5BVaRc9FZrTkWYYAVeUqZyL7y+roZQNpzsqaKgf4cg
+	W4U58EEu/3R0DL0pUy+KXgLAF2C79D86UJn6L2TTb4aedoxkH3zBI0Frfy4tnPKEum8rRClutOTWM
+	/t9dp/0TZM0Ols3lmVVaHiXMhsPJQlP8wlPW4NoZ2eCrW4oOtPwnoNxab6bH2eJBq0NaAMT/+hpUP
+	bYjuNKtAAD6+aLaE+8ww==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pZtGC-004vrG-RH; Wed, 08 Mar 2023 12:51:12 +0000
-Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
+	id 1paCEH-008hoP-Fc; Thu, 09 Mar 2023 09:06:29 +0000
+Received: from mail.saloumbitang.com ([217.61.23.68])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pZtGA-004vqX-Sc
-	for kexec@lists.infradead.org; Wed, 08 Mar 2023 12:51:12 +0000
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 3C13C61783;
-	Wed,  8 Mar 2023 12:51:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE55CC433EF;
-	Wed,  8 Mar 2023 12:51:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1678279869;
-	bh=hj+CAP4sRATw6qdx8/9prGlg5RY392PLVZZlTUyx0zQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lmTutHXCen85qAykPJoxu2E/V8R8T6kLhmj29LjTn75H8VTOKEF8lWmes6rWUzxM9
-	 A2RNWi2B0pdLIslqY1+oviluDCQEOFSWNWZZLAaAz2jz9KCvip2/EViX9iYSXKHQUt
-	 MmFiYg6xoBrRPOjeGs3IS6lW8hs/QMK1jZQL6B3vOxxYwQmibcDoN7BGx2/MeQ4tbA
-	 ozRs0lU+dqCsSH6ENHUbcFEQWyneUWjHuWWJ1LJwc091TSJrYLaTtPeUuDg+KWW7Ld
-	 uL/rLTbFHw8+HRUpOxASVNY4nl+37HQWOrqFtQQchpSSnM1FTBzuSp/tKRNkJTpXak
-	 4iCQNZpuD/RKA==
-Date: Wed, 8 Mar 2023 13:51:06 +0100
-From: Simon Horman <horms@kernel.org>
-To: Youling Tang <tangyouling@loongson.cn>
-Cc: kexec@lists.infradead.org, Philipp Rudo <prudo@redhat.com>
-Subject: Re: [PATCH v2 2/2] LoongArch: kdump: Set up kernel image segment
-Message-ID: <ZAiEujL9VLZwq0vc@kernel.org>
-References: <1677899351-31098-1-git-send-email-tangyouling@loongson.cn>
- <1677899351-31098-2-git-send-email-tangyouling@loongson.cn>
+	id 1paCEC-008hkm-9h
+	for kexec@lists.infradead.org; Thu, 09 Mar 2023 09:06:25 +0000
+Received: by mail.saloumbitang.com (Postfix, from userid 1001)
+	id F2F4E62FF3; Thu,  9 Mar 2023 09:05:41 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=saloumbitang.com;
+	s=mail; t=1678352741;
+	bh=kqPAYsKSjYBfj9YHlwAD/unmOtuhvRHs5JzaE8P9z5U=;
+	h=Date:From:To:Subject:From;
+	b=Wz0PEi/dZaTtiQ/3MkuYFWRYugKhxtR9+5/g2XR1BZTUv9ixfLIkaxgUDdqAgU+zu
+	 VxVdWlmsHmxmu+PVKhw0I2CcbNXVlHjnh/XaG1K1WHeFw/urnU3oNjYvAZgYU4L/Gy
+	 ZQh7uvDW2D/tbTw5K7ntz1vPTMllFl1FlpS4rHjTxZ5JzUwxPl1rE2ei/UJyFFZw80
+	 +rnqU2VZ8C6gTAJucWJ3MFwVykOL6AZBFxtmFyVXAJ/jM1X3VaR5pg5ovOfc6U1z4G
+	 9fNgKZLzh97kvFra69vc0HojAUI2v47PM+3xctxpVV1DD+GuRS7cZMOO+dStD6R728
+	 tAdnkXMyecDYw==
+Received: by mail.saloumbitang.com for <kexec@lists.infradead.org>; Thu,  9 Mar 2023 09:05:36 GMT
+Message-ID: <20230309074500-0.1.5q.a49k.0.82dpmoeklz@saloumbitang.com>
+Date: Thu,  9 Mar 2023 09:05:36 GMT
+From: "Bartosz Holender" <bartosz.holender@saloumbitang.com>
+To: <kexec@lists.infradead.org>
+Subject: =?UTF-8?Q?Pompy_ciep=C5=82a?=
+X-Mailer: mail.saloumbitang.com
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1677899351-31098-2-git-send-email-tangyouling@loongson.cn>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230308_045110_980214_0B66C5CA 
-X-CRM114-Status: GOOD (  11.05  )
+X-CRM114-CacheID: sfid-20230309_010624_530368_B2614A91 
+X-CRM114-Status: UNSURE (   1.92  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -67,23 +60,17 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sat, Mar 04, 2023 at 11:09:11AM +0800, Youling Tang wrote:
-> On LoongArch, we can use the same kernel image as 1st kernel when
-> 3f89765d622 ("LoongArch: kdump: Add single kernel image implementation")
-> is merged, but we have to modify the entry point as well as segments
-> addresses in the kernel elf header (or PE format vmlinux.efi) in order
-> to load them into correct places.
-> 
-> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
-
-Thanks, applied.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+RHppZcWEIGRvYnJ5LAoKZG9zdGFyY3phbXkgcG9tcHkgY2llcMWCYSwga3TDs3JlIHPEhSBqZWRu
+eW0geiBuYWpiYXJkemllaiBlbmVyZ29vc3pjesSZZG55Y2ggaSAxMDAlIGVrb2xvZ2ljem55Y2gg
+c3Bvc29iw7N3IG5hIG9ncnphbmllIGJ1ZHlua3UsIHdvZHkgdcW8eXRrb3dlaiBvcmF6IGNoxYJv
+ZHplbmllIHBvbWllc3pjemXFhCB3IGN6YXNpZSB1cGHFgsOzdy4gCgpDenkgc8SFIFBhxYRzdHdv
+IHphaW50ZXJlc293YW5pIHdzdMSZcG7EhSB3ZXJ5ZmlrYWNqxIUgdXJ6xIVkemXFhCBkbGEgc3dv
+amVnbyBkb211PwoKClBvemRyYXdpYW0KQmFydG9zeiBIb2xlbmRlcgoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVj
+QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9rZXhlYwo=
