@@ -4,183 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 25DBAC61DA4
-	for <kexec@archiver.kernel.org>; Mon, 13 Mar 2023 15:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9551AC61DA4
+	for <kexec@archiver.kernel.org>; Mon, 13 Mar 2023 16:31:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:Cc:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:To:Subject:
-	Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=zKDj7xDeqgGOTN/EhK7dlB7cgytv0R2wfL5LEy7sIOA=; b=yB9LtY6plkeAZiO4utWbqr0Tmv
-	t/Q61CNuORoC4GWEMEO3EV+zcuL57eBT2/IAdG95hKajPMOEpS4SK/NXvQ2vFsinzuUaCCT4NTEkP
-	NX82BVkgIz/goVMSWb9/cJJ5LmxGUeyPErCHdaKbntFRCbvsKN0fU+YMcKyo7i/KpDEXbkroiqLaH
-	2c0/oNx6GH5fzNxTcj29nAna5SHi8my/NFx/DRGQMWzO78zF4q/NYmMJyyGIl3VjbEIDkgiVGLFC4
-	Fzz6O+fTm42OesQXoFv6/VCESxfd8XS0U3N0zrHC6VJCxFsw+dPu0GgC1Tl6tKiP3jGxQsXcp/+CW
-	K+OnyIXQ==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:Cc:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=AJuFOCyDvGF3Xf2gqHRFt2uWrSVxy8q1rEXP81FIMaU=; b=GRG7H71srfLv5Y
+	26X7txZTMGeTH7iZJRr+9RvJqrMIH9pg7NLwpxjNb2uJKOg2XLvgKph44WSESPZCWuHXBo8OC9zro
+	P2Z0QnjCt51b/a/A+oi/XuncfNOOE0rwZ2sZvQKw2E5SDYT/5UR65P0WV+3a/VUM00XbK5Hjn4qoc
+	8GFHqILK28cpkqMtwmQITCdqHWEJ+J2X73K0zTAcGY4NdJJYLQ/7Zfv5HDDfESdGJ/CaQvcNboumt
+	4fnpzdJN+jF39NLUV/cWIVH5jeSOfA7R4m9QuHDYAZHhnqjw4ujmmHIq8qB4CyeXPloOkOIe5cFJC
+	+yNI0C3dh3uqSKj2R54w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pbkOJ-006UAY-2P; Mon, 13 Mar 2023 15:47:15 +0000
-Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
+	id 1pbl5V-006mDX-AA; Mon, 13 Mar 2023 16:31:53 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pbkOF-006U8f-Bw
-	for kexec@lists.infradead.org; Mon, 13 Mar 2023 15:47:12 +0000
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32DCSJTQ027922;
-	Mon, 13 Mar 2023 15:47:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2022-7-12;
- bh=TBXssBL/WTfMQ7bhpOmU74VfCv31VyJBTkrlH4CuUxk=;
- b=mPxVPe1d2choLRjpH0zta76xGTdLgBK2EL4i0qHSKQO+gfsIrutR+uIIDZunPTZCTvSi
- oUj3NKHWpeJT8cxFuXfyz6iTrMQTiEiUMPGhFd3Tck6Kf2mim8Svwwpdrr1YVy0aMq55
- 4I9d6NuWlb07RbAHXCUkbtIweaJvfdR2Mm+Xkit7Kg0mih+XmALzmajpsTOxITKUytoZ
- atRL4GVEzF9bhj+GxSJLqkaGjto3BKmzeX0DMEPFU0crNXAf4Itrce+q81J4OZjWF9my
- eS6NChO6L6aOYWCXmKn3TLklx7SjWc5kXUdnWqxTf99oElfZhiand+J3AIzVP+R2Dqsq rg== 
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3p8hhac6jp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 13 Mar 2023 15:47:04 +0000
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 32DEd5Ha002304;
-	Mon, 13 Mar 2023 15:47:02 GMT
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2045.outbound.protection.outlook.com [104.47.66.45])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3p8g3bcfy4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 13 Mar 2023 15:47:02 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=U6v6FE/v2HV+w8381erhKYcE92NsPjaLUawhYloXIrDVBqTIaK82FMtSjymJVd7miXfO3l5OP+Bt36f95ZfGhJKCZNiAxkEu82kpMj1uSCGrgPzr4QO4vtfcDgfEw+LHReUzUbXMZ6uboGEfPcGqVoqmmHWXJUyxBiav/3lsrUoDoJU3Jsg+h+AtX/vCltmXG7e5XiKIZzeZsce3maVriLgq1bYi5VYYUNHTdbuNK6J2IqONRoVlVnDD+AWev7JcvfYAwv6S+TzY36J0MZHObuiWPoUcad4N6CCsCBk7+jIH8wNGVXbvC5TM8gWQgJhhEhyqrgobYutCqiMrtgNBsg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TBXssBL/WTfMQ7bhpOmU74VfCv31VyJBTkrlH4CuUxk=;
- b=Wmn2Ie3SNpdyagFlh1qYfhrQP2knMGh8vzug2OFb0bUyhGOLc9szJYiKR7JcsqplCTFjjOSsaBHHnTQMuu65Y0ehyyHPFpZ971CpE/i9jB4WTt7vm838gkG4p9sf4v71ZkzhoSEPYVl47UHhKh4suKkE45Y1SzHreiOQNqnSCGYghR6Unrqu0sSrWr/KVSDTVd1R2vXSjjawbUUQgq1ItxrIiqX4DklklrgT9PRBFasHd/CU1uN7MHAn2fhF1sLOz/Z+KNkXQA89oQ1+MHRu9gvYOU11b/4P21BZvaVM4bycYxjG0RtGdQzH57YjLfjMBv9MVzpxyDO/MWmzMjScfg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TBXssBL/WTfMQ7bhpOmU74VfCv31VyJBTkrlH4CuUxk=;
- b=DOT5Putmq33pmB/NOT58QvHvnFdHPXMakK5D1WmlqJJV4P/5FOXm7KRR5DJHXL/x6qzSvM7B9DUOvy9L5Rt8dSH6qJLlh/t6ltzG4rAJsUnq/WtnsEhPlZpEFxkIOAE/VglUkVSX/KOYwDjziGtPcdP4NwBQNV3z12vR3hlu5ts=
-Received: from CO1PR10MB4531.namprd10.prod.outlook.com (2603:10b6:303:6c::22)
- by SA1PR10MB6296.namprd10.prod.outlook.com (2603:10b6:806:253::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.24; Mon, 13 Mar
- 2023 15:47:00 +0000
-Received: from CO1PR10MB4531.namprd10.prod.outlook.com
- ([fe80::671e:6486:6996:c38]) by CO1PR10MB4531.namprd10.prod.outlook.com
- ([fe80::671e:6486:6996:c38%7]) with mapi id 15.20.6178.024; Mon, 13 Mar 2023
- 15:46:59 +0000
-Message-ID: <0269c298-d53c-7ad7-c718-3dbc1e225d0d@oracle.com>
-Date: Mon, 13 Mar 2023 10:46:55 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.1
-Subject: Re: [PATCH v9 2/6] powerpc/crash: introduce a new config option
- CRASH_HOTPLUG
+	id 1pbksw-006hfY-Pq
+	for kexec@lists.infradead.org; Mon, 13 Mar 2023 16:18:57 +0000
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32DErl69031884;
+	Mon, 13 Mar 2023 16:18:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=sk/zhX+MZmMRyNGz/YjxsJfOmQ26B0S/YX6WsMSN5bU=;
+ b=jEJOGOD/HSVnmyNwebuOGS2vqsrIhvGvGYY0eVmKq/0bZ2vTlRQDOsBJk7fy7bc08zpI
+ PGtSsjhxB1ha5YaCBgMMU3Px8VdDTiwmn8P60A1jYSjskVKeFoFgw0J2yVhaYswNaxOH
+ RJVa6IGtgy+jHM/UULapGQ4t80H2oRh8BA01fiknAhL7DM6AXqtNoQwMeh6f1hOyhw5L
+ ZtunUT3t5QK3ytTNZHxSLPIrki99IfQ0aiAkvVaAoopjq9JqjbAH3o4B1Hxk7oz/EQUx
+ nQj9XMlK9lvglenhk9NPrv1cAcBu+Vy2YmO0U7LGBo8rUFJ9q/NqnLl4FtqoSw5FkD3C DA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3pa60dtgkp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 13 Mar 2023 16:18:47 +0000
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 32DErmYJ031918;
+	Mon, 13 Mar 2023 16:18:46 GMT
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3pa60dtgjr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 13 Mar 2023 16:18:46 +0000
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+	by ppma05fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 32DCvikX015761;
+	Mon, 13 Mar 2023 16:18:44 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma05fra.de.ibm.com (PPS) with ESMTPS id 3p8h96jt20-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 13 Mar 2023 16:18:44 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 32DGIeZL40894962
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 13 Mar 2023 16:18:40 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5C8542004B;
+	Mon, 13 Mar 2023 16:18:40 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F2BD820043;
+	Mon, 13 Mar 2023 16:18:39 +0000 (GMT)
+Received: from [9.101.4.33] (unknown [9.101.4.33])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 13 Mar 2023 16:18:39 +0000 (GMT)
+Message-ID: <d2346e25-56f0-f198-43cd-efdf73321f09@linux.ibm.com>
+Date: Mon, 13 Mar 2023 17:18:39 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.7.2
+Subject: Re: [PATCH v9 1/6] powerpc/kexec: turn some static helper functions
+ public
 Content-Language: en-US
 To: Sourabh Jain <sourabhjain@linux.ibm.com>, linuxppc-dev@ozlabs.org,
         mpe@ellerman.id.au
 References: <20230312181154.278900-1-sourabhjain@linux.ibm.com>
- <20230312181154.278900-3-sourabhjain@linux.ibm.com>
-From: Eric DeVolder <eric.devolder@oracle.com>
-In-Reply-To: <20230312181154.278900-3-sourabhjain@linux.ibm.com>
-X-ClientProxiedBy: SA0PR11CA0092.namprd11.prod.outlook.com
- (2603:10b6:806:d1::7) To CO1PR10MB4531.namprd10.prod.outlook.com
- (2603:10b6:303:6c::22)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PR10MB4531:EE_|SA1PR10MB6296:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5cbf46a5-4176-46be-8d7f-08db23da2e78
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 	yKb2SPW8MQJGlKuTtZL8df1CtL8dC//ro3ZkFyjg4BVk402kUd1VYunt7dxjagrb1sgZLc/CTg8pe5o/eDfg3gW5yotwK4SiYVilHazj58cJsnPf6HKpkRMW2y5bMEeHSG+vV04xORSEuVv9TYCevipCzFVoroJmJw59IJuJsABjrxzU0w1qGHhkPC7x3ixhl/pLDBoiuiQxlW9yBF0742F0D4omX1jdKh0CmTib+W1NFH0IhEvPCNvB8Yk5ymk/4SFxnAAF4fTCe/VwGEQq4SZpH0Uva4UX9OM8GAW2ObQ2EpwlzzXRg4qJVZ8F/C9BQWoOLfLUd9YeDHNwSFvc0TANU1MWnTsoqG8BEOu6RkyIZBphuGFUpL8nEBcGAjpKL8Ee7WRwYjy8OsJhjP6OUO3d3aSmt7CE0ki+npz0UNxaZL81PDjopZM3sJJB1MJXYnCVnL1IqkxLgVifjFFWr4Kad33Sh4t0r/coCXMdJpz0Q7e7t7CFsKxAKFiJmqo5a3uCjp3DKRtBHBvzNlm0glT/6hmpWGn5+EmUr3xukkfhZ07uNscIFHiYIWnx6rCv+CYEck8sKaX7c2Tod2g9tbjdlxN8Fvx7Extbn4DmGeKeDvqwoRSB5V7LwbKAETJx7IstuEVM5d0JX/KISRQpi98KHwjNRKosA0GxzGWJ5R3dHIzOcOfVzb79B1IPWBjTyw4WMYHckKIlNy/LSq0icUveNCHUSosVQWqh3ebc76g=
-X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR10MB4531.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(136003)(396003)(376002)(39860400002)(366004)(346002)(451199018)(86362001)(31696002)(36756003)(186003)(41300700001)(6512007)(5660300002)(4326008)(2616005)(8936002)(316002)(478600001)(66476007)(66556008)(8676002)(6666004)(6486002)(66946007)(38100700002)(2906002)(83380400001)(53546011)(6506007)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 	=?utf-8?B?NGE0Y2g0T3FKZzlpK29xOWs5VDV2S3ZtY3VzNVVNek84S0xqYWhsd1hyOWdC?=
- =?utf-8?B?Q01FbldnT3NUN3pCa0UrMUJNRWJIK0I1OXJ0SWtGbnQ4RmVpQUM5ckQwSEp3?=
- =?utf-8?B?MGZRQ0R4RmtFT05WMW4vTGxmVGtEZkhOMmFrVCsrSGF4M09Rd2xEUm4yUVFn?=
- =?utf-8?B?c1lkMGU4bUp5VGpYempPdnM3c0RXWWJUQ3N6R3ZZZ1FkNm5SdVlKZ3o4TjYz?=
- =?utf-8?B?aTNhRzBmTTFPN2hoWFFqOXFWYUx1dlNWcDNWaTRBemVlWnd4bEdlQWdZVGJR?=
- =?utf-8?B?bjM2M1Bja3M1M016THBLQm9kMWdoZkN0SWplV0Y0c2hXdkxWT2NVNXFyMkhU?=
- =?utf-8?B?dElpWVczb3pqY3ZkOVhub3RsTnJ6dHBKejY0dW9NcGdYV2JnQnRCMWFOSmN5?=
- =?utf-8?B?N2txWStFRUw0UU1xelZBcWdBR2U4RWNrVVV3U29sOXpQdTBjY3lwbmp0eUZy?=
- =?utf-8?B?UGVuODBGMVpJSWJ3SjR2M0VJaSs5dFIxdzZnV3drZnpNUzMzaEtndXVPMENo?=
- =?utf-8?B?OXRJbkorWVRUZVJMeVduZDBPMnVtY1FGeGdCQlM4OGQrUHp0V3VDR1VsWm1z?=
- =?utf-8?B?U3V3eXp3cFlCbnNGa2UxdW9ZcExlbWZxVmVOYUFERzRwaVNQSlpLcHhjWnY1?=
- =?utf-8?B?VE5SMnhrSFdsazRjejhRNWZFeFB0QkhIa1ZHTWluSU9lMElwVFNYUmkySDVk?=
- =?utf-8?B?dVpDVDN6MkUxOW9iVU9KREFRUXZJUWpuYXlCQ0RBcHRsejdZTXB0Q1B6SURO?=
- =?utf-8?B?bU9ENnhUc0hWMW52bDR5RitjcmVwWTk2dU4vVTdKa3ZGSC9RVHBrRnY0M2p4?=
- =?utf-8?B?Mk9rSlprYUhsNzQ1NE9FcW1TcGM1R0JxY0w4Ym52Q2VETTU0MjFINkNkU081?=
- =?utf-8?B?b1FSRUNwNS9GMnhDU2paWVd0Y3JtZ2U5V3R0WGgzL1dZbTE5aUtCU1l6aGp5?=
- =?utf-8?B?c1lSdkhvZUI2dDdLbWhEQVJMY0xKeE80bk1ZMzJvajNmKy9QSzYyMVd1QXQw?=
- =?utf-8?B?RGdPL1RSamo3bS84UUo5VC9hNlJVemhZa1o4ZlhJTlE4UVNQd1VqWldTQjZ6?=
- =?utf-8?B?Tm9odVVMMUw3UE1OdnZqMFF0ejBaWlNzb3ExZFlnbDAxcjdDMGdyM29LbFRK?=
- =?utf-8?B?SDRvejdFMTk1MDQzT0JaY200OUVUaGpnQnpwNG1HaDZBRFRGWCs3K2JlNVhZ?=
- =?utf-8?B?M0trdXBJQmN0cFZiU1NLdytqbnFJS1NDRlpUNGJqdks4T1BNUXFPc1FKRitY?=
- =?utf-8?B?Nk40ZFIvV2NEY1VUam1RV0hFdmtTdjlDR2E3VjkyR2hZVUhwOWNWUEp0RlZK?=
- =?utf-8?B?cWRZenlDOWpuWC8zR2wyT0xleUZ4Skl5STA4NGY1YnZnbXZDZkk5OFBpN2xq?=
- =?utf-8?B?emFFR00yNWpoazJ2M0V1cWEvMTFpcWN2UXNyNk95clFpdTM2ZGgrQVg3R1By?=
- =?utf-8?B?MjY1RlRFY3orbTVZZjhwc20rS0ZDVHhlaHprbVJ5eTdOb3Z5b21ldmJoVjk4?=
- =?utf-8?B?QTY4NkFhYlJyenRRZVZCYzBxNlRncmtkdkMvN2xjdlJydkV0cmNzMmdYQXY2?=
- =?utf-8?B?MmRKRlZmZmEvMGZRckhHdXgzYk1XalZXMncrY0h4cGozcHZBYTY3WkkwY09K?=
- =?utf-8?B?U0pkWGhDQnBYUmxsbVlJaWZXVm4xZGhMSlJWUEM1cTA0blcycGhtd1FMR3Ra?=
- =?utf-8?B?WGwwUXdsY3JDMjhmU0tJYzhBNEptVkF3eHArUUhTK1pUcDNxMm1vdkpYV0pk?=
- =?utf-8?B?dnE3L2hDTUVqcE5rbU5PQVpOTERaWjk2dFZHVGVGMURWcFg1ZURGTXJteERB?=
- =?utf-8?B?OTUzSFFqdkdqQlNhMnFoRFZqTVl3dkQ1Mzg5Q3FKUnpacS9uenF3T0tMN1ZL?=
- =?utf-8?B?bFphVmd0c3dYSTdSbFR2QlQrTG14MWRIQ3dUU0FsNFZOU0gyWVFETEJOdTBo?=
- =?utf-8?B?OUZmYS9OeWxITXVTaXExbTBRNjErVXNJM3MzcmRvVkpRQzBwZy8rZzk0bGJM?=
- =?utf-8?B?ejgyZUhKVHdzNWxOR3AvUnJHTHdoVXV2eFJpMzZBWTVjQU15MXhJUEdQdEFN?=
- =?utf-8?B?bThLR2pGdkthMFpWSXkzYytQMi93aHM4cllVOWJVOCtQVVhIR1NuZzIwOGNU?=
- =?utf-8?B?OWpKb0lCU2dhemlrMW14Tk80R3gwcXprTUJwWEMrZXdwMVMwMVlzWmVZVVlt?=
- =?utf-8?Q?RSpJo6Xvhu1afztmuMQHQEo=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 	=?utf-8?B?WTBvZ1hTVm5JUHFLMFhnODB4TnRSSnRLbU5RQnMyQlpoUy9JUEhEdjFEQmZw?=
- =?utf-8?B?N3UrMWlTNklxN0VSSTRHamQwTWdGSU9ESkpRSlJnMzVNdjczaHd3Mmk5UVVz?=
- =?utf-8?B?WVlpWUJsWnl2Z3EzeVdzUE9WeGRSVFcwQlhodkkrTkc2U3l1MnU2OWZiK1ZD?=
- =?utf-8?B?aXpLNkQ1QVpKaWRaOEMyZnQ3NWZ1bFMvaEVadHYyWnRtYXdGNjVWNmdCeUxZ?=
- =?utf-8?B?UkJxcXRZTnV1a3Z5SGRRazl6dS9JL1AvdjVmbzJFTTR6SWZkdWFIZGFjL3Vw?=
- =?utf-8?B?ZllqTTVZdWo1UEtqMjN3NktTa3Fta3VkT3dRbWtWTUthNmttMVF0b2pJMnIv?=
- =?utf-8?B?cUFEdVlZbmRxT3JWWWxmcHVHUGoyclA4NlB4RzdGMXdhNlEwYkNMOFVOMmdq?=
- =?utf-8?B?TEFUNzh2cjFRYmlJU0tHREl3M0MrODJqZkRQRnU1OE5QYnhqVEZneTUwQVRP?=
- =?utf-8?B?bFZ2RVRseExZUzliUXVyRlJPMkphTmFhVWxGR2o5Z0xjRWI4Q2t5QnVhOFBO?=
- =?utf-8?B?R3BuMEhaL2JwUWRyUUcwYjJpSGNVclQ2T0s3a1JvakUvN3cxRjVBQmFvT3ps?=
- =?utf-8?B?Y1ZhazFtOWlFK0dxV2M1UEJuLzZiZHJXbFFKYzAyMm9xNi9sUFNLRnFaZFJI?=
- =?utf-8?B?ZFZPMEhjMWRUcCtPQys5bFVnOXpQUHdtSkZ6dnpGelRaVjFXYnNOemJkRnRI?=
- =?utf-8?B?ZWZwV05Cd1BZR1l5dEo3aXZMSjNaZDB1UHRFRmZwd0dGN2RNYXRYZEJ3T3Iv?=
- =?utf-8?B?dWp5a3dWSXUyWWFKWjI4emJIdE9kcXBIZ1I2MTlWT042aVFjcks1bWovYjY0?=
- =?utf-8?B?Z2VVK3F2RU84cllad3k0aS9CZkpZVEhPb0wvZkowK0NiNUhmb2ZIWjhPVUkw?=
- =?utf-8?B?OTJCeW9VeFY1dnY1L1doYzdoUkZFbTJDMGM0RkxkeVJyUTAyVXZwek5mRUN2?=
- =?utf-8?B?QVJHL3pyNzVqSmdRZ2JHTmI3b2tta2ZzZ1FrZlIrakpvRjNKaE1ydklNVjVM?=
- =?utf-8?B?bXZGblNybDU4bnF1UU5CTURmSjA5Y0VjaW5HUmJ1bnZDMFpVdUY3b3NsZk9I?=
- =?utf-8?B?L21ZWTR4RjNoc1c5K052S0dDQ1pWWlQ2ZU5ZZVdhUXl5WG1HSVJDNEVvYXlx?=
- =?utf-8?B?YmM0ZWRGaG9aRGRzRlVYUjRkQmtubHNYOHZ0c1VRM2lYbHJvalJHTUhFSkwr?=
- =?utf-8?B?SnlwVUNmWk9SNnc3UDRJd0Jma3NabFJtSFFCMjZFdWYrTFlvQ0FHbGxmNUw5?=
- =?utf-8?B?aFlyc2pCUXlpQUlMajZHanBNMHViSmlGY0FvSlp4ckc4Q2hFZz09?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5cbf46a5-4176-46be-8d7f-08db23da2e78
-X-MS-Exchange-CrossTenant-AuthSource: CO1PR10MB4531.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2023 15:46:59.8937
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0oUoUPlghWBxnjUGw3KDXnwvYR7msl38a4y9dNsmOp3or7uhKTusX5Wz/9dbHvSV96BgJuIPjGByRnL9EYInl0RRVN0jr7YHxJtjml8ldZs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB6296
+ <20230312181154.278900-2-sourabhjain@linux.ibm.com>
+From: Laurent Dufour <ldufour@linux.ibm.com>
+In-Reply-To: <20230312181154.278900-2-sourabhjain@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: Mfh-fOOz55VIWrT_2K_0_1vEo45tft9i
+X-Proofpoint-GUID: 4UZXnQnVyTjSzpwLbt9sNd8towLY1FZ-
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
  definitions=2023-03-13_07,2023-03-13_02,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 mlxscore=0
- mlxlogscore=999 suspectscore=0 adultscore=0 phishscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
- definitions=main-2303130122
-X-Proofpoint-GUID: LudCGicO7-QJTIcFumAolpctK8IwV6Gw
-X-Proofpoint-ORIG-GUID: LudCGicO7-QJTIcFumAolpctK8IwV6Gw
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 lowpriorityscore=0 adultscore=0 clxscore=1011
+ mlxlogscore=999 malwarescore=0 mlxscore=0 spamscore=0 phishscore=0
+ suspectscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2212070000 definitions=main-2303130125
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230313_084711_449852_CE698C98 
-X-CRM114-Status: GOOD (  31.58  )
+X-CRM114-CacheID: sfid-20230313_091855_212151_33F905BB 
+X-CRM114-Status: GOOD (  40.82  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -192,74 +107,426 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Cc: ldufour@linux.ibm.com, kexec@lists.infradead.org, bhe@redhat.com, hbathini@linux.ibm.com
+Cc: eric.devolder@oracle.com, kexec@lists.infradead.org, bhe@redhat.com, hbathini@linux.ibm.com
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On 12/03/2023 19:11:49, Sourabh Jain wrote:
+> Move update_cpus_node and get_crash_memory_ranges functions from
+> kexec/file_load.c to kexec/core_64.c to make these functions usable
+        file_load_64.c
+> by other kexec compoenets.
+                 components
+> 
+> Later in the series, these functions are utilized to do in-kernel update to
+> kexec segments on CPU/Memory hotplug events for both kexec_load and
+> kexec_file_load syscalls.
+> 
+> No functional change intended.
+>
 
+FWIW, despite the 2 minor typos above,
 
-On 3/12/23 13:11, Sourabh Jain wrote:
-> Due to CPU/Memory hotplug events the system resources changes. A similar
-> change should reflect in the loaded kdump kernel image that describes
-> the state of the CPU and memory of the running kernel.
-> 
-> If the kdump kernel image is not updated after the CPU or Memory hotplug
-> events and it tries to collect the dump with the stale system resource
-> data this might lead to dump collection failure or an inaccurate dump
-> collection.
-> 
-> The current method to keep the kdump kernel up to date is by triggering
-> reload (i.e unload and load) the entire kdump kernel image whenever a
-> CPU or Memory hotplug event is observed by udev in the userspace.
-> Reloading the complete kdump kernel image is an expensive task. It can
-> be easily avoided by doing the in-kernel updates to specific kdump
-> kernel image components which are responsible for describing CPU and
-> Memory resources of the running kernel to the kdump kernel.
-> 
-> The kernel changes related to in-kernel update to the kdump kernel image
-> on CPU/Memory hotplug events are kept under the CRASH_HOTPLUG config
-> option.
-> 
-> Later in the series, a powerpc crash hotplug handler is introduced to
-> update the kdump kernel image on CPU/Memory hotplug events. This arch
-> specific handler is trigger from a generic crash handler that registers
-> with the CPU and memory notifiers.
-> 
-> The CRASH_HOTPLUG config option is enabled by default.
-> 
+Reviewed-by: Laurent Dufour <laurent.dufour@fr.ibm.com>
+
 > Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
 > ---
->   arch/powerpc/Kconfig | 12 ++++++++++++
->   1 file changed, 12 insertions(+)
+>  arch/powerpc/include/asm/kexec.h  |   6 ++
+>  arch/powerpc/kexec/core_64.c      | 166 ++++++++++++++++++++++++++++++
+>  arch/powerpc/kexec/file_load_64.c | 162 -----------------------------
+>  3 files changed, 172 insertions(+), 162 deletions(-)
 > 
-> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> index a6c4407d3ec83..2f45b3f5175cb 100644
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -681,6 +681,18 @@ config CRASH_DUMP
->   	  The same kernel binary can be used as production kernel and dump
->   	  capture kernel.
->   
-> +config CRASH_HOTPLUG
-> +	bool "Update crash capture system on CPU/Memory hotplug event"
-Fwiw, online/offline changes also flow through this infrastructure...
-eric
+> diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
+> index a1ddba01e7d13..8090ad7d97d9d 100644
+> --- a/arch/powerpc/include/asm/kexec.h
+> +++ b/arch/powerpc/include/asm/kexec.h
+> @@ -99,6 +99,12 @@ void relocate_new_kernel(unsigned long indirection_page, unsigned long reboot_co
+>  
+>  void kexec_copy_flush(struct kimage *image);
+>  
+> +#ifdef CONFIG_PPC64
+> +struct crash_mem;
+> +int update_cpus_node(void *fdt);
+> +int get_crash_memory_ranges(struct crash_mem **mem_ranges);
+> +#endif
+> +
+>  #if defined(CONFIG_CRASH_DUMP) && defined(CONFIG_PPC_RTAS)
+>  void crash_free_reserved_phys_range(unsigned long begin, unsigned long end);
+>  #define crash_free_reserved_phys_range crash_free_reserved_phys_range
+> diff --git a/arch/powerpc/kexec/core_64.c b/arch/powerpc/kexec/core_64.c
+> index a79e28c91e2be..0b292f93a74cc 100644
+> --- a/arch/powerpc/kexec/core_64.c
+> +++ b/arch/powerpc/kexec/core_64.c
+> @@ -17,6 +17,8 @@
+>  #include <linux/cpu.h>
+>  #include <linux/hardirq.h>
+>  #include <linux/of.h>
+> +#include <linux/libfdt.h>
+> +#include <linux/memblock.h>
+>  
+>  #include <asm/page.h>
+>  #include <asm/current.h>
+> @@ -30,6 +32,8 @@
+>  #include <asm/hw_breakpoint.h>
+>  #include <asm/svm.h>
+>  #include <asm/ultravisor.h>
+> +#include <asm/kexec_ranges.h>
+> +#include <asm/crashdump-ppc64.h>
+>  
+>  int machine_kexec_prepare(struct kimage *image)
+>  {
+> @@ -377,6 +381,168 @@ void default_machine_kexec(struct kimage *image)
+>  	/* NOTREACHED */
+>  }
+>  
+> +/**
+> + * get_crash_memory_ranges - Get crash memory ranges. This list includes
+> + *                           first/crashing kernel's memory regions that
+> + *                           would be exported via an elfcore.
+> + * @mem_ranges:              Range list to add the memory ranges to.
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +int get_crash_memory_ranges(struct crash_mem **mem_ranges)
+> +{
+> +	phys_addr_t base, end;
+> +	struct crash_mem *tmem;
+> +	u64 i;
+> +	int ret;
+> +
+> +	for_each_mem_range(i, &base, &end) {
+> +		u64 size = end - base;
+> +
+> +		/* Skip backup memory region, which needs a separate entry */
+> +		if (base == BACKUP_SRC_START) {
+> +			if (size > BACKUP_SRC_SIZE) {
+> +				base = BACKUP_SRC_END + 1;
+> +				size -= BACKUP_SRC_SIZE;
+> +			} else
+> +				continue;
+> +		}
+> +
+> +		ret = add_mem_range(mem_ranges, base, size);
+> +		if (ret)
+> +			goto out;
+> +
+> +		/* Try merging adjacent ranges before reallocation attempt */
+> +		if ((*mem_ranges)->nr_ranges == (*mem_ranges)->max_nr_ranges)
+> +			sort_memory_ranges(*mem_ranges, true);
+> +	}
+> +
+> +	/* Reallocate memory ranges if there is no space to split ranges */
+> +	tmem = *mem_ranges;
+> +	if (tmem && (tmem->nr_ranges == tmem->max_nr_ranges)) {
+> +		tmem = realloc_mem_ranges(mem_ranges);
+> +		if (!tmem)
+> +			goto out;
+> +	}
+> +
+> +	/* Exclude crashkernel region */
+> +	ret = crash_exclude_mem_range(tmem, crashk_res.start, crashk_res.end);
+> +	if (ret)
+> +		goto out;
+> +
+> +	/*
+> +	 * FIXME: For now, stay in parity with kexec-tools but if RTAS/OPAL
+> +	 *        regions are exported to save their context at the time of
+> +	 *        crash, they should actually be backed up just like the
+> +	 *        first 64K bytes of memory.
+> +	 */
+> +	ret = add_rtas_mem_range(mem_ranges);
+> +	if (ret)
+> +		goto out;
+> +
+> +	ret = add_opal_mem_range(mem_ranges);
+> +	if (ret)
+> +		goto out;
+> +
+> +	/* create a separate program header for the backup region */
+> +	ret = add_mem_range(mem_ranges, BACKUP_SRC_START, BACKUP_SRC_SIZE);
+> +	if (ret)
+> +		goto out;
+> +
+> +	sort_memory_ranges(*mem_ranges, false);
+> +out:
+> +	if (ret)
+> +		pr_err("Failed to setup crash memory ranges\n");
+> +	return ret;
+> +}
+> +
+> +/**
+> + * add_node_props - Reads node properties from device node structure and add
+> + *                  them to fdt.
+> + * @fdt:            Flattened device tree of the kernel
+> + * @node_offset:    offset of the node to add a property at
+> + * @dn:             device node pointer
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +static int add_node_props(void *fdt, int node_offset, const struct device_node *dn)
+> +{
+> +	int ret = 0;
+> +	struct property *pp;
+> +
+> +	if (!dn)
+> +		return -EINVAL;
+> +
+> +	for_each_property_of_node(dn, pp) {
+> +		ret = fdt_setprop(fdt, node_offset, pp->name, pp->value, pp->length);
+> +		if (ret < 0) {
+> +			pr_err("Unable to add %s property: %s\n", pp->name, fdt_strerror(ret));
+> +			return ret;
+> +		}
+> +	}
+> +	return ret;
+> +}
+> +
+> +/**
+> + * update_cpus_node - Update cpus node of flattened device tree using of_root
+> + *                    device node.
+> + * @fdt:              Flattened device tree of the kernel.
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +int update_cpus_node(void *fdt)
+> +{
+> +	struct device_node *cpus_node, *dn;
+> +	int cpus_offset, cpus_subnode_offset, ret = 0;
+> +
+> +	cpus_offset = fdt_path_offset(fdt, "/cpus");
+> +	if (cpus_offset < 0 && cpus_offset != -FDT_ERR_NOTFOUND) {
+> +		pr_err("Malformed device tree: error reading /cpus node: %s\n",
+> +		       fdt_strerror(cpus_offset));
+> +		return cpus_offset;
+> +	}
+> +
+> +	if (cpus_offset > 0) {
+> +		ret = fdt_del_node(fdt, cpus_offset);
+> +		if (ret < 0) {
+> +			pr_err("Error deleting /cpus node: %s\n", fdt_strerror(ret));
+> +			return -EINVAL;
+> +		}
+> +	}
+> +
+> +	/* Add cpus node to fdt */
+> +	cpus_offset = fdt_add_subnode(fdt, fdt_path_offset(fdt, "/"), "cpus");
+> +	if (cpus_offset < 0) {
+> +		pr_err("Error creating /cpus node: %s\n", fdt_strerror(cpus_offset));
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Add cpus node properties */
+> +	cpus_node = of_find_node_by_path("/cpus");
+> +	ret = add_node_props(fdt, cpus_offset, cpus_node);
+> +	of_node_put(cpus_node);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* Loop through all subnodes of cpus and add them to fdt */
+> +	for_each_node_by_type(dn, "cpu") {
+> +		cpus_subnode_offset = fdt_add_subnode(fdt, cpus_offset, dn->full_name);
+> +		if (cpus_subnode_offset < 0) {
+> +			pr_err("Unable to add %s subnode: %s\n", dn->full_name,
+> +			       fdt_strerror(cpus_subnode_offset));
+> +			ret = cpus_subnode_offset;
+> +			goto out;
+> +		}
+> +
+> +		ret = add_node_props(fdt, cpus_subnode_offset, dn);
+> +		if (ret < 0)
+> +			goto out;
+> +	}
+> +out:
+> +	of_node_put(dn);
+> +	return ret;
+> +}
+> +
+>  #ifdef CONFIG_PPC_64S_HASH_MMU
+>  /* Values we need to export to the second kernel via the device tree. */
+>  static unsigned long htab_base;
+> diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
+> index 110d28bede2a7..5b0b3f61e0e72 100644
+> --- a/arch/powerpc/kexec/file_load_64.c
+> +++ b/arch/powerpc/kexec/file_load_64.c
+> @@ -133,81 +133,6 @@ static int get_usable_memory_ranges(struct crash_mem **mem_ranges)
+>  	return ret;
+>  }
+>  
+> -/**
+> - * get_crash_memory_ranges - Get crash memory ranges. This list includes
+> - *                           first/crashing kernel's memory regions that
+> - *                           would be exported via an elfcore.
+> - * @mem_ranges:              Range list to add the memory ranges to.
+> - *
+> - * Returns 0 on success, negative errno on error.
+> - */
+> -static int get_crash_memory_ranges(struct crash_mem **mem_ranges)
+> -{
+> -	phys_addr_t base, end;
+> -	struct crash_mem *tmem;
+> -	u64 i;
+> -	int ret;
+> -
+> -	for_each_mem_range(i, &base, &end) {
+> -		u64 size = end - base;
+> -
+> -		/* Skip backup memory region, which needs a separate entry */
+> -		if (base == BACKUP_SRC_START) {
+> -			if (size > BACKUP_SRC_SIZE) {
+> -				base = BACKUP_SRC_END + 1;
+> -				size -= BACKUP_SRC_SIZE;
+> -			} else
+> -				continue;
+> -		}
+> -
+> -		ret = add_mem_range(mem_ranges, base, size);
+> -		if (ret)
+> -			goto out;
+> -
+> -		/* Try merging adjacent ranges before reallocation attempt */
+> -		if ((*mem_ranges)->nr_ranges == (*mem_ranges)->max_nr_ranges)
+> -			sort_memory_ranges(*mem_ranges, true);
+> -	}
+> -
+> -	/* Reallocate memory ranges if there is no space to split ranges */
+> -	tmem = *mem_ranges;
+> -	if (tmem && (tmem->nr_ranges == tmem->max_nr_ranges)) {
+> -		tmem = realloc_mem_ranges(mem_ranges);
+> -		if (!tmem)
+> -			goto out;
+> -	}
+> -
+> -	/* Exclude crashkernel region */
+> -	ret = crash_exclude_mem_range(tmem, crashk_res.start, crashk_res.end);
+> -	if (ret)
+> -		goto out;
+> -
+> -	/*
+> -	 * FIXME: For now, stay in parity with kexec-tools but if RTAS/OPAL
+> -	 *        regions are exported to save their context at the time of
+> -	 *        crash, they should actually be backed up just like the
+> -	 *        first 64K bytes of memory.
+> -	 */
+> -	ret = add_rtas_mem_range(mem_ranges);
+> -	if (ret)
+> -		goto out;
+> -
+> -	ret = add_opal_mem_range(mem_ranges);
+> -	if (ret)
+> -		goto out;
+> -
+> -	/* create a separate program header for the backup region */
+> -	ret = add_mem_range(mem_ranges, BACKUP_SRC_START, BACKUP_SRC_SIZE);
+> -	if (ret)
+> -		goto out;
+> -
+> -	sort_memory_ranges(*mem_ranges, false);
+> -out:
+> -	if (ret)
+> -		pr_err("Failed to setup crash memory ranges\n");
+> -	return ret;
+> -}
+> -
+>  /**
+>   * get_reserved_memory_ranges - Get reserve memory ranges. This list includes
+>   *                              memory regions that should be added to the
+> @@ -1018,93 +943,6 @@ unsigned int kexec_extra_fdt_size_ppc64(struct kimage *image)
+>  	return extra_size;
+>  }
+>  
+> -/**
+> - * add_node_props - Reads node properties from device node structure and add
+> - *                  them to fdt.
+> - * @fdt:            Flattened device tree of the kernel
+> - * @node_offset:    offset of the node to add a property at
+> - * @dn:             device node pointer
+> - *
+> - * Returns 0 on success, negative errno on error.
+> - */
+> -static int add_node_props(void *fdt, int node_offset, const struct device_node *dn)
+> -{
+> -	int ret = 0;
+> -	struct property *pp;
+> -
+> -	if (!dn)
+> -		return -EINVAL;
+> -
+> -	for_each_property_of_node(dn, pp) {
+> -		ret = fdt_setprop(fdt, node_offset, pp->name, pp->value, pp->length);
+> -		if (ret < 0) {
+> -			pr_err("Unable to add %s property: %s\n", pp->name, fdt_strerror(ret));
+> -			return ret;
+> -		}
+> -	}
+> -	return ret;
+> -}
+> -
+> -/**
+> - * update_cpus_node - Update cpus node of flattened device tree using of_root
+> - *                    device node.
+> - * @fdt:              Flattened device tree of the kernel.
+> - *
+> - * Returns 0 on success, negative errno on error.
+> - */
+> -static int update_cpus_node(void *fdt)
+> -{
+> -	struct device_node *cpus_node, *dn;
+> -	int cpus_offset, cpus_subnode_offset, ret = 0;
+> -
+> -	cpus_offset = fdt_path_offset(fdt, "/cpus");
+> -	if (cpus_offset < 0 && cpus_offset != -FDT_ERR_NOTFOUND) {
+> -		pr_err("Malformed device tree: error reading /cpus node: %s\n",
+> -		       fdt_strerror(cpus_offset));
+> -		return cpus_offset;
+> -	}
+> -
+> -	if (cpus_offset > 0) {
+> -		ret = fdt_del_node(fdt, cpus_offset);
+> -		if (ret < 0) {
+> -			pr_err("Error deleting /cpus node: %s\n", fdt_strerror(ret));
+> -			return -EINVAL;
+> -		}
+> -	}
+> -
+> -	/* Add cpus node to fdt */
+> -	cpus_offset = fdt_add_subnode(fdt, fdt_path_offset(fdt, "/"), "cpus");
+> -	if (cpus_offset < 0) {
+> -		pr_err("Error creating /cpus node: %s\n", fdt_strerror(cpus_offset));
+> -		return -EINVAL;
+> -	}
+> -
+> -	/* Add cpus node properties */
+> -	cpus_node = of_find_node_by_path("/cpus");
+> -	ret = add_node_props(fdt, cpus_offset, cpus_node);
+> -	of_node_put(cpus_node);
+> -	if (ret < 0)
+> -		return ret;
+> -
+> -	/* Loop through all subnodes of cpus and add them to fdt */
+> -	for_each_node_by_type(dn, "cpu") {
+> -		cpus_subnode_offset = fdt_add_subnode(fdt, cpus_offset, dn->full_name);
+> -		if (cpus_subnode_offset < 0) {
+> -			pr_err("Unable to add %s subnode: %s\n", dn->full_name,
+> -			       fdt_strerror(cpus_subnode_offset));
+> -			ret = cpus_subnode_offset;
+> -			goto out;
+> -		}
+> -
+> -		ret = add_node_props(fdt, cpus_subnode_offset, dn);
+> -		if (ret < 0)
+> -			goto out;
+> -	}
+> -out:
+> -	of_node_put(dn);
+> -	return ret;
+> -}
+> -
+>  static int copy_property(void *fdt, int node_offset, const struct device_node *dn,
+>  			 const char *propname)
+>  {
 
-> +	default y
-> +	depends on CRASH_DUMP && (HOTPLUG_CPU || MEMORY_HOTPLUG)
-> +	help
-> +	  In kernel update to relevant kexec segments due to change
-> +	  in the system configuration, rather reloading all the kexec
-> +	  segments again from userspace by monitoring CPU/Memory
-> +	  hotplug events in the userspace using udev.
-> +
-> +	  If unsure, say N.
-> +
->   config FA_DUMP
->   	bool "Firmware-assisted dump"
->   	depends on PPC64 && (PPC_RTAS || PPC_POWERNV)
 
 _______________________________________________
 kexec mailing list
