@@ -4,99 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C8735C74A44
-	for <kexec@archiver.kernel.org>; Tue, 14 Mar 2023 05:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 86F95C74A44
+	for <kexec@archiver.kernel.org>; Tue, 14 Mar 2023 05:18:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:Cc:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:To:Subject:MIME-Version:
-	Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=IAWZYmj1KAtmCZhkwJXhlVBWYSajx9lkEVlWJHBmOos=; b=j4Fh4rz2d/V/bdqrnLFRfJUI1D
-	26hirPLmX8GX5JRz95/0xPEQYfyxLSkTFDr9ZnASYUBsslyfjP0L50f24U4SlINAlUrZnJGFS1QCu
-	6CIxfKa+mSi8CcFEjw80lhQXNkrDUpDVh8dacX8Hf3zOQudQ7D/sZCyMlPMs+c0zq02dRtfmDow0m
-	IN4jU/p/DuXJmgKw2A+eR3acKt+5xkTLv6vgCZOYc8fuoWdW61NEvRUwEsusS+9ByQ1U9zM2u9rbp
-	Q7rWmwkH6m0TeqU2EOhalBUcZWHbASJfJBr9NfGMyR5fqX1ZDb/DazJYo3wJtXBRVp+R2FMtxPKhG
-	TEdrVrIQ==;
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=BcepqaxBwxASOmJ2StcxME2dm3iuE/6htJFbbJWYlj4=; b=RdxDzbcCSh+4Fu
+	20D2UGM1mMXoYUAKLNPbF7Kct1nr36qzK+mU/e7OEwdS4Q/blifTUqYQsBcOZfg9+62SktIE7Vskf
+	OChaHaC7wvgaP5pYNtXqEuA/G620evvWC7CSrwoJsE8JMOUfN/vjMXZvcmr/VfUMcQw7Rsuu80TTg
+	KumMpnLDZq/hqblZguhMs12nvIh1EMAEjFiIENXHlXkuy3PfJpaZUR6esb2kNNKBI95jo9rr9db9c
+	XwyjE/UkM3GJhpWLi3Cu/BZ52GdWU11prLsDQQe88SqVDh7torRJ8885jydhpMM2iQqBSK3S4vQqZ
+	nnnJ4J5+YE6cD1Heqvpw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pbwmw-0090wm-7D; Tue, 14 Mar 2023 05:01:30 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5] helo=mx0a-001b2d01.pphosted.com)
+	id 1pbx35-0093BT-VY; Tue, 14 Mar 2023 05:18:12 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pbwmm-0090vN-V5
-	for kexec@lists.infradead.org; Tue, 14 Mar 2023 05:01:28 +0000
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-	by mx0b-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32E4N4gn031612;
-	Tue, 14 Mar 2023 05:01:14 GMT
+	id 1pbx32-0093Ag-QF
+	for kexec@lists.infradead.org; Tue, 14 Mar 2023 05:18:10 +0000
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32E4rVEM025005;
+	Tue, 14 Mar 2023 05:18:05 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
  mime-version : subject : to : cc : references : from : in-reply-to :
  content-type : content-transfer-encoding; s=pp1;
- bh=LzJoRwQrgNLlBUeq8375AoNBf9REiCPzOBqQbKKZURA=;
- b=Zg3I94MNaH3GBs9UT1G5o2BwCQnjKXx911DGwOpP4Uan93KcQUwobnkluekdxxiGKOjF
- Rj4urrKEYnalEuzOHo5UrV41541OlknWqA0pnXh6n+dYrGkQ+DEMlqXdFa0UuXQIHZB0
- ULpgXAt3OAI/LXQDIR407uAS3CfWW6QevCFV/F3WLqaXEs1mWhv6Xm+TT2FCMO+5Tnwd
- v8lupvrKlfINDK/dbZBewLcqkC5lpUPKIeY/BnD286pO37N3wQUJI4d1w2punq3tFopm
- 93gYgZPkkXa/UC69wO+E5uxBp8MoI8DDsnDys3fvm8n6nwNDNmxtkG+bEopchRUNyQ65 ug== 
+ bh=0WKVQyVGQODDklV07F2FGkZYK48+pG1wbX0r3JV6WcA=;
+ b=FkSxB75aiQT9z2rewsJlxDMs46xNBIw6PiqcM0Q4ZrRm9IAz3mYdZkVjT3/wymO86lbp
+ x9JrovNWgvpQmupIVhTHjaDu9oYCShTui2fzCj6c33opm8wVzjxtATV6nN5RXG4Zgzdx
+ AZpdQTSFk7PiDuhqqb5Efv0JfPNrxgGACknfUe///oSkW4aHaWdjUTM69HcoHKwn7STE
+ dt+oPyRqnz6HA9gDMmKMgV2PnplpfcBxTN3Qyvi+kE3bht3cKD0A15GT4dl5oqhNLquk
+ dUbdS04+rv2Ms9WtxOCsFvfkGNIZCvjLZq+AsRnOddgKU3ZcjngT01KarjnGdjksP1NL UA== 
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3pahus0nvm-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3paj9sgf51-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 Mar 2023 05:01:13 +0000
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 32E50pX7000543;
-	Tue, 14 Mar 2023 05:01:13 GMT
+	Tue, 14 Mar 2023 05:18:04 +0000
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 32E4tImC000995;
+	Tue, 14 Mar 2023 05:18:04 GMT
 Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-	by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3pahus0nux-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3paj9sgf4j-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 Mar 2023 05:01:12 +0000
+	Tue, 14 Mar 2023 05:18:04 +0000
 Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-	by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 32DEIDkC000962;
-	Tue, 14 Mar 2023 05:01:11 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3p8h96m7xg-1
+	by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 32DEospZ001011;
+	Tue, 14 Mar 2023 05:18:02 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3p8h96m8e3-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 Mar 2023 05:01:11 +0000
+	Tue, 14 Mar 2023 05:18:02 +0000
 Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 32E517Ys32637346
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 32E5Hw7V22217428
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 14 Mar 2023 05:01:07 GMT
+	Tue, 14 Mar 2023 05:17:58 GMT
 Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 290932004F;
-	Tue, 14 Mar 2023 05:01:07 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id B47B22004D;
+	Tue, 14 Mar 2023 05:17:58 +0000 (GMT)
 Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5C2AF20043;
-	Tue, 14 Mar 2023 05:01:05 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 19BF820063;
+	Tue, 14 Mar 2023 05:17:57 +0000 (GMT)
 Received: from [9.43.46.246] (unknown [9.43.46.246])
 	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 14 Mar 2023 05:01:05 +0000 (GMT)
-Message-ID: <7eeea00d-78d6-c35c-f94c-f3ad73bcb509@linux.ibm.com>
-Date: Tue, 14 Mar 2023 10:31:04 +0530
+	Tue, 14 Mar 2023 05:17:56 +0000 (GMT)
+Message-ID: <9fdde88b-13e7-bf3e-d417-5479a60acb6a@linux.ibm.com>
+Date: Tue, 14 Mar 2023 10:47:56 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-Subject: Re: [PATCH v9 3/6] powerpc/crash: add a new member to the kimage_arch
- struct
+Subject: Re: [PATCH v9 2/6] powerpc/crash: introduce a new config option
+ CRASH_HOTPLUG
 Content-Language: en-US
-To: Laurent Dufour <ldufour@linux.ibm.com>, linuxppc-dev@ozlabs.org,
+To: Eric DeVolder <eric.devolder@oracle.com>, linuxppc-dev@ozlabs.org,
         mpe@ellerman.id.au
+Cc: ldufour@linux.ibm.com, kexec@lists.infradead.org, bhe@redhat.com,
+        hbathini@linux.ibm.com
 References: <20230312181154.278900-1-sourabhjain@linux.ibm.com>
- <20230312181154.278900-4-sourabhjain@linux.ibm.com>
- <5093127d-0199-2ef5-8a10-f293d54f3d90@linux.ibm.com>
+ <20230312181154.278900-3-sourabhjain@linux.ibm.com>
+ <0269c298-d53c-7ad7-c718-3dbc1e225d0d@oracle.com>
 From: Sourabh Jain <sourabhjain@linux.ibm.com>
-In-Reply-To: <5093127d-0199-2ef5-8a10-f293d54f3d90@linux.ibm.com>
+In-Reply-To: <0269c298-d53c-7ad7-c718-3dbc1e225d0d@oracle.com>
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Yt88Ncwu4e7nCa-cWwXX7Jr86_E78iGN
-X-Proofpoint-ORIG-GUID: B2bLUMkO7PMIebrngwIPHDMWtmhjKfwV
+X-Proofpoint-GUID: DIr4LSZphKBCPpVXY24IvfRd6lF0k8US
+X-Proofpoint-ORIG-GUID: OE5sumqNusd_JMJYzIhOSB3zVxFcF7m8
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
  definitions=2023-03-13_13,2023-03-13_03,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 suspectscore=0 clxscore=1015 mlxlogscore=999 impostorscore=0
- spamscore=0 mlxscore=0 adultscore=0 bulkscore=0 malwarescore=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
+ clxscore=1015 malwarescore=0 suspectscore=0 impostorscore=0 adultscore=0
+ mlxlogscore=999 spamscore=0 bulkscore=0 lowpriorityscore=0
  priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2303140040
+ engine=8.12.0-2212070000 definitions=main-2303140044
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230313_220124_130854_08735B65 
-X-CRM114-Status: GOOD (  32.15  )
+X-CRM114-CacheID: sfid-20230313_221808_992186_66C2EF23 
+X-CRM114-Status: GOOD (  26.89  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -108,126 +110,51 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Cc: eric.devolder@oracle.com, kexec@lists.infradead.org, bhe@redhat.com, hbathini@linux.ibm.com
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-
-On 13/03/23 21:55, Laurent Dufour wrote:
-> On 12/03/2023 19:11:51, Sourabh Jain wrote:
->> A new member "fdt_index" is added to the kimage_arch struct to hold
->> the index of the FDT (Flattened Device Tree) segment from the kexec
->> the segment array.
->>
->> fdt_index will provide direct access to the FDT segment in the kexec
->> segment array after the kdump kernel is loaded.
->>
->> The new attribute will be used in the arch crash hotplug handler
->> (added in upcoming patches) on every CPU and memory hotplug event.
->>
->> The fdt_index is populated for both kexec_load and kexec_file_load
->> case.
->>
->> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
->> ---
->>   arch/powerpc/include/asm/kexec.h |  5 +++++
->>   arch/powerpc/kexec/core_64.c     | 31 +++++++++++++++++++++++++++++++
->>   2 files changed, 36 insertions(+)
->>
->> diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
->> index 8090ad7d97d9d..348eb96e8ca67 100644
->> --- a/arch/powerpc/include/asm/kexec.h
->> +++ b/arch/powerpc/include/asm/kexec.h
->> @@ -103,6 +103,8 @@ void kexec_copy_flush(struct kimage *image);
->>   struct crash_mem;
->>   int update_cpus_node(void *fdt);
->>   int get_crash_memory_ranges(struct crash_mem **mem_ranges);
->> +int machine_kexec_post_load(struct kimage *image);
->> +#define machine_kexec_post_load machine_kexec_post_load
-> Minor comment, when CONFIG_CRASH_HOTPLUG is not set the function is simply
-> returning 0, why not defining it has an inline in that case?
-
-We can, but if the initialization of fdt_index is taken care during the 
-allocation
-of kimage struct, I will move the fdt_index discovery logic to arch crash
-hotplug handler. More on fdt_index initialization in the next comment.
-
-
->>   #endif
->>   
->>   #if defined(CONFIG_CRASH_DUMP) && defined(CONFIG_PPC_RTAS)
->> @@ -118,6 +120,9 @@ extern const struct kexec_file_ops kexec_elf64_ops;
->>   struct kimage_arch {
->>   	struct crash_mem *exclude_ranges;
->>   
->> +#if defined(CONFIG_CRASH_HOTPLUG)
->> +	int fdt_index;
->> +#endif
->>   	unsigned long backup_start;
->>   	void *backup_buf;
->>   	void *fdt;
->> diff --git a/arch/powerpc/kexec/core_64.c b/arch/powerpc/kexec/core_64.c
->> index 0b292f93a74cc..531486c973988 100644
->> --- a/arch/powerpc/kexec/core_64.c
->> +++ b/arch/powerpc/kexec/core_64.c
->> @@ -77,6 +77,37 @@ int machine_kexec_prepare(struct kimage *image)
->>   	return 0;
->>   }
->>   
->> +int machine_kexec_post_load(struct kimage *kimage)
->> +{
->> +#if defined(CONFIG_CRASH_HOTPLUG)
->> +	int i;
->> +	void *ptr;
->> +	unsigned long mem;
->> +
->> +	/* Mark fdt_index invalid */
->> +	kimage->arch.fdt_index = -1;
-> Why is that not done in the series introducing the generic
-> crash hotplug update, in do_kimage_alloc_init() ?
-
-do_kimage_alloc_init is a generic function where as fdt_index is a ppc 
-specific
-attribute. If fdt_index is initialized in do_kimage_alloc_init then 
-other architectures
-will have build issues.
-
-> This way there is a guarantee that the field will not be used while set by
-> default to 0.
-
-I agree that until the kernel hits the machine_kexec_post_load function 
-on the
-kdump kernel load path there is no way to identify the fdt_index is holding
-a valid index or not.
-
-Since there is no consumer of kimage's fdt_index attribute from the 
-point of its
-allocation to until it is initialized, we don't have any impact of 
-fdt_index holding
-value 0 (which is not valid) for sometime.
-
-But still we can do few things to allow fdt_index attribute consumers to 
-check
-the sanity of fdt_index.
-
-1. Introduce arch specific function call to initialize kimage_arch 
-struct (basically fdt_index for now).
-and call it inside do_kimage_alloc_init and initialize the fdt_index 
-with -1 there.
-
-2. Add another attribute in kimage_arch struct to indicate the sanity of the
-fdt_index attribute. For example fdt_index_valid, if this holds zero then
-the fdt_index holds invalid index. (looks inefficient to me)
-
-Not sure is it worth doing but please let me know your opinion.
-
-Thanks,
-Sourabh Jain
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+Ck9uIDEzLzAzLzIzIDIxOjE2LCBFcmljIERlVm9sZGVyIHdyb3RlOgo+Cj4KPiBPbiAzLzEyLzIz
+IDEzOjExLCBTb3VyYWJoIEphaW4gd3JvdGU6Cj4+IER1ZSB0byBDUFUvTWVtb3J5IGhvdHBsdWcg
+ZXZlbnRzIHRoZSBzeXN0ZW0gcmVzb3VyY2VzIGNoYW5nZXMuIEEgc2ltaWxhcgo+PiBjaGFuZ2Ug
+c2hvdWxkIHJlZmxlY3QgaW4gdGhlIGxvYWRlZCBrZHVtcCBrZXJuZWwgaW1hZ2UgdGhhdCBkZXNj
+cmliZXMKPj4gdGhlIHN0YXRlIG9mIHRoZSBDUFUgYW5kIG1lbW9yeSBvZiB0aGUgcnVubmluZyBr
+ZXJuZWwuCj4+Cj4+IElmIHRoZSBrZHVtcCBrZXJuZWwgaW1hZ2UgaXMgbm90IHVwZGF0ZWQgYWZ0
+ZXIgdGhlIENQVSBvciBNZW1vcnkgaG90cGx1Zwo+PiBldmVudHMgYW5kIGl0IHRyaWVzIHRvIGNv
+bGxlY3QgdGhlIGR1bXAgd2l0aCB0aGUgc3RhbGUgc3lzdGVtIHJlc291cmNlCj4+IGRhdGEgdGhp
+cyBtaWdodCBsZWFkIHRvIGR1bXAgY29sbGVjdGlvbiBmYWlsdXJlIG9yIGFuIGluYWNjdXJhdGUg
+ZHVtcAo+PiBjb2xsZWN0aW9uLgo+Pgo+PiBUaGUgY3VycmVudCBtZXRob2QgdG8ga2VlcCB0aGUg
+a2R1bXAga2VybmVsIHVwIHRvIGRhdGUgaXMgYnkgdHJpZ2dlcmluZwo+PiByZWxvYWQgKGkuZSB1
+bmxvYWQgYW5kIGxvYWQpIHRoZSBlbnRpcmUga2R1bXAga2VybmVsIGltYWdlIHdoZW5ldmVyIGEK
+Pj4gQ1BVIG9yIE1lbW9yeSBob3RwbHVnIGV2ZW50IGlzIG9ic2VydmVkIGJ5IHVkZXYgaW4gdGhl
+IHVzZXJzcGFjZS4KPj4gUmVsb2FkaW5nIHRoZSBjb21wbGV0ZSBrZHVtcCBrZXJuZWwgaW1hZ2Ug
+aXMgYW4gZXhwZW5zaXZlIHRhc2suIEl0IGNhbgo+PiBiZSBlYXNpbHkgYXZvaWRlZCBieSBkb2lu
+ZyB0aGUgaW4ta2VybmVsIHVwZGF0ZXMgdG8gc3BlY2lmaWMga2R1bXAKPj4ga2VybmVsIGltYWdl
+IGNvbXBvbmVudHMgd2hpY2ggYXJlIHJlc3BvbnNpYmxlIGZvciBkZXNjcmliaW5nIENQVSBhbmQK
+Pj4gTWVtb3J5IHJlc291cmNlcyBvZiB0aGUgcnVubmluZyBrZXJuZWwgdG8gdGhlIGtkdW1wIGtl
+cm5lbC4KPj4KPj4gVGhlIGtlcm5lbCBjaGFuZ2VzIHJlbGF0ZWQgdG8gaW4ta2VybmVsIHVwZGF0
+ZSB0byB0aGUga2R1bXAga2VybmVsIGltYWdlCj4+IG9uIENQVS9NZW1vcnkgaG90cGx1ZyBldmVu
+dHMgYXJlIGtlcHQgdW5kZXIgdGhlIENSQVNIX0hPVFBMVUcgY29uZmlnCj4+IG9wdGlvbi4KPj4K
+Pj4gTGF0ZXIgaW4gdGhlIHNlcmllcywgYSBwb3dlcnBjIGNyYXNoIGhvdHBsdWcgaGFuZGxlciBp
+cyBpbnRyb2R1Y2VkIHRvCj4+IHVwZGF0ZSB0aGUga2R1bXAga2VybmVsIGltYWdlIG9uIENQVS9N
+ZW1vcnkgaG90cGx1ZyBldmVudHMuIFRoaXMgYXJjaAo+PiBzcGVjaWZpYyBoYW5kbGVyIGlzIHRy
+aWdnZXIgZnJvbSBhIGdlbmVyaWMgY3Jhc2ggaGFuZGxlciB0aGF0IHJlZ2lzdGVycwo+PiB3aXRo
+IHRoZSBDUFUgYW5kIG1lbW9yeSBub3RpZmllcnMuCj4+Cj4+IFRoZSBDUkFTSF9IT1RQTFVHIGNv
+bmZpZyBvcHRpb24gaXMgZW5hYmxlZCBieSBkZWZhdWx0Lgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBT
+b3VyYWJoIEphaW4gPHNvdXJhYmhqYWluQGxpbnV4LmlibS5jb20+Cj4+IC0tLQo+PiDCoCBhcmNo
+L3Bvd2VycGMvS2NvbmZpZyB8IDEyICsrKysrKysrKysrKwo+PiDCoCAxIGZpbGUgY2hhbmdlZCwg
+MTIgaW5zZXJ0aW9ucygrKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL0tjb25maWcg
+Yi9hcmNoL3Bvd2VycGMvS2NvbmZpZwo+PiBpbmRleCBhNmM0NDA3ZDNlYzgzLi4yZjQ1YjNmNTE3
+NWNiIDEwMDY0NAo+PiAtLS0gYS9hcmNoL3Bvd2VycGMvS2NvbmZpZwo+PiArKysgYi9hcmNoL3Bv
+d2VycGMvS2NvbmZpZwo+PiBAQCAtNjgxLDYgKzY4MSwxOCBAQCBjb25maWcgQ1JBU0hfRFVNUAo+
+PiDCoMKgwqDCoMKgwqDCoCBUaGUgc2FtZSBrZXJuZWwgYmluYXJ5IGNhbiBiZSB1c2VkIGFzIHBy
+b2R1Y3Rpb24ga2VybmVsIGFuZCBkdW1wCj4+IMKgwqDCoMKgwqDCoMKgIGNhcHR1cmUga2VybmVs
+Lgo+PiDCoCArY29uZmlnIENSQVNIX0hPVFBMVUcKPj4gK8KgwqDCoCBib29sICJVcGRhdGUgY3Jh
+c2ggY2FwdHVyZSBzeXN0ZW0gb24gQ1BVL01lbW9yeSBob3RwbHVnIGV2ZW50Igo+IEZ3aXcsIG9u
+bGluZS9vZmZsaW5lIGNoYW5nZXMgYWxzbyBmbG93IHRocm91Z2ggdGhpcyBpbmZyYXN0cnVjdHVy
+ZS4uLgo+IGVyaWMKWWVzIEkgd2lsbCB1cGRhdGUgdGhlIENPTkZJRyBzdW1tYXJ5IGFuZCBjb21t
+aXQgbWVzc2FnZSB0byBjb252ZXkKdGhlIHNhbWUuCgpUaGFua3MgZm9yIHRoZSByZXZpZXcuCgpU
+aGFua3MsClNvdXJhYmggSmFpbgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcK
+aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
