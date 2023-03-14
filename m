@@ -4,99 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D5D8FC74A44
-	for <kexec@archiver.kernel.org>; Tue, 14 Mar 2023 03:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C8735C74A44
+	for <kexec@archiver.kernel.org>; Tue, 14 Mar 2023 05:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
 	Content-Transfer-Encoding:Cc:List-Subscribe:List-Help:List-Post:List-Archive:
 	List-Unsubscribe:List-Id:In-Reply-To:From:References:To:Subject:MIME-Version:
 	Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=f2EClvdr+7XrTusk4jMZQ8A0hBB7yEA3PX87585ad7w=; b=etsZPS3qBuKbHb5+U5F/+hQyiS
-	cbD3EqmCARQ/hN3oaldhYxv9hiW048g3oSyvGzHNPAQl/VUUhIpU5iRaaIvdZVljaZOnuFq/f9nss
-	hzWcMmhyDfmD6DbxLmglxVcLw3CPeNmN7EhZaHRUWyOa3jbiJegnX6VXRgs/A7eMWzd4N2OW1zMcv
-	9n6HrJjW5e4fM4fOoFp9oLYW1WwN/6ySNyl/7FN0NJcfrbFcR5s6Dpo2xljP45RfTp9IP0xu/4SmS
-	Jisg7VyItmKBVCY0uoL9l7M/reRC+KtGblfQ/M8wdxS3/jiFzTNpjNGA74XO3sVhdLkKKW7O6xUyf
-	E+2nPuiw==;
+	bh=IAWZYmj1KAtmCZhkwJXhlVBWYSajx9lkEVlWJHBmOos=; b=j4Fh4rz2d/V/bdqrnLFRfJUI1D
+	26hirPLmX8GX5JRz95/0xPEQYfyxLSkTFDr9ZnASYUBsslyfjP0L50f24U4SlINAlUrZnJGFS1QCu
+	6CIxfKa+mSi8CcFEjw80lhQXNkrDUpDVh8dacX8Hf3zOQudQ7D/sZCyMlPMs+c0zq02dRtfmDow0m
+	IN4jU/p/DuXJmgKw2A+eR3acKt+5xkTLv6vgCZOYc8fuoWdW61NEvRUwEsusS+9ByQ1U9zM2u9rbp
+	Q7rWmwkH6m0TeqU2EOhalBUcZWHbASJfJBr9NfGMyR5fqX1ZDb/DazJYo3wJtXBRVp+R2FMtxPKhG
+	TEdrVrIQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pbvXQ-008t2M-5f; Tue, 14 Mar 2023 03:41:24 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1pbwmw-0090wm-7D; Tue, 14 Mar 2023 05:01:30 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5] helo=mx0a-001b2d01.pphosted.com)
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1pbvXN-008t1N-BD
-	for kexec@lists.infradead.org; Tue, 14 Mar 2023 03:41:22 +0000
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32E343ij005828;
-	Tue, 14 Mar 2023 03:41:17 GMT
+	id 1pbwmm-0090vN-V5
+	for kexec@lists.infradead.org; Tue, 14 Mar 2023 05:01:28 +0000
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+	by mx0b-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32E4N4gn031612;
+	Tue, 14 Mar 2023 05:01:14 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
  mime-version : subject : to : cc : references : from : in-reply-to :
  content-type : content-transfer-encoding; s=pp1;
- bh=uC0i3aIc5pNy8rUQRZEFwP4DxuhfYhk4PNWqfvt4n1Y=;
- b=WC1J57b22YYQQvJaj8KS0jspcfNbdvHw2hvVlnqxZ+FBMUXsAMSvRUd0SuKfFNzduyIs
- QNFq3bjyiEaoWz2RfkIY+YsyJCOhbrv2HwjpPNxSF/oqUlXsEgmhYXitms89ig79XbPS
- mX6xToWfFBgEKhNhd55CBBGn4E6Yj15V/jVZzTLf+mCzjVibYU/Ha11m4jRiRvuErflC
- UkWvy9bCFvLKYehsZuxGyRVFyDW134AFlNlBgI+bT0j6ywHt21IDWlWzRQMhTZGLKTUy
- vg8LD0AbenqCO+TDRkczuP//OumskGs0CvqU/y/IP/vxB9wErPaI6mTi87+/optDBZc9 4g== 
+ bh=LzJoRwQrgNLlBUeq8375AoNBf9REiCPzOBqQbKKZURA=;
+ b=Zg3I94MNaH3GBs9UT1G5o2BwCQnjKXx911DGwOpP4Uan93KcQUwobnkluekdxxiGKOjF
+ Rj4urrKEYnalEuzOHo5UrV41541OlknWqA0pnXh6n+dYrGkQ+DEMlqXdFa0UuXQIHZB0
+ ULpgXAt3OAI/LXQDIR407uAS3CfWW6QevCFV/F3WLqaXEs1mWhv6Xm+TT2FCMO+5Tnwd
+ v8lupvrKlfINDK/dbZBewLcqkC5lpUPKIeY/BnD286pO37N3wQUJI4d1w2punq3tFopm
+ 93gYgZPkkXa/UC69wO+E5uxBp8MoI8DDsnDys3fvm8n6nwNDNmxtkG+bEopchRUNyQ65 ug== 
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3pae0s43t4-1
+	by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3pahus0nvm-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 Mar 2023 03:41:17 +0000
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 32E3FiuC021291;
-	Tue, 14 Mar 2023 03:41:16 GMT
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3pae0s43sj-1
+	Tue, 14 Mar 2023 05:01:13 +0000
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 32E50pX7000543;
+	Tue, 14 Mar 2023 05:01:13 GMT
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+	by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3pahus0nux-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 Mar 2023 03:41:16 +0000
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-	by ppma01fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 32DCSxpI018985;
-	Tue, 14 Mar 2023 03:41:14 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma01fra.de.ibm.com (PPS) with ESMTPS id 3p8h96k9jg-1
+	Tue, 14 Mar 2023 05:01:12 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+	by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 32DEIDkC000962;
+	Tue, 14 Mar 2023 05:01:11 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3p8h96m7xg-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 14 Mar 2023 03:41:14 +0000
+	Tue, 14 Mar 2023 05:01:11 +0000
 Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 32E3f6cA27853424
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 32E517Ys32637346
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 14 Mar 2023 03:41:06 GMT
+	Tue, 14 Mar 2023 05:01:07 GMT
 Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 81BC22004B;
-	Tue, 14 Mar 2023 03:41:06 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 290932004F;
+	Tue, 14 Mar 2023 05:01:07 +0000 (GMT)
 Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DA26B20043;
-	Tue, 14 Mar 2023 03:41:04 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 5C2AF20043;
+	Tue, 14 Mar 2023 05:01:05 +0000 (GMT)
 Received: from [9.43.46.246] (unknown [9.43.46.246])
 	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 14 Mar 2023 03:41:04 +0000 (GMT)
-Message-ID: <3eccc879-40bc-3748-f672-4209ee98df4c@linux.ibm.com>
-Date: Tue, 14 Mar 2023 09:11:04 +0530
+	Tue, 14 Mar 2023 05:01:05 +0000 (GMT)
+Message-ID: <7eeea00d-78d6-c35c-f94c-f3ad73bcb509@linux.ibm.com>
+Date: Tue, 14 Mar 2023 10:31:04 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-Subject: Re: [PATCH v9 1/6] powerpc/kexec: turn some static helper functions
- public
+Subject: Re: [PATCH v9 3/6] powerpc/crash: add a new member to the kimage_arch
+ struct
 Content-Language: en-US
 To: Laurent Dufour <ldufour@linux.ibm.com>, linuxppc-dev@ozlabs.org,
         mpe@ellerman.id.au
 References: <20230312181154.278900-1-sourabhjain@linux.ibm.com>
- <20230312181154.278900-2-sourabhjain@linux.ibm.com>
- <d2346e25-56f0-f198-43cd-efdf73321f09@linux.ibm.com>
+ <20230312181154.278900-4-sourabhjain@linux.ibm.com>
+ <5093127d-0199-2ef5-8a10-f293d54f3d90@linux.ibm.com>
 From: Sourabh Jain <sourabhjain@linux.ibm.com>
-In-Reply-To: <d2346e25-56f0-f198-43cd-efdf73321f09@linux.ibm.com>
+In-Reply-To: <5093127d-0199-2ef5-8a10-f293d54f3d90@linux.ibm.com>
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: kg453B1STxgjAFxBphwmbXL36DywFmDA
-X-Proofpoint-GUID: dzOgKhiCF8MDhzTxzZ54Kqk5CGrFXdOS
+X-Proofpoint-GUID: Yt88Ncwu4e7nCa-cWwXX7Jr86_E78iGN
+X-Proofpoint-ORIG-GUID: B2bLUMkO7PMIebrngwIPHDMWtmhjKfwV
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
  definitions=2023-03-13_13,2023-03-13_03,2023-02-09_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 mlxlogscore=999 priorityscore=1501 mlxscore=0 adultscore=0
- clxscore=1015 bulkscore=0 spamscore=0 malwarescore=0 impostorscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2303140030
+ phishscore=0 suspectscore=0 clxscore=1015 mlxlogscore=999 impostorscore=0
+ spamscore=0 mlxscore=0 adultscore=0 bulkscore=0 malwarescore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2303140040
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230313_204121_424178_E709F505 
-X-CRM114-Status: GOOD (  15.20  )
+X-CRM114-CacheID: sfid-20230313_220124_130854_08735B65 
+X-CRM114-Status: GOOD (  32.15  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -115,26 +115,117 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 
-On 13/03/23 21:48, Laurent Dufour wrote:
-> On 12/03/2023 19:11:49, Sourabh Jain wrote:
->> Move update_cpus_node and get_crash_memory_ranges functions from
->> kexec/file_load.c to kexec/core_64.c to make these functions usable
->          file_load_64.c
->> by other kexec compoenets.
->                   components]
-Thanks for points it out. I will fix them in next version.
->> Later in the series, these functions are utilized to do in-kernel update to
->> kexec segments on CPU/Memory hotplug events for both kexec_load and
->> kexec_file_load syscalls.
+On 13/03/23 21:55, Laurent Dufour wrote:
+> On 12/03/2023 19:11:51, Sourabh Jain wrote:
+>> A new member "fdt_index" is added to the kimage_arch struct to hold
+>> the index of the FDT (Flattened Device Tree) segment from the kexec
+>> the segment array.
 >>
->> No functional change intended.
+>> fdt_index will provide direct access to the FDT segment in the kexec
+>> segment array after the kdump kernel is loaded.
 >>
-> FWIW, despite the 2 minor typos above,
->
-> Reviewed-by: Laurent Dufour <laurent.dufour@fr.ibm.com>
-Thanks for the review Laurent.
+>> The new attribute will be used in the arch crash hotplug handler
+>> (added in upcoming patches) on every CPU and memory hotplug event.
+>>
+>> The fdt_index is populated for both kexec_load and kexec_file_load
+>> case.
+>>
+>> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+>> ---
+>>   arch/powerpc/include/asm/kexec.h |  5 +++++
+>>   arch/powerpc/kexec/core_64.c     | 31 +++++++++++++++++++++++++++++++
+>>   2 files changed, 36 insertions(+)
+>>
+>> diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
+>> index 8090ad7d97d9d..348eb96e8ca67 100644
+>> --- a/arch/powerpc/include/asm/kexec.h
+>> +++ b/arch/powerpc/include/asm/kexec.h
+>> @@ -103,6 +103,8 @@ void kexec_copy_flush(struct kimage *image);
+>>   struct crash_mem;
+>>   int update_cpus_node(void *fdt);
+>>   int get_crash_memory_ranges(struct crash_mem **mem_ranges);
+>> +int machine_kexec_post_load(struct kimage *image);
+>> +#define machine_kexec_post_load machine_kexec_post_load
+> Minor comment, when CONFIG_CRASH_HOTPLUG is not set the function is simply
+> returning 0, why not defining it has an inline in that case?
 
-- Sourabh Jain
+We can, but if the initialization of fdt_index is taken care during the 
+allocation
+of kimage struct, I will move the fdt_index discovery logic to arch crash
+hotplug handler. More on fdt_index initialization in the next comment.
+
+
+>>   #endif
+>>   
+>>   #if defined(CONFIG_CRASH_DUMP) && defined(CONFIG_PPC_RTAS)
+>> @@ -118,6 +120,9 @@ extern const struct kexec_file_ops kexec_elf64_ops;
+>>   struct kimage_arch {
+>>   	struct crash_mem *exclude_ranges;
+>>   
+>> +#if defined(CONFIG_CRASH_HOTPLUG)
+>> +	int fdt_index;
+>> +#endif
+>>   	unsigned long backup_start;
+>>   	void *backup_buf;
+>>   	void *fdt;
+>> diff --git a/arch/powerpc/kexec/core_64.c b/arch/powerpc/kexec/core_64.c
+>> index 0b292f93a74cc..531486c973988 100644
+>> --- a/arch/powerpc/kexec/core_64.c
+>> +++ b/arch/powerpc/kexec/core_64.c
+>> @@ -77,6 +77,37 @@ int machine_kexec_prepare(struct kimage *image)
+>>   	return 0;
+>>   }
+>>   
+>> +int machine_kexec_post_load(struct kimage *kimage)
+>> +{
+>> +#if defined(CONFIG_CRASH_HOTPLUG)
+>> +	int i;
+>> +	void *ptr;
+>> +	unsigned long mem;
+>> +
+>> +	/* Mark fdt_index invalid */
+>> +	kimage->arch.fdt_index = -1;
+> Why is that not done in the series introducing the generic
+> crash hotplug update, in do_kimage_alloc_init() ?
+
+do_kimage_alloc_init is a generic function where as fdt_index is a ppc 
+specific
+attribute. If fdt_index is initialized in do_kimage_alloc_init then 
+other architectures
+will have build issues.
+
+> This way there is a guarantee that the field will not be used while set by
+> default to 0.
+
+I agree that until the kernel hits the machine_kexec_post_load function 
+on the
+kdump kernel load path there is no way to identify the fdt_index is holding
+a valid index or not.
+
+Since there is no consumer of kimage's fdt_index attribute from the 
+point of its
+allocation to until it is initialized, we don't have any impact of 
+fdt_index holding
+value 0 (which is not valid) for sometime.
+
+But still we can do few things to allow fdt_index attribute consumers to 
+check
+the sanity of fdt_index.
+
+1. Introduce arch specific function call to initialize kimage_arch 
+struct (basically fdt_index for now).
+and call it inside do_kimage_alloc_init and initialize the fdt_index 
+with -1 there.
+
+2. Add another attribute in kimage_arch struct to indicate the sanity of the
+fdt_index attribute. For example fdt_index_valid, if this holds zero then
+the fdt_index holds invalid index. (looks inefficient to me)
+
+Not sure is it worth doing but please let me know your opinion.
+
+Thanks,
+Sourabh Jain
+
 
 _______________________________________________
 kexec mailing list
