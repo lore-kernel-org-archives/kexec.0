@@ -4,71 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2DD02C7618B
-	for <kexec@archiver.kernel.org>; Tue, 14 Mar 2023 21:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 10C55C61DA4
+	for <kexec@archiver.kernel.org>; Wed, 15 Mar 2023 14:53:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
-	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=+/ueBxT+pnUhBL3q4pA84+WuGrgqLEwHXqGWdm4kn/c=; b=cU220StslKu3pl
-	y56hlJPMesiXWgnNaqhdrKzkLgBRMijHbsTW5W4Rk9SMUEsW1hz71JJ33gfvOne6E2pqYeoc4l1UL
-	0DUW+D0DJvs7ysQ57rhuKfSsrA1YAQyGwzCjcRJqzPjO2nDMSto+sHgLMUstVb3s4YqvwqmHn9PCv
-	AqIVPVZ/5IK2EgR9rfhhvyz8ofsztHBTnvcX78lH/AyCpPz7bMjegtNVEBEWMnDTI6q1Z7qMikPFv
-	bEWCD7rw2sdDru/83LX0TNnhb9/rYWFrA+mbuvJ8Mo+iP6/xCKxF42I8MCR5VE6CrVx7tNMshuJpa
-	7GGTLHNfvwpfmvi8iPyg==;
+	List-Owner; bh=ghuSOSK6dcd4o74JpFGktCIgVFQhmvM/PYkLrjjqPRc=; b=jOnHFUx8JWIPoR
+	aJA1KIa7Ah2r/f0TmEgSb1gadWrI4zPWUwJIjStUEsRGS3frPN90VjRq/RkWkwlOTtqo2K9G1PSuf
+	L3uNNSEDgF+0wHgNl7da6ct0zu77XCUvD96NcsMz7MBGf30rT9pmM6K/fHBqrDobNrdhjAU1qpHsv
+	JLYqLs5qHyCZrUzGVqEWcDvTjBWMMW7KYyswUkVzu984Wou3kQWWDZjndCyLSWbJZwSK4pxFKTfuh
+	M8I7jtLlcUYxt4yT1lNXKdQsxXR8Jr1hFnWEXSQIJy/S2O/wbLjzuKC5Etai55qZu6kMdyW3jiTuk
+	Jm6L6rgZok56FaMZw9UA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pcCHb-00Bavw-0y;
-	Tue, 14 Mar 2023 21:34:11 +0000
-Received: from fanzine2.igalia.com ([213.97.179.56])
+	id 1pcSV3-00Dg26-1y;
+	Wed, 15 Mar 2023 14:53:09 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pcCHY-00Bav9-0P
-	for kexec@lists.infradead.org;
-	Tue, 14 Mar 2023 21:34:09 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=c8YKNDOulGKBFkU6e30QFajptaOddYDXD4U1msaMvSc=; b=jfiT6/wGCSK4hJok38JRVdriQ0
-	kztgeKUrgiK4sYFC7JXYut9VLbKNx8k3I/WebyWdMA/0Kq/wx8nY0TXO5UafpUQxE8TjbL44EAuBy
-	Nsa4dwr3WcWkP1AY+aKp7VEtUmeX0tI7xZ81iQlsNgVLNEJ6lscUsI5q9BhHQW0HqUDaIeichYGis
-	iMnv5pjr0FFsKfiWH7XkFuqviVYKirGYozwcmxR1fMH7jmXbaEH/2yzRDnT7y3a+Mx9gxvchtk50N
-	2trLrsH/RcC8PAPGF8bm+rx95Jyi7VegWMU82AgXpTUlncpHoU+b+tqT2mwSLZ2NTQHqnV86PRtcv
-	JMvJ/8rg==;
-Received: from [152.254.169.34] (helo=[192.168.1.60])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1pcCHP-00AVBj-83; Tue, 14 Mar 2023 22:33:59 +0100
-Message-ID: <de338659-8346-db8c-f0a8-0d68661ebfd6@igalia.com>
-Date: Tue, 14 Mar 2023 18:33:11 -0300
+	id 1pcSUr-00DftL-1h;
+	Wed, 15 Mar 2023 14:52:59 +0000
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 68E9061DC5;
+	Wed, 15 Mar 2023 14:52:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6C28C433EF;
+	Wed, 15 Mar 2023 14:52:54 +0000 (UTC)
+Date: Wed, 15 Mar 2023 14:52:51 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-kernel@vger.kernel.org, horms@kernel.org,
+	thunder.leizhen@huawei.com, John.p.donnelly@oracle.com,
+	will@kernel.org, kexec@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4] arm64: kdump: simplify the reservation behaviour of
+ crashkernel=,high
+Message-ID: <ZBHbw3Vp4dxukGOD@arm.com>
+References: <20230306084124.300584-1-bhe@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH v4] notifiers: Add tracepoints to the notifiers
- infrastructure
-Content-Language: en-US
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, bhe@redhat.com,
- pmladek@suse.com, xiyou.wangcong@gmail.com, dmitry.osipenko@collabora.com,
- rafael.j.wysocki@intel.com, bigeasy@linutronix.de,
- valentin.schneider@arm.com, kernel-dev@igalia.com, kernel@gpiccoli.net,
- Arjan van de Ven <arjan@linux.intel.com>,
- Michael Kelley <mikelley@microsoft.com>, Steven Rostedt
- <rostedt@goodmis.org>, Xiaoming Ni <nixiaoming@huawei.com>
-References: <20230314200058.1326909-1-gpiccoli@igalia.com>
- <20230314135015.789369cd9f71b39a5b7eb291@linux-foundation.org>
- <2d1ad49c-d38e-ef06-8737-766ab0566251@igalia.com>
- <20230314141846.d801ae3dafb6fd2faa7206ac@linux-foundation.org>
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <20230314141846.d801ae3dafb6fd2faa7206ac@linux-foundation.org>
+Content-Disposition: inline
+In-Reply-To: <20230306084124.300584-1-bhe@redhat.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230314_143408_164791_5BCFA2C7 
-X-CRM114-Status: UNSURE (   8.92  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20230315_075257_617928_616A721E 
+X-CRM114-Status: GOOD (  18.77  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,18 +66,50 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 14/03/2023 18:18, Andrew Morton wrote:
-> On Tue, 14 Mar 2023 18:08:37 -0300 "Guilherme G. Piccoli" <gpiccoli@igalia.com> wrote:
-> [...]
->> Hi Andrew, thanks!
->>
->> Do you want me to re-submit? I see some emails of the patch getting
->> added to "mm-nonmm-unstable" (and also a checkpatch fixes you added on
->> top of that). Lemme know how should I proceed.
+On Mon, Mar 06, 2023 at 04:41:24PM +0800, Baoquan He wrote:
+> On arm64, reservation for 'crashkernel=xM,high' is taken by searching for
+> suitable memory region top down. If the 'xM' of crashkernel high memory
+> is reserved from high memory successfully, it will try to reserve
+> crashkernel low memory later accoringly. Otherwise, it will try to search
+> low memory area for the 'xM' suitable region. Please see the details in
+> Documentation/admin-guide/kernel-parameters.txt.
 > 
-> I changed it, thanks.
+> While we observed an unexpected case where a reserved region crosses the
+> high and low meomry boundary. E.g on a system with 4G as low memory end,
+> user added the kernel parameters like: 'crashkernel=512M,high', it could
+> finally have [4G-126M, 4G+386M], [1G, 1G+128M] regions in running kernel.
+> The crashkernel high region crossing low and high memory boudary will bring
+> issues:
+[...]
+> Note: On arm64, the high and low memory boudary could be 1G if it's RPi4
+> system, or 4G if other normal systems.
 
-Tnx a bunch =)
+I'm mostly ok with the reworking but I'm not sure about the non-fixed
+low memory boundary. As I mentioned on v2, the user doesn't (need to)
+know about the ZONE_DMA limit on a specific platform, that's supposed to
+be fairly transparent. So on RPi4, specifying 'high' still allows
+allocation below 4G which some users may treat as 'low'. The
+kernel-parameters.txt doc also only talks about the 4G limit.
+
+> +		/*
+> +		 * For crashkernel=size[KMG], if the first attempt was for
+> +		 * low memory, fall back to high memory, the minimum required
+> +		 * low memory will be reserved later.
+> +		 */
+> +		if (!high && crash_max == CRASH_ADDR_LOW_MAX) {
+>  			crash_max = CRASH_ADDR_HIGH_MAX;
+> +			search_base = CRASH_ADDR_LOW_MAX;
+>  			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
+>  			goto retry;
+>  		}
+
+So I'm more tempted to set the search_base to 4G here rather than
+CRASH_ADDR_LOW_MAX. The crashkernel=x,high option on a RPi4 with all
+memory below 4G will fall back to low allocation. But RPi4 is the odd
+one out, so I think we can live with this.
+
+-- 
+Catalin
 
 _______________________________________________
 kexec mailing list
