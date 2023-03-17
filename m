@@ -4,72 +4,166 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9510DC6FD1D
-	for <kexec@archiver.kernel.org>; Fri, 17 Mar 2023 15:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BEC0BC7618E
+	for <kexec@archiver.kernel.org>; Fri, 17 Mar 2023 15:19:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:References:
+	Message-ID:Subject:CC:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=Br6jeXRW+jUhlBWzfUnK6a9rDrSlaP9LCsfWaAV1DNw=; b=NL90NqZDAL2yv1
-	jG0hMjiFjnERWfz5RKmqVaSxF2H23WSjai5B54DMk0hWldqdPEE9B9pMrbFoLMjr/ZEY4HhI9WXHp
-	tQ2j0syVB15MGuzEnqcTSa5iHNZOts08k4eEQYWIA9PAjI6d/+oi53nFkBITsVvXNxI3pjjL3LIuW
-	Zs60Y562DU80UJLak/Fz4SgsEQnQuUWZg5H+RA2nkdpoD24po2zkOMs1qYYeJS/tuV5RMIUnCDZ0s
-	T3HBwpLUHN8fx74pgtIlUB4ENOwAz7Ja0JYqKQUKrHPa54lIg5WuQSOB2b/t6g7MzQedpWpOtbr59
-	2dt0Y/yRvQIergm96cgA==;
+	List-Owner; bh=z02WlFk7cIv0IuMTS+jowevoCUNlhpJQFb8AeqPnQOg=; b=etQCRfmaV2cAIq
+	BS3Wfh7HBIW1hn3sSAZ0SmvF02iAbsDeZTy4Sgemm08Hiy4pKKoTFDta3oQ7uhVAbn++GOK7bMtvk
+	IKnqGKsfErgHBEvCQqRAIFN6VXOHZLr7CoOv1qFs3AL+RcRv365kbq3aWtFaDNmMpXDTlv/fECMJR
+	ytzT3Qb8yV0et1IloICqrQGEHyU5iuTomutsyleT/1NRhAPMnyPwTvlZAQfg/pTp2NzW92PWy6oM/
+	ASyQx6YievX8MXP9wbDBkf8t/vZofhAWfg9dVZ3OIVdOTKnYF3HGiBdFrORAjlhEXRBk5eJrwqong
+	FHfltLPPFOD1A+46wVSA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pdBhy-002Zd5-1p;
-	Fri, 17 Mar 2023 15:09:30 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1pdBrn-002bdn-1T;
+	Fri, 17 Mar 2023 15:19:39 +0000
+Received: from mga18.intel.com ([134.134.136.126])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pdBhv-002Zb0-1K
+	id 1pdBrk-002bd6-0l
 	for kexec@lists.infradead.org;
-	Fri, 17 Mar 2023 15:09:29 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1679065765;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1sm8PXGp513LsUWdH4xt3YWumdRryFErjBgqmIG+/uE=;
-	b=SfV86BHVDW+inVnJ3tV8OWziChbajgQBEUJlGsJEe7Mmh3hgF7En3gzHpsNM/EBeWfrk0/
-	4BTJlVTVBNwUj2FkthlZDdmzYpXdWq4s4Y3h4Mmswaz35XBMYclIHVibb5esAq2w1TQ2TE
-	4N1ND5zNonDG6Maeo4q1YVwD7p2GNSk=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-639-wFO7-Y5ZPomQw8x5sV4Edg-1; Fri, 17 Mar 2023 11:09:21 -0400
-X-MC-Unique: wFO7-Y5ZPomQw8x5sV4Edg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0844029DD995;
-	Fri, 17 Mar 2023 15:09:21 +0000 (UTC)
-Received: from localhost (ovpn-12-37.pek2.redhat.com [10.72.12.37])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 0A3A040C83B6;
-	Fri, 17 Mar 2023 15:09:19 +0000 (UTC)
-Date: Fri, 17 Mar 2023 23:09:13 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: linux-kernel@vger.kernel.org, horms@kernel.org,
-	thunder.leizhen@huawei.com, John.p.donnelly@oracle.com,
-	will@kernel.org, kexec@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4] arm64: kdump: simplify the reservation behaviour of
- crashkernel=,high
-Message-ID: <ZBSCeWtHvqc/iJZg@MiWiFi-R3L-srv>
-References: <20230306084124.300584-1-bhe@redhat.com>
- <ZBHbw3Vp4dxukGOD@arm.com>
- <ZBLlyGxGk33yrA+2@MiWiFi-R3L-srv>
- <ZBNTRBqqb74T3RMx@arm.com>
-MIME-Version: 1.0
+	Fri, 17 Mar 2023 15:19:37 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679066376; x=1710602376;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=bJ9t5ExyA/SDKR1EGopR6FT3T2LmJ7LPsS6L18K3JH4=;
+  b=duGbBhcRAhb6y4O0+AFWScN8zPbeaW3msZzaTSNp9bRfke7Y+ozuI7JZ
+   xqMFPxhH8XtLvHREocnXtA7RaC641kYtYHnQQHjl97rghJtA5R1W9z8HJ
+   dgNUx18IlWZ5GVxvDpQtSCIVl1vgKGT4sdMuZg9BaeKHqEJadF3k177JO
+   cMS6fQj/aXlg8c9O7giowH0ivU2HNBPQYvDuzSuHdDHu0TdR6ijNMna6I
+   FXZ6EYCyFXEvjGw4P0tLgktF/9BtO6GZiW5/Q2e6UmC8m/aiddln+EF9g
+   P0LG8GysB9Xjtb8/xqh8MhIIUjCQo4WdYn/7fTRO0xZi2H/yKbVU3T3vO
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10652"; a="322129573"
+X-IronPort-AV: E=Sophos;i="5.98,268,1673942400"; 
+   d="scan'208";a="322129573"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2023 08:19:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10652"; a="630308669"
+X-IronPort-AV: E=Sophos;i="5.98,268,1673942400"; 
+   d="scan'208";a="630308669"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orsmga003.jf.intel.com with ESMTP; 17 Mar 2023 08:19:26 -0700
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Fri, 17 Mar 2023 08:19:26 -0700
+Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
+ ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Fri, 17 Mar 2023 08:19:26 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21 via Frontend Transport; Fri, 17 Mar 2023 08:19:26 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.47) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.21; Fri, 17 Mar 2023 08:19:23 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=n7AR9GRZx5OPZdJqUaMwRKXBTy9MUnYoaz17Qg1ol1qUrqe+6b25DYO9V24ba8sho4uJu1acDGoTWKYqXKlMv/JKlpYJjgf5dewBh+e5WLTtnJBTDULit6RhlMIGrfNNeKTmzaXC8NNUCV6GsLpP23r8nMsCqOZAcURlZcw0y3SslMGV1dE1+nl+VvYt2cOmzTVXnIt1p4L/WUt95MSYvf8ISFAMKzuWuFtZvoSB8EUTJETVlfsIPJJ2O/PinzkM17H836CtUZgV6RiRzCYPdSSD7HlhItuuuMhQYFiUvyIj9hnkX7h/5fuIm3B7HNueup2OqXMOqC1kw7wvHJVwGQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0XZWhkg1mhgpdopnrGbjRw4F6ay4/jXyo1HG+bsBbwg=;
+ b=iDr7qg1VOYBsndfnc6qxxeSZQzD0NHio801nUcaSShLtl216wcl5X7HdP7OAeRt1LNnAt3ZBV/47xzhNUPMcu7lp0Oyz4/iXjtueXvWVCnwbqcb4d0GsKQYTc35amiq6QdNr+gCG8InPdku9z1h7/VKJQvjry9dHD3H8IzkP8ULHAcCL3G1VQtie2VWHQG9oChYuQlsvkDUJ7Mr8QcmPuoP4je7r9O/GpCM2JMop3i4Isp3iNEsAXdSehXzN2wtKHGBj+MwCaOQhSOweTA/9tYPpZnwBg1Xy1ENG8XywkIvh1nA57bvwDMV4i+hES13HhSijn2yxDKGBu7jj0gPu7g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by PH8PR11MB6753.namprd11.prod.outlook.com (2603:10b6:510:1c8::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.24; Fri, 17 Mar
+ 2023 15:19:22 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::ffa1:410b:20b3:6233]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::ffa1:410b:20b3:6233%5]) with mapi id 15.20.6178.035; Fri, 17 Mar 2023
+ 15:19:22 +0000
+Date: Fri, 17 Mar 2023 08:19:20 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: "lizhijian@fujitsu.com" <lizhijian@fujitsu.com>, Dan Williams
+	<dan.j.williams@intel.com>, "kexec@lists.infradead.org"
+	<kexec@lists.infradead.org>, "nvdimm@lists.linux.dev"
+	<nvdimm@lists.linux.dev>, "linux-mm@kvack.org" <linux-mm@kvack.org>
+CC: Baoquan He <bhe@redhat.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>,
+	"dyoung@redhat.com" <dyoung@redhat.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "dave.jiang@intel.com" <dave.jiang@intel.com>,
+	"horms@verge.net.au" <horms@verge.net.au>, "k-hagio-ab@nec.com"
+	<k-hagio-ab@nec.com>, "akpm@linux-foundation.org"
+	<akpm@linux-foundation.org>, "Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>,
+	"yangx.jy@fujitsu.com" <yangx.jy@fujitsu.com>, "ruansy.fnst@fujitsu.com"
+	<ruansy.fnst@fujitsu.com>
+Subject: Re: [RFC][nvdimm][crash] pmem memmap dump support
+Message-ID: <641484f7ef780_a52e2940@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <3c752fc2-b6a0-2975-ffec-dba3edcf4155@fujitsu.com>
+ <641404ea806dc_a52e2949@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <03bf236a-e832-ab81-2b2d-448aea37a2e4@fujitsu.com>
 Content-Disposition: inline
-In-Reply-To: <ZBNTRBqqb74T3RMx@arm.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
+In-Reply-To: <03bf236a-e832-ab81-2b2d-448aea37a2e4@fujitsu.com>
+X-ClientProxiedBy: SJ0PR13CA0055.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c2::30) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH8PR11MB6753:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7870f411-0543-41e2-e393-08db26fafc89
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: sv15VnfJRl08QskLqn30YtF7bY7qY9BMHUDCGNpEf5lqR5MzgjRqD0gej1QGvFatrzMpl/tecQEb1l5/alQ3BsjnzZzg1pUezKZ/H+Cge+Yf7mFtzoitXGF/QZoQsRPSkgU+ZslIxU8JyNJn1QNScUv3+w+ILy1020A/XECpSttmBx7xPWK1EcvCDh7hyCSMzB25TVN3XsIHZKzntXVDRbVQ8OPAuGntACK7uTCzNM5bbw8UnVtYNc+fOvw3+L1GALmTIZiw+eMP65L/hA83SXpCIJbOW8Yn1WIYP7cr4bMdcBPVlTjYZDFwp5B+X9PvX7Zi6oZ8hFBS6Li8Do16J/Tmvy7R66SXzk0jKgB9r59k9CJdlAz1l3LChxdaPfX5uyd18z4W/CzwvrjfrdO3fDt+p5/Yc84KCpu4yUHEeEXl8z2ObrzwpvkMxa6dREwp07KNI8z9Kx9LXvgQgunbVhruca+VcZTV6az9pkmtCoNQWfHoTexwj6qtHYVEchBnwqjUvaNVSo3SlwodCsJGzPb/xAxItIxX/Sy+0Z/xcM+YlnNPve6l1YsPTFlRDefgeBcmdi2Co2NL4pJqSs49XRwyd1wathHtcLe0HtKvFFNsNCEHcbc0MdMaTizcTTKD
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(136003)(366004)(396003)(346002)(376002)(39860400002)(451199018)(7416002)(5660300002)(83380400001)(53546011)(478600001)(66946007)(26005)(6512007)(966005)(186003)(6506007)(316002)(9686003)(6486002)(41300700001)(38100700002)(8936002)(86362001)(8676002)(66476007)(66556008)(54906003)(4326008)(110136005)(2906002)(82960400001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?7G6MXG9wOfa3stFOJFCZE9pGBAHBHrhop6QzHWY66AtO8lY9lrqeYbNBN+Xa?=
+ =?us-ascii?Q?6UScG5wOLlL9xwKEv35yw0OrXJ0vKCte+NL8Ei4cOyl1COpfEs1xPBDw6czI?=
+ =?us-ascii?Q?mvOzvdEtHgm0UnMyIjsZxfNfzaMy53rJiTCNUzs2FpfCDhcELgxMOVDF9Wc3?=
+ =?us-ascii?Q?53mh3CVE0EEQYeFnp+KW3bn1HT6irvZZQcHe+SZriHzulHssfuEE77L8FsLa?=
+ =?us-ascii?Q?cUxtLsR2EcJeJN17ns8AZdUamStXSXu8rk9B8Ko4zJLbAQSwWoMUlaQASVKU?=
+ =?us-ascii?Q?cDN/QGKBqtrOTFiNzerCHqMEbSw3hyvuINuXbpH2aQ88RN9bf8WGvh2faATk?=
+ =?us-ascii?Q?xnoYP0otUG1ZraIyP270ceK6XQYfYqy6Z6rboDekWMh9yY5zCvwf2WrLlFd0?=
+ =?us-ascii?Q?5Ht7946Hnqsqwhcq/ziHx53TwZ6BD1RBC8J7LvNjRxzMDDX34u189XFYL/pM?=
+ =?us-ascii?Q?YBOUtBE5yNuXnRQ7X4jdM9/fM/q1DWCBL17OTGOOJCPYgpF6BTwM5GmibZNY?=
+ =?us-ascii?Q?JULaK9J+Qi2r1bYnhRIWerPwHTr8p2Yunq0kAS93GC6hSWBI/M//SGO3dk/J?=
+ =?us-ascii?Q?CXoDzg0Xq3Ow7RXTJDNISHmUXt9kpjfcwRdkdznJhXOjSTRS8S1RTychDU0y?=
+ =?us-ascii?Q?7cIYNeoQhIdCBateaw/dotWxnZLi9duGHpPgg5KlDxWiJM3hyFJqQ0rDIp2q?=
+ =?us-ascii?Q?iX8v34/kdFjDcWXblaPzm1w4l8YhI5a4ogiePgmqJducOa/65JWzznBnJZVG?=
+ =?us-ascii?Q?y6nL80Tld4qZEV8/wSyvwApW6tqRtHvDD3jOhpyv/6PP3Cp2KklDiy6PJ7IH?=
+ =?us-ascii?Q?xcZIRYUm+L0uqnrb5i7Uu1LzCX0WlVSsRUaVHZnCy3c8+enJFqA3NbajK85c?=
+ =?us-ascii?Q?u9lVfDqXS7FRlhDr3Q+aBwQe+nqAARK/5B82KH0xCSNeBbrc7eSkGnX+4MfV?=
+ =?us-ascii?Q?wdeYg/kU93BxazbO4WQBCzuAQqz10SAu0Gdsu9lNHBu/VSuw1K7gqd+14wS1?=
+ =?us-ascii?Q?J9evNndUI011PlfIWtqgVxfwGBDOAgcLOIYbFxT9hzDkGRV0X47PevlmYC6U?=
+ =?us-ascii?Q?NxeXKfDUB0Atybq6c4fAFFLrqhcmbuhbuNW74e5A9eR0o9sxoBWfICkhpQ5l?=
+ =?us-ascii?Q?87azHztGFsQrnOBvRdeUVfNPDKAkvMTytjVE93n63U2MQuc10gXz5zH7DYy+?=
+ =?us-ascii?Q?Ivn+hcWMku6UZbX/YumeT9Ku3eV6UzR9StD/bR1QYjqELnkyDz7JBGDe22DH?=
+ =?us-ascii?Q?egmKt/Z+sLjhEaWjh1U7S5GJY1x0pvIJSB4FHKWw5vzFW3jdBpoCbuwB8pOR?=
+ =?us-ascii?Q?XxgNIgVCJ4DtICMtFlrs4Iz3hP5AoJuyJ0r6rWQqHNmt9KD8ZHNOL1XYC8fR?=
+ =?us-ascii?Q?fSiQIY4+NxJirNdzhxI1vRIThM3ugUZXNv2CG9rNLUHUXiqMVIzH7dqJ+nbU?=
+ =?us-ascii?Q?ayRw8voRJUojCYCHPi5j73nIcY9IpII4/lkr8t4B0nU5U3eXhB1fsbKLpthT?=
+ =?us-ascii?Q?HzQ1psTA7VGO066Hzqkv4VbSirynhUUcSpcNHm6j0QO/8nz5XshXdgU0LrV4?=
+ =?us-ascii?Q?6bTSCaXQ92K4PugWTGg5TDJD8GVf7c21+AyIDq5OiKnirNLWLgEORbj6JbQ4?=
+ =?us-ascii?Q?Cg=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7870f411-0543-41e2-e393-08db26fafc89
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2023 15:19:22.5663
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dZ/ZQMbUH4kJNscRmw7A03thcyCW8XjmobCZl/ih6/BnUAgC4l64Z6TltaVC3f42LDVAfLarKAtqLYJUzh2O3UebnXCRNU2AFE0pGZ10ylQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB6753
+X-OriginatorOrg: intel.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230317_080927_593983_8331711B 
-X-CRM114-Status: GOOD (  36.94  )
+X-CRM114-CacheID: sfid-20230317_081936_421685_CFBDD681 
+X-CRM114-Status: GOOD (  21.49  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,142 +180,48 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 03/16/23 at 05:35pm, Catalin Marinas wrote:
-> On Thu, Mar 16, 2023 at 05:47:52PM +0800, Baoquan He wrote:
-> > On 03/15/23 at 02:52pm, Catalin Marinas wrote:
-> > > On Mon, Mar 06, 2023 at 04:41:24PM +0800, Baoquan He wrote:
-> > > > +		/*
-> > > > +		 * For crashkernel=size[KMG], if the first attempt was for
-> > > > +		 * low memory, fall back to high memory, the minimum required
-> > > > +		 * low memory will be reserved later.
-> > > > +		 */
-> > > > +		if (!high && crash_max == CRASH_ADDR_LOW_MAX) {
-> > > >  			crash_max = CRASH_ADDR_HIGH_MAX;
-> > > > +			search_base = CRASH_ADDR_LOW_MAX;
-> > > >  			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
-> > > >  			goto retry;
-> > > >  		}
-> > > 
-> > > So I'm more tempted to set the search_base to 4G here rather than
-> > > CRASH_ADDR_LOW_MAX. The crashkernel=x,high option on a RPi4 with all
-> > > memory below 4G will fall back to low allocation. But RPi4 is the odd
-> > > one out, so I think we can live with this.
-> > 
-> > I totally agree with you that we should take 4G as the fixed boundary of
-> > low and high memory because kdump is aimed at workstation and server
-> > platform. We can leave RPi4 to use crashkernel=size[KMG][@offset[KMG]]
-> > to specify a region if people have to use.
-> > 
-> > [PATCH 0/2] arm64, kdump: enforce to take 4G as the crashkernel low memory end
-> > https://lore.kernel.org/all/20220828005545.94389-1-bhe@redhat.com/T/#u
-> > 
-> > Now I am wondering if we should change CRASH_ADDR_LOW_MAX to 4G directly
-> > since we decide to take 4G as the low memory limit when doing 'high'
-> > reserving or falling back. This is just like what we have been doing in
-> > x86_64. Not sure if I follow you correctly.
+lizhijian@fujitsu.com wrote:
 > 
-> On RPi4, we do need the 'low' allocation to be below 1GB, otherwise
-> ZONE_DMA will be empty. But we can leave the 'high' reservation above
-> 4GB (if available). The downside is that we won't get anything between
-> 1GB and 4GB unless explicitly specified with @offset.
-
-Ah, I see. You want to have high reservation like below when RPi4.
-
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 307763f97549..9e558fadf483 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -95,6 +95,7 @@ phys_addr_t __ro_after_init arm64_dma_phys_limit = PHYS_MASK + 1;
- 
- #define CRASH_ADDR_LOW_MAX		arm64_dma_phys_limit
- #define CRASH_ADDR_HIGH_MAX		(PHYS_MASK + 1)
-+#define CRASH_HIGH_SEARCH_BASE		SZ_4G
- 
- #define DEFAULT_CRASH_KERNEL_LOW_SIZE	(128UL << 20)
- 
-@@ -156,7 +157,7 @@ static void __init reserve_crashkernel(void)
- 		else if (ret)
- 			return;
- 
--		search_base = CRASH_ADDR_LOW_MAX;
-+		search_base = CRASH_HIGH_SEARCH_BASE;
- 		crash_max = CRASH_ADDR_HIGH_MAX;
- 		high = true;
- 	} else if (ret || !crash_size) {
-@@ -193,7 +194,7 @@ static void __init reserve_crashkernel(void)
- 		 */
- 		if (!high && crash_max == CRASH_ADDR_LOW_MAX) {
- 			crash_max = CRASH_ADDR_HIGH_MAX;
--			search_base = CRASH_ADDR_LOW_MAX;
-+			search_base = CRASH_HIGH_SEARCH_BASE;
- 			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
- 			goto retry;
- 		}
-
 > 
-> I'm not entirely sure what you want to achieve: avoiding the 'high'
-> reservation going across an arbitrary boundary (1GB or 4GB) that the
-> user may not be aware of or just avoiding the 'high' reservation going
-> across a 4G boundary? On RPi4, if the 'high' reservation above 4GB
-> fails, should it fall back to below 1GB reservation or to somewhere
-> between 1GB and 4GB, making sure it doesn't cross any of these two
-> boundaries? For someone unfamiliar with the ZONE_DMA on RPi4, the latter
-> would look like two 'low' allocations below 4GB.
+> On 17/03/2023 14:12, Dan Williams wrote:
+> > lizhijian@fujitsu.com wrote:
+> > [..]
+> >> Case D: unsupported && need your input To support this situation, the
+> >> makedumpfile needs to know the location of metadata for each pmem
+> >> namespace and the address and size of metadata in the pmem [start,
+> >> end)
+> > 
+> > My first reaction is that you should copy what the ndctl utility does
+> > when it needs to manipulate or interrogate the metadata space.
+> > 
+> > For example, see namespace_rw_infoblock():> 
+> > https://github.com/pmem/ndctl/blob/main/ndctl/namespace.c#L2022
+> > 
+> > That facility uses the force_raw attribute
+> > ("/sys/bus/nd/devices/namespaceX.Y/force_raw") to arrange for the
+> > namespace to initalize without considering any pre-existing metdata
+> > *and* without overwriting it. In that mode makedumpfile can walk the
+> > namespaces and retrieve the metadata written by the previous kernel.
+> 
+> For the dumping application(makedumpfile or cp), it will/should reads
+> /proc/vmcore to construct the dumpfile, So makedumpfile need to know
+> the *address* and *size/end* of metadata in the view of 1st kernel
+> address space.
 
-Currently, with the existing code, the high and low memory is like below
-on arm64:
-RPi4:
-0~1G: low memory | 1G~top: high memory
+Another option, instead of passing the metadata layout into the crash
+kernel, is to just parse the infoblock and calculate teh boundaries of
+userdata and metadata.
 
-Other normal system:
-0~4G: low memory | 4G~top: high memory
+> I haven't known much about namespace_rw_infoblock() , so it is also an
+> option if we can know such information from it.
+> 
+> My current WIP propose is to export a list linking all pmem namespaces
+> to vmcore, with this, the kdump kernel don't need to rely on the pmem
+> driver.
 
-Now you want RPi4 to have low and high crahskernel reservation like
-this: 
-0~1G: low memory | 4G~top: high memory
-It's also fine. However, as far as I know, RPi4 usually only has 8G
-memory. And arm64 only has top down memblock allocation. Its high memory
-above 4G will be fragmentary, the crahskernel high reservation will fail
-if the value is big.
-
-In fact, what I want to achieve is we set CRASH_ADDR_LOW_MAX to 4G
-fixedly on arm64, just like what we do on x86_64. As for RPi4 platform,
-we leave it to crashkernel=size@offset syntax. Two reasons for this:
-1) crashkernel is needed on enterprise platform, such as workstation or
-server. While RPi4 is obviously not the target. I contacted several RPi4
-players in Redhat and my friends, none of them ever played kdump
-testing. If they really have to, crashkernel=size@offset is enough for
-them to set.
-2) with the fixed CRASH_ADDR_LOW_MAX as 4G, we can easily fix the
-problem of base page mapping for the whole linear mapping if crsahkernel=
-is set in kernel parameter shown in [1] at bottom. 
-
-Arm64 enterprise OS deployment is now very important in our
-Fedora/Centos stream/RHEL. I am wondering how wide and important kdump
-feature is needed and deployed on RPi4 platform and what is the user case.
-
-If CRASH_ADDR_LOW_MAX is set to 4G fixedly, and document that RPi4 need
-crashkernel=size@offset specially if kdump deployment is really needed.
-problems we discussed here and the spotted base page mapping issue can
-be solved easily and elegantly. That woule be deeply appreciated.
-
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 307763f97549..3b03958b668e 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -93,8 +93,9 @@ phys_addr_t __ro_after_init arm64_dma_phys_limit = PHYS_MASK + 1;
- /* Current arm64 boot protocol requires 2MB alignment */
- #define CRASH_ALIGN                    SZ_2M
- 
--#define CRASH_ADDR_LOW_MAX             arm64_dma_phys_limit
-+#define CRASH_ADDR_LOW_MAX             SZ_4G
- #define CRASH_ADDR_HIGH_MAX            (PHYS_MASK + 1)
-
-
-[1]
-[PATCH 0/2] arm64, kdump: enforce to take 4G as the crashkernel low memory end
-https://lore.kernel.org/all/20220828005545.94389-1-bhe@redhat.com/T/#u
-
+Seems like more work to avoid using the pmem driver as new information
+passing infrastructure needs to be built vs reusing what is already
+there.
 
 _______________________________________________
 kexec mailing list
