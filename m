@@ -4,191 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5EE0AC7618B
-	for <kexec@archiver.kernel.org>; Fri, 17 Mar 2023 21:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1DFB3C6FD1F
+	for <kexec@archiver.kernel.org>; Sun, 19 Mar 2023 18:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=PC9ss26eyFJgD4sQBL6AyQ52krZPA1Q1XapAN5rk2JQ=; b=i/6rUs9DWTAyi7
-	vVsPscuOGSG2C8z6vj7cbgFUMmCTmgu9bBi08kATxN7yHx27fPEWorWZXi6VgGeULb40jw+H6Pai3
-	ejRGDqH2RLuG8nEHyjI6WKi31j5vsJxIkQdayUeT9/72NAFBpehuSo790+DvXRKnANbLXwhLx0Z9s
-	ev2upYYdnOfQ9Er74yvIklNaz2035W8LMw554ZsKmNGkvGLa18blttepR2yhkU/XYoRc06ftQGimX
-	n8v8u5LfBxRCHYM+L2I5Tg+RfIamo2oppVBxKqpkHUNYgf05ni/30ZIFVZgR/SdzokpEA6mjI9IfR
-	Zuu+TNh1esdkxfHdUE2Q==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:cc:Subject
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=c/jkAg5L+7YmhbvP2q+DgmPXOVSWD4nLMJraz/9Ggsg=; b=yrWMYW75exa6QM
+	/EINen6liQH42R3jrKlBVwhF3g12dHoDHR4XpoFeettkyYwYINSsVt7olw1bA1DE3MK2B4CllOFmb
+	HRQHDDpbyFlvBbWrK9wqgvLOIJzoqa922cL7y2Obsf4qiEC14Vb0jefDJcM3Fk924w/6EDKrGrmTL
+	WnED6IAc4+QZA9tQYXNX/YZ05Jm0TtlvM2H4o4ik2d6iK1tRxiKxp5Ju+MZhCOh2v/taeQfEuUaGg
+	+qgx+6UhSZquvdf7qczqJC+OKPQTngrLGom/6CVx2pUWcwlXO51VHZCDLVhjkjYTektMf/OJF9/FN
+	KWJRG9oaaIFdwZ0qOmjQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pdHWz-003QwD-1B;
-	Fri, 17 Mar 2023 21:22:33 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1pdxTB-0079FO-2f;
+	Sun, 19 Mar 2023 18:09:25 +0000
+Received: from myhtic.telent.net ([176.126.240.165] helo=mail.telent.net)
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pdHWy-003QvI-0l
-	for kexec@bombadil.infradead.org;
-	Fri, 17 Mar 2023 21:22:32 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=MIME-Version:Content-Type:
-	Content-Transfer-Encoding:References:In-Reply-To:Message-Id:Date:Subject:Cc:
-	To:From:Sender:Reply-To:Content-ID:Content-Description;
-	bh=g1wxY3LICoo5vWQ+zWVRd+wf6XK2Gcx/FSKiBxH+Ieg=; b=f76cgIEJnWL+gaswHUZYSkG4uD
-	KkqI+pt8yeedIx+AZQj2IEEwSRLUm0CH5bVfpebVClqInePxNZDCY+ErrfyCGZ+rZmkHCEqBsO8ga
-	WEy1KS74T/6ErOpWNEFOZ8Eqi86jzpgGgt+DwA0mtOI2GNl59YsihCOyPoMHa7arRfaFbZOWNY2BE
-	pMVyymTcz5Op7VvSptS4ghYEagzfGpKCAWOctX4tcqQDoGZnN6WOJdyh/ed/ZAwXVabnbNktevTo8
-	Vw9kH8aVboKFuevg6s++wXOUpxBT3eUxQpQnPVAU+128rAmGn8c5Fou2dam7TvOD6gdNRJ5spXQAj
-	Tf/chryQ==;
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
-	by desiato.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pdHWp-002vJS-2U
+	id 1pdxT5-0079EH-0k
 	for kexec@lists.infradead.org;
-	Fri, 17 Mar 2023 21:22:26 +0000
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32HJUQ03020643;
-	Fri, 17 Mar 2023 21:22:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references :
- content-transfer-encoding : content-type : mime-version; s=corp-2022-7-12;
- bh=g1wxY3LICoo5vWQ+zWVRd+wf6XK2Gcx/FSKiBxH+Ieg=;
- b=GyHNPqaKnNIfqcWCYBYj0AC7YpWOEmYV8zyFcWLYrm3ktRTIhdZRBRPE3a0Sq2Gcy1sq
- 6/JpSl+eo3533RwK3EaWv4p2XFqDwg506B32RIVwBPf6sWJI3b1YELrrbQzSPCESS0IG
- tye9GRdK2DLaZlBzifDRzIClHs27NOctVxsmwAlk4h/5F+V3tYLJ1BsPaMmxWuxCrHVb
- voXcH3vSJAzAwP3mwWw7tR3fjL4Au/y2lVTIwra+UssZ93dCtMKovFUaW3X8030Oqrxa
- a65pHUjybneSCsJV419SzKlH+pb/kAOaqr2IqPQ/CWWIOYP7T143cGx++nLq6QPTJZgN vg== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3pbs2651q3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 17 Mar 2023 21:22:01 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 32HJAVhh002489;
-	Fri, 17 Mar 2023 21:22:00 GMT
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2176.outbound.protection.outlook.com [104.47.59.176])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3pch08j9q1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 17 Mar 2023 21:22:00 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lPIha0LgA/u3GqH+WrEhnEYOzAwVzpzV5EJHYJyqiuujvvgqFE2fV7AOvs98Me4Lelg+agX2/SJW8xenn8zPfXzsaMCI6+GhBrDJ3Qou0Xr3lZMjHzZP1nG8n1ZbNPd06Bz/gEov4X9K0gYVgMFRhTtxXLlhabYQ+dw/Zn/XDHu7qJHAzv8oRxXPjaE9zpbj+A2D5w7ZS0sNwjGWvNMdJ9n31sbZE8Wt5YtfW03K7mM7cmcFkkcDJzzyvcY6Taou7ch+tfIo2gfGkJGI+61EdyUTo2ntjBAtMjjVuYnPQH56RcC4KTitko6JoKC869xAEl39MHnSfWcVskHCQ+kLPg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=g1wxY3LICoo5vWQ+zWVRd+wf6XK2Gcx/FSKiBxH+Ieg=;
- b=K8xF2pWb+qMFw6G8dgzPtn52SQD37ug12+Z8mprjR5Mom81BOozN2iBZILTw73Wzr/e7ZQd2lwpEsgyDQpckxcec5s4Ai/RnX2l2wpW20iiLHzvejFuiyP5zgHG2wwep892r9BEYqE2Z+vkyu+hfuLdqrfRiSW7UuPYifw6wdZmHbyB5imv+dtirt8sXsOW/Bo4otTTcjBjpbXNQHqqmNdRp5ZrlP4EF8mbKky2iOrp/CnGzq1NUMK+fN3Rcr2QQFVcaKiCJoRbm3MW/KnUDPyUK8mkSvhf7h/qIoKVYL3SSvhIji5oWDeQDnap3rz5l6z/iRioYK0msvBygLW6yVg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g1wxY3LICoo5vWQ+zWVRd+wf6XK2Gcx/FSKiBxH+Ieg=;
- b=UmJ9SKyjQuL7UA+FDaeFIoLwnnOH2tE2d9QAeMZZ40nakRu/TAwgI2evlGN1aAVapzOW11f31Vj4xczodqkJTZVtow1OCrCAYa3J1jGbev2Na1kLPFZlIxJKwOWZxZWMGvn7ok8h2uoMzM7LCK0j95FYS+0l6oGljQgbBED/aw0=
-Received: from CO1PR10MB4531.namprd10.prod.outlook.com (2603:10b6:303:6c::22)
- by DS7PR10MB5901.namprd10.prod.outlook.com (2603:10b6:8:87::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6178.35; Fri, 17 Mar 2023 21:21:58 +0000
-Received: from CO1PR10MB4531.namprd10.prod.outlook.com
- ([fe80::671e:6486:6996:c38]) by CO1PR10MB4531.namprd10.prod.outlook.com
- ([fe80::671e:6486:6996:c38%9]) with mapi id 15.20.6178.035; Fri, 17 Mar 2023
- 21:21:58 +0000
-From: Eric DeVolder <eric.devolder@oracle.com>
-To: linux-kernel@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org,
-        ebiederm@xmission.com, dyoung@redhat.com, bhe@redhat.com,
-        vgoyal@redhat.com
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com, nramas@linux.microsoft.com,
-        thomas.lendacky@amd.com, robh@kernel.org, efault@gmx.de,
-        rppt@kernel.org, david@redhat.com, sourabhjain@linux.ibm.com,
-        konrad.wilk@oracle.com, boris.ostrovsky@oracle.com,
-        eric.devolder@oracle.com
-Subject: [PATCH v20 7/8] x86/crash: optimize cpu changes
-Date: Fri, 17 Mar 2023 17:21:28 -0400
-Message-Id: <20230317212128.21424-8-eric.devolder@oracle.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20230317212128.21424-1-eric.devolder@oracle.com>
-References: <20230317212128.21424-1-eric.devolder@oracle.com>
-X-ClientProxiedBy: DS7PR05CA0054.namprd05.prod.outlook.com
- (2603:10b6:8:2f::28) To CO1PR10MB4531.namprd10.prod.outlook.com
- (2603:10b6:303:6c::22)
+	Sun, 19 Mar 2023 18:09:21 +0000
+Received: from noetbook (1.b.c.8.e.4.b.0.b.5.0.a.0.b.e.1.e.d.0.4.a.3.e.d.0.b.8.0.1.0.0.2.ip6.arpa [IPv6:2001:8b0:de3a:40de:1eb0:a05b:b4e:8cb1])
+	by mail.telent.net (Postfix) with ESMTPSA id EFB45100070;
+	Sun, 19 Mar 2023 18:00:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=telent.net; s=mail;
+	t=1679248850; bh=bqy5BTHzbS3HUPgWlwYe2ig/MYAyvk0Hbnil3chJOjM=;
+	h=From:To:Subject:cc:Date;
+	b=aZRHjOj6x51e9cGpV6Pvhh7hbvBWCtzUi1WxuASfbWK2CYS5s6p0YoD+9KGxMzFAl
+	 9rLoRCYZ8AZAhOZhUwkmm6uJAx+JWCxEDx6/sLjqmAAXNaToJ3fQvcuOM9BNjX4pLB
+	 p6657/zkSzY+k40n9VTPd1dCM+q79zDOCBVtXjOg=
+From: dan@telent.net
+To: kexec@lists.infradead.org
+Subject: [PATCH RFC] add --map-file option to map arbitrary files into physmem
+cc: horms@verge.net.au
+Date: Sun, 19 Mar 2023 18:00:47 +0000
+Message-ID: <87r0tkfwog.fsf@telent.net>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PR10MB4531:EE_|DS7PR10MB5901:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1006161c-94c9-42b7-b0ed-08db272da41a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 	5wjmQOqC/i3ucJWBjhhxN4B/KIXqNDckkAIIJzXs+/3A25iEF8NWvvpZjzxfFcdX2k/Y5s1V/gK92njGsiXF7aOAzQ17Q2jkBaT/8hQJg9EbXIqFnwdtqXoP916u8G+VsMw9TUw0sGG10EWjZvtOanUBDg3aI3AVqmwDf4dFs4uCkGrELg6D4H4ipTElxO2o0T6Ds7J8ua6Z1Pvmyd4CsC05UYZw+9PEKEg80qtiipCzerGu05VhKUOsFnWjePs6FuHMQHtk9Eg14vacHO1P+HxwzW/OyVFjLFX9WgrdE++lPguvhVGMFpGo6eLt5UQ+T5kFTLFGZrphX4H0fu/tsY+ZRb8SoaFBhJPocGHIJFsPG7oTB6LJTJUOa29+5hHdFESSDD3yFtdPZGYedx3zkmXTAiBRAImWjn5zlLc+U4luAjQur1kgRs/xm3cJo6670y6p3/XyosGsGkj7AaZ5I59UM76YxeVJEDb0vcMqYt+6JVZu91Cxmd5V8l8I1IJcUZgQ5oyB4CUK2cpFGCGQ4XHhTr1mkgI6dgAZHJj0IhrbPEI1MRWyCWwUsMHyyyiGTRkhgb6c2a4VS4VQV+iBw8Tb+qx1lDrGjrI+jmTe6XVDGWs6adtkFb6HjH3FDKEyhCups9q7Pfen1pq823tlAA==
-X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR10MB4531.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(136003)(39860400002)(396003)(376002)(346002)(366004)(451199018)(86362001)(36756003)(2906002)(38100700002)(41300700001)(5660300002)(7416002)(8936002)(4326008)(2616005)(6512007)(186003)(6506007)(26005)(1076003)(83380400001)(107886003)(316002)(8676002)(66556008)(6666004)(478600001)(6486002)(66946007)(66476007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 	=?us-ascii?Q?6OaSFJpWu3CdwIwTDrOTPcOR914oDEb4iKZeOQi+v2bOPcxJOn0ukEvn+ZHO?=
- =?us-ascii?Q?c2KjvubXAU8kd7GRiRQyV8ks4xVwRO8rLwTSytJAbcTq6onCjM+x+qy3zOum?=
- =?us-ascii?Q?/qUFVJyQLu3nvf2X8CuMrE6Hr15yFSAaKQ19nLNLNJ3qrQLekbbEvsr8IBen?=
- =?us-ascii?Q?m+jdfkzvY66LJMinJcQQPm6ulySn8zDZk7nkMX1FL78Z0sSQu2oO2lEA6NrR?=
- =?us-ascii?Q?D9zxkNjBRWAqIL2EQkrF464igdGpFEzfMJWqT7zmAlZvT7y5Ef3FBBSqQRS9?=
- =?us-ascii?Q?flraQXot83i8qyCkkoOekvf+K1tsi/t0I1URhHZadfuLRIvtq7Pcvvux6Mro?=
- =?us-ascii?Q?Uv1TRAmLKWB8hG4RMGjKXow+xFmParYxvPMU8YNrvnO4czSikHnQ6UVCYwH8?=
- =?us-ascii?Q?HvKy+y2BKLBoiAL1FzNZNJBDf4vEtmY7IrkmD/9ildG74joiXsXewBQXX1IF?=
- =?us-ascii?Q?kdRR6b1+r7fhTdQ15ZgKa0QixBQqNwS3YNE/OfQHs5tyPVSwUw1bZYl4gfRi?=
- =?us-ascii?Q?UDXQ9+/tFl0/j0BcORpvpsQpMCFScFw3rApKrhC88Gq4sNvqMefwuAEreLow?=
- =?us-ascii?Q?YrOZ/GEamAvw87UB0m6GXQRKWt1yqr1M+oYutLgucgxd23ubJoHnYc7ARJTP?=
- =?us-ascii?Q?P/LfeQYdlzGcHjGTqMAALL3fp/PHLWx6WlAiXGJU66sF7/4rWr7eUfnG6e2a?=
- =?us-ascii?Q?3UAEN1yKm3mVUP/GHiP7LmLtNnYksiFDFSwvxvFY/e7B1lfq/Vpae6tuQIjK?=
- =?us-ascii?Q?Lt3+IvrkphEL8I46r08JbkxmVQ6QvlSUc13wTZ7dKNO8HZmqrs26pCUbXeoC?=
- =?us-ascii?Q?eqXXDvn9EE9rLC6H4cC90M/qxbEkylK3cxh8YeZkMxn6vzc5xp1w1VMolHi2?=
- =?us-ascii?Q?zJPpO7ZNeoco3gCmjH/IvPEe/NyIWXAj5GT84gByc/WdO+TiECkS0rYSNSyU?=
- =?us-ascii?Q?t1ungeH877/Nk7VoFSXnUP+lZL0biNpSGSealELBH/ywTaD97SGcNejhcAqr?=
- =?us-ascii?Q?w46Qr3+T6xR47yCZgsAQ5yQm3KonADANDh2Aae8Uoa0CWp3FrYNtWGgPi2Yk?=
- =?us-ascii?Q?VV5OXtm9tqPyuQavHR3AX2HKpPpwm61+e/YFI++7MS5JGpNsAHmmqFsM+fWb?=
- =?us-ascii?Q?jHtUzF5g/MK+OFE1ofRyqooDvFlL5rFpvOofUMmS51QWA830aWcBibOHG6tE?=
- =?us-ascii?Q?VJPr+Q70NXbceQwIz5T55qi41U8iY0fP0FLyuWSsIlr0f+cuQr979A5YFhFQ?=
- =?us-ascii?Q?xdTWgwr7FG29mQaaxIrwO0EXfZxNhfvv9BMk/Wo1uExqejT9FCJNA2j8XxvI?=
- =?us-ascii?Q?MIkO4qQ2ErTjlnfYum7zRBXpEUh2WIn9Y6xX9Ujqk4SjuE+KKakT8ttOWjZR?=
- =?us-ascii?Q?TeHS9mgBLj8bOHcLBsGWYcT62SJCWD9t4cxxUuo+XIr+1vjLkW24fMXdpIRF?=
- =?us-ascii?Q?M7VwAagzXivc7MYRx7QGousO5YruQJGVgV9BrGV8WR6tnz1r111ZVVDCO3V7?=
- =?us-ascii?Q?UaA1x5wlkOH0DQEki93BYhSypO88ozNHU7bCRCKrpxQFHfc5l7qbGs8jbwBv?=
- =?us-ascii?Q?LCS9FVwa+2w80DTYQFwENSqa7GTA0MePHvN5lo50YiEiAAtIeIBvlWPeW1QA?=
- =?us-ascii?Q?cA=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 	=?us-ascii?Q?SAuBwLLbmr3GHfTpu7AQKLPVWKXvjTpjqSa6vDV2wO/fE90BFS8oMjiDkIGV?=
- =?us-ascii?Q?dDuDuJpyByEbvmGZqH408w+4jELO3g8d4BUuLCymlzB+h0Vh5/2JaReBIpz/?=
- =?us-ascii?Q?nMS7RUPh2N+Xa5lIeJzkA2W6hlRuyUlwhhR+5/OJDZkIURFexxRlv9wed9ov?=
- =?us-ascii?Q?9I29yPRmR39+CGMFT5/8V9rOT4j1gWUB1r4Sn2DgIA+recA6SMLUtLOcP4QW?=
- =?us-ascii?Q?kP5XEyu0IAXNYEw0XdPERzDlNVHtl6/IdNkwyLVO0OlrhhvjkmzIhantW/pt?=
- =?us-ascii?Q?UXciIpaMBiYIt5HBV0GgqM2QUQzMX0A1dElx1krkPB49BTUli5AromWqVjJy?=
- =?us-ascii?Q?d7IG58eUUVtKsHpPuPickuwtrlMxwLlJbwdpEV/s9E8XavCPw9ZddWJcpCYC?=
- =?us-ascii?Q?hABC+7UiF60L4kuE7KljIEVeBEdkp/qP6z/eelXnlJDXdvkhaijQaYXAeg0S?=
- =?us-ascii?Q?XGzEHtYk5rkDLCIdNHh6spD4qQ+VpNFtAOGutV/S/Jhm2ZDdzDqD5O0PG1Ea?=
- =?us-ascii?Q?pk0/ifiocVpdzSnMHCLu6e/02gVxQtEAnUcAsS4R48sFcbcKztYMPv0g9tMN?=
- =?us-ascii?Q?NwM2Pjz4AG6H+39CIf4pcdbIDNGmRY7UXrZGdLG3tIE+WTthwzv/H6FyRog7?=
- =?us-ascii?Q?jxpH8+OB9WKGt3eOiQhQEkz4JZsRUM/UlnoorCbdvh2KCX8eqCNNA7MsceCR?=
- =?us-ascii?Q?sMXmohpHeOMvXXf5mrgyX4dHXh7+/ik8cWnw6PR5eT18WrsTzCOkOKnEqiky?=
- =?us-ascii?Q?EyO5bE8bkqp35X7zVmk8XjXbw7JsJmzzNBNZBfLxKN4CjmpfvgNyHX6oyNEL?=
- =?us-ascii?Q?8Nv8uGf5xSoliuM70SxHWCRE5yzDVhnEgAQArVMsWwq7L68zBdVEPsfYOWg8?=
- =?us-ascii?Q?el213DAWlW+s8Hsmy1A9I9wdDLMsutBpHau5PJP4rhV+3+e+MXZi/gR2gROD?=
- =?us-ascii?Q?G98tHlBBOwg7gTricKSC9bR+GmJXnMt/d//c/QpoZ5HkJedt8njaX6ugIyG2?=
- =?us-ascii?Q?7c/SUghDFDRD+K/OPs1qms3f/kCxJ8afo2z6FGXjstCAOaktliCERod+xD0R?=
- =?us-ascii?Q?hEv3dSLYvfjdgFpebOQKxFzHLezugwKnMAYXClCId577cyqucdvK6gePXT8O?=
- =?us-ascii?Q?pityBKpDnQWlQfrve5BGwySH8lb0PlIYZ0OeGXn+jnS5ZKRvooxkN2M=3D?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1006161c-94c9-42b7-b0ed-08db272da41a
-X-MS-Exchange-CrossTenant-AuthSource: CO1PR10MB4531.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2023 21:21:58.5156
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HY6AeWuQgiaIGHwjB/NLlgyLEBqIMa5WooeMuVofPkHL1ZsdjxMJvC9yfDhA15Zs6rTHKGI6F9EcdcmGOeZoI2gssCEH3Cg7/t2Smpd8ovc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB5901
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-17_17,2023-03-16_02,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 bulkscore=0
- adultscore=0 phishscore=0 mlxscore=0 suspectscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2303150002
- definitions=main-2303170150
-X-Proofpoint-ORIG-GUID: 8Zlx89WUXmEXL5fSB-2NI3gezei0pgKl
-X-Proofpoint-GUID: 8Zlx89WUXmEXL5fSB-2NI3gezei0pgKl
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230317_212224_670834_4D634AC0 
-X-CRM114-Status: GOOD (  20.57  )
+X-CRM114-CacheID: sfid-20230319_110919_552673_14C43155 
+X-CRM114-Status: GOOD (  22.83  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -205,56 +62,188 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-This patch is dependent upon the patch 'crash: change
-crash_prepare_elf64_headers() to for_each_possible_cpu()'. With that
-patch, crash_prepare_elf64_headers() writes out an ELF cpu PT_NOTE
-for all possible cpus, thus further cpu changes to the elfcorehdr
-are not needed.
 
-This change works for kexec_file_load() and kexec_load() syscalls.
-For kexec_file_load(), crash_prepare_elf64_headers() is utilized
-directly and thus all ELF cpu PT_NOTEs are in the elfcorehdr already.
-This is the kimage->file_mode term.
-For kexec_load() syscall, one cpu or memory change will cause the
-elfcorehdr to be updated via crash_prepare_elf64_headers() and at
-that point all ELF cpu PT_NOTEs are in the elfcorehdr. This is the
-kimage->elfcorehdr_updated term.
+This is useful e.g. in conjunction with the MTD "phram" driver on
+embedded devices: a kernel can be booted with kexec and a root
+filesystem entirely in RAM to see if it works before writing it to
+flash. Something like this:
 
-This code is intentionally *NOT* hoisted into
-crash_handle_hotplug_event() as it would prevent the arch-specific
-handler from running for cpu changes. This would break PPC, for
-example, which needs to update other information besides the
-elfcorehdr, on cpu changes.
+   kexec --map-file ./squashfs@104857600 --dtb ./dtb  --command-line "mtdparts=phram0:9945088(rootfs) phram.phram=phram0,104857600,9945088 memmap=9945088$104857600" vmlinux
 
-Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
-Reviewed-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+My use case might be quite niche :-) but the implementation is
+I hope general enough that it could be used for other things as
+well. Or maybe it's impossibly general and shouldn't be offered
+at all without safety warnings.
+
+Feedback welcome on any or all of style, correctness, general
+desirability and/or other.  This is clearly not ever going to work with
+KEXEC_FILE_LOAD.
+
+
+Daniel
+
 ---
- arch/x86/kernel/crash.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ kexec/kexec.8 | 14 ++++++++++++-
+ kexec/kexec.c | 57 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ kexec/kexec.h |  4 +++-
+ 3 files changed, 73 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 0c9d496cf7ce..8f7b0b7fba90 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -456,6 +456,16 @@ void arch_crash_handle_hotplug_event(struct kimage *image)
- 	unsigned long mem, memsz;
- 	unsigned long elfsz = 0;
+diff --git a/kexec/kexec.8 b/kexec/kexec.8
+index 3a344c5..3140ccb 100644
+--- a/kexec/kexec.8
++++ b/kexec/kexec.8
+@@ -143,10 +143,17 @@ into the current kernel.
+ .B \-p\ (\-\-load\-panic)
+ Load the new kernel for use on panic.
+ .TP
+-.BI \-t\ (\-\-type= type )
++.BI \-m\ (\-\-type= type )
+ Specify that the new kernel is of this
+ .I type.
+ .TP
++.BI \-t\ (\-\-map-file= filename@addr )
++Read
++.I filename
++and arrange for it to be mapped into physical memory at the address
++.I addr.
++This option may be repeated if there are multiple files to map.
++.TP
+ .BI \-s\ (\-\-kexec-file-syscall)
+ Specify that the new KEXEC_FILE_LOAD syscall should be used exclusively.
+ .TP
+@@ -206,6 +213,11 @@ Reuse initrd from first boot.
+ .BI \-\-print-ckr-size
+ Print crash kernel region size, if available.
  
-+	/* As crash_prepare_elf64_headers() has already described all
-+	 * possible cpus, there is no need to update the elfcorehdr
-+	 * for additional cpu changes. This works for both kexec_load()
-+	 * and kexec_file_load() syscalls.
-+	 */
-+	if ((image->file_mode || image->elfcorehdr_updated) &&
-+		((image->hp_action == KEXEC_CRASH_HP_ADD_CPU) ||
-+		(image->hp_action == KEXEC_CRASH_HP_REMOVE_CPU)))
-+		return;
++.PP
++Options taking an
++.I addr
++parameter will accept a memory address written in hexadecimal (with leading
++0x), or octal (leading 0), or decimal (no leading sigil).
+ 
+ .SH SUPPORTED KERNEL FILE TYPES AND OPTIONS
+ .B Beoboot-x86
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index 36bb2ad..c3b40a4 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -63,6 +63,13 @@ static unsigned long kexec_flags = 0;
+ static unsigned long kexec_file_flags = 0;
+ int kexec_debug = 0;
+ 
++#define MAPPED_FILES_MAX 10 	/* arbitrary number */
++struct mapped_file {
++	const char *filename;
++	unsigned long long phys_address;
++} mapped_files[MAPPED_FILES_MAX] = { { .filename = NULL } };
 +
- 	/*
- 	 * Create the new elfcorehdr reflecting the changes to CPU and/or
- 	 * memory resources.
++
+ void dbgprint_mem_range(const char *prefix, struct memory_range *mr, int nr_mr)
+ {
+ 	int i;
+@@ -771,6 +778,19 @@ static int my_load(const char *type, int fileind, int argc, char **argv,
+ 	}
+ 	info.kexec_flags |= native_arch;
+ 
++	for(struct mapped_file *m = mapped_files; m->filename; m++) {
++		off_t file_size = 0;
++		char *buf = slurp_file(m->filename, &file_size);
++		add_buffer(&info,
++			   buf, file_size, file_size, sizeof (void *),
++			   m->phys_address,
++			   mem_max, 1);
++		free(m->filename);
++		/* do we free() memory returned by slurp_file()?
++		 * we don't know if it was mmaped, so maybe not
++		 */
++	};
++
+ 	result = file_type[i].load(argc, argv, kernel_buf, kernel_size, &info);
+ 	if (result < 0) {
+ 		switch (result) {
+@@ -1035,6 +1055,8 @@ void usage(void)
+ 	       "                      load code into.\n"
+ 	       "     --mem-max=<addr> Specify the highest memory address to\n"
+ 	       "                      load code into.\n"
++	       "     --map-file=<filename@addr> Map a file into memory for the\n"
++	       "                      new kernel before kexec.\n"
+ 	       "     --reuseinitrd    Reuse initrd from first boot.\n"
+ 	       "     --print-ckr-size Print crash kernel region size.\n"
+ 	       "     --load-preserve-context Load the new kernel and preserve\n"
+@@ -1396,6 +1418,33 @@ static void print_crashkernel_region_size(void)
+ 	printf("%" PRIu64 "\n", (start != end) ? (end - start + 1) : 0UL);
+ }
+ 
++static int add_mapped_file(char * optarg)
++{
++	char *at = strchr(optarg, '@');
++	if(!at)
++		return 1;
++
++	struct mapped_file *m = mapped_files;
++	struct mapped_file *m_end = mapped_files +
++	    ((sizeof mapped_files) / (sizeof mapped_files[0]));
++
++	while(m->filename && m < m_end)
++		m++;
++
++	if(m >= m_end)
++		return 1;
++
++	m->phys_address = strtoull(at + 1, NULL, 0);
++	if(m->phys_address == 0)
++		return 1;
++
++	m->filename = strndup(optarg, at - optarg);
++
++	(m+1)->filename = NULL;
++	return 0;
++}
++
++
+ int main(int argc, char *argv[])
+ {
+ 	int has_opt_load = 0;
+@@ -1521,6 +1570,14 @@ int main(int argc, char *argv[])
+ 			kexec_file_flags |= KEXEC_FILE_ON_CRASH;
+ 			kexec_flags = KEXEC_ON_CRASH;
+ 			break;
++		case OPT_MAP_FILE:
++			if(add_mapped_file(optarg)) {
++				fprintf(stderr,
++					"Bad option value or too many mapped files in --mapped-file=%s\n",
++					optarg);
++				return 1;
++			}
++			break;
+ 		case OPT_MEM_MIN:
+ 			mem_min = strtoul(optarg, &endptr, 0);
+ 			if (*endptr) {
+diff --git a/kexec/kexec.h b/kexec/kexec.h
+index 0d820ad..78022b6 100644
+--- a/kexec/kexec.h
++++ b/kexec/kexec.h
+@@ -224,6 +224,7 @@ extern int file_types;
+ #define OPT_STATUS		'S'
+ #define OPT_MEM_MIN             256
+ #define OPT_MEM_MAX             257
++#define OPT_MAP_FILE		'm'
+ #define OPT_REUSE_INITRD	258
+ #define OPT_LOAD_PRESERVE_CONTEXT 259
+ #define OPT_LOAD_JUMP_BACK_HELPER 260
+@@ -258,8 +259,9 @@ extern int file_types;
+ 	{ "debug",		0, 0, OPT_DEBUG }, \
+ 	{ "status",		0, 0, OPT_STATUS }, \
+ 	{ "print-ckr-size",     0, 0, OPT_PRINT_CKR_SIZE }, \
++	{ "map-file",		1, 0, OPT_MAP_FILE }, \
+ 
+-#define KEXEC_OPT_STR "h?vdfixyluet:pscaS"
++#define KEXEC_OPT_STR "h?vdfixyluet:pscaSm"
+ 
+ extern void dbgprint_mem_range(const char *prefix, struct memory_range *mr, int nr_mr);
+ extern void die(const char *fmt, ...)
 -- 
-2.31.1
+2.38.1
 
 
 _______________________________________________
