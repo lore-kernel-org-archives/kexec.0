@@ -4,56 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DF139C7618D
-	for <kexec@archiver.kernel.org>; Mon, 20 Mar 2023 12:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 67835C6FD1D
+	for <kexec@archiver.kernel.org>; Mon, 20 Mar 2023 13:12:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=bFY/mMR9Lm6uA3bMGD8SNfa8MnzPFXmN7TzWKXIhZ5Q=; b=zgYtZb2/mHRepM
-	d5lh1jGIDy3qzsBEoq/luBmeNH8Br5A81AdSarFlp+m+w4bNDptJHP0JXxDAnoRPY0OL8ZdvKNUoN
-	E7YY2nPZLmgQCBxKg+rVHlsNu73M3YXaMbPcxaggJRK0KJiYkseCI7wFIPlh1ySSO+gBcH/lU0/cg
-	nx/thBQTaiZIP8gXMlmOJak1OIurXYqQogQ9YyBmP+pnm7h21/Leh+HcYRFKXXA5c917HMG7N3kvH
-	QQSwVmhsKHtLt/kqtabAlFlgMb4Mcr2Uv2ItyHHIVaKKzpoZMl7hkZ5fp0qIKKHsbSAI3MfxOY6gH
-	TNxGBHzLZMz9NYnK9ODQ==;
+	List-Owner; bh=m/GnfSjjMo72yqgMfqrHZsr9wm6OdnFz5qyM0DPf+Kc=; b=J9I+kNKvCqWpJL
+	N/0F9FcH4m99iuTzKg7xGzOWVcKnyA10mIZUQQx5w4gw1XPKr7QQCeCN+81NksGoCKt9C2q6fytpv
+	0nbZfVEuku12dx5dB3CE2X9kEIDn5CaU/Qw0zS+CZTqJ6QfXwSWQSDV6qb0rJF4TL+RpSpnTbD/P0
+	f5Al/4X9vTVjWyrjdvpRdpCRL8o2i1qdW01CSZJkA+A3XMP8bDSZpylj0CvLorPJ9RDIdumIQVEkL
+	x1DoFA5UefPtOetm8VthQ8pOiPmOiPglQPSBltbMhVFmagymFMAifARmx2ZxDNMpR5C5xnsSUmkz/
+	L0mNfR6HfMG2FC4XkFiQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1peEu2-008zqP-1W;
-	Mon, 20 Mar 2023 12:46:18 +0000
-Received: from szxga08-in.huawei.com ([45.249.212.255])
+	id 1peFJF-0094BN-2u;
+	Mon, 20 Mar 2023 13:12:21 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1peEtx-008zoR-2x;
-	Mon, 20 Mar 2023 12:46:17 +0000
-Received: from dggpemm500016.china.huawei.com (unknown [172.30.72.56])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4PgDss1SYdz17MgS;
-	Mon, 20 Mar 2023 20:42:57 +0800 (CST)
-Received: from huawei.com (10.67.174.205) by dggpemm500016.china.huawei.com
- (7.185.36.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Mon, 20 Mar
- 2023 20:46:00 +0800
-From: Chen Jiahao <chenjiahao16@huawei.com>
-To: <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
-	<conor.dooley@microchip.com>, <guoren@kernel.org>, <heiko@sntech.de>,
-	<bjorn@rivosinc.com>, <alex@ghiti.fr>, <akpm@linux-foundation.org>,
-	<atishp@rivosinc.com>, <bhe@redhat.com>, <thunder.leizhen@huawei.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-	<kexec@lists.infradead.org>, <linux-doc@vger.kernel.org>
-Subject: [PATCH -next 1/2] riscv: kdump: Implement crashkernel=X,[high,low]
-Date: Tue, 21 Mar 2023 04:42:43 +0800
-Message-ID: <20230320204244.1637821-2-chenjiahao16@huawei.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20230320204244.1637821-1-chenjiahao16@huawei.com>
-References: <20230320204244.1637821-1-chenjiahao16@huawei.com>
+	id 1peFJD-00949d-1A
+	for kexec@lists.infradead.org;
+	Mon, 20 Mar 2023 13:12:21 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1679317938;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eRWuod9s//hIfJQGvOqq9tx2DfKSIyGg3ek1omM5PA0=;
+	b=N4h5QVmlj/exD9+8My+ExuNC1ByxqlTEkwDN7uvX7vyjRxGzgJ307zYryAfInh9JVckNUt
+	VQ6uOKdypiJ42hGAQXkqCv7DrU8Etaqa1hnva3BUKHl6Yl+E81Z8Fis/wO+5AvMSbSbNl0
+	EjNYdPG5HhDtaqXdMN/NfaX3LOSJgKI=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-516-M2VObNRIODOBGZRDq7nk-w-1; Mon, 20 Mar 2023 09:12:14 -0400
+X-MC-Unique: M2VObNRIODOBGZRDq7nk-w-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3501596DC81;
+	Mon, 20 Mar 2023 13:12:14 +0000 (UTC)
+Received: from localhost (ovpn-13-195.pek2.redhat.com [10.72.13.195])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id D21EC2027047;
+	Mon, 20 Mar 2023 13:12:12 +0000 (UTC)
+Date: Mon, 20 Mar 2023 21:12:08 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: linux-kernel@vger.kernel.org, horms@kernel.org,
+	thunder.leizhen@huawei.com, John.p.donnelly@oracle.com,
+	will@kernel.org, kexec@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4] arm64: kdump: simplify the reservation behaviour of
+ crashkernel=,high
+Message-ID: <ZBhbqAOsHFj5cheI@MiWiFi-R3L-srv>
+References: <20230306084124.300584-1-bhe@redhat.com>
+ <ZBHbw3Vp4dxukGOD@arm.com>
+ <ZBLlyGxGk33yrA+2@MiWiFi-R3L-srv>
+ <ZBNTRBqqb74T3RMx@arm.com>
+ <ZBSCeWtHvqc/iJZg@MiWiFi-R3L-srv>
+ <ZBSr/kIIuxmC/INY@arm.com>
 MIME-Version: 1.0
-X-Originating-IP: [10.67.174.205]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemm500016.china.huawei.com (7.185.36.25)
-X-CFilter-Loop: Reflected
+Content-Disposition: inline
+In-Reply-To: <ZBSr/kIIuxmC/INY@arm.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230320_054614_293851_B426FEB5 
-X-CRM114-Status: GOOD (  16.54  )
+X-CRM114-CacheID: sfid-20230320_061219_478057_00967067 
+X-CRM114-Status: GOOD (  54.99  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -70,140 +88,185 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On riscv, the current crash kernel allocation logic is trying to
-allocate within 32bit addressible memory region by default, if
-failed, try to allocate without 4G restriction.
+On 03/17/23 at 06:05pm, Catalin Marinas wrote:
+> On Fri, Mar 17, 2023 at 11:09:13PM +0800, Baoquan He wrote:
+> > On 03/16/23 at 05:35pm, Catalin Marinas wrote:
+> > > On Thu, Mar 16, 2023 at 05:47:52PM +0800, Baoquan He wrote:
+> > > > Now I am wondering if we should change CRASH_ADDR_LOW_MAX to 4G directly
+> > > > since we decide to take 4G as the low memory limit when doing 'high'
+> > > > reserving or falling back. This is just like what we have been doing in
+> > > > x86_64. Not sure if I follow you correctly.
+> > > 
+> > > On RPi4, we do need the 'low' allocation to be below 1GB, otherwise
+> > > ZONE_DMA will be empty. But we can leave the 'high' reservation above
+> > > 4GB (if available). The downside is that we won't get anything between
+> > > 1GB and 4GB unless explicitly specified with @offset.
+> > 
+> > Ah, I see. You want to have high reservation like below when RPi4.
+> > 
+> > diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> > index 307763f97549..9e558fadf483 100644
+> > --- a/arch/arm64/mm/init.c
+> > +++ b/arch/arm64/mm/init.c
+> > @@ -95,6 +95,7 @@ phys_addr_t __ro_after_init arm64_dma_phys_limit = PHYS_MASK + 1;
+> >  
+> >  #define CRASH_ADDR_LOW_MAX		arm64_dma_phys_limit
+> >  #define CRASH_ADDR_HIGH_MAX		(PHYS_MASK + 1)
+> > +#define CRASH_HIGH_SEARCH_BASE		SZ_4G
+> >  
+> >  #define DEFAULT_CRASH_KERNEL_LOW_SIZE	(128UL << 20)
+> >  
+> > @@ -156,7 +157,7 @@ static void __init reserve_crashkernel(void)
+> >  		else if (ret)
+> >  			return;
+> >  
+> > -		search_base = CRASH_ADDR_LOW_MAX;
+> > +		search_base = CRASH_HIGH_SEARCH_BASE;
+> >  		crash_max = CRASH_ADDR_HIGH_MAX;
+> >  		high = true;
+> >  	} else if (ret || !crash_size) {
+> > @@ -193,7 +194,7 @@ static void __init reserve_crashkernel(void)
+> >  		 */
+> >  		if (!high && crash_max == CRASH_ADDR_LOW_MAX) {
+> >  			crash_max = CRASH_ADDR_HIGH_MAX;
+> > -			search_base = CRASH_ADDR_LOW_MAX;
+> > +			search_base = CRASH_HIGH_SEARCH_BASE;
+> >  			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
+> >  			goto retry;
+> >  		}
+> 
+> This would probably do _if_ these are the semantics that we want (well,
+> more discussion below).
+> 
+> > > I'm not entirely sure what you want to achieve: avoiding the 'high'
+> > > reservation going across an arbitrary boundary (1GB or 4GB) that the
+> > > user may not be aware of or just avoiding the 'high' reservation going
+> > > across a 4G boundary? On RPi4, if the 'high' reservation above 4GB
+> > > fails, should it fall back to below 1GB reservation or to somewhere
+> > > between 1GB and 4GB, making sure it doesn't cross any of these two
+> > > boundaries? For someone unfamiliar with the ZONE_DMA on RPi4, the latter
+> > > would look like two 'low' allocations below 4GB.
+> > 
+> > Currently, with the existing code, the high and low memory is like below
+> > on arm64:
+> > RPi4:
+> > 0~1G: low memory | 1G~top: high memory
+> > 
+> > Other normal system:
+> > 0~4G: low memory | 4G~top: high memory
+> 
+> Yes, that's the current behaviour.
+> 
+> > Now you want RPi4 to have low and high crahskernel reservation like
+> > this: 
+> > 0~1G: low memory | 4G~top: high memory
+> 
+> I don't necessarily want this, I just want to clarify what we actually
+> need to fix. Your initial reasoning for this patch was that the user
+> gets confused by the high allocation going across the 4G boundary. But
+> without knowing of the 1GB vs 4GB boundary on RPi4, one can still get
+> confused by the high allocation across the 4GB boundary on RPi4.
 
-In need of saving DMA zone memory while allocating a relatively large
-crash kernel region, allocating the reserved memory top down in
-high memory, without overlapping the DMA zone, is a mature solution.
-Here introduce the parameter option crashkernel=X,[high,low].
+Ah, I see your point. Yeah, the initial reasoning is our QE reported
+several times that arm64 system could have two regions of low memory
+allocation when crahskernel=,high. While later I spotted another two
+issues. With the initial reasoning, we does need consider the hign and
+low boundary at 1G on RPi4 which could cause confusion. Given RPi4
+is not taken into our distros's account, I am shooting myself in the
+foot. But yes, we should consider it if kdump feature is really cared
+about on RPi4. Please see later reply.
 
-We can reserve the crash kernel from high memory above DMA zone range
-by explicitly passing "crashkernel=X,high"; or reserve a memory range
-below 4G with "crashkernel=X,low".
+> 
+> > It's also fine. However, as far as I know, RPi4 usually only has 8G
+> > memory.
+> 
+> That's the maximum. Lots of them just come with 4GB or less.
+> 
+> > And arm64 only has top down memblock allocation. Its high memory
+> > above 4G will be fragmentary, the crahskernel high reservation will fail
+> > if the value is big.
+> > 
+> > In fact, what I want to achieve is we set CRASH_ADDR_LOW_MAX to 4G
+> > fixedly on arm64, just like what we do on x86_64. As for RPi4 platform,
+> > we leave it to crashkernel=size@offset syntax. Two reasons for this:
+> > 1) crashkernel is needed on enterprise platform, such as workstation or
+> > server. While RPi4 is obviously not the target. I contacted several RPi4
+> > players in Redhat and my friends, none of them ever played kdump
+> > testing. If they really have to, crashkernel=size@offset is enough for
+> > them to set.
+> 
+> I'd like crashkernel=size (without @offset) on RPi4 to still do the
+> right thing: a low allocation at least as we had until recently (or
+> high+low where high here is maybe above 1GB). IOW, no regression for
+> this crashkernel=size case. We can then change the explicit
+> crashkernel=x,high to mean only above 4GB irrespective of the platform
+> and crashkernel=x,low to be below arm64_dma_phys_limit.
 
-Signed-off-by: Chen Jiahao <chenjiahao16@huawei.com>
----
- arch/riscv/kernel/setup.c |  5 ++++
- arch/riscv/mm/init.c      | 56 ++++++++++++++++++++++++++++++++++++---
- 2 files changed, 58 insertions(+), 3 deletions(-)
+Since crashkernel=,high and crashkernel=size fallback was added in arm64
+recently, with my understanding, you are suggesting:
 
-diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
-index 376d2827e736..d867b1535da4 100644
---- a/arch/riscv/kernel/setup.c
-+++ b/arch/riscv/kernel/setup.c
-@@ -176,6 +176,11 @@ static void __init init_resources(void)
- 		if (ret < 0)
- 			goto error;
- 	}
-+	if (crashk_low_res.start != crashk_low_res.end) {
-+		ret = add_resource(&iomem_resource, &crashk_low_res);
-+		if (ret < 0)
-+			goto error;
-+	}
- #endif
- 
- #ifdef CONFIG_CRASH_DUMP
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index 478d6763a01a..5def2174b243 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -1152,6 +1152,28 @@ static inline void setup_vm_final(void)
- }
- #endif /* CONFIG_MMU */
- 
-+/* Reserve 128M low memory by default for swiotlb buffer */
-+#define DEFAULT_CRASH_KERNEL_LOW_SIZE	(128UL << 20)
-+
-+static int __init reserve_crashkernel_low(unsigned long long low_size)
-+{
-+	unsigned long long low_base;
-+
-+	low_base = memblock_phys_alloc_range(low_size, PMD_SIZE, 0, dma32_phys_limit);
-+	if (!low_base) {
-+		pr_err("cannot allocate crashkernel low memory (size:0x%llx).\n", low_size);
-+		return -ENOMEM;
-+	}
-+
-+	pr_info("crashkernel low memory reserved: 0x%08llx - 0x%08llx (%lld MB)\n",
-+		low_base, low_base + low_size, low_size >> 20);
-+
-+	crashk_low_res.start = low_base;
-+	crashk_low_res.end = low_base + low_size - 1;
-+
-+	return 0;
-+}
-+
- /*
-  * reserve_crashkernel() - reserves memory for crash kernel
-  *
-@@ -1163,6 +1185,7 @@ static void __init reserve_crashkernel(void)
- {
- 	unsigned long long crash_base = 0;
- 	unsigned long long crash_size = 0;
-+	unsigned long long crash_low_size = 0;
- 	unsigned long search_start = memblock_start_of_DRAM();
- 	unsigned long search_end = memblock_end_of_DRAM();
- 
-@@ -1182,8 +1205,26 @@ static void __init reserve_crashkernel(void)
- 
- 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
- 				&crash_size, &crash_base);
--	if (ret || !crash_size)
-+	if (ret == -ENOENT) {
-+		ret = parse_crashkernel_high(boot_command_line, 0, &crash_size, &crash_base);
-+		if (ret || !crash_size)
-+			return;
-+
-+		/*
-+		 * crashkernel=Y,low can be specified or not, but invalid value
-+		 * is not allowed.
-+		 */
-+		ret = parse_crashkernel_low(boot_command_line, 0, &crash_low_size, &crash_base);
-+		if (ret == -ENOENT)
-+			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
-+		else if (ret)
-+			return;
-+
-+		search_start = dma32_phys_limit;
-+	} else if (ret || !crash_size) {
-+		/* Invalid argument value specified */
- 		return;
-+	}
- 
- 	crash_size = PAGE_ALIGN(crash_size);
- 
-@@ -1201,16 +1242,25 @@ static void __init reserve_crashkernel(void)
- 	 */
- 	crash_base = memblock_phys_alloc_range(crash_size, PMD_SIZE,
- 					       search_start,
--					       min(search_end, (unsigned long) SZ_4G));
-+					       min(search_end, (unsigned long) dma32_phys_limit));
- 	if (crash_base == 0) {
- 		/* Try again without restricting region to 32bit addressible memory */
- 		crash_base = memblock_phys_alloc_range(crash_size, PMD_SIZE,
--						search_start, search_end);
-+						       search_start, search_end);
- 		if (crash_base == 0) {
- 			pr_warn("crashkernel: couldn't allocate %lldKB\n",
- 				crash_size >> 10);
- 			return;
- 		}
-+
-+		if (!crash_low_size)
-+			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
-+	}
-+
-+	if ((crash_base > dma32_phys_limit - crash_low_size) &&
-+	     crash_low_size && reserve_crashkernel_low(crash_low_size)) {
-+		memblock_phys_free(crash_base, crash_size);
-+		return;
- 	}
- 
- 	pr_info("crashkernel: reserved 0x%016llx - 0x%016llx (%lld MB)\n",
--- 
-2.31.1
+on arm64:
+RPi4:
+crashkernel=size
+0~1G: low memory (no regression introduced)
+
+crashkernel=size,high
+0~1G: low memory | 4G~top: high memory
+
+Other normal system:
+crashkernel=size|crashkernel=size,high
+0~4G: low memory | 4G~top: high memory
+
+Please correct me if I misunderstood, I can make change according to
+your suggestion.
+
+> 
+> > 2) with the fixed CRASH_ADDR_LOW_MAX as 4G, we can easily fix the
+> > problem of base page mapping for the whole linear mapping if crsahkernel=
+> > is set in kernel parameter shown in [1] at bottom. 
+> 
+> That's a different problem ;). I should re-read that thread, forgot most
+> of the details but I recall one of the counter arguments was that there
+> isn't a strong case to unmap the crashkernel reservation. Now, if we
+> place crashdump kernel image goes in the 'high' reservation, can we not
+> leave the 'low' reservation mapped? We don't really care about it as it
+> wouldn't have any meaningful code/data to be preserved. If the 'high'
+> one goes above 4G always, we don't depend on the arm64_dma_phys_limit.
+
+Yes, this looks ideal. While it only works when crashkernel=,high case and
+it succeeds to reserve a memory region for the specified size of crashkernel
+high memory. At below, we have 4 cases of crashkernel= syntax:
+
+crashkernel=size
+1)first attempt:  low memory under arm64_dma_phys_limit
+2)fallback:       finding memory above 4G
+
+crashkernel=size,high
+3)first attempt:  finding memory above 4G
+4)fallback:       low memory under arm64_dma_phys_limit
+
+case 3) works with your suggestion. However, 1), 2), 4) all need to
+defer to bootmem_init(). With these cases and different handling,
+reserve_crashkernel() could be too complicated.
+
+I am wondering if we can cancel the protection of crashkernel memory
+region on arm64 for now. In earlier discussion, people questioned if the
+protection is necessary on arm64. After comparison, I would rather take
+away the protection method of crashkernel region since they try to
+protect in a chance in one million , while the base page mapping for the
+whole linear mapping is mitigating arm64 high end server always.
+
+> 
+> > Arm64 enterprise OS deployment is now very important in our
+> > Fedora/Centos stream/RHEL. I am wondering how wide and important kdump
+> > feature is needed and deployed on RPi4 platform and what is the user case.
+> 
+> I doubt it's important beyond testing but I'd very much like not to
+> cause a regression and require the @offset argument for RPi4.
+
+OK, understood. Pity we don't have information to judge if it's a RPi4
+system or not, with a Kconfig option, some cpu register or hardware
+information. 
 
 
 _______________________________________________
