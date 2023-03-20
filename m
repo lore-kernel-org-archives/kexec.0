@@ -4,74 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3C17BC7618A
-	for <kexec@archiver.kernel.org>; Mon, 20 Mar 2023 08:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B313DC7618A
+	for <kexec@archiver.kernel.org>; Mon, 20 Mar 2023 12:46:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=/gDSGz53akKlU31qptE8F5MKNgHyT9lvEHQ2GXpFGXA=; b=XaWUM4///bdaYM
-	+zk6BI7WYeJ30c2Evdx1mdkPCqNgNbUIUMkcrvNXNj2KMNBrDGhGQbCpqo3+E72X9UrDHen9gnJJG
-	RK6lholI7xAw50X0xPJeFKj0pc1KTT0l8VIrZ7uIlq9QC9tj37CNjUZo9HJiZi5jwLkePGNXrdWAR
-	OFVJkRh5i/4iAp+az8xqSWuHnH/d5cLoCH4ELbT3tXyDXtQmSfheBquQgY64N7dO9+XJ0pbj8ezI5
-	ASOtde342bkaRxBkuyKQNCXfobE4hbdC93bZ+K3f+0FuU9+lsriP1MRQa1xH36vSmV5uxidwev+1L
-	DAX85Jz1X7SKPH/BYFmQ==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:CC
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=xjrhrh3VQJw8ochi+JmupX5wnNUiZahRhViHFCuPsi0=; b=tGXw5PZLM4w94z
+	HAv2OEYpmjLH3A/j7TXVQiYSx/HK3EuXKI19tztCskqjeyHqyCWiod83qokb05PplFZLtyHI1dOJ2
+	VSHoMFXYkFh2zQMZmkamaRH2N+7GwP7NoMgE4N+ja/sZz08WA7RNn8lDyKEdeEhY2Jzpuy8UFvjVe
+	5jl4ITbDYD+9E+XFDg3ro2m30nkRCsCAmu1w/ZC+89OE+lLt79KwCKStg4eYPjAQeezMLeFs344dg
+	hjhNLEQ71Jt6S3nUvmLlc5LpBmxdjFYCIvD/bRtwQzvns0JIaFtuqsTGaqcO1dK4dGIKgRlElJWfF
+	f56CgJFORrq19/dK29jA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1peAdm-008M0X-0i;
-	Mon, 20 Mar 2023 08:13:14 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1peEu0-008zpv-3C;
+	Mon, 20 Mar 2023 12:46:16 +0000
+Received: from szxga08-in.huawei.com ([45.249.212.255])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1peAdj-008Lzs-1L
-	for kexec@lists.infradead.org;
-	Mon, 20 Mar 2023 08:13:12 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1679299989;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tBzMw9tBuAmm9CF1nE8dcERwEMEX881hULtl8Hi/03I=;
-	b=RFreAMOASBsD/DE2OoJHhX+kOt6o5TQeLVs3U4Nj4DgODTnvud5a+Ksb0x9IwoPQ3Qi9wE
-	o+JlplZP7FG/A4bEWOJl2iyyJuEsodcoeofIn3UDgrViDBrE6kQU/06m7UEc4lAjJonPmu
-	x/kTrq1oZmEdbcUT+La/4q0yUkmsxTU=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-544-tDKyxIHCOP2r6Xwq_li6tQ-1; Mon, 20 Mar 2023 04:13:07 -0400
-X-MC-Unique: tDKyxIHCOP2r6Xwq_li6tQ-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9E0903813F25;
-	Mon, 20 Mar 2023 08:13:06 +0000 (UTC)
-Received: from localhost (ovpn-13-195.pek2.redhat.com [10.72.13.195])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7258F4021B1;
-	Mon, 20 Mar 2023 08:13:05 +0000 (UTC)
-Date: Mon, 20 Mar 2023 16:13:02 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Eric DeVolder <eric.devolder@oracle.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org,
-	ebiederm@xmission.com, dyoung@redhat.com, vgoyal@redhat.com,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, hpa@zytor.com,
-	nramas@linux.microsoft.com, thomas.lendacky@amd.com,
-	robh@kernel.org, efault@gmx.de, rppt@kernel.org, david@redhat.com,
-	sourabhjain@linux.ibm.com, konrad.wilk@oracle.com,
-	boris.ostrovsky@oracle.com
-Subject: Re: [PATCH v20 2/8] crash: add generic infrastructure for crash
- hotplug support
-Message-ID: <ZBgVjjZdiEA5YxQX@MiWiFi-R3L-srv>
-References: <20230317212128.21424-1-eric.devolder@oracle.com>
- <20230317212128.21424-3-eric.devolder@oracle.com>
+	id 1peEtx-008zoP-2l;
+	Mon, 20 Mar 2023 12:46:15 +0000
+Received: from dggpemm500016.china.huawei.com (unknown [172.30.72.55])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4PgDss0NYZz17MgP;
+	Mon, 20 Mar 2023 20:42:57 +0800 (CST)
+Received: from huawei.com (10.67.174.205) by dggpemm500016.china.huawei.com
+ (7.185.36.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Mon, 20 Mar
+ 2023 20:46:00 +0800
+From: Chen Jiahao <chenjiahao16@huawei.com>
+To: <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
+	<conor.dooley@microchip.com>, <guoren@kernel.org>, <heiko@sntech.de>,
+	<bjorn@rivosinc.com>, <alex@ghiti.fr>, <akpm@linux-foundation.org>,
+	<atishp@rivosinc.com>, <bhe@redhat.com>, <thunder.leizhen@huawei.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+	<kexec@lists.infradead.org>, <linux-doc@vger.kernel.org>
+Subject: [PATCH -next 0/2] support allocating crashkernel above 4G explicitly on riscv
+Date: Tue, 21 Mar 2023 04:42:42 +0800
+Message-ID: <20230320204244.1637821-1-chenjiahao16@huawei.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20230317212128.21424-3-eric.devolder@oracle.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
+X-Originating-IP: [10.67.174.205]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpemm500016.china.huawei.com (7.185.36.25)
+X-CFilter-Loop: Reflected
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230320_011311_554992_B5489EF5 
-X-CRM114-Status: GOOD (  33.52  )
+X-CRM114-CacheID: sfid-20230320_054614_079838_A5FBAF4F 
+X-CRM114-Status: UNSURE (   6.50  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -88,181 +69,51 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 03/17/23 at 05:21pm, Eric DeVolder wrote:
-......
-> @@ -697,3 +700,137 @@ static int __init crash_save_vmcoreinfo_init(void)
->  }
->  
->  subsys_initcall(crash_save_vmcoreinfo_init);
-> +
-> +#ifdef CONFIG_CRASH_HOTPLUG
-> +#undef pr_fmt
-> +#define pr_fmt(fmt) "crash hp: " fmt
-> +/*
-> + * To accurately reflect hot un/plug changes of cpu and memory resources
-> + * (including onling and offlining of those resources), the elfcorehdr
-> + * (which is passed to the crash kernel via the elfcorehdr= parameter)
-> + * must be updated with the new list of CPUs and memories.
-> + *
-> + * In order to make changes to elfcorehdr, two conditions are needed:
-> + * First, the segment containing the elfcorehdr must be large enough
-> + * to permit a growing number of resources; the elfcorehdr memory size
-> + * is based on NR_CPUS_DEFAULT and CRASH_MAX_MEMORY_RANGES.
-> + * Second, purgatory must explicitly exclude the elfcorehdr from the
-> + * list of segments it checks (since the elfcorehdr changes and thus
-> + * would require an update to purgatory itself to update the digest).
-> + */
-> +static void crash_handle_hotplug_event(unsigned int hp_action, unsigned int cpu)
-> +{
-> +	/* Obtain lock while changing crash information */
-> +	if (!kexec_trylock())
-> +		return;
-> +
-> +	/* Check kdump is loaded */
-> +	if (kexec_crash_image) {
+On riscv, the current crash kernel allocation logic is trying to
+allocate within 32bit addressible memory region by default, if
+failed, try to allocate without 4G restriction.
 
-Here, what I mean is:
+In need of saving DMA zone memory while allocating a relatively large
+crash kernel region, allocating the reserved memory top down in
+high memory, without overlapping the DMA zone, is a mature solution.
+Hence this patchset introduces the parameter option crashkernel=X,[high,low].
 
-	/* Obtain lock while changing crash information */
-	if (!kexec_trylock())
-		return;
+One can reserve the crash kernel from high memory above DMA zone range
+by explicitly passing "crashkernel=X,high"; or reserve a memory range
+below 4G with "crashkernel=X,low". Besides, there are few rules need
+to take notice:
+1. "crashkernel=X,[high,low]" will be ignored if "crashkernel=size"
+   is specified.
+2. "crashkernel=X,low" is valid only when "crashkernel=X,high" is passed
+   and there is enough memory to be allocated under 4G.
+3. When allocating crashkernel above 4G and no "crashkernel=X,low" is
+   specified, a 128M low memory will be allocated automatically for
+   swiotlb bounce buffer.
+See Documentation/admin-guide/kernel-parameters.txt for more information.
 
-	/*If kdump is not loaded*/
-	if (!kexec_crash_image)
-		goto out;	
+Following test cases have been performed as expected:
+1) crashkernel=256M                          //low=256M
+2) crashkernel=1G                            //low=1G
+3) crashkernel=4G                            //high=4G, low=128M(default)
+4) crashkernel=4G crashkernel=256M,high      //high=4G, low=128M(default), high is ignored
+5) crashkernel=4G crashkernel=256M,low       //high=4G, low=128M(default), low is ignored
+6) crashkernel=4G,high                       //high=4G, low=128M(default)
+7) crashkernel=256M,low                      //low=0M, invalid
+8) crashkernel=4G,high crashkernel=256M,low  //high=4G, low=256M
+9) crashkernel=4G,high crashkernel=4G,low    //high=0M, low=0M, invalid
+10) crashkernel=512M@0xd0000000              //low=512M
 
-Then we reduce one tab of indentation for the following code block, e.g
-the for loop block will have smaller pressure on breaking the 80 chars
-limitation.
+Chen Jiahao (2):
+  riscv: kdump: Implement crashkernel=X,[high,low]
+  docs: kdump: Update the crashkernel description for riscv
 
-> +		struct kimage *image = kexec_crash_image;
-> +
-> +		if (hp_action == KEXEC_CRASH_HP_ADD_CPU ||
-> +			hp_action == KEXEC_CRASH_HP_REMOVE_CPU)
-> +			pr_debug("hp_action %u, cpu %u\n", hp_action, cpu);
-> +		else
-> +			pr_debug("hp_action %u\n", hp_action);
-> +
-> +		/*
-> +		 * When the struct kimage is allocated, the elfcorehdr_index
-> +		 * is set to -1. Find the segment containing the elfcorehdr,
-> +		 * if not already found. This works for both the kexec_load
-> +		 * and kexec_file_load paths.
-> +		 */
-> +		if (image->elfcorehdr_index < 0) {
-> +			unsigned long mem;
-> +			unsigned char *ptr;
-> +			unsigned int n;
-> +
-> +			for (n = 0; n < image->nr_segments; n++) {
-> +				mem = image->segment[n].mem;
-> +				ptr = kmap_local_page(pfn_to_page(mem >> PAGE_SHIFT));
-> +				if (ptr) {
-> +					/* The segment containing elfcorehdr */
-> +					if (memcmp(ptr, ELFMAG, SELFMAG) == 0)
-> +						image->elfcorehdr_index = (int)n;
-> +					kunmap_local(ptr);
-> +				}
-> +			}
-> +		}
-> +
-> +		if (image->elfcorehdr_index < 0) {
-> +			pr_err("unable to locate elfcorehdr segment");
-> +			goto out;
-> +		}
-> +
-> +		/* Needed in order for the segments to be updated */
-> +		arch_kexec_unprotect_crashkres();
-> +
-> +		/* Differentiate between normal load and hotplug update */
-> +		image->hp_action = hp_action;
-> +
-> +		/* Now invoke arch-specific update handler */
-> +		arch_crash_handle_hotplug_event(image);
-> +
-> +		/* No longer handling a hotplug event */
-> +		image->hp_action = KEXEC_CRASH_HP_NONE;
-> +		image->elfcorehdr_updated = true;
-> +
-> +		/* Change back to read-only */
-> +		arch_kexec_protect_crashkres();
-> +	}
-> +
-> +out:
-> +	/* Release lock now that update complete */
-> +	kexec_unlock();
-> +}
-> +
-> +static int crash_memhp_notifier(struct notifier_block *nb, unsigned long val, void *v)
-> +{
-> +	switch (val) {
-> +	case MEM_ONLINE:
-> +		crash_handle_hotplug_event(KEXEC_CRASH_HP_ADD_MEMORY,
-> +			KEXEC_CRASH_HP_INVALID_CPU);
-> +		break;
-> +
-> +	case MEM_OFFLINE:
-> +		crash_handle_hotplug_event(KEXEC_CRASH_HP_REMOVE_MEMORY,
-> +			KEXEC_CRASH_HP_INVALID_CPU);
-> +		break;
-> +	}
-> +	return NOTIFY_OK;
-> +}
-> +
-> +static struct notifier_block crash_memhp_nb = {
-> +	.notifier_call = crash_memhp_notifier,
-> +	.priority = 0
-> +};
-> +
-> +static int crash_cpuhp_online(unsigned int cpu)
-> +{
-> +	crash_handle_hotplug_event(KEXEC_CRASH_HP_ADD_CPU, cpu);
-> +	return 0;
-> +}
-> +
-> +static int crash_cpuhp_offline(unsigned int cpu)
-> +{
-> +	crash_handle_hotplug_event(KEXEC_CRASH_HP_REMOVE_CPU, cpu);
-> +	return 0;
-> +}
-> +
-> +static int __init crash_hotplug_init(void)
-> +{
-> +	int result = 0;
-> +
-> +	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
-> +		register_memory_notifier(&crash_memhp_nb);
-> +
-> +	if (IS_ENABLED(CONFIG_HOTPLUG_CPU)) {
-> +		result = cpuhp_setup_state_nocalls(CPUHP_BP_PREPARE_DYN,
-> +			"crash/cpuhp", crash_cpuhp_online, crash_cpuhp_offline);
-> +	}
-> +
-> +	return result;
-> +}
-> +
-> +subsys_initcall(crash_hotplug_init);
-> +#endif
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index 3d578c6fefee..8296d019737c 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -277,6 +277,12 @@ struct kimage *do_kimage_alloc_init(void)
->  	/* Initialize the list of unusable pages */
->  	INIT_LIST_HEAD(&image->unusable_pages);
->  
-> +#ifdef CONFIG_CRASH_HOTPLUG
-> +	image->hp_action = KEXEC_CRASH_HP_NONE;
-> +	image->elfcorehdr_index = -1;
-> +	image->elfcorehdr_updated = false;
-> +#endif
-> +
->  	return image;
->  }
->  
-> -- 
-> 2.31.1
-> 
+ .../admin-guide/kernel-parameters.txt         | 15 ++---
+ arch/riscv/kernel/setup.c                     |  5 ++
+ arch/riscv/mm/init.c                          | 56 ++++++++++++++++++-
+ 3 files changed, 66 insertions(+), 10 deletions(-)
+
+-- 
+2.31.1
 
 
 _______________________________________________
