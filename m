@@ -4,88 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CD93CC6FD1F
-	for <kexec@archiver.kernel.org>; Wed, 22 Mar 2023 19:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 04FE8C6FD1F
+	for <kexec@archiver.kernel.org>; Wed, 22 Mar 2023 20:13:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Message-Id:MIME-Version:Subject:
-	Date:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=C9tbvI9OT4IMn9cnMnhFobGROBm5uVzB1eWYAVHXKxc=; b=0Qcse3m8aPbUO6
-	9gs3Pp/2T6e7rUHRzdpGvlSeTejtWirw5gYKVIDrpRRq6ykAMZvp3PlAYk/cq+GEAHg2VvfQ8tb5G
-	Ze1/3e4OMUeNO4wgTldfQr+mu76vsva9kzD8/VYQDxxQRVEIMCsy/3mjPB/WZr+i1jRC+UeRDbzlt
-	mMTGF/zD8D5LseSb6hVMg35GOlq1r1xZOq0ycwgYXEKj2zMkN/WMTDqKWetJgjTgcebo4LbLjeB0S
-	0TpmC+6g3Jf2M3QhJBMWvU6i0ZmesWtTrzB7xBqVPeZrnVR/WJiBAGToec9rrSccJ1w9udjN0dfDr
-	NSc/I0oh/VFO3/n0vOvw==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=lkKoay5Ki4wf2/JI6bgBBPCSxgID35OKhXCQt35DSpA=; b=tN6dvPE9GyTZ/i
+	lPR44PzuPrj1rNqrHPSUcGXmmOozmCStdTP93jhDP6LcYHAwDVpFnQ2ryuAgexRMQ7dhjkLeD19Uk
+	MkzCRYn/RXhrHk8qBEMkYNk57gYZi2DCcwxi9iPH2kgX7Lu5ynqrfSLNfvEyaOloBGjO1/ROYUfF8
+	mxZs/09U+EHZStuq/LGq1iT2Ohs3Ayc4oKCyGGGrGqqCBHydblNcqj3ERHXl7w6WzE1FsEPU72uSm
+	w0tF7YumSTsaoI4LIQv6IIp3LM7Aq9zyGe15MQ79PlIHYeIRqRrXxjuD7gV42E+ZDdBNtn3+X95VZ
+	2++4EiveB1jyxxig4C4g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pf3q9-00H7ie-30;
-	Wed, 22 Mar 2023 19:09:41 +0000
-Received: from mail-ed1-x534.google.com ([2a00:1450:4864:20::534])
+	id 1pf4pg-00HJRb-2A;
+	Wed, 22 Mar 2023 20:13:16 +0000
+Received: from mail-il1-x12e.google.com ([2607:f8b0:4864:20::12e])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pf3q6-00H7hK-21
+	id 1pf4pe-00HJQK-1W
 	for kexec@lists.infradead.org;
-	Wed, 22 Mar 2023 19:09:40 +0000
-Received: by mail-ed1-x534.google.com with SMTP id cy23so77053135edb.12
-        for <kexec@lists.infradead.org>; Wed, 22 Mar 2023 12:09:35 -0700 (PDT)
+	Wed, 22 Mar 2023 20:13:15 +0000
+Received: by mail-il1-x12e.google.com with SMTP id h5so10492319ile.13
+        for <kexec@lists.infradead.org>; Wed, 22 Mar 2023 13:13:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1679512173;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+ySahdxE1L4cd6ksj325R5E2NVmNvOBKF2RFZh+Bg40=;
-        b=UPWEMq3NxXxzE8Wiu8abtvsUinCwPFZ8H9FO2g/NFY4fziUMumJC6irIJ6dv69ZpTQ
-         n21XNFACcI9NsGiNHUOVoAwAE2Fee/eo+JtPd9gQfHg4dOwJC75vcH4W7wbd8iWEA9qK
-         XqW4gf0zm/PELPGeYyejrX2CHeGxrVAhvfSjQ=
+        d=google.com; s=20210112; t=1679515989;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VSVpoYaq65+xbA9FzmSJjInslmYXWqbzAWERClhv01I=;
+        b=Nx3qTbZ20GsX7TOXQaiYemwOz4I72BqU0yeZUan+IOoQxcUzCYXiR6m9hNuyet44c0
+         69W3Pn+weLlnax/iMnT9t2K2zy3cNaQd2bK7297jNu6VjCS4Gwdm834G9FfkjusFTz3L
+         Og+U6A5VPgvSDLdANAEIH6eXjuS6yPaTvRyv3McBLC5tqM6md1lygdDv5Maj6imD49aR
+         8ST6dw7ZGzUWgIMPaN/9tUqhoBcmlNbfrD3Pufkz+f8pB8WaiKZVakO/3pcJS7xmQISF
+         2XdBlHmqesWw7t6HIZWxzw3yYbq6HtPIKgryuazt2g88qsmQrv60OUebkiStUz2VrU+f
+         129A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679512173;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+ySahdxE1L4cd6ksj325R5E2NVmNvOBKF2RFZh+Bg40=;
-        b=zMQC9fa5kzK8nvS3k9dXvH+0q1TuYQiTVHPGgwWljXE9Ku5QPQ7lSeFn7SE0ZVkLbt
-         LumN6TNbDIuPr6CZHdnKZf6ZSEiH9+zXIpK8q5u297eAQCVF/dAgnNTA5re48ACLWWCZ
-         uqOBK0R/rQZqDqYNY32AXWpyhKZ7kVVwGlbn+X280lQFvod8jkpQYs/soiJ9zrqA74pv
-         y+lI6ncFvM7Qd1TsmfbSvzd6qwMdPGr0HMxZ9nRN9Dt1SQrCtp3r9bGmSY5eVNm5nknR
-         18ZmQg+HG9o5RDMykE+kTkwxOK1xLBzI+uUCzsyIp4qVelV1s6Ls0AUj98e5KAKkGTDz
-         8SfQ==
-X-Gm-Message-State: AO0yUKWVL8OBALsxkB7U8F4/t3e6dh5JYTzNe65MIzgW5o0h10rXDxV0
-	Rr4LpdQfVP88ilVduev+zJs8ng==
-X-Google-Smtp-Source: AK7set9bWzvTBQfp8o8NZCDk6+QW+Q+iaLsHjRinXNgkwF5mMn25Kdc/k/pwNG7wlQ43npIAUmacDw==
-X-Received: by 2002:a17:906:7e55:b0:932:cfbc:7613 with SMTP id z21-20020a1709067e5500b00932cfbc7613mr7814672ejr.24.1679512173566;
-        Wed, 22 Mar 2023 12:09:33 -0700 (PDT)
-Received: from alco.roam.corp.google.com (80.71.134.83.ipv4.parknet.dk. [80.71.134.83])
-        by smtp.gmail.com with ESMTPSA id k24-20020a50ce58000000b004fc9e462743sm8129130edj.91.2023.03.22.12.09.33
+        d=1e100.net; s=20210112; t=1679515989;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VSVpoYaq65+xbA9FzmSJjInslmYXWqbzAWERClhv01I=;
+        b=fLwBxIZpJVSRevgbm6NgAilTlGTXwPefYuc4lTmuPMyyMNjKZYNjOw5TKrsxNtZ+QR
+         cajC8j9zjH2zMoWNve0TGUnZjuIu6KfItsVSlBOJxn82vPcC3xfcIQBahNTwHLDrM8e/
+         jwI2EjnL6jXOuZGUMBKicYB6hZV+0u+QHD1G8D0TLwSktgHuZF0xb1RbfhrPm1NBeBTl
+         +T0Eh9MlNzut50K6NTT1X4U0Du+H/DUyFbsDUxzVzg1vzxvgKPY0QZgl2gTb5gkVFuRs
+         LBoyCbVz8Dw6v57ME3Wum5Yu82EvEBoU/Yn97DoB1FRT7Z1YTdRqJreEIc3+v4QZcVla
+         IvTw==
+X-Gm-Message-State: AO0yUKUGDYkA+k3Bj4W9M9Q9lEc8MfwLR3ItqEgH4YYNjnIzVUyYDJyW
+	s9wfdL5sHWFCNbwUrPd+tP51tQ==
+X-Google-Smtp-Source: AK7set+6/bABqcZ7Ui8WBR/o5uSEMuupYads18CiEFawlKIO6/axtKxX5dOWAApzt981uGzOj3EbFg==
+X-Received: by 2002:a92:d0c5:0:b0:325:a6cd:4730 with SMTP id y5-20020a92d0c5000000b00325a6cd4730mr5350858ila.29.1679515988574;
+        Wed, 22 Mar 2023 13:13:08 -0700 (PDT)
+Received: from google.com ([2620:15c:183:200:7419:4945:3325:dd1e])
+        by smtp.gmail.com with ESMTPSA id v9-20020a056638250900b0040584b8a32fsm996985jat.126.2023.03.22.13.13.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Mar 2023 12:09:33 -0700 (PDT)
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Wed, 22 Mar 2023 20:09:21 +0100
-Subject: [PATCH v3] kexec: Support purgatories with .text.hot sections
+        Wed, 22 Mar 2023 13:13:08 -0700 (PDT)
+Date: Wed, 22 Mar 2023 14:13:03 -0600
+From: Ross Zwisler <zwisler@google.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ricardo Ribalda <ribalda@chromium.org>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Philipp Rudo <prudo@linux.vnet.ibm.com>,
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Subject: Re: [PATCH] kexec: Support purgatories with .text.hot sections
+Message-ID: <20230322201303.GA2979303@google.com>
+References: <20230321-kexec_clang16-v1-0-a768fc2c7c4d@chromium.org>
+ <ZBsSBr87al9ccG96@home.goodmis.org>
 MIME-Version: 1.0
-Message-Id: <20230321-kexec_clang16-v3-0-5f016c8d0e87@chromium.org>
-To: Eric Biederman <ebiederm@xmission.com>
-Cc: linux-kernel@vger.kernel.org, Philipp Rudo <prudo@redhat.com>,
- kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>,
- Ricardo Ribalda <ribalda@chromium.org>
-X-Mailer: b4 0.11.0-dev-696ae
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3040; i=ribalda@chromium.org;
- h=from:subject:message-id; bh=zeD7U+0v4JMLtkU5q8C0r0fzM4KdEhcMV9PmfyzIKU0=;
- b=owEBbQKS/ZANAwAKAdE30T7POsSIAcsmYgBkG1JkKRERoHv42QrNtVkqYPkq552VERdk/QnsxyEi
- q0BT2CmJAjMEAAEKAB0WIQREDzjr+/4oCDLSsx7RN9E+zzrEiAUCZBtSZAAKCRDRN9E+zzrEiN88D/
- 4us5k4JkfH+locFVVMElk6flGVX8JQm9dVqN442H5ATser3crdr0Ar8pPlcgcJVHtwby3G+qLJksSm
- loLsjZoLDrQgTJDJIQJDWmrj1fLTE3IranBC1bgZ4FyFir/I4yhSpiDIONnctM8nNAFZ24rLYABGmv
- 2VqJU7zbiPbg765ixmxCilQptemctcAL2K4wb1nEPVZhiRWCCRVe6GbYOnOOZzY/PmG0MrdQp/aAhj
- nghVQ51CpAUd+TvUgbFOBhBfNwVsX6+ujowsxQNl9oXGdkjdbiu4/uV5oWvFfx3VJjsebs1uOFn54Y
- M/PhxTrEBH3+pKBmtWc2n1pPzcIPU5cLt9j41IJSk39sCdZ7oM9G24801egJoqBL/el62Oaa9wqFCW
- BRwp09+2qsTGQIJvdGHKuHEOsbjgm0WfUtuxM2kpazmAAx4xXOMImQkGvbpPrdD8zRqNz1JEPs+Kcp
- kfcmq1tbJhIayWISo6eKAd74xIl2RrGobQo7zGPbcNqFL9QvaJU4mMTv4q4l50xxPyiqAnDYKfXT/p
- 494vBT80CbrGQqWqWiKjf+sDRSd8Df+KY0qkXOf3mh9ycDvfnSZPEOuKa5rO6jSglNHRVY8Qr0WdHl
- 79mYgpPR8TRXNH6RHduqRtZaSBJ5syOlt/y6SVivwFK2YWchFDGjZrxBMxMQ==
-X-Developer-Key: i=ribalda@chromium.org; a=openpgp;
- fpr=9EC3BB66E2FC129A6F90B39556A0D81F9F782DA9
+Content-Disposition: inline
+In-Reply-To: <ZBsSBr87al9ccG96@home.goodmis.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230322_120938_685266_1B5DD588 
-X-CRM114-Status: GOOD (  16.28  )
+X-CRM114-CacheID: sfid-20230322_131314_530632_D923984D 
+X-CRM114-Status: GOOD (  30.11  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,89 +94,100 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Clang16 links the purgatory text in two sections:
+On Wed, Mar 22, 2023 at 10:34:46AM -0400, Steven Rostedt wrote:
+> On Tue, Mar 21, 2023 at 12:49:08PM +0100, Ricardo Ribalda wrote:
+> > Clang16 links the purgatory text in two sections:
+> > 
+> >   [ 1] .text             PROGBITS         0000000000000000  00000040
+> >        00000000000011a1  0000000000000000  AX       0     0     16
+> >   [ 2] .rela.text        RELA             0000000000000000  00003498
+> >        0000000000000648  0000000000000018   I      24     1     8
+> >   ...
+> >   [17] .text.hot.        PROGBITS         0000000000000000  00003220
+> >        000000000000020b  0000000000000000  AX       0     0     1
+> >   [18] .rela.text.hot.   RELA             0000000000000000  00004428
+> >        0000000000000078  0000000000000018   I      24    17     8
+> > 
+> > And both of them have their range [sh_addr ... sh_addr+sh_size] on the
+> > area pointed by `e_entry`.
+> > 
+> > This causes that image->start is calculated twice, once for .text and
+> > another time for .text.hot. The second calculation leaves image->start
+> > in a random location.
+> > 
+> > Because of this, the system crashes inmediatly after:
+> > 
+> > kexec_core: Starting new kernel
+> > 
+> > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> > To: Eric Biederman <ebiederm@xmission.com>
+> > Cc: Philipp Rudo <prudo@linux.vnet.ibm.com>
+> > Cc: kexec@lists.infradead.org
+> > Cc: linux-kernel@vger.kernel.org
+> > ---
+> >  kernel/kexec_file.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> > index f1a0e4e3fb5c..b1a25d97d5e2 100644
+> > --- a/kernel/kexec_file.c
+> > +++ b/kernel/kexec_file.c
+> > @@ -904,7 +904,8 @@ static int kexec_purgatory_setup_sechdrs(struct purgatory_info *pi,
+> >  		if (sechdrs[i].sh_flags & SHF_EXECINSTR &&
+> >  		    pi->ehdr->e_entry >= sechdrs[i].sh_addr &&
+> >  		    pi->ehdr->e_entry < (sechdrs[i].sh_addr
+> > -					 + sechdrs[i].sh_size)) {
+> > +					 + sechdrs[i].sh_size) &&
+> > +		    kbuf->image->start != pi->ehdr->e_shnum) {
 
-  [ 1] .text             PROGBITS         0000000000000000  00000040
-       00000000000011a1  0000000000000000  AX       0     0     16
-  [ 2] .rela.text        RELA             0000000000000000  00003498
-       0000000000000648  0000000000000018   I      24     1     8
-  ...
-  [17] .text.hot.        PROGBITS         0000000000000000  00003220
-       000000000000020b  0000000000000000  AX       0     0     1
-  [18] .rela.text.hot.   RELA             0000000000000000  00004428
-       0000000000000078  0000000000000018   I      24    17     8
+I think we should also be comparing against the initial value (set ~20 lines
+above) of pi->ehdr->e_entry, not pi->ehdr->e_shnum.
 
-And both of them have their range [sh_addr ... sh_addr+sh_size] on the
-area pointed by `e_entry`.
-
-This causes that image->start is calculated twice, once for .text and
-another time for .text.hot. The second calculation leaves image->start
-in a random location.
-
-Because of this, the system crashes inmediatly after:
-
-kexec_core: Starting new kernel
-
-Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
----
-kexec: Fix kexec_file_load for llvm16
-
-When upreving llvm I realised that kexec stopped working on my test
-platform. This patch fixes it.
-
-To: Eric Biederman <ebiederm@xmission.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Philipp Rudo <prudo@redhat.com>
-Cc: kexec@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
-Changes in v3:
-- Fix initial value. Thanks Ross!
-- Link to v2: https://lore.kernel.org/r/20230321-kexec_clang16-v2-0-d10e5d517869@chromium.org
-
-Changes in v2:
-- Fix if condition. Thanks Steven!.
-- Update Philipp email. Thanks Baoquan.
-- Link to v1: https://lore.kernel.org/r/20230321-kexec_clang16-v1-0-a768fc2c7c4d@chromium.org
----
- kernel/kexec_file.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+This patch works correctly for me:
 
 diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index f1a0e4e3fb5c..25a37d8f113a 100644
+index f7a4fd4d243f4..967826a42cdd7 100644
 --- a/kernel/kexec_file.c
 +++ b/kernel/kexec_file.c
-@@ -901,10 +901,21 @@ static int kexec_purgatory_setup_sechdrs(struct purgatory_info *pi,
- 		}
- 
- 		offset = ALIGN(offset, align);
-+
-+		/*
-+		 * Check if the segment contains the entry point, if so,
-+		 * calculate the value of image->start based on it.
-+		 * If the compiler has produced more than one .text sections
-+		 * (Eg: .text.hot), they are generally after the main .text
-+		 * section, and they shall not be used to calculate
-+		 * image->start. So do not re-calculate image->start if it
-+		 * is not set to the initial value.
-+		 */
- 		if (sechdrs[i].sh_flags & SHF_EXECINSTR &&
- 		    pi->ehdr->e_entry >= sechdrs[i].sh_addr &&
- 		    pi->ehdr->e_entry < (sechdrs[i].sh_addr
--					 + sechdrs[i].sh_size)) {
-+					 + sechdrs[i].sh_size) &&
-+		    kbuf->image->start == pi->ehdr->e_entry) {
- 			kbuf->image->start -= sechdrs[i].sh_addr;
- 			kbuf->image->start += kbuf->mem + offset;
- 		}
+@@ -913,7 +913,8 @@ static int kexec_purgatory_setup_sechdrs(struct purgatory_info *pi,
+                if (sechdrs[i].sh_flags & SHF_EXECINSTR &&
+                    pi->ehdr->e_entry >= sechdrs[i].sh_addr &&
+                    pi->ehdr->e_entry < (sechdrs[i].sh_addr
+-                                        + sechdrs[i].sh_size)) {
++                                        + sechdrs[i].sh_size) &&
++                   kbuf->image->start == pi->ehdr->e_entry) {
+                        kbuf->image->start -= sechdrs[i].sh_addr;
+                        kbuf->image->start += kbuf->mem + offset;
+                }
 
----
-base-commit: 17214b70a159c6547df9ae204a6275d983146f6b
-change-id: 20230321-kexec_clang16-4510c23d129c
+Great find.  With those 2 quick changes, you can add:
 
-Best regards,
--- 
-Ricardo Ribalda <ribalda@chromium.org>
+Reviewed-by: Ross Zwisler <zwisler@google.com>
+
+> Shouldn't this be: kbuf->image->start == pi->ehdr->e_shnum) {
+> 
+> ?
+> 
+> As you want to only do this update when it's not equal to the initial value.
+> If this did work, then you may want to make sure that was the initial value.
+> 
+> Also, please add a comment about why you are doing this check.
+> 
+> Thanks!
+> 
+> -- Steve
+> 
+> >  			kbuf->image->start -= sechdrs[i].sh_addr;
+> >  			kbuf->image->start += kbuf->mem + offset;
+> >  		}
+> > 
+> > ---
+> > base-commit: 17214b70a159c6547df9ae204a6275d983146f6b
+> > change-id: 20230321-kexec_clang16-4510c23d129c
+> > 
+> > Best regards,
+> > -- 
+> > Ricardo Ribalda <ribalda@chromium.org>
 
 _______________________________________________
 kexec mailing list
