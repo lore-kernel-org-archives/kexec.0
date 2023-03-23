@@ -4,58 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5CE47C74A5B
-	for <kexec@archiver.kernel.org>; Thu, 23 Mar 2023 17:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 78B08C7619A
+	for <kexec@archiver.kernel.org>; Thu, 23 Mar 2023 22:08:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Mime-Version:References:In-Reply-To:
+	Message-Id:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=HPA2TwMt+ln7YuWdKCEIChqJqlZ0O+BYR4ma25JFMt0=; b=E7RbwQ1esmSBmC
-	5zhL0TW+PzwBh/MrPA5IacNrlrNGDKuJSMeDKA4VjCBV8qLXfhfiMAHuaTsgUrX2Ai6NA+nJEMDFk
-	UyTUuGAx6DAMzb1PyXVX5ti0d0TJhEwY+4Wh6wIWO2eZcgL9tFtdMtC6ZIo493RCdYJK3tM0ANYSe
-	P4QvBA0Fv+az/zNmb/R9hkH/+4PownrdcwzCGmCXmWPwkn1JKVcDhMa1Qwe94J+FGfRba4qq0itsQ
-	gSvuJfIFXfweMpQO4xhQJAajfz+A6tPFgkqAeoqTgydZWX/PFCtBLD4lzkdJRq5OA4jmRXVwpe6J6
-	j8h78zbyO6OIhS70O3mw==;
+	List-Owner; bh=Q+Td0L3KDbAyLydloWaarWG8dmDHAeLoeegLdSjVsng=; b=lNRxk+X+mzU4UG
+	s7gO+sTXrSKzWwwY3gKH3TOKHmipf/3gqLK1F42ZtNy4ZA9EYzag86x3ns0fwVHQXQRGGa6xJYHHD
+	8P9ABE2VP83tNDNU9o1v8oIQltrKsLN5vK89vHJArMN6NgRXtFxMW+1qduGl/EOEDf4edNGgdgwcM
+	/0/tKcf23gj7lXbMacEf/2pw1bH6bPxdAg1EQyzUB3Ywqxt9db1sbS8W/wZR2NB+/Ckj+w7UOyhfE
+	N3LmAjpftZur48NPDrgQisB5o7po2+rxkS8XnLH2ivTjo7X5JhaSkyiHfYbbIwRUmMDIdjRuhjGb8
+	xcc5d7Ml7YrUi495iHDQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pfOgs-002akr-0D;
-	Thu, 23 Mar 2023 17:25:30 +0000
-Received: from dfw.source.kernel.org ([139.178.84.217])
+	id 1pfT6G-0033DX-2e;
+	Thu, 23 Mar 2023 22:08:00 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pfOgp-002ak7-09;
-	Thu, 23 Mar 2023 17:25:28 +0000
+	id 1pfT6E-0033D2-1F
+	for kexec@lists.infradead.org;
+	Thu, 23 Mar 2023 22:07:59 +0000
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 9A8F662827;
-	Thu, 23 Mar 2023 17:25:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC4A4C433A8;
-	Thu, 23 Mar 2023 17:25:24 +0000 (UTC)
-Date: Thu, 23 Mar 2023 17:25:21 +0000
-From: Catalin Marinas <catalin.marinas@arm.com>
+	by dfw.source.kernel.org (Postfix) with ESMTPS id BFDCF628E0;
+	Thu, 23 Mar 2023 22:07:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01901C433EF;
+	Thu, 23 Mar 2023 22:07:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1679609277;
+	bh=reLqZ6mL7WqZDYYjDhmQkKBmgPIHanFWRcBr7gpKytk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=yWnmA7jho28TdcB1GYNPLBSK1E0F2yavbxbGf5yE5BOHyqq4nxKHTwWpAFBQ7gqdq
+	 kK4H+M4qD3qNbibUmbwo3f5JF0Hn3Xf21nMMrCr7TMJobLuTsAkNci/EDg68VV2ZT6
+	 A/q4A6FXFsWJh+LO4VGt3pxf9RZ+HpGXB6OyFJ2o=
+Date: Thu, 23 Mar 2023 15:07:55 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
 To: Baoquan He <bhe@redhat.com>
-Cc: linux-kernel@vger.kernel.org, horms@kernel.org,
-	thunder.leizhen@huawei.com, John.p.donnelly@oracle.com,
-	will@kernel.org, kexec@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4] arm64: kdump: simplify the reservation behaviour of
- crashkernel=,high
-Message-ID: <ZByLga6FS5o8Syug@arm.com>
-References: <20230306084124.300584-1-bhe@redhat.com>
- <ZBHbw3Vp4dxukGOD@arm.com>
- <ZBLlyGxGk33yrA+2@MiWiFi-R3L-srv>
- <ZBNTRBqqb74T3RMx@arm.com>
- <ZBSCeWtHvqc/iJZg@MiWiFi-R3L-srv>
- <ZBSr/kIIuxmC/INY@arm.com>
- <ZBhbqAOsHFj5cheI@MiWiFi-R3L-srv>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <ZBhbqAOsHFj5cheI@MiWiFi-R3L-srv>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, x86@kernel.org, Eric Biederman
+ <ebiederm@xmission.com>, Dave Hansen <dave.hansen@intel.com>, Thomas
+ Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
+ Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>, kexec@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v2 0/2] kexec: Remove unnecessary arch hook
+Message-Id: <20230323150755.06f8977fa2b860b8e02c37c3@linux-foundation.org>
+In-Reply-To: <ZBwEgDPq71+09OiD@MiWiFi-R3L-srv>
+References: <20230307224416.907040-1-helgaas@kernel.org>
+	<ZBwEgDPq71+09OiD@MiWiFi-R3L-srv>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230323_102527_167065_5445FD09 
-X-CRM114-Status: GOOD (  34.54  )
+X-CRM114-CacheID: sfid-20230323_150758_461263_AF085249 
+X-CRM114-Status: GOOD (  15.73  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -72,105 +76,27 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Mar 20, 2023 at 09:12:08PM +0800, Baoquan He wrote:
-> On 03/17/23 at 06:05pm, Catalin Marinas wrote:
-> > On Fri, Mar 17, 2023 at 11:09:13PM +0800, Baoquan He wrote:
-> > > In fact, what I want to achieve is we set CRASH_ADDR_LOW_MAX to 4G
-> > > fixedly on arm64, just like what we do on x86_64. As for RPi4 platform,
-> > > we leave it to crashkernel=size@offset syntax. Two reasons for this:
-> > > 1) crashkernel is needed on enterprise platform, such as workstation or
-> > > server. While RPi4 is obviously not the target. I contacted several RPi4
-> > > players in Redhat and my friends, none of them ever played kdump
-> > > testing. If they really have to, crashkernel=size@offset is enough for
-> > > them to set.
+On Thu, 23 Mar 2023 15:49:20 +0800 Baoquan He <bhe@redhat.com> wrote:
+
+> Hi,
+> 
+> On 03/07/23 at 04:44pm, Bjorn Helgaas wrote:
+> > From: Bjorn Helgaas <bhelgaas@google.com>
 > > 
-> > I'd like crashkernel=size (without @offset) on RPi4 to still do the
-> > right thing: a low allocation at least as we had until recently (or
-> > high+low where high here is maybe above 1GB). IOW, no regression for
-> > this crashkernel=size case. We can then change the explicit
-> > crashkernel=x,high to mean only above 4GB irrespective of the platform
-> > and crashkernel=x,low to be below arm64_dma_phys_limit.
-> 
-> Since crashkernel=,high and crashkernel=size fallback was added in arm64
-> recently, with my understanding, you are suggesting:
-> 
-> on arm64:
-> RPi4:
-> crashkernel=size
-> 0~1G: low memory (no regression introduced)
-
-And, if not enough low memory, fall back to memory above 1GB (for RPi4;
-it would be above 4GB for any other system).
-
-> crashkernel=size,high
-> 0~1G: low memory | 4G~top: high memory
-
-Yes.
-
-> Other normal system:
-> crashkernel=size|crashkernel=size,high
-> 0~4G: low memory | 4G~top: high memory
-
-Yes.
-
-IOW, specifying 'high' only forces the high allocation above 4GB instead
-of arm64_dma_phys_limit, irrespective of the platform. If no 'high'
-specified search_base remains CRASH_ADDR_LOW_MAX (1GB on RPi4, 4GB for
-the rest).
-
-> > > 2) with the fixed CRASH_ADDR_LOW_MAX as 4G, we can easily fix the
-> > > problem of base page mapping for the whole linear mapping if crsahkernel=
-> > > is set in kernel parameter shown in [1] at bottom. 
+> > There are no arch-specific things in arch_kexec_kernel_image_load(), so
+> > remove it and just use the generic version.
 > > 
-> > That's a different problem ;). I should re-read that thread, forgot most
-> > of the details but I recall one of the counter arguments was that there
-> > isn't a strong case to unmap the crashkernel reservation. Now, if we
-> > place crashdump kernel image goes in the 'high' reservation, can we not
-> > leave the 'low' reservation mapped? We don't really care about it as it
-> > wouldn't have any meaningful code/data to be preserved. If the 'high'
-> > one goes above 4G always, we don't depend on the arm64_dma_phys_limit.
+> > v1 is at:
+> > https://lore.kernel.org/all/20221215182339.129803-1-helgaas@kernel.org/
+> > 
+> > This v2 is trivially rebased to v6.3-rc1 and the commit log expanded
+> > slightly.
 > 
-> Yes, this looks ideal. While it only works when crashkernel=,high case and
-> it succeeds to reserve a memory region for the specified size of crashkernel
-> high memory. At below, we have 4 cases of crashkernel= syntax:
-> 
-> crashkernel=size
-> 1)first attempt:  low memory under arm64_dma_phys_limit
-> 2)fallback:       finding memory above 4G
+> This is an obvious and good cleanup patchset, who should I ping to ask
+> for accepting?  It's touching kexec generic code, while the hook
+> only exists on x86 ARCH.
 
-(2) should be 'finding memory above arm64_dma_phys_limit' to keep the
-current behaviour for RPi4.
-
-> crashkernel=size,high
-> 3)first attempt:  finding memory above 4G
-> 4)fallback:       low memory under arm64_dma_phys_limit
-
-Yes.
-
-> case 3) works with your suggestion. However, 1), 2), 4) all need to
-> defer to bootmem_init(). With these cases and different handling,
-> reserve_crashkernel() could be too complicated.
-
-Ah, because of the fallback below arm64_dma_phys_limit as in (4), we
-still can't move the full crashkernel reservation early. Well, we could
-do it in two steps: (a) early attempt at crashkernel reservation above
-4G if 'high' was specified and we avoid mapping it if successful and (b)
-do the late crashkernel reservation below arm64_dma_phys_limit and skip
-unmapping as being too late. This way most server-like platforms would
-get a reservation above 4G, unmapped.
-
-> I am wondering if we can cancel the protection of crashkernel memory
-> region on arm64 for now. In earlier discussion, people questioned if the
-> protection is necessary on arm64. After comparison, I would rather take
-> away the protection method of crashkernel region since they try to
-> protect in a chance in one million , while the base page mapping for the
-> whole linear mapping is mitigating arm64 high end server always.
-
-This works for me. We can add the protection later for addresses above
-4GB only as mentioned above.
-
--- 
-Catalin
+I grabbed them
 
 _______________________________________________
 kexec mailing list
