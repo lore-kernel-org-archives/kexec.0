@@ -4,8 +4,8 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9446DC76195
-	for <kexec@archiver.kernel.org>; Sat, 25 Mar 2023 02:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 055CEC6FD1C
+	for <kexec@archiver.kernel.org>; Sat, 25 Mar 2023 02:14:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
@@ -13,50 +13,51 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Message-ID:From:References:CC:To:Subject:Reply-To:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
 	:Resent-Message-ID:List-Owner;
-	bh=SZXxvT71lTj1x/HDMb4yPNbvNW1Je7Uai0fipo5ayCA=; b=26UOYWFyjM5BdABg7m1KM4Iv8n
-	q5nhalxqr0qhURiFwcqn1sxhbv2vnfv0HqavyARyx2sDpOjfoi68Z5Z2mM/Pr5lVEGLy6stfSzQVA
-	UHVq9MH2V6AdmEYAdOJp6RiUd4KdFCtDnKiv69chnF13lI+FSvKhjzCz9l89zcnqdb2XeBWFdafvE
-	E4slIdfdTyZdIgXfJsjnXd4h5I0PdyK/PlrGpVxm1NZuuusCZubOf1/NJjn4b8pkjfSqedlouGtuB
-	tNSisdtkhecoTnx8ke2RLLQJ+i6HgQKGxmLivT4aaps1tEiWLNLBIp5qmLzRedSFKsfUenV1kvYUO
-	nlZ6PuiA==;
+	bh=f4TJmHnzYiUsslyal1nhnq710G2AvMTXfpXas2SBgzs=; b=DwDfP++cW0v9EBke8jEFcZQfZL
+	hQCQ1Zej9PDIFFK5iTqjAs7bd8Ow4WycQvmN5Gr2Moj8RMcX2jhqRbxQq9QDBkrRMekAyaaTAADJk
+	idg5d78sF/NmdPxkb9VrHuejPDurRGYduHCbHC/IbfGNxIQCLkU6Bkk/nEEYavasTJNqdJ9JXOllR
+	zjLnioq3OtIIcDeclLvVR32AGSeAoaaPb36rL89+tX0RZrj/HZgEONDgzAy4qBoRwvGxnRkCa4+yU
+	0aWg770sZNb/VPSWL24X0gT7VRqoD4Qv/98iuIS3sZIyydEA00r2sOcZM2J7GG9l4K1XQ2PoRdn+L
+	89mStIqg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pftHw-005y27-36;
-	Sat, 25 Mar 2023 02:05:48 +0000
+	id 1pftQT-005yV2-31;
+	Sat, 25 Mar 2023 02:14:37 +0000
 Received: from szxga02-in.huawei.com ([45.249.212.188])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pftHu-005y1R-0N;
-	Sat, 25 Mar 2023 02:05:48 +0000
-Received: from dggpemm500006.china.huawei.com (unknown [172.30.72.55])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Pk2RJ4mFczKtNX;
-	Sat, 25 Mar 2023 10:03:08 +0800 (CST)
+	id 1pftQQ-005yUJ-20;
+	Sat, 25 Mar 2023 02:14:36 +0000
+Received: from dggpemm500006.china.huawei.com (unknown [172.30.72.53])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Pk2cM4kqpzSp0c;
+	Sat, 25 Mar 2023 10:10:59 +0800 (CST)
 Received: from [10.174.178.55] (10.174.178.55) by
  dggpemm500006.china.huawei.com (7.185.36.236) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Sat, 25 Mar 2023 10:04:34 +0800
-Subject: Re: [PATCH 3/3] arm64: kdump: defer the crashkernel reservation for
- platforms with no DMA memory zones
-To: Baoquan He <bhe@redhat.com>, <linux-kernel@vger.kernel.org>
-CC: <catalin.marinas@arm.com>, <horms@kernel.org>,
+ 15.1.2507.21; Sat, 25 Mar 2023 10:14:28 +0800
+Subject: Re: [PATCH 0/3] arm64: kdump : take off the protection on crashkernel
+ memory region
+To: Catalin Marinas <catalin.marinas@arm.com>, Baoquan He <bhe@redhat.com>
+CC: <linux-kernel@vger.kernel.org>, <horms@kernel.org>,
 	<John.p.donnelly@oracle.com>, <will@kernel.org>, <kexec@lists.infradead.org>,
 	<ardb@kernel.org>, <rppt@kernel.org>, <linux-arm-kernel@lists.infradead.org>
 References: <20230324131838.409996-1-bhe@redhat.com>
- <20230324131838.409996-4-bhe@redhat.com>
+ <ZB3Zx85Ajnhzq3Pt@arm.com>
 From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <3653555d-3302-fc40-c917-963b029fc839@huawei.com>
-Date: Sat, 25 Mar 2023 10:04:33 +0800
+Message-ID: <9ca6f729-989d-654a-83e6-c89d8f65c69d@huawei.com>
+Date: Sat, 25 Mar 2023 10:14:27 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20230324131838.409996-4-bhe@redhat.com>
+In-Reply-To: <ZB3Zx85Ajnhzq3Pt@arm.com>
 Content-Language: en-US
 X-Originating-IP: [10.174.178.55]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
  dggpemm500006.china.huawei.com (7.185.36.236)
 X-CFilter-Loop: Reflected
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230324_190546_516373_1F5B779F 
-X-CRM114-Status: GOOD (  16.66  )
+X-CRM114-CacheID: sfid-20230324_191434_831559_50EAE5B1 
+X-CRM114-Status: UNSURE (   9.95  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -75,66 +76,31 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 
 
-On 2023/3/24 21:18, Baoquan He wrote:
-> In commit 031495635b46 ("arm64: Do not defer reserve_crashkernel() for
-> platforms with no DMA memory zones"), reserve_crashkernel() is called
-> much earlier in arm64_memblock_init() to avoid causing base apge
-> mapping on platforms with no DMA meomry zones.
+On 2023/3/25 1:11, Catalin Marinas wrote:
+> On Fri, Mar 24, 2023 at 09:18:35PM +0800, Baoquan He wrote:
+>> Baoquan He (3):
+>>   arm64: kdump : take off the protection on crashkernel memory region
+>>   arm64: kdump: do not map crashkernel region specifically
+>>   arm64: kdump: defer the crashkernel reservation for platforms with no
+>>     DMA memory zones
+>>
+>>  arch/arm64/include/asm/kexec.h    |  6 -----
+>>  arch/arm64/include/asm/memory.h   |  5 ----
+>>  arch/arm64/kernel/machine_kexec.c | 20 --------------
+>>  arch/arm64/mm/init.c              |  6 +----
+>>  arch/arm64/mm/mmu.c               | 43 -------------------------------
+>>  5 files changed, 1 insertion(+), 79 deletions(-)
 > 
-> With taking off protection on crashkernel memory region, no need to call
-> reserve_crashkernel() specially in advance. The deferred invocation of
-> reserve_crashkernel() in bootmem_init() can cover all cases.
-> 
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> ---
->  arch/arm64/include/asm/memory.h | 5 -----
->  arch/arm64/mm/init.c            | 6 +-----
->  2 files changed, 1 insertion(+), 10 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
-> index 78e5163836a0..efcd68154a3a 100644
-> --- a/arch/arm64/include/asm/memory.h
-> +++ b/arch/arm64/include/asm/memory.h
-> @@ -374,11 +374,6 @@ static inline void *phys_to_virt(phys_addr_t x)
->  })
->  
->  void dump_mem_limit(void);
-> -
-> -static inline bool defer_reserve_crashkernel(void)
-> -{
-> -	return IS_ENABLED(CONFIG_ZONE_DMA) || IS_ENABLED(CONFIG_ZONE_DMA32);
-> -}
->  #endif /* !ASSEMBLY */
->  
->  /*
-> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> index 58a0bb2c17f1..b888de59e0b7 100644
-> --- a/arch/arm64/mm/init.c
-> +++ b/arch/arm64/mm/init.c
-> @@ -408,9 +408,6 @@ void __init arm64_memblock_init(void)
->  
->  	early_init_fdt_scan_reserved_mem();
->  
-> -	if (!defer_reserve_crashkernel())
-> -		reserve_crashkernel();
-> -
->  	high_memory = __va(memblock_end_of_DRAM() - 1) + 1;
->  }
->  
-> @@ -457,8 +454,7 @@ void __init bootmem_init(void)
->  	 * request_standard_resources() depends on crashkernel's memory being
->  	 * reserved, so do it here.
->  	 */
-> -	if (defer_reserve_crashkernel())
-> -		reserve_crashkernel();
-> +	reserve_crashkernel();
->  
->  	memblock_dump_all();
->  }
+> This series works for me and it has a negative diffstat as well (though
+> I'm sure people will try to bring it back ;)).
 
-Some comments also need to be deleted, above the definition of arm64_dma_phys_limit
-in arch/arm64/mm/init.c
+After the write protection is removed, it is recommended that crc32 check
+be added. However, it can be added later.
 
+> 
+> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+> 
+> .
 > 
 
 -- 
