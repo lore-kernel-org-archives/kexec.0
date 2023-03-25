@@ -4,62 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2A59EC6FD1C
-	for <kexec@archiver.kernel.org>; Sat, 25 Mar 2023 06:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 967ECC6FD1F
+	for <kexec@archiver.kernel.org>; Sat, 25 Mar 2023 16:01:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=USVEYV2B9VMUHxJeUBnEfMmXx6bC4EIa2a8ERMGsCCQ=; b=xmdJEA+cbcHY0F
-	3oQpOLGz+j43cThrxAFV2s9TJ8IGt+Z87KWsJyv2Exi1Ion6Wb86qsRz3Cs+Cc4vpI1+yqgBgu72b
-	m2Zznz0y5GbT+PhY1r1rHt+bJV/oKjrR3V+uKWXZLltV2zTZtMWSZa+QWu0nd4GhsdYIXuKv9VOmx
-	gna7o6NJV2EwX2FQXX/thp2tjDw8moGmkOiNFBY0SqACat5iPKqFjXCBcltGhTEUxv5fAldTZnDNY
-	OT17uzqMusvQKntCNNmJzFR43i4fUjt/wDgDPjtVZCiRKL5jqgC7bLKqs8ZLgxGAULicrEiuFUYN+
-	7Li0c+uc+1wkH+oZuoeQ==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=216uhPhg+kGFSkkmH4oEtADG6f05yS2zRNlR+oC3Y/c=; b=tplRWZ967GE6IM
+	KvbOgGGFr3V/u0aYAQHPGIHEquFBPEp6B+LkrwhXEJkPhzeHt9IFugUW/AhEBoD1jTfpcaH4ySJhL
+	xa43RCyARJlA7JSbm7Qz2G1AjMC1POjGm4/TSvW0ItWJiMFIsUqY6FQR9bv00FSgqZmEh+JMHIS90
+	Lz/c3v37ZWV00suBSSYg35/HUQwp6gRx3K4M+ztjxCD/QRVq42bebUvIBG3San3hF0emRsEjgw2AK
+	8c7zyrJVBhp9CtM8nX2y/UKodM7KIiK7HmpWdTMpkzbvbtzdzrM3kVp8AWDSnx0V6SGMXtvPw8JSs
+	TtTAZR9dr5lMOcMpyE6w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pfwz3-006Aw6-31;
-	Sat, 25 Mar 2023 06:02:33 +0000
-Received: from ams.source.kernel.org ([145.40.68.75])
+	id 1pg6Ky-006xZ9-1P;
+	Sat, 25 Mar 2023 16:01:48 +0000
+Received: from mga03.intel.com ([134.134.136.65])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pfwz0-006AvA-0y;
-	Sat, 25 Mar 2023 06:02:32 +0000
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ams.source.kernel.org (Postfix) with ESMTPS id 74598B826D7;
-	Sat, 25 Mar 2023 06:02:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC746C433D2;
-	Sat, 25 Mar 2023 06:02:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1679724145;
-	bh=Rm5cs/yD0VtyU6KhTA35Om5SsVQpAHv9hH3/NHRCp/Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y4GsbOChMjBs+cc6q/siXf+TIpqHSXAP4PhF5b3RctdQLqfhSBXZIjGjaYbR1gqIO
-	 Fvoyeu28I30ITId8AlXRmsDo+Yad3QrVVGWACLTYYL7Q3Sy5U8IjAhh4vwxhmx3RFz
-	 DwBqZF/R62NeydzttDCSvUAzM6VZV+gjEKljw5jcBCZR8mhj2ydWSCeiEGCC3AhpOi
-	 Y9YlMuH528884ZqUlXHk5f9ovfP95Xue443SNJ3dyjubxNOleI/X3tjTjOI3Ef2Gh3
-	 couRbkuD5vnFweX+PBAl3tLptvNVJDrih9blzTaTOSyKJ9RUDrZgkb9kGKxniAwvsa
-	 Fvxq+xyPz5mXQ==
-Date: Sat, 25 Mar 2023 09:02:10 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Baoquan He <bhe@redhat.com>
-Cc: linux-kernel@vger.kernel.org, catalin.marinas@arm.com, horms@kernel.org,
-	thunder.leizhen@huawei.com, John.p.donnelly@oracle.com,
-	will@kernel.org, kexec@lists.infradead.org, ardb@kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 0/3] arm64: kdump : take off the protection on
- crashkernel memory region
-Message-ID: <ZB6OYjP5ODkSwaUx@kernel.org>
-References: <20230324131838.409996-1-bhe@redhat.com>
+	id 1pg6Ks-006xYN-0e
+	for kexec@lists.infradead.org;
+	Sat, 25 Mar 2023 16:01:43 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679760102; x=1711296102;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=5dVs+q2gLQVLDGkLHXJqHU1Gk6hiIVR86jEv5ozZ6/4=;
+  b=ZKPbKzGlBxEGK8PqTX6V1oPzF9yb1PdwX6DdiTzKT9Gn2Km+YwNFWNkn
+   MayoguSys9M6RGSxPMRXxoeqTkj5eTEPmKnfxjyWWl7yYiiwEhPqUKg3E
+   7/UMGAFpiOsqfcjnEviAU3NnI58n0S/sWIrqnGSpAyWgnRCQNwKi9lY5T
+   S/KmCsEalefYAfkGcvSYUKNoiUmwswZUR65hlHM7ElEkaS5tPKJi34SoJ
+   23GlujdbE+AvA/cmjfODwQox7mEB2ShUopURmTFjakRnaQmcH1Y5Z4ZCb
+   ym9TKA6VUxkR9UwuXgyLuVfFEO0nLMRXIuvvfyBNXX8D5q9pB3945n+gV
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10660"; a="342385466"
+X-IronPort-AV: E=Sophos;i="5.98,290,1673942400"; 
+   d="scan'208";a="342385466"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2023 09:01:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10660"; a="747506632"
+X-IronPort-AV: E=Sophos;i="5.98,290,1673942400"; 
+   d="scan'208";a="747506632"
+Received: from benfis1x-mobl.ger.corp.intel.com (HELO box.shutemov.name) ([10.249.47.35])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2023 09:01:37 -0700
+Received: by box.shutemov.name (Postfix, from userid 1000)
+	id D62E510A607; Sat, 25 Mar 2023 19:01:34 +0300 (+03)
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Dave Hansen <dave.hansen@linux.intel.com>,
+	Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	x86@kernel.org,
+	Eric Biederman <ebiederm@xmission.com>,
+	kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCH] x86: Disable kexec for TDX guests
+Date: Sat, 25 Mar 2023 19:01:28 +0300
+Message-Id: <20230325160128.21857-1-kirill.shutemov@linux.intel.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20230324131838.409996-1-bhe@redhat.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230324_230230_668887_BC85581D 
-X-CRM114-Status: GOOD (  25.65  )
+X-CRM114-CacheID: sfid-20230325_090142_306959_130D8A4A 
+X-CRM114-Status: GOOD (  17.37  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,97 +87,124 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Mar 24, 2023 at 09:18:35PM +0800, Baoquan He wrote:
-> Problem:
-> =======
-> On arm64, block and section mapping is supported to build page tables.
-> However, currently it enforces to take base page mapping for the whole
-> linear mapping if CONFIG_ZONE_DMA or CONFIG_ZONE_DMA32 is enabled and
-> crashkernel kernel parameter is set. This will cause longer time of the
-> linear mapping process during bootup and severe performance degradation
-> during running time.
-> 
-> Root cause:
-> ==========
-> On arm64, crashkernel reservation relies on knowing the upper limit of
-> low memory zone because it needs to reserve memory in the zone so that
-> devices' DMA addressing in kdump kernel can be satisfied. However, the
-> upper limit of low memory on arm64 is variant. And the upper limit can
-> only be decided late till bootmem_init() is called [1].
-> 
-> And we need to map the crashkernel region with base page granularity when
-> doing linear mapping, because kdump needs to protect the crashkernel region
-> via set_memory_valid(,0) after kdump kernel loading. However, arm64 doesn't
-> support well on splitting the built block or section mapping due to some
-> cpu reststriction [2]. And unfortunately, the linear mapping is done before
-> bootmem_init().
-> 
-> To resolve the above conflict on arm64, the compromise is enforcing to
-> take base page mapping for the entire linear mapping if crashkernel is
-> set, and CONFIG_ZONE_DMA or CONFIG_ZONE_DMA32 is enabed. Hence
-> performance is sacrificed.
-> 
-> Solution:
-> =========
-> Comparing with the always encountered base page mapping for the whole
-> linear region, it's better to take off the protection on crashkernel memory
-> region for now because the protection can only happen in a chance in one
-> million, while the base page mapping for the whole linear mapping is
-> always mitigating arm64 systems with crashkernel set.
-> 
-> This can let distros have chance to back port this patchset to fix the
-> performance issue caused by the base page mapping in the whole linear
-> region.
-> 
-> Extra words
-> ===========
-> I personally expect that  we can add these back in the near future
-> when arm64_dma_phys_limit is fixed, e.g Raspberry Pi enlarges the device
-> addressing limit to 32bit; or Arm64 can support splitting built block or
-> section mapping. Like this, the code is the simplest and clearest.
-> 
-> Or as Catalin suggested, for below 4 cases we currently defer to handle
-> in bootme_init(), we can try to handle case 3) in advance so that memory
-> above 4G can avoid base page mapping wholly. This will complicate the
-> already complex code, let's see how it looks if people interested post patch.
-> 
-> crashkernel=size
-> 1)first attempt:  low memory under arm64_dma_phys_limit
-> 2)fallback:       finding memory above 4G
-> 
-> crashkernel=size,high
-> 3)first attempt:  finding memory above 4G
-> 4)fallback:       low memory under arm64_dma_phys_limit
-> 
-> 
-> [1]
-> https://lore.kernel.org/all/YrIIJkhKWSuAqkCx@arm.com/T/#u
-> 
-> [2]
-> https://lore.kernel.org/linux-arm-kernel/20190911182546.17094-1-nsaenzjulienne@suse.de/T/
-> 
-> Baoquan He (3):
->   arm64: kdump : take off the protection on crashkernel memory region
->   arm64: kdump: do not map crashkernel region specifically
->   arm64: kdump: defer the crashkernel reservation for platforms with no
->     DMA memory zones
-> 
->  arch/arm64/include/asm/kexec.h    |  6 -----
->  arch/arm64/include/asm/memory.h   |  5 ----
->  arch/arm64/kernel/machine_kexec.c | 20 --------------
->  arch/arm64/mm/init.c              |  6 +----
->  arch/arm64/mm/mmu.c               | 43 -------------------------------
->  5 files changed, 1 insertion(+), 79 deletions(-)
+Kexec enabling inside TDX guest requires addressing several issues:
 
-Acked-by: Mike Rapoport (IBM) <rppt@kernel.org>
+ - Avoid clearing CR4.MCE during kexec;
 
-> -- 
-> 2.34.1
-> 
+ - Convert all shared memory back to private on kexec, so the next
+   kernel could start normally;
 
+ - Add support for offlining secondary CPUs, so the new kernel could
+   bring them up again.
+
+The first two items are relatively straight-forward. The initial attempt
+to implement them can be found here - [1].
+
+The last item is tricky. TDX guests use ACPI MADT MPWK to bring up
+secondary CPUs. The mechanism doesn't allow to put a CPU back offline if
+it has woken up.
+
+It is clearly missing functionality from the ACPI mechanism and it has
+to be changed to allow offlining. The work in this direction has
+started, but it takes time.
+
+For now, disable kexec for TDX guests. It will fail kexec instead of
+crashing on attempt.
+
+[1] https://lore.kernel.org/all/20230213234836.3683-1-kirill.shutemov@linux.intel.com
+
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+---
+ arch/x86/include/asm/kexec.h       |  3 +++
+ arch/x86/kernel/machine_kexec_64.c | 10 ++++++++++
+ include/linux/kexec.h              |  7 +++++++
+ kernel/kexec.c                     |  4 ++++
+ kernel/kexec_file.c                |  4 ++++
+ 5 files changed, 28 insertions(+)
+
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index a3760ca796aa..89693684a7d1 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -189,6 +189,9 @@ extern void arch_kexec_pre_free_pages(void *vaddr, unsigned int pages);
+ void arch_kexec_protect_crashkres(void);
+ #define arch_kexec_protect_crashkres arch_kexec_protect_crashkres
+ 
++int arch_kexec_load(void);
++#define arch_kexec_load arch_kexec_load
++
+ void arch_kexec_unprotect_crashkres(void);
+ #define arch_kexec_unprotect_crashkres arch_kexec_unprotect_crashkres
+ 
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index 0611fd83858e..9a0ded12df70 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -600,3 +600,13 @@ void arch_kexec_pre_free_pages(void *vaddr, unsigned int pages)
+ 	 */
+ 	set_memory_encrypted((unsigned long)vaddr, pages);
+ }
++
++int arch_kexec_load(void)
++{
++	if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST)) {
++		pr_warn_once("Disable kexec: not yet supported in TDX guest\n");
++		return -EOPNOTSUPP;
++	}
++
++	return 0;
++}
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 6883c5922701..9fa88c191605 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -442,6 +442,13 @@ static inline void arch_kexec_protect_crashkres(void) { }
+ static inline void arch_kexec_unprotect_crashkres(void) { }
+ #endif
+ 
++#ifndef arch_kexec_load
++static inline int arch_kexec_load(void)
++{
++	return 0;
++}
++#endif
++
+ #ifndef page_to_boot_pfn
+ static inline unsigned long page_to_boot_pfn(struct page *page)
+ {
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 92d301f98776..70e4923c135d 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -194,6 +194,10 @@ static inline int kexec_load_check(unsigned long nr_segments,
+ 			 KEXEC_TYPE_CRASH : KEXEC_TYPE_DEFAULT;
+ 	int result;
+ 
++	result = arch_kexec_load();
++	if (result)
++		return result;
++
+ 	/* We only trust the superuser with rebooting the system. */
+ 	if (!kexec_load_permitted(image_type))
+ 		return -EPERM;
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index f1a0e4e3fb5c..d02b7eb0f6e6 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -331,6 +331,10 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+ 	struct kimage **dest_image, *image;
+ 	int ret = 0, i;
+ 
++	ret = arch_kexec_load();
++	if (ret)
++		return ret;
++
+ 	/* We only trust the superuser with rebooting the system. */
+ 	if (!kexec_load_permitted(image_type))
+ 		return -EPERM;
 -- 
-Sincerely yours,
-Mike.
+2.39.2
+
 
 _______________________________________________
 kexec mailing list
