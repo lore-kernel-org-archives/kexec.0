@@ -4,77 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 65D6AC76195
-	for <kexec@archiver.kernel.org>; Tue, 28 Mar 2023 04:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3F461C76196
+	for <kexec@archiver.kernel.org>; Tue, 28 Mar 2023 05:53:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
+	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=vYAo8VI3qbrnZ2+iCrr9FkbeDtBIReoH703j1UPm5OA=; b=yuxqkLrjpsGZy7
-	URgrJMryAs7FwDF6jX/DKPlxKLnEZLaLoNLWiOIQkJaCPGg1OSzKmW4D2JnjF1WNB0dbxQuc/JTXy
-	Wx8ZUr7zWNEDDtJ0GlPBQ33kmzwZAjiFXIj7oV68ONB3ZSSKO3AjEwWKeJTfNv3nt2W9UTvtRaFEV
-	Fd58FgfpMRBhJt+ukpWob4mJ90FegtwybUM6b0C+6VlgPo+ciy/hdfWpNX77/FxfrlFN9Ozxju0v4
-	F2eFtjOJ8flb/phFRWKRk4foXEu0lHV4VQBeLue28dxY9AyQ23tbGYhKKNTQ7nqXd4RCkekYWj0Bo
-	aHeSTyD7ww9dCVQ0xzxA==;
+	List-Owner; bh=QVkzbv7pLzedSZKY4hqZKGO+W4BnqUngq1BgHdPGFcE=; b=XkhVWjrge+xgN5
+	ojdSHn+gAAhUOLIQWoxWvM2NwtH67hgW5Ib98fP9meUZ4ps+Vq9OFqbkFsyCvinDlXiJM9n47rgjB
+	PKtMbxsxHxrlmcoQkYUD9ZSVV8C4dAvl4tk/wkxEQ4kOeMHvIZYKAH8K5HEB5dP311vF5jpQZ/KCV
+	Hwk67D2nUz0a7ZEUgXSCFek1+vymvQnHRQMYqRqogAsmWEXre+MOuEmDK3Aio/3E27t1eDycUHWu0
+	sYBoeU/pLiuNvJE6NG+hwo8zfqyUqZby5FLlHiyh6ZGqV+8uMAXoILpqmspwgpOBmqPJ3gB4ByGmz
+	7BiJQl27rH3yQ0JVbfbg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1ph0tu-00D6no-2e;
-	Tue, 28 Mar 2023 04:25:38 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1ph2H6-00DEKu-2A;
+	Tue, 28 Mar 2023 05:53:40 +0000
+Received: from mga06b.intel.com ([134.134.136.31] helo=mga06.intel.com)
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1ph0tr-00D6n1-2G
+	id 1ph2H4-00DEKM-2c
 	for kexec@lists.infradead.org;
-	Tue, 28 Mar 2023 04:25:37 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1679977528;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mMNSejxnX4U/6qwiydV9BBtn3L7BUvZOYY/Mz3nRvSM=;
-	b=e63BXwQz5l8DSfPFNkzshQO/3D+fXXZPMwQMqS4HgTKwXaiTSfY2NqDQTqbT30tHIxDcIx
-	BPytHPcyYbKBQh9aSWfs7GgRNO4LlC4lm7BBLNPZJ54YtzYnFWRzIAeGzLKv9fdJ7H3kdK
-	mzigruKDdyWHv0Q2qVr1vhAPlAdFFcw=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-458-jcZ_8fIZNiqa9W6m_kYecQ-1; Tue, 28 Mar 2023 00:25:20 -0400
-X-MC-Unique: jcZ_8fIZNiqa9W6m_kYecQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 142373C02B7A;
-	Tue, 28 Mar 2023 04:25:20 +0000 (UTC)
-Received: from localhost (ovpn-12-210.pek2.redhat.com [10.72.12.210])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 9BF9D1415139;
-	Tue, 28 Mar 2023 04:25:18 +0000 (UTC)
-Date: Tue, 28 Mar 2023 12:25:14 +0800
-From: Baoquan He <bhe@redhat.com>
-To: "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc: Dave Hansen <dave.hansen@intel.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-	Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86: Disable kexec for TDX guests
-Message-ID: <ZCJsKoKESK+FCQ0a@MiWiFi-R3L-srv>
-References: <20230325160128.21857-1-kirill.shutemov@linux.intel.com>
- <ebead33b-0594-73df-56ae-f40473ac0ffc@intel.com>
- <20230325192524.wetlbycbcsxc4plk@box>
- <b16bcda0-f190-7849-cbbb-412d328c8806@intel.com>
- <ZCDy+nsjPsi/Lllh@MiWiFi-R3L-srv>
- <20230327110932.z3wjdgfuay5dd2or@box.shutemov.name>
+	Tue, 28 Mar 2023 05:53:39 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679982818; x=1711518818;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=FF+DUqCGHy8oPyFBqiYg8s10DunJo6T+TgdcwHN7O5g=;
+  b=ESv2E2dNjMHASUtegF+EayvwPAK6RCh8Soc3l07IZvHlYJm5mDlJD45g
+   DvpqBqTHk+wuAzcn5YthmLIxbIqcOjE4ItYnxcjP32hiZWrCFY07x0TJq
+   1OeSdNkdN2lCcw3Ob8HbEVWCGmZA4+aZ7zwveGWDt78lmjgkXtl6LGtyX
+   SdeXQt48wPG2DlHU71isKS2rDDTgMF5m2/ehPZth+KG1gyEkxGM9BIMmq
+   BSkQ6I5p2N+axBu48UcN/hY5MmpK5mDRoWnWvKr+8n7UyLeMdhoIHiwJd
+   ytU+dkGSedaTOaN9WgbEn8bq92R3psFqHZrFMwgGYE9cEIukaSCDvPza0
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10662"; a="403088284"
+X-IronPort-AV: E=Sophos;i="5.98,296,1673942400"; 
+   d="scan'208";a="403088284"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2023 22:53:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10662"; a="752987372"
+X-IronPort-AV: E=Sophos;i="5.98,296,1673942400"; 
+   d="scan'208";a="752987372"
+Received: from skunchit-mobl.amr.corp.intel.com (HELO [10.209.35.30]) ([10.209.35.30])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2023 22:53:36 -0700
+Message-ID: <dfd8466a-9693-e469-31be-3d9158f19263@intel.com>
+Date: Sat, 25 Mar 2023 09:20:47 -0700
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20230327110932.z3wjdgfuay5dd2or@box.shutemov.name>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH] x86: Disable kexec for TDX guests
+Content-Language: en-US
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ x86@kernel.org, Eric Biederman <ebiederm@xmission.com>,
+ kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20230325160128.21857-1-kirill.shutemov@linux.intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+In-Reply-To: <20230325160128.21857-1-kirill.shutemov@linux.intel.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230327_212535_812513_F4C2A97F 
-X-CRM114-Status: GOOD (  40.79  )
+X-CRM114-CacheID: sfid-20230327_225338_907859_456DB595 
+X-CRM114-Status: UNSURE (   8.98  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,93 +86,18 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 03/27/23 at 02:09pm, Kirill A. Shutemov wrote:
-> On Mon, Mar 27, 2023 at 09:35:54AM +0800, Baoquan He wrote:
-> > On 03/26/23 at 10:01am, Dave Hansen wrote:
-> > > On 3/25/23 12:25, Kirill A. Shutemov wrote:
-> > > > On Sat, Mar 25, 2023 at 09:25:36AM -0700, Dave Hansen wrote:
-> > > >> On 3/25/23 09:01, Kirill A. Shutemov wrote:
-> > > >>> The last item is tricky. TDX guests use ACPI MADT MPWK to bring up
-> > > >>> secondary CPUs. The mechanism doesn't allow to put a CPU back offline if
-> > > >>> it has woken up.
-> > > >> ...
-> > > >>> +int arch_kexec_load(void)
-> > > >>> +{
-> > > >>> +	if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST)) {
-> > > >>> +		pr_warn_once("Disable kexec: not yet supported in TDX guest\n");
-> > > >>> +		return -EOPNOTSUPP;
-> > > >>> +	}
-> > > >>> +
-> > > >>> +	return 0;
-> > > >>> +}
-> > > >>
-> > > >> So, let's put all this together:
-> > > >>
-> > > >> 1. TDX implementations use MADT for wakeup exclusively right now (but
-> > > >>    are not necessarily _required_ to do so forever)
-> > > >> 2. MADT doesn't support CPU offlining
-> > > >> 3. kexec() requires offlining
-> > > >>
-> > > >> Thus, current TDX implementations can't support TDX guests.  This
-> > > >> *doesn't* say that TDX will always use the MADT for wakeups.
-> > > >>
-> > > >> Yet, the check you have here is for TDX and *not* for the MADT.
-> > > > 
-> > > > As I described in the commit message there are more than MADT that is
-> > > > required to get kexec in TDX guest.
-> > > 
-> > > I kinda think we should do both.
-> > > 
-> > > Let's make sure that all systems that depend on MADT wakeups can't
-> > > kexec() until the ACPI folks work out what to do there.
-> > > 
-> > > Separately, let's either fix or *mark* the kexec()-incompatible pieces
-> > > that *ARE* specific to TDX.
-> > > 
-> > > >> That seems wrong.
-> > > >>
-> > > >> Let's say SEV or arm64 comes along and uses the MADT for their guests.
-> > > >> They'll add another arch_kexec_load(), with a check for *their* feature.
-> > > >>
-> > > >> This all seems like you should be disabling kexec() the moment the MADT
-> > > >> CPU wakeup is used instead of making it based on TDX.
-> > > > 
-> > > > I guess we can go this path if you are fine with taking CR4.MCE and shared
-> > > > memory reverting patches (they require some rework, but I can get them
-> > > > into shape quickly). After that we can forbid kexec on machines with MADT
-> > > > if nr_cpus > 1.
-> > > 
-> > > This goes back to what I asked before: is anyone actually going to *use*
-> > > a single-processor system that wants to kexec()?  If not, let's not
-> > > waste the time to introduce code that is just going to bitrot.  Just
-> > > mark it broken and move on with life.
-> > 
-> > Now we have two API for kexec: kexec_load and kexec_file_load. They can
-> > be used to do kexec reboot, or crash dumping. For crash dumping, we
-> > usually only use one cpu to do the vmcore dumping. At least on our
-> > Fedora/centos-stream/RHEL, we do like this with kernel parameter
-> > 'nr_cpus=1' added by default. Unless people explicitly remove the
-> > 'nr_cpus=1' restriction or set nr_cpus= to other number to persue
-> > multithread dumping in kdump kernel.
-> 
-> Hm. I'm not sure how to determine if the target kernel wants to use >1
-> CPU. Scanning cmdline looks fragile. And who said the target kernel is
-> Linux.
+On 3/25/23 09:01, Kirill A. Shutemov wrote:
+> The last item is tricky. TDX guests use ACPI MADT MPWK to bring up
+> secondary CPUs. The mechanism doesn't allow to put a CPU back offline if
+> it has woken up.
 
-Ah, I forgot the checking and disabling is done in 1st kernel, it's truly
-not convinent to get 2nd kernel's cmdline. Then disabling kexec on TDX
-guest for the time being looks resonable to me.
+I'm not sure I like this approach.
 
-> 
-> I guess we can park all CPUs, but CPU0 and target kernel will just fail to
-> bring them up which is non-fatal issue (at least for Linux).
-> 
-> I admit that all looks hackish.
-> 
-> -- 
->   Kiryl Shutsemau / Kirill A. Shutemov
-> 
+TDX uses the MADT exclusively.
 
+MADT-based systems can't offline CPUs.
+
+kexec() requires
 
 _______________________________________________
 kexec mailing list
