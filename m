@@ -4,62 +4,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EA8D1C7619A
-	for <kexec@archiver.kernel.org>; Mon, 27 Mar 2023 12:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CE179C6FD1D
+	for <kexec@archiver.kernel.org>; Mon, 27 Mar 2023 15:07:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:CC:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=8gc2vhENbW8BUnMltJmK5AGFsSwqE32Gnel1nLBdD8M=; b=ljBlUPOgKyJkv2
-	dAd6GghfuoCt0YP6pQcyFEHJ6bazAAubq6AFoKZ0qkcl6VqZkZmvPQ6a8FBxMLoGiZGDVRm9hmdoc
-	QPORvS9Q4iy0cmR7o7KFHZeQippPYLgNEjNtVuA9G7Hmdmo5B/r+/gyxeKDXfbSvRuJkfneOLyB35
-	pc+67NEVMVF8l1IGF0B7t2pBT6gC+FQTJx4V2BN7GPOfW/98bf2DphK9cLt1TwJJ70A5/5Hzd2OjS
-	NhKXCfLKa+Splenk+JiurIHc7U5frLfrio4WMyTp91nsLsJiVZCuWCsJ5HQQsMgy3I8s+2c/4E8/X
-	ygMQpDRBbshIGGTCGJRA==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Message-Id:Date:From:MIME-Version
+	:Subject:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=KxnYfxCdmAMAZ6T0KGrza6ONZXqNKp+ia9fJIL4H2BQ=; b=WaUsUOOxO9J1lz
+	AeHdl64ZmpNMUkYpv+y3D47/CbF3gUpv3xUvYrT9e6L57QX8irgexV/Gw+1ufwUmhO1EQJyyTrFqz
+	vKITtrA5fZNi2lIDwAd4OXYLkMocMh9y+zPOT7YtNKbPslaYYH2FVLmStADkWnf4SnPSH8kCuQ81Y
+	auk4uT2BAWpSZfdcB+4eCK2dO3dC46xciZ2GbzDnF9quQ6gD5sPMgmMdQ/qCQIHlLT/EpnInKvGhi
+	k54bqL4HvZNqpk/gWuKKzouS1GAJS5saDES4oeJIvoF9qWt2w9KDN/m0cWZJe79UaDCfviEJnjHjj
+	tPz1zVTbJP5hHDWgy3ew==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pgmNL-00B1Vl-1P;
-	Mon, 27 Mar 2023 12:55:03 +0000
-Received: from szxga01-in.huawei.com ([45.249.212.187])
+	id 1pgoRD-00BSDd-0m;
+	Mon, 27 Mar 2023 15:07:11 +0000
+Received: from mail-ed1-x533.google.com ([2a00:1450:4864:20::533])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pgmNG-00B1Uk-1C;
-	Mon, 27 Mar 2023 12:55:00 +0000
-Received: from dggpemm500016.china.huawei.com (unknown [172.30.72.57])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4PlXn80JgMzrVvN;
-	Mon, 27 Mar 2023 20:53:48 +0800 (CST)
-Received: from [10.67.108.26] (10.67.108.26) by dggpemm500016.china.huawei.com
- (7.185.36.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Mon, 27 Mar
- 2023 20:54:54 +0800
-Message-ID: <39c36857-4452-0ccd-2cb8-da083e69124a@huawei.com>
-Date: Mon, 27 Mar 2023 20:54:54 +0800
+	id 1pgoRA-00BSBu-1J
+	for kexec@lists.infradead.org;
+	Mon, 27 Mar 2023 15:07:10 +0000
+Received: by mail-ed1-x533.google.com with SMTP id er18so26282871edb.9
+        for <kexec@lists.infradead.org>; Mon, 27 Mar 2023 08:07:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1679929626;
+        h=cc:to:message-id:date:from:content-transfer-encoding:mime-version
+         :subject:from:to:cc:subject:date:message-id:reply-to;
+        bh=0UFEbGRqt7rcAskYsh6grJN74iOCdchpE+7TjNCjkL4=;
+        b=Uk5DlJVQiFOCAyO438dQ7y0Ej9U8TJAs8QHDwkE8teva/DjvMijj58U7AhXnoBjQ/G
+         sMbocm7tv2KfAU+4waZe+mvPneY1Q5hEX1Lrpg0DRJGJd1CjrR9Hl3L7lkeZ4wQa8ODj
+         aODv3RNO6FnmDWelqP9k6fnKiRWop4LOPMcPY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679929626;
+        h=cc:to:message-id:date:from:content-transfer-encoding:mime-version
+         :subject:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0UFEbGRqt7rcAskYsh6grJN74iOCdchpE+7TjNCjkL4=;
+        b=iv4HEmyOTiGoqW2U5vSuT7u1NgWINCkKzLiWrzUTv63wmHoI7uX2GXyZkZTi5HbWRM
+         QrXw55Kx/1pXEg38C6bjcKDNuOp3aJUVgbQAMgOSjKsuJ6i33ViIxKiU7msGhShHS0QQ
+         MgE0MLi31PGFnIV8jL3rMUSmKHJI1Jk4iSGMPmG8z1qdVVmrOhQR8fQFhHvA8/Voyqw3
+         b7n5PdjyGdsXw/KF2CyI6D0TFsrdETtSw3dKpauEQoKKEQkNnxmWU+wzG27cGRSL2yug
+         rDqlqWFv5LJCqo9X1/eGNvo/py39m2u15gmwIZIr3qmJYc2Bm2lbll1RYK15dTevhbPF
+         WLgw==
+X-Gm-Message-State: AAQBX9f4ATnNN/OvNR2zA85gkIzSI3Ij+KSp/INJogw6VZx9JITG1jta
+	URaWPk4AWIsjmcMMQowfk9l6KA==
+X-Google-Smtp-Source: AKy350actXROnpcdn2lmx5wDV0TPEejAcfimbqFaHL731CO4ATVjrEQu1XuGrt9lvpNKvZKC6/f/Nw==
+X-Received: by 2002:aa7:c609:0:b0:4fa:ecdc:e44b with SMTP id h9-20020aa7c609000000b004faecdce44bmr12080742edq.24.1679929626563;
+        Mon, 27 Mar 2023 08:07:06 -0700 (PDT)
+Received: from alco.roam.corp.google.com ([2620:0:1059:10:ed3c:5e9e:b8e4:8695])
+        by smtp.gmail.com with ESMTPSA id t9-20020a50c249000000b005021d1ae6adsm5312428edf.28.2023.03.27.08.07.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Mar 2023 08:07:06 -0700 (PDT)
+Subject: [PATCH v4 0/2] kexec: Fix kexec_file_load for llvm16
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH -next 1/2] riscv: kdump: Implement
- crashkernel=X,[high,low]
-Content-Language: en-US
-To: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>,
-	<paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
-	<conor.dooley@microchip.com>, <guoren@kernel.org>, <heiko@sntech.de>,
-	<bjorn@rivosinc.com>, <alex@ghiti.fr>, <akpm@linux-foundation.org>,
-	<atishp@rivosinc.com>, <bhe@redhat.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-	<kexec@lists.infradead.org>, <linux-doc@vger.kernel.org>
-References: <20230320204244.1637821-1-chenjiahao16@huawei.com>
- <20230320204244.1637821-2-chenjiahao16@huawei.com>
- <be3ff2fa-39ea-8d36-0e11-e75195509a2e@huawei.com>
-From: "chenjiahao (C)" <chenjiahao16@huawei.com>
-In-Reply-To: <be3ff2fa-39ea-8d36-0e11-e75195509a2e@huawei.com>
-X-Originating-IP: [10.67.108.26]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpemm500016.china.huawei.com (7.185.36.25)
-X-CFilter-Loop: Reflected
+X-B4-Tracking: v=1; b=H4sIAAyxIWQC/33N3Q6CMAwF4Fchu3Zm3fj1yvcwxkBXYBFGsgnREN
+ 7dxkujXDWnzfm6ikjBURSnZBWBFhfd5Dmkh0RgX/uOpLOchVbaKKNB3ulJeMOBb5DLNAOF2ljQFQ
+ ruNHUk2YTaY88tPw8DL3sXH1N4fX4swOPyj1tAKlkXedmixgJTe8Y+TKObx+MUOnFlbNG7gGbAgq
+ LMZlCUefUDMLuAYSBrFeRYWkVl8QVs2/YGHtmubzQBAAA=
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Mon, 27 Mar 2023 17:06:52 +0200
+Message-Id: <20230321-kexec_clang16-v4-0-1340518f98e9@chromium.org>
+To: Eric Biederman <ebiederm@xmission.com>
+Cc: linux-kernel@vger.kernel.org, Baoquan He <bhe@redhat.com>,
+ stable@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
+ Ricardo Ribalda <ribalda@chromium.org>, Philipp Rudo <prudo@redhat.com>,
+ Steven Rostedt <rostedt@goodmis.org>, kexec@lists.infradead.org
+X-Mailer: b4 0.11.0-dev-696ae
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1624; i=ribalda@chromium.org;
+ h=from:subject:message-id; bh=c/Cef+C3wMgRslM3TKLYo/Fx7R2kWnifW8QXo2DyqYc=;
+ b=owEBbQKS/ZANAwAKAdE30T7POsSIAcsmYgBkIbEOxUf1VwPNCpjkoRxJUrAGmu9A9fnWdmb5L5VA
+ wW+pMCGJAjMEAAEKAB0WIQREDzjr+/4oCDLSsx7RN9E+zzrEiAUCZCGxDgAKCRDRN9E+zzrEiOjND/
+ 9IHDPa+BnNrrVbx15zUGOg/Puq2djPp0nMs1Bjy5OtucU4d8Mm5xg0Q9TwgufJuZ0NqYk8kGbja9Nu
+ y6/2suuXEdMr9W0Zi1rxHlYgO2XAklZR15uUjk73Cx97mKWDt68p+VLcnNS967KJjB/6+Pi5uiLQ3l
+ 3XKSfKrN/XZeqMzbViurzi0mWw7lO8/EwIgd23jYeButR4rSdqUWm3sdVLbm6PSgkAVdfOvP+BFvu9
+ 1ytum13E5pu08RpMV8Zpj6tA0lcZTnAZ+2y+z2CL9BqemWA2PHfUtuS8jjOpUpmJyyjVQuOmznnEys
+ gQ15HtMS2lVAYuG3g5oRk2mPjqEzkfkuql8384sq1uKzJ4HswLj4qRckUb+JQwE8NsNtHWvPXiX73g
+ EyNoTPxWWp1I2uLyd9OhEWD1qGyKXhG5o5OuL+lOH7tIOw8P7xsLmKNz0jc5b3ASdjrUEgsWVo2QMF
+ 0WTg5oXJ+GybniwJaGqZf6tq1LgzBXEtbVLYc4wMPg46eyALDK/pXJkW8mt7snIYk85cVBj6kHWnmH
+ DIDC86y0ogc4WKXaqRcg7Srs9pPWWVes9VAKbTthTWMkM+Oev09qbdFB1M9Upic9XYO8kWt7Mz11l9
+ cnjS2Lt/NrLGwv14oa5zOpPSV495yV2BSx5ko0aGP+Xy8NdYt+73I0yHsxXg==
+X-Developer-Key: i=ribalda@chromium.org; a=openpgp;
+ fpr=9EC3BB66E2FC129A6F90B39556A0D81F9F782DA9
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230327_055458_748416_7E235D69 
-X-CRM114-Status: GOOD (  17.80  )
+X-CRM114-CacheID: sfid-20230327_080708_469151_C393F8F7 
+X-CRM114-Status: GOOD (  10.10  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -71,157 +102,57 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+When upreving llvm I realised that kexec stopped working on my test
+platform. This patch fixes it.
 
-On 2023/3/21 9:42, Leizhen (ThunderTown) wrote:
->
-> On 2023/3/21 4:42, Chen Jiahao wrote:
->> On riscv, the current crash kernel allocation logic is trying to
->> allocate within 32bit addressible memory region by default, if
->> failed, try to allocate without 4G restriction.
->>
->> In need of saving DMA zone memory while allocating a relatively large
->> crash kernel region, allocating the reserved memory top down in
->> high memory, without overlapping the DMA zone, is a mature solution.
->> Here introduce the parameter option crashkernel=X,[high,low].
->>
->> We can reserve the crash kernel from high memory above DMA zone range
->> by explicitly passing "crashkernel=X,high"; or reserve a memory range
->> below 4G with "crashkernel=X,low".
->>
->> Signed-off-by: Chen Jiahao <chenjiahao16@huawei.com>
->> ---
->>   arch/riscv/kernel/setup.c |  5 ++++
->>   arch/riscv/mm/init.c      | 56 ++++++++++++++++++++++++++++++++++++---
->>   2 files changed, 58 insertions(+), 3 deletions(-)
->>
->> diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
->> index 376d2827e736..d867b1535da4 100644
->> --- a/arch/riscv/kernel/setup.c
->> +++ b/arch/riscv/kernel/setup.c
->> @@ -176,6 +176,11 @@ static void __init init_resources(void)
->>   		if (ret < 0)
->>   			goto error;
->>   	}
->> +	if (crashk_low_res.start != crashk_low_res.end) {
->> +		ret = add_resource(&iomem_resource, &crashk_low_res);
->> +		if (ret < 0)
->> +			goto error;
->> +	}
->>   #endif
->>   
->>   #ifdef CONFIG_CRASH_DUMP
->> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
->> index 478d6763a01a..5def2174b243 100644
->> --- a/arch/riscv/mm/init.c
->> +++ b/arch/riscv/mm/init.c
->> @@ -1152,6 +1152,28 @@ static inline void setup_vm_final(void)
->>   }
->>   #endif /* CONFIG_MMU */
->>   
->> +/* Reserve 128M low memory by default for swiotlb buffer */
->> +#define DEFAULT_CRASH_KERNEL_LOW_SIZE	(128UL << 20)
->> +
->> +static int __init reserve_crashkernel_low(unsigned long long low_size)
->> +{
->> +	unsigned long long low_base;
->> +
->> +	low_base = memblock_phys_alloc_range(low_size, PMD_SIZE, 0, dma32_phys_limit);
->> +	if (!low_base) {
->> +		pr_err("cannot allocate crashkernel low memory (size:0x%llx).\n", low_size);
->> +		return -ENOMEM;
->> +	}
->> +
->> +	pr_info("crashkernel low memory reserved: 0x%08llx - 0x%08llx (%lld MB)\n",
-> For unsigned long long, 08 --> 016.
+To: Eric Biederman <ebiederm@xmission.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Philipp Rudo <prudo@redhat.com>
+Cc: kexec@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Ross Zwisler <zwisler@google.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 
-Sure, I will fix it soon in another version.
+---
+Changes in v4:
+- Add Cc: stable
+- Add linker script for x86
+- Add a warning when the kernel image has overlapping sections.
+- Link to v3: https://lore.kernel.org/r/20230321-kexec_clang16-v3-0-5f016c8d0e87@chromium.org
 
->
->> +		low_base, low_base + low_size, low_size >> 20);
->> +
->> +	crashk_low_res.start = low_base;
->> +	crashk_low_res.end = low_base + low_size - 1;
->> +
->> +	return 0;
->> +}
->> +
->>   /*
->>    * reserve_crashkernel() - reserves memory for crash kernel
->>    *
->> @@ -1163,6 +1185,7 @@ static void __init reserve_crashkernel(void)
->>   {
->>   	unsigned long long crash_base = 0;
->>   	unsigned long long crash_size = 0;
->> +	unsigned long long crash_low_size = 0;
->>   	unsigned long search_start = memblock_start_of_DRAM();
->>   	unsigned long search_end = memblock_end_of_DRAM();
->>   
->> @@ -1182,8 +1205,26 @@ static void __init reserve_crashkernel(void)
->>   
->>   	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
->>   				&crash_size, &crash_base);
->> -	if (ret || !crash_size)
->> +	if (ret == -ENOENT) {
->> +		ret = parse_crashkernel_high(boot_command_line, 0, &crash_size, &crash_base);
->> +		if (ret || !crash_size)
->> +			return;
->> +
->> +		/*
->> +		 * crashkernel=Y,low can be specified or not, but invalid value
->> +		 * is not allowed.
->> +		 */
->> +		ret = parse_crashkernel_low(boot_command_line, 0, &crash_low_size, &crash_base);
->> +		if (ret == -ENOENT)
->> +			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
->> +		else if (ret)
->> +			return;
->> +
->> +		search_start = dma32_phys_limit;
->> +	} else if (ret || !crash_size) {
->> +		/* Invalid argument value specified */
->>   		return;
->> +	}
->>   
->>   	crash_size = PAGE_ALIGN(crash_size);
->>   
->> @@ -1201,16 +1242,25 @@ static void __init reserve_crashkernel(void)
->>   	 */
->>   	crash_base = memblock_phys_alloc_range(crash_size, PMD_SIZE,
->>   					       search_start,
->> -					       min(search_end, (unsigned long) SZ_4G));
->> +					       min(search_end, (unsigned long) dma32_phys_limit));
->>   	if (crash_base == 0) {
->>   		/* Try again without restricting region to 32bit addressible memory */
->>   		crash_base = memblock_phys_alloc_range(crash_size, PMD_SIZE,
->> -						search_start, search_end);
->> +						       search_start, search_end);
->>   		if (crash_base == 0) {
->>   			pr_warn("crashkernel: couldn't allocate %lldKB\n",
->>   				crash_size >> 10);
->>   			return;
->>   		}
->> +
->> +		if (!crash_low_size)
->> +			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
->> +	}
->> +
->> +	if ((crash_base > dma32_phys_limit - crash_low_size) &&
->> +	     crash_low_size && reserve_crashkernel_low(crash_low_size)) {
->> +		memblock_phys_free(crash_base, crash_size);
->> +		return;
->>   	}
->>   
->>   	pr_info("crashkernel: reserved 0x%016llx - 0x%016llx (%lld MB)\n",
->>
-BR,
+Changes in v3:
+- Fix initial value. Thanks Ross!
+- Link to v2: https://lore.kernel.org/r/20230321-kexec_clang16-v2-0-d10e5d517869@chromium.org
 
-Chen, Jiahao
+Changes in v2:
+- Fix if condition. Thanks Steven!.
+- Update Philipp email. Thanks Baoquan.
+- Link to v1: https://lore.kernel.org/r/20230321-kexec_clang16-v1-0-a768fc2c7c4d@chromium.org
 
+---
+Ricardo Ribalda (2):
+      kexec: Support purgatories with .text.hot sections
+      x86/purgatory: Add linker script
+
+ arch/x86/purgatory/.gitignore        |  2 ++
+ arch/x86/purgatory/Makefile          | 20 +++++++++----
+ arch/x86/purgatory/kexec-purgatory.S |  2 +-
+ arch/x86/purgatory/purgatory.lds.S   | 57 ++++++++++++++++++++++++++++++++++++
+ kernel/kexec_file.c                  | 13 +++++++-
+ 5 files changed, 86 insertions(+), 8 deletions(-)
+---
+base-commit: 17214b70a159c6547df9ae204a6275d983146f6b
+change-id: 20230321-kexec_clang16-4510c23d129c
+
+Best regards,
+-- 
+Ricardo Ribalda <ribalda@chromium.org>
 
 _______________________________________________
 kexec mailing list
