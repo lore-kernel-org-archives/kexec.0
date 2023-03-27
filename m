@@ -4,71 +4,102 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 72CF8C76195
-	for <kexec@archiver.kernel.org>; Mon, 27 Mar 2023 08:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 93D35C7619A
+	for <kexec@archiver.kernel.org>; Mon, 27 Mar 2023 10:55:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=Nt60BXdcFqqRBb5GHxyDW5DjZYTsjBaxSEcMyas24QY=; b=Ie/EPtJgeoyYo8
-	PgHiai6gHnR4JKm7IpWbIqRStCjebbt9PCwZif4GHiz7uA+7vHbJCvVcOF7hw3q4TSZX17I14AdCR
-	SK1hPhzdqZc82crzPfWnqpA0Te04lg598WeDvbIn6gEtcNr2UHt13hdoZJ5slRCSaqX9EMeL7Ti4q
-	YmDwMLh69zxfi37vyYfTNQZqoLC9wdxemtcrmBfSPC82Zl6BRF8pT5dog8wS3HczBWku/tKvdCxic
-	3lSwbett5lE3l3Td1AnpEnNR6/IL0NauaLZQ4DAShKOzmR6EQk3+zyvMLfw2HPf3nqiz3v7N6wuUI
-	vFSkqDDHDrj4fi//H4HQ==;
+	List-Owner; bh=bwb81MZ0aTAwtsCaWy+HSARP8fCIMXJb+/xMM4rvDm4=; b=LiW8woDp1Hh+aW
+	5X9icSaAfHdz/+/Ko0tyyxjZ4/kirX2OeX3meSFPPw0hS3+CJoOL7vIGUllmZ96X/MKno5AB5wQfg
+	EGCtbHPfMS4UqDIfjp4LYGulpqMLuI4n5GFYWEIZOjKl8/sn6c9vurnqcr3TST1ADw5lHNsRyuf1o
+	PXzer5PA16JBnqstZ4kNfLZat2Pq7ZVLRbAOTocdfoigI7f16jIUpkSV5UVCudit1tkMbdOkEivm2
+	cegeqOmoX6u6/Tw/M5zJjKeUofDdSCC+xp6LjyET3RSVal7gLfjRhQWRtYpqtptuDNFyPidm5raPM
+	SStd/3TSxMC2d6c0LnLA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pgiDK-00AFSN-1f;
-	Mon, 27 Mar 2023 08:28:26 +0000
-Received: from ams.source.kernel.org ([145.40.68.75])
+	id 1pgkVe-00AgcK-2t;
+	Mon, 27 Mar 2023 10:55:30 +0000
+Received: from out2-smtp.messagingengine.com ([66.111.4.26])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pgiD7-00AFNK-0x
+	id 1pgkVc-00Agb6-0u
 	for kexec@lists.infradead.org;
-	Mon, 27 Mar 2023 08:28:20 +0000
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ams.source.kernel.org (Postfix) with ESMTPS id 46B88B80EC0
-	for <kexec@lists.infradead.org>; Mon, 27 Mar 2023 08:28:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07E1DC433A7
-	for <kexec@lists.infradead.org>; Mon, 27 Mar 2023 08:28:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1679905690;
-	bh=Y8JTOKdxeH7icOS7byWYQFkU56Eh6A9KNr/xZH2yGvs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=oPXIuPATnqmS6XkCie8OtwQbCvDFddB1ajjlJjKhfmji7PgjVu+tZ3mEKFuY/k+Jc
-	 h4AclEq81F50pBjqut2RqGcb0IcsagvTdJFrV5mINAH4CebK+ERtIQzvmxwGThfvC8
-	 +jEZq0PlpcSok1gVx/HV+4ifivZBgrFPVe5IbWfCmKRDin8Xujd6G3XkZYN4PUHkvl
-	 wSUhmdlUMP2/d/M3IS0YKSD09ZOkyT/1G/sVUKEL9BYZdVLeHeUWB0dwL5p5sUIKM5
-	 CCDv7FT719rOVpzzCpNwB3ULx7Gp2ZqyfeXaGDJo6QSh1+s0RY9x5XJlb4lQy3Py6R
-	 jsU6qd1+OLhkg==
-Received: by mail-ed1-f48.google.com with SMTP id x3so32395403edb.10
-        for <kexec@lists.infradead.org>; Mon, 27 Mar 2023 01:28:09 -0700 (PDT)
-X-Gm-Message-State: AO0yUKXTSFtw2va6kSblTlK9rleHu3Zkw4oL2sw0ie+e5pSVr27pJrcw
-	lOl7zuQLjppSPx15UDJPCgayZBbOnYnInsmMJCc=
-X-Google-Smtp-Source: AK7set8eQPhVIihp6kWmI7Z0Yti48QvMdeoo36W8n/BL+TlyZs0ZjhVT2QxVBD/wrJkzDxcs0dIHYyWba8naxh7FMtk=
-X-Received: by 2002:a05:6402:540c:b0:4fb:e069:77ac with SMTP id
- ev12-20020a056402540c00b004fbe06977acmr12462537edb.0.1679905688080; Mon, 27
- Mar 2023 01:28:08 -0700 (PDT)
+	Mon, 27 Mar 2023 10:55:29 +0000
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+	by mailout.nyi.internal (Postfix) with ESMTP id 5E6795C006D;
+	Mon, 27 Mar 2023 06:55:22 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 27 Mar 2023 06:55:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:sender:subject:subject:to:to; s=fm3; t=1679914522; x=
+	1680000922; bh=PlZnDrcoAzOg901ZQvqNUg/0TK1Smj7F72AYZPUYd6w=; b=X
+	X8mibLJriKAFFyjK5XKJ0lFDhq7FN4vag8rwmWdAtJxzFz1olPVIDG6zq7v48Lwx
+	uyi6O7y+HhiGeVbZgz0zbuIDIJgNr3TYLKJUI+roC+0042NABidpaRVaN+bf09wY
+	NhM8WaiAHapcyYggFykqQXKJyjzbf64EDfJAp69w4bjkda0Z12A8DsXSViCnxjWG
+	+hObCSzqVlESXpIZnVLKjB8U7sUG2QXt6AxPt2uhbT+/CxdfX81PWGL7NgtLshp2
+	j/mlAMWbyRTpReqgE19+akhSwn25/tmi7GPSA+CiuzmZc0ncqka24fkO3hoijpHS
+	eZk/cyWk8bNhi01rOcJ9A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm2; t=1679914522; x=1680000922; bh=PlZnDrcoAzOg9
+	01ZQvqNUg/0TK1Smj7F72AYZPUYd6w=; b=fkqiXJ9OpGW2dbYJKk+wLeuscsO3Q
+	DGH8z1G8WOUGiSTGAiG6I0dkRa82tH25JQuXZogrwOtDC6vqA0hoOZn5SHOTMD/I
+	i/J2Ub3FchOgJdSRCOlv2NpTnxXT2pB1TxltXwd6DECxAUR1qgktJ53LP8LLVOP0
+	8FlYG1ervcoeii8emWpIFGdjanXR81xyvZOq+zDr22Y0de5lp8iPupKsiTOkiiqO
+	YygHmtJPHtVhCbaDa7APfxOxAzGIHEKe9EyFQGHt7R45CAofZMQVDYbz5BJiLdx8
+	wOw0pmPsB+akCKUhJXyIrtdthu2bi4CD1D9KFRMwIEKPaCRcl6h3LYXyQ==
+X-ME-Sender: <xms:GXYhZAnPpMh0pOpLKBtcNa6uPieIhZEoxE5Zse0TKQCtx0cxVNA1hA>
+    <xme:GXYhZP1YcHKIFqKc7jv0MMas6esZIxOY6o0rsKzEGXmtFF8yCniYZMkNVZYhd25KZ
+    _NEUXEEcQkAhleswZ0>
+X-ME-Received: <xmr:GXYhZOqJZRAHCMasS2m9gIz9HtnZQjzKbKTTE3EcPwsptWOGWSF-5JvK7gWuUiwSIy17BQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdehvddgfeegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdttddttddtvdenucfhrhhomhepfdfmihhr
+    ihhllhcutedrucfuhhhuthgvmhhovhdfuceokhhirhhilhhlsehshhhuthgvmhhovhdrnh
+    grmhgvqeenucggtffrrghtthgvrhhnpefffeevkefhffeghfeifeffjeehjeffheeujeeh
+    ieekveevhfejleevveejtdeuvdenucffohhmrghinhepieegrdhssgenucevlhhushhtvg
+    hrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehkihhrihhllhesshhhuhht
+    vghmohhvrdhnrghmvg
+X-ME-Proxy: <xmx:GXYhZMlgv4mq_Uyw7hNUX0ZPODaym-gryutOOG_5X0Tvaq31W2uswQ>
+    <xmx:GXYhZO2PAFvCwh2U8BngfUAiUZXoDMdV5EDlF69sACzmCrMsqSisQw>
+    <xmx:GXYhZDvS7vXDOrUfCeoS5ydFBMFWpPXRzpMOwROQE8kngcaJ-M_0Dg>
+    <xmx:GnYhZMxFgtBGUJ5RiJA0ivg9twDuzZD9IqJCnumiICDWZFP4WkuBSA>
+Feedback-ID: ie3994620:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 27 Mar 2023 06:55:21 -0400 (EDT)
+Received: by box.shutemov.name (Postfix, from userid 1000)
+	id 97E21109BD6; Mon, 27 Mar 2023 13:55:18 +0300 (+03)
+Date: Mon, 27 Mar 2023 13:55:18 +0300
+From: "Kirill A. Shutemov" <kirill@shutemov.name>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+	Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Andrew Cooper <andrew.cooper3@citrix.com>
+Subject: Re: [PATCH] x86: Disable kexec for TDX guests
+Message-ID: <20230327105518.zuswpklvyvz72u6i@box.shutemov.name>
+References: <20230325160128.21857-1-kirill.shutemov@linux.intel.com>
+ <ebead33b-0594-73df-56ae-f40473ac0ffc@intel.com>
+ <20230325192524.wetlbycbcsxc4plk@box>
+ <b16bcda0-f190-7849-cbbb-412d328c8806@intel.com>
 MIME-Version: 1.0
-References: <20221020031548.47587-1-xianting.tian@linux.alibaba.com>
- <Y1K6TsGGC3KnFlf8@vergenet.net> <44c6ec02-ab91-a9ba-a0b8-fed6b93b82d4@linux.alibaba.com>
- <c87af556-1996-bc22-52da-1da23761d591@linux.alibaba.com> <ZCD2wkLCIAztKb/C@MiWiFi-R3L-srv>
-In-Reply-To: <ZCD2wkLCIAztKb/C@MiWiFi-R3L-srv>
-From: Guo Ren <guoren@kernel.org>
-Date: Mon, 27 Mar 2023 16:27:56 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTQgZZDgh384E_a1AavzQwt04F46G=EPAWMprqDgkNua0A@mail.gmail.com>
-Message-ID: <CAJF2gTQgZZDgh384E_a1AavzQwt04F46G=EPAWMprqDgkNua0A@mail.gmail.com>
-Subject: Re: [PATCH V2] RISC-V: Add support for riscv kexec/kdump on kexec-tools
-To: "xianting_100@126.com" <xianting_100@126.com>
-Cc: Xianting Tian <xianting.tian@linux.alibaba.com>, Simon Horman <horms@kernel.org>, 
-	kexec@lists.infradead.org, wefu@redhat.com, yixun.lan@gmail.com, 
-	Baoquan He <bhe@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <b16bcda0-f190-7849-cbbb-412d328c8806@intel.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230327_012813_630691_967D0A77 
-X-CRM114-Status: GOOD (  38.87  )
+X-CRM114-CacheID: sfid-20230327_035528_632501_E1902521 
+X-CRM114-Status: GOOD (  21.71  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,82 +111,78 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Ri5ZLkkKCnhpYW50aW5nXzEwMEAxMjYuY29tCgpPbiBNb24sIE1hciAyNywgMjAyMyBhdCA5OjUy
-4oCvQU0gQmFvcXVhbiBIZSA8YmhlQHJlZGhhdC5jb20+IHdyb3RlOgo+Cj4gSGkgWGlhbnRpbmcs
-Cj4KPiBPbiAxMC8yNi8yMiBhdCAxMDo1OWFtLCBYaWFudGluZyBUaWFuIHdyb3RlOgo+ID4KPiA+
-IOWcqCAyMDIyLzEwLzI2IOS4iuWNiDEwOjEzLCBYaWFudGluZyBUaWFuIOWGmemBkzoKPiA+ID4g
-SGkgU2ltb24KPiA+ID4KPiA+ID4gdGhhbmtzIGZvciB0aGUgY29tbWVudHMKPiA+ID4KPiA+ID4g
-5ZyoIDIwMjIvMTAvMjEg5LiL5Y2IMTE6MjcsIFNpbW9uIEhvcm1hbiDlhpnpgZM6Cj4gPiA+ID4g
-T24gVGh1LCBPY3QgMjAsIDIwMjIgYXQgMTE6MTU6NDhBTSArMDgwMCwgWGlhbnRpbmcgVGlhbiB3
-cm90ZToKPiA+ID4gPiA+IEZyb206IE5pY2sgS29zc2lmaWRpcyA8bWlja0BpY3MuZm9ydGguZ3I+
-Cj4gPiA+ID4gPgo+ID4gPiA+ID4gVGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIGxvYWRpbmcg
-dGhlIEVMRiBrZXJuZWwgaW1hZ2UuIEl0IHBhcnNlcwo+ID4gPiA+ID4gdGhlIGN1cnJlbnQvcHJv
-dmlkZWQgZGV2aWNlIHRyZWUgdG8gZGV0ZXJtaW5lIHRoZSBzeXN0ZW0ncyBtZW1vcnkKPiA+ID4g
-PiA+IGxheW91dCwgYW5kIC9wcm9jL2lvbWVtIGZvciB0aGUgdmFyaW91cyBrZXJuZWwgc2VnbWVu
-dHMuCj4gPiA+ID4gPgo+ID4gPiA+ID4gVGhpcyBwYXRjaCB3YXMgZmlyc3RseSBkZXZlbG9wZWQg
-YnkgTmljayBLb3NzaWZpZGlzLCBhbmQgdHdvIGZpeGVzICgKPiA+ID4gPiA+ICAgICAxOiBmYWls
-IHRvIGZpbmQgZnJlZSBtZW1vcnkgYXJlYSBmb3IgZHRiIGxvYWQgd2hlbiB1c2luZwo+ID4gPiA+
-ID4gaW5pdHJkIGltYWdlLAo+ID4gPiA+ID4gbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1haWwv
-bGludXgtcmlzY3YvMjAyMi1BdWd1c3QvMDE4Mzk4Lmh0bWw7Cj4gPiA+ID4gPiAgICAgMjogZml4
-IG1lbW9yeSByYW5nZSBzaXplIGNhbGN1bGF0aW9uLAo+ID4gPiA+ID4gICAgICAgICBrZXhlYy9h
-cmNoL3Jpc2N2L2NyYXNoZHVtcC1yaXNjdi5jOmxpbmUgODUKPiA+ID4gPiA+ICkgYXJlIGNvbnRy
-aWJ1dGVkIGJ5IFlpeHVuIExhbiwgWGlhbnRpbmcgVGlhbi4KPiA+ID4gPiA+Cj4gPiA+ID4gPiBU
-ZXN0ZWQgb24gUWVtdSdzIHJ2NjQgdmlydCBtYWNoaW5lIGFuZCBTb0Mgb2YgVC1IZWFkIFJJU0Mt
-Vgo+ID4gPiA+ID4gWHVhbnRpZSA5MTAgQ1BVLgo+ID4gPiA+IEhpLAo+ID4gPiA+Cj4gPiA+ID4g
-dGhhbmtzIGZvciBzb21lIHBhdGNoLgo+ID4gPiA+Cj4gPiA+ID4gU29tZSBtaW5vciBmZWVkYmFj
-ayBmb2xsb3dzLgo+ID4gPiA+Cj4gPiA+ID4gU2VwYXJhdGVseSwgSSdsbCBwb3N0IGEgcGF0Y2gg
-dG8gYWRkIFJJU0MtViBidWlsZHMgdG8gdGhlIGdpdGh1Ygo+ID4gPiA+IHdvcmtmbG93LiBJZiB5
-b3UgY291bGQgaW5jbHVkZSB0aGF0IGluIFYzIEknZCBiZSBtb3N0IGdyYXRlZnVsLgo+ID4gPiA+
-Cj4gPiA+ID4gPiBUZXN0ZWQtYnk6IFlpeHVuIExhbiA8eWl4dW4ubGFuQGdtYWlsLmNvbT4KPiA+
-ID4gPiA+IENvLWRldmVsb3BlZC1ieTogWGlhbnRpbmcgVGlhbiA8eGlhbnRpbmcudGlhbkBsaW51
-eC5hbGliYWJhLmNvbT4KPiA+ID4gPiA+IENvLWRldmVsb3BlZC1ieTogWWl4dW4gTGFuIDx5aXh1
-bi5sYW5AZ21haWwuY29tPgo+ID4gPiA+ID4gU2lnbmVkLW9mZi1ieTogTmljayBLb3NzaWZpZGlz
-IDxtaWNrQGljcy5mb3J0aC5ncj4KPiA+ID4gPiAuLi4KPiA+ID4gPgo+ID4gPiA+ID4gKyAgICBy
-ZXQgPSBtZW1fcmVnaW9uc19hbGxvY19hbmRfYWRkKG1lbV9yYW5nZXMsIHN0YXJ0LAo+ID4gPiA+
-ID4gKyAgICAgICAgICAgICAgICAgICAgZW5kIC0gc3RhcnQsIHR5cGUpOwo+ID4gPiA+IG1lbV9y
-ZWdpb25zX2FsbG9jX2FuZF9hZGQgaXNuJ3QgYWx3YXlzIGF2YWlsYWJsZS4KPiA+ID4gPiBmLmUu
-IG9uIG1pcHMgdGhpcyBjYXVzZXMgYSBidWlsZCBmYWlsdXJlLgo+ID4gPiA+Cj4gPiA+ID4gUmVm
-OiBodHRwczovL2dpdGh1Yi5jb20vaG9ybXMva2V4ZWMtdG9vbHMvYWN0aW9ucy9ydW5zLzMyOTg0
-OTExNDMvam9icy81NDQwNjc3NTk1Cj4gPiA+Cj4gPiA+IEFzIHlvdSBrbm93LCBtZW1fcmVnaW9u
-c19zb3J0LCBtZW1fcmVnaW9uc19hbGxvY19hbmRfYWRkIGFyZSB0aGUgY29tbW9uCj4gPiA+IGZ1
-bnRpb25zLAo+ID4gPgo+ID4gPiBUaGUgYnVpbGQgZXJyb3Igb2YgbWlwcyBpcyBjYXVzZWQgYnkg
-dGhpcyByaXNjdiBwYXRjaD8KPiA+ID4KPiA+ID4ga2V4ZWMvbWVtX3JlZ2lvbnMuYzp2b2lkIG1l
-bV9yZWdpb25zX3NvcnQoc3RydWN0IG1lbW9yeV9yYW5nZXMgKnJhbmdlcykKPiA+ID4ga2V4ZWMv
-bWVtX3JlZ2lvbnMuaDp2b2lkIG1lbV9yZWdpb25zX3NvcnQoc3RydWN0IG1lbW9yeV9yYW5nZXMg
-KnJhbmdlcyk7Cj4gPiA+Cj4gPiA+Cj4gPiA+IGtleGVjL21lbV9yZWdpb25zLmM6aW50IG1lbV9y
-ZWdpb25zX2FsbG9jX2FuZF9hZGQoc3RydWN0IG1lbW9yeV9yYW5nZXMKPiA+ID4gKnJhbmdlcywK
-PiA+ID4ga2V4ZWMvbWVtX3JlZ2lvbnMuaDppbnQgbWVtX3JlZ2lvbnNfYWxsb2NfYW5kX2FkZChz
-dHJ1Y3QgbWVtb3J5X3Jhbmdlcwo+ID4gPiAqcmFuZ2VzLAo+ID4gPgo+ID4gPiA+Cj4gPiA+ID4g
-Li4uCj4gPiA+ID4KPiA+ID4gPiA+ICtpbnQgZHRiX2dldF9tZW1vcnlfcmFuZ2VzKGNoYXIgKmR0
-Yiwgc3RydWN0IG1lbW9yeV9yYW5nZXMKPiA+ID4gPiA+ICptZW1fcmFuZ2VzLCBzdHJ1Y3QgbWVt
-b3J5X3JhbmdlcyAqZXh0cmFfcmFuZ2VzKQo+ID4gPiA+ID4gK3sKPiA+ID4gPiAuLi4KPiA+ID4g
-Pgo+ID4gPiA+ID4gKyAgICBtZW1fcmVnaW9uc19zb3J0KG1lbV9yYW5nZXMpOwo+ID4gPiA+IExp
-a2V3aXNlLCBtZW1fcmVnaW9uc19zb3J0IGlzbid0IGFsd2F5cyBhdmFpbGFibGUuCj4gPiA+ID4g
-Zi5lLiBvbiBtaXBzIHRoaXMgY2F1c2VzIGEgYnVpbGQgZmFpbHVyZS4KPiA+ID4gPgo+ID4gPiA+
-IC4uLgo+ID4gPiA+Cj4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvcHVyZ2F0b3J5L2FyY2gvcmlzY3Yv
-TWFrZWZpbGUKPiA+ID4gPiA+IGIvcHVyZ2F0b3J5L2FyY2gvcmlzY3YvTWFrZWZpbGUKPiA+ID4g
-PiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gPiA+ID4gPiBpbmRleCAwMDAwMDAwLi44YmRlZDcx
-Cj4gPiA+ID4gPiAtLS0gL2Rldi9udWxsCj4gPiA+ID4gPiArKysgYi9wdXJnYXRvcnkvYXJjaC9y
-aXNjdi9NYWtlZmlsZQo+ID4gPiA+ID4gQEAgLTAsMCArMSw3IEBACj4gPiA+ID4gPiArIwo+ID4g
-PiA+ID4gKyMgUHVyZ2F0b3J5IHJpc2N2Cj4gPiA+ID4gPiArIwo+ID4gPiA+ID4gKwo+ID4gPiA+
-ID4gK3Jpc2N2X1BVUkdBVE9SWV9TUkNTID0KPiA+ID4gPiA+ICsKPiA+ID4gPiA+ICtkaXN0ICs9
-IHB1cmdhdG9yeS9hcmNoL3NoL01ha2VmaWxlICQocmlzY3ZfUFVSR0FUT1JZX1NSQ1MpCj4gPiA+
-ID4gcy9zaC9yaXNjdi8KPiA+ID4gPgo+ID4gPiA+IEVsc2UgdGhlIGRpc3RyaWJ1dGlvbiB0YXJi
-YWxsIHdvbid0IGluY2x1ZGUgdGhpcyBNYWtlZmlsZQo+ID4gPiA+Cj4gPiA+ID4gWW91IGNhbiBl
-eGVyY2lzZSB0aGlzIHVzaW5nOgo+ID4gPiA+ICAgIG1ha2UgZGlzdGNoZWNrIERJU1RDSEVDS19D
-T05GSUdVUkVfRkxBR1M9Ii0taG9zdD1yaXNjdjY0LWxpbnV4LWdudSIKPiA+ID4gdGhhbmtzLCBJ
-IHdpbGwgZml4IHRoaXMuCj4gPgo+ID4gdGhlIGZpeCBpcyBpbiBteSBwZXJzb25hbCBnaXRlZQo+
-ID4KPiA+IGh0dHBzOi8vZ2l0ZWUuY29tL3hpYW50aW5nLXRpYW4va2V4ZWMtdG9vbHMvY29tbWl0
-cy9tYXN0ZXIKPgo+IElzIHRoaXMgcGF0Y2hzZXQgcmVwb3N0aW5nIHN0aWxsIGluIHlvdXIgd29y
-a2luZyBwbGFuPyBJIGRvbid0IHNlZSB0aGUKPiBjb2RlIGluIGtleGUtdG9vbHMsIHNvIHBpbmcg
-dG8gYXNrLgo+Cj4gSWYgdGhpcyBpcyBub3QgeW91ciB3b3JrIHRhc2tzIGFueSBtb3JlLCBwZW9w
-bGUgaW50ZXJlc3RlZCBjYW4gcGljayB0aGlzCj4gcGF0Y2hzZXQgYW5kIHBvc3QgYWZ0ZXIgcG9s
-aXNoaW5nLgo+Cj4gVGhhbmtzCj4gQmFvcXVhbgo+CgoKLS0gCkJlc3QgUmVnYXJkcwogR3VvIFJl
-bgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMg
-bWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
-ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On Sun, Mar 26, 2023 at 10:01:23AM -0700, Dave Hansen wrote:
+> > I guess we can go this path if you are fine with taking CR4.MCE and shared
+> > memory reverting patches (they require some rework, but I can get them
+> > into shape quickly). After that we can forbid kexec on machines with MADT
+> > if nr_cpus > 1.
+> 
+> This goes back to what I asked before: is anyone actually going to *use*
+> a single-processor system that wants to kexec()?  If not, let's not
+> waste the time to introduce code that is just going to bitrot.  Just
+> mark it broken and move on with life.
+> 
+> I'm also a _bit_ curious what the implications of the CR4.MCE
+> preservation are.  IIRC, systems are quite a bit less stable when
+> CR4.MCE==0. So, maybe there are some benefits to leaving it set during
+> kexec() for everyone.
+
+Hm. I thought the opposite: keeping MCE set brings more risks.
+
+Andrew had feedback on the patch:
+
+	Async events, including NMIs, cannot be taken between this point and the
+	target having set itself up into it's intended operating mode.  During
+	this period you get all kinds of fun with type confusion in the IDT/TSS
+	and/or not having a safe stack to service the event.
+
+I tend to agree with him, but maybe I miss bigger picture.
+
+Based on that I adjusted the patch to only affect TDX guests:
+
+From edbef5f1e6c31929ae1249c58b29c38f86e676c0 Mon Sep 17 00:00:00 2001
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Date: Fri, 10 Feb 2023 12:53:11 +0300
+Subject: [PATCH] x86/kexec: Keep CR4.MCE during kexec for TDX guest
+
+TDX guests are not allowed to clear CR4.MCE. Attempt to clear it leads
+to #VE.
+
+Use alternatives to keep the flag during kexec for TDX guests.
+
+The change doesn't affect non-TDX environments.
+
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+---
+ arch/x86/kernel/relocate_kernel_64.S | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+index 4a73351f87f8..9e83a638a2b8 100644
+--- a/arch/x86/kernel/relocate_kernel_64.S
++++ b/arch/x86/kernel/relocate_kernel_64.S
+@@ -145,8 +145,11 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+ 	 * Set cr4 to a known state:
+ 	 *  - physical address extension enabled
+ 	 *  - 5-level paging, if it was enabled before
++	 *  - Machine check exception on TDX guest. Clearing MCE is not allowed
++	 *    in TDX guests.
+ 	 */
+-	movl	$X86_CR4_PAE, %eax
++	ALTERNATIVE "movl "$X86_CR4_PAE", %eax", \
++		    "movl "$(X86_CR4_PAE | X86_CR4_MCE)", %eax", X86_FEATURE_TDX_GUEST
+ 	testq	$X86_CR4_LA57, %r13
+ 	jz	1f
+ 	orl	$X86_CR4_LA57, %eax
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
