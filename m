@@ -4,74 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AF159C6FD1C
-	for <kexec@archiver.kernel.org>; Sun, 26 Mar 2023 17:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6E6FEC7619A
+	for <kexec@archiver.kernel.org>; Mon, 27 Mar 2023 01:27:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
-	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=R0R7gpNWpHfISajCUWSsp+TFqHfx0OWdmpnoGrv7BDk=; b=CGHtg4TiI7TKBK
-	4kCRnZBnhtITZju4LYeKvZFDKGSBMZ0TEdiD4HiWbz46KdprMiHv+XI1YYDClBA1e8bJXMpbKmiJR
-	SBecDZflzIRLw85yspg0qg0TMYMluJcmHheWnmphVLZ/dphFfDCn6AVZTDV5NT0RddS0Q+K8P3quB
-	T3PL5k4i+suaDb8oFzi9cZkBtowc0KlBsrYMHPJ9Aa7BvIUZ1xEkZy+EB9yP6ywLtnqfGmjj2WPhI
-	jZr+YWnA+m81JbmO2mAqbtvImKTom3evXLyblxeRXv1sD1HoVwvlSmHNiZqmJBZtpZv1aWtFl89bx
-	TMNBXyuWVtwjL4RgRbJQ==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:Date:
+	Message-ID:From:References:CC:To:Subject:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Owner;
+	bh=y/uVeD3hWnyjQIa/Xo9ryAunTGzft0QGpBGU9JDLn04=; b=vP7jFIJiQSjaWC1Nn0lDusPykO
+	+ilXpcNH/Jm2salthwJq2SGkxLXi0csZMeVz2vtQm+f40RBAmOJaC9jUwWWSuh6sEzcBHsWglSCKn
+	XPT/nkLdlaTP1+E5riv/THIOTH1ZSXai+1lKXi1iOwh/C1CtnkF/qfsb+iYXMmx5Z5y5NcdUaeK/u
+	qZQIISV2pgANs4C+LCfZkPSNjH4orpICUxfBNvVY0PP+YzKcKw/vz0m+DwziCJ5qFk7jjo3YRgA/h
+	inkK7FDT+rgna+A8QWYZtBeIPeyV47bU1BSj7Of1r8TmILXy5sXXsleAlAYR4l7CR4Yqtg74PUnO0
+	TeIqZy/w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pgTkU-008r2U-0A;
-	Sun, 26 Mar 2023 17:01:42 +0000
-Received: from mga04.intel.com ([192.55.52.120])
+	id 1pgbdZ-009Sx5-0Z;
+	Mon, 27 Mar 2023 01:27:05 +0000
+Received: from szxga02-in.huawei.com ([45.249.212.188])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pgTkJ-008qxg-2k
-	for kexec@lists.infradead.org;
-	Sun, 26 Mar 2023 17:01:33 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679850091; x=1711386091;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=fVZ/T0Xll5z45xFx7FBvnYRUxCDHZrN04aKO7XOOUT0=;
-  b=XhmfeW8ACPTAWp9ZY1bxCwdgdOAyt215wFUHyOJHHbmP+nde56CYjNQd
-   8e7lmUWQinsQRjViHVNbYFKkztxIUR/u7aSc9aqqyLIOKHEUfi+M57oO2
-   wzTaqB+P1n6miK1OUjM0KEms3T06faP4zCMcpHLNonEeziGHlNq4OErPQ
-   EsY9OPv5jgTXyDD4Tw9oO78ZgA0lPD0G05rEVrcPbE9J3cWQhlNshTSs4
-   avzv2dAdIgU+r2L/Qu+pT7MtrXotcAPv+doexB9uuCsz8NVGZRz1Fdyik
-   RR+aJ2kpRvE2/0bVSnfbJW7pgXgoL1XCp7UeERkZjTw6D/acnLYEhvzA9
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10661"; a="338829155"
-X-IronPort-AV: E=Sophos;i="5.98,292,1673942400"; 
-   d="scan'208";a="338829155"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2023 10:01:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10661"; a="633387655"
-X-IronPort-AV: E=Sophos;i="5.98,292,1673942400"; 
-   d="scan'208";a="633387655"
-Received: from crice5-mobl.amr.corp.intel.com (HELO [10.209.3.81]) ([10.209.3.81])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2023 10:01:23 -0700
-Message-ID: <b16bcda0-f190-7849-cbbb-412d328c8806@intel.com>
-Date: Sun, 26 Mar 2023 10:01:23 -0700
+	id 1pgbdW-009Sw1-05;
+	Mon, 27 Mar 2023 01:27:04 +0000
+Received: from dggpemm500006.china.huawei.com (unknown [172.30.72.57])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4PlFSL5pXMzSpGF;
+	Mon, 27 Mar 2023 09:23:14 +0800 (CST)
+Received: from [10.174.178.55] (10.174.178.55) by
+ dggpemm500006.china.huawei.com (7.185.36.236) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Mon, 27 Mar 2023 09:26:46 +0800
+Subject: Re: [PATCH v2 3/3] arm64: kdump: defer the crashkernel reservation
+ for platforms with no DMA memory zones
+To: Baoquan He <bhe@redhat.com>, <linux-kernel@vger.kernel.org>
+CC: <catalin.marinas@arm.com>, <horms@kernel.org>,
+	<John.p.donnelly@oracle.com>, <will@kernel.org>, <kexec@lists.infradead.org>,
+	<ardb@kernel.org>, <rppt@kernel.org>, <linux-arm-kernel@lists.infradead.org>
+References: <20230324131838.409996-1-bhe@redhat.com>
+ <20230324131838.409996-4-bhe@redhat.com> <ZCBCgkiJ1/QPfgSt@MiWiFi-R3L-srv>
+From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Message-ID: <cf446196-d9fa-5787-8072-9f664c10433a@huawei.com>
+Date: Mon, 27 Mar 2023 09:26:46 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH] x86: Disable kexec for TDX guests
+In-Reply-To: <ZCBCgkiJ1/QPfgSt@MiWiFi-R3L-srv>
 Content-Language: en-US
-To: "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, Borislav Petkov <bp@alien8.de>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- x86@kernel.org, Eric Biederman <ebiederm@xmission.com>,
- kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20230325160128.21857-1-kirill.shutemov@linux.intel.com>
- <ebead33b-0594-73df-56ae-f40473ac0ffc@intel.com>
- <20230325192524.wetlbycbcsxc4plk@box>
-From: Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <20230325192524.wetlbycbcsxc4plk@box>
+X-Originating-IP: [10.174.178.55]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpemm500006.china.huawei.com (7.185.36.236)
+X-CFilter-Loop: Reflected
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230326_100131_955994_1638F7BA 
-X-CRM114-Status: GOOD (  25.49  )
+X-CRM114-CacheID: sfid-20230326_182702_424510_6E2D74C1 
+X-CRM114-Status: GOOD (  27.01  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -88,77 +73,125 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 3/25/23 12:25, Kirill A. Shutemov wrote:
-> On Sat, Mar 25, 2023 at 09:25:36AM -0700, Dave Hansen wrote:
->> On 3/25/23 09:01, Kirill A. Shutemov wrote:
->>> The last item is tricky. TDX guests use ACPI MADT MPWK to bring up
->>> secondary CPUs. The mechanism doesn't allow to put a CPU back offline if
->>> it has woken up.
->> ...
->>> +int arch_kexec_load(void)
->>> +{
->>> +	if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST)) {
->>> +		pr_warn_once("Disable kexec: not yet supported in TDX guest\n");
->>> +		return -EOPNOTSUPP;
->>> +	}
->>> +
->>> +	return 0;
->>> +}
->>
->> So, let's put all this together:
->>
->> 1. TDX implementations use MADT for wakeup exclusively right now (but
->>    are not necessarily _required_ to do so forever)
->> 2. MADT doesn't support CPU offlining
->> 3. kexec() requires offlining
->>
->> Thus, current TDX implementations can't support TDX guests.  This
->> *doesn't* say that TDX will always use the MADT for wakeups.
->>
->> Yet, the check you have here is for TDX and *not* for the MADT.
+
+
+On 2023/3/26 21:02, Baoquan He wrote:
+> In commit 031495635b46 ("arm64: Do not defer reserve_crashkernel() for
+> platforms with no DMA memory zones"), reserve_crashkernel() is called
+> much earlier in arm64_memblock_init() to avoid causing base apge
+> mapping on platforms with no DMA meomry zones.
 > 
-> As I described in the commit message there are more than MADT that is
-> required to get kexec in TDX guest.
-
-I kinda think we should do both.
-
-Let's make sure that all systems that depend on MADT wakeups can't
-kexec() until the ACPI folks work out what to do there.
-
-Separately, let's either fix or *mark* the kexec()-incompatible pieces
-that *ARE* specific to TDX.
-
->> That seems wrong.
->>
->> Let's say SEV or arm64 comes along and uses the MADT for their guests.
->> They'll add another arch_kexec_load(), with a check for *their* feature.
->>
->> This all seems like you should be disabling kexec() the moment the MADT
->> CPU wakeup is used instead of making it based on TDX.
+> With taking off protection on crashkernel memory region, no need to call
+> reserve_crashkernel() specially in advance. The deferred invocation of
+> reserve_crashkernel() in bootmem_init() can cover all cases. So revert
+> the commit 031495635b46 now.
 > 
-> I guess we can go this path if you are fine with taking CR4.MCE and shared
-> memory reverting patches (they require some rework, but I can get them
-> into shape quickly). After that we can forbid kexec on machines with MADT
-> if nr_cpus > 1.
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> ---
+> v1->v2:
+> - When trying to revert commit 031495635b46, two hunks were missed in v1
+>   post. Remove them in v2. Thanks to Leizhen for pointing out this. 
+>   - Remove code comment above arm64_dma_phys_limit definition added
+>     in commit 031495635b46;
+>   - Move the arm64_dma_phys_limit assignment back into zone_sizes_init()
+>     when both CONFIG_ZONE_DMA and CONFIG_ZONE_DMA32 are not enabled.
 
-This goes back to what I asked before: is anyone actually going to *use*
-a single-processor system that wants to kexec()?  If not, let's not
-waste the time to introduce code that is just going to bitrot.  Just
-mark it broken and move on with life.
+Reviewed-by: Zhen Lei <thunder.leizhen@huawei.com>
 
-I'm also a _bit_ curious what the implications of the CR4.MCE
-preservation are.  IIRC, systems are quite a bit less stable when
-CR4.MCE==0.  So, maybe there are some benefits to leaving it set during
-kexec() for everyone.  But, that probably also involves having a #MC
-handler in the mix and that's obviously trouble while we're switching
-kernels and messing around in the guts of things like paging configuration.
+> 
+>  arch/arm64/include/asm/memory.h |  5 -----
+>  arch/arm64/mm/init.c            | 34 +++------------------------------
+>  2 files changed, 3 insertions(+), 36 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
+> index 78e5163836a0..efcd68154a3a 100644
+> --- a/arch/arm64/include/asm/memory.h
+> +++ b/arch/arm64/include/asm/memory.h
+> @@ -374,11 +374,6 @@ static inline void *phys_to_virt(phys_addr_t x)
+>  })
+>  
+>  void dump_mem_limit(void);
+> -
+> -static inline bool defer_reserve_crashkernel(void)
+> -{
+> -	return IS_ENABLED(CONFIG_ZONE_DMA) || IS_ENABLED(CONFIG_ZONE_DMA32);
+> -}
+>  #endif /* !ASSEMBLY */
+>  
+>  /*
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index 58a0bb2c17f1..66e70ca47680 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -61,34 +61,8 @@ EXPORT_SYMBOL(memstart_addr);
+>   * unless restricted on specific platforms (e.g. 30-bit on Raspberry Pi 4).
+>   * In such case, ZONE_DMA32 covers the rest of the 32-bit addressable memory,
+>   * otherwise it is empty.
+> - *
+> - * Memory reservation for crash kernel either done early or deferred
+> - * depending on DMA memory zones configs (ZONE_DMA) --
+> - *
+> - * In absence of ZONE_DMA configs arm64_dma_phys_limit initialized
+> - * here instead of max_zone_phys().  This lets early reservation of
+> - * crash kernel memory which has a dependency on arm64_dma_phys_limit.
+> - * Reserving memory early for crash kernel allows linear creation of block
+> - * mappings (greater than page-granularity) for all the memory bank rangs.
+> - * In this scheme a comparatively quicker boot is observed.
+> - *
+> - * If ZONE_DMA configs are defined, crash kernel memory reservation
+> - * is delayed until DMA zone memory range size initialization performed in
+> - * zone_sizes_init().  The defer is necessary to steer clear of DMA zone
+> - * memory range to avoid overlap allocation.  So crash kernel memory boundaries
+> - * are not known when mapping all bank memory ranges, which otherwise means
+> - * not possible to exclude crash kernel range from creating block mappings
+> - * so page-granularity mappings are created for the entire memory range.
+> - * Hence a slightly slower boot is observed.
+> - *
+> - * Note: Page-granularity mappings are necessary for crash kernel memory
+> - * range for shrinking its size via /sys/kernel/kexec_crash_size interface.
+>   */
+> -#if IS_ENABLED(CONFIG_ZONE_DMA) || IS_ENABLED(CONFIG_ZONE_DMA32)
+>  phys_addr_t __ro_after_init arm64_dma_phys_limit;
+> -#else
+> -phys_addr_t __ro_after_init arm64_dma_phys_limit = PHYS_MASK + 1;
+> -#endif
+>  
+>  /* Current arm64 boot protocol requires 2MB alignment */
+>  #define CRASH_ALIGN			SZ_2M
+> @@ -248,6 +222,8 @@ static void __init zone_sizes_init(void)
+>  	if (!arm64_dma_phys_limit)
+>  		arm64_dma_phys_limit = dma32_phys_limit;
+>  #endif
+> +	if (!arm64_dma_phys_limit)
+> +		arm64_dma_phys_limit = PHYS_MASK + 1;
+>  	max_zone_pfns[ZONE_NORMAL] = max_pfn;
+>  
+>  	free_area_init(max_zone_pfns);
+> @@ -408,9 +384,6 @@ void __init arm64_memblock_init(void)
+>  
+>  	early_init_fdt_scan_reserved_mem();
+>  
+> -	if (!defer_reserve_crashkernel())
+> -		reserve_crashkernel();
+> -
+>  	high_memory = __va(memblock_end_of_DRAM() - 1) + 1;
+>  }
+>  
+> @@ -457,8 +430,7 @@ void __init bootmem_init(void)
+>  	 * request_standard_resources() depends on crashkernel's memory being
+>  	 * reserved, so do it here.
+>  	 */
+> -	if (defer_reserve_crashkernel())
+> -		reserve_crashkernel();
+> +	reserve_crashkernel();
+>  
+>  	memblock_dump_all();
+>  }
+> 
 
-The CR4.MCE change is simple enough, but it also _completely_ glossed
-over the implications to non-TDX users.
-
-I guess the overall message here is: please try to think of the big
-picture a _little_ outside of the TDX world.  This patch's approach is a
-bit myopic.
+-- 
+Regards,
+  Zhen Lei
 
 _______________________________________________
 kexec mailing list
