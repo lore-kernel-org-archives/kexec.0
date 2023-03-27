@@ -4,102 +4,102 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 93D35C7619A
-	for <kexec@archiver.kernel.org>; Mon, 27 Mar 2023 10:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9E151C76195
+	for <kexec@archiver.kernel.org>; Mon, 27 Mar 2023 11:09:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=bwb81MZ0aTAwtsCaWy+HSARP8fCIMXJb+/xMM4rvDm4=; b=LiW8woDp1Hh+aW
-	5X9icSaAfHdz/+/Ko0tyyxjZ4/kirX2OeX3meSFPPw0hS3+CJoOL7vIGUllmZ96X/MKno5AB5wQfg
-	EGCtbHPfMS4UqDIfjp4LYGulpqMLuI4n5GFYWEIZOjKl8/sn6c9vurnqcr3TST1ADw5lHNsRyuf1o
-	PXzer5PA16JBnqstZ4kNfLZat2Pq7ZVLRbAOTocdfoigI7f16jIUpkSV5UVCudit1tkMbdOkEivm2
-	cegeqOmoX6u6/Tw/M5zJjKeUofDdSCC+xp6LjyET3RSVal7gLfjRhQWRtYpqtptuDNFyPidm5raPM
-	SStd/3TSxMC2d6c0LnLA==;
+	List-Owner; bh=ZB3YqgVn1t4sMWJYtd+oLQg4Ue5ujsk7SSuk5ZbxtsE=; b=VOm+x6/IwBbt5N
+	sew071UPXskGtn1huufF9X3RC39B6G6RkZj44/RT4q2tRy1+HNAng9s31pyI4qjQ8OZsIxt2ZqM5C
+	8dxpVERP4ii0jmHjZpl09s1oO6qrG9KaZblKljDzNjgk+I843i1PIoBwxRByCKpH7oB2hRVIy4QpI
+	U4xSi+geMpwYJzT1sOCDobbC4UoFj4WGAWqvcw0Hdk904wiVLBBn631132GaL0vD7UXD8Uygh5QYJ
+	rJiGIY+ot+yEWtP+NUpBEq3y020VJkE0G/+Gf/tiMnMxPioNQP9Virqw+6wnNbGpilmlsQCHI0WNt
+	AlLF7R8GPco4mgIVf32Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pgkVe-00AgcK-2t;
-	Mon, 27 Mar 2023 10:55:30 +0000
+	id 1pgkjK-00Aj0B-2N;
+	Mon, 27 Mar 2023 11:09:38 +0000
 Received: from out2-smtp.messagingengine.com ([66.111.4.26])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pgkVc-00Agb6-0u
+	id 1pgkjH-00AizZ-2p
 	for kexec@lists.infradead.org;
-	Mon, 27 Mar 2023 10:55:29 +0000
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailout.nyi.internal (Postfix) with ESMTP id 5E6795C006D;
-	Mon, 27 Mar 2023 06:55:22 -0400 (EDT)
+	Mon, 27 Mar 2023 11:09:37 +0000
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+	by mailout.nyi.internal (Postfix) with ESMTP id 164BC5C00D2;
+	Mon, 27 Mar 2023 07:09:35 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 27 Mar 2023 06:55:22 -0400
+  by compute1.internal (MEProxy); Mon, 27 Mar 2023 07:09:35 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
 	 h=cc:cc:content-type:content-type:date:date:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:sender:subject:subject:to:to; s=fm3; t=1679914522; x=
-	1680000922; bh=PlZnDrcoAzOg901ZQvqNUg/0TK1Smj7F72AYZPUYd6w=; b=X
-	X8mibLJriKAFFyjK5XKJ0lFDhq7FN4vag8rwmWdAtJxzFz1olPVIDG6zq7v48Lwx
-	uyi6O7y+HhiGeVbZgz0zbuIDIJgNr3TYLKJUI+roC+0042NABidpaRVaN+bf09wY
-	NhM8WaiAHapcyYggFykqQXKJyjzbf64EDfJAp69w4bjkda0Z12A8DsXSViCnxjWG
-	+hObCSzqVlESXpIZnVLKjB8U7sUG2QXt6AxPt2uhbT+/CxdfX81PWGL7NgtLshp2
-	j/mlAMWbyRTpReqgE19+akhSwn25/tmi7GPSA+CiuzmZc0ncqka24fkO3hoijpHS
-	eZk/cyWk8bNhi01rOcJ9A==
+	:reply-to:sender:subject:subject:to:to; s=fm3; t=1679915375; x=
+	1680001775; bh=zuQVwgWzdxxG6OjMCmHkNo6kbIdD+LHMQN/MYMfDnfI=; b=H
+	m8R6xPILIfJfAPKhshVfzFX/gsc6lcgoXxfJ1Sshiw7BaNEMKl0UoblsIyECaU3g
+	K/dYOV3LcZEAsCvKyt54Dech9daqJ0oj4nsY8RPxbilJrcz+UBgMB7LWq5cjS8+G
+	ghGnAy8roY4t+PmX87LqbRAm3XUUPbiu1K5BpUjkRQRYd7o1eI/WiYpPJrYBqBrb
+	Z+J751Sx09GjnGgeRELdEGS2k8T11F5jY7dMh/inBFTKjVMqLWEhnNm18pvMTJBA
+	RrIvj5dyVMyQbnxTnoghXhAfZbLVaQi8piAfpJ6UEsMesCGw7gcKMZ+9L6er5NaY
+	52jv7Y9sN0JPHVg18+GxQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-type:content-type:date:date
 	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
 	:message-id:mime-version:references:reply-to:sender:subject
 	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm2; t=1679914522; x=1680000922; bh=PlZnDrcoAzOg9
-	01ZQvqNUg/0TK1Smj7F72AYZPUYd6w=; b=fkqiXJ9OpGW2dbYJKk+wLeuscsO3Q
-	DGH8z1G8WOUGiSTGAiG6I0dkRa82tH25JQuXZogrwOtDC6vqA0hoOZn5SHOTMD/I
-	i/J2Ub3FchOgJdSRCOlv2NpTnxXT2pB1TxltXwd6DECxAUR1qgktJ53LP8LLVOP0
-	8FlYG1ervcoeii8emWpIFGdjanXR81xyvZOq+zDr22Y0de5lp8iPupKsiTOkiiqO
-	YygHmtJPHtVhCbaDa7APfxOxAzGIHEKe9EyFQGHt7R45CAofZMQVDYbz5BJiLdx8
-	wOw0pmPsB+akCKUhJXyIrtdthu2bi4CD1D9KFRMwIEKPaCRcl6h3LYXyQ==
-X-ME-Sender: <xms:GXYhZAnPpMh0pOpLKBtcNa6uPieIhZEoxE5Zse0TKQCtx0cxVNA1hA>
-    <xme:GXYhZP1YcHKIFqKc7jv0MMas6esZIxOY6o0rsKzEGXmtFF8yCniYZMkNVZYhd25KZ
-    _NEUXEEcQkAhleswZ0>
-X-ME-Received: <xmr:GXYhZOqJZRAHCMasS2m9gIz9HtnZQjzKbKTTE3EcPwsptWOGWSF-5JvK7gWuUiwSIy17BQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdehvddgfeegucetufdoteggodetrfdotf
+	:x-sasl-enc; s=fm2; t=1679915375; x=1680001775; bh=zuQVwgWzdxxG6
+	OjMCmHkNo6kbIdD+LHMQN/MYMfDnfI=; b=l1U9RT21ubrfotWDtweeWbt9jMx/9
+	InYi7kUThBSBCuVvResq9UiqT6Z6JInNRZuF96huKKqf8xlHqxI7TjSHew/CRNhj
+	Y9SuvYcr1saIFHtQXL3027/iTNuOsrmXBwlRR90LYZxhoBRk1xgTyCAahyp2OimB
+	3sZp4Ok480/SyqQ45VC7n2aXcY9C9vhQTiryt3SvzzTWDU/HDlPVEdmf9UCZ11fw
+	1D5G8yEvUgiT/cliZYvtvTZkslTK4iqwV2JnzyhMp57DDsW/HUqa7Xy7U/DDH7Jw
+	/saHZT7Os23LSUodgF57l0KUbKoeGk3Sdf8qjVlwLRtn7aaEG+ZG4KNew==
+X-ME-Sender: <xms:bnkhZKVs2jEK_6bE7yclsW_86dv6BehI_ldYO7wMIGcOXg9VzXnq3Q>
+    <xme:bnkhZGmcrv1WcDuuthXLtAIKcqV8wNmd29HJrqaA-fSHNxCmZfxu3dLDUVuin-yAH
+    9mwXuDkMb_U_ItHm8k>
+X-ME-Received: <xmr:bnkhZOZGCxrkTaWxpKRwWnSEZ1Y0rImIleP2vKnEWafeLNytW_q34Dun0QjvJNCCNdFqwg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdehvddgfeejucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhepfffhvfevuffkfhggtggujgesthdttddttddtvdenucfhrhhomhepfdfmihhr
     ihhllhcutedrucfuhhhuthgvmhhovhdfuceokhhirhhilhhlsehshhhuthgvmhhovhdrnh
-    grmhgvqeenucggtffrrghtthgvrhhnpefffeevkefhffeghfeifeffjeehjeffheeujeeh
-    ieekveevhfejleevveejtdeuvdenucffohhmrghinhepieegrdhssgenucevlhhushhtvg
-    hrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehkihhrihhllhesshhhuhht
-    vghmohhvrdhnrghmvg
-X-ME-Proxy: <xmx:GXYhZMlgv4mq_Uyw7hNUX0ZPODaym-gryutOOG_5X0Tvaq31W2uswQ>
-    <xmx:GXYhZO2PAFvCwh2U8BngfUAiUZXoDMdV5EDlF69sACzmCrMsqSisQw>
-    <xmx:GXYhZDvS7vXDOrUfCeoS5ydFBMFWpPXRzpMOwROQE8kngcaJ-M_0Dg>
-    <xmx:GnYhZMxFgtBGUJ5RiJA0ivg9twDuzZD9IqJCnumiICDWZFP4WkuBSA>
+    grmhgvqeenucggtffrrghtthgvrhhnpefhieeghfdtfeehtdeftdehgfehuddtvdeuheet
+    tddtheejueekjeegueeivdektdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpehkihhrihhllhesshhhuhhtvghmohhvrdhnrghmvg
+X-ME-Proxy: <xmx:bnkhZBVAa03v1HEsfX61m3ICe2toU5t38qhRdOt1h7Yp8LZdOUxqfg>
+    <xmx:bnkhZEnr3NeEOn-bUHZNw0EPaXRgTCpbUDU2MFLyOWGSnX2QQ-8UPA>
+    <xmx:bnkhZGdgphpN-2qo-PvWein5LhsotSHpPaRSJZGVYejrYb3fZ3lnlQ>
+    <xmx:b3khZBiQVIXy8V-2pBFlBSqg5fSuIcUZRrObyHb4RIlu09BJ0SQfYg>
 Feedback-ID: ie3994620:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 27 Mar 2023 06:55:21 -0400 (EDT)
+ 27 Mar 2023 07:09:34 -0400 (EDT)
 Received: by box.shutemov.name (Postfix, from userid 1000)
-	id 97E21109BD6; Mon, 27 Mar 2023 13:55:18 +0300 (+03)
-Date: Mon, 27 Mar 2023 13:55:18 +0300
+	id 99789109BD6; Mon, 27 Mar 2023 14:09:32 +0300 (+03)
+Date: Mon, 27 Mar 2023 14:09:32 +0300
 From: "Kirill A. Shutemov" <kirill@shutemov.name>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+To: Baoquan He <bhe@redhat.com>
+Cc: Dave Hansen <dave.hansen@intel.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
 	Dave Hansen <dave.hansen@linux.intel.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
 	Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Andrew Cooper <andrew.cooper3@citrix.com>
+	linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] x86: Disable kexec for TDX guests
-Message-ID: <20230327105518.zuswpklvyvz72u6i@box.shutemov.name>
+Message-ID: <20230327110932.z3wjdgfuay5dd2or@box.shutemov.name>
 References: <20230325160128.21857-1-kirill.shutemov@linux.intel.com>
  <ebead33b-0594-73df-56ae-f40473ac0ffc@intel.com>
  <20230325192524.wetlbycbcsxc4plk@box>
  <b16bcda0-f190-7849-cbbb-412d328c8806@intel.com>
+ <ZCDy+nsjPsi/Lllh@MiWiFi-R3L-srv>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <b16bcda0-f190-7849-cbbb-412d328c8806@intel.com>
+In-Reply-To: <ZCDy+nsjPsi/Lllh@MiWiFi-R3L-srv>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230327_035528_632501_E1902521 
-X-CRM114-Status: GOOD (  21.71  )
+X-CRM114-CacheID: sfid-20230327_040935_984993_D5E3A82D 
+X-CRM114-Status: GOOD (  33.17  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -116,69 +116,83 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sun, Mar 26, 2023 at 10:01:23AM -0700, Dave Hansen wrote:
-> > I guess we can go this path if you are fine with taking CR4.MCE and shared
-> > memory reverting patches (they require some rework, but I can get them
-> > into shape quickly). After that we can forbid kexec on machines with MADT
-> > if nr_cpus > 1.
+On Mon, Mar 27, 2023 at 09:35:54AM +0800, Baoquan He wrote:
+> On 03/26/23 at 10:01am, Dave Hansen wrote:
+> > On 3/25/23 12:25, Kirill A. Shutemov wrote:
+> > > On Sat, Mar 25, 2023 at 09:25:36AM -0700, Dave Hansen wrote:
+> > >> On 3/25/23 09:01, Kirill A. Shutemov wrote:
+> > >>> The last item is tricky. TDX guests use ACPI MADT MPWK to bring up
+> > >>> secondary CPUs. The mechanism doesn't allow to put a CPU back offline if
+> > >>> it has woken up.
+> > >> ...
+> > >>> +int arch_kexec_load(void)
+> > >>> +{
+> > >>> +	if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST)) {
+> > >>> +		pr_warn_once("Disable kexec: not yet supported in TDX guest\n");
+> > >>> +		return -EOPNOTSUPP;
+> > >>> +	}
+> > >>> +
+> > >>> +	return 0;
+> > >>> +}
+> > >>
+> > >> So, let's put all this together:
+> > >>
+> > >> 1. TDX implementations use MADT for wakeup exclusively right now (but
+> > >>    are not necessarily _required_ to do so forever)
+> > >> 2. MADT doesn't support CPU offlining
+> > >> 3. kexec() requires offlining
+> > >>
+> > >> Thus, current TDX implementations can't support TDX guests.  This
+> > >> *doesn't* say that TDX will always use the MADT for wakeups.
+> > >>
+> > >> Yet, the check you have here is for TDX and *not* for the MADT.
+> > > 
+> > > As I described in the commit message there are more than MADT that is
+> > > required to get kexec in TDX guest.
+> > 
+> > I kinda think we should do both.
+> > 
+> > Let's make sure that all systems that depend on MADT wakeups can't
+> > kexec() until the ACPI folks work out what to do there.
+> > 
+> > Separately, let's either fix or *mark* the kexec()-incompatible pieces
+> > that *ARE* specific to TDX.
+> > 
+> > >> That seems wrong.
+> > >>
+> > >> Let's say SEV or arm64 comes along and uses the MADT for their guests.
+> > >> They'll add another arch_kexec_load(), with a check for *their* feature.
+> > >>
+> > >> This all seems like you should be disabling kexec() the moment the MADT
+> > >> CPU wakeup is used instead of making it based on TDX.
+> > > 
+> > > I guess we can go this path if you are fine with taking CR4.MCE and shared
+> > > memory reverting patches (they require some rework, but I can get them
+> > > into shape quickly). After that we can forbid kexec on machines with MADT
+> > > if nr_cpus > 1.
+> > 
+> > This goes back to what I asked before: is anyone actually going to *use*
+> > a single-processor system that wants to kexec()?  If not, let's not
+> > waste the time to introduce code that is just going to bitrot.  Just
+> > mark it broken and move on with life.
 > 
-> This goes back to what I asked before: is anyone actually going to *use*
-> a single-processor system that wants to kexec()?  If not, let's not
-> waste the time to introduce code that is just going to bitrot.  Just
-> mark it broken and move on with life.
-> 
-> I'm also a _bit_ curious what the implications of the CR4.MCE
-> preservation are.  IIRC, systems are quite a bit less stable when
-> CR4.MCE==0. So, maybe there are some benefits to leaving it set during
-> kexec() for everyone.
+> Now we have two API for kexec: kexec_load and kexec_file_load. They can
+> be used to do kexec reboot, or crash dumping. For crash dumping, we
+> usually only use one cpu to do the vmcore dumping. At least on our
+> Fedora/centos-stream/RHEL, we do like this with kernel parameter
+> 'nr_cpus=1' added by default. Unless people explicitly remove the
+> 'nr_cpus=1' restriction or set nr_cpus= to other number to persue
+> multithread dumping in kdump kernel.
 
-Hm. I thought the opposite: keeping MCE set brings more risks.
+Hm. I'm not sure how to determine if the target kernel wants to use >1
+CPU. Scanning cmdline looks fragile. And who said the target kernel is
+Linux.
 
-Andrew had feedback on the patch:
+I guess we can park all CPUs, but CPU0 and target kernel will just fail to
+bring them up which is non-fatal issue (at least for Linux).
 
-	Async events, including NMIs, cannot be taken between this point and the
-	target having set itself up into it's intended operating mode.  During
-	this period you get all kinds of fun with type confusion in the IDT/TSS
-	and/or not having a safe stack to service the event.
+I admit that all looks hackish.
 
-I tend to agree with him, but maybe I miss bigger picture.
-
-Based on that I adjusted the patch to only affect TDX guests:
-
-From edbef5f1e6c31929ae1249c58b29c38f86e676c0 Mon Sep 17 00:00:00 2001
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Date: Fri, 10 Feb 2023 12:53:11 +0300
-Subject: [PATCH] x86/kexec: Keep CR4.MCE during kexec for TDX guest
-
-TDX guests are not allowed to clear CR4.MCE. Attempt to clear it leads
-to #VE.
-
-Use alternatives to keep the flag during kexec for TDX guests.
-
-The change doesn't affect non-TDX environments.
-
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
----
- arch/x86/kernel/relocate_kernel_64.S | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index 4a73351f87f8..9e83a638a2b8 100644
---- a/arch/x86/kernel/relocate_kernel_64.S
-+++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -145,8 +145,11 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
- 	 * Set cr4 to a known state:
- 	 *  - physical address extension enabled
- 	 *  - 5-level paging, if it was enabled before
-+	 *  - Machine check exception on TDX guest. Clearing MCE is not allowed
-+	 *    in TDX guests.
- 	 */
--	movl	$X86_CR4_PAE, %eax
-+	ALTERNATIVE "movl "$X86_CR4_PAE", %eax", \
-+		    "movl "$(X86_CR4_PAE | X86_CR4_MCE)", %eax", X86_FEATURE_TDX_GUEST
- 	testq	$X86_CR4_LA57, %r13
- 	jz	1f
- 	orl	$X86_CR4_LA57, %eax
 -- 
   Kiryl Shutsemau / Kirill A. Shutemov
 
