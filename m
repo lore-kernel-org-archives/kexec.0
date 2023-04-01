@@ -4,46 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 429D1C761A6
-	for <kexec@archiver.kernel.org>; Sat,  1 Apr 2023 01:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0CB88C76196
+	for <kexec@archiver.kernel.org>; Sat,  1 Apr 2023 01:45:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=nW7Fj86PGoq6xyKxieCW0R3E6ARNXcvKLXEbF9caetk=; b=xkxaJipDbmsCt+
-	OC2ftDSmuH8kNYqQ5zRtfkYA43hdrZnVERsjGrgs+b9AGCshCeeQg19Myon8S5ZEKSAAmlRKUTzmo
-	rlHbdR2nXRFlrEGAaGmGd0dBwZvW3LRa/KKwAN+jsbJMNkivBd2bvPuBmnJhweLZ1IsvR1I5Kc1/9
-	CbAaCl8rJb8sMlImU0yolUTSwN+E3e0Taq5evoHfdflphcAqy7kQpKOFj4TmBMxOJjgFnGeVZ+svN
-	EwZCtPf7mFlQVGpMstk8lyHevAlMNPNGh1YLiYvmrOFKSiZ+itiplozTJ9fUag9CGs8YYAZ/wzLT5
-	zbpmsP3ONKnXUMfLSm/w==;
+	List-Owner; bh=nW7Fj86PGoq6xyKxieCW0R3E6ARNXcvKLXEbF9caetk=; b=N9s8QR8IApCvsr
+	AdoBqvJO6YR1eUth8n2EK5tVNqN3DJEZlpeQzLAH4JE8P90OY3KxX4kkrY++lfv02xkdT+rS96AVl
+	jNMzMq/DuflYZFg6+k1x0VCx69WRFurD60hJuUG5jGToYdnfMP2n/P6SL7qlzXgFbLL87NDkMRzhg
+	i8IBL6i26yJc4fCxnGFSHJ++hb37X1/0RykCYiKq/avPQWEQ49y5Zp51/MBhLpf6gbwghj5mEB+kl
+	AGSMFAzyomswrQ03OxpjzaocgMIW7pvYciWZMGwWZZtTbichbL5ND+FopTsOyy1IDjwu1fxL9/1se
+	j/xMFa10jDQkmFHfa3tA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1piQIk-009VHm-00;
-	Sat, 01 Apr 2023 01:45:06 +0000
+	id 1piQIo-009VLG-1U;
+	Sat, 01 Apr 2023 01:45:10 +0000
 Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1piQIY-009V9P-2L
+	id 1piQIg-009VFJ-2e
 	for kexec@lists.infradead.org;
-	Sat, 01 Apr 2023 01:45:02 +0000
+	Sat, 01 Apr 2023 01:45:07 +0000
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 0C41162D31;
-	Sat,  1 Apr 2023 01:44:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D2BDC433A7;
-	Sat,  1 Apr 2023 01:44:52 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 0495162D23;
+	Sat,  1 Apr 2023 01:45:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F34CC433A0;
+	Sat,  1 Apr 2023 01:45:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1680313493;
+	s=k20201202; t=1680313501;
 	bh=COtBPWd792pj4wDo6QCmYmv27EpEeD8uoH4fJakfhLM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DjENa+A4TY2SY+Bt/t+iRbxo3eTK+/j16K+YntqVPInRDRI+hSf1hUtfkWRrq0liT
-	 R5le7hMhIIIUQMxKhscZ6UiGdEz1daHtMwJFiX5fr3eheHJWxbELf8W/qCBq9k7hvS
-	 twlNR0DUp7qthgC7b+HIRyBHh3PHo3/I5sAWOMghjkPulyBT4SDvrvbiJnV2ZMLqGX
-	 c23iItNDedYB0npbIxB7i6h+GHcHhiLwOKDMH5YEff7gnm9Qlq80podA8WAFftj32W
-	 MkJ2KrKCRYuxvS3ZmjxErJsjgjWg4E3drL3/3NcxwGmQUk3a1NF71EjCwzT7u8Fngg
-	 rmv1Es0WkLfcg==
+	b=roQzn49CfHGCeK35ch7COHPv7ggSSxsyfIqxPTAUojksAZRCOTM0KvfXX5MCaMUlY
+	 ZhO7CWMdffAPqwV3lwzidmUa2EAvQGw+A1Yt8pMDxqCzNOYltHcLtq+4tqa5OP7ADe
+	 pug/FkDGrLCO8kZiaqD1WdiRgFRJuATJjLgDOYhP3iVK7p43o8PcgROq0lOZOB1TFd
+	 0r7uQGbfMr7bhV+ir4FN+03t3F2p8eTxzj7jm5eib6OYMlPIRqylCQCXiIjIwBtyn/
+	 WRI8mkm+IBtqQXVooBgeBFytb9fi6C4HUYUH7nnX4oP7xK09cPdClOqpIvoCTgErye
+	 IW8lAI/wGaUfA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -57,17 +57,17 @@ Cc: Robbie Harwood <rharwood@redhat.com>,
 	kexec@lists.infradead.org,
 	Sasha Levin <sashal@kernel.org>,
 	davem@davemloft.net
-Subject: [PATCH AUTOSEL 4.19 4/4] verify_pefile: relax wrapper length check
-Date: Fri, 31 Mar 2023 21:44:44 -0400
-Message-Id: <20230401014444.3357427-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 3/3] verify_pefile: relax wrapper length check
+Date: Fri, 31 Mar 2023 21:44:54 -0400
+Message-Id: <20230401014454.3357487-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230401014444.3357427-1-sashal@kernel.org>
-References: <20230401014444.3357427-1-sashal@kernel.org>
+In-Reply-To: <20230401014454.3357487-1-sashal@kernel.org>
+References: <20230401014454.3357487-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230331_184454_898650_F10D18E1 
+X-CRM114-CacheID: sfid-20230331_184503_007126_DC8EBAD0 
 X-CRM114-Status: GOOD (  13.57  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
