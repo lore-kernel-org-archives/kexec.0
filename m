@@ -4,71 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0CB88C76196
-	for <kexec@archiver.kernel.org>; Sat,  1 Apr 2023 01:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D39A2C76188
+	for <kexec@archiver.kernel.org>; Mon,  3 Apr 2023 14:36:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=nW7Fj86PGoq6xyKxieCW0R3E6ARNXcvKLXEbF9caetk=; b=N9s8QR8IApCvsr
-	AdoBqvJO6YR1eUth8n2EK5tVNqN3DJEZlpeQzLAH4JE8P90OY3KxX4kkrY++lfv02xkdT+rS96AVl
-	jNMzMq/DuflYZFg6+k1x0VCx69WRFurD60hJuUG5jGToYdnfMP2n/P6SL7qlzXgFbLL87NDkMRzhg
-	i8IBL6i26yJc4fCxnGFSHJ++hb37X1/0RykCYiKq/avPQWEQ49y5Zp51/MBhLpf6gbwghj5mEB+kl
-	AGSMFAzyomswrQ03OxpjzaocgMIW7pvYciWZMGwWZZtTbichbL5ND+FopTsOyy1IDjwu1fxL9/1se
-	j/xMFa10jDQkmFHfa3tA==;
+	List-Owner; bh=JdmUO9tTKT11IfU+/p0byibFCItyL0fo12LeMZJS2aU=; b=Gmq8OPSu/UWRXo
+	tYAPZ6xV6Dx2Ajh2WuTsM8zV2n6Wlh4p4syO3azIKXwWToS0MIUdYMA64PtIV5ypmvLr/DGxrLmym
+	QuPBP5wlJ6dubURaNfZ5tmpMWp3eHKKw4hM2gv5PxulJO7opu1n0/L6IWY5eRD2KZROQkJXbbMJqh
+	3oLsvVx51NKr4ked65Y5Ci3qYxnNlfl20jUnJLC9qPnpFoTF4Cp3B2er2jOogNA508T8nY3KYPUjX
+	OSozw5ToHyhvjx95wbwP2CR4NqEjvEfVJ27hlKf7p8FBmgnfG6ca7yLvjS7IlzNh9HTios0s5p8fj
+	kLPLI4yAlCqHyKKJrvig==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1piQIo-009VLG-1U;
-	Sat, 01 Apr 2023 01:45:10 +0000
-Received: from dfw.source.kernel.org ([139.178.84.217])
+	id 1pjLHr-00Feuj-1J;
+	Mon, 03 Apr 2023 14:35:59 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1piQIg-009VFJ-2e
+	id 1pjLHl-00Fetr-2o
 	for kexec@lists.infradead.org;
-	Sat, 01 Apr 2023 01:45:07 +0000
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	Mon, 03 Apr 2023 14:35:55 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1680532550;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cP+bGhDlk17abfeJRcbu/Vx3+Nezj9s5bVdauklB/8Q=;
+	b=dlC3nXl+oDiWWGHVi0unYEDEqu9x3u0SpRjakTarDQ1JlVhd0+pkQNXtnb/t0ZTkuHmRQQ
+	MGlLpWmtr82aG6EZ/pru1be3IuSa+HCTs7TVxuOnmm5NxF8ueezfa3tNJ4hhDWJbuNJ+6+
+	DWwucQQQDkPd4IqAMhMEQMcIPZt5EEc=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-608-kXwApEh3NracL8aTR_vbkw-1; Mon, 03 Apr 2023 10:35:47 -0400
+X-MC-Unique: kXwApEh3NracL8aTR_vbkw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 0495162D23;
-	Sat,  1 Apr 2023 01:45:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F34CC433A0;
-	Sat,  1 Apr 2023 01:45:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1680313501;
-	bh=COtBPWd792pj4wDo6QCmYmv27EpEeD8uoH4fJakfhLM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=roQzn49CfHGCeK35ch7COHPv7ggSSxsyfIqxPTAUojksAZRCOTM0KvfXX5MCaMUlY
-	 ZhO7CWMdffAPqwV3lwzidmUa2EAvQGw+A1Yt8pMDxqCzNOYltHcLtq+4tqa5OP7ADe
-	 pug/FkDGrLCO8kZiaqD1WdiRgFRJuATJjLgDOYhP3iVK7p43o8PcgROq0lOZOB1TFd
-	 0r7uQGbfMr7bhV+ir4FN+03t3F2p8eTxzj7jm5eib6OYMlPIRqylCQCXiIjIwBtyn/
-	 WRI8mkm+IBtqQXVooBgeBFytb9fi6C4HUYUH7nnX4oP7xK09cPdClOqpIvoCTgErye
-	 IW8lAI/wGaUfA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Robbie Harwood <rharwood@redhat.com>,
-	David Howells <dhowells@redhat.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	keyrings@vger.kernel.org,
-	linux-crypto@vger.kernel.org,
-	kexec@lists.infradead.org,
-	Sasha Levin <sashal@kernel.org>,
-	davem@davemloft.net
-Subject: [PATCH AUTOSEL 4.14 3/3] verify_pefile: relax wrapper length check
-Date: Fri, 31 Mar 2023 21:44:54 -0400
-Message-Id: <20230401014454.3357487-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230401014454.3357487-1-sashal@kernel.org>
-References: <20230401014454.3357487-1-sashal@kernel.org>
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 744272A5954F;
+	Mon,  3 Apr 2023 14:35:46 +0000 (UTC)
+Received: from rotkaeppchen (unknown [10.39.192.158])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 612E21121315;
+	Mon,  3 Apr 2023 14:35:45 +0000 (UTC)
+Date: Mon, 3 Apr 2023 16:35:40 +0200
+From: Philipp Rudo <prudo@redhat.com>
+To: Ricardo Ribalda <ribalda@chromium.org>
+Cc: Eric Biederman <ebiederm@xmission.com>, linux-kernel@vger.kernel.org,
+ kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v3] kexec: Support purgatories with .text.hot sections
+Message-ID: <20230403163540.4f597d50@rotkaeppchen>
+In-Reply-To: <CANiDSCtu8oOn9vV9eak=S2RDVVO9yan2BO8K5ia9jALABqiwjQ@mail.gmail.com>
+References: <20230321-kexec_clang16-v3-0-5f016c8d0e87@chromium.org>
+	<20230324165855.23084947@rotkaeppchen>
+	<CANiDSCtu8oOn9vV9eak=S2RDVVO9yan2BO8K5ia9jALABqiwjQ@mail.gmail.com>
+Organization: Red Hat inc.
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230331_184503_007126_DC8EBAD0 
-X-CRM114-Status: GOOD (  13.57  )
+X-CRM114-CacheID: sfid-20230403_073554_004332_AB17F833 
+X-CRM114-Status: GOOD (  21.64  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,61 +83,103 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Robbie Harwood <rharwood@redhat.com>
+Hi Ricardo,
 
-[ Upstream commit 4fc5c74dde69a7eda172514aaeb5a7df3600adb3 ]
+sorry for the late reply...
 
-The PE Format Specification (section "The Attribute Certificate Table
-(Image Only)") states that `dwLength` is to be rounded up to 8-byte
-alignment when used for traversal.  Therefore, the field is not required
-to be an 8-byte multiple in the first place.
+On Mon, 27 Mar 2023 13:52:08 +0200
+Ricardo Ribalda <ribalda@chromium.org> wrote:
 
-Accordingly, pesign has not performed this alignment since version
-0.110.  This causes kexec failure on pesign'd binaries with "PEFILE:
-Signature wrapper len wrong".  Update the comment and relax the check.
+[...]
 
-Signed-off-by: Robbie Harwood <rharwood@redhat.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Jarkko Sakkinen <jarkko@kernel.org>
-cc: Eric Biederman <ebiederm@xmission.com>
-cc: Herbert Xu <herbert@gondor.apana.org.au>
-cc: keyrings@vger.kernel.org
-cc: linux-crypto@vger.kernel.org
-cc: kexec@lists.infradead.org
-Link: https://learn.microsoft.com/en-us/windows/win32/debug/pe-format#the-attribute-certificate-table-image-only
-Link: https://github.com/rhboot/pesign
-Link: https://lore.kernel.org/r/20230220171254.592347-2-rharwood@redhat.com/ # v2
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- crypto/asymmetric_keys/verify_pefile.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+> 
+> I tried removing the -r from arch/x86/purgatory/Makefile and that resulted into:
+> 
+> [  115.631578] BUG: unable to handle page fault for address: ffff93224d5c8e20
+> [  115.631583] #PF: supervisor write access in kernel mode
+> [  115.631585] #PF: error_code(0x0002) - not-present page
+> [  115.631586] PGD 100000067 P4D 100000067 PUD 1001ed067 PMD 132b58067 PTE 0
+> [  115.631589] Oops: 0002 [#1] PREEMPT SMP NOPTI
+> [  115.631592] CPU: 0 PID: 5291 Comm: kexec-lite Tainted: G     U
+>       5.15.103-17399-g852a928df601-dirty #19
+> cd159e0d6a91f03e06035a0a8eb7fc984a8f3e82
+> [  115.631594] Hardware name: Google Crota/Crota, BIOS
+> Google_Crota.14505.288.0 11/08/2022
+> [  115.631595] RIP: 0010:memcpy_erms+0x6/0x10
+> [  115.631599] Code: 5d 00 eb bd eb 1e 0f 1f 00 48 89 f8 48 89 d1 48
+> c1 e9 03 83 e2 07 f3 48 a5 89 d1 f3 a4 c3 cc cc cc cc 66 90 48 89 f8
+> 48 89 d1 <f3> a4 c3 cc cc cc cc 0f 1f 00 48 89 f8 48 83 fa 20 72 7e 40
+> 38 fe
+> [  115.631601] RSP: 0018:ffff93224f65fe50 EFLAGS: 00010246
+> [  115.631602] RAX: ffff93224d5c8e20 RBX: 00000000ffffffea RCX: 0000000000000100
+> [  115.631603] RDX: 0000000000000100 RSI: ffff9322407bd000 RDI: ffff93224d5c8e20
+> [  115.631604] RBP: ffff93224f65fe88 R08: 0000000000000000 R09: ffff92133cd3ef08
+> [  115.631605] R10: ffff9322407be000 R11: ffffffffa1b4f2e0 R12: 0000000000000000
+> [  115.631606] R13: ffff92133cee4c00 R14: 0000000000000100 R15: ffffffffa2b6f14f
+> [  115.631607] FS:  000078e8b9dbf7c0(0000) GS:ffff921437800000(0000)
+> knlGS:0000000000000000
+> [  115.631609] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  115.631610] CR2: ffff93224d5c8e20 CR3: 000000015be26001 CR4: 0000000000770ef0
+> [  115.631611] PKRU: 55555554
+> [  115.631612] Call Trace:
+> [  115.631614]  <TASK>
+> [  115.631615]  kexec_purgatory_get_set_symbol+0x82/0xd3
+> [  115.631619]  __se_sys_kexec_file_load+0x523/0x644
+> [  115.631621]  do_syscall_64+0x58/0xa5
+> [  115.631623]  entry_SYSCALL_64_after_hwframe+0x61/0xcb
 
-diff --git a/crypto/asymmetric_keys/verify_pefile.c b/crypto/asymmetric_keys/verify_pefile.c
-index d178650fd524c..411977947adbe 100644
---- a/crypto/asymmetric_keys/verify_pefile.c
-+++ b/crypto/asymmetric_keys/verify_pefile.c
-@@ -139,11 +139,15 @@ static int pefile_strip_sig_wrapper(const void *pebuf,
- 	pr_debug("sig wrapper = { %x, %x, %x }\n",
- 		 wrapper.length, wrapper.revision, wrapper.cert_type);
- 
--	/* Both pesign and sbsign round up the length of certificate table
--	 * (in optional header data directories) to 8 byte alignment.
-+	/* sbsign rounds up the length of certificate table (in optional
-+	 * header data directories) to 8 byte alignment.  However, the PE
-+	 * specification states that while entries are 8-byte aligned, this is
-+	 * not included in their length, and as a result, pesign has not
-+	 * rounded up since 0.110.
- 	 */
--	if (round_up(wrapper.length, 8) != ctx->sig_len) {
--		pr_debug("Signature wrapper len wrong\n");
-+	if (wrapper.length > ctx->sig_len) {
-+		pr_debug("Signature wrapper bigger than sig len (%x > %x)\n",
-+			 ctx->sig_len, wrapper.length);
- 		return -ELIBBAD;
- 	}
- 	if (wrapper.revision != WIN_CERT_REVISION_2_0) {
--- 
-2.39.2
+Yeah, simply dropping -r doesn't work. You at least need to add -fPIE
+to the CFLAGS. But probably you need more. When you go down this route
+you really need to pay attention to some nasty details...
+
+> And I did not continue in that direction.
+
+That's totally fine.
+
+Thanks
+Philipp
+
+> I also tried finding a flag for llvm that would avoid splitting .text,
+> but was not lucky either.
+> 
+> I will look into making a linker script for x86, we could combine it
+> with something like:
+> 
+>                 if (sechdrs[i].sh_flags & SHF_EXECINSTR &&
+>                     pi->ehdr->e_entry >= sechdrs[i].sh_addr &&
+>                     pi->ehdr->e_entry < (sechdrs[i].sh_addr
+> -                                        + sechdrs[i].sh_size) &&
+> -                   kbuf->image->start == pi->ehdr->e_entry) {
+> -                       kbuf->image->start -= sechdrs[i].sh_addr;
+> -                       kbuf->image->start += kbuf->mem + offset;
+> +                                        + sechdrs[i].sh_size)) {
+> +                       if (!WARN_ON(kbuf->image->start != pi->ehdr->e_entry)) {
+> +                               kbuf->image->start -= sechdrs[i].sh_addr;
+> +                               kbuf->image->start += kbuf->mem + offset;
+> +                       }
+>                 }
+> 
+> So developers have some hints of what to look at.
+> 
+> Thanks!
+> 
+> 
+> >
+> > Thanks
+> > Philipp
+> >  
+> > >                       kbuf->image->start -= sechdrs[i].sh_addr;
+> > >                       kbuf->image->start += kbuf->mem + offset;
+> > >               }
+> > >
+> > > ---
+> > > base-commit: 17214b70a159c6547df9ae204a6275d983146f6b
+> > > change-id: 20230321-kexec_clang16-4510c23d129c
+> > >
+> > > Best regards,  
+> >  
+> 
+> 
 
 
 _______________________________________________
