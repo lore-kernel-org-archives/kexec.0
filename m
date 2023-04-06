@@ -4,31 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 77AFCC76196
-	for <kexec@archiver.kernel.org>; Thu,  6 Apr 2023 14:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 660BBC761A6
+	for <kexec@archiver.kernel.org>; Thu,  6 Apr 2023 14:06:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:CC
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=MsezV4fpvsaaTGR0+y4vNdYlv3TQzTsS2h6CUd8tb5w=; b=BDell4S2sLXo2E
-	TdTS7jVd+27I3iH98LPorrnunixGxhhZLbN2orJ6kpykYgL0eqVIy1mlCx3tDzZY6w+Z8SvTINJBL
-	cd2sy+j/zDp5tQvZd29hecSlj1furMTvoKORZ998tblbb2pcdVh3CF2XaPxlp0roYxvMH8JH2buyf
-	xLNr6wdm3cEMoCIR0wUF4V3qp+G32nLpqeVRnusR66TkR58dFBhEoOvRlSa+c8WM2HMUyrmwRtXMa
-	ai5wjBlzQo1fL4hPaLN0FAtb8B6TpFq3bOqoYHTaW3AvW41oG2InW8qsXzN2jv7TnpgZZnuzmIrjK
-	/xx9HLThvSN1ijSLy84A==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=ZjIk4SsvINv/r2vhyqFLdMIALqGqzDeBu4DdldqoqJM=; b=tpVIBpw63QlZ/G
+	+BZPgeW6H+irNbMLW93hv5qSyS+ybGf/mKW9npxVi9rPHtHcpzJJ7/lRNTxSsqQwnjN/UG6ziaU94
+	R/iD8oFeOe0caawbGHELOVMPTViauj+RmC4Z8M1nHjhktWiQeJADEEYIp2ckt6agrL/Goh8NpQT6C
+	ULFv5M3K+xjFI0t15U2eWK2plMIRKhPc1eH8qUCTTpWUTotYLGfwHjPlLToSJknXLdkOashw32yQ9
+	rdtxUe5RsZN0oV0jQdUr4QlfLGSfJVakg98RiBSvd4zoiBqEnn0HxD8FLzwAfFt8NoPMwGn3AmCta
+	KpJ3yi+KppnQRF3s5DGQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pkQFS-007W2s-0v;
-	Thu, 06 Apr 2023 14:05:58 +0000
-Received: from szxga01-in.huawei.com ([45.249.212.187])
+	id 1pkQFU-007W44-0o;
+	Thu, 06 Apr 2023 14:06:00 +0000
+Received: from szxga02-in.huawei.com ([45.249.212.188])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pkQFO-007W1A-2T;
-	Thu, 06 Apr 2023 14:05:57 +0000
+	id 1pkQFR-007W19-0g;
+	Thu, 06 Apr 2023 14:05:58 +0000
 Received: from dggpemm500016.china.huawei.com (unknown [172.30.72.56])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Psjt61DPRzrXfC;
-	Thu,  6 Apr 2023 22:04:30 +0800 (CST)
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Psjrj4KHPzKx4d;
+	Thu,  6 Apr 2023 22:03:17 +0800 (CST)
 Received: from huawei.com (10.67.174.205) by dggpemm500016.china.huawei.com
  (7.185.36.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Thu, 6 Apr
@@ -41,19 +41,20 @@ CC: <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
 	<bjorn@rivosinc.com>, <alex@ghiti.fr>, <akpm@linux-foundation.org>,
 	<atishp@rivosinc.com>, <bhe@redhat.com>, <thunder.leizhen@huawei.com>,
 	<horms@kernel.org>
-Subject: [PATCH -next v3 0/2] support allocating crashkernel above 4G explicitly on riscv
-Date: Fri, 7 Apr 2023 06:02:04 +0800
-Message-ID: <20230406220206.3067006-1-chenjiahao16@huawei.com>
+Subject: [PATCH -next v3 2/2] docs: kdump: Update the crashkernel description for riscv
+Date: Fri, 7 Apr 2023 06:02:06 +0800
+Message-ID: <20230406220206.3067006-3-chenjiahao16@huawei.com>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20230406220206.3067006-1-chenjiahao16@huawei.com>
+References: <20230406220206.3067006-1-chenjiahao16@huawei.com>
 MIME-Version: 1.0
 X-Originating-IP: [10.67.174.205]
 X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
  dggpemm500016.china.huawei.com (7.185.36.25)
 X-CFilter-Loop: Reflected
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230406_070555_201701_0ECCFF9B 
-X-CRM114-Status: UNSURE (   8.60  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20230406_070557_450232_F8EF0529 
+X-CRM114-Status: GOOD (  10.15  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -70,64 +71,59 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On riscv, the current crash kernel allocation logic is trying to
-allocate within 32bit addressible memory region by default, if
-failed, try to allocate without 4G restriction.
+Now "crashkernel=" parameter on riscv has been updated to support
+crashkernel=X,[high,low]. Through which we can reserve memory region
+above/within 32bit addressible DMA zone.
 
-In need of saving DMA zone memory while allocating a relatively large
-crash kernel region, allocating the reserved memory top down in
-high memory, without overlapping the DMA zone, is a mature solution.
-Hence this patchset introduces the parameter option crashkernel=X,[high,low].
+Here update the parameter description accordingly.
 
-One can reserve the crash kernel from high memory above DMA zone range
-by explicitly passing "crashkernel=X,high"; or reserve a memory range
-below 4G with "crashkernel=X,low". Besides, there are few rules need
-to take notice:
-1. "crashkernel=X,[high,low]" will be ignored if "crashkernel=size"
-   is specified.
-2. "crashkernel=X,low" is valid only when "crashkernel=X,high" is passed
-   and there is enough memory to be allocated under 4G.
-3. When allocating crashkernel above 4G and no "crashkernel=X,low" is
-   specified, a 128M low memory will be allocated automatically for
-   swiotlb bounce buffer.
-See Documentation/admin-guide/kernel-parameters.txt for more information.
+Signed-off-by: Chen Jiahao <chenjiahao16@huawei.com>
+---
+ Documentation/admin-guide/kernel-parameters.txt | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-To verify loading the crashkernel, adapted kexec-tools is attached below:
-https://github.com/chenjh005/kexec-tools/tree/build-test-riscv-v2
-
-Following test cases have been performed as expected:
-1) crashkernel=256M                          //low=256M
-2) crashkernel=1G                            //low=1G
-3) crashkernel=4G                            //high=4G, low=128M(default)
-4) crashkernel=4G crashkernel=256M,high      //high=4G, low=128M(default), high is ignored
-5) crashkernel=4G crashkernel=256M,low       //high=4G, low=128M(default), low is ignored
-6) crashkernel=4G,high                       //high=4G, low=128M(default)
-7) crashkernel=256M,low                      //low=0M, invalid
-8) crashkernel=4G,high crashkernel=256M,low  //high=4G, low=256M
-9) crashkernel=4G,high crashkernel=4G,low    //high=0M, low=0M, invalid
-10) crashkernel=512M@0xd0000000              //low=512M
-11) crashkernel=1G@0xe0000000                //high=0M, low=0M, no enough low memory, failed
-
-Changes since [v3]:
-1. Update to print warning and return explicitly on failure when
-   crashkernel=size@offset is specified. Not changing the result
-   in this case but making the logic more straightforward.
-2. Some minor cleanup.
-
-Changes since [v2]:
-1. Update the allocation logic to ensure the high crashkernel
-   region is reserved strictly above dma32_phys_limit.
-2. Clean up some minor format problems.
-
-Chen Jiahao (2):
-  riscv: kdump: Implement crashkernel=X,[high,low]
-  docs: kdump: Update the crashkernel description for riscv
-
- .../admin-guide/kernel-parameters.txt         | 15 ++--
- arch/riscv/kernel/setup.c                     |  5 ++
- arch/riscv/mm/init.c                          | 74 +++++++++++++++++--
- 3 files changed, 82 insertions(+), 12 deletions(-)
-
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 54702bd488eb..41865aae9eaa 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -866,7 +866,7 @@
+ 			memory region [offset, offset + size] for that kernel
+ 			image. If '@offset' is omitted, then a suitable offset
+ 			is selected automatically.
+-			[KNL, X86-64, ARM64] Select a region under 4G first, and
++			[KNL, X86-64, ARM64, RISCV] Select a region under 4G first, and
+ 			fall back to reserve region above 4G when '@offset'
+ 			hasn't been specified.
+ 			See Documentation/admin-guide/kdump/kdump.rst for further details.
+@@ -879,14 +879,14 @@
+ 			Documentation/admin-guide/kdump/kdump.rst for an example.
+ 
+ 	crashkernel=size[KMG],high
+-			[KNL, X86-64, ARM64] range could be above 4G. Allow kernel
+-			to allocate physical memory region from top, so could
+-			be above 4G if system have more than 4G ram installed.
+-			Otherwise memory region will be allocated below 4G, if
+-			available.
++			[KNL, X86-64, ARM64, RISCV] range could be above 4G.
++			Allow kernel to allocate physical memory region from top,
++			so could be above 4G if system have more than 4G ram
++			installed. Otherwise memory region will be allocated
++			below 4G, if available.
+ 			It will be ignored if crashkernel=X is specified.
+ 	crashkernel=size[KMG],low
+-			[KNL, X86-64, ARM64] range under 4G. When crashkernel=X,high
++			[KNL, X86-64, ARM64, RISCV] range under 4G. When crashkernel=X,high
+ 			is passed, kernel could allocate physical memory region
+ 			above 4G, that cause second kernel crash on system
+ 			that require some amount of low memory, e.g. swiotlb
+@@ -897,6 +897,7 @@
+ 			size is	platform dependent.
+ 			  --> x86: max(swiotlb_size_or_default() + 8MiB, 256MiB)
+ 			  --> arm64: 128MiB
++			  --> riscv: 128MiB
+ 			This one lets the user specify own low range under 4G
+ 			for second kernel instead.
+ 			0: to disable low allocation.
 -- 
 2.31.1
 
