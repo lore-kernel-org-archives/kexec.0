@@ -4,73 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EF238C76196
-	for <kexec@archiver.kernel.org>; Thu,  6 Apr 2023 11:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8F0B6C7618D
+	for <kexec@archiver.kernel.org>; Thu,  6 Apr 2023 14:06:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=YRxkmUap4nYl2byta7y9I8el93XlQW8hXuzTotvDiC8=; b=UxyMEd29q/6lgw
-	ZODQjP1dPXApf2ETQew9FYrr/kKQH/iGJE1IuttP2AjGa89m8BpD3fl2LJRP4ZS5S/21O6vxxU7SO
-	R1cqlDIYP3iQD/MLJQ+9JuQEXUeCP8C1LJ57PZYcV6kdHyRDJJkul5V5Qi/1pOLWbMmsm1Oc8hd/U
-	Z7dp8hHF8ENC9d1OONtSSlUDQbDgFk++ne4DAJAIlqk6SOZzDA4V7t6raHBg1HKh2ANqsoF9zqBHK
-	/0ZMjDr+pLgpZ0qoN5qjpQU4bv1YHqx7wMiaSaftx6KmSWcaFwjoKgrSIjMHovdZgFnKrtSqMe72c
-	r1jsVqvA84lfNvBYYrXw==;
+	List-Owner; bh=d6MwnrERbBq2L+FJwFtWODAysJFaSa4PnzFI0CyYwXA=; b=WiS25PQaSYEBH5
+	m8UJHCsv6EecyXwFZyFO/62TvO26ido1RO3qfVlHsGeaftEwX0yxa1MD1HR1kI5+/E+maBFe8iovP
+	3jJMoPlStutAsaffcohW/YWZ1Sk3/VKwEiI6q3ugd79P0iDU3T1lgqGFOjJeUTYQED0JohE4QdCwU
+	TeQhTJLzZIpu7qcatdwIo87Ko40tTWT6TdiUj2xE2aIh8zlYr+AROaT/HhK/VNHFBhy6GScz735iA
+	PbszV1uaEZNQBPpbromx/Lh+xFcdqsusaZpipdeJXWz4eesgAof5+DzmoPZB14VGFAlJC742cmor1
+	CXef/rLsm6F1yKt3bjjg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pkNRs-0077Cy-2v;
-	Thu, 06 Apr 2023 11:06:36 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1pkQFR-007W2m-2b;
+	Thu, 06 Apr 2023 14:05:57 +0000
+Received: from szxga02-in.huawei.com ([45.249.212.188])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pkNRq-0077C0-0Q
-	for kexec@lists.infradead.org;
-	Thu, 06 Apr 2023 11:06:35 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1680779193;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LSpYEks1T5f1HgeKXvgnDWGtTBs8ltEecfJ6Ag+UgLU=;
-	b=WuYmFnb4aaDlLnQAwIrUUhLTR6eEwE4vokKPWLColy+//AUamCCUyxIH4oNx/Uci+7rE3q
-	RFuHUBvBYF6SOAXDphESKnKq+tqq7Sg3GBbYbF8T5WJmdP8mqARIVtnbvXONTnePJBCnjr
-	ttdxdw44GCTm61OIUGbsKCzfUKuZARM=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-613-jJolPkiZMh25d-WtlECE3g-1; Thu, 06 Apr 2023 07:06:27 -0400
-X-MC-Unique: jJolPkiZMh25d-WtlECE3g-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 12FAF3C0ED6C;
-	Thu,  6 Apr 2023 11:06:26 +0000 (UTC)
-Received: from localhost (ovpn-12-86.pek2.redhat.com [10.72.12.86])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 1D3171121314;
-	Thu,  6 Apr 2023 11:06:23 +0000 (UTC)
-Date: Thu, 6 Apr 2023 19:06:19 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Eric DeVolder <eric.devolder@oracle.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org,
-	ebiederm@xmission.com, dyoung@redhat.com, vgoyal@redhat.com,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, hpa@zytor.com,
-	nramas@linux.microsoft.com, thomas.lendacky@amd.com,
-	robh@kernel.org, efault@gmx.de, rppt@kernel.org, david@redhat.com,
-	sourabhjain@linux.ibm.com, konrad.wilk@oracle.com,
-	boris.ostrovsky@oracle.com
-Subject: Re: [PATCH v21 0/7] crash: Kernel handling of CPU and memory hot
- un/plug
-Message-ID: <ZC6nq13EDIrK1XFe@MiWiFi-R3L-srv>
-References: <20230404180326.6890-1-eric.devolder@oracle.com>
+	id 1pkQFO-007W1Z-31;
+	Thu, 06 Apr 2023 14:05:57 +0000
+Received: from dggpemm500016.china.huawei.com (unknown [172.30.72.56])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Psjrj2NqnzKx1b;
+	Thu,  6 Apr 2023 22:03:17 +0800 (CST)
+Received: from huawei.com (10.67.174.205) by dggpemm500016.china.huawei.com
+ (7.185.36.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Thu, 6 Apr
+ 2023 22:05:47 +0800
+From: Chen Jiahao <chenjiahao16@huawei.com>
+To: <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+	<kexec@lists.infradead.org>, <linux-doc@vger.kernel.org>
+CC: <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
+	<conor.dooley@microchip.com>, <guoren@kernel.org>, <heiko@sntech.de>,
+	<bjorn@rivosinc.com>, <alex@ghiti.fr>, <akpm@linux-foundation.org>,
+	<atishp@rivosinc.com>, <bhe@redhat.com>, <thunder.leizhen@huawei.com>,
+	<horms@kernel.org>
+Subject: [PATCH -next v3 1/2] riscv: kdump: Implement crashkernel=X,[high,low]
+Date: Fri, 7 Apr 2023 06:02:05 +0800
+Message-ID: <20230406220206.3067006-2-chenjiahao16@huawei.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20230406220206.3067006-1-chenjiahao16@huawei.com>
+References: <20230406220206.3067006-1-chenjiahao16@huawei.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20230404180326.6890-1-eric.devolder@oracle.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
+X-Originating-IP: [10.67.174.205]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpemm500016.china.huawei.com (7.185.36.25)
+X-CFilter-Loop: Reflected
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230406_040634_238904_407D088B 
-X-CRM114-Status: GOOD (  26.17  )
+X-CRM114-CacheID: sfid-20230406_070555_338984_CA4A4C60 
+X-CRM114-Status: GOOD (  18.16  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,72 +71,164 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 04/04/23 at 02:03pm, Eric DeVolder wrote:
-> Once the kdump service is loaded, if changes to CPUs or memory occur,
-> either by hot un/plug or off/onlining, the crash elfcorehdr must also
-> be updated.
-> 
-> The elfcorehdr describes to kdump the CPUs and memory in the system,
-> and any inaccuracies can result in a vmcore with missing CPU context
-> or memory regions.
-> 
-> The current solution utilizes udev to initiate an unload-then-reload
-> of the kdump image (eg. kernel, initrd, boot_params, purgatory and
-> elfcorehdr) by the userspace kexec utility. In the original post I
-> outlined the significant performance problems related to offloading
-> this activity to userspace.
-> 
-> This patchset introduces a generic crash handler that registers with
-> the CPU and memory notifiers. Upon CPU or memory changes, from either
-> hot un/plug or off/onlining, this generic handler is invoked and
-> performs important housekeeping, for example obtaining the appropriate
-> lock, and then invokes an architecture specific handler to do the
-> appropriate elfcorehdr update.
-> 
-> Note the description in patch 'crash: change crash_prepare_elf64_headers()
-> to for_each_possible_cpu()' and 'x86/crash: optimize CPU changes' that
-> enables further optimizations related to CPU plug/unplug/online/offline
-> performance of elfcorehdr updates.
-> 
-> In the case of x86_64, the arch specific handler generates a new
-> elfcorehdr, and overwrites the old one in memory; thus no involvement
-> with userspace needed.
-> 
-> To realize the benefits/test this patchset, one must make a couple
-> of minor changes to userspace:
-> 
->  - Prevent udev from updating kdump crash kernel on hot un/plug changes.
->    Add the following as the first lines to the RHEL udev rule file
->    /usr/lib/udev/rules.d/98-kexec.rules:
-> 
->    # The kernel updates the crash elfcorehdr for CPU and memory changes
->    SUBSYSTEM=="cpu", ATTRS{crash_hotplug}=="1", GOTO="kdump_reload_end"
->    SUBSYSTEM=="memory", ATTRS{crash_hotplug}=="1", GOTO="kdump_reload_end"
-> 
->    With this changeset applied, the two rules evaluate to false for
->    CPU and memory change events and thus skip the userspace
->    unload-then-reload of kdump.
-> 
->  - Change to the kexec_file_load for loading the kdump kernel:
->    Eg. on RHEL: in /usr/bin/kdumpctl, change to:
->     standard_kexec_args="-p -d -s"
->    which adds the -s to select kexec_file_load() syscall.
-> 
-> This kernel patchset also supports kexec_load() with a modified kexec
-> userspace utility. A working changeset to the kexec userspace utility
-> is posted to the kexec-tools mailing list here:
-> 
->  http://lists.infradead.org/pipermail/kexec/2022-October/026032.html
-> 
-> To use the kexec-tools patch, apply, build and install kexec-tools,
-> then change the kdumpctl's standard_kexec_args to replace the -s with
-> --hotplug. The removal of -s reverts to the kexec_load syscall and
-> the addition of --hotplug invokes the changes put forth in the
-> kexec-tools patch.
+On riscv, the current crash kernel allocation logic is trying to
+allocate within 32bit addressible memory region by default, if
+failed, try to allocate without 4G restriction.
 
-Other than the nitpick in patch 2, this series looks good to me.
+In need of saving DMA zone memory while allocating a relatively large
+crash kernel region, allocating the reserved memory top down in
+high memory, without overlapping the DMA zone, is a mature solution.
+Here introduce the parameter option crashkernel=X,[high,low].
 
-Acked-by: Baoquan He <bhe@redhat.com>
+One can reserve the crash kernel from high memory above DMA zone range
+by explicitly passing "crashkernel=X,high"; or reserve a memory range
+below 4G with "crashkernel=X,low".
+
+Signed-off-by: Chen Jiahao <chenjiahao16@huawei.com>
+---
+ arch/riscv/kernel/setup.c |  5 +++
+ arch/riscv/mm/init.c      | 74 ++++++++++++++++++++++++++++++++++++---
+ 2 files changed, 74 insertions(+), 5 deletions(-)
+
+diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
+index 5d3184cbf518..ea84e5047c23 100644
+--- a/arch/riscv/kernel/setup.c
++++ b/arch/riscv/kernel/setup.c
+@@ -176,6 +176,11 @@ static void __init init_resources(void)
+ 		if (ret < 0)
+ 			goto error;
+ 	}
++	if (crashk_low_res.start != crashk_low_res.end) {
++		ret = add_resource(&iomem_resource, &crashk_low_res);
++		if (ret < 0)
++			goto error;
++	}
+ #endif
+ 
+ #ifdef CONFIG_CRASH_DUMP
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index 478d6763a01a..b5b457193423 100644
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -1152,6 +1152,28 @@ static inline void setup_vm_final(void)
+ }
+ #endif /* CONFIG_MMU */
+ 
++/* Reserve 128M low memory by default for swiotlb buffer */
++#define DEFAULT_CRASH_KERNEL_LOW_SIZE	(128UL << 20)
++
++static int __init reserve_crashkernel_low(unsigned long long low_size)
++{
++	unsigned long long low_base;
++
++	low_base = memblock_phys_alloc_range(low_size, PMD_SIZE, 0, dma32_phys_limit);
++	if (!low_base) {
++		pr_err("cannot allocate crashkernel low memory (size:0x%llx).\n", low_size);
++		return -ENOMEM;
++	}
++
++	pr_info("crashkernel low memory reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
++		low_base, low_base + low_size, low_size >> 20);
++
++	crashk_low_res.start = low_base;
++	crashk_low_res.end = low_base + low_size - 1;
++
++	return 0;
++}
++
+ /*
+  * reserve_crashkernel() - reserves memory for crash kernel
+  *
+@@ -1163,8 +1185,12 @@ static void __init reserve_crashkernel(void)
+ {
+ 	unsigned long long crash_base = 0;
+ 	unsigned long long crash_size = 0;
++	unsigned long long crash_low_size = 0;
+ 	unsigned long search_start = memblock_start_of_DRAM();
+ 	unsigned long search_end = memblock_end_of_DRAM();
++	unsigned long search_low_max = (unsigned long)dma32_phys_limit;
++	char *cmdline = boot_command_line;
++	bool fixed_base = false;
+ 
+ 	int ret = 0;
+ 
+@@ -1180,14 +1206,37 @@ static void __init reserve_crashkernel(void)
+ 		return;
+ 	}
+ 
+-	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
++	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
+ 				&crash_size, &crash_base);
+-	if (ret || !crash_size)
++	if (ret == -ENOENT) {
++		/*
++		 * crashkernel=X,[high,low] can be specified or not, but
++		 * invalid value is not allowed.
++		 */
++		ret = parse_crashkernel_high(cmdline, 0, &crash_size, &crash_base);
++		if (ret || !crash_size)
++			return;
++
++		/*
++		 * crashkernel=Y,low is valid only when crashkernel=X,high
++		 * is passed and high memory is reserved successful.
++		 */
++		ret = parse_crashkernel_low(cmdline, 0, &crash_low_size, &crash_base);
++		if (ret == -ENOENT)
++			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
++		else if (ret)
++			return;
++
++		search_start = search_low_max;
++	} else if (ret || !crash_size) {
++		/* Invalid argument value specified */
+ 		return;
++	}
+ 
+ 	crash_size = PAGE_ALIGN(crash_size);
+ 
+ 	if (crash_base) {
++		fixed_base = true;
+ 		search_start = crash_base;
+ 		search_end = crash_base + crash_size;
+ 	}
+@@ -1201,16 +1250,31 @@ static void __init reserve_crashkernel(void)
+ 	 */
+ 	crash_base = memblock_phys_alloc_range(crash_size, PMD_SIZE,
+ 					       search_start,
+-					       min(search_end, (unsigned long) SZ_4G));
++					       min(search_end, search_low_max));
+ 	if (crash_base == 0) {
+-		/* Try again without restricting region to 32bit addressible memory */
++		if (fixed_base) {
++			pr_warn("crashkernel: allocating failed with given size@offset\n");
++			return;
++		}
++
++		/* Try again above the region of 32bit addressible memory */
+ 		crash_base = memblock_phys_alloc_range(crash_size, PMD_SIZE,
+-						search_start, search_end);
++						       max(search_start, search_low_max),
++						       search_end);
+ 		if (crash_base == 0) {
+ 			pr_warn("crashkernel: couldn't allocate %lldKB\n",
+ 				crash_size >> 10);
+ 			return;
+ 		}
++
++		if (!crash_low_size)
++			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
++	}
++
++	if ((crash_base > dma32_phys_limit - crash_low_size) &&
++	    crash_low_size && reserve_crashkernel_low(crash_low_size)) {
++		memblock_phys_free(crash_base, crash_size);
++		return;
+ 	}
+ 
+ 	pr_info("crashkernel: reserved 0x%016llx - 0x%016llx (%lld MB)\n",
+-- 
+2.31.1
 
 
 _______________________________________________
