@@ -4,63 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 448C3C6FD1D
-	for <kexec@archiver.kernel.org>; Fri,  7 Apr 2023 12:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8C11DC77B6C
+	for <kexec@archiver.kernel.org>; Fri,  7 Apr 2023 23:22:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:Date:
-	Message-ID:From:References:CC:To:Subject:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Owner;
-	bh=H8gd7W1DZtl23+uEbBpXuWOdsi314UByYbFKRc8K8Pg=; b=Af4xQrkO4CgZ9ij6dRS8FZmKnF
-	RHGs+x61nSkfR9kfj4YKjK9NkzBiKdbPkmVo+a4JCjG1EV+T8Y1axARcxoaYu6fsczDAq/MVyW+sJ
-	ECH341jWrVDHRe5wO2Ls+iZtXZ41CiiUrRb8S72Z7z4sc3Nsr6vdcK2KsxK64uOEaHK1BCL/zryBv
-	Q+AWYL+rf+5kY7Z7CnjSmJMrsgJ36tVwk6rOyaXOk1JURH3t6AqJd8s2ZbI8c/hyxi6aJKtPPzwnX
-	rOTH/LiTfkmkOy80CPBU4uDaQgMLTFBRrz31GoFha2KV4anibr2u5U1ymWQnItNMx0yEL6YrciDQu
-	UWSR3NoA==;
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=bnGsbHVxwv7kZAi8JAlen9EpQHhdkWOdNcrozNLUyH8=; b=cFIltZA0UTOjVs
+	TaVvqnW1y1i+6afIKqLCF5w11Sq9MPMxeer6c+EOkfi7kJyzKxQZIEVpyfw2jqHZPuD+Mnnw+5aE2
+	e1n7ZFP1Sp7I20j2JzSDBhkzm5CoIO2WKiQt9QDhZAdtzqiD1qVqykiLdYe23WfJyWUU2Wzm/KCRo
+	b5t21br+Gi0fGUrpjHo/D0UKr6PK3l3WJQKQMTaB2Lk6/NTt9NEzIA0OdVD45sCjwfQTAA9NY/og4
+	NdZirXkh8ntCupgdfGb+4JmvEdubldODCW3W+jWP8vPjTu/N8A3vZmjn6RmYF+xrff8qiZ01CY3v/
+	WRgHpQ6Oayd0+9XKuphw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pklgO-00AEJI-1P;
-	Fri, 07 Apr 2023 12:59:12 +0000
-Received: from szxga02-in.huawei.com ([45.249.212.188])
+	id 1pkvPw-00BOTs-1G;
+	Fri, 07 Apr 2023 23:22:52 +0000
+Received: from mail-pf1-x430.google.com ([2607:f8b0:4864:20::430])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pklgK-00AEHx-12;
-	Fri, 07 Apr 2023 12:59:10 +0000
-Received: from dggpemm500006.china.huawei.com (unknown [172.30.72.56])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4PtJHY3gVrzSmPS;
-	Fri,  7 Apr 2023 20:55:05 +0800 (CST)
-Received: from [10.174.178.55] (10.174.178.55) by
- dggpemm500006.china.huawei.com (7.185.36.236) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Fri, 7 Apr 2023 20:58:54 +0800
-Subject: Re: [PATCH -next v3 1/2] riscv: kdump: Implement
- crashkernel=X,[high,low]
-To: Simon Horman <horms@kernel.org>, Chen Jiahao <chenjiahao16@huawei.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-	<kexec@lists.infradead.org>, <linux-doc@vger.kernel.org>,
-	<paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
-	<conor.dooley@microchip.com>, <guoren@kernel.org>, <heiko@sntech.de>,
-	<bjorn@rivosinc.com>, <alex@ghiti.fr>, <akpm@linux-foundation.org>,
-	<atishp@rivosinc.com>, <bhe@redhat.com>
-References: <20230406220206.3067006-1-chenjiahao16@huawei.com>
- <20230406220206.3067006-2-chenjiahao16@huawei.com>
- <ZDAGi2/+1q0oEUZ5@kernel.org>
-From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <ee6434f7-8e94-bae5-7d63-4b9bce3aec24@huawei.com>
-Date: Fri, 7 Apr 2023 20:58:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+	id 1pkvPt-00BOSu-1X
+	for kexec@lists.infradead.org;
+	Fri, 07 Apr 2023 23:22:51 +0000
+Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-63260c5bb69so17169b3a.3
+        for <kexec@lists.infradead.org>; Fri, 07 Apr 2023 16:22:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112; t=1680909767; x=1683501767;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=njPybTaOp1vfFxl9sNrZg/wsVvOfoZpdPujnFpOpMQA=;
+        b=Vt5cGuMIp/txoyJYLtEZ9dC+RpJrsinP5mQDIKekwD6nvyST7tXyhGxLGL3Z/M4BHL
+         YFf8GiX9Fh4tjiQtNiW6yw9042t0+qbszTDR7yNaw1In2q93zzBUeag2fN++T7f+2SSO
+         mYiSVqW3ikHB9B21Lqi8J8xL7fext5RlMpNhrFwdmnzrn/Bg3Vk8cSLVkFC/HZw24r+S
+         +Kujk+EHG8CGkKC5eNtr/tRJybBPG+Q4wOvR2BLQmEOYTaTos8m/pQs78tPFU4aKWSaB
+         e9oGkOODEFlAIv7rPaMXnrblaHO5Qm6fS70uBtRfFtfbmnE5Wyk0GaGO95IRt8LeppyG
+         mLWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680909767; x=1683501767;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=njPybTaOp1vfFxl9sNrZg/wsVvOfoZpdPujnFpOpMQA=;
+        b=ivf51NWJbVK4wVH/YUMgxyr97Ke8rtmwn6ztjIJfiXJHcyJHvcCi0e03MlM0QITMIU
+         +5vYcWAt4tu1ZSbzbeHyPcpArzuSx8HSZcYIS0ADGR17v3TSUc62aVJGejZ3W/PlKqtd
+         S1QG3ee7UFE4tFXmha68lOy0kcRFdb3VYseYnie0y5vhcfQ6TjC3C0QNkWhplLQuuuCG
+         slvzGq9tmGZRGM7VODO6hcenLte/H2/Oa0tACsBO3e9WPHaIpvFrfGnSNo4AUIzVcd53
+         VzMFvks5NQqjqLJmiaWAiBsb+t6VgWts2lHgIQ8uEwymxfCkHucdma+rrTeW2r1JnvCQ
+         PXow==
+X-Gm-Message-State: AAQBX9e4PUf/J7vQ6ERB1J/37eC51z4E1n3Q2AS7rIka/hHV+cGGN4yo
+	19WQEugKgjAa3ZphUucGVhyIkSrRM10e25Q7S4P6jg==
+X-Google-Smtp-Source: AKy350bTVYi1UIgGoXP+cqF81jwaO+c2w357t2GB7id9Pg6AAkRKqAVvHygDDMoVBsekCEUGRFhlgAYliVFtq4CaHB0=
+X-Received: by 2002:a05:6a00:2e28:b0:625:c55f:bc66 with SMTP id
+ fc40-20020a056a002e2800b00625c55fbc66mr1911037pfb.4.1680909767332; Fri, 07
+ Apr 2023 16:22:47 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <ZDAGi2/+1q0oEUZ5@kernel.org>
-Content-Language: en-US
-X-Originating-IP: [10.174.178.55]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemm500006.china.huawei.com (7.185.36.236)
-X-CFilter-Loop: Reflected
+References: <20230321-kexec_clang16-v5-0-5563bf7c4173@chromium.org>
+ <20230321-kexec_clang16-v5-2-5563bf7c4173@chromium.org> <20230330111523.4b98c8ce@gandalf.local.home>
+ <20230330151826.GDZCWoQkQBj4BYbwWw@fat_crate.local> <20230330113127.3011e021@gandalf.local.home>
+ <20230330160017.GEZCWyEXQVQZRBbYif@fat_crate.local>
+In-Reply-To: <20230330160017.GEZCWyEXQVQZRBbYif@fat_crate.local>
+From: Nick Desaulniers <ndesaulniers@google.com>
+Date: Fri, 7 Apr 2023 16:22:36 -0700
+Message-ID: <CAKwvOdkULKxoifiVO4H4yomt1DHQxw0ntdO6QgMXk2BpM-urRg@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] x86/purgatory: Add linker script
+To: Ricardo Ribalda <ribalda@chromium.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Eric Biederman <ebiederm@xmission.com>, 
+	Baoquan He <bhe@redhat.com>, Philipp Rudo <prudo@redhat.com>, kexec@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Ross Zwisler <zwisler@google.com>, 
+	Simon Horman <horms@kernel.org>, "x86@kernel.org" <x86@kernel.org>, linux-toolchains@vger.kernel.org, 
+	clang-built-linux <llvm@lists.linux.dev>, Borislav Petkov <bp@alien8.de>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230407_055908_755270_7B5272BB 
-X-CRM114-Status: GOOD (  19.12  )
+X-CRM114-CacheID: sfid-20230407_162249_515277_022E2907 
+X-CRM114-Status: GOOD (  19.47  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -72,95 +89,47 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-
-
-On 2023/4/7 20:03, Simon Horman wrote:
-> On Fri, Apr 07, 2023 at 06:02:05AM +0800, Chen Jiahao wrote:
->> On riscv, the current crash kernel allocation logic is trying to
->> allocate within 32bit addressible memory region by default, if
->> failed, try to allocate without 4G restriction.
->>
->> In need of saving DMA zone memory while allocating a relatively large
->> crash kernel region, allocating the reserved memory top down in
->> high memory, without overlapping the DMA zone, is a mature solution.
->> Here introduce the parameter option crashkernel=X,[high,low].
->>
->> One can reserve the crash kernel from high memory above DMA zone range
->> by explicitly passing "crashkernel=X,high"; or reserve a memory range
->> below 4G with "crashkernel=X,low".
->>
->> Signed-off-by: Chen Jiahao <chenjiahao16@huawei.com>
-> 
-> ...
-> 
->> @@ -1180,14 +1206,37 @@ static void __init reserve_crashkernel(void)
->>  		return;
->>  	}
->>  
->> -	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
->> +	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
->>  				&crash_size, &crash_base);
->> -	if (ret || !crash_size)
->> +	if (ret == -ENOENT) {
->> +		/*
->> +		 * crashkernel=X,[high,low] can be specified or not, but
->> +		 * invalid value is not allowed.
-> 
-> nit: Perhaps something like this would be easier to correlate with the
->      code that follows:
-> 
-> 		/* Fallback to crashkernel=X,[high,low] */
-
-The description "crashkernel=X,[high,low] can be specified or not" is not
-correct, because crashkernel=X,high must be specified when walking into this
-branch. So use Simon's comments or copy arm64's comments(it's written for
-parse_crashkernel_low()).
-
-> 
-> 
->> +		 */
->> +		ret = parse_crashkernel_high(cmdline, 0, &crash_size, &crash_base);
->> +		if (ret || !crash_size)
->> +			return;
->> +
->> +		/*
->> +		 * crashkernel=Y,low is valid only when crashkernel=X,high
->> +		 * is passed and high memory is reserved successful.
-> 
-> nit: s/successful/successfully/
-
-Seems like the whole "and high memory is reserved successful" needs to be deleted.
-Only the dependency between the two boot options should be described here,
-regardless of whether their memory is successfully allocated.
-
-> 
->> +		 */
->> +		ret = parse_crashkernel_low(cmdline, 0, &crash_low_size, &crash_base);
->> +		if (ret == -ENOENT)
->> +			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
->> +		else if (ret)
->> +			return;
->> +
->> +		search_start = search_low_max;
->> +	} else if (ret || !crash_size) {
->> +		/* Invalid argument value specified */
->>  		return;
->> +	}
-> 
-> ...
-> .
-> 
-
--- 
-Regards,
-  Zhen Lei
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgUmljYXJkbywKVGhhbmtzIGZvciB0aGUgcGF0Y2ghICBQbGVhc2UgbWFrZSBzdXJlIHRvIGNj
+IG91ciBtYWlsaW5nIGxpc3QKPGxsdm1AbGlzdHMubGludXguZGV2PiBmb3IgbGx2bSBzcGVjaWZp
+YyBpc3N1ZXMuCnNjcmlwdHMvZ2V0X21haW50YWluZXIucGwgc2hvdWxkIHJlY29tbWVuZCBpdCwg
+b3IgeW91IGNhbiBmaW5kIGl0IGZyb20KY2xhbmdidWlsdGxpbnV4LmdpdGh1Yi5pby4gIFlvdSBj
+YW4gYWxzbyBwaW5nIG1lIGludGVybmFsbHkgZm9yCnRvb2xjaGFpbiByZWxhdGVkIGlzc3Vlcy4K
+ClN0YXJ0IG9mIHRocmVhZC4KaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGttbC8yMDIzMDMyMS1r
+ZXhlY19jbGFuZzE2LXY1LTAtNTU2M2JmN2M0MTczQGNocm9taXVtLm9yZy8KCk9uIFRodSwgTWFy
+IDMwLCAyMDIzIGF0IDk6MDDigK9BTSBCb3Jpc2xhdiBQZXRrb3YgPGJwQGFsaWVuOC5kZT4gd3Jv
+dGU6Cj4KPiBPbiBUaHUsIE1hciAzMCwgMjAyMyBhdCAxMTozMToyN0FNIC0wNDAwLCBTdGV2ZW4g
+Um9zdGVkdCB3cm90ZToKPiA+IE9uIFRodSwgMzAgTWFyIDIwMjMgMTc6MTg6MjYgKzAyMDAKPiA+
+IEJvcmlzbGF2IFBldGtvdiA8YnBAYWxpZW44LmRlPiB3cm90ZToKPiA+Cj4gPiA+IE9uIFRodSwg
+TWFyIDMwLCAyMDIzIGF0IDExOjE1OjIzQU0gLTA0MDAsIFN0ZXZlbiBSb3N0ZWR0IHdyb3RlOgo+
+ID4gPiA+ID4gTWFrZSBzdXJlIHRoYXQgdGhlIC50ZXh0IHNlY3Rpb24gaXMgbm90IGRpdmlkZWQg
+aW4gbXVsdGlwbGUgb3ZlcmxhcHBpbmcKPiA+ID4gPiA+IHNlY3Rpb25zLiBUaGlzIGlzIG5vdCBz
+dXBwb3J0ZWQgYnkga2V4ZWNfZmlsZS4KClBlcmhhcHMgdGhpcyBpcyByZWxhdGVkIHRvIENyT1Mn
+IHVzZSBvZiBBdXRvRkRPIGNyZWF0aW5nIC50ZXh0LmhvdD8KSWYgc28sIGl0J3MgcHJvYmFibHkg
+bW9yZSBzdHJhaWdodGZvcndhcmQgdG8gc3RyYWlnaHQgdXAgZGlzYWJsZSBQR08KZm9yIGtleGVj
+LiBTZWUgYWxzbzoKCmNvbW1pdCBiZGU5NzFhODNiYmYgKCJLVk06IGFybTY0OiBudmhlOiBGaXgg
+YnVpbGQgd2l0aCBwcm9maWxlIG9wdGltaXphdGlvbiIpCgo+ID4gPgo+ID4gPiBBbmQ/Cj4gPiA+
+Cj4gPiA+IFdoYXQgaXMgdGhlIGZhaWx1cmUgc2NlbmFyaW8/IFdoeSBhcmUgeW91IGZpeGluZyBp
+dD8gV2h5IGRvIHdlIGNhcmU/Cj4gPiA+Cj4gPiA+IFRoaXMgaXMgd2F5IHRvbyBsYWNvbmljLgo+
+ID4gPgo+ID4KPiA+IFllYWgsIEkgdGhpbmsgdGhlIGNoYW5nZSBsb2cgaW4gcGF0Y2ggMSBuZWVk
+cyB0byBiZSBpbiB0aGlzIHBhdGNoIHRvbywKPiA+IHdoaWNoIGdpdmVzIGJldHRlciBjb250ZXh0
+Lgo+Cj4gSnVzdCByZWFkIGl0Lgo+Cj4gV2h5IGRpZCBpdCB3b3JrIHdpdGggY2xhbmcgdmVyc2lv
+biA8IDE2PwoKSSdsbCBiZXQgaWYgd2UgYmlzZWN0IGxsdm0sIHdlIGNhbiBzcG90IHdoYXQgbWln
+aHQgaGF2ZSBjaGFuZ2VkLCB3aGljaAptYXkgZ2l2ZSB1cyBhIGNsdWUgb24gaG93IHRvIGdldCB0
+aGUgb2xkIGJlaGF2aW9yIGJhY2s7IG1heWJlIHdpdGhvdXQKdGhlIG5lZWQgZm9yIGEgbGlua2Vy
+IHNjcmlwdC4KClJpY2FyZG8sIGhvdyBkaWQgeW91IHZlcmlmeSB0aGF0IHlvdXIgZml4IHdhcyBj
+b3JyZWN0PyBTdXJlbHkgd2UgY2FuCmNoZWNrIHVzaW5nIGNvbW1hbmQgbGluZSB1dGlsaXRpZXMg
+d2l0aG91dCBuZWVkaW5nIGEgZnVsbCBibG93biBrZXhlYwpzZXR1cD8gSWYgeW91IGNhbiBzaGFy
+ZSBtb3JlIGluZm8sIEkgY2FuIGJpc2VjdCBsbHZtIHF1aWNrbHkuICBJZiBpdApyZXF1aXJlcyBw
+cm9maWxlIGRhdGEsIHlvdSdsbCBuZWVkIHRvIHNoYXJlIGl0LCBzaW5jZSBDck9TIGVuZ2luZWVy
+cwpzdGlsbCBoYXZlIG5vdCBwb3N0ZWQgcHVibGljIGRvY3VtZW50YXRpb24gb24gQXV0b0ZETyBh
+cyBJIGhhdmUKcmVwZWF0ZWRseSBhc2tlZCBmb3IuCgo+Cj4gKyB0b29sY2hhaW5zIE1MLgo+Cj4g
+LS0KPiBSZWdhcmRzL0dydXNzLAo+ICAgICBCb3Jpcy4KPgo+IGh0dHBzOi8vcGVvcGxlLmtlcm5l
+bC5vcmcvdGdseC9ub3Rlcy1hYm91dC1uZXRpcXVldHRlCgoKCi0tIApUaGFua3MsCn5OaWNrIERl
+c2F1bG5pZXJzCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
+dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
