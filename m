@@ -4,65 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9AC0DC76196
-	for <kexec@archiver.kernel.org>; Tue, 11 Apr 2023 07:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8D0E1C7619A
+	for <kexec@archiver.kernel.org>; Tue, 11 Apr 2023 18:37:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=iaPj0v/5c8uCZa+r7+IXO2G/rc0o5E92yFQc2Qa16xQ=; b=wj1+38x5ZNq8+d
-	0ow6k4M3XUdlleNv3Gx6+/4bQSnKuMC0V5IJIVNO4meWR6V4CdkL6pDprroHPXpKVvM/J58qm1awq
-	snrgF/cnJWB2/9L+pGRYwDxIlQD117yViZqVlob9tW7oHjdd6YpYI7C7cNs3R3Kcvj9g6f5YPG7RW
-	/jb79QT9pjJq8kK6WwLSo2PrgACzzVzjGJ5iB2KsIRU/jjuZkOVCi0p182HWJqd+fU/KzU5HnVmwm
-	w13vcXXqFdKXQavqXwxR9+Mcg40xaFAslg1kt15FjUGA1YIHO6+GqB59OHQX7lCdDD47D+irFNmv4
-	KYABjKx1sAwlZOWzRP0Q==;
+	List-Owner; bh=Qo1GCxUr1wdRYJ5XLddkNKN0cBoPBeokCwHJyMKCTbw=; b=aSZQENDpnSGMms
+	IgOeTL9pDTlVjVQtdpJ0BUGVrRxKCInttCGJzLE99e/XXXBokt3Fn89u47H2Cf3vZrJM6ma6UAS2r
+	O7JTPYhGKWAMykRqiAS5FA+mTirI2EdOAG1ERWnTpCkLq4IjoEEil+62vZ+qpgJtyr4Om4OyIQ28Y
+	eINHLBrDNX4/xDS8tFHCxXABX/EQFrd9xlM5KDVyvM7vCrYICuk28q/R4VHLkpPrW7g2+YrzWqT++
+	US3ghuFohtOGDG0ihXYJ7kSb4c6HgVzVFKfxtocyiquPpEta/5MwkC2QbHBuPmea64qyI5Uqe9raU
+	i0Tdiu/NHWfPOxIdpr0w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pm8Xt-00GkDy-0q;
-	Tue, 11 Apr 2023 07:36:05 +0000
+	id 1pmIs6-000oZm-39;
+	Tue, 11 Apr 2023 18:37:39 +0000
 Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pm8Xq-00GkD7-1t;
-	Tue, 11 Apr 2023 07:36:03 +0000
+	id 1pmIs2-000oYU-2A;
+	Tue, 11 Apr 2023 18:37:36 +0000
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 881336224B;
-	Tue, 11 Apr 2023 07:36:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DE4DC433EF;
-	Tue, 11 Apr 2023 07:35:57 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 33A6262ADD;
+	Tue, 11 Apr 2023 18:37:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C93CC4339B;
+	Tue, 11 Apr 2023 18:37:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1681198561;
-	bh=9ighdUcP/UTYLMiyXaga2dDu7U1Ozp7TXI7PHr3dDYU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pc3B3hgSIKCjI2c/0a4HjZdd2ehgt6z2AB/2lkt3ZD6vimWx/pG5aGfdOrQOKPqBx
-	 gjPeI3PzxplsapH8uFKl4f+UNMeQlirH6NJ6KQEL4JYpMdrlAhgc1e/+qQSLPnJ6Jt
-	 Z1r3Ty3+mnw9Oj7MUoOrTlHiUY2ndF8deB2I3KnvL3FWE7fXSuDRq+RSoWwlPp3c6D
-	 qv/asV3Ccah13L3j+wQu/EayolE5EbXi4uitIEu42TucY1rgfDOee6evA4HatXTpwF
-	 6dJhup7XFRTiwuy8FxHXbRACloOKnZ5kfXVq4yfp6LSnzMlnfs/3XmYg/cP3gsVGh1
-	 8lMMn383lj2Lw==
-Date: Tue, 11 Apr 2023 09:35:55 +0200
-From: Simon Horman <horms@kernel.org>
-To: Chen Jiahao <chenjiahao16@huawei.com>
-Cc: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	kexec@lists.infradead.org, linux-doc@vger.kernel.org,
-	paul.walmsley@sifive.com, palmer@dabbelt.com,
-	conor.dooley@microchip.com, guoren@kernel.org, heiko@sntech.de,
-	bjorn@rivosinc.com, alex@ghiti.fr, akpm@linux-foundation.org,
-	atishp@rivosinc.com, bhe@redhat.com, thunder.leizhen@huawei.com
-Subject: Re: [PATCH -next v4 1/2] riscv: kdump: Implement
- crashkernel=X,[high,low]
-Message-ID: <ZDUN2+WG3OKGN/oq@kernel.org>
-References: <20230410130553.3226347-1-chenjiahao16@huawei.com>
- <20230410130553.3226347-2-chenjiahao16@huawei.com>
+	s=k20201202; t=1681238253;
+	bh=cuJkj0gXqgGwRRDX0gNvDxHkCZkNFXT4t3hB/stfPCo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=V1G6irrGVfNL90UxP1t0WrtEGZbgdV+tWzqng1wAWqO0r59xZNWHtnkgg539fvGJO
+	 AEmKO/XJozgjgp2q+A1QEl2Fogn3TIDKbG4tXz2isL3QUqAmJ9ToB8WgVQj4bjAHMG
+	 3u1tRSXi1eJ1rIKkWJPte0lE3qR6UYdqLA3Mg93nP2L7MKuya9F65woEpAgUroQad0
+	 4FbSH/5mNEUjtB0t2+MiEz8/rrD/MoHzOeJESDEjIIX1H6CX5oroADhwBdRgs5cBsO
+	 o5nJYMoaRX4qLVzr7WpX+cZNvQTuzbxZmulZvuy/1Ay6tInt8IDA8rMmMFy636Lcrf
+	 nq9wDX5YH3Sdw==
+From: Will Deacon <will@kernel.org>
+To: Baoquan He <bhe@redhat.com>,
+	linux-kernel@vger.kernel.org
+Cc: catalin.marinas@arm.com,
+	kernel-team@android.com,
+	Will Deacon <will@kernel.org>,
+	thunder.leizhen@huawei.com,
+	horms@kernel.org,
+	John.p.donnelly@oracle.com,
+	linux-arm-kernel@lists.infradead.org,
+	ardb@kernel.org,
+	rppt@kernel.org,
+	kexec@lists.infradead.org
+Subject: Re: [PATCH v2 0/3] arm64: kdump : take off the protection on crashkernel memory region
+Date: Tue, 11 Apr 2023 19:37:24 +0100
+Message-Id: <168123748697.3041682.15156562269597498270.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20230407011507.17572-1-bhe@redhat.com>
+References: <20230407011507.17572-1-bhe@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20230410130553.3226347-2-chenjiahao16@huawei.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230411_003602_682644_C98308FE 
-X-CRM114-Status: GOOD (  11.63  )
+X-CRM114-CacheID: sfid-20230411_113734_750873_E22115C4 
+X-CRM114-Status: GOOD (  10.87  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,26 +82,34 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Apr 10, 2023 at 09:05:52PM +0800, Chen Jiahao wrote:
-> On riscv, the current crash kernel allocation logic is trying to
-> allocate within 32bit addressible memory region by default, if
-> failed, try to allocate without 4G restriction.
+On Fri, 7 Apr 2023 09:15:04 +0800, Baoquan He wrote:
+> Problem:
+> =======
+> On arm64, block and section mapping is supported to build page tables.
+> However, currently it enforces to take base page mapping for the whole
+> linear mapping if CONFIG_ZONE_DMA or CONFIG_ZONE_DMA32 is enabled and
+> crashkernel kernel parameter is set. This will cause longer time of the
+> linear mapping process during bootup and severe performance degradation
+> during running time.
 > 
-> In need of saving DMA zone memory while allocating a relatively large
-> crash kernel region, allocating the reserved memory top down in
-> high memory, without overlapping the DMA zone, is a mature solution.
-> Here introduce the parameter option crashkernel=X,[high,low].
-> 
-> One can reserve the crash kernel from high memory above DMA zone range
-> by explicitly passing "crashkernel=X,high"; or reserve a memory range
-> below 4G with "crashkernel=X,low".
-> 
-> Signed-off-by: Chen Jiahao <chenjiahao16@huawei.com>
-> Acked-by: Guo Ren <guoren@kernel.org>
-> Reviewed-by: Zhen Lei <thunder.leizhen@huawei.com>
+> [...]
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+Applied to arm64 (for-next/kdump), thanks!
 
+[1/3] arm64: kdump : take off the protection on crashkernel memory region
+      https://git.kernel.org/arm64/c/0d124e96051b
+[2/3] arm64: kdump: do not map crashkernel region specifically
+      https://git.kernel.org/arm64/c/04a2a7af3d97
+[3/3] arm64: kdump: defer the crashkernel reservation for platforms with no DMA memory zones
+      https://git.kernel.org/arm64/c/504cae453f82
+
+Cheers,
+-- 
+Will
+
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
 
 _______________________________________________
 kexec mailing list
