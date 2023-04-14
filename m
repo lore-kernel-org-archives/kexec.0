@@ -4,73 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DEBA3C77B6F
-	for <kexec@archiver.kernel.org>; Fri, 14 Apr 2023 09:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F26F9C77B72
+	for <kexec@archiver.kernel.org>; Fri, 14 Apr 2023 14:34:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=X3ZCRI6C5q576JosDUIpM3rlRcbIT9Auf9DpzX5DZBE=; b=KxjD+upEOx+79S
-	obu9h54bzqCUxlh+V015bhJ2N5hcHyOUHV2TJyLTcCUxv1wyPuH6OgiQfZvMbAdXzia1d/TDNmOmn
-	Gmjj24hl/P8zK2c69L3QStlg0Ot3D/oU1CodiaChp3rJpA64EgedmVq8OoJ+3VqsF5BYfLDsvO5pr
-	Wt3ZgzIgP7P8SvVe/k5IALFZCj7MgQUNbj7pUOfuB28xIeCwGACcpWJmDYzi5b2UrxQUQ8kJpim7S
-	8J06pLFHZ06vZZisFLWu+JmvpiWvw7EtXNb2TmNPIp7iTs+M0ka7lrn81fbxrrb2OjuztNllmO9S8
-	ruPXpM9EXVfMAS+MJ0yA==;
+	List-Owner; bh=KoYT9+zXOJmJCj/Aj77Agq9glL8r1pbWMQPjpeY8FBM=; b=iT8N2kBCZwYOb8
+	qptVwRSJJIRLVYGbg2v9DNnM4CD6905Uvo0htS7/uQm/9N8bGkoJK25T2WDzL9jZdlWqLK5Ue34Rj
+	bgXPqb3Fn2h71EuUz1d1skbe/8B1f7sbOaC33kNkTLEiU6t62L9yN+1jiwNb/PbkG4VmCNuJDfoU4
+	vU8wgvbpO7RmH6l2TyMosRvYBRgjmZKkUnRwnIhkLLR1PNRp/zxH1vz7mJmGACFtsIUZM9TCt3WVf
+	l6/Q3/AId23Buld2IploXfUPVIKwtiGiFdL080Rf8H2dVxhF/B9JHk1eForZ1UoBLOgSRetTuGE5F
+	X8+pg+Gcv3sXFYzf5Kyg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pnG4N-008uuY-0a;
-	Fri, 14 Apr 2023 09:50:15 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1pnKVQ-009prH-0Z;
+	Fri, 14 Apr 2023 14:34:28 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pnG4I-008usq-2a
-	for kexec@lists.infradead.org;
-	Fri, 14 Apr 2023 09:50:12 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1681465807;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yyikU5M9d76wbxiGEiGM6t7sb6u7giUEixuT9mv0t1Y=;
-	b=JMn/U+0r8SIJLM7TFaVBtFUo+ya1hpVxotVVXo2wVr3oPAJT9JuWp+4kZea2XXNpDOVM6G
-	7cvSZqHSchSs+uTaOaBGx0N+RCCTEIWQElm1hrm+zDJdybah9HgWEc5AkMk6zRZ9fwB2js
-	PuDX4LuDPuHmbk07cUowXMN5CnpV3K8=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-627-XS39Y3QeNJW4OlVc1qG7KQ-1; Fri, 14 Apr 2023 05:50:02 -0400
-X-MC-Unique: XS39Y3QeNJW4OlVc1qG7KQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	id 1pnKVK-009pqR-39;
+	Fri, 14 Apr 2023 14:34:26 +0000
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 810C6185A7A8;
-	Fri, 14 Apr 2023 09:50:01 +0000 (UTC)
-Received: from localhost (ovpn-12-58.pek2.redhat.com [10.72.12.58])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id AF76A2027043;
-	Fri, 14 Apr 2023 09:50:00 +0000 (UTC)
-Date: Fri, 14 Apr 2023 17:49:56 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: linux-kernel@vger.kernel.org, horms@kernel.org,
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 793CE6385D;
+	Fri, 14 Apr 2023 14:34:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E683C433D2;
+	Fri, 14 Apr 2023 14:34:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1681482861;
+	bh=d0iC7roleDI04oHJIwtWDATxuxnM5ASBnX6PRX+duzY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tDqpVX6rIICqZGNhn3rMgK3VZbfqOkWwStqI7SukeZhca0g7UEY0KBY4pkYHechq+
+	 D4VVpG047EwsF4tUVcVo9NUQdyqoYI1Ft63c+ZFqRuR1XMavgFb0HTsc1R6N+P6zvk
+	 TW4AIUVfYed7fR8bHyNinoFWhx0SWUx21OiyhJyQSVLQHW+6kzP9p43EN5D46hUhcc
+	 /F74Ht+k1pGaOBciSviM0+TEYWnBsn/C2q2lSWc3H3fHeq/25xfbfUDCTYhXh0BEbW
+	 C4QrLEmYK1ZTzswpX4N9Wo11cHOH4WL2/6ezPivGm4qzJCH1ZezSnM0//LKdEzGFsc
+	 mPYrJlfbHE/9g==
+Date: Fri, 14 Apr 2023 15:34:16 +0100
+From: Will Deacon <will@kernel.org>
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-kernel@vger.kernel.org, catalin.marinas@arm.com, horms@kernel.org,
 	thunder.leizhen@huawei.com, John.p.donnelly@oracle.com,
-	will@kernel.org, kexec@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org
+	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 Subject: Re: [PATCH v5] arm64: kdump: simplify the reservation behaviour of
  crashkernel=,high
-Message-ID: <ZDkhxGzMOvmrt1PI@MiWiFi-R3L-srv>
+Message-ID: <20230414143413.GA27911@willie-the-truck>
 References: <20230407022419.19412-1-bhe@redhat.com>
- <ZC+Axh1G/+NyIdwg@MiWiFi-R3L-srv>
- <ZDabRr/yyakrrDDO@arm.com>
- <ZDezLrWSg7qd5K08@MiWiFi-R3L-srv>
- <ZDgSCfLMtL9heS8J@arm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <ZDgSCfLMtL9heS8J@arm.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
+In-Reply-To: <20230407022419.19412-1-bhe@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230414_025010_945223_735A50E3 
-X-CRM114-Status: GOOD (  15.75  )
+X-CRM114-CacheID: sfid-20230414_073423_080750_1B53146E 
+X-CRM114-Status: GOOD (  14.05  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,21 +76,35 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 04/13/23 at 03:30pm, Catalin Marinas wrote:
-> On Thu, Apr 13, 2023 at 03:45:50PM +0800, Baoquan He wrote:
-> > I am OK with this version, or the version with min(SZ_4G,
-> > arm64_dma_phys_limit), or v4. Please help point out if I got your idea
-> > correctly. Thanks a lot.
-> 
-> I think we should stick to this patch. The disabling of the ZONE_DMA(32)
-> is fairly specialised and you are right that we should not introduce an
-> artificial 4GB crashkernel boundary on such systems. The slight
-> confusion may be that ,high triggers a search above 4GB where there's
-> not such boundary but this would match the documentation anyway.
+Hi,
 
-OK, sounds good to me. Thanks a lot for all those careful reviewing and
-helpful suggestions.
+On Fri, Apr 07, 2023 at 10:24:19AM +0800, Baoquan He wrote:
+> On arm64, reservation for 'crashkernel=xM,high' is taken by searching for
+> suitable memory region top down. If the 'xM' of crashkernel high memory
+> is reserved from high memory successfully, it will try to reserve
+> crashkernel low memory later accoringly. Otherwise, it will try to search
+> low memory area for the 'xM' suitable region. Please see the details in
+> Documentation/admin-guide/kernel-parameters.txt.
 
+[...]
+
+>  arch/arm64/mm/init.c | 44 ++++++++++++++++++++++++++++++++++----------
+>  1 file changed, 34 insertions(+), 10 deletions(-)
+
+I tried to apply this, but smatch is unhappy with the result:
+
+  | arch/arm64/mm/init.c:153 reserve_crashkernel() error: uninitialized symbol 'search_base'.
+
+I _think_ this is a false positive, but I must say that the control flow
+in reserve_crashkernel() is extremely hard to follow so I couldn't be
+sure. If the static checker is struggling, then so will humans!
+
+Ideally, this would all be restructured to make it easier to follow,
+but in the short term we need something to squash the warning.
+
+Cheers,
+
+Will
 
 _______________________________________________
 kexec mailing list
