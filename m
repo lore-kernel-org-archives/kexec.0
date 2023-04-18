@@ -4,43 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0205EC77B75
-	for <kexec@archiver.kernel.org>; Tue, 18 Apr 2023 12:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D9E56C6FD18
+	for <kexec@archiver.kernel.org>; Tue, 18 Apr 2023 12:27:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=PUzX5rdR3fvLuWi19bql99+WqgprwRTXJY0CZymX5G8=; b=DunltzYIuMO/Q/
-	6En82xmzSOrdUkBITo0zrbzCGoCB/GlFV2CrliPJ3YvP5x/AD5sjxHNjH5o6dnv2fqR2o09KTHS47
-	6tu6rxrNPq4a351YAbm6iZrZsT1uncTiDOS+1b5uN+8lxHzydYtSZNY4q6QcxKLUtbNc2DiBAclbv
-	RVTz0uwKjri3dwdrVkyZFLn8VvWLAaKikopcPudarTl3EPWQRVPY8WPvbB/skKakJwcCXuraogDOQ
-	Ytj2/KPISWEDDDcvqxgdnDjNGzjaMejSp4eY0WnGXjfyvFktj+iZ907LdkgeRU8Auqo8gdcsjvPBh
-	quQlMARBY/NNHzwZTQcg==;
+	List-Owner; bh=PUzX5rdR3fvLuWi19bql99+WqgprwRTXJY0CZymX5G8=; b=DWWewtsePXl/ac
+	u93LKL0cs3dHHcpzRU4R7WcHUbzmRZb1ED5elVHWpPjDY3cWWzlplT6XJZiKP73wk2C+WpbCeKg0N
+	JBfdV4zIyaSKz9QWtb06VWN+TufP5cA/FAnPxlRAsBZdhGUtvDxvnhqfY9t5+d0B1M2Z7U+6QWhqu
+	EMqx0DCPlXyCJHMzNel/qbUZ2MdiYDfQrFi0yNoCFgzEbkHVrCfjb8g5+W6qXTiIkcyfZrxUMysBq
+	Ciy8tw8s++bekrvJ0quKRGGOM/u6oOj1bBLYJZaHrcADxvu19tno3cojfj3iO7qo6RSUbhSdq5mGW
+	YH2BBf4229QK9fcouvQQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pokO9-0027Bi-1w;
-	Tue, 18 Apr 2023 12:24:49 +0000
+	id 1pokQM-0027x3-36;
+	Tue, 18 Apr 2023 12:27:06 +0000
 Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pokO6-0027A7-2X
+	id 1pokQK-0027vn-0S
 	for kexec@lists.infradead.org;
-	Tue, 18 Apr 2023 12:24:48 +0000
+	Tue, 18 Apr 2023 12:27:05 +0000
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 3E59263116;
-	Tue, 18 Apr 2023 12:24:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DB08C433D2;
-	Tue, 18 Apr 2023 12:24:45 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id A8E8763186;
+	Tue, 18 Apr 2023 12:27:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93F5AC433D2;
+	Tue, 18 Apr 2023 12:27:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1681820685;
+	s=korg; t=1681820823;
 	bh=COtBPWd792pj4wDo6QCmYmv27EpEeD8uoH4fJakfhLM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PDnXTZoIfZDWsn1a4ZXCGbl704I9f90/EgCmUmRWSAnloQZn5ogYlpybVhKuze3hX
-	 6vuAn/WbtaoZTuD9b1gapSXZebyH3N4dP+ckhqLujll4hENYBHkkbZxKg+jAHfDNXt
-	 jv66q/Q6DRTrJ9nWZLXinlnNEPsfRTgPkUU8zlrc=
+	b=PbotKGOYKw7sNKZeahCZW0LgeRiiixVX5nW0ybMeamx+GHro366gUxPkL92TQUQbi
+	 mbk/YHgKhDWKduXodEmnSVH1+JJOhKA4Q1uurAamQiZMB9x7VZcESXUnPu63IrpChT
+	 K6B9ZY75h9yfbqnXIkXrIyMjcBYto+L1fLPIDgkQ=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: stable@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -54,16 +54,16 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	linux-crypto@vger.kernel.org,
 	kexec@lists.infradead.org,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 30/37] verify_pefile: relax wrapper length check
-Date: Tue, 18 Apr 2023 14:21:40 +0200
-Message-Id: <20230418120255.753919976@linuxfoundation.org>
+Subject: [PATCH 4.19 45/57] verify_pefile: relax wrapper length check
+Date: Tue, 18 Apr 2023 14:21:45 +0200
+Message-Id: <20230418120300.309593262@linuxfoundation.org>
 X-Mailer: git-send-email 2.40.0
-In-Reply-To: <20230418120254.687480980@linuxfoundation.org>
-References: <20230418120254.687480980@linuxfoundation.org>
+In-Reply-To: <20230418120258.713853188@linuxfoundation.org>
+References: <20230418120258.713853188@linuxfoundation.org>
 User-Agent: quilt/0.67
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230418_052446_898898_2BEB0006 
+X-CRM114-CacheID: sfid-20230418_052704_258688_FA155FC6 
 X-CRM114-Status: GOOD (  14.93  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
