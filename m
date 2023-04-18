@@ -4,64 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E0AD7C6FD18
-	for <kexec@archiver.kernel.org>; Tue, 18 Apr 2023 11:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0205EC77B75
+	for <kexec@archiver.kernel.org>; Tue, 18 Apr 2023 12:24:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Message-Id:MIME-Version:Subject:
-	Date:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=Vq5IA3KUhoFcIDiQ7ehdisBIxmocgH6zvoRgMnimOfk=; b=DTzxegM3et0Uu2
-	9vtp450ZpVVnHlnY8AlEyi6f204UElfSrELx8SPh8uUPXQj/1Jk82bYohu7/4F+wTkBfHeEebCRS9
-	YMNKAtp1UUcnaHCNr2YxByR9E5SzdmXH9RRLXuxYcVL6T889PG1skIaQ1yIFVlDum82e3/sifx9XE
-	92XbBnnxvmclcxHqdzzeMUXMS+Tv4WrzLAJ5y2bng+wCTFWv1H8w2nLiL8EpbHWh+Em0Y2pIc918h
-	5lo4Tyvo47d3UsOD//sS8C/KSx+4VGu4kNn6MJT0GHFIxDAQpexRtczYcmGUwDLLjROTH5KqcdJtx
-	lh/ihOZwJGAVSUmcFE8Q==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=PUzX5rdR3fvLuWi19bql99+WqgprwRTXJY0CZymX5G8=; b=DunltzYIuMO/Q/
+	6En82xmzSOrdUkBITo0zrbzCGoCB/GlFV2CrliPJ3YvP5x/AD5sjxHNjH5o6dnv2fqR2o09KTHS47
+	6tu6rxrNPq4a351YAbm6iZrZsT1uncTiDOS+1b5uN+8lxHzydYtSZNY4q6QcxKLUtbNc2DiBAclbv
+	RVTz0uwKjri3dwdrVkyZFLn8VvWLAaKikopcPudarTl3EPWQRVPY8WPvbB/skKakJwcCXuraogDOQ
+	Ytj2/KPISWEDDDcvqxgdnDjNGzjaMejSp4eY0WnGXjfyvFktj+iZ907LdkgeRU8Auqo8gdcsjvPBh
+	quQlMARBY/NNHzwZTQcg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pojuX-0021pD-20;
-	Tue, 18 Apr 2023 11:54:13 +0000
-Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
+	id 1pokO9-0027Bi-1w;
+	Tue, 18 Apr 2023 12:24:49 +0000
+Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pojuU-0021ng-1q;
-	Tue, 18 Apr 2023 11:54:11 +0000
+	id 1pokO6-0027A7-2X
+	for kexec@lists.infradead.org;
+	Tue, 18 Apr 2023 12:24:48 +0000
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 165ED6247E;
-	Tue, 18 Apr 2023 11:54:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 373A8C433A1;
-	Tue, 18 Apr 2023 11:54:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1681818849;
-	bh=IwyqCw0ZeRA4BYG/sIG8QCK/6HafSnbXWPI++Rremlc=;
-	h=From:Date:Subject:To:Cc:From;
-	b=HnV7Gg44KLdEPtO6NSa/XqBBiESq55Dum3jMjkpXMI9O7nRk9We5Rgo/MoFCdPyvI
-	 JWnWnbZQGpnI53fmf/120wytyjRBVXIxocsDWTcHxQ449S1rNE7j6fLdQiDT0DvfBN
-	 sKRjEFhrO0xM1AM7iVstceNC5N13OVkk4tlGhDZuNMHKGALxloBwPMHFCekA0Xju+m
-	 HKpIBtlo11JRgA8CQQCsoPL9Z1Zt0xb2TaqBDdfu9HrdLRXUmLuD44ChLz2iXa9cDV
-	 wcUn2DNc16EeY8sE/nqGAcg2HS/k+jchwXFz37jm20J/xST6+hewX8ln2sNecIatl4
-	 TnVCsi9DqdgWQ==
-From: Simon Horman <horms@kernel.org>
-Date: Tue, 18 Apr 2023 13:54:00 +0200
-Subject: [PATCH] arm64: kexec: include reboot.h
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 3E59263116;
+	Tue, 18 Apr 2023 12:24:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DB08C433D2;
+	Tue, 18 Apr 2023 12:24:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1681820685;
+	bh=COtBPWd792pj4wDo6QCmYmv27EpEeD8uoH4fJakfhLM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=PDnXTZoIfZDWsn1a4ZXCGbl704I9f90/EgCmUmRWSAnloQZn5ogYlpybVhKuze3hX
+	 6vuAn/WbtaoZTuD9b1gapSXZebyH3N4dP+ckhqLujll4hENYBHkkbZxKg+jAHfDNXt
+	 jv66q/Q6DRTrJ9nWZLXinlnNEPsfRTgPkUU8zlrc=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	Robbie Harwood <rharwood@redhat.com>,
+	David Howells <dhowells@redhat.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	keyrings@vger.kernel.org,
+	linux-crypto@vger.kernel.org,
+	kexec@lists.infradead.org,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 30/37] verify_pefile: relax wrapper length check
+Date: Tue, 18 Apr 2023 14:21:40 +0200
+Message-Id: <20230418120255.753919976@linuxfoundation.org>
+X-Mailer: git-send-email 2.40.0
+In-Reply-To: <20230418120254.687480980@linuxfoundation.org>
+References: <20230418120254.687480980@linuxfoundation.org>
+User-Agent: quilt/0.67
 MIME-Version: 1.0
-Message-Id: <20230418-arm64-kexec-include-reboot-v1-1-8453fd4fb3fb@kernel.org>
-X-B4-Tracking: v=1; b=H4sIANeEPmQC/x2NzQrCMBAGX6Xs2cW0KW3xVcRDfr7aoCayqRIof
- XdTj8PAzEYZEpDp0mwk+IYcUqzQnhpyi4l3cPCVqVOdVn07sZHX0PMDBY5DdM+PBwtsSiu3A0b
- ltVbjpKkGrMlgKya65UjMSTiirGeXBId/C+ZQ/vPrbd9/exbtaYwAAAA=
-To: Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>
-Cc: Baoquan He <bhe@redhat.com>, 
- "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>, 
- linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, 
- linux-kernel@vger.kernel.org
-X-Mailer: b4 0.12.2
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230418_045410_647438_915A6845 
-X-CRM114-Status: UNSURE (   8.72  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20230418_052446_898898_2BEB0006 
+X-CRM114-Status: GOOD (  14.93  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,34 +81,63 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Include reboot.h in machine_kexec.c for declaration of
-machine_crash_shutdown.
+From: Robbie Harwood <rharwood@redhat.com>
 
-gcc-12 with W=1 reports:
+[ Upstream commit 4fc5c74dde69a7eda172514aaeb5a7df3600adb3 ]
 
- arch/arm64/kernel/machine_kexec.c:257:6: warning: no previous prototype for 'machine_crash_shutdown' [-Wmissing-prototypes]
-   257 | void machine_crash_shutdown(struct pt_regs *regs)
+The PE Format Specification (section "The Attribute Certificate Table
+(Image Only)") states that `dwLength` is to be rounded up to 8-byte
+alignment when used for traversal.  Therefore, the field is not required
+to be an 8-byte multiple in the first place.
 
-No functional changes intended.
-Compile tested only.
+Accordingly, pesign has not performed this alignment since version
+0.110.  This causes kexec failure on pesign'd binaries with "PEFILE:
+Signature wrapper len wrong".  Update the comment and relax the check.
 
-Signed-off-by: Simon Horman <horms@kernel.org>
+Signed-off-by: Robbie Harwood <rharwood@redhat.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Jarkko Sakkinen <jarkko@kernel.org>
+cc: Eric Biederman <ebiederm@xmission.com>
+cc: Herbert Xu <herbert@gondor.apana.org.au>
+cc: keyrings@vger.kernel.org
+cc: linux-crypto@vger.kernel.org
+cc: kexec@lists.infradead.org
+Link: https://learn.microsoft.com/en-us/windows/win32/debug/pe-format#the-attribute-certificate-table-image-only
+Link: https://github.com/rhboot/pesign
+Link: https://lore.kernel.org/r/20230220171254.592347-2-rharwood@redhat.com/ # v2
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/machine_kexec.c | 1 +
- 1 file changed, 1 insertion(+)
+ crypto/asymmetric_keys/verify_pefile.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index 54f8e2d081c4..078910db77a4 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -11,6 +11,7 @@
- #include <linux/kernel.h>
- #include <linux/kexec.h>
- #include <linux/page-flags.h>
-+#include <linux/reboot.h>
- #include <linux/set_memory.h>
- #include <linux/smp.h>
+diff --git a/crypto/asymmetric_keys/verify_pefile.c b/crypto/asymmetric_keys/verify_pefile.c
+index d178650fd524c..411977947adbe 100644
+--- a/crypto/asymmetric_keys/verify_pefile.c
++++ b/crypto/asymmetric_keys/verify_pefile.c
+@@ -139,11 +139,15 @@ static int pefile_strip_sig_wrapper(const void *pebuf,
+ 	pr_debug("sig wrapper = { %x, %x, %x }\n",
+ 		 wrapper.length, wrapper.revision, wrapper.cert_type);
  
+-	/* Both pesign and sbsign round up the length of certificate table
+-	 * (in optional header data directories) to 8 byte alignment.
++	/* sbsign rounds up the length of certificate table (in optional
++	 * header data directories) to 8 byte alignment.  However, the PE
++	 * specification states that while entries are 8-byte aligned, this is
++	 * not included in their length, and as a result, pesign has not
++	 * rounded up since 0.110.
+ 	 */
+-	if (round_up(wrapper.length, 8) != ctx->sig_len) {
+-		pr_debug("Signature wrapper len wrong\n");
++	if (wrapper.length > ctx->sig_len) {
++		pr_debug("Signature wrapper bigger than sig len (%x > %x)\n",
++			 ctx->sig_len, wrapper.length);
+ 		return -ELIBBAD;
+ 	}
+ 	if (wrapper.revision != WIN_CERT_REVISION_2_0) {
+-- 
+2.39.2
+
+
 
 
 _______________________________________________
