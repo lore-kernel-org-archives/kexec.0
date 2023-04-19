@@ -4,80 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4A20DC77B78
-	for <kexec@archiver.kernel.org>; Tue, 18 Apr 2023 19:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F34B4C6FD18
+	for <kexec@archiver.kernel.org>; Wed, 19 Apr 2023 00:05:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=Cyh19pj/4m2ExKa7EauYAiNPXwVUPAm4AtAXxC+6X0M=; b=O7AXDhqox4E525
-	z4YUmumtx/J9CObFjn28hB9DDh6W9G7J2mQU+ARA5j55wUTHVa/bmzuzmpgkLEWwFZH++CF/HZIo4
-	DW7I6izBnjM1TadpBI7iGAsMjRFYhpVfy0+ZjR0Yq0BCAx8rQrLyn0AZ2PCwiHN4Vcc9bwD/NiThh
-	QkgCwO9m8hw4s0OBDjMavOgYGHWnvfwHaAVSacAIG8hcgSZvNpwDe+nxJZ2emdduZRdnnb/+1K9lC
-	d93vVWZN7naKc0HlXTsQGgWCplPFeR0uwmY3btipnZHjzTUhlCK+TE+d70DXaLJ14dJ51bNDFlfTJ
-	6i49ti9ehfxUHXX7CD6A==;
+	List-Owner; bh=wZ8Umk+aXtUqXSfZ1jHCksvh1u6G39+zl2llqfjaBeo=; b=jNWEtkB5p4J9FK
+	F8nDxPDZ9ApEuGzA6hfYCBfOfcHQyEmYa87cCBzbEP5SFaMpmJ7U2xQHKXHYd/Tn03dxi4CgAmYFs
+	POAiASf19FmAUza3X2NIJNMswSfkjFO+8SC2Z3+gttkri5JK6ODZDN5kVOtjsQzBe43hjPw/NS7mb
+	UwENAp7OAs/6uspN8cF44hGGzJGIeirwzk/JHCUqGja5NGZVZinXbjANZ9tn2257IXkYiBfedStjk
+	jEKyWfqS1pviiVLaN4iUGifAwhBLNZp9qcMlLjkhJuPeL/q5JzRxG5wtD713ypo5cNEGIeA53Z1BE
+	wzHzo6OFhsVZmi6xganQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1poqlO-0039z5-1f;
-	Tue, 18 Apr 2023 19:13:14 +0000
-Received: from mga17.intel.com ([192.55.52.151])
+	id 1povKH-003cxm-20;
+	Wed, 19 Apr 2023 00:05:33 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1poqlL-0039xw-1V
+	id 1povKC-003cx4-1T
 	for kexec@lists.infradead.org;
-	Tue, 18 Apr 2023 19:13:12 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681845191; x=1713381191;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hi5rDPKAiKO3dkrZvNzmcu1W3or/62oMJmUKhJ71JxI=;
-  b=Djtj3HN3k8nw54V8RcVTmnntcbYPAorOoCcQd5rEKSiP/xywiGa9axh3
-   2gjRUEbUh59lhQvvf8sXq621U53atEdoCZIBFK/7y9Ae6VYqDqhVttzdl
-   pPlWAZqDz72DNsTILR4mSd+jFFAipLFymak/Q+d+CNi0XOdMplz49QtZg
-   Cl0hj/nw4Hz9+Lw8qHXYs4g37IhtC2nIgizekddKL40itBpHxW0kn43Vp
-   2mYHd/OJgftdEwR6fly5P3L3TRwr96QHXxbbpNeKB2LdcsHklzMEpgyRF
-   FCzvhgSyB59Sj51CTypQOvuR9hqqogx6fDrdjzkIbHOF43AZTX+Ndt3C4
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10684"; a="325599461"
-X-IronPort-AV: E=Sophos;i="5.99,207,1677571200"; 
-   d="scan'208";a="325599461"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2023 12:13:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10684"; a="641481107"
-X-IronPort-AV: E=Sophos;i="5.99,207,1677571200"; 
-   d="scan'208";a="641481107"
-Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 18 Apr 2023 12:13:04 -0700
-Received: from kbuild by b613635ddfff with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1poqlD-000dwL-1q;
-	Tue, 18 Apr 2023 19:13:03 +0000
-Date: Wed, 19 Apr 2023 03:12:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Stefan Berger <stefanb@linux.ibm.com>, kexec@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-integrity@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	nayna@linux.ibm.com, nasastry@in.ibm.com, mpe@ellerman.id.au,
-	Stefan Berger <stefanb@linux.ibm.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Frank Rowand <frowand.list@gmail.com>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Nageswara R Sastry <rnsastry@linux.ibm.com>,
-	Coiby Xu <coxu@redhat.com>
-Subject: Re: [PATCH v9 4/4] tpm/kexec: Duplicate TPM measurement log in
- of-tree for kexec
-Message-ID: <202304190215.d0zwo1ni-lkp@intel.com>
-References: <20230418134409.177485-5-stefanb@linux.ibm.com>
+	Wed, 19 Apr 2023 00:05:30 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1681862725;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iqYcQJ7RxHLqq2m5mcHetAO2yttoUlP/01PDG9Z2dnM=;
+	b=h2q2iIt/FqmMw5DMh4+BJT3Fj9Ee6vWwRfm0D3BvgmRFT9ZXK0OfefUoRedG7Tnwx4h2iX
+	dnZ5G4pK4TfaKCKcmsCn+1+P0sC/VSNlWAblC+HGC/jIVKtmvQ8QrgkU11epPNYCHUad91
+	e4VEaFMhXRGhz58fWVwWE5mkmDZSDi8=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-618-lhN3jzYlOMG7_cdy7DrwjA-1; Tue, 18 Apr 2023 20:05:22 -0400
+X-MC-Unique: lhN3jzYlOMG7_cdy7DrwjA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 81B788996E0;
+	Wed, 19 Apr 2023 00:05:21 +0000 (UTC)
+Received: from localhost (ovpn-12-26.pek2.redhat.com [10.72.12.26])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 434E12958;
+	Wed, 19 Apr 2023 00:05:20 +0000 (UTC)
+Date: Wed, 19 Apr 2023 08:05:16 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Eric DeVolder <eric.devolder@oracle.com>, bp@alien8.de, x86@kernel.org
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+	ebiederm@xmission.com, dyoung@redhat.com, vgoyal@redhat.com,
+	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+	hpa@zytor.com, nramas@linux.microsoft.com, thomas.lendacky@amd.com,
+	robh@kernel.org, efault@gmx.de, rppt@kernel.org, david@redhat.com,
+	sourabhjain@linux.ibm.com, konrad.wilk@oracle.com,
+	boris.ostrovsky@oracle.com
+Subject: Re: [PATCH v21 2/7] crash: add generic infrastructure for crash
+ hotplug support
+Message-ID: <ZD8wPOPxvh7cGJun@MiWiFi-R3L-srv>
+References: <20230404180326.6890-1-eric.devolder@oracle.com>
+ <20230404180326.6890-3-eric.devolder@oracle.com>
+ <ZC6nWzPuIWOxmvv2@MiWiFi-R3L-srv>
+ <80767ccc-ffd4-9cb9-44e4-a8d4f0e13853@oracle.com>
+ <ZC9cp5RLyNNx0DMG@MiWiFi-R3L-srv>
+ <7b25449b-72e9-3eca-73a9-592d7400b746@oracle.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20230418134409.177485-5-stefanb@linux.ibm.com>
+In-Reply-To: <7b25449b-72e9-3eca-73a9-592d7400b746@oracle.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230418_121311_517118_AC2F7BC6 
-X-CRM114-Status: GOOD (  12.25  )
+X-CRM114-CacheID: sfid-20230418_170528_584707_23D27C3D 
+X-CRM114-Status: GOOD (  36.45  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,57 +91,69 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Stefan,
+On 04/18/23 at 08:55am, Eric DeVolder wrote:
+......
+> > > > Seems we passed in the cpu number just for printing here. Wondering why
+> > > > we don't print out hot added/removed memory ranges. Is the cpu number
+> > > > printing necessary?
+> > > > 
+> > > Baoquan,
+> > > 
+> > > Ah, actually until recently it was used to track the 'offlinecpu' in this
+> > > function, but tglx pointed out that was un-necessary. That resulted in
+> > > dropping the code in this function dealing with offlinecpu, leaving this as
+> > > its only use in this function.
+> > > 
+> > > The printing of cpu number is not necessary, but helpful; I use it for debugging.
+> > 
+> > OK, I see. I am not requesting memory range printing, just try to prove
+> > cpu number printing is not so justified. If it's helpful, I am OK with
+> > it. Let's see if other people have concern about this.
+> > 
+> 
+> I do not plan on adding the memory range printing.
+> 
+> > > 
+> > > The printing of memory range is also not necessary, but in order to do that,
+> > > should we choose to do so, requires passing in the memory range to this
+> > > function. This patch series did do this early on, and by v7 I dropped it at
+> > > your urging (https://lore.kernel.org/lkml/20220401183040.1624-1-eric.devolder@oracle.com/).
+> > > At the time, I provided it since I considered this generic infrastructure,
+> > > but I could not defend it since x86 didn't need it. However, PPC now needs
+> > > this, and is now carrying this as part of PPC support of CRASH_HOTPLUG (https://lore.kernel.org/linuxppc-dev/20230312181154.278900-6-sourabhjain@linux.ibm.com/T/#u).
+> > > 
+> > > If you'd rather I pickup the memory range handling again, I can do that. I
+> > > think I'd likely change this function to be:
+> > > 
+> > >    void crash_handle_hotplug_event(unsigned int hp_action, unsigned int cpu,
+> > >       struct memory_notify *mhp);
+> > > 
+> > > where on a CPU op the 'cpu' parameter would be valid and 'mhp' NULL, and on a memory op,
+> > > the 'mhp' would be valid and 'cpu' parameter invalid(0).
+> > > 
+> > > I'd likely then stuff these two parameters into struct kimage so that it can
+> > > be utilized by arch-specific handler, if needed.
+> > > 
+> > > And of course, would print out the memory range for debug purposes.
+> > > 
+> > > Let me know what you think.
+> > 
+> 
+> I do not plan on adding the memory range handling; I'll let Sourabh do that as he has a use case for it.
+> 
+> As such, I don't see any other request for changes.
 
-kernel test robot noticed the following build warnings:
+OK, then I have no concern about this patchset. Thanks a lot for all
+these effort, Eric.
 
-[auto build test WARNING on 6a8f57ae2eb07ab39a6f0ccad60c760743051026]
+Hi x86 maintainers,
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Stefan-Berger/drivers-of-kexec-ima-Support-32-bit-platforms/20230418-214600
-base:   6a8f57ae2eb07ab39a6f0ccad60c760743051026
-patch link:    https://lore.kernel.org/r/20230418134409.177485-5-stefanb%40linux.ibm.com
-patch subject: [PATCH v9 4/4] tpm/kexec: Duplicate TPM measurement log in of-tree for kexec
-config: x86_64-randconfig-a013-20230417 (https://download.01.org/0day-ci/archive/20230419/202304190215.d0zwo1ni-lkp@intel.com/config)
-compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/16a833d47b9aca53a1b099dea4066b76b7f14ee1
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Stefan-Berger/drivers-of-kexec-ima-Support-32-bit-platforms/20230418-214600
-        git checkout 16a833d47b9aca53a1b099dea4066b76b7f14ee1
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=x86_64 olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash drivers/mailbox/
+Could you help check if there's anything we need improve, or consider
+taking this patchset?
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202304190215.d0zwo1ni-lkp@intel.com/
+Thanks
+Baoquan
 
-All warnings (new ones prefixed by >>):
-
-   In file included from drivers/mailbox/mailbox.c:18:
-   In file included from include/linux/mailbox_client.h:10:
->> include/linux/of.h:1664:48: warning: declaration of 'struct kimage' will not be visible outside of this function [-Wvisibility]
-   static inline void tpm_add_kexec_buffer(struct kimage *image) { }
-                                                  ^
-   1 warning generated.
-
-
-vim +1664 include/linux/of.h
-
-  1660	
-  1661	#if defined(CONFIG_KEXEC_FILE) && defined(CONFIG_OF_FLATTREE)
-  1662	void tpm_add_kexec_buffer(struct kimage *image);
-  1663	#else
-> 1664	static inline void tpm_add_kexec_buffer(struct kimage *image) { }
-  1665	#endif
-  1666	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
 
 _______________________________________________
 kexec mailing list
