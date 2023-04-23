@@ -4,61 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B94D2C7618E
-	for <kexec@archiver.kernel.org>; Sat, 22 Apr 2023 09:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E3D99C77B7C
+	for <kexec@archiver.kernel.org>; Sun, 23 Apr 2023 10:52:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=2TpUjibifxKZTHkAZ/NGiTuhxAPSWXq8kiYcOiqNGSw=; b=MqRDK/70pE0KMv
-	aogjQUngKHuxVBH4JSCwg/whfdFd5EEnX8/LZ6x3psQtYVG/QOV9qxaAYoboAB5e+F42cuA3SVpjg
-	pWfa4Pm+PaBi0Gg25evzGKHd6asrma3EJNNrLFLbMRyG/P192NmLDclv1d+uU87Gy/UMJ/tz+Dy7+
-	skqOLJXQxHOH/tIjde75i++TgpxUbsZKmi0P3KEC+LWlbXdfwo1v/z6MOFs2Lm6IwPROxqmLXwtA6
-	Gc+qIgQyFVvGxkOnu4uz0c1eKa6EnsVn6m6G+Yh9CT+7k3HEEiUDVhcjCOZaIk2IPEH85fah5xQ8s
-	Lf8lhcUDRpU8CkImORQA==;
+	Content-Transfer-Encoding:Content-Type:Cc:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:To:From:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=oQSksYW5p4rY5xtrJazAAMBhi3Du1KnbV3DuyRu/cRM=; b=xOe68tYH9+JOGy
+	vi5OnQw+7Wlv+fwh9RvFhKYoVpxUXLTkBVrmOsEtIhYjfpP4AMzhakktuxajPMY/mqvhHZax4hH0z
+	z6O2OTT0yZE1mVpSW04kgwG+S883w48JGycnrL7fRKa0VvgbTRoJz6oLiFa44JQCfgCie463My2KL
+	hJUrDFRdnqYAAI3egNHI7F4HwvQGu0waX0i3ngktjC/aE5b9z67tavR3DRPMUfTV0ESBvwqt0qQCo
+	LEDEkjYwJrezLHCe+LZ3zEakZ1/e/HH1asIa1RIwSai/Jh0d67t1HIXNou6yVm0N9NmEs0pNrD60r
+	HAJR3K1KtIMh2KnwBUHA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pqA1v-00Cctd-0g;
-	Sat, 22 Apr 2023 09:59:43 +0000
-Received: from mout.kundenserver.de ([212.227.17.10])
+	id 1pqXKh-00EAu5-1h;
+	Sun, 23 Apr 2023 10:52:39 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pqA1q-00CctE-34
+	id 1pqXKe-00EAsq-2F
 	for kexec@lists.infradead.org;
-	Sat, 22 Apr 2023 09:59:40 +0000
-Received: from quad ([82.142.8.70]) by mrelayeu.kundenserver.de (mreue109
- [212.227.15.183]) with ESMTPSA (Nemesis) id 1MJV9S-1paq6L1EGu-00JsXO; Sat, 22
- Apr 2023 11:59:29 +0200
-From: Laurent Vivier <laurent@vivier.eu>
-To: kexec@lists.infradead.org
-Cc: Simon Horman <horms@verge.net.au>,
-	Laurent Vivier <laurent@vivier.eu>,
-	Jason@zx2c4.com
-Subject: [PATCH] m68k: fix getrandom() use with uclibc
-Date: Sat, 22 Apr 2023 11:59:04 +0200
-Message-Id: <20230422095904.1303434-1-laurent@vivier.eu>
-X-Mailer: git-send-email 2.40.0
+	Sun, 23 Apr 2023 10:52:38 +0000
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33NAbvGS030967;
+	Sun, 23 Apr 2023 10:52:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=buqDzHLAFxsH4SxOQS7AgZWZ4bGNuNkFXJecuijWc9Q=;
+ b=psYKhlkgyWIw8O1T9rZQx5+a/qIcwGDezYC2TvJ1KCs0u4lTah4p79VMgteqMOhPrkig
+ EYi8Kjj2kBcTWmm7b1aKRWvi8enRVMAG9Z1xsZO+VicnDEsEic8b4sfqzln+viqFWAde
+ C9JiaoU1h7yBeXiRyBXo0irfoRZfYypw6lW4neR5CqeAO5D5ls8I9BvIC2k6S1BT/pe4
+ BjdT7KtZTvaTDHeMQz0WC9ESDJdv1B4yruqC23o7paUeHttiyQmPV5OpfzCJwrM8IJDC
+ xMWjAacH8TsxiORtpKVRc1e5ZoAslxkGqy+Ngm8Pc591Lb0HJpNCNVERl2YIHPz/r3bG Rg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3q461b13n8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 23 Apr 2023 10:52:33 +0000
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 33NAidj1014139;
+	Sun, 23 Apr 2023 10:52:32 GMT
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3q461b13mv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 23 Apr 2023 10:52:32 +0000
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+	by ppma03fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 33NAnQ8I032151;
+	Sun, 23 Apr 2023 10:52:30 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma03fra.de.ibm.com (PPS) with ESMTPS id 3q47770fvb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 23 Apr 2023 10:52:30 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 33NAqQSW10224310
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 23 Apr 2023 10:52:27 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DFD4B20043;
+	Sun, 23 Apr 2023 10:52:26 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 81F9120040;
+	Sun, 23 Apr 2023 10:52:23 +0000 (GMT)
+Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.ibm.com.com (unknown [9.43.22.217])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Sun, 23 Apr 2023 10:52:23 +0000 (GMT)
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+To: linuxppc-dev@ozlabs.org, mpe@ellerman.id.au
+Subject: [PATCH v10 2/5] powerpc/crash: introduce a new config option CRASH_HOTPLUG
+Date: Sun, 23 Apr 2023 16:22:10 +0530
+Message-Id: <20230423105213.70795-3-sourabhjain@linux.ibm.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230423105213.70795-1-sourabhjain@linux.ibm.com>
+References: <20230423105213.70795-1-sourabhjain@linux.ibm.com>
 MIME-Version: 1.0
-X-Provags-ID: V03:K1:/L1g2saqdQvH+L/Q8jVRHyAoQHW8mPxIhzIruN7ZrnfWjaFud2V
- 24MYfs6nImDnRPH3cyKjXVmdMrdNUb0IPTiN/7wam7eeXVL/uRdTTrygcZ4QWNu8fTbDoL0
- CTODjtMve1SB2RbUf24L3iWLHahm0ZySlKDUOg72qfOU0xNv0X+/t07IYtiR+HDkso1fGSk
- wS+dMfJ60h+wDgd9uSQ2A==
-UI-OutboundReport: notjunk:1;M01:P0:ihsRs8XtlE4=;OV0z5MTLPx9BAVp++SEYsnyHZ/+
- +cSeZNRMrldh6MumRKun+bMNzNNrUF1l5WcEU5L7yuK8Ooa4nERKvWMIzrltI3StWgL9Ilcn6
- RmMU0mI9KicZ8WQO4Y1vWUuevrDqdbhdL1hDbICgNKYQ3sekSRuOh7ni3IasQcIf0jV7l7WyZ
- Dndj+NbBwuJgl5hLu9irT4vr019g9mCZvqcVVIbLGRnK/EnOV1KRFp6JX+vQRaXk7SGRPmye+
- LZCkz1UyM6UgyQSbiF2eauZGnsC4kuYmLV4Z8J9KtEHzDIUobyD9lAgcKTWgBVH3VZpl08Ctq
- Iblj+LgxzR3mtqmM9HA4hKteghCV5qXeunq4aNL/zoi6yX7gUoNvjoFeqKwW/Q6Jh+F4q0tCN
- /hJnkBe7H3aIxKZeVwhdnxRZHeSr4CnGW0bWqkDd3Vn/5Af87Ei7b5fx98WMaa3IKTBT8pXyk
- 2XOgwsOCokozUKraFQtfMRw4NtKh0orknz7A6GAH9P7Kd6GJ2Jtt8oT16NoC0fPnJAsOfcLJA
- JTXGuOUedQAIQ6UvcBVAkX47dXd+gk30YQ7waWZvk7V7FX4LBweYJtFVsimcHIdBTfbnsqpSl
- nok1MG2Cw1EBLWLNr8jFKjKq8mnoQ1F03Dys1cDatg49A6h4sKAaSSjhQkaZt6NXJCFb86LnG
- f9iYjT7ltTRWhF+tW77ct3l8BfKFJ5j7ePatKB5aWw==
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: I4xUqsIW6nh5uw442fMtFxHIW2mBcK7d
+X-Proofpoint-ORIG-GUID: XKOUMa_FE0WDGNmvglTm6Jp_Vts4kvx1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-04-23_06,2023-04-21_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ mlxlogscore=999 clxscore=1015 mlxscore=0 priorityscore=1501
+ impostorscore=0 spamscore=0 malwarescore=0 bulkscore=0 phishscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2304230097
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230422_025939_301878_25198B37 
-X-CRM114-Status: UNSURE (   8.79  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20230423_035236_853835_FFCEE683 
+X-CRM114-Status: GOOD (  22.47  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -70,40 +104,72 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Cc: eric.devolder@oracle.com, bhe@redhat.com, kexec@lists.infradead.org, Laurent Dufour <laurent.dufour@fr.ibm.com>, ldufour@linux.ibm.com, hbathini@linux.ibm.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-With uclibc, getrandom() is only defined with _GNU_SOURCE, fix that:
+Due to CPU/Memory hot plug/unplug or online/offline events the system
+resources changes. A similar change should reflect in the loaded kdump
+kernel kexec segments that describes the state of the CPU and memory of
+the running kernel.
 
-kexec/arch/m68k/bootinfo.c: In function 'bootinfo_add_rng_seed':
-kexec/arch/m68k/bootinfo.c:231:13: warning: implicit declaration of function 'getrandom'; did you mean 'srandom'? [-Wimplicit-function-declaration]
-  231 |         if (getrandom(bi->rng_seed.data, RNG_SEED_LEN, GRND_NONBLOCK) != RNG_SEED_LEN) {
-      |             ^~~~~~~~~
-      |             srandom
-kexec/arch/m68k/bootinfo.c:231:56: error: 'GRND_NONBLOCK' undeclared (first use in this function)
-  231 |         if (getrandom(bi->rng_seed.data, RNG_SEED_LEN, GRND_NONBLOCK) != RNG_SEED_LEN) {
-      |                                                        ^~~~~~~~~~~~~
+If the kdump kernel kexec segments are not updated after the CPU/Memory
+hot plug/unplug or online/offline events and kdump kernel tries to
+collect the dump with the stale system resource data then this might
+lead to dump collection failure or an inaccurate dump collection.
 
-Fixes:  b9de05184816 ("m68k: pass rng seed via BI_RNG_SEED")
-Cc: Jason@zx2c4.com
-Signed-off-by: Laurent Vivier <laurent@vivier.eu>
+The current method to keep the kdump kernel kexec segments up to date is
+by reloading the complete kdump kernel whenever a CPU/Memory hot
+plug/unplug or online/offline event is observed in userspace. Reloading
+the kdump kernel for every CPU/Memory hot plug/unplug or online/offline
+event is inefficient and creates a large window where the kdump service
+is not available. It can be improved by doing in-kernel updates to only
+necessary kdump kernel kexec segments which describe CPU and Memory
+resources of the running kernel to the kdump kernel.
+
+The kernel changes related to in-kernel updates to the kdump kernel
+kexec segments are kept under the CRASH_HOTPLUG config option.
+
+Later in the series, a powerpc crash hotplug handler is introduced to
+update the kdump kernel kexec segments on CPU/Memory hotplug events.
+This arch-specific handler is triggered from a generic crash handler
+that registers with the CPU/Memory add/remove notifiers.
+
+The CRASH_HOTPLUG config option is enabled by default.
+
+Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+Reviewed-by: Laurent Dufour <laurent.dufour@fr.ibm.com>
 ---
- kexec/arch/m68k/bootinfo.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/powerpc/Kconfig | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/kexec/arch/m68k/bootinfo.c b/kexec/arch/m68k/bootinfo.c
-index 086a34bdfdeb..5afd212d9d34 100644
---- a/kexec/arch/m68k/bootinfo.c
-+++ b/kexec/arch/m68k/bootinfo.c
-@@ -1,3 +1,4 @@
-+#define _GNU_SOURCE
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index a6c4407d3ec83..ac0dc0ffe89b4 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -681,6 +681,18 @@ config CRASH_DUMP
+ 	  The same kernel binary can be used as production kernel and dump
+ 	  capture kernel.
  
- #include <stdio.h>
- #include <stdlib.h>
++config CRASH_HOTPLUG
++	bool "In-kernel update to kdump kernel on system configuration changes"
++	default y
++	depends on CRASH_DUMP && (HOTPLUG_CPU || MEMORY_HOTPLUG)
++	help
++	  Quick and efficient mechanism to update the kdump kernel in the
++	  event of CPU/Memory hot plug/unplug or online/offline events. This
++	  approach does the in-kernel update to only necessary kexec segment
++	  instead of unload-reload entire kdump kernel from userspace.
++
++	  If unsure, say Y.
++
+ config FA_DUMP
+ 	bool "Firmware-assisted dump"
+ 	depends on PPC64 && (PPC_RTAS || PPC_POWERNV)
 -- 
-2.40.0
+2.39.2
 
 
 _______________________________________________
