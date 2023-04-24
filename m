@@ -4,101 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 80E12C77B73
-	for <kexec@archiver.kernel.org>; Mon, 24 Apr 2023 15:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A07DEC77B61
+	for <kexec@archiver.kernel.org>; Mon, 24 Apr 2023 15:53:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
 	Content-Transfer-Encoding:Cc:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:To:Subject:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:To:Subject:MIME-Version:
 	Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=C2Sy/cc4ULeKHvtGD0xwIKwOFajjhew5ktv+bHbPSnk=; b=X5eQx9K7iRpyhs6ppZp3djmamD
-	djwUdA3BI88352S9qbU8kygaQdf5llsTTfvy2GWuX4W5JNtn/8IhIF1F/udOm4YsFXWAsb8BgXz5S
-	OIkV3idqQmq1Oc+qzr4HZOviF5dUvEIA3xlte6mwdOgvEjcu4f1yCtRl9oJPwWEidqsks0D7Q6QM+
-	A3kOxNpVdYEXzfGBndOnUbWIZbo9I5J4RMTTXlMOdDARdBYRxiQ8/LeABBv5uVPMLvPbMH+bPLneX
-	PtYoVQJuAUBaxQXpeYHvL5IrPExgpJmJCeXCUxuiYJztET7Mwlf0yulqDE9AHqeYnng281ZQn85xy
-	oXH3y3mA==;
+	bh=NWBNIFiYQA2Q+Ss1uisod0Sc6f+CXJeyupWMkGc0Xsk=; b=gyMvIPWoVpme7wGzl0GbRhJViW
+	lwtCUbv3vANV58VJK0bZCuH9Fv9LxkUlxh9ip6/FI+ueTSqENeQx1igZGZWVNi68yXa2Osg/6EyT3
+	2xzpnxewASz1kFHY1LFxN0ivc4ECT4Vfh67StBEfthMDckq5NaQQ5TxccnjQRBhHWREwcFlxeLncS
+	dez9IzseDmJdeqAPRewnWzWhdS6YEGHUfWmG0+egnR1l7jlE/EeY66AlIdjcFsaDuXESLjYSxrmTW
+	m+fP7HQC3IiyaPizoIWXYUq5BnbZYqd264W9e7qsmA1CE80nDH1WSHeqHWpnx0w62A28kfwMGLQHY
+	iPYAfsSA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pqxuF-00Gg6E-1T;
-	Mon, 24 Apr 2023 15:15:07 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1pqyVG-00GkBV-0G;
+	Mon, 24 Apr 2023 15:53:22 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pqxuD-00Gg2O-13
+	id 1pqyVD-00GkB0-2X
 	for kexec@lists.infradead.org;
-	Mon, 24 Apr 2023 15:15:06 +0000
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33OFEaYB027498;
-	Mon, 24 Apr 2023 15:14:40 GMT
+	Mon, 24 Apr 2023 15:53:21 +0000
+Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33OEeULd024589;
+	Mon, 24 Apr 2023 15:02:37 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=eGwH+czhQGpp4QXDxzkOcoLG8VMSqXayOyDMUdKN2yk=;
- b=BVVrgjzk8TGw0KlgkrcAo4faBUJgf46zdVjl10abeDR4/h8xQ40/WuOmWbJuqabILAL9
- jjUQf7Rqcn/NBwi9P4apkBb1/F7+Mezb4DD7m6WMFSOSNGWYMiGJQTEJYhKd/px5VoN6
- cu+0WT6wb2Ox9vyekZ2l+ZXCrZesGKZEX3LR/PLddfyTQEXprymaX2ijOyYRVBSge8ck
- VJa9wbt3I8DA0YsQa+SJifOo3g1bGVAnCQukfvMG6TUshCfbRHRsru33O3bg4VFfwxry
- gaziP+P+RE6AjJLvZXl9uvIWIohhTJixMyxW1boVavew5JaOHToSTU/uu182hVBAGqws LQ== 
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=qWjmJITQVbVjpvpbeY5cXPitIqrlOKrTeWepgG54gaU=;
+ b=UTK4oTclpjNGjXT1xrxCG+ae3+tOwvN83eIOtC1bYg5OqfsNvVIJY9WCduNhfDVXrUx3
+ iI7lK2mqP5Jpeqvb3dqO3cgAV5aeoAOftGfTrcvpmOQKjkyr8mX0OpX5hHpAjVuHSjf3
+ g0iHPegtpQMCLUH+ohqRe1HffkI5UAWVwkQItKYhlTDYu0im5nlJHIZHv5U6uiTFDb4Z
+ pSJKCq+oEK8/B+wSplRyTfjls+X4kHucyN2KC9WTmnrCzDEu+FThYrVgJyeuCLJsQsvz
+ jVLvmpBZidEL0+efn9APCj6x8buXQe13tV7B1Jy9uPHRemYj7zbuxmsF9Eh+EbwmhCOf OA== 
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3q47r7rc53-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3q4510ryq9-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Apr 2023 15:14:39 +0000
-Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 33OF6fJ0032755;
-	Mon, 24 Apr 2023 15:13:57 GMT
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3q47r7rbbh-1
+	Mon, 24 Apr 2023 15:02:36 +0000
+Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 33OEiknb023947;
+	Mon, 24 Apr 2023 15:01:38 GMT
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3q4510rwg2-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Apr 2023 15:13:57 +0000
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-	by ppma05fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 33ODx8d1031505;
-	Mon, 24 Apr 2023 15:13:28 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma05fra.de.ibm.com (PPS) with ESMTPS id 3q4776s05b-1
+	Mon, 24 Apr 2023 15:01:38 +0000
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+	by ppma06fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 33O5M67O022510;
+	Mon, 24 Apr 2023 15:01:00 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma06fra.de.ibm.com (PPS) with ESMTPS id 3q46ug102f-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Apr 2023 15:13:27 +0000
+	Mon, 24 Apr 2023 15:01:00 +0000
 Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 33OFDNl662718344
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 33OF0ugM13894330
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 24 Apr 2023 15:13:23 GMT
+	Mon, 24 Apr 2023 15:00:57 GMT
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AE45E20043;
-	Mon, 24 Apr 2023 15:13:23 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id DBF3E20040;
+	Mon, 24 Apr 2023 15:00:56 +0000 (GMT)
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 08D5D20065;
-	Mon, 24 Apr 2023 15:13:21 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 34C812004E;
+	Mon, 24 Apr 2023 15:00:54 +0000 (GMT)
 Received: from [9.43.100.55] (unknown [9.43.100.55])
 	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 24 Apr 2023 15:13:20 +0000 (GMT)
-Message-ID: <dfee1e13-01cb-e2f3-61cb-9f9c51f2a875@linux.ibm.com>
-Date: Mon, 24 Apr 2023 20:43:19 +0530
+	Mon, 24 Apr 2023 15:00:53 +0000 (GMT)
+Message-ID: <8a14c915-c121-c1c3-1d03-250ad571c840@linux.ibm.com>
+Date: Mon, 24 Apr 2023 20:30:52 +0530
+MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.1
-Subject: Re: [PATCH v10 0/5] PowerPC: In-kernel handling of CPU/Memory
- hotplug/online/offline events for kdump kernel
+Subject: Re: [PATCH v10 2/5] powerpc/crash: introduce a new config option
+ CRASH_HOTPLUG
 Content-Language: en-US
-To: Eric DeVolder <eric.devolder@oracle.com>, linuxppc-dev@ozlabs.org,
+To: Laurent Dufour <ldufour@linux.ibm.com>, linuxppc-dev@ozlabs.org,
         mpe@ellerman.id.au
 References: <20230423105213.70795-1-sourabhjain@linux.ibm.com>
- <9713a2e4-ac13-425f-1954-fe16ff318916@oracle.com>
+ <20230423105213.70795-3-sourabhjain@linux.ibm.com>
+ <c87ace32-b11d-8b60-50f5-584acc2bd824@linux.ibm.com>
 From: Sourabh Jain <sourabhjain@linux.ibm.com>
-In-Reply-To: <9713a2e4-ac13-425f-1954-fe16ff318916@oracle.com>
+In-Reply-To: <c87ace32-b11d-8b60-50f5-584acc2bd824@linux.ibm.com>
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: CgvPg77QIYlpsaiIgXxPLo_51wXGnctt
-X-Proofpoint-ORIG-GUID: MzmrLE2_p-V4ZZEhP6WjJTg682OIp1zR
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
-MIME-Version: 1.0
+X-Proofpoint-GUID: NzirQfUcTCjkb1fLdSBKAXjtuyXHDeru
+X-Proofpoint-ORIG-GUID: AiJCfFXlfSzpmmCC-n13nW8T9TV7qzPa
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
  definitions=2023-04-24_09,2023-04-21_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
- phishscore=0 clxscore=1015 impostorscore=0 adultscore=0 priorityscore=1501
- mlxscore=0 lowpriorityscore=0 spamscore=0 mlxlogscore=999 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2303200000
- definitions=main-2304240136
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ clxscore=1015 malwarescore=0 adultscore=0 mlxlogscore=999 mlxscore=0
+ lowpriorityscore=0 bulkscore=0 phishscore=0 suspectscore=0 impostorscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2304240131
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230424_081505_373997_8038DB97 
-X-CRM114-Status: GOOD (  22.48  )
+X-CRM114-CacheID: sfid-20230424_085319_942124_16F5C4AB 
+X-CRM114-Status: GOOD (  23.59  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -110,68 +110,59 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Cc: ldufour@linux.ibm.com, kexec@lists.infradead.org, hbathini@linux.ibm.com, bhe@redhat.com
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Cc: bhe@redhat.com, kexec@lists.infradead.org, Laurent Dufour <laurent.dufour@fr.ibm.com>, eric.devolder@oracle.com, hbathini@linux.ibm.com
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Ck9uIDI0LzA0LzIzIDE5OjM1LCBFcmljIERlVm9sZGVyIHdyb3RlOgo+Cj4KPiBPbiA0LzIzLzIz
-IDA1OjUyLCBTb3VyYWJoIEphaW4gd3JvdGU6Cj4+IFRoZSBQcm9ibGVtOgo+PiA9PT09PT09PT09
-PT0KPj4gUG9zdCBDUFUvTWVtb3J5IGhvdCBwbHVnL3VucGx1ZyBhbmQgb25saW5lL29mZmxpbmUg
-ZXZlbnRzIHRoZSBrZXJuZWwKPj4gaG9sZHMgc3RhbGUgaW5mb3JtYXRpb24gYWJvdXQgdGhlIHN5
-c3RlbS4gRHVtcCBjb2xsZWN0aW9uIHdpdGggc3RhbGUKPj4ga2R1bXAga2VybmVsIG1pZ2h0IGVu
-ZCB1cCBpbiBkdW1wIGNhcHR1cmUgZmFpbHVyZSBvciBhbiBpbmFjY3VyYXRlIGR1bXAKPj4gY29s
-bGVjdGlvbi4KPj4KPj4gRXhpc3Rpbmcgc29sdXRpb246Cj4+ID09PT09PT09PT09PT09PT09PQo+
-PiBUaGUgZXhpc3Rpbmcgc29sdXRpb24gdG8ga2VlcCB0aGUga2R1bXAga2VybmVsIHVwLXRvLWRh
-dGUgYnkgbW9uaXRvcmluZwo+PiBDUFUvTWVtb3J5IGhvdHBsdWcvb25saW5lL29mZmxpbmUgZXZl
-bnRzIHZpYSB1ZGV2IHJ1bGUgYW5kIHRyaWdnZXIgYSAKPj4gZnVsbAo+PiBrZHVtcCBrZXJuZWwg
-cmVsb2FkIGZvciBldmVyeSBob3RwbHVnIGV2ZW50Lgo+Pgo+PiBTaG9ydGNvbWluZ3M6Cj4+IC0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+PiAtIExlYXZl
-cyBhIHdpbmRvdyB3aGVyZSBrZXJuZWwgY3Jhc2ggbWlnaHQgbm90IGxlYWQgdG8gYSBzdWNjZXNz
-ZnVsIGR1bXAKPj4gwqDCoCBjb2xsZWN0aW9uLgo+PiAtIFJlbG9hZGluZyBhbGwga2V4ZWMgY29t
-cG9uZW50cyBmb3IgZWFjaCBob3RwbHVnIGlzIGluZWZmaWNpZW50Lgo+PiAtIHVkZXYgcnVsZXMg
-YXJlIHByb25lIHRvIHJhY2VzIGlmIGhvdHBsdWcgZXZlbnRzIGFyZSBmcmVxdWVudC4KPj4KPj4g
-TW9yZSBhYm91dCBpc3N1ZXMgd2l0aCBhbiBleGlzdGluZyBzb2x1dGlvbiBpcyBwb3N0ZWQgaGVy
-ZToKPj4gwqAgLSBodHRwczovL2xrbWwub3JnL2xrbWwvMjAyMC8xMi8xNC81MzIKPj4gwqAgLSAK
-Pj4gaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL3BpcGVybWFpbC9saW51eHBwYy1kZXYvMjAyMi1G
-ZWJydWFyeS8yNDAyNTQuaHRtbAo+Pgo+PiBQcm9wb3NlZCBTb2x1dGlvbjoKPj4gPT09PT09PT09
-PT09PT09PT09Cj4+IEluc3RlYWQgb2YgcmVsb2FkaW5nIGFsbCBrZXhlYyBzZWdtZW50cyBvbiBD
-UFUvTWVtb3J5IAo+PiBob3RwbHVnL29ubGluZS9vZmZsaW5lCj4+IGV2ZW50LCB0aGlzIHBhdGNo
-IHNlcmllcyBmb2N1c2VzIG9uIHVwZGF0aW5nIG9ubHkgdGhlIHJlbGV2YW50IGtleGVjIAo+PiBz
-ZWdtZW50Lgo+PiBPbmNlIHRoZSBrZXhlYyBzZWdtZW50cyBhcmUgbG9hZGVkIGluIHRoZSBrZXJu
-ZWwgcmVzZXJ2ZWQgYXJlYSB0aGVuIGFuCj4+IGFyY2gtc3BlY2lmaWMgaG90cGx1ZyBoYW5kbGVy
-IHdpbGwgdXBkYXRlIHRoZSByZWxldmFudCBrZXhlYyBzZWdtZW50IAo+PiBiYXNlZCBvbgo+PiBo
-b3RwbHVnIGV2ZW50IHR5cGUuCj4+Cj4+IFNlcmllcyBEZXBlbmRlbmNpZXMKPj4gPT09PT09PT09
-PT09PT09PT09PT0KPj4gVGhpcyBwYXRjaCBzZXJpZXMgaW1wbGVtZW50cyB0aGUgY3Jhc2ggaG90
-cGx1ZyBoYW5kbGVyIG9uIFBvd2VyUEMuIAo+PiBUaGUgZ2VuZXJpYwo+PiBjcmFzaCBob3RwbHVn
-IGhhbmRsZXIgaXMgaW50cm9kdWNlZCBieSAKPj4gaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMjMv
-NC80LzExMzYgcGF0Y2gKPj4gc2VyaWVzLgo+Pgo+PiBHaXQgdHJlZSBmb3IgdGVzdGluZzoKPj4g
-PT09PT09PT09PT09PT09PT09PT09Cj4+IFRoZSBiZWxvdyBnaXQgdHJlZSBoYXMgdGhpcyBwYXRj
-aCBzZXJpZXMgYXBwbGllZCBvbiB0b3Agb2YgZGVwZW5kZW50IAo+PiBwYXRjaAo+PiBzZXJpZXMu
-Cj4+IGh0dHBzOi8vZ2l0aHViLmNvbS9zb3VyYWJoamFpbnMvbGludXgvdHJlZS9lMjEtczEwCj4+
-Cj4+IFRvIHJlYWxpc2UgdGhlIGZlYXR1cmUgdGhlIGtkdW1wIHVkZXYgcnVsZSBtdXN0IHVwZGF0
-ZWQgdG8gYXZvaWQKPj4gcmVsb2FkaW5nIG9mIGtkdW1wIHJlbG9hZCBvbiBDUFUvTWVtb3J5IGhv
-dHBsdWcvb25saW5lL29mZmxpbmUgZXZlbnRzLgo+Pgo+PiDCoMKgIFJIRUw6IC91c3IvbGliL3Vk
-ZXYvcnVsZXMuZC85OC1rZXhlYy5ydWxlcwo+Pgo+PiDCoMKgwqDCoC1TVUJTWVNURU09PSJjcHUi
-LCBBQ1RJT049PSJvbmxpbmUiLCBHT1RPPSJrZHVtcF9yZWxvYWRfY3B1Igo+PiDCoMKgwqDCoC1T
-VUJTWVNURU09PSJtZW1vcnkiLCBBQ1RJT049PSJvbmxpbmUiLCBHT1RPPSJrZHVtcF9yZWxvYWRf
-bWVtIgo+PiDCoMKgwqDCoC1TVUJTWVNURU09PSJtZW1vcnkiLCBBQ1RJT049PSJvZmZsaW5lIiwg
-R09UTz0ia2R1bXBfcmVsb2FkX21lbSIKPj4gwqDCoMKgwqArU1VCU1lTVEVNPT0iY3B1IiwgQVRU
-UlN7Y3Jhc2hfaG90cGx1Z309PSIxIiwgCj4+IEdPVE89ImtkdW1wX3JlbG9hZF9lbmQiCj4+IMKg
-wqDCoMKgK1NVQlNZU1RFTT09Im1lbW9yeSIsIEFUVFJTe2NyYXNoX2hvdHBsdWd9PT0iMSIsIAo+
-PiBHT1RPPSJrZHVtcF9yZWxvYWRfZW5kIgo+Pgo+Cj4gSSBkaWRuJ3Qgc2VlIGluIHRoZSBwYXRj
-aCBzZXJpZXMgd2hlcmUgeW91IHdvdWxkIGhhdmUgdGhlIGVxdWl2YWxlbnQgCj4gdG8gdGhlIGZv
-bGxvd2luZyAobmVlZGVkIGZvciB0aGUgc3lzZnMgY3Jhc2hfaG90cGx1ZyBlbnRyaWVzKToKPgo+
-ICNpZmRlZiBDT05GSUdfSE9UUExVR19DUFUKPiBzdGF0aWMgaW5saW5lIGludCBjcmFzaF9ob3Rw
-bHVnX2NwdV9zdXBwb3J0KHZvaWQpIHsgcmV0dXJuIDE7IH0KPiAjZGVmaW5lIGNyYXNoX2hvdHBs
-dWdfY3B1X3N1cHBvcnQgY3Jhc2hfaG90cGx1Z19jcHVfc3VwcG9ydAo+ICNlbmRpZgo+Cj4gI2lm
-ZGVmIENPTkZJR19NRU1PUllfSE9UUExVRwo+IHN0YXRpYyBpbmxpbmUgaW50IGNyYXNoX2hvdHBs
-dWdfbWVtb3J5X3N1cHBvcnQodm9pZCkgeyByZXR1cm4gMTsgfQo+ICNkZWZpbmUgY3Jhc2hfaG90
-cGx1Z19tZW1vcnlfc3VwcG9ydCBjcmFzaF9ob3RwbHVnX21lbW9yeV9zdXBwb3J0Cj4gI2VuZGlm
-CgpJIG1pc3NlZCB0aGUgYWJvdmUgZGlmZiBpbiBteSB0ZXN0aW5nIGVudmlyb25tZW50LiBUaGFu
-a3MgeW91IGZvciAKYnJpbmdpbmcgaXQKdG8gbXkgYXR0ZW50aW9uLiBJIHdpbGwgZml4IHRoaXMg
-bmV4dCB2ZXJzaW9uLgoKLSBTb3VyYWJoIEphaW4KCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZy
-YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4
-ZWMK
+
+On 24/04/23 15:27, Laurent Dufour wrote:
+> On 23/04/2023 12:52:10, Sourabh Jain wrote:
+>> Due to CPU/Memory hot plug/unplug or online/offline events the system
+>> resources changes. A similar change should reflect in the loaded kdump
+>> kernel kexec segments that describes the state of the CPU and memory of
+>> the running kernel.
+>>
+>> If the kdump kernel kexec segments are not updated after the CPU/Memory
+>> hot plug/unplug or online/offline events and kdump kernel tries to
+>> collect the dump with the stale system resource data then this might
+>> lead to dump collection failure or an inaccurate dump collection.
+>>
+>> The current method to keep the kdump kernel kexec segments up to date is
+>> by reloading the complete kdump kernel whenever a CPU/Memory hot
+>> plug/unplug or online/offline event is observed in userspace. Reloading
+>> the kdump kernel for every CPU/Memory hot plug/unplug or online/offline
+>> event is inefficient and creates a large window where the kdump service
+>> is not available. It can be improved by doing in-kernel updates to only
+>> necessary kdump kernel kexec segments which describe CPU and Memory
+>> resources of the running kernel to the kdump kernel.
+>>
+>> The kernel changes related to in-kernel updates to the kdump kernel
+>> kexec segments are kept under the CRASH_HOTPLUG config option.
+>>
+>> Later in the series, a powerpc crash hotplug handler is introduced to
+>> update the kdump kernel kexec segments on CPU/Memory hotplug events.
+>> This arch-specific handler is triggered from a generic crash handler
+>> that registers with the CPU/Memory add/remove notifiers.
+>>
+>> The CRASH_HOTPLUG config option is enabled by default.
+>>
+>> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+>> Reviewed-by: Laurent Dufour <laurent.dufour@fr.ibm.com>
+> I can't remember having sent a review-by on that patch earlier.
+>
+> Anyway, I can't find any issue with that one, so replace with:
+> Reviewed-by: Laurent Dufour <ldufour@linux.ibm.com>
+
+I apologies for mistakenly applying the "Reviewed-by" tag to the entire
+patch series, when it was intended for only one patch. I will remove the
+tag in next version.
+
+- Sourabh Jain
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
