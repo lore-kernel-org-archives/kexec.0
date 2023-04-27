@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1D3E5C7EE2D
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1D396C7618E
 	for <kexec@archiver.kernel.org>; Thu, 27 Apr 2023 00:10:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
@@ -12,49 +12,49 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	List-Post:List-Archive:List-Unsubscribe:List-Id:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=33o443ByYhwLBZ7C3maCRg7bieM+CfIYIm/7BAA0Jeo=; b=Kvt8hWKCbBTrHM
-	aa+EFn5dCvQytX8kXEtp+4imOXTfTpkJV4ng6SHN8EhwFnJsjnb1fXqto36XddDnqjOQRcBldPXvi
-	wfMv+busegxcri6Myw57BAPc0QpYmHXfj+hnC03EHn0HnVMipLd8aDFLSJzV9wH/UEsg8bkK9/c3l
-	DqeKpZ4iWFet5mpKUJ2IHcMoLm8l5DGPICbhjcfpu5sHJXbTx7QJvuPM3CHaoHFzn8t1NCysIZCjc
-	eFuZcCh8oC24nBpHDqFHqPOboiHyAo2BlBKn0Vz5VZRC/1LkQzEPn9bYztoRM4Xlszxy1fbP7JsaT
-	t9+Lql9GOryK2qsEw9qg==;
+	List-Owner; bh=imyhp7F9tierd0PzDaeHxTgmlNUie62YYTRq+a93xno=; b=TYMKVDwOY15rUW
+	R2d/U6VXd/6/+y7ExBQzMXFpoQCXrdFIXORGLDRfsUT/VSwzSffJoj56iOGzlXjTfvKMyKmFIpRgh
+	bkFB1n27A2/dAN+lNVZUvn4oQjRWnMHbDC0Oi/+4Npg3LM5dVlRHfAMZVRyJRGmiM6OQm2c25M62R
+	hCkOn/O0ATyj1RxpWS05Ak69V0uKVjYZ94MFqGjQwF1W8nxkSsD+yYR4h/89nlDxPoMGYPGuG0tA8
+	SY6p0UCOa7sVpHZdIozJNpoRNizPAkfne6RVVvaOTTN7aLPWTACumz+MS/gNMAXC6uhTFVyQvoEuW
+	VxMoVg1oSNk5Ooqh0gTQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1prpD4-0056ZM-2S;
-	Thu, 27 Apr 2023 00:10:06 +0000
+	id 1prpD3-0056Yz-3A;
+	Thu, 27 Apr 2023 00:10:05 +0000
 Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1prpCw-0056Qi-21
+	id 1prpCv-0056Pk-08
 	for kexec@lists.infradead.org;
-	Thu, 27 Apr 2023 00:10:01 +0000
+	Thu, 27 Apr 2023 00:10:00 +0000
 Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33QGxEQx025323;
-	Thu, 27 Apr 2023 00:09:20 GMT
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33QGxDTf025309;
+	Thu, 27 Apr 2023 00:09:16 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2023-03-30;
- bh=HqaUuCd1TrikYSZqcmSr/0DHMDDKEbvkxeVBZQXF+4s=;
- b=ymokuz3wRntwI30/UPMDy8uxtvahfMueGv8Da1N3qrPtLBUqqTRtFtKbvokd96e5oZPc
- pGY+TCBPIuSXwvnuN1QwEW7r2+WpUN6T68bsCFTIQXhsaByghzHkSw63dHZAIArr8Zok
- vRy10JtQfeUPrT0F4r+cKjI4JYbseEZWXcPUr7KtYBgw5zozoWZePDLxldsjq0Z8Fbe5
- SJR+63Zf6mzrcGiBcfd8IT3o7crf+MDRZs6cwBzPEY7dvharmXfVNp0dVkumlGxD/XU6
- S108cMR7bmO/7+BFit4IaIqe96T4ktAHBuex20hQ1G56cNGPf/8/HB8tDXQFc3myQwQr Bw== 
+ bh=kCxexgjquhm43uIqnCzaCKme8/lW/JHqc5BFLC3zBqE=;
+ b=vTo9B+vvAjWpZl5sA4oPL1lKBhlH5A1X8UCeXo14KQCHh4gDG9JGTe8jsA8SvhWEA6lX
+ rCwXFo16cZYMNfr4aZeivRf7u3DFx56P7YgMJx3riVsOHDgVAViRH21ldwmNdxF2DBeb
+ JqNRvOwjMdpuYY+yWWgDEzFFodnBKgAjYlQhjn5Sy84JLsimXJOqFOWvEWcUM7WH2Ae3
+ yxJTV377SDejfMR/5XEMdNkOD2spr/zEOAXfZVFI3I7cKVkYN4JLeqnXL9DqpOG7fOVy
+ E/grQ+ERNydeVl9TX0aKf+NA2mkgf95PlZu+WMDNVMhFHDqzhiq9/daDDPxs4kFFdds/ 8A== 
 Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3q46622ty4-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3q46622ty0-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 27 Apr 2023 00:09:20 +0000
+	Thu, 27 Apr 2023 00:09:15 +0000
 Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 33QNV55B007557;
-	Thu, 27 Apr 2023 00:09:19 GMT
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 33QMwjOd007159;
+	Thu, 27 Apr 2023 00:09:15 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3q4618mpjm-1
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3q4618mpep-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 27 Apr 2023 00:09:19 +0000
+	Thu, 27 Apr 2023 00:09:15 +0000
 Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 33R0938g013888;
-	Thu, 27 Apr 2023 00:09:19 GMT
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 33R0938a013888;
+	Thu, 27 Apr 2023 00:09:14 GMT
 Received: from ca-qasparc-x86-2.us.oracle.com (ca-qasparc-x86-2.us.oracle.com [10.147.24.103])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3q4618mp42-11;
-	Thu, 27 Apr 2023 00:09:18 +0000
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3q4618mp42-8;
+	Thu, 27 Apr 2023 00:09:14 +0000
 From: Anthony Yznaga <anthony.yznaga@oracle.com>
 To: linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
@@ -63,9 +63,9 @@ Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
         ebiederm@xmission.com, keescook@chromium.org, graf@amazon.com,
         jason.zeng@intel.com, lei.l.li@intel.com, steven.sistare@oracle.com,
         fam.zheng@bytedance.com, mgalaxy@akamai.com, kexec@lists.infradead.org
-Subject: [RFC v3 10/21] PKRAM: prepare for adding preserved ranges to memblock reserved
-Date: Wed, 26 Apr 2023 17:08:46 -0700
-Message-Id: <1682554137-13938-11-git-send-email-anthony.yznaga@oracle.com>
+Subject: [RFC v3 07/21] mm: PKRAM: introduce super block
+Date: Wed, 26 Apr 2023 17:08:43 -0700
+Message-Id: <1682554137-13938-8-git-send-email-anthony.yznaga@oracle.com>
 X-Mailer: git-send-email 1.9.4
 In-Reply-To: <1682554137-13938-1-git-send-email-anthony.yznaga@oracle.com>
 References: <1682554137-13938-1-git-send-email-anthony.yznaga@oracle.com>
@@ -76,11 +76,11 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 ph
  mlxlogscore=999 malwarescore=0 mlxscore=0 spamscore=0 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2303200000
  definitions=main-2304270000
-X-Proofpoint-ORIG-GUID: Pb7Yjfl5p58r9mry-DL31w9dKlO5igMJ
-X-Proofpoint-GUID: Pb7Yjfl5p58r9mry-DL31w9dKlO5igMJ
+X-Proofpoint-ORIG-GUID: JPUChGVr1Ox4-7b8jQIrZtvAKfFxOq23
+X-Proofpoint-GUID: JPUChGVr1Ox4-7b8jQIrZtvAKfFxOq23
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230426_170958_668133_A65A536A 
-X-CRM114-Status: GOOD (  22.88  )
+X-CRM114-CacheID: sfid-20230426_170957_084698_ACD548EF 
+X-CRM114-Status: GOOD (  29.88  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -98,277 +98,207 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Calling memblock_reserve() repeatedly to add preserved ranges is
-inefficient and risks clobbering preserved memory if the memblock
-reserved regions array must be resized.  Instead, calculate the size
-needed to accommodate the preserved ranges, find a suitable range for
-a new reserved regions array that does not overlap any preserved range,
-and populate it with a new, merged regions array.
+The PKRAM super block is the starting point for restoring preserved
+memory. By providing the super block to the new kernel at boot time,
+preserved memory can be reserved and made available to be restored.
+To point the kernel to the location of the super block, one passes
+its pfn via the 'pkram' boot param. For that purpose, the pkram super
+block pfn is exported via /sys/kernel/pkram. If none is passed, any
+preserved memory will not be kept, and a new super block will be
+allocated.
 
+Originally-by: Vladimir Davydov <vdavydov.dev@gmail.com>
 Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
 ---
- mm/pkram.c | 244 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 244 insertions(+)
+ mm/pkram.c | 102 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 100 insertions(+), 2 deletions(-)
 
 diff --git a/mm/pkram.c b/mm/pkram.c
-index 3790e5180feb..c649504fa1fa 100644
+index da166cb6afb7..c66b2ae4d520 100644
 --- a/mm/pkram.c
 +++ b/mm/pkram.c
-@@ -7,6 +7,7 @@
+@@ -5,15 +5,18 @@
+ #include <linux/init.h>
+ #include <linux/io.h>
  #include <linux/kernel.h>
- #include <linux/kobject.h>
++#include <linux/kobject.h>
  #include <linux/list.h>
-+#include <linux/memblock.h>
  #include <linux/mm.h>
  #include <linux/module.h>
  #include <linux/mutex.h>
-@@ -1138,3 +1139,246 @@ static unsigned long pkram_populate_regions_list(void)
+ #include <linux/notifier.h>
++#include <linux/pfn.h>
+ #include <linux/pkram.h>
+ #include <linux/reboot.h>
+ #include <linux/sched.h>
+ #include <linux/string.h>
++#include <linux/sysfs.h>
+ #include <linux/types.h>
  
- 	return priv.nr_regions;
- }
-+
-+struct pkram_region *pkram_first_region(struct pkram_super_block *sb,
-+					struct pkram_region_list **rlp, int *idx)
-+{
-+	WARN_ON(!sb);
-+	WARN_ON(!sb->region_list_pfn);
-+
-+	if (!sb || !sb->region_list_pfn)
-+		return NULL;
-+
-+	*rlp = pfn_to_kaddr(sb->region_list_pfn);
-+	*idx = 0;
-+
-+	return &(*rlp)->regions[0];
-+}
-+
-+struct pkram_region *pkram_next_region(struct pkram_region_list **rlp, int *idx)
-+{
-+	struct pkram_region_list *rl = *rlp;
-+	int i = *idx;
-+
-+	i++;
-+	if (i >= PKRAM_REGIONS_LIST_MAX) {
-+		if (!rl->next_pfn) {
-+			pr_err("PKRAM: %s: no more pkram_region_list pages\n", __func__);
-+			return NULL;
-+		}
-+		rl = pfn_to_kaddr(rl->next_pfn);
-+		*rlp = rl;
-+		i = 0;
-+	}
-+	*idx = i;
-+
-+	if (rl->regions[i].size == 0)
-+		return NULL;
-+
-+	return &rl->regions[i];
-+}
-+
-+struct pkram_region *pkram_first_region_topdown(struct pkram_super_block *sb,
-+						struct pkram_region_list **rlp, int *idx)
-+{
-+	struct pkram_region_list *rl;
-+
-+	WARN_ON(!sb);
-+	WARN_ON(!sb->region_list_pfn);
-+
-+	if (!sb || !sb->region_list_pfn)
-+		return NULL;
-+
-+	rl = pfn_to_kaddr(sb->region_list_pfn);
-+	if (!rl->prev_pfn) {
-+		WARN_ON(1);
-+		return NULL;
-+	}
-+	rl = pfn_to_kaddr(rl->prev_pfn);
-+
-+	*rlp = rl;
-+
-+	*idx = (sb->nr_regions - 1) % PKRAM_REGIONS_LIST_MAX;
-+
-+	return &rl->regions[*idx];
-+}
-+
-+struct pkram_region *pkram_next_region_topdown(struct pkram_region_list **rlp, int *idx)
-+{
-+	struct pkram_region_list *rl = *rlp;
-+	int i = *idx;
-+
-+	if (i == 0) {
-+		if (!rl->prev_pfn)
-+			return NULL;
-+		rl = pfn_to_kaddr(rl->prev_pfn);
-+		*rlp = rl;
-+		i = PKRAM_REGIONS_LIST_MAX - 1;
-+	} else
-+		i--;
-+
-+	*idx = i;
-+
-+	return &rl->regions[i];
-+}
-+
-+/*
-+ * Use the pkram regions list to allocate a block of memory that does
-+ * not overlap with preserved pages.
-+ */
-+phys_addr_t __init alloc_topdown(phys_addr_t size)
-+{
-+	phys_addr_t hole_start, hole_end, hole_size;
-+	struct pkram_region_list *rl;
-+	struct pkram_region *r;
-+	phys_addr_t addr = 0;
-+	int idx;
-+
-+	hole_end = memblock.current_limit;
-+	r = pkram_first_region_topdown(pkram_sb, &rl, &idx);
-+
-+	while (r) {
-+		hole_start = r->base + r->size;
-+		hole_size = hole_end - hole_start;
-+
-+		if (hole_size >= size) {
-+			addr = memblock_phys_alloc_range(size, PAGE_SIZE,
-+							hole_start, hole_end);
-+			if (addr)
-+				break;
-+		}
-+
-+		hole_end = r->base;
-+		r = pkram_next_region_topdown(&rl, &idx);
-+	}
-+
-+	if (!addr)
-+		addr = memblock_phys_alloc_range(size, PAGE_SIZE, 0, hole_end);
-+
-+	return addr;
-+}
-+
-+int __init pkram_create_merged_reserved(struct memblock_type *new)
-+{
-+	unsigned long cnt_a;
-+	unsigned long cnt_b;
-+	long i, j, k;
-+	struct memblock_region *r;
-+	struct memblock_region *rgn;
-+	struct pkram_region *pkr;
-+	struct pkram_region_list *rl;
-+	int idx;
-+	unsigned long total_size = 0;
-+	unsigned long nr_preserved = 0;
-+
-+	cnt_a = memblock.reserved.cnt;
-+	cnt_b = pkram_sb->nr_regions;
-+
-+	i = 0;
-+	j = 0;
-+	k = 0;
-+
-+	pkr = pkram_first_region(pkram_sb, &rl, &idx);
-+	if (!pkr)
-+		return -EINVAL;
-+	while (i < cnt_a && j < cnt_b && pkr) {
-+		r = &memblock.reserved.regions[i];
-+		rgn = &new->regions[k];
-+
-+		if (r->base + r->size <= pkr->base) {
-+			*rgn = *r;
-+			i++;
-+		} else if (pkr->base + pkr->size <= r->base) {
-+			rgn->base = pkr->base;
-+			rgn->size = pkr->size;
-+			memblock_set_region_node(rgn, MAX_NUMNODES);
-+
-+			nr_preserved +=  (rgn->size >> PAGE_SHIFT);
-+			pkr = pkram_next_region(&rl, &idx);
-+			j++;
-+		} else {
-+			pr_err("PKRAM: unexpected overlap:\n");
-+			pr_err("PKRAM: reserved: base=%pa,size=%pa,flags=0x%x\n", &r->base,
-+				&r->size, (int)r->flags);
-+			pr_err("PKRAM: pkram: base=%pa,size=%pa\n", &pkr->base, &pkr->size);
-+			return -EBUSY;
-+		}
-+		total_size += rgn->size;
-+		k++;
-+	}
-+
-+	while (i < cnt_a) {
-+		r = &memblock.reserved.regions[i];
-+		rgn = &new->regions[k];
-+
-+		*rgn = *r;
-+
-+		total_size += rgn->size;
-+		i++;
-+		k++;
-+	}
-+	while (j < cnt_b && pkr) {
-+		rgn = &new->regions[k];
-+		rgn->base = pkr->base;
-+		rgn->size = pkr->size;
-+		memblock_set_region_node(rgn, MAX_NUMNODES);
-+
-+		nr_preserved += (rgn->size >> PAGE_SHIFT);
-+		total_size += rgn->size;
-+		pkr = pkram_next_region(&rl, &idx);
-+		j++;
-+		k++;
-+	}
-+
-+	WARN_ON(cnt_a + cnt_b != k);
-+	new->cnt = cnt_a + cnt_b;
-+	new->total_size = total_size;
-+
-+	return 0;
-+}
-+
-+/*
-+ * Reserve pages that belong to preserved memory.  This is accomplished by
-+ * merging the existing reserved ranges with the preserved ranges into
-+ * a new, sufficiently sized memblock reserved array.
+ #include "internal.h"
+@@ -82,12 +85,38 @@ struct pkram_node {
+ #define PKRAM_ACCMODE_MASK	3
+ 
+ /*
++ * The PKRAM super block contains data needed to restore the preserved memory
++ * structure on boot. The pointer to it (pfn) should be passed via the 'pkram'
++ * boot param if one wants to restore preserved data saved by the previously
++ * executing kernel. For that purpose the kernel exports the pfn via
++ * /sys/kernel/pkram. If none is passed, preserved memory if any will not be
++ * preserved and a new clean page will be allocated for the super block.
 + *
-+ * This function should be called at boot time as early as possible to prevent
-+ * preserved memory from being recycled.
++ * The structure occupies a memory page.
 + */
-+int __init pkram_merge_with_reserved(void)
++struct pkram_super_block {
++	__u64	node_pfn;		/* first element of the node list */
++};
++
++static unsigned long pkram_sb_pfn __initdata;
++static struct pkram_super_block *pkram_sb;
++
++/*
+  * For convenience sake PKRAM nodes are kept in an auxiliary doubly-linked list
+  * connected through the lru field of the page struct.
+  */
+ static LIST_HEAD(pkram_nodes);			/* linked through page::lru */
+ static DEFINE_MUTEX(pkram_mutex);		/* serializes open/close */
+ 
++/*
++ * The PKRAM super block pfn, see above.
++ */
++static int __init parse_pkram_sb_pfn(char *arg)
 +{
-+	struct memblock_type new;
-+	unsigned long new_max;
-+	phys_addr_t new_size;
-+	phys_addr_t addr;
-+	int err;
++	return kstrtoul(arg, 16, &pkram_sb_pfn);
++}
++early_param("pkram", parse_pkram_sb_pfn);
++
+ static inline struct page *pkram_alloc_page(gfp_t gfp_mask)
+ {
+ 	return alloc_page(gfp_mask);
+@@ -270,6 +299,7 @@ static void pkram_stream_init(struct pkram_stream *ps,
+  * @gfp_mask specifies the memory allocation mask to be used when saving data.
+  *
+  * Error values:
++ *	%ENODEV: PKRAM not available
+  *	%ENAMETOOLONG: name len >= PKRAM_NAME_MAX
+  *	%ENOMEM: insufficient memory available
+  *	%EEXIST: node with specified name already exists
+@@ -285,6 +315,9 @@ int pkram_prepare_save(struct pkram_stream *ps, const char *name, gfp_t gfp_mask
+ 	struct pkram_node *node;
+ 	int err = 0;
+ 
++	if (!pkram_sb)
++		return -ENODEV;
++
+ 	if (strlen(name) >= PKRAM_NAME_MAX)
+ 		return -ENAMETOOLONG;
+ 
+@@ -404,6 +437,7 @@ void pkram_discard_save(struct pkram_stream *ps)
+  * Returns 0 on success, -errno on failure.
+  *
+  * Error values:
++ *	%ENODEV: PKRAM not available
+  *	%ENOENT: node with specified name does not exist
+  *	%EBUSY: save to required node has not finished yet
+  *
+@@ -414,6 +448,9 @@ int pkram_prepare_load(struct pkram_stream *ps, const char *name)
+ 	struct pkram_node *node;
+ 	int err = 0;
+ 
++	if (!pkram_sb)
++		return -ENODEV;
++
+ 	mutex_lock(&pkram_mutex);
+ 	node = pkram_find_node(name);
+ 	if (!node) {
+@@ -825,6 +862,13 @@ static void __pkram_reboot(void)
+ 		node->node_pfn = node_pfn;
+ 		node_pfn = page_to_pfn(page);
+ 	}
 +
 +	/*
-+	 * Need space to insert one more range into memblock.reserved
-+	 * without memblock_double_array() being called.
++	 * Zero out pkram_sb completely since it may have been passed from
++	 * the previous boot.
 +	 */
-+	if (memblock.reserved.cnt == memblock.reserved.max) {
-+		WARN_ONCE(1, "PKRAM: no space for new memblock list\n");
-+		return -ENOMEM;
++	memset(pkram_sb, 0, PAGE_SIZE);
++	pkram_sb->node_pfn = node_pfn;
+ }
+ 
+ static int pkram_reboot(struct notifier_block *notifier,
+@@ -832,7 +876,8 @@ static int pkram_reboot(struct notifier_block *notifier,
+ {
+ 	if (val != SYS_RESTART)
+ 		return NOTIFY_DONE;
+-	__pkram_reboot();
++	if (pkram_sb)
++		__pkram_reboot();
+ 	return NOTIFY_OK;
+ }
+ 
+@@ -840,9 +885,62 @@ static int pkram_reboot(struct notifier_block *notifier,
+ 	.notifier_call = pkram_reboot,
+ };
+ 
++static ssize_t show_pkram_sb_pfn(struct kobject *kobj,
++		struct kobj_attribute *attr, char *buf)
++{
++	unsigned long pfn = pkram_sb ? PFN_DOWN(__pa(pkram_sb)) : 0;
++
++	return sprintf(buf, "%lx\n", pfn);
++}
++
++static struct kobj_attribute pkram_sb_pfn_attr =
++	__ATTR(pkram, 0444, show_pkram_sb_pfn, NULL);
++
++static struct attribute *pkram_attrs[] = {
++	&pkram_sb_pfn_attr.attr,
++	NULL,
++};
++
++static struct attribute_group pkram_attr_group = {
++	.attrs = pkram_attrs,
++};
++
++/* returns non-zero on success */
++static int __init pkram_init_sb(void)
++{
++	unsigned long pfn;
++	struct pkram_node *node;
++
++	if (!pkram_sb) {
++		struct page *page;
++
++		page = pkram_alloc_page(GFP_KERNEL | __GFP_ZERO);
++		if (!page) {
++			pr_err("PKRAM: Failed to allocate super block\n");
++			return 0;
++		}
++		pkram_sb = page_address(page);
 +	}
 +
-+	new_max = memblock.reserved.max + pkram_sb->nr_regions;
-+	new_size = PAGE_ALIGN(sizeof(struct memblock_region) * new_max);
-+
-+	addr = alloc_topdown(new_size);
-+	if (!addr)
-+		return -ENOMEM;
-+
-+	new.regions = __va(addr);
-+	new.max = new_max;
-+	err = pkram_create_merged_reserved(&new);
-+	if (err)
-+		return err;
-+
-+	memblock.reserved.cnt = new.cnt;
-+	memblock.reserved.max = new.max;
-+	memblock.reserved.total_size = new.total_size;
-+	memblock.reserved.regions = new.regions;
-+
-+	return 0;
++	/*
++	 * Build auxiliary doubly-linked list of nodes connected through
++	 * page::lru for convenience sake.
++	 */
++	pfn = pkram_sb->node_pfn;
++	while (pfn) {
++		node = pfn_to_kaddr(pfn);
++		pkram_insert_node(node);
++		pfn = node->node_pfn;
++	}
++	return 1;
 +}
++
+ static int __init pkram_init(void)
+ {
+-	register_reboot_notifier(&pkram_reboot_notifier);
++	if (pkram_init_sb()) {
++		register_reboot_notifier(&pkram_reboot_notifier);
++		sysfs_update_group(kernel_kobj, &pkram_attr_group);
++	}
+ 	return 0;
+ }
+ module_init(pkram_init);
 -- 
 1.9.4
 
