@@ -4,60 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C0337C77B61
-	for <kexec@archiver.kernel.org>; Tue, 25 Apr 2023 13:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DE74AC7618E
+	for <kexec@archiver.kernel.org>; Thu, 27 Apr 2023 00:10:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:References:CC:To:From:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:List-Subscribe:List-Help:
+	List-Post:List-Archive:List-Unsubscribe:List-Id:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=aNK3/4YH0/nMmzvdJmFf/ltanh1ENIJyla3BWhVNqbs=; b=1YjWO8lKxwszYb
-	gk9FHv5cFxn2qEigivR0eZpGnNKZR23Eqr+5RDlqAaCQ15BMRcLqQkIgvv0wsKc4cTI8RrxvYWe9x
-	0MEUsm3iX6o7DMxmvj/lf8Cayja0HJntb0p6VBaROPGwxix5yshcY0wR7Dno+vlIGExfsAkX10rD+
-	M4wID86mb7X7CXlFNljULF+FKNrppUE38L7sUiaOXl5MVbPMSFLeV5htMFX8YwNKf/hg94oQXcEqD
-	ix9hJ+P0Q6mgJyc3zfGq0N6rWPGmCzHGwFGMUMftvoTXIdX1kpjeUcxbD0PvX3hyO+24TMyjKovpO
-	mrwbZ864g8RL7lo9j63g==;
+	List-Owner; bh=vHWsOGnonSN4TrVgNcAK8xaG62sm4b+mddd8HDHywEA=; b=o/xE5BKIFHPR4R
+	SZgZpvK+dACamlKRxUskRwh4fm+UutTGgTDbpardl75vXgcLxKtJu9P81zM7vE3QxBmrv+WG+a99Q
+	Tr55INwdRs6SmZ2l1fY6YM6jPFTBBHgYgRC5CyTJXaJPNDaugzVnpVUP5ywJnRLWr8DelhJrmc2mZ
+	ZfLiel4iHwZjwzui7nME0ZvkmUgfZ8pA3ynEbDxinj2vf6MsvnGtX1OQIPvcaYHsCoTIN5gTnGphF
+	1FWjoj+8Y0WPZit7ne3kwKJWAZLyKeXNlMccHw5DemYohtowZ6NJN7G/MXgGvR+Ns1BhCqo/UUQ/P
+	dRV+N0SzlzlhQ6bDV/ag==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1prIbb-001CVs-1h;
-	Tue, 25 Apr 2023 13:21:15 +0000
-Received: from szxga01-in.huawei.com ([45.249.212.187])
+	id 1prpCx-0056RB-28;
+	Thu, 27 Apr 2023 00:09:59 +0000
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1prIbX-001COm-3D;
-	Tue, 25 Apr 2023 13:21:14 +0000
-Received: from dggpemm500016.china.huawei.com (unknown [172.30.72.53])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Q5MwY6SF8zpT8Q;
-	Tue, 25 Apr 2023 21:17:01 +0800 (CST)
-Received: from [10.67.108.26] (10.67.108.26) by dggpemm500016.china.huawei.com
- (7.185.36.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Tue, 25 Apr
- 2023 21:20:53 +0800
-Message-ID: <db4ba964-1c09-1d8a-bfc4-8fe50debfc6c@huawei.com>
-Date: Tue, 25 Apr 2023 21:20:53 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH -next v4 0/2] support allocating crashkernel above 4G
- explicitly on riscv
-Content-Language: en-US
-From: "chenjiahao (C)" <chenjiahao16@huawei.com>
-To: <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-	<kexec@lists.infradead.org>, <linux-doc@vger.kernel.org>
-CC: <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
-	<conor.dooley@microchip.com>, <guoren@kernel.org>, <heiko@sntech.de>,
-	<bjorn@rivosinc.com>, <alex@ghiti.fr>, <akpm@linux-foundation.org>,
-	<atishp@rivosinc.com>, <bhe@redhat.com>, <thunder.leizhen@huawei.com>,
-	<horms@kernel.org>
-References: <20230410130553.3226347-1-chenjiahao16@huawei.com>
-In-Reply-To: <20230410130553.3226347-1-chenjiahao16@huawei.com>
-X-Originating-IP: [10.67.108.26]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemm500016.china.huawei.com (7.185.36.25)
-X-CFilter-Loop: Reflected
+	id 1prpCu-0056OK-1h
+	for kexec@lists.infradead.org;
+	Thu, 27 Apr 2023 00:09:57 +0000
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33QGxFQg025361;
+	Thu, 27 Apr 2023 00:09:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2023-03-30;
+ bh=VQwaugMMgK/MS0E/urOkz6I4ukGs9iD4CWV4YSx/1xc=;
+ b=J9766iWR8G77hZ7IvzmoZgr4vzzvhIrhZGyputyh0qhGelOn0BZzz+TYbnctnLfB2tXh
+ 00taSjRcT8LFpZEslBFSSAM+7RpAZLoDdPLhJX6aat3Xus05BlbcMz45pXDselmAKTQL
+ 4j9iCnvsVigM9pq/Hn6cRChdsGBc3RcS+agLBtC0Ryp+vhjYvDipYwOzgG+fZ0YtUBKh
+ ywDBGNDhlrFvWYIx2fSMBZzPveVn06sAanl2zckyI7jdur2dQ1+8SRVOAnEI4OnwJAyu
+ qzNFfHr6Mb0eJ2sQWEFZDyiF5ZYwCvt6ZBGbB2qNbzLkGSSfha9z8223RFFTKeqKIbV2 AQ== 
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3q46622tym-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 27 Apr 2023 00:09:33 +0000
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 33QNUZGN007329;
+	Thu, 27 Apr 2023 00:09:32 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3q4618mpux-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 27 Apr 2023 00:09:32 +0000
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 33R09390013888;
+	Thu, 27 Apr 2023 00:09:32 GMT
+Received: from ca-qasparc-x86-2.us.oracle.com (ca-qasparc-x86-2.us.oracle.com [10.147.24.103])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3q4618mp42-20;
+	Thu, 27 Apr 2023 00:09:31 +0000
+From: Anthony Yznaga <anthony.yznaga@oracle.com>
+To: linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, dave.hansen@linux.intel.com, luto@kernel.org,
+        peterz@infradead.org, rppt@kernel.org, akpm@linux-foundation.org,
+        ebiederm@xmission.com, keescook@chromium.org, graf@amazon.com,
+        jason.zeng@intel.com, lei.l.li@intel.com, steven.sistare@oracle.com,
+        fam.zheng@bytedance.com, mgalaxy@akamai.com, kexec@lists.infradead.org
+Subject: [RFC v3 19/21] PKRAM: disable feature when running the kdump kernel
+Date: Wed, 26 Apr 2023 17:08:55 -0700
+Message-Id: <1682554137-13938-20-git-send-email-anthony.yznaga@oracle.com>
+X-Mailer: git-send-email 1.9.4
+In-Reply-To: <1682554137-13938-1-git-send-email-anthony.yznaga@oracle.com>
+References: <1682554137-13938-1-git-send-email-anthony.yznaga@oracle.com>
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-04-26_10,2023-04-26_03,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 phishscore=0 bulkscore=0
+ mlxlogscore=999 malwarescore=0 mlxscore=0 spamscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2303200000
+ definitions=main-2304270000
+X-Proofpoint-ORIG-GUID: jPzpZYiuahk2b6x6CL1T4-5GRvhXf1gU
+X-Proofpoint-GUID: jPzpZYiuahk2b6x6CL1T4-5GRvhXf1gU
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230425_062112_442597_6298EDD6 
-X-CRM114-Status: GOOD (  16.79  )
+X-CRM114-CacheID: sfid-20230426_170956_572141_A72F791A 
+X-CRM114-Status: GOOD (  18.73  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -69,82 +92,59 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+The kdump kernel should not preserve or restore pages.
 
-On 2023/4/10 21:05, Chen Jiahao wrote:
-> On riscv, the current crash kernel allocation logic is trying to
-> allocate within 32bit addressible memory region by default, if
-> failed, try to allocate without 4G restriction.
->
-> In need of saving DMA zone memory while allocating a relatively large
-> crash kernel region, allocating the reserved memory top down in
-> high memory, without overlapping the DMA zone, is a mature solution.
-> Hence this patchset introduces the parameter option crashkernel=X,[high,low].
->
-> One can reserve the crash kernel from high memory above DMA zone range
-> by explicitly passing "crashkernel=X,high"; or reserve a memory range
-> below 4G with "crashkernel=X,low". Besides, there are few rules need
-> to take notice:
-> 1. "crashkernel=X,[high,low]" will be ignored if "crashkernel=size"
->     is specified.
-> 2. "crashkernel=X,low" is valid only when "crashkernel=X,high" is passed
->     and there is enough memory to be allocated under 4G.
-> 3. When allocating crashkernel above 4G and no "crashkernel=X,low" is
->     specified, a 128M low memory will be allocated automatically for
->     swiotlb bounce buffer.
-> See Documentation/admin-guide/kernel-parameters.txt for more information.
->
-> To verify loading the crashkernel, adapted kexec-tools is attached below:
-> https://github.com/chenjh005/kexec-tools/tree/build-test-riscv-v2
->
-> Following test cases have been performed as expected:
-> 1) crashkernel=256M                          //low=256M
-> 2) crashkernel=1G                            //low=1G
-> 3) crashkernel=4G                            //high=4G, low=128M(default)
-> 4) crashkernel=4G crashkernel=256M,high      //high=4G, low=128M(default), high is ignored
-> 5) crashkernel=4G crashkernel=256M,low       //high=4G, low=128M(default), low is ignored
-> 6) crashkernel=4G,high                       //high=4G, low=128M(default)
-> 7) crashkernel=256M,low                      //low=0M, invalid
-> 8) crashkernel=4G,high crashkernel=256M,low  //high=4G, low=256M
-> 9) crashkernel=4G,high crashkernel=4G,low    //high=0M, low=0M, invalid
-> 10) crashkernel=512M@0xd0000000              //low=512M
-> 11) crashkernel=1G@0xe0000000                //high=0M, low=0M, no enough low memory, failed
->
-> Changes since [v4]:
-> 1. Update some imprecise code comments for cmdline parsing.
->
-> Changes since [v3]:
-> 1. Update to print warning and return explicitly on failure when
->     crashkernel=size@offset is specified. Not changing the result
->     in this case but making the logic more straightforward.
-> 2. Some minor cleanup.
->
-> Changes since [v2]:
-> 1. Update the allocation logic to ensure the high crashkernel
->     region is reserved strictly above dma32_phys_limit.
-> 2. Clean up some minor format problems.
->
-> Chen Jiahao (2):
->    riscv: kdump: Implement crashkernel=X,[high,low]
->    docs: kdump: Update the crashkernel description for riscv
->
->   .../admin-guide/kernel-parameters.txt         | 15 ++--
->   arch/riscv/kernel/setup.c                     |  5 ++
->   arch/riscv/mm/init.c                          | 71 +++++++++++++++++--
->   3 files changed, 79 insertions(+), 12 deletions(-)
+Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
+---
+ mm/pkram.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-Hi folks,
-
-The current version has fix all problems up-to-date, please let me know
-if there is any other bug, or somewhere not quiet correct. Thanks for
-looking into this.
-
-Best Regards,
-Jiahao
+diff --git a/mm/pkram.c b/mm/pkram.c
+index d404e415f3cb..f38236e5d836 100644
+--- a/mm/pkram.c
++++ b/mm/pkram.c
+@@ -1,4 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
++#include <linux/crash_dump.h>
+ #include <linux/err.h>
+ #include <linux/gfp.h>
+ #include <linux/highmem.h>
+@@ -188,7 +189,7 @@ void __init pkram_reserve(void)
+ {
+ 	int err = 0;
+ 
+-	if (!pkram_sb_pfn)
++	if (!pkram_sb_pfn || is_kdump_kernel())
+ 		return;
+ 
+ 	pr_info("PKRAM: Examining preserved memory...\n");
+@@ -285,6 +286,9 @@ static void pkram_show_banned(void)
+ 	int i;
+ 	unsigned long n, total = 0;
+ 
++	if (is_kdump_kernel())
++		return;
++
+ 	pr_info("PKRAM: banned regions:\n");
+ 	for (i = 0; i < nr_banned; i++) {
+ 		n = banned[i].end - banned[i].start + 1;
+@@ -1334,7 +1338,7 @@ static int __init pkram_init_sb(void)
+ 
+ static int __init pkram_init(void)
+ {
+-	if (pkram_init_sb()) {
++	if (!is_kdump_kernel() && pkram_init_sb()) {
+ 		register_reboot_notifier(&pkram_reboot_notifier);
+ 		register_shrinker(&banned_pages_shrinker, "pkram");
+ 		sysfs_update_group(kernel_kobj, &pkram_attr_group);
+-- 
+1.9.4
 
 
 _______________________________________________
