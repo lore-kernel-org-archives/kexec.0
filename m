@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6D4BDC7618E
-	for <kexec@archiver.kernel.org>; Thu, 27 Apr 2023 00:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 31A8BC77B7C
+	for <kexec@archiver.kernel.org>; Thu, 27 Apr 2023 00:10:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:MIME-Version:List-Subscribe:List-Help:
 	List-Post:List-Archive:List-Unsubscribe:List-Id:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=/Mxcf6sG2KmeGevnjGw9yevd0wnVKNQcZtlPZmdy4Rk=; b=3VIFWuxnqjgsmM
-	jP0XFcj5CWUg03U2am0fC19cS0kbmDEe79Fhga1iGAVO7Y3qG3UYnbhRKzbwR+m7Y9PBQkPEd3CPi
-	1seUlW3QSBWTdG3znKE+eQPirfM8gCqql1JG/g9y5y+mt7eFFODOeIiLoRLfpJI+TMUknGT1U5/2L
-	gEVw1y/+aKxEJcLBlYiJ2KK0VVh5hwWBZOhOLfn7n/xoIPuphuIqktqe7fz2sGw9Yny2Kcd8mBMZu
-	2VFLYB6vQKAyDU7ZdGJDc6LY1dYg/OOTiH+JgYknfRIg/tb+dKBDHjzFQU0gzeMrCzHpNZT8ypp6G
-	cLNVvNuzxwVubM0TWKcg==;
+	List-Owner; bh=mDhdyEGua67MCUd2oFl/8g2N9gCFX9nXJXwcEGBfic4=; b=AdZnXmhrzQblia
+	OycjH/QilytefFJbUsyH1FVeCla6cFJcQWYmoe4wdNC5TyZ+BSZrh/xZdz2CD6kF7vzsLOsyeTM/9
+	a6V9MqOAoxiBiBZBHvmW4bBZFE4L/emX1MXtG2xeHgOrsKk8+Q9+NxzxPYJKJKstxiyP8c8FxMjoI
+	t75mr83kdyosRE2xUkkWCPMTNao+bo/b3DZnl/ZKHXY4JtE6/Xsx44glPCYL7QmZZKcXBoPGH9fvg
+	StyVEDji/86tiRMIP63EDtHnA2JbMq715cM24209cSiCbUv748+QJ92XUEyfRdhk7ddvlqGj29hFQ
+	5dck5wAPpuzRBHqDO3gA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1prpDF-0056ls-0f;
+	id 1prpDF-0056mz-2n;
 	Thu, 27 Apr 2023 00:10:17 +0000
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1prpD2-0056XG-1O
+	id 1prpD1-0056WQ-1W
 	for kexec@lists.infradead.org;
 	Thu, 27 Apr 2023 00:10:09 +0000
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33QGwraY017018;
-	Thu, 27 Apr 2023 00:09:19 GMT
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33QGxD1d025310;
+	Thu, 27 Apr 2023 00:09:12 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2023-03-30;
- bh=TFcTuHsIv/plzZmdlp1y8kigeEeyXo4KMEAxl9EnHkE=;
- b=Zggh1E8czE4x4ifpjvsDspPPPFrTZtGY0vjQy73xEQSQJCKBnE4cJTj4k5BJ5EXzz1Su
- KsiwjlUDFJNM0uU2OJB/zM5Bm9iqCJeuDWrpQ/MKoHxEXp0zMW1mIqKa3m5N4CQormOS
- z7FEU3qe7EeyswcxhsWF8wXz9MgbSVFiSArjA8dRyMlNb/JnPJC7N6VrgImA1wYTkyxp
- ctCaI/TG+W5xh1cBKNImbW8wT7qmLf4zR/nm8RB1KqjFdQRqFLyQoSuKmPAtJLhdvsAQ
- FQE42ee6cVT5V1dU/kk3KMCHIgvH2DN3bPq0HhRluiybIMW2fDFh36w+3T5LamXb1skG hA== 
+ bh=M8m1jpfuKsBAiOuFoEkjKkL2mHa5vwe/lnUsSpAdeqY=;
+ b=XioIQjRsKO55if7qU5pc5RmHJ7+xiiutqegxkqaBdyQfIyM/ZkyhCK464QKjJLnxrdmt
+ qfFhb26IJfPS5NrhO41Fd7xLL/JUqLb2zwxT1JipnXsUch18NntSN6ysSHKmoqiuDvv8
+ UTBTXwdjJbiMdb65OtwieFuuVoojyf3WE8H67z6EwxDbSnkTVFT1lOERHjEV+vVNpX61
+ Ib3BI/N2BlYpkNNE/ID2hr5v1pz35CmC/13qXlClCcLN2nevgrzffP8hHOs7I0uxSz9Y
+ ppfwpanX2o5Wl8U9+t5Gu1Rj0PFXIxFyaD66RUZewzyXug20mDDAkAGIr2R2GeXnwI6p RA== 
 Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3q476u2ng3-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3q46622txw-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 27 Apr 2023 00:09:18 +0000
+	Thu, 27 Apr 2023 00:09:11 +0000
 Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 33QLgiYb007654;
-	Thu, 27 Apr 2023 00:09:18 GMT
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 33QM05AR007142;
+	Thu, 27 Apr 2023 00:09:11 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3q4618mpgv-1
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3q4618mpc0-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 27 Apr 2023 00:09:17 +0000
+	Thu, 27 Apr 2023 00:09:10 +0000
 Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 33R0938e013888;
-	Thu, 27 Apr 2023 00:09:17 GMT
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 33R0938U013888;
+	Thu, 27 Apr 2023 00:09:10 GMT
 Received: from ca-qasparc-x86-2.us.oracle.com (ca-qasparc-x86-2.us.oracle.com [10.147.24.103])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3q4618mp42-10;
-	Thu, 27 Apr 2023 00:09:17 +0000
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3q4618mp42-5;
+	Thu, 27 Apr 2023 00:09:10 +0000
 From: Anthony Yznaga <anthony.yznaga@oracle.com>
 To: linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
@@ -63,9 +63,9 @@ Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
         ebiederm@xmission.com, keescook@chromium.org, graf@amazon.com,
         jason.zeng@intel.com, lei.l.li@intel.com, steven.sistare@oracle.com,
         fam.zheng@bytedance.com, mgalaxy@akamai.com, kexec@lists.infradead.org
-Subject: [RFC v3 09/21] PKRAM: pass a list of preserved ranges to the next kernel
-Date: Wed, 26 Apr 2023 17:08:45 -0700
-Message-Id: <1682554137-13938-10-git-send-email-anthony.yznaga@oracle.com>
+Subject: [RFC v3 04/21] mm: PKRAM: implement folio stream operations
+Date: Wed, 26 Apr 2023 17:08:40 -0700
+Message-Id: <1682554137-13938-5-git-send-email-anthony.yznaga@oracle.com>
 X-Mailer: git-send-email 1.9.4
 In-Reply-To: <1682554137-13938-1-git-send-email-anthony.yznaga@oracle.com>
 References: <1682554137-13938-1-git-send-email-anthony.yznaga@oracle.com>
@@ -76,11 +76,11 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 ph
  mlxlogscore=999 malwarescore=0 mlxscore=0 spamscore=0 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2303200000
  definitions=main-2304270000
-X-Proofpoint-GUID: xTHpC9CzAHAd5dZprMjOHVznQrKD_GfJ
-X-Proofpoint-ORIG-GUID: xTHpC9CzAHAd5dZprMjOHVznQrKD_GfJ
+X-Proofpoint-ORIG-GUID: 9E3o04aE9ICIsw0HPe36rS9Y7E8_BkLp
+X-Proofpoint-GUID: 9E3o04aE9ICIsw0HPe36rS9Y7E8_BkLp
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230426_171004_593003_63E42267 
-X-CRM114-Status: GOOD (  31.90  )
+X-CRM114-CacheID: sfid-20230426_171003_531433_7FCB23BE 
+X-CRM114-Status: GOOD (  35.18  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -98,247 +98,506 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-In order to build a new memblock reserved list during boot that
-includes ranges preserved by the previous kernel, a list of preserved
-ranges is passed to the next kernel via the pkram superblock. The
-ranges are stored in ascending order in a linked list of pages. A more
-complete memblock list is not prepared to avoid possible conflicts with
-changes in a newer kernel and to avoid having to allocate a contiguous
-range larger than a page.
+Implement pkram_save_folio() to populate a PKRAM object with in-memory
+folios and pkram_load_folio() to load folios from a PKRAM object.
+Saving a folio to PKRAM is accomplished by recording its pfn, order,
+and mapping index and incrementing its refcount so that it will not
+be freed after the last user puts it.
 
+Originally-by: Vladimir Davydov <vdavydov.dev@gmail.com>
 Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
 ---
- mm/pkram.c | 184 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 177 insertions(+), 7 deletions(-)
+ include/linux/pkram.h |  42 ++++++-
+ mm/pkram.c            | 311 +++++++++++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 346 insertions(+), 7 deletions(-)
 
-diff --git a/mm/pkram.c b/mm/pkram.c
-index e6c0f3c52465..3790e5180feb 100644
---- a/mm/pkram.c
-+++ b/mm/pkram.c
-@@ -84,6 +84,20 @@ struct pkram_node {
- #define PKRAM_LOAD		2
- #define PKRAM_ACCMODE_MASK	3
+diff --git a/include/linux/pkram.h b/include/linux/pkram.h
+index 83718ad0e416..130ab5c2d94a 100644
+--- a/include/linux/pkram.h
++++ b/include/linux/pkram.h
+@@ -8,22 +8,47 @@
  
-+struct pkram_region {
-+	phys_addr_t base;
-+	phys_addr_t size;
-+};
-+
-+struct pkram_region_list {
-+	__u64	prev_pfn;
-+	__u64	next_pfn;
-+
-+	struct pkram_region regions[0];
-+};
-+
-+#define PKRAM_REGIONS_LIST_MAX \
-+	((PAGE_SIZE-sizeof(struct pkram_region_list))/sizeof(struct pkram_region))
- /*
-  * The PKRAM super block contains data needed to restore the preserved memory
-  * structure on boot. The pointer to it (pfn) should be passed via the 'pkram'
-@@ -96,13 +110,21 @@ struct pkram_node {
+ struct pkram_node;
+ struct pkram_obj;
++struct pkram_link;
+ 
+ /**
+  * enum pkram_data_flags - definition of data types contained in a pkram obj
+  * @PKRAM_DATA_none: No data types configured
++ * @PKRAM_DATA_folios: obj contains folio data
   */
- struct pkram_super_block {
- 	__u64	node_pfn;		/* first element of the node list */
-+	__u64	region_list_pfn;
-+	__u64	nr_regions;
+ enum pkram_data_flags {
+-	PKRAM_DATA_none		= 0x0,  /* No data types configured */
++	PKRAM_DATA_none		= 0x0,	/* No data types configured */
++	PKRAM_DATA_folios	= 0x1,	/* Contains folio data */
++};
++
++struct pkram_data_stream {
++	/* List of link pages to add/remove from */
++	__u64 *head_link_pfnp;
++	__u64 *tail_link_pfnp;
++
++	struct pkram_link *link;	/* current link */
++	unsigned int entry_idx;		/* next entry in link */
  };
  
-+static struct pkram_region_list *pkram_regions_list;
-+static int pkram_init_regions_list(void);
-+static unsigned long pkram_populate_regions_list(void);
+ struct pkram_stream {
+ 	gfp_t gfp_mask;
+ 	struct pkram_node *node;
+ 	struct pkram_obj *obj;
 +
- static unsigned long pkram_sb_pfn __initdata;
- static struct pkram_super_block *pkram_sb;
++	__u64 *folios_head_link_pfnp;
++	__u64 *folios_tail_link_pfnp;
++};
++
++struct pkram_folios_access {
++	unsigned long next_index;
+ };
  
- extern int pkram_add_identity_map(struct page *page);
- extern void pkram_remove_identity_map(struct page *page);
-+extern void pkram_find_preserved(unsigned long start, unsigned long end, void *private,
-+			int (*callback)(unsigned long base, unsigned long size, void *private));
+-struct pkram_access;
++struct pkram_access {
++	enum pkram_data_flags dtype;
++	struct pkram_stream *ps;
++	struct pkram_data_stream pds;
++
++	struct pkram_folios_access folios;
++};
+ 
+ #define PKRAM_NAME_MAX		256	/* including nul */
+ 
+@@ -41,8 +66,19 @@ int pkram_prepare_save(struct pkram_stream *ps, const char *name,
+ void pkram_finish_load(struct pkram_stream *ps);
+ void pkram_finish_load_obj(struct pkram_stream *ps);
+ 
++#define PKRAM_PDS_INIT(name, stream, type) {			\
++	.head_link_pfnp = (stream)->type##_head_link_pfnp,	\
++	.tail_link_pfnp = (stream)->type##_tail_link_pfnp,	\
++	}
++
++#define PKRAM_ACCESS_INIT(name, stream, type) {			\
++	.dtype = PKRAM_DATA_##type,				\
++	.ps = (stream),						\
++	.pds = PKRAM_PDS_INIT(name, stream, type),		\
++	}
++
+ #define PKRAM_ACCESS(name, stream, type)			\
+-	struct pkram_access name
++	struct pkram_access name = PKRAM_ACCESS_INIT(name, stream, type)
+ 
+ void pkram_finish_access(struct pkram_access *pa, bool status_ok);
+ 
+diff --git a/mm/pkram.c b/mm/pkram.c
+index 6e3895cb9872..610ff7a88c98 100644
+--- a/mm/pkram.c
++++ b/mm/pkram.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/err.h>
+ #include <linux/gfp.h>
++#include <linux/io.h>
+ #include <linux/kernel.h>
+ #include <linux/list.h>
+ #include <linux/mm.h>
+@@ -10,8 +11,40 @@
+ #include <linux/string.h>
+ #include <linux/types.h>
+ 
++#include "internal.h"
++
++
++/*
++ * Represents a reference to a data page saved to PKRAM.
++ */
++typedef __u64 pkram_entry_t;
++
++#define PKRAM_ENTRY_FLAGS_SHIFT	0x5
++#define PKRAM_ENTRY_FLAGS_MASK	0x7f
++#define PKRAM_ENTRY_ORDER_MASK	0x1f
++
++/*
++ * Keeps references to folios saved to PKRAM.
++ * The structure occupies a memory page.
++ */
++struct pkram_link {
++	__u64	link_pfn;	/* points to the next link of the object */
++	__u64	index;		/* mapping index of first pkram_entry_t */
++
++	/*
++	 * the array occupies the rest of the link page; if the link is not
++	 * full, the rest of the array must be filled with zeros
++	 */
++	pkram_entry_t entry[];
++};
++
++#define PKRAM_LINK_ENTRIES_MAX \
++	((PAGE_SIZE-sizeof(struct pkram_link))/sizeof(pkram_entry_t))
++
+ struct pkram_obj {
+-	__u64   obj_pfn;	/* points to the next object in the list */
++	__u64	folios_head_link_pfn;	/* the first folios link of the object */
++	__u64	folios_tail_link_pfn;	/* the last folios link of the object */
++	__u64	obj_pfn;	/* points to the next object in the list */
+ };
  
  /*
-  * For convenience sake PKRAM nodes are kept in an auxiliary doubly-linked list
-@@ -878,21 +900,48 @@ static void __pkram_reboot(void)
- 	struct page *page;
- 	struct pkram_node *node;
- 	unsigned long node_pfn = 0;
-+	unsigned long rl_pfn = 0;
-+	unsigned long nr_regions = 0;
-+	int err = 0;
- 
--	list_for_each_entry_reverse(page, &pkram_nodes, lru) {
--		node = page_address(page);
--		if (WARN_ON(node->flags & PKRAM_ACCMODE_MASK))
--			continue;
--		node->node_pfn = node_pfn;
--		node_pfn = page_to_pfn(page);
-+	if (!list_empty(&pkram_nodes)) {
-+		err = pkram_add_identity_map(virt_to_page(pkram_sb));
-+		if (err) {
-+			pr_err("PKRAM: failed to add super block to pagetable\n");
-+			goto done;
-+		}
-+		list_for_each_entry_reverse(page, &pkram_nodes, lru) {
-+			node = page_address(page);
-+			if (WARN_ON(node->flags & PKRAM_ACCMODE_MASK))
-+				continue;
-+			node->node_pfn = node_pfn;
-+			node_pfn = page_to_pfn(page);
-+		}
-+		err = pkram_init_regions_list();
-+		if (err) {
-+			pr_err("PKRAM: failed to init regions list\n");
-+			goto done;
-+		}
-+		nr_regions = pkram_populate_regions_list();
-+		if (IS_ERR_VALUE(nr_regions)) {
-+			err = nr_regions;
-+			pr_err("PKRAM: failed to populate regions list\n");
-+			goto done;
-+		}
-+		rl_pfn = page_to_pfn(virt_to_page(pkram_regions_list));
- 	}
- 
-+done:
- 	/*
- 	 * Zero out pkram_sb completely since it may have been passed from
- 	 * the previous boot.
- 	 */
- 	memset(pkram_sb, 0, PAGE_SIZE);
--	pkram_sb->node_pfn = node_pfn;
-+	if (!err && node_pfn) {
-+		pkram_sb->node_pfn = node_pfn;
-+		pkram_sb->region_list_pfn = rl_pfn;
-+		pkram_sb->nr_regions = nr_regions;
-+	}
+@@ -19,6 +52,10 @@ struct pkram_obj {
+  * independently of each other. The nodes are identified by unique name
+  * strings.
+  *
++ * References to folios saved to a preserved memory node are kept in a
++ * singly-linked list of PKRAM link structures (see above), the node has a
++ * pointer to the head of.
++ *
+  * The structure occupies a memory page.
+  */
+ struct pkram_node {
+@@ -68,6 +105,41 @@ static struct pkram_node *pkram_find_node(const char *name)
+ 	return NULL;
  }
  
- static int pkram_reboot(struct notifier_block *notifier,
-@@ -968,3 +1017,124 @@ static int __init pkram_init(void)
- 	return 0;
- }
- module_init(pkram_init);
-+
-+static int count_region_cb(unsigned long base, unsigned long size, void *private)
++static void pkram_truncate_link(struct pkram_link *link)
 +{
-+	unsigned long *nr_regions = (unsigned long *)private;
++	struct page *page;
++	pkram_entry_t p;
++	int i;
 +
-+	(*nr_regions)++;
++	for (i = 0; i < PKRAM_LINK_ENTRIES_MAX; i++) {
++		p = link->entry[i];
++		if (!p)
++			continue;
++		page = pfn_to_page(PHYS_PFN(p));
++		put_page(page);
++	}
++}
++
++static void pkram_truncate_links(unsigned long link_pfn)
++{
++	struct pkram_link *link;
++
++	while (link_pfn) {
++		link = pfn_to_kaddr(link_pfn);
++		pkram_truncate_link(link);
++		link_pfn = link->link_pfn;
++		pkram_free_page(link);
++		cond_resched();
++	}
++}
++
++static void pkram_truncate_obj(struct pkram_obj *obj)
++{
++	pkram_truncate_links(obj->folios_head_link_pfn);
++	obj->folios_head_link_pfn = 0;
++	obj->folios_tail_link_pfn = 0;
++}
++
+ static void pkram_truncate_node(struct pkram_node *node)
+ {
+ 	unsigned long obj_pfn;
+@@ -76,6 +148,7 @@ static void pkram_truncate_node(struct pkram_node *node)
+ 	obj_pfn = node->obj_pfn;
+ 	while (obj_pfn) {
+ 		obj = pfn_to_kaddr(obj_pfn);
++		pkram_truncate_obj(obj);
+ 		obj_pfn = obj->obj_pfn;
+ 		pkram_free_page(obj);
+ 		cond_resched();
+@@ -83,6 +156,84 @@ static void pkram_truncate_node(struct pkram_node *node)
+ 	node->obj_pfn = 0;
+ }
+ 
++static void pkram_add_link(struct pkram_link *link, struct pkram_data_stream *pds)
++{
++	__u64 link_pfn = page_to_pfn(virt_to_page(link));
++
++	if (!*pds->head_link_pfnp) {
++		*pds->head_link_pfnp = link_pfn;
++		*pds->tail_link_pfnp = link_pfn;
++	} else {
++		struct pkram_link *tail = pfn_to_kaddr(*pds->tail_link_pfnp);
++
++		tail->link_pfn = link_pfn;
++		*pds->tail_link_pfnp = link_pfn;
++	}
++}
++
++static struct pkram_link *pkram_remove_link(struct pkram_data_stream *pds)
++{
++	struct pkram_link *link;
++
++	if (!*pds->head_link_pfnp)
++		return NULL;
++
++	link = pfn_to_kaddr(*pds->head_link_pfnp);
++	*pds->head_link_pfnp = link->link_pfn;
++	if (!*pds->head_link_pfnp)
++		*pds->tail_link_pfnp = 0;
++	else
++		link->link_pfn = 0;
++
++	return link;
++}
++
++static struct pkram_link *pkram_new_link(struct pkram_data_stream *pds, gfp_t gfp_mask)
++{
++	struct pkram_link *link;
++	struct page *link_page;
++
++	link_page = pkram_alloc_page((gfp_mask & GFP_RECLAIM_MASK) |
++				    __GFP_ZERO);
++	if (!link_page)
++		return NULL;
++
++	link = page_address(link_page);
++	pkram_add_link(link, pds);
++	pds->link = link;
++	pds->entry_idx = 0;
++
++	return link;
++}
++
++static void pkram_add_link_entry(struct pkram_data_stream *pds, struct page *page)
++{
++	struct pkram_link *link = pds->link;
++	pkram_entry_t p;
++	short flags = 0;
++
++	p = page_to_phys(page);
++	p |= compound_order(page);
++	p |= ((flags & PKRAM_ENTRY_FLAGS_MASK) << PKRAM_ENTRY_FLAGS_SHIFT);
++	link->entry[pds->entry_idx] = p;
++	pds->entry_idx++;
++}
++
++static int pkram_next_link(struct pkram_data_stream *pds, struct pkram_link **linkp)
++{
++	struct pkram_link *link;
++
++	link = pkram_remove_link(pds);
++	if (!link)
++		return -ENODATA;
++
++	pds->link = link;
++	pds->entry_idx = 0;
++	*linkp = link;
++
 +	return 0;
 +}
 +
-+static unsigned long pkram_count_regions(void)
-+{
-+	unsigned long nr_regions = 0;
+ static void pkram_stream_init(struct pkram_stream *ps,
+ 			     struct pkram_node *node, gfp_t gfp_mask)
+ {
+@@ -159,6 +310,9 @@ int pkram_prepare_save_obj(struct pkram_stream *ps, enum pkram_data_flags flags)
+ 
+ 	BUG_ON((node->flags & PKRAM_ACCMODE_MASK) != PKRAM_SAVE);
+ 
++	if (flags & ~PKRAM_DATA_folios)
++		return -EINVAL;
 +
-+	pkram_find_preserved(0, PHYS_ADDR_MAX, &nr_regions, count_region_cb);
+ 	page = pkram_alloc_page(ps->gfp_mask | __GFP_ZERO);
+ 	if (!page)
+ 		return -ENOMEM;
+@@ -168,6 +322,10 @@ int pkram_prepare_save_obj(struct pkram_stream *ps, enum pkram_data_flags flags)
+ 		obj->obj_pfn = node->obj_pfn;
+ 	node->obj_pfn = page_to_pfn(page);
+ 
++	if (flags & PKRAM_DATA_folios) {
++		ps->folios_head_link_pfnp = &obj->folios_head_link_pfn;
++		ps->folios_tail_link_pfnp = &obj->folios_tail_link_pfn;
++	}
+ 	ps->obj = obj;
+ 	return 0;
+ }
+@@ -274,8 +432,17 @@ int pkram_prepare_load_obj(struct pkram_stream *ps)
+ 		return -ENODATA;
+ 
+ 	obj = pfn_to_kaddr(node->obj_pfn);
++	if (!obj->folios_head_link_pfn) {
++		WARN_ON(1);
++		return -EINVAL;
++	}
 +
-+	return nr_regions;
+ 	node->obj_pfn = obj->obj_pfn;
+ 
++	if (obj->folios_head_link_pfn) {
++		ps->folios_head_link_pfnp = &obj->folios_head_link_pfn;
++		ps->folios_tail_link_pfnp = &obj->folios_tail_link_pfn;
++	}
+ 	ps->obj = obj;
+ 	return 0;
+ }
+@@ -292,6 +459,7 @@ void pkram_finish_load_obj(struct pkram_stream *ps)
+ 
+ 	BUG_ON((node->flags & PKRAM_ACCMODE_MASK) != PKRAM_LOAD);
+ 
++	pkram_truncate_obj(obj);
+ 	pkram_free_page(obj);
+ }
+ 
+@@ -317,7 +485,41 @@ void pkram_finish_load(struct pkram_stream *ps)
+  */
+ void pkram_finish_access(struct pkram_access *pa, bool status_ok)
+ {
+-	WARN_ON_ONCE(1);
++	if (status_ok)
++		return;
++
++	if (pa->ps->node->flags == PKRAM_SAVE)
++		return;
++
++	if (pa->pds.link)
++		pkram_truncate_link(pa->pds.link);
 +}
 +
 +/*
-+ * To faciliate rapidly building a new memblock reserved list during boot
-+ * with the addition of preserved memory ranges a regions list is built
-+ * before reboot.
-+ * The regions list is a linked list of pages with each page containing an
-+ * array of preserved memory ranges.  The ranges are stored in each page
-+ * and across the list in address order.  A linked list is used rather than
-+ * a single contiguous range to mitigate against the possibility that a
-+ * larger, contiguous allocation may fail due to fragmentation.
-+ *
-+ * Since the pages of the regions list must be preserved and the pkram
-+ * pagetable is used to determine what ranges are preserved, the list pages
-+ * must be allocated and represented in the pkram pagetable before they can
-+ * be populated.  Rather than recounting the number of regions after
-+ * allocating pages and repeating until a precise number of pages are
-+ * allocated, the number of pages needed is estimated.
++ * Add a page to a PKRAM obj allocating a new PKRAM link if necessary.
 + */
-+static int pkram_init_regions_list(void)
++static int __pkram_save_page(struct pkram_access *pa, struct page *page,
++			     unsigned long index)
 +{
-+	struct pkram_region_list *rl;
-+	unsigned long nr_regions;
-+	unsigned long nr_lpages;
++	struct pkram_data_stream *pds = &pa->pds;
++	struct pkram_link *link = pds->link;
++
++	if (!link || pds->entry_idx >= PKRAM_LINK_ENTRIES_MAX ||
++	    index != pa->folios.next_index) {
++		link = pkram_new_link(pds, pa->ps->gfp_mask);
++		if (!link)
++			return -ENOMEM;
++
++		pa->folios.next_index = link->index = index;
++	}
++
++	get_page(page);
++
++	pkram_add_link_entry(pds, page);
++
++	pa->folios.next_index += compound_nr(page);
++
++	return 0;
+ }
+ 
+ /**
+@@ -327,10 +529,102 @@ void pkram_finish_access(struct pkram_access *pa, bool status_ok)
+  * with PKRAM_ACCESS().
+  *
+  * Returns 0 on success, -errno on failure.
++ *
++ * Error values:
++ *	%ENOMEM: insufficient amount of memory available
++ *
++ * Saving a folio to preserved memory is simply incrementing its refcount so
++ * that it will not get freed after the last user puts it. That means it is
++ * safe to use the folio as usual after it has been saved.
+  */
+ int pkram_save_folio(struct pkram_access *pa, struct folio *folio)
+ {
+-	return -EINVAL;
++	struct pkram_node *node = pa->ps->node;
++	struct page *page = folio_page(folio, 0);
++
++	BUG_ON((node->flags & PKRAM_ACCMODE_MASK) != PKRAM_SAVE);
++
++	return __pkram_save_page(pa, page, page->index);
++}
++
++static struct page *__pkram_prep_load_page(pkram_entry_t p)
++{
++	struct page *page;
++	int order;
++	short flags;
++
++	flags = (p >> PKRAM_ENTRY_FLAGS_SHIFT) & PKRAM_ENTRY_FLAGS_MASK;
++	order = p & PKRAM_ENTRY_ORDER_MASK;
++	if (order >= MAX_ORDER)
++		goto out_error;
++
++	page = pfn_to_page(PHYS_PFN(p));
++
++	if (!page_ref_freeze(pg, 1)) {
++		pr_err("PKRAM preserved page has unexpected inflated ref count\n");
++		goto out_error;
++	}
++
++	if (order) {
++		prep_compound_page(page, order);
++		if (order > 1)
++			prep_transhuge_page(page);
++	}
++
++	page_ref_unfreeze(page, 1);
++
++	return page;
++
++out_error:
++	return ERR_PTR(-EINVAL);
++}
++
++/*
++ * Extract the next page from preserved memory freeing a PKRAM link if it
++ * becomes empty.
++ */
++static struct page *__pkram_load_page(struct pkram_access *pa, unsigned long *index)
++{
++	struct pkram_data_stream *pds = &pa->pds;
++	struct pkram_link *link = pds->link;
++	struct page *page;
++	pkram_entry_t p;
++	int ret;
++
++	if (!link) {
++		ret = pkram_next_link(pds, &link);
++		if (ret)
++			return NULL;
++
++		if (index)
++			pa->folios.next_index = link->index;
++	}
++
++	BUG_ON(pds->entry_idx >= PKRAM_LINK_ENTRIES_MAX);
++
++	p = link->entry[pds->entry_idx];
++	BUG_ON(!p);
++
++	page = __pkram_prep_load_page(p);
++	if (IS_ERR(page))
++		return page;
++
++	if (index) {
++		*index = pa->folios.next_index;
++		pa->folios.next_index += compound_nr(page);
++	}
++
++	/* clear to avoid double free (see pkram_truncate_link()) */
++	link->entry[pds->entry_idx] = 0;
++
++	pds->entry_idx++;
++	if (pds->entry_idx >= PKRAM_LINK_ENTRIES_MAX ||
++	    !link->entry[pds->entry_idx]) {
++		pds->link = NULL;
++		pkram_free_page(link);
++	}
++
++	return page;
+ }
+ 
+ /**
+@@ -348,7 +642,16 @@ int pkram_save_folio(struct pkram_access *pa, struct folio *folio)
+  */
+ struct folio *pkram_load_folio(struct pkram_access *pa, unsigned long *index)
+ {
+-	return NULL;
++	struct pkram_node *node = pa->ps->node;
 +	struct page *page;
 +
-+	nr_regions = pkram_count_regions();
++	BUG_ON((node->flags & PKRAM_ACCMODE_MASK) != PKRAM_LOAD);
 +
-+	nr_lpages = DIV_ROUND_UP(nr_regions, PKRAM_REGIONS_LIST_MAX);
-+	nr_regions += nr_lpages;
-+	nr_lpages = DIV_ROUND_UP(nr_regions, PKRAM_REGIONS_LIST_MAX);
-+
-+	for (; nr_lpages; nr_lpages--) {
-+		page = pkram_alloc_page(GFP_KERNEL | __GFP_ZERO);
-+		if (!page)
-+			return -ENOMEM;
-+		rl = page_address(page);
-+		if (pkram_regions_list) {
-+			rl->next_pfn = page_to_pfn(virt_to_page(pkram_regions_list));
-+			pkram_regions_list->prev_pfn = page_to_pfn(page);
-+		}
-+		pkram_regions_list = rl;
-+	}
-+
-+	return 0;
-+}
-+
-+struct pkram_regions_priv {
-+	struct pkram_region_list *curr;
-+	struct pkram_region_list *last;
-+	unsigned long nr_regions;
-+	int idx;
-+};
-+
-+static int add_region_cb(unsigned long base, unsigned long size, void *private)
-+{
-+	struct pkram_regions_priv *priv;
-+	struct pkram_region_list *rl;
-+	int i;
-+
-+	priv = (struct pkram_regions_priv *)private;
-+	rl = priv->curr;
-+	i = priv->idx;
-+
-+	if (!rl) {
-+		WARN_ON(1);
-+		return 1;
-+	}
-+
-+	if (!i)
-+		priv->last = priv->curr;
-+
-+	rl->regions[i].base = base;
-+	rl->regions[i].size = size;
-+
-+	priv->nr_regions++;
-+	i++;
-+	if (i == PKRAM_REGIONS_LIST_MAX) {
-+		u64 next_pfn = rl->next_pfn;
-+
-+		if (next_pfn)
-+			priv->curr = pfn_to_kaddr(next_pfn);
-+		else
-+			priv->curr = NULL;
-+
-+		i = 0;
-+	}
-+	priv->idx = i;
-+
-+	return 0;
-+}
-+
-+static unsigned long pkram_populate_regions_list(void)
-+{
-+	struct pkram_regions_priv priv = { .curr = pkram_regions_list };
-+
-+	pkram_find_preserved(0, PHYS_ADDR_MAX, &priv, add_region_cb);
-+
-+	/*
-+	 * Link the first node to the last populated one.
-+	 */
-+	pkram_regions_list->prev_pfn = page_to_pfn(virt_to_page(priv.last));
-+
-+	return priv.nr_regions;
-+}
++	page = __pkram_load_page(pa, index);
++	if (IS_ERR_OR_NULL(page))
++		return (struct folio *)page;
++	else
++		return page_folio(page);
+ }
+ 
+ /**
 -- 
 1.9.4
 
