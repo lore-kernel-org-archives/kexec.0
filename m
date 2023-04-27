@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 13F30C7EE24
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 83186C7EE23
 	for <kexec@archiver.kernel.org>; Thu, 27 Apr 2023 00:10:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
@@ -12,49 +12,49 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	List-Post:List-Archive:List-Unsubscribe:List-Id:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=u5k1Dvn5Gl8WzqwaeVcYIxBPCkU0oUGHRm4+Xi9BtM0=; b=uWe1OZ4Is1BpbL
-	CuIP/xjIDtqfNTvoVeHxniETv7ce17CR8ZCgWDjgfcDx+0C7TE/HkXBVqy7UtLnZfYRDdvK7ZzTrN
-	KMQRxe91kd25L2/MgPbwNRhIGlLZ54Ki66YWSbBFdDU3CUCMzQi9B6owT+ruH8la8+cXb2N5hxZhv
-	UutW7d2o7qQGVxXj6V90V/w98TvHgErCCj7TlU/laOy8AOsZDFjH2roZaj0MQFX/z/87PX9N4dfZS
-	NpnyFasRlcmBqZyJM92yeyPuvktfi2OkzopPvJMwj46KIBRdk0Ol97+oHBDc/+3fwxDlSgOp7CoAe
-	p3CJl0osOwdylxPwkM+g==;
+	List-Owner; bh=J+aXA10igLAis8zeH9djbmB+Pd36urtWKQrNDq80C3g=; b=gJPGG/lAl8RLz9
+	Lm13xxUEheNWhbb7HNwkB6oGf1EaKf5fSPWanF5X5BErDwJVxr8u5x8BLopn/H84cpOhJDr8cdYsn
+	TECuNB30XXESBNcwXcbkpmgV/gfN2vosTXE6Lk5YKv6hh/xA/AbTbRCoQPzhQguT0vA4+ePt5aCZE
+	SdxtTP8YOFIudKfn+vyVCRajUbbVJALvfVFQHhDQN9ZjfLW9QVuXhhApElDlfNrzld9G5FCY5564b
+	vSXICZjN/iwPsmj1BzcKQ1/xWhnaq+h183B2mxDFC/wN7x+K6zDJm4xxINrS6uq1ggILb7UTgfULw
+	Wd6uYbX8QBmveVaq7yOg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1prpD0-0056Vl-1o;
-	Thu, 27 Apr 2023 00:10:02 +0000
+	id 1prpCz-0056Tc-1b;
+	Thu, 27 Apr 2023 00:10:01 +0000
 Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1prpCu-0056P0-2c
+	id 1prpCu-0056OL-1o
 	for kexec@lists.infradead.org;
 	Thu, 27 Apr 2023 00:09:59 +0000
 Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33QGxEtw025349;
-	Thu, 27 Apr 2023 00:09:09 GMT
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33QGxES2025338;
+	Thu, 27 Apr 2023 00:09:22 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2023-03-30;
- bh=2ukFf+zRaNRmI8y9b//d4HHLWejv/e/RSSnUHKNUOb0=;
- b=TxlrwQ0h7qFCJaeuzgzyEU0pAR/9XxEhbPIoeg6wR+uexwlVY+B8YNO/biu1qWN7dWsN
- zWja6dGffqrU7IioURUI0OMKQZQ9tuPCh7XG67qZectGRQhDmBVm+QZ5BEeNmOZgOdVi
- nwIybKeQicAO1qnGABVzNxIV9c/kc+TFYGvW3OrDaKffhxCBcJ2xvnKxbTw+ksNL93ET
- +3oK/5n13QLSew1loC2CozejsH8uV5iwonsq7XVCCgHaF7rHjDHPkQxkLHPsi67hbOyd
- YXklKe+yThp4IMn+e8XDiW13KH4eGybP1zScjsIW4e6WZfTZ9OYxWFtBQe1eEa6RptVa Hg== 
+ bh=qCn/KjOTilZ1uLUD9nUQPCZhyulY7CLY6Ex38w3zacI=;
+ b=Bm/jAfF05hZ41Po/Sldj/OVZEgh4vornvAX3ywU3g0/yLbdoYbJMFOMTp7C5akCX3fcZ
+ +pInqqlhBeWA1j5TPNcZ+6iEF6gS/F5sq1lf/buPv1WXX5wsj5gKfhyz8y8F710gFQvy
+ q3dmGfVJQxHlYBNf/drz3+bPaSYVMM92CKhQlUQu4PKBx+edhfUxVnE93LXz0l2c3jod
+ c0Yhtsq4U5CR9dYfi1acKahr/PyUR0HznCt6VPM22Bm0p28plaj/4tvVXewIDniGtxfB
+ U6VxuygBOvSiOhVsBYRZQ4FOX7K5ngh3ZyBqGktoa1h2pAyzX/SDB/RijrDDl5gqc2tg Fw== 
 Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3q46622txu-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3q46622ty5-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 27 Apr 2023 00:09:08 +0000
+	Thu, 27 Apr 2023 00:09:21 +0000
 Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 33QLGcu0007340;
-	Thu, 27 Apr 2023 00:09:07 GMT
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 33QNUjaf007380;
+	Thu, 27 Apr 2023 00:09:21 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3q4618mpab-1
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3q4618mpkr-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 27 Apr 2023 00:09:07 +0000
+	Thu, 27 Apr 2023 00:09:21 +0000
 Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 33R0938Q013888;
-	Thu, 27 Apr 2023 00:09:07 GMT
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 33R0938i013888;
+	Thu, 27 Apr 2023 00:09:20 GMT
 Received: from ca-qasparc-x86-2.us.oracle.com (ca-qasparc-x86-2.us.oracle.com [10.147.24.103])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3q4618mp42-3;
-	Thu, 27 Apr 2023 00:09:06 +0000
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3q4618mp42-12;
+	Thu, 27 Apr 2023 00:09:20 +0000
 From: Anthony Yznaga <anthony.yznaga@oracle.com>
 To: linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
@@ -63,9 +63,9 @@ Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
         ebiederm@xmission.com, keescook@chromium.org, graf@amazon.com,
         jason.zeng@intel.com, lei.l.li@intel.com, steven.sistare@oracle.com,
         fam.zheng@bytedance.com, mgalaxy@akamai.com, kexec@lists.infradead.org
-Subject: [RFC v3 02/21] mm: PKRAM: implement node load and save functions
-Date: Wed, 26 Apr 2023 17:08:38 -0700
-Message-Id: <1682554137-13938-3-git-send-email-anthony.yznaga@oracle.com>
+Subject: [RFC v3 11/21] mm: PKRAM: reserve preserved memory at boot
+Date: Wed, 26 Apr 2023 17:08:47 -0700
+Message-Id: <1682554137-13938-12-git-send-email-anthony.yznaga@oracle.com>
 X-Mailer: git-send-email 1.9.4
 In-Reply-To: <1682554137-13938-1-git-send-email-anthony.yznaga@oracle.com>
 References: <1682554137-13938-1-git-send-email-anthony.yznaga@oracle.com>
@@ -76,11 +76,11 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 ph
  mlxlogscore=999 malwarescore=0 mlxscore=0 spamscore=0 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2303200000
  definitions=main-2304270000
-X-Proofpoint-ORIG-GUID: BhiXjpaVT-IHUNxaCSxCFNS9jekWEvq_
-X-Proofpoint-GUID: BhiXjpaVT-IHUNxaCSxCFNS9jekWEvq_
+X-Proofpoint-ORIG-GUID: ePrmjbJOEXsn1MF-WbF_e2bo2djCeESw
+X-Proofpoint-GUID: ePrmjbJOEXsn1MF-WbF_e2bo2djCeESw
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230426_170956_859804_F2DB551C 
-X-CRM114-Status: GOOD (  27.67  )
+X-CRM114-CacheID: sfid-20230426_170956_610603_4CB94BEC 
+X-CRM114-Status: GOOD (  27.58  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -98,259 +98,220 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Preserved memory is divided into nodes which can be saved and loaded
-independently of each other. PKRAM nodes are kept on a list and
-identified by unique names. Whenever a save operation is initiated by
-calling pkram_prepare_save(), a new node is created and linked to the
-list. When the save operation has been committed by calling
-pkram_finish_save(), the node becomes loadable. A load operation can be
-then initiated by calling pkram_prepare_load() which deletes the node
-from the list and prepares the corresponding stream for loading data
-from it. After the load has been finished, the pkram_finish_load()
-function must be called to free the node. Nodes are also deleted when a
-save operation is discarded, i.e. pkram_discard_save() is called instead
-of pkram_finish_save().
+Keep preserved pages from being recycled during boot by adding them
+to the memblock reserved list during early boot. If memory reservation
+fails (e.g. a region has already been reserved), all preserved pages
+are dropped.
 
-Originally-by: Vladimir Davydov <vdavydov.dev@gmail.com>
 Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
 ---
- include/linux/pkram.h |   8 ++-
- mm/pkram.c            | 147 ++++++++++++++++++++++++++++++++++++++++++++++++--
- 2 files changed, 149 insertions(+), 6 deletions(-)
+ arch/x86/kernel/setup.c |  3 ++
+ arch/x86/mm/init_64.c   |  2 ++
+ include/linux/pkram.h   |  8 +++++
+ mm/pkram.c              | 84 ++++++++++++++++++++++++++++++++++++++++++++++---
+ 4 files changed, 92 insertions(+), 5 deletions(-)
 
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 16babff771bd..2806b21236d0 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -18,6 +18,7 @@
+ #include <linux/memblock.h>
+ #include <linux/panic_notifier.h>
+ #include <linux/pci.h>
++#include <linux/pkram.h>
+ #include <linux/root_dev.h>
+ #include <linux/hugetlb.h>
+ #include <linux/tboot.h>
+@@ -1221,6 +1222,8 @@ void __init setup_arch(char **cmdline_p)
+ 	initmem_init();
+ 	dma_contiguous_reserve(max_pfn_mapped << PAGE_SHIFT);
+ 
++	pkram_reserve();
++
+ 	if (boot_cpu_has(X86_FEATURE_GBPAGES))
+ 		hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
+ 
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index a190aae8ceaf..a46ffb434f39 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -34,6 +34,7 @@
+ #include <linux/gfp.h>
+ #include <linux/kcore.h>
+ #include <linux/bootmem_info.h>
++#include <linux/pkram.h>
+ 
+ #include <asm/processor.h>
+ #include <asm/bios_ebda.h>
+@@ -1339,6 +1340,7 @@ void __init mem_init(void)
+ 	after_bootmem = 1;
+ 	x86_init.hyper.init_after_bootmem();
+ 
++	totalram_pages_add(pkram_reserved_pages);
+ 	/*
+ 	 * Must be done after boot memory is put on freelist, because here we
+ 	 * might set fields in deferred struct pages that have not yet been
 diff --git a/include/linux/pkram.h b/include/linux/pkram.h
-index 57b8db4229a4..8def9017b16a 100644
+index b614e9059bba..53d5a1ec42ff 100644
 --- a/include/linux/pkram.h
 +++ b/include/linux/pkram.h
-@@ -6,6 +6,8 @@
- #include <linux/types.h>
- #include <linux/mm_types.h>
+@@ -99,4 +99,12 @@ int pkram_prepare_save(struct pkram_stream *ps, const char *name,
+ ssize_t pkram_write(struct pkram_access *pa, const void *buf, size_t count);
+ size_t pkram_read(struct pkram_access *pa, void *buf, size_t count);
  
-+struct pkram_node;
++#ifdef CONFIG_PKRAM
++extern unsigned long pkram_reserved_pages;
++void pkram_reserve(void);
++#else
++#define pkram_reserved_pages 0UL
++static inline void pkram_reserve(void) { }
++#endif
 +
- /**
-  * enum pkram_data_flags - definition of data types contained in a pkram obj
-  * @PKRAM_DATA_none: No data types configured
-@@ -14,7 +16,11 @@ enum pkram_data_flags {
- 	PKRAM_DATA_none		= 0x0,  /* No data types configured */
- };
- 
--struct pkram_stream;
-+struct pkram_stream {
-+	gfp_t gfp_mask;
-+	struct pkram_node *node;
-+};
-+
- struct pkram_access;
- 
- #define PKRAM_NAME_MAX		256	/* including nul */
+ #endif /* _LINUX_PKRAM_H */
 diff --git a/mm/pkram.c b/mm/pkram.c
-index 421de8211e05..bbfd8df0874e 100644
+index c649504fa1fa..b711f94dbef4 100644
 --- a/mm/pkram.c
 +++ b/mm/pkram.c
-@@ -2,16 +2,85 @@
- #include <linux/err.h>
- #include <linux/gfp.h>
- #include <linux/kernel.h>
-+#include <linux/list.h>
- #include <linux/mm.h>
-+#include <linux/mutex.h>
- #include <linux/pkram.h>
-+#include <linux/string.h>
- #include <linux/types.h>
+@@ -134,6 +134,8 @@ extern void pkram_find_preserved(unsigned long start, unsigned long end, void *p
+ static LIST_HEAD(pkram_nodes);			/* linked through page::lru */
+ static DEFINE_MUTEX(pkram_mutex);		/* serializes open/close */
  
++unsigned long __initdata pkram_reserved_pages;
++
+ /*
+  * The PKRAM super block pfn, see above.
+  */
+@@ -143,6 +145,59 @@ static int __init parse_pkram_sb_pfn(char *arg)
+ }
+ early_param("pkram", parse_pkram_sb_pfn);
+ 
++static void * __init pkram_map_meta(unsigned long pfn)
++{
++	if (pfn >= max_low_pfn)
++		return ERR_PTR(-EINVAL);
++	return pfn_to_kaddr(pfn);
++}
++
++int pkram_merge_with_reserved(void);
 +/*
-+ * Preserved memory is divided into nodes that can be saved or loaded
-+ * independently of each other. The nodes are identified by unique name
-+ * strings.
++ * Reserve pages that belong to preserved memory.
 + *
-+ * The structure occupies a memory page.
++ * This function should be called at boot time as early as possible to prevent
++ * preserved memory from being recycled.
 + */
-+struct pkram_node {
-+	__u32	flags;
-+
-+	__u8	name[PKRAM_NAME_MAX];
-+};
-+
-+#define PKRAM_SAVE		1
-+#define PKRAM_LOAD		2
-+#define PKRAM_ACCMODE_MASK	3
-+
-+static LIST_HEAD(pkram_nodes);			/* linked through page::lru */
-+static DEFINE_MUTEX(pkram_mutex);		/* serializes open/close */
-+
-+static inline struct page *pkram_alloc_page(gfp_t gfp_mask)
++void __init pkram_reserve(void)
 +{
-+	return alloc_page(gfp_mask);
-+}
-+
-+static inline void pkram_free_page(void *addr)
-+{
-+	free_page((unsigned long)addr);
-+}
-+
-+static inline void pkram_insert_node(struct pkram_node *node)
-+{
-+	list_add(&virt_to_page(node)->lru, &pkram_nodes);
-+}
-+
-+static inline void pkram_delete_node(struct pkram_node *node)
-+{
-+	list_del(&virt_to_page(node)->lru);
-+}
-+
-+static struct pkram_node *pkram_find_node(const char *name)
-+{
-+	struct page *page;
-+	struct pkram_node *node;
-+
-+	list_for_each_entry(page, &pkram_nodes, lru) {
-+		node = page_address(page);
-+		if (strcmp(node->name, name) == 0)
-+			return node;
-+	}
-+	return NULL;
-+}
-+
-+static void pkram_stream_init(struct pkram_stream *ps,
-+			     struct pkram_node *node, gfp_t gfp_mask)
-+{
-+	memset(ps, 0, sizeof(*ps));
-+	ps->gfp_mask = gfp_mask;
-+	ps->node = node;
-+}
-+
- /**
-  * Create a preserved memory node with name @name and initialize stream @ps
-  * for saving data to it.
-  *
-  * @gfp_mask specifies the memory allocation mask to be used when saving data.
-  *
-+ * Error values:
-+ *	%ENAMETOOLONG: name len >= PKRAM_NAME_MAX
-+ *	%ENOMEM: insufficient memory available
-+ *	%EEXIST: node with specified name already exists
-+ *
-  * Returns 0 on success, -errno on failure.
-  *
-  * After the save has finished, pkram_finish_save() (or pkram_discard_save() in
-@@ -19,7 +88,34 @@
-  */
- int pkram_prepare_save(struct pkram_stream *ps, const char *name, gfp_t gfp_mask)
- {
--	return -EINVAL;
-+	struct page *page;
-+	struct pkram_node *node;
 +	int err = 0;
 +
-+	if (strlen(name) >= PKRAM_NAME_MAX)
-+		return -ENAMETOOLONG;
++	if (!pkram_sb_pfn)
++		return;
 +
-+	page = pkram_alloc_page(gfp_mask | __GFP_ZERO);
-+	if (!page)
-+		return -ENOMEM;
-+	node = page_address(page);
++	pr_info("PKRAM: Examining preserved memory...\n");
 +
-+	node->flags = PKRAM_SAVE;
-+	strcpy(node->name, name);
-+
-+	mutex_lock(&pkram_mutex);
-+	if (!pkram_find_node(name))
-+		pkram_insert_node(node);
-+	else
-+		err = -EEXIST;
-+	mutex_unlock(&pkram_mutex);
-+	if (err) {
-+		pkram_free_page(node);
-+		return err;
-+	}
-+
-+	pkram_stream_init(ps, node, gfp_mask);
-+	return 0;
- }
- 
- /**
-@@ -50,7 +146,11 @@ void pkram_finish_save_obj(struct pkram_stream *ps)
-  */
- void pkram_finish_save(struct pkram_stream *ps)
- {
--	WARN_ON_ONCE(1);
-+	struct pkram_node *node = ps->node;
-+
-+	BUG_ON((node->flags & PKRAM_ACCMODE_MASK) != PKRAM_SAVE);
-+
-+	node->flags &= ~PKRAM_ACCMODE_MASK;
- }
- 
- /**
-@@ -60,7 +160,15 @@ void pkram_finish_save(struct pkram_stream *ps)
-  */
- void pkram_discard_save(struct pkram_stream *ps)
- {
--	WARN_ON_ONCE(1);
-+	struct pkram_node *node = ps->node;
-+
-+	BUG_ON((node->flags & PKRAM_ACCMODE_MASK) != PKRAM_SAVE);
-+
-+	mutex_lock(&pkram_mutex);
-+	pkram_delete_node(node);
-+	mutex_unlock(&pkram_mutex);
-+
-+	pkram_free_page(node);
- }
- 
- /**
-@@ -69,11 +177,36 @@ void pkram_discard_save(struct pkram_stream *ps)
-  *
-  * Returns 0 on success, -errno on failure.
-  *
-+ * Error values:
-+ *	%ENOENT: node with specified name does not exist
-+ *	%EBUSY: save to required node has not finished yet
-+ *
-  * After the load has finished, pkram_finish_load() is to be called.
-  */
- int pkram_prepare_load(struct pkram_stream *ps, const char *name)
- {
--	return -EINVAL;
-+	struct pkram_node *node;
-+	int err = 0;
-+
-+	mutex_lock(&pkram_mutex);
-+	node = pkram_find_node(name);
-+	if (!node) {
-+		err = -ENOENT;
-+		goto out_unlock;
-+	}
-+	if (node->flags & PKRAM_ACCMODE_MASK) {
++	/* Verify that nothing else has reserved the pkram_sb page */
++	if (memblock_is_region_reserved(PFN_PHYS(pkram_sb_pfn), PAGE_SIZE)) {
 +		err = -EBUSY;
-+		goto out_unlock;
++		goto out;
 +	}
-+	pkram_delete_node(node);
-+out_unlock:
-+	mutex_unlock(&pkram_mutex);
-+	if (err)
-+		return err;
 +
-+	node->flags |= PKRAM_LOAD;
-+	pkram_stream_init(ps, node, 0);
-+	return 0;
- }
- 
- /**
-@@ -106,7 +239,11 @@ void pkram_finish_load_obj(struct pkram_stream *ps)
-  */
- void pkram_finish_load(struct pkram_stream *ps)
++	pkram_sb = pkram_map_meta(pkram_sb_pfn);
++	if (IS_ERR(pkram_sb)) {
++		err = PTR_ERR(pkram_sb);
++		goto out;
++	}
++	/* An empty pkram_sb is not an error */
++	if (!pkram_sb->node_pfn) {
++		pkram_sb = NULL;
++		goto done;
++	}
++
++	err = pkram_merge_with_reserved();
++out:
++	if (err) {
++		pr_err("PKRAM: Reservation failed: %d\n", err);
++		WARN_ON(pkram_reserved_pages > 0);
++		pkram_sb = NULL;
++		return;
++	}
++
++done:
++	pr_info("PKRAM: %lu pages reserved\n", pkram_reserved_pages);
++}
++
+ static inline struct page *pkram_alloc_page(gfp_t gfp_mask)
  {
--	WARN_ON_ONCE(1);
-+	struct pkram_node *node = ps->node;
-+
-+	BUG_ON((node->flags & PKRAM_ACCMODE_MASK) != PKRAM_LOAD);
-+
-+	pkram_free_page(node);
- }
+ 	struct page *page;
+@@ -162,6 +217,7 @@ static inline struct page *pkram_alloc_page(gfp_t gfp_mask)
  
- /**
+ static inline void pkram_free_page(void *addr)
+ {
++	__ClearPageReserved(virt_to_page(addr));
+ 	pkram_remove_identity_map(virt_to_page(addr));
+ 	free_page((unsigned long)addr);
+ }
+@@ -193,13 +249,23 @@ static void pkram_truncate_link(struct pkram_link *link)
+ {
+ 	struct page *page;
+ 	pkram_entry_t p;
+-	int i;
++	int i, j, order;
+ 
+ 	for (i = 0; i < PKRAM_LINK_ENTRIES_MAX; i++) {
+ 		p = link->entry[i];
+ 		if (!p)
+ 			continue;
++		order = p & PKRAM_ENTRY_ORDER_MASK;
++		if (order >= MAX_ORDER) {
++			pr_err("PKRAM: attempted truncate of invalid page\n");
++			return;
++		}
+ 		page = pfn_to_page(PHYS_PFN(p));
++		for (j = 0; j < (1 << order); j++) {
++			struct page *pg = page + j;
++
++			__ClearPageReserved(pg);
++		}
+ 		pkram_remove_identity_map(page);
+ 		put_page(page);
+ 	}
+@@ -680,7 +746,7 @@ static int __pkram_bytes_save_page(struct pkram_access *pa, struct page *page)
+ static struct page *__pkram_prep_load_page(pkram_entry_t p)
+ {
+ 	struct page *page;
+-	int order;
++	int i, order;
+ 	short flags;
+ 
+ 	flags = (p >> PKRAM_ENTRY_FLAGS_SHIFT) & PKRAM_ENTRY_FLAGS_MASK;
+@@ -690,9 +756,16 @@ static struct page *__pkram_prep_load_page(pkram_entry_t p)
+ 
+ 	page = pfn_to_page(PHYS_PFN(p));
+ 
+-	if (!page_ref_freeze(pg, 1)) {
+-		pr_err("PKRAM preserved page has unexpected inflated ref count\n");
+-		goto out_error;
++	for (i = 0; i < (1 << order); i++) {
++		struct page *pg = page + i;
++		int was_rsvd;
++
++		was_rsvd = PageReserved(pg);
++		__ClearPageReserved(pg);
++		if ((was_rsvd || i == 0) && !page_ref_freeze(pg, 1)) {
++			pr_err("PKRAM preserved page has unexpected inflated ref count\n");
++			goto out_error;
++		}
+ 	}
+ 
+ 	if (order) {
+@@ -1331,6 +1404,7 @@ int __init pkram_create_merged_reserved(struct memblock_type *new)
+ 	}
+ 
+ 	WARN_ON(cnt_a + cnt_b != k);
++	pkram_reserved_pages = nr_preserved;
+ 	new->cnt = cnt_a + cnt_b;
+ 	new->total_size = total_size;
+ 
 -- 
 1.9.4
 
