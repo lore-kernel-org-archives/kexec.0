@@ -4,74 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1D2EBC77B7E
-	for <kexec@archiver.kernel.org>; Thu, 27 Apr 2023 08:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9B937C77B73
+	for <kexec@archiver.kernel.org>; Thu, 27 Apr 2023 09:51:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=VnYD7tO0Gzp7GH0qJB749J5mZjcUyW89bakaEHznmIc=; b=uHFKkWSYZVfAJI
-	VZExeuRsOrxnOxMtgSpKOQP2zcjV0vqDwu3tGwHHoBbf4qkkd9p1VodzBSOGyMAFd5IPVNdj2rbpB
-	pOXDv0IKbRDsm5Pg7rZ2uviK8tK4mQiGUu8VXT3N+At3r5OtPQ1vjgCCRAc/3mp2V0Rd/TDCo56w+
-	VP7JClTZGy420AA+HFYJj9bJXt6wbh+5M/crE0uds8PWO22qQjdMGBdC/2IPkCkgTXEIKWOpjnRqP
-	3PPJwGG9m60vOixZ5MezADMpgRZQaOO2aIHY6nMQW680QN2JOzQmXhp87sOexTuuXUquwKKv/872p
-	1Q+FAUC81Tr6fP9axuHQ==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Subject:To:From:Date:
+	Message-ID:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From
+	:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=JtdxdQ5kdE+TnICEQC1WRjBuSQNVYqyEin5iTIDVN7I=; b=3tMrtFfLjRnUa0
+	EZ4nwT++uXwwIZIuT4rdj/KHt6bXUEqlorjI/KqnCyOpxyDVJSY82UfpoOwI1YNxfvzKdTkl71k7h
+	+MdcdAh5e1Sz7zct/je7X3bIZytSoYUqzEVGOOPjdWVaeIOi+gfn9j7TPCOi4vvs3j7WdKRLxylee
+	R3RWkteKRwGQ3BhWIlKavNBUn72IL+iaY3gM186sC+vRUxTU2s3eh4iAK+zPQYd08Axsjd+3qmfMI
+	CI9dIguZrGkbludiBgQt1fGBhxpKM9+M5itcHMa7E8wZtrAWDmxbG01f49FfGd8aB3j89hkFw23SG
+	nnIY2pWu+kAEO3gjepIg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1prxKf-005rb6-34;
-	Thu, 27 Apr 2023 08:50:30 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1pryHy-0063jr-1S;
+	Thu, 27 Apr 2023 09:51:46 +0000
+Received: from mail.neston24.com ([37.187.225.180])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1prxKc-005raS-2s
+	id 1pryHu-0063iP-1G
 	for kexec@lists.infradead.org;
-	Thu, 27 Apr 2023 08:50:28 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1682585421;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rh/WbE+toZnJQPE0MKp08EzhTnMG7PdoYtKJ+SLzedk=;
-	b=IJw4I7tcmfurcBKt2Xi46EFXseJoSfaLEm9h0JotjMv7zkzlvVklH4llhzy6xWRHwrkFu6
-	DnEyBSowaFoLhLCd+iD2KISQTADmpczFmmbz2OCJVGcu7WW9p46349GtGJhQgpbRGxFhEQ
-	N32v5v+po8y82pSfH9HBkApXWZUrViA=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-360-oDXpSVuMOjy-jd1jxNjljQ-1; Thu, 27 Apr 2023 04:50:17 -0400
-X-MC-Unique: oDXpSVuMOjy-jd1jxNjljQ-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id AD33FA0F380;
-	Thu, 27 Apr 2023 08:50:16 +0000 (UTC)
-Received: from localhost (ovpn-13-168.pek2.redhat.com [10.72.13.168])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 49D46492C14;
-	Thu, 27 Apr 2023 08:50:12 +0000 (UTC)
-Date: Thu, 27 Apr 2023 16:49:56 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Hari Bathini <hbathini@linux.ibm.com>
-Cc: Eric DeVolder <eric.devolder@oracle.com>, linux-kernel@vger.kernel.org,
-	x86@kernel.org, kexec@lists.infradead.org, ebiederm@xmission.com,
-	dyoung@redhat.com, vgoyal@redhat.com, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	hpa@zytor.com, nramas@linux.microsoft.com, thomas.lendacky@amd.com,
-	robh@kernel.org, efault@gmx.de, rppt@kernel.org, david@redhat.com,
-	sourabhjain@linux.ibm.com, konrad.wilk@oracle.com,
-	boris.ostrovsky@oracle.com
-Subject: Re: [PATCH v21 5/7] x86/crash: add x86 crash hotplug support
-Message-ID: <ZEo3NK/9Nkc7ctrc@bhe.users.ipa.redhat.com>
-References: <20230404180326.6890-1-eric.devolder@oracle.com>
- <20230404180326.6890-6-eric.devolder@oracle.com>
- <da95e01d-24bd-676b-3a48-bafda1b36cda@linux.ibm.com>
+	Thu, 27 Apr 2023 09:51:44 +0000
+Received: by mail.neston24.com (Postfix, from userid 1002)
+	id E725621F20; Thu, 27 Apr 2023 09:51:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=neston24.com; s=mail;
+	t=1682589093; bh=5T/I5ALH265FnsfRMA5qkcy2CLiS4J17pa3P6HzpuT0=;
+	h=Date:From:To:Subject:From;
+	b=ddihj81cEWv5G1plmXR1+7C79WUtG29isnIZPe6Jm1uAHQjQHY78JKKYsAlf/nmIt
+	 cg+BCLzatyDLTmzhxXM5rOxYsj0FihS5WvI67UpUx+lITEN4Mc2H5jJ1ZGZCJilpOV
+	 XKhVQNTsMDePZIXUMpMIu2e4PFP2dozOjrEEh5IDov0UzEKSbiSz9+pPcw06+EEy9r
+	 9Srwv/UQpvI1l7B6VGh34SlBUq3pSGtq9aWmSdMMqmHx7MJ34tGr4TcmZpxxDNxZgQ
+	 XfDUDSxHBnsN0YXg/aKrgWDe8ids00mr8wH4wrD7Xi4sQ/Fmkv614HfitcE58oUmjw
+	 fDgyaPyI5V0QA==
+Received: by mail.neston24.com for <kexec@lists.infradead.org>; Thu, 27 Apr 2023 09:51:00 GMT
+Message-ID: <20230427090647-0.1.6j.clig.0.jpazlfk14i@neston24.com>
+Date: Thu, 27 Apr 2023 09:51:00 GMT
+From: =?UTF-8?Q?"Leo=C5=A1_Sl=C3=A1dek"?= <leos.sladek@neston24.com>
+To: <kexec@lists.infradead.org>
+Subject: =?UTF-8?Q?Fotovoltaick=C3=A9_rozvodnice?=
+X-Mailer: mail.neston24.com
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <da95e01d-24bd-676b-3a48-bafda1b36cda@linux.ibm.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230427_015027_035224_E7711B42 
-X-CRM114-Status: GOOD (  21.54  )
+X-CRM114-CacheID: sfid-20230427_025143_184706_A629CF3E 
+X-CRM114-Status: UNSURE (   0.63  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,53 +61,25 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 04/27/23 at 12:39pm, Hari Bathini wrote:
-> Hi Eric,
-> 
-> On 04/04/23 11:33 pm, Eric DeVolder wrote:
-> > When CPU or memory is hot un/plugged, or off/onlined, the crash
-> > elfcorehdr, which describes the CPUs and memory in the system,
-> > must also be updated.
-> > 
-> > The segment containing the elfcorehdr is identified at run-time
-> > in crash_core:crash_handle_hotplug_event(), which works for both
-> > the kexec_load() and kexec_file_load() syscalls. A new elfcorehdr
-> > is generated from the available CPUs and memory into a buffer,
-> > and then installed over the top of the existing elfcorehdr.
-> > 
-> > In the patch 'kexec: exclude elfcorehdr from the segment digest'
-> > the need to update purgatory due to the change in elfcorehdr was
-> > eliminated.  As a result, no changes to purgatory or boot_params
-> > (as the elfcorehdr= kernel command line parameter pointer
-> > remains unchanged and correct) are needed, just elfcorehdr.
-> > 
-> > To accommodate a growing number of resources via hotplug, the
-> > elfcorehdr segment must be sufficiently large enough to accommodate
-> > changes, see the CRASH_MAX_MEMORY_RANGES description. This is used
-> > only on the kexec_file_load() syscall; for kexec_load() userspace
-> > will need to size the segment similarly.
-> > 
-> > To accommodate kexec_load() syscall in the absence of
-> 
-> Firstly, thanks! This series is a nice improvement to kdump support
-> in hotplug environment.
-> 
-> One concern though is that this change assumes corresponding support
-> in kexec-tools. Without that support kexec_load would fail to boot
-> with digest verification failure, iiuc.
-
-Eric has posted patchset to modify kexec_tools to support that, please
-see the link Eric pasted in the cover letter.
-
-http://lists.infradead.org/pipermail/kexec/2022-October/026032.html
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+RG9icsO9IGRlbiwKCm9icmFjw61tIHNlIG5hIFbDoXMgam3DqW5lbSBkbG91aG9sZXTDqWhvIHbD
+vXJvYmNlIGZvdG92b2x0YWlja8O9Y2ggcm96dm9kbmljIHVyxI1lbsO9Y2ggcHJvCnNvdWtyb23D
+qSBpIHByxa9teXNsb3bDqSBwb3XFvml0w60uCgpEb2TDoXbDoW1lIGZvdG92b2x0YWlja8OpIHJv
+enZvZG5pY2UgbmEgemFrw6F6a3UgYSBqc21lIHNjaG9wbmkgcmVhbGl6b3ZhdCBpIHR5IG5lam7D
+oXJvxI1uxJtqxaHDrQpwb8W+YWRhdmt5IGluc3RhbGHEjW7DrWNoIGZpcmVtLCB2ZWxrb29iY2hv
+ZMWvIGEgZGlzdHJpYnV0b3LFry4KClZ5dcW+w612w6FtZSBuZWprdmFsaXRuxJtqxaHDrSBrb21w
+b25lbnR5IGEgbWF0ZXJpw6FseSwgxI3DrW3FviBkb3NhaHVqZW1lIHZ5xaHFocOtIG9kb2xub3N0
+LCBzdGFiaWxpdHUKcHJvdm96dSBhIG9jaHJhbnUgcHJvdGkgdm9kxJssIHZsa3UsIHByYWNodSBh
+IG7DoXJhesWvbS4KClYgbmHFoWVtIHNvcnRpbWVudHUganNvdSB0YWvDqSBvbWV6b3ZhxI1lIHDF
+mWVwxJt0w60gQUMvREMsIGt0ZXLDqSB6YWppxaHFpXVqw60gb2NocmFudQpmb3Rvdm9sdGFpY2vD
+vWNoIG5hcMOhamVjw61jaCBpbnN0YWxhY8OtIHDFmWVkIG5lZ2F0aXZuw61taSBlZmVrdHkgcMWZ
+ZXDEm3TDrSBhIGNocsOhbsOtIHphxZnDrXplbsOtIHDFmWVkCmVmZWt0eSBwxa9zb2JlbsOtIHDF
+mWVwxJt0w60gYSBibGVza292w71jaCBwcm91ZMWvLgoKQ2hjZXRlIHNpIHZ5emtvdcWhZXQgbmHF
+oWUgxZllxaFlbsOtPwoKClMgcG96ZHJhdmVtCkxlb8WhIFNsw6FkZWsKCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhl
+Y0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
+bGlzdGluZm8va2V4ZWMK
