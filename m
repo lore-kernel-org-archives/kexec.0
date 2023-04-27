@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 00843C77B7F
-	for <kexec@archiver.kernel.org>; Thu, 27 Apr 2023 00:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 005E8C77B60
+	for <kexec@archiver.kernel.org>; Thu, 27 Apr 2023 00:10:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:MIME-Version:List-Subscribe:List-Help:
 	List-Post:List-Archive:List-Unsubscribe:List-Id:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=0vJ7OdsG4xarL0wAjMo7SlLRRqfrpRo0NhLj1Nc5BM4=; b=mAhAL/AvQtkRX1
-	UCNHLHjWUw0SETirS1CC+BgCcIiwM1klhghjIF22Pm2M9URmESmVQqjUlOXgP0oZ2mTSjCxGv4Bxm
-	9R/zpxy2xeuUnEuk2+fkpOt0M3R4txi2Wb1nhLL1Jf7i8v3Iq2nk65bpwMAwuMfkM2vBEYUgBfAL8
-	8t2xOfbZE49AkKMboQY9Tp0Edv2GacW5gbKyly5ijckiR0aUdSzR9ESVbAq+Lf+Jp+HouYMnmvA8R
-	p7qtNdwI6JDqJwJaACo7mBYzI1tURTf3STm0wQgqf/pJCS0naONSOHQn6IEOyCCdpm0MVDGuW76jG
-	BNPWr6zCAwpE9I8llqVA==;
+	List-Owner; bh=WYNXcIet8Xk57u/5Yx0Mwe2OSh2swDhSVSjxF9zQaPY=; b=AJOEPu7mFx5y5O
+	VI7blooHnftxYqM2lzwGlouLzkWplYxpGTtHDn0keO2SO2Xbz3v3YWgE/+ZdY3HwZSotXojl6OmwF
+	UtJOSIYWAxdqRkwpEKZu1e26ztAXGIKpOrGLRvytafJVwtf5G7pYbpcQd3rBSkrjly48nQ4ERmuSH
+	Y+WziLUpgQjwebleIa5rzHuF6dQruY/PBWbyauR2oSJJ2wyJh+8BXGrS6Ec1HhB2eFz/Twi1meK69
+	gXxjnRhhkliT5V99L9qPX1kccbvr6M+Zz6nbVuz4sptvAB8CeLbrNl31FuXW1Ot71LfRmlPSDqKk3
+	xSP1OsgYubnqAolTv87w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1prpCy-0056S0-1F;
-	Thu, 27 Apr 2023 00:10:00 +0000
+	id 1prpD1-0056Wd-1q;
+	Thu, 27 Apr 2023 00:10:03 +0000
 Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1prpCu-0056P1-2i
+	id 1prpCu-0056P5-2v
 	for kexec@lists.infradead.org;
 	Thu, 27 Apr 2023 00:09:59 +0000
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33QGx2Ov004937;
-	Thu, 27 Apr 2023 00:09:14 GMT
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33QGx6XV014746;
+	Thu, 27 Apr 2023 00:09:10 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2023-03-30;
- bh=Ubk61ivo6vmHzGraxUFDO1r49XLMJqa4VVETk4Cbi0M=;
- b=FbqfouMwai47X2F7jNvsJULqyrfxpV15OToo/loakJHJQEPmxoEdpqyIHRa9xadym2iu
- Zfj3nxbIdNpCk2h9qaTsdZeZJOhA/A8QwbQ9vqot2Pmw4tcVa5qExJaA5QclNyOSEjxX
- Nw0W6/FfI79xQncISher39+JSNcaco3uaQ8BhrKSNNqcACD58W1dtnCPmxTEo2M7bsaB
- yklcT/WnUpoYfsWS9mEFJt9lu0jnwkwk/wMTDtBP/V5JOuMNzVKJVYsIpHKD8QXsqlgI
- 2VLOSJBeOHOwEuIzNy8aRR5TyDsY/oq4xcl5TIXA81o+4TrlYj9fxI45DAynbDiVR2SL kg== 
+ bh=V8bKMJcQa6Jv2T9adbwM8jWBRAWVIiOFCv4jdhXt4wk=;
+ b=1O7OzEZ6q3Uaoe9tuHIc0BR7Q0Y5MQzRvRBF53JohJ57D3BnVoGakPz0LMCaXlr5k6EE
+ hcxD5lmKhhEzCaYotXvvhdcoZM2GlaWAVi0uGAe97gWkaCXkvAOoMAPYpJ2EdV7Ytq0S
+ fMpw/wChwFMuBMEXu5cQ8vjvoxrH0kZ2H63FuQNA1E2CJtVvVklLv66+AZT1lQie52OH
+ vXAPe8Nv/QXXF3iyefzyZ0nt6hCgrNCXm7+dd0y+ij+jdzxQbYH9cvAC/zJfiTOJjHaR
+ 3vOFdz2NsVHfxbdkqOAeCcHG8QQK+nMa6GmGSMNAwC2+lUJ+COrkYB7u9Zgi39ZmGxqK nQ== 
 Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3q46gbtshn-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3q47fatmrn-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 27 Apr 2023 00:09:14 +0000
+	Thu, 27 Apr 2023 00:09:10 +0000
 Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 33QNdMUZ007383;
-	Thu, 27 Apr 2023 00:09:13 GMT
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 33QN01rW007153;
+	Thu, 27 Apr 2023 00:09:09 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3q4618mpdh-1
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3q4618mpbb-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 27 Apr 2023 00:09:13 +0000
+	Thu, 27 Apr 2023 00:09:09 +0000
 Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 33R0938Y013888;
-	Thu, 27 Apr 2023 00:09:13 GMT
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 33R0938S013888;
+	Thu, 27 Apr 2023 00:09:08 GMT
 Received: from ca-qasparc-x86-2.us.oracle.com (ca-qasparc-x86-2.us.oracle.com [10.147.24.103])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3q4618mp42-7;
-	Thu, 27 Apr 2023 00:09:12 +0000
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3q4618mp42-4;
+	Thu, 27 Apr 2023 00:09:08 +0000
 From: Anthony Yznaga <anthony.yznaga@oracle.com>
 To: linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
@@ -63,9 +63,9 @@ Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
         ebiederm@xmission.com, keescook@chromium.org, graf@amazon.com,
         jason.zeng@intel.com, lei.l.li@intel.com, steven.sistare@oracle.com,
         fam.zheng@bytedance.com, mgalaxy@akamai.com, kexec@lists.infradead.org
-Subject: [RFC v3 06/21] mm: PKRAM: link nodes by pfn before reboot
-Date: Wed, 26 Apr 2023 17:08:42 -0700
-Message-Id: <1682554137-13938-7-git-send-email-anthony.yznaga@oracle.com>
+Subject: [RFC v3 03/21] mm: PKRAM: implement object load and save functions
+Date: Wed, 26 Apr 2023 17:08:39 -0700
+Message-Id: <1682554137-13938-4-git-send-email-anthony.yznaga@oracle.com>
 X-Mailer: git-send-email 1.9.4
 In-Reply-To: <1682554137-13938-1-git-send-email-anthony.yznaga@oracle.com>
 References: <1682554137-13938-1-git-send-email-anthony.yznaga@oracle.com>
@@ -76,11 +76,11 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 ph
  mlxlogscore=999 malwarescore=0 mlxscore=0 spamscore=0 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2303200000
  definitions=main-2304270000
-X-Proofpoint-GUID: 4dfsl940M32SqdTr3kz-hSfm9AlSY8O0
-X-Proofpoint-ORIG-GUID: 4dfsl940M32SqdTr3kz-hSfm9AlSY8O0
+X-Proofpoint-ORIG-GUID: KQ35sjKexsktQQWPCGo9miJFSnT_W4A6
+X-Proofpoint-GUID: KQ35sjKexsktQQWPCGo9miJFSnT_W4A6
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230426_170956_887465_B8B71213 
-X-CRM114-Status: GOOD (  20.58  )
+X-CRM114-CacheID: sfid-20230426_170956_947920_3F5474CB 
+X-CRM114-Status: GOOD (  24.73  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -98,106 +98,194 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Since page structs are used for linking PKRAM nodes and cleared
-on boot, organize all PKRAM nodes into a list singly-linked by pfns
-before reboot to facilitate restoring the node list in the new kernel.
+PKRAM nodes are further divided into a list of objects. After a save
+operation has been initiated for a node, a save operation for an object
+associated with the node is initiated by calling pkram_prepare_save_obj().
+A new object is created and linked to the node.  The save operation for
+the object is committed by calling pkram_finish_save_obj().  After a load
+operation has been initiated, pkram_prepare_load_obj() is called to
+delete the next object from the node and prepare the corresponding
+stream for loading data from it.  After the load of object has been
+finished, pkram_finish_load_obj() is called to free the object.  Objects
+are also deleted when a save operation is discarded.
 
-Originally-by: Vladimir Davydov <vdavydov.dev@gmail.com>
 Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
 ---
- mm/pkram.c | 50 ++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+ include/linux/pkram.h |  2 ++
+ mm/pkram.c            | 72 ++++++++++++++++++++++++++++++++++++++++++++++++---
+ 2 files changed, 70 insertions(+), 4 deletions(-)
 
+diff --git a/include/linux/pkram.h b/include/linux/pkram.h
+index 8def9017b16a..83718ad0e416 100644
+--- a/include/linux/pkram.h
++++ b/include/linux/pkram.h
+@@ -7,6 +7,7 @@
+ #include <linux/mm_types.h>
+ 
+ struct pkram_node;
++struct pkram_obj;
+ 
+ /**
+  * enum pkram_data_flags - definition of data types contained in a pkram obj
+@@ -19,6 +20,7 @@ enum pkram_data_flags {
+ struct pkram_stream {
+ 	gfp_t gfp_mask;
+ 	struct pkram_node *node;
++	struct pkram_obj *obj;
+ };
+ 
+ struct pkram_access;
 diff --git a/mm/pkram.c b/mm/pkram.c
-index eac8cf6b0cdf..da166cb6afb7 100644
+index bbfd8df0874e..6e3895cb9872 100644
 --- a/mm/pkram.c
 +++ b/mm/pkram.c
-@@ -2,12 +2,16 @@
- #include <linux/err.h>
- #include <linux/gfp.h>
- #include <linux/highmem.h>
-+#include <linux/init.h>
- #include <linux/io.h>
- #include <linux/kernel.h>
- #include <linux/list.h>
+@@ -6,9 +6,14 @@
  #include <linux/mm.h>
-+#include <linux/module.h>
  #include <linux/mutex.h>
-+#include <linux/notifier.h>
  #include <linux/pkram.h>
-+#include <linux/reboot.h>
- #include <linux/sched.h>
++#include <linux/sched.h>
  #include <linux/string.h>
  #include <linux/types.h>
-@@ -60,11 +64,15 @@ struct pkram_obj {
-  * singly-linked list of PKRAM link structures (see above), the node has a
-  * pointer to the head of.
-  *
-+ * To facilitate data restore in the new kernel, before reboot all PKRAM nodes
-+ * are organized into a list singly-linked by pfn's (see pkram_reboot()).
-+ *
-  * The structure occupies a memory page.
+ 
++struct pkram_obj {
++	__u64   obj_pfn;	/* points to the next object in the list */
++};
++
+ /*
+  * Preserved memory is divided into nodes that can be saved or loaded
+  * independently of each other. The nodes are identified by unique name
+@@ -18,6 +23,7 @@
   */
  struct pkram_node {
  	__u32	flags;
- 	__u64	obj_pfn;	/* points to the first obj of the node */
-+	__u64	node_pfn;	/* points to the next node in the node list */
++	__u64	obj_pfn;	/* points to the first obj of the node */
  
  	__u8	name[PKRAM_NAME_MAX];
  };
-@@ -73,6 +81,10 @@ struct pkram_node {
- #define PKRAM_LOAD		2
- #define PKRAM_ACCMODE_MASK	3
- 
-+/*
-+ * For convenience sake PKRAM nodes are kept in an auxiliary doubly-linked list
-+ * connected through the lru field of the page struct.
-+ */
- static LIST_HEAD(pkram_nodes);			/* linked through page::lru */
- static DEFINE_MUTEX(pkram_mutex);		/* serializes open/close */
- 
-@@ -796,3 +808,41 @@ size_t pkram_read(struct pkram_access *pa, void *buf, size_t count)
- 	}
- 	return read_count;
+@@ -62,6 +68,21 @@ static struct pkram_node *pkram_find_node(const char *name)
+ 	return NULL;
  }
-+
-+/*
-+ * Build the list of PKRAM nodes.
-+ */
-+static void __pkram_reboot(void)
+ 
++static void pkram_truncate_node(struct pkram_node *node)
 +{
-+	struct page *page;
-+	struct pkram_node *node;
-+	unsigned long node_pfn = 0;
++	unsigned long obj_pfn;
++	struct pkram_obj *obj;
 +
-+	list_for_each_entry_reverse(page, &pkram_nodes, lru) {
-+		node = page_address(page);
-+		if (WARN_ON(node->flags & PKRAM_ACCMODE_MASK))
-+			continue;
-+		node->node_pfn = node_pfn;
-+		node_pfn = page_to_pfn(page);
++	obj_pfn = node->obj_pfn;
++	while (obj_pfn) {
++		obj = pfn_to_kaddr(obj_pfn);
++		obj_pfn = obj->obj_pfn;
++		pkram_free_page(obj);
++		cond_resched();
 +	}
++	node->obj_pfn = 0;
 +}
 +
-+static int pkram_reboot(struct notifier_block *notifier,
-+		       unsigned long val, void *v)
-+{
-+	if (val != SYS_RESTART)
-+		return NOTIFY_DONE;
-+	__pkram_reboot();
-+	return NOTIFY_OK;
-+}
+ static void pkram_stream_init(struct pkram_stream *ps,
+ 			     struct pkram_node *node, gfp_t gfp_mask)
+ {
+@@ -124,12 +145,31 @@ int pkram_prepare_save(struct pkram_stream *ps, const char *name, gfp_t gfp_mask
+  *
+  * Returns 0 on success, -errno on failure.
+  *
++ * Error values:
++ *	%ENOMEM: insufficient memory available
++ *
+  * After the save has finished, pkram_finish_save_obj() (or pkram_discard_save()
+  * in case of failure) is to be called.
+  */
+ int pkram_prepare_save_obj(struct pkram_stream *ps, enum pkram_data_flags flags)
+ {
+-	return -EINVAL;
++	struct pkram_node *node = ps->node;
++	struct pkram_obj *obj;
++	struct page *page;
 +
-+static struct notifier_block pkram_reboot_notifier = {
-+	.notifier_call = pkram_reboot,
-+};
++	BUG_ON((node->flags & PKRAM_ACCMODE_MASK) != PKRAM_SAVE);
 +
-+static int __init pkram_init(void)
-+{
-+	register_reboot_notifier(&pkram_reboot_notifier);
++	page = pkram_alloc_page(ps->gfp_mask | __GFP_ZERO);
++	if (!page)
++		return -ENOMEM;
++	obj = page_address(page);
++
++	if (node->obj_pfn)
++		obj->obj_pfn = node->obj_pfn;
++	node->obj_pfn = page_to_pfn(page);
++
++	ps->obj = obj;
 +	return 0;
-+}
-+module_init(pkram_init);
+ }
+ 
+ /**
+@@ -137,7 +177,9 @@ int pkram_prepare_save_obj(struct pkram_stream *ps, enum pkram_data_flags flags)
+  */
+ void pkram_finish_save_obj(struct pkram_stream *ps)
+ {
+-	WARN_ON_ONCE(1);
++	struct pkram_node *node = ps->node;
++
++	BUG_ON((node->flags & PKRAM_ACCMODE_MASK) != PKRAM_SAVE);
+ }
+ 
+ /**
+@@ -168,6 +210,7 @@ void pkram_discard_save(struct pkram_stream *ps)
+ 	pkram_delete_node(node);
+ 	mutex_unlock(&pkram_mutex);
+ 
++	pkram_truncate_node(node);
+ 	pkram_free_page(node);
+ }
+ 
+@@ -215,11 +258,26 @@ int pkram_prepare_load(struct pkram_stream *ps, const char *name)
+  *
+  * Returns 0 on success, -errno on failure.
+  *
++ * Error values:
++ *	%ENODATA: Stream @ps has no preserved memory objects
++ *
+  * After the load has finished, pkram_finish_load_obj() is to be called.
+  */
+ int pkram_prepare_load_obj(struct pkram_stream *ps)
+ {
+-	return -EINVAL;
++	struct pkram_node *node = ps->node;
++	struct pkram_obj *obj;
++
++	BUG_ON((node->flags & PKRAM_ACCMODE_MASK) != PKRAM_LOAD);
++
++	if (!node->obj_pfn)
++		return -ENODATA;
++
++	obj = pfn_to_kaddr(node->obj_pfn);
++	node->obj_pfn = obj->obj_pfn;
++
++	ps->obj = obj;
++	return 0;
+ }
+ 
+ /**
+@@ -229,7 +287,12 @@ int pkram_prepare_load_obj(struct pkram_stream *ps)
+  */
+ void pkram_finish_load_obj(struct pkram_stream *ps)
+ {
+-	WARN_ON_ONCE(1);
++	struct pkram_node *node = ps->node;
++	struct pkram_obj *obj = ps->obj;
++
++	BUG_ON((node->flags & PKRAM_ACCMODE_MASK) != PKRAM_LOAD);
++
++	pkram_free_page(obj);
+ }
+ 
+ /**
+@@ -243,6 +306,7 @@ void pkram_finish_load(struct pkram_stream *ps)
+ 
+ 	BUG_ON((node->flags & PKRAM_ACCMODE_MASK) != PKRAM_LOAD);
+ 
++	pkram_truncate_node(node);
+ 	pkram_free_page(node);
+ }
+ 
 -- 
 1.9.4
 
