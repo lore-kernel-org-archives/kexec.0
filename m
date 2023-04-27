@@ -4,43 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5220CC77B7C
-	for <kexec@archiver.kernel.org>; Thu, 27 Apr 2023 10:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8B69CC7EE23
+	for <kexec@archiver.kernel.org>; Thu, 27 Apr 2023 10:19:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=mHzHI/PfRbXYg5gCmiIDNhNKA+qSSxpI0MYxyDQMhCU=; b=Vo5zDnrcrzNIHq
-	oN4lMN87yV0onmjLpZuJpzvW9Q3vJbAlCaHdqWia91HN01or7+bkDscZX2HLgGS7YJK4U5GXZaCAP
-	xzDbWdep9dTM6/dU8IatPVJSEG4NKiioQKJ4nVdmdMVZ2fJy5OuwAgIHUFSVEsTSRsKdDWweOFiee
-	4VGfPYB2ntvBR7msGbKCdM0Jy2nNKahhpu9W0lm/2TX30vWz/2AmpiQtvKemdwA7E29hZudb69DWV
-	PrJGD9ZDL+y/x6784lvRp6Oa1AeaBd0H239ZCFFkCg5w3qflsFsBhZh9oBsUqaJVtNeoOIwwaGGW5
-	qOd6IqK0V7jGufvJe39w==;
+	List-Owner; bh=zqjQ5yqVxPyqO4ttqbPGlOMhfYh+IsnUzOLc0luNAU8=; b=P3nnYa+oGJ5w8f
+	YuHgsUMW1oaqkeCaCQyvlC4Y4t1cnly64B6Hg/YBz9y30Po8aIjWhDi/8NkstY3mDW7oxJTc0/hM2
+	XPRjsIG6g4WlDSOvFPRbAQA5l2KgaqvJ2Cv/EHJtVasZj5Q+awTgihGcJOHiF98djbqZXGp125fH+
+	TsClKwjmvVd47Dv+bPqEcq7aTkMRZWBFwSzcXvTWpo3zHPPSAzX3yi+Si53VUwmeJy/sVjCoi7Won
+	wKCGUWiw/LbQpi2UBRhpWnSFJsTJafefR6rqmba9+nyvFUf7zMoqZZjjvcX2dlJCeTmVU8YK4dbRB
+	zUpdbnp/Ixy6M5zKV+ow==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pryiM-0069V8-27;
-	Thu, 27 Apr 2023 10:19:02 +0000
-Received: from esa9.hc1455-7.c3s2.iphmx.com ([139.138.36.223])
+	id 1pryiJ-0069S9-2x;
+	Thu, 27 Apr 2023 10:18:59 +0000
+Received: from esa5.hc1455-7.c3s2.iphmx.com ([68.232.139.130])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pryiI-0069Ny-2U
+	id 1pryiF-0069Ko-2k
 	for kexec@lists.infradead.org;
-	Thu, 27 Apr 2023 10:19:00 +0000
-X-IronPort-AV: E=McAfee;i="6600,9927,10692"; a="103296166"
+	Thu, 27 Apr 2023 10:18:57 +0000
+X-IronPort-AV: E=McAfee;i="6600,9927,10692"; a="114561783"
 X-IronPort-AV: E=Sophos;i="5.99,230,1677510000"; 
-   d="scan'208";a="103296166"
-Received: from unknown (HELO oym-r1.gw.nic.fujitsu.com) ([210.162.30.89])
-  by esa9.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2023 19:18:54 +0900
-Received: from oym-m1.gw.nic.fujitsu.com (oym-nat-oym-m1.gw.nic.fujitsu.com [192.168.87.58])
-	by oym-r1.gw.nic.fujitsu.com (Postfix) with ESMTP id 569A9EDE41
-	for <kexec@lists.infradead.org>; Thu, 27 Apr 2023 19:18:52 +0900 (JST)
+   d="scan'208";a="114561783"
+Received: from unknown (HELO yto-r4.gw.nic.fujitsu.com) ([218.44.52.220])
+  by esa5.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2023 19:18:51 +0900
+Received: from yto-m3.gw.nic.fujitsu.com (yto-nat-yto-m3.gw.nic.fujitsu.com [192.168.83.66])
+	by yto-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id 9FF60D3EBA
+	for <kexec@lists.infradead.org>; Thu, 27 Apr 2023 19:18:47 +0900 (JST)
 Received: from kws-ab1.gw.nic.fujitsu.com (kws-ab1.gw.nic.fujitsu.com [192.51.206.11])
-	by oym-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id 96FEFD8C08
-	for <kexec@lists.infradead.org>; Thu, 27 Apr 2023 19:18:51 +0900 (JST)
+	by yto-m3.gw.nic.fujitsu.com (Postfix) with ESMTP id E582BD969C
+	for <kexec@lists.infradead.org>; Thu, 27 Apr 2023 19:18:46 +0900 (JST)
 Received: from FNSTPC.g08.fujitsu.local (unknown [10.167.226.45])
-	by kws-ab1.gw.nic.fujitsu.com (Postfix) with ESMTP id 9369C114147F;
-	Thu, 27 Apr 2023 19:18:49 +0900 (JST)
+	by kws-ab1.gw.nic.fujitsu.com (Postfix) with ESMTP id AE45F114626A;
+	Thu, 27 Apr 2023 19:18:44 +0900 (JST)
 From: Li Zhijian <lizhijian@fujitsu.com>
 To: x86@kernel.org,
 	nvdimm@lists.linux.dev,
@@ -50,12 +50,13 @@ Cc: linux-kernel@vger.kernel.org,
 	yangx.jy@fujitsu.com,
 	ruansy.fnst@fujitsu.com,
 	Li Zhijian <lizhijian@fujitsu.com>,
-	Baoquan He <bhe@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>
-Subject: [RFC PATCH v2 kexec-tools] kexec: Add and mark pmem region into PT_LOADs
-Date: Thu, 27 Apr 2023 18:18:35 +0800
-Message-Id: <20230427101838.12267-5-lizhijian@fujitsu.com>
+	Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>
+Subject: [RFC PATCH v2 2/3] drivers/nvdimm: export memmap of namespace to vmcoreinfo
+Date: Thu, 27 Apr 2023 18:18:33 +0800
+Message-Id: <20230427101838.12267-3-lizhijian@fujitsu.com>
 X-Mailer: git-send-email 2.40.0
 In-Reply-To: <20230427101838.12267-1-lizhijian@fujitsu.com>
 References: <20230427101838.12267-1-lizhijian@fujitsu.com>
@@ -64,15 +65,15 @@ X-TM-AS-GCONF: 00
 X-TM-AS-Product-Ver: IMSS-9.1.0.1408-9.0.0.1002-27590.006
 X-TM-AS-User-Approved-Sender: Yes
 X-TMASE-Version: IMSS-9.1.0.1408-9.0.1002-27590.006
-X-TMASE-Result: 10--6.121700-10.000000
-X-TMASE-MatchedRID: JUGAxiLh1cNSuJfEWZSQfBmCYUYerLHrwTlc9CcHMZerwqxtE531VIpb
-	wG9fIuITIqMWro5FhUiisum7bT5AftDFhoVadDNxfUkgDiuGxn/jmgMQ17h56yS30GKAkBxWCu1
-	ja6drUTmG9aEScwNGm4Ay6p60ZV62yA7duzCw6dLdB/CxWTRRu25FeHtsUoHuUiwP+xLbq3AxYM
-	d1N0VknfHRdUVXE7DT6INmePPYNPFgO21BQaodlQ==
+X-TMASE-Result: 10--5.296600-10.000000
+X-TMASE-MatchedRID: mJ3yV3MWQwmUkDPUhpX2vh1kSRHxj+Z5A81piVnI+HU1SqhT+J6xsUbg
+	XczvLJKOjx5X3FdI4UDmn3xyPJAJoh2P280ZiGmRfiKzBf4Yf9iOVGny5q72hp4Q+L3BXIWuyL5
+	QmWOgMfBI7ocMJBgR6/WV3EhAhFD6Sry0z8DqbhLNgrlT5Ajc7n0tCKdnhB589yM15V5aWpj6C0
+	ePs7A07Xi4XEoPXecxVvpTJmXb4dua6fR6Q+5OxeYzpCWDqqUZ3tGV3hp+Y+4=
 X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230427_031859_076610_14130267 
-X-CRM114-Status: UNSURE (   9.90  )
+X-CRM114-CacheID: sfid-20230427_031856_164735_CDDC403C 
+X-CRM114-Status: UNSURE (   9.96  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -90,49 +91,60 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-It does:
-1. Add pmem region into PT_LOADs of vmcore
-2. Mark pmem region's p_flags as PF_DEV
+Each namespace has its own memmap, it will be udpated when
+namespace initializing/creating, updating, and deleting.
 
-CC: Baoquan He <bhe@redhat.com>
-CC: Vivek Goyal <vgoyal@redhat.com>
-CC: Dave Young <dyoung@redhat.com>
+CC: Dan Williams <dan.j.williams@intel.com>
+CC: Vishal Verma <vishal.l.verma@intel.com>
+CC: Dave Jiang <dave.jiang@intel.com>
+CC: Ira Weiny <ira.weiny@intel.com>
 Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
 ---
- kexec/crashdump-elf.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/nvdimm/namespace_devs.c | 2 ++
+ drivers/nvdimm/pfn_devs.c       | 3 +++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/kexec/crashdump-elf.c b/kexec/crashdump-elf.c
-index b8bb686a17ca..ab257e825187 100644
---- a/kexec/crashdump-elf.c
-+++ b/kexec/crashdump-elf.c
-@@ -25,6 +25,8 @@ do {									\
- } while(0)
- #endif
+diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
+index c60ec0b373c5..096203e6203f 100644
+--- a/drivers/nvdimm/namespace_devs.c
++++ b/drivers/nvdimm/namespace_devs.c
+@@ -8,6 +8,7 @@
+ #include <linux/slab.h>
+ #include <linux/list.h>
+ #include <linux/nd.h>
++#include <linux/crash_core.h>
+ #include "nd-core.h"
+ #include "pmem.h"
+ #include "pfn.h"
+@@ -853,6 +854,7 @@ static ssize_t size_store(struct device *dev,
+ 	if (rc == 0 && val == 0 && is_namespace_pmem(dev)) {
+ 		struct nd_namespace_pmem *nspm = to_nd_namespace_pmem(dev);
  
-+#define PF_DEV (1 << 4)
-+
- /* Prepares the crash memory headers and stores in supplied buffer. */
- int FUNC(struct kexec_info *info,
- 	 struct crash_elf_info *elf_info,
-@@ -199,7 +201,7 @@ int FUNC(struct kexec_info *info,
- 	 * A seprate program header for Backup Region*/
- 	for (i = 0; i < ranges; i++, range++) {
- 		unsigned long long mstart, mend;
--		if (range->type != RANGE_RAM)
-+		if (range->type != RANGE_RAM && range->type != RANGE_PMEM)
- 			continue;
- 		mstart = range->start;
- 		mend = range->end;
-@@ -209,6 +211,8 @@ int FUNC(struct kexec_info *info,
- 		bufp += sizeof(PHDR);
- 		phdr->p_type	= PT_LOAD;
- 		phdr->p_flags	= PF_R|PF_W|PF_X;
-+		if (range->type == RANGE_PMEM)
-+			phdr->p_flags |= PF_DEV;
- 		phdr->p_offset	= mstart;
++		devm_memmap_vmcore_delete(to_ndns(dev));
+ 		kfree(nspm->uuid);
+ 		nspm->uuid = NULL;
+ 	}
+diff --git a/drivers/nvdimm/pfn_devs.c b/drivers/nvdimm/pfn_devs.c
+index af7d9301520c..80076996b2da 100644
+--- a/drivers/nvdimm/pfn_devs.c
++++ b/drivers/nvdimm/pfn_devs.c
+@@ -9,6 +9,7 @@
+ #include <linux/slab.h>
+ #include <linux/fs.h>
+ #include <linux/mm.h>
++#include <linux/crash_core.h>
+ #include "nd-core.h"
+ #include "pfn.h"
+ #include "nd.h"
+@@ -716,6 +717,8 @@ static int __nvdimm_setup_pfn(struct nd_pfn *nd_pfn, struct dev_pagemap *pgmap)
+ 	} else
+ 		return -ENXIO;
  
- 		if (mstart == info->backup_src_start
++	devm_memmap_vmcore_update(ndns, altmap->base_pfn, PHYS_PFN(offset),
++				  nd_pfn->mode == PFN_MODE_PMEM);
+ 	return 0;
+ }
+ 
 -- 
 2.29.2
 
