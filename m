@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B8A67C77B73
-	for <kexec@archiver.kernel.org>; Thu, 27 Apr 2023 10:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 31033C77B73
+	for <kexec@archiver.kernel.org>; Thu, 27 Apr 2023 10:18:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
 	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=9XsJekjUkvE+GisAcXKZnoDx32/kKBv3C9ZeN/n3FpY=; b=S0ALlkYcxXPt0/
-	A65q0wJP+6lGRuP5OdmobUE2d8/Ko0dpgWvogCkcV1GRMbAQFzkZv/DInR2qfqYPFN1zCaYgjXXAt
-	CNG7fiEOcoEapGB86scBJz5cnidJDjhA7ffv2KeLTNonHduXKiXkbOPztwhgsU+cPaDws2CW7BiJQ
-	BRwW4GME2qwhQMTDIancNOsNJx0EGUmZxcqgDe7/CYmgDEHXevX3ZzgBCfzSXhf4gyIky26a1kS3R
-	pKcz5RqOwCs5MR9YttIPqrm+DhstXn7YfTz/p+5mwvrPUEH21PpoWy2RSoOH81QGlfkxqH2de3vsX
-	dx3a1osx/Y6K5yNqIR7Q==;
+	List-Owner; bh=9XsJekjUkvE+GisAcXKZnoDx32/kKBv3C9ZeN/n3FpY=; b=eJih1OlzcqIMsf
+	exLxv0sNBIDOxvHCEx62H7KAt0WCd9ko8rFsYYBOL8xCC9vGAEexnKsYSzyTOu8q0B4N2sZblS4sN
+	x1QIvgAxhCFec243szf/UxEDX7W6/DfZ2YPFpy+sGqXpd6iF/QpBufZst6wnSozulBjoDeSfEPuTy
+	hbyry9zqPmaobaI9cncKlEN/HjId+gu4TiIU3yg1r1DvwD2nHaNFNb1LGLp69/IM7/lDCJGrDFADY
+	L4liG20ik1DzbG9tdkEx56SjNJWWXc7GK2ZaGyJNMLfzeqDNe+uNmfs66RcXEf6GDfyNARybJhaDQ
+	iMzLKafjf20I6msCgvkw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1prybb-0067CI-13;
-	Thu, 27 Apr 2023 10:12:03 +0000
-Received: from esa10.hc1455-7.c3s2.iphmx.com ([139.138.36.225])
+	id 1pryiC-0069L8-2F;
+	Thu, 27 Apr 2023 10:18:52 +0000
+Received: from esa11.hc1455-7.c3s2.iphmx.com ([207.54.90.137])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1prybX-00678l-1f
+	id 1pryi9-0069Fn-0T
 	for kexec@lists.infradead.org;
-	Thu, 27 Apr 2023 10:12:02 +0000
-X-IronPort-AV: E=McAfee;i="6600,9927,10692"; a="102761962"
+	Thu, 27 Apr 2023 10:18:51 +0000
+X-IronPort-AV: E=McAfee;i="6600,9927,10692"; a="94455118"
 X-IronPort-AV: E=Sophos;i="5.99,230,1677510000"; 
-   d="scan'208";a="102761962"
-Received: from unknown (HELO oym-r2.gw.nic.fujitsu.com) ([210.162.30.90])
-  by esa10.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2023 19:11:52 +0900
-Received: from oym-m1.gw.nic.fujitsu.com (oym-nat-oym-m1.gw.nic.fujitsu.com [192.168.87.58])
-	by oym-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id 4CCBDD4329
-	for <kexec@lists.infradead.org>; Thu, 27 Apr 2023 19:11:50 +0900 (JST)
-Received: from aks-ab1.gw.nic.fujitsu.com (aks-ab1.gw.nic.fujitsu.com [192.51.207.11])
-	by oym-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id 7479AD88A3
-	for <kexec@lists.infradead.org>; Thu, 27 Apr 2023 19:11:49 +0900 (JST)
+   d="scan'208";a="94455118"
+Received: from unknown (HELO oym-r3.gw.nic.fujitsu.com) ([210.162.30.91])
+  by esa11.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2023 19:18:44 +0900
+Received: from oym-m4.gw.nic.fujitsu.com (oym-nat-oym-m4.gw.nic.fujitsu.com [192.168.87.61])
+	by oym-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id 3922BD6478
+	for <kexec@lists.infradead.org>; Thu, 27 Apr 2023 19:18:41 +0900 (JST)
+Received: from kws-ab1.gw.nic.fujitsu.com (kws-ab1.gw.nic.fujitsu.com [192.51.206.11])
+	by oym-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id 574D9D6311
+	for <kexec@lists.infradead.org>; Thu, 27 Apr 2023 19:18:40 +0900 (JST)
 Received: from FNSTPC.g08.fujitsu.local (unknown [10.167.226.45])
-	by aks-ab1.gw.nic.fujitsu.com (Postfix) with ESMTP id 3B2EC2FC804A;
-	Thu, 27 Apr 2023 19:11:48 +0900 (JST)
+	by kws-ab1.gw.nic.fujitsu.com (Postfix) with ESMTP id D77BE114147F;
+	Thu, 27 Apr 2023 19:18:38 +0900 (JST)
 From: Li Zhijian <lizhijian@fujitsu.com>
-To: nvdimm@lists.linux.dev,
+To: x86@kernel.org,
+	nvdimm@lists.linux.dev,
 	kexec@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org,
 	y-goto@fujitsu.com,
 	yangx.jy@fujitsu.com,
 	ruansy.fnst@fujitsu.com
 Subject: [RFC PATCH v2 0/3] pmem memmap dump support
-Date: Thu, 27 Apr 2023 18:11:40 +0800
-Message-Id: <20230427101147.10477-1-lizhijian@fujitsu.com>
+Date: Thu, 27 Apr 2023 18:18:31 +0800
+Message-Id: <20230427101838.12267-1-lizhijian@fujitsu.com>
 X-Mailer: git-send-email 2.40.0
 MIME-Version: 1.0
 X-TM-AS-GCONF: 00
@@ -71,8 +72,8 @@ X-TMASE-MatchedRID: BMQxCkCavJY/erZuALh5hxxQCXaqsX3JeLLCA0PD7agXfsbcR/BbMebC
 	zsDTtAqYBE3k9Mpw=
 X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230427_031159_849417_B8B1A4B5 
-X-CRM114-Status: GOOD (  11.48  )
+X-CRM114-CacheID: sfid-20230427_031849_450027_88FC025B 
+X-CRM114-Status: GOOD (  11.50  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
