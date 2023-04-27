@@ -4,72 +4,106 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4A378C77B60
-	for <kexec@archiver.kernel.org>; Thu, 27 Apr 2023 02:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id ABA36C7EE22
+	for <kexec@archiver.kernel.org>; Thu, 27 Apr 2023 07:11:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=T5DasYUbMtynm8hxZAHzUzibTudLAwBsSpQ2Is6YHz4=; b=ofBvZ+niui94aj
-	i1ymYmmkWpYal9aKpUs9r09FRtTSSMGtSv6IzNNWYJaPTHGLPfuUmigKvMP72N9/g/t7tI0MKneQH
-	1RepyRuvYXETeOniGoZTIUH1XSd45pO/bpssWXG3fQ9MiYCVq2t+lbMxSoXj4PrQxI95wMUXn8xwk
-	WLvLt8PDYLqQnKffdt45eBV8b97gsiqoAX01r3o0xxI7zcgWDglqG8prwc2lfwrn6WhJFASf26D5v
-	IR/8thxTjWx+ckMnC/i86Oq5cUFemyGciRsOGbmI+RK38fep5CRHNQxSVAaSpjHcokzaLY/BI/Iwb
-	RDKw1B5b6nUOXn4/fDHA==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:Cc:To:
+	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=3H8gnTcDcSO4EBeOzrHaxBWU7W+IycUJAYRr329gM/0=; b=gZ9sEC7l9S4bFlrvb7GVhVzN64
+	YgwEy6flcjCX4GHHKa+X/pRMvhwj8cSemEOyOalZXC4fWkytIzGK1jo9b279AhlNeQ6DcP4K0R3rf
+	39LKCUBtv+DabUFxfZHRmtJxJygCA0QdtmLcbQJhipn83jF6YVdiZCGQprGQuDMTsRsWxzoaZDpCK
+	HbIjWw3yGz527ZOdhi3cYj9jdtsLr8/b/2noD8qGOQIrBWL39MGDjize4YafFl65BeF9FcZbUdph8
+	l/RQBxc0Y1bG+aq/j8OJCo2S/kF31O53iKgQkbomHzpVCnfvz51QifZ8J5kQDCpueNYF+BJcT0FTl
+	lMrGwb8w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1prr8j-005GL0-36;
-	Thu, 27 Apr 2023 02:13:45 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1prvn4-005d5H-2g;
+	Thu, 27 Apr 2023 07:11:42 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1prr8f-005GIx-0O
+	id 1prvn1-005coN-2N
 	for kexec@lists.infradead.org;
-	Thu, 27 Apr 2023 02:13:43 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1682561610;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QDBq73uOalrM4tKroB29WOkkL6N6HI1enBv2lSURmmI=;
-	b=SQgd0/BaV5Rv4/sRU3ftFerSFW1B/46dVUY25MNXlFSS8oMVxz7NDAuudP1BaLGglNwQP9
-	BiqZoi2kL1yr2ip20yxChCEAlpQWgFoc0tcP2Ijnxro6sxsAqXQcncJyupch24j6cS2xAL
-	JOdSx9J5JybGRzP48MqOMASsTDVy2Vs=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-610-8zon_suPN4Oswz06NwHtTA-1; Wed, 26 Apr 2023 22:13:25 -0400
-X-MC-Unique: 8zon_suPN4Oswz06NwHtTA-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A27FD8828C2;
-	Thu, 27 Apr 2023 02:13:24 +0000 (UTC)
-Received: from localhost (ovpn-12-30.pek2.redhat.com [10.72.12.30])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 59462492B03;
-	Thu, 27 Apr 2023 02:13:22 +0000 (UTC)
-Date: Thu, 27 Apr 2023 10:13:19 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Chen Jiahao <chenjiahao16@huawei.com>
-Cc: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	kexec@lists.infradead.org, linux-doc@vger.kernel.org,
-	paul.walmsley@sifive.com, palmer@dabbelt.com,
-	conor.dooley@microchip.com, guoren@kernel.org, heiko@sntech.de,
-	bjorn@rivosinc.com, alex@ghiti.fr, akpm@linux-foundation.org,
-	atishp@rivosinc.com, thunder.leizhen@huawei.com, horms@kernel.org
-Subject: Re: [PATCH -next v4 1/2] riscv: kdump: Implement
- crashkernel=X,[high,low]
-Message-ID: <ZEnaPzx3O9NWixIR@MiWiFi-R3L-srv>
-References: <20230410130553.3226347-1-chenjiahao16@huawei.com>
- <20230410130553.3226347-2-chenjiahao16@huawei.com>
+	Thu, 27 Apr 2023 07:11:41 +0000
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33R77AeR028416;
+	Thu, 27 Apr 2023 07:09:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=1moAoHtil6lEu7K2DGne1pxfJDqkbBHuvXsp8jQzFYo=;
+ b=ie5EFFisl+gxLHmulGXZ8eDBgcXsZ/xjlrMP11fMB3t1aET1nC/gO4NEwsRIP8P5ixSI
+ yKTr+yBKfqhpiKQi8pS7IClKiAg5/2XZjQokWYJOJbr7zb5WCZACITwAeGnqH47sp26y
+ UyLgYGR/0ZltB3eZ9JGY2zkBhO8GKTiit7FzyLgRHoRo6LRdejRcEblt0y2NRq0ST1f9
+ btinXPrk2QBhHNVXvDQN+AklHHpJNHA3Pzg8C5ec6coLkbL5IpEzbDJmD7ygRMOWIjlE
+ 8/360wdNfpfldu+YGBckDquQK0CVZNKAf1R4taYlp+ECizkcNofH+g/ysz3zXhS4RUuv Cw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3q7m7rr6yp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Apr 2023 07:09:00 +0000
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 33R778s4028379;
+	Thu, 27 Apr 2023 07:08:59 GMT
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3q7m7rr6tg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Apr 2023 07:08:59 +0000
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+	by ppma04fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 33R487OD032104;
+	Thu, 27 Apr 2023 07:08:54 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma04fra.de.ibm.com (PPS) with ESMTPS id 3q477729y9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Apr 2023 07:08:54 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 33R78p6K6488618
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 27 Apr 2023 07:08:51 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B19CC2004B;
+	Thu, 27 Apr 2023 07:08:51 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 612A820043;
+	Thu, 27 Apr 2023 07:08:46 +0000 (GMT)
+Received: from [9.43.11.206] (unknown [9.43.11.206])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 27 Apr 2023 07:08:46 +0000 (GMT)
+Message-ID: <2bc7d559-d827-bae9-33e0-4b7ca172ce5d@linux.ibm.com>
+Date: Thu, 27 Apr 2023 12:38:45 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v21 0/7] crash: Kernel handling of CPU and memory hot
+ un/plug
+Content-Language: en-US
+To: Eric DeVolder <eric.devolder@oracle.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, kexec@lists.infradead.org, ebiederm@xmission.com,
+        dyoung@redhat.com, bhe@redhat.com, vgoyal@redhat.com
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, hpa@zytor.com, nramas@linux.microsoft.com,
+        thomas.lendacky@amd.com, robh@kernel.org, efault@gmx.de,
+        rppt@kernel.org, david@redhat.com, sourabhjain@linux.ibm.com,
+        konrad.wilk@oracle.com, boris.ostrovsky@oracle.com
+References: <20230404180326.6890-1-eric.devolder@oracle.com>
+From: Hari Bathini <hbathini@linux.ibm.com>
+In-Reply-To: <20230404180326.6890-1-eric.devolder@oracle.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: LjrBv1jfrpPeAR5_o7oQjwI0FVfREAjz
+X-Proofpoint-GUID: YlfV2DA4ospcZQkqGsyhCpEdHhEnnNId
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20230410130553.3226347-2-chenjiahao16@huawei.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-04-27_05,2023-04-26_03,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
+ priorityscore=1501 bulkscore=0 clxscore=1011 mlxscore=0 lowpriorityscore=0
+ mlxlogscore=999 phishscore=0 spamscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2303200000
+ definitions=main-2304270061
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230426_191341_348778_41B5C670 
-X-CRM114-Status: GOOD (  33.54  )
+X-CRM114-CacheID: sfid-20230427_001139_784281_736FBAF0 
+X-CRM114-Status: GOOD (  28.33  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,193 +115,79 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 04/10/23 at 09:05pm, Chen Jiahao wrote:
-> On riscv, the current crash kernel allocation logic is trying to
-> allocate within 32bit addressible memory region by default, if
-> failed, try to allocate without 4G restriction.
-> 
-> In need of saving DMA zone memory while allocating a relatively large
-> crash kernel region, allocating the reserved memory top down in
-> high memory, without overlapping the DMA zone, is a mature solution.
-> Here introduce the parameter option crashkernel=X,[high,low].
-> 
-> One can reserve the crash kernel from high memory above DMA zone range
-> by explicitly passing "crashkernel=X,high"; or reserve a memory range
-> below 4G with "crashkernel=X,low".
-> 
-> Signed-off-by: Chen Jiahao <chenjiahao16@huawei.com>
-> Acked-by: Guo Ren <guoren@kernel.org>
-> Reviewed-by: Zhen Lei <thunder.leizhen@huawei.com>
-> ---
->  arch/riscv/kernel/setup.c |  5 +++
->  arch/riscv/mm/init.c      | 71 ++++++++++++++++++++++++++++++++++++---
->  2 files changed, 71 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
-> index 5d3184cbf518..ea84e5047c23 100644
-> --- a/arch/riscv/kernel/setup.c
-> +++ b/arch/riscv/kernel/setup.c
-> @@ -176,6 +176,11 @@ static void __init init_resources(void)
->  		if (ret < 0)
->  			goto error;
->  	}
-> +	if (crashk_low_res.start != crashk_low_res.end) {
-> +		ret = add_resource(&iomem_resource, &crashk_low_res);
-> +		if (ret < 0)
-> +			goto error;
-> +	}
->  #endif
->  
->  #ifdef CONFIG_CRASH_DUMP
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index 478d6763a01a..70f6cb281ed1 100644
-> --- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -1152,6 +1152,28 @@ static inline void setup_vm_final(void)
->  }
->  #endif /* CONFIG_MMU */
->  
-> +/* Reserve 128M low memory by default for swiotlb buffer */
-> +#define DEFAULT_CRASH_KERNEL_LOW_SIZE	(128UL << 20)
-> +
-> +static int __init reserve_crashkernel_low(unsigned long long low_size)
-> +{
-> +	unsigned long long low_base;
-> +
-> +	low_base = memblock_phys_alloc_range(low_size, PMD_SIZE, 0, dma32_phys_limit);
-> +	if (!low_base) {
-> +		pr_err("cannot allocate crashkernel low memory (size:0x%llx).\n", low_size);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	pr_info("crashkernel low memory reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
-> +		low_base, low_base + low_size, low_size >> 20);
-> +
-> +	crashk_low_res.start = low_base;
-> +	crashk_low_res.end = low_base + low_size - 1;
-> +
-> +	return 0;
-> +}
-> +
->  /*
->   * reserve_crashkernel() - reserves memory for crash kernel
->   *
-> @@ -1163,8 +1185,12 @@ static void __init reserve_crashkernel(void)
->  {
->  	unsigned long long crash_base = 0;
->  	unsigned long long crash_size = 0;
-> +	unsigned long long crash_low_size = 0;
->  	unsigned long search_start = memblock_start_of_DRAM();
->  	unsigned long search_end = memblock_end_of_DRAM();
-> +	unsigned long search_low_max = (unsigned long)dma32_phys_limit;
-> +	char *cmdline = boot_command_line;
-> +	bool fixed_base = false;
->  
->  	int ret = 0;
->  
-> @@ -1180,14 +1206,34 @@ static void __init reserve_crashkernel(void)
->  		return;
->  	}
->  
-> -	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
-> +	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
->  				&crash_size, &crash_base);
-> -	if (ret || !crash_size)
-> +	if (ret == -ENOENT) {
-> +		/* Fallback to crashkernel=X,[high,low] */
-> +		ret = parse_crashkernel_high(cmdline, 0, &crash_size, &crash_base);
-> +		if (ret || !crash_size)
-> +			return;
-> +
-> +		/*
-> +		 * crashkernel=Y,low is valid only when crashkernel=X,high
-> +		 * is passed.
-> +		 */
-> +		ret = parse_crashkernel_low(cmdline, 0, &crash_low_size, &crash_base);
-> +		if (ret == -ENOENT)
-> +			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
-> +		else if (ret)
-> +			return;
-> +
-> +		search_start = search_low_max;
-> +	} else if (ret || !crash_size) {
-> +		/* Invalid argument value specified */
->  		return;
-> +	}
->  
->  	crash_size = PAGE_ALIGN(crash_size);
->  
->  	if (crash_base) {
-> +		fixed_base = true;
->  		search_start = crash_base;
->  		search_end = crash_base + crash_size;
->  	}
-> @@ -1201,16 +1247,31 @@ static void __init reserve_crashkernel(void)
->  	 */
->  	crash_base = memblock_phys_alloc_range(crash_size, PMD_SIZE,
->  					       search_start,
-> -					       min(search_end, (unsigned long) SZ_4G));
-> +					       min(search_end, search_low_max));
+Hi Eric,
 
-Here, it seems not right in case crashkernel=,high is specified. In that
-case, search_start == search_low_max, then the min(search_end,
-search_low_max) will get search_low_max too. Then you make the fallback
-in below code block to try to get crashkernel reservation above 4G. This
-doesn't comply with the crashkernel=,high grammer which has been
-implemented in other architectures.
-
-For crashkernel=,high, user explicitly require memory reservation above
-4G. Why does crashkernel=,high is needed? E.g on big end server with
-huge memory, while the low memory under 4G is limited and precious.
-Hence, user want to put the main crashkernel reservation above 4G to
-contain kdump kernel/initrd and run user space program, while with few
-low memory for pci device driver. E.g crashkernel=2G,high, it won't
-impact much if there's huge memory above 4G and get crashkernel
-reservation there. However, it impacts a lot if it reserves memory
-below 4G.
-
-I would strongly suggest that risc-v also reserve memory from above 4G
-for crashkernel=,high, then fallback to below 4G. That's consistent with
-crashkernel=,high grammer.
-
->  	if (crash_base == 0) {
-> -		/* Try again without restricting region to 32bit addressible memory */
-> +		if (fixed_base) {
-> +			pr_warn("crashkernel: allocating failed with given size@offset\n");
-> +			return;
-> +		}
-> +
-> +		/* Try again above the region of 32bit addressible memory */
->  		crash_base = memblock_phys_alloc_range(crash_size, PMD_SIZE,
-> -						search_start, search_end);
-> +						       max(search_start, search_low_max),
-> +						       search_end);
->  		if (crash_base == 0) {
->  			pr_warn("crashkernel: couldn't allocate %lldKB\n",
->  				crash_size >> 10);
->  			return;
->  		}
-> +
-> +		if (!crash_low_size)
-> +			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
-> +	}
-> +
-> +	if ((crash_base > dma32_phys_limit - crash_low_size) &&
-> +	    crash_low_size && reserve_crashkernel_low(crash_low_size)) {
-> +		memblock_phys_free(crash_base, crash_size);
-> +		return;
->  	}
->  
->  	pr_info("crashkernel: reserved 0x%016llx - 0x%016llx (%lld MB)\n",
-> -- 
-> 2.31.1
+On 04/04/23 11:33 pm, Eric DeVolder wrote:
+> Once the kdump service is loaded, if changes to CPUs or memory occur,
+> either by hot un/plug or off/onlining, the crash elfcorehdr must also
+> be updated.
 > 
+> The elfcorehdr describes to kdump the CPUs and memory in the system,
+> and any inaccuracies can result in a vmcore with missing CPU context
+> or memory regions.
+> 
+> The current solution utilizes udev to initiate an unload-then-reload
+> of the kdump image (eg. kernel, initrd, boot_params, purgatory and
+> elfcorehdr) by the userspace kexec utility. In the original post I
+> outlined the significant performance problems related to offloading
+> this activity to userspace.
+> 
+> This patchset introduces a generic crash handler that registers with
+> the CPU and memory notifiers. Upon CPU or memory changes, from either
+> hot un/plug or off/onlining, this generic handler is invoked and
+> performs important housekeeping, for example obtaining the appropriate
+> lock, and then invokes an architecture specific handler to do the
+> appropriate elfcorehdr update.
+> 
+> Note the description in patch 'crash: change crash_prepare_elf64_headers()
+> to for_each_possible_cpu()' and 'x86/crash: optimize CPU changes' that
+> enables further optimizations related to CPU plug/unplug/online/offline
+> performance of elfcorehdr updates.
+> 
+> In the case of x86_64, the arch specific handler generates a new
+> elfcorehdr, and overwrites the old one in memory; thus no involvement
+> with userspace needed.
+> 
+> To realize the benefits/test this patchset, one must make a couple
+> of minor changes to userspace:
+> 
+>   - Prevent udev from updating kdump crash kernel on hot un/plug changes.
+>     Add the following as the first lines to the RHEL udev rule file
+>     /usr/lib/udev/rules.d/98-kexec.rules:
+> 
+>     # The kernel updates the crash elfcorehdr for CPU and memory changes
+>     SUBSYSTEM=="cpu", ATTRS{crash_hotplug}=="1", GOTO="kdump_reload_end"
+>     SUBSYSTEM=="memory", ATTRS{crash_hotplug}=="1", GOTO="kdump_reload_end"
+> 
+>     With this changeset applied, the two rules evaluate to false for
+>     CPU and memory change events and thus skip the userspace
+>     unload-then-reload of kdump.
+> 
+>   - Change to the kexec_file_load for loading the kdump kernel:
+>     Eg. on RHEL: in /usr/bin/kdumpctl, change to:
+>      standard_kexec_args="-p -d -s"
+>     which adds the -s to select kexec_file_load() syscall.
+> 
+> This kernel patchset also supports kexec_load() with a modified kexec
+> userspace utility. A working changeset to the kexec userspace utility
+> is posted to the kexec-tools mailing list here:
+> 
+>   http://lists.infradead.org/pipermail/kexec/2022-October/026032.html
 
+With the in-kernel update, the size is anyway getting calculated in
+kernel for kexec_file_load case, how about passing the recommended size
+for elfcorehdr segment and any other segment that needs an in-kernel 
+update as a sysfs attribute instead of kexec-tools having to do the
+calculation again in the userspace  (get_elfcorehdrsz()) for kexec_load
+case. That makes segment size calculation less error prone.
+
+Thanks
+Hari
 
 _______________________________________________
 kexec mailing list
