@@ -4,111 +4,152 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E66ACC77B60
-	for <kexec@archiver.kernel.org>; Fri, 28 Apr 2023 18:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6E05FC77B60
+	for <kexec@archiver.kernel.org>; Fri, 28 Apr 2023 18:59:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:Cc:To:
-	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=7VTv0DBMAsn20RPKcXtf2nhb3kKIWG0Xs7NLqIUKx9Q=; b=xT1toG+nxCHZQhJaIKEgQ+msq0
-	doqsGdURyRPT9vhBJU/a0bPQoFoqU3raA3FIR92JMy69oWf+lOsVieafTt262NEteptENpNRvx/NP
-	nFNa1QSyaLETFKzcOx7HG3dYSRTrF4sZILfQbdZoQc67JQhBgw02v7pvFD1YCzmkmUpt271B0YotI
-	l8z070wmAD4XUdeCX0saHC5u3shIpT3RLwvZLOv6nz7Y4qHa5eRFvA5oRvjxKFxPuAiFrKjXnJrpr
-	Y+yl2wCIj4Pc3kEha7TZzCB9A0SnkVLeWjJ05sqMhz54db/heh+s9S1qG1GV+svLYJpYFZcOtEl46
-	TgCjKNvQ==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:References:
+	Message-ID:Subject:CC:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=yQOyK5THK9t1VVF6Jnud9h/gLZB9TqNO2nCtej4P3sw=; b=kPmTBKDPZEKhHR
+	cPWOHUhKf3BaVSWXHTcuXzFkKfljynlPElkCnVjXrSrbzGX1evHFqmwX5Ck3pMKTXZYb3P3JDfVJB
+	F9jtXRWmP66Q9cW+PlqZg23bL3FO7tzzuNQ93q/cek1oOzL9QOP+meb67fpnoOha56ZtBlzDASVoT
+	qVxf+X+QdJ8SrZGqCiIET5WhpszJ/s38NcaCz41wlETu9F+/vr5dddxf/U7kD0TvkB67na5kIxk2s
+	GcQHd6BkLDNNkmxHr51+bWFslyiY/fufzLPM/6AyqaK4ldvFMKNSCDdleCwE0cnIQ4XAwFW28Vba7
+	OrF/yIMVNzc7E+aveTBw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1psTCM-00BYSi-2G;
-	Fri, 28 Apr 2023 18:52:02 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1psTJX-00BZlg-0c;
+	Fri, 28 Apr 2023 18:59:27 +0000
+Received: from mga17.intel.com ([192.55.52.151])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1psTCJ-00BYS2-3D
+	id 1psTJU-00BZjn-1q
 	for kexec@lists.infradead.org;
-	Fri, 28 Apr 2023 18:52:01 +0000
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33SIffHl002605;
-	Fri, 28 Apr 2023 18:51:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=h5MMbqwNWM1UuGgEnhB+WpFKFfKQZSmOMuSC+Pj4ZQQ=;
- b=GLruJiDXuKOPHKAr4rgfpL7tZeUo10yw5VWUeuFgjyj3IiFCLl4k8mbSFpBkFU4s2FyD
- 5hk3JCOZUXs3TfKnyQbRrvtDhpOoAs8N9G+Y3s20mcmsIpEhSKhdD0yIUizyyR8MNhHp
- CHgcbnNmmr0pnRV4+tRDFkkD5P/HuVqiZfr6hsONARVZNBcF0OWFklrJck0k2AgAF/zN
- OvaYbg9oSgZnlIxzP+wwIxjOnNUyBpH2FzF1PDbjC8KWxVnclxewvdYSytS0TeiooKvm
- RRmnrFDJlmzG79xmdtM8z+HiejQ2e/5sDBZqwgEbEhyFT165mgl3Ji6DKVpsdL0WDAfa GA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3q8k8v9068-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Apr 2023 18:51:26 +0000
-Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 33SIpJTk017148;
-	Fri, 28 Apr 2023 18:51:25 GMT
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3q8k8v902x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Apr 2023 18:51:25 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-	by ppma04ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 33SHcZqL024049;
-	Fri, 28 Apr 2023 18:31:13 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma04ams.nl.ibm.com (PPS) with ESMTPS id 3q47773qt0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Apr 2023 18:31:13 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 33SIVAE544368248
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 28 Apr 2023 18:31:10 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C650720040;
-	Fri, 28 Apr 2023 18:31:10 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B451720043;
-	Fri, 28 Apr 2023 18:31:04 +0000 (GMT)
-Received: from [9.43.39.167] (unknown [9.43.39.167])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 28 Apr 2023 18:31:04 +0000 (GMT)
-Message-ID: <97d18ae8-468d-cff5-0a32-4f07b050899e@linux.ibm.com>
-Date: Sat, 29 Apr 2023 00:01:03 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v21 5/7] x86/crash: add x86 crash hotplug support
-Content-Language: en-US
-To: Baoquan He <bhe@redhat.com>
-Cc: Eric DeVolder <eric.devolder@oracle.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, kexec@lists.infradead.org, ebiederm@xmission.com,
-        dyoung@redhat.com, vgoyal@redhat.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        hpa@zytor.com, nramas@linux.microsoft.com, thomas.lendacky@amd.com,
-        robh@kernel.org, efault@gmx.de, rppt@kernel.org, david@redhat.com,
-        sourabhjain@linux.ibm.com, konrad.wilk@oracle.com,
-        boris.ostrovsky@oracle.com
-References: <20230404180326.6890-1-eric.devolder@oracle.com>
- <20230404180326.6890-6-eric.devolder@oracle.com>
- <da95e01d-24bd-676b-3a48-bafda1b36cda@linux.ibm.com>
- <ZEo3NK/9Nkc7ctrc@bhe.users.ipa.redhat.com>
- <409c8253-49b9-6993-f79e-8e6203ce4b31@linux.ibm.com>
- <ZEuQ/hxmZey+eFZs@MiWiFi-R3L-srv>
-From: Hari Bathini <hbathini@linux.ibm.com>
-In-Reply-To: <ZEuQ/hxmZey+eFZs@MiWiFi-R3L-srv>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: NRmGodiaPurq9qe1241VYotLXV9DhjR3
-X-Proofpoint-ORIG-GUID: _ddVJxwuS15o0lOIO2w8Gqf19LfZvSmA
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	Fri, 28 Apr 2023 18:59:25 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1682708364; x=1714244364;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=Qe4HOdF+ptXwX3Qo4poATeeYyH+2WcUjxHPbAjgk7Z0=;
+  b=IMFdkKYrXQMf+/4zEyPk3KzTWYAFl9fxaCRW4nchjs0YiXyazxOBkx+C
+   He0Kh4P7RIZtZ4BGEDhwEkqm3nMhzRqU9aAhmpQZrTnEd/3D5tTF8TXCR
+   ua9HvvQrGPTGcy1/vsGXVWCurws01Hy7FjeZCWohUsZQxuy2P4L5eJaWZ
+   GVJRynCBrV16y1MWwx9sbFxK12v417i9IKoNrzMNdayzvTUxFRdMRUNUI
+   hJI5fqzWHLzZUYjmleP3Y4MMhLK3hLWqrZkDy+pqkp+oE4POiYBLCt67r
+   OEusR9MaXvoTNeY3EiEi5pVxAZWKfQ8aranC9SOSqCHuEDGsmTVRm4P3d
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10694"; a="328167511"
+X-IronPort-AV: E=Sophos;i="5.99,235,1677571200"; 
+   d="scan'208";a="328167511"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2023 11:59:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10694"; a="784340818"
+X-IronPort-AV: E=Sophos;i="5.99,235,1677571200"; 
+   d="scan'208";a="784340818"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by FMSMGA003.fm.intel.com with ESMTP; 28 Apr 2023 11:59:21 -0700
+Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Fri, 28 Apr 2023 11:59:21 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23 via Frontend Transport; Fri, 28 Apr 2023 11:59:21 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.23; Fri, 28 Apr 2023 11:59:20 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HQJZOw6zo3O+XlUF41OdNbgQPoE7nh3rVPk0Wd1UWIF1V+uU/3DbOjxdgnp3WhBVtTpvuO2+bY5dZdeHJQR/dqwAxv6BkLx3yAqhVm/kTRTYTLGc/8kBkHKiavcRQKJlrIxi5a+bTC1GNp2RF82eQsQI6fkaNFJFADtcDN+m+NSBaS0c45uIGdVhlq8CsenaZt5DLkYhXSm4y5wSSVoRi3dVJPac5GRy9OKr+ceBRJXjy1XcSUTGNwMlkcQ+jvjJUQxmE6DyHi4l1DOQlrFZUY/g76E+nww6kmTihfIeI2Xo85bO2l7T0LU5i5HzmI27fJEyAq65yRt3juBJ1mGDwQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wsDhoIRR1uusgGPNcCq+IKrBlmypDjc9pwr0IUPfgV0=;
+ b=JU5rXDt/w9iArZBUx7RsmU0LhW6qO2SCdeBVWHiDHRYV3yQzVO+DHzonuQ75/eBaRmZS5DRGbnALWHRrJWjl8QyWu5eQuVMRMgQ0sZA4TluD552KNUs7v1PBHRFPNBJC5rm/eXBSkvzsH69gfNa4N5SHRcMRhexSwtm6hVO4rprJY4hrBo8F2gs0ZMgEPhvvEG/+0QpfYGUciOY19n7MTk9F6UiXEZSJRNm+Z5gUcUxrIVBYyicmX9oYy5GyzPJJ2A/mgNa70X4oHShLYcGEljcM28cK2P5FPZXf5TJLRpnlpcKAEmJSIQMDFjNCAg0CZin1OlYY54X3KHf15Db6tg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by SJ2PR11MB7716.namprd11.prod.outlook.com (2603:10b6:a03:4f2::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6319.34; Fri, 28 Apr
+ 2023 18:59:18 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::95c6:c77e:733b:eee5]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::95c6:c77e:733b:eee5%6]) with mapi id 15.20.6340.020; Fri, 28 Apr 2023
+ 18:59:17 +0000
+Date: Fri, 28 Apr 2023 11:59:14 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: Li Zhijian <lizhijian@fujitsu.com>, <x86@kernel.org>,
+	<nvdimm@lists.linux.dev>, <kexec@lists.infradead.org>
+CC: <linux-kernel@vger.kernel.org>, <y-goto@fujitsu.com>,
+	<yangx.jy@fujitsu.com>, <ruansy.fnst@fujitsu.com>
+Subject: RE: [RFC PATCH v2 0/3] pmem memmap dump support
+Message-ID: <644c17823cf83_13303129460@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20230427101838.12267-1-lizhijian@fujitsu.com>
+Content-Disposition: inline
+In-Reply-To: <20230427101838.12267-1-lizhijian@fujitsu.com>
+X-ClientProxiedBy: SJ0PR03CA0159.namprd03.prod.outlook.com
+ (2603:10b6:a03:338::14) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-04-28_05,2023-04-27_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
- spamscore=0 mlxscore=0 adultscore=0 malwarescore=0 mlxlogscore=999
- bulkscore=0 lowpriorityscore=0 impostorscore=0 priorityscore=1501
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2303200000 definitions=main-2304280150
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SJ2PR11MB7716:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2df34b94-1445-45d4-742b-08db481aaa96
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: vtplahSq/ayTrcnfeywFxU2HLTUH9xeHY3pFSXwqTHouZ4uAi6D21N3fGZmepNfyptihIAjBRxcJaY902+AYDO5vhW7Sw6GJ4j+eLEkP/iXHsT+8BwcOqI/qkOufuQgOKaWZhf2+0AEfv0442FWm38UlbyPNTgtd92PMmdwt5LXZk4jZXe5HHEh5/uYaXAQ2HTGpBM20cWrxQFwSgRgNxOe+pW1a1cH4Y6OkamUrF4pJc54VQFtbNBalDebVkQ2ckaOtK6wPnebET/Y1alvSYC3NOyfKHPz+RjSyW81bcUH3klFnC4+0jPid47uj67JYI4OZX0uL+su8lckmO3ZQISMp1EkrVWaKDDcRWVF+yeDu8mdRr6vcVxYpBsDpfr6CjJh0vE56Cgp9+Pd6BVMUP4CjkrFpHTLtzLHNB3reaWN5EyrtVIJnxOfnH1KrG5oKvdt62X6uay8WbHDBdpIrLJYtARjDzCFwC7HmxdzjzLPFMwux/k0Z+EccvlkfzFbEFmx/ZZM0sNIe1cABhwBqJrHzqo0xrwctEA9JsPNnrVw=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(376002)(396003)(136003)(346002)(366004)(39860400002)(451199021)(66556008)(478600001)(4744005)(8936002)(86362001)(4326008)(5660300002)(38100700002)(8676002)(2906002)(66946007)(316002)(82960400001)(66476007)(41300700001)(966005)(186003)(26005)(9686003)(6512007)(6506007)(6486002)(83380400001)(6666004);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?wX1OQpSk0IjRU49rQYwnOtqWKxwanoHKby6istuJ0BR4bqqfy/5ZQPCj3bz5?=
+ =?us-ascii?Q?V+yP4OIw/o6F9gpmFfeuMkz7ZSux86jx7hHlkCx7rKlodZjLXOiM9fd8T2bu?=
+ =?us-ascii?Q?RjXXbwp1g08Crnp5GU9XvalKISaasZA1JYDCcQe3ikC+4aueTCiFjXSZ0VVV?=
+ =?us-ascii?Q?NhN37fIZmTds7hUS+CE7YuWycJCGke2TdQDXqP7OK4PFoqQm63YU8mHXS+Q3?=
+ =?us-ascii?Q?DruTNXBgsvdR0ttNEFSk1MI4c7INe6n7x7DhZmInL90kzybFogFr0/29NU6Q?=
+ =?us-ascii?Q?g/S/HiEayoo5wHXXQFfdgitjpXlNosOTOKa5U6PdEbKbFVyzcdwZwIbC56la?=
+ =?us-ascii?Q?3A481Za5CMhZX09UzC2T5UJZYVemf9a9mysahFeuqXJlhoLvX8kkn80URJRC?=
+ =?us-ascii?Q?5qq1BMTwbwt0Ujs1wArIwH/Jlnek4cuWI+1n8qKafoCExOBD/oRnuo01i1ZV?=
+ =?us-ascii?Q?apExSssfuJYMxwhEEwe6qg0fjjGWhNKNxl3SWYrqTaf0nqHvEp7p6Bx8dWcY?=
+ =?us-ascii?Q?60vcXJ3ocv4hOSZ5oNv+1dl0hRHDWzR9Pcc2r8aqnK0/89AD/aMcMQPhNv5a?=
+ =?us-ascii?Q?cQgnDHc3+pBU5cxvbE693eauns3Aau7u84ob1PkHtCx/u32VwUEwGt3spH3w?=
+ =?us-ascii?Q?VJusZ8UR91EWx5Lre6QmibPD9M6k+HEjpH0hptrDM/fJPQBtc7+MXuPVjp2G?=
+ =?us-ascii?Q?IajgubmDmYD3t6lFsCAzPvlkckC6Mx4VznlfwqdK3+OSwe9kaRAjKYuodOyi?=
+ =?us-ascii?Q?Ls4nd0wCdQBfSYcT8t/Mws664tGCR4uIk5dKJf6spGvK6RNTnl/Tlatp1MTi?=
+ =?us-ascii?Q?0RcXF9r1GurkFpyARFFhFdw0+QOTF1zRG16CR9wC3AhjedKncWNGBXTlXUgH?=
+ =?us-ascii?Q?XdKhspR+v4ydF83igugbyMGQbQu4ImfAefqfg3BSrYfxrqcD1czjQH3/hg+R?=
+ =?us-ascii?Q?2fYE9bWeDBxD5PjAbvwdsmbtGDQCuPiDCPoOE9TWtkuhwLvBimc3g3uUT3hv?=
+ =?us-ascii?Q?EZCwDOKt5ZWJNk66+N8PsFIPNaxl8q5gcVSdUKmW57AL6ycv7lTUib/flHEm?=
+ =?us-ascii?Q?+P4nmU0khKXnl2uc5l7egtWktB/p1CFWiRSL0GmIiSGEC0WzENEfMim633az?=
+ =?us-ascii?Q?N/MTrVyRmiyemTOCxDJMY5AVb82d24wkzf5CPM/0es5T8j4fUty7VBPus32V?=
+ =?us-ascii?Q?TNxdPRYDyltZnWMIDAT5hUbmdIH7TopO7oHJqcYusnADLcHI6Zy4u/7T8ddx?=
+ =?us-ascii?Q?1ErGOwyTkB3H0SHZ76FvNr56RAbqYqh5Xbl/WoDUu8vqkuXwzms+c4Qg3Yyy?=
+ =?us-ascii?Q?dsgXlf3q+uPsPIQfHpGCTUk5dEjBzMZ8kossxitQ9KeIwij5Y99QpwhNNiYe?=
+ =?us-ascii?Q?gVOoW/UrJ8KaUmetzWmCGDIR+1tE8P+VfOT6OCOrOg7d06HZgM41WSoGUNK9?=
+ =?us-ascii?Q?31J+ok6wMw89J8VtP86Sv+klI8Dl6OiGOxlXDmXYr/3GoOVNGBn9enhH99Aa?=
+ =?us-ascii?Q?Wfz5qkOYTKT+/HRsicVo9SydsJZXgujQjoz9VJpsS5xiKpKFJRhAw2Rs2/zL?=
+ =?us-ascii?Q?9u83gJ4+EFfjlnMduk25/mSBdYYW0TtKQcsmlOIj8SicGts3/KZXRIAuY6on?=
+ =?us-ascii?Q?aQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2df34b94-1445-45d4-742b-08db481aaa96
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2023 18:59:17.4403
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Fxv9X+8V9o404hDptYotnhOcna2Ng30F4XBIfJPz2eqHa8cbvY17Kh0XeS54vyMYRq6J7ndIspQXMF2UtrSiE5M83bOir9o19TXgphh+858=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB7716
+X-OriginatorOrg: intel.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230428_115200_039887_B553FC72 
-X-CRM114-Status: GOOD (  21.55  )
+X-CRM114-CacheID: sfid-20230428_115924_624172_633401F3 
+X-CRM114-Status: GOOD (  12.35  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -120,74 +161,32 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-
-On 28/04/23 2:55 pm, Baoquan He wrote:
-> On 04/27/23 at 10:26pm, Hari Bathini wrote:
->> On 27/04/23 2:19 pm, Baoquan He wrote:
->>> On 04/27/23 at 12:39pm, Hari Bathini wrote:
->>>> Hi Eric,
->>>>
->>>> On 04/04/23 11:33 pm, Eric DeVolder wrote:
->>>>> When CPU or memory is hot un/plugged, or off/onlined, the crash
->>>>> elfcorehdr, which describes the CPUs and memory in the system,
->>>>> must also be updated.
->>>>>
->>>>> The segment containing the elfcorehdr is identified at run-time
->>>>> in crash_core:crash_handle_hotplug_event(), which works for both
->>>>> the kexec_load() and kexec_file_load() syscalls. A new elfcorehdr
->>>>> is generated from the available CPUs and memory into a buffer,
->>>>> and then installed over the top of the existing elfcorehdr.
->>>>>
->>>>> In the patch 'kexec: exclude elfcorehdr from the segment digest'
->>>>> the need to update purgatory due to the change in elfcorehdr was
->>>>> eliminated.  As a result, no changes to purgatory or boot_params
->>>>> (as the elfcorehdr= kernel command line parameter pointer
->>>>> remains unchanged and correct) are needed, just elfcorehdr.
->>>>>
->>>>> To accommodate a growing number of resources via hotplug, the
->>>>> elfcorehdr segment must be sufficiently large enough to accommodate
->>>>> changes, see the CRASH_MAX_MEMORY_RANGES description. This is used
->>>>> only on the kexec_file_load() syscall; for kexec_load() userspace
->>>>> will need to size the segment similarly.
->>>>>
->>>>> To accommodate kexec_load() syscall in the absence of
->>>>
->>>> Firstly, thanks! This series is a nice improvement to kdump support
->>>> in hotplug environment.
->>>>
->>>> One concern though is that this change assumes corresponding support
->>>> in kexec-tools. Without that support kexec_load would fail to boot
->>>> with digest verification failure, iiuc.
->>>
->>> Eric has posted patchset to modify kexec_tools to support that, please
->>> see the link Eric pasted in the cover letter.
->>>
->>> http://lists.infradead.org/pipermail/kexec/2022-October/026032.html
->>
->> Right, Baoquan.
->>
->> I did see that and if I read the code correctly, without that patchset
->> kexec_load would fail. Not with an explicit error that hotplug support
->> is missing or such but it would simply fail to boot into capture kernel
->> with digest verification failure.
->>
->> My suggestion was to avoid that userspace tool breakage for older
->> kexec-tools version by introducing a new kexec flag that can tell
->> kernel that kexec-tools is ready to use this in-kernel update support.
->> So, if kexec_load happens without the flag, avoid doing an in-kernel
->> update on hotplug. I hope that clears the confusion.
+Li Zhijian wrote:
+> Hello folks,
 > 
-> Yeah, sounds like a good idea. It may be extended in later patch.
+> About 2 months ago, we posted our first RFC[3] and received your kindly feedback. Thank you :)
+> Now, I'm back with the code.
+> 
+> Currently, this RFC has already implemented to supported case D*. And the case A&B is disabled
+> deliberately in makedumpfile. It includes changes in 3 source code as below:
 
-Fixing it in this series itself would be a cleaner way, I guess.
+I think the reason this patchkit is difficult to follow is that it
+spends a lot of time describing a chosen solution, but not enough time
+describing the problem and the tradeoffs.
 
-Thanks
-Hari
+For example why is updating /proc/vmcore with pmem metadata the chosen
+solution? Why not leave the kernel out of it and have makedumpfile
+tooling aware of how to parse persistent memory namespace info-blocks
+and retrieve that dump itself? This is what I proposed here:
+
+http://lore.kernel.org/r/641484f7ef780_a52e2940@dwillia2-mobl3.amr.corp.intel.com.notmuch
+
+...but never got an answer, or I missed the answer.
 
 _______________________________________________
 kexec mailing list
