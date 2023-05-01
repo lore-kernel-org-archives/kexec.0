@@ -4,152 +4,108 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6E05FC77B60
-	for <kexec@archiver.kernel.org>; Fri, 28 Apr 2023 18:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0CC92C77B61
+	for <kexec@archiver.kernel.org>; Mon,  1 May 2023 13:22:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:References:
-	Message-ID:Subject:CC:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=yQOyK5THK9t1VVF6Jnud9h/gLZB9TqNO2nCtej4P3sw=; b=kPmTBKDPZEKhHR
-	cPWOHUhKf3BaVSWXHTcuXzFkKfljynlPElkCnVjXrSrbzGX1evHFqmwX5Ck3pMKTXZYb3P3JDfVJB
-	F9jtXRWmP66Q9cW+PlqZg23bL3FO7tzzuNQ93q/cek1oOzL9QOP+meb67fpnoOha56ZtBlzDASVoT
-	qVxf+X+QdJ8SrZGqCiIET5WhpszJ/s38NcaCz41wlETu9F+/vr5dddxf/U7kD0TvkB67na5kIxk2s
-	GcQHd6BkLDNNkmxHr51+bWFslyiY/fufzLPM/6AyqaK4ldvFMKNSCDdleCwE0cnIQ4XAwFW28Vba7
-	OrF/yIMVNzc7E+aveTBw==;
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:MIME-Version:Message-Id:Date:
+	Subject:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=tJgf9uNB3OeIca3HvFWO9w+1CjO9qwrH9qoSAO9ZEXM=; b=d5kKeGGdrfK9zh
+	aAb+myDXZtZ2Ct+3ju0S8105YEz25TAPOE4M1kquyLH3naKHaSf32ub3pwGjOmMn9iY5RzkDKkvWY
+	PcgLU2yGW9rnlt9QbW7+33V1y4PJbFCVLHYj2UzG3X7r3sMNniYnsV15Kq7FYfbCT3ifKC4GBCuvi
+	qSEUJLTlxCfRcnoV+9Wo9yqwZHrU525heE1ASmikG11403kraOlxF0TPybUDJgjLF+uhTD0mwC8dg
+	TyOfL7OWTuE1/cJKhsZzBV0dLGgUWzraFxwth1z//OmGD6yrjhKn72jyiWYrXJmCGmhYejjyUL9T2
+	JOUcm8F6zEpt7tx8zXsw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1psTJX-00BZlg-0c;
-	Fri, 28 Apr 2023 18:59:27 +0000
-Received: from mga17.intel.com ([192.55.52.151])
+	id 1ptSo3-00Fzo2-0q;
+	Mon, 01 May 2023 12:39:03 +0000
+Received: from mail-ed1-x52f.google.com ([2a00:1450:4864:20::52f])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1psTJU-00BZjn-1q
+	id 1ptSny-00Fzlx-2j
 	for kexec@lists.infradead.org;
-	Fri, 28 Apr 2023 18:59:25 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1682708364; x=1714244364;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=Qe4HOdF+ptXwX3Qo4poATeeYyH+2WcUjxHPbAjgk7Z0=;
-  b=IMFdkKYrXQMf+/4zEyPk3KzTWYAFl9fxaCRW4nchjs0YiXyazxOBkx+C
-   He0Kh4P7RIZtZ4BGEDhwEkqm3nMhzRqU9aAhmpQZrTnEd/3D5tTF8TXCR
-   ua9HvvQrGPTGcy1/vsGXVWCurws01Hy7FjeZCWohUsZQxuy2P4L5eJaWZ
-   GVJRynCBrV16y1MWwx9sbFxK12v417i9IKoNrzMNdayzvTUxFRdMRUNUI
-   hJI5fqzWHLzZUYjmleP3Y4MMhLK3hLWqrZkDy+pqkp+oE4POiYBLCt67r
-   OEusR9MaXvoTNeY3EiEi5pVxAZWKfQ8aranC9SOSqCHuEDGsmTVRm4P3d
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10694"; a="328167511"
-X-IronPort-AV: E=Sophos;i="5.99,235,1677571200"; 
-   d="scan'208";a="328167511"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2023 11:59:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10694"; a="784340818"
-X-IronPort-AV: E=Sophos;i="5.99,235,1677571200"; 
-   d="scan'208";a="784340818"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by FMSMGA003.fm.intel.com with ESMTP; 28 Apr 2023 11:59:21 -0700
-Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Fri, 28 Apr 2023 11:59:21 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23 via Frontend Transport; Fri, 28 Apr 2023 11:59:21 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Fri, 28 Apr 2023 11:59:20 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HQJZOw6zo3O+XlUF41OdNbgQPoE7nh3rVPk0Wd1UWIF1V+uU/3DbOjxdgnp3WhBVtTpvuO2+bY5dZdeHJQR/dqwAxv6BkLx3yAqhVm/kTRTYTLGc/8kBkHKiavcRQKJlrIxi5a+bTC1GNp2RF82eQsQI6fkaNFJFADtcDN+m+NSBaS0c45uIGdVhlq8CsenaZt5DLkYhXSm4y5wSSVoRi3dVJPac5GRy9OKr+ceBRJXjy1XcSUTGNwMlkcQ+jvjJUQxmE6DyHi4l1DOQlrFZUY/g76E+nww6kmTihfIeI2Xo85bO2l7T0LU5i5HzmI27fJEyAq65yRt3juBJ1mGDwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wsDhoIRR1uusgGPNcCq+IKrBlmypDjc9pwr0IUPfgV0=;
- b=JU5rXDt/w9iArZBUx7RsmU0LhW6qO2SCdeBVWHiDHRYV3yQzVO+DHzonuQ75/eBaRmZS5DRGbnALWHRrJWjl8QyWu5eQuVMRMgQ0sZA4TluD552KNUs7v1PBHRFPNBJC5rm/eXBSkvzsH69gfNa4N5SHRcMRhexSwtm6hVO4rprJY4hrBo8F2gs0ZMgEPhvvEG/+0QpfYGUciOY19n7MTk9F6UiXEZSJRNm+Z5gUcUxrIVBYyicmX9oYy5GyzPJJ2A/mgNa70X4oHShLYcGEljcM28cK2P5FPZXf5TJLRpnlpcKAEmJSIQMDFjNCAg0CZin1OlYY54X3KHf15Db6tg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by SJ2PR11MB7716.namprd11.prod.outlook.com (2603:10b6:a03:4f2::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6319.34; Fri, 28 Apr
- 2023 18:59:18 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::95c6:c77e:733b:eee5]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::95c6:c77e:733b:eee5%6]) with mapi id 15.20.6340.020; Fri, 28 Apr 2023
- 18:59:17 +0000
-Date: Fri, 28 Apr 2023 11:59:14 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Li Zhijian <lizhijian@fujitsu.com>, <x86@kernel.org>,
-	<nvdimm@lists.linux.dev>, <kexec@lists.infradead.org>
-CC: <linux-kernel@vger.kernel.org>, <y-goto@fujitsu.com>,
-	<yangx.jy@fujitsu.com>, <ruansy.fnst@fujitsu.com>
-Subject: RE: [RFC PATCH v2 0/3] pmem memmap dump support
-Message-ID: <644c17823cf83_13303129460@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20230427101838.12267-1-lizhijian@fujitsu.com>
-Content-Disposition: inline
-In-Reply-To: <20230427101838.12267-1-lizhijian@fujitsu.com>
-X-ClientProxiedBy: SJ0PR03CA0159.namprd03.prod.outlook.com
- (2603:10b6:a03:338::14) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	Mon, 01 May 2023 12:39:00 +0000
+Received: by mail-ed1-x52f.google.com with SMTP id 4fb4d7f45d1cf-50bc4d96e14so8629451a12.1
+        for <kexec@lists.infradead.org>; Mon, 01 May 2023 05:38:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1682944735; x=1685536735;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xJc/FIv16Z5bKlEeMjq3JH7jrMiztUQ6tRChXDQSURU=;
+        b=oKFN/r8uKGx9Dr4DETHEAj7XJds+1Bkl9Cqn4Z6CQQSxDowYbUKPXMMW3MeG+X8FYo
+         fBbtsDIE6lZ/2kRnHPaVvNFwGmN5R+12wlVOtMs22XZvF4DeqmQ7ZLHPROSNR6NOEBIy
+         hQHlXVgw1kAmIgV931djagKU+oBuvB30KXM04=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682944735; x=1685536735;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xJc/FIv16Z5bKlEeMjq3JH7jrMiztUQ6tRChXDQSURU=;
+        b=TxpBaXnbkbJA9I0RDiaAIbWfBvZwq3E1rMV4PtXJCI9hr1B8T3ueQ0JVdjlbwzpwEB
+         3qK2hmxtSOHjq41gObtkenzHyeTxOSSugAGlnJB3UrtJMNyRfCKvkSWl9N0qjSTvsRrH
+         jgUE6SxHGiKQWI+Hit3n3QdjPa8J0/pIZ6o9mjXpRLIQCs/9LVN2jk+NvIYjO11N4//X
+         /DjlYejyJI3iB8fd/p4F1PkJ9+buYuneNP6snYI/Mmnks7YF8iMbDPImbtR+9XWb/saB
+         mIbI+bFoPpjcU63V6HxUuofCawnnvZG23HQLHsg5uWlAnLxqCBwZaP0NSQlDXmR18Tzz
+         +mQA==
+X-Gm-Message-State: AC+VfDwFiTEb+c8JOvg0jxTmq/DkqSXDn0BU03JAXtBKfljYXCz4y7o8
+	j1BOaMsReihSv3FJtVdYXy0iSg==
+X-Google-Smtp-Source: ACHHUZ5dy1t28pTgAv9ZewhiQXtL5zGnuRNOu5Z+CKjak1xPicSHjkyOJ9snAkywki500Fps2M3Y7g==
+X-Received: by 2002:a05:6402:4413:b0:4af:7bdc:188e with SMTP id y19-20020a056402441300b004af7bdc188emr6406640eda.16.1682944735175;
+        Mon, 01 May 2023 05:38:55 -0700 (PDT)
+Received: from alco.roam.corp.google.com ([2620:0:1059:10:c573:159e:712e:688b])
+        by smtp.gmail.com with ESMTPSA id c8-20020aa7c988000000b0050bcbb5708asm146772edt.35.2023.05.01.05.38.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 May 2023 05:38:54 -0700 (PDT)
+From: Ricardo Ribalda <ribalda@chromium.org>
+Subject: [PATCH v6 0/4] kexec: Fix kexec_file_load for llvm16 with PGO
+Date: Mon, 01 May 2023 14:38:18 +0200
+Message-Id: <20230321-kexec_clang16-v6-0-a2255e81ab45@chromium.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SJ2PR11MB7716:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2df34b94-1445-45d4-742b-08db481aaa96
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: vtplahSq/ayTrcnfeywFxU2HLTUH9xeHY3pFSXwqTHouZ4uAi6D21N3fGZmepNfyptihIAjBRxcJaY902+AYDO5vhW7Sw6GJ4j+eLEkP/iXHsT+8BwcOqI/qkOufuQgOKaWZhf2+0AEfv0442FWm38UlbyPNTgtd92PMmdwt5LXZk4jZXe5HHEh5/uYaXAQ2HTGpBM20cWrxQFwSgRgNxOe+pW1a1cH4Y6OkamUrF4pJc54VQFtbNBalDebVkQ2ckaOtK6wPnebET/Y1alvSYC3NOyfKHPz+RjSyW81bcUH3klFnC4+0jPid47uj67JYI4OZX0uL+su8lckmO3ZQISMp1EkrVWaKDDcRWVF+yeDu8mdRr6vcVxYpBsDpfr6CjJh0vE56Cgp9+Pd6BVMUP4CjkrFpHTLtzLHNB3reaWN5EyrtVIJnxOfnH1KrG5oKvdt62X6uay8WbHDBdpIrLJYtARjDzCFwC7HmxdzjzLPFMwux/k0Z+EccvlkfzFbEFmx/ZZM0sNIe1cABhwBqJrHzqo0xrwctEA9JsPNnrVw=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(376002)(396003)(136003)(346002)(366004)(39860400002)(451199021)(66556008)(478600001)(4744005)(8936002)(86362001)(4326008)(5660300002)(38100700002)(8676002)(2906002)(66946007)(316002)(82960400001)(66476007)(41300700001)(966005)(186003)(26005)(9686003)(6512007)(6506007)(6486002)(83380400001)(6666004);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?wX1OQpSk0IjRU49rQYwnOtqWKxwanoHKby6istuJ0BR4bqqfy/5ZQPCj3bz5?=
- =?us-ascii?Q?V+yP4OIw/o6F9gpmFfeuMkz7ZSux86jx7hHlkCx7rKlodZjLXOiM9fd8T2bu?=
- =?us-ascii?Q?RjXXbwp1g08Crnp5GU9XvalKISaasZA1JYDCcQe3ikC+4aueTCiFjXSZ0VVV?=
- =?us-ascii?Q?NhN37fIZmTds7hUS+CE7YuWycJCGke2TdQDXqP7OK4PFoqQm63YU8mHXS+Q3?=
- =?us-ascii?Q?DruTNXBgsvdR0ttNEFSk1MI4c7INe6n7x7DhZmInL90kzybFogFr0/29NU6Q?=
- =?us-ascii?Q?g/S/HiEayoo5wHXXQFfdgitjpXlNosOTOKa5U6PdEbKbFVyzcdwZwIbC56la?=
- =?us-ascii?Q?3A481Za5CMhZX09UzC2T5UJZYVemf9a9mysahFeuqXJlhoLvX8kkn80URJRC?=
- =?us-ascii?Q?5qq1BMTwbwt0Ujs1wArIwH/Jlnek4cuWI+1n8qKafoCExOBD/oRnuo01i1ZV?=
- =?us-ascii?Q?apExSssfuJYMxwhEEwe6qg0fjjGWhNKNxl3SWYrqTaf0nqHvEp7p6Bx8dWcY?=
- =?us-ascii?Q?60vcXJ3ocv4hOSZ5oNv+1dl0hRHDWzR9Pcc2r8aqnK0/89AD/aMcMQPhNv5a?=
- =?us-ascii?Q?cQgnDHc3+pBU5cxvbE693eauns3Aau7u84ob1PkHtCx/u32VwUEwGt3spH3w?=
- =?us-ascii?Q?VJusZ8UR91EWx5Lre6QmibPD9M6k+HEjpH0hptrDM/fJPQBtc7+MXuPVjp2G?=
- =?us-ascii?Q?IajgubmDmYD3t6lFsCAzPvlkckC6Mx4VznlfwqdK3+OSwe9kaRAjKYuodOyi?=
- =?us-ascii?Q?Ls4nd0wCdQBfSYcT8t/Mws664tGCR4uIk5dKJf6spGvK6RNTnl/Tlatp1MTi?=
- =?us-ascii?Q?0RcXF9r1GurkFpyARFFhFdw0+QOTF1zRG16CR9wC3AhjedKncWNGBXTlXUgH?=
- =?us-ascii?Q?XdKhspR+v4ydF83igugbyMGQbQu4ImfAefqfg3BSrYfxrqcD1czjQH3/hg+R?=
- =?us-ascii?Q?2fYE9bWeDBxD5PjAbvwdsmbtGDQCuPiDCPoOE9TWtkuhwLvBimc3g3uUT3hv?=
- =?us-ascii?Q?EZCwDOKt5ZWJNk66+N8PsFIPNaxl8q5gcVSdUKmW57AL6ycv7lTUib/flHEm?=
- =?us-ascii?Q?+P4nmU0khKXnl2uc5l7egtWktB/p1CFWiRSL0GmIiSGEC0WzENEfMim633az?=
- =?us-ascii?Q?N/MTrVyRmiyemTOCxDJMY5AVb82d24wkzf5CPM/0es5T8j4fUty7VBPus32V?=
- =?us-ascii?Q?TNxdPRYDyltZnWMIDAT5hUbmdIH7TopO7oHJqcYusnADLcHI6Zy4u/7T8ddx?=
- =?us-ascii?Q?1ErGOwyTkB3H0SHZ76FvNr56RAbqYqh5Xbl/WoDUu8vqkuXwzms+c4Qg3Yyy?=
- =?us-ascii?Q?dsgXlf3q+uPsPIQfHpGCTUk5dEjBzMZ8kossxitQ9KeIwij5Y99QpwhNNiYe?=
- =?us-ascii?Q?gVOoW/UrJ8KaUmetzWmCGDIR+1tE8P+VfOT6OCOrOg7d06HZgM41WSoGUNK9?=
- =?us-ascii?Q?31J+ok6wMw89J8VtP86Sv+klI8Dl6OiGOxlXDmXYr/3GoOVNGBn9enhH99Aa?=
- =?us-ascii?Q?Wfz5qkOYTKT+/HRsicVo9SydsJZXgujQjoz9VJpsS5xiKpKFJRhAw2Rs2/zL?=
- =?us-ascii?Q?9u83gJ4+EFfjlnMduk25/mSBdYYW0TtKQcsmlOIj8SicGts3/KZXRIAuY6on?=
- =?us-ascii?Q?aQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2df34b94-1445-45d4-742b-08db481aaa96
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2023 18:59:17.4403
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Fxv9X+8V9o404hDptYotnhOcna2Ng30F4XBIfJPz2eqHa8cbvY17Kh0XeS54vyMYRq6J7ndIspQXMF2UtrSiE5M83bOir9o19TXgphh+858=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB7716
-X-OriginatorOrg: intel.com
+X-B4-Tracking: v=1; b=H4sIALqyT2QC/33QzWrDMAwA4FcpPs/F8n922nuMMhJZaczSBOw1d
+ JS8e9UeR5aTkIQ+Cd1FpZKpivfDXRRacs3zxIl/Owgc2ulMMifOhVbaKKNBftON8AtH7oGX1oF
+ CbRLoBgXPdG0l2ZV2woGnpus4cnHI9Wcuv68dC3D4/I9bQCrZBh971BjQpg8cynzJ18txLmdxY
+ mzRu4BmIIEilxyE6JsNwOwChgHXK/AYk6IYNgC7C1gGwFjlIPZNpK0L3C7gnhc4b7qePwDB/AH
+ WdX0Ax4+WyLYBAAA=
+To: Eric Biederman <ebiederm@xmission.com>, 
+ Philipp Rudo <prudo@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+ Nathan Chancellor <nathan@kernel.org>, Tom Rix <trix@redhat.com>, 
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+ Christophe Leroy <christophe.leroy@csgroup.eu>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+Cc: Baoquan He <bhe@redhat.com>, Philipp Rudo <prudo@redhat.com>, 
+ kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Ross Zwisler <zwisler@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
+ Simon Horman <horms@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+ llvm@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
+ linux-riscv@lists.infradead.org, Ricardo Ribalda <ribalda@chromium.org>, 
+ stable@vger.kernel.org
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1858; i=ribalda@chromium.org;
+ h=from:subject:message-id; bh=GVJi+03Xz3YcKIs9vohmPUDUq2YTUUxMRlFdBxq2C24=;
+ b=owEBbQKS/ZANAwAKAdE30T7POsSIAcsmYgBkT7LAFLlAuOy2Pigaz4i/nocmi0AaG2bDBwCis
+ 1EE/BR48JCJAjMEAAEKAB0WIQREDzjr+/4oCDLSsx7RN9E+zzrEiAUCZE+ywAAKCRDRN9E+zzrE
+ iBVJD/0bvdaJk33Kto6cW3Qh7bkAyMST0SlVrSVNNRzCcHkU8OMpa7+OaBEM6aylG0KK+gBpSC+
+ 9M/aU99yVviz/wK8tmypnptMZYvvfeVNiQeO93KdPzYmUZTepOB54/pajMpWdXzgXYnQD+5fVJj
+ XS1Mg4dxUrfaWd9jTaMg6bMPcw4hnduHVIUToP1960WZux+4iyt66qBkHDTUhEe+4aLJdIPu8y0
+ TXEFshDvlVqy/6h7WqW2Wn9X038Lecaf2Cb+vKG/dtcFncw1BsXiCUe+Ny7zQhFXCb+9f3XeamD
+ VVWQ8RhWqq+IsHt/LUVH0SWBcwegONn8/OA3jHsAfFQY9s2iYABKgoBbDzq7QuVR4DeXsS/B8kd
+ Je8L101yFCiVa6aM7T/iN025l2Pr0M6mSxPsEZbwbXYUnADYf4FjlVcsvSiBCQghUXRcE7yb0zE
+ 9s1uOFvgW1Tmn9KJTK5e91CRxAKAz5AUF/fiqJYtGJuXhPypDbO7xrVcHx2XV/9/KFsCVAWCFli
+ izkP0mT4SSvRRjga1EF091s9YDLMxKe287MF0LcOdNASLL8QmYbIG4Nk2KJcqLUx7RR/UAzd6LI
+ mzp4oKuDvSVn1XPWMnSidoCM4GInDmiQ20x5trgZ1hUVyat2PHBgU0I5SdzrjK2gYZDAo/Q8/4q
+ 9iNvZ9J8J2WbZpw==
+X-Developer-Key: i=ribalda@chromium.org; a=openpgp;
+ fpr=9EC3BB66E2FC129A6F90B39556A0D81F9F782DA9
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230428_115924_624172_633401F3 
-X-CRM114-Status: GOOD (  12.35  )
+X-CRM114-CacheID: sfid-20230501_053858_883141_F36D1960 
+X-CRM114-Status: GOOD (  12.16  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -166,27 +122,58 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Li Zhijian wrote:
-> Hello folks,
-> 
-> About 2 months ago, we posted our first RFC[3] and received your kindly feedback. Thank you :)
-> Now, I'm back with the code.
-> 
-> Currently, this RFC has already implemented to supported case D*. And the case A&B is disabled
-> deliberately in makedumpfile. It includes changes in 3 source code as below:
+When upreving llvm I realised that kexec stopped working on my test
+platform.
 
-I think the reason this patchkit is difficult to follow is that it
-spends a lot of time describing a chosen solution, but not enough time
-describing the problem and the tradeoffs.
+The reason seems to be that due to PGO there are multiple .text sections
+on the purgatory, and kexec does not supports that.
 
-For example why is updating /proc/vmcore with pmem metadata the chosen
-solution? Why not leave the kernel out of it and have makedumpfile
-tooling aware of how to parse persistent memory namespace info-blocks
-and retrieve that dump itself? This is what I proposed here:
+Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+---
+Changes in v6:
+- Replace linker script with Makefile rule. Thanks Nick
+- Link to v5: https://lore.kernel.org/r/20230321-kexec_clang16-v5-0-5563bf7c4173@chromium.org
 
-http://lore.kernel.org/r/641484f7ef780_a52e2940@dwillia2-mobl3.amr.corp.intel.com.notmuch
+Changes in v5:
+- Add warning when multiple text sections are found. Thanks Simon!
+- Add Fixes tag.
+- Link to v4: https://lore.kernel.org/r/20230321-kexec_clang16-v4-0-1340518f98e9@chromium.org
 
-...but never got an answer, or I missed the answer.
+Changes in v4:
+- Add Cc: stable
+- Add linker script for x86
+- Add a warning when the kernel image has overlapping sections.
+- Link to v3: https://lore.kernel.org/r/20230321-kexec_clang16-v3-0-5f016c8d0e87@chromium.org
+
+Changes in v3:
+- Fix initial value. Thanks Ross!
+- Link to v2: https://lore.kernel.org/r/20230321-kexec_clang16-v2-0-d10e5d517869@chromium.org
+
+Changes in v2:
+- Fix if condition. Thanks Steven!.
+- Update Philipp email. Thanks Baoquan.
+- Link to v1: https://lore.kernel.org/r/20230321-kexec_clang16-v1-0-a768fc2c7c4d@chromium.org
+
+---
+Ricardo Ribalda (4):
+      kexec: Support purgatories with .text.hot sections
+      x86/purgatory: Remove profile optimization flags
+      powerpc/purgatory: Remove profile optimization flags
+      risc/purgatory: Add linker script
+
+ arch/powerpc/purgatory/Makefile |  5 +++++
+ arch/riscv/purgatory/Makefile   |  5 +++++
+ arch/x86/purgatory/Makefile     |  5 +++++
+ kernel/kexec_file.c             | 14 +++++++++++++-
+ 4 files changed, 28 insertions(+), 1 deletion(-)
+---
+base-commit: 58390c8ce1bddb6c623f62e7ed36383e7fa5c02f
+change-id: 20230321-kexec_clang16-4510c23d129c
+
+Best regards,
+-- 
+Ricardo Ribalda <ribalda@chromium.org>
+
 
 _______________________________________________
 kexec mailing list
