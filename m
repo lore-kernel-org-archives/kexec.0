@@ -4,80 +4,151 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2B1FBC7EE29
-	for <kexec@archiver.kernel.org>; Wed,  3 May 2023 17:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 73CF0C7EE22
+	for <kexec@archiver.kernel.org>; Wed,  3 May 2023 22:16:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	List-Subscribe:List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:
-	In-Reply-To:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Reply-To:Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date
-	:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=zO4LCHGhNw7IUJMTjv+v5PhojylyWtDqeNg+XiUcTkY=; b=HFzB7sM7SBVvTPQWNI5XUqo4U9
-	3W0/pDy77bpOiBmrv5PvABCHkuvrP7JJ7o+xZMnEOGZhOFyW2yN5sO+S2m3BuMDMPdaMdPwuqKx6S
-	SRPss+94k1fZ8XfRlL08835DoDXfBBZiXqTtErFTHMayuhA00497mBR7Xk1PkMvEWxj4ZCwFbBBEL
-	EU/IcbNQvr5Ell1temC8qDV1x72qSpRYwl9F4xTzxa2iudLdBd8/G2CRcBWvCv6FfId7T8PHmhy2j
-	iTqfAfcHY6kQtdT81JUTl3iijq8kpsgVOfu5okLdOeEgjW5asYTneplsd18NvAuorZ6OSLmLq+QnJ
-	KS17Mlnw==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=/P4ynefL6bvesr1APjuAqEdgQwn1nngNyjojxZZlM3k=; b=iOOMjd1OTmZUXG
+	T1ZFefTOojAf0oURCIeGyn4236db/b2HySgB8s2jJSMcfwVO2c2cRDCmnsQ6Dvn8TKn43/FteNXSG
+	3aCYfvQvujXFLW1Scv400SwC8Di5RHzb9CYWvmJA6/TJNXoUhtIfkpMGGfuqU7SP+VJhmEkZEVkSA
+	+fP4ClyLfnu3j5XGPDzzfNnFuk2rvxUedG1XghnM2eynGBYapLPZJtK3i10tRvh9q7QSA5betp5Xk
+	fViGH0/MH1ZTKD8Mm3ylJaz1qGn6q1qj5LLUmGCbDugy7V2F279ZSooCn46YQWAZoO7lax5rXF06E
+	8lLF5U2sEcHXMDPomi8Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1puGRb-005ISH-35;
-	Wed, 03 May 2023 17:39:11 +0000
-Received: from dfw.source.kernel.org ([139.178.84.217])
+	id 1puKly-005xID-20;
+	Wed, 03 May 2023 22:16:30 +0000
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1ptXWN-00GQFS-0w;
-	Mon, 01 May 2023 17:41:08 +0000
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id F01F561E6C;
-	Mon,  1 May 2023 17:41:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33E2EC433D2;
-	Mon,  1 May 2023 17:40:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1682962864;
-	bh=81z/8+VNCOs2KfOTGMvYGJr78DCfPa8M7ZOzDNUfnCY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ghv0PKPSEF/qiYfWNIgVqzcxiV94CKnm+WiWCSyBxEUEJUm8nsJSuKOqtmJA871/J
-	 ajyg3xFZJvtCjWeS5XL4b4A6p8W8Eh4h5g7M6hUgv55S5cuvquU2/FPaVa5zMKrCwl
-	 p80tb777MSmmUOy4bAcn4YGjMwqaK97HS/0AXg1GmQZpUeeLgggQKhUGaoUJaJStfa
-	 60Dn1OZ5gbzQA/kDtxoEWTYgtega7R78ZTGPMTGp8mczgGW/rre5vijVDFKcWvkkOr
-	 osLrwqrSAODauKYj4W7bSX2Zm4Wj/8RL9xM/EboyvOZepXnzmaugABHmtdX2GOg6Wj
-	 4b93L3bPQNt+Q==
-Date: Mon, 1 May 2023 18:40:56 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Eric Biederman <ebiederm@xmission.com>,
-	Philipp Rudo <prudo@linux.vnet.ibm.com>,
-	Dave Young <dyoung@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Nathan Chancellor <nathan@kernel.org>, Tom Rix <trix@redhat.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Baoquan He <bhe@redhat.com>,
-	Philipp Rudo <prudo@redhat.com>, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Simon Horman <horms@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>, llvm@lists.linux.dev,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v6 4/4] risc/purgatory: Add linker script
-Message-ID: <20230501-cottage-overjoyed-1aeb9d72d309@spud>
-References: <20230321-kexec_clang16-v6-0-a2255e81ab45@chromium.org>
- <20230321-kexec_clang16-v6-4-a2255e81ab45@chromium.org>
+	id 1puKlv-005xGk-06
+	for kexec@lists.infradead.org;
+	Wed, 03 May 2023 22:16:28 +0000
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 343HpR1g014725
+	for <kexec@lists.infradead.org>; Wed, 3 May 2023 22:16:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references :
+ content-transfer-encoding : content-type : mime-version;
+ s=corp-2023-03-30; bh=u+9oLK3J1Mh3/oUe3yK8J6S3tTKnx6ElCHgFQuw7xWo=;
+ b=RMG3ScC20xxO2HHrhN95vXpkNCVJF8GyU68PZUwJ89eiYKzGJoxv1U8Bw9QWsHNdBrxN
+ 25rbRLmEKR51rAa3A2MXMfOs6aHBu3PTyCOQ0/VFRZt4jbGggWmT8/SMOaRgtCMpRbqi
+ YMSjMtT849+ilwbMO5x1/W+vR+J/WNrxg2wMZhmtQY9/B3SApxMt2PVxghUWKz+GNYCz
+ 8l4HcJUBhMENTNic9La0GYe9Xg4tA1p6qD6d3NxnDPk1MT6tq4b8O9IVNrHfXgdjOeHn
+ ONQMfmgNm0qT9DIgIg4iGzbyv5wf5dp6XBz+Bil0oHzLHb99aXAvMEzF5HU2CVkNRNcO mA== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3q8t140kjs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+	for <kexec@lists.infradead.org>; Wed, 03 May 2023 22:16:23 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 343L1d9Q040525
+	for <kexec@lists.infradead.org>; Wed, 3 May 2023 22:16:22 GMT
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2174.outbound.protection.outlook.com [104.47.56.174])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3q8sp7r43q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+	for <kexec@lists.infradead.org>; Wed, 03 May 2023 22:16:22 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=J7w+lD/WVxKLY8Mi78XO1w07rQtKVCZS89NH/EVeWZhxpyU1ku4GRICiBt75qrtlWOkmOpCZ9vi2oovYWsLlbZv3lYt9i5SrEGjQr0sq4ok5hWS61VU7tzH+THLchWGo0CYRTklP/WH3GGJMr+UAWupLM6wKKiqakar2z6rt/yIfLkRtCMjvuo3EGTNOqgG5MAzQZcPyYYMp0fdD9iPdxJJjYCl/OmwWIUOHh8+gW3b6ZFpVoIB7vD29nAhD3FyHxH70/vDX/k3ZUHtOVvfWavYrooTgnT7V19LW1DUxiTSLAYR4afvoPZ7MQRqWGE1lYz8nI2wKE5tOj5sNlm0oUA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=u+9oLK3J1Mh3/oUe3yK8J6S3tTKnx6ElCHgFQuw7xWo=;
+ b=iiFmC3PE1277QDDDYrrwIXlgcgqDqdXp+kCmPRvLY4aasAMoomxALdFKg4UoXCBxu/Mhb7BOH7wGqaJ5Pf0Rx5L0akMWVlM+4XglSq1LPMGJLGmNUJ6cbLePoCKKOik1ZV1e2dOWp8djNIlku/CJL4ICUVkcyLonYUlU9UuMSoIAMP2DpevRAq2ofl81mapsFw879qP26QUR/MHusg/CE2aw/7cJJboLQ7s1cILh2ld0wH8OFetiS1zSqS313IG5FcIyNGvoQqFNxSHPP4Qj40RRKqPauGrX01yBAfJt7IGXA0yAO6Vt5c2mxOGBXaEHwKR4CuRaCU27v3i0UW3tJg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=u+9oLK3J1Mh3/oUe3yK8J6S3tTKnx6ElCHgFQuw7xWo=;
+ b=oqYGcUXHb2X60L7IMdVyCG6QdKlpxH9oyvA+gGdnUbWdgwR2loTYkRIs8ShY4uu+WmLbJBjbfdOR/NBMZwHgDAD66tUW5zWaUlOs4XwRfts8Gl2duKQKp+v/n7tsyrZW1fRFTMgXCUWX9vBi2cR7vThP0Da93xTYP/EmknKnwfk=
+Received: from CO1PR10MB4531.namprd10.prod.outlook.com (2603:10b6:303:6c::22)
+ by DS0PR10MB6751.namprd10.prod.outlook.com (2603:10b6:8:11c::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6340.31; Wed, 3 May
+ 2023 22:16:20 +0000
+Received: from CO1PR10MB4531.namprd10.prod.outlook.com
+ ([fe80::ac1a:bf88:bdbf:2573]) by CO1PR10MB4531.namprd10.prod.outlook.com
+ ([fe80::ac1a:bf88:bdbf:2573%5]) with mapi id 15.20.6363.022; Wed, 3 May 2023
+ 22:16:20 +0000
+From: Eric DeVolder <eric.devolder@oracle.com>
+To: kexec@lists.infradead.org
+Cc: boris.ostrovsky@oracle.com, eric.devolder@oracle.com
+Subject: [PATCH v2 1/6] kexec: define KEXEC_UPDATE_ELFCOREHDR
+Date: Wed,  3 May 2023 18:16:06 -0400
+Message-Id: <20230503221611.2119-2-eric.devolder@oracle.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20230503221611.2119-1-eric.devolder@oracle.com>
+References: <20230503221611.2119-1-eric.devolder@oracle.com>
+X-ClientProxiedBy: SN7P220CA0002.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:806:123::7) To CO1PR10MB4531.namprd10.prod.outlook.com
+ (2603:10b6:303:6c::22)
 MIME-Version: 1.0
-In-Reply-To: <20230321-kexec_clang16-v6-4-a2255e81ab45@chromium.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PR10MB4531:EE_|DS0PR10MB6751:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6bc06da2-11ec-4463-e1ea-08db4c240593
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 	zMjMJQjFKK81to/fadC8PpPn81O6Y1iDwrk6CdgCmtvn6OO+CGS1QY4UVM128mP/JxKdM52q2icZ0budqtDqyZUwjAg/LwXmOfReFKMwY2ws2Avn6u1G+Hol3ZIo9vrEXnnAtSI0uOf57FE5Z74XTl3aHbUZRyD8epsT6d+4qxHwFDN61E4FVuQkNBrDVPtHKUPOTQ8MBy2/8GMOCDX/KGBP/bs4F/yjImUVc77gv2iCPNiCuH9LzYSc0qtQ/akowpw99w/TFCwvMcNqqZm/kSbQJv4kxrjfNgONGyNslS0FEFQfzIlb3eAQc8OuzTfcvsRKtdTfShyQP8JuwQ/hS3zReDY2otrJe4OK+rSeUN1S9SHpTkqqRB55mqKbZYxNT2DiKioVJqUiW+YNG717+xZJrlp8y96aptKM7018H4zdPD4ECPDB1w0bNbTyr+qV9zs8oh6/JTYDIDeM39YJ2aTFk3AFk8FJAACeCKDRlaQV/ux+A8kqfroF9mACAAve50LQXa0b41gEH3O8C/EJ2fF5XXvGE5c2fK9mlia+BpaJZQBl6GYe/6hRcrvgQHP8
+X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR10MB4531.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(366004)(346002)(376002)(39860400002)(136003)(451199021)(2616005)(6506007)(1076003)(6512007)(107886003)(26005)(41300700001)(38100700002)(6666004)(83380400001)(186003)(6486002)(478600001)(66556008)(316002)(4326008)(5660300002)(66476007)(6916009)(66946007)(2906002)(8676002)(36756003)(4744005)(86362001)(8936002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 	=?us-ascii?Q?Vgu1Z75OKAuEaMNy9TibRU2FtqJ4YI3BRgaSowDCBssp7Mw7AYrp26ToDm2d?=
+ =?us-ascii?Q?QvYRKRFeek9rOvlU9xE7dN+G0wBx8D6zaJaSro+oKk+P04gBmvhixwn6SEkt?=
+ =?us-ascii?Q?ARMsa4Ewky4sbYxrKttFi/gQp0FKLCKO7SfVK5h3WX3Csa+lgj5CWwxs6fwx?=
+ =?us-ascii?Q?twXbVyx+OlGtpGQN07VuHOeLp6EmorhdysyyGqoqTQVKqaWM9hj+OYp8kzyM?=
+ =?us-ascii?Q?CjwFOuBPSONV4DwTVf/ooMxWh2u91/7b1XKTtNMSr2r+IpxHsP4wUOWW9S6k?=
+ =?us-ascii?Q?h5unITTGMbwdOx2T9s0gb1Zeww7VdCbKEQi8700ccC2ZYoX7mVHkoamNGRlv?=
+ =?us-ascii?Q?qbtD4odHetiRThEICGpGko1mQ2aRKgxi7lblR5KSnMvTOJzHDqNWVpBGQ2MI?=
+ =?us-ascii?Q?gq7xFn4eCW0rjOu8i/z60CoM2kBUmrbwUoyIslqBSVpMQx98xpWAGQ6vl0Nn?=
+ =?us-ascii?Q?V1G6vkChNUWGKbecOHYAFB0oOHCnYz1Qq9ohGxxhnyKOTOcaNirpyarHfBLg?=
+ =?us-ascii?Q?Wwa13zA770VSYXBM+HI8jeUawtAn6+vUHrKug4KE+My0LowTyf/YETXI7WS+?=
+ =?us-ascii?Q?rbUlKrgj4hBC3UiHcdH+wYMRCAhh8xdYf7Doy31t535+Og2mdqn1N1TAcWpH?=
+ =?us-ascii?Q?tavA+qzr/23qGj0URRA79Q/31siUVXiwoW3cWmUAhGtQRF+fykCxd3lG0UqL?=
+ =?us-ascii?Q?bfQixdpiziI6sQPgl1JAfdEOMZoIJg+vA+4KTb9KK1LWisOf1oDUGM0/fYZ0?=
+ =?us-ascii?Q?ugZJ5SADASsx76bTVJQ2erTTPTSgojvs9wsoCtA8+FO+pxQoeyCRrt/ZB+nK?=
+ =?us-ascii?Q?H2kymyvq7qtW41m2EKxtNUTL5VqS1j3Gi5gw06ow1HaclRcuT9xrzfK1Cin6?=
+ =?us-ascii?Q?+RqTtynhpk4zLwX2r/qkWZs5km5xsLW44AtGc/20vPVtXdCE1JsGFDJkyXgt?=
+ =?us-ascii?Q?MEgcswDjQElFhnCxhpTJQ4fOAATHES5jU759cnJd1puHtwGn97+Bq51I/esJ?=
+ =?us-ascii?Q?R316hGqtF/epQiCjyrzFK+fWxjAH8RdMj6mXTvpPK6dvj2E10HO/obrO4p2Y?=
+ =?us-ascii?Q?Bziy5HEFXUYpWfsYq3GrWJQgGg9SB+qtmFPTq+L01x88LTYdoUTjUGX4UGyD?=
+ =?us-ascii?Q?UltdCTHWDKpFlTs11pPp/p3g0J9MRgytcnyUE19yrKUip40y8Qdbpe7FA+XP?=
+ =?us-ascii?Q?4f8o4d0enZyKqTaNgTnNF54C4v3I8VeJzwZ15R0XkMTks4uV9uk5siIpaJtc?=
+ =?us-ascii?Q?dZxjKKw42TaMcMVaS4DRxR3oBZhQEFW0B3ELt6bxa+nDidl30N+KrkyR60Qr?=
+ =?us-ascii?Q?kP2OuZxHTMNjhmBfYNdmW2eFEtccrIU8A5j9/R6VLB8XwZDaghDI5JhT4SwM?=
+ =?us-ascii?Q?6Hr8PHJnKgv0+xe7YCaVLIMolKY79L4UywPmxWntYyHoPL74TDM98prlW4ZT?=
+ =?us-ascii?Q?lVD6l6JDtbcq9sGV2nxyCJjCyWSl9BNkZ1y6LsHQGKRoCLjigQenfJLd12Bg?=
+ =?us-ascii?Q?mZYCaiPx7KKsECa081JjHXIP0oewoSHC6WuwIJCGmqRtLkizZAuBwkHQa4k3?=
+ =?us-ascii?Q?kQl8rAzGlVg6OGTk0y/0hUh+uoqvZ4W3zMhYK4ahyC3NiDmdYdfVqY7PVaxg?=
+ =?us-ascii?Q?sA=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 	GkXkYhXzCe3y2AAzH9qD3o+pShNEAKUiUbGRybHOkGjvO6DjRTHQTRu3PIHDrmzOT2vIpaUie/N+KP/74ZjK3IOg0/adKdTi724b+OJUUBLO09xjO296Cf56qwcG7HxHavGpHmu2UPQ1DNIhPJOw2gqDdy9/M/HnIH3M+cLOC1k5F0+6f/CXI3VsJ35UBepA41Uk37V60Y+afP+S6CcGV6WQlHNHjEWdcJI8zChEcDQlkB1+nInUNEg2QWA4JzOAQWZ6VaQxVl7Q5H0YveVi5fVoI8ayIxzA+ZFDAKNMklql7RZEBeRVTWKr6JG9tLN1+lgjgsbp1mu6lINw4yZTlknRiAiRFfw6y4DfiM+Fm0l8fBA4IbLMa7GKk6AfTxEtfndo9O/DoETUHkVVaasAb2Nj6PcPp28xybs5muK0LfnpnxxkRQUfNuJvfZs4MNFhKEKcWDpdBNdE4/OAEtolpjHm3lgywkdSzsubVUQkBN6eNxya/8ENBaF1C/1KXBsITicSpWSvsArguALQdeT1foZE4PvXjxT7PXQdUpytGKOjjvDS/nC3+ZkiH0kEuhiRhrrFz85XNEa2JAWP+y9v9RKXCl4c48Cf3wy9qX9siWHlypvYq6xhp794h5P1OWb62A1J88V7RYgz/vNkckFu621D+CcEHdyN4hBb6eCiOl2L06IQl6R4RQpvXSx+WwIXiPDxd+8msws6kpRSW0KK+Sp1Ps8tJ2qt475lwF6VKV22+Ab7BjV0in94NevNYtOXSnBMMswQopnsUn+dLJy09w==
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6bc06da2-11ec-4463-e1ea-08db4c240593
+X-MS-Exchange-CrossTenant-AuthSource: CO1PR10MB4531.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2023 22:16:20.0159
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 85KFa2V+2/wamX6nM1pHYHBsdqDEZGeP/vM91KsH3kT6jet4ekgXliQsYfnVGa5+MeymLJIdpjdVKMMs00Ny70QGnx7F9gTMg3Qb16XTWeE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB6751
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-05-03_14,2023-05-03_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=830
+ phishscore=0 bulkscore=0 suspectscore=0 mlxscore=0 spamscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2305030191
+X-Proofpoint-GUID: N7m0OBq3bUlfuSjUGGCkHcC6W7SOC5Hm
+X-Proofpoint-ORIG-GUID: N7m0OBq3bUlfuSjUGGCkHcC6W7SOC5Hm
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230501_104107_421076_FD5E47B1 
-X-CRM114-Status: GOOD (  21.34  )
-X-Mailman-Approved-At: Wed, 03 May 2023 10:39:08 -0700
+X-CRM114-CacheID: sfid-20230503_151627_504974_72BE5FB3 
+X-CRM114-Status: GOOD (  17.48  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,98 +160,39 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============8130223688528627959=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+The Linux kernel defines this flag to indicate that the kexec_load()'ed
+image is setup so that the kernel may directly modify the elfcorehdr
+(and not cause the purgatory digest checksum to fail).
 
---===============8130223688528627959==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="fl35W8zTCu+OA5lB"
-Content-Disposition: inline
+Define this flag to match/mirror the kernel flag.
 
+Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+---
+ kexec/kexec-syscall.h | 1 +
+ 1 file changed, 1 insertion(+)
 
---fl35W8zTCu+OA5lB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+diff --git a/kexec/kexec-syscall.h b/kexec/kexec-syscall.h
+index 1e2d12f..2559bff 100644
+--- a/kexec/kexec-syscall.h
++++ b/kexec/kexec-syscall.h
+@@ -112,6 +112,7 @@ static inline long kexec_file_load(int kernel_fd, int initrd_fd,
+ 
+ #define KEXEC_ON_CRASH		0x00000001
+ #define KEXEC_PRESERVE_CONTEXT	0x00000002
++#define KEXEC_UPDATE_ELFCOREHDR	0x00000004
+ #define KEXEC_ARCH_MASK		0xffff0000
+ 
+ /* Flags for kexec file based system call */
+-- 
+2.31.1
 
-Hey Ricardo,
-
-On Mon, May 01, 2023 at 02:38:22PM +0200, Ricardo Ribalda wrote:
-> If PGO is enabled, the purgatory ends up with multiple .text sections.
-> This is not supported by kexec and crashes the system.
->=20
-> Cc: stable@vger.kernel.org
-> Fixes: 930457057abe ("kernel/kexec_file.c: split up __kexec_load_puragory=
-")
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> ---
->  arch/riscv/purgatory/Makefile | 5 +++++
->  1 file changed, 5 insertions(+)
->=20
-> diff --git a/arch/riscv/purgatory/Makefile b/arch/riscv/purgatory/Makefile
-> index 5730797a6b40..cf3a44121a90 100644
-> --- a/arch/riscv/purgatory/Makefile
-> +++ b/arch/riscv/purgatory/Makefile
-> @@ -35,6 +35,11 @@ CFLAGS_sha256.o :=3D -D__DISABLE_EXPORTS
->  CFLAGS_string.o :=3D -D__DISABLE_EXPORTS
->  CFLAGS_ctype.o :=3D -D__DISABLE_EXPORTS
-> =20
-> +# When profile optimization is enabled, llvm emits two different overlap=
-ping
-> +# text sections, which is not supported by kexec. Remove profile optimiz=
-ation
-> +# flags.
-> +KBUILD_CFLAGS :=3D $(filter-out -fprofile-sample-use=3D% -fprofile-use=
-=3D%,$(KBUILD_CFLAGS))
-
-With the caveat of not being au fait with the workings of either PGO or
-of purgatory, how come you modify KBUILD_CFLAGS here rather than the
-purgatory specific PURGATORY_CFLAGS that are used later in the file?
-
-Cheers,
-Conor.
-
-> +
->  # When linking purgatory.ro with -r unresolved symbols are not checked,
->  # also link a purgatory.chk binary without -r to check for unresolved sy=
-mbols.
->  PURGATORY_LDFLAGS :=3D -e purgatory_start -z nodefaultlib
->=20
-> --=20
-> 2.40.1.495.gc816e09b53d-goog
->=20
->=20
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
-
---fl35W8zTCu+OA5lB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZE/5qAAKCRB4tDGHoIJi
-0tO7AQDCFxxBDCm6m1lRjliaYENcoYHVqFHrLwGzbHGrXVn/VQD/aKUuG6nnmBC9
-4JdlDj98flb/kiL3Z25m/1+UmBAjSAk=
-=uz5+
------END PGP SIGNATURE-----
-
---fl35W8zTCu+OA5lB--
-
-
---===============8130223688528627959==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============8130223688528627959==--
-
