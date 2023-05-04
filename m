@@ -4,106 +4,196 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 92D5DC77B7C
-	for <kexec@archiver.kernel.org>; Thu,  4 May 2023 06:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 23A3FC77B78
+	for <kexec@archiver.kernel.org>; Thu,  4 May 2023 14:51:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:Cc:To:
-	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=26qdJDRhcg1hcuSkEn9ztPyCN+RS++SXFd4WJ1qWZgI=; b=g4a/BjUuwwWxSX/ffHFLO5eldN
-	qBl2B0iagzCd8St06RSeqkfQ/C8Nbs8HuF4ubN5bHhOmRwLPtTkltGzIfCWmhkuU3A2AhIzbvd1g6
-	BVF5MFjVyhNm8eDh0UyaxomCjCDBEM3WAvXwjm6KQCPzYwEbt1XAhNquCpRn1ggr3jG3yOhmka6yX
-	LCZgLhe4NlKhA6gMKNONK9rlMVR6XQ9gmB4nlV3PcPQ4XtDxQz1wgFpJjh0D236t2wMd29Y+uvthg
-	4P6TMWFtChMOwetv3CH/wx19H1kDOsSFEJW7qDO6NlJQYyaW2+dihyoM0mMrdS2s/c3DXJIslenp5
-	PBiGq72A==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=mf1bG7dutaWZyk+/EaG89HcIgDtDwolA34U/rwfZwUM=; b=jPG8kwW4wSrahM
+	KnpdqMW3ScR/VuNvKgf4cxoNDgcoFYuP6Y1q32eZzzl3oZzGAeAkkz2Jp/A2q3O56ahVNH115B+lk
+	XpbhU2cyx7EKNqlJYkwS/x/TbstVpVfGQOZ9MWDS0orfPrSMyHFxdmItPrbA2q3BKViTuVBngBN3f
+	XCAWlI4TSVIjfhqsPcvpG9OK9l4GlouTBxB+AQTRj+2BeV6nhPQ8VUbEt68ZdhMS/RET8hjSxjP5D
+	cTkJVIDImZHcj1D6IG8QzGE8sPdY5nWvPQc6bYB6irDl1/L+6Uh6CcmMEsuR59xNWLNxqd8KFmprM
+	CljoQzCucXdGaVtb2W5Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1puSNA-006kbd-1N;
-	Thu, 04 May 2023 06:23:24 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1puaIS-0088VC-03;
+	Thu, 04 May 2023 14:51:04 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1puSN6-006kaA-15
+	id 1puaIP-0088Ul-2v
+	for kexec@bombadil.infradead.org;
+	Thu, 04 May 2023 14:51:02 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=MIME-Version:Content-Type:
+	Content-Transfer-Encoding:References:In-Reply-To:Message-Id:Date:Subject:Cc:
+	To:From:Sender:Reply-To:Content-ID:Content-Description;
+	bh=qg+QmQAr7G2Du8jRUNp9LdSED4njF2lSJssP8nuN8+w=; b=V3MjsG3H8GILU927miI2t5a9Xg
+	m83pxMD8g+KPezrFaObCd4AzWQEy42/lzrPpoa2cKyhpzUp2gB4qHJqWLVtJWMp4zwjZ12XKpyQX2
+	phjnNkQynj8rIjN3WuV/uBTZ3WKcFZo2fiFn8V/xaCYVvwrEZfGiSfuRY5y/wO7AU5xnWRZXPLOwS
+	xfZ8yabxpIA6gXAYxR5eGL5cd0APahh1ytmn6c14vkUmqAN5Uw0VOtIckn3IxY5ALMhtlp3als3SB
+	OITCjnqVWsMw0CAA1lggRueiVAlxpVvb6Zm87cdTl2k2ctw7Dkk4QHj7r05jUDWKRHOOnE7pni4v4
+	t/H2fnSw==;
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
+	by desiato.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
+	id 1puaIL-001kxj-2f
 	for kexec@lists.infradead.org;
-	Thu, 04 May 2023 06:23:22 +0000
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3446BMAB012455;
-	Thu, 4 May 2023 06:22:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=8zP22wMYK1SkbM5RUGkAZChKldrYmxLbOP7h31tcplg=;
- b=sRJuf7LvI++fTilKYJbn0rsv3A2BU1ssn/QARur1ZgpB169KYvJD8HjLNejqQytDw7Kt
- ddh2KJ9kWkEeWBjn7d4SaqsQYfK2O4KsENjJfkGWIF0fMDdL15iTeBcybZ04dhQ1nraE
- SBz3VwbaV9SxJ6M8Ey5erfsdTPteAiMGFeQrWM62cLv+ivmD4modDPoBhEeys70F+Vm0
- edQwt5GAUUGf/DZVPLKDf4vtCIHlLv7soB6SIGl3HeQrs9q8fo+6tDpA0IhmkNffNICT
- mOpVAyQoYtHG+sneiXyhVQtItoQmUDIMCZgphDDG+JOk2iq3JsgUkCetX+rOGtGW5XLw jA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qc6sk14pc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 04 May 2023 06:22:43 +0000
-Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3446Mhon020223;
-	Thu, 4 May 2023 06:22:43 GMT
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qc6sk14ng-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 04 May 2023 06:22:43 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-	by ppma04ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3441cahV010613;
-	Thu, 4 May 2023 06:22:40 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma04ams.nl.ibm.com (PPS) with ESMTPS id 3q8tv6tnrq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 04 May 2023 06:22:40 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3446MbWV58655120
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 4 May 2023 06:22:37 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A390E20040;
-	Thu,  4 May 2023 06:22:37 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AC89A20076;
-	Thu,  4 May 2023 06:22:30 +0000 (GMT)
-Received: from [9.43.36.155] (unknown [9.43.36.155])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  4 May 2023 06:22:30 +0000 (GMT)
-Message-ID: <f7364a0b-d5f2-5f38-e3cb-f3d0dd6184cf@linux.ibm.com>
-Date: Thu, 4 May 2023 11:52:28 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v22 0/8] crash: Kernel handling of CPU and memory hot
- un/plug
-Content-Language: en-US
-To: Eric DeVolder <eric.devolder@oracle.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, kexec@lists.infradead.org, ebiederm@xmission.com,
-        dyoung@redhat.com, bhe@redhat.com, vgoyal@redhat.com
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com, nramas@linux.microsoft.com,
-        thomas.lendacky@amd.com, robh@kernel.org, efault@gmx.de,
-        rppt@kernel.org, david@redhat.com, sourabhjain@linux.ibm.com,
-        konrad.wilk@oracle.com, boris.ostrovsky@oracle.com
-References: <20230503224145.7405-1-eric.devolder@oracle.com>
-From: Hari Bathini <hbathini@linux.ibm.com>
-In-Reply-To: <20230503224145.7405-1-eric.devolder@oracle.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: y3RnRaXugMdwOQJvW50vwU7meVk_10Li
-X-Proofpoint-ORIG-GUID: -1k6iwG7zgQo2W4UntFZ84FadHkPsMDm
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	Thu, 04 May 2023 14:51:00 +0000
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 344Dnovb005356;
+	Thu, 4 May 2023 14:50:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references :
+ content-transfer-encoding : content-type : mime-version;
+ s=corp-2023-03-30; bh=qg+QmQAr7G2Du8jRUNp9LdSED4njF2lSJssP8nuN8+w=;
+ b=2PZMoBdB7WordqHmlwvoJ7mvOqrIIxCMTRR5nQACGOoKGb82FvAHEQt65vK0HyVrxWIj
+ k3O271cO6f+gXDngBeia3AtC7DEiJ43HEqeVREoNZmJO/2Fu/GdfBW9Nwjp8upG3yQn/
+ IedbviYyMX4fykm/oe873xAm9spFWXNWdFdvNowSysrzzV2i9FafekYa6SiUpoSUH6MQ
+ wwSYDmCcVZVrtHBmm9AIGb2jMK97E8ToQn+ZgAoe0JCZ9tg/P+lQVC+cf0Kt5SZhA9X7
+ wkL9PtU33Ssdt4QgrHhiBQhJwyR+nDhUXd/mqljWSABBWtBHCTFXEeiYuxHWfx1KM7SH iA== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3q8t1424bv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 04 May 2023 14:50:31 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 344EG6hF026777;
+	Thu, 4 May 2023 14:50:30 GMT
+Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam02lp2045.outbound.protection.outlook.com [104.47.51.45])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3q8spevny5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 04 May 2023 14:50:30 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VWo1eGXld7mr1QbncQ+skXBpefkQZgIiyIYtEmgV/tKshl9dZ+btsXazxbIIsX78yk+AlX0iPwVe4VOY3V1bP8GgJsIaNHakuoHU6uiuLtpQNv/70YbKBVghewAraCvlr+uioHbcNy/s35DvNyxOUcWA2L+CsB+IT1K3F/uaD6a0yCz1DbvrwZc9TcMv00ozq7Pa6B0cGRwitnAjtJ0BAIMUumpck3m4imz4dTAGjLYNEUtFdouH0t+GBQ4ZB6e5irB5yLwQRmTb8qXR/OvaJlvuZwzen9b5nWB1y+EObw62OxniRneZlvm0uaalejdFV0pJH8JuuaxMxZd5BwYTtw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qg+QmQAr7G2Du8jRUNp9LdSED4njF2lSJssP8nuN8+w=;
+ b=TxajO8b2f1S9whAvjMJ8mUhzuFChLK8N+F+Trl4iaXx2Zffw8wF1Da80pKZfFJokp24jlqIB9xtKsVuiJAS/tFGRmVFrMBFVbbSGhnkq43vTG255NF6FCne1UDzXM8MUcOe3TH6kosvwu9xU26X+31oQQoPxzM4s14OwwTVk3PEPpOyR+TvII0+bzSuvQHN096fU9InVdNMriEO33oIE6skFxMnZ+No3OXP4wsTP2g6paWyVvz3nyhFOg2h5GPci52weaSM+++YQ21XRWyWVf7t1vXGZnojMo+/e6U03rz8CZoD76+HdTiCy4T53LscCYGUQKGM7MYqQknqUofe+pw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qg+QmQAr7G2Du8jRUNp9LdSED4njF2lSJssP8nuN8+w=;
+ b=FqbH59PjIeYB6Hp/eF3Bi2x4HNcGKVPZyZW3wQbupqcPkFRUysgeyxkPkj2mRKAkJDGQLsoYf+VtTgz33IK/PG4wbRalT5/pvt23nXVdG21ykaqayagNeNGtzhz4xLBGZhLVNadyNu+r27IbQZgjlK8LGL/VK2WaJWG+QWl3Hvg=
+Received: from BY5PR10MB3793.namprd10.prod.outlook.com (2603:10b6:a03:1f6::14)
+ by DM4PR10MB7505.namprd10.prod.outlook.com (2603:10b6:8:18a::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6363.26; Thu, 4 May
+ 2023 14:50:28 +0000
+Received: from BY5PR10MB3793.namprd10.prod.outlook.com
+ ([fe80::a007:b0c1:5cb:329a]) by BY5PR10MB3793.namprd10.prod.outlook.com
+ ([fe80::a007:b0c1:5cb:329a%5]) with mapi id 15.20.6363.026; Thu, 4 May 2023
+ 14:50:28 +0000
+From: Ross Philipson <ross.philipson@oracle.com>
+To: linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-crypto@vger.kernel.org, iommu@lists.linux-foundation.org,
+        kexec@lists.infradead.org, linux-efi@vger.kernel.org
+Cc: ross.philipson@oracle.com, dpsmith@apertussolutions.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        ardb@kernel.org, mjg59@srcf.ucam.org,
+        James.Bottomley@hansenpartnership.com, luto@amacapital.net,
+        nivedita@alum.mit.edu, kanth.ghatraju@oracle.com,
+        trenchboot-devel@googlegroups.com
+Subject: [PATCH v6 01/14] x86/boot: Place kernel_info at a fixed offset
+Date: Thu,  4 May 2023 14:50:10 +0000
+Message-Id: <20230504145023.835096-2-ross.philipson@oracle.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20230504145023.835096-1-ross.philipson@oracle.com>
+References: <20230504145023.835096-1-ross.philipson@oracle.com>
+X-ClientProxiedBy: DM6PR11CA0017.namprd11.prod.outlook.com
+ (2603:10b6:5:190::30) To BY5PR10MB3793.namprd10.prod.outlook.com
+ (2603:10b6:a03:1f6::14)
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BY5PR10MB3793:EE_|DM4PR10MB7505:EE_
+X-MS-Office365-Filtering-Correlation-Id: 39a7c5cf-949a-4ebf-f32a-08db4caee693
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 	iYSoaTWDhBqctPxMoYisLVlxrcbUT72eeENKiSHiuauQ5o2m9NtDwW0NhX4XLUNYobZ4LvBX3Lo5tswhQTWlShQ/wf0xmEMlywmzvtyj7yw/ht12EIh2gaGq4e06xYl/H92uUz9pUFipcZVdXLpHlSulhzYUgFLk7sr3WaFKNxlhb6xLyW2WqGHEGnPR7C7+76QMFaco/iJsjhOvdfskncbc+yQTRdhgeJuhu8+MgKzsykz5xJ6sLdIKthmP6Rw+suWgketPZtDTDID0385n6A/y6WN86t3pBKlRo9sUz/br4BLfaAZYBwUVWrTZ2BsFF2Azp/5x4wHeldBGPmkPgTPwAkb3YywcNxtKbUP/nX9t6lc0rXxrtBY6cMJW0kGfqM/xO5j3KEZ+1KGqQK3d5+A7cszydAo2dqxOqHG4a07A7JXGzpoaIEWe9/fhwgiJz5Nq/DkmZN3DFUQD4J6CXAEcDsl+7L+ZuPINAFnqejvHWoRmh74xgTsH7a7CC6pJ7ZcNP90WE6pUo1Yt0aaTVua3cFYuVBjP/iaoqSEh8WwybalyOuvDNz4KuLKk8P4F
+X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB3793.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(346002)(366004)(396003)(136003)(39860400002)(376002)(451199021)(83380400001)(6486002)(2906002)(478600001)(316002)(5660300002)(8936002)(41300700001)(8676002)(44832011)(66946007)(66476007)(66556008)(4326008)(38100700002)(7416002)(86362001)(36756003)(6666004)(186003)(1076003)(26005)(6512007)(6506007)(2616005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 	=?us-ascii?Q?Gwcc0gJxsCbU52NCwdzzFtKJ+quf05zqJzOkYhfQHEhgPHXci32w7Ru4iAro?=
+ =?us-ascii?Q?oV4m7cO7KhCvl7X1zsoeGAhgJoPhr0hUGRiWLh4ZMVDmFFeub7YsvDyKln51?=
+ =?us-ascii?Q?mtckzeDz4mF+IEENZitvH3RaICDaAcwYYynS6lNdKl5D9yA0fko/c0+RlsmQ?=
+ =?us-ascii?Q?UwBEOsndd+OMN49+BRG+HiJcnSgrmnsnNX++jxszr3x3p6rd7zYBzQnTYpHx?=
+ =?us-ascii?Q?Rcc2YMx4CI9zD0jPEbmWK0aVOvHo2Cl/MBboeDcFI43WreV5sTJaqVjM0azm?=
+ =?us-ascii?Q?mDQQ5wcTz+T33mazZPC2uLjsVpKjDkW8x28pA1B4UDeUbGEK3mRUpbRGvkwO?=
+ =?us-ascii?Q?KdDfpr0oJii6TZfIGgV92ZUw8uW5vxvm5HtojYyXJ/mv011tPbbY9oGMZXjn?=
+ =?us-ascii?Q?L54sgj/FvntWNc6ww3ZczV6jca2C49L2nU5mJGty0X0tl3BopsmpplX32WrI?=
+ =?us-ascii?Q?6AXB3HmqeTudeRYWt0e5iMmhnOM3nzRbhIuYTCDavg99ZHpNBzCzmey0xnzt?=
+ =?us-ascii?Q?W6rpgVmypqskE8EsLo+OqynWVo5+mRWcqF+9g5nPsmYmgu+l1XD9J45y5wIl?=
+ =?us-ascii?Q?6qh58DqyR65yH9L0WCThhtul/EYagbp1frhIzHKt4YlcVI4O23intHHOqP4n?=
+ =?us-ascii?Q?OQfobZpoLC/ZmnKd1SD0OUviDIP0t7lxUR1lhpW302+HKR6QIe2tZAxFuAlk?=
+ =?us-ascii?Q?AXNxdwL4SSUx0vUX372MlqLLo5LOQfskZ+36EwqOb6N8V/uO+3iMrwUg9md5?=
+ =?us-ascii?Q?tq1AGWOAWYpj3Pcp8jmKvP2LoyrsbIrDdWWGBTQdDisIHC5c9dYvkc6J9D48?=
+ =?us-ascii?Q?8QPNVYqHJqoNcHXfgXZfQ2EsLj6dtGPBom8Cw3i9scKalbAq9YAgteSZYbSg?=
+ =?us-ascii?Q?MoH4RMG72V/RkUUukBGYcZtnIzRRTngEvoShJvjvg3Kl0iEtAOZKRfuTP1K1?=
+ =?us-ascii?Q?44a0Mjrk0zF5bgTX6NG26Li8UreVSEmSrYgwEJyO7vUT1I5JJUWqRFtXS2cb?=
+ =?us-ascii?Q?fNeQsoCVispflHEdM1NRBvuWD2Lg1jpOd6n+3M+fso6s9+y6dAhYV6a6gUdh?=
+ =?us-ascii?Q?x33NgNDwKu7r7o8ABXhbT+h+MzDntVVI4EDFcvJBbLrFMCIuHTk/ZARw3N2C?=
+ =?us-ascii?Q?ZtkRwVTe93Psuh8D4uOHNSHNO1erP5rQPyhJI3uA7NOgEFDvuRPjWv2GXa+b?=
+ =?us-ascii?Q?H4ZYFtMn9x7vSHj5YHkc9B3TuAaMqW+mT9jKBcr/nYCVrjqHdraBSP0Yw0Pi?=
+ =?us-ascii?Q?WxYrrPlNiaF2ugoGI3g/iMUwC7aBSOc3gDn/vvfK/TFhyuZvRMfkNiIjtcbm?=
+ =?us-ascii?Q?DHnaQsSsYWptSbmiWEprocsUTKnBUsujvjEjY6gFdtFy/FfBATCGH/yPR/GI?=
+ =?us-ascii?Q?Sh4Kcma7SQHIieULIMMZskOk4HDjKRlHEIUASTecbBZq5LJ7qK4OPG5m0fW9?=
+ =?us-ascii?Q?PL6IPZ1sXEU5pwDQXdMQfnr/rvsRnZ7QeogQJd8LF5nZZkYZiNw5llAR4JP4?=
+ =?us-ascii?Q?Qmab1N/jkpxybxaUqMiLHSVxQ3wnPOCrls/c2XGf5TbCRlpbsa61hm0TlHYb?=
+ =?us-ascii?Q?VDIN2f1B1hvK4ZsP+5WhJagfYD+aN4lM7eXnFuR6zfOende15jE/X/+vVkLk?=
+ =?us-ascii?Q?wg=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 	=?us-ascii?Q?KNcU9Suytxr9/R2tsKz/ns0vdvbZEX4LsLsTgdBIYPLIW3podVdwVGR3iJEU?=
+ =?us-ascii?Q?DvOMOtEZdTefyauTd8Y0uaDEOgPFyQqqj9F9RsG37opfNf3ui2DDzz79VKd0?=
+ =?us-ascii?Q?mA+IS/Gou5rF3Rq9aPR7PAd28SQc4LWWSlvxhf+0Q3kj6/iKqwhhcA2EsK9v?=
+ =?us-ascii?Q?+6uhh1t7LxshUmTYe7PS1ePsjFcPU9+zAevjl5NdAWfNhq8jP8zTF/i8vPbQ?=
+ =?us-ascii?Q?6AkrD736dGWB6u747wYXPgkuiK3HZLHTFA5y8B/ciY9sJjgG9svLmHH61e/J?=
+ =?us-ascii?Q?mdunJfgUQ6Q2TLHa5/WhylPFBIHTcozO7xG9I8VpG7/9DXnH5DiO86cJNVKD?=
+ =?us-ascii?Q?dsu/HN70LzBfldGql4ak/xEwP2CJSe7Bmz0yYIqtPOkbqqnhEGLl1m3cQoeO?=
+ =?us-ascii?Q?WKd+j5uVBK1XsD77/GSZizZOuFOXa4gCwin/wQQ/6SBfocKHYWmGX7VeiHhM?=
+ =?us-ascii?Q?ymp0FdSqoDTFpsyUXjtX+FyB0DrfPVhDcYfhcUiZApdJB7T37+xVzAvWZ3Xj?=
+ =?us-ascii?Q?Aj1jLcH4JmeeolCk72eF/P42GvqxOuL70OQ9JVXa9VSSprlbLwZxEOzmNsKq?=
+ =?us-ascii?Q?+ZqEY5MK1pll7PQhXporZMuTpVhRhbJ7UW8DPRPfVkifrUL3oFjJ5VlCYIkJ?=
+ =?us-ascii?Q?NmGbPGW3mE33ss3/JgH7Yw1NLi1q0GKog84NCpjet7s1ESfZwDiysrfhwfmz?=
+ =?us-ascii?Q?r2ieTYlGOFfaPcRWRE71NcFYdImMBWX1hk0AxQBNDp+TgAjbVYpjgEG8l0JR?=
+ =?us-ascii?Q?VparXWENgB3TTatSdNinsMdX0IIRWzN3M8sXZV9XUdpEyMBpE9vQzkPAxOAs?=
+ =?us-ascii?Q?25zpRTZLuYEhhC9wGtUx8+EsXS54U/ziyHVd9mrXR/ZZ2f39QO++j1W7Oq5F?=
+ =?us-ascii?Q?4rS/7/9CdmytPxBl7dwRbrHRIQnnUsQs+wCNjW+1AEUI2qJmx4NVSaTnYvnn?=
+ =?us-ascii?Q?SkaHEZjzQgoVy20uqA2YOBMo4dSTH+noidklr8VMDl/Kq0WOD6b3rneGfeIG?=
+ =?us-ascii?Q?TddwnzUu2YiQ34hnbPI6p1Jh08SdNcW80bH5Mf7OMSsqCxlOQoCy6jzrHcaf?=
+ =?us-ascii?Q?zRUf9Fp5te7oEBktT+jmKnKnnlJD6INgVIuze/wEyVuoIJWaTJJEbcmVYozN?=
+ =?us-ascii?Q?IBO7VqpUHRbgrnyKYhw5jkvS3aI04o84szSkHAMtpK44t/LlF+gozPCG2V3n?=
+ =?us-ascii?Q?Qtl0uVJpeBLgAR1ZMIQ0wB17hw48TObLAMo64RbpdrFr3AcUJXOF1uQ5dW1K?=
+ =?us-ascii?Q?KMYPhqCXLkT2kQOdKjGqCXIPmoorcqLiYvmfiogOeEexGHKFe/p3mAPt85L7?=
+ =?us-ascii?Q?Kcs=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 39a7c5cf-949a-4ebf-f32a-08db4caee693
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB3793.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 May 2023 14:50:28.1132
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: rhLIlcPHlxhro4uZOdIT23UvFxmvIZQnESvKp/l5FkXFDwM6X8Df1MiXmZH14ZozEo2FAbWJboHxJfdKKfmxrhjieVRoDFLabg95hwx6y/c=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR10MB7505
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-05-04_03,2023-05-03_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- impostorscore=0 spamscore=0 malwarescore=0 lowpriorityscore=0 bulkscore=0
- adultscore=0 priorityscore=1501 suspectscore=0 mlxlogscore=999
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2303200000 definitions=main-2305040050
+ definitions=2023-05-04_10,2023-05-04_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 spamscore=0
+ mlxlogscore=999 mlxscore=0 adultscore=0 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2303200000
+ definitions=main-2305040122
+X-Proofpoint-GUID: IxaWVgAASc4In9T5KoE_kFBjH55EL3GD
+X-Proofpoint-ORIG-GUID: IxaWVgAASc4In9T5KoE_kFBjH55EL3GD
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230503_232320_592507_BFD1F4B9 
-X-CRM114-Status: GOOD (  45.09  )
+X-CRM114-CacheID: sfid-20230504_155058_436348_6FB4B988 
+X-CRM114-Status: GOOD (  26.36  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -115,313 +205,134 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+From: Arvind Sankar <nivedita@alum.mit.edu>
 
+There are use cases for storing the offset of a symbol in kernel_info.
+For example, the trenchboot series [0] needs to store the offset of the
+Measured Launch Environment header in kernel_info.
 
-On 04/05/23 4:11 am, Eric DeVolder wrote:
-> Once the kdump service is loaded, if changes to CPUs or memory occur,
-> either by hot un/plug or off/onlining, the crash elfcorehdr must also
-> be updated.
-> 
-> The elfcorehdr describes to kdump the CPUs and memory in the system,
-> and any inaccuracies can result in a vmcore with missing CPU context
-> or memory regions.
-> 
-> The current solution utilizes udev to initiate an unload-then-reload
-> of the kdump image (eg. kernel, initrd, boot_params, purgatory and
-> elfcorehdr) by the userspace kexec utility. In the original post I
-> outlined the significant performance problems related to offloading
-> this activity to userspace.
-> 
-> This patchset introduces a generic crash handler that registers with
-> the CPU and memory notifiers. Upon CPU or memory changes, from either
-> hot un/plug or off/onlining, this generic handler is invoked and
-> performs important housekeeping, for example obtaining the appropriate
-> lock, and then invokes an architecture specific handler to do the
-> appropriate elfcorehdr update.
-> 
-> Note the description in patch 'crash: change crash_prepare_elf64_headers()
-> to for_each_possible_cpu()' and 'x86/crash: optimize CPU changes' that
-> enables further optimizations related to CPU plug/unplug/online/offline
-> performance of elfcorehdr updates.
-> 
-> In the case of x86_64, the arch specific handler generates a new
-> elfcorehdr, and overwrites the old one in memory; thus no involvement
-> with userspace needed.
-> 
-> To realize the benefits/test this patchset, one must make a couple
-> of minor changes to userspace:
-> 
->   - Prevent udev from updating kdump crash kernel on hot un/plug changes.
->     Add the following as the first lines to the RHEL udev rule file
->     /usr/lib/udev/rules.d/98-kexec.rules:
-> 
->     # The kernel updates the crash elfcorehdr for CPU and memory changes
->     SUBSYSTEM=="cpu", ATTRS{crash_hotplug}=="1", GOTO="kdump_reload_end"
->     SUBSYSTEM=="memory", ATTRS{crash_hotplug}=="1", GOTO="kdump_reload_end"
-> 
->     With this changeset applied, the two rules evaluate to false for
->     CPU and memory change events and thus skip the userspace
->     unload-then-reload of kdump.
-> 
->   - Change to the kexec_file_load for loading the kdump kernel:
->     Eg. on RHEL: in /usr/bin/kdumpctl, change to:
->      standard_kexec_args="-p -d -s"
->     which adds the -s to select kexec_file_load() syscall.
-> 
-> This kernel patchset also supports kexec_load() with a modified kexec
-> userspace utility. A working changeset to the kexec userspace utility
-> is posted to the kexec-tools mailing list here:
-> 
->   http://lists.infradead.org/pipermail/kexec/2023-May/027049.html
-> 
-> To use the kexec-tools patch, apply, build and install kexec-tools,
-> then change the kdumpctl's standard_kexec_args to replace the -s with
-> --hotplug. The removal of -s reverts to the kexec_load syscall and
-> the addition of --hotplug invokes the changes put forth in the
-> kexec-tools patch.
+Since commit (note: commit ID from tip/master)
 
-The changes look good to me. For the series..
+commit 527afc212231 ("x86/boot: Check that there are no run-time relocations")
 
-Acked-by: Hari Bathini <hbathini@linux.ibm.com>
+run-time relocations are not allowed in the compressed kernel, so simply
+using the symbol in kernel_info, as
 
-> 
-> Regards,
-> eric
-> ---
-> v22: 3may2023
->   - Rebased onto 6.3.0
->   - Improved support for kexec_load(), per Hari Bathini. See
->     "crash: hotplug support for kexec_load()" which is the only
->     change to this series.
->   - Applied Baoquan He's Acked-by for all other patches.
-> 
-> v21: 4apr2023
->   https://lkml.org/lkml/2023/4/4/1136
->   https://lore.kernel.org/lkml/20230404180326.6890-1-eric.devolder@oracle.com/
->   - Rebased onto 6.3.0-rc5
->   - Additional simplification of indentation in crash_handle_hotplug_event(),
->     per Baoquan.
-> 
-> v20: 17mar2023
->   https://lkml.org/lkml/2023/3/17/1169
->   https://lore.kernel.org/lkml/20230317212128.21424-1-eric.devolder@oracle.com/
->   - Rebased onto 6.3.0-rc2
->   - Defaulting CRASH_HOTPLUG for x86 to Y, per Sourabh.
->   - Explicitly initializing image->hp_action, per Baoquan.
->   - Simplified kexec_trylock() in crash_handle_hotplug_event(),
->     per Baoquan.
->   - Applied Sourabh's Reviewed-by to the series.
-> 
-> v19: 6mar2023
->   https://lkml.org/lkml/2023/3/6/1358
->   https://lore.kernel.org/lkml/20230306162228.8277-1-eric.devolder@oracle.com/
->   - Rebased onto 6.2.0
->   - Did away with offlinecpu, per Thomas Gleixner.
->   - Changed to CPUHP_BP_PREPARE_DYN instead of CPUHP_AP_ONLINE_DYN.
->   - Did away with elfcorehdr_index_valid, per Sourabh.
->   - Convert to for_each_possible_cpu() in crash_prepare_elf64_headers()
->     per Sourabh.
->   - Small optimization for x86 cpu changes.
-> 
-> v18: 31jan2023
->   https://lkml.org/lkml/2023/1/31/1356
->   https://lore.kernel.org/lkml/20230131224236.122805-1-eric.devolder@oracle.com/
->   - Rebased onto 6.2.0-rc6
->   - Renamed struct kimage member hotplug_event to hp_action, and
->     re-enumerated the KEXEC_CRASH_HP_x items, adding _NONE at 0.
->   - Moved to cpuhp state CPUHP_BP_PREPARE_DYN instead of
->     CPUHP_AP_ONLINE_DYN in order to minimize window of time CPU
->     is not reflected in elfcorehdr.
->   - Reworked some of the comments and commit messages to offer
->     more of the why, than what, per Thomas Gleixner.
-> 
-> v17: 18jan2023
->   https://lkml.org/lkml/2023/1/18/1420
->   https://lore.kernel.org/lkml/20230118213544.2128-1-eric.devolder@oracle.com/
->   - Rebased onto 6.2.0-rc4
->   - Moved a bit of code around so that kexec_load()-only builds
->     work, per Sourabh.
->   - Corrected computation of number of memory region Phdrs needed
->     when x86 memory hotplug is not enabled, per Baoquan.
-> 
-> v16: 5jan2023
->   https://lkml.org/lkml/2023/1/5/673
->   https://lore.kernel.org/lkml/20230105151709.1845-1-eric.devolder@oracle.com/
->   - Rebased onto 6.2.0-rc2
->   - Corrected error identified by Baoquan.
-> 
-> v15: 9dec2022
->   https://lkml.org/lkml/2022/12/9/520
->   https://lore.kernel.org/lkml/20221209153656.3284-1-eric.devolder@oracle.com/
->   - Rebased onto 6.1.0-rc8
->   - Replaced arch_un/map_crash_pages() with direct use of
->     kun/map_local_pages(), per Boris.
->   - Some x86 changes, per Boris.
-> 
-> v14: 16nov2022
->   https://lkml.org/lkml/2022/11/16/1645
->   https://lore.kernel.org/lkml/20221116214643.6384-1-eric.devolder@oracle.com/
->   - Rebased onto 6.1.0-rc5
->   - Introduced CRASH_HOTPLUG Kconfig item to better fine tune
->     compilation of feature components, per Boris.
->   - Removed hp_action parameter to arch_crash_handle_hotplug_event()
->     as it is unused.
-> 
-> v13: 31oct2022
->   https://lkml.org/lkml/2022/10/31/854
->   https://lore.kernel.org/lkml/20221031193604.28779-1-eric.devolder@oracle.com/
->   - Rebased onto 6.1.0-rc3, which means converting to use the new
->     kexec_trylock() away from mutex_lock(kexec_mutex).
->   - Moved arch_un/map_crash_pages() into kexec.h and default
->     implementation using k/unmap_local_pages().
->   - Changed more #ifdef's into IS_ENABLED()
->   - Changed CRASH_MAX_MEMORY_RANGES to 8192 from 32768, and it moved
->     into x86 crash.c as #define rather Kconfig item, per Boris.
->   - Check number of Phdrs against PN_XNUM, max possible.
-> 
-> v12: 9sep2022
->   https://lkml.org/lkml/2022/9/9/1358
->   https://lore.kernel.org/lkml/20220909210509.6286-1-eric.devolder@oracle.com/
->   - Rebased onto 6.0-rc4
->   - Addressed some minor formatting items, per Baoquan
-> 
-> v11: 26aug2022
->   https://lkml.org/lkml/2022/8/26/963
->   https://lore.kernel.org/lkml/20220826173704.1895-1-eric.devolder@oracle.com/
->   - Rebased onto 6.0-rc2
->   - Redid the rework of __weak to use asm/kexec.h, per Baoquan
->   - Reworked some comments and minor items, per Baoquan
-> 
-> v10: 21jul2022
->   https://lkml.org/lkml/2022/7/21/1007
->   https://lore.kernel.org/lkml/20220721181747.1640-1-eric.devolder@oracle.com/
->   - Rebased to 5.19.0-rc7
->   - Per Sourabh, corrected build issue with arch_un/map_crash_pages()
->     for architectures not supporting this feature.
->   - Per David Hildebrand, removed the WARN_ONCE() altogether.
->   - Per David Hansen, converted to use of kmap_local_page().
->   - Per Baoquan He, replaced use of __weak with the kexec technique.
-> 
-> v9: 13jun2022
->   https://lkml.org/lkml/2022/6/13/3382
->   https://lore.kernel.org/lkml/20220613224240.79400-1-eric.devolder@oracle.com/
->   - Rebased to 5.18.0
->   - Per Sourabh, moved crash_prepare_elf64_headers() into common
->     crash_core.c to avoid compile issues with kexec_load only path.
->   - Per David Hildebrand, replaced mutex_trylock() with mutex_lock().
->   - Changed the __weak arch_crash_handle_hotplug_event() to utilize
->     WARN_ONCE() instead of WARN(). Fix some formatting issues.
->   - Per Sourabh, introduced sysfs attribute crash_hotplug for memory
->     and CPUs; for use by userspace (udev) to determine if the kernel
->     performs crash hot un/plug support.
->   - Per Sourabh, moved the code detecting the elfcorehdr segment from
->     arch/x86 into crash_core:handle_hotplug_event() so both kexec_load
->     and kexec_file_load can benefit.
->   - Updated userspace kexec-tools kexec utility to reflect change to
->     using CRASH_MAX_MEMORY_RANGES and get_nr_cpus().
->   - Updated the new proposed udev rules to reflect using the sysfs
->     attributes crash_hotplug.
-> 
-> v8: 5may2022
->   https://lkml.org/lkml/2022/5/5/1133
->   https://lore.kernel.org/lkml/20220505184603.1548-1-eric.devolder@oracle.com/
->   - Per Borislav Petkov, eliminated CONFIG_CRASH_HOTPLUG in favor
->     of CONFIG_HOTPLUG_CPU || CONFIG_MEMORY_HOTPLUG, ie a new define
->     is not needed. Also use of IS_ENABLED() rather than #ifdef's.
->     Renamed crash_hotplug_handler() to handle_hotplug_event().
->     And other corrections.
->   - Per Baoquan, minimized the parameters to the arch_crash_
->     handle_hotplug_event() to hp_action and cpu.
->   - Introduce KEXEC_CRASH_HP_INVALID_CPU definition, per Baoquan.
->   - Per Sourabh Jain, renamed and repurposed CRASH_HOTPLUG_ELFCOREHDR_SZ
->     to CONFIG_CRASH_MAX_MEMORY_RANGES, mirroring kexec-tools change
->     by David Hildebrand. Folded this patch into the x86
->     kexec_file_load support patch.
-> 
-> v7: 13apr2022
->   https://lkml.org/lkml/2022/4/13/850
->   https://lore.kernel.org/lkml/20220413164237.20845-1-eric.devolder@oracle.com/
->   - Resolved parameter usage to crash_hotplug_handler(), per Baoquan.
-> 
-> v6: 1apr2022
->   https://lkml.org/lkml/2022/4/1/1203
->   https://lore.kernel.org/lkml/20220401183040.1624-1-eric.devolder@oracle.com/
->   - Reword commit messages and some comment cleanup per Baoquan.
->   - Changed elf_index to elfcorehdr_index for clarity.
->   - Minor code changes per Baoquan.
-> 
-> v5: 3mar2022
->   https://lkml.org/lkml/2022/3/3/674
->   https://lore.kernel.org/lkml/20220303162725.49640-1-eric.devolder@oracle.com/
->   - Reworded description of CRASH_HOTPLUG_ELFCOREHDR_SZ, per
->     David Hildenbrand.
->   - Refactored slightly a few patches per Baoquan recommendation.
-> 
-> v4: 9feb2022
->   https://lkml.org/lkml/2022/2/9/1406
->   https://lore.kernel.org/lkml/20220209195706.51522-1-eric.devolder@oracle.com/
->   - Refactored patches per Baoquan suggestsions.
->   - A few corrections, per Baoquan.
-> 
-> v3: 10jan2022
->   https://lkml.org/lkml/2022/1/10/1212
->   https://lore.kernel.org/lkml/20220110195727.1682-1-eric.devolder@oracle.com/
->   - Rebasing per Baoquan He request.
->   - Changed memory notifier per David Hildenbrand.
->   - Providing example kexec userspace change in cover letter.
-> 
-> RFC v2: 7dec2021
->   https://lkml.org/lkml/2021/12/7/1088
->   https://lore.kernel.org/lkml/20211207195204.1582-1-eric.devolder@oracle.com/
->   - Acting upon Baoquan He suggestion of removing elfcorehdr from
->     the purgatory list of segments, removed purgatory code from
->     patchset, and it is signficiantly simpler now.
-> 
-> RFC v1: 18nov2021
->   https://lkml.org/lkml/2021/11/18/845
->   https://lore.kernel.org/lkml/20211118174948.37435-1-eric.devolder@oracle.com/
->   - working patchset demonstrating kernel handling of hotplug
->     updates to x86 elfcorehdr for kexec_file_load
-> 
-> RFC: 14dec2020
->   https://lkml.org/lkml/2020/12/14/532
->   https://lore.kernel.org/lkml/b04ed259-dc5f-7f30-6661-c26f92d9096a@oracle.com/
->   - proposed concept of allowing kernel to handle hotplug update
->     of elfcorehdr
-> ---
-> 
-> Eric DeVolder (8):
->    crash: move a few code bits to setup support of crash hotplug
->    crash: add generic infrastructure for crash hotplug support
->    kexec: exclude elfcorehdr from the segment digest
->    crash: memory and CPU hotplug sysfs attributes
->    x86/crash: add x86 crash hotplug support
->    crash: hotplug support for kexec_load()
->    crash: change crash_prepare_elf64_headers() to for_each_possible_cpu()
->    x86/crash: optimize CPU changes
-> 
->   .../admin-guide/mm/memory-hotplug.rst         |   8 +
->   Documentation/core-api/cpu_hotplug.rst        |  18 +
->   arch/x86/Kconfig                              |  13 +
->   arch/x86/include/asm/kexec.h                  |  18 +
->   arch/x86/kernel/crash.c                       | 156 +++++++-
->   drivers/base/cpu.c                            |  14 +
->   drivers/base/memory.c                         |  13 +
->   include/linux/crash_core.h                    |   9 +
->   include/linux/kexec.h                         |  63 +++-
->   include/uapi/linux/kexec.h                    |   1 +
->   kernel/crash_core.c                           | 355 ++++++++++++++++++
->   kernel/kexec.c                                |   3 +
->   kernel/kexec_core.c                           |   6 +
->   kernel/kexec_file.c                           | 187 +--------
->   kernel/ksysfs.c                               |  15 +
->   15 files changed, 674 insertions(+), 205 deletions(-)
-> 
+	.long	symbol
+
+will cause a linker error because this is not position-independent.
+
+With kernel_info being a separate object file and in a different section
+from startup_32, there is no way to calculate the offset of a symbol
+from the start of the image in a position-independent way.
+
+To enable such use cases, put kernel_info into its own section which is
+placed at a predetermined offset (KERNEL_INFO_OFFSET) via the linker
+script. This will allow calculating the symbol offset in a
+position-independent way, by adding the offset from the start of
+kernel_info to KERNEL_INFO_OFFSET.
+
+Ensure that kernel_info is aligned, and use the SYM_DATA.* macros
+instead of bare labels. This stores the size of the kernel_info
+structure in the ELF symbol table.
+
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Cc: Ross Philipson <ross.philipson@oracle.com>
+Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
+---
+ arch/x86/boot/compressed/kernel_info.S | 19 +++++++++++++++----
+ arch/x86/boot/compressed/kernel_info.h | 12 ++++++++++++
+ arch/x86/boot/compressed/vmlinux.lds.S |  6 ++++++
+ 3 files changed, 33 insertions(+), 4 deletions(-)
+ create mode 100644 arch/x86/boot/compressed/kernel_info.h
+
+diff --git a/arch/x86/boot/compressed/kernel_info.S b/arch/x86/boot/compressed/kernel_info.S
+index f818ee8..c18f071 100644
+--- a/arch/x86/boot/compressed/kernel_info.S
++++ b/arch/x86/boot/compressed/kernel_info.S
+@@ -1,12 +1,23 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ 
++#include <linux/linkage.h>
+ #include <asm/bootparam.h>
++#include "kernel_info.h"
+ 
+-	.section ".rodata.kernel_info", "a"
++/*
++ * If a field needs to hold the offset of a symbol from the start
++ * of the image, use the macro below, eg
++ *	.long	rva(symbol)
++ * This will avoid creating run-time relocations, which are not
++ * allowed in the compressed kernel.
++ */
++
++#define rva(X) (((X) - kernel_info) + KERNEL_INFO_OFFSET)
+ 
+-	.global kernel_info
++	.section ".rodata.kernel_info", "a"
+ 
+-kernel_info:
++	.balign	16
++SYM_DATA_START(kernel_info)
+ 	/* Header, Linux top (structure). */
+ 	.ascii	"LToP"
+ 	/* Size. */
+@@ -19,4 +30,4 @@ kernel_info:
+ 
+ kernel_info_var_len_data:
+ 	/* Empty for time being... */
+-kernel_info_end:
++SYM_DATA_END_LABEL(kernel_info, SYM_L_LOCAL, kernel_info_end)
+diff --git a/arch/x86/boot/compressed/kernel_info.h b/arch/x86/boot/compressed/kernel_info.h
+new file mode 100644
+index 0000000..c127f84
+--- /dev/null
++++ b/arch/x86/boot/compressed/kernel_info.h
+@@ -0,0 +1,12 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++#ifndef BOOT_COMPRESSED_KERNEL_INFO_H
++#define BOOT_COMPRESSED_KERNEL_INFO_H
++
++#ifdef CONFIG_X86_64
++#define KERNEL_INFO_OFFSET 0x500
++#else /* 32-bit */
++#define KERNEL_INFO_OFFSET 0x100
++#endif
++
++#endif /* BOOT_COMPRESSED_KERNEL_INFO_H */
+diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+index b22f34b..265c88f 100644
+--- a/arch/x86/boot/compressed/vmlinux.lds.S
++++ b/arch/x86/boot/compressed/vmlinux.lds.S
+@@ -7,6 +7,7 @@ OUTPUT_FORMAT(CONFIG_OUTPUT_FORMAT)
+ 
+ #include <asm/cache.h>
+ #include <asm/page_types.h>
++#include "kernel_info.h"
+ 
+ #ifdef CONFIG_X86_64
+ OUTPUT_ARCH(i386:x86-64)
+@@ -27,6 +28,11 @@ SECTIONS
+ 		HEAD_TEXT
+ 		_ehead = . ;
+ 	}
++	.rodata.kernel_info KERNEL_INFO_OFFSET : {
++		*(.rodata.kernel_info)
++	}
++	ASSERT(ABSOLUTE(kernel_info) == KERNEL_INFO_OFFSET, "kernel_info at bad address!")
++
+ 	.rodata..compressed : {
+ 		*(.rodata..compressed)
+ 	}
+-- 
+1.8.3.1
+
 
 _______________________________________________
 kexec mailing list
