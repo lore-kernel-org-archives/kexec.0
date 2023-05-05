@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 272B1C77B7C
-	for <kexec@archiver.kernel.org>; Fri,  5 May 2023 16:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BCE8AC77B7C
+	for <kexec@archiver.kernel.org>; Fri,  5 May 2023 16:22:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=ngnstP1CM4le7MozwnXat3S7zmivbFVJnfkx317w6wo=; b=jBlN8WGpR0sz4U
-	Z8uCspI1J3v7N3XVT+LTpVltwgSx2RWL+tIZjzKF0wxEgDjc3ub+YesBxkxYJ7U1vzfv0hFN5RQbf
-	aGel3TA2hJslGEC6a5f+Y7W+4CpeeDBr+n+iIZo1KEcSDAEARDuCYcIJSgNDvJBNrO1oXHtHPkkRw
-	9F7SxAgOdTXRe8CwA4Eu6xYzanf7d0cN5+o0JPSsWLJZClUvX3AyKtsMxGITFXfrspE0aKUEj8vZl
-	kR4ZrXe9701lkxYL/U+Q0JyU8okxF1mjrKz9vAbZHN3tZUh/FpyQH+RdCD7soH9sdlNFMGQJtBlV9
-	xYO/ZyvSx/mgmR5Mo6dQ==;
+	List-Owner; bh=+ytjYEz75YKgD9pwno9jl192wZdrbq08EyIvbJw4OQM=; b=v1cE6f6j3pFoSa
+	NCQ1n8cNwg1aL8bWDD+4nberDUh3weuKFQJ0Hrix8R0SmDyy2AydbNF3ScbI+FcdD9mX36YypbqQ3
+	j8+r/eW7mwCeuBq+q4EBj4mbxIYJPCH1Neqp/blhTjX7DNbFYrfYZbUOy+IDKP3yOr20DzV/ClayB
+	l+Q1/xZ+KZHfVDk11l1oX7TVFSUfZURrfxo4sOwCgCKXxy+0G5CyTAVt/fykPsUQg4DKLPBoBFQfZ
+	toYphs6OMiEkl4tD/E1Uqvp5NA3Mm8lRPw9F1iiTMa2zl7bGEpYv7qK8117pd91rplCRLBGvI8mdz
+	NTL6w2MtQQSMXdV0y7zw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1puy9I-00BHoJ-2v;
-	Fri, 05 May 2023 16:19:12 +0000
-Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
+	id 1puyCX-00BI59-0H;
+	Fri, 05 May 2023 16:22:33 +0000
+Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1puy9F-00BHn7-1J
+	id 1puyCS-00BI3l-29
 	for kexec@lists.infradead.org;
-	Fri, 05 May 2023 16:19:10 +0000
+	Fri, 05 May 2023 16:22:30 +0000
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 3C4A963F0D;
-	Fri,  5 May 2023 16:19:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBDE1C433EF;
-	Fri,  5 May 2023 16:19:03 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 02AE963F0A;
+	Fri,  5 May 2023 16:22:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD6C2C433EF;
+	Fri,  5 May 2023 16:22:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1683303547;
-	bh=9eVD8TLEEJTPz7yUDaY/tcM4ySNHmYkUZSsW6auAYhI=;
+	s=k20201202; t=1683303747;
+	bh=2K2sG1iqgAgCjF6w7LO1DpRP8tMIRvNOwwZ3Bg4XUBw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=loLHgZ6lqZrIKBgo3yKKid4OzVFYz+8ZiKK82DAcPHoYWv38JEZTzJBc/0Jilf3Ac
-	 13ZT853kkIOz5s92U2aLs8Qsw3/pa5XZXTWrM7RLBw1djPdirH/b7e328JT1KQDfo5
-	 Ia02U9yr3HawpR+b0VyOH8cI2VeNJrHrSxmbVFpT3yoROBJG7kA8FvP3nIX4blUvei
-	 1+YXY4yq6kvmuJAt1kUewv/TelPNq3i/P251E+XOAquYRG4fANOUEKMcFwQTJW2bcf
-	 3FEbGZUddqObaXNkWfTnpVbHzIE26/z88HVTnkB5sY9x/JYwY+Z5S7f7VIT7tH5VvM
-	 nkytUGk7g4Aow==
-Date: Fri, 5 May 2023 18:19:01 +0200
+	b=GZEwRFBu3OZwQgVrSyO4Ynl8ZobRrx7IJaO2Ag95MO9QXmRVqWD4FI+or+I91IfV8
+	 RJGPzYzK6nSrGitFu88EAj3lGYv+fFDD3wfltYOjqhppvwFmI06OI4DqgzgN+OxuzC
+	 ephmYdlUjJc48hQ7NEGyiDNgTaYJLvpBMW57huB3RYYhwaAUW8fwSn23THU9dAYkDw
+	 PqaObywOHOQfeGhuXy4GCnJKCxnBgMTs/DAQtM7YRj7ouzp9qR3VMboqANSLpH9fnM
+	 m++qETHrN5sEWH6zmRDzXt+mWb/EDniTdmX54yj3+wuskkZJf8BeNqK8gPLx+4MbIc
+	 86Q9Zw5nvY0hg==
+Date: Fri, 5 May 2023 18:22:21 +0200
 From: Simon Horman <horms@kernel.org>
 To: Ross Philipson <ross.philipson@oracle.com>
 Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
@@ -56,17 +56,16 @@ Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
 	James.Bottomley@hansenpartnership.com, luto@amacapital.net,
 	nivedita@alum.mit.edu, kanth.ghatraju@oracle.com,
 	trenchboot-devel@googlegroups.com
-Subject: Re: [PATCH v6 02/14] Documentation/x86: Secure Launch kernel
- documentation
-Message-ID: <ZFUsdbkulMLlU3XA@kernel.org>
+Subject: Re: [PATCH v6 04/14] x86: Secure Launch Resource Table header file
+Message-ID: <ZFUtPbgvG0qifhnV@kernel.org>
 References: <20230504145023.835096-1-ross.philipson@oracle.com>
- <20230504145023.835096-3-ross.philipson@oracle.com>
+ <20230504145023.835096-5-ross.philipson@oracle.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20230504145023.835096-3-ross.philipson@oracle.com>
+In-Reply-To: <20230504145023.835096-5-ross.philipson@oracle.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230505_091909_535805_09D126A1 
-X-CRM114-Status: GOOD (  19.86  )
+X-CRM114-CacheID: sfid-20230505_092228_965776_0F1FB6DC 
+X-CRM114-Status: GOOD (  14.24  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,102 +82,31 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, May 04, 2023 at 02:50:11PM +0000, Ross Philipson wrote:
-> Introduce background, overview and configuration/ABI information
-> for the Secure Launch kernel feature.
+On Thu, May 04, 2023 at 02:50:13PM +0000, Ross Philipson wrote:
+> Introduce the Secure Launch Resource Table which forms the formal
+> interface between the pre and post launch code.
 > 
-> Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
 > Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
-
-Hi Ross and Daniel,
-
-some minor nits from my side.
-
 > ---
->  Documentation/security/index.rst                   |   1 +
->  Documentation/security/launch-integrity/index.rst  |  10 +
->  .../security/launch-integrity/principles.rst       | 313 ++++++++++++
->  .../launch-integrity/secure_launch_details.rst     | 564 +++++++++++++++++++++
->  .../launch-integrity/secure_launch_overview.rst    | 220 ++++++++
->  5 files changed, 1108 insertions(+)
->  create mode 100644 Documentation/security/launch-integrity/index.rst
->  create mode 100644 Documentation/security/launch-integrity/principles.rst
->  create mode 100644 Documentation/security/launch-integrity/secure_launch_details.rst
->  create mode 100644 Documentation/security/launch-integrity/secure_launch_overview.rst
+>  include/linux/slr_table.h | 270 ++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 270 insertions(+)
+>  create mode 100644 include/linux/slr_table.h
 > 
-> diff --git a/Documentation/security/index.rst b/Documentation/security/index.rst
-> index 6ed8d2f..fade37e 100644
-> --- a/Documentation/security/index.rst
-> +++ b/Documentation/security/index.rst
-> @@ -18,3 +18,4 @@ Security Documentation
->     digsig
->     landlock
->     secrets/index
-> +   launch-integrity/index
-> diff --git a/Documentation/security/launch-integrity/index.rst b/Documentation/security/launch-integrity/index.rst
-> new file mode 100644
-> index 0000000..28eed91d
-> --- /dev/null
-> +++ b/Documentation/security/launch-integrity/index.rst
-> @@ -0,0 +1,10 @@
-
-I believe an SPDX tag should go at the top of each .rst file.
-
-> +=====================================
-> +System Launch Integrity documentation
-> +=====================================
-> +
-> +.. toctree::
-> +
-> +   principles
-> +   secure_launch_overview
-> +   secure_launch_details
-> +
-> diff --git a/Documentation/security/launch-integrity/principles.rst b/Documentation/security/launch-integrity/principles.rst
-> new file mode 100644
-> index 0000000..73cf063
-> --- /dev/null
-> +++ b/Documentation/security/launch-integrity/principles.rst
-> @@ -0,0 +1,313 @@
-> +=======================
-> +System Launch Integrity
-> +=======================
-> +
-> +This document serves to establish a common understanding of what is system
-> +launch, the integrity concern for system launch, and why using a Root of Trust
-> +(RoT) from a Dynamic Launch may be desired. Through out this document
-> +terminology from the Trusted Computing Group (TCG) and National Institue for
-
-s/Institue/Institute/
+> diff --git a/include/linux/slr_table.h b/include/linux/slr_table.h
 
 ...
 
-> +Trust Chains
-> +============
+> +static inline void *slr_end_of_entrys(struct slr_table *table)
+> +{
+> +	return (((void *)table) + table->size);
+> +}
 > +
-> +Bulding upon the understanding of security mechanisms to establish load-time
+> +static inline struct slr_entry_hdr *
+> +slr_next_entry(struct slr_table *table,
+> +		struct slr_entry_hdr *curr)
 
-s/Bulding/Building/
-
-...
-
-> diff --git a/Documentation/security/launch-integrity/secure_launch_details.rst b/Documentation/security/launch-integrity/secure_launch_details.rst
-
-...
-
-> +Secure Launch Resource Table
-> +============================
-> +
-> +The Secure Launch Resource Table (SLRT) is a platform-agnostic, standard format
-> +for providing information for the pre-launch environment and to pass
-> +information to the post-launch environment. The table is populated by one or
-> +more bootloaders in the boot chain and used by Secure Launch on how to setup
-> +the environment during post-launch. The details for the SLRT are documented
-> +in the TrenchBoot Secure Launch Specifcation [3]_.
-
-s/Specifcation/Specification/
-
-...
+nit: The indentation of the line above doesn't align with the '(' on
+     the line before it.
 
 _______________________________________________
 kexec mailing list
