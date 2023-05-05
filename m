@@ -4,70 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B2CAEC77B75
-	for <kexec@archiver.kernel.org>; Fri,  5 May 2023 19:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BECA4C77B75
+	for <kexec@archiver.kernel.org>; Fri,  5 May 2023 22:38:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=eltYtws9pvqv+VtpLyjAdSBsB8EFs9krHecVkSseuC0=; b=sEvnm4cdrtYWOd
-	kRziTSbK0MmOfqmqyCgIN1V0JF+vZnUcYvaSWEqY65gQKHXiU6bh6L2+CLxGwE6s96uPpwdbHusSs
-	wUfjVL6mvbNguOVE8ubZ2E530BmAlJP2yXQzBJ+ywMXbaLrRgwox8l/RM3fiXPZQLmqFfC9o+Zn+A
-	2pGeXS8amQzikpdR3FIb6CfksRCQNyDDS1HtMqd6pPCsGo4ffh69voAhmStiux2Agud57rt2Ejol7
-	MvNcvOboW+Th/bYQY/vF/4LJZNPctwco6uyoSHXLJtupmlKeI/ccI28zwcWmDGVauxBb9rJdCGmbm
-	2OEzrrgLh9LrI47Jfm7A==;
+	List-Owner; bh=0nGLAL3z/PMUpyFMgCyOqjb9mrjq6GKaIhsv//Z1mbE=; b=dsgtr6NRRkfBZO
+	JCkiLWQiCGqwriNfVOkXzuVtgE0QigTCoum3ffJjlYBGp0huEmJjlGwTMtVrqsrTi7NKCr2ZhsKMj
+	o7RfB4ku39ee0+OwT0AutnYxpySeIHgmJGTv4jGoMGu5A4NmyiKZIUnGQJh9gk/Z54vDtsgXifMEl
+	UHRhP54ijzAU1uE869bKAN2k3LH+YoHQoHD6qbh59MeYeIgiiuUO12YNHO7CaSjMVJF2MgVR6ysXt
+	O5PQNFjoVAIrs+ypAB6ZXHN26o4WH7ZnTAeOOx6JDHGT+Nezlrmz/wD8Fe5AZtq8LVooOAaNVrxD/
+	zQ5yEaa9Q07+UnG2uJiQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pv1OZ-00Bf2e-2M;
-	Fri, 05 May 2023 19:47:11 +0000
-Received: from dfw.source.kernel.org ([139.178.84.217])
-	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pv1OV-00Bf1j-2a
+	id 1pv44K-00C03H-16;
+	Fri, 05 May 2023 22:38:28 +0000
+Received: from foss.arm.com ([217.140.110.172])
+	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
+	id 1pv44I-00C02Y-0f
 	for kexec@lists.infradead.org;
-	Fri, 05 May 2023 19:47:09 +0000
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 3762A60F93;
-	Fri,  5 May 2023 19:47:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAD1EC433EF;
-	Fri,  5 May 2023 19:46:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1683316026;
-	bh=Sb2KgQ5DsUgQ8xKWmkYNMl26e38BQYOVMpl/Vac7Mlc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=elsCHSqNwFxUfu6VDPA5BgwMa9uPCAgvGK/9pAW2TU5GB9bI3Ll6zAfgwLZ0x/r5R
-	 IluW+zvNltdv9tF/cWmtu/jBRAAqCK5t2m8FHh2N6sAIIyhxca/kBfj26fVEeoWd2L
-	 A2r85aEVAIz5tUkrO73+HjZlYFK2Hmh7eFe7uuLwvJg4PXMsc+efjVhtqEnrcUOG3P
-	 ULB+CdNJnc7D3UqmB9EY104YZbopRSB4H5PLwfM4gBQWbRTiDjSNdEafQuGCZngOO3
-	 ZJ/Sv/PL7t1UG3pd7QfV1iPUyhYqUn3e6R7gLh6KK4sIutQOZ+ihxN1XWeAU8Hc+Y7
-	 F5IdlWXYgma6Q==
-Date: Fri, 5 May 2023 21:46:56 +0200
-From: Simon Horman <horms@kernel.org>
-To: Ross Philipson <ross.philipson@oracle.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
-	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-crypto@vger.kernel.org, iommu@lists.linux-foundation.org,
-	kexec@lists.infradead.org, linux-efi@vger.kernel.org,
-	dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, hpa@zytor.com, ardb@kernel.org, mjg59@srcf.ucam.org,
-	James.Bottomley@hansenpartnership.com, luto@amacapital.net,
-	nivedita@alum.mit.edu, kanth.ghatraju@oracle.com,
-	trenchboot-devel@googlegroups.com
-Subject: Re: [PATCH v6 07/14] x86: Secure Launch kernel early boot stub
-Message-ID: <ZFVdMJIQ+4BmXvhN@kernel.org>
-References: <20230504145023.835096-1-ross.philipson@oracle.com>
- <20230504145023.835096-8-ross.philipson@oracle.com>
- <ZFVBLCLVK7AAStst@kernel.org>
- <81ce947c-07a0-0975-1d09-776fb03c64b9@oracle.com>
+	Fri, 05 May 2023 22:38:27 +0000
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D13941FB;
+	Fri,  5 May 2023 15:39:04 -0700 (PDT)
+Received: from [192.168.122.164] (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 49CDD3F64C;
+	Fri,  5 May 2023 15:38:20 -0700 (PDT)
+Message-ID: <cd7dfc7c-9108-f55e-d2e2-2b8b1856ecb2@arm.com>
+Date: Fri, 5 May 2023 17:38:19 -0500
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <81ce947c-07a0-0975-1d09-776fb03c64b9@oracle.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH 0/5] arm64: zboot support
+Content-Language: en-US
+To: Pingfan Liu <piliu@redhat.com>, kexec@lists.infradead.org
+Cc: horms@verge.net.au, ardb@kernel.org
+References: <20230505025438.11943-1-piliu@redhat.com>
+From: Jeremy Linton <jeremy.linton@arm.com>
+In-Reply-To: <20230505025438.11943-1-piliu@redhat.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230505_124707_886701_67CC8B06 
-X-CRM114-Status: GOOD (  22.78  )
+X-CRM114-CacheID: sfid-20230505_153826_310979_597ACA93 
+X-CRM114-Status: GOOD (  25.11  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,59 +59,80 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, May 05, 2023 at 02:58:28PM -0400, Ross Philipson wrote:
-> On 5/5/23 13:47, Simon Horman wrote:
-> > On Thu, May 04, 2023 at 02:50:16PM +0000, Ross Philipson wrote:
-
-...
-
-> > > +asmlinkage __visible void sl_check_region(void *base, u32 size)
-> > > +{
-> > > +	sl_check_pmr_coverage(base, size, false);
-> > > +}
-> > 
-> > I'm a nit unsure, what to do here, but clang-16 with W=1 says the following.
-> > 
-> > arch/x86/boot/compressed/sl_main.c:533:27: warning: no previous prototype for function 'sl_main' [-Wmissing-prototypes]
-> > asmlinkage __visible void sl_main(void *bootparams)
-> >                            ^
-> > arch/x86/boot/compressed/sl_main.c:533:22: note: declare 'static' if the function is not intended to be used outside of this translation unit
-> > asmlinkage __visible void sl_main(void *bootparams)
-> >                       ^
-> >                       static
+On 5/4/23 21:54, Pingfan Liu wrote:
+> As more complicated capsule kernel format occurs like zboot, where the
+> compressed kernel is stored as a payload. The straight forward
+> decompression can not meet the demand.
 > 
-> Yea we will have to look into why this is. This function is only ever called
-> from asm code so that might have something to do with this.
-
-Thanks.
-
-...
-
-> > > diff --git a/arch/x86/include/uapi/asm/bootparam.h b/arch/x86/include/uapi/asm/bootparam.h
-> > > index 01d19fc..74e3e7df 100644
-> > > --- a/arch/x86/include/uapi/asm/bootparam.h
-> > > +++ b/arch/x86/include/uapi/asm/bootparam.h
-> > > @@ -26,6 +26,7 @@
-> > >   /* loadflags */
-> > >   #define LOADED_HIGH	(1<<0)
-> > >   #define KASLR_FLAG	(1<<1)
-> > > +#define SLAUNCH_FLAG	(1<<2)
-> > >   #define QUIET_FLAG	(1<<5)
-> > >   #define KEEP_SEGMENTS	(1<<6)
-> > >   #define CAN_USE_HEAP	(1<<7)
-> > 
-> > nit: please consider using BIT()
+> As the first step, on aarch64, reading in the kernel file in a probe
+> method and decide how to unfold the content by the method itself.
 > 
-> I am a little reluctant to change something like this in an existing header.
-> It seems a bit out of scope for the patch set.
+> The new designed probe interface returns two factors:
+> 1. the parsed kernel_buf should be returned so that it can be used by
+> the image load method later.
+> 2. the final fd passed to sys_kexec_file_load, since aarch64 kernel can
+> only work with Image format, the outer payload should be stripped and a
+> temporary file of Image should be created.
+> 
 
-Yes, sorry for the noise on this one.
-I agree that what you have is the best approach here.
+Well this is unfortunate. I pinged you a few days back but I guess it 
+must have gotten lost in the noise.
+
+I'm ok with dropping my set, but I don't see your 5/5, and it doesn't 
+show up in the archive either. Which presumably is the core ZBOOT 
+functionality. From what I can tell without that, this set then is all 
+just cleanup. So did you do that on purpose, if so maybe its best then 
+to just rebase on top of my set?
+
+
+Given I'm not a regular contributor here I'm not sure my opinion matters 
+much, but one of the things that bothered me when I was yak shaving my 
+set, were the #ifdef aarch64 bits in the common code. I considered 
+attempting to remove it but that was a bit more involved than I wanted 
+to get. But, as Ard correctly points out, the zboot is being used by 
+more than aarch64 at this point. So that is also a argument for assuring 
+whatever the probe()/etc interface is, that its not #ifdefed.
+
+
+
+
+> 
+> To: kexec@lists.infradead.org
+> Cc: horms@verge.net.au
+> Cc: ardb@kernel.org
+> Cc: jeremy.linton@arm.com
+> 
+> Pingfan Liu (5):
+>    kexec: Adding missing free for kernel_buf
+>    arm64/zImage: Remove unnecessary allocation for
+>      kernel_uncompressed_buf
+>    arm64: change the prototype of image probe function
+>    arm64: Scatter the reading of kernel file into each probe
+>    arm64: add support for zboot image
+> 
+>   kexec/arch/arm/kexec-arm.h            |   4 +-
+>   kexec/arch/arm/kexec-uImage-arm.c     |   2 +-
+>   kexec/arch/arm64/Makefile             |   3 +-
+>   kexec/arch/arm64/kexec-arm64.c        |   1 +
+>   kexec/arch/arm64/kexec-arm64.h        |  13 +-
+>   kexec/arch/arm64/kexec-elf-arm64.c    |   7 +-
+>   kexec/arch/arm64/kexec-image-arm64.c  |   6 +-
+>   kexec/arch/arm64/kexec-uImage-arm64.c |  17 +-
+>   kexec/arch/arm64/kexec-zImage-arm64.c |  23 +--
+>   kexec/arch/arm64/kexec-zboot-arm64.c  | 261 ++++++++++++++++++++++++++
+>   kexec/arch/arm64/zboot.h              |  26 +++
+>   kexec/kexec.c                         |  48 +++--
+>   kexec/kexec.h                         |   8 +
+>   13 files changed, 377 insertions(+), 42 deletions(-)
+>   create mode 100644 kexec/arch/arm64/kexec-zboot-arm64.c
+>   create mode 100644 kexec/arch/arm64/zboot.h
+> 
+
 
 _______________________________________________
 kexec mailing list
