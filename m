@@ -4,70 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E6BC2C77B73
-	for <kexec@archiver.kernel.org>; Fri,  5 May 2023 02:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 46D90C7EE21
+	for <kexec@archiver.kernel.org>; Fri,  5 May 2023 03:08:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=sgddR1AZcD3WcQlYGUJRqygYPKsAlbxL3+dFHERiRP0=; b=Jh0XYvKZzQq6ii
-	iOWTmyYontfgqD0FTghKuCy+NcN8kWVaLboN3XGwL7vGPGO/NXA70EzeglcNxOyJ8OS0cDBcgacC9
-	QwFdiVLghjsPpFOenguZS+4WXT5CUy+kgWZDx8NJ0MpZ9ZpScY3RPeyLtRRh13Qj/sritBwJSAFn7
-	xk6aZJAchQtin0CDoQHZHSUR1VyoY4M876IxsTL3iZzAAO9QNSdLT3iTUDEZxiGCLzrodL9zUg2Kf
-	10s8HNOrvbFtk87Op9DHyz5p419Saw0HCk61/mu85CDL/4uUngDhAyuGXfwHeqrzmDOVuT8H4s4DR
-	qctHdzNwwx1W6WYT9R+Q==;
+	List-Owner; bh=5Ov+7qo9lOvp83afLo1DAx2LYeGG9IlVidaSw4B1YMs=; b=NdkKh3y5wqMNou
+	GwzVWsy3fW8ILqQjfSWzSL61dWwV5dmESFutOzQ9ToUD0K13BSQcjmv580sfVPtHUXAlCTyapOfZs
+	a5fAey/x1wIirb7e6P8UsDxc0pW971yux16crcrhQwAXzNz3BbOcamJ8QPWGFrdmJh1Wnj3S265b8
+	JsuhBbacONnZMjTHy43CzrlVikna4mIFkEQg2MQrGo34HJAK4SgRV8emjJ9tYvO0yIhlRxgrCXImr
+	nko7+S20cx1JLTOK0BzrPJTVXmPx/lYFHc0iOEkDSvBkBEoFR4E9beAZ67N88rRp+fB+y5/Gbme2w
+	8z35gJoYP/6B8IYuuv/g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1puld6-009aVi-03;
-	Fri, 05 May 2023 02:57:08 +0000
+	id 1puloU-009bjz-34;
+	Fri, 05 May 2023 03:08:54 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1puld0-009aSh-0G
+	id 1puloS-009bjS-1K
 	for kexec@lists.infradead.org;
-	Fri, 05 May 2023 02:57:04 +0000
+	Fri, 05 May 2023 03:08:53 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1683255421;
+	s=mimecast20190719; t=1683256129;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=d5k8TNxhJWESdJ9HweyQ5BvIEwgH3IgIecCPlkRqXJ4=;
-	b=TfWV9UhieWeVwtq0HLqu6v1tA2dSj9kulYzH0w4PxuzHPajeMK48mqxGbmtvB/w7E05fkx
-	J7Yzk8MfYmlTQM3RXxpAYhhbNGnB+ADK+MEPhzeAseziQ0s3RB9vIXFbFh4JfubGj5pMJG
-	V5EeeZVK4EwbGvB+LtWLyr1vn6P7bVQ=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-434-_thyiH6INrCWzrnd4tTZ0g-1; Thu, 04 May 2023 22:55:07 -0400
-X-MC-Unique: _thyiH6INrCWzrnd4tTZ0g-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5D3E8800047;
-	Fri,  5 May 2023 02:55:07 +0000 (UTC)
-Received: from piliu.users.ipa.redhat.com (ovpn-8-19.pek2.redhat.com [10.72.8.19])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 0385C407D450;
-	Fri,  5 May 2023 02:55:04 +0000 (UTC)
-From: Pingfan Liu <piliu@redhat.com>
-To: kexec@lists.infradead.org
-Cc: Pingfan Liu <piliu@redhat.com>,
-	horms@verge.net.au,
-	ardb@kernel.org,
-	jeremy.linton@arm.com
-Subject: [PATCH 4/5] arm64: Scatter the logic of reading of kernel file into each probe
-Date: Fri,  5 May 2023 10:54:36 +0800
-Message-Id: <20230505025438.11943-5-piliu@redhat.com>
-In-Reply-To: <20230505025438.11943-1-piliu@redhat.com>
-References: <20230505025438.11943-1-piliu@redhat.com>
+	bh=jeFaguXA0upFRW1MVss2D2fkIUAp1XnyKHL11Ujw42o=;
+	b=SCS7OxMHwegLKhamgES5XlzgvNS+DshnHqU43s4gBuVOgoV2BNx0892HrjpBFHdUC8BVup
+	hhJcZFbrToBiYTlALBzxKJMypp7ddWVx9LBtmSWAgB+hDdLFiVDL/cwwt/0BNEKS1FDHFO
+	0xmjU+A/RKbJ89QVqdN5k9qkp5ULg+s=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-474-YEZ5xeHbO762BQPxJvZDfw-1; Thu, 04 May 2023 23:08:48 -0400
+X-MC-Unique: YEZ5xeHbO762BQPxJvZDfw-1
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-75646ca18a9so901185a.0
+        for <kexec@lists.infradead.org>; Thu, 04 May 2023 20:08:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683256128; x=1685848128;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jeFaguXA0upFRW1MVss2D2fkIUAp1XnyKHL11Ujw42o=;
+        b=XBY58EpbrwRAtngmuRUPYrgA8+LoKtW+M+xHamC8Wvy6SM2iQf7ejn4r2Jfn6M/iej
+         7YC3dmwzJQGBBsTzrRfzYYr/ZQAk6WGDn2VQQTVmR1kl5no/UTUx9S5TH6ow+QqztLD8
+         dK6mvJNrUuUUJp6HeNzpvhmtWYB780xnPl6yfS+fV9hv18su7d/egbKXYmbHQYV3q/dB
+         pYTBQjvSrlPE5mg1JZHAjTH5XvrIXqR0Iz+u3yLViElrkUUbCfYaOSp9OREEWmUcRsHz
+         TSdVL3Qh4CODnY3kzEp7g4eXjNBf/6qCjnlLOJPriL4QoLbTJE0Y5Q3EFU6ufihiFn0S
+         LTMQ==
+X-Gm-Message-State: AC+VfDx1gblsKNnPUP1KPPWuvVeRHNtL6GO1Y3WFc663L6PxAeOHzNvH
+	r39H/eyJAIRqcVCy6nErh1dtxSlnRJdGhN+hUOjj1sSupM51eU92OFqR5Jwtg7gQavdNCpsKN73
+	gseEZHc3y3tkMFDsfXeiYY3lLzcBEjThGfYgW
+X-Received: by 2002:a05:6214:407:b0:5ef:7e33:c6c9 with SMTP id z7-20020a056214040700b005ef7e33c6c9mr222559qvx.38.1683256127999;
+        Thu, 04 May 2023 20:08:47 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ7OvuzDckaBHgVDGuX624xDOpy42ooV6LjLc/xqc3Xp7YSyDci0lIb+k3AEzsNUFKijEcihenq6YXpxJ8Y5Ezs=
+X-Received: by 2002:a05:6214:407:b0:5ef:7e33:c6c9 with SMTP id
+ z7-20020a056214040700b005ef7e33c6c9mr222541qvx.38.1683256127761; Thu, 04 May
+ 2023 20:08:47 -0700 (PDT)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
+References: <20230504164147.1166614-1-jeremy.linton@arm.com>
+In-Reply-To: <20230504164147.1166614-1-jeremy.linton@arm.com>
+From: Pingfan Liu <piliu@redhat.com>
+Date: Fri, 5 May 2023 11:08:36 +0800
+Message-ID: <CAF+s44Q43rTrf=konek47A-EoWsPjfOyQSdKQRmFnXA4=W7+=w@mail.gmail.com>
+Subject: Re: [PATCH 0/4] Support kexec'ing PEs containing compressed kernels
+To: Jeremy Linton <jeremy.linton@arm.com>
+Cc: kexec@lists.infradead.org, horms@verge.net.au, bhsharma@redhat.com, 
+	ardb@kernel.org
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230504_195702_187992_7E12BB9E 
-X-CRM114-Status: GOOD (  26.82  )
+X-CRM114-CacheID: sfid-20230504_200852_518010_64D824C3 
+X-CRM114-Status: GOOD (  22.00  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,306 +91,49 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-As more complicated capsule kernel format occurs like zboot, where the
-compressed kernel is stored as a payload. The straight forward
-decompression can not meet the demand.
-
-So reading in the kernel file in a probe method and decide how to unfold
-the content by the method itself.
-
-Signed-off-by: Pingfan Liu <piliu@redhat.com>
-To: kexec@lists.infradead.org
-Cc: horms@verge.net.au
-Cc: ardb@kernel.org
-Cc: jeremy.linton@arm.com
-
----
- kexec/arch/arm64/kexec-elf-arm64.c    |  7 ++++-
- kexec/arch/arm64/kexec-image-arm64.c  |  6 +++-
- kexec/arch/arm64/kexec-uImage-arm64.c | 17 ++++++++---
- kexec/arch/arm64/kexec-zImage-arm64.c | 13 ++++-----
- kexec/kexec.c                         | 42 ++++++++++++++++++---------
- kexec/kexec.h                         |  2 ++
- 6 files changed, 60 insertions(+), 27 deletions(-)
-
-diff --git a/kexec/arch/arm64/kexec-elf-arm64.c b/kexec/arch/arm64/kexec-elf-arm64.c
-index 9238dd5..cedf3c6 100644
---- a/kexec/arch/arm64/kexec-elf-arm64.c
-+++ b/kexec/arch/arm64/kexec-elf-arm64.c
-@@ -16,11 +16,13 @@
- #include "kexec-elf.h"
- #include "kexec-syscall.h"
- 
--int elf_arm64_probe(const char *kernel_buf, off_t kernel_size, struct kexec_info *info)
-+int elf_arm64_probe(const char *kern_fname, off_t kernel_size, struct kexec_info *info)
- {
- 	struct mem_ehdr ehdr;
-+	char *kernel_buf;
- 	int result;
- 
-+	kernel_buf = slurp_file(kern_fname, &kernel_size);
- 	result = build_elf_exec_info(kernel_buf, kernel_size, &ehdr, 0);
- 
- 	if (result < 0) {
-@@ -34,8 +36,11 @@ int elf_arm64_probe(const char *kernel_buf, off_t kernel_size, struct kexec_info
- 		goto on_exit;
- 	}
- 
-+	info->kernel_fd = open(kern_fname, O_RDONLY);
-+	info->kernel_buf = kernel_buf;
- 	result = 0;
- on_exit:
-+	free(kernel_buf);
- 	free_elf_info(&ehdr);
- 	return result;
- }
-diff --git a/kexec/arch/arm64/kexec-image-arm64.c b/kexec/arch/arm64/kexec-image-arm64.c
-index 84aca72..90cd40a 100644
---- a/kexec/arch/arm64/kexec-image-arm64.c
-+++ b/kexec/arch/arm64/kexec-image-arm64.c
-@@ -14,10 +14,12 @@
- #include "kexec-syscall.h"
- #include "arch/options.h"
- 
--int image_arm64_probe(const char *kernel_buf, off_t kernel_size, struct kexec_info *info)
-+int image_arm64_probe(const char *kern_fname, off_t kernel_size, struct kexec_info *info)
- {
- 	const struct arm64_image_header *h;
-+	char *kernel_buf;
- 
-+	kernel_buf = slurp_file(kern_fname, &kernel_size);
- 	if (kernel_size < sizeof(struct arm64_image_header)) {
- 		dbgprintf("%s: No arm64 image header.\n", __func__);
- 		return -1;
-@@ -29,6 +31,8 @@ int image_arm64_probe(const char *kernel_buf, off_t kernel_size, struct kexec_in
- 		dbgprintf("%s: Bad arm64 image header.\n", __func__);
- 		return -1;
- 	}
-+	info->kernel_fd = open(kern_fname, O_RDONLY);
-+	info->kernel_buf = kernel_buf;
- 
- 	return 0;
- }
-diff --git a/kexec/arch/arm64/kexec-uImage-arm64.c b/kexec/arch/arm64/kexec-uImage-arm64.c
-index f5b94c8..cce1c76 100644
---- a/kexec/arch/arm64/kexec-uImage-arm64.c
-+++ b/kexec/arch/arm64/kexec-uImage-arm64.c
-@@ -3,26 +3,35 @@
-  */
- #include <stdint.h>
- #include <string.h>
-+#include <stdlib.h>
-+#include <fcntl.h>
- #include <sys/types.h>
- #include <image.h>
- #include <kexec-uImage.h>
- #include "../../kexec.h"
- #include "kexec-arm64.h"
- 
--int uImage_arm64_probe(const char *buf, off_t len, struct kexec_info *info)
-+int uImage_arm64_probe(const char *kern_fname, off_t len, struct kexec_info *info)
- {
- 	int ret;
-+	char *kernel_buf;
- 
--	ret = uImage_probe_kernel(buf, len, IH_ARCH_ARM64);
-+	kernel_buf = slurp_file(kern_fname, &len);
-+	ret = uImage_probe_kernel(kernel_buf, len, IH_ARCH_ARM64);
- 
- 	/*  0 - valid uImage.
- 	 * -1 - uImage is corrupted.
- 	 *  1 - image is not a uImage.
- 	 */
--	if (!ret)
-+	if (!ret) {
-+		info->kernel_fd = open(kern_fname, O_RDONLY);
-+		info->kernel_buf = kernel_buf;
- 		return 0;
--	else
-+	}
-+	else {
-+		free(kernel_buf);
- 		return -1;
-+	}
- }
- 
- int uImage_arm64_load(int argc, char **argv, const char *buf, off_t len,
-diff --git a/kexec/arch/arm64/kexec-zImage-arm64.c b/kexec/arch/arm64/kexec-zImage-arm64.c
-index 7877741..450a915 100644
---- a/kexec/arch/arm64/kexec-zImage-arm64.c
-+++ b/kexec/arch/arm64/kexec-zImage-arm64.c
-@@ -40,7 +40,7 @@
-  * fd : File descriptor of the temp file containing the decompressed
-  *      Image.
-  */
--int zImage_arm64_probe(const char *kernel_buf, off_t kernel_size, struct kexec_info *info)
-+int zImage_arm64_probe(const char *kernel, off_t kernel_size, struct kexec_info *info)
- {
- 	int ret = -1;
- 	int fd = 0;
-@@ -49,7 +49,7 @@ int zImage_arm64_probe(const char *kernel_buf, off_t kernel_size, struct kexec_i
- 	char *kernel_uncompressed_buf = NULL;
- 	const struct arm64_image_header *h;
- 
--	if (!is_zlib_file(kernel_buf, &kernel_size)) {
-+	if (!is_zlib_file(kernel, &kernel_size)) {
- 		dbgprintf("%s: Not an zImage file (Image.gz).\n", __func__);
- 		return -1;
- 	}
-@@ -69,7 +69,7 @@ int zImage_arm64_probe(const char *kernel_buf, off_t kernel_size, struct kexec_i
- 
- 	/* slurp in the input kernel */
- 	dbgprintf("%s: ", __func__);
--	kernel_uncompressed_buf = slurp_decompress_file(kernel_buf,
-+	kernel_uncompressed_buf = slurp_decompress_file(kernel,
- 							&kernel_size);
- 
- 	/* check for correct header magic */
-@@ -108,13 +108,12 @@ int zImage_arm64_probe(const char *kernel_buf, off_t kernel_size, struct kexec_i
- 		ret = -1;
- 		goto fail_bad_header;
- 	}
--
-+	info->kernel_fd = kernel_fd;
-+	info->kernel_buf = kernel_uncompressed_buf;
- 	unlink(fname);
--
--	free(kernel_uncompressed_buf);
- 	free(fname);
- 
--	return kernel_fd;
-+	return 0;
- 
- fail_bad_header:
- 	free(kernel_uncompressed_buf);
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index 116fb4a..dbd24aa 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -720,12 +720,13 @@ static int my_load(const char *type, int fileind, int argc, char **argv,
- 		return -1;
- 	}
- 	kernel = argv[fileind];
-+#ifndef __aarch64__
- 	/* slurp in the input kernel */
- 	kernel_buf = slurp_decompress_file(kernel, &kernel_size);
- 
- 	dbgprintf("kernel: %p kernel_size: %#llx\n",
- 		  kernel_buf, (unsigned long long)kernel_size);
--
-+#endif
- 	if (get_memory_ranges(&info.memory_range, &info.memory_ranges,
- 		info.kexec_flags) < 0 || info.memory_ranges == 0) {
- 		fprintf(stderr, "Could not get memory layout\n");
-@@ -742,13 +743,17 @@ static int my_load(const char *type, int fileind, int argc, char **argv,
- 			return -1;
- 		} else {
- 			/* make sure our file is really of that type */
-+
- #ifndef __aarch64__
- 			if (file_type[i].probe(kernel_buf, kernel_size) < 0)
- 				guess_only = 1;
- #else
--			if (file_type[i].probe(kernel_buf, kernel_size, &info) < 0)
-+			if (file_type[i].probe(kernel_buf, kernel_size, &info) < 0) {
- 				guess_only = 1;
--
-+			} else {
-+				if (info.kernel_buf != NULL)
-+					kernel_buf = info.kernel_buf;
-+			}
- #endif
- 		}
- 	}
-@@ -758,8 +763,11 @@ static int my_load(const char *type, int fileind, int argc, char **argv,
- 			if (file_type[i].probe(kernel_buf, kernel_size) == 0)
- 				break;
- #else
--			if (file_type[i].probe(kernel_buf, kernel_size, &info) == 0)
-+			if (file_type[i].probe(kernel, kernel_size, &info) >= 0) {
-+				if (info.kernel_buf != NULL)
-+					kernel_buf = info.kernel_buf;
- 				break;
-+			}
- #endif
- 		}
- 		if (i == file_types) {
-@@ -1289,6 +1297,8 @@ static int do_kexec_file_load(int fileind, int argc, char **argv,
- 
- 	info.file_mode = 1;
- 	info.initrd_fd = -1;
-+	info.kernel_fd = -1;
-+	info.kernel_buf = NULL;
- 
- 	if (!is_kexec_file_load_implemented())
- 		return EFALLBACK;
-@@ -1301,6 +1311,7 @@ static int do_kexec_file_load(int fileind, int argc, char **argv,
- 
- 	kernel = argv[fileind];
- 
-+#ifndef __aarch64__
- 	kernel_fd = open(kernel, O_RDONLY);
- 	if (kernel_fd == -1) {
- 		fprintf(stderr, "Failed to open file %s:%s\n", kernel,
-@@ -1310,21 +1321,24 @@ static int do_kexec_file_load(int fileind, int argc, char **argv,
- 
- 	/* slurp in the input kernel */
- 	kernel_buf = slurp_decompress_file(kernel, &kernel_size);
-+#endif
- 
- 	for (i = 0; i < file_types; i++) {
--#ifdef __aarch64__
--		/* handle Image.gz like cases */
--		if (is_zlib_file(kernel, &kernel_size)) {
--			if ((ret = file_type[i].probe(kernel, kernel_size, &info)) >= 0) {
--				kernel_fd = ret;
--				break;
--			}
--		} else
--			if (file_type[i].probe(kernel_buf, kernel_size, &info) >= 0)
-+#ifndef __aarch64__
-+		if (file_type[i].probe(kernel_buf, kernel_size) >= 0)
- 				break;
- #else
--		if (file_type[i].probe(kernel_buf, kernel_size) >= 0)
-+		if (file_type[i].probe(kernel, kernel_size, &info) >= 0) {
-+			if (info.kernel_fd != -1) {
-+				close(kernel_fd);
-+				kernel_fd = info.kernel_fd;
-+			}
-+			if (info.kernel_buf != NULL) {
-+				free(kernel_buf);
-+				kernel_buf = info.kernel_buf;
-+			}
- 			break;
-+		}
- #endif
- 	}
- 
-diff --git a/kexec/kexec.h b/kexec/kexec.h
-index 6e8430e..3349d16 100644
---- a/kexec/kexec.h
-+++ b/kexec/kexec.h
-@@ -164,7 +164,9 @@ struct kexec_info {
- 	unsigned long file_mode :1;
- 
- 	/* Filled by kernel image processing code */
-+	int kernel_fd;
- 	int initrd_fd;
-+	char *kernel_buf;
- 	char *command_line;
- 	int command_line_len;
- 
--- 
-2.31.1
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgSmVyZW15LAoKVGhhbmtzIGZvciBzaGFyaW5nIHRoaXMuIFdoZW4gSSBnZXQgeW91ciBzZXJp
+ZXMsIG15IHNlcmllcyBpcyBjbG9zZSB0bwplbmQsIHNvIGp1c3QgcG9zdCBpdC4KCk15IDIvNSBp
+cyBpZGVudGljYWwgdG8geW91ciA0LzQsIGFuZCBjYW4gYmUgZHJvcHBlZC4gTXkgNS81IGlzIHNp
+bWlsYXIKdG8geW91ciAyLzQsIHdoaWNoIGNhbiBiZSBkcm9wcGVkIGVpdGhlci4KClRoZSBtYWlu
+IGRpZmZlcmVuY2UgaXMgYWJvdXQgdGhlIGltYWdlIHByb2JlIG1ldGhvZC4gU2luY2UgdGhlCmlu
+dHJvZHVjdGlvbiBvZiB6Ym9vdCBmb3JtYXQsIGl0IGlzIG5vdCBwcm9wZXIgYW55IG1vcmUgdG8g
+Y2FsbCB0aGUKc2x1cnBfZGVjb21wcmVzc19maWxlKCkgZnVuY3Rpb24gb25jZSBiZWZvcmUgYXR0
+ZW1wdGluZyB0byBjYWxsCnZhcmlvdXMgcG9zc2libGUgcHJvYmVzLiBTbyBteSBzZXJpZXMgc2Nh
+dHRlcnMgdGhlCnNsdXJwX2RlY29tcHJlc3NfZmlsZSgpIGludG8gZWFjaCBwcm9iZSwgYW5kIHJl
+dHVybiB0d28gZmFjdG9yczogdGhlCmtlcm5lbCBmZCB3aGljaCBpcyB1c2VkIGJ5IHN5c19rZXhl
+Y19maWxlX2xvYWQgYW5kIHRoZSBwYXJzZWQga2VybmVsCmJ1Ziwgd2hpY2ggaXMgdXNlZCBsYXRl
+ciBieSB0aGUgaW1hZ2UgcHJvYmUgZnVuY3Rpb24uCgpPbiBGcmksIE1heSA1LCAyMDIzIGF0IDEy
+OjQ04oCvQU0gSmVyZW15IExpbnRvbiA8amVyZW15LmxpbnRvbkBhcm0uY29tPiB3cm90ZToKPgo+
+IFRoZSBsaW51eCBaQk9PVCBvcHRpb24gY3JlYXRlcyBQRXMgdGhhdCBjb250YWluIGNvbXByZXNz
+ZWQga2VybmVsIGltYWdlcwo+IHdoaWNoIGFyZSBzZWxmIGRlY29tcHJlc3NlZCBvbiBleGVjdXRp
+b24gYnkgVUVGSS4KPgo+IFRoaXMgc2V0IGFkZHMgc3VwcG9ydCBmb3IgdGhpcyBpbWFnZSBmb3Jt
+YXQgdG8ga2V4ZWMgYnkgZGVjb21wcmVzc2luZyB0aGUKPiBjb250YWluZWQga2VybmVsIGltYWdl
+IHRvIGEgdGVtcCBmaWxlLCB0aGVuIGhhbmRpbmcgdGhlIHJlc3VsdGluZyBpbWFnZQo+IG9mZiB0
+byB0aGUgZXhpc3RpbmcgIkltYWdlIiBsb2FkIHJvdXRpbmUgdG8gcGFzcyB0byB0aGUga2V4ZWMg
+c3lzY2FsbC4KPgo+IFRoZXJlIGlzIGFsc28gYW4gYWRkaXRpb25hbCBwYXRjaCB3aGljaCBjbGVh
+bnMgdXAgc29tZSBlcnJvcnMgbm90aWNlZAo+IGluIHRoZSBleGlzdGluZyB6SW1hZ2Ugc3VwcG9y
+dCBhcyB3ZWxsLgo+Cj4gSmVyZW15IExpbnRvbiAoNCk6Cj4gICBhcm02NDogQ2xlYW51cCBfcHJv
+YmUoKSByZXR1cm4gdmFsdWVzCj4gICBhcm02NDogQWRkIFpCT09UIFBFIGNvbnRhaW5pbmcgY29t
+cHJlc3NlZCBpbWFnZSBzdXBwb3J0Cj4gICBhcm02NDogSG9vayB1cCB0aGUgWkJPT1Qgc3VwcG9y
+dCBhcyB2bWxpbnV6Cj4gICBhcm02NDogRml4IHNvbWUgaXNzdWVzIHdpdGggekltYWdlIF9wcm9i
+ZSgpCj4KPiAga2V4ZWMvYXJjaC9hcm02NC9NYWtlZmlsZSAgICAgICAgICAgICAgfCAgIDMgKy0K
+PiAga2V4ZWMvYXJjaC9hcm02NC9pbWFnZS1oZWFkZXIuaCAgICAgICAgfCAgMTEgKysKPiAga2V4
+ZWMvYXJjaC9hcm02NC9rZXhlYy1hcm02NC5jICAgICAgICAgfCAgIDcgKwo+ICBrZXhlYy9hcmNo
+L2FybTY0L2tleGVjLWFybTY0LmggICAgICAgICB8ICAgMyArCj4gIGtleGVjL2FyY2gvYXJtNjQv
+a2V4ZWMtZWxmLWFybTY0LmMgICAgIHwgICAxICsKPiAga2V4ZWMvYXJjaC9hcm02NC9rZXhlYy12
+bWxpbnV6LWFybTY0LmMgfCAxNzIgKysrKysrKysrKysrKysrKysrKysrKysrKwo+ICBrZXhlYy9h
+cmNoL2FybTY0L2tleGVjLXpJbWFnZS1hcm02NC5jICB8ICAxMyArLQo+ICBrZXhlYy9rZXhlYy5j
+ICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAxMSArLQo+ICA4IGZpbGVzIGNoYW5nZWQsIDIw
+MSBpbnNlcnRpb25zKCspLCAyMCBkZWxldGlvbnMoLSkKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGtl
+eGVjL2FyY2gvYXJtNjQva2V4ZWMtdm1saW51ei1hcm02NC5jCj4KPiAtLQo+IDIuNDAuMAo+Cj4K
+PiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+IGtleGVj
+IG1haWxpbmcgbGlzdAo+IGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKPiBodHRwOi8vbGlzdHMu
+aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCj4KCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNA
+bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2tleGVjCg==
