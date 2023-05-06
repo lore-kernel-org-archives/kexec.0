@@ -4,83 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B6C09C77B7D
-	for <kexec@archiver.kernel.org>; Sat,  6 May 2023 03:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 94B46C77B73
+	for <kexec@archiver.kernel.org>; Sat,  6 May 2023 07:56:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
+	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=2j9DkLPXvehPQ5b2t009hQT3NbBhHLBaG7cUl/s/0HA=; b=KrpCJDtdUc3eQD
-	xCSv+feqoAYGkpwLDVJctHOT2GdFp/OORef/vyo37Umnvvsirv4zIjCqRAQrpAdTkTjIoj6FDbmoK
-	bqLs8O8643CoYBKThs3mbhV0SiXBs9gcGg/I5l7GQny/YvAoJY/8C+PeLdOs0jlVlK8KXl7Z59nQI
-	mhFOUsgPewh97pAf4bLO7SvMNjV16BUCsQyt57NkNT6W5paMCJPuaFzUARifuTC6B5JtmjZWUGcv5
-	7grn0jtXcIbWYdtnvzdcONrUrOOlgEG0D7jm9nJ0+Jyby8HuQMxmK19Almd/kkVS2xaRLrr3PNe6Z
-	D2Yf6otQ3RqhreqYzJ1g==;
+	List-Owner; bh=ESmmq2ug9b8uVAJVcfjZGIh8sv/cvQ/zTQjVVa66Uy8=; b=HGkfji7myQ1Wy8
+	ZX1cCXxv1HIBB2SnpKdP/cxbcB46G9gk3adXUsuO8li6sqb6fKvELvjfJYktNdSJzocg0mDOu5VuJ
+	W3C7oB3IacJWGlw6CeIDnpWInQZ+v3VfAs3tOQBeRmU265ADcqiifijYCBowGSyMxyofSLkZXcKtu
+	f94sCx3DhJ62g4LKWd/2bJTpXTJKz3Jr9+xxPS6iIkb1TMo0SmAXRf+6roToII0SD6qXHiQ1kIahR
+	8cWz6npo7AKWE7JTPbv+ftM1ch4aLsZMS93jSNJG88bAIyqiFGVCXMVVffERjhlk+pbK6FLnSgcEY
+	JPZmO9gU3jM/kNE0r4LQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pv8NS-00CQU7-2o;
-	Sat, 06 May 2023 03:14:30 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1pvCmY-00Cq3E-1E;
+	Sat, 06 May 2023 07:56:42 +0000
+Received: from mail-pf1-x433.google.com ([2607:f8b0:4864:20::433])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pv8NN-00CQTR-15
+	id 1pvCmW-00Cq2b-1c
 	for kexec@lists.infradead.org;
-	Sat, 06 May 2023 03:14:28 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1683342864;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VRLrWGdl3ICgUpIw3wrMz1/lK6OqIJksBXf9jQE3cR0=;
-	b=U3erX1rotB6OG8NfzQ9MxegwoVrNUTQg4aYweb7BrtbxHu7yw5zjIC5TBGrMzEsdYGf7ar
-	MBJm4H4bxuQDLwUBEB3G28ctEVe1Mnq9Jkg4G05/mdUL7D6Pp4uJYQDn2hCIM7DKa0Arad
-	6SrNHtONNKUbYIpr8qS+noYHP/2NUFk=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-620-VSnkQ8HMNqmyO4E-8l4F9w-1; Fri, 05 May 2023 23:14:23 -0400
-X-MC-Unique: VSnkQ8HMNqmyO4E-8l4F9w-1
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-61a66010dd7so12917946d6.3
-        for <kexec@lists.infradead.org>; Fri, 05 May 2023 20:14:23 -0700 (PDT)
+	Sat, 06 May 2023 07:56:41 +0000
+Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-643846c006fso2930302b3a.0
+        for <kexec@lists.infradead.org>; Sat, 06 May 2023 00:56:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683359797; x=1685951797;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=aSXqKKL2DM5ohMjcHFVamqTpkCqxvyAHPkfC2Zw2f2Y=;
+        b=ICQZu93FaTdOWK1lWtPwQ6fV3se+udSFcWL+PX02WV5hmUCuWM1vm69LM2Ew0WtkAG
+         AYwB/VBtO9q9nBrGgXxxp/P7t4YJjwxxloHfy+W2rj6QtoooYwfzSw4FG30PhManLORX
+         Dobl3L47/V0W4e3uq5DXNhAonfv5CuHhePYN2W1AWFVaSOSJpcLz0TP09p6VUgCRl5nE
+         WtzDFfac+YTPQ4y17OXd+J/Kv7YF4lyiR+QElUsHM/w6FjjThXGnbkK74JFI9fJtNEfZ
+         KSnk6rzR6p0+/iN64StLdRR4o5D9Z9HMDD4Q9H3y+lIKkXnFm1GJftui1DejIzFwB1OQ
+         A9kA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683342862; x=1685934862;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VRLrWGdl3ICgUpIw3wrMz1/lK6OqIJksBXf9jQE3cR0=;
-        b=gMIKlFNW0sn/ZwrlqMD2/LSZWBYf0FO4PKNzi8tLTuoVPjHkAGGDNEXvZIBVsdjPOk
-         y7iaRGfLH35r+iLl005OWE4TEF3ZHiaKkogz+IOLCS07yTO1iaHQZI4/0JK8fJV8OjPM
-         v8xXzKi5rQP6NmClPx/ov7XH39R4b278SsxPBmC86VZcpaOnbxOrNKEtSnvlJ2IJInNY
-         Lu3rtoFfPzzJs5tFGQBWWomj0cWrjxovOum2iIoPjMb8qzZ/gDvcy9zRosKOfnQ9N+oH
-         7ILky0tJvMn0W5wgnJeaZIFa3YtoJBnCxQV/NnHCOQt+63KPns2AMG7rbAfKDg7lAfJK
-         xTHw==
-X-Gm-Message-State: AC+VfDzAFLu0MY9EqeeihXgZvzT5d54auuEzgmvE2xXOFEMW2ya/F33S
-	dH7o/T3LYZC/j79dZbgwZHH10yfzOMt8Hz+nrOPyzIGsJI8WEe9bLR4n6MViRQ/oVtrT7tlLbnA
-	BiULpJKVo9B2EhigVvQ6uipubdHS4DGbJ9bWGtRIqz7PHdth8cg==
-X-Received: by 2002:ad4:5ae2:0:b0:5f1:6a35:60be with SMTP id c2-20020ad45ae2000000b005f16a3560bemr7215290qvh.23.1683342862515;
-        Fri, 05 May 2023 20:14:22 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ7PIOFqJq4vsxT3CNxNdaGiQ1TLAgJp/sLyd0vu5/zjL+/Bc/T+ee08EnxeT/Omkf9v+ZExvFMI996ZWELpwNY=
-X-Received: by 2002:ad4:5ae2:0:b0:5f1:6a35:60be with SMTP id
- c2-20020ad45ae2000000b005f16a3560bemr7215276qvh.23.1683342862308; Fri, 05 May
- 2023 20:14:22 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1683359797; x=1685951797;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aSXqKKL2DM5ohMjcHFVamqTpkCqxvyAHPkfC2Zw2f2Y=;
+        b=UBVXJ9VXz/YPo16csI9VSfHOsV28plpghpr194CLMpbXIIcCVDujnQpRwKlqnxmbgk
+         /KA6s8qX0fffllLvry/OsJOGwzqPtbkP3xao6fSx4aA7hGObDxsG7i6hZ/56E25TR/hR
+         Oc5flThIBRk5UwETbZqnq2RaG+BW1cBfZqUWN8fbTCFh2p1/sjiYe6UCPWBToAvror96
+         lsW9sFUrrv13kA0K2MTrTdAb7n16RLSW9j1VTHKGe45yzoC+3qF73bpuaSQ1jeKEIREk
+         9vo5k0e6YAgcd9SvcUfKW0QFox4vTFpcE7DzRMTKBziZ1Uo9WSQQCMi1du4+Kfmisd9g
+         3R+g==
+X-Gm-Message-State: AC+VfDwHAnomg13Dbb01J+NdEGQikD5Td5MTEkBsKvK1hU0TTJAekSjY
+	aC/QEzjZXVcFrFXxSQlkalFoqT4uV1U=
+X-Google-Smtp-Source: ACHHUZ4RWbkiR7mdDfiHmHp/BQEz0RuV+uOOFyLTWkWCNB+y/nFFtdZpPV2V1ex8dOzmoZa/+razmA==
+X-Received: by 2002:a05:6a00:1483:b0:63b:89a9:529f with SMTP id v3-20020a056a00148300b0063b89a9529fmr5038706pfu.14.1683359797435;
+        Sat, 06 May 2023 00:56:37 -0700 (PDT)
+Received: from [192.168.43.80] (subs03-180-214-233-66.three.co.id. [180.214.233.66])
+        by smtp.gmail.com with ESMTPSA id e19-20020aa78253000000b0063b96574b8bsm2648811pfn.220.2023.05.06.00.56.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 06 May 2023 00:56:37 -0700 (PDT)
+Message-ID: <0f62ff02-f601-e629-6524-972441035129@gmail.com>
+Date: Sat, 6 May 2023 14:56:30 +0700
 MIME-Version: 1.0
-References: <20230505025438.11943-1-piliu@redhat.com> <20230505025438.11943-4-piliu@redhat.com>
- <ZFUjzEwHZ6o+C9NO@kernel.org>
-In-Reply-To: <ZFUjzEwHZ6o+C9NO@kernel.org>
-From: Pingfan Liu <piliu@redhat.com>
-Date: Sat, 6 May 2023 11:14:11 +0800
-Message-ID: <CAF+s44TuVKPOPKcSP6SagJBaOL6W0zc6HM7n=BZC4OwQmNvbPw@mail.gmail.com>
-Subject: Re: [PATCH 3/5] arm64: change the prototype of image probe function
-To: Simon Horman <horms@kernel.org>
-Cc: kexec@lists.infradead.org, horms@verge.net.au, ardb@kernel.org, 
-	jeremy.linton@arm.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v6 00/14] x86: Trenchboot secure dynamic launch Linux
+ kernel support
+Content-Language: en-US
+To: Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-crypto@vger.kernel.org, iommu@lists.linux-foundation.org,
+ kexec@lists.infradead.org, linux-efi@vger.kernel.org
+Cc: dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, hpa@zytor.com, ardb@kernel.org, mjg59@srcf.ucam.org,
+ James.Bottomley@hansenpartnership.com, luto@amacapital.net,
+ nivedita@alum.mit.edu, kanth.ghatraju@oracle.com,
+ trenchboot-devel@googlegroups.com
+References: <20230504145023.835096-1-ross.philipson@oracle.com>
+ <ZFTA0kg98XxeP2Hh@debian.me>
+ <765a94ac-ed2c-267d-0ee9-be21757ceb16@oracle.com>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <765a94ac-ed2c-267d-0ee9-be21757ceb16@oracle.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230505_201425_466321_77B500C3 
-X-CRM114-Status: GOOD (  22.22  )
+X-CRM114-CacheID: sfid-20230506_005640_536125_9FCA3243 
+X-CRM114-Status: UNSURE (   7.57  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -92,51 +99,24 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-T24gRnJpLCBNYXkgNSwgMjAyMyBhdCAxMTo0MuKAr1BNIFNpbW9uIEhvcm1hbiA8aG9ybXNAa2Vy
-bmVsLm9yZz4gd3JvdGU6Cj4KPiBPbiBGcmksIE1heSAwNSwgMjAyMyBhdCAxMDo1NDozNUFNICsw
-ODAwLCBQaW5nZmFuIExpdSB3cm90ZToKPiA+IENoYW5naW5nIHRoZSBhYXJjaDY0IHByb2JlJ3Mg
-cHJvdG90eXBlICBmcm9tCj4gPiAgICAgICB0eXBlZGVmIGludCAocHJvYmVfdCkoY29uc3QgY2hh
-ciAqa2VybmVsX2J1Ziwgb2ZmX3Qga2VybmVsX3NpemUpOwo+ID4gdG8KPiA+ICAgICAgIHR5cGVk
-ZWYgaW50IChwcm9iZV90KShjb25zdCBjaGFyICprZXJuZWxfYnVmLCBvZmZfdCBrZXJuZWxfc2l6
-ZSwgc3RydWN0IGtleGVjX2luZm8gKmluZm8pOwo+ID4KPiA+IExhdGVyLCBpbmZvIGNhbiBiZSB1
-c2VkIHRvIHJldHVybiBib3RoIHRoZSBmaWxlIGRlc2NyaXB0b3IgYW5kIHBhcnNlZCBrZXJuZWwK
-PiA+IGJ1ZmZlci4gVGhlIGZkIGlzIHBhc3NlZCB0byBzeXNfa2V4ZWNfZmlsZV9sb2FkLCBhbmQg
-dGhlIHBhcnNlZCBrZXJuZWwKPiA+IGJ1ZmZlciBpcyB1c2VkIGJ5IGltYWdlJ3MgbG9hZCBmdW5j
-dGlvbi4KPiA+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBQaW5nZmFuIExpdSA8cGlsaXVAcmVkaGF0LmNv
-bT4KPgo+IEhpIFBpbmdmYW4sCj4KPiBJIGFtIHNlZWluZyBhIGJ1aWxkIGZhaWx1cmUgb24gQVJN
-ICgzMmJpdCkuCj4KPiAgIDEzOCB8IGludCB6SW1hZ2VfYXJtX3Byb2JlKGNvbnN0IGNoYXIgKlVO
-VVNFRChidWYpLCBvZmZfdCBVTlVTRUQobGVuKSkKPiAgICAgICB8ICAgICBefn5+fn5+fn5+fn5+
-fn5+Cj4gSW4gZmlsZSBpbmNsdWRlZCBmcm9tIC4uLy4uL2tleGVjL2FyY2gvYXJtL2tleGVjLXpJ
-bWFnZS1hcm0uYzoyMToKPiAuLi8uLi9rZXhlYy9hcmNoL2FybS9rZXhlYy1hcm0uaDoxMjo1OiBu
-b3RlOiBwcmV2aW91cyBkZWNsYXJhdGlvbiBvZiDigJh6SW1hZ2VfYXJtX3Byb2Jl4oCZIHdhcyBo
-ZXJlCj4gICAgMTIgfCBpbnQgekltYWdlX2FybV9wcm9iZShjb25zdCBjaGFyICpidWYsIG9mZl90
-IGxlbiwgc3RydWN0IGtleGVjX2luZm8gKmluZm8pOwo+ICAgICAgIHwgICAgIF5+fn5+fn5+fn5+
-fn5+fn4KPiBtYWtlWzFdOiAqKiogW01ha2VmaWxlOjEyNDoga2V4ZWMvYXJjaC9hcm0va2V4ZWMt
-ekltYWdlLWFybS5vXSBFcnJvciAxCj4gbWFrZVsxXTogKioqIFdhaXRpbmcgZm9yIHVuZmluaXNo
-ZWQgam9icy4uLi4KPiBtYWtlWzFdOiBMZWF2aW5nIGRpcmVjdG9yeSAnL2hvbWUvcnVubmVyL3dv
-cmsva2V4ZWMtdG9vbHMva2V4ZWMtdG9vbHMva2V4ZWMtdG9vbHMtMi4wLjI2LmdpdC9fYnVpbGQv
-c3ViJwo+IG1ha2U6ICoqKiBbTWFrZWZpbGU6Mjc2OiBkaXN0Y2hlY2tdIEVycm9yIDIKPiBFcnJv
-cjogUHJvY2VzcyBjb21wbGV0ZWQgd2l0aCBleGl0IGNvZGUgMi4KPgoKT29wcy4gSSBqdXN0IHRl
-c3RlZCBvbiB4ODZfNjQgYW5kIGFhcmNoNjQsIGFuZCBkaWQgbm90IGRldGVjdCB0aGlzIGJ1Zy4K
-Cj4gTGluazogaHR0cHM6Ly9naXRodWIuY29tL2hvcm1zL2tleGVjLXRvb2xzL2FjdGlvbnMvcnVu
-cy80ODk1MTI0NzE5L2pvYnMvODc0MDI3MjEwMwo+Cj4gLi4uCj4KPiA+IGRpZmYgLS1naXQgYS9r
-ZXhlYy9rZXhlYy5oIGIva2V4ZWMva2V4ZWMuaAo+ID4gaW5kZXggMGQ4MjBhZC4uNmU4NDMwZSAx
-MDA2NDQKPiA+IC0tLSBhL2tleGVjL2tleGVjLmgKPiA+ICsrKyBiL2tleGVjL2tleGVjLmgKPiA+
-IEBAIC0xOTEsNyArMTkxLDEzIEBAIHVuc2lnbmVkIGxvbmcgbG9jYXRlX2hvbGUoc3RydWN0IGtl
-eGVjX2luZm8gKmluZm8sCj4gPiAgICAgICB1bnNpZ25lZCBsb25nIGhvbGVfbWluLCB1bnNpZ25l
-ZCBsb25nIGhvbGVfbWF4LAo+ID4gICAgICAgaW50IGhvbGVfZW5kKTsKPiA+Cj4gPiArI2lmbmRl
-ZiBfX2FhcmNoNjRfXwo+ID4gIHR5cGVkZWYgaW50IChwcm9iZV90KShjb25zdCBjaGFyICprZXJu
-ZWxfYnVmLCBvZmZfdCBrZXJuZWxfc2l6ZSk7Cj4gPiArI2Vsc2UKPiA+ICt0eXBlZGVmIGludCAo
-cHJvYmVfdCkoY29uc3QgY2hhciAqa2Vybl9mbmFtZSwgb2ZmX3Qga2VybmVsX3NpemUsCj4gPiAr
-ICAgICBzdHJ1Y3Qga2V4ZWNfaW5mbyAqaW5mbyk7Cj4gPiArI2VuZGlmCj4gPiArCj4KPiBUaGlz
-IHNlZW1zIGtpbmQgb2YgdW5mb3J0dW5hdGUuCj4gQ291bGQgd2UgdXBkYXRlIHRoZSBwcm90b3R5
-cGUgZm9yIGFsbCBhcmNoaXRlY3R1cmVzPwo+CgpJIHdpbGwgaGF2ZSBhIHRyeSB3aXRoIGNvY2Np
-bmVsbGUuCgpUaGFua3MgZm9yIHlvdXIgaGVscC4KClJlZ2FyZHMsCgogICAgUGluZ2ZhbgoKCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxp
-bmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
-b3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On 5/5/23 22:45, Ross Philipson wrote:
+> Sorry about that. In the future I will include a base-commit field. It is based off of torvolds/master as of 5/1/2023. The branch where the patches came from is now pushed to the TrenchBoot repository here:
+> 
+> https://github.com/TrenchBoot/linux/tree/linux-sl-master-5-1-23-v6
+> 
+
+Pulled, thanks!
+
+-- 
+An old man doll... just what I always wanted! - Clara
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
