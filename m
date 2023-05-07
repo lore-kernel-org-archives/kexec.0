@@ -4,45 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 66F9CC77B7D
-	for <kexec@archiver.kernel.org>; Sun,  7 May 2023 04:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D6EBCC77B75
+	for <kexec@archiver.kernel.org>; Sun,  7 May 2023 04:08:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=nHDdFK+Z/qUMKqCTo2m4+72FVn2l+/bmqguDBoodcuA=; b=e9E+sYC/Swwfp8
-	KTIcUciygsh3wzJNGqoENzp6zukEpqZrGuwJqSvBQq++G9l+PDjq5cdN8KOnYrAV5SLrOd6Q+StcD
-	XCLdgxZ7geuoV6mYBmCszBVmLwU05Y6cmNEdI5YIyLwIH7HlQah+kGFEF/oLRgG1Sz/322x/jYQaB
-	SbJS0BgkerL6SgzlztmM4uct97EYeeboaGy3hr00F8M0iZDWpqNXOiArK8R7V5a3XZmWTghMG13KQ
-	M1xiznO5eDTj1XkD5SJAQFGDyTWvH4dDzDkLi3/0EuZcm9ViASICq9ye1MiodM80sPixZm3xTQD9v
-	YT7Noaku3md7UqXjZvrQ==;
+	List-Owner; bh=ICbuV9DaRWqJIh0ou+SvaSppa/eyvFSib+t6ZQrVuBE=; b=4Q+5QkYa2qwUye
+	hi4KQfleq8Y0Wlc5AQc2ttrG4Xn7YoN3XIR+qkfjmgxuD6KaA/7sfcanwE+vYYZvtGRMw5mpf4g7I
+	tCp+gSuNlsS93Gx0p0No6WZ3D8tMaNorI5atftjGPg2KY5Qg89lCGDwxpfbAObEdcnX+uQaU8GR8F
+	ywad1SgzawlkRAh7+KuFnBCqXwXLXt1jPOVbPXUz8THDCD7DDuYvFniBCu89GGqGaYcQUP0FaHl41
+	ikKXJH7lQZ4l4rcijF3IkIrwDbe5np0+vl7ycFRcGRn8EPe4RPrglb4GkzJ+5NyzFEp2QjLfmPPMI
+	EPtvijGnct/8DqI/H86Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pvVgU-00F7Qg-1H;
-	Sun, 07 May 2023 04:07:42 +0000
+	id 1pvVhM-00F7aF-0k;
+	Sun, 07 May 2023 04:08:36 +0000
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1pvVgS-00F7Q5-0j;
-	Sun, 07 May 2023 04:07:40 +0000
-Date: Sat, 6 May 2023 21:07:40 -0700
+	id 1pvVhL-00F7Zt-0g;
+	Sun, 07 May 2023 04:08:35 +0000
+Date: Sat, 6 May 2023 21:08:35 -0700
 From: Luis Chamberlain <mcgrof@kernel.org>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: hch@infradead.org, song@kernel.org, rafael@kernel.org,
-	gregkh@linuxfoundation.org, viro@zeniv.linux.org.uk, jack@suse.cz,
-	bvanassche@acm.org, ebiederm@xmission.com, mchehab@kernel.org,
-	keescook@chromium.org, p.raghav@samsung.com,
+To: Jan Kara <jack@suse.cz>
+Cc: "Darrick J. Wong" <djwong@kernel.org>, hch@infradead.org,
+	song@kernel.org, rafael@kernel.org, gregkh@linuxfoundation.org,
+	viro@zeniv.linux.org.uk, bvanassche@acm.org, ebiederm@xmission.com,
+	mchehab@kernel.org, keescook@chromium.org, p.raghav@samsung.com,
 	linux-fsdevel@vger.kernel.org, kernel@tuxforce.de,
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC v3 05/24] fs: add automatic kernel fs freeze / thaw and
- remove kthread freezing
-Message-ID: <ZFckDPpgpbvZBFyL@bombadil.infradead.org>
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+	xfs <linux-xfs@vger.kernel.org>
+Subject: Re: [RFC v3 03/24] fs: distinguish between user initiated freeze and
+ kernel initiated freeze
+Message-ID: <ZFckQz3udm48kprc@bombadil.infradead.org>
 References: <20230114003409.1168311-1-mcgrof@kernel.org>
- <20230114003409.1168311-6-mcgrof@kernel.org>
- <Y/gqNaP4mrSMaDJo@magnolia>
+ <20230114003409.1168311-4-mcgrof@kernel.org>
+ <Y8dYpOyR/jOsO267@magnolia>
+ <20230118092812.2gl3cde6mocbngli@quack3>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <Y/gqNaP4mrSMaDJo@magnolia>
+In-Reply-To: <20230118092812.2gl3cde6mocbngli@quack3>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -59,66 +61,37 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Feb 23, 2023 at 07:08:37PM -0800, Darrick J. Wong wrote:
-> On Fri, Jan 13, 2023 at 04:33:50PM -0800, Luis Chamberlain wrote:
-> > Add support to automatically handle freezing and thawing filesystems
-> > during the kernel's suspend/resume cycle.
+On Wed, Jan 18, 2023 at 10:28:12AM +0100, Jan Kara wrote:
+> On Tue 17-01-23 18:25:40, Darrick J. Wong wrote:
+> > [add linux-xfs to cc on this one]
 > > 
-> > This is needed so that we properly really stop IO in flight without
-> > races after userspace has been frozen. Without this we rely on
-> > kthread freezing and its semantics are loose and error prone.
-> > For instance, even though a kthread may use try_to_freeze() and end
-> > up being frozen we have no way of being sure that everything that
-> > has been spawned asynchronously from it (such as timers) have also
-> > been stopped as well.
+> > On Fri, Jan 13, 2023 at 04:33:48PM -0800, Luis Chamberlain wrote:
+> > > Userspace can initiate a freeze call using ioctls. If the kernel decides
+> > > to freeze a filesystem later it must be able to distinguish if userspace
+> > > had initiated the freeze, so that it does not unfreeze it later
+> > > automatically on resume.
 > > 
-> > A long term advantage of also adding filesystem freeze / thawing
-> > supporting during suspend / hibernation is that long term we may
-> > be able to eventually drop the kernel's thread freezing completely
-> > as it was originally added to stop disk IO in flight as we hibernate
-> > or suspend.
+> > Hm.  Zooming out a bit here, I want to think about how kernel freezes
+> > should behave...
+> > 
+> > > Likewise if the kernel is initiating a freeze on its own it should *not*
+> > > fail to freeze a filesystem if a user had already frozen it on our behalf.
+> > 
+> > ...because kernel freezes can absorb an existing userspace freeze.  Does
+> > that mean that userspace should be prevented from undoing a kernel
+> > freeze?  Even in that absorption case?
+> > 
+> > Also, should we permit multiple kernel freezes of the same fs at the
+> > same time?  And if we do allow that, would they nest like freeze used to
+> > do?
+> > 
+> > (My suggestions here are 'yes', 'yes', and '**** no'.)
 > 
-> Hooray!
-> 
-> One evil question though --
-> 
-> Say you have dm devices A and B.  Each has a distinct fs on it.
-> If you mount A and then B and initiate a suspend, that should result in
-> first B and then A freezing, right?
-> 
-> After resuming, you then change A's dm-table definition to point it
-> at a loop device backed by a file on B.
-> 
-> What happens now when you initiate a suspend?  B freezes, then A tries
-> to flush data to the loop-mounted file on B, but it's too late for that.
-> That sounds like a deadlock?
-> 
-> Though I don't know how much we care about this corner case,
+> Yeah, makes sense to me. So I think the mental model to make things safe
+> is that there are two flags - frozen_by_user, frozen_by_kernel - and the
+> superblock is kept frozen as long as either of these is set.
 
-As you suggest this is not the only corner case that one could draw
-upon. There was that evil ioctl added years ago to allow flipping an
-installed system bootted from a USB or ISO over to the real freshly
-installed root mount point. To make this bullet-proof we'll need to
-eventually add a simple graph implementation to keep tags on ordering
-requirements for the super blocks. I have some C code which tries to
-implement a graph Linux style but since these are all corner cases at
-this time, I think it's best we fix first suspend for most and later
-address a proper graph solution.
-
-> Anyway, just wondering if you'd thought about that kind of doomsday
-> scenario that a nutty sysadmin could set up.
-> 
-> The only way I can think of to solve that kind of thing would be to hook
-> filesystems and loop devices into the device model, make fs "device"
-> suspend actually freeze, hope the suspend code suspends from the leaves
-> inward, and hope I actually understand how the device model works (I
-> don't.)
-
-There's probably really odd things one can do, and one thing I think
-we can later do is simply annotate those cases and *not* allow auto-freeze
-with time for those horrible situations.
-
-A real long term solution I think will involve a graph.
+Makes sense to me.
 
   Luis
 
