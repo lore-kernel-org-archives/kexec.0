@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0207AC7EE2D
-	for <kexec@archiver.kernel.org>; Mon,  8 May 2023 01:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CB9B7C7EE2F
+	for <kexec@archiver.kernel.org>; Mon,  8 May 2023 01:17:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=ZtvGSp37wiLpcnoPMpaqhS7uXe0frMBcbtJpsHUDohM=; b=r5pzcHGHcQ+Q+t
-	jA2/qvsm+URtYYhouoFrCKSMMnjJvomB2A4GNlzKreCHHgdxwNRsTnWWPcX9FS8frT8P7sbWnN+O3
-	rgKY81+oCjQc/hFOv+1JFvgFi0wUijkuNyksHhjxJy6iD+DNK9uXUgIZYuT1+MjpoU6KoXXDrj91W
-	exilGbOT06arcd/y8Ei2YG5CbBPC6PMuqrVvqPrP3Om0vbybKwHAxlMIsIbALUM3bupKgYz4gp8iH
-	/iKNqjrmTEEojkZvqmgqOZZCoAJLwyYx8boUKAIx/GU8mfMIMDwQ5qA5LhQnOCYsWdXWGEDeBhJiJ
-	OzgOQ0MlaTqXDwjFMWyQ==;
+	List-Owner; bh=gOm/nCOuVDeaMVulEh036TQhnYR5vYnEJriY6G04pI0=; b=TXnBn3sW4AqWqZ
+	0votJB2NRwBm6CUqCb+6ajGTTMNwFfmYTyDhrODxvD5wzvTIX493g8GOHi1NVKLYh7KG1Ajyhe4yK
+	xMlrfkEKk6zrZDLkYhot0CkdYj3KztwZrGG5j48SrVB8Fh/RDECYsv+hSjcmxytuqCBhwn3f+GDbr
+	2rw453qmyGOTH9L7jvFbX/KTcbRA03wtl2FE9wLiyQ3WqeDzZ2+jCnX1oE0d2Hj7iFtSp0Z3Tw8t6
+	gFHGfDMfSIJFto9/45rizYzML60ilh6traKfpOsP35YVtw9kmrcHRG3bh6MIXkqBBmvilLgtHEq0s
+	2KUoWnnq/gEkpe+tVL4w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pvpVI-00Gvdv-2Y;
-	Mon, 08 May 2023 01:17:28 +0000
+	id 1pvpVH-00Gvcc-25;
+	Mon, 08 May 2023 01:17:27 +0000
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1pvpV8-00GvZ8-04;
-	Mon, 08 May 2023 01:17:18 +0000
+	id 1pvpV7-00GvYy-2e;
+	Mon, 08 May 2023 01:17:17 +0000
 From: Luis Chamberlain <mcgrof@kernel.org>
 To: hch@infradead.org,
 	djwong@kernel.org,
@@ -46,9 +46,9 @@ Cc: mchehab@kernel.org,
 	kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 6/6] fs: add automatic kernel fs freeze / thaw and remove kthread freezing
-Date: Sun,  7 May 2023 18:17:17 -0700
-Message-Id: <20230508011717.4034511-7-mcgrof@kernel.org>
+Subject: [PATCH 1/6] fs: unify locking semantics for fs freeze / thaw
+Date: Sun,  7 May 2023 18:17:12 -0700
+Message-Id: <20230508011717.4034511-2-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.38.1
 In-Reply-To: <20230508011717.4034511-1-mcgrof@kernel.org>
 References: <20230508011717.4034511-1-mcgrof@kernel.org>
@@ -69,172 +69,347 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Add support to automatically handle freezing and thawing filesystems
-during the kernel's suspend/resume cycle.
+Right now freeze_super()  and thaw_super() are called with
+different locking contexts. To expand on this is messy, so
+just unify the requirement to require grabbing an active
+reference and keep the superblock locked.
 
-This is needed so that we properly really stop IO in flight without
-races after userspace has been frozen. Without this we rely on
-kthread freezing and its semantics are loose and error prone.
-For instance, even though a kthread may use try_to_freeze() and end
-up being frozen we have no way of being sure that everything that
-has been spawned asynchronously from it (such as timers) have also
-been stopped as well.
-
-A long term advantage of also adding filesystem freeze / thawing
-supporting during suspend / hibernation is that long term we may
-be able to eventually drop the kernel's thread freezing completely
-as it was originally added to stop disk IO in flight as we hibernate
-or suspend.
-
-This does not remove the superfluous freezer calls on all filesystems.
-Each filesystem must remove all the kthread freezer stuff and peg
-the fs_type flags as supporting auto-freezing with the FS_AUTOFREEZE
-flag.
-
-Subsequent patches remove the kthread freezer usage from each
-filesystem, one at a time to make all this work bisectable.
-Once all filesystems remove the usage of the kthread freezer we
-can remove the FS_AUTOFREEZE flag.
-
-Reviewed-by: Jan Kara <jack@suse.cz>
+Suggested-by: Christoph Hellwig <hch@infradead.org>
 Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- fs/super.c             | 50 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/fs.h     | 14 ++++++++++++
- kernel/power/process.c | 15 ++++++++++++-
- 3 files changed, 78 insertions(+), 1 deletion(-)
+ block/bdev.c    |  5 +++-
+ fs/f2fs/gc.c    |  5 ++++
+ fs/gfs2/super.c |  9 +++++--
+ fs/gfs2/sys.c   |  6 +++++
+ fs/gfs2/util.c  |  5 ++++
+ fs/ioctl.c      | 12 ++++++++--
+ fs/super.c      | 62 ++++++++++++++++++-------------------------------
+ 7 files changed, 60 insertions(+), 44 deletions(-)
 
+diff --git a/block/bdev.c b/block/bdev.c
+index 21c63bfef323..dc54a2a1c46e 100644
+--- a/block/bdev.c
++++ b/block/bdev.c
+@@ -251,7 +251,7 @@ int freeze_bdev(struct block_device *bdev)
+ 		error = sb->s_op->freeze_super(sb);
+ 	else
+ 		error = freeze_super(sb);
+-	deactivate_super(sb);
++	deactivate_locked_super(sb);
+ 
+ 	if (error) {
+ 		bdev->bd_fsfreeze_count--;
+@@ -289,6 +289,8 @@ int thaw_bdev(struct block_device *bdev)
+ 	sb = bdev->bd_fsfreeze_sb;
+ 	if (!sb)
+ 		goto out;
++	if (!get_active_super(bdev))
++		goto out;
+ 
+ 	if (sb->s_op->thaw_super)
+ 		error = sb->s_op->thaw_super(sb);
+@@ -298,6 +300,7 @@ int thaw_bdev(struct block_device *bdev)
+ 		bdev->bd_fsfreeze_count++;
+ 	else
+ 		bdev->bd_fsfreeze_sb = NULL;
++	deactivate_locked_super(sb);
+ out:
+ 	mutex_unlock(&bdev->bd_fsfreeze_mutex);
+ 	return error;
+diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+index 61c5f9d26018..e31d6791d3e3 100644
+--- a/fs/f2fs/gc.c
++++ b/fs/f2fs/gc.c
+@@ -2166,7 +2166,10 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+ 	if (err)
+ 		return err;
+ 
++	if (!get_active_super(sbi->sb->s_bdev))
++		return -ENOTTY;
+ 	freeze_super(sbi->sb);
++
+ 	f2fs_down_write(&sbi->gc_lock);
+ 	f2fs_down_write(&sbi->cp_global_sem);
+ 
+@@ -2217,6 +2220,8 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+ out_err:
+ 	f2fs_up_write(&sbi->cp_global_sem);
+ 	f2fs_up_write(&sbi->gc_lock);
++	/* We use the same active reference from freeze */
+ 	thaw_super(sbi->sb);
++	deactivate_locked_super(sbi->sb);
+ 	return err;
+ }
+diff --git a/fs/gfs2/super.c b/fs/gfs2/super.c
+index 5eed8c237500..e57cb593e2f3 100644
+--- a/fs/gfs2/super.c
++++ b/fs/gfs2/super.c
+@@ -676,7 +676,12 @@ void gfs2_freeze_func(struct work_struct *work)
+ 	struct gfs2_sbd *sdp = container_of(work, struct gfs2_sbd, sd_freeze_work);
+ 	struct super_block *sb = sdp->sd_vfs;
+ 
+-	atomic_inc(&sb->s_active);
++	if (!get_active_super(sb->s_bdev)) {
++		fs_info(sdp, "GFS2: couldn't grap super for thaw for filesystem\n");
++		gfs2_assert_withdraw(sdp, 0);
++		return;
++	}
++
+ 	error = gfs2_freeze_lock(sdp, &freeze_gh, 0);
+ 	if (error) {
+ 		gfs2_assert_withdraw(sdp, 0);
+@@ -690,7 +695,7 @@ void gfs2_freeze_func(struct work_struct *work)
+ 		}
+ 		gfs2_freeze_unlock(&freeze_gh);
+ 	}
+-	deactivate_super(sb);
++	deactivate_locked_super(sb);
+ 	clear_bit_unlock(SDF_FS_FROZEN, &sdp->sd_flags);
+ 	wake_up_bit(&sdp->sd_flags, SDF_FS_FROZEN);
+ 	return;
+diff --git a/fs/gfs2/sys.c b/fs/gfs2/sys.c
+index 454dc2ff8b5e..cbb71c3520c0 100644
+--- a/fs/gfs2/sys.c
++++ b/fs/gfs2/sys.c
+@@ -164,6 +164,9 @@ static ssize_t freeze_store(struct gfs2_sbd *sdp, const char *buf, size_t len)
+ 	if (!capable(CAP_SYS_ADMIN))
+ 		return -EPERM;
+ 
++	if (!get_active_super(sb->s_bdev))
++		return -ENOTTY;
++
+ 	switch (n) {
+ 	case 0:
+ 		error = thaw_super(sdp->sd_vfs);
+@@ -172,9 +175,12 @@ static ssize_t freeze_store(struct gfs2_sbd *sdp, const char *buf, size_t len)
+ 		error = freeze_super(sdp->sd_vfs);
+ 		break;
+ 	default:
++		deactivate_locked_super(sb);
+ 		return -EINVAL;
+ 	}
+ 
++	deactivate_locked_super(sb);
++
+ 	if (error) {
+ 		fs_warn(sdp, "freeze %d error %d\n", n, error);
+ 		return error;
+diff --git a/fs/gfs2/util.c b/fs/gfs2/util.c
+index 7a6aeffcdf5c..3a0cd5e9ad84 100644
+--- a/fs/gfs2/util.c
++++ b/fs/gfs2/util.c
+@@ -345,10 +345,15 @@ int gfs2_withdraw(struct gfs2_sbd *sdp)
+ 	set_bit(SDF_WITHDRAW_IN_PROG, &sdp->sd_flags);
+ 
+ 	if (sdp->sd_args.ar_errors == GFS2_ERRORS_WITHDRAW) {
++		if (!get_active_super(sb->s_bdev)) {
++			fs_err(sdp, "could not grab super on withdraw for file system\n");
++			return -1;
++		}
+ 		fs_err(sdp, "about to withdraw this file system\n");
+ 		BUG_ON(sdp->sd_args.ar_debug);
+ 
+ 		signal_our_withdraw(sdp);
++		deactivate_locked_super(sb);
+ 
+ 		kobject_uevent(&sdp->sd_kobj, KOBJ_OFFLINE);
+ 
+diff --git a/fs/ioctl.c b/fs/ioctl.c
+index 5b2481cd4750..1d20af762e0d 100644
+--- a/fs/ioctl.c
++++ b/fs/ioctl.c
+@@ -386,6 +386,7 @@ static int ioctl_fioasync(unsigned int fd, struct file *filp,
+ static int ioctl_fsfreeze(struct file *filp)
+ {
+ 	struct super_block *sb = file_inode(filp)->i_sb;
++	int ret;
+ 
+ 	if (!ns_capable(sb->s_user_ns, CAP_SYS_ADMIN))
+ 		return -EPERM;
+@@ -394,10 +395,17 @@ static int ioctl_fsfreeze(struct file *filp)
+ 	if (sb->s_op->freeze_fs == NULL && sb->s_op->freeze_super == NULL)
+ 		return -EOPNOTSUPP;
+ 
++	if (!get_active_super(sb->s_bdev))
++		return -ENOTTY;
++
+ 	/* Freeze */
+ 	if (sb->s_op->freeze_super)
+-		return sb->s_op->freeze_super(sb);
+-	return freeze_super(sb);
++		ret = sb->s_op->freeze_super(sb);
++	ret = freeze_super(sb);
++
++	deactivate_locked_super(sb);
++
++	return ret;
+ }
+ 
+ static int ioctl_fsthaw(struct file *filp)
 diff --git a/fs/super.c b/fs/super.c
-index d5eab6b38b03..148674429ab8 100644
+index 34afe411cf2b..0e9d48846684 100644
 --- a/fs/super.c
 +++ b/fs/super.c
-@@ -1910,3 +1910,53 @@ int sb_init_dio_done_wq(struct super_block *sb)
- 		destroy_workqueue(wq);
+@@ -39,8 +39,6 @@
+ #include <uapi/linux/mount.h>
+ #include "internal.h"
+ 
+-static int thaw_super_locked(struct super_block *sb);
+-
+ static LIST_HEAD(super_blocks);
+ static DEFINE_SPINLOCK(sb_lock);
+ 
+@@ -851,13 +849,13 @@ struct super_block *get_active_super(struct block_device *bdev)
+ 		if (sb->s_bdev == bdev) {
+ 			if (!grab_super(sb))
+ 				goto restart;
+-			up_write(&sb->s_umount);
+ 			return sb;
+ 		}
+ 	}
+ 	spin_unlock(&sb_lock);
+ 	return NULL;
+ }
++EXPORT_SYMBOL_GPL(get_active_super);
+ 
+ struct super_block *user_get_super(dev_t dev, bool excl)
+ {
+@@ -1024,13 +1022,13 @@ void emergency_remount(void)
+ 
+ static void do_thaw_all_callback(struct super_block *sb)
+ {
+-	down_write(&sb->s_umount);
++	if (!get_active_super(sb->s_bdev))
++		return;
+ 	if (sb->s_root && sb->s_flags & SB_BORN) {
+ 		emergency_thaw_bdev(sb);
+-		thaw_super_locked(sb);
+-	} else {
+-		up_write(&sb->s_umount);
++		thaw_super(sb);
+ 	}
++	deactivate_locked_super(sb);
+ }
+ 
+ static void do_thaw_all(struct work_struct *work)
+@@ -1636,10 +1634,13 @@ static void sb_freeze_unlock(struct super_block *sb, int level)
+ }
+ 
+ /**
+- * freeze_super - lock the filesystem and force it into a consistent state
++ * freeze_super - force a filesystem backed by a block device into a consistent state
+  * @sb: the super to lock
+  *
+- * Syncs the super to make sure the filesystem is consistent and calls the fs's
++ * Used by filesystems and the kernel to freeze a fileystem backed by a block
++ * device into a consistent state. Callers must use get_active_super(bdev) to
++ * lock the @sb and when done must unlock it with deactivate_locked_super().
++ * Syncs the filesystem backed by the @sb and calls the filesystem's optional
+  * freeze_fs.  Subsequent calls to this without first thawing the fs will return
+  * -EBUSY.
+  *
+@@ -1672,22 +1673,15 @@ int freeze_super(struct super_block *sb)
+ {
+ 	int ret;
+ 
+-	atomic_inc(&sb->s_active);
+-	down_write(&sb->s_umount);
+-	if (sb->s_writers.frozen != SB_UNFROZEN) {
+-		deactivate_locked_super(sb);
++	if (sb->s_writers.frozen != SB_UNFROZEN)
+ 		return -EBUSY;
+-	}
+ 
+-	if (!(sb->s_flags & SB_BORN)) {
+-		up_write(&sb->s_umount);
++	if (!(sb->s_flags & SB_BORN))
+ 		return 0;	/* sic - it's "nothing to do" */
+-	}
+ 
+ 	if (sb_rdonly(sb)) {
+ 		/* Nothing to do really... */
+ 		sb->s_writers.frozen = SB_FREEZE_COMPLETE;
+-		up_write(&sb->s_umount);
+ 		return 0;
+ 	}
+ 
+@@ -1707,7 +1701,6 @@ int freeze_super(struct super_block *sb)
+ 		sb->s_writers.frozen = SB_UNFROZEN;
+ 		sb_freeze_unlock(sb, SB_FREEZE_PAGEFAULT);
+ 		wake_up(&sb->s_writers.wait_unfrozen);
+-		deactivate_locked_super(sb);
+ 		return ret;
+ 	}
+ 
+@@ -1723,7 +1716,6 @@ int freeze_super(struct super_block *sb)
+ 			sb->s_writers.frozen = SB_UNFROZEN;
+ 			sb_freeze_unlock(sb, SB_FREEZE_FS);
+ 			wake_up(&sb->s_writers.wait_unfrozen);
+-			deactivate_locked_super(sb);
+ 			return ret;
+ 		}
+ 	}
+@@ -1733,19 +1725,25 @@ int freeze_super(struct super_block *sb)
+ 	 */
+ 	sb->s_writers.frozen = SB_FREEZE_COMPLETE;
+ 	lockdep_sb_freeze_release(sb);
+-	up_write(&sb->s_umount);
  	return 0;
  }
-+
-+#ifdef CONFIG_PM_SLEEP
-+static bool super_should_freeze(struct super_block *sb)
-+{
-+	if (!(sb->s_type->fs_flags & FS_AUTOFREEZE))
-+		return false;
-+	/*
-+	 * We don't freeze virtual filesystems, we skip those filesystems with
-+	 * no backing device.
-+	 */
-+	if (sb->s_bdi == &noop_backing_dev_info)
-+		return false;
-+
-+	return true;
-+}
-+
-+int fs_suspend_freeze_sb(struct super_block *sb, void *priv)
-+{
-+	int error = 0;
-+
-+	if (!super_should_freeze(sb))
-+		goto out;
-+
-+	pr_info("%s (%s): freezing\n", sb->s_type->name, sb->s_id);
-+
-+	error = freeze_super(sb, false);
-+	if (error && error != -EBUSY)
-+		pr_notice("%s (%s): Unable to freeze, error=%d",
-+			  sb->s_type->name, sb->s_id, error);
-+out:
-+	return error;
-+}
-+
-+int fs_suspend_thaw_sb(struct super_block *sb, void *priv)
-+{
-+	int error = 0;
-+
-+	if (!super_should_freeze(sb))
-+		goto out;
-+
-+	pr_info("%s (%s): thawing\n", sb->s_type->name, sb->s_id);
-+
-+	error = thaw_super(sb, false);
-+	if (error && error != -EBUSY)
-+		pr_notice("%s (%s): Unable to unfreeze, error=%d",
-+			  sb->s_type->name, sb->s_id, error);
-+out:
-+	return error;
-+}
-+#endif /* CONFIG_PM_SLEEP */
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 22dd697ab703..92c85c8ec1ed 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2247,6 +2247,7 @@ struct file_system_type {
- #define FS_DISALLOW_NOTIFY_PERM	16	/* Disable fanotify permission events */
- #define FS_ALLOW_IDMAP         32      /* FS has been updated to handle vfs idmappings. */
- #define FS_RENAME_DOES_D_MOVE	32768	/* FS will handle d_move() during rename() internally. */
-+#define FS_AUTOFREEZE           (1<<16)	/*  temporary as we phase kthread freezer out */
- 	int (*init_fs_context)(struct fs_context *);
- 	const struct fs_parameter_spec *parameters;
- 	struct dentry *(*mount) (struct file_system_type *, int,
-@@ -2322,6 +2323,19 @@ extern int user_statfs(const char __user *, struct kstatfs *);
- extern int fd_statfs(int, struct kstatfs *);
- extern int freeze_super(struct super_block *super, bool usercall);
- extern int thaw_super(struct super_block *super, bool usercall);
-+#ifdef CONFIG_PM_SLEEP
-+int fs_suspend_freeze_sb(struct super_block *sb, void *priv);
-+int fs_suspend_thaw_sb(struct super_block *sb, void *priv);
-+#else
-+static inline int fs_suspend_freeze_sb(struct super_block *sb, void *priv)
-+{
-+	return 0;
-+}
-+static inline int fs_suspend_thaw_sb(struct super_block *sb, void *priv)
-+{
-+	return 0;
-+}
-+#endif
- extern __printf(2, 3)
- int super_setup_bdi_name(struct super_block *sb, char *fmt, ...);
- extern int super_setup_bdi(struct super_block *sb);
-diff --git a/kernel/power/process.c b/kernel/power/process.c
-index cae81a87cc91..7ca7688f0b5d 100644
---- a/kernel/power/process.c
-+++ b/kernel/power/process.c
-@@ -140,6 +140,16 @@ int freeze_processes(void)
+ EXPORT_SYMBOL(freeze_super);
  
- 	BUG_ON(in_atomic());
+-static int thaw_super_locked(struct super_block *sb)
++/**
++ * thaw_super -- unlock a filesystem backed by a block device
++ * @sb: the super to thaw
++ *
++ * Used by filesystems and the kernel to thaw a fileystem backed by a block
++ * device. Callers must use get_active_super(bdev) to lock the @sb and when
++ * done must unlock it with deactivate_locked_super(). Once done, this marks
++ * the filesystem as writeable.
++ */
++int thaw_super(struct super_block *sb)
+ {
+ 	int error;
  
-+	pr_info("Freezing filesystems ... ");
-+	error = iterate_supers_reverse_excl(fs_suspend_freeze_sb, NULL);
-+	if (error) {
-+		pr_cont("failed\n");
-+		iterate_supers_excl(fs_suspend_thaw_sb, NULL);
-+		thaw_processes();
-+		return error;
-+	}
-+	pr_cont("done.\n");
-+
- 	/*
- 	 * Now that the whole userspace is frozen we need to disable
- 	 * the OOM killer to disallow any further interference with
-@@ -149,8 +159,10 @@ int freeze_processes(void)
- 	if (!error && !oom_killer_disable(msecs_to_jiffies(freeze_timeout_msecs)))
- 		error = -EBUSY;
+-	if (sb->s_writers.frozen != SB_FREEZE_COMPLETE) {
+-		up_write(&sb->s_umount);
++	if (sb->s_writers.frozen != SB_FREEZE_COMPLETE)
+ 		return -EINVAL;
+-	}
  
--	if (error)
-+	if (error) {
-+		iterate_supers_excl(fs_suspend_thaw_sb, NULL);
- 		thaw_processes();
-+	}
- 	return error;
+ 	if (sb_rdonly(sb)) {
+ 		sb->s_writers.frozen = SB_UNFROZEN;
+@@ -1760,7 +1758,6 @@ static int thaw_super_locked(struct super_block *sb)
+ 			printk(KERN_ERR
+ 				"VFS:Filesystem thaw failed\n");
+ 			lockdep_sb_freeze_release(sb);
+-			up_write(&sb->s_umount);
+ 			return error;
+ 		}
+ 	}
+@@ -1769,21 +1766,8 @@ static int thaw_super_locked(struct super_block *sb)
+ 	sb_freeze_unlock(sb, SB_FREEZE_FS);
+ out:
+ 	wake_up(&sb->s_writers.wait_unfrozen);
+-	deactivate_locked_super(sb);
+ 	return 0;
  }
+-
+-/**
+- * thaw_super -- unlock filesystem
+- * @sb: the super to thaw
+- *
+- * Unlocks the filesystem and marks it writeable again after freeze_super().
+- */
+-int thaw_super(struct super_block *sb)
+-{
+-	down_write(&sb->s_umount);
+-	return thaw_super_locked(sb);
+-}
+ EXPORT_SYMBOL(thaw_super);
  
-@@ -188,6 +200,7 @@ void thaw_processes(void)
- 	pm_nosig_freezing = false;
- 
- 	oom_killer_enable();
-+	iterate_supers_excl(fs_suspend_thaw_sb, NULL);
- 
- 	pr_info("Restarting tasks ... ");
- 
+ /*
 -- 
 2.39.2
 
