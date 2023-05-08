@@ -4,26 +4,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 96959C77B7C
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EEABAC77B75
 	for <kexec@archiver.kernel.org>; Mon,  8 May 2023 01:19:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=hxSAsULXvz6N7J/4EZhOiGJSOAEIF6fCaS6mBVBUK7E=; b=l6m04b8hZyIO6f
-	TZh/kdgOmc6zbHrHswrm/lr8DMgvXebGLp9lSBtQba3IGyenQOEtaisG1u3Nq7kPjmJQvONPDnKgQ
-	xd6tp64FgLSJ2EmPuHNWpBgXfYznEWhL+OHUZVztG9+rvkboNw98tpXICS6kj2SWXivZCeCihmUSu
-	7P8KOddnscQqK1aESn+17UHrS8fZkdaxB0PY1PXUMnba4noy8yuY5EwpkDFq1ndxaN19r2LSGV3yy
-	ooUaVEMooIcbeGAxmQVMt+56Gm6GhT0QX5h/CisHYR9IQ5yygU3AtKQiBt2BQTyEi3jt6W2hM+FAu
-	zia4IZwmkXmVioUBL1ZA==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=IwvgBJPR2aousDWZnyIIDHVaftCO6ChVHdt+b9wVzO4=; b=uk9Lv4nLlwhyoa
+	/4W8pvQDe3utOMc+y/Fe2cqoVO/fQ6XQYt0916So1JSP260FquiSmEvvMj56H5YhtTX4PvEi0pkBT
+	F/nKLXiITaH9QFKxZO7eV02VFAuNPRG9M+57vlPrxvofhq9aqS1pERJUGVnV0jlZ2oN431uPQbVvY
+	ONCD9rvKSk8wDLmccLjH4nGj7qnkZ3dkh8+vCsLXaucmx8/7xOieW3+fDGX1skvFD+vNuHzMmi7d7
+	IT88GbedEREUj0+M81oaqJtEmyqDIbZurGGcmD752nd2oX9zp8PIzl/yoq/BBbiFECpaxIukQMdIp
+	DGGnL75BfHGO75B9juww==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pvpXF-00Gw9T-2W;
-	Mon, 08 May 2023 01:19:29 +0000
+	id 1pvpXG-00Gw9i-0q;
+	Mon, 08 May 2023 01:19:30 +0000
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1pvpXE-00Gw8M-18;
+	id 1pvpXE-00Gw8O-1P;
 	Mon, 08 May 2023 01:19:28 +0000
 From: Luis Chamberlain <mcgrof@kernel.org>
 To: hch@infradead.org,
@@ -46,10 +46,12 @@ Cc: mchehab@kernel.org,
 	kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 0/3] filesystems: start removal of the kthread freezer
-Date: Sun,  7 May 2023 18:19:24 -0700
-Message-Id: <20230508011927.4036707-1-mcgrof@kernel.org>
+Subject: [PATCH 1/3] ext4: replace kthread freezing with auto fs freezing
+Date: Sun,  7 May 2023 18:19:25 -0700
+Message-Id: <20230508011927.4036707-2-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.38.1
+In-Reply-To: <20230508011927.4036707-1-mcgrof@kernel.org>
+References: <20230508011927.4036707-1-mcgrof@kernel.org>
 MIME-Version: 1.0
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -67,25 +69,168 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Here's 3 filesystems converted over to remove the kthread freezer.
+The kernel power management now supports allowing the VFS
+to handle filesystem freezing freezes and thawing. Take advantage
+of that and remove the kthread freezing. This is needed so that we
+properly really stop IO in flight without races after userspace
+has been frozen. Without this we rely on kthread freezing and
+its semantics are loose and error prone.
 
-Luis Chamberlain (3):
-  ext4: replace kthread freezing with auto fs freezing
-  btrfs: replace kthread freezing with auto fs freezing
-  xfs: replace kthread freezing with auto fs freezing
+The filesystem therefore is in charge of properly dealing with
+quiescing of the filesystem through its callbacks if it thinks
+it knows better than how the VFS handles it.
 
- fs/btrfs/disk-io.c     |  4 ++--
- fs/btrfs/scrub.c       |  2 +-
- fs/btrfs/super.c       |  4 ++--
- fs/ext4/super.c        |  9 +++------
- fs/xfs/xfs_log.c       |  3 +--
- fs/xfs/xfs_log_cil.c   |  2 +-
- fs/xfs/xfs_mru_cache.c |  2 +-
- fs/xfs/xfs_pwork.c     |  2 +-
- fs/xfs/xfs_super.c     | 16 ++++++++--------
- fs/xfs/xfs_trans_ail.c |  3 ---
- 10 files changed, 20 insertions(+), 27 deletions(-)
+The following Coccinelle rule was used as to remove the now superfluous
+freezer calls:
 
+make coccicheck MODE=patch SPFLAGS="--in-place --no-show-diff" COCCI=./fs-freeze-cleanup.cocci M=fs/ext4
+
+virtual patch
+
+@ remove_set_freezable @
+expression time;
+statement S, S2;
+expression task, current;
+@@
+
+(
+-       set_freezable();
+|
+-       if (try_to_freeze())
+-               continue;
+|
+-       try_to_freeze();
+|
+-       freezable_schedule();
++       schedule();
+|
+-       freezable_schedule_timeout(time);
++       schedule_timeout(time);
+|
+-       if (freezing(task)) { S }
+|
+-       if (freezing(task)) { S }
+-       else
+	    { S2 }
+|
+-       freezing(current)
+)
+
+@ remove_wq_freezable @
+expression WQ_E, WQ_ARG1, WQ_ARG2, WQ_ARG3, WQ_ARG4;
+identifier fs_wq_fn;
+@@
+
+(
+    WQ_E = alloc_workqueue(WQ_ARG1,
+-                              WQ_ARG2 | WQ_FREEZABLE,
++                              WQ_ARG2,
+			   ...);
+|
+    WQ_E = alloc_workqueue(WQ_ARG1,
+-                              WQ_ARG2 | WQ_FREEZABLE | WQ_ARG3,
++                              WQ_ARG2 | WQ_ARG3,
+			   ...);
+|
+    WQ_E = alloc_workqueue(WQ_ARG1,
+-                              WQ_ARG2 | WQ_ARG3 | WQ_FREEZABLE,
++                              WQ_ARG2 | WQ_ARG3,
+			   ...);
+|
+    WQ_E = alloc_workqueue(WQ_ARG1,
+-                              WQ_ARG2 | WQ_ARG3 | WQ_FREEZABLE | WQ_ARG4,
++                              WQ_ARG2 | WQ_ARG3 | WQ_ARG4,
+			   ...);
+|
+	    WQ_E =
+-               WQ_ARG1 | WQ_FREEZABLE
++               WQ_ARG1
+|
+	    WQ_E =
+-               WQ_ARG1 | WQ_FREEZABLE | WQ_ARG3
++               WQ_ARG1 | WQ_ARG3
+|
+    fs_wq_fn(
+-               WQ_FREEZABLE | WQ_ARG2 | WQ_ARG3
++               WQ_ARG2 | WQ_ARG3
+    )
+|
+    fs_wq_fn(
+-               WQ_FREEZABLE | WQ_ARG2
++               WQ_ARG2
+    )
+|
+    fs_wq_fn(
+-               WQ_FREEZABLE
++               0
+    )
+)
+
+@ add_auto_flag @
+expression E1;
+identifier fs_type;
+@@
+
+struct file_system_type fs_type = {
+	.fs_flags = E1
++                   | FS_AUTOFREEZE
+	,
+};
+
+Generated-by: Coccinelle SmPL
+Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+---
+ fs/ext4/super.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
+
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index d39f386e9baf..1f436938d8be 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -136,7 +136,7 @@ static struct file_system_type ext2_fs_type = {
+ 	.init_fs_context	= ext4_init_fs_context,
+ 	.parameters		= ext4_param_specs,
+ 	.kill_sb		= kill_block_super,
+-	.fs_flags		= FS_REQUIRES_DEV,
++	.fs_flags		= FS_REQUIRES_DEV | FS_AUTOFREEZE,
+ };
+ MODULE_ALIAS_FS("ext2");
+ MODULE_ALIAS("ext2");
+@@ -152,7 +152,7 @@ static struct file_system_type ext3_fs_type = {
+ 	.init_fs_context	= ext4_init_fs_context,
+ 	.parameters		= ext4_param_specs,
+ 	.kill_sb		= kill_block_super,
+-	.fs_flags		= FS_REQUIRES_DEV,
++	.fs_flags		= FS_REQUIRES_DEV | FS_AUTOFREEZE,
+ };
+ MODULE_ALIAS_FS("ext3");
+ MODULE_ALIAS("ext3");
+@@ -3790,7 +3790,6 @@ static int ext4_lazyinit_thread(void *arg)
+ 	unsigned long next_wakeup, cur;
+ 
+ 	BUG_ON(NULL == eli);
+-	set_freezable();
+ 
+ cont_thread:
+ 	while (true) {
+@@ -3842,8 +3841,6 @@ static int ext4_lazyinit_thread(void *arg)
+ 		}
+ 		mutex_unlock(&eli->li_list_mtx);
+ 
+-		try_to_freeze();
+-
+ 		cur = jiffies;
+ 		if ((time_after_eq(cur, next_wakeup)) ||
+ 		    (MAX_JIFFY_OFFSET == next_wakeup)) {
+@@ -7245,7 +7242,7 @@ static struct file_system_type ext4_fs_type = {
+ 	.init_fs_context	= ext4_init_fs_context,
+ 	.parameters		= ext4_param_specs,
+ 	.kill_sb		= kill_block_super,
+-	.fs_flags		= FS_REQUIRES_DEV | FS_ALLOW_IDMAP,
++	.fs_flags		= FS_REQUIRES_DEV | FS_ALLOW_IDMAP | FS_AUTOFREEZE,
+ };
+ MODULE_ALIAS_FS("ext4");
+ 
 -- 
 2.39.2
 
