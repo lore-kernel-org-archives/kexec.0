@@ -4,169 +4,200 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5FDD1C77B7F
-	for <kexec@archiver.kernel.org>; Mon,  8 May 2023 10:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1DE10C7EE22
+	for <kexec@archiver.kernel.org>; Mon,  8 May 2023 15:08:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-ID:In-Reply-To:
-	References:Message-ID:Date:Subject:CC:To:From:Reply-To:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=TpQxsxySqu9bHBMeb3H5BetZWqEu9J8Fzi6/j2sovoM=; b=3JJptbmMiYtL9t
-	/RzJVijSLu5HCUxruIKahvfDT3HZh3fvlfY0KCigNw7S6aW+1e+SQwE1pOuEvncktEmxmsTzfatP8
-	EbMICMlFXScGSSVbwcuK+9ZvGhREXenQa1jCYcMLucnR3ne5duwXbXACN/LVL5aGGYv8lQ+vSjR0g
-	zQ8qfecTZuZ9oppxzA4+GYkGvaTBUpleOjUSyQQArZLz0Ivq6lD+wl9vU08tFPUQ0M9HkIwPG9RLZ
-	MVyrcDAfhIzd6CfI400chl4lZFnJ0Gze/hddCOWObKFSrdKeTDdp7omQPv6sUOaGu7o8XOy5A6wGo
-	iHQ3pOV6hiz/BVyib9tQ==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:Cc:To:
+	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=0C7NIZKb2LtM4VcyehF7vz7qQ5Y0cBpseVuVAx8Vs58=; b=q71GpFtGQVkaU6KjjAkwi3pOgG
+	FEA/TRfttCLhh/HVo1wnaI5EUSFPif3y6Y528ASZROCaSQYYe+eg9rFX2Dkiv1eWSBmmHcxBHcGIN
+	Ei8Qv/V+QNu/f5Ap1D3gRfc+XcbMC8aWVxdWm/ekNm8pn/F39BPRGCu00JYKyy0hFlZTu/tbZk4W9
+	/yIqZVaj6IqYS42V+uMUVTqAOjVkp0RE1lZGHjt5tAXhlIDcHmfHPG7riIJ006cIctxpTDPjqlAYB
+	45T2i9tKKv0sdQsTuJdFLQxxIluRO8wJHzTaIRldP7d4E9DWk9DFAtBs2gAr/Qon6Joufj2xojGYM
+	TXmT68hw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pvyJV-000KF2-3B;
-	Mon, 08 May 2023 10:41:54 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1pw2T8-000pch-1W;
+	Mon, 08 May 2023 15:08:06 +0000
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pvyJT-000KE8-27
-	for kexec@bombadil.infradead.org;
-	Mon, 08 May 2023 10:41:51 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=MIME-Version:Content-Transfer-Encoding
-	:Content-ID:Content-Type:In-Reply-To:References:Message-ID:Date:Subject:CC:To
-	:From:Sender:Reply-To:Content-Description;
-	bh=bxAJ94fTRwnJlrBy3/Vcz0J3sPe5ZF21V14m9SUB09Y=; b=hwImbVFdrk7X7+XF8vQCvGzRFg
-	z4pwOUe6bL6DO/9EjPokGUqN1oMnRIEp1oqw13RcjHq7NsxCMfpdu7VBBKJwmRvdTI8fon7zAkQz7
-	rER6GDIc/eWmdsdwVan28+ynoIb/V9QBsEPwNhnr8isJfUngjuaB8qUCMFXNv/oYRQ4iR6ysCtOwI
-	cmghy5TylqU0P0C94nC+d95rPfNJF2dtqhh+f3ksBslSpr8XNhqrjrIKNDyB6PyfF8PbPzE9wRQel
-	q1EilZJlILpUsBzcXcPTXbWrV58y/XAZ5PpA7Cc9sOhqhhESqc+iCm1QcD7KkxyYHqtEnoiGm8op7
-	f89jgtWQ==;
-Received: from esa2.fujitsucc.c3s2.iphmx.com ([68.232.152.246])
-	by desiato.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pvxRb-0057Jw-1c
+	id 1pw2T4-000pc5-1s
 	for kexec@lists.infradead.org;
-	Mon, 08 May 2023 09:46:13 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
-  t=1683539171; x=1715075171;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=bxAJ94fTRwnJlrBy3/Vcz0J3sPe5ZF21V14m9SUB09Y=;
-  b=DANMp1breagaxEoLun2GHblJGqsuP6iqVFx/NBy/rxX3RoggGbnPtEBE
-   CfSgIf+g2hzdhUmRg2Rhv4WoiyszY2fJyyJ8csfWj90zLdFsf0DBAt0TO
-   2UoweRtJ0EtPKJtCJbjLFqfv/VLLV+uxXmSMCOQaEr6RfHnddP3bv24CV
-   U9+cCV5Bb/wGx67idAwutxBVfRojssP9qWYdC9udFQY/t7q+n2uyinLfY
-   vDVdeWPpRkgUaihOd6+8klpdMheY4woGwPOshkPe2bISprAkHXuwWw+89
-   Sdc7iBCutk2Eg5R3knBJw1x/7bqAxZv+0FJJ0lpGbSdtqs1qfMRf+bNO+
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10703"; a="92012919"
-X-IronPort-AV: E=Sophos;i="5.99,258,1677510000"; 
-   d="scan'208";a="92012919"
-Received: from mail-tycjpn01lp2168.outbound.protection.outlook.com (HELO JPN01-TYC-obe.outbound.protection.outlook.com) ([104.47.23.168])
-  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2023 18:46:01 +0900
+	Mon, 08 May 2023 15:08:05 +0000
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 348BIhgs030652;
+	Mon, 8 May 2023 15:07:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2023-03-30;
+ bh=LofoAiu2lmmrmefC56neeLrMFWUMWU3DfoPME6EYRKw=;
+ b=owK7yBCpitTaSwGIK/8bK9OuZAmF6Hqu3QVlssWEson2tqkwhZ2mvcgzIusjri+1nVGU
+ 7IgfpIj0MKrBB0TQsOK9g6rAEqWVcjN4SpNAz4/JxBM5Oc6jIIG8oOOfvNECjUpSaL+W
+ ZgWkL5mR/DqxSUokbEuruig59gdtV/M33mGke2qSfXpdJvrVMfglB/W6S8I/YPi++af8
+ F4vVTDIrvLtaxOLSXXeGPLnmiYjuC45TWVnbRXZR+NeZy41tLfmo0+NUtLZM4p8DjRfi
+ vTtLpL9zVcoQS6xPy5P91lOZU7jDnNenMMsqTQr0DHl7rfCr8plyigj01ghkG1ORSlo6 Vw== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3qdegubm8g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 08 May 2023 15:07:30 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 348DsieN023387;
+	Mon, 8 May 2023 15:07:29 GMT
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2169.outbound.protection.outlook.com [104.47.59.169])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3qddb4uxem-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 08 May 2023 15:07:29 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=k2NjqtAMAKqEuVBVBzi9VpJyDZIX6wyYxUB37XBrIq5+QflQKobIjCROPVwRk0GUa9400CzSpyIoYUNE8HHXVcO6Qw7oSIMAh9N4vfw2hxkKb363snakJdJmqzKvPrw4N84i3dBG+XJfOFaoKny65hlp29N55TGXJGsgAe0otagjYuaRDM9tNc3aHSr8r+gbjnMeJXU22u37Iu685MfoHoMNhHsTAZsBN83RpRrrN87LSfJVGFbkV4iPTl1awSId4CT/j39RsupxLPAaA327753eRWYdtfOeO54AB09bk5t6cuaPpK+dX3ncb6Xmsl8R00FSngpjtmORU8N9LlU4nw==
+ b=GlNyMZknutd5hkPxDJ7GsVK8uL5kaKA+jMJmzhjTe5kp7MXe3l5deC1iKYIHOKXuR+rJGRXrX8PUcb273jjKggxOvLEWk0yNjWQb8ldKqoR4H5DkK57xvcQQJr0txl+t93UqDuIait8krCeLDrmffxColwYKeFVGz1vRwB2jJzL90MH3GaDI2DAdTtyaTr2v+Lif3PCIreHZQPTMgi0wz5C/M8lgNBkRMQc7wrb8wZxt9wrHtwbJyQXh2DPISSyOoX0DOEarvh3mTuU8OGyG+Z5DctajLuXUnTLoRQW4Vnl2O7EHjaUfLMJOhrwB0cNk6mQPQHykuArMY4YXH12sEA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bxAJ94fTRwnJlrBy3/Vcz0J3sPe5ZF21V14m9SUB09Y=;
- b=bXGjnIkf1dTstss2EIQqKyURlKixaMYp/o+4QxsI3YmZsRuUcBIobaAA7WG9/3Yyzi0AIH349hrgQIyLsVlovdVO57ZY229OOOu+XtRGP0Qq3fT5uBsE9mfqnEdtJ9X2qLe6ud/RBZNAm8YL5wSlqGixWGvmGxcYbM+y4ibVsqBr6tpw0+tvZjaa41wa+Dd3IdTWdxi+M11Afk1mlL8ZG44GUUHD96P8pwZTEbj75qzuxWs1zN9NeMTPzzH9hbIpoIOoiFjp7/UxlflF0YGrzxK2smk3T0xPcU8iH0ucTGPV0mVRmfTbEVcDary7Z1evefApXoDV9VBgP6QtMEnhFw==
+ bh=LofoAiu2lmmrmefC56neeLrMFWUMWU3DfoPME6EYRKw=;
+ b=FGzKM3AgCmOhCDYOdzrTktnaB3cvtGo8wco7CyoEwvvx5FBAoY+hq51oW2M9t73z3DNPBLZwNH4uKXfUjo7EldBwUv896udKOjXOcXwmTlCZhHZ/HMMyw5AimNM/9Mbo+xWsiuDe++BDkLHa/J8+QGw5b06hPvnnjMXuwXE6YmyfWy8RabxIbsegy4aKD5jUFnbLNjHKb65M6lc+RcJjYlE3UaDpXrlR9JOt7nrqVHM24J9/gTA0zmRIO2+lO5IVWBgA6Nf5EHutr4ne4kQ4Q97qp2yv6sBgu7Og7YEiLSeeG9YeXSwSENwGP5kjlXp293SfuKv4pFZxMmB1tnyKhA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
- dkim=pass header.d=fujitsu.com; arc=none
-Received: from OS7PR01MB11664.jpnprd01.prod.outlook.com (2603:1096:604:247::6)
- by TYWPR01MB10630.jpnprd01.prod.outlook.com (2603:1096:400:2a2::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6363.32; Mon, 8 May
- 2023 09:45:58 +0000
-Received: from OS7PR01MB11664.jpnprd01.prod.outlook.com
- ([fe80::687d:4884:ec0b:8835]) by OS7PR01MB11664.jpnprd01.prod.outlook.com
- ([fe80::687d:4884:ec0b:8835%7]) with mapi id 15.20.6363.030; Mon, 8 May 2023
- 09:45:58 +0000
-From: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
-To: Dan Williams <dan.j.williams@intel.com>, "x86@kernel.org"
-	<x86@kernel.org>, "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
-	"kexec@lists.infradead.org" <kexec@lists.infradead.org>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Yasunori
- Gotou (Fujitsu)" <y-goto@fujitsu.com>, "Xiao Yang (Fujitsu)"
-	<yangx.jy@fujitsu.com>, "Shiyang Ruan (Fujitsu)" <ruansy.fnst@fujitsu.com>
-Subject: Re: [RFC PATCH v2 0/3] pmem memmap dump support
-Thread-Topic: [RFC PATCH v2 0/3] pmem memmap dump support
-Thread-Index: AQHZePGyDbRSw7SlpU2xnWSJHHhjFK9BFSkAgA8cuQA=
-Date: Mon, 8 May 2023 09:45:57 +0000
-Message-ID: <774fd596-5481-aeff-aace-8785158728ea@fujitsu.com>
-References: <20230427101838.12267-1-lizhijian@fujitsu.com>
- <644c17823cf83_13303129460@dwillia2-xfh.jf.intel.com.notmuch>
-In-Reply-To: <644c17823cf83_13303129460@dwillia2-xfh.jf.intel.com.notmuch>
-Accept-Language: en-US, zh-CN
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LofoAiu2lmmrmefC56neeLrMFWUMWU3DfoPME6EYRKw=;
+ b=AKofL3USTELLBOgu4bb3sO2g4TKMYV8cGTN6HWop2w3ab2xLfTKsZala5rGaLY1drSfcyGYwYtehRvGWAtZEyjHLr0U3KGO1fQP74cl0BVM6BgM1Jg10xvFNEzsoYBIjHKVrIY6dsa7F+Jq8jSffnvG1lpc4g19/Kz0dwlWIOd4=
+Received: from BY5PR10MB3793.namprd10.prod.outlook.com (2603:10b6:a03:1f6::14)
+ by DM4PR10MB6039.namprd10.prod.outlook.com (2603:10b6:8:b7::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6363.32; Mon, 8 May 2023 15:07:27 +0000
+Received: from BY5PR10MB3793.namprd10.prod.outlook.com
+ ([fe80::a007:b0c1:5cb:329a]) by BY5PR10MB3793.namprd10.prod.outlook.com
+ ([fe80::a007:b0c1:5cb:329a%5]) with mapi id 15.20.6363.032; Mon, 8 May 2023
+ 15:07:27 +0000
+Message-ID: <305fcc15-0aec-8f9d-f98a-1e8966418543@oracle.com>
+Date: Mon, 8 May 2023 11:07:21 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH v6 12/14] x86: Secure Launch late initcall platform module
 Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=fujitsu.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: OS7PR01MB11664:EE_|TYWPR01MB10630:EE_
-x-ms-office365-filtering-correlation-id: 397165bc-e761-4f06-7456-08db4fa90675
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:  ONjInwk9HAGisEU3A6PB5rk/1akACsCpuel0Y2JddPF0M2FeqJZxiuBvv/t5P8vLjQ5bSyRizaEoA7yvYDfwqD8//IEbXcoGbpo2PgxP7Ksdt36C886dw9yuVcMP/qH7Rh8EwdOJz4ZS/bbS7y/5ervtWaoFd+8TI1/B6Ejlqja7mVheVOPeryPsz9C4nCjkTo0owat5P1Q+1WOv7XABXSAdiV76DxDTRz7VGSSkgNHtcJxvEKdu46cECbE8b5VMuw0YGrKZ8P7rdUs9K9uOESX099nydqzzqjbUeg41ArvMh+QmA7cIqqPMEqV+KCst8JcBziRu9q5+AgW4htoLBZDuuT0HlglWJa4vq6hT6ENdbGq3zjDIO7jez6JmQuhUgVbyKQXzgxzV8WAdZ+o5e7D9L4I2gohsf/LiWsNtcaiaI3LPBN4VENq59/pv8QIUR3MUylVPoZM3G+wUwzDQAq+zgeWc7wbLXE8t/nLtBjzkrgJmKTX7D3S7Wn8Vf2yfaCK9+j98KI8YYaRENwDK3csn4pSbtB9BerXro0jBukp6El7JsACgMXw0c9N0lIdMwtuwEYYO4IRGngfY2DqsNjhquHyRF6PJ8p3mrUFJpzGiPl6Kw1ghf653xq2kvgZcBynX5zUQ9iDgiM76g/CVGlF4I1Z77BP+1SOnJTGk7DdKS3P1CrMTxdq39q7qNYpCmd++YP7cL9bdHC8d+Ae0Yg==
-x-forefront-antispam-report:  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS7PR01MB11664.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(396003)(136003)(346002)(376002)(39860400002)(1590799018)(451199021)(83380400001)(966005)(91956017)(6486002)(478600001)(71200400001)(110136005)(54906003)(2616005)(6512007)(6506007)(26005)(53546011)(186003)(107886003)(2906002)(38100700002)(36756003)(66946007)(76116006)(64756008)(82960400001)(66446008)(66476007)(122000001)(4326008)(41300700001)(66556008)(85182001)(8676002)(8936002)(38070700005)(31696002)(86362001)(5660300002)(316002)(31686004)(1580799015)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:  =?utf-8?B?WGdMNG1tS3g3MVVtZVJWUjg1NHcyejRkZjQzYXlyRVhBc2Z5djBkUkk4ejJh?=
- =?utf-8?B?MGxDTXZLa1g5RGpsRCszTWRqMU82ckdWQzBoM2NQNlpHUEtSN0owWVdKd3NV?=
- =?utf-8?B?cXFBdjN1eVhGbU1CVTZCVDhmQTVyOHFkTGY3MVBDTzMzbkJodkxFbE9ZekMx?=
- =?utf-8?B?ekJiaVVJZHZMMVl4a2xqaEdqd3pmT2hWTDBnbWhtQldqdFZxMVRabjk1bXVV?=
- =?utf-8?B?RUNXVWxtb3pGaEllSmhhL08raW0yVmxoMG90NVZpRVBXeE9iRzVjVldyenFJ?=
- =?utf-8?B?dkFseHJEaWlRMmczcWk5TXJPV3ZFS2dvTGRXeitwVlN6b0FJZlZxNDdBQjZi?=
- =?utf-8?B?VE5tY3hMT3JHSTlDd2FTWVRJbFhSNkVra2dia2ZEL1dRRXN4RUloRkFOK05B?=
- =?utf-8?B?VTUyR1JGamlHRGxEQ3k2RzRZRWFzTjZha3dvMHdKQ3l4OVhPYXB2a0E0ZWpy?=
- =?utf-8?B?VHQ3VlZJSEQrRmc1OTVSWHBhSUNMVlBkOEtkSmNYaTl2WVB0U2NDZ3o5NGRm?=
- =?utf-8?B?d2trSXZUYjFXSmxUUW9TelRQTE9Wb3NiK3lqcFNzR01SaUhoVVVZUHozVVdW?=
- =?utf-8?B?MG93OWNjSzRML3V2YjhCNEhsdHB1Lzl0ZmhXazBCVW5DK1RaejRhSGVHQzEr?=
- =?utf-8?B?NlBFTUdGRUMrRmhsT0NmdmJyU0s5QkVvTFF4cFRoYzNZSXFSOTk1MWNJN2kr?=
- =?utf-8?B?d0RkeXpSa1hOcFhFNTFmSWVkelJMamR0WDN3TnhOUytUOGFGaWltc2V1T1Ri?=
- =?utf-8?B?RDVVUWVsNWptdmVVUExnUG9rZG9Fb0FPVWV3K1JKNTZQM29STWhZeU1PZTUz?=
- =?utf-8?B?aC9ZUjFHOURjZXhTTythTWk4T3dpb2VyQ0k3UUxRZUw1aGpOdmRKc002NTdI?=
- =?utf-8?B?N3M3NDB6c0x4SnlzOGZHMHNIcUVoMlpPRUhFVEFEOFNHblRiNVJLd200VFk0?=
- =?utf-8?B?QVYxZVIwL2xHN2hSd3R0amp5NEpwNmI1M2pDYXhxdktzVlJrR1J4dTI5dlUz?=
- =?utf-8?B?VVVhTUdRVkw3SVprL3ZkNkY2WWlzcFdtU21vdjlOYlRNWFlRN0F5RDFtaWpu?=
- =?utf-8?B?Z3hQckNNWFhXTjA3dDNEZ2lZZWZVQ1Z2L2dRb1ZFN0Q0a1h6NUdwY0ZDS2Mz?=
- =?utf-8?B?OG9aMWRpNUVmbzFFWWNta2FldGswaTVSTllhNHRxQm94dXAzaUl4eDRXU3Na?=
- =?utf-8?B?UC9MZ1JmVWo1NXdxWEV6Z21Hbyt3NEtzeE1NMWUrR0tUdWg0M1E5aDhUWity?=
- =?utf-8?B?aEN6T1RPcVRVMkZpdEJTVFJHei9HS2h2WVdPL3hUR05QaUljdW82MjRDd2ll?=
- =?utf-8?B?dlFBaXI1QzRHUmZNVit6bDBJNGx1QUI4Tm16L2prSHh1MnVlUytvUlc2a0My?=
- =?utf-8?B?UkZwQmJKWW9KdHFEL1ZEanhLVGRpdzhaQVBqU21MVEkwVTcyWGY4S2k1M3VO?=
- =?utf-8?B?eGVTai9DNmo5RVZqV3FxN3R2aUZuSlhhL1dIQ1RRemJ4ckpCdGNlMklzdlZB?=
- =?utf-8?B?bllqdkh1bFF5MXFOR3owYTBrS0p6VzFldDI3bHVsZ3lIZEpudktHUUJIMlFm?=
- =?utf-8?B?M2RNZUlUaWFEdFBaNHRDcHljb1IwMWlOSytPaW8vT1AyTGthb1FiRjYzNndQ?=
- =?utf-8?B?NVk2SzZsSm8zQWRsdkZRM2wvcC9YTjYwY2x5ek94dDJJUFNWR0xOampNc0N6?=
- =?utf-8?B?QWZhZUtRRGVFZjE4S1N0QmFLVlMrYzNMZUZpOE9pM2dCQWF3UXg4MFlVVU81?=
- =?utf-8?B?UFpOdFpNR25TMkhmTHdnbTlma2tkLzgvWlhUOVNiRDMvL1FsS1VDSktFY0c3?=
- =?utf-8?B?YnEvQ2hpQUhIdjhzdFBNRkVDTnNMN0JxNjhTSXhJdHRxL1FHOEhhbjlvVUJO?=
- =?utf-8?B?NnVIZTBMWUoxUEUrRFRIaXI0SUtHcnFsZ1hCenlkUzFkL0padkJIWVVLcTVK?=
- =?utf-8?B?Wkt2blNHYW1aN0RDZnpKOFc1bkJoSEplY3lOelUyOHJKMFErUmNaUGZ0dUw3?=
- =?utf-8?B?MEU4SE5lemRNL3QvVnY3VzRRcHkyb3pZTUc2VHQ5Z2pvYXA3R3BCMS90RWNj?=
- =?utf-8?B?bWE1emtGeUIySFlyeDhNZm54OWNLcGZRaTkxYU9mYWpqV0N4aFFtbG1CbTVH?=
- =?utf-8?B?a3JRa0hvMG1TakF0ZlMzK3FWWGNVckwrMkRwYjZiSVhWNkZ3R1hBUHpta2sy?=
- =?utf-8?B?Vmc9PQ==?=
-Content-ID: <91293082011AD6408392E24906E9C504@jpnprd01.prod.outlook.com>
+To: Simon Horman <horms@kernel.org>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-crypto@vger.kernel.org, iommu@lists.linux-foundation.org,
+        kexec@lists.infradead.org, linux-efi@vger.kernel.org,
+        dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, ardb@kernel.org, mjg59@srcf.ucam.org,
+        James.Bottomley@hansenpartnership.com, luto@amacapital.net,
+        nivedita@alum.mit.edu, kanth.ghatraju@oracle.com,
+        trenchboot-devel@googlegroups.com
+References: <20230504145023.835096-1-ross.philipson@oracle.com>
+ <20230504145023.835096-13-ross.philipson@oracle.com>
+ <ZFVcEI0RAS5pvrAc@kernel.org>
+From: Ross Philipson <ross.philipson@oracle.com>
+In-Reply-To: <ZFVcEI0RAS5pvrAc@kernel.org>
+X-ClientProxiedBy: CH2PR14CA0047.namprd14.prod.outlook.com
+ (2603:10b6:610:56::27) To BY5PR10MB3793.namprd10.prod.outlook.com
+ (2603:10b6:a03:1f6::14)
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BY5PR10MB3793:EE_|DM4PR10MB6039:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7acd44eb-498d-4cfd-c275-08db4fd5eeea
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 	Lfmwn+mfToQUdzrxqfLjBAXvhBC6KjIWNOiMxb54YbSjEg/LJ4SiV5Ibmrmz2Neu8XghUw/TLiCuKLjMtx8UJv1UN14Tw4A/K6giHfHzNyT2+cHpw72Kn2hTec1W+7YyyC1r+UMjYDoHUp9hRcpGSpEibiewKouAsgCG4tYxpzaaldt3v4rXf7tqSusGS4d0yuRbF7D6bxJkBCNMK2eC2QARJwnup62Umo00kmwwXpeBF0NZvSBhqI1bcW5Bztv+fnf0gLqO+qAssXhoFqSZ8GNk1MSpKhmsJGZ1YTIXxgU9kKCm6PLad0VjL3/focFLsK4QrITPkmtperyZhlmRvub7NiKshvof24Y2L8hJogfmqQDZ5Ppg/QE7Rdm/4U1YoV7fhwJq668neZxKGCD8g7KGc/15EA6ekg1tZ6LMJ4fRnOcoeGhes0VMFJr7mgbo3/74PVwNBSplkzAb3hmvkPYT1cqjMEoNuMkPAadzDHrQYWVVA/8TgNCI4m7g2MoLMgV7qmzB0060flG9t8VC2cbHKz9qLy86oeoe+7janhkLC6mA4SpoxlBNfffFTW93MQjMdf4qNJW9razsnvWBpxQu3xVjKw+WOlpCh0l9fJWq2p/2cr6xaxMlZ2XJfhA2bpxpIXLYopU6CtvYBydmyw==
+X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB3793.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(136003)(346002)(376002)(366004)(396003)(39860400002)(451199021)(83380400001)(6486002)(478600001)(6666004)(2616005)(6512007)(6506007)(186003)(53546011)(44832011)(30864003)(2906002)(7416002)(38100700002)(36756003)(6916009)(66946007)(66476007)(8936002)(4326008)(41300700001)(66556008)(31696002)(8676002)(86362001)(316002)(5660300002)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 	=?utf-8?B?KzNVTUk4ZzNoUk96MHV0STY5TVlGZXBuOGZxWkZ4MWUzMkNwVzhyMkZFLzQ4?=
+ =?utf-8?B?ZEdZNEFzWFJQb2NlWE5FVm4wZ21PL0ZUOEtjd3BaRENOSlRJdmdxN2RDZWpi?=
+ =?utf-8?B?ZU1MbVJqcUw1VXdkbUFPNGhoL05kNWtrc1RpMVh1Zlh6WWJMaGdTU2p5MVI5?=
+ =?utf-8?B?SVZtMGtydjQzMUFOMWxvRExjYWpHNnBKSlBTNTlMeTFnUTdGVjZPSnZpdkdJ?=
+ =?utf-8?B?MEhKQXJHQ2dEeU5ya1NRTXdlVDNOcmZPamphb3Z5Yk1SMFI1aTI2dnczSW84?=
+ =?utf-8?B?L1gvUnZEUHBLUEJacy96WGxtQTV4QU1FMHNaazNhazRKMTV0N0ExMG1KTFhq?=
+ =?utf-8?B?SnkzZlBLSmxJcFl5c2kvN091d1kwSDJMcGUrWmp3dlF1RlR4V3hRTDlYemRv?=
+ =?utf-8?B?aXBiQWZLU2VWK3JoZEZLYjhWQy9ncmV1WDRGeW9BWjJRaHF6aEs1ank2NnJH?=
+ =?utf-8?B?d1VuVUdZSjZoNmt2SWlKZWpmYWpHdng1T01VTE1wTlU2OFRTNjF0cGkxRCs3?=
+ =?utf-8?B?OVNJZXNIcGFTOFYxWDhOYVJJZDg0THo1b2ZmVHVLWFVPeG45OXRqSHZHMTlL?=
+ =?utf-8?B?SENoVWJxOHdpMDRKcHpXaUk5MmRqNHAwVXlXcHM4WWNpbm5yck13RjhMMmV6?=
+ =?utf-8?B?VFplb2FrSDRKaS9admVxNDRac011MllGSVpEVG8yV2V5U2dYd3E0Skx3MTN5?=
+ =?utf-8?B?UXhyaHBTQW5DcmZmMXpkOEdaYksydWtlVjM4emlidFhMaEU0bHVNYTRwSTVy?=
+ =?utf-8?B?cDhhdnBFb0NkNWVXRUl3aFBEam44dlZGalo1aWtlVUZHdHBkZkNXUEUrejF3?=
+ =?utf-8?B?YkN5QUFqdW1xVUZvK015Uy8wdTAwTVRZNE5RMTcvSkY3MzRLSHlKUXNPTVBH?=
+ =?utf-8?B?NFEydC9tWDNnakNnZmVlUi9CU3dCcHJ4eU5YSHJ1UVVHNnhqVlJ3a2NYZ3Iz?=
+ =?utf-8?B?d0ZsditWZURjMlRGU21RNVdYaDhPYlNLQWh2NUpGclUrQUJFbk9KWWRWVWkr?=
+ =?utf-8?B?UTBsWXgwckVJd3NPRTc0RFMvbm5lcXNBdnMvSUt6bDlKVk1SV0t3SC9zYkRN?=
+ =?utf-8?B?TDZWYWJzeTcveVlFbkNVS04yd2l0MEJHMmI2RmtaM3RTUml1aFRob3lzdkx6?=
+ =?utf-8?B?NXd1eFBmVXhlUlQyVUFEWU1TOTVuRmpLUUpmeENJenFvcmVjT1RIVXowM1BI?=
+ =?utf-8?B?UGlseVA1UC9ZM0JlYTE5R0U2OHhTM1IwNUdjRjhRODZsU2RwNjdtRFJ5Nm5q?=
+ =?utf-8?B?cmdycFBaU1crNEVXVW1FaEJNSHBmK2Y5ZmJURXZpNklUK3RDdFNwc05NaVBN?=
+ =?utf-8?B?WEZUeGdTOXJqL1RwN25ScXVLQlROZFZ2K3Nia1hoaE8rekhFb0RzMmlvOFhJ?=
+ =?utf-8?B?cmMxNU52QTZDNjRqNk9IaGd2T0o1ODZQdjhjc21VVkZHdTJxMU1KSmxTRk9r?=
+ =?utf-8?B?OUlZYktGVVhVcUV4dkZPNUNPT1VaVEkxUTlZQkk5UGhCK2NLRktPUXp2SWht?=
+ =?utf-8?B?ZFNBalA3MkpaTGREREQrYzRxR1NmQm4rbHlFK2pXUElKWTR3VC96UldxTCtl?=
+ =?utf-8?B?Y1I0bnRNUG4rTVlJZ2tsS2QrV1RJaVYrbDRlcHdqNEJGMS94S3NudmlveGFU?=
+ =?utf-8?B?YjJndGJtUnVVNisxbXIzR0pOVlNyK1cxQnpNRVJ3Z1hjUEVFSCtEeUpDdGxS?=
+ =?utf-8?B?V25MM09OcFpEb0Z1NTk5N1ZuUUp3R0c2d3Q2OTJXTExTK0ZzakUxUkVFMXRB?=
+ =?utf-8?B?aFFzb3ozdFQ0NjNIWVcrWk0vTU1KTUczM1BZeTduS1BvRU9mRHlGdkx3b2tC?=
+ =?utf-8?B?MVNRcW5EcFU0dHFyWEdvUG9zZUp3TVMxcnVqZEI0ZXpHMFljZ0MzUTNVVk5M?=
+ =?utf-8?B?OEYwb2lKVUQrUHd4STM4cFVhdWxpdUV0b1BoeXVyN3RGaFgybmkzcWxWOU1w?=
+ =?utf-8?B?MGQ1ZHFKNEdwY0pkN2VZNy81VWdMdUZpak14ZlNMMlpWT2gyTEFIN2o3U1Zu?=
+ =?utf-8?B?RGR6cURORnY4KzR5dVJGT0RNNGZzTEdsOHYydWxJSzJlL0oyYXhGWmdkVzd4?=
+ =?utf-8?B?NzhwZFJmc0VPN1lUU1RCWlNMT1hqaERQTFN1NldRNlJ2SXZVUUxCQ0p6RzBn?=
+ =?utf-8?B?c094NTk4Z0M4djBGZ3FKMXNzWjB0cjhuVHNWMTZZS0c3eUdLcDRQS1hRVTkr?=
+ =?utf-8?Q?+GsAOXPgUaVVYUYf5CRipBg=3D?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 	YFarCe495PxMKRHkZpXIHMmrVKk5FtHRgDRWQx/PzYIpPPudsQCJiwTq+5laAXVAWv5w/rcT6cNmDAT3yOdGZ2giItWWXNiLKd6NQaL9eS1u5WCqD+LvxkxoM+t68VpdMUmUnYUvF13+9XRsBCLPPjtCly3qohztBKxetm+B9krTV9KzKfA/WeFBtSZY17QimT7Is6YwXGqY4kyS6NmwXM54BA3fR5tu3hGBgE7MDDYpJ9cNy59j2hS47Ndy9nM0OvgaFCOUuCKcDfnVrpCiEetz9e7GZ9fHT66sYlYPTXP55x4FA7O8xgxhkU+zb+Un8arwOMGFj4jJOgfOo3Dnfqx5IVm+0ml0eLPotksFBEimk1cfdESqjiIBHKaQX29fPPKZMl6BUBtpFtqbjkqvnoLaDthDbajqb0pc4XK6hIBS85mEBxOvHLFR3BuvRfltgIJDQmRcRMPFz82ZuFzcEsf8l6RRGQ6PxojEQlAVuOMdWlPLQrY6UyhRADe98zahx4QE+ltHStBE3PD7r54pK1zZWyArschkAFsns5pcqTv8sfwcpAAr5ittI3zv2kbrPUieDGiY4LeDzuKA2kC5wILZczeiX4BlMPDFpK0XD/Zc85a9SoJ1qkj+xHuwstSAFLEHaZf43VQUiNg7K5S9W2+57i2LXvUCyjjLOn4pPl8gvEbSz/F5FU/SBQq1BT4BC5Dkx1AVmZH68PXKnyMU2zHN/XJu9vB1M9W7zf07+MomsL2oBFKoYP6ZBhjtHFD1SnBi+k2ofPATr9sXr2V+L1fnHbOj4Y0MA9XMx7S7P5SoLA92hRtQ+avvcDI87YTVpL9exg1Ew/xVuC5L3vjrfXkqHvutGhbLrFSownmUgQvxTjzrfPz8hyf5txC6rm1ZztExTXufKBmk1l4Le8sTFszaEPEkHHwGMa9MP2+YTFE=
-X-OriginatorOrg: fujitsu.com
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 	=?utf-8?B?YUlBUHZNVFlEbWdIT1JoVE9GRXdBS09GaDFmejBPWmVLVmExNHZFZEhkTjFR?=
+ =?utf-8?B?K0hkY09pWnZja21Kc3dRbW85cVowMmNHZW5DdWxZcUd2bTg0NmtqWmdnbE9I?=
+ =?utf-8?B?c21XWFVHaUxnNkZ3cU90SUdXUzZERTZ6ZndsVFFHaWFVU1dCS0pmcHFnYlBW?=
+ =?utf-8?B?WGNhZlFjZktnNDR6SnR3aVNPWWdpUitVUTNNaTNGSHhNMVFFVVQ5WlArLzVh?=
+ =?utf-8?B?eThtU0JtdDVsWkRVZ29SMGcwZ0ZkVFQ5czNuRDJnL1ErVzNwUUlYN2Y0ZWND?=
+ =?utf-8?B?b1lCYit3MmovUVRwZDNNTWI0NkJTZ21YT0VwQjRmRXZkQVJaU0pvUzFKR2Jw?=
+ =?utf-8?B?eVZ3cSt3dVlDUW11cGVVMnd1cnlTbTBIMUMzYVVRcjJMSTY1SFIwa2FDamdp?=
+ =?utf-8?B?aEw5SXI3dDdQZFhTTmRCYTZPS1pjM2lzMGxhY3VJM3ZsOWc4aHJtbHRZTkRL?=
+ =?utf-8?B?MlNRZmhWc05LT1g4V2pQWEJ3MVh4aVp1amNMNHBYdzQ0VkwwUVpTNnFUUVpM?=
+ =?utf-8?B?ZU1nYktQY0VFNVEySGNHQkVqS3lDbTBvTTlLT2ZhNExKMTQzZnkrT2VYclY2?=
+ =?utf-8?B?V3RBQ0tSOFQyV2FxYXYrZDNZdnJ5WlpiWDYxRXZnWVBGSkN4WEtucld6S1Av?=
+ =?utf-8?B?K0l3RnNJYzJUVThWQzJwVHhFQ0d5b2JOV0VpUUJNNUNVM3Y5YStLT1ZuZlZ2?=
+ =?utf-8?B?Wm5JT0h1MDdZWUVFRlBtb1FLMERGaVk3dzd1OGhPNzNWdGxqb1hGKzdtM2Nr?=
+ =?utf-8?B?QUJPUkpNT09xTlN5OGVMbEtCbHhuMkZTRDBVeStiL3dWZFFUZEZsQUhrRzBK?=
+ =?utf-8?B?QU1HNlNPczZNZHJTU0RHUEc4bDFSYTVZNHI4QmRseHpvMHFGNWRuNTQvM2RO?=
+ =?utf-8?B?UjFjNjlWR3V3ZlhCTVBaSHpPTzl4Znp3KzRCalZjM2p6em83YXNHY01OOS96?=
+ =?utf-8?B?dTdlL0t3Yjh1ekxxMTBtb29qSnRDUlc0dUw1ckxBaE1OUUJTRU5NRkVyZXFD?=
+ =?utf-8?B?SVVHOE9kdmptMitFRWVuSnhLengyT001MXNRRzdTVEcvVjhoU05CaXJteU4v?=
+ =?utf-8?B?ZXpERXB1SmRyNTZlNGUvSzBLRU5xNlFTYURjVG9uQkFtaGFIeVJVVmlNcktm?=
+ =?utf-8?B?Q3l2Njh4SUwrRHNTNktWZEJXeld0T3daMEh3cnBCY2lObkZ0SnB6NVlXZDlL?=
+ =?utf-8?B?V1FlY1ZzL0xLY0REaDA3RFM0bmVhY2J1ZnlQMVNWbXNEME1LMUNUTVdEWHVu?=
+ =?utf-8?B?eCt6ZDA5RUhBVmR6SHlZUkJadEYyYS9GWGU1YUUrT0s2WWpQL2dXS2V5ZlBz?=
+ =?utf-8?B?Z21BUVB0M00vUzJPbERiMXpqSHpBZGViR2svbnZCdzBpclhQZ3FscDV5RjZO?=
+ =?utf-8?B?STJrc2JtR2V0YUU3WnlWb1hnMEVyQjkvSHNvNy9xYVJ6QUZicU1IekZDQWYv?=
+ =?utf-8?B?Y3pjNlN0NHpyanVtUm82V0h6VXI5QUo3SUY1UC9PMmQwclJ6VGRLMVJtSVU5?=
+ =?utf-8?B?Q2t2OHZSTm9nMFZHZVFFMXV5NUlKMlZHcFB2NVY5UkExWE95WFJxQ1VVYSs0?=
+ =?utf-8?B?TDNCUVYrK0V0YUdabDhqTnBXQWVXSHJjalF1NGtSZjVPdTE0QVM0WlpUWVJl?=
+ =?utf-8?B?NHlwSm8zV20xTjM3bDJQbG5ROUIwVm0xVkdOY3FDMzc1b0NOT21oRFo3MjNZ?=
+ =?utf-8?B?bWdYOGhxQXZsMXhWeDRoSUlGcW0ydGg4aE5lY3pRVFROTFh6U3NpWVpkc3hG?=
+ =?utf-8?Q?jjD5g2rnPTztf6/yu0=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7acd44eb-498d-4cfd-c275-08db4fd5eeea
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB3793.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OS7PR01MB11664.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 397165bc-e761-4f06-7456-08db4fa90675
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2023 09:45:57.9245
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2023 15:07:27.0654
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zaVsGzuau8+1ez1oOhctYAbblKbUg3a7pfwfGuo/+NeV9MoJOheP/gvgR6g5+4SOJoltDbnHNiIedhWtEp6QWw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYWPR01MB10630
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: iH+h3VyfyvXsXlCLHwb3jz1NEHN3ryZGaU8rx83c37Eedqq4TgM4SIP3HZp/+Ogp3eoreJMTJaQ4e3dTsAhkvbuAuWUZxDJt8SRaB3/5wYA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR10MB6039
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-05-08_11,2023-05-05_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ phishscore=0 suspectscore=0 mlxscore=0 spamscore=0 malwarescore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2305080099
+X-Proofpoint-GUID: 1P33aFUkMhhIRxDkUW0ynbwtkIfaf6xY
+X-Proofpoint-ORIG-GUID: 1P33aFUkMhhIRxDkUW0ynbwtkIfaf6xY
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230508_104611_774337_D3EC02AD 
-X-CRM114-Status: GOOD (  16.19  )
+X-CRM114-CacheID: sfid-20230508_080802_762846_8FFDD05C 
+X-CRM114-Status: GOOD (  27.67  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -178,65 +209,441 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Dan,
-
-
-On 29/04/2023 02:59, Dan Williams wrote:
-> Li Zhijian wrote:
->> Hello folks,
+On 5/5/23 15:42, Simon Horman wrote:
+> On Thu, May 04, 2023 at 02:50:21PM +0000, Ross Philipson wrote:
+>> From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
 >>
->> About 2 months ago, we posted our first RFC[3] and received your kindly feedback. Thank you :)
->> Now, I'm back with the code.
+>> The Secure Launch platform module is a late init module. During the
+>> init call, the TPM event log is read and measurements taken in the
+>> early boot stub code are located. These measurements are extended
+>> into the TPM PCRs using the mainline TPM kernel driver.
 >>
->> Currently, this RFC has already implemented to supported case D*. And the case A&B is disabled
->> deliberately in makedumpfile. It includes changes in 3 source code as below:
+>> The platform module also registers the securityfs nodes to allow
+>> access to TXT register fields on Intel along with the fetching of
+>> and writing events to the late launch TPM log.
+>>
+>> Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
+>> Signed-off-by: garnetgrimm <grimmg@ainfosec.com>
+>> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
 > 
-> I think the reason this patchkit is difficult to follow is that it
-> spends a lot of time describing a chosen solution, but not enough time
-> describing the problem and the tradeoffs.
+> Hi Ross,
 > 
-> For example why is updating /proc/vmcore with pmem metadata the chosen
-> solution? Why not leave the kernel out of it and have makedumpfile
-> tooling aware of how to parse persistent memory namespace info-blocks
-> and retrieve that dump itself? This is what I proposed here:
+> a few more items from my side.
 > 
-> http://lore.kernel.org/r/641484f7ef780_a52e2940@dwillia2-mobl3.amr.corp.intel.com.notmuch
+> ...
+> 
+>> diff --git a/arch/x86/kernel/slmodule.c b/arch/x86/kernel/slmodule.c
+> 
+> ...
+> 
+>> +/*
+>> + * Securityfs exposure
+>> + */
+>> +struct memfile {
+>> +	char *name;
+>> +	void *addr;
+>> +	size_t size;
+>> +};
+>> +
+>> +static struct memfile sl_evtlog = {"eventlog", 0, 0};
+> 
+> I don't think the 0 fields are necessary above, memset will zero
+> any fields not explicitly set. But if you want to go that way, then
+> I think the first one should be NULL, as the addr field is a pointer.
+> 
+>> +static void *txt_heap;
+>> +static struct txt_heap_event_log_pointer2_1_element __iomem *evtlog20;
+>> +static DEFINE_MUTEX(sl_evt_log_mutex);
+> 
+>> +static ssize_t sl_evtlog_read(struct file *file, char __user *buf,
+>> +			      size_t count, loff_t *pos)
+>> +{
+>> +	ssize_t size;
+>> +
+>> +	if (!sl_evtlog.addr)
+>> +		return 0;
+>> +
+>> +	mutex_lock(&sl_evt_log_mutex);
+>> +	size = simple_read_from_buffer(buf, count, pos, sl_evtlog.addr,
+>> +				       sl_evtlog.size);
+>> +	mutex_unlock(&sl_evt_log_mutex);
+>> +
+>> +	return size;
+>> +}
+>> +
+>> +static ssize_t sl_evtlog_write(struct file *file, const char __user *buf,
+>> +				size_t datalen, loff_t *ppos)
+> 
+> nit: the line above doesn't align to the '(' on the line before that.
+> 
+>> +{
+>> +	ssize_t result;
+>> +	char *data;
+>> +
+>> +	if (!sl_evtlog.addr)
+>> +		return 0;
+>> +
+>> +	/* No partial writes. */
+>> +	result = -EINVAL;
+>> +	if (*ppos != 0)
+>> +		goto out;
+>> +
+>> +	data = memdup_user(buf, datalen);
+>> +	if (IS_ERR(data)) {
+>> +		result = PTR_ERR(data);
+>> +		goto out;
+>> +	}
+>> +
+>> +	mutex_lock(&sl_evt_log_mutex);
+>> +	if (evtlog20)
+>> +		result = tpm20_log_event(evtlog20, sl_evtlog.addr,
+>> +					 sl_evtlog.size, datalen, data);
+> 
+> Sparse says that the type of the first argument of tmp20_log_event is:
+> 
+> 	struct txt_heap_event_log_pointer2_1_element *
+> 
+> However, the type of evtlog20 is:
+> 
+> 	struct txt_heap_event_log_pointer2_1_element __iomem *
 
-Sorry for the late reply. I'm just back from the vacation.
-And sorry again for missing your previous *important* information in V1.
+I have to look into what is going on here. The TXT heap is just a memory 
+range not IO space. I will track this down.
 
-Your proposal also sounds to me with less kernel changes, but more ndctl coupling with makedumpfile tools.
-In my current understanding, it will includes following source changes.
-
------------+-------------------------------------------------------------------+
-Source     |                      changes                                      |
------------+-------------------------------------------------------------------+
-I.         | 1. enter force_raw in kdump kernel automatically(avoid metadata being updated again)|
-kernel     |                                                                   |
-            | 2. mark the whole pmem's PT_LOAD for kexec_file_load(2) syscall   |
------------+-------------------------------------------------------------------+
-II. kexec- | 1. mark the whole pmem's PT_LOAD for kexe_load(2) syscall         |
-tool       |                                                                   |
------------+-------------------------------------------------------------------+
-III.       | 1. parse the infoblock and calculate the boundaries of userdata and metadata   |
-makedump-  | 2. skip pmem userdata region                                      |
-file       | 3. exclude pmem metadata region if needed                         |
------------+-------------------------------------------------------------------+
-
-I will try rewrite it with your proposal ASAP
-
-Thanks again
+As to all the rest of your comments here, I will fix them.
 
 Thanks
-Zhijian
+Ross
 
 > 
-> ...but never got an answer, or I missed the answer.
+>> +	else
+>> +		result = tpm12_log_event(sl_evtlog.addr, sl_evtlog.size,
+>> +					 datalen, data);
+>> +	mutex_unlock(&sl_evt_log_mutex);
+>> +
+>> +	kfree(data);
+>> +out:
+>> +	return result;
+>> +}
+> 
+> ...
+> 
+>> +static long slaunch_expose_securityfs(void)
+>> +{
+>> +	long ret = 0;
+>> +	int i;
+>> +
+>> +	slaunch_dir = securityfs_create_dir("slaunch", NULL);
+>> +	if (IS_ERR(slaunch_dir))
+>> +		return PTR_ERR(slaunch_dir);
+>> +
+>> +	if (slaunch_get_flags() & SL_FLAG_ARCH_TXT) {
+>> +		txt_dir = securityfs_create_dir("txt", slaunch_dir);
+>> +		if (IS_ERR(txt_dir)) {
+>> +			ret = PTR_ERR(txt_dir);
+>> +			goto remove_slaunch;
+>> +		}
+>> +
+>> +		for (i = 0; i < ARRAY_SIZE(sl_txt_files); i++) {
+>> +			txt_entries[i] = securityfs_create_file(
+>> +						sl_txt_files[i].name, 0440,
+>> +						txt_dir, NULL,
+>> +						sl_txt_files[i].fops);
+>> +			if (IS_ERR(txt_entries[i])) {
+>> +				ret = PTR_ERR(txt_entries[i]);
+>> +				goto remove_files;
+>> +			}
+>> +		}
+>> +
+> 
+> nit: no blank line here.
+> 
+>> +	}
+>> +
+>> +	if (sl_evtlog.addr > 0) {
+> 
+> addr is a pointer. So perhaps:
+> 
+> 	if (sl_evtlog.addr) {
+> 
+>> +		event_file = securityfs_create_file(
+>> +					sl_evtlog.name, 0440,
+>> +					slaunch_dir, NULL,
+>> +					&sl_evtlog_ops);
+>> +		if (IS_ERR(event_file)) {
+>> +			ret = PTR_ERR(event_file);
+>> +			goto remove_files;
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+>> +
+>> +remove_files:
+>> +	if (slaunch_get_flags() & SL_FLAG_ARCH_TXT) {
+>> +		while (--i >= 0)
+>> +			securityfs_remove(txt_entries[i]);
+>> +		securityfs_remove(txt_dir);
+>> +	}
+>> +remove_slaunch:
+>> +	securityfs_remove(slaunch_dir);
+>> +
+>> +	return ret;
+>> +}
+> 
+> ...
+> 
+>> +static void slaunch_intel_evtlog(void __iomem *txt)
+>> +{
+>> +	struct slr_entry_log_info *log_info;
+>> +	struct txt_os_mle_data *params;
+>> +	struct slr_table *slrt;
+>> +	void *os_sinit_data;
+>> +	u64 base, size;
+>> +
+>> +	memcpy_fromio(&base, txt + TXT_CR_HEAP_BASE, sizeof(base));
+>> +	memcpy_fromio(&size, txt + TXT_CR_HEAP_SIZE, sizeof(size));
+>> +
+>> +	/* now map TXT heap */
+>> +	txt_heap = memremap(base, size, MEMREMAP_WB);
+>> +	if (!txt_heap)
+>> +		slaunch_txt_reset(txt,
+>> +			"Error failed to memremap TXT heap\n",
+>> +			SL_ERROR_HEAP_MAP);
+> 
+> nit: These lines are not aligned to the opening '('
+> 
+>> +
+>> +	params = (struct txt_os_mle_data *)txt_os_mle_data_start(txt_heap);
+>> +
+>> +	/* Get the SLRT and remap it */
+>> +	slrt = memremap(params->slrt, sizeof(*slrt), MEMREMAP_WB);
+>> +	if (!slrt)
+>> +		slaunch_txt_reset(txt,
+>> +			"Error failed to memremap SLR Table\n",
+>> +			SL_ERROR_SLRT_MAP);
+>> +	size = slrt->size;
+>> +	memunmap(slrt);
+>> +
+>> +	slrt = memremap(params->slrt, size, MEMREMAP_WB);
+>> +	if (!slrt)
+>> +		slaunch_txt_reset(txt,
+>> +			"Error failed to memremap SLR Table\n",
+>> +			SL_ERROR_SLRT_MAP);
+>> +
+>> +	log_info = (struct slr_entry_log_info *)
+>> +			slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_LOG_INFO);
+>> +	if (!log_info)
+>> +		slaunch_txt_reset(txt,
+>> +			"Error failed to memremap SLR Table\n",
+>> +			SL_ERROR_SLRT_MISSING_ENTRY);
+>> +
+>> +	sl_evtlog.size = log_info->size;
+>> +	sl_evtlog.addr = memremap(log_info->addr, log_info->size,
+>> +				  MEMREMAP_WB);
+>> +	if (!sl_evtlog.addr)
+>> +		slaunch_txt_reset(txt,
+>> +			"Error failed to memremap TPM event log\n",
+>> +			SL_ERROR_EVENTLOG_MAP);
+>> +
+>> +	memunmap(slrt);
+>> +
+>> +	/* Determine if this is TPM 1.2 or 2.0 event log */
+>> +	if (memcmp(sl_evtlog.addr + sizeof(struct tcg_pcr_event),
+>> +		    TCG_SPECID_SIG, sizeof(TCG_SPECID_SIG)))
+>> +		return; /* looks like it is not 2.0 */
+>> +
+>> +	/* For TPM 2.0 logs, the extended heap element must be located */
+>> +	os_sinit_data = txt_os_sinit_data_start(txt_heap);
+>> +
+> 
+> The return type of tmp20_find_lot2_1_element() is:
+> 
+> 	struct txt_heap_event_log_pointer2_1_element *
+> 
+> However, the type of evtlog20 is:
+> 
+> 	struct txt_heap_event_log_pointer2_1_element __iomem *
+> 
+>> +	evtlog20 = tpm20_find_log2_1_element(os_sinit_data);
+>> +
+>> +	/*
+>> +	 * If this fails, things are in really bad shape. Any attempt to write
+>> +	 * events to the log will fail.
+>> +	 */
+>> +	if (!evtlog20)
+>> +		slaunch_txt_reset(txt,
+>> +			"Error failed to find TPM20 event log element\n",
+>> +			SL_ERROR_TPM_INVALID_LOG20);
+>> +}
+>> +
+>> +static void slaunch_tpm20_extend_event(struct tpm_chip *tpm, void __iomem *txt,
+>> +				       struct tcg_pcr_event2_head *event)
+>> +{
+>> +	u16 *alg_id_field = (u16 *)((u8 *)event +
+>> +				    sizeof(struct tcg_pcr_event2_head));
+>> +	struct tpm_digest *digests;
+>> +	u8 *dptr;
+>> +	int ret;
+>> +	u32 i, j;
+>> +
+>> +	digests = kcalloc(tpm->nr_allocated_banks, sizeof(*digests),
+>> +			  GFP_KERNEL);
+>> +	if (!digests)
+>> +		slaunch_txt_reset(txt,
+>> +			"Failed to allocate array of digests\n",
+>> +			SL_ERROR_GENERIC);
+>> +
+>> +	for (i = 0; i < tpm->nr_allocated_banks; i++)
+>> +		digests[i].alg_id = tpm->allocated_banks[i].alg_id;
+>> +
+>> +
+> 
+> nit: one blank line is enough.
+> 
+>> +	/* Early SL code ensured there was a max count of 2 digests */
+>> +	for (i = 0; i < event->count; i++) {
+>> +		dptr = (u8 *)alg_id_field + sizeof(u16);
+>> +
+>> +		for (j = 0; j < tpm->nr_allocated_banks; j++) {
+>> +			if (digests[j].alg_id != *alg_id_field)
+>> +				continue;
+>> +
+>> +			switch (digests[j].alg_id) {
+>> +			case TPM_ALG_SHA256:
+>> +				memcpy(&digests[j].digest[0], dptr,
+>> +				       SHA256_DIGEST_SIZE);
+>> +				alg_id_field = (u16 *)((u8 *)alg_id_field +
+>> +					SHA256_DIGEST_SIZE + sizeof(u16));
+>> +				break;
+>> +			case TPM_ALG_SHA1:
+>> +				memcpy(&digests[j].digest[0], dptr,
+>> +				       SHA1_DIGEST_SIZE);
+>> +				alg_id_field = (u16 *)((u8 *)alg_id_field +
+>> +					SHA1_DIGEST_SIZE + sizeof(u16));
+>> +			default:
+>> +				break;
+>> +			}
+>> +		}
+>> +	}
+>> +
+>> +	ret = tpm_pcr_extend(tpm, event->pcr_idx, digests);
+>> +	if (ret) {
+>> +		pr_err("Error extending TPM20 PCR, result: %d\n", ret);
+>> +		slaunch_txt_reset(txt,
+>> +			"Failed to extend TPM20 PCR\n",
+>> +			SL_ERROR_TPM_EXTEND);
+>> +	}
+>> +
+>> +	kfree(digests);
+>> +}
+>> +
+>> +static void slaunch_tpm20_extend(struct tpm_chip *tpm, void __iomem *txt)
+>> +{
+>> +	struct tcg_pcr_event *event_header;
+>> +	struct tcg_pcr_event2_head *event;
+>> +	int start = 0, end = 0, size;
+>> +
+>> +	event_header = (struct tcg_pcr_event *)(sl_evtlog.addr +
+>> +						evtlog20->first_record_offset);
+> 
+> Sparse says that evtlog20 shouldn't be dereferenced because it
+> has a __iomem attribute.
+> 
+>> +
+>> +	/* Skip first TPM 1.2 event to get to first TPM 2.0 event */
+>> +	event = (struct tcg_pcr_event2_head *)((u8 *)event_header +
+>> +						sizeof(struct tcg_pcr_event) +
+>> +						event_header->event_size);
+>> +
+>> +	while ((void  *)event < sl_evtlog.addr + evtlog20->next_record_offset) {
+> 
+> Ditto.
+> 
+>> +		size = __calc_tpm2_event_size(event, event_header, false);
+>> +		if (!size)
+>> +			slaunch_txt_reset(txt,
+>> +				"TPM20 invalid event in event log\n",
+>> +				SL_ERROR_TPM_INVALID_EVENT);
+>> +
+>> +		/*
+>> +		 * Marker events indicate where the Secure Launch early stub
+>> +		 * started and ended adding post launch events.
+>> +		 */
+>> +		if (event->event_type == TXT_EVTYPE_SLAUNCH_END) {
+>> +			end = 1;
+>> +			break;
+>> +		} else if (event->event_type == TXT_EVTYPE_SLAUNCH_START) {
+>> +			start = 1;
+>> +			goto next;
+>> +		}
+>> +
+>> +		if (start)
+>> +			slaunch_tpm20_extend_event(tpm, txt, event);
+>> +
+>> +next:
+>> +		event = (struct tcg_pcr_event2_head *)((u8 *)event + size);
+>> +	}
+>> +
+>> +	if (!start || !end)
+>> +		slaunch_txt_reset(txt,
+>> +			"Missing start or end events for extending TPM20 PCRs\n",
+>> +			SL_ERROR_TPM_EXTEND);
+>> +}
+> 
+> ...
+> 
+>> +static void slaunch_pcr_extend(void __iomem *txt)
+>> +{
+>> +	struct tpm_chip *tpm;
+>> +
+>> +	tpm = tpm_default_chip();
+>> +	if (!tpm)
+>> +		slaunch_txt_reset(txt,
+>> +			"Could not get default TPM chip\n",
+>> +			SL_ERROR_TPM_INIT);
+>> +	if (evtlog20)
+>> +		slaunch_tpm20_extend(tpm, txt);
+>> +	else
+>> +		slaunch_tpm12_extend(tpm, txt);
+>> +}
+>> +
+>> +static int __init slaunch_module_init(void)
+>> +{
+>> +	void __iomem *txt;
+>> +
+>> +	/* Check to see if Secure Launch happened */
+>> +	if ((slaunch_get_flags() & (SL_FLAG_ACTIVE|SL_FLAG_ARCH_TXT)) !=
+>> +	    (SL_FLAG_ACTIVE|SL_FLAG_ARCH_TXT))
+> 
+> nit: spaces around '|'
+>       Likewise elsewhere in this patch.
+> 
+> 
+>> +		return 0;
+>> +
+>> +	txt = ioremap(TXT_PRIV_CONFIG_REGS_BASE, TXT_NR_CONFIG_PAGES *
+>> +		      PAGE_SIZE);
+>> +	if (!txt)
+>> +		panic("Error ioremap of TXT priv registers\n");
+>> +
+>> +	/* Only Intel TXT is supported at this point */
+>> +	slaunch_intel_evtlog(txt);
+>> +
+>> +	slaunch_pcr_extend(txt);
+>> +
+>> +	iounmap(txt);
+>> +
+>> +	return slaunch_expose_securityfs();
+>> +}
+> 
+> ...
+
+
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
