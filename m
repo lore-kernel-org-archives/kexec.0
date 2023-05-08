@@ -4,26 +4,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DDF12C7EE22
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CAC3BC7EE26
 	for <kexec@archiver.kernel.org>; Mon,  8 May 2023 01:17:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=uajH74NCekDUMXKBA6a/M6e+WHM1sbEeRudA5MZbZfA=; b=XTvzkpeuh3KD5d
-	4MKD/qfTwc2RbjNhBdJAM0S9Yn2823aFmTTaDj0ciDKZn0XZUn3dP9tQAW+vxhN29zhy3HaSf8K+4
-	5/+1pU6o8CcFh8jR+BrLlzUuP/h2CnPROiblyFPnCkb9Z4+PwOztFJ5uFyfNWrbaDPRiQrE+Viu1S
-	TsYzAj2Gxz2z+Q9s/uh2uh65ysnSjn58Igpolr3TiW/bJz1KK9TwBLbln7vBA58JPvS0lPZ4bDZh6
-	Nh2I5stntSdn+uPItVWeQYbyuj2mX3N3LCILR7slKyvr3FOFSatViTAhDz8DdF2HkuTitGV/9DQub
-	+konz7qBo+rebkU10DsA==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=lEQj9odxAo/SpQpGBtK0evHgdThuoIxN2O373Iy0tkA=; b=RSSbpa+0Q2cMNr
+	BTZ31WK2Eb5daYsENeBhO7j3NniEJH7bqCYhj3mZq69unNROjauOTLkpDMTHZBkzMEwF0SxVHeFnB
+	4DDjZ54rpiQh8uYRgHdQAeU6oDtc5JEFUVeQJyDDoQYc/54uU3NVobNxwPLSRZKoB9m/bksAHwpMr
+	+hVqP2sCnaZB6YO9vSz1x9TeGsb8/XObOnj1SWQ5YGzFNwC1OX4ht+P6TJOGzGBWYnajqcgCEneM/
+	fbx/f0C1OKEvsmgEuPUL/SiBYSfWzckHdiLXUwwFZTznkrvMHKmYGbZdCdRcqHWITceKVa4AXycAs
+	wV/bYblRdOfo4KM9ITKg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pvpVH-00GvcS-0U;
-	Mon, 08 May 2023 01:17:27 +0000
+	id 1pvpVF-00Gvb2-1w;
+	Mon, 08 May 2023 01:17:25 +0000
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1pvpV7-00GvYw-2V;
+	id 1pvpV7-00GvZ0-2m;
 	Mon, 08 May 2023 01:17:17 +0000
 From: Luis Chamberlain <mcgrof@kernel.org>
 To: hch@infradead.org,
@@ -46,10 +46,12 @@ Cc: mchehab@kernel.org,
 	kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 0/6] vfs: provide automatic kernel freeze / resume 
-Date: Sun,  7 May 2023 18:17:11 -0700
-Message-Id: <20230508011717.4034511-1-mcgrof@kernel.org>
+Subject: [PATCH 2/6] fs: add frozen sb state helpers
+Date: Sun,  7 May 2023 18:17:13 -0700
+Message-Id: <20230508011717.4034511-3-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.38.1
+In-Reply-To: <20230508011717.4034511-1-mcgrof@kernel.org>
+References: <20230508011717.4034511-1-mcgrof@kernel.org>
 MIME-Version: 1.0
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -67,62 +69,145 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-It's been about 5 months since the last v3 RFC for fs freeze. Now
-that some of us will have time at LSFMM to discuss stuff I figured
-it would be good to try to get the last pieces, if any discussed,
-and put out a new patch set based on the latests feedback. This
-time I boot tested, and stress tested the patches. From what I can
-tell I confirm nothing regresses, we just end up now with a new world
-where if your platform does support s3  / s4 we'll kick into gear the
-automatic kernel freeze.
+Provide helpers so that we can check a superblock frozen state.
+This will make subsequent changes easier to read. This makes
+no functional changes.
 
-To help with testing, as this is a rather tiny bit obscure area with
-virtualization, I've gone ahead and extended kdevops with support for
-always enabling s3 / s4, so it should be easy to test guest bring up
-there.
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+---
+ fs/ext4/ext4_jbd2.c |  2 +-
+ fs/gfs2/sys.c       |  2 +-
+ fs/quota/quota.c    |  4 ++--
+ fs/super.c          |  6 +++---
+ fs/xfs/xfs_trans.c  |  3 +--
+ include/linux/fs.h  | 22 ++++++++++++++++++++++
+ 6 files changed, 30 insertions(+), 9 deletions(-)
 
-I've picked out using stress-ng now to have fun stress testing suspend,
-the insane will try:
-
-./stress-ng --touch 8192 --touch-method creat
-
-Resume works but eventually suspend will trickle tons of OOMs and so
-we gotta find a sweet spot to automate this somehow in fstests somehow.
-I am not sure how we're gonna test this moving forward on fstests but
-perhaps worth talking about at LSFMM for ideas.
-
-Anyway, your filesystem will not participate in the auto kernel
-freeze / thaw unless your filesystem gets the kthread freezer junk
-removed and sets a flag. I'll post 3 patches for the 3 main filesystems
-after this. I've carried and advanced the SmPL patch for a few years
-now, and magically it all still works.
-
-[0] https://lkml.kernel.org/r/20230114003409.1168311-1-mcgrof@kernel.org
-
-Luis Chamberlain (6):
-  fs: unify locking semantics for fs freeze / thaw
-  fs: add frozen sb state helpers
-  fs: distinguish between user initiated freeze and kernel initiated
-    freeze
-  fs: move !SB_BORN check early on freeze and add for thaw
-  fs: add iterate_supers_excl() and iterate_supers_reverse_excl()
-  fs: add automatic kernel fs freeze / thaw and remove kthread freezing
-
- block/bdev.c           |   9 +-
- fs/ext4/ext4_jbd2.c    |   2 +-
- fs/f2fs/gc.c           |   9 +-
- fs/gfs2/glops.c        |   2 +-
- fs/gfs2/super.c        |  11 +-
- fs/gfs2/sys.c          |  12 ++-
- fs/gfs2/util.c         |   7 +-
- fs/ioctl.c             |  14 ++-
- fs/quota/quota.c       |   4 +-
- fs/super.c             | 239 +++++++++++++++++++++++++++++++++--------
- fs/xfs/xfs_trans.c     |   3 +-
- include/linux/fs.h     |  54 +++++++++-
- kernel/power/process.c |  15 ++-
- 13 files changed, 313 insertions(+), 68 deletions(-)
-
+diff --git a/fs/ext4/ext4_jbd2.c b/fs/ext4/ext4_jbd2.c
+index 77f318ec8abb..ef441f15053b 100644
+--- a/fs/ext4/ext4_jbd2.c
++++ b/fs/ext4/ext4_jbd2.c
+@@ -72,7 +72,7 @@ static int ext4_journal_check_start(struct super_block *sb)
+ 
+ 	if (sb_rdonly(sb))
+ 		return -EROFS;
+-	WARN_ON(sb->s_writers.frozen == SB_FREEZE_COMPLETE);
++	WARN_ON(sb_is_frozen(sb));
+ 	journal = EXT4_SB(sb)->s_journal;
+ 	/*
+ 	 * Special case here: if the journal has aborted behind our
+diff --git a/fs/gfs2/sys.c b/fs/gfs2/sys.c
+index cbb71c3520c0..e80c827acd09 100644
+--- a/fs/gfs2/sys.c
++++ b/fs/gfs2/sys.c
+@@ -148,7 +148,7 @@ static ssize_t uuid_show(struct gfs2_sbd *sdp, char *buf)
+ static ssize_t freeze_show(struct gfs2_sbd *sdp, char *buf)
+ {
+ 	struct super_block *sb = sdp->sd_vfs;
+-	int frozen = (sb->s_writers.frozen == SB_UNFROZEN) ? 0 : 1;
++	int frozen = sb_is_unfrozen(sb) ? 0 : 1;
+ 
+ 	return snprintf(buf, PAGE_SIZE, "%d\n", frozen);
+ }
+diff --git a/fs/quota/quota.c b/fs/quota/quota.c
+index 052f143e2e0e..66ea23e15d93 100644
+--- a/fs/quota/quota.c
++++ b/fs/quota/quota.c
+@@ -890,13 +890,13 @@ static struct super_block *quotactl_block(const char __user *special, int cmd)
+ 	sb = user_get_super(dev, excl);
+ 	if (!sb)
+ 		return ERR_PTR(-ENODEV);
+-	if (thawed && sb->s_writers.frozen != SB_UNFROZEN) {
++	if (thawed && !sb_is_unfrozen(sb)) {
+ 		if (excl)
+ 			up_write(&sb->s_umount);
+ 		else
+ 			up_read(&sb->s_umount);
+ 		wait_event(sb->s_writers.wait_unfrozen,
+-			   sb->s_writers.frozen == SB_UNFROZEN);
++			   sb_is_unfrozen(sb));
+ 		put_super(sb);
+ 		goto retry;
+ 	}
+diff --git a/fs/super.c b/fs/super.c
+index 0e9d48846684..46c6475fc765 100644
+--- a/fs/super.c
++++ b/fs/super.c
+@@ -905,7 +905,7 @@ int reconfigure_super(struct fs_context *fc)
+ 
+ 	if (fc->sb_flags_mask & ~MS_RMT_MASK)
+ 		return -EINVAL;
+-	if (sb->s_writers.frozen != SB_UNFROZEN)
++	if (!(sb_is_unfrozen(sb)))
+ 		return -EBUSY;
+ 
+ 	retval = security_sb_remount(sb, fc->security);
+@@ -929,7 +929,7 @@ int reconfigure_super(struct fs_context *fc)
+ 			down_write(&sb->s_umount);
+ 			if (!sb->s_root)
+ 				return 0;
+-			if (sb->s_writers.frozen != SB_UNFROZEN)
++			if (!sb_is_unfrozen(sb))
+ 				return -EBUSY;
+ 			remount_ro = !sb_rdonly(sb);
+ 		}
+@@ -1673,7 +1673,7 @@ int freeze_super(struct super_block *sb)
+ {
+ 	int ret;
+ 
+-	if (sb->s_writers.frozen != SB_UNFROZEN)
++	if (!sb_is_unfrozen(sb))
+ 		return -EBUSY;
+ 
+ 	if (!(sb->s_flags & SB_BORN))
+diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
+index 8afc0c080861..26caeafc572f 100644
+--- a/fs/xfs/xfs_trans.c
++++ b/fs/xfs/xfs_trans.c
+@@ -267,8 +267,7 @@ xfs_trans_alloc(
+ 	 * Zero-reservation ("empty") transactions can't modify anything, so
+ 	 * they're allowed to run while we're frozen.
+ 	 */
+-	WARN_ON(resp->tr_logres > 0 &&
+-		mp->m_super->s_writers.frozen == SB_FREEZE_COMPLETE);
++	WARN_ON(resp->tr_logres > 0 && sb_is_frozen(mp->m_super));
+ 	ASSERT(!(flags & XFS_TRANS_RES_FDBLKS) ||
+ 	       xfs_has_lazysbcount(mp));
+ 
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 21a981680856..90b5bdc4071a 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1621,6 +1621,28 @@ static inline bool sb_start_intwrite_trylock(struct super_block *sb)
+ 	return __sb_start_write_trylock(sb, SB_FREEZE_FS);
+ }
+ 
++/**
++ * sb_is_frozen - is superblock frozen
++ * @sb: the super to check
++ *
++ * Returns true if the super is frozen.
++ */
++static inline bool sb_is_frozen(struct super_block *sb)
++{
++	return sb->s_writers.frozen == SB_FREEZE_COMPLETE;
++}
++
++/**
++ * sb_is_unfrozen - is superblock unfrozen
++ * @sb: the super to check
++ *
++ * Returns true if the super is unfrozen.
++ */
++static inline bool sb_is_unfrozen(struct super_block *sb)
++{
++	return sb->s_writers.frozen == SB_UNFROZEN;
++}
++
+ bool inode_owner_or_capable(struct mnt_idmap *idmap,
+ 			    const struct inode *inode);
+ 
 -- 
 2.39.2
 
