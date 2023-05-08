@@ -4,26 +4,26 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B954BC77B7C
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DDF12C7EE22
 	for <kexec@archiver.kernel.org>; Mon,  8 May 2023 01:17:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=LZhoaDwOM9ynPauz4tzgWhbqgywo6frZ411ySKhNULg=; b=5G5rQdVYL/9WzU
-	7l8MQBgX0o04A+z9gyo58T+eHtfpJTGlqfEI6r1HEcp+h1/8zd4nNqo+QQUjOz7+bAHm8u6HcT1/m
-	tq+uDT5ulvC95tg5Jgf92MQZm9KSTbwaR5gJ97lplfv9l3hcJugQJolKsc68pocln3xe3mOSl2kTi
-	qagiucEtVWrDuTLDvAus2mrsRcnYoBFX7dUaGEkY3bqo1iUQUsPz0bczANAa8KGudVezF1JYTVsml
-	+cXwwIzjXZDSxv690kEYpoKMQsThfO12BsbgZi8D84A042BNGOBn7UvKw1fAqVnVIwTLDSr8Q2Pxy
-	Tu0s8A6RzV4Bc20fB8zg==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=uajH74NCekDUMXKBA6a/M6e+WHM1sbEeRudA5MZbZfA=; b=XTvzkpeuh3KD5d
+	4MKD/qfTwc2RbjNhBdJAM0S9Yn2823aFmTTaDj0ciDKZn0XZUn3dP9tQAW+vxhN29zhy3HaSf8K+4
+	5/+1pU6o8CcFh8jR+BrLlzUuP/h2CnPROiblyFPnCkb9Z4+PwOztFJ5uFyfNWrbaDPRiQrE+Viu1S
+	TsYzAj2Gxz2z+Q9s/uh2uh65ysnSjn58Igpolr3TiW/bJz1KK9TwBLbln7vBA58JPvS0lPZ4bDZh6
+	Nh2I5stntSdn+uPItVWeQYbyuj2mX3N3LCILR7slKyvr3FOFSatViTAhDz8DdF2HkuTitGV/9DQub
+	+konz7qBo+rebkU10DsA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pvpVG-00Gvc6-2A;
-	Mon, 08 May 2023 01:17:26 +0000
+	id 1pvpVH-00GvcS-0U;
+	Mon, 08 May 2023 01:17:27 +0000
 Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1pvpV7-00GvZ4-32;
+	id 1pvpV7-00GvYw-2V;
 	Mon, 08 May 2023 01:17:17 +0000
 From: Luis Chamberlain <mcgrof@kernel.org>
 To: hch@infradead.org,
@@ -46,12 +46,10 @@ Cc: mchehab@kernel.org,
 	kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 4/6] fs: move !SB_BORN check early on freeze and add for thaw
-Date: Sun,  7 May 2023 18:17:15 -0700
-Message-Id: <20230508011717.4034511-5-mcgrof@kernel.org>
+Subject: [PATCH 0/6] vfs: provide automatic kernel freeze / resume 
+Date: Sun,  7 May 2023 18:17:11 -0700
+Message-Id: <20230508011717.4034511-1-mcgrof@kernel.org>
 X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20230508011717.4034511-1-mcgrof@kernel.org>
-References: <20230508011717.4034511-1-mcgrof@kernel.org>
 MIME-Version: 1.0
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -69,59 +67,62 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The SB_BORN flag added on vfs_get_tree() when a filesystem is about to be
-mounted. If a super_block lacks this flag there's nothing to do for that
-filesystem in terms of freezing or thawing.
+It's been about 5 months since the last v3 RFC for fs freeze. Now
+that some of us will have time at LSFMM to discuss stuff I figured
+it would be good to try to get the last pieces, if any discussed,
+and put out a new patch set based on the latests feedback. This
+time I boot tested, and stress tested the patches. From what I can
+tell I confirm nothing regresses, we just end up now with a new world
+where if your platform does support s3  / s4 we'll kick into gear the
+automatic kernel freeze.
 
-In subsequent patches support will be added to allow detecting failures for
-iterating over all super_blocks and freezing or thawing. Although that
-functionality will be be skipped when sb->s_bdi == &noop_backing_dev_info,
-and so SB_BORN will not be set, since we already check for SB_BORN on
-freeze just move that up earlier and to be consistent do the same on
-thaw too. We do this as these are user facing APIs, and although it
-would be incorrect to issue a freeze on a non-mounted sb, it is even
-stranger to get -EBUSY.
+To help with testing, as this is a rather tiny bit obscure area with
+virtualization, I've gone ahead and extended kdevops with support for
+always enabling s3 / s4, so it should be easy to test guest bring up
+there.
 
-Be consistent about this and bail early for !SB_BORN for freeze and thaw
-without failing.
+I've picked out using stress-ng now to have fun stress testing suspend,
+the insane will try:
 
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- fs/super.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+./stress-ng --touch 8192 --touch-method creat
 
-diff --git a/fs/super.c b/fs/super.c
-index 16ccbb9dd230..28c633b81f8f 100644
---- a/fs/super.c
-+++ b/fs/super.c
-@@ -1678,12 +1678,13 @@ int freeze_super(struct super_block *sb, bool usercall)
- 	if (!usercall && sb_is_frozen(sb))
- 		return 0;
- 
-+	/* If the filesystem was not going to be mounted there is nothing to do */
-+	if (!(sb->s_flags & SB_BORN))
-+		return 0;
-+
- 	if (!sb_is_unfrozen(sb))
- 		return -EBUSY;
- 
--	if (!(sb->s_flags & SB_BORN))
--		return 0;	/* sic - it's "nothing to do" */
--
- 	if (sb_rdonly(sb)) {
- 		/* Nothing to do really... */
- 		sb->s_writers.frozen = SB_FREEZE_COMPLETE;
-@@ -1761,6 +1762,10 @@ int thaw_super(struct super_block *sb, bool usercall)
- 			return 0;
- 	}
- 
-+	/* If the filesystem was not going to be mounted there is nothing to do */
-+	if (!(sb->s_flags & SB_BORN))
-+		return 0;
-+
- 	if (!sb_is_frozen(sb))
- 		return -EINVAL;
- 
+Resume works but eventually suspend will trickle tons of OOMs and so
+we gotta find a sweet spot to automate this somehow in fstests somehow.
+I am not sure how we're gonna test this moving forward on fstests but
+perhaps worth talking about at LSFMM for ideas.
+
+Anyway, your filesystem will not participate in the auto kernel
+freeze / thaw unless your filesystem gets the kthread freezer junk
+removed and sets a flag. I'll post 3 patches for the 3 main filesystems
+after this. I've carried and advanced the SmPL patch for a few years
+now, and magically it all still works.
+
+[0] https://lkml.kernel.org/r/20230114003409.1168311-1-mcgrof@kernel.org
+
+Luis Chamberlain (6):
+  fs: unify locking semantics for fs freeze / thaw
+  fs: add frozen sb state helpers
+  fs: distinguish between user initiated freeze and kernel initiated
+    freeze
+  fs: move !SB_BORN check early on freeze and add for thaw
+  fs: add iterate_supers_excl() and iterate_supers_reverse_excl()
+  fs: add automatic kernel fs freeze / thaw and remove kthread freezing
+
+ block/bdev.c           |   9 +-
+ fs/ext4/ext4_jbd2.c    |   2 +-
+ fs/f2fs/gc.c           |   9 +-
+ fs/gfs2/glops.c        |   2 +-
+ fs/gfs2/super.c        |  11 +-
+ fs/gfs2/sys.c          |  12 ++-
+ fs/gfs2/util.c         |   7 +-
+ fs/ioctl.c             |  14 ++-
+ fs/quota/quota.c       |   4 +-
+ fs/super.c             | 239 +++++++++++++++++++++++++++++++++--------
+ fs/xfs/xfs_trans.c     |   3 +-
+ include/linux/fs.h     |  54 +++++++++-
+ kernel/power/process.c |  15 ++-
+ 13 files changed, 313 insertions(+), 68 deletions(-)
+
 -- 
 2.39.2
 
