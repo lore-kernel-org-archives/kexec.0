@@ -4,82 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 453F3C77B75
-	for <kexec@archiver.kernel.org>; Tue,  9 May 2023 12:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 114D3C7EE22
+	for <kexec@archiver.kernel.org>; Tue,  9 May 2023 16:09:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
 	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
 	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
 	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=+g1kON1R74ttgeGwiVLQYrB7b85i/yoTAFUC7TBhfwA=; b=gcolZaas7qVY77
-	VMr6m6aKz0Irjpm11gGWB2RcEsYDIvYDyu3qg12Z8Td4lWhcoNTp+6G/rqQv2AN3wqhuxAg+zueb/
-	Az2sKykEtYmk5kaIHc2KYIXZ7Mesr16g1xhelGu+tHNbnW61hFSXy3tm7CONYSlIvoD6qLXHvE42D
-	576xRzgVgAwJWHMTy06obRyZrxXzctnBglRGfpO52tfJFA0YOM5xp7UmYrHEiQgZas1OeCCiRN0YR
-	xN/5Zo172P+L08A479I6Ub6yVt8V9GB9aFV07oIBx3m4Mf1iKAE9sdSBfjLBy1lb3JY9FFBfM+nBF
-	gh8QQjmFGVyAnri8fzpA==;
+	List-Owner; bh=ipisHttzQSsAZQY0IqPnskGl8G61YkxqVJ3HTGEwN38=; b=CZL9rBMDUNpMQi
+	kDJ/56+MUJgM3vPvA3WvQ3W101BKyUxieAhXi9wtp68NBRqH9+u9Z9WI5vYvMDvMgAyoSg4Q8Bycz
+	AM85pWlMFq1BqK0SYx/ZDcKgUyiBo134rmGvUv8gsDp32TT6f39Zgl9Z5u9JgR7O3uqJtTw/wIz6D
+	Ss/7graMYUmSjmgOHMh/5dPjaz2mtfLeQ7+Xwd0++mrrihYFdSNNkhCSOyQ1KREA/9zYMigSz0zFi
+	9dAmBtuvkXAOhg5g3LOjBcDuk31LxUqXEsSAdpK/zw5Jpvv6VOg9q3DMTRJnDEa6EaWFixOfEJyKz
+	VjC8OSxffDRa99B7a/NA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pwM9i-003EO2-2t;
-	Tue, 09 May 2023 12:09:22 +0000
-Received: from mout.gmx.net ([212.227.17.22])
+	id 1pwPuK-003lsM-1E;
+	Tue, 09 May 2023 16:09:44 +0000
+Received: from sender3-of-o59.zoho.com ([136.143.184.59])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pwM9f-003EJT-38
+	id 1pwPuH-003lry-34
 	for kexec@lists.infradead.org;
-	Tue, 09 May 2023 12:09:21 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1683634113; i=deller@gmx.de;
-	bh=SSP2D0buVNvjEi9SU9T2UBPjDgOQCn0+r8mPHaHboGA=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=rwkFbAQTqvbAW14E3pe2FgIEvGvcDaaeVuNV2scBb2siYwx7HvlA2JefUKBVhwN2s
-	 Iy6lBRPlqoeLkRlBAdCxyQats14ohehBwMv3V78LjaCe/o/53C/jHgJdGfi3pSZOAp
-	 Qm68jdDnTDG3RjTJm4fgkqLxeQ7O617z56PdLr43QVIv92OVhQlVF9zXDpXOkozjsn
-	 OtM7Ne1zzd+Vo5yZ2kqiBIHVNVJ97XpmIbDs9J+uriLgfpdiH0ilJD5MUvH2NdNFgH
-	 U2HsKYWPZIxZGn4LY5b5oJNwF3etkJkGpeExa0YCquBcUPEXuzfJkb3/iA2KexL3CL
-	 f+zh9HacJ1IAw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.20.60] ([94.134.153.17]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MUowb-1pnrgO1Sb3-00QmTh; Tue, 09
- May 2023 14:08:33 +0200
-Message-ID: <ad64af5e-050a-e103-3619-3ef0468985c6@gmx.de>
-Date: Tue, 9 May 2023 14:08:31 +0200
+	Tue, 09 May 2023 16:09:43 +0000
+ARC-Seal: i=1; a=rsa-sha256; t=1683648561; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=e8z1GRKHIutI17sD6Ooa+GsqxZ6LiVUfaM2CBuq8Fnl8NkgMxccjJcIrLDwAp2AUFpse+WGI2R/+IhIwcdj+ZpURqgiXFh/3MQANM/u/SrCS5YDPCYRVn3jlne5PxwqF9qHJUE+2udAR3VOFk0gcRTuEqSXVNS1vmXslPZQ4KMY=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1683648561; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+	bh=qGk4Rls13lFQhdUfzwlL+5GIuudpucnLpMrkFUq4WaI=; 
+	b=EuJwYk5JFudfE1FA1+kyp1s7cosrwAQvGkYpJIqCWrw/drRm7W3tBpSTR8qG1T0YVT679qzwII3KdnJmusJ9i50PdxKmXiEfZqRml52LXLn8BqSGyKJmx54K5jjLh3TWp9uzlAdMPLU3RIq2iHBdCga2Hjm7FAPPC4PZQmuzirg=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=apertussolutions.com;
+	spf=pass  smtp.mailfrom=dpsmith@apertussolutions.com;
+	dmarc=pass header.from=<dpsmith@apertussolutions.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1683648561;
+	s=zoho; d=apertussolutions.com; i=dpsmith@apertussolutions.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=qGk4Rls13lFQhdUfzwlL+5GIuudpucnLpMrkFUq4WaI=;
+	b=SNFsz95maKu0/BHCbIqIyqUPOIR4r7MdlMd2xIlqC3KZ/LoT7dARRjOYEYESg5CP
+	0/GLY2THkxoK8LM8zNM85SqghmumzF7tBHxSS7X/VzJIeyypFttd0ukbH/+B0G2CV21
+	DHNisWZA600cfK7c2MQCmBpROG/vdDyyDEiXN2U8=
+Received: from [10.10.1.128] (static-72-81-132-2.bltmmd.fios.verizon.net [72.81.132.2]) by mx.zohomail.com
+	with SMTPS id 1683648559080793.9506296306162; Tue, 9 May 2023 09:09:19 -0700 (PDT)
+Message-ID: <dad2d0b2-65d6-89bf-d2f0-7f420436e44c@apertussolutions.com>
+Date: Tue, 9 May 2023 12:09:14 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [PATCH] parisc: kexec: include reboot.h
-To: Simon Horman <horms@kernel.org>, Baoquan He <bhe@redhat.com>
-Cc: "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>,
- kexec@lists.infradead.org, linux-parisc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20230508-parisc-kexec-include-reboot-v1-1-78a155a8a0a4@kernel.org>
- <ZFoL9ntYCCfZFCNs@bhe.users.ipa.redhat.com> <ZFo0Gd/Eucw/0gtC@kernel.org>
+Subject: Re: [PATCH v6 06/14] x86: Add early SHA support for Secure Launch
+ early measurements
 Content-Language: en-US
-From: Helge Deller <deller@gmx.de>
-In-Reply-To: <ZFo0Gd/Eucw/0gtC@kernel.org>
-X-Provags-ID: V03:K1:huQVl1MfhsA2PJtPDXj3magrMc4c+GchOIrEFlqTz1QU4gwklwX
- 1UAiIPp4QD3+ro32aCeHAlc9f8uWlp7NRrLhGiyIDqAHqtxcGPSZGotXaxMEZjsK8mShOVt
- X6JPZRtjwbzKtjAARM3ySetJvN5TIvrTOaTJhBDAp3Vyz6D9ja67ZlPSqgUQOG/yf0VZ7cw
- x09qUnsuZH9N4CHsKdOFg==
-UI-OutboundReport: notjunk:1;M01:P0:8kXG0SA0J80=;fnZ+jx+0PyaBK4EpXc2kcDzgp6x
- vcfebN7G8qetIF7ZQVY6lWwUaOGDt5VFoiyOb/wjY5x6YyJOI8q2zpw5QlejhOAHqv3GmeDr5
- GXzPqqQwhtC/4OseGJ7XtbT66o7nGyyq5uY+vfgB3O0Q9mTM4yOj8UGMmKWCevzvyzE/jxlgZ
- JM9rMvtR9umAspewFSYEG/fVMnE4Vsm6ThKu18nZ+aG5pbnZhznR0s0Kul5L5VtgoId9WLIds
- 0RRadYK+lpaIzILOs+JDMSYFRQatGicOYLp3kh98yLPSMc1tulXMyCFgmYecEZrOjy45ERPSe
- 9NjJ1XMGnJ2lfFbP3MPlq2hr9nD3qcgdGXHISlm6m1iygQR6HsI/UmbrYoWCy1WAXXYV8N4Pp
- lCaT4XAJ0Vo4mJeoGurGgkD4Wu2qdqsVGDanjYV1KD56kgaQcqK4Uw7v57TPIbRaNMbBBltcc
- iWxG7ieq3kAZ85tRE3PKVbLR60LJ/ETUu9mv303PTBMx7vLLgyLnwNP22q7dnkYB7D9sqKyue
- OwkiJNFHi2gvhXPTWcT4YXXj7sURJOexoN1B0Z138A7zVtosRYOrm1R5cjKjoXcYiDnIK2jDU
- yRVSBCVwnGgSXh0cq2G4XCtiLkWWBCoW7RBm9r+zb05lzbYYlwaaj3rvI0cTQynx98W6D6xSS
- yvC+sKH4aqeXZFM6NGFK2f4Yu7Q45A0QNipIrTY9jPr1BYFg9PgvvfHicEsnyhtxMLBqZ+yat
- 0ouSTZABlcz6we942mtjL/Lgj0xs1s/63zMvtJHLkxCIBhtIlYaWjheH3h20X+j0EXmeVYNz7
- Y3LZ9U2jPrWIfs8EU0g7MqguyTZuiaRomPz/0i3AsYQa62UQVM+HSICbjUjmCY5Ob4SuF19LM
- 7uRAJgKfUA8J3eilgMTio6VXE4gfsYkt/H+PVzPrErmtdwC4sast+h1a/RLCaRs6+auYA2UCU
- Y7fzIQ==
+To: Simon Horman <horms@kernel.org>,
+ Ross Philipson <ross.philipson@oracle.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+ linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-crypto@vger.kernel.org, iommu@lists.linux-foundation.org,
+ kexec@lists.infradead.org, linux-efi@vger.kernel.org, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, hpa@zytor.com, ardb@kernel.org,
+ mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
+ luto@amacapital.net, nivedita@alum.mit.edu, kanth.ghatraju@oracle.com,
+ trenchboot-devel@googlegroups.com
+References: <20230504145023.835096-1-ross.philipson@oracle.com>
+ <20230504145023.835096-7-ross.philipson@oracle.com>
+ <ZFUwLjPfhz8Ch9bE@kernel.org>
+From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
+In-Reply-To: <ZFUwLjPfhz8Ch9bE@kernel.org>
+X-ZohoMailClient: External
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230509_050920_318578_E026DDCC 
-X-CRM114-Status: UNSURE (   9.03  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20230509_090942_077347_B52B808C 
+X-CRM114-Status: GOOD (  24.45  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -96,33 +90,91 @@ Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 5/9/23 13:52, Simon Horman wrote:
-> On Tue, May 09, 2023 at 05:01:42PM +0800, Baoquan He wrote:
->> On 05/09/23 at 09:01am, Simon Horman wrote:
->>> Include reboot.h in machine_kexec.c for declaration of
->>> machine_crash_shutdown and machine_shutdown.
->>>
->>> gcc-12 with W=1 reports:
->>>
->>>   arch/parisc/kernel/kexec.c:57:6: warning: no previous prototype for 'machine_crash_shutdown' [-Wmissing-prototypes]
->>>      57 | void machine_crash_shutdown(struct pt_regs *regs)
->>>         |      ^~~~~~~~~~~~~~~~~~~~~~
->>>   arch/parisc/kernel/kexec.c:61:6: warning: no previous prototype for 'machine_shutdown' [-Wmissing-prototypes]
->>>      61 | void machine_shutdown(void)
->>>         |      ^~~~~~~~~~~~~~~~
->>>
->>> No functional changes intended.
->>> Compile tested only.
->>>
->>> Signed-off-by: Simon Horman <horms@kernel.org>
+On 5/5/23 12:34, Simon Horman wrote:
+> On Thu, May 04, 2023 at 02:50:15PM +0000, Ross Philipson wrote:
+>> From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
 >>
->> Acked-by: Baoquan He <bhe@redhat.com>
+>> The SHA algorithms are necessary to measure configuration information into
+>> the TPM as early as possible before using the values. This implementation
+>> uses the established approach of #including the SHA libraries directly in
+>> the code since the compressed kernel is not uncompressed at this point.
+>>
+>> The SHA code here has its origins in the code from the main kernel:
+>>
+>> commit c4d5b9ffa31f ("crypto: sha1 - implement base layer for SHA-1")
+>>
+>> That code could not be pulled directly into the setup portion of the
+>> compressed kernel because of other dependencies it pulls in. The result
+>> is this is a modified copy of that code that still leverages the core
+>> SHA algorithms.
+>>
+>> Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
+>> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
+>> ---
+>>   arch/x86/boot/compressed/Makefile       |  2 +
+>>   arch/x86/boot/compressed/early_sha1.c   | 97 +++++++++++++++++++++++++++++++++
+>>   arch/x86/boot/compressed/early_sha1.h   | 17 ++++++
+>>   arch/x86/boot/compressed/early_sha256.c |  7 +++
+>>   lib/crypto/sha1.c                       |  4 ++
+>>   lib/crypto/sha256.c                     |  8 +++
+>>   6 files changed, 135 insertions(+)
+>>   create mode 100644 arch/x86/boot/compressed/early_sha1.c
+>>   create mode 100644 arch/x86/boot/compressed/early_sha1.h
+>>   create mode 100644 arch/x86/boot/compressed/early_sha256.c
+>>
+>> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+>> index 6b6cfe6..1d327d4 100644
+>> --- a/arch/x86/boot/compressed/Makefile
+>> +++ b/arch/x86/boot/compressed/Makefile
+>> @@ -112,6 +112,8 @@ vmlinux-objs-$(CONFIG_EFI) += $(obj)/efi.o
+>>   vmlinux-objs-$(CONFIG_EFI_MIXED) += $(obj)/efi_mixed.o
+>>   vmlinux-objs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+>>   
+>> +vmlinux-objs-$(CONFIG_SECURE_LAUNCH) += $(obj)/early_sha1.o $(obj)/early_sha256.o
+>> +
+>>   $(obj)/vmlinux: $(vmlinux-objs-y) FORCE
+>>   	$(call if_changed,ld)
+>>   
+>> diff --git a/arch/x86/boot/compressed/early_sha1.c b/arch/x86/boot/compressed/early_sha1.c
+>> new file mode 100644
+>> index 0000000..524ec23
+>> --- /dev/null
+>> +++ b/arch/x86/boot/compressed/early_sha1.c
+>> @@ -0,0 +1,97 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (c) 2022 Apertus Solutions, LLC.
+>> + */
+>> +
+>> +#include <linux/init.h>
+>> +#include <linux/linkage.h>
+>> +#include <linux/string.h>
+>> +#include <asm/boot.h>
+>> +#include <asm/unaligned.h>
+>> +
+>> +#include "early_sha1.h"
+>> +
+>> +#define SHA1_DISABLE_EXPORT
+> 
+> Hi Ross,
+> 
+> I could be mistaken, but it seems to me that *_DISABLE_EXPORT
+> is a mechanism of this patch to disable exporting symbols
+> (use of EXPORT_SYMBOL), at compile time.
+> 
+> If so, this doesn't strike me as something that should be part of upstream
+> kernel code.  Could you consider dropping this part of the patch?
 
-applied to parisc for-next git tree.
+Greetings Simon,
 
-Thanks!
-Helge
+This was patterned after the move of sha256 to /lib. Upon re-inspection, 
+it appears this has since been updated to use the __DISABLE_EXPORTS 
+CFLAG mechanism of EXPORT_SYMBOL as a conditionally included rule in the 
+Makefile where the desire to disable exporting is wanted. We will update 
+this patch to follow the same pattern.
 
+V/r,
+Daniel P. Smith
 
 _______________________________________________
 kexec mailing list
