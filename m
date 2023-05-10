@@ -4,67 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0F01FC77B75
-	for <kexec@archiver.kernel.org>; Tue,  9 May 2023 22:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B5712C77B75
+	for <kexec@archiver.kernel.org>; Wed, 10 May 2023 01:21:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:References
-	:In-Reply-To:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=XD387NrvQe5OBtp6l7kz/aHFX/XhheY7yOk6ZEg14sA=; b=FvRqjX3G1ihoxq
-	ATnFVNiMLZRbb97fA+qqm5GlGuAURwed8yrKY2l+xPfPmn1lEg8DqaW4ExH/DEw2jK9vOaAkVUNxt
-	KbVLmhRKt+7R3aFYB0UPxBjsMk1CwlUG9b1jSRGCJDE2J2mttbthHX+zwSdMCehZ0JnUD9rFm0N/0
-	thRNSSgPVd/h1glkBprkm+1bCvwxfI21mZqX3LRGwSnRAt5VZ5KHZe74RfC8JlLLN7arZW8eJ+zHJ
-	X+haAGM0bJsyRFwSUR9Kq2woOOJlmczk3u9ITSXVwunWuyWxHja3aGX8mIC/9GgNS8XgH5HJVBMsZ
-	S49qxoydfPi48CwasFsg==;
+	List-Owner; bh=MDP7R+HfhS/Wy9QP4bwgnAeLj/lS4acnNAqi+kCjVbs=; b=tJR5UoRoJh07Vr
+	c0lCry/zbrzsiJztXK64ACqSKDSJvhtpIP3P99XEnP8NwldNi7RaCDu4505vIFFfsT4BeeP8ULab+
+	XiGmzRakTKi9sOI10ukk7nGZpMejczzUUnwnbCAFqnEAIowGSwozFrVh+D0+EUbjJMCrdaQ6KgBre
+	sJY+wjFfOLj8bUDds23x8B8hFkm3jJIztSX4jw8rMm4Htx+sx2GeXxc2K3MZ00RAEJCREGqYCWJa9
+	oiTc0gq3PWMaccmC0sxJzXTWd7YpS/CLoAQuZi8HhoibyuMuraUtYcExvMHbCQc8TWZPTSmAsAcHq
+	56VdUgDFzu6MqmHHpSWg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pwWCI-004R7o-0l;
-	Tue, 09 May 2023 22:52:42 +0000
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+	id 1pwYWd-004fyL-0L;
+	Wed, 10 May 2023 01:21:51 +0000
+Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pwWCF-004R74-37
+	id 1pwYWZ-004fxO-2x
 	for kexec@lists.infradead.org;
-	Tue, 09 May 2023 22:52:41 +0000
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1683672757;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=E8Jaf7DnUTN/1wZBcdgxkgn3jkW3pisAtBKw88TkIaI=;
-	b=i91xz4SrqjAG3hHnzidnYdTSK9J/zd8K8IApf8Nu8kNW1/EORrSNrHCEgE379arMJlZ48T
-	WbcIv+JHo0fYJLa2Uf/NIrkMOdBfXu8jG9RvsMWFj03TkpcZtnhv2Sr6xKo2zo+xp7Rw6S
-	sObU5PMn+J2FI3nc812k4N1odLHL5lOF6WbMNK2f73bQ/o5IPO6aaZ6k8+VjbNLxLtqZf0
-	s/6oUUSNg7bngSgYxQ59EoTzF0N/wWEJq9Tq12x2CuWYXer3/ZJ5LeumfdAZpoHfxUkw57
-	FzdNhzc2Jm+v/MXmEReytT1iZsxV3BmwvyjVGVtcvjJPJCoQQ0fhYFKcQAiNUQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1683672757;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=E8Jaf7DnUTN/1wZBcdgxkgn3jkW3pisAtBKw88TkIaI=;
-	b=lzSAFtKhlGkXUOm08XkO48+uUnmBsDbOk0fcUz15yZm+QwEYw4tWWIMkE3p69/jkjZ4W6B
-	6nNxM0rRREZJWIDA==
-To: Eric DeVolder <eric.devolder@oracle.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, kexec@lists.infradead.org, ebiederm@xmission.com,
- dyoung@redhat.com, bhe@redhat.com, vgoyal@redhat.com
-Cc: mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
- hpa@zytor.com, nramas@linux.microsoft.com, thomas.lendacky@amd.com,
- robh@kernel.org, efault@gmx.de, rppt@kernel.org, david@redhat.com,
- sourabhjain@linux.ibm.com, konrad.wilk@oracle.com,
- boris.ostrovsky@oracle.com, eric.devolder@oracle.com
-Subject: Re: [PATCH v22 5/8] x86/crash: add x86 crash hotplug support
-In-Reply-To: <20230503224145.7405-6-eric.devolder@oracle.com>
-References: <20230503224145.7405-1-eric.devolder@oracle.com>
- <20230503224145.7405-6-eric.devolder@oracle.com>
-Date: Wed, 10 May 2023 00:52:36 +0200
-Message-ID: <875y91yv63.ffs@tglx>
+	Wed, 10 May 2023 01:21:49 +0000
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 2037462B1E;
+	Wed, 10 May 2023 01:21:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F214DC433EF;
+	Wed, 10 May 2023 01:21:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1683681706;
+	bh=T+hNUKAHDe9/ZAR53PM2iZM4RaBimliyI1btNF2Jf4k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WoPGVpnQuUFTlGuKZx2LN+aJQD2+DlIT5gCBC8mO4wyKgGinDHp4aovWaFaYexlKU
+	 Y6jnJsD/RGrgxlVqUKFSThnxS4m/bVDvO/cCrR6BFvcypk77gTyAydbmojrnFC/nPy
+	 wJzQQ6+mHSe0ggabvV7VKj7YdoFe2TkDI4Pt/oS43WyHFDtzqUp7//ER40IjBXvBgb
+	 eg0arAk5eTxvrnprmSO5QzZoHAs8wmVeCwtywD5ubsINReU32BkJZpg0UxCkGn99Z7
+	 11LRF/RhTZyO+rgagdAYPyMQygKom5LEW09j7fEMpSq2+s+V4f+YMyyQSbHBDvg0B2
+	 h+ZlBQRySDMAQ==
+Date: Tue, 9 May 2023 18:21:44 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Ross Philipson <ross.philipson@oracle.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-crypto@vger.kernel.org, iommu@lists.linux-foundation.org,
+	kexec@lists.infradead.org, linux-efi@vger.kernel.org,
+	dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, hpa@zytor.com, ardb@kernel.org, mjg59@srcf.ucam.org,
+	James.Bottomley@hansenpartnership.com, luto@amacapital.net,
+	nivedita@alum.mit.edu, kanth.ghatraju@oracle.com,
+	trenchboot-devel@googlegroups.com
+Subject: Re: [PATCH v6 06/14] x86: Add early SHA support for Secure Launch
+ early measurements
+Message-ID: <20230510012144.GA1851@quark.localdomain>
+References: <20230504145023.835096-1-ross.philipson@oracle.com>
+ <20230504145023.835096-7-ross.philipson@oracle.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20230504145023.835096-7-ross.philipson@oracle.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230509_155240_151114_6CF0126E 
-X-CRM114-Status: GOOD (  24.57  )
+X-CRM114-CacheID: sfid-20230509_182148_000248_3390F32D 
+X-CRM114-Status: GOOD (  16.82  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,100 +83,33 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, May 03 2023 at 18:41, Eric DeVolder wrote:
-> In the patch 'kexec: exclude elfcorehdr from the segment digest'
+On Thu, May 04, 2023 at 02:50:15PM +0000, Ross Philipson wrote:
+> From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
+> 
+> The SHA algorithms are necessary to measure configuration information into
+> the TPM as early as possible before using the values. This implementation
+> uses the established approach of #including the SHA libraries directly in
+> the code since the compressed kernel is not uncompressed at this point.
+> 
+> The SHA code here has its origins in the code from the main kernel:
+> 
+> commit c4d5b9ffa31f ("crypto: sha1 - implement base layer for SHA-1")
+> 
+> That code could not be pulled directly into the setup portion of the
+> compressed kernel because of other dependencies it pulls in. The result
+> is this is a modified copy of that code that still leverages the core
+> SHA algorithms.
+> 
+> Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
+> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
 
-See reply to 8/8
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 53bab123a8ee..80538524c494 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -2119,6 +2119,19 @@ config CRASH_DUMP
->  	  (CONFIG_RELOCATABLE=y).
->  	  For more details see Documentation/admin-guide/kdump/kdump.rst
->  
-> +config CRASH_HOTPLUG
-> +	bool "Update the crash elfcorehdr on system configuration changes"
-> +	default y
-> +	depends on CRASH_DUMP && (HOTPLUG_CPU || MEMORY_HOTPLUG)
-> +	help
-> +	  Enable direct update to the crash elfcorehdr (which contains
-> +	  the list of CPUs and memory regions to be dumped upon a crash)
-> +	  in response to hot plug/unplug or online/offline of CPUs or
-> +	  memory. This is a much more advanced approach than userspace
-> +	  attempting that.
-> +
-> +	  If unsure, say Y.
+SHA-1 is insecure.  Why are you still using SHA-1?  Don't TPMs support SHA-2
+now?
 
-Why is this config an X86 specific thing?
+And if you absolutely MUST use SHA-1 despite it being insecure, please at least
+don't obfuscate it by calling it simply "SHA".
 
-Neither CRASH_DUMP nor HOTPLUG_CPU nor MEMORY_HOTPLUG are in any way X86
-specific at all. So why can't you stick that into a place where it can
-be reused by other architectures?
-
-It's not rocket science to do 
-
-+	depends on WANTS_CRASH_HOTPLUG && CRASH_DUMP && (HOTPLUG_CPU || MEMORY_HOTPLUG)
-
-or something like that. It's so tiring to have x86 Kconfig be the dump
-ground for the initial implementation, then having the sh*t copied to
-every other architecture and the cleanup is left to the maintainers.
-
-It's not rocket science to differentiate between a real architecture
-specific option and a generally useful option in the first place, right?
-
-
-> +#ifdef CONFIG_CRASH_HOTPLUG
-> +	/*
-> +	 * Ensure the elfcorehdr segment large enough for hotplug changes.
-> +	 * Account for VMCOREINFO and kernel_map and maximum CPUs.
-
-Neither the first line nor the second one qualifies as parseable sentences.
-
-> +/**
-> + * arch_crash_handle_hotplug_event() - Handle hotplug elfcorehdr changes
-> + * @image: the active struct kimage
-
-What is an active struct kimage?
-
-> + *
-> + * The new elfcorehdr is prepared in a kernel buffer, and then it is
-> + * written on top of the existing/old elfcorehdr.
-
--ENOPARSE
-
-> + */
-> +void arch_crash_handle_hotplug_event(struct kimage *image)
-> +{
-> +	void *elfbuf = NULL, *old_elfcorehdr;
-> +	unsigned long nr_mem_ranges;
-> +	unsigned long mem, memsz;
-> +	unsigned long elfsz = 0;
-> +
-> +	/*
-> +	 * Create the new elfcorehdr reflecting the changes to CPU and/or
-> +	 * memory resources.
-> +	 */
-> +	if (prepare_elf_headers(image, &elfbuf, &elfsz, &nr_mem_ranges)) {
-> +		pr_err("unable to prepare elfcore headers");
-> +		goto out;
-
-So this can fail. Why is there just a pr_err() and no return value which
-tells the caller that this failed?
-
-> +	/*
-> +	 * Copy new elfcorehdr over the old elfcorehdr at destination.
-> +	 */
-> +	old_elfcorehdr = kmap_local_page(pfn_to_page(mem >> PAGE_SHIFT));
-> +	if (!old_elfcorehdr) {
-> +		pr_err("updating elfcorehdr failed\n");
-
-How hard is it to write an error message which is clearly describing the
-problem?
-
-Thanks,
-
-        tglx
+- Eric
 
 _______________________________________________
 kexec mailing list
