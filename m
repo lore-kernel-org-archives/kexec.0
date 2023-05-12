@@ -4,54 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DF957C7EE2A
-	for <kexec@archiver.kernel.org>; Fri, 12 May 2023 11:26:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B6146C77B7F
+	for <kexec@archiver.kernel.org>; Fri, 12 May 2023 11:28:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=xpvhYtEZJoySQfJXzbN0zEEmW/6cx8TBAkNzWTCaIqg=; b=2gKadtZZxNy1HF
-	NcpD8S6KPoV8DZs3UCBOavbGxhUsyAI8Y0sxf22yzoakW39DHTzTTvcZLhpGaolPRM0/IZuKlC1sK
-	kcreNeW189HFPK1Nede9QrpeJKk7pgXQif1SkeX3L1S4idGFBfDsj3QHtOaYWyLCafhxkep2BkBKt
-	SebA/lyDf10Lz515o5DDUGbmyLhlO2V/QQlz1mXPrmkauhcvZzF/LUHJUcUYDptLrw2FPp/zvP+ol
-	OVKTYS3EHpQLUH+vcebGQ8ynZ86G0Q3ElX67oXzggjY5qGeTimWe5hDz/MXV28409pdnnS3znWx5n
-	zVij+WBx58j3RyJqfJ6g==;
+	List-Owner; bh=6vzUOTgk0e9GQQsjpS+7oozwv6ur4w72Qy6HY9BG5TE=; b=C1HuIu0QWHGh+c
+	2o7b8g31cSYbXLU/8q9M2bYuj5cMtfq41pzhSAFUyklZcQvu5TXdEJMvwy6jD3hPgb2wbLT0I21Xy
+	AWOlU1zvFkubm6hr6/MPnn/mDPry6R++ieoNhr/E8cwOv70AcjOC1kYV+T84HYyXs5OuKaoScyw2/
+	9+UvF8Rgr8SGKisjnIpRUw7SHRu/et2H/EomgWTaKOR6lc+Ak25culsNYVpBn2S0YYoB/QbSKx50z
+	w1UIF8YWNeGvR2HVYhn0PPnU5QQ023444uC+qNvocwYwMRlVMttxm0O53WHy0XOrV5oFd61Dzk2Ep
+	Ch0AaIu2V3HumG8cb+9g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pxQup-00Bofx-2d;
-	Fri, 12 May 2023 11:26:27 +0000
+	id 1pxQx9-00BpAI-2F;
+	Fri, 12 May 2023 11:28:51 +0000
 Received: from irc.codon.org.uk ([2a00:1098:84:22e::2] helo=cavan.codon.org.uk)
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pxQum-00BofE-2x
+	id 1pxQx6-00Bp9P-2q
 	for kexec@lists.infradead.org;
-	Fri, 12 May 2023 11:26:26 +0000
+	Fri, 12 May 2023 11:28:50 +0000
 Received: by cavan.codon.org.uk (Postfix, from userid 1000)
-	id 3036142527; Fri, 12 May 2023 12:26:23 +0100 (BST)
-Date: Fri, 12 May 2023 12:26:23 +0100
+	id 68D0D40A6F; Fri, 12 May 2023 12:28:47 +0100 (BST)
+Date: Fri, 12 May 2023 12:28:47 +0100
 From: Matthew Garrett <mjg59@srcf.ucam.org>
-To: Ross Philipson <ross.philipson@oracle.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Eric Biggers <ebiggers@kernel.org>,
+	Ross Philipson <ross.philipson@oracle.com>,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
 	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
 	linux-crypto@vger.kernel.org, iommu@lists.linux-foundation.org,
 	kexec@lists.infradead.org, linux-efi@vger.kernel.org,
 	dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, hpa@zytor.com, ardb@kernel.org,
-	James.Bottomley@hansenpartnership.com, luto@amacapital.net,
-	nivedita@alum.mit.edu, kanth.ghatraju@oracle.com,
-	trenchboot-devel@googlegroups.com
-Subject: Re: [PATCH v6 07/14] x86: Secure Launch kernel early boot stub
-Message-ID: <20230512112623.GE14461@srcf.ucam.org>
+	bp@alien8.de, hpa@zytor.com, James.Bottomley@hansenpartnership.com,
+	luto@amacapital.net, nivedita@alum.mit.edu,
+	kanth.ghatraju@oracle.com, trenchboot-devel@googlegroups.com
+Subject: Re: [PATCH v6 06/14] x86: Add early SHA support for Secure Launch
+ early measurements
+Message-ID: <20230512112847.GF14461@srcf.ucam.org>
 References: <20230504145023.835096-1-ross.philipson@oracle.com>
- <20230504145023.835096-8-ross.philipson@oracle.com>
+ <20230504145023.835096-7-ross.philipson@oracle.com>
+ <20230510012144.GA1851@quark.localdomain>
+ <20230512110455.GD14461@srcf.ucam.org>
+ <CAMj1kXE8m5jCH3vW54ys=dE2-Vf_gnnueR6_g4Rq-LSJ5BqRjA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20230504145023.835096-8-ross.philipson@oracle.com>
+In-Reply-To: <CAMj1kXE8m5jCH3vW54ys=dE2-Vf_gnnueR6_g4Rq-LSJ5BqRjA@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230512_042625_082713_D375C2FD 
-X-CRM114-Status: GOOD (  13.26  )
+X-CRM114-CacheID: sfid-20230512_042849_047024_79ED9B11 
+X-CRM114-Status: GOOD (  16.76  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -68,37 +73,33 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, May 04, 2023 at 02:50:16PM +0000, Ross Philipson wrote:
+On Fri, May 12, 2023 at 01:18:45PM +0200, Ard Biesheuvel wrote:
+> On Fri, 12 May 2023 at 13:04, Matthew Garrett <mjg59@srcf.ucam.org> wrote:
+> >
+> > On Tue, May 09, 2023 at 06:21:44PM -0700, Eric Biggers wrote:
+> >
+> > > SHA-1 is insecure.  Why are you still using SHA-1?  Don't TPMs support SHA-2
+> > > now?
+> >
+> > TXT is supported on some TPM 1.2 systems as well. TPM 2 systems are also
+> > at the whim of the firmware in terms of whether the SHA-2 banks are
+> > enabled. But even if the SHA-2 banks are enabled, if you suddenly stop
+> > extending the SHA-1 banks, a malicious actor can later turn up and
+> > extend whatever they want into them and present a SHA-1-only
+> > attestation. Ideally whatever is handling that attestation should know
+> > whether or not to expect an attestation with SHA-2, but the easiest way
+> > to maintain security is to always extend all banks.
+> >
+> 
+> Wouldn't it make more sense to measure some terminating event into the
+> SHA-1 banks instead?
 
-> +static void sl_find_event_log(struct slr_table *slrt)
-
-If this is called after the EFI stub then we're presumably 
-post-ExitBootServices and we're copied the TPM event log into a 
-configuration table so it's available to the runtime kernel. That also 
-means that we should be adding all further measurements to the Final 
-Events Table rather than the initial event log. How's that handled here, 
-both in terms of ensuring further events (generated by firmware or by 
-us) get added to the right place, and in terms of ensuring the event 
-logs the kernel has later on were covered appropriately? Or is the SL 
-event log an entirely different thing that can be merged in later 
-because it only covers the DRTM PCRs?
-
-> +static void sl_extend_setup_data(struct slr_policy_entry *entry)
-> +{
-> +	struct setup_data *data;
-> +
-> +	/*
-> +	 * Measuring the boot params measured the fixed e820 memory map.
-> +	 * Measure any setup_data entries including e820 extended entries.
-> +	 */
-> +	data = (struct setup_data *)(unsigned long)entry->entity;
-> +	while (data)
-> +		data = sl_handle_setup_data(data, entry);
-> +}
-
-Is e820 sufficient here? There are cases where we use the EFI memory map 
-directly (sorry), but I don't know if any of them are relevant to DRTM 
-outcomes.
+Unless we assert that SHA-1 events are unsupported, it seems a bit odd 
+to force a policy on people who have both banks enabled. People with 
+mixed fleets are potentially going to be dealing with SHA-1 measurements 
+for a while yet, and while there's obviously a security benefit in using 
+SHA-2 instead it'd be irritating to have to maintain two attestation 
+policies.
 
 _______________________________________________
 kexec mailing list
