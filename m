@@ -4,82 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 38302C77B75
-	for <kexec@archiver.kernel.org>; Fri, 12 May 2023 18:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 953DAC77B75
+	for <kexec@archiver.kernel.org>; Fri, 12 May 2023 19:12:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=onOr2OcVtB0yGKJgACnxaVXekdXBgE0VVMpr7YzM1kk=; b=RmS2m53przKlrQOfePe2XwRSGC
-	youGhQmJPTTmrWHDvwDTfwukk7nrJgyE1uWCmlulEA8+IUbuoMbjef6ZPOVvj4dfeROydwVg3mUqZ
-	II7PMit4CSdoE2MHBfe6r7zGf/2i9ebak1UwjGUaZkFQG0Vvp6Ywo/l+k5MPBEMNlTzNU7isR7ZOI
-	ox17SUCLjWQSLK5K1PCtqr5jOjWjwp6s5nb+BT4ppx7OxypC+ssy9p9CB5IEDo7H1wi4hy10KrFbA
-	g2OSF9WbijVyRlH2UYnT9kbA8Al6ArHDsGVD/ibmMEfNH31dbFOUtKv2NcrV8lDdzOFYW/gRKO0wg
-	PR29wPcQ==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=9zSvb6vzPUg++/NGMJc79HoVruxfgS+Jk62s7vzgbgM=; b=bLLsHSOGu0Tfw1
+	tT/P6V/SqDZ47Yyohjh8bpLgLBa+Lm7v7AAAenRwZdLSS19+lXcGd80+fk8HLijp2bAdWiu/c7+Zo
+	/LN2g9NfeDXaTznHqApL2peQABNpEzrjvLJHE5jv/JSOwajGcG6czNv1s0G6RKShpxzAJL5NWezqf
+	3hPA2jlfA5fduA1T3KTgQRBrWeSjK93trhYquW0J+FTm8+Ion7wLFZZPXTH58RwQnI1ZoOmp4IEdS
+	BhO/coeGW38q7IvdZN+g55H81i38cv434fmz8IJCTL8rb2XQ3DApHSL9DuFT+27wtz6kOglQ81map
+	jsWlM4GPeORttIPELAzQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pxXgK-00CjP9-0i;
-	Fri, 12 May 2023 18:39:56 +0000
-Received: from mail-pl1-x632.google.com ([2607:f8b0:4864:20::632])
+	id 1pxYBc-00CmWa-27;
+	Fri, 12 May 2023 19:12:16 +0000
+Received: from irc.codon.org.uk ([2a00:1098:84:22e::2] helo=cavan.codon.org.uk)
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pxXgH-00CjOm-1r
+	id 1pxYBX-00CmUn-0q
 	for kexec@lists.infradead.org;
-	Fri, 12 May 2023 18:39:55 +0000
-Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-1aaf702c3ccso509375ad.1
-        for <kexec@lists.infradead.org>; Fri, 12 May 2023 11:39:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1683916792; x=1686508792;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LxNeqg6Grq2YNGnd0knd3lPwc/gWH4WprNL3yZRCSlc=;
-        b=lp1Oy3BhdQeeC6JznyjC8cBtFOeNbflFpysHr1GQrN0z/RDcUwp19X8dIn53f44vUU
-         H6iorDT8qheOoQg95Fu6GGi2b6yvR5MviYTnbz2V7XHJkGJBV6gsqCJRm3fqOkwHQAnH
-         ShE6LHl4PKFR+g/210rb3bjvWRSlBMjSPomzjrvTXlqYyGud2RYS0DB1w/u6mJAlPq+K
-         olPKd8cPOmPVrMHiWMXqvvY/x/JzSid+UfiuEo/l/PJ/cH5hyaZn+fgCcrSmxUbTqteB
-         3DhYxfh+iVRcv3HeKAmRSVq6ZPJ0uU4rT9GO5+vLPcvHUBFo1aVN4GSNzLvp6Zs+3ojy
-         s2qA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683916792; x=1686508792;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LxNeqg6Grq2YNGnd0knd3lPwc/gWH4WprNL3yZRCSlc=;
-        b=VY1evRPfQg0lorCndmSNXky8Xho6DckKXucukXStt6EXYm4OsX/PckV8s7fqKXikbq
-         UjO+ScWnRS9rLStVj1nE3XHQCNNwQR7p9UsuUt0XQSs6Bwxz7p38Ki2r34AYkNZtXGiD
-         qWZfN7HN1Qxip/QA1KSMVxq+OsqdHJQ+gbYeigpnouxtUBBR34u+PT9I4WpgmVSbN0nA
-         yzmUdgDGrKkFtXklzaOKehjQjzyVOLow5w60tCKNjuacRVabCV2lvGnkCB0cY2dWv1Aw
-         gzHN/F88BfFLNIlFfgQ+Co2FvUr0KS3uazOTUg2oXzQDo7mLHB0aNMWKol89rW/yvRE4
-         muyA==
-X-Gm-Message-State: AC+VfDyy5utJrgPPHBvB7DdKStZ5j2iOHflSu2SVaALzOCrNEiwba2Yj
-	vFlKgH+1zrkH7/Z61SUAX73biA==
-X-Google-Smtp-Source: ACHHUZ6aomZXGlc1Nc6ucUjpY7UMr453DjWUnt0izCabu5fBIrS8LJlevVdVes9dZNx3ZSW0bw23jQ==
-X-Received: by 2002:a17:903:1cb:b0:1a6:6a2d:18f0 with SMTP id e11-20020a17090301cb00b001a66a2d18f0mr271059plh.9.1683916791741;
-        Fri, 12 May 2023 11:39:51 -0700 (PDT)
-Received: from google.com (25.11.145.34.bc.googleusercontent.com. [34.145.11.25])
-        by smtp.gmail.com with ESMTPSA id q8-20020a170902dac800b001ac618a6d55sm8215718plx.242.2023.05.12.11.39.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 May 2023 11:39:50 -0700 (PDT)
-Date: Fri, 12 May 2023 18:39:47 +0000
-From: Fangrui Song <maskray@google.com>
-To: Kees Cook <keescook@chromium.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Eric Biederman <ebiederm@xmission.com>, Baoquan He <bhe@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
-	linux-fsdevel@vger.kernel.org, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] coredump, vmcore: Set p_align to 4 for PT_NOTE
-Message-ID: <20230512183947.jvaslvmuhy7gndix@google.com>
-References: <20230512022528.3430327-1-maskray@google.com>
- <202305121126.E5AD334AA3@keescook>
+	Fri, 12 May 2023 19:12:14 +0000
+Received: by cavan.codon.org.uk (Postfix, from userid 1000)
+	id C748140A6F; Fri, 12 May 2023 20:12:03 +0100 (BST)
+Date: Fri, 12 May 2023 20:12:03 +0100
+From: Matthew Garrett <mjg59@srcf.ucam.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ard Biesheuvel <ardb@kernel.org>, Eric Biggers <ebiggers@kernel.org>,
+	Ross Philipson <ross.philipson@oracle.com>,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-crypto@vger.kernel.org, iommu@lists.linux-foundation.org,
+	kexec@lists.infradead.org, linux-efi@vger.kernel.org,
+	dpsmith@apertussolutions.com, mingo@redhat.com, bp@alien8.de,
+	hpa@zytor.com, James.Bottomley@hansenpartnership.com,
+	luto@amacapital.net, nivedita@alum.mit.edu,
+	kanth.ghatraju@oracle.com, trenchboot-devel@googlegroups.com
+Subject: Re: [PATCH v6 06/14] x86: Add early SHA support for Secure Launch
+ early measurements
+Message-ID: <20230512191203.GA21013@srcf.ucam.org>
+References: <20230504145023.835096-1-ross.philipson@oracle.com>
+ <20230504145023.835096-7-ross.philipson@oracle.com>
+ <20230510012144.GA1851@quark.localdomain>
+ <20230512110455.GD14461@srcf.ucam.org>
+ <CAMj1kXE8m5jCH3vW54ys=dE2-Vf_gnnueR6_g4Rq-LSJ5BqRjA@mail.gmail.com>
+ <20230512112847.GF14461@srcf.ucam.org>
+ <87pm75bs3v.ffs@tglx>
+ <20230512161318.GA18400@srcf.ucam.org>
+ <873541bej2.ffs@tglx>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <202305121126.E5AD334AA3@keescook>
+In-Reply-To: <873541bej2.ffs@tglx>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230512_113953_618065_035D8D4D 
-X-CRM114-Status: GOOD (  17.72  )
+X-CRM114-CacheID: sfid-20230512_121211_426550_49B776E5 
+X-CRM114-Status: GOOD (  21.47  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,60 +72,45 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2023-05-12, Kees Cook wrote:
->On Fri, May 12, 2023 at 02:25:28AM +0000, Fangrui Song wrote:
->> Tools like readelf/llvm-readelf use p_align to parse a PT_NOTE program
->> header as an array of 4-byte entries or 8-byte entries. Currently, there
->> are workarounds[1] in place for Linux to treat p_align==0 as 4. However,
->> it would be more appropriate to set the correct alignment so that tools
->> do not have to rely on guesswork. FreeBSD coredumps set p_align to 4 as
->> well.
->>
->> [1]: https://sourceware.org/git/?p=binutils-gdb.git;a=commit;h=82ed9683ec099d8205dc499ac84febc975235af6
->
->The interesting bit from here is:
->
->  /* NB: Some note sections may have alignment value of 0 or 1.  gABI
->     specifies that notes should be aligned to 4 bytes in 32-bit
->     objects and to 8 bytes in 64-bit objects.  As a Linux extension,
->     we also support 4 byte alignment in 64-bit objects.  If section
->     alignment is less than 4, we treate alignment as 4 bytes.   */
->  if (align < 4)
->    align = 4;
->  else if (align != 4 && align != 8)
->    {
->      warn (_("Corrupt note: alignment %ld, expecting 4 or 8\n"),
->           (long) align);
->      return FALSE;
->    }
->
->Should Linux use 8 for 64-bit processes to avoid the other special case?
->
->(And do we need to make some changes to make sure we are actually
->aligned?)
->
->-Kees
+On Fri, May 12, 2023 at 08:17:21PM +0200, Thomas Gleixner wrote:
+> On Fri, May 12 2023 at 17:13, Matthew Garrett wrote:
+> > On Fri, May 12, 2023 at 03:24:04PM +0200, Thomas Gleixner wrote:
+> >> On Fri, May 12 2023 at 12:28, Matthew Garrett wrote:
+> >> > Unless we assert that SHA-1 events are unsupported, it seems a bit odd 
+> >> > to force a policy on people who have both banks enabled. People with 
+> >> > mixed fleets are potentially going to be dealing with SHA-1 measurements 
+> >> > for a while yet, and while there's obviously a security benefit in using 
+> >> > SHA-2 instead it'd be irritating to have to maintain two attestation 
+> >> > policies.
+> >> 
+> >> Why?
+> >> 
+> >> If you have a mixed fleet then it's not too much asked to provide two
+> >> data sets. On a TPM2 system you can enforce SHA-2 and only fallback to
+> >> SHA-1 on TPM 1.2 hardware. No?
+> >
+> > No, beause having TPM2 hardware doesn't guarantee that your firmware 
+> > enables SHA-2 (which also means this is something that could change with 
+> > firmware updates, which means that refusing to support SHA-1 if the 
+> > SHA-2 banks are enabled could result in an entirely different policy 
+> > being required (and plausibly one that isn't implemented in their 
+> > existing tooling)
+> 
+> It's not rocket science to have both variants supported in tooling,
+> really.
 
-64-bit objects should use 8-byte entries and naturally the 8-byte alignment.
-Unfortunately, many systems including Solaris, *BSD, and Linux use
-4-byte entries for SHT_NOTE/PT_NOTE, and changing this will create
-a large compatibility problem (see tcmalloc that I recently
-updated[1])
-
-Linux introduced 8-byte alignment note sections (.note.gnu.property) a
-while ago, so the ecosystem has to deal with notes of mixed alignments.
-The resolution is to use the note alignment to decide whether it should
-be parsed as 4-byte entries or 8-byte entries.
-I think that just setting `p_align = 4` on the kernel side should be
-good enough:)
-
-[1]:
-https://github.com/google/tcmalloc/commit/c33cb2d8935002f8ba942028a1f0871d075345a1
+People who are currently using tboot are only getting SHA-1, so there's 
+no obvious reason for them to have added support yet. *My* tooling all 
+supports SHA-2 so I'm completely fine here, but either we refuse to 
+support a bunch of hardware or we have to support SHA-1 anyway, and if 
+we have to support it the only reason not to implement it even in the 
+"SHA-2 is supported" case is because we have opinions about how other 
+people implement their security.
 
 _______________________________________________
 kexec mailing list
