@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DE039C77B75
-	for <kexec@archiver.kernel.org>; Fri, 12 May 2023 18:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8C1EEC77B75
+	for <kexec@archiver.kernel.org>; Fri, 12 May 2023 18:04:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:References
 	:In-Reply-To:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=DBuo3NnLi7L9MnrK2tnPAtjfUFwlcfUsr35txBvyMXs=; b=D8pEXVuKv8qe4c
-	DtNZA2OSQEQPqngRYEKzR/de5ImCKxv18hsgcear6cWzyzrpNiZ48HV0mAs+DrVdr1hdQoDPIoW4l
-	4GENQPWaxyibHDHovxPtzAVf924j3ayUSwy1c/lU//IpG5r21lTZV7bE8gpS+OzIphwklJVgZ2wF6
-	YTUdFIJB+K5nfoSdfW0cjhPY7v6PYvtoIxoEaxigL86Tiq9qfAxaZKZJZ5j20prUzfZGngoDtQ4pM
-	aVNSkzOHEBciFUVQYVwwv1yWXhzup21+SJYvV1BMSvJek95du0uuCb4e4iyrvVBIoknNHzpeJeblY
-	ieyv1yegKwhT7BreUJXg==;
+	List-Owner; bh=+SEwe2fooStbv68VVSPzg7Jd7DMcyoA1+n0QP5m3UhY=; b=kDHV3Hbi/hxK7E
+	Euj4AFE3OLS+STLEQGzgLoy7a9g9j6h6df0hYkaUeqTITQmpGxK+tJ8Jm1FUxHiKu2Rp/l+Cby+ug
+	HLEY/cYTI+6y9n6szlxrXyTrsnS+i5KS7SWwjSWkBYPbeE8krxn7e7GmjilD3cwEJXhO2HRInvCoq
+	MjahUIjXKYiHIkc2faz+UZQsCcjtO3un8jOvi2QoRf6cbDpDivcsK6ue0nfBv1wv8PbzN22KpYmxy
+	nFze22s2ikeS/Zz4t4hd0xhzjVlSwnPr/PFALLEMgxuvhtjdLn2FTdPb7uiWoi4a62XOVJEhPPvSb
+	si8L/PXtPDDn3xfS1EKg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pxX6d-00CdP8-2m;
-	Fri, 12 May 2023 18:03:03 +0000
+	id 1pxX7o-00CdYC-0Z;
+	Fri, 12 May 2023 18:04:16 +0000
 Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pxX6b-00CdNB-1J
+	id 1pxX7l-00CdXc-0Q
 	for kexec@lists.infradead.org;
-	Fri, 12 May 2023 18:03:03 +0000
+	Fri, 12 May 2023 18:04:14 +0000
 From: Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1683914574;
+	s=2020; t=1683914651;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=u7fvD2GdqOQNGxWui4lgM0lmaDQ5NzqVVPg5OJ46+K8=;
-	b=TMd9YWufj4C4apzXCv73MfS74eNHfpwEzirL39R43AEm4JtQ/rZDmZjBcGVu5Ow4Vrqt0e
-	NJdEiZcLMr9bq0ibxtc6k+wtKEVmlqrg4UskEvfS1+mdOAjN8wVz6VbmRJ7uRp3ww9u94k
-	kBJ6qvtlf0a3Rs783+AOemGAGRPDryYG2hSg+lxbWOugs4+iQrSuhzxYE+er0YAcfLaI/9
-	OemvWNTAPZ2+E8/J526Lqg73bmUENRUpAnH+7HHgytx37HLehdL9V9uu2ARuZ3tacUT1M1
-	ebyw2jpt/ycGLwGs6c1fwMQ+K9YhsWyjqSAh+KVcD236nVYYQ72+k6LQEMb5ng==
+	bh=gFxNOuozAXli2+8g1C7PNYQPp9ZAqOWKvaCJaJ4AfAc=;
+	b=LbHwvTDEc0hV4KAq1PUZc94tVWyRgGsAAeeXU0VmCuW3TAeKZs2uZEyLzwUfs7KS4dD38i
+	wgoTZ0gz12qJirbvixaWm6i2mya+exWUqbRFt0i3/Tf1gQD9dPblbc9NTvC0Xe1aCGMexi
+	BS7/VZkQmFzIJ5m36zKm8RbQWIYGqLYcL84XsZJ+d65i+DSDWSPr4o5pomszVzJd0/0UZy
+	hcMpcxnoj0ioBJ8HqpZicvOhhb+2j86/n4Bc20WWyH634r6ZCt1jUTk592kO+imzmhlfXf
+	SsTaJUjliki/XDWEbhkzSBFzVpkLuP2Vx9y3ZLr0tntD//WJEdHNGQVrpwEhdA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1683914574;
+	s=2020e; t=1683914651;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=u7fvD2GdqOQNGxWui4lgM0lmaDQ5NzqVVPg5OJ46+K8=;
-	b=BZpOsxtvuF9Uu+TyQ/KB7ss5HC4P0Yz6Ag1UfGx/W9nQkzEswHiifo6E0TaXFFhUpgdJ3Y
-	9IRce0wATfBqCDCA==
+	bh=gFxNOuozAXli2+8g1C7PNYQPp9ZAqOWKvaCJaJ4AfAc=;
+	b=cDKb0AjjgsU6KeETTwLx/yZcsZ5RLmSVquWPcafZOE/qRkv8tzXB+St5rDZRLL9PYByy2g
+	ey9n95kLHFWhEzDg==
 To: Ross Philipson <ross.philipson@oracle.com>,
  linux-kernel@vger.kernel.org, x86@kernel.org,
  linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
@@ -57,16 +57,16 @@ Cc: ross.philipson@oracle.com, dpsmith@apertussolutions.com,
  mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
  luto@amacapital.net, nivedita@alum.mit.edu, kanth.ghatraju@oracle.com,
  trenchboot-devel@googlegroups.com
-Subject: Re: [PATCH v6 09/14] x86: Secure Launch SMP bringup support
-In-Reply-To: <20230504145023.835096-10-ross.philipson@oracle.com>
+Subject: Re: [PATCH v6 07/14] x86: Secure Launch kernel early boot stub
+In-Reply-To: <20230504145023.835096-8-ross.philipson@oracle.com>
 References: <20230504145023.835096-1-ross.philipson@oracle.com>
- <20230504145023.835096-10-ross.philipson@oracle.com>
-Date: Fri, 12 May 2023 20:02:53 +0200
-Message-ID: <87h6shbf76.ffs@tglx>
+ <20230504145023.835096-8-ross.philipson@oracle.com>
+Date: Fri, 12 May 2023 20:04:11 +0200
+Message-ID: <87ednlbf50.ffs@tglx>
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230512_110301_726724_8FB74C8F 
-X-CRM114-Status: GOOD (  28.02  )
+X-CRM114-CacheID: sfid-20230512_110413_309205_3DD8C69F 
+X-CRM114-Status: GOOD (  18.07  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,165 +83,100 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+
 On Thu, May 04 2023 at 14:50, Ross Philipson wrote:
->  
-> +#ifdef CONFIG_SECURE_LAUNCH
 > +
-> +static atomic_t first_ap_only = {1};
-
-ATOMIC_INIT(1) if at all.
-
+> +/* CPUID: leaf 1, ECX, SMX feature bit */
+> +#define X86_FEATURE_BIT_SMX	(1 << 6)
 > +
+> +/* Can't include apiddef.h in asm */
+
+Why not? All it needs is a #ifndef __ASSEMBLY__ guard around the C parts.
+
+> +#define XAPIC_ENABLE	(1 << 11)
+> +#define X2APIC_ENABLE	(1 << 10)
+> +
+> +/* Can't include traps.h in asm */
+
+NMI_VECTOR is defined in irq_vectors.h which just has a include
+<linux/threads.h> for no real good reason.
+
+> +#define X86_TRAP_NMI	2
+
+<SNIP>
+
 > +/*
-> + * Called to fix the long jump address for the waiting APs to vector to
-> + * the correct startup location in the Secure Launch stub in the rmpiggy.
+> + * See the comment in head_64.S for detailed informatoin on what this macro
+> + * is used for.
 > + */
-> +static int
-> +slaunch_fixup_jump_vector(void)
+> +#define rva(X) ((X) - sl_stub_entry)
 
-One line please.
+I'm having a hard time to find that comment in head_64.S. At least it's
+not in this patch.
 
-> +{
-> +	struct sl_ap_wake_info *ap_wake_info;
-> +	u32 *ap_jmp_ptr = NULL;
+> +.Lsl_ap_cs:
+> +	/* Load the relocated AP IDT */
+[ 11 more citation lines. Click/Enter to show. ]
+> +	lidt	(sl_ap_idt_desc - sl_txt_ap_wake_begin)(%ecx)
 > +
-> +	if (!atomic_dec_and_test(&first_ap_only))
-> +		return 0;
-
-Why does this need an atomic? CPU bringup is fully serialized and even
-with the upcoming parallel bootup work, there is no concurrency on this
-function.
-
-Aside of that. Why isn't this initialized during boot in a __init function?
-
-> +	ap_wake_info = slaunch_get_ap_wake_info();
+> +	/* Fixup MTRRs and misc enable MSR on APs too */
+> +	call	sl_txt_load_regs
 > +
-> +	ap_jmp_ptr = (u32 *)__va(ap_wake_info->ap_wake_block +
-> +				 ap_wake_info->ap_jmp_offset);
+> +	/* Enable SMI with GETSEC[SMCTRL] */
+> +	GETSEC $(SMX_X86_GETSEC_SMCTRL)
 > +
-> +	*ap_jmp_ptr = real_mode_header->sl_trampoline_start32;
+> +	/* IRET-to-self can be used to enable NMIs which SENTER disabled */
+> +	leal	rva(.Lnmi_enabled_ap)(%ebx), %eax
+> +	pushfl
+> +	pushl	$(__SL32_CS)
+> +	pushl	%eax
+> +	iret
+
+So from here on any NMI which hits the AP before it can reach the wait
+loop will corrupt EDX...
+
+> +/* This is the beginning of the relocated AP wake code block */
+> +	.global sl_txt_ap_wake_begin
+[ 10 more citation lines. Click/Enter to show. ]
+> +sl_txt_ap_wake_begin:
 > +
-> +	pr_debug("TXT AP long jump address updated\n");
+> +	/*
+> +	 * Wait for NMI IPI in the relocated AP wake block which was provided
+> +	 * and protected in the memory map by the prelaunch code. Leave all
+> +	 * other interrupts masked since we do not expect anything but an NMI.
+> +	 */
+> +	xorl	%edx, %edx
 > +
-> +	return 0;
+> +1:
+> +	hlt
+> +	testl	%edx, %edx
+> +	jz	1b
 
-Why does this need a return code of all return paths return 0?
+This really makes me nervous. A stray NMI and the AP starts going.
 
-> +}
-> +
-> +/*
-> + * TXT AP startup is quite different than normal. The APs cannot have #INIT
-> + * asserted on them or receive SIPIs. The early Secure Launch code has parked
-> + * the APs in a pause loop waiting to receive an NMI. This will wake the APs
-> + * and have them jump to the protected mode code in the rmpiggy where the rest
-> + * of the SMP boot of the AP will proceed normally.
-> + */
-> +static int
-> +slaunch_wakeup_cpu_from_txt(int cpu, int apicid)
-> +{
-> +	unsigned long send_status = 0, accept_status = 0;
-> +
-> +	/* Only done once */
+Can't this NMI just bring the AP out of HLT w/o changing any state and
+the AP evaluates a memory location which indicates whether it should
+start up or not.
 
-Yes. But not here.
+> +	/*
+> +	 * This is the long absolute jump to the 32b Secure Launch protected
+> +	 * mode stub code in the rmpiggy. The jump address will be fixed in
 
-> +	if (slaunch_fixup_jump_vector())
-> +		return -1;
-> +
-> +	/* Send NMI IPI to idling AP and wake it up */
-> +	apic_icr_write(APIC_DM_NMI, apicid);
-> +
-> +	if (init_udelay == 0)
-> +		udelay(10);
-> +	else
-> +		udelay(300);
+Providing an actual name for the stub might spare to rummage through
+code to figure out where this is supposed to jump to.
 
-The wonders of copy & pasta. This condition is pointless because this
-code only runs on systems which force init_udelay to 0.
-
-> +	send_status = safe_apic_wait_icr_idle();
-
-Moar copy & pasta. As this is guaranteed to be X2APIC mode, this
-function is a nop and returns 0 unconditionally.
-
-> +	if (init_udelay == 0)
-> +		udelay(10);
-> +	else
-> +		udelay(300);
-> +
-> +	accept_status = (apic_read(APIC_ESR) & 0xEF);
-
-The point of this is? Bit 0-3 are Pentium and P6 only.
-
-Bit 4 Tried to send low prio IPI but not supported
-Bit 5 Illegal Vector sent
-Bit 6 Illegal Vector received
-Bit 7 X2APIC illegal register access
-
-IOW, there is no accept error here. That would be bit 2 which is never set
-on anything modern
-
-But aside of that the read is moot anyway because the CPU has the APIC
-error vector enabled so if this would happen the APIC error interrupt
-would have swallowed and cleared the error condition.
-
-IOW. Everything except the apic_icr_write() here is completely useless.
-
-> +#else
-> +
-> +#define slaunch_wakeup_cpu_from_txt(cpu, apicid)	0
-
-inline stub please. 
-
-> +
-> +#endif  /* !CONFIG_SECURE_LAUNCH */
-> +
->  /*
->   * NOTE - on most systems this is a PHYSICAL apic ID, but on multiquad
->   * (ie clustered apic addressing mode), this is a LOGICAL apic ID.
-> @@ -1132,6 +1210,13 @@ static int do_boot_cpu(int apicid, int cpu, struct task_struct *idle,
->  	cpumask_clear_cpu(cpu, cpu_initialized_mask);
->  	smp_mb();
->  
-> +	/* With Intel TXT, the AP startup is totally different */
-> +	if ((slaunch_get_flags() & (SL_FLAG_ACTIVE|SL_FLAG_ARCH_TXT)) ==
-> +	   (SL_FLAG_ACTIVE|SL_FLAG_ARCH_TXT)) {
-
-Stick this condition into a helper function please
-
-> +		boot_error = slaunch_wakeup_cpu_from_txt(cpu, apicid);
-> +		goto txt_wake;
-> +	}
-> +
->  	/*
->  	 * Wake up a CPU in difference cases:
->  	 * - Use a method from the APIC driver if one defined, with wakeup
-> @@ -1147,6 +1232,7 @@ static int do_boot_cpu(int apicid, int cpu, struct task_struct *idle,
->  		boot_error = wakeup_cpu_via_init_nmi(cpu, start_ip, apicid,
->  						     cpu0_nmi_registered);
->  
-> +txt_wake:
-
-Sorry, but what has this to do with TXT ? And why can't the above just
-be yet another if clause in the existing if/else if maze?
-
-Now that brings me to another question. How is this supposed to work
-with CPU hotplug post boot?
-
-It will simply not work at all because once a CPU is offlined it is
-going to sit in an endless loop and wait for INIT/SIPI/SIPI. So it will
-get that NMI and go back to wait.
-
-So you need a TXT specific cpu_play_dead() implementation, which should
-preferrably use monitor/mwait where each "offline" CPU sits and waits
-until a condition becomes true. Then you don't need a NMI for wakeup at
-all. Just writing the condition into that per CPU cache line should be
-enough.
+> +	 * the SMP boot code when the first AP is brought up. This whole area
+> +	 * is provided and protected in the memory map by the prelaunch code.
+[ 2 more citation lines. Click/Enter to show. ]
+> +	 */
+> +	.byte	0xea
+> +sl_ap_jmp_offset:
+> +	.long	0x00000000
+> +	.word	__SL32_CS
 
 Thanks,
 
-        tglx
-
+	tglx
 
 _______________________________________________
 kexec mailing list
