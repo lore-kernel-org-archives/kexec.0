@@ -4,70 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 57CBAC77B7F
-	for <kexec@archiver.kernel.org>; Fri, 12 May 2023 13:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1D4E5C7EE2D
+	for <kexec@archiver.kernel.org>; Fri, 12 May 2023 13:24:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:References
 	:In-Reply-To:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=XHyRfjfelA3Df+ukxOAg5lp+e16zIs+Wvi24Tgz45+Y=; b=WPMb2ywISP6gFR
-	jJMUcekyyZfoFJG+BqUT3yqUvRw9+4QOaFKOV1xXO4VoHrgq8DeOc7ntdJrFc1O/JeIY6ya9CorrX
-	putU5SjaHpJVG2wazKfLvqfYyJBvIsoMquVYWNJYdVGKGNlEUdwGdWoORSEMtCCWtg7CngQdpz7Dz
-	eUy96U2c+C5f+eS1Phsnv/ZQqj5otF7hn8AidT8sg6y1RQpvZnhB5hmBUS1WAmbzCe02as4rlNBq1
-	rNdX9K8kuCYCoJD3TGm2gwYElT10xHXX2W/Ui7ETCCtG74kjL+KUlzVcpeK95EYXTCmoa79xWLoGe
-	oHTi112mJQzzXhpOGroA==;
+	List-Owner; bh=lS5AeavMatl3Cj4r2viqo+qp5SFq5SJfhoWb8EjcOtc=; b=j76A1/+sg1yEql
+	FmJGSmYoHIO0wTTigexC6s940ut2ErouMkNqNGDQGAncO9015hHpAvlMVU//OSyk/vEFrKBBTtRSq
+	qxZSgLMZH9OPqRIpMu7LqBLVS20OrzjBDEcFggdB1xFeq3PU8Z2KEAXtKlQ1xEPlQRe15F56AgD2Y
+	UXJSucJ7GNlOFa+jOkLJiLqnHjY/LqJ3IieIE+YnbKbAIGy83Eg0ePX7oN0t4mc5IgXqbQrwoe68Z
+	kO+FRgfeYRRAkdW5va8oNBl7Vir27WM5h+GmMmAft9OzaKVZjHnCtSFocw2cRQ2oFCeCOE47Pn2WJ
+	W7Ii90i7r3Xi4TiXlraQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pxSgc-00C0nF-2a;
-	Fri, 12 May 2023 13:19:54 +0000
+	id 1pxSkj-00C1HA-0e;
+	Fri, 12 May 2023 13:24:09 +0000
 Received: from galois.linutronix.de ([193.142.43.55])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pxSgZ-00C0ln-1l
+	id 1pxSkg-00C1GY-22
 	for kexec@lists.infradead.org;
-	Fri, 12 May 2023 13:19:53 +0000
+	Fri, 12 May 2023 13:24:07 +0000
 From: Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1683897587;
+	s=2020; t=1683897845;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=zu7AfHp+nm/4M5jR+Z/9talnCB0FHmaOcfCKY0ExWO0=;
-	b=Mv9Tnyleh7o156tZl7skdqEY9qCBJz6dksvLEdOa+yzTm+I0JUHG12vtOfaEavn2XFUV+J
-	2YImu1GyQDLO8IXPanqrURZNIkleLjpQ8Pq85f/RabyZ/ClbVEcsVRgNgUdqFbXEdBGiAa
-	shO+EMJCz1Rut6q/sAlYzwcdpq+/9zvHBH1a2MDMLLR4eQV6bgXggrisG1AmQs4SObe+Pp
-	8qvuu+edP329yd2l9IZVEYaR7Cxdmk+bvyt7YqEr1VBH/O/hItT9+mXJP1Lu6Fa2DMqxB+
-	ypSuYsbkS+u7EoCa3mE8EuSajPLtui4VnpAhMTjSQWJ1ZrU7lTVLBgZZ/ctaFQ==
+	bh=EGpiykIbZrzhClWEawyzh/+46DdyV3m0l/aogql4GLM=;
+	b=t4zuosmBFyYyCvcFt4CogxekyLnafjtx8UdgZrID9B7MkOZFFbFZUGHMqQ4w/49f+dprnT
+	PlH4xsuf9SnZUOj7+doXTmxlro1g3dwnvALxgbiT8zqrKR4AJUen8DhiEMHG4VUhgD4slv
+	C9X56nGsqINm+67cMkF7EU6EiQxHU/23YN7VvK9EXvyfvLTW68S7L4dUwXmA35Ei9TL036
+	gu+4asg1Taks0CJq2S+2OB9lkYShGaLJrhnbaqnWk9mEnRuWFWa0Oz6nGQs8cOSPyCJwEi
+	c2jvlBPs3mnLU2prsZbpx8tLhNGXy5wbGzwLrxlQo7WZLAontnM3cRvFOEMokA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1683897587;
+	s=2020e; t=1683897845;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=zu7AfHp+nm/4M5jR+Z/9talnCB0FHmaOcfCKY0ExWO0=;
-	b=jKVLpN1id/BmCGXWrrcd7uzWgYU1EkSu1Z+3gHgioy0/F4/PQqHJSGHugtA3q1+ZJQiL+8
-	hypwdRPxcX164PBA==
-To: Ross Philipson <ross.philipson@oracle.com>,
- linux-kernel@vger.kernel.org, x86@kernel.org,
+	bh=EGpiykIbZrzhClWEawyzh/+46DdyV3m0l/aogql4GLM=;
+	b=R8wbDPOZoeZXva36wF885TESy/aZyCr3jMp5vxQyYINiluGTuOY4gRqy+MdP5jxH24QHtN
+	tWf4/obwdQJm8xBQ==
+To: Matthew Garrett <mjg59@srcf.ucam.org>, Ard Biesheuvel <ardb@kernel.org>
+Cc: Eric Biggers <ebiggers@kernel.org>, Ross Philipson
+ <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org, x86@kernel.org,
  linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
  linux-crypto@vger.kernel.org, iommu@lists.linux-foundation.org,
- kexec@lists.infradead.org, linux-efi@vger.kernel.org
-Cc: ross.philipson@oracle.com, dpsmith@apertussolutions.com,
- mingo@redhat.com, bp@alien8.de, hpa@zytor.com, ardb@kernel.org,
- mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
- luto@amacapital.net, nivedita@alum.mit.edu, kanth.ghatraju@oracle.com,
+ kexec@lists.infradead.org, linux-efi@vger.kernel.org,
+ dpsmith@apertussolutions.com, mingo@redhat.com, bp@alien8.de,
+ hpa@zytor.com, James.Bottomley@hansenpartnership.com, luto@amacapital.net,
+ nivedita@alum.mit.edu, kanth.ghatraju@oracle.com,
  trenchboot-devel@googlegroups.com
-Subject: Re: [PATCH v6 02/14] Documentation/x86: Secure Launch kernel
- documentation
-In-Reply-To: <20230504145023.835096-3-ross.philipson@oracle.com>
+Subject: Re: [PATCH v6 06/14] x86: Add early SHA support for Secure Launch
+ early measurements
+In-Reply-To: <20230512112847.GF14461@srcf.ucam.org>
 References: <20230504145023.835096-1-ross.philipson@oracle.com>
- <20230504145023.835096-3-ross.philipson@oracle.com>
-Date: Fri, 12 May 2023 15:19:46 +0200
-Message-ID: <87sfc1bsb1.ffs@tglx>
+ <20230504145023.835096-7-ross.philipson@oracle.com>
+ <20230510012144.GA1851@quark.localdomain>
+ <20230512110455.GD14461@srcf.ucam.org>
+ <CAMj1kXE8m5jCH3vW54ys=dE2-Vf_gnnueR6_g4Rq-LSJ5BqRjA@mail.gmail.com>
+ <20230512112847.GF14461@srcf.ucam.org>
+Date: Fri, 12 May 2023 15:24:04 +0200
+Message-ID: <87pm75bs3v.ffs@tglx>
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230512_061951_722958_6125F2BE 
-X-CRM114-Status: GOOD (  16.41  )
+X-CRM114-CacheID: sfid-20230512_062406_827534_A0A165F8 
+X-CRM114-Status: GOOD (  17.55  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,62 +88,40 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, May 04 2023 at 14:50, Ross Philipson wrote:
-> +KASLR Configuration
-> +-------------------
-> +
-> +Secure Launch does not interoperate with KASLR. If possible, the MLE should be
-> +built with KASLR disabled::
+On Fri, May 12 2023 at 12:28, Matthew Garrett wrote:
+> On Fri, May 12, 2023 at 01:18:45PM +0200, Ard Biesheuvel wrote:
+>> On Fri, 12 May 2023 at 13:04, Matthew Garrett <mjg59@srcf.ucam.org> wrote:
+>> >
+>> > On Tue, May 09, 2023 at 06:21:44PM -0700, Eric Biggers wrote:
+>> >
+>> > > SHA-1 is insecure.  Why are you still using SHA-1?  Don't TPMs support SHA-2
+>> > > now?
+>> >
+>> > TXT is supported on some TPM 1.2 systems as well. TPM 2 systems are also
+>> > at the whim of the firmware in terms of whether the SHA-2 banks are
+>> > enabled. But even if the SHA-2 banks are enabled, if you suddenly stop
+>> > extending the SHA-1 banks, a malicious actor can later turn up and
+>> > extend whatever they want into them and present a SHA-1-only
+>> > attestation. Ideally whatever is handling that attestation should know
+>> > whether or not to expect an attestation with SHA-2, but the easiest way
+>> > to maintain security is to always extend all banks.
+>> >
+>> 
+>> Wouldn't it make more sense to measure some terminating event into the
+>> SHA-1 banks instead?
+>
+> Unless we assert that SHA-1 events are unsupported, it seems a bit odd 
+> to force a policy on people who have both banks enabled. People with 
+> mixed fleets are potentially going to be dealing with SHA-1 measurements 
+> for a while yet, and while there's obviously a security benefit in using 
+> SHA-2 instead it'd be irritating to have to maintain two attestation 
+> policies.
 
 Why?
 
-> +  "Processor type and features" -->
-> +      "Build a relocatable kernel" -->
-> +          "Randomize the address of the kernel image (KASLR) [ ]"
-> +
-> +This unsets the Kconfig value CONFIG_RANDOMIZE_BASE.
-> +
-> +If not possible, KASLR must be disabled on the kernel command line when doing
-> +a Secure Launch as follows::
-> +
-> +  nokaslr
-
-So what happens if KASLR is enabled in Kconfig and not disabled on the
-command line?
-
-> +IOMMU Configuration
-> +-------------------
-> +
-> +When doing a Secure Launch, the IOMMU should always be enabled and the drivers
-> +loaded. However, IOMMU passthrough mode should never be used. This leaves the
-> +MLE completely exposed to DMA after the PMR's [2]_ are disabled. The current default
-> +mode is to use IOMMU in lazy translated mode but strict translated mode is the preferred
-> +IOMMU mode and this should be selected in the build configuration::
-> +
-> +  "Device Drivers" -->
-> +      "IOMMU Hardware Support" -->
-> +          "IOMMU default domain type" -->
-> +              "(X) Translated - Strict"
-> +
-> +In addition, the Intel IOMMU should be on by default. The following sets this as the
-> +default in the build configuration::
-> +
-> +  "Device Drivers" -->
-> +      "IOMMU Hardware Support" -->
-> +          "Support for Intel IOMMU using DMA Remapping Devices [*]"
-> +
-> +and::
-> +
-> +  "Device Drivers" -->
-> +      "IOMMU Hardware Support" -->
-> +          "Support for Intel IOMMU using DMA Remapping Devices [*]" -->
-> +              "Enable Intel DMA Remapping Devices by default  [*]"
-> +
-> +It is recommended that no other command line options should be set to override
-> +the defaults above.
-
-Is any of this validated and are proper warnings emitted or is it just
-recommended and left to the user to do the right thing?
+If you have a mixed fleet then it's not too much asked to provide two
+data sets. On a TPM2 system you can enforce SHA-2 and only fallback to
+SHA-1 on TPM 1.2 hardware. No?
 
 Thanks,
 
