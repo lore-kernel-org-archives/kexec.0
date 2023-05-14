@@ -4,96 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 84CA6C77B7F
-	for <kexec@archiver.kernel.org>; Fri, 12 May 2023 19:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8C3A8C7EE22
+	for <kexec@archiver.kernel.org>; Sun, 14 May 2023 18:18:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
-	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=vQkq6NncW3NqfQ56aS03IOAq0MLLE3swC6zHXRkX6lI=; b=smSLJOeroZ3PqS
-	OL8+q6rOgnaPAFB8rdtkEYwMGmID2JBJ29EcvWHEKcoUliL5V3zLxw0ykDjKVuD4Wdn2c1MllAiDl
-	6+HcDlNeuQe/irxLNC7e5TYNRIGU2x9TS6X1+uWKcbXFEH2K1tKlNFm7DAlzE+gXz7ZKovj/+7gX9
-	+nVdZe9ZMD3rzgGvRrd8lgYbZH/cs1LAREx3El6UFphhVrPLkwbRDKMcqETePBg/GDr+EosdW7ZMu
-	sOKn4zl+1WWLs8jLWkCDw82wA9PCTQuOfVe51qp3DlsKkpP6oacxC3xAhtV2UCQ6OGl9HR4t+eUZY
-	5oI5N1xeDP1jH+FGJu0A==;
+	List-Owner; bh=RBeo8bLla019qoa3wzRuD0yRk/EfGZqtSvxPAcL4QqU=; b=yGe8JBp8H3GJIG
+	/V2w/kAk59dU9bdQeXupilQm86PFVgNe8P9f6xKcWZSi4cBXY05l/oIbLI4ncXSjdvKutM3zyQK+9
+	/7MVRRnInO73Qn9JL3Qb4aNrMPQteBekqMyQiBbZsDh4z6DT8of/DOpQREgJs7hq3Oxo9G8tAYHTf
+	paIIxOg5ioxGJty2vbWyV9K4J36Z9nyqoBx6uX+rutCZtuW4xtSGZKEQdjmUB0Lcf2kbQNWzt59MJ
+	pikk+sUVCn/4EponWzbTwxWdBij3/J1PHwpXjoZBjr/Wmv5d0JTsO8Nl0AP25MPTAOmi7bhzVRSwv
+	Dr9OtU+JrjcvrR6Xs08w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pxYf8-00Cp7W-2e;
-	Fri, 12 May 2023 19:42:46 +0000
-Received: from mail-wm1-x32d.google.com ([2a00:1450:4864:20::32d])
+	id 1pyGIc-00030t-0p;
+	Sun, 14 May 2023 18:18:26 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pxYf5-00Cp6a-26
+	id 1pyGIX-0002zt-2s
 	for kexec@lists.infradead.org;
-	Fri, 12 May 2023 19:42:45 +0000
-Received: by mail-wm1-x32d.google.com with SMTP id 5b1f17b1804b1-3f4271185daso62124335e9.2
-        for <kexec@lists.infradead.org>; Fri, 12 May 2023 12:42:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683920559; x=1686512559;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DN2lJwVxCSywQ45Toh9NWXRSKQkBQksDIAdmNfkgPbg=;
-        b=Pz9gZZLJj0bTpnXxFNomhku198dAZLFRV9cNoX36VzMjl1POqEJjByjCx+TOScAYIb
-         3iBkJdxH5ycv111ZXQ9w7h5tkc6P6Ne+UvjU0DctlUE/JiprguiPY3w509PMSPt8tF6z
-         ytunHZ+/UlNq4E3rW3AUAMrjsEZKmnMdcB2tP7BxF3dHO0s0MOncGzB6XsKwEB44Cmji
-         AbA7RoRaC1NUFSuAs7sWmFnh/TCSXajfjoYgev0bXVcYeVaHxuO8Z1E8aT/caQG42it9
-         9xYqhMcpvIdddCJF612T/XiuXecsioCbOv1cG1NVkkUlxpo/Z6UC2sr7Aa0rYOAahIHb
-         Y7qA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683920559; x=1686512559;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DN2lJwVxCSywQ45Toh9NWXRSKQkBQksDIAdmNfkgPbg=;
-        b=GM0CAFCHWz5L4Fid7pfa/jYQc+vORBK7NT/16QIJyrgz/O7HJfLcrUQQt8DWx2OqBO
-         KpTZz3nr7knPL/stwMssK1HoZNjJasHegZ/R9X/Qw1zzCzN+8MQSBKge0hnq9AjVWU+X
-         rhpsJof6c80CTeLeOrrm7fNKDCTs/KviI7++fqhxXnxLxknT3wSs2XuD2cjkavdLmuii
-         T2i/O6dyySMd/DIMPc+HbAlbfm+41AM7zIkdarwlEs7Si6hFoAYVw0mpIJbizoa+29rd
-         Qn2el/xp5hgsgRfj/askhsf/AIg6Lvea4NwtRDCF/X1HQLHJo437QUF38eJqJ7i7IyD4
-         Sy4w==
-X-Gm-Message-State: AC+VfDxoLAk+Aaj3SyNmuW2snjQRySk0RBzMESlBw4LKh+vsE/Qr785e
-	cy+QCsVfKJMpNsKqfwFkpcc=
-X-Google-Smtp-Source: ACHHUZ7WQC0iGvDme0/M8wQdMxZpP0KeML4RwxJscAaHJ8Z1gcQLji5mEU4q1GgRZuVlj8wSQ4Pbow==
-X-Received: by 2002:a05:600c:2210:b0:3f4:2174:b288 with SMTP id z16-20020a05600c221000b003f42174b288mr14545149wml.4.1683920559237;
-        Fri, 12 May 2023 12:42:39 -0700 (PDT)
-Received: from [10.80.67.26] (default-46-102-197-194.interdsl.co.uk. [46.102.197.194])
-        by smtp.gmail.com with ESMTPSA id n3-20020a5d4003000000b003063176ef0dsm24256011wrp.97.2023.05.12.12.42.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 May 2023 12:42:38 -0700 (PDT)
-Message-ID: <4a8f15b7-2897-e7f5-fe7e-fded3a4130c6@gmail.com>
-Date: Fri, 12 May 2023 20:42:37 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
+	Sun, 14 May 2023 18:18:23 +0000
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id DBF0F60C95;
+	Sun, 14 May 2023 18:18:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94EC5C433EF;
+	Sun, 14 May 2023 18:18:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1684088300;
+	bh=leEo7DBXpmphECdPPoj0UYJDLVxQHZKhN4OhIJt82Q8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oq8zPLuE2w26xouGORoxbM5b+qODTBQZmAW/0NB3Q31JGa62q+YXAH+9bP6AXzw80
+	 odeYEnGouTCPxcSP06EXzfOL5KHK2EqDVpOT2EtEPY4Im3TymWh06oaSA6n8+ZDhe9
+	 2AkIJAe4NctKvB8iFfRt/L9WLWEh2kTVyNHDY6YEDE88EXof5ns9O6juvD5zL+1v0p
+	 kcXK6VEIWsetUOc3SQlySKITnqKT+5qB0s1iCW91jyN+qIzHCYFzt1JWnxhw9uUtXZ
+	 vbJgcVdAW7t9K64vE/PutJqVsw5RUR6pIAoLqZmWZeVDRvXobXfjGvDN1OvDTJ1zs3
+	 226vaowByReJQ==
+Date: Sun, 14 May 2023 11:18:17 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Andrew Cooper <andrew.cooper3@citrix.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>, Matthew Garrett <mjg59@srcf.ucam.org>,
+	Ross Philipson <ross.philipson@oracle.com>,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-crypto@vger.kernel.org, iommu@lists.linux-foundation.org,
+	kexec@lists.infradead.org, linux-efi@vger.kernel.org,
+	dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, hpa@zytor.com, James.Bottomley@hansenpartnership.com,
+	luto@amacapital.net, nivedita@alum.mit.edu,
+	kanth.ghatraju@oracle.com, trenchboot-devel@googlegroups.com
 Subject: Re: [PATCH v6 06/14] x86: Add early SHA support for Secure Launch
  early measurements
-Content-Language: en-GB
-To: Matthew Garrett <mjg59@srcf.ucam.org>,
- Thomas Gleixner <tglx@linutronix.de>
-Cc: Ard Biesheuvel <ardb@kernel.org>, Eric Biggers <ebiggers@kernel.org>,
- Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-crypto@vger.kernel.org, iommu@lists.linux-foundation.org,
- kexec@lists.infradead.org, linux-efi@vger.kernel.org,
- dpsmith@apertussolutions.com, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
- James.Bottomley@hansenpartnership.com, luto@amacapital.net,
- nivedita@alum.mit.edu, kanth.ghatraju@oracle.com,
- trenchboot-devel@googlegroups.com, richard@hughsie.com
+Message-ID: <20230514181817.GA9528@sol.localdomain>
 References: <20230504145023.835096-1-ross.philipson@oracle.com>
  <20230504145023.835096-7-ross.philipson@oracle.com>
  <20230510012144.GA1851@quark.localdomain>
  <20230512110455.GD14461@srcf.ucam.org>
  <CAMj1kXE8m5jCH3vW54ys=dE2-Vf_gnnueR6_g4Rq-LSJ5BqRjA@mail.gmail.com>
- <20230512112847.GF14461@srcf.ucam.org> <87pm75bs3v.ffs@tglx>
- <20230512161318.GA18400@srcf.ucam.org> <873541bej2.ffs@tglx>
- <20230512191203.GA21013@srcf.ucam.org>
-From: Andrew Cooper <andyhhp@gmail.com>
-In-Reply-To: <20230512191203.GA21013@srcf.ucam.org>
+ <20230512112847.GF14461@srcf.ucam.org>
+ <CAMj1kXFUDUbH4avVs37uLkS=BfSFB1F60e5Ei5_m2aWxOYOGPw@mail.gmail.com>
+ <4acf414e-67e7-c964-566b-a5e657e9d1bb@citrix.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <4acf414e-67e7-c964-566b-a5e657e9d1bb@citrix.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230512_124243_687891_7C02B26E 
-X-CRM114-Status: GOOD (  17.93  )
+X-CRM114-CacheID: sfid-20230514_111822_031597_E42FCA38 
+X-CRM114-Status: GOOD (  30.02  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -110,47 +90,66 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 12/05/2023 8:12 pm, Matthew Garrett wrote:
-> On Fri, May 12, 2023 at 08:17:21PM +0200, Thomas Gleixner wrote:
->> On Fri, May 12 2023 at 17:13, Matthew Garrett wrote:
->>> On Fri, May 12, 2023 at 03:24:04PM +0200, Thomas Gleixner wrote:
->>>> On Fri, May 12 2023 at 12:28, Matthew Garrett wrote:
->>>>> Unless we assert that SHA-1 events are unsupported, it seems a bit odd 
->>>>> to force a policy on people who have both banks enabled. People with 
->>>>> mixed fleets are potentially going to be dealing with SHA-1 measurements 
->>>>> for a while yet, and while there's obviously a security benefit in using 
->>>>> SHA-2 instead it'd be irritating to have to maintain two attestation 
->>>>> policies.
->>>> Why?
->>>>
->>>> If you have a mixed fleet then it's not too much asked to provide two
->>>> data sets. On a TPM2 system you can enforce SHA-2 and only fallback to
->>>> SHA-1 on TPM 1.2 hardware. No?
->>> No, beause having TPM2 hardware doesn't guarantee that your firmware 
->>> enables SHA-2 (which also means this is something that could change with 
->>> firmware updates, which means that refusing to support SHA-1 if the 
->>> SHA-2 banks are enabled could result in an entirely different policy 
->>> being required (and plausibly one that isn't implemented in their 
->>> existing tooling)
->> It's not rocket science to have both variants supported in tooling,
->> really.
-> People who are currently using tboot are only getting SHA-1, so there's 
-> no obvious reason for them to have added support yet. *My* tooling all 
-> supports SHA-2 so I'm completely fine here, but either we refuse to 
-> support a bunch of hardware or we have to support SHA-1 anyway, and if 
-> we have to support it the only reason not to implement it even in the 
-> "SHA-2 is supported" case is because we have opinions about how other 
-> people implement their security.
+On Fri, May 12, 2023 at 01:24:22PM +0100, Andrew Cooper wrote:
+> On 12/05/2023 12:58 pm, Ard Biesheuvel wrote:
+> > On Fri, 12 May 2023 at 13:28, Matthew Garrett <mjg59@srcf.ucam.org> wrote:
+> >> On Fri, May 12, 2023 at 01:18:45PM +0200, Ard Biesheuvel wrote:
+> >>> On Fri, 12 May 2023 at 13:04, Matthew Garrett <mjg59@srcf.ucam.org> wrote:
+> >>>> On Tue, May 09, 2023 at 06:21:44PM -0700, Eric Biggers wrote:
+> >>>>
+> >>>>> SHA-1 is insecure.  Why are you still using SHA-1?  Don't TPMs support SHA-2
+> >>>>> now?
+> >>>> TXT is supported on some TPM 1.2 systems as well. TPM 2 systems are also
+> >>>> at the whim of the firmware in terms of whether the SHA-2 banks are
+> >>>> enabled. But even if the SHA-2 banks are enabled, if you suddenly stop
+> >>>> extending the SHA-1 banks, a malicious actor can later turn up and
+> >>>> extend whatever they want into them and present a SHA-1-only
+> >>>> attestation. Ideally whatever is handling that attestation should know
+> >>>> whether or not to expect an attestation with SHA-2, but the easiest way
+> >>>> to maintain security is to always extend all banks.
+> >>>>
+> >>> Wouldn't it make more sense to measure some terminating event into the
+> >>> SHA-1 banks instead?
+> >> Unless we assert that SHA-1 events are unsupported, it seems a bit odd
+> >> to force a policy on people who have both banks enabled. People with
+> >> mixed fleets are potentially going to be dealing with SHA-1 measurements
+> >> for a while yet, and while there's obviously a security benefit in using
+> >> SHA-2 instead it'd be irritating to have to maintain two attestation
+> >> policies.
+> > I understand why that matters from an operational perspective.
+> >
+> > However, we are dealing with brand new code being proposed for Linux
+> > mainline, and so this is our only chance to push back on this, as
+> > otherwise, we will have to maintain it for a very long time.
+> >
+> > IOW, D-RTM does not exist today in Linux, and it is up to us to define
+> > what it will look like. From that perspective, it is downright
+> > preposterous to even consider supporting SHA-1, given that SHA-1 by
+> > itself gives none of the guarantees that D-RTM aims to provide. If
+> > reducing your TCB is important enough to warrant switching to this
+> > implementation of D-RTM, surely you can upgrade your attestation
+> > policies as well.
+> 
+> You're suggesting that because Linux has been slow to take D-RTM over
+> the past decade, you're going to intentionally break people with older
+> hardware just because you don't feel like using an older algorithm?
+> 
+> That's about the worst possible reason to not take support.
+> 
+> There really are people in the world with older TPM 1.2 systems where
+> this D-RTM using SHA1 only is an improvement over using the incumbent tboot.
+> 
+> ~Andrew
 
-The way to deal with this is to merge DRTM support (when it's ready of
-course) so people have an option which isn't tboot.
+This patchset is proposing a new kernel feature.  So by definition, there are no
+existing users of it that can be broken.
 
-Then warn on finding a TPM2 without SHA-2, and make it a failure for
-https://fwupd.github.io/libfwupdplugin/hsi.html#tpm-20-present etc, and
-eventually the vendors will decide that the easiest way to avoid getting
-a cross in their customers UIs is to implement SHA-2 support properly.
+The fact is, SHA-1 is cryptographically broken.  It isn't actually about how
+"old" the algorithm is, or what anyone's "feelings" are.
 
-~Andrew
+Maybe a renaming from Secure Launch to simply Launch is in order?
+
+- Eric
 
 _______________________________________________
 kexec mailing list
