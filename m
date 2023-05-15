@@ -4,56 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B0FF0C77B75
-	for <kexec@archiver.kernel.org>; Mon, 15 May 2023 21:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 73909C77B7D
+	for <kexec@archiver.kernel.org>; Mon, 15 May 2023 21:24:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=nVwIEhmSpZnN/m5Ub2OWqJB2pxaKmgzkO2z8O4etBiM=; b=GD4jmCBxX3BBG5
-	hiJH8uYzYX9fSS3drTzKSQN5u221tDaJEDUA+jHiditYAmh4g8hJPVjiLsagbpHyKb0hY36AvAwjs
-	RUZya6A4CKa2pbUlWEnD0QgIY1tlPSJsi+eHJPtBXKeuSqAw7NwifJIS/FlI0/uOFIku0JbrXPMzo
-	5jhhFC556FiLBBGh4eJlmf68vMZR2Zsq3xLFvZA8u4dz4muDfr2VBNMafQj91J5PLAhpGdVWRzsVa
-	i1fWoSAgD8fU89kTUuKAhrOpdsgbqwg7vfFlsrwMmM9LdQpBJpvgBMHPoD7h5VejdXYG7eRmy9KAg
-	+VY/8NZKaTndoT/KzdJA==;
+	List-Owner; bh=rB+lbetGU0mWRA0vj/J33yD5OT76MUPX1PrRQlO+ceA=; b=xhb5MfYC2NHXxU
+	/JNSytcOMM2Wr3+30pXzoA46SoqnzXwvORvvrsZ1xZxZ0MecAaFlGvA3ICnT/3I0AXRzv5T39j0Oy
+	bk/o549VgeeHroqX+MP/kAQno7vgVetpyIytvjsvYM1jpnkNJhAW0z7bOes561cYtEk1zrh1b0DaF
+	Jb11+9x9JZpsNuDlwdK03RfnxKG94WYcEgzOUDPh0bQQTS9JRKlMJC5kKIB/0T/2vj65JxZvHuG18
+	J674YVCW/pI6M3P49ZPxMUM/bWe3Y+5mCWJZydzDM36beJE8JPohSLKGYXHJtfwZOjKbxGvoLbhP7
+	uplsAV7Iwgs0ddohxB1A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pyfe5-003XLu-2P;
-	Mon, 15 May 2023 21:22:17 +0000
-Received: from irc.codon.org.uk ([2a00:1098:84:22e::2] helo=cavan.codon.org.uk)
+	id 1pyffy-003XfI-0g;
+	Mon, 15 May 2023 21:24:14 +0000
+Received: from sender4-of-o50.zoho.com ([136.143.188.50])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pyfe0-003XKf-2b
+	id 1pyffw-003Xek-0S
 	for kexec@lists.infradead.org;
-	Mon, 15 May 2023 21:22:16 +0000
-Received: by cavan.codon.org.uk (Postfix, from userid 1000)
-	id AA4624252A; Mon, 15 May 2023 22:22:06 +0100 (BST)
-Date: Mon, 15 May 2023 22:22:06 +0100
-From: Matthew Garrett <mjg59@srcf.ucam.org>
-To: "Daniel P. Smith" <dpsmith@apertussolutions.com>
-Cc: Ross Philipson <ross.philipson@oracle.com>,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-crypto@vger.kernel.org, iommu@lists.linux-foundation.org,
-	kexec@lists.infradead.org, linux-efi@vger.kernel.org,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-	ardb@kernel.org, James.Bottomley@hansenpartnership.com,
-	luto@amacapital.net, nivedita@alum.mit.edu,
-	kanth.ghatraju@oracle.com, trenchboot-devel@googlegroups.com
-Subject: Re: [PATCH v6 04/14] x86: Secure Launch Resource Table header file
-Message-ID: <20230515212206.GA2162@srcf.ucam.org>
-References: <20230504145023.835096-1-ross.philipson@oracle.com>
- <20230504145023.835096-5-ross.philipson@oracle.com>
- <20230512105554.GB14461@srcf.ucam.org>
- <30d5891d-4747-8d67-2667-ff07628740bd@apertussolutions.com>
+	Mon, 15 May 2023 21:24:13 +0000
+ARC-Seal: i=1; a=rsa-sha256; t=1684185838; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=ZIiZUK8CbsCjiTqifI36HGbNwdFEP03mJGK5C8Kha6tVgBHP7kTeDgac2+tm/3XKsbDwlkOFJ/4w8cRPeVL3VnzwjCti5eH0DCyA7nRLJ2JNfQf3waGrN8Im9OQOKRHiOK1HYANwB1hR+/nL++Mh9g4UH04TowwykuQggdzSLmU=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1684185838; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+	bh=J3jOAuTNmPzCg2cyhMylK3GtU6TzEwrGngq9Y/KQJiQ=; 
+	b=cnbHjhH3F53ydRLRJExkPQrkix1xEpSDV/QLM4ZhENvB8JWNC30Qi41n8QwfXr1lfHGN/YmMLLMNwyQsTv98sg/0V4f3O+tHQDqhjAIoHYJZ/thkTLADCVHMRTTvyki4fJ4V30mYXdS1uR0cpUEo47jhgIfqJnxd1do0v+cYM9w=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=apertussolutions.com;
+	spf=pass  smtp.mailfrom=dpsmith@apertussolutions.com;
+	dmarc=pass header.from=<dpsmith@apertussolutions.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1684185838;
+	s=zoho; d=apertussolutions.com; i=dpsmith@apertussolutions.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=J3jOAuTNmPzCg2cyhMylK3GtU6TzEwrGngq9Y/KQJiQ=;
+	b=XF+jDcK+OfGZgLIcK5u+YeWep9XEHHVW3HEudShXbrPiGjD416u8N3ktwtum2gO8
+	xSPKV0oxzwGtK22V0BdbpwSgPx1tr1Qoh2O3kC8eLgIaZyoZg/aGR/nx+B+DzAORE+R
+	bVNcnaWzhPNJytg3mqqDi8s/XkcQS8WIaNwB+E+c=
+Received: from [10.10.1.128] (static-72-81-132-2.bltmmd.fios.verizon.net [72.81.132.2]) by mx.zohomail.com
+	with SMTPS id 1684185838046320.453113662738; Mon, 15 May 2023 14:23:58 -0700 (PDT)
+Message-ID: <9f0db589-e7b4-09c0-aed2-588b2a2e1bf5@apertussolutions.com>
+Date: Mon, 15 May 2023 17:23:55 -0400
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <30d5891d-4747-8d67-2667-ff07628740bd@apertussolutions.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v6 06/14] x86: Add early SHA support for Secure Launch
+ early measurements
+Content-Language: en-US
+To: Eric Biggers <ebiggers@kernel.org>,
+ Ross Philipson <ross.philipson@oracle.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+ linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-crypto@vger.kernel.org, iommu@lists.linux-foundation.org,
+ kexec@lists.infradead.org, linux-efi@vger.kernel.org, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, hpa@zytor.com, ardb@kernel.org,
+ mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
+ luto@amacapital.net, nivedita@alum.mit.edu, kanth.ghatraju@oracle.com,
+ trenchboot-devel@googlegroups.com
+References: <20230504145023.835096-1-ross.philipson@oracle.com>
+ <20230504145023.835096-7-ross.philipson@oracle.com>
+ <20230510012144.GA1851@quark.localdomain>
+From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
+In-Reply-To: <20230510012144.GA1851@quark.localdomain>
+X-ZohoMailClient: External
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230515_142212_997483_3A1F0C98 
-X-CRM114-Status: GOOD (  23.64  )
+X-CRM114-CacheID: sfid-20230515_142412_226008_74810447 
+X-CRM114-Status: GOOD (  16.55  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -65,53 +85,53 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, May 15, 2023 at 05:15:15PM -0400, Daniel P. Smith wrote:
-> On 5/12/23 06:55, Matthew Garrett wrote:
-> > On Thu, May 04, 2023 at 02:50:13PM +0000, Ross Philipson wrote:
-> > 
-> > > +#define SLR_TABLE_MAGIC		0x4452544d
-> > 
-> >  From convention I'd expect this to be 0x534c5254, but not really an
-> > issue.
+On 5/9/23 21:21, Eric Biggers wrote:
+> On Thu, May 04, 2023 at 02:50:15PM +0000, Ross Philipson wrote:
+>> From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
+>>
+>> The SHA algorithms are necessary to measure configuration information into
+>> the TPM as early as possible before using the values. This implementation
+>> uses the established approach of #including the SHA libraries directly in
+>> the code since the compressed kernel is not uncompressed at this point.
+>>
+>> The SHA code here has its origins in the code from the main kernel:
+>>
+>> commit c4d5b9ffa31f ("crypto: sha1 - implement base layer for SHA-1")
+>>
+>> That code could not be pulled directly into the setup portion of the
+>> compressed kernel because of other dependencies it pulls in. The result
+>> is this is a modified copy of that code that still leverages the core
+>> SHA algorithms.
+>>
+>> Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
+>> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
 > 
-> Apologies, but which convention?
+> SHA-1 is insecure.  Why are you still using SHA-1?  Don't TPMs support SHA-2
+> now?
 
-Tables in ACPI and UEFI tend to have magic that corresponds to their 
-name, so a table called SLRT would tend to have magic that matches the 
-ASCII values for that. In this case the SLRT has DRTM as its magic, 
-which is a touch unexpected.
+I think others have commented as to why SHA-1 is provided.
 
-> > Oof. Having the kernel know about bootloaders has not worked out super
-> > well for us in the past. If someone writes a new bootloader, are they
-> > unable to Secure Launch any existing kernels? The pragmatic thing for
-> > them to do would be to just pretend they're grub, which kind of defeats
-> > the point of having this definition...
-> 
-> Actually, this is not for making the kernel know about bootloaders. This is
-> dealing with the challenge created when the preamble was split for efi-stub,
-> and similar use cases, where what sets up the preamble, ie. the bootloader,
-> is separate from what invokes the dynamic launch, ie. the DLE handler. The
-> reality is that even in the simplest implementation of the DLE handler, a
-> remnant of GRUB for call back from efi-stub, there is information that is
-> needed to cross the gap.
+> And if you absolutely MUST use SHA-1 despite it being insecure, please at least
+> don't obfuscate it by calling it simply "SHA".
 
-What if I don't use grub, but use something that behaves equivalently? 
-Which value should be used here?
+Apologies that it appears that way to you. Typically when referring to 
+the family or a subset of the SHA algorithms, SHA-0, SHA-1, SHA-2, and 
+SHA-3, it is generally accepted to refer to them as the "SHA 
+algorithms". And this is contrasted to the SM algorithms which the TCG 
+spec provides for which we have no intentions to support ourselves, 
+though others are welcome to contribute.
 
-> We wrote the TrenchBoot Secure Launch general spec [1] with as much
-> forethought as possible for the target environments. Specifically, the
-> desire is to have a common approach for x86 (Intel and AMD), Arm, and
-> perhaps down the road the POWER arch. In particular, I do not believe there
-> is anything in the Arm DRTM beta spec that prohibits a mixed 32/64 bit
-> environment. In the end it is better to for the spec to be safe for those
-> environments then having to make changes to the spec later down the road.
+Again, apologies for misunderstanding and thank you for taking the time 
+to review the series.
 
-Ok.
+v/r,
+dps
+
 
 _______________________________________________
 kexec mailing list
