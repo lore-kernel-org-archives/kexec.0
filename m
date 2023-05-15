@@ -4,74 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 87C81C7EE24
-	for <kexec@archiver.kernel.org>; Mon, 15 May 2023 20:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 48995C77B7D
+	for <kexec@archiver.kernel.org>; Mon, 15 May 2023 21:15:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
 	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
 	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
 	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=qF8p4qGtsWm6rIvr3I4XVJCe0L1jAaQE3ABby40aB9E=; b=LgdjDgkfm91vpq
-	60UBAbOKm7z+KWRiQmmfK1OdFkTdWUlyzpxSvorC/NmAUMBs5+0x8jXZtcQLG7RVhecMbAxuVUwM+
-	KpLs1qMy7IxA0i4wdOpDbHx7kOnYzPTwvYCpXzQyT3c/XovIzOooXntooLRh8/bncxRRV1VtjPMk5
-	9kp2EzqFM/ZU1nb/PWyurD+o3d2Uv4pogmprBRD48EC1kaQzO6Aq0qpEf7FZk+iPT0LoOLWRce4bV
-	1+k8+/CcBfw3SpscX2tIOBU27e/Q168Au65J7gSj2/agPZC+qSuptrYAc94h937q/EdIxwX4bTcqv
-	ltG5dJ7HLvw0EVnT53QQ==;
+	List-Owner; bh=PIsf9IyC/ihoV8H31M591zRfwlIadhfl7TqXPSwQElE=; b=DcpBfsSyPWo2DJ
+	K4Xdz4/T7hWnYVal4OP6WQNYqA40toBDznqr8P0aziIQMwePauQGhbZjTVcifuPnaso87jfnHRR//
+	2fwGKtEwRny6AoEhk++k0/B4UaYyn8DDNc0yuRiVsEGs8XiwzcyahWsHjqA17jY1jRWOph/bNaGta
+	GHk8okOHjBizxNQTPLpZm6QJkYXy/Fi7xFThVbwd+YN1dfNK0gEBpg9Np2HAdP2jzWuZGU6znVOVC
+	/v2niz8Psd2fL7fqrf46/FOs1icuttKuKvtxMMEz8G1XFB16dCswRetuE7tItbteGsdsDHXoziMEg
+	SFkgfACrU99VRLzk3M9w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pyfHr-003UUk-1c;
-	Mon, 15 May 2023 20:59:19 +0000
+	id 1pyfXl-003Wae-2m;
+	Mon, 15 May 2023 21:15:45 +0000
 Received: from sender4-of-o50.zoho.com ([136.143.188.50])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pyfHp-003UUA-0I
+	id 1pyfXj-003WZq-0l
 	for kexec@lists.infradead.org;
-	Mon, 15 May 2023 20:59:18 +0000
-ARC-Seal: i=1; a=rsa-sha256; t=1684184340; cv=none; 
+	Mon, 15 May 2023 21:15:44 +0000
+ARC-Seal: i=1; a=rsa-sha256; t=1684185320; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=eTGG1qsyWmh6mu4/xm11IQw7s1gdYv4wGvAMFKKyLRT51V+/z6BOjxVCBpiwB6CMycnMECWystMjsmL/u0JqgXPRB5EXaxgK4eQOlJjVO2CkUNz2vfSt0t4slM/RQ63f27JiCFzCq1I5bPQwEWAeY67A/hOdr6OJYk8FG1MVYcI=
+	b=G/YHsvj6/b/7CAFV2mUx8G2APTL3FuWMoufRrCO7kCXu1zNMPCx6atooXg2cN8530h0MQywhQ0EayF3xeY5YKLjnAxpJr8lL1NUajaB5vBEP1ZV/AsKStIEP/911jhMFhQMbUJ+C8qCkysgy16gh6t7c9iVVwsTOoOP3VpiwpwI=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1684184340; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-	bh=O2n7lr3iwvkCVvfhSjCoMROTkl+hJy1NY/ie4hm8LcM=; 
-	b=FeCTxvsGT8jeqxZkhjgu39fSBaYYu7S8x0zxTztiUlKYIa1wXsKfbNQaRPOZA9aMuT1U8PwBzzAUEv8HeP0XHl2bhGisLG9ga7nDgwxxQWMnZpkjeYcd5tT6TyaSHUIGJNrdwPn8pBExC/pMlfg3e6e7z7dTjhjE+JXWOSd/DRQ=
+	t=1684185320; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+	bh=opLqZdRYHF3ys1ryY1OchQpGACCzgW4qUUvF6rqdT3c=; 
+	b=YpUk6rN9GBZQjC2bIFrjqmQCUOfWscDtTcsCXqEdu/jwdJcWXY4IT4I5bCG+PGBBrfPTLKZ3XvTPQrMAko9c5B8MWx1CnInPjEeKCz311/XuuXinet/MC4UN6AiiRC2WginEECTtHYsNUel3Dtc/UdyloAShTmMVnYnv6NJd/io=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=apertussolutions.com;
 	spf=pass  smtp.mailfrom=dpsmith@apertussolutions.com;
 	dmarc=pass header.from=<dpsmith@apertussolutions.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1684184340;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1684185320;
 	s=zoho; d=apertussolutions.com; i=dpsmith@apertussolutions.com;
 	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=O2n7lr3iwvkCVvfhSjCoMROTkl+hJy1NY/ie4hm8LcM=;
-	b=OiNJMmRZ3ylUV4zirQtm7+fuyXPEpSnMGwX0T+NHQ0fPeierTKbni+JLyU3PkarY
-	vGfd/MkFaPxp1Hzmg/eGHriCNOmgLj9f+ipBILCEOVZVKzXycxHyE7BNNPk6dEabqLw
-	O2gtkkut9XmlM9GbkzlBx526n25j5vYVeh4JbfMA=
+	bh=opLqZdRYHF3ys1ryY1OchQpGACCzgW4qUUvF6rqdT3c=;
+	b=H+wJhL5QefRj2CwgFKv38emkOe4zX8bV3SyWcbHaRRyjgYFU6C6zbFqD9f9+Veon
+	Ye/XC+6KrHMJbOE9p2lxX1NDXY/B5+XHt8SFNP8Wv1cyopWq5Bx7hTGVQfw5iNwY8mY
+	Owii2fofpSsaFXmlehYYeDDuzt7U0aYLlCMA+iQc=
 Received: from [10.10.1.128] (static-72-81-132-2.bltmmd.fios.verizon.net [72.81.132.2]) by mx.zohomail.com
-	with SMTPS id 1684184339064954.6533982182539; Mon, 15 May 2023 13:58:59 -0700 (PDT)
-Message-ID: <276bf3a2-2518-60cb-a745-5778aa5d66a5@apertussolutions.com>
-Date: Mon, 15 May 2023 16:58:50 -0400
+	with SMTPS id 1684185318079382.6343558445345; Mon, 15 May 2023 14:15:18 -0700 (PDT)
+Message-ID: <30d5891d-4747-8d67-2667-ff07628740bd@apertussolutions.com>
+Date: Mon, 15 May 2023 17:15:15 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
 Subject: Re: [PATCH v6 04/14] x86: Secure Launch Resource Table header file
 Content-Language: en-US
-To: Jarkko Sakkinen <jarkko@kernel.org>,
- Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+To: Matthew Garrett <mjg59@srcf.ucam.org>,
+ Ross Philipson <ross.philipson@oracle.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+ linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
  linux-crypto@vger.kernel.org, iommu@lists.linux-foundation.org,
- kexec@lists.infradead.org, linux-efi@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
- ardb@kernel.org, mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
- luto@amacapital.net, nivedita@alum.mit.edu, kanth.ghatraju@oracle.com,
+ kexec@lists.infradead.org, linux-efi@vger.kernel.org, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, hpa@zytor.com, ardb@kernel.org,
+ James.Bottomley@hansenpartnership.com, luto@amacapital.net,
+ nivedita@alum.mit.edu, kanth.ghatraju@oracle.com,
  trenchboot-devel@googlegroups.com
 References: <20230504145023.835096-1-ross.philipson@oracle.com>
  <20230504145023.835096-5-ross.philipson@oracle.com>
- <CSIZ2DT5C4WQ.19ZUUIWKNAJY9@suppilovahvero>
+ <20230512105554.GB14461@srcf.ucam.org>
 From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
-In-Reply-To: <CSIZ2DT5C4WQ.19ZUUIWKNAJY9@suppilovahvero>
+In-Reply-To: <20230512105554.GB14461@srcf.ucam.org>
 X-ZohoMailClient: External
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230515_135917_219388_B8975726 
-X-CRM114-Status: GOOD (  13.04  )
+X-CRM114-CacheID: sfid-20230515_141543_329038_D52BC192 
+X-CRM114-Status: GOOD (  17.92  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -88,90 +89,55 @@ Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 5/10/23 19:04, Jarkko Sakkinen wrote:
-> On Thu May 4, 2023 at 5:50 PM EEST, Ross Philipson wrote:
->> Introduce the Secure Launch Resource Table which forms the formal
->> interface between the pre and post launch code.
->>
->> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
->> ---
->>   include/linux/slr_table.h | 270 ++++++++++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 270 insertions(+)
->>   create mode 100644 include/linux/slr_table.h
->>
->> diff --git a/include/linux/slr_table.h b/include/linux/slr_table.h
->> new file mode 100644
->> index 0000000..d4b76e5
->> --- /dev/null
->> +++ b/include/linux/slr_table.h
->> @@ -0,0 +1,270 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/*
->> + * Secure Launch Resource Table
->> + *
->> + * Copyright (c) 2023, Oracle and/or its affiliates.
->> + */
->> +
->> +#ifndef _LINUX_SLR_TABLE_H
->> +#define _LINUX_SLR_TABLE_H
->> +
->> +/* Put this in efi.h if it becomes a standard */
->> +#define SLR_TABLE_GUID				EFI_GUID(0x877a9b2a, 0x0385, 0x45d1, 0xa0, 0x34, 0x9d, 0xac, 0x9c, 0x9e, 0x56, 0x5f)
->> +
->> +/* SLR table header values */
+On 5/12/23 06:55, Matthew Garrett wrote:
+> On Thu, May 04, 2023 at 02:50:13PM +0000, Ross Philipson wrote:
+> 
 >> +#define SLR_TABLE_MAGIC		0x4452544d
->> +#define SLR_TABLE_REVISION	1
->> +
->> +/* Current revisions for the policy and UEFI config */
->> +#define SLR_POLICY_REVISION		1
->> +#define SLR_UEFI_CONFIG_REVISION	1
->> +
->> +/* SLR defined architectures */
->> +#define SLR_INTEL_TXT		1
->> +#define SLR_AMD_SKINIT		2
->> +
+> 
+>  From convention I'd expect this to be 0x534c5254, but not really an
+> issue.
+
+Apologies, but which convention?
+
 >> +/* SLR defined bootloaders */
 >> +#define SLR_BOOTLOADER_INVALID	0
 >> +#define SLR_BOOTLOADER_GRUB	1
->> +
->> +/* Log formats */
->> +#define SLR_DRTM_TPM12_LOG	1
->> +#define SLR_DRTM_TPM20_LOG	2
->> +
->> +/* DRTM Policy Entry Flags */
->> +#define SLR_POLICY_FLAG_MEASURED	0x1
->> +#define SLR_POLICY_IMPLICIT_SIZE	0x2
->> +
->> +/* Array Lengths */
->> +#define TPM_EVENT_INFO_LENGTH		32
->> +#define TXT_VARIABLE_MTRRS_LENGTH	32
->> +
->> +/* Tags */
->> +#define SLR_ENTRY_INVALID	0x0000
->> +#define SLR_ENTRY_DL_INFO	0x0001
->> +#define SLR_ENTRY_LOG_INFO	0x0002
->> +#define SLR_ENTRY_ENTRY_POLICY	0x0003
->> +#define SLR_ENTRY_INTEL_INFO	0x0004
->> +#define SLR_ENTRY_AMD_INFO	0x0005
->> +#define SLR_ENTRY_ARM_INFO	0x0006
->> +#define SLR_ENTRY_UEFI_INFO	0x0007
->> +#define SLR_ENTRY_UEFI_CONFIG	0x0008
->> +#define SLR_ENTRY_END		0xffff
 > 
-> "Enums are preferred when defining several related constants."
-> 
-> See:
-> 
-> https://www.kernel.org/doc/html/latest/process/coding-style.html#macros-enums-and-rtl
+> Oof. Having the kernel know about bootloaders has not worked out super
+> well for us in the past. If someone writes a new bootloader, are they
+> unable to Secure Launch any existing kernels? The pragmatic thing for
+> them to do would be to just pretend they're grub, which kind of defeats
+> the point of having this definition...
 
-These values are only used for a u16 field in a packed structure. 
-Correct me if I am mistaken, but if an enum is used this will result in 
-type/casting handling to/from the u16 which would negate some of the 
-main benefits of using an enum.
+Actually, this is not for making the kernel know about bootloaders. This 
+is dealing with the challenge created when the preamble was split for 
+efi-stub, and similar use cases, where what sets up the preamble, ie. 
+the bootloader, is separate from what invokes the dynamic launch, ie. 
+the DLE handler. The reality is that even in the simplest implementation 
+of the DLE handler, a remnant of GRUB for call back from efi-stub, there 
+is information that is needed to cross the gap.
+
+>> +} __packed;
+> 
+> Random nit - why are they all packed? Are there circumstances where two
+> pieces of code with different assumptions about alignment will be
+> looking at a single instance of a table? It doesn't seem likely we're
+> going to be doing DRTM in a 32-bit firmware environment while launching
+> a 64-bit kernel?
+
+We wrote the TrenchBoot Secure Launch general spec [1] with as much 
+forethought as possible for the target environments. Specifically, the 
+desire is to have a common approach for x86 (Intel and AMD), Arm, and 
+perhaps down the road the POWER arch. In particular, I do not believe 
+there is anything in the Arm DRTM beta spec that prohibits a mixed 32/64 
+bit environment. In the end it is better to for the spec to be safe for 
+those environments then having to make changes to the spec later down 
+the road.
+
+[1] https://trenchboot.org/specifications/Secure_Launch/
 
 v/r,
 dps
-
 
 _______________________________________________
 kexec mailing list
