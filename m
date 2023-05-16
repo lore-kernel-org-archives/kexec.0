@@ -4,70 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E8AD1C77B7F
-	for <kexec@archiver.kernel.org>; Tue, 16 May 2023 07:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D1E84C77B7F
+	for <kexec@archiver.kernel.org>; Tue, 16 May 2023 15:17:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=yZaQb2dPcBSvEQJByEyUrpimp2wqG98qNkldQer4HP4=; b=OsfG7jZVk+Dk3H
-	dVl7TMIXCGp71kP5JFpqf9Nxtl0+18o13fxm7BAVbnfg8Dcefd71QTAr6FGUufs4Dsc/YrYSy2Mw6
-	AC51Rstqtgs/2y7OEQEQe7n+RFKywz1vW45nIAs366zTaR6Yd1oaLvP2UtDfFD+lXJLrqi+LVpZzD
-	9+dCbN4oQ1LprhYD/3OksA8wPT7fMqifyODUCJEbsobnIAjP5oIfiubWTObUtpp5j2RTn1omt+6S4
-	HSY0vWY3G867BX9EjSXainRtzkb6gx7TdX8GTIbLTbY1x7cMK5WHPD6/6+bqKOGvu+mZsZAYBnpRQ
-	7zmcC58QZKN06qwGIawQ==;
+	List-Owner; bh=a8/kZoz3OK1cBULFgB4iZql3k9Wuy04VpUOx9ow2ykw=; b=nHjVwlv6e/g9B9
+	WBTogNvIiGj3OdpXRLpamNlHC3vXLhmqkKBjE2yGUtYXi8BVszbrMe5f9xwQuRxALM/gdxv3YscPL
+	EJRWm6ylX/saRZBq6/1BQWvnacRrNc7J8XPyVIf1EFLVg7ia1PgLtNUZgo0c99UDD9eRbeeBAc0Qe
+	jBWzm2Zx2tzUo1wZRpzRL6pJfgU32n7O9+dr+DZkz4+N9PnIMhhHk7TjATzAEfYHXOcyGR5bVFcmV
+	3Ue0+LgIa24GLGvmQLLLYclf+RdqfkrOYfsIf95PL5acbFWdAP8tp7cZFb0wNpMAbLV7Up1XS22xQ
+	qkKxeU7NMtVI2/Ty9gOw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pypA9-004ewy-0M;
-	Tue, 16 May 2023 07:32:01 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1pywQV-006DiC-2a;
+	Tue, 16 May 2023 15:17:23 +0000
+Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pypA6-004euk-03
+	id 1pywQS-006DgS-1o
 	for kexec@lists.infradead.org;
-	Tue, 16 May 2023 07:31:59 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1684222317;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rKfD/+6Wp89q5P+zBwj9SnkKufVJhmvr2hp9QoJ6xvM=;
-	b=hNRIqiTIn8dTDL8T104jkMr36+Jd2HVfblOC1fE7I7CdVbE+4SYKdUMzkhOOxrGp5eWtTE
-	RGBeVCf0p7BprECmeRkoQoFSoKtFd5qkaXk+Pn82c+fBe6Z1pz36Ru7HfrsqeYMiKm5OR7
-	VtZ9iLfDNgnUTU0042YKxT5BGzNoBHQ=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-156-0La9H1fPN7awd8_8ton2fA-1; Tue, 16 May 2023 03:31:54 -0400
-X-MC-Unique: 0La9H1fPN7awd8_8ton2fA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	Tue, 16 May 2023 15:17:22 +0000
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9D355185A7A4;
-	Tue, 16 May 2023 07:31:52 +0000 (UTC)
-Received: from piliu.users.ipa.redhat.com (ovpn-8-20.pek2.redhat.com [10.72.8.20])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 4E6BE1121314;
-	Tue, 16 May 2023 07:31:50 +0000 (UTC)
-From: Pingfan Liu <piliu@redhat.com>
-To: kexec@lists.infradead.org
-Cc: Jeremy Linton <jeremy.linton@arm.com>,
-	Pingfan Liu <piliu@redhat.com>,
-	horms@verge.net.au,
-	ardb@kernel.org
-Subject: [PATCHv2 6/6] arm64: Hook up the ZBOOT support as vmlinuz
-Date: Tue, 16 May 2023 15:31:24 +0800
-Message-Id: <20230516073124.23531-7-piliu@redhat.com>
-In-Reply-To: <20230516073124.23531-1-piliu@redhat.com>
-References: <20230516073124.23531-1-piliu@redhat.com>
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 1C2FB63B3D;
+	Tue, 16 May 2023 15:17:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71041C433D2;
+	Tue, 16 May 2023 15:17:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1684250239;
+	bh=zbsLxnAMj2vSIfOTUoVRyfsNlOWW5Uqw9nion1XeX4E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PMTpX/YIRwsa4A8MO42slLD90eYpwk5Grd8dbmfPivPpPaa1JOWehAz+POdgblVEh
+	 D2laHfSTr4zpFVohDVcUfQfbV2iXxVg2/qSgRoENMhBp4K6MQciHSqd9P5f+bXTsYn
+	 gDugDHX7qYxEug0WIvsmZsSQo42q4vGEUBe/KagYb8Gq8ZADtQ0aUARE/frffW64xP
+	 tGfTPg9hxILttqTIwg99VYf4MXvfWPAuuuC4osf00WezPA37h8Tp/z7rW55J+VR938
+	 qE4WkuZyjG/1nZkz5l+EhlqVV/Oju2SjjDvgJB5Y8YHOWbAEGauCF63DmsD44zDIno
+	 dg/3E/HgJg8rQ==
+Date: Tue, 16 May 2023 08:17:18 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Dave Chinner <david@fromorbit.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, hch@infradead.org,
+	sandeen@sandeen.net, song@kernel.org, rafael@kernel.org,
+	gregkh@linuxfoundation.org, viro@zeniv.linux.org.uk, jack@suse.cz,
+	jikos@kernel.org, bvanassche@acm.org, ebiederm@xmission.com,
+	mchehab@kernel.org, keescook@chromium.org, p.raghav@samsung.com,
+	da.gomez@samsung.com, linux-fsdevel@vger.kernel.org,
+	kernel@tuxforce.de, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/6] fs: add automatic kernel fs freeze / thaw and remove
+ kthread freezing
+Message-ID: <20230516151718.GP858815@frogsfrogsfrogs>
+References: <20230508011717.4034511-1-mcgrof@kernel.org>
+ <20230508011717.4034511-7-mcgrof@kernel.org>
+ <20230509012013.GD2651828@dread.disaster.area>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+Content-Disposition: inline
+In-Reply-To: <20230509012013.GD2651828@dread.disaster.area>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230516_003158_129060_DA5E2A0B 
-X-CRM114-Status: GOOD (  13.47  )
+X-CRM114-CacheID: sfid-20230516_081720_682154_86221F90 
+X-CRM114-Status: GOOD (  39.23  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,71 +83,112 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Jeremy Linton <jeremy.linton@arm.com>
+On Tue, May 09, 2023 at 11:20:13AM +1000, Dave Chinner wrote:
+> On Sun, May 07, 2023 at 06:17:17PM -0700, Luis Chamberlain wrote:
+> > Add support to automatically handle freezing and thawing filesystems
+> > during the kernel's suspend/resume cycle.
+> > 
+> > This is needed so that we properly really stop IO in flight without
+> > races after userspace has been frozen. Without this we rely on
+> > kthread freezing and its semantics are loose and error prone.
+> > For instance, even though a kthread may use try_to_freeze() and end
+> > up being frozen we have no way of being sure that everything that
+> > has been spawned asynchronously from it (such as timers) have also
+> > been stopped as well.
+> > 
+> > A long term advantage of also adding filesystem freeze / thawing
+> > supporting during suspend / hibernation is that long term we may
+> > be able to eventually drop the kernel's thread freezing completely
+> > as it was originally added to stop disk IO in flight as we hibernate
+> > or suspend.
+> > 
+> > This does not remove the superfluous freezer calls on all filesystems.
+> > Each filesystem must remove all the kthread freezer stuff and peg
+> > the fs_type flags as supporting auto-freezing with the FS_AUTOFREEZE
+> > flag.
+> > 
+> > Subsequent patches remove the kthread freezer usage from each
+> > filesystem, one at a time to make all this work bisectable.
+> > Once all filesystems remove the usage of the kthread freezer we
+> > can remove the FS_AUTOFREEZE flag.
+> > 
+> > Reviewed-by: Jan Kara <jack@suse.cz>
+> > Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+> > ---
+> >  fs/super.c             | 50 ++++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/fs.h     | 14 ++++++++++++
+> >  kernel/power/process.c | 15 ++++++++++++-
+> >  3 files changed, 78 insertions(+), 1 deletion(-)
+> 
+> .....
+> 
+> > diff --git a/kernel/power/process.c b/kernel/power/process.c
+> > index cae81a87cc91..7ca7688f0b5d 100644
+> > --- a/kernel/power/process.c
+> > +++ b/kernel/power/process.c
+> > @@ -140,6 +140,16 @@ int freeze_processes(void)
+> >  
+> >  	BUG_ON(in_atomic());
+> >  
+> > +	pr_info("Freezing filesystems ... ");
+> > +	error = iterate_supers_reverse_excl(fs_suspend_freeze_sb, NULL);
+> > +	if (error) {
+> > +		pr_cont("failed\n");
+> > +		iterate_supers_excl(fs_suspend_thaw_sb, NULL);
+> > +		thaw_processes();
+> > +		return error;
+> 
+> That looks wrong. i.e. if the sb iteration fails to freeze a
+> filesystem (for whatever reason) then every userspace frozen
+> filesystem will be thawed by this call, right? i.e. it will thaw
+> more than just the filesystems frozen by the suspend freeze
+> iteration before it failed.
+> 
+> Don't we only want to thaw the superblocks we froze before the
+> failure occurred? i.e. the "undo" iteration needs to start from the
+> last superblock we successfully froze and then only walk to the tail
+> of the list we started from?
 
-Add the previously defined _probe() and _usage() routines
-to the kexec file types table, and build the new module.
+I think fs_suspend_thaw_sb calls thaw_super(..., false), which will not
+undo a userspace freeze.  So strictly speaking the answer to your
+question is (AFAICT) "no it won't"
 
-It should be noted that this "vmlinuz" support reuses the
-"Image" support to actually load the resulting image after
-it has been decompressed to a temporary file.
+That said, I read this and also had a raised-eyebrow moment -- we
+shouldn't (un?)touch superblocks that fs_suspend_freeze_sb didn't touch
+in the first place.
 
-Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-Signed-off-by: Pingfan Liu <piliu@redhat.com>
-To: kexec@lists.infradead.org
-Cc: horms@verge.net.au
-Cc: ardb@kernel.org
-Cc: jeremy.linton@arm.com
----
- kexec/arch/arm64/Makefile      | 3 ++-
- kexec/arch/arm64/kexec-arm64.c | 1 +
- kexec/arch/arm64/kexec-arm64.h | 4 ++++
- 3 files changed, 7 insertions(+), 1 deletion(-)
+I wonder if we should be using that NULL parameter to keep track of the
+last super that fs_suspend_freeze_sb didn't fail on?
 
-diff --git a/kexec/arch/arm64/Makefile b/kexec/arch/arm64/Makefile
-index d27c8ee..900f246 100644
---- a/kexec/arch/arm64/Makefile
-+++ b/kexec/arch/arm64/Makefile
-@@ -16,7 +16,8 @@ arm64_KEXEC_SRCS += \
- 	kexec/arch/arm64/kexec-elf-arm64.c \
- 	kexec/arch/arm64/kexec-uImage-arm64.c \
- 	kexec/arch/arm64/kexec-image-arm64.c \
--	kexec/arch/arm64/kexec-zImage-arm64.c
-+	kexec/arch/arm64/kexec-zImage-arm64.c \
-+	kexec/arch/arm64/kexec-vmlinuz-arm64.c
- 
- arm64_UIMAGE = kexec/kexec-uImage.c
- 
-diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-index ec6df4b..f6f96df 100644
---- a/kexec/arch/arm64/kexec-arm64.c
-+++ b/kexec/arch/arm64/kexec-arm64.c
-@@ -75,6 +75,7 @@ struct file_type file_type[] = {
- 	{"Image", image_arm64_probe, image_arm64_load, image_arm64_usage},
- 	{"uImage", uImage_arm64_probe, uImage_arm64_load, uImage_arm64_usage},
- 	{"zImage", zImage_arm64_probe, zImage_arm64_load, zImage_arm64_usage},
-+	{"vmlinuz", pez_arm64_probe, image_arm64_load, pez_arm64_usage},
- };
- 
- int file_types = sizeof(file_type) / sizeof(file_type[0]);
-diff --git a/kexec/arch/arm64/kexec-arm64.h b/kexec/arch/arm64/kexec-arm64.h
-index bce93a1..e2fa97c 100644
---- a/kexec/arch/arm64/kexec-arm64.h
-+++ b/kexec/arch/arm64/kexec-arm64.h
-@@ -56,6 +56,10 @@ int zImage_arm64_load(int argc, char **argv, const char *kernel_buf,
- 	off_t kernel_size, struct kexec_info *info);
- void zImage_arm64_usage(void);
- 
-+int pez_arm64_probe(const char *kern_fname, off_t kernel_size,
-+			struct kexec_info *info);
-+void pez_arm64_usage(void);
-+
- 
- extern off_t initrd_base;
- extern off_t initrd_size;
--- 
-2.31.1
+--D
 
+> > +	}
+> > +	pr_cont("done.\n");
+> > +
+> >  	/*
+> >  	 * Now that the whole userspace is frozen we need to disable
+> >  	 * the OOM killer to disallow any further interference with
+> > @@ -149,8 +159,10 @@ int freeze_processes(void)
+> >  	if (!error && !oom_killer_disable(msecs_to_jiffies(freeze_timeout_msecs)))
+> >  		error = -EBUSY;
+> >  
+> > -	if (error)
+> > +	if (error) {
+> > +		iterate_supers_excl(fs_suspend_thaw_sb, NULL);
+> >  		thaw_processes();
+> > +	}
+> 
+> Does this also have the same problem? i.e. if fs_suspend_freeze_sb()
+> skips over superblocks that are already userspace frozen without any
+> error, then this will incorrectly thaw those userspace frozen
+> filesystems.
+> 
+> Cheers,
+> 
+> Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
 
 _______________________________________________
 kexec mailing list
