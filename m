@@ -4,56 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 534AAC77B7D
-	for <kexec@archiver.kernel.org>; Tue, 16 May 2023 01:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 47507C77B75
+	for <kexec@archiver.kernel.org>; Tue, 16 May 2023 01:37:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
 	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
 	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
 	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=CZqLjsXDYWxxYRiDvLEOiRRijwa0KnWGfb9qbGZu92w=; b=1KjFF0ig1obuJJ
-	iX2O/oszqm2mFlCgquzU7/h7caa5kFhXeN5ltTBvfPdvw4SVzl+pBRAfdH1SlDfZIiREjigiNH9J6
-	v0qJ2pXPtmYKwEe/LKPluK12BjHqCZg665rcZbjLur0UtxTiJ+udALd19ov6HUHvkYVIM9maB3uOK
-	ds7mdzzNWNd0gUHJKuX/8IYoF0BILA+bhd+yVbgqktvHDgw76IMK6r2LgKxjR0kAsZFtvMYAppijj
-	nSNJpS3w/ty3khI/GYMxQUmtqc0vdcGHRMQx0hvLaBnYlxwJzmowT6xZNBkow8YxlGdjRqVg5Ce+L
-	PKxJB0Ulc74lyg5NriYA==;
+	List-Owner; bh=HDSMeIm5ux1GEll/mIO4x8sSs7uJTTfkkw1ghBbayNs=; b=HDcAZVbNN5uD4Y
+	mpm22Apa5O9/ZO3AJ8DIbRmSbMmW5vuiGyuTga1F+clBxNwB66VnjWR0/UrAOIpAKsC7nY+C45fWi
+	rnvk/64drmeT34KicvKug8AaSs+kGppOe9E1LfqD5PEPL3VBXQUW78cmwX5x2CtS5xo/mrgtOD2Xy
+	39cULPHrDVIwwm4mGVykMxjiS+Qsm9BzbGRZIvuf9TM9s3TY+F281g7nBrhM7scVhUWlOmYmmbt43
+	vw4u1198aygVUJ4mK/t4eABsGuCNcRm9AMgjillWGeOfuDGzT1bkYC4KU+sl5pghZcMYlKmWa6eSs
+	ZuQvAAm10fRcc3ITdy5w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pyjPp-0042Cv-0t;
-	Tue, 16 May 2023 01:23:49 +0000
+	id 1pyjcz-0043Yv-2V;
+	Tue, 16 May 2023 01:37:25 +0000
 Received: from sender3-of-o59.zoho.com ([136.143.184.59])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pyjPm-0042CK-1t
+	id 1pyjcw-0043Y0-12
 	for kexec@lists.infradead.org;
-	Tue, 16 May 2023 01:23:47 +0000
-ARC-Seal: i=1; a=rsa-sha256; t=1684200216; cv=none; 
+	Tue, 16 May 2023 01:37:24 +0000
+ARC-Seal: i=1; a=rsa-sha256; t=1684201030; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=RR1TfYZEGin5arrnpEvRLWCOsSlqGAODka5QOqh2UA6NN6tkN7W1/C/km7Ck+0CDl4L5rVEUMtYv+yPDiA7jNsSCKS+WP2uxKsvQC2jf61kWiBZRvWAErOIZ5SbVaixkF4lGKQqpLmeLnqHfv8cgiqYVUb1uFpAADHh84lCeVhk=
+	b=Yy0QRZ+oR6Hkd+NT/e8HezEouC/r9cI7fIZTIsfsE3AFLWeFTMshlyssYg0GSmMgLvk93s7Dq8nc4WCxEsN2hk9ZkKRYyM/MkGIVO1qPQN4mqtwqViu309itBnJukr3weenNa4pyBnxlTVEUhaTjnLKPkpPv8r2imImUxPWJgt0=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1684200216; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-	bh=t9xe8yTG0sKAFENcXbIvh8DJsGK2DfwwVT3xWVKVb+I=; 
-	b=UiPq7TVpfHS6m6iqXIN5DewJeEvOV/dHvI8gI9eNHXYCMxTsDm/WuiYOHyCfayPhky6qGStvc3KUk3qzB7QUrxZ7ro/5tyKIGkN6PuLm3k3UMpmKfw9QQpQq2/Fc1Y7mhA8jJOSYw7FhYsmMzWRTgybRi/vuCfSZgBMCwJB8U1Q=
+	t=1684201030; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+	bh=wPx0XuyYch603FQA0x9PPV+o+o1oV0OxjQn+1y5kW1M=; 
+	b=X1PFro26OTZHUqTL45decbzBsZ+/MB9mIMeQD0OljOyRdC2VRMGnF1PstQGH9tNnPZuUW9eXSU6sRQLsXBz6JcRR0STbaeX9hHGw1X5rUll5ZwokkRB/0ENry6FGDjjxvfNR/2ISgNQN5EmWx19TMgaLKnxxs/e+YHJ3uFP7F/0=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=apertussolutions.com;
 	spf=pass  smtp.mailfrom=dpsmith@apertussolutions.com;
 	dmarc=pass header.from=<dpsmith@apertussolutions.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1684200216;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1684201030;
 	s=zoho; d=apertussolutions.com; i=dpsmith@apertussolutions.com;
 	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=t9xe8yTG0sKAFENcXbIvh8DJsGK2DfwwVT3xWVKVb+I=;
-	b=UChlLcFEY/XnIK0uv4PQvV3Wp/AYkCd1F/foF76++k0T6Fbsfwsl1QUco905bf8W
-	YSZLMd/ydEkuFSZj1ZRHIGKTEMctK5pQzMZz4tWjqAVsVwYRWWTNNOLtnJKj2XByA59
-	gWMN4d5dNI0bPS0iPIJWi8kUs/zySml0uj8qu6Ko=
+	bh=wPx0XuyYch603FQA0x9PPV+o+o1oV0OxjQn+1y5kW1M=;
+	b=o5ZjTAXLWXJ5TM6YTFoBYPVzf3IFYDZpzH9a0iCG0ZQ63u9v9GzlPiHBelHWBLbP
+	1eeiQDTZpmj0nDwXAuMSpdeNTyWHwblSvSkwk8NzVPF18qapT/Wc4R+N3iQV2m7Vx2Y
+	W45lSSSOjvLJKg4cC0Jo3VSQO+Ya9n6WR7yzO36o=
 Received: from [10.10.1.128] (static-72-81-132-2.bltmmd.fios.verizon.net [72.81.132.2]) by mx.zohomail.com
-	with SMTPS id 1684200214907165.64041646283852; Mon, 15 May 2023 18:23:34 -0700 (PDT)
-Message-ID: <0e232a30-9b47-2315-86ea-4f6eeb7829a8@apertussolutions.com>
-Date: Mon, 15 May 2023 21:23:32 -0400
+	with SMTPS id 1684201029480598.0811292109397; Mon, 15 May 2023 18:37:09 -0700 (PDT)
+Message-ID: <b8c96c6b-f50d-1eca-ce6a-8460276c3a13@apertussolutions.com>
+Date: Mon, 15 May 2023 21:37:07 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [PATCH v6 11/14] reboot: Secure Launch SEXIT support on reboot
- paths
+Subject: Re: [PATCH v6 13/14] tpm: Allow locality 2 to be set when
+ initializing the TPM for Secure Launch
 Content-Language: en-US
 To: Ross Philipson <ross.philipson@oracle.com>,
  Matthew Garrett <mjg59@srcf.ucam.org>
@@ -66,15 +66,15 @@ Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
  nivedita@alum.mit.edu, kanth.ghatraju@oracle.com,
  trenchboot-devel@googlegroups.com
 References: <20230504145023.835096-1-ross.philipson@oracle.com>
- <20230504145023.835096-12-ross.philipson@oracle.com>
- <20230512114000.GG14461@srcf.ucam.org>
- <a38e0589-fa20-77ac-2fb0-2cb247c2b408@oracle.com>
+ <20230504145023.835096-14-ross.philipson@oracle.com>
+ <20230512114349.GH14461@srcf.ucam.org>
+ <1c17d8e8-1f34-8f11-4265-ddf5e77e3647@oracle.com>
 From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
-In-Reply-To: <a38e0589-fa20-77ac-2fb0-2cb247c2b408@oracle.com>
+In-Reply-To: <1c17d8e8-1f34-8f11-4265-ddf5e77e3647@oracle.com>
 X-ZohoMailClient: External
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230515_182346_695087_DC1F336C 
-X-CRM114-Status: GOOD (  15.10  )
+X-CRM114-CacheID: sfid-20230515_183722_425385_6847C336 
+X-CRM114-Status: GOOD (  17.04  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,32 +91,38 @@ Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 5/15/23 14:16, Ross Philipson wrote:
-> On 5/12/23 07:40, Matthew Garrett wrote:
->> On Thu, May 04, 2023 at 02:50:20PM +0000, Ross Philipson wrote:
->>> If the MLE kernel is being powered off, rebooted or halted,
->>> then SEXIT must be called. Note that the SEXIT GETSEC leaf
->>> can only be called after a machine_shutdown() has been done on
->>> these paths. The machine_shutdown() is not called on a few paths
->>> like when poweroff action does not have a poweroff callback (into
->>> ACPI code) or when an emergency reset is done. In these cases,
->>> just the TXT registers are finalized but SEXIT is skipped.
+On 5/12/23 12:22, Ross Philipson wrote:
+> On 5/12/23 07:43, Matthew Garrett wrote:
+>> On Thu, May 04, 2023 at 02:50:22PM +0000, Ross Philipson wrote:
+>>> The Secure Launch MLE environment uses PCRs that are only accessible 
+>>> from
+>>> the DRTM locality 2. By default the TPM drivers always initialize the
+>>> locality to 0. When a Secure Launch is in progress, initialize the
+>>> locality to 2.
 >>
->> What are the consequences of SEXIT not being called, and why is it ok to
->> skip it in these circumstances?
+>> This looks correct in itself, but looking at the CRB driver code I don't
+>> think locality support is actually implemented. Are there any SL systems
+>> using CRB?
 > 
-> Well the system is resetting so there are no real consequences. The 
-> problem on those two paths is that the APs have not been halted with a 
-> machine_shutdown() and that is a precondition to issuing GETSEC[SEXIT]. 
-> Only the BSP should be active and SEXIT must be done on it.
+> We have never seen a system that supports CRB other than some firmware 
+> TPMs that don't work with TXT in the first place. CRB is unexplored 
+> territory at this point.
 
-To expand on this just a bit further. On all paths we were able to 
-identify, the SECRETS bit is cleared, memconfig is unlocked, and the 
-private registers are all closed. This makes the system as safe as 
-possible to go through a power event and be able to come back up on the 
-other side. The clean way is to always go through an SEXIT before a 
-power event, but as Ross highlighted this can only be done after the APs 
-have been halted.
+So there is often confusion over the CRB interface. If you ask an ARM 
+person, they will describe a door-bell, general purpose memory interface 
+that has no support for locality. That interface is described in the 
+TCG's Mobile TPM interface. Though there is work in progress to address 
+this. Now if you speak with an x86 person, they will describe a 
+state-based command-response mechanism using MMIO registers which has 
+locality support. That interface is described in the TCG PC Client 
+specification.
+
+As to whether there are devices with CRB and TXT. I have seen talk on 
+the tboot mailing list that there exist an Intel client devices that has 
+an Intel-PTT fTPM using the PC Client CRB interface and Intel-TXT. I 
+myself have never seen one, so I could not point you at a SKU/Part No. 
+for such a device. If someone has such a device and willing to help, 
+drop me a line and I would be glad to work with them to get this tested.
 
 v/r,
 dps
