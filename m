@@ -4,67 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BFDB9C7EE25
-	for <kexec@archiver.kernel.org>; Tue, 16 May 2023 15:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1EE43C77B7F
+	for <kexec@archiver.kernel.org>; Tue, 16 May 2023 21:32:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=gdPAm99tOmFxp0WiSm4hMissrEupSKLbLLpHsJC8VCs=; b=Ff3sew7+YotyO4
-	JaPafvfcBge6Gzn7l0uKVCLy/Q4xHKQ0mdduEe1/Bdo3StOqi2x/ZkUw3pu21mTDMpU4bYc9rJbE3
-	FHwl+Lv2hpDwdYur76HeIoELI5xWcjxQ+BgHAJy+WsCqi07axaZyU3YxnQbXEIDwPn311HoIivJGj
-	Oibqi4YxYJdgpq6IfqFYGTHuTGkcsjd10nVy9lJcZ9TorrXVxnxkHISjxyBvy+qj7hF/KTGOX/Zgt
-	T0A6c8xv8XW+ARH1i7Ab6B4kUmdXlgtpQLFugqz71Vj1gnrlV5Gw1HtH+dCVvEIiOzkFS8B1Dg/eV
-	8zy9oMnYm+SbHdB8fTSA==;
+	List-Owner; bh=JNbxB2m0tRZT9Y1k0gxkPXhfMvqaOo3VAHVdhYzfl1o=; b=ggFKShrqzRdLZK
+	WrhL8uTmExTFBLXjLnTq8+vFomkvwxlzNNI1wYKOgk0XzlEXHg6XVNZhO/JXLDAUmTSPq3a4wjdpv
+	ib67UC879WKnT13vna/rPq4QGTug2nr4CMbNBKtX08vegVcQIAErKGxlImnIXrKImCtwgJ7jKZKDf
+	z6c7MyfdocYu0x+l5v8nlJVDPfnmfS0eT/Db1K5LV9dD0OTA1GMNA5nVOrYNP2VTAtLsfAYLoE2kx
+	0H/kbsyCYyAYll6GspX4597Nd71TgxoP7Si5+2ZD8CZ0Fj2q37hZl52EbgNHX4wcTHgsUjS5m+emH
+	3FKORi8f39tvf64qa3Sw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pywWv-006Eev-03;
-	Tue, 16 May 2023 15:24:01 +0000
-Received: from dfw.source.kernel.org ([139.178.84.217])
+	id 1pz2Hn-007Bcg-20;
+	Tue, 16 May 2023 21:32:47 +0000
+Received: from mail-pf1-x42d.google.com ([2607:f8b0:4864:20::42d])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pywWr-006EdQ-2t
+	id 1pz2Hj-007BbE-0I
 	for kexec@lists.infradead.org;
-	Tue, 16 May 2023 15:23:59 +0000
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 5463A6399B;
-	Tue, 16 May 2023 15:23:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF25CC4339B;
-	Tue, 16 May 2023 15:23:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1684250636;
-	bh=XzcAJOaMviMWx4fJV4gCqtkEJ5hNY98zHQPoTmHicgY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j07wOutVUDI1P9gV4eQZ0riyrPc/TPnsJ1oTlD8gj/VGRurl5ASckWhHW1+Hgfy3o
-	 zCVSyWpPsE764XhKfxZongCuilr2SmkQQwLptDolpd+O0M6g/Yg4tL+HkHRWUx0io5
-	 zt6+Sxeg0Zzm6tqqYUsspcGDzVvOfkn+tGS4tUYzgdS4KLK209rcuL/+Sn/OCk+UY+
-	 pyNwMRxftvFVNmN30SzZXttd/d8m+U1Xcpf1OdEzBAaSg1n350RlbeoY5OL8VHqtxb
-	 xOk49FIBj+QnRzyoQDfhU5GpghHIA1KwEsvA46mGIIZqTVK0CFzjCjQc3FP9fI223Y
-	 H8P3lMLY9rBQQ==
-Date: Tue, 16 May 2023 08:23:55 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Luis Chamberlain <mcgrof@kernel.org>
-Cc: hch@infradead.org, sandeen@sandeen.net, song@kernel.org,
-	rafael@kernel.org, gregkh@linuxfoundation.org,
-	viro@zeniv.linux.org.uk, jack@suse.cz, jikos@kernel.org,
-	bvanassche@acm.org, ebiederm@xmission.com, mchehab@kernel.org,
-	keescook@chromium.org, p.raghav@samsung.com, da.gomez@samsung.com,
-	linux-fsdevel@vger.kernel.org, kernel@tuxforce.de,
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/6] fs: distinguish between user initiated freeze and
- kernel initiated freeze
-Message-ID: <20230516152355.GG858791@frogsfrogsfrogs>
-References: <20230508011717.4034511-1-mcgrof@kernel.org>
- <20230508011717.4034511-4-mcgrof@kernel.org>
+	Tue, 16 May 2023 21:32:44 +0000
+Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-64cb307d91aso2372820b3a.3
+        for <kexec@lists.infradead.org>; Tue, 16 May 2023 14:32:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1684272760; x=1686864760;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bxYdFfNWgH8T3xza0b6h2vTAfCsIMX0iES+NjWywOvA=;
+        b=bXzoKWHeThT08/25gYmYH/PwvxAModM/x18sF48hSGj6VfYx3AqwxvU/wbGQ5mK0I8
+         8+IV3gwBatiY+/CsiJpzllvn6cxt3Da73Qsi7ikeS1pvjLSFJnKtNdk9H5CtJjTRxk/W
+         NlheeFiA1lboSiLgxb1bD8vHNpJviFWLuyTFA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684272760; x=1686864760;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bxYdFfNWgH8T3xza0b6h2vTAfCsIMX0iES+NjWywOvA=;
+        b=iOy2OHqRxlhg2KsBQTu2tlTTS+mhswR2/M6D88HF9GZbulihgyf0RaP5+W0aeCqenA
+         ENXJT1M9u3TyQZkx9D4vJQzQHiXhqr9g9hRQQkxk687hIF6Qe0BvRadEK/x0I2rzAQ2g
+         pnzlu7VzqkFlS1UAkTtVlJqVN6+B//uQiNlbbLafBwtCu+WCQ4ZJBiPmt9IJXBsVRw9O
+         lpuzHA1L3EkeOX12+fEud9f8Sc7p6W0+RVzal5+PbAo2NbJYKy9T6/4by0ogoYsQYabI
+         s0WMzGF0NXnt+efxhia0bpG0VjaOWI5CiWZ+zopI5t9F4rWXBjNi+WoLG2paWxNkhSre
+         8bKQ==
+X-Gm-Message-State: AC+VfDwn/elrEkXaCX3K/b5r9uBv7Y7JR6xHx2L/l6xrCuAV7KhjgCAX
+	8PSjHjVBFQNqN5C61M2uEmJPSA==
+X-Google-Smtp-Source: ACHHUZ4VD+Jiit5nBg+95/NhuhCFqpi2Y3R98cX5qgMR2DjWCcb42bHIdO2wn+EhSDv5VMuUlg+loQ==
+X-Received: by 2002:a05:6a00:1311:b0:63a:fae3:9890 with SMTP id j17-20020a056a00131100b0063afae39890mr49796503pfu.24.1684272760089;
+        Tue, 16 May 2023 14:32:40 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id k14-20020a65464e000000b00530914c3bc1sm8277026pgr.21.2023.05.16.14.32.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 May 2023 14:32:39 -0700 (PDT)
+From: Kees Cook <keescook@chromium.org>
+To: linux-fsdevel@vger.kernel.org,
+	kexec@lists.infradead.org,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	bhe@redhat.com,
+	maskray@google.com,
+	ebiederm@xmission.com,
+	brauner@kernel.org,
+	vgoyal@redhat.com,
+	dyoung@redhat.com
+Cc: Kees Cook <keescook@chromium.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] coredump, vmcore: Set p_align to 4 for PT_NOTE
+Date: Tue, 16 May 2023 14:32:34 -0700
+Message-Id: <168427275061.1358677.10611822490555556072.b4-ty@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230512022528.3430327-1-maskray@google.com>
+References: <20230512022528.3430327-1-maskray@google.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20230508011717.4034511-4-mcgrof@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230516_082358_017991_7910CC53 
-X-CRM114-Status: GOOD (  45.93  )
+X-CRM114-CacheID: sfid-20230516_143243_145230_1A815697 
+X-CRM114-Status: GOOD (  10.62  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,326 +97,24 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sun, May 07, 2023 at 06:17:14PM -0700, Luis Chamberlain wrote:
-> Userspace can initiate a freeze call using ioctls. If the kernel decides
-> to freeze a filesystem later it must be able to distinguish if userspace
-> had initiated the freeze, so that it does not unfreeze it later
-> automatically on resume.
+On Fri, 12 May 2023 02:25:28 +0000, Fangrui Song wrote:
+> Tools like readelf/llvm-readelf use p_align to parse a PT_NOTE program
+> header as an array of 4-byte entries or 8-byte entries. Currently, there
+> are workarounds[1] in place for Linux to treat p_align==0 as 4. However,
+> it would be more appropriate to set the correct alignment so that tools
+> do not have to rely on guesswork. FreeBSD coredumps set p_align to 4 as
+> well.
 > 
-> Likewise if the kernel is initiating a freeze on its own it should *not*
-> fail to freeze a filesystem if a user had already frozen it on our behalf.
-> This same concept applies to thawing, even if its not possible for
-> userspace to beat the kernel in thawing a filesystem. This logic however
-> has never applied to userspace freezing and thawing, two consecutive
-> userspace freeze calls will results in only the first one succeeding, so
-> we must retain the same behaviour in userspace.
-> 
-> This doesn't implement yet kernel initiated filesystem freeze calls,
-> this will be done in subsequent calls. This change should introduce
-> no functional changes, it just extends the definitions of a frozen
-> filesystem to account for future kernel initiated filesystem freeze
-> and let's us keep record of when userpace initiated it so the kernel
-> can respect a userspace initiated freeze upon kernel initiated freeze
-> and its respective thaw cycle.
-> 
-> Reviewed-by: Jan Kara <jack@suse.cz>
-> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-> ---
->  block/bdev.c       |  4 ++--
->  fs/f2fs/gc.c       |  4 ++--
->  fs/gfs2/glops.c    |  2 +-
->  fs/gfs2/super.c    |  2 +-
->  fs/gfs2/sys.c      |  4 ++--
->  fs/gfs2/util.c     |  2 +-
->  fs/ioctl.c         |  4 ++--
->  fs/super.c         | 29 +++++++++++++++++++++++++----
->  include/linux/fs.h | 16 ++++++++++++++--
->  9 files changed, 50 insertions(+), 17 deletions(-)
-> 
-> diff --git a/block/bdev.c b/block/bdev.c
-> index dc54a2a1c46e..04f7b2c99845 100644
-> --- a/block/bdev.c
-> +++ b/block/bdev.c
-> @@ -250,7 +250,7 @@ int freeze_bdev(struct block_device *bdev)
->  	if (sb->s_op->freeze_super)
->  		error = sb->s_op->freeze_super(sb);
->  	else
-> -		error = freeze_super(sb);
-> +		error = freeze_super(sb, true);
->  	deactivate_locked_super(sb);
->  
->  	if (error) {
-> @@ -295,7 +295,7 @@ int thaw_bdev(struct block_device *bdev)
->  	if (sb->s_op->thaw_super)
->  		error = sb->s_op->thaw_super(sb);
->  	else
-> -		error = thaw_super(sb);
-> +		error = thaw_super(sb, true);
->  	if (error)
->  		bdev->bd_fsfreeze_count++;
->  	else
-> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-> index e31d6791d3e3..a5891055d85d 100644
-> --- a/fs/f2fs/gc.c
-> +++ b/fs/f2fs/gc.c
-> @@ -2168,7 +2168,7 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
->  
->  	if (!get_active_super(sbi->sb->s_bdev))
->  		return -ENOTTY;
-> -	freeze_super(sbi->sb);
-> +	freeze_super(sbi->sb, true);
->  
->  	f2fs_down_write(&sbi->gc_lock);
->  	f2fs_down_write(&sbi->cp_global_sem);
-> @@ -2221,7 +2221,7 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
->  	f2fs_up_write(&sbi->cp_global_sem);
->  	f2fs_up_write(&sbi->gc_lock);
->  	/* We use the same active reference from freeze */
-> -	thaw_super(sbi->sb);
-> +	thaw_super(sbi->sb, true);
->  	deactivate_locked_super(sbi->sb);
->  	return err;
->  }
-> diff --git a/fs/gfs2/glops.c b/fs/gfs2/glops.c
-> index 01d433ed6ce7..8fd37508f9a0 100644
-> --- a/fs/gfs2/glops.c
-> +++ b/fs/gfs2/glops.c
-> @@ -584,7 +584,7 @@ static int freeze_go_sync(struct gfs2_glock *gl)
->  	if (gl->gl_state == LM_ST_SHARED && !gfs2_withdrawn(sdp) &&
->  	    !test_bit(SDF_NORECOVERY, &sdp->sd_flags)) {
->  		atomic_set(&sdp->sd_freeze_state, SFS_STARTING_FREEZE);
-> -		error = freeze_super(sdp->sd_vfs);
-> +		error = freeze_super(sdp->sd_vfs, true);
->  		if (error) {
->  			fs_info(sdp, "GFS2: couldn't freeze filesystem: %d\n",
->  				error);
-> diff --git a/fs/gfs2/super.c b/fs/gfs2/super.c
-> index e57cb593e2f3..f2641891de43 100644
-> --- a/fs/gfs2/super.c
-> +++ b/fs/gfs2/super.c
-> @@ -687,7 +687,7 @@ void gfs2_freeze_func(struct work_struct *work)
->  		gfs2_assert_withdraw(sdp, 0);
->  	} else {
->  		atomic_set(&sdp->sd_freeze_state, SFS_UNFROZEN);
-> -		error = thaw_super(sb);
-> +		error = thaw_super(sb, true);
->  		if (error) {
->  			fs_info(sdp, "GFS2: couldn't thaw filesystem: %d\n",
->  				error);
-> diff --git a/fs/gfs2/sys.c b/fs/gfs2/sys.c
-> index e80c827acd09..9e0398f99674 100644
-> --- a/fs/gfs2/sys.c
-> +++ b/fs/gfs2/sys.c
-> @@ -169,10 +169,10 @@ static ssize_t freeze_store(struct gfs2_sbd *sdp, const char *buf, size_t len)
->  
->  	switch (n) {
->  	case 0:
-> -		error = thaw_super(sdp->sd_vfs);
-> +		error = thaw_super(sdp->sd_vfs, true);
->  		break;
->  	case 1:
-> -		error = freeze_super(sdp->sd_vfs);
-> +		error = freeze_super(sdp->sd_vfs, true);
->  		break;
->  	default:
->  		deactivate_locked_super(sb);
-> diff --git a/fs/gfs2/util.c b/fs/gfs2/util.c
-> index 3a0cd5e9ad84..be9705d618ec 100644
-> --- a/fs/gfs2/util.c
-> +++ b/fs/gfs2/util.c
-> @@ -191,7 +191,7 @@ static void signal_our_withdraw(struct gfs2_sbd *sdp)
->  		/* Make sure gfs2_unfreeze works if partially-frozen */
->  		flush_work(&sdp->sd_freeze_work);
->  		atomic_set(&sdp->sd_freeze_state, SFS_FROZEN);
-> -		thaw_super(sdp->sd_vfs);
-> +		thaw_super(sdp->sd_vfs, true);
->  	} else {
->  		wait_on_bit(&i_gl->gl_flags, GLF_DEMOTE,
->  			    TASK_UNINTERRUPTIBLE);
-> diff --git a/fs/ioctl.c b/fs/ioctl.c
-> index 1d20af762e0d..3cc79b82a5dc 100644
-> --- a/fs/ioctl.c
-> +++ b/fs/ioctl.c
-> @@ -401,7 +401,7 @@ static int ioctl_fsfreeze(struct file *filp)
->  	/* Freeze */
->  	if (sb->s_op->freeze_super)
->  		ret = sb->s_op->freeze_super(sb);
-> -	ret = freeze_super(sb);
-> +	ret = freeze_super(sb, true);
->  
->  	deactivate_locked_super(sb);
->  
-> @@ -418,7 +418,7 @@ static int ioctl_fsthaw(struct file *filp)
->  	/* Thaw */
->  	if (sb->s_op->thaw_super)
->  		return sb->s_op->thaw_super(sb);
-> -	return thaw_super(sb);
-> +	return thaw_super(sb, true);
->  }
->  
->  static int ioctl_file_dedupe_range(struct file *file,
-> diff --git a/fs/super.c b/fs/super.c
-> index 46c6475fc765..16ccbb9dd230 100644
-> --- a/fs/super.c
-> +++ b/fs/super.c
-> @@ -1026,7 +1026,7 @@ static void do_thaw_all_callback(struct super_block *sb)
->  		return;
->  	if (sb->s_root && sb->s_flags & SB_BORN) {
->  		emergency_thaw_bdev(sb);
-> -		thaw_super(sb);
-> +		thaw_super(sb, true);
->  	}
->  	deactivate_locked_super(sb);
->  }
-> @@ -1636,6 +1636,8 @@ static void sb_freeze_unlock(struct super_block *sb, int level)
->  /**
->   * freeze_super - force a filesystem backed by a block device into a consistent state
->   * @sb: the super to lock
-> + * @usercall: whether or not userspace initiated this via an ioctl or if it
-> + * 	was a kernel freeze
->   *
->   * Used by filesystems and the kernel to freeze a fileystem backed by a block
->   * device into a consistent state. Callers must use get_active_super(bdev) to
-> @@ -1669,10 +1671,13 @@ static void sb_freeze_unlock(struct super_block *sb, int level)
->   *
->   * sb->s_writers.frozen is protected by sb->s_umount.
->   */
-> -int freeze_super(struct super_block *sb)
-> +int freeze_super(struct super_block *sb, bool usercall)
->  {
->  	int ret;
->  
-> +	if (!usercall && sb_is_frozen(sb))
-> +		return 0;
+> [...]
 
-If we try a kernel freeze but the fs was already frozen by userspace, we
-return ... zero?
+Applied to for-next/execve, thanks!
 
-What if userspace thaws the fs immediately afterwards?  The kernel
-caller is still running, and now it erroneously thinks the fs is frozen.
-Won't that break the suspend freezer?
+[1/1] coredump, vmcore: Set p_align to 4 for PT_NOTE
+      https://git.kernel.org/kees/c/60592fb6b67c
 
-TBH I was more thinking about fscounters scrub, which will report false
-corruptions if the fs gets unfrozen while it is running.
+-- 
+Kees Cook
 
---D
-
-> +
->  	if (!sb_is_unfrozen(sb))
->  		return -EBUSY;
->  
-> @@ -1682,6 +1687,7 @@ int freeze_super(struct super_block *sb)
->  	if (sb_rdonly(sb)) {
->  		/* Nothing to do really... */
->  		sb->s_writers.frozen = SB_FREEZE_COMPLETE;
-> +		sb->s_writers.frozen_by_user = usercall;
->  		return 0;
->  	}
->  
-> @@ -1699,6 +1705,7 @@ int freeze_super(struct super_block *sb)
->  	ret = sync_filesystem(sb);
->  	if (ret) {
->  		sb->s_writers.frozen = SB_UNFROZEN;
-> +		sb->s_writers.frozen_by_user = false;
->  		sb_freeze_unlock(sb, SB_FREEZE_PAGEFAULT);
->  		wake_up(&sb->s_writers.wait_unfrozen);
->  		return ret;
-> @@ -1724,6 +1731,7 @@ int freeze_super(struct super_block *sb)
->  	 * when frozen is set to SB_FREEZE_COMPLETE, and for thaw_super().
->  	 */
->  	sb->s_writers.frozen = SB_FREEZE_COMPLETE;
-> +	sb->s_writers.frozen_by_user = usercall;
->  	lockdep_sb_freeze_release(sb);
->  	return 0;
->  }
-> @@ -1732,21 +1740,33 @@ EXPORT_SYMBOL(freeze_super);
->  /**
->   * thaw_super -- unlock a filesystem backed by a block device
->   * @sb: the super to thaw
-> + * @usercall: whether or not userspace initiated this thaw or if it was the
-> + * 	kernel which initiated it
->   *
->   * Used by filesystems and the kernel to thaw a fileystem backed by a block
->   * device. Callers must use get_active_super(bdev) to lock the @sb and when
->   * done must unlock it with deactivate_locked_super(). Once done, this marks
->   * the filesystem as writeable.
->   */
-> -int thaw_super(struct super_block *sb)
-> +int thaw_super(struct super_block *sb, bool usercall)
->  {
->  	int error;
->  
-> -	if (sb->s_writers.frozen != SB_FREEZE_COMPLETE)
-> +	if (!usercall) {
-> +		/*
-> +		 * If userspace initiated the freeze don't let the kernel
-> +		 * thaw it on return from a kernel initiated freeze.
-> +		 */
-> +		if (sb_is_unfrozen(sb) || sb_is_frozen_by_user(sb))
-> +			return 0;
-> +	}
-> +
-> +	if (!sb_is_frozen(sb))
->  		return -EINVAL;
->  
->  	if (sb_rdonly(sb)) {
->  		sb->s_writers.frozen = SB_UNFROZEN;
-> +		sb->s_writers.frozen_by_user = false;
->  		goto out;
->  	}
->  
-> @@ -1763,6 +1783,7 @@ int thaw_super(struct super_block *sb)
->  	}
->  
->  	sb->s_writers.frozen = SB_UNFROZEN;
-> +	sb->s_writers.frozen_by_user = false;
->  	sb_freeze_unlock(sb, SB_FREEZE_FS);
->  out:
->  	wake_up(&sb->s_writers.wait_unfrozen);
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 90b5bdc4071a..d9b46c858103 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -1146,6 +1146,7 @@ enum {
->  
->  struct sb_writers {
->  	int				frozen;		/* Is sb frozen? */
-> +	bool				frozen_by_user;	/* User freeze? */
->  	wait_queue_head_t		wait_unfrozen;	/* wait for thaw */
->  	struct percpu_rw_semaphore	rw_sem[SB_FREEZE_LEVELS];
->  };
-> @@ -1632,6 +1633,17 @@ static inline bool sb_is_frozen(struct super_block *sb)
->  	return sb->s_writers.frozen == SB_FREEZE_COMPLETE;
->  }
->  
-> +/**
-> + * sb_is_frozen_by_user - was the superblock frozen by userspace?
-> + * @sb: the super to check
-> + *
-> + * Returns true if the super is frozen by userspace, such as an ioctl.
-> + */
-> +static inline bool sb_is_frozen_by_user(struct super_block *sb)
-> +{
-> +	return sb_is_frozen(sb) && sb->s_writers.frozen_by_user;
-> +}
-> +
->  /**
->   * sb_is_unfrozen - is superblock unfrozen
->   * @sb: the super to check
-> @@ -2308,8 +2320,8 @@ extern int unregister_filesystem(struct file_system_type *);
->  extern int vfs_statfs(const struct path *, struct kstatfs *);
->  extern int user_statfs(const char __user *, struct kstatfs *);
->  extern int fd_statfs(int, struct kstatfs *);
-> -extern int freeze_super(struct super_block *super);
-> -extern int thaw_super(struct super_block *super);
-> +extern int freeze_super(struct super_block *super, bool usercall);
-> +extern int thaw_super(struct super_block *super, bool usercall);
->  extern __printf(2, 3)
->  int super_setup_bdi_name(struct super_block *sb, char *fmt, ...);
->  extern int super_setup_bdi(struct super_block *sb);
-> -- 
-> 2.39.2
-> 
 
 _______________________________________________
 kexec mailing list
