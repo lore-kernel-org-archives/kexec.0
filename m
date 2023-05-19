@@ -4,66 +4,121 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0501EC7EE24
-	for <kexec@archiver.kernel.org>; Thu, 18 May 2023 05:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9706BC77B7A
+	for <kexec@archiver.kernel.org>; Fri, 19 May 2023 15:40:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References:Message-Id
+	:MIME-Version:Subject:Date:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=ArNP6PscjL5jkIy9g20SFGRCqE826eP2HSJyyrA0ZbU=; b=3CrIy289J9WV6p
-	At2crhTb4RGRLVLObBznegDx5Hx1IsimvNqHzc9/JosBYmUc5T73E8gBhwGwSXHKAvkAmmLbalsDU
-	xK1L0HndNs66S8EOjx4uqH2iUlEWXjub+iw8IXw2fjhf/Tty0LJucsicAffKBe1G76Y//2AH93S+m
-	P3AYeJ6rKpwFXxV1E2Y007Nt0LmoE0FZngyC5NO2CQxnaoPRtqSNl8dfUBGt+j2fe9ET+ket1qfdd
-	apULJjY+fgX2I6T7nxNEJNsvhXyVXTxtdzktDiuNCiUFitOxuTiJJBaNQ5r/82NHjR2+YUo9r5jd+
-	QeVf8AkdfM8jT+kxityA==;
+	List-Owner; bh=Do76KXzAMoS+kZb8B+CxJQpbjAJWg3tiHLfQH9RmGAs=; b=wnATYLXR7mxdkR
+	DerwqyJKmKJrjTiHe0GCJ4w4kA7oBoHbGg6L6JFloZVRFFOymjuxVaW41SGMMMAGdtx7N7uuRWMcm
+	kBkejFkubihcqI/Rc+ChQ9rMn5ViO9sJycl1KgAUnAQ7UzEMx9QopBlFN4MMm720iaM1hpeGrH+DK
+	AYOfkCX1qat7gYQaJdIwTbwogMFL4zmIuTQYtQ89tbTFfl8hIHA2XeBSB8BvZbTh+FX/Nd/Nw1u5o
+	61Hzu+zdB1wfhEKg71fe5X9iYrVq8nO3khIKpBrly9+7wq+OtVbw3n1GgaPwucL0xv7hLPRoBXKpR
+	3pYCOFLX2tH4zoy2u5VA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1pzWGC-00BwrZ-29;
-	Thu, 18 May 2023 05:33:08 +0000
-Received: from dfw.source.kernel.org ([139.178.84.217])
+	id 1q02DE-00GcZF-24;
+	Fri, 19 May 2023 15:40:12 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1pzWG6-00BwpW-01
+	id 1q02DD-00GcYM-0Y
+	for kexec@bombadil.infradead.org;
+	Fri, 19 May 2023 15:40:11 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Cc:To:In-Reply-To:References:
+	Message-Id:Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:
+	From:Sender:Reply-To:Content-ID:Content-Description;
+	bh=BD6qB7twnufisotyY5nBfpaakG3WUms/sLLcs5/qPcg=; b=Ik2X3UC5o6Zt0DGk6J+P7j5tA1
+	HPzpqTyz8SYmpEiaF7uvGXApcVPpkurEMU4C6SYTjo41LDkOkN32g4VbTZ5L1gipGwD459s3yG32f
+	Sp9xBNw2MRS5aOdhnEv99OnxxrrgTfNDNa4uH0r40/yfrQAt+ueHBudYjdWyEvvRKasl17fBI600h
+	unwcoYdxqpbkmhrYlHXc5gl8xlXj0rxlGJi1kAVGm5qFkFclDNJIgR8NAdlexJmiyckztoQhQ9xP5
+	hgO7TKcgVfUZaGaDHNbuvWeWTmYxxYjF75/9aXAZU7t26oGbUyKFdJwQALnWD0k8L3SuaWRK0TOGe
+	Yd23ojUA==;
+Received: from mail-ej1-x62c.google.com ([2a00:1450:4864:20::62c])
+	by desiato.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
+	id 1q01PA-00FvxT-2b
 	for kexec@lists.infradead.org;
-	Thu, 18 May 2023 05:33:05 +0000
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 021DB61CA1;
-	Thu, 18 May 2023 05:33:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57181C433EF;
-	Thu, 18 May 2023 05:33:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1684387980;
-	bh=hKTw5Wz7S33cBv8iS0xluYjrcwky6vAyvc60N/y/W2E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y/TBivBzznSTEAtdhRYdh0h05KBK2o8JXHfCcblVBlK4AiXPczHW1iCrGUlegFQxp
-	 ctE2PmT59KKpaAlpFRwkgG1nlwANdXZBeZj7wqEEnnQtdvEwURd/STP8SVyIJ//WJq
-	 DI/DGej55Jn7/JpCsjpqd/0/IMdw0rEFHfB7ymbV5IWc7I9j9tATK5EOenPHJS/kuh
-	 I1k0Ih0+JUwz/pSafLmSFqXEqR4VsZ8eZUGwUQSL6Wx5LgfTvs3ieIyHfHZEFYiexS
-	 1FQihksYM7JKKqY2m7ZXF5HtmIXnkSDvLBu00srCbv3ugWlejJVhJu3pJOf71Ueax8
-	 9laqBYogo3JPw==
-Date: Wed, 17 May 2023 22:32:59 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Luis Chamberlain <mcgrof@kernel.org>
-Cc: hch@infradead.org, sandeen@sandeen.net, song@kernel.org,
-	rafael@kernel.org, gregkh@linuxfoundation.org,
-	viro@zeniv.linux.org.uk, jack@suse.cz, jikos@kernel.org,
-	bvanassche@acm.org, ebiederm@xmission.com, mchehab@kernel.org,
-	keescook@chromium.org, p.raghav@samsung.com, da.gomez@samsung.com,
-	linux-fsdevel@vger.kernel.org, kernel@tuxforce.de,
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] fs: unify locking semantics for fs freeze / thaw
-Message-ID: <20230518053259.GB11598@frogsfrogsfrogs>
-References: <20230508011717.4034511-1-mcgrof@kernel.org>
- <20230508011717.4034511-2-mcgrof@kernel.org>
+	Fri, 19 May 2023 14:48:30 +0000
+Received: by mail-ej1-x62c.google.com with SMTP id a640c23a62f3a-96f588bc322so181697666b.1
+        for <kexec@lists.infradead.org>; Fri, 19 May 2023 07:48:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1684507706; x=1687099706;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BD6qB7twnufisotyY5nBfpaakG3WUms/sLLcs5/qPcg=;
+        b=JDuBiVDj8o8HaMzkIB840oZkGv5wJJi7TNtUIrYqKhMie/96QidOGQDjQXE7b5+5S9
+         tK8GWP5SEiIeHDVPjC3T2ENDFCeYqLi5SHh6A0hgK/rjIefTVUgKtRZiA8w7MSYtyRXh
+         R0aHFCTNuZeLm/jFjl0vcQ1z/eRP+0aN//K8c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684507706; x=1687099706;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BD6qB7twnufisotyY5nBfpaakG3WUms/sLLcs5/qPcg=;
+        b=JJ+yHhV3icBpe74a9wlXqG/Zj2ULnneIH/bVipGQmhR8pQ2GzcxG38Lk8o1aNLQdNw
+         NIfHhPYmy2+ezrIMAMRhrDTRT6SJzq7n+gOlggZzAPFTAyfc5kUHyM+85YqHx7T5aYZ1
+         fC8U4q1dEPp3Ta1fJ1rc+uXrzzBlBhEm8nTuJasgc34eg3ikc0tSAlH5a/ZNiF7dqGF3
+         eNWNaIdW36/K8HXWlmq2ov2Pc93lOj7rIYO541PzmstMjArzji4p7JaR3v8d6h7blHtY
+         yyWgg+2xH4Mv0CAH8Nc6cxKlmc7eiogEEiN774YHMAK4CZBDIUkD+2f4tUwir6xAoULn
+         UJ2A==
+X-Gm-Message-State: AC+VfDzigEi8LGBqCgh0Y9rb9hhDfTh7hmn4U7sSEUgwIQU/uFhT2TL6
+	xtRYJNXU0OdKe8YcoOcnBTGVKg==
+X-Google-Smtp-Source: ACHHUZ6OprUYGsS72ehmUtvrfFocAu2GyTDDqdde/uRgkGX7E/HjFZLPkMJjnA4KZkxfiwtIcIB0dw==
+X-Received: by 2002:a17:907:1609:b0:94f:1c90:cb71 with SMTP id hb9-20020a170907160900b0094f1c90cb71mr2302378ejc.65.1684507706237;
+        Fri, 19 May 2023 07:48:26 -0700 (PDT)
+Received: from alco.roam.corp.google.com ([2620:0:1059:10:62fd:274b:c2ab:69bb])
+        by smtp.gmail.com with ESMTPSA id a2-20020a17090680c200b0096a68648329sm2349437ejx.214.2023.05.19.07.48.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 May 2023 07:48:25 -0700 (PDT)
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Fri, 19 May 2023 16:47:37 +0200
+Subject: [PATCH v7 2/4] x86/purgatory: Remove PGO flags
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20230508011717.4034511-2-mcgrof@kernel.org>
+Message-Id: <20230321-kexec_clang16-v7-2-b05c520b7296@chromium.org>
+References: <20230321-kexec_clang16-v7-0-b05c520b7296@chromium.org>
+In-Reply-To: <20230321-kexec_clang16-v7-0-b05c520b7296@chromium.org>
+To: Eric Biederman <ebiederm@xmission.com>, 
+ Philipp Rudo <prudo@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+ Nathan Chancellor <nathan@kernel.org>, Tom Rix <trix@redhat.com>, 
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+ Christophe Leroy <christophe.leroy@csgroup.eu>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+Cc: Baoquan He <bhe@redhat.com>, Philipp Rudo <prudo@redhat.com>, 
+ kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Ross Zwisler <zwisler@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
+ Simon Horman <horms@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+ llvm@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
+ linux-riscv@lists.infradead.org, Ricardo Ribalda <ribalda@chromium.org>, 
+ stable@vger.kernel.org
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1218; i=ribalda@chromium.org;
+ h=from:subject:message-id; bh=ZdKmKWLc9TEOfphmrnN/WwYYNZStN7R/TxB0+Zjd8HY=;
+ b=owEBbQKS/ZANAwAKAdE30T7POsSIAcsmYgBkZ4wxpLapFX/30sji37lAIaagKHpP8BO2TaX+/
+ sJHabfFQk2JAjMEAAEKAB0WIQREDzjr+/4oCDLSsx7RN9E+zzrEiAUCZGeMMQAKCRDRN9E+zzrE
+ iBOhEACRW3xOCPLHp71KLmHTYNCd71GtWrKjkfxklAL33OghFmTvUpYrsF9LpYB/m7hEcL/ThHl
+ hL85+iGqortM23o+IHkavb1dGe2lPjzhRrAlOP3VRhZdMb4Z30GB9soPtsVB1wTkIHAffgMXlXl
+ OX9TTvAAdTwiK3QpxHsQTI7Zrwd7j4F5PLFwLvF1EJ5B9vHk24k8qUliTckaIUupc8s90pL+blD
+ 76ekelf8r6J/OuHnqjwfBNPIN+L5PKM1Qnvc+nhDbVClbug/NZoYEOQncnJUQzy4+pPlgWMhh1n
+ jSBpPsZLhRFaaAvgOmnCFcJ4QK855FrYlgSZ62gNGa18oujDvo8M/P3rMJl+ZptFWkJHg4ftqjk
+ d2p50qqwa36cAZSdv5xiIorPYJAvQcKnfbLTa/33NmhdJsRmYKEIBmzoJJMVV1WM2GQ1GoS3iqQ
+ xsIbbnRtyfu5Oj+092A0UrmjBv44l9VFL0GioJ/h1dybPyj/xRudpeipiBI5UHl+PsrthS0eXyR
+ BEhiiCDkPPQVspdv9HGVTw7RtC+jrD2P59F2ZJdHKAj43rczvbjLU1aFhLmXOsvEzExQ7jdyhrD
+ dtwIMAsWCKWuA82FW3a1RMjpQzwZn57XSc6vVKzBJhtayoAZ/RnFP3+dNNhzAJAuESXOXu/+Yc9
+ KoQnpw6oiVlAnVA==
+X-Developer-Key: i=ribalda@chromium.org; a=openpgp;
+ fpr=9EC3BB66E2FC129A6F90B39556A0D81F9F782DA9
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230517_223302_130227_E721456E 
-X-CRM114-Status: GOOD (  34.87  )
+X-CRM114-CacheID: sfid-20230519_154828_997717_25B28AFD 
+X-CRM114-Status: GOOD (  10.71  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,367 +135,37 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sun, May 07, 2023 at 06:17:12PM -0700, Luis Chamberlain wrote:
-> Right now freeze_super()  and thaw_super() are called with
-> different locking contexts. To expand on this is messy, so
-> just unify the requirement to require grabbing an active
-> reference and keep the superblock locked.
-> 
-> Suggested-by: Christoph Hellwig <hch@infradead.org>
-> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-> ---
->  block/bdev.c    |  5 +++-
->  fs/f2fs/gc.c    |  5 ++++
->  fs/gfs2/super.c |  9 +++++--
->  fs/gfs2/sys.c   |  6 +++++
->  fs/gfs2/util.c  |  5 ++++
->  fs/ioctl.c      | 12 ++++++++--
->  fs/super.c      | 62 ++++++++++++++++++-------------------------------
->  7 files changed, 60 insertions(+), 44 deletions(-)
-> 
-> diff --git a/block/bdev.c b/block/bdev.c
-> index 21c63bfef323..dc54a2a1c46e 100644
-> --- a/block/bdev.c
-> +++ b/block/bdev.c
-> @@ -251,7 +251,7 @@ int freeze_bdev(struct block_device *bdev)
->  		error = sb->s_op->freeze_super(sb);
->  	else
->  		error = freeze_super(sb);
-> -	deactivate_super(sb);
-> +	deactivate_locked_super(sb);
->  
->  	if (error) {
->  		bdev->bd_fsfreeze_count--;
-> @@ -289,6 +289,8 @@ int thaw_bdev(struct block_device *bdev)
->  	sb = bdev->bd_fsfreeze_sb;
->  	if (!sb)
->  		goto out;
-> +	if (!get_active_super(bdev))
-> +		goto out;
->  
->  	if (sb->s_op->thaw_super)
->  		error = sb->s_op->thaw_super(sb);
-> @@ -298,6 +300,7 @@ int thaw_bdev(struct block_device *bdev)
->  		bdev->bd_fsfreeze_count++;
->  	else
->  		bdev->bd_fsfreeze_sb = NULL;
-> +	deactivate_locked_super(sb);
->  out:
->  	mutex_unlock(&bdev->bd_fsfreeze_mutex);
->  	return error;
-> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-> index 61c5f9d26018..e31d6791d3e3 100644
-> --- a/fs/f2fs/gc.c
-> +++ b/fs/f2fs/gc.c
-> @@ -2166,7 +2166,10 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
->  	if (err)
->  		return err;
->  
-> +	if (!get_active_super(sbi->sb->s_bdev))
-> +		return -ENOTTY;
->  	freeze_super(sbi->sb);
-> +
->  	f2fs_down_write(&sbi->gc_lock);
->  	f2fs_down_write(&sbi->cp_global_sem);
->  
-> @@ -2217,6 +2220,8 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
->  out_err:
->  	f2fs_up_write(&sbi->cp_global_sem);
->  	f2fs_up_write(&sbi->gc_lock);
-> +	/* We use the same active reference from freeze */
->  	thaw_super(sbi->sb);
-> +	deactivate_locked_super(sbi->sb);
->  	return err;
->  }
-> diff --git a/fs/gfs2/super.c b/fs/gfs2/super.c
-> index 5eed8c237500..e57cb593e2f3 100644
-> --- a/fs/gfs2/super.c
-> +++ b/fs/gfs2/super.c
-> @@ -676,7 +676,12 @@ void gfs2_freeze_func(struct work_struct *work)
->  	struct gfs2_sbd *sdp = container_of(work, struct gfs2_sbd, sd_freeze_work);
->  	struct super_block *sb = sdp->sd_vfs;
->  
-> -	atomic_inc(&sb->s_active);
-> +	if (!get_active_super(sb->s_bdev)) {
-> +		fs_info(sdp, "GFS2: couldn't grap super for thaw for filesystem\n");
-> +		gfs2_assert_withdraw(sdp, 0);
-> +		return;
-> +	}
-> +
->  	error = gfs2_freeze_lock(sdp, &freeze_gh, 0);
->  	if (error) {
->  		gfs2_assert_withdraw(sdp, 0);
-> @@ -690,7 +695,7 @@ void gfs2_freeze_func(struct work_struct *work)
->  		}
->  		gfs2_freeze_unlock(&freeze_gh);
->  	}
-> -	deactivate_super(sb);
-> +	deactivate_locked_super(sb);
->  	clear_bit_unlock(SDF_FS_FROZEN, &sdp->sd_flags);
->  	wake_up_bit(&sdp->sd_flags, SDF_FS_FROZEN);
->  	return;
-> diff --git a/fs/gfs2/sys.c b/fs/gfs2/sys.c
-> index 454dc2ff8b5e..cbb71c3520c0 100644
-> --- a/fs/gfs2/sys.c
-> +++ b/fs/gfs2/sys.c
-> @@ -164,6 +164,9 @@ static ssize_t freeze_store(struct gfs2_sbd *sdp, const char *buf, size_t len)
->  	if (!capable(CAP_SYS_ADMIN))
->  		return -EPERM;
->  
-> +	if (!get_active_super(sb->s_bdev))
-> +		return -ENOTTY;
-> +
->  	switch (n) {
->  	case 0:
->  		error = thaw_super(sdp->sd_vfs);
-> @@ -172,9 +175,12 @@ static ssize_t freeze_store(struct gfs2_sbd *sdp, const char *buf, size_t len)
->  		error = freeze_super(sdp->sd_vfs);
->  		break;
->  	default:
-> +		deactivate_locked_super(sb);
->  		return -EINVAL;
->  	}
->  
-> +	deactivate_locked_super(sb);
-> +
->  	if (error) {
->  		fs_warn(sdp, "freeze %d error %d\n", n, error);
->  		return error;
-> diff --git a/fs/gfs2/util.c b/fs/gfs2/util.c
-> index 7a6aeffcdf5c..3a0cd5e9ad84 100644
-> --- a/fs/gfs2/util.c
-> +++ b/fs/gfs2/util.c
-> @@ -345,10 +345,15 @@ int gfs2_withdraw(struct gfs2_sbd *sdp)
->  	set_bit(SDF_WITHDRAW_IN_PROG, &sdp->sd_flags);
->  
->  	if (sdp->sd_args.ar_errors == GFS2_ERRORS_WITHDRAW) {
-> +		if (!get_active_super(sb->s_bdev)) {
-> +			fs_err(sdp, "could not grab super on withdraw for file system\n");
-> +			return -1;
-> +		}
->  		fs_err(sdp, "about to withdraw this file system\n");
->  		BUG_ON(sdp->sd_args.ar_debug);
->  
->  		signal_our_withdraw(sdp);
-> +		deactivate_locked_super(sb);
->  
->  		kobject_uevent(&sdp->sd_kobj, KOBJ_OFFLINE);
->  
-> diff --git a/fs/ioctl.c b/fs/ioctl.c
-> index 5b2481cd4750..1d20af762e0d 100644
-> --- a/fs/ioctl.c
-> +++ b/fs/ioctl.c
-> @@ -386,6 +386,7 @@ static int ioctl_fioasync(unsigned int fd, struct file *filp,
->  static int ioctl_fsfreeze(struct file *filp)
->  {
->  	struct super_block *sb = file_inode(filp)->i_sb;
-> +	int ret;
->  
->  	if (!ns_capable(sb->s_user_ns, CAP_SYS_ADMIN))
->  		return -EPERM;
-> @@ -394,10 +395,17 @@ static int ioctl_fsfreeze(struct file *filp)
->  	if (sb->s_op->freeze_fs == NULL && sb->s_op->freeze_super == NULL)
->  		return -EOPNOTSUPP;
->  
-> +	if (!get_active_super(sb->s_bdev))
+If profile-guided optimization is enabled, the purgatory ends up with
+multiple .text sections.
+This is not supported by kexec and crashes the system.
 
-Um... doesn't this mean that we now cannot freeze network and pseudo
-filesystems?
+Cc: stable@vger.kernel.org
+Fixes: 930457057abe ("kernel/kexec_file.c: split up __kexec_load_puragory")
+Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+---
+ arch/x86/purgatory/Makefile | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-> +		return -ENOTTY;
-> +
->  	/* Freeze */
->  	if (sb->s_op->freeze_super)
-> -		return sb->s_op->freeze_super(sb);
-> -	return freeze_super(sb);
-> +		ret = sb->s_op->freeze_super(sb);
-> +	ret = freeze_super(sb);
-> +
-> +	deactivate_locked_super(sb);
-> +
-> +	return ret;
->  }
->  
->  static int ioctl_fsthaw(struct file *filp)
-> diff --git a/fs/super.c b/fs/super.c
-> index 34afe411cf2b..0e9d48846684 100644
-> --- a/fs/super.c
-> +++ b/fs/super.c
-> @@ -39,8 +39,6 @@
->  #include <uapi/linux/mount.h>
->  #include "internal.h"
->  
-> -static int thaw_super_locked(struct super_block *sb);
-> -
->  static LIST_HEAD(super_blocks);
->  static DEFINE_SPINLOCK(sb_lock);
->  
-> @@ -851,13 +849,13 @@ struct super_block *get_active_super(struct block_device *bdev)
->  		if (sb->s_bdev == bdev) {
->  			if (!grab_super(sb))
->  				goto restart;
-> -			up_write(&sb->s_umount);
->  			return sb;
->  		}
->  	}
->  	spin_unlock(&sb_lock);
->  	return NULL;
->  }
-> +EXPORT_SYMBOL_GPL(get_active_super);
->  
->  struct super_block *user_get_super(dev_t dev, bool excl)
->  {
-> @@ -1024,13 +1022,13 @@ void emergency_remount(void)
->  
->  static void do_thaw_all_callback(struct super_block *sb)
->  {
-> -	down_write(&sb->s_umount);
-> +	if (!get_active_super(sb->s_bdev))
-> +		return;
->  	if (sb->s_root && sb->s_flags & SB_BORN) {
->  		emergency_thaw_bdev(sb);
-> -		thaw_super_locked(sb);
-> -	} else {
-> -		up_write(&sb->s_umount);
-> +		thaw_super(sb);
->  	}
-> +	deactivate_locked_super(sb);
->  }
->  
->  static void do_thaw_all(struct work_struct *work)
-> @@ -1636,10 +1634,13 @@ static void sb_freeze_unlock(struct super_block *sb, int level)
->  }
->  
->  /**
-> - * freeze_super - lock the filesystem and force it into a consistent state
-> + * freeze_super - force a filesystem backed by a block device into a consistent state
->   * @sb: the super to lock
->   *
-> - * Syncs the super to make sure the filesystem is consistent and calls the fs's
-> + * Used by filesystems and the kernel to freeze a fileystem backed by a block
-> + * device into a consistent state. Callers must use get_active_super(bdev) to
-> + * lock the @sb and when done must unlock it with deactivate_locked_super().
-> + * Syncs the filesystem backed by the @sb and calls the filesystem's optional
->   * freeze_fs.  Subsequent calls to this without first thawing the fs will return
->   * -EBUSY.
->   *
-> @@ -1672,22 +1673,15 @@ int freeze_super(struct super_block *sb)
->  {
->  	int ret;
->  
-> -	atomic_inc(&sb->s_active);
-> -	down_write(&sb->s_umount);
-> -	if (sb->s_writers.frozen != SB_UNFROZEN) {
-> -		deactivate_locked_super(sb);
-> +	if (sb->s_writers.frozen != SB_UNFROZEN)
->  		return -EBUSY;
-> -	}
->  
-> -	if (!(sb->s_flags & SB_BORN)) {
-> -		up_write(&sb->s_umount);
-> +	if (!(sb->s_flags & SB_BORN))
->  		return 0;	/* sic - it's "nothing to do" */
-> -	}
->  
->  	if (sb_rdonly(sb)) {
->  		/* Nothing to do really... */
->  		sb->s_writers.frozen = SB_FREEZE_COMPLETE;
-> -		up_write(&sb->s_umount);
->  		return 0;
->  	}
->  
-> @@ -1707,7 +1701,6 @@ int freeze_super(struct super_block *sb)
->  		sb->s_writers.frozen = SB_UNFROZEN;
->  		sb_freeze_unlock(sb, SB_FREEZE_PAGEFAULT);
->  		wake_up(&sb->s_writers.wait_unfrozen);
-> -		deactivate_locked_super(sb);
->  		return ret;
->  	}
->  
-> @@ -1723,7 +1716,6 @@ int freeze_super(struct super_block *sb)
->  			sb->s_writers.frozen = SB_UNFROZEN;
->  			sb_freeze_unlock(sb, SB_FREEZE_FS);
->  			wake_up(&sb->s_writers.wait_unfrozen);
-> -			deactivate_locked_super(sb);
->  			return ret;
->  		}
->  	}
-> @@ -1733,19 +1725,25 @@ int freeze_super(struct super_block *sb)
->  	 */
->  	sb->s_writers.frozen = SB_FREEZE_COMPLETE;
->  	lockdep_sb_freeze_release(sb);
-> -	up_write(&sb->s_umount);
->  	return 0;
+diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
+index 82fec66d46d2..42abd6af1198 100644
+--- a/arch/x86/purgatory/Makefile
++++ b/arch/x86/purgatory/Makefile
+@@ -14,6 +14,11 @@ $(obj)/sha256.o: $(srctree)/lib/crypto/sha256.c FORCE
+ 
+ CFLAGS_sha256.o := -D__DISABLE_EXPORTS
+ 
++# When profile-guided optimization is enabled, llvm emits two different
++# overlapping text sections, which is not supported by kexec. Remove profile
++# optimization flags.
++KBUILD_CFLAGS := $(filter-out -fprofile-sample-use=% -fprofile-use=%,$(KBUILD_CFLAGS))
++
+ # When linking purgatory.ro with -r unresolved symbols are not checked,
+ # also link a purgatory.chk binary without -r to check for unresolved symbols.
+ PURGATORY_LDFLAGS := -e purgatory_start -z nodefaultlib
 
-Also ... before this change, a successful freeze means that we retain
-the elevated s_active during the freeze.  Now the callers of this
-function always call deactivate_locked_super, which decrements the
-active count, even if the fs is actually frozen.  The active count no
-longer works the way it used to.  Can that lead to freeing a frozen
-super?
+-- 
+2.40.1.698.g37aff9b760-goog
 
-Alternately, I guess we could take our own s_active reference here.
-
---D
-
->  }
->  EXPORT_SYMBOL(freeze_super);
->  
-> -static int thaw_super_locked(struct super_block *sb)
-> +/**
-> + * thaw_super -- unlock a filesystem backed by a block device
-> + * @sb: the super to thaw
-> + *
-> + * Used by filesystems and the kernel to thaw a fileystem backed by a block
-> + * device. Callers must use get_active_super(bdev) to lock the @sb and when
-> + * done must unlock it with deactivate_locked_super(). Once done, this marks
-> + * the filesystem as writeable.
-> + */
-> +int thaw_super(struct super_block *sb)
->  {
->  	int error;
->  
-> -	if (sb->s_writers.frozen != SB_FREEZE_COMPLETE) {
-> -		up_write(&sb->s_umount);
-> +	if (sb->s_writers.frozen != SB_FREEZE_COMPLETE)
->  		return -EINVAL;
-> -	}
->  
->  	if (sb_rdonly(sb)) {
->  		sb->s_writers.frozen = SB_UNFROZEN;
-> @@ -1760,7 +1758,6 @@ static int thaw_super_locked(struct super_block *sb)
->  			printk(KERN_ERR
->  				"VFS:Filesystem thaw failed\n");
->  			lockdep_sb_freeze_release(sb);
-> -			up_write(&sb->s_umount);
->  			return error;
->  		}
->  	}
-> @@ -1769,21 +1766,8 @@ static int thaw_super_locked(struct super_block *sb)
->  	sb_freeze_unlock(sb, SB_FREEZE_FS);
->  out:
->  	wake_up(&sb->s_writers.wait_unfrozen);
-> -	deactivate_locked_super(sb);
->  	return 0;
->  }
-> -
-> -/**
-> - * thaw_super -- unlock filesystem
-> - * @sb: the super to thaw
-> - *
-> - * Unlocks the filesystem and marks it writeable again after freeze_super().
-> - */
-> -int thaw_super(struct super_block *sb)
-> -{
-> -	down_write(&sb->s_umount);
-> -	return thaw_super_locked(sb);
-> -}
->  EXPORT_SYMBOL(thaw_super);
->  
->  /*
-> -- 
-> 2.39.2
-> 
 
 _______________________________________________
 kexec mailing list
