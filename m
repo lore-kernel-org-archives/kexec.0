@@ -4,92 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 24100C7EE2C
-	for <kexec@archiver.kernel.org>; Thu, 25 May 2023 09:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7487AC7EE29
+	for <kexec@archiver.kernel.org>; Thu, 25 May 2023 12:17:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=GwigmQMhdJICWmKpQ95iwrUKRTc435VHd7OVSCGz/IY=; b=Xs3/M2P1lV/X7i
-	G198wqH7ET+5HyYeX0B+8DpJQjPVecNPnNqAZ6hPR3I+qY+maa7y94hUpcnmgdtFNWZteIpmKAYEq
-	MZgxJlko9o2Hy2cGpaCOLd/dYV9heDLO15Cn7VSbEK2c/X4TVljdxg8nNLre4hKY9vVPdOwjkLxA4
-	w4EutBhhsank4aYNUhkbPxUMjoDLfUoii8kKYAUWZ78sfwVwpn6sAxdzakW/2cILrnHoIPxS7LaKk
-	VUvbx/wenDfnwwWEDcf+lWSjYorrpnw+dZd7rZmhKXoSM/EFvXY+23UBDl7Df77pYF3lO1JcyOHVy
-	+VQtzJ8VhXl6cKQ0jyQQ==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=RBZ/e02+UyupACrIAuKp6JjKO8puYxPevdy0xDtrTcU=; b=z+Jf5V43hMSQ/t
+	rK0ugteXOWNLaVogP1+18ZqZp7gIWH+hbxDAsOtjqd4fnY48vgBP4OQrQDxPRKxqSpRjg6nnpqCRS
+	foJJVq0JBC3L+Zzjpjl7mH6rgYz5Mx/xESQYBAL9GuEhbnsN2MFW9bKZUx/VSKVa4mIvShaNW9Qxu
+	ZJjYFmWFe3zTpYZ8/BLnEquXr+40yODHvyUBMXDOig9OBSxJuwrzBuAMCexmQ9CIuvhvo66i86pwA
+	k0ZA27z78Q4K19jjU3E+PM+qbMrXbhmyAttfkshzvscxpFfU6fKd/iGsPX6UKD/Y2urLKD8ncq7q/
+	sByomG4KdfahRFLCt3nQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1q27cx-00GC0S-3A;
-	Thu, 25 May 2023 09:51:24 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1q29uW-00GbE7-23;
+	Thu, 25 May 2023 12:17:40 +0000
+Received: from smtp-out2.suse.de ([195.135.220.29])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1q27cv-00GBzZ-0d
+	id 1q29uS-00GbBq-2B
 	for kexec@lists.infradead.org;
-	Thu, 25 May 2023 09:51:22 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1685008279;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=hAxjra5W1+1SvpBMN22QXJJOi5JB+teXZgPwJvUgVGE=;
-	b=Q9t3HPe1XmP+KVL3Bl5lCvG9jgwbLTKUjKCb338xO4W6xB5LJljgQzyBVtv1QDIcMY5FGf
-	ukoiPTLi0esXqkTznqc6HrwWC8u3k5ohtE76mL+8bKJu3QKht0/e+SUAw4lpq9/KajXpa2
-	aWM7faeCXLAeiYOA9w7xuq1j11AhXXQ=
-Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
- [209.85.215.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-554-hjbXOWmvONixtdrXen6znQ-1; Thu, 25 May 2023 05:49:38 -0400
-X-MC-Unique: hjbXOWmvONixtdrXen6znQ-1
-Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-5308f5d8ac9so912270a12.0
-        for <kexec@lists.infradead.org>; Thu, 25 May 2023 02:49:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685008177; x=1687600177;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hAxjra5W1+1SvpBMN22QXJJOi5JB+teXZgPwJvUgVGE=;
-        b=RjS3ADTPu4TcL1w6RxYXNMQjSRQrLHj9Ydb5Uq2Mihe6+ktUbosRAyDH8SGpCHTHZb
-         MJQOqAZd37QAmoA2btZZ1sT1FuksZF4f5eonycHLUXVYu5gxLtvwyos1k2jTS6c5Ci3R
-         j8hMtLuV6RgVPz5zvc43m2SMr5kTIfdViw/EqIT/LbqnxutdOUcp7zCYyah1lL8ylNkw
-         +LNx69K1KO57SYEyqtqhBPy+phVims3QIOqkNDyU7YtYks0UiP3XSfqyiBMkoBtJV8dy
-         IVhAWSmpQTW9Ct0oo88ZtZTUVctWn60a4oU/HcEbFRIv66uV4Quv/0qXg3nbhxugDo+v
-         CImw==
-X-Gm-Message-State: AC+VfDxOwrmBCWps4NEnxnGxLg6aGkZuGKYWNhhU3xK51NXEfibvfrvY
-	t3b/3KwnDF0yshLuxafgwdFOuns4haNiDtZ88KJUkHpGFj4s+srmqZA6KpEEs/kr5qMFbt0MRlh
-	NhG0dKF74XjzEmDwiwJkp
-X-Received: by 2002:a17:903:230f:b0:1af:a03:8d82 with SMTP id d15-20020a170903230f00b001af0a038d82mr1149861plh.57.1685008177419;
-        Thu, 25 May 2023 02:49:37 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ64F7+wAhODeQTh71SkG9KiZ+8BDhumZp7KJkEik3KY4RGXnQjHL9XswjQ5pC+GeNWlMRi+Sg==
-X-Received: by 2002:a17:903:230f:b0:1af:a03:8d82 with SMTP id d15-20020a170903230f00b001af0a038d82mr1149833plh.57.1685008177110;
-        Thu, 25 May 2023 02:49:37 -0700 (PDT)
-Received: from localhost.localdomain.com ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id c10-20020a170903234a00b001ab2b4105ddsm1008282plh.60.2023.05.25.02.49.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 May 2023 02:49:36 -0700 (PDT)
-From: Tao Liu <ltao@redhat.com>
-To: tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com
-Cc: linux-kernel@vger.kernel.org,
-	bhe@redhat.com,
-	dyoung@redhat.com,
-	kexec@lists.infradead.org,
-	linux-efi@vger.kernel.org,
-	Tao Liu <ltao@redhat.com>
-Subject: [PATCH] x86/kexec: Add EFI config table identity mapping for kexec kernel
-Date: Thu, 25 May 2023 17:49:14 +0800
-Message-Id: <20230525094914.23420-1-ltao@redhat.com>
-X-Mailer: git-send-email 2.33.1
+	Thu, 25 May 2023 12:17:38 +0000
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 5942A1FE5C;
+	Thu, 25 May 2023 12:17:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1685017051; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2dzHnSkKSTY5qlRUI5cyea03h/AtEkjWPF2KHs6AMuY=;
+	b=l4uwul7a9d7ai//eKop7F/76NhEFiPT+6AulP8hXlAENTeciQUq+i7qbcXAk1+56oivF8C
+	KupcFrWBVM9QVfTiA154I19lFhzU2pj118AIWNUh1/XR8Y7T0T+/vXsx25cL6C0kS52H6Q
+	7MQM+y+Gggsg7yzkx1ll8K5quEbaxFs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1685017051;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2dzHnSkKSTY5qlRUI5cyea03h/AtEkjWPF2KHs6AMuY=;
+	b=eWlU1g39Km6Gwl34yMDbsZv9Xuk2mSTQtjzIJoQSXAuWzN7LROgqwncprq3x+okNgupCGq
+	RknlYBd1WAe0j9Cg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 44B96134B2;
+	Thu, 25 May 2023 12:17:31 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id N2C8ENtRb2QGMAAAMHmgww
+	(envelope-from <jack@suse.cz>); Thu, 25 May 2023 12:17:31 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id D5DFAA075C; Thu, 25 May 2023 14:17:30 +0200 (CEST)
+Date: Thu, 25 May 2023 14:17:30 +0200
+From: Jan Kara <jack@suse.cz>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: hch@infradead.org, djwong@kernel.org, sandeen@sandeen.net,
+	song@kernel.org, rafael@kernel.org, gregkh@linuxfoundation.org,
+	viro@zeniv.linux.org.uk, jack@suse.cz, jikos@kernel.org,
+	bvanassche@acm.org, ebiederm@xmission.com, mchehab@kernel.org,
+	keescook@chromium.org, p.raghav@samsung.com, da.gomez@samsung.com,
+	linux-fsdevel@vger.kernel.org, kernel@tuxforce.de,
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] fs: unify locking semantics for fs freeze / thaw
+Message-ID: <20230525121730.mqmdm7zp2rvnqjvi@quack3>
+References: <20230508011717.4034511-1-mcgrof@kernel.org>
+ <20230508011717.4034511-2-mcgrof@kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+Content-Disposition: inline
+In-Reply-To: <20230508011717.4034511-2-mcgrof@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230525_025121_325562_EFBC3D6F 
-X-CRM114-Status: GOOD (  17.85  )
+X-CRM114-CacheID: sfid-20230525_051736_861406_5532091E 
+X-CRM114-Status: GOOD (  25.96  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -106,113 +97,104 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-A kexec kernel bootup hang is observed on Intel Atom cpu due to unmapped
-EFI config table.
+On Sun 07-05-23 18:17:12, Luis Chamberlain wrote:
+> Right now freeze_super()  and thaw_super() are called with
+> different locking contexts. To expand on this is messy, so
+> just unify the requirement to require grabbing an active
+> reference and keep the superblock locked.
+> 
+> Suggested-by: Christoph Hellwig <hch@infradead.org>
+> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 
-Currently EFI system table is identity-mapped for the kexec kernel, but EFI
-config table is not mapped explicitly:
+Finally got around to looking at this. Sorry for the delay. In principle I
+like the direction but see below:
 
-    commit 6bbeb276b71f ("x86/kexec: Add the EFI system tables and ACPI
-                          tables to the ident map")
+> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+> index 61c5f9d26018..e31d6791d3e3 100644
+> --- a/fs/f2fs/gc.c
+> +++ b/fs/f2fs/gc.c
+> @@ -2166,7 +2166,10 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+>  	if (err)
+>  		return err;
+>  
+> +	if (!get_active_super(sbi->sb->s_bdev))
+> +		return -ENOTTY;
 
-Later in the following 2 commits, EFI config table will be accessed when
-enabling sev at kernel startup. This may result in a page fault due to EFI
-config table's unmapped address. Since the page fault occurs at an early
-stage, it is unrecoverable and kernel hangs.
+Calling get_active_super() like this is just sick. You rather want to
+provide a helper for grabbing another active sb reference and locking the
+sb when you already have sb reference. Because that is what is needed in
+the vast majority of the places. Something like
 
-    commit ec1c66af3a30 ("x86/compressed/64: Detect/setup SEV/SME features
-                          earlier during boot")
-    commit c01fce9cef84 ("x86/compressed: Add SEV-SNP feature
-                          detection/setup")
+void grab_active_super(struct super_block *sb)
+{
+	down_write(sb->s_umount);
+	atomic_inc(&s->s_active);
+}
 
-In addition, the issue doesn't appear on all systems, because the kexec
-kernel uses Page Size Extension (PSE) for identity mapping. In most cases,
-EFI config table can end up to be mapped into due to 1 GB page size.
-However if nogbpages is set, or cpu doesn't support pdpe1gb feature
-(e.g Intel Atom x6425RE cpu), EFI config table may not be mapped into
-due to 2 MB page size, thus a page fault hang is more likely to happen.
+> @@ -851,13 +849,13 @@ struct super_block *get_active_super(struct block_device *bdev)
+>  		if (sb->s_bdev == bdev) {
+>  			if (!grab_super(sb))
+>  				goto restart;
+> -			up_write(&sb->s_umount);
+>  			return sb;
+>  		}
+>  	}
+>  	spin_unlock(&sb_lock);
+>  	return NULL;
+>  }
+> +EXPORT_SYMBOL_GPL(get_active_super);
 
-In this patch, we will make sure the EFI config table is always mapped.
+And I'd call this grab_bdev_super() and no need to export it when you have
+grab_active_super().
 
-Signed-off-by: Tao Liu <ltao@redhat.com>
----
- arch/x86/kernel/machine_kexec_64.c | 35 ++++++++++++++++++++++++++----
- 1 file changed, 31 insertions(+), 4 deletions(-)
+> @@ -1636,10 +1634,13 @@ static void sb_freeze_unlock(struct super_block *sb, int level)
+>  }
+>  
+>  /**
+> - * freeze_super - lock the filesystem and force it into a consistent state
+> + * freeze_super - force a filesystem backed by a block device into a consistent state
+>   * @sb: the super to lock
+>   *
+> - * Syncs the super to make sure the filesystem is consistent and calls the fs's
+> + * Used by filesystems and the kernel to freeze a fileystem backed by a block
+> + * device into a consistent state. Callers must use get_active_super(bdev) to
+> + * lock the @sb and when done must unlock it with deactivate_locked_super().
+> + * Syncs the filesystem backed by the @sb and calls the filesystem's optional
+>   * freeze_fs.  Subsequent calls to this without first thawing the fs will return
+>   * -EBUSY.
+>   *
+> @@ -1672,22 +1673,15 @@ int freeze_super(struct super_block *sb)
+>  {
+>  	int ret;
+>  
+> -	atomic_inc(&sb->s_active);
+> -	down_write(&sb->s_umount);
+> -	if (sb->s_writers.frozen != SB_UNFROZEN) {
+> -		deactivate_locked_super(sb);
 
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index 1a3e2c05a8a5..755aa12f583f 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -28,6 +28,7 @@
- #include <asm/setup.h>
- #include <asm/set_memory.h>
- #include <asm/cpu.h>
-+#include <asm/efi.h>
- 
- #ifdef CONFIG_ACPI
- /*
-@@ -86,10 +87,12 @@ const struct kexec_file_ops * const kexec_file_loaders[] = {
- #endif
- 
- static int
--map_efi_systab(struct x86_mapping_info *info, pgd_t *level4p)
-+map_efi_sys_cfg_tab(struct x86_mapping_info *info, pgd_t *level4p)
- {
- #ifdef CONFIG_EFI
- 	unsigned long mstart, mend;
-+	void *kaddr;
-+	int ret;
- 
- 	if (!efi_enabled(EFI_BOOT))
- 		return 0;
-@@ -105,6 +108,30 @@ map_efi_systab(struct x86_mapping_info *info, pgd_t *level4p)
- 	if (!mstart)
- 		return 0;
- 
-+	ret = kernel_ident_mapping_init(info, level4p, mstart, mend);
-+	if (ret)
-+		return ret;
-+
-+	kaddr = memremap(mstart, mend - mstart, MEMREMAP_WB);
-+	if (!kaddr) {
-+		pr_err("Could not map UEFI system table\n");
-+		return -ENOMEM;
-+	}
-+
-+	mstart = efi_config_table;
-+
-+	if (efi_enabled(EFI_64BIT)) {
-+		efi_system_table_64_t *stbl = (efi_system_table_64_t *)kaddr;
-+
-+		mend = mstart + sizeof(efi_config_table_64_t) * stbl->nr_tables;
-+	} else {
-+		efi_system_table_32_t *stbl = (efi_system_table_32_t *)kaddr;
-+
-+		mend = mstart + sizeof(efi_config_table_32_t) * stbl->nr_tables;
-+	}
-+
-+	memunmap(kaddr);
-+
- 	return kernel_ident_mapping_init(info, level4p, mstart, mend);
- #endif
- 	return 0;
-@@ -244,10 +271,10 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
- 	}
- 
- 	/*
--	 * Prepare EFI systab and ACPI tables for kexec kernel since they are
--	 * not covered by pfn_mapped.
-+	 * Prepare EFI systab, config table and ACPI tables for kexec kernel
-+	 * since they are not covered by pfn_mapped.
- 	 */
--	result = map_efi_systab(&info, level4p);
-+	result = map_efi_sys_cfg_tab(&info, level4p);
- 	if (result)
- 		return result;
- 
+At least add a warning for s_umount not being held here?
+
+> +	if (sb->s_writers.frozen != SB_UNFROZEN)
+>  		return -EBUSY;
+> -	}
+>  
+> -	if (!(sb->s_flags & SB_BORN)) {
+> -		up_write(&sb->s_umount);
+> +	if (!(sb->s_flags & SB_BORN))
+>  		return 0;	/* sic - it's "nothing to do" */
+> -	}
+>  
+>  	if (sb_rdonly(sb)) {
+>  		/* Nothing to do really... */
+>  		sb->s_writers.frozen = SB_FREEZE_COMPLETE;
+> -		up_write(&sb->s_umount);
+>  		return 0;
+>  	}
+
+								Honza
 -- 
-2.33.1
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
 
 _______________________________________________
 kexec mailing list
