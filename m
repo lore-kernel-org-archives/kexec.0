@@ -4,83 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E4AB5C77B7A
-	for <kexec@archiver.kernel.org>; Thu, 25 May 2023 03:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 78323C77B73
+	for <kexec@archiver.kernel.org>; Thu, 25 May 2023 05:37:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=H2D0rJYM7rafgExtFPYQBTuAArvmGdyvRqDnU0HRzVY=; b=h9e4oSy6Io3Spu
-	C1WNd/yQ+cTW33kjZp4W0r+cUFSuIG3k1kmCg0VgXawHdnPU6Yo7apj1oJYKMKUUp1FSvndISBtmK
-	9XeZm79fYiv/y50Bao6rGezKlzxv7g3SB64yvMjgYZNC3KzohJlctx+Ne8JgdAUMpE488oZQ5cwMF
-	SLk/0U53EYkSrGFpwrK4KGV+rSgIl5vJKs5PDkplrFIOKy29B+wL/EHf0DUSTsfNCWoZJsxkxYSel
-	Kyyw//9aWWRO4SqyWxB2cfMM3v+XPIfLZ4DPzuX4diHlWpuelcFrffxo5ZprT7yudQX+w8V2uRqeB
-	rMkurUpCn288pkJ3Ap1A==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:Date:Message-ID:References:
+	Cc:To:From:Subject:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=/6t5SsKVccaLw2CYkjQ9RLkt9K+HEIJ8HLCbSXBUOTg=; b=voSbQjGzn6qQrHUaSN3YzSH7TQ
+	V5ssulyT04OWA1eHZSlgnZPsmutqHMRmKxBVjDLL//3hx/oKlxmSC7eKprMiny+/dUyyrvhGeQjck
+	pfMZPVc/RBw1EDjFjj64ZyXHeYhobod/3b2gUfH2Lo0KKN1QlllefcJfHunhG/1R4QSuXdJoET3FX
+	x1EiaSwW5gtNU5eV1HhPLwxmo6hn45ztnbkeIDrZsYroE6lVTi3Bzurzj6fBdfUCsKRW/KjUBk8ua
+	x1gfRz9Dmop2RVRZmKyYZFYC4ebwBAhHyX/vK0l3Xa6FRWqwHREDK7Z5XlCrrNWmHY26XPS8mhRK9
+	0ocmt6Zg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1q21if-00FN02-12;
-	Thu, 25 May 2023 03:32:53 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1q23f9-00FaiZ-0L;
+	Thu, 25 May 2023 05:37:23 +0000
+Received: from esa7.hc1455-7.c3s2.iphmx.com ([139.138.61.252])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1q21iZ-00FMz7-0k
+	id 1q23f5-00FagK-1H
 	for kexec@lists.infradead.org;
-	Thu, 25 May 2023 03:32:49 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1684985563;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nCL253oR0xrHiX919LuT19rMbaszPR0ez+RX1NsBHKo=;
-	b=CeTtf9LTCjUIOgTlJOo9FaWIDLuQ+u7xT3epOaUODaX+Hg/UBVgotDf7ZRZaqUo7JBYcjH
-	BmyhW+6tnJ1Z5bptrw/JQ6fDIjzVNMO/InXUQkSu6Y8ptcwRReMHYqsgOyLCclCIwrGXhF
-	bkJ5vvNfZcpZPsh5tVhUbglArFXuw1E=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-494-WgTRuoRuMM-92T_NEmNL4w-1; Wed, 24 May 2023 23:32:42 -0400
-X-MC-Unique: WgTRuoRuMM-92T_NEmNL4w-1
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-623998c0d33so5439976d6.0
-        for <kexec@lists.infradead.org>; Wed, 24 May 2023 20:32:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684985561; x=1687577561;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nCL253oR0xrHiX919LuT19rMbaszPR0ez+RX1NsBHKo=;
-        b=Wz8elBJqLAYsmeLS9anErvLo+SC0hQE9baFToKfshlKp5v/NhIwJhOsXs8vgCrEEMs
-         lUFv4EoosS4JtFihIWbwMe6bvQsyL1QSzEouv3N1PI+uEZTcMAocEGxIS8A5J+WJ8ux+
-         aokblt8ZjE+pub1VYjNgk5xFXcnQmjCBJqmiDwDIF73xTRON4XX5PYcG5TN3jWxLgtBM
-         /pAzn6brjkl5DeYvY15MkcGyLTmWT6CS9Gktjny1P92dMLb0rko9ebVmOaSFmHV5X7+A
-         URkXkV0TnykoXsffK1ktlR5R5uLFbGsoOyAbaE6E+Cyn/iHMHWVOOU/wjSIolk4W/JqJ
-         ifBA==
-X-Gm-Message-State: AC+VfDxYpBbmKK3uUJbVGSvFLxJnvmVqr8kqY2NF1bJxI14Z5HQKwwc4
-	w4hTVkJNJuqwQGPhx/UD5VbbtCB6wRErSCNeaBRnsheT27Bh/d9bhCJqE9tFC1abWiXt/ikqxms
-	WcaVrXDDrdCT8l9Bj+BW3yzx0yS4Z2+UDb2kemh0qc4j+wE4=
-X-Received: by 2002:a05:6214:2b0d:b0:61b:5faf:9a72 with SMTP id jx13-20020a0562142b0d00b0061b5faf9a72mr206498qvb.3.1684985561467;
-        Wed, 24 May 2023 20:32:41 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ7aPyat/3nRnjUgeUsX36t6JNo9L7v259RwkLrNk5RYpmcpsEkuNXYiIQVMxFpuTwiFYg+1zoFc5eJrwcvSQJc=
-X-Received: by 2002:a05:6214:2b0d:b0:61b:5faf:9a72 with SMTP id
- jx13-20020a0562142b0d00b0061b5faf9a72mr206491qvb.3.1684985561226; Wed, 24 May
- 2023 20:32:41 -0700 (PDT)
+	Thu, 25 May 2023 05:37:22 +0000
+X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="96634623"
+X-IronPort-AV: E=Sophos;i="6.00,190,1681138800"; 
+   d="scan'208";a="96634623"
+Received: from unknown (HELO oym-r3.gw.nic.fujitsu.com) ([210.162.30.91])
+  by esa7.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 14:36:51 +0900
+Received: from oym-m4.gw.nic.fujitsu.com (oym-nat-oym-m4.gw.nic.fujitsu.com [192.168.87.61])
+	by oym-r3.gw.nic.fujitsu.com (Postfix) with ESMTP id B2345CA1E6
+	for <kexec@lists.infradead.org>; Thu, 25 May 2023 14:36:49 +0900 (JST)
+Received: from aks-ab1.gw.nic.fujitsu.com (aks-ab1.gw.nic.fujitsu.com [192.51.207.11])
+	by oym-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id DBC6CD63B6
+	for <kexec@lists.infradead.org>; Thu, 25 May 2023 14:36:48 +0900 (JST)
+Received: from [192.168.122.212] (unknown [10.167.226.45])
+	by aks-ab1.gw.nic.fujitsu.com (Postfix) with ESMTP id 6CB792FC685A;
+	Thu, 25 May 2023 14:36:47 +0900 (JST)
+Subject: Re: [RFC PATCH v2 0/3] pmem memmap dump support
+From: "Li, Zhijian" <lizhijian@fujitsu.com>
+To: Dan Williams <dan.j.williams@intel.com>, bhe@redhat.com
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "Yasunori Gotou (Fujitsu)" <y-goto@fujitsu.com>,
+ "Xiao Yang (Fujitsu)" <yangx.jy@fujitsu.com>,
+ "Shiyang Ruan (Fujitsu)" <ruansy.fnst@fujitsu.com>,
+ "x86@kernel.org" <x86@kernel.org>,
+ "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
+ "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+References: <20230427101838.12267-1-lizhijian@fujitsu.com>
+ <644c17823cf83_13303129460@dwillia2-xfh.jf.intel.com.notmuch>
+ <774fd596-5481-aeff-aace-8785158728ea@fujitsu.com>
+ <0fe0d69e-e33b-cf45-c957-68a8159d29ab@fujitsu.com>
+Message-ID: <f8aff5b7-4892-9ccb-8079-abd87e9ab8b0@fujitsu.com>
+Date: Thu, 25 May 2023 13:36:46 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.1.1
 MIME-Version: 1.0
-References: <20230516073124.23531-1-piliu@redhat.com> <20230516073124.23531-2-piliu@redhat.com>
- <ZG36mQerUGDHAgcQ@kernel.org>
-In-Reply-To: <ZG36mQerUGDHAgcQ@kernel.org>
-From: Pingfan Liu <piliu@redhat.com>
-Date: Thu, 25 May 2023 11:32:30 +0800
-Message-ID: <CAF+s44RTqPzURPYDJm+XKv2U4-=LUB9dPk7GaDPBWihJKSf_UA@mail.gmail.com>
-Subject: Re: [PATCHv2 1/6] kexec: Change the image probe's prototype
-To: Simon Horman <horms@kernel.org>
-Cc: kexec@lists.infradead.org, horms@verge.net.au, ardb@kernel.org, 
-	jeremy.linton@arm.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+In-Reply-To: <0fe0d69e-e33b-cf45-c957-68a8159d29ab@fujitsu.com>
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-TM-AS-Product-Ver: IMSS-9.1.0.1408-9.0.0.1002-27648.005
+X-TM-AS-User-Approved-Sender: Yes
+X-TMASE-Version: IMSS-9.1.0.1408-9.0.1002-27648.005
+X-TMASE-Result: 10--36.427300-10.000000
+X-TMASE-MatchedRID: YmTIeYLGqWmPvrMjLFD6eCkMR2LAnMRpThn37FFP5A2Z6U7QhkqRnjig
+	xUJufWBq8GZ6UXtd/D8knOGoeIQzlrLPlm4wh/ZC71L6f9O5B+bHbztUafrIJrwxqSK0GSPRJf5
+	otvavOZdfShUER1/uQrIR2fkfALoSk3+L/4zTFEMF7cpFXK76Tb/I3arxTrviHpyu/FxYOKH6NX
+	Oh/Q26I55+Yz1Sdwy4b6fm/8CuE09LyNFBdZE0R6zGfgakLdjanY+2FiS7N53PWp1UK7zV94X8M
+	Gul6j45WeYbg0RZpl1DTrJAgvBeWaUEDxO9eWwq93bduyx/IZzEOsCKZvLZAdVtkV1dqmwpFTcl
+	NALNY0cWeucbks6Qtsano5bsVuqHb6wZx1ul0pwvz6alF1rVgye0Z6pse6+bhJsTo2dS2dm/BR6
+	8O365bn9eOltIlLtrdthZ52U1v6XwR+yx9wo5ahFbgtHjUWLyUrr7Qc5WhKgQRik6+J7XSf9hZe
+	ynbNVArY6OTSUV7oJEPm1gqq01NcZjWS+/cngMvR08UROkEAeok0CD5UnL64Ajsy+r+wvnLHCPR
+	rZVF/euMZ3gmgaUtf+d8LoybRqLv9CQXR/hM+TfSQNpZkETVEhdBJqHdZ1jF7XImrociEcEgwlH
+	ZNfFor3SKCxDfa5Nh/v5z8O9WopdfABN5LHDU7hXT+72mpTN1LV3ye5rrQEz91mDYZLM5XGk47q
+	JAyS/XICzc9HFHLudqC2fLtk9xE1+zyfzlN7ygxsfzkNRlfJoFT3KzpHqEw6wQI72z4YedB0ntd
+	9Tzp7iRhduhvElsvJT+hf62k2YIbZSWXZZ520=
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230524_203247_364466_5223A8D7 
-X-CRM114-Status: GOOD (  32.29  )
+X-CRM114-CacheID: sfid-20230524_223719_701462_E42FB145 
+X-CRM114-Status: GOOD (  35.36  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -92,100 +94,261 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-T24gV2VkLCBNYXkgMjQsIDIwMjMgYXQgNzo1M+KAr1BNIFNpbW9uIEhvcm1hbiA8aG9ybXNAa2Vy
-bmVsLm9yZz4gd3JvdGU6Cj4KPiBPbiBUdWUsIE1heSAxNiwgMjAyMyBhdCAwMzozMToxOVBNICsw
-ODAwLCBQaW5nZmFuIExpdSB3cm90ZToKPiA+IEFzIG1vcmUgY29tcGxpY2F0ZWQga2VybmVsIGZv
-cm1hdCBvY2N1cnMgc3VjaCBhcyB6Ym9vdCwgd2hlcmUgdGhlCj4gPiBjb21wcmVzc2VkIGtlcm5l
-bCBpcyBzdG9yZWQgYXMgYSBwYXlsb2FkLiBUaGUgc3RyYWlnaHQgZm9yd2FyZAo+ID4gZGVjb21w
-cmVzc2lvbiBjYW4gbm90IG1lZXQgdGhlIGRlbWFuZC4KPiA+Cj4gPiBBIG5ldyBpbWFnZSBwcm9i
-ZSBtZXRob2QgaXMgZXhwZWN0ZWQgdG8gcmVhZCBpbiB0aGUga2VybmVsIGZpbGUgYW5kIGRlY2lk
-ZQo+ID4gaG93IHRvIHVuZm9sZCB0aGUgY29udGVudCBieSBpdHNlbGYuCj4gPgo+ID4gVGhpcyBw
-YXRjaCBhaW1zIHRvIGNoYW5nZSB0aGUgaW1hZ2UgcHJvYmUncyBwcm90b3R5cGUgZnJvbQo+ID4g
-ICAgICAgICAgICAgdHlwZWRlZiBpbnQgKHByb2JlX3QpKGNvbnN0IGNoYXIgKmtlcm5lbF9idWYs
-IG9mZl90IGtlcm5lbF9zaXplKTsKPiA+IHRvCj4gPiAgICAgICAgICAgICB0eXBlZGVmIGludCAo
-cHJvYmVfdCkoY29uc3QgY2hhciAqa2VybmVsX2J1Ziwgb2ZmX3Qga2VybmVsX3NpemUsIHN0cnVj
-dCBrZXhlY19pbmZvICppbmZvKTsKPiA+Cj4gPiBMYXRlciwgaW5mbyBjYW4gYmUgdXNlZCB0byBy
-ZXR1cm4gYm90aCB0aGUgZmlsZSBkZXNjcmlwdG9yIGFuZCB0aGUKPiA+IHBhcnNlZCBrZXJuZWwg
-YnVmZmVyLgo+ID4KPiA+IEluIGNhc2UgeW91ciBhcmUgY3VyaW91cywgdGhlIHJlbWFpbmcgcGFy
-dCBvZiB0aGUgbG9nIGRlc2NyaWJlcyB0aGUKPiA+IHByb2Nlc3Mgb2YgdGhlIHN1YnN0aXR1dGlv
-biBvZiB0aGUgbmV3IHByb3RvdHlwZSwgd2hpY2ggY2FuIGJlIGRpdmlkZWQKPiA+IGludG8gdGhy
-ZWUgZ3JvdXBzLgo+ID4KPiA+IDEuIGNoYW5nZSBmdW5jdGlvbiBwb2ludGVyIGFuZCBpdHMgY2Fs
-bHNpdGVzOgo+ID4gICBzZWQgLWkgJ3MvKHByb2JlX3QpKGNvbnN0IGNoYXIgXCprZXJuZWxfYnVm
-LCBvZmZfdCBrZXJuZWxfc2l6ZSk7Lyhwcm9iZV90KShjb25zdCBjaGFyIFwqa2VybmVsLCBvZmZf
-dCBrZXJuZWxfc2l6ZSwgc3RydWN0IGtleGVjX2luZm8gXCppbmZvKTsvZycga2V4ZWMva2V4ZWMu
-aAo+ID4gICBzZWQgLWkgJ3MvXC5wcm9iZShcKFteLF0qXCksIFwoW14pXSpcKSkvXC5wcm9iZShc
-MSwgXDIsIE5VTEwpL2cnIGtleGVjL2tleGVjLmMKPiA+Cj4gPiAyLiBjaGFuZ2UgdGhlIGZ1bmN0
-aW9uIGRlY2xhcmF0aW9uIGFuZCBkZWZpbml0aW9uIG9mIGVhY2ggJ3Byb2JlJwo+ID4gICAgaW5z
-dGFuY2UgYnkgY29jY2luZWxsZSBiZWNhdXNlIHRoZXkgbWF5IGNyb3NzIGxpbmVzCj4gPgo+ID4g
-VGhlIGNvY2NpIGZpbGUgbG9va3MgbGlrZToKPiA+Cj4gPiBAIHJ1bGUxIEAKPiA+IGlkZW50aWZp
-ZXIgZm4gPX4gIl9wcm9iZSI7Cj4gPiBpZGVudGlmaWVyIGJ1Ziwgc2l6ZTsKPiA+IHR5cGVkZWYg
-b2ZmX3Q7Cj4gPiBAQAo+ID4KPiA+IC1pbnQgZm4oY29uc3QgY2hhciAqYnVmLCBvZmZfdCBzaXpl
-KQo+ID4gK2ludCBmbihjb25zdCBjaGFyICpidWYsIG9mZl90IHNpemUsIHN0cnVjdCBrZXhlY19p
-bmZvICppbmZvKQo+ID4gewo+ID4gICAgICAgICAuLi4KPiA+IH0KPiA+Cj4gPiBAIHJ1bGUyIEAK
-PiA+IGlkZW50aWZpZXIgZm4gPX4gIl9wcm9iZSI7Cj4gPiBpZGVudGlmaWVyIGJ1Ziwgc2l6ZTsK
-PiA+IHR5cGVkZWYgb2ZmX3Q7Cj4gPiBAQAo+ID4KPiA+ICtpbnQgZm4oY29uc3QgY2hhciAqYnVm
-LCBvZmZfdCBzaXplLCBzdHJ1Y3Qga2V4ZWNfaW5mbyAqaW5mbyk7Cj4gPiAtaW50IGZuKGNvbnN0
-IGNoYXIgKmJ1Ziwgb2ZmX3Qgc2l6ZSk7Cj4gPgo+ID4gVGhlbiBydW5uaW5nIHRoZSBjb21tYW5k
-Cj4gPiBzcGF0Y2ggLS1zcC1maWxlIGNvY2NpL2RlZmluZS5jb2NjaSAtLWRpciBrZXhlYyAtLWlu
-Y2x1ZGUtaGVhZGVycyA+IC4uL2RlZmluZS5wYXRjaAo+ID4gZ2l0IGFwcGx5IC0tZGlyZWN0b3J5
-PWtleGVjIC4uL2RlZmluZS5wYXRjaAo+ID4KPiA+IDMuIGNoYW5nZSB0aGUgZGlyZWN0IGNhbGxz
-IHRvIHRoZSBwcm9iZSBpbnN0YW5jZXMKPiA+Cj4gPiBPcmlnaW5hbGx5IEkgcGxhbm5lZCB0byBh
-Y2hpZXZlIHRoaXMgYnkgY29jY2luZWxsZSwgYnV0IGZhaWxlZCBzaW1pbGFyCj4gPiB0byBbMV0u
-IEkgaGF2ZSB0cmllZCB1c2luZyAiLUkgYW5kIC0taW5jbHVkZSIgb3B0aW9uIGZvciBjb2NjaW5l
-bGxlLCBidXQgaXQKPiA+IHN0aWxsIGRpZCBub3Qgd29yay4KPiA+Cj4gPiBDaGVja2luZyB0aGUg
-ZGlyZWN0IGNhbGxzaXRlIGJ5ICJnaXQgZ3JlcCAiX3Byb2JlKCIgfCBncmVwIC12IGNvbnN0Igo+
-ID4gRm9ydHVuYXRlbGx5LCBpdCB0dXJucyBvdXQgdGhhdCBvbmx5IGEgZmV3IGRpcmVjdCBjYWxs
-c2l0ZXMgZXhpc3QsIHdoaWNoCj4gPiBsaWVzIGluIGkzODYsIGFuZCBlYXN5IHRvIGJlIGFtZW5k
-ZWQgbWFudWFsbHkuCj4gPgo+ID4gQW55d2F5LCBqdXN0IEZZSSwgdGhlIGNvY2NpIGZpbGUgbG9v
-a3MgbGlrZToKPiA+IEAgcnVsZTEgQAo+ID4gaWRlbnRpZmllciBmbiA9fiAiX3Byb2JlIjsKPiA+
-IGlkZW50aWZpZXIgYnVmLCBzaXplOwo+ID4gaWRlbnRpZmllciBpbmZvOwo+ID4gdHlwZWRlZiBv
-ZmZfdDsKPiA+IEBACj4gPgo+ID4gaW50IGZuKGNvbnN0IGNoYXIgKmJ1Ziwgb2ZmX3Qgc2l6ZSwg
-c3RydWN0IGtleGVjX2luZm8gKmluZm8pOwo+ID4KPiA+IC8qIGNoYW5nZSB0aGUgZGlyZWN0IGNh
-bGxzaXRlIG9mIGFueSBwcm9iZSAqLwo+ID4gQCBydWxlMiBACj4gPiBpZGVudGlmaWVyIHJ1bGUx
-LmZuOwo+ID4gZXhwcmVzc2lvbiBFMSwgRTI7Cj4gPiBAQAo+ID4KPiA+ICBmbihFMSwgRTIKPiA+
-ICsgICxOVUxMCj4gPiAgICApCj4gPgo+ID4gVGhlbiBydW5uaW5nIHRoZSBjb21tYW5kOgo+ID4g
-c3BhdGNoIC0tc3AtZmlsZSBjb2NjaS9kaXJlY3QuY29jY2kgLS1kaXIga2V4ZWMgLS1pbmNsdWRl
-LWhlYWRlcnMKPiA+Cj4gPiBbMV06IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2FsbC9hbHBpbmUu
-REVCLjIuMjIuMzk0LjIyMDIyODA3MDUwODAuMzExMkBoYWRyaWVuL1QvCj4gPgo+ID4gU2lnbmVk
-LW9mZi1ieTogUGluZ2ZhbiBMaXUgPHBpbGl1QHJlZGhhdC5jb20+Cj4gPiBUbzoga2V4ZWNAbGlz
-dHMuaW5mcmFkZWFkLm9yZwo+ID4gQ2M6IGhvcm1zQHZlcmdlLm5ldC5hdQo+ID4gQ2M6IGFyZGJA
-a2VybmVsLm9yZwo+ID4gQ2M6IGplcmVteS5saW50b25AYXJtLmNvbQo+Cj4gVW5mb3J0dW5hdGVs
-eSBJIGFtIHNlZWluZyBhIGJ1aWxkIGZhaWx1cmUgb24gKGF0IGxlYXN0KSBzaDQgd2l0aCB0aGlz
-IGNoYW5nZToKPgo+ICAuLi8uLi9rZXhlYy9hcmNoL3NoL2tleGVjLXpJbWFnZS1zaC5jOjU0OjU6
-IGVycm9yOiBjb25mbGljdGluZyB0eXBlcyBmb3Ig4oCYekltYWdlX3NoX3Byb2Jl4oCZCj4gICAg
-IDU0IHwgaW50IHpJbWFnZV9zaF9wcm9iZShjb25zdCBjaGFyICpidWYsIG9mZl90IFVOVVNFRChs
-ZW4pKQo+ICAgICAgICB8ICAgICBefn5+fn5+fn5+fn5+fn4KCkl0IG1heSBiZSBiZWNhdXNlIHRo
-ZSBtYWNybyBVTlVTRUQoKSBpcyBub3QgdGFja2xlZCBjb3JyZWN0bHkgYnkgY29jY2luZWxsZS4K
-CkFuZCB0aGVyZSBhcmUgc2V2ZXJhbCBvdGhlciBwbGFjZXMsIHdoaWNoIHVzZSBVTlVTRUQoKQpn
-aXQgZ3JlcCBVTlVTRUQgfCBncmVwIHByb2JlCmtleGVjL2FyY2gvYXJtL2tleGVjLXpJbWFnZS1h
-cm0uYzoxMzg6aW50IHpJbWFnZV9hcm1fcHJvYmUoY29uc3QgY2hhcgoqVU5VU0VEKGJ1ZiksIG9m
-Zl90IFVOVVNFRChsZW4pKQprZXhlYy9hcmNoL3MzOTAva2V4ZWMtaW1hZ2UuYzoyMTk6aW1hZ2Vf
-czM5MF9wcm9iZShjb25zdCBjaGFyCipVTlVTRUQoa2VybmVsX2J1ZiksIG9mZl90IFVOVVNFRChr
-ZXJuZWxfc2l6ZSkpCmtleGVjL2FyY2gvc2gva2V4ZWMtbmV0YnNkLXNoLmM6Mzg6aW50IG5ldGJz
-ZF9zaF9wcm9iZShjb25zdCBjaGFyCipidWYsIG9mZl90IFVOVVNFRChsZW4pKQprZXhlYy9hcmNo
-L3NoL2tleGVjLXpJbWFnZS1zaC5jOjU0OmludCB6SW1hZ2Vfc2hfcHJvYmUoY29uc3QgY2hhcgoq
-YnVmLCBvZmZfdCBVTlVTRUQobGVuKSkKCkkgd2lsbCBzZWUgaG93IHRvIGhhbmRsZSB0aGVtLgoK
-ClRoYW5rcywKClBpbmdmYW4KPiAgSW4gZmlsZSBpbmNsdWRlZCBmcm9tIC4uLy4uL2tleGVjL2Fy
-Y2gvc2gva2V4ZWMtekltYWdlLXNoLmM6Mjc6Cj4gIC4uLy4uL2tleGVjL2FyY2gvc2gva2V4ZWMt
-c2guaDoxMTo1OiBub3RlOiBwcmV2aW91cyBkZWNsYXJhdGlvbiBvZiDigJh6SW1hZ2Vfc2hfcHJv
-YmXigJkgd2FzIGhlcmUKPiAgICAgMTEgfCBpbnQgekltYWdlX3NoX3Byb2JlKGNvbnN0IGNoYXIg
-KmJ1Ziwgb2ZmX3QgbGVuLCBzdHJ1Y3Qga2V4ZWNfaW5mbyAqaW5mbyk7Cj4gICAgICAgIHwgICAg
-IF5+fn5+fn5+fn5+fn5+fgo+ICAuLi8uLi9rZXhlYy9hcmNoL3NoL2tleGVjLXpJbWFnZS1zaC5j
-OjI5OjE4OiB3YXJuaW5nOiDigJhwcm9iZV9kZWJ1Z+KAmSBkZWZpbmVkIGJ1dCBub3QgdXNlZCBb
-LVd1bnVzZWQtY29uc3QtdmFyaWFibGU9XQo+ICAgICAyOSB8IHN0YXRpYyBjb25zdCBpbnQgcHJv
-YmVfZGVidWcgPSAwOwo+ICAgICAgICB8ICAgICAgICAgICAgICAgICAgXn5+fn5+fn5+fn4KPiAg
-bWFrZVsxXTogKioqIFtNYWtlZmlsZToxMjQ6IGtleGVjL2FyY2gvc2gva2V4ZWMtekltYWdlLXNo
-Lm9dIEVycm9yIDEKPiAgbWFrZVsxXTogKioqIFdhaXRpbmcgZm9yIHVuZmluaXNoZWQgam9icy4u
-Li4KPiAgLi4vLi4va2V4ZWMvYXJjaC9zaC9rZXhlYy1uZXRic2Qtc2guYzoyODoxODogd2Fybmlu
-Zzog4oCYcHJvYmVfZGVidWfigJkgZGVmaW5lZCBidXQgbm90IHVzZWQgWy1XdW51c2VkLWNvbnN0
-LXZhcmlhYmxlPV0KPiAgICAgMjggfCBzdGF0aWMgY29uc3QgaW50IHByb2JlX2RlYnVnID0gMDsK
-PiAgICAgICAgfCAgICAgICAgICAgICAgICAgIF5+fn5+fn5+fn5+Cj4KPiBMaW5rOiBodHRwczov
-L2dpdGh1Yi5jb20vaG9ybXMva2V4ZWMtdG9vbHMvYWN0aW9ucy9ydW5zLzUwNjgyNTA0OTMvam9i
-cy85MTAwMzE5MDkzI3N0ZXA6NToyMTUKPgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRl
-YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Ping
+
+Baoquan, Dan
+
+Sorry to bother you again.
+
+Could you further comment a word or two on this set?
+
+
+Thanks
+Zhijian
+
+
+on 5/10/2023 6:41 PM, Zhijian Li (Fujitsu) wrote:
+> Hi Dan
+>
+>
+> on 5/8/2023 5:45 PM, Zhijian Li (Fujitsu) wrote:
+>> Dan,
+>>
+>>
+>> On 29/04/2023 02:59, Dan Williams wrote:
+>>> Li Zhijian wrote:
+>>>> Hello folks,
+>>>>
+>>>> About 2 months ago, we posted our first RFC[3] and received your kindly feedback. Thank you :)
+>>>> Now, I'm back with the code.
+>>>>
+>>>> Currently, this RFC has already implemented to supported case D*. And the case A&B is disabled
+>>>> deliberately in makedumpfile. It includes changes in 3 source code as below:
+>>> I think the reason this patchkit is difficult to follow is that it
+>>> spends a lot of time describing a chosen solution, but not enough time
+>>> describing the problem and the tradeoffs.
+>>>
+>>> For example why is updating /proc/vmcore with pmem metadata the chosen
+>>> solution? Why not leave the kernel out of it and have makedumpfile
+>>> tooling aware of how to parse persistent memory namespace info-blocks
+>>> and retrieve that dump itself? This is what I proposed here:
+>>>
+>>> http://lore.kernel.org/r/641484f7ef780_a52e2940@dwillia2-mobl3.amr.corp.intel.com.notmuch
+>> Sorry for the late reply. I'm just back from the vacation.
+>> And sorry again for missing your previous *important* information in V1.
+>>
+>> Your proposal also sounds to me with less kernel changes, but more ndctl coupling with makedumpfile tools.
+>> In my current understanding, it will includes following source changes.
+> The kernel and makedumpfile has updated. It's still in a early stage, but in order to make sure I'm following your proposal.
+> i want to share the changes with you early. Alternatively, you are able to refer to my github for the full details.
+> https://github.com/zhijianli88/makedumpfile/commit/8ebfe38c015cfca0545cb3b1d7a6cc9a58fc9bb3
+>
+> If I'm going the wrong way, fee free to let me know :)
+>
+>
+>> -----------+-------------------------------------------------------------------+
+>> Source     |                      changes                                      |
+>> -----------+-------------------------------------------------------------------+
+>> I.         | 1. enter force_raw in kdump kernel automatically(avoid metadata being updated again)|
+> kernel should adapt it so that the metadata of pmem will be updated again in the kdump kernel:
+>
+> diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
+> index c60ec0b373c5..2e59be8b9c78 100644
+> --- a/drivers/nvdimm/namespace_devs.c
+> +++ b/drivers/nvdimm/namespace_devs.c
+> @@ -8,6 +8,7 @@
+>    #include <linux/slab.h>
+>    #include <linux/list.h>
+>    #include <linux/nd.h>
+> +#include <linux/crash_dump.h>
+>    #include "nd-core.h"
+>    #include "pmem.h"
+>    #include "pfn.h"
+> @@ -1504,6 +1505,8 @@ struct nd_namespace_common *nvdimm_namespace_common_probe(struct device *dev)
+>                           return ERR_PTR(-ENODEV);
+>           }
+>    
+> +       if (is_kdump_kernel())
+> +               ndns->force_raw = true;
+>           return ndns;
+>    }
+>    EXPORT_SYMBOL(nvdimm_namespace_common_probe);
+>
+>> kernel     |                                                                   |
+>>               | 2. mark the whole pmem's PT_LOAD for kexec_file_load(2) syscall   |
+>> -----------+-------------------------------------------------------------------+
+>> II. kexec- | 1. mark the whole pmem's PT_LOAD for kexe_load(2) syscall         |
+>> tool       |                                                                   |
+>> -----------+-------------------------------------------------------------------+
+>> III.       | 1. parse the infoblock and calculate the boundaries of userdata and metadata   |
+>> makedump-  | 2. skip pmem userdata region                                      |
+>> file       | 3. exclude pmem metadata region if needed                         |
+>> -----------+-------------------------------------------------------------------+
+>>
+>> I will try rewrite it with your proposal ASAP
+> inspect_pmem_namespace() will walk the namespaces and the read its resource.start and infoblock. With this
+> information, we can calculate the boundaries of userdata and metadata easily. But currently this changes are
+> strongly coupling with the ndctl/pmem which looks a bit messy and ugly.
+>
+> ============makedumpfile=======
+>
+> diff --git a/Makefile b/Makefile
+> index a289e41ef44d..4b4ded639cfd 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -50,7 +50,7 @@ OBJ_PART=$(patsubst %.c,%.o,$(SRC_PART))
+>    SRC_ARCH = arch/arm.c arch/arm64.c arch/x86.c arch/x86_64.c arch/ia64.c arch/ppc64.c arch/s390x.c arch/ppc.c arch/sparc64.c arch/mips64.c arch/loongarch64.c
+>    OBJ_ARCH=$(patsubst %.c,%.o,$(SRC_ARCH))
+>    
+> -LIBS = -ldw -lbz2 -ldl -lelf -lz
+> +LIBS = -ldw -lbz2 -ldl -lelf -lz -lndctl
+>    ifneq ($(LINKTYPE), dynamic)
+>    LIBS := -static $(LIBS) -llzma
+>    endif
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index 98c3b8c7ced9..db68d05a29f9 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -27,6 +27,8 @@
+>    #include <limits.h>
+>    #include <assert.h>
+>    #include <zlib.h>
+> +#include <sys/types.h>
+> +#include <ndctl/libndctl.h>
+>
+> +
+> +#define INFOBLOCK_SZ (8192)
+> +#define SZ_4K (4096)
+> +#define PFN_SIG_LEN 16
+> +
+> +typedef uint64_t u64;
+> +typedef int64_t s64;
+> +typedef uint32_t u32;
+> +typedef int32_t s32;
+> +typedef uint16_t u16;
+> +typedef int16_t s16;
+> +typedef uint8_t u8;
+> +typedef int8_t s8;
+> +
+> +typedef int64_t le64;
+> +typedef int32_t le32;
+> +typedef int16_t le16;
+> +
+> +struct pfn_sb {
+> +       u8 signature[PFN_SIG_LEN];
+> +       u8 uuid[16];
+> +       u8 parent_uuid[16];
+> +       le32 flags;
+> +       le16 version_major;
+> +       le16 version_minor;
+> +       le64 dataoff; /* relative to namespace_base + start_pad */
+> +       le64 npfns;
+> +       le32 mode;
+> +       /* minor-version-1 additions for section alignment */
+> +       le32 start_pad;
+> +       le32 end_trunc;
+> +       /* minor-version-2 record the base alignment of the mapping */
+> +       le32 align;
+> +       /* minor-version-3 guarantee the padding and flags are zero */
+> +       /* minor-version-4 record the page size and struct page size */
+> +       le32 page_size;
+> +       le16 page_struct_size;
+> +       u8 padding[3994];
+> +       le64 checksum;
+> +};
+> +
+> +static int nd_read_infoblock_dataoff(struct ndctl_namespace *ndns)
+> +{
+> +       int fd, rc;
+> +       char path[50];
+> +       char buf[INFOBLOCK_SZ + 1];
+> +       struct pfn_sb *pfn_sb = (struct pfn_sb *)(buf + SZ_4K);
+> +
+> +       sprintf(path, "/dev/%s", ndctl_namespace_get_block_device(ndns));
+> +
+> +       fd = open(path, O_RDONLY|O_EXCL);
+> +       if (fd < 0)
+> +               return -1;
+> +
+> +
+> +       rc = read(fd, buf, INFOBLOCK_SZ);
+> +       if (rc < INFOBLOCK_SZ) {
+> +               return -1;
+> +       }
+> +
+> +       return pfn_sb->dataoff;
+> +}
+> +
+> +int inspect_pmem_namespace(void)
+> +{
+> +       struct ndctl_ctx *ctx;
+> +       struct ndctl_bus *bus;
+> +       int rc = -1;
+> +
+> +       fprintf(stderr, "\n\ninspect_pmem_namespace!!\n\n");
+> +       rc = ndctl_new(&ctx);
+> +       if (rc)
+> +               return -1;
+> +
+> +       ndctl_bus_foreach(ctx, bus) {
+> +               struct ndctl_region *region;
+> +
+> +               ndctl_region_foreach(bus, region) {
+> +                       struct ndctl_namespace *ndns;
+> +
+> +                       ndctl_namespace_foreach(region, ndns) {
+> +                               enum ndctl_namespace_mode mode;
+> +                               long long start, end_metadata;
+> +
+> +                               mode = ndctl_namespace_get_mode(ndns);
+> +                               /* kdump kernel should set force_raw, mode become *safe* */
+> +                               if (mode == NDCTL_NS_MODE_SAFE) {
+> +                                       fprintf(stderr, "Only raw can be dumpable\n");
+> +                                       continue;
+> +                               }
+> +
+> +                               start = ndctl_namespace_get_resource(ndns);
+> +                               end_metadata = nd_read_infoblock_dataoff(ndns);
+> +
+> +                               /* metadata really starts from 2M alignment */
+> +                               if (start != ULLONG_MAX && end_metadata > 2 * 1024 * 1024) // 2M
+> +                                       pmem_add_next(start, end_metadata);
+> +                       }
+> +               }
+> +       }
+> +
+> +       ndctl_unref(ctx);
+> +       return 0;
+> +}
+> +
+>
+> Thanks
+> Zhijian
+>
+>
+>
+>> Thanks again
+>>
+>> Thanks
+>> Zhijian
+>>
+>>> ...but never got an answer, or I missed the answer.
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
