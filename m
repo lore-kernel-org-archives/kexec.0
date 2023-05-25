@@ -4,62 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 08DAEC77B7A
-	for <kexec@archiver.kernel.org>; Thu, 25 May 2023 14:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 547B9C7EE2D
+	for <kexec@archiver.kernel.org>; Thu, 25 May 2023 16:07:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Message-Id:MIME-Version:Subject:
-	Date:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=wXRq7SenVjD5MPCeeutBqUq0/F0rlwQ1jNP/IlPFXP8=; b=EzyAAvCeQlfOt7
-	1pmUpXOch7v+KJGrRNiyjaC9s8TPNQvqEtnyFgm9xT+LNQ3G90ySHNKrKWxR5wiBzBqDFEVZ70sqE
-	ugaNMyc/6IUp7njWl2symlPqPtFr80pQewNJKQVOyKe/bLDKyqmWDf+TCAdYA5fUM3rpCzqT4/5w5
-	tm6+PV06SWNSKEq3r0Rviq910pfgJOaCan6zoSLZjXWZvbYEP272+h2y/sJPbLxct4DlwM7v0Yja8
-	/19Eup6K9LuIAYiCK9lIwd1BCamJGuCKtSAAURYz7v3Bu7rLspGxVfBV6j7VcwHosnbIZqd6EawfU
-	B/BHepXrbdTfXBhETjeg==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=3QtpXPENQIeb2Q39i6jDTTGoEZXiDSujWhT7LUt4z0w=; b=Td6M1/SuYtcEeR
+	9qvd+aFkP9VsPz0/P2YqxYXdij2RI+CaInIac5A8/lp+uzJY8EDkFxjUVff7aQXuaLlVLFLH2zJuc
+	3ja21vCDEEcn8bTGiqo1egdJjQPe61p3bprLalkOXWJTsWLxvvw2oe97Scu0BPOu6efHkP4qCZqTd
+	7+7Bj5bVAIj3UI/jrevV939yvmYiCRT0dh7s5cqQRAni1qL8b0cEcVx/02gLe7sO3QaBVm/MWj/Ep
+	2Zi6LcjOaAh47lRGE56ATcEFSQsotYJOfEFwu3mzH9JEY79QoeEjnKuRsm+Upa5mLIVWFnEF4U2lN
+	n5WIgpiRX50hvNrngGIg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1q2BvH-00Gq1J-0K;
-	Thu, 25 May 2023 14:26:35 +0000
-Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
+	id 1q2DV0-00H3Gp-29;
+	Thu, 25 May 2023 16:07:34 +0000
+Received: from smtp-out1.suse.de ([195.135.220.28])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1q2BvD-00Gq0i-2q
+	id 1q2DUx-00H3FW-0d
 	for kexec@lists.infradead.org;
-	Thu, 25 May 2023 14:26:33 +0000
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	Thu, 25 May 2023 16:07:32 +0000
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 259916462C;
-	Thu, 25 May 2023 14:26:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FB6FC433EF;
-	Thu, 25 May 2023 14:26:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1685024790;
-	bh=JwGEFsVAytpbnNTBcy9sEez5APaywOmU9QISh6P6Aw4=;
-	h=From:Date:Subject:To:Cc:From;
-	b=SSYfx3l/xw++zk8yHiFZKMnV7NCo0yZ0o6m+PMrdb4g+bxcEF2Xb8II2nZB5HwnlE
-	 //N4HEtbd2P90fo6T89Ow23UxAy6hnJWoubiLOsoX6IfBK3FQsxoS5jqm/vEakQj8D
-	 ucHrj3f8a0AY6755FV6ZY9Unf/tjsJx5xaKlwPlTYfKUDoroiT3U1Hrnnxk7JRNOwf
-	 Fh2rJZgfLXN7pJYOhJaEn3Lt3br5bnBpWxzy/sk2oTJvLzl6LKIZ7IiXuJWsOossA5
-	 9WTt7Dkty72DAJPBa0tjU9X3zb87r97sDdEaqv9IltfqOXJmryr5vVcO4PdZCr/Qle
-	 ybqFL8jhtWflg==
-From: Simon Horman <horms@kernel.org>
-Date: Thu, 25 May 2023 16:26:25 +0200
-Subject: [PATCH] kexec: Avoid calculating array size twice
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C3C7A21BD3;
+	Thu, 25 May 2023 16:07:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1685030845; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6fUmMKEP0NVxF0dlYJ3RY0KP8iLVIJxr+Cik8LTdcs0=;
+	b=tVp0qzVwlCNA27cvyif8ZJzfdvr0nmHI96GB1JWTQpMQs4ZdakZMUZ2rGnFUCas5JfQBU2
+	UYxQ3x0JlGRia0jsPOsyC7qghzYza254c2wM2DvHqG00ztXcSeOBRjMroQJh2ZxjjMxtCc
+	5DSwnqxg/m9XWuORKLsTYCcK6UVLPno=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1685030845;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6fUmMKEP0NVxF0dlYJ3RY0KP8iLVIJxr+Cik8LTdcs0=;
+	b=bkY2qer6sn5GnmrBSL9dYeISnx+U55IZWNeE5Ei3jBtweIcQgK7skYuDEVsB3lVqUStOUb
+	hAxH/SFvbCPPtQBQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id B172F13356;
+	Thu, 25 May 2023 16:07:25 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id gX42K72Hb2ScGgAAMHmgww
+	(envelope-from <jack@suse.cz>); Thu, 25 May 2023 16:07:25 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id C3764A075C; Thu, 25 May 2023 18:07:24 +0200 (CEST)
+Date: Thu, 25 May 2023 18:07:24 +0200
+From: Jan Kara <jack@suse.cz>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: hch@infradead.org, djwong@kernel.org, sandeen@sandeen.net,
+	song@kernel.org, rafael@kernel.org, gregkh@linuxfoundation.org,
+	viro@zeniv.linux.org.uk, jack@suse.cz, jikos@kernel.org,
+	bvanassche@acm.org, ebiederm@xmission.com, mchehab@kernel.org,
+	keescook@chromium.org, p.raghav@samsung.com, da.gomez@samsung.com,
+	linux-fsdevel@vger.kernel.org, kernel@tuxforce.de,
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] ext4: replace kthread freezing with auto fs freezing
+Message-ID: <20230525160724.aqpwh5bapsw57uwm@quack3>
+References: <20230508011927.4036707-1-mcgrof@kernel.org>
+ <20230508011927.4036707-2-mcgrof@kernel.org>
 MIME-Version: 1.0
-Message-Id: <20230525-kexec-array_size-v1-1-8b4bf4f7500a@kernel.org>
-X-B4-Tracking: v=1; b=H4sIABBwb2QC/x2N0QrCMAwAf2Xk2UCtrQ/+ioikXeaCo0qCMjf27
- ws+3sFxKxirsMGlW0H5Kyav5nA8dFBHag9G6Z0hhngKOWZ88swVSZV+d5OFsT/nGiilkmgAzwo
- ZY1FqdfSwfabJ5Vt5kPn/ud62bQcbFtZsdwAAAA==
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Eric Biederman <ebiederm@xmission.com>, Baoquan He <bhe@redhat.com>, 
- "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>, 
- kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-X-Mailer: b4 0.12.2
+Content-Disposition: inline
+In-Reply-To: <20230508011927.4036707-2-mcgrof@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230525_072632_150425_E3BE3A67 
-X-CRM114-Status: GOOD (  11.15  )
+X-CRM114-CacheID: sfid-20230525_090731_378110_08D19373 
+X-CRM114-Status: GOOD (  23.25  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,49 +97,181 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Avoid calculating array size twice in kexec_purgatory_setup_sechdrs().
-Once using array_size(), and once open-coded.
+On Sun 07-05-23 18:19:25, Luis Chamberlain wrote:
+> The kernel power management now supports allowing the VFS
+> to handle filesystem freezing freezes and thawing. Take advantage
+> of that and remove the kthread freezing. This is needed so that we
+> properly really stop IO in flight without races after userspace
+> has been frozen. Without this we rely on kthread freezing and
+> its semantics are loose and error prone.
+> 
+> The filesystem therefore is in charge of properly dealing with
+> quiescing of the filesystem through its callbacks if it thinks
+> it knows better than how the VFS handles it.
+> 
+> The following Coccinelle rule was used as to remove the now superfluous
+> freezer calls:
+> 
+> make coccicheck MODE=patch SPFLAGS="--in-place --no-show-diff" COCCI=./fs-freeze-cleanup.cocci M=fs/ext4
+> 
+> virtual patch
+> 
+> @ remove_set_freezable @
+> expression time;
+> statement S, S2;
+> expression task, current;
+> @@
+> 
+> (
+> -       set_freezable();
+> |
+> -       if (try_to_freeze())
+> -               continue;
+> |
+> -       try_to_freeze();
+> |
+> -       freezable_schedule();
+> +       schedule();
+> |
+> -       freezable_schedule_timeout(time);
+> +       schedule_timeout(time);
+> |
+> -       if (freezing(task)) { S }
+> |
+> -       if (freezing(task)) { S }
+> -       else
+> 	    { S2 }
+> |
+> -       freezing(current)
+> )
+> 
+> @ remove_wq_freezable @
+> expression WQ_E, WQ_ARG1, WQ_ARG2, WQ_ARG3, WQ_ARG4;
+> identifier fs_wq_fn;
+> @@
+> 
+> (
+>     WQ_E = alloc_workqueue(WQ_ARG1,
+> -                              WQ_ARG2 | WQ_FREEZABLE,
+> +                              WQ_ARG2,
+> 			   ...);
+> |
+>     WQ_E = alloc_workqueue(WQ_ARG1,
+> -                              WQ_ARG2 | WQ_FREEZABLE | WQ_ARG3,
+> +                              WQ_ARG2 | WQ_ARG3,
+> 			   ...);
+> |
+>     WQ_E = alloc_workqueue(WQ_ARG1,
+> -                              WQ_ARG2 | WQ_ARG3 | WQ_FREEZABLE,
+> +                              WQ_ARG2 | WQ_ARG3,
+> 			   ...);
+> |
+>     WQ_E = alloc_workqueue(WQ_ARG1,
+> -                              WQ_ARG2 | WQ_ARG3 | WQ_FREEZABLE | WQ_ARG4,
+> +                              WQ_ARG2 | WQ_ARG3 | WQ_ARG4,
+> 			   ...);
+> |
+> 	    WQ_E =
+> -               WQ_ARG1 | WQ_FREEZABLE
+> +               WQ_ARG1
+> |
+> 	    WQ_E =
+> -               WQ_ARG1 | WQ_FREEZABLE | WQ_ARG3
+> +               WQ_ARG1 | WQ_ARG3
+> |
+>     fs_wq_fn(
+> -               WQ_FREEZABLE | WQ_ARG2 | WQ_ARG3
+> +               WQ_ARG2 | WQ_ARG3
+>     )
+> |
+>     fs_wq_fn(
+> -               WQ_FREEZABLE | WQ_ARG2
+> +               WQ_ARG2
+>     )
+> |
+>     fs_wq_fn(
+> -               WQ_FREEZABLE
+> +               0
+>     )
+> )
+> 
+> @ add_auto_flag @
+> expression E1;
+> identifier fs_type;
+> @@
+> 
+> struct file_system_type fs_type = {
+> 	.fs_flags = E1
+> +                   | FS_AUTOFREEZE
+> 	,
+> };
+> 
+> Generated-by: Coccinelle SmPL
+> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 
-Flagged by Coccinelle:
+I guess we can also usually remove the #include <linux/freezer.h> line? At
+least in ext4 it is the case I believe. Otherwise this looks good.
 
-  .../kexec_file.c:881:8-25: WARNING: array_size is already used (line 877) to compute the same size
+								Honza
 
-No functional change intended.
-Compile tested only.
-
-Signed-off-by: Simon Horman <horms@kernel.org>
----
- kernel/kexec_file.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index f989f5f1933b..3f5677679744 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -867,6 +867,7 @@ static int kexec_purgatory_setup_sechdrs(struct purgatory_info *pi,
- {
- 	unsigned long bss_addr;
- 	unsigned long offset;
-+	size_t sechdrs_size;
- 	Elf_Shdr *sechdrs;
- 	int i;
- 
-@@ -874,11 +875,11 @@ static int kexec_purgatory_setup_sechdrs(struct purgatory_info *pi,
- 	 * The section headers in kexec_purgatory are read-only. In order to
- 	 * have them modifiable make a temporary copy.
- 	 */
--	sechdrs = vzalloc(array_size(sizeof(Elf_Shdr), pi->ehdr->e_shnum));
-+	sechdrs_size = array_size(sizeof(Elf_Shdr), pi->ehdr->e_shnum);
-+	sechdrs = vzalloc(sechdrs_size);
- 	if (!sechdrs)
- 		return -ENOMEM;
--	memcpy(sechdrs, (void *)pi->ehdr + pi->ehdr->e_shoff,
--	       pi->ehdr->e_shnum * sizeof(Elf_Shdr));
-+	memcpy(sechdrs, (void *)pi->ehdr + pi->ehdr->e_shoff, sechdrs_size);
- 	pi->sechdrs = sechdrs;
- 
- 	offset = 0;
-
+> ---
+>  fs/ext4/super.c | 9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
+> 
+> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+> index d39f386e9baf..1f436938d8be 100644
+> --- a/fs/ext4/super.c
+> +++ b/fs/ext4/super.c
+> @@ -136,7 +136,7 @@ static struct file_system_type ext2_fs_type = {
+>  	.init_fs_context	= ext4_init_fs_context,
+>  	.parameters		= ext4_param_specs,
+>  	.kill_sb		= kill_block_super,
+> -	.fs_flags		= FS_REQUIRES_DEV,
+> +	.fs_flags		= FS_REQUIRES_DEV | FS_AUTOFREEZE,
+>  };
+>  MODULE_ALIAS_FS("ext2");
+>  MODULE_ALIAS("ext2");
+> @@ -152,7 +152,7 @@ static struct file_system_type ext3_fs_type = {
+>  	.init_fs_context	= ext4_init_fs_context,
+>  	.parameters		= ext4_param_specs,
+>  	.kill_sb		= kill_block_super,
+> -	.fs_flags		= FS_REQUIRES_DEV,
+> +	.fs_flags		= FS_REQUIRES_DEV | FS_AUTOFREEZE,
+>  };
+>  MODULE_ALIAS_FS("ext3");
+>  MODULE_ALIAS("ext3");
+> @@ -3790,7 +3790,6 @@ static int ext4_lazyinit_thread(void *arg)
+>  	unsigned long next_wakeup, cur;
+>  
+>  	BUG_ON(NULL == eli);
+> -	set_freezable();
+>  
+>  cont_thread:
+>  	while (true) {
+> @@ -3842,8 +3841,6 @@ static int ext4_lazyinit_thread(void *arg)
+>  		}
+>  		mutex_unlock(&eli->li_list_mtx);
+>  
+> -		try_to_freeze();
+> -
+>  		cur = jiffies;
+>  		if ((time_after_eq(cur, next_wakeup)) ||
+>  		    (MAX_JIFFY_OFFSET == next_wakeup)) {
+> @@ -7245,7 +7242,7 @@ static struct file_system_type ext4_fs_type = {
+>  	.init_fs_context	= ext4_init_fs_context,
+>  	.parameters		= ext4_param_specs,
+>  	.kill_sb		= kill_block_super,
+> -	.fs_flags		= FS_REQUIRES_DEV | FS_ALLOW_IDMAP,
+> +	.fs_flags		= FS_REQUIRES_DEV | FS_ALLOW_IDMAP | FS_AUTOFREEZE,
+>  };
+>  MODULE_ALIAS_FS("ext4");
+>  
+> -- 
+> 2.39.2
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
 
 _______________________________________________
 kexec mailing list
