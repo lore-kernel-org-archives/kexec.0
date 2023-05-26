@@ -4,83 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 547B9C7EE2D
-	for <kexec@archiver.kernel.org>; Thu, 25 May 2023 16:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B55EDC77B7A
+	for <kexec@archiver.kernel.org>; Fri, 26 May 2023 04:08:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=3QtpXPENQIeb2Q39i6jDTTGoEZXiDSujWhT7LUt4z0w=; b=Td6M1/SuYtcEeR
-	9qvd+aFkP9VsPz0/P2YqxYXdij2RI+CaInIac5A8/lp+uzJY8EDkFxjUVff7aQXuaLlVLFLH2zJuc
-	3ja21vCDEEcn8bTGiqo1egdJjQPe61p3bprLalkOXWJTsWLxvvw2oe97Scu0BPOu6efHkP4qCZqTd
-	7+7Bj5bVAIj3UI/jrevV939yvmYiCRT0dh7s5cqQRAni1qL8b0cEcVx/02gLe7sO3QaBVm/MWj/Ep
-	2Zi6LcjOaAh47lRGE56ATcEFSQsotYJOfEFwu3mzH9JEY79QoeEjnKuRsm+Upa5mLIVWFnEF4U2lN
-	n5WIgpiRX50hvNrngGIg==;
+	List-Owner; bh=g3nNm4+gjZG5P4Gd6WMj0u3v+rYV8HFk/Rudns0rMhw=; b=zMNruVK/EG81ow
+	UPiG/rZ1zzNdEdGrxRZWVxLrpiA4JOxpJpgoeyAmSLLYJ3C0XMnW5TyyWfznfM9m3KZEiwEbKvqYQ
+	6ME+lgJR5+zAwOKgvvSl4ZIUNvTdU16zi2RJJQmWOsTilU7/YJ7M6f9RQCa3pQtxSA/Sh0ThcfG6k
+	/wJTxqF9cS1p3ms/zxHW3e2TjdVCN0f4sRHjeyGmOEz+O/Pyt18cOTtkc7lJHQv01s2uNvfgNvkxI
+	K8GSUj99FCBfoXpoH5ohSpavueLSACte9/GJOvrFZDuu+IqzWKo/Udcpax3B1/1pqm6CwHBG4i5UZ
+	C3TIw55HOpvpt9MB4HHg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1q2DV0-00H3Gp-29;
-	Thu, 25 May 2023 16:07:34 +0000
-Received: from smtp-out1.suse.de ([195.135.220.28])
+	id 1q2OkZ-000vuz-2F;
+	Fri, 26 May 2023 04:08:23 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1q2DUx-00H3FW-0d
+	id 1q2OkS-000vtx-1P
 	for kexec@lists.infradead.org;
-	Thu, 25 May 2023 16:07:32 +0000
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id C3C7A21BD3;
-	Thu, 25 May 2023 16:07:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1685030845; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	Fri, 26 May 2023 04:08:18 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1685074094;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6fUmMKEP0NVxF0dlYJ3RY0KP8iLVIJxr+Cik8LTdcs0=;
-	b=tVp0qzVwlCNA27cvyif8ZJzfdvr0nmHI96GB1JWTQpMQs4ZdakZMUZ2rGnFUCas5JfQBU2
-	UYxQ3x0JlGRia0jsPOsyC7qghzYza254c2wM2DvHqG00ztXcSeOBRjMroQJh2ZxjjMxtCc
-	5DSwnqxg/m9XWuORKLsTYCcK6UVLPno=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1685030845;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6fUmMKEP0NVxF0dlYJ3RY0KP8iLVIJxr+Cik8LTdcs0=;
-	b=bkY2qer6sn5GnmrBSL9dYeISnx+U55IZWNeE5Ei3jBtweIcQgK7skYuDEVsB3lVqUStOUb
-	hAxH/SFvbCPPtQBQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	bh=281L+8rYh29YkUcSLnBXVJo3LDjuwmSmWQA4O0K9HTQ=;
+	b=FJ8iIgSvYNlHhiQFCQ1YHkzFuRjCUTiI3pu9Lgv4xYSQPfG5Duyfqcgkb2fqVjfAajU/ZW
+	5gvA9TONF0Ktquc1ve2NoYK3qIis//FycXFTNxvmN6y30uz6xytbE9YYMDnCtH0tSM9p58
+	lpUlA4W09xE4Miiz3fXLK/8kvJ89t2w=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-283-fezvmrDnPGGsIsfT4Pzcaw-1; Fri, 26 May 2023 00:08:10 -0400
+X-MC-Unique: fezvmrDnPGGsIsfT4Pzcaw-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id B172F13356;
-	Thu, 25 May 2023 16:07:25 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id gX42K72Hb2ScGgAAMHmgww
-	(envelope-from <jack@suse.cz>); Thu, 25 May 2023 16:07:25 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id C3764A075C; Thu, 25 May 2023 18:07:24 +0200 (CEST)
-Date: Thu, 25 May 2023 18:07:24 +0200
-From: Jan Kara <jack@suse.cz>
-To: Luis Chamberlain <mcgrof@kernel.org>
-Cc: hch@infradead.org, djwong@kernel.org, sandeen@sandeen.net,
-	song@kernel.org, rafael@kernel.org, gregkh@linuxfoundation.org,
-	viro@zeniv.linux.org.uk, jack@suse.cz, jikos@kernel.org,
-	bvanassche@acm.org, ebiederm@xmission.com, mchehab@kernel.org,
-	keescook@chromium.org, p.raghav@samsung.com, da.gomez@samsung.com,
-	linux-fsdevel@vger.kernel.org, kernel@tuxforce.de,
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] ext4: replace kthread freezing with auto fs freezing
-Message-ID: <20230525160724.aqpwh5bapsw57uwm@quack3>
-References: <20230508011927.4036707-1-mcgrof@kernel.org>
- <20230508011927.4036707-2-mcgrof@kernel.org>
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 905F58032EF;
+	Fri, 26 May 2023 04:08:09 +0000 (UTC)
+Received: from localhost (ovpn-12-35.pek2.redhat.com [10.72.12.35])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 82B05492B0A;
+	Fri, 26 May 2023 04:08:08 +0000 (UTC)
+Date: Fri, 26 May 2023 12:08:04 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Tao Liu <ltao@redhat.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	linux-kernel@vger.kernel.org, dyoung@redhat.com,
+	kexec@lists.infradead.org, linux-efi@vger.kernel.org
+Subject: Re: [PATCH] x86/kexec: Add EFI config table identity mapping for
+ kexec kernel
+Message-ID: <ZHAwpL3wbKX9sWep@MiWiFi-R3L-srv>
+References: <20230525094914.23420-1-ltao@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20230508011927.4036707-2-mcgrof@kernel.org>
+In-Reply-To: <20230525094914.23420-1-ltao@redhat.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230525_090731_378110_08D19373 
-X-CRM114-Status: GOOD (  23.25  )
+X-CRM114-CacheID: sfid-20230525_210816_703152_31E66060 
+X-CRM114-Status: GOOD (  29.42  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,181 +83,130 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sun 07-05-23 18:19:25, Luis Chamberlain wrote:
-> The kernel power management now supports allowing the VFS
-> to handle filesystem freezing freezes and thawing. Take advantage
-> of that and remove the kthread freezing. This is needed so that we
-> properly really stop IO in flight without races after userspace
-> has been frozen. Without this we rely on kthread freezing and
-> its semantics are loose and error prone.
-> 
-> The filesystem therefore is in charge of properly dealing with
-> quiescing of the filesystem through its callbacks if it thinks
-> it knows better than how the VFS handles it.
-> 
-> The following Coccinelle rule was used as to remove the now superfluous
-> freezer calls:
-> 
-> make coccicheck MODE=patch SPFLAGS="--in-place --no-show-diff" COCCI=./fs-freeze-cleanup.cocci M=fs/ext4
-> 
-> virtual patch
-> 
-> @ remove_set_freezable @
-> expression time;
-> statement S, S2;
-> expression task, current;
-> @@
-> 
-> (
-> -       set_freezable();
-> |
-> -       if (try_to_freeze())
-> -               continue;
-> |
-> -       try_to_freeze();
-> |
-> -       freezable_schedule();
-> +       schedule();
-> |
-> -       freezable_schedule_timeout(time);
-> +       schedule_timeout(time);
-> |
-> -       if (freezing(task)) { S }
-> |
-> -       if (freezing(task)) { S }
-> -       else
-> 	    { S2 }
-> |
-> -       freezing(current)
-> )
-> 
-> @ remove_wq_freezable @
-> expression WQ_E, WQ_ARG1, WQ_ARG2, WQ_ARG3, WQ_ARG4;
-> identifier fs_wq_fn;
-> @@
-> 
-> (
->     WQ_E = alloc_workqueue(WQ_ARG1,
-> -                              WQ_ARG2 | WQ_FREEZABLE,
-> +                              WQ_ARG2,
-> 			   ...);
-> |
->     WQ_E = alloc_workqueue(WQ_ARG1,
-> -                              WQ_ARG2 | WQ_FREEZABLE | WQ_ARG3,
-> +                              WQ_ARG2 | WQ_ARG3,
-> 			   ...);
-> |
->     WQ_E = alloc_workqueue(WQ_ARG1,
-> -                              WQ_ARG2 | WQ_ARG3 | WQ_FREEZABLE,
-> +                              WQ_ARG2 | WQ_ARG3,
-> 			   ...);
-> |
->     WQ_E = alloc_workqueue(WQ_ARG1,
-> -                              WQ_ARG2 | WQ_ARG3 | WQ_FREEZABLE | WQ_ARG4,
-> +                              WQ_ARG2 | WQ_ARG3 | WQ_ARG4,
-> 			   ...);
-> |
-> 	    WQ_E =
-> -               WQ_ARG1 | WQ_FREEZABLE
-> +               WQ_ARG1
-> |
-> 	    WQ_E =
-> -               WQ_ARG1 | WQ_FREEZABLE | WQ_ARG3
-> +               WQ_ARG1 | WQ_ARG3
-> |
->     fs_wq_fn(
-> -               WQ_FREEZABLE | WQ_ARG2 | WQ_ARG3
-> +               WQ_ARG2 | WQ_ARG3
->     )
-> |
->     fs_wq_fn(
-> -               WQ_FREEZABLE | WQ_ARG2
-> +               WQ_ARG2
->     )
-> |
->     fs_wq_fn(
-> -               WQ_FREEZABLE
-> +               0
->     )
-> )
-> 
-> @ add_auto_flag @
-> expression E1;
-> identifier fs_type;
-> @@
-> 
-> struct file_system_type fs_type = {
-> 	.fs_flags = E1
-> +                   | FS_AUTOFREEZE
-> 	,
-> };
-> 
-> Generated-by: Coccinelle SmPL
-> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+Hi Tao,
 
-I guess we can also usually remove the #include <linux/freezer.h> line? At
-least in ext4 it is the case I believe. Otherwise this looks good.
+On 05/25/23 at 05:49pm, Tao Liu wrote:
+> A kexec kernel bootup hang is observed on Intel Atom cpu due to unmapped
+> EFI config table.
+> 
+> Currently EFI system table is identity-mapped for the kexec kernel, but EFI
+> config table is not mapped explicitly:
+> 
+>     commit 6bbeb276b71f ("x86/kexec: Add the EFI system tables and ACPI
+>                           tables to the ident map")
+> 
+> Later in the following 2 commits, EFI config table will be accessed when
+> enabling sev at kernel startup. This may result in a page fault due to EFI
+> config table's unmapped address. Since the page fault occurs at an early
+> stage, it is unrecoverable and kernel hangs.
+> 
+>     commit ec1c66af3a30 ("x86/compressed/64: Detect/setup SEV/SME features
+>                           earlier during boot")
+>     commit c01fce9cef84 ("x86/compressed: Add SEV-SNP feature
+>                           detection/setup")
+> 
+> In addition, the issue doesn't appear on all systems, because the kexec
+> kernel uses Page Size Extension (PSE) for identity mapping. In most cases,
+> EFI config table can end up to be mapped into due to 1 GB page size.
+> However if nogbpages is set, or cpu doesn't support pdpe1gb feature
+> (e.g Intel Atom x6425RE cpu), EFI config table may not be mapped into
+> due to 2 MB page size, thus a page fault hang is more likely to happen.
+> 
+> In this patch, we will make sure the EFI config table is always mapped.
 
-								Honza
+Nice work. While you may need to rephrase above sentence, x86
+maintainers don't like log with the 'this patch,' or 'we'. Please refer
+to 'Changelog' part of Documentation/process/maintainer-tip.rst and
+improve it.
 
+> 
+> Signed-off-by: Tao Liu <ltao@redhat.com>
 > ---
->  fs/ext4/super.c | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
+>  arch/x86/kernel/machine_kexec_64.c | 35 ++++++++++++++++++++++++++----
+>  1 file changed, 31 insertions(+), 4 deletions(-)
 > 
-> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-> index d39f386e9baf..1f436938d8be 100644
-> --- a/fs/ext4/super.c
-> +++ b/fs/ext4/super.c
-> @@ -136,7 +136,7 @@ static struct file_system_type ext2_fs_type = {
->  	.init_fs_context	= ext4_init_fs_context,
->  	.parameters		= ext4_param_specs,
->  	.kill_sb		= kill_block_super,
-> -	.fs_flags		= FS_REQUIRES_DEV,
-> +	.fs_flags		= FS_REQUIRES_DEV | FS_AUTOFREEZE,
->  };
->  MODULE_ALIAS_FS("ext2");
->  MODULE_ALIAS("ext2");
-> @@ -152,7 +152,7 @@ static struct file_system_type ext3_fs_type = {
->  	.init_fs_context	= ext4_init_fs_context,
->  	.parameters		= ext4_param_specs,
->  	.kill_sb		= kill_block_super,
-> -	.fs_flags		= FS_REQUIRES_DEV,
-> +	.fs_flags		= FS_REQUIRES_DEV | FS_AUTOFREEZE,
->  };
->  MODULE_ALIAS_FS("ext3");
->  MODULE_ALIAS("ext3");
-> @@ -3790,7 +3790,6 @@ static int ext4_lazyinit_thread(void *arg)
->  	unsigned long next_wakeup, cur;
+> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+> index 1a3e2c05a8a5..755aa12f583f 100644
+> --- a/arch/x86/kernel/machine_kexec_64.c
+> +++ b/arch/x86/kernel/machine_kexec_64.c
+> @@ -28,6 +28,7 @@
+>  #include <asm/setup.h>
+>  #include <asm/set_memory.h>
+>  #include <asm/cpu.h>
+> +#include <asm/efi.h>
 >  
->  	BUG_ON(NULL == eli);
-> -	set_freezable();
+>  #ifdef CONFIG_ACPI
+>  /*
+> @@ -86,10 +87,12 @@ const struct kexec_file_ops * const kexec_file_loaders[] = {
+>  #endif
 >  
->  cont_thread:
->  	while (true) {
-> @@ -3842,8 +3841,6 @@ static int ext4_lazyinit_thread(void *arg)
->  		}
->  		mutex_unlock(&eli->li_list_mtx);
+>  static int
+> -map_efi_systab(struct x86_mapping_info *info, pgd_t *level4p)
+> +map_efi_sys_cfg_tab(struct x86_mapping_info *info, pgd_t *level4p)
+
+Can we call the function map_efi_tables() since we will map efi system
+table, system config table. If you need add another table mapping here,
+what would you call it, map_efi_sys_cfg_xxx_tab()?
+
+Anyway, not very strong opinion as long as x86 maintainer likes it.
+
+>  {
+>  #ifdef CONFIG_EFI
+>  	unsigned long mstart, mend;
+> +	void *kaddr;
+> +	int ret;
 >  
-> -		try_to_freeze();
-> -
->  		cur = jiffies;
->  		if ((time_after_eq(cur, next_wakeup)) ||
->  		    (MAX_JIFFY_OFFSET == next_wakeup)) {
-> @@ -7245,7 +7242,7 @@ static struct file_system_type ext4_fs_type = {
->  	.init_fs_context	= ext4_init_fs_context,
->  	.parameters		= ext4_param_specs,
->  	.kill_sb		= kill_block_super,
-> -	.fs_flags		= FS_REQUIRES_DEV | FS_ALLOW_IDMAP,
-> +	.fs_flags		= FS_REQUIRES_DEV | FS_ALLOW_IDMAP | FS_AUTOFREEZE,
->  };
->  MODULE_ALIAS_FS("ext4");
+>  	if (!efi_enabled(EFI_BOOT))
+>  		return 0;
+> @@ -105,6 +108,30 @@ map_efi_systab(struct x86_mapping_info *info, pgd_t *level4p)
+>  	if (!mstart)
+>  		return 0;
+>  
+> +	ret = kernel_ident_mapping_init(info, level4p, mstart, mend);
+> +	if (ret)
+> +		return ret;
+> +
+> +	kaddr = memremap(mstart, mend - mstart, MEMREMAP_WB);
+> +	if (!kaddr) {
+> +		pr_err("Could not map UEFI system table\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	mstart = efi_config_table;
+> +
+> +	if (efi_enabled(EFI_64BIT)) {
+> +		efi_system_table_64_t *stbl = (efi_system_table_64_t *)kaddr;
+> +
+> +		mend = mstart + sizeof(efi_config_table_64_t) * stbl->nr_tables;
+> +	} else {
+> +		efi_system_table_32_t *stbl = (efi_system_table_32_t *)kaddr;
+> +
+> +		mend = mstart + sizeof(efi_config_table_32_t) * stbl->nr_tables;
+> +	}
+> +
+> +	memunmap(kaddr);
+> +
+>  	return kernel_ident_mapping_init(info, level4p, mstart, mend);
+>  #endif
+>  	return 0;
+> @@ -244,10 +271,10 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
+>  	}
+>  
+>  	/*
+> -	 * Prepare EFI systab and ACPI tables for kexec kernel since they are
+> -	 * not covered by pfn_mapped.
+> +	 * Prepare EFI systab, config table and ACPI tables for kexec kernel
+> +	 * since they are not covered by pfn_mapped.
+>  	 */
+> -	result = map_efi_systab(&info, level4p);
+> +	result = map_efi_sys_cfg_tab(&info, level4p);
+>  	if (result)
+>  		return result;
 >  
 > -- 
-> 2.39.2
+> 2.33.1
 > 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+
 
 _______________________________________________
 kexec mailing list
