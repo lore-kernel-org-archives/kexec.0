@@ -4,77 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 63C3DC77B73
-	for <kexec@archiver.kernel.org>; Sun, 28 May 2023 00:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9BE9CC77B7E
+	for <kexec@archiver.kernel.org>; Sun, 28 May 2023 01:45:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=iWL66Y/fLlhXLFRUuGO7yANcDC5yE6OOE4TfPWZUKpY=; b=bUPSB/TXuA4uIg
-	twFDvNdT4A0gzfdHcrxunPPstgXOYNVhK8PDqUKJ3ToQL8mler3f6KMh8jRudRrZRRYsy/JUXxmtu
-	iDcThriolFDxf+2ahic6Ax9s0BSGtXiGxf27T4Wqm2MiO1fV6nmXTlJi0dhw/wcDYOhybbKy0MxjE
-	YuMnCnkXKdcN+PVJHNlhGyrlNXEIqdfRVvVUl6mAygvGNbdezNoVKrQDVipgUcZIVuX5i0sUCDx+8
-	uqJUUXCz4pTT8ogIAyca+C2Gr8LcXFIU0P7e45paNUxHdMcLAeBroO/hWu7Bz9UXahI1MplIW8rk9
-	oRQCISNg6bKCT5yIrnTw==;
+	List-Owner; bh=mQ+F1K4DRJ4JRp2AtEot4rviKERFhoXsnCN0E9HSeOg=; b=QKa2k7a8viHt/D
+	/D5Wf9k+tARHJiejt/AM8mO37hQ2Nx2RLXU5cBt4SvjZt/h9P5lYVl7ijxQxDi9YICItToKlnHIvt
+	We4uu9o97BPHjhWzKpeJ0x2DqrUlbnER0GMwXtrlPNZMTmx4UfM6mOgXpKqfOsknOxsmfHL3Frfcp
+	DPm7x3DSbgSWRBqiIVVrpP+EKJvkWUFj9+QxmJh0PexDcumUz6lhJbh3uMynfRoO8Kk31YUWew6B7
+	On7uBg5XVBvNvrCONLM4Jq8rpNrY9YK599SJRCEPqNAS5nn7PpzOEwgr9XkdamO+NLvaXvL+CmC91
+	roIjyodyJNhPEs1pwwBA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1q33yd-006ZcW-0Z;
-	Sun, 28 May 2023 00:09:39 +0000
-Received: from mga17.intel.com ([192.55.52.151])
+	id 1q35Sx-006jjf-33;
+	Sun, 28 May 2023 01:45:03 +0000
+Received: from mga02.intel.com ([134.134.136.20])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1q33yZ-006Zbx-0q
+	id 1q35Su-006jiQ-1m
 	for kexec@lists.infradead.org;
-	Sun, 28 May 2023 00:09:37 +0000
+	Sun, 28 May 2023 01:45:02 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685232575; x=1716768575;
+  t=1685238300; x=1716774300;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=a9gIudvxnsEuKt6ByRRnLGP+BwC0R1njnXJ4h3gya0I=;
-  b=NSyuE1hT8GfUpvWMLK6z1w30JGA/iA/mxCjRtFzY3QfSq7uvyplfj41I
-   ldQGP9ahV8CHKhn+mJhjCco59C38AB6L/dY9HBEEE1t9r+Xn+3R7/7K9A
-   iVBVcZWjLRV9fNvXj7lgD66aXBJYM7DjvqjcbsmaZTgz1m3/+j5d86yCe
-   O2/5K201gvF/8siXObHAf00V1+Ue2heq1lnU1a0xnAb0OMGoBL6NuGGFI
-   dCoF+yDOLgiNSN7JqupMUiahBoAGziEQ3bTqbNYT4by2OtgneDt42tHHk
-   i3qugzantRcA0KCJiXCpxcGFI0LK0SfyJRQiabyB1GCQIyY4I5QGazA2V
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10723"; a="334815484"
+  bh=Gll6v8zxfLENN56Xlc2FVXBXa2vDekhM1BJGuQkgYbQ=;
+  b=WuDe3ECEtNm6mLLmBeqOjzIy9MWli8hxRIIckmRgEYDqVqJDAXr4WtdT
+   N1EdknyGjzCUTiL789chQPzDs1Q3hs1nXVmHIAP4SwWK7eBOlVypmCffs
+   EGgDs6jT7uDCyfDsZB6d06h6HFSVaKV0ZGLHAvwUN6z7Guj36aKs+2QWo
+   1VVfcpZgEihFV31myUadMUWa/+YP0E/9UZlzmFkyQWZ2Ll7Uct0Ik2QuZ
+   jMUQIj2+CY6HmhYuZ/IjBuAULu3pk9vsd75H10dhDoTbcAhvAL1PFi2Z7
+   RTTxOk6QOyxVLEtboNOgZRgv23zM8WuWCQRz15QBxzcnQKXAxG8HnUsOT
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10723"; a="343968776"
 X-IronPort-AV: E=Sophos;i="6.00,198,1681196400"; 
-   d="scan'208";a="334815484"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2023 17:09:32 -0700
+   d="scan'208";a="343968776"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2023 18:44:54 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10723"; a="849932954"
+X-IronPort-AV: E=McAfee;i="6600,9927,10723"; a="736420199"
 X-IronPort-AV: E=Sophos;i="6.00,198,1681196400"; 
-   d="scan'208";a="849932954"
+   d="scan'208";a="736420199"
 Received: from lkp-server01.sh.intel.com (HELO dea6d5a4f140) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 27 May 2023 17:09:29 -0700
+  by orsmga008.jf.intel.com with ESMTP; 27 May 2023 18:44:52 -0700
 Received: from kbuild by dea6d5a4f140 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1q33yS-000KGk-2t;
-	Sun, 28 May 2023 00:09:28 +0000
-Date: Sun, 28 May 2023 08:08:51 +0800
+	id 1q35Sl-000KMu-0y;
+	Sun, 28 May 2023 01:44:51 +0000
+Date: Sun, 28 May 2023 09:44:10 +0800
 From: kernel test robot <lkp@intel.com>
 To: Zhen Lei <thunder.leizhen@huawei.com>,
 	Eric Biederman <ebiederm@xmission.com>, Baoquan He <bhe@redhat.com>,
 	kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Zhen Lei <thunder.leizhen@huawei.com>,
+Cc: oe-kbuild-all@lists.linux.dev, Zhen Lei <thunder.leizhen@huawei.com>,
 	Michael Holzheu <holzheu@linux.vnet.ibm.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Linux Memory Management List <linux-mm@kvack.org>,
 	Amerigo Wang <amwang@redhat.com>
 Subject: Re: [PATCH 5/6] kexec: add helper __crash_shrink_memory()
-Message-ID: <202305280717.Pw06aLkz-lkp@intel.com>
+Message-ID: <202305280949.yYtbjy5B-lkp@intel.com>
 References: <20230527123439.772-6-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
 Content-Disposition: inline
 In-Reply-To: <20230527123439.772-6-thunder.leizhen@huawei.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230527_170935_363597_047ED38D 
-X-CRM114-Status: GOOD (  14.78  )
+X-CRM114-CacheID: sfid-20230527_184500_689721_1333B3A9 
+X-CRM114-Status: GOOD (  13.92  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -105,37 +104,30 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Zhen-Lei/kexec-fix-a-memo
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
 patch link:    https://lore.kernel.org/r/20230527123439.772-6-thunder.leizhen%40huawei.com
 patch subject: [PATCH 5/6] kexec: add helper __crash_shrink_memory()
-config: riscv-randconfig-r042-20230526 (https://download.01.org/0day-ci/archive/20230528/202305280717.Pw06aLkz-lkp@intel.com/config)
-compiler: clang version 17.0.0 (https://github.com/llvm/llvm-project 4faf3aaf28226a4e950c103a14f6fc1d1fdabb1b)
+config: mips-randconfig-r012-20230528 (https://download.01.org/0day-ci/archive/20230528/202305280949.yYtbjy5B-lkp@intel.com/config)
+compiler: mipsel-linux-gcc (GCC) 12.1.0
 reproduce (this is a W=1 build):
         mkdir -p ~/bin
         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
         chmod +x ~/bin/make.cross
-        # install riscv cross compiling tool for clang build
-        # apt-get install binutils-riscv64-linux-gnu
         # https://github.com/intel-lab-lkp/linux/commit/dea97cef503d26e05d0e11818ae44176056ddf64
         git remote add linux-review https://github.com/intel-lab-lkp/linux
         git fetch --no-tags linux-review Zhen-Lei/kexec-fix-a-memory-leak-in-crash_shrink_memory/20230527-203821
         git checkout dea97cef503d26e05d0e11818ae44176056ddf64
         # save the config file
         mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang ~/bin/make.cross W=1 O=build_dir ARCH=riscv olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang ~/bin/make.cross W=1 O=build_dir ARCH=riscv SHELL=/bin/bash
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 ~/bin/make.cross W=1 O=build_dir ARCH=mips olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 ~/bin/make.cross W=1 O=build_dir ARCH=mips SHELL=/bin/bash
 
 If you fix the issue, kindly add following tag where applicable
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202305280717.Pw06aLkz-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202305280949.yYtbjy5B-lkp@intel.com/
 
 All warnings (new ones prefixed by >>):
 
->> kernel/kexec_core.c:1108:5: warning: no previous prototype for function '__crash_shrink_memory' [-Wmissing-prototypes]
-   int __crash_shrink_memory(struct resource *old_res, unsigned long new_size)
-       ^
-   kernel/kexec_core.c:1108:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
-   int __crash_shrink_memory(struct resource *old_res, unsigned long new_size)
-   ^
-   static 
-   1 warning generated.
+>> kernel/kexec_core.c:1108:5: warning: no previous prototype for '__crash_shrink_memory' [-Wmissing-prototypes]
+    1108 | int __crash_shrink_memory(struct resource *old_res, unsigned long new_size)
+         |     ^~~~~~~~~~~~~~~~~~~~~
 
 
 vim +/__crash_shrink_memory +1108 kernel/kexec_core.c
