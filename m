@@ -4,71 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2B9D4C77B73
-	for <kexec@archiver.kernel.org>; Wed, 31 May 2023 07:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B2AFCC77B7C
+	for <kexec@archiver.kernel.org>; Wed, 31 May 2023 07:41:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=gv2eeg2hcii9srTUHBOPz8p4sXq+i+aBuMuV0ov4rmw=; b=KxAQSvVfwI4gw9
-	bnKD4hdRKT1WKB2g5mILS1v8Yqnhrvh2ytSydhrdlJ9Hu/NO0pK1UUW5BaSzcKMiOFdlf09V2eca+
-	FC1EBYZutK6P7M/Uv99FUTpLGjAzF1z+ZDKxHHovSd02zPXGLAfXoetysXkjSNrTk7n4JiOOYrsW4
-	ybI9F+pJrJWBbKoYUUmjcm07eFXzrrq+ft4asru2j6NBZ23vbAdwaDK79CVOLOq0EdxB8R0HWSBFb
-	SOvp2wdFLg6OcCbslnYBQeNDI/TcWeXgYChN0nBrq9h4EqiT7ts6T8A+u3avzOhmdIawfFik6NNeF
-	Hs4tK1xPZGKokNz25Uyg==;
+	List-Owner; bh=M8Z7fTHPcAzUue4hHgTCG/8u8kL3cqjwLQIJqey91p0=; b=OLfC3/+b6mm9i7
+	jmxViur+5Jy72k8rcXpQdfmkhGWYf0RMiSEnRCU/TQOXuTTnqyMxB/WAF9YmUNRnqwxQZrEAbBWpq
+	5ehIbSxqp8usOOHup1DkmIpUmUKluinC+fcMWp6mx/gE5llir36dbPDrbj6FZcaWeJn+t/aW3McBq
+	65HEQAaQOX2VJSV0Eknkldm/1v1lD2PBR94QrUVWxUSO61DuTzKuE10tk3DA6S1IsLElYBeYo3lna
+	8YIrcJUcNNsXLFG1sK8Exfgbzko0AJ7Fe4LfUgOzEAhVeVYaJojwWRnrES5rHGfv/s09o+Qgr/rOw
+	ziOTI4puukD43tvYFS9A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1q4GIh-00GRxl-0E;
-	Wed, 31 May 2023 07:31:19 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1q4GSa-00GU4V-20;
+	Wed, 31 May 2023 07:41:32 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1q4GIe-00GRvl-0v
+	id 1q4GSY-00GU3U-1G
 	for kexec@lists.infradead.org;
-	Wed, 31 May 2023 07:31:17 +0000
+	Wed, 31 May 2023 07:41:31 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1685518270;
+	s=mimecast20190719; t=1685518889;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xgdLJ8iH5oaqpzGT2VDUPLqR1HXU87CsPuv2JR9kJ1k=;
-	b=VmjdWosse65P/mOn3a96FTLFTuPkLeUwB4hQGxZ9j+HLL+sJU745YbgUJzPHyRxd/roZ4p
-	o21yauvIeyivaUUxn7yIvbCQOMf5icE23d0tEPrz6OL7i8eeU3T9EZtAHEm/TfGfzN0iRi
-	PFKoPvYO+AgFXKY63jG1egFl55X23L4=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=c/LgYdINnVSghmwNsV+kSfBQhPeozhgR1xVSC5icCD8=;
+	b=iQun/tKlDAdKRrf20RQH/KsrpWbpIkA2AS8xuglaTm+dXHdNKi3q3QeQiSPARko0bD6gyV
+	t2de6+rxNabGkE2yuO+Y17k4PlIBtgPEEjYetyq5LWiw0SyJU+B2trUE4mnBJ4MRzUeS9x
+	xM9buD6xtc0rkxHxVbKgJ9xoVtPe3Ys=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-379-gbwutGR5OXqtxdF2C-E10A-1; Wed, 31 May 2023 03:31:07 -0400
-X-MC-Unique: gbwutGR5OXqtxdF2C-E10A-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+ us-mta-582-iC-EiwSvNPyI4SF233teJw-1; Wed, 31 May 2023 03:41:25 -0400
+X-MC-Unique: iC-EiwSvNPyI4SF233teJw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B6A101C068CF;
-	Wed, 31 May 2023 07:31:06 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5A5CF811E85;
+	Wed, 31 May 2023 07:41:25 +0000 (UTC)
 Received: from localhost (ovpn-12-54.pek2.redhat.com [10.72.12.54])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id DE373492B00;
-	Wed, 31 May 2023 07:31:05 +0000 (UTC)
-Date: Wed, 31 May 2023 15:31:01 +0800
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 6231F40C6EC4;
+	Wed, 31 May 2023 07:41:22 +0000 (UTC)
+Date: Wed, 31 May 2023 15:41:20 +0800
 From: Baoquan He <bhe@redhat.com>
 To: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
 Cc: Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Michael Holzheu <holzheu@linux.vnet.ibm.com>,
 	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 1/6] kexec: fix a memory leak in crash_shrink_memory()
-Message-ID: <ZHb3tVHVV2l1BJBl@MiWiFi-R3L-srv>
+Subject: Re: [PATCH 2/6] kexec: delete a useless check in
+ crash_shrink_memory()
+Message-ID: <ZHb6IFhwRMkAkNjt@MiWiFi-R3L-srv>
 References: <20230527123439.772-1-thunder.leizhen@huawei.com>
- <20230527123439.772-2-thunder.leizhen@huawei.com>
- <ZHaQ7qRYWX9FETu6@MiWiFi-R3L-srv>
- <5232350c-7529-eece-c9cb-8a8bbc83a81a@huawei.com>
+ <20230527123439.772-3-thunder.leizhen@huawei.com>
+ <ZHaSF4EGNwSGhGAL@MiWiFi-R3L-srv>
+ <5beb1883-5391-1b75-d8cd-2152478b9e72@huawei.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <5232350c-7529-eece-c9cb-8a8bbc83a81a@huawei.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
+In-Reply-To: <5beb1883-5391-1b75-d8cd-2152478b9e72@huawei.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230531_003116_398330_FD13E148 
-X-CRM114-Status: GOOD (  30.59  )
+X-CRM114-CacheID: sfid-20230531_004130_524082_D57C681B 
+X-CRM114-Status: GOOD (  25.69  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,81 +86,57 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 05/31/23 at 09:16am, Leizhen (ThunderTown) wrote:
+On 05/31/23 at 10:19am, Leizhen (ThunderTown) wrote:
 > 
 > 
-> On 2023/5/31 8:13, Baoquan He wrote:
+> On 2023/5/31 8:17, Baoquan He wrote:
 > > On 05/27/23 at 08:34pm, Zhen Lei wrote:
-> >> If the value of parameter 'new_size' is in the semi-open and semi-closed
-> >> interval (crashk_res.end - KEXEC_CRASH_MEM_ALIGN + 1, crashk_res.end], the
-> >> calculation result of ram_res is:
-> >> 	ram_res->start = crashk_res.end + 1
-> >> 	ram_res->end   = crashk_res.end
+> >> The check '(crashk_res.parent != NULL)' is added by
+> >> commit e05bd3367bd3 ("kexec: fix Oops in crash_shrink_memory()"), but it's
+> >> stale now. Because if 'crashk_res' is not reserved, it will be zero in
+> >> size and will be intercepted by the above 'if (new_size >= old_size)'.
+> >>
+> >> Ago:
+> >> 	if (new_size >= end - start + 1)
+> >>
+> >> Now:
+> >> 	old_size = (end == 0) ? 0 : end - start + 1;
+> >> 	if (new_size >= old_size)
 > > 
-> > If the new_size is smaller than KEXEC_CRASH_MEM_ALIGN, does it make
-> > any sense except of testing purpose? Do we need to fail this kind of
-> > shrinking, or just shrink all the left crash memory?
-
-OK, I misread your log. You are saying the new_size is close to
-crashk_res.end but has a tiny difference in your example, I
-thought the new_size is smaller than KEXEC_CRASH_MEM_ALIGN which is just
-in the opposite direction.
-
-Yea, it does have the possibility to waste a ram_res but does nothing
-even though the chance is very small.
-
-Acked-by: Baoquan He <bhe@redhat.com>
-
+> > Hmm, I would strongly suggest we keep that check. Even though the
+> > current code like above can do the acutal checking, but its actual usage
+> > is not obvious for checking of crashk_res existence. In the future,
+> > someone may change above calculation and don't notice the hidden
+> > functionality at all behind the calculation. The cost of the check is
+> > almost zero, right?
 > 
-> We can't give a fixed value, that is, how much crash memory is reserved to
-> ensure that the capture kernel runs. The size of KEXEC_CRASH_MEM_ALIGN is
-> only one page on non-s390 platforms. So, it's better to keep the code simple,
-> and let the user(administrator) shrink the crash memory reasonably.
-> 
-> include/linux/kexec.h
-> #define KEXEC_CRASH_MEM_ALIGN	PAGE_SIZE
+> The cost of the check is negligible. The only downside is that it's hard to
+> understand why it's added, and I only found out why by looking at the history
+> log. In my opinion, the above 'Now:' is the right fix.
 
+It checks if the resource exists before releasing, just a normal
+checking?
 > 
 > > 
-> >> The operation of function insert_resource() fails, and ram_res is not
-> >> added to iomem_resource. As a result, the memory of the control block
-> >> ram_res is leaked.
 > >>
-> >> In fact, on all architectures, the start address and size of crashk_res
-> >> are already aligned by KEXEC_CRASH_MEM_ALIGN. Therefore, we do not need to
-> >> round up crashk_res.start again. Instead, we should round up 'new_size'
-> >> in advance.
-> >>
-> >> Fixes: 6480e5a09237 ("kdump: add missing RAM resource in crash_shrink_memory()")
-> >> Fixes: 06a7f711246b ("kexec: premit reduction of the reserved memory size")
 > >> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 > >> ---
-> >>  kernel/kexec_core.c | 5 ++---
-> >>  1 file changed, 2 insertions(+), 3 deletions(-)
+> >>  kernel/kexec_core.c | 2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
 > >>
 > >> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> >> index 3d578c6fefee385..22acee18195a591 100644
+> >> index 22acee18195a591..d1ab139dd49035e 100644
 > >> --- a/kernel/kexec_core.c
 > >> +++ b/kernel/kexec_core.c
-> >> @@ -1122,6 +1122,7 @@ int crash_shrink_memory(unsigned long new_size)
-> >>  	start = crashk_res.start;
-> >>  	end = crashk_res.end;
-> >>  	old_size = (end == 0) ? 0 : end - start + 1;
-> >> +	new_size = roundup(new_size, KEXEC_CRASH_MEM_ALIGN);
-> >>  	if (new_size >= old_size) {
-> >>  		ret = (new_size == old_size) ? 0 : -EINVAL;
-> >>  		goto unlock;
-> >> @@ -1133,9 +1134,7 @@ int crash_shrink_memory(unsigned long new_size)
-> >>  		goto unlock;
-> >>  	}
-> >>  
-> >> -	start = roundup(start, KEXEC_CRASH_MEM_ALIGN);
-> >> -	end = roundup(start + new_size, KEXEC_CRASH_MEM_ALIGN);
-> >> -
-> >> +	end = start + new_size;
+> >> @@ -1137,7 +1137,7 @@ int crash_shrink_memory(unsigned long new_size)
+> >>  	end = start + new_size;
 > >>  	crash_free_reserved_phys_range(end, crashk_res.end);
 > >>  
-> >>  	if ((start == end) && (crashk_res.parent != NULL))
+> >> -	if ((start == end) && (crashk_res.parent != NULL))
+> >> +	if (start == end)
+> >>  		release_resource(&crashk_res);
+> >>  
+> >>  	ram_res->start = end;
 > >> -- 
 > >> 2.25.1
 > >>
