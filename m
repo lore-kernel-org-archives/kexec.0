@@ -4,63 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 760FEC77B73
-	for <kexec@archiver.kernel.org>; Wed, 31 May 2023 08:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6ED0EC77B7C
+	for <kexec@archiver.kernel.org>; Wed, 31 May 2023 09:53:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:Date:
-	Message-ID:From:References:CC:To:Subject:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Owner;
-	bh=sai6Agvgl7sRUfun+JwS0tCLXceQ65SkmKAuTM9fTlg=; b=DJIgpxTFA86CLbshqjDQtzvlKG
-	MUI6MR/JH/AufLbopW6poG/bx1iMdj8TcD/9x8bBwCSOevp+LAWqUbjQ1hJn7OmXtIKouI6coGzf2
-	nBNAkDfIEHXKPxk0mURljKVynZ9Ku3NGQtMt6BcF66uuL346lHt3Z7/chIgvrwpC5MwiJM6c8FOq4
-	jr3ktFQ9E+l+BvRZcc0xdK2UmmtR4yprzzigZ18SRGuzEUOso0uf6ZNtt5aFpecS2GVFQoX4IQR3U
-	kmTFh1OnY3aXA6P714mmnHrV3neQzaRoYXTWyIbeTEkzcxbBcN0kRw35w+PIPu6kx3FK5d43ZY99a
-	BqII+XIQ==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=AGm7cNYST6aR3I6JENvGx4bwReS+ExHCc9HIlF57LQ0=; b=oh8Uw1sW9f3Lhw
+	g3+/CrglEJXh8td41F9F+kWlKohMjpnRQ4o895nadImK0xP3cg01cy1p5KmtfNVmgC/v+WY6LgyWN
+	HmvL1JN8+MiWc3cNaVrQwxs9hDmv5Kd+9wLjVZQNsdOG2LkkxT5oAHW01er1e8rq6SK6rV7LIQFPf
+	QIrqhBNBuvF3n1lsdjZXod1K0N1uU6nH7pu9yOZ6cyFBGHdcQXUJUinWemd6MQ3Acwtc/ONoBV0IC
+	y8r9vy3mhv/2GdQUS+0zTMfyUlALULOhNjGbUB5eCIWnSszDCqlP9APnbLpj1FzKexipN4nX8zkAO
+	/JXTN5r+l/EvACixpqpw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1q4HAj-00Gc9q-33;
-	Wed, 31 May 2023 08:27:09 +0000
-Received: from szxga01-in.huawei.com ([45.249.212.187])
+	id 1q4IWe-00GvX1-2Q;
+	Wed, 31 May 2023 09:53:52 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1q4HAh-00Gc7h-13
+	id 1q4IWb-00GvWD-0G
 	for kexec@lists.infradead.org;
-	Wed, 31 May 2023 08:27:08 +0000
-Received: from dggpemm500006.china.huawei.com (unknown [172.30.72.56])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4QWMgq6QC8zqTfn;
-	Wed, 31 May 2023 16:22:15 +0800 (CST)
-Received: from [10.174.178.55] (10.174.178.55) by
- dggpemm500006.china.huawei.com (7.185.36.236) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Wed, 31 May 2023 16:26:54 +0800
-Subject: Re: [PATCH 2/6] kexec: delete a useless check in
- crash_shrink_memory()
-To: Baoquan He <bhe@redhat.com>
-CC: Eric Biederman <ebiederm@xmission.com>, <kexec@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, Michael Holzheu <holzheu@linux.vnet.ibm.com>,
+	Wed, 31 May 2023 09:53:51 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1685526827;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Xn2QBqttB+dOYYBuMERj9tPY3tQCj+h6bHqi72Etugo=;
+	b=XXRoKb9KvXIo0jU1+B/3g0V20XePyxI/PixTJpgR3GbEPAQ5HK3JJ5e8Djd/sSL/IhV7Kx
+	RPs5tBfYdObx9EVRDqBJ22Ru/IATatbXrDXzXbcaaZNz1mfEA3Oz+UkLAXIxH+KgZbbkeo
+	dBYNFq2uwCIp/lqpqDTlLgO9n2mm/PM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-46-YoT3WvbRNtq9mfbC6sguhg-1; Wed, 31 May 2023 05:53:39 -0400
+X-MC-Unique: YoT3WvbRNtq9mfbC6sguhg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B9C96101A53A;
+	Wed, 31 May 2023 09:53:38 +0000 (UTC)
+Received: from localhost (ovpn-12-54.pek2.redhat.com [10.72.12.54])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id D80EB140E962;
+	Wed, 31 May 2023 09:53:37 +0000 (UTC)
+Date: Wed, 31 May 2023 17:53:34 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Zhen Lei <thunder.leizhen@huawei.com>
+Cc: Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Michael Holzheu <holzheu@linux.vnet.ibm.com>,
 	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 6/6] kexec: enable kexec_crash_size to support two crash
+ kernel regions
+Message-ID: <ZHcY/jsExa8t7hJW@MiWiFi-R3L-srv>
 References: <20230527123439.772-1-thunder.leizhen@huawei.com>
- <20230527123439.772-3-thunder.leizhen@huawei.com>
- <ZHaSF4EGNwSGhGAL@MiWiFi-R3L-srv>
- <5beb1883-5391-1b75-d8cd-2152478b9e72@huawei.com>
- <ZHb6IFhwRMkAkNjt@MiWiFi-R3L-srv>
-From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <e8f84a24-5c8a-4b98-db0b-68630d58ebd0@huawei.com>
-Date: Wed, 31 May 2023 16:26:54 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ <20230527123439.772-7-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <ZHb6IFhwRMkAkNjt@MiWiFi-R3L-srv>
-Content-Language: en-US
-X-Originating-IP: [10.174.178.55]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemm500006.china.huawei.com (7.185.36.236)
-X-CFilter-Loop: Reflected
+Content-Disposition: inline
+In-Reply-To: <20230527123439.772-7-thunder.leizhen@huawei.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230531_012707_563406_DA2FCC09 
-X-CRM114-Status: GOOD (  17.51  )
+X-CRM114-CacheID: sfid-20230531_025349_679586_B4CC9E63 
+X-CRM114-Status: GOOD (  28.13  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,83 +84,124 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On 05/27/23 at 08:34pm, Zhen Lei wrote:
+> The crashk_low_res should be considered by /sys/kernel/kexec_crash_size
+> to support two crash kernel regions. Since crashk_res manages the memory
+> with high address and crashk_low_res manages the memory with low address,
+> crashk_low_res is shrunken only when all crashk_res is shrunken. And
+> because when there is only one crash kernel region, crashk_res is always
+> used. Therefore, if all crashk_res is shrunken and crashk_low_res still
+> exists, swap them.
 
+This looks good, otherwise someone else won't stop attempting to add
+support of crashk_low_res shrinking. Not sure if this will bring corner
+case issue in testing, let's see. For the patch log, I tried to
+rephrase, feel free to refer to.
 
-On 2023/5/31 15:41, Baoquan He wrote:
-> On 05/31/23 at 10:19am, Leizhen (ThunderTown) wrote:
->>
->>
->> On 2023/5/31 8:17, Baoquan He wrote:
->>> On 05/27/23 at 08:34pm, Zhen Lei wrote:
->>>> The check '(crashk_res.parent != NULL)' is added by
->>>> commit e05bd3367bd3 ("kexec: fix Oops in crash_shrink_memory()"), but it's
->>>> stale now. Because if 'crashk_res' is not reserved, it will be zero in
->>>> size and will be intercepted by the above 'if (new_size >= old_size)'.
->>>>
->>>> Ago:
->>>> 	if (new_size >= end - start + 1)
->>>>
->>>> Now:
->>>> 	old_size = (end == 0) ? 0 : end - start + 1;
->>>> 	if (new_size >= old_size)
->>>
->>> Hmm, I would strongly suggest we keep that check. Even though the
->>> current code like above can do the acutal checking, but its actual usage
->>> is not obvious for checking of crashk_res existence. In the future,
->>> someone may change above calculation and don't notice the hidden
->>> functionality at all behind the calculation. The cost of the check is
->>> almost zero, right?
->>
->> The cost of the check is negligible. The only downside is that it's hard to
->> understand why it's added, and I only found out why by looking at the history
->> log. In my opinion, the above 'Now:' is the right fix.
+=====
+The crashk_low_res should be considered by /sys/kernel/kexec_crash_size
+to support two crash kernel regions shrinking if existing.
+
+While doing it, crashk_low_res will only be shrunk when the entire
+crashk_res is empty; and if the crashk_res is empty and crahk_low_res
+is not, change crashk_low_res to be crashk_res.
+=====
+
+With the log updated, you can add:
+
+Acked-by: Baoquan He <bhe@redhat.com>
+
 > 
-> It checks if the resource exists before releasing, just a normal
-> checking?
-
-If resource_size(&crashk_res) is zero, it means that crashk_res has not been
-added(insert_resource) or has been deleted(release_resource). I've tested it. It's okay.
-
->>
->>>
->>>>
->>>> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
->>>> ---
->>>>  kernel/kexec_core.c | 2 +-
->>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
->>>> index 22acee18195a591..d1ab139dd49035e 100644
->>>> --- a/kernel/kexec_core.c
->>>> +++ b/kernel/kexec_core.c
->>>> @@ -1137,7 +1137,7 @@ int crash_shrink_memory(unsigned long new_size)
->>>>  	end = start + new_size;
->>>>  	crash_free_reserved_phys_range(end, crashk_res.end);
->>>>  
->>>> -	if ((start == end) && (crashk_res.parent != NULL))
->>>> +	if (start == end)
->>>>  		release_resource(&crashk_res);
->>>>  
->>>>  	ram_res->start = end;
->>>> -- 
->>>> 2.25.1
->>>>
->>>
->>> .
->>>
->>
->> -- 
->> Regards,
->>   Zhen Lei
->>
+> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+> ---
+>  kernel/kexec_core.c | 43 ++++++++++++++++++++++++++++++++++++++-----
+>  1 file changed, 38 insertions(+), 5 deletions(-)
 > 
-> 
-> .
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index e82bc6d6634136a..c1d50f6566300d9 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -1091,6 +1091,11 @@ __bpf_kfunc void crash_kexec(struct pt_regs *regs)
+>  	}
+>  }
+>  
+> +static inline resource_size_t crash_resource_size(const struct resource *res)
+> +{
+> +	return !res->end ? 0 : resource_size(res);
+> +}
+> +
+>  ssize_t crash_get_memory_size(void)
+>  {
+>  	ssize_t size = 0;
+> @@ -1098,8 +1103,8 @@ ssize_t crash_get_memory_size(void)
+>  	if (!kexec_trylock())
+>  		return -EBUSY;
+>  
+> -	if (crashk_res.end != crashk_res.start)
+> -		size = resource_size(&crashk_res);
+> +	size += crash_resource_size(&crashk_res);
+> +	size += crash_resource_size(&crashk_low_res);
+>  
+>  	kexec_unlock();
+>  	return size;
+> @@ -1135,7 +1140,7 @@ int __crash_shrink_memory(struct resource *old_res, unsigned long new_size)
+>  int crash_shrink_memory(unsigned long new_size)
+>  {
+>  	int ret = 0;
+> -	unsigned long old_size;
+> +	unsigned long old_size, low_size;
+>  
+>  	if (!kexec_trylock())
+>  		return -EBUSY;
+> @@ -1144,14 +1149,42 @@ int crash_shrink_memory(unsigned long new_size)
+>  		ret = -ENOENT;
+>  		goto unlock;
+>  	}
+> -	old_size = !crashk_res.end ? 0 : resource_size(&crashk_res);
+> +
+> +	low_size = crash_resource_size(&crashk_low_res);
+> +	old_size = crash_resource_size(&crashk_res) + low_size;
+>  	new_size = roundup(new_size, KEXEC_CRASH_MEM_ALIGN);
+>  	if (new_size >= old_size) {
+>  		ret = (new_size == old_size) ? 0 : -EINVAL;
+>  		goto unlock;
+>  	}
+>  
+> -	ret = __crash_shrink_memory(&crashk_res, new_size);
+> +	/*
+> +	 * (low_size > new_size) implies that low_size is greater than zero.
+> +	 * This also means that if low_size is zero, the else branch is taken.
+> +	 *
+> +	 * If low_size is greater than 0, (low_size > new_size) indicates that
+> +	 * crashk_low_res also needs to be shrunken. Otherwise, only crashk_res
+> +	 * needs to be shrunken.
+> +	 */
+> +	if (low_size > new_size) {
+> +		ret = __crash_shrink_memory(&crashk_res, 0);
+> +		if (ret)
+> +			goto unlock;
+> +
+> +		ret = __crash_shrink_memory(&crashk_low_res, new_size);
+> +	} else {
+> +		ret = __crash_shrink_memory(&crashk_res, new_size - low_size);
+> +	}
+> +
+> +	/* Swap crashk_res and crashk_low_res if needed */
+> +	if (!crashk_res.end && crashk_low_res.end) {
+> +		crashk_res.start = crashk_low_res.start;
+> +		crashk_res.end   = crashk_low_res.end;
+> +		release_resource(&crashk_low_res);
+> +		crashk_low_res.start = 0;
+> +		crashk_low_res.end   = 0;
+> +		insert_resource(&iomem_resource, &crashk_res);
+> +	}
+>  
+>  unlock:
+>  	kexec_unlock();
+> -- 
+> 2.25.1
 > 
 
--- 
-Regards,
-  Zhen Lei
 
 _______________________________________________
 kexec mailing list
