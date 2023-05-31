@@ -4,61 +4,108 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 61CA9C7EE23
-	for <kexec@archiver.kernel.org>; Wed, 31 May 2023 14:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E6B7EC7EE23
+	for <kexec@archiver.kernel.org>; Wed, 31 May 2023 22:44:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:Date:
-	Message-ID:From:References:CC:To:Subject:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Owner;
-	bh=cEMPN3JQDnsJQF9tWTaYhCDhiJg5XzxG8dlkwXhcgGc=; b=aYbsgVX+RJKsaIjlR4d7WXFnKO
-	to4FLJWNRtvjxuDPevUe8wNFzevpPqiIAkKCUbSrWA4aoWLzmCLIKe/jVz8mvocn0DfCsIMkQS8Q1
-	cqtIh9cSsC6Lp3MY2tYAdQmXa2ZYeq5Vb2aENIcDZeFzDRYADJZKouCc13he60mhsp34DTS6rXN67
-	w6DLyecqQkRBbKWDGvP1zZA2gWWT7NlX3HDxof7mhj3nM9CN2flNW7RyIaeAVhZMPWOd8qoCqZYeN
-	9EJYy4nhajZmkWW3m5oBFF19ErvWv1b9aCpQeg1w5weR08pCoiybfk76HWGLFhvxuAgC9wULCpQ1n
-	1Mk3rBAw==;
+	List-Archive:List-Unsubscribe:List-Id:Mime-Version:References:In-Reply-To:
+	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=HJvOS5YEQ0s+T+qbggu786leRMSu+66od1d0leVcztE=; b=Jn3QpwZoMw79ae
+	rAlHeSX3R7EqC4fWaX0i2zNfNzWOm/btGK4ttnI/SSAHMazLvWtwraNNzQe/lU5r+GHPaqTf+0wt7
+	RCkBt1ukN6husPA4Ecs+6DEGQecMpOfgKl2buBVWo5kGOVOxjX0t57+DSMe3IT4MbmoQHCWyp52dx
+	PfI3z9F2T/3Iuw+pG0FJTRArU4TlmhFlCTk4WtJ21GiOBNKsPpYLLYHU+wsXuyz7mNkzMsNF/pv6h
+	1YCohDG3RlVvGyrjb5Ivy1mF0AeSPBzDfJ/dOR2DNmr5tUTPUxkoslVEpW1JyLo8T6jY43QbVFP3k
+	lQzkinXNhLo6oJOJg2xg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1q4Mlp-000885-3B;
-	Wed, 31 May 2023 14:25:50 +0000
-Received: from szxga02-in.huawei.com ([45.249.212.188])
+	id 1q4UYB-001N5a-1C;
+	Wed, 31 May 2023 22:44:15 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1q4Mll-000861-2Z
+	id 1q4UY7-001Mzk-1Q
 	for kexec@lists.infradead.org;
-	Wed, 31 May 2023 14:25:48 +0000
-Received: from dggpemm500006.china.huawei.com (unknown [172.30.72.57])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4QWWgd4jvFzLq8l;
-	Wed, 31 May 2023 22:22:37 +0800 (CST)
-Received: from [10.174.178.55] (10.174.178.55) by
- dggpemm500006.china.huawei.com (7.185.36.236) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Wed, 31 May 2023 22:25:36 +0800
-Subject: Re: [PATCH 6/6] kexec: enable kexec_crash_size to support two crash
- kernel regions
-To: Baoquan He <bhe@redhat.com>
-CC: Eric Biederman <ebiederm@xmission.com>, <kexec@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, Michael Holzheu <holzheu@linux.vnet.ibm.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-References: <20230527123439.772-1-thunder.leizhen@huawei.com>
- <20230527123439.772-7-thunder.leizhen@huawei.com>
- <ZHcY/jsExa8t7hJW@MiWiFi-R3L-srv>
-From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <955d2ba6-2cb8-7ee1-031f-e9033b32a3c8@huawei.com>
-Date: Wed, 31 May 2023 22:25:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <ZHcY/jsExa8t7hJW@MiWiFi-R3L-srv>
-Content-Language: en-US
-X-Originating-IP: [10.174.178.55]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpemm500006.china.huawei.com (7.185.36.236)
-X-CFilter-Loop: Reflected
+	Wed, 31 May 2023 22:44:13 +0000
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34VMcZAl022574;
+	Wed, 31 May 2023 22:43:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=PjVB4V5KmDB8lsfGN3zFzOQHXrHxrw6zC+HWPORI3sE=;
+ b=moyOfA5iKj9WNwO9wyqOB6vejN/j3qa2nX5CNHrH8LeMvwcwXXwSTy6kOp3kPuVEeKHw
+ zhWD2gtvbsUxKn3NlvVcFsCDXyFZTNW25TryCMaoey/LorxaX6BzkGED7ebExwctYP0G
+ 1zLY0C95q9vTjnna9vLzMvPLm39PzgQLSi94HnHv+dOAOMGT7tJ5D0thocFNRrqA7NdZ
+ 01FI7REnxv+1mHas0Ec0UpoktTFUQUF1sE83/jvSqSMGzL18IJhl8U3hN4GGaYHf1H4P
+ N6FsASgbS6JmiWLGPtxXwH9MtHulCwTLrbXwOWEJt2c3xBkuP5IVMTpJOqHBZ4zAx4xp PQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qxegnh2gu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 31 May 2023 22:43:58 +0000
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34VMdLaf026689;
+	Wed, 31 May 2023 22:43:58 GMT
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qxegnh2gg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 31 May 2023 22:43:58 +0000
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+	by ppma01dal.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 34VLjErF019428;
+	Wed, 31 May 2023 22:43:57 GMT
+Received: from smtprelay05.wdc07v.mail.ibm.com ([9.208.129.117])
+	by ppma01dal.us.ibm.com (PPS) with ESMTPS id 3qu9g6sydd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 31 May 2023 22:43:57 +0000
+Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
+	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 34VMhtkB4981310
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 31 May 2023 22:43:55 GMT
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BF60A58053;
+	Wed, 31 May 2023 22:43:55 +0000 (GMT)
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D3CF25805F;
+	Wed, 31 May 2023 22:43:54 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.61.53.77])
+	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 31 May 2023 22:43:54 +0000 (GMT)
+Message-ID: <8308a411a50a1168aa5a1a0d70138b29cea73914.camel@linux.ibm.com>
+Subject: Re: need help: patches to capture events between kexec load and
+ execute
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Tushar Sugandhi <tusharsu@linux.microsoft.com>,
+        Jonathan McDowell
+	 <noodles@fb.com>, bauermann@kolabnow.com
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        Alasdair G
+ Kergon <agk@redhat.com>,
+        Lakshmi Ramasubramanian
+ <nramas@linux.microsoft.com>,
+        Tyler Hicks <tyhicks@linux.microsoft.com>, code@tyhicks.com
+Date: Wed, 31 May 2023 18:43:54 -0400
+In-Reply-To: <41270374-dc5e-3aa2-d2ed-9b8fc73ad65f@linux.microsoft.com>
+References: <c33ba2f1-bacd-54dd-90d7-b0ab82568fff@linux.microsoft.com>
+	 <Yp24dc/i8XU9A+5/@noodles-fedora.dhcp.thefacebook.com>
+	 <87775c1e-d1d3-519c-599b-30cdb1691cb2@linux.microsoft.com>
+	 <4eff26f794254c1f06ace12e68527fd3452ac47d.camel@linux.ibm.com>
+	 <41270374-dc5e-3aa2-d2ed-9b8fc73ad65f@linux.microsoft.com>
+X-Mailer: Evolution 3.28.5 (3.28.5-18.el8) 
+Mime-Version: 1.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: CV_Oq2aiLFG7xGTH97I4fPYanXsv60BQ
+X-Proofpoint-GUID: 1GAmHsKCCHXyMvfXT1TZYUMD3Vanscr-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-05-31_16,2023-05-31_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ mlxscore=0 phishscore=0 priorityscore=1501 clxscore=1015 malwarescore=0
+ impostorscore=0 bulkscore=0 spamscore=0 mlxlogscore=758 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2304280000
+ definitions=main-2305310190
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230531_072546_665382_12AFA3F6 
-X-CRM114-Status: GOOD (  24.11  )
+X-CRM114-CacheID: sfid-20230531_154411_731276_7F1F6209 
+X-CRM114-Status: GOOD (  37.68  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -70,143 +117,61 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-
-
-On 2023/5/31 17:53, Baoquan He wrote:
-> On 05/27/23 at 08:34pm, Zhen Lei wrote:
->> The crashk_low_res should be considered by /sys/kernel/kexec_crash_size
->> to support two crash kernel regions. Since crashk_res manages the memory
->> with high address and crashk_low_res manages the memory with low address,
->> crashk_low_res is shrunken only when all crashk_res is shrunken. And
->> because when there is only one crash kernel region, crashk_res is always
->> used. Therefore, if all crashk_res is shrunken and crashk_low_res still
->> exists, swap them.
-> 
-> This looks good, otherwise someone else won't stop attempting to add
-> support of crashk_low_res shrinking. Not sure if this will bring corner
-> case issue in testing, let's see. For the patch log, I tried to
-> rephrase, feel free to refer to.
-> 
-> =====
-> The crashk_low_res should be considered by /sys/kernel/kexec_crash_size
-> to support two crash kernel regions shrinking if existing.
-> 
-> While doing it, crashk_low_res will only be shrunk when the entire
-> crashk_res is empty; and if the crashk_res is empty and crahk_low_res
-> is not, change crashk_low_res to be crashk_res.
-> =====
-> 
-> With the log updated, you can add:
-> 
-> Acked-by: Baoquan He <bhe@redhat.com>
-
-OK, I will update the log and add Acked-by in v2.
-
-> 
->>
->> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
->> ---
->>  kernel/kexec_core.c | 43 ++++++++++++++++++++++++++++++++++++++-----
->>  1 file changed, 38 insertions(+), 5 deletions(-)
->>
->> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
->> index e82bc6d6634136a..c1d50f6566300d9 100644
->> --- a/kernel/kexec_core.c
->> +++ b/kernel/kexec_core.c
->> @@ -1091,6 +1091,11 @@ __bpf_kfunc void crash_kexec(struct pt_regs *regs)
->>  	}
->>  }
->>  
->> +static inline resource_size_t crash_resource_size(const struct resource *res)
->> +{
->> +	return !res->end ? 0 : resource_size(res);
->> +}
->> +
->>  ssize_t crash_get_memory_size(void)
->>  {
->>  	ssize_t size = 0;
->> @@ -1098,8 +1103,8 @@ ssize_t crash_get_memory_size(void)
->>  	if (!kexec_trylock())
->>  		return -EBUSY;
->>  
->> -	if (crashk_res.end != crashk_res.start)
->> -		size = resource_size(&crashk_res);
->> +	size += crash_resource_size(&crashk_res);
->> +	size += crash_resource_size(&crashk_low_res);
->>  
->>  	kexec_unlock();
->>  	return size;
->> @@ -1135,7 +1140,7 @@ int __crash_shrink_memory(struct resource *old_res, unsigned long new_size)
->>  int crash_shrink_memory(unsigned long new_size)
->>  {
->>  	int ret = 0;
->> -	unsigned long old_size;
->> +	unsigned long old_size, low_size;
->>  
->>  	if (!kexec_trylock())
->>  		return -EBUSY;
->> @@ -1144,14 +1149,42 @@ int crash_shrink_memory(unsigned long new_size)
->>  		ret = -ENOENT;
->>  		goto unlock;
->>  	}
->> -	old_size = !crashk_res.end ? 0 : resource_size(&crashk_res);
->> +
->> +	low_size = crash_resource_size(&crashk_low_res);
->> +	old_size = crash_resource_size(&crashk_res) + low_size;
->>  	new_size = roundup(new_size, KEXEC_CRASH_MEM_ALIGN);
->>  	if (new_size >= old_size) {
->>  		ret = (new_size == old_size) ? 0 : -EINVAL;
->>  		goto unlock;
->>  	}
->>  
->> -	ret = __crash_shrink_memory(&crashk_res, new_size);
->> +	/*
->> +	 * (low_size > new_size) implies that low_size is greater than zero.
->> +	 * This also means that if low_size is zero, the else branch is taken.
->> +	 *
->> +	 * If low_size is greater than 0, (low_size > new_size) indicates that
->> +	 * crashk_low_res also needs to be shrunken. Otherwise, only crashk_res
->> +	 * needs to be shrunken.
->> +	 */
->> +	if (low_size > new_size) {
->> +		ret = __crash_shrink_memory(&crashk_res, 0);
->> +		if (ret)
->> +			goto unlock;
->> +
->> +		ret = __crash_shrink_memory(&crashk_low_res, new_size);
->> +	} else {
->> +		ret = __crash_shrink_memory(&crashk_res, new_size - low_size);
->> +	}
->> +
->> +	/* Swap crashk_res and crashk_low_res if needed */
->> +	if (!crashk_res.end && crashk_low_res.end) {
->> +		crashk_res.start = crashk_low_res.start;
->> +		crashk_res.end   = crashk_low_res.end;
->> +		release_resource(&crashk_low_res);
->> +		crashk_low_res.start = 0;
->> +		crashk_low_res.end   = 0;
->> +		insert_resource(&iomem_resource, &crashk_res);
->> +	}
->>  
->>  unlock:
->>  	kexec_unlock();
->> -- 
->> 2.25.1
->>
-> 
-> .
-> 
-
--- 
-Regards,
-  Zhen Lei
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gV2VkLCAyMDIzLTA1LTMxIGF0IDE1OjAyIC0wNzAwLCBUdXNoYXIgU3VnYW5kaGkgd3JvdGU6
+Cj4gSGkgTWltaSwKPiAKPiBPbiA1LzMxLzIzIDA0OjM5LCBNaW1pIFpvaGFyIHdyb3RlOgo+ID4g
+SGkgVHVzaGFyLAo+ID4KPiA+IE9uIFRodSwgMjAyMy0wNS0yNSBhdCAxMDoyMSAtMDcwMCwgVHVz
+aGFyIFN1Z2FuZGhpIHdyb3RlOgo+ID4KPiA+PiBUaGUgaXNzdWUgb2YgSU1BIG1lYXN1cmVtZW50
+cyBnZXR0aW5nIGxvc3QgYmV0d2VlbiBrZXhlYyAnbG9hZCcgYW5kICdleGVjdXRlJyBzdGlsbCBl
+eGlzdHMuCj4gPj4gSSB2ZXJpZmllZCBpdCBvbiB0aGUgbWFpbmxpbmUga2VybmVsIDYuNC5yYzMu
+IFNlZSAqQXBwZW5kaXggQSogZm9yIGRldGFpbHMuCj4gPj4KPiA+PiBJIHdlbnQgdGhyb3VnaCBU
+aGlhZ28ncyBwYXRjaGVzIGhlIHdyb3RlIHNldmVyYWwgeWVhcnMgYWdvLCBhbmQgdHJpZWQgdG8g
+ZGV2ZWxvcCBhIHNvbHV0aW9uLgo+ID4+Cj4gPj4gSSB3YXMgZmFjaW5nIHNvbWUgaXNzdWVzIHdp
+dGggcGh5c2ljYWwgdG8gdmlydHVhbCBhZGRyZXNzIHRyYW5zbGF0aW9uLgo+ID4+IE9uZSBvZiBt
+eSBjby13b3JrZXIgYXQgTWljcm9zb2Z0IGhlbHBlZCBteSByZS13cml0ZSB0aGUgbG9naWMgd2hp
+Y2ggc2VlbXMgdG8gYmUgd29ya2luZy4KPiA+PiBTZWUgdGhlIGF0dGFjaGVkIHBhdGNoIGFuZCAq
+QXBwZW5kaXggQiogZm9yIGRldGFpbHMuCj4gPj4KPiA+PiBUaGUgYmFzaWMgZnVuY3Rpb25hbGl0
+eSBpcyB3b3JraW5nLiBJIG5lZWQgdG8gcG9saXNoIHRoZSBjb2RlLCBhbmQgaGFuZGxlIGVycm9y
+IHBhdGhzIGluIGEgYmV0dGVyIHdheS4KPiA+PiBCdXQgYmVmb3JlIGRvaW5nIHRoYXQsIEkgbmVl
+ZCB5b3VyIGZlZWRiYWNrIG9uIHRoZSBmdW5kYW1lbnRhbCBhcHByb2FjaC4KPiA+PiBTaW5jZSBJ
+IGFtIG5vdCBhIGtleGVjIGV4cGVydCwgaXTigJlkIGJlIGdyZWF0IGlmIEkgY291bGQgZ2V0IGhl
+bHAgd2l0aCB0aGUgY29kZSByZXZpZXcKPiA+PiBhbmQgYWxzbyBzdWdnZXN0aW9ucyBvbiBzY2Vu
+YXJpb3MgdG8gdGVzdCB0byB2YWxpZGF0ZSB0aGUgcGF0Y2ggdGhvcm91Z2hseS4KPiA+PiBMZXQg
+bWUga25vdyBpZiBJIHNob3VsZCBmaXJzdCBwb3N0IHRoZSBwYXRjaCBhcyBSRkMgb24gcHVibGlj
+IGZvcnVtcyBmb3IgdGhhdC4KPiA+IFRoYW5rcywgVHVzaGFyLiAgIE1lYXN1cmVtZW50cyBjYW4g
+YW5kIGFyZSBjdXJyZW50bHkgYmVpbmcgYWRkZWQgdG8gdGhlCj4gPiBJTUEgbWVhc3VyZW1lbnQg
+bGlzdCBiZXR3ZWVuIGtleGVjIGxvYWQgYW5kIGV4ZWN1dGUsIGJ1dCBhcmUgbm90IGJlaW5nCj4g
+PiBjYXJyaWVkIGFjcm9zcyBrZXhlYy4gIFRoZXNlIG1lYXN1cmVtZW50cyBhbHNvIGV4dGVuZCB0
+aGUgVFBNLiAgQWZ0ZXIKPiA+IHRoZSBzb2Z0IHJlYm9vdCwgd2l0aG91dCB0aGVzZSBhZGRpdGlv
+bmFsIG1lYXN1cmVtZW50cyB0aGUgSU1BCj4gPiBtZWFzdXJlbWVudCBsaXN0IGNhbm5vdCBiZSB2
+ZXJpZmllZCBhZ2FpbnN0IHRoZSBUUE0gUENScy4KPiBZdXAuIElNQSBtZWFzdXJlbWVudCBsaXN0
+IGdvZXMgb3V0IG9mIHN5bmMgd2l0aCBUUE0gUENScyBhZnRlciB0aGUgc29mdCAKPiByZWJvb3Qu
+Cj4gU28gdGhlIG1lYXN1cmVtZW50IGxpc3QgY2Fubm90IGJlIHZlcmlmaWVkIGFnYWluc3QgUENS
+cy4gVGhhdCdzIHRoZSBpc3N1ZS4KPiBUaGFua3MgZm9yIGFja25vd2xlZGdpbmcgaXQuCj4gPiBZ
+b3VyIHByb3Bvc2VkIHBhdGNoLCBsaWtlIFRoaWFnbydzLCBzYXZlZCB0aGUgZW50aXJlIElNQSBt
+ZWFzdXJlbWVudAo+ID4gbGlzdCBhZ2Fpbi4gIEFzc3VtaW5nIHRoZSBidWZmZXIgc2l6ZSBjYW4n
+dCBjaGFuZ2UgYmV0d2VlbiBrZXhlYyBsb2FkCj4gPiBhbmQgZXhlY3V0ZSwgYXMgcGVyIHRoZSBj
+b21tZW50LCB3aHkgbm90IGp1c3QgYWxsb2NhdGUgdGhlIGJ1ZmZlciBvbgo+ID4ga2V4ZWMgbG9h
+ZCBhbmQgZmlsbCBpdCBvbiBrZXhlYyBleGVjPwo+ID4KPiA+IFRvIHNpbXVsYXRlIHRoZSBleGlz
+dGluZyBiZWhhdmlvciwgZmlsbCB0aGUgYnVmZmVyIHdpdGggYXMgbWFueQo+ID4gY29tcGxldGUg
+bWVhc3VyZW1lbnQgcmVjb3JkcyBhcyB0aGUgYnVmZmVyIHdpbGwgaG9sZC4KCgo+IEkgd2FzIHVu
+ZGVyIHRoZSBpbXByZXNzaW9uIHRoYXQgSSB3YXMgZG9pbmcgdGhlIHNhbWUuIGkuZS4gYWxsb2Nh
+dGUgYXQgCj4gJ2xvYWQnIGFuZCBmaWxsIG9uICdleGVjdXRlJy4KPiBCdXQgSSByZWFsaXplZCB0
+aGF0IGluIG15IHBhdGNoIGltYV9kdW1wX21lYXN1cmVtZW50X2xpc3QoKSBnZXRzIGNhbGxlZCAK
+PiB0d2ljZSAtIG9uY2UgYXQgJ2xvYWQnIGFuZCBvbmNlIGF0ICdleGVjdXRlJy4KPiBJcyB0aGF0
+IHdoYXQgeW91IG1lYW50IGJ5ICJteSBwYXRjaCBzYXZlZCB0aGUgZW50aXJlIElNQSBtZWFzdXJl
+bWVudCAKPiBsaXN0IGFnYWluIiA/CgpFeGFjdGx5LCB0aGVyZSdzIG5vIG5lZWQgZm9yIGNvcHlp
+bmcgdGhlIG1lYXN1cmVtZW50IGxpc3QgdHdpY2UuICBUaGUKZmlyc3QgTiBudW1iZXIgb2YgbWVh
+c3VyZW1lbnRzIGhhdmVuJ3QgY2hhbmdlZC4KCj4gaW1hX2R1bXBfbWVhc3VyZW1lbnRfbGlzdCgp
+IGNhbGxzIHZtYWxsb2MsIG1lbXNldCwgYW5kIG1lbWNweS4KPiBTbyB0aGVyZSBpcyBkZWZpbml0
+ZWx5IHNvbWUgcmVkdW5kYW5jeS4gTGV0IG1lIHNlZSBob3cgY2FuIEkgb3B0aW1pemUgaXQuCgpQ
+bGVhc2UgbG9vayBhdCBteSBzdWdnZXN0aW9uLgoKPiBBdHRhY2hpbmcgbXkgb3JpZ2luYWwgcGF0
+Y2ggYWdhaW4gZm9yIHJlZmVyZW5jZS4KClBhdGNoZXMgc2hvdWxkIGJlIHBvc3RlZCBpbmxpbmUu
+ICBQbGVhc2UgZG9uJ3QgZG8gdGhpcy4KCi0tIAp0aGFua3MsCgpNaW1pCgoKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdApr
+ZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8va2V4ZWMK
