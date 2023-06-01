@@ -4,103 +4,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 52653C77B7A
-	for <kexec@archiver.kernel.org>; Thu,  1 Jun 2023 07:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A6C83C77B7E
+	for <kexec@archiver.kernel.org>; Thu,  1 Jun 2023 07:56:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=8kkftvHpoiLk7T7xBAD8qUQj3E+OZd9Gqax4Y/A7Kgc=; b=gsuTV0h9c0Kapd
-	cgUey5r3fGGIfmeympnoQAIK4ZKdYtF72z3G/fUCCd/bFtECi+QMWrB5OrG/X0vPO9c06HKwQ+cfh
-	z132Dj2YllKoZt9CG0hFUdUvRMgC7Jaoq/Mrg6/EYYN1hLSvSPHyifzWeBdqiSwvBmP6An3QZnVSc
-	+0ZGxejaqfk7Lnc7nCSPAQWGalYxtj320xbelK/6aDNEmH+U4mhflaQBcp87cdnJg99OCbcT9dBf1
-	QzGWsEbzsY+FrcOEljlL41BItvGFBWPnIIsDPDa0lRWrjfM2GpPc557/HFizykeRXdnygVxgmZkdj
-	wmbYXHBZnMACwk1/HpWA==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=PH2ROJ4TRM8ecC0+O+lZzXCZrn3UFtHzYzhxRrlmtgM=; b=zunbq8HIiz81sh
+	nBg7vvOefy/Mb6kVEQhDsaxzYym3BLVqKvF0FzU7WQrN7l4UwY51VJkKTyC4DVTyUfeMren4eoeSq
+	Z5EIaX+oHZ/LsCLg98L+rgOVQ2H89Xl0e2A0pRD8Z6QE2ezfAXZRVWJ8YCikJB0ErQg3f0b+UcvD/
+	RJDFXUK1XIGNcEAGQui7BxnSHBsr/yfojRCIzSWQNUvLGSVe6tcIsJYkG+MmQ4ljVb83oBQAu+dX2
+	M4gI28m1OYBsu2yM/efPazd6GH3AyU4P38xKxLDQ8dOWZiYPGAraXd/nzCTkS8B3m90YgdeVaOCt6
+	IW2Oaa40FLB6BF4BRnlw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1q4ciD-002M0o-1k;
-	Thu, 01 Jun 2023 07:27:09 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1q4dAD-002RaZ-13;
+	Thu, 01 Jun 2023 07:56:05 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1q4ci6-002LxN-1Z
+	id 1q4dA9-002RZQ-1G
 	for kexec@lists.infradead.org;
-	Thu, 01 Jun 2023 07:27:07 +0000
+	Thu, 01 Jun 2023 07:56:02 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1685604421;
+	s=mimecast20190719; t=1685606159;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AgH6lkMBE6SH6kwKQ2OLQdShNDxo5U5zIXrPWoXTrzY=;
-	b=XMbYeBBnweO3TPrJPMqkuTaP+oYL73MZ1+3U4g7ZrnewYndzddfZicGPYAnYkGFkePhoga
-	dCbIocdZxm667ZGQnCIvu8wd7U//SJ3BNf2RRt/VUQlY7CYRokPD3H4BhaLhi+03L+J90T
-	ScNbxotBnaLzujuHyC36sIZhA4HI4c4=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=v0btJxCCZe43YDGHsdR9uwY7u4rDiYwVgo7mtVALHgE=;
+	b=WGU0h5HZ6wb5lSUPrCfgvvqG+NcV67QMJDO2skNn4FX/4CWhfY6eO8AajBXX25mQiAwo5A
+	i1euus/AnZqUq5dzSsIxcREy4ZXWSpLnKxEj6NF3sG1UXBWK/jjQFcSTMJF55v58pLhzp8
+	Qt9eN3hX2cG31PcEB1ypLjbPIJuVaLo=
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
+ [209.85.210.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-352-ht8IqsLsNdObl4Z6RIzpCg-1; Thu, 01 Jun 2023 03:25:05 -0400
-X-MC-Unique: ht8IqsLsNdObl4Z6RIzpCg-1
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2568fd3f360so104780a91.2
-        for <kexec@lists.infradead.org>; Thu, 01 Jun 2023 00:25:05 -0700 (PDT)
+ us-mta-644-TWKpT5veO6O69hiOJZnPwg-1; Thu, 01 Jun 2023 03:55:58 -0400
+X-MC-Unique: TWKpT5veO6O69hiOJZnPwg-1
+Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-64d2f088dc2so672905b3a.3
+        for <kexec@lists.infradead.org>; Thu, 01 Jun 2023 00:55:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685604304; x=1688196304;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AgH6lkMBE6SH6kwKQ2OLQdShNDxo5U5zIXrPWoXTrzY=;
-        b=EOxR2RAKrrogX3Vbk5Yghm+RwrxYNQOPenAREb7aPMtVGg60SsKYYslQzNLD4wmP85
-         XzrETQAk7vYUFxvUJDAcHN296N5+PLP6G2qvgPLpZKp4uRTfawJdE9CV0aS5Qwl8z/0t
-         5PGyfmGe+cPXvJMnZUgtYYjmPJLsuPc4AROEBKVjM0CReS/Uc5GHygjpB55/m+3njjln
-         lKyVSaEwoq+u06vVm87Pjqb09sj4YrQAhGHI4/ycMqVzrG8DciX/lyEVvSTlKzp5Ge8v
-         lMceBFZxyvd/50Qr8qWZ5aIE8YNwfg+oCYVihzFRDm2CzgzD49RkFwTItWfzfV7jt2iS
-         eXlA==
-X-Gm-Message-State: AC+VfDz6ACq3FuyZQSEKeRb9OOcX+os5FpcIeSkaTb4O7Xfd9Qib9zCY
-	ThgPdrMXyQq0Rs1gAek5iXTgmvunKXMMhLuaziS5elBnljy0bF3fXz/Ec4U40eAAFDgJ7+9xUQ6
-	B4c5AtCbAr3sg6WX5Ox8ukw5Kl0p1hXN0SLQWVoDy6pJm9i9Wdozf4T3VKgRoK08/IwMqAzVtpu
-	8AaLrQn7I=
-X-Received: by 2002:a17:90a:1d5:b0:258:ad44:1881 with SMTP id 21-20020a17090a01d500b00258ad441881mr348571pjd.11.1685604303993;
-        Thu, 01 Jun 2023 00:25:03 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ7xgKGdx+9FIXW6GTYR3P3F8V57UwAyR9jIH88D5P2XGZN+XYlgvqnsqFZh+mlMZMuhp1bt/w==
-X-Received: by 2002:a17:90a:1d5:b0:258:ad44:1881 with SMTP id 21-20020a17090a01d500b00258ad441881mr348543pjd.11.1685604303582;
-        Thu, 01 Jun 2023 00:25:03 -0700 (PDT)
-Received: from localhost ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id o11-20020a17090a4e8b00b00256799877ffsm702466pjh.47.2023.06.01.00.25.02
+        d=1e100.net; s=20221208; t=1685606157; x=1688198157;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=v0btJxCCZe43YDGHsdR9uwY7u4rDiYwVgo7mtVALHgE=;
+        b=WbDUjhjK/teRU1F8+PPkxK4nSbyclwD2vmrkkm3PMb5vBgpKX0EhfOgxo1frSVjO4V
+         XIBtUjd3K8xYumCoOeB1A1Qzq4qVVGx1/fTKPqzBVoC6bAtFMIXq/30N87/ahDui8syu
+         5LT5y/HbR+vrkcM+wiNpnNFuymxzd3EwILCyIzlQsaXM0K6jVxkyTMFPmbSZ7C6WuCBH
+         vGW+LBKUa3/T65fTt//lPpGyjfolGlVRC2g1bivUpVAJknNQiRtR6prwETLQMy8zCdpy
+         D4jd8QJh/jenwKQ1Eq0QtukD31+eRWCsDwYJ4QeMfcWGozcCXYNUA6ycIkjDCTfjdSsN
+         BWtg==
+X-Gm-Message-State: AC+VfDwQUtRG/Kkv025vb+6eeWI0WDR183nQs/5waLq9z0Z37zKkRyXl
+	AdB/7DkHIyLMdi1GigbDe9akszl4se3zW2rq2v2rFQWhmUBXX15rWXstW1gR99JF+wyR3W/AQr4
+	HqbtensKCdPLUZj1LD6tQ
+X-Received: by 2002:a05:6a00:3910:b0:64f:7c9d:9c09 with SMTP id fh16-20020a056a00391000b0064f7c9d9c09mr11549198pfb.32.1685606157381;
+        Thu, 01 Jun 2023 00:55:57 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ7AFiGmMIL5yucVf1xXEUVV0IZpvnTGUsiZsNXeIglwrAEjmuisCODxuG3g3iCemJzBVxOWkw==
+X-Received: by 2002:a05:6a00:3910:b0:64f:7c9d:9c09 with SMTP id fh16-20020a056a00391000b0064f7c9d9c09mr11549178pfb.32.1685606157062;
+        Thu, 01 Jun 2023 00:55:57 -0700 (PDT)
+Received: from localhost.localdomain.com ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id 17-20020aa79211000000b00643355ff6a6sm4600773pfo.99.2023.06.01.00.55.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Jun 2023 00:25:03 -0700 (PDT)
-From: Coiby Xu <coxu@redhat.com>
-To: kexec@lists.infradead.org
-Cc: Milan Broz <gmazyland@gmail.com>,
-	Thomas Staudt <tstaudt@de.ibm.com>,
-	Kairui Song <ryncsn@gmail.com>,
-	dm-devel@redhat.com,
-	Jan Pazdziora <jpazdziora@redhat.com>,
-	Pingfan Liu <kernelfans@gmail.com>,
-	Baoquan He <bhe@redhat.com>,
-	Dave Young <dyoung@redhat.com>,
-	linux-kernel@vger.kernel.org,
+        Thu, 01 Jun 2023 00:55:56 -0700 (PDT)
+From: Tao Liu <ltao@redhat.com>
+To: tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
 	x86@kernel.org,
-	Dave Hansen <dave.hansen@intel.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Eric Biederman <ebiederm@xmission.com>
-Subject: [PATCH 4/5] x86/crash: pass the LUKS volume key to kdump kernel
-Date: Thu,  1 Jun 2023 15:24:43 +0800
-Message-Id: <20230601072444.2033855-5-coxu@redhat.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230601072444.2033855-1-coxu@redhat.com>
-References: <20230601072444.2033855-1-coxu@redhat.com>
+	hpa@zytor.com,
+	ardb@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	bhe@redhat.com,
+	dyoung@redhat.com,
+	kexec@lists.infradead.org,
+	linux-efi@vger.kernel.org,
+	Tao Liu <ltao@redhat.com>
+Subject: [PATCH v2] x86/kexec: Add EFI config table identity mapping for kexec kernel
+Date: Thu,  1 Jun 2023 15:20:44 +0800
+Message-Id: <20230601072043.24439-1-ltao@redhat.com>
+X-Mailer: git-send-email 2.33.1
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230601_002702_628579_A15DE196 
-X-CRM114-Status: GOOD (  19.92  )
+X-CRM114-CacheID: sfid-20230601_005601_523296_1DC3C732 
+X-CRM114-Status: GOOD (  19.03  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -117,144 +107,117 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-1st kernel will build up the kernel command parameter luksvolumekey as
-similar to elfcorehdr to pass the memory address of the stored info of
-LUKS volume key to kdump kernel.
+A kexec kernel bootup hang is observed on Intel Atom cpu due to unmapped
+EFI config table.
 
-Signed-off-by: Coiby Xu <coxu@redhat.com>
+Currently EFI system table is identity-mapped for the kexec kernel, but EFI
+config table is not mapped explicitly:
+
+    commit 6bbeb276b71f ("x86/kexec: Add the EFI system tables and ACPI
+                          tables to the ident map")
+
+Later in the following 2 commits, EFI config table will be accessed when
+enabling sev at kernel startup. This may result in a page fault due to EFI
+config table's unmapped address. Since the page fault occurs at an early
+stage, it is unrecoverable and kernel hangs.
+
+    commit ec1c66af3a30 ("x86/compressed/64: Detect/setup SEV/SME features
+                          earlier during boot")
+    commit c01fce9cef84 ("x86/compressed: Add SEV-SNP feature
+                          detection/setup")
+
+In addition, the issue doesn't appear on all systems, because the kexec
+kernel uses Page Size Extension (PSE) for identity mapping. In most cases,
+EFI config table can end up to be mapped into due to 1 GB page size.
+However if nogbpages is set, or cpu doesn't support pdpe1gb feature
+(e.g Intel Atom x6425RE cpu), EFI config table may not be mapped into
+due to 2 MB page size, thus a page fault hang is more likely to happen.
+
+This patch will make sure the EFI config table is always mapped.
+
+Signed-off-by: Tao Liu <ltao@redhat.com>
 ---
- arch/x86/include/asm/crash.h      |  1 +
- arch/x86/kernel/crash.c           | 47 ++++++++++++++++++++++++++++++-
- arch/x86/kernel/kexec-bzimage64.c |  7 +++++
- include/linux/kexec.h             |  4 +++
- 4 files changed, 58 insertions(+), 1 deletion(-)
+Changes in v2:
+- Rephrase the change log based on Baoquan's suggestion.
+- Rename map_efi_sys_cfg_tab() to map_efi_tables().
+- Link to v1: https://lore.kernel.org/kexec/20230525094914.23420-1-ltao@redhat.com/
+---
+ arch/x86/kernel/machine_kexec_64.c | 35 ++++++++++++++++++++++++++----
+ 1 file changed, 31 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/crash.h b/arch/x86/include/asm/crash.h
-index 8b6bd63530dc..485f75dce2ca 100644
---- a/arch/x86/include/asm/crash.h
-+++ b/arch/x86/include/asm/crash.h
-@@ -4,6 +4,7 @@
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index 1a3e2c05a8a5..664aefa6e896 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -28,6 +28,7 @@
+ #include <asm/setup.h>
+ #include <asm/set_memory.h>
+ #include <asm/cpu.h>
++#include <asm/efi.h>
  
- struct kimage;
+ #ifdef CONFIG_ACPI
+ /*
+@@ -86,10 +87,12 @@ const struct kexec_file_ops * const kexec_file_loaders[] = {
+ #endif
  
-+int crash_load_luks_volume_key(struct kimage *image);
- int crash_load_segments(struct kimage *image);
- int crash_setup_memmap_entries(struct kimage *image,
- 		struct boot_params *params);
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index cdd92ab43cda..32d4a9e3badf 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -289,6 +289,7 @@ static int memmap_exclude_ranges(struct kimage *image, struct crash_mem *cmem,
- 				 unsigned long long mend)
+ static int
+-map_efi_systab(struct x86_mapping_info *info, pgd_t *level4p)
++map_efi_tables(struct x86_mapping_info *info, pgd_t *level4p)
  {
- 	unsigned long start, end;
-+	int r;
- 
- 	cmem->ranges[0].start = mstart;
- 	cmem->ranges[0].end = mend;
-@@ -297,7 +298,19 @@ static int memmap_exclude_ranges(struct kimage *image, struct crash_mem *cmem,
- 	/* Exclude elf header region */
- 	start = image->elf_load_addr;
- 	end = start + image->elf_headers_sz - 1;
--	return crash_exclude_mem_range(cmem, start, end);
-+	r = crash_exclude_mem_range(cmem, start, end);
-+
-+	if (r)
-+		return r;
-+
-+	/* Exclude LUKS volume key region */
-+	if (image->luks_volume_key_addr) {
-+		start = image->luks_volume_key_addr;
-+		end = start + image->luks_volume_key_sz - 1;
-+		return crash_exclude_mem_range(cmem, start, end);
-+	}
-+
-+	return r;
- }
- 
- /* Prepare memory map for crash dump kernel */
-@@ -368,6 +381,38 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
- 	return ret;
- }
- 
-+int crash_load_luks_volume_key(struct kimage *image)
-+{
+ #ifdef CONFIG_EFI
+ 	unsigned long mstart, mend;
++	void *kaddr;
 +	int ret;
-+	struct kexec_buf kbuf = {
-+		.image = image,
-+		.buf_min = 0,
-+		.buf_max = ULONG_MAX,
-+		.top_down = false,
-+		.random = true,
-+	};
-+
-+	image->luks_volume_key_addr = 0;
-+	ret = crash_pass_temp_luks_volume_key(&kbuf.buffer, &kbuf.bufsz);
+ 
+ 	if (!efi_enabled(EFI_BOOT))
+ 		return 0;
+@@ -105,6 +108,30 @@ map_efi_systab(struct x86_mapping_info *info, pgd_t *level4p)
+ 	if (!mstart)
+ 		return 0;
+ 
++	ret = kernel_ident_mapping_init(info, level4p, mstart, mend);
 +	if (ret)
 +		return ret;
 +
-+	kbuf.memsz = kbuf.bufsz;
-+	kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
-+	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-+	ret = kexec_add_buffer(&kbuf);
-+	if (ret) {
-+		vfree((void *)kbuf.buffer);
-+		return ret;
++	kaddr = memremap(mstart, mend - mstart, MEMREMAP_WB);
++	if (!kaddr) {
++		pr_err("Could not map UEFI system table\n");
++		return -ENOMEM;
 +	}
-+	image->luks_volume_key_addr = kbuf.mem;
-+	image->luks_volume_key_sz = kbuf.bufsz;
-+	pr_debug("Loaded LUKS volume key at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-+		 image->luks_volume_key_addr, kbuf.bufsz, kbuf.bufsz);
 +
-+	return ret;
-+}
++	mstart = efi_config_table;
 +
- int crash_load_segments(struct kimage *image)
- {
- 	int ret;
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index a61c12c01270..a859e9e5c876 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -76,6 +76,10 @@ static int setup_cmdline(struct kimage *image, struct boot_params *params,
- 	if (image->type == KEXEC_TYPE_CRASH) {
- 		len = sprintf(cmdline_ptr,
- 			"elfcorehdr=0x%lx ", image->elf_load_addr);
++	if (efi_enabled(EFI_64BIT)) {
++		efi_system_table_64_t *stbl = (efi_system_table_64_t *)kaddr;
 +
-+		if (image->luks_volume_key_addr != 0)
-+			len += sprintf(cmdline_ptr + len,
-+					"luksvolumekey=0x%lx ", image->luks_volume_key_addr);
- 	}
- 	memcpy(cmdline_ptr + len, cmdline, cmdline_len);
- 	cmdline_len += len;
-@@ -433,6 +437,9 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
- 		ret = crash_load_segments(image);
- 		if (ret)
- 			return ERR_PTR(ret);
-+		ret = crash_load_luks_volume_key(image);
-+		if (ret)
-+			pr_debug("Either no LUKS volume key or error to retrieve the LUKS volume key\n");
++		mend = mstart + sizeof(efi_config_table_64_t) * stbl->nr_tables;
++	} else {
++		efi_system_table_32_t *stbl = (efi_system_table_32_t *)kaddr;
++
++		mend = mstart + sizeof(efi_config_table_32_t) * stbl->nr_tables;
++	}
++
++	memunmap(kaddr);
++
+ 	return kernel_ident_mapping_init(info, level4p, mstart, mend);
+ #endif
+ 	return 0;
+@@ -244,10 +271,10 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
  	}
  
  	/*
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 5b2440444112..20d213076e46 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -374,6 +374,10 @@ struct kimage {
- 	void *elf_headers;
- 	unsigned long elf_headers_sz;
- 	unsigned long elf_load_addr;
-+
-+	/* LUKS volume key buffer */
-+	unsigned long luks_volume_key_addr;
-+	unsigned long luks_volume_key_sz;
- };
+-	 * Prepare EFI systab and ACPI tables for kexec kernel since they are
+-	 * not covered by pfn_mapped.
++	 * Prepare EFI systab, config table and ACPI tables for kexec kernel
++	 * since they are not covered by pfn_mapped.
+ 	 */
+-	result = map_efi_systab(&info, level4p);
++	result = map_efi_tables(&info, level4p);
+ 	if (result)
+ 		return result;
  
- /* kexec interface functions */
 -- 
-2.40.1
+2.33.1
 
 
 _______________________________________________
