@@ -4,42 +4,42 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E3581C7EE24
-	for <kexec@archiver.kernel.org>; Fri,  2 Jun 2023 10:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2E405C7EE32
+	for <kexec@archiver.kernel.org>; Fri,  2 Jun 2023 10:27:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=JL81dDUp1WA9TNJU/yVl9RZy+5/4AW5urO55ACl3Vvc=; b=3j5+WUgMvyEK92
-	FIloAghQHMnEnlBjdp9eKdbvMI/qMLSmvnzchz4UvsOlfIXVtw+ymIzPAe1h4O0OTEc30juJYc/FD
-	C70B/IWOZ4CSo0WBX9ZOCMd8dDv3PEiTT0nHmdCJpV9k3nC1a2gbzwyGkAa7w92Ckct5KIpqJ6Fk0
-	TBITb4sauK4bCf8vQlhUuuerZV8FBJmLbwSR8YBCMtJDYH6YrVKI45jXY8kz7A7QhM3N+wbhVk0Wp
-	v/kI6ize+QpwzVbOLS2084tl++vqPfdIr84Sg817ZbgF8HFLnVqI1mqksb0bHvDoFdcbvplKdVMla
-	mSoQ3Cs7xikV4vn1F21Q==;
+	List-Owner; bh=sRAmRScaJz+Q471RpYPnRH3Gcr/vPIT6EcFNk1kEgdM=; b=zw6Fmt1bsJkY/a
+	p7W7Uz5CiDVdGyl7Pert1r9ZnwWo8yt4mosadaJu4pVkxj1byoG819TCIUwQ+ln9ycoe2Frj7hXol
+	yN0FlGpOVsxLRFxX4blSt7T3mnbhW6hqQq5898OwfFREAaBOqqds3KrvS9RSDak+mvfIy++WDbdLk
+	IiIO0c60RrXGTnQAEWi4A90SkHdQVjMec9b2M6iTvAu5BM4PYsTjWP2o1nXHEF9D7PY6pXCo4GMU/
+	vB0/v7faXNIeLy8yoazJX5NT8pYEBNQdvVkWoXqoaar0pRc9RlkOR6YhHhWFUECyEx1AbAucdFI49
+	Qf563dvuEcZtpzB/ylKA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1q520A-006WNI-0X;
-	Fri, 02 Jun 2023 10:27:22 +0000
-Received: from esa10.hc1455-7.c3s2.iphmx.com ([139.138.36.225])
+	id 1q5207-006WL4-29;
+	Fri, 02 Jun 2023 10:27:19 +0000
+Received: from esa11.hc1455-7.c3s2.iphmx.com ([207.54.90.137])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1q5203-006WHr-0z
+	id 1q5202-006WHQ-1h
 	for kexec@lists.infradead.org;
-	Fri, 02 Jun 2023 10:27:18 +0000
-X-IronPort-AV: E=McAfee;i="6600,9927,10728"; a="106949230"
+	Fri, 02 Jun 2023 10:27:17 +0000
+X-IronPort-AV: E=McAfee;i="6600,9927,10728"; a="98600090"
 X-IronPort-AV: E=Sophos;i="6.00,212,1681138800"; 
-   d="scan'208";a="106949230"
-Received: from unknown (HELO yto-r2.gw.nic.fujitsu.com) ([218.44.52.218])
-  by esa10.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2023 19:27:08 +0900
-Received: from yto-m1.gw.nic.fujitsu.com (yto-nat-yto-m1.gw.nic.fujitsu.com [192.168.83.64])
-	by yto-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id B20A2C68E4
-	for <kexec@lists.infradead.org>; Fri,  2 Jun 2023 19:27:06 +0900 (JST)
+   d="scan'208";a="98600090"
+Received: from unknown (HELO yto-r4.gw.nic.fujitsu.com) ([218.44.52.220])
+  by esa11.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2023 19:27:09 +0900
+Received: from yto-m4.gw.nic.fujitsu.com (yto-nat-yto-m4.gw.nic.fujitsu.com [192.168.83.67])
+	by yto-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id E67A3D3EB2
+	for <kexec@lists.infradead.org>; Fri,  2 Jun 2023 19:27:05 +0900 (JST)
 Received: from kws-ab4.gw.nic.fujitsu.com (kws-ab4.gw.nic.fujitsu.com [192.51.206.22])
-	by yto-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id E5B3ACFAB7
+	by yto-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id 3CF60E647B
 	for <kexec@lists.infradead.org>; Fri,  2 Jun 2023 19:27:05 +0900 (JST)
 Received: from localhost.localdomain (unknown [10.167.234.230])
-	by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id DD90630C425;
+	by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id 1DB03E4AAF;
 	Fri,  2 Jun 2023 19:27:04 +0900 (JST)
 From: Li Zhijian <lizhijian@fujitsu.com>
 To: kexec@lists.infradead.org,
@@ -51,15 +51,12 @@ Cc: linux-kernel@vger.kernel.org,
 	y-goto@fujitsu.com,
 	yangx.jy@fujitsu.com,
 	Li Zhijian <lizhijian@fujitsu.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	x86@kernel.org
-Subject: [RFC PATCH v3 2/3] x86/crash: Add pmem region into PT_LOADs of vmcore
-Date: Fri,  2 Jun 2023 18:26:51 +0800
-Message-Id: <20230602102656.131654-3-lizhijian@fujitsu.com>
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>
+Subject: [RFC PATCH v3 1/3] nvdimm: set force_raw=1 in kdump kernel
+Date: Fri,  2 Jun 2023 18:26:50 +0800
+Message-Id: <20230602102656.131654-2-lizhijian@fujitsu.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230602102656.131654-1-lizhijian@fujitsu.com>
 References: <20230602102656.131654-1-lizhijian@fujitsu.com>
@@ -68,16 +65,18 @@ X-TM-AS-GCONF: 00
 X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-27666.006
 X-TM-AS-User-Approved-Sender: Yes
 X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-27666.006
-X-TMASE-Result: 10--8.329300-10.000000
-X-TMASE-MatchedRID: SzbEz7SZt2uKi1hWqQY8Ws7ggHewVGq2wwrHF5pwze+fHrjLA9DhZkop
-	D+RCCRBkWW2Dmwvfm8fHs1P4pGN3CkKry8ky4RfFrMZ+BqQt2NqDnmblFLAswsC5DTEMxpeQfiq
-	1gj2xET/kizndBEr04aS6UDs/n0a68yMI2JjGZ9a628cXbnOhTxgff28UuvITQmw1cPfvj6kgfJ
-	3S34h6EV+3LSA0WzRX64sVlliWKx8fE8yM4pjsDwtuKBGekqUpI/NGWt0UYPBTsAAS6F7IXbxSS
-	Tr43YbG2CTYFQRbaau5CD61Mvm0FlqwxgxViRpo
+X-TMASE-Result: 10-0.974000-10.000000
+X-TMASE-MatchedRID: t1Iw0ML99//7w6uw5pqYnoOlbll4OMtk9LMB0hXFSeg6Zx3YUNQTG+Wh
+	NKYuM7eN4QRvjxz49tHS7j6TEIEt1D3TQfUpAv1sPkILbTHNp5vYUDvAr2Y/17fYIuZsOQ0sOXB
+	2cqV0mCIre4xpX839SFAz81vtOOYiZ4F2TwmYmEDum6Nvy6t3NlK6+0HOVoSoWAuSz3ewb22AI+
+	pLfk3sByL637QCIVpi8vc3EUpCmrV9Y/vlKk76U9splnBzc8xMTFQnI+epPIaRo95rkBSGU6PFj
+	JEFr+olwXCBO/GKkVqOhzOa6g8KrW2CLRXivi3wNhkKY/nNBRst5qYpMkBetMsgyaJj+IZ28rnl
+	FWxtjwA8cpbtw5mTmssX0GOwKpO0i+7bNO++4Qw50ytg9FCbQRXBt/mUREyAj/ZFF9Wfm7hNy7p
+	pG0IjcFQqk0j7vLVUewMSBDreIdk=
 X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230602_032715_622260_5CD5069C 
-X-CRM114-Status: GOOD (  13.38  )
+X-CRM114-CacheID: sfid-20230602_032714_854533_92B20EE7 
+X-CRM114-Status: GOOD (  11.65  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,69 +93,59 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Only the region described by PT_LOADs of /proc/vmcore are dumpable/readble
-by dumping applications. Previously, on x86/x86_64 only system ram resources
-will be injected into PT_LOADs.
-So in order to make the entire pmem resource is dumpable/readable, we need
-to add pmem region into the PT_LOADs of /proc/vmcore.
+The virtually mapped memory map allows storing struct page objects for
+persistent memory devices in pre-allocated storage on those devices.
+These 'struct page objects' on devices are also known as metadata.
 
-Here we introduce a new API walk_pmem_res() to sort out the pmem region. Note
-that, unlike other walk_xxx_res() API in resource.c, we walk through
-pmem resources without IORESOUCE_BUSY flag.
+During libnvdimm/nd_pmem are loading, the previous metadata will
+be re-constructed to fit the current running kernel. For kdump purpose,
+these metadata should not be touched until the dumping is done so that
+the metadata is identical.
 
-This is kexec_file_load() specific, for kexec_load(), kexec-tools will have a
-similar change.
+To achieve this, we have some options
+1. Don't provide libnvdimm driver in kdump kernel rootfs/initramfs
+2. Disable libnvdimm driver by specific comline parameters (
+   initcall_blacklist=libnvdimm_init libnvdimm.blacklist=1 rd.driver.blacklist=libnvdimm)
+3. Enforce force_raw=1 for nvdimm namespace, because when force_raw=1,
+   metadata will not be re-constructed again. This may also result in
+   the pmem doesn't work before a few extra configurations.
 
-CC: Thomas Gleixner <tglx@linutronix.de>
-CC: Ingo Molnar <mingo@redhat.com>
-CC: Borislav Petkov <bp@alien8.de>
-CC: Dave Hansen <dave.hansen@linux.intel.com>
-CC: "H. Peter Anvin" <hpa@zytor.com>
-CC: Baoquan He <bhe@redhat.com>
-CC: x86@kernel.org
+Here we choose the 3rd one because the kdump application in this RFC relies
+on some /sys interfaces exported by libnvdimm and nd_pmem etc.
+
+CC: Dan Williams <dan.j.williams@intel.com>
+CC: Vishal Verma <vishal.l.verma@intel.com>
+CC: Dave Jiang <dave.jiang@intel.com>
+CC: Ira Weiny <ira.weiny@intel.com>
+CC: nvdimm@lists.linux.dev
 Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
 ---
- arch/x86/kernel/crash.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+V3: new patch
+---
+ drivers/nvdimm/namespace_devs.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index cdd92ab43cda..97763ea804c6 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -168,6 +168,17 @@ static int get_nr_ram_ranges_callback(struct resource *res, void *arg)
- 	return 0;
+diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
+index c60ec0b373c5..2e59be8b9c78 100644
+--- a/drivers/nvdimm/namespace_devs.c
++++ b/drivers/nvdimm/namespace_devs.c
+@@ -8,6 +8,7 @@
+ #include <linux/slab.h>
+ #include <linux/list.h>
+ #include <linux/nd.h>
++#include <linux/crash_dump.h>
+ #include "nd-core.h"
+ #include "pmem.h"
+ #include "pfn.h"
+@@ -1504,6 +1505,8 @@ struct nd_namespace_common *nvdimm_namespace_common_probe(struct device *dev)
+ 			return ERR_PTR(-ENODEV);
+ 	}
+ 
++	if (is_kdump_kernel())
++		ndns->force_raw = true;
+ 	return ndns;
  }
- 
-+/*
-+ * This function calls the @func callback against all memory ranges, which
-+ * are ranges marked as IORESOURCE_MEM and IORES_DESC_PERSISTENT_MEMORY.
-+ */
-+static int walk_pmem_res(u64 start, u64 end, void *arg,
-+			 int (*func)(struct resource *, void *))
-+{
-+	return walk_iomem_res_desc(IORES_DESC_PERSISTENT_MEMORY, IORESOURCE_MEM,
-+				   start, end, arg, func);
-+}
-+
- /* Gather all the required information to prepare elf headers for ram regions */
- static struct crash_mem *fill_up_crash_elf_data(void)
- {
-@@ -178,6 +189,7 @@ static struct crash_mem *fill_up_crash_elf_data(void)
- 	if (!nr_ranges)
- 		return NULL;
- 
-+	walk_pmem_res(0, -1, &nr_ranges, get_nr_ram_ranges_callback);
- 	/*
- 	 * Exclusion of crash region and/or crashk_low_res may cause
- 	 * another range split. So add extra two slots here.
-@@ -243,6 +255,7 @@ static int prepare_elf_headers(struct kimage *image, void **addr,
- 	ret = walk_system_ram_res(0, -1, cmem, prepare_elf64_ram_headers_callback);
- 	if (ret)
- 		goto out;
-+	walk_pmem_res(0, -1, cmem, prepare_elf64_ram_headers_callback);
- 
- 	/* Exclude unwanted mem ranges */
- 	ret = elf_header_exclude_ranges(cmem);
+ EXPORT_SYMBOL(nvdimm_namespace_common_probe);
 -- 
 2.29.2
 
