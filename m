@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EFA98C7EE2C
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E3581C7EE24
 	for <kexec@archiver.kernel.org>; Fri,  2 Jun 2023 10:27:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
@@ -12,35 +12,35 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=Dnr/umq+0guAZZIxELb78yqCZgcIwxtgHAYWvqHx6mU=; b=JFUiqkL4mGM4zj
-	Gh1r5Aj+qykl4DpREDF8dk2Bm01Q24uLeb8gF8ejDOrzdAOzDH9tJiwRcGabZV3M84VUWjtmfy3FU
-	IR2tS/0FkjcgY0gDBR3y6AxtxXZJ9SDfiYzdfSdKhzIi+9sGT1R1iaeMl9JyhZZAYvvcaiif01XF+
-	rns/HpXk9yxOr18U/NUNOOMoRKwTcCrJHQVTQlD0E6my5b/elpWfAFfO02wKiRI6f+4VCkFqXB6Au
-	sKWSx22r7fJ1H4f0T11va6QEKtAs9bkJ+SYOxMYcFbwHaim2jeKMXY1OGu8HtWLZ6+9sakMmlbHhw
-	bACpWcMLURl1zYjNAwkg==;
+	List-Owner; bh=JL81dDUp1WA9TNJU/yVl9RZy+5/4AW5urO55ACl3Vvc=; b=3j5+WUgMvyEK92
+	FIloAghQHMnEnlBjdp9eKdbvMI/qMLSmvnzchz4UvsOlfIXVtw+ymIzPAe1h4O0OTEc30juJYc/FD
+	C70B/IWOZ4CSo0WBX9ZOCMd8dDv3PEiTT0nHmdCJpV9k3nC1a2gbzwyGkAa7w92Ckct5KIpqJ6Fk0
+	TBITb4sauK4bCf8vQlhUuuerZV8FBJmLbwSR8YBCMtJDYH6YrVKI45jXY8kz7A7QhM3N+wbhVk0Wp
+	v/kI6ize+QpwzVbOLS2084tl++vqPfdIr84Sg817ZbgF8HFLnVqI1mqksb0bHvDoFdcbvplKdVMla
+	mSoQ3Cs7xikV4vn1F21Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1q5209-006WMs-1l;
-	Fri, 02 Jun 2023 10:27:21 +0000
-Received: from esa2.hc1455-7.c3s2.iphmx.com ([207.54.90.48])
+	id 1q520A-006WNI-0X;
+	Fri, 02 Jun 2023 10:27:22 +0000
+Received: from esa10.hc1455-7.c3s2.iphmx.com ([139.138.36.225])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1q5203-006WIJ-2P
+	id 1q5203-006WHr-0z
 	for kexec@lists.infradead.org;
 	Fri, 02 Jun 2023 10:27:18 +0000
-X-IronPort-AV: E=McAfee;i="6600,9927,10728"; a="119220283"
+X-IronPort-AV: E=McAfee;i="6600,9927,10728"; a="106949230"
 X-IronPort-AV: E=Sophos;i="6.00,212,1681138800"; 
-   d="scan'208";a="119220283"
-Received: from unknown (HELO oym-r2.gw.nic.fujitsu.com) ([210.162.30.90])
-  by esa2.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2023 19:27:12 +0900
-Received: from oym-m2.gw.nic.fujitsu.com (oym-nat-oym-m2.gw.nic.fujitsu.com [192.168.87.59])
-	by oym-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id 8F403D4256
-	for <kexec@lists.infradead.org>; Fri,  2 Jun 2023 19:27:09 +0900 (JST)
+   d="scan'208";a="106949230"
+Received: from unknown (HELO yto-r2.gw.nic.fujitsu.com) ([218.44.52.218])
+  by esa10.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2023 19:27:08 +0900
+Received: from yto-m1.gw.nic.fujitsu.com (yto-nat-yto-m1.gw.nic.fujitsu.com [192.168.83.64])
+	by yto-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id B20A2C68E4
+	for <kexec@lists.infradead.org>; Fri,  2 Jun 2023 19:27:06 +0900 (JST)
 Received: from kws-ab4.gw.nic.fujitsu.com (kws-ab4.gw.nic.fujitsu.com [192.51.206.22])
-	by oym-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id BE67EBF3D4
-	for <kexec@lists.infradead.org>; Fri,  2 Jun 2023 19:27:08 +0900 (JST)
+	by yto-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id E5B3ACFAB7
+	for <kexec@lists.infradead.org>; Fri,  2 Jun 2023 19:27:05 +0900 (JST)
 Received: from localhost.localdomain (unknown [10.167.234.230])
-	by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id CC25FE4ABD;
-	Fri,  2 Jun 2023 19:27:07 +0900 (JST)
+	by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id DD90630C425;
+	Fri,  2 Jun 2023 19:27:04 +0900 (JST)
 From: Li Zhijian <lizhijian@fujitsu.com>
 To: kexec@lists.infradead.org,
 	nvdimm@lists.linux.dev
@@ -51,11 +51,15 @@ Cc: linux-kernel@vger.kernel.org,
 	y-goto@fujitsu.com,
 	yangx.jy@fujitsu.com,
 	Li Zhijian <lizhijian@fujitsu.com>,
-	Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>
-Subject: [RFC PATCH makedumpfile v3 2/3] makedumpfile.c: Exclude all pmem pages
-Date: Fri,  2 Jun 2023 18:26:55 +0800
-Message-Id: <20230602102656.131654-7-lizhijian@fujitsu.com>
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	x86@kernel.org
+Subject: [RFC PATCH v3 2/3] x86/crash: Add pmem region into PT_LOADs of vmcore
+Date: Fri,  2 Jun 2023 18:26:51 +0800
+Message-Id: <20230602102656.131654-3-lizhijian@fujitsu.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230602102656.131654-1-lizhijian@fujitsu.com>
 References: <20230602102656.131654-1-lizhijian@fujitsu.com>
@@ -64,16 +68,16 @@ X-TM-AS-GCONF: 00
 X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-27666.006
 X-TM-AS-User-Approved-Sender: Yes
 X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-27666.006
-X-TMASE-Result: 10--6.321800-10.000000
-X-TMASE-MatchedRID: CCHfsHgEWa2BgK4uB6zi2wI0yP/uoH+D2+EDPw+8xrdJEjJjpEhCnwFV
-	KntB9/BKIvrftAIhWmLy9zcRSkKatUAhvNB5B6uKzfqlpbtmcWgAPNCUrAcH+yS30GKAkBxW58T
-	g0a5Ro0fiJKINn1ydSUNghIQqhUBNP7A6mmzUskCp3Btb1bH20NY3ddD/vCxPkHPVkBTu31P8bd
-	qAerXT9wzx9NgblERANGy+MoqzZ01DQYe+1GQPNbrbxxduc6FPfS0Ip2eEHnz3IzXlXlpamPoLR
-	4+zsDTtH/zyL+gBqiwKmTdg1dVt31KQTaEXmx8EEvFiRzb4CfQizqc5rHUqnQ==
+X-TMASE-Result: 10--8.329300-10.000000
+X-TMASE-MatchedRID: SzbEz7SZt2uKi1hWqQY8Ws7ggHewVGq2wwrHF5pwze+fHrjLA9DhZkop
+	D+RCCRBkWW2Dmwvfm8fHs1P4pGN3CkKry8ky4RfFrMZ+BqQt2NqDnmblFLAswsC5DTEMxpeQfiq
+	1gj2xET/kizndBEr04aS6UDs/n0a68yMI2JjGZ9a628cXbnOhTxgff28UuvITQmw1cPfvj6kgfJ
+	3S34h6EV+3LSA0WzRX64sVlliWKx8fE8yM4pjsDwtuKBGekqUpI/NGWt0UYPBTsAAS6F7IXbxSS
+	Tr43YbG2CTYFQRbaau5CD61Mvm0FlqwxgxViRpo
 X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230602_032716_071011_869C0712 
-X-CRM114-Status: GOOD (  11.85  )
+X-CRM114-CacheID: sfid-20230602_032715_622260_5CD5069C 
+X-CRM114-Status: GOOD (  13.38  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,99 +94,69 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Generally, the pmem is too large to suitable to be dumped. Further, only
-the namespace of the pmem is dumpable, but actually currently we have no
-idea the excatly layout of the namespace in pmem. So we exclude all of
-them temporarily. And later, we will try to support including/excluding
-metadata by specific parameter.
+Only the region described by PT_LOADs of /proc/vmcore are dumpable/readble
+by dumping applications. Previously, on x86/x86_64 only system ram resources
+will be injected into PT_LOADs.
+So in order to make the entire pmem resource is dumpable/readable, we need
+to add pmem region into the PT_LOADs of /proc/vmcore.
 
+Here we introduce a new API walk_pmem_res() to sort out the pmem region. Note
+that, unlike other walk_xxx_res() API in resource.c, we walk through
+pmem resources without IORESOUCE_BUSY flag.
+
+This is kexec_file_load() specific, for kexec_load(), kexec-tools will have a
+similar change.
+
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Ingo Molnar <mingo@redhat.com>
+CC: Borislav Petkov <bp@alien8.de>
+CC: Dave Hansen <dave.hansen@linux.intel.com>
+CC: "H. Peter Anvin" <hpa@zytor.com>
 CC: Baoquan He <bhe@redhat.com>
-CC: Vivek Goyal <vgoyal@redhat.com>
-CC: Dave Young <dyoung@redhat.com>
-CC: kexec@lists.infradead.org
+CC: x86@kernel.org
 Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
 ---
- makedumpfile.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ arch/x86/kernel/crash.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index cadc59662bef..f304f752b0ec 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -100,6 +100,7 @@ mdf_pfn_t pfn_user;
- mdf_pfn_t pfn_free;
- mdf_pfn_t pfn_hwpoison;
- mdf_pfn_t pfn_offline;
-+mdf_pfn_t pfn_pmem_userdata;
- mdf_pfn_t pfn_elf_excluded;
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index cdd92ab43cda..97763ea804c6 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -168,6 +168,17 @@ static int get_nr_ram_ranges_callback(struct resource *res, void *arg)
+ 	return 0;
+ }
  
- mdf_pfn_t num_dumped;
-@@ -6389,6 +6390,7 @@ __exclude_unnecessary_pages(unsigned long mem_map,
- 	unsigned int order_offset, dtor_offset;
- 	unsigned long flags, mapping, private = 0;
- 	unsigned long compound_dtor, compound_head = 0;
-+	unsigned int is_pmem;
- 
- 	/*
- 	 * If a multi-page exclusion is pending, do it first
-@@ -6443,6 +6445,13 @@ __exclude_unnecessary_pages(unsigned long mem_map,
- 				continue;
- 		}
- 
-+		is_pmem = is_pmem_pt_load_range(pfn << PAGESHIFT(), (pfn + 1) << PAGESHIFT());
-+		if (is_pmem) {
-+			pfn_pmem_userdata++;
-+			clear_bit_on_2nd_bitmap_for_kernel(pfn, cycle);
-+			continue;
-+		}
++/*
++ * This function calls the @func callback against all memory ranges, which
++ * are ranges marked as IORESOURCE_MEM and IORES_DESC_PERSISTENT_MEMORY.
++ */
++static int walk_pmem_res(u64 start, u64 end, void *arg,
++			 int (*func)(struct resource *, void *))
++{
++	return walk_iomem_res_desc(IORES_DESC_PERSISTENT_MEMORY, IORESOURCE_MEM,
++				   start, end, arg, func);
++}
 +
- 		index_pg = pfn % PGMM_CACHED;
- 		pcache  = page_cache + (index_pg * SIZE(page));
+ /* Gather all the required information to prepare elf headers for ram regions */
+ static struct crash_mem *fill_up_crash_elf_data(void)
+ {
+@@ -178,6 +189,7 @@ static struct crash_mem *fill_up_crash_elf_data(void)
+ 	if (!nr_ranges)
+ 		return NULL;
  
-@@ -8122,7 +8131,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
- 	 */
- 	if (info->flag_cyclic) {
- 		pfn_zero = pfn_cache = pfn_cache_private = 0;
--		pfn_user = pfn_free = pfn_hwpoison = pfn_offline = 0;
-+		pfn_user = pfn_free = pfn_hwpoison = pfn_offline = pfn_pmem_userdata = 0;
- 		pfn_memhole = info->max_mapnr;
- 	}
++	walk_pmem_res(0, -1, &nr_ranges, get_nr_ram_ranges_callback);
+ 	/*
+ 	 * Exclusion of crash region and/or crashk_low_res may cause
+ 	 * another range split. So add extra two slots here.
+@@ -243,6 +255,7 @@ static int prepare_elf_headers(struct kimage *image, void **addr,
+ 	ret = walk_system_ram_res(0, -1, cmem, prepare_elf64_ram_headers_callback);
+ 	if (ret)
+ 		goto out;
++	walk_pmem_res(0, -1, cmem, prepare_elf64_ram_headers_callback);
  
-@@ -9460,7 +9469,7 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
- 		 * Reset counter for debug message.
- 		 */
- 		pfn_zero = pfn_cache = pfn_cache_private = 0;
--		pfn_user = pfn_free = pfn_hwpoison = pfn_offline = 0;
-+		pfn_user = pfn_free = pfn_hwpoison = pfn_offline = pfn_pmem_userdata = 0;
- 		pfn_memhole = info->max_mapnr;
- 
- 		/*
-@@ -10408,7 +10417,7 @@ print_report(void)
- 	 */
- 	pfn_original = info->max_mapnr - pfn_memhole;
- 
--	pfn_excluded = pfn_zero + pfn_cache + pfn_cache_private
-+	pfn_excluded = pfn_zero + pfn_cache + pfn_cache_private + pfn_pmem_userdata
- 	    + pfn_user + pfn_free + pfn_hwpoison + pfn_offline;
- 
- 	REPORT_MSG("\n");
-@@ -10425,6 +10434,7 @@ print_report(void)
- 	REPORT_MSG("    Free pages              : 0x%016llx\n", pfn_free);
- 	REPORT_MSG("    Hwpoison pages          : 0x%016llx\n", pfn_hwpoison);
- 	REPORT_MSG("    Offline pages           : 0x%016llx\n", pfn_offline);
-+	REPORT_MSG("    pmem userdata pages     : 0x%016llx\n", pfn_pmem_userdata);
- 	REPORT_MSG("  Remaining pages  : 0x%016llx\n",
- 	    pfn_original - pfn_excluded);
- 
-@@ -10464,7 +10474,7 @@ print_mem_usage(void)
- 	*/
- 	pfn_original = info->max_mapnr - pfn_memhole;
- 
--	pfn_excluded = pfn_zero + pfn_cache + pfn_cache_private
-+	pfn_excluded = pfn_zero + pfn_cache + pfn_cache_private + pfn_pmem_userdata
- 	    + pfn_user + pfn_free + pfn_hwpoison + pfn_offline;
- 	shrinking = (pfn_original - pfn_excluded) * 100;
- 	shrinking = shrinking / pfn_original;
+ 	/* Exclude unwanted mem ranges */
+ 	ret = elf_header_exclude_ranges(cmem);
 -- 
 2.29.2
 
