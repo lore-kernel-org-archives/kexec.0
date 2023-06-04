@@ -4,86 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6DC1EC77B7A
-	for <kexec@archiver.kernel.org>; Sat,  3 Jun 2023 09:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B42EEC7EE2A
+	for <kexec@archiver.kernel.org>; Sun,  4 Jun 2023 03:51:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=3LzUS9bEW5iVItmhwVmYeO2fa8WePFzSJUzIaTWO4CQ=; b=q9JJXBgw7UkKTp
-	zIRVq4xpU2mra2URICC6QBrvkJDj1AbQnKx/AaCdaM9rqLxnbjHUIiK5lGkQJHK92wl6GfXnuSU+S
-	jfRayEhItphtkAcw+j4W3HCp+2NCrmDRaY22552YevyzsMlABxFt7Q/p87OWugEBw2v7dMu+EghfG
-	+aJhm1jE5gq2YsQzx4H7bV22eQ6XHAZ3RMGaksd0HpKhsW+eCbYbM4hO8PFD8F+zV70BiML0SoLF+
-	d8t8HrBPruI0IG2Yo3q1RBXgBGQg/5LkJrbF27LDbyKkVEpRQMPjTkrzqAlyCg0MGTkcU+h4giBDS
-	T0CUERHzI8e3gIYAv+qQ==;
+	List-Owner; bh=Oc51sjCjces58rV05hI0IdshKsRaFNvA8IJvHQJB/M0=; b=oxI7TiASRDMZ5/
+	CglNxvfaxM3eVFPFMYoTKgWEuAxELbU4e2QZvoqyzwza42A/gJQnHkmH80IG0VjVh+MVbZqIEM5iB
+	NRQtBZ5OsWb5HfLJLkCR2EpBOkPtfd92Hvhs+8Ml/2uE4xOjs1abWugsBemVIyxVuoQfbjdfp41UJ
+	jJdTZusuBKZ3vwzZvjNpK3IWEemmH2QKkSvgMUwyGN3m6XFZCkz/qMVn2iuS38bIvdGsFkxiAllHC
+	JDJqKQtBcsSm0qjlb+llEeJxDN1a/Iekbyq+78HfH8GWZ5jlhP9T6TwEYINHLDTQ1UkJXXWx68Rbt
+	O6QXpnumKPj/7p8lhdwA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1q5NTP-009Bw7-1d;
-	Sat, 03 Jun 2023 09:22:59 +0000
-Received: from mail-wm1-x331.google.com ([2a00:1450:4864:20::331])
+	id 1q5elj-00BDzn-1s;
+	Sun, 04 Jun 2023 03:51:03 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1q5NTM-009BvH-38
+	id 1q5eld-00BDyw-2o
 	for kexec@lists.infradead.org;
-	Sat, 03 Jun 2023 09:22:58 +0000
-Received: by mail-wm1-x331.google.com with SMTP id 5b1f17b1804b1-3f7353993cbso417855e9.0
-        for <kexec@lists.infradead.org>; Sat, 03 Jun 2023 02:22:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685784174; x=1688376174;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=O5ZZccEjOJDauUyUc86UqVR1EPzXqg2YfD93ZA1ljqc=;
-        b=qI0nJsNWcHPPAlmCysrUhMrmWKr27qMxZO5HMUxwnyK+gpI+LPc6MlMrzrSyF3ZCtk
-         1Hft1SoBsmWFRXSmyJaSjpGBY1iimxIJH/04hSrN4Th377wHgQseNGGv/rWbfnir1d1b
-         rJS2HdlJfYGXG8kTkozPEzTSIv6nc/5+/qD4Zt2zJbW/b8PzbGyxeDutsZa65rtWK1mB
-         wF6dbclJzCRVzB6/vtbHfCHojqL3dxpFyi4bePqUmEHNfPWGwjMVzXviopAkC0UeA1zb
-         u8SQESCLxYrVytCtxsfz9subGlJKQtTgJptNGa8pProfb38gx8d1k1L625HFWncg2VZ4
-         Mbww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685784174; x=1688376174;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=O5ZZccEjOJDauUyUc86UqVR1EPzXqg2YfD93ZA1ljqc=;
-        b=K+y26xrJDzIY7yoH1HfnDXxtwQmziiYkbibMkSxU2IvfprYN4QlRpL1KlsG8WgI26h
-         ktWoQSJv+CSmNmyMLF3+nnaEUvKg9RTH264zniAQiDrJMMZVpXwV/HBgFpw6rPMvptj7
-         HSTt/6OBTM0+I18Ud6PeOvx+g4LzTizxrzwtnUZKnF1Rli+Im7OaAtrbEjF/oc5qtifm
-         1hQoPPIfrV9kTaEAplNNMkaG7EesiD7z2KioIf1ZEnIa3Uu2MviXmLTCIAb2trsXOX9+
-         j+6O1arXYGc1R2jU3CtbiGN5MRjuXIEM/ygkjNVmJrMNZJKuYfKRb2PHPvwa1e8fGAN/
-         BdLA==
-X-Gm-Message-State: AC+VfDwBA9v5cLTyoJwwvRLeb2OmMKxKUOrzE0pI2hQEJgVILYj/tX4g
-	bzX4Za95W4+WJFDiVBAXL/o=
-X-Google-Smtp-Source: ACHHUZ7HrvGXynuCfe2Du1bVfjOvawLJSng9RyiQMVVgL2YM1NZ+L20ZQXh+OzK3OYRVGFQ/PlzrPQ==
-X-Received: by 2002:a1c:4c0d:0:b0:3f7:5e1:f3fd with SMTP id z13-20020a1c4c0d000000b003f705e1f3fdmr4008232wmf.5.1685784174328;
-        Sat, 03 Jun 2023 02:22:54 -0700 (PDT)
-Received: from [192.168.2.30] (85-70-151-113.rcd.o2.cz. [85.70.151.113])
-        by smtp.gmail.com with ESMTPSA id l5-20020a7bc445000000b003f6042d6da0sm4431638wmi.16.2023.06.03.02.22.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 03 Jun 2023 02:22:53 -0700 (PDT)
-Message-ID: <f569a35a-bff9-9dbb-2ded-7e02ee060a9a@gmail.com>
-Date: Sat, 3 Jun 2023 11:22:52 +0200
+	Sun, 04 Jun 2023 03:50:59 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1685850654;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3xoQmPFaAUegfYSJYPIpp3RbbthxKSVIwBfF4d2guz4=;
+	b=PQcZAT80+Pww+A6YVvihgCu3+vUsQj7MNYGsNewpuPR57BdzzaGAgl+bnqsyX6zHuM8cCF
+	ckjhkD1E4/u0C0vVyHUvqwCwarUuCFQBldw3cYLOON7L4gGgevtruLSf4qSwJlolWgLUBI
+	RyRaPZjKYI3YuXqxSalOjTltBKodBus=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-630-A2_BvKP3MLuD089rbGtYyw-1; Sat, 03 Jun 2023 23:50:50 -0400
+X-MC-Unique: A2_BvKP3MLuD089rbGtYyw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BBA8D800888;
+	Sun,  4 Jun 2023 03:50:49 +0000 (UTC)
+Received: from localhost (ovpn-12-83.pek2.redhat.com [10.72.12.83])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 595831410F25;
+	Sun,  4 Jun 2023 03:50:47 +0000 (UTC)
+Date: Sun, 4 Jun 2023 11:50:44 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Chen Jiahao <chenjiahao16@huawei.com>
+Cc: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+	kexec@lists.infradead.org, linux-doc@vger.kernel.org,
+	paul.walmsley@sifive.com, palmer@dabbelt.com,
+	conor.dooley@microchip.com, guoren@kernel.org, heiko@sntech.de,
+	bjorn@rivosinc.com, alex@ghiti.fr, akpm@linux-foundation.org,
+	atishp@rivosinc.com, thunder.leizhen@huawei.com, horms@kernel.org
+Subject: Re: [PATCH -next v5 1/2] riscv: kdump: Implement
+ crashkernel=X,[high,low]
+Message-ID: <ZHwKFADVXyNYJBCp@MiWiFi-R3L-srv>
+References: <20230511085139.1039088-1-chenjiahao16@huawei.com>
+ <20230511085139.1039088-2-chenjiahao16@huawei.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.11.0
-Subject: Re: [PATCH 0/5] Support kdump with LUKS encryption by reusing LUKS
- volume key
-Content-Language: en-US
-To: Eric Biggers <ebiggers@kernel.org>, Coiby Xu <coxu@redhat.com>
-Cc: kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>, x86@kernel.org,
- dm-devel@redhat.com, Pingfan Liu <kernelfans@gmail.com>,
- linux-kernel@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>,
- Kairui Song <ryncsn@gmail.com>, Jan Pazdziora <jpazdziora@redhat.com>,
- Thomas Staudt <tstaudt@de.ibm.com>, Vitaly Kuznetsov <vkuznets@redhat.com>,
- Dave Young <dyoung@redhat.com>
-References: <20230601072444.2033855-1-coxu@redhat.com>
- <20230602213452.GC628@quark.localdomain>
-From: Milan Broz <gmazyland@gmail.com>
-In-Reply-To: <20230602213452.GC628@quark.localdomain>
+Content-Disposition: inline
+In-Reply-To: <20230511085139.1039088-2-chenjiahao16@huawei.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230603_022257_052844_F9815E25 
-X-CRM114-Status: GOOD (  12.96  )
+X-CRM114-CacheID: sfid-20230603_205058_002042_8A5EADF1 
+X-CRM114-Status: GOOD (  19.41  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -95,37 +81,115 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 6/2/23 23:34, Eric Biggers wrote:
-> On Thu, Jun 01, 2023 at 03:24:39PM +0800, Coiby Xu wrote:
->> [PATCH 0/5] Support kdump with LUKS encryption by reusing LUKS volume key
+Hi Jiahao,
+
+On 05/11/23 at 04:51pm, Chen Jiahao wrote:
+......  
+> @@ -1300,14 +1325,34 @@ static void __init reserve_crashkernel(void)
+>  		return;
+>  	}
+>  
+> -	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+> +	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
+>  				&crash_size, &crash_base);
+> -	if (ret || !crash_size)
+> +	if (ret == -ENOENT) {
+> +		/* Fallback to crashkernel=X,[high,low] */
+> +		ret = parse_crashkernel_high(cmdline, 0, &crash_size, &crash_base);
+> +		if (ret || !crash_size)
+> +			return;
+> +
+> +		/*
+> +		 * crashkernel=Y,low is valid only when crashkernel=X,high
+> +		 * is passed.
+> +		 */
+> +		ret = parse_crashkernel_low(cmdline, 0, &crash_low_size, &crash_base);
+> +		if (ret == -ENOENT)
+> +			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
+> +		else if (ret)
+> +			return;
+> +
+> +		search_end = memblock_end_of_DRAM();
+> +	} else if (ret || !crash_size) {
+> +		/* Invalid argument value specified */
+>  		return;
+> +	}
+
+The parsing part looks great, while you didn't mark if it's specified
+high reservation, please see later comment why it's needed.
+
+>  
+>  	crash_size = PAGE_ALIGN(crash_size);
+>  
+>  	if (crash_base) {
+> +		fixed_base = true;
+>  		search_start = crash_base;
+>  		search_end = crash_base + crash_size;
+>  	}
+> @@ -1320,17 +1365,31 @@ static void __init reserve_crashkernel(void)
+>  	 * swiotlb can work on the crash kernel.
+>  	 */
+>  	crash_base = memblock_phys_alloc_range(crash_size, PMD_SIZE,
+> -					       search_start,
+> -					       min(search_end, (unsigned long) SZ_4G));
+> +					       search_start, search_end);
+
+If it's a specified high reservation, you have 
+search_start = memblock_start_of_DRAM();
+search_end = memblock_end_of_DRAM();
+
+Then it attempts to search top down first time here.
+
+>  	if (crash_base == 0) {
+> -		/* Try again without restricting region to 32bit addressible memory */
+> +		if (fixed_base) {
+> +			pr_warn("crashkernel: allocating failed with given size@offset\n");
+> +			return;
+> +		}
+> +		search_end = memblock_end_of_DRAM();
+> +
+> +		/* Try again above the region of 32bit addressible memory */
+>  		crash_base = memblock_phys_alloc_range(crash_size, PMD_SIZE,
+> -						search_start, search_end);
+> +						       search_start, search_end);
+
+If crashkernel=,high case, the first attempt failed, here it assigns
+search_end with memblock_end_of_DRAM(). It's the exactly the same
+attempt, why is that needed? Why don't you use a local variable 'high'
+to mark the crashkernel=,hig, then judge when deciding how to adjsut the
+reservation range.
+
+Do I misunderstand the code? 
+
+Thanks
+Baoquan
+
+>  		if (crash_base == 0) {
+>  			pr_warn("crashkernel: couldn't allocate %lldKB\n",
+>  				crash_size >> 10);
+>  			return;
+>  		}
+> +
+> +		if (!crash_low_size)
+> +			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
+> +	}
+> +
+> +	if ((crash_base > dma32_phys_limit - crash_low_size) &&
+> +	    crash_low_size && reserve_crashkernel_low(crash_low_size)) {
+> +		memblock_phys_free(crash_base, crash_size);
+> +		return;
+>  	}
+>  
+>  	pr_info("crashkernel: reserved 0x%016llx - 0x%016llx (%lld MB)\n",
+> -- 
+> 2.31.1
 > 
-> The kernel has no concept of LUKS at all.  It provides dm-crypt, which LUKS
-> happens to use.  But LUKS is a userspace concept.
-> 
-> This is a kernel patchset, so why does it make sense for it to be talking about
-> LUKS at all?  Perhaps you mean dm-crypt?
 
-Exactly.
-
-I had the same comment almost a year ago... and it still applies:
-https://lore.kernel.org/all/c857dcf8-024e-ab8a-fd26-295ce2e0ae41@gmail.com/
-
-  Anyway, please fix the naming before this patchset can be read or reviewed!
-
-  LUKS is user-space key management only (on-disk metadata); the kernel has
-  no idea how the key is derived or what LUKS is - dm-crypt only knows the key
-  (either through keyring or directly in the mapping table).
-
-  Polluting kernel namespace with "luks" names variables is wrong - dm-crypt
-  is used in many other mappings (plain, bitlocker, veracrypt, ...)
-  Just use the dm-crypt key, do not reference LUKS at all.
-
-Milan
 
 _______________________________________________
 kexec mailing list
