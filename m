@@ -4,90 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B6D54C7EE2C
-	for <kexec@archiver.kernel.org>; Mon,  5 Jun 2023 02:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 81B86C7EE23
+	for <kexec@archiver.kernel.org>; Mon,  5 Jun 2023 07:10:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
 	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Fuce7QQc4Z4jjLaaL6EUi175FOFYHO1egTM8Ao7CX98=; b=5A0ZGGz/0OLipaMGaE2RRVs/HT
-	oyiaOuDVSt37J39TaMkm8NC3QinwvrN/UgR1lhv1mWAJTn/+3uvKISjEvtWKd1STswVLXHNWK1oY2
-	bJIwRgU6PCW8P5ojKhhoBlKEYqdYeMLMdpVtcaEq0x0uo67stS3HeVOSj0GZ1EMwz9JRMUUpywXp0
-	aLthydhMgAbsj6HyJklWkQwFPO8hg4JmxsGJ5xGd5jwbs2CceA4/bhL+gyCB9jMNpYTdVi5ytp12B
-	/Z5dnQGviIyRP1qMHlbINJIYTI5brcDyFXhGJFiHtQ/SJrAZ70S7xFdH4VDDJ/WvU0tATfBddwSAY
-	MdiveUjQ==;
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=P/cegld0ODID3OHu6mpsYLAN1OaGPcB7flI88t2pIow=; b=ZERI3YgBjt9F7K
+	w4OfcfoDw0qyFwV8b6J+lFZ1QqhxjQSrtrfBDc8CoixROl/A/km3W8w/5DXw1lMKG5pD9h+cSYHwd
+	oOBVNOyXhf1ww+LR0s7vl4/krPOpDnBgXKABLYbI/BrxFW+ZK0ID7OW37XtL6CZFzaeR9SDBV0c4r
+	3mITvZB2pxRRtQheCILnmoAfeeRXjkvdHmUlS9EUiRyoBoxJaiCAuyK1quXK/3+26Y7a2P4oXuTf+
+	nAxfzJkQu3MzBMxK4UxdsbgDoMYEqTvTARID+f2oBtF1S68McO4nDAQ9OQLoofMLyFbB4PrCmDNI4
+	DSHnycMzsCRC8IBEmajg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1q60EE-00DoJW-2p;
-	Mon, 05 Jun 2023 02:45:54 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1q64Lk-00EVNT-31;
+	Mon, 05 Jun 2023 07:09:56 +0000
+Received: from mail-ed1-x531.google.com ([2a00:1450:4864:20::531])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1q60E9-00DoHg-1E
+	id 1q64Lh-00EVMM-0h
 	for kexec@lists.infradead.org;
-	Mon, 05 Jun 2023 02:45:53 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1685933148;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Jlwl2BIm+peoNeTUMCVWAtru/pvJMSDZiLA+UJX1Gw4=;
-	b=iHk98osV2bdPVx4NLLkEEzyBWsB7MMZ0mwrOffRs9XWM1QTZndccf4ywbGCbGeGiu40zgO
-	l8dayEBHkiMgYHKKGXwqUV2JPxDdNdkri7WnFYKFjqIi5fGeZ4A8kRVC/0o/ovCDLgWe2T
-	lRS05cQyPKyfjx+4nFadK3I0yWx7kAs=
-Received: from mail-yb1-f200.google.com (mail-yb1-f200.google.com
- [209.85.219.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-597-Efry9q0FMkC1Kl1oVvpogg-1; Sun, 04 Jun 2023 22:45:47 -0400
-X-MC-Unique: Efry9q0FMkC1Kl1oVvpogg-1
-Received: by mail-yb1-f200.google.com with SMTP id 3f1490d57ef6-bacfa4eefd2so7238900276.0
-        for <kexec@lists.infradead.org>; Sun, 04 Jun 2023 19:45:47 -0700 (PDT)
+	Mon, 05 Jun 2023 07:09:54 +0000
+Received: by mail-ed1-x531.google.com with SMTP id 4fb4d7f45d1cf-51493ec65d8so6894988a12.2
+        for <kexec@lists.infradead.org>; Mon, 05 Jun 2023 00:09:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685948991; x=1688540991;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=40CnV0seHNA+3J+ZtxxY5lWq8+DP/bF+vwPGX6memA4=;
+        b=nQjOn8M6P984wlmWjWHri0pDo+/njmcKrLFh66hG0uR6pU7+aTHjw36bUCRinAxJii
+         KbN3vxAxQMp3KiIyTnDQ/rTQTJZqn6YD7UMNlbPdL+9Np2mqiZU7dfYcVfVNOjHt7TC7
+         Sj26M8ZF2kraEKuMLqCzPxbSDwvMk7zuzYhWnUxNEqf/TX72tiT0VtqfxeWfYR5nEvaW
+         9ZskfIiLmy0GivRZ36V1afjVWrN7LpyEQGfWq9m7a/zN0/f6bTFSq7NkhsIcjhTvBsdu
+         ylVE2XTULgISjxu6NhkgbFzojQhE0qDGaINB/O2Q0HjbD1FFberFqTUCk8UlMuYH59sM
+         +gaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685933147; x=1688525147;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Jlwl2BIm+peoNeTUMCVWAtru/pvJMSDZiLA+UJX1Gw4=;
-        b=hXtdLBVT2xPqI61dEb8Nm7cHuBOAul2YMUceE0Px3Q09Mx19n5AusCzwrHDo4MNVxo
-         aQ5l9Ec3Ch1+8FU34JW01bYsT0dXfY+CMG+yOq46JfRla4n9ZxOOqriijxkAhGbbghHj
-         38BTK2uANQDTSw5XRdR6E6PvekjMVSj9OIhYlARZrwAHxxMUUVfWXUlLeAUq/UWh7xCZ
-         7g6/Cf2qBHDFDeJv4f4xs//fAkIAxk96lfvzApgjEdSUS7FCPn/8fGvJQXf6lfdk6F6q
-         XZz4ZXgjEIvAaRxVunh59LnuSZhl7Ve0zLpsVCbp2SLXyIIfPIhbSGNQuS8o/nrgqrN0
-         +eeg==
-X-Gm-Message-State: AC+VfDz4oJaef1gbvDTVQRYLg/NWrfEs9vqfGMo97dZOJgNbfaM92Eg3
-	kQZahzn4AUIVsAJ/XINJyOff+AjImdrrY6XT4QEz88mRLIqad5AY93Q8SjJQangvmby+h59aEux
-	J/80y7HLiSCPdTW1uume3
-X-Received: by 2002:a25:ab61:0:b0:bab:af52:7482 with SMTP id u88-20020a25ab61000000b00babaf527482mr13858124ybi.34.1685933146709;
-        Sun, 04 Jun 2023 19:45:46 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ4DZ9gNAc8/q12HbeOnPdcqtS8oXkx5kC683CduHv/BdkqjLzn5lvuc+mzhWnbsn/xLeoCPUQ==
-X-Received: by 2002:a25:ab61:0:b0:bab:af52:7482 with SMTP id u88-20020a25ab61000000b00babaf527482mr13858088ybi.34.1685933146392;
-        Sun, 04 Jun 2023 19:45:46 -0700 (PDT)
-Received: from localhost ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id 2-20020a170902c20200b001a80ad9c599sm5257026pll.294.2023.06.04.19.45.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 Jun 2023 19:45:45 -0700 (PDT)
-Date: Mon, 5 Jun 2023 10:40:15 +0800
-From: Coiby Xu <coxu@redhat.com>
-To: Anthony Yznaga <anthony.yznaga@oracle.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com, 
-	dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org, rppt@kernel.org, 
-	akpm@linux-foundation.org, ebiederm@xmission.com, keescook@chromium.org, graf@amazon.com, 
-	jason.zeng@intel.com, lei.l.li@intel.com, steven.sistare@oracle.com, 
-	fam.zheng@bytedance.com, mgalaxy@akamai.com, kexec@lists.infradead.org
-Subject: Re: [RFC v3 07/21] mm: PKRAM: introduce super block
-Message-ID: <upgf3qmqxn7xzbnwwt6nxau4ugqkq7szdaheewzbok27xwch4e@6tdnhkqspok4>
-References: <1682554137-13938-1-git-send-email-anthony.yznaga@oracle.com>
- <1682554137-13938-8-git-send-email-anthony.yznaga@oracle.com>
+        d=1e100.net; s=20221208; t=1685948991; x=1688540991;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=40CnV0seHNA+3J+ZtxxY5lWq8+DP/bF+vwPGX6memA4=;
+        b=Bc28h9pEOxQ0+mFr1ScQQsFl9+Q6LtohkTehdpfXPay6rqyN2T1U/VtvK6VBx309mU
+         cbJpCvAvUjnoZffaOmrS7Fz81fIrRbvyK2s4ODm97Q/yy8C2MOXXKmBKP+mP+cLTBlzp
+         8zKf/ghCxO0J7Qs3wh/I1mnzlN9iwKdkVGv8ToSbhWd3FCyU5M2VJ4mffCSORqnlLTvR
+         t02RGa4fYC+C4rFxmiXfA4+AF/kcZReIEWe/L2z2V9sGHmtBHeFQMFq4Wct0UII9zEyl
+         ZcsUlWo7eBML58p9Ko0oKyCJgoNNj5RrzuMaW1Fjh+Oifrdg7A0e4bWP697RLTAW7n/D
+         dUag==
+X-Gm-Message-State: AC+VfDw1FikzmWzSe2o37Htj9SPWdod8mamWKiQERS5Q+otDGxgZ1HzZ
+	IYh7AWFN127iLfC9H0YnBDo=
+X-Google-Smtp-Source: ACHHUZ4avov38OYLaR3Bj09ogtbzgAw+IJvsxh/+I2jNWLZnteyosL/g2MigG3R1N70vvHtsLvmoLg==
+X-Received: by 2002:a05:6402:659:b0:516:642e:f92b with SMTP id u25-20020a056402065900b00516642ef92bmr783879edx.1.1685948991066;
+        Mon, 05 Jun 2023 00:09:51 -0700 (PDT)
+Received: from [147.251.42.107] (nbbroz2.fi.muni.cz. [147.251.42.107])
+        by smtp.gmail.com with ESMTPSA id b13-20020a056402138d00b00516654bf182sm334943edv.41.2023.06.05.00.09.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 05 Jun 2023 00:09:50 -0700 (PDT)
+Message-ID: <a5eaa21d-6551-5857-98cd-50578fe59566@gmail.com>
+Date: Mon, 5 Jun 2023 09:09:49 +0200
 MIME-Version: 1.0
-In-Reply-To: <1682554137-13938-8-git-send-email-anthony.yznaga@oracle.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.11.0
+Subject: Re: [PATCH 0/5] Support kdump with LUKS encryption by reusing LUKS
+ volume key
+Content-Language: en-US
+To: Coiby Xu <coxu@redhat.com>, Eric Biggers <ebiggers@kernel.org>
+Cc: kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>, x86@kernel.org,
+ dm-devel@redhat.com, Pingfan Liu <kernelfans@gmail.com>,
+ linux-kernel@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>,
+ Kairui Song <ryncsn@gmail.com>, Jan Pazdziora <jpazdziora@redhat.com>,
+ Thomas Staudt <tstaudt@de.ibm.com>, Vitaly Kuznetsov <vkuznets@redhat.com>,
+ Dave Young <dyoung@redhat.com>
+References: <20230601072444.2033855-1-coxu@redhat.com>
+ <20230602213452.GC628@quark.localdomain>
+ <f569a35a-bff9-9dbb-2ded-7e02ee060a9a@gmail.com>
+ <36mz3gn764ceadfbuhhmoo2zaiqmzplpkdcnszha2hzhmb3i62@sm6hilxryzk4>
+From: Milan Broz <gmazyland@gmail.com>
+In-Reply-To: <36mz3gn764ceadfbuhhmoo2zaiqmzplpkdcnszha2hzhmb3i62@sm6hilxryzk4>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230604_194549_496413_E66B5F71 
-X-CRM114-Status: GOOD (  28.43  )
+X-CRM114-CacheID: sfid-20230605_000953_253964_A933D794 
+X-CRM114-Status: GOOD (  27.25  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,230 +102,73 @@ Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Anthony,
+On 6/5/23 04:31, Coiby Xu wrote:
+> Hi Eric and Milan,
+> 
+> On Sat, Jun 03, 2023 at 11:22:52AM +0200, Milan Broz wrote:
+>> On 6/2/23 23:34, Eric Biggers wrote:
+>>> On Thu, Jun 01, 2023 at 03:24:39PM +0800, Coiby Xu wrote:
+>>>> [PATCH 0/5] Support kdump with LUKS encryption by reusing LUKS volume key
+>>>
+>>> The kernel has no concept of LUKS at all.  It provides dm-crypt, which LUKS
+>>> happens to use.  But LUKS is a userspace concept.
+>>>
+>>> This is a kernel patchset, so why does it make sense for it to be talking about
+>>> LUKS at all?  Perhaps you mean dm-crypt?
+>>
+>> Exactly.
+> 
+> Thanks for raising the above concern! The use cases like CoreOS and
+> Confidential VMs explicitly want kdump to work for LUKS. And correct me
+> if I'm wrong, I think the two problems addressed by this patch set only
+> apply to LUKS so the kdump part of the kernel only cares about the LUKS
+> case. If there are use cases where similar approach is needed, I'll be
+> happy to make the solution more generic.
+> 
+>>
+>> I had the same comment almost a year ago... and it still applies:
+>> https://lore.kernel.org/all/c857dcf8-024e-ab8a-fd26-295ce2e0ae41@gmail.com/
+>>
+>> Anyway, please fix the naming before this patchset can be read or reviewed!
+>>
+>> LUKS is user-space key management only (on-disk metadata); the kernel has
+>> no idea how the key is derived or what LUKS is - dm-crypt only knows the key
+>> (either through keyring or directly in the mapping table).
+>>
+>> Polluting kernel namespace with "luks" names variables is wrong - dm-crypt
+>> is used in many other mappings (plain, bitlocker, veracrypt, ...)
+>> Just use the dm-crypt key, do not reference LUKS at all.
+> 
+> Thanks for the reminding! That comment was on the first RFC version. But
+> starting with "RFC v2", there is no longer any interaction with dm-crypt
+> (to save a copy of the LUKS volume key for the kdump kernel) and now I
+> make cryptsetup talks to the kdump part of the kernel via the sysfs to
+> reuse the volume key. So only the kdump part of the kernel needs to know
+> LUKS which is what it cares. Thus I don't think there is any kernel
+> namespace pollution now.
 
-On Wed, Apr 26, 2023 at 05:08:43PM -0700, Anthony Yznaga wrote:
->The PKRAM super block is the starting point for restoring preserved
->memory. By providing the super block to the new kernel at boot time,
->preserved memory can be reserved and made available to be restored.
->To point the kernel to the location of the super block, one passes
->its pfn via the 'pkram' boot param. 
+Hi,
 
-I'm curious to ask how will the 'pkram' boot param be passed. It seems I
-can't find the answer in this patch set.
+I am sorry if I did understand correctly, but I thought that kdump is part
+of the kernel.
 
+I am trying to say that kernel generally has no concept of LUKS;
+this is a userspace abstraction for key management.
 
-> For that purpose, the pkram super
->block pfn is exported via /sys/kernel/pkram. If none is passed, any
->preserved memory will not be kept, and a new super block will be
->allocated.
->
->Originally-by: Vladimir Davydov <vdavydov.dev@gmail.com>
->Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
->---
-> mm/pkram.c | 102 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
-> 1 file changed, 100 insertions(+), 2 deletions(-)
->
->diff --git a/mm/pkram.c b/mm/pkram.c
->index da166cb6afb7..c66b2ae4d520 100644
->--- a/mm/pkram.c
->+++ b/mm/pkram.c
->@@ -5,15 +5,18 @@
-> #include <linux/init.h>
-> #include <linux/io.h>
-> #include <linux/kernel.h>
->+#include <linux/kobject.h>
-> #include <linux/list.h>
-> #include <linux/mm.h>
-> #include <linux/module.h>
-> #include <linux/mutex.h>
-> #include <linux/notifier.h>
->+#include <linux/pfn.h>
-> #include <linux/pkram.h>
-> #include <linux/reboot.h>
-> #include <linux/sched.h>
-> #include <linux/string.h>
->+#include <linux/sysfs.h>
-> #include <linux/types.h>
->
-> #include "internal.h"
->@@ -82,12 +85,38 @@ struct pkram_node {
-> #define PKRAM_ACCMODE_MASK	3
->
-> /*
->+ * The PKRAM super block contains data needed to restore the preserved memory
->+ * structure on boot. The pointer to it (pfn) should be passed via the 'pkram'
->+ * boot param if one wants to restore preserved data saved by the previously
->+ * executing kernel. For that purpose the kernel exports the pfn via
->+ * /sys/kernel/pkram. If none is passed, preserved memory if any will not be
->+ * preserved and a new clean page will be allocated for the super block.
->+ *
->+ * The structure occupies a memory page.
->+ */
->+struct pkram_super_block {
->+	__u64	node_pfn;		/* first element of the node list */
->+};
->+
->+static unsigned long pkram_sb_pfn __initdata;
->+static struct pkram_super_block *pkram_sb;
->+
->+/*
->  * For convenience sake PKRAM nodes are kept in an auxiliary doubly-linked list
->  * connected through the lru field of the page struct.
->  */
-> static LIST_HEAD(pkram_nodes);			/* linked through page::lru */
-> static DEFINE_MUTEX(pkram_mutex);		/* serializes open/close */
->
->+/*
->+ * The PKRAM super block pfn, see above.
->+ */
->+static int __init parse_pkram_sb_pfn(char *arg)
->+{
->+	return kstrtoul(arg, 16, &pkram_sb_pfn);
->+}
->+early_param("pkram", parse_pkram_sb_pfn);
->+
-> static inline struct page *pkram_alloc_page(gfp_t gfp_mask)
-> {
-> 	return alloc_page(gfp_mask);
->@@ -270,6 +299,7 @@ static void pkram_stream_init(struct pkram_stream *ps,
->  * @gfp_mask specifies the memory allocation mask to be used when saving data.
->  *
->  * Error values:
->+ *	%ENODEV: PKRAM not available
->  *	%ENAMETOOLONG: name len >= PKRAM_NAME_MAX
->  *	%ENOMEM: insufficient memory available
->  *	%EEXIST: node with specified name already exists
->@@ -285,6 +315,9 @@ int pkram_prepare_save(struct pkram_stream *ps, const char *name, gfp_t gfp_mask
-> 	struct pkram_node *node;
-> 	int err = 0;
->
->+	if (!pkram_sb)
->+		return -ENODEV;
->+
-> 	if (strlen(name) >= PKRAM_NAME_MAX)
-> 		return -ENAMETOOLONG;
->
->@@ -404,6 +437,7 @@ void pkram_discard_save(struct pkram_stream *ps)
->  * Returns 0 on success, -errno on failure.
->  *
->  * Error values:
->+ *	%ENODEV: PKRAM not available
->  *	%ENOENT: node with specified name does not exist
->  *	%EBUSY: save to required node has not finished yet
->  *
->@@ -414,6 +448,9 @@ int pkram_prepare_load(struct pkram_stream *ps, const char *name)
-> 	struct pkram_node *node;
-> 	int err = 0;
->
->+	if (!pkram_sb)
->+		return -ENODEV;
->+
-> 	mutex_lock(&pkram_mutex);
-> 	node = pkram_find_node(name);
-> 	if (!node) {
->@@ -825,6 +862,13 @@ static void __pkram_reboot(void)
-> 		node->node_pfn = node_pfn;
-> 		node_pfn = page_to_pfn(page);
-> 	}
->+
->+	/*
->+	 * Zero out pkram_sb completely since it may have been passed from
->+	 * the previous boot.
->+	 */
->+	memset(pkram_sb, 0, PAGE_SIZE);
->+	pkram_sb->node_pfn = node_pfn;
-> }
->
-> static int pkram_reboot(struct notifier_block *notifier,
->@@ -832,7 +876,8 @@ static int pkram_reboot(struct notifier_block *notifier,
-> {
-> 	if (val != SYS_RESTART)
-> 		return NOTIFY_DONE;
->-	__pkram_reboot();
->+	if (pkram_sb)
->+		__pkram_reboot();
-> 	return NOTIFY_OK;
-> }
->
->@@ -840,9 +885,62 @@ static int pkram_reboot(struct notifier_block *notifier,
-> 	.notifier_call = pkram_reboot,
-> };
->
->+static ssize_t show_pkram_sb_pfn(struct kobject *kobj,
->+		struct kobj_attribute *attr, char *buf)
->+{
->+	unsigned long pfn = pkram_sb ? PFN_DOWN(__pa(pkram_sb)) : 0;
->+
->+	return sprintf(buf, "%lx\n", pfn);
->+}
->+
->+static struct kobj_attribute pkram_sb_pfn_attr =
->+	__ATTR(pkram, 0444, show_pkram_sb_pfn, NULL);
->+
->+static struct attribute *pkram_attrs[] = {
->+	&pkram_sb_pfn_attr.attr,
->+	NULL,
->+};
->+
->+static struct attribute_group pkram_attr_group = {
->+	.attrs = pkram_attrs,
->+};
->+
->+/* returns non-zero on success */
->+static int __init pkram_init_sb(void)
->+{
->+	unsigned long pfn;
->+	struct pkram_node *node;
->+
->+	if (!pkram_sb) {
->+		struct page *page;
->+
->+		page = pkram_alloc_page(GFP_KERNEL | __GFP_ZERO);
->+		if (!page) {
->+			pr_err("PKRAM: Failed to allocate super block\n");
->+			return 0;
->+		}
->+		pkram_sb = page_address(page);
->+	}
->+
->+	/*
->+	 * Build auxiliary doubly-linked list of nodes connected through
->+	 * page::lru for convenience sake.
->+	 */
->+	pfn = pkram_sb->node_pfn;
->+	while (pfn) {
->+		node = pfn_to_kaddr(pfn);
->+		pkram_insert_node(node);
->+		pfn = node->node_pfn;
->+	}
->+	return 1;
->+}
->+
-> static int __init pkram_init(void)
-> {
->-	register_reboot_notifier(&pkram_reboot_notifier);
->+	if (pkram_init_sb()) {
->+		register_reboot_notifier(&pkram_reboot_notifier);
->+		sysfs_update_group(kernel_kobj, &pkram_attr_group);
->+	}
-> 	return 0;
-> }
-> module_init(pkram_init);
->-- 
->1.9.4
->
->
->_______________________________________________
->kexec mailing list
->kexec@lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/kexec
->
+Even the cryptsetup dm-crypt configuration mapping table generated from LUKS
+has nothing LUKS special in it (only in DM-UUID as a name prefix).
 
--- 
-Best regards,
-Coiby
+So I do not understand why you need to mention LUKS even in kdump part.
+Perhaps it is still only a naming problem, nothing more.
 
+All you need is to preserve key and configuration parameters (for dm-crypt).
+If it is set by cryptsetup, dmsetup, or any other way is not important - on this
+kernel layer, it has nothing to do with LUKS key management metadata.
+
+No problem if you support only LUKS in userspace, but really, all this machinery
+should work for any dm-crypt devices. Perhaps your patch even works for it already.
+
+Milan
 
 _______________________________________________
 kexec mailing list
