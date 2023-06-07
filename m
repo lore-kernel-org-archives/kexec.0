@@ -4,70 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C0553C7EE29
-	for <kexec@archiver.kernel.org>; Tue,  6 Jun 2023 17:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DC832C7EE29
+	for <kexec@archiver.kernel.org>; Wed,  7 Jun 2023 06:15:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=+opZ31A040jppHh33abVqRRLH/Khq8SaOfmfyJAzXj0=; b=ytNmarykHtZaO7
-	KVIUxSIzIK6VCIU+sS3bQueY1IjyzVPvWyIAbn/1Ve0WV1licuLMO0QpIGDPgqjTteNb/4bnjsUVA
-	/Wv6EXdfSuRMzpt1Sp3UHtm2YDZhPW908RTRDDbQ1JKuD/ClrjXTmsrgSbyFDq42a3GwZ27M69Ezv
-	Gk1BJDPy7BaHJ60VmyVr/hzg1O66CQP8vLYXEqKRx72ouGi5xdF9PQRZsIkyQIBtyXrpZ8ar/y4jA
-	a+cvFqx2XPGe3VdcgF0cana0yQX7i4tUGnUCXivZJh9EMkWsTzl/l9g6dp0tuMDapyRudhRES0ey6
-	aAIabHBVPiVspHrw25uA==;
+	List-Owner; bh=GMA421cUKJfoBFSRgrkI4HDCzEAuokPBfs1fv1fQerw=; b=wwTfV2CQwDGqdo
+	J2kGclMWbQDlZjC8/nFDwIYQ7SLWcSiTu5qxOa810PsRLfu1tw/xiZfgD1LtqK4BDfJs61FxMmw13
+	uTywKPxK+XetboauZM73RxmaPmYpSKXpOqLzWROWomGjXg6ZHJkiydCmlYBZLOeM2DNqtvGXnnDGi
+	nzU28Da4vFs9PUWVdoTtlGQya66yAnspDdt0bZnReN6G8VS0OCEM1U8sdai9gq0dHmRfSYf4JUwnb
+	QDYWTAZcUV5PdNdRMUBjWvrW6lbqgXsJGkbpSZdr2ieWaKin3APpIM/mITQKgkOVc7XiSEESJwNyM
+	hMks/WED2Vklc5VimKJw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1q6aLk-002Zdo-1t;
-	Tue, 06 Jun 2023 17:20:04 +0000
-Received: from dfw.source.kernel.org ([139.178.84.217])
+	id 1q6mRe-004XAO-1Q;
+	Wed, 07 Jun 2023 06:14:58 +0000
+Received: from mail-ej1-x62b.google.com ([2a00:1450:4864:20::62b])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1q6aLe-002ZaO-1o
+	id 1q6mRb-004X7h-0C
 	for kexec@lists.infradead.org;
-	Tue, 06 Jun 2023 17:20:02 +0000
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id D703562AD2;
-	Tue,  6 Jun 2023 17:19:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 345E2C4339B;
-	Tue,  6 Jun 2023 17:19:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1686071997;
-	bh=oA+hhvm3fENXUSsKB3tE3UVVkXtL/Q4jgZuj2RxTU7M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PSV10s6YmI47PgxVSu0b/67VA+sM+FSsBQXmL2EAJCW2ZnAVYC7w9Dut7U6S4ZnOA
-	 rp81YVwNuzM0rEaxs1rmr3RA/5WbdrvQ923mGMzWNxwozXEKupw3iI8LFd9bjayPqd
-	 ojhXu7Lm99Mi8OBABVfvpE3SkIGBizkPMI4rgc2GmVL979GpTNVsBkquhxcZTK1WT5
-	 e8UbqVoN7K/Hcs7zffDLEKFNNVEGEZt8r7v2+RYDyrTP9KO7w4wKcwyGdii1VwBlM2
-	 dux1SRXC87HXyTYIX+oJiumvFhAXF1vrKRP51ptxrkhbjwiWbd8hsqppf2zUdCKqMX
-	 yLLOBGIyfKBVQ==
-Date: Tue, 6 Jun 2023 10:19:56 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Jan Kara <jack@suse.cz>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, hch@infradead.org,
-	sandeen@sandeen.net, song@kernel.org, rafael@kernel.org,
-	gregkh@linuxfoundation.org, viro@zeniv.linux.org.uk,
-	jikos@kernel.org, bvanassche@acm.org, ebiederm@xmission.com,
-	mchehab@kernel.org, keescook@chromium.org, p.raghav@samsung.com,
-	da.gomez@samsung.com, linux-fsdevel@vger.kernel.org,
-	kernel@tuxforce.de, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/6] fs: distinguish between user initiated freeze and
- kernel initiated freeze
-Message-ID: <20230606171956.GG72267@frogsfrogsfrogs>
-References: <20230508011717.4034511-1-mcgrof@kernel.org>
- <20230508011717.4034511-4-mcgrof@kernel.org>
- <20230522234200.GC11598@frogsfrogsfrogs>
- <20230525141430.slms7f2xkmesezy5@quack3>
+	Wed, 07 Jun 2023 06:14:56 +0000
+Received: by mail-ej1-x62b.google.com with SMTP id a640c23a62f3a-974f4897d87so811110166b.0
+        for <kexec@lists.infradead.org>; Tue, 06 Jun 2023 23:14:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686118486; x=1688710486;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qLbVbVUg9j5I15+llYMFFF7NMo/S4z5Ys0RB/9uQl58=;
+        b=FG7o5Uu3KLda7yKUb03+cnxUWpeKTZ2TPWH2QZ2GkOCHeFctlwRxZkl5ngvgmJP19t
+         E7c3SIPRCal7nrrmMpba5L6u3Y2cFJxTvxCvfosDCAFzWYCoSQ3GT7V7xDdkbHL3dWIT
+         8dpBIjtW4BkfEvGlqpMeU2jMXqmQ+SACHSYgB1MPtIDKz8YDQB1xD3sxDwS2A2Vr5qdi
+         VG23TKkisFswxRzyWS4/46BMXn+21pQ0H/japW3mCyDBF1kKCFuSW/yCmx1+0NomsaqS
+         A9FWwv7v4itYvbmSc1xX55JTULymF0rvj3sk0zXban5GsJ8GLBcc1581wYfRQbGD3w+v
+         V94g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686118486; x=1688710486;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qLbVbVUg9j5I15+llYMFFF7NMo/S4z5Ys0RB/9uQl58=;
+        b=DaNSGtMp9T3a0Ma2JNWNkpqsOreD4vMcltkMVAV/IeQ1GbO81W6Z/HaGnEU5nwYohN
+         eRNKlnpb9ZYZBUpCemi6T2Nar26uuN3YX5LImMic/xA37fjF8YLuL9cer1i/duVG2gMN
+         zIgRIXklyzobElDbxHQO2czwl2AErxXvgIEDPWL0HQ/Ssi2Shq4cy/5Go59Z75SrC/2S
+         ETSfDgeVOftkFUJ5dUpapmjYidKiI6MOCYUZRuqd/0YXaBR6SLr54SEtuHua8OqFls1J
+         VWshfQmZbBxVLbEyFTJuoO0rj7HfpMOVeBILH/e2Mi6gP27txuWbpWK7G1lsJ0cT9nO1
+         BDTg==
+X-Gm-Message-State: AC+VfDzcugLandmhYqVBWxZyU7m2rhR69k+gNuxs8ZCoguznkuIuQFuP
+	BSoEJHkFzICDACxSSU+amBU=
+X-Google-Smtp-Source: ACHHUZ51uxuxW9U9f1VRvp0RizzYWoG0e9p/q7tzibsqn8ln24i89Nm+W/E8vW4DMNN/8/X4G/ILVA==
+X-Received: by 2002:a17:906:6a15:b0:974:b15:fcda with SMTP id qw21-20020a1709066a1500b009740b15fcdamr4759049ejc.54.1686118486290;
+        Tue, 06 Jun 2023 23:14:46 -0700 (PDT)
+Received: from [147.251.42.107] (nbbroz2.fi.muni.cz. [147.251.42.107])
+        by smtp.gmail.com with ESMTPSA id cd13-20020a170906b34d00b0096b15e4ffcesm6412886ejb.85.2023.06.06.23.14.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 Jun 2023 23:14:45 -0700 (PDT)
+Message-ID: <88581a3c-8bd3-f7b2-064c-c809a2152ed3@gmail.com>
+Date: Wed, 7 Jun 2023 08:14:44 +0200
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20230525141430.slms7f2xkmesezy5@quack3>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.11.0
+Subject: Re: [PATCH 0/5] Support kdump with LUKS encryption by reusing LUKS
+ volume key
+To: Coiby Xu <coxu@redhat.com>
+Cc: Eric Biggers <ebiggers@kernel.org>, kexec@lists.infradead.org,
+ Baoquan He <bhe@redhat.com>, x86@kernel.org, dm-devel@redhat.com,
+ Pingfan Liu <kernelfans@gmail.com>, linux-kernel@vger.kernel.org,
+ Dave Hansen <dave.hansen@intel.com>, Kairui Song <ryncsn@gmail.com>,
+ Jan Pazdziora <jpazdziora@redhat.com>, Thomas Staudt <tstaudt@de.ibm.com>,
+ Vitaly Kuznetsov <vkuznets@redhat.com>, Dave Young <dyoung@redhat.com>
+References: <20230601072444.2033855-1-coxu@redhat.com>
+ <20230602213452.GC628@quark.localdomain>
+ <f569a35a-bff9-9dbb-2ded-7e02ee060a9a@gmail.com>
+ <36mz3gn764ceadfbuhhmoo2zaiqmzplpkdcnszha2hzhmb3i62@sm6hilxryzk4>
+ <a5eaa21d-6551-5857-98cd-50578fe59566@gmail.com>
+ <oosx274kf6kzasncdfdg5a53ut6wey3nlnbho5x3rql2df3zep@c6r6m4whphvh>
+Content-Language: en-US
+From: Milan Broz <gmazyland@gmail.com>
+In-Reply-To: <oosx274kf6kzasncdfdg5a53ut6wey3nlnbho5x3rql2df3zep@c6r6m4whphvh>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230606_101958_681738_42AA87B9 
-X-CRM114-Status: GOOD (  54.41  )
+X-CRM114-CacheID: sfid-20230606_231455_098537_4DB8A2AD 
+X-CRM114-Status: GOOD (  36.26  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,264 +99,110 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, May 25, 2023 at 04:14:30PM +0200, Jan Kara wrote:
-> On Mon 22-05-23 16:42:00, Darrick J. Wong wrote:
-> > How about this as an alternative patch?  Kernel and userspace freeze
-> > state are stored in s_writers; each type cannot block the other (though
-> > you still can't have nested kernel or userspace freezes); and the freeze
-> > is maintained until /both/ freeze types are dropped.
-> > 
-> > AFAICT this should work for the two other usecases (quiescing pagefaults
-> > for fsdax pmem pre-removal; and freezing fses during suspend) besides
-> > online fsck for xfs.
-> > 
-> > --D
-> > 
-> > From: Darrick J. Wong <djwong@kernel.org>
-> > Subject: fs: distinguish between user initiated freeze and kernel initiated freeze
-> > 
-> > Userspace can freeze a filesystem using the FIFREEZE ioctl or by
-> > suspending the block device; this state persists until userspace thaws
-> > the filesystem with the FITHAW ioctl or resuming the block device.
-> > Since commit 18e9e5104fcd ("Introduce freeze_super and thaw_super for
-> > the fsfreeze ioctl") we only allow the first freeze command to succeed.
-> > 
-> > The kernel may decide that it is necessary to freeze a filesystem for
-> > its own internal purposes, such as suspends in progress, filesystem fsck
-> > activities, or quiescing a device prior to removal.  Userspace thaw
-> > commands must never break a kernel freeze, and kernel thaw commands
-> > shouldn't undo userspace's freeze command.
-> > 
-> > Introduce a couple of freeze holder flags and wire it into the
-> > sb_writers state.  One kernel and one userspace freeze are allowed to
-> > coexist at the same time; the filesystem will not thaw until both are
-> > lifted.
-> > 
-> > Inspired-by: Luis Chamberlain <mcgrof@kernel.org>
-> > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+On 6/6/23 13:02, Coiby Xu wrote:
+> On Mon, Jun 05, 2023 at 09:09:49AM +0200, Milan Broz wrote:
+>> On 6/5/23 04:31, Coiby Xu wrote:
+>>> Hi Eric and Milan,
+>>>
+>>> On Sat, Jun 03, 2023 at 11:22:52AM +0200, Milan Broz wrote:
+>>>> On 6/2/23 23:34, Eric Biggers wrote:
+>>>>> On Thu, Jun 01, 2023 at 03:24:39PM +0800, Coiby Xu wrote:
+>>>>>> [PATCH 0/5] Support kdump with LUKS encryption by reusing LUKS volume key
+>>>>>
+>>>>> The kernel has no concept of LUKS at all.  It provides dm-crypt, which LUKS
+>>>>> happens to use.  But LUKS is a userspace concept.
+>>>>>
+>>>>> This is a kernel patchset, so why does it make sense for it to be talking about
+>>>>> LUKS at all?  Perhaps you mean dm-crypt?
+>>>>
+>>>> Exactly.
+>>>
+>>> Thanks for raising the above concern! The use cases like CoreOS and
+>>> Confidential VMs explicitly want kdump to work for LUKS. And correct me
+>>> if I'm wrong, I think the two problems addressed by this patch set only
+>>> apply to LUKS so the kdump part of the kernel only cares about the LUKS
+>>> case. If there are use cases where similar approach is needed, I'll be
+>>> happy to make the solution more generic.
+>>>
+>>>>
+>>>> I had the same comment almost a year ago... and it still applies:
+>>>> https://lore.kernel.org/all/c857dcf8-024e-ab8a-fd26-295ce2e0ae41@gmail.com/
+>>>>
+>>>> Anyway, please fix the naming before this patchset can be read or reviewed!
+>>>>
+>>>> LUKS is user-space key management only (on-disk metadata); the kernel has
+>>>> no idea how the key is derived or what LUKS is - dm-crypt only knows the key
+>>>> (either through keyring or directly in the mapping table).
+>>>>
+>>>> Polluting kernel namespace with "luks" names variables is wrong - dm-crypt
+>>>> is used in many other mappings (plain, bitlocker, veracrypt, ...)
+>>>> Just use the dm-crypt key, do not reference LUKS at all.
+>>>
+>>> Thanks for the reminding! That comment was on the first RFC version. But
+>>> starting with "RFC v2", there is no longer any interaction with dm-crypt
+>>> (to save a copy of the LUKS volume key for the kdump kernel) and now I
+>>> make cryptsetup talks to the kdump part of the kernel via the sysfs to
+>>> reuse the volume key. So only the kdump part of the kernel needs to know
+>>> LUKS which is what it cares. Thus I don't think there is any kernel
+>>> namespace pollution now.
+>>
+>> Hi,
+>>
+>> I am sorry if I did understand correctly, but I thought that kdump is part
+>> of the kernel.
 > 
-> Yes, this is exactly how I'd imagine it. Thanks for writing the patch!
+> Yes, there is the kernel part of the kdump although there is also the
+> userspace part to make the feature complete:)
 > 
-> I'd just note that this would need rebasing on top of Luis' patches 1 and
-> 2. Also:
-
-I started doing that, but I noticed that after patch 1, freeze_super no
-longer leaves s_active elevated if the freeze is successful.  The
-callers drop the s_active ref that they themselves obtained, which
-means that we've now changed that behavior, right?  ioctl_fsfreeze now
-does:
-
-	if (!get_active_super(sb->s_bdev))
-		return -ENOTTY;
-
-(Increase ref)
-
-        /* Freeze */
-        if (sb->s_op->freeze_super)
-		ret = sb->s_op->freeze_super(sb);
-	ret = freeze_super(sb);
-
-(Not sure why we can do both here?)
-
-	deactivate_locked_super(sb);
-
-(Decrease ref; net change to s_active is zero)
-
-	return ret;
-
-Luis hasn't responded to my question, so I stopped.
-
-> > +	if (sbw->frozen == SB_FREEZE_COMPLETE) {
-> > +		switch (who) {
-> > +		case FREEZE_HOLDER_KERNEL:
-> > +			if (sbw->freeze_holders & FREEZE_HOLDER_KERNEL) {
-> > +				/*
-> > +				 * Kernel freeze already in effect; caller can
-> > +				 * try again.
-> > +				 */
-> > +				deactivate_locked_super(sb);
-> > +				return -EBUSY;
-> > +			}
-> > +			if (sbw->freeze_holders & FREEZE_HOLDER_USERSPACE) {
-> > +				/*
-> > +				 * Share the freeze state with the userspace
-> > +				 * freeze already in effect.
-> > +				 */
-> > +				sbw->freeze_holders |= who;
-> > +				deactivate_locked_super(sb);
-> > +				return 0;
-> > +			}
-> > +			break;
-> > +		case FREEZE_HOLDER_USERSPACE:
-> > +			if (sbw->freeze_holders & FREEZE_HOLDER_USERSPACE) {
-> > +				/*
-> > +				 * Userspace freeze already in effect; tell
-> > +				 * the caller we're busy.
-> > +				 */
-> > +				deactivate_locked_super(sb);
-> > +				return -EBUSY;
-> > +			}
-> > +			if (sbw->freeze_holders & FREEZE_HOLDER_KERNEL) {
-> > +				/*
-> > +				 * Share the freeze state with the kernel
-> > +				 * freeze already in effect.
-> > +				 */
-> > +				sbw->freeze_holders |= who;
-> > +				deactivate_locked_super(sb);
-> > +				return 0;
-> > +			}
-> > +			break;
-> > +		default:
-> > +			BUG();
-> > +			deactivate_locked_super(sb);
-> > +			return -EINVAL;
-> > +		}
-> > +	}
+>>
+>> I am trying to say that kernel generally has no concept of LUKS;
+>> this is a userspace abstraction for key management.
+>>
+>> Even the cryptsetup dm-crypt configuration mapping table generated from LUKS
+>> has nothing LUKS special in it (only in DM-UUID as a name prefix).
+>>
+>> So I do not understand why you need to mention LUKS even in kdump part.
+>> Perhaps it is still only a naming problem, nothing more.
+>>
+>> All you need is to preserve key and configuration parameters (for dm-crypt).
+>> If it is set by cryptsetup, dmsetup, or any other way is not important - on this
+>> kernel layer, it has nothing to do with LUKS key management metadata.
+>>
+>> No problem if you support only LUKS in userspace, but really, all this machinery
+>> should work for any dm-crypt devices. Perhaps your patch even works for it already.
 > 
-> Can't this be simplified to:
-> 
-> 	BUG_ON(who & ~(FREEZE_HOLDER_USERSPACE | FREEZE_HOLDER_KERNEL));
-> 	BUG_ON(!(!(who & FREEZE_HOLDER_USERSPACE) ^
-> 	       !(who & FREEZE_HOLDER_KERNEL)));
-> retry:
-> 	if (sb->s_writers.freeze_holders & who)
-> 		return -EBUSY;
-> 	/* Already frozen by someone else? */
-> 	if (sb->s_writers.freeze_holders & ~who) {
-> 		sb->s_writers.freeze_holders |= who;
-> 		return 0;
-> 	}
+> Thanks for the explanation! After reflecting on your words for some
+> time, I realize I had an implicit assumption. I assumed is if I use a
+> name like dm_crypt_key instead of luks_volume_key, I need to support all
+> mappings like plain, bitlocker, veracrypt as mentioned by you and this
+> could mean much more efforts. So I'm not motivated to do that as
+> currently users only request kdump to work for LUKS.
 
-Yes, it can.
+Thanks, I think it is perfectly fine to implement just subset here.
 
-> Now the only remaining issue with the code is that the two different
-> holders can be attempting to freeze the filesystem at once and in that case
-> one of them has to wait for the other one instead of returning -EBUSY as
-> would happen currently. This can happen because we temporarily drop
-> s_umount in freeze_super() due to lock ordering issues. I think we could
-> do something like:
-> 
-> 	if (!sb_unfrozen(sb)) {
-> 		up_write(&sb->s_umount);
-> 		wait_var_event(&sb->s_writers.frozen,
-> 			       sb_unfrozen(sb) || sb_frozen(sb));
-> 		down_write(&sb->s_umount);
-> 		goto retry;
-> 	}
-> 
-> and then sprinkle wake_up_var(&sb->s_writers.frozen) at appropriate places
-> in freeze_super().
+> But maybe I can divide the efforts into the kernel part and userspace
+> part. For the kernel part, almost no effort is needed since only
+> renaming is needed as pointed out by you. For the userpace part, maybe
+> it's OK to support preserving key only for LUKS2 in cryptsetup as hinted
+> by your last paragraph? Does it look good to you from the viewpoint of
+> the maintainer of cryptsetup?
 
-I think that'd work.  Let me try that.
+My comment was just about proper naming in kernel, it is of course up to you
+what you want to support in userspace (and even in kernel, extensions can
+be added later).
 
-> BTW, when reading this code, I've spotted attached cleanup opportunity but
-> I'll queue that separately so that is JFYI.
-> 
-> > +#define FREEZE_HOLDER_USERSPACE	(1U << 1)	/* userspace froze fs */
-> > +#define FREEZE_HOLDER_KERNEL	(1U << 2)	/* kernel froze fs */
-> 
-> Why not start from 1U << 0? And bonus points for using BIT() macro :).
+Only LUKS2 uses keyring for volume key in dm-crypt as default option anyway.
+I do not think you need any cryptsetup patches, all you need is to write
+decrypted volume key from LUKS metadata with
+   cryptsetup luksDump ---dump-volume-key -volume-key-file <out> <device>
+(or any code equivalent with libcryptsetup), am I correct?
 
-I didn't think filesystem code was supposed to be using stuff from
-vdso.h...
-
---D
-
-> 								Honza
-> -- 
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
-
-> From 9fce35f21f9a62470e764463c84373fb013108fd Mon Sep 17 00:00:00 2001
-> From: Jan Kara <jack@suse.cz>
-> Date: Thu, 25 May 2023 15:56:19 +0200
-> Subject: [PATCH] fs: Drop wait_unfrozen wait queue
-> 
-> wait_unfrozen waitqueue is used only in quota code to wait for
-> filesystem to become unfrozen. In that place we can just use
-> sb_start_write() - sb_end_write() pair to achieve the same. So just
-> remove the waitqueue.
-> 
-> Signed-off-by: Jan Kara <jack@suse.cz>
-> ---
->  fs/quota/quota.c   | 5 +++--
->  fs/super.c         | 4 ----
->  include/linux/fs.h | 1 -
->  3 files changed, 3 insertions(+), 7 deletions(-)
-> 
-> diff --git a/fs/quota/quota.c b/fs/quota/quota.c
-> index 052f143e2e0e..0e41fb84060f 100644
-> --- a/fs/quota/quota.c
-> +++ b/fs/quota/quota.c
-> @@ -895,8 +895,9 @@ static struct super_block *quotactl_block(const char __user *special, int cmd)
->  			up_write(&sb->s_umount);
->  		else
->  			up_read(&sb->s_umount);
-> -		wait_event(sb->s_writers.wait_unfrozen,
-> -			   sb->s_writers.frozen == SB_UNFROZEN);
-> +		/* Wait for sb to unfreeze */
-> +		sb_start_write(sb);
-> +		sb_end_write(sb);
->  		put_super(sb);
->  		goto retry;
->  	}
-> diff --git a/fs/super.c b/fs/super.c
-> index 34afe411cf2b..6283cea67280 100644
-> --- a/fs/super.c
-> +++ b/fs/super.c
-> @@ -236,7 +236,6 @@ static struct super_block *alloc_super(struct file_system_type *type, int flags,
->  					&type->s_writers_key[i]))
->  			goto fail;
->  	}
-> -	init_waitqueue_head(&s->s_writers.wait_unfrozen);
->  	s->s_bdi = &noop_backing_dev_info;
->  	s->s_flags = flags;
->  	if (s->s_user_ns != &init_user_ns)
-> @@ -1706,7 +1705,6 @@ int freeze_super(struct super_block *sb)
->  	if (ret) {
->  		sb->s_writers.frozen = SB_UNFROZEN;
->  		sb_freeze_unlock(sb, SB_FREEZE_PAGEFAULT);
-> -		wake_up(&sb->s_writers.wait_unfrozen);
->  		deactivate_locked_super(sb);
->  		return ret;
->  	}
-> @@ -1722,7 +1720,6 @@ int freeze_super(struct super_block *sb)
->  				"VFS:Filesystem freeze failed\n");
->  			sb->s_writers.frozen = SB_UNFROZEN;
->  			sb_freeze_unlock(sb, SB_FREEZE_FS);
-> -			wake_up(&sb->s_writers.wait_unfrozen);
->  			deactivate_locked_super(sb);
->  			return ret;
->  		}
-> @@ -1768,7 +1765,6 @@ static int thaw_super_locked(struct super_block *sb)
->  	sb->s_writers.frozen = SB_UNFROZEN;
->  	sb_freeze_unlock(sb, SB_FREEZE_FS);
->  out:
-> -	wake_up(&sb->s_writers.wait_unfrozen);
->  	deactivate_locked_super(sb);
->  	return 0;
->  }
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 21a981680856..3b65a6194485 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -1146,7 +1146,6 @@ enum {
->  
->  struct sb_writers {
->  	int				frozen;		/* Is sb frozen? */
-> -	wait_queue_head_t		wait_unfrozen;	/* wait for thaw */
->  	struct percpu_rw_semaphore	rw_sem[SB_FREEZE_LEVELS];
->  };
->  
-> -- 
-> 2.35.3
-> 
-
+Milan
 
 _______________________________________________
 kexec mailing list
