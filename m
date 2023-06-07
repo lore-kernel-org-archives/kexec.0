@@ -4,70 +4,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A14E3C83003
-	for <kexec@archiver.kernel.org>; Wed,  7 Jun 2023 16:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2528EC7EE23
+	for <kexec@archiver.kernel.org>; Wed,  7 Jun 2023 18:43:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=8O/w5D7ehPBpTOagW37B8r437kNASwFslPSYl291XRw=; b=dGXpXSxSdxZm/q
-	ZKgWAK5grb2o9DIQLDpkxtvHHQT5j8JUqchZrOXjupBSJOXJWANdOtrQ5h5MelaXuaym1VKmtrdtN
-	qQ2jZm+M26RyJHJcYnKM1PEqNJ/Nf5OJf5I0AVrxtneS+NYh/CR7fauLoDMd2r7liO51zk1LIVeIB
-	MjpoA6+Jzn2jhwKxQaOMap+Nivt3/3jZginy5x8+0INASm+zn0SV1w5igBp48bcs8u3Kkdfb2dEz5
-	xsf3Besh2UZ//PBMEp1458LPUM3cp3Fo7mj4xEHW7aFM30A5ncyy+Ko0oLKf9AHD4faJAv70VU1Vm
-	ai6v90C1Oed1HkdtBoIQ==;
+	List-Owner; bh=/UcV5Xk+PaZWXix2r9rd4mP+rkgaFBtQKe5wxpSi6Lg=; b=yh4MCfNV8lz3zk
+	BK4+X2VgkmazpEf82EuvuBUnHGm4vXGGyMNy6VcxZWpReumlzzeH1342jKBUAGbU0q/2F2wjm3eEA
+	TVIT+zAk0BGR7MxAkt7CiA3pzkas0adyeidAxuHsAyS5T4ZQHSeLknyX7CnUnRYfUYB6sb9bRZgqQ
+	SHwt9R/A9sMwBS33I/BkCkGKH7+CQB/owBPjpc8uDH2H3cB+EXxgmPcCNd+C4SsMe+qCqwn4zEZsS
+	WZbaRybpwMQWjH6fu9KJ8Cd+UDI7IuvqKJHPMi+cyNTRqcH3BdukKC3xt22WVujuJR94f0Xhuko18
+	Oh+YO2CAcqaB6KmePtuA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1q6w45-006YZf-0q;
-	Wed, 07 Jun 2023 16:31:17 +0000
-Received: from dfw.source.kernel.org ([139.178.84.217])
+	id 1q6y7p-006sif-2u;
+	Wed, 07 Jun 2023 18:43:17 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1q6w40-006YXn-1k
+	id 1q6y7m-006sgp-24
 	for kexec@lists.infradead.org;
-	Wed, 07 Jun 2023 16:31:14 +0000
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id E1B2663851;
-	Wed,  7 Jun 2023 16:31:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D62CC433EF;
-	Wed,  7 Jun 2023 16:31:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1686155471;
-	bh=2YlrGYG6oL8aUFEc0R5TBETCnF42HZcZntfhdvsfVE4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cGZbYSuBwt6lNJwZKyujyAHodC6dST3Wg/X3mxtTgFlkJfwXZOdmoKirYzWC0zOTp
-	 kysOiQVnjGkD9EPxcXZDpFgDhqyL7x0S010LWLtI7Q+QuDkA8kTMgEkMSLHfUXjyWZ
-	 lzKZqcCEVlqTO0F+CBsHaEuMiLh23XkOI4zn/aaPlWTrfEjeHq1WCvaccqf2/ye6zZ
-	 1j286Rd05BltKECE6ZJjaHPVLolrgpBQ/lNlTIRTFcYLomLFByueJtyfQJ8Jree5eD
-	 SX58tXzfx4RFsoxJTN1o9FsLSNslZCKzBwsdFNO7BO83+mnVbWxkVNTPx3pPtQyfuO
-	 MU754YXAv5xCQ==
-Date: Wed, 7 Jun 2023 09:31:10 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Jan Kara <jack@suse.cz>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, hch@infradead.org,
-	sandeen@sandeen.net, song@kernel.org, rafael@kernel.org,
-	gregkh@linuxfoundation.org, viro@zeniv.linux.org.uk,
-	jikos@kernel.org, bvanassche@acm.org, ebiederm@xmission.com,
-	mchehab@kernel.org, keescook@chromium.org, p.raghav@samsung.com,
-	da.gomez@samsung.com, linux-fsdevel@vger.kernel.org,
-	kernel@tuxforce.de, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/6] fs: distinguish between user initiated freeze and
- kernel initiated freeze
-Message-ID: <20230607163110.GC72224@frogsfrogsfrogs>
-References: <20230508011717.4034511-1-mcgrof@kernel.org>
- <20230508011717.4034511-4-mcgrof@kernel.org>
- <20230522234200.GC11598@frogsfrogsfrogs>
- <20230525141430.slms7f2xkmesezy5@quack3>
+	Wed, 07 Jun 2023 18:43:16 +0000
+Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 357IHb0D020648;
+	Wed, 7 Jun 2023 18:42:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=2bXPJh0M9CyvA8ONrgYdPv6D9q8iWZ5CObDcZOjqHEs=;
+ b=P4/ywpaI/3xC6Ldeh76UnqTq5j8IaQlIJm7129W6n0FNQsvS9iKIbyPq5Z3LoBVSIK35
+ O3WYMaozwlr49HQgaKeL91XwvEdEvsCxT3WSV823yqiuGx4JplNe1SIFe2U4rEUwEg4E
+ 2PqlUSih79Baf4n8SIymiFAZCpwF/rPBxIVOLLl3XP68oWvQXFR78PBFe2cMmcFIu5gF
+ SMm0+5qZ9dFCfSAiJoMNlzPPo65r09reFueffV2FPnCh2GUJ/LOSfbe4QjH90/2EQM/B
+ 4rLSRc7oVnuIWzN7xKrJYHeLR4N2+7X2S/L2LplQx7F1oMuHuhmkH+aVOuis1zuLhcWU Dg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3r2y1q8fmg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 07 Jun 2023 18:42:54 +0000
+Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 357IZPuO017904;
+	Wed, 7 Jun 2023 18:42:53 GMT
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3r2y1q8fmc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 07 Jun 2023 18:42:53 +0000
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+	by ppma04dal.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 357GjwH2002032;
+	Wed, 7 Jun 2023 18:42:52 GMT
+Received: from smtprelay03.wdc07v.mail.ibm.com ([9.208.129.113])
+	by ppma04dal.us.ibm.com (PPS) with ESMTPS id 3r2a767rkn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 07 Jun 2023 18:42:52 +0000
+Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
+	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 357Igokc57082278
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 7 Jun 2023 18:42:50 GMT
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C823858054;
+	Wed,  7 Jun 2023 18:42:50 +0000 (GMT)
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 922855805D;
+	Wed,  7 Jun 2023 18:42:49 +0000 (GMT)
+Received: from [9.47.158.152] (unknown [9.47.158.152])
+	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  7 Jun 2023 18:42:49 +0000 (GMT)
+Message-ID: <dcc8f01e-0971-e826-3a48-ea0c1f2381ae@linux.ibm.com>
+Date: Wed, 7 Jun 2023 14:42:49 -0400
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20230525141430.slms7f2xkmesezy5@quack3>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: need help: patches to capture events between kexec load and
+ execute
+Content-Language: en-US
+To: Mimi Zohar <zohar@linux.ibm.com>,
+        Tushar Sugandhi <tusharsu@linux.microsoft.com>,
+        Jonathan McDowell <noodles@fb.com>, bauermann@kolabnow.com
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        Alasdair G Kergon <agk@redhat.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Tyler Hicks <tyhicks@linux.microsoft.com>, code@tyhicks.com
+References: <c33ba2f1-bacd-54dd-90d7-b0ab82568fff@linux.microsoft.com>
+ <Yp24dc/i8XU9A+5/@noodles-fedora.dhcp.thefacebook.com>
+ <87775c1e-d1d3-519c-599b-30cdb1691cb2@linux.microsoft.com>
+ <4eff26f794254c1f06ace12e68527fd3452ac47d.camel@linux.ibm.com>
+ <41270374-dc5e-3aa2-d2ed-9b8fc73ad65f@linux.microsoft.com>
+ <8308a411a50a1168aa5a1a0d70138b29cea73914.camel@linux.ibm.com>
+ <3748147f-85f5-4aeb-0083-cbeef375e12a@linux.ibm.com>
+ <91dd069c090522be1e3369e83520d3813336b5bf.camel@linux.ibm.com>
+From: Stefan Berger <stefanb@linux.ibm.com>
+In-Reply-To: <91dd069c090522be1e3369e83520d3813336b5bf.camel@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: shzeJ4WtPfeBeBMkzgKXUidhw8QwnNAt
+X-Proofpoint-ORIG-GUID: kjhksj5oLYRBnX6-cPoUe3wN5gufu-52
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-06-07_09,2023-06-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 spamscore=0 suspectscore=0 clxscore=1015 adultscore=0
+ bulkscore=0 impostorscore=0 mlxscore=0 mlxlogscore=999 malwarescore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2306070160
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230607_093112_659853_E7DE86AD 
-X-CRM114-Status: GOOD (  54.16  )
+X-CRM114-CacheID: sfid-20230607_114314_889310_82866176 
+X-CRM114-Status: GOOD (  29.73  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,245 +120,68 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, May 25, 2023 at 04:14:30PM +0200, Jan Kara wrote:
-> On Mon 22-05-23 16:42:00, Darrick J. Wong wrote:
-> > How about this as an alternative patch?  Kernel and userspace freeze
-> > state are stored in s_writers; each type cannot block the other (though
-> > you still can't have nested kernel or userspace freezes); and the freeze
-> > is maintained until /both/ freeze types are dropped.
-> > 
-> > AFAICT this should work for the two other usecases (quiescing pagefaults
-> > for fsdax pmem pre-removal; and freezing fses during suspend) besides
-> > online fsck for xfs.
-> > 
-> > --D
-> > 
-> > From: Darrick J. Wong <djwong@kernel.org>
-> > Subject: fs: distinguish between user initiated freeze and kernel initiated freeze
-> > 
-> > Userspace can freeze a filesystem using the FIFREEZE ioctl or by
-> > suspending the block device; this state persists until userspace thaws
-> > the filesystem with the FITHAW ioctl or resuming the block device.
-> > Since commit 18e9e5104fcd ("Introduce freeze_super and thaw_super for
-> > the fsfreeze ioctl") we only allow the first freeze command to succeed.
-> > 
-> > The kernel may decide that it is necessary to freeze a filesystem for
-> > its own internal purposes, such as suspends in progress, filesystem fsck
-> > activities, or quiescing a device prior to removal.  Userspace thaw
-> > commands must never break a kernel freeze, and kernel thaw commands
-> > shouldn't undo userspace's freeze command.
-> > 
-> > Introduce a couple of freeze holder flags and wire it into the
-> > sb_writers state.  One kernel and one userspace freeze are allowed to
-> > coexist at the same time; the filesystem will not thaw until both are
-> > lifted.
-> > 
-> > Inspired-by: Luis Chamberlain <mcgrof@kernel.org>
-> > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-> 
-> Yes, this is exactly how I'd imagine it. Thanks for writing the patch!
-> 
-> I'd just note that this would need rebasing on top of Luis' patches 1 and
-> 2. Also:
-> 
-> > +	if (sbw->frozen == SB_FREEZE_COMPLETE) {
-> > +		switch (who) {
-> > +		case FREEZE_HOLDER_KERNEL:
-> > +			if (sbw->freeze_holders & FREEZE_HOLDER_KERNEL) {
-> > +				/*
-> > +				 * Kernel freeze already in effect; caller can
-> > +				 * try again.
-> > +				 */
-> > +				deactivate_locked_super(sb);
-> > +				return -EBUSY;
-> > +			}
-> > +			if (sbw->freeze_holders & FREEZE_HOLDER_USERSPACE) {
-> > +				/*
-> > +				 * Share the freeze state with the userspace
-> > +				 * freeze already in effect.
-> > +				 */
-> > +				sbw->freeze_holders |= who;
-> > +				deactivate_locked_super(sb);
-> > +				return 0;
-> > +			}
-> > +			break;
-> > +		case FREEZE_HOLDER_USERSPACE:
-> > +			if (sbw->freeze_holders & FREEZE_HOLDER_USERSPACE) {
-> > +				/*
-> > +				 * Userspace freeze already in effect; tell
-> > +				 * the caller we're busy.
-> > +				 */
-> > +				deactivate_locked_super(sb);
-> > +				return -EBUSY;
-> > +			}
-> > +			if (sbw->freeze_holders & FREEZE_HOLDER_KERNEL) {
-> > +				/*
-> > +				 * Share the freeze state with the kernel
-> > +				 * freeze already in effect.
-> > +				 */
-> > +				sbw->freeze_holders |= who;
-> > +				deactivate_locked_super(sb);
-> > +				return 0;
-> > +			}
-> > +			break;
-> > +		default:
-> > +			BUG();
-> > +			deactivate_locked_super(sb);
-> > +			return -EINVAL;
-> > +		}
-> > +	}
-> 
-> Can't this be simplified to:
-> 
-> 	BUG_ON(who & ~(FREEZE_HOLDER_USERSPACE | FREEZE_HOLDER_KERNEL));
-> 	BUG_ON(!(!(who & FREEZE_HOLDER_USERSPACE) ^
-> 	       !(who & FREEZE_HOLDER_KERNEL)));
-> retry:
-> 	if (sb->s_writers.freeze_holders & who)
-> 		return -EBUSY;
-> 	/* Already frozen by someone else? */
-> 	if (sb->s_writers.freeze_holders & ~who) {
-> 		sb->s_writers.freeze_holders |= who;
-> 		return 0;
-> 	}
-> 
-> Now the only remaining issue with the code is that the two different
-> holders can be attempting to freeze the filesystem at once and in that case
-> one of them has to wait for the other one instead of returning -EBUSY as
-> would happen currently. This can happen because we temporarily drop
-> s_umount in freeze_super() due to lock ordering issues. I think we could
-> do something like:
-> 
-> 	if (!sb_unfrozen(sb)) {
-> 		up_write(&sb->s_umount);
-> 		wait_var_event(&sb->s_writers.frozen,
-> 			       sb_unfrozen(sb) || sb_frozen(sb));
-> 		down_write(&sb->s_umount);
-> 		goto retry;
-> 	}
-> 
-> and then sprinkle wake_up_var(&sb->s_writers.frozen) at appropriate places
-> in freeze_super().
 
-If we implemented this behavior change, it ought to be a separate patch.
 
-For the case where the kernel is freezing the fs and userspace wants to
-start freezing the fs, we could make userspace wait and then share the
-kernel freeze.
-
-For any case where the fs is !unfrozen and the kernel wants to start
-freezing the fs, I think I'd rather return EBUSY immediately and let the
-caller decide to wait and/or call back.
-
-For the case where one userspace thread is freezing the fs and another
-userspace thread wants to start freezing the fs, I think the current
-behavior of returning EBUSY immediately is ok.
-
---D
-
-> BTW, when reading this code, I've spotted attached cleanup opportunity but
-> I'll queue that separately so that is JFYI.
+On 6/6/23 11:59, Mimi Zohar wrote:
+> On Tue, 2023-06-06 at 11:37 -0400, Stefan Berger wrote:
+>>
+>> On 5/31/23 18:43, Mimi Zohar wrote:
+>>> On Wed, 2023-05-31 at 15:02 -0700, Tushar Sugandhi wrote:
+>>>> Hi Mimi,
+>>>>
+>>>> On 5/31/23 04:39, Mimi Zohar wrote:
+>>>>> Hi Tushar,
+>>>>>
+>>>>> On Thu, 2023-05-25 at 10:21 -0700, Tushar Sugandhi wrote:
+>>>>>
+>>>>>> The issue of IMA measurements getting lost between kexec 'load' and 'execute' still exists.
+>>>>>> I verified it on the mainline kernel 6.4.rc3. See *Appendix A* for details.
+>>
+>> I think there's a 2nd problem.  Once the IMA measurement list is frozen (at kexec 'exec' stage)
+>> IMA must stop extending PCRs. It can log (into the void) if it wanted to but the PCR extensions
+>> have to stop otherwise the TPM's PCR state won't match the log in the kexec'ed-to kernel. I have
+>> seen that on PPC64 some processes are being kicked off by kexec 'exec' that end up causing TPM
+>> driver error message due to what seems to be a shutdown of the driver subsystem at this point.
+>> I am not sure what an elegant method would be to stop PCR extensions. Maybe a flag on the level
+>> of IMA would do? Or notifying the TPM driver to reject PCR extensions or just any command?
 > 
-> > +#define FREEZE_HOLDER_USERSPACE	(1U << 1)	/* userspace froze fs */
-> > +#define FREEZE_HOLDER_KERNEL	(1U << 2)	/* kernel froze fs */
+> Thank you for raising this concern.
 > 
-> Why not start from 1U << 0? And bonus points for using BIT() macro :).
-> 
-> 								Honza
-> -- 
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
-
-> From 9fce35f21f9a62470e764463c84373fb013108fd Mon Sep 17 00:00:00 2001
-> From: Jan Kara <jack@suse.cz>
-> Date: Thu, 25 May 2023 15:56:19 +0200
-> Subject: [PATCH] fs: Drop wait_unfrozen wait queue
-> 
-> wait_unfrozen waitqueue is used only in quota code to wait for
-> filesystem to become unfrozen. In that place we can just use
-> sb_start_write() - sb_end_write() pair to achieve the same. So just
-> remove the waitqueue.
-> 
-> Signed-off-by: Jan Kara <jack@suse.cz>
-> ---
->  fs/quota/quota.c   | 5 +++--
->  fs/super.c         | 4 ----
->  include/linux/fs.h | 1 -
->  3 files changed, 3 insertions(+), 7 deletions(-)
-> 
-> diff --git a/fs/quota/quota.c b/fs/quota/quota.c
-> index 052f143e2e0e..0e41fb84060f 100644
-> --- a/fs/quota/quota.c
-> +++ b/fs/quota/quota.c
-> @@ -895,8 +895,9 @@ static struct super_block *quotactl_block(const char __user *special, int cmd)
->  			up_write(&sb->s_umount);
->  		else
->  			up_read(&sb->s_umount);
-> -		wait_event(sb->s_writers.wait_unfrozen,
-> -			   sb->s_writers.frozen == SB_UNFROZEN);
-> +		/* Wait for sb to unfreeze */
-> +		sb_start_write(sb);
-> +		sb_end_write(sb);
->  		put_super(sb);
->  		goto retry;
->  	}
-> diff --git a/fs/super.c b/fs/super.c
-> index 34afe411cf2b..6283cea67280 100644
-> --- a/fs/super.c
-> +++ b/fs/super.c
-> @@ -236,7 +236,6 @@ static struct super_block *alloc_super(struct file_system_type *type, int flags,
->  					&type->s_writers_key[i]))
->  			goto fail;
->  	}
-> -	init_waitqueue_head(&s->s_writers.wait_unfrozen);
->  	s->s_bdi = &noop_backing_dev_info;
->  	s->s_flags = flags;
->  	if (s->s_user_ns != &init_user_ns)
-> @@ -1706,7 +1705,6 @@ int freeze_super(struct super_block *sb)
->  	if (ret) {
->  		sb->s_writers.frozen = SB_UNFROZEN;
->  		sb_freeze_unlock(sb, SB_FREEZE_PAGEFAULT);
-> -		wake_up(&sb->s_writers.wait_unfrozen);
->  		deactivate_locked_super(sb);
->  		return ret;
->  	}
-> @@ -1722,7 +1720,6 @@ int freeze_super(struct super_block *sb)
->  				"VFS:Filesystem freeze failed\n");
->  			sb->s_writers.frozen = SB_UNFROZEN;
->  			sb_freeze_unlock(sb, SB_FREEZE_FS);
-> -			wake_up(&sb->s_writers.wait_unfrozen);
->  			deactivate_locked_super(sb);
->  			return ret;
->  		}
-> @@ -1768,7 +1765,6 @@ static int thaw_super_locked(struct super_block *sb)
->  	sb->s_writers.frozen = SB_UNFROZEN;
->  	sb_freeze_unlock(sb, SB_FREEZE_FS);
->  out:
-> -	wake_up(&sb->s_writers.wait_unfrozen);
->  	deactivate_locked_super(sb);
->  	return 0;
->  }
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 21a981680856..3b65a6194485 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -1146,7 +1146,6 @@ enum {
->  
->  struct sb_writers {
->  	int				frozen;		/* Is sb frozen? */
-> -	wait_queue_head_t		wait_unfrozen;	/* wait for thaw */
->  	struct percpu_rw_semaphore	rw_sem[SB_FREEZE_LEVELS];
->  };
->  
-> -- 
-> 2.35.3
+> Agreed "kexec exec" might trigger additional measurements.  As long as
+> these are known, consistent measurements, they could be pre-measured
+> before calling "kexec exec".
 > 
 
+Tushar, Mimi,
+
+   I tried this now on ppc64 and with the following patch applied on top of yours it seems to work.
+Also the problem with the TPM PCR extensions seems to be gone with your changes to
+ima_add_template_entry()  -- it's probably worth mentioning this in the patch description.
+
+phys_to_page doesn't seem to be generally available, so hopefully this will be a solution for more architectures.
+[I haven't tested this on x86_64 since I couldn't get kexec to work just to begin with in any of my VMs.]
+
+Regards,
+    Stefan
+
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index f0bbdd403b6c..30ab7f81b508 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -966,7 +966,7 @@ void *kimage_map_segment(struct kimage *image,
+                 else if (entry & IND_SOURCE) {
+                         if (dest_page_addr >= addr && dest_page_addr < eaddr) {
+                                 src_page_addr = entry & PAGE_MASK;
+-                               src_pages[i++] = phys_to_page(src_page_addr);
++                               src_pages[i++] = virt_to_page(__va(src_page_addr));
+                                 if (i == npages)
+                                         break;
+                                 dest_page_addr += PAGE_SIZE;
 
 _______________________________________________
 kexec mailing list
