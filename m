@@ -4,44 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6218BC7EE25
-	for <kexec@archiver.kernel.org>; Thu,  8 Jun 2023 05:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 90304C7EE2E
+	for <kexec@archiver.kernel.org>; Thu,  8 Jun 2023 05:24:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=Z2bsZNgVE/LZkrlr9kOnKvp90ExK8mFQCD7M9fr2DOg=; b=ErwzQBiwGRL7WK
-	trsB+TwP2bGt7UhR4E/hqztwUKpX7vAqsW+V0OirzQI+/0WFhyE4eDVYBcevh/saNFUJ3tvUKeMrF
-	VzQvP0AG+GwT+Y4QkjnXdzvhlvQAXsNZcj2P4w01vXYr9Pg397GFzKuS+QrmLbghN8zjk7I7orpgZ
-	ZiT2zkJXU6z9J9pRv4MV9rQQz1Q4RDvdBtIBU5IT0fZesoq12rK2JeuVJrAfOkmgbP5bVxOCCvkyT
-	xQV6lXZ2B59obMTe17es2yJU9XgOSrK8H9LH4RxtZu/XW6h/Z1qqqsk0v5Ut0/vyjr6qqVA+Wv5MX
-	OeK8JOl5TwmabA+Q8zSA==;
+	List-Owner; bh=38teWTlm3uhVMN8/icCJtKiH5L9DcnVz8tgAaQiw09I=; b=teF38K6fTyRAT9
+	zSCOg1baA9yCWcvK3zjPlfkVJcNIDXhs8dLvuopwMjy5qqklOaA7lGm+Kpxu8bk2dPxMiMn4gD/Wz
+	5FvV4Ouea/in8f/lH+xJPPbgBd/0UTjljYu8DuhWmmJotSnVD8LVDjGkugnXlBtqnp9Cu7zr702YN
+	WhxpZOzrmfkTNb5vYIoJHnomZSKb2t3/fmKdNWqsdA9pl0ObIvcyfiyLVmoxPub9ia8TaXUIVH/I2
+	3i46POwINrYdk6jrJJ9fOFElr3UkygUDVrWhYknopxukKfPUgSRwMdrO67tq7MupXnQa1ityvm4+X
+	9yDajl+ONcgy+4ChGMMw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1q77qG-008794-2K;
-	Thu, 08 Jun 2023 05:05:48 +0000
+	id 1q788Q-0088oY-1V;
+	Thu, 08 Jun 2023 05:24:34 +0000
 Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1q77qE-00878e-2Q;
-	Thu, 08 Jun 2023 05:05:46 +0000
-Date: Wed, 7 Jun 2023 22:05:46 -0700
+	id 1q788P-0088oB-08;
+	Thu, 08 Jun 2023 05:24:33 +0000
+Date: Wed, 7 Jun 2023 22:24:32 -0700
 From: Christoph Hellwig <hch@infradead.org>
-To: Luis Chamberlain <mcgrof@kernel.org>
-Cc: hch@infradead.org, djwong@kernel.org, sandeen@sandeen.net,
-	song@kernel.org, rafael@kernel.org, gregkh@linuxfoundation.org,
-	viro@zeniv.linux.org.uk, jack@suse.cz, jikos@kernel.org,
-	bvanassche@acm.org, ebiederm@xmission.com, mchehab@kernel.org,
-	keescook@chromium.org, p.raghav@samsung.com, da.gomez@samsung.com,
-	linux-fsdevel@vger.kernel.org, kernel@tuxforce.de,
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/6] fs: add frozen sb state helpers
-Message-ID: <ZIFhqk6VElD6qXBU@infradead.org>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, hch@infradead.org,
+	sandeen@sandeen.net, song@kernel.org, rafael@kernel.org,
+	gregkh@linuxfoundation.org, viro@zeniv.linux.org.uk, jack@suse.cz,
+	jikos@kernel.org, bvanassche@acm.org, ebiederm@xmission.com,
+	mchehab@kernel.org, keescook@chromium.org, p.raghav@samsung.com,
+	da.gomez@samsung.com, linux-fsdevel@vger.kernel.org,
+	kernel@tuxforce.de, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/6] fs: distinguish between user initiated freeze and
+ kernel initiated freeze
+Message-ID: <ZIFmEGdJ4CCbS1B3@infradead.org>
 References: <20230508011717.4034511-1-mcgrof@kernel.org>
- <20230508011717.4034511-3-mcgrof@kernel.org>
+ <20230508011717.4034511-4-mcgrof@kernel.org>
+ <20230522234200.GC11598@frogsfrogsfrogs>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20230508011717.4034511-3-mcgrof@kernel.org>
+In-Reply-To: <20230522234200.GC11598@frogsfrogsfrogs>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -58,14 +61,138 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sun, May 07, 2023 at 06:17:13PM -0700, Luis Chamberlain wrote:
-> Provide helpers so that we can check a superblock frozen state.
-> This will make subsequent changes easier to read. This makes
-> no functional changes.
+On Mon, May 22, 2023 at 04:42:00PM -0700, Darrick J. Wong wrote:
+> How about this as an alternative patch?  Kernel and userspace freeze
+> state are stored in s_writers; each type cannot block the other (though
+> you still can't have nested kernel or userspace freezes); and the freeze
+> is maintained until /both/ freeze types are dropped.
+> 
+> AFAICT this should work for the two other usecases (quiescing pagefaults
+> for fsdax pmem pre-removal; and freezing fses during suspend) besides
+> online fsck for xfs.
 
-I'll look at the further changes, but having frozen/unfrozen helpers
-that sound binary while we have 4 shades of gray seems rather confusing
-to me.
+I think this is fundamentally the right thing.  Can you send this as
+a standalone thread in a separate thread to make it sure it gets
+expedited?
+
+> -static int thaw_super_locked(struct super_block *sb);
+> +static int thaw_super_locked(struct super_block *sb, unsigned short who);
+
+Is the unsigned short really worth it?  Even if it's just two values
+I'd also go for a __bitwise type to get the typechecking as that tends
+to help a lot goind down the road.
+
+>  /**
+> - * freeze_super - lock the filesystem and force it into a consistent state
+> + * __freeze_super - lock the filesystem and force it into a consistent state
+>   * @sb: the super to lock
+> + * @who: FREEZE_HOLDER_USERSPACE if userspace wants to freeze the fs;
+> + * FREEZE_HOLDER_KERNEL if the kernel wants to freeze it
+>   *
+>   * Syncs the super to make sure the filesystem is consistent and calls the fs's
+> - * freeze_fs.  Subsequent calls to this without first thawing the fs will return
+> + * freeze_fs.  Subsequent calls to this without first thawing the fs may return
+>   * -EBUSY.
+>   *
+> + * The @who argument distinguishes between the kernel and userspace trying to
+> + * freeze the filesystem.  Although there cannot be multiple kernel freezes or
+> + * multiple userspace freezes in effect at any given time, the kernel and
+> + * userspace can both hold a filesystem frozen.  The filesystem remains frozen
+> + * until there are no kernel or userspace freezes in effect.
+> + *
+>   * During this function, sb->s_writers.frozen goes through these values:
+>   *
+>   * SB_UNFROZEN: File system is normal, all writes progress as usual.
+> @@ -1668,12 +1676,61 @@ static void sb_freeze_unlock(struct super_block *sb, int level)
+>   *
+>   * sb->s_writers.frozen is protected by sb->s_umount.
+>   */
+
+There's really no point in having a kerneldoc for a static function.
+Either this moves to the actual exported functions, or it should
+become a normal non-kerneldoc comment.  But I'm not even sre this split
+makes much sense to start with.  I'd just add a the who argument
+to freeze_super given that we have only very few callers anyway,
+and it is way easier to follow than thse rappers hardoding the argument.
+
+> +static int __freeze_super(struct super_block *sb, unsigned short who)
+>  {
+> +	struct sb_writers *sbw = &sb->s_writers;
+>  	int ret;
+>  
+>  	atomic_inc(&sb->s_active);
+>  	down_write(&sb->s_umount);
+> +
+> +	if (sbw->frozen == SB_FREEZE_COMPLETE) {
+> +		switch (who) {
+
+Nit, but maybe split evetything inside this branch into a
+freeze_frozen_super helper?
+
+> +static int thaw_super_locked(struct super_block *sb, unsigned short who)
+> +{
+> +	struct sb_writers *sbw = &sb->s_writers;
+>  	int error;
+>  
+> +	if (sbw->frozen == SB_FREEZE_COMPLETE) {
+> +		switch (who) {
+> +		case FREEZE_HOLDER_KERNEL:
+> +			if (!(sbw->freeze_holders & FREEZE_HOLDER_KERNEL)) {
+> +				/* Caller doesn't hold a kernel freeze. */
+> +				up_write(&sb->s_umount);
+> +				return -EINVAL;
+> +			}
+> +			if (sbw->freeze_holders & FREEZE_HOLDER_USERSPACE) {
+> +				/*
+> +				 * We were sharing the freeze with userspace,
+> +				 * so drop the userspace freeze but exit
+> +				 * without unfreezing.
+> +				 */
+> +				sbw->freeze_holders &= ~who;
+> +				up_write(&sb->s_umount);
+> +				return 0;
+> +			}
+> +			break;
+> +		case FREEZE_HOLDER_USERSPACE:
+> +			if (!(sbw->freeze_holders & FREEZE_HOLDER_USERSPACE)) {
+> +				/* Caller doesn't hold a userspace freeze. */
+> +				up_write(&sb->s_umount);
+> +				return -EINVAL;
+> +			}
+> +			if (sbw->freeze_holders & FREEZE_HOLDER_KERNEL) {
+> +				/*
+> +				 * We were sharing the freeze with the kernel,
+> +				 * so drop the kernel freeze but exit without
+> +				 * unfreezing.
+> +				 */
+> +				sbw->freeze_holders &= ~who;
+> +				up_write(&sb->s_umount);
+> +				return 0;
+> +			}
+> +			break;
+> +		default:
+> +			BUG();
+> +			up_write(&sb->s_umount);
+> +			return -EINVAL;
+> +		}
+
+To me this screams for another 'is_partial_thaw' or so helper, whith
+which we could doe something like:
+
+	if (sbw->frozen != SB_FREEZE_COMPLETE) {
+		ret = -EINVAL;
+		goto out_unlock;
+	}
+	ret = is_partial_thaw(sb, who);
+	if (ret) {
+		if (ret == 1) {
+			sbw->freeze_holders &= ~who;
+			ret = 0
+		}
+		goto out_unlock;
+	}
+
+Btw, same comment about the wrappers as on the freeze side.
 
 
 _______________________________________________
