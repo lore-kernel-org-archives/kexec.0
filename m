@@ -4,187 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 17030C7EE25
-	for <kexec@archiver.kernel.org>; Fri,  9 Jun 2023 01:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C8054C7EE2E
+	for <kexec@archiver.kernel.org>; Fri,  9 Jun 2023 10:01:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-ID:In-Reply-To:
-	References:Message-ID:Date:Subject:CC:To:From:Reply-To:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=b+iqCQT4EA2dIg87/ZUV3SFLXyuE9p7BoWRQ+3V/+q0=; b=e+eRZ6r+3OvE1k
-	zUPPhzgnmdRAtgg6Es53i+6L+IHKqshLImdduf4AGF8Ew0tE9oTIFXHxvejyrwhvnPX/TXNhpUdav
-	KBpibgoZZf+L44H8CBeTQ1/HbGBHe6r7b6jIfWt3cCsC9UKxPNjR9l4ufj6PxJBO4bsPxlgxK4Tdz
-	DchGugHNFmBiBQjP5uZyQvWR6qY4OUPycuymLbpi/R/YHxSEo8rbqPtRB8aPPxIQo4mLZA7S+a/CS
-	QYi/fe6pfZF3b+0jqXtCA6Gdp6DY7/VkV/+Osxb4K1G6X/42hbOOVLKCrZr/Y9iJGF+koxcO4i5+V
-	ncsthh2cY5atjCM6QBuA==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=tIFE2+G39THtMxdBugu8F9zOYSARPxjot84IeuF3IFA=; b=f2n6TIYLcGM2Pw9yrCWBGtDjoE
+	cTbb7NRuevD2kKAAi/6GX8ADl+JAWatMrLpf+gVqUtg4R6yExLJP5J948mTFHgovq7TQtN1jtyKmU
+	ARiiKHs1CJDwrgf6yxF5oZH7UBZa8wsibGMdmxo7WPHA66aT6h9bKeM/CcOkZ9ic6QtHtoo1XQFnc
+	0O26fpFZCiUUBcQDH8+97IiVS+qkwTqeJv4GoM+eysyoe1UqeFIYzIsp/62iL0pcSzdeBwrMqnjoQ
+	fPoQ1UoT1VAVJ5s1SuWLrnzUdqJxABHO0X7APDOrhdjXIegGkCR7ywDQS7gCiEQVmCPauf5aaR3Pk
+	HqNpcnTg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1q7Qp4-00BAT3-2c;
-	Fri, 09 Jun 2023 01:21:50 +0000
-Received: from esa11.fujitsucc.c3s2.iphmx.com ([216.71.156.121])
+	id 1q7YvW-00CUfj-11;
+	Fri, 09 Jun 2023 10:01:02 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1q7Qp1-00BAQI-2W
+	id 1q7YvS-00CUeo-0d
 	for kexec@lists.infradead.org;
-	Fri, 09 Jun 2023 01:21:49 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
-  t=1686273707; x=1717809707;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=1bg8MysPSq0QSLk96zCeB4D8JsDpwYVvcqZJcV9pQHs=;
-  b=ev3UkzcWP78+xakaaB6/LBeKndJ4nBMXyKsyaaH92E4WWUdZ17RF5PHs
-   hb6QqWGr88ftdW8WN/OJzEEsfH0wCTAlzpl7DHZrM93HJNa5ny0Ew4g7m
-   9U1DYJmod3PWBrT1wrtR3PpGNk/U5mdya5vEOzmnat0JU0SioOVJ3qmKn
-   h8whBbMxbDaDEfzGjfVEKdpTnST95G7KSTdMM8HEWh/atI1PLKTJ92ocv
-   XsqDA6KyDdJej9RpMnYeEgCOQ2N088g7rBtO9dEMXXmiRaTRheuaVfQhw
-   NxE3VY5Dt6D8AkjlHjMM0f8Jw4I6WQtqBHUVcSGudE9FuPhIdDg7iki2o
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10735"; a="87163241"
-X-IronPort-AV: E=Sophos;i="6.00,228,1681138800"; 
-   d="scan'208";a="87163241"
-Received: from mail-os0jpn01lp2113.outbound.protection.outlook.com (HELO JPN01-OS0-obe.outbound.protection.outlook.com) ([104.47.23.113])
-  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2023 10:21:36 +0900
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=i4LSFfVfEW5YH1hGemNejdOpnnW9YJwhcOjtS1XP6K3l06O5ltr31KlqmgT2fKDeClyXqe7B5+vz8HS588b/eJrrmJdkX2Pafh6897SRy2Ld4rWNkTRD5LDxXyYjsO7Spp8tAdL5kkHG/LSciOOUYmCupD/m6eUUAedlxm90NmFH2iTVvKBFdsBS3DGeLaxQeoms2Av6iWHatTcPm9vl0NTXgggq2bEn3m1dYRdHowp4VBxtMiMi7DUE5ivFCDF2QJBm2/NDCMQIoKKr8fnOYuzPnM0KhlXi0NfE6uIDs7jrh6BvTJgRuON8d3P3qVUB/dxNeAx2nx5m0XiB9KxhzA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1bg8MysPSq0QSLk96zCeB4D8JsDpwYVvcqZJcV9pQHs=;
- b=Xv+FLDkqdVdaGMpCWVg9gJZDwHzD437hoWXikisPr52BrKD4YknIMXQpkNqYVVivkbpEuiDYj7KIt2AMHolFHoonuirWYIt7OFqgAG88V6dlGWbqciFjRb8dsNDbCBwYmag57oG0sQkqleZVXZm5zZLvtWXhBK3hdUAhB+E0s9g/tbGyijfft3gQhDMz9mKRAy8KKmXjKUjnQaZamwMVBh6kl8LfmTHV3WhuJAG9EAEf/nysWZogFlkWITjyFzbvHwVR1XymOTZ9u7zUiUd1OrWVk0JAvnkHL1ZwymY7jdy/oJfS+/dyJz/Q+Th4ElZ8Tt3d6kDY6dFj2jsHyZpy7g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
- dkim=pass header.d=fujitsu.com; arc=none
-Received: from OS7PR01MB11664.jpnprd01.prod.outlook.com (2603:1096:604:247::6)
- by TYCPR01MB7752.jpnprd01.prod.outlook.com (2603:1096:400:181::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.38; Fri, 9 Jun
- 2023 01:21:34 +0000
-Received: from OS7PR01MB11664.jpnprd01.prod.outlook.com
- ([fe80::687d:4884:ec0b:8835]) by OS7PR01MB11664.jpnprd01.prod.outlook.com
- ([fe80::687d:4884:ec0b:8835%7]) with mapi id 15.20.6477.016; Fri, 9 Jun 2023
- 01:21:33 +0000
-From: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
-To: Baoquan He <bhe@redhat.com>, "dan.j.williams@intel.com"
-	<dan.j.williams@intel.com>
-CC: "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, Kazuhito Hagio
-	<k-hagio-ab@nec.com>, Simon Horman <horms@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Shiyang Ruan
- (Fujitsu)" <ruansy.fnst@fujitsu.com>, "Yasunori Gotou (Fujitsu)"
-	<y-goto@fujitsu.com>, "Xiao Yang (Fujitsu)" <yangx.jy@fujitsu.com>, Borislav
- Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Dave Jiang
-	<dave.jiang@intel.com>, Dave Young <dyoung@redhat.com>, Eric Biederman
-	<ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar
-	<mingo@redhat.com>, Ira Weiny <ira.weiny@intel.com>, Thomas Gleixner
-	<tglx@linutronix.de>, Vishal Verma <vishal.l.verma@intel.com>, Vivek Goyal
-	<vgoyal@redhat.com>, "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [RFC PATCH v3 0/3] pmem memmap dump support
-Thread-Topic: [RFC PATCH v3 0/3] pmem memmap dump support
-Thread-Index: AQHZlTzHcuh16amYD0mm4j3oWC0gfK96nm0AgAcYioA=
-Date: Fri, 9 Jun 2023 01:21:32 +0000
-Message-ID: <51395c29-9f26-d0f7-6b25-730dabc78110@fujitsu.com>
-References: <20230602102656.131654-1-lizhijian@fujitsu.com>
- <ZHyKyHiTYH80HUjF@MiWiFi-R3L-srv>
-In-Reply-To: <ZHyKyHiTYH80HUjF@MiWiFi-R3L-srv>
-Accept-Language: en-US, zh-CN
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=fujitsu.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: OS7PR01MB11664:EE_|TYCPR01MB7752:EE_
-x-ms-office365-filtering-correlation-id: 284a3b84-1749-4952-1203-08db6887dc2d
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: WSYhKIMrVue/v0sZOLHN0P4chIHiMk6jgNMuyILyPBd0YZG/dzD2cfnXGb+93HIj0XmXdAJfENE9Ik/5UrUzvVKEb6T2GEYp+HRBqJO5yYNP+M9CuN9xQW8FOC/deKwD2mSs8aCOfmQ2dstnlPpsq2mt0kDmwDZ5hUCDafXM0mmK03o9LqTmiHX86qJmqIzGnmYPQR8Kutan0YLwkXQ2wlovnLfMULQOHG7+PdDI9ei2IvtMLV5PKMLWDbFKeRtF34vYJISvLHUh2nXJKVnbIQHmlSYg4yLF1LRhk6f5adQJdvX8WEPTvjLRoHJtSamoyry/nZvkNqh4A2kg0OEMEa3t9nMksnSy1MlQiIxgK2zQFZ2lG8mgKEz/vo5SfnfVh9Kc4LbxxH/l9CzlJnpnzVtHRVcOXcjR7stYUwHLAo/A+bnzNguf+KjVpgy9QHIvLHMEwPlwFoPsK67QjfzFcM7yyqmUm2CQ8R+JCq8eaPo6tD3GpIkj7lgTpCPHjNFUGAtZLMW2h10ELIbXeLD61FF+k1FyxnqoSIZL9aDnJPZRQiRMq8W0Xvp1Op2AxXfNm3bDHleAyhKT6cauaZPAnKwvULe1t8ph2Dve/kawO8KYW4hR/ta0/qja2oH3SchtAnYPcRjWtk1MikWy36Bfc07CR361q312Z6ZZLG6B6i6Q4lvfkLHf2iDWzSSzJqNtLAziLHgreHFBXC1YSXXsqQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS7PR01MB11664.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(39860400002)(396003)(346002)(366004)(376002)(451199021)(1590799018)(478600001)(31696002)(71200400001)(6486002)(64756008)(66556008)(66446008)(82960400001)(122000001)(66946007)(2906002)(76116006)(66476007)(91956017)(36756003)(110136005)(54906003)(7416002)(38100700002)(5660300002)(85182001)(38070700005)(8936002)(8676002)(41300700001)(316002)(86362001)(4326008)(2616005)(31686004)(6506007)(53546011)(6512007)(26005)(186003)(1580799015)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?empNVXdoZVJFQTNWbXRHNi9WQVJINkdPSUNJcUpSWkwvUGJIY05IbDV5dVpK?=
- =?utf-8?B?YUgvdFltakRNZVZIQ3E4RUh0YXhQVzBuT3VIcjQ0T2xndlZCaGgyUWJaaldW?=
- =?utf-8?B?MW95VFowckF0RUFSOGlOdE5xR25yVU4zdHZPdm5od2ExUzV6RTNLc3l4YS9w?=
- =?utf-8?B?emMrc1hWVkJyaXBRd3U4d3ZxZm5ZWWkwM2UxbU1EUExWOUhkZUVRMzhtRVY3?=
- =?utf-8?B?QVI2SDBQYi9FV0FSVHFGcFBSZWdkVEszSXBWMEltWnBLVEJmd2EvK0lBV05s?=
- =?utf-8?B?V2Z5ZXdYNWZIMHg1OXRPWkhyOFZhaFl0K0syQk5JdUEydEZoVmY3OGVpbCt0?=
- =?utf-8?B?VGV5MHBNSm5yc0pyWVBDTnVoT0ZqRmpkWVl0b0VMNzBkdXMwZnlkQmo2ZHlO?=
- =?utf-8?B?UXduZGZPYVZrZC90RGFZeW9jYTAyZitNSDNVaWJPZTIrZmlvcDg0am1kTFNQ?=
- =?utf-8?B?MkhQSzhvVEoxR09XeEQ1NjE1amRPUUhtbFBvcG9FRnYwVE54aWxHTzJPMGdj?=
- =?utf-8?B?RXBObXJZdUU5VW1jWllIN2ZUbXkxdTlzQ003aUhZcGdFOHBna2xWK3doM0tO?=
- =?utf-8?B?a2JWem9Nc1dkS2ZCQ2h0U1dDODFaV0l4YzlVd1JyMnZvdGczNjY5dWIwdVZB?=
- =?utf-8?B?RW80OXZxaWkyOVA4WkNobDJkWVpTU3ZneExBV1RkUStNdlM4c01UYmJocTBz?=
- =?utf-8?B?LzkxUXk0MlZXYlExMTRkUmhuY1NVZzB6aTU1NFZvblNRZWV5ZFdBbkxNUkRD?=
- =?utf-8?B?dUZRT3JvQjVvajZFbE5uNCsrL2pWUmg4OUpTYzBCRmdkQThhZE5kemhrME9U?=
- =?utf-8?B?SHhJdWt6Qjh1dDQzV3JBVXlhYkZYdnJYZTBwMHFqN2JWeGFXRFNoOHlnTmJL?=
- =?utf-8?B?UU90MmJ0QmxOTWlIVUlTYUR0RUc2cUFqWUVYZ0Z1TGM4ZHR5NUY1UDZWTzFF?=
- =?utf-8?B?YjVwMi84djZSNklPUkpnZWttQmliL1E3UUhyK3pOWWJ6WGszenVuditxU3dH?=
- =?utf-8?B?Z3JFTm5CMkNQN1RUajkxR29CRUozZ2ZKN3U3RS8xVmdpUVFjeGxMaG13WWRk?=
- =?utf-8?B?R3kzMW13RTVFVmE4U21FQ1IycURzNmczQlAvUHdXSk5Vb2l3cG94djdES00v?=
- =?utf-8?B?bFZORkZJQ3FVQytVMnhwSVNhUzZjUGZTQzNILys2OTNPRmZudDZoZ0g5U3F1?=
- =?utf-8?B?citmVkN5aXRJWVZ4dTA5d2xvR1d0N2xoc2lCR296UFpjMWNrbWFuV29rUVFa?=
- =?utf-8?B?MDUrZ2lJVUY0SGg0Z1poSXEzNm1KS0FxUEY0ZnpRR2NmRjR2b3U5VG1WUFE4?=
- =?utf-8?B?eDZGSkRFZWJHSUpCTUhoeVZIMlZyZmFEU3pOK3V1cm0wZVJMeUhINU05WHlX?=
- =?utf-8?B?aDlKS2xuWitKMUN2c3dyOXE1dE91VzllVE5tWmxFMjY5YktoaFBSc0xnNVh1?=
- =?utf-8?B?ZENIbHRnclVKRW51U1I2c3ZsYUMvRVRDNmwzNnJreGNwdzBqUkRiRGJMK1FR?=
- =?utf-8?B?WDBDelFWaC9MSDYrUHg1c0w4K2VZZ3FuOU5DK3Yxcy8vbnZIcnRUbkljNHVk?=
- =?utf-8?B?Yzg4aWFwV2xDcTU2MExwbC9SWi9kMjZpMjBpZCtWOVZWbDNTVnhXZDhxckRl?=
- =?utf-8?B?eENFZmNsNnhtMVd5RU03amc4VGhnYkxuSFlqRVYxbWVwM2dZYjlRVXNSb2Rs?=
- =?utf-8?B?aGd6WWw4dGVrcGQvdVQ5YkxYL0tmMXRMZzVRRERkaUdsK05JemRLdWowYVdl?=
- =?utf-8?B?T0M3bnpkRGpBMXRGYmw5NkJoR3lva0dRcUlTR05YMlo2ZGlReUc3RytnVStQ?=
- =?utf-8?B?aHhvYWRCci9rMHhUN1dNc2VXUlZHdGZNQTd5Nmt3NTZBY282QWZ4Ym0zN3hX?=
- =?utf-8?B?SEJLenBYRFlaVDhPczdyU0pTaHBuUExXazdQUHRkQVhudzZsL2ZuSFZMamVL?=
- =?utf-8?B?QjVZNElzSzVWTE51V1dPMGRVanRDai81eDJORzFjSnRjR3F6WDhRRWNMWGND?=
- =?utf-8?B?U1FEUWlZR1FteXR3cFdaMHhWSHMrNENMRlJDMyt6dGNNV2tUSEFLTmlsQUJx?=
- =?utf-8?B?Nk1PT0lJemM3aWVjK3RKeUlVc25ITlcwRStTQXZUVEcrT05wL1hmd1VNazlx?=
- =?utf-8?B?WHVhNk40UVdEMUdPZTh2WmJtN3oxMXQrYVBLWmpJa0YxSW1nT2RhdkdxNWUw?=
- =?utf-8?B?Qmc9PQ==?=
-Content-ID: <D7075E3D7B5D484A83492FD2748447BA@jpnprd01.prod.outlook.com>
+	Fri, 09 Jun 2023 10:01:00 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1686304854;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M0n8/D5gSrVbcAskz0QgbStZ+qE9a1Ww6ORHIZhs/gc=;
+	b=N0xFzEdQPsQnqW29atL4ue1DE1hnwNEi9PrxJ+RZKxsIMLHbgKAPJyorAUGpORFcg1ThP1
+	QrEh5SezmeJKL71bm8H5+ltpaRJ9psWnFKQz+gbcFI3l1Pt0w3Ht5EEakeIrFnmPfzDbbA
+	wRGwu9hFBaOkhKxNHbonmm1YbgQdncs=
+Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
+ [209.85.215.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-493--BNd5R3PNhaTBI8Pp2NaTQ-1; Fri, 09 Jun 2023 06:00:52 -0400
+X-MC-Unique: -BNd5R3PNhaTBI8Pp2NaTQ-1
+Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-53ff4f39c0fso448793a12.0
+        for <kexec@lists.infradead.org>; Fri, 09 Jun 2023 03:00:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686304852; x=1688896852;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M0n8/D5gSrVbcAskz0QgbStZ+qE9a1Ww6ORHIZhs/gc=;
+        b=XH8mT7bwPvgpJMTWB0u9VLUl3E+ggxVeMRKRz3xTrfeHlrMYzuYHzyJgTUEQHiOnYp
+         1kuWd+QnAA7SqPS8SaJdu83H2cqyjxgrWLStXg1Hu7atWqZJs16Olmi1pNRNw+1A95PI
+         6E9gub3ghdlCPV0HxXM2wt/BV0AMlqtZkWpHnDjZcxVfdJjfP5kKPH2sSnIRPn8CYfqC
+         hf1CZ5hvRbok08LeorVxSxGft9Szb05/cHYMHnrs5aKn/MU8W6keaeERryrZjlyC3sU+
+         CcTvliF6wKmftiBnxKttQnzCvN1NB3F20/pHs58TK0kC5VE8kf/rcywlUjpZb8goe9Sg
+         Ycnw==
+X-Gm-Message-State: AC+VfDzVEGHDn5tntcwWDJdXWD9A/xLGNE5ERcf9pfinlM8Gz/o/kE4P
+	ctxnFKSo13H46U/xIKDBCpEYUtvHzF8fUx6QEEAG5Qru6pgE1MUXM6fSXqzlGnJvpzlBdonGKCR
+	+qiH1VKLkF3e8HotrPfBD
+X-Received: by 2002:a17:902:b194:b0:1b0:74f5:bf10 with SMTP id s20-20020a170902b19400b001b074f5bf10mr468744plr.65.1686304851825;
+        Fri, 09 Jun 2023 03:00:51 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ4D79t5gV/Mp/rSDmH1GlwdJpW+EfHN7X7D7bUurjaZ92cyqHMbXsDdD5+zEeKB48041JGjYg==
+X-Received: by 2002:a17:902:b194:b0:1b0:74f5:bf10 with SMTP id s20-20020a170902b19400b001b074f5bf10mr468730plr.65.1686304851467;
+        Fri, 09 Jun 2023 03:00:51 -0700 (PDT)
+Received: from localhost ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id az5-20020a170902a58500b001b034faf49csm1437300plb.285.2023.06.09.03.00.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Jun 2023 03:00:50 -0700 (PDT)
+Date: Fri, 9 Jun 2023 17:58:11 +0800
+From: Coiby Xu <coxu@redhat.com>
+To: Milan Broz <gmazyland@gmail.com>
+Cc: Eric Biggers <ebiggers@kernel.org>, kexec@lists.infradead.org, 
+	Baoquan He <bhe@redhat.com>, x86@kernel.org, dm-devel@redhat.com, 
+	Pingfan Liu <kernelfans@gmail.com>, linux-kernel@vger.kernel.org, 
+	Dave Hansen <dave.hansen@intel.com>, Kairui Song <ryncsn@gmail.com>, 
+	Jan Pazdziora <jpazdziora@redhat.com>, Thomas Staudt <tstaudt@de.ibm.com>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>, Dave Young <dyoung@redhat.com>, 
+	Ondrej Kozina <okozina@redhat.com>
+Subject: Re: [PATCH 0/5] Support kdump with LUKS encryption by reusing LUKS
+ volume key
+Message-ID: <mmvghlh7pdleopnkwu3mmqlc4etqjs3rmjwfgh2grbys5icehj@2ifbkc2a6ot5>
+References: <20230601072444.2033855-1-coxu@redhat.com>
+ <20230602213452.GC628@quark.localdomain>
+ <f569a35a-bff9-9dbb-2ded-7e02ee060a9a@gmail.com>
+ <36mz3gn764ceadfbuhhmoo2zaiqmzplpkdcnszha2hzhmb3i62@sm6hilxryzk4>
+ <a5eaa21d-6551-5857-98cd-50578fe59566@gmail.com>
+ <oosx274kf6kzasncdfdg5a53ut6wey3nlnbho5x3rql2df3zep@c6r6m4whphvh>
+ <88581a3c-8bd3-f7b2-064c-c809a2152ed3@gmail.com>
+ <maamg4udo7visvgzp4m4qkfcds6djyiga236lb2mwtjasi6pvj@zmqzb2lijegj>
+ <f7a1a20c-bee8-c7a4-4c49-b66415f556f9@gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?utf-8?B?U0JiWjVvWlRUVmxEdWtiS3EzMjcva21tZDNGVUx0Mmo4SGZoZjZvanJDL3hV?=
- =?utf-8?B?ZjU3K1Nsbk56QllVT1V4SUdyS2pxRkVrdHVTUzdwV0hUMy8zZFFUOElGUjQ2?=
- =?utf-8?B?SkJScC9wOW93bzdnQzBIa3JQMlZ0VnYvUkZONGZPbVFGeE1DRjcxREZjdkV6?=
- =?utf-8?B?SW4yNVErRjd1WHF0a2IreFNUMjYwVHpIMUdobHdKdzgrbEY1WGt6VmhrUitz?=
- =?utf-8?B?OTZ5VGI2cWhwRC9pak1LTjl3akFTcXN0b2wxblhzd2ltSnRCckdCUElNMXJP?=
- =?utf-8?B?dUZaUmt3WDdFSkFJaldXODZCYzFPampGVElrK0pRa0wvSlNYWHo1V3ArMFF0?=
- =?utf-8?B?S2xveTAyeE1XYjNyVFpNOEh1anBOaWRiUFVuUElUcStnOHI3cXdEWHdUSUg3?=
- =?utf-8?B?UXZEQW5scXUwUHdabjM2cGFkdTluRDZQNEZBdm1GZzR6YzI1c0YzSk9FZ1po?=
- =?utf-8?B?bklidWw4M2JRelovQkc4WGRZZUhKSmx1OGtEVGNIaVRjTXY4YVN0Uy9TZDhM?=
- =?utf-8?B?azk0V3FibTRkbjJSbGtENFhhZlA0cGZYLy8vUmIyekdWL29oZnQ5eC9mc043?=
- =?utf-8?B?UXRsY2pDaHlqeWVqOENIU3hpcTVxSkVMZjZ4UGkrSlJQd3NXczczQXpxZmds?=
- =?utf-8?B?WXU0MWptWkYya3ZlUmdydG5IMU1hRUpTWGtoazlZZjF6cDZoWHZSZ0h2eU04?=
- =?utf-8?B?NFpmZFNCODBIU2d0YVduaHhnc2FIMFNtS1VaL2lRK2VpamdrQWNHcFQvTmxU?=
- =?utf-8?B?Y05jVnRwWXhxYjU2b2ZaQndJdlVMUXZDbTEraWd2dHRIRUdFVTNZWUpBdjBs?=
- =?utf-8?B?NGVDdW11bHFuWDBtVHdvNWxPditwc2lGZ0R1NFZ4eEowVEpoeGZPTDVyUGZL?=
- =?utf-8?B?REhYdWpJYWx0UzhVTXFmWFFoOFhOWURCa0Vhd3R1cUxWNTZqQjVzWit1NUEz?=
- =?utf-8?B?V2pwZVkyQVpLOXFua2Fua1FPRVdXdEN1OWZmdVlKbHNRSXhYcFhiS3F5STMv?=
- =?utf-8?B?R0gxYVlYR2hDTU1yNzhNQVhjazY5bnhCSUhPbkZ1RzhDWWwzaHpVRTUwbUpZ?=
- =?utf-8?B?cUJNTzZMd1p4UlYxa0RGVlkrTnR2UVVyQnlDNEk1QTVKT0UySXBNYUpEZzlE?=
- =?utf-8?B?YUVkTVNFd3FVbWEyV1dLQ1hqbEFmamxMb0dPcUwxb2JwMVMrU1RqUHVETml5?=
- =?utf-8?B?VE5YL0hWMnFtZjlmU0pseFZzUEhpQjdRUzhNMEpLTUdvWjBjL1JHVFUvRllJ?=
- =?utf-8?B?WC8yRmh0TFJuM3Ardk5LS2Z6d0NSYTZoanNRMmtQa3c2NnZlc21LNTVUb0Rz?=
- =?utf-8?B?RnpLMG42YVpaVGNCNnQvWVRjZm92S1FQZEx5bXlQN1NiUDVTd2c0U3l1VUth?=
- =?utf-8?B?eDh1R3I1VEhDOWt1V3lpaFFDWlFnL21hYk5nTkN3TmQzT0hkOENQKzFrYy9H?=
- =?utf-8?B?VW15UDJDYTR3LzEzQmEwZVlPSGhrd2FIMFJSYmNBYitoUHNFdGZ2cU5XS1pp?=
- =?utf-8?Q?5O8Gu2E+KPuPRktCMsxfSn6+VjL?=
-X-OriginatorOrg: fujitsu.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OS7PR01MB11664.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 284a3b84-1749-4952-1203-08db6887dc2d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jun 2023 01:21:32.6265
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gULLfBwX9ocfRMb1WLpHwKXhCLaD74zh1GbbxirPTRqplzmzy1CtWMB1wOFJ8X/Gu/oA5IQOjJOuYtPe/o2wJw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB7752
+In-Reply-To: <f7a1a20c-bee8-c7a4-4c49-b66415f556f9@gmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230608_182148_107093_C2D4FF4C 
-X-CRM114-Status: GOOD (  16.39  )
+X-CRM114-CacheID: sfid-20230609_030058_333149_58055E79 
+X-CRM114-Status: GOOD (  22.97  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -196,47 +108,100 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Baoquan,
-
-
-On 04/06/2023 20:59, Baoquan He wrote:
-> Hi Zhijian,
-> 
-> On 06/02/23 at 06:26pm, Li Zhijian wrote:
->> Hello folks,
+On Thu, Jun 08, 2023 at 12:39:26PM +0200, Milan Broz wrote:
+>On 6/7/23 14:39, Coiby Xu wrote:
+>...
+>>>I do not think you need any cryptsetup patches, all you need is to write
+>>>decrypted volume key from LUKS metadata with
+>>>  cryptsetup luksDump ---dump-volume-key -volume-key-file <out> <device>
+>>>(or any code equivalent with libcryptsetup), am I correct?
 >>
->> After sending out the previous version of the patch set, we received some comments,
->> and we really appreciate your input. However, as you can see, the current patch
->> set is still in its early stages, especially in terms of the solution selection,
->> which may still undergo changes.
-> 
-> Thanks for the effort to make it and improve. And add Kazu and Simon to
-> the CC because they maintain kexec-tools and makedumpfile utility.
-> 
-> For better reviewing, I would suggest splitting the patches into
-> differet patchset for different component or repo. Here, it's obviouly
-> has kernel patchset, kexec-tools patch and makedumpfile patchset.
+>>Correct me if I'm wrong, but I don't think there will be a safer way to
+>>preserve key without patching cryptsetup. Actually the --dump-volume-key
+>>approach has been proposed before and I agree with your conclusion [1]
+>>on that approach i.e. "passing volume key this way is quite insecure".
+>>Without patching cryptsetup, even if I save the volume key in the memory
+>>reserved for the kdump kernel, I need to retrieve this key in the
+>>userspace to unlock the LUKS device which may lead to quite a security
+>>vulnerability.
+>
+>Hm, where are the patches for cryptsetup, then? I am afraid we do not want
+>to add such specific things there.
 
-Thank you very much for your feedback.
-Agreed, i will split them out if we can reach a basic proposal.
+Thanks for cleaning up the text to make the discussion easier! Sorry I
+only mentioned it [3] in the cover letter and didn't provide one in
+previous reply. [3] was done in a quick-and-dirty way (I plan to send a
+formal merge request after finishing the kernel part) and there is no need
+to read it. Let's me explain what [3] does here instead,
+  1) After unlocking the LUKS-encrypted device, if cryptsetup finds
+     /sys/kernel/crash_luks_volume_key exists, it will write the key
+     description of the volume key to it to notify the kernel to save a copy
+     of this logon key linked to its thread keyring for the kdump kernel
+  2) After the 1st kernel crashes, if crytpsetup finds it's in the kdump
+     kernel, instead of deriving the volume key from a passphrase, it
+     will write the key description to /sys/kernel/crash_luks_volume_key
+     to ask the kdump kernel to link the saved key to its thread keyring.
+
+[3] https://gitlab.com/coxu/cryptsetup/-/commit/750a46d933fac82e0c994b5c41de40a0b8cac647
+
+>
+>But we are just going to merge a patchset that changes how we use keyring
+>where you can tell cryptsetup to store/link key under some specific name
+>and to specific keyring
+>(see https://gitlab.com/cryptsetup/cryptsetup/-/merge_requests/492)
+>(Please talk to Red Hat cryptsetup maintainers for more info,
+>I just mentioned this mail to them today.)
+
+Thanks for pointing me to the above MR which looks promising! Unlike
+treating the kdump use case as a special case [3], it just provides a
+generic way with the implemented options --link-vk-to-keyring and
+--volume-key-keyring.
+
+>
+>>I respect the efforts from you and the cryptsetup community to make LUKS
+>>as secure as possible. And kdump is used in product environment. Kdump
+>>is to a server as a black box is to an aircraft. So by no means I want
+>>to reverse the used security measures and patching cryptsetup can allow
+>>to keep the security measures. One concern raised by you against "FRC
+>>v1" was a copy of the LUKS volume key for the kdump kernel creates an
+>>attack vector. I took this feedback seriously and have sought advice
+>>from my colleagues to implement the countermeasures ([PATCH 1/5] and
+>>[Patch 4/5]).
+>>
+>>[1] https://yhbt.net/lore/all/e5abd089-3398-fdb4-7991-0019be434b79@gmail.com/
+>
+>Yes, I appreciate that. And it is perfectly ok if your customers accept
+>the trade-off and security risk of handling the key this way.
+>
+>Anyway, I feel we are going in circles here, and as it seems to be my fault,
+>I do not want to sound grumpy as I am perhaps missing some context.
+
+Actually I should thank you for your patience! You have been always
+offering your feedback on this work kindly and promptly starting with
+the first proposed solution [1].
+
+>
+>Could you please talk to internal RH cryptsetup maintainers first and discuss
+>your solution? They know what we can do here can help to find an acceptable
+>solution. (I added cc to Ondra.)
+
+Sure, I'll talk to them first. Thanks for letting Ondra know!
+
+>
+>Thanks,
+>Milan
+>
+
+-- 
+Best regards,
+Coiby
 
 
-Thanks
-Zhijian
-
-> 
-> For the kernel patches, it looks straightforward and clear, if Dan can
-> approve it from nvdimm side, everything should be fine. Then next we can
-> focus on the relevant kexec-tools and makedumpfile utility support.
-> 
-> Thanks
-> Baoquan
-> 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
