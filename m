@@ -4,70 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 593CCC7EE23
-	for <kexec@archiver.kernel.org>; Sun, 11 Jun 2023 12:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C5E6AC7EE23
+	for <kexec@archiver.kernel.org>; Sun, 11 Jun 2023 14:31:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=Z58vb9aNHaT3qdd+y1BLW6pdhfSWp9zvEV0XXE99TNo=; b=IjJTNoW362cYP8
-	hO2mBspttWHsBMb126I1BvpndkE/4CbVHHXOg8A00t84/ka9L8vomWfpoIHP8iV9Z1/7FSjoiU/px
-	QOPxhn46iROCsaGJZy5be+xyevvLSl2+lsiC/2OQ2oJwaHFfB154vi78hXlsG4ZHjDy12ntAaBmuS
-	bkL3w+1Ljzog9FjlUwPMwLUwsql8ac3v1+IScFFEbwxTpUcMSJhGDhDgeMT/vV/MDq0ZQceLZvceh
-	uZ0oSiuKHZFnL6P5uUgWFarliAi7ty09YOy9MyKZZ2Eyc61cNT720rf7gcJ3X4uvPQFbI2Ze/HV29
-	pX/KxxsK86haF9uIzDtA==;
+	List-Owner; bh=cVFuwUOo2vek1AjsNUZENow/WZFah3ZDbD31q0eAzyo=; b=my5tuJ9yk8H4oL
+	G9Oz3OIJscf2VdBMeBd9nftMICEIetRwLpmMbu4kDXqJD9DPK0G275NWr6GT5H8PrPw9d5n8EllSN
+	fCFPH2qCIwmViIjyzlDpSOe9HJaw/53h6G44onpA3rXV5gjWcVdvbKIALQqbxAKErZTonSYyKgHF6
+	CShwVWFcCcSRONiWGfQFqODxkv4XNB3jJIOK50Z5qHBKqBDYdzxuVBfumIMaHBdPV6anKqDf3ZDiu
+	0xRtP4FDpP6+j+D6+v9BaUqcMhUQ04avwYd6ORsrT4xjsLFgQKdBnTAku1qG9AnaI5DGPSHYvuNWk
+	qFQ/Z8pasa4+/NAGwQIA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1q8Jye-000rHh-11;
-	Sun, 11 Jun 2023 12:15:24 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1q8M6g-0017sn-1j;
+	Sun, 11 Jun 2023 14:31:50 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1q8Jyb-000rGU-1Q
-	for kexec@lists.infradead.org;
-	Sun, 11 Jun 2023 12:15:22 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1686485717;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9hd3npbID10r5k6jMGmqFp5hgwno88O8I5Xi3MAI7ao=;
-	b=TVZ6008KX8Tx/bRDLLMLIh7eXygB/B0SU4KpFFXqp9rr8rfdNjPoKLJudrWBqg+E8LVUFm
-	mw5QfhqweUZtuSirz0Tm6weW08iSFDdeNwu1tnxbIGYRfZ7Dzxl0Jz4q9ebyhJFcE3flG8
-	NOc/j05ST18JDjKfqNyIRtXdNVxzi6o=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-519-adM4VlXgM1CNEOmtz42UUQ-1; Sun, 11 Jun 2023 08:15:12 -0400
-X-MC-Unique: adM4VlXgM1CNEOmtz42UUQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	id 1q8M6c-0017sF-1n;
+	Sun, 11 Jun 2023 14:31:48 +0000
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4CA9B8002BF;
-	Sun, 11 Jun 2023 12:15:12 +0000 (UTC)
-Received: from localhost (ovpn-12-34.pek2.redhat.com [10.72.12.34])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 8810740CFD01;
-	Sun, 11 Jun 2023 12:15:11 +0000 (UTC)
-Date: Sun, 11 Jun 2023 20:15:07 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Catalin Marinas <catalin.marinas@arm.com>
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 82EC361005;
+	Sun, 11 Jun 2023 14:31:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82045C433D2;
+	Sun, 11 Jun 2023 14:31:39 +0000 (UTC)
+Date: Sun, 11 Jun 2023 15:31:36 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Baoquan He <bhe@redhat.com>
 Cc: linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>,
 	horms@kernel.org, thunder.leizhen@huawei.com,
 	John.p.donnelly@oracle.com, kexec@lists.infradead.org,
 	linux-arm-kernel@lists.infradead.org
 Subject: Re: [PATCH v6 0/2] arm64: kdump: simplify the reservation behaviour
  of crashkernel=,high
-Message-ID: <ZIW6y9IK+pqMSfoc@MiWiFi-R3L-srv>
+Message-ID: <ZIXayAr6r1tnFQ5i@arm.com>
 References: <20230515060259.830662-1-bhe@redhat.com>
  <168633894002.3180904.11323833556978641615.b4-ty@arm.com>
+ <ZIW6y9IK+pqMSfoc@MiWiFi-R3L-srv>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <168633894002.3180904.11323833556978641615.b4-ty@arm.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
+In-Reply-To: <ZIW6y9IK+pqMSfoc@MiWiFi-R3L-srv>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230611_051521_576428_EF3D0E92 
-X-CRM114-Status: GOOD (  18.56  )
+X-CRM114-CacheID: sfid-20230611_073146_661171_E1977ED1 
+X-CRM114-Status: GOOD (  23.31  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,50 +68,52 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Catalin,
-
-On 06/09/23 at 08:30pm, Catalin Marinas wrote:
-> On Mon, 15 May 2023 14:02:57 +0800, Baoquan He wrote:
-> > In v5 patch, Catalin helped review and acked the patch. However, an
-> > uninitialized local varilable is warned out by static checker when Will
-> > tried to merge the patch. And Will complained the code flow in
-> > reserve_crashkernel() is hard to follow, required to refactor. While
-> > when I tried to do the refactory, I feel it's not easy, the existing
-> > several cases causes that.
+On Sun, Jun 11, 2023 at 08:15:07PM +0800, Baoquan He wrote:
+> On 06/09/23 at 08:30pm, Catalin Marinas wrote:
+> > On Mon, 15 May 2023 14:02:57 +0800, Baoquan He wrote:
+> > > In v5 patch, Catalin helped review and acked the patch. However, an
+> > > uninitialized local varilable is warned out by static checker when Will
+> > > tried to merge the patch. And Will complained the code flow in
+> > > reserve_crashkernel() is hard to follow, required to refactor. While
+> > > when I tried to do the refactory, I feel it's not easy, the existing
+> > > several cases causes that.
+> > > 
+> > > [...]
 > > 
-> > [...]
+> > Applied to arm64 (for-next/kdump).
+> > 
+> > I reworte some of the paragraphs in the documentation patch, removed
+> > some sentences to make it easier to read (some details were pretty
+> > obvious). Please have a look, if you think I missed something important,
+> > just send a patch on top. Thanks.
+> > 
+> > [1/2] arm64: kdump: simplify the reservation behaviour of crashkernel=,high
+> >       https://git.kernel.org/arm64/c/6c4dcaddbd36
+> > [2/2] Documentation: add kdump.rst to present crashkernel reservation on arm64
+> >       https://git.kernel.org/arm64/c/03dc0e05407f
 > 
-> Applied to arm64 (for-next/kdump).
+> Could you help add below code change into the document patch commit? I
+> forgot adding it and got warning report from lkp test robot.
 > 
-> I reworte some of the paragraphs in the documentation patch, removed
-> some sentences to make it easier to read (some details were pretty
-> obvious). Please have a look, if you think I missed something important,
-> just send a patch on top. Thanks.
+> https://lore.kernel.org/oe-kbuild-all/202306110549.ynH2Juok-lkp@intel.com/
 > 
-> [1/2] arm64: kdump: simplify the reservation behaviour of crashkernel=,high
->       https://git.kernel.org/arm64/c/6c4dcaddbd36
-> [2/2] Documentation: add kdump.rst to present crashkernel reservation on arm64
->       https://git.kernel.org/arm64/c/03dc0e05407f
+> diff --git a/Documentation/arm64/index.rst b/Documentation/arm64/index.rst
+> index ae21f8118830..dcfebddb6088 100644
+> --- a/Documentation/arm64/index.rst
+> +++ b/Documentation/arm64/index.rst
+> @@ -25,6 +25,7 @@ ARM64 Architecture
+>      sve
+>      tagged-address-abi
+>      tagged-pointers
+> +    kdump
 
-Could you help add below code change into the document patch commit? I
-forgot adding it and got warning report from lkp test robot.
+I've seen the warning as well. Please send a patch fixing this as I try
+to avoid rebasing. Also we keep this part in alphabetical order.
 
-https://lore.kernel.org/oe-kbuild-all/202306110549.ynH2Juok-lkp@intel.com/
+Thanks.
 
-
-diff --git a/Documentation/arm64/index.rst b/Documentation/arm64/index.rst
-index ae21f8118830..dcfebddb6088 100644
---- a/Documentation/arm64/index.rst
-+++ b/Documentation/arm64/index.rst
-@@ -25,6 +25,7 @@ ARM64 Architecture
-     sve
-     tagged-address-abi
-     tagged-pointers
-+    kdump
- 
-     features
- 
-
+-- 
+Catalin
 
 _______________________________________________
 kexec mailing list
