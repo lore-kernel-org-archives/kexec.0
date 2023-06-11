@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 81980C7EE29
-	for <kexec@archiver.kernel.org>; Sun, 11 Jun 2023 00:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 593CCC7EE23
+	for <kexec@archiver.kernel.org>; Sun, 11 Jun 2023 12:15:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=1L7LQjdMEtGq604ozcIRyFmixHGta5tzUpWgwOqOS2w=; b=Yx1PBIzilYyRMR
-	6TeqtFZyyRhdL3b+cY6auL3E3UqYjHUVG0AY71m/KLdIrJpvWd4jMeD2Cj7EWKbJE9whQk9VE7mcb
-	8PosYvsIYqj/d7MJ41BdZ2Qx0tFxT0vYXJpSVGOZrogi8rPf+fZZjZNRL3GZPfhhfjMbfTqrwrko3
-	HwRWrfr1NoY5V4qRmuwdObRGH4gZIl6k0laYgQArexYRbN/mJy0oCrT1XEJNLPGrAvi3BNYCnCLoU
-	/pGeFJKu4oaUa/WRzlLUkG3oYyg47GS2Dk6O8OuMfVVnl4+aSZvw7bmKLdtbgocS6HJ8ajC0bUz6D
-	zdPQCOqCjlUA1k0/3kRw==;
+	List-Owner; bh=Z58vb9aNHaT3qdd+y1BLW6pdhfSWp9zvEV0XXE99TNo=; b=IjJTNoW362cYP8
+	hO2mBspttWHsBMb126I1BvpndkE/4CbVHHXOg8A00t84/ka9L8vomWfpoIHP8iV9Z1/7FSjoiU/px
+	QOPxhn46iROCsaGJZy5be+xyevvLSl2+lsiC/2OQ2oJwaHFfB154vi78hXlsG4ZHjDy12ntAaBmuS
+	bkL3w+1Ljzog9FjlUwPMwLUwsql8ac3v1+IScFFEbwxTpUcMSJhGDhDgeMT/vV/MDq0ZQceLZvceh
+	uZ0oSiuKHZFnL6P5uUgWFarliAi7ty09YOy9MyKZZ2Eyc61cNT720rf7gcJ3X4uvPQFbI2Ze/HV29
+	pX/KxxsK86haF9uIzDtA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1q893z-00HKsS-2p;
-	Sun, 11 Jun 2023 00:36:11 +0000
+	id 1q8Jye-000rHh-11;
+	Sun, 11 Jun 2023 12:15:24 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1q893u-00HKqH-1y
+	id 1q8Jyb-000rGU-1Q
 	for kexec@lists.infradead.org;
-	Sun, 11 Jun 2023 00:36:08 +0000
+	Sun, 11 Jun 2023 12:15:22 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1686443764;
+	s=mimecast20190719; t=1686485717;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=x89zI7MJ/ts8FOURhFSOQ5PbYCpR9HHm1ievjVbGHuc=;
-	b=Q7cFU0egNWI3xpM7Ntfbvwz7I0TL0rbeyTtHBol5oFI21ZvC5GvinwOIgn59Z93pRfVfgR
-	+zZdXs2a+O+EDiijkpY0BgTwrE3zfLUxqBUuWWP9J4rRwEv4NTfl1yixADOJ5ltTIk81i1
-	XW/utkr1q7RYrttAg2RFe7li0mPc+sY=
+	bh=9hd3npbID10r5k6jMGmqFp5hgwno88O8I5Xi3MAI7ao=;
+	b=TVZ6008KX8Tx/bRDLLMLIh7eXygB/B0SU4KpFFXqp9rr8rfdNjPoKLJudrWBqg+E8LVUFm
+	mw5QfhqweUZtuSirz0Tm6weW08iSFDdeNwu1tnxbIGYRfZ7Dzxl0Jz4q9ebyhJFcE3flG8
+	NOc/j05ST18JDjKfqNyIRtXdNVxzi6o=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-205-Wf-VQU6rPy6HqqX_SbNZbg-1; Sat, 10 Jun 2023 20:35:59 -0400
-X-MC-Unique: Wf-VQU6rPy6HqqX_SbNZbg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+ us-mta-519-adM4VlXgM1CNEOmtz42UUQ-1; Sun, 11 Jun 2023 08:15:12 -0400
+X-MC-Unique: adM4VlXgM1CNEOmtz42UUQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8EAE1811E78;
-	Sun, 11 Jun 2023 00:35:58 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4CA9B8002BF;
+	Sun, 11 Jun 2023 12:15:12 +0000 (UTC)
 Received: from localhost (ovpn-12-34.pek2.redhat.com [10.72.12.34])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 8E738140E956;
-	Sun, 11 Jun 2023 00:35:56 +0000 (UTC)
-Date: Sun, 11 Jun 2023 08:35:52 +0800
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 8810740CFD01;
+	Sun, 11 Jun 2023 12:15:11 +0000 (UTC)
+Date: Sun, 11 Jun 2023 20:15:07 +0800
 From: Baoquan He <bhe@redhat.com>
 To: Catalin Marinas <catalin.marinas@arm.com>
 Cc: linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>,
@@ -58,16 +58,16 @@ Cc: linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>,
 	linux-arm-kernel@lists.infradead.org
 Subject: Re: [PATCH v6 0/2] arm64: kdump: simplify the reservation behaviour
  of crashkernel=,high
-Message-ID: <ZIUW6Ho8Wfz5XoZV@MiWiFi-R3L-srv>
+Message-ID: <ZIW6y9IK+pqMSfoc@MiWiFi-R3L-srv>
 References: <20230515060259.830662-1-bhe@redhat.com>
  <168633894002.3180904.11323833556978641615.b4-ty@arm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
 In-Reply-To: <168633894002.3180904.11323833556978641615.b4-ty@arm.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230610_173606_856041_4C0EA181 
-X-CRM114-Status: GOOD (  16.39  )
+X-CRM114-CacheID: sfid-20230611_051521_576428_EF3D0E92 
+X-CRM114-Status: GOOD (  18.56  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,6 +83,8 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
+
+Hi Catalin,
 
 On 06/09/23 at 08:30pm, Catalin Marinas wrote:
 > On Mon, 15 May 2023 14:02:57 +0800, Baoquan He wrote:
@@ -107,7 +109,24 @@ On 06/09/23 at 08:30pm, Catalin Marinas wrote:
 > [2/2] Documentation: add kdump.rst to present crashkernel reservation on arm64
 >       https://git.kernel.org/arm64/c/03dc0e05407f
 
-Thanks a lot, Catalin. The rewriting looks great!
+Could you help add below code change into the document patch commit? I
+forgot adding it and got warning report from lkp test robot.
+
+https://lore.kernel.org/oe-kbuild-all/202306110549.ynH2Juok-lkp@intel.com/
+
+
+diff --git a/Documentation/arm64/index.rst b/Documentation/arm64/index.rst
+index ae21f8118830..dcfebddb6088 100644
+--- a/Documentation/arm64/index.rst
++++ b/Documentation/arm64/index.rst
+@@ -25,6 +25,7 @@ ARM64 Architecture
+     sve
+     tagged-address-abi
+     tagged-pointers
++    kdump
+ 
+     features
+ 
 
 
 _______________________________________________
