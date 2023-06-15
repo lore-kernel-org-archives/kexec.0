@@ -4,62 +4,205 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4F84FEB64D9
-	for <kexec@archiver.kernel.org>; Thu, 15 Jun 2023 09:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 792FAEB64D9
+	for <kexec@archiver.kernel.org>; Thu, 15 Jun 2023 18:01:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
 	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:CC:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=/HjzsycJbzGX1J+aWIdKDrRzm3sjl1J8TmVTMmf4pEw=; b=CWLIIaydT20ArP
-	XW2IZjdFpsYAFRKBjxYAFMfislAf0LUfVMbNxRG/kAHwuA6EYYR6FKuSVS+6kmmlB+W7RhwwwPfc8
-	LF037UEVfu9oFPjdHyw0jo+rS+zp0K8Jr2jRSvjF8IRWZlkUSAA/mF1KzdhTZ8zDa+T4NW1vHjZOh
-	rKA0pmzzgGZ84VtRbNtt3JnrdumGe4/50H4iFNVplFmAIWRFLzQK1IEMXGTiH8C2zcOESVaqRdzzx
-	T0H2/MQmqal8gdsZlKbRAkfz7Dcx+HIlMXN67eGSjGBsqPRBRyyY6B3gcku7dBRWoJ5H04O41tRh9
-	N3XeB/MOJf047t1uDmgA==;
+	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:Cc:To:
+	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=Qs0FzZJs6mLUCZl9h/iSc7SmOst3OilQa3OEH4E7WzI=; b=1/gTbQsv6rNLNuIEHVxaWNpKFq
+	pbyqETo9CXyXUhVEY169+RgZUoZ53C5aUNyuGPeKg/bEUozRW0hT2lHPrJ/FKfpX7GmyP+q79ZJ1A
+	NfM2HwE5+38wYL8PWuOtNzRqRPSa4MJKKJ/aeSBmcYJeecg4hMsL0zTRSVBSj5ueFNQCmn/7ni0Gp
+	1nflwaN8Yk7HTXhBIXUkmkIKQg9ZPVCdcQyZWhq4zqJ45zu8ElSSlNHKoit3nMLYqnK8asznKueQI
+	b9UPgM6pcRH1aKD82G+mh1x0P62QVpYnjT/lZntYP9YIWY5agWumXHTcL0tBJdheAbYpHxBDCLvob
+	vY2ZRS9w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1q9jbY-00EMVJ-0E;
-	Thu, 15 Jun 2023 09:49:24 +0000
-Received: from szxga03-in.huawei.com ([45.249.212.189])
+	id 1q9rHb-00FgPg-1q;
+	Thu, 15 Jun 2023 18:01:19 +0000
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1q9jbU-00EMT2-2y;
-	Thu, 15 Jun 2023 09:49:23 +0000
-Received: from dggpemm500016.china.huawei.com (unknown [172.30.72.54])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Qhcs36BWrzLmp5;
-	Thu, 15 Jun 2023 17:47:19 +0800 (CST)
-Received: from [10.67.108.26] (10.67.108.26) by dggpemm500016.china.huawei.com
- (7.185.36.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Thu, 15 Jun
- 2023 17:49:10 +0800
-Message-ID: <852b8777-3c6e-f76b-0413-1c66629f33cd@huawei.com>
-Date: Thu, 15 Jun 2023 17:49:10 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH -next v5 1/2] riscv: kdump: Implement
- crashkernel=X,[high,low]
-To: Baoquan He <bhe@redhat.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-	<kexec@lists.infradead.org>, <linux-doc@vger.kernel.org>,
-	<paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
-	<conor.dooley@microchip.com>, <guoren@kernel.org>, <heiko@sntech.de>,
-	<bjorn@rivosinc.com>, <alex@ghiti.fr>, <akpm@linux-foundation.org>,
-	<atishp@rivosinc.com>, <thunder.leizhen@huawei.com>, <horms@kernel.org>
-References: <20230511085139.1039088-1-chenjiahao16@huawei.com>
- <20230511085139.1039088-2-chenjiahao16@huawei.com>
- <ZHwKFADVXyNYJBCp@MiWiFi-R3L-srv>
+	id 1q9rHZ-00FgM2-13
+	for kexec@lists.infradead.org;
+	Thu, 15 Jun 2023 18:01:18 +0000
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35FGJfKh020981;
+	Thu, 15 Jun 2023 18:00:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2023-03-30;
+ bh=Cx+AglUz4EiwLL672TyWbN8szaImaJKBS7TzVI4dZ+Y=;
+ b=TBb57vbjCeSASEtk5bwN9WIsXya/s0Mk5oLxpHbzZ1OpOD2s0pFbMmOY+Y1UcLph+3Jh
+ SWdcglYIS5lFAzwfrWV3T7bMgSaIt4t+qWUTC7QyQlP05nr5pOamfGr+AAIkCtzCPtOL
+ LcbeJIswxh3Z0u9IIEHExSYrpJ6o5fFGIsf+sYOTCgkWtws/trpcV4OJvsv0gVXw0G9W
+ me6g8SNorjKPHugRB4WhEir8jx5lqQ2tjmGyoE74qKf6dLUTeZjiKwVuTbketOnyoPg3
+ rEibLcmfEq4n1wicomBDZHL6/WuDdFR7aIJ7tv9MQIZkwXyPuMgqOR83/JhCet+fll4I 0A== 
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3r4hqutp6v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 15 Jun 2023 18:00:33 +0000
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 35FGWFjm033589;
+	Thu, 15 Jun 2023 18:00:33 GMT
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2101.outbound.protection.outlook.com [104.47.70.101])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3r4fm790cc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 15 Jun 2023 18:00:33 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VSJKRj+1Bg9aeoA8TcbuM4W7SxuPiplkFCWX3nGZy3o/vOTwLJASdrSOCUauBTxQlJ2FCAGJArvQk03BwPldjeWaU6mk+/T7Pyepi84XZhuL+27p6lIl/Xxz5/2KEkxM5lC4KdMWAJ2QNoSWa+SzpeiF+O0bmW5o4LdGLPnqI1v6Pk7zVz0IXH2OyvvSVXrq77HzZX1dQ1P29f7cLq10wCHOeqr9EKt16Q21/I00j+VguB4agUHtC1x2ioiJHiZNZj3AF/+hru3jjuHUxCIqGUfZRn59EhivC2V3SosTl0RQPl6NJhngRz08jUjADrGXjpMd7VoOBRHn+tYC7c4T7g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Cx+AglUz4EiwLL672TyWbN8szaImaJKBS7TzVI4dZ+Y=;
+ b=fig/xBGE+Ui9rJHkaA8F+phc9OkccRaJPhvPmmcq7la7/ZtTQUMeu4qVAxKd/FzVZVu6avNF66DlxXwpXGsdYkhOWd29gWYljeuIK7JPvAfxf+owEyrP2OyAFuvcnF9kqLFoCk8D0OeG1mdov9FC+5rKsDmdz3Vq8hhBATlN4ImBsHOHUuXgaj9p9CVM7++Fg+jl5l5pXv73JxvorZf8ZLyrFyfZUJjdiyDpY4mav85uOU4RswylMxRpK8l0dj/jEonkqFVvNoGoM0XFeob4/47Qt1DcUuUWBnJVrkGq0EcAw3A9OkQQ0fhDhwo8Sj4bj3l9fe3UQxAF53Cluu8bmw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Cx+AglUz4EiwLL672TyWbN8szaImaJKBS7TzVI4dZ+Y=;
+ b=THuDAJjcR9XUgY2TEqtARuKI1xQr0o5dBW5iBkiswJC4LDy8dyXotLEioqZ4JAxib2qkKYUWGJaY6sriVakM4mnEQ9blR0g0SIYzbGXLNy40Z2j48gZNukf6IlMRftqDLkylhY8GIOtttsxwCG+ApoZT5/HTeVgjU7ldW0WttFk=
+Received: from BY5PR10MB3793.namprd10.prod.outlook.com (2603:10b6:a03:1f6::14)
+ by BN0PR10MB5094.namprd10.prod.outlook.com (2603:10b6:408:129::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6500.27; Thu, 15 Jun
+ 2023 18:00:30 +0000
+Received: from BY5PR10MB3793.namprd10.prod.outlook.com
+ ([fe80::773a:ca84:21fe:b3de]) by BY5PR10MB3793.namprd10.prod.outlook.com
+ ([fe80::773a:ca84:21fe:b3de%5]) with mapi id 15.20.6500.025; Thu, 15 Jun 2023
+ 18:00:30 +0000
+Message-ID: <3c28500f-1284-eee2-c63a-590c280b675c@oracle.com>
+Date: Thu, 15 Jun 2023 14:00:24 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [PATCH v6 07/14] x86: Secure Launch kernel early boot stub
 Content-Language: en-US
-From: "chenjiahao (C)" <chenjiahao16@huawei.com>
-In-Reply-To: <ZHwKFADVXyNYJBCp@MiWiFi-R3L-srv>
-X-Originating-IP: [10.67.108.26]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemm500016.china.huawei.com (7.185.36.25)
-X-CFilter-Loop: Reflected
+To: Matthew Garrett <mjg59@srcf.ucam.org>,
+        "Daniel P. Smith" <dpsmith@apertussolutions.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-crypto@vger.kernel.org, iommu@lists.linux-foundation.org,
+        kexec@lists.infradead.org, linux-efi@vger.kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        ardb@kernel.org, James.Bottomley@hansenpartnership.com,
+        luto@amacapital.net, nivedita@alum.mit.edu, kanth.ghatraju@oracle.com,
+        trenchboot-devel@googlegroups.com,
+        Ross Philipson <ross.philipson@oracle.com>
+References: <20230504145023.835096-1-ross.philipson@oracle.com>
+ <20230504145023.835096-8-ross.philipson@oracle.com>
+ <20230512112623.GE14461@srcf.ucam.org>
+ <98decbe9-846a-6d36-aa7a-f906a19fa6cf@oracle.com>
+ <7ff17d2b-7030-fbbd-c495-b43583e3f9e7@apertussolutions.com>
+ <20230516014549.GB5403@srcf.ucam.org>
+From: Ross Philipson <ross.philipson@oracle.com>
+In-Reply-To: <20230516014549.GB5403@srcf.ucam.org>
+X-ClientProxiedBy: BN9PR03CA0547.namprd03.prod.outlook.com
+ (2603:10b6:408:138::12) To BY5PR10MB3793.namprd10.prod.outlook.com
+ (2603:10b6:a03:1f6::14)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BY5PR10MB3793:EE_|BN0PR10MB5094:EE_
+X-MS-Office365-Filtering-Correlation-Id: c8675f2a-21a5-475b-6711-08db6dca681a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: bfbpluL9fCWE6d8Cd2Fpv9/7EN7TAJcNbKw+iZYBlapuQ3rOQUxkknuYE/GvImG27Ky8g/ruTPgTXonHoyXp5PDGIC8E8uI6m7dfF73eG/uhkG9p8w/U3eO779NOTXO/flgbxbG6yIH0GEEpBTUkDmBBkiHxx6ad4NRHP1paTQ0Bt0pDPbpNbUw/P2M5HniPvUk/mOZzfxw86Pcb4ko3PynIG7nsN/fxIh1msvgZ43o7wboftcjGDQIw9qA3SljqjWZfeFM0si6oDXg7rVYs9rFTrwlBEN5CI4KWbMXjeqEQev3UZqM6PqBQCgYt/MngioEgTgUw/QiQAQ+BXkNGx+ZaU+5PIdRrGV+jiBy5/0pID2YKIZuMaJBK9nwgfzaNy099KIojsOiofDB0PonCQ72Opc9AUgJRyOOT9mSTHJCxQJpw07AYwKFvb94HcYOn4qgv12O/uVjpFOFAknZcWP7qGy4dY9PfeLzpYrHS/lyXgSoi6VH66qJU97nIfiQhrziVMaS5+lhQNelMavq79K6TyE2Z9JnieaX5EIPdJnnkS7VlWZRjJhZHKeNPC6ZUx8JsGIxa3fYCcUjF04Cu8fAKHGJR94gxwj8MB6S6yoji43VcH7yV29GXSDZxp2LW3vrxpSDciNAwNuDguam7fA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB3793.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(136003)(376002)(366004)(346002)(396003)(39860400002)(451199021)(31686004)(86362001)(31696002)(8936002)(38100700002)(8676002)(5660300002)(7416002)(316002)(44832011)(41300700001)(4326008)(66556008)(66946007)(66476007)(110136005)(2616005)(53546011)(478600001)(186003)(6512007)(6506007)(36756003)(107886003)(2906002)(6486002)(6666004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NVNIYi9UTEtkZ1R0bk5jTlFUNVQ0cVovOEFnQlBJZzBLMFAxSG40ZGo2VzU5?=
+ =?utf-8?B?WmxVelQxekU5RTFYYkRuNEoxSFR4eFkzVGR3Ty9VTVV3K0R5OFlsZlhEY05s?=
+ =?utf-8?B?STlzdWR2VVRaUXR6UmlMUFRaSkVUUlBvZ2piaVhBS09sUG5Ga2ZndXN3TC9l?=
+ =?utf-8?B?bUlBSDNNbmRsSmt5bFYvemlsSW82QUR4ODQ1OFRnQU4zMzNxWUJudjBSbit3?=
+ =?utf-8?B?bUpzMDFHbHJDRUlpVGpUZlJOWm40RGdXNnh2YXNUWEVqV3liK1pMOGx1Ty9F?=
+ =?utf-8?B?WXJTQ1h1TEZCTkpHeFFCVHNnRThCRGZIUFhudlZvajhDQmcwelE5Unp5ZDF0?=
+ =?utf-8?B?bHdNdnh5NmVmSmhGUFZrdkxxKzVoSFluTURvZFhOaDdkOWpBYmt6czEvUGxJ?=
+ =?utf-8?B?N3FaSHVpQmdtTnZmNGQ4T1FpYTVSNUlnK2VxRk53Yk0yVm1Wa25ydDcza0oy?=
+ =?utf-8?B?Wm1TQ0R4REVqb3pSSnZSNGtGT0Eyc1dlV3U1SWVweFZJVmxiN0Z6S1B0U2NK?=
+ =?utf-8?B?YVh0SnVESW93bXJieTNUYkdzRG8weTNSREVJa3V6SUxxWS9PQkNjZ29hRzFE?=
+ =?utf-8?B?YU5WaVd0aHdyLzVFVHBCQVVoSUROQ0ptYTE2Vkt0eXB3bXJNajVkSFRLbjRl?=
+ =?utf-8?B?Z0FSNTRBanFIUDNOTFFjcUNNOU9Venc2a2hONk5HQjhDaDVCTHFZaklvK2I5?=
+ =?utf-8?B?bTIyK2NLbHJIbWtaK2E0bXgxQ1BLaTE2NmZHK3VuNVJ5c2hoNFVZdmFITW12?=
+ =?utf-8?B?MFVSN3ZyMGJ0ZS81SjFxSzVxeXpiMWRxNzROZExGT3ZXdEd2S2hBcEZSMFUy?=
+ =?utf-8?B?aW5KUFRwRE8za0I2cVJZT2xLSU1sSlFoRWFFWXVucFJsbVlaMkhXcHNzblNo?=
+ =?utf-8?B?RTE3T21Oa3VZVnZHREgydVRrSTFCVUtObUtRZ0RwM1VUaFFGZEVzQXIrTFA5?=
+ =?utf-8?B?UDRZS2Y0NmVmYWp5OXhEekZsK3ZMbXRmb3dYT2Z6WnVSZEhrODV5Wk1HWG1R?=
+ =?utf-8?B?NzJxSzk2NjBXQzVqM0xIM29HMXZncjlHazZKbnhCVEE5UTBLYnZpVGE0VS9o?=
+ =?utf-8?B?eGQrdVFaVmdLU09PSi9qeUtSWUY5S25YbmZrSDliaW8rV3kyd0V1SzNXZkRl?=
+ =?utf-8?B?blZsY3NvVnZ1bTN0U2xrdFE5UnV1Q2RvWE0zVGo0eE1xWXk2MVVZSDFjWWho?=
+ =?utf-8?B?TVhmUXh4aG5Va0k5dHk1Sy9QanM1QlBqY040RnFjV2ZVcGw0VTcvQnZFRHY0?=
+ =?utf-8?B?U01sM29xVDF6eDJzODE3VkRpQnhiSlM1SU8yVTRtbjRva1BQZ1dZUkVGcU80?=
+ =?utf-8?B?QUtZRUxadWl4ekkya0lPUlU4WTZ5YnppL3pEdTVTMHFlSzVTcmF6cm4reEpT?=
+ =?utf-8?B?WGdtQXBTM1N1K2JXR3dhMnd1eXJUMXlkMnE2VTltamZJUUpMbXZWYzZVMmZ2?=
+ =?utf-8?B?Q3JDaDBuNTNRc2M5U3dMekYxTEhqTE84RFpsQS9VLzhoa25RK1VLSXpReTBZ?=
+ =?utf-8?B?N2NYZWcwVzlRMGhiM3JHcHM0WXl6aXNYSklYNnp5YmV3MFN6SEVaWkd4Sjdo?=
+ =?utf-8?B?dDdNWFNMM0dEWkQzYXNIclliOVBkak15RitTNU1jdlErdDU1VWZxNWNaUkZJ?=
+ =?utf-8?B?dGRBM2pRdGt4VTVwYjJlNGxzZUwzRjd3ZXFPOEhxL3hnSTd0VnZobXcrc1ly?=
+ =?utf-8?B?eTVsOE9GTzh6VFRUOE5VcFkvK2N3bHZaaWFERUlYSkxxWmVtTVE4M3VrWlpG?=
+ =?utf-8?B?bDJpTTd3dFh6akZ0VjNSSUJydFRlNERsZWZ2bTdIL0RCakkzdFkranQ2TFNL?=
+ =?utf-8?B?cWkrNmozT3MvdjBhVUprTnJrRGxBdXNvSFZ4YnNsaUtWWHU5bUJkWTR5QVRI?=
+ =?utf-8?B?TExkamQvWHBZdUZ2a2pWUUR4YmRVUHVEMFlwYWFaeVQrbGhaVmpKWHRWRjJu?=
+ =?utf-8?B?OWJiTWpSaHF6YjF1c2NseGVDekEzaHJENWhSamdCbEhnVXk1S3prWXVwY1dV?=
+ =?utf-8?B?K3kvSXhQaUlpd1dqNkxJZWV0eUJVbjR0dHdnR1g5a0lBNE5tWUg4YzhXWlRJ?=
+ =?utf-8?B?aThveElHQjdQMDdXUEZYZ2RIOS9NTFpMdkVLS2VBWFRIUU55TlpveGVLUHN3?=
+ =?utf-8?B?ZWc0WURTSkJhYy9WK1pJRjg0OWpXRXlYQXJtQVBmM3N6U2pzWk1wMHZuZGxm?=
+ =?utf-8?Q?h7Go9GIZs3jypF9kV2vXmtU=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?utf-8?B?dWZ1TlJFeWkwM0R0NkFQUTlxUi9kSWpKSzR0ZEQyOEhYbUdNRTdpNFhIZWl0?=
+ =?utf-8?B?WW53eUh3TlBqdmJ3UkNEN1Uyb0FIeFhtOVNDTFJHV1pFTXYwSFQwUUk3M0tq?=
+ =?utf-8?B?VU9QcUhFN2hPaXpTYXN5R2puQ2pyZTdobjU0RHJ4UVpWbjMxQk9YSXdzUlRP?=
+ =?utf-8?B?VlJHNnZmMlJKYStoMVhLUDhjOFhtN2c4Qjl6N2h1SlloUUFYbXJXVXlvU2NH?=
+ =?utf-8?B?bEtNRFdtM00yMndGekh4R2RnbmU3Skd3bERGbGtRU2tZTDA1eFNQV1NSMklX?=
+ =?utf-8?B?NmxCTTFwaGlsbThoczFVcFQrbzlLeFZzZ2FuSTdYMmpUano0NEErTkJ1bTQ0?=
+ =?utf-8?B?cDF6NFMwKzdVTFcwZWI5blZobmFtcFN1cUVvS0xvaU9uTkJWbUtXV0ozclpZ?=
+ =?utf-8?B?bTkwZ0pRSG5CN2VKMTJScFlqK3U4a25vTU55SVNkcXc1akYzMUdaYlgvQkxH?=
+ =?utf-8?B?dENGZnI1V2Z5ak96UWpXaFRDZlpLbGVhUjZSakJyejhaUGxsSDkyMnB2Vnc1?=
+ =?utf-8?B?S1FkTnp4ckc5YmRjS1FBeTZHanlSck10WnRHWFV4WEtFZ3FvSFBYcWJjNGx5?=
+ =?utf-8?B?SXA4UmF3ekZJa2ZUbTVOTjJZWkN5S2FvSm9jaGpKTmI4Um5vNEg0d01NdVYx?=
+ =?utf-8?B?UUQxV1hINnYwKzlQa1laT01GbnZibzlLeVFsdHpnYjhXTVFRdDVwT0hIMVZB?=
+ =?utf-8?B?c3hWWEh2ckNRcGhJNExsT2VFMmhTamg3cjBQMnZUUzFHT0p5WWRveEFsc2NT?=
+ =?utf-8?B?eHI3N2dudHVmQ2VCWHZJeHVMNlp5cmdYWWJ3Qk9PUmtMWnFJZVpBbVZ4aWpJ?=
+ =?utf-8?B?b3JZWlppS0tiamdNNkVTNXg2MEk0bDlTS2tidGsvamR0RWhWci9uR3FRR1dT?=
+ =?utf-8?B?ZWJvMWxrT3FXcEJKMmp4aWNlcDFYZFIzelBCZE9LRmlnNEtYQzlXcVFPbmJ1?=
+ =?utf-8?B?VVRVYm5EYkxrM2VYaFhqV1lXUi9XUUhiSnlrSVNjVEpDdkVPVVdDQnFqZXV5?=
+ =?utf-8?B?b0JGVjVWejZxTTcya2x0eFM2VWVHVCtUZ0R3WndMamxybjQva1lpR3BYaVNF?=
+ =?utf-8?B?eWFLMXFsMTVnYTlPTmlkSEEvOVlqVWZjSFJRQkkyTEYvOXA5d1FhTC92YStL?=
+ =?utf-8?B?ZlpnV0pOdlppZy85aWtlcU9GZDJ0cWRJbWhRVmZ5aFVwMXFlQ1RLUUM1Nmg3?=
+ =?utf-8?B?dGZKVWM4RkxIWDlMZkIwbGZyV0s0V2tnVTc1Y3l6d21oYWVJc1pkZ01uQWlN?=
+ =?utf-8?B?ckQ2RGk5R0RUb256N2hzMlI3SDd1dk9JSWQzODlwZUcrdnFPVDNFMHpFMTJz?=
+ =?utf-8?B?YUtTeHg1c2tuTEQzZVZnMDRya2xSaWtjNEVVOTBQbERVS3FRRHQ3b0llRDlq?=
+ =?utf-8?B?VnU1azdJckVwZ0dkMFliTHMxQWF6RWkzekJLa0FISEY3ZFFXSGZNbTJ6clpj?=
+ =?utf-8?B?WUNZZm10c0s3ODJ6YmJPUVNXeUE3WEc3SkhkcUtFTERUVG5nVWUrNG8rR3dS?=
+ =?utf-8?B?TXowT1RTMnNrY1haeGU1bzY4U3ZTRVJkRTBlQ3VRb3pucHJNVDREYjE2WG1i?=
+ =?utf-8?B?eTQ4WWlnRlUrU0FobnN2c2dKbHVXVmFaQk1hNGFIS0JaZWdURzgxWXpBa2NJ?=
+ =?utf-8?B?elBudmZ5Z0NXdlJsMm1QY3FKMW10eHlPMVFjSkY5TFhEb3QycHFxKzNMQlVi?=
+ =?utf-8?B?NjNIUUFMTlp6QVFFdWVoNTZYeURQWGwwbWhIWERNOTRFZDV1UTZoTGtjaXgv?=
+ =?utf-8?Q?GQGiU3WDUvt7VLybAs=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c8675f2a-21a5-475b-6711-08db6dca681a
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB3793.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2023 18:00:30.2979
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vHv4maYRq1lPq43DT0d9cqC7ivoQMalSGolLsRzckLQGUirLmWIG7JbDau/YTW7tw5S5az2AzYySj83gUf20/8joNrlZmWSN35IaeD65pno=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR10MB5094
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-06-15_14,2023-06-15_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 phishscore=0
+ suspectscore=0 mlxlogscore=999 bulkscore=0 spamscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2305260000
+ definitions=main-2306150155
+X-Proofpoint-ORIG-GUID: C64R6s3QTctcuRF4Hv4qucFr2FGU8AAW
+X-Proofpoint-GUID: C64R6s3QTctcuRF4Hv4qucFr2FGU8AAW
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230615_024921_286565_D34D9C42 
-X-CRM114-Status: GOOD (  18.99  )
+X-CRM114-CacheID: sfid-20230615_110117_375451_2F28222C 
+X-CRM114-Status: GOOD (  24.72  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,141 +219,32 @@ Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-
-On 2023/6/4 11:50, Baoquan He wrote:
-> Hi Jiahao,
->
-> On 05/11/23 at 04:51pm, Chen Jiahao wrote:
-> ......
->> @@ -1300,14 +1325,34 @@ static void __init reserve_crashkernel(void)
->>   		return;
->>   	}
->>   
->> -	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
->> +	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
->>   				&crash_size, &crash_base);
->> -	if (ret || !crash_size)
->> +	if (ret == -ENOENT) {
->> +		/* Fallback to crashkernel=X,[high,low] */
->> +		ret = parse_crashkernel_high(cmdline, 0, &crash_size, &crash_base);
->> +		if (ret || !crash_size)
->> +			return;
->> +
->> +		/*
->> +		 * crashkernel=Y,low is valid only when crashkernel=X,high
->> +		 * is passed.
->> +		 */
->> +		ret = parse_crashkernel_low(cmdline, 0, &crash_low_size, &crash_base);
->> +		if (ret == -ENOENT)
->> +			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
->> +		else if (ret)
->> +			return;
->> +
->> +		search_end = memblock_end_of_DRAM();
->> +	} else if (ret || !crash_size) {
->> +		/* Invalid argument value specified */
->>   		return;
->> +	}
-> The parsing part looks great, while you didn't mark if it's specified
-> high reservation, please see later comment why it's needed.
->
->>   
->>   	crash_size = PAGE_ALIGN(crash_size);
->>   
->>   	if (crash_base) {
->> +		fixed_base = true;
->>   		search_start = crash_base;
->>   		search_end = crash_base + crash_size;
->>   	}
->> @@ -1320,17 +1365,31 @@ static void __init reserve_crashkernel(void)
->>   	 * swiotlb can work on the crash kernel.
->>   	 */
->>   	crash_base = memblock_phys_alloc_range(crash_size, PMD_SIZE,
->> -					       search_start,
->> -					       min(search_end, (unsigned long) SZ_4G));
->> +					       search_start, search_end);
-> If it's a specified high reservation, you have
-> search_start = memblock_start_of_DRAM();
-> search_end = memblock_end_of_DRAM();
->
-> Then it attempts to search top down first time here.
->
->>   	if (crash_base == 0) {
->> -		/* Try again without restricting region to 32bit addressible memory */
->> +		if (fixed_base) {
->> +			pr_warn("crashkernel: allocating failed with given size@offset\n");
->> +			return;
->> +		}
->> +		search_end = memblock_end_of_DRAM();
->> +
->> +		/* Try again above the region of 32bit addressible memory */
->>   		crash_base = memblock_phys_alloc_range(crash_size, PMD_SIZE,
->> -						search_start, search_end);
->> +						       search_start, search_end);
-> If crashkernel=,high case, the first attempt failed, here it assigns
-> search_end with memblock_end_of_DRAM(). It's the exactly the same
-> attempt, why is that needed? Why don't you use a local variable 'high'
-> to mark the crashkernel=,hig, then judge when deciding how to adjsut the
-> reservation range.
->
-> Do I misunderstand the code?
->
-> Thanks
-> Baoquan
-
-You are right. Here I use search_end = memblock_end_of_DRAM() for the
-first attempt on "crashkernel=,high" case, but it will not distinct from
-other cases if the first attempt fails.
-
-I have read your latest refactor on Arm64, introducing the "high" flag
-is a good choice, the logic gets more straightforward when handling
-crashkernel=,high case and retrying.
-
-Following that logic, here introducing and set "high" flag when parsing
-cmdline, when the first attempt failed:
-
-if fixed_base:
-     failed and return;
-
-if set high:
-     search_start = memblock_start_of_DRAM();
-     search_end = (unsigned long)dma32_phys_limit;
-else:
-     search_start = (unsigned long)dma32_phys_limit;
-     search_end = memblock_end_of_DRAM();
-
-second attempt with new {search_start, search_end}
-...
-
-This should handle "crashkernel=,high" case correctly and avoid cross
-4G reservation.
-
-Is that logic correct, or is any other problem missed?
-
-Thanks,
-Jiahao
-
->
->>   		if (crash_base == 0) {
->>   			pr_warn("crashkernel: couldn't allocate %lldKB\n",
->>   				crash_size >> 10);
->>   			return;
->>   		}
->> +
->> +		if (!crash_low_size)
->> +			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
->> +	}
->> +
->> +	if ((crash_base > dma32_phys_limit - crash_low_size) &&
->> +	    crash_low_size && reserve_crashkernel_low(crash_low_size)) {
->> +		memblock_phys_free(crash_base, crash_size);
->> +		return;
->>   	}
->>   
->>   	pr_info("crashkernel: reserved 0x%016llx - 0x%016llx (%lld MB)\n",
->> -- 
->> 2.31.1
+On 5/15/23 21:45, Matthew Garrett wrote:
+> On Mon, May 15, 2023 at 09:11:15PM -0400, Daniel P. Smith wrote:
+>> On 5/12/23 12:17, Ross Philipson wrote:
+>>> This is a good point. At this point it is really something we
+>>> overlooked. We will have to revisit this and figure out the best way to
+>>> find the final event log depending on how things booted.
 >>
+>> I believe Ross misunderstood what you were asking for here. There are two
+>> reasons this is not possible or desired. The first reason is that on Intel,
+>> the DRTM log is not initialized by TrenchBoot code in the preamble. It is
+>> only responsible for allocating a buffer and recording the location in the
+>> TXT structures. When the SINIT ACM is executed, it will initialize the log
+>> and record the measurement that CPU sent directly to the TPM and then the
+>> measurements the ACM makes of the environment. If you pointed at the SRTM
+>> log, then the ACM would write over existing log, which I don't think you
+>> want. Now if you pointed at the tail end of the SRTM log, you would still
+>> end up with a second, separate log that just happens to be memory adjacent.
+> 
+> Ok. I think it would be clearer if either the function names or some
+> comments expressly indicated that this refers to the DRTM event log and
+> that that's a separate entity from the SRTM one, "event log" on its own
+> is likely to cause people to think of the existing log rather than
+> associate it with something else.
+> 
+
+That can be done, thanks.
 
 _______________________________________________
 kexec mailing list
