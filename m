@@ -4,75 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CD965EB64D8
-	for <kexec@archiver.kernel.org>; Tue, 13 Jun 2023 20:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4F84FEB64D9
+	for <kexec@archiver.kernel.org>; Thu, 15 Jun 2023 09:49:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:References
-	:In-Reply-To:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:CC:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=eNWGueNli4GnT3v/vOIunJZsTkyICFfkklyqkbyZa5Y=; b=SV3e5CdgO67b65
-	JatNZFB23fdMov6V9X9ocQAJ/YkjlJak+s7i1gM01cAinQq+gMYFv37XBROC4YWUDW8uTctZ3sq7a
-	lVIxcx33QgwFtz4fyp91TR/5WiGsD71ou8bEOIDQKG0JSkm5u80rqZ4nBrII+He424WX3NvhE1/u2
-	AgoIGbxmC3E4dYcHOBBaACTXt0Kf902lA76r3eo4SXfSz7WqQ32/JuI1h0RyWiG33nMh5uWyrMy2X
-	dNmXPutD0NKGPcX+b4qdcOMnCjBh3/URZggRNly3oxl/4m9MuNN8mqub8VR7ULGuCmrzTEarOutvm
-	9DSNO14sS5TkSb2vw0pQ==;
+	List-Owner; bh=/HjzsycJbzGX1J+aWIdKDrRzm3sjl1J8TmVTMmf4pEw=; b=CWLIIaydT20ArP
+	XW2IZjdFpsYAFRKBjxYAFMfislAf0LUfVMbNxRG/kAHwuA6EYYR6FKuSVS+6kmmlB+W7RhwwwPfc8
+	LF037UEVfu9oFPjdHyw0jo+rS+zp0K8Jr2jRSvjF8IRWZlkUSAA/mF1KzdhTZ8zDa+T4NW1vHjZOh
+	rKA0pmzzgGZ84VtRbNtt3JnrdumGe4/50H4iFNVplFmAIWRFLzQK1IEMXGTiH8C2zcOESVaqRdzzx
+	T0H2/MQmqal8gdsZlKbRAkfz7Dcx+HIlMXN67eGSjGBsqPRBRyyY6B3gcku7dBRWoJ5H04O41tRh9
+	N3XeB/MOJf047t1uDmgA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1q9AUY-0094sM-33;
-	Tue, 13 Jun 2023 20:19:50 +0000
-Received: from galois.linutronix.de ([193.142.43.55])
+	id 1q9jbY-00EMVJ-0E;
+	Thu, 15 Jun 2023 09:49:24 +0000
+Received: from szxga03-in.huawei.com ([45.249.212.189])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1q9AUU-0094p7-14
-	for kexec@lists.infradead.org;
-	Tue, 13 Jun 2023 20:19:49 +0000
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1686687579;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HE1N4P0d/WhniObXa5GtYC4fEZuwmn5LLuL6Wr0ZtK4=;
-	b=Tf3UoS9LopV2MoDkt6mREw6JQ1H92mYf8JJR87y9KFj/g9Y6BCa1QsYyoSYpqQU8Kv513J
-	pN4kb9E9e4kjmxzWqS2LDHP3scrieeSc067Bh5mzIcuZNGGRyI6Y3UbzyynDyXRmWCDwC/
-	UTYLoIx7oveMp/6/NRRZXvvmsZPcCraBbhAPPeZy7w7QMifJcu7iOfGhCbl81K5+EANJqT
-	B3IteW2VL5AvNnkNiS9WdZxIaX7WJQgq/vOtVU9GM3RuqBZKiYvYUssYiwiHsZHBZH5JOJ
-	o32Xzk/Q71EPi97vaNCjxCLPhuCVLdS9Xhe8Y95dAsEYHGaFSiuPSqBA+HhiSw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1686687579;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HE1N4P0d/WhniObXa5GtYC4fEZuwmn5LLuL6Wr0ZtK4=;
-	b=Xp05f34xzTJaqdiVBn9l6bLgZ93PE8JGwnfn3n5pwFY//ykipWNnG09cAq9lqdTQfkJHHL
-	3z+xTe5HLaRIWgCA==
-To: Eric DeVolder <eric.devolder@oracle.com>, Greg KH
- <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, david@redhat.com, osalvador@suse.de,
- corbet@lwn.net, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, bhe@redhat.com,
- ebiederm@xmission.com, kexec@lists.infradead.org, hpa@zytor.com,
- rafael@kernel.org, vgoyal@redhat.com, dyoung@redhat.com,
- lf32.dev@gmail.com, akpm@linux-foundation.org,
- naveen.n.rao@linux.vnet.ibm.com, zohar@linux.ibm.com, bhelgaas@google.com,
- vbabka@suse.cz, tiwai@suse.de, seanjc@google.com, linux@weissschuh.net,
- vschneid@redhat.com, linux-mm@kvack.org, linux-doc@vger.kernel.org,
- sourabhjain@linux.ibm.com, konrad.wilk@oracle.com,
- boris.ostrovsky@oracle.com
-Subject: Re: [PATCH v23 4/8] crash: memory and CPU hotplug sysfs attributes
-In-Reply-To: <40cacc6b-c3d1-c63b-e307-d95b2c53e399@oracle.com>
-References: <20230612210712.683175-1-eric.devolder@oracle.com>
- <20230612210712.683175-5-eric.devolder@oracle.com>
- <2023061320-vindicate-usual-6643@gregkh>
- <13118eaa-6fae-7b45-9f3e-ab95e7d34729@oracle.com>
- <40cacc6b-c3d1-c63b-e307-d95b2c53e399@oracle.com>
-Date: Tue, 13 Jun 2023 22:19:39 +0200
-Message-ID: <87h6rb6rok.ffs@tglx>
+	id 1q9jbU-00EMT2-2y;
+	Thu, 15 Jun 2023 09:49:23 +0000
+Received: from dggpemm500016.china.huawei.com (unknown [172.30.72.54])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Qhcs36BWrzLmp5;
+	Thu, 15 Jun 2023 17:47:19 +0800 (CST)
+Received: from [10.67.108.26] (10.67.108.26) by dggpemm500016.china.huawei.com
+ (7.185.36.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Thu, 15 Jun
+ 2023 17:49:10 +0800
+Message-ID: <852b8777-3c6e-f76b-0413-1c66629f33cd@huawei.com>
+Date: Thu, 15 Jun 2023 17:49:10 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH -next v5 1/2] riscv: kdump: Implement
+ crashkernel=X,[high,low]
+To: Baoquan He <bhe@redhat.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+	<kexec@lists.infradead.org>, <linux-doc@vger.kernel.org>,
+	<paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
+	<conor.dooley@microchip.com>, <guoren@kernel.org>, <heiko@sntech.de>,
+	<bjorn@rivosinc.com>, <alex@ghiti.fr>, <akpm@linux-foundation.org>,
+	<atishp@rivosinc.com>, <thunder.leizhen@huawei.com>, <horms@kernel.org>
+References: <20230511085139.1039088-1-chenjiahao16@huawei.com>
+ <20230511085139.1039088-2-chenjiahao16@huawei.com>
+ <ZHwKFADVXyNYJBCp@MiWiFi-R3L-srv>
+Content-Language: en-US
+From: "chenjiahao (C)" <chenjiahao16@huawei.com>
+In-Reply-To: <ZHwKFADVXyNYJBCp@MiWiFi-R3L-srv>
+X-Originating-IP: [10.67.108.26]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpemm500016.china.huawei.com (7.185.36.25)
+X-CFilter-Loop: Reflected
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230613_131946_536213_69F27DBD 
-X-CRM114-Status: GOOD (  12.82  )
+X-CRM114-CacheID: sfid-20230615_024921_286565_D34D9C42 
+X-CRM114-Status: GOOD (  18.99  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,49 +71,146 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Jun 13 2023 at 14:58, Eric DeVolder wrote:
-> On 6/13/23 10:24, Eric DeVolder wrote:
->> On 6/13/23 03:03, Greg KH wrote:
->>> All of these #ifdefs should all be removed and instead use the
->>> is_visible() callback to determine if the attribute is shown or not,
->>> using the IS_ENABLED() test in the function.
->> 
->> ok, I'll correct this.
+
+On 2023/6/4 11:50, Baoquan He wrote:
+> Hi Jiahao,
 >
-> I've been examining drivers/base/cacheinfo.c as a template for how to remove the
-> #ifdefs and use the is_visible() callback for the drivers/base/cpu|memory.c files.
+> On 05/11/23 at 04:51pm, Chen Jiahao wrote:
+> ......
+>> @@ -1300,14 +1325,34 @@ static void __init reserve_crashkernel(void)
+>>   		return;
+>>   	}
+>>   
+>> -	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+>> +	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
+>>   				&crash_size, &crash_base);
+>> -	if (ret || !crash_size)
+>> +	if (ret == -ENOENT) {
+>> +		/* Fallback to crashkernel=X,[high,low] */
+>> +		ret = parse_crashkernel_high(cmdline, 0, &crash_size, &crash_base);
+>> +		if (ret || !crash_size)
+>> +			return;
+>> +
+>> +		/*
+>> +		 * crashkernel=Y,low is valid only when crashkernel=X,high
+>> +		 * is passed.
+>> +		 */
+>> +		ret = parse_crashkernel_low(cmdline, 0, &crash_low_size, &crash_base);
+>> +		if (ret == -ENOENT)
+>> +			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
+>> +		else if (ret)
+>> +			return;
+>> +
+>> +		search_end = memblock_end_of_DRAM();
+>> +	} else if (ret || !crash_size) {
+>> +		/* Invalid argument value specified */
+>>   		return;
+>> +	}
+> The parsing part looks great, while you didn't mark if it's specified
+> high reservation, please see later comment why it's needed.
 >
-> I'm attempting to apply this technique to drivers/base/cpu.c. In this file, there
-> are features that are compiled in/out based on the CONFIG settings, for example 
-> CONFIG_ARCH_CPU_PROBE_RELEASE. My attempts at applying the technique thus far have
-> resulted in link-time errors for missing symbols, ie. arch_cpu_probe() and
-> arch_cpu_release().
+>>   
+>>   	crash_size = PAGE_ALIGN(crash_size);
+>>   
+>>   	if (crash_base) {
+>> +		fixed_base = true;
+>>   		search_start = crash_base;
+>>   		search_end = crash_base + crash_size;
+>>   	}
+>> @@ -1320,17 +1365,31 @@ static void __init reserve_crashkernel(void)
+>>   	 * swiotlb can work on the crash kernel.
+>>   	 */
+>>   	crash_base = memblock_phys_alloc_range(crash_size, PMD_SIZE,
+>> -					       search_start,
+>> -					       min(search_end, (unsigned long) SZ_4G));
+>> +					       search_start, search_end);
+> If it's a specified high reservation, you have
+> search_start = memblock_start_of_DRAM();
+> search_end = memblock_end_of_DRAM();
 >
-> As I understand it, to use IS_ENABLED(XYZ) to guard-band conditional code, the contents
-> of that code still needs to be compile-able (eg. no references to struct members with
-> surrounding #ifdef CONFIG_XYZ) and link-able (eg. any called functions must also be
-> compiled).
+> Then it attempts to search top down first time here.
+>
+>>   	if (crash_base == 0) {
+>> -		/* Try again without restricting region to 32bit addressible memory */
+>> +		if (fixed_base) {
+>> +			pr_warn("crashkernel: allocating failed with given size@offset\n");
+>> +			return;
+>> +		}
+>> +		search_end = memblock_end_of_DRAM();
+>> +
+>> +		/* Try again above the region of 32bit addressible memory */
+>>   		crash_base = memblock_phys_alloc_range(crash_size, PMD_SIZE,
+>> -						search_start, search_end);
+>> +						       search_start, search_end);
+> If crashkernel=,high case, the first attempt failed, here it assigns
+> search_end with memblock_end_of_DRAM(). It's the exactly the same
+> attempt, why is that needed? Why don't you use a local variable 'high'
+> to mark the crashkernel=,hig, then judge when deciding how to adjsut the
+> reservation range.
+>
+> Do I misunderstand the code?
+>
+> Thanks
+> Baoquan
 
-You can't obviously reference anything which is #ifdeffed out in a data
-structure. But functions is a different story. All you needs is a
-declaration.
+You are right. Here I use search_end = memblock_end_of_DRAM() for the
+first attempt on "crashkernel=,high" case, but it will not distinct from
+other cases if the first attempt fails.
 
-void foo(void);
+I have read your latest refactor on Arm64, introducing the "high" flag
+is a good choice, the logic gets more straightforward when handling
+crashkernel=,high case and retrying.
 
-     if (IS_ENABLED(FOO))
-     	foo();
+Following that logic, here introducing and set "high" flag when parsing
+cmdline, when the first attempt failed:
 
-Builds correctly if FOO=n and foo() is not built in. The wonders of dead
-code elimination.
+if fixed_base:
+     failed and return;
+
+if set high:
+     search_start = memblock_start_of_DRAM();
+     search_end = (unsigned long)dma32_phys_limit;
+else:
+     search_start = (unsigned long)dma32_phys_limit;
+     search_end = memblock_end_of_DRAM();
+
+second attempt with new {search_start, search_end}
+...
+
+This should handle "crashkernel=,high" case correctly and avoid cross
+4G reservation.
+
+Is that logic correct, or is any other problem missed?
 
 Thanks,
+Jiahao
 
-        tglx
+>
+>>   		if (crash_base == 0) {
+>>   			pr_warn("crashkernel: couldn't allocate %lldKB\n",
+>>   				crash_size >> 10);
+>>   			return;
+>>   		}
+>> +
+>> +		if (!crash_low_size)
+>> +			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
+>> +	}
+>> +
+>> +	if ((crash_base > dma32_phys_limit - crash_low_size) &&
+>> +	    crash_low_size && reserve_crashkernel_low(crash_low_size)) {
+>> +		memblock_phys_free(crash_base, crash_size);
+>> +		return;
+>>   	}
+>>   
+>>   	pr_info("crashkernel: reserved 0x%016llx - 0x%016llx (%lld MB)\n",
+>> -- 
+>> 2.31.1
+>>
 
 _______________________________________________
 kexec mailing list
