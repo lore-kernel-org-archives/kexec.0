@@ -4,206 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B9D5DEB64D7
-	for <kexec@archiver.kernel.org>; Fri, 16 Jun 2023 20:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3EE68EB64DB
+	for <kexec@archiver.kernel.org>; Mon, 19 Jun 2023 02:50:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:Cc:To:
-	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=yJM4+L1HugC64HsrM8j5p+cM3IyuRl54wNU1q0Wn1NI=; b=XN+NcpGgHthmMsxZXgFRbRbQhw
-	PWXfdqb0LVWiCl250Np6YN+ngqE+NH7aw8xs+0pnyZHSERiELVXxHS4zyDPTueQjXTwrjqhqXzY1/
-	IfAfVh4jBtHUZYKwQ2i4iGRy6Zfaud6buSXgeaGmO1F3jH0JZQIfSdbLCndgr7R7bCUa3LGEFBu/H
-	AgmEwUhPpOG4aeQV/oi5tZg7z+Pph5lT7oljkIMmr4+od3ofOMByzDPYixwdOdVQrLAkTAarwtXPB
-	xibtRlvX+ZqM5U72Ew35ABaREzklRda7Et8NzJsNcLwJMBF2N1n8R//V6cMkly0hbSeHX+3aHPAkx
-	tZTwJFDA==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:Cc:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:To:From:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=Sf7Gc6eUl3m7PejUvPkMVLH4vz/K16hSe+PVAKRbCJI=; b=gJ8a26fP5Zk3uQ
+	gylNxUUkYSVA3mB3JYjCNPPWofUiMTNGiaPm+l/n5F/liTPMwSBLenDM8kjzmUIvZaylb12lN5nY6
+	ONtvE1fHbiscOvlOlGmYqJXnaNGLMLplTQ/0wh8td2X2gW/uxaExKcfBycBBVaSxnzGdVqxznCfdJ
+	xmye8AAqdEjbYI+I+/AUbYrs2HrovMmp+efP560NG8ZWkgXhqPHo1Mv2h+7wnABpeheoqwE6pf6ra
+	MqrMgaoP+1MimKiotI4vdvpQJAfiRIQSdfKFg17eSOkkLz2cF+TzTDFLFQuWabTkKJ3j6poTbHXGn
+	VG8QTwJAxEI8/vryKuhA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qAGVL-001qcG-06;
-	Fri, 16 Jun 2023 20:57:11 +0000
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
+	id 1qB4xq-007EoM-1t;
+	Mon, 19 Jun 2023 02:49:58 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qAGVH-001qbL-0Q
+	id 1qB4xl-007Em9-0Z
 	for kexec@lists.infradead.org;
-	Fri, 16 Jun 2023 20:57:09 +0000
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35GCi78P026624;
-	Fri, 16 Jun 2023 20:56:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2023-03-30;
- bh=FVRYkNYp7O2zzPKQAlsWaH5BwcccTNYSaWp65RYt8YI=;
- b=KXlaULBRYzeZwTgPZnkmP4f3q8N1Ss3lH7yhS4RtsIqthtkeJdgiFFNvyy38RsN0MXAQ
- wzI+22Nr3sz4E5BFlrJGWT4l9XsKjTtbn02d7b9UlzTJEbbnW9N15YiLgdJOrz5qbRg7
- 0/twnyf7MCyMWcZxZRwIjLX8HLRv/XdxX7c6Fv7wjncy7QrMv1HQ/XKiFcmbXmgyfiPe
- j2am03pyh9qWJ2jkPWs5KhdrT0ZXqez63eX5LHw5eeSMMN0EntA7MjLTDijUHmVrTDLN
- 8O7XjjXa5lMmvQrfUus2r2RRTa9iwKMpYx1zS0qKqf0mM/h41bTlz8dkNKApjI43f9ph EQ== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3r4fy3n2ur-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 16 Jun 2023 20:56:35 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 35GKFVJX039213;
-	Fri, 16 Jun 2023 20:56:34 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2169.outbound.protection.outlook.com [104.47.58.169])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3r4fm8dx38-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 16 Jun 2023 20:56:34 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IHGiqsKlHSogCw7J5fX7nlchzw57BN053ayvmfmTti/mVr0htrj0AaTCk5kL14QhmRvWpBUYRajfGlT5bHUsU/W1RYjh0xJsB2Spr0ivN/jVxmWsxeSRJVw+rGVJPVsMAQcKoBqYOMXBCJt+YWzuLyCoCBWGcZ7ZS6XqYZgql345Yvb83zSOiPWP1jm5bHUgzliyUyE3vtMOMY8K5JgWwmeX9+ykhrjfl38TQ5so5XLSo4ohbT7Ohy7s33jHOIwgCKPD7G+NhKC81b/CNvT1ProS86yuAsMG2PlSa/Y1yupxKs7eYaW6i+Zyfz9teivfPJXYe/YrcVkU7HpgOaRiGA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FVRYkNYp7O2zzPKQAlsWaH5BwcccTNYSaWp65RYt8YI=;
- b=eDr1H776nRmsBhNREZesJ3rfEG0bAXS7psPBZkkyr++1DpyVCpBgItCcoliOCZdEVJq9EpgP7oZPImHiuNSGhq5WQdjYZym7Na4p2Zv4Pf0bBjjbpMDDMTvB9lOTK6Is/QSuDdN0CP9xlF3M8AKRXvLm7L1xrigTtRuVEjjhdT46Ka7tBtFydo0T2leGF97ioJjSfBDwz9jXxbDLsAdinj2nO8xw3Wm/d14vIg6LhgHRpmj0t3peu8Dcy0Q1L+bF4vTvM06IC16NkNrdDOuFdwRAYV5vG+X1pSHAgTG6zr9qJOJvXAoXCp5nsC80L2qVNCqxTnVKA8i/PiS60oNHLQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FVRYkNYp7O2zzPKQAlsWaH5BwcccTNYSaWp65RYt8YI=;
- b=rcyXOs8LP4YIgKg+6xMvHdHFreR2nLgfPhnI9aM/kunPhwefu/W4RGhiGDYBjjTn3kVDDD5C95F1DOYLpWa3Cp9tJ7mjnC6yi+EARpwqJjpxp2vZ/7HTowrpQVMDGWFEXAXi/TG7EnKgYAF2oOFduvilFx8xYmR1cPEP+XjIGOs=
-Received: from CO1PR10MB4531.namprd10.prod.outlook.com (2603:10b6:303:6c::22)
- by PH7PR10MB7850.namprd10.prod.outlook.com (2603:10b6:510:30c::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6500.25; Fri, 16 Jun
- 2023 20:56:30 +0000
-Received: from CO1PR10MB4531.namprd10.prod.outlook.com
- ([fe80::8b8f:b4b1:bb78:b048]) by CO1PR10MB4531.namprd10.prod.outlook.com
- ([fe80::8b8f:b4b1:bb78:b048%5]) with mapi id 15.20.6500.029; Fri, 16 Jun 2023
- 20:56:30 +0000
-Message-ID: <7c2e90c4-6ef0-c1d2-8a0d-655adc265547@oracle.com>
-Date: Fri, 16 Jun 2023 15:56:23 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v23 4/8] crash: memory and CPU hotplug sysfs attributes
-Content-Language: en-US
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, david@redhat.com, osalvador@suse.de,
-        corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, bhe@redhat.com,
-        ebiederm@xmission.com, kexec@lists.infradead.org, hpa@zytor.com,
-        rafael@kernel.org, vgoyal@redhat.com, dyoung@redhat.com,
-        lf32.dev@gmail.com, akpm@linux-foundation.org,
-        naveen.n.rao@linux.vnet.ibm.com, zohar@linux.ibm.com,
-        bhelgaas@google.com, vbabka@suse.cz, tiwai@suse.de, seanjc@google.com,
-        linux@weissschuh.net, vschneid@redhat.com, linux-mm@kvack.org,
-        linux-doc@vger.kernel.org, sourabhjain@linux.ibm.com,
-        konrad.wilk@oracle.com, boris.ostrovsky@oracle.com
-References: <20230612210712.683175-1-eric.devolder@oracle.com>
- <20230612210712.683175-5-eric.devolder@oracle.com>
- <2023061320-vindicate-usual-6643@gregkh>
-From: Eric DeVolder <eric.devolder@oracle.com>
-In-Reply-To: <2023061320-vindicate-usual-6643@gregkh>
-X-ClientProxiedBy: SJ0PR03CA0374.namprd03.prod.outlook.com
- (2603:10b6:a03:3a1::19) To CO1PR10MB4531.namprd10.prod.outlook.com
- (2603:10b6:303:6c::22)
+	Mon, 19 Jun 2023 02:49:54 +0000
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35J1rPGC020370;
+	Mon, 19 Jun 2023 02:49:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=44NntPtwanWBnhVEhxAVjvyqHlt14FXL4khpqBdJBp8=;
+ b=GQe/jnMT61E5RLvd8GtmlUX1nMpGWkOSX8Wgz59oukeEkbCMIxMJ5btp//otAYHcWFaY
+ XFTszImwOvUnsfX2rUR0cnx14IvWBbkUQeQBAyOWTAeVPiMaTC8g2mWqxD96m5zNbHno
+ F583FLxxeXrOEoEvN6bqtQPeaB6BVW6drLtQcRIRFPFP1VDujHY8noA/1wY+g6ghZ2N2
+ qvMqOIgJPwZc74kChshLo9gsXW1K81W3auQb3QrKVgeUF6LL2T0FT7k+1zr7dW3s34VS
+ e/C0P2L7Xsm9jIN9kcIh95Mr5UXEQMhbyZA4N82swSQShbElrNYNTHbIyEshZQBk02LF Xg== 
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3radra0u5u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 19 Jun 2023 02:49:46 +0000
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+	by ppma02fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35J2Gnhe001895;
+	Mon, 19 Jun 2023 02:49:44 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma02fra.de.ibm.com (PPS) with ESMTPS id 3r94f58ty9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 19 Jun 2023 02:49:44 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35J2nfRj60752160
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 19 Jun 2023 02:49:41 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0FDDC20043;
+	Mon, 19 Jun 2023 02:49:41 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7D50520040;
+	Mon, 19 Jun 2023 02:49:39 +0000 (GMT)
+Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.ibm.com.com (unknown [9.43.70.141])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 19 Jun 2023 02:49:39 +0000 (GMT)
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+To: linuxppc-dev@ozlabs.org, mpe@ellerman.id.au
+Subject: [PATCH v11 2/4] powerpc/crash: add crash CPU hotplug support
+Date: Mon, 19 Jun 2023 08:19:32 +0530
+Message-Id: <20230619024934.567046-3-sourabhjain@linux.ibm.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20230619024934.567046-1-sourabhjain@linux.ibm.com>
+References: <20230619024934.567046-1-sourabhjain@linux.ibm.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PR10MB4531:EE_|PH7PR10MB7850:EE_
-X-MS-Office365-Filtering-Correlation-Id: 211895fd-461f-481f-f7ea-08db6eac28d2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: qZJ1vSQ9l5/yHGtIGd/o49s5wX982Qk0vVxpgRPGEZph8naKBoJ1StL6ZEt5npq4cb2RFgA4k4zYWOByxUEBIqdQ1oPRf9XHXskT0yW2EZej7u2AXF7fUSoWkaqFCneydBUiZheavgjMP0iDV46sppLYQTfaKbZDy7TFlTLU/Q1zomqQVnZOdy3+oJ/+L/9lnZaSwWNhauLL9uBdPVq3n02Wg9m052z7ibLuwGZalYw02nYpr9g8CNDsutzidoy8R4PTpMzHkaARyvqagJF5vaNa064j78H7EtTlzM8Vc/yzP95jW2jfmeRoB6kMA7QJyCviyBvavB895un3m8IPkiqL+Dw3ADr//5iEx3H1aE2jY7Dim5st4rNhcgziVLCutxjjx8aN3nDBLMt2P32g3o+062hS1EYJmXH1x/Ot5OK3Ja1YlTy2PYWobLh/O7YikhLNXd10SFurmfmZz4drTs/Rqinvv4m7euP1blXkS8FIjfS1BxgGCxodAS7B6doFIby9hCtiRt2T6rODnC74fxrlrLluD/oNN3kfKcCtBYqOTeGxvdKViq+4S5rn4t/ps9/monoFmsiainG9r42p/GvepUlaixhnF16xLITq7t+9dFOrjB0VVXeuyKWpuO14AdPHLrnIzVmKyt2nJWcGxw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR10MB4531.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(39860400002)(376002)(136003)(366004)(346002)(451199021)(36756003)(38100700002)(86362001)(478600001)(8676002)(8936002)(41300700001)(6486002)(31686004)(4326008)(31696002)(6666004)(316002)(107886003)(5660300002)(7416002)(7406005)(53546011)(6506007)(6512007)(186003)(30864003)(26005)(2906002)(2616005)(66476007)(66946007)(66556008)(6916009)(83380400001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TGhja2JNb3lSY3ovNCsrQllVb0lRZmo5dU1ieU1mdm90blZlanZpOXBnTmNn?=
- =?utf-8?B?L3Nld0RIYkRwckJ6Zm5tOVgxc3NUbTlXRFJrSTJoR2NHSWdEbkQrUlhoZmlq?=
- =?utf-8?B?V0hlcHN2U3dRQnI1QllvZWxOWUFhNjEzdkx0M0ZqN1owMmVIbEh6QnRuTzRD?=
- =?utf-8?B?RTZ2RmtnRlpiVEE0VzRIYXo2M0NTWXRWN3hzTk1CNGRFVTlVenVNWi9mQWg5?=
- =?utf-8?B?SUc2Z3NaQ0lieGJISk0vbi9UaXdJMFZ4NTBsa2dkQS9uN3FMaURkUHdqMXFK?=
- =?utf-8?B?d3ZnQWZLM0M3cU1tWWovS1lJREpyeVdYa0pCN0Nwa1l6RnZwRWkyYlpjbHVh?=
- =?utf-8?B?eWh4UjB3TXBwV1JBK0svYlJqclhzWlRnQmIyeVExWm5Bdng1VUxKanJncnRi?=
- =?utf-8?B?TkZLYzNwWUFKckVwY0VMMjBkNDhjRWlJSE5VcXVzWm85eFdvM3k2R21XR1M1?=
- =?utf-8?B?dTFneWN2aGJGOVFuSktvd0RDSS9pMzlXclgyb1FaZDE3aEZ0T29jZGZiVGVM?=
- =?utf-8?B?OVdSNjFXSUVkc0s4NldzekcreTR0NUFwV3dPUnBKcjEzblZkMnVsSjFjbjcz?=
- =?utf-8?B?TTdQeFN6dkE4UElQZzIzYjZDWWc2OXNIeDEraEhCS1FNazZoNDdxWkJKRlN3?=
- =?utf-8?B?UmlyRXhLNWtCZDQ3cTg3TDNRY1V4eks1MFhKMWJ6MzRzZkZZVmxNY1A4ajdt?=
- =?utf-8?B?SjRXeUZ1L0UzNmczSjMzSXFPaVZDZlB1akVNZElKSWorRFpmRVFES1dnL2dN?=
- =?utf-8?B?T3o1ZUlWbE1ZZk5CKzZqV1lpYy8zK2o5cUJRL1RNSGdFNUNkeDhWWjAzTmgz?=
- =?utf-8?B?eEN2NHJIRWhwZjBDK2UxMzhTeDZ1ZE1JZFVQTnBLeDRBOTlrWE5TODdhaEJN?=
- =?utf-8?B?VGhDQklNc1J4eEtlTUc4TlJZYjdiM21UQWFFaGpMaVhQOTJ3eE53cldLaFd2?=
- =?utf-8?B?TUg1ZUJ6ZllMdFF2d3lzUXdGUTJCN29pV0lmTEVzRCtraEFzL0FqQWMzallO?=
- =?utf-8?B?dWZ4Sk1PdExDWmFuMzloU1pjbHI5Q1VoM3pmN2YrUnF5V0NMeCtKSGp2OHpL?=
- =?utf-8?B?dkJwRno2UVdaUExoQllIS2c1YmtweDl4aEJFU2M3Tkt5OFVEUlNvbE56NHlI?=
- =?utf-8?B?K0pUUUdlYTBWU2ZkcHhGemF6cytzK3BWR0gweFRVTlZWU2NFZi9aRjh6ZjZN?=
- =?utf-8?B?VEVBL0R6NSsrODZ1OGpISEpVeXRObkdaVnI4a0p3NUVBT2xmeEd2NTJUUXdM?=
- =?utf-8?B?bWVmZGM4cUpKZXB5QzVac0RVYy9WWDBEMFdYOHJHV09nNUlNQjMrSCtCcFFw?=
- =?utf-8?B?WkVlWnF6YnFFOCtRaHlFTkYvQ2I5bFBKd08yQkU1OFpnZjZRUjllZmt6Qjg5?=
- =?utf-8?B?TzNZY2t6c3JiVGpLZWxKcUo1WjNZUjlIQUd0V2NpNDdsZEFXdnJVUm94ZWxW?=
- =?utf-8?B?WXhJaU5vc09QdDdFb25qaXdpNXg0WXpEQ3RZVHkwUDFYS2pqcDV5TjJPR3Bn?=
- =?utf-8?B?NmxUSE4zK3YyVHROOE1PUTVBWDNwQXB2Y3I2L2JQRTBQeXVMcFFrS05xd0cv?=
- =?utf-8?B?S3FjdDNQSkI4aXIwWU11SmZoeW5DV3BqUVB1UExZSDlYeTBlT0RhZmhZQzBJ?=
- =?utf-8?B?SmxOQ2hBeFdpN0hqK1U0UEJId1cwN1lkNjdVMHNXTXRRL0NnNkw4WklmNTRT?=
- =?utf-8?B?VGJpMGhLOUlNQkFQYVFGTjd1cUk2dW1STzkxZjR1UDI3YXgwV2swZ20zWFQ3?=
- =?utf-8?B?ZTJxb0JZNE9UTlBsTHpCWFk4UnhjYUlBWFpyWjJSRDJoSFlHdU8vVmdsYmpu?=
- =?utf-8?B?cE5iM1E5bVVOSjhSSURYTHd3N1Erajg5THZFMjlzeHBKdmpaK0xpUHhlbzRp?=
- =?utf-8?B?S3RIVDNNWm1HRm1XYS8yMy8rR2VDUDlhbytqaDFIaFMzKzdSREVJemx4bHAv?=
- =?utf-8?B?Y3JLL21jd3BLVlVRaUpNRjVIaUErUmlhWHY0dTRuTEFFWFpXU0FzQU5DQi9y?=
- =?utf-8?B?bFVtWlpOaG9GQ0wxWjRyU1N3UHNYNmhhUCtqajlhZ0g3Ymtmb28rUGJuR3Vs?=
- =?utf-8?B?cGQ1Rm8zeWgycnhIRENzWjJsY3JKMUZBM2puM0t4Z1g2aVFPQVIrMVByTnk0?=
- =?utf-8?B?WVRrU285ZXROODFORWtLUys1Vmg4L3hFYXUwVEVCK1BTSVhnR25VQlRadEdE?=
- =?utf-8?B?c2c9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?utf-8?B?MGp2RWtPVHNSYnI2d0Q3VWNTdG13TUtwS2VBeFNmZHNZRHNaaHZsejZoLzZQ?=
- =?utf-8?B?aXZldzNtQXhkelpuSzhFZVFMZXNWSXVORUhwVHpib2FNUkVwem85QXk3OE9n?=
- =?utf-8?B?TTM5SjlOMTlINmh1Vmh6TGVpbERCbERYZEkzdXIzUUJEbTNwS3ZZdFk0N2c1?=
- =?utf-8?B?Wk9IeEErNkRqclliaExLb0h3eUt1dStxM0RlMy9MeDlJMTR3ZmRnUmVPRkRl?=
- =?utf-8?B?SWVYei9CanBhQ2YvNXBNWU8xRmVQaE5XVU5LUTh6UE1RYXZnRUF4QmxMVWhM?=
- =?utf-8?B?RVhnZFpkcDBWTmF4cmlIbVNOTXJ0U0xrTVJ6akEzbzl6MkZVbGk0UklrNFlB?=
- =?utf-8?B?UXIzQWNjUXVNQXVZU2lkK0sxSCtCdm16N0F5eWFnektucnFPVXBCRUlRTjRo?=
- =?utf-8?B?em9EeXlCYTZRdkVJQ3g5RUIwMmZVTFZlSmJJR0pJZEFYb3lHeFkrdGZCSHpT?=
- =?utf-8?B?WEtBYUhsMFlzRnRGSDNXeTBzZjJlWFVpbUxKRk1KQ1h5S2pVQkp1RlZkczFa?=
- =?utf-8?B?M1ExK0ZhZmdxUHhIVnR1OG5rODFHU2syUXUwYklFNi9va3d4Tm4vZ3RtYXFN?=
- =?utf-8?B?T2tHdDRjOHE1NmFSZTU2aU9IKzIvNnpxRmJ3ZHBtYXUrQVJ3Q1dNZis2dWly?=
- =?utf-8?B?K1gwd0I1ZDBnRnVud1B6Ylh2b2thMy9wZU1rMWpyZy90TkJKSDFvbEg4N01m?=
- =?utf-8?B?b1ZMa3NCVjhKaEhqaHlWVDJ1TUdEMGFTTkJUenh1QW1iWWJTdGdNOEY1ZEVK?=
- =?utf-8?B?enNFS3NXRlUrOE4raDB5NjVPWXRCYWFQMUZZQnljaFZGVlFwT2JVZ0ZEcWk4?=
- =?utf-8?B?blJhWWZXNWZpSEFpOUZZeEpBQTM2RjlKVlU3a1JkMzFsaGR0WHBDU3BFajFK?=
- =?utf-8?B?OEg1alJFcStKQWZUNm9kNG1ETWRBMkhTQ2xzNmpCelRwUzBZbW05QW5FVlFx?=
- =?utf-8?B?aTlYK3FOZTVxd2JZOHdCY3gyN2l2cnJBZDVKK0hzdE5WREx0N1BVL2ZiSzVi?=
- =?utf-8?B?Sis5MDJPQlg4NGIrUVdGbWNSWGs5UCtMbUt2NU5vWXlWSW1GaDFXS3ZJNmxG?=
- =?utf-8?B?U21iS2l1a1hNWU9tUS9SbjV2c1Y2d3hnczU0eDVrMktqc0ZCNGh0WHplVVQr?=
- =?utf-8?B?ZVIrMDlYZG5wQjhzUjVRTzFxZWIzQ0tSVE9mRXFZZGR0Wnp6ZThVQjB4emQy?=
- =?utf-8?B?U2FDRFZPeHphU0F5Qi9WWUxDaWFMYVpUYWczSjdaR3Y4REtKSzF3UkdLSFU1?=
- =?utf-8?B?MENMaWlXWlBmYlB3aitldTNmS3VTeVdPYVpUaVBTYitlOWpEV1dIdmo3cnQz?=
- =?utf-8?B?aXBrYW40empZSk1hWVVvR0Z5Z2QrWkl2TGh3R2VRTEhUNDdLYXNBOUZOWDFo?=
- =?utf-8?B?RWF1L2tNR2d5SURTaUlYVmdlQkMxVzFzclQvZWMzdVpkUDVya2o2K3phS3Uv?=
- =?utf-8?B?NU1KVWV4TnFoUHdnc2lGL3NnRndSMjVNQ2M5YkNnQXp1am1HeWMxeVhHZlJJ?=
- =?utf-8?B?bUgrTU52QTBPNG5yalpxWEg2enpPMFpBK0JpSDkvTnhnSUl5MmtMNFhNcjVi?=
- =?utf-8?B?OEpjQXBYTEZwQlJvMnFSc0w5eFRHOHFLTXVtbjlCeW5jY0hJL2NQTDkxbjNR?=
- =?utf-8?B?enNEZ2g4RWJKUkF1S1lsYTl0d00wWHNyRGs2dnQvdDNBcDBwTXppZTZiTU1r?=
- =?utf-8?B?cXRHNGhqeHlzbElBb093YVRTZ096aE1WcEpxZW02NEg3UVdKL3R3dkRFdnJr?=
- =?utf-8?B?ejFseG1vcS9KTVZIcjBxNUlXUC9ueHljU2RjWER2SFJSeCtxMFc4dWtaZUVE?=
- =?utf-8?B?Zy9JZk5kbEF1WS9JT3B6Q1dCRDAvemFFK3dNQ21sN2FmdURGSVdhMXBpQnRB?=
- =?utf-8?B?Q05NVm81VVNMc04zY0dlOU9HakNScGtySFNJOU9ONjBKQ1Q3S05sVnUweGR6?=
- =?utf-8?Q?k6GNozLJyS4=3D?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 211895fd-461f-481f-f7ea-08db6eac28d2
-X-MS-Exchange-CrossTenant-AuthSource: CO1PR10MB4531.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2023 20:56:30.3185
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Bl/045UduvxRJlA2QIBKrZuTKUX2BZknOKcsSlgmh+vaJAQL/1Kklpw5Pg3/lhUV6rUTo/U5wh5278iKH8rKZdgNAjpkP5z0jOxbXcS9Qh8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB7850
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: D4bmSDx3YNjeGmuMstqDpbwd8g4dJxqJ
+X-Proofpoint-ORIG-GUID: D4bmSDx3YNjeGmuMstqDpbwd8g4dJxqJ
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-06-16_14,2023-06-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
- mlxscore=0 adultscore=0 spamscore=0 phishscore=0 bulkscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2305260000 definitions=main-2306160189
-X-Proofpoint-GUID: VGHe44fpbmrCc7XNSa7BUCj39NKX72_0
-X-Proofpoint-ORIG-GUID: VGHe44fpbmrCc7XNSa7BUCj39NKX72_0
+ definitions=2023-06-18_16,2023-06-16_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
+ bulkscore=0 malwarescore=0 lowpriorityscore=0 spamscore=0
+ priorityscore=1501 phishscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2306190022
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230616_135707_311611_EFDA693A 
-X-CRM114-Status: GOOD (  14.06  )
+X-CRM114-CacheID: sfid-20230618_194953_220185_6150E408 
+X-CRM114-Status: GOOD (  37.42  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -215,286 +97,236 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Cc: ldufour@linux.ibm.com, eric.devolder@oracle.com, kexec@lists.infradead.org, hbathini@linux.ibm.com
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+Introduce powerpc crash hotplug handler to update the necessary kexec
+segments in the kernel on CPU/Memory hotplug events. Currently, these
+updates are done by monitoring CPU/Memory hotplug events in userspace.
 
+In the generic infrastructure, a shared crash hotplug handler is
+triggered for both CPU and Memory hotplug events. However, in this
+particular patch, only CPU hotplug events are handled for crash updates.
+Support for crash updates during memory hotplug events will be
+introduced in subsequent patches.
 
-On 6/13/23 03:03, Greg KH wrote:
-> On Mon, Jun 12, 2023 at 05:07:08PM -0400, Eric DeVolder wrote:
->> Introduce the crash_hotplug attribute for memory and CPUs for
->> use by userspace.  These attributes directly facilitate the udev
->> rule for managing userspace re-loading of the crash kernel upon
->> hot un/plug changes.
->>
->> For memory, expose the crash_hotplug attribute to the
->> /sys/devices/system/memory directory. For example:
->>
->>   # udevadm info --attribute-walk /sys/devices/system/memory/memory81
->>    looking at device '/devices/system/memory/memory81':
->>      KERNEL=="memory81"
->>      SUBSYSTEM=="memory"
->>      DRIVER==""
->>      ATTR{online}=="1"
->>      ATTR{phys_device}=="0"
->>      ATTR{phys_index}=="00000051"
->>      ATTR{removable}=="1"
->>      ATTR{state}=="online"
->>      ATTR{valid_zones}=="Movable"
->>
->>    looking at parent device '/devices/system/memory':
->>      KERNELS=="memory"
->>      SUBSYSTEMS==""
->>      DRIVERS==""
->>      ATTRS{auto_online_blocks}=="offline"
->>      ATTRS{block_size_bytes}=="8000000"
->>      ATTRS{crash_hotplug}=="1"
->>
->> For CPUs, expose the crash_hotplug attribute to the
->> /sys/devices/system/cpu directory. For example:
->>
->>   # udevadm info --attribute-walk /sys/devices/system/cpu/cpu0
->>    looking at device '/devices/system/cpu/cpu0':
->>      KERNEL=="cpu0"
->>      SUBSYSTEM=="cpu"
->>      DRIVER=="processor"
->>      ATTR{crash_notes}=="277c38600"
->>      ATTR{crash_notes_size}=="368"
->>      ATTR{online}=="1"
->>
->>    looking at parent device '/devices/system/cpu':
->>      KERNELS=="cpu"
->>      SUBSYSTEMS==""
->>      DRIVERS==""
->>      ATTRS{crash_hotplug}=="1"
->>      ATTRS{isolated}==""
->>      ATTRS{kernel_max}=="8191"
->>      ATTRS{nohz_full}=="  (null)"
->>      ATTRS{offline}=="4-7"
->>      ATTRS{online}=="0-3"
->>      ATTRS{possible}=="0-7"
->>      ATTRS{present}=="0-3"
->>
->> With these sysfs attributes in place, it is possible to efficiently
->> instruct the udev rule to skip crash kernel reloading for kernels
->> configured with crash hotplug support.
->>
->> For example, the following is the proposed udev rule change for RHEL
->> system 98-kexec.rules (as the first lines of the rule file):
->>
->>   # The kernel updates the crash elfcorehdr for CPU and memory changes
->>   SUBSYSTEM=="cpu", ATTRS{crash_hotplug}=="1", GOTO="kdump_reload_end"
->>   SUBSYSTEM=="memory", ATTRS{crash_hotplug}=="1", GOTO="kdump_reload_end"
->>
->> When examined in the context of 98-kexec.rules, the above rules
->> test if crash_hotplug is set, and if so, the userspace initiated
->> unload-then-reload of the crash kernel is skipped.
->>
->> CPU and memory checks are separated in accordance with
->> CONFIG_HOTPLUG_CPU and CONFIG_MEMORY_HOTPLUG kernel config options.
->> If an architecture supports, for example, memory hotplug but not
->> CPU hotplug, then the /sys/devices/system/memory/crash_hotplug
->> attribute file is present, but the /sys/devices/system/cpu/crash_hotplug
->> attribute file will NOT be present. Thus the udev rule skips
->> userspace processing of memory hot un/plug events, but the udev
->> rule will evaluate false for CPU events, thus allowing userspace to
->> process CPU hot un/plug events (ie the unload-then-reload of the kdump
->> capture kernel).
->>
->> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
->> Reviewed-by: Sourabh Jain <sourabhjain@linux.ibm.com>
->> Acked-by: Hari Bathini <hbathini@linux.ibm.com>
->> Acked-by: Baoquan He <bhe@redhat.com>
->> ---
->>   .../admin-guide/mm/memory-hotplug.rst          |  8 ++++++++
->>   Documentation/core-api/cpu_hotplug.rst         | 18 ++++++++++++++++++
->>   drivers/base/cpu.c                             | 14 ++++++++++++++
->>   drivers/base/memory.c                          | 13 +++++++++++++
->>   include/linux/kexec.h                          |  8 ++++++++
->>   5 files changed, 61 insertions(+)
->>
->> diff --git a/Documentation/admin-guide/mm/memory-hotplug.rst b/Documentation/admin-guide/mm/memory-hotplug.rst
->> index 1b02fe5807cc..eb99d79223a3 100644
->> --- a/Documentation/admin-guide/mm/memory-hotplug.rst
->> +++ b/Documentation/admin-guide/mm/memory-hotplug.rst
->> @@ -291,6 +291,14 @@ The following files are currently defined:
->>   		       Availability depends on the CONFIG_ARCH_MEMORY_PROBE
->>   		       kernel configuration option.
->>   ``uevent``	       read-write: generic udev file for device subsystems.
->> +``crash_hotplug``      read-only: when changes to the system memory map
->> +		       occur due to hot un/plug of memory, this file contains
->> +		       '1' if the kernel updates the kdump capture kernel memory
->> +		       map itself (via elfcorehdr), or '0' if userspace must update
->> +		       the kdump capture kernel memory map.
->> +
->> +		       Availability depends on the CONFIG_MEMORY_HOTPLUG kernel
->> +		       configuration option.
->>   ====================== =========================================================
->>   
->>   .. note::
->> diff --git a/Documentation/core-api/cpu_hotplug.rst b/Documentation/core-api/cpu_hotplug.rst
->> index f75778d37488..0c8dc3fe5f94 100644
->> --- a/Documentation/core-api/cpu_hotplug.rst
->> +++ b/Documentation/core-api/cpu_hotplug.rst
->> @@ -750,6 +750,24 @@ will receive all events. A script like::
->>   
->>   can process the event further.
->>   
->> +When changes to the CPUs in the system occur, the sysfs file
->> +/sys/devices/system/cpu/crash_hotplug contains '1' if the kernel
->> +updates the kdump capture kernel list of CPUs itself (via elfcorehdr),
->> +or '0' if userspace must update the kdump capture kernel list of CPUs.
->> +
->> +The availability depends on the CONFIG_HOTPLUG_CPU kernel configuration
->> +option.
->> +
->> +To skip userspace processing of CPU hot un/plug events for kdump
->> +(ie the unload-then-reload to obtain a current list of CPUs), this sysfs
->> +file can be used in a udev rule as follows:
->> +
->> + SUBSYSTEM=="cpu", ATTRS{crash_hotplug}=="1", GOTO="kdump_reload_end"
->> +
->> +For a cpu hot un/plug event, if the architecture supports kernel updates
->> +of the elfcorehdr (which contains the list of CPUs), then the rule skips
->> +the unload-then-reload of the kdump capture kernel.
->> +
->>   Kernel Inline Documentations Reference
->>   ======================================
->>   
->> diff --git a/drivers/base/cpu.c b/drivers/base/cpu.c
->> index c1815b9dae68..06a0c22b37b8 100644
->> --- a/drivers/base/cpu.c
->> +++ b/drivers/base/cpu.c
->> @@ -282,6 +282,17 @@ static ssize_t print_cpus_nohz_full(struct device *dev,
->>   static DEVICE_ATTR(nohz_full, 0444, print_cpus_nohz_full, NULL);
->>   #endif
->>   
->> +#ifdef CONFIG_HOTPLUG_CPU
->> +#include <linux/kexec.h>
->> +static ssize_t crash_hotplug_show(struct device *dev,
->> +				     struct device_attribute *attr,
->> +				     char *buf)
->> +{
->> +	return sprintf(buf, "%d\n", crash_hotplug_cpu_support());
->> +}
->> +static DEVICE_ATTR_ADMIN_RO(crash_hotplug);
->> +#endif
->> +
->>   static void cpu_device_release(struct device *dev)
->>   {
->>   	/*
->> @@ -469,6 +480,9 @@ static struct attribute *cpu_root_attrs[] = {
->>   #ifdef CONFIG_NO_HZ_FULL
->>   	&dev_attr_nohz_full.attr,
->>   #endif
->> +#ifdef CONFIG_HOTPLUG_CPU
->> +	&dev_attr_crash_hotplug.attr,
->> +#endif
->>   #ifdef CONFIG_GENERIC_CPU_AUTOPROBE
->>   	&dev_attr_modalias.attr,
->>   #endif
->> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
->> index b456ac213610..24b8ef4c830c 100644
->> --- a/drivers/base/memory.c
->> +++ b/drivers/base/memory.c
->> @@ -490,6 +490,16 @@ static ssize_t auto_online_blocks_store(struct device *dev,
->>   
->>   static DEVICE_ATTR_RW(auto_online_blocks);
->>   
->> +#ifdef CONFIG_MEMORY_HOTPLUG
->> +#include <linux/kexec.h>
->> +static ssize_t crash_hotplug_show(struct device *dev,
->> +				       struct device_attribute *attr, char *buf)
->> +{
->> +	return sprintf(buf, "%d\n", crash_hotplug_memory_support());
->> +}
-> 
-> This sysfs file has to be documented in Documentation/ABI/ right?
-> 
-> And did you use checkpatch?  It should have told you to use sysfs_emit()
-> instead...
-> 
->> +static DEVICE_ATTR_RO(crash_hotplug);
->> +#endif
-> 
-> All of these #ifdefs should all be removed and instead use the
-> is_visible() callback to determine if the attribute is shown or not,
-> using the IS_ENABLED() test in the function.
-> 
-> thanks,
-> 
-> greg k-h
+The elfcorehdr segment facilitates the exchange of CPU and other
+relevant dump information between kernels. Ideally, this segment should
+be regenerated during CPU hotplug events to reflect any changes.
+However, on powerpc systems, the elfcorehdr is initially constructed
+with all possible CPUs, rendering it unnecessary to update or recreate
+it when CPU hotplug events occur.
 
-Greg,
-I've been examining this request, and could use a bit more guidance. Taking a look at just 
-drivers/base/cpu.c for the purposes of this discussion, I need to add the .is_visible method to the 
-following:
+Additionally, on powerpc, there is another segment called the FDT
+(Flattened Device Tree) that holds CPU data. During the boot of the
+kdump kernel, it is crucial for the crashing CPU to be present in the
+FDT. Failure to have the crashing CPU in the FDT would result in a
+boot failure of the kdump kernel.
 
-static const struct attribute_group cpu_root_attr_group = {
-     .attrs = cpu_root_attrs,
-};
+Therefore, the only action required on powerpc to handle a crash CPU
+hotplug event is to add the hot-added CPUs to the kdump FDT segment,
+ensuring that the kdump kernel boots successfully. However, there is
+no need to remove the hot-unplugged CPUs from the FDT segment, so no
+action is taken for a CPU hot removal event.
 
-ok, that makes sense. The request is to remove the #ifdefs from the following in cpu_root_attrs[]:
+In order to support an increasing number of CPUs, the FDT is constructed
+with extra buffer space to ensure it can accommodate possible number of
+CPUs nodes. Also do not pack the FDT and shrik its size once prepared.
 
-static struct attribute *cpu_root_attrs[] = {
-#ifdef CONFIG_ARCH_CPU_PROBE_RELEASE
-     &dev_attr_probe.attr,
-     &dev_attr_release.attr,
-#endif
-     &cpu_attrs[0].attr.attr,
-     &cpu_attrs[1].attr.attr,
-     &cpu_attrs[2].attr.attr,
-     &dev_attr_kernel_max.attr,
-     &dev_attr_offline.attr,
-     &dev_attr_isolated.attr,
-#ifdef CONFIG_NO_HZ_FULL
-     &dev_attr_nohz_full.attr,
-#endif
-#ifdef CONFIG_GENERIC_CPU_AUTOPROBE
-     &dev_attr_modalias.attr,
-#endif
-     NULL
-};
+The changes introduced here will also work for the kexec_load system
+call, considering that the kexec tool constructs the FDT segment with
+extra space to accommodate possible number CPUs nodes.
 
-In order to remove the #ifdefs in this struct, as requested, that means these attributes need to be 
-always compiled-in. So I can move the declarations of these outside of the #ifdef which contain 
-them, but these all contain a callback function for show()/store(), which is inside the #ifdef. The 
-struct device-attribute .show/.store pointer to the callback function must point to something linkable.
+Since memory crash hotplug support is not there yet the crash hotplug
+the handler simply warns the user and returns.
 
-Is an acceptable solution to place nop callback functions for show()/store() on an #else part of the 
-code blocks in the file? Ie:
+The changes realted to in-kernel update to kdump kernel kexec segments
+on CPU/Memory hotplug and online/offline events are kept under
+CRASH_HOTPLUG config and it is enabled by default on PowerPC platform.
 
-#ifdef CONFIG_ARCH_CPU_PROBE_RELEASE
-static ssize_t cpu_probe_store(struct device *dev,
-                    struct device_attribute *attr,
-                    const char *buf,
-                    size_t count)
-{
-... real function contents ...
-}
-#else
-static ssize_t cpu_probe_store(struct device *dev,
-                    struct device_attribute *attr,
-                    const char *buf,
-                    size_t count)
-{
-     return 0;
-}
-#endif
+Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+---
+ arch/powerpc/Kconfig              |  3 ++
+ arch/powerpc/include/asm/kexec.h  | 10 +++++
+ arch/powerpc/kexec/core_64.c      | 61 +++++++++++++++++++++++++++++++
+ arch/powerpc/kexec/elf_64.c       | 12 +++++-
+ arch/powerpc/kexec/file_load_64.c | 14 +++++++
+ 5 files changed, 99 insertions(+), 1 deletion(-)
 
-I've been looking around the source tree for examples, but I find most are either groups that are 
-all strongly related and thus compiled-in/out together (ie drivers/base/cacheinfo.c, 
-drivers/acpi/nfit/core.c), or utilize #ifdefs (ie this file, drivers/base/topology.c) .
-
-I may not understand the goal of the request either, as it appears it would result in a kernel 
-slightly larger (struct attribute containing entries for items that are not configured in the 
-kernel) than a kernel utilizing the #ifdefs as-is currently.
-
-Thanks,
-eric
-
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 36f2fe0cc8a5..87f1b569c682 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -665,6 +665,9 @@ config RELOCATABLE_TEST
+ config ARCH_HAS_CRASH_DUMP
+ 	def_bool PPC64 || PPC_BOOK3S_32 || PPC_85xx || (44x && !SMP)
+ 
++config ARCH_HAS_CRASH_HOTPLUG
++	def_bool y
++
+ config ARCH_SUPPORTS_CRASH_DUMP
+ 	def_bool y
+ 	depends on CRASH_DUMP
+diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
+index 8090ad7d97d9..154759bf0759 100644
+--- a/arch/powerpc/include/asm/kexec.h
++++ b/arch/powerpc/include/asm/kexec.h
+@@ -103,6 +103,16 @@ void kexec_copy_flush(struct kimage *image);
+ struct crash_mem;
+ int update_cpus_node(void *fdt);
+ int get_crash_memory_ranges(struct crash_mem **mem_ranges);
++
++#ifdef CONFIG_CRASH_HOTPLUG
++void arch_crash_handle_hotplug_event(struct kimage *image);
++#define arch_crash_handle_hotplug_event arch_crash_handle_hotplug_event
++
++#ifdef CONFIG_HOTPLUG_CPU
++static inline int crash_hotplug_cpu_support(void) { return 1; }
++#define crash_hotplug_cpu_support crash_hotplug_cpu_support
++#endif
++#endif
+ #endif
+ 
+ #if defined(CONFIG_CRASH_DUMP) && defined(CONFIG_PPC_RTAS)
+diff --git a/arch/powerpc/kexec/core_64.c b/arch/powerpc/kexec/core_64.c
+index 0b292f93a74c..cb38da1c6dbe 100644
+--- a/arch/powerpc/kexec/core_64.c
++++ b/arch/powerpc/kexec/core_64.c
+@@ -543,6 +543,67 @@ int update_cpus_node(void *fdt)
+ 	return ret;
+ }
+ 
++#ifdef CONFIG_CRASH_HOTPLUG
++#undef pr_fmt
++#define pr_fmt(fmt) "crash hp: " fmt
++
++/**
++ * arch_crash_handle_hotplug_event - Handle crash CPU/Memory hotplug events to update the
++ *				     necessary kexec segments based on the hotplug event.
++ * @image: the active struct kimage
++ *
++ * Update FDT segment to include newly added CPU. No action for CPU remove case.
++ */
++void arch_crash_handle_hotplug_event(struct kimage *image)
++{
++	void *fdt, *ptr;
++	unsigned long mem;
++	int i, fdt_index = -1;
++	unsigned int hp_action = image->hp_action;
++
++	/*
++	 * Since the hot-unplugged CPU is already part of crash FDT,
++	 * no action is needed for CPU remove case.
++	 */
++	if (hp_action == KEXEC_CRASH_HP_REMOVE_CPU)
++		return;
++
++	/* crash update on memory hotplug events is not supported yet */
++	if (hp_action == KEXEC_CRASH_HP_REMOVE_MEMORY || hp_action == KEXEC_CRASH_HP_ADD_MEMORY) {
++		pr_info_once("Crash update is not supported for memory hotplug\n");
++		return;
++	}
++
++	/* Find the FDT segment index in kexec segment array. */
++	for (i = 0; i < image->nr_segments; i++) {
++		mem = image->segment[i].mem;
++		ptr = __va(mem);
++
++		if (ptr && fdt_magic(ptr) == FDT_MAGIC) {
++			fdt_index = i;
++			break;
++		}
++	}
++
++	if (fdt_index < 0) {
++		pr_err("Unable to locate FDT segment.\n");
++		return;
++	}
++
++	fdt = __va((void *)image->segment[fdt_index].mem);
++
++	/* Temporarily invalidate the crash image while it is replaced */
++	xchg(&kexec_crash_image, NULL);
++
++	/* update FDT to refelect changes in CPU resrouces */
++	if (update_cpus_node(fdt))
++		pr_err("Failed to update crash FDT");
++
++	/* The crash image is now valid once again */
++	xchg(&kexec_crash_image, image);
++}
++#endif
++
+ #ifdef CONFIG_PPC_64S_HASH_MMU
+ /* Values we need to export to the second kernel via the device tree. */
+ static unsigned long htab_base;
+diff --git a/arch/powerpc/kexec/elf_64.c b/arch/powerpc/kexec/elf_64.c
+index eeb258002d1e..4983d67efbf7 100644
+--- a/arch/powerpc/kexec/elf_64.c
++++ b/arch/powerpc/kexec/elf_64.c
+@@ -30,6 +30,7 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
+ 			unsigned long cmdline_len)
+ {
+ 	int ret;
++	bool do_pack_fdt = true;
+ 	unsigned long kernel_load_addr;
+ 	unsigned long initrd_load_addr = 0, fdt_load_addr;
+ 	void *fdt;
+@@ -116,7 +117,16 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
+ 	if (ret)
+ 		goto out_free_fdt;
+ 
+-	fdt_pack(fdt);
++#ifdef CONFIG_CRASH_HOTPLG
++	/*
++	 * Do not pack FDT, additional space is reserved to accommodate
++	 * possible CPU nodes which are not yet present in the system.
++	 */
++	if (image->type == KEXEC_TYPE_CRASH)
++		do_pack_fdt = false;
++#endif
++	if (do_pack_fdt)
++		fdt_pack(fdt);
+ 
+ 	kbuf.buffer = fdt;
+ 	kbuf.bufsz = kbuf.memsz = fdt_totalsize(fdt);
+diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
+index 5b0b3f61e0e7..1757e7ba379a 100644
+--- a/arch/powerpc/kexec/file_load_64.c
++++ b/arch/powerpc/kexec/file_load_64.c
+@@ -908,6 +908,9 @@ unsigned int kexec_extra_fdt_size_ppc64(struct kimage *image)
+ 	unsigned int cpu_nodes, extra_size = 0;
+ 	struct device_node *dn;
+ 	u64 usm_entries;
++#ifdef CONFIG_CRASH_HOTPLUG
++	unsigned int possible_cpu_nodes;
++#endif
+ 
+ 	// Budget some space for the password blob. There's already extra space
+ 	// for the key name
+@@ -940,6 +943,17 @@ unsigned int kexec_extra_fdt_size_ppc64(struct kimage *image)
+ 	if (cpu_nodes > boot_cpu_node_count)
+ 		extra_size += (cpu_nodes - boot_cpu_node_count) * cpu_node_size();
+ 
++#ifdef CONFIG_CRASH_HOTPLUG
++	/*
++	 * Make sure enough space is reserved to accommodate possible CPU nodes
++	 * in the crash FDT. This allows packing possible CPU nodes which are
++	 * not yet present in the system without regenerating the entire FDT.
++	 */
++	possible_cpu_nodes = num_possible_cpus() / threads_per_core;
++	if (image->type == KEXEC_TYPE_CRASH && possible_cpu_nodes > cpu_nodes)
++		extra_size += (possible_cpu_nodes - cpu_nodes) * cpu_node_size();
++#endif
++
+ 	return extra_size;
+ }
+ 
+-- 
+2.40.1
 
 
 _______________________________________________
