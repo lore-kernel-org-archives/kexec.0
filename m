@@ -4,120 +4,175 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 65F31C001DB
-	for <kexec@archiver.kernel.org>; Wed, 28 Jun 2023 15:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 57E46C001DE
+	for <kexec@archiver.kernel.org>; Wed, 28 Jun 2023 15:16:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=A7Fu29udPjrjmAvMBIkUYeKThD8/2TsVp6dnlC/XloQ=; b=SUXP0UdHiblgjF
-	4zbXM+FQVUlna5dcHhXPILmImp8ZXNvNjKtu2XLe+SlfrQeLGXjMmduhGLc4ZGsWa71VRozzXtTZy
-	iwGsOlchqZNEwyb+PZjH8VSrsV4ItQsyWPj0lQOjH8ZfnxWT7HoTTeGFk/qpOhH759l9MbJB2KJMH
-	wmfmAdDWiqpVpalH6KLgQ+u6wsu4rklI910fjZPz1UUfGugrDXh9r6WDmOfgdWsWhZR0V833U9B7D
-	BaZWxyphmh0jUocKu/1xCScMPeonc2AoHpYruKWzmTECc07xNdrNxJuj6tA578gU2FU0mNjx6j6GJ
-	/e/HZ+Jz4N+osLGBwttw==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	List-Subscribe:List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:
+	References:In-Reply-To:MIME-Version:Message-ID:Subject:CC:To:From:Date:
+	Reply-To:Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date
+	:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=UVWRF8IAn/K8dHsjOi90C2oHMT3ZZgNcNqtbrmS5fp4=; b=gk7U5neuW6x8TMmg5m7BRfe5c+
+	rwR6t4unDbKjI4n9CYyJYOa9LgPEpIhV9B0KLMfEMPPTDei++Jqw7Zn5jTo1/HbNsf4F6FrtnUP6/
+	tiuWknA25zXcCMYh7FtzUKhElW32zIxwaseOe1VgVPKxg+W0bi9Hmspbf/jH1G4mlmpaN2lpZIq6g
+	3TM+IcvgVtqpRDUSxt2xy+vYzMp3nxCcONl2wPV7aWIUZkEUYV1To4m+Gg6PwWQm0bNf+vP2bjpdT
+	aiImXRjqglQSqVIwBMpLKArD6eNFxOaY7UFXhxrGfFe8oELomnXfMRgYmwEy3pqe2a3Og15ZJWefq
+	Q1fHqIAA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qEWuT-00Fx5f-1W;
-	Wed, 28 Jun 2023 15:16:45 +0000
-Received: from smtp-out2.suse.de ([2001:67c:2178:6::1d])
+	id 1qEWuW-00FxDR-0K;
+	Wed, 28 Jun 2023 15:16:48 +0000
+Received: from mailout1.w1.samsung.com ([210.118.77.11])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qBw8t-00EPRe-13
+	id 1qBxgi-00EeUt-2q
 	for kexec@lists.infradead.org;
-	Wed, 21 Jun 2023 11:36:56 +0000
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-	by smtp-out2.suse.de (Postfix) with ESMTP id C87691FDE8;
-	Wed, 21 Jun 2023 11:36:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1687347411; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/FQApQPgb/S6VB9crvo39szrL+RZ0B9Iq9K2WpGCiTo=;
-	b=iwyLnEK1VeUWv/tmm/Nm6Cx5NbYxgFmj0mH+P5/gDg9l9WiFHQ1aqfL3EEa87DHfpr/aUI
-	PhCVJRawNs68LlACkkSmFEImXna0QGgLP5xUaED+wkuZFJn4wrg4DCWfOxgJw3/ea1pY1O
-	C9tLa1Flx054EBbIvKK/ApG8ncbzfFo=
-Received: from suse.cz (unknown [10.100.201.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by relay2.suse.de (Postfix) with ESMTPS id 144972C141;
-	Wed, 21 Jun 2023 11:36:46 +0000 (UTC)
-Date: Wed, 21 Jun 2023 13:36:46 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Joel Granados <j.granados@samsung.com>
-Cc: mcgrof@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	Theodore Ts'o <tytso@mit.edu>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>, Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Benjamin LaHaise <bcrl@kvack.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>, Jan Kara <jack@suse.cz>,
-	Kees Cook <keescook@chromium.org>,
-	Iurii Zaikin <yzaikin@google.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Balbir Singh <bsingharora@gmail.com>,
-	Eric Biederman <ebiederm@xmission.com>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Will Deacon <will@kernel.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mike Kravetz <mike.kravetz@oracle.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	Naoya Horiguchi <naoya.horiguchi@nec.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	David Howells <dhowells@redhat.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	Amir Goldstein <amir73il@gmail.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yhs@fb.com>, KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>, Waiman Long <longman@redhat.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	John Ogness <john.ogness@linutronix.de>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Andy Lutomirski <luto@amacapital.net>,
-	Will Drewry <wad@chromium.org>, Mark Rutland <mark.rutland@arm.com>,
-	Miaohe Lin <linmiaohe@huawei.com>, linux-kernel@vger.kernel.org,
-	xen-devel@lists.xenproject.org, linux-aio@kvack.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	bpf@vger.kernel.org, kexec@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org, keyrings@vger.kernel.org,
-	linux-security-module@vger.kernel.org
+	Wed, 21 Jun 2023 13:15:58 +0000
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20230621131555euoutp01cbc0ed048af8c2bf28332479f20c2ce4~qru-OYmE12681126811euoutp01m;
+	Wed, 21 Jun 2023 13:15:55 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20230621131555euoutp01cbc0ed048af8c2bf28332479f20c2ce4~qru-OYmE12681126811euoutp01m
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1687353355;
+	bh=NbLD2SuFhZddkTpTyuzHX5np9Ewwh7mfi7FsRT8ROaQ=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=JNcJ5ITswF0IEJpYFOaxysTaMYVdrBOLr7EOczmyHgvwYgKoHvv+Z1wasrE5vJ9ze
+	 mG9m6hTMHD7eQZj6dy6futmrUSKu6ZtWcQPOiIGUJooV0+o97DkZ38AV+6ABgERAne
+	 ODsU39a5aZus6HUZguwhXM1F7n/MUL3RoWmKiS4c=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20230621131555eucas1p20be9c897ff3f7c6cf943c864400829af~qru_4FVm-1334713347eucas1p2z;
+	Wed, 21 Jun 2023 13:15:55 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges2new.samsung.com (EUCPMTA) with SMTP id C1.C4.11320.A08F2946; Wed, 21
+	Jun 2023 14:15:54 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20230621131554eucas1p135050d4ea931b8da593678132937163f~qru_TTVJM0660106601eucas1p1u;
+	Wed, 21 Jun 2023 13:15:54 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20230621131554eusmtrp1692d0318dd759904de572872ce9c6b36~qru_RdmKS1434014340eusmtrp1j;
+	Wed, 21 Jun 2023 13:15:54 +0000 (GMT)
+X-AuditID: cbfec7f4-97dff70000022c38-5c-6492f80aeefc
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id 94.9A.14344.A08F2946; Wed, 21
+	Jun 2023 14:15:54 +0100 (BST)
+Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20230621131553eusmtip164806c07aa1bfa8f2bab3ed09c2fc98c~qru95WHid1267712677eusmtip1g;
+	Wed, 21 Jun 2023 13:15:53 +0000 (GMT)
+Received: from localhost (106.210.248.248) by CAMSVWEXC02.scsc.local
+	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
+	Wed, 21 Jun 2023 14:15:53 +0100
+Date: Wed, 21 Jun 2023 15:15:52 +0200
+From: Joel Granados <j.granados@samsung.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: <mcgrof@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+	<mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>, Theodore Ts'o
+	<tytso@mit.edu>, "Jason A. Donenfeld" <Jason@zx2c4.com>, Jiri Slaby
+	<jirislaby@kernel.org>, Juergen Gross <jgross@suse.com>, Stefano Stabellini
+	<sstabellini@kernel.org>, Benjamin LaHaise <bcrl@kvack.org>, Alexander Viro
+	<viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jeff
+	Layton <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, Jan Kara
+	<jack@suse.cz>, Kees Cook <keescook@chromium.org>, Iurii Zaikin
+	<yzaikin@google.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
+	<daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, Balbir Singh
+	<bsingharora@gmail.com>, Eric Biederman <ebiederm@xmission.com>, "Naveen N.
+ Rao" <naveen.n.rao@linux.ibm.com>, Anil S Keshavamurthy
+	<anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra
+	<peterz@infradead.org>, Will Deacon <will@kernel.org>, Petr Mladek
+	<pmladek@suse.com>, Sergey Senozhatsky <senozhatsky@chromium.org>, Juri
+	Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>,
+	Steven Rostedt <rostedt@goodmis.org>, Andrew Morton
+	<akpm@linux-foundation.org>, Mike Kravetz <mike.kravetz@oracle.com>, Muchun
+	Song <muchun.song@linux.dev>, Naoya Horiguchi <naoya.horiguchi@nec.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, David Howells
+	<dhowells@redhat.com>, Jarkko Sakkinen <jarkko@kernel.org>, Paul Moore
+	<paul@paul-moore.com>, James Morris <jmorris@namei.org>, "Serge E. Hallyn"
+	<serge@hallyn.com>, "H. Peter Anvin" <hpa@zytor.com>, Oleksandr Tyshchenko
+	<oleksandr_tyshchenko@epam.com>, Amir Goldstein <amir73il@gmail.com>, John
+	Fastabend <john.fastabend@gmail.com>, Martin KaFai Lau
+	<martin.lau@linux.dev>, Song Liu <song@kernel.org>, Yonghong Song
+	<yhs@fb.com>, KP Singh <kpsingh@kernel.org>, Stanislav Fomichev
+	<sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>, John
+	Ogness <john.ogness@linutronix.de>, Dietmar Eggemann
+	<dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, Mel Gorman
+	<mgorman@suse.de>, Daniel Bristot de Oliveira <bristot@redhat.com>, Valentin
+	Schneider <vschneid@redhat.com>, Andy Lutomirski <luto@amacapital.net>, Will
+	Drewry <wad@chromium.org>, Mark Rutland <mark.rutland@arm.com>, Miaohe Lin
+	<linmiaohe@huawei.com>, <linux-kernel@vger.kernel.org>,
+	<xen-devel@lists.xenproject.org>, <linux-aio@kvack.org>,
+	<linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>,
+	<bpf@vger.kernel.org>, <kexec@lists.infradead.org>,
+	<linux-trace-kernel@vger.kernel.org>, <keyrings@vger.kernel.org>,
+	<linux-security-module@vger.kernel.org>
 Subject: Re: [PATCH 08/11] sysctl: Add size to register_sysctl_init
-Message-ID: <ZJLgzo1GuykDV8fd@alley>
-References: <20230621091000.424843-1-j.granados@samsung.com>
- <CGME20230621091037eucas1p188e11d8064526a5a0549217d5a419647@eucas1p1.samsung.com>
- <20230621091000.424843-9-j.granados@samsung.com>
+Message-ID: <20230621131552.pqsordxcjmiopciq@localhost>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20230621091000.424843-9-j.granados@samsung.com>
+In-Reply-To: <2023062150-outbound-quiet-2609@gregkh>
+X-Originating-IP: [106.210.248.248]
+X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
+	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
+X-Brightmail-Tracker: H4sIAAAAAAAAA2VTa1BUZRjuO+fbc5ZVmCOYfCH+CEwNBAtT3zFpYrLxdDMtK6sxW+UMOAoo
+	K6ZZCssmsmIgoOCCBu0IC7sBwrJBuOCsIHETJLkJeAMV5eINBNyRjfXg5Ez/nve5nO95fhwp
+	7Xxc6ibdErpTCA+Vb/NgZNh0frzRRzaWGPhG6YHFkJ5vYKApT49g1JpGQ1lfJ4bh8U4W1BNG
+	DAZjFAWPCiYYeFRZzUD/uYcImntaGEi5E4Uh/U49C7bu2xRoMx/T0FcQgyC9UYVhSGnFcDOh
+	mAabScVCtDafAUt1BQvHTrtCWko0BYnjCQiutbhBeocfDJ1wh/GsXBby8rUUKEt0FJgu/Yag
+	MllDQ3f8UQz1h0KgrG6EguIuJQO3yw9TEDt6CkPyMSWCM+YaDP/8lc7AFYNNAvfjbjBQmd+A
+	oe783xj0f0RK4FTbRQoMsTkSaE+4iSBp6BYCbfY8eFDxOTSfzaAgq/Q6hotRZxHok5+yMGa1
+	SqAzMQVD9eGzFNh6RiRQfvAaBc1j/RjKTv/OvPspP/rLr5i/OvAU84aTBsSnRV7EvDGng+K7
+	TpUi/kj0EMuXarpZXlV+meUzCiP41rKveVXloIQv0nnx2jN3KF7d3kzzhbmxzJoF38hWBArb
+	tuwSwhe9870sWGfNpLZnOe5OKuihIlHzNDVykBLuLZKaU8SqkUzqzOkQUQ52UeIxjMhRm3bq
+	eIRIaWwqeh4xadIkopCNSEz+CGsXnrmqzO+LQjEicXrLZFwqxdxrJEfD2T0Mt5A0DnTRdjyT
+	W0ziGzTP3qa5W7NIU+sAYxdcuPeIObpXYseO3DIy0tpHi3gGqTnei+2Y5naTys5R2v59mptN
+	siekdtphslzNeTMrFvUkbeVaRsQ/k1rj5WdrCNcynTzpvjUlrCT3rjbQInYhd6uNU2F3UpcU
+	h8VAEiIVE/dZ8dAjkhU1Qomut4nqUu9UIoDolInI3ohwTqR9cIZY1IkkmlJokXYkBw84i+55
+	RH9lACcgT80L0zQvTNP8N02kF5KMsofM/2hvkpXZT4vYn+Tl3cMZiM1FrkKEIiRIUPiFCj/4
+	KuQhiojQIN/NYSGFaPKPrZuoHi5B2Xcf+FoQJUUWNHcyfKNA34TccGhYqOAx03FOYWKgs2Og
+	fM+PQnjYxvCIbYLCgmZLsYero7d/zWZnLki+U9gqCNuF8OcqJXVwi6T2LW3rmNNjVi4q2fFB
+	f6qkqnGTdx377R6f0ipFU4zvww9/ClkfkL0jQNd7Inbx/R6v5UMfGVXLmWk1y141y1YtbbNV
+	yQ+o102fc+7k8V7vGTdNW61rM2P5ov2b8oIudH8XP+g9i50VlJQU7E5MSyzyAenGDJN7uWdx
+	bfquk8HjLp8wDuWdPhlLZC1ORX+upoe9X1Je3d+6t6n7EFanqlaqX4+7azN/ORhp3LSh7zMX
+	/3We0f4l5rEvrOqilU91HgvqufY1tdlO0c2Rgesthse1T172mx9zbEP8Ov9pK74yWMKc115o
+	8FvhdOS6/+oifDtOf6lqPvTUzB0IyGp1Qh1hr8Ts/XifB1YEy9/0osMV8n8BgipHCCwFAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA2VTe0xTdxT2d++v9xY2lksBuaAmS93YhrNSBD1MIGSL8e6RadyDsMW5Bq5C
+	Bi1rgeiGk2cm3VCoKFkpivKSx3itMJSHiBXGAAUUxPGQlwIK+AAEVoFRmmUm++/L953zfeec
+	5AhJUTntKAySh/FKuSxYTFni5qXGvs2W85oAl+laC9AVF1LQVlSAYM6YRkLVWA+GmYUeGtRL
+	egyF+mgCpkuWKJg2NFLw8OpTBB3DnRSkjkdj0I230LDcN0pA5rlnJIyV/IhAdyMOw1SMEcO9
+	pHISliviaIjNLKagvvEyDadL7SEtNZYAzUISgoFOR9DdcYWp9PWwkJNPQ1FxJgExlRcIqLh1
+	FoEhRUtC34lTGFp+CoGq5lkCyntjKBitTSQgYS4bQ8rpGATVNU0Ybl7SUdBfuCyAxz8PUWAo
+	bsXQ3PAHhoJfowSQfbudgMKEPAF0J91DcHLqPoLMXCd4cvkT6KjLICDn4iCG9ug6BAUpizTM
+	G40C6NGkYmhMrCNgeXhWALXHBgjomH+Ioar0POWzm5uLP465uxOLmCs8U4i4tKh2zOnz7hBc
+	b/ZFxCXHTtHcRW0fzcXV/kVzGWXhXFeVHxdnmBRwv11w5jKrxwlO3d1BcmX5CdSeN7+QeCoV
+	4WH8q4EKVZiX+EspuEqkHiBxdfOQSLdu3/eOq7t4i7dnAB8cFMErt3h/LQmsqL5JhmZZHRqv
+	yUdRqO0lNbIQsowbW6FNE6iRpVDEZCO29EwuNgvr2dKZToEZ27DPu9SUuegJYidGNZRJEDHl
+	iP17wF6NhELMvM7maRkTTTFvszcmekkTtmW2sidatbSpl2SG1rIVI9dWBRvmPbYmdmQ1wIrZ
+	zs52jZHmgEnEPq0uxmbBmm36ZWQVk0wEG2MYxqYwklnH5i4JTbTFygZNDTW0edCN7O3aTMqM
+	j7DTi/dRErLRvuCkfcFJ+5+TmXZmu5fGif/Rm9iccw9JM/Zii4oe4QxE5yNbPlwVcjBE5SpR
+	yUJU4fKDEn9FSBla+ZmKhgV9Jcp78ERSjwghqkevmXYvKWhDjliukPNiW6sNZZoAkVWA7PB3
+	vFKxXxkezKvqkfvKFZNJRzt/xcoDysP2S7e5uEvdtnm4uHts2yq2t3o/9JhMxByUhfHf8Hwo
+	r/y3jxBaOEYRorY9DpK1fYtfXTsSad+t/9bu+nXRyztbSVtBQex8f2zA5gZfuxavU9LKjvTG
+	hSjLxAfi4nGHzmjv9rp9Vz091cKlwQ3GxrHPPA43q3FV4p/+axJ+EEw+HfjoU53BCT/LuvuK
+	/ujaSxHGHXhd5RXvmfhdh6Zys9d8Pu2isX70VlWCj1OTww2rW3U2BX7H3zgw23y0/zz5eIeP
+	xicmJLm8Pt7t+W4PZ+s00QG3d4d2WguGRp3cRw2MaK/ueJDUl1fn7O2JSp/pNzj0dnUYB3lF
+	/L5WjZY8KdfrPsj6+LBoUVYu8f/+lmfr2YzH7mHnr+2y84u0DDV4Rw5uEiPfD7dE/H4lPUKM
+	VYEyqTOpVMn+Aa3aWqDIBAAA
+X-CMS-MailID: 20230621131554eucas1p135050d4ea931b8da593678132937163f
+X-Msg-Generator: CA
+X-RootMTR: 20230621091037eucas1p188e11d8064526a5a0549217d5a419647
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20230621091037eucas1p188e11d8064526a5a0549217d5a419647
+References: <20230621091000.424843-1-j.granados@samsung.com>
+	<CGME20230621091037eucas1p188e11d8064526a5a0549217d5a419647@eucas1p1.samsung.com>
+	<20230621091000.424843-9-j.granados@samsung.com>
+	<2023062150-outbound-quiet-2609@gregkh>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230621_043655_526479_942A066B 
-X-CRM114-Status: GOOD (  20.34  )
+X-CRM114-CacheID: sfid-20230621_061557_185846_D891AE51 
+X-CRM114-Status: GOOD (  18.77  )
 X-Mailman-Approved-At: Wed, 28 Jun 2023 08:16:38 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -130,47 +185,80 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============6281439757414887486=="
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed 2023-06-21 11:09:57, Joel Granados wrote:
-> In order to remove the end element from the ctl_table struct arrays, we
-> explicitly define the size when registering the targes. We add a size
-> argument to the register_sysctl_init call and pass an ARRAY_SIZE for all
-> the callers.
+--===============6281439757414887486==
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="kqwdriluwhsvqta5"
+Content-Disposition: inline
 
-This does not explain the motivatin why the end element is removed.
+--kqwdriluwhsvqta5
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I agree with Jiri that saving 9k is a questionable gain. According to
-the cover letter it saved 0,00%. It is because it saved 9k with allyes
-config which produces huge kernel. IMHO, the 9k might be interesting
-only for a tiny kernel. But I guess that it would safe much less
-bytes there.
+On Wed, Jun 21, 2023 at 12:47:58PM +0200, Greg Kroah-Hartman wrote:
+> On Wed, Jun 21, 2023 at 11:09:57AM +0200, Joel Granados wrote:
+> >  static int __init random_sysctls_init(void)
+> >  {
+> > -	register_sysctl_init("kernel/random", random_table);
+> > +	register_sysctl_init("kernel/random", random_table,
+> > +			     ARRAY_SIZE(random_table));
+>=20
+> As mentioned before, why not just do:
+>=20
+> #define register_sysctl_init(string, table)	\
+> 	__register_sysctl_init(string, table, ARRAY_SIZE(table);
+Answered you in the original mail where you suggested it.
 
-And the code with the added ARRAY_SIZE() parameter looks worse than before.
+Best
+>=20
+> or something like that?
+>=20
+> That way no callers need to change AND you prevent the size from ever
+> being incorrect?
+>=20
+> thanks,
+>=20
+> greg k-h
 
-> diff --git a/kernel/printk/sysctl.c b/kernel/printk/sysctl.c
-> index c228343eeb97..28f37b86414e 100644
-> --- a/kernel/printk/sysctl.c
-> +++ b/kernel/printk/sysctl.c
-> @@ -81,5 +81,6 @@ static struct ctl_table printk_sysctls[] = {
->  
->  void __init printk_sysctl_init(void)
->  {
-> -	register_sysctl_init("kernel", printk_sysctls);
-> +	register_sysctl_init("kernel", printk_sysctls,
-> +			     ARRAY_SIZE(printk_sysctls));
->  }
+--=20
 
-Is register_sysctl_init() still ready to handle the last empty element,
-please? I am not in Cc on the related patches.
+Joel Granados
 
-Best Regards,
-Petr
+--kqwdriluwhsvqta5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmSS+AgACgkQupfNUreW
+QU8jOQwAkoxloAVnIuEyaWUNUmcFoEEQMjNqdYL2wi038MemWOYfweOEMRyOEo3b
+iqRfJVW+fiwb+BFTXw9Z3i1KteXm7mdz4YY+VbjJiygOSu0zhM4LY4ViTh8pu5LV
+FSsRDdRaQZfbeb8bog0lWFauAs5AfpyFcUqvZM1O9TDiI+nMrMlzb4PzSBJeIq3r
+DCIxRhnWhl/QbfXYBx8rRHskljcS6NTXtILN4S3H88F5YOdof86uQwtXnz28VLdW
+C6DK8aafbLVrwB8/nYX6YxrT4nFquNKfodH7jKM7iHGCxZWc3ALSwvKBA6mjMSCh
+GqhXmroSN4hN0N1vA/oDK9ZwZ1GPwqmxtmXe1Rtp/Ah3CtzC2F3hbPxaHP5yEVJS
+pyPZRKBdEvIvWFhDf3JfEAhrvP08QKKyDN6cihST4dXQ7SHdgpwAVcK7hLnNU0mw
+Tg+iK0faxcu/tfkmixursSgigO7zwZJXKbBifv3mQ1RP5E5QnsSfgsgY50ogU7/I
+hN6IedMI
+=UHCo
+-----END PGP SIGNATURE-----
+
+--kqwdriluwhsvqta5--
+
+
+--===============6281439757414887486==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============6281439757414887486==--
+
