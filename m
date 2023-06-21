@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E21EAEB64DD
-	for <kexec@archiver.kernel.org>; Wed, 28 Jun 2023 15:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 65F31C001DB
+	for <kexec@archiver.kernel.org>; Wed, 28 Jun 2023 15:16:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=xd2ztqKJQkDNKh1MfqnrAGshNxeJqn8lMBtVVuL3xL0=; b=0KNSGf7PnTIOof
-	3VatT/lZMRciEieV6b+mOCue+lD8OUsFKaNIU7h+kNbsHcQYiO8Wbsr9EmDER8O7YJ1lLm+UGXW1L
-	B3CMzFgUjBpH++J4KWIcubsBKuD1pQhz3lF7leAkK2T5YnJ2xEHCn2Tq9iz/G3BE8FMdWCN+3KW5r
-	iY+rbIDzqSR/Wjvr7pv1GpeDsmvCVC83QicY52WDn8/9fNZLAI3kCk9gZ7IsGvQMp5kuCeQ2Z+xGB
-	LpHLxr0grqwjC3VX/TqmsiVmfwuq1eYVJW5KYmQltDrspOLMCAMy56Ox1NwKQEniXl+eA/bdDqQ9h
-	x4ac2Ug58K//6v/KxweA==;
+	List-Owner; bh=A7Fu29udPjrjmAvMBIkUYeKThD8/2TsVp6dnlC/XloQ=; b=SUXP0UdHiblgjF
+	4zbXM+FQVUlna5dcHhXPILmImp8ZXNvNjKtu2XLe+SlfrQeLGXjMmduhGLc4ZGsWa71VRozzXtTZy
+	iwGsOlchqZNEwyb+PZjH8VSrsV4ItQsyWPj0lQOjH8ZfnxWT7HoTTeGFk/qpOhH759l9MbJB2KJMH
+	wmfmAdDWiqpVpalH6KLgQ+u6wsu4rklI910fjZPz1UUfGugrDXh9r6WDmOfgdWsWhZR0V833U9B7D
+	BaZWxyphmh0jUocKu/1xCScMPeonc2AoHpYruKWzmTECc07xNdrNxJuj6tA578gU2FU0mNjx6j6GJ
+	/e/HZ+Jz4N+osLGBwttw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qEWuS-00Fx3d-0V;
-	Wed, 28 Jun 2023 15:16:44 +0000
-Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
+	id 1qEWuT-00Fx5f-1W;
+	Wed, 28 Jun 2023 15:16:45 +0000
+Received: from smtp-out2.suse.de ([2001:67c:2178:6::1d])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qBvNe-00EDGo-1t
+	id 1qBw8t-00EPRe-13
 	for kexec@lists.infradead.org;
-	Wed, 21 Jun 2023 10:48:07 +0000
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	Wed, 21 Jun 2023 11:36:56 +0000
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+	by smtp-out2.suse.de (Postfix) with ESMTP id C87691FDE8;
+	Wed, 21 Jun 2023 11:36:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1687347411; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/FQApQPgb/S6VB9crvo39szrL+RZ0B9Iq9K2WpGCiTo=;
+	b=iwyLnEK1VeUWv/tmm/Nm6Cx5NbYxgFmj0mH+P5/gDg9l9WiFHQ1aqfL3EEa87DHfpr/aUI
+	PhCVJRawNs68LlACkkSmFEImXna0QGgLP5xUaED+wkuZFJn4wrg4DCWfOxgJw3/ea1pY1O
+	C9tLa1Flx054EBbIvKK/ApG8ncbzfFo=
+Received: from suse.cz (unknown [10.100.201.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id DADB161501;
-	Wed, 21 Jun 2023 10:48:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D79BC433C8;
-	Wed, 21 Jun 2023 10:48:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1687344485;
-	bh=vQW8SpknqhfYsLd//ycoQUF1XEoKmVOh7WQXK7qiNdI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T3axtBl09Uj+gGhVy84WdPlv59/aPeu632cEchdYe8a/k5iJl0+IXsbF+vopEWDYq
-	 NwenFITRTKDLMCVF8CzPXY6p9Hti1Q2TT7eK4GXO8pT0fRmZYBTPxe1ckDw7AxLZe2
-	 wT9Wmou6gxTC0sVGsza4KPz7hQ7x6JjyXWzC0NK4=
-Date: Wed, 21 Jun 2023 12:47:58 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+	by relay2.suse.de (Postfix) with ESMTPS id 144972C141;
+	Wed, 21 Jun 2023 11:36:46 +0000 (UTC)
+Date: Wed, 21 Jun 2023 13:36:46 +0200
+From: Petr Mladek <pmladek@suse.com>
 To: Joel Granados <j.granados@samsung.com>
 Cc: mcgrof@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
 	Theodore Ts'o <tytso@mit.edu>,
 	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Jiri Slaby <jirislaby@kernel.org>, Juergen Gross <jgross@suse.com>,
 	Stefano Stabellini <sstabellini@kernel.org>,
 	Benjamin LaHaise <bcrl@kvack.org>,
@@ -69,7 +71,7 @@ Cc: mcgrof@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
 	"David S. Miller" <davem@davemloft.net>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Will Deacon <will@kernel.org>, Petr Mladek <pmladek@suse.com>,
+	Will Deacon <will@kernel.org>,
 	Sergey Senozhatsky <senozhatsky@chromium.org>,
 	Juri Lelli <juri.lelli@redhat.com>,
 	Vincent Guittot <vincent.guittot@linaro.org>,
@@ -106,7 +108,7 @@ Cc: mcgrof@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
 	linux-trace-kernel@vger.kernel.org, keyrings@vger.kernel.org,
 	linux-security-module@vger.kernel.org
 Subject: Re: [PATCH 08/11] sysctl: Add size to register_sysctl_init
-Message-ID: <2023062150-outbound-quiet-2609@gregkh>
+Message-ID: <ZJLgzo1GuykDV8fd@alley>
 References: <20230621091000.424843-1-j.granados@samsung.com>
  <CGME20230621091037eucas1p188e11d8064526a5a0549217d5a419647@eucas1p1.samsung.com>
  <20230621091000.424843-9-j.granados@samsung.com>
@@ -114,8 +116,8 @@ MIME-Version: 1.0
 Content-Disposition: inline
 In-Reply-To: <20230621091000.424843-9-j.granados@samsung.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230621_034806_745005_2BE0A3A4 
-X-CRM114-Status: GOOD (  13.18  )
+X-CRM114-CacheID: sfid-20230621_043655_526479_942A066B 
+X-CRM114-Status: GOOD (  20.34  )
 X-Mailman-Approved-At: Wed, 28 Jun 2023 08:16:38 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -133,26 +135,40 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Jun 21, 2023 at 11:09:57AM +0200, Joel Granados wrote:
->  static int __init random_sysctls_init(void)
+On Wed 2023-06-21 11:09:57, Joel Granados wrote:
+> In order to remove the end element from the ctl_table struct arrays, we
+> explicitly define the size when registering the targes. We add a size
+> argument to the register_sysctl_init call and pass an ARRAY_SIZE for all
+> the callers.
+
+This does not explain the motivatin why the end element is removed.
+
+I agree with Jiri that saving 9k is a questionable gain. According to
+the cover letter it saved 0,00%. It is because it saved 9k with allyes
+config which produces huge kernel. IMHO, the 9k might be interesting
+only for a tiny kernel. But I guess that it would safe much less
+bytes there.
+
+And the code with the added ARRAY_SIZE() parameter looks worse than before.
+
+> diff --git a/kernel/printk/sysctl.c b/kernel/printk/sysctl.c
+> index c228343eeb97..28f37b86414e 100644
+> --- a/kernel/printk/sysctl.c
+> +++ b/kernel/printk/sysctl.c
+> @@ -81,5 +81,6 @@ static struct ctl_table printk_sysctls[] = {
+>  
+>  void __init printk_sysctl_init(void)
 >  {
-> -	register_sysctl_init("kernel/random", random_table);
-> +	register_sysctl_init("kernel/random", random_table,
-> +			     ARRAY_SIZE(random_table));
+> -	register_sysctl_init("kernel", printk_sysctls);
+> +	register_sysctl_init("kernel", printk_sysctls,
+> +			     ARRAY_SIZE(printk_sysctls));
+>  }
 
-As mentioned before, why not just do:
+Is register_sysctl_init() still ready to handle the last empty element,
+please? I am not in Cc on the related patches.
 
-#define register_sysctl_init(string, table)	\
-	__register_sysctl_init(string, table, ARRAY_SIZE(table);
-
-or something like that?
-
-That way no callers need to change AND you prevent the size from ever
-being incorrect?
-
-thanks,
-
-greg k-h
+Best Regards,
+Petr
 
 _______________________________________________
 kexec mailing list
