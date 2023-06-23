@@ -4,177 +4,125 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 49210EB64D7
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A4FF6EB64DC
 	for <kexec@archiver.kernel.org>; Wed, 28 Jun 2023 15:16:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	List-Subscribe:List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:
-	References:In-Reply-To:MIME-Version:Message-ID:Subject:CC:To:From:Date:
-	Reply-To:Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date
-	:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=7vKeW8fnzfJCwcWZHuKxYSIJWxnJkng8x18L9GnY6us=; b=w6BQEU1tRIcb/4PJXs5/O4RHUq
-	L1Sxa3SE6k4Mlr3YCZuACOEvD4HTnWuOrhEZhQ3pWFcRxZOPVFObJ53lNEL6uC8cnLfJdEr7zJUZQ
-	MJFxplMT7zWKI0qlMHdA6FOgROEpN++/IBdZQwx8RttrU+Kyyyaj90+MGRLP5DbSw7SiUkPBTkD+/
-	aS2eZYx5ivZuUXTrlfZ7EdKqzX7jqWoiXofvQOIaKNKGUKPr8554xqnS/T+4gY4oGw+97CYSZ4FGM
-	IlXDcwrOdQt4oynq0WhkcbVCbno5j+hOPKvrTCSNrq0lgM1g81+7Spw2HOPCzP+l49M4gYXHf//v8
-	Zt1bXczg==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=/BzG765HZUY8vikCNysa/EJWP0+a7qdW3rMCqUfFdkA=; b=K6bPWDuUnybCaT
+	rZ+Bw4tUUc8WLnkIw+sivEqQCIaPdWdNu3rdu6comrr78sfNNyBiNgCayIpLA3HCVv5OYHEauMHf3
+	yMd7VXDa/5WnmasqHHFhGvBjUbUsJdfumm0naCSfJHg7Mc2S7u9PEKDAYUnGqGmJcBw08ZTmEWoJV
+	NTq+rrhNzlvjCIvXRPX/c3WUzMzReYBOWSt5YqqldkdKblJZdZm/OsWVixTHAIXYlolfkI0RgaiLm
+	K+/BXPKbQLJCHqXrgiRvleRHCdjBqUJbBVlbZtH4hpGMjEOtNRqkywQ+mj7S5ts+UDgLfHiMKhamY
+	ALRJuGlJR8CgSMlRTb6g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qEWub-00FxN2-2o;
-	Wed, 28 Jun 2023 15:16:53 +0000
-Received: from mailout1.w1.samsung.com ([210.118.77.11])
+	id 1qEWuc-00FxNi-1Q;
+	Wed, 28 Jun 2023 15:16:54 +0000
+Received: from smtp-out2.suse.de ([2001:67c:2178:6::1d])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qCKrJ-000swF-2z
+	id 1qCiaO-003v6O-1J
 	for kexec@lists.infradead.org;
-	Thu, 22 Jun 2023 14:00:27 +0000
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20230622140024euoutp016c59b1213fcbc04a0a7dcab6f00677f0~q--HNBgTF1007310073euoutp01W;
-	Thu, 22 Jun 2023 14:00:24 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20230622140024euoutp016c59b1213fcbc04a0a7dcab6f00677f0~q--HNBgTF1007310073euoutp01W
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1687442424;
-	bh=og1TC2Lnktq3yPqNAHugUqe0csk9nUhazXy+81bh4dw=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=mCUZPxxFAPlZfYMcyjtFzdZobopd9W7sIEmS0WAnAfWvOWNbeSnjCvTqoPq4BflsT
-	 2So3S8hL+ZL3HkDd5Eh+8RGv9HB078GacsMBEAHSQPAa+kL61XF9pqEmryoVjwNNNw
-	 bs/wprggINHRtWs8Diakqsfp4AtYSsFi0OgBuBaw=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20230622140024eucas1p2cbb3f8b639a73e206f4c47f91fb01813~q--G9NX-t3023430234eucas1p2f;
-	Thu, 22 Jun 2023 14:00:24 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges3new.samsung.com (EUCPMTA) with SMTP id EC.F9.37758.7F354946; Thu, 22
-	Jun 2023 15:00:23 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20230622140023eucas1p1a4af4ef903b3613453b5b1e254aa2c8a~q--GTP6rD0317103171eucas1p1P;
-	Thu, 22 Jun 2023 14:00:23 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20230622140023eusmtrp122f2f2a32f10e3b52e1916a11785fa7c~q--GQ6exq1308413084eusmtrp1f;
-	Thu, 22 Jun 2023 14:00:23 +0000 (GMT)
-X-AuditID: cbfec7f5-815ff7000002937e-b4-649453f791b8
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms1.samsung.com (EUCPMTA) with SMTP id 0E.1F.10549.7F354946; Thu, 22
-	Jun 2023 15:00:23 +0100 (BST)
-Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20230622140022eusmtip11ccd18796ef5394ff02d0e58b93a459b~q--F5zocq3248032480eusmtip1K;
-	Thu, 22 Jun 2023 14:00:22 +0000 (GMT)
-Received: from localhost (106.110.32.133) by CAMSVWEXC02.scsc.local
-	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-	Thu, 22 Jun 2023 15:00:22 +0100
-Date: Thu, 22 Jun 2023 16:00:21 +0200
-From: Joel Granados <j.granados@samsung.com>
-To: Jiri Slaby <jirislaby@kernel.org>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, <mcgrof@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, Theodore Ts'o <tytso@mit.edu>, "Jason A. Donenfeld"
-	<Jason@zx2c4.com>, Juergen Gross <jgross@suse.com>, Stefano Stabellini
-	<sstabellini@kernel.org>, Benjamin LaHaise <bcrl@kvack.org>, Alexander Viro
-	<viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, "Jeff
- Layton" <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, Jan Kara
-	<jack@suse.cz>, Kees Cook <keescook@chromium.org>, Iurii Zaikin
-	<yzaikin@google.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
-	<daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, Balbir Singh
-	<bsingharora@gmail.com>, Eric Biederman <ebiederm@xmission.com>, "Naveen N.
- Rao" <naveen.n.rao@linux.ibm.com>, Anil S Keshavamurthy
-	<anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra
-	<peterz@infradead.org>, Will Deacon <will@kernel.org>, Petr Mladek
-	<pmladek@suse.com>, Sergey Senozhatsky <senozhatsky@chromium.org>, Juri
-	Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>,
-	"Steven Rostedt" <rostedt@goodmis.org>, Andrew Morton
-	<akpm@linux-foundation.org>, Mike Kravetz <mike.kravetz@oracle.com>, Muchun
-	Song <muchun.song@linux.dev>, Naoya Horiguchi <naoya.horiguchi@nec.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, David Howells
-	<dhowells@redhat.com>, Jarkko Sakkinen <jarkko@kernel.org>, Paul Moore
-	<paul@paul-moore.com>, James Morris <jmorris@namei.org>, "Serge E. Hallyn"
-	<serge@hallyn.com>, "H. Peter Anvin" <hpa@zytor.com>, Oleksandr Tyshchenko
-	<oleksandr_tyshchenko@epam.com>, "Amir Goldstein" <amir73il@gmail.com>, John
-	Fastabend <john.fastabend@gmail.com>, Martin KaFai Lau
-	<martin.lau@linux.dev>, Song Liu <song@kernel.org>, "Yonghong Song"
-	<yhs@fb.com>, KP Singh <kpsingh@kernel.org>, Stanislav Fomichev
-	<sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>, "John
- Ogness" <john.ogness@linutronix.de>, Dietmar Eggemann
-	<dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, Mel Gorman
-	<mgorman@suse.de>, Daniel Bristot de Oliveira <bristot@redhat.com>,
-	"Valentin Schneider" <vschneid@redhat.com>, Andy Lutomirski
-	<luto@amacapital.net>, "Will Drewry" <wad@chromium.org>, Mark Rutland
-	<mark.rutland@arm.com>, Miaohe Lin <linmiaohe@huawei.com>,
-	<linux-kernel@vger.kernel.org>, <xen-devel@lists.xenproject.org>,
-	<linux-aio@kvack.org>, <linux-fsdevel@vger.kernel.org>,
-	<linux-mm@kvack.org>, <bpf@vger.kernel.org>, <kexec@lists.infradead.org>,
-	<linux-trace-kernel@vger.kernel.org>, <keyrings@vger.kernel.org>,
-	<linux-security-module@vger.kernel.org>
+	Fri, 23 Jun 2023 15:20:34 +0000
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+	by smtp-out2.suse.de (Postfix) with ESMTP id D24151F45F;
+	Fri, 23 Jun 2023 15:20:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1687533627; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1mTZQB6E8gpW9xyv3IdX7kwRMApo1npl8Ta69cylcgI=;
+	b=cw+6g9R2o/Umv74/BGjs0HZFU73NXkDTjRhAwElwD9yLjkG2loVWkX98zsq+Jw9f7GWEbv
+	1LhcZAdPyuPlH6OaETf856CLkRN01mJSpFOO8X/jovaGWHnPkt2fDQYbq4M0K8/oavd3Ir
+	XsYDO2FS6i0HJDFn6EWyGK6+OhLducU=
+Received: from suse.cz (pmladek.udp.ovpn2.prg.suse.de [10.100.201.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by relay2.suse.de (Postfix) with ESMTPS id 1AE602C141;
+	Fri, 23 Jun 2023 15:20:22 +0000 (UTC)
+Date: Fri, 23 Jun 2023 17:20:17 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Joel Granados <j.granados@samsung.com>
+Cc: Jiri Slaby <jirislaby@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, mcgrof@kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	Theodore Ts'o <tytso@mit.edu>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Juergen Gross <jgross@suse.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Benjamin LaHaise <bcrl@kvack.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>, Jan Kara <jack@suse.cz>,
+	Kees Cook <keescook@chromium.org>,
+	Iurii Zaikin <yzaikin@google.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Balbir Singh <bsingharora@gmail.com>,
+	Eric Biederman <ebiederm@xmission.com>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Will Deacon <will@kernel.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Mike Kravetz <mike.kravetz@oracle.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Naoya Horiguchi <naoya.horiguchi@nec.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	David Howells <dhowells@redhat.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+	Amir Goldstein <amir73il@gmail.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	Yonghong Song <yhs@fb.com>, KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>, Waiman Long <longman@redhat.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	John Ogness <john.ogness@linutronix.de>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Andy Lutomirski <luto@amacapital.net>,
+	Will Drewry <wad@chromium.org>, Mark Rutland <mark.rutland@arm.com>,
+	Miaohe Lin <linmiaohe@huawei.com>, linux-kernel@vger.kernel.org,
+	xen-devel@lists.xenproject.org, linux-aio@kvack.org,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	bpf@vger.kernel.org, kexec@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org, keyrings@vger.kernel.org,
+	linux-security-module@vger.kernel.org
 Subject: Re: [PATCH 08/11] sysctl: Add size to register_sysctl_init
-Message-ID: <20230622140021.g3odhui75ybwuai5@localhost>
-MIME-Version: 1.0
-In-Reply-To: <fc37eccc-b9b3-d888-6b57-78cd61986a11@kernel.org>
-X-Originating-IP: [106.110.32.133]
-X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
-	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
-X-Brightmail-Tracker: H4sIAAAAAAAAA2WTe0xTVxzHc+49vbc2ltSK4QTEbHUY5oOp0/CLohnbst1NF11cXLY5NyLX
-	16CaVpgubvLoxkOdCChaUEGgQFsBWSki8lglIq/xZmDBqaBSQB4ir/Ea5brMZP99ft/z/Z78
-	vic5YloeJ3YWH1Ae4VVKHz8FI8HmO+M1q0Z3xPqurp/0hIQsIwO1mQYEoxPxNBR0WTG8GLey
-	EDltwmA0BVMwlD3NwFBpGQM9t58jqO9oYiDOFowhwVbFwkz7UwqSk0Zo6MoOQ5BQo8HQFzKB
-	4XFULg0zZg0LoclZDFjKilk4f90J4uNCKYgej0LwoMkZElrXQt+lxTCu07OQmZVMQciNdArM
-	jVcQlMZqaWg/cw5D1Ul/KKgcpiC3LYSBp0WnKYgYTcUQez4Ewa3CcgwNNxMYuG+cEcHAqUcM
-	lGZVY6i8cxeD4VqQCFL/rKPAGJEhgpaoxwhi+p4gSE5bBoPFO6C+JJECXf5DDHXBJQgMsVMs
-	jE1MiMAaHYeh7HQJBTMdwyIoCn9AQf1YD4aC61eZd7Zxoz//irm/eqcwZ7xsRFx8UB3mTBmt
-	FNeWmo+4s6F9LJevbWc5TdE9lkvMCeCaC77gNKXPRNxv6cu55Fs2iotsqae5HH0Es939S4mX
-	L+93IJBXvbX5W8n++Ii7osPPHI5mXTFTQah7fiQSi4lsHUnp/ygSScRyWToiF+sMWBheINKc
-	kUtHonmzwxAi1st+drYHMpr6GcGUhkhBih4Jw6zp5rWgl3ETIrW6KtYewTI3Uq0fmWNGtpLU
-	9LbNXes4q+vy9YydaVmIE+lK8rDzQtl7pDC0U2RnqcyTjOY1sgIvIOUXO7HgP0rGzJm0vQMt
-	cyFp02K7PE+2mcScjEXCpgoy3HtaJPCPpMJ0jxK4bj6xxr0r8PskKWMKC7yQdJeZWIEXk8qY
-	U3NdiCwGkeLpAVYYDIjogodf3rSRaBo7Xya8SXpINBIe1YG0PFsg7OlAos1xtCBLSfgvcsG9
-	jBju9+IotFT7SjPtK820/zUT5JUkseA58z95BdEl9dACbyKZmf04EbF65MQHqP338eq3lfz3
-	Hmoff3WAcp/HnkP+OWj2v1ZOlw3fQOndgx4WRImRBb0xG36UbahFzlh5SMkrHKWuOdG+cqmv
-	z7EfeNWhb1QBfrzaglzEWOEkXbGpfI9cts/nCP8dzx/mVf+eUuJ5zkGUn7s8IW8ysOhJriuv
-	OrrRst583L3P9nfKyIZbfLS1dW3M7T+mmrqCD+Y5LXWLWK09Y8tW92Rv3eBiVTDW7Y4djtd2
-	/9R902CUHHy4bmv474qm8okFtS47/W9/jDM/0HpfcD1RXl1M1oXx4q7eNSmerYVnj7ltblj0
-	epWltHBN3u4Bh/PbG0aN1HTNJ9uUVx/2fOafE/xVtWfZKtuWWk184wmJZ/9xnYK1fdrccuZO
-	+fLVrXs7LUs2eH3e2XQRitwSc3c98j4QJVVse239uY7CsC1vunot0cs/DCTuFRbL3rZLWaV9
-	Dbukeyu+rqjLWTRSfWHn5T3NJaZuycLDjMZhcNLXSWxWYPV+nzXLaZXa5x9OzkChKgUAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA2WTfUxTZxTG896+vbc4mR2wcEW2zDqd0VktAp4uysx0yxXnNjWabMt0nVzR
-	DVpswbglywoUhTKwfExnwa6IRSkdVKRoV0QHDDRAUAYC8jFQULAKImAlHe2KdZnJ/vu9z3me
-	JydvcngcPwsVxNsvjWflUkmMgJyDG10NvSsc23OjVtVY50J+mYmE66UlCBzOPA7YhrsxTE53
-	U6B2VWAwVSQSMGF2kTBR10CCvfYxgtY77SQcH0nEkD/SRIG79x4BhQVPODBsPoIgv0WFYTTJ
-	iWFIY+GAu1JFQXJhGQk1DZcpOHYuEPKOJxOQPa1B0N8eBPldITB6Mhimi4wUlJYVEpB08SwB
-	lW2/IKjL1XKg9+hPGJrSY8HWOEWApSeJhHvVGQSkOQwYco8lIai6dA3Dn7/lk9BncnPh0Y+3
-	Sagra8bQWH8VQ8mvSi4YOm4QYEor5kKnZghBzuhdBIVnlsD45e3QekVPQJF1AMONxCsISnJn
-	KHjqdHKhO/s4hoaMKwS470xxoTq1n4DWp3YMtnOnyPUfM46UTMz89WAGMyadCTF5yhuYqSju
-	IpgegxUxWcmjFGPV9lKMqvoWxejLE5ibtk8ZVd1DLnP+7DKmsGqEYNSdrRym3JhGfrL0M+Fa
-	uSwhnn1jn0wRv07wuQhChCIxCENCxULR6jVfvBMSJlgZsTaKjdl/kJWvjPhSuK/LsivO/vKh
-	I/0blWh4rhr58Gh+KF3cPkaq0RyeH9+AaP30H4R3EEyfm2znetmf/vum+rlpHNH3T1Rh76MC
-	0bdOWp+5MH8x3Wx8Qs0yyX+bbnnQw5nlAI9eZDU+S3P4ykB6pttb68/fQF9KHnzGvvw1tONC
-	G+VtbSHo8czu54NX6GsnBvEsc/gH6YGpSx4Tz8ML6DMu3qzsw4+gc9JzkXdVAT31IOP52t/T
-	EzN3kQb5a19o0r7QpP2vySsvoztdI8T/5OV0UYGd4+V1dGnpGNYjyogC2ARFbHSsQiRUSGIV
-	CdJo4R5ZbDny3Exl/fT5i0h3f1xYgwgeqkFvepK3zSXXURCWyqSsIMD3tfLsKD/fKMm337Fy
-	2W55QgyrqEFhnm/M4gS9ukfmOUBp/G5R+KowUWi4eFWYOHy1INB3U1yqxI8fLYlnv2HZOFb+
-	b47g+QQpCVFugD6Rmme2TeqDI6+r2L695/15HXubt2xWX+2p/nC0KVVbn/PBWL04Zsh3cO1R
-	VzeWOmTGmNdfsmwt71vp06y09V3IarNULW7a3jg0ENe8bUX2nOzHaMfJ0+6dNR+965S5jOvr
-	yKEf2IYDpxYFpI9HbjUEPz5QVLvjkNOorbVNhrrxBbsmvONqyMLU91WRmw3XhEvsPWSeYVPt
-	vNORdPKGQ+PEzoUXxbtWmzPmDSxIe5hy973aiUxddvvSjduqAgcnl5sX6X6vqJjfn8S85TNG
-	b+lMOTy85YysPboAF+/tSO9wtUgIP93Ww/MrNT/fj8qUfqXOUhToHgVWfs2VbgspFWDFPolo
-	GUeukPwDhsADlcgEAAA=
-X-CMS-MailID: 20230622140023eucas1p1a4af4ef903b3613453b5b1e254aa2c8a
-X-Msg-Generator: CA
-X-RootMTR: 20230621091037eucas1p188e11d8064526a5a0549217d5a419647
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20230621091037eucas1p188e11d8064526a5a0549217d5a419647
+Message-ID: <ZJW4MdIvrWjbKtVy@alley>
 References: <20230621091000.424843-1-j.granados@samsung.com>
-	<CGME20230621091037eucas1p188e11d8064526a5a0549217d5a419647@eucas1p1.samsung.com>
-	<20230621091000.424843-9-j.granados@samsung.com>
-	<2023062150-outbound-quiet-2609@gregkh>
-	<20230621131552.pqsordxcjmiopciq@localhost>
-	<fc37eccc-b9b3-d888-6b57-78cd61986a11@kernel.org>
+ <CGME20230621091037eucas1p188e11d8064526a5a0549217d5a419647@eucas1p1.samsung.com>
+ <20230621091000.424843-9-j.granados@samsung.com>
+ <2023062150-outbound-quiet-2609@gregkh>
+ <20230621131552.pqsordxcjmiopciq@localhost>
+ <fc37eccc-b9b3-d888-6b57-78cd61986a11@kernel.org>
+ <20230622140021.g3odhui75ybwuai5@localhost>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20230622140021.g3odhui75ybwuai5@localhost>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230622_070026_236695_DD8D6435 
-X-CRM114-Status: GOOD (  20.72  )
+X-CRM114-CacheID: sfid-20230623_082032_598698_918E724B 
+X-CRM114-Status: GOOD (  24.27  )
 X-Mailman-Approved-At: Wed, 28 Jun 2023 08:16:38 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -187,80 +135,74 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0981084085847488467=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
---===============0981084085847488467==
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="syt6n5frzjj2i4j3"
-Content-Disposition: inline
+On Thu 2023-06-22 16:00:21, Joel Granados wrote:
+> On Thu, Jun 22, 2023 at 06:21:48AM +0200, Jiri Slaby wrote:
+> > On 21. 06. 23, 15:15, Joel Granados wrote:
+> > > On Wed, Jun 21, 2023 at 12:47:58PM +0200, Greg Kroah-Hartman wrote:
+> > > > On Wed, Jun 21, 2023 at 11:09:57AM +0200, Joel Granados wrote:
+> > > > >   static int __init random_sysctls_init(void)
+> > > > >   {
+> > > > > -	register_sysctl_init("kernel/random", random_table);
+> > > > > +	register_sysctl_init("kernel/random", random_table,
+> > > > > +			     ARRAY_SIZE(random_table));
+> > > > 
+> > > > As mentioned before, why not just do:
+> > > > 
+> > > > #define register_sysctl_init(string, table)	\
+> > > > 	__register_sysctl_init(string, table, ARRAY_SIZE(table);
+> > > Answered you in the original mail where you suggested it.
+> > 
+> > I am curious what that was, do you have a link?
+> of course. I think you will find it here https://lore.kernel.org/all/20230621123816.ufqbob6qthz4hujx@localhost/
 
---syt6n5frzjj2i4j3
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Let me to copy the answer here:
 
-On Thu, Jun 22, 2023 at 06:21:48AM +0200, Jiri Slaby wrote:
-> On 21. 06. 23, 15:15, Joel Granados wrote:
-> > On Wed, Jun 21, 2023 at 12:47:58PM +0200, Greg Kroah-Hartman wrote:
-> > > On Wed, Jun 21, 2023 at 11:09:57AM +0200, Joel Granados wrote:
-> > > >   static int __init random_sysctls_init(void)
-> > > >   {
-> > > > -	register_sysctl_init("kernel/random", random_table);
-> > > > +	register_sysctl_init("kernel/random", random_table,
-> > > > +			     ARRAY_SIZE(random_table));
-> > >=20
-> > > As mentioned before, why not just do:
-> > >=20
-> > > #define register_sysctl_init(string, table)	\
-> > > 	__register_sysctl_init(string, table, ARRAY_SIZE(table);
-> > Answered you in the original mail where you suggested it.
->=20
-> I am curious what that was, do you have a link?
-of course. I think you will find it here https://lore.kernel.org/all/202306=
-21123816.ufqbob6qthz4hujx@localhost/
->=20
-> --=20
-> js
-> suse labs
->=20
+<paste>
+I considered this at the outset, but it will not work with callers that
+use a pointer instead of the actual array.
+Additionally, we would not avoid big commits as we would have to go
+looking in all the files where register is called directly or indirectly
+and make sure the logic is sound.
+</paste>
 
---=20
+For the callers using a pointer. A solution would be to create another
+wrapper which would take the array size, e.g.
 
-Joel Granados
-
---syt6n5frzjj2i4j3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmSUU/UACgkQupfNUreW
-QU/eXQwAlJO0Xh+bybgQP96+XlRpihv6ZwN4xoVQS++ddKq1YhcrS2QQ3aAI2zlS
-O+JsUdqP3tI8y8lMZnQol7Ez9g0BX1PeqWSUnitoKVCyZe8NwvpjdmYBG5oEuZaE
-ruvpOJQoHlFt+0C3hfcxo+gvQtjjXRGDmO0Kjfg5JL0d/TmxV694P5Y9sjJ3Zz/9
-q88yHBeZ++k0QVUllifujJ0XKcqA6aLjNd5O+ujwisz+KYpRnslGyqgFG9hI4F9/
-FcHmyOP8V6DxshGEpW924k2zVDZu/H/LCl+KqB3vmfaIm/hs34Q4bnG/cnRKWxsW
-x7HeXEn489/bnVCmHQ9PTZJCexFp/lL3Mdr5dyQfkk2gwk0hAfzLh1akOv2p7scx
-63UyaIoh7zP6aLN1U4LGQfprDbl+Ll55j+KYv/DbhALGXaZ4/Ko1LdCEQpo/rKYU
-AfygV67LAp5wW26oCQ0p/2QeqjaIkn8xOjVw7VthnBeBrMFx6jHQylS6QZaogAyV
-dB+VmnCT
-=Evhn
------END PGP SIGNATURE-----
-
---syt6n5frzjj2i4j3--
+#define register_sysctl_init_limited(string, table, size)	\
+	__register_sysctl_init(string, table, size);
 
 
---===============0981084085847488467==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+And ARRAY_SIZE() is defined in include/linux/kernel.h as:
+
+#define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]) + __must_be_array(arr))
+
+It will create a compiler error when either an array[] or *array is
+passed.
+
+When using this:
+
+1. The compiler will tell us where the other wrapper is needed.
+
+2. Some locations might need the @size parameter even when a static
+   array is passed. For example, neigh_sysctl_register() terminates
+   the array early.
+
+   But this will work when __register_sysctl_init() supports
+   both ways.I mean that it will stop either on @size or empty
+   element, as discussed in the other subthread.
+
+   This should be caught when the final "empty" is removed
+   from the particular caller.
+
+Best Regards,
+Petr
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============0981084085847488467==--
-
