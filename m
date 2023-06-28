@@ -4,76 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6F737EB64D7
-	for <kexec@archiver.kernel.org>; Wed, 28 Jun 2023 18:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 83DA3EB64DA
+	for <kexec@archiver.kernel.org>; Wed, 28 Jun 2023 18:53:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=vM+YkoGiCTeixbq5Kk+75C/ZFxbiR2rzm5rMyqLmW8w=; b=f1aoc5Ru/g7QfW
-	ePugicGVBvtvTBk2RqMOjmBTITWNQ6J/zP+mw9h0gCz+yCfxoD3jNVjjI0XC4eEQr2cFF9QE9w9rQ
-	v4UEbnVjpZkPrmcj+tgjHdG9NnizRbF9Xj9ZN36+xyF3kuB09Vn6yZ7zrd3xqzOvqzyh7rvSg+PXD
-	0C/nbwVu1DLZgjlRlNVcUa8UhxuLHwp7NTjv99Y7am9xeDoly9P//SicnwCZBfGcMOWmbaUcpnE5f
-	+KJjpH47XRg9C2ZlaEnYqyNjiaUdZC1370YON9OHhJt11/BEgh0xQRKGvYI+HPK3vZG10zQDUOTrS
-	/ae7d/jBuA94Ccgjaoxw==;
+	List-Owner; bh=334xy0Hx8EcA7BglSUUKzlOL53LF4SJl8lRwGuScxPw=; b=Bi0wNjf/HBRVox
+	hBirrJp/JxYdiwS1gN4dqlXjXib+02FWs3rN19ATvuJQ8yxhLvza19ZCxG8yj0yMP8QYhSj8xVPoc
+	q5MPC7ShY9anL9bqQp/OiAoldCUKzGRFnJMU9CvILmycWRlh4Cdb9twoqa8mrGRaUyBkIm0HJmC94
+	pssiQ94NMFKT94l2n7Fkzyi8IKcdEcg+dMHBMlN1dft1F5iANrczaEUTL+UBcdp6aBlJWXfY+cJVY
+	ixJYhFVfLBFyZiwjxbDfZiEfi5GRp2yPTsv5+jHQwN9CXK3KKhT0Ty5D0xHLWW8fySf1CkbybhwMR
+	fy6JPi4OYgDBW6KYDdWQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qEaHs-00GRnU-2n;
-	Wed, 28 Jun 2023 18:53:08 +0000
+	id 1qEaHw-00GRpT-0Q;
+	Wed, 28 Jun 2023 18:53:12 +0000
 Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qEaHq-00GRka-0x
+	id 1qEaHq-00GRjq-0x
 	for kexec@lists.infradead.org;
-	Wed, 28 Jun 2023 18:53:08 +0000
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35SGwwb1019770;
-	Wed, 28 Jun 2023 18:52:43 GMT
+	Wed, 28 Jun 2023 18:53:10 +0000
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35SGwlru011815;
+	Wed, 28 Jun 2023 18:52:34 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references :
  content-transfer-encoding : content-type : mime-version;
- s=corp-2023-03-30; bh=W8iEv38eAoUWiIac6DamuSVNXvMP78ssEHCbdxW608k=;
- b=Jm95YVh/IdrTZhjHKwce8+4Lfl0yxzm+4gJEtx2ICMtRwc2NnprzNDYSz+210SmKjWbZ
- as4TK6tA2jvzOVOPLYUPBpzEjVZeVWql78FYO36y542FPfy4W8Tz4spR4VF/S74ArED+
- fMLo09fDxvypssjL1eiRa43NhyDz9vNQbPBtRK+Exz07ndqlDq5fdVeZBTFf+66Zf2Zl
- b6S/EnrTiiWIIJ5orN35+OCr6XXXOOUG7XgEXKNQMzBHSMt61vOoskYRroM/dRNwDPzp
- AEIeTl4+8cfU1jmtnENBAxmKwWUemellebcNqhVAbXj+Qi+v4IWFgFbNLzPFVHMCdGsW iA== 
+ s=corp-2023-03-30; bh=Nlp/oHypkgqILKUkxsjCRnUeHefJfb6/VFa3Fe0IQP4=;
+ b=wEDojz5EXTZD9bYL4oDmK+Z6WGFb+A3H/lYaWc0gt7UOV6qavrq/dwQqz+GP4TWJ2z9/
+ im4MwaWaj8UFfo/TJvsSL05l76dRtgEIDitmpbAh7ksD58YPStLAonWbB1Lnu9BFry+u
+ CBMvs9eSUK6Wrw5IUJdmKD7W0wqByOh3fQM4XM1czBi630Q+kaeYcy59yDRnFgii1YGW
+ 7JGHSVfMSg/lQELXhuvghz69cQaC77kvmwVKcisMMOPTf15PrfUZMR0LN+vMDBuGlqIu
+ qpUh1qWzCKHZ4REeX0/EQsdqB9GLTWhghrNPxYzavIEcSaQDr1ge6VMXMImYeo8H5kR+ nQ== 
 Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3rdpwdgjua-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3rdq938me7-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 28 Jun 2023 18:52:42 +0000
+	Wed, 28 Jun 2023 18:52:34 +0000
 Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 35SI734F019935;
-	Wed, 28 Jun 2023 18:52:42 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2106.outbound.protection.outlook.com [104.47.58.106])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3rdpxc6cxu-1
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 35SIAF0N019910;
+	Wed, 28 Jun 2023 18:52:33 GMT
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2107.outbound.protection.outlook.com [104.47.58.107])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3rdpxc6cs4-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 28 Jun 2023 18:52:42 +0000
+	Wed, 28 Jun 2023 18:52:33 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iN85890X1L3QqQdoRYsYt9+kZj7X6nigTm/keRQvMidQl/vKKHsmk1Rb6zSI7SHzVou5X0uy2c12bw6HHe3K+Hfo0NXiB+OJa7zCMp15eI9G+t2vHeXwlpfCpNBlKb/7306qkwNLBQo4wCPtt8G7XdAKf6yDJUDgWe3o3ahWdwVm0NaMcXN7WCPmB3iklcmq5ec6y7ToEJnGiDnXBBjGFz3nPffkooUYCC5+O+gbygYfjJqvm3AvXDAlEHB9fMzy8XnjhrRMsWklqCYrf0Oik/4eYgM2c4NMe/mpH6cKs18QHfGVGwzJZQbdS0M6lt+yhchpXu9Wu0/A72sUUidjaA==
+ b=hRBaetnxKKQp16askjhdKNsw/z5/+vPpD/4818cWZo7tEFkP58IJMuGp4xOJPNoVT06k3YwSZYAS+YwZ0xEuni2umvGCYlnDBsHAoEgvlh6WzYdQo7XW3tWmQi3CH7gS0OeYKvLXXdU5fChUZ7AHYYY1f0uM0x0Y4R9l4CluNm3uHKfNwsksFtg+BSEZMvbp+QUQ6MwhcPZrg0tukBAt7Q4DXLpG9mNKpMgedWJeNXEG1XMSqyGBxH+nEJhNISMugEXii3Jj4I201ibVkc6X11jHaiQcn9B1HaJ/hbHZohR+qDTIsNqxnfV84JuTtXWaK3UTGkcdo5AfMVQ9vmfnJQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=W8iEv38eAoUWiIac6DamuSVNXvMP78ssEHCbdxW608k=;
- b=hlpr8sRJxwzsDl5/ihTt+avl1dUviTrgRIwZK8ZDgpL8/Uena4IQhWq/0poJOQyk42B7T1QG+WBfEfjtI2Js5oblJVDx0uHqOnOUwhwN1I4oiNN4vRLidEU3R+JCCUA8JA2RlqeTSnXRP9Ex90iK7sk36BXLwf8vZjq4zamGVc3w2+offMNbQqi7b+x88rTrfQqWXpESdBp4FNlhH6O/nbzi4Nug1DhOYvGZoi2gzjDmhzPoEHY2M3A3Gs9V0a2hW7/XhFGkIRjDdrffzPvrATsGx1N0Bqk7/loArASxyny//aVNNrteLqKzQKPaA0kYfSuqBs4woemwzlWA7HgjKw==
+ bh=Nlp/oHypkgqILKUkxsjCRnUeHefJfb6/VFa3Fe0IQP4=;
+ b=PmNdQ/ThdzVQfNdxP3VWOOeK4j7Ic2xEDc05r2NuFrU0GBn5vp6k245Py+CGbP0mgtzBQx8oZELXQM7xEn3SGLriEtDb9EOG4oOQkI+HLk8PD8z1BlpIiCE+JvYj3slCE4D1yEle/QzpKu0+mwAKNtecTRlItGa3HAwYn6xawxIKM9BnqcwgTyu9hZpWxPiHpYsJAs5rKIiNZVjTP0LCZB9e1S+9QbXaeCb1f8n1RXy4ERlpy/mOxm526/y43GETLziYT0LTsN1N9juFPahVDYxM1EIaNPBJ3HEoz2tFzrhyWYjv4m4Y3mE4gpbWRHxEuW7zJeE5ofcspzsQTcG4Gw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=W8iEv38eAoUWiIac6DamuSVNXvMP78ssEHCbdxW608k=;
- b=pFoUCWYOItcaZpuDwr/nPFxCeaEqzbLF0n5hKSxneETf8NBjXu32H+Ybi7crKgbiooLc8AAH7J/OeOuXiGJh0Phjvd8oGN+Ayj4yYUbZpyLA/pRT7bpAVCr/tfT3z3V5vG2zGI0szNBR0xg/fHjVi/AS6vh2YQLlMWWWJkEaW6s=
+ bh=Nlp/oHypkgqILKUkxsjCRnUeHefJfb6/VFa3Fe0IQP4=;
+ b=GA8eWVcfriY0UOBZC8Lz6w6JmCn78MsjrtwVmoayL7Gz33cLfUqjZA3kykZHn+IHAHjacWQyEQZ4UTbYSbFyvCJuEfefI42/ZCTOu85S2DgP1TDJQtFPoHnoxwqP6v6w6y/fyvd/0k6ffwLK0n1dS2yb/rLk3OotTHF9VK0nADE=
 Received: from CO1PR10MB4531.namprd10.prod.outlook.com (2603:10b6:303:6c::22)
  by LV3PR10MB7820.namprd10.prod.outlook.com (2603:10b6:408:1b4::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.23; Wed, 28 Jun
- 2023 18:52:39 +0000
+ 2023 18:52:30 +0000
 Received: from CO1PR10MB4531.namprd10.prod.outlook.com
  ([fe80::8b8f:b4b1:bb78:b048]) by CO1PR10MB4531.namprd10.prod.outlook.com
  ([fe80::8b8f:b4b1:bb78:b048%5]) with mapi id 15.20.6521.024; Wed, 28 Jun 2023
- 18:52:39 +0000
+ 18:52:30 +0000
 From: Eric DeVolder <eric.devolder@oracle.com>
 To: linux-kernel@vger.kernel.org, david@redhat.com, osalvador@suse.de,
         corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
@@ -87,89 +87,89 @@ Cc: hpa@zytor.com, gregkh@linuxfoundation.org, rafael@kernel.org,
         vschneid@redhat.com, linux-mm@kvack.org, linux-doc@vger.kernel.org,
         sourabhjain@linux.ibm.com, konrad.wilk@oracle.com,
         boris.ostrovsky@oracle.com, eric.devolder@oracle.com
-Subject: [PATCH v24 05/10] kexec: exclude elfcorehdr from the segment digest
-Date: Wed, 28 Jun 2023 14:52:10 -0400
-Message-Id: <20230628185215.40707-6-eric.devolder@oracle.com>
+Subject: [PATCH v24 02/10] drivers/base: refactor memory.c to use .is_visible()
+Date: Wed, 28 Jun 2023 14:52:07 -0400
+Message-Id: <20230628185215.40707-3-eric.devolder@oracle.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230628185215.40707-1-eric.devolder@oracle.com>
 References: <20230628185215.40707-1-eric.devolder@oracle.com>
-X-ClientProxiedBy: BYAPR06CA0066.namprd06.prod.outlook.com
- (2603:10b6:a03:14b::43) To CO1PR10MB4531.namprd10.prod.outlook.com
+X-ClientProxiedBy: SN7PR18CA0026.namprd18.prod.outlook.com
+ (2603:10b6:806:f3::18) To CO1PR10MB4531.namprd10.prod.outlook.com
  (2603:10b6:303:6c::22)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: CO1PR10MB4531:EE_|LV3PR10MB7820:EE_
-X-MS-Office365-Filtering-Correlation-Id: eaed10e9-5c79-4776-10a0-08db7808d886
+X-MS-Office365-Filtering-Correlation-Id: 31af01ab-f988-47d9-40d3-08db7808d343
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: t386r8HUs28xlgMjUDoRYpF1VT3uZLNxmnEkrSXc+jm/lubkmYhbzk0Tc+qGjAKzkxyM9No4G220ImRlN1ezXNPGirfp3SPIerL4kyLdBTU4YPazX3BBZAUMHfqubJm/Pl/XF3nrK87fOo7xED4+QYYo1cyPx4pDaGsd9DQo4qY2vuDBIQz82HuNBSC1V5OdpXu5q68Ch7xtkaOD8iyYA2B0aqf1t1nkIB9kCTH0ZBB3rGYZ4YaCEsAEOhDUDg0NZHnywPZskoiJ39HrqIYe3XAEDMeN+mW72JYa38221ixQNyoLzkDsVZtFhZT2vJRpBatIHmpt5bHwkI9+0/KgvhUx2xmWvoCMP+4KweW6rA0p8BsLNeEmSoUjn6sCgdD0aXZGgoYkiZdGs6WqPzlJB+rfJY8PURW5LGgZwToMupdxh1Z6QqoGaiX2nE0wdJ6Ljy5DspCm15jupYsLDOpDE7tNjWjChCSi0XpEqa5J3VFU0jeCrLx7FG7NYI82Y2q7l5qUhf0nxb5cGUSEKg+rexNReXxoDi0N+ptjmgRr5G6ZgVUvmZO+vvbIE7j5+HL9CRfmnSWwVxcFz1VMW9oiHa9woI8KgifOo8jc73x8nRA=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR10MB4531.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(376002)(396003)(366004)(346002)(39860400002)(136003)(451199021)(2906002)(83380400001)(316002)(26005)(6506007)(6512007)(1076003)(6666004)(6486002)(186003)(478600001)(86362001)(107886003)(921005)(2616005)(66476007)(41300700001)(8936002)(7406005)(7416002)(4326008)(66556008)(66946007)(8676002)(36756003)(38100700002)(5660300002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: ZY0pl8kacdguKCc6ErHusyUYZHjwavz/+DZ6xiuj4hZ57L6LVnqNLRDjaKgezJcaShFI09xDvPAJisV6j7cBfWS/2GoxK6OeVNeceTHxhIyivKceicC6/2vOHjD5x9yLRspRRNbTeZl/iixzTZbpY7LWrRHjsPMVimHbsRiwaee24nG5clyMeAxCgYP06GGY6vD8OJXPc+HR+KHHG62aov4+HtIzGe2w+elgTQEyqeDY3Z0GfVr/tngs1gkX12F9km/2GLvGLva4xi8/mch/QeHvVAdN8AQPa6IDwOt/SYOpWY7T6Tq+ib78tWWb9YONCVEJfwJYn2foOzGyApUHvwJhs6lMMYydrbz5rXVOfqyTbZcEMp3fG7RH+5hreC42AOzLXf/1+UmJKncvVEwYa9dTazYPhgYVEck9hOU1KXLcZxCAYZY67COu3fp9JdkJwBY/Tz8Ekq+3mqiOvMRUdyp2xE9+t4KnvbzHNWdU3ejGnyJwrsDe1d9bih/iSqfnzhwcJQGfdqvQblQ/pmEz2pA7xyE3Ua64ncwFQ3peGaUP+qZ6PlJ+Qbpuf0rqj0GgPK7gTnybOwNsTx1whgj3ZI/PNC7Nvl4m0c+XJwLWWs0HpM6OUea0MO74wVd5dw6S
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR10MB4531.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(376002)(396003)(366004)(346002)(39860400002)(136003)(451199021)(2906002)(83380400001)(316002)(26005)(6506007)(6512007)(1076003)(6666004)(6486002)(186003)(478600001)(86362001)(107886003)(921005)(2616005)(66476007)(41300700001)(8936002)(7406005)(7416002)(4326008)(66556008)(66946007)(8676002)(36756003)(38100700002)(5660300002)(142923001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?xYMLAUdqxVmlpVWIjCQXE+3MM8gKKlaEYxrxGuE/K8txL+kVMLkE/nEbYKlJ?=
- =?us-ascii?Q?hWdKRTHwtOAP0xWkNVuu6lnlq8PziCsZmsxbOFSmVMkvRK87NYOtgoIwOxTY?=
- =?us-ascii?Q?ELkXZUN3suhRwzj4ZjkcErqYaT6bM/gtxzjW2ScBsOoPQXv/Owv3FKXzqDxZ?=
- =?us-ascii?Q?2gFMxrUEmTfjW71xPAIX3CvX+zNhWMPfVw2wpZZryuwZM4kikFOmhFVPbWPJ?=
- =?us-ascii?Q?GcNyEBCKEAltXwAnO8BW0ZxVjIwA8z51Q67bmxMNqxEpwmv5d/ZNYnCbDCD9?=
- =?us-ascii?Q?1MZL8Yg5y2iesME3NWcqSdZ9Aikr9aFIRpx4i7vKhwjJRpB07UeNih05/xxa?=
- =?us-ascii?Q?QxOEoCpxJZccIqJSavjNb0sAJhtzeQ3CgOwy8YkPFDBF4e4uO+0YY8+X5vEW?=
- =?us-ascii?Q?VE7vx16Vd8a6iLBTocndvZrYtZF1AAscXFEMtmPxMwcTCk46Aj7lBeGP/IvM?=
- =?us-ascii?Q?smqulUo/qpdgvE4jL/UYGL2ohoMtUtetr7jdYln3j6ybfi/sqhgaZBXug1rk?=
- =?us-ascii?Q?6Ky921u1jrgrSksRkgEwbR8U/3cebnv1TMrJ+eKJ1JKaimgi+smCgaAQA+02?=
- =?us-ascii?Q?NyDlMar1Gn6W27gIlZa6QMrbzux0Dyfn0Sm3qyZaMmayC0FunTwuwISBuPvJ?=
- =?us-ascii?Q?Gg4zg01KCrEJP8xe/V9rwkEVbH8OUmhpVapmBmw7vGzyiOJo4zBw1fL0eJHp?=
- =?us-ascii?Q?P6jCX6NoDu5hdAdXvx7OkVr6om6gzAnUq9oeSfhEh77BAwqwFx1qSbBwnDQC?=
- =?us-ascii?Q?Ip+fitIHciqmfZBzu2uiNrAYLMkUPvfblJ7m99lq79CWpkIwzHgTaI+YowFT?=
- =?us-ascii?Q?dss0zftO/Mwhacm88zVC01V1E5S8pFQGiMjHLLCjY8Z5e3RwfsKXCNRAsPsG?=
- =?us-ascii?Q?Iot5wDDnu8+3H4Z/bRA+Qe17ej8Xf608FGsm5iVL0fZ5mTxrguQDm+XaXtyy?=
- =?us-ascii?Q?pjdLlnUtFUXVkLQFIhnzRDKV+w3Mcdv750N7zEPSYiVQo9Yuh2vqDDL8s5pw?=
- =?us-ascii?Q?YwGv0OmDUHH7CZx16uIEIBazL4TVRbGCrBlKilc5byFkqv9s36BqwI9h+GhD?=
- =?us-ascii?Q?Bw0cPdZP8+D3fb4J9njEyPBMDoHupf74tVUQY16i5EbiP6kGusXNCi1/KwXQ?=
- =?us-ascii?Q?Erw1e2pOwa9NcTzmXg2MEaIOGLWcc6Dy7s3j1uVggKcX8siKWmzKBeCzu9aa?=
- =?us-ascii?Q?1JFp9gd/fRrf9HzSIdKlykXlaNQSl5PxXz6I6/ao9e8VsQPHpNVK0yEz7Fm5?=
- =?us-ascii?Q?KCLL8tKr871lpGvR4T16NeI0sX/yqWHT/oFurrV00eOdnuJn291qYQq7aVM3?=
- =?us-ascii?Q?tX2l/XJ18kgEoSGlkHCevNe78NQCen42ooXZJN4v+Fwbg/CoxwTqQ+TcRGT5?=
- =?us-ascii?Q?Hc0XCpc4VMCnO3jAD7hCll8gTpWAYTklQJzhdSGsAH5JcLqlQna5OAPtA57U?=
- =?us-ascii?Q?HDj2/+7tz7JcCTxJ+wz1p3pEI7pNQFc8pCdxvxxRqMlUDx7EKMSJnvnltGBT?=
- =?us-ascii?Q?fz/C9Z1XioBpCv/tEhrAwFVS5F+u9RlMCfHQjuDRKH83bgG4qoHdJHbhdQQN?=
- =?us-ascii?Q?aLDSMzqcKYAo01ZbktKTHsOlkqhP8Ki4brl6yZ+/R8sD0blMzz1QJM4dmZLi?=
- =?us-ascii?Q?6A=3D=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?34tY1uLMlIKWQ3svrmqUzGTts3kIr6IrckEWIAw6shL6QMPzHCpSnT1aC+kD?=
+ =?us-ascii?Q?v+0WNuhJ29rbGHerWR1sVb9Pxbji0ZAxMVb4zgP22VUhAiEy6uPXVF9AaB/J?=
+ =?us-ascii?Q?c1DErMz1z8pJQmBH/Ur6CioYDq6OpQ6SpTYQwy+yus2xhtH8ltY4NQbFq/UO?=
+ =?us-ascii?Q?KZx3TgOASORncOFs2AKCT7aSA7QDNtgIFhkD0u8wZr7q1/zPK+bQqmPUQTEu?=
+ =?us-ascii?Q?4SzeFTsZRH83ltP+FlA5GnE8qmVApa6QdeFSu8X7ZXpr2CKZSQAVACw6Q+T1?=
+ =?us-ascii?Q?OTPsNnwHt5HosKoV177bLtCFaDWTmNpZqVrp5sEAwxV4PTolJm6KGB5VLRHz?=
+ =?us-ascii?Q?6QVtVByYS3S484lcpHgFWf5tNA2c41GaPqlphPWfvdayW/ZZOaSzZy5JYcOv?=
+ =?us-ascii?Q?E7S3Pf/zoXPxk7zlo2vn5aP0o7tHzh4HzLuoSGKMkSgbjd1q+4o6U0VoR66l?=
+ =?us-ascii?Q?VnD5gU0bBvGzyu43sqaIgELSddqxWR6sHlUuQWjcJ3bs0U72AiJO3oAei53R?=
+ =?us-ascii?Q?UCMZs2r6thHb4SuUzASXNFv/8dADj38/uYUdx8pEFmNiMxXLFVSPv3aqKLlL?=
+ =?us-ascii?Q?jm5hYxP3Ua76Dx7RRTl0GVIb4cCJ9BdJhTH4/YqjV5Irxrs9GCqvkM7GkDOR?=
+ =?us-ascii?Q?/bkl1SRCgJS3HOugh87a8nMqVKv9sCsHX/7Bngwo0FOxJOLTAVj3XyPZ/6Mg?=
+ =?us-ascii?Q?hXS/WQJ66loqQ0VuxVikv2J+1Cn92ZJ+yZUsPYdL0zSmeGewVA2gOxMvGjAX?=
+ =?us-ascii?Q?d7ZDcy4ETd5vrG5LXpvN+wpJFS7t05hDks2aRk1y3Xt8mLcPCU/oJjsTt9Zm?=
+ =?us-ascii?Q?5LERFK0OASpQeh7yD4V/ZPKIQ+Cw9PkT4++9/gIwpbkVDFYi1wpSitjxH4l1?=
+ =?us-ascii?Q?TifTBPtMxsdJQnfng1qc9wsty80CD5tUnshbW50OBQGsMwn7yvytwVSB762c?=
+ =?us-ascii?Q?F5G6V5+4l5KY1Y57ZZ2Ztdccj8umU/dtyURlVUmbNeQmQldOkM50hGi0R0oe?=
+ =?us-ascii?Q?kRzFutLh8qnUhknXZIelDffGG1DWlKiRRQ2Mr8N24v2MJ86vDiuzzx0LfKUb?=
+ =?us-ascii?Q?E77nI6bJwhutfUnchVw2PqsNTivkEhGZq5lNWutcx7kXrCA1K4NCJ/Rj13Y+?=
+ =?us-ascii?Q?EFoz+Tgs8WYvCpXhvJWHrM8C3rtLXweFqdWzVDqxS61908coGAU2JfrGCGHs?=
+ =?us-ascii?Q?Ie+PHEI0EyrgH6GehgeyxERupoDLVq/lDT7O/e6h+p4X0hpth4XTyBUqg5ru?=
+ =?us-ascii?Q?IojonurCNIYqfZrlFK4L1JjxAmD36urVogCUerlNvIiajWBv9hW1q5Xhtq44?=
+ =?us-ascii?Q?+0LXEpZ2rQwf3no+fb30+R/ae2vP8G+PHkm7bzRRDmHZoBfbL89dakCy0gx5?=
+ =?us-ascii?Q?F7TEcvjsNxUBBEqKOe4XNF9zmdHCEGjjoFwGSMqz7JFUIt0h4dtysfvZLYEX?=
+ =?us-ascii?Q?lSPpMs6Hffkg7NpXyHBiWxta+03IOoCw9XCl40AAYyElachV3v9YlFBGNDnn?=
+ =?us-ascii?Q?q+G8q/VKoL7fz4biKmGeZ4ddcpL5zMQolhxGHVZIOkgix2QBS5MtbBS1Pd9Y?=
+ =?us-ascii?Q?MIG2fg7jm5/7Mv+CNetVqSnzisxgDzq2/B6N1iZFDZCRt1F+7JJZ/OkYOD6/?=
+ =?us-ascii?Q?+g=3D=3D?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?us-ascii?Q?kjOOjzEXcKvNmyJQ5qbyYKmcF2s+cnk8IYkqpZc3ULrgCw8klBvMbhLk1ZYm?=
- =?us-ascii?Q?GTlZQeWrPcP8rLS6CmN2qmRHZk4UGtk4ztPKsldnVKUoHm7bawRygzO6z8BS?=
- =?us-ascii?Q?Jm0pLR1K8tX51M3I2zawpOIq9o+3gUsTzxRDhkgEURxNlw6KuCL8i/3LFy+1?=
- =?us-ascii?Q?VJBVnlhPJuBkL/Y66LayKKLgyrquxrQOiuzZwcyITvcz7FUXUZFOZ4N30vZO?=
- =?us-ascii?Q?5zc+6rGOjc+f7vb0mZiiHK7eXCCk0gZ2gePs+9P+OEGfA0Xkn4QE73OAWK6+?=
- =?us-ascii?Q?VxleVG5xPHKDvQMxhw3oUxKT78zGr3TELJjx4Ah/9ztMkCSw7So18amSh/Gc?=
- =?us-ascii?Q?RjA4cVms9m6MzwvZg06OELl6hf1DuR9ZtzuIErVPL+3zK3NOKoYUgwj9bXPV?=
- =?us-ascii?Q?emkTN8NvdJyJQa6va2VAbqcBfw3P6nzIoHZdu8yXDq1GAQq60S80Uk0ZE8oZ?=
- =?us-ascii?Q?rDvTH5Z2eNn5M3Qe2DlMQR8fHEmOxz3s3axaQYcNoWZCbefPzqOIOZNDrdJl?=
- =?us-ascii?Q?Vr5mEJU5NvJs7BB4z6jYBl51JH8bMQVWgt6MUjESUBVSBtlQz4rmTp/KdWvh?=
- =?us-ascii?Q?HSb3cc+ei2n9ywBD5OlzLP61rMe4rkarLPbjqcqIIrbJvGmnCEvPyyFUkYgw?=
- =?us-ascii?Q?34Wwx6NaQgIzHa1y/p2GGNmZcS4VVBCTar9aIiSRYjQgda4XdMJJOTlpl1sr?=
- =?us-ascii?Q?SWq2f+vjEyOmirRIPLTjpCrpM6yjAhqVjtRUG0wXs03JHUYalOvg1H1Gq+EK?=
- =?us-ascii?Q?Mddqv2GulBDdiKmSZO5vwR/N0kE1hGooBbN7CDd39inbWd99iNLA2WMLDVDW?=
- =?us-ascii?Q?llsFtvc6lLXR5CwDd9ie6T2Pu100iTTOFqYLqpHc5XcXkFwugxqEkaUiteDO?=
- =?us-ascii?Q?UHaBbuu43sKPJmQLLDVJuobX1fHSF4jlsSx6Ry+ri6jXd7t0ZKP+Ugfmj5dh?=
- =?us-ascii?Q?GzSUZoIl82Qk2dHyJcNCpsX9CWCgB0adLji1bBtuF9yatu47cXdc6PiABuxU?=
- =?us-ascii?Q?TW/n6yBL4Ix+YAeoJK0NHx3qW2tGGCp0bCzxPvPAPtieDcYb6GopQG2rCf9h?=
- =?us-ascii?Q?bciR2i+Cf3xTAjcW6Te+12wNZZpA/DdLWTjPIHWHZzfWkPuN4JwxGJAC2hjj?=
- =?us-ascii?Q?OiEtTBuAnXms3vVvhDrTixnldsYvVa2VUpvRqemkTmhQE58IgCrIEws2Wf3Z?=
- =?us-ascii?Q?ka+jK7T/e0QvPompHEXbDAYZofTznulO8eh42EcM/sNQ2BZhrHSMRAv4yGfO?=
- =?us-ascii?Q?svUsj+DiJiLdL8EeWYwG2tEe3y/IzrzoccYt3PrINcrhoMFs/+lmO85a6GSR?=
- =?us-ascii?Q?kA7v8N8hxy/fFglhDmNi1luT50u2NrwRpN3UkU0JNgqiIhfHJQsOplGgpxmD?=
- =?us-ascii?Q?+sskRTcfYZRI8sBGBYz5BCGpOcpU6ZRvEw4ZHK1Y04c188v3dnGHtgtlyFh2?=
- =?us-ascii?Q?Ug2KihDKhLE=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?us-ascii?Q?URtZn70u93EDMt5K8iBYG9b1i6pKmF4dtfdHn4qbRrWGH596NgTZX5R/gWoZ?=
+ =?us-ascii?Q?viPm1EViYVYpBzI1RaqQYpJz91gZ5D3V234gYFeKLZmcpD8G33vqMs/YRVit?=
+ =?us-ascii?Q?7yMutp7gDANazLxUSoUb4xfuBvuqDiBwyLXYAqzQY7mGqeqSzx2l9oDgZmK1?=
+ =?us-ascii?Q?VB1l+QHU2DxepZgXbQqk+T3tYpFPigo0UYNkl+xQj+JnJJp7lto1+j4SxKg1?=
+ =?us-ascii?Q?jAgM/1fj4nC976nnsAEs1juXE0vVHzRvTkKFvwqPx1U5IxuEvh8CaifU5u8L?=
+ =?us-ascii?Q?JMZnZ9wmcoxHLcFTQ4sgl93a3nLlPmrn5a9WoCFvXbXNx+F76/tkUOvltj4v?=
+ =?us-ascii?Q?DGhW+wuioonHzbzhOvx+AxQI8xzl9gRSwsqJwn6IEaVDOFWcVZPtwuQdrdCh?=
+ =?us-ascii?Q?jkOO1idhkywra0toY11LmT2V1rAlVIOIn7AO5DGSbT4vGMD5Glyn9Ph6dLgF?=
+ =?us-ascii?Q?7MIbnKTA403iZZ0x5y1YWHnq905dLe4sgcj/MaPK9iB9TdqewM5pAZVFIZM/?=
+ =?us-ascii?Q?UmRPm1yJd3TbdFBojtj/nV+G3nHGTfWZbgsXXCGJ3Nz0HJ4wz7TBCx+HnRun?=
+ =?us-ascii?Q?BOnN4Ym/5N95hCaaunuPYyk19MDU1RiMHrrm7eeZQXwrha7yiZhmLNZirFhD?=
+ =?us-ascii?Q?fx3+o4mK5L42Q8MnJL4490zyMwF8IgxJgXuaZvtv97rxi30zziNp674ScjaT?=
+ =?us-ascii?Q?PbKP6nA4imTYr/PPl1OuRDJxojNdEUaJek4JPhBzh4zoJJzeOgM63RCTHejl?=
+ =?us-ascii?Q?soOxt1wJiJjgR4SUreydr4k9c3hLqjZWD1IQmEJ5OMpjmPRdPEuvOTlth5rs?=
+ =?us-ascii?Q?cGTrHhN+QvUJtCXS37xXHAx9SwDA1V85ITsl368sy25u9mq/6wFOMRjysbvW?=
+ =?us-ascii?Q?vjqH4DDXlnvFg6CPp5DwpaTptDL5AjhG2v8lXjATcfzGOiJczyFNu43tVjhY?=
+ =?us-ascii?Q?gOjuV8Swz6EoIW2kajMZ73Y4Lei7TOCkD+aZmQyLvTAjtEV1hu5ogC2iHbIJ?=
+ =?us-ascii?Q?6Wn9nHA+mbjRStffmXGo3PVjhVlWQ6hnvXXxfvjA1HV26FZwERkvviiqyNaD?=
+ =?us-ascii?Q?jDSLvN/7OLY2FPC1P/odxSVyCwjFC2+N55G8UQ4WqdHwhNTNsN5V72J9x9wp?=
+ =?us-ascii?Q?dlcK5E3ycuBRqabwMnU2CBOsyjLNMRf1mD6zD77OGRBG+hmYDmDRPzi/WD7e?=
+ =?us-ascii?Q?8Za7tKIqUIAxk/WHhF4nGNtSrg32cR3ZZeKmLTrVRRoYb+8gtFhPk8P9bUKv?=
+ =?us-ascii?Q?abi74hr2KlY9dETN5YAx+yNosvOROcPZU0vkDAwGFLDVPhJuuY8T+6ArvHpT?=
+ =?us-ascii?Q?MUCoA8LZz61YOnqVYGOKgGx5+ZKPLZ2WPalUfL4UQ0FO/fvuwopj7LEOQNPu?=
+ =?us-ascii?Q?7viUZgpfcNinSxnWSXc6HQyr51Iv9YpK0LleEYbquRnRC4jSNmOtHUAggD4U?=
+ =?us-ascii?Q?qpMgUGqr7tM=3D?=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eaed10e9-5c79-4776-10a0-08db7808d886
+X-MS-Exchange-CrossTenant-Network-Message-Id: 31af01ab-f988-47d9-40d3-08db7808d343
 X-MS-Exchange-CrossTenant-AuthSource: CO1PR10MB4531.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jun 2023 18:52:39.1861
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jun 2023 18:52:30.4452
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CabDA/wNt1COCA0O7zUOufHH1+y6x14vNpJmtylY+vnbiN8OUZ0EtxtPNWUN/ZIjeBejwIW7FwD7P0kziomlTEesWf1GhGldDBxNsNrdbNg=
+X-MS-Exchange-CrossTenant-UserPrincipalName: GeboyiBjZ05uQafzkaxyon6u7g6sRF5T2XOSWdWAc21AAb1JcyA8UGYQv67XOHBXUCXBEJhne9hRm6zj+jYIHuNh2/3K5WBsTh/QqdmXCgw=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR10MB7820
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
@@ -178,11 +178,11 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 suspec
  malwarescore=0 phishscore=0 bulkscore=0 spamscore=0 adultscore=0
  mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2305260000 definitions=main-2306280168
-X-Proofpoint-GUID: p7Z3ezR82gokJ_E6YVAEIVr5Gh-_7ICq
-X-Proofpoint-ORIG-GUID: p7Z3ezR82gokJ_E6YVAEIVr5Gh-_7ICq
+X-Proofpoint-ORIG-GUID: Z38sp8V1JUnGnibKTkDYpu9lWibXkn8Q
+X-Proofpoint-GUID: Z38sp8V1JUnGnibKTkDYpu9lWibXkn8Q
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230628_115306_456897_61F6B857 
-X-CRM114-Status: GOOD (  19.90  )
+X-CRM114-CacheID: sfid-20230628_115306_474776_8C1C8885 
+X-CRM114-Status: GOOD (  19.86  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -199,45 +199,240 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-When a crash kernel is loaded via the kexec_file_load() syscall, the
-kernel places the various segments (ie crash kernel, crash initrd,
-boot_params, elfcorehdr, purgatory, etc) in memory. For those
-architectures that utilize purgatory, a hash digest of the segments
-is calculated for integrity checking. The digest is embedded into
-the purgatory image prior to placing in memory.
+Greg Kroah-Hartman requested that this file use the .is_visible()
+method instead of #ifdefs for the attributes in memory.c.
 
-Updates to the elfcorehdr in response to CPU and memory changes
-would cause the purgatory integrity checking to fail (at crash time,
-and no vmcore created). Therefore, the elfcorehdr segment is
-explicitly excluded from the purgatory digest, enabling updates to
-the elfcorehdr while also avoiding the need to recompute the hash
-digest and reload purgatory.
+ static struct attribute *memory_memblk_attrs[] = {
+     &dev_attr_phys_index.attr,
+     &dev_attr_state.attr,
+     &dev_attr_phys_device.attr,
+     &dev_attr_removable.attr,
+ #ifdef CONFIG_MEMORY_HOTREMOVE
+     &dev_attr_valid_zones.attr,
+ #endif
+     NULL
+ };
+
+and
+
+ static struct attribute *memory_root_attrs[] = {
+ #ifdef CONFIG_ARCH_MEMORY_PROBE
+     &dev_attr_probe.attr,
+ #endif
+
+ #ifdef CONFIG_MEMORY_FAILURE
+     &dev_attr_soft_offline_page.attr,
+     &dev_attr_hard_offline_page.attr,
+ #endif
+
+     &dev_attr_block_size_bytes.attr,
+     &dev_attr_auto_online_blocks.attr,
+     NULL
+ };
+
+To that end:
+ - the .is_visible() method is implemented, and IS_ENABLED(), rather
+   than #ifdef, is used to determine the visibility of the attribute.
+ - the DEVICE_ATTR_xx() attributes are moved outside of #ifdefs, so that
+   those structs are always present for the memory_memblk_attrs[] and
+   memory_root_attrs[].
+ - the #ifdefs guarding the attributes in the memory_memblk_attrs[] and
+   memory_root_attrs[] are moved to the corresponding callback function;
+   as the callback function must exist now that the attribute is always
+   compiled-in (though not necessarily visible).
+
+No functionality change intended.
 
 Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
-Reviewed-by: Sourabh Jain <sourabhjain@linux.ibm.com>
-Acked-by: Hari Bathini <hbathini@linux.ibm.com>
-Acked-by: Baoquan He <bhe@redhat.com>
 ---
- kernel/kexec_file.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/base/memory.c | 78 +++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 65 insertions(+), 13 deletions(-)
 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index e9cf9e8d8f01..824ffc5282f4 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -726,6 +726,12 @@ static int kexec_calculate_store_digests(struct kimage *image)
- 	for (j = i = 0; i < image->nr_segments; i++) {
- 		struct kexec_segment *ksegment;
+diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+index b456ac213610..f03eda7e1c9c 100644
+--- a/drivers/base/memory.c
++++ b/drivers/base/memory.c
+@@ -405,10 +405,12 @@ static int print_allowed_zone(char *buf, int len, int nid,
  
-+#ifdef CONFIG_CRASH_HOTPLUG
-+		/* Exclude elfcorehdr segment to allow future changes via hotplug */
-+		if (j == image->elfcorehdr_index)
-+			continue;
+ 	return sysfs_emit_at(buf, len, " %s", zone->name);
+ }
 +#endif
+ 
+ static ssize_t valid_zones_show(struct device *dev,
+ 				struct device_attribute *attr, char *buf)
+ {
++#ifdef CONFIG_MEMORY_HOTREMOVE
+ 	struct memory_block *mem = to_memory_block(dev);
+ 	unsigned long start_pfn = section_nr_to_pfn(mem->start_section_nr);
+ 	unsigned long nr_pages = PAGES_PER_SECTION * sections_per_block;
+@@ -444,9 +446,11 @@ static ssize_t valid_zones_show(struct device *dev,
+ out:
+ 	len += sysfs_emit_at(buf, len, "\n");
+ 	return len;
++#else
++	return 0;
++#endif
+ }
+ static DEVICE_ATTR_RO(valid_zones);
+-#endif
+ 
+ static DEVICE_ATTR_RO(phys_index);
+ static DEVICE_ATTR_RW(state);
+@@ -496,10 +500,10 @@ static DEVICE_ATTR_RW(auto_online_blocks);
+  * as well as ppc64 will do all of their discovery in userspace
+  * and will require this interface.
+  */
+-#ifdef CONFIG_ARCH_MEMORY_PROBE
+ static ssize_t probe_store(struct device *dev, struct device_attribute *attr,
+ 			   const char *buf, size_t count)
+ {
++#ifdef CONFIG_ARCH_MEMORY_PROBE
+ 	u64 phys_addr;
+ 	int nid, ret;
+ 	unsigned long pages_per_block = PAGES_PER_SECTION * sections_per_block;
+@@ -527,12 +531,13 @@ static ssize_t probe_store(struct device *dev, struct device_attribute *attr,
+ out:
+ 	unlock_device_hotplug();
+ 	return ret;
++#else
++	return 0;
++#endif
+ }
+ 
+ static DEVICE_ATTR_WO(probe);
+-#endif
+ 
+-#ifdef CONFIG_MEMORY_FAILURE
+ /*
+  * Support for offlining pages of memory
+  */
+@@ -542,6 +547,7 @@ static ssize_t soft_offline_page_store(struct device *dev,
+ 				       struct device_attribute *attr,
+ 				       const char *buf, size_t count)
+ {
++#ifdef CONFIG_MEMORY_FAILURE
+ 	int ret;
+ 	u64 pfn;
+ 	if (!capable(CAP_SYS_ADMIN))
+@@ -551,6 +557,9 @@ static ssize_t soft_offline_page_store(struct device *dev,
+ 	pfn >>= PAGE_SHIFT;
+ 	ret = soft_offline_page(pfn, 0);
+ 	return ret == 0 ? count : ret;
++#else
++	return 0;
++#endif
+ }
+ 
+ /* Forcibly offline a page, including killing processes. */
+@@ -558,6 +567,7 @@ static ssize_t hard_offline_page_store(struct device *dev,
+ 				       struct device_attribute *attr,
+ 				       const char *buf, size_t count)
+ {
++#ifdef CONFIG_MEMORY_FAILURE
+ 	int ret;
+ 	u64 pfn;
+ 	if (!capable(CAP_SYS_ADMIN))
+@@ -569,11 +579,13 @@ static ssize_t hard_offline_page_store(struct device *dev,
+ 	if (ret == -EOPNOTSUPP)
+ 		ret = 0;
+ 	return ret ? ret : count;
++#else
++	return 0;
++#endif
+ }
+ 
+ static DEVICE_ATTR_WO(soft_offline_page);
+ static DEVICE_ATTR_WO(hard_offline_page);
+-#endif
+ 
+ /* See phys_device_show(). */
+ int __weak arch_get_memory_phys_device(unsigned long start_pfn)
+@@ -611,14 +623,35 @@ static struct attribute *memory_memblk_attrs[] = {
+ 	&dev_attr_state.attr,
+ 	&dev_attr_phys_device.attr,
+ 	&dev_attr_removable.attr,
+-#ifdef CONFIG_MEMORY_HOTREMOVE
+ 	&dev_attr_valid_zones.attr,
+-#endif
+ 	NULL
+ };
+ 
++static umode_t
++memory_memblk_attr_is_visible(struct kobject *kobj,
++			       struct attribute *attr, int unused)
++{
++	umode_t mode = attr->mode;
 +
- 		ksegment = &image->segment[i];
- 		/*
- 		 * Skip purgatory as it will be modified once we put digest
++	if (attr == &dev_attr_phys_index.attr)
++		return mode;
++	if (attr == &dev_attr_state.attr)
++		return mode;
++	if (attr == &dev_attr_phys_device.attr)
++		return mode;
++	if (attr == &dev_attr_removable.attr)
++		return mode;
++	if (IS_ENABLED(CONFIG_MEMORY_HOTREMOVE)) {
++		if (attr == &dev_attr_valid_zones.attr)
++			return mode;
++	}
++
++	return 0;
++}
++
+ static const struct attribute_group memory_memblk_attr_group = {
+ 	.attrs = memory_memblk_attrs,
++	.is_visible = memory_memblk_attr_is_visible,
+ };
+ 
+ static const struct attribute_group *memory_memblk_attr_groups[] = {
+@@ -878,22 +911,41 @@ void remove_memory_block_devices(unsigned long start, unsigned long size)
+ }
+ 
+ static struct attribute *memory_root_attrs[] = {
+-#ifdef CONFIG_ARCH_MEMORY_PROBE
+ 	&dev_attr_probe.attr,
+-#endif
+-
+-#ifdef CONFIG_MEMORY_FAILURE
+ 	&dev_attr_soft_offline_page.attr,
+ 	&dev_attr_hard_offline_page.attr,
+-#endif
+-
+ 	&dev_attr_block_size_bytes.attr,
+ 	&dev_attr_auto_online_blocks.attr,
+ 	NULL
+ };
+ 
++static umode_t
++memory_root_attr_is_visible(struct kobject *kobj,
++			       struct attribute *attr, int unused)
++{
++	umode_t mode = attr->mode;
++
++	if (IS_ENABLED(CONFIG_ARCH_MEMORY_PROBE)) {
++		if (attr == &dev_attr_probe.attr)
++			return mode;
++	}
++	if (IS_ENABLED(CONFIG_MEMORY_FAILURE)) {
++		if (attr == &dev_attr_soft_offline_page.attr)
++			return mode;
++		if (attr == &dev_attr_hard_offline_page.attr)
++			return mode;
++	}
++	if (attr == &dev_attr_block_size_bytes.attr)
++		return mode;
++	if (attr == &dev_attr_auto_online_blocks.attr)
++		return mode;
++
++	return 0;
++}
++
+ static const struct attribute_group memory_root_attr_group = {
+ 	.attrs = memory_root_attrs,
++	.is_visible = memory_root_attr_is_visible,
+ };
+ 
+ static const struct attribute_group *memory_root_attr_groups[] = {
 -- 
 2.31.1
 
