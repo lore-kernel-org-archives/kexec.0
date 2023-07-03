@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5120DC0015E
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B69D4C001DB
 	for <kexec@archiver.kernel.org>; Mon,  3 Jul 2023 21:57:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
@@ -12,32 +12,32 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=luCaPv29RmeXPS91j5XjxgJ7eVwhSjMVAFTVF+LpW4g=; b=aVSD5VYvz/JKny
-	IpSjs5kouiyhoGTqbr/lE2lQ3QnbDt/XFSrInWrCmf8JjWmM6DadTpnwFrwMzBfvicN5b0xVhhN4x
-	YD6lnskWtYo0tFWWsI8QURvPs+NDg2mPPMd/hMKkEoxcyM1vcv1TbKQTN4XjLdNAZJYHylIw82Sfk
-	AHrJ1HHCTUAmmTCtmaC+/krb3/OCZg6v73e69dlqXLVGaAaFJ1itkgZe6sEzjDgY/au/lLp8mApjZ
-	eVHMy65odc+emtM6J2OCMyvOklgZ8gLN1a/+2RNrlICDg0ZTxnCqP3ExhBpGYRkHEOzJ1S/F+43q5
-	cZWxqEeGLFzm1Kaf0GdA==;
+	List-Owner; bh=QALo6N3CPynUnBk0BwNE5a4sZWAXCdo+sniha64PSu8=; b=TaKVwE30knAMoS
+	vQHVUBFxuW7qfAk/PuND5gXVhrH/d+f6ZwqlVhgF9UCXwvZXKaRFMEizHsnfUP3ORemUaNdNe4HGk
+	kX3M7neTAVYB/+zXe9PU5QTiCDaRo4D1UnRowJtQDYwOvhq4BntiyaXQF7+UooP9NeKqmWdpgu4vW
+	JiNO7zTozXmNe8dOkMjdv7IMsfxuTmhhmFPqF04vjVeccslX4lDuRtF8Hy13Z5HX9ysiNjKBKjQJA
+	ZrmJDk6xyuTvM+AElZzFULfrgTvfwd2fY+Kzbf3t3AJh9WaeWsL7fN8Ft/kKDPEVemVn7DOYbKvSY
+	vMpooc+eCC2ZrnXn97Tg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qGRXv-00BVvw-2o;
-	Mon, 03 Jul 2023 21:57:23 +0000
+	id 1qGRXy-00BVwz-1Z;
+	Mon, 03 Jul 2023 21:57:26 +0000
 Received: from linux.microsoft.com ([13.77.154.182])
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qGRXs-00BVsR-05
+	id 1qGRXs-00BVsZ-0Q
 	for kexec@lists.infradead.org;
-	Mon, 03 Jul 2023 21:57:21 +0000
+	Mon, 03 Jul 2023 21:57:22 +0000
 Received: from tushar-HP-Pavilion-Laptop-15-eg0xxx.lan (c-98-237-170-177.hsd1.wa.comcast.net [98.237.170.177])
-	by linux.microsoft.com (Postfix) with ESMTPSA id BB30520AECBD;
-	Mon,  3 Jul 2023 14:57:17 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BB30520AECBD
+	by linux.microsoft.com (Postfix) with ESMTPSA id CAB5220C08E8;
+	Mon,  3 Jul 2023 14:57:18 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CAB5220C08E8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1688421437;
-	bh=eQiDdiGszFkOMDk1+HM/N9CWYJ7B5kMdxIp/HrxE+hU=;
+	s=default; t=1688421439;
+	bh=dY4aFxIDs6EY00F0s6UDoHjuv7HPfWOrldANuBkGFWU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HkEH6GqHefQ3IMcFxi9qEcIzWzVymw0R8WlJWcRaLzDQrMAjoC4b12i7FO/gs3Nzr
-	 tza0yGt9YBhhvrbxELq/kXt4VgnxfcI8HX3H1pLpDPSoBRClFRIMtpfgOgv9Xywlh0
-	 rTaUj84l6vax9yjdp1eGP5a8jYR2XwaWm7FworH8=
+	b=EUeufRn/WOcR0527Xs7EmfGHRPuXdmUeyzABRAmpyU/Cn5BjjQ3ciTrKQyapp9t0S
+	 oexM5A/c9kw7UxVncX5t39AsRe26OL5vitK/cjy0SFR6+pNB6JpwVZU7l2UIWGbyNG
+	 u7/6Y7l+nL3Prp+IPlcyJoiaxnA29fz83dpICOiE=
 From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
 To: zohar@linux.ibm.com,
 	noodles@fb.com,
@@ -47,16 +47,16 @@ To: zohar@linux.ibm.com,
 Cc: code@tyhicks.com,
 	nramas@linux.microsoft.com,
 	paul@paul-moore.com
-Subject: [PATCH 01/10] ima: implement function to allocate buffer at kexec load
-Date: Mon,  3 Jul 2023 14:57:00 -0700
-Message-Id: <20230703215709.1195644-2-tusharsu@linux.microsoft.com>
+Subject: [PATCH 04/10] ima: implement functions to suspend and resume measurements
+Date: Mon,  3 Jul 2023 14:57:03 -0700
+Message-Id: <20230703215709.1195644-5-tusharsu@linux.microsoft.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230703215709.1195644-1-tusharsu@linux.microsoft.com>
 References: <20230703215709.1195644-1-tusharsu@linux.microsoft.com>
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230703_145720_102878_011D9E4D 
-X-CRM114-Status: GOOD (  12.98  )
+X-CRM114-CacheID: sfid-20230703_145720_231522_FABC4721 
+X-CRM114-Status: GOOD (  11.28  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -73,80 +73,74 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-IMA does not provide a mechanism to allocate memory for IMA log storage
-during kexec operation.  The function should handle the scenario where
-the kexec load is called multiple times. 
+The IMA subsystem needs to provide a mechanism to suspend or resume
+measurements.  This functionality is needed to temporarily halt the
+recording of IMA measurements during certain system operations.
 
-Implement a function to allocate buffer of size kexec_segment_size at
-kexec load.  If the buffer was already allocated, free that buffer and
-reallocate.  Finally, initialize ima_khdr struct. 
+Add functions ima_measurements_suspend() and ima_measurements_resume()
+functions to set and reset the suspend_ima_measurements variable,
+respectively, to suspend/resume IMA measurements.  Use
+ima_extend_list_mutex to ensure that the operations are thread-safe.
 
-The patch operates under the assumption that the segment size does not
-change between kexec load and execute.
+Note: Use ima_measurements_suspend() and ima_measurements_resume() in
+pairs to avoid indefinitely suspending IMA measurements.
 
 Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
 ---
- security/integrity/ima/ima_kexec.c | 47 ++++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+ security/integrity/ima/ima.h       |  2 ++
+ security/integrity/ima/ima_queue.c | 19 +++++++++++++++++++
+ 2 files changed, 21 insertions(+)
 
-diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-index 419dc405c831..48a683874044 100644
---- a/security/integrity/ima/ima_kexec.c
-+++ b/security/integrity/ima/ima_kexec.c
-@@ -15,6 +15,53 @@
- #include "ima.h"
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index 2ffda9449b9b..7127c5cf1909 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -163,6 +163,8 @@ bool ima_template_has_modsig(const struct ima_template_desc *ima_template);
+ int ima_restore_measurement_entry(struct ima_template_entry *entry);
+ int ima_restore_measurement_list(loff_t bufsize, void *buf);
+ int ima_measurements_show(struct seq_file *m, void *v);
++void ima_measurements_suspend(void);
++void ima_measurements_resume(void);
+ unsigned long ima_get_binary_runtime_size(void);
+ int ima_init_template(void);
+ void ima_init_template_list(void);
+diff --git a/security/integrity/ima/ima_queue.c b/security/integrity/ima/ima_queue.c
+index 532da87ce519..cb9abc02a304 100644
+--- a/security/integrity/ima/ima_queue.c
++++ b/security/integrity/ima/ima_queue.c
+@@ -44,6 +44,11 @@ struct ima_h_table ima_htable = {
+  */
+ static DEFINE_MUTEX(ima_extend_list_mutex);
  
- #ifdef CONFIG_IMA_KEXEC
-+struct seq_file ima_kexec_file;
-+struct ima_kexec_hdr ima_khdr;
-+static size_t kexec_segment_size;
++/*
++ * Used internally by the kernel to suspend-resume ima measurements.
++ */
++static atomic_t suspend_ima_measurements;
 +
-+void ima_clear_kexec_file(void)
+ /* lookup up the digest value in the hash table, and return the entry */
+ static struct ima_queue_entry *ima_lookup_digest_entry(u8 *digest_value,
+ 						       int pcr)
+@@ -148,6 +153,20 @@ static int ima_pcr_extend(struct tpm_digest *digests_arg, int pcr)
+ 	return result;
+ }
+ 
++void ima_measurements_suspend(void)
 +{
-+	vfree(ima_kexec_file.buf);
-+	ima_kexec_file.buf = NULL;
-+	ima_kexec_file.size = 0;
-+	ima_kexec_file.read_pos = 0;
-+	ima_kexec_file.count = 0;
++	mutex_lock(&ima_extend_list_mutex);
++	atomic_set(&suspend_ima_measurements, 1);
++	mutex_unlock(&ima_extend_list_mutex);
 +}
 +
-+static int ima_allocate_buf_at_kexec_load(void)
++void ima_measurements_resume(void)
 +{
-+	if ((kexec_segment_size == 0) ||
-+	    (kexec_segment_size == ULONG_MAX) ||
-+	    ((kexec_segment_size >> PAGE_SHIFT) > totalram_pages() / 2)) {
-+		pr_err("%s: Invalid segment size for kexec: %zu\n",
-+			__func__, kexec_segment_size);
-+		return -EINVAL;
-+	}
-+
-+	/* if kexec load was called before, clear the existing buffer
-+	 *  before allocating a new one
-+	 */
-+	if (ima_kexec_file.buf)
-+		ima_clear_kexec_file();
-+
-+	/* segment size can't change between kexec load and execute */
-+	ima_kexec_file.buf = vmalloc(kexec_segment_size);
-+	if (!ima_kexec_file.buf) {
-+		pr_err("%s: No memory for ima kexec measurement buffer\n",
-+			__func__);
-+		return -ENOMEM;
-+	}
-+
-+	ima_kexec_file.size = kexec_segment_size;
-+	ima_kexec_file.read_pos = 0;
-+	ima_kexec_file.count = sizeof(ima_khdr);	/* reserved space */
-+
-+	memset(&ima_khdr, 0, sizeof(ima_khdr));
-+	ima_khdr.version = 1;
-+
-+	return 0;
++	mutex_lock(&ima_extend_list_mutex);
++	atomic_set(&suspend_ima_measurements, 0);
++	mutex_unlock(&ima_extend_list_mutex);
 +}
 +
- static int ima_dump_measurement_list(unsigned long *buffer_size, void **buffer,
- 				     unsigned long segment_size)
- {
+ /*
+  * Add template entry to the measurement list and hash table, and
+  * extend the pcr.
 -- 
 2.25.1
 
