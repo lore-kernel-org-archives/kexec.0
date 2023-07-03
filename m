@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BC878EB64DC
-	for <kexec@archiver.kernel.org>; Mon,  3 Jul 2023 13:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1E246EB64DD
+	for <kexec@archiver.kernel.org>; Mon,  3 Jul 2023 13:09:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=uE1WSuePdpj0TkBHKxrQY2ftUA6AARPpwf1hLcJixD0=; b=Kr9h2aCP25Mq+t
-	0U9Pg3RqzQ21ilYCNYqRWI79zmhyWKAUk26ms+padPfBwZsnND8EDg7dMfOLoQEYHV6N4lD/9oTw4
-	uF/8HF6FRr9CiHFvj8jzqBKyT0rAftTu/nfwRwip9JYdAxol025vJEANIgr5W3HCkUkmvYHVFnL+2
-	23+S27epOzcJ64UQrFKY8fXJ3NjVS250BcHfE9wd6Irw/bj40DQoUP9hS4qTE3eD2Gb+HJJkVePRP
-	9Xyf3G2vXgi8hZcf+KlI11VKOk/GUhxBNDSYBUrRHthkfKIKghgq1phsM/XQ3UTMZSZLghQGfcgv1
-	AdSmZo0TkBdexcypMcgg==;
+	List-Owner; bh=NKx7c/o+vFZNNLfEI3QjuQvDWCc0VjwhEfsmuc+cW9o=; b=NuNWlImIQruyfX
+	zBD0dIBeCOg+8beHL8c6X56vIqNWWXo29g2XtBtw5IYh5J39cA7PlN3Eh5gNInarGc1+6X8ZtM3wz
+	rZjjK8RI/nJc4XWXi8MUhXHqy42aO+Xe4rulD+2fxVVX6/FtIvsNjkIf+FGYNTqEvw0SgCSxsLW6e
+	oe2KsPgN2FbiXevVv99rR2s+ZP74BOexFRZQOiX5YaJzth7HODCACNNkfJFAjbiZeN7SH/vfQAeRQ
+	ektNcRLmfb/DZlfjcd2+Ri1BJNWcrobkNwUnWUtZRXDgsUHelc68tGsol+wogXMUwKNjNlghnitjh
+	uKXWcxEpfNj55Mk7IEXw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qGJIL-00AaeP-2V;
-	Mon, 03 Jul 2023 13:08:45 +0000
-Received: from dfw.source.kernel.org ([139.178.84.217])
+	id 1qGJJ2-00Aakz-17;
+	Mon, 03 Jul 2023 13:09:28 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qGJII-00AadU-2p
+	id 1qGJIz-00AakG-23
 	for kexec@lists.infradead.org;
-	Mon, 03 Jul 2023 13:08:44 +0000
+	Mon, 03 Jul 2023 13:09:26 +0000
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id D1CDF60F25;
-	Mon,  3 Jul 2023 13:08:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 795CDC433C8;
-	Mon,  3 Jul 2023 13:08:40 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id AA83260F1B;
+	Mon,  3 Jul 2023 13:09:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83BCBC433C8;
+	Mon,  3 Jul 2023 13:09:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1688389721;
-	bh=ypbcj87dPUAw9tzLtO/umPTpb2y3vCv6n+L9rNnzz58=;
+	s=korg; t=1688389764;
+	bh=T7Ufr/yUXiAraO8aEPf0fd3IynmqDCJjXf6AnGN17u4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=xLr+Vuydj3zwqtXJDbof6qt1egJsCwGG7z1JqapZix5T/n6ja+Kwo8KTGK/Y2hItD
-	 6KKa493JijPBeliZnn61IYNmRt9cFvJej2Vrmki4L6PeJItT/MixQmRQzIeTPVpLDl
-	 fAvq9kslDMfoChfvyLMM2g2U7ug/P0An5+tF9UYc=
-Date: Mon, 3 Jul 2023 15:05:28 +0200
+	b=FstFVqiOOub0QPkzlTWmoa1ngU2Y+dI3ygdxBmCXB7XXduSXAruOW4Gq/vlTZMAU/
+	 5xExvyfrJN7N+2ZKKjTxU/83uaQ7BBhhboo59yTT/Sv4cOZkAP+P3iA38ftBNgTEoJ
+	 NOogCkM7yMaevmyWa0boAN22Gx6dQUoJm1DETK4c=
+Date: Mon, 3 Jul 2023 15:07:29 +0200
 From: Greg KH <gregkh@linuxfoundation.org>
 To: Eric DeVolder <eric.devolder@oracle.com>
 Cc: linux-kernel@vger.kernel.org, david@redhat.com, osalvador@suse.de,
@@ -57,17 +57,17 @@ Cc: linux-kernel@vger.kernel.org, david@redhat.com, osalvador@suse.de,
 	linux-mm@kvack.org, linux-doc@vger.kernel.org,
 	sourabhjain@linux.ibm.com, konrad.wilk@oracle.com,
 	boris.ostrovsky@oracle.com
-Subject: Re: [PATCH v25 01/10] drivers/base: refactor cpu.c to use
- .is_visible()
-Message-ID: <2023070342-human-spill-a62c@gregkh>
+Subject: Re: [PATCH v25 06/10] crash: memory and CPU hotplug sysfs attributes
+Message-ID: <2023070359-saline-unsolved-3a99@gregkh>
 References: <20230629192119.6613-1-eric.devolder@oracle.com>
- <20230629192119.6613-2-eric.devolder@oracle.com>
+ <20230629192119.6613-7-eric.devolder@oracle.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20230629192119.6613-2-eric.devolder@oracle.com>
+In-Reply-To: <20230629192119.6613-7-eric.devolder@oracle.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230703_060842_961727_5A7141D0 
-X-CRM114-Status: GOOD (  11.11  )
+X-CRM114-CacheID: sfid-20230703_060925_716472_E34AF02A 
+X-CRM114-Status: UNSURE (   7.32  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,17 +84,15 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Jun 29, 2023 at 03:21:10PM -0400, Eric DeVolder wrote:
->  - the function body of the callback functions are now wrapped with
->    IS_ENABLED(); as the callback function must exist now that the
->    attribute is always compiled-in (though not necessarily visible).
+On Thu, Jun 29, 2023 at 03:21:15PM -0400, Eric DeVolder wrote:
+> +What:		/sys/devices/system/cpu/crash_hotplug
+> +Date:		Jun 2023
 
-Why do you need to do this last thing?  Is it a code savings goal?  Or
-something else?  The file will not be present in the system if the
-option is not enabled, so it should be safe to not do this unless you
-feel it's necessary for some reason?
+It's not "Jun" anymore :(
 
-Not doing this would make the diff easier to read :)
+> +Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
+
+Why are you not going to maintain this?  Why is this up to me?
 
 thanks,
 
