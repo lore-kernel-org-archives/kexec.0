@@ -4,70 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 702D0EB64D9
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 72A46EB64DD
 	for <kexec@archiver.kernel.org>; Wed,  5 Jul 2023 02:47:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=7CSxseN3dRrOgFPW/LOViQL49Ck5amie6F1RP7AOy0k=; b=Go8XpXHjA3DtF4
-	K6b4L2ad4PUHDVR1rslV/y6OsqqnmUYw3wbwOl9GplOn8kJqwfcrMbG+4yUFdNwyP73/yvBzl6/0P
-	6Lktn1ljz/GHsDERio8bZT+F/it9zwYaDvIpjQYwD+3nSmYuLIAz4EPnKUtoB02XCKKU12/wXGr+L
-	hKkZkgeZjt7NsWrvIviqM3eriWq/Z7m9vLGKKKX7xBT6VUauEf9EtITOkhXSq33syD291msFxlhD6
-	DdMcnL5w9rK2pG1IQo74qRT0KihWFT+WQjLW9GfRYKX/sZ/CRM6BBvhpdxJ3d0t3YKueIMg9Abblv
-	zFQBye/L4UlHx7Q3wlXA==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=vAkQp8jffFy7E64j6Bfff06DBXEnN2OLfwfovGQuZaI=; b=p+laaHW2mxDG9F
+	Lrea1Z6Szt0W8P4FKdS/lckD+r1Ha45DyOQmTjsPWQYcdQLO/BFNxKVXblezLgKisoj7VdDUhCGx7
+	JdyOfmHs6cmUCiv9oVXtlldr63/Z6bjKjo90oauHBwBOf7Mq/djSft0p+KIYxmI6sKbwMXlMP7xRY
+	OT69f/03i7OWIxtGF5uTrVNRf5ugkmkrWcYhtSM1U2XoNRW1DebEBdPkYSZhk2cdsm+0LxNSsUIo3
+	/KicyOSzxIez6l8uZEPVQH4RcI/2IoSxC7x/c/+DfJkUqimTg7donujRU+G0d2JG/yhRcNViHFNxg
+	4B+thDGJEcbTx7K/uviw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qGsYV-00Edol-2M;
-	Wed, 05 Jul 2023 02:47:47 +0000
+	id 1qGsYU-00EdoC-0c;
+	Wed, 05 Jul 2023 02:47:46 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qGsYT-00EdoB-0A
+	id 1qGsYP-00Ednm-1X
 	for kexec@lists.infradead.org;
-	Wed, 05 Jul 2023 02:47:46 +0000
+	Wed, 05 Jul 2023 02:47:43 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1688525264;
+	s=mimecast20190719; t=1688525258;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8Zv0ZIBcubRVFd0aPY9hgjti2jW8lVVyFHpftPXK2YY=;
-	b=d5ix9TqMTg8jnmgOXpguIEx/7gzFOtCqz1DrfbFKejcoiSrZ6ehnODk2+kouCD7OhDFkkF
-	QnyotSnfXbYgGaRKctw7ZgaKH4WcawYtl3qMMv+fdXtzEVf0es3V9E4oIIVzNBEl9YEBvz
-	GfQwrRfXUv/IPd7dwGluOrF5DtwL3ts=
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=e4uVNvSf6KmlEELdZHyswNelZU79exDVk5Mw7MK2CN0=;
+	b=E0iT/+xEQawJFwFhJQqDjmv8zn77leeDPbR4EudWFUTI4MyHTdFkAe9kQCG9vLGAFjWTS1
+	1BUX0mm4SEcQgGm4VTcSlewULpfRKcR5L0YsuPy54Yvteu/XDbAOPpe5jnJETnNQsiRETO
+	RsIZrHLmew1jJEx+0mdvKO/H+/9O57Q=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-626-65If1DHgM6ag-5UZEVKjIQ-1; Tue, 04 Jul 2023 22:47:40 -0400
-X-MC-Unique: 65If1DHgM6ag-5UZEVKjIQ-1
+ us-mta-564-4h2C1UEbNny5MHr-Mx37Fg-1; Tue, 04 Jul 2023 22:47:37 -0400
+X-MC-Unique: 4h2C1UEbNny5MHr-Mx37Fg-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 92A211008133;
-	Wed,  5 Jul 2023 02:47:40 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D65B4185A78B;
+	Wed,  5 Jul 2023 02:47:36 +0000 (UTC)
 Received: from piliu.users.ipa.redhat.com (ovpn-8-19.pek2.redhat.com [10.72.8.19])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id A85C51121314;
-	Wed,  5 Jul 2023 02:47:37 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 3731C1121314;
+	Wed,  5 Jul 2023 02:47:32 +0000 (UTC)
 From: Pingfan Liu <piliu@redhat.com>
 To: kexec@lists.infradead.org
-Cc: Jeremy Linton <jeremy.linton@arm.com>,
-	Pingfan Liu <piliu@redhat.com>,
+Cc: Pingfan Liu <piliu@redhat.com>,
 	horms@verge.net.au,
-	ardb@kernel.org
-Subject: [PATCHv4 1/8] arm64: Fix some issues with zImage _probe()
-Date: Wed,  5 Jul 2023 10:47:18 +0800
-Message-Id: <20230705024725.11741-2-piliu@redhat.com>
-In-Reply-To: <20230705024725.11741-1-piliu@redhat.com>
-References: <20230705024725.11741-1-piliu@redhat.com>
+	ardb@kernel.org,
+	jeremy.linton@arm.com
+Subject: [PATCHv4 0/8] arm64: zboot support
+Date: Wed,  5 Jul 2023 10:47:17 +0800
+Message-Id: <20230705024725.11741-1-piliu@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230704_194745_160766_79A34A95 
-X-CRM114-Status: GOOD (  11.69  )
+X-CRM114-CacheID: sfid-20230704_194741_610159_12D8A339 
+X-CRM114-Status: GOOD (  14.67  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,63 +81,65 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Jeremy Linton <jeremy.linton@arm.com>
+As more complicated capsule kernel format occurs like zboot, where the
+compressed kernel is stored as a payload. The straight forward
+decompression can not meet the demand.
 
-Current compilers note that fname will be null while
-attempting to print failures from strdup().
+As the first step, on aarch64, reading in the kernel file in a probe
+method and decide how to unfold the content by the method itself.
 
-Further fix a memory leak caused by kernel_uncompressed_buf
-never being used/freed before the allocated block is replaced
-by the one returned by slurp_decompress_file().
+This series introduce a new image probe interface probe2(), which
+returns three factors: kernel buffer, kernel size and kernel fd through
+a struct parsed_info.
+-1. the parsed kernel_buf should be returned so that it can be used by
+the image load method later.
+-2. the final fd passed to sys_kexec_file_load, since aarch64 kernel can
+only work with Image format, the outer payload should be stripped and a
+temporary file of Image should be created.
 
-Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-Signed-off-by: Pingfan Liu <piliu@redhat.com>
+
+v3 -> v4:
+Give up the method to change the image probe method prototype
+system-wide, instead, introducing a probe2() for the affected arch
+
+
 To: kexec@lists.infradead.org
 Cc: horms@verge.net.au
 Cc: ardb@kernel.org
 Cc: jeremy.linton@arm.com
----
- kexec/arch/arm64/kexec-zImage-arm64.c | 13 +------------
- 1 file changed, 1 insertion(+), 12 deletions(-)
 
-diff --git a/kexec/arch/arm64/kexec-zImage-arm64.c b/kexec/arch/arm64/kexec-zImage-arm64.c
-index 6ee82ff..3eb1ad8 100644
---- a/kexec/arch/arm64/kexec-zImage-arm64.c
-+++ b/kexec/arch/arm64/kexec-zImage-arm64.c
-@@ -55,8 +55,7 @@ int zImage_arm64_probe(const char *kernel_buf, off_t kernel_size)
- 	}
- 
- 	if (!(fname = strdup(FILENAME_IMAGE))) {
--		dbgprintf("%s: Can't duplicate strings %s\n", __func__,
--				fname);
-+		dbgprintf("%s: Can't duplicate strings\n", __func__);
- 		return -1;
- 	}
- 
-@@ -67,15 +66,6 @@ int zImage_arm64_probe(const char *kernel_buf, off_t kernel_size)
- 		goto fail_mkstemp;
- 	}
- 
--	kernel_uncompressed_buf =
--		(char *) calloc(kernel_size, sizeof(off_t));
--	if (!kernel_uncompressed_buf) {
--		dbgprintf("%s: Can't calloc %ld bytes\n",
--				__func__, kernel_size);
--		ret= -ENOMEM;
--		goto fail_calloc;
--	}
--
- 	/* slurp in the input kernel */
- 	dbgprintf("%s: ", __func__);
- 	kernel_uncompressed_buf = slurp_decompress_file(kernel_buf,
-@@ -128,7 +118,6 @@ int zImage_arm64_probe(const char *kernel_buf, off_t kernel_size)
- fail_bad_header:
- 	free(kernel_uncompressed_buf);
- 
--fail_calloc:
- 	if (fd >= 0)
- 		close(fd);
- 
+
+Jeremy Linton (4):
+  arm64: Fix some issues with zImage _probe()
+  kexec/zboot: Add arch independent zboot support
+  arm64: Add ZBOOT PE containing compressed image support
+  arm64: Hook up the ZBOOT support as vmlinuz
+
+Pingfan Liu (4):
+  kexec: Isolate probe method
+  kexec: Introduce a new image probe method 'probe2'
+  arm64: Transfer from probe() to probe2()
+  kexec: Drop condition macro for aarch64
+
+ include/kexec-pe-zboot.h               |  15 +++
+ kexec/Makefile                         |   1 +
+ kexec/arch/arm64/Makefile              |   3 +-
+ kexec/arch/arm64/image-header.h        |   1 +
+ kexec/arch/arm64/kexec-arm64.c         |  10 +-
+ kexec/arch/arm64/kexec-arm64.h         |  11 +-
+ kexec/arch/arm64/kexec-elf-arm64.c     |   7 +-
+ kexec/arch/arm64/kexec-image-arm64.c   |  15 ++-
+ kexec/arch/arm64/kexec-uImage-arm64.c  |  15 ++-
+ kexec/arch/arm64/kexec-vmlinuz-arm64.c | 102 +++++++++++++++++++
+ kexec/arch/arm64/kexec-zImage-arm64.c  |  41 ++------
+ kexec/kexec-pe-zboot.c                 | 133 +++++++++++++++++++++++++
+ kexec/kexec.c                          |  86 ++++++++++------
+ kexec/kexec.h                          |   9 ++
+ 14 files changed, 366 insertions(+), 83 deletions(-)
+ create mode 100644 include/kexec-pe-zboot.h
+ create mode 100644 kexec/arch/arm64/kexec-vmlinuz-arm64.c
+ create mode 100644 kexec/kexec-pe-zboot.c
+
 -- 
 2.31.1
 
