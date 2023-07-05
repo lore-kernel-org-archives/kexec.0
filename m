@@ -4,56 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BA86EC001B1
-	for <kexec@archiver.kernel.org>; Tue,  4 Jul 2023 13:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 702D0EB64D9
+	for <kexec@archiver.kernel.org>; Wed,  5 Jul 2023 02:47:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:CC
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=xEnjJjEDAt300fBMg1MDCOkouJIut/kN+THnxIFCHXM=; b=mM6tNgdocWm1nZ
-	MvA64uuRBxEnlq/polG2L/7T5q3BzpRDIwix0EjjzzemmIijPoPZ6atdZLKiOr9U2e1zMOruDn5SV
-	7Jdfmb31lud1ojy9Cpw73ptoyjfdSc926QqROgAjTXR2Umx0x8Tmk45wdRryTdi87gz7DuKAy6iHY
-	fSVJ1XCth6U9tbUGrwvYJsVC3vEu3vWl75WoGa8cqgSw7zPH7O6FxImDig7hwVTOIus2AkiwyQUt0
-	vF5MUy75b0yOLgJh1g3+/Wo+7cmCHMDwpRwba9jKGQYFLcU6jnzB8hwWxnVKRx+NkBV8FJtRmweef
-	J2DQPxLHz+7j/+tx0rPw==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=7CSxseN3dRrOgFPW/LOViQL49Ck5amie6F1RP7AOy0k=; b=Go8XpXHjA3DtF4
+	K6b4L2ad4PUHDVR1rslV/y6OsqqnmUYw3wbwOl9GplOn8kJqwfcrMbG+4yUFdNwyP73/yvBzl6/0P
+	6Lktn1ljz/GHsDERio8bZT+F/it9zwYaDvIpjQYwD+3nSmYuLIAz4EPnKUtoB02XCKKU12/wXGr+L
+	hKkZkgeZjt7NsWrvIviqM3eriWq/Z7m9vLGKKKX7xBT6VUauEf9EtITOkhXSq33syD291msFxlhD6
+	DdMcnL5w9rK2pG1IQo74qRT0KihWFT+WQjLW9GfRYKX/sZ/CRM6BBvhpdxJ3d0t3YKueIMg9Abblv
+	zFQBye/L4UlHx7Q3wlXA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qGg0v-00DO0P-19;
-	Tue, 04 Jul 2023 13:24:17 +0000
-Received: from szxga03-in.huawei.com ([45.249.212.189])
+	id 1qGsYV-00Edol-2M;
+	Wed, 05 Jul 2023 02:47:47 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qGg0p-00DNvi-1e;
-	Tue, 04 Jul 2023 13:24:15 +0000
-Received: from dggpemm500016.china.huawei.com (unknown [172.30.72.57])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4QwNjg14d2zLnfG;
-	Tue,  4 Jul 2023 21:21:43 +0800 (CST)
-Received: from huawei.com (10.67.174.205) by dggpemm500016.china.huawei.com
- (7.185.36.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Tue, 4 Jul
- 2023 21:23:54 +0800
-From: Chen Jiahao <chenjiahao16@huawei.com>
-To: <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-	<kexec@lists.infradead.org>, <linux-doc@vger.kernel.org>
-CC: <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
-	<conor.dooley@microchip.com>, <guoren@kernel.org>, <heiko@sntech.de>,
-	<bjorn@rivosinc.com>, <alex@ghiti.fr>, <akpm@linux-foundation.org>,
-	<atishp@rivosinc.com>, <bhe@redhat.com>, <thunder.leizhen@huawei.com>,
-	<horms@kernel.org>
-Subject: [PATCH -next v7 0/2] support allocating crashkernel above 4G explicitly on riscv
-Date: Tue, 4 Jul 2023 21:23:25 +0000
-Message-ID: <20230704212327.1687310-1-chenjiahao16@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	id 1qGsYT-00EdoB-0A
+	for kexec@lists.infradead.org;
+	Wed, 05 Jul 2023 02:47:46 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1688525264;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8Zv0ZIBcubRVFd0aPY9hgjti2jW8lVVyFHpftPXK2YY=;
+	b=d5ix9TqMTg8jnmgOXpguIEx/7gzFOtCqz1DrfbFKejcoiSrZ6ehnODk2+kouCD7OhDFkkF
+	QnyotSnfXbYgGaRKctw7ZgaKH4WcawYtl3qMMv+fdXtzEVf0es3V9E4oIIVzNBEl9YEBvz
+	GfQwrRfXUv/IPd7dwGluOrF5DtwL3ts=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-626-65If1DHgM6ag-5UZEVKjIQ-1; Tue, 04 Jul 2023 22:47:40 -0400
+X-MC-Unique: 65If1DHgM6ag-5UZEVKjIQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 92A211008133;
+	Wed,  5 Jul 2023 02:47:40 +0000 (UTC)
+Received: from piliu.users.ipa.redhat.com (ovpn-8-19.pek2.redhat.com [10.72.8.19])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id A85C51121314;
+	Wed,  5 Jul 2023 02:47:37 +0000 (UTC)
+From: Pingfan Liu <piliu@redhat.com>
+To: kexec@lists.infradead.org
+Cc: Jeremy Linton <jeremy.linton@arm.com>,
+	Pingfan Liu <piliu@redhat.com>,
+	horms@verge.net.au,
+	ardb@kernel.org
+Subject: [PATCHv4 1/8] arm64: Fix some issues with zImage _probe()
+Date: Wed,  5 Jul 2023 10:47:18 +0800
+Message-Id: <20230705024725.11741-2-piliu@redhat.com>
+In-Reply-To: <20230705024725.11741-1-piliu@redhat.com>
+References: <20230705024725.11741-1-piliu@redhat.com>
 MIME-Version: 1.0
-X-Originating-IP: [10.67.174.205]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemm500016.china.huawei.com (7.185.36.25)
-X-CFilter-Loop: Reflected
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230704_062414_266415_DB8C283B 
-X-CRM114-Status: UNSURE (   9.81  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20230704_194745_160766_79A34A95 
+X-CRM114-Status: GOOD (  11.69  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -70,88 +84,65 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On riscv, the current crash kernel allocation logic is trying to
-allocate within 32bit addressible memory region by default, if
-failed, try to allocate without 4G restriction.
+From: Jeremy Linton <jeremy.linton@arm.com>
 
-In need of saving DMA zone memory while allocating a relatively large
-crash kernel region, allocating the reserved memory top down in
-high memory, without overlapping the DMA zone, is a mature solution.
-Hence this patchset introduces the parameter option crashkernel=X,[high,low].
+Current compilers note that fname will be null while
+attempting to print failures from strdup().
 
-One can reserve the crash kernel from high memory above DMA zone range
-by explicitly passing "crashkernel=X,high"; or reserve a memory range
-below 4G with "crashkernel=X,low". Besides, there are few rules need
-to take notice:
-1. "crashkernel=X,[high,low]" will be ignored if "crashkernel=size"
-   is specified.
-2. "crashkernel=X,low" is valid only when "crashkernel=X,high" is passed
-   and there is enough memory to be allocated under 4G.
-3. When allocating crashkernel above 4G and no "crashkernel=X,low" is
-   specified, a 128M low memory will be allocated automatically for
-   swiotlb bounce buffer.
-See Documentation/admin-guide/kernel-parameters.txt for more information.
+Further fix a memory leak caused by kernel_uncompressed_buf
+never being used/freed before the allocated block is replaced
+by the one returned by slurp_decompress_file().
 
-To verify loading the crashkernel, adapted kexec-tools is attached below:
-https://github.com/chenjh005/kexec-tools/tree/build-test-riscv-v2
+Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+Signed-off-by: Pingfan Liu <piliu@redhat.com>
+To: kexec@lists.infradead.org
+Cc: horms@verge.net.au
+Cc: ardb@kernel.org
+Cc: jeremy.linton@arm.com
+---
+ kexec/arch/arm64/kexec-zImage-arm64.c | 13 +------------
+ 1 file changed, 1 insertion(+), 12 deletions(-)
 
-Following test cases have been performed as expected:
-1) crashkernel=256M                          //low=256M
-2) crashkernel=1G                            //low=1G
-3) crashkernel=4G                            //high=4G, low=128M(default)
-4) crashkernel=4G crashkernel=256M,high      //high=4G, low=128M(default), high is ignored
-5) crashkernel=4G crashkernel=256M,low       //high=4G, low=128M(default), low is ignored
-6) crashkernel=4G,high                       //high=4G, low=128M(default)
-7) crashkernel=256M,low                      //low=0M, invalid
-8) crashkernel=4G,high crashkernel=256M,low  //high=4G, low=256M
-9) crashkernel=4G,high crashkernel=4G,low    //high=0M, low=0M, invalid
-10) crashkernel=512M@0xd0000000              //low=512M
-11) crashkernel=1G,high crashkernel=0M,low   //high=1G, low=0M
-
-Changes since [v7]:
-1. Minor refactor: move crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE
-   into the !high branch when the first allocation fails. Not changing
-   the result but further align with Arm64 logic, refer to Baoquan's
-   comment.
-2. Add test case "crashkernel=1G,high crashkernel=0M,low", the result
-   also matches out expectation.
-
-Changes since [v6]:
-1. Introduce the "high" flag to mark whether "crashkernel=X,high"
-   is passed. Fix the retrying logic between "crashkernel=X,high"
-   case and others when the first allocation attempt fails.
-
-Changes since [v5]:
-1. Update the crashkernel allocation logic when crashkernel=X,high
-   is specified. In this case, region above 4G will directly get
-   reserved as crashkernel, rather than trying lower 32bit allocation
-   first.
-
-Changes since [v4]:
-1. Update some imprecise code comments for cmdline parsing.
-
-Changes since [v3]:
-1. Update to print warning and return explicitly on failure when
-   crashkernel=size@offset is specified. Not changing the result
-   in this case but making the logic more straightforward.
-2. Some minor cleanup.
-
-Changes since [v2]:
-1. Update the allocation logic to ensure the high crashkernel
-   region is reserved strictly above dma32_phys_limit.
-2. Clean up some minor format problems.
-
-Chen Jiahao (2):
-  riscv: kdump: Implement crashkernel=X,[high,low]
-  docs: kdump: Update the crashkernel description for riscv
-
- .../admin-guide/kernel-parameters.txt         | 15 +--
- arch/riscv/kernel/setup.c                     |  5 +
- arch/riscv/mm/init.c                          | 93 +++++++++++++++++--
- 3 files changed, 99 insertions(+), 14 deletions(-)
-
+diff --git a/kexec/arch/arm64/kexec-zImage-arm64.c b/kexec/arch/arm64/kexec-zImage-arm64.c
+index 6ee82ff..3eb1ad8 100644
+--- a/kexec/arch/arm64/kexec-zImage-arm64.c
++++ b/kexec/arch/arm64/kexec-zImage-arm64.c
+@@ -55,8 +55,7 @@ int zImage_arm64_probe(const char *kernel_buf, off_t kernel_size)
+ 	}
+ 
+ 	if (!(fname = strdup(FILENAME_IMAGE))) {
+-		dbgprintf("%s: Can't duplicate strings %s\n", __func__,
+-				fname);
++		dbgprintf("%s: Can't duplicate strings\n", __func__);
+ 		return -1;
+ 	}
+ 
+@@ -67,15 +66,6 @@ int zImage_arm64_probe(const char *kernel_buf, off_t kernel_size)
+ 		goto fail_mkstemp;
+ 	}
+ 
+-	kernel_uncompressed_buf =
+-		(char *) calloc(kernel_size, sizeof(off_t));
+-	if (!kernel_uncompressed_buf) {
+-		dbgprintf("%s: Can't calloc %ld bytes\n",
+-				__func__, kernel_size);
+-		ret= -ENOMEM;
+-		goto fail_calloc;
+-	}
+-
+ 	/* slurp in the input kernel */
+ 	dbgprintf("%s: ", __func__);
+ 	kernel_uncompressed_buf = slurp_decompress_file(kernel_buf,
+@@ -128,7 +118,6 @@ int zImage_arm64_probe(const char *kernel_buf, off_t kernel_size)
+ fail_bad_header:
+ 	free(kernel_uncompressed_buf);
+ 
+-fail_calloc:
+ 	if (fd >= 0)
+ 		close(fd);
+ 
 -- 
-2.34.1
+2.31.1
 
 
 _______________________________________________
