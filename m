@@ -4,86 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 37584EB64DA
-	for <kexec@archiver.kernel.org>; Wed,  5 Jul 2023 17:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 87AD6EB64D9
+	for <kexec@archiver.kernel.org>; Thu,  6 Jul 2023 06:44:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:CC:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=6qqsI7z/Y6ufWESHHdVwQ/QPblcky/+j4XH66/oR2BI=; b=b32yD9y3pJgQuc
-	l7NY+i0aZeKtcIOvTv4EiTVnXe4LJpGVphZxnuE3aTs8qbV+BmcGyl2c47EDtZ3cnvJWhpr8HXtlf
-	D4+2Lw3Gp8ugT/Zmr2d37QFdXwVI6RX1h/m726Vw/gRrdI3D2G7atdjDweCymiD4T4G2l5VFCYJ45
-	NEA8pDMTKxAYPDC58eSf+unOWiDSLoMQhq/2FDwX5aTW6whvduxlv6Zpbuf8Oht7RufgQFOQF2AcO
-	E3s9Rc2tRJ0N+WlBlxNd2NaAMhHmRQprYa0Ysn4JSDcay0lZHeGLhLyusgGfe2s1zlOUJO6qzh8EK
-	NM23vVECxBPfW1m8twNw==;
+	List-Owner; bh=AaXSYRDt7TMKXSBxzx92V/i3kE8c7yv/Yi3wVjngBJ8=; b=TUDZmkl11w7AA9
+	TMu7XG0Ad6HQT3Xumy5CT88S3hs0TiXok+rBeV5jPTAR5T1CVER37ia8Rl6Ln01Bvb3U0Z1KmjIJD
+	kSCw+hzhSM0wgRQXlHZq8fRbaspUMppAEdV3PTB0yyuSccwwERY5n6hhOMcfxE2K+qsukIoXyCBoQ
+	LK0oDKNxO1Ithkduu8T58MkVcq60Oz/E3Zxgm/3AynkQFQifJ/POXtq8XyXm4GIu3WSjryy+VSoME
+	VCRj6XkH/thb564iSzleQ7qqnobFGgvEyTTWMuGdk+bUipvYiRftUQp3i+jr/Ps1x4ZqaQJBh8L3V
+	0dZNoPu63tYo4BDwGeHA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qH6Of-00GdQa-0f;
-	Wed, 05 Jul 2023 17:34:33 +0000
-Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
+	id 1qHIjM-000gMf-0e;
+	Thu, 06 Jul 2023 06:44:44 +0000
+Received: from szxga02-in.huawei.com ([45.249.212.188])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qH6OZ-00GdOO-0d
+	id 1qHIjI-000gJA-1X
 	for kexec@lists.infradead.org;
-	Wed, 05 Jul 2023 17:34:30 +0000
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1E2251EC059E;
-	Wed,  5 Jul 2023 19:34:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-	t=1688578461;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-	bh=MEGOnUUJklrhitbV4ruvcKvARnIEQPaD/80tSn75pgY=;
-	b=DfAWS0S8ha7gru/HpM2t1Jhwl9N1jSdZb6qL4M8Poc7Viil3gU0jDY/y4tia9rSI3KGD/7
-	riBZWamT+cCQom+CFOIal5mxycuotfBzcdlnRr81kP8U3QGYXoSUmRZ2aUUQYhm4yWkxFs
-	6VGqFtzoFsoRa1VN6Lbb1aat0GJw/M8=
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id O2FxcyoDZwkQ; Wed,  5 Jul 2023 17:34:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1688578456; bh=MEGOnUUJklrhitbV4ruvcKvARnIEQPaD/80tSn75pgY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IC9K9a/L4pfqPiVykF+jA8SdbsCF3hdLrmsA+YP0Ewc94yDOk+O+JWhOijaXDiYY6
-	 aT6HVMh8DlOVWXNneGj7PeSxseBFc8t04yE4T629V5ksuEVhksc1twpneKhNpGva6u
-	 MBRNmlh+vqnH0lTELQmjfdNbMO+eyXr6Ck7zrJztIpS+BhbYmsjEdUycg3Fm1UB9ZN
-	 dcm/9xvTlPF43QDL85v6NDrp/brCYopWXGLtnT+hjD2kLAIlpP/xL0W7a97PmdcPyD
-	 dP50292ZFcdkUfngK/8F6cgfYdmsp16noYN81GRK7oVXKkfTLwl70e+GEPWI5PcuRh
-	 59GpzilrVN8Qe/CQDuloXstmx9yij9ZJXy/nXD4Jnvcl4jBfQWAZtRYe+wymirWSnT
-	 eAMpfKCzFpD2G0mb3vIK9l5H5WUYAYypCrOz2Ox0oXKRXaHmRZnxw6KHl10JR1YVzn
-	 buhfzky46506lOt2mrCAHQ9r1xpZovpUxZ2ttYkG9aqCs5jO44rdCK5CfQBv1ze9Nc
-	 vCbXsOh5kH4Mal6k9lr8ThYItcO06lFTf6cuYl+L6MSreIwMftWa6AT7MJy8gqPcrn
-	 eb+GyIlQg2lGB6krdtNm9uiPwWFY61neTH2OfZYwSgWGpLdQZQlMvl1V7HN9nHvtnT
-	 BJudhAcMzqcGAiGg4PnuN24Q=
-Received: from zn.tnic (pd9530d32.dip0.t-ipconnect.de [217.83.13.50])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A7A9040E0191;
-	Wed,  5 Jul 2023 17:34:04 +0000 (UTC)
-Date: Wed, 5 Jul 2023 19:33:59 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Tao Liu <ltao@redhat.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, ardb@kernel.org,
-	linux-kernel@vger.kernel.org, bhe@redhat.com, dyoung@redhat.com,
-	kexec@lists.infradead.org, linux-efi@vger.kernel.org
-Subject: Re: [PATCH v2] x86/kexec: Add EFI config table identity mapping for
- kexec kernel
-Message-ID: <20230705173359.GDZKWphyFbNE8id6Jm@fat_crate.local>
-References: <20230601072043.24439-1-ltao@redhat.com>
+	Thu, 06 Jul 2023 06:44:42 +0000
+Received: from dggpeml500021.china.huawei.com (unknown [172.30.72.56])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4QxRnB2d43zTm85;
+	Thu,  6 Jul 2023 14:43:26 +0800 (CST)
+Received: from [10.174.177.174] (10.174.177.174) by
+ dggpeml500021.china.huawei.com (7.185.36.21) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Thu, 6 Jul 2023 14:44:29 +0800
+Message-ID: <d7f266fd-e34d-e26e-e371-ee6ff13b6696@huawei.com>
+Date: Thu, 6 Jul 2023 14:44:29 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20230601072043.24439-1-ltao@redhat.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.2
+Subject: Re: [BUG REPORT] Triggering a panic in an x86 virtual machine does
+ not wait
+Content-Language: en-US
+To: Thomas Gleixner <tglx@linutronix.de>
+CC: <arjan@linux.intel.com>, <ashok.raj@intel.com>,
+	<ashok.raj@linux.intel.com>, <ebiederm@xmission.com>,
+	<linux-kernel@vger.kernel.org>, <mario.limonciello@amd.com>,
+	<thomas.lendacky@amd.com>, <tony.luck@intel.com>, <tonyb@cybernetics.com>,
+	<x86@kernel.org>, yangerkun <yangerkun@huawei.com>, Baoquan He
+	<bhe@redhat.com>, <kexec@lists.infradead.org>, Baokun Li
+	<libaokun1@huawei.com>
+References: <20230615193330.608657211@linutronix.de>
+ <71578392-63ed-02a9-24da-2adf8cce38c7@huawei.com> <87ttui91jo.ffs@tglx>
+From: Baokun Li <libaokun1@huawei.com>
+In-Reply-To: <87ttui91jo.ffs@tglx>
+X-Originating-IP: [10.174.177.174]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpeml500021.china.huawei.com (7.185.36.21)
+X-CFilter-Loop: Reflected
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230705_103428_080913_FBD30113 
-X-CRM114-Status: GOOD (  27.92  )
+X-CRM114-CacheID: sfid-20230705_234440_922093_80C52E86 
+X-CRM114-Status: GOOD (  19.14  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -95,133 +72,57 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Jun 01, 2023 at 03:20:44PM +0800, Tao Liu wrote:
-> A kexec kernel bootup hang is observed on Intel Atom cpu due to unmapped
-
-s/cpu/CPU/g
-
-> EFI config table.
-> 
-> Currently EFI system table is identity-mapped for the kexec kernel, but EFI
-> config table is not mapped explicitly:
-
-Why does the EFI config table *need* to be mapped explicitly?
-
->     commit 6bbeb276b71f ("x86/kexec: Add the EFI system tables and ACPI
->                           tables to the ident map")
-> 
-> Later in the following 2 commits, EFI config table will be accessed when
-> enabling sev at kernel startup.
-
-What does SEV have to do with an Intel problem?
-
-> This may result in a page fault due to EFI
-> config table's unmapped address. Since the page fault occurs at an early
-> stage, it is unrecoverable and kernel hangs.
-> 
->     commit ec1c66af3a30 ("x86/compressed/64: Detect/setup SEV/SME features
->                           earlier during boot")
->     commit c01fce9cef84 ("x86/compressed: Add SEV-SNP feature
->                           detection/setup")
-> 
-> In addition, the issue doesn't appear on all systems, because the kexec
-> kernel uses Page Size Extension (PSE) for identity mapping. In most cases,
-> EFI config table can end up to be mapped into due to 1 GB page size.
-> However if nogbpages is set, or cpu doesn't support pdpe1gb feature
-> (e.g Intel Atom x6425RE cpu), EFI config table may not be mapped into
-> due to 2 MB page size, thus a page fault hang is more likely to happen.
-
-This doesn't answer my question above.
-
-> This patch will make sure the EFI config table is always mapped.
-
-Avoid having "This patch" or "This commit" in the commit message. It is
-tautologically useless.
-
-Also, do
-
-$ git grep 'This patch' Documentation/process
-
-for more details.
-
-
-> 
-> Signed-off-by: Tao Liu <ltao@redhat.com>
-> ---
-> Changes in v2:
-> - Rephrase the change log based on Baoquan's suggestion.
-> - Rename map_efi_sys_cfg_tab() to map_efi_tables().
-> - Link to v1: https://lore.kernel.org/kexec/20230525094914.23420-1-ltao@redhat.com/
-> ---
->  arch/x86/kernel/machine_kexec_64.c | 35 ++++++++++++++++++++++++++----
->  1 file changed, 31 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-> index 1a3e2c05a8a5..664aefa6e896 100644
-> --- a/arch/x86/kernel/machine_kexec_64.c
-> +++ b/arch/x86/kernel/machine_kexec_64.c
-> @@ -28,6 +28,7 @@
->  #include <asm/setup.h>
->  #include <asm/set_memory.h>
->  #include <asm/cpu.h>
-> +#include <asm/efi.h>
->  
->  #ifdef CONFIG_ACPI
->  /*
-> @@ -86,10 +87,12 @@ const struct kexec_file_ops * const kexec_file_loaders[] = {
->  #endif
->  
->  static int
-> -map_efi_systab(struct x86_mapping_info *info, pgd_t *level4p)
-> +map_efi_tables(struct x86_mapping_info *info, pgd_t *level4p)
->  {
->  #ifdef CONFIG_EFI
->  	unsigned long mstart, mend;
-> +	void *kaddr;
-> +	int ret;
->  
->  	if (!efi_enabled(EFI_BOOT))
->  		return 0;
-> @@ -105,6 +108,30 @@ map_efi_systab(struct x86_mapping_info *info, pgd_t *level4p)
->  	if (!mstart)
->  		return 0;
->  
-> +	ret = kernel_ident_mapping_init(info, level4p, mstart, mend);
-> +	if (ret)
-> +		return ret;
-> +
-> +	kaddr = memremap(mstart, mend - mstart, MEMREMAP_WB);
-> +	if (!kaddr) {
-> +		pr_err("Could not map UEFI system table\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	mstart = efi_config_table;
-
-Yeah, about this, did you see efi_reuse_config() and the comment above
-it especially?
-
-Or is it that the EFI in that box wants the config table mapped 1:1 and
-accesses it during boot/kexec?
-
-In any case, this is all cloudy without a proper root cause.
-
-Also, I'd like for Ard to have a look at this too.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gMjAyMy83LzUgMTY6NTksIFRob21hcyBHbGVpeG5lciB3cm90ZToKPiBPbiBNb24sIEp1bCAw
+MyAyMDIzIGF0IDExOjQ0LCBCYW9rdW4gTGkgd3JvdGU6Cj4KPj4gV2hlbiBJIG1hbnVhbGx5IHRy
+aWdnZXIgcGFuaWMgaW4gYSBxdW1lIHg4NiBWTSB3aXRoCj4+Cj4+ICAgwqDCoMKgwqDCoMKgIGBl
+Y2hvIGMgPiAvcHJvYy9zeXNycS10cmlnZ2VyYCwKPj4KPj4gICDCoEkgZmluZCB0aGF0IHRoZSBW
+TSB3aWxsIHByb2JhYmx5IHJlYm9vdCBkaXJlY3RseSwgYnV0IHRoZQo+PiBQQU5JQ19USU1FT1VU
+IGlzIDAuCj4+IFRoaXMgcHJldmVudHMgdXMgZnJvbSBleHBvcnRpbmcgdGhlIHZtY29yZSB2aWEg
+cGFuaWMsIGFuZCBldmVuIGlmIHdlIHN1Y2NlZWQKPj4gaW4gcGFuaWMgZXhwb3J0aW5nIHRoZSB2
+bWNvcmUsIHRoZSBwcm9jZXNzZXMgaW4gdGhlIHZtY29yZSBhcmUgbW9zdGx5Cj4+IHN0b3BfdGhp
+c19jcHUoKS4gQnkgZGljaG90b21pemluZyB3ZSBmb3VuZCB0aGUgcGF0Y2ggdGhhdCBpbnRyb2R1
+Y2VkIHRoZQo+PiBiZWhhdmlvciBjaGFuZ2UKPj4KPj4gICDCoMKgIDQ1ZTM0YzhhZjU4ZiAoIng4
+Ni9zbXA6IFB1dCBDUFVzIGludG8gSU5JVCBvbiBzaHV0ZG93biBpZiBwb3NzaWJsZSIpLAo+IEJh
+aCwgSSBtaXNzZWQgdGhhdCB0aGlzIGlzIHVzZWQgYnkgY3Jhc2ggdG9vLiBTbyBpZiB0aGlzIGhh
+cHBlbnMgdG8gYmUKPiBpbnZva2VkIG9uIGFuIEFQLCBpLmUuIG5vdCBvbiBDUFUgMCwgdGhlbiB0
+aGUgSU5JVCB3aWxsIHJlc2V0IHRoZQo+IG1hY2hpbmUuIEZpeCBiZWxvdy4KPgo+IFRoYW5rcywK
+Pgo+ICAgICAgICAgIHRnbHgKPiAtLS0KPiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYva2VybmVsL3Nt
+cGJvb3QuYyBiL2FyY2gveDg2L2tlcm5lbC9zbXBib290LmMKPiBpbmRleCBlZDJkNTE5NjBhN2Qu
+LmUxYWEyY2Q3NzM0YiAxMDA2NDQKPiAtLS0gYS9hcmNoL3g4Ni9rZXJuZWwvc21wYm9vdC5jCj4g
+KysrIGIvYXJjaC94ODYva2VybmVsL3NtcGJvb3QuYwo+IEBAIC0xMzQ4LDYgKzEzNDgsMTQgQEAg
+Ym9vbCBzbXBfcGFya19vdGhlcl9jcHVzX2luX2luaXQodm9pZCkKPiAgIAlpZiAoYXBpYy0+d2Fr
+ZXVwX3NlY29uZGFyeV9jcHVfNjQgfHwgYXBpYy0+d2FrZXVwX3NlY29uZGFyeV9jcHUpCj4gICAJ
+CXJldHVybiBmYWxzZTsKPiAgIAo+ICsJLyoKPiArCSAqIElmIHRoaXMgaXMgYSBjcmFzaCBzdG9w
+IHdoaWNoIGRvZXMgbm90IGV4ZWN1dGUgb24gdGhlIGJvb3QgQ1BVLAo+ICsJICogdGhlbiB0aGlz
+IGNhbm5vdCB1c2UgdGhlIElOSVQgbWVjaGFuaXNtIGJlY2F1c2UgSU5JVCB0byB0aGUgYm9vdAo+
+ICsJICogQ1BVIHdpbGwgcmVzZXQgdGhlIG1hY2hpbmUuCj4gKwkgKi8KPiArCWlmICh0aGlzX2Nw
+dSkKPiArCQlyZXR1cm4gZmFsc2U7Cj4gKwo+ICAgCWZvcl9lYWNoX3ByZXNlbnRfY3B1KGNwdSkg
+ewo+ICAgCQlpZiAoY3B1ID09IHRoaXNfY3B1KQo+ICAgCQkJY29udGludWU7ClRoaXMgcGF0Y2gg
+ZG9lcyBmaXggdGhlIHByb2JsZW0gb2YgcmVib290aW5nIGF0IHBhbmljLCBidXQgdGhlIGV4cG9y
+dGVkIApzdGFjawpzdGF5cyBhdCBzdG9wX3RoaXNfY3B1KCkgbGlrZSBiZWxvdywgaW5zdGVhZCBv
+ZiBzaG93aW5nIHdoYXQgdGhlIApjb3JyZXNwb25kaW5nCnByb2Nlc3MgaXMgZG9pbmcgYXMgYmVm
+b3JlLgoKUElEOiA2ODHCoMKgwqDCoMKgIFRBU0s6IGZmZmY5YWMyNDI5ZDMwODDCoCBDUFU6IDLC
+oMKgwqAgQ09NTUFORDogImZzc3RyZXNzIgogwqAjMCBbZmZmZmIwMDIwMDE4NGZkMF0gc3RvcF90
+aGlzX2NwdSBhdCBmZmZmZmZmZjg5YTRmZmQ4CiDCoCMxIFtmZmZmYjAwMjAwMTg0ZmU4XSBfX3N5
+c3ZlY19yZWJvb3QgYXQgZmZmZmZmZmY4OWE5NDIxMwogwqAjMiBbZmZmZmIwMDIwMDE4NGZmMF0g
+c3lzdmVjX3JlYm9vdCBhdCBmZmZmZmZmZjhhZWU3NDkxCi0tLSA8SVJRIHN0YWNrPiAtLS0KIMKg
+wqDCoCBSSVA6IDAwMDAwMDAwMDAwMDAwMTDCoCBSU1A6IDAwMDAwMDAwMDAwMDAwMTjCoCBSRkxB
+R1M6IGZmZmZiMDAyMDBmOGJkMDgKIMKgwqDCoCBSQVg6IGZmZmY5YWMyNTZmZGE5ZDjCoCBSQlg6
+IDAwMDAwMDAwMDk5NzNhODXCoCBSQ1g6IGZmZmY5YWMyNTZmZGEwNzgKIMKgwqDCoCBSRFg6IGZm
+ZmY5YWMyNDQxNmUzMDDCoCBSU0k6IGZmZmY5YWMyNTZmZGE5ZTDCoCBSREk6IGZmZmZmZmZmZmZm
+ZmZmZmYKIMKgwqDCoCBSQlA6IGZmZmY5YWMyNDQzYTVmODjCoMKgIFI4OiAwMDAwMDAwMDAwMDAw
+MDAwwqDCoCBSOTogZmZmZjlhYzI0MjJlZWVhMAogwqDCoMKgIFIxMDogZmZmZjlhYzI1NmZkYTlk
+OMKgIFIxMTogMDAwMDAwMDAwMDU0OTkyMcKgIFIxMjogZmZmZjlhYzI0MjJlZWVhMAogwqDCoMKg
+IFIxMzogZmZmZjlhYzI1MWNkMjNjOMKgIFIxNDogZmZmZjlhYzI0MjY5YTgwMMKgIFIxNTogZmZm
+ZjlhYzI1MWNkMjE1MAogwqDCoMKgIE9SSUdfUkFYOiBmZmZmZmZmZjhhMTcxOWU0wqAgQ1M6IDAy
+MDbCoCBTUzogZmZmZmZmZmY4YTE3MTljOApidDogV0FSTklORzogcG9zc2libHkgYm9ndXMgZXhj
+ZXB0aW9uIGZyYW1lCgpEbyB5b3Uga25vdyBob3cgdGhpcyBoYXBwZW5lZD8gSSB3b3VsZCBiZSBn
+cmF0ZWZ1bCBpZiB5b3UgY291bGQgZml4IGl0LgoKVGhhbmtzIQotLSAKV2l0aCBCZXN0IFJlZ2Fy
+ZHMsCkJhb2t1biBMaQouCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
+Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
