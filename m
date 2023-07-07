@@ -4,70 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 698E7EB64DA
-	for <kexec@archiver.kernel.org>; Fri,  7 Jul 2023 10:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BD849EB64D9
+	for <kexec@archiver.kernel.org>; Fri,  7 Jul 2023 12:28:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:References
-	:In-Reply-To:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=te2TlXIT98E4asu9u17zY3FlX49OLO/bpOsyX4r8jso=; b=1nYXioUPbUGGHZ
-	i4cD52Y44Z2E4qhH8++dS/vfHDTJOZ083wym0A3cZmjwNooq/c7uKoiFQf4yZGodXyQxmJq5Mudch
-	BpyAW9vFxrFhKgTd/Yq0tyI0XZgVozexKk16o/r+mBetQ2C6HG1J/v8SCtdEqIYUZmVpekGsC/c9e
-	HDWv+MH4RZatyW8xo2ydBtiNFTqsmpPXPiiASBpXmWXScPsq6muU9tjbUYsp5CUVQOI4vbQ0sWj93
-	lII2hoAq74ZK9+yRk8uCPh9lLbseeF+2t0e0qMiPD69tjDRswiMCpwYUVdR251f/ZHSYTlmDXJABO
-	AHXJancfvcXe9VWh8VYA==;
+	List-Owner; bh=MKFXQSef+tthO2KiY0uAWTQZYP+YQl7vHqAs8CD7c1k=; b=aMKV+Ha6p5bFgy
+	iOY7vmjFfUF+BdwbOKG8NxFZVm8fnnxoZx0POn3mPx1jmV7JTGxxxRK2eB6I3cWLmdiuRrdBJ/bwn
+	k9BFTRqPHklq8EYMIh+hEjYlF1r/odUhWYQTJVSNGWWBA23rhaxhk1U2cYUjt3HrSX30teHiJ84jk
+	UOWZJNxjQQhJBNwUZBbDs0suInEO47ZfD4Ayc4/MjJFjCrufffVebUFpdi12sOJGZINQjmjPh5kq8
+	osYgJJxqR0ApIQRpE8Xz0s1m9pFigcJT37Dhy2Tkdp2GQ1yltB2ReW/MECi8vE010o9ZaQt+t0RP+
+	9hImRWmJ4DmaNiRsG5og==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qHiYF-004LtE-0v;
-	Fri, 07 Jul 2023 10:18:59 +0000
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+	id 1qHkZl-004cqq-0P;
+	Fri, 07 Jul 2023 12:28:41 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qHiYC-004LhB-1p
+	id 1qHkZi-004cpk-2E
 	for kexec@lists.infradead.org;
-	Fri, 07 Jul 2023 10:18:58 +0000
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1688725121;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2d3houmsYkGVGZJ+TnslUxorhkLSwL4n9/p70tnZL7A=;
-	b=y4doa5DKfOzdCF21tIHXXGEp7Tighcyi2aqc4+bE5su2grB8igK69DcILbae5lykTRs5JV
-	PYm8S351m8I52i6O6betlp1NJBOuaDOhcpSjHpAf5gkPS4ql4bPs59vUfRwN0hS9oBxuGZ
-	HjfgVjqt5FZpSyJuXRwsWXqLu6J3UyRqhFNdrmogJQ1uVYvApG4e2Mrb+3YSpKMjw+Fuhg
-	aRPDRjqsb/hyTS0kFyDNsh6kwdQIYmX8MSLyHPhJp7wTnbDAeNbh9ORfvwHzHkqL0p85+B
-	TOR0s68ZDsmb21uc+eK6qJ/CoWkJZQt1mKvLGEyZipI8aM+1MJbfWzOqwFeCDw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1688725121;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2d3houmsYkGVGZJ+TnslUxorhkLSwL4n9/p70tnZL7A=;
-	b=9tdprbeuz34HJLn6OXpF/f1dsXMyUURUW2bxIbsBMyXUbdtkctVG/W3f9EIP518gzZTyL0
-	btin56Kv04H/BoDg==
-To: Baokun Li <libaokun1@huawei.com>
-Cc: arjan@linux.intel.com, ashok.raj@intel.com, ashok.raj@linux.intel.com,
- ebiederm@xmission.com, linux-kernel@vger.kernel.org,
- mario.limonciello@amd.com, thomas.lendacky@amd.com, tony.luck@intel.com,
- tonyb@cybernetics.com, x86@kernel.org, yangerkun <yangerkun@huawei.com>,
- Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, Baokun Li
- <libaokun1@huawei.com>
-Subject: Re: [BUG REPORT] Triggering a panic in an x86 virtual machine does
- not wait
-In-Reply-To: <d7f266fd-e34d-e26e-e371-ee6ff13b6696@huawei.com>
-References: <20230615193330.608657211@linutronix.de>
- <71578392-63ed-02a9-24da-2adf8cce38c7@huawei.com> <87ttui91jo.ffs@tglx>
- <d7f266fd-e34d-e26e-e371-ee6ff13b6696@huawei.com>
-Date: Fri, 07 Jul 2023 12:18:39 +0200
-Message-ID: <87lefs81og.ffs@tglx>
+	Fri, 07 Jul 2023 12:28:40 +0000
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 367CM5v8008790;
+	Fri, 7 Jul 2023 12:28:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=qZMm9yTjcJWUSWLm7JzzcwParFkZ3ZwO6pyqzRsLeJg=;
+ b=JBdeuJEBQCmOqPx3HXA4bu7l5TLSFSEdKTitHuAwdqg6yAAbY38WgIxLsVC8Zkm1Ahl0
+ jwnUGJFf48ERK1SL8ckJ4Z0kqI88thNocEnokjHwBRvYaTn3v88GTbKGTqHI2bxl5pne
+ pawv72qVeqnVvNXl6Y9PBrU18E6Om5/ISZjPjw/V+9oR48+CRTzkqgWRTSjLa6FBOYiP
+ IjP84AWQ4KAdjI63sXX9HE79DxQGf+0un4Sg2r/W0C27/otQFrAJlxjJkJqZ93elfGOz
+ 4G65sb5NgKDaNynvuyVQnD6+TXDXAi4g6E38OokNpkm/Qj5JX+2JqswJBzxXuRQTN6IB Fw== 
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rpjna040a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Jul 2023 12:28:22 +0000
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+	by ppma03dal.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 367Aeqm8001784;
+	Fri, 7 Jul 2023 12:28:21 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([9.208.129.119])
+	by ppma03dal.us.ibm.com (PPS) with ESMTPS id 3rjbs5a0pa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Jul 2023 12:28:21 +0000
+Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 367CSJYO25231950
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 7 Jul 2023 12:28:19 GMT
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 49E545805E;
+	Fri,  7 Jul 2023 12:28:19 +0000 (GMT)
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 66E6358056;
+	Fri,  7 Jul 2023 12:28:18 +0000 (GMT)
+Received: from [9.47.158.152] (unknown [9.47.158.152])
+	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Fri,  7 Jul 2023 12:28:18 +0000 (GMT)
+Message-ID: <ab4c5f9a-5b70-5d45-80d9-2ec48ea49913@linux.ibm.com>
+Date: Fri, 7 Jul 2023 08:28:17 -0400
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH 05/10] kexec: implement functions to map and unmap segment
+ to kimage
+To: Tushar Sugandhi <tusharsu@linux.microsoft.com>, zohar@linux.ibm.com,
+        noodles@fb.com, bauermann@kolabnow.com, kexec@lists.infradead.org,
+        linux-integrity@vger.kernel.org
+Cc: code@tyhicks.com, nramas@linux.microsoft.com, paul@paul-moore.com
+References: <20230703215709.1195644-1-tusharsu@linux.microsoft.com>
+ <20230703215709.1195644-6-tusharsu@linux.microsoft.com>
+Content-Language: en-US
+From: Stefan Berger <stefanb@linux.ibm.com>
+In-Reply-To: <20230703215709.1195644-6-tusharsu@linux.microsoft.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: -_0LmGCmx17hBFyDp6E3G3bthskmOg0Y
+X-Proofpoint-ORIG-GUID: -_0LmGCmx17hBFyDp6E3G3bthskmOg0Y
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-07_08,2023-07-06_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ spamscore=0 adultscore=0 phishscore=0 mlxscore=0 lowpriorityscore=0
+ clxscore=1011 priorityscore=1501 impostorscore=0 mlxlogscore=868
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2307070112
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230707_031856_764352_C51AA455 
-X-CRM114-Status: GOOD (  16.23  )
+X-CRM114-CacheID: sfid-20230707_052838_937924_8F37A541 
+X-CRM114-Status: GOOD (  24.19  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,44 +104,66 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-T24gVGh1LCBKdWwgMDYgMjAyMyBhdCAxNDo0NCwgQmFva3VuIExpIHdyb3RlOgo+IE9uIDIwMjMv
-Ny81IDE2OjU5LCBUaG9tYXMgR2xlaXhuZXIgd3JvdGU6Cj4+ICsJLyoKPj4gKwkgKiBJZiB0aGlz
-IGlzIGEgY3Jhc2ggc3RvcCB3aGljaCBkb2VzIG5vdCBleGVjdXRlIG9uIHRoZSBib290IENQVSwK
-Pj4gKwkgKiB0aGVuIHRoaXMgY2Fubm90IHVzZSB0aGUgSU5JVCBtZWNoYW5pc20gYmVjYXVzZSBJ
-TklUIHRvIHRoZSBib290Cj4+ICsJICogQ1BVIHdpbGwgcmVzZXQgdGhlIG1hY2hpbmUuCj4+ICsJ
-ICovCj4+ICsJaWYgKHRoaXNfY3B1KQo+PiArCQlyZXR1cm4gZmFsc2U7Cgo+IFRoaXMgcGF0Y2gg
-ZG9lcyBmaXggdGhlIHByb2JsZW0gb2YgcmVib290aW5nIGF0IHBhbmljLCBidXQgdGhlCj4gZXhw
-b3J0ZWQgc3RhY2sgc3RheXMgYXQgc3RvcF90aGlzX2NwdSgpIGxpa2UgYmVsb3csIGluc3RlYWQg
-b2Ygc2hvd2luZwo+IHdoYXQgdGhlIGNvcnJlc3BvbmRpbmcgcHJvY2VzcyBpcyBkb2luZyBhcyBi
-ZWZvcmUuCj4KPiBQSUQ6IDY4McKgwqDCoMKgwqAgVEFTSzogZmZmZjlhYzI0MjlkMzA4MMKgIENQ
-VTogMsKgwqDCoCBDT01NQU5EOiAiZnNzdHJlc3MiCj4gIMKgIzAgW2ZmZmZiMDAyMDAxODRmZDBd
-IHN0b3BfdGhpc19jcHUgYXQgZmZmZmZmZmY4OWE0ZmZkOAo+ICDCoCMxIFtmZmZmYjAwMjAwMTg0
-ZmU4XSBfX3N5c3ZlY19yZWJvb3QgYXQgZmZmZmZmZmY4OWE5NDIxMwo+ICDCoCMyIFtmZmZmYjAw
-MjAwMTg0ZmYwXSBzeXN2ZWNfcmVib290IGF0IGZmZmZmZmZmOGFlZTc0OTEKPiAtLS0gPElSUSBz
-dGFjaz4gLS0tCj4gIMKgwqDCoCBSSVA6IDAwMDAwMDAwMDAwMDAwMTDCoCBSU1A6IDAwMDAwMDAw
-MDAwMDAwMTjCoCBSRkxBR1M6IGZmZmZiMDAyMDBmOGJkMDgKPiAgwqDCoMKgIFJBWDogZmZmZjlh
-YzI1NmZkYTlkOMKgIFJCWDogMDAwMDAwMDAwOTk3M2E4NcKgIFJDWDogZmZmZjlhYzI1NmZkYTA3
-OAo+ICDCoMKgwqAgUkRYOiBmZmZmOWFjMjQ0MTZlMzAwwqAgUlNJOiBmZmZmOWFjMjU2ZmRhOWUw
-wqAgUkRJOiBmZmZmZmZmZmZmZmZmZmZmCj4gIMKgwqDCoCBSQlA6IGZmZmY5YWMyNDQzYTVmODjC
-oMKgIFI4OiAwMDAwMDAwMDAwMDAwMDAwwqDCoCBSOTogZmZmZjlhYzI0MjJlZWVhMAo+ICDCoMKg
-wqAgUjEwOiBmZmZmOWFjMjU2ZmRhOWQ4wqAgUjExOiAwMDAwMDAwMDAwNTQ5OTIxwqAgUjEyOiBm
-ZmZmOWFjMjQyMmVlZWEwCj4gIMKgwqDCoCBSMTM6IGZmZmY5YWMyNTFjZDIzYzjCoCBSMTQ6IGZm
-ZmY5YWMyNDI2OWE4MDDCoCBSMTU6IGZmZmY5YWMyNTFjZDIxNTAKPiAgwqDCoMKgIE9SSUdfUkFY
-OiBmZmZmZmZmZjhhMTcxOWU0wqAgQ1M6IDAyMDbCoCBTUzogZmZmZmZmZmY4YTE3MTljOAo+IGJ0
-OiBXQVJOSU5HOiBwb3NzaWJseSBib2d1cyBleGNlcHRpb24gZnJhbWUKPgo+IERvIHlvdSBrbm93
-IGhvdyB0aGlzIGhhcHBlbmVkPyBJIHdvdWxkIGJlIGdyYXRlZnVsIGlmIHlvdSBjb3VsZCBmaXgg
-aXQuCgpObywgSSBkb24ndC4gQnV0IHRoZXJlIGlzIGNsZWFybHkgYSBoaW50OgoKPiBidDogV0FS
-TklORzogcG9zc2libHkgYm9ndXMgZXhjZXB0aW9uIGZyYW1lCgpTbyB0aGUgZXhjZXB0aW9uIGZy
-YW1lIHNlZW1zIHRvIGJlIGNvcnJ1cHRlZC4gSSBoYXZlIG5vIGlkZWEgd2h5LgoKVGhlIHF1ZXN0
-aW9uIGlzLCB3aGV0aGVyIHRoaXMgZ29lcyBhd2F5IHdoZW4geW91IHJldmVydCB0aGF0IGNvbW1p
-dCBvciBub3QuCkkgY2FuJ3Qgb3JhY2xlIHRoYXQgb3V0IGZyb20geW91ciByZXBvcnQuCgpDYW4g
-eW91IHBsZWFzZSByZXZlcnQgNDVlMzRjOGFmNThmIG9uIHRvcCBvZiBMaW51cyB0cmVlIGFuZCB2
-ZXJpZnkgdGhhdAppdCBtYWtlcyB0aGUgaXNzdWUgZ28gYXdheT8KClRoYW5rcywKCiAgICAgICAg
-dGdseAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4
-ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+
+
+On 7/3/23 17:57, Tushar Sugandhi wrote:
+> Currently, there's no mechanism to map and unmap segments to the kimage
+> structure.  This functionality is needed when dealing with memory segments
+> in the context of a kexec operation.
+> 
+> The patch adds two new functions: kimage_map_segment() and
+> kimage_unmap_segment().
+> 
+> Implement kimage_map_segment() which takes a kimage pointer, an address,
+> and a size.  Ensures that the entire segment is being mapped by comparing
+> the given address and size to each segment in the kimage's segment array.
+> Collect the source pages that correspond to the given address range,
+> allocate an array of pointers to these pages, and map them to a contiguous
+> range of virtual addresses.  If the mapping operation is successful, the
+> function returns the start of this range.  Otherwise, it frees the page
+> pointer array and returns NULL.
+> 
+> Implement kimage_unmap_segment() that takes a pointer to a segment buffer
+> and unmaps it using vunmap().
+> 
+> Finally, move for_each_kimage_entry() macro to kexec.h.
+> 
+> Note: Use kimage_map_segment() and kimage_unmap_segment() carefully to
+> avoid memory leaks and ensure that all mapped segments are properly
+> unmapped when they're no longer needed.
+> 
+> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+
+> +
+> +	i = 0;
+> +	for_each_kimage_entry(image, ptr, entry) {
+> +		if (entry & IND_DESTINATION)
+> +			dest_page_addr = entry & PAGE_MASK;
+> +		else if (entry & IND_SOURCE) {
+> +			if (dest_page_addr >= addr && dest_page_addr < eaddr) {
+> +				src_page_addr = entry & PAGE_MASK;
+> +				src_pages[i++] = phys_to_page(src_page_addr);
+
+Since phys_to_page is not defined on many/most architectures I change it for ppc64 and have successfully used the following:
+
++                               src_pages[i++] = virt_to_page(__va(src_page_addr))
+
+
+After several kexecs the following check still works:
+
+# evmctl ima_measurement --ignore-violations /sys/kernel/security/ima/binary_runtime_measurements
+Matched per TPM bank calculated digest(s).
+
+
+    Stefan
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
