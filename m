@@ -4,80 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2BBC3EB64D9
-	for <kexec@archiver.kernel.org>; Fri,  7 Jul 2023 19:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 87CC4EB64D9
+	for <kexec@archiver.kernel.org>; Fri,  7 Jul 2023 19:50:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:Subject:From:References:Cc:To:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:Mime-Version:References:In-Reply-To:
+	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=OkDvejKHhEgWfPoUFCecsbG+vcii+885VemgxzyErF4=; b=pOsXWiBe1sKkYw
-	vsKn+XEtme8qmKqWqzpg00BJax5TqviT4qo2nDHCdxnQqj3DYwshcDmHNxW1Y6Ho1rsNtv8fq4hWQ
-	UplUKA9SuICWWjCrqphRjIE6KxdTQhr5McpxOxy+2QOWM1u74l6eKXgliC4hdFOArNhJT7yc/fcU/
-	Z9qJIcZ5Sxr7fbK8u4OxlqM+w6RtEzLwvRhazbv44jqLgi2tOo/YxBygsTESQ7klEKX/A0r8YtShz
-	maneiwd9r0/GZ0C+8DTa6fUwFh3lwkTs0UsZPy6kGfXeNfmYpG4UgLaRz4KxvtoH4o1vfWtGc2l+U
-	/vpuMmvixNm6VMs1dksA==;
+	List-Owner; bh=PyGA06qkg4WQ40j0qqBSAbOMF7hCPOWreGwLW3Y0HMY=; b=oWM/LW9u+dSYh5
+	+RPTR4vrbAAP1A5micE2S86b8kkIUedJJ1LWhJjr3UR2UlQn5TkvFGeFjviLZ4k2eQNBGUX8lndCw
+	/5b3r0Zfck+XizKGwovPhe9hXuEW8s2nDY/wa7dYYRwct1JyC3qlGlDIhNnxDO3cbhCXfHyznkfCW
+	Lt3Byp3d7YvWZYph8rtBhMqbnLO0avAcymrTilt4LPBt3C7Z44ZLhnkq4Laj0r6LSMjq/dDpoIDiy
+	HdOqcS2K36fgJy8t0GtjxuNgsAmSQkwharIzz7CYs5/zS+4abID4OCbA0PvYGdeM/PWwOadGjJGqu
+	NoGl7a0THKI1DKga1hdw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qHrBU-005X29-3B;
-	Fri, 07 Jul 2023 19:32:04 +0000
-Received: from sender4-of-o50.zoho.com ([136.143.188.50])
+	id 1qHrSs-005YtO-0I;
+	Fri, 07 Jul 2023 19:50:02 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qHrBR-005X1E-2G
+	id 1qHrSp-005YsV-0M
 	for kexec@lists.infradead.org;
-	Fri, 07 Jul 2023 19:32:03 +0000
-ARC-Seal: i=1; a=rsa-sha256; t=1688758303; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=EwVRDfNxcmQnOtFGleOVrjIkgKRwh7y52cIfKN0GFaKN0OBxQFBpkW0gztPv2rTPKlsHRlXNwqX0V7X/g+5tbnDalixwm2P/depB+msJkqw/5QsMvebiIudbxXZcK1IbibAsD9T0IWr/xFfu3sBT8tHUKltieu6YOTNc2Jmrb0Y=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1688758303; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
-	bh=fHoswupnpLAD4heKyuTd/2GZhFPZ+XaZr9DP5UrvceM=; 
-	b=DqSq9DCKsV8NNFqKvMsP7CH363mjfejdsBrrzQySj2V3OvRaWyj+oqjlPq7Epav31II3NSHM/7frG+F6Y1XfRgBLU0KRRwB9dW4hauAHB+OjLS5TlBRetCewMpONDWbHiwkl967kv0nYSIzxfV2EGWvZw+ADN9A1drGyDR7Yv1E=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=apertussolutions.com;
-	spf=pass  smtp.mailfrom=dpsmith@apertussolutions.com;
-	dmarc=pass header.from=<dpsmith@apertussolutions.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1688758303;
-	s=zoho; d=apertussolutions.com; i=dpsmith@apertussolutions.com;
-	h=Message-ID:Date:Date:MIME-Version:To:To:Cc:Cc:References:From:From:Subject:Subject:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=fHoswupnpLAD4heKyuTd/2GZhFPZ+XaZr9DP5UrvceM=;
-	b=HoM7R2M40mW1tdXIy+g2mlEdzq4NQsxSZwuCWYH0mXFXkpb8z1J7gKkVr6gGnG0W
-	ThRDcJKAEMQPpH/O0wwTDLv9oL/6evwho0H4lNX1iHqyRIe2OeOj97Jr0LvSCMlnL99
-	foaIXq91NT2RQ/qveQIN7YXB140UETdVegWIRZHg=
-Received: from [10.10.1.138] (static-72-81-132-2.bltmmd.fios.verizon.net [72.81.132.2]) by mx.zohomail.com
-	with SMTPS id 1688758300880456.56534128910005; Fri, 7 Jul 2023 12:31:40 -0700 (PDT)
-Message-ID: <df033b7b-54ce-504a-47d6-1b92ea1038f7@apertussolutions.com>
-Date: Fri, 7 Jul 2023 15:31:38 -0400
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Content-Language: en-US
-To: Matthew Garrett <mjg59@srcf.ucam.org>
-Cc: Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-crypto@vger.kernel.org, iommu@lists.linux-foundation.org,
- kexec@lists.infradead.org, linux-efi@vger.kernel.org, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, hpa@zytor.com, ardb@kernel.org,
- James.Bottomley@hansenpartnership.com, luto@amacapital.net,
- nivedita@alum.mit.edu, kanth.ghatraju@oracle.com,
- trenchboot-devel@googlegroups.com
-References: <20230504145023.835096-1-ross.philipson@oracle.com>
- <20230504145023.835096-5-ross.philipson@oracle.com>
- <20230512105554.GB14461@srcf.ucam.org>
- <30d5891d-4747-8d67-2667-ff07628740bd@apertussolutions.com>
- <20230515212206.GA2162@srcf.ucam.org>
- <df9d1260-41dd-034b-9dc6-14173c6c0d25@apertussolutions.com>
- <20230516014310.GA5403@srcf.ucam.org>
- <eda6da3a-00fe-21c5-5a3d-3e06d21179f4@apertussolutions.com>
- <20230616201513.GA30963@srcf.ucam.org>
-From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
-Subject: Re: [PATCH v6 04/14] x86: Secure Launch Resource Table header file
-In-Reply-To: <20230616201513.GA30963@srcf.ucam.org>
-X-ZohoMailClient: External
+	Fri, 07 Jul 2023 19:50:00 +0000
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 367JjoVt014509;
+	Fri, 7 Jul 2023 19:49:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=AASJHNPtyKDbFRB+w5mz4hm+dMa+gaONJyhB+7+OFpU=;
+ b=bH/WPdlNUYSaj0rleW5MUwRaKWm0cZEJ6ixXwNiu8+kb2bbBdnQiqAgYnuu1Qs6bRBU3
+ Y2Y2b0jpWRi+S4EdMjAQOw5B7Dn2+1aIl3MkbFMvme9L2us9QFYb/9g4kk5ntr2Cy9I2
+ sgFv7AsWAITWbdFNLENkRRLdyjUkIpP16s0j8FqQPR4FVp9E/DbDKB1KV1OBmjGuSn17
+ F3MrHqC5qeTBt2u7VkfBHePwT6djmCrcfWsfVmhCJJWErYagCMYiQ1fuU/Be2sANHAxr
+ 8ueFwmdvf7uaZ7Ni3qCpgoa8Q65qyCGOIpAz6/AG5I0QGl7Ykh+I1EA/uF/b2oM70HYw /Q== 
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rps5702sb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Jul 2023 19:49:45 +0000
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+	by ppma01dal.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 367IIC8S008571;
+	Fri, 7 Jul 2023 19:49:44 GMT
+Received: from smtprelay02.dal12v.mail.ibm.com ([9.208.130.97])
+	by ppma01dal.us.ibm.com (PPS) with ESMTPS id 3rjbs6qtff-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Jul 2023 19:49:44 +0000
+Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
+	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 367Jnhk525887342
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 7 Jul 2023 19:49:43 GMT
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E9AEE58057;
+	Fri,  7 Jul 2023 19:49:42 +0000 (GMT)
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7838558058;
+	Fri,  7 Jul 2023 19:49:42 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.61.7.157])
+	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Fri,  7 Jul 2023 19:49:42 +0000 (GMT)
+Message-ID: <a3f141d0585580676e6738ff6596dad106f7bf18.camel@linux.ibm.com>
+Subject: Re: [PATCH 06/10] ima: update buffer at kexec execute with ima
+ measurements
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Tushar Sugandhi <tusharsu@linux.microsoft.com>, noodles@fb.com,
+        bauermann@kolabnow.com, kexec@lists.infradead.org,
+        linux-integrity@vger.kernel.org
+Cc: code@tyhicks.com, nramas@linux.microsoft.com, paul@paul-moore.com
+Date: Fri, 07 Jul 2023 15:49:42 -0400
+In-Reply-To: <5cd5b5efc443cbdce9dce3b121f4dbfd2db6dea3.camel@linux.ibm.com>
+References: <20230703215709.1195644-1-tusharsu@linux.microsoft.com>
+	 <20230703215709.1195644-7-tusharsu@linux.microsoft.com>
+	 <5cd5b5efc443cbdce9dce3b121f4dbfd2db6dea3.camel@linux.ibm.com>
+X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
+Mime-Version: 1.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 03WfiOs3JonS3QKomVcHVuyifMqn7Jp_
+X-Proofpoint-GUID: 03WfiOs3JonS3QKomVcHVuyifMqn7Jp_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-07_13,2023-07-06_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ spamscore=0 clxscore=1015 adultscore=0 phishscore=0 malwarescore=0
+ mlxscore=0 bulkscore=0 impostorscore=0 suspectscore=0 lowpriorityscore=0
+ mlxlogscore=969 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2307070179
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230707_123201_831225_A1FA4043 
-X-CRM114-Status: GOOD (  24.39  )
+X-CRM114-CacheID: sfid-20230707_124959_394311_7352060F 
+X-CRM114-Status: GOOD (  23.72  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,77 +103,89 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 6/16/23 16:15, Matthew Garrett wrote:
-> On Fri, Jun 16, 2023 at 04:01:09PM -0400, Daniel P. Smith wrote:
->> On 5/15/23 21:43, Matthew Garrett wrote:
->>> On Mon, May 15, 2023 at 08:41:00PM -0400, Daniel P. Smith wrote:
->>>> On 5/15/23 17:22, Matthew Garrett wrote:
->>>>> What if I don't use grub, but use something that behaves equivalently?
->>>>> Which value should be used here?
->>>>
->>>> Generally we would request that the bootloader submit a request to register
->>>> for a value to be reserved in the spec. That aside, the intent here is to
->>>> allow for the possibility for the DLE handler to be independent from the
->>>> bootloader, but this does not have to be this way. If a non-open entity
->>>> decides to produce their own implementation, they can freely use a
->>>> unallocated value at their own risk that it could be allocated to another
->>>> bootloader in the future. Though in this scenario it likely would not matter
->>>> as the non-open DLE handler would only be present when the non-open
->>>> bootloader was present.
->>>
->>> Is the expectation that the DLE will always be shipped with the
->>> bootloader? I think I'm not entirely clear on what's consuming this and
->>> why.
->>>
->>
->> No, in fact, an early idea proposed by a pair of us in the TrenchBoot
->> community was to have it live either as a Runtime Service that was loaded by
->> a UEFI app or in the coreboot UEFI payload.
+On Fri, 2023-07-07 at 11:01 -0400, Mimi Zohar wrote:
+> Hi Tushar,
 > 
-> Ok, then I think I'm still confused. If I want to write a new bootloader
-> but make use of the existing DLE, what contract am I establishing and
-> what value should I be putting in here?
+> On Mon, 2023-07-03 at 14:57 -0700, Tushar Sugandhi wrote:
+> 
+> > +/*
+> > + * Called during kexec execute so that IMA can update the measurement list.
+> > + */
+> > +static int ima_update_kexec_buffer(struct notifier_block *self,
+> > +				   unsigned long action, void *data)
+> > +{
+> > +	void *new_buffer = NULL;
+> > +	size_t new_buffer_size, cur_buffer_size;
+> > +	bool resume = false;
+> > +
+> > +	if (!kexec_in_progress) {
+> > +		pr_info("%s: No kexec in progress.\n", __func__);
+> > +		return NOTIFY_OK;
+> > +	}
+> > +
+> > +	if (!ima_kexec_buffer) {
+> > +		pr_err("%s: Kexec buffer not set.\n", __func__);
+> > +		return NOTIFY_OK;
+> > +	}
+> > +
+> > +	ima_measurements_suspend();
+> > +
+> > +	cur_buffer_size = kexec_segment_size - sizeof(struct ima_kexec_hdr);
+> > +	new_buffer_size = ima_get_binary_runtime_size();
+> > +	if (new_buffer_size > cur_buffer_size) {
+> > +		pr_err("%s: Measurement list grew too large.\n", __func__);
+> > +		resume = true;
+> > +		goto out;
+> > +	}
+> 
+> This changes the current behavior of carrying as many measurements
+> across kexec as possible.  True the measurement list won't verify
+> against the TPM PCRs, but not copying the measurements leaves the
+> impression there weren't any previous measurements.
+> 
+> This also explains the reason for allocating an IMA buffer (patch 1/10)
+> and not writing the measurements directly into the kexec buffer.
 
-Apologies on the delayed response, vacation and what not.
+If not carrying even a partial measurement list across kexec is
+desired, then in addition to the "boot_aggregate" record, define a new
+record containing the TPM pcrcounter.  With this information,
+attestation servers will at least be able to detect if the measurement
+list was truncated.
 
-I believe I know where the confusion is coming from, let me see if I can 
-explain better by why that field came about. The motivation for the SLRT 
-came out of our agreement to use a callback mechanism to support 
-entering efi-stub and then going back to a dynamic launch aware hook to 
-complete the initiation of the dynamic launch. The SLRT was devised as a 
-platform and kernel agnostic means to handle the launch. As such, there 
-was a desire to use that interface, and the underlying DLE code, whether 
-GRUB was launching the kernel via the UEFI interface or the traditional 
-interface. Skipping the details, but it boils down to the fact that in 
-the non-UEFI case, functionality from core GRUB was needed. As a result, 
-to provide maximum flexibility for other bootloaders, and to make it 
-easier on us, we add the ability to pass a context object across the 
-interface. Thus allowing GRUB's DLE handler to have a single entry that 
-could be called externally by efi-stub or directly from GRUB proper.
+thanks,
 
-IOW, the bootloader context is a means to provide a bootloader with them 
-means to implement a private interface between the bootloader proper and 
-a DLE handler that it installed into memory should its implementation 
-require it.
+Mimi
 
-There is an underlying question within your question, and that is of 
-reuse. In this case, we wrote GRUB's DLE handler was written 
-specifically to be used by GRUB. It was written to provide a stable and 
-demonstrable implementation of the SL interface. In the future it may 
-get refactored or a common standalone implementation, e.g., the 
-previously mentioned UEFI runtime service, may arise that would be 
-reusable by multiple bootloaders.
+> 
+> > +	ima_populate_buf_at_kexec_execute(&new_buffer_size, &new_buffer);
+> > +
+> > +	if (!new_buffer) {
+> > +		pr_err("%s: Dump measurements failed.\n", __func__);
+> > +		resume = true;
+> > +		goto out;
+> > +	}
+> > +	memcpy(ima_kexec_buffer, new_buffer, new_buffer_size);
+> > +out:
+> > +	kimage_unmap_segment(ima_kexec_buffer);
+> > +	ima_kexec_buffer = NULL;
+> > +
+> > +	if (resume)
+> > +		ima_measurements_resume();
+> > +
+> > +	return NOTIFY_OK;
+> > +}
+> > +
+> >  #endif /* IMA_KEXEC */
+> >  
+> >  /*
+> 
 
-I hope this helped explain the purpose and use of this area of the 
-table. Please let me know if it did not.
 
-V/r,
-DPS
 
 _______________________________________________
 kexec mailing list
