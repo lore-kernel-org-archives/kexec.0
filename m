@@ -4,92 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B2D83EB64D9
-	for <kexec@archiver.kernel.org>; Fri,  7 Jul 2023 15:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 46A60EB64D9
+	for <kexec@archiver.kernel.org>; Fri,  7 Jul 2023 17:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=Dk8iEux+3kQWSWxK0NMXU0RLguV2bHHTMWI/tCti0fE=; b=UOSBF0JRI2FPRQ
-	3uxToGOmC778hs2R6ECI9j3NZD3JlIESVM2zv1XNmnfqW27zUgdRX7lAsWOh3SzxlkfYE+lMfIBeP
-	NB5gRxAHJJvkxqRWIIoIpaPmrsyJO1YAHshSHTTgY1tcna4zKMsA3V6UTtShDO9Nxbc6KItVGhTAh
-	/XtzOi8FLWjAltvhXxJw0UXVKXFsAOkdVwQKSoL4H+9yOSHaAebo9ebBIStP4X1d/slhq0IeJyxOd
-	g/8TnT1fm36NB0MnMSkQhhpP2/qmyKls3u1JRSjz+LIGHyEItJOkh5R+e0kN+s9DiWKVSb13osVAZ
-	jf/O5GrYUCzpwO+GSTCQ==;
+	List-Owner; bh=B1RvJElMfwom+qNyS7p5O4qdsMuLB7f5yPFXq5JSwBI=; b=ERDauGWROBiPRc
+	mtM8ySFnQ6rCwPfYqjLXFqWwQYiAi+6xNTNoociRVTj+wKfqsh5Nf3C58TKzlNvTcAr9b+Y/qteh8
+	ycZsgOlFCfMRoUneC3uyLCIu1ruT4eaqhLt/8ICWPDdKLddraKh9cSw4cfNW1YVNzs6rNtg6TpRzy
+	EyxdGp4+GF/jqNcDVvxDvji5cSJ0Cqa9H/4Tro0TJO7ndglNEoyovWuPqb5g6FHane5BFIXkXik0A
+	CXgGIbbTtVpAxZwXuspbLVu6Nd6A7exSeM+UujvQi5hTACoWySYHhKnkmInqxlO/b/r/VPWbm5SD6
+	WVdEO9UvwCyB4ehEW4dg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qHnnn-0056xX-1a;
-	Fri, 07 Jul 2023 15:55:23 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1qHp0g-005HaZ-1A;
+	Fri, 07 Jul 2023 17:12:46 +0000
+Received: from mail.skyhub.de ([5.9.137.197])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qHnnj-0056wj-1j
+	id 1qHp0c-005HZk-2q
 	for kexec@lists.infradead.org;
-	Fri, 07 Jul 2023 15:55:22 +0000
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 367Fl4rR003816;
-	Fri, 7 Jul 2023 15:55:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=P0zwdwkAOLd1bfwdZdOgwq014ydUifkKY71uTwZW+FA=;
- b=tes+DVVcdpG03Dn9Tw31BP0INQMgQgPrqGYLaTj1h7SplXB1UFaTi2PJG8ftcMCU9QYD
- Eo6tNMrKDEAkydvDEIeNqfA9c/vcDi0nmNRH90iGATG5RwK+/l/sYhJN10wOczAjk9v9
- zlUaS6pJMh8DIXK5jg2G3MCvv3iB3HZiL0bU70G1b+tzrUqI0psdKZ6RgRR62hC2CgwV
- 1Qqu8pX/n9JstY/P+eFIX9aeaBlQ9/8Anh++F9CKPPARd9m0W2Rw3yI6JL5JpHkCSEmo
- zV4cZs97P0uN1XQn4ZN9rRvDH5Wt+z2ZgsWNrlrytmax/wZ+U4Z628UbRR5PHdxBpP5L 7Q== 
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rpnnd85e7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Jul 2023 15:55:08 +0000
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-	by ppma04dal.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 367FUH4T029960;
-	Fri, 7 Jul 2023 15:55:07 GMT
-Received: from smtprelay02.wdc07v.mail.ibm.com ([9.208.129.120])
-	by ppma04dal.us.ibm.com (PPS) with ESMTPS id 3rjbs6emu4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Jul 2023 15:55:07 +0000
-Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
-	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 367Ft6Mc4784750
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 7 Jul 2023 15:55:06 GMT
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1D7445806A;
-	Fri,  7 Jul 2023 15:55:06 +0000 (GMT)
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 519575805A;
-	Fri,  7 Jul 2023 15:55:05 +0000 (GMT)
-Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.61.7.157])
-	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Fri,  7 Jul 2023 15:55:05 +0000 (GMT)
-Message-ID: <37d03d69a89c344089b4e9d6e5b7b685f1c62cda.camel@linux.ibm.com>
-Subject: Re: [PATCH 00/10] ima: measure events between kexec load and execute
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Tushar Sugandhi <tusharsu@linux.microsoft.com>, noodles@fb.com,
-        bauermann@kolabnow.com, kexec@lists.infradead.org,
-        linux-integrity@vger.kernel.org
-Cc: code@tyhicks.com, nramas@linux.microsoft.com, paul@paul-moore.com
-Date: Fri, 07 Jul 2023 11:55:04 -0400
-In-Reply-To: <20230703215709.1195644-1-tusharsu@linux.microsoft.com>
-References: <20230703215709.1195644-1-tusharsu@linux.microsoft.com>
-X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: lyKgLXBeezkCvf8PEscJrRWHsi9hkB42
-X-Proofpoint-ORIG-GUID: lyKgLXBeezkCvf8PEscJrRWHsi9hkB42
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	Fri, 07 Jul 2023 17:12:44 +0000
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B2CAD1EC0398;
+	Fri,  7 Jul 2023 19:12:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+	t=1688749959;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+	bh=6OzTAM5FK7zuWehbwIgNlYhTn7gz7QucEzqfEJ1uQTI=;
+	b=Ofn5vYHULl96suxbDMl8V3puQxjmh25Tno5YjGIbEsBkrPiFJOa5NlyzTLaPt/R+MIeZUF
+	Uizt9oJ9o7OW5R7R0wiP5jGIcMGUQymN8GRm9OGilHmdIYUahjq81dg90dw0ypAi4zDjKX
+	MzwRASzQ5bETaid2gx4d3LR0NYyAHck=
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id k6gAkJSP5-z2; Fri,  7 Jul 2023 17:12:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1688749957; bh=6OzTAM5FK7zuWehbwIgNlYhTn7gz7QucEzqfEJ1uQTI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VDJmOTTLG3llFmdDaKnj+N0q1BVcJThGqAiKNp1ZUHH+UiMBMRE9/QEtwiG/3cfZa
+	 6rTjON9AFVVjHpGKcTOar3LrWQr0lV8K/BgOUzXLMHwOiR0/Yjk1jJq7dbJuekJCZZ
+	 X1L1rEMgfxlKC1xabfQg0YhvZXBAy4/oGeDF5opiQWZitjBa/mM1tWJQx2zQtPs0mE
+	 Slke0oVL8p5vYisoWC64IVbAy6pQR3qyMtzzqu705q4V4TaeXMJFcqZWEzLsLtSqKG
+	 vaIcWmD9wbRSP69U8m6r+t9uVZYxZr+bLuK0UJg52fwTrY3DIdcLtZ5PGFbb+QM3QJ
+	 ogtoWsUN71NuW3F1148tAjUqcyrk+mxw/qakHSeAu1/Qjg00Lo9qvzvGV8cZ3hlncG
+	 WcCi5e4Zqqch83l9g15JQ47DLEcuzjVt2Re6m8TlSmf0jRO/tVJuxy28y1UkjmI8Gz
+	 1cMm4q/vM3OOmdd/1RnoZcsln5QfAzBlHBYq8UKcev62KeIra9IrhsnYh3c7kTccoR
+	 6g7bNed2WfC0zbQsMSBCUBzH5xpzsES6JeHUXfHFgK/v3JyuB7rt5mLVkBpm+bwgcz
+	 e9yOY7qHCeETWZv6Yp/CuCVbtVWJVLhaAeysDmoY5OLOgEoPJPwT3cv6Kzl0shauJ7
+	 rD30uRnap9KWpwAVvKoxo2ec=
+Received: from zn.tnic (pd9530d32.dip0.t-ipconnect.de [217.83.13.50])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CECA740E0140;
+	Fri,  7 Jul 2023 17:12:21 +0000 (UTC)
+Date: Fri, 7 Jul 2023 19:12:17 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Michael Roth <michael.roth@amd.com>
+Cc: Joerg Roedel <jroedel@suse.de>, Baoquan He <bhe@redhat.com>,
+	Tao Liu <ltao@redhat.com>, thomas.lendacky@amd.com,
+	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com, ardb@kernel.org,
+	linux-kernel@vger.kernel.org, dyoung@redhat.com,
+	kexec@lists.infradead.org, linux-efi@vger.kernel.org
+Subject: Re: [PATCH v2] x86/kexec: Add EFI config table identity mapping for
+ kexec kernel
+Message-ID: <20230707171217.GHZKhHcffp4nn6RgR/@fat_crate.local>
+References: <20230601072043.24439-1-ltao@redhat.com>
+ <20230705173359.GDZKWphyFbNE8id6Jm@fat_crate.local>
+ <CAO7dBbXdJgpO4Ym=4WME3OOrUhq2MNKpNZmhpsC7pOSugHiKDg@mail.gmail.com>
+ <ZKeTX2aemPbsMiVr@MiWiFi-R3L-srv>
+ <ZKfLYG_4DANc_i5r@suse.de>
+ <20230707085712.GBZKfTaGJXnzhEenxj@fat_crate.local>
+ <20230707152515.42gpfzjgvfwe6rf7@amd.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-07_10,2023-07-06_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 phishscore=0 spamscore=0 clxscore=1015 suspectscore=0
- adultscore=0 mlxlogscore=999 lowpriorityscore=0 priorityscore=1501
- mlxscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2305260000 definitions=main-2307070144
+Content-Disposition: inline
+In-Reply-To: <20230707152515.42gpfzjgvfwe6rf7@amd.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230707_085519_588415_238FA502 
-X-CRM114-Status: GOOD (  38.16  )
+X-CRM114-CacheID: sfid-20230707_101243_078992_06BB3899 
+X-CRM114-Status: GOOD (  17.04  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -106,104 +108,38 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, 2023-07-03 at 14:56 -0700, Tushar Sugandhi wrote:
-> The current Kernel behavior is IMA measurements snapshot is taken at
-> kexec 'load' and not at kexec 'execute'.  IMA log is then carried
-> over to the new Kernel after kexec 'execute'.
-> 
-> Some devices can be configured to call kexec 'load' first, and followed
-> by kexec 'execute' after some time. (as opposed to calling 'load' and
-> 'execute' in one single kexec command).  In such scenario, if new IMA
-> measurements are added between kexec 'load' and kexec 'execute', the
-> TPM PCRs are extended with the IMA events between 'load' and 'execute';
-> but those IMA events are not carried over to the new kernel after kexec
-> soft reboot.  This results in mismatch between TPM PCR quotes and the
-> actual IMA measurements list after the device boots into the new kexec
-> image.  This mismatch results in the remote attestation failing for that
-> device.
-> 
-> This patch series proposes a solution to solve this problem by allocating
-> the necessary buffer at kexec 'load' time, and populating the buffer
-> with the IMA measurements at kexec 'execute' time. 
+On Fri, Jul 07, 2023 at 10:25:15AM -0500, Michael Roth wrote:
+> ...
+> It would be unfortunate if we finally abandoned this path because of the
+> issue being hit here though. I think the patch posted here is the proper
+> resolution to the issue being hit, and I'm hoping at this point we've
+> identified all the similar cases where EFI/setup_data-related structures
+> were missing explicit mappings. But if we still think it's too much of a
+> liability to access the EFI config table outside of SEV-enabled guests,
+> then I can work on re-implementing things based on the above logic.
 
-Thanks, Tushar.   Depending on the IMA policy, the above problem
-statement is correct, but not all policies are affected by it.  It's
-also unclear why so much needs to change.  Instead of copying the
-measurement list at kexec 'load',  using the existing method and simply
-copying them at kexec 'exec' would suffice.
+Replying here to Tom's note too...
 
-Also as mentioned in comment on 3/10, the ordering of this patch set is
-not bisect safe.  If the same method of copying the measurement list
-was used, changing from copying at  kexec 'load'  to kexec 'exec' could
-be done in the same patch.
+So, I like the idea of rechecking CPUID. Yes, let's do the sev_status
+check. As a result, we either fail the guest - no problem - or we boot
+and we recheck. Thus, we don't run AMD code on !AMD machines, if the HV
+is not a lying bastard.
 
-Mimi
+Now, if we've gotten a valid setup_data SETUP_EFI entry with a valid
+pointer to an EFI config table, then that should happen in the generic
+path - initialize_identity_maps(), for example - like you've done in
+b57feed2cc26 - not in the kexec code because kexec *happens* to need it.
 
-> 
-> The solution includes:
->  - addition of new functionality to allocate a buffer to hold IMA
->    measurements at kexec 'load', 
-> 
->  - ima functionality to suspend and resume measurements as needed during
->    buffer copy at kexec 'execute',
-> 
->  - ima functionality for mapping the measurement list from the current
->    Kernel to the subsequent one, 
-> 
->  - necessary changes to the kexec_file_load syscall, enabling it to call
->    the ima functions
-> 
->  - registering a reboot notifier which gets called during kexec 'execute',
-> 
->  - and removal of deprecated functions.
-> 
-> The modifications proposed in this series ensure the integrity of the ima
-> measurements is preserved across kexec soft reboots, thus significantly
-> improving the security of the Kernel post kexec soft reboots.
-> 
-> There were previous attempts to fix this issue [1], [2], [3].  But they
-> were not merged into the mainline Kernel.  
-> 
-> We took inspiration from the past work [1] and [2] while working on this
-> patch series.
-> 
-> References:
-> -----------
-> 
-> [1] [PATHC v2 5/9] ima: on soft reboot, save the measurement list
-> https://lore.kernel.org/lkml/1472596811-9596-6-git-send-email-zohar@linux.vnet.ibm.com/
-> 
-> [2] PATCH v2 4/6] kexec_file: Add mechanism to update kexec segments.
-> https://lkml.org/lkml/2016/8/16/577
-> 
-> [3] [PATCH 1/6] kexec_file: Add buffer hand-over support
-> https://lore.kernel.org/linuxppc-dev/1466473476-10104-6-git-send-email-bauerman@linux.vnet.ibm.com/T/
-> 
-> Tushar Sugandhi (10):
->   ima: implement function to allocate buffer at kexec load
->   ima: implement function to populate buffer at kexec execute
->   ima: allocate buffer at kexec load to hold ima measurements
->   ima: implement functions to suspend and resume measurements
->   kexec: implement functions to map and unmap segment to kimage
->   ima: update buffer at kexec execute with ima measurements
->   ima: remove function ima_dump_measurement_list
->   ima: implement and register a reboot notifier function to update kexec
->     buffer
->   ima: suspend measurements while the kexec buffer is being copied
->   kexec: update kexec_file_load syscall to call ima_kexec_post_load
-> 
->  include/linux/ima.h                |   3 +
->  include/linux/kexec.h              |  13 ++
->  kernel/kexec_core.c                |  72 +++++++++-
->  kernel/kexec_file.c                |   7 +
->  kernel/kexec_internal.h            |   1 +
->  security/integrity/ima/ima.h       |   4 +
->  security/integrity/ima/ima_kexec.c | 211 +++++++++++++++++++++++------
->  security/integrity/ima/ima_queue.c |  32 +++++
->  8 files changed, 295 insertions(+), 48 deletions(-)
-> 
+We want to access the EFI config table? Sure, by all means, but make
+that generic for all code.
 
+Thx.
 
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
 
 _______________________________________________
 kexec mailing list
