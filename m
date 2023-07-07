@@ -4,91 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B39A7EB64D9
-	for <kexec@archiver.kernel.org>; Fri,  7 Jul 2023 08:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 698E7EB64DA
+	for <kexec@archiver.kernel.org>; Fri,  7 Jul 2023 10:19:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:References
+	:In-Reply-To:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=+QnT2Phvjen92oKmidokhH3LP7cToFYn/KLNtd6cFxM=; b=HkmXUFMPlwnDBI
-	lmqpkOyux8ik/EMhMxw4GDtwmCz8sChz7UxwqGs28et1UzcvilW8qFjl0iGaZqViXmiDY2gqGcH1E
-	FWykZza9ifvkeFxz8+EExQ2zsizasz47BU7+kCyqDR35TenaE0Ks8o0/d56YkR1SdQnoftCSzTb7i
-	ZiBSxUonTCH05iNqGH3hFFQWIkzSNzStD//M3bduyAi3ZIxWL+s+1WV+6NB7XPWON2hO+hWhkhVIj
-	mnDzHuNNmTWIU3M8u19Os/xYw31igCgyYTV9ix4e/wXNVuIbGS6jQS2T9Z33JjTnEAt19l4GB74V9
-	RvfZU1oz4/doAV02JXHw==;
+	List-Owner; bh=te2TlXIT98E4asu9u17zY3FlX49OLO/bpOsyX4r8jso=; b=1nYXioUPbUGGHZ
+	i4cD52Y44Z2E4qhH8++dS/vfHDTJOZ083wym0A3cZmjwNooq/c7uKoiFQf4yZGodXyQxmJq5Mudch
+	BpyAW9vFxrFhKgTd/Yq0tyI0XZgVozexKk16o/r+mBetQ2C6HG1J/v8SCtdEqIYUZmVpekGsC/c9e
+	HDWv+MH4RZatyW8xo2ydBtiNFTqsmpPXPiiASBpXmWXScPsq6muU9tjbUYsp5CUVQOI4vbQ0sWj93
+	lII2hoAq74ZK9+yRk8uCPh9lLbseeF+2t0e0qMiPD69tjDRswiMCpwYUVdR251f/ZHSYTlmDXJABO
+	AHXJancfvcXe9VWh8VYA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qHhHc-0044An-2V;
-	Fri, 07 Jul 2023 08:57:44 +0000
-Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
+	id 1qHiYF-004LtE-0v;
+	Fri, 07 Jul 2023 10:18:59 +0000
+Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qHhHY-00448W-2k
+	id 1qHiYC-004LhB-1p
 	for kexec@lists.infradead.org;
-	Fri, 07 Jul 2023 08:57:42 +0000
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C0DE81EC0398;
-	Fri,  7 Jul 2023 10:57:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-	t=1688720254;
+	Fri, 07 Jul 2023 10:18:58 +0000
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1688725121;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-	bh=GbkfdLxp9rbQ7AZmN6x307z1tOVXWnNsYY4HWTwrins=;
-	b=bTkZdCbdw2GZhc2GvXaNOtj9+aqKb+BrFtxh5mguwFfQVyldtHs3xPkfXBXEyPWnPMsBBz
-	krJh3j19J4FhWVWTC/78jcP6RZEFmFxZDzbAUe2EPooxvvPighLbwwc/ZwfNpG6c/SzV34
-	k0S3pzuXoHUiaU9n50wJcNBr3Faijfw=
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id aOrEHwDTfLF3; Fri,  7 Jul 2023 08:57:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1688720252; bh=GbkfdLxp9rbQ7AZmN6x307z1tOVXWnNsYY4HWTwrins=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Btv9s/ge/XigqKznJFeyxJDvvCxC4amkdlU18+hJG8mAULOQBZOSRqivw1XrmKyrb
-	 ZIK5fB1JTWJa6Wq/T2GAMA/yPNoitAo2hmTRqYBfJ9iuQlGxWSBgtmDbsWVGVI7jEh
-	 NlSHetQxvPGZIhv6TWQ2LsyTkrASV9rgvAel4SukBGn+MVu0jBYxzl5o4cfPz58EfE
-	 /coHNKiPukC3mVE1VpLL1hKBBg4sblcXPOel7s1eu6NMpfvFcuC9V0JB/YweRQmLLw
-	 mgQgkbFV0qk62n2JCbxDLNnRndFm+D3eGh/QCJmml57u1mH7WVqR+1qbYBXEtlAFVW
-	 CV3kodEru/Pp0091eSlbo2oM4x5zmB2tvBjc6IihDnN+kuopSgQtaGVIfhdBG1RKle
-	 IKUL2cVH9Qjxbxhr+BoRKpfuad5wnKbckpQWIEvaPNf/BO7hyjVg6iE0BKKNQhH9i8
-	 FN1sVkoxdHHBAVXiJ/rP9QSYho7PXaV4HIry4epe3aPtnm75WRTf7dIPVd49TfM5oN
-	 Ga/dbgdFNlsmbveHNVbV2HLKsbuqvicDbjPZR6GRcOKNwn7VcYl6AWyRwLwKqKcZsx
-	 YptrBQUkg4V15kl89VPwKWSgbz589YddKW4e618ehFKgHNWUTKyc2rQbFKZbvmeTPo
-	 2BJwfVNXl0MPqeec3SK4laeY=
-Received: from zn.tnic (pd9530d32.dip0.t-ipconnect.de [217.83.13.50])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 109AC40E0187;
-	Fri,  7 Jul 2023 08:57:17 +0000 (UTC)
-Date: Fri, 7 Jul 2023 10:57:12 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Joerg Roedel <jroedel@suse.de>, michael.roth@amd.com
-Cc: Baoquan He <bhe@redhat.com>, Tao Liu <ltao@redhat.com>,
-	thomas.lendacky@amd.com, tglx@linutronix.de, mingo@redhat.com,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	ardb@kernel.org, linux-kernel@vger.kernel.org, dyoung@redhat.com,
-	kexec@lists.infradead.org, linux-efi@vger.kernel.org
-Subject: Re: [PATCH v2] x86/kexec: Add EFI config table identity mapping for
- kexec kernel
-Message-ID: <20230707085712.GBZKfTaGJXnzhEenxj@fat_crate.local>
-References: <20230601072043.24439-1-ltao@redhat.com>
- <20230705173359.GDZKWphyFbNE8id6Jm@fat_crate.local>
- <CAO7dBbXdJgpO4Ym=4WME3OOrUhq2MNKpNZmhpsC7pOSugHiKDg@mail.gmail.com>
- <ZKeTX2aemPbsMiVr@MiWiFi-R3L-srv>
- <ZKfLYG_4DANc_i5r@suse.de>
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2d3houmsYkGVGZJ+TnslUxorhkLSwL4n9/p70tnZL7A=;
+	b=y4doa5DKfOzdCF21tIHXXGEp7Tighcyi2aqc4+bE5su2grB8igK69DcILbae5lykTRs5JV
+	PYm8S351m8I52i6O6betlp1NJBOuaDOhcpSjHpAf5gkPS4ql4bPs59vUfRwN0hS9oBxuGZ
+	HjfgVjqt5FZpSyJuXRwsWXqLu6J3UyRqhFNdrmogJQ1uVYvApG4e2Mrb+3YSpKMjw+Fuhg
+	aRPDRjqsb/hyTS0kFyDNsh6kwdQIYmX8MSLyHPhJp7wTnbDAeNbh9ORfvwHzHkqL0p85+B
+	TOR0s68ZDsmb21uc+eK6qJ/CoWkJZQt1mKvLGEyZipI8aM+1MJbfWzOqwFeCDw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1688725121;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2d3houmsYkGVGZJ+TnslUxorhkLSwL4n9/p70tnZL7A=;
+	b=9tdprbeuz34HJLn6OXpF/f1dsXMyUURUW2bxIbsBMyXUbdtkctVG/W3f9EIP518gzZTyL0
+	btin56Kv04H/BoDg==
+To: Baokun Li <libaokun1@huawei.com>
+Cc: arjan@linux.intel.com, ashok.raj@intel.com, ashok.raj@linux.intel.com,
+ ebiederm@xmission.com, linux-kernel@vger.kernel.org,
+ mario.limonciello@amd.com, thomas.lendacky@amd.com, tony.luck@intel.com,
+ tonyb@cybernetics.com, x86@kernel.org, yangerkun <yangerkun@huawei.com>,
+ Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, Baokun Li
+ <libaokun1@huawei.com>
+Subject: Re: [BUG REPORT] Triggering a panic in an x86 virtual machine does
+ not wait
+In-Reply-To: <d7f266fd-e34d-e26e-e371-ee6ff13b6696@huawei.com>
+References: <20230615193330.608657211@linutronix.de>
+ <71578392-63ed-02a9-24da-2adf8cce38c7@huawei.com> <87ttui91jo.ffs@tglx>
+ <d7f266fd-e34d-e26e-e371-ee6ff13b6696@huawei.com>
+Date: Fri, 07 Jul 2023 12:18:39 +0200
+Message-ID: <87lefs81og.ffs@tglx>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <ZKfLYG_4DANc_i5r@suse.de>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230707_015741_068441_D3E92298 
-X-CRM114-Status: GOOD (  14.76  )
+X-CRM114-CacheID: sfid-20230707_031856_764352_C51AA455 
+X-CRM114-Status: GOOD (  16.23  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,36 +79,44 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Jul 07, 2023 at 10:22:56AM +0200, Joerg Roedel wrote:
-> On Fri, Jul 07, 2023 at 12:23:59PM +0800, Baoquan He wrote:
-> > I am wondering why we don't detect the cpu type and return early inside
-> > sev_enable() if it's Intel cpu.
-> > 
-> > We can't rely on CONFIG_AMD_MEM_ENCRYPT to decide if the code need be
-> > executed or not because we usually enable them all in distros.
-> 
-> Looking at the code in head_64.S, by the time sev_enable() runs the SEV
-> bit should already be set in sev_status. Maybe use that to detect
-> whether SEV is enabled and bail out early?
-
-There was something about getting the CPUID page on SNP *before*
-actually calling CPUID but this is not the first time we had trouble in
-this area. This needs to be done differently.
-
-Michael?
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVGh1LCBKdWwgMDYgMjAyMyBhdCAxNDo0NCwgQmFva3VuIExpIHdyb3RlOgo+IE9uIDIwMjMv
+Ny81IDE2OjU5LCBUaG9tYXMgR2xlaXhuZXIgd3JvdGU6Cj4+ICsJLyoKPj4gKwkgKiBJZiB0aGlz
+IGlzIGEgY3Jhc2ggc3RvcCB3aGljaCBkb2VzIG5vdCBleGVjdXRlIG9uIHRoZSBib290IENQVSwK
+Pj4gKwkgKiB0aGVuIHRoaXMgY2Fubm90IHVzZSB0aGUgSU5JVCBtZWNoYW5pc20gYmVjYXVzZSBJ
+TklUIHRvIHRoZSBib290Cj4+ICsJICogQ1BVIHdpbGwgcmVzZXQgdGhlIG1hY2hpbmUuCj4+ICsJ
+ICovCj4+ICsJaWYgKHRoaXNfY3B1KQo+PiArCQlyZXR1cm4gZmFsc2U7Cgo+IFRoaXMgcGF0Y2gg
+ZG9lcyBmaXggdGhlIHByb2JsZW0gb2YgcmVib290aW5nIGF0IHBhbmljLCBidXQgdGhlCj4gZXhw
+b3J0ZWQgc3RhY2sgc3RheXMgYXQgc3RvcF90aGlzX2NwdSgpIGxpa2UgYmVsb3csIGluc3RlYWQg
+b2Ygc2hvd2luZwo+IHdoYXQgdGhlIGNvcnJlc3BvbmRpbmcgcHJvY2VzcyBpcyBkb2luZyBhcyBi
+ZWZvcmUuCj4KPiBQSUQ6IDY4McKgwqDCoMKgwqAgVEFTSzogZmZmZjlhYzI0MjlkMzA4MMKgIENQ
+VTogMsKgwqDCoCBDT01NQU5EOiAiZnNzdHJlc3MiCj4gIMKgIzAgW2ZmZmZiMDAyMDAxODRmZDBd
+IHN0b3BfdGhpc19jcHUgYXQgZmZmZmZmZmY4OWE0ZmZkOAo+ICDCoCMxIFtmZmZmYjAwMjAwMTg0
+ZmU4XSBfX3N5c3ZlY19yZWJvb3QgYXQgZmZmZmZmZmY4OWE5NDIxMwo+ICDCoCMyIFtmZmZmYjAw
+MjAwMTg0ZmYwXSBzeXN2ZWNfcmVib290IGF0IGZmZmZmZmZmOGFlZTc0OTEKPiAtLS0gPElSUSBz
+dGFjaz4gLS0tCj4gIMKgwqDCoCBSSVA6IDAwMDAwMDAwMDAwMDAwMTDCoCBSU1A6IDAwMDAwMDAw
+MDAwMDAwMTjCoCBSRkxBR1M6IGZmZmZiMDAyMDBmOGJkMDgKPiAgwqDCoMKgIFJBWDogZmZmZjlh
+YzI1NmZkYTlkOMKgIFJCWDogMDAwMDAwMDAwOTk3M2E4NcKgIFJDWDogZmZmZjlhYzI1NmZkYTA3
+OAo+ICDCoMKgwqAgUkRYOiBmZmZmOWFjMjQ0MTZlMzAwwqAgUlNJOiBmZmZmOWFjMjU2ZmRhOWUw
+wqAgUkRJOiBmZmZmZmZmZmZmZmZmZmZmCj4gIMKgwqDCoCBSQlA6IGZmZmY5YWMyNDQzYTVmODjC
+oMKgIFI4OiAwMDAwMDAwMDAwMDAwMDAwwqDCoCBSOTogZmZmZjlhYzI0MjJlZWVhMAo+ICDCoMKg
+wqAgUjEwOiBmZmZmOWFjMjU2ZmRhOWQ4wqAgUjExOiAwMDAwMDAwMDAwNTQ5OTIxwqAgUjEyOiBm
+ZmZmOWFjMjQyMmVlZWEwCj4gIMKgwqDCoCBSMTM6IGZmZmY5YWMyNTFjZDIzYzjCoCBSMTQ6IGZm
+ZmY5YWMyNDI2OWE4MDDCoCBSMTU6IGZmZmY5YWMyNTFjZDIxNTAKPiAgwqDCoMKgIE9SSUdfUkFY
+OiBmZmZmZmZmZjhhMTcxOWU0wqAgQ1M6IDAyMDbCoCBTUzogZmZmZmZmZmY4YTE3MTljOAo+IGJ0
+OiBXQVJOSU5HOiBwb3NzaWJseSBib2d1cyBleGNlcHRpb24gZnJhbWUKPgo+IERvIHlvdSBrbm93
+IGhvdyB0aGlzIGhhcHBlbmVkPyBJIHdvdWxkIGJlIGdyYXRlZnVsIGlmIHlvdSBjb3VsZCBmaXgg
+aXQuCgpObywgSSBkb24ndC4gQnV0IHRoZXJlIGlzIGNsZWFybHkgYSBoaW50OgoKPiBidDogV0FS
+TklORzogcG9zc2libHkgYm9ndXMgZXhjZXB0aW9uIGZyYW1lCgpTbyB0aGUgZXhjZXB0aW9uIGZy
+YW1lIHNlZW1zIHRvIGJlIGNvcnJ1cHRlZC4gSSBoYXZlIG5vIGlkZWEgd2h5LgoKVGhlIHF1ZXN0
+aW9uIGlzLCB3aGV0aGVyIHRoaXMgZ29lcyBhd2F5IHdoZW4geW91IHJldmVydCB0aGF0IGNvbW1p
+dCBvciBub3QuCkkgY2FuJ3Qgb3JhY2xlIHRoYXQgb3V0IGZyb20geW91ciByZXBvcnQuCgpDYW4g
+eW91IHBsZWFzZSByZXZlcnQgNDVlMzRjOGFmNThmIG9uIHRvcCBvZiBMaW51cyB0cmVlIGFuZCB2
+ZXJpZnkgdGhhdAppdCBtYWtlcyB0aGUgaXNzdWUgZ28gYXdheT8KClRoYW5rcywKCiAgICAgICAg
+dGdseAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4
+ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
+ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
