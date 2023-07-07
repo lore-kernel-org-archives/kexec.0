@@ -4,83 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 94944EB64DA
-	for <kexec@archiver.kernel.org>; Fri,  7 Jul 2023 08:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4AA71EB64D9
+	for <kexec@archiver.kernel.org>; Fri,  7 Jul 2023 08:19:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
 	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=Voo9WedtssCvwW6KzFqzRYrlXT44107vE2gXPo59wQo=; b=hbtjOeMVFowbFf
-	RzhpKEsBB8cd/RnKxOqTp637sIqSv/8zCfwX1Pa+PJ9SDzGSag0BJrsfC3H0S79J65Yj80QYiaAlR
-	O+JQMcpsfKu5Mn86p7x6FuBPQVfQz37tj02E/MuHze9FqbfDHyCPVNehW++ZTOlTVhxZT2tqjVWiK
-	wsJDHRoij4ikOmu0ZYbCc4CdR2T1Ietgo2jcfeTL9FhFwjEuJ1SuhcsK4ycOT8Gg341XisG27jNnX
-	G5WHaR62Qu/eGiuIiqFrKmHvcclof6gqq4lUSYUHWKtrCZ6i5HLVXllktKlpCgB5NsbjLM5glSvLg
-	JJ0zO1m2AHlEg8J6lNjQ==;
+	List-Owner; bh=+nkaW8gkFfYfPXXSa7c5ftsVcWvYAA8fm5B9bqlw6LM=; b=DOZyx4jWVmrDDJ
+	NLdES+/NdzuxokavZlvaXJEAzLiROgTBi+sL43Xz+2YH6I9IqbUG+XP4JSBo86GieV2SXKC8HD3qj
+	FbWVORqYo9dDpGVaYAReKlCr+U+CrEYor3t4DBg4eMQl1N3XKsqEI4mnjrGfDQWsKGpNSXQX7ek4l
+	8Zen+LY7QYH9+GKEd512EBzL7cLPzo+OKsa582QJ8B5evUWOL5r0GaiulJzLU7udvfrtOi46B3jta
+	ZgIU3J3R4riMwjf1u0zDNi/EKycri5LQcSNygGdDD2jQE/wN35D11HSZxancHwXkk9Ew+kLgGtc5t
+	DAwRgB5ABCBDR7MKUFVw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qHgeR-003xa0-0q;
-	Fri, 07 Jul 2023 08:17:15 +0000
+	id 1qHggL-003xnL-14;
+	Fri, 07 Jul 2023 08:19:13 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qHgeO-003xYl-0c
+	id 1qHggI-003xmS-0e
 	for kexec@lists.infradead.org;
-	Fri, 07 Jul 2023 08:17:13 +0000
+	Fri, 07 Jul 2023 08:19:11 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1688717828;
+	s=mimecast20190719; t=1688717949;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=XPaN5pqbomSOKx5xl3JROR9VsqVfGN0ANT/ZNiELBU8=;
-	b=EgxBKNnyQfx6Lw8bnawKtB2iSqgq+xBoiydyXbfrhey3ItWOriUxBH/FmVtpoRtMEk6PjJ
-	ZCykEsS5Z4SJ2351FolvgY670d8WV0nCDU4mP+3LZufQyCHQXwQpA2FDQrKIg/GIDcaorz
-	TVS1Ru3+sZf73n/tLeYnqmo0J1S2n4o=
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com
- [209.85.166.197]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=LDsBTISbzBTDLjmus2cmCAKpmg00PLgnL3XexDug1Tk=;
+	b=DnGwFFdeFuzZJk3IreCUbSzEzyp1WTNbNnbB5bVhmnj9Fo2YjCxlC+RdKPUlqSh98l9hnK
+	t16CA1pV5HcpUiczh6puWwzPMtP6k+fKYswDvVvlwdBVBm/nv81ZjMEDSgMo3jP+5s8IuS
+	viqK2sLJSARoLux5R2dX10n18FNO3+s=
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com
+ [209.85.166.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-266-adppQkOUMoSrzDvA-IrZzA-1; Fri, 07 Jul 2023 04:17:07 -0400
-X-MC-Unique: adppQkOUMoSrzDvA-IrZzA-1
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-34616cffaabso1547985ab.1
-        for <kexec@lists.infradead.org>; Fri, 07 Jul 2023 01:17:07 -0700 (PDT)
+ us-mta-108-IK2aoRr7MUerX7ULYnjMAQ-1; Fri, 07 Jul 2023 04:19:08 -0400
+X-MC-Unique: IK2aoRr7MUerX7ULYnjMAQ-1
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7864d24d5dfso26610139f.1
+        for <kexec@lists.infradead.org>; Fri, 07 Jul 2023 01:19:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688717826; x=1691309826;
+        d=1e100.net; s=20221208; t=1688717947; x=1691309947;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=XPaN5pqbomSOKx5xl3JROR9VsqVfGN0ANT/ZNiELBU8=;
-        b=MRSUgsme8BsPxg+uBilnaQCiSQBMh4/g0auoSWecgqfzhtIJ2wjFWF9rSAzvmkQHNe
-         YGIMqOClz3mFvx6qKAn6Z3xG7Yvife+xihytD9CH2cp0osyMsSvU2TREhbtUm00PHAtF
-         oNG7K+R/60dklZPJFH7FOBR680rBozq2PovfT1sfwEkBpHk2N04Dm+YvIL9kRABgRgs6
-         xNCmRN3IU0dgWmhB7puZeNi+QLH97IbR27Y6nb5YTao8gIBNI8d2gKSGfh1kEeBlBUUh
-         WpMu1Unu0jUnKhnczJrKeAFlwwc5JoS9wL6p/+xHI8DBN/2p/mX1S8pcnRyghK2JC3oR
-         SaIg==
-X-Gm-Message-State: ABy/qLYr7qaWLhgAmICA9cy1XjUTMuGGNWne9jOu7yGCFIMKuLZ3kez1
-	Ior36W4ipZZS0gTgIVPb8uI9Kb30556R1+SBys8iV9hgR9qmzm3MEkyWcX6jh3rUUxfgdkqPfb9
-	wmyaNmb+hl1XtWlnLoBa25VtaSRmwzA9gzWXU
-X-Received: by 2002:a05:6e02:1a62:b0:346:1919:7cb1 with SMTP id w2-20020a056e021a6200b0034619197cb1mr6742341ilv.2.1688717826685;
-        Fri, 07 Jul 2023 01:17:06 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlGLdSmS3qJJRQ35msI1TYAi+yBPPV4fvNEEnqy2IXhTRvWYiVXIjdoR/KlooxuKrMIls/Q5ivEzfqkjGa2k8uU=
-X-Received: by 2002:a05:6e02:1a62:b0:346:1919:7cb1 with SMTP id
- w2-20020a056e021a6200b0034619197cb1mr6742316ilv.2.1688717826255; Fri, 07 Jul
- 2023 01:17:06 -0700 (PDT)
+        bh=LDsBTISbzBTDLjmus2cmCAKpmg00PLgnL3XexDug1Tk=;
+        b=ZBGRpKubtIQ9+L6ukLf1uFZamEUgWNFe1hoiaAxsp8OTMASNxeyaSJ5CHbaN1pPSec
+         wB2NK8csMfTsV3HynIZ+83apRGQBGqcJIepKIGLlLHYsctYivwLSMEyK2nmzrngAXX9T
+         GVTTJkyIjcXhr4V8vLfb1DT06FoO4cYEkK7tmrcO8Am6St/cLbW1jex3TKSWdbD2xa8q
+         qZEtY+daWNH/SxuAbvipMhJT3TOYCq+alBUpUY/zTUK5OGhnC82RgZeGSVKRuM4WW47g
+         zHCvPVA3fhgKOiWKX/N/6bRMQSE0JL3oH9rLNLPz42B+73qtd32g+SSPVgQIBTLX0Ygb
+         m+ww==
+X-Gm-Message-State: ABy/qLY+s0t/COj7HtTf3aoD/+++J7Xccal/WfA6u53JPe1nfaU22/Xx
+	9A0WAQ8Kd3OEWcAwBYCjiQOJynJFxz6MhwE0wWnUAJlMeiQP64hgUUucxYRrxIyPSkXK+SrOrHM
+	BrCs/OV9ev8VUe93o7uVITRikLrNup1f/vAms
+X-Received: by 2002:a05:6e02:e04:b0:345:e438:7381 with SMTP id a4-20020a056e020e0400b00345e4387381mr4590735ilk.2.1688717947620;
+        Fri, 07 Jul 2023 01:19:07 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlGmmO9KnWk1OmpKCwnkO7ACUqSxF9xZ4r8DsWs9KsNMtByt1/3EtUImi4KmVM+CqLQ/jkRSYBt6LhkIH/6JgZ0=
+X-Received: by 2002:a05:6e02:e04:b0:345:e438:7381 with SMTP id
+ a4-20020a056e020e0400b00345e4387381mr4590728ilk.2.1688717947397; Fri, 07 Jul
+ 2023 01:19:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230703215709.1195644-1-tusharsu@linux.microsoft.com>
-In-Reply-To: <20230703215709.1195644-1-tusharsu@linux.microsoft.com>
-From: Dave Young <dyoung@redhat.com>
-Date: Fri, 7 Jul 2023 16:18:31 +0800
-Message-ID: <CALu+AoSyhnw0Cz06Mmqh+7FcLUF1q0txY1qbWLxkHO8OD5---Q@mail.gmail.com>
-Subject: Re: [PATCH 00/10] ima: measure events between kexec load and execute
+References: <20230703215709.1195644-1-tusharsu@linux.microsoft.com> <20230703215709.1195644-11-tusharsu@linux.microsoft.com>
+In-Reply-To: <20230703215709.1195644-11-tusharsu@linux.microsoft.com>
+From: RuiRui Yang <ruyang@redhat.com>
+Date: Fri, 7 Jul 2023 16:20:33 +0800
+Message-ID: <CALu+AoQC101fcbJjLdJHD7QtqeXzt5uOZDgNYvob0U_NGyaqCQ@mail.gmail.com>
+Subject: Re: [PATCH 10/10] kexec: update kexec_file_load syscall to call ima_kexec_post_load
 To: Tushar Sugandhi <tusharsu@linux.microsoft.com>
 Cc: zohar@linux.ibm.com, noodles@fb.com, bauermann@kolabnow.com, 
 	kexec@lists.infradead.org, linux-integrity@vger.kernel.org, code@tyhicks.com, 
-	nramas@linux.microsoft.com, paul@paul-moore.com, 
-	Eric Biederman <ebiederm@xmission.com>
+	nramas@linux.microsoft.com, paul@paul-moore.com
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230707_011712_325038_A34E3F88 
-X-CRM114-Status: GOOD (  30.58  )
+X-CRM114-CacheID: sfid-20230707_011910_314761_C131CCBF 
+X-CRM114-Status: GOOD (  26.98  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,92 +96,71 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-[Add Eric in cc]
-
 On Tue, 4 Jul 2023 at 05:58, Tushar Sugandhi
 <tusharsu@linux.microsoft.com> wrote:
 >
-> The current Kernel behavior is IMA measurements snapshot is taken at
-> kexec 'load' and not at kexec 'execute'.  IMA log is then carried
-> over to the new Kernel after kexec 'execute'.
+> The kexec_file_load syscall is used to load a new kernel for kexec.
+> The syscall needs to update its function to call ima_kexec_post_load, which
+> was implemented in a previous patch.  ima_kexec_post_load takes care of
+> mapping the measurement list for the next kernel and registering a reboot
+> notifier if it's not already registered.
 >
-> Some devices can be configured to call kexec 'load' first, and followed
-> by kexec 'execute' after some time. (as opposed to calling 'load' and
-> 'execute' in one single kexec command).  In such scenario, if new IMA
-> measurements are added between kexec 'load' and kexec 'execute', the
-> TPM PCRs are extended with the IMA events between 'load' and 'execute';
-> but those IMA events are not carried over to the new kernel after kexec
-> soft reboot.  This results in mismatch between TPM PCR quotes and the
-> actual IMA measurements list after the device boots into the new kexec
-> image.  This mismatch results in the remote attestation failing for that
-> device.
+> Modify the kexec_file_load syscall to call ima_kexec_post_load after the
+> image has been loaded and prepared for kexec.  This ensures that the IMA
+> measurement list will be available to the next kernel after a kexec reboot.
+> This also ensures the measurements taken in the window between kexec load
+> and execute are captured and passed to the next kernel.
 >
-> This patch series proposes a solution to solve this problem by allocating
-> the necessary buffer at kexec 'load' time, and populating the buffer
-> with the IMA measurements at kexec 'execute' time.
+> Declare the kimage_file_post_load function in the kernel/kexec_internal.h,
+> so it can be properly used in the syscall.
 >
-> The solution includes:
->  - addition of new functionality to allocate a buffer to hold IMA
->    measurements at kexec 'load',
+> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> ---
+>  kernel/kexec_file.c     | 7 +++++++
+>  kernel/kexec_internal.h | 1 +
+>  2 files changed, 8 insertions(+)
 >
->  - ima functionality to suspend and resume measurements as needed during
->    buffer copy at kexec 'execute',
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index f989f5f1933b..efe28e77280c 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -184,6 +184,11 @@ kimage_validate_signature(struct kimage *image)
+>  }
+>  #endif
 >
->  - ima functionality for mapping the measurement list from the current
->    Kernel to the subsequent one,
+> +void kimage_file_post_load(struct kimage *image)
+> +{
+> +       ima_kexec_post_load(image);
+> +}
+> +
+>  /*
+>   * In file mode list of segments is prepared by kernel. Copy relevant
+>   * data from user space, do error checking, prepare segment list
+> @@ -399,6 +404,8 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
 >
->  - necessary changes to the kexec_file_load syscall, enabling it to call
->    the ima functions
+>         kimage_terminate(image);
 >
->  - registering a reboot notifier which gets called during kexec 'execute',
+> +       kimage_file_post_load(image);
+
+I think it should be only done for the reboot case,  please just
+exclude the kdump case here..
+
+> +
+>         ret = machine_kexec_post_load(image);
+>         if (ret)
+>                 goto out;
+> diff --git a/kernel/kexec_internal.h b/kernel/kexec_internal.h
+> index 74da1409cd14..98dd5fcafaf0 100644
+> --- a/kernel/kexec_internal.h
+> +++ b/kernel/kexec_internal.h
+> @@ -30,6 +30,7 @@ static inline void kexec_unlock(void)
 >
->  - and removal of deprecated functions.
->
-> The modifications proposed in this series ensure the integrity of the ima
-> measurements is preserved across kexec soft reboots, thus significantly
-> improving the security of the Kernel post kexec soft reboots.
->
-> There were previous attempts to fix this issue [1], [2], [3].  But they
-> were not merged into the mainline Kernel.
->
-> We took inspiration from the past work [1] and [2] while working on this
-> patch series.
->
-> References:
-> -----------
->
-> [1] [PATHC v2 5/9] ima: on soft reboot, save the measurement list
-> https://lore.kernel.org/lkml/1472596811-9596-6-git-send-email-zohar@linux.vnet.ibm.com/
->
-> [2] PATCH v2 4/6] kexec_file: Add mechanism to update kexec segments.
-> https://lkml.org/lkml/2016/8/16/577
->
-> [3] [PATCH 1/6] kexec_file: Add buffer hand-over support
-> https://lore.kernel.org/linuxppc-dev/1466473476-10104-6-git-send-email-bauerman@linux.vnet.ibm.com/T/
->
-> Tushar Sugandhi (10):
->   ima: implement function to allocate buffer at kexec load
->   ima: implement function to populate buffer at kexec execute
->   ima: allocate buffer at kexec load to hold ima measurements
->   ima: implement functions to suspend and resume measurements
->   kexec: implement functions to map and unmap segment to kimage
->   ima: update buffer at kexec execute with ima measurements
->   ima: remove function ima_dump_measurement_list
->   ima: implement and register a reboot notifier function to update kexec
->     buffer
->   ima: suspend measurements while the kexec buffer is being copied
->   kexec: update kexec_file_load syscall to call ima_kexec_post_load
->
->  include/linux/ima.h                |   3 +
->  include/linux/kexec.h              |  13 ++
->  kernel/kexec_core.c                |  72 +++++++++-
->  kernel/kexec_file.c                |   7 +
->  kernel/kexec_internal.h            |   1 +
->  security/integrity/ima/ima.h       |   4 +
->  security/integrity/ima/ima_kexec.c | 211 +++++++++++++++++++++++------
->  security/integrity/ima/ima_queue.c |  32 +++++
->  8 files changed, 295 insertions(+), 48 deletions(-)
->
+>  #ifdef CONFIG_KEXEC_FILE
+>  #include <linux/purgatory.h>
+> +void kimage_file_post_load(struct kimage *image);
+>  void kimage_file_post_load_cleanup(struct kimage *image);
+>  extern char kexec_purgatory[];
+>  extern size_t kexec_purgatory_size;
 > --
 > 2.25.1
 >
