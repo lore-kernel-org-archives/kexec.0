@@ -4,136 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8F7B9EB64D9
-	for <kexec@archiver.kernel.org>; Fri,  7 Jul 2023 15:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B2D83EB64D9
+	for <kexec@archiver.kernel.org>; Fri,  7 Jul 2023 15:55:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:Cc:To:
-	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Vz/jT4HQ56GLiVjIVC0dZacv/PtMxm+nL2VN1tSINhY=; b=aMEMd8/nx7rccMNRIjaITl2PCo
-	1F6iPyOh4GHTQy19rNIazdXsd4l4Jiu632/MabwyURvgIDItVyK5tvE+zHDOdnvagoVtJr9mokyfE
-	Zhekp86fpyDylljxVQeVu8NWTam59ZfgceN51Q1bhfPk5Z+KJG5sZKij9wYBuSUNTrU9XDWnIZEMR
-	x42jXfZeViaEb5dVHvC72xTUf3ehM5JN6kNErt1YhhM780rb1yQCD1E6nGZ5OeIdeZ8g9OY9xgn59
-	Ur05zE57afZdrvu69C06cWA3a1UmyPOxi/NXJCl8Yf7lxM9aaHS0WKWWjKbwePNSkW0ZvP2cKA7X5
-	s9cRcCeA==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=Dk8iEux+3kQWSWxK0NMXU0RLguV2bHHTMWI/tCti0fE=; b=UOSBF0JRI2FPRQ
+	3uxToGOmC778hs2R6ECI9j3NZD3JlIESVM2zv1XNmnfqW27zUgdRX7lAsWOh3SzxlkfYE+lMfIBeP
+	NB5gRxAHJJvkxqRWIIoIpaPmrsyJO1YAHshSHTTgY1tcna4zKMsA3V6UTtShDO9Nxbc6KItVGhTAh
+	/XtzOi8FLWjAltvhXxJw0UXVKXFsAOkdVwQKSoL4H+9yOSHaAebo9ebBIStP4X1d/slhq0IeJyxOd
+	g/8TnT1fm36NB0MnMSkQhhpP2/qmyKls3u1JRSjz+LIGHyEItJOkh5R+e0kN+s9DiWKVSb13osVAZ
+	jf/O5GrYUCzpwO+GSTCQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qHnfu-0055d9-0K;
-	Fri, 07 Jul 2023 15:47:14 +0000
-Received: from mail-dm6nam12on20601.outbound.protection.outlook.com ([2a01:111:f400:fe59::601] helo=NAM12-DM6-obe.outbound.protection.outlook.com)
+	id 1qHnnn-0056xX-1a;
+	Fri, 07 Jul 2023 15:55:23 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qHnfq-0055br-2r
+	id 1qHnnj-0056wj-1j
 	for kexec@lists.infradead.org;
-	Fri, 07 Jul 2023 15:47:12 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IANjMsmcpYxFTevLE5RPZx9/JRYwETqFHb7iOyLRQCsbmMK+TLTRu+Sd+hCv8sRnVd4lzMMzRkr5H8BY6j8j2l5ycPIcb6+P2Xi/ijyWX8wssT6m/miKsVZnv8xSswplT6Al/IjRtE8J5ot2opurUu18cYv1YsgRWWJSglaMkTjw0wneRUOjT+kXlmWDLb858auy9xaYolnWy8pCDkEu1oEldDnuGIoZ+UapdJwryNi0JidvniAxDux+EW+8HlJ0SlzWKYuYNyqdt6fTQ5LC39ivf9LskS8MMbQK5aJ39l+yl8xmOy7b9aA1j3jqnM45YmkI/kgDTh9OHPeOcyRdZg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jZ8Z6dZ1pk5mUN1/IqFlNH9X+2Vbbg8DmVUvwh7woE0=;
- b=ZxhQD/irF35EjV+u1kr/AEA8fQqmplGbyuoSb+QsHhRPOShLh0xlVzocrM/S6RxCwGBVxW/BHOLpG9/3YdKnGUl5kvd+m+RMTfRt93XhpPyr6MzUdvXHXOfEMdaymktJ+p1HklZ18WandCzZJqUU64y0hx1OxZhBzX/6pdTiWAq6dnJsY/oRBO7jlI25oSTR7akpwJAvKyJsMTj9WbUQj2RGffH80IaVfgY5QMWBjEUyc20cxs9uzc3EOyuqo8xs2Z27wal2x1ZGOp+WWvNqKrqjXdZtpzvx3C+dcV0RH8V81PXSKz6vG5VEHTJWhDXjTpeXTVuhbbbpuq5QaLJlQA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jZ8Z6dZ1pk5mUN1/IqFlNH9X+2Vbbg8DmVUvwh7woE0=;
- b=osLFHAtuO4yIEi2cLgTW5sjID+t3kJ1Ep5e8zQiKReGPTvUuosbC+nAxt8Spsy2nwDJl4UV4uPYW/QlAcfJysNyQSAc0386cSzpkkylqp85C4pMQA8WoxCXkTL48S8gNimUJCpK1a/spKNQ6k5vX/fv/ZFKw69hMfahnwq8n0YA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB5229.namprd12.prod.outlook.com (2603:10b6:5:398::12)
- by SJ0PR12MB5456.namprd12.prod.outlook.com (2603:10b6:a03:3ae::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6565.25; Fri, 7 Jul
- 2023 15:47:02 +0000
-Received: from DM4PR12MB5229.namprd12.prod.outlook.com
- ([fe80::1629:622f:93d0:f72f]) by DM4PR12MB5229.namprd12.prod.outlook.com
- ([fe80::1629:622f:93d0:f72f%7]) with mapi id 15.20.6565.025; Fri, 7 Jul 2023
- 15:47:02 +0000
-Message-ID: <3c7bc679-6366-ab7f-7001-7b5ab71fa364@amd.com>
-Date: Fri, 7 Jul 2023 10:46:59 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v2] x86/kexec: Add EFI config table identity mapping for
- kexec kernel
-Content-Language: en-US
-To: Joerg Roedel <jroedel@suse.de>, Baoquan He <bhe@redhat.com>
-Cc: Tao Liu <ltao@redhat.com>, Borislav Petkov <bp@alien8.de>,
- tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
- x86@kernel.org, hpa@zytor.com, ardb@kernel.org,
- linux-kernel@vger.kernel.org, dyoung@redhat.com, kexec@lists.infradead.org,
- linux-efi@vger.kernel.org, michael.roth@amd.com
-References: <20230601072043.24439-1-ltao@redhat.com>
- <20230705173359.GDZKWphyFbNE8id6Jm@fat_crate.local>
- <CAO7dBbXdJgpO4Ym=4WME3OOrUhq2MNKpNZmhpsC7pOSugHiKDg@mail.gmail.com>
- <ZKeTX2aemPbsMiVr@MiWiFi-R3L-srv> <ZKfLYG_4DANc_i5r@suse.de>
-From: Tom Lendacky <thomas.lendacky@amd.com>
-In-Reply-To: <ZKfLYG_4DANc_i5r@suse.de>
-X-ClientProxiedBy: SN4PR0501CA0111.namprd05.prod.outlook.com
- (2603:10b6:803:42::28) To DM4PR12MB5229.namprd12.prod.outlook.com
- (2603:10b6:5:398::12)
+	Fri, 07 Jul 2023 15:55:22 +0000
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 367Fl4rR003816;
+	Fri, 7 Jul 2023 15:55:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=P0zwdwkAOLd1bfwdZdOgwq014ydUifkKY71uTwZW+FA=;
+ b=tes+DVVcdpG03Dn9Tw31BP0INQMgQgPrqGYLaTj1h7SplXB1UFaTi2PJG8ftcMCU9QYD
+ Eo6tNMrKDEAkydvDEIeNqfA9c/vcDi0nmNRH90iGATG5RwK+/l/sYhJN10wOczAjk9v9
+ zlUaS6pJMh8DIXK5jg2G3MCvv3iB3HZiL0bU70G1b+tzrUqI0psdKZ6RgRR62hC2CgwV
+ 1Qqu8pX/n9JstY/P+eFIX9aeaBlQ9/8Anh++F9CKPPARd9m0W2Rw3yI6JL5JpHkCSEmo
+ zV4cZs97P0uN1XQn4ZN9rRvDH5Wt+z2ZgsWNrlrytmax/wZ+U4Z628UbRR5PHdxBpP5L 7Q== 
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rpnnd85e7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Jul 2023 15:55:08 +0000
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+	by ppma04dal.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 367FUH4T029960;
+	Fri, 7 Jul 2023 15:55:07 GMT
+Received: from smtprelay02.wdc07v.mail.ibm.com ([9.208.129.120])
+	by ppma04dal.us.ibm.com (PPS) with ESMTPS id 3rjbs6emu4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 07 Jul 2023 15:55:07 +0000
+Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
+	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 367Ft6Mc4784750
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 7 Jul 2023 15:55:06 GMT
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1D7445806A;
+	Fri,  7 Jul 2023 15:55:06 +0000 (GMT)
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 519575805A;
+	Fri,  7 Jul 2023 15:55:05 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.61.7.157])
+	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Fri,  7 Jul 2023 15:55:05 +0000 (GMT)
+Message-ID: <37d03d69a89c344089b4e9d6e5b7b685f1c62cda.camel@linux.ibm.com>
+Subject: Re: [PATCH 00/10] ima: measure events between kexec load and execute
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Tushar Sugandhi <tusharsu@linux.microsoft.com>, noodles@fb.com,
+        bauermann@kolabnow.com, kexec@lists.infradead.org,
+        linux-integrity@vger.kernel.org
+Cc: code@tyhicks.com, nramas@linux.microsoft.com, paul@paul-moore.com
+Date: Fri, 07 Jul 2023 11:55:04 -0400
+In-Reply-To: <20230703215709.1195644-1-tusharsu@linux.microsoft.com>
+References: <20230703215709.1195644-1-tusharsu@linux.microsoft.com>
+X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: lyKgLXBeezkCvf8PEscJrRWHsi9hkB42
+X-Proofpoint-ORIG-GUID: lyKgLXBeezkCvf8PEscJrRWHsi9hkB42
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5229:EE_|SJ0PR12MB5456:EE_
-X-MS-Office365-Filtering-Correlation-Id: 15995680-c66d-4ffc-3eea-08db7f01681e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: u/ikJ0Mi32AlgDOLx1tSILVAWJsc/RFILYEx8ZhOs1u6TqshdRmPWVVZhMdu+s8lQDOj9mErmopuu72G5nlZQVAaOnL6X0hdTIyuC9NM4zO3ynXotguqRLT2cu1Ym5sqP8NNxxsqI6G77N1kHfQ8Y1su7JcgtevoNdRkm8mr0z5VEi1SK8Li8Y4eTPOgp+lETZjP17Li/9XEzl0u/RViGuq0tP+OtAClUWN0B4W6SXgHQYyDlDSC9Sy8N1AgMNb99Xie5Gv1+XyPWIubwxev9HaTDEplFUFuk+uDMRyJ7/XB7KCGtS//OYqXcwvyGa67Z7pfi0ktNKvsY5ghn71hSQ5VmboDKH82P6eejJs+uXv7Ex2iuWUZmk607yIJYIlYBiFIAfrrXJVOIwEpY+d7tvCsWm+HwbVGqS+rgGdfYjOy0Y+hCnpGknJGaHQEywRpLuUPzFt7WYX4Xpm/XSbG/5yJRVf8Ss0cQN/UiiPdLt6CXaN5tnxKeA4u+vuQJJMdrLdo1K/9/1ypyS1o/CatM7x9aFQLpZbhCzfgCEVhp1DCCl3tneZUtgEa/LvRQ62fFW6Whi3yu0n3k2OFOgybfmpjYgCLGQUyNwYpsoOkOfx4p9MIr2Al3p2pTNM7nGEM3+jwhXiDGS6qgpZIYgPn9g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5229.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(396003)(136003)(39860400002)(366004)(376002)(451199021)(6666004)(478600001)(6486002)(110136005)(54906003)(53546011)(6506007)(26005)(186003)(6512007)(2906002)(41300700001)(316002)(4326008)(66556008)(66946007)(5660300002)(7416002)(8936002)(8676002)(66476007)(38100700002)(86362001)(31696002)(36756003)(83380400001)(2616005)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NzNMNGNmci9YMjU2ODU2QnlGcTZkUU9abXd2TGcyRVhPNXorN2JndnM5NGlt?=
- =?utf-8?B?Vy9FMlVCUGJSMU9QNGRzR3BsQXpmd09KbFVxMXhaMG1QcFlQdS8zT0crYlI0?=
- =?utf-8?B?Q2dWRWU4aGpUY1pWQXBFZ1crQmpSdmRYVlZFM3JsOUtsNkg2MzdNVmdpNHRh?=
- =?utf-8?B?NGlvZSt2S2UwQmhRZHdseDZCb3BOaGQ1TkczTy8wa25uSytOY3gycGdJQ2tT?=
- =?utf-8?B?RVBnamxQUTJmZ1J0ek00cndjNnVxbnMwd2dWQ3dZNVYyUENUeDNKUDZ3aTJo?=
- =?utf-8?B?N1RTNjI5Wk9YYVZ3U3BFa0s5Y1VucDVPNDdwcUNxYXB4R3FIaEFocXZpY1I4?=
- =?utf-8?B?KzkveUpUZ2FSdHIzZnRkdTNNMG1vUUpXZk1uQnpKdy9rV2hxdHJsYmhEa0Jj?=
- =?utf-8?B?eHhRd0hXY2FyQnVTVFlVNGZZNGVOM092QlhBZFdzVjZrTGdPenI3TFE2ZHV1?=
- =?utf-8?B?aUpuaDBBVnhzMGZWY1pObGp1RUVZYnhKaHNzdmt2L0dkcitRL0R6U3QvOUtr?=
- =?utf-8?B?cll2WDI2QVUzVThTdkZIN1RReWxMYW5HMFNmSlo0MytRQ2ZxYTZTbE9hVG8r?=
- =?utf-8?B?N0ptSmMrRjY3cit1SHJFOHMrWlE1S01KZUNHVWZVZ3pJeE4yd0VlTkZzcFFq?=
- =?utf-8?B?blRORDdvcDN1ekdtRXI5bkdHNEpFaGk1QnNCdVl5djY2N1hBTVUvVjF6cEp1?=
- =?utf-8?B?RE9ndnlHYVNMeTgzK1NMdmRKUjhKdHdLcnp2VXVQZG50MzJyOGxMc1FFKzFM?=
- =?utf-8?B?ZXJWYTJjZVlRSWxZUnloWUpSU0hhMjdDUmpFZzk1VnpubWdhVEc2N0pDQmpn?=
- =?utf-8?B?R3BISHIyR2V2cERCV3ZPOXMraTB6VXFPUGlJQlRVdzJnVGZESUZGSFBNc2J0?=
- =?utf-8?B?cGdIVUdzVXNnZ3d5MFhsVE9xVnB5MG1CN1o0azczTkdwRGhHclQ3YkpCYTFa?=
- =?utf-8?B?RzArMThnMktxMWZHaDRTemlUVE5EWlN5ZTdVc0lKZnFJRXgyaGp1emhsbXZz?=
- =?utf-8?B?N1E2SGFEbUs3N0VnMndVOVpJQy9MRXYyMnhsL3ZVV1hRRHF3OWh1TUVGUDlj?=
- =?utf-8?B?eVpxZE0rVS9tUjRnOEt0VmtoWE0wSEZvSUUxb3U5dmRUMkwvSk1rK3R2ZWFo?=
- =?utf-8?B?ZHJkWFBGWjRDb2lSNXd4OU1WelhKcldSTUFTRmxyaW9uYjBzcDFxSUJRSHVH?=
- =?utf-8?B?cFhGNjRRY1FxL1pucVdOSnl2TE9qZTB3S0lhUWk4bmM2QmxtNDFNT1NNSjZI?=
- =?utf-8?B?dng4VTZqQmhjVDR1V05sK09PUXYvSERYZ1FhZFB4enQxR2FMWE55UjY3R0M4?=
- =?utf-8?B?M1lrL3czZVFYZlFFR09od1RkOEplOWpidG0yNGNTMU4yYWFSeVUyTlgwam95?=
- =?utf-8?B?dGtRMEwvbmNNcy9NL2EwNTE5LzhrNWdwMDZoYk5ZaXp6Y254MktxdzdSYlpK?=
- =?utf-8?B?elZsTnA1aEJFQ2pTTTdjdXhzUGFkM0JIb2JKZUJsS3ZsaXBHbHVHOVNHOVVl?=
- =?utf-8?B?K0VMdmp2ME94bGM0cjRVeTJzL2UwaERGNi9vRFd3OHZ6NkE0ZnNtdXJ6SXFp?=
- =?utf-8?B?azJmZWJFeWNuVXdDdWpDb0YyQ1EydFVwOUh6L1RvQ1RRbnBqSXZiOHdCZ2h3?=
- =?utf-8?B?T0Zxd2lQS1FTY1ZaaGs2dDY5MVNGMjBHMHl3K3JSNDQvbW1HT0VMb1g2bTdv?=
- =?utf-8?B?d2l0ZitUdnBxQ3NWdGQvVXJaZ0VGWVdWUjFha20vZy9hUDFkTUtPZExrbktt?=
- =?utf-8?B?S01aQWY1cnJQNFU0NWZ5bHl1NFhzbE5MQzBsMDc5VnpjOHlFdk1LbHAvZmt5?=
- =?utf-8?B?R1RGRm5qei9pblV4WW1oUlNxYXh6MVcvRUROSzBTS3lab016SXV4RU9PQUxM?=
- =?utf-8?B?VFVKYU9aOTY0NWRWUVpjNjdmanR1Q1ZyRUU3NUNqZGFZanhkdnhuMDVHRFly?=
- =?utf-8?B?bXB4ZjNiYnZobGlVM05iYk0vTEcxVEo4eDBMTitUekdWV2hQQTJxVzE2cTIw?=
- =?utf-8?B?SkNsY01IVVVYeWI4K2Z1RUI5TmxHWlE2aHk0Tk9QSzZVMnhGQTY2QUhvSmFJ?=
- =?utf-8?B?LzArT0U4eXpTOG5yRWN0NTBJanF3SlBidG9yWkdrWVcwNjNFL1Fra0svMVlC?=
- =?utf-8?Q?r8WXiNHM8xiPgjbukn74wvvKX?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 15995680-c66d-4ffc-3eea-08db7f01681e
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5229.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2023 15:47:02.3536
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7Bg+O/jamDU1hP0RXv9/fOCGWGGNJz6FsTZak4V4ytuzUvU0Dd137IFN62F12OGlOVCdVJdsyYUNY5Y/cEa/PA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB5456
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-07_10,2023-07-06_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 phishscore=0 spamscore=0 clxscore=1015 suspectscore=0
+ adultscore=0 mlxlogscore=999 lowpriorityscore=0 priorityscore=1501
+ mlxscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2307070144
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230707_084710_950408_D3E87602 
-X-CRM114-Status: GOOD (  17.36  )
+X-CRM114-CacheID: sfid-20230707_085519_588415_238FA502 
+X-CRM114-Status: GOOD (  38.16  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -145,42 +101,109 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 7/7/23 03:22, Joerg Roedel wrote:
-> On Fri, Jul 07, 2023 at 12:23:59PM +0800, Baoquan He wrote:
->> I am wondering why we don't detect the cpu type and return early inside
->> sev_enable() if it's Intel cpu.
->>
->> We can't rely on CONFIG_AMD_MEM_ENCRYPT to decide if the code need be
->> executed or not because we usually enable them all in distros.
+On Mon, 2023-07-03 at 14:56 -0700, Tushar Sugandhi wrote:
+> The current Kernel behavior is IMA measurements snapshot is taken at
+> kexec 'load' and not at kexec 'execute'.  IMA log is then carried
+> over to the new Kernel after kexec 'execute'.
 > 
-> Looking at the code in head_64.S, by the time sev_enable() runs the SEV
-> bit should already be set in sev_status. Maybe use that to detect
-> whether SEV is enabled and bail out early?
+> Some devices can be configured to call kexec 'load' first, and followed
+> by kexec 'execute' after some time. (as opposed to calling 'load' and
+> 'execute' in one single kexec command).  In such scenario, if new IMA
+> measurements are added between kexec 'load' and kexec 'execute', the
+> TPM PCRs are extended with the IMA events between 'load' and 'execute';
+> but those IMA events are not carried over to the new kernel after kexec
+> soft reboot.  This results in mismatch between TPM PCR quotes and the
+> actual IMA measurements list after the device boots into the new kexec
+> image.  This mismatch results in the remote attestation failing for that
+> device.
+> 
+> This patch series proposes a solution to solve this problem by allocating
+> the necessary buffer at kexec 'load' time, and populating the buffer
+> with the IMA measurements at kexec 'execute' time. 
 
-I think that is only if you enter on the 32-bit path. If invoked from EFI 
-in 64-bit, efi64_stub_entry(), then I don't believe that sev_status will 
-be set yet.
+Thanks, Tushar.   Depending on the IMA policy, the above problem
+statement is correct, but not all policies are affected by it.  It's
+also unclear why so much needs to change.  Instead of copying the
+measurement list at kexec 'load',  using the existing method and simply
+copying them at kexec 'exec' would suffice.
 
-Before it can be determined if it is a non-AMD platform, the EFI config 
-table has to be searched in order to find the CC blob table. Once that is 
-found (or not found), then the checks for the platform are performed and 
-sev_enable() will exit if not on an AMD platform.
+Also as mentioned in comment on 3/10, the ordering of this patch set is
+not bisect safe.  If the same method of copying the measurement list
+was used, changing from copying at  kexec 'load'  to kexec 'exec' could
+be done in the same patch.
 
-I think it was an oversight to not add support for identity mapping the 
-EFI config tables for kexec. Any features in the future that need to 
-search for an EFI config table early like this will need the same.
-
-Thanks,
-Tom
+Mimi
 
 > 
-> Regards,
+> The solution includes:
+>  - addition of new functionality to allocate a buffer to hold IMA
+>    measurements at kexec 'load', 
 > 
+>  - ima functionality to suspend and resume measurements as needed during
+>    buffer copy at kexec 'execute',
+> 
+>  - ima functionality for mapping the measurement list from the current
+>    Kernel to the subsequent one, 
+> 
+>  - necessary changes to the kexec_file_load syscall, enabling it to call
+>    the ima functions
+> 
+>  - registering a reboot notifier which gets called during kexec 'execute',
+> 
+>  - and removal of deprecated functions.
+> 
+> The modifications proposed in this series ensure the integrity of the ima
+> measurements is preserved across kexec soft reboots, thus significantly
+> improving the security of the Kernel post kexec soft reboots.
+> 
+> There were previous attempts to fix this issue [1], [2], [3].  But they
+> were not merged into the mainline Kernel.  
+> 
+> We took inspiration from the past work [1] and [2] while working on this
+> patch series.
+> 
+> References:
+> -----------
+> 
+> [1] [PATHC v2 5/9] ima: on soft reboot, save the measurement list
+> https://lore.kernel.org/lkml/1472596811-9596-6-git-send-email-zohar@linux.vnet.ibm.com/
+> 
+> [2] PATCH v2 4/6] kexec_file: Add mechanism to update kexec segments.
+> https://lkml.org/lkml/2016/8/16/577
+> 
+> [3] [PATCH 1/6] kexec_file: Add buffer hand-over support
+> https://lore.kernel.org/linuxppc-dev/1466473476-10104-6-git-send-email-bauerman@linux.vnet.ibm.com/T/
+> 
+> Tushar Sugandhi (10):
+>   ima: implement function to allocate buffer at kexec load
+>   ima: implement function to populate buffer at kexec execute
+>   ima: allocate buffer at kexec load to hold ima measurements
+>   ima: implement functions to suspend and resume measurements
+>   kexec: implement functions to map and unmap segment to kimage
+>   ima: update buffer at kexec execute with ima measurements
+>   ima: remove function ima_dump_measurement_list
+>   ima: implement and register a reboot notifier function to update kexec
+>     buffer
+>   ima: suspend measurements while the kexec buffer is being copied
+>   kexec: update kexec_file_load syscall to call ima_kexec_post_load
+> 
+>  include/linux/ima.h                |   3 +
+>  include/linux/kexec.h              |  13 ++
+>  kernel/kexec_core.c                |  72 +++++++++-
+>  kernel/kexec_file.c                |   7 +
+>  kernel/kexec_internal.h            |   1 +
+>  security/integrity/ima/ima.h       |   4 +
+>  security/integrity/ima/ima_kexec.c | 211 +++++++++++++++++++++++------
+>  security/integrity/ima/ima_queue.c |  32 +++++
+>  8 files changed, 295 insertions(+), 48 deletions(-)
+> 
+
+
 
 _______________________________________________
 kexec mailing list
