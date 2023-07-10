@@ -4,70 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BFCA7EB64D9
-	for <kexec@archiver.kernel.org>; Sat,  8 Jul 2023 02:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9A5F5EB64D9
+	for <kexec@archiver.kernel.org>; Mon, 10 Jul 2023 09:14:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=cof8ErfPrBPSo5bXAX/52L58Awc0ej9N3TGgVqbETog=; b=Ee5/S0KPAwFmoK
-	9a7yOZ0McjglTcgBEa8/ztGYqlRScuTqsSG1UM/rng7bvk1P5phS10vnItHzHMf2CYSaOao0g/JIi
-	VxtnsDjtI6G6W1d36y8wd70WZR6VwfbPZgngDJY5q2k9LVTe9cWbm8+dl2JIqfgULme/PoRMEGd0Y
-	HyZvBABioz+tzK6MDAEqC4s1bMvub5R5M3U5EBcoV1HUWAKx7Uk2ROwznKdipKvAnmQ6Q5G8SYEvx
-	0M49LYGhT4mAJqwnRRKtcqDqQ20Ot8TthmQ/uGUL8TkYpNlB3KJHCXCBYypwuwVexwsj3IMhLWrjB
-	lOH8yahPhDXc+OgjmsUg==;
+	List-Owner; bh=ZYtq0W7DE723uLJ9Byw78F13Ndd+9dlcogaYkrmujog=; b=obOYCd8+ePBCnA
+	IlO2Rll/d969Z3gPodbdDMbbmhEElSmopE07+WtbqDiQQRG27Ygkr/BACZdAQd8sCuDF43Yvpdlor
+	jhl4b+MmEHLMyyoFVkatBpWJSjuNuVfXsjhzKIusuuEfq61jyH95xXlAJ3s6ClqhuX0zAWDx5R09N
+	6R/+q94qlIofdDpE+22TBqM+ftHA3EQjwgLk+ZAGPO+lTyXdIUkzyPAkasJXOwWx1PX7rns2qX5Tx
+	d7nzuaqoXLt6jqE1OoQDLAoho6RDotPi68E5bTmer8X6NYh75oTOx0UqDzy5+p7DBC1sx7vewuFIh
+	1CAV93RW34MoMNwKn8lQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qHxT4-006K2G-0r;
-	Sat, 08 Jul 2023 02:14:38 +0000
+	id 1qImyd-00AyOk-1h;
+	Mon, 10 Jul 2023 09:14:39 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qHxSx-006K1P-0j
+	id 1qImyX-00AyNA-2u
 	for kexec@lists.infradead.org;
-	Sat, 08 Jul 2023 02:14:32 +0000
+	Mon, 10 Jul 2023 09:14:35 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1688782470;
+	s=mimecast20190719; t=1688980473;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Kpy+PGb5drQmeWGSE0l67Lj4CAUJY3SUrpQEp6bMyqo=;
-	b=CRFfKgnxOo1cP3iy2qu8XFSDbNrxurz8Ld0g00Tz5N55MBWTam8Wvtc10EpLq8wj0FwfaE
-	HzztyJ057PjJviJwnDikyqpEeBDcMjfWyw+fuFoPFmCPlY92k5krHx1jP33olsBSubSo/7
-	YVgMN9V3B2UH23dh8NhFPd9Z+dd5coY=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=3ZxZGq4D+R9v/uHRHPVTjCJO+HqCh9drWSD3QE0wPss=;
+	b=X7L7x/IpgdmYo6AmphjHLOIq/8RQvL0RLeLXVBSJljiPotimNtxNuwiEqpp8M9NGgmdv8A
+	r7/TQFNd3Xlj6IBmQFSfIpHTy+Bqi2l5To7I+x+NJl2WoEt9Co8Wkz1nt44k24b2xrerE+
+	txEWXCxva78KFx8bw8sl1k4gn4wywPs=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-307-iTbWNiJGMhGyjVPRPERf0Q-1; Fri, 07 Jul 2023 22:14:27 -0400
-X-MC-Unique: iTbWNiJGMhGyjVPRPERf0Q-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+ us-mta-607-dq1Pi2d5OE2_NXrRq89yKg-1; Mon, 10 Jul 2023 05:14:28 -0400
+X-MC-Unique: dq1Pi2d5OE2_NXrRq89yKg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 799CB800962;
-	Sat,  8 Jul 2023 02:14:26 +0000 (UTC)
-Received: from darkstar.users.ipa.redhat.com (ovpn-12-59.pek2.redhat.com [10.72.12.59])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 8B20B1454142;
-	Sat,  8 Jul 2023 02:14:20 +0000 (UTC)
-Date: Sat, 8 Jul 2023 10:15:53 +0800
-From: Dave Young <dyoung@redhat.com>
-To: Baoquan He <bhe@redhat.com>
-Cc: linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
-	thunder.leizhen@huawei.com, John.p.donnelly@oracle.com,
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	horms@kernel.org, chenjiahao16@huawei.com,
-	linux-riscv@lists.infradead.org, x86@kernel.org, bp@alien8.de
-Subject: Re: [RFC PATCH 0/4] kdump: add generic functions to simplify
- crashkernel crashkernel in architecture
-Message-ID: <ZKjG2R8RhWmJex53@darkstar.users.ipa.redhat.com>
-References: <20230619055951.45620-1-bhe@redhat.com>
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 358492A59568;
+	Mon, 10 Jul 2023 09:14:28 +0000 (UTC)
+Received: from ovpn-8-31.pek2.redhat.com (ovpn-8-33.pek2.redhat.com [10.72.8.33])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 427E32017DCB;
+	Mon, 10 Jul 2023 09:14:19 +0000 (UTC)
+Date: Mon, 10 Jul 2023 17:14:15 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Jens Axboe <axboe@kernel.dk>, linux-nvme@lists.infradead.org,
+	linux-block@vger.kernel.org, Wen Xiong <wenxiong@linux.ibm.com>,
+	Keith Busch <kbusch@kernel.org>, Dave Young <dyoung@redhat.com>,
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	mpe@ellerman.id.au, Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 2/2] nvme-pci: use blk_mq_max_nr_hw_queues() to calculate
+ io queues
+Message-ID: <ZKvL58L58rY3GWnt@ovpn-8-31.pek2.redhat.com>
+References: <20230708020259.1343736-1-ming.lei@redhat.com>
+ <20230708020259.1343736-3-ming.lei@redhat.com>
+ <20230710064109.GB24519@lst.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20230619055951.45620-1-bhe@redhat.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
+In-Reply-To: <20230710064109.GB24519@lst.de>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230707_191431_340374_D4370675 
-X-CRM114-Status: GOOD (  29.50  )
+X-CRM114-CacheID: sfid-20230710_021434_010889_D5136C8B 
+X-CRM114-Status: GOOD (  15.98  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,103 +87,36 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 06/19/23 at 01:59pm, Baoquan He wrote:
-> In the current arm64, crashkernel=,high support has been finished after
-> several rounds of posting and careful reviewing. The code in arm64 which
-> parses crashkernel kernel parameters firstly, then reserve memory can be
-> a good example for other ARCH to refer to.
+On Mon, Jul 10, 2023 at 08:41:09AM +0200, Christoph Hellwig wrote:
+> On Sat, Jul 08, 2023 at 10:02:59AM +0800, Ming Lei wrote:
+> > Take blk-mq's knowledge into account for calculating io queues.
+> > 
+> > Fix wrong queue mapping in case of kdump kernel.
+> > 
+> > On arm and ppc64, 'maxcpus=1' is passed to kdump command line, see
+> > `Documentation/admin-guide/kdump/kdump.rst`, so num_possible_cpus()
+> > still returns all CPUs.
 > 
-> Whereas in x86_64, the code mixing crashkernel parameter parsing and
-> memory reserving is twisted, and looks messy. Refactoring the code to
-> make it more readable maintainable is necessary.
-> 
-> Here, try to abstract the crashkernel parameter parsing code into a
-> generic function parse_crashkernel_generic(), and the crashkernel memory
-> reserving code into a generic function reserve_crashkernel_generic().
-> Then, in ARCH which crashkernel=,high support is needed, a simple
-> arch_reserve_crashkernel() can be added to call above two generic
-> functions. This can remove the duplicated implmentation code in each
-> ARCH, like arm64, x86_64.
+> That's simply broken.  Please fix the arch code to make sure
+> it does not return a bogus num_possible_cpus value for these
 
-Hi Baoquan, the parse_crashkernel_common and parse_crashkernel_generic
-are confusion to me.  Thanks for the effort though.
+That is documented in Documentation/admin-guide/kdump/kdump.rst.
 
-I'm not sure if it will be easy or not, but ideally I think the parse
-function can be arch independent, something like a general funtion
-parse_crashkernel() which can return the whole necessary infomation of
-crashkenrel for arch code to use, for example return like
-below pseudo stucture(just a concept, may need to think more):
+On arm and ppc64, 'maxcpus=1' is passed for kdump kernel, and "maxcpu=1"
+simply keep one of CPU cores as online, and others as offline.
 
-structure crashkernel_range {
-	size,
-	range,
-	struct list_head list;
-}
+So Cc our arch(arm & ppc64) & kdump guys wrt. passing 'maxcpus=1' for
+kdump kernel.
 
-structure crashkernel{
-  structure crashkernel_range *range_list;
-  union {
-  	offset,
-  	low_high
-  }
-}
+> setups, otherwise you'll have to paper over it in all kind of
+> drivers.
 
-So the arch code can just get the data of crashkernel and then check
-about the details, if it does not support low and high reservation then
-it can just ignore the option.
+The issue is only triggered for drivers which use managed irq &
+multiple hw queues.
 
-Thoughts?
 
-> 
-> I only change the arm64 and x86_64 implementation to make use of the
-> generic functions to simplify code. Risc-v can be done very easily refer
-> to the steps in arm64 and x86_64. I leave this to Jiahao or other risc-v
-> developer since Jiahao have posted a patchset to add crashkernel=,high
-> support to risc-v.
-> 
-> This patchset is based on the latest linus's tree, and on top of below
-> patch:
-> 
-> arm64: kdump: simplify the reservation behaviour of crashkernel=,high
->       https://git.kernel.org/arm64/c/6c4dcaddbd36
-> 
-> 
-> Baoquan He (4):
->   kdump: rename parse_crashkernel() to parse_crashkernel_common()
->   kdump: add generic functions to parse crashkernel and do reservation
->   arm64: kdump: use generic interfaces to simplify crashkernel
->     reservation code
->   x86: kdump: use generic interfaces to simplify crashkernel reservation
->     code
-> 
->  arch/arm/kernel/setup.c              |   4 +-
->  arch/arm64/Kconfig                   |   3 +
->  arch/arm64/include/asm/kexec.h       |   8 ++
->  arch/arm64/mm/init.c                 | 141 ++----------------------
->  arch/ia64/kernel/setup.c             |   4 +-
->  arch/loongarch/kernel/setup.c        |   3 +-
->  arch/mips/cavium-octeon/setup.c      |   2 +-
->  arch/mips/kernel/setup.c             |   4 +-
->  arch/powerpc/kernel/fadump.c         |   5 +-
->  arch/powerpc/kexec/core.c            |   4 +-
->  arch/powerpc/mm/nohash/kaslr_booke.c |   4 +-
->  arch/riscv/mm/init.c                 |   5 +-
->  arch/s390/kernel/setup.c             |   4 +-
->  arch/sh/kernel/machine_kexec.c       |   5 +-
->  arch/x86/Kconfig                     |   3 +
->  arch/x86/include/asm/kexec.h         |  32 ++++++
->  arch/x86/kernel/setup.c              | 141 +++---------------------
->  include/linux/crash_core.h           |  33 +++++-
->  kernel/crash_core.c                  | 158 +++++++++++++++++++++++++--
->  19 files changed, 274 insertions(+), 289 deletions(-)
-> 
-> -- 
-> 2.34.1
-> 
-> 
-
-Thanks
-Dave
+Thanks,
+Ming
 
 
 _______________________________________________
