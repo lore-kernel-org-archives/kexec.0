@@ -4,58 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5F43DEB64DC
-	for <kexec@archiver.kernel.org>; Tue, 11 Jul 2023 17:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 62A0FEB64DC
+	for <kexec@archiver.kernel.org>; Tue, 11 Jul 2023 17:52:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
 	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
 	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
 	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=88ZVHZNUk83ZAqV3r8moEu37Bh0tFd5YI9Qn1B23Tho=; b=kzMVOT+er6VgQS
-	L0tR0p3ff5zwmSuipjksG6CsdhzNIWTbQDTYCBoD5SxC3MNh51cebRox2nOFAOEzgyYv/apyMj7qh
-	0HVRUPuPjKnteQQiHzssAj6QuosAdpwtrMzvhkdc4f2h1c31frGgbVIR0DI78YzjSLwl6CkkTCayc
-	GPuidT7r5VPSOT6S1/I3lRivh/ip6ZsOaUn1fJLp6fR2jBsu94xmAoV0sKE3EIKF8v09TGlCS3nyT
-	sFoSdGCSUK2FoWk00UPmyeyPYnRNZSoP2dd0WBiue1uC7gKIcqaETCCJr+ngBO5CXHhfxuGx9a9hR
-	RWFd1/VrLNHTLC+bA+FA==;
+	List-Owner; bh=em0piBRecJ6wZWDoVK2NEB4w5F69jxVuQlbYaiUbm2A=; b=ku0XJjd9AfOiXh
+	cohJ0Rj4RIoETmuHxQfK7f6QgwXMGCMPospj/pTvJcoRI16jwfqfMXSKme/wZil584ztzr7UGd05R
+	0KsFb3cX+4bxYGF7NC2kozyITRVskENCsoP9a0Gaw2Almw+JuHrKMk60GV1VdD9oJDdBnXrUbA5Ds
+	ut2x3sapZ581bKWtL4euoK9GA41kGqDmRYk3b2qBPeru0W663SwhTjIdM2WT+a3IDA3WmTvbe6/Fc
+	pWdw5H+9mAu6OqwLTR7+ZWK3ooo2i9k3FsBI4Jp/G8Jcq0DcnhzNlVOtZ0olfGbacLntxsWD4vEny
+	oJLL7fjzBGZkZLpnKakQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qJHWB-00FaUi-1I;
-	Tue, 11 Jul 2023 17:51:19 +0000
+	id 1qJHXg-00FamK-0z;
+	Tue, 11 Jul 2023 17:52:52 +0000
 Received: from linux.microsoft.com ([13.77.154.182])
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qJHW7-00FaTr-0M
+	id 1qJHXd-00FalV-21
 	for kexec@lists.infradead.org;
-	Tue, 11 Jul 2023 17:51:16 +0000
+	Tue, 11 Jul 2023 17:52:51 +0000
 Received: from [192.168.87.36] (c-98-237-170-177.hsd1.wa.comcast.net [98.237.170.177])
-	by linux.microsoft.com (Postfix) with ESMTPSA id DEF3821C3A89;
-	Tue, 11 Jul 2023 10:51:11 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DEF3821C3A89
+	by linux.microsoft.com (Postfix) with ESMTPSA id 89C1721C3A93;
+	Tue, 11 Jul 2023 10:52:48 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 89C1721C3A93
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1689097872;
-	bh=efVTT0pRm4hRibHf/ZjkE6gdHUiHxMuVjy7rK43v89k=;
+	s=default; t=1689097968;
+	bh=bOmcrci2HPoHYlVwUho2VMxL4ObRHZgvgIPwuP8X0us=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=swg4ZOfsgUpu6PUkNfx/Wct1dXjwpkizTjXuYLxjj2xRexzVusKmJ+6WPS0HA9uLG
-	 btanXo/jWx0tOO3EdTc6BPhnwJ9Ss1BoJe2wkG1YSJh0AdDwOnjlS7+nuWzgkanHyp
-	 86BO7whzBRwZPGPyocyBVDzhP72NW+Lri6dLwSOw=
-Message-ID: <2d6fbdea-592c-1c30-753e-801b68ece0fe@linux.microsoft.com>
-Date: Tue, 11 Jul 2023 10:51:10 -0700
+	b=AW3iqNSdPgtLp+qzLHJHsXJj4x5wJL1wmLc6wLQ7/znIVB9pjRy5pXLjwj2WQDyBC
+	 ayNfYd/ArcxsQv7XfRee5CVQ5y8D3WZPoYIHN5sdzX+kx6SY4hRVtbbpGKLgljCQ3x
+	 THVEHs4xiXnJnlRpCBU+rlpCDh2J8tVbcOATq1h8=
+Message-ID: <565e0301-3a8b-0543-5ace-22a1484b67a4@linux.microsoft.com>
+Date: Tue, 11 Jul 2023 10:52:47 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.0
 Subject: Re: [PATCH 00/10] ima: measure events between kexec load and execute
 Content-Language: en-US
-To: Mimi Zohar <zohar@linux.ibm.com>, noodles@fb.com, bauermann@kolabnow.com,
- kexec@lists.infradead.org, linux-integrity@vger.kernel.org
-Cc: code@tyhicks.com, nramas@linux.microsoft.com, paul@paul-moore.com,
- ebiederm@xmission.com
+To: Dave Young <dyoung@redhat.com>
+Cc: zohar@linux.ibm.com, noodles@fb.com, bauermann@kolabnow.com,
+ kexec@lists.infradead.org, linux-integrity@vger.kernel.org,
+ code@tyhicks.com, nramas@linux.microsoft.com, paul@paul-moore.com,
+ Eric Biederman <ebiederm@xmission.com>
 References: <20230703215709.1195644-1-tusharsu@linux.microsoft.com>
- <37d03d69a89c344089b4e9d6e5b7b685f1c62cda.camel@linux.ibm.com>
+ <CALu+AoSyhnw0Cz06Mmqh+7FcLUF1q0txY1qbWLxkHO8OD5---Q@mail.gmail.com>
 From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-In-Reply-To: <37d03d69a89c344089b4e9d6e5b7b685f1c62cda.camel@linux.ibm.com>
+In-Reply-To: <CALu+AoSyhnw0Cz06Mmqh+7FcLUF1q0txY1qbWLxkHO8OD5---Q@mail.gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230711_105115_224516_1BEB167E 
-X-CRM114-Status: GOOD (  30.87  )
+X-CRM114-CacheID: sfid-20230711_105249_717090_CB5EE35F 
+X-CRM114-Status: GOOD (  24.45  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -67,103 +68,115 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-VGhhbmtzIGZvciByZXZpZXdpbmcgdGhpcyBzZXJpZXMgTWltaS4gQXBwcmVjaWF0ZSBpdC4KCkFk
-ZGluZyBFcmljIHRvIGNjLgoKT24gNy83LzIzIDA4OjU1LCBNaW1pIFpvaGFyIHdyb3RlOgo+IE9u
-IE1vbiwgMjAyMy0wNy0wMyBhdCAxNDo1NiAtMDcwMCwgVHVzaGFyIFN1Z2FuZGhpIHdyb3RlOgo+
-PiBUaGUgY3VycmVudCBLZXJuZWwgYmVoYXZpb3IgaXMgSU1BIG1lYXN1cmVtZW50cyBzbmFwc2hv
-dCBpcyB0YWtlbiBhdAo+PiBrZXhlYyAnbG9hZCcgYW5kIG5vdCBhdCBrZXhlYyAnZXhlY3V0ZScu
-ICBJTUEgbG9nIGlzIHRoZW4gY2FycmllZAo+PiBvdmVyIHRvIHRoZSBuZXcgS2VybmVsIGFmdGVy
-IGtleGVjICdleGVjdXRlJy4KPj4KPj4gU29tZSBkZXZpY2VzIGNhbiBiZSBjb25maWd1cmVkIHRv
-IGNhbGwga2V4ZWMgJ2xvYWQnIGZpcnN0LCBhbmQgZm9sbG93ZWQKPj4gYnkga2V4ZWMgJ2V4ZWN1
-dGUnIGFmdGVyIHNvbWUgdGltZS4gKGFzIG9wcG9zZWQgdG8gY2FsbGluZyAnbG9hZCcgYW5kCj4+
-ICdleGVjdXRlJyBpbiBvbmUgc2luZ2xlIGtleGVjIGNvbW1hbmQpLiAgSW4gc3VjaCBzY2VuYXJp
-bywgaWYgbmV3IElNQQo+PiBtZWFzdXJlbWVudHMgYXJlIGFkZGVkIGJldHdlZW4ga2V4ZWMgJ2xv
-YWQnIGFuZCBrZXhlYyAnZXhlY3V0ZScsIHRoZQo+PiBUUE0gUENScyBhcmUgZXh0ZW5kZWQgd2l0
-aCB0aGUgSU1BIGV2ZW50cyBiZXR3ZWVuICdsb2FkJyBhbmQgJ2V4ZWN1dGUnOwo+PiBidXQgdGhv
-c2UgSU1BIGV2ZW50cyBhcmUgbm90IGNhcnJpZWQgb3ZlciB0byB0aGUgbmV3IGtlcm5lbCBhZnRl
-ciBrZXhlYwo+PiBzb2Z0IHJlYm9vdC4gIFRoaXMgcmVzdWx0cyBpbiBtaXNtYXRjaCBiZXR3ZWVu
-IFRQTSBQQ1IgcXVvdGVzIGFuZCB0aGUKPj4gYWN0dWFsIElNQSBtZWFzdXJlbWVudHMgbGlzdCBh
-ZnRlciB0aGUgZGV2aWNlIGJvb3RzIGludG8gdGhlIG5ldyBrZXhlYwo+PiBpbWFnZS4gIFRoaXMg
-bWlzbWF0Y2ggcmVzdWx0cyBpbiB0aGUgcmVtb3RlIGF0dGVzdGF0aW9uIGZhaWxpbmcgZm9yIHRo
-YXQKPj4gZGV2aWNlLgo+Pgo+PiBUaGlzIHBhdGNoIHNlcmllcyBwcm9wb3NlcyBhIHNvbHV0aW9u
-IHRvIHNvbHZlIHRoaXMgcHJvYmxlbSBieSBhbGxvY2F0aW5nCj4+IHRoZSBuZWNlc3NhcnkgYnVm
-ZmVyIGF0IGtleGVjICdsb2FkJyB0aW1lLCBhbmQgcG9wdWxhdGluZyB0aGUgYnVmZmVyCj4+IHdp
-dGggdGhlIElNQSBtZWFzdXJlbWVudHMgYXQga2V4ZWMgJ2V4ZWN1dGUnIHRpbWUuCj4gVGhhbmtz
-LCBUdXNoYXIuICAgRGVwZW5kaW5nIG9uIHRoZSBJTUEgcG9saWN5LCB0aGUgYWJvdmUgcHJvYmxl
-bQo+IHN0YXRlbWVudCBpcyBjb3JyZWN0LCBidXQgbm90IGFsbCBwb2xpY2llcyBhcmUgYWZmZWN0
-ZWQgYnkgaXQuICBJdCdzCj4gYWxzbyB1bmNsZWFyIHdoeSBzbyBtdWNoIG5lZWRzIHRvIGNoYW5n
-ZS4gIEluc3RlYWQgb2YgY29weWluZyB0aGUKPiBtZWFzdXJlbWVudCBsaXN0IGF0IGtleGVjICds
-b2FkJywgIHVzaW5nIHRoZSBleGlzdGluZyBtZXRob2QgYW5kIHNpbXBseQo+IGNvcHlpbmcgdGhl
-bSBhdCBrZXhlYyAnZXhlYycgd291bGQgc3VmZmljZS4KTXkgdW5kZXJzdGFuZGluZyBpcyB0aGUg
-YnVmZmVyIG11c3QgYmUgYWxsb2NhdGVkIGF0IGtleGVjIOKAmGxvYWTigJkgdGltZS4KVGhlIHNl
-Z21lbnQgc2l6ZSBjYW5ub3QgY2hhbmdlIGJldHdlZW4ga2V4ZWMg4oCYbG9hZOKAmSBhbmQga2V4
-ZWMg4oCYZXhlY3V0ZeKAmS4KTm90IHN1cmUgaWYgdGhpcyBpcyBhIHRlY2huaWNhbCBsaW1pdGF0
-aW9uIG9mIElNQSwgb3IgS0VYRUMuCgpDb3VsZCB5b3Uvc29tZW9uZSBmcm9tIGtleGVjIHNpZGUg
-bGV0IG1lIGtub3c/CgpJZiBteSBjdXJyZW50IHVuZGVyc3RhbmRpbmcgaXMgbm90IGNvcnJlY3Qs
-IHRoZW4gSSBhZ3JlZSwgc2ltcGx5IGNvcHlpbmcKdGhlIG1lYXN1cmVtZW50cyBhdCBrZXhlYyDi
-gJhleGVjdXRl4oCZIHVzaW5nIGltYV9kdW1wX21lYXN1cmVtZW50X2xpc3Qgc2hvdWxkCnN1ZmZp
-Y2UuCgo+Cj4gQWxzbyBhcyBtZW50aW9uZWQgaW4gY29tbWVudCBvbiAzLzEwLCB0aGUgb3JkZXJp
-bmcgb2YgdGhpcyBwYXRjaCBzZXQgaXMKPiBub3QgYmlzZWN0IHNhZmUuICBJZiB0aGUgc2FtZSBt
-ZXRob2Qgb2YgY29weWluZyB0aGUgbWVhc3VyZW1lbnQgbGlzdAo+IHdhcyB1c2VkLCBjaGFuZ2lu
-ZyBmcm9tIGNvcHlpbmcgYXQgIGtleGVjICdsb2FkJyAgdG8ga2V4ZWMgJ2V4ZWMnIGNvdWxkCj4g
-YmUgZG9uZSBpbiB0aGUgc2FtZSBwYXRjaC4KPgo+IE1pbWkKT2suIEJhc2VkIG9uIG15IGFib3Zl
-IHJlc3BvbnNlLCBpZiB0aGVyZSBpcyBubyBzdWNoIHRlY2huaWNhbCBsaW1pdGF0aW9uCnRvIGFs
-bG9jYXRlIGFuZCBjb3B5IGF0IGtleGVjIOKAmGV4ZWN1dGXigJkg4oCTIEkgd2lsbCBzaW1wbHkg
-bW92ZSB0aGUgY2FsbAp0byBpbWFfZHVtcF9tZWFzdXJlbWVudF9saXN0IGZyb20ga2V4ZWMgJ2xv
-YWQnIHRvICdleGVjJy4KQW5kIHRoYXQgY2FuIGJlIGRvbmUgaW50aGUgc2FtZSBwYXRjaCBhcyB5
-b3UgbWVudGlvbmVkLgoKflR1c2hhcgo+Cj4+IFRoZSBzb2x1dGlvbiBpbmNsdWRlczoKPj4gICAt
-IGFkZGl0aW9uIG9mIG5ldyBmdW5jdGlvbmFsaXR5IHRvIGFsbG9jYXRlIGEgYnVmZmVyIHRvIGhv
-bGQgSU1BCj4+ICAgICBtZWFzdXJlbWVudHMgYXQga2V4ZWMgJ2xvYWQnLAo+Pgo+PiAgIC0gaW1h
-IGZ1bmN0aW9uYWxpdHkgdG8gc3VzcGVuZCBhbmQgcmVzdW1lIG1lYXN1cmVtZW50cyBhcyBuZWVk
-ZWQgZHVyaW5nCj4+ICAgICBidWZmZXIgY29weSBhdCBrZXhlYyAnZXhlY3V0ZScsCj4+Cj4+ICAg
-LSBpbWEgZnVuY3Rpb25hbGl0eSBmb3IgbWFwcGluZyB0aGUgbWVhc3VyZW1lbnQgbGlzdCBmcm9t
-IHRoZSBjdXJyZW50Cj4+ICAgICBLZXJuZWwgdG8gdGhlIHN1YnNlcXVlbnQgb25lLAo+Pgo+PiAg
-IC0gbmVjZXNzYXJ5IGNoYW5nZXMgdG8gdGhlIGtleGVjX2ZpbGVfbG9hZCBzeXNjYWxsLCBlbmFi
-bGluZyBpdCB0byBjYWxsCj4+ICAgICB0aGUgaW1hIGZ1bmN0aW9ucwo+Pgo+PiAgIC0gcmVnaXN0
-ZXJpbmcgYSByZWJvb3Qgbm90aWZpZXIgd2hpY2ggZ2V0cyBjYWxsZWQgZHVyaW5nIGtleGVjICdl
-eGVjdXRlJywKPj4KPj4gICAtIGFuZCByZW1vdmFsIG9mIGRlcHJlY2F0ZWQgZnVuY3Rpb25zLgo+
-Pgo+PiBUaGUgbW9kaWZpY2F0aW9ucyBwcm9wb3NlZCBpbiB0aGlzIHNlcmllcyBlbnN1cmUgdGhl
-IGludGVncml0eSBvZiB0aGUgaW1hCj4+IG1lYXN1cmVtZW50cyBpcyBwcmVzZXJ2ZWQgYWNyb3Nz
-IGtleGVjIHNvZnQgcmVib290cywgdGh1cyBzaWduaWZpY2FudGx5Cj4+IGltcHJvdmluZyB0aGUg
-c2VjdXJpdHkgb2YgdGhlIEtlcm5lbCBwb3N0IGtleGVjIHNvZnQgcmVib290cy4KPj4KPj4gVGhl
-cmUgd2VyZSBwcmV2aW91cyBhdHRlbXB0cyB0byBmaXggdGhpcyBpc3N1ZSBbMV0sIFsyXSwgWzNd
-LiAgQnV0IHRoZXkKPj4gd2VyZSBub3QgbWVyZ2VkIGludG8gdGhlIG1haW5saW5lIEtlcm5lbC4K
-Pj4KPj4gV2UgdG9vayBpbnNwaXJhdGlvbiBmcm9tIHRoZSBwYXN0IHdvcmsgWzFdIGFuZCBbMl0g
-d2hpbGUgd29ya2luZyBvbiB0aGlzCj4+IHBhdGNoIHNlcmllcy4KPj4KPj4gUmVmZXJlbmNlczoK
-Pj4gLS0tLS0tLS0tLS0KPj4KPj4gWzFdIFtQQVRIQyB2MiA1LzldIGltYTogb24gc29mdCByZWJv
-b3QsIHNhdmUgdGhlIG1lYXN1cmVtZW50IGxpc3QKPj4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcv
-bGttbC8xNDcyNTk2ODExLTk1OTYtNi1naXQtc2VuZC1lbWFpbC16b2hhckBsaW51eC52bmV0Lmli
-bS5jb20vCj4+Cj4+IFsyXSBQQVRDSCB2MiA0LzZdIGtleGVjX2ZpbGU6IEFkZCBtZWNoYW5pc20g
-dG8gdXBkYXRlIGtleGVjIHNlZ21lbnRzLgo+PiBodHRwczovL2xrbWwub3JnL2xrbWwvMjAxNi84
-LzE2LzU3Nwo+Pgo+PiBbM10gW1BBVENIIDEvNl0ga2V4ZWNfZmlsZTogQWRkIGJ1ZmZlciBoYW5k
-LW92ZXIgc3VwcG9ydAo+PiBodHRwczovL2xvcmUua2VybmVsLm9yZy9saW51eHBwYy1kZXYvMTQ2
-NjQ3MzQ3Ni0xMDEwNC02LWdpdC1zZW5kLWVtYWlsLWJhdWVybWFuQGxpbnV4LnZuZXQuaWJtLmNv
-bS9ULwo+Pgo+PiBUdXNoYXIgU3VnYW5kaGkgKDEwKToKPj4gICAgaW1hOiBpbXBsZW1lbnQgZnVu
-Y3Rpb24gdG8gYWxsb2NhdGUgYnVmZmVyIGF0IGtleGVjIGxvYWQKPj4gICAgaW1hOiBpbXBsZW1l
-bnQgZnVuY3Rpb24gdG8gcG9wdWxhdGUgYnVmZmVyIGF0IGtleGVjIGV4ZWN1dGUKPj4gICAgaW1h
-OiBhbGxvY2F0ZSBidWZmZXIgYXQga2V4ZWMgbG9hZCB0byBob2xkIGltYSBtZWFzdXJlbWVudHMK
-Pj4gICAgaW1hOiBpbXBsZW1lbnQgZnVuY3Rpb25zIHRvIHN1c3BlbmQgYW5kIHJlc3VtZSBtZWFz
-dXJlbWVudHMKPj4gICAga2V4ZWM6IGltcGxlbWVudCBmdW5jdGlvbnMgdG8gbWFwIGFuZCB1bm1h
-cCBzZWdtZW50IHRvIGtpbWFnZQo+PiAgICBpbWE6IHVwZGF0ZSBidWZmZXIgYXQga2V4ZWMgZXhl
-Y3V0ZSB3aXRoIGltYSBtZWFzdXJlbWVudHMKPj4gICAgaW1hOiByZW1vdmUgZnVuY3Rpb24gaW1h
-X2R1bXBfbWVhc3VyZW1lbnRfbGlzdAo+PiAgICBpbWE6IGltcGxlbWVudCBhbmQgcmVnaXN0ZXIg
-YSByZWJvb3Qgbm90aWZpZXIgZnVuY3Rpb24gdG8gdXBkYXRlIGtleGVjCj4+ICAgICAgYnVmZmVy
-Cj4+ICAgIGltYTogc3VzcGVuZCBtZWFzdXJlbWVudHMgd2hpbGUgdGhlIGtleGVjIGJ1ZmZlciBp
-cyBiZWluZyBjb3BpZWQKPj4gICAga2V4ZWM6IHVwZGF0ZSBrZXhlY19maWxlX2xvYWQgc3lzY2Fs
-bCB0byBjYWxsIGltYV9rZXhlY19wb3N0X2xvYWQKPj4KPj4gICBpbmNsdWRlL2xpbnV4L2ltYS5o
-ICAgICAgICAgICAgICAgIHwgICAzICsKPj4gICBpbmNsdWRlL2xpbnV4L2tleGVjLmggICAgICAg
-ICAgICAgIHwgIDEzICsrCj4+ICAga2VybmVsL2tleGVjX2NvcmUuYyAgICAgICAgICAgICAgICB8
-ICA3MiArKysrKysrKystCj4+ICAga2VybmVsL2tleGVjX2ZpbGUuYyAgICAgICAgICAgICAgICB8
-ICAgNyArCj4+ICAga2VybmVsL2tleGVjX2ludGVybmFsLmggICAgICAgICAgICB8ICAgMSArCj4+
-ICAgc2VjdXJpdHkvaW50ZWdyaXR5L2ltYS9pbWEuaCAgICAgICB8ICAgNCArCj4+ICAgc2VjdXJp
-dHkvaW50ZWdyaXR5L2ltYS9pbWFfa2V4ZWMuYyB8IDIxMSArKysrKysrKysrKysrKysrKysrKysr
-Ky0tLS0tLQo+PiAgIHNlY3VyaXR5L2ludGVncml0eS9pbWEvaW1hX3F1ZXVlLmMgfCAgMzIgKysr
-KysKPj4gICA4IGZpbGVzIGNoYW5nZWQsIDI5NSBpbnNlcnRpb25zKCspLCA0OCBkZWxldGlvbnMo
-LSkKPj4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtl
-eGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
-bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Thanks Dave for taking a look at this.
+
+I will keep Eric looped in on the next versions of this
+patch series.
+
+~Tushar
+
+On 7/7/23 01:18, Dave Young wrote:
+> [Add Eric in cc]
+>
+> On Tue, 4 Jul 2023 at 05:58, Tushar Sugandhi
+> <tusharsu@linux.microsoft.com> wrote:
+>> The current Kernel behavior is IMA measurements snapshot is taken at
+>> kexec 'load' and not at kexec 'execute'.  IMA log is then carried
+>> over to the new Kernel after kexec 'execute'.
+>>
+>> Some devices can be configured to call kexec 'load' first, and followed
+>> by kexec 'execute' after some time. (as opposed to calling 'load' and
+>> 'execute' in one single kexec command).  In such scenario, if new IMA
+>> measurements are added between kexec 'load' and kexec 'execute', the
+>> TPM PCRs are extended with the IMA events between 'load' and 'execute';
+>> but those IMA events are not carried over to the new kernel after kexec
+>> soft reboot.  This results in mismatch between TPM PCR quotes and the
+>> actual IMA measurements list after the device boots into the new kexec
+>> image.  This mismatch results in the remote attestation failing for that
+>> device.
+>>
+>> This patch series proposes a solution to solve this problem by allocating
+>> the necessary buffer at kexec 'load' time, and populating the buffer
+>> with the IMA measurements at kexec 'execute' time.
+>>
+>> The solution includes:
+>>   - addition of new functionality to allocate a buffer to hold IMA
+>>     measurements at kexec 'load',
+>>
+>>   - ima functionality to suspend and resume measurements as needed during
+>>     buffer copy at kexec 'execute',
+>>
+>>   - ima functionality for mapping the measurement list from the current
+>>     Kernel to the subsequent one,
+>>
+>>   - necessary changes to the kexec_file_load syscall, enabling it to call
+>>     the ima functions
+>>
+>>   - registering a reboot notifier which gets called during kexec 'execute',
+>>
+>>   - and removal of deprecated functions.
+>>
+>> The modifications proposed in this series ensure the integrity of the ima
+>> measurements is preserved across kexec soft reboots, thus significantly
+>> improving the security of the Kernel post kexec soft reboots.
+>>
+>> There were previous attempts to fix this issue [1], [2], [3].  But they
+>> were not merged into the mainline Kernel.
+>>
+>> We took inspiration from the past work [1] and [2] while working on this
+>> patch series.
+>>
+>> References:
+>> -----------
+>>
+>> [1] [PATHC v2 5/9] ima: on soft reboot, save the measurement list
+>> https://lore.kernel.org/lkml/1472596811-9596-6-git-send-email-zohar@linux.vnet.ibm.com/
+>>
+>> [2] PATCH v2 4/6] kexec_file: Add mechanism to update kexec segments.
+>> https://lkml.org/lkml/2016/8/16/577
+>>
+>> [3] [PATCH 1/6] kexec_file: Add buffer hand-over support
+>> https://lore.kernel.org/linuxppc-dev/1466473476-10104-6-git-send-email-bauerman@linux.vnet.ibm.com/T/
+>>
+>> Tushar Sugandhi (10):
+>>    ima: implement function to allocate buffer at kexec load
+>>    ima: implement function to populate buffer at kexec execute
+>>    ima: allocate buffer at kexec load to hold ima measurements
+>>    ima: implement functions to suspend and resume measurements
+>>    kexec: implement functions to map and unmap segment to kimage
+>>    ima: update buffer at kexec execute with ima measurements
+>>    ima: remove function ima_dump_measurement_list
+>>    ima: implement and register a reboot notifier function to update kexec
+>>      buffer
+>>    ima: suspend measurements while the kexec buffer is being copied
+>>    kexec: update kexec_file_load syscall to call ima_kexec_post_load
+>>
+>>   include/linux/ima.h                |   3 +
+>>   include/linux/kexec.h              |  13 ++
+>>   kernel/kexec_core.c                |  72 +++++++++-
+>>   kernel/kexec_file.c                |   7 +
+>>   kernel/kexec_internal.h            |   1 +
+>>   security/integrity/ima/ima.h       |   4 +
+>>   security/integrity/ima/ima_kexec.c | 211 +++++++++++++++++++++++------
+>>   security/integrity/ima/ima_queue.c |  32 +++++
+>>   8 files changed, 295 insertions(+), 48 deletions(-)
+>>
+>> --
+>> 2.25.1
+>>
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
+>>
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
