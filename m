@@ -4,97 +4,109 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C6526EB64DC
-	for <kexec@archiver.kernel.org>; Tue, 11 Jul 2023 21:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B8436EB64DC
+	for <kexec@archiver.kernel.org>; Wed, 12 Jul 2023 02:59:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Mime-Version:References:In-Reply-To:
-	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=b5umknS1QldLwXqYSWV3UqqjkQkpwuPSXCQHg6HW2+0=; b=zPOQMJYhz+elS3
-	G4DhRHm/lrXcC7HIerprnJ49AJiq4sbE2VHhFGnHBqUKxC6y+TK7thp0BfTh+HfnhY5GabvGqWrhc
-	UGmbDnofo/kTWNBprHbKt4ocvBOxAeySiWjWd/oGBSnPHJnqiK+BQg6sdlNQXprRQfbzeEU31mCRk
-	JpWPe7+dvpy7aQAlYyKmF0iQy/labCvrRTBDHD2z6zrA6y9wVLU5sELs+mcP+em/61ZsOHFeQ4obt
-	qJVu7XV7Sa+X5Hn7bJvoDOEKH4+T6IdvQcvfXVssJG0A/qFkC8S/cFtYO1KkQIAjNa0SIBJNxWH/b
-	weZ/J4NcXiMNVVBNEhKQ==;
+	List-Owner; bh=mpPbfFYkciOrw3x/2S9XU6qqYocwUUefrbw8t3HEe98=; b=3ufvOxadnVpY5w
+	l5nXFjGq+M/OE3XMiht4/tLot2IYKyeTpLVn/6HDWMQVyxNhnSk6Kg06TD+rShYFnG6NA9nMXlqc5
+	VNv49ndVeJ33nHYR67JKctDsRlAu1CBY9PGrDFu5KRUY+PFXuVhm2BEx2BgSO1DTqsbV+XiU1BnHN
+	talVU3D/LVbpGrvVX1HF4U0R6nj4ZTIU4V/zP8+Fa/aryaK2eP456VX/Bld/X7eRpwGX8Hcj56yhK
+	1x3Oelfey/ZB2LkAgYnvTTwI6hhaWNarvr7/5/jOZrJtx8p+HqzZftpI9F314+mOO9hYh3YyDV5eA
+	SWiuvPE7ZhZ/xDnljbCQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qJKeX-00FtsD-0t;
-	Tue, 11 Jul 2023 21:12:09 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1qJQ4a-00GLIm-1a;
+	Wed, 12 Jul 2023 02:59:24 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qJKeU-00Ftrd-1F
+	id 1qJQ4Z-00GLIA-0j
+	for kexec@bombadil.infradead.org;
+	Wed, 12 Jul 2023 02:59:23 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Type:Cc:To:Subject:Message-ID:
+	Date:From:In-Reply-To:References:MIME-Version:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=ocNLmvGR7kxVxI6dJrp51pqGUF67GQOJCx01vsa/B+E=; b=j1kqCy6+OHjoPi41kvNY2v8OpR
+	ifbzy/OfY+HqYH9+T49NRADcVU+zNxMRzOHveVEeuqEdtOgIFs/zDE3Qd+2qYfEgQ2kCBZP8NqZ/Q
+	Qkn/k16vZS+wf+OpLYm4UZdqxIP4FRIjzTs9gKR3yfuOey+5RANc9ouIwbwZGAgYd8GfYKhG+LCph
+	l6YC8sbsDe+MFmcN5qlq/UY5fYJvcNTmfZuMmZrG8qsEOPS0nyt7Uz0GBM/NBDN9cKgkqYQZ5xP3d
+	7ddR/NKgv1SdurzcWv+FOcyi11bdfOwkkQvp0IxPtNqwqgmL8v9kxpOcN8MYN9wwzaq9i7DEpPSGI
+	WeAxUeNg==;
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	by desiato.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
+	id 1qJOel-002ZjG-06
 	for kexec@lists.infradead.org;
-	Tue, 11 Jul 2023 21:12:08 +0000
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36BL9jW1002442;
-	Tue, 11 Jul 2023 21:11:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=/jbmUM/Tz5PwYQ7xibcV54GFdtSsVEw7ymNllB0dx7E=;
- b=sNxzswunyHLLzZnCfQZdMcKPULi7FTMBca+QNXlM+j9G7dL/udJSddAvioNRPMlslYXU
- sjb9K8fwYmhCffM03mXg7QPxxdD+E+2xdgJjdEoKAccUbLZwUWV0w2JI17hZxZIo+Ujr
- Lj0EJhR6DKalQKZALXq/xEjnVH4OyDQV0whw9kz6qtmuQ5Za9QGI02u6bUYodrrwvuMt
- fVLB9cTT+yUPVzAVnCpASGAHTEwb49Xrf6uxWYB93fdi3tMIGHj+BT+8/nLj8kRvdp2t
- Ywv0RnKaMSl8YecZolTRdq/y/VewWk0sx/KuZpiBwvsq/uCQA5SG1UPKlBdx49YnJzMS Ow== 
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rseg8gaak-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Jul 2023 21:11:51 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 36BEGJs7011647;
-	Tue, 11 Jul 2023 21:11:51 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3rqk4mgjbe-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 11 Jul 2023 21:11:51 +0000
-Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 36BLBosr34734376
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 11 Jul 2023 21:11:50 GMT
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 52D9258058;
-	Tue, 11 Jul 2023 21:11:50 +0000 (GMT)
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B5B5F58057;
-	Tue, 11 Jul 2023 21:11:49 +0000 (GMT)
-Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.61.19.33])
-	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 11 Jul 2023 21:11:49 +0000 (GMT)
-Message-ID: <66ca5d5504291161d887d141bc43ce2a4c14ff8c.camel@linux.ibm.com>
-Subject: Re: [PATCH 01/10] ima: implement function to allocate buffer at
- kexec load
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Tushar Sugandhi <tusharsu@linux.microsoft.com>, noodles@fb.com,
-        bauermann@kolabnow.com, kexec@lists.infradead.org,
-        linux-integrity@vger.kernel.org
-Cc: code@tyhicks.com, nramas@linux.microsoft.com, paul@paul-moore.com,
-        Eric
-	Biederman <ebiederm@xmission.com>
-Date: Tue, 11 Jul 2023 17:11:47 -0400
-In-Reply-To: <31eb2a9c-7410-b655-43d2-3b2966d2d3da@linux.microsoft.com>
+	Wed, 12 Jul 2023 01:28:42 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1689125311;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ocNLmvGR7kxVxI6dJrp51pqGUF67GQOJCx01vsa/B+E=;
+	b=fBCMYpZKKWLYclSC/BnE4SMG5AvFk781xVugCZaXFrgfEx9+vY/ZHnoFNvZfVkTtXZopNQ
+	5GfbIj+B+0qMJh/S3QzPlffSruKQ+9aK233Wi1rM2RmHRJjhAqEPbHrrr0n2VBQOSTmSL9
+	PR43U8p59sCstH32u8bFUKselz6A5OM=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1689125311;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ocNLmvGR7kxVxI6dJrp51pqGUF67GQOJCx01vsa/B+E=;
+	b=fBCMYpZKKWLYclSC/BnE4SMG5AvFk781xVugCZaXFrgfEx9+vY/ZHnoFNvZfVkTtXZopNQ
+	5GfbIj+B+0qMJh/S3QzPlffSruKQ+9aK233Wi1rM2RmHRJjhAqEPbHrrr0n2VBQOSTmSL9
+	PR43U8p59sCstH32u8bFUKselz6A5OM=
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com
+ [209.85.166.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-120-XPBNZfr6P1iVA1IvfVdQEw-1; Tue, 11 Jul 2023 21:27:03 -0400
+X-MC-Unique: XPBNZfr6P1iVA1IvfVdQEw-1
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3465508c267so3347675ab.1
+        for <kexec@lists.infradead.org>; Tue, 11 Jul 2023 18:27:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689125223; x=1689730023;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ocNLmvGR7kxVxI6dJrp51pqGUF67GQOJCx01vsa/B+E=;
+        b=SGB1FVCR+J0mNWGTNwDYfK4QRsIhsorOjIoGLJHkXF3vY62aHHF1fg7YMeug9xLYCJ
+         XiOkWqeGIuJzJMFEZ+tuDX8YIKTTe7rLSoy6lxChSVSdCutmdoKPmmqAZz6KpVlLO6qZ
+         waq9GNWcDeD8p5ldsJ19s8urOj56U31thhF+qrHWCLZt1QFWg1kNUPv+mUJaJXfulL5a
+         viC4bPDvPnM6cOn7S61pdQNaXsr7vzhTh+D/6wbmg+G84XT4zXB2qZqngGNVPEzcmaDJ
+         I5RFOByPek3W8gz1ViAyJ+8gVDt7mG6UEuc1rgYFXXJk5o5C55H1kvVwl8lxtCxVzKOt
+         cEnw==
+X-Gm-Message-State: ABy/qLZpxA3hMwL5pYLY/VphweAFc8pA0r6zr5UqhtYKZ2/Qy4cxo2vQ
+	gv5+op9+F/iS47FWerRhzwhnSVTQo4lddgXpQJtONGSzYRYjBoYkn1bUo+oSvPL5OG+B6ZIqwGI
+	70iK5P6cYJnMYhW5NZ8Adi0aCTQok7Ie6F6wU
+X-Received: by 2002:a05:6e02:932:b0:346:10c5:2949 with SMTP id o18-20020a056e02093200b0034610c52949mr13794766ilt.1.1689125222783;
+        Tue, 11 Jul 2023 18:27:02 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlHlxdigAm+vrY+sQ9k08ownvSzVq2tBlBZb5YstpZDFEDJvAsu8IRjZ3+TTbxGF96c1r8l5QAxulq55I+ZKIOI=
+X-Received: by 2002:a05:6e02:932:b0:346:10c5:2949 with SMTP id
+ o18-20020a056e02093200b0034610c52949mr13794752ilt.1.1689125222485; Tue, 11
+ Jul 2023 18:27:02 -0700 (PDT)
+MIME-Version: 1.0
 References: <20230703215709.1195644-1-tusharsu@linux.microsoft.com>
-	 <20230703215709.1195644-2-tusharsu@linux.microsoft.com>
-	 <494dffc6cc7cfb8c6ca78f3bae442d57362a8857.camel@linux.ibm.com>
-	 <31eb2a9c-7410-b655-43d2-3b2966d2d3da@linux.microsoft.com>
-X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
-Mime-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: ajjQURlfE6K12wP7zNJ6D7w-6WsYI88s
-X-Proofpoint-ORIG-GUID: ajjQURlfE6K12wP7zNJ6D7w-6WsYI88s
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-11_12,2023-07-11_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 priorityscore=1501 malwarescore=0 phishscore=0
- impostorscore=0 mlxscore=0 bulkscore=0 clxscore=1011 spamscore=0
- mlxlogscore=967 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2305260000 definitions=main-2307110191
+ <20230703215709.1195644-11-tusharsu@linux.microsoft.com> <CALu+AoQC101fcbJjLdJHD7QtqeXzt5uOZDgNYvob0U_NGyaqCQ@mail.gmail.com>
+ <b4047d8d-2c7c-e357-1c1f-cc55978fd963@linux.microsoft.com>
+In-Reply-To: <b4047d8d-2c7c-e357-1c1f-cc55978fd963@linux.microsoft.com>
+From: RuiRui Yang <ruyang@redhat.com>
+Date: Wed, 12 Jul 2023 09:28:33 +0800
+Message-ID: <CALu+AoSWcEU7PfHvejYAuFWMEO6uGEWPnJMXuW2kNG-MUshFsw@mail.gmail.com>
+Subject: Re: [PATCH 10/10] kexec: update kexec_file_load syscall to call ima_kexec_post_load
+To: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+Cc: zohar@linux.ibm.com, noodles@fb.com, bauermann@kolabnow.com, 
+	kexec@lists.infradead.org, linux-integrity@vger.kernel.org, code@tyhicks.com, 
+	nramas@linux.microsoft.com, paul@paul-moore.com, 
+	Eric Biederman <ebiederm@xmission.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230711_141206_726546_66A63AD3 
-X-CRM114-Status: GOOD (  30.15  )
+X-CRM114-CacheID: sfid-20230712_022839_447839_B78D5980 
+X-CRM114-Status: GOOD (  33.22  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -106,49 +118,107 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-T24gVHVlLCAyMDIzLTA3LTExIGF0IDEwOjU5IC0wNzAwLCBUdXNoYXIgU3VnYW5kaGkgd3JvdGU6
-Cj4gQWRkaW5nIEVyaWMgdG8gY2MuCj4gCj4gT24gNy83LzIzIDA2OjAwLCBNaW1pIFpvaGFyIHdy
-b3RlOgo+ID4gSGkgVHVzaGFyLAo+ID4KPiA+IE9uIE1vbiwgMjAyMy0wNy0wMyBhdCAxNDo1NyAt
-MDcwMCwgVHVzaGFyIFN1Z2FuZGhpIHdyb3RlOgo+ID4+IElNQSBkb2VzIG5vdCBwcm92aWRlIGEg
-bWVjaGFuaXNtIHRvIGFsbG9jYXRlIG1lbW9yeSBmb3IgSU1BIGxvZyBzdG9yYWdlCj4gPj4gZHVy
-aW5nIGtleGVjIG9wZXJhdGlvbi4KPiA+IFRoZSBJTUEgbWVhc3VyZW1lbnQgbGlzdCBpcyBjdXJy
-ZW50bHkgYmVpbmcgY2FycmllZCBhY3Jvc3Mga2V4ZWMsIHNvCj4gPiBvYnZpb3VzbHkgYSBidWZm
-ZXIgaXMgYmVpbmcgYWxsb2NhdGVkIGZvciBpdC4gIElNQSBub3QgYWxsb2NhdGluZwo+ID4gbWVt
-b3J5IGZvciB0aGUgbWVhc3VybWVudCBsaXN0IGlzIG5vdCB0aGUgcHJvYmxlbSBzdGF0ZW1lbnQu
-ICBQbGVhc2UKPiA+IGNvbmNpc2VseSBwcm92aWRlIHRoZSBwcm9ibGVtIHN0YXRlbWVudCwgZXhw
-bGFpbmluZyB3aHkgSU1BIG5lZWRzIHRvCj4gPiBhbGxvY2F0ZSB0aGUgYnVmZmVyLgo+ID4KPiBJ
-IG1lYW50IElNQSBkb2VzIG5vdCBwcm92aWRlIHNlcGFyYXRlIGZ1bmN0aW9ucyB0byBhbGxvY2F0
-ZSBidWZmZXIgYW5kCj4gcG9wdWxhdGUgbWVhc3VyZW1lbnRzLiAgQm90aCBvcGVyYXRpb25zIGFy
-ZSB3cmFwcGVkIGluIGFuIGF0b21pYwo+IGltYV9kdW1wX21lYXN1cmVtZW50X2xpc3QoKS4KCk9r
-LgoKPiBBcyBJIG1lbnRpb25lZCBpbiB0aGUgY29tbWVudCBpbiB0aGUgY292ZXIgbGV0dGVyLCBp
-ZiB0aGVyZSBpcyBubyBzdWNoCj4gdGVjaG5pY2FsIGxpbWl0YXRpb24gdG8gYWxsb2NhdGUgdGhl
-IGJ1ZmZlciBhbmQgY29weSB0aGUgbWVhc3VyZW1lbnRzIGF0Cj4ga2V4ZWMg4oCYZXhlY3V0ZeKA
-mSDigJMgSSB3aWxsIG1ha2UgdGhlIG5lY2Vzc2FyeSBjb2RlIGNoYW5nZXMgYW5kIHVwZGF0ZSB0
-aGUKPiBhYm92ZSBsaW5lIGluIHRoZSBwYXRjaCBkZXNjcmlwdGlvbiBhY2NvcmRpbmdseS4KClRo
-ZSAibm9ybWFsIiB3YXkgb2YgbWFraW5nIHRoaXMgdHlwZSBvZiBjaGFuZ2Ugd291bGQgYmUgdG8g
-c3BsaXQgdGhlCmV4aXN0aW5nIGltYV9kdW1wX21lYXN1cmVtZW50X2xpc3QoKSBmdW5jdGlvbi4g
-IENvcHlpbmcgdGhlIG1lYXN1cmVtZW50Cmxpc3Qgd291bGQgc3RpbGwgYmUgbmFtZWQgaW1hX2R1
-bXBfbWVhc3VyZW1lbnRfbGlzdCgpLiAgVGhlIG90aGVyIGNvdWxkCmJlIG5hbWVkIGltYV9hbGxv
-Y19rZXhlY19idWYoKS4gIEJvdGggZnVuY3Rpb25zIGluaXRpYWxseSB3b3VsZCBiZQpjYWxsZWQu
-CgpFcmljLCBiZXNpZGVzIHVwZGF0aW5nIHRoZSBidWZmZXIgYXQga2V4ZWMgZXhlY3V0ZSwgaXMg
-dGhlcmUgYW55dGhpbmcKZWxzZSB0aGF0IG5lZWRzIHRvIGJlIGRvbmUgKGUuZy4gdXBkYXRpbmcg
-ZGlnZXN0cyk/Cgo+ID4+IFRoZSBmdW5jdGlvbiBzaG91bGQgaGFuZGxlIHRoZSBzY2VuYXJpbyB3
-aGVyZQo+ID4+IHRoZSBrZXhlYyBsb2FkIGlzIGNhbGxlZCBtdWx0aXBsZSB0aW1lcy4KPiA+IEN1
-cnJlbnRseSB0aGUgYnVmZmVyIGlzIGJlaW5nIGZyZWVkIHdpdGggdGhlIGtleGVjICd1bmxvYWQn
-LiAgV2l0aCB0aGlzCj4gPiBwYXRjaCBJTUEgaXMgYWxsb2NhdGluZyBhIGJ1ZmZlciBmb3IgdGhl
-IG1lYXN1cmVtZW50IGxpc3QsIHdoaWNoIG5lZWRzCj4gPiB0byBiZSBmcmVlZCBpbmRlcGVuZGVu
-dGx5IG9mIHRoZSBrZXhlYyAndW5sb2FkJy4KCj4gSWYgd2UgZW5kIHVwIGFsbG9jYXRpbmcgdGhl
-IGJ1ZmZlciBhdCBrZXhlYyDigJhleGVjdXRl4oCZICh3aGljaCByZXN1bHRzIGluCj4gc29mdCBi
-b290IHRvIG5leHQgS2VybmVsKSDigJMgaXMgaXQgdGVjaG5pY2FsbHkgcG9zc2libGUgdGhhdAo+
-IGtleGVjIOKAmHVubG9hZOKAmSBiZWluZyBjYWxsZWQgYWZ0ZXIgY2FsbGluZyBrZXhlYyDigJhl
-eGVjdXRl4oCZPwoKPiBJZiBub3QsIHNob3VsZCBJIHN0aWxsIGZyZWUgdGhlIGJ1ZmZlciBhdCBr
-ZXhlYyDigJh1bmxvYWTigJkgaW4gdGhpcwo+IHNjZW5hcmlvPwoKVGhlIHF1ZXN0aW9uIGlzIGhv
-dyB0byBhY2Nlc3MgdGhlIGJ1ZmZlciBvbmNlIGtleGVjX2FkZF9idWZmZXIoKSBpcwpjYWxsZWQu
-CgpNaW1pCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-a2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On Wed, 12 Jul 2023 at 03:15, Tushar Sugandhi
+<tusharsu@linux.microsoft.com> wrote:
+>
+>
+> On 7/7/23 01:20, RuiRui Yang wrote:
+> > On Tue, 4 Jul 2023 at 05:58, Tushar Sugandhi
+> > <tusharsu@linux.microsoft.com> wrote:
+> >> The kexec_file_load syscall is used to load a new kernel for kexec.
+> >> The syscall needs to update its function to call ima_kexec_post_load, which
+> >> was implemented in a previous patch.  ima_kexec_post_load takes care of
+> >> mapping the measurement list for the next kernel and registering a reboot
+> >> notifier if it's not already registered.
+> >>
+> >> Modify the kexec_file_load syscall to call ima_kexec_post_load after the
+> >> image has been loaded and prepared for kexec.  This ensures that the IMA
+> >> measurement list will be available to the next kernel after a kexec reboot.
+> >> This also ensures the measurements taken in the window between kexec load
+> >> and execute are captured and passed to the next kernel.
+> >>
+> >> Declare the kimage_file_post_load function in the kernel/kexec_internal.h,
+> >> so it can be properly used in the syscall.
+> >>
+> >> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> >> ---
+> >>   kernel/kexec_file.c     | 7 +++++++
+> >>   kernel/kexec_internal.h | 1 +
+> >>   2 files changed, 8 insertions(+)
+> >>
+> >> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> >> index f989f5f1933b..efe28e77280c 100644
+> >> --- a/kernel/kexec_file.c
+> >> +++ b/kernel/kexec_file.c
+> >> @@ -184,6 +184,11 @@ kimage_validate_signature(struct kimage *image)
+> >>   }
+> >>   #endif
+> >>
+> >> +void kimage_file_post_load(struct kimage *image)
+> >> +{
+> >> +       ima_kexec_post_load(image);
+> >> +}
+> >> +
+> >>   /*
+> >>    * In file mode list of segments is prepared by kernel. Copy relevant
+> >>    * data from user space, do error checking, prepare segment list
+> >> @@ -399,6 +404,8 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+> >>
+> >>          kimage_terminate(image);
+> >>
+> >> +       kimage_file_post_load(image);
+> > I think it should be only done for the reboot case,  please just
+> > exclude the kdump case here..
+> >
+> Thanks for the feedback RuiRui.  Appreciate it.
+>
+> Conceptually I agree with you that this needs to be done only for reboot.
+> I need to figure out how to do it implementation wise.
+>
+> If you can give me pointers/suggestions, that would help.
+
+Hi Tushar,
+
+You can check the flags argument in the function
+if (flags & KEXEC_FILE_ON_CRASH) is true then this is a kdump kernel
+loading, just skip the kimage_file_post_load in that case?
+
+>
+> ~Tushar
+> >> +
+> >>          ret = machine_kexec_post_load(image);
+> >>          if (ret)
+> >>                  goto out;
+> >> diff --git a/kernel/kexec_internal.h b/kernel/kexec_internal.h
+> >> index 74da1409cd14..98dd5fcafaf0 100644
+> >> --- a/kernel/kexec_internal.h
+> >> +++ b/kernel/kexec_internal.h
+> >> @@ -30,6 +30,7 @@ static inline void kexec_unlock(void)
+> >>
+> >>   #ifdef CONFIG_KEXEC_FILE
+> >>   #include <linux/purgatory.h>
+> >> +void kimage_file_post_load(struct kimage *image);
+> >>   void kimage_file_post_load_cleanup(struct kimage *image);
+> >>   extern char kexec_purgatory[];
+> >>   extern size_t kexec_purgatory_size;
+> >> --
+> >> 2.25.1
+> >>
+> >>
+> >> _______________________________________________
+> >> kexec mailing list
+> >> kexec@lists.infradead.org
+> >> http://lists.infradead.org/mailman/listinfo/kexec
+> >>
+>
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
