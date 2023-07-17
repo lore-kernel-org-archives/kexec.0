@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 028ADEB64DC
-	for <kexec@archiver.kernel.org>; Mon, 17 Jul 2023 13:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 111F0EB64DC
+	for <kexec@archiver.kernel.org>; Mon, 17 Jul 2023 13:09:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=87pDxCBbIt/KvEYNksAJw7bugcbR6ZI8gR0h2l969k4=; b=Dhl48yKiBTeCid
-	KHKBS+msFRhD8GVF/m8uh07e5Pzu5YsUYtddr1hONYGSOp/P4xTmO9dpAfzDca+uYCeJC/RBigSuV
-	1CrQ2AsVio9HozvVFixcFVJcXJ6PIK8vv6cyPD1y98tbmiiUwl04Nriz+IW1+7j3jHIJgGTAMYbHS
-	7w7TUJwv4B24gBuZ1+s97VHAjEaX7a9ANvbPMXJqLQGcr7zbCo3t1/HbWPP17bhhI90HGAKRKynNz
-	Thh788+eLm7edZHVJD3ycGvIA7iJP+Ah+pyCvsKseHcPZ/ZBX7fZ72QH3LMCbVyIw+yhyddPseshs
-	5z8N0fqN74RdTvIVFqdQ==;
+	List-Owner; bh=7srCqFLXG+igppOYKgk4ishQorhbgz13U6PBqL6YpXs=; b=h4TViFly17lYPl
+	f0gps1xefG8/CpTCEHGk+YSaOPQoYljJGTfv6WOkg7t7Jr3UY6py+TTnOiq155coLFjYQIBzQ44t+
+	3+xYkNb9ssmF0Miy00i/iKMBW5i5ZwF5khas5V55Cb+XPddle5zZwnlQj0Dn/vRzG6aqz6hFMVQ24
+	S+np2r+KLZRz12tJE5rz4G33sm/X1Dy31TwsCsX50M5fS1rvYXrpAHCLWrA1PH/Lc+7tcZWAp+0pI
+	ohp2PtTtkZu9nYvYB9GC/GXWfRViMttq2YH7sOt6B8g7jOqKihwPvA+X3uJqZU52MvuP2cwf8cqdx
+	K150KFOVBGMi1xvI45EQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qLNyI-004460-1T;
-	Mon, 17 Jul 2023 13:09:02 +0000
+	id 1qLNyK-00446j-05;
+	Mon, 17 Jul 2023 13:09:06 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qLNy9-00442x-1X
+	id 1qLNy8-00442v-2y
 	for kexec@lists.infradead.org;
 	Mon, 17 Jul 2023 13:08:57 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
@@ -33,32 +33,32 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xN6A3V6Gy/L9hvxZcBdVQUa5oCMWeoxENZV2G7HOMc4=;
-	b=Tas1ne4B6VzNBMdVPhjEaGK1ZhlZmkDenJwF/Uid5OhtL//tlZO7hgISxF2pjM8lwT9YBt
-	uQCy2RHQLm1N8lyngJpAGT3lq8HVMDkxBbPT7XDpqU6S+FZwI0I36rA5IxLt5DQr5/Ko/M
-	9fHrsQelZjazq2dD1spxmovICJVs7F8=
+	bh=Fc4ZroIhZSTf6w/jI7BfI2KVFSIrN3g1vWaZOfu/5kw=;
+	b=Ci1ebE2KE1TpT7EO+AR38rlq9jns5+rJguccwWo0FU75006fwf8Auc9OlOeLBawh1CdsDu
+	Pj/sk0AHyulGXPSazlvDpbwaLwPEF04Nsk1jwuY2sSKlpAlAE+SQoY44jSTSp/uvubz33c
+	NnVm+OO3DP28pTH6VGcQT4lJCvgf9Qw=
 Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-658-0q8uJx1aM1q-XDawwzAoGg-1; Mon, 17 Jul 2023 09:08:51 -0400
-X-MC-Unique: 0q8uJx1aM1q-XDawwzAoGg-1
+ us-mta-584-7OWoP-7LOZK3scefF-Rr8w-1; Mon, 17 Jul 2023 09:08:47 -0400
+X-MC-Unique: 7OWoP-7LOZK3scefF-Rr8w-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0FA912A5957A;
-	Mon, 17 Jul 2023 13:08:51 +0000 (UTC)
-Received: from piliu.users.ipa.redhat.com (ovpn-8-18.pek2.redhat.com [10.72.8.18])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 0502C1121314;
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2E3712A5957F;
 	Mon, 17 Jul 2023 13:08:47 +0000 (UTC)
+Received: from piliu.users.ipa.redhat.com (ovpn-8-18.pek2.redhat.com [10.72.8.18])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 154BB1121314;
+	Mon, 17 Jul 2023 13:08:22 +0000 (UTC)
 From: Pingfan Liu <piliu@redhat.com>
 To: kexec@lists.infradead.org
 Cc: Pingfan Liu <piliu@redhat.com>,
 	horms@verge.net.au,
 	ardb@kernel.org,
 	jeremy.linton@arm.com
-Subject: [PATCHv5 5/8] kexec: Drop condition macro for aarch64
-Date: Mon, 17 Jul 2023 21:07:29 +0800
-Message-Id: <20230717130732.22710-6-piliu@redhat.com>
+Subject: [PATCHv5 4/8] arm64: Transfer from probe() to probe2()
+Date: Mon, 17 Jul 2023 21:07:28 +0800
+Message-Id: <20230717130732.22710-5-piliu@redhat.com>
 In-Reply-To: <20230717130732.22710-1-piliu@redhat.com>
 References: <20230717130732.22710-1-piliu@redhat.com>
 MIME-Version: 1.0
@@ -66,8 +66,8 @@ X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230717_060853_592508_A65473E1 
-X-CRM114-Status: GOOD (  10.24  )
+X-CRM114-CacheID: sfid-20230717_060853_107840_E538E157 
+X-CRM114-Status: GOOD (  22.91  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,41 +84,281 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Since all arm64 images have transfer from the interface probe() to
-probe2(), the snippet dedicated for aarch64 to call probe() can be
-dropped now.
+Scatter the logic of reading of kernel file into each probe
+
+As more complicated capsule kernel format ,such as zboot, emerge, where
+the compressed kernel is stored as a payload. The straight forward
+decompression can not meet the demand.
+
+Therefore, introduce a method probe2, which reads in the kernel file and
+decides how to unfold the content by itself.
+
+At present, only aarch64 supports zboot image and implements probe2().
 
 Signed-off-by: Pingfan Liu <piliu@redhat.com>
 To: kexec@lists.infradead.org
 Cc: horms@verge.net.au
 Cc: ardb@kernel.org
 Cc: jeremy.linton@arm.com
+Signed-off-by: Pingfan Liu <piliu@redhat.com>
 ---
- kexec/kexec.c | 10 ----------
- 1 file changed, 10 deletions(-)
+ kexec/arch/arm64/kexec-arm64.c        |  9 +++++----
+ kexec/arch/arm64/kexec-arm64.h        |  8 ++++----
+ kexec/arch/arm64/kexec-elf-arm64.c    |  7 +++++--
+ kexec/arch/arm64/kexec-image-arm64.c  | 16 ++++++++++-----
+ kexec/arch/arm64/kexec-uImage-arm64.c | 15 ++++++++++----
+ kexec/arch/arm64/kexec-zImage-arm64.c | 28 +++++++++------------------
+ 6 files changed, 45 insertions(+), 38 deletions(-)
 
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index 5f75179..3238c19 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -730,17 +730,7 @@ static int probe(struct file_type *ft, const char *kern_fname,
+diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+index ec6df4b..f391f77 100644
+--- a/kexec/arch/arm64/kexec-arm64.c
++++ b/kexec/arch/arm64/kexec-arm64.c
+@@ -70,11 +70,12 @@ const struct arch_map_entry arches[] = {
+ 	{ NULL, 0 },
+ };
  
- 	ret = initialze_probe(kern_fname, kernel_buf, kernel_size, kernel_fd);
- 	if (ret == 0) {
--#ifdef __aarch64__
--		/* handle Image.gz like cases */
--		if (is_zlib_file(kern_fname, &kernel_size)) {
--			if ((ret = ft->probe(kern_fname, *kernel_size)) >= 0)
--				*kernel_fd = ret;
--		} else {
--			ret = ft->probe(*kernel_buf, *kernel_size);
--		}
--#else
- 		ret = ft->probe(*kernel_buf, *kernel_size);
--#endif
- 	} else if (ret == 1) {
- 		ret = ft->probe2(kern_fname, &info);
- 		*kernel_buf = info.kernel_buf;
++/* On arm64, probe2 is used, probe is abandoned */
+ struct file_type file_type[] = {
+-	{"vmlinux", elf_arm64_probe, elf_arm64_load, elf_arm64_usage},
+-	{"Image", image_arm64_probe, image_arm64_load, image_arm64_usage},
+-	{"uImage", uImage_arm64_probe, uImage_arm64_load, uImage_arm64_usage},
+-	{"zImage", zImage_arm64_probe, zImage_arm64_load, zImage_arm64_usage},
++	{"vmlinux", NULL, elf_arm64_load, elf_arm64_usage, elf_arm64_probe},
++	{"Image", NULL, image_arm64_load, image_arm64_usage, image_arm64_probe},
++	{"uImage", NULL, uImage_arm64_load, uImage_arm64_usage, uImage_arm64_probe},
++	{"zImage", NULL, zImage_arm64_load, zImage_arm64_usage, zImage_arm64_probe},
+ };
+ 
+ int file_types = sizeof(file_type) / sizeof(file_type[0]);
+diff --git a/kexec/arch/arm64/kexec-arm64.h b/kexec/arch/arm64/kexec-arm64.h
+index 5eb9fc0..eeb35ae 100644
+--- a/kexec/arch/arm64/kexec-arm64.h
++++ b/kexec/arch/arm64/kexec-arm64.h
+@@ -29,22 +29,22 @@
+ #define NOT_KV_ADDR	(0x0)
+ #define NOT_PADDR	(ULONGLONG_MAX)
+ 
+-int elf_arm64_probe(const char *kernel_buf, off_t kernel_size);
++int elf_arm64_probe(const char *kern_fname, struct parsed_info *info);
+ int elf_arm64_load(int argc, char **argv, const char *kernel_buf,
+ 	off_t kernel_size, struct kexec_info *info);
+ void elf_arm64_usage(void);
+ 
+-int image_arm64_probe(const char *kernel_buf, off_t kernel_size);
++int image_arm64_probe(const char *kern_fname, struct parsed_info *info);
+ int image_arm64_load(int argc, char **argv, const char *kernel_buf,
+ 	off_t kernel_size, struct kexec_info *info);
+ void image_arm64_usage(void);
+ 
+-int uImage_arm64_probe(const char *buf, off_t len);
++int uImage_arm64_probe(const char *kern_fname, struct parsed_info *info);
+ int uImage_arm64_load(int argc, char **argv, const char *buf, off_t len,
+ 		      struct kexec_info *info);
+ void uImage_arm64_usage(void);
+ 
+-int zImage_arm64_probe(const char *kernel_buf, off_t kernel_size);
++int zImage_arm64_probe(const char *kern_fname, struct parsed_info *info);
+ int zImage_arm64_load(int argc, char **argv, const char *kernel_buf,
+ 	off_t kernel_size, struct kexec_info *info);
+ void zImage_arm64_usage(void);
+diff --git a/kexec/arch/arm64/kexec-elf-arm64.c b/kexec/arch/arm64/kexec-elf-arm64.c
+index e14f8e9..4e8f8d9 100644
+--- a/kexec/arch/arm64/kexec-elf-arm64.c
++++ b/kexec/arch/arm64/kexec-elf-arm64.c
+@@ -16,12 +16,13 @@
+ #include "kexec-elf.h"
+ #include "kexec-syscall.h"
+ 
+-int elf_arm64_probe(const char *kernel_buf, off_t kernel_size)
++int elf_arm64_probe(const char *kern_fname, struct parsed_info *info)
+ {
+ 	struct mem_ehdr ehdr;
+ 	int result;
+ 
+-	result = build_elf_exec_info(kernel_buf, kernel_size, &ehdr, 0);
++	info->kernel_buf = slurp_file(kern_fname, &info->kernel_size);
++	result = build_elf_exec_info(info->kernel_buf, info->kernel_size, &ehdr, 0);
+ 
+ 	if (result < 0) {
+ 		dbgprintf("%s: Not an ELF executable.\n", __func__);
+@@ -34,8 +35,10 @@ int elf_arm64_probe(const char *kernel_buf, off_t kernel_size)
+ 		goto on_exit;
+ 	}
+ 
++	info->fd = open(kern_fname, O_RDONLY);
+ 	result = 0;
+ on_exit:
++	free(info->kernel_buf);
+ 	free_elf_info(&ehdr);
+ 	return result;
+ }
+diff --git a/kexec/arch/arm64/kexec-image-arm64.c b/kexec/arch/arm64/kexec-image-arm64.c
+index aa8f2e2..3895c1a 100644
+--- a/kexec/arch/arm64/kexec-image-arm64.c
++++ b/kexec/arch/arm64/kexec-image-arm64.c
+@@ -7,6 +7,7 @@
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <limits.h>
++#include <stdlib.h>
+ #include "crashdump-arm64.h"
+ #include "image-header.h"
+ #include "kexec.h"
+@@ -14,23 +15,28 @@
+ #include "kexec-syscall.h"
+ #include "arch/options.h"
+ 
+-int image_arm64_probe(const char *kernel_buf, off_t kernel_size)
++int image_arm64_probe(const char *kern_fname, struct parsed_info *info)
+ {
+ 	const struct arm64_image_header *h;
+ 
+-	if (kernel_size < sizeof(struct arm64_image_header)) {
++	info->kernel_buf = slurp_file(kern_fname, &info->kernel_size);
++	if (info->kernel_size < sizeof(struct arm64_image_header)) {
+ 		dbgprintf("%s: No arm64 image header.\n", __func__);
+-		return -1;
++		goto err;
+ 	}
+ 
+-	h = (const struct arm64_image_header *)(kernel_buf);
++	h = (const struct arm64_image_header *)(info->kernel_buf);
+ 
+ 	if (!arm64_header_check_magic(h)) {
+ 		dbgprintf("%s: Bad arm64 image header.\n", __func__);
+-		return -1;
++		goto err;
+ 	}
++	info->fd = open(kern_fname, O_RDONLY);
+ 
+ 	return 0;
++err:
++	free(info->kernel_buf);
++	return -1;
+ }
+ 
+ int image_arm64_load(int argc, char **argv, const char *kernel_buf,
+diff --git a/kexec/arch/arm64/kexec-uImage-arm64.c b/kexec/arch/arm64/kexec-uImage-arm64.c
+index c466913..2bd4607 100644
+--- a/kexec/arch/arm64/kexec-uImage-arm64.c
++++ b/kexec/arch/arm64/kexec-uImage-arm64.c
+@@ -3,26 +3,33 @@
+  */
+ #include <stdint.h>
+ #include <string.h>
++#include <stdlib.h>
++#include <fcntl.h>
+ #include <sys/types.h>
+ #include <image.h>
+ #include <kexec-uImage.h>
+ #include "../../kexec.h"
+ #include "kexec-arm64.h"
+ 
+-int uImage_arm64_probe(const char *buf, off_t len)
++int uImage_arm64_probe(const char *kern_fname, struct parsed_info *info)
+ {
+ 	int ret;
+ 
+-	ret = uImage_probe_kernel(buf, len, IH_ARCH_ARM64);
++	info->kernel_buf = slurp_file(kern_fname, &info->kernel_size);
++	ret = uImage_probe_kernel(info->kernel_buf, info->kernel_size, IH_ARCH_ARM64);
+ 
+ 	/*  0 - valid uImage.
+ 	 * -1 - uImage is corrupted.
+ 	 *  1 - image is not a uImage.
+ 	 */
+-	if (!ret)
++	if (!ret) {
++		info->fd = open(kern_fname, O_RDONLY);
+ 		return 0;
+-	else
++	}
++	else {
++		free(info->kernel_buf);
+ 		return -1;
++	}
+ }
+ 
+ int uImage_arm64_load(int argc, char **argv, const char *buf, off_t len,
+diff --git a/kexec/arch/arm64/kexec-zImage-arm64.c b/kexec/arch/arm64/kexec-zImage-arm64.c
+index 3eb1ad8..4e488a5 100644
+--- a/kexec/arch/arm64/kexec-zImage-arm64.c
++++ b/kexec/arch/arm64/kexec-zImage-arm64.c
+@@ -37,23 +37,15 @@
+ 
+ /* Returns:
+  * -1 : in case of error/invalid format (not a valid Image.gz format.
+- * fd : File descriptor of the temp file containing the decompressed
+- *      Image.
+  */
+-int zImage_arm64_probe(const char *kernel_buf, off_t kernel_size)
++int zImage_arm64_probe(const char *kern_fname, struct parsed_info *info)
+ {
+ 	int ret = -1;
+ 	int fd = 0;
+-	int kernel_fd = 0;
+ 	char *fname = NULL;
+ 	char *kernel_uncompressed_buf = NULL;
+ 	const struct arm64_image_header *h;
+ 
+-	if (!is_zlib_file(kernel_buf, &kernel_size)) {
+-		dbgprintf("%s: Not an zImage file (Image.gz).\n", __func__);
+-		return -1;
+-	}
+-
+ 	if (!(fname = strdup(FILENAME_IMAGE))) {
+ 		dbgprintf("%s: Can't duplicate strings\n", __func__);
+ 		return -1;
+@@ -68,11 +60,11 @@ int zImage_arm64_probe(const char *kernel_buf, off_t kernel_size)
+ 
+ 	/* slurp in the input kernel */
+ 	dbgprintf("%s: ", __func__);
+-	kernel_uncompressed_buf = slurp_decompress_file(kernel_buf,
+-							&kernel_size);
++	kernel_uncompressed_buf = slurp_decompress_file(kern_fname,
++							&info->kernel_size);
+ 
+ 	/* check for correct header magic */
+-	if (kernel_size < sizeof(struct arm64_image_header)) {
++	if (info->kernel_size < sizeof(struct arm64_image_header)) {
+ 		dbgprintf("%s: No arm64 image header.\n", __func__);
+ 		ret = -1;
+ 		goto fail_bad_header;
+@@ -87,7 +79,7 @@ int zImage_arm64_probe(const char *kernel_buf, off_t kernel_size)
+ 	}
+ 
+ 	if (write(fd, kernel_uncompressed_buf,
+-				kernel_size) != kernel_size) {
++				info->kernel_size) != info->kernel_size) {
+ 		dbgprintf("%s: Can't write the uncompressed file %s\n",
+ 				__func__, fname);
+ 		ret = -1;
+@@ -100,20 +92,18 @@ int zImage_arm64_probe(const char *kernel_buf, off_t kernel_size)
+ 	 * opening the file in O_RDWR and calling kexec_file_load()
+ 	 * causes the kernel to return -ETXTBSY
+ 	 */
+-	kernel_fd = open(fname, O_RDONLY);
+-	if (kernel_fd == -1) {
++	info->fd = open(fname, O_RDONLY);
++	if (info->fd == -1) {
+ 		dbgprintf("%s: Failed to open file %s\n",
+ 				__func__, fname);
+ 		ret = -1;
+ 		goto fail_bad_header;
+ 	}
+-
++	info->kernel_buf = kernel_uncompressed_buf;
+ 	unlink(fname);
+-
+-	free(kernel_uncompressed_buf);
+ 	free(fname);
+ 
+-	return kernel_fd;
++	return 0;
+ 
+ fail_bad_header:
+ 	free(kernel_uncompressed_buf);
 -- 
 2.31.1
 
