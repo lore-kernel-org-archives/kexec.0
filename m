@@ -4,72 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0AA97C001B0
-	for <kexec@archiver.kernel.org>; Wed, 19 Jul 2023 06:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 617A3C001DC
+	for <kexec@archiver.kernel.org>; Wed, 19 Jul 2023 06:55:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=TjNxvZ04vDdsby6ZamL7Owucqw7TLCj56AH4Swe7pXA=; b=mWMrMhY/+RVsJr
-	2qSswOQ9KpTjq/9M4TlZo8qh1du8KLIntihaFTQTRhj8u+YSbx9neg1K6qVgsBEih23wu7daVEklw
-	UaojwKntN3qWxlvHNnCNp3/cbLpueO42R51BIcLNqt7RBiT1+3fYgFlSvnyAuVBEmTqK8N0Ug4fx3
-	r/5NYY7lfy2oQonyWECOUccaUk+HH3CNQbSkiBdxz4uL98Kn4x6FyfmTNdK2Ghj9sa9ZtSx7vM4YJ
-	H/B2ShI4VFi+ImZDOu77UULDZOdw9po5vqou64fITUeiqMHe9VrZGsxNnMNkmZcMC4AhbVfSwaTs7
-	ibKx+a59LslMB8m9OSNA==;
+	List-Owner; bh=75LzCJzeyq1f7sc7cOMZAyJ+DYNFnX0cryKZ/k0dBrE=; b=L34dSLoEcdBvaU
+	ZFTTQO+mD7Qd6wJhbDh4ovgQqJKa3q1b9hRBBrASG3wOoKrVlC6rhIb0kbcCKJFUfZRy6ZrGsDZ9b
+	envnCLL5L0Y0nz62a96IJFSWkICkP/+fslcPxsxIVUZOgrQQkbpJ3FiDkawwwCMIX5HOuQnyiDIhW
+	1aRTn/Iz4wydf9k1AZhBW8cxkkMeiJMEZq8pcI/Lhx93oAvY2mZcaWw4bWe53dk3Zgm/gcmBEPAUa
+	Jxzu+VkURj+dDYSLLbDb9ASYR70bP4BAM5TF+jWvDUjAbdG2BzmBHf2iPX/Sgh0B8tDfWhp2LGMRr
+	LKpoJX1NarJATQg2LBHw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qM13x-005x1o-1q;
-	Wed, 19 Jul 2023 06:53:29 +0000
+	id 1qM15i-005yDM-0M;
+	Wed, 19 Jul 2023 06:55:18 +0000
 Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qM13v-005x0O-2I
+	id 1qM15g-005yB9-1b
 	for kexec@bombadil.infradead.org;
-	Wed, 19 Jul 2023 06:53:27 +0000
+	Wed, 19 Jul 2023 06:55:16 +0000
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=4yHx4HrfZqQeQHE9vX1YoGZ33C2Py0gSDsJKBhg4K6M=; b=nXZddxCIHTDBbbEoTRgNxk8jUQ
-	qAhwclD4nmJkQqn4PlskfAFsPMZNWw6RflJ1toKU9x/dm+hso3hvtq70fqiSnu0XP0NwanzpTgwUe
-	YFNADk7+NjrMvYtrQ9SVRaA1xNUfCZ8gU5byGIhv/cDKlgxzlgVTQJbZt5r1RNKWgGDVqTShs/TV6
-	RDM+QZSs8fY6g8M4JBkjwYascp9EL11T868RYjK+ha/EiSetS4pYliq5/5X6CEIU1EizCjoKf9fUA
-	XS9CQQ1er14x/jWSP5t7CveyhZao72uprS23H62u29tUy2cH0ZoMHU3LKKgkpH1M8qorPsqwUOcKW
-	YpaGvzfw==;
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132])
+	d=infradead.org; s=desiato.20200630; h=Content-Type:In-Reply-To:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=9vP2PddVnjrvv0c1cRBrDK6rOieBX/lLqHSjMrd00ZU=; b=ft5AC0Hr2NooRZvnW2imGaQ/PN
+	+3IFPLlNQE30EIp17r7bIZtaaOIHdfN1TSBf++oAtUZnGccxKEcCz6kvvTyMCEQC/1dcMYP71Py6a
+	0cewN3fmqcBVxp37fh+9mG86oG+4pFEbS0Gzs/gNPzd2VXvuuAgjy+hz2qcScqAKrquFGwkQlK85/
+	l8+vIUmmLA4Su5S3hx0OaoLL4np21xBRJ7mRwOY1tFYXgwwnHfVsIEOU32aICeihADWO8Cy0WYctN
+	IBSmlLXBIIg0oIeu6r6pFTraORymxg02/NSoiwWQEOuYHOd8CBi8GJ/sfEWdSVwT7wj9KKZwtdUFF
+	FVUO2xqg==;
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by desiato.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qLhCa-00BMnM-2w
+	id 1qLxQe-00ChCu-22
 	for kexec@lists.infradead.org;
-	Tue, 18 Jul 2023 09:41:08 +0000
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R281e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=xianting.tian@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0VnhEuq-_1689673217;
-Received: from 30.221.101.185(mailfrom:xianting.tian@linux.alibaba.com fp:SMTPD_---0VnhEuq-_1689673217)
-          by smtp.aliyun-inc.com;
-          Tue, 18 Jul 2023 17:40:33 +0800
-Message-ID: <a416d394-ecf8-f6a5-3227-1f5ade206363@linux.alibaba.com>
-Date: Tue, 18 Jul 2023 17:40:17 +0800
+	Wed, 19 Jul 2023 03:00:43 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1689735635;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9vP2PddVnjrvv0c1cRBrDK6rOieBX/lLqHSjMrd00ZU=;
+	b=WBOiY3UUwKAEFo/ZdO/OhH5WSBMD3VqFA0fHOO3nzuujymXFiYMXX6YpEvc2e17ZpsfQ2w
+	Y3cww7N5IvlhnQDPtoTaBBj7ZoJep2suE84XRpFBdjdv02ouZD/T+54wXlFf9dV2c3Sb7w
+	hW9WmvoOwT6nR8E/cG+tZSk6D/G2ri4=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1689735637;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9vP2PddVnjrvv0c1cRBrDK6rOieBX/lLqHSjMrd00ZU=;
+	b=PIF6/HuxFDqr8hylbJ0YJrKUCZrTb61UK71sdOR/4HKWeHq4iXWYr89xRJCVWEhFR/md/Y
+	76NHHLpSLyC1oq8XJAUMmonlanWA8yACbtx2e1zZSg5Sd/hRaM/4wZJC58wOAMiiuM122K
+	MaX0QGHEjMdd9DJF2pO2qOiBPukxfFw=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-608-mJI82IufPEy1RDCTa7edZQ-1; Tue, 18 Jul 2023 23:00:30 -0400
+X-MC-Unique: mJI82IufPEy1RDCTa7edZQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B45C8936D22;
+	Wed, 19 Jul 2023 03:00:29 +0000 (UTC)
+Received: from darkstar.users.ipa.redhat.com (ovpn-12-183.pek2.redhat.com [10.72.12.183])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id CC3A71454142;
+	Wed, 19 Jul 2023 03:00:24 +0000 (UTC)
+Date: Wed, 19 Jul 2023 11:02:08 +0800
+From: Dave Young <dyoung@redhat.com>
+To: Pingfan Liu <piliu@redhat.com>
+Cc: kexec@lists.infradead.org, horms@verge.net.au, ardb@kernel.org,
+	jeremy.linton@arm.com
+Subject: Re: [PATCHv5 0/8] arm64: zboot support
+Message-ID: <ZLdSMPJ9LxxFHCrO@darkstar.users.ipa.redhat.com>
+References: <20230717130732.22710-1-piliu@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.10.0
-Subject: Re: [PATCH V2] RISC-V: Add support for riscv kexec/kdump on
- kexec-tools
-To: =?UTF-8?B?UGV0ciBUZXNhxZnDrWs=?= <petr@tesarici.cz>,
- Guo Ren <guoren@kernel.org>
-Cc: "xianting_100@126.com" <xianting_100@126.com>,
- Simon Horman <horms@kernel.org>, kexec@lists.infradead.org, wefu@redhat.com,
- yixun.lan@gmail.com, Baoquan He <bhe@redhat.com>
-References: <20221020031548.47587-1-xianting.tian@linux.alibaba.com>
- <Y1K6TsGGC3KnFlf8@vergenet.net>
- <44c6ec02-ab91-a9ba-a0b8-fed6b93b82d4@linux.alibaba.com>
- <c87af556-1996-bc22-52da-1da23761d591@linux.alibaba.com>
- <ZCD2wkLCIAztKb/C@MiWiFi-R3L-srv>
- <CAJF2gTQgZZDgh384E_a1AavzQwt04F46G=EPAWMprqDgkNua0A@mail.gmail.com>
- <20230718113726.07c1f500@meshulam.tesarici.cz>
-From: Xianting Tian <xianting.tian@linux.alibaba.com>
-In-Reply-To: <20230718113726.07c1f500@meshulam.tesarici.cz>
+In-Reply-To: <20230717130732.22710-1-piliu@redhat.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230718_104105_501533_8B0D4C77 
-X-CRM114-Status: GOOD (  18.05  )
+X-CRM114-CacheID: sfid-20230719_040041_052228_0837573A 
+X-CRM114-Status: GOOD (  41.18  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,85 +101,469 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-CuWcqCAyMDIzLzcvMTgg5LiL5Y2INTozNywgUGV0ciBUZXNhxZnDrWsg5YaZ6YGTOgo+IE9uIE1v
-biwgMjcgTWFyIDIwMjMgMTY6Mjc6NTYgKzA4MDAKPiBHdW8gUmVuIDxndW9yZW5Aa2VybmVsLm9y
-Zz4gd3JvdGU6Cj4KPj4gRi5ZLkkKPj4KPj4geGlhbnRpbmdfMTAwQDEyNi5jb20KPj4KPj4gT24g
-TW9uLCBNYXIgMjcsIDIwMjMgYXQgOTo1MuKAr0FNIEJhb3F1YW4gSGUgPGJoZUByZWRoYXQuY29t
-PiB3cm90ZToKPj4+IEhpIFhpYW50aW5nLAo+Pj4KPj4+IE9uIDEwLzI2LzIyIGF0IDEwOjU5YW0s
-IFhpYW50aW5nIFRpYW4gd3JvdGU6Cj4+Pj4g5ZyoIDIwMjIvMTAvMjYg5LiK5Y2IMTA6MTMsIFhp
-YW50aW5nIFRpYW4g5YaZ6YGTOgo+Pj4+PiBIaSBTaW1vbgo+Pj4+Pgo+Pj4+PiB0aGFua3MgZm9y
-IHRoZSBjb21tZW50cwo+Pj4+Pgo+Pj4+PiDlnKggMjAyMi8xMC8yMSDkuIvljYgxMToyNywgU2lt
-b24gSG9ybWFuIOWGmemBkzoKPj4+Pj4+IE9uIFRodSwgT2N0IDIwLCAyMDIyIGF0IDExOjE1OjQ4
-QU0gKzA4MDAsIFhpYW50aW5nIFRpYW4gd3JvdGU6Cj4+Pj4+Pj4gRnJvbTogTmljayBLb3NzaWZp
-ZGlzIDxtaWNrQGljcy5mb3J0aC5ncj4KPj4+Pj4+Pgo+Pj4+Pj4+IFRoaXMgcGF0Y2ggYWRkcyBz
-dXBwb3J0IGZvciBsb2FkaW5nIHRoZSBFTEYga2VybmVsIGltYWdlLiBJdCBwYXJzZXMKPj4+Pj4+
-PiB0aGUgY3VycmVudC9wcm92aWRlZCBkZXZpY2UgdHJlZSB0byBkZXRlcm1pbmUgdGhlIHN5c3Rl
-bSdzIG1lbW9yeQo+Pj4+Pj4+IGxheW91dCwgYW5kIC9wcm9jL2lvbWVtIGZvciB0aGUgdmFyaW91
-cyBrZXJuZWwgc2VnbWVudHMuCj4+Pj4+Pj4KPj4+Pj4+PiBUaGlzIHBhdGNoIHdhcyBmaXJzdGx5
-IGRldmVsb3BlZCBieSBOaWNrIEtvc3NpZmlkaXMsIGFuZCB0d28gZml4ZXMgKAo+Pj4+Pj4+ICAg
-ICAgMTogZmFpbCB0byBmaW5kIGZyZWUgbWVtb3J5IGFyZWEgZm9yIGR0YiBsb2FkIHdoZW4gdXNp
-bmcKPj4+Pj4+PiBpbml0cmQgaW1hZ2UsCj4+Pj4+Pj4gbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBl
-cm1haWwvbGludXgtcmlzY3YvMjAyMi1BdWd1c3QvMDE4Mzk4Lmh0bWw7Cj4+Pj4+Pj4gICAgICAy
-OiBmaXggbWVtb3J5IHJhbmdlIHNpemUgY2FsY3VsYXRpb24sCj4+Pj4+Pj4gICAgICAgICAga2V4
-ZWMvYXJjaC9yaXNjdi9jcmFzaGR1bXAtcmlzY3YuYzpsaW5lIDg1Cj4+Pj4+Pj4gKSBhcmUgY29u
-dHJpYnV0ZWQgYnkgWWl4dW4gTGFuLCBYaWFudGluZyBUaWFuLgo+Pj4+Pj4+Cj4+Pj4+Pj4gVGVz
-dGVkIG9uIFFlbXUncyBydjY0IHZpcnQgbWFjaGluZSBhbmQgU29DIG9mIFQtSGVhZCBSSVNDLVYK
-Pj4+Pj4+PiBYdWFudGllIDkxMCBDUFUuCj4+Pj4+PiBIaSwKPj4+Pj4+Cj4+Pj4+PiB0aGFua3Mg
-Zm9yIHNvbWUgcGF0Y2guCj4+Pj4+Pgo+Pj4+Pj4gU29tZSBtaW5vciBmZWVkYmFjayBmb2xsb3dz
-Lgo+Pj4+Pj4KPj4+Pj4+IFNlcGFyYXRlbHksIEknbGwgcG9zdCBhIHBhdGNoIHRvIGFkZCBSSVND
-LVYgYnVpbGRzIHRvIHRoZSBnaXRodWIKPj4+Pj4+IHdvcmtmbG93LiBJZiB5b3UgY291bGQgaW5j
-bHVkZSB0aGF0IGluIFYzIEknZCBiZSBtb3N0IGdyYXRlZnVsLgo+Pj4+Pj4gICAKPj4+Pj4+PiBU
-ZXN0ZWQtYnk6IFlpeHVuIExhbiA8eWl4dW4ubGFuQGdtYWlsLmNvbT4KPj4+Pj4+PiBDby1kZXZl
-bG9wZWQtYnk6IFhpYW50aW5nIFRpYW4gPHhpYW50aW5nLnRpYW5AbGludXguYWxpYmFiYS5jb20+
-Cj4+Pj4+Pj4gQ28tZGV2ZWxvcGVkLWJ5OiBZaXh1biBMYW4gPHlpeHVuLmxhbkBnbWFpbC5jb20+
-Cj4+Pj4+Pj4gU2lnbmVkLW9mZi1ieTogTmljayBLb3NzaWZpZGlzIDxtaWNrQGljcy5mb3J0aC5n
-cj4KPj4+Pj4+IC4uLgo+Pj4+Pj4gICAKPj4+Pj4+PiArICAgIHJldCA9IG1lbV9yZWdpb25zX2Fs
-bG9jX2FuZF9hZGQobWVtX3Jhbmdlcywgc3RhcnQsCj4+Pj4+Pj4gKyAgICAgICAgICAgICAgICAg
-ICAgZW5kIC0gc3RhcnQsIHR5cGUpOwo+Pj4+Pj4gbWVtX3JlZ2lvbnNfYWxsb2NfYW5kX2FkZCBp
-c24ndCBhbHdheXMgYXZhaWxhYmxlLgo+Pj4+Pj4gZi5lLiBvbiBtaXBzIHRoaXMgY2F1c2VzIGEg
-YnVpbGQgZmFpbHVyZS4KPj4+Pj4+Cj4+Pj4+PiBSZWY6IGh0dHBzOi8vZ2l0aHViLmNvbS9ob3Jt
-cy9rZXhlYy10b29scy9hY3Rpb25zL3J1bnMvMzI5ODQ5MTE0My9qb2JzLzU0NDA2Nzc1OTUKPj4+
-Pj4gQXMgeW91IGtub3csIG1lbV9yZWdpb25zX3NvcnQsIG1lbV9yZWdpb25zX2FsbG9jX2FuZF9h
-ZGQgYXJlIHRoZSBjb21tb24KPj4+Pj4gZnVudGlvbnMsCj4+Pj4+Cj4+Pj4+IFRoZSBidWlsZCBl
-cnJvciBvZiBtaXBzIGlzIGNhdXNlZCBieSB0aGlzIHJpc2N2IHBhdGNoPwo+Pj4+Pgo+Pj4+PiBr
-ZXhlYy9tZW1fcmVnaW9ucy5jOnZvaWQgbWVtX3JlZ2lvbnNfc29ydChzdHJ1Y3QgbWVtb3J5X3Jh
-bmdlcyAqcmFuZ2VzKQo+Pj4+PiBrZXhlYy9tZW1fcmVnaW9ucy5oOnZvaWQgbWVtX3JlZ2lvbnNf
-c29ydChzdHJ1Y3QgbWVtb3J5X3JhbmdlcyAqcmFuZ2VzKTsKPj4+Pj4KPj4+Pj4KPj4+Pj4ga2V4
-ZWMvbWVtX3JlZ2lvbnMuYzppbnQgbWVtX3JlZ2lvbnNfYWxsb2NfYW5kX2FkZChzdHJ1Y3QgbWVt
-b3J5X3Jhbmdlcwo+Pj4+PiAqcmFuZ2VzLAo+Pj4+PiBrZXhlYy9tZW1fcmVnaW9ucy5oOmludCBt
-ZW1fcmVnaW9uc19hbGxvY19hbmRfYWRkKHN0cnVjdCBtZW1vcnlfcmFuZ2VzCj4+Pj4+ICpyYW5n
-ZXMsCj4+Pj4+ICAgCj4+Pj4+PiAuLi4KPj4+Pj4+ICAgCj4+Pj4+Pj4gK2ludCBkdGJfZ2V0X21l
-bW9yeV9yYW5nZXMoY2hhciAqZHRiLCBzdHJ1Y3QgbWVtb3J5X3Jhbmdlcwo+Pj4+Pj4+ICptZW1f
-cmFuZ2VzLCBzdHJ1Y3QgbWVtb3J5X3JhbmdlcyAqZXh0cmFfcmFuZ2VzKQo+Pj4+Pj4+ICt7Cj4+
-Pj4+PiAuLi4KPj4+Pj4+ICAgCj4+Pj4+Pj4gKyAgICBtZW1fcmVnaW9uc19zb3J0KG1lbV9yYW5n
-ZXMpOwo+Pj4+Pj4gTGlrZXdpc2UsIG1lbV9yZWdpb25zX3NvcnQgaXNuJ3QgYWx3YXlzIGF2YWls
-YWJsZS4KPj4+Pj4+IGYuZS4gb24gbWlwcyB0aGlzIGNhdXNlcyBhIGJ1aWxkIGZhaWx1cmUuCj4+
-Pj4+Pgo+Pj4+Pj4gLi4uCj4+Pj4+PiAgIAo+Pj4+Pj4+IGRpZmYgLS1naXQgYS9wdXJnYXRvcnkv
-YXJjaC9yaXNjdi9NYWtlZmlsZQo+Pj4+Pj4+IGIvcHVyZ2F0b3J5L2FyY2gvcmlzY3YvTWFrZWZp
-bGUKPj4+Pj4+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+Pj4+Pj4+IGluZGV4IDAwMDAwMDAuLjhi
-ZGVkNzEKPj4+Pj4+PiAtLS0gL2Rldi9udWxsCj4+Pj4+Pj4gKysrIGIvcHVyZ2F0b3J5L2FyY2gv
-cmlzY3YvTWFrZWZpbGUKPj4+Pj4+PiBAQCAtMCwwICsxLDcgQEAKPj4+Pj4+PiArIwo+Pj4+Pj4+
-ICsjIFB1cmdhdG9yeSByaXNjdgo+Pj4+Pj4+ICsjCj4+Pj4+Pj4gKwo+Pj4+Pj4+ICtyaXNjdl9Q
-VVJHQVRPUllfU1JDUyA9Cj4+Pj4+Pj4gKwo+Pj4+Pj4+ICtkaXN0ICs9IHB1cmdhdG9yeS9hcmNo
-L3NoL01ha2VmaWxlICQocmlzY3ZfUFVSR0FUT1JZX1NSQ1MpCj4+Pj4+PiBzL3NoL3Jpc2N2Lwo+
-Pj4+Pj4KPj4+Pj4+IEVsc2UgdGhlIGRpc3RyaWJ1dGlvbiB0YXJiYWxsIHdvbid0IGluY2x1ZGUg
-dGhpcyBNYWtlZmlsZQo+Pj4+Pj4KPj4+Pj4+IFlvdSBjYW4gZXhlcmNpc2UgdGhpcyB1c2luZzoK
-Pj4+Pj4+ICAgICBtYWtlIGRpc3RjaGVjayBESVNUQ0hFQ0tfQ09ORklHVVJFX0ZMQUdTPSItLWhv
-c3Q9cmlzY3Y2NC1saW51eC1nbnUiCj4+Pj4+IHRoYW5rcywgSSB3aWxsIGZpeCB0aGlzLgo+Pj4+
-IHRoZSBmaXggaXMgaW4gbXkgcGVyc29uYWwgZ2l0ZWUKPj4+Pgo+Pj4+IGh0dHBzOi8vZ2l0ZWUu
-Y29tL3hpYW50aW5nLXRpYW4va2V4ZWMtdG9vbHMvY29tbWl0cy9tYXN0ZXIKPj4+IElzIHRoaXMg
-cGF0Y2hzZXQgcmVwb3N0aW5nIHN0aWxsIGluIHlvdXIgd29ya2luZyBwbGFuPyBJIGRvbid0IHNl
-ZSB0aGUKPj4+IGNvZGUgaW4ga2V4ZS10b29scywgc28gcGluZyB0byBhc2suCj4+Pgo+Pj4gSWYg
-dGhpcyBpcyBub3QgeW91ciB3b3JrIHRhc2tzIGFueSBtb3JlLCBwZW9wbGUgaW50ZXJlc3RlZCBj
-YW4gcGljayB0aGlzCj4+PiBwYXRjaHNldCBhbmQgcG9zdCBhZnRlciBwb2xpc2hpbmcuCj4gTm93
-IGl0IHNlZW1zIEkgYW0gaW50ZXJlc3RlZC4gRllJIG15IHBsYW4gaXMgdG8gc3RhcnQgd29ya2lu
-ZyBvbiB0aGlzCj4gaWYgdGhlcmUgaXMgbm8gZnVydGhlciByZWFjdGlvbiBmcm9tIGFueWJvZHkg
-ZWxzZSB3aXRoaW4gYSBmb3J0bmlnaHQuCkdvb2QsIHBsZWFzZSBmZWVsIGZyZWUgdG8gZG8gaXQu
-Cj4KPiBQZXRyIFQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
-aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Hi Pingfan, Simon,
+
+On 07/17/23 at 09:07pm, Pingfan Liu wrote:
+> As more complicated capsule kernel format occurs like zboot, where the
+> compressed kernel is stored as a payload. The straight forward
+> decompression can not meet the demand.
+> 
+> As the first step, on aarch64, reading in the kernel file in a probe
+> method and decide how to unfold the content by the method itself.
+> 
+> This series introduce a new image probe interface probe2(), which
+> returns three factors: kernel buffer, kernel size and kernel fd through
+> a struct parsed_info.
+> -1. the parsed kernel_buf should be returned so that it can be used by
+> the image load method later.
+> -2. the final fd passed to sys_kexec_file_load, since aarch64 kernel can
+> only work with Image format, the outer payload should be stripped and a
+> temporary file of Image should be created.
+
+I took a look at the Image.gz file load code, the current code can be
+simplified with passing a fd directly instead of creating temp files via
+memfd_create with the already decompressed kernel_buf. 
+
+The current file load is like below:
+
+do_kexec_file_load():
+  1.slurp_decompress_file
+    2. probe
+      3. load
+        4. kexec_file_load
+
+In step 1, the Image.gz has been decompressed to kernel_buf, so just
+create a virtual memfd copy to it, then save the virtual fd for step 4
+use.
+
+Otherwise in step 2 it is some sanity checking, step 3 is setting
+something else eg. initrd_fd, cmdline. With the changes below Image and
+Image.gz will share same code. I think you can add the zboot
+detection/checking code in the Image probe, load functions, with a new
+info->kernel_fd, you can decompress the zboot kernel_buf and save to
+another virtual memfd, and set to the info->kernel_fd.  Then in step 4
+the kexec_file_load can just use it.
+
+The kernel_buf itself is only used for sanity checking of the formats,
+kernel only needs a file fd, so I think it should be fine and easier
+than the original ways.
+
+Thoughts?
+
+---
+ kexec/arch/arm64/Makefile             |    3 
+ kexec/arch/arm64/kexec-arm64.c        |    1 
+ kexec/arch/arm64/kexec-arm64.h        |    6 
+ kexec/arch/arm64/kexec-image-arm64.c  |    2 
+ kexec/arch/arm64/kexec-zImage-arm64.c |  226 ----------------------------------
+ kexec/kexec.c                         |   55 +++++---
+ kexec/kexec.h                         |    1 
+ 7 files changed, 39 insertions(+), 255 deletions(-)
+
+Index: kexec-tools/kexec/arch/arm64/Makefile
+===================================================================
+--- kexec-tools.orig/kexec/arch/arm64/Makefile
++++ kexec-tools/kexec/arch/arm64/Makefile
+@@ -15,8 +15,7 @@ arm64_KEXEC_SRCS += \
+ 	kexec/arch/arm64/kexec-arm64.c \
+ 	kexec/arch/arm64/kexec-elf-arm64.c \
+ 	kexec/arch/arm64/kexec-uImage-arm64.c \
+-	kexec/arch/arm64/kexec-image-arm64.c \
+-	kexec/arch/arm64/kexec-zImage-arm64.c
++	kexec/arch/arm64/kexec-image-arm64.c
+ 
+ arm64_UIMAGE = kexec/kexec-uImage.c
+ 
+Index: kexec-tools/kexec/arch/arm64/kexec-arm64.c
+===================================================================
+--- kexec-tools.orig/kexec/arch/arm64/kexec-arm64.c
++++ kexec-tools/kexec/arch/arm64/kexec-arm64.c
+@@ -74,7 +74,6 @@ struct file_type file_type[] = {
+ 	{"vmlinux", elf_arm64_probe, elf_arm64_load, elf_arm64_usage},
+ 	{"Image", image_arm64_probe, image_arm64_load, image_arm64_usage},
+ 	{"uImage", uImage_arm64_probe, uImage_arm64_load, uImage_arm64_usage},
+-	{"zImage", zImage_arm64_probe, zImage_arm64_load, zImage_arm64_usage},
+ };
+ 
+ int file_types = sizeof(file_type) / sizeof(file_type[0]);
+Index: kexec-tools/kexec/arch/arm64/kexec-arm64.h
+===================================================================
+--- kexec-tools.orig/kexec/arch/arm64/kexec-arm64.h
++++ kexec-tools/kexec/arch/arm64/kexec-arm64.h
+@@ -44,12 +44,6 @@ int uImage_arm64_load(int argc, char **a
+ 		      struct kexec_info *info);
+ void uImage_arm64_usage(void);
+ 
+-int zImage_arm64_probe(const char *kernel_buf, off_t kernel_size);
+-int zImage_arm64_load(int argc, char **argv, const char *kernel_buf,
+-	off_t kernel_size, struct kexec_info *info);
+-void zImage_arm64_usage(void);
+-
+-
+ extern off_t initrd_base;
+ extern off_t initrd_size;
+ 
+Index: kexec-tools/kexec/arch/arm64/kexec-image-arm64.c
+===================================================================
+--- kexec-tools.orig/kexec/arch/arm64/kexec-image-arm64.c
++++ kexec-tools/kexec/arch/arm64/kexec-image-arm64.c
+@@ -114,6 +114,6 @@ exit:
+ void image_arm64_usage(void)
+ {
+ 	printf(
+-"     An ARM64 binary image, uncompressed, big or little endian.\n"
++"     An ARM64 binary image, compressed or not, big or little endian.\n"
+ "     Typically an Image file.\n\n");
+ }
+Index: kexec-tools/kexec/arch/arm64/kexec-zImage-arm64.c
+===================================================================
+--- kexec-tools.orig/kexec/arch/arm64/kexec-zImage-arm64.c
++++ /dev/null
+@@ -1,226 +0,0 @@
+-/*
+- * ARM64 kexec zImage (Image.gz) support.
+- *
+- * Several distros use 'make zinstall' rule inside
+- * 'arch/arm64/boot/Makefile' to install the arm64
+- * Image.gz compressed file inside the boot destination
+- * directory (for e.g. /boot).
+- *
+- * Currently we cannot use kexec_file_load() to load vmlinuz
+- * (or Image.gz).
+- *
+- * To support Image.gz, we should:
+- * a). Copy the contents of Image.gz to a temporary file.
+- * b). Decompress (gunzip-decompress) the contents inside the
+- *     temporary file.
+- * c). Pass the 'fd' of the temporary file to the kernel space.
+- *
+- * So basically the kernel space still gets a decompressed
+- * kernel image to load via kexec-tools.
+- */
+-
+-#define _GNU_SOURCE
+-
+-#include <errno.h>
+-#include <fcntl.h>
+-#include <limits.h>
+-#include <stdlib.h>
+-#include "crashdump-arm64.h"
+-#include "image-header.h"
+-#include "kexec.h"
+-#include "kexec-arm64.h"
+-#include "kexec-syscall.h"
+-#include "kexec-zlib.h"
+-#include "arch/options.h"
+-
+-#define FILENAME_IMAGE		"/tmp/ImageXXXXXX"
+-
+-/* Returns:
+- * -1 : in case of error/invalid format (not a valid Image.gz format.
+- * fd : File descriptor of the temp file containing the decompressed
+- *      Image.
+- */
+-int zImage_arm64_probe(const char *kernel_buf, off_t kernel_size)
+-{
+-	int ret = -1;
+-	int fd = 0;
+-	int kernel_fd = 0;
+-	char *fname = NULL;
+-	char *kernel_uncompressed_buf = NULL;
+-	const struct arm64_image_header *h;
+-
+-	if (!is_zlib_file(kernel_buf, &kernel_size)) {
+-		dbgprintf("%s: Not an zImage file (Image.gz).\n", __func__);
+-		return -1;
+-	}
+-
+-	if (!(fname = strdup(FILENAME_IMAGE))) {
+-		dbgprintf("%s: Can't duplicate strings %s\n", __func__,
+-				fname);
+-		return -1;
+-	}
+-
+-	if ((fd = mkstemp(fname)) < 0) {
+-		dbgprintf("%s: Can't open file %s\n", __func__,
+-				fname);
+-		ret = -1;
+-		goto fail_mkstemp;
+-	}
+-
+-	kernel_uncompressed_buf =
+-		(char *) calloc(kernel_size, sizeof(off_t));
+-	if (!kernel_uncompressed_buf) {
+-		dbgprintf("%s: Can't calloc %ld bytes\n",
+-				__func__, kernel_size);
+-		ret= -ENOMEM;
+-		goto fail_calloc;
+-	}
+-
+-	/* slurp in the input kernel */
+-	dbgprintf("%s: ", __func__);
+-	kernel_uncompressed_buf = slurp_decompress_file(kernel_buf,
+-							&kernel_size);
+-
+-	/* check for correct header magic */
+-	if (kernel_size < sizeof(struct arm64_image_header)) {
+-		dbgprintf("%s: No arm64 image header.\n", __func__);
+-		ret = -1;
+-		goto fail_bad_header;
+-	}
+-
+-	h = (const struct arm64_image_header *)(kernel_uncompressed_buf);
+-
+-	if (!arm64_header_check_magic(h)) {
+-		dbgprintf("%s: Bad arm64 image header.\n", __func__);
+-		ret = -1;
+-		goto fail_bad_header;
+-	}
+-
+-	if (write(fd, kernel_uncompressed_buf,
+-				kernel_size) != kernel_size) {
+-		dbgprintf("%s: Can't write the uncompressed file %s\n",
+-				__func__, fname);
+-		ret = -1;
+-		goto fail_bad_header;
+-	}
+-
+-	close(fd);
+-
+-	/* Open the tmp file again, this time in O_RDONLY mode, as
+-	 * opening the file in O_RDWR and calling kexec_file_load()
+-	 * causes the kernel to return -ETXTBSY
+-	 */
+-	kernel_fd = open(fname, O_RDONLY);
+-	if (kernel_fd == -1) {
+-		dbgprintf("%s: Failed to open file %s\n",
+-				__func__, fname);
+-		ret = -1;
+-		goto fail_bad_header;
+-	}
+-
+-	unlink(fname);
+-
+-	free(kernel_uncompressed_buf);
+-	free(fname);
+-
+-	return kernel_fd;
+-
+-fail_bad_header:
+-	free(kernel_uncompressed_buf);
+-
+-fail_calloc:
+-	if (fd >= 0)
+-		close(fd);
+-
+-	unlink(fname);
+-
+-fail_mkstemp:
+-	free(fname);
+-
+-	return ret;
+-}
+-
+-int zImage_arm64_load(int argc, char **argv, const char *kernel_buf,
+-	off_t kernel_size, struct kexec_info *info)
+-{
+-	const struct arm64_image_header *header;
+-	unsigned long kernel_segment;
+-	int result;
+-
+-	if (info->file_mode) {
+-		if (arm64_opts.initrd) {
+-			info->initrd_fd = open(arm64_opts.initrd, O_RDONLY);
+-			if (info->initrd_fd == -1) {
+-				fprintf(stderr,
+-					"Could not open initrd file %s:%s\n",
+-					arm64_opts.initrd, strerror(errno));
+-				result = EFAILED;
+-				goto exit;
+-			}
+-		}
+-
+-		if (arm64_opts.command_line) {
+-			info->command_line = (char *)arm64_opts.command_line;
+-			info->command_line_len =
+-					strlen(arm64_opts.command_line) + 1;
+-		}
+-
+-		return 0;
+-	}
+-
+-	header = (const struct arm64_image_header *)(kernel_buf);
+-
+-	if (arm64_process_image_header(header))
+-		return EFAILED;
+-
+-	kernel_segment = arm64_locate_kernel_segment(info);
+-
+-	if (kernel_segment == ULONG_MAX) {
+-		dbgprintf("%s: Kernel segment is not allocated\n", __func__);
+-		result = EFAILED;
+-		goto exit;
+-	}
+-
+-	dbgprintf("%s: kernel_segment: %016lx\n", __func__, kernel_segment);
+-	dbgprintf("%s: text_offset:    %016lx\n", __func__,
+-		arm64_mem.text_offset);
+-	dbgprintf("%s: image_size:     %016lx\n", __func__,
+-		arm64_mem.image_size);
+-	dbgprintf("%s: phys_offset:    %016lx\n", __func__,
+-		arm64_mem.phys_offset);
+-	dbgprintf("%s: vp_offset:      %016lx\n", __func__,
+-		arm64_mem.vp_offset);
+-	dbgprintf("%s: PE format:      %s\n", __func__,
+-		(arm64_header_check_pe_sig(header) ? "yes" : "no"));
+-
+-	/* create and initialize elf core header segment */
+-	if (info->kexec_flags & KEXEC_ON_CRASH) {
+-		result = load_crashdump_segments(info);
+-		if (result) {
+-			dbgprintf("%s: Creating eflcorehdr failed.\n",
+-								__func__);
+-			goto exit;
+-		}
+-	}
+-
+-	/* load the kernel */
+-	add_segment_phys_virt(info, kernel_buf, kernel_size,
+-			kernel_segment + arm64_mem.text_offset,
+-			arm64_mem.image_size, 0);
+-
+-	/* load additional data */
+-	result = arm64_load_other_segments(info, kernel_segment
+-		+ arm64_mem.text_offset);
+-
+-exit:
+-	if (result)
+-		fprintf(stderr, "kexec: load failed.\n");
+-	return result;
+-}
+-
+-void zImage_arm64_usage(void)
+-{
+-	printf(
+-"     An ARM64 zImage, compressed, big or little endian.\n"
+-"     Typically an Image.gz or Image.lzma file.\n\n");
+-}
+Index: kexec-tools/kexec/kexec.c
+===================================================================
+--- kexec-tools.orig/kexec/kexec.c
++++ kexec-tools/kexec/kexec.c
+@@ -638,6 +638,21 @@ char *slurp_decompress_file(const char *
+ 	return kernel_buf;
+ }
+ 
++int copybuf_memfd(const char *kernel_buf, size_t size)
++{
++	int fd, count;
++
++	fd = memfd_create("kernel", MFD_ALLOW_SEALING);
++	if (fd == -1)
++		return fd;
++
++	count = write(fd, kernel_buf, size);
++	if (count < 0)
++		return -1;
++
++	return fd;
++}
++
+ static void update_purgatory(struct kexec_info *info)
+ {
+ 	static const uint8_t null_buf[256];
+@@ -1263,7 +1278,7 @@ static int do_kexec_file_load(int filein
+ 			unsigned long flags) {
+ 
+ 	char *kernel;
+-	int kernel_fd, i;
++	int kernel_fd, i, fd;
+ 	struct kexec_info info;
+ 	int ret = 0;
+ 	char *kernel_buf;
+@@ -1277,6 +1292,7 @@ static int do_kexec_file_load(int filein
+ 	info.kexec_flags = flags;
+ 
+ 	info.file_mode = 1;
++	info.kernel_fd = -1;
+ 	info.initrd_fd = -1;
+ 
+ 	if (!is_kexec_file_load_implemented())
+@@ -1299,22 +1315,16 @@ static int do_kexec_file_load(int filein
+ 
+ 	/* slurp in the input kernel */
+ 	kernel_buf = slurp_decompress_file(kernel, &kernel_size);
++	fd = copybuf_memfd(kernel_buf, kernel_size);
++	if (fd < 0)
++		fprintf(stderr, "Failed to copy decompressed buf\n");
++	else {
++		kernel_fd = fd;
++	}
+ 
+ 	for (i = 0; i < file_types; i++) {
+-#ifdef __aarch64__
+-		/* handle Image.gz like cases */
+-		if (is_zlib_file(kernel, &kernel_size)) {
+-			if ((ret = file_type[i].probe(kernel, kernel_size)) >= 0) {
+-				kernel_fd = ret;
+-				break;
+-			}
+-		} else
+-			if (file_type[i].probe(kernel_buf, kernel_size) >= 0)
+-				break;
+-#else
+ 		if (file_type[i].probe(kernel_buf, kernel_size) >= 0)
+ 			break;
+-#endif
+ 	}
+ 
+ 	if (i == file_types) {
+@@ -1324,12 +1334,19 @@ static int do_kexec_file_load(int filein
+ 		return EFAILED;
+ 	}
+ 
+-	ret = file_type[i].load(argc, argv, kernel_buf, kernel_size, &info);
+-	if (ret < 0) {
+-		fprintf(stderr, "Cannot load %s\n", kernel);
+-		close(kernel_fd);
+-		return ret;
+-	}
++       ret = file_type[i].load(argc, argv, kernel_buf, kernel_size, &info);
++       if (ret < 0) {
++               fprintf(stderr, "Cannot load %s\n", kernel);
++               close(kernel_fd);
++               return ret;
++       }
++
++       /*
++	* image type specific load functioin detect the capsule kernel type
++	* and create another fd for file load. For example the zboot kernel.
++	*/
++	if (info.kernel_fd != -1)
++		kernel_fd = info.kernel_fd;
+ 
+ 	/*
+ 	 * If there is no initramfs, set KEXEC_FILE_NO_INITRAMFS flag so that
+Index: kexec-tools/kexec/kexec.h
+===================================================================
+--- kexec-tools.orig/kexec/kexec.h
++++ kexec-tools/kexec/kexec.h
+@@ -164,6 +164,7 @@ struct kexec_info {
+ 	unsigned long file_mode :1;
+ 
+ 	/* Filled by kernel image processing code */
++	int kernel_fd;
+ 	int initrd_fd;
+ 	char *command_line;
+ 	int command_line_len;
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
