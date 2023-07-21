@@ -4,85 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 860CCEB64DA
-	for <kexec@archiver.kernel.org>; Thu, 20 Jul 2023 10:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 91089EB64DD
+	for <kexec@archiver.kernel.org>; Fri, 21 Jul 2023 08:21:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=bTb2q35DLMGgHkr0dVsM/lfp5/WavL9iEliqmS9AJjY=; b=DS8Agp8mYk5ktb
-	+L9aXQisg/BubTtqjed1OUPJf61Vvc12hTjPOmvvc9gZNG1w7Sr91hfpz9FlbY9oiiAwb2Hq66fs1
-	6UIEYdeyJjOcLWpaKF/Co8qUpxh/VN8K0V5pS/HRX3hQvkU7ofRwG0huqNso5m3b/oNzRiFLtIY1W
-	xfd/jZwShhPBT99nu1cd+QGjYuAegMd9PN0y6nF5VC02M3tcXu6vsRfYTs0pkqJbFnQ+fU565ranw
-	kh6mL079PYLO2YZuZkYTVJE/8Z5Ma/OnQjn6RMXH4UKDj9GS8e6UMFzy7PEGkSX/pd4oFW0h2M2+7
-	m6wHDQRDE5iZSHFZ7Iew==;
+	List-Owner; bh=X2SgUbSuq1CPbLxm0R8vdft6fvsQMhRUia8uUfwzlho=; b=fbFN4Hmu1Th2kY
+	NKe7rB2uJybMsHAIyYYq6oJrp9KC7/z/xWmeXv4DgUye5nOMcyxF3tOZDzS0JvSE4OZKXtke5WAWe
+	yPCKVpeiNRYcbB1tywEHvS9OA7ovB1rO7U0XBy3BBQWLomu4v1EmwcnVjb8uDaj1H/0vPolZ3rah5
+	yWoDJkBqrNYxMg9Y6RK9hel3L0I9amfSjqRmpFrZUJrYJDlC2YQ66BESD5EBZelC3YG3Huwcr8Y56
+	CWk6ZZNJi/wKTk6XELK/f2P3BwtwiFUZX9XG9hwxNFPXkYko9yerJC7MD2M/E/nQ1Y/Jnw+FBcSQ7
+	RFy1zXCZO/PxGivfCFXQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qMQZE-00Agpd-0h;
-	Thu, 20 Jul 2023 10:07:28 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1qMlOC-00DLKU-1g;
+	Fri, 21 Jul 2023 08:21:28 +0000
+Received: from [45.249.212.51] (helo=dggsgout11.his.huawei.com)
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qMQZB-00Agi2-0A
-	for kexec@lists.infradead.org;
-	Thu, 20 Jul 2023 10:07:26 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1689847615;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=w6RHdcQUaQmsrvqbhKrMl+sQhjJv/PRaKnm29ihYT4Y=;
-	b=CcShdRTVMYVBB2avLIL2mW8vIr2AgWlXwxIhOfmbpsrn23cgC+cjIk+7aogEum4weoESYW
-	uVnONxPgRgMRKkNr2CbJn5RJrezenORuXmN8rXbXLC8BY+duEVBsUyiQtuXT+12DORWOAU
-	G6RJchOi2kvpBUDXxyTmSa3bJhgaAaw=
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
- [209.85.166.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-658-Byxd21ASPJmvbsvur8DfQg-1; Thu, 20 Jul 2023 06:06:54 -0400
-X-MC-Unique: Byxd21ASPJmvbsvur8DfQg-1
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-783339b6c88so9468539f.0
-        for <kexec@lists.infradead.org>; Thu, 20 Jul 2023 03:06:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689847613; x=1690452413;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=w6RHdcQUaQmsrvqbhKrMl+sQhjJv/PRaKnm29ihYT4Y=;
-        b=Pzcw30BoBAeVbnP0HbxFsqAsCGk+awAvtzVqJmrgt96aNFQr97QOWygB9XkT9GwlPb
-         ffVr6/WhdO6A1CZSW6NBTvmftt/r8SCjaLbyahg8m6tfvQP7uBe7sYGFEMRrTd7T+0m7
-         tVKD67MVVjAmJEGXLXTQCf9JFF0JhXdl1v2R2uSvN/1RCQvUFGka0ZtAphY7WvcwFdrS
-         uqrJPwdq/z/0ftMVXjknYSPRId619j9SkD/XvuSmYZeuXSxUva3MVr1F+ieq/cEWaEQG
-         naHagErWT1t4R4aa0JuGk/QsNghdseNFgTlMzehpJjUC3mlmOkL6Dzntj/X4fC35ySpy
-         qtMQ==
-X-Gm-Message-State: ABy/qLYAMoZQeubdZJ3EpWPjubTOzf6lbpbQ0PXksGekQ56FKiIoAQTd
-	/gCniZjbnPuTpAtDPN4NGX+QHIe9mQ0oK7SCIDAFzhZ2inyDSizq575dUZVZdqsnwMqpxXztyNA
-	3PnHFryEZNtHS6SVKySPL9YJp7gX7Q3XyXjAkrwb0cwal
-X-Received: by 2002:a92:dacf:0:b0:345:db9a:be2c with SMTP id o15-20020a92dacf000000b00345db9abe2cmr2135129ilq.1.1689847613602;
-        Thu, 20 Jul 2023 03:06:53 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlF4Un4212Lv3jpghVCZkxfDHQKMRv9odR0JncfshuIIRhnVpu54SAt4KwHL7hzfgFlRyEzLaf+lsMKrIQW6p3M=
-X-Received: by 2002:a92:dacf:0:b0:345:db9a:be2c with SMTP id
- o15-20020a92dacf000000b00345db9abe2cmr2135122ilq.1.1689847613373; Thu, 20 Jul
- 2023 03:06:53 -0700 (PDT)
+	id 1qMlO7-00DLHD-0i;
+	Fri, 21 Jul 2023 08:21:25 +0000
+Received: from mail02.huawei.com (unknown [172.30.67.143])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4R6jF54MWYz4f41GL;
+	Fri, 21 Jul 2023 16:21:13 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.174.178.55])
+	by APP4 (Coremail) with SMTP id gCh0CgAHoZT2P7pkhprcOQ--.24672S6;
+	Fri, 21 Jul 2023 16:21:14 +0800 (CST)
+From: thunder.leizhen@huaweicloud.com
+To: Dave Young <dyoung@redhat.com>,
+	Baoquan He <bhe@redhat.com>,
+	Vivek Goyal <vgoyal@redhat.com>,
+	"Eric W . Biederman" <ebiederm@xmission.com>,
+	kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org
+Cc: Zhen Lei <thunder.leizhen@huawei.com>
+Subject: [PATCH 2/3] arm64: kdump: use page-level mapping for crashkernel region
+Date: Fri, 21 Jul 2023 16:17:25 +0800
+Message-Id: <20230721081726.882-3-thunder.leizhen@huaweicloud.com>
+X-Mailer: git-send-email 2.37.3.windows.1
+In-Reply-To: <20230721081726.882-1-thunder.leizhen@huaweicloud.com>
+References: <20230721081726.882-1-thunder.leizhen@huaweicloud.com>
 MIME-Version: 1.0
-References: <20230717130732.22710-1-piliu@redhat.com> <ZLdSMPJ9LxxFHCrO@darkstar.users.ipa.redhat.com>
- <CAF+s44SZSX5H_UkTjauHkxZwWRBTJ0vD6a_AqEfTxBioJ6ioTQ@mail.gmail.com>
- <CALu+AoQMib-=w3mEoaz97Yb-nG=NfgLJswifUh834duu3rnj+A@mail.gmail.com>
- <CAF+s44QVbpb=upCqY6n_FSo6QAhv6=eLNCXwz1Jng6wW75KLXQ@mail.gmail.com> <CALu+AoThG6kFEQ1-x=uv1_f8PYGNLD=hgg3vk2avDUk=K_BdOg@mail.gmail.com>
-In-Reply-To: <CALu+AoThG6kFEQ1-x=uv1_f8PYGNLD=hgg3vk2avDUk=K_BdOg@mail.gmail.com>
-From: Dave Young <dyoung@redhat.com>
-Date: Thu, 20 Jul 2023 18:08:31 +0800
-Message-ID: <CALu+AoREQ9ZjtzibtKMH-ZRD6O1Lqh3hG7s2VS1xXOaqszom5g@mail.gmail.com>
-Subject: Re: [PATCHv5 0/8] arm64: zboot support
-To: Pingfan Liu <piliu@redhat.com>
-Cc: kexec@lists.infradead.org, horms@verge.net.au, ardb@kernel.org, 
-	jeremy.linton@arm.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+X-CM-TRANSID: gCh0CgAHoZT2P7pkhprcOQ--.24672S6
+X-Coremail-Antispam: 1UD129KBjvJXoW7uF4ktrWkuw43ZF1Uuw4rZrb_yoW8Wr4rpr
+	1kZ3s8Gr4rC3Z3ua1fWwn7Z3yrtw1FkFy5Za13A3Wvga1kJ39xKryrWFySvryjgrWftr4S
+	vr10yrn3Wa12yrDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBCb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6r106r1rM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUXw
+	A2048vs2IY020Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WxJr0_GcWl84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx
+	0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWU
+	JVW8JwACjcxG0xvY0x0EwIxGrwACI402YVCY1x02628vn2kIc2xKxwAKzVCY07xG64k0F2
+	4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWU
+	JVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7V
+	AKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42
+	IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU49mRUUUUU
+X-CM-SenderInfo: hwkx0vthuozvpl2kv046kxt4xhlfz01xgou0bp/
+X-CFilter-Loop: Reflected
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230720_030725_156447_94E5B338 
-X-CRM114-Status: GOOD (  39.20  )
+X-CRM114-CacheID: sfid-20230721_012123_449579_56204471 
+X-CRM114-Status: UNSURE (   9.80  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,81 +84,65 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-T24gVGh1LCAyMCBKdWwgMjAyMyBhdCAxODowOCwgRGF2ZSBZb3VuZyA8ZHlvdW5nQHJlZGhhdC5j
-b20+IHdyb3RlOgo+Cj4gT24gVGh1LCAyMCBKdWwgMjAyMyBhdCAxNjo1OSwgUGluZ2ZhbiBMaXUg
-PHBpbGl1QHJlZGhhdC5jb20+IHdyb3RlOgo+ID4KPiA+IE9uIFRodSwgSnVsIDIwLCAyMDIzIGF0
-IDM6MjfigK9QTSBEYXZlIFlvdW5nIDxkeW91bmdAcmVkaGF0LmNvbT4gd3JvdGU6Cj4gPiA+Cj4g
-PiA+IEhpIFBpbmdmYW4sCj4gPiA+Cj4gPiA+IE9uIFRodSwgMjAgSnVsIDIwMjMgYXQgMTA6MDUs
-IFBpbmdmYW4gTGl1IDxwaWxpdUByZWRoYXQuY29tPiB3cm90ZToKPiA+ID4gPgo+ID4gPiA+IEhp
-IERhdmUsCj4gPiA+ID4KPiA+ID4gPiBUaGFua3MgZm9yIHlvdXIgaW5zaWdodC4gUGxlYXNlIHNl
-ZSB0aGUgY29tbWVudHMgaW5saW5lIGJlbG93Lgo+ID4gPiA+Cj4gPiA+ID4gT24gV2VkLCBKdWwg
-MTksIDIwMjMgYXQgMTE6MDDigK9BTSBEYXZlIFlvdW5nIDxkeW91bmdAcmVkaGF0LmNvbT4gd3Jv
-dGU6Cj4gPiA+ID4gPgo+ID4gPiA+ID4gSGkgUGluZ2ZhbiwgU2ltb24sCj4gPiA+ID4gPgo+ID4g
-PiA+ID4gT24gMDcvMTcvMjMgYXQgMDk6MDdwbSwgUGluZ2ZhbiBMaXUgd3JvdGU6Cj4gPiA+ID4g
-PiA+IEFzIG1vcmUgY29tcGxpY2F0ZWQgY2Fwc3VsZSBrZXJuZWwgZm9ybWF0IG9jY3VycyBsaWtl
-IHpib290LCB3aGVyZSB0aGUKPiA+ID4gPiA+ID4gY29tcHJlc3NlZCBrZXJuZWwgaXMgc3RvcmVk
-IGFzIGEgcGF5bG9hZC4gVGhlIHN0cmFpZ2h0IGZvcndhcmQKPiA+ID4gPiA+ID4gZGVjb21wcmVz
-c2lvbiBjYW4gbm90IG1lZXQgdGhlIGRlbWFuZC4KPiA+ID4gPiA+ID4KPiA+ID4gPiA+ID4gQXMg
-dGhlIGZpcnN0IHN0ZXAsIG9uIGFhcmNoNjQsIHJlYWRpbmcgaW4gdGhlIGtlcm5lbCBmaWxlIGlu
-IGEgcHJvYmUKPiA+ID4gPiA+ID4gbWV0aG9kIGFuZCBkZWNpZGUgaG93IHRvIHVuZm9sZCB0aGUg
-Y29udGVudCBieSB0aGUgbWV0aG9kIGl0c2VsZi4KPiA+ID4gPiA+ID4KPiA+ID4gPiA+ID4gVGhp
-cyBzZXJpZXMgaW50cm9kdWNlIGEgbmV3IGltYWdlIHByb2JlIGludGVyZmFjZSBwcm9iZTIoKSwg
-d2hpY2gKPiA+ID4gPiA+ID4gcmV0dXJucyB0aHJlZSBmYWN0b3JzOiBrZXJuZWwgYnVmZmVyLCBr
-ZXJuZWwgc2l6ZSBhbmQga2VybmVsIGZkIHRocm91Z2gKPiA+ID4gPiA+ID4gYSBzdHJ1Y3QgcGFy
-c2VkX2luZm8uCj4gPiA+ID4gPiA+IC0xLiB0aGUgcGFyc2VkIGtlcm5lbF9idWYgc2hvdWxkIGJl
-IHJldHVybmVkIHNvIHRoYXQgaXQgY2FuIGJlIHVzZWQgYnkKPiA+ID4gPiA+ID4gdGhlIGltYWdl
-IGxvYWQgbWV0aG9kIGxhdGVyLgo+ID4gPiA+ID4gPiAtMi4gdGhlIGZpbmFsIGZkIHBhc3NlZCB0
-byBzeXNfa2V4ZWNfZmlsZV9sb2FkLCBzaW5jZSBhYXJjaDY0IGtlcm5lbCBjYW4KPiA+ID4gPiA+
-ID4gb25seSB3b3JrIHdpdGggSW1hZ2UgZm9ybWF0LCB0aGUgb3V0ZXIgcGF5bG9hZCBzaG91bGQg
-YmUgc3RyaXBwZWQgYW5kIGEKPiA+ID4gPiA+ID4gdGVtcG9yYXJ5IGZpbGUgb2YgSW1hZ2Ugc2hv
-dWxkIGJlIGNyZWF0ZWQuCj4gPiA+ID4gPgo+ID4gPiA+ID4gSSB0b29rIGEgbG9vayBhdCB0aGUg
-SW1hZ2UuZ3ogZmlsZSBsb2FkIGNvZGUsIHRoZSBjdXJyZW50IGNvZGUgY2FuIGJlCj4gPiA+ID4g
-PiBzaW1wbGlmaWVkIHdpdGggcGFzc2luZyBhIGZkIGRpcmVjdGx5IGluc3RlYWQgb2YgY3JlYXRp
-bmcgdGVtcCBmaWxlcyB2aWEKPiA+ID4gPiA+IG1lbWZkX2NyZWF0ZSB3aXRoIHRoZSBhbHJlYWR5
-IGRlY29tcHJlc3NlZCBrZXJuZWxfYnVmLgo+ID4gPiA+ID4KPiA+ID4gPiA+IFRoZSBjdXJyZW50
-IGZpbGUgbG9hZCBpcyBsaWtlIGJlbG93Ogo+ID4gPiA+ID4KPiA+ID4gPiA+IGRvX2tleGVjX2Zp
-bGVfbG9hZCgpOgo+ID4gPiA+ID4gICAxLnNsdXJwX2RlY29tcHJlc3NfZmlsZQo+ID4gPiA+ID4g
-ICAgIDIuIHByb2JlCj4gPiA+ID4gPiAgICAgICAzLiBsb2FkCj4gPiA+ID4gPiAgICAgICAgIDQu
-IGtleGVjX2ZpbGVfbG9hZAo+ID4gPiA+ID4KPiA+ID4gPiA+IEluIHN0ZXAgMSwgdGhlIEltYWdl
-Lmd6IGhhcyBiZWVuIGRlY29tcHJlc3NlZCB0byBrZXJuZWxfYnVmLCBzbyBqdXN0Cj4gPiA+ID4g
-PiBjcmVhdGUgYSB2aXJ0dWFsIG1lbWZkIGNvcHkgdG8gaXQsIHRoZW4gc2F2ZSB0aGUgdmlydHVh
-bCBmZCBmb3Igc3RlcCA0Cj4gPiA+ID4gPiB1c2UuCj4gPiA+ID4gPgo+ID4gPiA+ID4gT3RoZXJ3
-aXNlIGluIHN0ZXAgMiBpdCBpcyBzb21lIHNhbml0eSBjaGVja2luZywgc3RlcCAzIGlzIHNldHRp
-bmcKPiA+ID4gPiA+IHNvbWV0aGluZyBlbHNlIGVnLiBpbml0cmRfZmQsIGNtZGxpbmUuIFdpdGgg
-dGhlIGNoYW5nZXMgYmVsb3cgSW1hZ2UgYW5kCj4gPiA+ID4gPiBJbWFnZS5neiB3aWxsIHNoYXJl
-IHNhbWUgY29kZS4gSSB0aGluayB5b3UgY2FuIGFkZCB0aGUgemJvb3QKPiA+ID4gPiA+IGRldGVj
-dGlvbi9jaGVja2luZyBjb2RlIGluIHRoZSBJbWFnZSBwcm9iZSwgbG9hZCBmdW5jdGlvbnMsIHdp
-dGggYSBuZXcKPiA+ID4gPiA+IGluZm8tPmtlcm5lbF9mZCwgeW91IGNhbiBkZWNvbXByZXNzIHRo
-ZSB6Ym9vdCBrZXJuZWxfYnVmIGFuZCBzYXZlIHRvCj4gPiA+ID4gPiBhbm90aGVyIHZpcnR1YWwg
-bWVtZmQsIGFuZCBzZXQgdG8gdGhlIGluZm8tPmtlcm5lbF9mZC4gIFRoZW4gaW4gc3RlcCA0Cj4g
-PiA+ID4gPiB0aGUga2V4ZWNfZmlsZV9sb2FkIGNhbiBqdXN0IHVzZSBpdC4KPiA+ID4gPiA+Cj4g
-PiA+ID4KPiA+ID4gPiBUaGlzIG9ubHkgcmVzdWx0cyBpbiBhIG1pbm9yIGNoYW5nZSBpbiB0aGUg
-aW50ZXJmYWNlLCBub3QgbGlrZSBtaW5lLiBJCj4gPiA+ID4gcHJlZmVyIHRoaXMgbWV0aG9kLgo+
-ID4gPiA+Cj4gPiA+ID4gPiBUaGUga2VybmVsX2J1ZiBpdHNlbGYgaXMgb25seSB1c2VkIGZvciBz
-YW5pdHkgY2hlY2tpbmcgb2YgdGhlIGZvcm1hdHMsCj4gPiA+ID4gPiBrZXJuZWwgb25seSBuZWVk
-cyBhIGZpbGUgZmQsIHNvIEkgdGhpbmsgaXQgc2hvdWxkIGJlIGZpbmUgYW5kIGVhc2llcgo+ID4g
-PiA+ID4gdGhhbiB0aGUgb3JpZ2luYWwgd2F5cy4KPiA+ID4gPiA+Cj4gPiA+ID4KPiA+ID4gPiBP
-dmVyYWxsLCB0aGlzIG5ldyBtZXRob2QgbWluaW1hbGx5IGFmZmVjdHMgdGhlIGZ1bmN0aW9uIGlu
-dGVyZmFjZSwgaW4KPiA+ID4gPiBhZGRpdGlvbiB0byB0aGUgY29kZSBzaW1wbGlmaWNhdGlvbi4K
-PiA+ID4gPiBJIHdpbGwgdHJ5IHRvIHRha2UgaXQgaW4gdGhlIG5leHQgdmVyc2lvbi4KPiA+ID4g
-Pgo+ID4gPiBPaywgZ3JlYXQuICBCdHcsIGl0IHdvdWxkIGJlIGlkZWFsIGlmIHNvbWUgb2YgdGhl
-IHBlel9wcmVwYXJlIHdvcmsgY2FuCj4gPiA+IGJlIGRvbmUgZWFybHkgYmVmb3JlIHRoZSBzbHVy
-cF9kZWNvbXByZXNzX2ZpbGUgaW4KPiA+ID4gZG9fa2V4ZWNfZmlsZV9sb2FkKCksIHRoZW4gaXQg
-Y291bGQgYmUganVzdCBhcmNoIGluZGVwZW5kZW50IDopCj4gPiA+Cj4gPgo+ID4gSSBhc3N1bWUg
-dGhhdCB5b3Ugc3VnZ2VzdCB0aGUgZm9sbG93aW5nIGJpZyBwaWN0dXJlOgo+ID4gICAgIGlmIHRy
-eWluZyBzbHVycF9kZWNvbXByZXNzX2ZpbGUoKQo+ID4gICAgIGVsc2UgdHJ5aW5nIHBlel9wcmVw
-YXJlKCkKPiA+ICAgICBmb3IgKGkgPSAwOyBpIDwgZmlsZV90eXBlczsgaSsrKSB7Cj4gPiAgICAg
-ICBpZiAoZmlsZV90eXBlW2ldLnByb2JlKGtlcm5lbF9idWYsIGtlcm5lbF9zaXplKSA+PSAwKQo+
-ID4gICAgfQo+ID4KPiA+IEJ1dCB0aGVyZSBpcyBzb21lIGNoZWNrIGJlZm9yZSBwZXpfcHJlcGFy
-ZSgpIGluIHBlel9hcm02NF9wcm9iZSgpLCBJCj4gPiBhbSBub3Qgc3VyZSB3aGV0aGVyIHRoZXkg
-Y2FuIGJlIHNraXBwZWQgb3Igbm90Lgo+Cj4gT2ssIGdvdCBpdCwgaWYgdGhlIHppbWFnZSBoZWFk
-ZXIgb2YgYXJtNjQgaXMgYXJjaCBzcGVjaWZpYyAsIGl0IHNob3VsZAoKcy96aW1hZ2UvemJvb3QK
-Cj4gc3RpbGwgZ28gdG8gdGhlIGFyY2ggcGFydC4KPgo+IFRoYW5rcwo+IERhdmUKCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxp
-c3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+From: Zhen Lei <thunder.leizhen@huawei.com>
+
+Use page-level mappings for crashkernel region so that we can use
+set_memory_valid() to do access protection for it.
+
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+---
+ arch/arm64/mm/mmu.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index 95d360805f8aeb3..e0a197ebe14837d 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -594,6 +594,11 @@ static void __init map_mem(pgd_t *pgdp)
+ 	 */
+ 	memblock_mark_nomap(kernel_start, kernel_end - kernel_start);
+ 
++#ifdef CONFIG_KEXEC_CORE
++	if (crashk_res.end)
++		memblock_mark_nomap(crashk_res.start, resource_size(&crashk_res));
++#endif
++
+ 	/* map all the memory banks */
+ 	for_each_mem_range(i, &start, &end) {
+ 		if (start >= end)
+@@ -621,6 +626,22 @@ static void __init map_mem(pgd_t *pgdp)
+ 		       PAGE_KERNEL, NO_CONT_MAPPINGS);
+ 	memblock_clear_nomap(kernel_start, kernel_end - kernel_start);
+ 	arm64_kfence_map_pool(early_kfence_pool, pgdp);
++
++	/*
++	 * Use page-level mappings here so that we can shrink the region
++	 * in page granularity and put back unused memory to buddy system
++	 * through /sys/kernel/kexec_crash_size interface.
++	 */
++#ifdef CONFIG_KEXEC_CORE
++	if (crashk_res.end) {
++		__map_memblock(pgdp, crashk_res.start,
++			       crashk_res.end + 1,
++			       PAGE_KERNEL,
++			       NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS);
++		memblock_clear_nomap(crashk_res.start,
++				     resource_size(&crashk_res));
++	}
++#endif
+ }
+ 
+ void mark_rodata_ro(void)
+-- 
+2.25.1
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
