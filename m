@@ -4,89 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id F2354C04E69
-	for <kexec@archiver.kernel.org>; Mon, 24 Jul 2023 09:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 953CFC001B0
+	for <kexec@archiver.kernel.org>; Mon, 24 Jul 2023 10:01:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	List-Archive:List-Unsubscribe:List-Id:Subject:From:CC:To:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=l0Umkkxox4ybT7pt/exMGZAZp9OpNohT8XpgQryxRAc=; b=1knM6fJP8gNtMQ
-	ulPb2DpfpETIi5ZYcxtclMQg4Cr6bLMQXTpJrsS0LDi61lyvYWhLLb19FfTLJI8ySILtY55f86a/m
-	sGpRZVghyhMZFXX1Ni3aqdgCmNS+Yadu4a9aWnTkOuvUHtAhqcp58/kZ2vmSe9xwS1qL4nR3N6zUt
-	v21zDlNqdAxa/nQIRr9Aw3dg7P30FWB9KV1v6EUyYHMGagxc7ADzKFrRkzC47Ryr8HemnD5iiyq6E
-	dmRvzKJzuCmyxKbrLCxMXRnjS+TSNhyTEltlI0OYhxYrZfBfd82kkFvvhN1sTSjgME/yOfW8aOWp1
-	nmQZfODxqE8WSVqvcttg==;
+	List-Owner; bh=tprf2Q/JFQa1Nm/k1YzyjQKb+ZQRRJfsdSLORYwxizM=; b=EK45T3e/GvzhY5
+	BcFIThBzklEFF2xVnxKZaMkzkaCDVnZqwdXMWMqyjViObWwyi9pqIaJ55rZpo0i4OgEZNEf6oL3J4
+	4fJjEBUH7n3HK2VlEjQUhU1k9QRV20qoyNqB+si4NMu3cKUEai3ZwoAuo4AH/RfGX3OwEphuwp2aX
+	Q3QC7BzwvPGUC0UREwndKTnhn8FJfTOrs4Sk8b9dREfx0z94xrtdf3CdPBEa86JE7AQelxa7Tprs/
+	cJyoaE7/W9J2HM1eun/wINkEFpyueowwhbNZON+WfNUasoAOabZED1alcUJUw2DvOgHVBo0MnYnLR
+	Oox036IEOxCJ9lAofzaA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qNsLF-003Ya3-0u;
-	Mon, 24 Jul 2023 09:59:01 +0000
-Received: from mail-oi1-x230.google.com ([2607:f8b0:4864:20::230])
+	id 1qNsNl-003ZKR-1Y;
+	Mon, 24 Jul 2023 10:01:37 +0000
+Received: from szxga03-in.huawei.com ([45.249.212.189])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qNsLC-003YYa-1L;
-	Mon, 24 Jul 2023 09:58:59 +0000
-Received: by mail-oi1-x230.google.com with SMTP id 5614622812f47-3a5ad21a1f9so680949b6e.2;
-        Mon, 24 Jul 2023 02:58:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690192735; x=1690797535;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RDlfftCqHuUNq6LkkwKxzRiSDkmFGSCz0/vq6oh3T+s=;
-        b=DSXykGWLjFrMqpPv66tlr93X7a0vmBHxz/80vR9k8v9lxYIlxldXX+1QWnvqrVQiPL
-         T9Z0gIzVebVrJtp/2dD1t24vN029WXT4YJv6bfRGMsyfrY7Ev7oCdHj/SdtZ3eKyWxJ1
-         qp1KSO0l/8QzlY8IcUxvUKiFg83LuDfw9+RP1+s/OGqqqy/Py0x9QGfKA9M186kkmNxK
-         PsY/yS3fIWwz3Wa/OVWrLwpf8y9A0QALq0ODtl9acsl6mEWViFV/17vEYrEyFlXN0Mpn
-         b5wly/Nqx3jOJrPhGkUvcatvS4JRzlZvhfIA4VyebxQJiDaXw3czDVbLLBv200CQBMbz
-         S8tA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690192735; x=1690797535;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RDlfftCqHuUNq6LkkwKxzRiSDkmFGSCz0/vq6oh3T+s=;
-        b=LLsV9fVIFo5sZhcMiVdyf+RarY2ULs/sSoocxk277J+akYs7Lym7WUAbapZYSZZHif
-         odReh4gbt4HMiMSWt8KIArUYHEe5ppbo8NyVJ1RIC+ucrWkI9XudAiO0Lnybk/z1ERbo
-         gVjnC7PKJ/1yvfDmwOHRjtkA2wQrSEOmGO8Q3lm7C8tFlbnr5tDMVZ12XlPTrQFitAjM
-         WJNCUZPNbo7rkYkSPw90ueDnQ7XLlcMikUy6+3VTrFCkXMuVAvcFLMehXpzNhuTbw0bN
-         wuutG9Rwg6Z6t7tLZ3Kn3OSV3uqS2436Jfoa08qr7oE6Jc7rpFZ55Ms2aZtk/GO/7cZZ
-         hKnw==
-X-Gm-Message-State: ABy/qLYRjFH8lDaAIUt9dY8WkeTsCkfowAv/yMfBrkxfHY8GxeVh4g4q
-	Sr07BWCadHHrmL8fW5J9iBPdEdLEFXgb1w==
-X-Google-Smtp-Source: APBJJlHa0gbcqcComJDdQw8zIzYrXjx/3orq1WOFxcJ0mjEKBVzrS5YHzxRQ/Nvge46RN553XCHzQQ==
-X-Received: by 2002:a05:6808:98c:b0:3a3:7ecd:7d32 with SMTP id a12-20020a056808098c00b003a37ecd7d32mr9466634oic.30.1690192735254;
-        Mon, 24 Jul 2023 02:58:55 -0700 (PDT)
-Received: from localhost.localdomain ([58.240.82.166])
-        by smtp.gmail.com with ESMTPSA id d12-20020a63734c000000b0055acfd94c20sm8174380pgn.35.2023.07.24.02.58.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jul 2023 02:58:54 -0700 (PDT)
-From: Song Shuai <suagrfillet@gmail.com>
-To: bhe@redhat.com,
-	vgoyal@redhat.com,
-	dyoung@redhat.com,
-	corbet@lwn.net,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	xianting.tian@linux.alibaba.com,
-	suagrfillet@gmail.com,
-	anup@brainfault.org,
-	robh@kernel.org,
-	ajones@ventanamicro.com,
-	alexghiti@rivosinc.com,
-	conor.dooley@microchip.com
-Cc: kexec@lists.infradead.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: [PATCH -fixes 1/2] riscv: Export va_kernel_pa_offset in vmcoreinfo
-Date: Mon, 24 Jul 2023 17:57:44 +0800
-Message-Id: <20230724095745.286695-1-suagrfillet@gmail.com>
-X-Mailer: git-send-email 2.20.1
+	id 1qNsNh-003ZIa-38
+	for kexec@lists.infradead.org;
+	Mon, 24 Jul 2023 10:01:35 +0000
+Received: from kwepemm600006.china.huawei.com (unknown [172.30.72.53])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4R8bGS2scxzHqdf;
+	Mon, 24 Jul 2023 17:58:56 +0800 (CST)
+Received: from [10.174.177.30] (10.174.177.30) by
+ kwepemm600006.china.huawei.com (7.193.23.105) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Mon, 24 Jul 2023 18:01:28 +0800
+Message-ID: <3252d7b3-0d78-808d-8d36-a5b3f969e15d@huawei.com>
+Date: Mon, 24 Jul 2023 18:01:27 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+To: <kexec@lists.infradead.org>, <linux-integrity@vger.kernel.org>,
+	<linux-security-module@vger.kernel.org>
+CC: <ebiederm@xmission.com>, <zohar@linux.ibm.com>,
+	<dmitry.kasatkin@gmail.com>, <paul@paul-moore.com>, <jmorris@namei.org>,
+	<serge@hallyn.com>, <hejingxian@huawei.com>, <louhongxiang@huawei.com>
+From: Wenyu Liu <liuwenyu7@huawei.com>
+Subject: [PATCH v2] kexec_lock: Replace kexec_mutex() by kexec_lock() in two
+ comments
+X-Originating-IP: [10.174.177.30]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600006.china.huawei.com (7.193.23.105)
+X-CFilter-Loop: Reflected
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230724_025858_474138_9E510999 
-X-CRM114-Status: UNSURE (   8.68  )
+X-CRM114-CacheID: sfid-20230724_030134_201682_19EE39C7 
+X-CRM114-Status: UNSURE (   8.93  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -104,37 +71,51 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Since RISC-V Linux v6.4, the commit 3335068f8721 ("riscv: Use
-PUD/P4D/PGD pages for the linear mapping") changes phys_ram_base
-from the physical start of the kernel to the actual start of the DRAM.
+kexec_mutex is replaced by an atomic variable
+in 05c6257433b (panic, kexec: make __crash_kexec() NMI safe).
 
-The Crash-utility's VTOP() still uses phys_ram_base and kernel_map.virt_addr
-to translate kernel virtual address, that failed the Crash with Linux v6.4 [1].
+But there are still two comments that for kexec_add_buffer()
+and ima_add_kexec_buffer() using kexec_mutex, replace them by kexec_lock.
 
-Export kernel_map.va_kernel_pa_offset in vmcoreinfo to help Crash translate
-the kernel virtual address correctly.
-
-Fixes: 3335068f8721 ("riscv: Use PUD/P4D/PGD pages for the linear mapping")
-Link: https://lore.kernel.org/linux-riscv/20230724040649.220279-1-suagrfillet@gmail.com/ [1]
-Signed-off-by: Song Shuai <suagrfillet@gmail.com>
+Signed-off-by: Wenyu Liu <liuwenyu7@huawei.com>
+Acked-by: Baoquan He <bhe@redhat.com>
+Acked-by: Paul Menzel <pmenzel@molgen.mpg.de>
 ---
- arch/riscv/kernel/crash_core.c | 2 ++
- 1 file changed, 2 insertions(+)
+v1 -> v2
+ - fixed some mistakes in the submission information
 
-diff --git a/arch/riscv/kernel/crash_core.c b/arch/riscv/kernel/crash_core.c
-index b351a3c01355..55f1d7856b54 100644
---- a/arch/riscv/kernel/crash_core.c
-+++ b/arch/riscv/kernel/crash_core.c
-@@ -18,4 +18,6 @@ void arch_crash_save_vmcoreinfo(void)
- 	vmcoreinfo_append_str("NUMBER(MODULES_END)=0x%lx\n", MODULES_END);
- #endif
- 	vmcoreinfo_append_str("NUMBER(KERNEL_LINK_ADDR)=0x%lx\n", KERNEL_LINK_ADDR);
-+	vmcoreinfo_append_str("NUMBER(va_kernel_pa_offset)=0x%lx\n",
-+						kernel_map.va_kernel_pa_offset);
- }
--- 
-2.20.1
+ kernel/kexec_file.c                | 2 +-
+ security/integrity/ima/ima_kexec.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 881ba0d1714c..b5bbb2fe0668 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -624,7 +624,7 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
+  * kexec_add_buffer - place a buffer in a kexec segment
+  * @kbuf:  Buffer contents and memory parameters.
+  *
+- * This function assumes that kexec_mutex is held.
++ * This function assumes that kexec_lock is held.
+  * On successful return, @kbuf->mem will have the physical address of
+  * the buffer in memory.
+  *
+diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
+index 419dc405c831..ad133fe120db 100644
+--- a/security/integrity/ima/ima_kexec.c
++++ b/security/integrity/ima/ima_kexec.c
+@@ -77,7 +77,7 @@ static int ima_dump_measurement_list(unsigned long *buffer_size, void **buffer,
+  * Called during kexec_file_load so that IMA can add a segment to the kexec
+  * image for the measurement list for the next kernel.
+  *
+- * This function assumes that kexec_mutex is held.
++ * This function assumes that kexec_lock is held.
+  */
+ void ima_add_kexec_buffer(struct kimage *image)
+ {
+--
+2.33.0
 
 _______________________________________________
 kexec mailing list
