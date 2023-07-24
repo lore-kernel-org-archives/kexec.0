@@ -4,49 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 314ACC001DE
-	for <kexec@archiver.kernel.org>; Mon, 24 Jul 2023 08:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8BDCCC001B0
+	for <kexec@archiver.kernel.org>; Mon, 24 Jul 2023 08:23:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=HRxLwERwVnQpZnVad646lEm8NiAteX4TSocc8qo63J0=; b=q8ie76I6oubP++
-	FXKTbrqERpGjQPmtrTbvH9OXYXvSWoAfvjlWgukzuy3qd8GccovAUdrAxopjjYQvZZY5LHEYEPCGq
-	xNNEH/x5vFIu2y2CFuYCx3/GA02DJee81esW+Td6LenPamyDTjU7Mpce/jKPDltQtu4LN74BiZ0f5
-	KvldxM8yrjwk8LNJWlBNS5CHzfwJoRQOmNnNaLzCWy+TvullaJ9C6XjAFcgmVb3WjPsgJTiwr9XA1
-	EGOaMK5DxwRD6pK39tP00tB+z8HgsjbXh9H7/AJ/XKCJttxQGUwT/DjDF32vM+OZMTsefDao7UOlG
-	drRJbNbNMax7Zfa3Y2AA==;
+	List-Owner; bh=h5Ek/3oU2QRY8YOILaghkBQZddMH8+9KpvJfez/vd/U=; b=otwKOD9LZIwuTP
+	rr0tfITT6Vz0vCyzHy7v0eiM9KWfWCDYnPrW4h0TXkzgrltg5yM+jbgjeluSWnS3mdUj34WAtZKry
+	WlLjD1TSfT6bC52GXL3KnUnQoX3TVqx+jtP6qUaoHbSRN4U3Xj0L8LX2QUXgl/Xdb3KLW0q9huOoU
+	40n3nhhhBPgzeLWVA4ZFw2ZxCqFl1R0YIb0SMr3M1HzENh+c8jUlAQIPTGbpnCZcr2/qggmsT1ef3
+	odW6vAWa8lGEWYXD41dxK9c0A848QKDJHpOFk+jvM+VvpUaCmX9igDA+JEqB6EVWNbLiDy4GeeKUP
+	9TFku5UeLD+HbuQ9vbFQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qNqhc-003CxG-1b;
-	Mon, 24 Jul 2023 08:14:00 +0000
-Received: from relay1-d.mail.gandi.net ([2001:4b98:dc4:8::221])
+	id 1qNqqZ-003Ecr-1p;
+	Mon, 24 Jul 2023 08:23:15 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qNqhR-003Cn2-2R;
-	Mon, 24 Jul 2023 08:13:59 +0000
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 71481240004;
-	Mon, 24 Jul 2023 08:13:39 +0000 (UTC)
-Message-ID: <db0ebf87-39ee-0b44-6b07-6adb7b976cb8@ghiti.fr>
-Date: Mon, 24 Jul 2023 10:13:38 +0200
+	id 1qNqqW-003EbF-06
+	for kexec@lists.infradead.org;
+	Mon, 24 Jul 2023 08:23:13 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1690186990;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ye5hZVkJgwhIyK0/JiD2r7SsrzVvzq+O4olxaiN3AL0=;
+	b=F+2s+me9rO5vudcwYoy6MgRc9ZtfscGQ0X9js9zbsvDLfpe2R+cxfhFpe1nScJWItRgufG
+	9NghFo95CDEACYXl5cX/Rgy5HAnJTnp1AsJ0LZEEA3YBiMQsB8aXdta9gR3E5rTdw9fgLr
+	Nj90PJNIsbkAElvHOmvlGtaJShxZ7zY=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-110-P7kk_43WOo2WA6SRQLK3gg-1; Mon, 24 Jul 2023 04:23:07 -0400
+X-MC-Unique: P7kk_43WOo2WA6SRQLK3gg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 79FF481D9EC;
+	Mon, 24 Jul 2023 08:23:06 +0000 (UTC)
+Received: from localhost (ovpn-12-31.pek2.redhat.com [10.72.12.31])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id D31661121315;
+	Mon, 24 Jul 2023 08:23:04 +0000 (UTC)
+Date: Mon, 24 Jul 2023 16:23:00 +0800
+From: Baoquan He <bhe@redhat.com>
+To: "Wenyu Liu(D)" <liuwenyu7@huawei.com>
+Cc: kexec@lists.infradead.org, linux-integrity@vger.kernel.org,
+	linux-security-module@vger.kernel.org, ebiederm@xmission.com,
+	zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, paul@paul-moore.com,
+	jmorris@namei.org, serge@hallyn.com
+Subject: Re: [PATCH] kexec_lock:Fix comment for kexec_lock
+Message-ID: <ZL405LGPVa6lOl5s@MiWiFi-R3L-srv>
+References: <26ff12fe-347b-d908-0327-73cf3c83b00b@huawei.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [Crash-utility] RISCV64: Use va_kernel_pa_offset in VTOP()
-Content-Language: en-US
-To: Song Shuai <suagrfillet@gmail.com>, xianting.tian@linux.alibaba.com,
- mick@ics.forth.gr, heinrich.schuchardt@canonical.com, guoren@kernel.org,
- k-hagio-ab@nec.com, yixun.lan@gmail.com, lijiang@redhat.com
-Cc: linux-riscv@lists.infradead.org, kexec@lists.infradead.org,
- crash-utility@redhat.com
-References: <20230724040649.220279-1-suagrfillet@gmail.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20230724040649.220279-1-suagrfillet@gmail.com>
-X-GND-Sasl: alex@ghiti.fr
+Content-Disposition: inline
+In-Reply-To: <26ff12fe-347b-d908-0327-73cf3c83b00b@huawei.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230724_011350_113141_7E63943B 
-X-CRM114-Status: GOOD (  25.50  )
+X-CRM114-CacheID: sfid-20230724_012312_134487_C99BB5AF 
+X-CRM114-Status: GOOD (  22.50  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -58,118 +77,68 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Song,
+On 07/24/23 at 11:45am, Wenyu Liu(D) wrote:
+> kexec_mutex is replaced by an atomic variable in
+> 56314b90fd43bd2444 (panic, kexec: make __crash_kexec() NMI safe).
 
+You could use a distros kernel or customized kernel and made change
+based on that. The commit id isn't correct. I pasted the right one
+at below.
 
-On 24/07/2023 06:06, Song Shuai wrote:
-> Since RISC-V Linux v6.4, the commit 3335068f8721 ("riscv: Use
-> PUD/P4D/PGD pages for the linear mapping") changes the
-> phys_ram_base from the kernel_map.phys_addr to the start of DRAM.
+commit 05c6257433b ("panic, kexec: make __crash_kexec() NMI safe")
 
+Other than this, this looks good. You can post a new one with my ack.
 
-Maybe we could be more explicit here, kernel_map.phys_addr actually 
-points to the physical start of the kernel so maybe something like that:
+Acked-by: Baoquan He <bhe@redhat.com>
 
-"changes phys_ram_base from the physical start of the kernel to the 
-actual start of the DRAM."
-
-
->
-> The Crash's VTOP() still uses phys_ram_base and kernel_map.virt_addr
-> to translate kernel virtual address, that made Crash boot failed with
-> Linux v6.4 and later version.
->
-> Let Linux export kernel_map.va_kernel_pa_offset in v6.5 and Crash can
-> use "va_kernel_pa_offset" to translate the kernel virtual address in
-> VTOP() correctly.
->
-> Signed-off-by: Song Shuai <suagrfillet@gmail.com>
+> 
+> Fix some comment that still using kexec_mutex.
+> 
+> Signed-off-by: Wenyu Liu  <liuwenyu7@huawei.com>
 > ---
-> You can check/test the Linux changes from this link:
-> https://github.com/sugarfillet/linux/commits/6.5-rc3-crash
->
-> And I'll send the Linux changes to riscv/for-next If you're ok with this patch.
-> ---
->   defs.h    |  4 ++--
->   riscv64.c | 22 ++++++++++++++++++++++
->   2 files changed, 24 insertions(+), 2 deletions(-)
->
-> diff --git a/defs.h b/defs.h
-> index 358f365..46b9857 100644
-> --- a/defs.h
-> +++ b/defs.h
-> @@ -3662,8 +3662,7 @@ typedef signed int s32;
->   	ulong _X = X;									\
->   	(THIS_KERNEL_VERSION >= LINUX(5,13,0) &&					\
->   		(_X) >= machdep->machspec->kernel_link_addr) ?				\
-> -		(((unsigned long)(_X)-(machdep->machspec->kernel_link_addr)) +		\
-> -		 machdep->machspec->phys_base):						\
-> +		((unsigned long)(_X)-(machdep->machspec->va_kernel_pa_offset)): 	\
->   		(((unsigned long)(_X)-(machdep->kvbase)) +				\
->   		 machdep->machspec->phys_base);						\
->   	})
-> @@ -7021,6 +7020,7 @@ struct machine_specific {
->   	ulong modules_vaddr;
->   	ulong modules_end;
->   	ulong kernel_link_addr;
-> +	ulong va_kernel_pa_offset;
->   
->   	ulong _page_present;
->   	ulong _page_read;
-> diff --git a/riscv64.c b/riscv64.c
-> index 6b9a688..b9e50b4 100644
-> --- a/riscv64.c
-> +++ b/riscv64.c
-> @@ -418,6 +418,27 @@ error:
->   	error(FATAL, "cannot get vm layout\n");
->   }
->   
-> +static void
-> +riscv64_get_va_kernel_pa_offset(struct machine_specific *ms)
-> +{
-> +	unsigned long kernel_version = riscv64_get_kernel_version();
-> +
-> +	/*
-> +	 * va_kernel_pa_offset is defined in Linux kernel since 6.5.
-> +	 */
-> +	if (kernel_version >= LINUX(6,5,0)) {
-> +		char *string;
-> +		if ((string = pc->read_vmcoreinfo("NUMBER(va_kernel_pa_offset)"))) {
-> +			ms->va_kernel_pa_offset = htol(string, QUIET, NULL);
-> +			free(string);
-> +		} else
-> +			error(FATAL, "cannot read va_kernel_pa_offset\n");
-> +	} else if (kernel_version >= LINUX(6,4,0))
-> +		error(FATAL, "cannot determine va_kernel_pa_offset since Linux 6.4\n");
-> +	else
-> +		ms->va_kernel_pa_offset = ms->kernel_link_addr - ms->phys_base;
-> +}
-> +
->   static int
->   riscv64_is_kvaddr(ulong vaddr)
->   {
-> @@ -1352,6 +1373,7 @@ riscv64_init(int when)
->   		riscv64_get_struct_page_size(machdep->machspec);
->   		riscv64_get_va_bits(machdep->machspec);
->   		riscv64_get_va_range(machdep->machspec);
-> +		riscv64_get_va_kernel_pa_offset(machdep->machspec);
->   
->   		pt_level_alloc(&machdep->pgd, "cannot malloc pgd space.");
->   		pt_level_alloc(&machdep->machspec->p4d, "cannot malloc p4d space.");
-
-
-Would you mind giving me the instructions on how to reproduce the issue 
-please? So that I can add that to our internal CI and avoid this type of 
-breakage in the future.
-
-Thanks,
-
-Alex
+>  kernel/kexec_file.c                | 2 +-
+>  security/integrity/ima/ima_kexec.c | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index 881ba0d1714c..b5bbb2fe0668 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -624,7 +624,7 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
+>   * kexec_add_buffer - place a buffer in a kexec segment
+>   * @kbuf:  Buffer contents and memory parameters.
+>   *
+> - * This function assumes that kexec_mutex is held.
+> + * This function assumes that kexec_lock is held.
+>   * On successful return, @kbuf->mem will have the physical address of
+>   * the buffer in memory.
+>   *
+> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
+> index 419dc405c831..ad133fe120db 100644
+> --- a/security/integrity/ima/ima_kexec.c
+> +++ b/security/integrity/ima/ima_kexec.c
+> @@ -77,7 +77,7 @@ static int ima_dump_measurement_list(unsigned long *buffer_size, void **buffer,
+>   * Called during kexec_file_load so that IMA can add a segment to the kexec
+>   * image for the measurement list for the next kernel.
+>   *
+> - * This function assumes that kexec_mutex is held.
+> + * This function assumes that kexec_lock is held.
+>   */
+>  void ima_add_kexec_buffer(struct kimage *image)
+>  {
+> --
+> 2.33.0
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
 
 _______________________________________________
