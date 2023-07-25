@@ -4,67 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7C5E7C04A6A
-	for <kexec@archiver.kernel.org>; Tue, 25 Jul 2023 10:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4173FC001DE
+	for <kexec@archiver.kernel.org>; Tue, 25 Jul 2023 10:06:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:To:From:Reply-To:Cc:Content-ID:Content-Description:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=5quVd2HZcabVyJJO1rWV6MLJy11gp/iSwLFOWLW847g=; b=tA8lhmOjNwjEAd
-	MXIEXt+Q6kj9pl4N1QrtOoYkXr+B97aahX5KS7IxPjoYhPJgOdRBc54BpN0ITVFA342lXzNcSEHl0
-	KusxBza2w2EoTHLeAjLifzjVWaDfyqLXeDP716cYUZCRE/dL2gcs7XWzyn+xJd3BzLc+xuuQpQ6oJ
-	pPJnuKHi+6I51eqLenjFaWTT6oGoVQ6bXdWsng6L7X/euCETl7wvlvpW7pKiDOVJc+V4j9MszwRz+
-	Kjt7JWFScxJ6GFcDnFrRkeoF+hZHt7SJn2+ZInAzd2zRlJ+rhxblKExmJSnYCizwuK/fMqpKg+i8E
-	EbswsMlKeEaGXnd1KStg==;
+	List-Owner; bh=kZZWbbSYYcIi3B0+1YjTocVFVWsbhtfxio9ELh257lw=; b=IO1tA/cneN36MM
+	4K50vw5ma8bqEhk6QKKJqFNJqXvFm6BtnZEC2J+vY6WT80VqbHSBKJ8wqfMahsd6UgiY624GSMUGr
+	RrkBPpKvqOvx09jrmHy137LfVEcl92D04hWpalbR8TFZ1pVLzWmGgxtVyXBHmJw26zsoxItW4q8cx
+	ndhTbsc/2Q0YrRlEznRc3CIQ1osKcAKJJCTCBY+mruAtg13l8XeiXmrCqJB+ADioOHTdMXLbavZEG
+	w7G/M38o/BmX850iRzOTo7K1LpRgOlgem9tHPqgpCqmMwhU0fznUTJgIzPxD+sMoRzKhYavBXAXgT
+	LesiBe24wndA0pUQcGQg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qOEre-0071vY-11;
-	Tue, 25 Jul 2023 10:01:58 +0000
-Received: from [14.137.139.154] (helo=frasgout12.his.huawei.com)
+	id 1qOEw9-0072w0-2G;
+	Tue, 25 Jul 2023 10:06:37 +0000
+Received: from bee.tesarici.cz ([77.93.223.253])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qOErb-0071ti-2A
+	id 1qOEw6-0072uG-27
 	for kexec@lists.infradead.org;
-	Tue, 25 Jul 2023 10:01:57 +0000
-Received: from mail02.huawei.com (unknown [172.18.147.227])
-	by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4R9C063Pqrz9xxnV
-	for <kexec@lists.infradead.org>; Tue, 25 Jul 2023 17:48:38 +0800 (CST)
-Received: from A2101119013HW2.china.huawei.com (unknown [10.48.128.235])
-	by APP1 (Coremail) with SMTP id LxC2BwB3AAx3nb9kBvUHBQ--.31143S5;
-	Tue, 25 Jul 2023 11:01:46 +0100 (CET)
-From: Petr Tesarik <petrtesarik@huaweicloud.com>
-To: kexec@lists.infradead.org
-Subject: [PATCH v1 3/3] riscv/purgatory: do not link with string.o
-Date: Tue, 25 Jul 2023 12:01:10 +0200
-Message-Id: <a083f38c7c3acd6ac9542228e36947be30b58188.1690274483.git.petr.tesarik.ext@huawei.com>
-X-Mailer: git-send-email 2.25.1
+	Tue, 25 Jul 2023 10:06:36 +0000
+Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by bee.tesarici.cz (Postfix) with ESMTPSA id 1C8DE16F842;
+	Tue, 25 Jul 2023 12:06:28 +0200 (CEST)
+Authentication-Results: mail.tesarici.cz; dmarc=fail (p=none dis=none) header.from=tesarici.cz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tesarici.cz; s=mail;
+	t=1690279588; bh=bsblOb2yuHRfSrcFSBe2L6Bqn7/ke9Mqkv30xQt0zLE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=g9zbyxXosVe7/i3cGzouFYdyaK2xuWiq+TlgP72QAwvphy3I51X4hLDDKWz5mQknb
+	 f1+gY0FrHcbtxf5F8so6QwH5PmMDKt+yqWYOan7zd4uZvTP7FxmO27K7jxfC/W1JGs
+	 qiMDF2ak9seJtUQhQC+4X8HkwUiB9KXTHQ1EFSy3m9nb/dtbmKIdmvaozud1A4eDup
+	 9bJFavifkQ4Xt2sTb+vxwdApaDx7pjdpdNtGy4tNim/QkVBU7E3ZtUBL4v64qDAuV3
+	 SZq0woBGpx9f8hGJKRbFeHNrStzpK2+h9No9RBMM6SQIQdwXfi0J/ZxIKeOS8ZoIAy
+	 ZGa7bB3JNoJiw==
+Date: Tue, 25 Jul 2023 12:06:27 +0200
+From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
+To: Petr Tesarik <petrtesarik@huaweicloud.com>
+Cc: kexec@lists.infradead.org
+Subject: Re: [PATCH v1 0/3] RISC-V: Fix a few kexec_file_load(2) failures
+Message-ID: <20230725120627.32963156@meshulam.tesarici.cz>
 In-Reply-To: <cover.1690274483.git.petr.tesarik.ext@huawei.com>
 References: <cover.1690274483.git.petr.tesarik.ext@huawei.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-X-CM-TRANSID: LxC2BwB3AAx3nb9kBvUHBQ--.31143S5
-X-Coremail-Antispam: 1UD129KBjvJXoWxJrWfuw15GrWfGF4xXw18Krg_yoW8tw1Dpa
-	yxKayDK3s8Aw1kKrZ7XF1Uuw17Z3yUKrWFqF42grW5AFy5JF9IvryfXrWDAFWUJr1Ik3s8
-	AryIgFyUt3WFkwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUWw
-	A2048vs2IY020Ec7CjxVAFwI0_JFI_Gr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8
-	Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMc
-	Ij6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_
-	Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAKzI0EY4vE52x082I5MxAIw28IcxkI7VAKI4
-	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
-	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUXVWUAwCIc40Y0x0EwIxGrwCI42IY6xIIjx
-	v20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20E
-	Y4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267
-	AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07joMKZUUUUU=
-X-CM-SenderInfo: hshw23xhvd2x3n6k3tpzhluzxrxghudrp/
-X-CFilter-Loop: Reflected
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230725_030155_991797_32A44E83 
-X-CRM114-Status: UNSURE (   8.56  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20230725_030635_157469_000BC56B 
+X-CRM114-Status: GOOD (  14.81  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,68 +72,42 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Petr Tesarik <petr.tesarik.ext@huawei.com>
+Hi,
 
-Linking with this object file it makes kexec_file_load(2) fail with:
+oops. I wanted to _add_ the kexec ML to all other recipients, but I
+somehow screwed up, so this version is sent _only_ to the kexec ML. If
+you reply here, the other recipients will not see your reply. The real
+thread is here:
 
- kexec_image: Unknown rela relocation: 20
- kexec_image: Error loading purgatory ret=-8
+https://lore.kernel.org/lkml/cover.1690274483.git.petr.tesarik.ext@huawei.com/
 
-This is R_RISCV_GOT_HI20, generated by the linker to handle references to
-the global variable _ctype from strcasecmp() and strncasecmp().
+I'm sorry
+Petr T
 
-Rather than implementing GOT for the purgatory, remove the object file,
-because it is not needed by the purgatory code.
+On Tue, 25 Jul 2023 12:01:07 +0200
+Petr Tesarik <petrtesarik@huaweicloud.com> wrote:
 
-Fixes: 838b3e28488f ("RISC-V: Load purgatory in kexec_file")
-Signed-off-by: Petr Tesarik <petr.tesarik.ext@huawei.com>
-Cc: Li Zhengyu <lizhengyu3@huawei.com>
-Cc: stable@vger.kernel.org
----
- arch/riscv/purgatory/Makefile | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
-
-diff --git a/arch/riscv/purgatory/Makefile b/arch/riscv/purgatory/Makefile
-index dc20e166983e..497bb72b6ba8 100644
---- a/arch/riscv/purgatory/Makefile
-+++ b/arch/riscv/purgatory/Makefile
-@@ -1,15 +1,12 @@
- # SPDX-License-Identifier: GPL-2.0
- OBJECT_FILES_NON_STANDARD := y
- 
--purgatory-y := purgatory.o sha256.o entry.o string.o ctype.o memcpy.o memset.o
-+purgatory-y := purgatory.o sha256.o entry.o ctype.o memcpy.o memset.o
- purgatory-y += strcmp.o strlen.o strncmp.o
- 
- targets += $(purgatory-y)
- PURGATORY_OBJS = $(addprefix $(obj)/,$(purgatory-y))
- 
--$(obj)/string.o: $(srctree)/lib/string.c FORCE
--	$(call if_changed_rule,cc_o_c)
--
- $(obj)/ctype.o: $(srctree)/lib/ctype.c FORCE
- 	$(call if_changed_rule,cc_o_c)
- 
-@@ -32,7 +29,6 @@ $(obj)/sha256.o: $(srctree)/lib/crypto/sha256.c FORCE
- 	$(call if_changed_rule,cc_o_c)
- 
- CFLAGS_sha256.o := -D__DISABLE_EXPORTS -D__NO_FORTIFY
--CFLAGS_string.o := -D__DISABLE_EXPORTS
- CFLAGS_ctype.o := -D__DISABLE_EXPORTS
- 
- # When profile-guided optimization is enabled, llvm emits two different
-@@ -83,9 +79,6 @@ CFLAGS_purgatory.o		+= $(PURGATORY_CFLAGS)
- CFLAGS_REMOVE_sha256.o		+= $(PURGATORY_CFLAGS_REMOVE)
- CFLAGS_sha256.o			+= $(PURGATORY_CFLAGS)
- 
--CFLAGS_REMOVE_string.o		+= $(PURGATORY_CFLAGS_REMOVE)
--CFLAGS_string.o			+= $(PURGATORY_CFLAGS)
--
- CFLAGS_REMOVE_ctype.o		+= $(PURGATORY_CFLAGS_REMOVE)
- CFLAGS_ctype.o			+= $(PURGATORY_CFLAGS)
- 
--- 
-2.25.1
+> From: Petr Tesarik <petr.tesarik.ext@huawei.com>
+> 
+> The kexec_file_load(2) syscall does not work at least in some kernel
+> builds. For details see the relevant section in this blog post:
+> 
+> https://sigillatum.tesarici.cz/2023-07-21-state-of-riscv64-kdump.html
+> 
+> This patch series handles additional relocation types and removes the need
+> to implement a Global Offset Table (GOT) for the purgatory.
+> 
+> Petr Tesarik (2):
+>   riscv/kexec: handle R_RISCV_ADD16 and R_RISCV_SUB16 relocation types
+>   riscv/purgatory: do not link with string.o
+> 
+> Torsten Duwe (1):
+>   riscv/kexec: handle R_RISCV_CALL_PLT relocation type
+> 
+>  arch/riscv/kernel/elf_kexec.c | 7 +++++++
+>  arch/riscv/purgatory/Makefile | 9 +--------
+>  2 files changed, 8 insertions(+), 8 deletions(-)
+> 
 
 
 _______________________________________________
