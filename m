@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 18FE1C001B0
-	for <kexec@archiver.kernel.org>; Wed, 26 Jul 2023 10:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 64ADEC001B0
+	for <kexec@archiver.kernel.org>; Wed, 26 Jul 2023 10:25:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=1/TgkYmCJhLhOptg6gI5Yq+0rcpKdvEYPIK0IIIgo8o=; b=ZK9USFwQGK2d2N
-	d5EbX9h6zkrR6JmZ7b0aCH5DrEQPwX0kgBRZe6uJQiiZCaO6ULkOScDm1T6PhuLWFH8a4xGb9AAw6
-	aDbC9h1Uolvhd2PuO6f3yQYiILVMtK7+hBECkWEXMQRnLlb0VW+sBAdWOp156QEVJva2dEX0mXbrj
-	36H3KVB13/ybWsKDhUx3I5MQryomV2uJ1ZUTeUUXVEceUYK4g/ijdkSJdXo1yN4QB8APXrVPFEQs5
-	/vl9T5aMKYhUMmUfQwoeVizfiafOvqyUxI9+/WOAwogkuXr/tdU/S/vjVA/cvoMbijBEkhYg2SJ6o
-	fVYnf+mlEpWtsERME9zQ==;
+	List-Owner; bh=mmtrpIhiwaONRGIjRaOesKc+GQmkBXoIsoxtZoqCclI=; b=bYOg89TI/YzZul
+	vYK6ITT8mQNQT7Eg1nseC0/TzpIG3MlOb6amVDRjkKmCxpeEl9zcLzSdNouXlgsV+XxyON42DYZid
+	kzW0Y1AHFFbNc4WtCap3rqIOCg5Va2M1i3lvIs5XxLGI5fpMl4e9P3gdlKBtAQqjjlvAEgqT5Zw1s
+	598zzU9IfZVBNoig43yjkT+ccyQqGpikFgUnhE0+91gM59eVB0AxG/oo5HD8MQw/r0HQ6VGfD/rJy
+	ZkS2sUSiiT4ShQkq4EhCEKqBxD1r134VZ9BAdWeJs8tPXxryFRwEBfyQmG+Oe7rCzoNAOFtj7qC+R
+	kikTKcN0rn1i9giq1xrw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qObhc-009t6K-0S;
-	Wed, 26 Jul 2023 10:25:08 +0000
+	id 1qObhy-009tAe-0a;
+	Wed, 26 Jul 2023 10:25:30 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qObhZ-009t5o-2i
+	id 1qObhw-009tA4-14
 	for kexec@lists.infradead.org;
-	Wed, 26 Jul 2023 10:25:07 +0000
+	Wed, 26 Jul 2023 10:25:29 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1690367105;
+	s=mimecast20190719; t=1690367127;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=36DJPnF7Pxv/d3UEUTkuVMdzn88ssz77HYYWsSAh9Ic=;
-	b=WJ9xN+uTv8P/iEdWwIykOU63eaLfqV8kD2W84fvbTYENHdlhC2da5GqyGSNPF8DFoSSBf/
-	JGN5OHvUnT7MRH5ObH4Djt1qxSirpg3aUTDOc8lZpIR5nAX331DeTB1YquO6sysFf2oliy
-	YlkRjDS11Z2uq4gFyrAQ7EF9MfAZ6KE=
+	bh=6NrkSvDdE4cdjpoTJxD+Lnito5LDpS0282P7ZLa36EE=;
+	b=VFe6OlcjwWPGehyfVBCdhk1wjquIwWgnLcHRZzRSndvi8ptBsze7G5JOG/cX5LZSEKLbHN
+	d5OnNfmZ209FebZkpFRJkmR47q44pdBLblTrw56MxypqA1rOSJi2f6bvt+tzkGHonaAEUZ
+	Ug2cRWgI3pVPvccV67Qo0Cqogzpxr08=
 Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-223-VUxOp_ZdMMuuLuv-n4j8Yg-1; Wed, 26 Jul 2023 06:24:59 -0400
-X-MC-Unique: VUxOp_ZdMMuuLuv-n4j8Yg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+ us-mta-597-jrcLmOGXMXWtWFE-eZtxUw-1; Wed, 26 Jul 2023 06:25:24 -0400
+X-MC-Unique: jrcLmOGXMXWtWFE-eZtxUw-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B84991C31C46;
-	Wed, 26 Jul 2023 10:24:58 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8E81B1C31C49;
+	Wed, 26 Jul 2023 10:25:23 +0000 (UTC)
 Received: from localhost (ovpn-12-99.pek2.redhat.com [10.72.12.99])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id AC8E62166B25;
-	Wed, 26 Jul 2023 10:24:57 +0000 (UTC)
-Date: Wed, 26 Jul 2023 18:24:53 +0800
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id E202646A3A7;
+	Wed, 26 Jul 2023 10:25:22 +0000 (UTC)
+Date: Wed, 26 Jul 2023 18:25:19 +0800
 From: Baoquan He <bhe@redhat.com>
 To: Chen Jiahao <chenjiahao16@huawei.com>
 Cc: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
@@ -58,18 +58,18 @@ Cc: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
 	conor.dooley@microchip.com, guoren@kernel.org, heiko@sntech.de,
 	bjorn@rivosinc.com, alex@ghiti.fr, akpm@linux-foundation.org,
 	atishp@rivosinc.com, thunder.leizhen@huawei.com, horms@kernel.org
-Subject: Re: [PATCH -next v9 1/2] riscv: kdump: Implement
- crashkernel=X,[high,low]
-Message-ID: <ZMD0dV6JEG0UhWD6@MiWiFi-R3L-srv>
+Subject: Re: [PATCH -next v9 2/2] docs: kdump: Update the crashkernel
+ description for riscv
+Message-ID: <ZMD0jxzH0jmFLTd8@MiWiFi-R3L-srv>
 References: <20230726175000.2536220-1-chenjiahao16@huawei.com>
- <20230726175000.2536220-2-chenjiahao16@huawei.com>
+ <20230726175000.2536220-3-chenjiahao16@huawei.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20230726175000.2536220-2-chenjiahao16@huawei.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
+In-Reply-To: <20230726175000.2536220-3-chenjiahao16@huawei.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230726_032505_949634_58D34B79 
-X-CRM114-Status: GOOD (  32.77  )
+X-CRM114-CacheID: sfid-20230726_032528_434844_253812D3 
+X-CRM114-Status: GOOD (  24.35  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,189 +86,66 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 07/26/23 at 05:49pm, Chen Jiahao wrote:
-> On riscv, the current crash kernel allocation logic is trying to
-> allocate within 32bit addressible memory region by default, if
-> failed, try to allocate without 4G restriction.
+On 07/26/23 at 05:50pm, Chen Jiahao wrote:
+> Now "crashkernel=" parameter on riscv has been updated to support
+> crashkernel=X,[high,low]. Through which we can reserve memory region
+> above/within 32bit addressible DMA zone.
 > 
-> In need of saving DMA zone memory while allocating a relatively large
-> crash kernel region, allocating the reserved memory top down in
-> high memory, without overlapping the DMA zone, is a mature solution.
-> Here introduce the parameter option crashkernel=X,[high,low].
-> 
-> One can reserve the crash kernel from high memory above DMA zone range
-> by explicitly passing "crashkernel=X,high"; or reserve a memory range
-> below 4G with "crashkernel=X,low".
-
-LGTM,
+> Here update the parameter description accordingly.
 
 Acked-by: Baoquan He <bhe@redhat.com>
 
 > 
 > Signed-off-by: Chen Jiahao <chenjiahao16@huawei.com>
-> Acked-by: Guo Ren <guoren@kernel.org>
+> Reviewed-by: Guo Ren <guoren@kernel.org>
+> Reviewed-by: Simon Horman <horms@kernel.org>
+> Reviewed-by: Zhen Lei <thunder.leizhen@huawei.com>
 > ---
->  arch/riscv/kernel/setup.c |  5 +++
->  arch/riscv/mm/init.c      | 93 ++++++++++++++++++++++++++++++++++++---
->  2 files changed, 91 insertions(+), 7 deletions(-)
+>  Documentation/admin-guide/kernel-parameters.txt | 15 ++++++++-------
+>  1 file changed, 8 insertions(+), 7 deletions(-)
 > 
-> diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
-> index 971fe776e2f8..376f5d49ce85 100644
-> --- a/arch/riscv/kernel/setup.c
-> +++ b/arch/riscv/kernel/setup.c
-> @@ -178,6 +178,11 @@ static void __init init_resources(void)
->  		if (ret < 0)
->  			goto error;
->  	}
-> +	if (crashk_low_res.start != crashk_low_res.end) {
-> +		ret = add_resource(&iomem_resource, &crashk_low_res);
-> +		if (ret < 0)
-> +			goto error;
-> +	}
->  #endif
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index a1457995fd41..bd519749968f 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -862,7 +862,7 @@
+>  			memory region [offset, offset + size] for that kernel
+>  			image. If '@offset' is omitted, then a suitable offset
+>  			is selected automatically.
+> -			[KNL, X86-64, ARM64] Select a region under 4G first, and
+> +			[KNL, X86-64, ARM64, RISCV] Select a region under 4G first, and
+>  			fall back to reserve region above 4G when '@offset'
+>  			hasn't been specified.
+>  			See Documentation/admin-guide/kdump/kdump.rst for further details.
+> @@ -875,14 +875,14 @@
+>  			Documentation/admin-guide/kdump/kdump.rst for an example.
 >  
->  #ifdef CONFIG_CRASH_DUMP
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index 70fb31960b63..156e09a1ceee 100644
-> --- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -1297,6 +1297,28 @@ static inline void setup_vm_final(void)
->  }
->  #endif /* CONFIG_MMU */
->  
-> +/* Reserve 128M low memory by default for swiotlb buffer */
-> +#define DEFAULT_CRASH_KERNEL_LOW_SIZE	(128UL << 20)
-> +
-> +static int __init reserve_crashkernel_low(unsigned long long low_size)
-> +{
-> +	unsigned long long low_base;
-> +
-> +	low_base = memblock_phys_alloc_range(low_size, PMD_SIZE, 0, dma32_phys_limit);
-> +	if (!low_base) {
-> +		pr_err("cannot allocate crashkernel low memory (size:0x%llx).\n", low_size);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	pr_info("crashkernel low memory reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
-> +		low_base, low_base + low_size, low_size >> 20);
-> +
-> +	crashk_low_res.start = low_base;
-> +	crashk_low_res.end = low_base + low_size - 1;
-> +
-> +	return 0;
-> +}
-> +
->  /*
->   * reserve_crashkernel() - reserves memory for crash kernel
->   *
-> @@ -1308,8 +1330,12 @@ static void __init reserve_crashkernel(void)
->  {
->  	unsigned long long crash_base = 0;
->  	unsigned long long crash_size = 0;
-> +	unsigned long long crash_low_size = 0;
->  	unsigned long search_start = memblock_start_of_DRAM();
-> -	unsigned long search_end = memblock_end_of_DRAM();
-> +	unsigned long search_end = (unsigned long)dma32_phys_limit;
-> +	char *cmdline = boot_command_line;
-> +	bool fixed_base = false;
-> +	bool high = false;
->  
->  	int ret = 0;
->  
-> @@ -1325,14 +1351,36 @@ static void __init reserve_crashkernel(void)
->  		return;
->  	}
->  
-> -	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
-> +	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
->  				&crash_size, &crash_base);
-> -	if (ret || !crash_size)
-> +	if (ret == -ENOENT) {
-> +		/* Fallback to crashkernel=X,[high,low] */
-> +		ret = parse_crashkernel_high(cmdline, 0, &crash_size, &crash_base);
-> +		if (ret || !crash_size)
-> +			return;
-> +
-> +		/*
-> +		 * crashkernel=Y,low is valid only when crashkernel=X,high
-> +		 * is passed.
-> +		 */
-> +		ret = parse_crashkernel_low(cmdline, 0, &crash_low_size, &crash_base);
-> +		if (ret == -ENOENT)
-> +			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
-> +		else if (ret)
-> +			return;
-> +
-> +		search_start = (unsigned long)dma32_phys_limit;
-> +		search_end = memblock_end_of_DRAM();
-> +		high = true;
-> +	} else if (ret || !crash_size) {
-> +		/* Invalid argument value specified */
->  		return;
-> +	}
->  
->  	crash_size = PAGE_ALIGN(crash_size);
->  
->  	if (crash_base) {
-> +		fixed_base = true;
->  		search_start = crash_base;
->  		search_end = crash_base + crash_size;
->  	}
-> @@ -1345,12 +1393,37 @@ static void __init reserve_crashkernel(void)
->  	 * swiotlb can work on the crash kernel.
->  	 */
->  	crash_base = memblock_phys_alloc_range(crash_size, PMD_SIZE,
-> -					       search_start,
-> -					       min(search_end, (unsigned long) SZ_4G));
-> +					       search_start, search_end);
->  	if (crash_base == 0) {
-> -		/* Try again without restricting region to 32bit addressible memory */
-> +		/*
-> +		 * For crashkernel=size[KMG]@offset[KMG], print out failure
-> +		 * message if can't reserve the specified region.
-> +		 */
-> +		if (fixed_base) {
-> +			pr_warn("crashkernel: allocating failed with given size@offset\n");
-> +			return;
-> +		}
-> +
-> +		if (high) {
-> +			/*
-> +			 * For crashkernel=size[KMG],high, if the first attempt was
-> +			 * for high memory, fall back to low memory.
-> +			 */
-> +			search_start = memblock_start_of_DRAM();
-> +			search_end = (unsigned long)dma32_phys_limit;
-> +		} else {
-> +			/*
-> +			 * For crashkernel=size[KMG], if the first attempt was for
-> +			 * low memory, fall back to high memory, the minimum required
-> +			 * low memory will be reserved later.
-> +			 */
-> +			search_start = (unsigned long)dma32_phys_limit;
-> +			search_end = memblock_end_of_DRAM();
-> +			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
-> +		}
-> +
->  		crash_base = memblock_phys_alloc_range(crash_size, PMD_SIZE,
-> -						search_start, search_end);
-> +						       search_start, search_end);
->  		if (crash_base == 0) {
->  			pr_warn("crashkernel: couldn't allocate %lldKB\n",
->  				crash_size >> 10);
-> @@ -1358,6 +1431,12 @@ static void __init reserve_crashkernel(void)
->  		}
->  	}
->  
-> +	if ((crash_base >= dma32_phys_limit) && crash_low_size &&
-> +	     reserve_crashkernel_low(crash_low_size)) {
-> +		memblock_phys_free(crash_base, crash_size);
-> +		return;
-> +	}
-> +
->  	pr_info("crashkernel: reserved 0x%016llx - 0x%016llx (%lld MB)\n",
->  		crash_base, crash_base + crash_size, crash_size >> 20);
->  
+>  	crashkernel=size[KMG],high
+> -			[KNL, X86-64, ARM64] range could be above 4G. Allow kernel
+> -			to allocate physical memory region from top, so could
+> -			be above 4G if system have more than 4G ram installed.
+> -			Otherwise memory region will be allocated below 4G, if
+> -			available.
+> +			[KNL, X86-64, ARM64, RISCV] range could be above 4G.
+> +			Allow kernel to allocate physical memory region from top,
+> +			so could be above 4G if system have more than 4G ram
+> +			installed. Otherwise memory region will be allocated
+> +			below 4G, if available.
+>  			It will be ignored if crashkernel=X is specified.
+>  	crashkernel=size[KMG],low
+> -			[KNL, X86-64, ARM64] range under 4G. When crashkernel=X,high
+> +			[KNL, X86-64, ARM64, RISCV] range under 4G. When crashkernel=X,high
+>  			is passed, kernel could allocate physical memory region
+>  			above 4G, that cause second kernel crash on system
+>  			that require some amount of low memory, e.g. swiotlb
+> @@ -893,6 +893,7 @@
+>  			size is	platform dependent.
+>  			  --> x86: max(swiotlb_size_or_default() + 8MiB, 256MiB)
+>  			  --> arm64: 128MiB
+> +			  --> riscv: 128MiB
+>  			This one lets the user specify own low range under 4G
+>  			for second kernel instead.
+>  			0: to disable low allocation.
 > -- 
 > 2.34.1
 > 
