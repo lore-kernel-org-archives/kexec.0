@@ -4,84 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 30D0CC0015E
-	for <kexec@archiver.kernel.org>; Wed, 26 Jul 2023 09:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 18FE1C001B0
+	for <kexec@archiver.kernel.org>; Wed, 26 Jul 2023 10:25:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=U2bzJaJHiy1mcopLmjMYufMRCs3Lckion0xm8+Kc8b0=; b=TqkV5h1edlGAvD
-	Lm3+2ysXR3DfNOFji/zo/OMwOjCJg7qhQdzL8pEzmmGNWdMRG2S0cQ2BtwaJ0QDliTAvwSqodvhSR
-	DTmueqqtdqr66OA86q7Ok+9cpjQmlxWYHeMpk+z4JbuPLmrdy/HcdzSstfPQjTQIGhfOAu6mX8LLI
-	f3L51ne8GinyZvU3xHgnyZx0f9dKIdFGy1zwjPFpNQzknTNwuK0ZObnOVqDjNKyxbmZONTvRXMLOS
-	eIMFzNMIsGV9v15CmlHqRDGP9tV4UWhvGNkK4BB0R0Uts9sbehAYNivhnCaslVXdHhJDg4sUIhGP7
-	bGZoU6Rd07cMeGgQC9Qg==;
+	List-Owner; bh=1/TgkYmCJhLhOptg6gI5Yq+0rcpKdvEYPIK0IIIgo8o=; b=ZK9USFwQGK2d2N
+	d5EbX9h6zkrR6JmZ7b0aCH5DrEQPwX0kgBRZe6uJQiiZCaO6ULkOScDm1T6PhuLWFH8a4xGb9AAw6
+	aDbC9h1Uolvhd2PuO6f3yQYiILVMtK7+hBECkWEXMQRnLlb0VW+sBAdWOp156QEVJva2dEX0mXbrj
+	36H3KVB13/ybWsKDhUx3I5MQryomV2uJ1ZUTeUUXVEceUYK4g/ijdkSJdXo1yN4QB8APXrVPFEQs5
+	/vl9T5aMKYhUMmUfQwoeVizfiafOvqyUxI9+/WOAwogkuXr/tdU/S/vjVA/cvoMbijBEkhYg2SJ6o
+	fVYnf+mlEpWtsERME9zQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qObEg-009pPR-16;
-	Wed, 26 Jul 2023 09:55:14 +0000
-Received: from [14.137.139.154] (helo=frasgout12.his.huawei.com)
+	id 1qObhc-009t6K-0S;
+	Wed, 26 Jul 2023 10:25:08 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qObEc-009pMv-2n;
-	Wed, 26 Jul 2023 09:55:12 +0000
-Received: from mail02.huawei.com (unknown [172.18.147.228])
-	by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4R9pnr6DVKz9v7cX;
-	Wed, 26 Jul 2023 17:41:52 +0800 (CST)
-Received: from A2101119013HW2.china.huawei.com (unknown [10.81.211.226])
-	by APP1 (Coremail) with SMTP id LxC2BwBHo95C7cBk+WYTBQ--.33492S5;
-	Wed, 26 Jul 2023 10:54:52 +0100 (CET)
-From: Petr Tesarik <petrtesarik@huaweicloud.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Li Huafei <lihuafei1@huawei.com>,
-	Liao Chang <liaochang1@huawei.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Kees Cook <keescook@chromium.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Ricardo Ribalda <ribalda@chromium.org>,
-	Alyssa Ross <hi@alyssa.is>,
-	Li Zhengyu <lizhengyu3@huawei.com>,
-	linux-riscv@lists.infradead.org (open list:RISC-V ARCHITECTURE),
-	kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org (open list)
-Cc: Torsten Duwe <duwe@suse.de>,
-	Roberto Sassu <roberto.sassu@huaweicloud.com>,
-	petr@tesarici.cz
-Subject: [PATCH v2 3/3] riscv/kexec: load initrd high in available memory
-Date: Wed, 26 Jul 2023 11:54:01 +0200
-Message-Id: <67c8eb9eea25717c2c8208d9bfbfaa39e6e2a1c6.1690365011.git.petr.tesarik.ext@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1690365011.git.petr.tesarik.ext@huawei.com>
-References: <cover.1690365011.git.petr.tesarik.ext@huawei.com>
+	id 1qObhZ-009t5o-2i
+	for kexec@lists.infradead.org;
+	Wed, 26 Jul 2023 10:25:07 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1690367105;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=36DJPnF7Pxv/d3UEUTkuVMdzn88ssz77HYYWsSAh9Ic=;
+	b=WJ9xN+uTv8P/iEdWwIykOU63eaLfqV8kD2W84fvbTYENHdlhC2da5GqyGSNPF8DFoSSBf/
+	JGN5OHvUnT7MRH5ObH4Djt1qxSirpg3aUTDOc8lZpIR5nAX331DeTB1YquO6sysFf2oliy
+	YlkRjDS11Z2uq4gFyrAQ7EF9MfAZ6KE=
+Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-223-VUxOp_ZdMMuuLuv-n4j8Yg-1; Wed, 26 Jul 2023 06:24:59 -0400
+X-MC-Unique: VUxOp_ZdMMuuLuv-n4j8Yg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B84991C31C46;
+	Wed, 26 Jul 2023 10:24:58 +0000 (UTC)
+Received: from localhost (ovpn-12-99.pek2.redhat.com [10.72.12.99])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id AC8E62166B25;
+	Wed, 26 Jul 2023 10:24:57 +0000 (UTC)
+Date: Wed, 26 Jul 2023 18:24:53 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Chen Jiahao <chenjiahao16@huawei.com>
+Cc: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+	kexec@lists.infradead.org, linux-doc@vger.kernel.org,
+	paul.walmsley@sifive.com, palmer@dabbelt.com,
+	conor.dooley@microchip.com, guoren@kernel.org, heiko@sntech.de,
+	bjorn@rivosinc.com, alex@ghiti.fr, akpm@linux-foundation.org,
+	atishp@rivosinc.com, thunder.leizhen@huawei.com, horms@kernel.org
+Subject: Re: [PATCH -next v9 1/2] riscv: kdump: Implement
+ crashkernel=X,[high,low]
+Message-ID: <ZMD0dV6JEG0UhWD6@MiWiFi-R3L-srv>
+References: <20230726175000.2536220-1-chenjiahao16@huawei.com>
+ <20230726175000.2536220-2-chenjiahao16@huawei.com>
 MIME-Version: 1.0
-X-CM-TRANSID: LxC2BwBHo95C7cBk+WYTBQ--.33492S5
-X-Coremail-Antispam: 1UD129KBjvJXoWxJr13KrWrXFWfuw4kArW7XFb_yoW8Gr1Dpw
-	sxCF4UGrWUuwsrC34j93Wxua48Aa95Wr1aga1DCayrJrs8XrW5Z3yqq342vF4vkr1agF9Y
-	vFyY9r1S93WkA3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUQq14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JrWl82xGYIkIc2
-	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1U
-	M2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjx
-	v20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1l
-	F7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2
-	IY04v7MxkF7I0En4kS14v26r1q6r43MxkF7I0Ew4C26cxK6c8Ij28IcwCF04k20xvY0x0E
-	wIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E74
-	80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0
-	I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42
-	xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF
-	7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7VUjmFAJUUUUU==
-X-CM-SenderInfo: hshw23xhvd2x3n6k3tpzhluzxrxghudrp/
-X-CFilter-Loop: Reflected
+Content-Disposition: inline
+In-Reply-To: <20230726175000.2536220-2-chenjiahao16@huawei.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230726_025511_185973_0A65B4BF 
-X-CRM114-Status: GOOD (  13.02  )
+X-CRM114-CacheID: sfid-20230726_032505_949634_58D34B79 
+X-CRM114-Status: GOOD (  32.77  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -98,43 +86,192 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Torsten Duwe <duwe@suse.de>
+On 07/26/23 at 05:49pm, Chen Jiahao wrote:
+> On riscv, the current crash kernel allocation logic is trying to
+> allocate within 32bit addressible memory region by default, if
+> failed, try to allocate without 4G restriction.
+> 
+> In need of saving DMA zone memory while allocating a relatively large
+> crash kernel region, allocating the reserved memory top down in
+> high memory, without overlapping the DMA zone, is a mature solution.
+> Here introduce the parameter option crashkernel=X,[high,low].
+> 
+> One can reserve the crash kernel from high memory above DMA zone range
+> by explicitly passing "crashkernel=X,high"; or reserve a memory range
+> below 4G with "crashkernel=X,low".
 
-When initrd is loaded low, the secondary kernel fails like this:
+LGTM,
 
- INITRD: 0xdc581000+0x00eef000 overlaps in-use memory region
+Acked-by: Baoquan He <bhe@redhat.com>
 
-This initrd load address corresponds to the _end symbol, but the
-reservation is aligned on PMD_SIZE, as explained by a comment in
-setup_bootmem().
-
-It is technically possible to align the initrd load address accordingly,
-leaving a hole between the end of kernel and the initrd, but it is much
-simpler to allocate the initrd top-down.
-
-Fixes: 838b3e28488f ("RISC-V: Load purgatory in kexec_file")
-Signed-off-by: Torsten Duwe <duwe@suse.de>
-Signed-off-by: Petr Tesarik <petr.tesarik.ext@huawei.com>
-Cc: stable@vger.kernel.org
----
- arch/riscv/kernel/elf_kexec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/riscv/kernel/elf_kexec.c b/arch/riscv/kernel/elf_kexec.c
-index 38390d3bdcac..c08bb5c3b385 100644
---- a/arch/riscv/kernel/elf_kexec.c
-+++ b/arch/riscv/kernel/elf_kexec.c
-@@ -281,7 +281,7 @@ static void *elf_kexec_load(struct kimage *image, char *kernel_buf,
- 		kbuf.buffer = initrd;
- 		kbuf.bufsz = kbuf.memsz = initrd_len;
- 		kbuf.buf_align = PAGE_SIZE;
--		kbuf.top_down = false;
-+		kbuf.top_down = true;
- 		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
- 		ret = kexec_add_buffer(&kbuf);
- 		if (ret)
--- 
-2.25.1
+> 
+> Signed-off-by: Chen Jiahao <chenjiahao16@huawei.com>
+> Acked-by: Guo Ren <guoren@kernel.org>
+> ---
+>  arch/riscv/kernel/setup.c |  5 +++
+>  arch/riscv/mm/init.c      | 93 ++++++++++++++++++++++++++++++++++++---
+>  2 files changed, 91 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
+> index 971fe776e2f8..376f5d49ce85 100644
+> --- a/arch/riscv/kernel/setup.c
+> +++ b/arch/riscv/kernel/setup.c
+> @@ -178,6 +178,11 @@ static void __init init_resources(void)
+>  		if (ret < 0)
+>  			goto error;
+>  	}
+> +	if (crashk_low_res.start != crashk_low_res.end) {
+> +		ret = add_resource(&iomem_resource, &crashk_low_res);
+> +		if (ret < 0)
+> +			goto error;
+> +	}
+>  #endif
+>  
+>  #ifdef CONFIG_CRASH_DUMP
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index 70fb31960b63..156e09a1ceee 100644
+> --- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -1297,6 +1297,28 @@ static inline void setup_vm_final(void)
+>  }
+>  #endif /* CONFIG_MMU */
+>  
+> +/* Reserve 128M low memory by default for swiotlb buffer */
+> +#define DEFAULT_CRASH_KERNEL_LOW_SIZE	(128UL << 20)
+> +
+> +static int __init reserve_crashkernel_low(unsigned long long low_size)
+> +{
+> +	unsigned long long low_base;
+> +
+> +	low_base = memblock_phys_alloc_range(low_size, PMD_SIZE, 0, dma32_phys_limit);
+> +	if (!low_base) {
+> +		pr_err("cannot allocate crashkernel low memory (size:0x%llx).\n", low_size);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	pr_info("crashkernel low memory reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
+> +		low_base, low_base + low_size, low_size >> 20);
+> +
+> +	crashk_low_res.start = low_base;
+> +	crashk_low_res.end = low_base + low_size - 1;
+> +
+> +	return 0;
+> +}
+> +
+>  /*
+>   * reserve_crashkernel() - reserves memory for crash kernel
+>   *
+> @@ -1308,8 +1330,12 @@ static void __init reserve_crashkernel(void)
+>  {
+>  	unsigned long long crash_base = 0;
+>  	unsigned long long crash_size = 0;
+> +	unsigned long long crash_low_size = 0;
+>  	unsigned long search_start = memblock_start_of_DRAM();
+> -	unsigned long search_end = memblock_end_of_DRAM();
+> +	unsigned long search_end = (unsigned long)dma32_phys_limit;
+> +	char *cmdline = boot_command_line;
+> +	bool fixed_base = false;
+> +	bool high = false;
+>  
+>  	int ret = 0;
+>  
+> @@ -1325,14 +1351,36 @@ static void __init reserve_crashkernel(void)
+>  		return;
+>  	}
+>  
+> -	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+> +	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
+>  				&crash_size, &crash_base);
+> -	if (ret || !crash_size)
+> +	if (ret == -ENOENT) {
+> +		/* Fallback to crashkernel=X,[high,low] */
+> +		ret = parse_crashkernel_high(cmdline, 0, &crash_size, &crash_base);
+> +		if (ret || !crash_size)
+> +			return;
+> +
+> +		/*
+> +		 * crashkernel=Y,low is valid only when crashkernel=X,high
+> +		 * is passed.
+> +		 */
+> +		ret = parse_crashkernel_low(cmdline, 0, &crash_low_size, &crash_base);
+> +		if (ret == -ENOENT)
+> +			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
+> +		else if (ret)
+> +			return;
+> +
+> +		search_start = (unsigned long)dma32_phys_limit;
+> +		search_end = memblock_end_of_DRAM();
+> +		high = true;
+> +	} else if (ret || !crash_size) {
+> +		/* Invalid argument value specified */
+>  		return;
+> +	}
+>  
+>  	crash_size = PAGE_ALIGN(crash_size);
+>  
+>  	if (crash_base) {
+> +		fixed_base = true;
+>  		search_start = crash_base;
+>  		search_end = crash_base + crash_size;
+>  	}
+> @@ -1345,12 +1393,37 @@ static void __init reserve_crashkernel(void)
+>  	 * swiotlb can work on the crash kernel.
+>  	 */
+>  	crash_base = memblock_phys_alloc_range(crash_size, PMD_SIZE,
+> -					       search_start,
+> -					       min(search_end, (unsigned long) SZ_4G));
+> +					       search_start, search_end);
+>  	if (crash_base == 0) {
+> -		/* Try again without restricting region to 32bit addressible memory */
+> +		/*
+> +		 * For crashkernel=size[KMG]@offset[KMG], print out failure
+> +		 * message if can't reserve the specified region.
+> +		 */
+> +		if (fixed_base) {
+> +			pr_warn("crashkernel: allocating failed with given size@offset\n");
+> +			return;
+> +		}
+> +
+> +		if (high) {
+> +			/*
+> +			 * For crashkernel=size[KMG],high, if the first attempt was
+> +			 * for high memory, fall back to low memory.
+> +			 */
+> +			search_start = memblock_start_of_DRAM();
+> +			search_end = (unsigned long)dma32_phys_limit;
+> +		} else {
+> +			/*
+> +			 * For crashkernel=size[KMG], if the first attempt was for
+> +			 * low memory, fall back to high memory, the minimum required
+> +			 * low memory will be reserved later.
+> +			 */
+> +			search_start = (unsigned long)dma32_phys_limit;
+> +			search_end = memblock_end_of_DRAM();
+> +			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
+> +		}
+> +
+>  		crash_base = memblock_phys_alloc_range(crash_size, PMD_SIZE,
+> -						search_start, search_end);
+> +						       search_start, search_end);
+>  		if (crash_base == 0) {
+>  			pr_warn("crashkernel: couldn't allocate %lldKB\n",
+>  				crash_size >> 10);
+> @@ -1358,6 +1431,12 @@ static void __init reserve_crashkernel(void)
+>  		}
+>  	}
+>  
+> +	if ((crash_base >= dma32_phys_limit) && crash_low_size &&
+> +	     reserve_crashkernel_low(crash_low_size)) {
+> +		memblock_phys_free(crash_base, crash_size);
+> +		return;
+> +	}
+> +
+>  	pr_info("crashkernel: reserved 0x%016llx - 0x%016llx (%lld MB)\n",
+>  		crash_base, crash_base + crash_size, crash_size >> 20);
+>  
+> -- 
+> 2.34.1
+> 
 
 
 _______________________________________________
