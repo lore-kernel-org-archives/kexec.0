@@ -4,81 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 53191C0015E
-	for <kexec@archiver.kernel.org>; Wed, 26 Jul 2023 18:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C82E3C0015E
+	for <kexec@archiver.kernel.org>; Wed, 26 Jul 2023 21:58:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
-	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=PRNNwVVmirXlyElj996FuKQKYp+uYyIQJRZo0SlaQ5Q=; b=zpUjFsi3t5YCpA
-	q7cWdEQHURjV02uyoeNcSWp/F5lt4+glLNB/kp/On/u+do7Yw9MBnjKNBHl7Bvr9YmNyhi+UmDd5p
-	rYlWc8FX3eJSiJljq8cKcUlv+JaJd2ZKZ3PO2UQcXqUCLU3Rm+861DGkTyu8EKvu/L7EG1dsqAd34
-	McivnppRwxt2jMuDhqV+GwuoOvWPU9blrK0LWTkVxzB8iiYCMaQwIHn9tXHEY+rHdjMCk/Yixq3Zk
-	cfX4OPKXqi2cV9hV3/ZjsIpGQNib+iEcS3k0Y+emLDHC1r+PCJnA5G3qGQ4tSiXxYO3cP4ID7bg8l
-	iPYsQxw9tudtNtRrW/Fw==;
+	Content-Transfer-Encoding:Content-Type:Reply-To:List-Subscribe:List-Help:
+	List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:
+	Subject:To:From:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=QvTZn0f7jh75xxAo9qqdnt9KSRVzB7GBjxXLx8pHlbE=; b=A9DA4dxa3TL1ES
+	w8WH9o4SpRt7L2ufldvfW6byWkFagPebIvsL7LJ7aSOQNTpUlG9+xjuZLAhxsllVNh0sx7IsBjFko
+	5KjWaekxqMYEq+AzIujm7iwHjVCmqB0yy/fMTvTBkU5ch/fo0dKLmaZDMhIctLNQz61E5Ew/GAgLH
+	Exh73LHg5tfQlbgkrCqP8nC6Obo8QFgiCtb2h7WNnxuw1i5LH21fPt4HhOCkEG+GNgrceMtDOiZUN
+	FAo09TVLGysrRsezAHbiEBKqfo/th+CSeM5Zom4oJZ8ganWpAY68dTaLiMEtWXdsXHRn3YvHQGd3l
+	5Lgbg9NIe4WtJJv8UrLQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qOjFD-00BHAk-0v;
-	Wed, 26 Jul 2023 18:28:19 +0000
-Received: from [14.137.139.154] (helo=frasgout12.his.huawei.com)
+	id 1qOmW5-00BbCW-2H;
+	Wed, 26 Jul 2023 21:57:57 +0000
+Received: from 5675075.natnudogroup.com ([162.215.220.40])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qOjF9-00BH9C-1k;
-	Wed, 26 Jul 2023 18:28:17 +0000
-Received: from mail02.huawei.com (unknown [172.18.147.227])
-	by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4RB29j6nK3z9xFqw;
-	Thu, 27 Jul 2023 02:14:49 +0800 (CST)
-Received: from [10.81.211.226] (unknown [10.81.211.226])
-	by APP2 (Coremail) with SMTP id GxC2BwB3IjmaZcFkGUkMBQ--.1285S2;
-	Wed, 26 Jul 2023 19:27:50 +0100 (CET)
-Message-ID: <a6a112d4-8fe7-4f73-b7c9-8eaf5e9d7ba1@huaweicloud.com>
-Date: Wed, 26 Jul 2023 20:27:34 +0200
+	id 1qOmW2-00Bb6s-0A
+	for kexec@lists.infradead.org;
+	Wed, 26 Jul 2023 21:57:56 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=dslpharma.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	MIME-Version:Message-ID:Date:Subject:To:From:Reply-To:Sender:Cc:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Du68sW6WOU4RHVQtrNJ12Gp+zfUorboiemsFBrhBCX8=; b=HZsrP2gTskpHgXKSWIprzuzBhP
+	GeshGTig8egYbKGLxwOyQzTgtM23n9eQ3i0c6d66kSAt+Fiq13s7CWyXMvXR3A0CgMW/OSZ5mPzwb
+	/vIVNfZw/ORIU2z7wvakr+ksHzf3XjlVs04bEetjsOaOtmVHiWG2S6YdlfeOYZ6BGEP8M2LpQjfav
+	y5ZoNA8ZHHJ56ZI1Til+TBZ9oQYYkLAW7FWMMt4cl/xfq0rejaPNq7zMUKCX12huWQc9SzOvBC+m+
+	CZ+4ocfZJPzp2zRoN/HZNJwPW6yZzO+wY2RCxG9LEGgNNwzYwnJXdp+5xpJivKx3eCmQpXIvvUUzD
+	Fy2N9GCA==;
+Received: from [43.128.74.197] (port=61939 helo=dslpharma.com)
+	by 5675075.natnudogroup.com with esmtpa (Exim 4.96)
+	(envelope-from <admin@dslpharma.com>)
+	id 1qOm7t-0005SM-2L
+	for kexec@lists.infradead.org;
+	Wed, 26 Jul 2023 16:33:00 -0500
+From: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Subject: Hey what are you doing ? you forgot to pay your bills #kexec-854846
+Date: 27 Jul 2023 05:32:58 +0800
+Message-ID: <20230727053258.91E88311344EF888@lists.infradead.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH v2 3/3] riscv/kexec: load initrd high in available memory
-Content-Language: en-US
-To: Conor Dooley <conor@kernel.org>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Conor Dooley <conor.dooley@microchip.com>, Li Huafei <lihuafei1@huawei.com>,
- Liao Chang <liaochang1@huawei.com>, Masahiro Yamada <masahiroy@kernel.org>,
- Kees Cook <keescook@chromium.org>, Andrew Morton
- <akpm@linux-foundation.org>, Heiko Stuebner <heiko@sntech.de>,
- Ricardo Ribalda <ribalda@chromium.org>, Alyssa Ross <hi@alyssa.is>,
- Li Zhengyu <lizhengyu3@huawei.com>,
- "open list:RISC-V ARCHITECTURE" <linux-riscv@lists.infradead.org>,
- kexec@lists.infradead.org, open list <linux-kernel@vger.kernel.org>,
- Torsten Duwe <duwe@suse.de>, Roberto Sassu <roberto.sassu@huaweicloud.com>,
- petr@tesarici.cz
-References: <cover.1690365011.git.petr.tesarik.ext@huawei.com>
- <67c8eb9eea25717c2c8208d9bfbfaa39e6e2a1c6.1690365011.git.petr.tesarik.ext@huawei.com>
- <20230726-busily-marsupial-504e9ff2d873@spud>
-From: Petr Tesarik <petrtesarik@huaweicloud.com>
-In-Reply-To: <20230726-busily-marsupial-504e9ff2d873@spud>
-X-CM-TRANSID: GxC2BwB3IjmaZcFkGUkMBQ--.1285S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7ury8WrWUJFy3JF4UtF4kCrg_yoW8WF1fpr
-	4fGw17GFWDA3y5ZrWUta17u347Zws3Jw1jgF1UKFy8Zr1Y9FWjkryUGrWxWrykAryvg3W8
-	JFy5Zr12v3WUJw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9214x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJV
-	WxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
-	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
-	67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
-	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E
-	3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYx
-	BIdaVFxhVjvjDU0xZFpf9x0JUQvtAUUUUU=
-X-CM-SenderInfo: hshw23xhvd2x3n6k3tpzhluzxrxghudrp/
-X-CFilter-Loop: Reflected
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - 5675075.natnudogroup.com
+X-AntiAbuse: Original Domain - lists.infradead.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - dslpharma.com
+X-Get-Message-Sender-Via: 5675075.natnudogroup.com: authenticated_id: admin@dslpharma.com
+X-Authenticated-Sender: 5675075.natnudogroup.com: admin@dslpharma.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230726_112815_853221_FC1E1237 
-X-CRM114-Status: GOOD (  12.65  )
+X-CRM114-CacheID: sfid-20230726_145754_198332_DB88CAEC 
+X-CRM114-Status: UNSURE (   5.42  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,70 +76,95 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Reply-To: kexec@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 7/26/2023 6:38 PM, Conor Dooley wrote:
-> On Wed, Jul 26, 2023 at 11:54:01AM +0200, Petr Tesarik wrote:
->> From: Torsten Duwe <duwe@suse.de>
->>
->> When initrd is loaded low, the secondary kernel fails like this:
->>
->>  INITRD: 0xdc581000+0x00eef000 overlaps in-use memory region
->>
->> This initrd load address corresponds to the _end symbol, but the
->> reservation is aligned on PMD_SIZE, as explained by a comment in
->> setup_bootmem().
->>
->> It is technically possible to align the initrd load address accordingly,
->> leaving a hole between the end of kernel and the initrd, but it is much
->> simpler to allocate the initrd top-down.
->>
->> Fixes: 838b3e28488f ("RISC-V: Load purgatory in kexec_file")
->> Signed-off-by: Torsten Duwe <duwe@suse.de>
->> Signed-off-by: Petr Tesarik <petr.tesarik.ext@huawei.com>
->> Cc: stable@vger.kernel.org
-> 
-> Trying to align it might be worthwhile, but the simple fix makes sense
-> for now & w.r.t backporting.
-
-On a second thought, allocating the initrd at the top of the range is
-probably even better, because the kernel can unpack to low addresses,
-resulting in less fragmented memory. See diagrams.
-
-Top-down initrd:
-
-+----------+          +----------+
-|  initrd  |          |          |
-+----------+          |   free   |
-|          |          |          |
-|          |  unpack  +----------+
-|   free   |  ----->  | unpacked |
-|          |          |  initrd  |
-+----------+          +----------+
-|  kernel  |          |  kernel  |
-+----------+          +----------+
-
-
-Aligned initrd:
-
-+----------+          +----------+
-|          |          |   free   |
-|          |          +----------|
-|   free   |          | unpacked |
-|          |          |  initrd  |
-+----------+  unpack  +----------+
-|  initrd  |  ----->  |   free   |
-+----------+          +----------+
-|  kernel  |          |  kernel  |
-+----------+          +----------+
-
-Petr T
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkuIEhvdyBhcmUgeW91PwoKSSBrbm93LCBpdOKAmXMgdW5wbGVhc2FudCB0byBzdGFydCB0aGUg
+Y29udmVyc2F0aW9uIHdpdGggYmFkIG5ld3MsIGJ1dCBJIGhhdmUgbm8gY2hvaWNlLgpGZXcgbW9u
+dGhzIGFnbywgSSBoYXZlIGdhaW5lZCBhY2Nlc3MgdG8geW91ciBkZXZpY2VzIHRoYXQgdXNlZCBi
+eSB5b3UgZm9yIGludGVybmV0IGJyb3dzaW5nLgpBZnRlcndhcmRzLCBJIGNvdWxkIHRyYWNrIGRv
+d24gYWxsIHlvdXIgaW50ZXJuZXQgYWN0aXZpdGllcy4KCkhlcmUgaXMgdGhlIGhpc3Rvcnkgb2Yg
+aG93IGl0IGNvdWxkIGJlY29tZSBwb3NzaWJsZToKQXQgZmlyc3QsIEkgcHVyY2hhc2VkIGZyb20g
+aGFja2VycyB0aGUgYWNjZXNzIHRvIG11bHRpcGxlIGVtYWlsIGFjY291bnRzIChub3dhZGF5cywg
+aXQgaXMgYSByZWFsbHkgc2ltcGxlIHRoaW5nIHRvIGRvIG9ubGluZSkuCkFzIHJlc3VsdCwgSSBj
+b3VsZCBlYXNpbHkgbG9nIGluIHRvIHlvdXIgZW1haWwgYWNjb3VudCBrZXhlY0BsaXN0cy5pbmZy
+YWRlYWQub3JnLgoKT25lIHdlZWsgbGF0ZXIsIEkgaW5zdGFsbGVkIFRyb2phbiB2aXJ1cyBpbiBP
+cGVyYXRpbmcgU3lzdGVtcyBvZiBhbGwgZGV2aWNlcyBvZiB5b3Vycywgd2hpY2ggeW91IHVzZSB0
+byBvcGVuIGVtYWlsLgpGcmFua2x5IHNwZWFraW5nLCBpdCB3YXMgcmF0aGVyIHN0cmFpZ2h0Zm9y
+d2FyZCAoc2luY2UgeW91IHdlcmUgb3BlbmluZyB0aGUgbGlua3MgZnJvbSB5b3VyIGluYm94IGVt
+YWlscykuCkV2ZXJ5dGhpbmcgaW5nZW5pb3VzIGlzIHF1aXRlIHNpbXBsZS4gKG9fMCkhCgpNeSBz
+b2Z0d2FyZSBlbmFibGVzIG1lIHdpdGggYWNjZXNzIHRvIGFsbCBjb250cm9sbGVycyBpbnNpZGUg
+ZGV2aWNlcyBvZiB5b3VycywgbGlrZSBtaWNyb3Bob25lLCBrZXlib2FyZCBhbmQgdmlkZW8gY2Ft
+ZXJhLgpJIGNvdWxkIGVhc2lseSBkb3dubG9hZCB0byBteSBzZXJ2ZXJzIGFsbCB5b3VyIHByaXZh
+dGUgaW5mbywgaW5jbHVkaW5nIHRoZSBoaXN0b3J5IG9mIHdlYiBicm93c2luZyBhbmQgcGhvdG9z
+LgpJIGNhbiBlZmZvcnRsZXNzbHkgZ2FpbiBhY2Nlc3MgdG8gYWxsIHlvdXIgbWVzc2VuZ2Vycywg
+c29jaWFsIG5ldHdvcmtzIGFjY291bnRzLCBlbWFpbHMsIGNvbnRhY3QgbGlzdCBhcyB3ZWxsIGFz
+IGNoYXQgaGlzdG9yeS4KVmlydXMgb2YgbWluZSBjb25zdGFudGx5IGtlZXBzIHJlZnJlc2hpbmcg
+aXRzIHNpZ25hdHVyZXMgKGJlY2F1c2UgaXQgaXMgZHJpdmVyLWJhc2VkKSwgYW5kIGFzIHJlc3Vs
+dCByZW1haW5zIHVubm90aWNlZCBieSB5b3VyIGFudGl2aXJ1cy4KCkhlbmNlLCB5b3UgY2FuIGFs
+cmVhZHkgZ3Vlc3Mgd2h5IEkgc3RheWVkIHVuZGV0ZWN0ZWQgYWxsIHRoaXMgd2hpbGUuCgpBcyBJ
+IHdhcyBnYXRoZXJpbmcgaW5mb3JtYXRpb24gYWJvdXQgeW91LCBJIGNvdWxkbuKAmXQgaGVscCBi
+dXQgbm90aWNlIHRoYXQgeW91IGFyZSBhbHNvIGEgdHJ1ZSBmYW4gb2YgYWR1bHQtY29udGVudCB3
+ZWJzaXRlcy4KWW91IGFjdHVhbGx5IGxvdmUgdmlzaXRpbmcgcG9ybiBzaXRlcyBhbmQgYnJvd3Np
+bmcgdGhyb3VnaCBraW5reSB2aWRlb3MsIHdoaWxlIHBsZWFzdXJpbmcgeW91cnNlbGYuCkkgY291
+bGQgbWFrZSBhIGZldyBkaXJ0eSByZWNvcmRzIHdpdGggeW91IGluIHRoZSBtYWluIGZvY3VzIGFu
+ZCBtb250YWdlZCBzZXZlcmFsIHZpZGVvcyBzaG93aW5nIHRoZSB3YXkgeW91IHJlYWNoIG9yZ2Fz
+bSB3aGlsZSBtYXN0dXJiYXRpbmcgd2l0aCBqb3kuCgpJZiB5b3UgYXJlIHN0aWxsIHVuY2VydGFp
+biByZWdhcmRpbmcgdGhlIHNlcmlvdXNuZXNzIG9mIG15IGludGVudGlvbnMsCml0IG9ubHkgcmVx
+dWlyZXMgc2V2ZXJhbCBtb3VzZSBjbGlja3MgZm9yIG1lIHRvIGZvcndhcmQgeW91ciB2aWRlb3Mg
+dG8gYWxsIHlvdXIgcmVsYXRpdmVzLCBhcyB3ZWxsIGFzIGZyaWVuZHMgYW5kIGNvbGxlYWd1ZXMu
+CkkgY2FuIGFsc28gbWFrZSB0aG9zZSB2aWRzIGJlY29tZSBhY2Nlc3NpYmxlIGJ5IHB1YmxpYy4K
+SSBob25lc3RseSB0aGluayB0aGF0IHlvdSBkbyBub3QgcmVhbGx5IHdhbnQgdGhhdCB0byBoYXBw
+ZW4sIGNvbnNpZGVyaW5nIHRoZSBwZWN1bGlhcml0eSBvZiB2aWRlb3MgeW91IGxpa2UgdG8gd2F0
+Y2gsCih5b3Ugb2J2aW91c2x5IGtub3cgd2hhdCBJIG1lYW4pIGFsbCB0aGF0IGtpbmt5IGNvbnRl
+bnQgY2FuIGJlY29tZSBhIHJlYXNvbiBvZiBzZXJpb3VzIHRyb3VibGVzIGZvciB5b3UuCgpIb3dl
+dmVyLCB3ZSBjYW4gc3RpbGwgcmVzb2x2ZSB0aGlzIHNpdHVhdGlvbiBpbiB0aGUgZm9sbG93aW5n
+IG1hbm5lcjoKRXZlcnl0aGluZyB5b3UgYXJlIHJlcXVpcmVkIHRvIGRvIGlzIGEgc2luZ2xlIHRy
+YW5zZmVyIG9mICQ5NTUgVVNEIHRvIG15IGFjY291bnQgKG9yIGFtb3VudCBlcXVpdmFsZW50IHRv
+IGJpdGNvaW4gZGVwZW5kaW5nIG9uIGV4Y2hhbmdlIHJhdGUgYXQgdGhlIG1vbWVudCBvZiB0cmFu
+c2ZlciksCmFuZCBvbmNlIHRoZSB0cmFuc2FjdGlvbiBpcyBjb21wbGV0ZSwgSSB3aWxsIHN0cmFp
+Z2h0IGF3YXkgcmVtb3ZlIGFsbCB0aGUgZGlydHkgY29udGVudCBleHBvc2luZyB5b3UuCkFmdGVy
+IHRoYXQsIHlvdSBjYW4gZXZlbiBmb3JnZXQgdGhhdCB5b3UgaGF2ZSBjb21lIGFjcm9zcyBtZS4g
+TW9yZW92ZXIsIEkgc3dlYXIgdGhhdCBhbGwgdGhlIGhhcm1mdWwgc29mdHdhcmUgd2lsbCBiZSBy
+ZW1vdmVkIGZyb20gYWxsIGRldmljZXMgb2YgeW91cnMgYXMgd2VsbC4KTWFrZSBubyBkb3VidCB0
+aGF0IEkgd2lsbCBmdWxmaWxsIG15IHBhcnQuCgpUaGlzIGlzIHJlYWxseSBhIGdyZWF0IGRlYWwg
+dGhhdCBjb21lcyBhdCBhIHJlYXNvbmFibGUgcHJpY2UsIGdpdmVuIHRoYXQgSSBoYXZlIHVzZWQg
+cXVpdGUgYSBsb3Qgb2YgZW5lcmd5IHRvIGNoZWNrIHlvdXIgcHJvZmlsZSBhcyB3ZWxsIGFzIHRy
+YWZmaWMgb3ZlciBhbiBleHRlbmRlZCBwZXJpb2Qgb2YgdGltZS4KSWYgeW91IGhhdmUgbm8gaWRl
+YSBhYm91dCBiaXRjb2luIHB1cmNoYXNlIHByb2Nlc3Mg4oCTIGl0IGNhbiBiZSBzdHJhaWdodGZv
+cndhcmRseSBkb25lIGJ5IGdldHRpbmcgYWxsIHRoZSBuZWNlc3NhcnkgaW5mb3JtYXRpb24gb25s
+aW5lLgoKSGVyZSBpcyBteSBiaXRjb2luIHdhbGxldCBwcm92aWRlZCBiZWxvdzogYmMxcThrMno3
+dTVzOW14MGp6Y3Z0Zm1hd2czM2RyaHVldjVkajZ1ZHM3CgpZb3Ugc2hvdWxkIGNvbXBsZXRlIHRo
+ZSBhYm92ZW1lbnRpb25lZCB0cmFuc2ZlciB3aXRoaW4gNDggaG91cnMgKDIgZGF5cykgYWZ0ZXIg
+b3BlbmluZyB0aGlzIGVtYWlsLgoKVGhlIGZvbGxvd2luZyBsaXN0IGNvbnRhaW5zIGFjdGlvbnMg
+eW91IHNob3VsZCBhdm9pZCBhdHRlbXB0aW5nOgojRG8gbm90IHRyeSBjYWxsaW5nIHBvbGljZSBh
+cyB3ZWxsIGFzIG90aGVyIHNlY3VyaXR5IGZvcmNlcy4gSW4gYWRkaXRpb24sIGFic3RhaW4gZnJv
+bSBzaGFyaW5nIHRoaXMgc3Rvcnkgd2l0aCB5b3VyIGZyaWVuZHMuCkFmdGVyIEkgZmluZCBvdXQg
+KGJlIHN1cmUsIEkgY2FuIGVhc2lseSBkbyB0aGF0LCBnaXZlbiB0aGF0IEkga2VlcCBjb21wbGV0
+ZSBjb250cm9sIG9mIGFsbCB5b3VyIGRldmljZXMpIOKAkyB5b3VyIGtpbmt5IHZpZGVvIHdpbGwg
+ZW5kIHVwIGJlaW5nIGF2YWlsYWJsZSB0byBwdWJsaWMgcmlnaHQgYXdheS4KI0RvIG5vdCB0cnkg
+c2VhcmNoaW5nIGZvciBtZSDigJMgdGhlcmUgaXMgYWJzb2x1dGVseSBubyByZWFzb24gdG8gZG8g
+dGhhdC4gTW9yZW92ZXIsIGFsbCB0cmFuc2FjdGlvbnMgaW4gY3J5cHRvY3VycmVuY3kgYXJlIGFs
+d2F5cyBhbm9ueW1vdXMuCiNEbyBub3QgdHJ5IHJlaW5zdGFsbGluZyB0aGUgT1Mgb24geW91ciBk
+ZXZpY2VzIG9yIHRocm93aW5nIHRoZW0gYXdheS4gSXQgaXMgcG9pbnRsZXNzIGFzIHdlbGwsIHNp
+bmNlIGFsbCB5b3VyIHZpZGVvcyBoYXZlIGFscmVhZHkgYmVlbiB1cGxvYWRlZCB0byByZW1vdGUg
+c2VydmVycy4KClRoZSBmb2xsb3dpbmcgbGlzdCBjb250YWlucyB0aGluZ3MgeW91IHNob3VsZCBu
+b3QgYmUgd29ycmllZCBhYm91dDoKI1RoYXQgeW91ciBtb25leSB3b27igJl0IHJlYWNoIG15IGFj
+Y291bnQuCuKAkyBSZXN0IGFzc3VyZWQsIHRoZSB0cmFuc2FjdGlvbnMgY2FuIGJlIHRyYWNrZWQs
+IGhlbmNlIG9uY2UgdGhlIHRyYW5zYWN0aW9uIGlzIGNvbXBsZXRlLApJIHdpbGwga25vdyBhYm91
+dCBpdCwgYmVjYXVzZSBJIGNvbnRpbnVvdXNseSBvYnNlcnZlIGFsbCB5b3VyIGFjdGl2aXRpZXMg
+KG15IHRyb2phbiB2aXJ1cyBhbGxvd3MgbWUgdG8gY29udHJvbCByZW1vdGVseSB5b3VyIGRldmlj
+ZXMsIHNhbWUgYXMgVGVhbVZpZXdlcikuCiNUaGF0IEkgc3RpbGwgd2lsbCBzaGFyZSB5b3VyIGtp
+bmt5IHZpZGVvcyB0byBwdWJsaWMgYWZ0ZXIgeW91IGNvbXBsZXRlIG1vbmV5IHRyYW5zZmVyLgri
+gJMgVHJ1c3QgbWUsIGl04oCZcyBwb2ludGxlc3MgZm9yIG1lIHRvIGNvbnRpbnVlIHRyb3VibGlu
+ZyB5b3VyIGxpZmUuIElmIEkgcmVhbGx5IHdhbnRlZCwgSSB3b3VsZCBtYWtlIGl0IGhhcHBlbiBh
+bHJlYWR5IQoKTGV04oCZcyBtYWtlIHRoaXMgZGVhbCBpbiBhIGZhaXIgbWFubmVyIQoKT3doLCBv
+bmUgbW9yZSB0aGluZ+KApmluIGZ1dHVyZSBpdCBpcyBiZXN0IHRoYXQgeW91IGRvbuKAmXQgaW52
+b2x2ZSB5b3Vyc2VsZiBpbiBzaW1pbGFyIHNpdHVhdGlvbnMgYW55IGxvbmdlciEKT25lIGxhc3Qg
+YWR2aWNlIGZyb20gbWUg4oCTIHJlY3VycmVudGx5IGNoYW5nZSBhbGwgeW91ciBwYXNzd29yZHMg
+ZnJvbSBhbGwgYWNjb3VudHMuIAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcK
+aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
