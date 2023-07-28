@@ -4,52 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BA457C001DE
-	for <kexec@archiver.kernel.org>; Fri, 28 Jul 2023 08:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D778EC001DF
+	for <kexec@archiver.kernel.org>; Fri, 28 Jul 2023 16:56:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Subject:To:From:Date:
-	Message-ID:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From
-	:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=hEwk9emYV/JTdG76nDJEYqXIam8UbOmZZZc27mIVi8c=; b=c7EzngqO0VKHdr
-	/DsVJBEtZyUC7tcqdOad85x3VK4Nu3O8moDBh/lygmCN/VlUAVm3iUG5f2ddD9dYg3APtOiByHTWd
-	qjx/bMqAz6rCYiNIUPHqWMBuJPTSn99GKfnKJsG5oOR5NNj1lC051jtRGK1vDsGUYl/ye+SyfPdqT
-	L+GiC460f8jcUHal1fvRGup1OLrZqxrCr1NcvHfdMGcxeJ3cmkSHeko+WkdlpM96B2Qe+q+iN2Z3h
-	V/JvwuTujtcPvvXf9PmBkckXujHDqf8UdydvGfGaQOwHpHT6bIQEDUWJdVIar1YPEqRsqYDeURek7
-	GJnYeR2PopXjxN6zRznA==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=HSm0f+s6d6d2KO47l14jdxBu6bcgHzpQntRf7xpp+sY=; b=K4/1WHzkULP6f9
+	Ronlc4zXncJWG18H3D/1ooSpORHo6Nzkco6U8eOKwmmO//80rIHoEUXD3KiAgnUODxWqEAU8g6L4K
+	G0H7eAHmzFVoMinncB38thF3ptV/3N0/WOJIuwNXPbRSkVDrc/7JIMrtiF9UErTbAjbI8sUP7nCax
+	D3BZIpR+FGefA/Kk13L/UWbXQ7CAB3s9ZsNQDzInQ1nBBDWd5zbK8CBayZPlHMiOMJh9/DiCqGkyk
+	FL9FAtfKEd7yuAkPpDhs8FqR1FwP/djjQR9fFgvFkE+qAMvLXKi15m71WwnFTXnVunfgI73t0DJF1
+	O8+Tlb1LGIB7wP87tY8g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qPIVu-002KJs-33;
-	Fri, 28 Jul 2023 08:07:54 +0000
-Received: from mail.alsdel.com ([135.125.191.231])
+	id 1qPQl7-0048Nl-27;
+	Fri, 28 Jul 2023 16:56:09 +0000
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qPIVq-002KGb-2u
+	id 1qPQl2-0047r8-2a
 	for kexec@lists.infradead.org;
-	Fri, 28 Jul 2023 08:07:53 +0000
-Received: by mail.alsdel.com (Postfix, from userid 1002)
-	id 19CEE48F54; Fri, 28 Jul 2023 08:06:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=alsdel.com; s=mail;
-	t=1690531610; bh=CAYDwZmm9N5ZiJT6ScYnRcZJNRz0YmzbvUPtJS3sV08=;
-	h=Date:From:To:Subject:From;
-	b=EL4F1V6RoFi0imvgqFZU/imkPrQ8Ny5Ut6Hlo4iYIBf5BXhxdJRnbdFWW2X3TXPBW
-	 8ofgl9Q58ZdvaPIQk8Ysmi0TNRlBYaJU5Z3sLTO68Q7FWUWgWBFZRtJc21JqrF6eOx
-	 P5LWcj2ZDMJbLvRYEJ1rXoORGKdXACPZxGKVYW4goIjVG/F86nFXxHJC2j1RyZda58
-	 WXK0dYFIcSyBy83dJHLEA+NZQcpw3fBLPItsEwq6ZtapRgPIzR4qes/Zx3UEoOzguJ
-	 3HPKzHgzOl+86n+/8EXN3MQ4Yg+8uSOIcozciAfHpmkDHI39dzLj7wvepUOrtTqbUZ
-	 3FTHOF4CTwugg==
-Received: by alsdel.com for <kexec@lists.infradead.org>; Fri, 28 Jul 2023 08:05:43 GMT
-Message-ID: <20230728064520-0.1.1h.7wr8.0.027jpjt0xz@alsdel.com>
-Date: Fri, 28 Jul 2023 08:05:43 GMT
-From: "Marek Brzyski" <marek.brzyski@alsdel.com>
-To: <kexec@lists.infradead.org>
-Subject: =?UTF-8?Q?Magazyny_do_wynaj=C4=99cia_w_Twoim_regionie?=
-X-Mailer: mail.alsdel.com
+	Fri, 28 Jul 2023 16:56:07 +0000
+Received: from mail.alien8.de (mail.alien8.de [IPv6:2a01:4f9:3051:3f93::2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 96B621EC0F5F;
+	Fri, 28 Jul 2023 18:55:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+	t=1690563355;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+	bh=RSQT6kz7q95HmcLEvve4qa6I/xcjQSECnE4yw3Z+BmU=;
+	b=ElxUExeiD9kGERJ+C54vf0jddcWtGvI5ZT3Mn555PFNTBBE7MKO2eostStL4ekhXWvqayv
+	/RbxMcrajN3tUT+GI3UdAdoDqljFLmSmgc8/c+S6Z0XMX67m1enswyiqfJES+T/mCaQhmk
+	IGPpzQg15MRrynSuB7RURODe3GY704k=
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id rzgwixfY34gw; Fri, 28 Jul 2023 16:55:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1690563352; bh=RSQT6kz7q95HmcLEvve4qa6I/xcjQSECnE4yw3Z+BmU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ix3uBvolQLGla1R3bo/TEjxXMwOJL8/Q7O4av2ki3Yq7BEv97Jix8mr1kzLolSqTr
+	 5DqLxWDwtN3SoMvvLCQ9AVOT7osB5ESpRY7Xei97nqS7lKN05xJCRUqVxE1SQzXKwN
+	 TRzemVX4S/G98igilaQAvaSNdf4F3z4zf3+xx0Ut1PrHUybZVCn6eMOrLa2QngOecQ
+	 c0OX0nb1ukkw1gyiOPzm8FDUKbW7xyvShChOV5etXZ4ZKji46fl+x01pRSyYoi1qyJ
+	 MCahbaVtT+WIk0+TDZusdAjeu//Ma8ic27dWerp/ev8Ch+eOzVPgMwMy0zeyjPnPSY
+	 I0G5kEL1fHDbcNt0vLT+ZvO6xYPCIXQ74viHSwwdrVE29TbBCt/XXr62qPUWZFS0pb
+	 C5YFxIL4KCLgn0bCujD40bFs0hD7+rXb6AzCFFmIC4/jXbme14LWl3/8Tv+5Npitkn
+	 OC2uzSgH0BFrqczdKwI2G7szphKaEDuff8i0GRXutZyGdRoB3tnBEjRBlPplSPrkIh
+	 Vh1wCnc4BKb8sWIAykeW2IH+JpPEivnsO9dpenjTFymT+BHUUV1i2fphWSuDZQaHLD
+	 5lpJTmpn1ZksxD3H0Zhd95mZ6MIHNpTKPQxOG7HW6OfF86FohclpLRsrbAkT8/FMzn
+	 +KMO7sjbO8ULrvhhqcvVlneU=
+Received: from zn.tnic (pd9530d32.dip0.t-ipconnect.de [217.83.13.50])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CEA0740E0184;
+	Fri, 28 Jul 2023 16:55:39 +0000 (UTC)
+Date: Fri, 28 Jul 2023 18:55:35 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Tao Liu <ltao@redhat.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com, ardb@kernel.org,
+	linux-kernel@vger.kernel.org, bhe@redhat.com, dyoung@redhat.com,
+	kexec@lists.infradead.org, linux-efi@vger.kernel.org
+Subject: Re: [PATCH v2] x86/kexec: Add EFI config table identity mapping for
+ kexec kernel
+Message-ID: <20230728165535.GDZMPzB/ek5QM+xJqA@fat_crate.local>
+References: <20230601072043.24439-1-ltao@redhat.com>
+ <20230713100459.GEZK/MS69XbphJa+tN@fat_crate.local>
+ <CAO7dBbVMNKTSDi5eP4BseEUexsk0Mo0GWJpyHfOcp+tHs6cSUw@mail.gmail.com>
+ <20230717141409.GGZLVMsU6d/9mpJvMO@fat_crate.local>
+ <CAO7dBbXJv9JzDbSa-DLT03+osYCQXNUXFwz63gbq=NGDxEVyEA@mail.gmail.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <CAO7dBbXJv9JzDbSa-DLT03+osYCQXNUXFwz63gbq=NGDxEVyEA@mail.gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230728_010751_722556_FC6045AE 
-X-CRM114-Status: UNSURE (   0.60  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20230728_095605_214390_31DA9ED6 
+X-CRM114-Status: GOOD (  20.32  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -61,24 +99,120 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-RHppZcWEIGRvYnJ5LAoKbWFteSBkbGEgUGHFhHN0d2EgZG8gemFvZmVyb3dhbmlhIHd5bmFqZW0g
-cG93aWVyemNobmkgbWFnYXp5bm93by1wcm9kdWtjeWpuZWogeiBkb3N0xJlwbnltaSBtb2R1xYJh
-bWkgb2QgMyA1MDAgbWt3IG5hIGtvbmt1cmVuY3lqbnljaCB3YXJ1bmthY2guCgpPZGRhamVteSBu
-YWplbWNvbSBkbyB1xbx5dGt1IHBhcmsgbWFnYXp5bm93by1wcm9kdWtjeWpueSB6IHd5asSFdGtv
-d28gYXRyYWtjeWpuxIUgbG9rYWxpemFjasSFICh6YXLDs3dubyBkbGEgcHJhY293bmlrw7N3LCBq
-YWsgaSBLbGllbnTDs3cpIC0gcHJ6eSBnxYLDs3dueWNoIHN6bGFrYWNoIGtvbXVuaWthY3lqbnlj
-aCwgeiBkb2dvZG55bSBkb2phemRlbSBkbyBkcsOzZyBrcmFqb3d5Y2gsIG9kcG93aWVkbmllaiBp
-bmZyYXN0cnVrdHVyeSBvcmF6IGtvbXVuaWthY2ppIG1pZWpza2llai4KCkR6acSZa2kgd3lrb3J6
-eXN0YW5pdSBub3dvY3plc255Y2ggc3RhbmRhcmTDs3cgdGVjaG5pY3pueWNoIGkgcHJvIGVrb2xv
-Z2ljem55Y2ggbW9nxIUgUGHFhHN0d28gd3lnZW5lcm93YcSHIG9zemN6xJlkbm/Fm2NpIHcgenXF
-vHljaXUgZW5lcmdpaSBzacSZZ2FqxIVjZSBuYXdldCBraWxrdWR6aWVzacSZY2l1IHByb2NlbnQu
-CgpDaGPEhSBQYcWEc3R3byBwb3puYcSHIGRvc3TEmXBuZSBvcGNqZT8KCgpQb3pkcmF3aWFtIHNl
-cmRlY3puaWUKTWFyZWsgQnJ6eXNraQpTYWxlcyBNYW5hZ2VyCgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlz
-dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2tleGVjCg==
+On Thu, Jul 27, 2023 at 07:03:26PM +0800, Tao Liu wrote:
+> Hi Borislav,
+> 
+> Sorry for the late response. I spent some time retesting your patch
+> against 6.5.0-rc1 and 6.5.0-rc3, and it is OK. So
+> 
+> Reported-and-tested-by: Tao Liu <ltao@redhat.com>
+> 
+> And will we use this patch as a workaround or will we wait for a
+> better solution as proposed by Michael?
+
+First of all, please do not top-post.
+
+And yes, here's a better one. I'd appreciate it you testing it.
+
+Thx.
+
+---
+ arch/x86/boot/compressed/idt_64.c |  5 ++++-
+ arch/x86/boot/compressed/sev.c    | 37 +++++++++++++++++++++++++++++--
+ 2 files changed, 39 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/boot/compressed/idt_64.c b/arch/x86/boot/compressed/idt_64.c
+index 6debb816e83d..0f03ac12e2a6 100644
+--- a/arch/x86/boot/compressed/idt_64.c
++++ b/arch/x86/boot/compressed/idt_64.c
+@@ -63,7 +63,10 @@ void load_stage2_idt(void)
+ 	set_idt_entry(X86_TRAP_PF, boot_page_fault);
+ 
+ #ifdef CONFIG_AMD_MEM_ENCRYPT
+-	set_idt_entry(X86_TRAP_VC, boot_stage2_vc);
++	if (sev_status & BIT(1))
++		set_idt_entry(X86_TRAP_VC, boot_stage2_vc);
++	else
++		set_idt_entry(X86_TRAP_VC, NULL);
+ #endif
+ 
+ 	load_boot_idt(&boot_idt_desc);
+diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
+index 09dc8c187b3c..c3e343bd4760 100644
+--- a/arch/x86/boot/compressed/sev.c
++++ b/arch/x86/boot/compressed/sev.c
+@@ -404,13 +404,46 @@ void sev_enable(struct boot_params *bp)
+ 	if (bp)
+ 		bp->cc_blob_address = 0;
+ 
++	/*
++	 * Do an initial SEV capability check before snp_init() which
++	 * loads the CPUID page and the same checks afterwards are done
++	 * without the hypervisor and are trustworthy.
++	 *
++	 * If the HV fakes SEV support, the guest will crash'n'burn
++	 * which is good enough.
++	 */
++
++	/* Check for the SME/SEV support leaf */
++	eax = 0x80000000;
++	ecx = 0;
++	native_cpuid(&eax, &ebx, &ecx, &edx);
++	if (eax < 0x8000001f)
++		return;
++
++	/*
++	 * Check for the SME/SEV feature:
++	 *   CPUID Fn8000_001F[EAX]
++	 *   - Bit 0 - Secure Memory Encryption support
++	 *   - Bit 1 - Secure Encrypted Virtualization support
++	 *   CPUID Fn8000_001F[EBX]
++	 *   - Bits 5:0 - Pagetable bit position used to indicate encryption
++	 */
++	eax = 0x8000001f;
++	ecx = 0;
++	native_cpuid(&eax, &ebx, &ecx, &edx);
++	/* Check whether SEV is supported */
++	if (!(eax & BIT(1)))
++		return;
++
+ 	/*
+ 	 * Setup/preliminary detection of SNP. This will be sanity-checked
+ 	 * against CPUID/MSR values later.
+ 	 */
+ 	snp = snp_init(bp);
+ 
+-	/* Check for the SME/SEV support leaf */
++	/* Now repeat the checks with the SNP CPUID table. */
++
++	/* Recheck the SME/SEV support leaf */
+ 	eax = 0x80000000;
+ 	ecx = 0;
+ 	native_cpuid(&eax, &ebx, &ecx, &edx);
+@@ -418,7 +451,7 @@ void sev_enable(struct boot_params *bp)
+ 		return;
+ 
+ 	/*
+-	 * Check for the SME/SEV feature:
++	 * Recheck for the SME/SEV feature:
+ 	 *   CPUID Fn8000_001F[EAX]
+ 	 *   - Bit 0 - Secure Memory Encryption support
+ 	 *   - Bit 1 - Secure Encrypted Virtualization support
+-- 
+2.41.0
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
