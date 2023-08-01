@@ -4,66 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AA95EC07E8B
-	for <kexec@archiver.kernel.org>; Tue,  1 Aug 2023 18:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D003BC00528
+	for <kexec@archiver.kernel.org>; Tue,  1 Aug 2023 19:02:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:References:To:From:Subject:
+	Cc:Message-Id:Date:Mime-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=SrTWpouADSu3Vsa5q9oaQ4xcvu5J1eKqygEF4swv8r4=; b=OOnnfToJzL8X/V
-	xhi1U+NlL/QyFFIBsyKyPOMO+YsmFMJav34vW8/9YYVd1KBkNRT01nuVw5xjrRQ4zQk05wdxrotQ/
-	yFwAWQ/1f+9gnBGjvILjer3Gug94My1vSzuIZnUGeAW7xe7ITaXH9tUKn7pCEaQkrFqS1mGIFoxJq
-	OaEvth6F+xQgHHA34NEzthQ2+eOb+UUoySQcQiVoJYFXrdzz11FuONbn74aAcpklwzSVrYqcHdSRh
-	RV/CURLGG0nZbTyw6MpfpdvdkRGWnVYX+gcLlXnGrs5XhhLsXst+Qhk2Qi68U3MJ6yh6N7f0pdHiN
-	DRxVWWltqnAgo8USihQw==;
+	List-Owner; bh=xmvSgKrbLMN2X/xsotXoGpxPGvEm72YlGbGl32HDbUk=; b=0DOqRJlgjPoW2m
+	KhHpwwKTJ2kJvxXyOFMvly20F8DXG8Npzv0JnkCXRVITDMD6npnvwGrtWqWQFGvT4m/U7oKfQ/cJr
+	eOtK50ihM1PuFMHD2P9U1k6VC+GDFEodmzVI3QeZ7sCuIClY5fu6bPIymtqcKRBAtGhfPWWv1yr7i
+	3sfI8cGiUp+gTejBc4cAni9bHe8f+rn/WWwahNS0LiwE04teX3ieJehgi0ESemV5atIwBZ/G1r2NR
+	NkIRV0yk2zSysls+sd651buQYAeFKwQqeMNfSoUXIfL8h/6bk0BuhjcZVjPxShD4+R+OP9N/QHf9V
+	YeGbHhnmf1tuHBz9YQgA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qQty1-0030nP-1U;
-	Tue, 01 Aug 2023 18:19:33 +0000
-Received: from linux.microsoft.com ([13.77.154.182])
-	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qQtxw-0030kk-1l
+	id 1qQudz-00366y-2f;
+	Tue, 01 Aug 2023 19:02:55 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
+	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
+	id 1qQudw-003666-36
 	for kexec@lists.infradead.org;
-	Tue, 01 Aug 2023 18:19:31 +0000
-Received: from tushar-HP-Pavilion-Laptop-15-eg0xxx.lan (c-98-237-170-177.hsd1.wa.comcast.net [98.237.170.177])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 15D8B238AE9F;
-	Tue,  1 Aug 2023 11:19:27 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 15D8B238AE9F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1690913967;
-	bh=YyXNPicdPmDdugeuEdmn5ywOfCLWK1lBOFctYL8C0yQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QGe+IK+ZCUEzGThf5xruHt+zZH8RdEZv3/7bSCd8xRqA+/pPR8a6AugPfo1EYBLJf
-	 +BqxUuQ0BEkLxoZYWdYITMc/Ze5dvJNdH72y3w+Yq4q+lrGBKixjSw4u/jlVc8zUn2
-	 vhwcIRUzcCNJYL81VuJ6RcdaspFIf3N3iXC4Izb0=
-From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-To: zohar@linux.ibm.com,
-	noodles@fb.com,
-	bauermann@kolabnow.com,
-	ebiederm@xmission.com,
-	bhe@redhat.com,
-	vgoyal@redhat.com,
-	dyoung@redhat.com,
-	peterhuewe@gmx.de,
-	jarkko@kernel.org,
-	jgg@ziepe.ca,
-	kexec@lists.infradead.org,
-	linux-integrity@vger.kernel.org
-Cc: code@tyhicks.com,
-	nramas@linux.microsoft.com,
-	paul@paul-moore.com
-Subject: [PATCH 2/6] tpm: provide functionality to get update counter
-Date: Tue,  1 Aug 2023 11:19:13 -0700
-Message-Id: <20230801181917.8535-3-tusharsu@linux.microsoft.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230801181917.8535-1-tusharsu@linux.microsoft.com>
+	Tue, 01 Aug 2023 19:02:54 +0000
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id E4C51616A9;
+	Tue,  1 Aug 2023 19:02:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71600C433B7;
+	Tue,  1 Aug 2023 19:02:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1690916571;
+	bh=QELR0/VAgEvzHkL6pJaiqVMd5NFnPPFbeIgCxZeiFqk=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=LekJib2hmEP7rOzsvbZ3XD57rkAM99mf29ceW+HF3IaV+WYLEB8vkd7AJOhnbttHi
+	 f6230wbVhTFqow4q+qWBm/P2uJVkMOwCyJWHWbLYzN+WUVCgPrMLSm+5ef38uo/6d3
+	 CCeUmsrweBtNJgsvEf+lTNmGJkpxKMyxsBpsjf222rIHHdF7Adu29RziPef9nFX6g2
+	 XxOl2myyB59y9IkvoWCEzMB7vEmPwacQhAOq7GaDWtfo9C9GuosERC6S43dv+oOSBP
+	 psb80SRaUN4LP8zMtBxLnxL75G9QHadHgVBDcfCduyw839l3s6aUnboe/bMBnwO5nc
+	 ZpkwYaslLuPvA==
+Mime-Version: 1.0
+Date: Tue, 01 Aug 2023 22:02:45 +0300
+Message-Id: <CUHFWAAKMKJN.2EA3ZHLOOPPGB@suppilovahvero>
+Cc: <code@tyhicks.com>, <nramas@linux.microsoft.com>, <paul@paul-moore.com>
+Subject: Re: [PATCH 1/6] tpm: implement TPM2 function to get update counter
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Tushar Sugandhi" <tusharsu@linux.microsoft.com>, <zohar@linux.ibm.com>,
+ <noodles@fb.com>, <bauermann@kolabnow.com>, <ebiederm@xmission.com>,
+ <bhe@redhat.com>, <vgoyal@redhat.com>, <dyoung@redhat.com>,
+ <peterhuewe@gmx.de>, <jgg@ziepe.ca>, <kexec@lists.infradead.org>,
+ <linux-integrity@vger.kernel.org>
+X-Mailer: aerc 0.14.0
 References: <20230801181917.8535-1-tusharsu@linux.microsoft.com>
-MIME-Version: 1.0
+ <20230801181917.8535-2-tusharsu@linux.microsoft.com>
+In-Reply-To: <20230801181917.8535-2-tusharsu@linux.microsoft.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230801_111928_649343_ADA4304D 
-X-CRM114-Status: GOOD (  13.96  )
+X-CRM114-CacheID: sfid-20230801_120253_084178_590C4190 
+X-CRM114-Status: GOOD (  27.21  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,96 +79,125 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The IMA subsystem needs to measure pcrUpdateCounter value present in 
-TPM2_PCR_Read Response struct [1].  However,the  pcrUpdateCounter value
-is not exposed outside of the TPM subsystem by any of the existing
-functions. 
+The short summary is cryptic to say the least.
 
-Implement a new function 'tpm_pcr_get_update_counter()',  which provides
-a way to retrieve the PCR update counter values from subsystems outside 
-of TPM.  If the input tpm_chip is not a TPM2 chip, return an error as
-the functionality is currently only implemented for TPM2 chips.
+"update counter" does not map it to have anything to do with PCRs.
 
-This function improves TPM capabilities in the Linux kernel by
-facilitating access to the PCR update counter.
+Why not "tpm: Read pcrUpdateCounter field from TPM2_PCR_Read"?
 
-[1] https://trustedcomputinggroup.org/wp-content/uploads/TCG_TPM2_r1p59_Part3_Commands_pub.pdf
-Section 22.4.2, Page 206.
+On Tue Aug 1, 2023 at 9:19 PM EEST, Tushar Sugandhi wrote:
+> The TPM2_PCR_Read command returns TPM2_PCR_Read Response struct[1].  It
+> contains pcrUpdateCounter member which contains the current value of TPM
+> PCR update counter.  The update counter provides the number of times the
+> PCRs are updated, which is essential for tracking changes and verifying
+> system integrity.  Thus, subsystems (like IMA) should measure
+> pcrUpdateCounter value.  Although tpm2_pcr_read_out struct is returned
+> by tpm2_pcr_read(), it is not used by it's caller function tpm_pcr_read().
+> Further, TPM2_PCR_Read Response struct and pcrUpdateCounter is not
+> available in tpm1_pcr_read().
+>
+> PcrUpdateCounter is only needed in a specific case (IMA for measurements).
+> Changing tpm_pcr_read() and tpm2_pcr_read() function signature to return
+> tpm2_pcr_read_out struct would be a more disruptive change, since these
+> functions are used elsewhere too.  Creating separate functions to get
+> pcrUpdateCounter when needed would be a cleaner approach.
+>
+> Add a function, 'tpm2_pcr_get_update_counter()' to retrieve
+> the update counter for a given PCR index and algorithm ID on a TPM2 chip.
+>
+> This function complements existing TPM functionalities such as reading
+> and extending PCRs, and enhances the ability to monitor PCR status
+> in the Linux Kernel. 
+>
+> [1] https://trustedcomputinggroup.org/wp-content/uploads/TCG_TPM2_r1p59_Part3_Commands_pub.pdf
+> Section 22.4.2, Page 206.
+>
+> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> ---
+>  drivers/char/tpm/tpm.h      |  3 +++
+>  drivers/char/tpm/tpm2-cmd.c | 48 +++++++++++++++++++++++++++++++++++++
+>  2 files changed, 51 insertions(+)
+>
+> diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
+> index 830014a26609..60489f21d3bd 100644
+> --- a/drivers/char/tpm/tpm.h
+> +++ b/drivers/char/tpm/tpm.h
+> @@ -288,6 +288,9 @@ static inline void tpm_add_ppi(struct tpm_chip *chip)
+>  int tpm2_get_timeouts(struct tpm_chip *chip);
+>  int tpm2_pcr_read(struct tpm_chip *chip, u32 pcr_idx,
+>  		  struct tpm_digest *digest, u16 *digest_size_ptr);
+> +int tpm2_pcr_get_update_counter(struct tpm_chip *chip,
+> +				u32 pcr_idx, u16 alg_id,
+> +				u32 *update_counter);
 
-Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
----
- drivers/char/tpm/tpm-interface.c | 28 ++++++++++++++++++++++++++++
- include/linux/tpm.h              |  8 ++++++++
- 2 files changed, 36 insertions(+)
+tpm_pcr_read_update_cnt()
 
-diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
-index 7e513b771832..9a1088914487 100644
---- a/drivers/char/tpm/tpm-interface.c
-+++ b/drivers/char/tpm/tpm-interface.c
-@@ -300,6 +300,34 @@ int tpm_pcr_read(struct tpm_chip *chip, u32 pcr_idx,
- }
- EXPORT_SYMBOL_GPL(tpm_pcr_read);
- 
-+/**
-+ * tpm_pcr_get_update_counter - gets an update counter value for a PCR bank
-+ * @chip: a &struct tpm_chip instance, %NULL for the default chip
-+ * @pcr_idx: PCR index used to retrieve the update counter
-+ * @alg_id:	alg id used to retrieve the update counter
-+ * @update_counter: output update counter value
-+ *
-+ * Return: same as with tpm_transmit_cmd()
-+ */
-+int tpm_pcr_get_update_counter(struct tpm_chip *chip, u32 pcr_idx,
-+		 u16 alg_id, u32 *update_counter)
-+{
-+	int rc;
-+
-+	chip = tpm_find_get_ops(chip);
-+	if (!chip)
-+		return -ENODEV;
-+
-+	if (chip->flags & TPM_CHIP_FLAG_TPM2)
-+		rc = tpm2_pcr_get_update_counter(chip, pcr_idx, alg_id,
-+						 update_counter);
-+	else
-+		rc = -ENODEV;
-+
-+	tpm_put_ops(chip);
-+	return rc;
-+}
-+EXPORT_SYMBOL_GPL(tpm_pcr_get_update_counter);
- /**
-  * tpm_pcr_extend - extend a PCR value in SHA1 bank.
-  * @chip:	a &struct tpm_chip instance, %NULL for the default chip
-diff --git a/include/linux/tpm.h b/include/linux/tpm.h
-index 4dc97b9f65fb..3b55218b70fa 100644
---- a/include/linux/tpm.h
-+++ b/include/linux/tpm.h
-@@ -424,6 +424,8 @@ extern ssize_t tpm_transmit_cmd(struct tpm_chip *chip, struct tpm_buf *buf,
- 				size_t min_rsp_body_length, const char *desc);
- extern int tpm_pcr_read(struct tpm_chip *chip, u32 pcr_idx,
- 			struct tpm_digest *digest);
-+extern int tpm_pcr_get_update_counter(struct tpm_chip *chip, u32 pcr_idx,
-+		 u16 alg_id, u32 *update_counter);
- extern int tpm_pcr_extend(struct tpm_chip *chip, u32 pcr_idx,
- 			  struct tpm_digest *digests);
- extern int tpm_send(struct tpm_chip *chip, void *cmd, size_t buflen);
-@@ -440,6 +442,12 @@ static inline int tpm_pcr_read(struct tpm_chip *chip, int pcr_idx,
- {
- 	return -ENODEV;
- }
-+static inline int tpm_pcr_get_update_counter(struct tpm_chip *chip,
-+					     u32 pcr_idx, u16 alg_id,
-+					     u32 *update_counter)
-+{
-+	return -ENODEV;
-+}
- 
- static inline int tpm_pcr_extend(struct tpm_chip *chip, u32 pcr_idx,
- 				 struct tpm_digest *digests)
--- 
-2.25.1
+>  int tpm2_pcr_extend(struct tpm_chip *chip, u32 pcr_idx,
+>  		    struct tpm_digest *digests);
+>  int tpm2_get_random(struct tpm_chip *chip, u8 *dest, size_t max);
+> diff --git a/drivers/char/tpm/tpm2-cmd.c b/drivers/char/tpm/tpm2-cmd.c
+> index 93545be190a5..55f4e102289a 100644
+> --- a/drivers/char/tpm/tpm2-cmd.c
+> +++ b/drivers/char/tpm/tpm2-cmd.c
+> @@ -216,6 +216,54 @@ int tpm2_pcr_read(struct tpm_chip *chip, u32 pcr_idx,
+>  	return rc;
+>  }
+>  
+> +/**
+> + * tpm2_pcr_get_update_counter() - gets an update counter value for a PCR bank
+> + * @chip: TPM chip to use
+> + * @pcr_idx: PCR index used to retrieve the update counter
+> + * @alg_id:	alg id used to retrieve the update counter
+> + * @update_counter: output update counter value
+> + *
+> + * Return: Same as with tpm_transmit_cmd.
+> + */
+> +int tpm2_pcr_get_update_counter(struct tpm_chip *chip,
+> +				u32 pcr_idx, u16 alg_id, u32 *update_counter)
+> +{
+> +	int rc;
+> +	struct tpm_buf buf;
+> +	struct tpm2_pcr_read_out *read_out;
+> +	u8 pcr_select[TPM2_PCR_SELECT_MIN] = {0};
+> +
+> +	if (pcr_idx >= TPM2_PLATFORM_PCR)
+> +		return -EINVAL;
+> +
+> +	if (!update_counter)
+> +		return -EINVAL;
+> +
+> +	rc = tpm_buf_init(&buf, TPM2_ST_NO_SESSIONS, TPM2_CC_PCR_READ);
+> +	if (rc)
+> +		return rc;
+> +
+> +	pcr_select[pcr_idx >> 3] = 1 << (pcr_idx & 0x7);
+> +
+> +	tpm_buf_append_u32(&buf, 1);
+> +	tpm_buf_append_u16(&buf, alg_id);
+> +	tpm_buf_append_u8(&buf, TPM2_PCR_SELECT_MIN);
+> +	tpm_buf_append(&buf, (const unsigned char *)pcr_select,
+> +		       sizeof(pcr_select));
+> +
+> +	rc = tpm_transmit_cmd(chip, &buf, 0, "attempting to read a pcr value");
+> +	if (rc)
+> +		goto out;
+> +
+> +	read_out = (struct tpm2_pcr_read_out *)&buf.data[TPM_HEADER_SIZE];
+> +
+> +	*update_counter = be32_to_cpu(read_out->update_cnt);
+> +
+> +out:
+> +	tpm_buf_destroy(&buf);
+> +	return rc;
+> +}
+> +
+>  struct tpm2_null_auth_area {
+>  	__be32  handle;
+>  	__be16  nonce_size;
+> -- 
+> 2.25.1
 
+BR, Jarkko
 
 _______________________________________________
 kexec mailing list
