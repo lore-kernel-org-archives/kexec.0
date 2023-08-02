@@ -4,88 +4,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BB2CFC001DF
-	for <kexec@archiver.kernel.org>; Wed,  2 Aug 2023 08:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B5AABC001DF
+	for <kexec@archiver.kernel.org>; Wed,  2 Aug 2023 09:40:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=8wZ+8zfJ7pedofLr6a3jJocrAFp6lZD7Pox5GBLp3WY=; b=fYBb1oAUy0qgbO
-	HUu4fSKia8XM6eqCgTuu/M7Dqcgl47oXsqrMaVApu4/kqX1Xcv9JL1E7em1frkk1eDg0LUQP0x57f
-	zvRbABNJf0YdL3MGX4Id6yZyl2jDXgM5vmmFyOEc0rUxGq1hzr9yHw88Bixvn4TqiW0vYXEtrBf+8
-	Fh5eUsBRQD87LuFDcfHzmZwfNZeCYKqgBMHlT1eGkGCJnQNjICA1bmjvg6m9IRYoV9zsd5xeXA2yg
-	aJoJyYNGoJ/jzWHzPUklAlMJ6BFq4y+EGGP9nVkyhl69eMQWcOPjGzFW/+XIRn8E/A7FD9ZKQSS8j
-	raknvz4fzJwyKZmtwVwg==;
+	List-Owner; bh=ym12gxX02sQgtizb9s+ZMYYyr1iMhhsP57kMJvUyuqY=; b=EXfQakWl9b5GFp
+	eu20Wb+BRBRBXXcZC4EKE7TtdBWwTrFTEy/2Rs1I4IJ/4eXOhf87A43fSEXarIzuaeXbXtVMdwAZp
+	UuWlbjY98BoAgF3xSDjiYhG4N75hhSikcV75auxr5qWupcJVdWtxckE7PlV2e9om8ZFXjF28GP9CC
+	HumZITWBMo9YiAvv0NLVvpeLmedbtr+MmzjOQsjETFzDeneTMu4yTfvb9tnI5bb4D3qdCdllzr7TK
+	TffVt0YGLysi4pYgA1i1R05d4fqqFlpgvvuFE47/wMgeOnYdNSEiaIIZBZrm00e6iGjmdwXzkoB1D
+	zMTEqqYJCDKaVi9A+ccg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qR78w-004Mgm-0V;
-	Wed, 02 Aug 2023 08:23:42 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1qR8Kk-004VBH-1a;
+	Wed, 02 Aug 2023 09:39:58 +0000
+Received: from mail.skyhub.de ([5.9.137.197])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qR78r-004Mg4-35
+	id 1qR8Kg-004VAV-2U
 	for kexec@lists.infradead.org;
-	Wed, 02 Aug 2023 08:23:39 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1690964614;
+	Wed, 02 Aug 2023 09:39:56 +0000
+Received: from mail.alien8.de (mail.alien8.de [IPv6:2a01:4f9:3051:3f93::2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 76EDC1EC053F;
+	Wed,  2 Aug 2023 11:39:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+	t=1690969191;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=J6xA1F/tQvnceD1AFJdAnCO4v6zT18KFQE0US8wehYA=;
-	b=OqkPaNTUQG9J8JRZNgOOzP0OCUsPPFYyi6/yIfJXV6+ozvFj6uvneSo+CGDb/wGNnhMhd3
-	I9bWb/WkrXvRs6RQjeZ3KAzyceKWlSFPQ5sDf1h7soxaHz/HS3i/3OoRMDD70bCs5BVqC4
-	poPjbA+zWtY2S5MG9/vinfxVe+3cDfU=
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-447-Q5YGIEweOgezrVmqM8leAw-1; Wed, 02 Aug 2023 04:23:32 -0400
-X-MC-Unique: Q5YGIEweOgezrVmqM8leAw-1
-Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-4fb76659d37so6096829e87.2
-        for <kexec@lists.infradead.org>; Wed, 02 Aug 2023 01:23:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690964611; x=1691569411;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=J6xA1F/tQvnceD1AFJdAnCO4v6zT18KFQE0US8wehYA=;
-        b=TP3TOPN/5lDgtjkR3LnNihU5eXVX2+Ks3i2EGVGkMSXItTlF0Hn5mfFDE2u330FukF
-         JPq2CFGDunV2KbaIkuI3bhrtdPaAp3vPa5mLKPRyDxz2QA2AJXiC6vL2CU18yhVvY1cT
-         HAZIhRkOlqRnvN7wTVuZlhwbElbA0Ov/HITlqsL+RRQKMHxQAegWk13JADTPO9afKez5
-         4TRlVXANRYVsmwxHnsEArMc4Ec8QsjU9Hu/pfGJPFcGCR1FBbProkm4FhHcFHovklo+d
-         iBSiQROpx3K5C6kgZLeNb+68t4vDHS4v/zLO5WXzxNCrzv0ceY96f1725uUccIW948pz
-         dJzQ==
-X-Gm-Message-State: ABy/qLYa6KtGo2NioAEu+8efDRl9fxZDOrSp9SN5Gt2AyRUVLOjsLBgf
-	Ho83kPVi4WAkSlMyLgDwjihzTiOPGoM91UhmfKYenJSMlbJkAaDfVof75Jwru59wIvoLH+sa+Bx
-	1WaPbiKmpc3B4wJChBzCF+oU7HnCEzVLKmRt+
-X-Received: by 2002:a05:6512:3c9d:b0:4fd:d016:c2e8 with SMTP id h29-20020a0565123c9d00b004fdd016c2e8mr5267056lfv.43.1690964611479;
-        Wed, 02 Aug 2023 01:23:31 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlEJNKHF2p2CytRgIKLCKCUGGjT7LyJXykVvMQOxHkWM+4I6/V0yxuRpiIuVaotJpuNHCW0V42NQ2DovrfXG528=
-X-Received: by 2002:a05:6512:3c9d:b0:4fd:d016:c2e8 with SMTP id
- h29-20020a0565123c9d00b004fdd016c2e8mr5267031lfv.43.1690964611133; Wed, 02
- Aug 2023 01:23:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230601072043.24439-1-ltao@redhat.com> <20230713100459.GEZK/MS69XbphJa+tN@fat_crate.local>
- <CAO7dBbVMNKTSDi5eP4BseEUexsk0Mo0GWJpyHfOcp+tHs6cSUw@mail.gmail.com>
- <20230717141409.GGZLVMsU6d/9mpJvMO@fat_crate.local> <CAO7dBbXJv9JzDbSa-DLT03+osYCQXNUXFwz63gbq=NGDxEVyEA@mail.gmail.com>
- <20230728165535.GDZMPzB/ek5QM+xJqA@fat_crate.local>
-In-Reply-To: <20230728165535.GDZMPzB/ek5QM+xJqA@fat_crate.local>
-From: Tao Liu <ltao@redhat.com>
-Date: Wed, 2 Aug 2023 16:22:54 +0800
-Message-ID: <CAO7dBbVyuLHH6RfdVQkU5ThXaJ-F4yvFAYD1PDNGkOpph9xvnA@mail.gmail.com>
+	 content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+	bh=qbAb28o3tTJyuj6zBqT3c/7EC27OCaTirnTJ24B68rw=;
+	b=pK8OgvPZqyU9mXrjGzYXOw9QEn3Aj1nEqDDoqeblSnSLCEvWCTlwVEiRsbK8Pdp0RZ2ruK
+	r+AbPuI6yw35R/PFgVV5WUo2u67IW4TgwqsSVedZP+ky9z4uqSCj1ukjS5kN77skeKdK2A
+	VmEEKPwL8YucrcdNaT//X7zjqdthLKo=
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id DaNgISScVH2s; Wed,  2 Aug 2023 09:39:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1690969187; bh=qbAb28o3tTJyuj6zBqT3c/7EC27OCaTirnTJ24B68rw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iZnA2RbIkt7bvkrXIOReyMu35jT96kZDma2DdSGBU+hlhgYu/pibRZRUyM9cEM1TW
+	 L/+lZx1iq64wBrHRYczsmgQnsRWfu1b/a6H2MwkwEOrlBFuDFe8hbE3x+aCc1aY4gy
+	 k7Ono3a6ah6RhD8JkqtbyjOnGQWLi7/f1FHf94B/4y96VLhLcDZ0uAQLd7dfsB6Tkv
+	 1LTM7ua/0gw3mTuKQSyTkA2wT9IRt1uAdtmmW39rAb82paPyRiq99F/P9x9p6pvNDS
+	 HirU49kbd1D0EoRFTcgxMm5BZfdRiCoeBKCCqr9WI2BEB3dtNEXdIVpoq+AtzCuJFC
+	 hoKgZO9hohbmFn6AXL3xLCYja+yDNQLf9I5yfvuweD171STA6jLsVVZGlfaLDdkyeg
+	 UnQyCT0YdyT3SHaJyHKLVtkxZq73jvFeNFQFeTz+4DOKgl1hr/1kYNg4zh73Y2Zncj
+	 dltGgtqQhSvJTtYuxCVAdBKPr9QZ96AQKV1dFolZ04igWYV+L3sTVwOCLAeh8bt941
+	 7ZGLdf7BwjwVxvDflBQumvo8/CVE3fkILzS1tNKik4G+OZElDEn5B2clpdycsb/5QW
+	 8rnnnL8Y1NZAMipx+gPMtSkgoE1wzYkg2Z6RqikTn+oLX1lToWSyzg7/GsHMEkV6HW
+	 P5PQ4ku3T69a0hkRub4ITCj0=
+Received: from zn.tnic (pd9530d32.dip0.t-ipconnect.de [217.83.13.50])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6AFF040E0190;
+	Wed,  2 Aug 2023 09:39:33 +0000 (UTC)
+Date: Wed, 2 Aug 2023 11:39:27 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Tao Liu <ltao@redhat.com>, Michael Roth <michael.roth@amd.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com, ardb@kernel.org,
+	linux-kernel@vger.kernel.org, bhe@redhat.com, dyoung@redhat.com,
+	kexec@lists.infradead.org, linux-efi@vger.kernel.org
 Subject: Re: [PATCH v2] x86/kexec: Add EFI config table identity mapping for
  kexec kernel
-To: Borislav Petkov <bp@alien8.de>
-Cc: tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com, 
-	x86@kernel.org, hpa@zytor.com, ardb@kernel.org, linux-kernel@vger.kernel.org, 
-	bhe@redhat.com, dyoung@redhat.com, kexec@lists.infradead.org, 
-	linux-efi@vger.kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+Message-ID: <20230802093927.GAZMokT57anC5jBISK@fat_crate.local>
+References: <20230601072043.24439-1-ltao@redhat.com>
+ <20230713100459.GEZK/MS69XbphJa+tN@fat_crate.local>
+ <CAO7dBbVMNKTSDi5eP4BseEUexsk0Mo0GWJpyHfOcp+tHs6cSUw@mail.gmail.com>
+ <20230717141409.GGZLVMsU6d/9mpJvMO@fat_crate.local>
+ <CAO7dBbXJv9JzDbSa-DLT03+osYCQXNUXFwz63gbq=NGDxEVyEA@mail.gmail.com>
+ <20230728165535.GDZMPzB/ek5QM+xJqA@fat_crate.local>
+ <CAO7dBbVyuLHH6RfdVQkU5ThXaJ-F4yvFAYD1PDNGkOpph9xvnA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <CAO7dBbVyuLHH6RfdVQkU5ThXaJ-F4yvFAYD1PDNGkOpph9xvnA@mail.gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230802_012338_081935_316EACBC 
-X-CRM114-Status: GOOD (  29.01  )
+X-CRM114-CacheID: sfid-20230802_023954_962552_F71E3184 
+X-CRM114-Status: GOOD (  24.34  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,80 +102,147 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-SGkgQm9yaXNsYXYsCgpPbiBTYXQsIEp1bCAyOSwgMjAyMyBhdCAxMjo1NuKAr0FNIEJvcmlzbGF2
-IFBldGtvdiA8YnBAYWxpZW44LmRlPiB3cm90ZToKPgo+IE9uIFRodSwgSnVsIDI3LCAyMDIzIGF0
-IDA3OjAzOjI2UE0gKzA4MDAsIFRhbyBMaXUgd3JvdGU6Cj4gPiBIaSBCb3Jpc2xhdiwKPiA+Cj4g
-PiBTb3JyeSBmb3IgdGhlIGxhdGUgcmVzcG9uc2UuIEkgc3BlbnQgc29tZSB0aW1lIHJldGVzdGlu
-ZyB5b3VyIHBhdGNoCj4gPiBhZ2FpbnN0IDYuNS4wLXJjMSBhbmQgNi41LjAtcmMzLCBhbmQgaXQg
-aXMgT0suIFNvCj4gPgo+ID4gUmVwb3J0ZWQtYW5kLXRlc3RlZC1ieTogVGFvIExpdSA8bHRhb0By
-ZWRoYXQuY29tPgo+ID4KPiA+IEFuZCB3aWxsIHdlIHVzZSB0aGlzIHBhdGNoIGFzIGEgd29ya2Fy
-b3VuZCBvciB3aWxsIHdlIHdhaXQgZm9yIGEKPiA+IGJldHRlciBzb2x1dGlvbiBhcyBwcm9wb3Nl
-ZCBieSBNaWNoYWVsPwo+Cj4gRmlyc3Qgb2YgYWxsLCBwbGVhc2UgZG8gbm90IHRvcC1wb3N0Lgo+
-CgpPSywgdGhhbmtzIGZvciB0aGUgcmVtaW5kZXIuCgo+IEFuZCB5ZXMsIGhlcmUncyBhIGJldHRl
-ciBvbmUuIEknZCBhcHByZWNpYXRlIGl0IHlvdSB0ZXN0aW5nIGl0Lgo+CgpUaGFua3MgZm9yIHRo
-ZSBwYXRjaCEgSSBoYXZlIHRlc3RlZCBpdCBvbiB0aGUgbGVub3ZvIG1hY2hpbmUgaW4gdGhlCnBh
-c3QgZmV3IGRheXMsIG5vIGlzc3VlIGZvdW5kLCBzbyB0aGUgcGF0Y2ggdGVzdHMgT0suCgpUaGFu
-a3MsClRhbyBMaXUKCj4gVGh4Lgo+Cj4gLS0tCj4gIGFyY2gveDg2L2Jvb3QvY29tcHJlc3NlZC9p
-ZHRfNjQuYyB8ICA1ICsrKystCj4gIGFyY2gveDg2L2Jvb3QvY29tcHJlc3NlZC9zZXYuYyAgICB8
-IDM3ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0KPiAgMiBmaWxlcyBjaGFuZ2VkLCAz
-OSBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQo+Cj4gZGlmZiAtLWdpdCBhL2FyY2gveDg2
-L2Jvb3QvY29tcHJlc3NlZC9pZHRfNjQuYyBiL2FyY2gveDg2L2Jvb3QvY29tcHJlc3NlZC9pZHRf
-NjQuYwo+IGluZGV4IDZkZWJiODE2ZTgzZC4uMGYwM2FjMTJlMmE2IDEwMDY0NAo+IC0tLSBhL2Fy
-Y2gveDg2L2Jvb3QvY29tcHJlc3NlZC9pZHRfNjQuYwo+ICsrKyBiL2FyY2gveDg2L2Jvb3QvY29t
-cHJlc3NlZC9pZHRfNjQuYwo+IEBAIC02Myw3ICs2MywxMCBAQCB2b2lkIGxvYWRfc3RhZ2UyX2lk
-dCh2b2lkKQo+ICAgICAgICAgc2V0X2lkdF9lbnRyeShYODZfVFJBUF9QRiwgYm9vdF9wYWdlX2Zh
-dWx0KTsKPgo+ICAjaWZkZWYgQ09ORklHX0FNRF9NRU1fRU5DUllQVAo+IC0gICAgICAgc2V0X2lk
-dF9lbnRyeShYODZfVFJBUF9WQywgYm9vdF9zdGFnZTJfdmMpOwo+ICsgICAgICAgaWYgKHNldl9z
-dGF0dXMgJiBCSVQoMSkpCj4gKyAgICAgICAgICAgICAgIHNldF9pZHRfZW50cnkoWDg2X1RSQVBf
-VkMsIGJvb3Rfc3RhZ2UyX3ZjKTsKPiArICAgICAgIGVsc2UKPiArICAgICAgICAgICAgICAgc2V0
-X2lkdF9lbnRyeShYODZfVFJBUF9WQywgTlVMTCk7Cj4gICNlbmRpZgo+Cj4gICAgICAgICBsb2Fk
-X2Jvb3RfaWR0KCZib290X2lkdF9kZXNjKTsKPiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYvYm9vdC9j
-b21wcmVzc2VkL3Nldi5jIGIvYXJjaC94ODYvYm9vdC9jb21wcmVzc2VkL3Nldi5jCj4gaW5kZXgg
-MDlkYzhjMTg3YjNjLi5jM2UzNDNiZDQ3NjAgMTAwNjQ0Cj4gLS0tIGEvYXJjaC94ODYvYm9vdC9j
-b21wcmVzc2VkL3Nldi5jCj4gKysrIGIvYXJjaC94ODYvYm9vdC9jb21wcmVzc2VkL3Nldi5jCj4g
-QEAgLTQwNCwxMyArNDA0LDQ2IEBAIHZvaWQgc2V2X2VuYWJsZShzdHJ1Y3QgYm9vdF9wYXJhbXMg
-KmJwKQo+ICAgICAgICAgaWYgKGJwKQo+ICAgICAgICAgICAgICAgICBicC0+Y2NfYmxvYl9hZGRy
-ZXNzID0gMDsKPgo+ICsgICAgICAgLyoKPiArICAgICAgICAqIERvIGFuIGluaXRpYWwgU0VWIGNh
-cGFiaWxpdHkgY2hlY2sgYmVmb3JlIHNucF9pbml0KCkgd2hpY2gKPiArICAgICAgICAqIGxvYWRz
-IHRoZSBDUFVJRCBwYWdlIGFuZCB0aGUgc2FtZSBjaGVja3MgYWZ0ZXJ3YXJkcyBhcmUgZG9uZQo+
-ICsgICAgICAgICogd2l0aG91dCB0aGUgaHlwZXJ2aXNvciBhbmQgYXJlIHRydXN0d29ydGh5Lgo+
-ICsgICAgICAgICoKPiArICAgICAgICAqIElmIHRoZSBIViBmYWtlcyBTRVYgc3VwcG9ydCwgdGhl
-IGd1ZXN0IHdpbGwgY3Jhc2gnbididXJuCj4gKyAgICAgICAgKiB3aGljaCBpcyBnb29kIGVub3Vn
-aC4KPiArICAgICAgICAqLwo+ICsKPiArICAgICAgIC8qIENoZWNrIGZvciB0aGUgU01FL1NFViBz
-dXBwb3J0IGxlYWYgKi8KPiArICAgICAgIGVheCA9IDB4ODAwMDAwMDA7Cj4gKyAgICAgICBlY3gg
-PSAwOwo+ICsgICAgICAgbmF0aXZlX2NwdWlkKCZlYXgsICZlYngsICZlY3gsICZlZHgpOwo+ICsg
-ICAgICAgaWYgKGVheCA8IDB4ODAwMDAwMWYpCj4gKyAgICAgICAgICAgICAgIHJldHVybjsKPiAr
-Cj4gKyAgICAgICAvKgo+ICsgICAgICAgICogQ2hlY2sgZm9yIHRoZSBTTUUvU0VWIGZlYXR1cmU6
-Cj4gKyAgICAgICAgKiAgIENQVUlEIEZuODAwMF8wMDFGW0VBWF0KPiArICAgICAgICAqICAgLSBC
-aXQgMCAtIFNlY3VyZSBNZW1vcnkgRW5jcnlwdGlvbiBzdXBwb3J0Cj4gKyAgICAgICAgKiAgIC0g
-Qml0IDEgLSBTZWN1cmUgRW5jcnlwdGVkIFZpcnR1YWxpemF0aW9uIHN1cHBvcnQKPiArICAgICAg
-ICAqICAgQ1BVSUQgRm44MDAwXzAwMUZbRUJYXQo+ICsgICAgICAgICogICAtIEJpdHMgNTowIC0g
-UGFnZXRhYmxlIGJpdCBwb3NpdGlvbiB1c2VkIHRvIGluZGljYXRlIGVuY3J5cHRpb24KPiArICAg
-ICAgICAqLwo+ICsgICAgICAgZWF4ID0gMHg4MDAwMDAxZjsKPiArICAgICAgIGVjeCA9IDA7Cj4g
-KyAgICAgICBuYXRpdmVfY3B1aWQoJmVheCwgJmVieCwgJmVjeCwgJmVkeCk7Cj4gKyAgICAgICAv
-KiBDaGVjayB3aGV0aGVyIFNFViBpcyBzdXBwb3J0ZWQgKi8KPiArICAgICAgIGlmICghKGVheCAm
-IEJJVCgxKSkpCj4gKyAgICAgICAgICAgICAgIHJldHVybjsKPiArCj4gICAgICAgICAvKgo+ICAg
-ICAgICAgICogU2V0dXAvcHJlbGltaW5hcnkgZGV0ZWN0aW9uIG9mIFNOUC4gVGhpcyB3aWxsIGJl
-IHNhbml0eS1jaGVja2VkCj4gICAgICAgICAgKiBhZ2FpbnN0IENQVUlEL01TUiB2YWx1ZXMgbGF0
-ZXIuCj4gICAgICAgICAgKi8KPiAgICAgICAgIHNucCA9IHNucF9pbml0KGJwKTsKPgo+IC0gICAg
-ICAgLyogQ2hlY2sgZm9yIHRoZSBTTUUvU0VWIHN1cHBvcnQgbGVhZiAqLwo+ICsgICAgICAgLyog
-Tm93IHJlcGVhdCB0aGUgY2hlY2tzIHdpdGggdGhlIFNOUCBDUFVJRCB0YWJsZS4gKi8KPiArCj4g
-KyAgICAgICAvKiBSZWNoZWNrIHRoZSBTTUUvU0VWIHN1cHBvcnQgbGVhZiAqLwo+ICAgICAgICAg
-ZWF4ID0gMHg4MDAwMDAwMDsKPiAgICAgICAgIGVjeCA9IDA7Cj4gICAgICAgICBuYXRpdmVfY3B1
-aWQoJmVheCwgJmVieCwgJmVjeCwgJmVkeCk7Cj4gQEAgLTQxOCw3ICs0NTEsNyBAQCB2b2lkIHNl
-dl9lbmFibGUoc3RydWN0IGJvb3RfcGFyYW1zICpicCkKPiAgICAgICAgICAgICAgICAgcmV0dXJu
-Owo+Cj4gICAgICAgICAvKgo+IC0gICAgICAgICogQ2hlY2sgZm9yIHRoZSBTTUUvU0VWIGZlYXR1
-cmU6Cj4gKyAgICAgICAgKiBSZWNoZWNrIGZvciB0aGUgU01FL1NFViBmZWF0dXJlOgo+ICAgICAg
-ICAgICogICBDUFVJRCBGbjgwMDBfMDAxRltFQVhdCj4gICAgICAgICAgKiAgIC0gQml0IDAgLSBT
-ZWN1cmUgTWVtb3J5IEVuY3J5cHRpb24gc3VwcG9ydAo+ICAgICAgICAgICogICAtIEJpdCAxIC0g
-U2VjdXJlIEVuY3J5cHRlZCBWaXJ0dWFsaXphdGlvbiBzdXBwb3J0Cj4gLS0KPiAyLjQxLjAKPgo+
-IC0tCj4gUmVnYXJkcy9HcnVzcywKPiAgICAgQm9yaXMuCj4KPiBodHRwczovL3Blb3BsZS5rZXJu
-ZWwub3JnL3RnbHgvbm90ZXMtYWJvdXQtbmV0aXF1ZXR0ZQo+CgoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxp
-c3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9rZXhlYwo=
+On Wed, Aug 02, 2023 at 04:22:54PM +0800, Tao Liu wrote:
+> Thanks for the patch! I have tested it on the lenovo machine in the
+> past few days, no issue found, so the patch tests OK.
+
+Thanks for testing!
+
+Mike, Tom, the below ok this way?
+
+---
+From: "Borislav Petkov (AMD)" <bp@alien8.de>
+Date: Sun, 16 Jul 2023 20:22:20 +0200
+Subject: [PATCH] x86/sev: Do not try to parse for the CC blob on non-AMD
+ hardware
+
+Tao Liu reported a boot hang on an Intel Atom machine due to an unmapped
+EFI config table. The reason being that the CC blob which contains the
+CPUID page for AMD SNP guests is parsed for before even checking
+whether the machine runs on AMD hardware.
+
+Usually that's not a problem on !AMD hw - it simply won't find the CC
+blob's GUID and return. However, if any parts of the config table
+pointers array is not mapped, the kernel will #PF very early in the
+decompressor stage without any opportunity to recover.
+
+Therefore, do a superficial CPUID check before poking for the CC blob.
+This will fix the current issue on real hardware. It would also work as
+a guest on a non-lying hypervisor.
+
+For the lying hypervisor, the check is done again, *after* parsing the
+CC blob as the real CPUID page will be present then.
+
+Clear the #VC handler in case SEV-{ES,SNP} hasn't been detected, as
+a precaution.
+
+Fixes: c01fce9cef84 ("x86/compressed: Add SEV-SNP feature detection/setup")
+Reported-by: Tao Liu <ltao@redhat.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Tested-by: Tao Liu <ltao@redhat.com>
+Cc: <stable@kernel.org>
+Link: https://lore.kernel.org/r/20230601072043.24439-1-ltao@redhat.com
+---
+ arch/x86/boot/compressed/idt_64.c |  9 +++++++-
+ arch/x86/boot/compressed/sev.c    | 37 +++++++++++++++++++++++++++++--
+ 2 files changed, 43 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/boot/compressed/idt_64.c b/arch/x86/boot/compressed/idt_64.c
+index 6debb816e83d..3cdf94b41456 100644
+--- a/arch/x86/boot/compressed/idt_64.c
++++ b/arch/x86/boot/compressed/idt_64.c
+@@ -63,7 +63,14 @@ void load_stage2_idt(void)
+ 	set_idt_entry(X86_TRAP_PF, boot_page_fault);
+ 
+ #ifdef CONFIG_AMD_MEM_ENCRYPT
+-	set_idt_entry(X86_TRAP_VC, boot_stage2_vc);
++	/*
++	 * Clear the second stage #VC handler in case guest types
++	 * needing #VC have not been detected.
++	 */
++	if (sev_status & BIT(1))
++		set_idt_entry(X86_TRAP_VC, boot_stage2_vc);
++	else
++		set_idt_entry(X86_TRAP_VC, NULL);
+ #endif
+ 
+ 	load_boot_idt(&boot_idt_desc);
+diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
+index 09dc8c187b3c..c3e343bd4760 100644
+--- a/arch/x86/boot/compressed/sev.c
++++ b/arch/x86/boot/compressed/sev.c
+@@ -404,13 +404,46 @@ void sev_enable(struct boot_params *bp)
+ 	if (bp)
+ 		bp->cc_blob_address = 0;
+ 
++	/*
++	 * Do an initial SEV capability check before snp_init() which
++	 * loads the CPUID page and the same checks afterwards are done
++	 * without the hypervisor and are trustworthy.
++	 *
++	 * If the HV fakes SEV support, the guest will crash'n'burn
++	 * which is good enough.
++	 */
++
++	/* Check for the SME/SEV support leaf */
++	eax = 0x80000000;
++	ecx = 0;
++	native_cpuid(&eax, &ebx, &ecx, &edx);
++	if (eax < 0x8000001f)
++		return;
++
++	/*
++	 * Check for the SME/SEV feature:
++	 *   CPUID Fn8000_001F[EAX]
++	 *   - Bit 0 - Secure Memory Encryption support
++	 *   - Bit 1 - Secure Encrypted Virtualization support
++	 *   CPUID Fn8000_001F[EBX]
++	 *   - Bits 5:0 - Pagetable bit position used to indicate encryption
++	 */
++	eax = 0x8000001f;
++	ecx = 0;
++	native_cpuid(&eax, &ebx, &ecx, &edx);
++	/* Check whether SEV is supported */
++	if (!(eax & BIT(1)))
++		return;
++
+ 	/*
+ 	 * Setup/preliminary detection of SNP. This will be sanity-checked
+ 	 * against CPUID/MSR values later.
+ 	 */
+ 	snp = snp_init(bp);
+ 
+-	/* Check for the SME/SEV support leaf */
++	/* Now repeat the checks with the SNP CPUID table. */
++
++	/* Recheck the SME/SEV support leaf */
+ 	eax = 0x80000000;
+ 	ecx = 0;
+ 	native_cpuid(&eax, &ebx, &ecx, &edx);
+@@ -418,7 +451,7 @@ void sev_enable(struct boot_params *bp)
+ 		return;
+ 
+ 	/*
+-	 * Check for the SME/SEV feature:
++	 * Recheck for the SME/SEV feature:
+ 	 *   CPUID Fn8000_001F[EAX]
+ 	 *   - Bit 0 - Secure Memory Encryption support
+ 	 *   - Bit 1 - Secure Encrypted Virtualization support
+-- 
+2.41.0
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
