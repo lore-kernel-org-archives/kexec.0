@@ -4,78 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1D93BC001E0
-	for <kexec@archiver.kernel.org>; Wed,  2 Aug 2023 14:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D3A18C001E0
+	for <kexec@archiver.kernel.org>; Wed,  2 Aug 2023 15:52:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=4mqumnWa4YggiuXfGvaKbUEivgvbxUa91G7sPI/Zomg=; b=QzycrhwMJwwBD9
-	qUEMzo/qFA28hmpd1KLR59YOqkLCFpeSlergtBRQYAP+edUarMztzx6jD15uRb0FP7Jc5OX7O5qqf
-	qLXt09xxz9ErWEAdMO7xqGaFsJUXpCZ1NqzqFcc2lPcRy3MOfUPumfTn8ogND/7k0vEvjxL7xI6Q5
-	RTLCTKOV+kGwljg5FYuWB8IFZDHRRrhsT2AGxX7XV5ZENaKeAhHLdJ+MAN6ataEAy8K8AChRmdkSV
-	b+492B4A2dGstk3xGvi2zziOzMtn3y2wGDkQ+DaEYTgDOidlIqjV6fBeZJEVtQIKoGp2Ij4GHC5w9
-	PJf8p6TUhB/SicuMHhxA==;
+	List-Owner; bh=e2qjnyMsSZuGO3ODx9ZfI6vJuMe5zRTTc1z4kmessf8=; b=HsC8noKdfPIgUm
+	WFe1jg2XeOvao22gJAHHsLBFOGglfHbf+ZFuN40GZk9L9Q3wzJBbxxBz0ZU/cC1cylnaBetdw3nrc
+	rb87xZdi6kOnB+Azf3EG5YgN3dKX/Q07tcrwV5DSoV8MW5VRd4TpJIwNyODTKb+U13IpWmUgzYARR
+	fegPtsWGo6VV45Y+1/U9tphHs5AOd1lEjGqMPN7MA/lKoKywwsj46jdG90U9uyjq8IbiftZqSe2pR
+	NdxmRVKVF8kVpDH8iooQAGYxLy4RbKV1e84hhLTz7Y4DAeNql5wj4a7cdk80e01yfg3hRKr0l/jAi
+	ivfh+89Su8WvtswFwzeQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qRDGL-0058fc-0x;
-	Wed, 02 Aug 2023 14:55:45 +0000
-Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
+	id 1qRE9N-005HSV-03;
+	Wed, 02 Aug 2023 15:52:37 +0000
+Received: from mail.skyhub.de ([5.9.137.197])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qRDGI-0058en-0z
+	id 1qRE9J-005HRI-1X
 	for kexec@lists.infradead.org;
-	Wed, 02 Aug 2023 14:55:43 +0000
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	Wed, 02 Aug 2023 15:52:35 +0000
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 9C90D619D3
-	for <kexec@lists.infradead.org>; Wed,  2 Aug 2023 14:55:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A392C433CA
-	for <kexec@lists.infradead.org>; Wed,  2 Aug 2023 14:55:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1690988141;
-	bh=FZMPhXQrHyK9eeuZN1J/jrG/TyLK6PIVTmkTcWu2x8Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=nf9+x2Nau3IaPligYAwj77m2G8cVmC3xLAgRSYIxggCfuHTvqe9UxQcRObhU3LB6F
-	 1v4ZMmPclGeYuyAmt37pw09cOJ8INnHVNQfK19PHJC0Ul0uukSTwF4UnpaqZiOVNOH
-	 otSck7fW999Mqi6onftfzhTWKYAU4IVnj9oPXtDy9o0gz20LYgk6br0mHtbNwopoJK
-	 y8VZixxHCG2a0A4bc/BOxEL9l1dgrJsb2Ikp2PV85GGk80a0TMpBq62qIR2mbO2L/z
-	 cAE16MeEIN5qpa83iieROd2qpUkpfbppPSb39FZxtGg/fo1bEYpfhmu21hyTZBky4l
-	 /EpiUINyLQZwA==
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-4fe2503e3easo8230285e87.2
-        for <kexec@lists.infradead.org>; Wed, 02 Aug 2023 07:55:40 -0700 (PDT)
-X-Gm-Message-State: ABy/qLYz+3ESllE9i6OvrYCu0VuxCNn3SfePjeLAxuSrYURY+yXmb62m
-	NOd/5SL/bZIqvzU3vx7Lpn21tjUBm+nL393WsLo=
-X-Google-Smtp-Source: APBJJlFkgTdGC/+fMRk0576THqIS5DHxPQs47yVN+ZI5ALLSkyek+7GbY4Kn3l6ILVEhda600DZTBdXCm8GHDpwxGSg=
-X-Received: by 2002:ac2:4e81:0:b0:4f9:5396:ed1b with SMTP id
- o1-20020ac24e81000000b004f95396ed1bmr4371719lfr.28.1690988139082; Wed, 02 Aug
- 2023 07:55:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230601072043.24439-1-ltao@redhat.com> <20230713100459.GEZK/MS69XbphJa+tN@fat_crate.local>
- <CAO7dBbVMNKTSDi5eP4BseEUexsk0Mo0GWJpyHfOcp+tHs6cSUw@mail.gmail.com>
- <20230717141409.GGZLVMsU6d/9mpJvMO@fat_crate.local> <CAO7dBbXJv9JzDbSa-DLT03+osYCQXNUXFwz63gbq=NGDxEVyEA@mail.gmail.com>
- <20230728165535.GDZMPzB/ek5QM+xJqA@fat_crate.local> <CAO7dBbVyuLHH6RfdVQkU5ThXaJ-F4yvFAYD1PDNGkOpph9xvnA@mail.gmail.com>
- <20230802093927.GAZMokT57anC5jBISK@fat_crate.local> <99cb3813-1737-9d10-1f24-77565e460c55@amd.com>
- <20230802135856.GBZMphIHHLa3dXRRVe@fat_crate.local>
-In-Reply-To: <20230802135856.GBZMphIHHLa3dXRRVe@fat_crate.local>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Wed, 2 Aug 2023 16:55:27 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEM5hGknVGwHh_w99D4L8yrYrTFycwGHZ0CQun70CLipw@mail.gmail.com>
-Message-ID: <CAMj1kXEM5hGknVGwHh_w99D4L8yrYrTFycwGHZ0CQun70CLipw@mail.gmail.com>
+	by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 57C621EC0178;
+	Wed,  2 Aug 2023 17:52:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+	t=1690991548;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+	bh=yqMHR0Z0aVeHPdU7GGghI4+MBQDdK48qYp/dKJdytGY=;
+	b=fT59unzFBkw1LjdFVUcEWkZwDYLDCa4u6LhyMRHlRs1qaS2uf4k3rrgWeO/XyYVc9CU7aO
+	aP/24yaaFPT3H11gEh98HTvol4ZN8Ik2uwG5qkUcm5nKo1MxhT8YQdwiAP0q/YPweozBUp
+	FD5zcPLrRpmxr9wn8fbyVYBZlOQiwHo=
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id ewxjwJTfMDVa; Wed,  2 Aug 2023 15:52:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1690991533; bh=yqMHR0Z0aVeHPdU7GGghI4+MBQDdK48qYp/dKJdytGY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Cvk4t1AzQEkxxA1E1hNXYfPbU+DrxTNYnBKuVbuaYiEHytSWvEY2M9wg6Xs5YHYqF
+	 PZOnPuMj0tMFH4OI6+hAVN9PGFor8Yiw86CQUimpbSS6m+3xEZ3VBhcs+t2xZZKKWt
+	 ewoDr0HoPx6phDZvvud1M7alF2hYrBIGltul36nEt7VSm+pm4Fab6UqkovVQQpLs16
+	 O0mZN/8Hf7mDRwzgK0ct8RY9yBs8KkgNTniRqujZRUN0ddh6S/txFz486yxq/IBAMe
+	 xUSgDZAhAQWbfdIF/dKv3Q3ozRb6QniDTu0t+r5xxWCD0FpuvaNLNqkwzcE1KZDAyD
+	 CIM+jb+TJ1UARVj5dLhouk5RVCQdsGRgm/hZwIaU/uZ3+23Fssw7kRNw0NUt5OQUVm
+	 i23AcHfJmkKxQqcjmyk5nG7jV9brmNy3WSBEQuJiQGXs8OeY58T94trayXPNWHRxdv
+	 j5umebvH5TFZp5tAgu659Onukc8T9MvPNUZ+F9R3GhBAU2PxXZzmGOS3slBCii93Na
+	 FZmqYb+NPGSNlnHWNWRXdQG+F9ZLvaE0BjY7PRXLA2e2Tn5hZtUD3QX5jkdRLeh6N/
+	 3xzX/nvWoUl6mV+S6DUlkIgm3qwOsdqm1vr7MgxyQ7DdtoYaqr5cBYpQeFlY+L6hRr
+	 UDQYujMgkBcUV7CzNnifx2pg=
+Received: from zn.tnic (pd9530d32.dip0.t-ipconnect.de [217.83.13.50])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8448040E020F;
+	Wed,  2 Aug 2023 15:51:58 +0000 (UTC)
+Date: Wed, 2 Aug 2023 17:51:46 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Ard Biesheuvel <ardb@kernel.org>,
+	=?utf-8?B?SsO2cmcgUsO2ZGVs?= <joro@8bytes.org>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>, Tao Liu <ltao@redhat.com>,
+	Michael Roth <michael.roth@amd.com>, tglx@linutronix.de,
+	mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org,
+	hpa@zytor.com, linux-kernel@vger.kernel.org, bhe@redhat.com,
+	dyoung@redhat.com, kexec@lists.infradead.org,
+	linux-efi@vger.kernel.org
 Subject: Re: [PATCH v2] x86/kexec: Add EFI config table identity mapping for
  kexec kernel
-To: Borislav Petkov <bp@alien8.de>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>, Tao Liu <ltao@redhat.com>, 
-	Michael Roth <michael.roth@amd.com>, tglx@linutronix.de, mingo@redhat.com, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-	linux-kernel@vger.kernel.org, bhe@redhat.com, dyoung@redhat.com, 
-	kexec@lists.infradead.org, linux-efi@vger.kernel.org
+Message-ID: <20230802155146.GCZMp7ksDdN2ETVzKV@fat_crate.local>
+References: <20230713100459.GEZK/MS69XbphJa+tN@fat_crate.local>
+ <CAO7dBbVMNKTSDi5eP4BseEUexsk0Mo0GWJpyHfOcp+tHs6cSUw@mail.gmail.com>
+ <20230717141409.GGZLVMsU6d/9mpJvMO@fat_crate.local>
+ <CAO7dBbXJv9JzDbSa-DLT03+osYCQXNUXFwz63gbq=NGDxEVyEA@mail.gmail.com>
+ <20230728165535.GDZMPzB/ek5QM+xJqA@fat_crate.local>
+ <CAO7dBbVyuLHH6RfdVQkU5ThXaJ-F4yvFAYD1PDNGkOpph9xvnA@mail.gmail.com>
+ <20230802093927.GAZMokT57anC5jBISK@fat_crate.local>
+ <99cb3813-1737-9d10-1f24-77565e460c55@amd.com>
+ <20230802135856.GBZMphIHHLa3dXRRVe@fat_crate.local>
+ <CAMj1kXEM5hGknVGwHh_w99D4L8yrYrTFycwGHZ0CQun70CLipw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXEM5hGknVGwHh_w99D4L8yrYrTFycwGHZ0CQun70CLipw@mail.gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230802_075542_388950_E008B608 
-X-CRM114-Status: GOOD (  13.40  )
+X-CRM114-CacheID: sfid-20230802_085234_128445_1406B477 
+X-CRM114-Status: GOOD (  11.37  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -92,22 +110,35 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, 2 Aug 2023 at 15:59, Borislav Petkov <bp@alien8.de> wrote:
->
-> On Wed, Aug 02, 2023 at 08:40:36AM -0500, Tom Lendacky wrote:
-> > Short of figuring out how to map page accesses earlier through the
-> > boot_page_fault IDT routine
->
-> And you want to do that because?
->
+On Wed, Aug 02, 2023 at 04:55:27PM +0200, Ard Biesheuvel wrote:
+> ... because now, entering via startup_32 is broken, given that it only
+> maps the kernel image itself and relies on the #PF handling for
+> everything else it accesses, including firmware tables.
+> 
+> AFAICT this also means that entering via startup_32 is broken entirely
+> for any configuration that enables the cc blob config table check,
+> regardless of the platform.
 
-... because now, entering via startup_32 is broken, given that it only
-maps the kernel image itself and relies on the #PF handling for
-everything else it accesses, including firmware tables.
+Lemme brain-dump what Tom and I just talked on IRC.
 
-AFAICT this also means that entering via startup_32 is broken entirely
-for any configuration that enables the cc blob config table check,
-regardless of the platform.
+That startup_32 entry path for SNP guests was used with old grubs which
+used to enter through there and not anymore, reportedly. Which means,
+that must've worked at some point but Joerg would know. CCed.
+
+Newer grubs enter through the 64-bit entry point and thus are fine
+- otherwise we would be seeing explosions left and right.
+
+So dependent on what we wanna do, if we kill the 32-bit path, we can
+kill the 32-bit C-bit verif code. But that's for later and an item on my
+TODO list.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
 
 _______________________________________________
 kexec mailing list
