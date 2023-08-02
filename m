@@ -4,73 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0EBF2C00528
-	for <kexec@archiver.kernel.org>; Tue,  1 Aug 2023 21:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2C733C04A6A
+	for <kexec@archiver.kernel.org>; Wed,  2 Aug 2023 03:58:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:References:To:From:Subject:
+	Cc:Message-Id:Date:Mime-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=I7fzVqffBlOWahMT+m5kB4R7iehllDd8Nm1ktZOe4Ew=; b=v9yT6q9fm8LU89
-	ChITagWvaaHZVlaAQCTrP/nfWEbX9YMK1sV420hbNzE/CK2mx2ammqHnpbIzgyUPqfaRkNYcHovmK
-	9SV+XwrvjQVpOd+eF+/xsQDBFi1+QVhUfdN955KRGCaGYHLDZLOuJuKuz5qrRmGFcfrLXOduh9xvj
-	TaTsM5OzSLhPzr8qk3jMzZw4LPvmaR47XILLUxrNW77VTYRChmg6NXw/u56TqBVDwdoZLeqC7Y5yM
-	wjyjK9eyFZhf67gS/iyvpp1AheT9ExYpONfQ0H8qLJhyvHe8jopaVycYPpt4bpMObLBcpZWIFGBeY
-	Hmdz0q0o2/aOAeXvuulg==;
+	List-Owner; bh=WxNag5Yj9ch8vOLxDZp87OmN7ak5H2DO+FZcHYv48Ec=; b=vmITW8+q3TZFML
+	Gx4u8NXSjiYfLZ8sxpR5P3sq0vb+gpLyBnyuXj3qD8ZTDvl6bMtWVh5htmzYbD8dfhk3vDYvJS4hP
+	Frf7nzEwTi83TI9JdtEcJWJ82rKda3z0bMAzgOqFufkAkDhm+sflYQGvJGAV0LT+O5S3NfoUsK7H1
+	5mqXrf37Zj2DOlFLG6bUDOE9KHK+tAyfan6ua7UtZ9itM8C9uxTImrcEcrO/I6A6rnLcyK3cxf2bs
+	0ZxCxqaFIWuaBWrnyGr/EWmjV88muW9M/Eu9s50CKLQKqcXnrwXCDu3aEDCG84lMXJrGNhcjANQbG
+	qYxV8VehhHQZvWS3wLcA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qQwom-003L8C-0H;
-	Tue, 01 Aug 2023 21:22:12 +0000
-Received: from bedivere.hansenpartnership.com ([96.44.175.130])
+	id 1qR30K-003ukz-2c;
+	Wed, 02 Aug 2023 03:58:32 +0000
+Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qQwof-003L7L-0G
+	id 1qR30E-003ukQ-31
 	for kexec@lists.infradead.org;
-	Tue, 01 Aug 2023 21:22:08 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1690924919;
-	bh=w46ldPzBqQOY7Xq8/bGltCOTcrgrcgMnCH9vMYcu8B4=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=PHjVNE77XUFzDR7e7N6e8/9XX2+1/0EWb1HxD+SUkd7iLLf4zcVLR2KEpl9Fdda4d
-	 227a067AawQ5WhGiidtCiKiXq/tCeZiBW/qWCtnVFOFOejRzJKbwlUzUu3kOO5Hla8
-	 Sptcu8xVSxG9M/HH29H1QBz94rEVPCZBy5Y8HqQE=
-Received: from localhost (localhost [127.0.0.1])
-	by bedivere.hansenpartnership.com (Postfix) with ESMTP id 18C031285E73;
-	Tue,  1 Aug 2023 17:21:59 -0400 (EDT)
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
- by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavis, port 10024)
- with ESMTP id tPG9IWaaoNFL; Tue,  1 Aug 2023 17:21:59 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1690924918;
-	bh=w46ldPzBqQOY7Xq8/bGltCOTcrgrcgMnCH9vMYcu8B4=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=P4e8OZ/iq/7XbOKyN0isx3wCiAFQfBH+xusN3H+CvbOuphM7D8sG/w70uuEFcx9jD
-	 quvk7jH/Bf4lEPYmMJNuzD6mV5KgiyRTUv1DRaoiaeE0LouugNPGeOTg9DmWL2BIQu
-	 dbuBbmhdJ6wn9dbvY4wO4sDasWKK678PA+TY34Mw=
-Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::c14])
+	Wed, 02 Aug 2023 03:58:28 +0000
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 699C81285E58;
-	Tue,  1 Aug 2023 17:21:57 -0400 (EDT)
-Message-ID: <b748230c8ee291288afcf48898507556c3aa7c71.camel@HansenPartnership.com>
-Subject: Re: [RFC] IMA Log Snapshotting Design Proposal
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: Sush Shringarputale <sushring@linux.microsoft.com>, 
- linux-integrity@vger.kernel.org, zohar@linux.ibm.com, peterhuewe@gmx.de, 
- jarkko@kernel.org, jgg@ziepe.ca, kgold@linux.ibm.com, bhe@redhat.com, 
- vgoyal@redhat.com, dyoung@redhat.com, kexec@lists.infradead.org,
- jmorris@namei.org,  Paul Moore <paul@paul-moore.com>, serge@hallyn.com
-Cc: code@tyhicks.com, nramas@linux.microsoft.com, Tushar Sugandhi
-	 <tusharsu@linux.microsoft.com>, linux-security-module@vger.kernel.org
-Date: Tue, 01 Aug 2023 17:21:55 -0400
-In-Reply-To: <c5737141-7827-1c83-ab38-0119dcfea485@linux.microsoft.com>
-References: <c5737141-7827-1c83-ab38-0119dcfea485@linux.microsoft.com>
-User-Agent: Evolution 3.42.4 
-MIME-Version: 1.0
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 3D5C061796;
+	Wed,  2 Aug 2023 03:58:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D5E8C433C8;
+	Wed,  2 Aug 2023 03:58:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1690948705;
+	bh=Z93Cm/pqJCTfoBFO1+c0PbkRrs7zUpJNV0ZkQnxbF1k=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=swjGqCCfdAbWZI/FIIpImPv9ppSKsNhhrBj0qPHd9vV4kE3hlDDfC0l0nEFih3nqW
+	 goJUDznUpSJjVgzejLLd+yZYjrziWOlsC1d3EBDMHHBdVJAeYzE6f9cy61TDq576bT
+	 ZFVXS3obEyjab1VNYncWUU8zuG1EFaoEN+rLMtzce4L1+ztPgmaQaQixvKFxYUx9n4
+	 VK9ixu9BRGIzTUlnmL72h56WBoVNLr1IrWOS0FFElviR+BXMQGW7P91XqrcPAWr6Mg
+	 orOO5cXVp85fBPadNwwPRFwzTHsfp3de5pzKCh2C7fTWhe/Br9XrP3P8h4itQhmpg/
+	 okNDYgRgV1KTw==
+Mime-Version: 1.0
+Date: Wed, 02 Aug 2023 06:58:18 +0300
+Message-Id: <CUHRAC79EW66.1VQRXS97GB0UO@suppilovahvero>
+Cc: <code@tyhicks.com>, <nramas@linux.microsoft.com>, <paul@paul-moore.com>
+Subject: Re: [PATCH 1/6] tpm: implement TPM2 function to get update counter
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Tushar Sugandhi" <tusharsu@linux.microsoft.com>, <zohar@linux.ibm.com>,
+ <noodles@fb.com>, <bauermann@kolabnow.com>, <ebiederm@xmission.com>,
+ <bhe@redhat.com>, <vgoyal@redhat.com>, <dyoung@redhat.com>,
+ <peterhuewe@gmx.de>, <jgg@ziepe.ca>, <kexec@lists.infradead.org>,
+ <linux-integrity@vger.kernel.org>
+X-Mailer: aerc 0.14.0
+References: <20230801181917.8535-1-tusharsu@linux.microsoft.com>
+ <20230801181917.8535-2-tusharsu@linux.microsoft.com>
+ <CUHFWAAKMKJN.2EA3ZHLOOPPGB@suppilovahvero>
+ <1d592ca1-1f6c-9eef-ce71-b07a837372b0@linux.microsoft.com>
+In-Reply-To: <1d592ca1-1f6c-9eef-ce71-b07a837372b0@linux.microsoft.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230801_142205_134852_8896FB4A 
-X-CRM114-Status: GOOD (  14.88  )
+X-CRM114-CacheID: sfid-20230801_205827_018188_674DFB13 
+X-CRM114-Status: GOOD (  15.00  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,39 +76,37 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, 2023-08-01 at 12:12 -0700, Sush Shringarputale wrote:
-[...]
-> Truncating IMA log to reclaim memory is not feasible, since it makes
-> the log go out of sync with the TPM PCR quote making remote
-> attestation fail.
-
-This assumption isn't entirely true.  It's perfectly possible to shard
-an IMA log using two TPM2_Quote's for the beginning and end PCR values
-to validate the shard.  The IMA log could be truncated in the same way
-(replace the removed part of the log with a TPM2_Quote and AK, so the
-log still validates from the beginning quote to the end).
-
-If you use a TPM2_Quote mechanism to save the log, all you need to do
-is have the kernel generate the quote with an internal AK.  You can
-keep a record of the quote and the AK at the beginning of the truncated
-kernel log.  If the truncated entries are saved in a file shard it
-should have a beginning and end quote and a record of the AK used. 
-Since verifiers like Keylime are already using this beginning and end
-quote for sharded logs, it's the most natural format to feed to
-something externally for verification and it means you don't have to
-invent a new format to do the same thing.
-
-Regards,
-
-James
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gV2VkIEF1ZyAyLCAyMDIzIGF0IDEyOjAxIEFNIEVFU1QsIFR1c2hhciBTdWdhbmRoaSB3cm90
+ZToKPiBUaGFua3MgZm9yIHRoZSByZXNwb25zZSBKYXJra28uCj4KPiBPbiA4LzEvMjMgMTI6MDIs
+IEphcmtrbyBTYWtraW5lbiB3cm90ZToKPiA+IFRoZSBzaG9ydCBzdW1tYXJ5IGlzIGNyeXB0aWMg
+dG8gc2F5IHRoZSBsZWFzdC4KPiBEbyB5b3UgbWVhbiB0aGUgcGF0Y2ggc3ViamVjdCBsaW5lLCBv
+ciB0aGUgZGVzY3JpcHRpb24gYmVsb3c/CgpJdCBpcyBpbiB0aGUgcHJvY2VzcyBkb2N1bWVudGF0
+aW9uOgoKaHR0cHM6Ly93d3cua2VybmVsLm9yZy9kb2MvaHRtbC92Ni4zL3Byb2Nlc3Mvc3VibWl0
+dGluZy1wYXRjaGVzLmh0bWwjdGhlLWNhbm9uaWNhbC1wYXRjaC1mb3JtYXQKCj4gPiAidXBkYXRl
+IGNvdW50ZXIiIGRvZXMgbm90IG1hcCBpdCB0byBoYXZlIGFueXRoaW5nIHRvIGRvIHdpdGggUENS
+cy4KPiBBZ3JlZWQuwqAgSSBub3RpY2VkIHRoYXQgd2hlbiBJIHdhcyB0ZXN0aW5nIHRoZSBwYXRj
+aGVzLgo+IFRoZSB1cGRhdGUgY291bnRlciBpcyBzYW1lIGZvciBhbGwgUENScy7CoCBJdCB3YXMg
+YWxzbyB0aGUgc2FtZSBmb3IKPiB0aGUgdHdvIGhhc2ggYWxnbydzIEkgdGVzdGVkIGl0IGZvciAo
+U0hBMSBhbmQgU0hBMjU2KS4gQnV0IHRoZSBzcGVjCj4gZGVzY3JpcHRpb24gYW5kIEtlcm5lbCBp
+bXBsZW1lbnRhdGlvbiByZXF1aXJlcyB0byBwYXNzIHRoZQo+IHBjcl9pZHggYW5kIGhhc2ggYWxn
+byB0byBQQ1JfUmVhZCBjb21tYW5kIHRvIGdldCB0aGUgdXBkYXRlIGNvdW50ZXIuCgpJIHdhcyBy
+ZWZlcnJpbmcgdG8gdGhlIGZhY3QgdGhhdCBUUE0yX1BDUl9SZWFkIGRvZXMgbm90IGhhdmUgYSBm
+aWVsZApjYWxsZWQgInVwZGF0ZSBjb3VudGVyIiBpbiBpdHMgcmVzcG9uc2UgYnV0IGl0IGhhcyBh
+IGZpZWxkIGNhbGxlZAoicGNyVXBkYXRlQ291bnRlciIuIFBsZWFzZSByZWZlciB0byB0aGlncyB0
+aGF0IGFjdHVhbGx5IGV4aXN0LgoKSW4gdGhlIGxvbmcgZGVzY3JpcHRpb24geW91IGFyZSBpbiBz
+b21lIG9jY2FzaW9ucyByZWZlcnJpbmcgdG8gdGhlIHNhbWUKb2JqZWN0IGFzOgoKMS4gInVwZGF0
+ZSBjb3VudGVyIgoyLiAicGNyVXBkYXRlQ291bnRlciIKMy4gIlBjclVwZGF0ZUNvdW50ZXIiCgpU
+aGlzIGlzIGFtYmlndW91cyBhbmQgd3JvbmcuCgpGcm9tIGxvbmcgZGVzY3JpcHRpb24gSSBzZWUg
+emVybyBtb3RpdmF0aW9uIHRvIGFjayB0aGlzIGNoYW5nZSwgZXhjZXB0CnNvbWUgaGVyZXNheSBh
+Ym91dCBJTUEgcmVxdWlyaW5nIGl0LiBXaHkgZG9lcyBJTUEgbmVlZCB1cGRhdGVfY250IGFuZAp3
+aHkgdGhpcyBpcyBub3QgZG9jdW1lbnRlZCB0byB0aGUgbG9uZyBkZXNjcmlwdGlvbj8KCj4gQnV0
+IEkgY2FuIHVwZGF0ZSB0cG0yX3Bjcl9yZWFkKCkgaWYgeW91IGFyZSBvayB3aXRoIGl0Lgo+IFBs
+ZWFzZSBsZXQgbWUga25vdy4KCllvdSBjYW4gYWRkICJ1MzIgKnVwZGF0ZV9jbnQiLgoKQlIsIEph
+cmtrbwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4
+ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
+ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
