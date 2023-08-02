@@ -4,93 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B5AABC001DF
-	for <kexec@archiver.kernel.org>; Wed,  2 Aug 2023 09:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 70E36C001DE
+	for <kexec@archiver.kernel.org>; Wed,  2 Aug 2023 09:54:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=ym12gxX02sQgtizb9s+ZMYYyr1iMhhsP57kMJvUyuqY=; b=EXfQakWl9b5GFp
-	eu20Wb+BRBRBXXcZC4EKE7TtdBWwTrFTEy/2Rs1I4IJ/4eXOhf87A43fSEXarIzuaeXbXtVMdwAZp
-	UuWlbjY98BoAgF3xSDjiYhG4N75hhSikcV75auxr5qWupcJVdWtxckE7PlV2e9om8ZFXjF28GP9CC
-	HumZITWBMo9YiAvv0NLVvpeLmedbtr+MmzjOQsjETFzDeneTMu4yTfvb9tnI5bb4D3qdCdllzr7TK
-	TffVt0YGLysi4pYgA1i1R05d4fqqFlpgvvuFE47/wMgeOnYdNSEiaIIZBZrm00e6iGjmdwXzkoB1D
-	zMTEqqYJCDKaVi9A+ccg==;
+	List-Owner; bh=ufy2ehcB3D+EISQltH447uyVZVls13j1hjzwwiGP5qU=; b=AfuImdsmSaMnMf
+	jmZWurLyRAnRv3/LbWu0r1xAACsJcZCQiJRuLJxaFQ6rre0D8E9UwW9YFxyqZlh1Iro1XkkoOD+wX
+	N1G2KWnlfos5zuUQlCEN9Ri6iRba1t6CxZlBKIJ9coVXQhKKCntzpeBtXSe/gzbzlgXpEAArPLr9Y
+	dmNQBl2cf7UTYxe1eVRybAc8d6z9Fz+//YhSCMxB7k+5Kog7tsGsqk6KW4xt5rbtbLlVMs/0xs6aZ
+	ja4jHHjCmiue9p7qOYsStfgdvK20lp14SXd0BLGADOPeF34KcvUAwTBAYTInRsb+ZXxGlJXSWequZ
+	hJLnjYHOs/LagC89L66w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qR8Kk-004VBH-1a;
-	Wed, 02 Aug 2023 09:39:58 +0000
-Received: from mail.skyhub.de ([5.9.137.197])
+	id 1qR8Yb-004XIR-2z;
+	Wed, 02 Aug 2023 09:54:17 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qR8Kg-004VAV-2U
+	id 1qR8YY-004XHo-1r
 	for kexec@lists.infradead.org;
-	Wed, 02 Aug 2023 09:39:56 +0000
-Received: from mail.alien8.de (mail.alien8.de [IPv6:2a01:4f9:3051:3f93::2])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 76EDC1EC053F;
-	Wed,  2 Aug 2023 11:39:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-	t=1690969191;
+	Wed, 02 Aug 2023 09:54:16 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1690970052;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-	bh=qbAb28o3tTJyuj6zBqT3c/7EC27OCaTirnTJ24B68rw=;
-	b=pK8OgvPZqyU9mXrjGzYXOw9QEn3Aj1nEqDDoqeblSnSLCEvWCTlwVEiRsbK8Pdp0RZ2ruK
-	r+AbPuI6yw35R/PFgVV5WUo2u67IW4TgwqsSVedZP+ky9z4uqSCj1ukjS5kN77skeKdK2A
-	VmEEKPwL8YucrcdNaT//X7zjqdthLKo=
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id DaNgISScVH2s; Wed,  2 Aug 2023 09:39:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1690969187; bh=qbAb28o3tTJyuj6zBqT3c/7EC27OCaTirnTJ24B68rw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iZnA2RbIkt7bvkrXIOReyMu35jT96kZDma2DdSGBU+hlhgYu/pibRZRUyM9cEM1TW
-	 L/+lZx1iq64wBrHRYczsmgQnsRWfu1b/a6H2MwkwEOrlBFuDFe8hbE3x+aCc1aY4gy
-	 k7Ono3a6ah6RhD8JkqtbyjOnGQWLi7/f1FHf94B/4y96VLhLcDZ0uAQLd7dfsB6Tkv
-	 1LTM7ua/0gw3mTuKQSyTkA2wT9IRt1uAdtmmW39rAb82paPyRiq99F/P9x9p6pvNDS
-	 HirU49kbd1D0EoRFTcgxMm5BZfdRiCoeBKCCqr9WI2BEB3dtNEXdIVpoq+AtzCuJFC
-	 hoKgZO9hohbmFn6AXL3xLCYja+yDNQLf9I5yfvuweD171STA6jLsVVZGlfaLDdkyeg
-	 UnQyCT0YdyT3SHaJyHKLVtkxZq73jvFeNFQFeTz+4DOKgl1hr/1kYNg4zh73Y2Zncj
-	 dltGgtqQhSvJTtYuxCVAdBKPr9QZ96AQKV1dFolZ04igWYV+L3sTVwOCLAeh8bt941
-	 7ZGLdf7BwjwVxvDflBQumvo8/CVE3fkILzS1tNKik4G+OZElDEn5B2clpdycsb/5QW
-	 8rnnnL8Y1NZAMipx+gPMtSkgoE1wzYkg2Z6RqikTn+oLX1lToWSyzg7/GsHMEkV6HW
-	 P5PQ4ku3T69a0hkRub4ITCj0=
-Received: from zn.tnic (pd9530d32.dip0.t-ipconnect.de [217.83.13.50])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6AFF040E0190;
-	Wed,  2 Aug 2023 09:39:33 +0000 (UTC)
-Date: Wed, 2 Aug 2023 11:39:27 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Tao Liu <ltao@redhat.com>, Michael Roth <michael.roth@amd.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, ardb@kernel.org,
-	linux-kernel@vger.kernel.org, bhe@redhat.com, dyoung@redhat.com,
-	kexec@lists.infradead.org, linux-efi@vger.kernel.org
-Subject: Re: [PATCH v2] x86/kexec: Add EFI config table identity mapping for
- kexec kernel
-Message-ID: <20230802093927.GAZMokT57anC5jBISK@fat_crate.local>
-References: <20230601072043.24439-1-ltao@redhat.com>
- <20230713100459.GEZK/MS69XbphJa+tN@fat_crate.local>
- <CAO7dBbVMNKTSDi5eP4BseEUexsk0Mo0GWJpyHfOcp+tHs6cSUw@mail.gmail.com>
- <20230717141409.GGZLVMsU6d/9mpJvMO@fat_crate.local>
- <CAO7dBbXJv9JzDbSa-DLT03+osYCQXNUXFwz63gbq=NGDxEVyEA@mail.gmail.com>
- <20230728165535.GDZMPzB/ek5QM+xJqA@fat_crate.local>
- <CAO7dBbVyuLHH6RfdVQkU5ThXaJ-F4yvFAYD1PDNGkOpph9xvnA@mail.gmail.com>
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wGAkBV+zxWpYO5VE8HRlKmcYiDBzHga2UFMcXCYQuLs=;
+	b=CMn7HCM61LTzSkUHLJ14PMv/3we84Uw9N4syBiB595h3pqBXLGJwh10h7APxZtZUTPNpzH
+	XRgsMxSbTRzPgxI4mBGvFKojosw5Iy8A/q4xPSsZFs1iyQFusY+ldlk5yjmPLuLFVs7+so
+	qKB1BV6bS+LWvYdpalm7JstP5tZ1fRk=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-362-h_x4EL74Nfm_9VsQnRqpUQ-1; Wed, 02 Aug 2023 05:54:10 -0400
+X-MC-Unique: h_x4EL74Nfm_9VsQnRqpUQ-1
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-63d245b67abso80417436d6.3
+        for <kexec@lists.infradead.org>; Wed, 02 Aug 2023 02:54:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690970050; x=1691574850;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wGAkBV+zxWpYO5VE8HRlKmcYiDBzHga2UFMcXCYQuLs=;
+        b=RXFYDOI0+0DxRFfxkydG/L1HkmSKtVIW3cKcZZfrPxITz+EABpd4cIeEud8MtUSp7E
+         6YYmKbNTlgSURSiKux4rumrKkTc6xSBUNP1WRilhE1pXyBKznHWpQ7peIZXJ2mNVJkXC
+         b7wUzRPR6gdwE83TUUL3PD/R8UQx2ydvpol50VJkAoscFA+3CdOZX57EUm7m/uW16TU3
+         xv09I5H1N6GBx1Fxd0XvQOSaT35zlJba+a+OTSHhVz9DhS2FlhPvxr9OpXepHoYenQ2r
+         3Guh1V7uN+rkPgtAXWzvzZ5EDoIcawVPwONvFVoor3XA9GQ88z+qXuGLjnu0E/1SPe5h
+         JW1Q==
+X-Gm-Message-State: ABy/qLbHiQ5Pv3hF/OgZ7/o3uifddhxX2VVLznq8/A37auDdIWKH/Kek
+	NNIm1tHs5SQ0UpmJRnppz89F90LHNQ6v1avHkU1vOIyA0wvZgPkXaBHn4g+lR+whKGeOYdHqwiI
+	yy/5Y48QL0X3xf+UhnjvOyMOOzNdrq7iLlhIZ
+X-Received: by 2002:a0c:f14a:0:b0:63d:e49:e693 with SMTP id y10-20020a0cf14a000000b0063d0e49e693mr15402962qvl.59.1690970050368;
+        Wed, 02 Aug 2023 02:54:10 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlGjS7YwQw5R9tAxNWxNgwYlxFjPln7a7OmqG7nAphE7xUCRZWhCQhl3XJ31/WUCTtqP2exXVtMUdwdp8FlCwkE=
+X-Received: by 2002:a0c:f14a:0:b0:63d:e49:e693 with SMTP id
+ y10-20020a0cf14a000000b0063d0e49e693mr15402949qvl.59.1690970050123; Wed, 02
+ Aug 2023 02:54:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAO7dBbVyuLHH6RfdVQkU5ThXaJ-F4yvFAYD1PDNGkOpph9xvnA@mail.gmail.com>
+References: <20230724022142.6425-1-piliu@redhat.com> <20230724022142.6425-4-piliu@redhat.com>
+ <ZMitmSZPqnH+/70s@kernel.org>
+In-Reply-To: <ZMitmSZPqnH+/70s@kernel.org>
+From: Pingfan Liu <piliu@redhat.com>
+Date: Wed, 2 Aug 2023 17:53:59 +0800
+Message-ID: <CAF+s44QBMgsT7Q2ro9obVvHYCrKYTQoeCnOVOMzhfexQS+_6Sw@mail.gmail.com>
+Subject: Re: [PATCHv6 3/5] kexec/zboot: Add arch independent zboot support
+To: Simon Horman <horms@kernel.org>
+Cc: kexec@lists.infradead.org, Jeremy Linton <jeremy.linton@arm.com>, horms@verge.net.au, 
+	ardb@kernel.org
+X-Mimecast-Spam-Score: 1
+X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230802_023954_962552_F71E3184 
-X-CRM114-Status: GOOD (  24.34  )
+X-CRM114-CacheID: sfid-20230802_025414_708892_A0B6A8E1 
+X-CRM114-Status: GOOD (  20.87  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,147 +92,49 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Aug 02, 2023 at 04:22:54PM +0800, Tao Liu wrote:
-> Thanks for the patch! I have tested it on the lenovo machine in the
-> past few days, no issue found, so the patch tests OK.
-
-Thanks for testing!
-
-Mike, Tom, the below ok this way?
-
----
-From: "Borislav Petkov (AMD)" <bp@alien8.de>
-Date: Sun, 16 Jul 2023 20:22:20 +0200
-Subject: [PATCH] x86/sev: Do not try to parse for the CC blob on non-AMD
- hardware
-
-Tao Liu reported a boot hang on an Intel Atom machine due to an unmapped
-EFI config table. The reason being that the CC blob which contains the
-CPUID page for AMD SNP guests is parsed for before even checking
-whether the machine runs on AMD hardware.
-
-Usually that's not a problem on !AMD hw - it simply won't find the CC
-blob's GUID and return. However, if any parts of the config table
-pointers array is not mapped, the kernel will #PF very early in the
-decompressor stage without any opportunity to recover.
-
-Therefore, do a superficial CPUID check before poking for the CC blob.
-This will fix the current issue on real hardware. It would also work as
-a guest on a non-lying hypervisor.
-
-For the lying hypervisor, the check is done again, *after* parsing the
-CC blob as the real CPUID page will be present then.
-
-Clear the #VC handler in case SEV-{ES,SNP} hasn't been detected, as
-a precaution.
-
-Fixes: c01fce9cef84 ("x86/compressed: Add SEV-SNP feature detection/setup")
-Reported-by: Tao Liu <ltao@redhat.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Tested-by: Tao Liu <ltao@redhat.com>
-Cc: <stable@kernel.org>
-Link: https://lore.kernel.org/r/20230601072043.24439-1-ltao@redhat.com
----
- arch/x86/boot/compressed/idt_64.c |  9 +++++++-
- arch/x86/boot/compressed/sev.c    | 37 +++++++++++++++++++++++++++++--
- 2 files changed, 43 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/boot/compressed/idt_64.c b/arch/x86/boot/compressed/idt_64.c
-index 6debb816e83d..3cdf94b41456 100644
---- a/arch/x86/boot/compressed/idt_64.c
-+++ b/arch/x86/boot/compressed/idt_64.c
-@@ -63,7 +63,14 @@ void load_stage2_idt(void)
- 	set_idt_entry(X86_TRAP_PF, boot_page_fault);
- 
- #ifdef CONFIG_AMD_MEM_ENCRYPT
--	set_idt_entry(X86_TRAP_VC, boot_stage2_vc);
-+	/*
-+	 * Clear the second stage #VC handler in case guest types
-+	 * needing #VC have not been detected.
-+	 */
-+	if (sev_status & BIT(1))
-+		set_idt_entry(X86_TRAP_VC, boot_stage2_vc);
-+	else
-+		set_idt_entry(X86_TRAP_VC, NULL);
- #endif
- 
- 	load_boot_idt(&boot_idt_desc);
-diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
-index 09dc8c187b3c..c3e343bd4760 100644
---- a/arch/x86/boot/compressed/sev.c
-+++ b/arch/x86/boot/compressed/sev.c
-@@ -404,13 +404,46 @@ void sev_enable(struct boot_params *bp)
- 	if (bp)
- 		bp->cc_blob_address = 0;
- 
-+	/*
-+	 * Do an initial SEV capability check before snp_init() which
-+	 * loads the CPUID page and the same checks afterwards are done
-+	 * without the hypervisor and are trustworthy.
-+	 *
-+	 * If the HV fakes SEV support, the guest will crash'n'burn
-+	 * which is good enough.
-+	 */
-+
-+	/* Check for the SME/SEV support leaf */
-+	eax = 0x80000000;
-+	ecx = 0;
-+	native_cpuid(&eax, &ebx, &ecx, &edx);
-+	if (eax < 0x8000001f)
-+		return;
-+
-+	/*
-+	 * Check for the SME/SEV feature:
-+	 *   CPUID Fn8000_001F[EAX]
-+	 *   - Bit 0 - Secure Memory Encryption support
-+	 *   - Bit 1 - Secure Encrypted Virtualization support
-+	 *   CPUID Fn8000_001F[EBX]
-+	 *   - Bits 5:0 - Pagetable bit position used to indicate encryption
-+	 */
-+	eax = 0x8000001f;
-+	ecx = 0;
-+	native_cpuid(&eax, &ebx, &ecx, &edx);
-+	/* Check whether SEV is supported */
-+	if (!(eax & BIT(1)))
-+		return;
-+
- 	/*
- 	 * Setup/preliminary detection of SNP. This will be sanity-checked
- 	 * against CPUID/MSR values later.
- 	 */
- 	snp = snp_init(bp);
- 
--	/* Check for the SME/SEV support leaf */
-+	/* Now repeat the checks with the SNP CPUID table. */
-+
-+	/* Recheck the SME/SEV support leaf */
- 	eax = 0x80000000;
- 	ecx = 0;
- 	native_cpuid(&eax, &ebx, &ecx, &edx);
-@@ -418,7 +451,7 @@ void sev_enable(struct boot_params *bp)
- 		return;
- 
- 	/*
--	 * Check for the SME/SEV feature:
-+	 * Recheck for the SME/SEV feature:
- 	 *   CPUID Fn8000_001F[EAX]
- 	 *   - Bit 0 - Secure Memory Encryption support
- 	 *   - Bit 1 - Secure Encrypted Virtualization support
--- 
-2.41.0
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgU2ltb24sCgpUaGFua3MgZm9yIHRoZSB0cnkuIFBsZWFzZSBzZWUgdGhlIGNvbW1lbnQgYmVs
+b3cuCgpPbiBUdWUsIEF1ZyAxLCAyMDIzIGF0IDM6MDDigK9QTSBTaW1vbiBIb3JtYW4gPGhvcm1z
+QGtlcm5lbC5vcmc+IHdyb3RlOgo+Cj4gT24gTW9uLCBKdWwgMjQsIDIwMjMgYXQgMTA6MjE6NDBB
+TSArMDgwMCwgUGluZ2ZhbiBMaXUgd3JvdGU6Cj4gPiBGcm9tOiBKZXJlbXkgTGludG9uIDxqZXJl
+bXkubGludG9uQGFybS5jb20+Cj4gPgo+ID4gVGhlIGxpbnV4IGtlcm5lbCBDT05GSUdfWkJPT1Qg
+b3B0aW9uIGNyZWF0ZXMKPiA+IHNlbGYgZGVjb21wcmVzc2luZyBQRSBrZXJuZWwgaW1hZ2VzLiBT
+byB0aGlzIG1lYW5zCj4gPiB0aGF0IGtleGVjIHNob3VsZCBoYXZlIGEgZ2VuZXJpYyB1bmRlcnN0
+YW5kaW5nIG9mCj4gPiB0aGUgZm9ybWF0IHdoaWNoIG1heSBiZSB1c2VkIGJ5IG11bHRpcGxlIGFy
+Y2hlcy4KPiA+Cj4gPiBTbyBsZXRzIGFkZCBhbiBhcmNoIGluZGVwZW5kZW50IHZhbGlkYXRpb24K
+PiA+IGFuZCBkZWNvbXByZXNzaW9uIHJvdXRpbmUuCj4gPgo+ID4gU2lnbmVkLW9mZi1ieTogSmVy
+ZW15IExpbnRvbiA8amVyZW15LmxpbnRvbkBhcm0uY29tPgo+ID4gW01vZGlmaWVkIGJ5IFBpbmdm
+YW4gdG8gZXhwb3J0IGtlcm5lbCBmZF0KPiA+IFNpZ25lZC1vZmYtYnk6IFBpbmdmYW4gTGl1IDxw
+aWxpdUByZWRoYXQuY29tPgo+Cj4gSGkgUGluZ2ZhbiwKPgo+IHVuZm9ydHVuYXRlbHkgdGhpcyBj
+YXVzZXMgYSBidWlsZCBmYWlsdXJlIG9uIGhwcGEuCj4KPiAuLi8uLi9rZXhlYy9rZXhlYy1wZS16
+Ym9vdC5jOjMxOjEwOiBmYXRhbCBlcnJvcjoga2V4ZWMtcGUtemJvb3QuaDogTm8gc3VjaCBmaWxl
+IG9yIGRpcmVjdG9yeQo+ICAgIDMxIHwgI2luY2x1ZGUgPGtleGVjLXBlLXpib290Lmg+Cj4gICAg
+ICAgfCAgICAgICAgICBefn5+fn5+fn5+fn5+fn5+fn4KPgo+IExpbms6IGh0dHBzOi8vZ2l0aHVi
+LmNvbS9ob3Jtcy9rZXhlYy10b29scy9hY3Rpb25zL3J1bnMvNTcyMzU4MDUyMy9qb2IvMTU1MDg0
+MjU3OTAKPgoKSXQgaXMgbm90IHJlbGF0ZWQgdG8gY3Jvc3MtY29tcGlsaW5nLiBBY3R1YWxseSwg
+SSBoYXZlIHRyaWVkIHRvCnNpbXBsaWZ5IHRoZSB0ZXN0IG1hdHJpeCwgd2hpY2ggbGltaXRzIHRo
+ZSBjb21waWxhdGlvbiBvbmx5IG9uIHg4Nl82NC4KQW5kIEkgZ290IHRoZSBzaW1pbGFyIGVycm9y
+IFsxXQoKVGhlIHdvcmtmbG93IGNvbnRyb2wgZmlsZSBpcyBbMl0sIHdoaWNoIGNsaXBzIG91dCBh
+bGwgYXJjaGVzIGV4Y2VwdAp4ODZfNjQuICBCdXQgSSBjYW4gc3VjY2Vzc2Z1bGx5IGJ1aWxkIGl0
+IG9uIHRoZSBGZWRvcmEgc3lzdGVtIHdpdGggdGhlCmZvbGxvd2luZyBiYXNoIHNjcmlwdCwgd2hp
+Y2ggaXMgYmFzZWQgb24gdGhlIGdpdGh1YidzIGJ1aWxkIGxvZy4gIFNvCm1heWJlIGl0IGlzIGEg
+YnVnIHdpdGggdGhlIGNvbXBpbGluZyB0b29scz8KCmtleGVjX3Rvb2xzX2Rpcj0iLi8iCgpta2Rp
+ciAka2V4ZWNfdG9vbHNfZGlyL19idWlsZCBcCiAgICAgICAgICRrZXhlY190b29sc19kaXIvX2J1
+aWxkL3N1YiBcCiAgICAgICAgICRrZXhlY190b29sc19kaXIvX2luc3QgXAogICAgICAgICAka2V4
+ZWNfdG9vbHNfZGlyL19kZXN0CmNobW9kIGEtdyAka2V4ZWNfdG9vbHNfZGlyCnRlc3QgLWQgJGtl
+eGVjX3Rvb2xzX2Rpci9fYnVpbGQKSU5TVEFMTF9CQVNFPSQoY2QgJGtleGVjX3Rvb2xzX2Rpci9f
+aW5zdCAmJiBwd2QgfCBzZWQgLWUKJ3MsXlteOlxcL106W1xcL10sLywnKSAmJlwKICAgICAgICBE
+RVNURElSPSIka2V4ZWNfdG9vbHNfZGlyL19kZXN0IiAmJiBcCiAgICAgICAgY2QgJGtleGVjX3Rv
+b2xzX2Rpci9fYnVpbGQvc3ViICYmIFwKICAgICAgICAgICAgICAgIC4uLy4uL2NvbmZpZ3VyZSBc
+CiAgICAgICAgICAgICAgICAgXAogICAgICAgICAgICAgICAgLS1zcmNkaXI9Li4vLi4gLS1wcmVm
+aXg9IiRJTlNUQUxMX0JBU0UiICYmIFwKICAgICAgICBtYWtlICAtajgKCgpbMV06IGh0dHBzOi8v
+Z2l0aHViLmNvbS9wZmxpdS9rZXhlYy10b29scy9hY3Rpb25zL3J1bnMvNTczNzI1NDEwOS9qb2Iv
+MTU1NDg1MjA4NjMKWzJdOiBodHRwczovL2dpdGh1Yi5jb20vcGZsaXUva2V4ZWMtdG9vbHMvYmxv
+Yi96Ym9vdFY2Ly5naXRodWIvd29ya2Zsb3dzL21haW4ueW1sCgoKVGhhbmtzLAoKUGluZ2ZhbgoK
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1h
+aWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
+YWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
