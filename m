@@ -4,101 +4,105 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E6469C001DB
-	for <kexec@archiver.kernel.org>; Thu,  3 Aug 2023 22:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 773E1C001DF
+	for <kexec@archiver.kernel.org>; Thu,  3 Aug 2023 22:37:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:Mime-Version:References:In-Reply-To:
 	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=Yv9/FXISbUtL6ZlyUVSmJWcH0qC+AKBh1xk95AXeScY=; b=MQj+egNeYSI7U+
-	ouNjKvWm8UFtkeBt/vyl6M7I91oJ8hcXlacJr7w9+8vKyv7Bzb8RDfq1IUG/LGgdwcCPrPJ+daakF
-	9Nhhh9zNE8msv4dUQr3nB8o18nFO8h0lAlRx7M+DPfb2QZ4OAenUUHrOhFTg4KyRQEp+W9WYeiUFZ
-	N49mz+rwyzrGwWzO8wwBllIMXmyW8/1DVCEerWc8caTks3bObRy5F8vj799MyRjz7c5ccIWXnWIVo
-	OhyogECkfHQePqwRRSgOSB6TMfuwQaiseWZ5NZNcD1HOWtBOHB8pd+TdGzvS6ymdTnRIvyOI1JOb2
-	jRtnAQkmLWhpKWEAsY9w==;
+	List-Owner; bh=pZZiePPbHIPqaehtgOOns2vfhNskxMWNwYAczUkvt4o=; b=4oBGGQezzAfG+S
+	lt5DkhYJFvfTo/66QaEx17v0Ls4+zNro63G/h/xdgtpKgIJgO0t79bB5LvqmA9K+fehtTgC7y2zE4
+	6bKPXpAfypAiWO6ulwkco94W4nljJe91ZvXYgjetccSC3bDZpUsS+Jz8EsTKwxjZ3ZyXFu59nXV+o
+	0i7f2IBA4RAHHQz9Tlxaf4vZJMEB4U2H9p7A7GWWOtXb2qf7iKTKw+CQGmzQv+COTmiPn2IXkzUjp
+	1ufJxf0VQcUSq0ujnYReKifHXwhHoD4lKq+cBvvjzS5HqSNEoy6iO1ZmgjnfWIa0Ye5VvG6fu1O8W
+	1dNGnkybphSQaGt+e9RA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qRgcD-00AyPc-1x;
-	Thu, 03 Aug 2023 22:16:17 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1qRgww-00B05q-2K;
+	Thu, 03 Aug 2023 22:37:42 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qRgcA-00AyP2-2r
+	id 1qRgwr-00B05J-0L
 	for kexec@lists.infradead.org;
-	Thu, 03 Aug 2023 22:16:16 +0000
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 373MCDGd013093;
-	Thu, 3 Aug 2023 22:15:59 GMT
+	Thu, 03 Aug 2023 22:37:41 +0000
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 373MCHtH017736;
+	Thu, 3 Aug 2023 22:37:21 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
  from : to : cc : date : in-reply-to : references : content-type :
  mime-version : content-transfer-encoding; s=pp1;
- bh=O1B5KdsoDE1NcfTHcK1yj+kfd2jZwLNC8evbq4DKpPI=;
- b=h7ELUgcI+OFnnkc7NGTtUX6Ad7tTLKNynyAZjtifVC3eZLr2N6KSG2s+KHgK7P5e3hwz
- Fwn3AM9MJBuvKtPkR1Hjv/fA9mARWyZGfEjEFQbevHPQdpGzoZlL+qxPTF4x/cmP/KQW
- SzI4QCbgMs+gEp0kq5DCyU4IIOir23zA7ummT+PVew7Dv2uh6cm5QB/Ia0FxpJgF54MN
- iYcJ6pFLYzdH9JEkrFiDh1atAE2xygrySeoSFLDVaOJHjQpN3frzoRz5Jnnjxs8r675V
- 94Jsm/8jSjmHnlkr/L978fFht5ROY5RaTq7cLBq3J2L09M66ZYP8L6/Npi508hBqrZpF dA== 
+ bh=NMPbHmsRwkAoq3ntcMANlW/GSJeuKkG6VQKW4r0Dm44=;
+ b=oCddjZnmInDNoDNwUSk2uEN0N5r7tBIYqBrLtAYiTr9BtfJhFddMluLUiosoV9xw4kkG
+ UZzj00V21zD/MTEi5L5ISpG/oXlKta0aZSwYctU/bPF3wlGwfKXbeOA00NuQMcu4Tkuf
+ ZGY50TuG9/cM4W9y5sTt1SA/Zebcntf1AdrdnuXscX5yQzzESzubARBkrJqEQgdDzpqb
+ cIV+clPGhqAnLLmpS6qxUW8suVs6jD/mzaeJYDK6BhS0f1RoNb89SbahqOtDKICqn7aM
+ UZp/BV9LbfySC8YHAbtsVHbq7sZPCAHh+xfWUHYyDNtU+bd5DprtRcKS2/mRFcweoZDa BA== 
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s8mtr8260-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s8mndghq6-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Aug 2023 22:15:59 +0000
-Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 373MFCF2023439;
-	Thu, 3 Aug 2023 22:15:58 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s8mtr825h-1
+	Thu, 03 Aug 2023 22:37:20 +0000
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 373MTIDn007226;
+	Thu, 3 Aug 2023 22:37:09 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s8mndgh1a-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Aug 2023 22:15:58 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 373Krl7N018450;
-	Thu, 3 Aug 2023 22:15:57 GMT
-Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3s8kp4rg4u-1
+	Thu, 03 Aug 2023 22:37:09 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 373KpvQF015879;
+	Thu, 3 Aug 2023 22:36:58 GMT
+Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3s8kn70krx-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Aug 2023 22:15:57 +0000
-Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
-	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 373MFux845023566
+	Thu, 03 Aug 2023 22:36:58 +0000
+Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
+	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 373MawMu5308976
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 3 Aug 2023 22:15:56 GMT
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C4F1258056;
-	Thu,  3 Aug 2023 22:15:56 +0000 (GMT)
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 04E9058052;
-	Thu,  3 Aug 2023 22:15:56 +0000 (GMT)
+	Thu, 3 Aug 2023 22:36:58 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EEA7858063;
+	Thu,  3 Aug 2023 22:36:57 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 29F865805E;
+	Thu,  3 Aug 2023 22:36:57 +0000 (GMT)
 Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.61.157.226])
-	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  3 Aug 2023 22:15:55 +0000 (GMT)
-Message-ID: <223d5c5a655fec263895c991550e4291d1bbd4c9.camel@linux.ibm.com>
-Subject: Re: [PATCH 5/6] ima: measure TPM update counter at ima_init
+	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  3 Aug 2023 22:36:57 +0000 (GMT)
+Message-ID: <d51cd6959472885a59fc13b863b71f2157fc8f65.camel@linux.ibm.com>
+Subject: Re: [PATCH 0/6] Measuring TPM update counter in IMA
 From: Mimi Zohar <zohar@linux.ibm.com>
-To: Tushar Sugandhi <tusharsu@linux.microsoft.com>, noodles@fb.com,
+To: Stefan Berger <stefanb@linux.ibm.com>,
+        Tushar Sugandhi
+ <tusharsu@linux.microsoft.com>, noodles@fb.com,
         bauermann@kolabnow.com, ebiederm@xmission.com, bhe@redhat.com,
         vgoyal@redhat.com, dyoung@redhat.com, peterhuewe@gmx.de,
         jarkko@kernel.org, jgg@ziepe.ca, kexec@lists.infradead.org,
         linux-integrity@vger.kernel.org
 Cc: code@tyhicks.com, nramas@linux.microsoft.com, paul@paul-moore.com
-Date: Thu, 03 Aug 2023 18:15:55 -0400
-In-Reply-To: <20230801181917.8535-6-tusharsu@linux.microsoft.com>
+Date: Thu, 03 Aug 2023 18:36:53 -0400
+In-Reply-To: <a4a5e40b-abc1-27fa-3984-cee18fb4522c@linux.ibm.com>
 References: <20230801181917.8535-1-tusharsu@linux.microsoft.com>
-	 <20230801181917.8535-6-tusharsu@linux.microsoft.com>
+	 <dbfb545b-9399-d505-6739-c2940930ef48@linux.ibm.com>
+	 <cb2029b8-d585-1c06-a0ac-15624cf70e28@linux.microsoft.com>
+	 <a4a5e40b-abc1-27fa-3984-cee18fb4522c@linux.ibm.com>
 X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
 Mime-Version: 1.0
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: dpDrD-ar3j94nXpTMb1pEbtJtVst3zSl
-X-Proofpoint-ORIG-GUID: Ez4hbw6zPKDgtUGVo2uWf1omrPeBcOkQ
+X-Proofpoint-ORIG-GUID: 24gxbTS0-E0bQGvUb1J7in4krZhjiVJs
+X-Proofpoint-GUID: 91ieXi7xNRZ8TnY0i0p3fLZvjYo-hPSa
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
  definitions=2023-08-03_22,2023-08-03_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- malwarescore=0 impostorscore=0 bulkscore=0 mlxscore=0 priorityscore=1501
- adultscore=0 spamscore=0 clxscore=1015 phishscore=0 lowpriorityscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2306200000 definitions=main-2308030198
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 adultscore=0 spamscore=0 mlxscore=0 malwarescore=0
+ lowpriorityscore=0 bulkscore=0 impostorscore=0 mlxlogscore=999
+ clxscore=1015 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2306200000 definitions=main-2308030203
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230803_151615_168109_83AEF5E8 
-X-CRM114-Status: GOOD (  25.91  )
+X-CRM114-CacheID: sfid-20230803_153737_267157_48BAE86C 
+X-CRM114-Status: GOOD (  21.83  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -115,66 +119,26 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, 2023-08-01 at 11:19 -0700, Tushar Sugandhi wrote:
-> IMA log entries can be lost due to a variety of causes, such as code bugs
-> or error conditions, leading to a mismatch between TPM PCRs and
-> the IMA log.  Measuring TPM PCR update counter during ima_init would
-> provide a baseline counter for the number of times the TPM PCRs are
-> updated.  The remote attestation service can compare this baseline
-> counter with a subsequent measured one (e.g., post-kexec soft-boot) to
-> identify if there are any lost IMA log events.
+On Thu, 2023-08-03 at 18:09 -0400, Stefan Berger wrote:
+> > I can remove the kexec example if it is causing confusion.> Please let me know.
 > 
-> Measure the TPM update counter at ima init.
+> I am not convinced we need this series  ... :-( Your kexec series prevents
+> further logging and especially PCR extensions after the frozen measurement log
+> has been created and in ima_add_template_entry(), if we hit an oom condition,
+> then we luckily do not extend the PCR either. If either the log was to have one
+> more entry than number PCR extensions occurred or vice versa, then the remote
+> attestation service will see this mismatch no matter what and all the PCR update
+> counter won't help (and is generally not a good indicator for this purpose imo)
+> for it to recover from this. It's better to declare the system as un-trusted/
+> corrupted in this case then.
 
-No need for separate patches for one line changes like this.  Either
-merge patches 5/6 and 6/6 or all three 4/6, 5/6, 6/6 together.
+As previously mentioned, there is a patch set that doesn't carry any
+records across kexec, if the the measurement list is too large, and
+another proposal to trim the measurement list.
 
-> 
-> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> ---
->  security/integrity/ima/ima_init.c | 3 +++
->  security/integrity/ima/ima_main.c | 1 +
->  2 files changed, 4 insertions(+)
-> 
-> diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
-> index 63979aefc95f..9bb18d6c2fd6 100644
-> --- a/security/integrity/ima/ima_init.c
-> +++ b/security/integrity/ima/ima_init.c
-> @@ -154,5 +154,8 @@ int __init ima_init(void)
->  				  UTS_RELEASE, strlen(UTS_RELEASE), false,
->  				  NULL, 0);
->  
-> +	/* Measures TPM update counter at ima_init */
-> +	ima_measure_update_counter("ima_init_tpm_update_counter");
-> +
-
-With "ima_policy=critical_data" on the boot command line, the IMA
-measurement list record looks like:
-
-6e190cc643ff0b718485966a0300473baedface735 ima_init_tpm_update_counter 7570646174655f636f756e7465723d3330383b
-
-Please change the "ima_init_tpm_update_counter" to something shorter
-and the hex encoded ascii string and pcr counter to something readable.
-Perhaps name this critical-data "tpm" and "tpm-info", similar to the
-SELinux "selinux" and "selinux-state".  Then again, if this is TPM
-critical-data we should rethink what other info should be included.
-
->  	return rc;
->  }
-> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-> index 1bcd45cc5a6a..93357c245e82 100644
-> --- a/security/integrity/ima/ima_main.c
-> +++ b/security/integrity/ima/ima_main.c
-> @@ -1035,6 +1035,7 @@ void ima_kexec_cmdline(int kernel_fd, const void *buf, int size)
->  				   buf, size, "kexec-cmdline", KEXEC_CMDLINE, 0,
->  				   NULL, false, NULL, 0);
->  	fdput(f);
-> +
->  }
->  
->  /**
-
-Unnecessary change.
+In both of these cases including a new IMA mesaurement record, at least
+after the boot_aggregate, would help simplify detecting whether the
+measurement list has been trimmed/truncated.
 
 -- 
 thanks,
