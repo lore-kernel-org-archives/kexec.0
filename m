@@ -4,60 +4,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BFA00C001DB
-	for <kexec@archiver.kernel.org>; Thu,  3 Aug 2023 23:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 03DC4C00528
+	for <kexec@archiver.kernel.org>; Fri,  4 Aug 2023 01:19:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:Mime-Version:References:In-Reply-To:
+	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=qfW74o99mQcnkUOV1RCw7DNSqVXblBRgaD7aYWkhr4Q=; b=siUTlB1ENNWjB+
-	DSlqh/6lLklSt8ZbGLyY7PbG3/AZukixbBLg1W7F6/GtIOtH1NV2MmZfXsPd+F/THEZvysDavwAFh
-	mKUmtkWWIRv1cU5oNRHui2z8A3gsl2rpn3rJoz1FfmGTAuFOipX6KqSZEvTW+jROLk1SJqRAVzt9Z
-	A4RXM24D9sKUJELuvg0fJoe1jSkeqLYlzRd31fLW0NvvHsgnRLqDdDxT8IqlQE1ZGwV2Bzv5ky6fm
-	6EjwRBnr6GFUuKeSXCjIvv7kXDANBR2rrk/RMXcBi5q7AL1IDeu7Whud/a2V8ZqBXCdrmVX/72geh
-	tX5jW3/sTNfe5SmPa5iA==;
+	List-Owner; bh=adiLi/AHifO85uRr2+MtPgDOV+JB43cviFoFP23OFqE=; b=rUnXfjDJ6MhkQv
+	GDt6bIIy+zDHlwJ8KujdenzIHjtS4mVyr04gase1xGslaT3sYkevcQLVKEzs4of8h1aGvmG9kA9V9
+	4sQA6wkWTmWk5uLuwaLRMJ6/vDw8ICoVjqsHBRxdHTkO223xiSKapwzeCMbYnBkWr4Yaf7K13918o
+	KNtWUU1VrtVwI2hAKp2hAkr0f5HbAS7F0aJrokvFPSOlBA8sQOBTJ8alQkPfhXszZA+ba8gGatkka
+	npZizh7LGn4GZBtBvDa10AuXjo9qKQbxMSnsl8jawdnDuOjXvZT1tYoguV9l93Rs9Q9RqEI0qDxtF
+	VEGGaAOoN90o228+4yrw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qRhqR-00B6gy-0C;
-	Thu, 03 Aug 2023 23:35:03 +0000
-Received: from linux.microsoft.com ([13.77.154.182])
-	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qRhqN-00B6gJ-0N
+	id 1qRjTR-00BDlL-38;
+	Fri, 04 Aug 2023 01:19:25 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
+	id 1qRjTO-00BDkv-0i
 	for kexec@lists.infradead.org;
-	Thu, 03 Aug 2023 23:35:00 +0000
-Received: from [192.168.87.36] (c-98-237-170-177.hsd1.wa.comcast.net [98.237.170.177])
-	by linux.microsoft.com (Postfix) with ESMTPSA id C6098207F5B1;
-	Thu,  3 Aug 2023 16:34:56 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C6098207F5B1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1691105697;
-	bh=L8yrCktR1bInfqFj8yOAiQus2L1BtlSzyz1/mAjoTyI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sTQbB6oC/uYAco2S/dtzv26Klf8dFhBBWQwL9wfYoMhbBie1PciAnjj2E66O/TXXb
-	 Jd0VzJCTzZYfEmZ43Ba/QRWvhGhfp7wNi84sYFKaTEOvb7j/a6g5OD6bVVHVXATTKs
-	 EXCp+Hgs6nVDcNjR2J23clcbrtrElcQcGpFor57s=
-Message-ID: <da91b56a-83c8-d12e-71f8-887b6701f021@linux.microsoft.com>
-Date: Thu, 3 Aug 2023 16:34:56 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
+	Fri, 04 Aug 2023 01:19:24 +0000
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3741E0cH014695;
+	Fri, 4 Aug 2023 01:19:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=hRUuYNEq51IISWThNxB+vhPcosarWEeayDJatL6s9sw=;
+ b=WWY2+GKt7w5MupIYGoCGocA/Ggw23FbNHEy6v3UA0XzLbI4ZPT+tXchsyZNejTn4isp7
+ 4BMx6KYgp8Elhhzk6kYJ9wTAtMVXc4sZ4f4LTPCNGv8mY/Wsda4fVoxm/Qzem0hqrIqg
+ Xu47cQSId54hWoyGQJtqAoGi0EFPDDtTk9Z1BhWgTKaoIhFOEyA91gwkQSnnyw01wk4m
+ XSUOUq9smUPvbYgEQwO0I8AwbL/LhxDmSYC8ivr+Q1XxmnqDHZwxdkt/9XKlHFV1qB63
+ x/KLN2chrXUblnh+BpXewh54eXj0O/uzf3OUsY4pm5MffE1vfamJ4ww2otdauxIwttkq gg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s8qfyr2ks-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Aug 2023 01:19:02 +0000
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3741J10t030442;
+	Fri, 4 Aug 2023 01:19:01 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3s8qfyr2kc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Aug 2023 01:19:01 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 373NIQjC021591;
+	Fri, 4 Aug 2023 01:19:00 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3s8kmc9hfv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 04 Aug 2023 01:19:00 +0000
+Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3741Ix4d36962606
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 4 Aug 2023 01:18:59 GMT
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C93825805C;
+	Fri,  4 Aug 2023 01:18:59 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1C85A5805E;
+	Fri,  4 Aug 2023 01:18:58 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.61.157.226])
+	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Fri,  4 Aug 2023 01:18:58 +0000 (GMT)
+Message-ID: <e9ab98a823c2e6c536fb2acbe86229a0085bd34a.camel@linux.ibm.com>
 Subject: Re: [PATCH 5/6] ima: measure TPM update counter at ima_init
-Content-Language: en-US
-To: Mimi Zohar <zohar@linux.ibm.com>, noodles@fb.com, bauermann@kolabnow.com,
- ebiederm@xmission.com, bhe@redhat.com, vgoyal@redhat.com, dyoung@redhat.com,
- peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca,
- kexec@lists.infradead.org, linux-integrity@vger.kernel.org
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Tushar Sugandhi <tusharsu@linux.microsoft.com>, noodles@fb.com,
+        bauermann@kolabnow.com, ebiederm@xmission.com, bhe@redhat.com,
+        vgoyal@redhat.com, dyoung@redhat.com, peterhuewe@gmx.de,
+        jarkko@kernel.org, jgg@ziepe.ca, kexec@lists.infradead.org,
+        linux-integrity@vger.kernel.org
 Cc: code@tyhicks.com, nramas@linux.microsoft.com, paul@paul-moore.com
+Date: Thu, 03 Aug 2023 21:18:57 -0400
+In-Reply-To: <da91b56a-83c8-d12e-71f8-887b6701f021@linux.microsoft.com>
 References: <20230801181917.8535-1-tusharsu@linux.microsoft.com>
- <20230801181917.8535-6-tusharsu@linux.microsoft.com>
- <223d5c5a655fec263895c991550e4291d1bbd4c9.camel@linux.ibm.com>
-From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-In-Reply-To: <223d5c5a655fec263895c991550e4291d1bbd4c9.camel@linux.ibm.com>
+	 <20230801181917.8535-6-tusharsu@linux.microsoft.com>
+	 <223d5c5a655fec263895c991550e4291d1bbd4c9.camel@linux.ibm.com>
+	 <da91b56a-83c8-d12e-71f8-887b6701f021@linux.microsoft.com>
+X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
+Mime-Version: 1.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: l0uqTI1WZecOJcWxJijVFSnp-7m7iNtC
+X-Proofpoint-GUID: kjX9wFxSgO1ykwjMMn4_nXrKNvZFRrJn
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-08-03_24,2023-08-03_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ priorityscore=1501 adultscore=0 lowpriorityscore=0 mlxscore=0 bulkscore=0
+ malwarescore=0 mlxlogscore=999 impostorscore=0 clxscore=1015 spamscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2308040007
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230803_163459_204504_00CAAC3F 
-X-CRM114-Status: GOOD (  23.49  )
+X-CRM114-CacheID: sfid-20230803_181922_507456_3367CD8F 
+X-CRM114-Status: GOOD (  23.20  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -69,92 +112,88 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-CgpPbiA4LzMvMjMgMTU6MTUsIE1pbWkgWm9oYXIgd3JvdGU6Cj4gT24gVHVlLCAyMDIzLTA4LTAx
-IGF0IDExOjE5IC0wNzAwLCBUdXNoYXIgU3VnYW5kaGkgd3JvdGU6Cj4+IElNQSBsb2cgZW50cmll
-cyBjYW4gYmUgbG9zdCBkdWUgdG8gYSB2YXJpZXR5IG9mIGNhdXNlcywgc3VjaCBhcyBjb2RlIGJ1
-Z3MKPj4gb3IgZXJyb3IgY29uZGl0aW9ucywgbGVhZGluZyB0byBhIG1pc21hdGNoIGJldHdlZW4g
-VFBNIFBDUnMgYW5kCj4+IHRoZSBJTUEgbG9nLiAgTWVhc3VyaW5nIFRQTSBQQ1IgdXBkYXRlIGNv
-dW50ZXIgZHVyaW5nIGltYV9pbml0IHdvdWxkCj4+IHByb3ZpZGUgYSBiYXNlbGluZSBjb3VudGVy
-IGZvciB0aGUgbnVtYmVyIG9mIHRpbWVzIHRoZSBUUE0gUENScyBhcmUKPj4gdXBkYXRlZC4gIFRo
-ZSByZW1vdGUgYXR0ZXN0YXRpb24gc2VydmljZSBjYW4gY29tcGFyZSB0aGlzIGJhc2VsaW5lCj4+
-IGNvdW50ZXIgd2l0aCBhIHN1YnNlcXVlbnQgbWVhc3VyZWQgb25lIChlLmcuLCBwb3N0LWtleGVj
-IHNvZnQtYm9vdCkgdG8KPj4gaWRlbnRpZnkgaWYgdGhlcmUgYXJlIGFueSBsb3N0IElNQSBsb2cg
-ZXZlbnRzLgo+Pgo+PiBNZWFzdXJlIHRoZSBUUE0gdXBkYXRlIGNvdW50ZXIgYXQgaW1hIGluaXQu
-Cj4gTm8gbmVlZCBmb3Igc2VwYXJhdGUgcGF0Y2hlcyBmb3Igb25lIGxpbmUgY2hhbmdlcyBsaWtl
-IHRoaXMuICBFaXRoZXIKPiBtZXJnZSBwYXRjaGVzIDUvNiBhbmQgNi82IG9yIGFsbCB0aHJlZSA0
-LzYsIDUvNiwgNi82IHRvZ2V0aGVyLgo+ClNvdW5kcyBnb29kLgpJIHdpbGwgbWVyZ2UgNC82LCA1
-LzYsIDYvNiB0b2dldGhlci4KPj4gU2lnbmVkLW9mZi1ieTogVHVzaGFyIFN1Z2FuZGhpIDx0dXNo
-YXJzdUBsaW51eC5taWNyb3NvZnQuY29tPgo+PiAtLS0KPj4gICBzZWN1cml0eS9pbnRlZ3JpdHkv
-aW1hL2ltYV9pbml0LmMgfCAzICsrKwo+PiAgIHNlY3VyaXR5L2ludGVncml0eS9pbWEvaW1hX21h
-aW4uYyB8IDEgKwo+PiAgIDIgZmlsZXMgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspCj4+Cj4+IGRp
-ZmYgLS1naXQgYS9zZWN1cml0eS9pbnRlZ3JpdHkvaW1hL2ltYV9pbml0LmMgYi9zZWN1cml0eS9p
-bnRlZ3JpdHkvaW1hL2ltYV9pbml0LmMKPj4gaW5kZXggNjM5NzlhZWZjOTVmLi45YmIxOGQ2YzJm
-ZDYgMTAwNjQ0Cj4+IC0tLSBhL3NlY3VyaXR5L2ludGVncml0eS9pbWEvaW1hX2luaXQuYwo+PiAr
-KysgYi9zZWN1cml0eS9pbnRlZ3JpdHkvaW1hL2ltYV9pbml0LmMKPj4gQEAgLTE1NCw1ICsxNTQs
-OCBAQCBpbnQgX19pbml0IGltYV9pbml0KHZvaWQpCj4+ICAgCQkJCSAgVVRTX1JFTEVBU0UsIHN0
-cmxlbihVVFNfUkVMRUFTRSksIGZhbHNlLAo+PiAgIAkJCQkgIE5VTEwsIDApOwo+PiAgIAo+PiAr
-CS8qIE1lYXN1cmVzIFRQTSB1cGRhdGUgY291bnRlciBhdCBpbWFfaW5pdCAqLwo+PiArCWltYV9t
-ZWFzdXJlX3VwZGF0ZV9jb3VudGVyKCJpbWFfaW5pdF90cG1fdXBkYXRlX2NvdW50ZXIiKTsKPj4g
-Kwo+IFdpdGggImltYV9wb2xpY3k9Y3JpdGljYWxfZGF0YSIgb24gdGhlIGJvb3QgY29tbWFuZCBs
-aW5lLCB0aGUgSU1BCj4gbWVhc3VyZW1lbnQgbGlzdCByZWNvcmQgbG9va3MgbGlrZToKPgo+IDZl
-MTkwY2M2NDNmZjBiNzE4NDg1OTY2YTAzMDA0NzNiYWVkZmFjZTczNSBpbWFfaW5pdF90cG1fdXBk
-YXRlX2NvdW50ZXIgNzU3MDY0NjE3NDY1NWY2MzZmNzU2ZTc0NjU3MjNkMzMzMDM4M2IKPgo+IFBs
-ZWFzZSBjaGFuZ2UgdGhlICJpbWFfaW5pdF90cG1fdXBkYXRlX2NvdW50ZXIiIHRvIHNvbWV0aGlu
-ZyBzaG9ydGVyCj4gYW5kIHRoZSBoZXggZW5jb2RlZCBhc2NpaSBzdHJpbmcgYW5kIHBjciBjb3Vu
-dGVyIHRvIHNvbWV0aGluZyByZWFkYWJsZS4KSSBiZWxpZXZlIHlvdSBhcmUgc2VlaW5nIHRoZSBh
-Ym92ZSBsaW5lIGluIGFzY2lsbF9ydW50aW1lX21lYXN1cmVtZW50cyBsb2cuCgpUaGUgYXNjaWkg
-bG9nZ2luZyBmb3JtYXQgaXMgY29uc2lzdGVudCB3aXRoIG90aGVyIGV2ZW50IGRhdGEgZm9yIApj
-cml0aWNhbF9kYXRhIGV2ZW50IGUuZy4ga2VybmVsX3ZlcnNpb24uCjEwIDhmNDQ5MTc1YmJmODhi
-YzU1ZmMxMTI3NDY2NjI4YzM5YTM5NTdkMTUgaW1hLWJ1ZiAKc2hhMTo0YWNhYjRmYmIwOGRiNjYz
-YjdiN2I0NTI4ZTg3MjkxODdkNzI2NzgyIGtlcm5lbF92ZXJzaW9uIAozNjJlMzMyZTMwMmQ3MjYz
-MzMyYgoxMCBmMTA2NzhiNjNjNGIyNTI5MzM5ZGZmMDIyODJlNjNkOWM2YmIwMzg1IGltYS1idWYg
-CnNoYTE6ZDhjMTg3NTI0NDEyZjc0YTk2MWYyMDUxYTk1MjljMDA5ZTcwMDMzNyAKaW1hX2luaXRf
-dHBtX3VwZGF0ZV9jb3VudGVyIDc1NzA2NDYxNzQ2NTVmNjM2Zjc1NmU3NDY1NzIzZDMxMzMzMDNi
-CgpFbnRyaWVzIGluIHRoZSBiaW5hcnkgcnVudGltZSBtZWFzdXJlbWVudHMgbG9vayByZWFkYWJs
-ZSB0byBtZS4KCmltYV9pbml0X3RwbV91cGRhdGVfY291bnRlciB1cGRhdGVfY291bnRlcj0xMzA7
-Ci4uLgprZXhlY19sb2FkX3RwbV91cGRhdGVfY291bnRlIHJ1cGRhdGVfY291bnRlcj0xMzM7CgpQ
-bGVhc2UgbGV0IG1lIGtub3cgaWYgeW91IHN0aWxsIHdhbnQgbWUgdG8gY2hhbmdlIHRoZSBmb3Jt
-YXQuCgo+IFBlcmhhcHMgbmFtZSB0aGlzIGNyaXRpY2FsLWRhdGEgInRwbSIgYW5kICJ0cG0taW5m
-byIsIHNpbWlsYXIgdG8gdGhlCiBGcm9tIHBhdGNoIDQvNjoKK8KgwqDCoCByZXN1bHQgPSBpbWFf
-bWVhc3VyZV9jcml0aWNhbF9kYXRhKCJ0cG1fcGNyX3VwZGF0ZV9jb3VudGVyIiwgCmV2ZW50X25h
-bWUsCivCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGJ1ZiwgYnVmX2xlbiwgZmFs
-c2UsIE5VTEwsIDApOwoKVGhlIGNyaXRpY2FsX2RhdGEgZXZlbnRfbGFiZWwgdmFsdWUgaXMgY3Vy
-cmVudGx5IHNldCB0byAKInRwbV9wY3JfdXBkYXRlX2NvdW50ZXIiLgpJIGNhbiByZW5hbWUgZXZl
-bnRfbGFiZWwgdG8gInRwbS1pbmZvIiwgc28gdGhhdCB0aGUgYWRtaW5zIGNhbiBmaWx0ZXIgdGhl
-CmV2ZW50IGluIElNQSBwb2xpY3kgYmFzZWQgb24gdGhlIGxhYmVsIGlmIG5lZWRlZC4KCkFzIHlv
-dSBrbm93LCBldmVudF9sYWJlbCBkb2Vzbid0IGFwcGVhciBpbiBJTUEgbG9nLCBpdCBjYW4gYXBw
-ZWFyIGluIElNQSAKcG9saWN5LgpXaGVyZWFzIGV2ZW50X25hbWUgYXBwZWFycyBpbiBJTUEgbG9n
-LgoKSSB3YXMgdGhpbmtpbmcgb2YgdXNpbmcgZXZlbnRfbmFtZSB0byBpZGVudGlmeSB3aGVuIHdh
-cyB0aGUgaW5mbyBjYXB0dXJlZC4KKGUuZy4gaW1hX2luaXQsIGtleGVjX2xvYWQsIG9yIGF0IHNv
-bWUgb3RoZXIgZXZlbnQgaW4gZnV0dXJlKS4KCldlIGNhbiBlaXRoZXIgZG8KKGEpCmV2ZW50X2xh
-YmVsID0gInRwbS1pbmZvIiBldmVudF9uYW1lID0gInRwbS1pbmZvLWltYS1pbml0IiB8IAoidHBt
-LWluZm8ta2V4ZWMtbG9hZCIgfCAuLi4KCi1vci0KCihiKQpldmVudF9sYWJlbCA9ICJ0cG0iIGV2
-ZW50X25hbWUgPSAidHBtLWluZm8iCmFuZCBldmVudF9kYXRhIHRvIGRlc2NyaWJlIHRoZSB3aGVy
-ZS93aGVuIHRoaXMgaW5mbyB3YXMgY2FwdHVyZWQuCmUuZy4KdmVyc2lvbj08Tj4uPE4+LjxOPjtu
-dW1fZW5hYmxlZF9wY3JfYmFua3M9PE4+O3BjclVwZGF0ZUNvdW50ZXI9PE4+O251bV9pbWFfbWVh
-c3VyZW1lbnRzPTxOPjtldmVudD1rZXhlY19sb2FkOwoKTGV0IG1lIGtub3cgaWYgeW91IHdvdWxk
-IHByZWZlciBvcHRpb24gKGEpIG9yIChiKSBvciBzb21ldGhpbmcgZWxzZS4KCgo+IFNFTGludXgg
-InNlbGludXgiIGFuZCAic2VsaW51eC1zdGF0ZSIuICBUaGVuIGFnYWluLCBpZiB0aGlzIGlzIFRQ
-TQo+IGNyaXRpY2FsLWRhdGEgd2Ugc2hvdWxkIHJldGhpbmsgd2hhdCBvdGhlciBpbmZvIHNob3Vs
-ZCBiZSBpbmNsdWRlZC4KQXMgeW91IHN1Z2dlc3RlZCBpbiBQYXRjaCA0LzYsIEkgd2lsbCBhZGQg
-dmVyc2lvbiwgbnVtYmVyIG9mIGVuYWJsZWQgcGNyIApiYW5rcywKcGNyVXBkYXRlQ291bnRlciwg
-YW5kIG51bV9pbWFfbWVhc3VyZW1lbnRzLiBJIHRoaW5rIHdlIHNob3VsZCBpbmNsdWRlIAp0aGUg
-VFBNCnZlcnNpb24gYXMgd2VsbCAoMSB2L3MgMikuCgpQbGVhc2UgbGV0IG1lIGtub3cgaWYgeW91
-IHRoaW5rIG9mIGFueSBvdGhlciBhdHRyaWJ1dGUgdG8gcmVjb3JkLgoKPj4gICAJcmV0dXJuIHJj
-Owo+PiAgIH0KPj4gZGlmZiAtLWdpdCBhL3NlY3VyaXR5L2ludGVncml0eS9pbWEvaW1hX21haW4u
-YyBiL3NlY3VyaXR5L2ludGVncml0eS9pbWEvaW1hX21haW4uYwo+PiBpbmRleCAxYmNkNDVjYzVh
-NmEuLjkzMzU3YzI0NWU4MiAxMDA2NDQKPj4gLS0tIGEvc2VjdXJpdHkvaW50ZWdyaXR5L2ltYS9p
-bWFfbWFpbi5jCj4+ICsrKyBiL3NlY3VyaXR5L2ludGVncml0eS9pbWEvaW1hX21haW4uYwo+PiBA
-QCAtMTAzNSw2ICsxMDM1LDcgQEAgdm9pZCBpbWFfa2V4ZWNfY21kbGluZShpbnQga2VybmVsX2Zk
-LCBjb25zdCB2b2lkICpidWYsIGludCBzaXplKQo+PiAgIAkJCQkgICBidWYsIHNpemUsICJrZXhl
-Yy1jbWRsaW5lIiwgS0VYRUNfQ01ETElORSwgMCwKPj4gICAJCQkJICAgTlVMTCwgZmFsc2UsIE5V
-TEwsIDApOwo+PiAgIAlmZHB1dChmKTsKPj4gKwo+PiAgIH0KPj4gICAKPj4gICAvKioKPiBVbm5l
-Y2Vzc2FyeSBjaGFuZ2UuCj4Kb29wcy4gVGhhbmtzIGZvciBjYXRjaGluZy4gV2lsbCBmaXguCgoK
-flR1c2hhcgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
-cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On Thu, 2023-08-03 at 16:34 -0700, Tushar Sugandhi wrote:
+
+> >> +++ b/security/integrity/ima/ima_init.c
+> >> @@ -154,5 +154,8 @@ int __init ima_init(void)
+> >>   				  UTS_RELEASE, strlen(UTS_RELEASE), false,
+> >>   				  NULL, 0);
+> >>   
+> >> +	/* Measures TPM update counter at ima_init */
+> >> +	ima_measure_update_counter("ima_init_tpm_update_counter");
+> >> +
+> > With "ima_policy=critical_data" on the boot command line, the IMA
+> > measurement list record looks like:
+> >
+> > 6e190cc643ff0b718485966a0300473baedface735 ima_init_tpm_update_counter 7570646174655f636f756e7465723d3330383b
+> >
+> > Please change the "ima_init_tpm_update_counter" to something shorter
+> > and the hex encoded ascii string and pcr counter to something readable.
+> I believe you are seeing the above line in ascill_runtime_measurements log.
+
+Yes, the ascii_runtime_measurements are suppose to be readable to the
+end user.
+
+> The ascii logging format is consistent with other event data for 
+> critical_data event e.g. kernel_version.
+
+Then you got it wrong.
+
+> 10 8f449175bbf88bc55fc1127466628c39a3957d15 ima-buf 
+> sha1:4acab4fbb08db663b7b7b4528e8729187d726782 kernel_version 
+> 362e332e302d7263332b
+> 10 f10678b63c4b2529339dff02282e63d9c6bb0385 ima-buf 
+> sha1:d8c187524412f74a961f2051a9529c009e700337 
+> ima_init_tpm_update_counter 7570646174655f636f756e7465723d3133303b
+> 
+> Entries in the binary runtime measurements look readable to me.
+
+You've inverted the meaning of the ascii and binary runtime measurement
+lists.  For comparison look at the ima-ng/ima-sig records.
+
+> ima_init_tpm_update_counter update_counter=130;
+> ...
+> kexec_load_tpm_update_counte rupdate_counter=133;
+> 
+> Please let me know if you still want me to change the format.
+
+OI course the ascii measurement list should be human readable.
+
+> > Perhaps name this critical-data "tpm" and "tpm-info", similar to the
+>  From patch 4/6:
+> +    result = ima_measure_critical_data("tpm_pcr_update_counter", 
+> event_name,
+> +                  buf, buf_len, false, NULL, 0);
+> 
+> The critical_data event_label value is currently set to 
+> "tpm_pcr_update_counter".
+
+Why is the string so long?   Long strings or variables don't make the
+code or logs more understandable.  Please shorten both the strings and
+variables.
+
+> I can rename event_label to "tpm-info", so that the admins can filter the
+> event in IMA policy based on the label if needed.
+
+The new record needs to be self containd and verifiable.  The
+additional info I suggested were just examples.  Please take the time
+to consider what needs to be included in the new record.  Decide
+whether this is a TPM security critical data record.  Only then, decide
+on the naming.
+
+-- 
+thanks,
+
+Mimi
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
