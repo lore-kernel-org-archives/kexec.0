@@ -4,82 +4,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0BCE8C001DB
-	for <kexec@archiver.kernel.org>; Mon,  7 Aug 2023 13:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 33371C001B0
+	for <kexec@archiver.kernel.org>; Mon,  7 Aug 2023 14:13:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=sHmAcPXbgeFzT0csycFnmXFMCLPeE7OAUCyY62PiZqc=; b=zlLpvtYVIslJMi
-	VB6UKXpJe7rA5S2I8dZxg6vr+fcikm0hDlrEG3hy7n/n+SBLcPYcUfaXnnNrQayQt3bt8eXXeNDml
-	QoWb71KkiIXMK1D/8xVjNG4thLRQaj3YgVYlw9IHobDxsnsnQ8xmDinAC9skW3TcirWNvy6B+zdnc
-	18ySbo8KZRLVa4ZXqankNiiy9uqXvjyEsVK/NlEQcKrmkZ/2BfxJSibwYETbv/ZtyxG/vawWul+8w
-	dKBK8OiBRDDl2AmkqZQlofsY51WA/uaF08A/1IBywlgIR8y2d3tR3mzPWANOoYpX/ppY9IGONDLe8
-	kLtMtYtJ/9Ej0/X9XqWA==;
+	List-Owner; bh=jXLN9xFVHO6jpFwPmMaA8w5JGWHZKXYyCEY8ykizpoA=; b=w0xVgOW9xcMk+8
+	pfMP31K7Q++cDK1MOGCc0ISw99RiNlB5+wOoe/AwFGMwaQw0OrH59a0sKXac/zS+HT8uAyFPFnNd1
+	NFhH+BDhiCu6dnpjqHgJeSy0yCClqC6hWhJjitu6A9IrNYTZdOb10t10oXBIJa6hcOMur79FzHQwT
+	Ei99E+QH97hb31l5TR56xWJJ8fgG62iioUnMuzCBQA3JNnvWwT6Ufw6r2fUvSLGJLtRHw6LOdkV8A
+	X25n2+b/jfK2QiUDZ+Ju3cf9dsF7a3R0tQzNXPKJTlgKpwKBzdKip64AbZ5f9TGrPTEv1tAXLCQqy
+	52j9Gjlz9gNF5caeV6Mg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qT0EP-00HNdz-0P;
-	Mon, 07 Aug 2023 13:25:09 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1qT0yq-00HVCN-1k;
+	Mon, 07 Aug 2023 14:13:08 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qT0EC-00HNTS-2d
+	id 1qT0yj-00HVAM-1h
 	for kexec@lists.infradead.org;
-	Mon, 07 Aug 2023 13:25:07 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1691414695;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hPKMYVZSRQ486lvxIB6qf4WtXlBzmwylQaAyPXd/rrk=;
-	b=IGIIadxNh+B4imthT430Q8ev/BsgQCCL3c0kCbeWysheK2d5tDxKM723Fg+e9Q0HxM0LIZ
-	pnVvu5+teQX6G/c93QLgEVODN2FDgI75/dSuNVjB9dfUJllIAysV4TnY4CYJ0DflcOUtyi
-	nT6VZgIX09XYPDmS+mM+P+BKNOykYBs=
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com
- [209.85.166.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-546-tszIV5ZsPoulnZZ_r3DRoA-1; Mon, 07 Aug 2023 09:24:53 -0400
-X-MC-Unique: tszIV5ZsPoulnZZ_r3DRoA-1
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3490a7d499bso7268315ab.0
-        for <kexec@lists.infradead.org>; Mon, 07 Aug 2023 06:24:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691414693; x=1692019493;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hPKMYVZSRQ486lvxIB6qf4WtXlBzmwylQaAyPXd/rrk=;
-        b=SZnefX96HP8XOxKTX5d24H9V9A6xpGsrWj916UDy7w1JPcpyH14yo9m3iB9U/tOLqy
-         91qWvIIP5WgmE2ip8a7KePpVnnevmOTCsHU/1ttNrPOg+Ax8U+E2KNtlePRjQN5JnLBg
-         mPg107s15Hsw5Mu0tpJMwkUMgKA4UV2nQ1BKYKPpeEzqgRsUtlYhHtosBTHhDW+m4Fr4
-         4IfO2+GVzQGYBI2RZLwuHflvfFKyxaZSPubzoc66vMFvUgagIMBaO2bnwE6Q6By2Fd2K
-         acNo3jg3Gw3msHk1z1uqHTzBmJhS4h2WTON5q4hStOun5ROMt7jJrDyF2QrwA28IjHH3
-         c0Ew==
-X-Gm-Message-State: AOJu0YxALqbj10r5veCnJwQYlW2OJH59CxxnM08hSU0SKnyFuGZ01Rz4
-	fwjw+2SOaie9gLYTmnBGES2Nfcwjf5CKOIXHsErroIIHaHTLrYzYuZSAk866tAv7NX167B8dou1
-	OABmLmJ3D2Sz8LVcp5+zmZBuq6MOfqNlayJyG
-X-Received: by 2002:a92:2802:0:b0:349:7518:4877 with SMTP id l2-20020a922802000000b0034975184877mr520750ilf.0.1691414692798;
-        Mon, 07 Aug 2023 06:24:52 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFr4NxoX3Zwn5aiVqcRQMLm59gwaXwCy6Ox8JLmKJbbkVDLRp3kys6o0a3PYcDzCzxPTBgNLaCcS4NZ8mMxFB8=
-X-Received: by 2002:a92:2802:0:b0:349:7518:4877 with SMTP id
- l2-20020a922802000000b0034975184877mr520735ilf.0.1691414692563; Mon, 07 Aug
- 2023 06:24:52 -0700 (PDT)
+	Mon, 07 Aug 2023 14:13:07 +0000
+Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 377EA8Jx027339;
+	Mon, 7 Aug 2023 14:12:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=n84BQ09XyZvS5KUY2JrmSWiOSun89MF1BFDg9O40w/Q=;
+ b=qQj+gKQWBPPopqtFLXQxL2+L26wqPCnUNRTVuIqD46ZluBWBLjlqCNmEKIq2RP9BF76p
+ C8YuhGSPgCGMNJNFzBRRTpxTtsAVzapMTWLk4Dnv4PvH9c/D3QfHhAAuJ2/fn10NhTwj
+ viU/DmUwuYVWfSvk4VuxnyVZr8vT1P/gW3jivDBUr3puhAfYcSkXAnaZWIbp5LJIzDcJ
+ WnDlYP4NFxlQlsKLCr7fZX9S+IQHwMTwc9YSgZCwNQIP2G5pZ/U4/gWa/E8XWfI62OeZ
+ 0n1EgWoUnWszxF6Kq2LiQtJ3MDYRsj32LIO2gheG/BSZux2SrsAS9hR4dqlFbRoaWQo1 +g== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sb209r6ke-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 07 Aug 2023 14:12:20 +0000
+Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 377EBKEP032235;
+	Mon, 7 Aug 2023 14:12:19 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sb209r6jv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 07 Aug 2023 14:12:19 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 377DKBhs000404;
+	Mon, 7 Aug 2023 14:12:18 GMT
+Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3sa28k5hj5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 07 Aug 2023 14:12:18 +0000
+Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
+	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 377ECIIC1638968
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 7 Aug 2023 14:12:18 GMT
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5D6B758045;
+	Mon,  7 Aug 2023 14:12:18 +0000 (GMT)
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0EC9F58052;
+	Mon,  7 Aug 2023 14:12:17 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.61.107.174])
+	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  7 Aug 2023 14:12:16 +0000 (GMT)
+Message-ID: <53b8559db650886f013d5e91704ce8f4df77d815.camel@linux.ibm.com>
+Subject: Re: [PATCH v2 RESEND] kexec_lock: Replace kexec_mutex() by
+ kexec_lock() in two comments
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Wenyu Liu <liuwenyu7@huawei.com>, ebiederm@xmission.com,
+        dmitry.kasatkin@gmail.com, paul@paul-moore.com, jmorris@namei.org,
+        serge@hallyn.com, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org
+Cc: akpm@linux-foundation.org, vschneid@redhat.com, pmenzel@molgen.mpg.de,
+        bhe@redhat.com, louhongxiang@huawei.com
+Date: Mon, 07 Aug 2023 10:12:16 -0400
+In-Reply-To: <20230807025206.3682381-1-liuwenyu7@huawei.com>
+References: <20230807025206.3682381-1-liuwenyu7@huawei.com>
+X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 3MTXnmgIWlUckT8r0RJNoUpKvEmNRFKG
+X-Proofpoint-ORIG-GUID: Seemm6eNkL6LT_0YpO8DJa7mQCDyrpLg
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-References: <20230803024152.11663-1-piliu@redhat.com> <20230803024152.11663-2-piliu@redhat.com>
- <ZNDv7L3lWXZxrmWT@vergenet.net>
-In-Reply-To: <ZNDv7L3lWXZxrmWT@vergenet.net>
-From: Dave Young <dyoung@redhat.com>
-Date: Mon, 7 Aug 2023 21:26:49 +0800
-Message-ID: <CALu+AoS-Df2zrAAHnjHnjc-tZPqGfnme2O-xj28Qofg5JdaR9Q@mail.gmail.com>
-Subject: Re: [PATCHv7 1/5] kexec/arm64: Simplify the code for zImage
-To: Simon Horman <horms@kernel.org>
-Cc: Pingfan Liu <piliu@redhat.com>, kexec@lists.infradead.org, ardb@kernel.org, 
-	jeremy.linton@arm.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-08-07_14,2023-08-03_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=930
+ impostorscore=0 lowpriorityscore=0 suspectscore=0 bulkscore=0
+ priorityscore=1501 phishscore=0 clxscore=1011 mlxscore=0 adultscore=0
+ spamscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2308070130
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230807_062456_952181_7D93321B 
-X-CRM114-Status: GOOD (  18.15  )
+X-CRM114-CacheID: sfid-20230807_071301_929870_BA0EE148 
+X-CRM114-Status: GOOD (  13.27  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -96,36 +117,25 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, 7 Aug 2023 at 21:23, Simon Horman <horms@kernel.org> wrote:
->
-> On Thu, Aug 03, 2023 at 10:41:48AM +0800, Pingfan Liu wrote:
-> > Inside zimage_probe(), it uncompresses the kernel and performs some
-> > check, similar to image_probe(). Taking a close look, the uncompressing
-> > has already executed before the image probe is called. What is missing
-> > here is to provide a fd, pointing to an uncompressed kernel image.
-> >
-> > This patch creates a memfd based on the result produced by
-> > slurp_decompress_file(), and finally simplify the logical of the probe
-> > for aarch64.
-> >
-> > The credit goes to the Dave Young, who contributes the original code.
-> >
-> > Signed-off-by: Pingfan Liu <piliu@redhat.com>
-> > Co-authored-by: Dave Young <dyoung@redhat.com>
->
-> Dave, could I get a Signed-off-by line from you?
-> Likewise for patch 2/5.
+On Mon, 2023-08-07 at 10:52 +0800, Wenyu Liu wrote:
+> kexec_mutex is replaced by an atomic variable
+> in 05c6257433b (panic, kexec: make __crash_kexec() NMI safe).
+> 
+> But there are still two comments that referenced kexec_mutex,
+> replace them by kexec_lock.
+> 
+> Signed-off-by: Wenyu Liu <liuwenyu7@huawei.com>
+> Acked-by: Baoquan He <bhe@redhat.com>
+> Acked-by: Paul Menzel <pmenzel@molgen.mpg.de>
 
-I Simon, sounds good to me, thanks!
+Thank you. It's now queued 
+https://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git/log/?h=next-integrity
+.
 
->
-> I think simply replying to the relevant emails should be sufficient.
->
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
->
+--
+thanks,
+
+Mimi
 
 
 _______________________________________________
