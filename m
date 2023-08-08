@@ -4,108 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B4B18C001DB
-	for <kexec@archiver.kernel.org>; Mon,  7 Aug 2023 22:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4E9ACC001DB
+	for <kexec@archiver.kernel.org>; Tue,  8 Aug 2023 12:35:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:Cc:To:
-	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=OaKFsxYVylS+mIqo5RodA0lWNyACRUvPnCcMCd7a7Vc=; b=LY8o/ZANIUJTao2RUJL/yNjSO3
-	9D5u0/pfCqyhnwG/G6PMc3ERVrfpNLcoWhIsu4AH5RWKdVpzQfmm2WG7yaM3xLgndkjPJVNIy5DVv
-	nGnlRS45h08yjm3IHvJszMcPKUTl8uR8XQ2uo9WmKtwC9gMTkNTkdqzWhqCIUlH8ksQC/h09O30Lc
-	ra4DW0lam2i6VRaGL55qOk/CVkgs3Nua4TahjJ38V1NqgHgIAV59D8YiRVHQvefYG38MvA8bPUZDP
-	T3c1qDLgZk25wqEkDCkA64VHTeNK/ADOV9rOd/9GVZg9QAwOAjlP2j9aiiVLz4nTIr7jBQ7SeiLKe
-	9pW+5+aA==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=s8W5uXSiVMC7kxJU8eqSQEZkKmeJGFu4Y+xQj2RayPU=; b=0oANJ2ShKCWnDz
+	QzBT7bD2WD+IDFm94WL1lIJs+yY64D6z62SA4xxwfTlmKhtGHyBiFR0PGDnnEubCWlRYKe1MlqxN/
+	oi9ttmLqTAAdtgPcE/NaKhnIGmW0FC+gN1U6BgPCbLhXhM3HjM5uOJjtuL/KzIkn4nGBzeDpcd8wF
+	axbJ0gCARetLwGTWdMpzZ5OGrFjd4cibZb1nX9hE4+/0d+RRkIh4D1rzPffphLMuKXCUgP+SFImWW
+	JyBjw+aygF05/XWyA0yZ+Bm3uQxfmIKEXXlv2Vt9Js6IlKJenGDCsNVjl5AKL97coui0tM01N1iHN
+	NvUXtj7WXDbtyvA/6xpg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qT92s-0011qW-0N;
-	Mon, 07 Aug 2023 22:49:50 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1qTLwB-002ZOV-0s;
+	Tue, 08 Aug 2023 12:35:47 +0000
+Received: from bedivere.hansenpartnership.com ([2607:fcd0:100:8a00::2])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qT92o-0011pG-1n
+	id 1qTLw7-002ZN7-0B
 	for kexec@lists.infradead.org;
-	Mon, 07 Aug 2023 22:49:48 +0000
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 377MnPRF012611;
-	Mon, 7 Aug 2023 22:49:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=+6CooSgnHbnLKTlBr/6t5AuLifIIHcmW0yn6xvZilv0=;
- b=pp1i/Kd9Tn5glsCsXwcVXmzJA4jj9Q8xn/75Pm4aIzf/mpXKaDh6aUGXSb2FehF/s9I+
- ffFw+T/eUhVlsbTylg6o6A6UsfhxqoI2toZyHiR2R4lD/XaTHKfRlS86k8lT+6Sld4La
- m/up6pIbYa9bqkECc4W0cQU6UWBP2g+DU2wKaBmLb/odwLYutCJ+kM/RRtBNuaNkGpwj
- VVnpOYQ/9q1kYs20MHjGqc5PgUl+o2wFd0R2fUxcUCIk58XkgaQ5XTZhFpACSTaadaOC
- NrZMkpj1omBw92I6m4uONDj7YqTbtIMOMDXq1arifOpVTruUKSts22J3iOWbMh291p+d Hg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sb9r80046-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Aug 2023 22:49:29 +0000
-Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 377MnSqU012759;
-	Mon, 7 Aug 2023 22:49:28 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sb9r8003w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Aug 2023 22:49:28 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 377Mcm9V006656;
-	Mon, 7 Aug 2023 22:49:27 GMT
-Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3sa0rssm4x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 07 Aug 2023 22:49:27 +0000
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 377MnQUS19989024
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 7 Aug 2023 22:49:26 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C4D7758055;
-	Mon,  7 Aug 2023 22:49:26 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D523658043;
-	Mon,  7 Aug 2023 22:49:25 +0000 (GMT)
-Received: from [9.47.158.152] (unknown [9.47.158.152])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  7 Aug 2023 22:49:25 +0000 (GMT)
-Message-ID: <5d21276a-daac-fc9b-add9-62e7c04bbdcd@linux.ibm.com>
-Date: Mon, 7 Aug 2023 18:49:25 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
+	Tue, 08 Aug 2023 12:35:44 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1691498138;
+	bh=KZKKRT5Ma1nq9ta9abKg3orsaJzYsdcSBENnz8xI6lo=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=pa4OIxVYyMGokTSV6PutSvmvVqZomEWX3xoVHocoLIBZau8s8H2+4PEFqh3aDwHvU
+	 kt7FKynZTmm8Soljhwwj0FIB56PqbUiNEaC9hClJ5QRIqxct9gjer4uTHu0l9sWDFJ
+	 r+tNpJWjT83wdMDo44bm/sLFpgDUe2WPiwaxJvqs=
+Received: from localhost (localhost [127.0.0.1])
+	by bedivere.hansenpartnership.com (Postfix) with ESMTP id 83FB612868AE;
+	Tue,  8 Aug 2023 08:35:38 -0400 (EDT)
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+ by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavis, port 10024)
+ with ESMTP id W9axPlGpAZeL; Tue,  8 Aug 2023 08:35:38 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1691498138;
+	bh=KZKKRT5Ma1nq9ta9abKg3orsaJzYsdcSBENnz8xI6lo=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=pa4OIxVYyMGokTSV6PutSvmvVqZomEWX3xoVHocoLIBZau8s8H2+4PEFqh3aDwHvU
+	 kt7FKynZTmm8Soljhwwj0FIB56PqbUiNEaC9hClJ5QRIqxct9gjer4uTHu0l9sWDFJ
+	 r+tNpJWjT83wdMDo44bm/sLFpgDUe2WPiwaxJvqs=
+Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id D57FF12868AD;
+	Tue,  8 Aug 2023 08:35:36 -0400 (EDT)
+Message-ID: <8ad131f35c33cf10788344be6c981473971f9c1c.camel@HansenPartnership.com>
 Subject: Re: [RFC] IMA Log Snapshotting Design Proposal
-Content-Language: en-US
-To: James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Sush Shringarputale <sushring@linux.microsoft.com>,
-        linux-integrity@vger.kernel.org, zohar@linux.ibm.com,
-        peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca,
-        kgold@linux.ibm.com, bhe@redhat.com, vgoyal@redhat.com,
-        dyoung@redhat.com, kexec@lists.infradead.org, jmorris@namei.org,
-        Paul Moore <paul@paul-moore.com>, serge@hallyn.com
-Cc: code@tyhicks.com, nramas@linux.microsoft.com,
-        Tushar Sugandhi <tusharsu@linux.microsoft.com>,
-        linux-security-module@vger.kernel.org
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: Stefan Berger <stefanb@linux.ibm.com>, Sush Shringarputale
+ <sushring@linux.microsoft.com>, linux-integrity@vger.kernel.org, 
+ zohar@linux.ibm.com, peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, 
+ kgold@linux.ibm.com, bhe@redhat.com, vgoyal@redhat.com, dyoung@redhat.com, 
+ kexec@lists.infradead.org, jmorris@namei.org, Paul Moore
+ <paul@paul-moore.com>,  serge@hallyn.com
+Cc: code@tyhicks.com, nramas@linux.microsoft.com, Tushar Sugandhi
+	 <tusharsu@linux.microsoft.com>, linux-security-module@vger.kernel.org
+Date: Tue, 08 Aug 2023 08:35:35 -0400
+In-Reply-To: <5d21276a-daac-fc9b-add9-62e7c04bbdcd@linux.ibm.com>
 References: <c5737141-7827-1c83-ab38-0119dcfea485@linux.microsoft.com>
- <b748230c8ee291288afcf48898507556c3aa7c71.camel@HansenPartnership.com>
-From: Stefan Berger <stefanb@linux.ibm.com>
-In-Reply-To: <b748230c8ee291288afcf48898507556c3aa7c71.camel@HansenPartnership.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: mTcLWF4zRxTB3SOazcI_e657VvnRXgi0
-X-Proofpoint-ORIG-GUID: xgMo4RPBwwSYeXY43PFBWfG-OK1BDWgv
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	 <b748230c8ee291288afcf48898507556c3aa7c71.camel@HansenPartnership.com>
+	 <5d21276a-daac-fc9b-add9-62e7c04bbdcd@linux.ibm.com>
+User-Agent: Evolution 3.42.4 
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-08-07_25,2023-08-03_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- priorityscore=1501 bulkscore=0 clxscore=1011 mlxscore=0 phishscore=0
- mlxlogscore=999 lowpriorityscore=0 malwarescore=0 impostorscore=0
- spamscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2306200000 definitions=main-2308070203
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230807_154946_610681_7C5AEF42 
-X-CRM114-Status: GOOD (  36.58  )
+X-CRM114-CacheID: sfid-20230808_053543_139222_06088C33 
+X-CRM114-Status: GOOD (  24.19  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -117,82 +85,52 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-
-
-On 8/1/23 17:21, James Bottomley wrote:
-> On Tue, 2023-08-01 at 12:12 -0700, Sush Shringarputale wrote:
-> [...]
->> Truncating IMA log to reclaim memory is not feasible, since it makes
->> the log go out of sync with the TPM PCR quote making remote
->> attestation fail.
-> 
-> This assumption isn't entirely true.  It's perfectly possible to shard
-> an IMA log using two TPM2_Quote's for the beginning and end PCR values
-> to validate the shard.  The IMA log could be truncated in the same way
-> (replace the removed part of the log with a TPM2_Quote and AK, so the
-> log still validates from the beginning quote to the end).
-> 
-> If you use a TPM2_Quote mechanism to save the log, all you need to do
-> is have the kernel generate the quote with an internal AK.  You can
-> keep a record of the quote and the AK at the beginning of the truncated
-> kernel log.  If the truncated entries are saved in a file shard it
-
-The truncation seems dangerous to me. Maybe not all the scenarios with an attestation
-client (client = reading logs and quoting) are possible then anymore, such as starting
-an attestation client only after truncation but a verifier must have witnessed the
-system's PCRs and log state before the truncation occurred.
-
-I think an ima-buf (or similar) log entry in IMA log would have to appear at the beginning of the
-truncated log stating the value of all PCRs that IMA touched (typically only PCR 10
-but it can be others). The needs to be done since the quote itself doesn't
-provide the state of the individual PCRs. This would at least allow an attestation
-client to re-read the log from the beginning (when it is re-start or started for the
-first time after the truncation). However, this alone (without the
-internal AK quoting the old state) could lead to abuse where I could create totally
-fake IMA logs stating the state of the PCRs at the beginning (so the verifier
-syncs its internal PCR state to this state). Further, even with the AK-quote that
-you propose I may be able to create fake logs and trick a verifier into
-trusting the machine IFF it doesn't know what kernel this system was booted with
-that I may have hacked to provide a fake AK-quote that just happens to match the
-PCR state presented at the beginning of the log.
-
-=> Can a truncated log be made safe for attestation when the attestation starts
-only after the truncation occurred?
-
-=> Even if attestation was occurring 'what' state does an attestation server
-need to carry around for an attested-to system so that the truncation is 'safe'
-and I cannot create fake AK-quotes and fake IMA logs with initial PCR states?
-Can I ever restart the client and have it read the truncated log from the
-beginning and what type of verification needs to happen on the server then?
-It seems like the server would have to remember the state of the IMA PCRs upon
-last truncation to detect a possible attack. This would make staring to monitor
-a system after truncation impossible -- would be good to know these details.
-
-
-
-
-> should have a beginning and end quote and a record of the AK used.
-> Since verifiers like Keylime are already using this beginning and end
-> quote for sharded logs, it's the most natural format to feed to
-> something externally for verification and it means you don't have to
-> invent a new format to do the same thing.
-> 
-> Regards,
-> 
-> James
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gTW9uLCAyMDIzLTA4LTA3IGF0IDE4OjQ5IC0wNDAwLCBTdGVmYW4gQmVyZ2VyIHdyb3RlOgo+
+IAo+IAo+IE9uIDgvMS8yMyAxNzoyMSwgSmFtZXMgQm90dG9tbGV5IHdyb3RlOgo+ID4gT24gVHVl
+LCAyMDIzLTA4LTAxIGF0IDEyOjEyIC0wNzAwLCBTdXNoIFNocmluZ2FycHV0YWxlIHdyb3RlOgo+
+ID4gWy4uLl0KPiA+ID4gVHJ1bmNhdGluZyBJTUEgbG9nIHRvIHJlY2xhaW0gbWVtb3J5IGlzIG5v
+dCBmZWFzaWJsZSwgc2luY2UgaXQKPiA+ID4gbWFrZXMgdGhlIGxvZyBnbyBvdXQgb2Ygc3luYyB3
+aXRoIHRoZSBUUE0gUENSIHF1b3RlIG1ha2luZyByZW1vdGUKPiA+ID4gYXR0ZXN0YXRpb24gZmFp
+bC4KPiA+IAo+ID4gVGhpcyBhc3N1bXB0aW9uIGlzbid0IGVudGlyZWx5IHRydWUuwqAgSXQncyBw
+ZXJmZWN0bHkgcG9zc2libGUgdG8KPiA+IHNoYXJkIGFuIElNQSBsb2cgdXNpbmcgdHdvIFRQTTJf
+UXVvdGUncyBmb3IgdGhlIGJlZ2lubmluZyBhbmQgZW5kCj4gPiBQQ1IgdmFsdWVzIHRvIHZhbGlk
+YXRlIHRoZSBzaGFyZC7CoCBUaGUgSU1BIGxvZyBjb3VsZCBiZSB0cnVuY2F0ZWQKPiA+IGluIHRo
+ZSBzYW1lIHdheSAocmVwbGFjZSB0aGUgcmVtb3ZlZCBwYXJ0IG9mIHRoZSBsb2cgd2l0aCBhCj4g
+PiBUUE0yX1F1b3RlIGFuZCBBSywgc28gdGhlIGxvZyBzdGlsbCB2YWxpZGF0ZXMgZnJvbSB0aGUg
+YmVnaW5uaW5nCj4gPiBxdW90ZSB0byB0aGUgZW5kKS4KPiA+IAo+ID4gSWYgeW91IHVzZSBhIFRQ
+TTJfUXVvdGUgbWVjaGFuaXNtIHRvIHNhdmUgdGhlIGxvZywgYWxsIHlvdSBuZWVkIHRvCj4gPiBk
+byBpcyBoYXZlIHRoZSBrZXJuZWwgZ2VuZXJhdGUgdGhlIHF1b3RlIHdpdGggYW4gaW50ZXJuYWwg
+QUsuwqAgWW91Cj4gPiBjYW4ga2VlcCBhIHJlY29yZCBvZiB0aGUgcXVvdGUgYW5kIHRoZSBBSyBh
+dCB0aGUgYmVnaW5uaW5nIG9mIHRoZQo+ID4gdHJ1bmNhdGVkIGtlcm5lbCBsb2cuwqAgSWYgdGhl
+IHRydW5jYXRlZCBlbnRyaWVzIGFyZSBzYXZlZCBpbiBhIGZpbGUKPiA+IHNoYXJkIGl0Cj4gCj4g
+VGhlIHRydW5jYXRpb24gc2VlbXMgZGFuZ2Vyb3VzIHRvIG1lLiBNYXliZSBub3QgYWxsIHRoZSBz
+Y2VuYXJpb3MKPiB3aXRoIGFuIGF0dGVzdGF0aW9uIGNsaWVudCAoY2xpZW50ID0gcmVhZGluZyBs
+b2dzIGFuZCBxdW90aW5nKSBhcmUKPiBwb3NzaWJsZSB0aGVuIGFueW1vcmUsIHN1Y2ggYXMgc3Rh
+cnRpbmcgYW4gYXR0ZXN0YXRpb24gY2xpZW50IG9ubHkKPiBhZnRlciB0cnVuY2F0aW9uIGJ1dCBh
+IHZlcmlmaWVyIG11c3QgaGF2ZSB3aXRuZXNzZWQgdGhlIHN5c3RlbSdzIFBDUnMKPiBhbmQgbG9n
+IHN0YXRlIGJlZm9yZSB0aGUgdHJ1bmNhdGlvbiBvY2N1cnJlZC4KClRoYXQncyBub3QgZXhhY3Rs
+eSBjb3JyZWN0LiAgTm90aGluZyBuZWVkcyB0byBoYXZlICJ3aXRuZXNzZWQiIHRoZQpzdGFydGlu
+ZyBQQ1IgdmFsdWUgYmVjYXVzZSB0aGUgcXVvdGUgdm91Y2hlcyBmb3IgaXQgKGFuZCBjYW4gdm91
+Y2ggZm9yCml0IGFmdGVyIHRoZSBmYWN0KS4gIFRoZSBvbmx5IHRoaW5nIHlvdSBuZWVkIHRvIHZl
+cmlmeSB0aGUgcXVvdGUgaXMgdGhlCmF0dGVzdGF0aW9uIGtleSBhbmQgdGhlIG9ubHkgdGhpbmcg
+eW91IG5lZWQgdG8gZG8gdG8gdHJ1c3QgdGhlCmF0dGVzdGF0aW9uIGtleSBpcyBlbnN1cmUgaXQg
+d2FzIFRQTSBjcmVhdGVkLiAgQWxsIG9mIHRoYXQgY2FuIGJlCnZlcmlmaWVkIGFmdGVyIHRoZSBm
+YWN0IGFzIHdlbGwuICBUaGUgb25seSB0aGluZyB0aGF0IGNhbiBiZSBkb25lIHRvCmRpc3J1cHQg
+dGhpcyBpcyB0byBkZXN0cm95IHRoZSBUUE0gKG9yIHJlLW93biBpdCkuCgpSZW1lbWJlciB0aGUg
+YXNzdW1wdGlvbiBpcyB5b3UgKmFsc28qIGhhdmUgdGhlIHJlbW92ZWQgbG9nIHNoYXJkIHRvCnBy
+ZXNlbnQuICBGcm9tIHRoYXQgdGhlIFBDUiBzdGF0ZSBvZiB0aGUgc3RhcnRpbmcgcXVvdGUgY2Fu
+IGJlCmNhbGN1bGF0ZWQgYW5kIGNoZWNrZWQgZm9yIG1hdGNoaW5nIHRoZSBxdW90ZS4gIElmIHlv
+dSBsb3NlIHRoYXQsIGl0J3MKZXF1aXZhbGVudCB0byB0aGUgbG9nIGJlaW5nIHRhbXBlcmVkIHdp
+dGggYW5kIGFsbCBiZXRzIGFyZSBvZmYuICBUaGUKYXNzdW1wdGlvbiBpcyB0aGF0IGJlY2F1c2Ug
+b2YgdGhlIGltcG9zc2liaWxpdHkgb2YgZW5naW5lZXJpbmcgVFBNCmV4dGVuc2lvbnMsIGl0IHNo
+b3VsZCBiZSBpbXBvc3NpYmxlIHRvIGNvbWUgdXAgd2l0aCBhIGZha2UgbG9nIHRoYXQKcHJvZHVj
+ZXMgdGhlIFBDUnMgb2YgdGhlIHJlYWwgb25lLiAgSWYgdGhhdCdzIHZpb2xhdGVkLCB0aGVuIElN
+QSBpdHNlbGYKYmVjb21lcyB1c2VsZXNzLgoKSmFtZXMKCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMu
+aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2tleGVjCg==
