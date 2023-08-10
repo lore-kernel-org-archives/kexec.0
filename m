@@ -4,64 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CAD0AC04A6A
-	for <kexec@archiver.kernel.org>; Thu, 10 Aug 2023 01:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2D108C001E0
+	for <kexec@archiver.kernel.org>; Thu, 10 Aug 2023 01:18:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=RieXEEMV9QZCdB3T6NM13W0skxMWgqVsVENBFXNoZmE=; b=pvR4sneP6FvFES
-	s0Xc6rYaylDBOVl8EfTTymx0pruFSti9xGa0AZLbZEUzTJQC7VVD2QfapGz9iAvI238CA5KYsZ575
-	dY0dhw6tYC241de5Sv65HH7xSM5Q/pB5KKSjfHl5V543bzPbY9UAy+fYxIwSqE58C/YntHiHB0vcs
-	23JwIEQhY6V4WLdX7miVhYSzbQhp01qtXx39rkwaDFO7mfx/S4OABnI3epXAWGua19Yn13uQ9sXbW
-	atzuZ562sEQT9jvscHPwUjIbV9LO/Fg6uw/hilogSfVuV/7hdcg4kK8uBU16oI8mO8eooD+ZgPrjy
-	PtHrGiVrp5oodFLVPbbQ==;
+	List-Owner; bh=Mn5rxu+bWiANuQAZ8Mo+m3wBTcuVm1dn2uxLm2dUOJo=; b=NnwEx0LUx+cZ3E
+	1UEvpaiVeUWNHh9qSYv7jno1r03cPJUMii3YZol5egPg7TSnio7cmqELqtsrbjYhpMG7O3pz6z6NX
+	hOxiXbN8X7fDvfFdqhDsKWeYleJdFcHMVyU2f7meCY15OT9qXCYAcshpNrmCko+z0wYtnBwa6UtzB
+	FQh7x+eV6MlENbtQDRp1KLSXty5GQOX8fKSuu/L7c2Pm06L/CtMc6k7qreIOmWtA3qtv1NhwxG/Wy
+	a23hkpISjg2x1Zyf+ulEHGZEvQ+lf7Da5mWFj7MJ3uqCGbi+iixgpFNA1qpAYKzbbkIh6XkiUHZO6
+	Xl50LBAsDAIVMSrMAsKw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qTuHI-006GBs-00;
-	Thu, 10 Aug 2023 01:15:52 +0000
-Received: from linux.microsoft.com ([13.77.154.182])
-	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qTuHF-006GAj-0T
+	id 1qTuK0-006GU8-1z;
+	Thu, 10 Aug 2023 01:18:40 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
+	id 1qTuJx-006GTQ-1y
 	for kexec@lists.infradead.org;
-	Thu, 10 Aug 2023 01:15:51 +0000
-Received: from [192.168.87.33] (c-98-237-170-177.hsd1.wa.comcast.net [98.237.170.177])
-	by linux.microsoft.com (Postfix) with ESMTPSA id B431D20FC4EA;
-	Wed,  9 Aug 2023 18:15:47 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B431D20FC4EA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1691630148;
-	bh=WDzxSOItJ03IYMTUWQ/lOeMY7qiRvNMmxaG1DgqmKo4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=boWQxa0hnd4R+o/Z15/ouy62SVdNlNc9KF4DAZsb1V16lUpudujcKsuK4WLb4db9S
-	 r200n80+tshG2xHSTAERUEc0QkPUu5jioUSVKbh/hUlA+hrLhuMGA9OIqnuh1+dur9
-	 4+5RZSyoVPTqctvDI5J1F2dUhEhkoLpn/x9kFWD0=
-Message-ID: <b538f7d2-5a04-46d0-3792-a18653230a95@linux.microsoft.com>
-Date: Wed, 9 Aug 2023 18:15:47 -0700
+	Thu, 10 Aug 2023 01:18:39 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1691630316;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8RyE1XhIfdOavy1+yd7tZWH6XrA0A0ZMjPep4bJOZxA=;
+	b=A3Fsu839pyA4VM4uZIr6VXdbFy9Tg6/G7MicivBy0GbByahVspoYfXZVktHowrb9j405JF
+	bRznq8M7/FLjDWq0dUJ9KkKaGmJsj13bCeUtWtR0raHZcU0BspREf8dEQ3jI71UPs/IJmO
+	roWoTh640VGD1ngfffCac6YS/jrdVFY=
+Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-251-yJgvA4ilMeOrCYwrgq4MeA-1; Wed, 09 Aug 2023 21:18:33 -0400
+X-MC-Unique: yJgvA4ilMeOrCYwrgq4MeA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 448DA1C04182;
+	Thu, 10 Aug 2023 01:18:32 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.99])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 45ECB2166B25;
+	Thu, 10 Aug 2023 01:18:29 +0000 (UTC)
+Date: Thu, 10 Aug 2023 09:18:27 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Ming Lei <ming.lei@redhat.com>, mpe@ellerman.id.au, npiggin@gmail.com,
+	christophe.leroy@csgroup.eu
+Cc: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+	linux-nvme@lists.infradead.org,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
+	Wen Xiong <wenxiong@linux.ibm.com>, Keith Busch <kbusch@kernel.org>,
+	linuxppc-dev@lists.ozlabs.org, Dave Young <dyoung@redhat.com>,
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Pingfan Liu <piliu@redhat.com>
+Subject: Re: [PATCH V3 01/14] blk-mq: add blk_mq_max_nr_hw_queues()
+Message-ID: <ZNQ64xhCIBU6XM/5@MiWiFi-R3L-srv>
+References: <20230808104239.146085-1-ming.lei@redhat.com>
+ <20230808104239.146085-2-ming.lei@redhat.com>
+ <20230809134401.GA31852@lst.de>
+ <ZNQqt1C0pXspGl3d@fedora>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [RFC] IMA Log Snapshotting Design Proposal
-Content-Language: en-US
-To: Stefan Berger <stefanb@linux.ibm.com>,
- James Bottomley <James.Bottomley@HansenPartnership.com>,
- Sush Shringarputale <sushring@linux.microsoft.com>,
- linux-integrity@vger.kernel.org, zohar@linux.ibm.com, peterhuewe@gmx.de,
- jarkko@kernel.org, jgg@ziepe.ca, kgold@linux.ibm.com, bhe@redhat.com,
- vgoyal@redhat.com, dyoung@redhat.com, kexec@lists.infradead.org,
- jmorris@namei.org, Paul Moore <paul@paul-moore.com>, serge@hallyn.com
-Cc: code@tyhicks.com, nramas@linux.microsoft.com,
- linux-security-module@vger.kernel.org
-References: <c5737141-7827-1c83-ab38-0119dcfea485@linux.microsoft.com>
- <b748230c8ee291288afcf48898507556c3aa7c71.camel@HansenPartnership.com>
- <5d21276a-daac-fc9b-add9-62e7c04bbdcd@linux.ibm.com>
-From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-In-Reply-To: <5d21276a-daac-fc9b-add9-62e7c04bbdcd@linux.ibm.com>
+Content-Disposition: inline
+In-Reply-To: <ZNQqt1C0pXspGl3d@fedora>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230809_181549_250292_85959490 
-X-CRM114-Status: GOOD (  46.24  )
+X-CRM114-CacheID: sfid-20230809_181837_745355_9A4B5FDA 
+X-CRM114-Status: GOOD (  25.16  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -73,126 +85,63 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-VGhhbmtzIGEgbG90IFN0ZWZhbiBmb3IgbG9va2luZyBpbnRvIHRoaXMgcHJvcG9zYWwsCmFuZCBw
-cm92aWRpbmcgeW91ciBmZWVkYmFjay4gV2UgcmVhbGx5IGFwcHJlY2lhdGUgaXQuCgpPbiA4Lzcv
-MjMgMTU6NDksIFN0ZWZhbiBCZXJnZXIgd3JvdGU6Cj4KPgo+IE9uIDgvMS8yMyAxNzoyMSwgSmFt
-ZXMgQm90dG9tbGV5IHdyb3RlOgo+PiBPbiBUdWUsIDIwMjMtMDgtMDEgYXQgMTI6MTIgLTA3MDAs
-IFN1c2ggU2hyaW5nYXJwdXRhbGUgd3JvdGU6Cj4+IFsuLi5dCj4+PiBUcnVuY2F0aW5nIElNQSBs
-b2cgdG8gcmVjbGFpbSBtZW1vcnkgaXMgbm90IGZlYXNpYmxlLCBzaW5jZSBpdCBtYWtlcwo+Pj4g
-dGhlIGxvZyBnbyBvdXQgb2Ygc3luYyB3aXRoIHRoZSBUUE0gUENSIHF1b3RlIG1ha2luZyByZW1v
-dGUKPj4+IGF0dGVzdGF0aW9uIGZhaWwuCj4+Cj4+IFRoaXMgYXNzdW1wdGlvbiBpc24ndCBlbnRp
-cmVseSB0cnVlLsKgIEl0J3MgcGVyZmVjdGx5IHBvc3NpYmxlIHRvIHNoYXJkCj4+IGFuIElNQSBs
-b2cgdXNpbmcgdHdvIFRQTTJfUXVvdGUncyBmb3IgdGhlIGJlZ2lubmluZyBhbmQgZW5kIFBDUiB2
-YWx1ZXMKPj4gdG8gdmFsaWRhdGUgdGhlIHNoYXJkLsKgIFRoZSBJTUEgbG9nIGNvdWxkIGJlIHRy
-dW5jYXRlZCBpbiB0aGUgc2FtZSB3YXkKPj4gKHJlcGxhY2UgdGhlIHJlbW92ZWQgcGFydCBvZiB0
-aGUgbG9nIHdpdGggYSBUUE0yX1F1b3RlIGFuZCBBSywgc28gdGhlCj4+IGxvZyBzdGlsbCB2YWxp
-ZGF0ZXMgZnJvbSB0aGUgYmVnaW5uaW5nIHF1b3RlIHRvIHRoZSBlbmQpLgo+Pgo+PiBJZiB5b3Ug
-dXNlIGEgVFBNMl9RdW90ZSBtZWNoYW5pc20gdG8gc2F2ZSB0aGUgbG9nLCBhbGwgeW91IG5lZWQg
-dG8gZG8KPj4gaXMgaGF2ZSB0aGUga2VybmVsIGdlbmVyYXRlIHRoZSBxdW90ZSB3aXRoIGFuIGlu
-dGVybmFsIEFLLsKgIFlvdSBjYW4KPj4ga2VlcCBhIHJlY29yZCBvZiB0aGUgcXVvdGUgYW5kIHRo
-ZSBBSyBhdCB0aGUgYmVnaW5uaW5nIG9mIHRoZSB0cnVuY2F0ZWQKPj4ga2VybmVsIGxvZy7CoCBJ
-ZiB0aGUgdHJ1bmNhdGVkIGVudHJpZXMgYXJlIHNhdmVkIGluIGEgZmlsZSBzaGFyZCBpdAo+Cj4g
-VGhlIHRydW5jYXRpb24gc2VlbXMgZGFuZ2Vyb3VzIHRvIG1lLiBNYXliZSBub3QgYWxsIHRoZSBz
-Y2VuYXJpb3Mgd2l0aCAKPiBhbiBhdHRlc3RhdGlvbgo+IGNsaWVudCAoY2xpZW50ID0gcmVhZGlu
-ZyBsb2dzIGFuZCBxdW90aW5nKSBhcmUgcG9zc2libGUgdGhlbiBhbnltb3JlLCAKPiBzdWNoIGFz
-IHN0YXJ0aW5nCj4gYW4gYXR0ZXN0YXRpb24gY2xpZW50IG9ubHkgYWZ0ZXIgdHJ1bmNhdGlvbiBi
-dXQgYSB2ZXJpZmllciBtdXN0IGhhdmUgCj4gd2l0bmVzc2VkIHRoZQo+IHN5c3RlbSdzIFBDUnMg
-YW5kIGxvZyBzdGF0ZSBiZWZvcmUgdGhlIHRydW5jYXRpb24gb2NjdXJyZWQuCllvdSBhcmUgY29y
-cmVjdCB0aGF0IHRydW5jYXRpb24gb24gaXTigJlzIG93biBpcyBkYW5nZXJvdXMuIEl0IG5lZWRz
-IHRvIGJlCmFjY29tcGFuaWVkIGJ5IChhKSBzYXZpbmcgdGhlIElNQSBsb2cgZGF0YSB0byBkaXNr
-IGFzIHNuYXBzaG90cywgKGIpIAphZGRpbmcgdGhlCm5lY2Vzc2FyeSBUUE0gUENSIHF1b3RlcyB0
-byB0aGUgY3VycmVudCBJTUEgbG9nIChhcyBKYW1lcyBtZW50aW9uZWQgYWJvdmUpLAooYykgYXR0
-ZXN0YXRpb24gY2xpZW50cyBoYXZpbmcgYW4gYWJpbGl0eSB0byBzZW5kIHRoZSBwYXN0IHNuYXBz
-aG90cyB0byB0aGUKcmVtb3RlLWF0dGVzdGF0aW9uLXNlcnZpY2UgKHZlcmlmaWVycyksIChkKSBh
-bmQgdmVyaWZpZXJzIGhhdmluZyBhbiBhYmlsaXR5CnRvIHVzZSB0aGUgc25hcHNob3RzIGFsb25n
-IHdpdGggY3VycmVudCBJTUEgbG9ncyBmb3IgdGhlIHB1cnBvc2Ugb2YgCmF0dGVzdGF0aW9uLgpB
-bGwgdGhlc2UgcG9pbnRzIGFyZSBleHBsYWluZWQgaW4gdGhlIG9yaWdpbmFsIFJGQyBlbWFpbCBp
-biBzZWN0aW9ucyBCLjEgCnRocm91Z2ggQi41IFsxXS4KPgo+IEkgdGhpbmsgYW4gaW1hLWJ1ZiAo
-b3Igc2ltaWxhcikgbG9nIGVudHJ5IGluIElNQSBsb2cgd291bGQgaGF2ZSB0byAKPiBhcHBlYXIg
-YXQgdGhlIGJlZ2lubmluZyBvZiB0aGUKPiB0cnVuY2F0ZWQgbG9nIHN0YXRpbmcgdGhlIHZhbHVl
-IG9mIGFsbCBQQ1JzIHRoYXQgSU1BIHRvdWNoZWQgCj4gKHR5cGljYWxseSBvbmx5IFBDUiAxMAo+
-IGJ1dCBpdCBjYW4gYmUgb3RoZXJzKS4gVGhlIG5lZWRzIHRvIGJlIGRvbmUgc2luY2UgdGhlIHF1
-b3RlIGl0c2VsZiAKPiBkb2Vzbid0Cj4gcHJvdmlkZSB0aGUgc3RhdGUgb2YgdGhlIGluZGl2aWR1
-YWwgUENScy4gVGhpcyB3b3VsZCBhdCBsZWFzdCBhbGxvdyBhbiAKPiBhdHRlc3RhdGlvbgo+IGNs
-aWVudCB0byByZS1yZWFkIHRoZSBsb2cgZnJvbSB0aGUgYmVnaW5uaW5nICh3aGVuIGl0IGlzIHJl
-LXN0YXJ0IG9yIAo+IHN0YXJ0ZWQgZm9yIHRoZQo+IGZpcnN0IHRpbWUgYWZ0ZXIgdGhlIHRydW5j
-YXRpb24pLiAKIMKgQWdyZWVkLiBTZWUgdGhlIGRlc2NyaXB0aW9uIG9mIHNuYXBzaG90X2FnZ3Jl
-Z2F0ZSBpbiBTZWN0aW9uIEIuNSBpbiB0aGUKb3JpZ2luYWwgUkZDIGVtYWlsIFsxXS4KPiBIb3dl
-dmVyLCB0aGlzIGFsb25lICh3aXRob3V0IHRoZQo+IGludGVybmFsIEFLIHF1b3RpbmcgdGhlIG9s
-ZCBzdGF0ZSkgY291bGQgbGVhZCB0byBhYnVzZSB3aGVyZSBJIGNvdWxkIAo+IGNyZWF0ZSB0b3Rh
-bGx5Cj4gZmFrZSBJTUEgbG9ncyBzdGF0aW5nIHRoZSBzdGF0ZSBvZiB0aGUgUENScyBhdCB0aGUg
-YmVnaW5uaW5nIChzbyB0aGUgCj4gdmVyaWZpZXIKPiBzeW5jcyBpdHMgaW50ZXJuYWwgUENSIHN0
-YXRlIHRvIHRoaXMgc3RhdGUpLiAKWWVzLCB0aGUgUENSIHF1b3RlcyBzZW50IHRvIHRoZSB2ZXJp
-ZmllciBtdXN0IGJlIHNpZ25lZCBieSB0aGUgQUsgdGhhdAppcyB0cnVzdGVkIGJ5IHRoZSB2ZXJp
-Zmllci4gVGhhdCBhc3N1bXB0aW9uIGlzIHRydWUgcmVnYXJkbGVzcyBvZiBJTUEgbG9nCnNuYXBz
-aG90dGluZyBmZWF0dXJlLgo+IEZ1cnRoZXIsIGV2ZW4gd2l0aCB0aGUgQUstcXVvdGUgdGhhdAo+
-IHlvdSBwcm9wb3NlIEkgbWF5IGJlIGFibGUgdG8gY3JlYXRlIGZha2UgbG9ncyBhbmQgdHJpY2sg
-YSB2ZXJpZmllciBpbnRvCj4gdHJ1c3RpbmcgdGhlIG1hY2hpbmUgSUZGIGl0IGRvZXNuJ3Qga25v
-dyB3aGF0IGtlcm5lbCB0aGlzIHN5c3RlbSB3YXMgCj4gYm9vdGVkIHdpdGgKPiB0aGF0IEkgbWF5
-IGhhdmUgaGFja2VkIHRvIHByb3ZpZGUgYSBmYWtlIEFLLXF1b3RlIHRoYXQganVzdCBoYXBwZW5z
-IHRvIAo+IG1hdGNoIHRoZQo+IFBDUiBzdGF0ZSBwcmVzZW50ZWQgYXQgdGhlIGJlZ2lubmluZyBv
-ZiB0aGUgbG9nLgo+CklmIHRoZSBLZXJuZWwgaXMgY29tcHJvbWlzZWQsIHRoZW4gYWxsLWJldHMg
-YXJlIG9mZi4KKFJlZ2FyZGxlc3Mgb2YgSU1BIGxvZyBzbmFwc2hvdHRpbmcgZmVhdHVyZS4pCj4g
-PT4gQ2FuIGEgdHJ1bmNhdGVkIGxvZyBiZSBtYWRlIHNhZmUgZm9yIGF0dGVzdGF0aW9uIHdoZW4g
-dGhlIAo+IGF0dGVzdGF0aW9uIHN0YXJ0cwo+IG9ubHkgYWZ0ZXIgdGhlIHRydW5jYXRpb24gb2Nj
-dXJyZWQ/Cj4KWWVzLiBJZiB0aGUg4oCcUENSIHF1b3RlcyBpbiB0aGUgc25hcHNob3RfYWdncmVn
-YXRlIGV2ZW50IGluIElNQSBsb2figJ0KKyAicmVwbGF5IG9mIHJlc3Qgb2YgdGhlIGV2ZW50cyBp
-biBJTUEgbG9nIiByZXN1bHRzIGluIHRoZSDigJxmaW5hbCBQQ1IgCnF1b3Rlc+KAnQp0aGF0IG1h
-dGNoZXMgd2l0aCB0aGUg4oCcQUsgc2lnbmVkIFBDUiBxdW90ZXPigJ0gc2VudCBieSB0aGUgY2xp
-ZW50LCB0aGVuIAp0aGUgdHJ1bmNhdGVkCklNQSBsb2cgY2FuIGJlIHRydXN0ZWQuIFRoZSB2ZXJp
-ZmllciBjYW4gZWl0aGVyIOKAmHRydXN04oCZIHRoZSDigJxQQ1IgcXVvdGVzIAppbiB0aGUKc25h
-cHNob3RfYWdncmVnYXRlIGV2ZW50IGluIElNQSBsb2figJ0gb3IgaXQgY2FuIGFzayBmb3IgdGhl
-IChuLTEpdGggCnNuYXBzaG90IHNoYXJkCnRvIGNoZWNrIHRoZSBwYXN0IGV2ZW50cy4KCj4gPT4g
-RXZlbiBpZiBhdHRlc3RhdGlvbiB3YXMgb2NjdXJyaW5nICd3aGF0JyBzdGF0ZSBkb2VzIGFuIGF0
-dGVzdGF0aW9uIAo+IHNlcnZlcgo+IG5lZWQgdG8gY2FycnkgYXJvdW5kIGZvciBhbiBhdHRlc3Rl
-ZC10byBzeXN0ZW0gc28gdGhhdCB0aGUgdHJ1bmNhdGlvbiAKPiBpcyAnc2FmZScKPiBhbmQgSSBj
-YW5ub3QgY3JlYXRlIGZha2UgQUstcXVvdGVzIGFuZCBmYWtlIElNQSBsb2dzIHdpdGggaW5pdGlh
-bCBQQ1IgCj4gc3RhdGVzPwpBc3N1bWluZyBtb3N0IG9mIHRoZSBjbGllbnQgZGV2aWNlcyB0YWtl
-IGEgc25hcHNob3QgYXQgc3BlY2lmaWMgY2hlY2twb2ludHMsCnRoZSDigJxQQ1IgcXVvdGVzIGlu
-IHRoZSBzbmFwc2hvdF9hZ2dyZWdhdGUgZXZlbnQgaW4gSU1BIGxvZ+KAnSB3aWxsIGJlIHRoZSAK
-c2FtZSBmb3IgdGhlbS4KVGhlIHJlbW90ZSBhdHRlc3RhdGlvbiBzZXJ2ZXIgd2lsbCBoYXZlIHRv
-IHJlbWVtYmVyIHRoZXNlIGdvbGRlbiBQQ1IgcXVvdGVzLgpJdCBkb2Vzbid0IGhhdmUgdG8gcmVt
-ZW1iZXIgdGhlIHN0YXRlIG9mIGVhY2ggY2xpZW50IGRldmljZS4KCj4gQ2FuIEkgZXZlciByZXN0
-YXJ0IHRoZSBjbGllbnQgYW5kIGhhdmUgaXQgcmVhZCB0aGUgdHJ1bmNhdGVkIGxvZyBmcm9tIHRo
-ZQo+IGJlZ2lubmluZyBhbmQgd2hhdCB0eXBlIG9mIHZlcmlmaWNhdGlvbiBuZWVkcyB0byBoYXBw
-ZW4gb24gdGhlIHNlcnZlciAKPiB0aGVuPwo+ClllcywgcmVzdGFydGluZyB0aGUgY2xpZW50IHNo
-b3VsZCBiZSBwb3NzaWJsZS4KPiBJdCBzZWVtcyBsaWtlIHRoZSBzZXJ2ZXIgd291bGQgaGF2ZSB0
-byByZW1lbWJlciB0aGUgc3RhdGUgb2YgdGhlIElNQSAKPiBQQ1JzIHVwb24KPiBsYXN0IHRydW5j
-YXRpb24gdG8gZGV0ZWN0IGEgcG9zc2libGUgYXR0YWNrLiBUaGlzIHdvdWxkIG1ha2Ugc3Rhcmlu
-ZyAKPiB0byBtb25pdG9yCj4gYSBzeXN0ZW0gYWZ0ZXIgdHJ1bmNhdGlvbiBpbXBvc3NpYmxlIC0t
-IHdvdWxkIGJlIGdvb2QgdG8ga25vdyB0aGVzZSAKPiBkZXRhaWxzLgo+ClRoZSBzZXJ2ZXIgaXMg
-bm90IGZvcmNlZCB0byByZW1lbWJlciB0aGUgc3RhdGUgb2YgSU1BIFBDUnMuIEl0IGNhbgphbHdh
-eXMgYXNrIGZvciB0aGUgbGFzdCBuIHNuYXBzaG90IGZpbGVzIChzaGFyZHMpIGFuZCByZXBsYXkg
-dGhlIGV2ZW50cy4gCkV2ZW4KdGhvdWdoIHRoZSBkYXRhIGlzIHRydW5jYXRlZCBmcm9tIHRoZSBJ
-TUEgbG9nLCBpdCBpcyBub3QgdG90YWxseSBsb3N0LiBJdCBpcwpzaW1wbHkgYmVpbmcgdHJhbnNm
-ZXJyZWQgdG8gdGhlIGRpc2suIEl0IGlzIHNhdmVkIGJ5IFVNIGFzIHNuYXBzaG90IApmaWxlcy9z
-aGFyZHMuClRoZSBnb2FsIG9mIElNQSBzbmFwc2hvdHRpbmcgaXMgdG8gcmVkdWNlIHRoZSBLZXJu
-ZWwgbWVtb3J5IHByZXNzdXJlIG9uIHRoZQpjbGllbnQgZGV2aWNlcyAtIHRvIHNhdmUgdGhlbSBm
-cm9tIG91dC1vZi1tZW1vcnkgZXJyb3JzIHdoaWNoIGFyZSBoYXJkZXIgCnRvIG1hbmFnZQpvbiBs
-b25nIHJ1bm5pbmcgY2xpZW50cy4gSXQgY29tZXMgd2l0aCBhIGNvc3Qgb2YgYWRkaXRpb25hbCB3
-b3JrIG9uIHRoZSAKc2VydmVyCnNpZGUgdG8gYXR0ZXN0IHRob3NlIGNsaWVudHMuCgoKQmVpbmcg
-c2FpZCB0aGF0LCBpbiB0aGUgY3VycmVudCBwcm9wb3NhbCwgdGFraW5nIGEgc25hcHNob3RzIGlz
-IHRvdGFsbHkgCm9wdGlvbmFsCmFuZCBjb250cm9sbGVkIGJ5IFVNIGF0dGVzdGF0aW9uIGNsaWVu
-dHMuIElmIHRoZSAKYXR0ZXN0YXRpb24tY2xpZW50cy9zZXJ2aWNlcyBhcmUKbm90LXJlYWR5L2Rv
-buKAmXQtd2FudCB0byB0YWtlIGFkdmFudGFnZSBvZiBJTUEgbG9nIHNuYXBzaG90dGluZywgdGhl
-eSAKZG9u4oCZdCBoYXZlIHRvLgoKTm8gc25hcHNob3Qgd2lsbCBiZSB0YWtlbiwgYW5kIHRoZSBj
-bGllbnQtc2VydmljZSBjYW4gcHJvY2VzcyB0aGUgCm1vbm9saXRoaWMgSU1BCmxvZyBqdXN0IGxp
-a2UgdGhleSBkbyB0b2RheS4KClsxXSAKaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvYWxsL2M1NzM3
-MTQxLTc4MjctMWM4My1hYjM4LTAxMTlkY2ZlYTQ4NUBsaW51eC5taWNyb3NvZnQuY29tLyN0IAoK
-Cj4KPgo+Cj4+IHNob3VsZCBoYXZlIGEgYmVnaW5uaW5nIGFuZCBlbmQgcXVvdGUgYW5kIGEgcmVj
-b3JkIG9mIHRoZSBBSyB1c2VkLgo+PiBTaW5jZSB2ZXJpZmllcnMgbGlrZSBLZXlsaW1lIGFyZSBh
-bHJlYWR5IHVzaW5nIHRoaXMgYmVnaW5uaW5nIGFuZCBlbmQKPj4gcXVvdGUgZm9yIHNoYXJkZWQg
-bG9ncywgaXQncyB0aGUgbW9zdCBuYXR1cmFsIGZvcm1hdCB0byBmZWVkIHRvCj4+IHNvbWV0aGlu
-ZyBleHRlcm5hbGx5IGZvciB2ZXJpZmljYXRpb24gYW5kIGl0IG1lYW5zIHlvdSBkb24ndCBoYXZl
-IHRvCj4+IGludmVudCBhIG5ldyBmb3JtYXQgdG8gZG8gdGhlIHNhbWUgdGhpbmcuCj4+Cj4+IFJl
-Z2FyZHMsCj4+Cj4+IEphbWVzCj4+Cj4+Cj4+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCj4+IGtleGVjIG1haWxpbmcgbGlzdAo+PiBrZXhlY0BsaXN0cy5p
-bmZyYWRlYWQub3JnCj4+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
-Zm8va2V4ZWMKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On 08/10/23 at 08:09am, Ming Lei wrote:
+> On Wed, Aug 09, 2023 at 03:44:01PM +0200, Christoph Hellwig wrote:
+> > I'm starting to sound like a broken record, but we can't just do random
+> > is_kdump checks, and it's not going to get better by resending it again and
+> > again.  If kdump kernels limit the number of possible CPUs, it needs to
+> > reflected in cpu_possible_map and we need to use that information.
+> > 
+> 
+> Can you look at previous kdump/arch guys' comment about kdump usage &
+> num_possible_cpus?
+> 
+>     https://lore.kernel.org/linux-block/CAF+s44RuqswbosY9kMDx35crviQnxOeuvgNsuE75Bb0Y2Jg2uw@mail.gmail.com/
+>     https://lore.kernel.org/linux-block/ZKz912KyFQ7q9qwL@MiWiFi-R3L-srv/
+> 
+> The point is that kdump kernels does not limit the number of possible CPUs.
+> 
+> 1) some archs support 'nr_cpus=1' for kdump kernel, which is fine, since
+> num_possible_cpus becomes 1.
+
+Yes, "nr_cpus=" is strongly suggested in kdump kernel because "nr_cpus="
+limits the possible cpu numbers, while "maxcpuss=" only limits the cpu
+number which can be brought up during bootup. We noticed this diference
+because a large number of possible cpus will cost more memory in kdump
+kernel. e.g percpu initialization, even though kdump kernel have set
+"maxcpus=1". 
+
+Currently x86 and arm64 all support "nr_cpus=". Pingfan ever spent much
+effort to make patches to add "nr_cpus=" support to ppc64, seems ppc64
+dev and maintainers do not care about it. Finally the patches are not
+accepted, and the work is not continued.
+
+Now, I am wondering what is the barrier to add "nr_cpus=" to power ach.
+Can we reconsider adding 'nr_cpus=' to power arch since real issue
+occurred in kdump kernel?
+
+As for this patchset, it can be accpeted so that no failure in kdump
+kernel is seen on ARCHes w/o "nr_cpus=" support? My personal opinion.
+
+> 
+> 2) some archs do not support 'nr_cpus=1', and have to rely on
+> 'max_cpus=1', so num_possible_cpus isn't changed, and kernel just boots
+> with single online cpu. That causes trouble because blk-mq limits single
+> queue.
+> 
+> Documentation/admin-guide/kdump/kdump.rst
+> 
+> Thanks, 
+> Ming
+> 
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
