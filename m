@@ -4,73 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 15081C001E0
-	for <kexec@archiver.kernel.org>; Thu, 10 Aug 2023 00:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0F3A7C001B0
+	for <kexec@archiver.kernel.org>; Thu, 10 Aug 2023 01:03:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=G2DvaXDYlxR62QaMncAxgVfbdRNH5zuUBI6R8px4NS0=; b=4hlwedWuUkhFw6
-	tokKuVzGb80rblef8jx6SSZEAqAAl7MheXPy1AQD1FobKoUkgsqnDU6kFptOjpOBdI8Pevpf+Liwy
-	U1RaNP5fE7uU+oOoU1dtE2pE9KnQg8qVTvQZw1oMeQiU2U4Z8oEUZ51Q5KNfkqXkI85uijncZgrtK
-	L7twJbgpeiWy6wNcOxZYbLwwhqwjgd21hvdcwdY/bKNHfepA6xjLgkNdurF8TdQNQZcTvney+olsK
-	fnt4dGa8XzMeMaCJ51i+iiF3g2htBIP6DHDVHpeCxpgvm0NLuQloitOXvi55uSjEgpJfbfCbCMEa4
-	QEXBQKe75HvF94UqfIMg==;
+	List-Owner; bh=aghnBByBM3AWWekLOBzu63Up74e2Yc2NvvWcman2W4k=; b=CbnAf5qy9y9Kji
+	4wpIgYYwrbUpa3bYtREy4X+py0ToI74YtHaW4RBWEkjF7sz67dwwvxF6HPMlFuEIFodGIt0aTDjmu
+	Mkv0p4dvp9F2ddG4SPF5rX+AkMD/HlcqnGXccBPgAMdil5u7vyo2kQV+5JvBBW/RoJpoZdex93B1e
+	O0zA8hGceloiR//L/HJf+NjHcskN7mY6pgJQqLEkE+zR0vDgwExhfyYUSuRcwXMH5i8rEWcFO32Vz
+	ujJNlgIhtKErDiMCKq/QmcdhjfMDP0vyttIbgSaK/2s1ancfY/hBfIZmenAph8iESe/Q5ZDlclARl
+	fE0eOwKTO/7pYXpM8VeA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qTtFN-0068N1-37;
-	Thu, 10 Aug 2023 00:09:49 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
-	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qTtFK-0068Lk-09
+	id 1qTu5I-006EqR-0t;
+	Thu, 10 Aug 2023 01:03:28 +0000
+Received: from linux.microsoft.com ([13.77.154.182])
+	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
+	id 1qTu5E-006Epk-2j
 	for kexec@lists.infradead.org;
-	Thu, 10 Aug 2023 00:09:47 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1691626183;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RhYjGeDQjHaify9fYveKNlg3W8+1+0vVy9IFYKIMw0M=;
-	b=TmcJYfCnmq5zm2wFuGcK6rUmvlVg3sl4aFa4zHaQ07CgaJElz1jsrwAHeWA1/uDfmIMaHH
-	fGArd4a4vA6Efd7mstjHs7u0Br+8rdqXQOgoElYrgCudRx+zM5HZ/JvFZ1ckxkxLYI4mh1
-	ODS/lnFKoMPRb7ik0mlhQQ/hYsuCOAc=
-Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-583-dBjPouXWOO-yZ4G5_5ahoA-1; Wed, 09 Aug 2023 20:09:40 -0400
-X-MC-Unique: dBjPouXWOO-yZ4G5_5ahoA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0557D3802BBC;
-	Thu, 10 Aug 2023 00:09:40 +0000 (UTC)
-Received: from fedora (unknown [10.72.120.3])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id EA7C02026D4B;
-	Thu, 10 Aug 2023 00:09:32 +0000 (UTC)
-Date: Thu, 10 Aug 2023 08:09:27 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-nvme@lists.infradead.org,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org, linux-block@vger.kernel.org,
-	Wen Xiong <wenxiong@linux.ibm.com>, Keith Busch <kbusch@kernel.org>,
-	linuxppc-dev@lists.ozlabs.org, Dave Young <dyoung@redhat.com>,
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Baoquan He <bhe@redhat.com>, Pingfan Liu <piliu@redhat.com>
-Subject: Re: [PATCH V3 01/14] blk-mq: add blk_mq_max_nr_hw_queues()
-Message-ID: <ZNQqt1C0pXspGl3d@fedora>
-References: <20230808104239.146085-1-ming.lei@redhat.com>
- <20230808104239.146085-2-ming.lei@redhat.com>
- <20230809134401.GA31852@lst.de>
+	Thu, 10 Aug 2023 01:03:26 +0000
+Received: from [192.168.87.33] (c-98-237-170-177.hsd1.wa.comcast.net [98.237.170.177])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 8092920FC4EA;
+	Wed,  9 Aug 2023 18:03:21 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8092920FC4EA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1691629402;
+	bh=2x2EFhFJgTyCZhIinQsqkFaSlOaRo4/tPw/QPajL/BU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gx57cqg3A3QgQ3AYuhFcN7vGxDUiNdFywJNq4cRkOq5swDeWUQ/O4apEcC4wp0cQ3
+	 O71O/OyDQwo1KSdLtUVRF8li9nCAxD7oDTgSZyT2FTZAZlJnNW8pkueOnu3tZn/E91
+	 YYmU/YPLTBZsi7varAA7bynpVAUndeutc12+fVrM=
+Message-ID: <e9b67fd8-3a8f-7024-5940-a093a704358e@linux.microsoft.com>
+Date: Wed, 9 Aug 2023 18:03:20 -0700
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20230809134401.GA31852@lst.de>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [RFC] IMA Log Snapshotting Design Proposal
+Content-Language: en-US
+To: James Bottomley <James.Bottomley@HansenPartnership.com>,
+ Sush Shringarputale <sushring@linux.microsoft.com>,
+ linux-integrity@vger.kernel.org, zohar@linux.ibm.com, peterhuewe@gmx.de,
+ jarkko@kernel.org, jgg@ziepe.ca, kgold@linux.ibm.com, bhe@redhat.com,
+ vgoyal@redhat.com, dyoung@redhat.com, kexec@lists.infradead.org,
+ jmorris@namei.org, Paul Moore <paul@paul-moore.com>, serge@hallyn.com
+Cc: code@tyhicks.com, nramas@linux.microsoft.com,
+ linux-security-module@vger.kernel.org
+References: <c5737141-7827-1c83-ab38-0119dcfea485@linux.microsoft.com>
+ <b748230c8ee291288afcf48898507556c3aa7c71.camel@HansenPartnership.com>
+From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+In-Reply-To: <b748230c8ee291288afcf48898507556c3aa7c71.camel@HansenPartnership.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230809_170946_178693_3C911640 
-X-CRM114-Status: GOOD (  15.58  )
+X-CRM114-CacheID: sfid-20230809_180324_967879_07AC3EF5 
+X-CRM114-Status: GOOD (  23.44  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,41 +71,54 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Aug 09, 2023 at 03:44:01PM +0200, Christoph Hellwig wrote:
-> I'm starting to sound like a broken record, but we can't just do random
-> is_kdump checks, and it's not going to get better by resending it again and
-> again.  If kdump kernels limit the number of possible CPUs, it needs to
-> reflected in cpu_possible_map and we need to use that information.
-> 
-
-Can you look at previous kdump/arch guys' comment about kdump usage &
-num_possible_cpus?
-
-    https://lore.kernel.org/linux-block/CAF+s44RuqswbosY9kMDx35crviQnxOeuvgNsuE75Bb0Y2Jg2uw@mail.gmail.com/
-    https://lore.kernel.org/linux-block/ZKz912KyFQ7q9qwL@MiWiFi-R3L-srv/
-
-The point is that kdump kernels does not limit the number of possible CPUs.
-
-1) some archs support 'nr_cpus=1' for kdump kernel, which is fine, since
-num_possible_cpus becomes 1.
-
-2) some archs do not support 'nr_cpus=1', and have to rely on
-'max_cpus=1', so num_possible_cpus isn't changed, and kernel just boots
-with single online cpu. That causes trouble because blk-mq limits single
-queue.
-
-Documentation/admin-guide/kdump/kdump.rst
-
-Thanks, 
-Ming
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+VGhhbmtzIGEgbG90IEphbWVzIGZvciBsb29raW5nIGF0IHRoaXMgcHJvcG9zYWwsCmFuZCBzaGFy
+aW5nIHlvdXIgdGhvdWdodHMuIFJlYWxseSBhcHByZWNpYXRlIGl0LgoKT24gOC8xLzIzIDE0OjIx
+LCBKYW1lcyBCb3R0b21sZXkgd3JvdGU6Cj4gT24gVHVlLCAyMDIzLTA4LTAxIGF0IDEyOjEyIC0w
+NzAwLCBTdXNoIFNocmluZ2FycHV0YWxlIHdyb3RlOgo+IFsuLi5dCj4+IFRydW5jYXRpbmcgSU1B
+IGxvZyB0byByZWNsYWltIG1lbW9yeSBpcyBub3QgZmVhc2libGUsIHNpbmNlIGl0IG1ha2VzCj4+
+IHRoZSBsb2cgZ28gb3V0IG9mIHN5bmMgd2l0aCB0aGUgVFBNIFBDUiBxdW90ZSBtYWtpbmcgcmVt
+b3RlCj4+IGF0dGVzdGF0aW9uIGZhaWwuCj4gVGhpcyBhc3N1bXB0aW9uIGlzbid0IGVudGlyZWx5
+IHRydWUuICBJdCdzIHBlcmZlY3RseSBwb3NzaWJsZSB0byBzaGFyZAo+IGFuIElNQSBsb2cgdXNp
+bmcgdHdvIFRQTTJfUXVvdGUncyBmb3IgdGhlIGJlZ2lubmluZyBhbmQgZW5kIFBDUiB2YWx1ZXMK
+PiB0byB2YWxpZGF0ZSB0aGUgc2hhcmQuICBUaGUgSU1BIGxvZyBjb3VsZCBiZSB0cnVuY2F0ZWQg
+aW4gdGhlIHNhbWUgd2F5Cj4gKHJlcGxhY2UgdGhlIHJlbW92ZWQgcGFydCBvZiB0aGUgbG9nIHdp
+dGggYSBUUE0yX1F1b3RlIGFuZCBBSywgc28gdGhlCj4gbG9nIHN0aWxsIHZhbGlkYXRlcyBmcm9t
+IHRoZSBiZWdpbm5pbmcgcXVvdGUgdG8gdGhlIGVuZCkuCkhlcmUgd2UgbWVhbnQganVzdCB0cnVu
+Y2F0aW5nIElNQSBsb2cgaXMgbm90IGEgY29tcGxldGUKc29sdXRpb24gaW4gaXRzZWxmLiBBcyB5
+b3Ugc2FpZCwgd2UgaGF2ZSB0byB0YWtlIGFkZGl0aW9uYWwgc3RlcHMKbGlrZSBsb2dnaW5nIFRQ
+TTJfUXVvdGVzIGV0Yy4gTG9nZ2luZyBBSyBpcyBhbiBpbnRlcmVzdGluZyBwcm9wb3NhbAp3aGlj
+aCB3ZSBkaWRu4oCZdCBjb25zaWRlciBlYXJsaWVyLiBJIGFtIG5vdCBzdXJlIGlmIGVtYmVkZGlu
+ZyBBSyB0byBJTUEKbG9nL3NuYXBzaG90IGlzIG5lZWRlZC4gSWYgdGhlIGNsaWVudCBzZW5kcyB0
+aGVtIHNlcGFyYXRlbHkgd2l0aCAic2lnbmVkClBDUiBxdW90ZXMiICsgIklNQSBsb2ciICsgc25h
+cHNob3RzLCBpdCBzaG91bGQgc3RpbGwgc2VydmUgdGhlIHB1cnBvc2UsCnJpZ2h0PwoKPgo+IElm
+IHlvdSB1c2UgYSBUUE0yX1F1b3RlIG1lY2hhbmlzbSB0byBzYXZlIHRoZSBsb2csIGFsbCB5b3Ug
+bmVlZCB0byBkbwo+IGlzIGhhdmUgdGhlIGtlcm5lbCBnZW5lcmF0ZSB0aGUgcXVvdGUgd2l0aCBh
+biBpbnRlcm5hbCBBSy4gIFlvdSBjYW4KPiBrZWVwIGEgcmVjb3JkIG9mIHRoZSBxdW90ZSBhbmQg
+dGhlIEFLIGF0IHRoZSBiZWdpbm5pbmcgb2YgdGhlIHRydW5jYXRlZAo+IGtlcm5lbCBsb2cuICBJ
+ZiB0aGUgdHJ1bmNhdGVkIGVudHJpZXMgYXJlIHNhdmVkIGluIGEgZmlsZSBzaGFyZCBpdAo+IHNo
+b3VsZCBoYXZlIGEgYmVnaW5uaW5nIGFuZCBlbmQgcXVvdGUgYW5kIGEgcmVjb3JkIG9mIHRoZSBB
+SyB1c2VkLgpBIG5ldyBJTUEgbG9nIHNuYXBzaG90IGZpbGUgKG9yIHNoYXJkIGFzIHlvdSBjYWxs
+IGl0KSB3aWxsIGhhdmUKdGhlIFRQTTJfUXVvdGUgcmVjb3JkIChwbHVzIHNvbWUgYWRkaXRpb25h
+bCBtZXRhZGF0YSkgYXQgdGhlIGJlZ2lubmluZy4KSSBkb24ndCBiZWxpZXZlIGl0IG5lZWRzIHRv
+IGJlIGxvZ2dlZCBhdCB0aGUgZW5kIG9mIHRoZSBzbmFwc2hvdCAoc2luY2UgCml0IGNhbgpiZSBj
+b21wdXRlZCBieSByZXBsYXlpbmcgdGhlIHJlbWFpbmluZyBlbnRyaWVzIGluIHRoZSBzbmFwc2hv
+dCkuCgpTZWUgdGhlIHNuYXBzaG90X2FnZ3JlZ2F0ZSBmaWVsZCBpbiBzZWN0aW9uIEIuNSBpbiB0
+aGUgb3JpZ2luYWwgUkZDIG1haWwgClsxXS4KPiBTaW5jZSB2ZXJpZmllcnMgbGlrZSBLZXlsaW1l
+IGFyZSBhbHJlYWR5IHVzaW5nIHRoaXMgYmVnaW5uaW5nIGFuZCBlbmQKPiBxdW90ZSBmb3Igc2hh
+cmRlZCBsb2dzLCBpdCdzIHRoZSBtb3N0IG5hdHVyYWwgZm9ybWF0IHRvIGZlZWQgdG8KPiBzb21l
+dGhpbmcgZXh0ZXJuYWxseSBmb3IgdmVyaWZpY2F0aW9uIGFuZCBpdCBtZWFucyB5b3UgZG9uJ3Qg
+aGF2ZSB0bwo+IGludmVudCBhIG5ldyBmb3JtYXQgdG8gZG8gdGhlIHNhbWUgdGhpbmcuCkNvdWxk
+IHlvdSBwbGVhc2UgcG9pbnQgdG8gdGhlIEtleWxpbWUgc291cmNlIGFuZC9vciBkb2N1bWVudGF0
+aW9uCndoaWNoIGV4cGxhaW5zIHRoZSB1c2Ugb2YgYmVnaW5uaW5nIGFuZCBlbmQgcXVvdGVzPyBX
+ZSB3b3VsZCBsaWtlIHRvCnVuZGVyc3RhbmQgaG93IHRoZSB2ZXJpZmllcnMgYXJlIGFkZHJlc3Np
+bmcgdGhpcyBwcm9ibGVtIGN1cnJlbnRseS4KCgpbMV0gCmh0dHBzOi8vbG9yZS5rZXJuZWwub3Jn
+L2FsbC9jNTczNzE0MS03ODI3LTFjODMtYWIzOC0wMTE5ZGNmZWE0ODVAbGludXgubWljcm9zb2Z0
+LmNvbS8jdAoKflR1c2hhcgo+Cj4gUmVnYXJkcywKPgo+IEphbWVzCgoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVj
+QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9rZXhlYwo=
