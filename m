@@ -4,62 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9D0D5C001B0
-	for <kexec@archiver.kernel.org>; Fri, 11 Aug 2023 07:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A0401EB64DD
+	for <kexec@archiver.kernel.org>; Fri, 11 Aug 2023 07:31:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=2S/neoU3HN4pofD9JCD1cz7Q23geEhoBRrPzOlLCF0Y=; b=auDGJtFVsfu7/P
-	Q8qcbCtDiBVEoRgprkWs+9tBMbALig4NNvMTIOl1gGruRLoow9AZKWuE8XIJ5gwisRH9KzVDr/hBH
-	2kE24W0znPUYCD+n2FsIRwXVrFcS06cWQVAEcA4sP+XtZaLkAYs6f2vWDxpj+VrI6Q5DOsxzohetx
-	BDlOfrpVMhsGATzDTBtd2Du/bLyRICuOpf2D1ZRFY3mMuDqwdgw06lgomd2lHcJ+xB7v2YJq4d1H9
-	bLEG1bQlYWs7lBbUAjKBxGIdq6frunuWi0VntsuaetZjV+P/17EyAlvNyi3BcqKrJodpabXVGqK9f
-	KoFdjUjfNuKlJQ7T+Fjg==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Subject:To:From
+	:Date:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=nVpVRY9vyDPby3OfReizCrxCIj7dC4A9h4P6cwi0Z0w=; b=w1RQRG0MZrEf36
+	cXv8zKwq6SsdUSL/wX/U8tPVRmpPyEIoaKgSV8LoJdtxrWvbp20IGCx5O/qvheTKc9j7dIe9FnxVW
+	/hDfZiN4mwu1oqru2BppP0oFvsRHIKWQ8HxSRc2jj+vz8teqUJC2+0BOrfV3E+i6Wdb0sWhWeAk/K
+	9EC50+ShVdhOkZNzHJC/nWbApvOVTwKRx5xVQjwwF1FwGIHfWCxzapcSUVOqdpEyuO5zi4fyZAsKj
+	Sg1/MDYmoAziU7gHDrFkXjw1w2CwOLWnmoKdTKnIE7pHMbizU/64GyhsCNaIci4wILRYYsPTXYC9n
+	+QXygo9pguYvtCcxGdJA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qUMaM-009kVN-1p;
-	Fri, 11 Aug 2023 07:29:26 +0000
-Received: from dfw.source.kernel.org ([139.178.84.217])
+	id 1qUMbx-009kgS-2I;
+	Fri, 11 Aug 2023 07:31:05 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qUMaJ-009kUk-25
+	id 1qUMbv-009kg4-0Y
 	for kexec@lists.infradead.org;
-	Fri, 11 Aug 2023 07:29:24 +0000
+	Fri, 11 Aug 2023 07:31:04 +0000
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 23FEE63354;
-	Fri, 11 Aug 2023 07:29:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40B90C433C8;
-	Fri, 11 Aug 2023 07:29:21 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 9F4A560DBC
+	for <kexec@lists.infradead.org>; Fri, 11 Aug 2023 07:31:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73194C433C8
+	for <kexec@lists.infradead.org>; Fri, 11 Aug 2023 07:31:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1691738962;
-	bh=XJU+LlVLWapnhz/8gPxmFI6uCVjVGrIUpoTjrOxlv8c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WCtxHZ+id3y01wWtXXyJ6ABkrEA07D4v/raYyCTeQYZ7Q2W50CDxDDmbXOoZuM/Xl
-	 /k+m1pRpVvCOpWirEWERTzBPtJ4xOhEcdZU+jqYkS+HnndpZX2kfx4RZe1uIwY/lO7
-	 jACQ3lzQQ3NgOcqyQbOtyJBsYaaNS2Oxh3ETWrO/llj4eLQIdkC9391bF/yDSek57R
-	 7bwyo0n/j358jJQbd/63x51Vtpx2HVK3KrZpZccP28QaccDwQWMi0LK54Orf40x+z5
-	 XQ5zncJvAuhNwS4JbmulGhgSJxrPbiA2Uf7+I/rd3575TO1JfnmcRDl/obOdkKJ1IG
-	 EsfAvfmALVa3A==
-Date: Fri, 11 Aug 2023 09:29:19 +0200
+	s=k20201202; t=1691739061;
+	bh=ZUlacCuYW0yl025n+zG3PEyJTB0jL23XwqtzbUb1Ig0=;
+	h=Date:From:To:Subject:From;
+	b=tD9TWVSIz6bWi2fzmAD5cdo1KhA0H9MRK7N1kXM6RmdpR1OzJDZYkeb14ADReARrR
+	 IVBlT2xquUWy1QAhFJBGNTxRqNKZ3SZLwlVDqicHqhUZXt5sRI8e5/VwtFJid36UAd
+	 Cx12RMmmRLquUVb6upClVEEHbTl8CSD3HxvFZYF4DBpW4jsjdHistzU4ad57CKr1VX
+	 penYTGDJOtx1QF7sEj45MBjDb2ociU7C1ljK0HdN5knJ2wCCFHiUKiKQXfOCLgtYNi
+	 o1XggnA4FrH5H5yCMuNAS+I9YwtUDdzXqCRyL5dZm33FX8FcziG5IAIXNsHSbB4Ug8
+	 d3Bvmh/S50Idg==
+Date: Fri, 11 Aug 2023 09:30:59 +0200
 From: Simon Horman <horms@kernel.org>
-To: Pingfan Liu <piliu@redhat.com>
-Cc: kexec@lists.infradead.org, root <root@piliu.users.ipa.redhat.com>,
-	Dave Young <dyoung@redhat.com>, ardb@kernel.org,
-	jeremy.linton@arm.com
-Subject: Re: [PATCHv7 0/5] arm64: zboot support
-Message-ID: <ZNXjT8J2UCktknRa@vergenet.net>
-References: <20230803024152.11663-1-piliu@redhat.com>
+To: kexec@lists.infradead.org
+Subject: [ANNOUNCE] kexec-tools v2.0.27 preparation
+Message-ID: <ZNXjs19UOvGEl/5K@vergenet.net>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20230803024152.11663-1-piliu@redhat.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230811_002923_746169_226FB161 
-X-CRM114-Status: GOOD (  13.00  )
+X-CRM114-CacheID: sfid-20230811_003103_249892_C72CFD96 
+X-CRM114-Status: UNSURE (   7.67  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,35 +72,31 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Aug 03, 2023 at 10:41:47AM +0800, Pingfan Liu wrote:
-> From: root <root@piliu.users.ipa.redhat.com>
-> 
-> As more complicated capsule kernel format occurs like zboot, where the
-> compressed kernel is stored as a payload. The straight forward
-> decompression can not meet the demand.
->   
-> As the first step, on aarch64, reading in the kernel file in a probe
-> method and decide how to unfold the content by the method itself.
-> 
-> This series consists of two parts
-> [1/5], simplify the current aarch64 image probe
-> [2-5/5], return the kernel fd by the image load interface, and let the
-> handling of zboot image built on it. (Thanks for Dave Young, who
-> contributes the original idea and the code)
->  
->  
-> To ease the review, a branch is also available at https://github.com/pfliu/kexec-tools.git
-> branch zbootV7
->  
-> To: kexec@lists.infradead.org
-> Cc: Dave Young <dyoung@redhat.com>
-> Cc: horms@verge.net.au
-> Cc: ardb@kernel.org
-> Cc: jeremy.linton@arm.com
+Hi all,
 
-Thanks everyone,
+I am planning to release kexec-tools v2.0.27 in the next two weeks
+to roughly coincide with the release of the v6.5 kernel.
 
-applied.
+I would like to ask interested parties to send any patches they would like
+included in v2.0.27 within one week so they can be considered for inclusion
+in an rc release.
+
+For reference the patches queued up since v2.0.26 are as follows.
+
+Thanks to everyone who has contributed to kexec-tools!
+
+f67c4146d7b5 arm64: Hook up the ZBOOT support as vmlinuz
+fc7b83bdf734 arm64: Add ZBOOT PE containing compressed image support
+f41c4182b0c4 kexec/zboot: Add arch independent zboot support
+1572b91da7c4 kexec: Introduce a member kernel_fd in kexec_info
+714fa11590fe kexec/arm64: Simplify the code for zImage
+a8de94e5f033 LoongArch: kdump: Set up kernel image segment
+4203eaccfa92 kexec: __NR_kexec_file_load is set to undefined on LoongArch
+63e9a012112e ppc64: Add elf-ppc64 file types/options and an arch specific flag to man page
+806711fca9e9 x86: add devicetree support
+29fe5067ed07 kexec: make -a the default
+e63fefd4fc35 ppc64: add --reuse-cmdline parameter support
+8fc55927f700 kexec-tools 2.0.26.git
 
 _______________________________________________
 kexec mailing list
