@@ -4,58 +4,109 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A0401EB64DD
-	for <kexec@archiver.kernel.org>; Fri, 11 Aug 2023 07:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F1F82EB64DD
+	for <kexec@archiver.kernel.org>; Fri, 11 Aug 2023 07:53:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Subject:To:From
-	:Date:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=nVpVRY9vyDPby3OfReizCrxCIj7dC4A9h4P6cwi0Z0w=; b=w1RQRG0MZrEf36
-	cXv8zKwq6SsdUSL/wX/U8tPVRmpPyEIoaKgSV8LoJdtxrWvbp20IGCx5O/qvheTKc9j7dIe9FnxVW
-	/hDfZiN4mwu1oqru2BppP0oFvsRHIKWQ8HxSRc2jj+vz8teqUJC2+0BOrfV3E+i6Wdb0sWhWeAk/K
-	9EC50+ShVdhOkZNzHJC/nWbApvOVTwKRx5xVQjwwF1FwGIHfWCxzapcSUVOqdpEyuO5zi4fyZAsKj
-	Sg1/MDYmoAziU7gHDrFkXjw1w2CwOLWnmoKdTKnIE7pHMbizU/64GyhsCNaIci4wILRYYsPTXYC9n
-	+QXygo9pguYvtCcxGdJA==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:Cc:To:
+	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=TV+iY0wwt7k3CE7yCBCmCjzhTmzCDsuuzu4ACsOj4pQ=; b=EsI2evExv/xvkqthmvrEeQVpzu
+	VaDqDtNCd2ksT3Ac8WuPHoYOcaIQnJlhhRG+aRQjpKvZMZexcKoxW6XLEBhVHsCHymMYzbgr4WxGT
+	NHHcu6Fiqz51N059wj/3KgMoYbCqHGu5tajhh9jUBrPJV1Rr+MFf62fq6zg84xKZG0bS72KnbXWea
+	2JCHNTrR4qWvls0309N++qyYfBuxNjKdu0XYTgHR17h0m+vd22xXsLLHUddg3Rjg56PKrEK2Evc3L
+	DxcKYJRsMGZ8/7Ru8R9pwxlha2+cIyeOAepN2wY3WXZqRk0XmXFeLiP49dCu+tN7HYT47ix/83cin
+	/vJJLV+w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qUMbx-009kgS-2I;
-	Fri, 11 Aug 2023 07:31:05 +0000
-Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
+	id 1qUMxc-009nIL-2J;
+	Fri, 11 Aug 2023 07:53:28 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qUMbv-009kg4-0Y
-	for kexec@lists.infradead.org;
-	Fri, 11 Aug 2023 07:31:04 +0000
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 9F4A560DBC
-	for <kexec@lists.infradead.org>; Fri, 11 Aug 2023 07:31:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73194C433C8
-	for <kexec@lists.infradead.org>; Fri, 11 Aug 2023 07:31:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1691739061;
-	bh=ZUlacCuYW0yl025n+zG3PEyJTB0jL23XwqtzbUb1Ig0=;
-	h=Date:From:To:Subject:From;
-	b=tD9TWVSIz6bWi2fzmAD5cdo1KhA0H9MRK7N1kXM6RmdpR1OzJDZYkeb14ADReARrR
-	 IVBlT2xquUWy1QAhFJBGNTxRqNKZ3SZLwlVDqicHqhUZXt5sRI8e5/VwtFJid36UAd
-	 Cx12RMmmRLquUVb6upClVEEHbTl8CSD3HxvFZYF4DBpW4jsjdHistzU4ad57CKr1VX
-	 penYTGDJOtx1QF7sEj45MBjDb2ociU7C1ljK0HdN5knJ2wCCFHiUKiKQXfOCLgtYNi
-	 o1XggnA4FrH5H5yCMuNAS+I9YwtUDdzXqCRyL5dZm33FX8FcziG5IAIXNsHSbB4Ug8
-	 d3Bvmh/S50Idg==
-Date: Fri, 11 Aug 2023 09:30:59 +0200
-From: Simon Horman <horms@kernel.org>
-To: kexec@lists.infradead.org
-Subject: [ANNOUNCE] kexec-tools v2.0.27 preparation
-Message-ID: <ZNXjs19UOvGEl/5K@vergenet.net>
+	id 1qUMxZ-009nHe-0p;
+	Fri, 11 Aug 2023 07:53:27 +0000
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37B7gSdP003926;
+	Fri, 11 Aug 2023 07:53:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=fsxSThKavB4Wa/c1slzKbPIW5l6Yh6RXKmr7qs6SFSo=;
+ b=JGPM0ylHnbvmOTDiFgoOo/EMXDwuIqbqPDsZd1gFQ3sSSE0Bzqq8ifiLWmsDqfY/4mQc
+ 3ln3tLlol5hot0/q8aNQ87BpTl/hJ3+sk/634IbptVQNfkdlBgECVulA823V/6H6etew
+ 7ITA9Mkrvusa5ioRBTZmB7MCpKzeZC2eAV7Dh50r6oCicfL0X9wtMT1S58prdIyZ0r5M
+ zgU79h62Uj9vm6pJRd3UiDNnaDIK7pmIgf5bllZZYMHKcryoDj+AX2PhuvWPW7NJ37f+
+ G3nWTvSULjjZeYXJiUjOEXu4kGn1Dn2z/3EIWx17nYt5DUGPYwq2KGqzH0QsDAznAXLU 2Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sdgtwg7xn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 11 Aug 2023 07:53:15 +0000
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37B7hdWN007933;
+	Fri, 11 Aug 2023 07:53:14 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sdgtwg7xd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 11 Aug 2023 07:53:14 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37B76qu4015354;
+	Fri, 11 Aug 2023 07:53:13 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3sb3f3jj4q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 11 Aug 2023 07:53:13 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37B7rAsw57934296
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 11 Aug 2023 07:53:10 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9542E20040;
+	Fri, 11 Aug 2023 07:53:10 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C5EAC2004B;
+	Fri, 11 Aug 2023 07:53:06 +0000 (GMT)
+Received: from [9.43.111.169] (unknown [9.43.111.169])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 11 Aug 2023 07:53:06 +0000 (GMT)
+Message-ID: <772c4140-3035-16d8-0253-f5893c3698e2@linux.ibm.com>
+Date: Fri, 11 Aug 2023 13:23:05 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH V3 01/14] blk-mq: add blk_mq_max_nr_hw_queues()
+To: Baoquan He <bhe@redhat.com>, Ming Lei <ming.lei@redhat.com>
+Cc: Jens Axboe <axboe@kernel.dk>, linux-scsi@vger.kernel.org,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Pingfan Liu <piliu@redhat.com>, Dave Young <dyoung@redhat.com>,
+        npiggin@gmail.com, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-block@vger.kernel.org,
+        Wen Xiong <wenxiong@linux.ibm.com>, kexec@lists.infradead.org,
+        Keith Busch <kbusch@kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        Christoph Hellwig <hch@lst.de>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>
+References: <20230808104239.146085-1-ming.lei@redhat.com>
+ <20230808104239.146085-2-ming.lei@redhat.com> <20230809134401.GA31852@lst.de>
+ <ZNQqt1C0pXspGl3d@fedora> <ZNQ64xhCIBU6XM/5@MiWiFi-R3L-srv>
+ <ZNRGNsRzEJfzUEzH@fedora> <ZNRTGrRuwf69EgnE@MiWiFi-R3L-srv>
+Content-Language: en-US
+From: Hari Bathini <hbathini@linux.ibm.com>
+In-Reply-To: <ZNRTGrRuwf69EgnE@MiWiFi-R3L-srv>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: gWFn9VUrffjAE3WNuOELsGUhX27lTrVe
+X-Proofpoint-ORIG-GUID: oPPSb3RsDgqGSQYgmI0ooyVmbtyN59DI
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-Content-Disposition: inline
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-08-10_20,2023-08-10_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ impostorscore=0 clxscore=1011 mlxscore=0 priorityscore=1501 spamscore=0
+ mlxlogscore=999 adultscore=0 suspectscore=0 lowpriorityscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2306200000
+ definitions=main-2308110068
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230811_003103_249892_C72CFD96 
-X-CRM114-Status: UNSURE (   7.67  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20230811_005325_526610_046FA930 
+X-CRM114-Status: GOOD (  31.82  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -67,36 +118,81 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi all,
 
-I am planning to release kexec-tools v2.0.27 in the next two weeks
-to roughly coincide with the release of the v6.5 kernel.
 
-I would like to ask interested parties to send any patches they would like
-included in v2.0.27 within one week so they can be considered for inclusion
-in an rc release.
+On 10/08/23 8:31 am, Baoquan He wrote:
+> On 08/10/23 at 10:06am, Ming Lei wrote:
+>> On Thu, Aug 10, 2023 at 09:18:27AM +0800, Baoquan He wrote:
+>>> On 08/10/23 at 08:09am, Ming Lei wrote:
+>>>> On Wed, Aug 09, 2023 at 03:44:01PM +0200, Christoph Hellwig wrote:
+>>>>> I'm starting to sound like a broken record, but we can't just do random
+>>>>> is_kdump checks, and it's not going to get better by resending it again and
+>>>>> again.  If kdump kernels limit the number of possible CPUs, it needs to
+>>>>> reflected in cpu_possible_map and we need to use that information.
+>>>>>
+>>>>
+>>>> Can you look at previous kdump/arch guys' comment about kdump usage &
+>>>> num_possible_cpus?
+>>>>
+>>>>      https://lore.kernel.org/linux-block/CAF+s44RuqswbosY9kMDx35crviQnxOeuvgNsuE75Bb0Y2Jg2uw@mail.gmail.com/
+>>>>      https://lore.kernel.org/linux-block/ZKz912KyFQ7q9qwL@MiWiFi-R3L-srv/
+>>>>
+>>>> The point is that kdump kernels does not limit the number of possible CPUs.
+>>>>
+>>>> 1) some archs support 'nr_cpus=1' for kdump kernel, which is fine, since
+>>>> num_possible_cpus becomes 1.
+>>>
+>>> Yes, "nr_cpus=" is strongly suggested in kdump kernel because "nr_cpus="
+>>> limits the possible cpu numbers, while "maxcpuss=" only limits the cpu
+>>> number which can be brought up during bootup. We noticed this diference
+>>> because a large number of possible cpus will cost more memory in kdump
+>>> kernel. e.g percpu initialization, even though kdump kernel have set
+>>> "maxcpus=1".
+>>>
+>>> Currently x86 and arm64 all support "nr_cpus=". Pingfan ever spent much
+>>> effort to make patches to add "nr_cpus=" support to ppc64, seems ppc64
+>>> dev and maintainers do not care about it. Finally the patches are not
+>>> accepted, and the work is not continued.
+>>>
+>>> Now, I am wondering what is the barrier to add "nr_cpus=" to power ach.
+>>> Can we reconsider adding 'nr_cpus=' to power arch since real issue
+>>> occurred in kdump kernel?
+>>
+>> If 'nr_cpus=' can be supported on ppc64, this patchset isn't needed.
+>>
+>>>
+>>> As for this patchset, it can be accpeted so that no failure in kdump
+>>> kernel is seen on ARCHes w/o "nr_cpus=" support? My personal opinion.
+>>
+>> IMO 'nr_cpus=' support should be preferred, given it is annoying to
+>> maintain two kinds of implementation for kdump kernel from driver
+>> viewpoint. I guess kdump things can be simplified too with supporting
+>> 'nr_cpus=' only.
+> 
+> Yes, 'nr_cpus=' is ideal. Not sure if there's some underlying concerns so
+> that power people decided to not support it.
 
-For reference the patches queued up since v2.0.26 are as follows.
+Though "nr_cpus=1" is an ideal solution, maintainer was not happy with
+the patch as the code changes have impact for regular boot path and
+it is likely to cause breakages. So, even if "nr_cpus=1" support for
+ppc64 is revived, the change is going to take time to be accepted
+upstream.
 
-Thanks to everyone who has contributed to kexec-tools!
+Also, I see is_kdump_kernel() being used irrespective of "nr_cpus=1"
+support for other optimizations in the driver for the special dump
+capture environment kdump is.
 
-f67c4146d7b5 arm64: Hook up the ZBOOT support as vmlinuz
-fc7b83bdf734 arm64: Add ZBOOT PE containing compressed image support
-f41c4182b0c4 kexec/zboot: Add arch independent zboot support
-1572b91da7c4 kexec: Introduce a member kernel_fd in kexec_info
-714fa11590fe kexec/arm64: Simplify the code for zImage
-a8de94e5f033 LoongArch: kdump: Set up kernel image segment
-4203eaccfa92 kexec: __NR_kexec_file_load is set to undefined on LoongArch
-63e9a012112e ppc64: Add elf-ppc64 file types/options and an arch specific flag to man page
-806711fca9e9 x86: add devicetree support
-29fe5067ed07 kexec: make -a the default
-e63fefd4fc35 ppc64: add --reuse-cmdline parameter support
-8fc55927f700 kexec-tools 2.0.26.git
+If there is no other downside for driver code, to use is_kdump_kernel(),
+other than the maintainability aspect, I think the above changes are
+worth considering.
+
+Thanks
+Hari
 
 _______________________________________________
 kexec mailing list
