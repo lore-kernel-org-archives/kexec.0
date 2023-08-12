@@ -4,72 +4,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8C7E1EB64DD
-	for <kexec@archiver.kernel.org>; Sat, 12 Aug 2023 03:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 666F2C001B0
+	for <kexec@archiver.kernel.org>; Sat, 12 Aug 2023 10:48:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=ff0Pi6AAU/ZnAW6PA9WxFbyVaX9lfSehzmHaOHtI4hM=; b=B1iIjIJDwg0JU9
-	eHOHzVrOzWeo/3OVP8Xf1paTBIlAkRoHQZ44obr9Di2Qsmoha9ZpZp0VHSJYjsDjjaHSrl5W/ilG7
-	4vEbTIYIs3feblf7Aau0ihzAClmiD2YKpjkzV0zmM6p5uWyjeRDG6rSVTqpqtG2V8KcV+D88UetUV
-	W5XKaRbVtC0uXgDK6yurUqaSsfiEr9KxOc6Pa9Bm2b33Dm7FeLRQHRZqEa0hG2QY2V4Ad5+IWSNPe
-	+fyhljSpVtGik2bllPYL2zC6GOhOnoREDpXfEn9hILm7BFHuZaIyoSAnUEf0tSrvtRxFZYxTWYPi0
-	18Rd3UdWYLNpiy1mtpOQ==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:Cc:To:
+	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=+gdB/mK3QRvjRBTLp5sq5QPifCzzZ6D6GsnHkX2LW94=; b=jVOnSF3Lw5j3q0ofSKII6KYDLX
+	deCE1YR1ya2lVTZcZdMvimjgwy0tbBTaDZ5et2y8Dx2+97xKINIk/yDYJuY5Bt8p5Q6bTJCulf3/H
+	/JP1PKkszJoXgisMNkoYF9kC1+wdnBnOgIwNlgcGZgsdRl+a/mxsy3hDDdiUA5G4IoF/XJLcrsOSf
+	ljuWSOEUJt9NPBgMrhOak/8oVLoCb+8DKtNy6jNQ/udJEknpVwGILwofPRo4FDpb8/sAsD/CFsVYL
+	+NMgQohgqiJE5XKVdPhTi1hHoie0Sn6xE2zhFAEA1jCGgBeHgnJA7DkIJzqjBt4PeKfEw+Ubf/b5P
+	totR7KgQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qUfVN-00CZl8-2q;
-	Sat, 12 Aug 2023 03:41:33 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1qUmAj-00DGbL-38;
+	Sat, 12 Aug 2023 10:48:41 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qUfVH-00CZjm-1K
+	id 1qUmAg-00DGan-27
 	for kexec@lists.infradead.org;
-	Sat, 12 Aug 2023 03:41:29 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1691811684;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QTjvUvzMVBtwg6ufrIOAG45eqkF1iXrISKV8+2wLJ2c=;
-	b=J8e8BTuRQFS8ryfkup36Hz0l6/0TyBV9PqBklX0WgFTtvVQZf/+7yvg7RBOaLmHIL29keC
-	rdd9wqwePbWrCyFpMQwtqpPSQJadEBfl9kWlPyrfbJybp3q0F5fBit6D99lemwXR4TN6Yk
-	oeL8LBYYQTkYZhJk9V83+9EZHfQg1vU=
-Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-62-3ID4eYNwO222kcteJM47AA-1; Fri, 11 Aug 2023 23:41:20 -0400
-X-MC-Unique: 3ID4eYNwO222kcteJM47AA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 47B213C0D878;
-	Sat, 12 Aug 2023 03:41:20 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.12])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4E04940C2063;
-	Sat, 12 Aug 2023 03:41:18 +0000 (UTC)
-Date: Sat, 12 Aug 2023 11:41:16 +0800
-From: "bhe@redhat.com" <bhe@redhat.com>
-To: "Pandey, Radhey Shyam" <radhey.shyam.pandey@amd.com>
-Cc: "piliu@redhat.com" <piliu@redhat.com>,
-	"kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"Sarangi, Anirudha" <anirudha.sarangi@amd.com>
-Subject: Re: kexec reports "Cannot get kernel _text symbol address" on arm64
- platform
-Message-ID: <ZNb/XKryxy4VHvWF@MiWiFi-R3L-srv>
-References: <MN0PR12MB59538822AA264031D0CAE468B70DA@MN0PR12MB5953.namprd12.prod.outlook.com>
- <ZNL14lnrHvzbpRQu@MiWiFi-R3L-srv>
- <MN0PR12MB59535434E071499DDE439B08B710A@MN0PR12MB5953.namprd12.prod.outlook.com>
- <ZNbAC+nq2+CJSQX8@MiWiFi-R3L-srv>
+	Sat, 12 Aug 2023 10:48:40 +0000
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37CAJoGG001758;
+	Sat, 12 Aug 2023 10:48:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=pHcgMyXfl6z8JjUNXCvs1+SGwqPjT94l6NtAGbR9eaE=;
+ b=BdEJ/OmOJw4JeWAodh6XZKTTDFiZsYKM9XmimVKW+bpTydONWm5IYyzV60CYTDNR1Fnu
+ AlXZP/RJjA6vdN1Np/XTHlglT+bqc79v5tdcnd7XCqwZJOO7aYdUweiMRwoJqD5Y9xM1
+ Kcnbaar06ccl4jn7EgQNx6mSWFcIi6ihI0YlhIrY+oJA7vjQ/ocG/Xvwdj6p6B5X6dVp
+ Hlbat4nfHtGnS2/EZ5FH20F+qrZqpFy5SVcHy6IYGAo2iROaueFN0S06RJpExCxCX8rW
+ 0JJ86dasfWwhA67QdcbHVcR9GLVUXUSxjkuLfeKXIsKBEncCnd7qdTLAdR6DTkBZ4lJP Hw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3se87wgcd6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 12 Aug 2023 10:48:08 +0000
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37CAbSYn012907;
+	Sat, 12 Aug 2023 10:48:07 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3se87wgccf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 12 Aug 2023 10:48:07 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37C9VSYE017612;
+	Sat, 12 Aug 2023 10:48:06 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3se2ydj4fs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 12 Aug 2023 10:48:06 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37CAm40W14811696
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 12 Aug 2023 10:48:04 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0AABE20043;
+	Sat, 12 Aug 2023 10:48:04 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 56AEC20040;
+	Sat, 12 Aug 2023 10:47:54 +0000 (GMT)
+Received: from [9.43.125.184] (unknown [9.43.125.184])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Sat, 12 Aug 2023 10:47:54 +0000 (GMT)
+Message-ID: <188cfb39-7d10-967b-3150-22dac6e95baa@linux.ibm.com>
+Date: Sat, 12 Aug 2023 16:17:52 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v27 2/8] crash: add generic infrastructure for crash
+ hotplug support
+Content-Language: en-US
+To: Eric DeVolder <eric.devolder@oracle.com>, linux-kernel@vger.kernel.org,
+        david@redhat.com, osalvador@suse.de, corbet@lwn.net,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, bhe@redhat.com,
+        ebiederm@xmission.com, kexec@lists.infradead.org
+Cc: hpa@zytor.com, gregkh@linuxfoundation.org, rafael@kernel.org,
+        vgoyal@redhat.com, dyoung@redhat.com, lf32.dev@gmail.com,
+        akpm@linux-foundation.org, naveen.n.rao@linux.vnet.ibm.com,
+        zohar@linux.ibm.com, bhelgaas@google.com, vbabka@suse.cz,
+        tiwai@suse.de, seanjc@google.com, linux@weissschuh.net,
+        vschneid@redhat.com, linux-mm@kvack.org, linux-doc@vger.kernel.org,
+        konrad.wilk@oracle.com, boris.ostrovsky@oracle.com
+References: <20230811170642.6696-1-eric.devolder@oracle.com>
+ <20230811170642.6696-3-eric.devolder@oracle.com>
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+In-Reply-To: <20230811170642.6696-3-eric.devolder@oracle.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 0TnRMt3wwTfxhoKGQyXDfW-VCdQl6Vhh
+X-Proofpoint-ORIG-GUID: VXUlIvEhGxI7VATrM6Bx-5BTvNl9poBU
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <ZNbAC+nq2+CJSQX8@MiWiFi-R3L-srv>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-08-12_09,2023-08-10_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
+ malwarescore=0 mlxscore=0 adultscore=0 phishscore=0 clxscore=1011
+ impostorscore=0 lowpriorityscore=0 priorityscore=1501 suspectscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2308120098
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230811_204127_530510_59C6C57F 
-X-CRM114-Status: GOOD (  28.63  )
+X-CRM114-CacheID: sfid-20230812_034838_833707_DC5E051C 
+X-CRM114-Status: GOOD (  58.27  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,156 +120,338 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 08/12/23 at 07:11am, Baoquan He wrote:
-> On 08/11/23 at 01:27pm, Pandey, Radhey Shyam wrote:
-> > > -----Original Message-----
-> > > From: bhe@redhat.com <bhe@redhat.com>
-> > > Sent: Wednesday, August 9, 2023 7:42 AM
-> > > To: Pandey, Radhey Shyam <radhey.shyam.pandey@amd.com>;
-> > > piliu@redhat.com
-> > > Cc: kexec@lists.infradead.org; linux-kernel@vger.kernel.org
-> > > Subject: Re: kexec reports "Cannot get kernel _text symbol address" on
-> > > arm64 platform
-> > > 
-> > > On 08/08/23 at 07:17pm, Pandey, Radhey Shyam wrote:
-> > > > Hi,
-> > > >
-> > > > I am trying to bring up kdump on arm64 platform[1]. But I get "Cannot get
-> > > kernel _text symbol address".
-> > > >
-> > > > Is there some Dump-capture kernel config options that I am missing?
-> > > >
-> > > > FYI, copied below complete kexec debug log.
-> > > >
-> > > > [1]: https://www.xilinx.com/products/boards-and-kits/vck190.html
-> > > 
-> > > Your description isn't clear. You saw the printing, then your kdump kernel
-> > > loading succeeded or not?
-> > > 
-> > > If no, have you tried applying Pingfan's patchset and still saw the issue?
-> > > 
-> > > [PATCHv7 0/5] arm64: zboot support
-> > > https://lore.kernel.org/all/20230803024152.11663-1-piliu@redhat.com/T/#u
-> > 
-> > I was able to proceed further with loading with crash kernel on triggering system crash.
-> > echo c > /proc/sysrq-trigger
-> > 
-> > But when I copy /proc/vmcore it throws memory abort. Also I see size of /proc/vmcore really huge (18446603353488633856).
-> 
-> This is a better symptom description.
-> 
-> It's very similar with a solved issue even though the calltrace is not
-> completely same, can you try below patch to see if it fix your problem?
+Hello Eric,
 
-Oops, I was wrong. Below patch is irrelevant because it's a kcore issue,
-you met a vmcore issue, please ignore this. We need investigate to see
-what is happening.
+On 11/08/23 22:36, Eric DeVolder wrote:
+> To support crash hotplug, a mechanism is needed to update the crash
+> elfcorehdr upon CPU or memory changes (eg. hot un/plug or off/
+> onlining). The crash elfcorehdr describes the CPUs and memory to
+> be written into the vmcore.
+>
+> To track CPU changes, callbacks are registered with the cpuhp
+> mechanism via cpuhp_setup_state_nocalls(CPUHP_BP_PREPARE_DYN). The
+> crash hotplug elfcorehdr update has no explicit ordering requirement
+> (relative to other cpuhp states), so meets the criteria for
+> utilizing CPUHP_BP_PREPARE_DYN. CPUHP_BP_PREPARE_DYN is a dynamic
+> state and avoids the need to introduce a new state for crash
+> hotplug. Also, CPUHP_BP_PREPARE_DYN is the last state in the PREPARE
+> group, just prior to the STARTING group, which is very close to the
+> CPU starting up in a plug/online situation, or stopping in a unplug/
+> offline situation. This minimizes the window of time during an
+> actual plug/online or unplug/offline situation in which the
+> elfcorehdr would be inaccurate. Note that for a CPU being unplugged
+> or offlined, the CPU will still be present in the list of CPUs
+> generated by crash_prepare_elf64_headers(). However, there is no
+> need to explicitly omit the CPU, see justification in
+> 'crash: change crash_prepare_elf64_headers() to for_each_possible_cpu()'.
+>
+> To track memory changes, a notifier is registered to capture the
+> memblock MEM_ONLINE and MEM_OFFLINE events via register_memory_notifier().
+>
+> The CPU callbacks and memory notifiers invoke crash_handle_hotplug_event()
+> which performs needed tasks and then dispatches the event to the
+> architecture specific arch_crash_handle_hotplug_event() to update the
+> elfcorehdr with the current state of CPUs and memory. During the
+> process, the kexec_lock is held.
+>
+> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+> Reviewed-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+> Acked-by: Hari Bathini <hbathini@linux.ibm.com>
+> Acked-by: Baoquan He <bhe@redhat.com>
+> ---
+>   include/linux/crash_core.h |   9 +++
+>   include/linux/kexec.h      |  11 +++
+>   kernel/Kconfig.kexec       |  31 ++++++++
+>   kernel/crash_core.c        | 142 +++++++++++++++++++++++++++++++++++++
+>   kernel/kexec_core.c        |   6 ++
+>   5 files changed, 199 insertions(+)
+>
+> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+> index de62a722431e..e14345cc7a22 100644
+> --- a/include/linux/crash_core.h
+> +++ b/include/linux/crash_core.h
+> @@ -84,4 +84,13 @@ int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
+>   int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
+>   		unsigned long long *crash_size, unsigned long long *crash_base);
+>   
+> +#define KEXEC_CRASH_HP_NONE			0
+> +#define KEXEC_CRASH_HP_ADD_CPU			1
+> +#define KEXEC_CRASH_HP_REMOVE_CPU		2
+> +#define KEXEC_CRASH_HP_ADD_MEMORY		3
+> +#define KEXEC_CRASH_HP_REMOVE_MEMORY		4
+> +#define KEXEC_CRASH_HP_INVALID_CPU		-1U
+> +
+> +struct kimage;
+> +
+>   #endif /* LINUX_CRASH_CORE_H */
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index 811a90e09698..b9903dd48e24 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -33,6 +33,7 @@ extern note_buf_t __percpu *crash_notes;
+>   #include <linux/compat.h>
+>   #include <linux/ioport.h>
+>   #include <linux/module.h>
+> +#include <linux/highmem.h>
+>   #include <asm/kexec.h>
+>   
+>   /* Verify architecture specific macros are defined */
+> @@ -360,6 +361,12 @@ struct kimage {
+>   	struct purgatory_info purgatory_info;
+>   #endif
+>   
+> +#ifdef CONFIG_CRASH_HOTPLUG
+> +	int hp_action;
+> +	int elfcorehdr_index;
+> +	bool elfcorehdr_updated;
+> +#endif
+> +
+>   #ifdef CONFIG_IMA_KEXEC
+>   	/* Virtual address of IMA measurement buffer for kexec syscall */
+>   	void *ima_buffer;
+> @@ -490,6 +497,10 @@ static inline int arch_kexec_post_alloc_pages(void *vaddr, unsigned int pages, g
+>   static inline void arch_kexec_pre_free_pages(void *vaddr, unsigned int pages) { }
+>   #endif
+>   
+> +#ifndef arch_crash_handle_hotplug_event
+> +static inline void arch_crash_handle_hotplug_event(struct kimage *image) { }
+> +#endif
+> +
 
-> 
-> [PATCH] fs/proc/kcore: reinstate bounce buffer for KCORE_TEXT regions
-> https://lore.kernel.org/all/20230731215021.70911-1-lstoakes@gmail.com/T/#u
-> 
-> > Any possible guess on what could be wrong?
-> > 
-> > 
-> > [   80.733523] Starting crashdump kernel...
-> > [   80.737435] Bye!
-> > [    0.000000] Booting Linux on physical CPU 0x0000000001 [0x410fd083]
-> > [    0.000000] Linux version 6.5.0-rc4-ge28001fb4e07 (radheys@xhdradheys41) (aarch64-xilinx-linux-gcc.real (GCC) 12.2.0, GNU ld (GNU Binutils) 2.39.0.20220819) #23 SMP Fri Aug 11 16:25:34 IST 2023
-> > <snip>
-> > 
-> > 
-> > 
-> > xilinx-vck190-20232:/run/media/mmcblk0p1# cat /proc/meminfo | head
-> > MemTotal:        2092876 kB
-> > MemFree:         1219928 kB
-> > MemAvailable:    1166004 kB
-> > Buffers:              32 kB
-> > Cached:           756952 kB
-> > SwapCached:            0 kB
-> > Active:             1480 kB
-> > Inactive:          24164 kB
-> > Active(anon):       1452 kB
-> > Inactive(anon):    24160 kB
-> > xilinx-vck190-20232:/run/media/mmcblk0p1# cp /proc/vmcore dump     
-> > [  975.284865] Unable to handle kernel level 3 address size fault at virtual address ffff80008d7cf000
-> > [  975.293871] Mem abort info:
-> > [  975.296669]   ESR = 0x0000000096000003
-> > [  975.300425]   EC = 0x25: DABT (current EL), IL = 32 bits
-> > [  975.305738]   SET = 0, FnV = 0
-> > [  975.308788]   EA = 0, S1PTW = 0
-> > [  975.311925]   FSC = 0x03: level 3 address size fault
-> > [  975.316888] Data abort info:
-> > [  975.319763]   ISV = 0, ISS = 0x00000003, ISS2 = 0x00000000
-> > [  975.325245]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-> > [  975.330292]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-> > [  975.335599] swapper pgtable: 4k pages, 48-bit VAs, pgdp=000005016ef6b000
-> > [  975.342297] [ffff80008d7cf000] pgd=10000501eddfe003, p4d=10000501eddfe003, pud=10000501eddfd003, pmd=100005017b695003, pte=00687fff84000703
-> > [  975.354827] Internal error: Oops: 0000000096000003 [#4] SMP
-> > [  975.360392] Modules linked in:
-> > 3  975.
-> > 63440] CBPrUo:a d0c aPID: 664 Comm: cp Tainted: G      D            6.5.0-rc4-ge28001fb4e07 #23
-> > [  975.372822] Hardware name: Xilinx Versal vck190 Eval board revA (DT)
-> > [  975.379165] pstate: a0000005 (NzCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> > [  975.386119] pc : __memcpy+0x110/0x230
-> > [  975.389783] lr : _copy_to_iter+0x3d8/0x4d0
-> > [  975.393874] sp : ffff80008dc939a0
-> > [  975.397178] x29: ffff80008dc939a0 x28: ffff05013c1bea30 x27: 0000000000001000
-> > [  975.404309] x26: 0000000000001000 x25: 0000000000001000 x24: ffff80008d7cf000
-> > [  975.411440] x23: 0000040000000000 x22: ffff80008dc93ba0 x21: 0000000000001000
-> > [  975.418570] x20: ffff000000000000 x19: 0000000000001000 x18: 0000000000000000
-> > [  975.425699] x17: 0000000000000000 x16: 0000000000000000 x15: 0140000000000000
-> > [  975.432829] x14: ffff8500a9919000 x13: 0040000000000001 x12: 0000fffef6831000
-> > [  975.439958] x11: ffff80008d9cf000 x10: 0000000000000000 x9 : 0000000000000000
-> > [  975.447088] x8 : ffff80008d7d0000 x7 : ffff0501addfd358 x6 : 0400000000000001
-> > [  975.454217] x5 : ffff0501370e9000 x4 : ffff80008d7d0000 x3 : 0000000000000000
-> > [  975.461346] x2 : 0000000000001000 x1 : ffff80008d7cf000 x0 : ffff0501370e8000
-> > [  975.468476] Call trace:
-> > [  975.470912]  __memcpy+0x110/0x230
-> > [  975.474221]  copy_oldmem_page+0x70/0xac
-> > [  975.478050]  read_from_oldmem.part.0+0x120/0x188
-> > [  975.482663]  read_vmcore+0x14c/0x238
-> > [  975.486231]  proc_reg_read_iter+0x84/0xd8
-> > [  975.490233]  copy_splice_read+0x160/0x288
-> > [  975.494236]  vfs_splice_read+0xac/0x10c
-> > [  975.498063]  splice_direct_to_actor+0xa4/0x26c
-> > [  975.502498]  do_splice_direct+0x90/0xdc
-> > [  975.506325]  do_sendfile+0x344/0x454
-> > [  975.509892]  __arm64_sys_sendfile64+0x134/0x140
-> > [  975.514415]  invoke_syscall+0x54/0x124
-> > [  975.518157]  el0_svc_common.constprop.0+0xc4/0xe4
-> > [  975.522854]  do_el0_svc+0x38/0x98
-> > [  975.526162]  el0_svc+0x2c/0x84
-> > [  975.529211]  el0t_64_sync_handler+0x100/0x12c
-> > [  975.533562]  el0t_64_sync+0x190/0x194
-> > [  975.537218] Code: cb01000e b4fffc2e eb0201df 540004a3 (a940342c) 
-> > [  975.543302] ---[ end trace 0000000000000000 ]---
-> > t message from systemd-journald@xilinx-vck190-20232 (Tue 2022-11-08 14:16:20 UTC):
-> > 
-> > kernel[539]: [  975.354827] Internal error: Oops: 0000000096000003 [#4] SMP
-> > 
-> > 
-> > Broadcast message from systemd-journald@xilinx-vck190-20232 (Tue 2022-11-08 14:16:20 UTC):
-> > 
-> > kernel[539]: [  975.537218] Code: cb01000e b4fffc2e eb0201df 540004a3 (a940342c)
-> > 
-> > Segmentation fault
-> > xilinx-vck190-20232:/run/media/mmcblk0p1# ls -lrth /proc/vmcore 
-> > -r--------    1 root     root       16.0E Nov  8 14:05 /proc/vmcore
-> > xilinx-vck190-20232:/run/media/mmcblk0p1# ls -lh /proc/vmcore
-> > -r--------    1 root     root       16.0E Nov  8 14:05 /proc/vmcore
-> > xilinx-vck190-20232:/run/media/mmcblk0p1# ls -l /proc/vmcore
-> > -r--------    1 root     root     18446603353488633856 Nov  8 14:05 /proc/vmcore
-> > 
-> > Thanks,
-> > Radhey
-> > 
-> 
+Isn't the above function should be declare under CONFIG_CRASH_HOTPLUG?
+
+Thanks,
+Sourabh
+
+>   #else /* !CONFIG_KEXEC_CORE */
+>   struct pt_regs;
+>   struct task_struct;
+> diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
+> index ff72e45cfaef..d0a9a5392035 100644
+> --- a/kernel/Kconfig.kexec
+> +++ b/kernel/Kconfig.kexec
+> @@ -113,4 +113,35 @@ config CRASH_DUMP
+>   	  For s390, this option also enables zfcpdump.
+>   	  See also <file:Documentation/s390/zfcpdump.rst>
+>   
+> +config CRASH_HOTPLUG
+> +	bool "Update the crash elfcorehdr on system configuration changes"
+> +	default y
+> +	depends on CRASH_DUMP && (HOTPLUG_CPU || MEMORY_HOTPLUG)
+> +	depends on ARCH_SUPPORTS_CRASH_HOTPLUG
+> +	help
+> +	  Enable direct update to the crash elfcorehdr (which contains
+> +	  the list of CPUs and memory regions to be dumped upon a crash)
+> +	  in response to hot plug/unplug or online/offline of CPUs or
+> +	  memory. This is a much more advanced approach than userspace
+> +	  attempting that.
+> +
+> +	  If unsure, say Y.
+> +
+> +config CRASH_MAX_MEMORY_RANGES
+> +	int "Specify the maximum number of memory regions for the elfcorehdr"
+> +	default 8192
+> +	depends on CRASH_HOTPLUG
+> +	help
+> +	  For the kexec_file_load() syscall path, specify the maximum number of
+> +	  memory regions that the elfcorehdr buffer/segment can accommodate.
+> +	  These regions are obtained via walk_system_ram_res(); eg. the
+> +	  'System RAM' entries in /proc/iomem.
+> +	  This value is combined with NR_CPUS_DEFAULT and multiplied by
+> +	  sizeof(Elf64_Phdr) to determine the final elfcorehdr memory buffer/
+> +	  segment size.
+> +	  The value 8192, for example, covers a (sparsely populated) 1TiB system
+> +	  consisting of 128MiB memblocks, while resulting in an elfcorehdr
+> +	  memory buffer/segment size under 1MiB. This represents a sane choice
+> +	  to accommodate both baremetal and virtual machine configurations.
+> +
+>   endmenu
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index b7c30b748a16..53d211c690a1 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -11,6 +11,8 @@
+>   #include <linux/vmalloc.h>
+>   #include <linux/sizes.h>
+>   #include <linux/kexec.h>
+> +#include <linux/memory.h>
+> +#include <linux/cpuhotplug.h>
+>   
+>   #include <asm/page.h>
+>   #include <asm/sections.h>
+> @@ -18,6 +20,7 @@
+>   #include <crypto/sha1.h>
+>   
+>   #include "kallsyms_internal.h"
+> +#include "kexec_internal.h"
+>   
+>   /* vmcoreinfo stuff */
+>   unsigned char *vmcoreinfo_data;
+> @@ -697,3 +700,142 @@ static int __init crash_save_vmcoreinfo_init(void)
+>   }
+>   
+>   subsys_initcall(crash_save_vmcoreinfo_init);
+> +
+> +#ifdef CONFIG_CRASH_HOTPLUG
+> +#undef pr_fmt
+> +#define pr_fmt(fmt) "crash hp: " fmt
+> +/*
+> + * To accurately reflect hot un/plug changes of cpu and memory resources
+> + * (including onling and offlining of those resources), the elfcorehdr
+> + * (which is passed to the crash kernel via the elfcorehdr= parameter)
+> + * must be updated with the new list of CPUs and memories.
+> + *
+> + * In order to make changes to elfcorehdr, two conditions are needed:
+> + * First, the segment containing the elfcorehdr must be large enough
+> + * to permit a growing number of resources; the elfcorehdr memory size
+> + * is based on NR_CPUS_DEFAULT and CRASH_MAX_MEMORY_RANGES.
+> + * Second, purgatory must explicitly exclude the elfcorehdr from the
+> + * list of segments it checks (since the elfcorehdr changes and thus
+> + * would require an update to purgatory itself to update the digest).
+> + */
+> +static void crash_handle_hotplug_event(unsigned int hp_action, unsigned int cpu)
+> +{
+> +	struct kimage *image;
+> +
+> +	/* Obtain lock while changing crash information */
+> +	if (!kexec_trylock()) {
+> +		pr_info("kexec_trylock() failed, elfcorehdr may be inaccurate\n");
+> +		return;
+> +	}
+> +
+> +	/* Check kdump is not loaded */
+> +	if (!kexec_crash_image)
+> +		goto out;
+> +
+> +	image = kexec_crash_image;
+> +
+> +	if (hp_action == KEXEC_CRASH_HP_ADD_CPU ||
+> +		hp_action == KEXEC_CRASH_HP_REMOVE_CPU)
+> +		pr_debug("hp_action %u, cpu %u\n", hp_action, cpu);
+> +	else
+> +		pr_debug("hp_action %u\n", hp_action);
+> +
+> +	/*
+> +	 * The elfcorehdr_index is set to -1 when the struct kimage
+> +	 * is allocated. Find the segment containing the elfcorehdr,
+> +	 * if not already found.
+> +	 */
+> +	if (image->elfcorehdr_index < 0) {
+> +		unsigned long mem;
+> +		unsigned char *ptr;
+> +		unsigned int n;
+> +
+> +		for (n = 0; n < image->nr_segments; n++) {
+> +			mem = image->segment[n].mem;
+> +			ptr = kmap_local_page(pfn_to_page(mem >> PAGE_SHIFT));
+> +			if (ptr) {
+> +				/* The segment containing elfcorehdr */
+> +				if (memcmp(ptr, ELFMAG, SELFMAG) == 0)
+> +					image->elfcorehdr_index = (int)n;
+> +				kunmap_local(ptr);
+> +			}
+> +		}
+> +	}
+> +
+> +	if (image->elfcorehdr_index < 0) {
+> +		pr_err("unable to locate elfcorehdr segment");
+> +		goto out;
+> +	}
+> +
+> +	/* Needed in order for the segments to be updated */
+> +	arch_kexec_unprotect_crashkres();
+> +
+> +	/* Differentiate between normal load and hotplug update */
+> +	image->hp_action = hp_action;
+> +
+> +	/* Now invoke arch-specific update handler */
+> +	arch_crash_handle_hotplug_event(image);
+> +
+> +	/* No longer handling a hotplug event */
+> +	image->hp_action = KEXEC_CRASH_HP_NONE;
+> +	image->elfcorehdr_updated = true;
+> +
+> +	/* Change back to read-only */
+> +	arch_kexec_protect_crashkres();
+> +
+> +	/* Errors in the callback is not a reason to rollback state */
+> +out:
+> +	/* Release lock now that update complete */
+> +	kexec_unlock();
+> +}
+> +
+> +static int crash_memhp_notifier(struct notifier_block *nb, unsigned long val, void *v)
+> +{
+> +	switch (val) {
+> +	case MEM_ONLINE:
+> +		crash_handle_hotplug_event(KEXEC_CRASH_HP_ADD_MEMORY,
+> +			KEXEC_CRASH_HP_INVALID_CPU);
+> +		break;
+> +
+> +	case MEM_OFFLINE:
+> +		crash_handle_hotplug_event(KEXEC_CRASH_HP_REMOVE_MEMORY,
+> +			KEXEC_CRASH_HP_INVALID_CPU);
+> +		break;
+> +	}
+> +	return NOTIFY_OK;
+> +}
+> +
+> +static struct notifier_block crash_memhp_nb = {
+> +	.notifier_call = crash_memhp_notifier,
+> +	.priority = 0
+> +};
+> +
+> +static int crash_cpuhp_online(unsigned int cpu)
+> +{
+> +	crash_handle_hotplug_event(KEXEC_CRASH_HP_ADD_CPU, cpu);
+> +	return 0;
+> +}
+> +
+> +static int crash_cpuhp_offline(unsigned int cpu)
+> +{
+> +	crash_handle_hotplug_event(KEXEC_CRASH_HP_REMOVE_CPU, cpu);
+> +	return 0;
+> +}
+> +
+> +static int __init crash_hotplug_init(void)
+> +{
+> +	int result = 0;
+> +
+> +	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
+> +		register_memory_notifier(&crash_memhp_nb);
+> +
+> +	if (IS_ENABLED(CONFIG_HOTPLUG_CPU)) {
+> +		result = cpuhp_setup_state_nocalls(CPUHP_BP_PREPARE_DYN,
+> +			"crash/cpuhp", crash_cpuhp_online, crash_cpuhp_offline);
+> +	}
+> +
+> +	return result;
+> +}
+> +
+> +subsys_initcall(crash_hotplug_init);
+> +#endif
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index e2f2574d8b74..5d323255862a 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -277,6 +277,12 @@ struct kimage *do_kimage_alloc_init(void)
+>   	/* Initialize the list of unusable pages */
+>   	INIT_LIST_HEAD(&image->unusable_pages);
+>   
+> +#ifdef CONFIG_CRASH_HOTPLUG
+> +	image->hp_action = KEXEC_CRASH_HP_NONE;
+> +	image->elfcorehdr_index = -1;
+> +	image->elfcorehdr_updated = false;
+> +#endif
+> +
+>   	return image;
+>   }
+>   
 
 
 _______________________________________________
