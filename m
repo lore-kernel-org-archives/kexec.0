@@ -4,63 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E8913C001B0
-	for <kexec@archiver.kernel.org>; Tue, 15 Aug 2023 10:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 32F26C001E0
+	for <kexec@archiver.kernel.org>; Tue, 15 Aug 2023 10:50:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=YnnKXmoTNFWPkXPmjCb3FxBxNfottXNs0yB5B6l83fQ=; b=KlOS1vN6iuBCNh
-	DfFvRAwvieCMGp9/zRvMpg4fOS+RVZKE12tyYPcBJlIt7707OnKe+/i+ZrCrpepgfYW9AMFREQ+WC
-	4ujoAhc21LrJJdApd1Ps74vz9RVtKh+cmgVHcebsaQ4dGny6Wnqs/MEUMrAKNbM3oQznXT3ceb6j6
-	s/Sm+pbqSsKwxW4YhbowpMCXBwU2WBp25T1DF3VNkaZjnGAfQ48efdUu6z0CJIztrDggWBJ03KwQO
-	eLWWVMcs06CPFvhdDSFFLceqUfhFcOowqeZhE2Qcnv4RQOJtYDUS5dAu4LFtrbb8Ey5wGUfCv+vml
-	ZsupXCiuW8YZwr11b1fA==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=Qs0ml9WqI483JBvH4RXONEm7L+hzMVdxV7coB/xpEn4=; b=l7gmj+sUVryNtT
+	KVUQnya52j2zmVxjZYUtGVJfxvpirlsK+Yvb2yJgg8nAEbGUT5zMOrO8OUIp/LxwJPQcleuU/o9kK
+	b1ItYZ/2vccD/s+953xg7F5tEoRwlBre5ZI8lbhZJWs8u14ArMeJrx9s5etxvXmB9wkGXItpOtAyp
+	xBjssKK1fyAag6+RvvWqYwgQmtE+fdmGCb1Qxg7eE8kn9zYJwxaDxU9OWVH+4dLs3zAakXP+74MJP
+	D4rIz3FBPiVbtxSvivMecymc2TTHV/z7odMHAjX8It0Kpl/TxPmiwvQRoVGcHoOAEoyIKOFg/2mYN
+	i0ZE4m516iNaiUCb4YKQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qVrT5-001J7d-2Q;
-	Tue, 15 Aug 2023 10:40:07 +0000
-Received: from dfw.source.kernel.org ([139.178.84.217])
+	id 1qVrdE-001KND-2S;
+	Tue, 15 Aug 2023 10:50:36 +0000
+Received: from bg4.exmail.qq.com ([43.155.67.158])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qVrT2-001J6e-1E
-	for kexec@lists.infradead.org;
-	Tue, 15 Aug 2023 10:40:05 +0000
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 9C64265498;
-	Tue, 15 Aug 2023 10:40:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE1DEC433C7;
-	Tue, 15 Aug 2023 10:39:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1692096000;
-	bh=LpDuDmXwtvKKiIAQ3I9sznNgGjycDIKymnYyZz1F9Tc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PGRam2aMHip6R8asnMjxFw+qs1Xa0zprS3nWIuPIuRQDCcM0SxCNYykmBgWtZvpEO
-	 wg1bFZsjsAtGh6N+Jtk6LQh9ROztOAUAaBSgoF/Oy8sFzZub6SHIJerudPMwxJrxjT
-	 Ef7smVOji2ktmHivCX65DaLFRxTENch3NIKkWWzO/2jtSTelT3GslAc+6QDknNI0ct
-	 B0nOlJTY+o5nvb7bow6zphfZhgb8xXNVS4d9x2MgSnOVxj1wjaZ3MyLKpwCBt2iur7
-	 SBerkMTDX85h2C60hrl4msdN8EQqhKAUN3j6OjizOv8kIMyaf34vtO4dRadehQ92xQ
-	 mGUhFfJg4+Y1g==
-Date: Tue, 15 Aug 2023 12:39:56 +0200
-From: Simon Horman <horms@kernel.org>
-To: Coiby Xu <coxu@redhat.com>
-Cc: Sourabh Jain <sourabhjain@linux.ibm.com>,
-	Simon Horman <horms@kernel.org>, kexec@lists.infradead.org
-Subject: Re: [ANNOUNCE] kexec-tools v2.0.27 preparation
-Message-ID: <ZNtV/P4fPCrMevQZ@vergenet.net>
-References: <ZNXjs19UOvGEl/5K@vergenet.net>
- <d92decbb-768c-27e7-8c0b-eea662a86670@linux.ibm.com>
- <ymdn754ihzovgpgoikjnpwueqx6zzmgcempvlr6bsn5rx3mwrw@62dmgvygv4eo>
+	id 1qVrdA-001KKd-2A;
+	Tue, 15 Aug 2023 10:50:35 +0000
+X-QQ-mid: bizesmtp78t1692096533tqw77zvr
+Received: from localhost.localdomain ( [221.226.144.218])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 15 Aug 2023 18:48:51 +0800 (CST)
+X-QQ-SSF: 01200000000000B0B000000A0000000
+X-QQ-FEAT: rZJGTgY0+YMW5DdpUqE/uxFUSfrDxy1/9tAZByanbxvWWIqR870ykuNueNqb6
+	LIDON3wk2mEk441WvWfQUBxKoWj2/m51tF/enBR4D8JLRHifnfJPhTBIUj7bbGFyFBMNbva
+	0Fj6l0cg8SMyKEt0Q4kD7Wq8ujsi0s8Vpzz/UzXfij/mXgu699rYly19VF5D4s/+uii7kX4
+	B1HLjcvregTDZIjaasVqei3sy+rrMJJvw62r/LRYwMLODvy3XvgBbhqhMEt/0tHBc6JdpeO
+	kvVlF2PHCeOR276sw1JUM8u7lW3yWKddqN04/bQDZ/8fIi9SITaYBYV78WNW1VnC0YCC0o+
+	lack9p9DAiXbeMS1dbHou0AXk9300jRX1IkXCBaEySIVyLAqgrr21Nwblk0/A==
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 7910942497712437719
+From: Song Shuai <songshuaishuai@tinylab.org>
+To: xianting.tian@linux.alibaba.com,
+	mick@ics.forth.gr,
+	heinrich.schuchardt@canonical.com,
+	guoren@kernel.org,
+	k-hagio-ab@nec.com,
+	yixun.lan@gmail.com,
+	lijiang@redhat.com
+Cc: linux-riscv@lists.infradead.org,
+	kexec@lists.infradead.org,
+	crash-utility@redhat.com,
+	Song Shuai <suagrfillet@gmail.com>
+Subject: [Crash-utility PATCH] RISCV64: Add KASLR support
+Date: Tue, 15 Aug 2023 18:48:00 +0800
+Message-Id: <20230815104800.705753-1-songshuaishuai@tinylab.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <ymdn754ihzovgpgoikjnpwueqx6zzmgcempvlr6bsn5rx3mwrw@62dmgvygv4eo>
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:tinylab.org:qybglogicsvrsz:qybglogicsvrsz4a-0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230815_034004_464329_13D47D42 
-X-CRM114-Status: GOOD (  16.62  )
+X-CRM114-CacheID: sfid-20230815_035033_036450_E7811295 
+X-CRM114-Status: GOOD (  14.72  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -72,39 +72,62 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Aug 14, 2023 at 11:19:07AM +0800, Coiby Xu wrote:
-> Hi Sourabh,
-> 
-> On Mon, Aug 14, 2023 at 08:17:34AM +0530, Sourabh Jain wrote:
-> > Hello Simon,
-> > 
-> > Can we include below fix?
-> > https://lists.fedoraproject.org/archives/list/kexec@lists.fedoraproject.org/thread/O3W4SLVVFT6J25U5YSXNZ3URZ4QY6SRU/
-> 
-> I'll review your patch! Note the patch is against Fedora's kexec-tools
-> so it doesn't apply to this upstream kexec-tools. The relationship
-> between Fedora's kexec-tools and this upstream kexec-tools can be
-> described as follows,
-> 1. Fedora's kexec-tools packages the kexec binary which is provides by upstream
-> kexec-tools; 2. The kexec binary is used for loading the kdump kernel and
-> initrd but
-> it's not responsible for building the kdump initrd. Fedora's kexec-tools
-> is used to build the kdump initrd instead.
-> 
-> Currrently it's WIP to split current Fedora kexec-tools into
-> kexec-tools, kdump-utils, makedumpfile and eppic. Hopefully after it's
-> done, you and other uses will no longer be confused by the relationship
-> between Fedora's kexec-tools and this upstream kexec-tools.
-
-Thanks for the clarification, I'm assuming no action is needed on my part
-at this time. Let me know if I am mistaken.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+RnJvbTogU29uZyBTaHVhaSA8c3VhZ3JmaWxsZXRAZ21haWwuY29tPgoKVGhpcyBwYXRjaCBhZGRz
+IEtBU0xSIHN1cHBvcnQgZm9yIENyYXNoIHRvIGFuYWx5emUgS0FTTFItZWQgdm1jb3JlCnNpbmNl
+IFJJU0MtViBMaW51eCBpcyBhbHJlYWR5IHN1ZmZpY2llbnRseSBwcmVwYXJlZCBmb3IgS0FTTFIg
+WzFdLgoKV2l0aCB0aGlzIHBhdGNoLCBldmVuIGlmIHRoZSBDcmFzaCAnLS1rYXNscicgb3B0aW9u
+IGlzIG5vdCBzZXQgb3IgTGludXgKQ09ORklHX1JBTkRPTUlaRV9CQVNFIGlzIG5vdCBjb25maWd1
+cmVkLCB0aGUgJ2Rlcml2ZV9rYXNscl9vZmZzZXQoKScKZnVuY3Rpb24gd2lsbCBhbHdheXMgd29y
+a8KgdG8gY2FsY3VsYXRlICdrdC0+cmVsb2NhdGUnIHdoaWNoIHNlcnZlcyB0bwp1cGRhdGUgdGhl
+IGtlcm5lbCB2aXJ0dWFsIGFkZHJlc3MuCgpbMV06IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xp
+bnV4LXJpc2N2LzIwMjMwNzIyMTIzODUwLjYzNDU0NC0xLWFsZXhnaGl0aUByaXZvc2luYy5jb20v
+CgpTaWduZWQtb2ZmLWJ5OiBTb25nIFNodWFpIDxzdWFncmZpbGxldEBnbWFpbC5jb20+Ci0tLQog
+bWFpbi5jICAgIHwgIDIgKy0KIHJpc2N2NjQuYyB8IDExICsrKysrKysrKysrCiBzeW1ib2xzLmMg
+fCAgNCArKy0tCiAzIGZpbGVzIGNoYW5nZWQsIDE0IGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25z
+KC0pCgpkaWZmIC0tZ2l0IGEvbWFpbi5jIGIvbWFpbi5jCmluZGV4IGIyNzhjMjIuLjBjNmU1OTUg
+MTAwNjQ0Ci0tLSBhL21haW4uYworKysgYi9tYWluLmMKQEAgLTIyOCw3ICsyMjgsNyBAQCBtYWlu
+KGludCBhcmdjLCBjaGFyICoqYXJndikKIAkJCX0gZWxzZSBpZiAoU1RSRVEobG9uZ19vcHRpb25z
+W29wdGlvbl9pbmRleF0ubmFtZSwgImthc2xyIikpIHsKIAkJCQlpZiAoIW1hY2hpbmVfdHlwZSgi
+WDg2XzY0IikgJiYKIAkJCQkgICAgIW1hY2hpbmVfdHlwZSgiQVJNNjQiKSAmJiAhbWFjaGluZV90
+eXBlKCJYODYiKSAmJgotCQkJCSAgICAhbWFjaGluZV90eXBlKCJTMzkwWCIpKQorCQkJCSAgICAh
+bWFjaGluZV90eXBlKCJTMzkwWCIpICYmICFtYWNoaW5lX3R5cGUoIlJJU0NWNjQiKSkKIAkJCQkJ
+ZXJyb3IoSU5GTywgIi0ta2FzbHIgbm90IHZhbGlkICIKIAkJCQkJCSJ3aXRoIHRoaXMgbWFjaGlu
+ZSB0eXBlLlxuIik7CiAJCQkJZWxzZSBpZiAoU1RSRVEob3B0YXJnLCAiYXV0byIpKQpkaWZmIC0t
+Z2l0IGEvcmlzY3Y2NC5jIGIvcmlzY3Y2NC5jCmluZGV4IGEwMmY3NWEuLjI4OGM3YWUgMTAwNjQ0
+Ci0tLSBhL3Jpc2N2NjQuYworKysgYi9yaXNjdjY0LmMKQEAgLTM3OCw2ICszNzgsOSBAQCBzdGF0
+aWMgdm9pZCByaXNjdjY0X2dldF92YV9yYW5nZShzdHJ1Y3QgbWFjaGluZV9zcGVjaWZpYyAqbXMp
+CiAJfSBlbHNlCiAJCWdvdG8gZXJyb3I7CiAKKwlpZiAoKGt0LT5mbGFnczIgJiBLQVNMUikgJiYg
+KGt0LT5mbGFncyAmIFJFTE9DX1NFVCkpCisJCW1zLT5rZXJuZWxfbGlua19hZGRyICs9IChrdC0+
+cmVsb2NhdGUgKiAtMSk7CisKIAkvKgogCSAqIEZyb20gTGludXggNS4xMywgdGhlIGtlcm5lbCBt
+YXBwaW5nIGlzIG1vdmVkIHRvIHRoZSBsYXN0IDJHQgogCSAqIG9mIHRoZSBhZGRyZXNzIHNwYWNl
+LCBtb2R1bGVzIHVzZSB0aGUgMkdCIG1lbW9yeSByYW5nZSByaWdodApAQCAtMTM2MCw2ICsxMzYz
+LDE0IEBAIHJpc2N2NjRfaW5pdChpbnQgd2hlbikKIAogCQltYWNoZGVwLT52ZXJpZnlfcGFkZHIg
+PSBnZW5lcmljX3ZlcmlmeV9wYWRkcjsKIAkJbWFjaGRlcC0+cHRyc19wZXJfcGdkID0gUFRSU19Q
+RVJfUEdEOworCisJCS8qCisJCSAqIEV2ZW4gaWYgQ09ORklHX1JBTkRPTUlaRV9CQVNFIGlzIG5v
+dCBjb25maWd1cmVkLAorCQkgKiBkZXJpdmVfa2FzbHJfb2Zmc2V0KCkgc2hvdWxkIHdvcmsgYW5k
+IHNldAorCQkgKiBrdC0+cmVsb2NhdGUgdG8gMAorCQkgKi8KKwkJaWYgKCFrdC0+cmVsb2NhdGUg
+JiYgIShrdC0+ZmxhZ3MyICYgKFJFTE9DX0FVVE98S0FTTFIpKSkKKwkJCWt0LT5mbGFnczIgfD0g
+KFJFTE9DX0FVVE98S0FTTFIpOwogCQlicmVhazsKIAogCWNhc2UgUFJFX0dEQjoKZGlmZiAtLWdp
+dCBhL3N5bWJvbHMuYyBiL3N5bWJvbHMuYwppbmRleCA4NzZiZTdhLi44ZThiNGMzIDEwMDY0NAot
+LS0gYS9zeW1ib2xzLmMKKysrIGIvc3ltYm9scy5jCkBAIC02MjksNyArNjI5LDcgQEAga2FzbHJf
+aW5pdCh2b2lkKQogCWNoYXIgKnN0cmluZzsKIAogCWlmICgoIW1hY2hpbmVfdHlwZSgiWDg2XzY0
+IikgJiYgIW1hY2hpbmVfdHlwZSgiQVJNNjQiKSAmJiAhbWFjaGluZV90eXBlKCJYODYiKSAmJgot
+CSAgICAhbWFjaGluZV90eXBlKCJTMzkwWCIpKSB8fCAoa3QtPmZsYWdzICYgUkVMT0NfU0VUKSkK
+KwkgICAgIW1hY2hpbmVfdHlwZSgiUzM5MFgiKSAmJiAhbWFjaGluZV90eXBlKCJSSVNDVjY0Iikp
+IHx8IChrdC0+ZmxhZ3MgJiBSRUxPQ19TRVQpKQogCQlyZXR1cm47CiAKIAlpZiAoIWt0LT52bWNv
+cmVpbmZvLl9zdGV4dF9TWU1CT0wgJiYKQEAgLTc5NSw3ICs3OTUsNyBAQCBzdG9yZV9zeW1ib2xz
+KGJmZCAqYWJmZCwgaW50IGR5bmFtaWMsIHZvaWQgKm1pbmlzeW1zLCBsb25nIHN5bWNvdW50LAog
+CQl9IGVsc2UgaWYgKCEoa3QtPmZsYWdzICYgUkVMT0NfU0VUKSkKIAkJCWt0LT5mbGFncyB8PSBS
+RUxPQ19GT1JDRTsKIAl9IGVsc2UgaWYgKG1hY2hpbmVfdHlwZSgiWDg2XzY0IikgfHwgbWFjaGlu
+ZV90eXBlKCJBUk02NCIpIHx8Ci0JCSAgIG1hY2hpbmVfdHlwZSgiUzM5MFgiKSkgeworCQkgICBt
+YWNoaW5lX3R5cGUoIlMzOTBYIikgfHwgbWFjaGluZV90eXBlKCJSSVNDVjY0IikpIHsKIAkJaWYg
+KChrdC0+ZmxhZ3MyICYgUkVMT0NfQVVUTykgJiYgIShrdC0+ZmxhZ3MgJiBSRUxPQ19TRVQpKQog
+CQkJZGVyaXZlX2thc2xyX29mZnNldChhYmZkLCBkeW5hbWljLCBmcm9tLAogCQkJCWZyb21lbmQs
+IHNpemUsIHN0b3JlKTsKLS0gCjIuMjAuMQoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRl
+YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
