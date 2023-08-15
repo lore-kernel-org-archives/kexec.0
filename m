@@ -4,65 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BDE69C001B0
-	for <kexec@archiver.kernel.org>; Tue, 15 Aug 2023 07:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E8913C001B0
+	for <kexec@archiver.kernel.org>; Tue, 15 Aug 2023 10:40:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	List-Subscribe:List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:
-	In-Reply-To:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Reply-To:Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date
-	:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=XYgJtR/Hx7sItLGiuCJxlYqkfTgVXWIq8BLUOlDopKk=; b=QNdnCpmuHUNJP5toLIt/AolqI6
-	Bw9iHxMMLLaZ1xXC7x1NhMk5bRqW0jzfi79PvVuuBOk33dggOyoz1tZhMICkyyTg/Kl+7/2YtkNpI
-	s4k13Q2SJjuJs4mRFkpnizE53WwWAxmBhKZbMGuXsEqjUA1a7o+g5wQ+T9y3hoWt1vj6Yg9v41Gx6
-	pUKx9Uc45i9pLSuXhdyO6+eUVXsz/LHRAOH3s477v7J3mqu2Owc66upUe30OZG602NUQFyc+c5lAu
-	/6qc2hVJ2aq0EgLbwc4+rJ+HLxtpAZS3yGo54qexrSAASPjTi6PRxQXSY2SGCxNAyzek17LRVf9/T
-	owDvBIOw==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=YnnKXmoTNFWPkXPmjCb3FxBxNfottXNs0yB5B6l83fQ=; b=KlOS1vN6iuBCNh
+	DfFvRAwvieCMGp9/zRvMpg4fOS+RVZKE12tyYPcBJlIt7707OnKe+/i+ZrCrpepgfYW9AMFREQ+WC
+	4ujoAhc21LrJJdApd1Ps74vz9RVtKh+cmgVHcebsaQ4dGny6Wnqs/MEUMrAKNbM3oQznXT3ceb6j6
+	s/Sm+pbqSsKwxW4YhbowpMCXBwU2WBp25T1DF3VNkaZjnGAfQ48efdUu6z0CJIztrDggWBJ03KwQO
+	eLWWVMcs06CPFvhdDSFFLceqUfhFcOowqeZhE2Qcnv4RQOJtYDUS5dAu4LFtrbb8Ey5wGUfCv+vml
+	ZsupXCiuW8YZwr11b1fA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qVo9g-0012jS-1n;
-	Tue, 15 Aug 2023 07:07:52 +0000
+	id 1qVrT5-001J7d-2Q;
+	Tue, 15 Aug 2023 10:40:07 +0000
 Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qVo9d-0012ia-21
+	id 1qVrT2-001J6e-1E
 	for kexec@lists.infradead.org;
-	Tue, 15 Aug 2023 07:07:51 +0000
+	Tue, 15 Aug 2023 10:40:05 +0000
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 27ABE611FE;
-	Tue, 15 Aug 2023 07:07:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8382AC433C8;
-	Tue, 15 Aug 2023 07:07:43 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 9C64265498;
+	Tue, 15 Aug 2023 10:40:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE1DEC433C7;
+	Tue, 15 Aug 2023 10:39:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1692083265;
-	bh=pCtZjnKJUEa8FYa56axMkuXgP7EQY2H3kfh4BalzC5k=;
+	s=k20201202; t=1692096000;
+	bh=LpDuDmXwtvKKiIAQ3I9sznNgGjycDIKymnYyZz1F9Tc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=koC16Z5X8KRHAsokwXHCtaxTfmGzvA2P6a+uDRkioYImlWv0mQd8ZTlmRcmq50dUL
-	 eXf0SjGLCqqBrkDQu8azw5AavKXIWkIXybNTCH5diViIw+sf9BXT7CQ6WPtJbp/koA
-	 6CcLTL0kDB8qV+gDu8x+wJfdx6k/4j2lG+jlC0UKYL3gxbsT4t7XraMUp4t4uRXnce
-	 Q3z2wW8x0c3SsaRMg/mMAFzGpMZT6JUiGdurgMHeEUDIZ2sX7EFogsKJSDa761OKm3
-	 uyZwMh46+xFgiOdhVy7pNlb98WNpu5nJ8D+WIb/8i6O2oBKmv42yLJq54mvlUsUrNH
-	 fNB9BiSA9hW5A==
-Date: Tue, 15 Aug 2023 08:07:41 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Song Shuai <songshuaishuai@tinylab.org>
-Cc: Conor Dooley <conor.dooley@microchip.com>,
-	xianting.tian@linux.alibaba.com, guoren@kernel.org,
-	horms@kernel.org, huanyi.xj@alibaba-inc.com, mick@ics.forth.gr,
-	yixun.lan@gmail.com, kexec@lists.infradead.org
-Subject: Re: [PATCH 1/2] RISC-V: Use linux,usable-memory-range for crash
- kernel
-Message-ID: <20230815-irritably-resident-7b717f79a98e@spud>
-References: <20230811104117.91406-1-songshuaishuai@tinylab.org>
- <20230814-hefty-reformist-ac79d3c6b84b@wendy>
- <1815D8529965B5FE+f6e31844-3c4e-6290-cf28-6822fb7d34ea@tinylab.org>
+	b=PGRam2aMHip6R8asnMjxFw+qs1Xa0zprS3nWIuPIuRQDCcM0SxCNYykmBgWtZvpEO
+	 wg1bFZsjsAtGh6N+Jtk6LQh9ROztOAUAaBSgoF/Oy8sFzZub6SHIJerudPMwxJrxjT
+	 Ef7smVOji2ktmHivCX65DaLFRxTENch3NIKkWWzO/2jtSTelT3GslAc+6QDknNI0ct
+	 B0nOlJTY+o5nvb7bow6zphfZhgb8xXNVS4d9x2MgSnOVxj1wjaZ3MyLKpwCBt2iur7
+	 SBerkMTDX85h2C60hrl4msdN8EQqhKAUN3j6OjizOv8kIMyaf34vtO4dRadehQ92xQ
+	 mGUhFfJg4+Y1g==
+Date: Tue, 15 Aug 2023 12:39:56 +0200
+From: Simon Horman <horms@kernel.org>
+To: Coiby Xu <coxu@redhat.com>
+Cc: Sourabh Jain <sourabhjain@linux.ibm.com>,
+	Simon Horman <horms@kernel.org>, kexec@lists.infradead.org
+Subject: Re: [ANNOUNCE] kexec-tools v2.0.27 preparation
+Message-ID: <ZNtV/P4fPCrMevQZ@vergenet.net>
+References: <ZNXjs19UOvGEl/5K@vergenet.net>
+ <d92decbb-768c-27e7-8c0b-eea662a86670@linux.ibm.com>
+ <ymdn754ihzovgpgoikjnpwueqx6zzmgcempvlr6bsn5rx3mwrw@62dmgvygv4eo>
 MIME-Version: 1.0
-In-Reply-To: <1815D8529965B5FE+f6e31844-3c4e-6290-cf28-6822fb7d34ea@tinylab.org>
+Content-Disposition: inline
+In-Reply-To: <ymdn754ihzovgpgoikjnpwueqx6zzmgcempvlr6bsn5rx3mwrw@62dmgvygv4eo>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230815_000749_743264_E1A64CC4 
-X-CRM114-Status: GOOD (  19.30  )
+X-CRM114-CacheID: sfid-20230815_034004_464329_13D47D42 
+X-CRM114-Status: GOOD (  16.62  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,76 +72,39 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============3391513575448857914=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On Mon, Aug 14, 2023 at 11:19:07AM +0800, Coiby Xu wrote:
+> Hi Sourabh,
+> 
+> On Mon, Aug 14, 2023 at 08:17:34AM +0530, Sourabh Jain wrote:
+> > Hello Simon,
+> > 
+> > Can we include below fix?
+> > https://lists.fedoraproject.org/archives/list/kexec@lists.fedoraproject.org/thread/O3W4SLVVFT6J25U5YSXNZ3URZ4QY6SRU/
+> 
+> I'll review your patch! Note the patch is against Fedora's kexec-tools
+> so it doesn't apply to this upstream kexec-tools. The relationship
+> between Fedora's kexec-tools and this upstream kexec-tools can be
+> described as follows,
+> 1. Fedora's kexec-tools packages the kexec binary which is provides by upstream
+> kexec-tools; 2. The kexec binary is used for loading the kdump kernel and
+> initrd but
+> it's not responsible for building the kdump initrd. Fedora's kexec-tools
+> is used to build the kdump initrd instead.
+> 
+> Currrently it's WIP to split current Fedora kexec-tools into
+> kexec-tools, kdump-utils, makedumpfile and eppic. Hopefully after it's
+> done, you and other uses will no longer be confused by the relationship
+> between Fedora's kexec-tools and this upstream kexec-tools.
 
---===============3391513575448857914==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="vOV1D9Vp+DOZz99k"
-Content-Disposition: inline
-
-
---vOV1D9Vp+DOZz99k
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Aug 15, 2023 at 10:49:12AM +0800, Song Shuai wrote:
->=20
->=20
-> =E5=9C=A8 2023/8/14 19:10, Conor Dooley =E5=86=99=E9=81=93:
-> > On Fri, Aug 11, 2023 at 06:41:16PM +0800, Song Shuai wrote:
-> > > Now we use "memeory::linux,usable-memory" to indicate the available
-> > > memory for the crash kernel.
-> > >=20
-> > > While booting with UEFI, the crash kernel would use efi.memmap to
-> > > re-populate memblock and then first kernel's memory would be corrpute=
-d.
-> > > Consequently, the /proc/vmcore file failed to create in my local test.
-> > >=20
-> > > And according to "chosen" dtschema [1], the available memory for the
-> > > crash kernel should be held via "chosen::linux,usable-memory-range"
-> > > property which will re-cap memblock even after UEFI's re-population.
-> > >=20
-> > > [1]:
-> > > https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schema=
-s/chosen.yaml
-> >=20
-> > nit: Please use Link: tags for links rather than free-form text.
-> >=20
-> > This doesn't apply to fixes, for-next or master. What is your base?
-> >=20
-> Actually, I sent these patches to kexec-tools/build-test-riscv-v2,
-> perhaps I shouldn't cc the linux-riscv mailing list.
-
-Oh right, sorry about that!
-
---vOV1D9Vp+DOZz99k
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZNskLAAKCRB4tDGHoIJi
-0l8jAQC8OOSmwyLyZKRPNrapQh2ik7llkiKKJJq8ND/Sz7EafAEA0OdYLTlt2yP1
-qdgmyeijlI+HZ4jFKrnccIIof5+LfgQ=
-=kxOG
------END PGP SIGNATURE-----
-
---vOV1D9Vp+DOZz99k--
-
-
---===============3391513575448857914==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Thanks for the clarification, I'm assuming no action is needed on my part
+at this time. Let me know if I am mistaken.
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============3391513575448857914==--
-
