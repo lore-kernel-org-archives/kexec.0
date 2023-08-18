@@ -4,63 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 54D0DC001DE
-	for <kexec@archiver.kernel.org>; Fri, 18 Aug 2023 09:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 11FB2C05052
+	for <kexec@archiver.kernel.org>; Fri, 18 Aug 2023 10:49:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Subject:To:From
+	:Date:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=mMFSBvxqhe1QSkC+md+GHuekRIhfAXDESHS4uDpfUO0=; b=PB14KrckvLTgbx
-	5fTOCsuLvs6k9lJAQfHG9r9Pg1Z6Cdr9NkfWc9Yx6nqkP4VZj30BWKdhKfQFNui+oUgFmi43N3IqH
-	jkjQ5c72PTbkWsJbnwcnEhy/Q6v/aG4omKwqv8QjNr7acJrM6/1X1u9TrvIET5p2mfq+kN7Vo0Ufe
-	1Dgj6xCtsh5TJf/rxnvOrGUlWLeWahgEhdd2TZwaR6IkL8PR4MTLfUzRjUZfD7Ua7GlhWdlyEYgU+
-	CEqNDnhcVKbIIGzAMk9I3FyIbeJ2TFCVlyjLeyHmgKbx5/ywz8mYE+KE5a+rynyawFGNaNcr5D512
-	GRZ+Z3TK4wFB8lcO8i/g==;
+	List-Owner; bh=ZQ2ItQjemagCbfX0yG0edjeglPtOgpyJfWQqYqU63RE=; b=W45XFSsiz0hGVx
+	EIvyenj9JWg02ZXuEoBvkjW7GbFUB3zktpQRPtCfymKrCn5kTNcDNU7P9u+0HPAcDMezE5KJL7qVV
+	TTGd2e9OPXmLVgw1ug4KryJGf4ZLpVZI3oJVIpl+3CpBTebIrQp6skMGTdm9xJMNuTgwuZ8/imMjy
+	yK0nXkvBRjjABDIvyjUExlic0Shj+K0AW5WQz/N98kgc2bgMe5RyhZ9ahUNUa6jJY9FblRtfbYVKN
+	mqFF33HcJNg8hT5tVT4xfZ3AOdR0C60LpHB+/i0Fa8MsQwTGYz9dEoXB6VhVRyzt5N+X9fuF2rpbx
+	EIyFlG/TcbVHinBcR72g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qWw9O-0088yI-1L;
-	Fri, 18 Aug 2023 09:52:14 +0000
-Received: from bg4.exmail.qq.com ([43.154.221.58])
+	id 1qWx2V-008LWO-10;
+	Fri, 18 Aug 2023 10:49:11 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qWw9J-0088wY-0D;
-	Fri, 18 Aug 2023 09:52:11 +0000
-X-QQ-mid: bizesmtp89t1692352231tywfa1bm
-Received: from localhost.localdomain ( [61.183.83.60])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 18 Aug 2023 17:50:30 +0800 (CST)
-X-QQ-SSF: 01200000000000D0D000000A0000000
-X-QQ-FEAT: xnbq7qFd8vprDzjZChdw+TNRpRXlOB7G0+uO75guUGIV9Cu0rivaXtLi2NhCg
-	xrjv3NtDi7yI394qgiVmxqCe0u6+vEC/XDgJhxv8QRze0L4BGdCLahk2d+3cHMGRsyeh9D8
-	DCvHwT/hb994F7PomV6YEfQBmZFcOf3NLwFRDIODZEiuM1Y5tcmp7OzT1b7mX1XXExtIlec
-	hj1m3LogqZ3AjGWr77m/f9gdzavMjF5KuEOQAM8jtCwW0zgTUkI7a2PZM8N96z1SSC44hAQ
-	UsZzkcmHBUTcqeabrEDehOmqJgeCw09cWaBUGWLt5165G5Dy633nN1HL0Jfi15vcg2SBtSK
-	uj5SE8FDmzcH5lJX5yeTg6m56m3eC9Bv8UaYnW5
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 6813891064426468315
-From: Song Shuai <songshuaishuai@tinylab.org>
-To: xianting.tian@linux.alibaba.com,
-	mick@ics.forth.gr,
-	heinrich.schuchardt@canonical.com,
-	guoren@kernel.org,
-	k-hagio-ab@nec.com,
-	yixun.lan@gmail.com,
-	lijiang@redhat.com
-Cc: linux-riscv@lists.infradead.org,
-	kexec@lists.infradead.org,
-	crash-utility@redhat.com,
-	Song Shuai <suagrfillet@gmail.com>
-Subject: [Crash-utility PATCH V2] RISCV64: Add KASLR support
-Date: Fri, 18 Aug 2023 17:50:28 +0800
-Message-Id: <20230818095028.1012639-1-songshuaishuai@tinylab.org>
-X-Mailer: git-send-email 2.20.1
+	id 1qWx2R-008LTJ-25
+	for kexec@lists.infradead.org;
+	Fri, 18 Aug 2023 10:49:09 +0000
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 7014A632A4
+	for <kexec@lists.infradead.org>; Fri, 18 Aug 2023 10:49:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F65EC433C7
+	for <kexec@lists.infradead.org>; Fri, 18 Aug 2023 10:49:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1692355745;
+	bh=fJfa1iDwK+kQXUJ0fJK3l9f5+0dVJ0vAidbP5tjjvcg=;
+	h=Date:From:To:Subject:From;
+	b=jxmtae9G326WiEI8pgj8hN8XCLpp7SIKMNW/8MdXlStm6M+9+n6dcKxqGbkF5zki+
+	 BDhzvpVt3ShRX7aFomdZzU9gimgNlJO3Bad7uiCQSRWEw+cQ9HkVtjU4x/8P3yiIdY
+	 L5QIJISGmFafPUT44NuQleGkuA4y40bmCpRAgkU/njAiGupgO0q9a2UJ7uO9Eqf9wH
+	 Gp/bRmBHvPHp2GtVwF3xTu5JFbtROKG0eLPG1qBU+38IdvaSEi0snsJfjdIPY8BZDX
+	 qfqOCNrmD/+ToKz+I1X2hK9fAqH3JsptWbDmVeOsPNDeyV9qVDquC/zcELvn6PWQ8+
+	 ZDPPuDjBALTzg==
+Date: Fri, 18 Aug 2023 12:49:02 +0200
+From: Simon Horman <horms@kernel.org>
+To: kexec@lists.infradead.org
+Subject: [ANNOUNCE] kexec-tools 2.0.27-rc1
+Message-ID: <ZN9MnhFyaAbcVzo3@vergenet.net>
 MIME-Version: 1.0
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:tinylab.org:qybglogicsvrsz:qybglogicsvrsz4a-0
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230818_025209_453215_8B3DB010 
-X-CRM114-Status: GOOD (  15.94  )
+X-CRM114-CacheID: sfid-20230818_034907_748088_F22E8C4F 
+X-CRM114-Status: GOOD (  10.25  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -72,93 +66,53 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-RnJvbTogU29uZyBTaHVhaSA8c3VhZ3JmaWxsZXRAZ21haWwuY29tPgoKVGhpcyBwYXRjaCBhZGRz
-IEtBU0xSIHN1cHBvcnQgZm9yIENyYXNoIHRvIGFuYWx5emUgS0FTTFItZWQgdm1jb3JlCnNpbmNl
-IFJJU0MtViBMaW51eCBpcyBhbHJlYWR5IHN1ZmZpY2llbnRseSBwcmVwYXJlZCBmb3IgS0FTTFIg
-WzFdLgoKV2l0aCB0aGlzIHBhdGNoLCBldmVuIGlmIHRoZSBDcmFzaCAnLS1rYXNscicgb3B0aW9u
-IGlzIG5vdCBzZXQgb3IgTGludXgKQ09ORklHX1JBTkRPTUlaRV9CQVNFIGlzIG5vdCBjb25maWd1
-cmVkLCB0aGUgJ2Rlcml2ZV9rYXNscl9vZmZzZXQoKScKZnVuY3Rpb24gd2lsbCBhbHdheXMgd29y
-a8KgdG8gY2FsY3VsYXRlICdrdC0+cmVsb2NhdGUnIHdoaWNoIHNlcnZlcyB0bwp1cGRhdGUgdGhl
-IGtlcm5lbCB2aXJ0dWFsIGFkZHJlc3MuCgpUZXN0aW5nIGluIFFlbXUgcnY2NCB2aXJ0LCBrZXJu
-ZWwgbG9nIG91dHB1dGVkIHRoZSBrZXJuZWwgb2Zmc2V0OgoKWyAgMTIxLjIxNDQ0N10gU01QOiBz
-dG9wcGluZyBzZWNvbmRhcnkgQ1BVcwpbICAxMjEuMjE1NDQ1XSBLZXJuZWwgT2Zmc2V0OiAweDM3
-YzAwMDAwIGZyb20gMHhmZmZmZmZmZjgwMDAwMDAwClsgIDEyMS4yMTYzMTJdIFN0YXJ0aW5nIGNy
-YXNoZHVtcCBrZXJuZWwuLi4KWyAgMTIxLjIxNjU4NV0gV2lsbCBjYWxsIG5ldyBrZXJuZWwgYXQg
-OTQ4MDAwMDAgZnJvbSBoYXJ0IGlkIDAKWyAgMTIxLjIxNjgzNF0gRkRUIGltYWdlIGF0IDljN2Zk
-MDAwClsgIDEyMS4yMTY5ODJdIEJ5ZS4uLgoKUnVubmluZyBjcmFzaCB3aXRoIGAtZCAxYCBvcHRp
-b24gYW5kIHdpdGhvdXQgYC0ta2FzbHJgIG9wdGlvbiwKd2UgZ2V0IHRoZSByaWdodCBga3QtPnJl
-bG9jYXRlYCBhbmQga2VybmVsIGxpbmsgYWRkcjoKCiQgLi4vY3Jhc2gvY3Jhc2ggLWQgMSB2bWxp
-bnV4IHZtY29yZV9rYXNscl8wODE1Ci4uLgpLQVNMUjoKICBfc3RleHQgZnJvbSB2bWxpbnV4OiBm
-ZmZmZmZmZjgwMDAyMDAwCiAgX3N0ZXh0IGZyb20gdm1jb3JlaW5mbzogZmZmZmZmZmZiN2MwMjAw
-MAogIHJlbG9jYXRlOiAzN2MwMDAwMCAoODkyTUIpCnZtZW1tYXAgOiAweGZmMWMwMDAwMDAwMDAw
-MDAgLSAweGZmMjAwMDAwMDAwMDAwMDAKdm1hbGxvYyA6IDB4ZmYyMDAwMDAwMDAwMDAwMCAtIDB4
-ZmY2MDAwMDAwMDAwMDAwMAptdWR1bGVzIDogMHhmZmZmZmZmZjM5NTJmMDAwIC0gMHhmZmZmZmZm
-ZmI3YzAwMDAwCmxvd21lbSAgOiAweGZmNjAwMDAwMDAwMDAwMDAgLQprZXJuZWwgbGluayBhZGRy
-ICAgICAgICA6IDB4ZmZmZmZmZmZiN2MwMDAwMAouLi4KICAgICAgS0VSTkVMOiAvaG9tZS9zb25n
-LzlfbGludXgvbGludXgvMDBfcnZfa2FzbHIvdm1saW51eAogICAgRFVNUEZJTEU6IC90bXAvaGVs
-bG8vdm1jb3JlX2thc2xyXzA4MTUKICAgICAgICBDUFVTOiAyCiAgICAgICAgREFURTogVHVlIEF1
-ZyAxNSAxNjozNjoxNSBDU1QgMjAyMwogICAgICBVUFRJTUU6IDAwOjAyOjAxCkxPQUQgQVZFUkFH
-RTogMC40MCwgMC4yMywgMC4wOQogICAgICAgVEFTS1M6IDYzCiAgICBOT0RFTkFNRTogc3RhZ2U0
-LmZlZG9yYXByb2plY3Qub3JnCiAgICAgUkVMRUFTRTogNi41LjAtcmMzLTAwMDA4LWdhZDE4ZGVl
-NDIzYWMKICAgICBWRVJTSU9OOiAjMTcgU01QIFR1ZSBBdWcgMTUgMTQ6NDE6MTIgQ1NUIDIwMjMK
-ICAgICBNQUNISU5FOiByaXNjdjY0ICAodW5rbm93biBNaHopCiAgICAgIE1FTU9SWTogNTExLjgg
-TUIKICAgICAgIFBBTklDOiAiS2VybmVsIHBhbmljIC0gbm90IHN5bmNpbmc6IHN5c3JxIHRyaWdn
-ZXJlZCBjcmFzaCIKICAgICAgICAgUElEOiAxNjAKICAgICBDT01NQU5EOiAiYmFzaCIKICAgICAg
-ICBUQVNLOiBmZjYwMDAwMDAxNTJiYWMwICBbVEhSRUFEX0lORk86IGZmNjAwMDAwMDE1MmJhYzBd
-CiAgICAgICAgIENQVTogMQogICAgICAgU1RBVEU6IFRBU0tfUlVOTklORyAoUEFOSUMpCmNyYXNo
-PgoKWzFdOiBodHRwczovL2xvcmUua2VybmVsLm9yZy9saW51eC1yaXNjdi8yMDIzMDcyMjEyMzg1
-MC42MzQ1NDQtMS1hbGV4Z2hpdGlAcml2b3NpbmMuY29tLwoKU2lnbmVkLW9mZi1ieTogU29uZyBT
-aHVhaSA8c3VhZ3JmaWxsZXRAZ21haWwuY29tPgpSZXZpZXdlZC1ieTogR3VvIFJlbiA8Z3VvcmVu
-QGtlcm5lbC5vcmc+CgotLS0KQ2hhbmdlcyBzaW5jZSBWMToKaHR0cHM6Ly9sb3JlLmtlcm5lbC5v
-cmcvbGludXgtcmlzY3YvMjAyMzA4MTUxMDQ4MDAuNzA1NzUzLTEtc29uZ3NodWFpc2h1YWlAdGlu
-eWxhYi5vcmcvCiAgLSBzdXBwbGVtZW50IHRoZSBvdXRwdXQgb2YgbXkgQ3Jhc2ggdGVzdCBpbiB0
-aGUgY29tbWl0LW1zZyAKICAtIGFkZCB0aGUgUmV2aWV3ZWQtYnkgZnJvbSBHdW8KCi0tLQogbWFp
-bi5jICAgIHwgIDIgKy0KIHJpc2N2NjQuYyB8IDExICsrKysrKysrKysrCiBzeW1ib2xzLmMgfCAg
-NCArKy0tCiAzIGZpbGVzIGNoYW5nZWQsIDE0IGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0p
-CgpkaWZmIC0tZ2l0IGEvbWFpbi5jIGIvbWFpbi5jCmluZGV4IGIyNzhjMjIuLjBjNmU1OTUgMTAw
-NjQ0Ci0tLSBhL21haW4uYworKysgYi9tYWluLmMKQEAgLTIyOCw3ICsyMjgsNyBAQCBtYWluKGlu
-dCBhcmdjLCBjaGFyICoqYXJndikKIAkJCX0gZWxzZSBpZiAoU1RSRVEobG9uZ19vcHRpb25zW29w
-dGlvbl9pbmRleF0ubmFtZSwgImthc2xyIikpIHsKIAkJCQlpZiAoIW1hY2hpbmVfdHlwZSgiWDg2
-XzY0IikgJiYKIAkJCQkgICAgIW1hY2hpbmVfdHlwZSgiQVJNNjQiKSAmJiAhbWFjaGluZV90eXBl
-KCJYODYiKSAmJgotCQkJCSAgICAhbWFjaGluZV90eXBlKCJTMzkwWCIpKQorCQkJCSAgICAhbWFj
-aGluZV90eXBlKCJTMzkwWCIpICYmICFtYWNoaW5lX3R5cGUoIlJJU0NWNjQiKSkKIAkJCQkJZXJy
-b3IoSU5GTywgIi0ta2FzbHIgbm90IHZhbGlkICIKIAkJCQkJCSJ3aXRoIHRoaXMgbWFjaGluZSB0
-eXBlLlxuIik7CiAJCQkJZWxzZSBpZiAoU1RSRVEob3B0YXJnLCAiYXV0byIpKQpkaWZmIC0tZ2l0
-IGEvcmlzY3Y2NC5jIGIvcmlzY3Y2NC5jCmluZGV4IGEwMmY3NWEuLjI4OGM3YWUgMTAwNjQ0Ci0t
-LSBhL3Jpc2N2NjQuYworKysgYi9yaXNjdjY0LmMKQEAgLTM3OCw2ICszNzgsOSBAQCBzdGF0aWMg
-dm9pZCByaXNjdjY0X2dldF92YV9yYW5nZShzdHJ1Y3QgbWFjaGluZV9zcGVjaWZpYyAqbXMpCiAJ
-fSBlbHNlCiAJCWdvdG8gZXJyb3I7CiAKKwlpZiAoKGt0LT5mbGFnczIgJiBLQVNMUikgJiYgKGt0
-LT5mbGFncyAmIFJFTE9DX1NFVCkpCisJCW1zLT5rZXJuZWxfbGlua19hZGRyICs9IChrdC0+cmVs
-b2NhdGUgKiAtMSk7CisKIAkvKgogCSAqIEZyb20gTGludXggNS4xMywgdGhlIGtlcm5lbCBtYXBw
-aW5nIGlzIG1vdmVkIHRvIHRoZSBsYXN0IDJHQgogCSAqIG9mIHRoZSBhZGRyZXNzIHNwYWNlLCBt
-b2R1bGVzIHVzZSB0aGUgMkdCIG1lbW9yeSByYW5nZSByaWdodApAQCAtMTM2MCw2ICsxMzYzLDE0
-IEBAIHJpc2N2NjRfaW5pdChpbnQgd2hlbikKIAogCQltYWNoZGVwLT52ZXJpZnlfcGFkZHIgPSBn
-ZW5lcmljX3ZlcmlmeV9wYWRkcjsKIAkJbWFjaGRlcC0+cHRyc19wZXJfcGdkID0gUFRSU19QRVJf
-UEdEOworCisJCS8qCisJCSAqIEV2ZW4gaWYgQ09ORklHX1JBTkRPTUlaRV9CQVNFIGlzIG5vdCBj
-b25maWd1cmVkLAorCQkgKiBkZXJpdmVfa2FzbHJfb2Zmc2V0KCkgc2hvdWxkIHdvcmsgYW5kIHNl
-dAorCQkgKiBrdC0+cmVsb2NhdGUgdG8gMAorCQkgKi8KKwkJaWYgKCFrdC0+cmVsb2NhdGUgJiYg
-IShrdC0+ZmxhZ3MyICYgKFJFTE9DX0FVVE98S0FTTFIpKSkKKwkJCWt0LT5mbGFnczIgfD0gKFJF
-TE9DX0FVVE98S0FTTFIpOwogCQlicmVhazsKIAogCWNhc2UgUFJFX0dEQjoKZGlmZiAtLWdpdCBh
-L3N5bWJvbHMuYyBiL3N5bWJvbHMuYwppbmRleCA4NzZiZTdhLi44ZThiNGMzIDEwMDY0NAotLS0g
-YS9zeW1ib2xzLmMKKysrIGIvc3ltYm9scy5jCkBAIC02MjksNyArNjI5LDcgQEAga2FzbHJfaW5p
-dCh2b2lkKQogCWNoYXIgKnN0cmluZzsKIAogCWlmICgoIW1hY2hpbmVfdHlwZSgiWDg2XzY0Iikg
-JiYgIW1hY2hpbmVfdHlwZSgiQVJNNjQiKSAmJiAhbWFjaGluZV90eXBlKCJYODYiKSAmJgotCSAg
-ICAhbWFjaGluZV90eXBlKCJTMzkwWCIpKSB8fCAoa3QtPmZsYWdzICYgUkVMT0NfU0VUKSkKKwkg
-ICAgIW1hY2hpbmVfdHlwZSgiUzM5MFgiKSAmJiAhbWFjaGluZV90eXBlKCJSSVNDVjY0IikpIHx8
-IChrdC0+ZmxhZ3MgJiBSRUxPQ19TRVQpKQogCQlyZXR1cm47CiAKIAlpZiAoIWt0LT52bWNvcmVp
-bmZvLl9zdGV4dF9TWU1CT0wgJiYKQEAgLTc5NSw3ICs3OTUsNyBAQCBzdG9yZV9zeW1ib2xzKGJm
-ZCAqYWJmZCwgaW50IGR5bmFtaWMsIHZvaWQgKm1pbmlzeW1zLCBsb25nIHN5bWNvdW50LAogCQl9
-IGVsc2UgaWYgKCEoa3QtPmZsYWdzICYgUkVMT0NfU0VUKSkKIAkJCWt0LT5mbGFncyB8PSBSRUxP
-Q19GT1JDRTsKIAl9IGVsc2UgaWYgKG1hY2hpbmVfdHlwZSgiWDg2XzY0IikgfHwgbWFjaGluZV90
-eXBlKCJBUk02NCIpIHx8Ci0JCSAgIG1hY2hpbmVfdHlwZSgiUzM5MFgiKSkgeworCQkgICBtYWNo
-aW5lX3R5cGUoIlMzOTBYIikgfHwgbWFjaGluZV90eXBlKCJSSVNDVjY0IikpIHsKIAkJaWYgKChr
-dC0+ZmxhZ3MyICYgUkVMT0NfQVVUTykgJiYgIShrdC0+ZmxhZ3MgJiBSRUxPQ19TRVQpKQogCQkJ
-ZGVyaXZlX2thc2xyX29mZnNldChhYmZkLCBkeW5hbWljLCBmcm9tLAogCQkJCWZyb21lbmQsIHNp
-emUsIHN0b3JlKTsKLS0gCjIuMjAuMQoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQu
-b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Hi all,
+
+I am happy to announce the release of kexec-tools 2.0.27-rc1.
+
+This is an incremental feature pre-release.
+
+So long as no serious problems arise I intend to release kexec-tools 2.0.27
+in a weeks time. Testing of 2.0.27-rc1 would be greatly appreciated.
+
+I do not have any outstanding changes for 2.0.27 at this time.
+And I would like to only accept bug fixes at this time and take
+features patches once 2.0.27 has been released.
+
+The pre-release can be downloaded from kernel.org:
+
+	https://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools-2.0.27-rc1.tar.xz
+	https://kernel.org/pub/linux/utils/kernel/kexec/
+
+I have also tagged it in git:
+
+	https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+
+Thanks to everyone who has contributed to kexec.
+
+
+For reference the changes since v2.0.26 are:
+
+777ca453ca69 kexec-tools 2.0.27-rc1
+f67c4146d7b5 arm64: Hook up the ZBOOT support as vmlinuz
+fc7b83bdf734 arm64: Add ZBOOT PE containing compressed image support
+f41c4182b0c4 kexec/zboot: Add arch independent zboot support
+1572b91da7c4 kexec: Introduce a member kernel_fd in kexec_info
+714fa11590fe kexec/arm64: Simplify the code for zImage
+a8de94e5f033 LoongArch: kdump: Set up kernel image segment
+4203eaccfa92 kexec: __NR_kexec_file_load is set to undefined on LoongArch
+63e9a012112e ppc64: Add elf-ppc64 file types/options and an arch specific flag to man page
+806711fca9e9 x86: add devicetree support
+29fe5067ed07 kexec: make -a the default
+e63fefd4fc35 ppc64: add --reuse-cmdline parameter support
+8fc55927f700 kexec-tools 2.0.26.git
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
