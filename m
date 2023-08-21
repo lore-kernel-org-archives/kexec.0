@@ -4,64 +4,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B503DEE49A0
-	for <kexec@archiver.kernel.org>; Mon, 21 Aug 2023 22:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 06305EE49A6
+	for <kexec@archiver.kernel.org>; Mon, 21 Aug 2023 23:08:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=a7OChHEb1g4AkqDSLjZBRZANGpifjhBQoAx8BDGyskY=; b=mXr5bEeP1ze1gR
-	zl4Sg8uCM483ncV58ea2aDyjWyOQPjjrj0iQVaM0R5q1ahAsR5qYfaKtjiCNGvi6yNM6mSV9IoGIM
-	LvliQiprTvz+zQ0/rusS4Ww0rIAWVi+UMJ7LgVKxPVhVSgUzMYwod49TVsHv+/GlkZG5Abx3YtR7G
-	JbcVOW/L+TrYZ0jg/icLXtL4cd1omRD71yrgZYjS31aaxQ/O1cbUW20oaZyFI7fVlZVRidBwbE6+R
-	x7potKUlmrZLIKNArqBilSmgkQM3RlufXyzFcW+1yzHMukI9JDTAYsiPdmn2QV5DUcqm2E2K04RKC
-	0o7LdvoJ60FsLdpvPK2g==;
+	List-Owner; bh=o7y2e7zDcNW8zH8RWmguR04Fc3Js94mpZsE2Hb/8L4Y=; b=bKyTqMkzcvs1Wr
+	voSzRqo7XoS0ot2tVOr4a6T3uze/EfKb2IA5lvVz02oy7oXczxQeBTZxvbM2/7sMqv2ZfNBjh0JkI
+	b/KaTd7LjO3nLOv0e8x1n5weEZYAhjda922NjJLSEXR+jfLe8+nS1In8NRKQqzkHmLrUqiLTt+9vm
+	YVPiufgSsswyl5Xgoj+km34+cEb0KOLSPa7kHy6hhfakzVIiZzY8X6m7Z4keyQeFjCmh/0N6b6fdC
+	dqWWm2wqCMP1tVxiuN+8/EsHSG1BgyEOi/3w1OFBM9VWf/vyZdoYtAjTo2dUSseKAKWqVRdVuchgq
+	yraAg1Sic/7/gPxoOWKw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qYD1c-00ElAI-1U;
-	Mon, 21 Aug 2023 22:05:28 +0000
-Received: from linux.microsoft.com ([13.77.154.182])
-	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qYD1Y-00El9x-1k
+	id 1qYE0L-00Ensy-3A;
+	Mon, 21 Aug 2023 23:08:13 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
+	id 1qYE0H-00EnrN-1d
 	for kexec@lists.infradead.org;
-	Mon, 21 Aug 2023 22:05:26 +0000
-Received: from [10.137.114.52] (unknown [131.107.159.180])
-	by linux.microsoft.com (Postfix) with ESMTPSA id B1F992126CAD;
-	Mon, 21 Aug 2023 15:05:17 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B1F992126CAD
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1692655517;
-	bh=27Gt5g39km05HA5Jc2OsnUkxm3ZtTJbBzolAHyq7W6E=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WtMc/7fA+E88b/6c1PGfS2o3acsD8mvwk8oqoYIai5KwzJabvkzPWm8wbgfpKa4tp
-	 C2AAAViBNa+wg/cYNefMtzr2qSwwvLL9108tzOLmj8DwzAvEKcKIbOfMAURlJCP+++
-	 yojGMn7V7ij3AOoQEmMDyT9CDu3/SR9QYZzJPAQw=
-Message-ID: <8bc0f024-fc12-cb32-7af0-e500948cc6db@linux.microsoft.com>
-Date: Mon, 21 Aug 2023 15:05:17 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
+	Mon, 21 Aug 2023 23:08:12 +0000
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37LN6WJS000663;
+	Mon, 21 Aug 2023 23:07:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=36XwjfYqUjEXR6AeSWBYlEfAWJFkC+REbYhvlu74dS8=;
+ b=cDg917xMpI2GCYjLi9mj0BNewIyd3fHrFKD6BE7z+FgAP9daXaaDPh05+s83WsT1zoOd
+ L1iR/+sjHbaajjWCVhUaV865TYweRy2bbWgkVFZEbi3X3Ksr2leMVm7uq1hOXSvH8Q7F
+ Ey1b+OZ++tnNctUKqOUAOwqcokFHOnhKhU6YM7rOCnCos3EYMtHPYlHiVzL0KBKaqzB1
+ /HAGw/i4flwJVGoMPFNrWgRKWd0WQG4KB7tO81VL7d54ZzoS8OuipzM/Y5+4mtxjeLyW
+ fozeznDtzaGkzFVzLOdDL0BBpkeF9uCRSl0io0lEYA/f1oggOMyvuRa9wzD7YUX5pKw/ sg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3smha6g0vb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Aug 2023 23:07:45 +0000
+Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37LN6YeU000738;
+	Mon, 21 Aug 2023 23:07:44 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3smha6g0v1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Aug 2023 23:07:44 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37LN0io6009007;
+	Mon, 21 Aug 2023 23:07:44 GMT
+Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3smak9apga-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 21 Aug 2023 23:07:44 +0000
+Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
+	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37LN7hra32571968
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 21 Aug 2023 23:07:43 GMT
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 89C8F58095;
+	Mon, 21 Aug 2023 23:07:43 +0000 (GMT)
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C521258098;
+	Mon, 21 Aug 2023 23:07:41 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.61.28.246])
+	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 21 Aug 2023 23:07:41 +0000 (GMT)
+Message-ID: <7e32afa2596b9d8cfdc275614575b2023cd1d673.camel@linux.ibm.com>
 Subject: Re: [RFC] IMA Log Snapshotting Design Proposal
-Content-Language: en-US
-To: Mimi Zohar <zohar@linux.ibm.com>, linux-integrity@vger.kernel.org,
- peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, kgold@linux.ibm.com,
- bhe@redhat.com, vgoyal@redhat.com, dyoung@redhat.com,
- kexec@lists.infradead.org, jmorris@namei.org,
- Paul Moore <paul@paul-moore.com>, serge@hallyn.com
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Sush Shringarputale <sushring@linux.microsoft.com>,
+        linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jarkko@kernel.org,
+        jgg@ziepe.ca, kgold@linux.ibm.com, bhe@redhat.com, vgoyal@redhat.com,
+        dyoung@redhat.com, kexec@lists.infradead.org, jmorris@namei.org,
+        Paul Moore
+	 <paul@paul-moore.com>, serge@hallyn.com
 Cc: code@tyhicks.com, nramas@linux.microsoft.com,
- Tushar Sugandhi <tusharsu@linux.microsoft.com>,
- linux-security-module@vger.kernel.org
+        Tushar Sugandhi
+	 <tusharsu@linux.mic>,
+        linux-security-module@vger.kernel.org,
+        AmirGoldstein
+	 <amir73il@gmail.com>
+Date: Mon, 21 Aug 2023 19:07:41 -0400
+In-Reply-To: <8bc0f024-fc12-cb32-7af0-e500948cc6db@linux.microsoft.com>
 References: <c5737141-7827-1c83-ab38-0119dcfea485@linux.microsoft.com>
- <277db5491460d5fd607785f2bcc733de39022a35.camel@linux.ibm.com>
- <bf794136-703a-0d33-e245-7e723007b5c0@linux.microsoft.com>
- <0e1511e8819b24ab8a34a7b15821f06eff688f29.camel@linux.ibm.com>
-From: Sush Shringarputale <sushring@linux.microsoft.com>
-In-Reply-To: <0e1511e8819b24ab8a34a7b15821f06eff688f29.camel@linux.ibm.com>
+	 <277db5491460d5fd607785f2bcc733de39022a35.camel@linux.ibm.com>
+	 <bf794136-703a-0d33-e245-7e723007b5c0@linux.microsoft.com>
+	 <0e1511e8819b24ab8a34a7b15821f06eff688f29.camel@linux.ibm.com>
+	 <8bc0f024-fc12-cb32-7af0-e500948cc6db@linux.microsoft.com>
+X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: -D5ax3zTZYRyNtlaU9dqh-d7Pa5BF0kz
+X-Proofpoint-ORIG-GUID: qWv9fjzMfaiyoG6e153jXVRcztQr7EwZ
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-08-21_10,2023-08-18_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 impostorscore=0
+ malwarescore=0 mlxlogscore=999 suspectscore=0 mlxscore=0
+ priorityscore=1501 lowpriorityscore=0 adultscore=0 spamscore=0
+ phishscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2308210212
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230821_150524_644889_F49EC5CD 
-X-CRM114-Status: GOOD (  28.23  )
+X-CRM114-CacheID: sfid-20230821_160809_883178_3C21C8EF 
+X-CRM114-Status: GOOD (  51.53  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -73,95 +120,138 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-CgpPbiA4LzE0LzIwMjMgMzowMiBQTSwgTWltaSBab2hhciB3cm90ZToKPiBPbiBNb24sIDIwMjMt
-MDgtMTQgYXQgMTQ6NDIgLTA3MDAsIFN1c2ggU2hyaW5nYXJwdXRhbGUgd3JvdGU6Cj4+PiBUaGlz
-IGRlc2lnbiBzZWVtcyBvdmVybHkgY29tcGxleCBhbmQgcmVxdWlyZXMgc3luY2hyb25pemF0aW9u
-IGJldHdlZW4KPj4+IHRoZSAic25hcHNob3QiIHJlY29yZCBhbmQgZXhwb3J0aW5nIHRoZSByZWNv
-cmRzIGZyb20gdGhlIG1lYXN1cmVtZW50Cj4+PiBsaXN0LiAgTm9uZSBvZiB0aGlzIHdvdWxkIGJl
-IG5lY2Vzc2FyeSBpZiB0aGUgbWVhc3VyZW1lbnRzIHdlcmUgY29waWVkCj4+PiBmcm9tIGtlcm5l
-bCBtZW1vcnkgdG8gYSBiYWNraW5nIGZpbGUgKGUuZy4gdG1wZnMpLCBhcyBkZXNjcmliZWQgaW4g
-WzFdLgpFdmVuIGlmIHRoZSBLZXJuZWwgbWFpbnRhaW5zIHRoZSBsaW5rIGJldHdlZW4gYSB0bXBm
-cyBleHBvcnRlZCBhbmQgYW4KaW4tbWVtb3J5IElNQSBsb2cgLSBpdCBzdGlsbCBoYXMgdG8gY29w
-eSB0aGUgdG1wZnMgcG9ydGlvbiB0byB0aGUKS2VybmVsIG1lbW9yeSBkdXJpbmcga2V4ZWMgc29m
-dCBib290LsKgIHRtcGZzIGlzIGNsZWFyZWQgZHVyaW5nIGtleGVjLApzbyB0aGlzIGNvcHlpbmcg
-b2YgdG1wZnMgYmFjayB0byBrZXJuZWwgbWVtb3J5IGlzIG5lY2Vzc2FyeSB0byBwcmVzZXJ2ZQp0
-aGUgaW50ZWdyaXR5IG9mIHRoZSBsb2cgZHVyaW5nIGtleGVjLsKgIEJ1dCB0aGUgY29weWluZyB3
-b3VsZCBhZGQgYmFjawp0aGUgbWVtb3J5IHByZXNzdXJlIG9uIHRoZSBub2RlIGR1cmluZyBrZXhl
-YyAod2hpY2ggbWF5IHJlc3VsdCBpbgpvdXQtb2YtbWVtb3J5KSwgZGVmZWF0aW5nIHRoZSBwdXJw
-b3NlIG9mIHRoZSBvdmVyYWxsIGVmZm9ydC9mZWF0dXJlLgpDb3B5aW5nIHRvIGEgcmVndWxhciAq
-cGVyc2lzdGVudCogcHJvdGVjdGVkIGZpbGUgc2VlbXMgYSBjbGVhbmVyCmFwcHJvYWNoLCBjb21w
-YXJlZCB0byB0bXBmcy7CoCBXZSBwcm90b3R5cGVkIHRoaXMgc29sdXRpb24sIGhvd2V2ZXIgaXQK
-ZG9lcyBub3Qgc2VlbSB0byBiZSBhIGNvbW1vbiBwYXR0ZXJuIHdpdGhpbiB0aGUgS2VybmVsIHRv
-IHdyaXRlIHN0YXRlCmRpcmVjdGx5IHRvIGZpbGVzIG9uIGRpc2sgZmlsZSBzeXN0ZW1zLsKgIFdl
-IGNvbnNpZGVyZWQgdHdvIHBvdGVudGlhbApvcHRpb25zOgoKT3B0aW9uIChBKTogKFJFQ09NTUVO
-REVEKQogwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBMZXQgS2VybmVsIHdyaXRlIHRoZSBmaWxlIHVz
-aW5nIEtNIGZpbGUgQVBJcwotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLQogwqDCoMKgIFVzZSBLZXJuZWwgbW9kZSBmaWxlIEFQSXMgc3VjaCBhcyBfZmlsZV9vcGVu
-X3Jvb3RfLCBfdmZzX2xsc2Vla18sCiDCoMKgwqAgYW5kIF92ZnNfd3JpdGVfIHRvIHVzZSBhIHBl
-cnNpc3RlbnQgZmlsZSBvbiBkaXNrLsKgIFRoZXJlIGlzIG5vdAogwqDCoMKgIHN1ZmZpY2llbnQg
-cHJlY2VkZW50IGZvciB0aGlzIHBhdHRlcm4gaW4gdGhlIEtlcm5lbCBjdXJyZW50bHksIHNvCiDC
-oMKgwqAgd2UgbmVlZCBndWlkYW5jZSBmcm9tIGFyZWEgZXhwZXJ0cyBvbiB0aGUgYmVzdCBtZWNo
-YW5pc20gdG8KIMKgwqDCoCBpbXBsZW1lbnQgdGhpcy4KCiDCoMKgwqAgQXMgZm9yIHRoZSBsb2Nh
-dGlvbiBvZiB0aGUgZmlsZSwgd2Ugc3VnZ2VzdCBzZXR0aW5nIHRoaXMgaW4KIMKgwqDCoCBLQ29u
-ZmlnLiBUaGUgZmlsZSB3aWxsIGJlIGNyZWF0ZWQgYnkgdGhlIEtlcm5lbCwgc28gaXQgc2hvdWxk
-IGJlCiDCoMKgwqAgcHJvdGVjdGVkIGZyb20gVU0gYWNjZXNzLsKgIEFkZGl0aW9uYWxseSwgb24g
-YSBmdWxsIGJvb3QsIHRoZQogwqDCoMKgIGZpbGUgc2hvdWxkIGJlIGNsZWFyZWQgYnkgdGhlIEtl
-cm5lbC4KCiDCoCBQT1RFTlRJQUwgSVNTVUVTIEFORCBNSVRJR0FUSU9OUwogwqDCoMKgIC0gaGFu
-ZGxpbmcgSU8gZXJyb3JzIGZyb20gS00KCiDCoMKgwqDCoMKgIEEgcG90ZW50aWFsIG1pdGlnYXRp
-b24gZm9yIHRoaXMgaXMgdG8gcmV0cnkgdGhlIGZhaWxlZCB3cml0ZS4KIMKgwqDCoMKgwqAgVGhp
-cyBhc3N1bWVzIHRoYXQgdGhlIHZmc193cml0ZSBLZXJuZWwgbWV0aG9kIGNhbiBoYW5kbGUgYW55
-CiDCoMKgwqDCoMKgIGZhaWx1cmVzIGdyYWNlZnVsbHkgd2l0aG91dCBjYXVzaW5nIGNyYXNoZXMu
-CgoKIMKgwqDCoCAtIHVzaW5nIGZpbGUgc3lzdGVtIHBhdGhzIHRvIHJlc29sdmUgdGhlIGZpbGUg
-ZnJvbSBLTQoKIMKgwqDCoMKgwqAgVXNpbmcgdGhlIGZpbGVfb3Blbl9yb290IHNlZW1zIHRvIHBy
-b3ZpZGUgc3VmZmljaWVudCByZXNpbGllbmN5CiDCoMKgwqDCoMKgIGFnYWluc3QgdGhpcy7CoCBU
-aGUgZmlsZSBjYW4gYmUgbG9jYXRlZCBhdCBhIHdlbGwga25vd24gbG9jYXRpb24KIMKgwqDCoMKg
-wqAgdG8gbWluaW1pemUgcG90ZW50aWFsIGNvbmNlcm5zLsKgIEhvd2V2ZXIsIGFueSBndWlkYW5j
-ZSBpbgogwqDCoMKgwqDCoCBtaW5pbWl6aW5nIHNxdWF0dGluZyByaXNrcyB3b3VsZCBiZSBncmVh
-dGx5IGFwcHJlY2lhdGVkLgoKIMKgwqDCoCAtIHRoZSBmaWxlIGNvdWxkIGJlIHRhbXBlcmVkIGJ5
-IFVNCgogwqDCoMKgwqDCoCBUaGVyZSBuZWVkcyB0byBiZSBhIGxvY2sva2VybmVsLW9ubHktcGVy
-bWlzc2lvbiBvbiB0aGUgZmlsZQogwqDCoMKgwqDCoCBzbyB0aGF0IGEgVU0gcHJvY2VzcyBjYW5u
-b3QgdGFtcGVyIHdpdGggdGhlIGZpbGUuwqAgQSBkZXNjcmlwdGlvbgogwqDCoMKgwqDCoCBvbiBo
-b3cgdGhpcyBmaWxlIHdvdWxkIGJlIHByb3RlY3RlZCB3YXMgcHJvdmlkZWQgYXQgWzJdLgoKCk9w
-dGlvbiAoQik6IChOT1QgUkVDT01NRU5ERUQpCiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIEhhbmQg
-b3ZlciB0aGUgZmlsZSB3cml0aW5nIHRvIFVNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tCiDCoMKgwqAgQWx0ZXJuYXRlbHksIFVNIGNvdWxkIHdyaXRlIHRoZSBm
-aWxlIGNvbnRlbnRzIGFuZCBkZWNpZGUgdGhlCiDCoMKgwqAgbG9jYXRpb24gb2YgdGhlIGZpbGUg
-b24gZGlzay7CoCBJZiB3ZSB3YW50IHRvIHByZXNlcnZlIHRoZSBLZXJuZWwKIMKgwqDCoCBiZWhh
-dmlvciBvZiByZW5kZXJpbmcgdGhlIElNQSBsb2cgYXMgYSBzaW5nbGUgbW9ub2xpdGhpYyBsb2cg
-b24KIMKgwqDCoCBjbGllbnQgKGFzIGFzY2lpL2JpbmFyeV9ydW50aW1lX21lYXN1cmVtZW50cyBm
-aWxlKSwgdGhlCiDCoMKgwqAgS2VybmVsIHdpbGwgaGF2ZSB0byByZWFkIGZyb20gYSBmaWxlIHdy
-aXR0ZW4gYnkgVU0gYW5kIGNvbWJpbmUgaXQKIMKgwqDCoCB3aXRoIHRoZSByZW1haW5pbmcgaW4t
-a2VybmVsLW1lbW9yeSBJTUEgbG9nIGV2ZW50cy4KCiDCoMKgwqAgVGhpcyBhcHByb2FjaCBvZiBh
-IEtlcm5lbCByZWFkaW5nIGZyb20gYSBVTSB3cml0dGVuIGZpbGUgYXMgYW4KIMKgwqDCoCBJTUEg
-bG9nIHZpb2xhdGVzIHRoZSBjYWxsIHN0YWNrLCBhbmQgdGh1cyBpdCBpcyBub3QgcmVjb21tZW5k
-ZWQuCgpJZiBVTSBpcyB0byBoYW5kbGUgd3JpdGluZyB0aGUgSU1BIGxvZyB0byBkaXNrLCB0aGUg
-S2VybmVsIGNhbm5vdCByZWFkCnRob3NlIHNuYXBzaG90dGVkIGV2ZW50cyBhZ2Fpbi7CoCBJbnRl
-Z3JpdHkgb2YgdGhlIElNQSBsb2cgY2FuIHN0aWxsIGJlCm1haW50YWluZWQgLSBhIHNvbHV0aW9u
-IGltcGxlbWVudGluZyB0aGlzIHdhcyBpbiB0aGUgb3JpZ2luYWwgcHJvcG9zYWwKd2Ugc3VibWl0
-dGVkIFsxXS4KCldlIGFwcHJlY2lhdGUgdGhlIGNvbW11bml0eSdzIGZlZWRiYWNrIG9uIGhlbHBp
-bmcgbW9sZCB0aGlzIGZlYXR1cmUgdG8gYQpzdWl0YWJsZSBpbXBsZW1lbnRhdGlvbi4KClRoYW5r
-cywKU3VzaCBhbmQgVHVzaGFyLgoKClJlZmVyZW5jZXM6ClsxXQpodHRwczovL2xvcmUua2VybmVs
-Lm9yZy9saW51eC1pbnRlZ3JpdHkvYzU3MzcxNDEtNzgyNy0xYzgzLWFiMzgtMDExOWRjZmVhNDg1
-QGxpbnV4Lm1pY3Jvc29mdC5jb20vIAoKClsyXQpodHRwczovL2xvcmUua2VybmVsLm9yZy9saW51
-eC1pbnRlZ3JpdHkvQ0FPUTR1eGlCQUdLY28xQktneUxPTVk1NHJfQ2syam52ejhSQ0ZPREQtVjg3
-Q0dxTEV3QG1haWwuZ21haWwuY29tLyAKCj4+Pgo+Pj4gV2hhdCBpcyB0aGUgcmVhbCBwcm9ibGVt
-IC0ga2VybmVsIG1lbW9yeSBwcmVzc3VyZSwgbWVtb3J5IHByZXNzdXJlIGluCj4+PiBnZW5lcmFs
-LCBvciBkaXNrIHNwYWNlPyAgSXMgdGhlIGludGVudGlvbiB0byByZW1vdmUgb3Igb2ZmbG9hZCB0
-aGUKPj4+IGV4cG9ydGVkIG1lYXN1cmVtZW50cz8KPj4gVGhlIG1haW4gY29uY2VybiBpcyB0aGUg
-bWVtb3J5IHByZXNzdXJlIG9uIGJvdGggdGhlIGtlcm5lbCBhbmQgdGhlCj4+IGF0dGVzdGF0aW9u
-IGNsaWVudAo+PiB3aGVuIGl0IHNlbmRzIHRoZSByZXF1ZXN0LiAgVGhlIGNvbmNlcm4geW91IGJy
-aW5nIHVwIGlzIHZhbGlkIGFuZCB3ZSBhcmUKPj4gd29ya2luZyBvbgo+PiBjcmVhdGluZyBhIHBy
-b3RvdHlwZS4gIFRoZXJlIGlzIG5vIGludGVudGlvbiB0byByZW1vdmUgdGhlIGV4cG9ydGVkCj4+
-IG1lYXN1cmVtZW50cy4KPiBHbGFkIHRvIGhlYXIgdGhhdCB5b3UncmUgbm90IGludGVuZGluZyB0
-byByZW1vdmUgdGhlIGV4cG9ydGVkCj4gbWVhc3VyZW1lbnRzLgo+Cj4gRGVmaW5pbmcgYW5kIGlu
-Y2x1ZGluZyBhIG5ldyByZWNvcmQgaW4gdGhlIG1lYXN1cmVtZW50IGxpc3QgbWVhc3VyZW1lbnQK
-PiBpcyBmaW5lLCBpZiBpdCBoZWxwcyB3aXRoIGF0dGVzdGF0aW9uIGFuZCBkb2Vzbid0IHJlcXVp
-cmUgcGF1c2luZyB0aGUKPiBtZWFzdXJlbWVudHMuCj4KCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMu
-aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2tleGVjCg==
+On Mon, 2023-08-21 at 15:05 -0700, Sush Shringarputale wrote:
+> 
+> On 8/14/2023 3:02 PM, Mimi Zohar wrote:
+> > On Mon, 2023-08-14 at 14:42 -0700, Sush Shringarputale wrote:
+> >>> This design seems overly complex and requires synchronization between
+> >>> the "snapshot" record and exporting the records from the measurement
+> >>> list.  None of this would be necessary if the measurements were copied
+> >>> from kernel memory to a backing file (e.g. tmpfs), as described in [1].
+> Even if the Kernel maintains the link between a tmpfs exported and an
+> in-memory IMA log - it still has to copy the tmpfs portion to the
+> Kernel memory during kexec soft boot.  tmpfs is cleared during kexec,
+> so this copying of tmpfs back to kernel memory is necessary to preserve
+> the integrity of the log during kexec.  But the copying would add back
+> the memory pressure on the node during kexec (which may result in
+> out-of-memory), defeating the purpose of the overall effort/feature.
+> Copying to a regular *persistent* protected file seems a cleaner
+> approach, compared to tmpfs.
+
+From a kernel perspective, it doesn't make a difference if userspace
+provides a tmpfs or persistent file.  As per the discussion 
+https://lore.kernel.org/linux-integrity/CAOQ4uxj4Pv2Wr1wgvBCDR-tnA5dsZT3rvdDzKgAH1aEV_-r9Qg@mail.gmail.com/#t
+, userspace provides the kernel with the file descriptor of the opened
+file.
+
+> We prototyped this solution, however it
+> does not seem to be a common pattern within the Kernel to write state
+> directly to files on disk file systems.  We considered two potential
+> options:
+
+If no file descriptor is provided, then the measurements aren't copied
+and removed from the securityfs file.  If there are write errors, the
+measurements aren't removed from the securityfs file until the write
+errors are resolved.
+
+Mimi
+
+> 
+> Option (A): (RECOMMENDED)
+>              Let Kernel write the file using KM file APIs
+> --------------------------------------------
+>      Use Kernel mode file APIs such as _file_open_root_, _vfs_llseek_,
+>      and _vfs_write_ to use a persistent file on disk.  There is not
+>      sufficient precedent for this pattern in the Kernel currently, so
+>      we need guidance from area experts on the best mechanism to
+>      implement this.
+> 
+>      As for the location of the file, we suggest setting this in
+>      KConfig. The file will be created by the Kernel, so it should be
+>      protected from UM access.  Additionally, on a full boot, the
+>      file should be cleared by the Kernel.
+> 
+>    POTENTIAL ISSUES AND MITIGATIONS
+>      - handling IO errors from KM
+> 
+>        A potential mitigation for this is to retry the failed write.
+>        This assumes that the vfs_write Kernel method can handle any
+>        failures gracefully without causing crashes.
+> 
+> 
+>      - using file system paths to resolve the file from KM
+> 
+>        Using the file_open_root seems to provide sufficient resiliency
+>        against this.  The file can be located at a well known location
+>        to minimize potential concerns.  However, any guidance in
+>        minimizing squatting risks would be greatly appreciated.
+> 
+>      - the file could be tampered by UM
+> 
+>        There needs to be a lock/kernel-only-permission on the file
+>        so that a UM process cannot tamper with the file.  A description
+>        on how this file would be protected was provided at [2].
+> 
+> Option (B): (NOT RECOMMENDED)
+>              Hand over the file writing to UM
+> --------------------------------------------
+>      Alternately, UM could write the file contents and decide the
+>      location of the file on disk.  If we want to preserve the Kernel
+>      behavior of rendering the IMA log as a single monolithic log on
+>      client (as ascii/binary_runtime_measurements file), the
+>      Kernel will have to read from a file written by UM and combine it
+>      with the remaining in-kernel-memory IMA log events.
+> 
+>      This approach of a Kernel reading from a UM written file as an
+>      IMA log violates the call stack, and thus it is not recommended.
+> 
+> If UM is to handle writing the IMA log to disk, the Kernel cannot read
+> those snapshotted events again.  Integrity of the IMA log can still be
+> maintained - a solution implementing this was in the original proposal
+> we submitted [1].
+> 
+> We appreciate the community's feedback on helping mold this feature to a
+> suitable implementation.
+> 
+> Thanks,
+> Sush and Tushar.
+> 
+> 
+> References:
+> [1]
+> https://lore.kernel.org/linux-integrity/c5737141-7827-1c83-ab38-0119dcfea485@linux.microsoft.com/ 
+> 
+> 
+> [2]
+> https://lore.kernel.org/linux-integrity/CAOQ4uxiBAGKco1BKgyLOMY54r_Ck2jnvz8RCFODD-V87CGqLEw@mail.gmail.com/ 
+> 
+> >>>
+> >>> What is the real problem - kernel memory pressure, memory pressure in
+> >>> general, or disk space?  Is the intention to remove or offload the
+> >>> exported measurements?
+> >> The main concern is the memory pressure on both the kernel and the
+> >> attestation client
+> >> when it sends the request.  The concern you bring up is valid and we are
+> >> working on
+> >> creating a prototype.  There is no intention to remove the exported
+> >> measurements.
+> > Glad to hear that you're not intending to remove the exported
+> > measurements.
+> >
+> > Defining and including a new record in the measurement list measurement
+> > is fine, if it helps with attestation and doesn't require pausing the
+> > measurements.
+> >
+> 
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
