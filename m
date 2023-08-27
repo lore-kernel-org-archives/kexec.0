@@ -4,72 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 689C8C83F10
-	for <kexec@archiver.kernel.org>; Sun, 27 Aug 2023 10:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6DD36C83F01
+	for <kexec@archiver.kernel.org>; Sun, 27 Aug 2023 13:53:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=fQ+y3qfH1a0wT9WsWPMDLnfdIsgqCyPJ2YPZ9MoW3W8=; b=afHN2zj6270mCJ
-	MVhj33GlZdlNsNZfA3Vkw2+PSTQ7VxfJmUKxAzjLyLNI7WJ1mI1WAn7qTFTO4ZRZn4OAUbbwa78sY
-	AzEPxIrZnXqgqYJsSFVKvImadDL3CL9zxEyT8KVFo161x3AvBxJyI94ooWdHpAelXGGOkM0nOcpfP
-	LkvZL6geEtVRF9be4T88zTJwYP9BRPjrSejPKjvN7QBoKB+lDg2rz2f5Lbq3KgRFCXcO8p7cSHiwA
-	CY6Jxx7J+5A/IxbjnaDK/dLgkUwMi43lodXIVSYCqyHY240jTbMMmVFw1Jd5zCeQ2Fi7Yj6MknixA
-	m3XAt68eNXJOJz+zdfxA==;
+	List-Owner; bh=QBt26gWKUHlyt79W9/7TGQ0ZTTjs988M9a7KLCzlwRU=; b=2z+87ZjQkAJYec
+	idVQh7HvV3wYlKFy6Akk+k5dm50HAihSFdVc0SKAOJyi3/wpqQLo3PJp+cyRWz7BcMTNTC25I6mWp
+	TQMcoTamF9grx67pGm/Sb/t/XADyD/6uC7CbK60eoDOk6wSTeWt4Dtig/bpCPgO1qfEqfSK3BDOb8
+	ALGrnzoHMR63jg5cp4mafzXvxSX9a6AfVOyhmO7xlv0LB5LNEnUG0sWYqx2CMOSf5hJBbubqO5bIF
+	+XIIZWojHpnswIyB9L1E9W47nIOY3+sRPMvlDI8YQD3Tk4KBBw+/2ReynofwwzfsmjWvAoMporbPg
+	GnX9dfRSC5PyHrsaOxuA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qaDFd-007x5F-36;
-	Sun, 27 Aug 2023 10:44:13 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1qaGD2-0087xK-0l;
+	Sun, 27 Aug 2023 13:53:44 +0000
+Received: from mgamail.intel.com ([134.134.136.31])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qaDFZ-007x3Q-0c
-	for kexec@lists.infradead.org;
-	Sun, 27 Aug 2023 10:44:11 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1693133047;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Gd22ezUKcwqT1bZ9j87gCgLT1/C+MuJtb6TwFtS9oS8=;
-	b=FH8FfhfXoYo2s5o+UykzDXIiDLgz9J5PEkz9APkt0HH1m1+nWEN/rxjJNsCThQCCTnN8wr
-	nvEc8BkEhctce8YJRIGpsezd4R4FmREgfOr05fZ8Ts2RQBL3miarJBYU0+gzDJZK+yWa16
-	ZjzKycsIoY8+YRvGxAbkpvewan7m4lQ=
-Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-591-0j7igmE5PcWQ_x4ZNxGPqw-1; Sun, 27 Aug 2023 06:44:01 -0400
-X-MC-Unique: 0j7igmE5PcWQ_x4ZNxGPqw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EEA5C380673A;
-	Sun, 27 Aug 2023 10:44:00 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.43])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id C2AE2C15E6A;
-	Sun, 27 Aug 2023 10:43:58 +0000 (UTC)
-Date: Sun, 27 Aug 2023 18:43:55 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Dave Young <dyoung@redhat.com>, Philipp Rudo <prudo@redhat.com>
-Cc: linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
-	thunder.leizhen@huawei.com, John.p.donnelly@oracle.com,
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	horms@kernel.org, chenjiahao16@huawei.com,
-	linux-riscv@lists.infradead.org, x86@kernel.org, bp@alien8.de
-Subject: Re: [RFC PATCH 0/4] kdump: add generic functions to simplify
- crashkernel crashkernel in architecture
-Message-ID: <ZOso66U0DIR9rfMW@MiWiFi-R3L-srv>
-References: <20230619055951.45620-1-bhe@redhat.com>
- <ZKjG2R8RhWmJex53@darkstar.users.ipa.redhat.com>
- <20230710192018.031c9912@rotkaeppchen>
+	id 1qaGCx-0087wW-0H;
+	Sun, 27 Aug 2023 13:53:42 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693144419; x=1724680419;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=x2/mWGYjOaOJsFCVN/w0DdieBRqnmIkLdF2iZvzrn1A=;
+  b=BPUv1lEdCYxtiDVzi1piqXN2tOHbOM6I5GEQHOBjs0TSA7QqCeVsZiHb
+   kZ6WSGX8mnvyXWP4X8mcbie6/lAYVNanbuuHwg9SRR655relDT+562641
+   qkIh23/h52Lyrv5pGr6hfa5tg8X6VaI6Xq/3uNAEQL45s1A/+voNUxaVG
+   zVCMaK1q5WaLYPOYZP59EfcCLj3gF7mvSoQBozfPCFGm2CDeRt9q87O0u
+   B+/ddY23P1+y1DrTa5c2ovYq+FKhd+2b9/GDSXMgpZ7W+ah4WBvRmIpmo
+   dMjg0IxhHSA3msDkB1B56zvyziEujfdMTI82RZhGbXafA22K6WMzBuvno
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10815"; a="438899111"
+X-IronPort-AV: E=Sophos;i="6.02,205,1688454000"; 
+   d="scan'208";a="438899111"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2023 06:53:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10815"; a="852530947"
+X-IronPort-AV: E=Sophos;i="6.02,205,1688454000"; 
+   d="scan'208";a="852530947"
+Received: from lkp-server02.sh.intel.com (HELO daf8bb0a381d) ([10.239.97.151])
+  by fmsmga002.fm.intel.com with ESMTP; 27 Aug 2023 06:53:29 -0700
+Received: from kbuild by daf8bb0a381d with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1qaGCm-0005rX-1K;
+	Sun, 27 Aug 2023 13:53:28 +0000
+Date: Sun, 27 Aug 2023 21:53:02 +0800
+From: kernel test robot <lkp@intel.com>
+To: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, kexec@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, x86@kernel.org,
+	linux-riscv@lists.infradead.org, akpm@linux-foundation.org,
+	catalin.marinas@arm.com, thunder.leizhen@huawei.com,
+	dyoung@redhat.com, prudo@redhat.com, Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH 5/8] crash_core: add generic function to do reservation
+Message-ID: <202308272150.p3kRkMoF-lkp@intel.com>
+References: <20230827101128.70931-6-bhe@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20230710192018.031c9912@rotkaeppchen>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
+In-Reply-To: <20230827101128.70931-6-bhe@redhat.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230827_034409_377329_ED3DA967 
-X-CRM114-Status: GOOD (  65.99  )
+X-CRM114-CacheID: sfid-20230827_065339_184874_E6B851D4 
+X-CRM114-Status: GOOD (  14.47  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,568 +87,285 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Dave, Philipp
+Hi Baoquan,
 
-On 07/10/23 at 07:20pm, Philipp Rudo wrote:
-> Hi Baoquan,
-> Hi Dave,
-> 
-> On Sat, 8 Jul 2023 10:15:53 +0800
-> Dave Young <dyoung@redhat.com> wrote:
-> 
-> > On 06/19/23 at 01:59pm, Baoquan He wrote:
-> > > In the current arm64, crashkernel=,high support has been finished after
-> > > several rounds of posting and careful reviewing. The code in arm64 which
-> > > parses crashkernel kernel parameters firstly, then reserve memory can be
-> > > a good example for other ARCH to refer to.
-> > > 
-> > > Whereas in x86_64, the code mixing crashkernel parameter parsing and
-> > > memory reserving is twisted, and looks messy. Refactoring the code to
-> > > make it more readable maintainable is necessary.
-> > > 
-> > > Here, try to abstract the crashkernel parameter parsing code into a
-> > > generic function parse_crashkernel_generic(), and the crashkernel memory
-> > > reserving code into a generic function reserve_crashkernel_generic().
-> > > Then, in ARCH which crashkernel=,high support is needed, a simple
-> > > arch_reserve_crashkernel() can be added to call above two generic
-> > > functions. This can remove the duplicated implmentation code in each
-> > > ARCH, like arm64, x86_64.  
-> > 
-> > Hi Baoquan, the parse_crashkernel_common and parse_crashkernel_generic
-> > are confusion to me.  Thanks for the effort though.
-> 
-> I agree, having both parse_crashkernel_common and
-> parse_crashkernel_generic is pretty confusing.
+kernel test robot noticed the following build errors:
 
-Sorry for being late to respond, and thank both a lot for reviewing
-and valuable suggestions on this patchset, and
+[auto build test ERROR on tip/x86/core]
+[also build test ERROR on powerpc/next powerpc/fixes linus/master v6.5-rc7]
+[cannot apply to arm64/for-next/core next-20230825]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-I have made a new patchset to address your concern that the old 
-parse_crashkernel_common() and parse_crashkernel_generic() are
-confusing. Please see the new formal post which can be accessed from
-below link. Within the new post, I integrated all kinds of crashkernel
-parsing into parse_crashkernel().
+url:    https://github.com/intel-lab-lkp/linux/commits/Baoquan-He/crash_core-c-remove-unnecessary-parameter-of-function/20230827-181555
+base:   tip/x86/core
+patch link:    https://lore.kernel.org/r/20230827101128.70931-6-bhe%40redhat.com
+patch subject: [PATCH 5/8] crash_core: add generic function to do reservation
+config: csky-defconfig (https://download.01.org/0day-ci/archive/20230827/202308272150.p3kRkMoF-lkp@intel.com/config)
+compiler: csky-linux-gcc (GCC) 13.2.0
+reproduce: (https://download.01.org/0day-ci/archive/20230827/202308272150.p3kRkMoF-lkp@intel.com/reproduce)
 
-https://lore.kernel.org/all/20230827101128.70931-1-bhe@redhat.com/T/#u 
-[PATCH 0/8] kdump: use generic functions to simplify crashkernel reservation in architectures
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202308272150.p3kRkMoF-lkp@intel.com/
 
-As for introducing a new structure struct crashkernel and enum
-crashkernel_type, after careful thinking, I think it may not be
-appropriate in this place. The reason is that even though we have
-several different grammers of crashkernel= specification, in fact
-there's one being able to set in kernel parameters. Crashkernel=,high
-support is special because it needs too, while we can ignore the
-crashernel=,low since crashkernel=,low is not an independent one.
-So a structure wrapper isn't helping much and will cause many code
-change churn in all architectures where crashkernel=,high is not
-supported. Besides, we have fallback mechanism for crashkernel=xM and
-crashkernel=xM,high. So the switch case handling Phlipp suggested
-doesn't fit in this case.
+All errors (new ones prefixed by >>):
 
-As you can see, with the v1 patchset, the code change is few and not
-hard to understand.
+     537 | void __weak arch_crash_save_vmcoreinfo(void)
+         |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+   kernel/crash_core.c:540:20: warning: no previous prototype for 'paddr_vmcoreinfo_note' [-Wmissing-prototypes]
+     540 | phys_addr_t __weak paddr_vmcoreinfo_note(void)
+         |                    ^~~~~~~~~~~~~~~~~~~~~
+   kernel/crash_core.c: In function 'crash_save_vmcoreinfo_init':
+   kernel/crash_core.c:554:45: error: 'VMCOREINFO_NOTE_SIZE' undeclared (first use in this function)
+     554 |         vmcoreinfo_note = alloc_pages_exact(VMCOREINFO_NOTE_SIZE,
+         |                                             ^~~~~~~~~~~~~~~~~~~~
+   kernel/crash_core.c:563:9: error: implicit declaration of function 'VMCOREINFO_OSRELEASE' [-Werror=implicit-function-declaration]
+     563 |         VMCOREINFO_OSRELEASE(init_uts_ns.name.release);
+         |         ^~~~~~~~~~~~~~~~~~~~
+   kernel/crash_core.c:564:9: error: implicit declaration of function 'VMCOREINFO_BUILD_ID' [-Werror=implicit-function-declaration]
+     564 |         VMCOREINFO_BUILD_ID();
+         |         ^~~~~~~~~~~~~~~~~~~
+   kernel/crash_core.c:565:9: error: implicit declaration of function 'VMCOREINFO_PAGESIZE' [-Werror=implicit-function-declaration]
+     565 |         VMCOREINFO_PAGESIZE(PAGE_SIZE);
+         |         ^~~~~~~~~~~~~~~~~~~
+   kernel/crash_core.c:567:9: error: implicit declaration of function 'VMCOREINFO_SYMBOL' [-Werror=implicit-function-declaration]
+     567 |         VMCOREINFO_SYMBOL(init_uts_ns);
+         |         ^~~~~~~~~~~~~~~~~
+   kernel/crash_core.c:568:9: error: implicit declaration of function 'VMCOREINFO_OFFSET' [-Werror=implicit-function-declaration]
+     568 |         VMCOREINFO_OFFSET(uts_namespace, name);
+         |         ^~~~~~~~~~~~~~~~~
+   kernel/crash_core.c:568:27: error: 'uts_namespace' undeclared (first use in this function)
+     568 |         VMCOREINFO_OFFSET(uts_namespace, name);
+         |                           ^~~~~~~~~~~~~
+   kernel/crash_core.c:568:42: error: 'name' undeclared (first use in this function)
+     568 |         VMCOREINFO_OFFSET(uts_namespace, name);
+         |                                          ^~~~
+   kernel/crash_core.c:571:9: error: implicit declaration of function 'VMCOREINFO_SYMBOL_ARRAY' [-Werror=implicit-function-declaration]
+     571 |         VMCOREINFO_SYMBOL_ARRAY(swapper_pg_dir);
+         |         ^~~~~~~~~~~~~~~~~~~~~~~
+   kernel/crash_core.c:588:9: error: implicit declaration of function 'VMCOREINFO_STRUCT_SIZE' [-Werror=implicit-function-declaration]
+     588 |         VMCOREINFO_STRUCT_SIZE(page);
+         |         ^~~~~~~~~~~~~~~~~~~~~~
+   kernel/crash_core.c:588:32: error: 'page' undeclared (first use in this function)
+     588 |         VMCOREINFO_STRUCT_SIZE(page);
+         |                                ^~~~
+   kernel/crash_core.c:589:32: error: 'pglist_data' undeclared (first use in this function)
+     589 |         VMCOREINFO_STRUCT_SIZE(pglist_data);
+         |                                ^~~~~~~~~~~
+   kernel/crash_core.c:590:32: error: 'zone' undeclared (first use in this function)
+     590 |         VMCOREINFO_STRUCT_SIZE(zone);
+         |                                ^~~~
+   kernel/crash_core.c:591:32: error: 'free_area' undeclared (first use in this function)
+     591 |         VMCOREINFO_STRUCT_SIZE(free_area);
+         |                                ^~~~~~~~~
+   kernel/crash_core.c:592:32: error: 'list_head' undeclared (first use in this function)
+     592 |         VMCOREINFO_STRUCT_SIZE(list_head);
+         |                                ^~~~~~~~~
+   kernel/crash_core.c:593:9: error: implicit declaration of function 'VMCOREINFO_SIZE' [-Werror=implicit-function-declaration]
+     593 |         VMCOREINFO_SIZE(nodemask_t);
+         |         ^~~~~~~~~~~~~~~
+   kernel/crash_core.c:593:25: error: expected expression before 'nodemask_t'
+     593 |         VMCOREINFO_SIZE(nodemask_t);
+         |                         ^~~~~~~~~~
+   kernel/crash_core.c:594:33: error: 'flags' undeclared (first use in this function); did you mean 'fls'?
+     594 |         VMCOREINFO_OFFSET(page, flags);
+         |                                 ^~~~~
+         |                                 fls
+   kernel/crash_core.c:595:33: error: '_refcount' undeclared (first use in this function); did you mean 'seqcount'?
+     595 |         VMCOREINFO_OFFSET(page, _refcount);
+         |                                 ^~~~~~~~~
+         |                                 seqcount
+   kernel/crash_core.c:596:33: error: 'mapping' undeclared (first use in this function)
+     596 |         VMCOREINFO_OFFSET(page, mapping);
+         |                                 ^~~~~~~
+   kernel/crash_core.c:597:33: error: 'lru' undeclared (first use in this function)
+     597 |         VMCOREINFO_OFFSET(page, lru);
+         |                                 ^~~
+   kernel/crash_core.c:598:33: error: '_mapcount' undeclared (first use in this function); did you mean 'nmi_count'?
+     598 |         VMCOREINFO_OFFSET(page, _mapcount);
+         |                                 ^~~~~~~~~
+         |                                 nmi_count
+   kernel/crash_core.c:599:33: error: 'private' undeclared (first use in this function); did you mean 'PG_private'?
+     599 |         VMCOREINFO_OFFSET(page, private);
+         |                                 ^~~~~~~
+         |                                 PG_private
+   kernel/crash_core.c:600:27: error: 'folio' undeclared (first use in this function)
+     600 |         VMCOREINFO_OFFSET(folio, _folio_dtor);
+         |                           ^~~~~
+   kernel/crash_core.c:600:34: error: '_folio_dtor' undeclared (first use in this function)
+     600 |         VMCOREINFO_OFFSET(folio, _folio_dtor);
+         |                                  ^~~~~~~~~~~
+   kernel/crash_core.c:601:34: error: '_folio_order' undeclared (first use in this function); did you mean 'folio_order'?
+     601 |         VMCOREINFO_OFFSET(folio, _folio_order);
+         |                                  ^~~~~~~~~~~~
+         |                                  folio_order
+   kernel/crash_core.c:602:33: error: 'compound_head' undeclared (first use in this function); did you mean '_compound_head'?
+     602 |         VMCOREINFO_OFFSET(page, compound_head);
+         |                                 ^~~~~~~~~~~~~
+         |                                 _compound_head
+   kernel/crash_core.c:603:40: error: 'node_zones' undeclared (first use in this function); did you mean 'node_zonelist'?
+     603 |         VMCOREINFO_OFFSET(pglist_data, node_zones);
+         |                                        ^~~~~~~~~~
+         |                                        node_zonelist
+   kernel/crash_core.c:604:40: error: 'nr_zones' undeclared (first use in this function)
+     604 |         VMCOREINFO_OFFSET(pglist_data, nr_zones);
+         |                                        ^~~~~~~~
+>> kernel/crash_core.c:606:40: error: 'node_mem_map' undeclared (first use in this function); did you mean 'node_remap'?
+     606 |         VMCOREINFO_OFFSET(pglist_data, node_mem_map);
+         |                                        ^~~~~~~~~~~~
+         |                                        node_remap
+   kernel/crash_core.c:608:40: error: 'node_start_pfn' undeclared (first use in this function)
+     608 |         VMCOREINFO_OFFSET(pglist_data, node_start_pfn);
+         |                                        ^~~~~~~~~~~~~~
+   kernel/crash_core.c:609:40: error: 'node_spanned_pages' undeclared (first use in this function); did you mean 'zone_managed_pages'?
+     609 |         VMCOREINFO_OFFSET(pglist_data, node_spanned_pages);
+         |                                        ^~~~~~~~~~~~~~~~~~
+         |                                        zone_managed_pages
+   kernel/crash_core.c:610:40: error: 'node_id' undeclared (first use in this function)
+     610 |         VMCOREINFO_OFFSET(pglist_data, node_id);
+         |                                        ^~~~~~~
+   kernel/crash_core.c:612:33: error: 'vm_stat' undeclared (first use in this function); did you mean 'vfs_stat'?
+     612 |         VMCOREINFO_OFFSET(zone, vm_stat);
+         |                                 ^~~~~~~
+         |                                 vfs_stat
+   kernel/crash_core.c:613:33: error: 'spanned_pages' undeclared (first use in this function); did you mean 'shake_page'?
+     613 |         VMCOREINFO_OFFSET(zone, spanned_pages);
+         |                                 ^~~~~~~~~~~~~
+         |                                 shake_page
+   kernel/crash_core.c:614:38: error: 'free_list' undeclared (first use in this function); did you mean 'kfree_link'?
+     614 |         VMCOREINFO_OFFSET(free_area, free_list);
+         |                                      ^~~~~~~~~
+         |                                      kfree_link
+   kernel/crash_core.c:615:38: error: 'next' undeclared (first use in this function); did you mean 'net'?
+     615 |         VMCOREINFO_OFFSET(list_head, next);
+         |                                      ^~~~
+         |                                      net
+   kernel/crash_core.c:616:38: error: 'prev' undeclared (first use in this function)
+     616 |         VMCOREINFO_OFFSET(list_head, prev);
+         |                                      ^~~~
+   kernel/crash_core.c:617:27: error: 'vmap_area' undeclared (first use in this function)
+     617 |         VMCOREINFO_OFFSET(vmap_area, va_start);
+         |                           ^~~~~~~~~
+   kernel/crash_core.c:617:38: error: 'va_start' undeclared (first use in this function); did you mean '_start'?
+     617 |         VMCOREINFO_OFFSET(vmap_area, va_start);
+         |                                      ^~~~~~~~
+         |                                      _start
+   kernel/crash_core.c:618:38: error: 'list' undeclared (first use in this function)
+     618 |         VMCOREINFO_OFFSET(vmap_area, list);
+         |                                      ^~~~
+   kernel/crash_core.c:619:9: error: implicit declaration of function 'VMCOREINFO_LENGTH' [-Werror=implicit-function-declaration]
+     619 |         VMCOREINFO_LENGTH(zone.free_area, MAX_ORDER + 1);
+         |         ^~~~~~~~~~~~~~~~~
+   kernel/crash_core.c:622:9: error: implicit declaration of function 'VMCOREINFO_NUMBER' [-Werror=implicit-function-declaration]
+     622 |         VMCOREINFO_NUMBER(NR_FREE_PAGES);
+         |         ^~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
 
-> 
-> > I'm not sure if it will be easy or not, but ideally I think the parse
-> > function can be arch independent, something like a general funtion
-> > parse_crashkernel() which can return the whole necessary infomation of
-> > crashkenrel for arch code to use, for example return like
-> > below pseudo stucture(just a concept, may need to think more):
-> > 
-> > structure crashkernel_range {
-> > 	size,
-> > 	range,
-> > 	struct list_head list;
-> > }
-> > 
-> > structure crashkernel{
-> >   structure crashkernel_range *range_list;
-> >   union {
-> >   	offset,
-> >   	low_high
-> >   }
-> > }
-> > 
-> > So the arch code can just get the data of crashkernel and then check
-> > about the details, if it does not support low and high reservation then
-> > it can just ignore the option.
-> > 
-> > Thoughts?
-> 
-> Sounds reasonable. The only thing I would make different is for the
-> parser to take the systems ram into account and simply return the size
-> that needs to be allocated in case multiple ranges are given.
-> 
-> I've played around a little on how this might look like (probably
-> wasting way too much time on it) and came up with the patch below. With
-> that patch parse_crashkernel_{common,high,low} and friends could be
-> removed once all architectures are ported to the new parse_crashkernel
-> function.
-> 
-> Please note that I never tested the patch. So it probably doesn't even
-> compile. Nevertheless I hope it helps to get an idea on what I think
-> should work :-)
-> 
-> Thanks
-> Philipp
-> 
-> ----
-> 
-> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> index fb904cc57ab1..fd5d01872c53 100644
-> --- a/arch/arm64/mm/init.c
-> +++ b/arch/arm64/mm/init.c
-> @@ -66,22 +66,12 @@ phys_addr_t __ro_after_init arm64_dma_phys_limit;
->  
->  static void __init arch_reserve_crashkernel(void)
->  {
-> -	unsigned long long low_size = 0;
-> -	unsigned long long crash_base, crash_size;
->  	char *cmdline = boot_command_line;
-> -	bool high = false;
-> -	int ret;
->  
->  	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
->  		return;
->  
-> -	ret = parse_crashkernel_generic(cmdline, &crash_size, &crash_base,
-> -					&low_size, &high);
-> -	if (ret)
-> -		return;
-> -
-> -	reserve_crashkernel_generic(cmdline, crash_size, crash_base,
-> -				    low_size, high);
-> +	reserve_crashkernel_generic(cmdline);
->  }
->  
->  /*
-> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> index b26221022283..4a78bf8ad494 100644
-> --- a/arch/x86/kernel/setup.c
-> +++ b/arch/x86/kernel/setup.c
-> @@ -486,28 +486,17 @@ unsigned long crash_low_size_default(void)
->  
->  static void __init arch_reserve_crashkernel(void)
->  {
-> -	unsigned long long crash_base, crash_size, low_size = 0;
->  	char *cmdline = boot_command_line;
-> -	bool high = false;
-> -	int ret;
->  
->  	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
->  		return;
->  
-> -	ret = parse_crashkernel_generic(cmdline, &crash_size, &crash_base,
-> -					&low_size, &high);
-> -	if (ret)
-> -		return;
-> -
->  	if (xen_pv_domain()) {
->  		pr_info("Ignoring crashkernel for a Xen PV domain\n");
->  		return;
->  	}
->  
-> -	reserve_crashkernel_generic(cmdline, crash_size, crash_base,
-> -				    low_size, high);
-> -
-> -	return;
-> +	reserve_crashkernel_generic(cmdline);
->  }
->  
->  static struct resource standard_io_resources[] = {
-> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-> index 1b12868cad1b..a1ebd6c47467 100644
-> --- a/include/linux/crash_core.h
-> +++ b/include/linux/crash_core.h
-> @@ -84,35 +84,25 @@ int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
->  int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
->  		unsigned long long *crash_size, unsigned long long *crash_base);
->  
-> -#ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
-> -int __init parse_crashkernel_generic(char *cmdline,
-> -				 unsigned long long *crash_size,
-> -				 unsigned long long *crash_base,
-> -				 unsigned long long *low_size,
-> -				 bool *high);
-> -
-> -void __init reserve_crashkernel_generic(char *cmdline,
-> -		unsigned long long crash_size,
-> -		unsigned long long crash_base,
-> -		unsigned long long crash_low_size,
-> -		bool high);
-> -#else
-> -
-> -static inline int __init parse_crashkernel_generic(char *cmdline,
-> -		unsigned long long *crash_size,
-> -		unsigned long long *crash_base,
-> -		unsigned long long *low_size,
-> -		bool *high)
-> -{
-> -	return 0;
-> +enum crashkernel_type {
-> +	CRASHKERNEL_NORMAL,
-> +	CRASHKERNEL_FIXED_OFFSET,
-> +	CRASHKERNEL_HIGH,
-> +	CRASHKERNEL_LOW
->  }
->  
-> -static inline void __init reserve_crashkernel_generic(char *cmdline,
-> -		unsigned long long crash_size,
-> -		unsigned long long crash_base,
-> -		unsigned long long crash_low_size,
-> -		bool high)
-> -{}
-> +struct crashkernl {
-> +	enum crashkernel_type type;
-> +	unsigned long long size;
-> +	unsigned long long offet;
-> +};
-> +
-> +int __init parse_crashkernel(char *cmdline, struct crashkernel *ck);
-> +
-> +#ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
-> +void __init reserve_crashkernel_generic(char *cmdline);
-> +#else
-> +void __init reserve_crashkernel_generic(char *cmdline) {}
->  #endif
->  
->  #endif /* LINUX_CRASH_CORE_H */
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index b82dc8c970de..c04a8675446b 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -203,8 +203,7 @@ static int __init parse_crashkernel_suffix(char *cmdline,
->  }
->  
->  static __init char *get_last_crashkernel(char *cmdline,
-> -			     const char *name,
-> -			     const char *suffix)
-> +					 const char *name)
->  {
->  	char *p = cmdline, *ck_cmdline = NULL;
->  
-> @@ -217,23 +216,6 @@ static __init char *get_last_crashkernel(char *cmdline,
->  		if (!end_p)
->  			end_p = p + strlen(p);
->  
-> -		if (!suffix) {
-> -			int i;
-> -
-> -			/* skip the one with any known suffix */
-> -			for (i = 0; suffix_tbl[i]; i++) {
-> -				q = end_p - strlen(suffix_tbl[i]);
-> -				if (!strncmp(q, suffix_tbl[i],
-> -					     strlen(suffix_tbl[i])))
-> -					goto next;
-> -			}
-> -			ck_cmdline = p;
-> -		} else {
-> -			q = end_p - strlen(suffix);
-> -			if (!strncmp(q, suffix, strlen(suffix)))
-> -				ck_cmdline = p;
-> -		}
-> -next:
->  		p = strstr(p+1, name);
->  	}
->  
-> @@ -314,42 +296,144 @@ static int __init parse_crashkernel_dummy(char *arg)
->  early_param("crashkernel", parse_crashkernel_dummy);
->  
->  
-> -#ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
-> -int __init parse_crashkernel_generic(char *cmdline,
-> -			     unsigned long long *crash_size,
-> -			     unsigned long long *crash_base,
-> -			     unsigned long long *low_size,
-> -			     bool *high)
-> +/*
-> + * This function parses command lines in the format
-> + *
-> + *   crashkernel=[start1-end1:]size1[,...][@offset|,high|,low]
-> + *
-> + * The function returns 0 on success and -EINVAL on failure.
-> + */
-> +static int __init _parse_crashkernel(char *cmdline, struct crashkernel *ck)
->  {
-> -	int ret;
-> +	unsigned long long start, end, size, offset;
-> +	unsigned long long system_ram;
-> +	char *next, *cur = cmdline;
->  
-> -	/* crashkernel=X[@offset] */
-> -	ret = parse_crashkernel_common(cmdline, memblock_phys_mem_size(),
-> -				crash_size, crash_base);
-> -	if (ret == -ENOENT) {
-> -		ret = parse_crashkernel_high(cmdline, 0, crash_size, crash_base);
-> -		if (ret || !*crash_size)
-> -			return -1;
-> -
-> -		/*
-> -		 * crashkernel=Y,low can be specified or not, but invalid value
-> -		 * is not allowed.
-> -		 */
-> -		ret = parse_crashkernel_low(cmdline, 0, low_size, crash_base);
-> -		if (ret == -ENOENT)
-> -			*low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
-> -		else if (ret)
-> -			return -1;
-> -
-> -		*high = true;
-> -	} else if (ret || !*crash_size) {
-> -		/* The specified value is invalid */
-> -		return -1;
-> +	/*
-> +	 * Firmware sometimes reserves some memory regions for its own use,
-> +	 * so the system memory size is less than the actual physical memory
-> +	 * size. Work around this by rounding up the total size to 128M,
-> +	 * which is enough for most test cases.
-> +	 */
-> +	system_ram = memblock_phys_mem_size()
-> +	system_ram = roundup(system_mem, SZ_128M);
-> +
-> +	start = 0;
-> +	end = ULLONG_MAX;
-> +	size = memparse(cur, &next);
-> +	if (cur == next) {
-> +		pr_warn("crashkernel: Memory value expected\n");
-> +		return -EINVAL;
-> +	}
-> +	cur = next;
-> +	ck->type=CRASHKERNEL_NORMAL;
-> +
-> +	/* case crashkerne=size[@offset|,high|,low] */
-> +	if (!strchr(cmdline, '-')) {
-> +		ck->size = size;
-> +	}
-> +
-> +	while (*cur != ' ' && *cur != '\0') {
-> +		switch (*cur) {
-> +		case '@':
-> +			offset = memparse(++cur, &next);
-> +			if (*next != ' ' && *next != '\0') {
-> +				pr_warn("crashkernel: Offset must be at the end\n");
-> +				return -EINVAL;
-> +			}
-> +			/* allow corner cases with @0 */
-> +			ck->type=CRASHKERNEL_FIXED_OFFSET;
-> +			ck->offset = offset;
-> +			break;
-> +
-> +		case '-':
-> +			start = size;
-> +			end = memparse(++cur, &next);
-> +			/* allow <start>-:<size> */
-> +			if (cur == next) {
-> +				end = system_ram;
-> +				next++;
-> +			}
-> +
-> +			if (*next != ':') {
-> +				pr_warn("crashkernel: ':' expected\n");
-> +				return -EINVAL;
-> +			}
-> +
-> +			cur = next + 1;
-> +			size = memparse(cur, &next);
-> +			if (cur == next) {
-> +				pr_warn("crashkernel: No size provided\n");
-> +				return -EINVAL;
-> +			}
-> +
-> +			if (end <= start) {
-> +				pr_warn("crashkernel: end <= start\n");
-> +				return -EINVAL;
-> +			}
-> +
-> +			if (start <= system_ram && end > system_ram)
-> +				ck->size = size;
-> +
-> +
-> +			cur = next + 1;
-> +			break;
-> +
-> +		case ',':
-> +			cur++;
-> +
-> +			/* check for ,high, ,low */
-> +			if (strncmp(cur, "high", strlen("high"))) {
-> +				ck->type=CRASHKERNEL_HIGH;
-> +				cur+=strlen("high");
-> +				if (*cur != ' ' || *cur != '\0') {
-> +					pr_warn("crashkernel: ,high must be at the end\n");
-> +					return -EINVAL;
-> +				}
-> +				break;
-> +			} else if (strncmp(cur, "low". strlen("low"))) {
-> +				ck->type=CRASHKERNEL_LOW;
-> +				cur+=strlen("low");
-> +				if (*cur != ' ' || *cur != '\0') {
-> +					pr_warn("crashkernel: ,high must be at the end\n");
-> +					return -EINVAL;
-> +				}
-> +				break;
-> +			}
-> +
-> +			/* start with next entry */
-> +			size = memparse(cur, &next);
-> +			if (cur == next) {
-> +				pr_warn("crashkernel: Memory value expected\n");
-> +				return -EINVAL;
-> +			}
-> +			cur = next;
-> +			break;
-> +
-> +		default:
-> +			pr_warn("crashkernel: Invalid character '%c' provided\n", *cur);
-> +			return -EINVAL;
-> +		}
->  	}
->  
->  	return 0;
->  }
->  
-> +#ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
-> +int __init parse_crashkernel(char *cmdline, struct crashkernel *ck)
-> +{
-> +	const char *name="crashkernel=";
-> +	char *ck_cmdline;
-> +
-> +	BUG_ON(!ck);
-> +
-> +	ck_cmdline = get_last_crashkernel(cmdline, name);
-> +	if (!ck_cmdline)
-> +		return -ENOENT;
-> +	ck_cmdline += strlen(name);
-> +	return _parse_crashkernel(ck_cmdline, ck);
-> +}
-> +
->  static int __init reserve_crashkernel_low(unsigned long long low_size)
->  {
->  #ifdef CONFIG_64BIT
-> @@ -371,70 +455,57 @@ static int __init reserve_crashkernel_low(unsigned long long low_size)
->  	return 0;
->  }
->  
-> -void __init reserve_crashkernel_generic(char *cmdline,
-> -			     unsigned long long crash_size,
-> -			     unsigned long long crash_base,
-> -			     unsigned long long crash_low_size,
-> -			     bool high)
-> +void __init reserve_crashkernel_generic(char *cmdline)
->  {
-> -	unsigned long long search_end = CRASH_ADDR_LOW_MAX, search_base = 0;
-> -	bool fixed_base = false;
-> -
-> -	/* User specifies base address explicitly. */
-> -	if (crash_base) {
-> -		fixed_base = true;
-> -		search_base = crash_base;
-> -		search_end = crash_base + crash_size;
-> -	}
-> +	struct ck = { 0 };
->  
-> -	if (high) {
-> -		search_base = CRASH_ADDR_LOW_MAX;
-> -		search_end = CRASH_ADDR_HIGH_MAX;
-> -	}
-> +	parse_crashkernel(cmdline, &ck);
->  
-> -retry:
-> -	crash_base = memblock_phys_alloc_range(crash_size, CRASH_ALIGN,
-> -					       search_base, search_end);
-> -	if (!crash_base) {
-> -		/*
-> -		 * For crashkernel=size[KMG]@offset[KMG], print out failure
-> -		 * message if can't reserve the specified region.
-> -		 */
-> -		if (fixed_base) {
-> -			pr_warn("crashkernel reservation failed - memory is in use.\n");
-> -			return;
-> -		}
-> +	if (!ck.size)
-> +		return;
->  
-> -		/*
-> -		 * For crashkernel=size[KMG], if the first attempt was for
-> -		 * low memory, fall back to high memory, the minimum required
-> -		 * low memory will be reserved later.
-> -		 */
-> -		if (!high && search_end == CRASH_ADDR_LOW_MAX) {
-> -			search_end = CRASH_ADDR_HIGH_MAX;
-> -			search_base = CRASH_ADDR_LOW_MAX;
-> -			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
-> -			goto retry;
-> +	switch (ck.type) {
-> +	CRASHKERNEL_FIXED_OFFSET:
-> +		crash_base = memblock_phys_alloc_range(ck.size, CRASH_ALIGN,
-> +						       ck.offset,
-> +						       ck.offset + ck.size);
-> +		break;
-> +
-> +	CRASHKERNEL_NORMAL:
-> +		if (DEFAULT_CRASH_KERNEL_LOW_SIZE) {
-> +			/* Simply continue in case we fail to allocate the low
-> +			 * memory */
-> +			if (!reserve_crashkernel_low(DEFAULT_CRASH_KERNEL_LOW_SIZE))
-> +				ck.size -= DEFAULT_CRASH_KERNEL_LOW_SIZE;
->  		}
->  
-> -		/*
-> -		 * For crashkernel=size[KMG],high, if the first attempt was
-> -		 * for high memory, fall back to low memory.
-> -		 */
-> -		if (high && search_end == CRASH_ADDR_HIGH_MAX) {
-> -			search_end = CRASH_ADDR_LOW_MAX;
-> -			search_base = 0;
-> -			goto retry;
-> -		}
-> -		pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
-> -			crash_size);
-> +		fallthrough;
-> +	CRASHKERNEL_HIGH:
-> +		crash_base = memblock_phys_alloc_range(ck.size, CRASH_ALIGN,
-> +						       CRASH_ADDR_LOW_MAX,
-> +						       CRASH_ADDR_HIGH_MAX);
-> +		if (crash_base)
-> +			break;
-> +
-> +		fallthrough;
-> +	CRASHKERNEL_LOW:
-> +		crash_base = memblock_phys_alloc_range(ck.size, CRASH_ALIGN, 0,
-> +						       CRASH_ADDR_LOW_MAX);
-> +		break;
-> +
-> +	default:
-> +		pr_warn("Invalid crashkernel type %i\n", ck.type);
->  		return;
->  	}
->  
-> -	if ((crash_base > CRASH_ADDR_LOW_MAX) &&
-> -	     crash_low_size && reserve_crashkernel_low(crash_low_size)) {
-> -		memblock_phys_free(crash_base, crash_size);
-> -		return;
-> +	if (!crash_base) {
-> +		pr_warn("could not allocate crashkernel (size:0x%llx)\n",
-> +			ck.size);
-> +		if (crashk_low_res.end) {
-> +			memblock_phys_free(crashk_low_res.start,
-> +					   crashk_low_res.end - crashk_low_res.start + 1);
-> +		}
-> +		return
->  	}
->  
->  	pr_info("crashkernel reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
-> @@ -449,7 +520,7 @@ void __init reserve_crashkernel_generic(char *cmdline,
->  		kmemleak_ignore_phys(crashk_low_res.start);
->  
->  	crashk_res.start = crash_base;
-> -	crashk_res.end = crash_base + crash_size - 1;
-> +	crashk_res.end = crash_base + ck.size - 1;
->  	insert_resource(&iomem_resource, &crashk_res);
->  }
->  #endif
-> 
 
+vim +606 kernel/crash_core.c
+
+692f66f26a4c19d Hari Bathini            2017-05-08  545  
+692f66f26a4c19d Hari Bathini            2017-05-08  546  static int __init crash_save_vmcoreinfo_init(void)
+692f66f26a4c19d Hari Bathini            2017-05-08  547  {
+203e9e41219b4e7 Xunlei Pang             2017-07-12  548  	vmcoreinfo_data = (unsigned char *)get_zeroed_page(GFP_KERNEL);
+203e9e41219b4e7 Xunlei Pang             2017-07-12  549  	if (!vmcoreinfo_data) {
+203e9e41219b4e7 Xunlei Pang             2017-07-12  550  		pr_warn("Memory allocation for vmcoreinfo_data failed\n");
+203e9e41219b4e7 Xunlei Pang             2017-07-12  551  		return -ENOMEM;
+203e9e41219b4e7 Xunlei Pang             2017-07-12  552  	}
+203e9e41219b4e7 Xunlei Pang             2017-07-12  553  
+203e9e41219b4e7 Xunlei Pang             2017-07-12  554  	vmcoreinfo_note = alloc_pages_exact(VMCOREINFO_NOTE_SIZE,
+203e9e41219b4e7 Xunlei Pang             2017-07-12  555  						GFP_KERNEL | __GFP_ZERO);
+203e9e41219b4e7 Xunlei Pang             2017-07-12  556  	if (!vmcoreinfo_note) {
+203e9e41219b4e7 Xunlei Pang             2017-07-12  557  		free_page((unsigned long)vmcoreinfo_data);
+203e9e41219b4e7 Xunlei Pang             2017-07-12  558  		vmcoreinfo_data = NULL;
+203e9e41219b4e7 Xunlei Pang             2017-07-12  559  		pr_warn("Memory allocation for vmcoreinfo_note failed\n");
+203e9e41219b4e7 Xunlei Pang             2017-07-12  560  		return -ENOMEM;
+203e9e41219b4e7 Xunlei Pang             2017-07-12  561  	}
+203e9e41219b4e7 Xunlei Pang             2017-07-12  562  
+692f66f26a4c19d Hari Bathini            2017-05-08  563  	VMCOREINFO_OSRELEASE(init_uts_ns.name.release);
+44e8a5e9120bf4f Stephen Boyd            2021-07-07  564  	VMCOREINFO_BUILD_ID();
+692f66f26a4c19d Hari Bathini            2017-05-08  565  	VMCOREINFO_PAGESIZE(PAGE_SIZE);
+692f66f26a4c19d Hari Bathini            2017-05-08  566  
+692f66f26a4c19d Hari Bathini            2017-05-08  567  	VMCOREINFO_SYMBOL(init_uts_ns);
+ca4a9241cc5e718 Alexander Egorenkov     2020-12-15  568  	VMCOREINFO_OFFSET(uts_namespace, name);
+692f66f26a4c19d Hari Bathini            2017-05-08  569  	VMCOREINFO_SYMBOL(node_online_map);
+692f66f26a4c19d Hari Bathini            2017-05-08  570  #ifdef CONFIG_MMU
+eff4345e7fba0aa Omar Sandoval           2018-08-21  571  	VMCOREINFO_SYMBOL_ARRAY(swapper_pg_dir);
+692f66f26a4c19d Hari Bathini            2017-05-08  572  #endif
+692f66f26a4c19d Hari Bathini            2017-05-08  573  	VMCOREINFO_SYMBOL(_stext);
+692f66f26a4c19d Hari Bathini            2017-05-08  574  	VMCOREINFO_SYMBOL(vmap_area_list);
+692f66f26a4c19d Hari Bathini            2017-05-08  575  
+a9ee6cf5c60ed10 Mike Rapoport           2021-06-28  576  #ifndef CONFIG_NUMA
+692f66f26a4c19d Hari Bathini            2017-05-08  577  	VMCOREINFO_SYMBOL(mem_map);
+692f66f26a4c19d Hari Bathini            2017-05-08  578  	VMCOREINFO_SYMBOL(contig_page_data);
+692f66f26a4c19d Hari Bathini            2017-05-08  579  #endif
+692f66f26a4c19d Hari Bathini            2017-05-08  580  #ifdef CONFIG_SPARSEMEM
+a0b1280368d1e91 Kirill A. Shutemov      2018-01-12  581  	VMCOREINFO_SYMBOL_ARRAY(mem_section);
+692f66f26a4c19d Hari Bathini            2017-05-08  582  	VMCOREINFO_LENGTH(mem_section, NR_SECTION_ROOTS);
+692f66f26a4c19d Hari Bathini            2017-05-08  583  	VMCOREINFO_STRUCT_SIZE(mem_section);
+692f66f26a4c19d Hari Bathini            2017-05-08  584  	VMCOREINFO_OFFSET(mem_section, section_mem_map);
+4f5aecdff25f59f Pingfan Liu             2021-06-15  585  	VMCOREINFO_NUMBER(SECTION_SIZE_BITS);
+1d50e5d0c505244 Bhupesh Sharma          2020-05-14  586  	VMCOREINFO_NUMBER(MAX_PHYSMEM_BITS);
+692f66f26a4c19d Hari Bathini            2017-05-08  587  #endif
+692f66f26a4c19d Hari Bathini            2017-05-08  588  	VMCOREINFO_STRUCT_SIZE(page);
+692f66f26a4c19d Hari Bathini            2017-05-08  589  	VMCOREINFO_STRUCT_SIZE(pglist_data);
+692f66f26a4c19d Hari Bathini            2017-05-08  590  	VMCOREINFO_STRUCT_SIZE(zone);
+692f66f26a4c19d Hari Bathini            2017-05-08  591  	VMCOREINFO_STRUCT_SIZE(free_area);
+692f66f26a4c19d Hari Bathini            2017-05-08  592  	VMCOREINFO_STRUCT_SIZE(list_head);
+692f66f26a4c19d Hari Bathini            2017-05-08  593  	VMCOREINFO_SIZE(nodemask_t);
+692f66f26a4c19d Hari Bathini            2017-05-08  594  	VMCOREINFO_OFFSET(page, flags);
+692f66f26a4c19d Hari Bathini            2017-05-08  595  	VMCOREINFO_OFFSET(page, _refcount);
+692f66f26a4c19d Hari Bathini            2017-05-08  596  	VMCOREINFO_OFFSET(page, mapping);
+692f66f26a4c19d Hari Bathini            2017-05-08  597  	VMCOREINFO_OFFSET(page, lru);
+692f66f26a4c19d Hari Bathini            2017-05-08  598  	VMCOREINFO_OFFSET(page, _mapcount);
+692f66f26a4c19d Hari Bathini            2017-05-08  599  	VMCOREINFO_OFFSET(page, private);
+1c5509be58f636a Matthew Wilcox (Oracle  2023-01-11  600) 	VMCOREINFO_OFFSET(folio, _folio_dtor);
+1c5509be58f636a Matthew Wilcox (Oracle  2023-01-11  601) 	VMCOREINFO_OFFSET(folio, _folio_order);
+692f66f26a4c19d Hari Bathini            2017-05-08  602  	VMCOREINFO_OFFSET(page, compound_head);
+692f66f26a4c19d Hari Bathini            2017-05-08  603  	VMCOREINFO_OFFSET(pglist_data, node_zones);
+692f66f26a4c19d Hari Bathini            2017-05-08  604  	VMCOREINFO_OFFSET(pglist_data, nr_zones);
+43b02ba93b25b1c Mike Rapoport           2021-06-28  605  #ifdef CONFIG_FLATMEM
+692f66f26a4c19d Hari Bathini            2017-05-08 @606  	VMCOREINFO_OFFSET(pglist_data, node_mem_map);
+692f66f26a4c19d Hari Bathini            2017-05-08  607  #endif
+692f66f26a4c19d Hari Bathini            2017-05-08  608  	VMCOREINFO_OFFSET(pglist_data, node_start_pfn);
+692f66f26a4c19d Hari Bathini            2017-05-08  609  	VMCOREINFO_OFFSET(pglist_data, node_spanned_pages);
+692f66f26a4c19d Hari Bathini            2017-05-08  610  	VMCOREINFO_OFFSET(pglist_data, node_id);
+692f66f26a4c19d Hari Bathini            2017-05-08  611  	VMCOREINFO_OFFSET(zone, free_area);
+692f66f26a4c19d Hari Bathini            2017-05-08  612  	VMCOREINFO_OFFSET(zone, vm_stat);
+692f66f26a4c19d Hari Bathini            2017-05-08  613  	VMCOREINFO_OFFSET(zone, spanned_pages);
+692f66f26a4c19d Hari Bathini            2017-05-08  614  	VMCOREINFO_OFFSET(free_area, free_list);
+692f66f26a4c19d Hari Bathini            2017-05-08  615  	VMCOREINFO_OFFSET(list_head, next);
+692f66f26a4c19d Hari Bathini            2017-05-08  616  	VMCOREINFO_OFFSET(list_head, prev);
+692f66f26a4c19d Hari Bathini            2017-05-08  617  	VMCOREINFO_OFFSET(vmap_area, va_start);
+692f66f26a4c19d Hari Bathini            2017-05-08  618  	VMCOREINFO_OFFSET(vmap_area, list);
+23baf831a32c04f Kirill A. Shutemov      2023-03-15  619  	VMCOREINFO_LENGTH(zone.free_area, MAX_ORDER + 1);
+692f66f26a4c19d Hari Bathini            2017-05-08  620  	log_buf_vmcoreinfo_setup();
+692f66f26a4c19d Hari Bathini            2017-05-08  621  	VMCOREINFO_LENGTH(free_area.free_list, MIGRATE_TYPES);
+692f66f26a4c19d Hari Bathini            2017-05-08  622  	VMCOREINFO_NUMBER(NR_FREE_PAGES);
+692f66f26a4c19d Hari Bathini            2017-05-08  623  	VMCOREINFO_NUMBER(PG_lru);
+692f66f26a4c19d Hari Bathini            2017-05-08  624  	VMCOREINFO_NUMBER(PG_private);
+692f66f26a4c19d Hari Bathini            2017-05-08  625  	VMCOREINFO_NUMBER(PG_swapcache);
+1cbf29da3628b66 Petr Tesarik            2018-04-13  626  	VMCOREINFO_NUMBER(PG_swapbacked);
+692f66f26a4c19d Hari Bathini            2017-05-08  627  	VMCOREINFO_NUMBER(PG_slab);
+692f66f26a4c19d Hari Bathini            2017-05-08  628  #ifdef CONFIG_MEMORY_FAILURE
+692f66f26a4c19d Hari Bathini            2017-05-08  629  	VMCOREINFO_NUMBER(PG_hwpoison);
+692f66f26a4c19d Hari Bathini            2017-05-08  630  #endif
+692f66f26a4c19d Hari Bathini            2017-05-08  631  	VMCOREINFO_NUMBER(PG_head_mask);
+6e292b9be7f4358 Matthew Wilcox          2018-06-07  632  #define PAGE_BUDDY_MAPCOUNT_VALUE	(~PG_buddy)
+692f66f26a4c19d Hari Bathini            2017-05-08  633  	VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
+692f66f26a4c19d Hari Bathini            2017-05-08  634  #ifdef CONFIG_HUGETLB_PAGE
+692f66f26a4c19d Hari Bathini            2017-05-08  635  	VMCOREINFO_NUMBER(HUGETLB_PAGE_DTOR);
+e04b742f74c2362 David Hildenbrand       2019-03-05  636  #define PAGE_OFFLINE_MAPCOUNT_VALUE	(~PG_offline)
+e04b742f74c2362 David Hildenbrand       2019-03-05  637  	VMCOREINFO_NUMBER(PAGE_OFFLINE_MAPCOUNT_VALUE);
+692f66f26a4c19d Hari Bathini            2017-05-08  638  #endif
+692f66f26a4c19d Hari Bathini            2017-05-08  639  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
 _______________________________________________
 kexec mailing list
