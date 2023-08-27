@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2DB47C83F10
-	for <kexec@archiver.kernel.org>; Sun, 27 Aug 2023 10:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EA379C83F11
+	for <kexec@archiver.kernel.org>; Sun, 27 Aug 2023 10:12:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=yp/s05Q2EhybsWYubH74g3uLqirnhQ+88qth3IeA7u0=; b=EzKcHYowZyOfWM
-	4a0fnJm9uE+3f9KZ+6uaupXoQMWcADfca21TwYQmm5pZcpRiLubLdO0/2kT4GyPMOjzg3ZlnaT9ji
-	5HvqvWHTGK/ZbHWXjn29O3QNmQcjKmAQ8hT2OB67YWQfAXmod04hYPhMDsnyrAyv5bzimIEkfwlaL
-	ve7JQjM/6uyksFF79vYxyrYKPMFAQIOVkNRJm8zt8H0oK5YG0r6C9LyHWl0E45m+WhqRDxqQ1LoxX
-	wwgSVd/hJWBi7ng30TCHXTI8tyQEl2qWlox12rRI+MBXLBgL9i449EaIcY+LckjimlWTSCqRUq3EY
-	/Ix5nT4N1SCdk+AoA6GA==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=h1F6Wm9Jl8AQgNDGTBcNXEQHBH5SZq9cq/BrBqf8KkM=; b=ke4S4ymDJPqlwt
+	4PiVGov8uNtZLB2unccYAGbLZOk+3vDVFDTGi7Mw57iU2w75PgCggs/TrXnnUYBizZ6dUtqzwF/uf
+	agZEeJUbyTJo5uYk7zWqmnVVEAPvuq2xXdFl8Wy965q82z/DJyzfGNtsTQ3tTn13jyStI8vXmmVSI
+	fMg4w+IHH87HWu1xsNf9qBBXyGwoM21feHWXQhbsfOho2+SRwYNTG8DsTy3jRmIdgmvNE2V3NAJ2N
+	8ImSprfKpuUNrCh8mj3wrYgvlUlQYVtSd+dgridvel5Pyuwq5qlxgVF8Rmsu4Nc6BJX/fwRVJvUVP
+	R6IWvKA6foTGHHzy65Ew==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qaCkR-007oYT-0a;
-	Sun, 27 Aug 2023 10:11:59 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1qaCkU-007obi-1y;
+	Sun, 27 Aug 2023 10:12:02 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qaCkF-007oMO-2I
+	id 1qaCkG-007oJD-1U
 	for kexec@lists.infradead.org;
-	Sun, 27 Aug 2023 10:11:49 +0000
+	Sun, 27 Aug 2023 10:11:51 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1693131105;
+	s=mimecast20190719; t=1693131100;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tfjMHtwZmYPGJa055635da7tGwR4fHeiGc9iyDU58/U=;
-	b=X5ay8s15dV/ILxeoQ/qLl8SQJ3hpgxVeHrJkpRdE1p3MpUbsXw9pYBzpyZ3lo7D7Da38EP
-	zHwp9lcQv28Sm5apvTjxSMpoMENEYqgmZyzceetV8QA6wwg8F4u1cFJC5Hm0fWTw8L8kVX
-	EjPA0+sj0hPIpo3izeu9hqyzAwKjnwQ=
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=fg4otpgPmKt9KaByfspMaEC8zG3oBR6gcXrny0pY4kM=;
+	b=cwmCmVj62bzxRM290Fvc8YekKHrcPFL0REPOD1uS7p761UhxWNoxebzTHgWzzyvjq0nFYQ
+	dbAK5lYva+dsCEXTfaaQ+lA47Bw58wRruTYNk4PbCBvYTjegrLSM4lPSvNyD3lziQ3OHvf
+	ib9goopm0w+poJyFhPLIR1UltSxnq0Q=
 Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-157-_F2DW1_AP7-9rph8ZAP7Hw-1; Sun, 27 Aug 2023 06:11:41 -0400
-X-MC-Unique: _F2DW1_AP7-9rph8ZAP7Hw-1
+ us-mta-484-5aQtTWKvOGW19Ky3V7f6fg-1; Sun, 27 Aug 2023 06:11:36 -0400
+X-MC-Unique: 5aQtTWKvOGW19Ky3V7f6fg-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 89A72380673A;
-	Sun, 27 Aug 2023 10:11:40 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BD2553806631;
+	Sun, 27 Aug 2023 10:11:35 +0000 (UTC)
 Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.112.43])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 634522166B25;
-	Sun, 27 Aug 2023 10:11:36 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 5E5EE2166B25;
+	Sun, 27 Aug 2023 10:11:31 +0000 (UTC)
 From: Baoquan He <bhe@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: kexec@lists.infradead.org,
@@ -62,16 +61,14 @@ Cc: kexec@lists.infradead.org,
 	dyoung@redhat.com,
 	prudo@redhat.com,
 	Baoquan He <bhe@redhat.com>
-Subject: [PATCH 1/8] crash_core.c: remove unnecessary parameter of function
-Date: Sun, 27 Aug 2023 18:11:20 +0800
-Message-ID: <20230827101128.70931-2-bhe@redhat.com>
-In-Reply-To: <20230827101128.70931-1-bhe@redhat.com>
-References: <20230827101128.70931-1-bhe@redhat.com>
+Subject: [PATCH 0/8] kdump: use generic functions to simplify crashkernel reservation in architectures
+Date: Sun, 27 Aug 2023 18:11:19 +0800
+Message-ID: <20230827101128.70931-1-bhe@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230827_031147_847733_C22E4652 
-X-CRM114-Status: GOOD (  10.72  )
+X-CRM114-CacheID: sfid-20230827_031148_590569_6F56FDB9 
+X-CRM114-Status: GOOD (  14.19  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -88,59 +85,70 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-In all call sites of __parse_crashkernel(), the parameter 'name' is
-hardcoded as "crashkernel=". So remove the unnecessary parameter 'name',
-add local varibale 'name' inside __parse_crashkernel() instead.
+In the current arm64, crashkernel=,high support has been finished after
+several rounds of posting and careful reviewing. The code in arm64 which
+parses crashkernel kernel parameters firstly, then reserve memory can be
+a good example for other ARCH to refer to.
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
- kernel/crash_core.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Whereas in x86_64, the code mixing crashkernel parameter parsing and
+memory reserving is twisted, and looks messy. Refactoring the code to
+make it more readable maintainable is necessary.
 
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 90ce1dfd591c..f27b4e45d410 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -241,11 +241,11 @@ static int __init __parse_crashkernel(char *cmdline,
- 			     unsigned long long system_ram,
- 			     unsigned long long *crash_size,
- 			     unsigned long long *crash_base,
--			     const char *name,
- 			     const char *suffix)
- {
- 	char	*first_colon, *first_space;
- 	char	*ck_cmdline;
-+	char	*name = "crashkernel=";
- 
- 	BUG_ON(!crash_size || !crash_base);
- 	*crash_size = 0;
-@@ -283,7 +283,7 @@ int __init parse_crashkernel(char *cmdline,
- 			     unsigned long long *crash_base)
- {
- 	return __parse_crashkernel(cmdline, system_ram, crash_size, crash_base,
--					"crashkernel=", NULL);
-+				NULL);
- }
- 
- int __init parse_crashkernel_high(char *cmdline,
-@@ -292,7 +292,7 @@ int __init parse_crashkernel_high(char *cmdline,
- 			     unsigned long long *crash_base)
- {
- 	return __parse_crashkernel(cmdline, system_ram, crash_size, crash_base,
--				"crashkernel=", suffix_tbl[SUFFIX_HIGH]);
-+				suffix_tbl[SUFFIX_HIGH]);
- }
- 
- int __init parse_crashkernel_low(char *cmdline,
-@@ -301,7 +301,7 @@ int __init parse_crashkernel_low(char *cmdline,
- 			     unsigned long long *crash_base)
- {
- 	return __parse_crashkernel(cmdline, system_ram, crash_size, crash_base,
--				"crashkernel=", suffix_tbl[SUFFIX_LOW]);
-+				suffix_tbl[SUFFIX_LOW]);
- }
- 
- /*
+Here, firstly abstract the crashkernel parameter parsing code into
+parse_crashkernel() to make it be able to parse crashkernel=,high|low.
+Then abstract the crashkernel memory reserving code into a generic
+function reserve_crashkernel_generic(). Finally, in ARCH which
+crashkernel=,high support is needed, a simple arch_reserve_crashkernel()
+can be added to call above two functions. This can remove the duplicated
+implmentation code in each ARCH, like arm64, x86_64.
+
+I only change the arm64 and x86_64 implementation to make use of the
+generic functions to simplify code. Risc-v can be done very easily refer
+to the steps in arm64 and x86_64.
+
+History:
+- RFC patchset:
+  https://lore.kernel.org/all/20230619055951.45620-1-bhe@redhat.com/T/#u
+  [RFC PATCH 0/4] kdump: add generic functions to simplify crashkernel crashkernel in architecture
+  Dave and Philipp commented the old parse_crashkernel_common() and
+  parse_crashkernel_generic() are quite confusing. In this formal post,
+  I made change to address the concern by unifying all crashkernel
+  parsing into parse_crashkernel().
+
+Baoquan He (8):
+  crash_core.c: remove unnecessary parameter of function
+  crash_core: change the prototype of function parse_crashkernel()
+  include/linux/kexec.h: move down crash_core.h including
+  crash_core: change parse_crashkernel() to support
+    crashkernel=,high|low parsing
+  crash_core: add generic function to do reservation
+  arm64: kdump: use generic interface to simplify crashkernel
+    reservation
+  x86: kdump: use generic interface to simplify crashkernel reservation
+    code
+  crash_core.c: remove unneeded functions
+
+ arch/arm/kernel/setup.c              |   3 +-
+ arch/arm64/Kconfig                   |   3 +
+ arch/arm64/include/asm/kexec.h       |   5 +
+ arch/arm64/mm/init.c                 | 140 ++--------------------
+ arch/ia64/kernel/setup.c             |   2 +-
+ arch/loongarch/kernel/setup.c        |   4 +-
+ arch/mips/kernel/setup.c             |   3 +-
+ arch/powerpc/kernel/fadump.c         |   2 +-
+ arch/powerpc/kexec/core.c            |   2 +-
+ arch/powerpc/mm/nohash/kaslr_booke.c |   2 +-
+ arch/riscv/mm/init.c                 |   2 +-
+ arch/s390/kernel/setup.c             |   4 +-
+ arch/sh/kernel/machine_kexec.c       |   2 +-
+ arch/x86/Kconfig                     |   3 +
+ arch/x86/include/asm/kexec.h         |  32 +++++
+ arch/x86/kernel/setup.c              | 143 +++-------------------
+ include/linux/crash_core.h           |  35 +++++-
+ include/linux/kexec.h                |  14 +--
+ kernel/crash_core.c                  | 170 +++++++++++++++++++++++----
+ 19 files changed, 266 insertions(+), 305 deletions(-)
+
 -- 
 2.41.0
 
