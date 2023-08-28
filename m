@@ -4,82 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5342AC83F12
-	for <kexec@archiver.kernel.org>; Mon, 28 Aug 2023 05:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6AF88C83F11
+	for <kexec@archiver.kernel.org>; Mon, 28 Aug 2023 06:16:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
-	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=GAAi6WZLxvSrMwWyp1e63w8yWynryf1tqqKUUItpO14=; b=wdhfvBbk32UWVb
-	pGu2x0BtSAxDX+ufBGO94XJsiCsmutPLPFcV04aJtyV+fm9LGDOTjUQUvzQHll56VzbaryWLAwYty
-	d80xL59kizZDLkgsHeoniOF1L9P79fTI/Ksqj4ryhlkj5tIs8bd0Ri/KQ7bOD+sohbqM3dtD6RjOe
-	OUX4kzqrRaMCAfSqiGD1NDbWd50Bi2NFofeFmM3qIZarUySDcrT9KVTKKaGfW5AtOOH+k5O96DQO7
-	3bjOrYihzTcI24yQjegFnR/sPMIcAAUwrJzimM760mD4HMt24ihebhQhnKU/zQUMUByN45zbap/nK
-	7S+qEShdIO5/hqxHaKuw==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:References:To:From:Subject:MIME-Version:
+	Date:Message-ID:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=sP89zBNhbMcKVNX4HtoyoEwcolgJLHyerWjNM5Ku7+k=; b=Spe0sOFskf3xoXDd7wlgb6q56I
+	fdI21Qqe+EFWpOBgmlv+OsFpEjKsNYGsV0c+otglFCY8ri1Ad02I36RmdWZB4YPit+GQSDWaY/++A
+	5ciIZnTk9zjrAAdG9ti6iiKHIaZDc80tV74SzI7XgVGjCr4gzoh2dJDby2CjOiPH2bapM3vB0NmOd
+	NTtrkg9VP3EoM9F0o6C6osjTrRauZF8+YXTMLd9vP2U/zoX5hfjP+yuxB/rw2idYq+khuXwkvn+VA
+	WKwPzdnDRI+tzD1vlzZcGaGjfIM3d9BiyViNq1WWkFEyfnKbEYuSnL4BXJYP2DbV8CJFfr2mgXDP5
+	dkddLlTA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qaUlp-008smN-31;
-	Mon, 28 Aug 2023 05:26:37 +0000
-Received: from mail-qt1-x82c.google.com ([2607:f8b0:4864:20::82c])
+	id 1qaVY4-008wIT-0B;
+	Mon, 28 Aug 2023 06:16:28 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qaUll-008slM-00
+	id 1qaVY0-008wHP-15
 	for kexec@lists.infradead.org;
-	Mon, 28 Aug 2023 05:26:34 +0000
-Received: by mail-qt1-x82c.google.com with SMTP id d75a77b69052e-41215efeb1aso13453971cf.1
-        for <kexec@lists.infradead.org>; Sun, 27 Aug 2023 22:26:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1693200391; x=1693805191;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=108AsllHoPT0Lzt6ytjY6pwVBBXW6+UeWb5fHpdiN2Q=;
-        b=ldkG786to9BGWtLjh1WpxPRqStCYl8LmG4rHbPoL584Ls+asn+5YyMI61vJLYr6C4t
-         2fmq2AzgCsmbCOMiBqUszMj3zNyh9TcrZRbKwG4w4ulMng1rF9U39n1QYbXcMwqMl9mw
-         YTmukQHhLrSUlJeclpPyPGv9x4XYuLCD/EVOt2l3sRuMUOFkPha71hxR9S1i1sVc530C
-         TRJoYH624KKJC61vtkAJYiKDE+NAzAIIDnM9fJrG/+3B8/IW4DTJhPOtbxJX1OSgt0Zd
-         JKfXUgJ5WriQuw+RZOisBtZYZqkwfLR66g527y4cNsWVAQ6cCcO8kAiUmku2CsbPLZVH
-         VuOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693200391; x=1693805191;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=108AsllHoPT0Lzt6ytjY6pwVBBXW6+UeWb5fHpdiN2Q=;
-        b=eKYNT9Q9JylKYG2Vts+fZ/9mmEzW766YaClLQImEpXyNjzcMVuMQUl34oIKQFgDylV
-         RUNe8aD/idGmsmfujxxRwJSW29t81ftw1cvP0E/aakv0PkLaKy2ZQ64u3aQ7vVc39lbm
-         dWTUYvwOBFXx2Wb2ycsV4CggIhIEip0/KM4T7rLZp3ojv+Kk0eIPM5XDR596vu+FjMQ0
-         7D5y76PYtbsyioQob8zEeNSd6Nis0q3i/UkJ1DS1YWKb26odCPI5NWhQJkFBHTZTI+gF
-         iapO4BUJZlXjTi8ECzhkeuhMtUZpUIXeNO+tRbLnFnsXbqkvjXvga17En7ZOrUGqM0HF
-         4XIQ==
-X-Gm-Message-State: AOJu0YxU8QPoY90EBLbl5DQNbb9clfk8locpMrZYcOK5bMxjZIBU5AtM
-	nBhNrLVU2/nZc6GSQtyzWITW+lyGAKT66x5byvU=
-X-Google-Smtp-Source: AGHT+IHEQKuNBZ6qJ4N2xNz7ofrzmnsHi+TY1oiaRD1gEJ0FxfGbS6fr0a1lahg4MRvwzZ6B70mZTw==
-X-Received: by 2002:a05:622a:1182:b0:410:9855:aae with SMTP id m2-20020a05622a118200b0041098550aaemr25612358qtk.19.1693200391084;
-        Sun, 27 Aug 2023 22:26:31 -0700 (PDT)
-Received: from ?IPV6:2600:1700:2000:b002:6140:58e3:2550:7e99? ([2600:1700:2000:b002:6140:58e3:2550:7e99])
-        by smtp.gmail.com with ESMTPSA id bt4-20020ac86904000000b00403f1a7be90sm2084094qtb.88.2023.08.27.22.26.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 27 Aug 2023 22:26:30 -0700 (PDT)
-Message-ID: <15058508-9e21-0d10-4eca-2c8a5562d36c@sifive.com>
-Date: Mon, 28 Aug 2023 00:26:29 -0500
+	Mon, 28 Aug 2023 06:16:25 +0000
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37S3UjcE025254;
+	Mon, 28 Aug 2023 06:16:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : from : to : references : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=BrpM+0SPkDpGjgOdzPooS4TQ40M6SgNZ+qZ41GLgf+Y=;
+ b=o4w8EFkvoMo+tGm2RnZ42toc7TUMwZ2Razd6jqxmai+fbQd1pawlwsrpZPbVEUK/zbN6
+ Iv0z9IMRx7sLIEQtkAonAwogxFUc76uiBfj9f34UwhBvSTt8ts0HP1tvAIyJ5nCPTf6U
+ Y5feCi6PmaoezG4WOZGsz36lORqvzhFCkOA/dfdKJG0OxuhSVEJ1tlrsH7F6Yn2mQkUa
+ T92J5DXluLLcpa25N7TZUrLMBuHmtGgvRmwK17MriLaasjFP3Bk3p0pX6ZA/ovj5mGJt
+ 32UWMk/zHlm2P4o3MpvIcd2N97/aLDMVmqSkungBCRVRuky45d98bM8jB9aTYwSyPxNA yg== 
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sr9j23qbk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Aug 2023 06:16:19 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37S4dwwa014406;
+	Mon, 28 Aug 2023 06:16:18 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3sqvqmrg1s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Aug 2023 06:16:18 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37S6GGZ745613788
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 28 Aug 2023 06:16:16 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 44F7F20043;
+	Mon, 28 Aug 2023 06:16:16 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9F84820040;
+	Mon, 28 Aug 2023 06:16:15 +0000 (GMT)
+Received: from [9.203.106.137] (unknown [9.203.106.137])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 28 Aug 2023 06:16:15 +0000 (GMT)
+Message-ID: <63e65749-4ec7-c618-72d3-1568992fff7a@linux.ibm.com>
+Date: Mon, 28 Aug 2023 11:46:14 +0530
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 8/8] crash_core.c: remove unneeded functions
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] kexec: update manpage with explicit mention of clean
+ kexec
 Content-Language: en-US
-To: Baoquan He <bhe@redhat.com>
-Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- x86@kernel.org, linux-riscv@lists.infradead.org, akpm@linux-foundation.org,
- catalin.marinas@arm.com, thunder.leizhen@huawei.com, dyoung@redhat.com,
- prudo@redhat.com, linux-kernel@vger.kernel.org
-References: <20230827101128.70931-1-bhe@redhat.com>
- <20230827101128.70931-9-bhe@redhat.com>
-From: Samuel Holland <samuel.holland@sifive.com>
-In-Reply-To: <20230827101128.70931-9-bhe@redhat.com>
+From: Hari Bathini <hbathini@linux.ibm.com>
+To: Kexec-ml <kexec@lists.infradead.org>, Simon Horman <horms@kernel.org>
+References: <20230707052929.427625-1-hbathini@linux.ibm.com>
+In-Reply-To: <20230707052929.427625-1-hbathini@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: UKnBw24MfiDtpkCyuSxIEKuWiwvY_lSE
+X-Proofpoint-ORIG-GUID: UKnBw24MfiDtpkCyuSxIEKuWiwvY_lSE
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-08-28_03,2023-08-25_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ malwarescore=0 adultscore=0 suspectscore=0 mlxlogscore=999
+ lowpriorityscore=0 mlxscore=0 spamscore=0 clxscore=1011 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2308100000 definitions=main-2308280055
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230827_222633_054899_548968E7 
-X-CRM114-Status: GOOD (  12.41  )
+X-CRM114-CacheID: sfid-20230827_231624_516793_8A1D79CF 
+X-CRM114-Status: GOOD (  23.50  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,73 +100,45 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Baoquan,
+Any comments on this, please..
 
-On 2023-08-27 5:11 AM, Baoquan He wrote:
-> So far, nobody calls functions parse_crashkernel_high() and
-> parse_crashkernel_high(), remove both of them.
-
-minor typo: should be parse_crashkernel_low().
-
-Regards,
-Samuel
-
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> ---
->  include/linux/crash_core.h |  4 ----
->  kernel/crash_core.c        | 18 ------------------
->  2 files changed, 22 deletions(-)
+On 07/07/23 10:59 am, Hari Bathini wrote:
+> While the manpage does mention about kexec boot with a clean shutdown,
+> it is not explicit about it. Make it explicit.
 > 
-> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-> index 2f732493e922..0c512a80a768 100644
-> --- a/include/linux/crash_core.h
-> +++ b/include/linux/crash_core.h
-> @@ -80,10 +80,6 @@ void final_note(Elf_Word *buf);
->  int __init parse_crashkernel(char *cmdline, unsigned long long system_ram,
->  		unsigned long long *crash_size, unsigned long long *crash_base,
->  		unsigned long long *low_size, bool *high);
-> -int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
-> -		unsigned long long *crash_size, unsigned long long *crash_base);
-> -int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
-> -		unsigned long long *crash_size, unsigned long long *crash_base);
->  
->  #ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
->  #ifndef DEFAULT_CRASH_KERNEL_LOW_SIZE
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index 6bc00cc390b5..61a8ea3b23a2 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -323,24 +323,6 @@ int __init parse_crashkernel(char *cmdline,
->  	return 0;
->  }
->  
-> -int __init parse_crashkernel_high(char *cmdline,
-> -			     unsigned long long system_ram,
-> -			     unsigned long long *crash_size,
-> -			     unsigned long long *crash_base)
-> -{
-> -	return __parse_crashkernel(cmdline, system_ram, crash_size, crash_base,
-> -				suffix_tbl[SUFFIX_HIGH]);
-> -}
-> -
-> -int __init parse_crashkernel_low(char *cmdline,
-> -			     unsigned long long system_ram,
-> -			     unsigned long long *crash_size,
-> -			     unsigned long long *crash_base)
-> -{
-> -	return __parse_crashkernel(cmdline, system_ram, crash_size, crash_base,
-> -				suffix_tbl[SUFFIX_LOW]);
-> -}
-> -
->  /*
->   * Add a dummy early_param handler to mark crashkernel= as a known command line
->   * parameter and suppress incorrect warnings in init/main.c.
-
+> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+> ---
+>   kexec/kexec.8 | 12 ++++++++++--
+>   1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kexec/kexec.8 b/kexec/kexec.8
+> index 3a344c5..87e4ab5 100644
+> --- a/kexec/kexec.8
+> +++ b/kexec/kexec.8
+> @@ -95,8 +95,16 @@ then you would use the following command to load the kernel:
+>   .RB "\-\-append=" "root=/dev/hda1" "\ \-\-initrd=" /boot/initrd
+>   .RE
+>   .PP
+> -After this kernel is loaded, it can be booted to at any time using the
+> -command:
+> +After this kernel is loaded, assuming your Linux distribution supports
+> +kexec-based rebooting, it can be booted to, with a clean shutdown, using
+> +the command:
+> +
+> +.RS
+> +.BR reboot
+> +.RE
+> +.PP
+> +Alternatively, it can also be booted to, without calling shutdown(8), with
+> +the command:
+> 
+>   .RS
+>   .BR kexec \ \-e
 
 _______________________________________________
 kexec mailing list
