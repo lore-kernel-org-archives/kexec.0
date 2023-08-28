@@ -4,67 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 05B1AC71153
-	for <kexec@archiver.kernel.org>; Mon, 28 Aug 2023 09:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8BF33C83F11
+	for <kexec@archiver.kernel.org>; Mon, 28 Aug 2023 10:27:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:To
-	:From:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=3iXG1QRF4oISHM91BOIq+TTTZ+mVdGPW1nAEjSZh5rU=; b=zp4sPdlrI6PPK7
-	7FYWXVjPFziBJV+qvliVwrr8AUYHHUXrV1VShRQiSAyY66cNMZ9Nv4TKw0BMp3Mk31vdK1WHO66+Y
-	IUz3kUzTrukVXEA0g956CmX0XnNU8EQOcA9FqeBU4COPu8kZNifGDF+auXgrxerrRbnFhaXkArMMn
-	BQ+fl5GH91yGjbcjxfqKn7qKigfXjF4VC5E5E+14U9+b0veaE8qzl/BRFgi/Kb2rZoDyPo9FL85GQ
-	3sgs5a/GBUSNMbxZ3mZl+3ej7ubq5EB/ytYhRQS8Tk10d57iTy0ezJ5kQqhnhlRWWNVOCqYkZ8fx2
-	FvNvHC/qyMKRRVUH/4bg==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=NZCGaOPXk/6P2MK9otrOuYFi7ZH1C+C+ew4WSiKtF88=; b=R/o6eSVEOanaqO
+	hnxRv1Sfms7Cd2Qsqg1ktbafOtgY0UqvupyHLrrHlC3gu+Hkx9neBXPgy+cu7AhFuiAkrZC0ymbKb
+	GeV8tlcQmUIocgDWI3tm/vt7fG9M6MSLbifOmwPglml7lOeFVLf+LQNPnwZJUXkFCyeN0XzPsvV/U
+	rJh8AIR2PWJ1ZPSloAz0MLGHhvC/6xUuOHUAiZmNkuazBSmRPaLP7PdjAZ0a0GFfaswjA59C4iNcb
+	NAsSWlwLE0NaohmnQnn6YTTct1v5yHuR2XI+LwGv+Y+y73KFiWJ5DQg4txecTYJ6ELg2z0wvpVQQp
+	lmA/XgNxkodWvDi13AbQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qaZ1J-009Gi1-25;
-	Mon, 28 Aug 2023 09:58:53 +0000
-Received: from mail-wm1-f45.google.com ([209.85.128.45])
+	id 1qaZT2-009Qip-1Y;
+	Mon, 28 Aug 2023 10:27:32 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qaZ1G-009Ghf-2D
+	id 1qaZSz-009Qdo-0e
 	for kexec@lists.infradead.org;
-	Mon, 28 Aug 2023 09:58:52 +0000
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-401b393df02so29069725e9.1
-        for <kexec@lists.infradead.org>; Mon, 28 Aug 2023 02:58:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693216728; x=1693821528;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bT96dmZD0fZy5FTtNyTbk/Q9c5LAI1qIpMtHm5Rlpac=;
-        b=fqlQ6QS2SQwOQ/62mjrMv+PfrxelL6S6WvcWNiDsta5r3SCQNbKLruY1esC9084gTT
-         vb7H9g+BSJu7NjjjtMcNmYaziOzwSVpiUzCE/rSrn7KTX6pwNd/pGZ4A+mCG7iVmwJ+0
-         BfUzn7zek7ih9qX3TJrTI4y8CaeMDJtlFJo1xgQoCxmkhRxkbiuI88M0g9mT45nVoM3Q
-         +XwC6MsRIxyz4mFp6MYmCKMi15KlETS63ASjEFck5+aHk+bgLCoyCHmlgG7ok1Vzx8V6
-         pGc5bOwAQxvwQuK7/dJW3Q0D5ZXWeMoRdBv9+GyPle7APKy4B/W39/nlOjMxi0d6dIi6
-         EI5g==
-X-Gm-Message-State: AOJu0YwnAfGgFqhfFO2Jeh6o3098QrbAMs1uJRSCNBRuVz0CMAeXuOZ7
-	jacQCeE83GigEB4354Qhj2TFZMPhrVe3cw==
-X-Google-Smtp-Source: AGHT+IEJ/Ap3fhgDcTnNk43P7d7hrtPbAiy0aaUfO8w8aUlYN1+Fx2DWS0dgB310PVZaXvkVgwQqOw==
-X-Received: by 2002:a1c:f204:0:b0:3fe:4548:1892 with SMTP id s4-20020a1cf204000000b003fe45481892mr18678215wmc.16.1693216727902;
-        Mon, 28 Aug 2023 02:58:47 -0700 (PDT)
-Received: from rhea.home.vuxu.org (i6DFA5D05.versanet.de. [109.250.93.5])
-        by smtp.gmail.com with ESMTPSA id z12-20020a1c4c0c000000b003fed78b03b4sm10136744wmf.20.2023.08.28.02.58.47
-        for <kexec@lists.infradead.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Aug 2023 02:58:47 -0700 (PDT)
-Received: from localhost (rhea.home.vuxu.org [local])
-	by rhea.home.vuxu.org (OpenSMTPD) with ESMTPA id 8abd3988
-	for <kexec@lists.infradead.org>;
-	Mon, 28 Aug 2023 09:58:46 +0000 (UTC)
-From: Leah Neukirchen <leah@vuxu.org>
-To: kexec@lists.infradead.org
-Subject: [kexec-tools PATCH] build: fix tarball creation
-Date: Mon, 28 Aug 2023 11:58:15 +0200
-Message-ID: <20230828095840.595-1-leah@vuxu.org>
-X-Mailer: git-send-email 2.42.0
+	Mon, 28 Aug 2023 10:27:30 +0000
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37S9aI8E027559;
+	Mon, 28 Aug 2023 10:27:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=YmMjGeyyYaXb83MMjvOqoQJdCsWfxuiCmk0rUQxeIzw=;
+ b=q1hKh6sxxdA80dpB+2XpPYyNbkNMDqlKg01A3LCcP+t0dVVuOykU0y6n8hcP2li/4vqu
+ GSqmE+DgCtNuo2NVtUMlh/RZjSNuw/ZYBZgjm8FPD9TwlSG1FHf6lbDy2gdA6RPT3h6j
+ eLbXuuf7b5Aew3jaZ2AebdCGISWrp9qyUuk0/sz3vGzkVdN8P9zA1rtI2OJVdfpLfyLI
+ oNR78N+rX32ADsOPqrITVEQMPwdbJA2jwZLHM1RjTKVrqMYQzBqGrkP0F4wRvdlHdR2f
+ MnMajrNoAX1Tthqq1KUalLBrdwV00UF/zaZTIFriCGSGVxNFL/VHz7plMpK6Li5PYGkC /w== 
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sradxs0r5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Aug 2023 10:27:16 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37S8Ilne014114;
+	Mon, 28 Aug 2023 10:27:15 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3sqwxjhfsp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 28 Aug 2023 10:27:15 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37SARDGA43647284
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 28 Aug 2023 10:27:13 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CAB5020071;
+	Mon, 28 Aug 2023 10:27:13 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1C6162006E;
+	Mon, 28 Aug 2023 10:27:13 +0000 (GMT)
+Received: from [9.203.106.137] (unknown [9.203.106.137])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 28 Aug 2023 10:27:12 +0000 (GMT)
+Message-ID: <4f81d535-ff2c-fba3-8285-7e68bd6493bb@linux.ibm.com>
+Date: Mon, 28 Aug 2023 15:57:11 +0530
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] kexec: update manpage with explicit mention of clean
+ kexec
+Content-Language: en-US
+To: Simon Horman <horms@kernel.org>
+Cc: Kexec-ml <kexec@lists.infradead.org>
+References: <20230707052929.427625-1-hbathini@linux.ibm.com>
+ <63e65749-4ec7-c618-72d3-1568992fff7a@linux.ibm.com>
+ <20230828074810.GY3523530@kernel.org>
+From: Hari Bathini <hbathini@linux.ibm.com>
+In-Reply-To: <20230828074810.GY3523530@kernel.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 2T-UQtYlT004SVY4vb6mCzzsH0eT8w-n
+X-Proofpoint-ORIG-GUID: 2T-UQtYlT004SVY4vb6mCzzsH0eT8w-n
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-08-28_07,2023-08-25_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
+ lowpriorityscore=0 priorityscore=1501 mlxlogscore=822 clxscore=1015
+ suspectscore=0 malwarescore=0 mlxscore=0 adultscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2308100000 definitions=main-2308280091
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230828_025850_741626_895BA94D 
-X-CRM114-Status: UNSURE (   8.53  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20230828_032729_531459_11BC40EF 
+X-CRM114-Status: GOOD (  24.55  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,48 +103,54 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The fix in 41b77edac did not work, bsdtar still complains about
-"hardlink pointing to itself".
 
-Simplify the code instead: since the staging directory contains
-exactly the files we want, just package it as a whole.
 
-Signed-off-by: Leah Neukirchen <leah@vuxu.org>
----
- Makefile.in | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+On 28/08/23 1:18 pm, Simon Horman wrote:
+> On Mon, Aug 28, 2023 at 11:46:14AM +0530, Hari Bathini wrote:
+>> Any comments on this, please..
+> 
+> Hi Hari,
+> 
+> Sorry, I had missed this.
 
-diff --git a/Makefile.in b/Makefile.in
-index 09bbd5c..3cad22a 100644
---- a/Makefile.in
-+++ b/Makefile.in
-@@ -179,8 +179,6 @@ GENERATED_SRCS:= $(SPEC)
- TARBALL=$(PACKAGE_NAME)-$(PACKAGE_VERSION).tar
- TARBALL.gz=$(TARBALL).gz
- SRCS:= $(dist)
--PSRCS:=$(foreach s, $(SRCS), $(PACKAGE_NAME)-$(PACKAGE_VERSION)/$(s))
--PGSRCS:=$(foreach s, $(GENERATED_SRCS), $(PACKAGE_NAME)-$(PACKAGE_VERSION)/$(s))
- 
- MAN_PAGES:=$(KEXEC_MANPAGE) $(VMCORE_DMESG_MANPAGE)
- BINARIES_i386:=$(KEXEC_TEST)
-@@ -223,8 +221,7 @@ $(TARBALL): $(SRCS) $(GENERATED_SRCS)
- 	$(MKDIR) $(PACKAGE_NAME)-$(PACKAGE_VERSION)
- 	$(TAR) -c $(SRCS) $(GENERATED_SRCS) | \
- 	        $(TAR) -C $(PACKAGE_NAME)-$(PACKAGE_VERSION) -x
--	$(TAR) -cf $@ $(PSRCS)
--	$(TAR) -rf $@ $(PGSRCS)
-+	$(TAR) -cf $@ $(PACKAGE_NAME)-$(PACKAGE_VERSION)
- 	$(RM) -rf $(PACKAGE_NAME)-$(PACKAGE_VERSION)
- 
- $(TARBALL.gz): $(TARBALL)
--- 
-2.42.0
+No worries. Thanks for the response.
 
+> 
+>> On 07/07/23 10:59 am, Hari Bathini wrote:
+>>> While the manpage does mention about kexec boot with a clean shutdown,
+>>> it is not explicit about it. Make it explicit.
+>>>
+>>> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+>>> ---
+>>>    kexec/kexec.8 | 12 ++++++++++--
+>>>    1 file changed, 10 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/kexec/kexec.8 b/kexec/kexec.8
+>>> index 3a344c5..87e4ab5 100644
+>>> --- a/kexec/kexec.8
+>>> +++ b/kexec/kexec.8
+>>> @@ -95,8 +95,16 @@ then you would use the following command to load the kernel:
+>>>    .RB "\-\-append=" "root=/dev/hda1" "\ \-\-initrd=" /boot/initrd
+>>>    .RE
+>>>    .PP
+>>> -After this kernel is loaded, it can be booted to at any time using the
+>>> -command:
+>>> +After this kernel is loaded, assuming your Linux distribution supports
+>>> +kexec-based rebooting, it can be booted to, with a clean shutdown, using
+>>> +the command:
+> 
+> Perhaps user-space would be better than "your Linux distribution".
+> But perhaps that is just kernel developer speak and makes less
+> sense to others.
+
+No strong inclination to putting it either way. Would leave it to you :)
+
+- Hari
 
 _______________________________________________
 kexec mailing list
