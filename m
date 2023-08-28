@@ -4,70 +4,140 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DC6EFC83F11
-	for <kexec@archiver.kernel.org>; Mon, 28 Aug 2023 12:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C0616C83F12
+	for <kexec@archiver.kernel.org>; Mon, 28 Aug 2023 17:39:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:References:
+	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=iEE1Xh/bVxwXC+UhxU4l93GlM286P9MaQA7BB+kORwc=; b=TUuUYQDkfgdRpY
-	/VOijJlXl27R4F3iWAQ8vAU5E3ErSfYTjJCdMHGRfnpO/fr5CzV1bkjdYTiAcqhBhKSSI06rfg6+K
-	tTBYcdqe9OYQK4HMVTnaIWFzOeCnOS0P9sO4i3sAqfFscP5wI2Ug59WGW5HMlcjTPAhnDsnx8bMDq
-	8tiVpZxK5txffegEoKIkfRWXeMVTsUH7ANoXMPAKcy5FjDxmUdM0tIjx4U/p/q9qzKZe/AKhYuI3Q
-	hFIIrLfd+YfefJc+sxD/kLOqYI3tI8S5Ios8T74v9qR8gUAgfjvsEMVT93mIbdE1+ta4L1VmiLdKh
-	oWOxSzN5eWru/SMJKVig==;
+	List-Owner; bh=j4iUdbiiHec4GYs7kVtCh4JcVWNeBkHLC3nSeRNnyIc=; b=a7BgKiPQE4FGZc
+	WFYHrGey6yTgBfxlE3Z/PYC1++mPgbgxTKW23omBDNLgPFngZetPAS/9acvuAI4Xae/xTG9xOolz6
+	6civEXmuJ0D35VhzFkypUy1rLeh+aB2CyDCFV6sOfCFgxRHMFORU1k8jfN5ak3AJbIsufY58j4FmE
+	dXTkuFz/DEhwyMJiJfoPu6Hwhi5GlJlRlUpNccrZ7zZrqSIpLe4FZIK9zq+6Ni55k8FhvaNMxmBKb
+	DDn1Ckq+7U9wf7BQjbKpqtjGU+hWSRVpzGNOxB5QM8DxYTNlCzdUD1mxtSw4QF/cBe2Rjo7KKJ8rL
+	/TZKnQKSXcsL17Xetuiw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qaboW-009bGM-07;
-	Mon, 28 Aug 2023 12:57:52 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1qagDB-00A0xR-2x;
+	Mon, 28 Aug 2023 17:39:37 +0000
+Received: from mail-dm6nam12on20600.outbound.protection.outlook.com ([2a01:111:f400:fe59::600] helo=NAM12-DM6-obe.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qaboQ-009bEL-2b
+	id 1qagD9-00A0ws-1I
 	for kexec@lists.infradead.org;
-	Mon, 28 Aug 2023 12:57:50 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1693227462;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NOz0d+DONXgrsdDVPVVga2kkMlrujdq0Q46zC+MGPCs=;
-	b=ZY0d5RpuGEmyfsLaiiiI4+cgFZApCJ1U4xRDVceRBoqbtgNzuSxfIjztaap6BTV2f0sq0D
-	P3HJbGRJx5uNAXRa+hAARzTPp2VSEN0bu+WKuT9NcA1xQVX25/tlHpjwXeF9mmeymgVH16
-	4ZcirC3nJdReyszOXHm6qK1D/KyFTD8=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-106-TR7YY8FuNDem5N5dKErxVQ-1; Mon, 28 Aug 2023 08:57:39 -0400
-X-MC-Unique: TR7YY8FuNDem5N5dKErxVQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4D72183394A;
-	Mon, 28 Aug 2023 12:57:38 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.121])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id D112F1121318;
-	Mon, 28 Aug 2023 12:57:36 +0000 (UTC)
-Date: Mon, 28 Aug 2023 20:57:33 +0800
-From: Baoquan He <bhe@redhat.com>
-To: kernel test robot <lkp@intel.com>
-Cc: linux-kernel@vger.kernel.org, oe-kbuild-all@lists.linux.dev,
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	x86@kernel.org, linux-riscv@lists.infradead.org,
-	akpm@linux-foundation.org, catalin.marinas@arm.com,
-	thunder.leizhen@huawei.com, dyoung@redhat.com, prudo@redhat.com
-Subject: Re: [PATCH 5/8] crash_core: add generic function to do reservation
-Message-ID: <ZOyZvawxNOSUJcsa@MiWiFi-R3L-srv>
-References: <20230827101128.70931-6-bhe@redhat.com>
- <202308272150.p3kRkMoF-lkp@intel.com>
+	Mon, 28 Aug 2023 17:39:37 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=U7An19nsx3ItDaQwEWYY8maEP9Nxlde4GUtVV/Vq7G91L4wUAgn3vc4zp6Ok5BwHVTugG71sw0T3psr0yX2TKEUPXUNquHgUcj26HSrtm6vIz3UKgqgjoKTnVxQuFoPZEH3GYxpKIBDla5+mgfV6ZqH4Mx760bmM9qkUdB62H/0MGuYH5y6Bpb09c1NOw6zwBw5J4IclnGjOPBMe4IBJZcAPJaImsvTZ3emZK3hmHkhfCbuIZyvAXoxk945spvyef6URmCdEtQGhkw+xdcshipz7FpX66Tc6PccYvYPMq5R7VyFaIyiQTQnqxGt5OrFgw7vNtGssvgv0KEdpBUlpNQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZJFxyWenX/up3x9iCQjv+frRF22QL0pti5AaY0SLZUI=;
+ b=DhV4v91KIvUNatBh4w6F/8SxBeqAalBhLh1U2kZCjk7uQudifipP/evpNSOk1ONaoR5RQPWMBAr4zC7BBpMPDbpE6u+vnfk68cz4FEuaI3318JNGnPSf0gfHOUtpe2/myn9kDyTiw4bmrNvWWZW2pKi0AofYGkl9jYmsM58FlNcQ4rqB3SElmLnnWwe/qkHdInyZ/Z0ZTdd+VTOWEMr2O1eJ79wovbA5dYP4zcA3PZp3D4Gs1LxKzNT9Hz4J0w4Ezh6JTM1CWBxIGsF8dCPCLRXXWC+WYlQw+rTO2K1yd+fMcd8qQBAAfrFskmU1FgQclD2hMkdNfhJKZcy+3tv8qA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZJFxyWenX/up3x9iCQjv+frRF22QL0pti5AaY0SLZUI=;
+ b=KN9nxBoVDRiUXOyCu16ObBxt1sp9ANVkAw9G/kz+DtZPQBG3azkSd+FjzBs+PXlWHsKYnN+6YQG66EbB3f2aaKXLks7KS18On8bhpSHknYHDJM5Vx0Y64m0SWLS0sLWzWGLB3UoKwEST6PpyW5aiLmh9zeHvsmfiJ+hQFBNh6WA=
+Received: from MN0PR12MB5953.namprd12.prod.outlook.com (2603:10b6:208:37c::15)
+ by BN9PR12MB5259.namprd12.prod.outlook.com (2603:10b6:408:100::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.34; Mon, 28 Aug
+ 2023 17:39:27 +0000
+Received: from MN0PR12MB5953.namprd12.prod.outlook.com
+ ([fe80::5cff:cc6e:6241:168c]) by MN0PR12MB5953.namprd12.prod.outlook.com
+ ([fe80::5cff:cc6e:6241:168c%7]) with mapi id 15.20.6699.034; Mon, 28 Aug 2023
+ 17:39:27 +0000
+From: "Pandey, Radhey Shyam" <radhey.shyam.pandey@amd.com>
+To: Alexander Kamensky <alexander.kamensky42@gmail.com>
+CC: "bhe@redhat.com" <bhe@redhat.com>, "piliu@redhat.com" <piliu@redhat.com>,
+	"kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Sarangi,
+ Anirudha" <anirudha.sarangi@amd.com>
+Subject: RE: kexec reports "Cannot get kernel _text symbol address" on arm64
+ platform
+Thread-Topic: kexec reports "Cannot get kernel _text symbol address" on arm64
+ platform
+Thread-Index: AdnKK79OkD4zpG4kTFa/kOe2Uun+RAAOxmsAAHwHDeAAlUzuAAFfZ4gQACCkigAAUgkXYAAp+FgAAMt+ALA=
+Date: Mon, 28 Aug 2023 17:39:27 +0000
+Message-ID: <MN0PR12MB5953557EB8909B66B4D09B28B7E0A@MN0PR12MB5953.namprd12.prod.outlook.com>
+References: <MN0PR12MB59538822AA264031D0CAE468B70DA@MN0PR12MB5953.namprd12.prod.outlook.com>
+ <ZNL14lnrHvzbpRQu@MiWiFi-R3L-srv>
+ <MN0PR12MB59535434E071499DDE439B08B710A@MN0PR12MB5953.namprd12.prod.outlook.com>
+ <ZNogKKZCp12Q92jh@MiWiFi-R3L-srv>
+ <MN0PR12MB5953FFB655A208BD4FA32EE4B71EA@MN0PR12MB5953.namprd12.prod.outlook.com>
+ <CACBYKvRJL_WmZUN7BH_TjxX+TC2O1gjsudkh1GtRyB3WifjMJA@mail.gmail.com>
+ <MN0PR12MB59532ABFAF131AC84F36B73FB71CA@MN0PR12MB5953.namprd12.prod.outlook.com>
+ <CACBYKvT6AzupfrHZ58BYM8xi8TDLeppqD+Lt=rf9hfmSew+nmQ@mail.gmail.com>
+In-Reply-To: <CACBYKvT6AzupfrHZ58BYM8xi8TDLeppqD+Lt=rf9hfmSew+nmQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MN0PR12MB5953:EE_|BN9PR12MB5259:EE_
+x-ms-office365-filtering-correlation-id: 1a1f1111-1c6d-4cf8-e14b-08dba7edba04
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: cQVtbRRpSGCwiNL90JcPoFbHCvGvGR2XFhUeDIFK2GFCYTBxx75aV4TjWODuGfa4EpouHQTZ2bgkJZMaI0pIv0afcFq5zYYPaIB7kM5oJ3KWochKHAZC/BB7vBTRMqiIOMKX3PyVr4zbUQhuV0kuw3S9bziuyfR+vajjtwXUPdEFfq7gHh/DW1bzc4kSMlPsgg7yY8OEvaOC8DMPGdCoLQoSG5iNhPCYUMJE0ckh3AUzpRnq/KZQ9wMq0R5OSekkrAfg2ETVDh96YQUzWaCt5Lgao+mcesWhECVj+X9ExDqAu+FbYvhxcjuqw1ZiEaX/vtoYPGN2uAa+9S4DBb+I8ufeAt6FYp04HSG/NWRbLhX3lDcizqlXmPR405dk5ThbU4LzHG7JUGSSUxsDx/LkLdZ6hMAZHzTBcl6tWuiW1lSD98A8sk/FxHYaQIeCPSS0QVxaZzUnwz6efk2DeFBKQAfLdOT+9jB955BoCdF6ffiAXbAeQGaCzOUMuPEeAcXgUazIcvRzaGioJtH3jacKgScNofPiU37Atb89qkZiqW6or7bqGcSbQ9mlnxZTDn9nppgKHAjCtp61zOILABaD7si1hXNgOc9i0aVSDff2Fow=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB5953.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(136003)(346002)(376002)(396003)(39860400002)(186009)(451199024)(1800799009)(41300700001)(122000001)(38100700002)(86362001)(83380400001)(478600001)(38070700005)(71200400001)(966005)(26005)(9686003)(53546011)(7696005)(6506007)(55016003)(66946007)(76116006)(66476007)(54906003)(6916009)(2906002)(66446008)(64756008)(33656002)(66556008)(316002)(5660300002)(4326008)(8676002)(8936002)(52536014);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?SWVLQ3BVLzk2bDhDZkxHd1U1aCt5bnk4YUFlVUNsMWxRQ3lQYTRlV0p1ZU4w?=
+ =?utf-8?B?QkJTRzR1QUxaN1NrV3BFQysraGxEcDFpSlRockVtSEIrWGhuL3BqTXBhZjhT?=
+ =?utf-8?B?QlV5WC9mdmlHcUkrTmNJU1pxQWdOY2dybnJTQ1NySVlpNUp6c2Y5WWdLMmNZ?=
+ =?utf-8?B?T1M3VWFVT0xYeWdFK1E4K1lkYnVnSWJSOEY2ZHluUG1SdE56YmZVeFkybWkr?=
+ =?utf-8?B?NVgwdTdCSFFQU3Vwc2tCZk5pc1YrcGdvYzZZVGVGOGRqck0yZUJRbDlhd0Nu?=
+ =?utf-8?B?dmRBVEdrektVcUY4d0duVG5HZ1A0UENRbHdjWWFBZGFqbUNMcm9iWkxKaktJ?=
+ =?utf-8?B?aC9yVG5yNEdGVWF2ZzNLZm9kK2dZNWJuZUpJd0dSRWxyTElWVXhyQVdxblNS?=
+ =?utf-8?B?NnBEYWNmZTBXOG5YUTBjMG9lT2JlSUw3U3kxaU9wV0RFQlhUY3dtWlVBZk9w?=
+ =?utf-8?B?MWd6dUNIYzlzVHpBd3dtZUFRTk1ZanUyS2wzbVdZTHpRc01lcno4MGRkR1E0?=
+ =?utf-8?B?cWQvSzlhQ2VzcWJsbk1xWUg3MjRFcDBqY1d1OCt6eWRPVHM0SVRUVTd3VWhP?=
+ =?utf-8?B?ZzlWUEZIaTAzVkZ0TDEyL09XRmN2NHlGZEltZ3ZwTkF1bnRBR1Qvck16aWRt?=
+ =?utf-8?B?dGJZVFBZemZhUjBUMlUwenVKenFkQlNlMjcwayt6MVBJN3pDR3dCNDRDbVhm?=
+ =?utf-8?B?TDdSY1AzQ01WR0ZLbkwrTEFKcWNhb0F2UStlM0prZU9rMEJZMTZjbDNmdkxC?=
+ =?utf-8?B?Zkx1MkFrWVRyVGg5NkRoK21WbDJWMHMzNzVPZ2xUUEhjdWF0SzNja1FiQWNj?=
+ =?utf-8?B?ZzEzWEpKUzlndm5wdG4ya28wRUpJTUNGaG93SXlIU1ZOTE9scEswc20xNGwv?=
+ =?utf-8?B?aGlPcU5tNEpaaWdwbDY1SzJLSml3KzVoMFVaNmMzd0NxRHFvdXhGTmRXVEFU?=
+ =?utf-8?B?QzM3d1ZZY3ozSExDL29vdGF5SWhUelZjMGIyNHFwVFZDUk9uTEpCWGlkRzI5?=
+ =?utf-8?B?WTFlRXh2YnpjKzh6OGwzRWpxREJTcFMrOFRHYnRPeHhMNkExb2J6aUJScEhS?=
+ =?utf-8?B?NVUvbEplUnVLZW5xaHpNTjVOMkhET2wxMUlTUUhWSjV4ZndWSlZ0dGgrcTFV?=
+ =?utf-8?B?Y1ZncGpHREdRMGJIUWIwK21QQkpwcUFjK0l6NFo0SXpRYWJkNWF1dHFHVmlX?=
+ =?utf-8?B?MmdCb1Y4T2VuS0t6a2htNUY2VVpQN1E5Ri9JMFRDNmd4OGlIc2pGNU1hQ1Fw?=
+ =?utf-8?B?b01ZdTA4UUhZSHB3bmZuQ0x3SGI2N2hJenBRbHhtR3RtRCtQbVlwd1JSK0I1?=
+ =?utf-8?B?d2N0aUhjN2dJTXBRUHUyQlJrZ3pWK2ZOc3BpR1BMNG5XdzZIL09hMGxXZlV4?=
+ =?utf-8?B?WFdYMXRuaDdtL0hwUUhqYWQ1RHZUeW5md2FCUzdLT2dudUtPQnFCY3BEc0Zr?=
+ =?utf-8?B?OSt6MEdBYyt0MHlKRVc5Qkk0UnZJSFN2UnRibE1ReERvL293M0FkbnBZMURM?=
+ =?utf-8?B?ZEJoamVscHgvQ0tyUEtkVkRRMXkzK2RLQmxjc2NkMlFhRFhZdzEyTy93ZVha?=
+ =?utf-8?B?UWxjMXpUWlNEYlZwM1lnTzFWZjROVUFSbCtrZ3loa3NxK0szZXRKNlZ6cnlV?=
+ =?utf-8?B?cm1salVKQzZ6S09aNklhZlFQWDFTM2pMdk5uOGk5VUtOc0Y0cEl4SzQ5eFUv?=
+ =?utf-8?B?azdIOXFWckljdWVsZGd1cm1Ib2NvdjFXTUJmaSt0OTNlRmZYUk04c3JSN0xB?=
+ =?utf-8?B?S1FlRHNwZWVYOGJieHUwNTVheGZ3YjR6Zlo4VW5UT0J0Z0pLbGxvL0RIQzRr?=
+ =?utf-8?B?RWg2cFhtdkx6RGNaRDgrM1BrcndGYTlEVVNFbUNrV1QwR0psQ0lHK3lBKy85?=
+ =?utf-8?B?SFg0eDdDM3NYaC9VZFgvbVNsZENMdWh3aGhPS2FDMGZDUi92bkpPYklMYnVL?=
+ =?utf-8?B?UG80TElEU2M1Y3I2N2s3VHpnQUEzSmVibXNpakRTQnQzZm9WbHlPd3pFeXE0?=
+ =?utf-8?B?WnhJUVdqOWk5Uk03cUJIY2RFNEV0RVdBODVCVmx2L0tORWpnekwzM0R4STNG?=
+ =?utf-8?B?d1E0MGRLdnlLZWFWT3RaLzdsMmFncWhBQVhKT3FCQVg4WVY5UU81MnZVa1Z5?=
+ =?utf-8?Q?5YqI=3D?=
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <202308272150.p3kRkMoF-lkp@intel.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB5953.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1a1f1111-1c6d-4cf8-e14b-08dba7edba04
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2023 17:39:27.2801
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: onC7Q3kB7gVldhwvu7hRXl0lzXRZZopmtkMyPd9HcqKgcL5Qygj3OdF6CZ//XEHm
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5259
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230828_055747_006721_A5733217 
-X-CRM114-Status: GOOD (  21.20  )
+X-CRM114-CacheID: sfid-20230828_103935_492335_71F11EDE 
+X-CRM114-Status: GOOD (  23.14  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,303 +149,78 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 08/27/23 at 09:53pm, kernel test robot wrote:
-> Hi Baoquan,
-> 
-> kernel test robot noticed the following build errors:
-> 
-> [auto build test ERROR on tip/x86/core]
-> [also build test ERROR on powerpc/next powerpc/fixes linus/master v6.5-rc7]
-> [cannot apply to arm64/for-next/core next-20230825]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Baoquan-He/crash_core-c-remove-unnecessary-parameter-of-function/20230827-181555
-> base:   tip/x86/core
-> patch link:    https://lore.kernel.org/r/20230827101128.70931-6-bhe%40redhat.com
-> patch subject: [PATCH 5/8] crash_core: add generic function to do reservation
-> config: csky-defconfig (https://download.01.org/0day-ci/archive/20230827/202308272150.p3kRkMoF-lkp@intel.com/config)
-> compiler: csky-linux-gcc (GCC) 13.2.0
-> reproduce: (https://download.01.org/0day-ci/archive/20230827/202308272150.p3kRkMoF-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202308272150.p3kRkMoF-lkp@intel.com/
-
-Thanks for reporting this. The error is caused by patch 3:
-[PATCH 3/8] include/linux/kexec.h: move down crash_core.h including
-
-In this lkp's config, CONFIG_CRASH_CORE=y and CONFIG_KEXEC_CORE=n, the
-moving down of crash_core.h including will triger the error. I will
-think of another way to fix this.
-
-> 
-> All errors (new ones prefixed by >>):
-> 
->      537 | void __weak arch_crash_save_vmcoreinfo(void)
->          |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
->    kernel/crash_core.c:540:20: warning: no previous prototype for 'paddr_vmcoreinfo_note' [-Wmissing-prototypes]
->      540 | phys_addr_t __weak paddr_vmcoreinfo_note(void)
->          |                    ^~~~~~~~~~~~~~~~~~~~~
->    kernel/crash_core.c: In function 'crash_save_vmcoreinfo_init':
->    kernel/crash_core.c:554:45: error: 'VMCOREINFO_NOTE_SIZE' undeclared (first use in this function)
->      554 |         vmcoreinfo_note = alloc_pages_exact(VMCOREINFO_NOTE_SIZE,
->          |                                             ^~~~~~~~~~~~~~~~~~~~
->    kernel/crash_core.c:563:9: error: implicit declaration of function 'VMCOREINFO_OSRELEASE' [-Werror=implicit-function-declaration]
->      563 |         VMCOREINFO_OSRELEASE(init_uts_ns.name.release);
->          |         ^~~~~~~~~~~~~~~~~~~~
->    kernel/crash_core.c:564:9: error: implicit declaration of function 'VMCOREINFO_BUILD_ID' [-Werror=implicit-function-declaration]
->      564 |         VMCOREINFO_BUILD_ID();
->          |         ^~~~~~~~~~~~~~~~~~~
->    kernel/crash_core.c:565:9: error: implicit declaration of function 'VMCOREINFO_PAGESIZE' [-Werror=implicit-function-declaration]
->      565 |         VMCOREINFO_PAGESIZE(PAGE_SIZE);
->          |         ^~~~~~~~~~~~~~~~~~~
->    kernel/crash_core.c:567:9: error: implicit declaration of function 'VMCOREINFO_SYMBOL' [-Werror=implicit-function-declaration]
->      567 |         VMCOREINFO_SYMBOL(init_uts_ns);
->          |         ^~~~~~~~~~~~~~~~~
->    kernel/crash_core.c:568:9: error: implicit declaration of function 'VMCOREINFO_OFFSET' [-Werror=implicit-function-declaration]
->      568 |         VMCOREINFO_OFFSET(uts_namespace, name);
->          |         ^~~~~~~~~~~~~~~~~
->    kernel/crash_core.c:568:27: error: 'uts_namespace' undeclared (first use in this function)
->      568 |         VMCOREINFO_OFFSET(uts_namespace, name);
->          |                           ^~~~~~~~~~~~~
->    kernel/crash_core.c:568:42: error: 'name' undeclared (first use in this function)
->      568 |         VMCOREINFO_OFFSET(uts_namespace, name);
->          |                                          ^~~~
->    kernel/crash_core.c:571:9: error: implicit declaration of function 'VMCOREINFO_SYMBOL_ARRAY' [-Werror=implicit-function-declaration]
->      571 |         VMCOREINFO_SYMBOL_ARRAY(swapper_pg_dir);
->          |         ^~~~~~~~~~~~~~~~~~~~~~~
->    kernel/crash_core.c:588:9: error: implicit declaration of function 'VMCOREINFO_STRUCT_SIZE' [-Werror=implicit-function-declaration]
->      588 |         VMCOREINFO_STRUCT_SIZE(page);
->          |         ^~~~~~~~~~~~~~~~~~~~~~
->    kernel/crash_core.c:588:32: error: 'page' undeclared (first use in this function)
->      588 |         VMCOREINFO_STRUCT_SIZE(page);
->          |                                ^~~~
->    kernel/crash_core.c:589:32: error: 'pglist_data' undeclared (first use in this function)
->      589 |         VMCOREINFO_STRUCT_SIZE(pglist_data);
->          |                                ^~~~~~~~~~~
->    kernel/crash_core.c:590:32: error: 'zone' undeclared (first use in this function)
->      590 |         VMCOREINFO_STRUCT_SIZE(zone);
->          |                                ^~~~
->    kernel/crash_core.c:591:32: error: 'free_area' undeclared (first use in this function)
->      591 |         VMCOREINFO_STRUCT_SIZE(free_area);
->          |                                ^~~~~~~~~
->    kernel/crash_core.c:592:32: error: 'list_head' undeclared (first use in this function)
->      592 |         VMCOREINFO_STRUCT_SIZE(list_head);
->          |                                ^~~~~~~~~
->    kernel/crash_core.c:593:9: error: implicit declaration of function 'VMCOREINFO_SIZE' [-Werror=implicit-function-declaration]
->      593 |         VMCOREINFO_SIZE(nodemask_t);
->          |         ^~~~~~~~~~~~~~~
->    kernel/crash_core.c:593:25: error: expected expression before 'nodemask_t'
->      593 |         VMCOREINFO_SIZE(nodemask_t);
->          |                         ^~~~~~~~~~
->    kernel/crash_core.c:594:33: error: 'flags' undeclared (first use in this function); did you mean 'fls'?
->      594 |         VMCOREINFO_OFFSET(page, flags);
->          |                                 ^~~~~
->          |                                 fls
->    kernel/crash_core.c:595:33: error: '_refcount' undeclared (first use in this function); did you mean 'seqcount'?
->      595 |         VMCOREINFO_OFFSET(page, _refcount);
->          |                                 ^~~~~~~~~
->          |                                 seqcount
->    kernel/crash_core.c:596:33: error: 'mapping' undeclared (first use in this function)
->      596 |         VMCOREINFO_OFFSET(page, mapping);
->          |                                 ^~~~~~~
->    kernel/crash_core.c:597:33: error: 'lru' undeclared (first use in this function)
->      597 |         VMCOREINFO_OFFSET(page, lru);
->          |                                 ^~~
->    kernel/crash_core.c:598:33: error: '_mapcount' undeclared (first use in this function); did you mean 'nmi_count'?
->      598 |         VMCOREINFO_OFFSET(page, _mapcount);
->          |                                 ^~~~~~~~~
->          |                                 nmi_count
->    kernel/crash_core.c:599:33: error: 'private' undeclared (first use in this function); did you mean 'PG_private'?
->      599 |         VMCOREINFO_OFFSET(page, private);
->          |                                 ^~~~~~~
->          |                                 PG_private
->    kernel/crash_core.c:600:27: error: 'folio' undeclared (first use in this function)
->      600 |         VMCOREINFO_OFFSET(folio, _folio_dtor);
->          |                           ^~~~~
->    kernel/crash_core.c:600:34: error: '_folio_dtor' undeclared (first use in this function)
->      600 |         VMCOREINFO_OFFSET(folio, _folio_dtor);
->          |                                  ^~~~~~~~~~~
->    kernel/crash_core.c:601:34: error: '_folio_order' undeclared (first use in this function); did you mean 'folio_order'?
->      601 |         VMCOREINFO_OFFSET(folio, _folio_order);
->          |                                  ^~~~~~~~~~~~
->          |                                  folio_order
->    kernel/crash_core.c:602:33: error: 'compound_head' undeclared (first use in this function); did you mean '_compound_head'?
->      602 |         VMCOREINFO_OFFSET(page, compound_head);
->          |                                 ^~~~~~~~~~~~~
->          |                                 _compound_head
->    kernel/crash_core.c:603:40: error: 'node_zones' undeclared (first use in this function); did you mean 'node_zonelist'?
->      603 |         VMCOREINFO_OFFSET(pglist_data, node_zones);
->          |                                        ^~~~~~~~~~
->          |                                        node_zonelist
->    kernel/crash_core.c:604:40: error: 'nr_zones' undeclared (first use in this function)
->      604 |         VMCOREINFO_OFFSET(pglist_data, nr_zones);
->          |                                        ^~~~~~~~
-> >> kernel/crash_core.c:606:40: error: 'node_mem_map' undeclared (first use in this function); did you mean 'node_remap'?
->      606 |         VMCOREINFO_OFFSET(pglist_data, node_mem_map);
->          |                                        ^~~~~~~~~~~~
->          |                                        node_remap
->    kernel/crash_core.c:608:40: error: 'node_start_pfn' undeclared (first use in this function)
->      608 |         VMCOREINFO_OFFSET(pglist_data, node_start_pfn);
->          |                                        ^~~~~~~~~~~~~~
->    kernel/crash_core.c:609:40: error: 'node_spanned_pages' undeclared (first use in this function); did you mean 'zone_managed_pages'?
->      609 |         VMCOREINFO_OFFSET(pglist_data, node_spanned_pages);
->          |                                        ^~~~~~~~~~~~~~~~~~
->          |                                        zone_managed_pages
->    kernel/crash_core.c:610:40: error: 'node_id' undeclared (first use in this function)
->      610 |         VMCOREINFO_OFFSET(pglist_data, node_id);
->          |                                        ^~~~~~~
->    kernel/crash_core.c:612:33: error: 'vm_stat' undeclared (first use in this function); did you mean 'vfs_stat'?
->      612 |         VMCOREINFO_OFFSET(zone, vm_stat);
->          |                                 ^~~~~~~
->          |                                 vfs_stat
->    kernel/crash_core.c:613:33: error: 'spanned_pages' undeclared (first use in this function); did you mean 'shake_page'?
->      613 |         VMCOREINFO_OFFSET(zone, spanned_pages);
->          |                                 ^~~~~~~~~~~~~
->          |                                 shake_page
->    kernel/crash_core.c:614:38: error: 'free_list' undeclared (first use in this function); did you mean 'kfree_link'?
->      614 |         VMCOREINFO_OFFSET(free_area, free_list);
->          |                                      ^~~~~~~~~
->          |                                      kfree_link
->    kernel/crash_core.c:615:38: error: 'next' undeclared (first use in this function); did you mean 'net'?
->      615 |         VMCOREINFO_OFFSET(list_head, next);
->          |                                      ^~~~
->          |                                      net
->    kernel/crash_core.c:616:38: error: 'prev' undeclared (first use in this function)
->      616 |         VMCOREINFO_OFFSET(list_head, prev);
->          |                                      ^~~~
->    kernel/crash_core.c:617:27: error: 'vmap_area' undeclared (first use in this function)
->      617 |         VMCOREINFO_OFFSET(vmap_area, va_start);
->          |                           ^~~~~~~~~
->    kernel/crash_core.c:617:38: error: 'va_start' undeclared (first use in this function); did you mean '_start'?
->      617 |         VMCOREINFO_OFFSET(vmap_area, va_start);
->          |                                      ^~~~~~~~
->          |                                      _start
->    kernel/crash_core.c:618:38: error: 'list' undeclared (first use in this function)
->      618 |         VMCOREINFO_OFFSET(vmap_area, list);
->          |                                      ^~~~
->    kernel/crash_core.c:619:9: error: implicit declaration of function 'VMCOREINFO_LENGTH' [-Werror=implicit-function-declaration]
->      619 |         VMCOREINFO_LENGTH(zone.free_area, MAX_ORDER + 1);
->          |         ^~~~~~~~~~~~~~~~~
->    kernel/crash_core.c:622:9: error: implicit declaration of function 'VMCOREINFO_NUMBER' [-Werror=implicit-function-declaration]
->      622 |         VMCOREINFO_NUMBER(NR_FREE_PAGES);
->          |         ^~~~~~~~~~~~~~~~~
->    cc1: some warnings being treated as errors
-> 
-> 
-> vim +606 kernel/crash_core.c
-> 
-> 692f66f26a4c19d Hari Bathini            2017-05-08  545  
-> 692f66f26a4c19d Hari Bathini            2017-05-08  546  static int __init crash_save_vmcoreinfo_init(void)
-> 692f66f26a4c19d Hari Bathini            2017-05-08  547  {
-> 203e9e41219b4e7 Xunlei Pang             2017-07-12  548  	vmcoreinfo_data = (unsigned char *)get_zeroed_page(GFP_KERNEL);
-> 203e9e41219b4e7 Xunlei Pang             2017-07-12  549  	if (!vmcoreinfo_data) {
-> 203e9e41219b4e7 Xunlei Pang             2017-07-12  550  		pr_warn("Memory allocation for vmcoreinfo_data failed\n");
-> 203e9e41219b4e7 Xunlei Pang             2017-07-12  551  		return -ENOMEM;
-> 203e9e41219b4e7 Xunlei Pang             2017-07-12  552  	}
-> 203e9e41219b4e7 Xunlei Pang             2017-07-12  553  
-> 203e9e41219b4e7 Xunlei Pang             2017-07-12  554  	vmcoreinfo_note = alloc_pages_exact(VMCOREINFO_NOTE_SIZE,
-> 203e9e41219b4e7 Xunlei Pang             2017-07-12  555  						GFP_KERNEL | __GFP_ZERO);
-> 203e9e41219b4e7 Xunlei Pang             2017-07-12  556  	if (!vmcoreinfo_note) {
-> 203e9e41219b4e7 Xunlei Pang             2017-07-12  557  		free_page((unsigned long)vmcoreinfo_data);
-> 203e9e41219b4e7 Xunlei Pang             2017-07-12  558  		vmcoreinfo_data = NULL;
-> 203e9e41219b4e7 Xunlei Pang             2017-07-12  559  		pr_warn("Memory allocation for vmcoreinfo_note failed\n");
-> 203e9e41219b4e7 Xunlei Pang             2017-07-12  560  		return -ENOMEM;
-> 203e9e41219b4e7 Xunlei Pang             2017-07-12  561  	}
-> 203e9e41219b4e7 Xunlei Pang             2017-07-12  562  
-> 692f66f26a4c19d Hari Bathini            2017-05-08  563  	VMCOREINFO_OSRELEASE(init_uts_ns.name.release);
-> 44e8a5e9120bf4f Stephen Boyd            2021-07-07  564  	VMCOREINFO_BUILD_ID();
-> 692f66f26a4c19d Hari Bathini            2017-05-08  565  	VMCOREINFO_PAGESIZE(PAGE_SIZE);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  566  
-> 692f66f26a4c19d Hari Bathini            2017-05-08  567  	VMCOREINFO_SYMBOL(init_uts_ns);
-> ca4a9241cc5e718 Alexander Egorenkov     2020-12-15  568  	VMCOREINFO_OFFSET(uts_namespace, name);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  569  	VMCOREINFO_SYMBOL(node_online_map);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  570  #ifdef CONFIG_MMU
-> eff4345e7fba0aa Omar Sandoval           2018-08-21  571  	VMCOREINFO_SYMBOL_ARRAY(swapper_pg_dir);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  572  #endif
-> 692f66f26a4c19d Hari Bathini            2017-05-08  573  	VMCOREINFO_SYMBOL(_stext);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  574  	VMCOREINFO_SYMBOL(vmap_area_list);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  575  
-> a9ee6cf5c60ed10 Mike Rapoport           2021-06-28  576  #ifndef CONFIG_NUMA
-> 692f66f26a4c19d Hari Bathini            2017-05-08  577  	VMCOREINFO_SYMBOL(mem_map);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  578  	VMCOREINFO_SYMBOL(contig_page_data);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  579  #endif
-> 692f66f26a4c19d Hari Bathini            2017-05-08  580  #ifdef CONFIG_SPARSEMEM
-> a0b1280368d1e91 Kirill A. Shutemov      2018-01-12  581  	VMCOREINFO_SYMBOL_ARRAY(mem_section);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  582  	VMCOREINFO_LENGTH(mem_section, NR_SECTION_ROOTS);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  583  	VMCOREINFO_STRUCT_SIZE(mem_section);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  584  	VMCOREINFO_OFFSET(mem_section, section_mem_map);
-> 4f5aecdff25f59f Pingfan Liu             2021-06-15  585  	VMCOREINFO_NUMBER(SECTION_SIZE_BITS);
-> 1d50e5d0c505244 Bhupesh Sharma          2020-05-14  586  	VMCOREINFO_NUMBER(MAX_PHYSMEM_BITS);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  587  #endif
-> 692f66f26a4c19d Hari Bathini            2017-05-08  588  	VMCOREINFO_STRUCT_SIZE(page);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  589  	VMCOREINFO_STRUCT_SIZE(pglist_data);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  590  	VMCOREINFO_STRUCT_SIZE(zone);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  591  	VMCOREINFO_STRUCT_SIZE(free_area);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  592  	VMCOREINFO_STRUCT_SIZE(list_head);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  593  	VMCOREINFO_SIZE(nodemask_t);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  594  	VMCOREINFO_OFFSET(page, flags);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  595  	VMCOREINFO_OFFSET(page, _refcount);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  596  	VMCOREINFO_OFFSET(page, mapping);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  597  	VMCOREINFO_OFFSET(page, lru);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  598  	VMCOREINFO_OFFSET(page, _mapcount);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  599  	VMCOREINFO_OFFSET(page, private);
-> 1c5509be58f636a Matthew Wilcox (Oracle  2023-01-11  600) 	VMCOREINFO_OFFSET(folio, _folio_dtor);
-> 1c5509be58f636a Matthew Wilcox (Oracle  2023-01-11  601) 	VMCOREINFO_OFFSET(folio, _folio_order);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  602  	VMCOREINFO_OFFSET(page, compound_head);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  603  	VMCOREINFO_OFFSET(pglist_data, node_zones);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  604  	VMCOREINFO_OFFSET(pglist_data, nr_zones);
-> 43b02ba93b25b1c Mike Rapoport           2021-06-28  605  #ifdef CONFIG_FLATMEM
-> 692f66f26a4c19d Hari Bathini            2017-05-08 @606  	VMCOREINFO_OFFSET(pglist_data, node_mem_map);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  607  #endif
-> 692f66f26a4c19d Hari Bathini            2017-05-08  608  	VMCOREINFO_OFFSET(pglist_data, node_start_pfn);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  609  	VMCOREINFO_OFFSET(pglist_data, node_spanned_pages);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  610  	VMCOREINFO_OFFSET(pglist_data, node_id);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  611  	VMCOREINFO_OFFSET(zone, free_area);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  612  	VMCOREINFO_OFFSET(zone, vm_stat);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  613  	VMCOREINFO_OFFSET(zone, spanned_pages);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  614  	VMCOREINFO_OFFSET(free_area, free_list);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  615  	VMCOREINFO_OFFSET(list_head, next);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  616  	VMCOREINFO_OFFSET(list_head, prev);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  617  	VMCOREINFO_OFFSET(vmap_area, va_start);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  618  	VMCOREINFO_OFFSET(vmap_area, list);
-> 23baf831a32c04f Kirill A. Shutemov      2023-03-15  619  	VMCOREINFO_LENGTH(zone.free_area, MAX_ORDER + 1);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  620  	log_buf_vmcoreinfo_setup();
-> 692f66f26a4c19d Hari Bathini            2017-05-08  621  	VMCOREINFO_LENGTH(free_area.free_list, MIGRATE_TYPES);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  622  	VMCOREINFO_NUMBER(NR_FREE_PAGES);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  623  	VMCOREINFO_NUMBER(PG_lru);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  624  	VMCOREINFO_NUMBER(PG_private);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  625  	VMCOREINFO_NUMBER(PG_swapcache);
-> 1cbf29da3628b66 Petr Tesarik            2018-04-13  626  	VMCOREINFO_NUMBER(PG_swapbacked);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  627  	VMCOREINFO_NUMBER(PG_slab);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  628  #ifdef CONFIG_MEMORY_FAILURE
-> 692f66f26a4c19d Hari Bathini            2017-05-08  629  	VMCOREINFO_NUMBER(PG_hwpoison);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  630  #endif
-> 692f66f26a4c19d Hari Bathini            2017-05-08  631  	VMCOREINFO_NUMBER(PG_head_mask);
-> 6e292b9be7f4358 Matthew Wilcox          2018-06-07  632  #define PAGE_BUDDY_MAPCOUNT_VALUE	(~PG_buddy)
-> 692f66f26a4c19d Hari Bathini            2017-05-08  633  	VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  634  #ifdef CONFIG_HUGETLB_PAGE
-> 692f66f26a4c19d Hari Bathini            2017-05-08  635  	VMCOREINFO_NUMBER(HUGETLB_PAGE_DTOR);
-> e04b742f74c2362 David Hildenbrand       2019-03-05  636  #define PAGE_OFFLINE_MAPCOUNT_VALUE	(~PG_offline)
-> e04b742f74c2362 David Hildenbrand       2019-03-05  637  	VMCOREINFO_NUMBER(PAGE_OFFLINE_MAPCOUNT_VALUE);
-> 692f66f26a4c19d Hari Bathini            2017-05-08  638  #endif
-> 692f66f26a4c19d Hari Bathini            2017-05-08  639  
-> 
-> -- 
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
-> 
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbGV4YW5kZXIgS2FtZW5za3kg
+PGFsZXhhbmRlci5rYW1lbnNreTQyQGdtYWlsLmNvbT4NCj4gU2VudDogVGh1cnNkYXksIEF1Z3Vz
+dCAyNCwgMjAyMyA4OjM1IFBNDQo+IFRvOiBQYW5kZXksIFJhZGhleSBTaHlhbSA8cmFkaGV5LnNo
+eWFtLnBhbmRleUBhbWQuY29tPg0KPiBDYzogYmhlQHJlZGhhdC5jb207IHBpbGl1QHJlZGhhdC5j
+b207IGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJu
+ZWwub3JnOyBTYXJhbmdpLCBBbmlydWRoYSA8YW5pcnVkaGEuc2FyYW5naUBhbWQuY29tPg0KPiBT
+dWJqZWN0OiBSZToga2V4ZWMgcmVwb3J0cyAiQ2Fubm90IGdldCBrZXJuZWwgX3RleHQgc3ltYm9s
+IGFkZHJlc3MiIG9uDQo+IGFybTY0IHBsYXRmb3JtDQo+IA0KPiBPbiBXZWQsIEF1ZyAyMywgMjAy
+MyBhdCAxMjowOeKAr1BNIFBhbmRleSwgUmFkaGV5IFNoeWFtDQo+IDxyYWRoZXkuc2h5YW0ucGFu
+ZGV5QGFtZC5jb20+IHdyb3RlOg0KPiA+DQo+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0t
+LQ0KPiA+ID4gRnJvbTogQWxleGFuZGVyIEthbWVuc2t5IDxhbGV4YW5kZXIua2FtZW5za3k0MkBn
+bWFpbC5jb20+DQo+ID4gPiBTZW50OiBUdWVzZGF5LCBBdWd1c3QgMjIsIDIwMjMgOToyNCBBTQ0K
+PiA+ID4gVG86IFBhbmRleSwgUmFkaGV5IFNoeWFtIDxyYWRoZXkuc2h5YW0ucGFuZGV5QGFtZC5j
+b20+DQo+ID4gPiBDYzogYmhlQHJlZGhhdC5jb207IHBpbGl1QHJlZGhhdC5jb207IGtleGVjQGxp
+c3RzLmluZnJhZGVhZC5vcmc7DQo+ID4gPiBsaW51eC0ga2VybmVsQHZnZXIua2VybmVsLm9yZzsg
+U2FyYW5naSwgQW5pcnVkaGENCj4gPiA+IDxhbmlydWRoYS5zYXJhbmdpQGFtZC5jb20+DQo+ID4g
+PiBTdWJqZWN0OiBSZToga2V4ZWMgcmVwb3J0cyAiQ2Fubm90IGdldCBrZXJuZWwgX3RleHQgc3lt
+Ym9sIGFkZHJlc3MiDQo+ID4gPiBvbg0KPiA+ID4gYXJtNjQgcGxhdGZvcm0NCj4gPiA+DQo+ID4g
+PiBIaSBBbGwsDQo+ID4gPg0KPiA+ID4gU29ycnkgZm9yIHRoZSB0b3AgcG9zdCwgYnV0IEkgYmVs
+aWV2ZSB0aGF0IEkgbWlnaHQgaGF2ZSBwb3N0ZWQgYSBmaXgNCj4gPiA+IGZvciB0aGlzIGlzc3Vl
+IGEgY291cGxlIGRheXMgYWdvLg0KPiA+ID4NCj4gPiA+IFBsZWFzZSBjaGVjayBhbmQgc2VlIGlm
+IGl0IGhlbHBzDQo+ID4gPiBodHRwczovL2xvcmUua2VybmVsLm9yZy9rZXhlYy8yMDIzMDgxOTE5
+MTExOS45NzUyOTktMS0NCj4gPiA+IGFsZXhhbmRlci5rYW1lbnNreTQyQGdtYWlsLmNvbS9ULyN1
+DQo+ID4gPg0KPiA+ID4gRXhwbGFuYXRpb24gZm9yIHRoZSBpc3N1ZSBJIG9ic2VydmVkIHdpdGgg
+YSBzaW1pbGFyIHNlY29uZGFyeSBrZXJuZWwNCj4gPiA+IHRyYWNlYmFjayBvbiBhcm02NCBpcyBp
+biB0aGUgY29tbWl0IG1lc3NhZ2UuDQo+ID4NCj4gPiBJIGZldGNoZWQgbGF0ZXN0IGtleGVjIHNv
+dXJjZXMNCj4gPiAoNzc3Y2E0NTNjYTY5ZTQ2ZjczNzZiMDdiYTY3MjdiZDI2MWVjOTdlZikNCj4g
+PiBhbmQgYXBwbGllZCBhYm92ZSBwYXRjaCwgYSBiaXQgaW1wcm92ZWQgYnV0IHN0aWxsIHZtY29y
+ZSBzaXplIGlzIGh1Z2UuDQo+ID4NCj4gPiAvICMgbHMgLWxydGggL3Byb2Mvdm1jb3JlDQo+ID4g
+LXItLS0tLS0tLSAgICAxIHJvb3QgICAgIHJvb3QgICAgICAgMTUuNUcgQXVnIDIzIDE4OjU1IC9w
+cm9jL3ZtY29yZQ0KPiA+DQo+IEhvdyBiaWcgaXMgeW91ciBzeXN0ZW0gbWVtb3J5PyBJZiBpdCBp
+cyAxNkcgdGhlbiB0aGUgYWJvdmUgaXMgbm9ybWFsLg0KDQpZZXMsIGl0J3MgMTZHLg0KDQo+IA0K
+PiBUaGUgbW9zdCBpbXBvcnRhbnQgdGhpbmcgaXMgY2FuIHlvdXIgc2Vjb25kYXJ5IGtlcm5lbCBy
+ZWFkIGl0PyBGb3IgZXhhbXBsZQ0KPiANCj4gY2F0IC9wcm9jL3ZtY29yZSA+IC9kZXYvbnVsbA0K
+DQpUaGlzIHJ1bnMgZmluZSBhbmQgSSBjYW4gcmVhZCAvcHJvYy92bWNvcmUNCg0KPiANCj4gSWYg
+eW91IHdhbnQgdG8gY2FwdHVyZSBvbmx5IGtlcm5lbCBjb3JlIG91dCBvZiAvcHJvYy92bWNvcmUg
+eW91IG5lZWQgdG8gdXNlDQo+IG1ha2VkdW1wZmlsZSB0byBmaWx0ZXIgb3V0IHRoZSByZXN0IG9m
+IHRoZSBtZW1vcnkuDQoNClRoYW5rcyBmb3IgdGhlIHBvaW50ZXJzLiBJIGNvdWxkIHVzZSBtYWtl
+ZHVtcGZpbGUgdG8gZXh0cmFjdCBkbWVzZyBkdW1wIA0KYW5kIGl0IHBvaW50ZWQgdG8gc3lzdGVt
+IEtlcm5lbCBkdW1wIGNvcnJlY3RseSBhbHNvIGNvbXByZXNzIGR1bXAgZGF0YS4NCg0KRnVydGhl
+ciBleHBsb3Jpbmcgb24gaXQgYW5kIHdpbGwgcmVwb3J0IGhvdyB0aGUgYW5hbHlzaXMgZ29lcy4N
+Cg0KeGlsaW54LXZjazE5MC0yMDIzMjovcnVuL21lZGlhL21tY2JsazBwMSMgbWFrZWR1bXBmaWxl
+IC1jIC0tc3BsaXQgLWQgMyAgIC9wcm9jL3ZtY29yZSBkdW1wZmlsZTEgZHVtcGZpbGUyDQpUaGUg
+a2VybmVsIHZlcnNpb24gaXMgbm90IHN1cHBvcnRlZC4NClRoZSBtYWtlZHVtcGZpbGUgb3BlcmF0
+aW9uIG1heSBiZSBpbmNvbXBsZXRlLg0KQ2hlY2tpbmcgZm9yIG1lbW9yeSBob2xlcyAgICAgICAg
+ICAgICAgICAgICAgICAgICA6IFsxMDAuMCAlXSB8ICAgICAgICAgICAgICAgICAgQ2hlY2tpbmcg
+Zm9yIG1lbW9yeSBob2xlcyAgICAgICAgICAgICAgICAgICAgICAgICA6IFsxMDAuMCAlXSB8ICAg
+ICAgICAgICAgIA0KQ2hlY2tpbmcgZm9yIG1lbW9yeSBob2xlcyAgICAgICAgICAgICAgICAgICAg
+ICAgICA6IFsxMDAuMCAlXSAvICAgICAgICAgICAgICAgICAgQ2hlY2tpbmcgZm9yIG1lbW9yeSBo
+b2xlcyAgICAgICAgICAgICAgICAgICAgICAgICA6IFsxMDAuMCAlXSAvICAgICAgICAgICAgIA0K
+Q2hlY2tpbmcgZm9yIG1lbW9yeSBob2xlcyAgICAgICAgICAgICAgICAgICAgICAgICA6IFsxMDAu
+MCAlXSB8ICAgICAgICAgICAgICAgICAgQ2hlY2tpbmcgZm9yIG1lbW9yeSBob2xlcyAgICAgICAg
+ICAgICAgICAgICAgICAgICA6IFsxMDAuMCAlXSB8ICAgICAgICAgICAgIA0KQ2hlY2tpbmcgZm9y
+IG1lbW9yeSBob2xlcyAgICAgICAgICAgICAgICAgICAgICAgICA6IFsxMDAuMCAlXSBcICAgICAg
+ICAgICAgICAgICAgQ2hlY2tpbmcgZm9yIG1lbW9yeSBob2xlcyAgICAgICAgICAgICAgICAgICAg
+ICAgICA6IFsxMDAuMCAlXSBcICAgICAgICAgICAgIA0KQ2hlY2tpbmcgZm9yIG1lbW9yeSBob2xl
+cyAgICAgICAgICAgICAgICAgICAgICAgICA6IFsxMDAuMCAlXSB8ICAgICAgICAgICAgICAgICAg
+Q2hlY2tpbmcgZm9yIG1lbW9yeSBob2xlcyAgICAgICAgICAgICAgICAgICAgICAgICA6IFsxMDAu
+MCAlXSB8ICAgICAgICAgICAgIA0KQ2hlY2tpbmcgZm9yIG1lbW9yeSBob2xlcyAgICAgICAgICAg
+ICAgICAgICAgICAgICA6IFsxMDAuMCAlXSAtICAgICAgICAgICAgICAgICAgQ2hlY2tpbmcgZm9y
+IG1lbW9yeSBob2xlcyAgICAgICAgICAgICAgICAgICAgICAgICA6IFsxMDAuMCAlXSAtICAgICAg
+ICAgICAgIA0KQ29weWluZyBkYXRhICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICA6IFsgNDUuNyAlXSAtICAgICAgICBldGE6IDZtMTNzDQpDb3B5aW5nIGRhdGEgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIDogWyA1NC4xICVdIC0gICAgICAgICAgIGV0YTog
+MXMNCg0KVGhlIGR1bXBmaWxlcyBhcmUgc2F2ZWQgdG8gZHVtcGZpbGUxLCBhbmQgZHVtcGZpbGUy
+Lg0KDQptYWtlZHVtcGZpbGUgQ29tcGxldGVkLiANCg0KPiANCj4gVGhhbmtzLA0KPiBBbGV4YW5k
+ZXINCj4gDQo+ID4gVGhhbmtzLA0KPiA+IFJhZGhleQ0KX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmlu
+ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9r
+ZXhlYwo=
