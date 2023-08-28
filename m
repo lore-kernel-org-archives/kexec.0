@@ -4,71 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AE5AAC71153
-	for <kexec@archiver.kernel.org>; Mon, 28 Aug 2023 09:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 05B1AC71153
+	for <kexec@archiver.kernel.org>; Mon, 28 Aug 2023 09:58:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=e6UhO1+H2cv3UTUnOoZSPw/Nqd8hk6CWVv4vQ6D+NRs=; b=hJSTKXDeGVFxy3
-	O6Kog/usWLaqb24NgyHppntolUMTy54BxjenN9NRC8dWHCyA/UfF6BlSYaEEgdR8F3NlyavlIVmOr
-	7WNoVztgpGZAaRM1/CBrk3+AvMoJMuisRcGBritbkbbDWawYEJ4DvAX7BTa2BGWZ5u94w5Q8pRwSr
-	EAlC2tlq+GAPrQMcKC6/dN8liEmgs+VnSOKIC4MfX/6eELChA8zDp9zgHtzAemW2aSmD0ZDnwFVsd
-	6QVhxExjcQE+phZZ9HQo4hP10x8BgPbASZHpYLVkHf1XhNgkpB5/svtL8adVVl3k9DvE2RXbNqkvO
-	XPayhx1VeeXWaJZq5vxg==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:To
+	:From:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=3iXG1QRF4oISHM91BOIq+TTTZ+mVdGPW1nAEjSZh5rU=; b=zp4sPdlrI6PPK7
+	7FYWXVjPFziBJV+qvliVwrr8AUYHHUXrV1VShRQiSAyY66cNMZ9Nv4TKw0BMp3Mk31vdK1WHO66+Y
+	IUz3kUzTrukVXEA0g956CmX0XnNU8EQOcA9FqeBU4COPu8kZNifGDF+auXgrxerrRbnFhaXkArMMn
+	BQ+fl5GH91yGjbcjxfqKn7qKigfXjF4VC5E5E+14U9+b0veaE8qzl/BRFgi/Kb2rZoDyPo9FL85GQ
+	3sgs5a/GBUSNMbxZ3mZl+3ej7ubq5EB/ytYhRQS8Tk10d57iTy0ezJ5kQqhnhlRWWNVOCqYkZ8fx2
+	FvNvHC/qyMKRRVUH/4bg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qaYm0-009FKX-1b;
-	Mon, 28 Aug 2023 09:43:04 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1qaZ1J-009Gi1-25;
+	Mon, 28 Aug 2023 09:58:53 +0000
+Received: from mail-wm1-f45.google.com ([209.85.128.45])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qaYlv-009FIy-2P
+	id 1qaZ1G-009Ghf-2D
 	for kexec@lists.infradead.org;
-	Mon, 28 Aug 2023 09:43:02 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1693215778;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=01IAJZlGxE3jZFYcWyiHELiJj0j7MGd1pqgzbgK/uXE=;
-	b=EZ6Iqare/tppIhGYSk6fLm+Laq8iNFtOzl5WCev3MguDLZUQG66dwM0q0ppc8JR8de40vO
-	PyL3IlqrhZLSvoNv5X3Hctdwlpl1fvrgHv3V26XLoHX8Cofk3dxdvDfPBiWMyRpmgtZ/Ex
-	GGNUJVRNBm5nNxghOa7jhGa3TetGCKg=
-Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-12-aKmWqtQrOFym7C9xJcjr2w-1; Mon, 28 Aug 2023 05:42:54 -0400
-X-MC-Unique: aKmWqtQrOFym7C9xJcjr2w-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2CAC23C11C62;
-	Mon, 28 Aug 2023 09:42:54 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.121])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id B284640C6F4C;
-	Mon, 28 Aug 2023 09:42:51 +0000 (UTC)
-Date: Mon, 28 Aug 2023 17:42:48 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Samuel Holland <samuel.holland@sifive.com>
-Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	x86@kernel.org, linux-riscv@lists.infradead.org,
-	akpm@linux-foundation.org, catalin.marinas@arm.com,
-	thunder.leizhen@huawei.com, dyoung@redhat.com, prudo@redhat.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 8/8] crash_core.c: remove unneeded functions
-Message-ID: <ZOxsGIeYYvypf9op@MiWiFi-R3L-srv>
-References: <20230827101128.70931-1-bhe@redhat.com>
- <20230827101128.70931-9-bhe@redhat.com>
- <15058508-9e21-0d10-4eca-2c8a5562d36c@sifive.com>
+	Mon, 28 Aug 2023 09:58:52 +0000
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-401b393df02so29069725e9.1
+        for <kexec@lists.infradead.org>; Mon, 28 Aug 2023 02:58:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693216728; x=1693821528;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bT96dmZD0fZy5FTtNyTbk/Q9c5LAI1qIpMtHm5Rlpac=;
+        b=fqlQ6QS2SQwOQ/62mjrMv+PfrxelL6S6WvcWNiDsta5r3SCQNbKLruY1esC9084gTT
+         vb7H9g+BSJu7NjjjtMcNmYaziOzwSVpiUzCE/rSrn7KTX6pwNd/pGZ4A+mCG7iVmwJ+0
+         BfUzn7zek7ih9qX3TJrTI4y8CaeMDJtlFJo1xgQoCxmkhRxkbiuI88M0g9mT45nVoM3Q
+         +XwC6MsRIxyz4mFp6MYmCKMi15KlETS63ASjEFck5+aHk+bgLCoyCHmlgG7ok1Vzx8V6
+         pGc5bOwAQxvwQuK7/dJW3Q0D5ZXWeMoRdBv9+GyPle7APKy4B/W39/nlOjMxi0d6dIi6
+         EI5g==
+X-Gm-Message-State: AOJu0YwnAfGgFqhfFO2Jeh6o3098QrbAMs1uJRSCNBRuVz0CMAeXuOZ7
+	jacQCeE83GigEB4354Qhj2TFZMPhrVe3cw==
+X-Google-Smtp-Source: AGHT+IEJ/Ap3fhgDcTnNk43P7d7hrtPbAiy0aaUfO8w8aUlYN1+Fx2DWS0dgB310PVZaXvkVgwQqOw==
+X-Received: by 2002:a1c:f204:0:b0:3fe:4548:1892 with SMTP id s4-20020a1cf204000000b003fe45481892mr18678215wmc.16.1693216727902;
+        Mon, 28 Aug 2023 02:58:47 -0700 (PDT)
+Received: from rhea.home.vuxu.org (i6DFA5D05.versanet.de. [109.250.93.5])
+        by smtp.gmail.com with ESMTPSA id z12-20020a1c4c0c000000b003fed78b03b4sm10136744wmf.20.2023.08.28.02.58.47
+        for <kexec@lists.infradead.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Aug 2023 02:58:47 -0700 (PDT)
+Received: from localhost (rhea.home.vuxu.org [local])
+	by rhea.home.vuxu.org (OpenSMTPD) with ESMTPA id 8abd3988
+	for <kexec@lists.infradead.org>;
+	Mon, 28 Aug 2023 09:58:46 +0000 (UTC)
+From: Leah Neukirchen <leah@vuxu.org>
+To: kexec@lists.infradead.org
+Subject: [kexec-tools PATCH] build: fix tarball creation
+Date: Mon, 28 Aug 2023 11:58:15 +0200
+Message-ID: <20230828095840.595-1-leah@vuxu.org>
+X-Mailer: git-send-email 2.42.0
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <15058508-9e21-0d10-4eca-2c8a5562d36c@sifive.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230828_024259_853565_7D3669D4 
-X-CRM114-Status: GOOD (  16.64  )
+X-CRM114-CacheID: sfid-20230828_025850_741626_895BA94D 
+X-CRM114-Status: UNSURE (   8.53  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,69 +81,42 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 08/28/23 at 12:26am, Samuel Holland wrote:
-> Hi Baoquan,
-> 
-> On 2023-08-27 5:11 AM, Baoquan He wrote:
-> > So far, nobody calls functions parse_crashkernel_high() and
-> > parse_crashkernel_high(), remove both of them.
-> 
-> minor typo: should be parse_crashkernel_low().
+The fix in 41b77edac did not work, bsdtar still complains about
+"hardlink pointing to itself".
 
-Good catch, will update. Thanks.
+Simplify the code instead: since the staging directory contains
+exactly the files we want, just package it as a whole.
 
-> 
-> > Signed-off-by: Baoquan He <bhe@redhat.com>
-> > ---
-> >  include/linux/crash_core.h |  4 ----
-> >  kernel/crash_core.c        | 18 ------------------
-> >  2 files changed, 22 deletions(-)
-> > 
-> > diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-> > index 2f732493e922..0c512a80a768 100644
-> > --- a/include/linux/crash_core.h
-> > +++ b/include/linux/crash_core.h
-> > @@ -80,10 +80,6 @@ void final_note(Elf_Word *buf);
-> >  int __init parse_crashkernel(char *cmdline, unsigned long long system_ram,
-> >  		unsigned long long *crash_size, unsigned long long *crash_base,
-> >  		unsigned long long *low_size, bool *high);
-> > -int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
-> > -		unsigned long long *crash_size, unsigned long long *crash_base);
-> > -int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
-> > -		unsigned long long *crash_size, unsigned long long *crash_base);
-> >  
-> >  #ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
-> >  #ifndef DEFAULT_CRASH_KERNEL_LOW_SIZE
-> > diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> > index 6bc00cc390b5..61a8ea3b23a2 100644
-> > --- a/kernel/crash_core.c
-> > +++ b/kernel/crash_core.c
-> > @@ -323,24 +323,6 @@ int __init parse_crashkernel(char *cmdline,
-> >  	return 0;
-> >  }
-> >  
-> > -int __init parse_crashkernel_high(char *cmdline,
-> > -			     unsigned long long system_ram,
-> > -			     unsigned long long *crash_size,
-> > -			     unsigned long long *crash_base)
-> > -{
-> > -	return __parse_crashkernel(cmdline, system_ram, crash_size, crash_base,
-> > -				suffix_tbl[SUFFIX_HIGH]);
-> > -}
-> > -
-> > -int __init parse_crashkernel_low(char *cmdline,
-> > -			     unsigned long long system_ram,
-> > -			     unsigned long long *crash_size,
-> > -			     unsigned long long *crash_base)
-> > -{
-> > -	return __parse_crashkernel(cmdline, system_ram, crash_size, crash_base,
-> > -				suffix_tbl[SUFFIX_LOW]);
-> > -}
-> > -
-> >  /*
-> >   * Add a dummy early_param handler to mark crashkernel= as a known command line
-> >   * parameter and suppress incorrect warnings in init/main.c.
-> 
+Signed-off-by: Leah Neukirchen <leah@vuxu.org>
+---
+ Makefile.in | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/Makefile.in b/Makefile.in
+index 09bbd5c..3cad22a 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -179,8 +179,6 @@ GENERATED_SRCS:= $(SPEC)
+ TARBALL=$(PACKAGE_NAME)-$(PACKAGE_VERSION).tar
+ TARBALL.gz=$(TARBALL).gz
+ SRCS:= $(dist)
+-PSRCS:=$(foreach s, $(SRCS), $(PACKAGE_NAME)-$(PACKAGE_VERSION)/$(s))
+-PGSRCS:=$(foreach s, $(GENERATED_SRCS), $(PACKAGE_NAME)-$(PACKAGE_VERSION)/$(s))
+ 
+ MAN_PAGES:=$(KEXEC_MANPAGE) $(VMCORE_DMESG_MANPAGE)
+ BINARIES_i386:=$(KEXEC_TEST)
+@@ -223,8 +221,7 @@ $(TARBALL): $(SRCS) $(GENERATED_SRCS)
+ 	$(MKDIR) $(PACKAGE_NAME)-$(PACKAGE_VERSION)
+ 	$(TAR) -c $(SRCS) $(GENERATED_SRCS) | \
+ 	        $(TAR) -C $(PACKAGE_NAME)-$(PACKAGE_VERSION) -x
+-	$(TAR) -cf $@ $(PSRCS)
+-	$(TAR) -rf $@ $(PGSRCS)
++	$(TAR) -cf $@ $(PACKAGE_NAME)-$(PACKAGE_VERSION)
+ 	$(RM) -rf $(PACKAGE_NAME)-$(PACKAGE_VERSION)
+ 
+ $(TARBALL.gz): $(TARBALL)
+-- 
+2.42.0
 
 
 _______________________________________________
