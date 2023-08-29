@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CA62BC83F16
-	for <kexec@archiver.kernel.org>; Tue, 29 Aug 2023 12:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6DFBEC83F12
+	for <kexec@archiver.kernel.org>; Tue, 29 Aug 2023 12:17:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=47jE11xdoyOK3MQmwhU/jXORdB0CsS9JMFGNABhUKIs=; b=A75eZtD4brOLs0
-	0KnB84MGDUnnzwVhCWpfc7f+9oTZ91LkOMaYb2rcOYNn4cKlElkn4u8+DPK0XA8z8Tmb3Q6Sm7Pw3
-	2zYRIz5yCsC81E512dHBixVCNJM24MuDE4qVq7LcsdIWtVxZSKrUwEkRVjdq203pTQvpsq6H3iwQ+
-	ahvss8ozFeOQtaiQ7OCvMtD/BU2+o2lYWUs34XlbN1X+8ryLdzyI2GoHHZWwFfrPcwuBIXGdYOmM+
-	AimXFX9WJqig1o1aSWnW5pBBe0k45XvazoOUVl7/NqxV+WK8rA7IY01QbFV0MeqH3wW6VsAOaES0R
-	TvwamsTI+4bfNMzkUI6w==;
+	List-Owner; bh=vUQAauNjkyS3CuufQ6eq2nXrnQ8wraWwrquSgcbs6QE=; b=Gw7cIqbRT2PR12
+	EkdhVj+c4SuNuRAVFAwE3KVBdU6mobUSK5q3NlqCBnzTw4ksP06Ztk4D5duBBBxMzmMBxXprurxqm
+	vrXKwBfFbFGAlnh035oI+QAl4ES2jIsnTMqMtxn3V3Y8PFd8ewe8U5uRQjIKuktEnQs5aQ097QqBe
+	rDCd49Cb1TltJp6SYBMD2zPL2i+xThfOeyvbagmTuyBJooBa2zqxtoVgG2gk62m3mcau63qpesuEV
+	Ny9n8pMcwDFYS7UQcDoLaCz4n+QB4N0kLFPRrXnlLFto8yPTqiS0ewvK8n+4ZAxURKblJnDBioMeS
+	JO+lDqvxWAQHGKaSlu7A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qaxec-00BToW-1d;
-	Tue, 29 Aug 2023 12:17:06 +0000
+	id 1qaxed-00BTp2-0Z;
+	Tue, 29 Aug 2023 12:17:07 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qaxeF-00BTbS-1i
+	id 1qaxeK-00BTed-21
 	for kexec@lists.infradead.org;
-	Tue, 29 Aug 2023 12:16:45 +0000
+	Tue, 29 Aug 2023 12:16:49 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1693311402;
+	s=mimecast20190719; t=1693311407;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Yxgj/4bGPsyeEGGTCmmz+k2NvLzn/k3ICbMHRhDNWaw=;
-	b=Qx98H06V+/ng0nAkWsfeyRM56bsQvkx90sH2YqEwVDnvFP2nIRaCNJjtB0zyHrRhO0mvXO
-	uM12XP7Fa7c0NJM5N+mQjjoNgmXMZihkMX/AY19Ei1ODlPOQyfn5qEOWzXESl5X7p/+ua3
-	YSJETZ2syQ4uwksDg+8AiqAkFGIVCsE=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-641-ae7XW89IPrmAROByRIxuNQ-1; Tue, 29 Aug 2023 08:16:38 -0400
-X-MC-Unique: ae7XW89IPrmAROByRIxuNQ-1
+	bh=Qjf2vgpZvAbuO/fyNcy9/C3Rx0kevn2I1wz9DuGab2c=;
+	b=bzsJ9lQesBefbfLRn7sPuU9vVoJUq/2h6xfOjEO29mZQmRfjVJf2qGMSrMkC30GD0EoTaD
+	dNUGO2peI1zdRn+qHB9tX9qvuSg4o+nuzdJLDjrHNlRu1y+vyfUIX7zOF8kyyDYAo+CMIj
+	jGQqAv6P14tvGTkoM5KSjPpewlC8TiM=
+Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-561-wvbW7TOFNgO-DwvFv2n-kQ-1; Tue, 29 Aug 2023 08:16:44 -0400
+X-MC-Unique: wvbW7TOFNgO-DwvFv2n-kQ-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 277FC8432D0;
-	Tue, 29 Aug 2023 12:16:38 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 496DE384F3C2;
+	Tue, 29 Aug 2023 12:16:43 +0000 (UTC)
 Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.112.67])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id B646E6B2B2;
-	Tue, 29 Aug 2023 12:16:33 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id C21896B2AD;
+	Tue, 29 Aug 2023 12:16:38 +0000 (UTC)
 From: Baoquan He <bhe@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: akpm@linux-foundation.org,
@@ -62,16 +62,17 @@ Cc: akpm@linux-foundation.org,
 	linux-arm-kernel@lists.infradead.org,
 	x86@kernel.org,
 	Baoquan He <bhe@redhat.com>
-Subject: [PATCH v2 4/8] crash_core: add generic function to do reservation
-Date: Tue, 29 Aug 2023 20:16:06 +0800
-Message-ID: <20230829121610.138107-5-bhe@redhat.com>
+Subject: [PATCH v2 5/8] crash_core.h: include <asm/crash_core.h> if generic reservation is needed
+Date: Tue, 29 Aug 2023 20:16:07 +0800
+Message-ID: <20230829121610.138107-6-bhe@redhat.com>
 In-Reply-To: <20230829121610.138107-1-bhe@redhat.com>
 References: <20230829121610.138107-1-bhe@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230829_051643_638284_852B3FF6 
-X-CRM114-Status: GOOD (  20.35  )
+X-CRM114-CacheID: sfid-20230829_051648_734973_4F10C29E 
+X-CRM114-Status: UNSURE (   9.54  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -88,206 +89,34 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-In architecture like x86_64, arm64 and riscv, they have vast virtual
-address space and usually have huge physical memory RAM. Their
-crashkernel reservation doesn't have to be limited under 4G RAM,
-but can be extended to the whole physical memory via crashkernel=,high
-support.
+In asm/crash_core.h, ARCH can provide its own macro definitions to
+override DEFAULT_CRASH_KERNEL_LOW_SIZE, CRASH_ALIGN, CRASH_ADDR_LOW_MAX,
+CRASH_ADDR_HIGH_MAX in <linux/crash_core.h> if needed.
 
-Now add function reserve_crashkernel_generic() to reserve crashkernel
-memory if users specify any case of kernel pamameters, like
-crashkernel=xM[@offset] or crashkernel=,high|low.
-
-This is preparation to simplify code of crashkernel=,high support
-in architecutures.
+Later, x86 and arm64 wil support the generic reservaton, so wrap the
+including into CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION ifdeffery
+scope to avoid compiling error in other ARCH-es which doesn't take the
+generic reservation.
 
 Signed-off-by: Baoquan He <bhe@redhat.com>
 ---
- include/linux/crash_core.h |  34 ++++++++++--
- kernel/crash_core.c        | 109 ++++++++++++++++++++++++++++++++++++-
- 2 files changed, 136 insertions(+), 7 deletions(-)
+ include/linux/crash_core.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-index 85260bf4a734..2f732493e922 100644
+index 2f732493e922..86e22e6a039f 100644
 --- a/include/linux/crash_core.h
 +++ b/include/linux/crash_core.h
-@@ -77,12 +77,6 @@ Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
- 			  void *data, size_t data_len);
- void final_note(Elf_Word *buf);
- 
--#ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
--#ifndef DEFAULT_CRASH_KERNEL_LOW_SIZE
--#define DEFAULT_CRASH_KERNEL_LOW_SIZE  (128UL << 20)
--#endif
--#endif
--
- int __init parse_crashkernel(char *cmdline, unsigned long long system_ram,
- 		unsigned long long *crash_size, unsigned long long *crash_base,
- 		unsigned long long *low_size, bool *high);
-@@ -91,4 +85,32 @@ int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
- int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
- 		unsigned long long *crash_size, unsigned long long *crash_base);
- 
+@@ -5,6 +5,9 @@
+ #include <linux/linkage.h>
+ #include <linux/elfcore.h>
+ #include <linux/elf.h>
 +#ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
-+#ifndef DEFAULT_CRASH_KERNEL_LOW_SIZE
-+#define DEFAULT_CRASH_KERNEL_LOW_SIZE	(128UL << 20)
++#include <asm/crash_core.h>
 +#endif
-+#ifndef CRASH_ALIGN
-+#define CRASH_ALIGN			SZ_2M
-+#endif
-+#ifndef CRASH_ADDR_LOW_MAX
-+#define CRASH_ADDR_LOW_MAX		SZ_4G
-+#endif
-+#ifndef CRASH_ADDR_HIGH_MAX
-+#define CRASH_ADDR_HIGH_MAX		memblock_end_of_DRAM()
-+#endif
-+
-+void __init reserve_crashkernel_generic(char *cmdline,
-+		unsigned long long crash_size,
-+		unsigned long long crash_base,
-+		unsigned long long crash_low_size,
-+		bool high);
-+#else
-+static inline void __init reserve_crashkernel_generic(char *cmdline,
-+		unsigned long long crash_size,
-+		unsigned long long crash_base,
-+		unsigned long long crash_low_size,
-+		bool high)
-+{}
-+#endif
-+
- #endif /* LINUX_CRASH_CORE_H */
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 355b0ab5189c..6bc00cc390b5 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -5,11 +5,13 @@
-  */
  
- #include <linux/buildid.h>
--#include <linux/crash_core.h>
- #include <linux/init.h>
- #include <linux/utsname.h>
- #include <linux/vmalloc.h>
- #include <linux/sizes.h>
-+#include <linux/memblock.h>
-+#include <linux/kexec.h>
-+#include <linux/kmemleak.h>
- 
- #include <asm/page.h>
- #include <asm/sections.h>
-@@ -349,6 +351,111 @@ static int __init parse_crashkernel_dummy(char *arg)
- }
- early_param("crashkernel", parse_crashkernel_dummy);
- 
-+#ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
-+static int __init reserve_crashkernel_low(unsigned long long low_size)
-+{
-+#ifdef CONFIG_64BIT
-+	unsigned long long low_base;
-+
-+	low_base = memblock_phys_alloc_range(low_size, CRASH_ALIGN, 0, CRASH_ADDR_LOW_MAX);
-+	if (!low_base) {
-+		pr_err("cannot allocate crashkernel low memory (size:0x%llx).\n", low_size);
-+		return -ENOMEM;
-+	}
-+
-+	pr_info("crashkernel low memory reserved: 0x%08llx - 0x%08llx (%lld MB)\n",
-+		low_base, low_base + low_size, low_size >> 20);
-+
-+	crashk_low_res.start = low_base;
-+	crashk_low_res.end   = low_base + low_size - 1;
-+	insert_resource(&iomem_resource, &crashk_low_res);
-+#endif
-+	return 0;
-+}
-+
-+void __init reserve_crashkernel_generic(char *cmdline,
-+			     unsigned long long crash_size,
-+			     unsigned long long crash_base,
-+			     unsigned long long crash_low_size,
-+			     bool high)
-+{
-+	unsigned long long search_end = CRASH_ADDR_LOW_MAX, search_base = 0;
-+	bool fixed_base = false;
-+
-+	/* User specifies base address explicitly. */
-+	if (crash_base) {
-+		fixed_base = true;
-+		search_base = crash_base;
-+		search_end = crash_base + crash_size;
-+	}
-+
-+	if (high) {
-+		search_base = CRASH_ADDR_LOW_MAX;
-+		search_end = CRASH_ADDR_HIGH_MAX;
-+	}
-+
-+retry:
-+	crash_base = memblock_phys_alloc_range(crash_size, CRASH_ALIGN,
-+					       search_base, search_end);
-+	if (!crash_base) {
-+		/*
-+		 * For crashkernel=size[KMG]@offset[KMG], print out failure
-+		 * message if can't reserve the specified region.
-+		 */
-+		if (fixed_base) {
-+			pr_warn("crashkernel reservation failed - memory is in use.\n");
-+			return;
-+		}
-+
-+		/*
-+		 * For crashkernel=size[KMG], if the first attempt was for
-+		 * low memory, fall back to high memory, the minimum required
-+		 * low memory will be reserved later.
-+		 */
-+		if (!high && search_end == CRASH_ADDR_LOW_MAX) {
-+			search_end = CRASH_ADDR_HIGH_MAX;
-+			search_base = CRASH_ADDR_LOW_MAX;
-+			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
-+			goto retry;
-+		}
-+
-+		/*
-+		 * For crashkernel=size[KMG],high, if the first attempt was
-+		 * for high memory, fall back to low memory.
-+		 */
-+		if (high && search_end == CRASH_ADDR_HIGH_MAX) {
-+			search_end = CRASH_ADDR_LOW_MAX;
-+			search_base = 0;
-+			goto retry;
-+		}
-+		pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
-+			crash_size);
-+		return;
-+	}
-+
-+	if ((crash_base > CRASH_ADDR_LOW_MAX) &&
-+	     crash_low_size && reserve_crashkernel_low(crash_low_size)) {
-+		memblock_phys_free(crash_base, crash_size);
-+		return;
-+	}
-+
-+	pr_info("crashkernel reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
-+		crash_base, crash_base + crash_size, crash_size >> 20);
-+
-+	/*
-+	 * The crashkernel memory will be removed from the kernel linear
-+	 * map. Inform kmemleak so that it won't try to access it.
-+	 */
-+	kmemleak_ignore_phys(crash_base);
-+	if (crashk_low_res.end)
-+		kmemleak_ignore_phys(crashk_low_res.start);
-+
-+	crashk_res.start = crash_base;
-+	crashk_res.end = crash_base + crash_size - 1;
-+	insert_resource(&iomem_resource, &crashk_res);
-+}
-+#endif
-+
- Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
- 			  void *data, size_t data_len)
- {
+ #define CRASH_CORE_NOTE_NAME	   "CORE"
+ #define CRASH_CORE_NOTE_HEAD_BYTES ALIGN(sizeof(struct elf_note), 4)
 -- 
 2.41.0
 
