@@ -4,90 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3C0B8C71153
-	for <kexec@archiver.kernel.org>; Mon, 28 Aug 2023 20:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 011CAC83F12
+	for <kexec@archiver.kernel.org>; Tue, 29 Aug 2023 02:35:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:CC:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=3kFww1cXGZoDvc+DihOzJOGoBJt3IZgcKMsj01sVzog=; b=Ne/6Zb6EbPjxHN
-	5wNSjFirzU2tf7F1xwkSRZJIr88sYK8b1kTb0M8UnDZDvY+aKTog3lK9fEsoENbno12pehv4/rQ5S
-	BtrCVBIC9ra1uR+gmClPu9HB7H7hCmKUhJXlLbC7L8uzZDEo4p42RNm1pNYwqrzmvcsTqVDLZFULk
-	veTsJinkDqyRjRIquuGY2+QesE06uzGGEUB6eSVsaD+wlcoSCnHywA6luo/A2dOBbNdvLqqs3/b2/
-	EWuKfjRu05zGUb9+JySNX+VMc0Eha22FlzUcCOtOtIvTU+gPbaoMcZclj4fi09vXgrrFu6myBAcMt
-	v8wQEtKwYrM3UkpRZKBA==;
+	List-Owner; bh=ygxQN0Z2IylztjVraciLTZvQpW0QDUtJUoAvSD/VWjY=; b=dNTU0oogepQgE7
+	kiOkDL6M8KqL7SKovR7mMbQ1h3Y0ycZd6fUXS9z60PWK+jWWUrDO4r+3jK0aVio4CV/srnNIF5XgR
+	S0zx+vGHejTxw7H+gIfTNL5aFRO9QmjHclFHYunDo6Pq+rd365/A/6gHf4D55Ez4NCWP+7uucz1dp
+	pVWnlnKlunj1d9EVvJujFaV/vdlfjyv+5GIKdwANunelCps+8fvVUOB/1Mkv4m1c8s9WauIamtqkd
+	87vfbEYWAqh/O8zeIF1jfCE5qT2QfZHQcAPktks5sXi29ra6520YspjEpbWFk6JJ/FMXYdy/TlUBj
+	mFa4p7GQT3yJGlYNQj6g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qajCB-00AGBo-1k;
-	Mon, 28 Aug 2023 20:50:47 +0000
-Received: from smtp-fw-80008.amazon.com ([99.78.197.219])
+	id 1qaoa0-00AddS-22;
+	Tue, 29 Aug 2023 02:35:44 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qajC8-00AGAX-11
+	id 1qaoZw-00Adcj-2G
 	for kexec@lists.infradead.org;
-	Mon, 28 Aug 2023 20:50:46 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1693255844; x=1724791844;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ktiOhQrnGvQT2oDKq37JPM9wIGmpIXOUH9d4jIp7pQs=;
-  b=a39V7madYI7tISqQeZ4F2SZ05or2h5xnHeDc3Q6MAMSWR03WZnbmH7My
-   U8JDqeHucoWW/eHPK5dIhz0WXwjNZP/tncaNP9O2JLkgle//MOJDv26Xe
-   JKXBYrFpc2wa/LLxCmhFJoA57/oR7H52FLJV5CPQC+kN0rpkImVlQ+OTo
-   k=;
-X-IronPort-AV: E=Sophos;i="6.02,208,1688428800"; 
-   d="scan'208";a="25563562"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-iad-1d-m6i4x-b404fda3.us-east-1.amazon.com) ([10.25.36.214])
-  by smtp-border-fw-80008.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2023 20:50:32 +0000
-Received: from EX19MTAUWB002.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan3.iad.amazon.com [10.40.163.38])
-	by email-inbound-relay-iad-1d-m6i4x-b404fda3.us-east-1.amazon.com (Postfix) with ESMTPS id D12D7807DA;
-	Mon, 28 Aug 2023 20:50:26 +0000 (UTC)
-Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.30; Mon, 28 Aug 2023 20:50:26 +0000
-Received: from [0.0.0.0] (10.253.83.51) by EX19D020UWC004.ant.amazon.com
- (10.13.138.149) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.37; Mon, 28 Aug
- 2023 20:50:21 +0000
-Message-ID: <e0ed9fb9-8e7a-44ad-976a-27362f6e537a@amazon.de>
-Date: Mon, 28 Aug 2023 22:50:19 +0200
+	Tue, 29 Aug 2023 02:35:42 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1693276539;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VwuD2aa53cA/FpJ7rUm5S4Mqbb/i5UZFHYZ5kPy3VlE=;
+	b=hdU4ldP39lEIZgDVZ/vm6ngTGN14dNoXbVeTgrzJsyp2tMrAtBvBcnuWUeRG9S29ryPjgF
+	/0fx+zd0wKXKOT8sj/J1Yka0qYt71Jdy2QjABBTCqhL929OldReWJ/NY0AiApelu0/lMIf
+	JuIPiT+lF2+6V9GtnxY6Zs2+/ou4BR4=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-53-yk_ojDXGP8u742uvZSexmA-1; Mon, 28 Aug 2023 22:35:36 -0400
+X-MC-Unique: yk_ojDXGP8u742uvZSexmA-1
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-76da52a42bcso503427685a.3
+        for <kexec@lists.infradead.org>; Mon, 28 Aug 2023 19:35:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693276536; x=1693881336;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VwuD2aa53cA/FpJ7rUm5S4Mqbb/i5UZFHYZ5kPy3VlE=;
+        b=YOz4xARB+0GvTNpWo01MA9mnQ6GIdtMJ60y/2ZPCWZe5/66f/Yw7A9YA4Ol8Y1dhzn
+         hEQmeyJPkC2iwHEktP9hGSM8EpJRk+cwlCSpVwdHw/yg4VGUenjaWBj8uDPJ2cEPYtdU
+         s9tTuYMreqa1F/bn2i/QQioIeVrJBzumTtTfaDWkB8sWKOqN3twOV0VwgZJ+nOFfzrQt
+         XShy6FdoGZE65EWTWn4aJ3RThT6PB1dbaJdextQOmbOT+GxZa2EcUHuXo7+r+N2EUHzD
+         0qvpyfaaPwdH8pJRXPlBZyYQdsCGHxBJYSSNoH3HOfXdJaNnU651c8OBWFei3hbcZ6WE
+         uKyw==
+X-Gm-Message-State: AOJu0Yzq8jEGCSEqHnn5edbHgV/O3UBpcy0+zy70o7ibzqhKJtWIV7+n
+	NBKgGdRxhE4KbDAYJ8zsU7luPJJpDN5qPcPA4VnFx6xpdOmn5AuAkzVXPSr6HZJX2YoeWlEBBhK
+	4aBNanwyFIvFmSPIXOrcK+HVcG8MUO+DVq1R/
+X-Received: by 2002:a05:620a:40c5:b0:765:a89b:ce04 with SMTP id g5-20020a05620a40c500b00765a89bce04mr34190184qko.59.1693276536239;
+        Mon, 28 Aug 2023 19:35:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGnXMHvs3yw9wg6GUTwgMRB+sxJQ+bVwl/bRSTFNg/fItX3svgeiWpMMq3MVDfAwhbNiBzV9uBfajlnShU0iCY=
+X-Received: by 2002:a05:620a:40c5:b0:765:a89b:ce04 with SMTP id
+ g5-20020a05620a40c500b00765a89bce04mr34190166qko.59.1693276535833; Mon, 28
+ Aug 2023 19:35:35 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] Introduce persistent memory pool
-Content-Language: en-GB
-To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, "Gowans, James"
-	<jgowans@amazon.com>
-CC: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-	"rppt@kernel.org" <rppt@kernel.org>, "madvenka@linux.microsoft.com"
-	<madvenka@linux.microsoft.com>, "anthony.yznaga@oracle.com"
-	<anthony.yznaga@oracle.com>, "steven.sistare@oracle.com"
-	<steven.sistare@oracle.com>, "stanislav.kinsburskii@gmail.com"
-	<stanislav.kinsburskii@gmail.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "seanjc@google.com" <seanjc@google.com>,
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, "kys@microsoft.com"
-	<kys@microsoft.com>, "arnd@arndb.de" <arnd@arndb.de>, "wei.liu@kernel.org"
-	<wei.liu@kernel.org>, "anrayabh@linux.microsoft.com"
-	<anrayabh@linux.microsoft.com>, "dragan.cvetic@amd.com"
-	<dragan.cvetic@amd.com>, "jinankjain@linux.microsoft.com"
-	<jinankjain@linux.microsoft.com>, "derek.kiernan@amd.com"
-	<derek.kiernan@amd.com>, "linux-mm@kvack.org" <linux-mm@kvack.org>, "Andrew
- Morton" <akpm@linux-foundation.org>, <kexec@lists.infradead.org>,
-	<iommu@lists.linux.dev>, kvm <kvm@vger.kernel.org>
-References: <64e7cbf7.050a0220.114c7.b70dSMTPIN_ADDED_BROKEN@mx.google.com>
- <2023082506-enchanted-tripping-d1d5@gregkh>
- <c26ad989dcc6737dd295e980c78ef53740098810.camel@amazon.com>
- <20230823024500.GA25462@skinsburskii.>
-From: Alexander Graf <graf@amazon.de>
-In-Reply-To: <20230823024500.GA25462@skinsburskii.>
-X-Originating-IP: [10.253.83.51]
-X-ClientProxiedBy: EX19D037UWC003.ant.amazon.com (10.13.139.231) To
- EX19D020UWC004.ant.amazon.com (10.13.138.149)
+References: <20230819191119.975299-1-alexander.kamensky42@gmail.com>
+ <CAF+s44THuTneZr3ny1_FeB8b1+rytySadU4HMLEthnfxzF_F1A@mail.gmail.com> <CACBYKvSs0P2MAfx-oeaRKi_V2m8iKFd_Ko7wBD6C3AQUtUUaYQ@mail.gmail.com>
+In-Reply-To: <CACBYKvSs0P2MAfx-oeaRKi_V2m8iKFd_Ko7wBD6C3AQUtUUaYQ@mail.gmail.com>
+From: Pingfan Liu <piliu@redhat.com>
+Date: Tue, 29 Aug 2023 10:35:24 +0800
+Message-ID: <CAF+s44SZ4sU74xUqURcEaZj9YQoNvEe-B_u5-Pkd+b-ue2=6xg@mail.gmail.com>
+Subject: Re: [PATCH] aarch64: kern_paddr_start calculation makes more accurate
+ legacy check
+To: Alexander Kamensky <alexander.kamensky42@gmail.com>
+Cc: kexec@lists.infradead.org, Simon Horman <horms@kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230828_135044_424276_BA27B9F4 
-X-CRM114-Status: GOOD (  58.71  )
+X-CRM114-CacheID: sfid-20230828_193540_827931_D620DE2D 
+X-CRM114-Status: GOOD (  54.96  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,207 +92,165 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-+kexec, iommu, kvm
-
-On 23.08.23 04:45, Stanislav Kinsburskii wrote:
->
-> +akpm, +linux-mm
->
-> On Fri, Aug 25, 2023 at 01:32:40PM +0000, Gowans, James wrote:
->> On Fri, 2023-08-25 at 10:05 +0200, Greg Kroah-Hartman wrote:
->>
->> Thanks for adding me to this thread Greg!
->>
->>> On Tue, Aug 22, 2023 at 11:34:34AM -0700, Stanislav Kinsburskii wrote:
->>>> This patch addresses the need for a memory allocator dedicated to
->>>> persistent memory within the kernel. This allocator will preserve
->>>> kernel-specific states like DMA passthrough device states, IOMMU state, and
->>>> more across kexec.
->>>> The proposed solution offers a foundational implementation for potential
->>>> custom solutions that might follow. Though the implementation is
->>>> intentionally kept concise and straightforward to foster discussion and
->>>> feedback, it's fully functional in its current state.
->> Hi Stanislav, it looks like we're working on similar things. I'm looking
->> to develop a mechanism to support hypervisor live update for when KVM is
->> running VMs with PCI device passthrough. VMs with device passthrough
->> also necessitates passing and re-hydrating IOMMU state so that DMA can
->> continue during live update.
->>
->> Planning on having an LPC session on this topic:
->> https://lpc.events/event/17/abstracts/1629/ (currently it's only a
->> submitted abstract so not sure if visible, hopefully it will be soon).
->>
->> We are looking at implementing persistence across kexec via an in-memory
->> filesystem on top of reserved memory. This would have files for anything
->> that needs to be persisted. That includes files for IOMMU pgtables, for
->> guest memory or userspace-accessible memory.
->>
->> It may be nice to solve all kexec persistence requirements with one
->> solution, but we can consider IOMMU separately. There are at least three
->> ways that this can be done:
->> a) carving out reserved memory for pgtables. This is done by your
->> proposal here, as well as my suggestion of a filesystem.
->> b) pre/post kexec hooks for drivers to serialise state and pass it
->> across in a structured format from old to new kernel.
->> c) Reconstructing IOMMU state in the new kernel by starting at the
->> hardware registers and walking the page tables. No state passing needed.
->>
->> Have you considered option (b) and (c) here? One of the implications of
->> (b) and (c) are that they would need to hook into the buddy allocator
->> really early to be able to carve out the reconstructed page tables
->> before the allocator is used. Similar to how pkram [0] hooks in early to
->> carve out pages used for its filesystem.
->>
-> Hi James,
->
-> We are indeed working on similar things, so thanks for chiming in.
-> I've seen pkram proposal as well as your comments there.
->
-> I think (b) will need some persistent-over-kexec memory to pass the
-> state across kexec as well as some key-value store persisted as well.
-> And the proposed persistent memory pool is aimed exactly for this
-> purpose.
-> Or do you imply some other way to pass driver's data accross kexec?
-
-
-If I had to build this, I'd probably do it just like device tree passing 
-on ARM. It's a single, physically contiguous blob of data whose entry 
-point you pass to the target kernel. IIRC ACPI passing works similarly. 
-This would just be one more opaque data structure that then needs very 
-strict versioning and forward/backward compat guarantees.
-
-
-> I dind't consider (c) yet, thanks for for the pointer.
->
-> I have a question in this scope: how is PCI devices registers state is persisted
-> across kexec with the files system you are working on? I.e. how does
-> driver know, that the device shouldn't not be reinitialized?
-
-
-The easiest way to do it initially would be kernel command line options 
-that hack up the drivers. But I suppose depending on the option we go 
-with, you can also use the respective "natural" path:
-
-(a) A special metadata file that explains the state to the driver
-(b) An entry in the structured file format that explains the state to 
-the target driver
-(c) Compatible target drivers try to enumerate state from the target 
-device's register file
-
-
->
->>>> Potential applications include:
->>>>
->>>>    1. Allowing various in-kernel entities to allocate persistent pages from
->>>>       a singular memory pool, eliminating the need for multiple region
->>>>       reservations.
->>>>
->>>>    2. For in-kernel components that require the allocation address to be
->>>>       available on kernel kexec, this address can be exposed to user space and
->>>>       then passed via the command line.
->> Do you have specific examples of other state that needs to be passed
->> across? Trying to see whether tailoring specifically to the IOMMU case
->> is okay. Conceptually IOMMU state can be reconstructed starting with
->> hardware registers, not needing reserved memory. Other use-cases may not
->> have this option.
->>
-> Well, basically it's IOMMU state and PCI devices to skip/avoid
-> initializing.
-> I bet there can be other misc (and unrelated things) like persistent
-> filesystems, block devices, etc. But I don't have a solid set of use
-> cases to present.
-
-
-Would be great if you could think through the problem space until LPC so 
-we can have a solid conversation there :)
-
-
->
->>> As you have no in-kernel users of this, it's not something we can even
->>> consider at the moment for obvious reasons (neither would you want us
->>> to.)
->>>
->>> Can you make this part of a patch series that actually adds a user,
->>> probably more than one, so that we can see if any of this even makes
->>> sense?
->> I'm very keen to see this as well. The way that the IOMMU drivers are
->> enlightened to hook into your memory pool will likely be similar to how
->> they would hook into my proposal of an in-memory filesystem.
->> Do you have code available showing the IOMMU integration?
->>
-> No, I don't have such a code yet.
-> But I was thinking that using such a allocator in the mempool allows
-> to hide this implementation under the hood of an existent generic
-> mechanism, which is then can be used to create persistent objects (file
-> system, for example) on top of it.
-
-
-Unfortunately it's practically impossible to have a solid conversation 
-on generic mechanisms without actual users to see how they fit in with 
-the real world. That's Greg's answer to your patch set and I tend to 
-agree. What if (b) or (c) turn out much more viable? Then we've wasted a 
-lot of effort in shaping up the allocator for no good reason.
-
-
->
->>>>   drivers/misc/Kconfig   |    7 +
->>>>   drivers/misc/Makefile  |    1
->>>>   drivers/misc/pmpool.c  |  270 ++++++++++++++++++++++++++++++++++++++++++++++++
->>>>   include/linux/pmpool.h |   20 ++++
->>>>   4 files changed, 298 insertions(+)
->>>>   create mode 100644 drivers/misc/pmpool.c
->>>>   create mode 100644 include/linux/pmpool.h
->>> misc is not for memory pools, as this is not a driver.  please put this
->>> in the properly location instead of trying to hide it from the mm
->>> maintainers and subsystem :)
->> One of the reasons I thought a proper filesystem would be a better way
->> of exposing this functionality.
->>
-> Yes, I see the point of having a file system for the goals you are
-> targeting. It looks like the right way forward.
->
-> What I'm not sure about is that persistent-over-kexec memory management and
-> the actual preservation mechanism should be an embedded part of this file
-> system.
->
-> What I'm trying to propose is a part of a generic mechanism to provide
-> state persistence across kexec, which can then be used by your file
-> system or something else.
->
-> What do you think about this approach?
-
-
-IMHO we need to at least prototype each of the paths outlined above to 
-be able to create a sense for what works the best. I can see problems 
-with all of them - and I'm personally not convinced there will be a 
-one-size-fits-all solution yet.
-
-That said, I am happy to see you pursue similar paths to what we have in 
-mind. It means there is a real gap in functionality in Linux kexec that 
-we need to overcome sooner or later.
-
-
-Alex
-
-
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gU3VuLCBBdWcgMjcsIDIwMjMgYXQgNDoyM+KAr0FNIEFsZXhhbmRlciBLYW1lbnNreQo8YWxl
+eGFuZGVyLmthbWVuc2t5NDJAZ21haWwuY29tPiB3cm90ZToKPgo+IEhpIFBpbmdmYW4sCj4KPiBQ
+bGVhc2Ugc2VlIGlubGluZQo+Cj4gT24gVGh1LCBBdWcgMjQsIDIwMjMgYXQgMTE6MTfigK9QTSBQ
+aW5nZmFuIExpdSA8cGlsaXVAcmVkaGF0LmNvbT4gd3JvdGU6Cj4gPgo+ID4gT24gU3VuLCBBdWcg
+MjAsIDIwMjMgYXQgMzoxNuKAr0FNIEFsZXhhbmRlciBLYW1lbnNreQo+ID4gPGFsZXhhbmRlci5r
+YW1lbnNreTQyQGdtYWlsLmNvbT4gd3JvdGU6Cj4gPiA+Cj4gPiA+IEluIHRoZSBsYXRlc3Qgb3Bl
+bmVtYmVkZGVkIHdpdGggYWFyY2g2NCBpbWFnZSB0aGF0IHVzZXMgNi40LjMga2VybmVsIG9uIHFl
+bXUgSQo+ID4gPiB0cmllZCB0byBydW4gbWFrZWR1bXBmaWxlIGluIHNlY29uZGFyeSBrZXJuZWwg
+d2l0aCAvcHJvYy92bWNvcmUuIEl0IGZhaWxlZCBhcwo+ID4gPiBmb2xsb3dzOgo+ID4gPgo+ID4g
+PiA+IHJvb3RAcWVtdWFybTY0On4jIG1ha2VkdW1wZmlsZSAtYyAtRiAvcHJvYy92bWNvcmUgPiAv
+ZGV2L251bGwKPiA+ID4gPiByZWFkX2Zyb21fdm1jb3JlOiBDYW4ndCBzZWVrIHRoZSBkdW1wIG1l
+bW9yeSgvcHJvYy92bWNvcmUpLiAob2Zmc2V0OiBmZmZmZmZjMDEyM2ZhMDAwKSBJbnZhbGlkIGFy
+Z3VtZW50Cj4gPiA+ID4gcmVhZHBhZ2VfZWxmOiBDYW4ndCByZWFkIHRoZSBkdW1wIG1lbW9yeSgv
+cHJvYy92bWNvcmUpLgo+ID4gPiA+IDxzbmlwPgo+ID4gPgo+ID4gPiBJdCB0dXJucyBvdXQgdGhh
+dCBub3QgYWxsIHBhcnRzIGZvciAvcHJvYy92bWNvcmUgYXJlIHJlYWRhYmxlOgo+ID4gPgo+ID4g
+PiA+IHJvb3RAcWVtdWFybTY0On4jIGNhdCAvcHJvYy92bWNvcmUgPiAvZGV2L251bGwKPiA+ID4g
+PiBbICAxMzYuMzk0OTMxXSBJbnRlcm5hbCBlcnJvcjogc3luY2hyb25vdXMgZXh0ZXJuYWwgYWJv
+cnQ6IDAwMDAwMDAwOTYwMDAwMTAgWyMxXSBQUkVFTVBUIFNNUAo+ID4gPiA+IFsgIDEzNi40MjI0
+MzRdIE1vZHVsZXMgbGlua2VkIGluOgo+ID4gPiA+IDxzbmlwPgo+ID4gPgo+ID4gPiBCaW5hcnkg
+c2VhcmNoIG9mIGRpZmZlcmVudCBrZXJuZWwgdmVyc2lvbnMgSSBmb3VuZCB0aGF0IHRoZSBpc3N1
+ZSBnb2VzIGJhY2sgdG8KPiA+ID4gNS4xMS4gSXQgd29ya3MgZmluZSB3aXRoIDUuMTAgdmVyc2lv
+biBvZiB0aGUga2VybmVsLgo+ID4gPgo+ID4gPiBBZnRlciBydW5uaW5nIHNlY29uZGFyeSBrZXJu
+ZWwgdW5kZXIgcWVtdSBnZGIsIEkndmUgZm91bmQgdGhhdCB0aGUgcHJpbWFyeSBrZXJuZWwKPiA+
+ID4gbWFpbiBtZW1vcnkgc2VnbWVudCBpbiBlbGZjb3JlaGRyIGhhcyB3cm9uZyBhZGRyZXNzIGFu
+ZCBzaXplLgo+ID4gPgo+ID4gPiBMb29raW5nIGF0IGtleGVjIG91dHB1dCB3aXRoIGRlYnVnIGVu
+YWJsZWQgYXQgdGhlIHRpbWUgd2hlbiBpdCBsb2FkcyBzZWNvbmRhcnkKPiA+ID4gY3Jhc2gga2Vy
+bmVsIEkgc2F3IHRoZSBmb2xsb3dpbmc6Cj4gPiA+Cj4gPiA+ID4gS2VybmVsIHRleHQgRWxmIGhl
+YWRlcjogcF90eXBlID0gMSwgcF9vZmZzZXQgPSAweDQwMzAyMDAwMDAgcF9wYWRkciA9IDB4NDAz
+MDIwMDAwMCBwX3ZhZGRyID0gMHhmZmZmZmZmZmZmZmZmZmZmIHBfZmlsZXN6ID0gMHhmZmZmZmZj
+MDExNDEwMDAwIHBfbWVtc3ogPSAweGZmZmZmZmMwMTE0MTAwMDAKPiA+ID4KPiA+ID4gVGhlc2Ug
+dmFsdWVzIGNvbWUgZnJvbSBlbGZfaW5mbyB2YXJpYWJsZSBhbmQgYXJlIHNldCBpbiBpb21lbV9y
+YW5nZV9jYWxsYmFjawo+ID4gPiBmdW5jdGlvbi4gVGhlIGZ1bmN0aW9uIGdldHMgdGhlIGZvbGxv
+d2luZyBpbnB1dCBvbiBteSBzeXN0ZW06Cj4gPiA+Cj4gPiA+IHJvb3RAcWVtdWFybTY0On4jIGNh
+dCAvcHJvYy9pb21lbSB8IGdyZXAgIktlcm5lbCBjb2RlIgo+ID4gPiAgIDQwMjEwMDAwLTQwZmVm
+ZmZmIDogS2VybmVsIGNvZGUKPiA+ID4gcm9vdEBxZW11YXJtNjQ6fiMgY2F0IC9wcm9jL2thbGxz
+eW1zIHwgZ3JlcCAtZSAnIF90ZXh0JCcKPiA+Cj4gPiBUaGlzIGlzIHRoZSBjcnV4IG9mIHRoZSBw
+cm9ibGVtLiBDb3VsZCB5b3Ugc2F5IHNvbWV0aGluZyBhYm91dCBob3cgaXQKPiA+IGRpc2FwcGVh
+cmVkPwo+Cj4gSGVyZSBpcyB3aGF0IEkgZm91bmQ6Cj4KPiAqIGluIGthbGxzeW1zIC50bXBfdm1s
+aW51eC5rYWxsc3ltczEuc3ltcyBfdGV4dCBJIGhhdmUgdGhpczoKPgo+IGZmZmZmZmMwMDgwMDAw
+MDAgVCBfdGV4dAo+IGZmZmZmZmMwMDgwMTAwMDAgVCBfX2lycWVudHJ5X3RleHRfc3RhcnQKPiBm
+ZmZmZmZjMDA4MDEwMDAwIFQgX3N0ZXh0Cj4KPiAqIGluIHNjcmlwdHMva2FsbHN5bXMuYyByYW5n
+ZXMgZGVmaW5lZCBhcwo+Cj4gc3RhdGljIHN0cnVjdCBhZGRyX3JhbmdlIHRleHRfcmFuZ2VzW10g
+PSB7Cj4gICAgIHsgIl9zdGV4dCIsICAgICAiX2V0ZXh0IiAgICAgfSwKPiAgICAgeyAiX3Npbml0
+dGV4dCIsICJfZWluaXR0ZXh0IiB9LAo+IH07Cj4KPiAqIGFzIGEgcmVzdWx0IF90ZXh0IGZhaWxz
+IGNoZWNrX3N5bWJvbF9yYW5nZSBmdW5jdGlvbiBpdHMgbm90IGluY2x1ZGVkIGluCj4ga2FsbHN5
+bXMKPgo+ICogZnJvbSAnZ2RiIHZtbGludXgnCj4KPiAoZ2RiKSBwIF90ZXh0Cj4gJDEgPSAweGZm
+ZmZmZmMwMDgwMDAwMDAgPF90ZXh0PiAiTVpAXDM3MidkPlwwMjQiCj4gKGdkYikgcCBfc3RleHQK
+PiAkMiA9IDB4ZmZmZmZmYzAwODAxMDAwMCA8X3N0ZXh0PiAiXDAzNyBcMDAzXDMyNVwwMzcgXDAw
+M1wzMjVcMDM3Cj4gXDAwM1wzMjVcMDM3IFwwMDNcMzI1PyNcMDAzXDMyNVwzNzV7XDI3M1wyNTFc
+Mzc1XDAwMyIKPgo+ICogZnJvbSBrZXJuZWwgbGlua2VyIHNjcmlwdCAuL2FyY2gvYXJtNjQva2Vy
+bmVsL3ZtbGludXgubGRzLCBub3RlCj4gX3N0ZXh0IGZvbGxvd3MgX3RleHQgYW5kIGFsaWduZWQg
+YnkgMHgwMDAxMDAwMAo+Cj4gT1VUUFVUX0FSQ0goYWFyY2g2NCkKPiBFTlRSWShfdGV4dCkKPiBq
+aWZmaWVzID0gamlmZmllc182NDsKPiBQRUNPRkZfRklMRV9BTElHTk1FTlQgPSAweDIwMDsKPiBT
+RUNUSU9OUwo+IHsKPiAgL0RJU0NBUkQvIDogeyAqKC5leGl0Y2FsbC5leGl0KSAqKC5kaXNjYXJk
+KSAqKC5kaXNjYXJkLiopICooLm1vZGluZm8pCj4gKiguZ251LnZlcnNpb24qKSB9Cj4gIC9ESVND
+QVJELyA6IHsKPiAgICooLmludGVycCAuZHluYW1pYykKPiAgICooLmR5bnN5bSAuZHluc3RyIC5o
+YXNoIC5nbnUuaGFzaCkKPiAgfQo+ICAuID0gKCgoKC0oKCgxKSkgPDwgKCgoKDM5KSkpIC0gMSkp
+KSkgKyAoMHgwODAwMDAwMCkpKTsKPiAgLmhlYWQudGV4dCA6IHsKPiAgIF90ZXh0ID0gLjsgLy8g
+PC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+ICAgS0VF
+UCgqKC5oZWFkLnRleHQpKQo+ICB9Cj4gIC50ZXh0IDogQUxJR04oMHgwMDAxMDAwMCkgeyAvLyA8
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiAgIF9zdGV4dCA9IC47IC8vIDwtLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+ICAgIC4gPSBBTElH
+Tig4KTsgX19pcnFlbnRyeV90ZXh0X3N0YXJ0ID0gLjsgKiguaXJxZW50cnkudGV4dCkKPiBfX2ly
+cWVudHJ5X3RleHRfZW5kID0gLjsKPiAgICAuID0gQUxJR04oOCk7IF9fc29mdGlycWVudHJ5X3Rl
+eHRfc3RhcnQgPSAuOyAqKC5zb2Z0aXJxZW50cnkudGV4dCkKPiBfX3NvZnRpcnFlbnRyeV90ZXh0
+X2VuZCA9IC47Cj4KPiAqIC4vYXJjaC9hcm02NC9rZXJuZWwvdm1saW51eC5sZHMgaXMgcHJlcHJv
+Y2Nlc3NlZCBmaWxlIGZyb20KPiBhcmNoL2FybTY0L2tlcm5lbC92bWxpbnV4Lmxkcy5TLCBoZXJl
+IGFyZSByZWxldmFudCBzbmlwcGV0czoKPgo+ICAgICAuaGVhZC50ZXh0IDogewo+ICAgICAgICAg
+X3RleHQgPSAuOwo+ICAgICAgICAgSEVBRF9URVhUCj4gICAgIH0KPiAgICAgLnRleHQgOiBBTElH
+TihTRUdNRU5UX0FMSUdOKSB7ICAgIC8qIFJlYWwgdGV4dCBzZWdtZW50ICAgICAgICAqLwo+ICAg
+ICAgICAgX3N0ZXh0ID0gLjsgICAgICAgIC8qIFRleHQgYW5kIHJlYWQtb25seSBkYXRhICAgICov
+Cj4gICAgICAgICAgICAgSVJRRU5UUllfVEVYVAo+ICAgICAgICAgICAgIFNPRlRJUlFFTlRSWV9U
+RVhUCj4KPiAqIGFuZCBTRUdNRU5UX0FMSUdOIGRlZmluZWQgaW4KPgo+IGFyY2gvYXJtNjQvaW5j
+bHVkZS9hc20vbWVtb3J5Lmg6I2RlZmluZSBTRUdNRU5UX0FMSUdOICAgICAgICAgICBTWl82NEsK
+Pgo+ICogc3ltYm9sX3ZhbGlkIGZ1bmN0aW9uIGZyb20gc2NyaXB0cy9rYWxsc3ltcy5jIHdpbGwg
+aWdub3JlIHJhbmdlCj4gY2hlY2sgaWYgLS1hbGwtc3ltYm9scyBvcHRpb24gaXMgcGFzc2VkCj4K
+PiAqIGZyb20gc2NyaXB0cy9saW5rLXZtbGludXguc2ggb25lIGNhbiBzZWUgdGhhdCAtLWFsbC1z
+eW1ib2xzIHdpbGwgYmUKPiBhZGRlZCBvbmx5IGlmIENPTkZJR19LQUxMU1lNU19BTEwgaXMgZW5h
+YmxlZAo+Cj4ga2FsbHN5bXMoKQo+IHsKPiAgICAgICAgIGxvY2FsIGthbGxzeW1vcHQ7Cj4KPiAg
+ICAgICAgIGlmIGlzX2VuYWJsZWQgQ09ORklHX0tBTExTWU1TX0FMTDsgdGhlbgo+ICAgICAgICAg
+ICAgICAgICBrYWxsc3ltb3B0PSIke2thbGxzeW1vcHR9IC0tYWxsLXN5bWJvbHMiCj4gICAgICAg
+ICBmaQo+Cj4gKiBpbiBteSBrZXJuZWwgQ09ORklHX0tBTExTWU1TX0FMTCBpcyBub3Qgc2V0Cj4K
+PiAqIEkndmUgY2hlY2tlZCBhYXJjaDY0IGZlZG9yYSAzOCBrZXJuZWwgY29uZmlnIGluIHRoZXJl
+Cj4gQ09ORklHX0tBTExTWU1TX0FMTCBpcyBlbmFibGVkIHRoYXQgZXhwbGFpbnMgd2h5IHlvdSBz
+ZWUgdGhpcyBfdGV4dCBpbgo+IGthbGxzeW1zIG9mIGZlZG9yYQo+Cj4gKiBzbyBmYXIgaXQgc2Vl
+bXMgdGhhdCBfdGV4dCBhZGRyZXNzIGNhbm5vdCBiZSBwYXJ0IG9mIGthbGxzeW1zIHVubGVzcwo+
+IENPTkZJR19LQUxMU1lNU19BTEwgaXMgZW5hYmxlZCBvciBvcmlnaW5hbCBfdGV4dCBpcyA2NGsg
+YWxpZ25lZCBzbyBpdAo+IHdpbGwgY29pbmNpZGUgd2l0aCBfc3RleHQKPgo+ICogaW4gYWxsIG15
+IHRlc3RpbmcgZXZlbiB3aXRoIDUuMTAga2VybmVsIF90ZXh0IHdhcyBtaXNzaW5nIGluCj4ga2Fs
+bHN5bXMsIHRoYXQgaXQgd2h5IEkgdGhvdWdodCBpdCBwcmVzZW5jZSBjb25zdGl0dXRlZCBsZWdh
+Y3kgY2FzZSwKPiBpbiA1LjEwIGNhc2UgbGFzdCBpdCB3b3JrZWQgZm9yIG1lIGxlbmd0aCBjaGVj
+ayB3YXMgZmFpbGluZyBhbmQgY29kZQo+IHdhcyB0YWtpbmcgZWxzZSBwYXJ0IHVzaW5nIF9zdGV4
+dCBhbnl3YXkKPgo+ICogSSBiZWxpZXZlIG15IHBhdGNoIGlzIGNvcnJlY3QgYW5kIGl0IHNob3Vs
+ZCB3b3JrIGZvciBib3RoIGNhc2VzIHdoZW4KPiBDT05GSUdfS0FMTFNZTVNfQUxMIGlzIHNldCBv
+ciBub3QuCj4KCk5vdywgdGhlIGNydXggaXMgY2xlYXIuIEl0IGlzIGludHJvZHVjZWQgYnkgdGhl
+IGZpbHRlcmluZyBvZgpDT05GSUdfS0FMTFNZTVNfQUxMLiBBbmQgdGhlIGtlcm5lbCBsYXlvdXQg
+aGFzIG5vdCBjaGFuZ2VkLgoKPiAqIE1heWJlIHdlIGNhbiByZW1vdmUgd2hvbGUgJ2t2YV90ZXh0
+X2VuZCAtIGt2YV9zdGV4dCA9PSBsZW5ndGgnIGNoZWNrCj4gYW5kIHNldCAnZWxmX2luZm8ua2Vy
+bl9wYWRkcl9zdGFydCA9IGJhc2UnIHVuY29uZGl0aW9uYWxseSwgYnV0IEkgYW0KPiBjb25jZXJu
+ZWQgdGhhdCBzb21lIG9sZGVyIGtlcm5lbHMgd2lsbCB0cmlwIG9uIGl0Cj4KClllcywgY29tcGF0
+aWJpbGl0eSBpcyBhIGNoYWxsZW5nZSwgdGhhdCBpcyB3aHkgdGhlIGNvZGUgbG9va3MgbGlrZSB0
+aGlzLgoKRnVydGhlcm1vcmUsIHNpbmNlIHRoZSBrZXJuZWwgbGF5b3V0IGRvZXMgbm90IGNoYW5n
+ZSwgdGhlIGNvZGUgbG9naWMKc3RhbmRzLiBBbmQgSSB0aGluayB5b3Ugc2hvdWxkIGNvbnNpZGVy
+IGFib3V0IGNoYW5naW5nCiJlbGZfaW5mby5rZXJuX3ZhZGRyX3N0YXJ0ID0gZ2V0X2tlcm5lbF9z
+eW0oIl90ZXh0Iik7IiAgdG8gKCJfc3RleHQiKS4KCkZpbmFsbHkgeW91IGNhbiB1bmlmeSB0aGUg
+Y2hhbmdlcyB0aGVyZSBhbmQgdGhlIGZvbGxvd2luZyBjb2RlIHNuaXBwZXQuCgpUaGFua3MsCgpQ
+aW5nZmFuCgo+ICAgICBpZiAoa3ZhX3RleHRfZW5kIC0ga3ZhX3N0ZXh0ID09IGxlbmd0aCkKPiAg
+ICAgICAgIGVsZl9pbmZvLmtlcm5fcGFkZHJfc3RhcnQgPSBiYXNlIC0gKGt2YV9zdGV4dCAtIGt2
+YV90ZXh0KTsKPiAgICAgZWxzZQo+ICAgICAgICAgZWxmX2luZm8ua2Vybl9wYWRkcl9zdGFydCA9
+IGJhc2U7Cj4KPiBUaGFua3MsCj4gQWxleGFuZGVyIEthbWVuc2t5Cj4KPiA+IE9uIG15IHNpZGUs
+IEkgY2FuIHNlZSB0aGlzIGluZm8gb24gNi4yLjE0LTMwMC5mYzM4LmFhcmNoNjQKPiA+Cj4gPiBn
+cmVwIC13IF90ZXh0IC9wcm9jL2thbGxzeW1zCj4gPiBmZmZmYzcwNWQ4NTAwMDAwIFQgX3RleHQK
+PiA+Cj4gPiBUaGFua3MsCj4gPgo+ID4gUGluZ2Zhbgo+ID4gPiByb290QHFlbXVhcm02NDp+IyBj
+YXQgL3Byb2Mva2FsbHN5bXMgfCBncmVwIC1lICcgX3N0ZXh0JCcKPiA+ID4gZmZmZmZmYzAxMDAx
+MDAwMCBUIF9zdGV4dAo+ID4gPiByb290QHFlbXVhcm02NDp+IyBjYXQgL3Byb2Mva2FsbHN5bXMg
+fCBncmVwIC1lICcgX19pbml0X2JlZ2luJCcKPiA+ID4gZmZmZmZmYzAxMGRmMDAwMCBUIF9faW5p
+dF9iZWdpbgo+ID4gPgo+ID4gPiB0aGUgZnVuY3Rpb24gY2FsY3VsYXRlcyBlbGZfaW5mby5rZXJu
+X3BhZGRyX3N0YXJ0IGFkZHJlc3Mgc2ltaWxhciB0bwo+ID4gPiB0aGVzZSBtYW51YWwgc3RlcHM6
+Cj4gPiA+Cj4gPiA+IGJhc2UgPSAweDQwMjEwMDAwCj4gPiA+IGxlbmd0aCA9IDB4NDBmZWZmZmYg
+LSAweDQwMjEwMDAwICsgMHgxID0gMHhkZTAwMDAKPiA+ID4ga3ZhX3RleHRfZW5kIC0ga3ZhX3N0
+ZXh0ID0gMHhmZmZmZmZjMDEwZGYwMDAwIC0gMHhmZmZmZmZjMDEwMDEwMDAwID0gMHhkZTAwMDAK
+PiA+ID4KPiA+ID4gZWxmX2luZm8ua2Vybl9wYWRkcl9zdGFydCA9IGJhc2UgLSAoa3ZhX3N0ZXh0
+IC0ga3ZhX3RleHQpID0KPiA+ID4gICAgICAgICAgICAgICAgICAgICAgIDB4NDAyMTAwMDAgLSAw
+eGZmZmZmZmMwMTAwMTAwMDAgPSAweDQwMzAyMDAwMDAKPiA+ID4KPiA+ID4gc2luY2UgJ2xlbmd0
+aCcgYW5kICdrdmFfdGV4dF9lbmQgLSBrdmFfc3RleHQnIGFyZSBlcXVhbCB0aGUgZnVuY3Rpb24g
+Y2FsY3VsYXRlCj4gPiA+IGVsZl9pbmZvLmtlcm5fcGFkZHJfc3RhcnQgYXMgaW4gbGVnYWN5IGNh
+c2U6Cj4gPiA+Cj4gPiA+ICAgaWYgKGt2YV90ZXh0X2VuZCAtIGt2YV9zdGV4dCA9PSBsZW5ndGgp
+Cj4gPiA+ICAgICAgZWxmX2luZm8ua2Vybl9wYWRkcl9zdGFydCA9IGJhc2UgLSAoa3ZhX3N0ZXh0
+IC0ga3ZhX3RleHQpOyAvLyA8LS0tLS0tLS0tCj4gPiA+ICAgZWxzZQo+ID4gPiAgICAgIGVsZl9p
+bmZvLmtlcm5fcGFkZHJfc3RhcnQgPSBiYXNlOwo+ID4gPgo+ID4gPiBidXQgbXkga2VybmVsIGlz
+IG5vdCBsZWdhY3kgYW5kIGt2YV90ZXh0IGlzIHplcm8uCj4gPiA+Cj4gPiA+IFRoZSBmaXggaXMg
+anVzdCB0byBhZGQgYSBjaGVjayBmb3Iga3ZhX3RleHQgbm90IGJlaW5nIHplcm8gYmVmb3JlIGZv
+bGxvd2luZyB0aGUKPiA+ID4gbGVnYWN5IGNhc2UuCj4gPiA+Cj4gPiA+IFNpZ25lZC1vZmYtYnk6
+IEFsZXhhbmRlciBLYW1lbnNreSA8YWxleGFuZGVyLmthbWVuc2t5NDJAZ21haWwuY29tPgo+ID4g
+PiAtLS0KPiA+ID4gIGtleGVjL2FyY2gvYXJtNjQvY3Jhc2hkdW1wLWFybTY0LmMgfCAyICstCj4g
+PiA+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkKPiA+ID4K
+PiA+ID4gZGlmZiAtLWdpdCBhL2tleGVjL2FyY2gvYXJtNjQvY3Jhc2hkdW1wLWFybTY0LmMgYi9r
+ZXhlYy9hcmNoL2FybTY0L2NyYXNoZHVtcC1hcm02NC5jCj4gPiA+IGluZGV4IDMwOTgzMTUuLjYz
+OWM4MmEgMTAwNjQ0Cj4gPiA+IC0tLSBhL2tleGVjL2FyY2gvYXJtNjQvY3Jhc2hkdW1wLWFybTY0
+LmMKPiA+ID4gKysrIGIva2V4ZWMvYXJjaC9hcm02NC9jcmFzaGR1bXAtYXJtNjQuYwo+ID4gPiBA
+QCAtODIsNyArODIsNyBAQCBzdGF0aWMgaW50IGlvbWVtX3JhbmdlX2NhbGxiYWNrKHZvaWQgKlVO
+VVNFRChkYXRhKSwgaW50IFVOVVNFRChuciksCj4gPiA+ICAgICAgICAgICAgICAgICAgKiBGb3Ig
+Y29tcGF0aWJpbGl0eSwgZGVkdWNlIGJ5IGNvbXBhcmluZyB0aGUgZ2FwICJfX2luaXRfYmVnaW4g
+LSBfc3RleHQiCj4gPiA+ICAgICAgICAgICAgICAgICAgKiBhbmQgdGhlIHJlcyBzaXplIG9mICJL
+ZXJuZWwgY29kZSIgaW4gL3Byb2MvaW9tZW0KPiA+ID4gICAgICAgICAgICAgICAgICAqLwo+ID4g
+PiAtICAgICAgICAgICAgICAgaWYgKGt2YV90ZXh0X2VuZCAtIGt2YV9zdGV4dCA9PSBsZW5ndGgp
+Cj4gPiA+ICsgICAgICAgICAgICAgICBpZiAoKGt2YV90ZXh0X2VuZCAtIGt2YV9zdGV4dCA9PSBs
+ZW5ndGgpICYmIChrdmFfdGV4dCAhPSAwKSkKPiA+ID4gICAgICAgICAgICAgICAgICAgICAgICAg
+ZWxmX2luZm8ua2Vybl9wYWRkcl9zdGFydCA9IGJhc2UgLSAoa3ZhX3N0ZXh0IC0ga3ZhX3RleHQp
+Owo+ID4gPiAgICAgICAgICAgICAgICAgZWxzZQo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAg
+ICBlbGZfaW5mby5rZXJuX3BhZGRyX3N0YXJ0ID0gYmFzZTsKPiA+ID4gLS0KPiA+ID4gMi40MS4w
+Cj4gPiA+Cj4gPiA+Cj4gPiA+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCj4gPiA+IGtleGVjIG1haWxpbmcgbGlzdAo+ID4gPiBrZXhlY0BsaXN0cy5pbmZy
+YWRlYWQub3JnCj4gPiA+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
+Zm8va2V4ZWMKPiA+ID4KPiA+Cj4KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9y
+ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
