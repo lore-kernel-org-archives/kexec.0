@@ -4,74 +4,113 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C533AC83F12
-	for <kexec@archiver.kernel.org>; Tue, 29 Aug 2023 21:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E66E4C83F12
+	for <kexec@archiver.kernel.org>; Tue, 29 Aug 2023 21:54:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=A7iQfswF+x9grDi305hB9PtS8pIZR8pdmW32yXQkeEc=; b=fUf3PgcTq/n/xh
-	GHK1LcfU3MQRtE6aepd1/Bvcb1J/ocUN2j6RmmNWdDT3Ut4vDpE99fUd7L21IJ7zcJ4UqJVrrGFFx
-	bN0oqbuAR4Gg5vosIh/NzOEqZOzXzd7wsKMeic+TMEXaPLFwMJr2so6qx+y6Vp1S/QuFuyaGlJcqb
-	q8GURIB2dmPQkMdRYpNAEg7L7h5PxdUot3A/veZ8PaqAmdLxzvzQbPBjQKlWurXtFFKCvOOeToYAA
-	BiQfLZDFdV3kIflREOQhcjKOb2s/fwJnNbXTU6MufpO4lP3Y5nKNIjUafRFjAqDgmLQuIqAg5K43I
-	tkWrvEhhfxlE5XpjX4Aw==;
+	List-Owner; bh=ruyWnUgH8yJKCJIjBA2KBxBfA4b9tz5/d5r03AIIPMI=; b=qr7A6zXvzF4xzB
+	jsrwrVAcZ/Z6yV385VmvsoOjRX4xSNoDXfzqo3uvMz1wBhz81TKSxzwjSrZfC3OYYlZFQuC6h6Idb
+	3K5U3DJvHBMw+gT7lSmgOWrO3JPBZ6Ajw1atoQvY0W9NQ7D4kcL/NCsJ6xCtQ03Tjz3tOsu7R90nl
+	iHemMDWJZCntnKW+d1+M8KJVgYpEfQFR5W6NOddiur/MqN0qJ9eF0Hu9Uyh145yjPYJf54G5UNIrE
+	DD7PxqS7+RFO7J+iR35gwpRII6xVPwZpWpADj9IoPyO1havUVkhMcFMFbvBZnCYHsdDiu21VDHnsd
+	glvzIL3FtpHjl7Cru9dg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qb6PD-00CImZ-2Q;
-	Tue, 29 Aug 2023 21:37:47 +0000
-Received: from mgamail.intel.com ([134.134.136.20])
+	id 1qb6fS-00CLUV-1U;
+	Tue, 29 Aug 2023 21:54:34 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qb6PA-00CIlQ-1v;
-	Tue, 29 Aug 2023 21:37:46 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693345064; x=1724881064;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=UkuSJ0aCL76HRt93f5IdKGK0TvI9BZtbZIqy9NilJek=;
-  b=OLHqpXFFGsU2GhtmbNxJfQmLrEeSB08GsxDMjZhVDoTgEW5PDJaIg1bu
-   d0WJjY20iX7ni2oaSE7V2DWnvibBSZbcQnxl5P7uxeBNLsPo9oqzd7zWf
-   kBDm4jdYuQTnEAzt/OCCCEBPBg8WqzbtrKRK2dhrkBmhTZX8F8h7Pwej+
-   1PIlMai7l8qV6cdD/kXGr+LsGDn/s0b3V5WMlzpkp4ZP88l/0sbDzoGco
-   WFaZ+EdElH50e0EYCGT2n8OqPUo7ptHd8eR/MbMEjer73zTA2lcOsy0kn
-   yo5RorBN/A+fWalAO6StfSDxQw+GcxHOn2zpTv4yBTIRF8oApf9ff624p
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10817"; a="365688970"
-X-IronPort-AV: E=Sophos;i="6.02,211,1688454000"; 
-   d="scan'208";a="365688970"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2023 14:37:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10817"; a="853459507"
-X-IronPort-AV: E=Sophos;i="6.02,211,1688454000"; 
-   d="scan'208";a="853459507"
-Received: from lkp-server02.sh.intel.com (HELO daf8bb0a381d) ([10.239.97.151])
-  by fmsmga002.fm.intel.com with ESMTP; 29 Aug 2023 14:37:38 -0700
-Received: from kbuild by daf8bb0a381d with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1qb6Ox-00096D-16;
-	Tue, 29 Aug 2023 21:37:34 +0000
-Date: Wed, 30 Aug 2023 05:37:18 +0800
-From: kernel test robot <lkp@intel.com>
-To: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, akpm@linux-foundation.org,
-	catalin.marinas@arm.com, thunder.leizhen@huawei.com,
-	dyoung@redhat.com, prudo@redhat.com, samuel.holland@sifive.com,
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	x86@kernel.org, Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v2 6/8] x86: kdump: use generic interface to simplify
- crashkernel reservation code
-Message-ID: <202308300522.oOG0V3U3-lkp@intel.com>
-References: <20230829121610.138107-7-bhe@redhat.com>
+	id 1qb6fO-00CLTD-3D
+	for kexec@lists.infradead.org;
+	Tue, 29 Aug 2023 21:54:32 +0000
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37TLmDSY009559;
+	Tue, 29 Aug 2023 21:54:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=ndDTU/5RCr22rffQCpMiCsavmU21p02+wG+PB8lMcHM=;
+ b=jhz03888D+s9ksdTmRoF0CX0y2hZzCrX9QZK9r/K9yaTEPv9eVA8PxX8dycQhrL+DWty
+ xERTBbTvC+vtj/TbbPKKWrqckgVnsNZ/PlynaLyOZRfUuQGM50cfIvGd27q7xm9vRply
+ 2gWHgqjo/qGJtM6hBOKq8vH4h1wrzG32jObqULUoN8qQ8zRP24dDX5DwhU3eISrkKD9e
+ tB9fphfZW8cye8yZtyOFVR8lkWUsUIT124oMhKqwN7VmYdO8lNeqp2dbxWlSKbK6MxUI
+ 1/d+zTHEHPNhk8YmLwihj4ECsDM/8nfwydVmtjIfHjUP91CwvJ17CRunLmlDfCC+V0HF 7Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ssrwpr2da-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Aug 2023 21:54:14 +0000
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37TLni8f012352;
+	Tue, 29 Aug 2023 21:54:13 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ssrwpr2cy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Aug 2023 21:54:13 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37TJqelC009855;
+	Tue, 29 Aug 2023 21:54:12 GMT
+Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3sqw7kenqu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 29 Aug 2023 21:54:12 +0000
+Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
+	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37TLsC5o2294328
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 29 Aug 2023 21:54:12 GMT
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 54B575805B;
+	Tue, 29 Aug 2023 21:54:12 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CE2C35804B;
+	Tue, 29 Aug 2023 21:54:10 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.61.191.86])
+	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 29 Aug 2023 21:54:10 +0000 (GMT)
+Message-ID: <077249ac2bf2cb6d34347514e921720bb0f30b66.camel@linux.ibm.com>
+Subject: Re: [RFC] IMA Log Snapshotting Design Proposal
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Paul Moore <paul@paul-moore.com>
+Cc: Sush Shringarputale <sushring@linux.microsoft.com>,
+        linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jarkko@kernel.org,
+        jgg@ziepe.ca, kgold@linux.ibm.com, bhe@redhat.com, vgoyal@redhat.com,
+        dyoung@redhat.com, kexec@lists.infradead.org, jmorris@namei.org,
+        serge@hallyn.com, code@tyhicks.com, nramas@linux.microsoft.com,
+        Tushar
+ Sugandhi <tusharsu@linux.mic>,
+        linux-security-module@vger.kernel.org,
+        AmirGoldstein <amir73il@gmail.com>
+Date: Tue, 29 Aug 2023 17:54:10 -0400
+In-Reply-To: <CAHC9VhTjej-GFjvEQhnL-HWnnkvJKA_DuOA_Md1KkV24Tx5haA@mail.gmail.com>
+References: <c5737141-7827-1c83-ab38-0119dcfea485@linux.microsoft.com>
+	 <277db5491460d5fd607785f2bcc733de39022a35.camel@linux.ibm.com>
+	 <bf794136-703a-0d33-e245-7e723007b5c0@linux.microsoft.com>
+	 <0e1511e8819b24ab8a34a7b15821f06eff688f29.camel@linux.ibm.com>
+	 <8bc0f024-fc12-cb32-7af0-e500948cc6db@linux.microsoft.com>
+	 <7e32afa2596b9d8cfdc275614575b2023cd1d673.camel@linux.ibm.com>
+	 <CAHC9VhSVO9t=9e9JmniXKoqqvMv42E4dVeYtQTWZ4Eih3Sfr0Q@mail.gmail.com>
+	 <ed16f899485cbd559f9e6d7fbe17fa0d92335c20.camel@linux.ibm.com>
+	 <CAHC9VhTjej-GFjvEQhnL-HWnnkvJKA_DuOA_Md1KkV24Tx5haA@mail.gmail.com>
+X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Wad0xOiSp48H75RMrqNeHmUHzwc37LSx
+X-Proofpoint-ORIG-GUID: 3cETr-hq0YXM9dn1uxRLsLKTlBJGSQVP
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20230829121610.138107-7-bhe@redhat.com>
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-08-29_15,2023-08-29_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ malwarescore=0 spamscore=0 suspectscore=0 priorityscore=1501 bulkscore=0
+ clxscore=1015 adultscore=0 phishscore=0 mlxlogscore=999 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2308100000
+ definitions=main-2308290186
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230829_143744_673184_722F5443 
-X-CRM114-Status: GOOD (  15.29  )
+X-CRM114-CacheID: sfid-20230829_145431_361562_013081DE 
+X-CRM114-Status: GOOD (  40.77  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,137 +122,72 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Baoquan,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on arm64/for-next/core]
-[also build test ERROR on tip/x86/core powerpc/next powerpc/fixes linus/master v6.5]
-[cannot apply to next-20230829]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Baoquan-He/crash_core-c-remove-unnecessary-parameter-of-function/20230829-201942
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/core
-patch link:    https://lore.kernel.org/r/20230829121610.138107-7-bhe%40redhat.com
-patch subject: [PATCH v2 6/8] x86: kdump: use generic interface to simplify crashkernel reservation code
-config: i386-randconfig-r026-20230830 (https://download.01.org/0day-ci/archive/20230830/202308300522.oOG0V3U3-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230830/202308300522.oOG0V3U3-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202308300522.oOG0V3U3-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   ld: kernel/crash_core.o: in function `reserve_crashkernel_generic':
->> kernel/crash_core.c:450: undefined reference to `crashk_low_res'
->> ld: kernel/crash_core.c:451: undefined reference to `crashk_low_res'
->> ld: kernel/crash_core.c:455: undefined reference to `crashk_res'
-   ld: kernel/crash_core.c:453: undefined reference to `crashk_res'
-   ld: kernel/crash_core.c:454: undefined reference to `crashk_res'
-
-
-vim +450 kernel/crash_core.c
-
-6bee83d29d2e09 Baoquan He 2023-08-29  375  
-6bee83d29d2e09 Baoquan He 2023-08-29  376  void __init reserve_crashkernel_generic(char *cmdline,
-6bee83d29d2e09 Baoquan He 2023-08-29  377  			     unsigned long long crash_size,
-6bee83d29d2e09 Baoquan He 2023-08-29  378  			     unsigned long long crash_base,
-6bee83d29d2e09 Baoquan He 2023-08-29  379  			     unsigned long long crash_low_size,
-6bee83d29d2e09 Baoquan He 2023-08-29  380  			     bool high)
-6bee83d29d2e09 Baoquan He 2023-08-29  381  {
-6bee83d29d2e09 Baoquan He 2023-08-29  382  	unsigned long long search_end = CRASH_ADDR_LOW_MAX, search_base = 0;
-6bee83d29d2e09 Baoquan He 2023-08-29  383  	bool fixed_base = false;
-6bee83d29d2e09 Baoquan He 2023-08-29  384  
-6bee83d29d2e09 Baoquan He 2023-08-29  385  	/* User specifies base address explicitly. */
-6bee83d29d2e09 Baoquan He 2023-08-29  386  	if (crash_base) {
-6bee83d29d2e09 Baoquan He 2023-08-29  387  		fixed_base = true;
-6bee83d29d2e09 Baoquan He 2023-08-29  388  		search_base = crash_base;
-6bee83d29d2e09 Baoquan He 2023-08-29  389  		search_end = crash_base + crash_size;
-6bee83d29d2e09 Baoquan He 2023-08-29  390  	}
-6bee83d29d2e09 Baoquan He 2023-08-29  391  
-6bee83d29d2e09 Baoquan He 2023-08-29  392  	if (high) {
-6bee83d29d2e09 Baoquan He 2023-08-29  393  		search_base = CRASH_ADDR_LOW_MAX;
-6bee83d29d2e09 Baoquan He 2023-08-29  394  		search_end = CRASH_ADDR_HIGH_MAX;
-6bee83d29d2e09 Baoquan He 2023-08-29  395  	}
-6bee83d29d2e09 Baoquan He 2023-08-29  396  
-6bee83d29d2e09 Baoquan He 2023-08-29  397  retry:
-6bee83d29d2e09 Baoquan He 2023-08-29  398  	crash_base = memblock_phys_alloc_range(crash_size, CRASH_ALIGN,
-6bee83d29d2e09 Baoquan He 2023-08-29  399  					       search_base, search_end);
-6bee83d29d2e09 Baoquan He 2023-08-29  400  	if (!crash_base) {
-6bee83d29d2e09 Baoquan He 2023-08-29  401  		/*
-6bee83d29d2e09 Baoquan He 2023-08-29  402  		 * For crashkernel=size[KMG]@offset[KMG], print out failure
-6bee83d29d2e09 Baoquan He 2023-08-29  403  		 * message if can't reserve the specified region.
-6bee83d29d2e09 Baoquan He 2023-08-29  404  		 */
-6bee83d29d2e09 Baoquan He 2023-08-29  405  		if (fixed_base) {
-6bee83d29d2e09 Baoquan He 2023-08-29  406  			pr_warn("crashkernel reservation failed - memory is in use.\n");
-6bee83d29d2e09 Baoquan He 2023-08-29  407  			return;
-6bee83d29d2e09 Baoquan He 2023-08-29  408  		}
-6bee83d29d2e09 Baoquan He 2023-08-29  409  
-6bee83d29d2e09 Baoquan He 2023-08-29  410  		/*
-6bee83d29d2e09 Baoquan He 2023-08-29  411  		 * For crashkernel=size[KMG], if the first attempt was for
-6bee83d29d2e09 Baoquan He 2023-08-29  412  		 * low memory, fall back to high memory, the minimum required
-6bee83d29d2e09 Baoquan He 2023-08-29  413  		 * low memory will be reserved later.
-6bee83d29d2e09 Baoquan He 2023-08-29  414  		 */
-6bee83d29d2e09 Baoquan He 2023-08-29  415  		if (!high && search_end == CRASH_ADDR_LOW_MAX) {
-6bee83d29d2e09 Baoquan He 2023-08-29  416  			search_end = CRASH_ADDR_HIGH_MAX;
-6bee83d29d2e09 Baoquan He 2023-08-29  417  			search_base = CRASH_ADDR_LOW_MAX;
-6bee83d29d2e09 Baoquan He 2023-08-29  418  			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
-6bee83d29d2e09 Baoquan He 2023-08-29  419  			goto retry;
-6bee83d29d2e09 Baoquan He 2023-08-29  420  		}
-6bee83d29d2e09 Baoquan He 2023-08-29  421  
-6bee83d29d2e09 Baoquan He 2023-08-29  422  		/*
-6bee83d29d2e09 Baoquan He 2023-08-29  423  		 * For crashkernel=size[KMG],high, if the first attempt was
-6bee83d29d2e09 Baoquan He 2023-08-29  424  		 * for high memory, fall back to low memory.
-6bee83d29d2e09 Baoquan He 2023-08-29  425  		 */
-6bee83d29d2e09 Baoquan He 2023-08-29  426  		if (high && search_end == CRASH_ADDR_HIGH_MAX) {
-6bee83d29d2e09 Baoquan He 2023-08-29  427  			search_end = CRASH_ADDR_LOW_MAX;
-6bee83d29d2e09 Baoquan He 2023-08-29  428  			search_base = 0;
-6bee83d29d2e09 Baoquan He 2023-08-29  429  			goto retry;
-6bee83d29d2e09 Baoquan He 2023-08-29  430  		}
-6bee83d29d2e09 Baoquan He 2023-08-29  431  		pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
-6bee83d29d2e09 Baoquan He 2023-08-29  432  			crash_size);
-6bee83d29d2e09 Baoquan He 2023-08-29  433  		return;
-6bee83d29d2e09 Baoquan He 2023-08-29  434  	}
-6bee83d29d2e09 Baoquan He 2023-08-29  435  
-6bee83d29d2e09 Baoquan He 2023-08-29  436  	if ((crash_base > CRASH_ADDR_LOW_MAX) &&
-6bee83d29d2e09 Baoquan He 2023-08-29  437  	     crash_low_size && reserve_crashkernel_low(crash_low_size)) {
-6bee83d29d2e09 Baoquan He 2023-08-29  438  		memblock_phys_free(crash_base, crash_size);
-6bee83d29d2e09 Baoquan He 2023-08-29  439  		return;
-6bee83d29d2e09 Baoquan He 2023-08-29  440  	}
-6bee83d29d2e09 Baoquan He 2023-08-29  441  
-6bee83d29d2e09 Baoquan He 2023-08-29  442  	pr_info("crashkernel reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
-6bee83d29d2e09 Baoquan He 2023-08-29  443  		crash_base, crash_base + crash_size, crash_size >> 20);
-6bee83d29d2e09 Baoquan He 2023-08-29  444  
-6bee83d29d2e09 Baoquan He 2023-08-29  445  	/*
-6bee83d29d2e09 Baoquan He 2023-08-29  446  	 * The crashkernel memory will be removed from the kernel linear
-6bee83d29d2e09 Baoquan He 2023-08-29  447  	 * map. Inform kmemleak so that it won't try to access it.
-6bee83d29d2e09 Baoquan He 2023-08-29  448  	 */
-6bee83d29d2e09 Baoquan He 2023-08-29  449  	kmemleak_ignore_phys(crash_base);
-6bee83d29d2e09 Baoquan He 2023-08-29 @450  	if (crashk_low_res.end)
-6bee83d29d2e09 Baoquan He 2023-08-29 @451  		kmemleak_ignore_phys(crashk_low_res.start);
-6bee83d29d2e09 Baoquan He 2023-08-29  452  
-6bee83d29d2e09 Baoquan He 2023-08-29  453  	crashk_res.start = crash_base;
-6bee83d29d2e09 Baoquan He 2023-08-29  454  	crashk_res.end = crash_base + crash_size - 1;
-6bee83d29d2e09 Baoquan He 2023-08-29 @455  	insert_resource(&iomem_resource, &crashk_res);
-6bee83d29d2e09 Baoquan He 2023-08-29  456  }
-6bee83d29d2e09 Baoquan He 2023-08-29  457  #endif
-6bee83d29d2e09 Baoquan He 2023-08-29  458  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVHVlLCAyMDIzLTA4LTI5IGF0IDE3OjMwIC0wNDAwLCBQYXVsIE1vb3JlIHdyb3RlOgo+IE9u
+IFR1ZSwgQXVnIDI5LCAyMDIzIGF0IDU6MDXigK9QTSBNaW1pIFpvaGFyIDx6b2hhckBsaW51eC5p
+Ym0uY29tPiB3cm90ZToKPiA+IE9uIFR1ZSwgMjAyMy0wOC0yOSBhdCAxNTozNCAtMDQwMCwgUGF1
+bCBNb29yZSB3cm90ZToKPiA+ID4gT24gTW9uLCBBdWcgMjEsIDIwMjMgYXQgNzowOOKAr1BNIE1p
+bWkgWm9oYXIgPHpvaGFyQGxpbnV4LmlibS5jb20+IHdyb3RlOgo+ID4gPiA+IE9uIE1vbiwgMjAy
+My0wOC0yMSBhdCAxNTowNSAtMDcwMCwgU3VzaCBTaHJpbmdhcnB1dGFsZSB3cm90ZToKPiA+ID4g
+PiA+IE9uIDgvMTQvMjAyMyAzOjAyIFBNLCBNaW1pIFpvaGFyIHdyb3RlOgo+ID4gPiA+ID4gPiBP
+biBNb24sIDIwMjMtMDgtMTQgYXQgMTQ6NDIgLTA3MDAsIFN1c2ggU2hyaW5nYXJwdXRhbGUgd3Jv
+dGU6Cj4gPiA+ID4gPiA+Pj4gVGhpcyBkZXNpZ24gc2VlbXMgb3Zlcmx5IGNvbXBsZXggYW5kIHJl
+cXVpcmVzIHN5bmNocm9uaXphdGlvbiBiZXR3ZWVuCj4gPiA+ID4gPiA+Pj4gdGhlICJzbmFwc2hv
+dCIgcmVjb3JkIGFuZCBleHBvcnRpbmcgdGhlIHJlY29yZHMgZnJvbSB0aGUgbWVhc3VyZW1lbnQK
+PiA+ID4gPiA+ID4+PiBsaXN0LiAgTm9uZSBvZiB0aGlzIHdvdWxkIGJlIG5lY2Vzc2FyeSBpZiB0
+aGUgbWVhc3VyZW1lbnRzIHdlcmUgY29waWVkCj4gPiA+ID4gPiA+Pj4gZnJvbSBrZXJuZWwgbWVt
+b3J5IHRvIGEgYmFja2luZyBmaWxlIChlLmcuIHRtcGZzKSwgYXMgZGVzY3JpYmVkIGluIFsxXS4K
+PiA+ID4gPiA+IEV2ZW4gaWYgdGhlIEtlcm5lbCBtYWludGFpbnMgdGhlIGxpbmsgYmV0d2VlbiBh
+IHRtcGZzIGV4cG9ydGVkIGFuZCBhbgo+ID4gPiA+ID4gaW4tbWVtb3J5IElNQSBsb2cgLSBpdCBz
+dGlsbCBoYXMgdG8gY29weSB0aGUgdG1wZnMgcG9ydGlvbiB0byB0aGUKPiA+ID4gPiA+IEtlcm5l
+bCBtZW1vcnkgZHVyaW5nIGtleGVjIHNvZnQgYm9vdC4gIHRtcGZzIGlzIGNsZWFyZWQgZHVyaW5n
+IGtleGVjLAo+ID4gPiA+ID4gc28gdGhpcyBjb3B5aW5nIG9mIHRtcGZzIGJhY2sgdG8ga2VybmVs
+IG1lbW9yeSBpcyBuZWNlc3NhcnkgdG8gcHJlc2VydmUKPiA+ID4gPiA+IHRoZSBpbnRlZ3JpdHkg
+b2YgdGhlIGxvZyBkdXJpbmcga2V4ZWMuICBCdXQgdGhlIGNvcHlpbmcgd291bGQgYWRkIGJhY2sK
+PiA+ID4gPiA+IHRoZSBtZW1vcnkgcHJlc3N1cmUgb24gdGhlIG5vZGUgZHVyaW5nIGtleGVjICh3
+aGljaCBtYXkgcmVzdWx0IGluCj4gPiA+ID4gPiBvdXQtb2YtbWVtb3J5KSwgZGVmZWF0aW5nIHRo
+ZSBwdXJwb3NlIG9mIHRoZSBvdmVyYWxsIGVmZm9ydC9mZWF0dXJlLgo+ID4gPiA+ID4gQ29weWlu
+ZyB0byBhIHJlZ3VsYXIgKnBlcnNpc3RlbnQqIHByb3RlY3RlZCBmaWxlIHNlZW1zIGEgY2xlYW5l
+cgo+ID4gPiA+ID4gYXBwcm9hY2gsIGNvbXBhcmVkIHRvIHRtcGZzLgo+ID4gPiA+Cj4gPiA+ID4g
+RnJvbSBhIGtlcm5lbCBwZXJzcGVjdGl2ZSwgaXQgZG9lc24ndCBtYWtlIGEgZGlmZmVyZW5jZSBp
+ZiB1c2Vyc3BhY2UKPiA+ID4gPiBwcm92aWRlcyBhIHRtcGZzIG9yIHBlcnNpc3RlbnQgZmlsZS4g
+IEFzIHBlciB0aGUgZGlzY3Vzc2lvbgo+ID4gPiA+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xp
+bnV4LWludGVncml0eS9DQU9RNHV4ajRQdjJXcjF3Z3ZCQ0RSLXRuQTVkc1pUM3J2ZER6S2dBSDFh
+RVZfLXI5UWdAbWFpbC5nbWFpbC5jb20vI3QKPiA+ID4gPiAsIHVzZXJzcGFjZSBwcm92aWRlcyB0
+aGUga2VybmVsIHdpdGggdGhlIGZpbGUgZGVzY3JpcHRvciBvZiB0aGUgb3BlbmVkCj4gPiA+ID4g
+ZmlsZS4KPiA+ID4gPgo+ID4gPiA+ID4gV2UgcHJvdG90eXBlZCB0aGlzIHNvbHV0aW9uLCBob3dl
+dmVyIGl0Cj4gPiA+ID4gPiBkb2VzIG5vdCBzZWVtIHRvIGJlIGEgY29tbW9uIHBhdHRlcm4gd2l0
+aGluIHRoZSBLZXJuZWwgdG8gd3JpdGUgc3RhdGUKPiA+ID4gPiA+IGRpcmVjdGx5IHRvIGZpbGVz
+IG9uIGRpc2sgZmlsZSBzeXN0ZW1zLiAgV2UgY29uc2lkZXJlZCB0d28gcG90ZW50aWFsCj4gPiA+
+ID4gPiBvcHRpb25zOgo+ID4gPiA+Cj4gPiA+ID4gSWYgbm8gZmlsZSBkZXNjcmlwdG9yIGlzIHBy
+b3ZpZGVkLCB0aGVuIHRoZSBtZWFzdXJlbWVudHMgYXJlbid0IGNvcGllZAo+ID4gPiA+IGFuZCBy
+ZW1vdmVkIGZyb20gdGhlIHNlY3VyaXR5ZnMgZmlsZS4gIElmIHRoZXJlIGFyZSB3cml0ZSBlcnJv
+cnMsIHRoZQo+ID4gPiA+IG1lYXN1cmVtZW50cyBhcmVuJ3QgcmVtb3ZlZCBmcm9tIHRoZSBzZWN1
+cml0eWZzIGZpbGUgdW50aWwgdGhlIHdyaXRlCj4gPiA+ID4gZXJyb3JzIGFyZSByZXNvbHZlZC4K
+PiA+ID4KPiA+ID4gSXQgc291bmRzIGxpa2UgdGhpcyBhcHByb2FjaCB3b3VsZCByZXF1aXJlIHRo
+ZSBmaWxlL2ZpbGVzeXN0ZW0gdG8gYmUKPiA+ID4gY29udGludW91c2x5IGF2YWlsYWJsZSBmb3Ig
+dGhlIGxpZmUgb2YgdGhlIHN5c3RlbSBvbmNlIHRoZSBsb2cgd2FzCj4gPiA+IHNuYXBzaG90dGVk
+L292ZXJmbG93ZWQgdG8gcGVyc2lzdGVudCBzdG9yYWdlLCB5ZXM/ICBBc3N1bWluZyB0aGF0IGlz
+Cj4gPiA+IHRoZSBjYXNlLCB3aGF0IGhhcHBlbnMgaWYgdGhlIGZpbGUvZmlsZXN5c3RlbSBiZWNv
+bWVzIGluYWNjZXNzaWJsZSBhdAo+ID4gPiBzb21lIHBvaW50IGFuZCBhbiBhdHRlc3RhdGlvbiBj
+bGllbnQgYXR0ZW1wdHMgdG8gcmVhZCB0aGUgZW50aXJlIGxvZz8KPiA+Cj4gPiBUaGUgbWFpbiBw
+dXJwb3NlIG9mIHRoZSBjaGFuZ2UgaXMgdG8gYWRkcmVzIGtlcm5lbCBtZW1vcnkgcHJlc3N1cmUu
+Cj4gPiBUd28gZGVzaWducyBhcmUgYmVpbmcgZGlzY3Vzc2VkOiBTdXNoJ3MgInNuYXBzaG90dGlu
+ZyIgZGVzaWduIGFuZAo+ID4gQW1pcidzIG9yaWdpbmFsIHN1Z2dlc3Rpb24gb2YgY29udGlub3Vz
+bHkgZXhwb3J0aW5nIHRoZSBtZWFzdXJlbWVudAo+ID4gcmVjb3JkcyB0byBhIHRtcGZzIG9yIHJl
+Z3VsYXIgZmlsZS4gIEJvdGggZGVzaWducyByZXF1aXJlIHZlcmlmeWluZyB0aGUKPiA+IGluaXRp
+YWwgYXR0ZXN0YXRpb24gcXVvdGUgYnkgd2Fsa2luZyB0aGUgZW50aXJlIG1lYXN1cmVtZW50IGxp
+c3QsCj4gPiBjYWxjdWxhdGluZyB0aGUgZXhwZWN0ZWQgVFBNIFBDUiB2YWx1ZShzKS4gIFRoYXQg
+ZG9lc24ndCBjaGFuZ2UuCj4gCj4gU3VyZSwgYnV0IG15IHF1ZXN0aW9uIGlzIGFib3V0IHdoYXQg
+aGFwcGVucyBpZiBwb3J0aW9ucyBvZiB0aGUKPiBtZWFzdXJlbWVudCBsaXN0IGRpc2FwcGVhciBk
+dWUgdG8gZmlsZS9maWxlc3lzdGVtIHByb2JsZW1zPyAgSG93IGlzCj4gdGhhdCBoYW5kbGVkPwoK
+V2l0aCB0aGUgInNuYXBzaG90dGluZyIgc29sdXRpb24gdGhlcmUgY291bGQgYmUgbXVsdGlwbGUg
+ZmlsZXMsIHNvCnBvcnRpb25zIGNvdWxkIGJlIG1pc3NpbmcuICBUaGUgb3RoZXIgc29sdXRpb24s
+IHRoZSBwcmVmZXJyZWQgc29sdXRpb24sCndvdWxkIGJlIG9uZSBmaWxlLgoKQW55IHN1Z2dlc3Rp
+b25zPwoKLS0gCnRoYW5rcywKCk1pbWkKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVh
+ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
