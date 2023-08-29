@@ -4,74 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 52B29C83F18
-	for <kexec@archiver.kernel.org>; Tue, 29 Aug 2023 12:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 29579C71153
+	for <kexec@archiver.kernel.org>; Tue, 29 Aug 2023 19:34:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=9n4i08YHLhvQoxW1f851Sl9W5A0u0Av1fYgswSLYgq8=; b=Ps3ydu0OAISkgO
-	6HrNzCju1G5ILcXYKE674uPlpcCoVhys8GVYbgsZDAarOaY4bv73K1gGbBV7cPouxJ3Kw0XUobwng
-	NBiLvUt8QElzFeAzEeEgvSIlzywlpB8ASo/4e70u2IGPhI493Sg/Tb4cc+PZaVmebur0pypQMBBZV
-	7yfsZbttRHYtidu0fT4ymPZfPwkCl8jZVPziB6up3EC8EBTycPo9oqTuzanzCbITnmlmNxTua785E
-	e6K0Mm4Pmv3lQ3l32rnGMWPdkulj4YzZ6CdjBzjvkeywIXZuCzZDu5K2xoaniD1HB2Wtmcvmdfsvl
-	rRBG0rylZzhTDZmXoe7Q==;
+	List-Owner; bh=xXqab4F4spB6TEy8lc8ddM6QMom8MvYqVX0lYu+76Yw=; b=n2aLf3feluHypU
+	qgNrjKjB7tTbMWItb6F3x+xVyagoscS14H1+6gOaZzRf5waJlOSWIAdbdEjRqzFnbzKPc9gMAZaoL
+	IYgn/Z+z5NHF+ELz3R5DNQ1UFQKK8Ro5b0vper2TkcgsUwZaT5ytTiIjr5zufsysCW4qGoq5FtIzD
+	GeNf7Xwp7jmIgESSdmaM8SBiucvsG3XWc29P4iH1uMAG4W7mvdtmDNaIaUSzxwZy+HERHwLw2+k3I
+	HzhslxGuIKq8REWK0ypMBfuy9Q3gwshNI+sPC9CeHY7Zbc0IHKL+DOxcencpjlt95aCv6DqskGj0+
+	ULcEEydGoKfQ8ler77Hg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qaxeh-00BTtM-1e;
-	Tue, 29 Aug 2023 12:17:11 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1qb4Ts-00C9GX-39;
+	Tue, 29 Aug 2023 19:34:28 +0000
+Received: from mail-yw1-x1132.google.com ([2607:f8b0:4864:20::1132])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qaxeb-00BTnJ-2J
+	id 1qb4Tp-00C9G5-20
 	for kexec@lists.infradead.org;
-	Tue, 29 Aug 2023 12:17:07 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1693311423;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+hckykIMLf51tNIjNulmnmPP8hP1DLxLmtgnqCmv10w=;
-	b=d5Cqz2g7uvMjsV45kBA97uZcgKQiHBHQSwB37qW56362dxkoPeVQc1r0D09y2GBrKTiqmB
-	729W4rg6/lShIN91xbHee3GJlJYZz/lucf5YMKcWFITIj6AXztqfdksV7s/0H8i0VX7D0W
-	E5PDfWu/zhZAc6TVjjR9qIc9lRzWtMg=
-Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-80-Miv3FsNOO2mAxMuuhLz35Q-1; Tue, 29 Aug 2023 08:16:53 -0400
-X-MC-Unique: Miv3FsNOO2mAxMuuhLz35Q-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2B8653C0C484;
-	Tue, 29 Aug 2023 12:16:53 +0000 (UTC)
-Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.112.67])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id D79E56B2B9;
-	Tue, 29 Aug 2023 12:16:48 +0000 (UTC)
-From: Baoquan He <bhe@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: akpm@linux-foundation.org,
-	catalin.marinas@arm.com,
-	thunder.leizhen@huawei.com,
-	dyoung@redhat.com,
-	prudo@redhat.com,
-	samuel.holland@sifive.com,
-	kexec@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	x86@kernel.org,
-	Baoquan He <bhe@redhat.com>
-Subject: [PATCH v2 7/8] arm64: kdump: use generic interface to simplify crashkernel reservation
-Date: Tue, 29 Aug 2023 20:16:09 +0800
-Message-ID: <20230829121610.138107-8-bhe@redhat.com>
-In-Reply-To: <20230829121610.138107-1-bhe@redhat.com>
-References: <20230829121610.138107-1-bhe@redhat.com>
+	Tue, 29 Aug 2023 19:34:27 +0000
+Received: by mail-yw1-x1132.google.com with SMTP id 00721157ae682-58dfe2d5b9aso1909937b3.1
+        for <kexec@lists.infradead.org>; Tue, 29 Aug 2023 12:34:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1693337662; x=1693942462; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Dku1evb9mZQ/UCmFfdo5JZbpZalq24cWTcGsSAzwTxo=;
+        b=CF0FJhob63nQbW8otrIQDi1CqzGirvaSMf/ZNjg5kn68NMxJ//RDbkYBG+CDPXi40D
+         aox3zJ8J3zB+57nwsLzOVwPnk0W0hEDRF/Nl9yOc1NwHhIXeF8CxkhYJqvwr4/wAkcxc
+         yOUS81e2bTTBKm5/w45OgEcJGCRkWE/2bXWDOV3rVfIfZBWd7qmNwdx//2EzgCJAp3Ty
+         RHO/XV+DtKM8oi8biz9Wb7ZbSxPgNc6nELiuOpvWx7KgT3mPbMffhSd0qg+6pqj8TvHd
+         C8flFn4XGQBNjQtMsqJ54h52lDhm7sFBhDeyyrbEKYdFsDfEWWQQOUzqx1XKa/pFgMO9
+         JZEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693337662; x=1693942462;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Dku1evb9mZQ/UCmFfdo5JZbpZalq24cWTcGsSAzwTxo=;
+        b=LnxmHY744aD9mzJ6Xaj0D5WdlTFB5Zoq0KTLtkNx2/sVkQp4G8UoZ8nSgZ4yfPpzVm
+         bla2dX04fAoAD3vRv7+tsCSaJ+EFnq1z+H41FpnotUcbJfeiith1wcJy+vlA2GAI7zBv
+         HEbAuVuCy87DGsgJoIbv+oGe6aFtkDGpQTAcpzeutm2PXQ6AVo1yqmlc096O3W+0DiJU
+         BdWzvIjJmU/zduWvPA6uPlzRjcz98ZiF5qCd9B59sB1K9wgen3Iukh/wdPdgOnfNw7mZ
+         S+qHuz8cev3dZoU4X/3O2rMv7/j3jL/xSOL+RWRQmUU14XVJpikku1EmNbHNuc+Hz66w
+         WGKQ==
+X-Gm-Message-State: AOJu0Yz/L1IT4Ce7/GzOZzhPDCenY0/xhHJRZKEby6aaiRzxe2awXubT
+	sb0zQ3gnmsqrpjDHrAeM4dLvLDSeDsXpE2jFDQgGf4VnufvGpO4=
+X-Google-Smtp-Source: AGHT+IFet3rs4lSa6SdyUYuNhduFXChT/c/u2XD2EuWbmN/GXJdqeDdKGD9HS33EBu3hJQ+LAmlIEUXeaAC+annspfI=
+X-Received: by 2002:a81:4e10:0:b0:586:a680:250 with SMTP id
+ c16-20020a814e10000000b00586a6800250mr179637ywb.5.1693337661845; Tue, 29 Aug
+ 2023 12:34:21 -0700 (PDT)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
+References: <c5737141-7827-1c83-ab38-0119dcfea485@linux.microsoft.com>
+ <277db5491460d5fd607785f2bcc733de39022a35.camel@linux.ibm.com>
+ <bf794136-703a-0d33-e245-7e723007b5c0@linux.microsoft.com>
+ <0e1511e8819b24ab8a34a7b15821f06eff688f29.camel@linux.ibm.com>
+ <8bc0f024-fc12-cb32-7af0-e500948cc6db@linux.microsoft.com> <7e32afa2596b9d8cfdc275614575b2023cd1d673.camel@linux.ibm.com>
+In-Reply-To: <7e32afa2596b9d8cfdc275614575b2023cd1d673.camel@linux.ibm.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Tue, 29 Aug 2023 15:34:10 -0400
+Message-ID: <CAHC9VhSVO9t=9e9JmniXKoqqvMv42E4dVeYtQTWZ4Eih3Sfr0Q@mail.gmail.com>
+Subject: Re: [RFC] IMA Log Snapshotting Design Proposal
+To: Mimi Zohar <zohar@linux.ibm.com>
+Cc: Sush Shringarputale <sushring@linux.microsoft.com>, linux-integrity@vger.kernel.org, 
+	peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, kgold@linux.ibm.com, 
+	bhe@redhat.com, vgoyal@redhat.com, dyoung@redhat.com, 
+	kexec@lists.infradead.org, jmorris@namei.org, serge@hallyn.com, 
+	code@tyhicks.com, nramas@linux.microsoft.com, 
+	Tushar Sugandhi <tusharsu@linux.mic>, linux-security-module@vger.kernel.org, 
+	AmirGoldstein <amir73il@gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230829_051705_835458_7BBCEC0C 
-X-CRM114-Status: GOOD (  24.64  )
+X-CRM114-CacheID: sfid-20230829_123426_152550_24C1920B 
+X-CRM114-Status: GOOD (  24.66  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,248 +92,52 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-With the help of newly changed function parse_crashkernel() and
-generic reserve_crashkernel_generic(), crashkernel reservation can be
-simplified by steps:
-
-1) Add a new header file <asm/crash_core.h>, and define CRASH_ALIGN,
-   CRASH_ADDR_LOW_MAX, CRASH_ADDR_HIGH_MAX and
-   DEFAULT_CRASH_KERNEL_LOW_SIZE in <asm/crash_core.h>;
-
-2) Add arch_reserve_crashkernel() to call parse_crashkernel() and
-   reserve_crashkernel_generic();
-
-3) Add ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION Kconfig in
-   arch/arm64/Kconfig.
-
-The old reserve_crashkernel_low() and reserve_crashkernel() can be
-removed.
-
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
- arch/arm64/Kconfig                  |   3 +
- arch/arm64/include/asm/crash_core.h |  10 ++
- arch/arm64/mm/init.c                | 140 ++--------------------------
- 3 files changed, 21 insertions(+), 132 deletions(-)
- create mode 100644 arch/arm64/include/asm/crash_core.h
-
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 29db061db9bb..07fb8c71339d 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -1481,6 +1481,9 @@ config KEXEC_FILE
- 	  for kernel and initramfs as opposed to list of segments as
- 	  accepted by previous system call.
- 
-+config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
-+	def_bool CRASH_CORE
-+
- config KEXEC_SIG
- 	bool "Verify kernel signature during kexec_file_load() syscall"
- 	depends on KEXEC_FILE
-diff --git a/arch/arm64/include/asm/crash_core.h b/arch/arm64/include/asm/crash_core.h
-new file mode 100644
-index 000000000000..9f5c8d339f44
---- /dev/null
-+++ b/arch/arm64/include/asm/crash_core.h
-@@ -0,0 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef _ARM64_CRASH_CORE_H
-+#define _ARM64_CRASH_CORE_H
-+
-+/* Current arm64 boot protocol requires 2MB alignment */
-+#define CRASH_ALIGN                     SZ_2M
-+
-+#define CRASH_ADDR_LOW_MAX              arm64_dma_phys_limit
-+#define CRASH_ADDR_HIGH_MAX             (PHYS_MASK + 1)
-+#endif
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 4ad637508b75..48ab23531bb6 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -64,15 +64,6 @@ EXPORT_SYMBOL(memstart_addr);
-  */
- phys_addr_t __ro_after_init arm64_dma_phys_limit;
- 
--/* Current arm64 boot protocol requires 2MB alignment */
--#define CRASH_ALIGN			SZ_2M
--
--#define CRASH_ADDR_LOW_MAX		arm64_dma_phys_limit
--#define CRASH_ADDR_HIGH_MAX		(PHYS_MASK + 1)
--#define CRASH_HIGH_SEARCH_BASE		SZ_4G
--
--#define DEFAULT_CRASH_KERNEL_LOW_SIZE	(128UL << 20)
--
- /*
-  * To make optimal use of block mappings when laying out the linear
-  * mapping, round down the base of physical memory to a size that can
-@@ -100,140 +91,25 @@ phys_addr_t __ro_after_init arm64_dma_phys_limit;
- #define ARM64_MEMSTART_ALIGN	(1UL << ARM64_MEMSTART_SHIFT)
- #endif
- 
--static int __init reserve_crashkernel_low(unsigned long long low_size)
--{
--	unsigned long long low_base;
--
--	low_base = memblock_phys_alloc_range(low_size, CRASH_ALIGN, 0, CRASH_ADDR_LOW_MAX);
--	if (!low_base) {
--		pr_err("cannot allocate crashkernel low memory (size:0x%llx).\n", low_size);
--		return -ENOMEM;
--	}
--
--	pr_info("crashkernel low memory reserved: 0x%08llx - 0x%08llx (%lld MB)\n",
--		low_base, low_base + low_size, low_size >> 20);
--
--	crashk_low_res.start = low_base;
--	crashk_low_res.end   = low_base + low_size - 1;
--	insert_resource(&iomem_resource, &crashk_low_res);
--
--	return 0;
--}
--
--/*
-- * reserve_crashkernel() - reserves memory for crash kernel
-- *
-- * This function reserves memory area given in "crashkernel=" kernel command
-- * line parameter. The memory reserved is used by dump capture kernel when
-- * primary kernel is crashing.
-- */
--static void __init reserve_crashkernel(void)
-+static void __init arch_reserve_crashkernel(void)
- {
--	unsigned long long crash_low_size = 0, search_base = 0;
--	unsigned long long crash_max = CRASH_ADDR_LOW_MAX;
-+	unsigned long long low_size = 0;
- 	unsigned long long crash_base, crash_size;
- 	char *cmdline = boot_command_line;
--	bool fixed_base = false;
- 	bool high = false;
- 	int ret;
- 
- 	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
- 		return;
- 
--	/* crashkernel=X[@offset] */
- 	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
--				&crash_size, &crash_base, NULL, NULL);
--	if (ret == -ENOENT) {
--		ret = parse_crashkernel_high(cmdline, 0, &crash_size, &crash_base);
--		if (ret || !crash_size)
--			return;
--
--		/*
--		 * crashkernel=Y,low can be specified or not, but invalid value
--		 * is not allowed.
--		 */
--		ret = parse_crashkernel_low(cmdline, 0, &crash_low_size, &crash_base);
--		if (ret == -ENOENT)
--			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
--		else if (ret)
--			return;
--
--		search_base = CRASH_HIGH_SEARCH_BASE;
--		crash_max = CRASH_ADDR_HIGH_MAX;
--		high = true;
--	} else if (ret || !crash_size) {
--		/* The specified value is invalid */
-+				&crash_size, &crash_base,
-+				&low_size, &high);
-+	if (ret)
- 		return;
--	}
--
--	crash_size = PAGE_ALIGN(crash_size);
--
--	/* User specifies base address explicitly. */
--	if (crash_base) {
--		fixed_base = true;
--		search_base = crash_base;
--		crash_max = crash_base + crash_size;
--	}
--
--retry:
--	crash_base = memblock_phys_alloc_range(crash_size, CRASH_ALIGN,
--					       search_base, crash_max);
--	if (!crash_base) {
--		/*
--		 * For crashkernel=size[KMG]@offset[KMG], print out failure
--		 * message if can't reserve the specified region.
--		 */
--		if (fixed_base) {
--			pr_warn("crashkernel reservation failed - memory is in use.\n");
--			return;
--		}
--
--		/*
--		 * For crashkernel=size[KMG], if the first attempt was for
--		 * low memory, fall back to high memory, the minimum required
--		 * low memory will be reserved later.
--		 */
--		if (!high && crash_max == CRASH_ADDR_LOW_MAX) {
--			crash_max = CRASH_ADDR_HIGH_MAX;
--			search_base = CRASH_ADDR_LOW_MAX;
--			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
--			goto retry;
--		}
--
--		/*
--		 * For crashkernel=size[KMG],high, if the first attempt was
--		 * for high memory, fall back to low memory.
--		 */
--		if (high && crash_max == CRASH_ADDR_HIGH_MAX) {
--			crash_max = CRASH_ADDR_LOW_MAX;
--			search_base = 0;
--			goto retry;
--		}
--		pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
--			crash_size);
--		return;
--	}
--
--	if ((crash_base >= CRASH_ADDR_LOW_MAX) && crash_low_size &&
--	     reserve_crashkernel_low(crash_low_size)) {
--		memblock_phys_free(crash_base, crash_size);
--		return;
--	}
--
--	pr_info("crashkernel reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
--		crash_base, crash_base + crash_size, crash_size >> 20);
--
--	/*
--	 * The crashkernel memory will be removed from the kernel linear
--	 * map. Inform kmemleak so that it won't try to access it.
--	 */
--	kmemleak_ignore_phys(crash_base);
--	if (crashk_low_res.end)
--		kmemleak_ignore_phys(crashk_low_res.start);
- 
--	crashk_res.start = crash_base;
--	crashk_res.end = crash_base + crash_size - 1;
--	insert_resource(&iomem_resource, &crashk_res);
-+	reserve_crashkernel_generic(cmdline, crash_size, crash_base,
-+				    low_size, high);
- }
- 
- /*
-@@ -481,7 +357,7 @@ void __init bootmem_init(void)
- 	 * request_standard_resources() depends on crashkernel's memory being
- 	 * reserved, so do it here.
- 	 */
--	reserve_crashkernel();
-+	arch_reserve_crashkernel();
- 
- 	memblock_dump_all();
- }
--- 
-2.41.0
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gTW9uLCBBdWcgMjEsIDIwMjMgYXQgNzowOOKAr1BNIE1pbWkgWm9oYXIgPHpvaGFyQGxpbnV4
+LmlibS5jb20+IHdyb3RlOgo+IE9uIE1vbiwgMjAyMy0wOC0yMSBhdCAxNTowNSAtMDcwMCwgU3Vz
+aCBTaHJpbmdhcnB1dGFsZSB3cm90ZToKPiA+IE9uIDgvMTQvMjAyMyAzOjAyIFBNLCBNaW1pIFpv
+aGFyIHdyb3RlOgo+ID4gPiBPbiBNb24sIDIwMjMtMDgtMTQgYXQgMTQ6NDIgLTA3MDAsIFN1c2gg
+U2hyaW5nYXJwdXRhbGUgd3JvdGU6Cj4gPiA+Pj4gVGhpcyBkZXNpZ24gc2VlbXMgb3Zlcmx5IGNv
+bXBsZXggYW5kIHJlcXVpcmVzIHN5bmNocm9uaXphdGlvbiBiZXR3ZWVuCj4gPiA+Pj4gdGhlICJz
+bmFwc2hvdCIgcmVjb3JkIGFuZCBleHBvcnRpbmcgdGhlIHJlY29yZHMgZnJvbSB0aGUgbWVhc3Vy
+ZW1lbnQKPiA+ID4+PiBsaXN0LiAgTm9uZSBvZiB0aGlzIHdvdWxkIGJlIG5lY2Vzc2FyeSBpZiB0
+aGUgbWVhc3VyZW1lbnRzIHdlcmUgY29waWVkCj4gPiA+Pj4gZnJvbSBrZXJuZWwgbWVtb3J5IHRv
+IGEgYmFja2luZyBmaWxlIChlLmcuIHRtcGZzKSwgYXMgZGVzY3JpYmVkIGluIFsxXS4KPiA+IEV2
+ZW4gaWYgdGhlIEtlcm5lbCBtYWludGFpbnMgdGhlIGxpbmsgYmV0d2VlbiBhIHRtcGZzIGV4cG9y
+dGVkIGFuZCBhbgo+ID4gaW4tbWVtb3J5IElNQSBsb2cgLSBpdCBzdGlsbCBoYXMgdG8gY29weSB0
+aGUgdG1wZnMgcG9ydGlvbiB0byB0aGUKPiA+IEtlcm5lbCBtZW1vcnkgZHVyaW5nIGtleGVjIHNv
+ZnQgYm9vdC4gIHRtcGZzIGlzIGNsZWFyZWQgZHVyaW5nIGtleGVjLAo+ID4gc28gdGhpcyBjb3B5
+aW5nIG9mIHRtcGZzIGJhY2sgdG8ga2VybmVsIG1lbW9yeSBpcyBuZWNlc3NhcnkgdG8gcHJlc2Vy
+dmUKPiA+IHRoZSBpbnRlZ3JpdHkgb2YgdGhlIGxvZyBkdXJpbmcga2V4ZWMuICBCdXQgdGhlIGNv
+cHlpbmcgd291bGQgYWRkIGJhY2sKPiA+IHRoZSBtZW1vcnkgcHJlc3N1cmUgb24gdGhlIG5vZGUg
+ZHVyaW5nIGtleGVjICh3aGljaCBtYXkgcmVzdWx0IGluCj4gPiBvdXQtb2YtbWVtb3J5KSwgZGVm
+ZWF0aW5nIHRoZSBwdXJwb3NlIG9mIHRoZSBvdmVyYWxsIGVmZm9ydC9mZWF0dXJlLgo+ID4gQ29w
+eWluZyB0byBhIHJlZ3VsYXIgKnBlcnNpc3RlbnQqIHByb3RlY3RlZCBmaWxlIHNlZW1zIGEgY2xl
+YW5lcgo+ID4gYXBwcm9hY2gsIGNvbXBhcmVkIHRvIHRtcGZzLgo+Cj4gRnJvbSBhIGtlcm5lbCBw
+ZXJzcGVjdGl2ZSwgaXQgZG9lc24ndCBtYWtlIGEgZGlmZmVyZW5jZSBpZiB1c2Vyc3BhY2UKPiBw
+cm92aWRlcyBhIHRtcGZzIG9yIHBlcnNpc3RlbnQgZmlsZS4gIEFzIHBlciB0aGUgZGlzY3Vzc2lv
+bgo+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LWludGVncml0eS9DQU9RNHV4ajRQdjJX
+cjF3Z3ZCQ0RSLXRuQTVkc1pUM3J2ZER6S2dBSDFhRVZfLXI5UWdAbWFpbC5nbWFpbC5jb20vI3QK
+PiAsIHVzZXJzcGFjZSBwcm92aWRlcyB0aGUga2VybmVsIHdpdGggdGhlIGZpbGUgZGVzY3JpcHRv
+ciBvZiB0aGUgb3BlbmVkCj4gZmlsZS4KPgo+ID4gV2UgcHJvdG90eXBlZCB0aGlzIHNvbHV0aW9u
+LCBob3dldmVyIGl0Cj4gPiBkb2VzIG5vdCBzZWVtIHRvIGJlIGEgY29tbW9uIHBhdHRlcm4gd2l0
+aGluIHRoZSBLZXJuZWwgdG8gd3JpdGUgc3RhdGUKPiA+IGRpcmVjdGx5IHRvIGZpbGVzIG9uIGRp
+c2sgZmlsZSBzeXN0ZW1zLiAgV2UgY29uc2lkZXJlZCB0d28gcG90ZW50aWFsCj4gPiBvcHRpb25z
+Ogo+Cj4gSWYgbm8gZmlsZSBkZXNjcmlwdG9yIGlzIHByb3ZpZGVkLCB0aGVuIHRoZSBtZWFzdXJl
+bWVudHMgYXJlbid0IGNvcGllZAo+IGFuZCByZW1vdmVkIGZyb20gdGhlIHNlY3VyaXR5ZnMgZmls
+ZS4gIElmIHRoZXJlIGFyZSB3cml0ZSBlcnJvcnMsIHRoZQo+IG1lYXN1cmVtZW50cyBhcmVuJ3Qg
+cmVtb3ZlZCBmcm9tIHRoZSBzZWN1cml0eWZzIGZpbGUgdW50aWwgdGhlIHdyaXRlCj4gZXJyb3Jz
+IGFyZSByZXNvbHZlZC4KCkl0IHNvdW5kcyBsaWtlIHRoaXMgYXBwcm9hY2ggd291bGQgcmVxdWly
+ZSB0aGUgZmlsZS9maWxlc3lzdGVtIHRvIGJlCmNvbnRpbnVvdXNseSBhdmFpbGFibGUgZm9yIHRo
+ZSBsaWZlIG9mIHRoZSBzeXN0ZW0gb25jZSB0aGUgbG9nIHdhcwpzbmFwc2hvdHRlZC9vdmVyZmxv
+d2VkIHRvIHBlcnNpc3RlbnQgc3RvcmFnZSwgeWVzPyAgQXNzdW1pbmcgdGhhdCBpcwp0aGUgY2Fz
+ZSwgd2hhdCBoYXBwZW5zIGlmIHRoZSBmaWxlL2ZpbGVzeXN0ZW0gYmVjb21lcyBpbmFjY2Vzc2li
+bGUgYXQKc29tZSBwb2ludCBhbmQgYW4gYXR0ZXN0YXRpb24gY2xpZW50IGF0dGVtcHRzIHRvIHJl
+YWQgdGhlIGVudGlyZSBsb2c/CgotLSAKcGF1bC1tb29yZS5jb20KCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0Bs
+aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
+dGluZm8va2V4ZWMK
