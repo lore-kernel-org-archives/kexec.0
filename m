@@ -4,60 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6B437C83F14
-	for <kexec@archiver.kernel.org>; Tue, 29 Aug 2023 09:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4E815C83F18
+	for <kexec@archiver.kernel.org>; Tue, 29 Aug 2023 12:16:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:To:Subject:MIME-Version:
-	Date:Message-ID:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=RelRpHKWIvPNh82qYUhQCr01uFkDvuc3Oey6Gyw5csY=; b=0uzOvQkmN9D0798QA09I/pdknn
-	L7snoc5eujY8ReycG3cOcQnCLhKnmtTrWnraV25d1x7tmAlTH0qwjmL/GfXe7q4JL7qqYd06wVdop
-	JXWUQgZxnVXOxQPAbhExh3plywsk3ZDEjbYPZ6Ol85w/r7zRNlxU+8qUmDbn+52wRHFsCnR96Hqry
-	Ncs/CJNJk1B1x2LEH13ZiteIo+TcDGkok3+lp+NyOVPqoqi84T/hd5MMtymVabMh8nbmnkDZSmxy3
-	rizrXZIITRBVczsCHadvjPrBU1xRA+a+METNr8tReV1WSzFcJm8/v4uqHjUfiR8k4mX9vVY7UzFaK
-	Lw3mzjDg==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=abDhusw5Csy6ki5fGSLq2LE20Sgy9CKgdB618jI/zIs=; b=vPF7Qubnb/Sygp
+	+kDTBpAAXF4JJkO83UkzPlAmwvRzkc/J9Ho+sLP0bmAYpzX1XkwYiewGZblv7844QISTOlJd+kALS
+	GtKEy1lyQBY/+qgtCM84eTAgphZtNQumtcYLD04MtytNPreOFvHjmjS4CCviY/I3gWYdXhXSLzIru
+	oUIvp9gyyJoP4UBcuS4cpcTbpOvpQP/OHccnuJZjSXsw63Jn0kLDEMdC5gdn5vZWgk7MoQ2+y7In7
+	2FmGDw002rAkYzrr4KtoJ5GeFKJrzr9pKLUfPbDntbF+NPiq1TrDlmf4O1tvWqW5W5HOvXGU391D3
+	s7Jm5HUozrXne4Pvh/5A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qavQz-00BBJ4-0c;
-	Tue, 29 Aug 2023 09:54:53 +0000
-Received: from szxga01-in.huawei.com ([45.249.212.187])
+	id 1qaxe0-00BTTZ-20;
+	Tue, 29 Aug 2023 12:16:28 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qavQu-00BBIZ-0X;
-	Tue, 29 Aug 2023 09:54:50 +0000
-Received: from dggpemm500016.china.huawei.com (unknown [172.30.72.57])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4RZjNP5yT5zhZHV;
-	Tue, 29 Aug 2023 17:50:45 +0800 (CST)
-Received: from [10.67.108.26] (10.67.108.26) by dggpemm500016.china.huawei.com
- (7.185.36.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Tue, 29 Aug
- 2023 17:54:36 +0800
-Message-ID: <4b4063c2-dfd3-474b-6827-8dbd1257af2d@huawei.com>
-Date: Tue, 29 Aug 2023 17:54:35 +0800
+	id 1qaxdx-00BTSw-0O
+	for kexec@lists.infradead.org;
+	Tue, 29 Aug 2023 12:16:26 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1693311383;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=V9QpIawjTNUXSAeauUX4fl4M+mXtQMbJ5Ulee2rW8ME=;
+	b=edMljgk47+2x/DxDZmSPCKRslpQ1T2EohGAi+P6lGPXwNVX8fQiqugf/Na9nKfoDseO8im
+	XLFQu/2M4/RIwuO9owJBpJxgi1EZwI+d5CBh8hvcEzH0LRZ3agL9kqsHLc1GL4U7UMMtmo
+	d9ijJx8eaNJTePYi+jNAwj6yiXaPMc4=
+Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-397-Zmligm66Ovu2JRrnNR0kUQ-1; Tue, 29 Aug 2023 08:16:19 -0400
+X-MC-Unique: Zmligm66Ovu2JRrnNR0kUQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 50BE33C36A8E;
+	Tue, 29 Aug 2023 12:16:18 +0000 (UTC)
+Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.112.67])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 91C4B63F6C;
+	Tue, 29 Aug 2023 12:16:13 +0000 (UTC)
+From: Baoquan He <bhe@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: akpm@linux-foundation.org,
+	catalin.marinas@arm.com,
+	thunder.leizhen@huawei.com,
+	dyoung@redhat.com,
+	prudo@redhat.com,
+	samuel.holland@sifive.com,
+	kexec@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	x86@kernel.org,
+	Baoquan He <bhe@redhat.com>
+Subject: [PATCH v2 0/8] kdump: use generic functions to simplify crashkernel reservation in arch
+Date: Tue, 29 Aug 2023 20:16:02 +0800
+Message-ID: <20230829121610.138107-1-bhe@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH -next v9 0/2] support allocating crashkernel above 4G
- explicitly on riscv
-To: <linux-kernel@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-	<kexec@lists.infradead.org>, <linux-doc@vger.kernel.org>,
-	<paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
-	<conor.dooley@microchip.com>, <guoren@kernel.org>, <heiko@sntech.de>,
-	<bjorn@rivosinc.com>, <alex@ghiti.fr>, <akpm@linux-foundation.org>,
-	<atishp@rivosinc.com>, <bhe@redhat.com>, <thunder.leizhen@huawei.com>,
-	<horms@kernel.org>
-References: <20230726175000.2536220-1-chenjiahao16@huawei.com>
-Content-Language: en-US
-From: "chenjiahao (C)" <chenjiahao16@huawei.com>
-In-Reply-To: <20230726175000.2536220-1-chenjiahao16@huawei.com>
-X-Originating-IP: [10.67.108.26]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemm500016.china.huawei.com (7.185.36.25)
-X-CFilter-Loop: Reflected
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230829_025448_546018_33C09481 
-X-CRM114-Status: GOOD (  20.11  )
+X-CRM114-CacheID: sfid-20230829_051625_273765_FEAA2D78 
+X-CRM114-Status: GOOD (  18.18  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -69,106 +80,87 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi folks,
+In the current arm64, crashkernel=,high support has been finished after
+several rounds of posting and careful reviewing. The code in arm64 which
+parses crashkernel kernel parameters firstly, then reserve memory can be
+a good example for other ARCH to refer to.
 
-This is a friendly ping. Anyone has additional comments on this patch set?
+Whereas in x86_64, the code mixing crashkernel parameter parsing and
+memory reserving is twisted, and looks messy. Refactoring the code to
+make it more readable maintainable is necessary.
 
-Best regards,
-Jiahao
+Here, firstly abstract the crashkernel parameter parsing code into
+parse_crashkernel() to make it be able to parse crashkernel=,high|low.
+Then abstract the crashkernel memory reserving code into a generic
+function reserve_crashkernel_generic(). Finally, in ARCH which
+crashkernel=,high support is needed, a simple arch_reserve_crashkernel()
+can be added to call above two functions. This can remove the duplicated
+implmentation code in each ARCH, like arm64, x86_64.
 
-On 2023/7/27 1:49, Chen Jiahao wrote:
-> On riscv, the current crash kernel allocation logic is trying to
-> allocate within 32bit addressible memory region by default, if
-> failed, try to allocate without 4G restriction.
->
-> In need of saving DMA zone memory while allocating a relatively large
-> crash kernel region, allocating the reserved memory top down in
-> high memory, without overlapping the DMA zone, is a mature solution.
-> Hence this patchset introduces the parameter option crashkernel=X,[high,low].
->
-> One can reserve the crash kernel from high memory above DMA zone range
-> by explicitly passing "crashkernel=X,high"; or reserve a memory range
-> below 4G with "crashkernel=X,low". Besides, there are few rules need
-> to take notice:
-> 1. "crashkernel=X,[high,low]" will be ignored if "crashkernel=size"
->     is specified.
-> 2. "crashkernel=X,low" is valid only when "crashkernel=X,high" is passed
->     and there is enough memory to be allocated under 4G.
-> 3. When allocating crashkernel above 4G and no "crashkernel=X,low" is
->     specified, a 128M low memory will be allocated automatically for
->     swiotlb bounce buffer.
-> See Documentation/admin-guide/kernel-parameters.txt for more information.
->
-> To verify loading the crashkernel, adapted kexec-tools is attached below:
-> https://github.com/chenjh005/kexec-tools/tree/build-test-riscv-v2
->
-> Following test cases have been performed as expected:
-> 1) crashkernel=256M                          //low=256M
-> 2) crashkernel=1G                            //low=1G
-> 3) crashkernel=4G                            //high=4G, low=128M(default)
-> 4) crashkernel=4G crashkernel=256M,high      //high=4G, low=128M(default), high is ignored
-> 5) crashkernel=4G crashkernel=256M,low       //high=4G, low=128M(default), low is ignored
-> 6) crashkernel=4G,high                       //high=4G, low=128M(default)
-> 7) crashkernel=256M,low                      //low=0M, invalid
-> 8) crashkernel=4G,high crashkernel=256M,low  //high=4G, low=256M
-> 9) crashkernel=4G,high crashkernel=4G,low    //high=0M, low=0M, invalid
-> 10) crashkernel=512M@0xd0000000              //low=512M
-> 11) crashkernel=1G,high crashkernel=0M,low   //high=1G, low=0M
->
-> Changes since [v9]:
-> 1. As per Conor's comment, rebase to correct base on riscv/for-next
->     branch. No code logic changed.
->
-> Changes since [v8]:
-> 1. Rebase to newest mainline head, not modifying any code logic.
->
-> Changes since [v7]:
-> 1. Minor refactor: move crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE
->     into the !high branch when the first allocation fails. Not changing
->     the result but further align with Arm64 logic, refer to Baoquan's
->     comment.
-> 2. Add test case "crashkernel=1G,high crashkernel=0M,low", the result
->     also matches our expectation.
->
-> Changes since [v6]:
-> 1. Introduce the "high" flag to mark whether "crashkernel=X,high"
->     is passed. Fix the retrying logic between "crashkernel=X,high"
->     case and others when the first allocation attempt fails.
->
-> Changes since [v5]:
-> 1. Update the crashkernel allocation logic when crashkernel=X,high
->     is specified. In this case, region above 4G will directly get
->     reserved as crashkernel, rather than trying lower 32bit allocation
->     first.
->
-> Changes since [v4]:
-> 1. Update some imprecise code comments for cmdline parsing.
->
-> Changes since [v3]:
-> 1. Update to print warning and return explicitly on failure when
->     crashkernel=size@offset is specified. Not changing the result
->     in this case but making the logic more straightforward.
-> 2. Some minor cleanup.
->
-> Changes since [v2]:
-> 1. Update the allocation logic to ensure the high crashkernel
->     region is reserved strictly above dma32_phys_limit.
-> 2. Clean up some minor format problems.
->
-> Chen Jiahao (2):
->    riscv: kdump: Implement crashkernel=X,[high,low]
->    docs: kdump: Update the crashkernel description for riscv
->
->   .../admin-guide/kernel-parameters.txt         | 15 +--
->   arch/riscv/kernel/setup.c                     |  5 +
->   arch/riscv/mm/init.c                          | 93 +++++++++++++++++--
->   3 files changed, 99 insertions(+), 14 deletions(-)
->
+I only change the arm64 and x86_64 implementation to make use of the
+generic functions to simplify code. Risc-v can be done very easily refer
+to the steps in arm64 and x86_64.
+
+History:
+- RFC patchset:
+  https://lore.kernel.org/all/20230619055951.45620-1-bhe@redhat.com/T/#u
+  [RFC PATCH 0/4] kdump: add generic functions to simplify crashkernel crashkernel in architecture
+  Dave and Philipp commented the old parse_crashkernel_common() and
+  parse_crashkernel_generic() are quite confusing. In this formal post,
+  I made change to address the concern by unifying all crashkernel
+  parsing into parse_crashkernel().
+
+v1->v2:
+- Change to add asm/crash_core.h into x86 and arm64 to contain those
+  arch specific macro definitions for generic reservaton. This fixes the
+  compiling error reported by LKP in v1.
+  https://lore.kernel.org/all/202308272150.p3kRkMoF-lkp@intel.com/T/#u
+- Fix a log typo in patch 8, thanks to Samuel.
+
+Baoquan He (8):
+  crash_core.c: remove unnecessary parameter of function
+  crash_core: change the prototype of function parse_crashkernel()
+  crash_core: change parse_crashkernel() to support
+    crashkernel=,high|low parsing
+  crash_core: add generic function to do reservation
+  crash_core.h: include <asm/crash_core.h> if generic reservation is
+    needed
+  x86: kdump: use generic interface to simplify crashkernel reservation
+    code
+  arm64: kdump: use generic interface to simplify crashkernel
+    reservation
+  crash_core.c: remove unneeded functions
+
+ arch/arm/kernel/setup.c              |   3 +-
+ arch/arm64/Kconfig                   |   3 +
+ arch/arm64/include/asm/crash_core.h  |  10 ++
+ arch/arm64/mm/init.c                 | 140 ++--------------------
+ arch/ia64/kernel/setup.c             |   2 +-
+ arch/loongarch/kernel/setup.c        |   4 +-
+ arch/mips/kernel/setup.c             |   3 +-
+ arch/powerpc/kernel/fadump.c         |   2 +-
+ arch/powerpc/kexec/core.c            |   2 +-
+ arch/powerpc/mm/nohash/kaslr_booke.c |   2 +-
+ arch/riscv/mm/init.c                 |   2 +-
+ arch/s390/kernel/setup.c             |   4 +-
+ arch/sh/kernel/machine_kexec.c       |   2 +-
+ arch/x86/Kconfig                     |   3 +
+ arch/x86/include/asm/crash_core.h    |  34 ++++++
+ arch/x86/kernel/setup.c              | 143 +++-------------------
+ include/linux/crash_core.h           |  38 +++++-
+ kernel/crash_core.c                  | 170 +++++++++++++++++++++++----
+ 18 files changed, 269 insertions(+), 298 deletions(-)
+ create mode 100644 arch/arm64/include/asm/crash_core.h
+ create mode 100644 arch/x86/include/asm/crash_core.h
+
+-- 
+2.41.0
+
 
 _______________________________________________
 kexec mailing list
