@@ -4,70 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A53ECC83F16
-	for <kexec@archiver.kernel.org>; Wed, 30 Aug 2023 13:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EB143C83F01
+	for <kexec@archiver.kernel.org>; Wed, 30 Aug 2023 13:46:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=veKE9kV1m8lHv6mDfqy18qaKhA0a1NgkBH3AS9LJVWQ=; b=dobIjGH5Iivv+A
-	mUtpby6ZFaj6ElHIPvPh0d4xHGtGNdpPq39pH+NHuhh2jiVV6NYyvuKtNXCoZo8jdeG4aVvX4aQPz
-	0QX5V4/r1bvK4Ywuv9GK6sASfJNyIYvspMDSBeFC6WiHi1SCUF7XVYZYr0YC8L9HGoAVy0hVUBcV3
-	XhkvOgpEBcKfVZgfuQqFxMvOIfquYp9/nirtIGYbYtG8BgRfqp9hh7jw7St31YcvfGF4WOOEVJcmO
-	a2HAm166aC4DzX9x2R1YiprPrcMBCAHmpbGp631tFoSrzMK9F0mTLJUCGU/U88t8xxnGydt/nP5fU
-	czybS71vs+lJjUrLbw6w==;
+	List-Owner; bh=nyYF8GYZjPso2xXXVlLLIw507mh/sw1u+nOuB/L+iQo=; b=XpjhNMCc4TrglO
+	QVu3m1ikQHMsNZTgFjBQKZxnPFZ86dhepxGaH2G9FMTg+TbISZ64dxJ6dtseiuETKKsa1zi//gCSs
+	QP/2qkZTeWBXwSDHCFlZul722XK8/jNGxMKv3G/GOqQmKdIvSj0V608F20tP6GvNc0jROpuXyw+la
+	030TmzNU2cmFyKfLwcgnylZ1WPiabUYErlHJnIa+E5X3DaxpV+ucxMToG2NNrWQU8Omf5l0PIrB/q
+	U2LKrZNQujuYFAEYnVa7h9PuVypKIkY0ISR81y4MpybIrlv5tfAuPK3tUy7nrk/xKxv800AvFhK3W
+	mW547nzN77IyrhXSz/zA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qbLWs-00DbtY-27;
-	Wed, 30 Aug 2023 13:46:42 +0000
+	id 1qbLWw-00Dbwo-17;
+	Wed, 30 Aug 2023 13:46:46 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qbLWq-00Dbrl-13
+	id 1qbLWt-00DbuO-2t
 	for kexec@lists.infradead.org;
-	Wed, 30 Aug 2023 13:46:41 +0000
+	Wed, 30 Aug 2023 13:46:45 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1693403199;
+	s=mimecast20190719; t=1693403203;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UOJpuwbwTVfs+j95sEE93OpkqtbclA96WzipEC/nM14=;
-	b=M2J2AOzajbWxpOSlsTFsRiEYVhKK2zgfd14zlINFE9jhrRj0GKtWG4NxtPTI3Z6VJ3ioPn
-	zHVYB+tdXs7gHK3ew+iH0TwicSodRc6z1earMnab8o9nLhRj3erHw5U0FY5KcwzJcRXZCc
-	Yzhugu6EgC3zekLIfIVYbhl9ZeBAStg=
-Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
- [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=w7XXAxDLUmZdx81fESQwCFLbPlVQDp3wBmzbmeWO24M=;
+	b=YkMcg0qKAZmEEfDMi44h3xAsrFu8AH6DiusKV7zSAF0tI3JGYUWWYqQCt4UGN8EW3+Q82F
+	V9sPjnH1Hkf93G0uIW/9Nio9WAOVO/q9r39CaicSSdQazMLIjA4yIbSGPVqtpszQcyOzf7
+	4VGzc9QdQVvQhaXmNcZQrKk62HXTPNg=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-365-pyjmCeLEP0mLksJCtJhlsw-1; Wed, 30 Aug 2023 09:46:38 -0400
-X-MC-Unique: pyjmCeLEP0mLksJCtJhlsw-1
-Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2b9cca3c395so19428631fa.1
-        for <kexec@lists.infradead.org>; Wed, 30 Aug 2023 06:46:37 -0700 (PDT)
+ us-mta-67-a-TiSxnIP6GqhEM6ijgaDA-1; Wed, 30 Aug 2023 09:46:41 -0400
+X-MC-Unique: a-TiSxnIP6GqhEM6ijgaDA-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-94a342f1703so87949466b.0
+        for <kexec@lists.infradead.org>; Wed, 30 Aug 2023 06:46:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693403197; x=1694007997;
+        d=1e100.net; s=20221208; t=1693403200; x=1694008000;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UOJpuwbwTVfs+j95sEE93OpkqtbclA96WzipEC/nM14=;
-        b=Q6e+F3FdzQ0hCCzafrUojzvkQ012h/Alk1e6JsJgSaImC6Y5+Ki+fgLZLCrVQQgIgt
-         5lL9AxVGeR45hwhn6KgKgxkAOxUcFkhIkoYj0S68Qha6JyWS80ZYoa1V05KXwaqHiCH+
-         uH6wxbLVIDvgEFdb81U6WACCOdRMCScRMiAuzv2GF0AyHIlrbAC+/3r3+U3lNe+Xs92U
-         bVBihDQW9doQYFVP32azk93195U7dVwnGTZog6KqXu8pv7iEMWF6QrbgH5+hgB2WvrsD
-         HoLlhQTaVpDV6WCU2c4OGVlRXFNRM4UiR3fOTiiwMI/zNcW5tm9Jj3ZcrZ2sqfNuuR3W
-         oeEg==
-X-Gm-Message-State: AOJu0YzXqqtmJhczDEkW1cLgrw+4xLk+Dughw0tt0p0bjGSMn0V4qtOg
-	Qj1WxCXCBu8umBe/FCnlwRE+4mkvzen3uSAyBY7M1SNm/gYuCiVy4NjnQ5w2jdidzZq8/hNrJi5
-	/JrGy/f7H0qLVQlOFrHWF
-X-Received: by 2002:a05:651c:1182:b0:2bc:fc2e:766c with SMTP id w2-20020a05651c118200b002bcfc2e766cmr1857334ljo.3.1693403196828;
-        Wed, 30 Aug 2023 06:46:36 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHNBSsy/iFndvURQgQS9ZCnlQ9lW+9HBjOb1QIZNMn1l3Gt7cB24Ma8x0ITyx+CEVBlGHtj+A==
-X-Received: by 2002:a05:651c:1182:b0:2bc:fc2e:766c with SMTP id w2-20020a05651c118200b002bcfc2e766cmr1857319ljo.3.1693403196642;
-        Wed, 30 Aug 2023 06:46:36 -0700 (PDT)
+        bh=w7XXAxDLUmZdx81fESQwCFLbPlVQDp3wBmzbmeWO24M=;
+        b=WgA4ZCACwD4UgwV8lJlxMujHgiF+Ht7Om81yIeWNSstW01l5QBbJfokfpD41jCuBuZ
+         GILYQU0jp4Xduu5Y43Utz//Mobk/deHcg/i8Luo6Xy7JUyCOtXnK6g/J/h0lkxzKftqa
+         l6oIBOH0VHbQzfztC36vgl1BAoScatGlzEpRNqVs60oQcz3IXK9lEMmQR7bm1Sbb+S+Y
+         m2KBZ0YsH7VRH2V6+m5aK2HoeVw4ml/ZP09vDITaXPLC2YwjA+KFFXRwk4Xdc72Ccfup
+         8V9JtygKWfsbfx+E9WJBhs7hjMNHYp5Py39BXD6L/jLxEYrpuaAgH/l63F+ZaaB7JuFk
+         RVug==
+X-Gm-Message-State: AOJu0YyzgmiSz+ODBXvSVCucUzcXkbJhgKeoOn3OtkM0S1cNE83JaMVG
+	zEJj1TUintLHy5CIbAk/iNCWhoyNYMI5P0SGp+T5u4OvJWiwTGImA+H9/KEv39OSBpl+yqq5itX
+	9bKuCGkMnxk5Sa9Bt8bKp
+X-Received: by 2002:a17:906:1011:b0:9a1:aea8:cb5a with SMTP id 17-20020a170906101100b009a1aea8cb5amr1574496ejm.1.1693403200683;
+        Wed, 30 Aug 2023 06:46:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEFovveJ1gRkNa/hbpuOdO660EpmuFNfSfZvj7MduSJ07LTCEG5M6k7oeDfsA0MPBedrGa9vw==
+X-Received: by 2002:a17:906:1011:b0:9a1:aea8:cb5a with SMTP id 17-20020a170906101100b009a1aea8cb5amr1574480ejm.1.1693403200487;
+        Wed, 30 Aug 2023 06:46:40 -0700 (PDT)
 Received: from fedorinator.fritz.box ([2001:9e8:32e4:1500:aa40:e745:b6c9:7081])
-        by smtp.gmail.com with ESMTPSA id li22-20020a170906f99600b009a198078c53sm7167678ejb.214.2023.08.30.06.46.35
+        by smtp.gmail.com with ESMTPSA id gy25-20020a170906f25900b0098951bb4dc3sm7218566ejb.184.2023.08.30.06.46.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Aug 2023 06:46:36 -0700 (PDT)
+        Wed, 30 Aug 2023 06:46:40 -0700 (PDT)
 From: Philipp Stanner <pstanner@redhat.com>
 To: Kees Cook <keescook@chromium.org>,
 	Andy Shevchenko <andy@kernel.org>,
@@ -90,9 +90,9 @@ Cc: VMware Graphics Reviewers <linux-graphics-maintainer@vmware.com>,
 	linux-hardening@vger.kernel.org,
 	Philipp Stanner <pstanner@redhat.com>,
 	David Airlie <airlied@redhat.com>
-Subject: [PATCH 4/5] drm_lease.c: copy user-array safely
-Date: Wed, 30 Aug 2023 15:45:55 +0200
-Message-ID: <34e14523c9cea13e2f63afabf2938c89d2e84776.1693386602.git.pstanner@redhat.com>
+Subject: [PATCH 5/5] drm: vmgfx_surface.c: copy user-array safely
+Date: Wed, 30 Aug 2023 15:45:56 +0200
+Message-ID: <6f9397d6af919b7e8325c2945385c13aaa3dc5f1.1693386602.git.pstanner@redhat.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <cover.1693386602.git.pstanner@redhat.com>
 References: <cover.1693386602.git.pstanner@redhat.com>
@@ -100,8 +100,8 @@ MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230830_064640_445754_8C30709E 
-X-CRM114-Status: GOOD (  11.58  )
+X-CRM114-CacheID: sfid-20230830_064644_018780_54FFDF47 
+X-CRM114-Status: GOOD (  10.63  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -126,24 +126,25 @@ duplicating the user-space array safely.
 Suggested-by: David Airlie <airlied@redhat.com>
 Signed-off-by: Philipp Stanner <pstanner@redhat.com>
 ---
- drivers/gpu/drm/drm_lease.c | 4 ++--
+ drivers/gpu/drm/vmwgfx/vmwgfx_surface.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_lease.c b/drivers/gpu/drm/drm_lease.c
-index 150fe1555068..94375c6a5425 100644
---- a/drivers/gpu/drm/drm_lease.c
-+++ b/drivers/gpu/drm/drm_lease.c
-@@ -510,8 +510,8 @@ int drm_mode_create_lease_ioctl(struct drm_device *dev,
- 	/* Handle leased objects, if any */
- 	idr_init(&leases);
- 	if (object_count != 0) {
--		object_ids = memdup_user(u64_to_user_ptr(cl->object_ids),
--					 array_size(object_count, sizeof(__u32)));
-+		object_ids = memdup_array_user(u64_to_user_ptr(cl->object_ids),
-+					       object_count, sizeof(__u32));
- 		if (IS_ERR(object_ids)) {
- 			ret = PTR_ERR(object_ids);
- 			idr_destroy(&leases);
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_surface.c b/drivers/gpu/drm/vmwgfx/vmwgfx_surface.c
+index 5db403ee8261..9be185b094cb 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_surface.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_surface.c
+@@ -777,9 +777,9 @@ int vmw_surface_define_ioctl(struct drm_device *dev, void *data,
+ 	       sizeof(metadata->mip_levels));
+ 	metadata->num_sizes = num_sizes;
+ 	metadata->sizes =
+-		memdup_user((struct drm_vmw_size __user *)(unsigned long)
++		memdup_array_user((struct drm_vmw_size __user *)(unsigned long)
+ 			    req->size_addr,
+-			    sizeof(*metadata->sizes) * metadata->num_sizes);
++			    metadata->num_sizes, sizeof(*metadata->sizes));
+ 	if (IS_ERR(metadata->sizes)) {
+ 		ret = PTR_ERR(metadata->sizes);
+ 		goto out_no_sizes;
 -- 
 2.41.0
 
