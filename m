@@ -4,107 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AA7D4C6FA8F
-	for <kexec@archiver.kernel.org>; Wed, 30 Aug 2023 07:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 48376C6FA8F
+	for <kexec@archiver.kernel.org>; Wed, 30 Aug 2023 11:39:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:CC:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=9DFCCCNhlh6Z220Xx/fWJ2y17aIv4wBX1Wluf+XAG1Q=; b=Rj9WToskcZ5ZZ2
-	er/enIUMap5vZzhZjWYwqhg80cABEjoDLKsgAT//EfWTl+Vd0eZ5jWpEgpQMVcK2Uz1o8w47a9Et6
-	pJ+i5pVZJJ7iCHRg37WV++NCj6Ricb92m08pcVzAEcQPer6+elrGNJ5UROQNocFS04PNg1SGUrBv8
-	S5tPHjuGjvZd1UbrfhTWjixREKJhyIaEeaF7y/3B7nWTBUCsdz+ayJDishExr9rVSIM2ivERY9tsH
-	NoTf1WYdO44j9xIawY1Fx2tXQU7z7l/dMxlKx91MaJ8IEcJDPIRuNeNDi1mTK0+TkhGvNIw6cE/A7
-	mNLnH5OX/7azhHbUx7DQ==;
+	List-Owner; bh=NIwb1ICHJiRhqTTD/EliuGxT+K3deE6OWkTWDqGiuGk=; b=Cl3rSsaznR1MPY
+	EC5iC3Xnatz5NPMEIX6IF2vUgDvPI+GyupcCBHZZ8ngmUUMFOX9k6W3AtC19tdXouMpZFUh3bL1vB
+	Q/GHkyxlqn78g8P4wbNDgaQ8XQOj8p5kgSSp9Jz3Fv7IxZGGG67tR88e4IqRk1S1GgO5qHVv+cD9+
+	uRpGWxR610y6ScUImCPwU2vtdqC572XIHGxaN6QHD+sWc6RZH11axHyNsDg4q1fKPGpr+ahBvR3+V
+	i+EjZ4LmHcDv8V5FK/nn1LVil3UiW9Z9ZLEfaDwb7CNSGfBW7GJYl/rOYdphXxxncCrl0R5mppL9C
+	ApqcNWgHdcp3RJmZ7Zpw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qbFVi-00Cyy9-1D;
-	Wed, 30 Aug 2023 07:21:06 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1qbJXc-00DPcK-1e;
+	Wed, 30 Aug 2023 11:39:20 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qbFVg-00Cyy0-2y
-	for kexec@bombadil.infradead.org;
-	Wed, 30 Aug 2023 07:21:05 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:CC:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=WqdW8Qj2xK46E3UyrwcROMadSGBZGtNxIQEEI9MRaS0=; b=c1uaBcALm0xLsy1gVXFwtj8a5Q
-	enQPUI8Ko2pNZw4fLIXpDbdzhRKVV8HvVXlSLQouu4X9a2ZI+o52Pvf1lWNxmceB7lPwQ9jNqwafg
-	R7LirHs/XTCk6+hbyc+z/Y2xH3oAdySVaT5BUZJC5F4MYAmBIhCQ0Irr1gWTrj0CIHROVf2MNrvyw
-	fh9Kr0iaiW0DIJ8mSI0ev0GGdOJaaryMhVThBxvccA3ULjd/atLUmWOROsoVMIOu4+1v6t2Pb7vxP
-	clHaW/fJlCWZqgD/EGys31tz/jaOno8QJEtx5IrKo/FNPv1C4d9ecLLDi/H4o+1aifydz9L18hVRa
-	JwiNyzlg==;
-Received: from smtp-fw-80008.amazon.com ([99.78.197.219])
-	by desiato.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qbFVb-00CChv-1G
+	id 1qbJXY-00DPbW-0s
 	for kexec@lists.infradead.org;
-	Wed, 30 Aug 2023 07:21:03 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1693380059; x=1724916059;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=WqdW8Qj2xK46E3UyrwcROMadSGBZGtNxIQEEI9MRaS0=;
-  b=g+SzTqOxm7USjJ/cM5MLhrR21W1Lhwg1gqrCKtc8QdKuCPhgOpDYjTpY
-   Mq59OWc8LhG1CHEsAX1mYdYka/j12NaEwhbiThMa5TasC/P1LnwTsmJqF
-   75/Lu6c1mOc3Ku87BVU4x3MdPPwxEqLVoe+4eMNEit1CdlkTWGTV2+79a
-   4=;
-X-IronPort-AV: E=Sophos;i="6.02,212,1688428800"; 
-   d="scan'208";a="25907343"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-pdx-2c-m6i4x-b1c0e1d0.us-west-2.amazon.com) ([10.25.36.214])
-  by smtp-border-fw-80008.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2023 07:20:50 +0000
-Received: from EX19MTAUWB002.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
-	by email-inbound-relay-pdx-2c-m6i4x-b1c0e1d0.us-west-2.amazon.com (Postfix) with ESMTPS id 319AF806B6;
-	Wed, 30 Aug 2023 07:20:49 +0000 (UTC)
-Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.37; Wed, 30 Aug 2023 07:20:41 +0000
-Received: from [0.0.0.0] (10.253.83.51) by EX19D020UWC004.ant.amazon.com
- (10.13.138.149) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.37; Wed, 30 Aug
- 2023 07:20:37 +0000
-Message-ID: <82416797-01aa-471a-a737-471297e37c4c@amazon.de>
-Date: Wed, 30 Aug 2023 09:20:34 +0200
+	Wed, 30 Aug 2023 11:39:18 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1693395555;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cTX1jjRNGO8OcMeJufjnK0bfy5r6OmV10OVkYSeEhKk=;
+	b=MvC+HfCFu21HB8c1f+5+kS+y4prHO2Y0UbhhYZ18ILGNL4QnCaX99AeGnWgUHyMdaYTp8p
+	VMAuol6rHJMPWhtL/okpQo5egvhXoE+gAM9MB/AUxiUNCVSn5mnSUr5WNn0alGryWzbdgO
+	8J52FQxI07+nL1RoE3ZfPGnCWfYLiX0=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-655-vpS9i7EZNOObdnNWiyPNYA-1; Wed, 30 Aug 2023 07:39:10 -0400
+X-MC-Unique: vpS9i7EZNOObdnNWiyPNYA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BF2A885CBE2;
+	Wed, 30 Aug 2023 11:39:09 +0000 (UTC)
+Received: from localhost (unknown [10.72.113.118])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id E6F7CC15BAE;
+	Wed, 30 Aug 2023 11:39:08 +0000 (UTC)
+Date: Wed, 30 Aug 2023 19:39:05 +0800
+From: Baoquan He <bhe@redhat.com>
+To: kernel test robot <lkp@intel.com>
+Cc: linux-kernel@vger.kernel.org, oe-kbuild-all@lists.linux.dev,
+	akpm@linux-foundation.org, catalin.marinas@arm.com,
+	thunder.leizhen@huawei.com, dyoung@redhat.com, prudo@redhat.com,
+	samuel.holland@sifive.com, kexec@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, x86@kernel.org
+Subject: Re: [PATCH v2 6/8] x86: kdump: use generic interface to simplify
+ crashkernel reservation code
+Message-ID: <ZO8qWQg23JT2lWNg@MiWiFi-R3L-srv>
+References: <20230829121610.138107-7-bhe@redhat.com>
+ <202308300910.e0i4piJT-lkp@intel.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] Introduce persistent memory pool
-Content-Language: en-GB
-To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-CC: "Gowans, James" <jgowans@amazon.com>, "gregkh@linuxfoundation.org"
-	<gregkh@linuxfoundation.org>, "rppt@kernel.org" <rppt@kernel.org>,
-	"madvenka@linux.microsoft.com" <madvenka@linux.microsoft.com>,
-	"anthony.yznaga@oracle.com" <anthony.yznaga@oracle.com>,
-	"steven.sistare@oracle.com" <steven.sistare@oracle.com>,
-	"stanislav.kinsburskii@gmail.com" <stanislav.kinsburskii@gmail.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"seanjc@google.com" <seanjc@google.com>, "pbonzini@redhat.com"
-	<pbonzini@redhat.com>, "kys@microsoft.com" <kys@microsoft.com>,
-	"arnd@arndb.de" <arnd@arndb.de>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"anrayabh@linux.microsoft.com" <anrayabh@linux.microsoft.com>,
-	"dragan.cvetic@amd.com" <dragan.cvetic@amd.com>,
-	"jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
-	"derek.kiernan@amd.com" <derek.kiernan@amd.com>, "linux-mm@kvack.org"
-	<linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>,
-	<kexec@lists.infradead.org>, <iommu@lists.linux.dev>, kvm
-	<kvm@vger.kernel.org>
-References: <64e7cbf7.050a0220.114c7.b70dSMTPIN_ADDED_BROKEN@mx.google.com>
- <2023082506-enchanted-tripping-d1d5@gregkh>
- <c26ad989dcc6737dd295e980c78ef53740098810.camel@amazon.com>
- <20230823024500.GA25462@skinsburskii.>
- <e0ed9fb9-8e7a-44ad-976a-27362f6e537a@amazon.de>
- <20230829220740.GA26605@skinsburskii.>
-From: Alexander Graf <graf@amazon.de>
-In-Reply-To: <20230829220740.GA26605@skinsburskii.>
-X-Originating-IP: [10.253.83.51]
-X-ClientProxiedBy: EX19D038UWC001.ant.amazon.com (10.13.139.213) To
- EX19D020UWC004.ant.amazon.com (10.13.138.149)
+Content-Disposition: inline
+In-Reply-To: <202308300910.e0i4piJT-lkp@intel.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230830_082100_038827_6C8C0FF9 
-X-CRM114-Status: GOOD (  48.04  )
+X-CRM114-CacheID: sfid-20230830_043916_377685_7E8AAFBC 
+X-CRM114-Status: GOOD (  29.41  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -116,187 +80,172 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Stanislav,
+On 08/30/23 at 09:49am, kernel test robot wrote:
+> Hi Baoquan,
+> 
+> kernel test robot noticed the following build errors:
+> 
+> [auto build test ERROR on arm64/for-next/core]
+> [also build test ERROR on tip/x86/core powerpc/next powerpc/fixes v6.5]
+> [cannot apply to linus/master next-20230829]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Baoquan-He/crash_core-c-remove-unnecessary-parameter-of-function/20230829-201942
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/core
+> patch link:    https://lore.kernel.org/r/20230829121610.138107-7-bhe%40redhat.com
+> patch subject: [PATCH v2 6/8] x86: kdump: use generic interface to simplify crashkernel reservation code
+> config: x86_64-randconfig-r022-20230830 (https://download.01.org/0day-ci/archive/20230830/202308300910.e0i4piJT-lkp@intel.com/config)
+> compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230830/202308300910.e0i4piJT-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202308300910.e0i4piJT-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    ld: vmlinux.o: in function `reserve_crashkernel_low':
+>    kernel/crash_core.c:369: undefined reference to `crashk_low_res'
+>    ld: kernel/crash_core.c:369: undefined reference to `crashk_low_res'
+>    ld: kernel/crash_core.c:370: undefined reference to `crashk_low_res'
+>    ld: kernel/crash_core.c:369: undefined reference to `crashk_low_res'
+>    ld: kernel/crash_core.c:370: undefined reference to `crashk_low_res'
+>    ld: vmlinux.o:kernel/crash_core.c:371: more undefined references to `crashk_low_res' follow
+>    ld: vmlinux.o: in function `reserve_crashkernel_generic':
+> >> kernel/crash_core.c:453: undefined reference to `crashk_res'
+> >> ld: kernel/crash_core.c:453: undefined reference to `crashk_res'
+>    ld: kernel/crash_core.c:454: undefined reference to `crashk_res'
+> >> ld: kernel/crash_core.c:453: undefined reference to `crashk_res'
+>    ld: kernel/crash_core.c:454: undefined reference to `crashk_res'
+>    ld: vmlinux.o:kernel/crash_core.c:454: more undefined references to `crashk_res' follow
 
-On 30.08.23 00:07, Stanislav Kinsburskii wrote:
->
-> On Mon, Aug 28, 2023 at 10:50:19PM +0200, Alexander Graf wrote:
->> +kexec, iommu, kvm
->>
->> On 23.08.23 04:45, Stanislav Kinsburskii wrote:
->>> +akpm, +linux-mm
->>>
->>> On Fri, Aug 25, 2023 at 01:32:40PM +0000, Gowans, James wrote:
->>>> On Fri, 2023-08-25 at 10:05 +0200, Greg Kroah-Hartman wrote:
->>>>
->>>> Thanks for adding me to this thread Greg!
->>>>
->>>>> On Tue, Aug 22, 2023 at 11:34:34AM -0700, Stanislav Kinsburskii wrote:
->>>>>> This patch addresses the need for a memory allocator dedicated to
->>>>>> persistent memory within the kernel. This allocator will preserve
->>>>>> kernel-specific states like DMA passthrough device states, IOMMU state, and
->>>>>> more across kexec.
->>>>>> The proposed solution offers a foundational implementation for potential
->>>>>> custom solutions that might follow. Though the implementation is
->>>>>> intentionally kept concise and straightforward to foster discussion and
->>>>>> feedback, it's fully functional in its current state.
->>>> Hi Stanislav, it looks like we're working on similar things. I'm looking
->>>> to develop a mechanism to support hypervisor live update for when KVM is
->>>> running VMs with PCI device passthrough. VMs with device passthrough
->>>> also necessitates passing and re-hydrating IOMMU state so that DMA can
->>>> continue during live update.
->>>>
->>>> Planning on having an LPC session on this topic:
->>>> https://lpc.events/event/17/abstracts/1629/ (currently it's only a
->>>> submitted abstract so not sure if visible, hopefully it will be soon).
->>>>
->>>> We are looking at implementing persistence across kexec via an in-memory
->>>> filesystem on top of reserved memory. This would have files for anything
->>>> that needs to be persisted. That includes files for IOMMU pgtables, for
->>>> guest memory or userspace-accessible memory.
->>>>
->>>> It may be nice to solve all kexec persistence requirements with one
->>>> solution, but we can consider IOMMU separately. There are at least three
->>>> ways that this can be done:
->>>> a) carving out reserved memory for pgtables. This is done by your
->>>> proposal here, as well as my suggestion of a filesystem.
->>>> b) pre/post kexec hooks for drivers to serialise state and pass it
->>>> across in a structured format from old to new kernel.
->>>> c) Reconstructing IOMMU state in the new kernel by starting at the
->>>> hardware registers and walking the page tables. No state passing needed.
->>>>
->>>> Have you considered option (b) and (c) here? One of the implications of
->>>> (b) and (c) are that they would need to hook into the buddy allocator
->>>> really early to be able to carve out the reconstructed page tables
->>>> before the allocator is used. Similar to how pkram [0] hooks in early to
->>>> carve out pages used for its filesystem.
->>>>
->>> Hi James,
->>>
->>> We are indeed working on similar things, so thanks for chiming in.
->>> I've seen pkram proposal as well as your comments there.
->>>
->>> I think (b) will need some persistent-over-kexec memory to pass the
->>> state across kexec as well as some key-value store persisted as well.
->>> And the proposed persistent memory pool is aimed exactly for this
->>> purpose.
->>> Or do you imply some other way to pass driver's data accross kexec?
->>
->> If I had to build this, I'd probably do it just like device tree passing on
->> ARM. It's a single, physically contiguous blob of data whose entry point you
->> pass to the target kernel. IIRC ACPI passing works similarly. This would
->> just be one more opaque data structure that then needs very strict
->> versioning and forward/backward compat guarantees.
->>
-> Device tree or ACPI are options indeed. However AFAIU in case of DT user
-> space has to involved into the picture to modify and complie it, while
-> ACPI isn't flexible or easily extendable.
-> Also, AFAIU both these standards were designed with passing
-> hardware-specific data in mind from bootstrap software to an OS kernel
-> and thus were never really intended to be used for creating a persistent
-> state accross kexec.
-> To me, an attempt to use either of them to pass kernel-specific data looks
-> like an abuse (or misuse) excused by the simplicity of implementation.
+Thanks for reporting. This one has the same root cause as the i386-randconfig
+building. It's because crashk_res|crashk_low_res are defined in
+kernel/kexec_core.c, but referenced in generic reservation code in
+crash_core.c, while in this lkp's randconfig, CONFIG_KEXEC_CORE is
+unset, CONFIG_CRASH_CORE=on. Then undefined reference to `crashk_res'
+and `crashk_low_res' are reported.
 
+Below patch can fix it. I will post v3 to contain this.
 
-What I was describing above is that the Linux boot protocol already has 
-natural ways to pass a DT (arm) or set of ACPI tables (x86) to the 
-target kernel. Whatever we do here should either piggy back on top of 
-those natural mechanisms (e.g. /chosen node in DT) or be on the same 
-level (e.g. pass DT in one register, pass metadata structure in another 
-register).
+From 5a5bda3b5b1e370b789489d87516c8f1fb966c46 Mon Sep 17 00:00:00 2001
+From: Baoquan He <bhe@redhat.com>
+Date: Tue, 29 Aug 2023 22:38:15 -0400
+Subject: [PATCH] crash_core: move crashk_res and crashk_low_res definition
+ into crash_core.c
+Content-type: text/plain
 
-When it comes to the actual content of the metadata, I'm personally also 
-leaning towards DT. We already have libfdt inside the kernel. It gives 
-is a very simple, well understood structured file format that you can 
-extend, version, etc etc. And the kernel has mechanisms to modify fdt 
-contents.
+Both crashk_res and crashk_low_res are used to mark the reserved
+crashkernel regions in iomem_resource tree. And later the generic
+crashkernel resrvation which references them will be added into
+crash_core.c. So move crashk_res and crashk_low_res definition into
+crash_core.c to avoid compiling error when CONFIG_CRASH_CORE=on while
+CONFIG_KEXEC_CORE is unset.
 
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+ include/linux/crash_core.h |  5 +++++
+ include/linux/kexec.h      |  4 ----
+ kernel/crash_core.c        | 16 ++++++++++++++++
+ kernel/kexec_core.c        | 17 -----------------
+ 4 files changed, 21 insertions(+), 21 deletions(-)
 
->
->>> I dind't consider (c) yet, thanks for for the pointer.
->>>
->>> I have a question in this scope: how is PCI devices registers state is persisted
->>> across kexec with the files system you are working on? I.e. how does
->>> driver know, that the device shouldn't not be reinitialized?
->>
->> The easiest way to do it initially would be kernel command line options that
->> hack up the drivers. But I suppose depending on the option we go with, you
->> can also use the respective "natural" path:
->>
->> (a) A special metadata file that explains the state to the driver
->> (b) An entry in the structured file format that explains the state to the
->> target driver
->> (c) Compatible target drivers try to enumerate state from the target
->> device's register file
->>
-> Command line option is the simplest way to go indeed, but from my POV
-> it's good only for pointing to a particualr object, which is persisted
-> somehow else. But it we have a persistence mechanism, then I think we
-> can make another step forward and don't use command line at all (which
-> is a bit cumbersome and errorprone due to it's human-readable and
-> serialized nature).
->
-> I'm leaning towards some kind of "natural" path you mentioned... I guess
-> I'm a bit confused with the word "file" here, as it sounds line it
-> implies a file system driver, and I'm not sure that's what we want for
-> driver specific data.
-
-
-Oh, I was just referring to the set of registers a device exposes :).
-
-
->
->>>>>> Potential applications include:
->>>>>>
->>>>>>     1. Allowing various in-kernel entities to allocate persistent pages from
->>>>>>        a singular memory pool, eliminating the need for multiple region
->>>>>>        reservations.
->>>>>>
->>>>>>     2. For in-kernel components that require the allocation address to be
->>>>>>        available on kernel kexec, this address can be exposed to user space and
->>>>>>        then passed via the command line.
->>>> Do you have specific examples of other state that needs to be passed
->>>> across? Trying to see whether tailoring specifically to the IOMMU case
->>>> is okay. Conceptually IOMMU state can be reconstructed starting with
->>>> hardware registers, not needing reserved memory. Other use-cases may not
->>>> have this option.
->>>>
->>> Well, basically it's IOMMU state and PCI devices to skip/avoid
->>> initializing.
->>> I bet there can be other misc (and unrelated things) like persistent
->>> filesystems, block devices, etc. But I don't have a solid set of use
->>> cases to present.
->>
->> Would be great if you could think through the problem space until LPC so we
->> can have a solid conversation there :)
->>
-> Yeah, I have a few ideas I'll try to implement and share before LPC.
-> Unfortunatelly I'm not planning to attend it this year, so this
-> conversation will be without me.
-> But I'll do my best to provide as much content to discuss as I can.
-
-
-Thanks, looking forward to it! :)
-
-
-Alex
-
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
+diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+index d64006c4bd43..daa87b8730d3 100644
+--- a/include/linux/crash_core.h
++++ b/include/linux/crash_core.h
+@@ -9,6 +9,11 @@
+ #include <asm/crash_core.h>
+ #endif
+ 
++/* Location of a reserved region to hold the crash kernel.
++ */
++extern struct resource crashk_res;
++extern struct resource crashk_low_res;
++
+ #define CRASH_CORE_NOTE_NAME	   "CORE"
+ #define CRASH_CORE_NOTE_HEAD_BYTES ALIGN(sizeof(struct elf_note), 4)
+ #define CRASH_CORE_NOTE_NAME_BYTES ALIGN(sizeof(CRASH_CORE_NOTE_NAME), 4)
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 22b5cd24f581..e762b0435c39 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -22,10 +22,6 @@
+ #include <uapi/linux/kexec.h>
+ #include <linux/verification.h>
+ 
+-/* Location of a reserved region to hold the crash kernel.
+- */
+-extern struct resource crashk_res;
+-extern struct resource crashk_low_res;
+ extern note_buf_t __percpu *crash_notes;
+ 
+ #ifdef CONFIG_KEXEC_CORE
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 61a8ea3b23a2..d76e7280c651 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -28,6 +28,22 @@ u32 *vmcoreinfo_note;
+ /* trusted vmcoreinfo, e.g. we can make a copy in the crash memory */
+ static unsigned char *vmcoreinfo_data_safecopy;
+ 
++/* Location of the reserved area for the crash kernel */
++struct resource crashk_res = {
++	.name  = "Crash kernel",
++	.start = 0,
++	.end   = 0,
++	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
++	.desc  = IORES_DESC_CRASH_KERNEL
++};
++struct resource crashk_low_res = {
++	.name  = "Crash kernel",
++	.start = 0,
++	.end   = 0,
++	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
++	.desc  = IORES_DESC_CRASH_KERNEL
++};
++
+ /*
+  * parsing the "crashkernel" commandline
+  *
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index e2f2574d8b74..03ee65546df6 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -55,23 +55,6 @@ note_buf_t __percpu *crash_notes;
+ /* Flag to indicate we are going to kexec a new kernel */
+ bool kexec_in_progress = false;
+ 
+-
+-/* Location of the reserved area for the crash kernel */
+-struct resource crashk_res = {
+-	.name  = "Crash kernel",
+-	.start = 0,
+-	.end   = 0,
+-	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
+-	.desc  = IORES_DESC_CRASH_KERNEL
+-};
+-struct resource crashk_low_res = {
+-	.name  = "Crash kernel",
+-	.start = 0,
+-	.end   = 0,
+-	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
+-	.desc  = IORES_DESC_CRASH_KERNEL
+-};
+-
+ int kexec_should_crash(struct task_struct *p)
+ {
+ 	/*
+-- 
+2.41.0
 
 
 _______________________________________________
