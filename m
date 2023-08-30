@@ -4,71 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 48376C6FA8F
-	for <kexec@archiver.kernel.org>; Wed, 30 Aug 2023 11:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8AD77C83F15
+	for <kexec@archiver.kernel.org>; Wed, 30 Aug 2023 13:21:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References:Date:
+	Message-Id:From:Subject:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=NIwb1ICHJiRhqTTD/EliuGxT+K3deE6OWkTWDqGiuGk=; b=Cl3rSsaznR1MPY
-	EC5iC3Xnatz5NPMEIX6IF2vUgDvPI+GyupcCBHZZ8ngmUUMFOX9k6W3AtC19tdXouMpZFUh3bL1vB
-	Q/GHkyxlqn78g8P4wbNDgaQ8XQOj8p5kgSSp9Jz3Fv7IxZGGG67tR88e4IqRk1S1GgO5qHVv+cD9+
-	uRpGWxR610y6ScUImCPwU2vtdqC572XIHGxaN6QHD+sWc6RZH11axHyNsDg4q1fKPGpr+ahBvR3+V
-	i+EjZ4LmHcDv8V5FK/nn1LVil3UiW9Z9ZLEfaDwb7CNSGfBW7GJYl/rOYdphXxxncCrl0R5mppL9C
-	ApqcNWgHdcp3RJmZ7Zpw==;
+	List-Owner; bh=zx0Md3zPJJK9PK544em0dgx0WAveEfrE03+C9/PnpcY=; b=TlwHEPV8EtwY3y
+	WmIOUS7cmN24dXUmIaUi65kNPzN1+CbS51F0yN7iPu3B3idcd/LVwK2H1tFwLLXNnjQjuQm4wnBif
+	zE/tdP0rqfwjhON3gDVRRsaJcKsi5WrzGJMVvmzUwucFbi3G83yyuV61qyPz5rtKmfQmon63bZh+H
+	zBTKuxk6vBwzMClFxAD+9VZCxR9ccNXZxyWgzf+RCQZapN9D28/ICWaYPm7GtTsqdmjlAYdxCeo/p
+	Q7EjBEu+Hp80ZZdqdQ0SldG6NGyQ/4OR0LNZxgJMMbzM8zdEW8ir+f87pay7DX7F9Ki0LZC5C+M3j
+	zgc4iYqpT9suix84TNKg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qbJXc-00DPcK-1e;
-	Wed, 30 Aug 2023 11:39:20 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1qbL84-00DXqA-33;
+	Wed, 30 Aug 2023 13:21:04 +0000
+Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qbJXY-00DPbW-0s
-	for kexec@lists.infradead.org;
-	Wed, 30 Aug 2023 11:39:18 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1693395555;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cTX1jjRNGO8OcMeJufjnK0bfy5r6OmV10OVkYSeEhKk=;
-	b=MvC+HfCFu21HB8c1f+5+kS+y4prHO2Y0UbhhYZ18ILGNL4QnCaX99AeGnWgUHyMdaYTp8p
-	VMAuol6rHJMPWhtL/okpQo5egvhXoE+gAM9MB/AUxiUNCVSn5mnSUr5WNn0alGryWzbdgO
-	8J52FQxI07+nL1RoE3ZfPGnCWfYLiX0=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-655-vpS9i7EZNOObdnNWiyPNYA-1; Wed, 30 Aug 2023 07:39:10 -0400
-X-MC-Unique: vpS9i7EZNOObdnNWiyPNYA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	id 1qbL7g-00DXXu-0E;
+	Wed, 30 Aug 2023 13:20:43 +0000
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BF2A885CBE2;
-	Wed, 30 Aug 2023 11:39:09 +0000 (UTC)
-Received: from localhost (unknown [10.72.113.118])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id E6F7CC15BAE;
-	Wed, 30 Aug 2023 11:39:08 +0000 (UTC)
-Date: Wed, 30 Aug 2023 19:39:05 +0800
-From: Baoquan He <bhe@redhat.com>
-To: kernel test robot <lkp@intel.com>
-Cc: linux-kernel@vger.kernel.org, oe-kbuild-all@lists.linux.dev,
-	akpm@linux-foundation.org, catalin.marinas@arm.com,
-	thunder.leizhen@huawei.com, dyoung@redhat.com, prudo@redhat.com,
-	samuel.holland@sifive.com, kexec@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, x86@kernel.org
-Subject: Re: [PATCH v2 6/8] x86: kdump: use generic interface to simplify
- crashkernel reservation code
-Message-ID: <ZO8qWQg23JT2lWNg@MiWiFi-R3L-srv>
-References: <20230829121610.138107-7-bhe@redhat.com>
- <202308300910.e0i4piJT-lkp@intel.com>
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 589CD6229A;
+	Wed, 30 Aug 2023 13:20:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E87D7C433BB;
+	Wed, 30 Aug 2023 13:20:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1693401635;
+	bh=Rk0PKoJyEZ5+FRNg9NgHMqK2XLSnuE+lrVJYZ51wZv4=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=MSVZRLD2fYUKb2eMAH/iloYGZzAMw1SeGca57apnBqdpGujyoYPtNdzUbInPAYrFz
+	 iGpIEXi4XMveXZN+tb3s3Gz2/9Tr5qpVAmf1TMYBWcBH0NaniNNDvel1j5a2BOc7Ey
+	 lOGMygkkHRJAnB1w1forSsGfM+5KEjV8/kSL9WMlodzLdaekNwjp2YSeNqnOM4TFrT
+	 TSJrs8JWa32KdcqouXL3K1f2kIzWg/HU7SjIuuGR/nHFkPwdRr/eLo34u3oqy4kS9S
+	 YQ07FSm7pXI0C8or5vdvUZlYzNcblvunjYksSy8G+WW0MUe7ZpNPNihRsYT7hTtWGJ
+	 IAGlghIUyML/g==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id CF870E29F3D;
+	Wed, 30 Aug 2023 13:20:34 +0000 (UTC)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <202308300910.e0i4piJT-lkp@intel.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
+Subject: Re: [PATCH -next v9 0/2] support allocating crashkernel above 4G
+ explicitly on riscv
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: <169340163484.19859.603263749901327950.git-patchwork-notify@kernel.org>
+Date: Wed, 30 Aug 2023 13:20:34 +0000
+References: <20230726175000.2536220-1-chenjiahao16@huawei.com>
+In-Reply-To: <20230726175000.2536220-1-chenjiahao16@huawei.com>
+To: chenjiahao (C) <chenjiahao16@huawei.com>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ kexec@lists.infradead.org, linux-doc@vger.kernel.org,
+ paul.walmsley@sifive.com, palmer@dabbelt.com, conor.dooley@microchip.com,
+ guoren@kernel.org, heiko@sntech.de, bjorn@rivosinc.com, alex@ghiti.fr,
+ akpm@linux-foundation.org, atishp@rivosinc.com, bhe@redhat.com,
+ thunder.leizhen@huawei.com, horms@kernel.org
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230830_043916_377685_7E8AAFBC 
-X-CRM114-Status: GOOD (  29.41  )
+X-CRM114-CacheID: sfid-20230830_062040_170237_BD153F3F 
+X-CRM114-Status: UNSURE (   9.76  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,167 +82,34 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 08/30/23 at 09:49am, kernel test robot wrote:
-> Hi Baoquan,
-> 
-> kernel test robot noticed the following build errors:
-> 
-> [auto build test ERROR on arm64/for-next/core]
-> [also build test ERROR on tip/x86/core powerpc/next powerpc/fixes v6.5]
-> [cannot apply to linus/master next-20230829]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Baoquan-He/crash_core-c-remove-unnecessary-parameter-of-function/20230829-201942
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/core
-> patch link:    https://lore.kernel.org/r/20230829121610.138107-7-bhe%40redhat.com
-> patch subject: [PATCH v2 6/8] x86: kdump: use generic interface to simplify crashkernel reservation code
-> config: x86_64-randconfig-r022-20230830 (https://download.01.org/0day-ci/archive/20230830/202308300910.e0i4piJT-lkp@intel.com/config)
-> compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230830/202308300910.e0i4piJT-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202308300910.e0i4piJT-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
->    ld: vmlinux.o: in function `reserve_crashkernel_low':
->    kernel/crash_core.c:369: undefined reference to `crashk_low_res'
->    ld: kernel/crash_core.c:369: undefined reference to `crashk_low_res'
->    ld: kernel/crash_core.c:370: undefined reference to `crashk_low_res'
->    ld: kernel/crash_core.c:369: undefined reference to `crashk_low_res'
->    ld: kernel/crash_core.c:370: undefined reference to `crashk_low_res'
->    ld: vmlinux.o:kernel/crash_core.c:371: more undefined references to `crashk_low_res' follow
->    ld: vmlinux.o: in function `reserve_crashkernel_generic':
-> >> kernel/crash_core.c:453: undefined reference to `crashk_res'
-> >> ld: kernel/crash_core.c:453: undefined reference to `crashk_res'
->    ld: kernel/crash_core.c:454: undefined reference to `crashk_res'
-> >> ld: kernel/crash_core.c:453: undefined reference to `crashk_res'
->    ld: kernel/crash_core.c:454: undefined reference to `crashk_res'
->    ld: vmlinux.o:kernel/crash_core.c:454: more undefined references to `crashk_res' follow
+Hello:
 
-Thanks for reporting. This one has the same root cause as the i386-randconfig
-building. It's because crashk_res|crashk_low_res are defined in
-kernel/kexec_core.c, but referenced in generic reservation code in
-crash_core.c, while in this lkp's randconfig, CONFIG_KEXEC_CORE is
-unset, CONFIG_CRASH_CORE=on. Then undefined reference to `crashk_res'
-and `crashk_low_res' are reported.
+This series was applied to riscv/linux.git (for-next)
+by Palmer Dabbelt <palmer@rivosinc.com>:
 
-Below patch can fix it. I will post v3 to contain this.
+On Wed, 26 Jul 2023 17:49:58 +0000 you wrote:
+> On riscv, the current crash kernel allocation logic is trying to
+> allocate within 32bit addressible memory region by default, if
+> failed, try to allocate without 4G restriction.
+> 
+> In need of saving DMA zone memory while allocating a relatively large
+> crash kernel region, allocating the reserved memory top down in
+> high memory, without overlapping the DMA zone, is a mature solution.
+> Hence this patchset introduces the parameter option crashkernel=X,[high,low].
+> 
+> [...]
 
-From 5a5bda3b5b1e370b789489d87516c8f1fb966c46 Mon Sep 17 00:00:00 2001
-From: Baoquan He <bhe@redhat.com>
-Date: Tue, 29 Aug 2023 22:38:15 -0400
-Subject: [PATCH] crash_core: move crashk_res and crashk_low_res definition
- into crash_core.c
-Content-type: text/plain
+Here is the summary with links:
+  - [-next,v9,1/2] riscv: kdump: Implement crashkernel=X,[high,low]
+    https://git.kernel.org/riscv/c/5882e5acf18d
+  - [-next,v9,2/2] docs: kdump: Update the crashkernel description for riscv
+    https://git.kernel.org/riscv/c/33f0dd973d4e
 
-Both crashk_res and crashk_low_res are used to mark the reserved
-crashkernel regions in iomem_resource tree. And later the generic
-crashkernel resrvation which references them will be added into
-crash_core.c. So move crashk_res and crashk_low_res definition into
-crash_core.c to avoid compiling error when CONFIG_CRASH_CORE=on while
-CONFIG_KEXEC_CORE is unset.
-
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
- include/linux/crash_core.h |  5 +++++
- include/linux/kexec.h      |  4 ----
- kernel/crash_core.c        | 16 ++++++++++++++++
- kernel/kexec_core.c        | 17 -----------------
- 4 files changed, 21 insertions(+), 21 deletions(-)
-
-diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-index d64006c4bd43..daa87b8730d3 100644
---- a/include/linux/crash_core.h
-+++ b/include/linux/crash_core.h
-@@ -9,6 +9,11 @@
- #include <asm/crash_core.h>
- #endif
- 
-+/* Location of a reserved region to hold the crash kernel.
-+ */
-+extern struct resource crashk_res;
-+extern struct resource crashk_low_res;
-+
- #define CRASH_CORE_NOTE_NAME	   "CORE"
- #define CRASH_CORE_NOTE_HEAD_BYTES ALIGN(sizeof(struct elf_note), 4)
- #define CRASH_CORE_NOTE_NAME_BYTES ALIGN(sizeof(CRASH_CORE_NOTE_NAME), 4)
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 22b5cd24f581..e762b0435c39 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -22,10 +22,6 @@
- #include <uapi/linux/kexec.h>
- #include <linux/verification.h>
- 
--/* Location of a reserved region to hold the crash kernel.
-- */
--extern struct resource crashk_res;
--extern struct resource crashk_low_res;
- extern note_buf_t __percpu *crash_notes;
- 
- #ifdef CONFIG_KEXEC_CORE
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 61a8ea3b23a2..d76e7280c651 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -28,6 +28,22 @@ u32 *vmcoreinfo_note;
- /* trusted vmcoreinfo, e.g. we can make a copy in the crash memory */
- static unsigned char *vmcoreinfo_data_safecopy;
- 
-+/* Location of the reserved area for the crash kernel */
-+struct resource crashk_res = {
-+	.name  = "Crash kernel",
-+	.start = 0,
-+	.end   = 0,
-+	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
-+	.desc  = IORES_DESC_CRASH_KERNEL
-+};
-+struct resource crashk_low_res = {
-+	.name  = "Crash kernel",
-+	.start = 0,
-+	.end   = 0,
-+	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
-+	.desc  = IORES_DESC_CRASH_KERNEL
-+};
-+
- /*
-  * parsing the "crashkernel" commandline
-  *
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index e2f2574d8b74..03ee65546df6 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -55,23 +55,6 @@ note_buf_t __percpu *crash_notes;
- /* Flag to indicate we are going to kexec a new kernel */
- bool kexec_in_progress = false;
- 
--
--/* Location of the reserved area for the crash kernel */
--struct resource crashk_res = {
--	.name  = "Crash kernel",
--	.start = 0,
--	.end   = 0,
--	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
--	.desc  = IORES_DESC_CRASH_KERNEL
--};
--struct resource crashk_low_res = {
--	.name  = "Crash kernel",
--	.start = 0,
--	.end   = 0,
--	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
--	.desc  = IORES_DESC_CRASH_KERNEL
--};
--
- int kexec_should_crash(struct task_struct *p)
- {
- 	/*
+You are awesome, thank you!
 -- 
-2.41.0
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
 
 _______________________________________________
