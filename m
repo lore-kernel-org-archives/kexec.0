@@ -4,104 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EB143C83F01
-	for <kexec@archiver.kernel.org>; Wed, 30 Aug 2023 13:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BE12BC6FA8F
+	for <kexec@archiver.kernel.org>; Wed, 30 Aug 2023 14:12:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=nyYF8GYZjPso2xXXVlLLIw507mh/sw1u+nOuB/L+iQo=; b=XpjhNMCc4TrglO
-	QVu3m1ikQHMsNZTgFjBQKZxnPFZ86dhepxGaH2G9FMTg+TbISZ64dxJ6dtseiuETKKsa1zi//gCSs
-	QP/2qkZTeWBXwSDHCFlZul722XK8/jNGxMKv3G/GOqQmKdIvSj0V608F20tP6GvNc0jROpuXyw+la
-	030TmzNU2cmFyKfLwcgnylZ1WPiabUYErlHJnIa+E5X3DaxpV+ucxMToG2NNrWQU8Omf5l0PIrB/q
-	U2LKrZNQujuYFAEYnVa7h9PuVypKIkY0ISR81y4MpybIrlv5tfAuPK3tUy7nrk/xKxv800AvFhK3W
-	mW547nzN77IyrhXSz/zA==;
+	List-Owner; bh=Pcqkg37l4ypQedHyw9/i+csijtFDmyVkUerIGufVn8Q=; b=s35UxV9px+6vAt
+	nbW6WLcAmK5ReQDrD4kGzA8B+3OcVkjwnIdY54SH/9r4Pm8KdfVPXRmXJLwXJG+MT+Cp00TjBSWPk
+	d/FSFUNUrLgiJy5wOcmjNbV7jjV0q+YIANIu6RoYb61rTGnMxUtCKgxNbT7+QW7KQBsDKUvVjQ6wi
+	nXcZRYhkrnvIR0MYOpXRcwkb4k75k+8xpzD9C/mFzj++O47dsMO0dov/Bfj3u+7TvpwUIITTOwVOP
+	STfnDCMtZf+ixjnb0JFTBXFADdc1/YNSzVk7vyoKdXDZdZwuBEns7V5jfcuqu7Cpb1WBrCBGes6i6
+	lO8LxZF7j0cJVmZJw8qQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qbLWw-00Dbwo-17;
-	Wed, 30 Aug 2023 13:46:46 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1qbLvO-00DeZ4-2P;
+	Wed, 30 Aug 2023 14:12:02 +0000
+Received: from mail-oo1-xc35.google.com ([2607:f8b0:4864:20::c35])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qbLWt-00DbuO-2t
+	id 1qbLvL-00DeYF-3A
 	for kexec@lists.infradead.org;
-	Wed, 30 Aug 2023 13:46:45 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1693403203;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=w7XXAxDLUmZdx81fESQwCFLbPlVQDp3wBmzbmeWO24M=;
-	b=YkMcg0qKAZmEEfDMi44h3xAsrFu8AH6DiusKV7zSAF0tI3JGYUWWYqQCt4UGN8EW3+Q82F
-	V9sPjnH1Hkf93G0uIW/9Nio9WAOVO/q9r39CaicSSdQazMLIjA4yIbSGPVqtpszQcyOzf7
-	4VGzc9QdQVvQhaXmNcZQrKk62HXTPNg=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-67-a-TiSxnIP6GqhEM6ijgaDA-1; Wed, 30 Aug 2023 09:46:41 -0400
-X-MC-Unique: a-TiSxnIP6GqhEM6ijgaDA-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-94a342f1703so87949466b.0
-        for <kexec@lists.infradead.org>; Wed, 30 Aug 2023 06:46:41 -0700 (PDT)
+	Wed, 30 Aug 2023 14:12:01 +0000
+Received: by mail-oo1-xc35.google.com with SMTP id 006d021491bc7-571194584e2so3458333eaf.3
+        for <kexec@lists.infradead.org>; Wed, 30 Aug 2023 07:11:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1693404717; x=1694009517; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QkS0efXVCy8VZ5VmSKwsFXPwQqBxWGJyzZuacJMQHs0=;
+        b=phEe/S9+JnbseuQzNEUcPpDF1TtxVLDxk5lSpHkkiyEnwgfkznVgzRF1IxZjKmHeWm
+         +D4XmGNfdo4jvYPXjkpPXgmmsdu82YL0Mn/84jvHGxkHWxaLds4l4hfsP7TdYFVgQ3tB
+         sMDCa5a1oq9haOmhuZEERmY4P5qXMVrwYVbz5O3FXkXGo13PX0ZOcqq9mVl5cHQdzqhO
+         2xKB6/2zvSbgakFk2Gbbu3F+DyOWXZBMus7DXY1lMpETWZ0BQPa4F+pDM9O7/87cWNmC
+         E8V1wQ69nJcjEp/QgPXuADpgTOhU1OCl9LjRNAAkiMrD6OUnmVtLLJo/RuBtYzdeEote
+         80ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693403200; x=1694008000;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1693404717; x=1694009517;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=w7XXAxDLUmZdx81fESQwCFLbPlVQDp3wBmzbmeWO24M=;
-        b=WgA4ZCACwD4UgwV8lJlxMujHgiF+Ht7Om81yIeWNSstW01l5QBbJfokfpD41jCuBuZ
-         GILYQU0jp4Xduu5Y43Utz//Mobk/deHcg/i8Luo6Xy7JUyCOtXnK6g/J/h0lkxzKftqa
-         l6oIBOH0VHbQzfztC36vgl1BAoScatGlzEpRNqVs60oQcz3IXK9lEMmQR7bm1Sbb+S+Y
-         m2KBZ0YsH7VRH2V6+m5aK2HoeVw4ml/ZP09vDITaXPLC2YwjA+KFFXRwk4Xdc72Ccfup
-         8V9JtygKWfsbfx+E9WJBhs7hjMNHYp5Py39BXD6L/jLxEYrpuaAgH/l63F+ZaaB7JuFk
-         RVug==
-X-Gm-Message-State: AOJu0YyzgmiSz+ODBXvSVCucUzcXkbJhgKeoOn3OtkM0S1cNE83JaMVG
-	zEJj1TUintLHy5CIbAk/iNCWhoyNYMI5P0SGp+T5u4OvJWiwTGImA+H9/KEv39OSBpl+yqq5itX
-	9bKuCGkMnxk5Sa9Bt8bKp
-X-Received: by 2002:a17:906:1011:b0:9a1:aea8:cb5a with SMTP id 17-20020a170906101100b009a1aea8cb5amr1574496ejm.1.1693403200683;
-        Wed, 30 Aug 2023 06:46:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEFovveJ1gRkNa/hbpuOdO660EpmuFNfSfZvj7MduSJ07LTCEG5M6k7oeDfsA0MPBedrGa9vw==
-X-Received: by 2002:a17:906:1011:b0:9a1:aea8:cb5a with SMTP id 17-20020a170906101100b009a1aea8cb5amr1574480ejm.1.1693403200487;
-        Wed, 30 Aug 2023 06:46:40 -0700 (PDT)
-Received: from fedorinator.fritz.box ([2001:9e8:32e4:1500:aa40:e745:b6c9:7081])
-        by smtp.gmail.com with ESMTPSA id gy25-20020a170906f25900b0098951bb4dc3sm7218566ejb.184.2023.08.30.06.46.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Aug 2023 06:46:40 -0700 (PDT)
-From: Philipp Stanner <pstanner@redhat.com>
-To: Kees Cook <keescook@chromium.org>,
-	Andy Shevchenko <andy@kernel.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Christian Brauner <brauner@kernel.org>,
-	David Disseldorp <ddiss@suse.de>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Siddh Raman Pant <code@siddh.me>,
-	Nick Alcock <nick.alcock@oracle.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Zack Rusin <zackr@vmware.com>
-Cc: VMware Graphics Reviewers <linux-graphics-maintainer@vmware.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org,
-	linux-hardening@vger.kernel.org,
-	Philipp Stanner <pstanner@redhat.com>,
-	David Airlie <airlied@redhat.com>
-Subject: [PATCH 5/5] drm: vmgfx_surface.c: copy user-array safely
-Date: Wed, 30 Aug 2023 15:45:56 +0200
-Message-ID: <6f9397d6af919b7e8325c2945385c13aaa3dc5f1.1693386602.git.pstanner@redhat.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <cover.1693386602.git.pstanner@redhat.com>
-References: <cover.1693386602.git.pstanner@redhat.com>
+        bh=QkS0efXVCy8VZ5VmSKwsFXPwQqBxWGJyzZuacJMQHs0=;
+        b=cCLKiAEzyCTImKK9VX+f7WOwho+yIqF7xNlfM9HYxwUWdEDe2AfG8h7l27+XxbF+WJ
+         XgQ8WRYlYBcv0ULA21+WWnS7a1bXcNoj+vocna7Y6JHbwfHyWvUqilXp/QvDHBv+KEfi
+         z4E4sZotMCvB08JI8AovkMEX5E/gsVY1uhaw52/plCdvnp257mjR4XAn6k8I5IZ+R0Mw
+         ZOaTtDtBdBaBKLb70tV39MuqNOFQeZSZMV305mBOXmz7LSwt+ZKxqybKzfPxXwPJqGFQ
+         LZFv5Ji2BUpwKDPcvkBID+DGyOVybMNTiV3DLQmWKde2sH9yH4d3uZgvnicTxBy4KkKg
+         nTfg==
+X-Gm-Message-State: AOJu0YxADrWs4lc7qrGjbxbKxAbLefnly48k3z9nC+o+Su8UIXRNSzd8
+	v+uCT2QxFe49Z5WgLyl/CaxukgS3PMYWJ9f3SfM=
+X-Google-Smtp-Source: AGHT+IGbT74tfz3VyfVut6ethLJwLvDm6Tl7JSJUbcDNwD+fiygq/r9pK7Rbz0oaYOoffpJo/r8wDHC3auZoXajOIhc=
+X-Received: by 2002:a4a:d213:0:b0:570:be00:5e14 with SMTP id
+ c19-20020a4ad213000000b00570be005e14mr2163595oos.8.1693404717504; Wed, 30 Aug
+ 2023 07:11:57 -0700 (PDT)
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+References: <cover.1693386602.git.pstanner@redhat.com> <46f667e154393a930a97d2218d8e90286d93a062.1693386602.git.pstanner@redhat.com>
+In-Reply-To: <46f667e154393a930a97d2218d8e90286d93a062.1693386602.git.pstanner@redhat.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 30 Aug 2023 17:11:21 +0300
+Message-ID: <CAHp75VfkzV-=XuEZwipYzfHNu4EXuwzbu6vfEKh1Uueseo2=wA@mail.gmail.com>
+Subject: Re: [PATCH 1/5] string.h: add array-wrappers for (v)memdup_user()
+To: Philipp Stanner <pstanner@redhat.com>
+Cc: Kees Cook <keescook@chromium.org>, Andy Shevchenko <andy@kernel.org>, 
+	Eric Biederman <ebiederm@xmission.com>, Christian Brauner <brauner@kernel.org>, 
+	David Disseldorp <ddiss@suse.de>, Luis Chamberlain <mcgrof@kernel.org>, Siddh Raman Pant <code@siddh.me>, 
+	Nick Alcock <nick.alcock@oracle.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Zack Rusin <zackr@vmware.com>, 
+	VMware Graphics Reviewers <linux-graphics-maintainer@vmware.com>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
+	linux-hardening@vger.kernel.org, David Airlie <airlied@redhat.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230830_064644_018780_54FFDF47 
-X-CRM114-Status: GOOD (  10.63  )
+X-CRM114-CacheID: sfid-20230830_071200_025156_29E944DA 
+X-CRM114-Status: GOOD (  17.80  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -113,43 +91,45 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Currently, there is no overflow-check with memdup_user().
-
-Use the new function memdup_array_user() instead of memdup_user() for
-duplicating the user-space array safely.
-
-Suggested-by: David Airlie <airlied@redhat.com>
-Signed-off-by: Philipp Stanner <pstanner@redhat.com>
----
- drivers/gpu/drm/vmwgfx/vmwgfx_surface.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_surface.c b/drivers/gpu/drm/vmwgfx/vmwgfx_surface.c
-index 5db403ee8261..9be185b094cb 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_surface.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_surface.c
-@@ -777,9 +777,9 @@ int vmw_surface_define_ioctl(struct drm_device *dev, void *data,
- 	       sizeof(metadata->mip_levels));
- 	metadata->num_sizes = num_sizes;
- 	metadata->sizes =
--		memdup_user((struct drm_vmw_size __user *)(unsigned long)
-+		memdup_array_user((struct drm_vmw_size __user *)(unsigned long)
- 			    req->size_addr,
--			    sizeof(*metadata->sizes) * metadata->num_sizes);
-+			    metadata->num_sizes, sizeof(*metadata->sizes));
- 	if (IS_ERR(metadata->sizes)) {
- 		ret = PTR_ERR(metadata->sizes);
- 		goto out_no_sizes;
--- 
-2.41.0
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gV2VkLCBBdWcgMzAsIDIwMjMgYXQgNDo0NuKAr1BNIFBoaWxpcHAgU3Rhbm5lciA8cHN0YW5u
+ZXJAcmVkaGF0LmNvbT4gd3JvdGU6Cj4KPiBDdXJyZW50bHksIHVzZXIgYXJyYXkgZHVwbGljYXRp
+b25zIGFyZSBzb21ldGltZXMgZG9uZSB3aXRob3V0IGFuCj4gb3ZlcmZsb3cgY2hlY2suIFNvbWV0
+aW1lcyB0aGUgY2hlY2tzIGFyZSBkb25lIG1hbnVhbGx5OyBzb21ldGltZXMgdGhlCj4gYXJyYXkg
+c2l6ZSBpcyBjYWxjdWxhdGVkIHdpdGggYXJyYXlfc2l6ZSgpIGFuZCBzb21ldGltZXMgYnkgY2Fs
+Y3VsYXRpbmcKPiBuICogc2l6ZSBkaXJlY3RseSBpbiBjb2RlLgo+Cj4gSW50cm9kdWNlIHdyYXBw
+ZXJzIGZvciBhcnJheXMgZm9yIG1lbWR1cF91c2VyKCkgYW5kIHZtZW1kdXBfdXNlcigpIHRvCj4g
+cHJvdmlkZSBhIHN0YW5kYXJkaXplZCBhbmQgc2FmZSB3YXkgZm9yIGR1cGxpY2F0aW5nIHVzZXIg
+YXJyYXlzLgo+Cj4gVGhpcyBpcyBib3RoIGZvciBuZXcgY29kZSBhcyB3ZWxsIGFzIHJlcGxhY2lu
+ZyB1c2FnZSBvZiAodiltZW1kdXBfdXNlcigpCj4gaW4gZXhpc3RpbmcgY29kZSB0aGF0IHVzZXMs
+IGUuZy4sIG4gKiBzaXplIHRvIGNhbGN1bGF0ZSBhcnJheSBzaXplcy4KCi4uLgoKPiAtLS0gYS9p
+bmNsdWRlL2xpbnV4L3N0cmluZy5oCj4gKysrIGIvaW5jbHVkZS9saW51eC9zdHJpbmcuaAoKSSdt
+IHdvbmRlcmluZyBpZiB0aGlzIGhhcyBubyBzaWRlLWVmZmVjdHMgYXMgc3RyaW5nLmgvc3RyaW5n
+LmMgSUlSQyBpcwp1c2VkIGFsc28gZm9yIGVhcmx5IHN0YWdlcyB3aGVyZSBzb21lIG9mIHRoZSBB
+UElzIGFyZSBub3QgYXZhaWxhYmxlLgoKPiBAQCAtNiw2ICs2LDggQEAKPiAgI2luY2x1ZGUgPGxp
+bnV4L3R5cGVzLmg+ICAgICAgIC8qIGZvciBzaXplX3QgKi8KPiAgI2luY2x1ZGUgPGxpbnV4L3N0
+ZGRlZi5oPiAgICAgIC8qIGZvciBOVUxMICovCj4gICNpbmNsdWRlIDxsaW51eC9lcnJuby5oPiAg
+ICAgICAvKiBmb3IgRTJCSUcgKi8KPiArI2luY2x1ZGUgPGxpbnV4L292ZXJmbG93Lmg+ICAgIC8q
+IGZvciBjaGVja19tdWxfb3ZlcmZsb3coKSAqLwo+ICsjaW5jbHVkZSA8bGludXgvZXJyLmg+ICAg
+ICAgICAgLyogZm9yIEVSUl9QVFIoKSAqLwoKQ2FuIHdlIHByZXNlcnZlIG9yZGVyICh0byBzb21l
+IGV4dGVudCk/Cgo+ICAjaW5jbHVkZSA8bGludXgvc3RkYXJnLmg+Cj4gICNpbmNsdWRlIDx1YXBp
+L2xpbnV4L3N0cmluZy5oPgoKLi4uCgo+ICsvKioKPiArICogbWVtZHVwX2FycmF5X3VzZXIgLSBk
+dXBsaWNhdGUgYXJyYXkgZnJvbSB1c2VyIHNwYWNlCgo+ICsgKgoKRG8gd2UgbmVlZCB0aGlzIGJs
+YW5rIGxpbmU/Cgo+ICsgKiBAc3JjOiBzb3VyY2UgYWRkcmVzcyBpbiB1c2VyIHNwYWNlCj4gKyAq
+IEBuOiBudW1iZXIgb2YgYXJyYXkgbWVtYmVycyB0byBjb3B5Cj4gKyAqIEBzaXplOiBzaXplIG9m
+IG9uZSBhcnJheSBtZW1iZXIKPiArICoKPiArICogUmV0dXJuOiBhbiBFUlJfUFRSKCkgb24gZmFp
+bHVyZS4gIFJlc3VsdCBpcyBwaHlzaWNhbGx5Cj4gKyAqIGNvbnRpZ3VvdXMsIHRvIGJlIGZyZWVk
+IGJ5IGtmcmVlKCkuCj4gKyAqLwoKLi4uCgo+ICsvKioKPiArICogdm1lbWR1cF9hcnJheV91c2Vy
+IC0gZHVwbGljYXRlIGFycmF5IGZyb20gdXNlciBzcGFjZQoKPiArICoKClJlZHVuZGFudD8KCj4g
+KyAqIEBzcmM6IHNvdXJjZSBhZGRyZXNzIGluIHVzZXIgc3BhY2UKPiArICogQG46IG51bWJlciBv
+ZiBhcnJheSBtZW1iZXJzIHRvIGNvcHkKPiArICogQHNpemU6IHNpemUgb2Ygb25lIGFycmF5IG1l
+bWJlcgo+ICsgKgo+ICsgKiBSZXR1cm46IGFuIEVSUl9QVFIoKSBvbiBmYWlsdXJlLiAgUmVzdWx0
+IG1heSBiZSBub3QKPiArICogcGh5c2ljYWxseSBjb250aWd1b3VzLiAgVXNlIGt2ZnJlZSgpIHRv
+IGZyZWUuCj4gKyAqLwoKLS0gCldpdGggQmVzdCBSZWdhcmRzLApBbmR5IFNoZXZjaGVua28KCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxp
+bmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
+b3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
