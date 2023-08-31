@@ -4,8 +4,8 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E4F8CC6FA8F
-	for <kexec@archiver.kernel.org>; Thu, 31 Aug 2023 01:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A7471C83F14
+	for <kexec@archiver.kernel.org>; Thu, 31 Aug 2023 02:30:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
@@ -13,65 +13,65 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	Message-ID:From:References:Cc:To:Subject:Reply-To:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
 	:Resent-Message-ID:List-Owner;
-	bh=MdrdyVUM2Yk0zg4IMWNrymMnHqI9YUttIv2GkEwa2lw=; b=MULlgnr7jK6Pmo+vz6Kdzxl6Q4
-	hdbvkR0cYhReGtu3PBv//Jpo5950XWa6GTef3gltwU24Tr5j2diEASFC+S4VDcf5xgeV3TmB3PZ5J
-	LIkgLvAJmGBpUXQRX4T766XssHP178KWbYN+npwcuNi/yryH9li5QzP1Wk4m7B0ycXI+pNepXkQ+v
-	Wgc290BHC6sMk3Jtudjd9D9k+pK/pHDp3AYYF5rmDLKC1/UgPkaW7oIiBYtqvkigvpPZrHfvdqaQ2
-	J9Mfbj5DfPdLN2jYSOWgZht63co9VcZFsnbstwLE4p9VFLQl5bP3wDQV7UxlgKGS16rBLVa/jP5qI
-	IrcNLDQw==;
+	bh=SOewb3NeS64w2ZMq8jruUU0MnjtnBf2votiSqvBlxjA=; b=nVStC5AZWbUCNS7pPPTP0X7jm0
+	o2ZJHd+BWokAXr7xYS6F6qUpaQZviy+D0q4fIZBYAMINS85x41n4Vp5Jo/8qDmmc2th4GoEYCOkRY
+	Zn05GcwjE0gT5vBWQc4V5FQMBuhrj7v+j/Hk3ywszEbfUbHYbAVdxrCJxcwtxh0ctle/PzcLJtIwQ
+	JapBrMherS+h3HJh6ZUemz3vxBLf3nIN0ptli74PHPmBugo9TaDYczqgkNoxc51lRDztfmawqaExT
+	J3m/vLrEkq6H73/f4b5evIejic7YfBlAn/2tKIcZsgCkNAYoUHkHBPzEPvlo3zYbZmfZUkftfJUqB
+	FMcJCDGQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qbWRt-00ERxU-2N;
-	Thu, 31 Aug 2023 01:26:17 +0000
-Received: from [45.249.212.51] (helo=dggsgout11.his.huawei.com)
+	id 1qbXS9-00EV5N-0R;
+	Thu, 31 Aug 2023 02:30:37 +0000
+Received: from [45.249.212.56] (helo=dggsgout12.his.huawei.com)
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qbWRr-00ERwJ-0f;
-	Thu, 31 Aug 2023 01:26:17 +0000
+	id 1qbXS5-00EV4V-0v;
+	Thu, 31 Aug 2023 02:30:35 +0000
 Received: from mail02.huawei.com (unknown [172.30.67.143])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Rbk540HQwz4f3l15;
-	Thu, 31 Aug 2023 09:26:00 +0800 (CST)
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4RblWG5DwTz4f3s5l;
+	Thu, 31 Aug 2023 10:30:18 +0800 (CST)
 Received: from [10.174.178.55] (unknown [10.174.178.55])
-	by APP4 (Coremail) with SMTP id gCh0CgDHVqkn7O9kTDn0Bw--.61999S3;
-	Thu, 31 Aug 2023 09:26:01 +0800 (CST)
-Subject: Re: [PATCH v2 1/8] crash_core.c: remove unnecessary parameter of
- function
+	by APP4 (Coremail) with SMTP id gCh0CgBH16k8++9kWev3Bw--.61986S3;
+	Thu, 31 Aug 2023 10:30:22 +0800 (CST)
+Subject: Re: [PATCH v2 2/8] crash_core: change the prototype of function
+ parse_crashkernel()
 To: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
 Cc: akpm@linux-foundation.org, catalin.marinas@arm.com,
  thunder.leizhen@huawei.com, dyoung@redhat.com, prudo@redhat.com,
  samuel.holland@sifive.com, kexec@lists.infradead.org,
  linux-arm-kernel@lists.infradead.org, x86@kernel.org
 References: <20230829121610.138107-1-bhe@redhat.com>
- <20230829121610.138107-2-bhe@redhat.com>
+ <20230829121610.138107-3-bhe@redhat.com>
 From: "Leizhen (ThunderTown)" <thunder.leizhen@huaweicloud.com>
-Message-ID: <d00bf2e8-3022-64a1-0458-56497179d5aa@huaweicloud.com>
-Date: Thu, 31 Aug 2023 09:25:59 +0800
+Message-ID: <77c34c98-f6b1-75e1-dbf3-a148691e7f9d@huaweicloud.com>
+Date: Thu, 31 Aug 2023 10:30:20 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20230829121610.138107-2-bhe@redhat.com>
+In-Reply-To: <20230829121610.138107-3-bhe@redhat.com>
 Content-Language: en-US
-X-CM-TRANSID: gCh0CgDHVqkn7O9kTDn0Bw--.61999S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Kr48Aw1kAF13XrykXw43ZFb_yoW8Cw4kpr
-	y8JF45Cry5JF1vkw12yr93CrW8Aw4rAa43uF9akF1rKF9rKasxtr43Ww17Xr4UKr4Y93W2
-	yr4SqFnIk3W0v3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+X-CM-TRANSID: gCh0CgBH16k8++9kWev3Bw--.61986S3
+X-Coremail-Antispam: 1UD129KBjvJXoW3AFW5uw17JF4kAw1xGr45Wrg_yoWfZFykpr
+	1UAF4rKr4jyFykCa4xAr93urWrJ3Wv9a47WFyUAr95tF9rXF15tr4rW3W7WrWjqrs093WI
+	yasYqFsaga10gaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
 	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
-	e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
-	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
-	6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
-	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE
-	14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
-	9x07UWE__UUUUU=
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY0VAS
+	07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
+	02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_
+	GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+	CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAF
+	wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
+	7IU1zuWJUUUUU==
 X-CM-SenderInfo: hwkx0vthuozvpl2kv046kxt4xhlfz01xgou0bp/
 X-CFilter-Loop: Reflected
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230830_182615_570780_818561E5 
-X-CRM114-Status: GOOD (  13.73  )
+X-CRM114-CacheID: sfid-20230830_193033_660282_072E6CE8 
+X-CRM114-Status: GOOD (  19.61  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,62 +91,235 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 
 On 2023/8/29 20:16, Baoquan He wrote:
-> In all call sites of __parse_crashkernel(), the parameter 'name' is
-> hardcoded as "crashkernel=". So remove the unnecessary parameter 'name',
-> add local varibale 'name' inside __parse_crashkernel() instead.
+> Add two parameters 'low_size' and 'high' to function parse_crashkernel(),
+> later crashkernel=,high|low parsing will be added. Make adjustments in all
+> call sites of parse_crashkernel() in arch.
 
 Reviewed-by: Zhen Lei <thunder.leizhen@huawei.com>
 
 > 
 > Signed-off-by: Baoquan He <bhe@redhat.com>
 > ---
->  kernel/crash_core.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+>  arch/arm/kernel/setup.c              |  3 ++-
+>  arch/arm64/mm/init.c                 |  2 +-
+>  arch/ia64/kernel/setup.c             |  2 +-
+>  arch/loongarch/kernel/setup.c        |  4 +++-
+>  arch/mips/kernel/setup.c             |  3 ++-
+>  arch/powerpc/kernel/fadump.c         |  2 +-
+>  arch/powerpc/kexec/core.c            |  2 +-
+>  arch/powerpc/mm/nohash/kaslr_booke.c |  2 +-
+>  arch/riscv/mm/init.c                 |  2 +-
+>  arch/s390/kernel/setup.c             |  4 ++--
+>  arch/sh/kernel/machine_kexec.c       |  2 +-
+>  arch/x86/kernel/setup.c              |  3 ++-
+>  include/linux/crash_core.h           |  3 ++-
+>  kernel/crash_core.c                  | 15 ++++++++++++---
+>  14 files changed, 32 insertions(+), 17 deletions(-)
 > 
+> diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
+> index c66b560562b3..e2bb7afd0683 100644
+> --- a/arch/arm/kernel/setup.c
+> +++ b/arch/arm/kernel/setup.c
+> @@ -1010,7 +1010,8 @@ static void __init reserve_crashkernel(void)
+>  
+>  	total_mem = get_total_mem();
+>  	ret = parse_crashkernel(boot_command_line, total_mem,
+> -				&crash_size, &crash_base);
+> +				&crash_size, &crash_base,
+> +				NULL, NULL);
+>  	/* invalid value specified or crashkernel=0 */
+>  	if (ret || !crash_size)
+>  		return;
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index 4fcb88a445ef..4ad637508b75 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -142,7 +142,7 @@ static void __init reserve_crashkernel(void)
+>  
+>  	/* crashkernel=X[@offset] */
+>  	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
+> -				&crash_size, &crash_base);
+> +				&crash_size, &crash_base, NULL, NULL);
+>  	if (ret == -ENOENT) {
+>  		ret = parse_crashkernel_high(cmdline, 0, &crash_size, &crash_base);
+>  		if (ret || !crash_size)
+> diff --git a/arch/ia64/kernel/setup.c b/arch/ia64/kernel/setup.c
+> index 5a55ac82c13a..4faea2d2cf07 100644
+> --- a/arch/ia64/kernel/setup.c
+> +++ b/arch/ia64/kernel/setup.c
+> @@ -277,7 +277,7 @@ static void __init setup_crashkernel(unsigned long total, int *n)
+>  	int ret;
+>  
+>  	ret = parse_crashkernel(boot_command_line, total,
+> -			&size, &base);
+> +			&size, &base, NULL, NULL);
+>  	if (ret == 0 && size > 0) {
+>  		if (!base) {
+>  			sort_regions(rsvd_region, *n);
+> diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
+> index 9d830ab4e302..776a068d8718 100644
+> --- a/arch/loongarch/kernel/setup.c
+> +++ b/arch/loongarch/kernel/setup.c
+> @@ -267,7 +267,9 @@ static void __init arch_parse_crashkernel(void)
+>  	unsigned long long crash_base, crash_size;
+>  
+>  	total_mem = memblock_phys_mem_size();
+> -	ret = parse_crashkernel(boot_command_line, total_mem, &crash_size, &crash_base);
+> +	ret = parse_crashkernel(boot_command_line, total_mem,
+> +				&crash_size, &crash_base,
+> +				NULL, NULL);
+>  	if (ret < 0 || crash_size <= 0)
+>  		return;
+>  
+> diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+> index cb871eb784a7..08321c945ac4 100644
+> --- a/arch/mips/kernel/setup.c
+> +++ b/arch/mips/kernel/setup.c
+> @@ -460,7 +460,8 @@ static void __init mips_parse_crashkernel(void)
+>  
+>  	total_mem = memblock_phys_mem_size();
+>  	ret = parse_crashkernel(boot_command_line, total_mem,
+> -				&crash_size, &crash_base);
+> +				&crash_size, &crash_base,
+> +				NULL, NULL);
+>  	if (ret != 0 || crash_size <= 0)
+>  		return;
+>  
+> diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
+> index ea0a073abd96..7dbdeba56e74 100644
+> --- a/arch/powerpc/kernel/fadump.c
+> +++ b/arch/powerpc/kernel/fadump.c
+> @@ -313,7 +313,7 @@ static __init u64 fadump_calculate_reserve_size(void)
+>  	 * memory at a predefined offset.
+>  	 */
+>  	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+> -				&size, &base);
+> +				&size, &base, NULL, NULL);
+>  	if (ret == 0 && size > 0) {
+>  		unsigned long max_size;
+>  
+> diff --git a/arch/powerpc/kexec/core.c b/arch/powerpc/kexec/core.c
+> index de64c7962991..9346c960b296 100644
+> --- a/arch/powerpc/kexec/core.c
+> +++ b/arch/powerpc/kexec/core.c
+> @@ -109,7 +109,7 @@ void __init reserve_crashkernel(void)
+>  	total_mem_sz = memory_limit ? memory_limit : memblock_phys_mem_size();
+>  	/* use common parsing */
+>  	ret = parse_crashkernel(boot_command_line, total_mem_sz,
+> -			&crash_size, &crash_base);
+> +			&crash_size, &crash_base, NULL, NULL);
+>  	if (ret == 0 && crash_size > 0) {
+>  		crashk_res.start = crash_base;
+>  		crashk_res.end = crash_base + crash_size - 1;
+> diff --git a/arch/powerpc/mm/nohash/kaslr_booke.c b/arch/powerpc/mm/nohash/kaslr_booke.c
+> index 2fb3edafe9ab..b4f2786a7d2b 100644
+> --- a/arch/powerpc/mm/nohash/kaslr_booke.c
+> +++ b/arch/powerpc/mm/nohash/kaslr_booke.c
+> @@ -178,7 +178,7 @@ static void __init get_crash_kernel(void *fdt, unsigned long size)
+>  	int ret;
+>  
+>  	ret = parse_crashkernel(boot_command_line, size, &crash_size,
+> -				&crash_base);
+> +				&crash_base, NULL, NULL);
+>  	if (ret != 0 || crash_size == 0)
+>  		return;
+>  	if (crash_base == 0)
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index e4c35ac2357f..a9ef0824f905 100644
+> --- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -1332,7 +1332,7 @@ static void __init reserve_crashkernel(void)
+>  	}
+>  
+>  	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+> -				&crash_size, &crash_base);
+> +				&crash_size, &crash_base, NULL, NULL);
+>  	if (ret || !crash_size)
+>  		return;
+>  
+> diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
+> index c744104e4a9c..98204a5f62b1 100644
+> --- a/arch/s390/kernel/setup.c
+> +++ b/arch/s390/kernel/setup.c
+> @@ -626,8 +626,8 @@ static void __init reserve_crashkernel(void)
+>  	phys_addr_t low, high;
+>  	int rc;
+>  
+> -	rc = parse_crashkernel(boot_command_line, ident_map_size, &crash_size,
+> -			       &crash_base);
+> +	rc = parse_crashkernel(boot_command_line, ident_map_size,
+> +			       &crash_size, &crash_base, NULL, NULL);
+>  
+>  	crash_base = ALIGN(crash_base, KEXEC_CRASH_MEM_ALIGN);
+>  	crash_size = ALIGN(crash_size, KEXEC_CRASH_MEM_ALIGN);
+> diff --git a/arch/sh/kernel/machine_kexec.c b/arch/sh/kernel/machine_kexec.c
+> index 223c14f44af7..fa3a7b36190a 100644
+> --- a/arch/sh/kernel/machine_kexec.c
+> +++ b/arch/sh/kernel/machine_kexec.c
+> @@ -154,7 +154,7 @@ void __init reserve_crashkernel(void)
+>  	int ret;
+>  
+>  	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+> -			&crash_size, &crash_base);
+> +			&crash_size, &crash_base, NULL, NULL);
+>  	if (ret == 0 && crash_size > 0) {
+>  		crashk_res.start = crash_base;
+>  		crashk_res.end = crash_base + crash_size - 1;
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index fd975a4a5200..382c66d2cf71 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -558,7 +558,8 @@ static void __init reserve_crashkernel(void)
+>  	total_mem = memblock_phys_mem_size();
+>  
+>  	/* crashkernel=XM */
+> -	ret = parse_crashkernel(boot_command_line, total_mem, &crash_size, &crash_base);
+> +	ret = parse_crashkernel(boot_command_line, total_mem,
+> +				&crash_size, &crash_base, NULL, NULL);
+>  	if (ret != 0 || crash_size <= 0) {
+>  		/* crashkernel=X,high */
+>  		ret = parse_crashkernel_high(boot_command_line, total_mem,
+> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+> index de62a722431e..2e76289699ff 100644
+> --- a/include/linux/crash_core.h
+> +++ b/include/linux/crash_core.h
+> @@ -78,7 +78,8 @@ Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
+>  void final_note(Elf_Word *buf);
+>  
+>  int __init parse_crashkernel(char *cmdline, unsigned long long system_ram,
+> -		unsigned long long *crash_size, unsigned long long *crash_base);
+> +		unsigned long long *crash_size, unsigned long long *crash_base,
+> +		unsigned long long *low_size, bool *high);
+>  int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
+>  		unsigned long long *crash_size, unsigned long long *crash_base);
+>  int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
 > diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index 90ce1dfd591c..f27b4e45d410 100644
+> index f27b4e45d410..f6a5c219e2e1 100644
 > --- a/kernel/crash_core.c
 > +++ b/kernel/crash_core.c
-> @@ -241,11 +241,11 @@ static int __init __parse_crashkernel(char *cmdline,
+> @@ -280,10 +280,19 @@ static int __init __parse_crashkernel(char *cmdline,
+>  int __init parse_crashkernel(char *cmdline,
 >  			     unsigned long long system_ram,
 >  			     unsigned long long *crash_size,
->  			     unsigned long long *crash_base,
-> -			     const char *name,
->  			     const char *suffix)
+> -			     unsigned long long *crash_base)
+> +			     unsigned long long *crash_base,
+> +			     unsigned long long *low_size,
+> +			     bool *high)
 >  {
->  	char	*first_colon, *first_space;
->  	char	*ck_cmdline;
-> +	char	*name = "crashkernel=";
->  
->  	BUG_ON(!crash_size || !crash_base);
->  	*crash_size = 0;
-> @@ -283,7 +283,7 @@ int __init parse_crashkernel(char *cmdline,
->  			     unsigned long long *crash_base)
->  {
->  	return __parse_crashkernel(cmdline, system_ram, crash_size, crash_base,
-> -					"crashkernel=", NULL);
-> +				NULL);
+> -	return __parse_crashkernel(cmdline, system_ram, crash_size, crash_base,
+> -				NULL);
+> +	int ret;
+> +
+> +	/* crashkernel=X[@offset] */
+> +	ret = __parse_crashkernel(cmdline, system_ram, crash_size,
+> +				crash_base, NULL);
+> +	if (!high)
+> +		return ret;
+> +
+> +	return 0;
 >  }
 >  
 >  int __init parse_crashkernel_high(char *cmdline,
-> @@ -292,7 +292,7 @@ int __init parse_crashkernel_high(char *cmdline,
->  			     unsigned long long *crash_base)
->  {
->  	return __parse_crashkernel(cmdline, system_ram, crash_size, crash_base,
-> -				"crashkernel=", suffix_tbl[SUFFIX_HIGH]);
-> +				suffix_tbl[SUFFIX_HIGH]);
->  }
->  
->  int __init parse_crashkernel_low(char *cmdline,
-> @@ -301,7 +301,7 @@ int __init parse_crashkernel_low(char *cmdline,
->  			     unsigned long long *crash_base)
->  {
->  	return __parse_crashkernel(cmdline, system_ram, crash_size, crash_base,
-> -				"crashkernel=", suffix_tbl[SUFFIX_LOW]);
-> +				suffix_tbl[SUFFIX_LOW]);
->  }
->  
->  /*
 > 
 
 -- 
