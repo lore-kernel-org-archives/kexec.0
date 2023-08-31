@@ -4,113 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 59095C83F01
-	for <kexec@archiver.kernel.org>; Wed, 30 Aug 2023 23:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E4F8CC6FA8F
+	for <kexec@archiver.kernel.org>; Thu, 31 Aug 2023 01:26:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Subject:Cc:To:From:Date:References:
-	In-Reply-To:Message-Id:Mime-Version:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=+hqS9n78pkizA9lxfNqRfyeciIC8I0R/cCe6AD0qwiI=; b=mNo77iP5o4fsF0
-	yuGxkpqgMLy9ygXMTPN0UrUvzQWCGxLequzK8Rd2LDUxuIU/AA4j2X8Ten1C3v+DOjPB74A5SIKc2
-	h2huZVpRS04TL7hCXIAEE/XvTwzAfjdYFP8hjSfewkgaaUUWGNhOI9r2b+YcSw35kBmFL9w4EOVys
-	+DexVOcFnW9rf9YUQXb+bqZRDgJcOfiq+Lcd2j+iYHQbCawlzCa3e5t1yQDvNl5md0LAmzF6cjT96
-	TU0GNpsH+y5FWnHK3v5BlCVPxQY8Q6pqtPn7rWHEawGGdrWPLENKG4gtvCXL2CrIBOSasINJsikvW
-	EeqS5R3Rzu0cAhhvR+yQ==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:Date:
+	Message-ID:From:References:Cc:To:Subject:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Owner;
+	bh=MdrdyVUM2Yk0zg4IMWNrymMnHqI9YUttIv2GkEwa2lw=; b=MULlgnr7jK6Pmo+vz6Kdzxl6Q4
+	hdbvkR0cYhReGtu3PBv//Jpo5950XWa6GTef3gltwU24Tr5j2diEASFC+S4VDcf5xgeV3TmB3PZ5J
+	LIkgLvAJmGBpUXQRX4T766XssHP178KWbYN+npwcuNi/yryH9li5QzP1Wk4m7B0ycXI+pNepXkQ+v
+	Wgc290BHC6sMk3Jtudjd9D9k+pK/pHDp3AYYF5rmDLKC1/UgPkaW7oIiBYtqvkigvpPZrHfvdqaQ2
+	J9Mfbj5DfPdLN2jYSOWgZht63co9VcZFsnbstwLE4p9VFLQl5bP3wDQV7UxlgKGS16rBLVa/jP5qI
+	IrcNLDQw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qbUmt-00ELTl-35;
-	Wed, 30 Aug 2023 23:39:51 +0000
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25])
+	id 1qbWRt-00ERxU-2N;
+	Thu, 31 Aug 2023 01:26:17 +0000
+Received: from [45.249.212.51] (helo=dggsgout11.his.huawei.com)
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qbUmr-00ELSJ-0y
-	for kexec@lists.infradead.org;
-	Wed, 30 Aug 2023 23:39:51 +0000
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailout.west.internal (Postfix) with ESMTP id 9DB6C32008FB;
-	Wed, 30 Aug 2023 19:39:40 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Wed, 30 Aug 2023 19:39:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm3; t=1693438780; x=1693525180; bh=M9
-	gCOekIM2huAR+ziQ0XQjqHbftSph1uDZZYkRIXuOY=; b=h0nbIFQABAhkUtYLOb
-	Nc80hXI+gmNKqPcCnLnMjBtZq38DP3F7i1vexStaKEZtfIl0l0X4JJ7jLPZf4CWp
-	RrYIbrwHVosg+gMbqdOFjoi/HpXZSgXAbYRfWfQnp9sXkxcGwRFe+hSjkOi5agDO
-	4pcMR6WRbtzbtH0r9BJ8lLBtrfUBWPls5LdOEYPwuBJ7FPJkswg5Y0A+k40RbRjl
-	GgK0xD3yx8j+iVu13aZImwLK0pZO+CVOk3I1zQSb99e5L+7fKTieHfCfSkxMBmby
-	mUvB8wnqOTYDolIXih7WcxLG6jqiSwBXsnCUt4WeJDZ3/hRvil1yMyQYTNiVVppM
-	SEmA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm1; t=1693438780; x=1693525180; bh=M9gCOekIM2huA
-	R+ziQ0XQjqHbftSph1uDZZYkRIXuOY=; b=QEKf/B1hGP+3+lNgIbPPHKf6dWjAv
-	Kl3cKbpGmMeyoz1x39J42uhNWzDtFm86wco3daCRHL5X1YJkdPCQg+sJWQQFsHOG
-	XEzju8k85UTDZaiG+HB69EI5g6cLpVBSCQ0tq5lnJfiFnOrVch9v5NPiHAtgpyJ8
-	0/uergth478HofL+FedcUigFE9Ykbqk8F3BEYaxI3eH/wuHlaRmqT29W/80I70vn
-	Y+7Bd9DyacXJSbZ7+NTNuTiZ5nIbDGQMTOF/h0XdX5pOs5I2HsQgPDEmCYNxfL3M
-	3L5ADpyteoc67NJRZnq/c+h2gms0EueCAIfdjTSTPOq8EAyg0KpZChpaQ==
-X-ME-Sender: <xms:O9PvZOqOKu1IV6AEth8ocsibmTvUGjaTopAfD6P9AzWfyxjjwEVcXw>
-    <xme:O9PvZMoxMys15V9ewrjpNPKjLqvAb0Fiwv4EeszY18XziVeNvLY8l-WKzfhqAwVho
-    VzRRTsA5dcBGlYEzCc>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrudefledgvdefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:O9PvZDMHIG2lbMPjEE-g_PZeLNcOEKbzKnDTBTN8ltDWAaanw9Q8xw>
-    <xmx:O9PvZN5OAl8OhVR1-o53t5KivDGBF0969OiI5lu86ko1b8f1rkHxfQ>
-    <xmx:O9PvZN7MwvvntaIA6F2pcUpiYYS1T3ThbNKk8RK4u5fVrBARqPzBsg>
-    <xmx:PNPvZL59z4MU1L3Z1URriTzvOKkfUzUeNgZKIsrxaY4yuxbr8u4G1A>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 27699B60089; Wed, 30 Aug 2023 19:39:39 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-701-g9b2f44d3ee-fm-20230823.001-g9b2f44d3
-Mime-Version: 1.0
-Message-Id: <1697efce-665a-43d5-b0be-7c03c0a4d850@app.fastmail.com>
-In-Reply-To: <82416797-01aa-471a-a737-471297e37c4c@amazon.de>
-References: <64e7cbf7.050a0220.114c7.b70dSMTPIN_ADDED_BROKEN@mx.google.com>
- <2023082506-enchanted-tripping-d1d5@gregkh>
- <c26ad989dcc6737dd295e980c78ef53740098810.camel@amazon.com>
- <20230823024500.GA25462@skinsburskii.>
- <e0ed9fb9-8e7a-44ad-976a-27362f6e537a@amazon.de>
- <20230829220740.GA26605@skinsburskii.>
- <82416797-01aa-471a-a737-471297e37c4c@amazon.de>
-Date: Wed, 30 Aug 2023 19:39:18 -0400
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Alexander Graf" <graf@amazon.de>,
- "Stanislav Kinsburskii" <skinsburskii@linux.microsoft.com>
-Cc: "Gowans, James" <jgowans@amazon.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Mike Rapoport" <rppt@kernel.org>,
- "madvenka@linux.microsoft.com" <madvenka@linux.microsoft.com>,
- "anthony.yznaga@oracle.com" <anthony.yznaga@oracle.com>,
- "steven.sistare@oracle.com" <steven.sistare@oracle.com>,
- "Stanislav Kinsburskii" <stanislav.kinsburskii@gmail.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "Sean Christopherson" <seanjc@google.com>,
- "Paolo Bonzini" <pbonzini@redhat.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>, "Wei Liu" <wei.liu@kernel.org>,
- "anrayabh@linux.microsoft.com" <anrayabh@linux.microsoft.com>,
- "dragan.cvetic@amd.com" <dragan.cvetic@amd.com>,
- "jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
- "derek.kiernan@amd.com" <derek.kiernan@amd.com>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>,
- "Andrew Morton" <akpm@linux-foundation.org>, kexec@lists.infradead.org,
- iommu@lists.linux.dev, kvm <kvm@vger.kernel.org>
-Subject: Re: [RFC PATCH] Introduce persistent memory pool
+	id 1qbWRr-00ERwJ-0f;
+	Thu, 31 Aug 2023 01:26:17 +0000
+Received: from mail02.huawei.com (unknown [172.30.67.143])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Rbk540HQwz4f3l15;
+	Thu, 31 Aug 2023 09:26:00 +0800 (CST)
+Received: from [10.174.178.55] (unknown [10.174.178.55])
+	by APP4 (Coremail) with SMTP id gCh0CgDHVqkn7O9kTDn0Bw--.61999S3;
+	Thu, 31 Aug 2023 09:26:01 +0800 (CST)
+Subject: Re: [PATCH v2 1/8] crash_core.c: remove unnecessary parameter of
+ function
+To: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
+Cc: akpm@linux-foundation.org, catalin.marinas@arm.com,
+ thunder.leizhen@huawei.com, dyoung@redhat.com, prudo@redhat.com,
+ samuel.holland@sifive.com, kexec@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, x86@kernel.org
+References: <20230829121610.138107-1-bhe@redhat.com>
+ <20230829121610.138107-2-bhe@redhat.com>
+From: "Leizhen (ThunderTown)" <thunder.leizhen@huaweicloud.com>
+Message-ID: <d00bf2e8-3022-64a1-0458-56497179d5aa@huaweicloud.com>
+Date: Thu, 31 Aug 2023 09:25:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20230829121610.138107-2-bhe@redhat.com>
+Content-Language: en-US
+X-CM-TRANSID: gCh0CgDHVqkn7O9kTDn0Bw--.61999S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Kr48Aw1kAF13XrykXw43ZFb_yoW8Cw4kpr
+	y8JF45Cry5JF1vkw12yr93CrW8Aw4rAa43uF9akF1rKF9rKasxtr43Ww17Xr4UKr4Y93W2
+	yr4SqFnIk3W0v3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
+	e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
+	6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE
+	14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
+	9x07UWE__UUUUU=
+X-CM-SenderInfo: hwkx0vthuozvpl2kv046kxt4xhlfz01xgou0bp/
+X-CFilter-Loop: Reflected
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230830_163949_869951_61BFACED 
-X-CRM114-Status: GOOD (  19.96  )
+X-CRM114-CacheID: sfid-20230830_182615_570780_818561E5 
+X-CRM114-Status: GOOD (  13.73  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -127,46 +88,71 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Aug 30, 2023, at 03:20, Alexander Graf wrote:
-> On 30.08.23 00:07, Stanislav Kinsburskii wrote:
->> On Mon, Aug 28, 2023 at 10:50:19PM +0200, Alexander Graf wrote:
 
->> Device tree or ACPI are options indeed. However AFAIU in case of DT user
->> space has to involved into the picture to modify and complie it, while
->> ACPI isn't flexible or easily extendable.
->> Also, AFAIU both these standards were designed with passing
->> hardware-specific data in mind from bootstrap software to an OS kernel
->> and thus were never really intended to be used for creating a persistent
->> state accross kexec.
->> To me, an attempt to use either of them to pass kernel-specific data looks
->> like an abuse (or misuse) excused by the simplicity of implementation.
->
->
-> What I was describing above is that the Linux boot protocol already has 
-> natural ways to pass a DT (arm) or set of ACPI tables (x86) to the 
-> target kernel. Whatever we do here should either piggy back on top of 
-> those natural mechanisms (e.g. /chosen node in DT) or be on the same 
-> level (e.g. pass DT in one register, pass metadata structure in another 
-> register).
->
-> When it comes to the actual content of the metadata, I'm personally also 
-> leaning towards DT. We already have libfdt inside the kernel. It gives 
-> is a very simple, well understood structured file format that you can 
-> extend, version, etc etc. And the kernel has mechanisms to modify fdt 
-> contents.
 
-Agreed. This also makes a lot of sense since the fdt format was
-originally introduced for this exact purpose, to be a key-value
-store to pass data from the running kernel to the next one after
-kexec when the original source of the data (originally open
-firmware) is gone. It only turned into the generic way to
-describe embedded systems later on, but both the fdt binary
-format and the kexec infrastructure for manipulating and
-passing the blob should be easy to reuse for additional purposes
-as long as the contents are put into appropriate namespaces that
-don't clash with existing usage.
+On 2023/8/29 20:16, Baoquan He wrote:
+> In all call sites of __parse_crashkernel(), the parameter 'name' is
+> hardcoded as "crashkernel=". So remove the unnecessary parameter 'name',
+> add local varibale 'name' inside __parse_crashkernel() instead.
 
-       Arnd
+Reviewed-by: Zhen Lei <thunder.leizhen@huawei.com>
+
+> 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> ---
+>  kernel/crash_core.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index 90ce1dfd591c..f27b4e45d410 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -241,11 +241,11 @@ static int __init __parse_crashkernel(char *cmdline,
+>  			     unsigned long long system_ram,
+>  			     unsigned long long *crash_size,
+>  			     unsigned long long *crash_base,
+> -			     const char *name,
+>  			     const char *suffix)
+>  {
+>  	char	*first_colon, *first_space;
+>  	char	*ck_cmdline;
+> +	char	*name = "crashkernel=";
+>  
+>  	BUG_ON(!crash_size || !crash_base);
+>  	*crash_size = 0;
+> @@ -283,7 +283,7 @@ int __init parse_crashkernel(char *cmdline,
+>  			     unsigned long long *crash_base)
+>  {
+>  	return __parse_crashkernel(cmdline, system_ram, crash_size, crash_base,
+> -					"crashkernel=", NULL);
+> +				NULL);
+>  }
+>  
+>  int __init parse_crashkernel_high(char *cmdline,
+> @@ -292,7 +292,7 @@ int __init parse_crashkernel_high(char *cmdline,
+>  			     unsigned long long *crash_base)
+>  {
+>  	return __parse_crashkernel(cmdline, system_ram, crash_size, crash_base,
+> -				"crashkernel=", suffix_tbl[SUFFIX_HIGH]);
+> +				suffix_tbl[SUFFIX_HIGH]);
+>  }
+>  
+>  int __init parse_crashkernel_low(char *cmdline,
+> @@ -301,7 +301,7 @@ int __init parse_crashkernel_low(char *cmdline,
+>  			     unsigned long long *crash_base)
+>  {
+>  	return __parse_crashkernel(cmdline, system_ram, crash_size, crash_base,
+> -				"crashkernel=", suffix_tbl[SUFFIX_LOW]);
+> +				suffix_tbl[SUFFIX_LOW]);
+>  }
+>  
+>  /*
+> 
+
+-- 
+Regards,
+  Zhen Lei
+
 
 _______________________________________________
 kexec mailing list
