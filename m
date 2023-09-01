@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A6770CA0FE1
-	for <kexec@archiver.kernel.org>; Fri,  1 Sep 2023 09:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4D8E5CA0FE6
+	for <kexec@archiver.kernel.org>; Fri,  1 Sep 2023 10:09:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=R/cfDnnghFvL2VKeoknpecGeNml3teX9HnRfMr6mACY=; b=i8vNpcN0WVi7yT
-	DpItvsVSK5z1OdDF1APnvlVQUwOef/Wj8tz7Zym16Cohsl8uxP6bPETB1o3HjRiY0emPupbdaqyEx
-	HwZ1eEhGXVv3YgQ1qKomFPJgjRCZUlkHbdMZ9i5ETVydc063jvDFrom7nVxcnW/9jVEkeEiP3fy+4
-	v98vp8jjbDBK8IvRU/zItAldlbm213oXTf24+cuPr+ZpzMuYv9k9Tt5q1q/FMC/x1H7A5hRezafAv
-	YxYRkt8JXKUX01ehc/XIG+toJffMFr6pB7Oxr0HnjG/KhAvVM6ilwp4gCt8BmTG4H2JH4Fe1yKV5U
-	vjBgqJQ3yIhqG5bzOgVg==;
+	List-Owner; bh=lgq53K5efvDNEWbLuxKRAYMUperQUUFV2o7gRyn9658=; b=qI+XW6n4XFllKJ
+	EnK2X9EMQMdq6OoPh0A+6+CnX6XQ2XPLre0JrdM6UEV8ntVhMKpK+eQm84V/IUja+ciQmJ1UAmfdo
+	A+6hAg/TVhjjmA42wLJKXrgP6OjMSp0ql90lG5IBPFaH/lG+sYKUMFadAU04WdyqRNQtdPAIN8hIq
+	tkZYfSRMsTMSX7DgqvEcGjb1zD5Y6sGe/oNTVDDQMX3YGtZvCRsjJ+OrZf87utn30zRM6u0D7x26y
+	0LWMfA/QUDOljFUJCkpY8xjm4q8AEMCkz+qbhr4QpiI2XkZmUDct3jvIiJXjXaUbALd6aTZj25Lf9
+	UhbXhh4C1eceqNGGE2TQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qc0mL-00GmRs-0e;
-	Fri, 01 Sep 2023 09:49:25 +0000
+	id 1qc15P-00Go2S-0t;
+	Fri, 01 Sep 2023 10:09:07 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qc0mI-00GmQO-1E
+	id 1qc15M-00Go1g-0s
 	for kexec@lists.infradead.org;
-	Fri, 01 Sep 2023 09:49:23 +0000
+	Fri, 01 Sep 2023 10:09:05 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1693561757;
+	s=mimecast20190719; t=1693562942;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=bcExDhghP5q2uMrkxwwq4cXddfl7pnt3QkGDEdgHPBI=;
-	b=F5U8+N2Xt5pqZ4WWaPWLnG0inevpczz8T60tOnSRdDWKnexeasyyPVICpoBWvIyezeGAq4
-	bqoTRD7o3HO/naKNDvwrGa2NKztqXxW09+Q7DK4MVn1LC2S8O/f+Sqff8vlz05WbCzUd8R
-	jO6lMG07MRbd0psB4fw5+o5vXngy11c=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-94-dqSyZhw4NUq7agicu0a-mg-1; Fri, 01 Sep 2023 05:49:12 -0400
-X-MC-Unique: dqSyZhw4NUq7agicu0a-mg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	bh=i8CdRaFuyX7B1sgP28cqTdKjALW2usXqlIRObbQvCxc=;
+	b=BlegyQ759o3KVd/bnkRS1NQHIqBlgi+1jL/xJe86RvR2nj+U4nHFlbkP5+Yc+2HoXI04UT
+	2B4m3ows0fDARSTdOohrdi+bBpZMZt8/9lauaGht4pk3p9YOvga0sq5c5eAskKRWFkjG8f
+	jYr0fOJ+BFK47AwN16a6w2FiL4AXDXQ=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-388-Xs10w53IOouXn1DUb9QA0g-1; Fri, 01 Sep 2023 06:09:00 -0400
+X-MC-Unique: Xs10w53IOouXn1DUb9QA0g-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 518D23C17126;
-	Fri,  1 Sep 2023 09:49:12 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CA83F185A78F;
+	Fri,  1 Sep 2023 10:08:59 +0000 (UTC)
 Received: from localhost (unknown [10.72.113.156])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 70A1540C6F4C;
-	Fri,  1 Sep 2023 09:49:11 +0000 (UTC)
-Date: Fri, 1 Sep 2023 17:49:08 +0800
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 08A0621EE560;
+	Fri,  1 Sep 2023 10:08:58 +0000 (UTC)
+Date: Fri, 1 Sep 2023 18:08:55 +0800
 From: Baoquan He <bhe@redhat.com>
 To: "Leizhen (ThunderTown)" <thunder.leizhen@huaweicloud.com>
 Cc: linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
@@ -57,19 +57,18 @@ Cc: linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
 	dyoung@redhat.com, prudo@redhat.com, samuel.holland@sifive.com,
 	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
 	x86@kernel.org
-Subject: Re: [PATCH v2 3/8] crash_core: change parse_crashkernel() to support
- crashkernel=,high|low parsing
-Message-ID: <ZPGzlIkXqVThTwjg@MiWiFi-R3L-srv>
+Subject: Re: [PATCH v2 4/8] crash_core: add generic function to do reservation
+Message-ID: <ZPG4Nzd/4JdU1Ft4@MiWiFi-R3L-srv>
 References: <20230829121610.138107-1-bhe@redhat.com>
- <20230829121610.138107-4-bhe@redhat.com>
- <c4a1f96e-2c8d-a496-61f3-0299d77c5c84@huaweicloud.com>
+ <20230829121610.138107-5-bhe@redhat.com>
+ <df395f20-55e9-169b-846b-f55d21d00861@huaweicloud.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <c4a1f96e-2c8d-a496-61f3-0299d77c5c84@huaweicloud.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
+In-Reply-To: <df395f20-55e9-169b-846b-f55d21d00861@huaweicloud.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230901_024922_503975_FF6A5E71 
-X-CRM114-Status: GOOD (  33.57  )
+X-CRM114-CacheID: sfid-20230901_030904_422604_447445D3 
+X-CRM114-Status: GOOD (  12.43  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,143 +85,39 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 08/31/23 at 10:56am, Leizhen (ThunderTown) wrote:
-> 
-> 
-> On 2023/8/29 20:16, Baoquan He wrote:
-> > Now parse_crashkernel() is a real entry point for all kinds of
-> > crahskernel parsing on any architecture.
-> > 
-> > And wrap the crahskernel=,high|low handling inside
-> > CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION ifdeffery scope.
-> > 
-> > Signed-off-by: Baoquan He <bhe@redhat.com>
-> > ---
-> >  include/linux/crash_core.h |  6 ++++++
-> >  kernel/crash_core.c        | 28 +++++++++++++++++++++++++++-
-> >  2 files changed, 33 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-> > index 2e76289699ff..85260bf4a734 100644
-> > --- a/include/linux/crash_core.h
-> > +++ b/include/linux/crash_core.h
-> > @@ -77,6 +77,12 @@ Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
-> >  			  void *data, size_t data_len);
-> >  void final_note(Elf_Word *buf);
-> >  
-> > +#ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
-> > +#ifndef DEFAULT_CRASH_KERNEL_LOW_SIZE
-> > +#define DEFAULT_CRASH_KERNEL_LOW_SIZE  (128UL << 20)
-> > +#endif
-> > +#endif
+On 08/31/23 at 11:23am, Leizhen (ThunderTown) wrote:
+......
+> > +void __init reserve_crashkernel_generic(char *cmdline,
+> > +			     unsigned long long crash_size,
+> > +			     unsigned long long crash_base,
+> > +			     unsigned long long crash_low_size,
+> > +			     bool high)
+> > +{
+> > +	unsigned long long search_end = CRASH_ADDR_LOW_MAX, search_base = 0;
+> > +	bool fixed_base = false;
 > > +
-> >  int __init parse_crashkernel(char *cmdline, unsigned long long system_ram,
-> >  		unsigned long long *crash_size, unsigned long long *crash_base,
-> >  		unsigned long long *low_size, bool *high);
-> > diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> > index f6a5c219e2e1..355b0ab5189c 100644
-> > --- a/kernel/crash_core.c
-> > +++ b/kernel/crash_core.c
-> > @@ -276,6 +276,9 @@ static int __init __parse_crashkernel(char *cmdline,
-> >  /*
-> >   * That function is the entry point for command line parsing and should be
-> >   * called from the arch-specific code.
-> > + *
-> > + * If crashkernel=,high|low is supported on architecture, non-NULL values
-> > + * should be passed to parameters 'low_size' and 'high'.
-> >   */
-> >  int __init parse_crashkernel(char *cmdline,
-> >  			     unsigned long long system_ram,
-> > @@ -291,7 +294,30 @@ int __init parse_crashkernel(char *cmdline,
-> >  				crash_base, NULL);
-> >  	if (!high)
-> >  		return ret;
-> > -
-> > +#ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
-> > +	else if (ret == -ENOENT) {
-> > +		ret = __parse_crashkernel(cmdline, 0, crash_size,
-> > +				crash_base, suffix_tbl[SUFFIX_HIGH]);
-> > +		if (ret || !*crash_size)
-> > +			return -1;
-> 
-> Change -1 to -EINVAL?
-
-Thanks a lot for careful reviewing, Zhen Lei.
-
-Here, it's fine to me, parse_crashkernel() returns 0 on success, other value
-on failure. '-1' or '-EINVAL' is not different to me in this case. I can
-update if you think '-EINVAL' is better.
-
-> 
-> > +
-> > +		/*
-> > +		 * crashkernel=Y,low can be specified or not, but invalid value
-> > +		 * is not allowed.
-> > +		 */
-> > +		ret = __parse_crashkernel(cmdline, 0, low_size,
-> > +				crash_base, suffix_tbl[SUFFIX_LOW]);
-> > +		if (ret == -ENOENT)
-> > +			*low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
-> > +		else if (ret)
-> > +			return -1;
-> 
-> return ret;
-
-Ditto.
-
-> 
-> > +
-> > +		*high = true;
-> > +	} else if (ret || !*crash_size) {
-> 
-> This check can be moved outside of #ifdef. Because even '!high', it's completely
-> applicable. The overall adjustment is as follows:
-
-Hmm, the current logic is much easier to understand. However, I may not
-100% get your suggestion. Can you paste the complete code in your
-suggested way? Do not need 100% correct code, just the skeleton of code logic
-so that I can better understand it and add inline comment.
-
-> 
-> -  	if (!high)
-> -  		return ret;
-> 
-> #ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
-> 	if (high && ret == -ENOENT) {
-> 		... ...
-> 		if (ret || !*crash_size)	//parse HIGH
-> 		... ...
-> 	}
-> 
-> 	//At this point, *crash_size is not 0 and ret is 0.
-> 	//We can also delete if (!*crash_size) above because it will be checked later.
-> #endif
-> 
-> 	if (!*crash_size)
-> 		ret = -EINVAL;
-> 
-> 	return ret;
-
-When crashkernel=,high is specified while crashkernel=,low is omitted,
-the ret==-ENOENT, but we can't return ret directly. That is still an
-acceptable way.
-
-> 
-> -  	return 0;
-> 
-> > +		/* The specified value is invalid */
-> > +		return -1;
+> > +	/* User specifies base address explicitly. */
+> > +	if (crash_base) {
+> > +		fixed_base = true;
+> > +		search_base = crash_base;
+> > +		search_end = crash_base + crash_size;
 > > +	}
-> > +#endif
-> >  	return 0;
-> >  }
-> >  
-> > 
+> > +
+> > +	if (high) {
 > 
-> -- 
-> Regards,
->   Zhen Lei
+> It might be a little clearer to use "else if (high) {"
+
+Makes sense, will update.
+
 > 
+> > +		search_base = CRASH_ADDR_LOW_MAX;
+> > +		search_end = CRASH_ADDR_HIGH_MAX;
+> > +	}
+> > +
+> > +retry:
+> > +	crash_base = memblock_phys_alloc_range(crash_size, CRASH_ALIGN,
+> > +					       search_base, search_end);
+......
 
 
 _______________________________________________
