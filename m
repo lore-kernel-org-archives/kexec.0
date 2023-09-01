@@ -4,72 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 44915CA0FE1
-	for <kexec@archiver.kernel.org>; Fri,  1 Sep 2023 10:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E15B0CA0FE5
+	for <kexec@archiver.kernel.org>; Fri,  1 Sep 2023 14:16:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=slxhLBOt5GmZ+iCv68Sfc3AmuPX/tFU61hJTV9EJRw0=; b=3kTlA2XJL/R+gF
-	Ivsfsgf7D4vdCS5B6fmquCBaAaCZtxibI2yQ74o8CpL3foTXCdsQVDe0oW3RsS27Xjnk6elI9PgOG
-	vEbiPCMXevg0C2Rv/Ghfuuefo3ylhwNXCC8+BVnuF0JglElTcRhtc2zwwOQtrgyYhgX6/gfjTb0Uy
-	Jsx7uTxq1CTQZvxovtoFkEjS5H0ko1BgUmypYiPoPjvODGb09MaQGX4r6EC6/fceOG8chve8YK+HD
-	ZIxcGInQSA0FiJgzdCTnZ2Hy976WEmQ6Oi6NMrcKhWgliLx4JvBmyWPs8uVpLVHitV23WTrEj0t0/
-	5IBSSE7USesFMZUSm8EQ==;
+	List-Archive:List-Unsubscribe:List-Id:To:From:Subject:Message-ID:In-Reply-To:
+	Date:MIME-Version:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+	List-Owner; bh=wFCABbM62EWCr46XmJA8HU5RQEOlttXr/ipb1/WWxoE=; b=lApta2zzjVyvD8
+	XcWlFvHKEvjD5b5gwfuOcWUTfpJC9x0bQsKk/FqHTKGYrxp2fFB1B1Q3tDtpZ+I+SeMmFgCv3LoUP
+	ZdGPDRh5XUdk/qrWTW+38+OJbJ266AMrC2WyVJAJCgWhsPniol3UeN4ddR3wRVf8M+MXvIllru/um
+	8aAQh6035Q6M4kSvmpUSZJ+Y2U9TinR8EETalRAba5ZfJsyjATpUXjDBG4x4JtIc1CIBWTYAaXhpc
+	wEhcnfTbX7v79yvvbA+Onbh+f/38FXIEkdF7djzltTRuw4jl61CBbikppOErLV87ffKX2JPCvHI1p
+	ssrxZ1BQFyu5jH0V6QHw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qc174-00GoE4-29;
-	Fri, 01 Sep 2023 10:10:50 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1qc4wy-0000wT-1Z;
+	Fri, 01 Sep 2023 14:16:40 +0000
+Received: from mail-pl1-f198.google.com ([209.85.214.198])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qc171-00GoCH-2J
+	id 1qc4wu-0000vL-2R
 	for kexec@lists.infradead.org;
-	Fri, 01 Sep 2023 10:10:49 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1693563043;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=q456NUShtf2WogSHXj6ov5yi106wsm6xbREboVKzgDk=;
-	b=FjuQOScXL4Eq5VYZ+FO3ZLDXNrZ14YlBs3YyZ59s9JbbI+5sV95YgZAV9r86sUDXFtJFx0
-	GE4nwXGeTkxEZGUDRA+n3P+RexBc+dBXQtIyAQc+OAcHnP6A+Unhw1CQUFbKxzHssnx8vI
-	CKBDqSXJzfcamhBDzTH97BG76yoL6jo=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-687-QwiV2FkgMJGMDhMCbxQXZA-1; Fri, 01 Sep 2023 06:10:37 -0400
-X-MC-Unique: QwiV2FkgMJGMDhMCbxQXZA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B42BE3C0D848;
-	Fri,  1 Sep 2023 10:10:36 +0000 (UTC)
-Received: from localhost (unknown [10.72.113.156])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 06C42201B07A;
-	Fri,  1 Sep 2023 10:10:35 +0000 (UTC)
-Date: Fri, 1 Sep 2023 18:10:32 +0800
-From: Baoquan He <bhe@redhat.com>
-To: "Leizhen (ThunderTown)" <thunder.leizhen@huaweicloud.com>
-Cc: linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-	catalin.marinas@arm.com, thunder.leizhen@huawei.com,
-	dyoung@redhat.com, prudo@redhat.com, samuel.holland@sifive.com,
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	x86@kernel.org
-Subject: Re: [PATCH v2 6/8] x86: kdump: use generic interface to simplify
- crashkernel reservation code
-Message-ID: <ZPG4mKmxaU78u/2k@MiWiFi-R3L-srv>
-References: <20230829121610.138107-1-bhe@redhat.com>
- <20230829121610.138107-7-bhe@redhat.com>
- <5b53d460-7134-e292-77ec-967016e89003@huaweicloud.com>
+	Fri, 01 Sep 2023 14:16:38 +0000
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-1bf703dd21fso23028215ad.3
+        for <kexec@lists.infradead.org>; Fri, 01 Sep 2023 07:16:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693577794; x=1694182594;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fcvgDbvbUw5Qcf0anbgZcfJ9WNarMzjdamecOvB7IYI=;
+        b=IJR1CdZ6KQyVjRDAE66W/fzSkBFSbrx4NJl3AbCfZh08wVzb09EEQ+AZQvNuBIRR5N
+         xAVtV4uZ5nb83+wXwhw3PYBC0wdDtn3HXOqsQpbx9nkQUgOm+qYJBHaV5VhCZuSfeb8D
+         LH7Y8i/fBu0kUVgyPrcnB6jz59ht+JtYYLml8ZsyiydYaf4ZW29/5hzud2GsdsKmK10M
+         xEs3H/raT3Myr35BhmW3eNYjZuH+CxO1WteewEoMRXFKuqAuYiopdKJB0QmJst4VPyi2
+         6A6E1izyY3OjHtk+GYnrucbR7RQ+uYSwPwGv0570rAvyE1h8MwxcE7xs9Y9i3qgHFcMT
+         uuag==
+X-Gm-Message-State: AOJu0YwiWJtjVO4KFlS2+s5nN1GLxfMQ/NHKGr8Mm2c8FawUAAmIn6Dz
+	BADNsNQ62hSiOUc63KyYg05mej9r5fFMHLQiqP2KGUDd4XPk
+X-Google-Smtp-Source: AGHT+IFc7YjlSjHvDvP7cirzcdCjKk2D/fDe+yk6UxvIvAemHVScjMtitmUI/slD7b32dT0fMgTPgbdH3RXPR+jluBVxNY9SvuDQ
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <5b53d460-7134-e292-77ec-967016e89003@huaweicloud.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
+X-Received: by 2002:a17:902:dacb:b0:1b8:929f:1990 with SMTP id
+ q11-20020a170902dacb00b001b8929f1990mr922243plx.6.1693577794354; Fri, 01 Sep
+ 2023 07:16:34 -0700 (PDT)
+Date: Fri, 01 Sep 2023 07:16:34 -0700
+In-Reply-To: <0000000000001f4d4806037fc7b8@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d5052e06044cced1@google.com>
+Subject: Re: [syzbot] [mm?] kernel BUG in free_unref_page_prepare
+From: syzbot <syzbot+7423f066b632d9ff23d5@syzkaller.appspotmail.com>
+To: 42.hyeyoo@gmail.com, akpm@linux-foundation.org, bhe@redhat.com, 
+	dyoung@redhat.com, hughd@google.com, kexec@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, llvm@lists.linux.dev, 
+	lrh2000@pku.edu.cn, mike.kravetz@oracle.com, muchun.song@linux.dev, 
+	nathan@kernel.org, ndesaulniers@google.com, pcc@google.com, 
+	syzkaller-bugs@googlegroups.com, trix@redhat.com, vgoyal@redhat.com, 
+	willy@infradead.org
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230901_031047_827245_ED3A99B7 
-X-CRM114-Status: GOOD (  18.64  )
+X-CRM114-CacheID: sfid-20230901_071636_793787_4D3399FC 
+X-CRM114-Status: UNSURE (   3.75  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,102 +81,28 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 08/31/23 at 11:43am, Leizhen (ThunderTown) wrote:
-......  
-> > -static void __init reserve_crashkernel(void)
-> > +static void __init arch_reserve_crashkernel(void)
-> >  {
-> > -	unsigned long long crash_size, crash_base, total_mem;
-> > +	unsigned long long crash_base, crash_size, low_size = 0;
-> > +	char *cmdline = boot_command_line;
-> >  	bool high = false;
-> >  	int ret;
-> >  
-> >  	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
-> >  		return;
-> >  
-> > -	total_mem = memblock_phys_mem_size();
-> > -
-> > -	/* crashkernel=XM */
-> > -	ret = parse_crashkernel(boot_command_line, total_mem,
-> > -				&crash_size, &crash_base, NULL, NULL);
-> > -	if (ret != 0 || crash_size <= 0) {
-> > -		/* crashkernel=X,high */
-> > -		ret = parse_crashkernel_high(boot_command_line, total_mem,
-> > -					     &crash_size, &crash_base);
-> > -		if (ret != 0 || crash_size <= 0)
-> > -			return;
-> > -		high = true;
-> > -	}
-> > +	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
-> > +				&crash_size, &crash_base,
-> > +				&low_size, &high);
-> > +	if (ret)
-> > +		return;
-> >  
-> >  	if (xen_pv_domain()) {
-> >  		pr_info("Ignoring crashkernel for a Xen PV domain\n");
-> >  		return;
-> >  	}
-> >  
-> > -	/* 0 means: find the address automatically */
-> > -	if (!crash_base) {
-> > -		/*
-> > -		 * Set CRASH_ADDR_LOW_MAX upper bound for crash memory,
-> > -		 * crashkernel=x,high reserves memory over 4G, also allocates
-> > -		 * 256M extra low memory for DMA buffers and swiotlb.
-> > -		 * But the extra memory is not required for all machines.
-> > -		 * So try low memory first and fall back to high memory
-> > -		 * unless "crashkernel=size[KMG],high" is specified.
-> > -		 */
-> > -		if (!high)
-> > -			crash_base = memblock_phys_alloc_range(crash_size,
-> > -						CRASH_ALIGN, CRASH_ALIGN,
-> > -						CRASH_ADDR_LOW_MAX);
-> > -		if (!crash_base)
-> > -			crash_base = memblock_phys_alloc_range(crash_size,
-> > -						CRASH_ALIGN, CRASH_ALIGN,
-> > -						CRASH_ADDR_HIGH_MAX);
-> > -		if (!crash_base) {
-> > -			pr_info("crashkernel reservation failed - No suitable area found.\n");
-> > -			return;
-> > -		}
-> > -	} else {
-> > -		unsigned long long start;
-> > -
-> > -		start = memblock_phys_alloc_range(crash_size, SZ_1M, crash_base,
-> > -						  crash_base + crash_size);
-> > -		if (start != crash_base) {
-> > -			pr_info("crashkernel reservation failed - memory is in use.\n");
-> > -			return;
-> > -		}
-> > -	}
-> > -
-> > -	if (crash_base >= (1ULL << 32) && reserve_crashkernel_low()) {
-> > -		memblock_phys_free(crash_base, crash_size);
-> > -		return;
-> > -	}
-> > -
-> > -	pr_info("Reserving %ldMB of memory at %ldMB for crashkernel (System RAM: %ldMB)\n",
-> > -		(unsigned long)(crash_size >> 20),
-> > -		(unsigned long)(crash_base >> 20),
-> > -		(unsigned long)(total_mem >> 20));
-> > +	reserve_crashkernel_generic(cmdline, crash_size, crash_base,
-> > +				    low_size, high);
-> >  
-> > -	crashk_res.start = crash_base;
-> > -	crashk_res.end   = crash_base + crash_size - 1;
-> > -	insert_resource(&iomem_resource, &crashk_res);
-> > +	return;
-> 
-> This can be omitted.
+syzbot has bisected this issue to:
 
-Will update, thx.
+commit 3a77b282e256d880791a4c5aa10ede13d6417425
+Author: Matthew Wilcox (Oracle) <willy@infradead.org>
+Date:   Wed Aug 16 15:11:58 2023 +0000
 
-> 
-> >  }
-......
+    mm: free up a word in the first tail page
 
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13297387a80000
+start commit:   7271b2a53042 Add linux-next specific files for 20230818
+git tree:       linux-next
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=10a97387a80000
+console output: https://syzkaller.appspot.com/x/log.txt?x=17297387a80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1936af09cdef7dd6
+dashboard link: https://syzkaller.appspot.com/bug?extid=7423f066b632d9ff23d5
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=112386f3a80000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15044717a80000
+
+Reported-by: syzbot+7423f066b632d9ff23d5@syzkaller.appspotmail.com
+Fixes: 3a77b282e256 ("mm: free up a word in the first tail page")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
 _______________________________________________
 kexec mailing list
