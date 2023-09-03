@@ -4,62 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4ACE6CA0FE8
-	for <kexec@archiver.kernel.org>; Fri,  1 Sep 2023 22:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5815BC83F2C
+	for <kexec@archiver.kernel.org>; Sun,  3 Sep 2023 03:37:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=GG3feYzge6kJk9NTkbyaFOSzYS7Z+vCYeeD2PJvIjYI=; b=oeZKZ8J8EepC2H
-	uAdoeGh5kmYw/NLRHCuXiBhsut/jTTrI0PqxGjVqTTvuWGWlCTyhXvrxI0CxQ8NO3x+IFGseiy+Zs
-	gHZnXWaXBRIL1ooRnetdHokwQhHj+iuF93DAwTMLhf96ixwSy3vgAQxZOcmx6100atYtg7pkVdTgN
-	Wp5JJAV1j2777O1fuDVhDT7RvBat9E/dVjtoI++KK+OLxwD9kvnROaHqsY1E80pditn5gXQcPkeYY
-	PryDmGfLjl4RlUHFrM7prC2WS4gYpH4bQJbB+IWmpcWovoF9w7NXXuOWleLzLAPq+xD9D1mKRD6j1
-	wklJ3mjIdFvi+Dh4SiOw==;
+	List-Owner; bh=Cx6wLz1nTQ62M3PJHwaBS2m3gqH3wI4jin7T9ExAiuQ=; b=bZriAa8cr4nCYH
+	yxq8EyV5Ypdyvu3T28CBO0FaKYXDlgV2VPwklG/iCMgYUrwOUkoMzO+G02eGilXskpKC+cHP97BUZ
+	hZDkxN7Ea/EgW7Rux9SiDKVTRaPWQPEom4yDZSoDfDcbbN12JDH2JxNwerebN36UldzAalj+xj3FF
+	fAEG7kF1DYydVX1IIn+E48SRBp3ZWcTS9/+WiAESVWJxUbzz3gxCi9Jj/U384OT7XzptYv287+cwY
+	9GuO5KSy8jAFwCsU9lCo+3HvN0Cj/w9Qf691FF+AmypsCEb3LrykGXp0Rh+X40TvRwrf4VOY/33xJ
+	71ugSFyOCa77bNQGs8SA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qcCHy-000Qwz-1x;
-	Fri, 01 Sep 2023 22:06:50 +0000
-Received: from linux.microsoft.com ([13.77.154.182])
-	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qcCHv-000Qwf-0v
+	id 1qcdvA-00234P-05;
+	Sun, 03 Sep 2023 03:37:08 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
+	id 1qcdv5-00233p-0L
 	for kexec@lists.infradead.org;
-	Fri, 01 Sep 2023 22:06:49 +0000
-Received: from [192.168.86.41] (unknown [50.46.242.41])
-	by linux.microsoft.com (Postfix) with ESMTPSA id D3815212A784;
-	Fri,  1 Sep 2023 15:06:45 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D3815212A784
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1693606006;
-	bh=MAPRirw43SQMAfz9BXvFsZVrtiSMUrdiYLmeabyub5w=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bDc71/vAEO8noPu3QZzGncOeJGhePJcsYowD2WoxUuQ3PhfdPsMNiq3K3D1zPV17/
-	 iAAp0/G2gkvF6AoRvzYK20DojoEfmfkdu1VC6cILfwGa1CqvszKVyb271J28IYvAJv
-	 maR9SveydEYU9f2y8hl1lF6xQg7bbbtoC2s8S0LI=
-Message-ID: <c83e13f8-4b7d-9489-37cc-53936b24343c@linux.microsoft.com>
-Date: Fri, 1 Sep 2023 15:06:45 -0700
+	Sun, 03 Sep 2023 03:37:04 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1693712218;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pKtB7jxT4Cb7Dh6mDUeRnvr1QZkonAikTMNrLOlN9ng=;
+	b=bT4aIblsPocoiC0BNgfTqZpHACU5/bEkYdTaFnyemD7FGu1bcIZtz/jYX21SRXOybrTlFT
+	+juGmuWT+2t+JmzEmMwziJy3DWGD3Hyg6QY1iXa+1wVpFEAAsxstsuHZB1geKmlbA+xRby
+	yvM5h26/qWtGoPlDjYWn/B5NwFg0awk=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-261-2R5AotwnOH2WWaOhBKVgZA-1; Sat, 02 Sep 2023 23:36:54 -0400
+X-MC-Unique: 2R5AotwnOH2WWaOhBKVgZA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E2BE610264C1;
+	Sun,  3 Sep 2023 03:36:53 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.18])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 8F260D4781C;
+	Sun,  3 Sep 2023 03:36:52 +0000 (UTC)
+Date: Sun, 3 Sep 2023 11:36:49 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Hari Bathini <hbathini@linux.ibm.com>
+Cc: lkml <linux-kernel@vger.kernel.org>,
+	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+	Kexec-ml <kexec@lists.infradead.org>,
+	Dave Young <dyoung@redhat.com>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Sourabh Jain <sourabhjain@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH 1/2] vmcore: allow alternate dump capturing methods to
+ export vmcore without is_kdump_kernel()
+Message-ID: <ZPP/UeP1zUbGPzrt@MiWiFi-R3L-srv>
+References: <20230901190438.375678-1-hbathini@linux.ibm.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [RFC] IMA Log Snapshotting Design Proposal - aggregate
-Content-Language: en-US
-To: Ken Goldman <kgold@linux.ibm.com>,
- Sush Shringarputale <sushring@linux.microsoft.com>,
- linux-integrity@vger.kernel.org, zohar@linux.ibm.com, peterhuewe@gmx.de,
- jarkko@kernel.org, jgg@ziepe.ca, bhe@redhat.com, vgoyal@redhat.com,
- dyoung@redhat.com, kexec@lists.infradead.org, jmorris@namei.org,
- Paul Moore <paul@paul-moore.com>, serge@hallyn.com
-Cc: code@tyhicks.com, nramas@linux.microsoft.com,
- linux-security-module@vger.kernel.org
-References: <c5737141-7827-1c83-ab38-0119dcfea485@linux.microsoft.com>
- <598fdd62-f4c3-a6dc-ae22-8f5a9e18f570@linux.ibm.com>
-From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-In-Reply-To: <598fdd62-f4c3-a6dc-ae22-8f5a9e18f570@linux.ibm.com>
+Content-Disposition: inline
+In-Reply-To: <20230901190438.375678-1-hbathini@linux.ibm.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230901_150647_398888_2E68C80B 
-X-CRM114-Status: GOOD (  23.18  )
+X-CRM114-CacheID: sfid-20230902_203703_237344_80B0C372 
+X-CRM114-Status: GOOD (  28.98  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -71,90 +81,105 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-CgpPbiA4LzMwLzIzIDExOjEyLCBLZW4gR29sZG1hbiB3cm90ZToKPiBPbiA4LzEvMjAyMyAzOjEy
-IFBNLCBTdXNoIFNocmluZ2FycHV0YWxlIHdyb3RlOgo+PiAtIEEgdXNlci1tb2RlIHByb2Nlc3Mg
-d2lsbCB0cmlnZ2VyIHRoZSBzbmFwc2hvdCBieSBvcGVuaW5nIGEgZmlsZSBpbiAKPj4gU3lzRlMK
-Pj4gwqDCoCBzYXkgL3N5cy9rZXJuZWwvc2VjdXJpdHkvaW1hL3NuYXBzaG90IChyZWZlcnJlZCB0
-byBhcyAKPj4gc3lza19pbWFfc25hcHNob3RfZmlsZQo+PiDCoMKgIGhlcmUgb253YXJkcykuCj4+
-IC0gVGhlIEtlcm5lbCB3aWxsIGdldCB0aGUgY3VycmVudCBUUE0gUENSIHZhbHVlcyBhbmQgUENS
-IHVwZGF0ZSAKPj4gY291bnRlciBbMl0KPj4gwqDCoCBhbmQgc3RvcmUgdGhlbSBhcyB0ZW1wbGF0
-ZSBkYXRhIGluIGEgbmV3IElNQSBldmVudCAKPj4gInNuYXBzaG90X2FnZ3JlZ2F0ZSIuCj4gCj4g
-SWYgdGhpcyBpcyByZWx5aW5nIG9uIGEgdXNlci1tb2RlIHByb2Nlc3MsIGlzIHRoZXJlIGEgY29u
-Y2VybiB0aGF0IHRoZSAKPiBwcm9jZXNzIGRvZXNuJ3QgcnVuLiBNaWdodCBpdCBiZSBzYWZlciB0
-byBoYXZlIHRoZSBrZXJuZWwgdHJpZ2dlciB0aGUKPiBzbmFwc2hvdC4KPiAKVGhlIFVNIHByb2Nl
-c3MgaGVyZSB3b3VsZCBiZSB0eXBpY2FsbHkgYW4gYXR0ZXN0YXRpb24gY2xpZW50CndoaWNoIHBh
-c3NlcyBvbiB0aGUgSU1BIGxvZyB0byB0aGUgcmVtb3RlIHNlcnZpY2UgZm9yIGF0dGVzdGF0aW9u
-LgpJZiB0aGUgcHJvY2VzcyBkb2Vzbid0IHJ1biwgdGhlIGNsaWVudCB3aWxsIG9wZXJhdGUgdGhl
-IHNhbWUgd2F5IGFzIGl0CmRvZXMgY3VycmVudGx5LgoKS2VybmVsIHRyaWdnZXJpbmcgc25hcHNo
-b3Qgd291bGQgY29tZSB3aXRoIGl0cyBvd24gaXNzdWVzIG9mIEtlcm5lbApzdG9yaW5nIHRoZSBz
-bmFwc2hvdCBvbiBzb21lIHBlcnNpc3RlbnQgZmlsZS1zeXN0ZW0uIFRoZXkgYXJlIGJlaW5nCmRp
-c2N1c3NlZCBvbiB0aGUgbWFpbiB0aHJlYWQgWzFdLgoKPiBQQ1IgcmVhZHMgYXJlIG5vdCBhdG9t
-aWMsIHdpdGggZWFjaCBvdGhlciBhbmQgd2l0aCBldmVudCBsb2cgYXBwZW5kcy4gSXMgCj4gdGhp
-cyBhbiBpc3N1ZT8KPiAKSW4gdGhpcyBkZXNpZ24sIHJlYWRpbmcgdGhlIFBDUiBwbHVzIGFkZGlu
-ZyB0aGUgc25hcHNob3RfYWdncmVnYXRlCmhhcyB0byBiZSBhbiBhdG9taWMgb3BlcmF0aW9uLiAg
-T3RoZXIgSU1BIGV2ZW50cyBzaG91bGRuJ3QgaW50ZXJmZXJlCndpdGggdGhpcyBvcGVyYXRpb24u
-IEp1c3QgbGlrZSBJTUEgZW5zdXJlcyBhZGRpbmcgYW4gZW50cnkgdG8gdGhlIGxvZwpwbHVzIFBD
-UiBleHRlbnNpb24gaGFwcGVucyBpbiBhbiBhdG9taWMgd2F5IGJ5IGhvbGRpbmcgdGhlCmltYV9l
-eHRlbmRfbGlzdF9tdXRleCBbMl0sIHdlIGludGVuZCB0byB1c2UgYSBzaW1pbGFyIG1lY2hhbmlz
-bSB0bwplbnN1cmUgcmVhZGluZyB0aGUgUENSIHBsdXMgYWRkaW5nIHRoZSBzbmFwc2hvdF9hZ2dy
-ZWdhdGUgcmVtYWlucyBhbgphdG9taWMgb3BlcmF0aW9uLiAgQW5kIHNpbmNlIHRha2luZyBhIHNu
-YXBzaG90IHdvdWxkIGJlIGEgcmFyZSBldmVudApjb21wYXJlZCB0byBhZGRpbmcgYSBnZW5lcmlj
-IGV2ZW50IHRvIElNQSBsb2cgLSBvdmVyYWxsIHdlIGV4cGVjdCBhIGxvdwpvdmVyaGVhZCBpbiBj
-YXNlIG9mIHNuYXBzaG90dGluZy4KCkhvd2V2ZXIsIHBsZWFzZSBub3RlIHRoYXQgdGhlIGV2ZW50
-IGFkZGl0aW9uIHRvIElNQSBsb2dzIHdpbGwgKm5vdCoKYmUgcGF1c2VkIHdoaWxlIHRoZSBsb2cg
-aXMgd3JpdHRlbiBvdXQgdG8gZGlzayBieSB0aGUgVU0gcHJvY2Vzcy4KCj4gVGhlIFBDUiB1cGRh
-dGUgY291bnRlciBjYW4gY2hhbmdlIGJldHdlZW4gUENSIHJlYWRzLsKgIFdoYXQgaXMgaXRzIHB1
-cnBvc2U/Cj4gCkVhcmxpZXIgd2UgYmVsaWV2ZWQgdGhlIFBDUiB1cGRhdGUgY291bnRlciB3aWxs
-IGhlbHAgd2l0aCBrZWVwaW5nIHRyYWNrCm9mIGV2ZW50cyBpbiB0aGUgSU1BIGxvZyBzbmFwc2hv
-dC4gQnV0IEkgc29vbiByZWFsaXplZCAoYW5kIGl0IHdhcwphbHNvIHBvaW50ZWQgb3V0IGJ5IFN0
-ZWZhbiBCZXJnZXIgb24gdGhlIFBDUiB1cGRhdGUgY291bnRlciBwYXRjaC1zZXJpZXMgClszXSkg
-dGhhdCB0aGUgdXBkYXRlIGNvdW50ZXIgZ2V0cyBpbmNyZW1lbnRlZCBvbiB1cGRhdGVzIHRvIGFu
-eSBQQ1IKKGluY2x1ZGluZyB0aGUgUENScyBub3QgdG91Y2hlZCBieSBJTUEpLgoKSSBhZ3JlZSB0
-aGF0IHVwZGF0ZSBjb3VudGVyIG1heSBub3QgYmUgYSByZWxpYWJsZSBtYXJrZXIgZm9yIHRoaXMK
-cGFydGljdWxhciBmZWF0dXJlLgoKV2UgaGF2ZSBwdXQgdGhhdCBzZXJpZXMgWzNdIG9uIGhvbGQg
-Zm9yIG90aGVyIGhpZ2hlciBwcmlvcml0eSB3b3JrIGl0ZW1zCmluIHRoZSBJTUEva2V4ZWMgc3Bh
-Y2UuCgo+IFdoYXQgaXMgdGhlIHB1cnBvc2Ugb2YgdGhlIHNuYXBzaG90IGFnZ3JlZ2F0ZT/CoCBT
-aW5jZSB0aGUgZW50aXJlIGV2ZW50IAo+IGxvZyBoYXMgdG8gYmUgcmV0YWluZWQgYW5kIHNlbnQg
-dG8gdGhlIHZlcmlmaWVyLCBpcyB0aGUgYWdncmVnYXRlIAo+IHJlZHVuZGFudD8KClRoZSBnb2Fs
-cyBvZiBzbmFwc2hvdF9hZ2dyZWdhdGUgbWFya2VyIGFyZToKICAgICAxLiBUbyBhbGxvdyB0aGUg
-SU1BIGxvZyB0byBiZSBkaXZpZGVkIGludG8gbXVsdGlwbGUgY2h1bmtzIGFuZAogICAgICAgIHBy
-b3ZpZGUgYXR0ZXN0YXRpb24gc2VydmljZSB0aGUgYWJpbGl0eSB0byB2ZXJpZnkgYW5kIHVzZSB0
-aGUKICAgICAgICBsYXRlc3QgY2h1bmsgKGkuZS4gc25hcHNob3QgKSBmb3IgYXR0ZXN0YXRpb24u
-CgogICAgIDIuIFRvIGluZGljYXRlIHRvIHRoZSBhdHRlc3RhdGlvbiBzZXJ2aWNlIHRoYXQgdGhl
-IGNsaWVudCBkZXZpY2UgaGFzCiAgICAgICAgSU1BIGxvZyBzbmFwc2hvdHRpbmcgZmVhdHVyZSBl
-bmFibGVkLCBhbmQgYXQgbGVhc3Qgb25lIHNuYXBzaG90CiAgICAgICAgaXMgdGFrZW4uICBTbyB0
-aGF0IHRoZSBzZXJ2aWNlIGNhbiBhc2sgZm9yIHByZXZpb3VzIHNuYXBzaG90cwogICAgICAgIGFz
-IG5lZWRlZC4KCiAgICAgMy4gSW4gdGhlIGV2ZW50IG9mIG11bHRpcGxlIHNuYXBzaG90cywgdGhl
-IHNuYXBzaG90X2FnZ3JlZ2F0ZQogICAgICAgIG1hcmtlciBoYXMgc3VmZmljaWVudCBpbmZvcm1h
-dGlvbiB0byB2ZXJpZnkgdGhlIGludGVncml0eQogICAgICAgIG9mIGxhdGVzdCBzdWJzZXQgb2Yg
-aXNvbGF0ZWQgc25hcHNob3RzICh3aXRoIHRoZSBoZWxwIG9mIFBDUgogICAgICAgIHF1b3RlIG9m
-IGNvdXJzZSkKCiAgICAgNC4gc25hcHNob3RfYWdncmVnYXRlIGhlbHBzIGJvdGgga2VybmVsIGFu
-ZCBVTSBkZWZpbmUgY2xlYXIKICAgICAgICBib3VuZGFyaWVzIGJldHdlZW4gbXVsdGlwbGUgc25h
-cHNob3RzLgogICAgICAgIChlYWNoIG5ldyBzbmFwc2hvdCBzdGFydHMgd2l0aCBlaXRoZXIgdGhl
-IGZpcnN0IGJvb3RfYWdncmVnYXRlCiAgICAgICAgIG9yIGEgc25hcHNob3RfYWdncmVnYXRlIGV2
-ZW50KQoKVGhlIG92ZXJhbGwgZ29hbHMgb2YgSU1BIGxvZyBzbmFwc2hvdHRpbmcgZmVhdHVyZSBh
-cmU6CiAgICAgYS4gdG8gcmVsaWV2ZSBtZW1vcnkgcHJlc3N1cmUgb24gdGhlIGNsaWVudCBkZXZp
-Y2UuCgogICAgIGIuIHRvIG1ha2UgYXR0ZXN0YXRpb24gc2VydmljZSBzaWRlIHByb2Nlc3Npbmcg
-bW9yZSBlZmZpY2llbnQKICAgICAgICBUaGV5IGRvbid0IGhhdmUgdG8gZGVhbCB3aXRoIHRoZSBl
-bnRpcmUgbG9nIHNpbmNlIGJvb3QsCiAgICAgICAgYXMgeW91IG1lbnRpb25lZCBvbgoKICAgICBj
-LiBSZWR1Y2UgbmV0d29yayBiYW5kd2lkdGggdXNhZ2UgYnkgc2VuZGluZyBsZXNzIGRhdGEKICAg
-ICAgICBmb3IgZWFjaCBhdHRlc3RhdGlvbiByZXF1ZXN0LgoKV2UgbWlzc2VkIHN0YXRpbmcgdGhl
-bSBleHBsaWNpdGx5IGluIHRoZSBvcmlnaW5hbCBSRkMgcHJvcG9zYWwgd2UKc2VudC4gV2Ugd2ls
-bCBhZGQgdGhlbSBpbiB0aGUgbmV4dCB2ZXJzaW9uIG9mIHRoZSBwcm9wb3NhbC4KClJlZmVyZW5j
-ZXM6CgpbMV0gUmU6IFtSRkNdIElNQSBMb2cgU25hcHNob3R0aW5nIERlc2lnbiBQcm9wb3NhbCAt
-IFBhdWwgTW9vcmUgCihrZXJuZWwub3JnKQpodHRwczovL2xvcmUua2VybmVsLm9yZy9saW51eC1p
-bnRlZ3JpdHkvQ0FIQzlWaFFibnlkMm52bUwtdD0za1hwcHNtOTg1cHMrTlBKNVFEdk0xV1NTLUhk
-X0V3QG1haWwuZ21haWwuY29tLwoKClsyXSBpbWFfZXh0ZW5kX2xpc3RfbXV0ZXgKaHR0cHM6Ly9l
-bGl4aXIuYm9vdGxpbi5jb20vbGludXgvbGF0ZXN0L3NvdXJjZS9zZWN1cml0eS9pbnRlZ3JpdHkv
-aW1hL2ltYV9xdWV1ZS5jI0wxNTkKClszXSBSZTogW1BBVENIIDAvNl0gTWVhc3VyaW5nIFRQTSB1
-cGRhdGUgY291bnRlciBpbiBJTUEgLSBTdGVmYW4gQmVyZ2VyIAooa2VybmVsLm9yZykKaHR0cHM6
-Ly9sb3JlLmtlcm5lbC5vcmcvbGludXgtaW50ZWdyaXR5L2E0YTVlNDBiLWFiYzEtMjdmYS0zOTg0
-LWNlZTE4ZmI0NTIyY0BsaW51eC5pYm0uY29tLwoKVGhhbmtzLAoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxp
-c3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9rZXhlYwo=
+Hi Hari,
+
+On 09/02/23 at 12:34am, Hari Bathini wrote:
+> Currently, is_kdump_kernel() returns true when elfcorehdr_addr is set.
+> While elfcorehdr_addr is set for kexec based kernel dump mechanism,
+> alternate dump capturing methods like fadump [1] also set it to export
+> the vmcore. is_kdump_kernel() is used to restrict resources in crash
+> dump capture kernel but such restrictions may not be desirable for
+> fadump. Allow is_kdump_kernel() to be defined differently for such
+> scenarios. With this, is_kdump_kernel() could be false while vmcore
+> is usable. So, introduce is_crashdump_kernel() to return true when
+> elfcorehdr_addr is set and use it for vmcore related checks.
+
+I got what is done in these two patches, but didn't get why they need be
+done. vmcore_unusable()/is_vmcore_usable() are only unitilized in ia64.
+Why do you care if it's is_crashdump_kernel() or is_kdump_kernel()?
+If you want to override the generic is_kdump_kernel() with powerpc's own
+is_kdump_kernel(), your below change is enough to allow you to do that.
+I can't see why is_crashdump_kernel() is needed. Could you explain that
+specifically?
+
+#ifndef is_kdump_kernel
+static inline bool is_kdump_kernel(void)
+{
+        return elfcorehdr_addr != ELFCORE_ADDR_MAX;
+}
+#endif
+
+Thanks
+Baoquan
+
+> [1] https://docs.kernel.org/powerpc/firmware-assisted-dump.html
+> 
+> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+> ---
+>  include/linux/crash_dump.h | 18 ++++++++++++++++--
+>  1 file changed, 16 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
+> index 0f3a656293b0..1052a0faf0dd 100644
+> --- a/include/linux/crash_dump.h
+> +++ b/include/linux/crash_dump.h
+> @@ -50,6 +50,7 @@ void vmcore_cleanup(void);
+>  #define vmcore_elf64_check_arch(x) (elf_check_arch(x) || vmcore_elf_check_arch_cross(x))
+>  #endif
+>  
+> +#ifndef is_kdump_kernel
+>  /*
+>   * is_kdump_kernel() checks whether this kernel is booting after a panic of
+>   * previous kernel or not. This is determined by checking if previous kernel
+> @@ -64,6 +65,19 @@ static inline bool is_kdump_kernel(void)
+>  {
+>  	return elfcorehdr_addr != ELFCORE_ADDR_MAX;
+>  }
+> +#endif
+> +
+> +/*
+> + * Return true if this is a dump capture kernel, where vmcore needs to be
+> + * exported, irrespective of the dump capture mechanism in use.
+> + *
+> + * Same as is_kdump_kernel() unless arch specific code defines is_kdump_kernel()
+> + * differently while supporting other dump capturing mechanisms.
+> + */
+> +static inline bool is_crashdump_kernel(void)
+> +{
+> +	return elfcorehdr_addr != ELFCORE_ADDR_MAX;
+> +}
+>  
+>  /* is_vmcore_usable() checks if the kernel is booting after a panic and
+>   * the vmcore region is usable.
+> @@ -75,7 +89,7 @@ static inline bool is_kdump_kernel(void)
+>  
+>  static inline int is_vmcore_usable(void)
+>  {
+> -	return is_kdump_kernel() && elfcorehdr_addr != ELFCORE_ADDR_ERR ? 1 : 0;
+> +	return is_crashdump_kernel() && elfcorehdr_addr != ELFCORE_ADDR_ERR ? 1 : 0;
+>  }
+>  
+>  /* vmcore_unusable() marks the vmcore as unusable,
+> @@ -84,7 +98,7 @@ static inline int is_vmcore_usable(void)
+>  
+>  static inline void vmcore_unusable(void)
+>  {
+> -	if (is_kdump_kernel())
+> +	if (is_crashdump_kernel())
+>  		elfcorehdr_addr = ELFCORE_ADDR_ERR;
+>  }
+>  
+> -- 
+> 2.41.0
+> 
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
