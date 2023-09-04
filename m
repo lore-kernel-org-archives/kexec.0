@@ -4,72 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5815BC83F2C
-	for <kexec@archiver.kernel.org>; Sun,  3 Sep 2023 03:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D48A8C71153
+	for <kexec@archiver.kernel.org>; Mon,  4 Sep 2023 02:48:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=Cx6wLz1nTQ62M3PJHwaBS2m3gqH3wI4jin7T9ExAiuQ=; b=bZriAa8cr4nCYH
-	yxq8EyV5Ypdyvu3T28CBO0FaKYXDlgV2VPwklG/iCMgYUrwOUkoMzO+G02eGilXskpKC+cHP97BUZ
-	hZDkxN7Ea/EgW7Rux9SiDKVTRaPWQPEom4yDZSoDfDcbbN12JDH2JxNwerebN36UldzAalj+xj3FF
-	fAEG7kF1DYydVX1IIn+E48SRBp3ZWcTS9/+WiAESVWJxUbzz3gxCi9Jj/U384OT7XzptYv287+cwY
-	9GuO5KSy8jAFwCsU9lCo+3HvN0Cj/w9Qf691FF+AmypsCEb3LrykGXp0Rh+X40TvRwrf4VOY/33xJ
-	71ugSFyOCa77bNQGs8SA==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:Date:
+	Message-ID:From:References:Cc:To:Subject:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Owner;
+	bh=68j8QN1xjt2vSi0TDUplUS+ZcCU9RvUqV2pRJyinOpo=; b=q/yMct6XsNaygxcJpUIZ3MdR8x
+	rdokc4thtxtaLqqgrlcs2T1vyRZ60fAcH9LX49vhYk6W0rWpagij8tFYkZDMNHWfULaR14eQ0C6uS
+	Havqtn/2Xrp0xzYw4Qkz08jSnQV+60cv30yEUVMtNVOxn/YgfsrN6l5uRL4laeiPqcUrR3Aefa1SE
+	W+vY2sNB0SXHHISWvJW0J7tNw/OANo30LjQDGPGu+yndIVY/XqpqvY5Wp8CV7dqN94IsdBPlDQOXU
+	xY6c8A3K8Dj7YN08+fyNetVeW2lch9OMiIluZzFNQ0z4Ie16rgynxVBvgKNaStH1jWAa2qvQLhJhY
+	jaPyuWiQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qcdvA-00234P-05;
-	Sun, 03 Sep 2023 03:37:08 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1qczde-003B8E-0H;
+	Mon, 04 Sep 2023 02:48:30 +0000
+Received: from [45.249.212.51] (helo=dggsgout11.his.huawei.com)
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qcdv5-00233p-0L
-	for kexec@lists.infradead.org;
-	Sun, 03 Sep 2023 03:37:04 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1693712218;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pKtB7jxT4Cb7Dh6mDUeRnvr1QZkonAikTMNrLOlN9ng=;
-	b=bT4aIblsPocoiC0BNgfTqZpHACU5/bEkYdTaFnyemD7FGu1bcIZtz/jYX21SRXOybrTlFT
-	+juGmuWT+2t+JmzEmMwziJy3DWGD3Hyg6QY1iXa+1wVpFEAAsxstsuHZB1geKmlbA+xRby
-	yvM5h26/qWtGoPlDjYWn/B5NwFg0awk=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-261-2R5AotwnOH2WWaOhBKVgZA-1; Sat, 02 Sep 2023 23:36:54 -0400
-X-MC-Unique: 2R5AotwnOH2WWaOhBKVgZA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E2BE610264C1;
-	Sun,  3 Sep 2023 03:36:53 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.18])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 8F260D4781C;
-	Sun,  3 Sep 2023 03:36:52 +0000 (UTC)
-Date: Sun, 3 Sep 2023 11:36:49 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Hari Bathini <hbathini@linux.ibm.com>
-Cc: lkml <linux-kernel@vger.kernel.org>,
-	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-	Kexec-ml <kexec@lists.infradead.org>,
-	Dave Young <dyoung@redhat.com>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Sourabh Jain <sourabhjain@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH 1/2] vmcore: allow alternate dump capturing methods to
- export vmcore without is_kdump_kernel()
-Message-ID: <ZPP/UeP1zUbGPzrt@MiWiFi-R3L-srv>
-References: <20230901190438.375678-1-hbathini@linux.ibm.com>
+	id 1qczda-003B6i-1i;
+	Mon, 04 Sep 2023 02:48:28 +0000
+Received: from mail02.huawei.com (unknown [172.30.67.143])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4RfCjr0VYsz4f3kKC;
+	Mon,  4 Sep 2023 10:48:00 +0800 (CST)
+Received: from [10.174.178.55] (unknown [10.174.178.55])
+	by APP4 (Coremail) with SMTP id gCh0CgDHVqleRfVkcC9CCQ--.43117S3;
+	Mon, 04 Sep 2023 10:48:00 +0800 (CST)
+Subject: Re: [PATCH v2 3/8] crash_core: change parse_crashkernel() to support
+ crashkernel=,high|low parsing
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+ catalin.marinas@arm.com, thunder.leizhen@huawei.com, dyoung@redhat.com,
+ prudo@redhat.com, samuel.holland@sifive.com, kexec@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, x86@kernel.org
+References: <20230829121610.138107-1-bhe@redhat.com>
+ <20230829121610.138107-4-bhe@redhat.com>
+ <c4a1f96e-2c8d-a496-61f3-0299d77c5c84@huaweicloud.com>
+ <ZPGzlIkXqVThTwjg@MiWiFi-R3L-srv>
+From: "Leizhen (ThunderTown)" <thunder.leizhen@huaweicloud.com>
+Message-ID: <2b9af1b7-8d80-46b7-d582-156a97456a36@huaweicloud.com>
+Date: Mon, 4 Sep 2023 10:47:58 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20230901190438.375678-1-hbathini@linux.ibm.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
+In-Reply-To: <ZPGzlIkXqVThTwjg@MiWiFi-R3L-srv>
+Content-Language: en-US
+X-CM-TRANSID: gCh0CgDHVqleRfVkcC9CCQ--.43117S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7urWxAw48GryrJw4xJF4UXFb_yoW8Aw4rpr
+	1rAF4UJF1UAFn5G34IvFZ3uayfJrZ2vrWUZrWakas0yr9IywnIyr15Ga129rWv9rnFqF4S
+	vF48tFsIyryF9FJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
+	e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
+	6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE
+	14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
+	9x07UWE__UUUUU=
+X-CM-SenderInfo: hwkx0vthuozvpl2kv046kxt4xhlfz01xgou0bp/
+X-CFilter-Loop: Reflected
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230902_203703_237344_80B0C372 
-X-CRM114-Status: GOOD (  28.98  )
+X-CRM114-CacheID: sfid-20230903_194826_912838_9B382858 
+X-CRM114-Status: GOOD (  14.61  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,97 +90,87 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Hari,
 
-On 09/02/23 at 12:34am, Hari Bathini wrote:
-> Currently, is_kdump_kernel() returns true when elfcorehdr_addr is set.
-> While elfcorehdr_addr is set for kexec based kernel dump mechanism,
-> alternate dump capturing methods like fadump [1] also set it to export
-> the vmcore. is_kdump_kernel() is used to restrict resources in crash
-> dump capture kernel but such restrictions may not be desirable for
-> fadump. Allow is_kdump_kernel() to be defined differently for such
-> scenarios. With this, is_kdump_kernel() could be false while vmcore
-> is usable. So, introduce is_crashdump_kernel() to return true when
-> elfcorehdr_addr is set and use it for vmcore related checks.
 
-I got what is done in these two patches, but didn't get why they need be
-done. vmcore_unusable()/is_vmcore_usable() are only unitilized in ia64.
-Why do you care if it's is_crashdump_kernel() or is_kdump_kernel()?
-If you want to override the generic is_kdump_kernel() with powerpc's own
-is_kdump_kernel(), your below change is enough to allow you to do that.
-I can't see why is_crashdump_kernel() is needed. Could you explain that
-specifically?
+On 2023/9/1 17:49, Baoquan He wrote:
+>>> +
+>>> +		*high = true;
+>>> +	} else if (ret || !*crash_size) {
+>> This check can be moved outside of #ifdef. Because even '!high', it's completely
+>> applicable. The overall adjustment is as follows:
+> Hmm, the current logic is much easier to understand. However, I may not
+> 100% get your suggestion. Can you paste the complete code in your
+> suggested way? Do not need 100% correct code, just the skeleton of code logic
+> so that I can better understand it and add inline comment.
 
-#ifndef is_kdump_kernel
-static inline bool is_kdump_kernel(void)
+int __init parse_crashkernel(...)
 {
-        return elfcorehdr_addr != ELFCORE_ADDR_MAX;
+	int ret;
+
+	/* crashkernel=X[@offset] */
+	ret = __parse_crashkernel(cmdline, system_ram, crash_size,
+				crash_base, NULL);
+
+#ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
+	if (high && ret == -ENOENT) {
+		... ...		//The code for your original branch "else if (ret == -ENOENT) {"
+		ret = 0;	//Added based on the next discussion
+	}
++#endif
+
+ 	if (!*crash_size)
+		ret = -EINVAL;
+
+	return ret;
 }
-#endif
 
-Thanks
-Baoquan
+> 
+>> -  	if (!high)
+>> -  		return ret;
+>>
+>> #ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
+>> 	if (high && ret == -ENOENT) {
+>> 		... ...
+>> 		if (ret || !*crash_size)	//parse HIGH
+>> 		... ...
+>> 	}
+>>
+>> 	//At this point, *crash_size is not 0 and ret is 0.
+>> 	//We can also delete if (!*crash_size) above because it will be checked later.
+>> #endif
+>>
+>> 	if (!*crash_size)
+>> 		ret = -EINVAL;
+>>
+>> 	return ret;
+> When crashkernel=,high is specified while crashkernel=,low is omitted,
+> the ret==-ENOENT, but we can't return ret directly. That is still an
+> acceptable way.
 
-> [1] https://docs.kernel.org/powerpc/firmware-assisted-dump.html
+Oh, yes. Sorry, I didn't notice branch "ret==-ENOENT" didn't return. So "ret = 0;"
+needs to be added.
+
+	if (high && ret == -ENOENT) {
+		... ...
+		*high = true;
++		ret = 0;
+	}
+
 > 
-> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-> ---
->  include/linux/crash_dump.h | 18 ++++++++++++++++--
->  1 file changed, 16 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
-> index 0f3a656293b0..1052a0faf0dd 100644
-> --- a/include/linux/crash_dump.h
-> +++ b/include/linux/crash_dump.h
-> @@ -50,6 +50,7 @@ void vmcore_cleanup(void);
->  #define vmcore_elf64_check_arch(x) (elf_check_arch(x) || vmcore_elf_check_arch_cross(x))
->  #endif
->  
-> +#ifndef is_kdump_kernel
->  /*
->   * is_kdump_kernel() checks whether this kernel is booting after a panic of
->   * previous kernel or not. This is determined by checking if previous kernel
-> @@ -64,6 +65,19 @@ static inline bool is_kdump_kernel(void)
->  {
->  	return elfcorehdr_addr != ELFCORE_ADDR_MAX;
->  }
-> +#endif
-> +
-> +/*
-> + * Return true if this is a dump capture kernel, where vmcore needs to be
-> + * exported, irrespective of the dump capture mechanism in use.
-> + *
-> + * Same as is_kdump_kernel() unless arch specific code defines is_kdump_kernel()
-> + * differently while supporting other dump capturing mechanisms.
-> + */
-> +static inline bool is_crashdump_kernel(void)
-> +{
-> +	return elfcorehdr_addr != ELFCORE_ADDR_MAX;
-> +}
->  
->  /* is_vmcore_usable() checks if the kernel is booting after a panic and
->   * the vmcore region is usable.
-> @@ -75,7 +89,7 @@ static inline bool is_kdump_kernel(void)
->  
->  static inline int is_vmcore_usable(void)
->  {
-> -	return is_kdump_kernel() && elfcorehdr_addr != ELFCORE_ADDR_ERR ? 1 : 0;
-> +	return is_crashdump_kernel() && elfcorehdr_addr != ELFCORE_ADDR_ERR ? 1 : 0;
->  }
->  
->  /* vmcore_unusable() marks the vmcore as unusable,
-> @@ -84,7 +98,7 @@ static inline int is_vmcore_usable(void)
->  
->  static inline void vmcore_unusable(void)
->  {
-> -	if (is_kdump_kernel())
-> +	if (is_crashdump_kernel())
->  		elfcorehdr_addr = ELFCORE_ADDR_ERR;
->  }
->  
-> -- 
-> 2.41.0
-> 
+>> -  	return 0;
+>>
+>>> +		/* The specified value is invalid */
+>>> +		return -1;
+>>> +	}
+>>> +#endif
+>>>  	return 0;
+>>>  }
+>>>  
+>>>
+
+-- 
+Regards,
+  Zhen Lei
 
 
 _______________________________________________
