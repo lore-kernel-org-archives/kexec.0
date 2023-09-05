@@ -4,98 +4,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A9600C83F3E
-	for <kexec@archiver.kernel.org>; Tue,  5 Sep 2023 19:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 73D64CA0FFB
+	for <kexec@archiver.kernel.org>; Tue,  5 Sep 2023 19:26:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=QBAneo27xDLDl2qEZebiJzfh49n3bdAGKJPPXSxoqNE=; b=U6tHYez0GSyWZK
-	cz5Ua6LCAGXmN3Du8dipRMchMRVEJKZBWLI1Yvy8wkrKlT+PTz9EEBHZMw7bRjmJ7Nr7S5tdet4xP
-	vm3HFmNJQEsvZXSP3cF9BSHjer3gBm+Y9KqQqFJvx8s2R8unfItzfV8AMSlC+NlKqfeyTFVXvFRPZ
-	5/YzCFDI87P+qLx2boMUVnGDe9kJ9VVmxI2zqfcmaYm2aStnAizswfEL08a/ub0I72vRcEE71fG60
-	rqANIfgB8rEX9jWqcxQp1LLLTu103M4CYi0VLLBN7vXAYnfU5CC1SI+Tj730BpX4mXNVqwBqk3Cul
-	o5CQIjrrcKKdVdArJdIA==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=wdV8xqU+bJZxYiz3UdVP3fYLXmVAUflmg8xnqbOFwqo=; b=N89ro/ca733OIe
+	313tIQUU6u8q3psWex+DNPEQLetQRTKZCtyNnUINYsrUxyS+AjhvY1cMJthWWNAw8t0vf0WC+S6Ff
+	coUk8OWqZDYyfWv1EcHiXfPxHE181ROuvFahmbWLVNtoZrAISKhY3KxvwzcRF+7UIsvJDJ7JTVwDI
+	5SRvnPIL4oy6eacxIFN0puJEZ9+CjjqkIPpLZLcikWwMDYMpsO/t/rrmsIaG1ioG5uZkN2EBDHIv4
+	4SncJ6GGXiKhxEIYUfW9mSBebADksu7kZNrSGDxQ0DPyvRbSZo8qZYOCcA47nO16ik3Oxfo87dUpW
+	BYa5mwPN1eOj/T4f1nnQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qdbSh-006av9-12;
-	Tue, 05 Sep 2023 19:11:43 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1qdbgg-006bim-07;
+	Tue, 05 Sep 2023 19:26:10 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qdbSa-006auI-1g
+	id 1qdbgb-006bi3-0r
 	for kexec@lists.infradead.org;
-	Tue, 05 Sep 2023 19:11:40 +0000
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 385J8YQo017837;
-	Tue, 5 Sep 2023 19:11:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=zSl9C1uQUGnKUHKEYd/N1SuSlXkpaJd1Dr30fySsTbw=;
- b=K2qtowmp56LqgqpurHBpKkueY6QiqMooY7KVmqpLZaYKDVaOtX5ySMawVYtbrDy+Max/
- gy6PPUdCpMyNVBQjpA8jt5uWBMrKMwIEYH9eK6XfhPX/bJ23jevdTIj5SNmoeZ9w03GT
- vJUcGlIrMRxMch6Fp57TdP49n9dYKWGZRscYLeOn6waefUKFQDigHU/QGaf9xD5iGS2H
- YIgNLrg0tEDqDO0uB4R2YWyPCYUwYuOGlpH56Dv8tjVSzeYI15fG2dA7Ty5mZrrmrsS3
- RCZYbCziy47xe4VE2yqO9r5ExoZ+5iRy+nRfQc/m7L6KHmOUlWBHEAFW/AlJ140T5lJ6 Ig== 
+	Tue, 05 Sep 2023 19:26:08 +0000
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 385JFfjt003469;
+	Tue, 5 Sep 2023 19:26:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=7ULapfELbIAWVvGJokYwrzD3uX2qjQSeL5o58+0Keaw=;
+ b=fhJW5nouIxtm32yjzNxic3wQ5MRYHMEoapL2O0Ls0hAh79JTkE21xIBZ4NtGxzFWPqe1
+ vbQ7IZ4mP6KQjCPPUWzvhoCmM/uGd8BKsGlNBfbaDs25BYy09aC7TdHhxDCTya5fLjj5
+ Wc/ef0UIyD+rRXo7ZHjw9rLbPCs+TpuOjrZVaHh/dXNzRAZzIjoW/4FxbWwzsBSBYTA+
+ DjgSyvF/S3XSHPPYvRoceR8bUQesPDdk5Bj1IABGLqfMxkEhcz7RHvifuD4+/136mCNz
+ EwIhJ4XK0O1MvvBQU+3M9HT22giJecy75a9NfLlmbeUzQ8Hl9ExvOxlDjYflzlPCtp0g eQ== 
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sxa0krv9p-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sxaay0kbg-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Sep 2023 19:11:31 +0000
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 385J8g4t019024;
-	Tue, 5 Sep 2023 19:11:17 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sxa0krtdg-9
+	Tue, 05 Sep 2023 19:26:01 +0000
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 385JFvEb004836;
+	Tue, 5 Sep 2023 19:26:00 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sxaay0kay-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Sep 2023 19:11:17 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 385HrPlQ001610;
-	Tue, 5 Sep 2023 18:36:10 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3svfcsnayr-1
+	Tue, 05 Sep 2023 19:26:00 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 385HudYB011121;
+	Tue, 5 Sep 2023 19:26:00 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3svj31mrha-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Sep 2023 18:36:10 +0000
+	Tue, 05 Sep 2023 19:26:00 +0000
 Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 385Ia7XC7144106
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 385JPvQF45417100
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 5 Sep 2023 18:36:08 GMT
+	Tue, 5 Sep 2023 19:25:57 GMT
 Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D715F20043;
-	Tue,  5 Sep 2023 18:36:07 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 37BC420040;
+	Tue,  5 Sep 2023 19:25:57 +0000 (GMT)
 Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E1C4020040;
-	Tue,  5 Sep 2023 18:36:05 +0000 (GMT)
-Received: from li-bd3f974c-2712-11b2-a85c-df1cec4d728e.ibm.com.com (unknown [9.43.114.159])
+	by IMSVA (Postfix) with ESMTP id AB93420043;
+	Tue,  5 Sep 2023 19:25:55 +0000 (GMT)
+Received: from [9.43.114.159] (unknown [9.43.114.159])
 	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  5 Sep 2023 18:36:05 +0000 (GMT)
-From: Hari Bathini <hbathini@linux.ibm.com>
-To: lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Kexec-ml <kexec@lists.infradead.org>
-Cc: Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH v2 1/3] powerpc/fadump: make is_fadump_active() visible for exporting vmcore
-Date: Wed,  6 Sep 2023 00:06:02 +0530
-Message-ID: <20230905183604.568996-1-hbathini@linux.ibm.com>
-X-Mailer: git-send-email 2.41.0
+	Tue,  5 Sep 2023 19:25:55 +0000 (GMT)
+Message-ID: <7ae76fa1-6d6e-2aff-a71d-4db76e63857a@linux.ibm.com>
+Date: Wed, 6 Sep 2023 00:55:54 +0530
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH 1/2] vmcore: allow alternate dump capturing methods to
+ export vmcore without is_kdump_kernel()
+Content-Language: en-US
+To: Baoquan He <bhe@redhat.com>
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Kexec-ml <kexec@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Dave Young <dyoung@redhat.com>
+References: <20230901190438.375678-1-hbathini@linux.ibm.com>
+ <ZPP/UeP1zUbGPzrt@MiWiFi-R3L-srv>
+ <8fcd7ba7-0f27-7bbc-676f-7e13c8bf00d7@linux.ibm.com>
+ <ZPaSyMuPa466sEPz@MiWiFi-R3L-srv>
+From: Hari Bathini <hbathini@linux.ibm.com>
+In-Reply-To: <ZPaSyMuPa466sEPz@MiWiFi-R3L-srv>
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: m_EEdtmtcBJ8Bl664_L4-tA5VIHaGQBC
-X-Proofpoint-GUID: Qhq2VodxAMpkVdX0kxPKylqYNsCnIhk1
+X-Proofpoint-ORIG-GUID: aEHGwkuBtXUEo2dCd_xfSKUN6LXkp4yf
+X-Proofpoint-GUID: qQMHCb5SNcsQKhOcYNs-Yo4cP2UbEtyt
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
  definitions=2023-09-05_12,2023-09-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
- spamscore=0 mlxscore=0 malwarescore=0 impostorscore=0 bulkscore=0
- adultscore=0 lowpriorityscore=0 priorityscore=1501 clxscore=1015
- mlxlogscore=983 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ lowpriorityscore=0 phishscore=0 adultscore=0 bulkscore=0 suspectscore=0
+ mlxscore=0 impostorscore=0 malwarescore=0 mlxlogscore=487 clxscore=1015
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2308100000 definitions=main-2309050166
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230905_121136_768884_D017FF78 
-X-CRM114-Status: GOOD (  19.98  )
+X-CRM114-CacheID: sfid-20230905_122605_444903_41BA200B 
+X-CRM114-Status: GOOD (  24.40  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -107,96 +116,62 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Include asm/fadump.h in asm/kexec.h to make it visible while exporting
-vmcore. Also, update is_fadump_active() to return boolean instead of
-integer for better readability. The change will be used in the next
-patch to ensure vmcore is exported when fadump is active.
-
-Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
----
-
-Changes in v2:
-* New patch based on Baoquan's suggestion to use is_fadump_active()
-  instead of introducing new function is_crashdump_kernel().
 
 
- arch/powerpc/include/asm/fadump.h | 4 ++--
- arch/powerpc/include/asm/kexec.h  | 8 ++++++--
- arch/powerpc/kernel/fadump.c      | 4 ++--
- 3 files changed, 10 insertions(+), 6 deletions(-)
+On 05/09/23 8:00 am, Baoquan He wrote:
+> On 09/04/23 at 08:04pm, Hari Bathini wrote:
+>> Hi Baoquan,
+>>
+>> Thanks for the review...
+>>
+>> On 03/09/23 9:06 am, Baoquan He wrote:
+>>> Hi Hari,
+>>>
+>>> On 09/02/23 at 12:34am, Hari Bathini wrote:
+>>>> Currently, is_kdump_kernel() returns true when elfcorehdr_addr is set.
+>>>> While elfcorehdr_addr is set for kexec based kernel dump mechanism,
+>>>> alternate dump capturing methods like fadump [1] also set it to export
+>>>> the vmcore. is_kdump_kernel() is used to restrict resources in crash
+>>>> dump capture kernel but such restrictions may not be desirable for
+>>>> fadump. Allow is_kdump_kernel() to be defined differently for such
+>>>> scenarios. With this, is_kdump_kernel() could be false while vmcore
+>>>> is usable. So, introduce is_crashdump_kernel() to return true when
+>>>> elfcorehdr_addr is set and use it for vmcore related checks.
+>>>
+>>> I got what is done in these two patches, but didn't get why they need be
+>>> done. vmcore_unusable()/is_vmcore_usable() are only unitilized in ia64.
+>>> Why do you care if it's is_crashdump_kernel() or is_kdump_kernel()?
+>>> If you want to override the generic is_kdump_kernel() with powerpc's own
+>>> is_kdump_kernel(), your below change is enough to allow you to do that.
+>>> I can't see why is_crashdump_kernel() is needed. Could you explain that
+>>> specifically?
+>>
+>> You mean to just remove is_kdump_kernel() check in is_vmcore_usable() &
+>> vmcore_unusable() functions? Replaced generic is_crashdump_kernel()
+>> function instead, that returns true for any dump capturing method,
+>> irrespective of whether is_kdump_kernel() returns true or false.
+>> For fadump case, is_kdump_kernel() will return false after patch 2/2.
+> 
+> OK, I could understand what you want to achieve. You want to make
+> is_kdump_kernel() only return true for kdump, while is_vmcore_usable()
+> returns true for both kdump and fadump.
+> 
+> IIUC, can we change as below? It could make code clearer and more
+> straightforward. I don't think adding another is_crashdump_kernel()
+> is a good idea, that would be a torture for non-powerpc people reading
+> code when they need differentiate between kdump and crashdump.
+> 
 
-diff --git a/arch/powerpc/include/asm/fadump.h b/arch/powerpc/include/asm/fadump.h
-index 526a6a647312..27b74a7e2162 100644
---- a/arch/powerpc/include/asm/fadump.h
-+++ b/arch/powerpc/include/asm/fadump.h
-@@ -15,13 +15,13 @@ extern int crashing_cpu;
- 
- extern int is_fadump_memory_area(u64 addr, ulong size);
- extern int setup_fadump(void);
--extern int is_fadump_active(void);
-+extern bool is_fadump_active(void);
- extern int should_fadump_crash(void);
- extern void crash_fadump(struct pt_regs *, const char *);
- extern void fadump_cleanup(void);
- 
- #else	/* CONFIG_FA_DUMP */
--static inline int is_fadump_active(void) { return 0; }
-+static inline bool is_fadump_active(void) { return false; }
- static inline int should_fadump_crash(void) { return 0; }
- static inline void crash_fadump(struct pt_regs *regs, const char *str) { }
- static inline void fadump_cleanup(void) { }
-diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
-index a1ddba01e7d1..b760ef459234 100644
---- a/arch/powerpc/include/asm/kexec.h
-+++ b/arch/powerpc/include/asm/kexec.h
-@@ -51,6 +51,7 @@
- 
- #ifndef __ASSEMBLY__
- #include <asm/reg.h>
-+#include <asm/fadump.h>
- 
- typedef void (*crash_shutdown_t)(void);
- 
-@@ -99,10 +100,13 @@ void relocate_new_kernel(unsigned long indirection_page, unsigned long reboot_co
- 
- void kexec_copy_flush(struct kimage *image);
- 
--#if defined(CONFIG_CRASH_DUMP) && defined(CONFIG_PPC_RTAS)
-+#if defined(CONFIG_CRASH_DUMP)
-+#define is_fadump_active		is_fadump_active
-+#if defined(CONFIG_PPC_RTAS)
- void crash_free_reserved_phys_range(unsigned long begin, unsigned long end);
- #define crash_free_reserved_phys_range crash_free_reserved_phys_range
--#endif
-+#endif /* CONFIG_PPC_RTAS */
-+#endif /* CONFIG_CRASH_DUMP */
- 
- #ifdef CONFIG_KEXEC_FILE
- extern const struct kexec_file_ops kexec_elf64_ops;
-diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
-index 3ff2da7b120b..5682a65e8326 100644
---- a/arch/powerpc/kernel/fadump.c
-+++ b/arch/powerpc/kernel/fadump.c
-@@ -187,9 +187,9 @@ int should_fadump_crash(void)
- 	return 1;
- }
- 
--int is_fadump_active(void)
-+bool is_fadump_active(void)
- {
--	return fw_dump.dump_active;
-+	return !!fw_dump.dump_active;
- }
- 
- /*
--- 
-2.41.0
+Sure, Baoquan.
+Posted v2 based on your suggestion.
 
+Thanks
+Hari
 
 _______________________________________________
 kexec mailing list
