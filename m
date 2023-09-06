@@ -4,82 +4,106 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A6BD5EB8FAF
-	for <kexec@archiver.kernel.org>; Wed,  6 Sep 2023 09:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 898A0EE14D6
+	for <kexec@archiver.kernel.org>; Wed,  6 Sep 2023 20:13:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=MkFs5HG3/t+jVSfjc91BzkLTsBonDkGBnbKS1ob1bZ8=; b=xJ8tUniCt6aN2C
-	QdDQdBojqKFHGk7NegfQAF43mVKj2OgIab5oCUMTv0t4bT4BcP3gtzMiwdma7TcBfKHD4WHcAdqZj
-	3SKcT1ePEdfAp7XcFwmIA6/Y1j12B41CGo7M8u7v0AYxLA4Elc5pKeqgOzSbLtCjH6YeyG7+d1BDy
-	ADMdjMFk0Dx8YfzPbVwm4tW6xe4vjWNWUCCYtYhj5YpM3f7UvREllX5v9xBRFd/12irjDmteHl5GU
-	Ugs0HQWBwJ4kCsjATuQQ0kTZcxMZ5hed07UZKMsyyuwn/NdtUoeKH7QrrbfGb6p5jnjQHAhL8G9rk
-	9++IgQY0eE3urEVgv+qg==;
+	List-Owner; bh=KWHUP9OHkqJ4Z5v7zCnjzVdgmGgMDkgqCESfxJSnrLM=; b=VjkojlKCikROK5
+	GJ5K0JHA0uHQJNM05hxv/fBumuiiO6NODbLomsJfb1a7FhbXSQPrBJhfpbphNem/DrFl1eLDHJjst
+	C0+H48fPyqqbcjgaQ1+FasuN0UzZgSJhfqbuDAwD4rHHCxugGvyE81KSIldZ14DrL5iYhVVRoSF/a
+	toJFzD3nN7DGKfWsd2gdTG9kZghUVeo2takGVq0truq3qwzKWv18oP1G0ALtnzHjaD9aVYgb443q2
+	tJaHKQ9mRAXGP1FfCgjaTe/INAFOCQtGaNHQXNoOz/xw1IXs5vbq7kU5w8BdxCUmKDftq61whhMa4
+	UDEiF9G73Y/iWp5pZsrg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qdp6U-007zMf-3D;
-	Wed, 06 Sep 2023 09:45:43 +0000
-Received: from mgamail.intel.com ([192.55.52.120])
+	id 1qdyu5-00Apvb-36;
+	Wed, 06 Sep 2023 20:13:33 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qdn8Q-007XFU-0M
+	id 1qdyu1-00Apv5-23
 	for kexec@lists.infradead.org;
-	Wed, 06 Sep 2023 07:39:35 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693985974; x=1725521974;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=fgNzEeiwp6pBaULO4mpRILdHhEu7rh3ebMJew1dYykw=;
-  b=PnKs9o5qIPXRpbt5VN3AXHE+wHvUR7zFx4VtAIvhTT9jZs1aavCfd8WL
-   35gyUSGaoBIvNCEd01Gbj9xVN34jxhaSCP7z9YXx8FpNZfHy8oD3IsWXP
-   4jlY/UkFLbRyRW3ytp6rIdwaKwJPmblXUX1QdwkCl+3yg4s5K0XPnJ38l
-   hl8vliZIBSLpm6A66Es9qRnl8k+jGBc6HVcMIMPCBlvoFW+S9qC88B9f3
-   qRICwlVwI7Fg6LTNhtlbiKP6gnQQia0yTk3Jb2crx46xf+S7xabRCIvtL
-   Ru9yd9fmeTQBuM6PN44fdGhMcLviNuF63jgnnyGtmd6XW6XpS9j/k8/k6
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="375898486"
-X-IronPort-AV: E=Sophos;i="6.02,231,1688454000"; 
-   d="scan'208";a="375898486"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2023 00:39:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="988133806"
-X-IronPort-AV: E=Sophos;i="6.02,231,1688454000"; 
-   d="scan'208";a="988133806"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.252.60.154])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2023 00:39:29 -0700
-From: Adrian Hunter <adrian.hunter@intel.com>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Dave Hansen <dave.hansen@intel.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Mike Rapoport <rppt@linux.ibm.com>,
-	Lorenzo Stoakes <lstoakes@gmail.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Baoquan He <bhe@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-coco@lists.linux.dev,
-	linux-efi@vger.kernel.org,
-	kexec@lists.infradead.org
-Subject: [PATCH 3/3] /dev/mem: Do not map unaccepted memory
-Date: Wed,  6 Sep 2023 10:39:02 +0300
-Message-Id: <20230906073902.4229-4-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230906073902.4229-1-adrian.hunter@intel.com>
-References: <20230906073902.4229-1-adrian.hunter@intel.com>
+	Wed, 06 Sep 2023 20:13:31 +0000
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 386KAcqE022159;
+	Wed, 6 Sep 2023 20:13:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=DFb9HATY9Bf3FAnrjHqTNOsKVgzX3rRyK/wy/jxNIOQ=;
+ b=WxukGb+H1WC73OWQ3zKEBGI+gHWmpjpLbG0dDlHOppRpLi5vqimEGbJu7AYlTVqmsoU6
+ 5pD1C2OcRQMcmLbdM35A6bZiPX2vqqn6R2Nitz5dh7uv747/FI4WAVqUIb8rMndg7FPG
+ 3O+KsL0gorg2MaHpMpBt+r1tDl6coamSAEafMzytXKtdF1J5f+YsfLX2L3p8HetaC6SZ
+ 7MhcGMgdBRt0t0qXdr6tiaHPQ6ob/Co6ClSMLBxzu+/J+bWLzyO5EyHxm/PtaBe5oJqT
+ 4vHbEt5ED6yVYlvGdlUiHbjfCkfYJZ3LXJiY1kjkEbPcEYo+/jvcTw9C95ZXCPaiGVf3 TA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sxyywra8g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 06 Sep 2023 20:13:10 +0000
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 386KAQnO021431;
+	Wed, 6 Sep 2023 20:13:09 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sxyywra85-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 06 Sep 2023 20:13:09 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 386INLRJ012217;
+	Wed, 6 Sep 2023 20:13:08 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3svhkk5wb2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 06 Sep 2023 20:13:08 +0000
+Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
+	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 386KD8CR5702308
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 6 Sep 2023 20:13:08 GMT
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3764358062;
+	Wed,  6 Sep 2023 20:13:08 +0000 (GMT)
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A62C55805C;
+	Wed,  6 Sep 2023 20:13:06 +0000 (GMT)
+Received: from [9.67.51.26] (unknown [9.67.51.26])
+	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  6 Sep 2023 20:13:06 +0000 (GMT)
+Message-ID: <ba7d9550-03f0-9fcd-386c-382ceedbe72f@linux.ibm.com>
+Date: Wed, 6 Sep 2023 16:13:04 -0400
 MIME-Version: 1.0
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.0
+Subject: Re: [RFC] IMA Log Snapshotting Design Proposal - unseal
+Content-Language: en-US
+To: Tushar Sugandhi <tusharsu@linux.microsoft.com>,
+        Sush Shringarputale <sushring@linux.microsoft.com>,
+        linux-integrity@vger.kernel.org, zohar@linux.ibm.com,
+        peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, bhe@redhat.com,
+        vgoyal@redhat.com, dyoung@redhat.com, kexec@lists.infradead.org,
+        jmorris@namei.org, Paul Moore <paul@paul-moore.com>, serge@hallyn.com
+Cc: code@tyhicks.com, nramas@linux.microsoft.com,
+        linux-security-module@vger.kernel.org
+References: <c5737141-7827-1c83-ab38-0119dcfea485@linux.microsoft.com>
+ <1ef45099-da24-b73f-b33f-6a299c0b1696@linux.ibm.com>
+ <1d2b1df7-aabd-8a18-a564-24399b53f3d2@linux.microsoft.com>
+From: Ken Goldman <kgold@linux.ibm.com>
+In-Reply-To: <1d2b1df7-aabd-8a18-a564-24399b53f3d2@linux.microsoft.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: m7najSqPMB1tCe-HWXauEWzkxJ0g8AiP
+X-Proofpoint-ORIG-GUID: 9beOJqhbdXDnhuGeicESjgax82JqHbmy
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-09-06_06,2023-09-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ suspectscore=0 phishscore=0 malwarescore=0 impostorscore=0
+ lowpriorityscore=0 bulkscore=0 mlxscore=0 adultscore=0 clxscore=1015
+ spamscore=0 mlxlogscore=897 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2308100000 definitions=main-2309060173
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230906_003934_158232_3075722D 
-X-CRM114-Status: GOOD (  14.80  )
+X-CRM114-CacheID: sfid-20230906_131330_027682_7B0D587A 
+X-CRM114-Status: GOOD (  24.02  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,66 +115,45 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Support for unaccepted memory was added recently, refer commit
-dcdfdd40fa82 ("mm: Add support for unaccepted memory"), whereby
-a virtual machine may need to accept memory before it can be used.
-
-Do not map unaccepted memory because it can cause the guest to fail.
-
-For /dev/mem, this means a read of unaccepted memory will return zeros,
-a write to unaccepted memory will be ignored, but an mmap of unaccepted
-memory will return an error.
-
-Fixes: dcdfdd40fa82 ("mm: Add support for unaccepted memory")
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- drivers/char/mem.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/char/mem.c b/drivers/char/mem.c
-index 1052b0f2d4cf..1a7c5728783c 100644
---- a/drivers/char/mem.c
-+++ b/drivers/char/mem.c
-@@ -147,7 +147,8 @@ static ssize_t read_mem(struct file *file, char __user *buf,
- 			goto failed;
- 
- 		err = -EFAULT;
--		if (allowed == 2) {
-+		if (allowed == 2 ||
-+		    range_contains_unaccepted_memory(p, p + sz)) {
- 			/* Show zeros for restricted memory. */
- 			remaining = clear_user(buf, sz);
- 		} else {
-@@ -226,7 +227,8 @@ static ssize_t write_mem(struct file *file, const char __user *buf,
- 			return -EPERM;
- 
- 		/* Skip actual writing when a page is marked as restricted. */
--		if (allowed == 1) {
-+		if (allowed == 1 &&
-+		    !range_contains_unaccepted_memory(p, p + sz)) {
- 			/*
- 			 * On ia64 if a page has been mapped somewhere as
- 			 * uncached, then it must also be accessed uncached
-@@ -378,6 +380,9 @@ static int mmap_mem(struct file *file, struct vm_area_struct *vma)
- 						&vma->vm_page_prot))
- 		return -EINVAL;
- 
-+	if (range_contains_unaccepted_memory(offset, offset + size))
-+		return -EINVAL;
-+
- 	vma->vm_page_prot = phys_mem_access_prot(file, vma->vm_pgoff,
- 						 size,
- 						 vma->vm_page_prot);
--- 
-2.34.1
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+CgpPbiA5LzEvMjAyMyA1OjIyIFBNLCBUdXNoYXIgU3VnYW5kaGkgd3JvdGU6Cj4gCj4gCj4gT24g
+OC8zMC8yMyAxMjoxMiwgS2VuIEdvbGRtYW4gd3JvdGU6Cj4+IE9uIDgvMS8yMDIzIDM6MTIgUE0s
+IFN1c2ggU2hyaW5nYXJwdXRhbGUgd3JvdGU6Cj4+Cj4+PiBGb3IgcmVtb3RlIGF0dGVzdGF0aW9u
+IHRvIHdvcmssIHRoZSBzZXJ2aWNlIHdpbGwgbmVlZCB0byBrbm93IGhvdyB0bwo+Pj4gwqB2YWxp
+ZGF0ZSB0aGUgc25hcHNob3RfYWdncmVnYXRlIGVudHJ5IGluIHRoZSBJTUEgbG9nLsKgIEl0IHdp
+bGwgaGF2ZQo+Pj4gdG8gcmVhZCB0aGUgUENSIHZhbHVlcyBwcmVzZW50IGluIHRoZSB0ZW1wbGF0
+ZSBkYXRhIG9mCj4+PiBzbmFwc2hvdF9hZ2dyZWdhdGUgZXZlbnQgaW4gdGhlIGxhdGVzdCBJTUEg
+bG9nLCBhbmQgZW5zdXJlIHRoYXQgdGhlCj4+PiBQQ1IgcXVvdGVzIGFsaWduIHdpdGggdGhlIGNv
+bnRlbnRzIG9mIHRoZSBwYXN0IFVNX3NuYXBzaG90X2ZpbGUocykuCj4+PiBUaGlzIHdpbGwgcmUt
+ZXN0YWJsaXNoIHRoZSBjaGFpbiBvZiB0cnVzdCBuZWVkZWQgZm9yIHRoZSBkZXZpY2UgdG8KPj4+
+IHBhc3MgcmVtb3RlIGF0dGVzdGF0aW9uLsKgIFRoaXMgd2lsbCBhbHNvIG1haW50YWluIHRoZSBh
+YmlsaXR5IG9mIHRoZQo+Pj4gcmVtb3RlLWF0dGVzdGF0aW9uLXNlcnZpY2UgdG8gc2VhbCB0aGUg
+c2VjcmV0cywgaWYgdGhlIGNsaWVudC1zZXJ2ZXIKPj4+IMKgdXNlIFRQTSB1bnNlYWwgbWVjaGFu
+aXNtIHRvIGF0dGVzdCB0aGUgc3RhdGUgb2YgdGhlIGRldmljZS4KPj4KPj4gSSB0aGluayB0aGF0
+IHNlYWwvdW5zZWFsIHRvIElNQSBQQ1JzIGlzIGZ1dGlsZS7CoCBTaW5jZSBib290IGlzCj4+IG11
+bHRpLXRocmVhZGVkLCB0aGUgSU1BIFBDUiBpcyB1bnByZWRpY3RhYmxlIGV2ZW4gd2hlbiB2YWxp
+ZC4KPiAKPiBUcnVlLiBCdXQgaGVyZSB3ZSBhcmUgdGFsa2luZyBhYm91dCBzZWFsL3Vuc2VhbCBw
+b3N0IGJvb3Qgd2hlbiB0aGUKPiBkZXZpY2UgaXMgaW4gYSBzdGFibGUgc3RhdGUsIGFuZCB0aGVy
+ZSBhcmUgcmVsYXRpdmVseSBsZXNzIG51bWJlciBvZgo+IGV2ZW50cyBleHRlbmRpbmcgSU1BIFBD
+Ui4gVGhlIHZhbHVlIG9mIHRoZSBhY3R1YWwgSU1BIFBDUiBkb2Vzbid0IG1hdHRlcgo+IGluIHRo
+aXMgY29udGV4dCBhcyBsb25nIGFzIGl0IHN0YXlzIHRoZSBzYW1lIGJldHdlZW4gc2VhbC11bnNl
+YWwgd2luZG93LgoKRG9lcyAncmVsYXRpdmVseSBsZXNzIG51bWJlciBvZiBldmVudHMnIHJlYWxs
+eSBtYXR0ZXI/ICBFdmVuIGlmIHRoZXJlIAphcmUgb25seSB0d28sIGlmIHRoZSBvcmRlciBpcyB1
+bnByZWRpY3RhYmxlLCB1bnNlYWwgZmFpbHMuCgo+IAo+IElmIGl0IGNoYW5nZXMgYmV0d2VlbiB0
+aGF0IHdpbmRvdywgdGhlIGNsaWVudHMgdHlwaWNhbGx5IHJldHJ5IGJ5Cj4gc2VuZGluZyB0aGUg
+cmVxdWVzdCB0byB0aGUgc2VydmljZSB3aXRoIGEgbmV3IHN0YWJsZSBQQ1IuCgpEb2VzIGEgcmV0
+cnkgaGVscD8gT25jZSB0aGUgUENSIGhhcyBiZWVuIGV4dGVuZGVkIHRvIHRoZSB3cm9uZyB2YWx1
+ZSwgaXQgCmNhbiBuZXZlciBnZXQgYmFjayB0byB0aGUgY29ycmVjdCB2YWx1ZSB3aXRob3V0IGEg
+cmVib290LgoKPiAKPiBTZWFsLXVuc2VhbCBpcyBzdXBwb3J0ZWQgYnkgVFBNIHNwZWMsIGFuZCBp
+cyB1c2VkIHdpZGVseS4gU28gd2UgaGFkIHRvCj4gZW5zdXJlIHRoYXQgb3VyIHByb3Bvc2VkIGRl
+c2lnbiB3b3VsZG4ndCByZWdyZXNzIHRoaXMgZXhpc3RpbmcKPiBmdW5jdGlvbmFsaXR5LgoKSXQg
+d29ya3MgaW4gdGhlIHByZS1PUyBlbnZpcm9ubWVudCwgd2hlcmUgdGhlIGZpcm13YXJlIHNwZWNp
+ZmljYXRpb24gCm1hbmRhdGVzIHRoYXQgdGhlIFBDUiB2YWx1ZXMgYXJlIHJlcGVhdGFibGUuIE9u
+Y2UgeW91J3JlIHBvc3QtT1MsIAptdWx0aS10aHJlYWRlZCwgYW4gdW5zZWFsIHRoYXQgaW5jbHVk
+ZXMgUENSIDEwIGlzIGluZmVhc2libGUuCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFk
+Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
