@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4E289EB8FAD
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A6BD5EB8FAF
 	for <kexec@archiver.kernel.org>; Wed,  6 Sep 2023 09:45:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
@@ -12,45 +12,45 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=saboB2C3kg5UGUzBBDaqSnqxpSGuRNqGospYnReFh3c=; b=02r9499MWwBjew
-	NHnewBUGePZSA3F5V0t3kDoYFow7iAO6bkCpN+KLoW0f7nwKA8l9LlHRES/40b9qIgjtEySeTRbgd
-	Q3COaRyV3yNrPCdrhXlfr8G6Pq0wjqBlLGCFxzYCUYAozlUdG8z42LOM0ZdxUoFFUZjBziICKcWCL
-	d8d5LiM7j16Rni/cFdzeltkTXNSGEKCtV7Fzv8v41O60mTkN3RlbLVQVYivuDUbxvSuhb8TUc6yh0
-	099ZG4lYvHXe8xhSD0bP3yXhu3ery5o6w3WyuXboV7gyGQDpY8Vq0Gvkq6n2AqmqSWQdiw3Ehm//N
-	qadGcvrkmLPMw4rpy0fg==;
+	List-Owner; bh=MkFs5HG3/t+jVSfjc91BzkLTsBonDkGBnbKS1ob1bZ8=; b=xJ8tUniCt6aN2C
+	QdDQdBojqKFHGk7NegfQAF43mVKj2OgIab5oCUMTv0t4bT4BcP3gtzMiwdma7TcBfKHD4WHcAdqZj
+	3SKcT1ePEdfAp7XcFwmIA6/Y1j12B41CGo7M8u7v0AYxLA4Elc5pKeqgOzSbLtCjH6YeyG7+d1BDy
+	ADMdjMFk0Dx8YfzPbVwm4tW6xe4vjWNWUCCYtYhj5YpM3f7UvREllX5v9xBRFd/12irjDmteHl5GU
+	Ugs0HQWBwJ4kCsjATuQQ0kTZcxMZ5hed07UZKMsyyuwn/NdtUoeKH7QrrbfGb6p5jnjQHAhL8G9rk
+	9++IgQY0eE3urEVgv+qg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qdp6U-007zLy-0p;
-	Wed, 06 Sep 2023 09:45:42 +0000
+	id 1qdp6U-007zMf-3D;
+	Wed, 06 Sep 2023 09:45:43 +0000
 Received: from mgamail.intel.com ([192.55.52.120])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qdn8H-007XFU-0V
+	id 1qdn8Q-007XFU-0M
 	for kexec@lists.infradead.org;
-	Wed, 06 Sep 2023 07:39:26 +0000
+	Wed, 06 Sep 2023 07:39:35 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693985965; x=1725521965;
+  t=1693985974; x=1725521974;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=qvs+CfaaOcukCPcQ3yn99op16Cq3tmycYYGCo66m1aQ=;
-  b=kwrZY6Ut+8R+95gMkpMAf2aMdCGH4KrJn+GQrVO3Xy6s4m09jDPWukG/
-   RqgMRnLqvGGuVHvRkU4m+6JEsbjJTmiDTDAWSwgb2z9BCTXB07EWiWWkh
-   l/0qUSJYMP5b85NjTH/dGOXz/4gvPACQeSFKGflZjfHsklCHouVya7ulc
-   m0Q+F597laFR45zMMcWwzhjjp5alGiUVoK+nnbYrzFFR8WJNz2SdUDk7c
-   6ghBOe9LEZivArtyB9A964u3XCU9hcZohCC/Mowve1iKmea7AtFmPq/M8
-   GBHnKsbKzXy+vQYL1sbrADq0oxEDasPzOi32YbtYbIF0dquV+as2BNQE4
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="375898456"
+  bh=fgNzEeiwp6pBaULO4mpRILdHhEu7rh3ebMJew1dYykw=;
+  b=PnKs9o5qIPXRpbt5VN3AXHE+wHvUR7zFx4VtAIvhTT9jZs1aavCfd8WL
+   35gyUSGaoBIvNCEd01Gbj9xVN34jxhaSCP7z9YXx8FpNZfHy8oD3IsWXP
+   4jlY/UkFLbRyRW3ytp6rIdwaKwJPmblXUX1QdwkCl+3yg4s5K0XPnJ38l
+   hl8vliZIBSLpm6A66Es9qRnl8k+jGBc6HVcMIMPCBlvoFW+S9qC88B9f3
+   qRICwlVwI7Fg6LTNhtlbiKP6gnQQia0yTk3Jb2crx46xf+S7xabRCIvtL
+   Ru9yd9fmeTQBuM6PN44fdGhMcLviNuF63jgnnyGtmd6XW6XpS9j/k8/k6
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="375898486"
 X-IronPort-AV: E=Sophos;i="6.02,231,1688454000"; 
-   d="scan'208";a="375898456"
+   d="scan'208";a="375898486"
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2023 00:39:24 -0700
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2023 00:39:33 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="988133789"
+X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="988133806"
 X-IronPort-AV: E=Sophos;i="6.02,231,1688454000"; 
-   d="scan'208";a="988133789"
+   d="scan'208";a="988133806"
 Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.252.60.154])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2023 00:39:20 -0700
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2023 00:39:29 -0700
 From: Adrian Hunter <adrian.hunter@intel.com>
 To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
 	Borislav Petkov <bp@alien8.de>,
@@ -69,17 +69,17 @@ Cc: Dave Hansen <dave.hansen@intel.com>,
 	linux-coco@lists.linux.dev,
 	linux-efi@vger.kernel.org,
 	kexec@lists.infradead.org
-Subject: [PATCH 1/3] proc/vmcore: Do not map unaccepted memory
-Date: Wed,  6 Sep 2023 10:39:00 +0300
-Message-Id: <20230906073902.4229-2-adrian.hunter@intel.com>
+Subject: [PATCH 3/3] /dev/mem: Do not map unaccepted memory
+Date: Wed,  6 Sep 2023 10:39:02 +0300
+Message-Id: <20230906073902.4229-4-adrian.hunter@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230906073902.4229-1-adrian.hunter@intel.com>
 References: <20230906073902.4229-1-adrian.hunter@intel.com>
 MIME-Version: 1.0
 Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230906_003925_207743_D42933E9 
-X-CRM114-Status: GOOD (  13.64  )
+X-CRM114-CacheID: sfid-20230906_003934_158232_3075722D 
+X-CRM114-Status: GOOD (  14.80  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,69 +102,50 @@ a virtual machine may need to accept memory before it can be used.
 
 Do not map unaccepted memory because it can cause the guest to fail.
 
-For /proc/vmcore, which is read-only, this means a read or mmap of
-unaccepted memory will return zeros.
+For /dev/mem, this means a read of unaccepted memory will return zeros,
+a write to unaccepted memory will be ignored, but an mmap of unaccepted
+memory will return an error.
 
 Fixes: dcdfdd40fa82 ("mm: Add support for unaccepted memory")
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- fs/proc/vmcore.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/char/mem.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index 1fb213f379a5..a28da2033ce8 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -118,6 +118,13 @@ static bool pfn_is_ram(unsigned long pfn)
- 	return ret;
- }
+diff --git a/drivers/char/mem.c b/drivers/char/mem.c
+index 1052b0f2d4cf..1a7c5728783c 100644
+--- a/drivers/char/mem.c
++++ b/drivers/char/mem.c
+@@ -147,7 +147,8 @@ static ssize_t read_mem(struct file *file, char __user *buf,
+ 			goto failed;
  
-+static bool pfn_is_unaccepted_memory(unsigned long pfn)
-+{
-+	phys_addr_t paddr = pfn << PAGE_SHIFT;
-+
-+	return range_contains_unaccepted_memory(paddr, paddr + PAGE_SIZE);
-+}
-+
- static int open_vmcore(struct inode *inode, struct file *file)
- {
- 	spin_lock(&vmcore_cb_lock);
-@@ -150,7 +157,7 @@ ssize_t read_from_oldmem(struct iov_iter *iter, size_t count,
- 			nr_bytes = count;
- 
- 		/* If pfn is not ram, return zeros for sparse dump files */
--		if (!pfn_is_ram(pfn)) {
-+		if (!pfn_is_ram(pfn) || pfn_is_unaccepted_memory(pfn)) {
- 			tmp = iov_iter_zero(nr_bytes, iter);
+ 		err = -EFAULT;
+-		if (allowed == 2) {
++		if (allowed == 2 ||
++		    range_contains_unaccepted_memory(p, p + sz)) {
+ 			/* Show zeros for restricted memory. */
+ 			remaining = clear_user(buf, sz);
  		} else {
- 			if (encrypted)
-@@ -511,7 +518,7 @@ static int remap_oldmem_pfn_checked(struct vm_area_struct *vma,
- 	pos_end = pfn + (size >> PAGE_SHIFT);
+@@ -226,7 +227,8 @@ static ssize_t write_mem(struct file *file, const char __user *buf,
+ 			return -EPERM;
  
- 	for (pos = pos_start; pos < pos_end; ++pos) {
--		if (!pfn_is_ram(pos)) {
-+		if (!pfn_is_ram(pos) || pfn_is_unaccepted_memory(pos)) {
+ 		/* Skip actual writing when a page is marked as restricted. */
+-		if (allowed == 1) {
++		if (allowed == 1 &&
++		    !range_contains_unaccepted_memory(p, p + sz)) {
  			/*
- 			 * We hit a page which is not ram. Remap the continuous
- 			 * region between pos_start and pos-1 and replace
-@@ -552,6 +559,7 @@ static int vmcore_remap_oldmem_pfn(struct vm_area_struct *vma,
- 			    unsigned long from, unsigned long pfn,
- 			    unsigned long size, pgprot_t prot)
- {
-+	phys_addr_t paddr = pfn << PAGE_SHIFT;
- 	int ret, idx;
+ 			 * On ia64 if a page has been mapped somewhere as
+ 			 * uncached, then it must also be accessed uncached
+@@ -378,6 +380,9 @@ static int mmap_mem(struct file *file, struct vm_area_struct *vma)
+ 						&vma->vm_page_prot))
+ 		return -EINVAL;
  
- 	/*
-@@ -559,7 +567,8 @@ static int vmcore_remap_oldmem_pfn(struct vm_area_struct *vma,
- 	 * pages without a reason.
- 	 */
- 	idx = srcu_read_lock(&vmcore_cb_srcu);
--	if (!list_empty(&vmcore_cb_list))
-+	if (!list_empty(&vmcore_cb_list) ||
-+	    range_contains_unaccepted_memory(paddr, paddr + size))
- 		ret = remap_oldmem_pfn_checked(vma, from, pfn, size, prot);
- 	else
- 		ret = remap_oldmem_pfn_range(vma, from, pfn, size, prot);
++	if (range_contains_unaccepted_memory(offset, offset + size))
++		return -EINVAL;
++
+ 	vma->vm_page_prot = phys_mem_access_prot(file, vma->vm_pgoff,
+ 						 size,
+ 						 vma->vm_page_prot);
 -- 
 2.34.1
 
