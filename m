@@ -4,101 +4,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6CF14CA0FFB
-	for <kexec@archiver.kernel.org>; Tue,  5 Sep 2023 19:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C472EEB8FB5
+	for <kexec@archiver.kernel.org>; Wed,  6 Sep 2023 07:39:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=L8ZHt34XQQrRk0vHyM26mRCQSmTk89npLPNCk2nqvfY=; b=p+zuMNeqUzQuK/
-	f6iYukrj3zGm4os4DULWQ44aezYbeOGxA/w3NRgjmlaP904vJCMZzxv6SWJH14ssykbFkee4xgt4Z
-	TSGAkLa1A31YskIs6l8sQSReTQ0H2L9Lwahy73LpyKnNN47PILI6TdYQHUfTJ7quCEaLshyqLyldl
-	wdHl6L5jVAiqQOkDYhva/YwxILCCD1qMVvVRlI2NaU9D8gnfSbTsgHw9AMip17JZrum/Zo2G+caAa
-	f9amrIX7n0iEPV5QfOl115xsWTKNMEe7thCbPPfT0ZLRsSG4boab4X+SljXUD9/PecTgjSBqIEbrI
-	LDegsmnERuGnWkJ2kdaQ==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=3U/YkwNBLxO+qK6KcYv6NRNDnyR5Tle2jV4Nm2FZzks=; b=zq1wSg5u8LqlWy
+	MwKxnc8CxafSRQsL8e5vTBu6ppHuiUqj1jYGHsToZnMHsITSeC/pK9gcB1WqnxezkVW6e8qMGrPlX
+	drXuVtILMN86fqppPKAAlwhzxPgeaE87Ju9hor4/cRjJKj7FBMd1s/BMPwVl8WUIMFrOoJBlHGZz/
+	FUlVix7hedbQSvO+DVbC0boULH78vpom10TTOxWX+/FI+RCQ70gviTw0WtThr4ioPpnXhwZ8nXORN
+	mhdiu7LIygR6fmkrB+P6iu25OXTZNc/HZS2tw9bb5so78bkiCoePwdUzD4BEJ0xzryqJ/niBdn0n0
+	FWgR9Y5E/RZeti5YauAg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qdblT-006c3r-0L;
-	Tue, 05 Sep 2023 19:31:07 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1qdn8G-007XGJ-0G;
+	Wed, 06 Sep 2023 07:39:24 +0000
+Received: from mgamail.intel.com ([192.55.52.120])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qdblQ-006c3R-0l
+	id 1qdn8D-007XFU-25
 	for kexec@lists.infradead.org;
-	Tue, 05 Sep 2023 19:31:05 +0000
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 385JMJY1027528;
-	Tue, 5 Sep 2023 19:31:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : content-transfer-encoding
- : mime-version; s=pp1; bh=q+b17WGlf8Tf/Vsme2Bal+Z/bYkSI0hbFQ9jixWp+Bw=;
- b=gif63GY+t5CG0mThPMCUS67jEB2v3pfpA92nyp51ArpmlxUhSeVrl36pNF6qTDaJvMbe
- cG309zwOgWl4MSPZZ/W/4+E8fn1ClIr4ukR7FRxT41TfEpYpWkX7Doh0A6C6eDF0qbSy
- DWpAhm5YhOrcMOYGw7nvTXJdOs5CLBeINAtsoVxTiqAg/mInQ1UNLyByQntEtqw05EoL
- NwUQ51RO6ge5tr568MujOQSqQA/FmNGufN7vCbTVEsd54NMN1Y6yGHE6/q/g9Zst6BF1
- mkLMxrLRfEm9s2bZ3JE1IsyeC09FxtAjC3rYGHjqkn3W3Q4E4rFqkt82lquecaTaPbA/ Gw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sxae4gcm2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Sep 2023 19:30:59 +0000
-Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 385JNV7H031025;
-	Tue, 5 Sep 2023 19:30:59 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sxae4gcjj-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Sep 2023 19:30:59 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 385I0nBB011130;
-	Tue, 5 Sep 2023 18:36:13 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3svj31mdjk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Sep 2023 18:36:13 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 385IaAso41353628
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 5 Sep 2023 18:36:10 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 34D5720043;
-	Tue,  5 Sep 2023 18:36:10 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3F57320040;
-	Tue,  5 Sep 2023 18:36:08 +0000 (GMT)
-Received: from li-bd3f974c-2712-11b2-a85c-df1cec4d728e.ibm.com.com (unknown [9.43.114.159])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  5 Sep 2023 18:36:08 +0000 (GMT)
-From: Hari Bathini <hbathini@linux.ibm.com>
-To: lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Kexec-ml <kexec@lists.infradead.org>
-Cc: Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH v2 2/3] vmcore: allow fadump to export vmcore even if is_kdump_kernel() is false
-Date: Wed,  6 Sep 2023 00:06:03 +0530
-Message-ID: <20230905183604.568996-2-hbathini@linux.ibm.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230905183604.568996-1-hbathini@linux.ibm.com>
-References: <20230905183604.568996-1-hbathini@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 5DSGlBywuMoM_Ngx43GKsBSn_VHV-SsD
-X-Proofpoint-GUID: 6YIJfTK3LF49t8zdGQV1wjnfg5pV2wEv
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	Wed, 06 Sep 2023 07:39:22 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693985961; x=1725521961;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=9DWfOXctPMjyadaaUcywDcWCHVuND2DRm2KBk4DeAY8=;
+  b=KFaG+ffi5S+KJKLF8bPHYBC8vIMVHBeKRFEyRujS53lQio7goD9EpFgb
+   JHy3IvYyoj2LPnUzcNzEgK24ezoJNdqm59QaGgwZIk9ZuHpfWDcSW9PFj
+   q0tBr3aws7kU3/TCG1ddtP2Tk4wA39FlTs9hF3r8GeydQiGCg9MC0XfGl
+   DztgxBTON8b0dTEhWkPzAyOZDZo/1rqDxFpZ5iSv584/s/AuLJkO+RQ4Q
+   E/OWnr58w9mwc5Ftp5ECx/n7cEc5F3GP2EcH0PRY+HL/mc/Z8v916MOPv
+   sVq135sa/MrpUqcld9mf39cPutsuM4FKg/+Z3wzsjNfsBIxhhy7rnl3Sb
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="375898440"
+X-IronPort-AV: E=Sophos;i="6.02,231,1688454000"; 
+   d="scan'208";a="375898440"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2023 00:39:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10824"; a="988133778"
+X-IronPort-AV: E=Sophos;i="6.02,231,1688454000"; 
+   d="scan'208";a="988133778"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.252.60.154])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2023 00:39:16 -0700
+From: Adrian Hunter <adrian.hunter@intel.com>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Dave Hansen <dave.hansen@intel.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Mike Rapoport <rppt@linux.ibm.com>,
+	Lorenzo Stoakes <lstoakes@gmail.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Baoquan He <bhe@redhat.com>,
+	Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-coco@lists.linux.dev,
+	linux-efi@vger.kernel.org,
+	kexec@lists.infradead.org
+Subject: [PATCH 0/3] Do not map unaccepted memory
+Date: Wed,  6 Sep 2023 10:38:59 +0300
+Message-Id: <20230906073902.4229-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-05_12,2023-09-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- impostorscore=0 lowpriorityscore=0 clxscore=1015 adultscore=0
- suspectscore=0 malwarescore=0 priorityscore=1501 bulkscore=0
- mlxlogscore=999 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2308100000 definitions=main-2309050166
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230905_123104_410978_52E8D705 
-X-CRM114-Status: GOOD (  23.17  )
+X-CRM114-CacheID: sfid-20230906_003921_693794_03713FAA 
+X-CRM114-Status: UNSURE (   7.70  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -115,83 +95,29 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Currently, is_kdump_kernel() returns true when elfcorehdr_addr is set.
-While elfcorehdr_addr is set for kexec based kernel dump mechanism,
-alternate dump capturing methods like fadump [1] also set it to export
-the vmcore. Since, is_kdump_kernel() is used to restrict resources in
-crash dump capture kernel and such restrictions are not desirable for
-fadump, allow is_kdump_kernel() to be defined differently for fadump
-case. With that change, include is_fadump_active() check in functions
-is_vmcore_usable() & vmcore_unusable() to be able to export vmcore for
-fadump case too.
+Hi
 
-[1] https://docs.kernel.org/powerpc/firmware-assisted-dump.html
+Support for unaccepted memory was added recently, refer commit
+dcdfdd40fa82 ("mm: Add support for unaccepted memory"), whereby
+a virtual machine may need to accept memory before it can be used.
 
-Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
----
-
-Changes in v2:
-* is_fadump_active() check added to is_vmcore_usable() as suggested
-  by Baoquan.
+Plug a few gaps where RAM is exposed without checking if it is
+unaccepted memory.
 
 
- include/linux/crash_dump.h | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+Adrian Hunter (3):
+      proc/vmcore: Do not map unaccepted memory
+      proc/kcore: Do not map unaccepted memory
+      /dev/mem: Do not map unaccepted memory
 
-diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
-index 0f3a656293b0..de8a9fabfb6f 100644
---- a/include/linux/crash_dump.h
-+++ b/include/linux/crash_dump.h
-@@ -50,6 +50,7 @@ void vmcore_cleanup(void);
- #define vmcore_elf64_check_arch(x) (elf_check_arch(x) || vmcore_elf_check_arch_cross(x))
- #endif
- 
-+#ifndef is_kdump_kernel
- /*
-  * is_kdump_kernel() checks whether this kernel is booting after a panic of
-  * previous kernel or not. This is determined by checking if previous kernel
-@@ -64,6 +65,19 @@ static inline bool is_kdump_kernel(void)
- {
- 	return elfcorehdr_addr != ELFCORE_ADDR_MAX;
- }
-+#endif
-+
-+#ifndef is_fadump_active
-+/*
-+ * If f/w assisted dump capturing mechanism (fadump), instead of kexec based
-+ * dump capturing mechanism (kdump) is exporting the vmcore, then this function
-+ * will be defined in arch specific code to return true, when appropriate.
-+ */
-+static inline bool is_fadump_active(void)
-+{
-+	return false;
-+}
-+#endif
- 
- /* is_vmcore_usable() checks if the kernel is booting after a panic and
-  * the vmcore region is usable.
-@@ -75,7 +89,8 @@ static inline bool is_kdump_kernel(void)
- 
- static inline int is_vmcore_usable(void)
- {
--	return is_kdump_kernel() && elfcorehdr_addr != ELFCORE_ADDR_ERR ? 1 : 0;
-+	return (is_kdump_kernel() || is_fadump_active())
-+		&& elfcorehdr_addr != ELFCORE_ADDR_ERR ? 1 : 0;
- }
- 
- /* vmcore_unusable() marks the vmcore as unusable,
-@@ -84,7 +99,7 @@ static inline int is_vmcore_usable(void)
- 
- static inline void vmcore_unusable(void)
- {
--	if (is_kdump_kernel())
-+	if (is_kdump_kernel() || is_fadump_active())
- 		elfcorehdr_addr = ELFCORE_ADDR_ERR;
- }
- 
--- 
-2.41.0
+ drivers/char/mem.c |  9 +++++++--
+ fs/proc/kcore.c    | 10 +++++++++-
+ fs/proc/vmcore.c   | 15 ++++++++++++---
+ 3 files changed, 28 insertions(+), 6 deletions(-)
 
+
+Regards
+Adrian
 
 _______________________________________________
 kexec mailing list
