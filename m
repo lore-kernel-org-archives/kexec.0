@@ -4,69 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1A742EE14D9
-	for <kexec@archiver.kernel.org>; Thu,  7 Sep 2023 09:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F3C59EE14D4
+	for <kexec@archiver.kernel.org>; Thu,  7 Sep 2023 09:58:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:Date:From:Reply-To:Content-ID:Content-Description:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=E5QBRcFpSfyO537IkhXkW+sEcFoBaSf8Spr5Bj0gwuk=; b=1d4eujsi/QVtTh
-	dOvdzOjfp1Dh4q5CNwJZh9pHAM3Fn7zkaTLpTy+n4VK8N6UUG9uSCYH2GzbVzy1DeO2WiGHokq2iy
-	pc5rBef1X+mAntyirHSB1Nj33mEQBVbVf9CDDVEc51iWpqcCnnxtDaY8g3hm+wrukxpdx1xdao2ls
-	bHjlUcxIKfw42SuOlStyCrlgTSYne2lFx7ul9zHsY8SiAsdzUFZ62t6qw7orCMI9kuT/koxAW1Rwb
-	KpMEEcjZD2ONw12JhEXZ1UXmc4K++9eHHSVvXi5g6UO3QrakJBc+x2g2nHAAmtmWtozZjdt46YI3z
-	V/UAZmixdRqA8vtOo8dA==;
+	List-Owner; bh=pgJohFlITWkBEXBJZlt2UTHtaSbHvRNy77r+wHNTo6E=; b=DxFjEijhcsH7vg
+	K6Xa0MBiu06Fz6eMyVIJ3ev9+SDRPK/kEeSNNnCnwmq6rrHt1ECJw/hEzq2NA6tWQnPtrS/zEO22o
+	yW3/Zcs5tw+4WC1Ly84H9Pu7M8SZ+1FQHOVjnj9btPtcNSAyfTQkroL5/MGARqVn6IHFSThPJ09bl
+	k9m65SKnFlr3MAIHsSc1aiyGselBv5g827oM9oPowo7paLksfwlQ+aepv+QMUQejlohjo9v536HGr
+	4kL6asthGmrXA99RyQiGC9QeNUaaV3Yzx1JLlhN1JKitVm1NWHhncVxyNH89OKTwCErCELzrLpYnO
+	jL6zmf99qxi6H1joEseQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qeBVE-00BhTw-0S;
-	Thu, 07 Sep 2023 09:40:44 +0000
-Received: from mail-lf1-x12f.google.com ([2a00:1450:4864:20::12f])
+	id 1qeBmL-00Bjdi-2z;
+	Thu, 07 Sep 2023 09:58:25 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qeBVB-00BhTK-0q
+	id 1qeBmI-00BjcR-2S
 	for kexec@lists.infradead.org;
-	Thu, 07 Sep 2023 09:40:42 +0000
-Received: by mail-lf1-x12f.google.com with SMTP id 2adb3069b0e04-502153ae36cso1128262e87.3
-        for <kexec@lists.infradead.org>; Thu, 07 Sep 2023 02:40:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694079639; x=1694684439; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=m2fdKFR8q9uEXLNSeU9tuN4gH8iEvFyeK5eSCmXl3rY=;
-        b=DzOJCkhRVnD5xl53L7CgEZUTPx1kVnwbw1Yy1DJFEJMxLt4T6nfReEDx+vpfGbkt8W
-         TpR041j1E6QQ1oErjlmtymKqsleAsmTKxv6Kmyqmq55+YthreqkugaxLv2/igj94m4Gb
-         tyinwtSRgkGWaTKYCe5f4ZfrVs5L6tQtG7nYM04hkR7BcYeO0fYqgsdhtytK76RmWboZ
-         FYk6qPLbRW6HK4WmxIMY93qBp8Ak4hkk4gIAH39RCH1LVawbPeHmIao3JQcBxSa2BlXg
-         liNceAlrD2Y6Y9K050Cl/2RBDGGLGLsprs4LLmKvLw7G41q/uh/8x9BTH+73FDS+KKL/
-         Sa7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1694079639; x=1694684439;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m2fdKFR8q9uEXLNSeU9tuN4gH8iEvFyeK5eSCmXl3rY=;
-        b=TyeUl/IDfHd8D5J7fIcLzjPiHauiOYH77fEBaS1H2rQEBxrLRw4CoJofxf5+Xaxi05
-         uohw9MYpm7fYxnD5PuGyt8QTyUA8iL/7hqdGY9zvlETTKnBw1w0NS6t706D8DXCXPx3E
-         g8Xpha7INFUZXWp1ykkkhPOqH/9PWy9LiqI2HAqDy4yIs7bGWDQYTU9lrb5jS4zw0bgv
-         mktf1QoedUcNiPJwlKHTi0tyBLGqsxtiN4+GwetAXEBYaQfPg3JO3YUHZaX+DpCKxalj
-         P+v1WZe/0tiHVInB39B1Gk5z5v/GMefoBdoBqX7d5SSjyQvlqZkUAk6PhWD3/e24J6wO
-         Elqg==
-X-Gm-Message-State: AOJu0YyH8m/salXWXzS1RGLo45y6p5QDYHOKfSMHabHOq8moj0eRf3Ws
-	3Q3gqR3qnFyCIb6T6UguUFY=
-X-Google-Smtp-Source: AGHT+IGnVUxgJvZMlPBtKyIiXEz0zQ/L77txjqDYDTh1Sa3UGxaMrwFpLFqcHn1w07E0rmK4dukubA==
-X-Received: by 2002:ac2:52ab:0:b0:500:5d5c:ecc9 with SMTP id r11-20020ac252ab000000b005005d5cecc9mr4043445lfm.62.1694079639175;
-        Thu, 07 Sep 2023 02:40:39 -0700 (PDT)
-Received: from pc636 (host-90-235-20-237.mobileonline.telia.com. [90.235.20.237])
-        by smtp.gmail.com with ESMTPSA id t16-20020a192d50000000b00501c6d78f11sm597800lft.298.2023.09.07.02.40.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Sep 2023 02:40:38 -0700 (PDT)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Thu, 7 Sep 2023 11:40:36 +0200
-To: Baoquan He <bhe@redhat.com>
-Cc: "Uladzislau Rezki (Sony)" <urezki@gmail.com>, k-hagio-ab@nec.com,
-	lijiang@redhat.com, linux-mm@kvack.org,
+	Thu, 07 Sep 2023 09:58:24 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1694080700;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+YZnY8Y16y63bpnKa1LB+Dq6TqgHlqb2M3cQd5Vbeeg=;
+	b=Dm9lYZt6+rWWBGxgs1RoCWNXBKWGGPQUs7A8NJ5RFJtLad+ukL37y0jGg8cTscmv0xIxZl
+	LDCQcjchUCYL/ZPSSAS9iZ8KHxBIg+paF3NBG5Kx/lJOL++CoBou/qh5jozdT4aAMrQGg/
+	5WhmcYtjTQae1ZZ/Ipq/37MV4sp78TE=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-279-bRJDmM7BNXioUhRM5aC-Og-1; Thu, 07 Sep 2023 05:58:16 -0400
+X-MC-Unique: bRJDmM7BNXioUhRM5aC-Og-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 79102801FA9;
+	Thu,  7 Sep 2023 09:58:15 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.68])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 399E2493112;
+	Thu,  7 Sep 2023 09:58:13 +0000 (UTC)
+Date: Thu, 7 Sep 2023 17:58:09 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Uladzislau Rezki <urezki@gmail.com>, k-hagio-ab@nec.com
+Cc: lijiang@redhat.com, linux-mm@kvack.org,
 	Andrew Morton <akpm@linux-foundation.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	Lorenzo Stoakes <lstoakes@gmail.com>,
@@ -79,17 +65,18 @@ Cc: "Uladzislau Rezki (Sony)" <urezki@gmail.com>, k-hagio-ab@nec.com,
 	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
 	kexec@lists.infradead.org
 Subject: Re: [PATCH v2 4/9] mm: vmalloc: Remove global vmap_area_root rb-tree
-Message-ID: <ZPmalB+hfaxAZIcw@pc636>
+Message-ID: <ZPmesS66PTl+1Mdz@MiWiFi-R3L-srv>
 References: <20230829081142.3619-1-urezki@gmail.com>
  <20230829081142.3619-5-urezki@gmail.com>
  <ZPkyw0nAQSQWj5H1@MiWiFi-R3L-srv>
- <ZPmZ/8CLpKHEZvQY@MiWiFi-R3L-srv>
+ <ZPmaYgsT5EdLVUyO@pc636>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <ZPmZ/8CLpKHEZvQY@MiWiFi-R3L-srv>
+In-Reply-To: <ZPmaYgsT5EdLVUyO@pc636>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230907_024041_338416_9DD34965 
-X-CRM114-Status: GOOD (  28.00  )
+X-CRM114-CacheID: sfid-20230907_025822_872658_37E12B5D 
+X-CRM114-Status: GOOD (  30.39  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -106,8 +93,8 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Sep 07, 2023 at 05:38:07PM +0800, Baoquan He wrote:
-> On 09/07/23 at 10:17am, Baoquan He wrote:
+On 09/07/23 at 11:39am, Uladzislau Rezki wrote:
+> On Thu, Sep 07, 2023 at 10:17:39AM +0800, Baoquan He wrote:
 > > Add Kazu and Lianbo to CC, and kexec mailing list
 > > 
 > > On 08/29/23 at 10:11am, Uladzislau Rezki (Sony) wrote:
@@ -136,23 +123,32 @@ On Thu, Sep 07, 2023 at 05:38:07PM +0800, Baoquan He wrote:
 > > on system with many vmap nodes. People doing live debugging via
 > > /proc/kcore will get a little surprise.
 > > 
+> >
 > > Empty vmap_area_list will break makedumpfile utility, Crash utility
 > > could be impactd too. I checked makedumpfile code, it relys on
 > > vmap_area_list to deduce the vmalloc_start value. 
-> 
-> Except of the empty vmap_area_list, this patch looks good to me.
-> 
-> We may need think of another way to export the vmalloc_start value or
-> deduce it in makedumpfile/Crash utility. And then remove the useless
-> vmap_area_list. I am not sure if we should remove vmap_area_list in this
-> patch because the empty value will cause breakage anyway. Otherwise,
-> 
-> Reviewed-by: Baoquan He <bhe@redhat.com>
-> 
-Thanks for the review!
+> >
+> It is left part and i hope i fix it in v3. The problem here is
+> we can not give an opportunity to access to vmap internals from
+> outside. This is just not correct, i.e. you are not allowed to
+> access the list directly.
 
---
-Uladzislau Rezki
+Right. Thanks for the fix in v3, that is a relief of makedumpfile and
+crash.
+
+Hi Kazu,
+
+Meanwhile, I am thinking if we should evaluate the necessity of
+vmap_area_list in makedumpfile and Crash. In makedumpfile, we just use
+vmap_area_list to deduce VMALLOC_START. Wondering if we can export
+VMALLOC_START directly. Surely, the lowest va->va_start in vmap_area_list
+is a tighter low boundary of vmalloc area and can reduce unnecessary
+scanning below the lowest va. Not sure if this is the reason people
+decided to export vmap_area_list.
+
+Thanks
+Baoquan
+
 
 _______________________________________________
 kexec mailing list
