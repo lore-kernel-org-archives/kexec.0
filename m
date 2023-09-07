@@ -4,72 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BCD21EE14D3
-	for <kexec@archiver.kernel.org>; Thu,  7 Sep 2023 05:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7196BEE14D3
+	for <kexec@archiver.kernel.org>; Thu,  7 Sep 2023 09:38:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=tlDd5A/jbBTxwaHgC65Am7LtGBv9m8hhLyBRrAVaFK4=; b=TmYwRLi+F82KUF
-	ONp5thdizLkpA+NjK16XOGdQfBhEVR7hU7EuPjrPFPb9M7IDjGQjjqEbmDQr0llrLGqRGbY3idS4z
-	7W7rlHkRjyWZiOeBo3kfYfeQHw41Sj/JUwMyZu1l37dl9BWiQM+bbzwRobCzyAFfT/OzlWa+N+LFd
-	F49Js1BM8ao/GaR1pl2rKUCkI+LPn1ofj9N2/d+KS8Rhle83gJRK4SUXZLPpTy3yw9ZCDELCfqR0h
-	pJkB+LsqUa2ixI5RaImcrxf8BbqNudA8/IzsgwW0s8wBzca7YbZOqzWELkMa9T8Fi5BskPP5eqzX4
-	67XLj28siE3XF3Hl+BkQ==;
+	List-Owner; bh=uYfUwxUwEXvY8ZTFEvP6UxdZHokyjkymhyheSsiunlA=; b=pppFEm5P1F7Va3
+	lIszHvBadAEBBLqZDkVoV36gEvdrGd2XvriEO9yJjpNyTfTcYILRhC3pseUHjPP8TFFKifA1KtU7Q
+	4Wp3YjYxSMRuvmHcI8aRc7qNEgRzWscxoxkOX+EoqNTj0qC6d3pIh5m/rmN4GjFRdYJgzZxQY8ZVy
+	leKSTfZZV/+6SY8CkU6n0GyPvMhcAvbRXCcBWbsbcrnvK+UEJY74AR4e4juvzdh4CrTFSC6fWHQRL
+	yYJDfEs3lhmpkiR+sH+jB8tMv6YzwswLZYJmD/jG4nE5CusyhhAuGXFDjCDWCvwn5F1vSk+RSTlP0
+	touQyHewLI68OEqZhj7g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qe7ms-00BNHQ-1h;
-	Thu, 07 Sep 2023 05:42:42 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1qeBSt-00BhIT-11;
+	Thu, 07 Sep 2023 09:38:19 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qe7mo-00BNGk-2I
+	id 1qeBSr-00BhHR-0l
 	for kexec@lists.infradead.org;
-	Thu, 07 Sep 2023 05:42:40 +0000
+	Thu, 07 Sep 2023 09:38:18 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1694065355;
+	s=mimecast20190719; t=1694079495;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=4/CWGvO9dl10nwF5u1Uuz14eYbdHi5ccVChxSLOIBUU=;
-	b=hjhi5XY2nCYESGSpje2aVBCr1sl4HsONOAnHblQfRiRXGf+k2s8tQpDs6s06tKapDy5VZX
-	4oB2SNeMdpAMRhNRtXKiER0LmDnx84lVvIl6y1sDKlFgV3S3WVzR0cyRIJXbYCBo7PcCH/
-	NEfKMpVOarPIE+RR/wC/kJt9MiusrYY=
+	bh=euSESbGnOpxGG/an0+tjKSmmMkLR8E9KsUE2opfoBz4=;
+	b=excSXbyJlGbX6pAc33Ge9NN6EDo2zxteKV7vQwsKT+quExSXCimXATWKj78GYssm/Z5W+z
+	whxjjbt7mkqn36HpnfhgYNNbMNvMbI9BTjixPlAY2oJQReU6k6PAyA86jAdU+jAC1EyGyM
+	mtMyfZXFqB87pCyZOSTVJy6OAW2fLCs=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-59-ITvlD7nyOtqFbA3L-3aP4w-1; Thu, 07 Sep 2023 01:42:30 -0400
-X-MC-Unique: ITvlD7nyOtqFbA3L-3aP4w-1
+ us-mta-122-b4LufIMuOiuXJ0blwuhkkQ-1; Thu, 07 Sep 2023 05:38:12 -0400
+X-MC-Unique: b4LufIMuOiuXJ0blwuhkkQ-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A9F37816526;
-	Thu,  7 Sep 2023 05:42:28 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4F9AF8001EA;
+	Thu,  7 Sep 2023 09:38:11 +0000 (UTC)
 Received: from localhost (unknown [10.72.112.68])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7288AC03292;
-	Thu,  7 Sep 2023 05:42:27 +0000 (UTC)
-Date: Thu, 7 Sep 2023 13:42:24 +0800
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 6EDFBC03293;
+	Thu,  7 Sep 2023 09:38:10 +0000 (UTC)
+Date: Thu, 7 Sep 2023 17:38:07 +0800
 From: Baoquan He <bhe@redhat.com>
-To: Hari Bathini <hbathini@linux.ibm.com>
-Cc: lkml <linux-kernel@vger.kernel.org>,
-	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-	Kexec-ml <kexec@lists.infradead.org>,
-	Dave Young <dyoung@redhat.com>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Sourabh Jain <sourabhjain@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH v2 1/3] powerpc/fadump: make is_fadump_active() visible
- for exporting vmcore
-Message-ID: <ZPliwJ6b9oNDtAHC@MiWiFi-R3L-srv>
-References: <20230905183604.568996-1-hbathini@linux.ibm.com>
+To: "Uladzislau Rezki (Sony)" <urezki@gmail.com>, k-hagio-ab@nec.com,
+	lijiang@redhat.com
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Lorenzo Stoakes <lstoakes@gmail.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Dave Chinner <david@fromorbit.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
+	kexec@lists.infradead.org
+Subject: Re: [PATCH v2 4/9] mm: vmalloc: Remove global vmap_area_root rb-tree
+Message-ID: <ZPmZ/8CLpKHEZvQY@MiWiFi-R3L-srv>
+References: <20230829081142.3619-1-urezki@gmail.com>
+ <20230829081142.3619-5-urezki@gmail.com>
+ <ZPkyw0nAQSQWj5H1@MiWiFi-R3L-srv>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20230905183604.568996-1-hbathini@linux.ibm.com>
+In-Reply-To: <ZPkyw0nAQSQWj5H1@MiWiFi-R3L-srv>
 X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230906_224238_823584_85F23855 
-X-CRM114-Status: GOOD (  22.47  )
+X-CRM114-CacheID: sfid-20230907_023817_361955_9F68CB64 
+X-CRM114-Status: GOOD (  25.43  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,101 +92,52 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 09/06/23 at 12:06am, Hari Bathini wrote:
-> Include asm/fadump.h in asm/kexec.h to make it visible while exporting
-> vmcore. Also, update is_fadump_active() to return boolean instead of
-> integer for better readability. The change will be used in the next
-> patch to ensure vmcore is exported when fadump is active.
+On 09/07/23 at 10:17am, Baoquan He wrote:
+> Add Kazu and Lianbo to CC, and kexec mailing list
 > 
-> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-
-Thanks, Hari. The whole series looks good to me.
-
-Acked-by: Baoquan He <bhe@redhat.com>
-
-Since it's a power specific change, should be picked into powerpc tree?
-
-Thanks
-Baoquan
-
-> ---
+> On 08/29/23 at 10:11am, Uladzislau Rezki (Sony) wrote:
+> > Store allocated objects in a separate nodes. A va->va_start
+> > address is converted into a correct node where it should
+> > be placed and resided. An addr_to_node() function is used
+> > to do a proper address conversion to determine a node that
+> > contains a VA.
+> > 
+> > Such approach balances VAs across nodes as a result an access
+> > becomes scalable. Number of nodes in a system depends on number
+> > of CPUs divided by two. The density factor in this case is 1/2.
+> > 
+> > Please note:
+> > 
+> > 1. As of now allocated VAs are bound to a node-0. It means the
+> >    patch does not give any difference comparing with a current
+> >    behavior;
+> > 
+> > 2. The global vmap_area_lock, vmap_area_root are removed as there
+> >    is no need in it anymore. The vmap_area_list is still kept and
+> >    is _empty_. It is exported for a kexec only;
 > 
-> Changes in v2:
-> * New patch based on Baoquan's suggestion to use is_fadump_active()
->   instead of introducing new function is_crashdump_kernel().
+> I haven't taken a test, while accessing all nodes' busy tree to get
+> va of the lowest address could severely impact kcore reading efficiency
+> on system with many vmap nodes. People doing live debugging via
+> /proc/kcore will get a little surprise.
 > 
+> Empty vmap_area_list will break makedumpfile utility, Crash utility
+> could be impactd too. I checked makedumpfile code, it relys on
+> vmap_area_list to deduce the vmalloc_start value. 
+
+Except of the empty vmap_area_list, this patch looks good to me.
+
+We may need think of another way to export the vmalloc_start value or
+deduce it in makedumpfile/Crash utility. And then remove the useless
+vmap_area_list. I am not sure if we should remove vmap_area_list in this
+patch because the empty value will cause breakage anyway. Otherwise,
+
+Reviewed-by: Baoquan He <bhe@redhat.com>
+
 > 
->  arch/powerpc/include/asm/fadump.h | 4 ++--
->  arch/powerpc/include/asm/kexec.h  | 8 ++++++--
->  arch/powerpc/kernel/fadump.c      | 4 ++--
->  3 files changed, 10 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/powerpc/include/asm/fadump.h b/arch/powerpc/include/asm/fadump.h
-> index 526a6a647312..27b74a7e2162 100644
-> --- a/arch/powerpc/include/asm/fadump.h
-> +++ b/arch/powerpc/include/asm/fadump.h
-> @@ -15,13 +15,13 @@ extern int crashing_cpu;
->  
->  extern int is_fadump_memory_area(u64 addr, ulong size);
->  extern int setup_fadump(void);
-> -extern int is_fadump_active(void);
-> +extern bool is_fadump_active(void);
->  extern int should_fadump_crash(void);
->  extern void crash_fadump(struct pt_regs *, const char *);
->  extern void fadump_cleanup(void);
->  
->  #else	/* CONFIG_FA_DUMP */
-> -static inline int is_fadump_active(void) { return 0; }
-> +static inline bool is_fadump_active(void) { return false; }
->  static inline int should_fadump_crash(void) { return 0; }
->  static inline void crash_fadump(struct pt_regs *regs, const char *str) { }
->  static inline void fadump_cleanup(void) { }
-> diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
-> index a1ddba01e7d1..b760ef459234 100644
-> --- a/arch/powerpc/include/asm/kexec.h
-> +++ b/arch/powerpc/include/asm/kexec.h
-> @@ -51,6 +51,7 @@
->  
->  #ifndef __ASSEMBLY__
->  #include <asm/reg.h>
-> +#include <asm/fadump.h>
->  
->  typedef void (*crash_shutdown_t)(void);
->  
-> @@ -99,10 +100,13 @@ void relocate_new_kernel(unsigned long indirection_page, unsigned long reboot_co
->  
->  void kexec_copy_flush(struct kimage *image);
->  
-> -#if defined(CONFIG_CRASH_DUMP) && defined(CONFIG_PPC_RTAS)
-> +#if defined(CONFIG_CRASH_DUMP)
-> +#define is_fadump_active		is_fadump_active
-> +#if defined(CONFIG_PPC_RTAS)
->  void crash_free_reserved_phys_range(unsigned long begin, unsigned long end);
->  #define crash_free_reserved_phys_range crash_free_reserved_phys_range
-> -#endif
-> +#endif /* CONFIG_PPC_RTAS */
-> +#endif /* CONFIG_CRASH_DUMP */
->  
->  #ifdef CONFIG_KEXEC_FILE
->  extern const struct kexec_file_ops kexec_elf64_ops;
-> diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
-> index 3ff2da7b120b..5682a65e8326 100644
-> --- a/arch/powerpc/kernel/fadump.c
-> +++ b/arch/powerpc/kernel/fadump.c
-> @@ -187,9 +187,9 @@ int should_fadump_crash(void)
->  	return 1;
->  }
->  
-> -int is_fadump_active(void)
-> +bool is_fadump_active(void)
->  {
-> -	return fw_dump.dump_active;
-> +	return !!fw_dump.dump_active;
->  }
->  
->  /*
-> -- 
-> 2.41.0
+> > 
+> > 3. The vmallocinfo and vread() have to be reworked to be able to
+> >    handle multiple nodes.
 > 
 
 
