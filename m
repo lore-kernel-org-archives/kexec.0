@@ -4,74 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B757BEE14DB
-	for <kexec@archiver.kernel.org>; Thu,  7 Sep 2023 10:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E1B9FEC8730
+	for <kexec@archiver.kernel.org>; Thu,  7 Sep 2023 14:16:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
+	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=4jkeU0Uoczk4CPrgL+DpaUEmLIctYURKHpBuwXyew7k=; b=YgAuo/UDXADgAv
-	e0Ss2/fw/FlvBOTcOKP2yFDftGOXj1tSdNLKcvqAwCpyJqsWrbB5lld7p+vvfeS545pLzdKvIa/Fs
-	Fx4x9B6H+sYXk0yqI16JlINMmFyypBWi0zH95Y6bCoiMLCRzXQ0Ztqw9rKHC/Bta3KfbwtVjsD3I5
-	SLc1+15tG9GvVNtVn/wX6SEGaaurkGTjmVipgnPthlYgpSM9GrHOke3XTeKrSXLLaPKdfY8Ynwe+E
-	6ljR3TJb12ujgEYPA2IbNcXckkgdm6OGBaHChoXWyf3aFnmWWyOnL2GrshFlMW4ah4pppi5P7CTdG
-	pNQoNYnCQuu0N1tKfIUA==;
+	List-Owner; bh=I2GVLXNaLmh1cGR/zLUUDz4T9iI2y4Z2hQelb4X3APw=; b=2NIu21pb7yDP17
+	M3cshsL3seFePDedm0wqlnCLTp08+BPa4mFOJ5jfFiJ+0BkOdf65ZcfIL7+Db7kFp92m961iefqT+
+	EpI9zs3Emwgpo09/9OFyXGBokZru5DNzTPLC/qVeBjG51ETS9IaaugkjhD37ucvW0MPBNGCyHK6HS
+	uB6+dzf3BGKSNNQzrNKZtRE+PK3G2QZyV4Mn/00u5e4hZgLuS4j4S+eOh/yBFS4dUnC679EsjKLAV
+	mgLCC+3h1c7U5OlQZX/GL0OKTYxYwqZyxSjaQFt1/opQvun9GcbQci7Su8HZFJhYp7nmDr8s/889o
+	NK4c3Q+bPYUb6z97RFPQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qeCOo-00BnJz-04;
-	Thu, 07 Sep 2023 10:38:10 +0000
-Received: from bg2.exmail.qq.com ([114.132.224.180])
+	id 1qeFng-00CBOa-1C;
+	Thu, 07 Sep 2023 14:16:04 +0000
+Received: from mgamail.intel.com ([192.55.52.151])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qeCOl-00BnJG-0P
+	id 1qeFne-00CBNM-02
 	for kexec@lists.infradead.org;
-	Thu, 07 Sep 2023 10:38:08 +0000
-X-QQ-mid: bizesmtp65t1694083018t81ozpyf
-Received: from localhost.localdomain ( [221.226.144.218])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 07 Sep 2023 18:36:56 +0800 (CST)
-X-QQ-SSF: 01200000000000B0B000000A0000000
-X-QQ-FEAT: znfcQSa1hKYPPlX8KvMpBE/YOlGf71rdNbr35Hj+Pp4vDwY+EzNxgfOHbtbBf
-	T51X8y9d9N0Zygz0yvMGhfWbrC5WLd99IOaFL6Y/Rri/9bkIiLZRpvnRb8WpLKV1sOb+PpU
-	wIZDQCkF+ggK44JCM3zfbs+/yKTKDvSvonvRGr8WDUg884y7oYRrS6B/6/kAdBNxjHvHJZW
-	b95JqKQhxiOeGWWhqSigqYNx6oByILPwHXFd7swnAAhgNvFVr7cgdQuzzLi7bvfZ+Yc1Ef5
-	n1M09kUyyLck0pObd1JdLILZ8CkC3LO3V+rTPgBDBaS0hcQg7yOugx889QkVT0ww2J/ch00
-	xvTOYt+V6EZMTy7gMbKcuvJjsuefuZ2zXlxPAoHIVKpYXUhhBcISqJt+IP7hA==
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 3081111644831951934
-From: Song Shuai <songshuaishuai@tinylab.org>
-To: paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	conor.dooley@microchip.com,
-	lihuafei1@huawei.com,
-	songshuaishuai@tinylab.org,
-	petr.tesarik.ext@huawei.com,
-	duwe@suse.de,
-	ribalda@chromium.org,
-	akpm@linux-foundation.org,
-	keescook@chromium.org,
-	hi@alyssa.is,
-	heiko@sntech.de,
-	lizhengyu3@huawei.com,
-	alexghiti@rivosinc.com,
-	schwab@suse.de
-Cc: linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org
-Subject: [PATCH V1 3/3] riscv: kexec: Remove -fPIE for PURGATORY_CFLAGS
-Date: Thu,  7 Sep 2023 18:33:04 +0800
-Message-Id: <20230907103304.590739-4-songshuaishuai@tinylab.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20230907103304.590739-1-songshuaishuai@tinylab.org>
-References: <20230907103304.590739-1-songshuaishuai@tinylab.org>
+	Thu, 07 Sep 2023 14:16:03 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694096161; x=1725632161;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Urz8J26AUOtbbaftdYy1+eG3zzf8pqaVITlpJ9CGDIc=;
+  b=KqCLImUyv4OUbcQMvSQ4wE7gBgYMx+VaymItqHnSbyqCvRQ5QwaKLZQv
+   t0F8PLXOUcsFlIe2winu6+SQjCX46ayP+20Tkt5mGms/nsMH1SbquQ6on
+   8/1BduLHJeQxkrwVrlUgl45E15uSxMOQlr5N4IbYayfUBT2MwtpE9NRH+
+   QeMfi7hUXejreblR06EtF6KQbZ3Zg7I1iK/OUZf0jQFbXmSy9eh6xyf70
+   HPZIxaYjCSPCYQ/YE8ha7p0TMLuBCe8FzRmPF62bi69q7B+oOLOi6ffbi
+   Ub19NuR/oR3c6LZzov3k7QqldEZoSJrUPrgqqcYdEoVKsGIV3v08hpSzB
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10826"; a="357676563"
+X-IronPort-AV: E=Sophos;i="6.02,235,1688454000"; 
+   d="scan'208";a="357676563"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2023 07:15:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10826"; a="735516999"
+X-IronPort-AV: E=Sophos;i="6.02,235,1688454000"; 
+   d="scan'208";a="735516999"
+Received: from ningle-mobl2.amr.corp.intel.com (HELO [10.209.13.77]) ([10.209.13.77])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2023 07:15:21 -0700
+Message-ID: <9ffb7a3b-cf20-617a-e4f1-8a6a8a2c5972@intel.com>
+Date: Thu, 7 Sep 2023 07:15:21 -0700
 MIME-Version: 1.0
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:tinylab.org:qybglogicsvrsz:qybglogicsvrsz4a-0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.0
+Subject: Re: [PATCH 3/3] /dev/mem: Do not map unaccepted memory
+Content-Language: en-US
+To: Adrian Hunter <adrian.hunter@intel.com>,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Borislav Petkov <bp@alien8.de>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@linux.ibm.com>,
+ Lorenzo Stoakes <lstoakes@gmail.com>, Tom Lendacky
+ <thomas.lendacky@amd.com>, Baoquan He <bhe@redhat.com>,
+ Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, linux-coco@lists.linux.dev, linux-efi@vger.kernel.org,
+ kexec@lists.infradead.org
+References: <20230906073902.4229-1-adrian.hunter@intel.com>
+ <20230906073902.4229-4-adrian.hunter@intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+In-Reply-To: <20230906073902.4229-4-adrian.hunter@intel.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230907_033807_501700_66DC4CFB 
-X-CRM114-Status: UNSURE (   8.69  )
+X-CRM114-CacheID: sfid-20230907_071602_063358_5FDF3123 
+X-CRM114-Status: UNSURE (   9.36  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -89,43 +92,16 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-With CONFIG_RELOCATABLE enabled, KBUILD_CFLAGS had a -fPIE option
-and then the purgatory/string.o was built to reference _ctype symbol
-via R_RISCV_GOT_HI20 relocations which can't be handled by purgatory.
+On 9/6/23 00:39, Adrian Hunter wrote:
+> Support for unaccepted memory was added recently, refer commit
+> dcdfdd40fa82 ("mm: Add support for unaccepted memory"), whereby
+> a virtual machine may need to accept memory before it can be used.
+> 
+> Do not map unaccepted memory because it can cause the guest to fail.
 
-As a consequence, the kernel failed kexec_load_file() with:
-
-[  880.386562] kexec_image: The entry point of kernel at 0x80200000
-[  880.388650] kexec_image: Unknown rela relocation: 20
-[  880.389173] kexec_image: Error loading purgatory ret=-8
-
-So remove the -fPIE option for PURGATORY_CFLAGS to generate
-R_RISCV_PCREL_HI20 relocations type making puragtory work as it was.
-
-Fixes: 39b33072941f ("riscv: Introduce CONFIG_RELOCATABLE")
-Signed-off-by: Song Shuai <songshuaishuai@tinylab.org>
----
- arch/riscv/purgatory/Makefile | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/riscv/purgatory/Makefile b/arch/riscv/purgatory/Makefile
-index dc20e166983e..c2065d63945f 100644
---- a/arch/riscv/purgatory/Makefile
-+++ b/arch/riscv/purgatory/Makefile
-@@ -77,6 +77,10 @@ ifdef CONFIG_STACKPROTECTOR_STRONG
- PURGATORY_CFLAGS_REMOVE		+= -fstack-protector-strong
- endif
- 
-+ifdef CONFIG_RELOCATABLE
-+PURGATORY_CFLAGS_REMOVE		+= -fPIE
-+endif
-+
- CFLAGS_REMOVE_purgatory.o	+= $(PURGATORY_CFLAGS_REMOVE)
- CFLAGS_purgatory.o		+= $(PURGATORY_CFLAGS)
- 
--- 
-2.20.1
-
+Doesn't /dev/mem already provide a billion ways for someone to shoot
+themselves in the foot?  TDX seems to have added the 1,000,000,001st.
+Is this really worth patching?
 
 _______________________________________________
 kexec mailing list
