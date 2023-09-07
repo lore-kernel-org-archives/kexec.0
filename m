@@ -4,56 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7196BEE14D3
-	for <kexec@archiver.kernel.org>; Thu,  7 Sep 2023 09:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3C239EE14D3
+	for <kexec@archiver.kernel.org>; Thu,  7 Sep 2023 09:39:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Message-ID:Subject:Cc:To:Date:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=uYfUwxUwEXvY8ZTFEvP6UxdZHokyjkymhyheSsiunlA=; b=pppFEm5P1F7Va3
-	lIszHvBadAEBBLqZDkVoV36gEvdrGd2XvriEO9yJjpNyTfTcYILRhC3pseUHjPP8TFFKifA1KtU7Q
-	4Wp3YjYxSMRuvmHcI8aRc7qNEgRzWscxoxkOX+EoqNTj0qC6d3pIh5m/rmN4GjFRdYJgzZxQY8ZVy
-	leKSTfZZV/+6SY8CkU6n0GyPvMhcAvbRXCcBWbsbcrnvK+UEJY74AR4e4juvzdh4CrTFSC6fWHQRL
-	yYJDfEs3lhmpkiR+sH+jB8tMv6YzwswLZYJmD/jG4nE5CusyhhAuGXFDjCDWCvwn5F1vSk+RSTlP0
-	touQyHewLI68OEqZhj7g==;
+	List-Owner; bh=OPI6biy+7clwy+UhXS+oemH1FNyRikxYy7zBk3Zo/RU=; b=KWgzVSbxvSrMEL
+	1qoMf3Xyiumoo2k9kkpK8URfGR9+WmgQkwOGYu+dQYQHkU6crduZ8Vt/nD/zRh278LsTKPHgRuen3
+	CDQIRTxkTjsOlyzm0AvBTTlQb9Ih5aYU68fW0sx328ns6qQvbiR0qTm0q7sVOocP6BBt72EXyna19
+	PYrz7IAH/bz320X7BxUyhrVsHAjNT5YAtQ7+ET1sBGLfivYCZfGKxaynGRizvL/D4XDvWZEo8Oysw
+	xrfeqRgDeKyuVidLk8JyA0Va/AL66j8/+zGIsvsR0JjiTQh8lScKATmzwo/p9xeKwCYFKB9LtAc7A
+	fd+Roww9qN+00Zw6vgIw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qeBSt-00BhIT-11;
-	Thu, 07 Sep 2023 09:38:19 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1qeBUS-00BhPi-1P;
+	Thu, 07 Sep 2023 09:39:56 +0000
+Received: from mail-lj1-x234.google.com ([2a00:1450:4864:20::234])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qeBSr-00BhHR-0l
+	id 1qeBUQ-00BhOa-0Y
 	for kexec@lists.infradead.org;
-	Thu, 07 Sep 2023 09:38:18 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1694079495;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=euSESbGnOpxGG/an0+tjKSmmMkLR8E9KsUE2opfoBz4=;
-	b=excSXbyJlGbX6pAc33Ge9NN6EDo2zxteKV7vQwsKT+quExSXCimXATWKj78GYssm/Z5W+z
-	whxjjbt7mkqn36HpnfhgYNNbMNvMbI9BTjixPlAY2oJQReU6k6PAyA86jAdU+jAC1EyGyM
-	mtMyfZXFqB87pCyZOSTVJy6OAW2fLCs=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-122-b4LufIMuOiuXJ0blwuhkkQ-1; Thu, 07 Sep 2023 05:38:12 -0400
-X-MC-Unique: b4LufIMuOiuXJ0blwuhkkQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4F9AF8001EA;
-	Thu,  7 Sep 2023 09:38:11 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.68])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 6EDFBC03293;
-	Thu,  7 Sep 2023 09:38:10 +0000 (UTC)
-Date: Thu, 7 Sep 2023 17:38:07 +0800
-From: Baoquan He <bhe@redhat.com>
-To: "Uladzislau Rezki (Sony)" <urezki@gmail.com>, k-hagio-ab@nec.com,
-	lijiang@redhat.com
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+	Thu, 07 Sep 2023 09:39:55 +0000
+Received: by mail-lj1-x234.google.com with SMTP id 38308e7fff4ca-2bcfdadd149so14166531fa.0
+        for <kexec@lists.infradead.org>; Thu, 07 Sep 2023 02:39:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1694079590; x=1694684390; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gSn/skXMWf/xa0+iNC5/Gw93hjM5QOQeyldszIVaJcM=;
+        b=XyxKWdMAllVxRil+cnIv7J91eJc8kVdIczkjMni2g7nI3HPY2DRpTIyxlc7/4ePUs3
+         tLcAliruNNt74Jcn9AiEXgklkbkQ+L5JSEw0uFEYZi3hFMIQRtDRSx7IDz9vhbg9iTVg
+         Ts1uNERWb4+3uPmBiFODQnxaZtGOHSrTM0yrAimyRJ0vU4CqTwjXl4jMd6cmZTK33Jpk
+         lOfCKWR1uvVuOSF6cGRKnlcVUYx8pSuPvnPGbjxg0HcdwAuL2Zz6lDPLFs0D92Fh/ah8
+         xPXMthvmKgpOmPZgOBtV7hKeoot61BA26m7q0ZzU7hDnJJLTi3Fm5leM720+3NAldGrY
+         m0ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1694079590; x=1694684390;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gSn/skXMWf/xa0+iNC5/Gw93hjM5QOQeyldszIVaJcM=;
+        b=YSlK76KJicY6AE7ZKPWsorc5eH7DZ/aagHhsyFLrWeQzVLd7QGV8f1J0DwkJxySJWR
+         1vgD7ko2Eoz1/nQMIbA413dJPytaG9LqYsIkbu5ACxVR8yB624b/TiFFMOzc0rv0TfzS
+         mVnz6zaPwd/TkNRLkKSaPPCL75C3NLKcDJLU5v9XMZmKqabySvVw4EZHQAqdYI9zC/oX
+         3QGAnbbYX4+OYH+u4WBR+UK/sUGXT0pgeuKG2rVT/ewRcYeSgUOqAJbnL5ie996mGgKe
+         AoWGXIjpv529tsohWWbsbxvESwwipDtDgMBik/0u+p40xa8JZfVJ2CvtwPxI86ZTkBm+
+         /fyg==
+X-Gm-Message-State: AOJu0Yw6HKO99tZRNtr8Qdq3WFG4PuHrYvc08g+pHMhMQ1PEexKykvvC
+	ATOa8LuB3x3SW6ce+80PRlY=
+X-Google-Smtp-Source: AGHT+IG1t55SSsZ9IU41gZXp4fEBDaVSYmlggSt5r5GETk7wcr+KmFaGuKy5GVo7hA7HKyZxxIJlPQ==
+X-Received: by 2002:ac2:4db5:0:b0:500:b7dc:6c90 with SMTP id h21-20020ac24db5000000b00500b7dc6c90mr4108472lfe.36.1694079590034;
+        Thu, 07 Sep 2023 02:39:50 -0700 (PDT)
+Received: from pc636 (host-90-235-20-237.mobileonline.telia.com. [90.235.20.237])
+        by smtp.gmail.com with ESMTPSA id w14-20020a05651204ce00b004fe2de20d88sm3082119lfq.232.2023.09.07.02.39.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Sep 2023 02:39:49 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Thu, 7 Sep 2023 11:39:46 +0200
+To: Baoquan He <bhe@redhat.com>
+Cc: "Uladzislau Rezki (Sony)" <urezki@gmail.com>, k-hagio-ab@nec.com,
+	lijiang@redhat.com, linux-mm@kvack.org,
+	Andrew Morton <akpm@linux-foundation.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	Lorenzo Stoakes <lstoakes@gmail.com>,
 	Christoph Hellwig <hch@infradead.org>,
@@ -65,17 +79,16 @@ Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
 	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
 	kexec@lists.infradead.org
 Subject: Re: [PATCH v2 4/9] mm: vmalloc: Remove global vmap_area_root rb-tree
-Message-ID: <ZPmZ/8CLpKHEZvQY@MiWiFi-R3L-srv>
+Message-ID: <ZPmaYgsT5EdLVUyO@pc636>
 References: <20230829081142.3619-1-urezki@gmail.com>
  <20230829081142.3619-5-urezki@gmail.com>
  <ZPkyw0nAQSQWj5H1@MiWiFi-R3L-srv>
 MIME-Version: 1.0
 Content-Disposition: inline
 In-Reply-To: <ZPkyw0nAQSQWj5H1@MiWiFi-R3L-srv>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230907_023817_361955_9F68CB64 
-X-CRM114-Status: GOOD (  25.43  )
+X-CRM114-CacheID: sfid-20230907_023954_209859_1EF9342C 
+X-CRM114-Status: GOOD (  22.75  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -92,7 +105,7 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 09/07/23 at 10:17am, Baoquan He wrote:
+On Thu, Sep 07, 2023 at 10:17:39AM +0800, Baoquan He wrote:
 > Add Kazu and Lianbo to CC, and kexec mailing list
 > 
 > On 08/29/23 at 10:11am, Uladzislau Rezki (Sony) wrote:
@@ -121,25 +134,18 @@ On 09/07/23 at 10:17am, Baoquan He wrote:
 > on system with many vmap nodes. People doing live debugging via
 > /proc/kcore will get a little surprise.
 > 
+>
 > Empty vmap_area_list will break makedumpfile utility, Crash utility
 > could be impactd too. I checked makedumpfile code, it relys on
 > vmap_area_list to deduce the vmalloc_start value. 
+>
+It is left part and i hope i fix it in v3. The problem here is
+we can not give an opportunity to access to vmap internals from
+outside. This is just not correct, i.e. you are not allowed to
+access the list directly.
 
-Except of the empty vmap_area_list, this patch looks good to me.
-
-We may need think of another way to export the vmalloc_start value or
-deduce it in makedumpfile/Crash utility. And then remove the useless
-vmap_area_list. I am not sure if we should remove vmap_area_list in this
-patch because the empty value will cause breakage anyway. Otherwise,
-
-Reviewed-by: Baoquan He <bhe@redhat.com>
-
-> 
-> > 
-> > 3. The vmallocinfo and vread() have to be reworked to be able to
-> >    handle multiple nodes.
-> 
-
+--
+Uladzislau Rezki
 
 _______________________________________________
 kexec mailing list
