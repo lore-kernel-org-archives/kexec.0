@@ -4,70 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 92EDCEEB570
-	for <kexec@archiver.kernel.org>; Fri,  8 Sep 2023 23:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AE4ABEEB56E
+	for <kexec@archiver.kernel.org>; Fri,  8 Sep 2023 23:13:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=MA10HiX2V+FXs+yeEmdHjf/ym53YHHYVvxAdbPL5Yx0=; b=PIS6Y9mEmHXpe3
-	R/hL3OLppUkiCONv+FQIr0QWV3wSznekl+NpB8O7hrK12mzj3g5zJ8rnPC8O7J6vPudZ2G1ES81as
-	6pPEnYhvdzZhc0jD5a3J41BvQSodlN9+BoYuEba5sWR9PHeR+IIy0n0bUAdIj6FGrEZYn8UM+ZhLx
-	Z+rkgsFsmiGdSIw7UKubbHb2pmTdX7e0S9uWXtZCGPNOpDLUlBV4cWqccCVDEYlPMo7OK+p5s0oP6
-	0ZFpbbgbkSrrdGanlURumRsC/buITrDJTwPSoycN1ppaZ8IJFqNrd+zMZJAHPq/+2eZoKYWhj+7bX
-	ruymeuj6bLmFzZQuAYYg==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:CC
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=WG7J1PEZdfvwyOdRCTII5IKwiRtNJ9fT3hZhb6mmyfY=; b=OkCExgySlTkk7z
+	lmzxQvWIYNJgYg4BrAihtAS/cETf9XjGym/+w1FMXvmTTJpzB4/mN7Yn4xWKIAOB76QRK06pSOAdT
+	crfp4w+oxxVGF0q6hpNP8NDUD8Ky5PWz3rlo0F+PWlo/JdnMrZ7i3b3QD7pIdCEaO9oj7uB5NUyDb
+	uH82tJACTbWF7QlwAflEscL3cV7waXEuE9VKxnPglsFjVmNvAcwsQtqUYjJ5UTEXZ3IEyiWx3umqk
+	dsiZ6HxXCt/zsBIoj71UM9EiXBCEzdy8y5x/aYBHK9oqh98AyxyzRts+T8VB588NU8A6ufRc9XkDK
+	1zras7u+3dVE+UATtNTg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qekcx-00Efoc-0h;
-	Fri, 08 Sep 2023 23:11:03 +0000
-Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
+	id 1qekew-00EfxZ-2k;
+	Fri, 08 Sep 2023 23:13:06 +0000
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qekcu-00Efo2-0F
+	id 1qekeu-00EfxF-1f
 	for kexec@lists.infradead.org;
-	Fri, 08 Sep 2023 23:11:01 +0000
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 19C3D614F5
-	for <kexec@lists.infradead.org>; Fri,  8 Sep 2023 23:10:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75BD2C433CD
-	for <kexec@lists.infradead.org>; Fri,  8 Sep 2023 23:10:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1694214658;
-	bh=f+inhm0X+wSIsbS7nGkQlD4ziqDqwkrezqRi8joSHLc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=qlJ/EojXbzqZjFi+HZY9uVC39b8rjhVxZAH8ldpry0BCboXtBwSlcY+7Aw+M6cpDZ
-	 7KZ9jjejq04va6b+dakqIxyJnqeICXk/A9Kpti4xc9FcsBQZWYV1bDcJSm/qP3HUM5
-	 7yCo91vB0XpkV2qfrXgAGhXoVHK9tdTsg8ZXs27jGSqrCDy2IOTZTgfsQrcnonGM0r
-	 dVS07BIllfYf5G8TOMDAeMW5yx0lrdxyZ7gKGhQTg4HdQwkdG8e4J1X5pGwB5BM0M9
-	 5xcZTYO8yXfNesPBURDSi9HyCDHOg6nEbtowGfQO7WdHd72ADnOJwezWIur9cJy4qs
-	 9yIQqLhY+YYGQ==
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5007c8308c3so4310472e87.0
-        for <kexec@lists.infradead.org>; Fri, 08 Sep 2023 16:10:58 -0700 (PDT)
-X-Gm-Message-State: AOJu0YwLOqAropxRZVhwfaZ+Enw1o4iL6UK5469dAlplacEFR29UQFY+
-	EEbgY86eYLXktjZP1QC0OwgFsjJfetmcTs+XK2g=
-X-Google-Smtp-Source: AGHT+IFAHSeut3CZTN1maFrthLyJK3L37GkdrjNTQk98ZKwPoYw8ayKHxL/mm5gYph+nAmphdU3ADPjaat9Ut2fB0oQ=
-X-Received: by 2002:ac2:4c94:0:b0:500:94c5:6e06 with SMTP id
- d20-20020ac24c94000000b0050094c56e06mr2520205lfl.56.1694214656726; Fri, 08
- Sep 2023 16:10:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230908225353.984169-1-song@kernel.org> <ZPunWKU/TlrN9xiH@google.com>
-In-Reply-To: <ZPunWKU/TlrN9xiH@google.com>
+	Fri, 08 Sep 2023 23:13:06 +0000
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 388HqD5C030687
+	for <kexec@lists.infradead.org>; Fri, 8 Sep 2023 16:13:02 -0700
+Received: from mail.thefacebook.com ([163.114.132.120])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3t06jvvkdt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <kexec@lists.infradead.org>; Fri, 08 Sep 2023 16:13:02 -0700
+Received: from twshared52565.14.frc2.facebook.com (2620:10d:c085:208::f) by
+ mail.thefacebook.com (2620:10d:c085:21d::8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Fri, 8 Sep 2023 16:13:01 -0700
+Received: by devbig932.frc1.facebook.com (Postfix, from userid 4523)
+	id 01CBF24087ED5; Fri,  8 Sep 2023 16:12:48 -0700 (PDT)
 From: Song Liu <song@kernel.org>
-Date: Fri, 8 Sep 2023 16:10:44 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW5ZovvWG=KyDR80tEDbKda0=sGsVoKzLJDfBz1n4A7BPg@mail.gmail.com>
-Message-ID: <CAPhsuW5ZovvWG=KyDR80tEDbKda0=sGsVoKzLJDfBz1n4A7BPg@mail.gmail.com>
-Subject: Re: [PATCH] x86/purgatory: Remove LTO flags
-To: Nick Desaulniers <ndesaulniers@google.com>
-Cc: linux-kernel@vger.kernel.org, songliubraving@fb.com, 
-	Ricardo Ribalda <ribalda@chromium.org>, kexec@lists.infradead.org, x86@kernel.org, 
-	samitolvanen@google.com, llvm@lists.linux.dev
+To: <linux-kernel@vger.kernel.org>
+CC: <ndesaulniers@google.com>, Song Liu <song@kernel.org>,
+        Ricardo Ribalda
+	<ribalda@chromium.org>,
+        Sami Tolvanen <samitolvanen@google.com>, <kexec@lists.infradead.org>,
+        <x86@kernel.org>, <llvm@lists.linux.dev>
+Subject: [PATCH v2] x86/purgatory: Remove LTO flags
+Date: Fri, 8 Sep 2023 16:12:44 -0700
+Message-ID: <20230908231244.1092614-1-song@kernel.org>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+X-FB-Internal: Safe
+X-Proofpoint-GUID: ryHDu0A_a97RCNG672_ogBzDAXw_r3AW
+X-Proofpoint-ORIG-GUID: ryHDu0A_a97RCNG672_ogBzDAXw_r3AW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-09-08_18,2023-09-05_01,2023-05-22_02
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230908_161100_222309_031976CD 
-X-CRM114-Status: GOOD (  23.05  )
+X-CRM114-CacheID: sfid-20230908_161304_687781_994DA2A3 
+X-CRM114-Status: UNSURE (   9.01  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,57 +73,68 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-T24gRnJpLCBTZXAgOCwgMjAyMyBhdCAzOjU54oCvUE0gTmljayBEZXNhdWxuaWVycyA8bmRlc2F1
-bG5pZXJzQGdvb2dsZS5jb20+IHdyb3RlOgo+Cj4gT24gRnJpLCBTZXAgMDgsIDIwMjMgYXQgMDM6
-NTM6NTNQTSAtMDcwMCwgU29uZyBMaXUgd3JvdGU6Cj4gPiBXaXRoIExUTyBlbmFibGVkLCBsZC5s
-bGQgZ2VuZXJhdGVzIG11bHRpcGxlIC50ZXh0IHNlY3Rpb25zIGZvcgo+ID4gcHVyZ2F0b3J5LnJv
-Ogo+ID4KPiA+ICQgcmVhZGVsZiAtUyBwdXJnYXRvcnkucm8gIHwgZ3JlcCAiIC50ZXh0Igo+ID4g
-ICBbIDFdIC50ZXh0ICAgICAgICAgICAgIFBST0dCSVRTICAgICAgICAgMDAwMDAwMDAwMDAwMDAw
-MCAgMDAwMDAwNDAKPiA+ICAgWyA3XSAudGV4dC5wdXJnYXRvcnkgICBQUk9HQklUUyAgICAgICAg
-IDAwMDAwMDAwMDAwMDAwMDAgIDAwMDAyMGUwCj4gPiAgIFsgOV0gLnRleHQud2FybiAgICAgICAg
-UFJPR0JJVFMgICAgICAgICAwMDAwMDAwMDAwMDAwMDAwICAwMDAwMjFjMAo+ID4gICBbMTNdIC50
-ZXh0LnNoYTI1Nl91cGRhIFBST0dCSVRTICAgICAgICAgMDAwMDAwMDAwMDAwMDAwMCAgMDAwMDIy
-ZjAKPiA+ICAgWzE1XSAudGV4dC5zaGEyMjRfdXBkYSBQUk9HQklUUyAgICAgICAgIDAwMDAwMDAw
-MDAwMDAwMDAgIDAwMDAyYmUwCj4gPiAgIFsxN10gLnRleHQuc2hhMjU2X2ZpbmEgUFJPR0JJVFMg
-ICAgICAgICAwMDAwMDAwMDAwMDAwMDAwICAwMDAwMmJmMAo+ID4gICBbMTldIC50ZXh0LnNoYTIy
-NF9maW5hIFBST0dCSVRTICAgICAgICAgMDAwMDAwMDAwMDAwMDAwMCAgMDAwMDJjYzAKPiA+Cj4g
-PiBUaGlzIGNhdXNlIFdBUk5JTkcgZnJvbSBrZXhlY19wdXJnYXRvcnlfc2V0dXBfc2VjaGRycygp
-Ogo+ID4KPiA+IFdBUk5JTkc6IENQVTogMjYgUElEOiAxMTA4OTQgYXQga2VybmVsL2tleGVjX2Zp
-bGUuYzo5MTkKPiA+IGtleGVjX2xvYWRfcHVyZ2F0b3J5KzB4MzdmLzB4MzkwCj4gPgo+ID4gRml4
-IHRoaXMgYnkgZGlzYWJsaW5nIExUTyBmb3IgcHVyZ2F0b3J5Lgo+ID4KPiA+IEZpeGVzOiA4NjUy
-ZDQ0ZjQ2NmEgKCJrZXhlYzogc3VwcG9ydCBwdXJnYXRvcmllcyB3aXRoIC50ZXh0LmhvdCBzZWN0
-aW9ucyIpCj4gPiBDYzogUmljYXJkbyBSaWJhbGRhIDxyaWJhbGRhQGNocm9taXVtLm9yZz4KPiA+
-IENjOiBrZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCj4gPiBDYzogbGludXgta2VybmVsQHZnZXIu
-a2VybmVsLm9yZwo+ID4gQ2M6IHg4NkBrZXJuZWwub3JnCj4gPiBTaWduZWQtb2ZmLWJ5OiBTb25n
-IExpdSA8c29uZ0BrZXJuZWwub3JnPgo+ID4KPiA+IC0tLQo+ID4gQUZBSUNULCB4ODYgaXMgdGhl
-IG9ubHkgYXJjaCB0aGF0IHN1cHBvcnRzIExUTyBhbmQgcHVyZ2F0b3J5Lgo+ID4gLS0tCj4gPiAg
-YXJjaC94ODYvcHVyZ2F0b3J5L01ha2VmaWxlIHwgNCArKysrCj4gPiAgMSBmaWxlIGNoYW5nZWQs
-IDQgaW5zZXJ0aW9ucygrKQo+ID4KPiA+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9wdXJnYXRvcnkv
-TWFrZWZpbGUgYi9hcmNoL3g4Ni9wdXJnYXRvcnkvTWFrZWZpbGUKPiA+IGluZGV4IGMyYTI5YmUz
-NWMwMS4uOWMwYmZmNDk5MmVhIDEwMDY0NAo+ID4gLS0tIGEvYXJjaC94ODYvcHVyZ2F0b3J5L01h
-a2VmaWxlCj4gPiArKysgYi9hcmNoL3g4Ni9wdXJnYXRvcnkvTWFrZWZpbGUKPiA+IEBAIC0xOSw2
-ICsxOSwxMCBAQCBDRkxBR1Nfc2hhMjU2Lm8gOj0gLURfX0RJU0FCTEVfRVhQT1JUUyAtRF9fTk9f
-Rk9SVElGWQo+ID4gICMgb3B0aW1pemF0aW9uIGZsYWdzLgo+ID4gIEtCVUlMRF9DRkxBR1MgOj0g
-JChmaWx0ZXItb3V0IC1mcHJvZmlsZS1zYW1wbGUtdXNlPSUgLWZwcm9maWxlLXVzZT0lLCQoS0JV
-SUxEX0NGTEFHUykpCj4gPgo+ID4gKyMgV2hlbiBMVE8gaXMgZW5hYmxlZCwgbGx2bSBlbWl0cyBt
-YW55IHRleHQgc2VjdGlvbnMsIHdoaWNoIGlzIG5vdCBzdXBwb3J0ZWQKPiA+ICsjIGJ5IGtleGVj
-LiBSZW1vdmUgLWZsdG89KiBmbGFncy4KPiA+ICtLQlVJTERfQ0ZMQUdTIDo9ICQoZmlsdGVyLW91
-dCAtZmx0bz0lLCQoS0JVSUxEX0NGTEFHUykpCj4KPiBUaGFua3MgZm9yIHRoZSBwYXRjaCEKPgo+
-IFBsZWFzZSBwcmVmZXIgc29tZXRoaW5nIGFraW4gdG86Cj4gY29tbWl0IDZlMjBmMTg1NzljNSAo
-ImVmaS9saWJzdHViOiBkaXNhYmxlIExUTyIpCgpUaGFua3MgZm9yIHRoZSBwb2ludGVyISBUaGlz
-IGRvZXMgbG9vayBiZXR0ZXIuCgpUaGFua3MsClNvbmcKCj4KPiBQbGVhc2UgYWxzbyBDQyBTYW1p
-IGFuZCBsbHZtQGxpc3RzLmxpbnV4LmRldiBmb3IgdjIuCj4KPiBQcmV0dHkgc3VyZSB3ZSB1c2Ug
-YSBsaW5rZXIgc2NyaXB0IHRvIHJlam9pbiAudGV4dC4qIGVsc2V3aGVyZSBpbiB0aGUKPiBrZXJu
-ZWwsIGJ1dCBpdCBkb2Vzbid0IGxvb2sgbGlrZSB4ODYgcHVyZ2F0b3J5IGhhcyBvbmUuCj4KPiA+
-ICsKPiA+ICAjIFdoZW4gbGlua2luZyBwdXJnYXRvcnkucm8gd2l0aCAtciB1bnJlc29sdmVkIHN5
-bWJvbHMgYXJlIG5vdCBjaGVja2VkLAo+ID4gICMgYWxzbyBsaW5rIGEgcHVyZ2F0b3J5LmNoayBi
-aW5hcnkgd2l0aG91dCAtciB0byBjaGVjayBmb3IgdW5yZXNvbHZlZCBzeW1ib2xzLgo+ID4gIFBV
-UkdBVE9SWV9MREZMQUdTIDo9IC1lIHB1cmdhdG9yeV9zdGFydCAteiBub2RlZmF1bHRsaWIKPiA+
-IC0tCj4gPiAyLjM0LjEKPiA+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
-dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+With LTO enabled, ld.lld generates multiple .text sections for
+purgatory.ro:
+
+$ readelf -S purgatory.ro  | grep " .text"
+  [ 1] .text             PROGBITS         0000000000000000  00000040
+  [ 7] .text.purgatory   PROGBITS         0000000000000000  000020e0
+  [ 9] .text.warn        PROGBITS         0000000000000000  000021c0
+  [13] .text.sha256_upda PROGBITS         0000000000000000  000022f0
+  [15] .text.sha224_upda PROGBITS         0000000000000000  00002be0
+  [17] .text.sha256_fina PROGBITS         0000000000000000  00002bf0
+  [19] .text.sha224_fina PROGBITS         0000000000000000  00002cc0
+
+This cause WARNING from kexec_purgatory_setup_sechdrs():
+
+WARNING: CPU: 26 PID: 110894 at kernel/kexec_file.c:919
+kexec_load_purgatory+0x37f/0x390
+
+Fix this by disabling LTO for purgatory.
+
+Fixes: 8652d44f466a ("kexec: support purgatories with .text.hot sections")
+Cc: Ricardo Ribalda <ribalda@chromium.org>
+Cc: Sami Tolvanen <samitolvanen@google.com>
+Cc: kexec@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org
+Cc: llvm@lists.linux.dev
+Signed-off-by: Song Liu <song@kernel.org>
+
+---
+AFAICT, x86 is the only arch that supports LTO and purgatory.
+
+Changes in v2:
+1. Use CC_FLAGS_LTO instead of hardcode -flto. (Nick Desaulniers)
+---
+ arch/x86/purgatory/Makefile | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
+index c2a29be35c01..08aa0f25f12a 100644
+--- a/arch/x86/purgatory/Makefile
++++ b/arch/x86/purgatory/Makefile
+@@ -19,6 +19,10 @@ CFLAGS_sha256.o := -D__DISABLE_EXPORTS -D__NO_FORTIFY
+ # optimization flags.
+ KBUILD_CFLAGS := $(filter-out -fprofile-sample-use=% -fprofile-use=%,$(KBUILD_CFLAGS))
+ 
++# When LTO is enabled, llvm emits many text sections, which is not supported
++# by kexec. Remove -flto=* flags.
++KBUILD_CFLAGS := $(filter-out $(CC_FLAGS_LTO),$(KBUILD_CFLAGS))
++
+ # When linking purgatory.ro with -r unresolved symbols are not checked,
+ # also link a purgatory.chk binary without -r to check for unresolved symbols.
+ PURGATORY_LDFLAGS := -e purgatory_start -z nodefaultlib
+-- 
+2.34.1
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
