@@ -4,75 +4,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1EA9FEE8018
-	for <kexec@archiver.kernel.org>; Fri,  8 Sep 2023 15:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F11ECEEB566
+	for <kexec@archiver.kernel.org>; Fri,  8 Sep 2023 20:02:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=sto4sEVjtfVKKLNth50hkZEbxbAsvXAIKbseBTCfD4Y=; b=jQmzfZyE4d7s2Z
-	mWasw2dJLrfruEVCFP7x40EW3B4nStPvRCu0wHlWzZ9FLOjTGQUN5WANAp6cfKa28TP2zBcJgE3ha
-	fCKoMLuGtPyHGqi1qrZhjmxC3S5xchwghj6r+spZZyPl5/4bh4ZqEYhy7/y0yLkHIuTbbiL5CAkeI
-	w2QbEg2Ti14jPZ55eU3E44oYmaBHjEdItEW2DsXRQyzO9cy5f2S4+4XmvSvQ2Q+pnNsmjZ799Z9eg
-	zFankIDSNlVUeXxnX3KX8O54RHBNJ62NWg5TITAGK82Oiu3Rgn02vlLalK8nxFxiEWhzeMKEAvbQe
-	6+BeSxbmwps/fHWALH4Q==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=5rYb1JtYVBsTmtyA92MNKC8F2bkSDZId4HLuAJS7meo=; b=Kb+dQCaLn36ebY
+	uj8D7v8tV5oUNp5mc1yuJur3I45GnxMKi3+3cfbzq9wU2Wlm1pdQkDqFAXIA2Rc1k1uQvov3bU3Sd
+	nQzo16vCzIES5A7YWTQMSlOmyjH1lDAPTNYTU1/sJMO+BNHRwIZa5NyiTaRkvEWij8PCx6kPgpv2t
+	ni91SHizkg0+oVahrd02q4fJH2EVckk5xCfnx11JkY2hSwKldn3J3gZFtt/0EcvcAoQFAu1TK/aL1
+	RUUlRJ8qCerfWHgZmOH4PrV/hjJKlL4qC6nWpteIQTfJg226maA2q4hiBVSdl2SdRwgr16uHwe0aI
+	053SnffY7Bdl7gsyW51Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qediU-00E1xi-2i;
-	Fri, 08 Sep 2023 15:48:18 +0000
-Received: from mgamail.intel.com ([134.134.136.100])
+	id 1qehgs-00EQP6-07;
+	Fri, 08 Sep 2023 20:02:54 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qediR-00E1xI-33
+	id 1qehgp-00EQNI-1W
 	for kexec@lists.infradead.org;
-	Fri, 08 Sep 2023 15:48:17 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694188095; x=1725724095;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=7lZwzD4Jl1j1hHG9SxEpqmUzote7v9725kYKuPdquWo=;
-  b=MAfJDb8k6mrz8KJQ/SS0cywsiq5aZPiro5wiqmxeIRHY5Jv7nFoBFtma
-   nMU5TisqfqOBeJDzM3LA1Ye8/X4VLGHrHRZ1/8wPyjOUqRbWBHzLtzd7Z
-   rlADGuT8Ezv+7ZSMOH0jBFz+viSQIB2fakaTw7YNdXSvtv191cjHuAoMK
-   +6LlNNqqmFmAlSG77yBEwxL9v0i/XYkugQHBO2JMggZhVxxfKUVhDTeXO
-   FIO9aDvXS/p7DqKkk7AdJFeDa+HZSt2T4S3jNaj2HiVQrM0/seq4IvXOt
-   /vQN777CX2kkcnLmRqZrTpeNgYImU+xezTQJFgmTIa2cXhPcwxdpIlaQ2
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10827"; a="444113425"
-X-IronPort-AV: E=Sophos;i="6.02,237,1688454000"; 
-   d="scan'208";a="444113425"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2023 08:48:15 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10827"; a="719194428"
-X-IronPort-AV: E=Sophos;i="6.02,237,1688454000"; 
-   d="scan'208";a="719194428"
-Received: from lkp-server01.sh.intel.com (HELO 59b3c6e06877) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 08 Sep 2023 08:48:12 -0700
-Received: from kbuild by 59b3c6e06877 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1qediM-0002PR-2W;
-	Fri, 08 Sep 2023 15:48:10 +0000
-Date: Fri, 8 Sep 2023 23:47:36 +0800
-From: kernel test robot <lkp@intel.com>
-To: Pingfan Liu <piliu@redhat.com>, linuxppc-dev@lists.ozlabs.org
-Cc: oe-kbuild-all@lists.linux.dev, Baoquan He <bhe@redhat.com>,
-	Pingfan Liu <piliu@redhat.com>, kexec@lists.infradead.org,
-	Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-	Ming Lei <ming.lei@redhat.com>, Wen Xiong <wenxiong@linux.ibm.com>,
-	Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCHv5 1/3] powerpc/setup: Loosen the mapping between cpu
- logical id and its seq in dt
-Message-ID: <202309082357.FUmBMhC4-lkp@intel.com>
-References: <20230908141941.13660-2-piliu@redhat.com>
+	Fri, 08 Sep 2023 20:02:52 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1694203366;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=CVUWiNi0XyDqlB1JxyjZ0R/Ir5gIUCrvEGnFOU6/cQM=;
+	b=i3XSc3IbHxg4+9Y4Xt7yiR9jYIWtiHtn5K5lokvFfE0pPMuAwIsdbFomCnx2WuXphQzZm/
+	O4hCWC4JByje5ob91Se3AAukS/Btccfx4SSK4UAy33/ox97iQLoJ4CIN/Kq/ygq1ravGcJ
+	i5f/lARzV5s4WHVjccg1QMz3rwesbXs=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-466-OXClKBNvN7iFQFNcfa-c1g-1; Fri, 08 Sep 2023 16:02:45 -0400
+X-MC-Unique: OXClKBNvN7iFQFNcfa-c1g-1
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4122119722eso4980381cf.0
+        for <kexec@lists.infradead.org>; Fri, 08 Sep 2023 13:02:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694203364; x=1694808164;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CVUWiNi0XyDqlB1JxyjZ0R/Ir5gIUCrvEGnFOU6/cQM=;
+        b=ss8bvzKzK6IFc2rxU8LAjpijVyZUY8NrSXSCAbhO/wlVulhSZT8ycg420jAVnOBbub
+         IqA2QmCBQTX1iWkj/5o8clpuaCVxf8Fx+q8+t/fCbXbQ89ZLN1kqm3xmOCd6xXQKrezi
+         +Dv0EaYu3D+Z1kjvIepeM4duLXFaR5t/J3mBdAExfFm6YToQmVBElgMvgGdRbCXMbGUe
+         A0FhmUPLL97eipshBL7AMDB/bBN1CfpO4SGdKLdHRrW1nLeUtSs9OBHmcxhETI5PBWNP
+         PZnEyMDFkvItoHWRu2ISdz5QDcsUrOcbCE6CIiYaRcMrOZBEHe73c3sIlB840ZI7QkWM
+         ryug==
+X-Gm-Message-State: AOJu0YyDgq8LKpfhSaYHg7QcvPmqojJiv/vvPwlatYpoKTI4IbjDzkH6
+	jew/iNP3OG3wfUd9jYNr8XWrUdycNwa9x3r4GMd9dqienei3pcbQ46qg7oIdmLoFNqkbDff9H91
+	wHUkEc+Oy3p1/lsF803jv
+X-Received: by 2002:a05:622a:1915:b0:412:1c5f:4781 with SMTP id w21-20020a05622a191500b004121c5f4781mr4701336qtc.4.1694203364612;
+        Fri, 08 Sep 2023 13:02:44 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEuiGnmMFWAKLSh30zPQGkgvOkX4VTvQk/17jsSVc5WjoNTNjt80rBc5lL7G+qjPScKuI3czQ==
+X-Received: by 2002:a05:622a:1915:b0:412:1c5f:4781 with SMTP id w21-20020a05622a191500b004121c5f4781mr4701161qtc.4.1694203362351;
+        Fri, 08 Sep 2023 13:02:42 -0700 (PDT)
+Received: from fedorinator.redhat.com ([2001:9e8:32da:e500:513e:fbe9:e455:ae67])
+        by smtp.gmail.com with ESMTPSA id jm8-20020a05622a750800b003f9c6a311e1sm840078qtb.47.2023.09.08.13.02.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Sep 2023 13:02:42 -0700 (PDT)
+From: Philipp Stanner <pstanner@redhat.com>
+To: Kees Cook <keescook@chromium.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Christian Brauner <brauner@kernel.org>,
+	David Disseldorp <ddiss@suse.de>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Siddh Raman Pant <code@siddh.me>,
+	Nick Alcock <nick.alcock@oracle.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Zack Rusin <zackr@vmware.com>
+Cc: VMware Graphics Reviewers <linux-graphics-maintainer@vmware.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org,
+	linux-hardening@vger.kernel.org,
+	Philipp Stanner <pstanner@redhat.com>
+Subject: [PATCH v2 0/5] Introduce new wrappers to copy user-arrays
+Date: Fri,  8 Sep 2023 21:59:39 +0200
+Message-ID: <cover.1694202430.git.pstanner@redhat.com>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20230908141941.13660-2-piliu@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230908_084816_026130_CF2BF0F5 
-X-CRM114-Status: GOOD (  11.37  )
+X-CRM114-CacheID: sfid-20230908_130251_597031_0604F902 
+X-CRM114-Status: GOOD (  13.34  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,60 +114,56 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Pingfan,
+Hi!
 
-kernel test robot noticed the following build errors:
+David Airlie suggested that we could implement new wrappers around
+(v)memdup_user() for duplicating user arrays.
 
-[auto build test ERROR on powerpc/fixes]
-[also build test ERROR on linus/master v6.5 next-20230908]
-[cannot apply to powerpc/next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+This small patch series first implements the two new wrapper functions
+memdup_array_user() and vmemdup_array_user(). They calculate the
+array-sizes safely, i.e., they return an error in case of an overflow.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Pingfan-Liu/powerpc-setup-Loosen-the-mapping-between-cpu-logical-id-and-its-seq-in-dt/20230908-222430
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git fixes
-patch link:    https://lore.kernel.org/r/20230908141941.13660-2-piliu%40redhat.com
-patch subject: [PATCHv5 1/3] powerpc/setup: Loosen the mapping between cpu logical id and its seq in dt
-config: powerpc-allnoconfig (https://download.01.org/0day-ci/archive/20230908/202309082357.FUmBMhC4-lkp@intel.com/config)
-compiler: powerpc-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230908/202309082357.FUmBMhC4-lkp@intel.com/reproduce)
+It then implements the new wrappers in two components in kernel/ and two
+in the drm-subsystem.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202309082357.FUmBMhC4-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   arch/powerpc/kernel/prom.c: In function 'early_init_dt_scan_cpus':
-   arch/powerpc/kernel/prom.c:365:44: error: lvalue required as left operand of assignment
-     365 |                                 nr_cpu_ids = nthreads;
-         |                                            ^
-   arch/powerpc/kernel/prom.c: At top level:
->> arch/powerpc/kernel/prom.c:79:23: error: 'boot_cpu_count' defined but not used [-Werror=unused-variable]
-      79 | static int __initdata boot_cpu_count;
-         |                       ^~~~~~~~~~~~~~
-   cc1: all warnings being treated as errors
+In total, there are 18 files in the kernel that use (v)memdup_user() to
+duplicate arrays. My plan is to provide patches for the other 14
+successively once this series has been merged.
 
 
-vim +/boot_cpu_count +79 arch/powerpc/kernel/prom.c
+Changes since v1:
+- Insert new headers alphabetically ordered
+- Remove empty lines in functions' docstrings
+- Return -EOVERFLOW instead of -EINVAL from wrapper functions
 
-c1e53367dab15e Srikar Dronamraju      2021-04-15  70  
-9b6b563c0d2d25 Paul Mackerras         2005-10-06  71  #ifdef CONFIG_PPC64
-28897731318dc8 Olof Johansson         2006-04-12  72  int __initdata iommu_is_off;
-9b6b563c0d2d25 Paul Mackerras         2005-10-06  73  int __initdata iommu_force_on;
-cf00a8d18b9a1c Paul Mackerras         2005-10-31  74  unsigned long tce_alloc_start, tce_alloc_end;
-cd3db0c4ca3d23 Benjamin Herrenschmidt 2010-07-06  75  u64 ppc64_rma_size;
-e13d23a404f2e6 Laurent Dufour         2022-11-10  76  unsigned int boot_cpu_node_count __ro_after_init;
-9b6b563c0d2d25 Paul Mackerras         2005-10-06  77  #endif
-03bf469add176a Benjamin Herrenschmidt 2011-05-11  78  static phys_addr_t first_memblock_size;
-7ac87abb8166b9 Matt Evans             2011-05-25 @79  static int __initdata boot_cpu_count;
-9b6b563c0d2d25 Paul Mackerras         2005-10-06  80  
+
+@Andy:
+I test-build it for UM on my x86_64. Builds successfully.
+A kernel build (localmodconfig) for my Fedora38 @ x86_64 does also boot
+fine.
+
+If there is more I can do to verify the early boot stages are fine,
+please let me know!
+
+P.
+
+Philipp Stanner (5):
+  string.h: add array-wrappers for (v)memdup_user()
+  kernel: kexec: copy user-array safely
+  kernel: watch_queue: copy user-array safely
+  drm_lease.c: copy user-array safely
+  drm: vmgfx_surface.c: copy user-array safely
+
+ drivers/gpu/drm/drm_lease.c             |  4 +--
+ drivers/gpu/drm/vmwgfx/vmwgfx_surface.c |  4 +--
+ include/linux/string.h                  | 40 +++++++++++++++++++++++++
+ kernel/kexec.c                          |  2 +-
+ kernel/watch_queue.c                    |  2 +-
+ 5 files changed, 46 insertions(+), 6 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.41.0
+
 
 _______________________________________________
 kexec mailing list
