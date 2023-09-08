@@ -4,70 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 45888EEB56B
-	for <kexec@archiver.kernel.org>; Fri,  8 Sep 2023 20:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 26555EEB566
+	for <kexec@archiver.kernel.org>; Fri,  8 Sep 2023 20:03:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=2xTwhnbqy8EHOb2edxIGKXM+kvgDoewmB+CEFC9RBFg=; b=Orrn95qiDtmdcC
-	LuW1fdXL/KfdO3UFnUdGMw2YMe3YPxPcmcCDh/pY/B4GR5gwRFlNQE3IJ8hTMS1C3yGsdtExv/uwH
-	505m2sg9z4/Rx2v7HouAC9nNE85n9tb0tMN1NbHgLwEaBX5pScJHUUbZpBzMthXqu0k1Zvtz3Q3/J
-	9iHvNjkxYxGPGNnuAws6P8B8T1ou7FcC4+U7QKL9EgTMGtWro5ULUqrqX9TeweBDVR42/kXEtW/54
-	RUE9qtcIGCQXHhUasm5jnf5Dc3Wv7YXirqtmPeNd+w7mmeuUZ9cuFG40ZvyHT+PCvQRFMBS3UuHB7
-	KOTLvQODS0jU1Ay9NGdg==;
+	List-Owner; bh=EWh+EzTwremimRGBVRwUpCogdDBsJNW/aHeNueKEX84=; b=4S1tkDqO2CHFBc
+	5l2IqZj4j094GdESROcSPRs0cwSleeEZQwozCEaOoBDpmQ7N4IlW39a4AnFNIp6nkjQvnHBTC+JWb
+	UpXDk9KcXnxhsz/W49/n39WUPzbXHRf+imTiD4pgjarmEkmRYjeiEBCIeT/FUhyGYIoLxGcsmQk2k
+	kRsuTrKtFon4catnLFONMZuVMohvaq/09GT+0GsbGsE87mXbyPxTui3GhIqUIFEIh7++eJ0SPqQAF
+	3XlSYW5aLWY7bj2n/1d4Z/RUKkDbobrpSKvp2BNLI+fB742DKHXoOarvnTlGuvR2H5/DPP/rlXZPG
+	PrZx2QbcOQNmERdbjEBw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qehgx-00EQR0-23;
-	Fri, 08 Sep 2023 20:02:59 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1qehhB-00EQUp-1c;
+	Fri, 08 Sep 2023 20:03:13 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qehgv-00EQPY-03
+	id 1qehh8-00EQT8-1N
 	for kexec@lists.infradead.org;
-	Fri, 08 Sep 2023 20:02:58 +0000
+	Fri, 08 Sep 2023 20:03:11 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1694203376;
+	s=mimecast20190719; t=1694203387;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=4V6bm459ozDimu1heDZpH+ZMi6MrCIxlIoO52rIEKGg=;
-	b=czx7leJI+d6u2ujanNzx8zfCQQrmOZBN8mqWkTe0m/lqDsmtqqA8y2FKYfPB2DNcE/+6us
-	lcI1bB13IHXK+G1yBsNN45cSsWgNgQBfCc4ut0w4zNsl/Wk5CUd6+SXQeg7Ujrodyczfr9
-	9U1t5ijHjqwy+yCZkQ69+j7shrV8oRk=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=qJlM81Ad0uqQunhdFKofh1JwhP2kaFm8hxSxz8OfTMk=;
+	b=jMsXr4fCY2mTJNN0+K8vCQR8Ssl/227kiazFF8ikkfHYXzrzXsDI6EW+bpCPoQz2PkHOYe
+	dWIfu/IGQb4l4sEda3XV9yCIXH8/NyymcX+kwFNg69j28zvH0B6o8mydIAFpT2yvYkCBBr
+	N6sD0OkUgLD+0u59KHDQXRNPdkFVRTg=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-244-FmvI0BpNMquGvNNrkPHIlw-1; Fri, 08 Sep 2023 16:02:52 -0400
-X-MC-Unique: FmvI0BpNMquGvNNrkPHIlw-1
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-4059b5c3dd0so3340411cf.0
-        for <kexec@lists.infradead.org>; Fri, 08 Sep 2023 13:02:52 -0700 (PDT)
+ us-mta-653-Zhr6_kCMMCaWEIjwd-evyA-1; Fri, 08 Sep 2023 16:03:05 -0400
+X-MC-Unique: Zhr6_kCMMCaWEIjwd-evyA-1
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-637948b24bdso5999116d6.1
+        for <kexec@lists.infradead.org>; Fri, 08 Sep 2023 13:03:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694203372; x=1694808172;
+        d=1e100.net; s=20230601; t=1694203385; x=1694808185;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4V6bm459ozDimu1heDZpH+ZMi6MrCIxlIoO52rIEKGg=;
-        b=PGdAddSNREB4AVywYGOycOtNp3HN+2dFf0dOnPkHAavVcoMj9268E7VbPQLuX047kL
-         fBDzDvuS+1f0xPQPrpd5KrLs6oeSVWJRXHFInNt5qfKSO+pRCKWO5LWCDcPuI63pTqFZ
-         PuTuBoKyseVikkvEaQ6thwEsfjpwFNx3nPyS70g02TnziaNQ5rfytPNOIztOBI9snBCm
-         F6ahwbfWQ+P3AWeiOLmSnNi4a7mR/tq5ES+whWVfeQtN4N/A0P6XCRJQUaxj10Dke6hU
-         OnpO5KKfK/OntvsRSts6V58u6zswMY4I6UX4ft/G/rj9Xg+KDOfENSyM/l5W23qhJbxj
-         eNMQ==
-X-Gm-Message-State: AOJu0Yy2D+poPrlB3eb/aAz5ER91g8YINMIJs4ujLuPJUMUB6r3rRrNJ
-	IM+kdY8mhE8DIUZ+0RGi+WG2OKM36yvC0kfdnzzoFCubtVl865x9Ca22sgaRXLiyCCYBrAy8CiJ
-	Y6skAsRU5KxBAKP9o+l5y
-X-Received: by 2002:a05:622a:1997:b0:40f:da40:88a with SMTP id u23-20020a05622a199700b0040fda40088amr3927383qtc.4.1694203372361;
-        Fri, 08 Sep 2023 13:02:52 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEUR/6fW5sKr+U41wFGsfMKmuUv8vxb4fBBYTs7l3DnJhhPgBBiRmpLahG272yCMwIEUruJgg==
-X-Received: by 2002:a05:622a:1997:b0:40f:da40:88a with SMTP id u23-20020a05622a199700b0040fda40088amr3927365qtc.4.1694203372058;
-        Fri, 08 Sep 2023 13:02:52 -0700 (PDT)
+        bh=qJlM81Ad0uqQunhdFKofh1JwhP2kaFm8hxSxz8OfTMk=;
+        b=wZigdpb5Y6i6EU9Z+Gm+yqsWYddT1r/1a6a9B9GLxNXpVyKB15gEOM1nFE1isbRJon
+         Jk1MSBfFM9ucCA0AiT4+eitpbUXGCInqXPOMn1OthaX4OONBNfhAP6RoJuF5ST0bmwXT
+         ysVvHl4PuraxLE+I+SiV+karkANeosXVN4PvXaC5xp2oslSO8fYLbHqerPLOooM/TneO
+         R/KtstR3KXLKLiDNFmT/qIsTDCgj0rYhn5o+8dRrBW/rbau9SnFyaGncfDZEJxMhDkvr
+         YpkokudAImxxK1dScyCjHe6JxXZ6TsMC3hFAGHBPwD74i7O3Dp2EhNrlt4V5jYTsG8AP
+         eudQ==
+X-Gm-Message-State: AOJu0YwvLzR3lWBIpb87cdkILqphDc7Z76/PKrbu6eBJCEzUcvWEievU
+	FElILkbJEMhYNXqNgZxzD113SPHNYZUwKEc/ykEiyQ8a+g57Oq/6h6/xHMvjFaABBgiSk59QYvy
+	8LqB8gUKuGsNxoMVXQ6Gn
+X-Received: by 2002:a05:6214:234b:b0:649:5f43:245c with SMTP id hu11-20020a056214234b00b006495f43245cmr3403889qvb.4.1694203385316;
+        Fri, 08 Sep 2023 13:03:05 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGkpjEpC3M4jl16uIjnS3PMQJTudw+DmAKJXO1LGuAkwNI/2h/IQUepIX3UGSH4cUrAf1SALA==
+X-Received: by 2002:a05:6214:234b:b0:649:5f43:245c with SMTP id hu11-20020a056214234b00b006495f43245cmr3403702qvb.4.1694203382095;
+        Fri, 08 Sep 2023 13:03:02 -0700 (PDT)
 Received: from fedorinator.redhat.com ([2001:9e8:32da:e500:513e:fbe9:e455:ae67])
-        by smtp.gmail.com with ESMTPSA id x19-20020ac85393000000b0041511b21a7csm262984qtp.40.2023.09.08.13.02.48
+        by smtp.gmail.com with ESMTPSA id r19-20020a0ccc13000000b0064f523836fdsm959242qvk.123.2023.09.08.13.02.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Sep 2023 13:02:51 -0700 (PDT)
+        Fri, 08 Sep 2023 13:03:01 -0700 (PDT)
 From: Philipp Stanner <pstanner@redhat.com>
 To: Kees Cook <keescook@chromium.org>,
 	Andy Shevchenko <andy@kernel.org>,
@@ -90,9 +90,9 @@ Cc: VMware Graphics Reviewers <linux-graphics-maintainer@vmware.com>,
 	linux-hardening@vger.kernel.org,
 	Philipp Stanner <pstanner@redhat.com>,
 	David Airlie <airlied@redhat.com>
-Subject: [PATCH v2 1/5] string.h: add array-wrappers for (v)memdup_user()
-Date: Fri,  8 Sep 2023 21:59:40 +0200
-Message-ID: <93001a9f3f101be0f374080090f9c32df73ca773.1694202430.git.pstanner@redhat.com>
+Subject: [PATCH v2 2/5] kernel: kexec: copy user-array safely
+Date: Fri,  8 Sep 2023 21:59:41 +0200
+Message-ID: <31313a8a1dd1baf9dd3c21fbe8dd46b9e111f20c.1694202430.git.pstanner@redhat.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <cover.1694202430.git.pstanner@redhat.com>
 References: <cover.1694202430.git.pstanner@redhat.com>
@@ -100,8 +100,8 @@ MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230908_130257_122237_706F17E9 
-X-CRM114-Status: GOOD (  13.83  )
+X-CRM114-CacheID: sfid-20230908_130310_534371_1ECE6559 
+X-CRM114-Status: GOOD (  11.34  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -118,82 +118,30 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Currently, user array duplications are sometimes done without an
-overflow check. Sometimes the checks are done manually; sometimes the
-array size is calculated with array_size() and sometimes by calculating
-n * size directly in code.
+Currently, there is no overflow-check with memdup_user().
 
-Introduce wrappers for arrays for memdup_user() and vmemdup_user() to
-provide a standardized and safe way for duplicating user arrays.
-
-This is both for new code as well as replacing usage of (v)memdup_user()
-in existing code that uses, e.g., n * size to calculate array sizes.
+Use the new function memdup_array_user() instead of memdup_user() for
+duplicating the user-space array safely.
 
 Suggested-by: David Airlie <airlied@redhat.com>
 Signed-off-by: Philipp Stanner <pstanner@redhat.com>
 ---
- include/linux/string.h | 40 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+ kernel/kexec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/string.h b/include/linux/string.h
-index dbfc66400050..8c9fc76c7154 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -5,7 +5,9 @@
- #include <linux/compiler.h>	/* for inline */
- #include <linux/types.h>	/* for size_t */
- #include <linux/stddef.h>	/* for NULL */
-+#include <linux/err.h>		/* for ERR_PTR() */
- #include <linux/errno.h>	/* for E2BIG */
-+#include <linux/overflow.h>	/* for check_mul_overflow() */
- #include <linux/stdarg.h>
- #include <uapi/linux/string.h>
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 107f355eac10..8f35a5a42af8 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -247,7 +247,7 @@ SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
+ 		((flags & KEXEC_ARCH_MASK) != KEXEC_ARCH_DEFAULT))
+ 		return -EINVAL;
  
-@@ -14,6 +16,44 @@ extern void *memdup_user(const void __user *, size_t);
- extern void *vmemdup_user(const void __user *, size_t);
- extern void *memdup_user_nul(const void __user *, size_t);
+-	ksegments = memdup_user(segments, nr_segments * sizeof(ksegments[0]));
++	ksegments = memdup_array_user(segments, nr_segments, sizeof(ksegments[0]));
+ 	if (IS_ERR(ksegments))
+ 		return PTR_ERR(ksegments);
  
-+/**
-+ * memdup_array_user - duplicate array from user space
-+ * @src: source address in user space
-+ * @n: number of array members to copy
-+ * @size: size of one array member
-+ *
-+ * Return: an ERR_PTR() on failure. Result is physically
-+ * contiguous, to be freed by kfree().
-+ */
-+static inline void *memdup_array_user(const void __user *src, size_t n, size_t size)
-+{
-+	size_t nbytes;
-+
-+	if (unlikely(check_mul_overflow(n, size, &nbytes)))
-+		return ERR_PTR(-EOVERFLOW);
-+
-+	return memdup_user(src, nbytes);
-+}
-+
-+/**
-+ * vmemdup_array_user - duplicate array from user space
-+ * @src: source address in user space
-+ * @n: number of array members to copy
-+ * @size: size of one array member
-+ *
-+ * Return: an ERR_PTR() on failure. Result may be not
-+ * physically contiguous. Use kvfree() to free.
-+ */
-+static inline void *vmemdup_array_user(const void __user *src, size_t n, size_t size)
-+{
-+	size_t nbytes;
-+
-+	if (unlikely(check_mul_overflow(n, size, &nbytes)))
-+		return ERR_PTR(-EOVERFLOW);
-+
-+	return vmemdup_user(src, nbytes);
-+}
-+
- /*
-  * Include machine specific inline routines
-  */
 -- 
 2.41.0
 
