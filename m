@@ -4,63 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AE4ABEEB56E
-	for <kexec@archiver.kernel.org>; Fri,  8 Sep 2023 23:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 58320EEB580
+	for <kexec@archiver.kernel.org>; Sat,  9 Sep 2023 16:19:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:CC
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
 	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=WG7J1PEZdfvwyOdRCTII5IKwiRtNJ9fT3hZhb6mmyfY=; b=OkCExgySlTkk7z
-	lmzxQvWIYNJgYg4BrAihtAS/cETf9XjGym/+w1FMXvmTTJpzB4/mN7Yn4xWKIAOB76QRK06pSOAdT
-	crfp4w+oxxVGF0q6hpNP8NDUD8Ky5PWz3rlo0F+PWlo/JdnMrZ7i3b3QD7pIdCEaO9oj7uB5NUyDb
-	uH82tJACTbWF7QlwAflEscL3cV7waXEuE9VKxnPglsFjVmNvAcwsQtqUYjJ5UTEXZ3IEyiWx3umqk
-	dsiZ6HxXCt/zsBIoj71UM9EiXBCEzdy8y5x/aYBHK9oqh98AyxyzRts+T8VB588NU8A6ufRc9XkDK
-	1zras7u+3dVE+UATtNTg==;
+	List-Owner; bh=ZE0C8JLikO3nAdnp2HKxFCJvZiac4VOYpD/3KFaGyH0=; b=W/5dkLqQ9oPT95
+	3FkqMcbluezGwjKEjALnC476RFtrP3qUHuv5F/dhAtXy0r6qbi7jrxKqdvkXTy83s6H9TNsRvHU4T
+	EvxBJ75A9fZBnmZ3RViEZWEmqV8o3V+RnSREyV/1K4Bmv+VSJOHU2/vwzxiq0rl3oFgE99ENN5GPD
+	GBDcdYrhP6V83cUbakggIpYa0Tg1Vprr4531NvNC7CB51iWdqBqdlS3o1+rG2hiDo1l7NIM3MoGk+
+	r/Q3uU/QP7QVxi0OvfqY5PLaFt5Ga/FFS9WkGwpmbnzciC4C6qinavYVnyZCGBEuskojFIXsN1PcU
+	GBORW7GitHT5+VdO9ZIg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qekew-00EfxZ-2k;
-	Fri, 08 Sep 2023 23:13:06 +0000
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30])
+	id 1qf0gE-00FcoT-1e;
+	Sat, 09 Sep 2023 16:19:30 +0000
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qekeu-00EfxF-1f
+	id 1qf0gA-00Fcmy-1P
 	for kexec@lists.infradead.org;
-	Fri, 08 Sep 2023 23:13:06 +0000
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 388HqD5C030687
-	for <kexec@lists.infradead.org>; Fri, 8 Sep 2023 16:13:02 -0700
-Received: from mail.thefacebook.com ([163.114.132.120])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3t06jvvkdt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <kexec@lists.infradead.org>; Fri, 08 Sep 2023 16:13:02 -0700
-Received: from twshared52565.14.frc2.facebook.com (2620:10d:c085:208::f) by
- mail.thefacebook.com (2620:10d:c085:21d::8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Fri, 8 Sep 2023 16:13:01 -0700
-Received: by devbig932.frc1.facebook.com (Postfix, from userid 4523)
-	id 01CBF24087ED5; Fri,  8 Sep 2023 16:12:48 -0700 (PDT)
-From: Song Liu <song@kernel.org>
-To: <linux-kernel@vger.kernel.org>
-CC: <ndesaulniers@google.com>, Song Liu <song@kernel.org>,
-        Ricardo Ribalda
-	<ribalda@chromium.org>,
-        Sami Tolvanen <samitolvanen@google.com>, <kexec@lists.infradead.org>,
-        <x86@kernel.org>, <llvm@lists.linux.dev>
-Subject: [PATCH v2] x86/purgatory: Remove LTO flags
-Date: Fri, 8 Sep 2023 16:12:44 -0700
-Message-ID: <20230908231244.1092614-1-song@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	Sat, 09 Sep 2023 16:19:28 +0000
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+	by mailout.west.internal (Postfix) with ESMTP id 6F5593200906;
+	Sat,  9 Sep 2023 12:19:19 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Sat, 09 Sep 2023 12:19:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:sender:subject
+	:subject:to:to; s=fm3; t=1694276358; x=1694362758; bh=M6wmMumG4G
+	BxFWlO6TZUur1MLDcccw0IA9bEJxeSNGM=; b=ZQovllt6MTMezPd0k27xXp7Zlt
+	eD1Iv0eIRAoAv8bY5pZt1yPp2u0Oxn3SWbD6NVyU37HL8xyI3rZSc1ctFAtIzOop
+	iB1XhXzuroyAkhcQfceaYBkNMrITKDt9kcR8PaPLU7nas2SZ1UtI6uudsYWjU01P
+	odsqvNgkSVX53gjwQN9WmbI+OLwmOSHjYVXAMIPBgjLi+242+KkBb0zgvWPhn5k9
+	WYF2aTe+DFMkaDY6wAvTPQ25pIoQQauOTvBXjX1GeQnLEIdplqh7WlsWjwPpBqen
+	E1UWjetRfv38HvP2mv373pSEFQXY9fg9WcdYKatkqVHavVE+JfUrWB1F4aHA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm1; t=1694276358; x=1694362758; bh=M6wmMumG4GBxF
+	WlO6TZUur1MLDcccw0IA9bEJxeSNGM=; b=qs1+qeSdE4kiwwsozL1htaz808QAu
+	xpEA9BRVT7YL9j20aBJpnDpOYOi9Pbor3bmBHAMUiybyBbSOSNTGS5vS64To7cVT
+	K2Q0QfixfA2pozZUxSmjNEyLYDBckXiYZrTqcz821A3MiX4tw2ll5CkFm3J5h9xn
+	5tkoVYJsJ1XAVbFDOUOhVFtt148gaviT1J2dQrUMLoS8kx/N0ncxnE67+p3UsDR5
+	SURthJg4+a9dOOuUK4WBc4yP7Q3Tsbk3HG60I54NtYi4//JYZTVd1sp91/4lc2u0
+	fZxEbvu4uoKIGm+xdnjibCI0zqmISaCFyvwiXrPwuSzIJ2QBzA8PRekOQ==
+X-ME-Sender: <xms:Bpv8ZOQHmuRjYDUquUOmY8Nt7juhf9PRZvU-l5vJxr17k2dScXr2cQ>
+    <xme:Bpv8ZDxQ0v5eqcJH_Vs7MbJPPVU2iV3F9DJQGYyLETTbsT3NMBHdfRxX_cPahKOVN
+    ySXCezxcj0hh8y-GC4>
+X-ME-Received: <xmr:Bpv8ZL1pUmpUIK_BvWLn50VTCP3NIbdnpkO_7xtjHJ_SL_ZpPfJD764N26td6THx-49lNe31sJ_ahgcK9VQUy_gYKN0X>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrudehledgleelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucgfrhhlucfvnfffucdluddtmdenucfjughrpefhvf
+    evufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeflrghnucfjvghnughrihhkucfh
+    rghrrhcuoehkvghrnhgvlhesjhhfrghrrhdrtggtqeenucggtffrrghtthgvrhhnpeduge
+    dvlefhtdelvefghfdugfetieeikeekjeeugeduhfdthffgfeefhfffhfdvveenucffohhm
+    rghinhepghhithhhuhgsrdgtohhmpdhurghpihdqghhrohhuphdrohhrghenucevlhhush
+    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehkvghrnhgvlhesjhhf
+    rghrrhdrtggt
+X-ME-Proxy: <xmx:Bpv8ZKA_NvXZiIuNH8lfCnpGwrNVsRH3z09FX83hHZCK03YAdBQa5Q>
+    <xmx:Bpv8ZHibBsluqj3N9tbAXe36m881wXAtZhWD3JENLkWLO6aO0CG3LA>
+    <xmx:Bpv8ZGqeBGvdiwdPFzn-Br4gPAyCFgV7_j9EwRK5kh2RIJ_-g07OYg>
+    <xmx:Bpv8ZAa7_TpCPyCx-lQW8Ge9baHpzDK9bIKjYMn31Qq6N4QljrQcsw>
+Feedback-ID: i0fc947c4:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 9 Sep 2023 12:19:16 -0400 (EDT)
+From: Jan Hendrik Farr <kernel@jfarr.cc>
+To: linux-kernel@vger.kernel.org
+Cc: kexec@lists.infradead.org,
+	x86@kernel.org,
+	tglx@linutronix.de,
+	dhowells@redhat.com,
+	vgoyal@redhat.com,
+	keyrings@vger.kernel.org,
+	akpm@linux-foundation.org,
+	bhe@redhat.com,
+	bhelgaas@google.com,
+	lennart@poettering.net,
+	bluca@debian.org,
+	systemd-devel@lists.freedesktop.org,
+	kernel@jfarr.cc
+Subject: [PATCH 0/1] x86/kexec: UKI support
+Date: Sat,  9 Sep 2023 18:18:50 +0200
+Message-Id: <20230909161851.223627-1-kernel@jfarr.cc>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-X-FB-Internal: Safe
-X-Proofpoint-GUID: ryHDu0A_a97RCNG672_ogBzDAXw_r3AW
-X-Proofpoint-ORIG-GUID: ryHDu0A_a97RCNG672_ogBzDAXw_r3AW
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-08_18,2023-09-05_01,2023-05-22_02
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230908_161304_687781_994DA2A3 
-X-CRM114-Status: UNSURE (   9.01  )
+X-CRM114-CacheID: sfid-20230909_091926_854727_F5EE6AC7 
+X-CRM114-Status: UNSURE (   8.61  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -78,60 +114,40 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-With LTO enabled, ld.lld generates multiple .text sections for
-purgatory.ro:
+Hello,
 
-$ readelf -S purgatory.ro  | grep " .text"
-  [ 1] .text             PROGBITS         0000000000000000  00000040
-  [ 7] .text.purgatory   PROGBITS         0000000000000000  000020e0
-  [ 9] .text.warn        PROGBITS         0000000000000000  000021c0
-  [13] .text.sha256_upda PROGBITS         0000000000000000  000022f0
-  [15] .text.sha224_upda PROGBITS         0000000000000000  00002be0
-  [17] .text.sha256_fina PROGBITS         0000000000000000  00002bf0
-  [19] .text.sha224_fina PROGBITS         0000000000000000  00002cc0
+this patch implements UKI support for kexec_file_load. It will require support
+in the kexec-tools userspace utility. For testing purposes the following can be used:
+https://github.com/Cydox/kexec-test/
 
-This cause WARNING from kexec_purgatory_setup_sechdrs():
+There has been discussion on this topic in an issue on GitHub that is linked below
+for reference.
 
-WARNING: CPU: 26 PID: 110894 at kernel/kexec_file.c:919
-kexec_load_purgatory+0x37f/0x390
 
-Fix this by disabling LTO for purgatory.
+Some links:
+- Related discussion: https://github.com/systemd/systemd/issues/28538
+- Documentation of UKIs: https://uapi-group.org/specifications/specs/unified_kernel_image/
 
-Fixes: 8652d44f466a ("kexec: support purgatories with .text.hot sections")
-Cc: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Sami Tolvanen <samitolvanen@google.com>
-Cc: kexec@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: x86@kernel.org
-Cc: llvm@lists.linux.dev
-Signed-off-by: Song Liu <song@kernel.org>
+Jan Hendrik Farr (1):
+  x86/kexec: UKI support
 
----
-AFAICT, x86 is the only arch that supports LTO and purgatory.
+ arch/x86/include/asm/kexec-uki.h       |   7 ++
+ arch/x86/include/asm/parse_pefile.h    |  32 +++++++
+ arch/x86/kernel/Makefile               |   2 +
+ arch/x86/kernel/kexec-uki.c            | 113 +++++++++++++++++++++++++
+ arch/x86/kernel/machine_kexec_64.c     |   2 +
+ arch/x86/kernel/parse_pefile.c         | 110 ++++++++++++++++++++++++
+ crypto/asymmetric_keys/mscode_parser.c |   2 +-
+ crypto/asymmetric_keys/verify_pefile.c | 110 +++---------------------
+ crypto/asymmetric_keys/verify_pefile.h |  16 ----
+ 9 files changed, 278 insertions(+), 116 deletions(-)
+ create mode 100644 arch/x86/include/asm/kexec-uki.h
+ create mode 100644 arch/x86/include/asm/parse_pefile.h
+ create mode 100644 arch/x86/kernel/kexec-uki.c
+ create mode 100644 arch/x86/kernel/parse_pefile.c
 
-Changes in v2:
-1. Use CC_FLAGS_LTO instead of hardcode -flto. (Nick Desaulniers)
----
- arch/x86/purgatory/Makefile | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
-index c2a29be35c01..08aa0f25f12a 100644
---- a/arch/x86/purgatory/Makefile
-+++ b/arch/x86/purgatory/Makefile
-@@ -19,6 +19,10 @@ CFLAGS_sha256.o := -D__DISABLE_EXPORTS -D__NO_FORTIFY
- # optimization flags.
- KBUILD_CFLAGS := $(filter-out -fprofile-sample-use=% -fprofile-use=%,$(KBUILD_CFLAGS))
- 
-+# When LTO is enabled, llvm emits many text sections, which is not supported
-+# by kexec. Remove -flto=* flags.
-+KBUILD_CFLAGS := $(filter-out $(CC_FLAGS_LTO),$(KBUILD_CFLAGS))
-+
- # When linking purgatory.ro with -r unresolved symbols are not checked,
- # also link a purgatory.chk binary without -r to check for unresolved symbols.
- PURGATORY_LDFLAGS := -e purgatory_start -z nodefaultlib
 -- 
-2.34.1
+2.40.1
 
 
 _______________________________________________
