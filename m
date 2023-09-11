@@ -4,76 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C86ACEE49A4
-	for <kexec@archiver.kernel.org>; Mon, 11 Sep 2023 02:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 10714C71153
+	for <kexec@archiver.kernel.org>; Mon, 11 Sep 2023 03:24:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Subject:Cc:To:From:Date:References:
+	In-Reply-To:Message-Id:Mime-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=DmUQQRwQn+sr6cRAmUiWPSLHm3u6R28X9DacIiQy/NY=; b=s2724nkreCv0ru
-	aCV1FV0YaxcNlUtP/+03H25cpotPCHPQjmccXtahlectfBZKFYJhYmbvAtZHEpRgg3VVah16cnscH
-	0n7kGg2KUT0vCFuvfoziDdunoVOIckorypSVBOGH/0jrmEU8U934FbjjXsGihBOAwlt6Q5ecARe+f
-	jyuRbxqsl7kax/S8G0jVcFbXGptqW4nXyUvEURzXA4695Ujpb1zR8wt5/4mDd0n+bR4i90GtPl62t
-	zfmL9QYO0cns6OTx4y+a8VRFm9/7NkdQU8VzTuxgzrr3rzSCuwcvJBHCZYle8FKa6ohpKa2I69LNV
-	V0zi364BKCpdtNYZnVKA==;
+	List-Owner; bh=b7BQm3B4OGKJ/UUJ7YMM8HXg5q1h5XCw+6cNrYPF4N4=; b=uyO+ns9wDPvG3n
+	abWzUnet1PcJJ1hoLKxb7poyPUh25fX02ihbtF0ComW+wticfflvqIf3d61L5qH7xwDEQ/k4OAc/X
+	I5QB4f5SmPD6liLa3bQOO3adPyXhlEochg/L8hKK3dBqPhcYuGh++ODPIjhARduC1QzE39k3PwSVR
+	HaG2jhumaUfE1eEqLxxkbJgtvFJ2yC6PegrYoBILziyZEHy3ycCkHWk1uXddiwg0HPH1e52PH0q3F
+	oNU7r9G16PQ1tXrQe6yVmDiTcoGdUS0eG3+MDHU8W78r1ddTWFbd72lEyn2bypHAQftczcoYpUuGa
+	MjmliYORDPk6iIEXu2XA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qfWOi-00H56X-1Q;
-	Mon, 11 Sep 2023 02:11:32 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1qfXWs-00HAk0-0N;
+	Mon, 11 Sep 2023 03:24:02 +0000
+Received: from out1-smtp.messagingengine.com ([66.111.4.25])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qfWOc-00H55p-2t
+	id 1qfXWp-00HAil-1D
 	for kexec@lists.infradead.org;
-	Mon, 11 Sep 2023 02:11:28 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1694398286;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Mjb3hdzORQdy0trp+gr35cXqM14i405hB8hckdOimd4=;
-	b=IA/d8zg1P3H2tyogdZr5NMrXJDhYRzazHQtxaK4Mzm6HjpE46MoKZ8n0BBBsDi6RiZYApL
-	GAuHvluD/LxAhpgypVVYLomGCBE9hugXWefnP0yLxhWjgyYGEwskLKhm2nk7XJkFCxKWrt
-	diSQ8D7RTP1lgPPqXq+V195mIJkdEVQ=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-562-ysgnE0wQPCqLPd2fK3TVMw-1; Sun, 10 Sep 2023 22:11:21 -0400
-X-MC-Unique: ysgnE0wQPCqLPd2fK3TVMw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EF9DD29AB3FF;
-	Mon, 11 Sep 2023 02:11:20 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.35])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id AAE5C2015CFF;
-	Mon, 11 Sep 2023 02:11:19 +0000 (UTC)
-Date: Mon, 11 Sep 2023 10:11:16 +0800
-From: Baoquan He <bhe@redhat.com>
-To: "Leizhen (ThunderTown)" <thunder.leizhen@huaweicloud.com>
-Cc: linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-	catalin.marinas@arm.com, thunder.leizhen@huawei.com,
-	dyoung@redhat.com, prudo@redhat.com, samuel.holland@sifive.com,
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	x86@kernel.org
-Subject: Re: [PATCH v2 3/8] crash_core: change parse_crashkernel() to support
- crashkernel=,high|low parsing
-Message-ID: <ZP53RL/6PdxLLh7a@MiWiFi-R3L-srv>
-References: <20230829121610.138107-1-bhe@redhat.com>
- <20230829121610.138107-4-bhe@redhat.com>
- <c4a1f96e-2c8d-a496-61f3-0299d77c5c84@huaweicloud.com>
- <ZPGzlIkXqVThTwjg@MiWiFi-R3L-srv>
- <2b9af1b7-8d80-46b7-d582-156a97456a36@huaweicloud.com>
- <ZPbm5SwHOhiAtG7w@MiWiFi-R3L-srv>
- <58a0c4be-0302-04e0-8723-df37407884a8@huaweicloud.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <58a0c4be-0302-04e0-8723-df37407884a8@huaweicloud.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
+	Mon, 11 Sep 2023 03:24:01 +0000
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.nyi.internal (Postfix) with ESMTP id AB8615C0055;
+	Sun, 10 Sep 2023 23:23:53 -0400 (EDT)
+Received: from imap49 ([10.202.2.99])
+  by compute6.internal (MEProxy); Sun, 10 Sep 2023 23:23:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:sender
+	:subject:subject:to:to; s=fm3; t=1694402633; x=1694489033; bh=zp
+	vxo3GJwex0j26UspefQuRFPKYsD8Stn98KJVqfyzc=; b=VIdmGYrLMN3WRPf0Jo
+	1Dd4gp/R3o3LSUrAibupVlELwksJpqfO3u81gHRdrW4hy1WrDg38YGv7lHFWNQ1q
+	cxVe+vGlKqPTtZHtuMaomKJxARzWUkqeqWbiC8asjcFklvjf6JvRuxRj2qgj2a77
+	PLpITOshGTj4g4Gx9aCHL6nqQ8Qde2GJKhKazlMsHsXDPxdbMXzYgzu0NFITwZv5
+	Vlm7b+ikEqFhzPc3qCCWhbliUvylwBbTto2Cx44x5L9hAUSHmsQBQhlZdYxeWxvK
+	yqxBe6dnx9jaTW4Q0GVIyTajjULgcHDTKiRGWJIq2IUzECa4f88rHCl0dL/PQUEH
+	3flQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm1; t=1694402633; x=1694489033; bh=zpvxo3GJwex0j
+	26UspefQuRFPKYsD8Stn98KJVqfyzc=; b=YkDRsX6e1551vocQmwYYdLGLzqH8/
+	05AQhUP0pJ85vunzUoL+YzEbqwyh25nbPRxKJYYaK62MDXY/NInCREokNxh0C5l1
+	dQU+kYij1GXyCKdzOHcgYJ6Z3pGLRRChn/NMEp0J4tTgC+ZfigAgniVewgKQit+W
+	nubfDDtrauZCefZ+HULFVkx4Acay6rxXogvAmIe3BEYMbGR5J5+ninyCslKA0o0A
+	lCQ5axRwmFyCWW4T6FJTteWo91HkM9Re7m76QuGRrjl0F047Fedv/ZlzwWgismC0
+	HDcxXdNzzMYUOCMvwCeEHsdBi7mgmqp5Eun0s9+/33pggY/1QU4h9zQzw==
+X-ME-Sender: <xms:SYj-ZPeb2fd0_mPtNDY2ko9GEihz487EkZxP-goRakBS66-5JgvKDw>
+    <xme:SYj-ZFNucUtp3uH4ByJBkky5s9ZOHfuOkrwsz7VbZsRcxLr7Oww21mt25jJOuoA9u
+    iHz0RX87gNfIZQGbD0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrudeifedgieelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    gfrhhlucfvnfffucdludehmdenucfjughrpefofgggkfgjfhffhffvvefutgesthdtredt
+    reertdenucfhrhhomhepfdflrghnucfjvghnughrihhkucfhrghrrhdfuceokhgvrhhnvg
+    hlsehjfhgrrhhrrdgttgeqnecuggftrfgrthhtvghrnhepffffueefhfeivdefheegveff
+    ffffuddvudfhfeejkeegveeihfduvdegkedvvdfhnecuvehluhhsthgvrhfuihiivgeptd
+    enucfrrghrrghmpehmrghilhhfrhhomhepkhgvrhhnvghlsehjfhgrrhhrrdgttg
+X-ME-Proxy: <xmx:SYj-ZIjjTq7HJ1YFixPBSsDC_HESqghduvok1BRy1apofG_R8P275g>
+    <xmx:SYj-ZA99Rg5QTuvVG9JxUz2-eU8bup6Kn556nCh8xijM6VSFI8j7BQ>
+    <xmx:SYj-ZLt9dvBdt4Ey0sVJTJ0WD_bsNTzX-L2wAHewnm1LnPVq0uYS7g>
+    <xmx:SYj-ZJL_wJQxaomig2nR4_6SNKIUGMbBRdrRYBY9bdqAmoOgsfmUYA>
+Feedback-ID: i0fc947c4:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 2B31B15A0091; Sun, 10 Sep 2023 23:23:53 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-711-g440737448e-fm-20230828.001-g44073744
+Mime-Version: 1.0
+Message-Id: <a0e1848a-4411-4a1a-82a9-5cb0080a8323@app.fastmail.com>
+In-Reply-To: <CAMw=ZnShMzqH_yiXCS0-O+yR0RZs7+sSm0rqSYwpoygcYdg6hA@mail.gmail.com>
+References: <20230909161851.223627-1-kernel@jfarr.cc>
+ <CAMw=ZnT-Ck-Y4i-MZAf99U5nzgDaj-q8UPRH_c00JgGMtUy_QA@mail.gmail.com>
+ <5c94f7f4-697f-4388-9243-009c0c2d745f@app.fastmail.com>
+ <CAMw=ZnShMzqH_yiXCS0-O+yR0RZs7+sSm0rqSYwpoygcYdg6hA@mail.gmail.com>
+Date: Mon, 11 Sep 2023 05:23:29 +0200
+From: "Jan Hendrik Farr" <kernel@jfarr.cc>
+To: "Luca Boccassi" <bluca@debian.org>
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, x86@kernel.org,
+ tglx@linutronix.de, dhowells@redhat.com, vgoyal@redhat.com,
+ keyrings@vger.kernel.org, akpm@linux-foundation.org, bhe@redhat.com,
+ bhelgaas@google.com, lennart@poettering.net
+Subject: Re: [PATCH 0/1] x86/kexec: UKI support
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230910_191127_007037_FFF2E6E5 
-X-CRM114-Status: GOOD (  30.40  )
+X-CRM114-CacheID: sfid-20230910_202359_901370_9B6D53CE 
+X-CRM114-Status: GOOD (  17.40  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,139 +109,26 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 09/06/23 at 05:07pm, Leizhen (ThunderTown) wrote:
-> 
-> 
-> On 2023/9/5 16:29, Baoquan He wrote:
-> > On 09/04/23 at 10:47am, Leizhen (ThunderTown) wrote:
-> >>
-> >>
-> >> On 2023/9/1 17:49, Baoquan He wrote:
-> >>>>> +
-> >>>>> +		*high = true;
-> >>>>> +	} else if (ret || !*crash_size) {
-> >>>> This check can be moved outside of #ifdef. Because even '!high', it's completely
-> >>>> applicable. The overall adjustment is as follows:
-> >>> Hmm, the current logic is much easier to understand. However, I may not
-> >>> 100% get your suggestion. Can you paste the complete code in your
-> >>> suggested way? Do not need 100% correct code, just the skeleton of code logic
-> >>> so that I can better understand it and add inline comment.
-> >>
-> >> int __init parse_crashkernel(...)
-> >> {
-> >> 	int ret;
-> >>
-> >> 	/* crashkernel=X[@offset] */
-> >> 	ret = __parse_crashkernel(cmdline, system_ram, crash_size,
-> >> 				crash_base, NULL);
-> >>
-> >> #ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
-> >> 	if (high && ret == -ENOENT) {
-> >> 		... ...		//The code for your original branch "else if (ret == -ENOENT) {"
-> >> 		ret = 0;	//Added based on the next discussion
-> >> 	}
-> >> +#endif
-> >>
-> >>  	if (!*crash_size)
-> >> 		ret = -EINVAL;
-> >>
-> >> 	return ret;
-> >> }
-> >>
-> > Thanks, Zhen Lei.
-> > 
-> > I paste the whole parse_crashkernel() as you suggested at bottom. Please
-> > check if it's what you want. 
-> 
-> Yes.
-> 
-> > To me, both is fine to me. I have two minor
-> > concerns to your suggested way.
-> > 
-> > 1)
-> > I took the "if (!high) return" way because except of x86/arm64, all
-> > other architectures will call parse_crashkerne() and check
-> > if *crash_size ==0. Please try 'git grep "parse_crashkernel(" arch'
-> > and check those call sites. With that, we will have duplicated checking.
-> 
-> Add some patches to remove the duplicated checking of other ARCHs? After this
-> patch series upstreamed.
+>> > - the dtb section also is optional but supported, and given kexec
+>> > supports loading a new dtb I think this change should support it too
+>> > immediately.  Moreover, we are adding support for multiple DTBs in a
+>> > single UKI (by simply having multiple .dtb sections, and picking the
+>> > one that matches the firmware), as a stretch goal would be nice to
+>> > support that too, but it can also come later
+>>
+>> As far as I know dtb is not supported by kexec_file_load at all at the moment. Maybe someone here knows more about this. I'll look into it.
+>
+> Not sure about the specific syscalls, but I definitely use kexec
+> --load --dtb on arm64 with existing released versions of
+> kernel/tooling
 
-I resisted this in the first place, after rethinking, it makes sense.
-parse_crashkernel() returning 0 indicates a meaningful crashkernel vlaue
-parsed, otherwise non-zero. I will go with this.
+Ok, it looks like this is supported and should be doable (on arm64, not for x86). When I was looking around the source code yesterday I forgot that my LSP had indexed the kernel for x86 and not arm64.
 
-> 
-> > 
-> >         ret = __parse_crashkernel(cmdline, system_ram, crash_size,
-> >                                 crash_base, NULL);
-> >         if (!high)
-> >                 return ret;
-> > 2)
-> > I actually like below branch and the code comment. It can give people
-> > hint about what's going on in that case. Discarding it is a little pity.
-> 
-> Except that "!*crash_size" and "(high && ret == -ENOENT)" needs special comments,
-> other common errors do not need to be described, I think. Even if some is required,
-> it should be placed in function __parse_crashkernel().
+>> > - also what would it take to support arm64, which is the other major UEFI arch?
+>>
+>> I'm not familiar with UEFI on arm64, but I can certainly look into it. I assume it's not gonna be that difficult.
 
-Hmm, I will consider how to comment these better, will update and post
-v3.
-
-Thanks, Lei.
-
-> 
-> > 
-> >         } else if (ret || !*crash_size) {
-> >                 /* The specified value is invalid */
-> >                 return -1;
-> >         }
-> > 
-> > int __init parse_crashkernel(...)
-> > {
-> > 	int ret;
-> > 
-> > 	/* crashkernel=X[@offset] */
-> > 	ret = __parse_crashkernel(cmdline, system_ram, crash_size,
-> > 				crash_base, NULL);
-> > #ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
-> > 	if (high && ret == -ENOENT) {
-> > 		ret = __parse_crashkernel(cmdline, 0, crash_size,
-> > 				crash_base, suffix_tbl[SUFFIX_HIGH]);
-> > 		if (ret || !*crash_size)
-> > 			return -EINVAL;
-> > 
-> > 		/*
-> > 		 * crashkernel=Y,low can be specified or not, but invalid value
-> > 		 * is not allowed.
-> > 		 */
-> > 		ret = __parse_crashkernel(cmdline, 0, low_size,
-> > 				crash_base, suffix_tbl[SUFFIX_LOW]);
-> > 		if (ret == -ENOENT) {
-> > 			*low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
-> > 			ret = 0;
-> > 		} else if (ret) {
-> > 			return ret;
-> > 		}
-> > 
-> > 		*high = true;
-> > 	}
-> > #endif
-> > 
-> > 	if (!*crash_size)
-> > 		ret = -EINVAL;
-> > 
-> > 	return ret;
-> > }
-> > 
-> > .
-> > 
-> 
-> -- 
-> Regards,
->   Zhen Lei
-> 
-
+I'll work on a separate patch for UKI support on arm64 (with .dtb section support). I think it's best to keep this x86 patch separate from that. I have a v2 patch for x86 put together with the small fix for the optional .cmdline section + a few other tweaks that I'll submit shortly.
 
 _______________________________________________
 kexec mailing list
