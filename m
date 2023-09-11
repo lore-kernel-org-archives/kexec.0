@@ -4,101 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D9F73EE801F
-	for <kexec@archiver.kernel.org>; Mon, 11 Sep 2023 05:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4D1DDEE57DF
+	for <kexec@archiver.kernel.org>; Mon, 11 Sep 2023 06:34:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=txnuzbyu+eHn83PJx1JhRdqJbe8MRFlii+umHfUz5h4=; b=0xyvQ6yNdFuEUn
-	2kVeGLtBwBDG2NNlo27PVlDPx7PdoT4QGha/wEq9oaCxrn6EIiTJSRNrkGW9xBxJ7YRkBI4Yz6rWw
-	cTCEYH8xV9KobKnBoALhjdkfQ2EsRDZQ7GCPGJvbpLD+6OVLJKEShsQBkuNU1wWhSjrA21kSD0p6N
-	nFoae7Dh6CemmGoFqagsxbiahQJBJRl56XOO+Q6pX+hzqBgpUIgRH0OROHfCTqTQvZ4sg68uYLqdK
-	PUtglEkiwp0q2JVtR5clapgyd8IpO+Wv13j+kcHCtKWAP5mg5JLq7irVUMOlQxbqyl+VD1UfTbrd5
-	DBcJ2rAH2BJOsd1ZLLDw==;
+	List-Owner; bh=9lDVioZfY3LfmcnCNHKIQEMqZii6UQoM5V2m1VYiBGk=; b=jY9Wgx3bukbCgn
+	fsuJxeTlshyLB0YRW+NtZW4LkJAwDqdEAtvP3GeBTL1vWRQoZpLMksM6eS6v6jhfOm0/VUdk+zowI
+	+l6hpawrKEg46MH6B2VE/uFeAcPeSUj++1EDeABRAPrawlAr/NlMaQ/nq1vw1Su34AFsP/2GDf3//
+	cUd8B2jGGBpCFHFEHBWc56mXqIsv5wNw/fG52dMq+2Ruiq0KugmU2DXWpQhW/eoBexxHPylErlp7h
+	XrnTCNyOS8K6XD6mG282U5Ab/OVMe8qM1hnVc78L0CUJCmgLyALcbvSAkeGqI09EKQTfg3YtOgANq
+	eHbsYWCJiiPFSXUf5baQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qfZRS-00HGFO-0s;
-	Mon, 11 Sep 2023 05:26:34 +0000
-Received: from out4-smtp.messagingengine.com ([66.111.4.28])
+	id 1qfaV9-00HKWT-2C;
+	Mon, 11 Sep 2023 06:34:27 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qfZRP-00HGDq-1f
+	id 1qfaV6-00HKVh-0w
 	for kexec@lists.infradead.org;
-	Mon, 11 Sep 2023 05:26:33 +0000
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.nyi.internal (Postfix) with ESMTP id E46AD5C00CE;
-	Mon, 11 Sep 2023 01:26:30 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Mon, 11 Sep 2023 01:26:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
-	:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:sender:subject:subject:to:to; s=fm3; t=1694409990; x=
-	1694496390; bh=BCXzQAxKcTxOEQhh9DLQ4hnHkrayZdUDOP+GxHQhMCc=; b=P
-	O+W4r3BkSWadKS/4TCpzSkOOgcR+yJRn4ND1OnYvfIu/ihtCKbqOgkTQpCO0/SdN
-	ZCjfaf9wiZz3DipGll9Ru55yaNi0hS+Xsp+WdkgSsbRS+LgN1hntDunDdxb8rMWr
-	SKwY+DTFVMmKRVwg3HthjE9p06gu8APoBP2Dek6pth4NK/u/tTMh2jbhwfAiOtUK
-	ttzSN+LRIabnzQzIzQ1G/Fk5NfjWm5trHmcur+OK650+nw7FuvCFVT+qRvRDpFJE
-	dMV+B0k7qskjBvUq9wd7a7eymQqkm3zCCDfYGKpZibV/AIgnK52vH1ItNbgDjGgY
-	KiQ3WGjC/3rM6Q4K5IOyA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1694409990; x=
-	1694496390; bh=BCXzQAxKcTxOEQhh9DLQ4hnHkrayZdUDOP+GxHQhMCc=; b=w
-	jmd2kyLNblsdB/Q4uTcxZgXYO1U9Ni5XU4FmSGDse431WTNl7kWjB99NRRPpLx97
-	DJn2mQKr5viNZqdySQwGXPx7IVlTvVzRHV6vcMZpRLU0QBOyUZCbHmZUhaJ+6rqY
-	/WIuTUoxpfFb46F3UsC4+2Xf9C58N7nAeqgXnJ6ht/sNzbD/ArNCbAzdn4XIKQGw
-	o3veEiDJ3My7405/CH1u8RCeVa9nsCA0DVCN6Pl7XtUx+ww9mIsE49vkVqlJmqaj
-	eiQR0wkMUDDlJe2uj97kVIkCQ4Ar8f3uhNSd2G572ojJ1Le1ShGNoQXUvJQrobCw
-	XdXJBRHEM3fTDs+M0qnwA==
-X-ME-Sender: <xms:BqX-ZCq-XgF71RDNGZWYSnPa1_fkG-TDMHsBDfMUsMSEEC2kklRL8A>
-    <xme:BqX-ZArQ3rZ71SlM39syWrfLmoI_U1zh5c-FwUDc4kGRbBDz3eAkpanW033GMJVfN
-    HqGouZSjotswEXNgsE>
-X-ME-Received: <xmr:BqX-ZHPoX3jNfcZTXg1bNJr0BMP9ikJL7F93gmtw9RPm7jrVhfXBHG_JRuEdZCOS_rhl4VPrA-iS8XJCjJ0Prf9hWNTw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrudeifedgleefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucgfrhhlucfvnfffucdlfedtmdenucfjughrpefhvf
-    evufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeflrghnucfjvghnughrihhk
-    ucfhrghrrhcuoehkvghrnhgvlhesjhhfrghrrhdrtggtqeenucggtffrrghtthgvrhhnpe
-    egfeeliefggeeiiedtudevveevvddvvefguddtvdeitdejleejuefgueelieehteenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehkvghrnhgvlh
-    esjhhfrghrrhdrtggt
-X-ME-Proxy: <xmx:BqX-ZB63lLQbM7t7JUnGdLXU6ba_daiPsUpmO9sXIsSMYn6SKlqYhw>
-    <xmx:BqX-ZB6wwo-f4Dv1LYMZ1c3SXDKBcKWW1slFfqDzC7RRlIO4B1CcCg>
-    <xmx:BqX-ZBiNrgAKybSryFHc8XDp1tzO9fvDSKLrn9lkgIFy0HAF1Mmhmw>
-    <xmx:BqX-ZNgV4raizDmiNNKYYAgGb6nbno40W2aGTCX7EBGFts6_6KX-pw>
-Feedback-ID: i0fc947c4:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 11 Sep 2023 01:26:29 -0400 (EDT)
-From: Jan Hendrik Farr <kernel@jfarr.cc>
-To: linux-kernel@vger.kernel.org
-Cc: kexec@lists.infradead.org,
-	x86@kernel.org,
-	tglx@linutronix.de,
-	dhowells@redhat.com,
-	vgoyal@redhat.com,
-	keyrings@vger.kernel.org,
-	akpm@linux-foundation.org,
-	bhe@redhat.com,
-	bhelgaas@google.com,
-	bluca@debian.org,
-	lennart@poettering.net,
-	Jan Hendrik Farr <kernel@jfarr.cc>
-Subject: [PATCH v2 2/2] x86/kexec: UKI support
-Date: Mon, 11 Sep 2023 07:25:35 +0200
-Message-Id: <20230911052535.335770-3-kernel@jfarr.cc>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230911052535.335770-1-kernel@jfarr.cc>
-References: <20230911052535.335770-1-kernel@jfarr.cc>
+	Mon, 11 Sep 2023 06:34:25 +0000
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38B5b0qX024937;
+	Mon, 11 Sep 2023 06:34:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=jbaRXs0JDI+EbNI97y0el2icMAsDKOPkHEpxiyV9O44=;
+ b=iyfFJKz6sb16lPyew61uIECsoFxacPC5RbD/3IRyDq7y+aqPyyQ8hBKJRYCUl+sgY/5Q
+ X75RB23iZART+95IVc1aBuhyIx3nJrmsNG0br6HioMeupnvmLJ6NLG8GDfkGUavqeMp1
+ hmQA9RTzuBVk9YmVRRX3LuG84cVwX09agoZ0OR3VvZ4QjI1DePbmOwcYayF8aCkfs9tE
+ 6z5G3QEWILXu7koc/HZzOUGcDh++t3bEWPPsnVvAE2yFXA9H+pOqOcZgHZhQwYZuXPFU
+ xv7p6Pysh0E8DY576zBOnchk7n3dCC1tHgKxfro5Pw6FSYCNDwTRGBDORwBHmjVT8Nxb eA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t1ut1jf4g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 11 Sep 2023 06:34:14 +0000
+Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 38B6T4dp020618;
+	Mon, 11 Sep 2023 06:34:13 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t1ut1jf3b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 11 Sep 2023 06:34:13 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38B53gpk023099;
+	Mon, 11 Sep 2023 06:34:12 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3t141n8e27-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 11 Sep 2023 06:34:12 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38B6YA2w22938340
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 11 Sep 2023 06:34:10 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 64DFA2004B;
+	Mon, 11 Sep 2023 06:34:10 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A0CED20040;
+	Mon, 11 Sep 2023 06:34:09 +0000 (GMT)
+Received: from [9.43.41.70] (unknown [9.43.41.70])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 11 Sep 2023 06:34:09 +0000 (GMT)
+Message-ID: <70462450-b31f-fdfd-031f-debb89c118ac@linux.ibm.com>
+Date: Mon, 11 Sep 2023 12:04:08 +0530
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] kexec: update manpage with explicit mention of clean
+ kexec
+To: Baoquan He <bhe@redhat.com>, Simon Horman <horms@kernel.org>
+Cc: Kexec-ml <kexec@lists.infradead.org>
+References: <20230707052929.427625-1-hbathini@linux.ibm.com>
+ <63e65749-4ec7-c618-72d3-1568992fff7a@linux.ibm.com>
+ <20230828074810.GY3523530@kernel.org> <ZOxr7VjBhBe6WW91@MiWiFi-R3L-srv>
+Content-Language: en-US
+From: Hari Bathini <hbathini@linux.ibm.com>
+In-Reply-To: <ZOxr7VjBhBe6WW91@MiWiFi-R3L-srv>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 5BR_jcK3gm0OKLM-u2JUTMgxg_g49-k2
+X-Proofpoint-GUID: l8NNiXNpRVGHu77ARYMNUtaqC1-2cUpD
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-09-11_03,2023-09-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ malwarescore=0 phishscore=0 lowpriorityscore=0 suspectscore=0 adultscore=0
+ impostorscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=999
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2308100000 definitions=main-2309110059
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230910_222631_618736_94AA5523 
-X-CRM114-Status: GOOD (  24.28  )
+X-CRM114-CacheID: sfid-20230910_233424_580239_C2AAAD3B 
+X-CRM114-Status: GOOD (  25.90  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -110,288 +110,64 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-make the kernel accept UKIs (Unified Kernel Images) for kexec_file_load.
 
-UKIs contain the kernel bzImage, initrd, and cmdline all packaged up as
-one EFI application. The main advantage of this is that the whole
-combination is signed together as a package for secure boot.
 
-This implementation parses the UKI and passes the bzImage, initrd, and
-cmdline to the normal bzImage loader.
+On 28/08/23 3:12 pm, Baoquan He wrote:
+> On 08/28/23 at 09:48am, Simon Horman wrote:
+>> On Mon, Aug 28, 2023 at 11:46:14AM +0530, Hari Bathini wrote:
+>>> Any comments on this, please..
+>>
+>> Hi Hari,
+>>
+>> Sorry, I had missed this.
+>>
+>>> On 07/07/23 10:59 am, Hari Bathini wrote:
+>>>> While the manpage does mention about kexec boot with a clean shutdown,
+>>>> it is not explicit about it. Make it explicit.
+>>>>
+>>>> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+>>>> ---
+>>>>    kexec/kexec.8 | 12 ++++++++++--
+>>>>    1 file changed, 10 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/kexec/kexec.8 b/kexec/kexec.8
+>>>> index 3a344c5..87e4ab5 100644
+>>>> --- a/kexec/kexec.8
+>>>> +++ b/kexec/kexec.8
+>>>> @@ -95,8 +95,16 @@ then you would use the following command to load the kernel:
+>>>>    .RB "\-\-append=" "root=/dev/hda1" "\ \-\-initrd=" /boot/initrd
+>>>>    .RE
+>>>>    .PP
+>>>> -After this kernel is loaded, it can be booted to at any time using the
+>>>> -command:
+>>>> +After this kernel is loaded, assuming your Linux distribution supports
+>>>> +kexec-based rebooting, it can be booted to, with a clean shutdown, using
+>>>> +the command:
+>>
+>> Perhaps user-space would be better than "your Linux distribution".
+>> But perhaps that is just kernel developer speak and makes less
+>> sense to others.
+> 
+> Agree, linux distrobution doesn't make sense here. And since this is a
+> kexec man page, does it really need to make this change? We know
+> kexec-tools loaded a kernel, we will use kexec-tools to trigger the
+> reboot. Wondering why we need to stress distros or kernel or kexec-tools
+> supports the kexec-based rebooting. 'with a clean shutdown' seems a
+> little helpful though.
 
-Signed-off-by: Jan Hendrik Farr <kernel@jfarr.cc>
----
- arch/x86/include/asm/kexec-uki.h       |   7 ++
- arch/x86/kernel/Makefile               |   1 +
- arch/x86/kernel/kexec-uki.c            | 126 +++++++++++++++++++++++++
- arch/x86/kernel/machine_kexec_64.c     |   2 +
- crypto/asymmetric_keys/verify_pefile.c |  11 ++-
- lib/Makefile                           |   1 +
- lib/parse_pefile.c                     |  21 ++---
- 7 files changed, 157 insertions(+), 12 deletions(-)
- create mode 100644 arch/x86/include/asm/kexec-uki.h
- create mode 100644 arch/x86/kernel/kexec-uki.c
+Yeah. Users did express that lack of clarity on what is the cleaner
+approach to use kexec boot after load. That prompted this patch.
+I am ok with "user-space" or "your linux distribution".
 
-diff --git a/arch/x86/include/asm/kexec-uki.h b/arch/x86/include/asm/kexec-uki.h
-new file mode 100644
-index 000000000000..87fd2c6fb091
---- /dev/null
-+++ b/arch/x86/include/asm/kexec-uki.h
-@@ -0,0 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef _ASM_KEXEC_UKI_H
-+#define _ASM_KEXEC_UKI_H
-+
-+extern const struct kexec_file_ops kexec_uki_ops;
-+
-+#endif  /* _ASM_KEXEC_UKI_H */
-diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-index 3269a0e23d3a..a73d61f86d29 100644
---- a/arch/x86/kernel/Makefile
-+++ b/arch/x86/kernel/Makefile
-@@ -101,6 +101,7 @@ obj-$(CONFIG_CRASH_CORE)	+= crash_core_$(BITS).o
- obj-$(CONFIG_KEXEC_CORE)	+= machine_kexec_$(BITS).o
- obj-$(CONFIG_KEXEC_CORE)	+= relocate_kernel_$(BITS).o crash.o
- obj-$(CONFIG_KEXEC_FILE)	+= kexec-bzimage64.o
-+obj-$(CONFIG_KEXEC_FILE)	+= kexec-uki.o
- obj-$(CONFIG_CRASH_DUMP)	+= crash_dump_$(BITS).o
- obj-y				+= kprobes/
- obj-$(CONFIG_MODULES)		+= module.o
-diff --git a/arch/x86/kernel/kexec-uki.c b/arch/x86/kernel/kexec-uki.c
-new file mode 100644
-index 000000000000..5a381e4f3728
---- /dev/null
-+++ b/arch/x86/kernel/kexec-uki.c
-@@ -0,0 +1,126 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Kexec UKI loader
-+ *
-+ * Copyright (C) 2023 Jan Hendrik Farr
-+ *
-+ * Authors:
-+ *      Jan Hendrik Farr <kernel@jfarr.cc>
-+ */
-+
-+#define pr_fmt(fmt)	"kexec-uki: " fmt
-+
-+#include <linux/kernel.h>
-+#include "linux/pe.h"
-+#include <linux/kexec.h>
-+#include <linux/err.h>
-+
-+#include <asm/kexec-uki.h>
-+#include <asm/kexec-bzimage64.h>
-+#include <linux/parse_pefile.h>
-+
-+static int find_section(struct pefile_context *ctx, const char *name,
-+			const struct section_header **sec)
-+{
-+	for (int i = 0; i < ctx->n_sections; i++) {
-+		const struct section_header *cur_sec = &ctx->secs[i];
-+
-+		if (!strncmp(cur_sec->name, name, ARRAY_SIZE(cur_sec->name))) {
-+			*sec = cur_sec;
-+			return 0;
-+		}
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static int uki_probe(const char *buf, unsigned long len)
-+{
-+	int ret = -ENOEXEC;
-+	int r = 0;
-+	struct pefile_context pe_ctx;
-+	const struct section_header *s;
-+
-+	memset(&pe_ctx, 0, sizeof(pe_ctx));
-+	r = pefile_parse_binary(buf, len, &pe_ctx);
-+
-+	if (r) {
-+		pr_info("Not a UKI. Not a valid PE file\n");
-+		return ret;
-+	}
-+
-+	if (find_section(&pe_ctx, ".linux", &s) ||
-+	    find_section(&pe_ctx, ".initrd", &s)) {
-+		pr_info("Not a UKI. Missing .linux, or .initrd\n");
-+		return ret;
-+	}
-+
-+	pr_info("It's a UKI\n");
-+	return 0;
-+}
-+
-+static void *uki_load(struct kimage *image, char *kernel,
-+		      unsigned long kernel_len, char *initrd,
-+		      unsigned long initrd_len, char *cmdline,
-+		      unsigned long cmdline_len)
-+{
-+	struct pefile_context pe_ctx;
-+	const struct section_header *sec_linux, *sec_initrd, *sec_cmdline;
-+	int r_linux, r_initrd, r_cmdline, r = 0;
-+	void *ret;
-+
-+	if (initrd_len || strcmp(cmdline, "") || cmdline_len != 1) {
-+		pr_err("No manual cmdline or initrd allowed for UKIs");
-+		return ERR_PTR(-EPERM);
-+	}
-+
-+	memset(&pe_ctx, 0, sizeof(pe_ctx));
-+	r = pefile_parse_binary(kernel, kernel_len, &pe_ctx);
-+
-+	if (r)
-+		return ERR_PTR(r);
-+
-+	r_linux   = find_section(&pe_ctx, ".linux", &sec_linux);
-+	r_initrd  = find_section(&pe_ctx, ".initrd", &sec_initrd);
-+	r_cmdline = find_section(&pe_ctx, ".cmdline", &sec_cmdline);
-+
-+	if (r_linux || r_initrd)
-+		return ERR_PTR(-EINVAL);
-+
-+	if (r_cmdline) {
-+		cmdline = "";
-+		cmdline_len = 1;
-+	} else {
-+		cmdline = kernel + sec_cmdline->data_addr;
-+		cmdline_len = sec_cmdline->raw_data_size;
-+	}
-+
-+	ret = kexec_bzImage64_ops.load(
-+		image,
-+		kernel + sec_linux->data_addr,
-+		sec_linux->raw_data_size,
-+		kernel + sec_initrd->data_addr,
-+		sec_initrd->raw_data_size,
-+		cmdline,
-+		cmdline_len
-+	);
-+
-+	if (IS_ERR(ret))
-+		pr_err("bzImage64_load error\n");
-+
-+	return ret;
-+}
-+
-+static int uki_cleanup(void *loader_data)
-+{
-+	return kexec_bzImage64_ops.cleanup(loader_data);
-+}
-+
-+const struct kexec_file_ops kexec_uki_ops = {
-+	.probe = uki_probe,
-+	.load = uki_load,
-+	.cleanup = uki_cleanup,
-+#ifdef CONFIG_KEXEC_BZIMAGE_VERIFY_SIG
-+	.verify_sig = kexec_kernel_verify_pe_sig,
-+#endif
-+};
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index 1a3e2c05a8a5..072f5aac52b9 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -25,6 +25,7 @@
- #include <asm/io_apic.h>
- #include <asm/debugreg.h>
- #include <asm/kexec-bzimage64.h>
-+#include <asm/kexec-uki.h>
- #include <asm/setup.h>
- #include <asm/set_memory.h>
- #include <asm/cpu.h>
-@@ -81,6 +82,7 @@ static int map_acpi_tables(struct x86_mapping_info *info, pgd_t *level4p) { retu
- #ifdef CONFIG_KEXEC_FILE
- const struct kexec_file_ops * const kexec_file_loaders[] = {
- 		&kexec_bzImage64_ops,
-+		&kexec_uki_ops,
- 		NULL
- };
- #endif
-diff --git a/crypto/asymmetric_keys/verify_pefile.c b/crypto/asymmetric_keys/verify_pefile.c
-index 68592a328db7..ea183feca231 100644
---- a/crypto/asymmetric_keys/verify_pefile.c
-+++ b/crypto/asymmetric_keys/verify_pefile.c
-@@ -334,6 +334,13 @@ int verify_pefile_signature(const void *pebuf, unsigned pelen,
- 	if (ret < 0)
- 		return ret;
- 
-+	const struct data_dirent *certs = pebuf + ctx.cert_dirent_offset;
-+
-+	if (!certs->virtual_address || !certs->size) {
-+		pr_warn("Unsigned PE binary\n");
-+		return -ENODATA;
-+	}
-+
- 	ret = pefile_strip_sig_wrapper(pebuf, &ctx);
- 	if (ret < 0)
- 		return ret;
-@@ -342,8 +349,10 @@ int verify_pefile_signature(const void *pebuf, unsigned pelen,
- 				     pebuf + ctx.sig_offset, ctx.sig_len,
- 				     trusted_keys, usage,
- 				     mscode_parse, &ctx);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pr_warn("invalid PE file signature\n");
- 		goto error;
-+	}
- 
- 	pr_debug("Digest: %u [%*ph]\n",
- 		 ctx.digest_len, ctx.digest_len, ctx.digest);
-diff --git a/lib/Makefile b/lib/Makefile
-index 01a6c13565b6..ad6af1bab3ef 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -366,6 +366,7 @@ obj-$(CONFIG_SBITMAP) += sbitmap.o
- obj-$(CONFIG_PARMAN) += parman.o
- 
- obj-$(CONFIG_SIGNED_PE_FILE_VERIFICATION) += parse_pefile.o
-+obj-$(CONFIG_KEXEC_FILE) += parse_pefile.o
- 
- obj-y += group_cpus.o
- 
-diff --git a/lib/parse_pefile.c b/lib/parse_pefile.c
-index 9a8496b2588e..672a044d380c 100644
---- a/lib/parse_pefile.c
-+++ b/lib/parse_pefile.c
-@@ -88,18 +88,17 @@ int pefile_parse_binary(const void *pebuf, unsigned int pelen,
- 		(unsigned long)&ddir->certs - (unsigned long)pebuf;
- 	ctx->certs_size = ddir->certs.size;
- 
--	if (!ddir->certs.virtual_address || !ddir->certs.size) {
--		pr_warn("Unsigned PE binary\n");
--		return -ENODATA;
--	}
-+	if (ddir->certs.virtual_address && ddir->certs.size) {
-+
-+		chkaddr(ctx->header_size, ddir->certs.virtual_address,
-+			ddir->certs.size);
-+		ctx->sig_offset = ddir->certs.virtual_address;
-+		ctx->sig_len = ddir->certs.size;
-+		pr_debug("cert = %x @%x [%*ph]\n",
-+			 ctx->sig_len, ctx->sig_offset,
-+			 ctx->sig_len, pebuf + ctx->sig_offset);
- 
--	chkaddr(ctx->header_size, ddir->certs.virtual_address,
--		ddir->certs.size);
--	ctx->sig_offset = ddir->certs.virtual_address;
--	ctx->sig_len = ddir->certs.size;
--	pr_debug("cert = %x @%x [%*ph]\n",
--		 ctx->sig_len, ctx->sig_offset,
--		 ctx->sig_len, pebuf + ctx->sig_offset);
-+	}
- 
- 	ctx->n_sections = pe->sections;
- 	if (ctx->n_sections > (ctx->header_size - cursor) / sizeof(*sec))
--- 
-2.40.1
+Simon, do you want to respin with "user-space" change instead?
 
+Thanks
+Hari
 
 _______________________________________________
 kexec mailing list
