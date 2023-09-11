@@ -4,65 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A00B4EE7FF4
-	for <kexec@archiver.kernel.org>; Mon, 11 Sep 2023 10:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8E7C1EE57DF
+	for <kexec@archiver.kernel.org>; Mon, 11 Sep 2023 10:37:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=/dzcU7KqpFsO2ZjQSlwH/qQgdjME7tPfIiFamhLztN0=; b=neCdMhBpqjbyYB
-	zxINl4vRt3rrTtFM2V+ymT4tup2btBqusY/lL32gp3GmLbPoaw1XDFGf1Ex3qhSCRHXJO5x3BaJHN
-	0AWot/ICuWDWLTgg/yxyO82hFD+TQSjtmJZlqRGkdWpBN3gZCDhMhddxZmpYoh3eKOY057kq/80oN
-	piAIIPP/Zq/2XygYidMEFA4sRO8rf6hCpa5anqWdZi6nuZR+jLoRypTehK02rmpqMuKa+pAwsX49e
-	oTpkbmtTwhR20uQEOjFmbqE2C6dwOKnfcoIH6wJY8R6if0qmSnzSA8BaBlo6jY9AmvEVW+kjcZ9+8
-	glPXGMIC0qUojfTCDZdg==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=MaiM4waq+TT+r149qfbDoe+zOTnOa+r3AW+p5t2VcOo=; b=AJAfFWXuTYfTbP
+	ql2uEt7+aXF1L/tGXyK2ZpGbfK6oKMLxdRSwTdI/LqFU2DY1YOuX0MLrfXu/sqEXt6h0nao8Zx1yT
+	ujLliEtftPERW+3FpQmX2kbzGJCxnf5ZLc5fgxKSXSVfgL3QnN/NwjVCA1q9uxLjiI8+b6FmbzHjD
+	K5MDg+6O4fKfUnfqSSO+mj1iEmJlSIVJMmW3nH/bjJql1K9neQPL8Omv+sGxqodkTsQueYhNE+xKM
+	Ym6mZeqBs4irdlMetGuGi+b0gIO3ARBj+au3B65SyZrF4DWBf4eCuEiGmiQMf8R8la9hSjhUa7V5L
+	kZnT+i4paZ6hVPqc48sQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qfeIW-000HD8-0m;
-	Mon, 11 Sep 2023 10:37:40 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1qfeIX-000HEJ-2c;
+	Mon, 11 Sep 2023 10:37:41 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qfeIT-000H9T-0Q
+	id 1qfeIV-000HBj-09
 	for kexec@lists.infradead.org;
-	Mon, 11 Sep 2023 10:37:38 +0000
+	Mon, 11 Sep 2023 10:37:40 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1694428654;
+	s=mimecast20190719; t=1694428658;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=x+GIKG0+QWhazz4vzf/BgCwK4+E3GrXL0V04spD/dAg=;
-	b=f4GMXMXTBLG1FeQBTkV6gmwwSH45KJ7hGaHl1VFrSqWeN7ZE5LB4gKAW9/dhcwqfCs7zKW
-	PmpoRq5iFI1JgrLxH1dsSOugIYIihWvz9mSbA3NQfEDDVPbaQbfnlfuZjZqXpVHIyvHdn7
-	HU9UtwM/rS7O3jmtZUz0o6zvr8IWgKA=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SJpwkMLVy2GMDrbXNM7PEcDjSodKzBCld5DjqeJJlIU=;
+	b=MFof0GDJzpbfmM5Nvn7yYaKjXhyj4k/T5vyD0HxL8FKsX5xAVxuaEMhQHZkqG/S4oSGJ94
+	2LE032Blggye6rTWkDLp8IOVsknJkgqJslzx4NGWdlJZ3lKro+KL+wC7LUk6tM++ky1yy7
+	tZOzDeRE76KSBKqYjFctQ6TN7qWz+KA=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-119-L2A1rv3qP7OIRvb8h5gD3A-1; Mon, 11 Sep 2023 06:37:33 -0400
-X-MC-Unique: L2A1rv3qP7OIRvb8h5gD3A-1
+ us-mta-50-M5-aSlsfN4icUuqPRuIqQg-1; Mon, 11 Sep 2023 06:37:36 -0400
+X-MC-Unique: M5-aSlsfN4icUuqPRuIqQg-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 55857916EE2;
-	Mon, 11 Sep 2023 10:37:33 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 15E09800962;
+	Mon, 11 Sep 2023 10:37:36 +0000 (UTC)
 Received: from darkstar.users.ipa.redhat.com (unknown [10.72.112.254])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 3CDFC44029;
-	Mon, 11 Sep 2023 10:37:30 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 032E544029;
+	Mon, 11 Sep 2023 10:37:33 +0000 (UTC)
 From: Dave Young <dyoung@redhat.com>
 To: kexec@lists.infradead.org
 Cc: Simon Horman <horms@kernel.org>,
 	Pingfan Liu <piliu@redhat.com>
-Subject: [PATCH 1/2] zboot: enable arm64 kexec_load for zboot image
-Date: Tue, 12 Sep 2023 02:37:21 +0800
-Message-Id: <20230911183722.11173-1-dyoung@redhat.com>
+Subject: [PATCH 2/2] zboot: add loongarch kexec_load support
+Date: Tue, 12 Sep 2023 02:37:22 +0800
+Message-Id: <20230911183722.11173-2-dyoung@redhat.com>
+In-Reply-To: <20230911183722.11173-1-dyoung@redhat.com>
+References: <20230911183722.11173-1-dyoung@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230911_033737_254729_3861D386 
-X-CRM114-Status: GOOD (  18.47  )
+X-CRM114-CacheID: sfid-20230911_033739_151497_B4D0E6E1 
+X-CRM114-Status: GOOD (  19.42  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,60 +82,146 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-kexec_file_load support of zboot kernel image decompressed the vmlinuz,
-so in kexec_load code just load the kernel with reading the decompressed
-kernel fd into a new buffer and use it directly.
+From: "dyoung@redhat.com" <dyoung@redhat.com>
+
+Copy arm64 code and change for loongarch so that the kexec -c can load
+a zboot image.
+Note: probe zboot image first otherwise the pei-loongarch file type will
+be used.
 
 Signed-off-by: Dave Young <dyoung@redhat.com>
 ---
- include/kexec-pe-zboot.h               |  3 ++-
- kexec/arch/arm64/kexec-vmlinuz-arm64.c | 20 ++++++++++++++++++--
- kexec/kexec-pe-zboot.c                 |  4 +++-
- kexec/kexec.c                          |  2 +-
- kexec/kexec.h                          |  1 +
- 5 files changed, 25 insertions(+), 5 deletions(-)
+ kexec/arch/loongarch/Makefile              |  1 +
+ kexec/arch/loongarch/image-header.h        |  1 +
+ kexec/arch/loongarch/kexec-loongarch.c     |  1 +
+ kexec/arch/loongarch/kexec-loongarch.h     |  4 +
+ kexec/arch/loongarch/kexec-pez-loongarch.c | 88 ++++++++++++++++++++++
+ 5 files changed, 95 insertions(+)
+ create mode 100644 kexec/arch/loongarch/kexec-pez-loongarch.c
 
-diff --git a/include/kexec-pe-zboot.h b/include/kexec-pe-zboot.h
-index e2e0448a81f2..374916cbe883 100644
---- a/include/kexec-pe-zboot.h
-+++ b/include/kexec-pe-zboot.h
-@@ -11,5 +11,6 @@ struct linux_pe_zboot_header {
- 	uint32_t compress_type;
+diff --git a/kexec/arch/loongarch/Makefile b/kexec/arch/loongarch/Makefile
+index 3b33b9693287..cee7e569a2a2 100644
+--- a/kexec/arch/loongarch/Makefile
++++ b/kexec/arch/loongarch/Makefile
+@@ -6,6 +6,7 @@ loongarch_KEXEC_SRCS += kexec/arch/loongarch/kexec-elf-loongarch.c
+ loongarch_KEXEC_SRCS += kexec/arch/loongarch/kexec-pei-loongarch.c
+ loongarch_KEXEC_SRCS += kexec/arch/loongarch/kexec-elf-rel-loongarch.c
+ loongarch_KEXEC_SRCS += kexec/arch/loongarch/crashdump-loongarch.c
++loongarch_KEXEC_SRCS += kexec/arch/loongarch/kexec-pez-loongarch.c
+ 
+ loongarch_MEM_REGIONS = kexec/mem_regions.c
+ 
+diff --git a/kexec/arch/loongarch/image-header.h b/kexec/arch/loongarch/image-header.h
+index 3b7576552685..223d81f77d9f 100644
+--- a/kexec/arch/loongarch/image-header.h
++++ b/kexec/arch/loongarch/image-header.h
+@@ -33,6 +33,7 @@ struct loongarch_image_header {
  };
  
--int pez_prepare(const char *crude_buf, off_t buf_sz, int *kernel_fd);
-+int pez_prepare(const char *crude_buf, off_t buf_sz, int *kernel_fd,
-+		off_t *kernel_size);
- #endif
-diff --git a/kexec/arch/arm64/kexec-vmlinuz-arm64.c b/kexec/arch/arm64/kexec-vmlinuz-arm64.c
-index c0ee47c8f50a..8f378d8fa6d0 100644
---- a/kexec/arch/arm64/kexec-vmlinuz-arm64.c
-+++ b/kexec/arch/arm64/kexec-vmlinuz-arm64.c
-@@ -34,6 +34,7 @@
- #include "arch/options.h"
+ static const uint8_t loongarch_image_pe_sig[2] = {'M', 'Z'};
++static const uint8_t loongarch_pe_machtype[6] = {'P','E', 0x0, 0x0, 0x64, 0x62};
  
- static int kernel_fd = -1;
+ /**
+  * loongarch_header_check_pe_sig - Helper to check the loongarch image header.
+diff --git a/kexec/arch/loongarch/kexec-loongarch.c b/kexec/arch/loongarch/kexec-loongarch.c
+index f47c99861674..62ff8fd1aeb7 100644
+--- a/kexec/arch/loongarch/kexec-loongarch.c
++++ b/kexec/arch/loongarch/kexec-loongarch.c
+@@ -165,6 +165,7 @@ int get_memory_ranges(struct memory_range **range, int *ranges,
+ 
+ struct file_type file_type[] = {
+ 	{"elf-loongarch", elf_loongarch_probe, elf_loongarch_load, elf_loongarch_usage},
++	{"pez-loongarch", pez_loongarch_probe, pez_loongarch_load, pez_loongarch_usage},
+ 	{"pei-loongarch", pei_loongarch_probe, pei_loongarch_load, pei_loongarch_usage},
+ };
+ int file_types = sizeof(file_type) / sizeof(file_type[0]);
+diff --git a/kexec/arch/loongarch/kexec-loongarch.h b/kexec/arch/loongarch/kexec-loongarch.h
+index 5120a26fd513..2c7624f2fd3a 100644
+--- a/kexec/arch/loongarch/kexec-loongarch.h
++++ b/kexec/arch/loongarch/kexec-loongarch.h
+@@ -27,6 +27,10 @@ int pei_loongarch_probe(const char *buf, off_t len);
+ int pei_loongarch_load(int argc, char **argv, const char *buf, off_t len,
+ 	struct kexec_info *info);
+ void pei_loongarch_usage(void);
++int pez_loongarch_probe(const char *kernel_buf, off_t kernel_size);
++int pez_loongarch_load(int argc, char **argv, const char *buf, off_t len,
++		       struct kexec_info *info);
++void pez_loongarch_usage(void);
+ 
+ int loongarch_process_image_header(const struct loongarch_image_header *h);
+ 
+diff --git a/kexec/arch/loongarch/kexec-pez-loongarch.c b/kexec/arch/loongarch/kexec-pez-loongarch.c
+new file mode 100644
+index 000000000000..6d94a405d54a
+--- /dev/null
++++ b/kexec/arch/loongarch/kexec-pez-loongarch.c
+@@ -0,0 +1,88 @@
++/*
++ * LoongArch PE compressed Image (vmlinuz, ZBOOT) support.
++ * Based on arm64 code
++ */
++
++#define _GNU_SOURCE
++#include <fcntl.h>
++#include <unistd.h>
++#include <stdlib.h>
++#include "kexec.h"
++#include "kexec-loongarch.h"
++#include <kexec-pe-zboot.h>
++#include "arch/options.h"
++
++static int kernel_fd = -1;
 +static off_t decompressed_size;
- 
- /* Returns:
-  * -1 : in case of error/invalid format (not a valid PE+compressed ZBOOT format.
-@@ -72,7 +73,7 @@ int pez_arm64_probe(const char *kernel_buf, off_t kernel_size)
- 		return -1;
- 	}
- 
--	ret = pez_prepare(buf, buf_sz, &kernel_fd);
++
++/* Returns:
++ * -1 : in case of error/invalid format (not a valid PE+compressed ZBOOT format.
++ */
++int pez_loongarch_probe(const char *kernel_buf, off_t kernel_size)
++{
++	int ret = -1;
++	const struct loongarch_image_header *h;
++	char *buf;
++	off_t buf_sz;
++
++	buf = (char *)kernel_buf;
++	buf_sz = kernel_size;
++	if (!buf)
++		return -1;
++	h = (const struct loongarch_image_header *)buf;
++
++	dbgprintf("%s: PROBE.\n", __func__);
++	if (buf_sz < sizeof(struct loongarch_image_header)) {
++		dbgprintf("%s: Not large enough to be a PE image.\n", __func__);
++		return -1;
++	}
++	if (!loongarch_header_check_pe_sig(h)) {
++		dbgprintf("%s: Not an PE image.\n", __func__);
++		return -1;
++	}
++
++	if (buf_sz < sizeof(struct loongarch_image_header) + h->pe_header) {
++		dbgprintf("%s: PE image offset larger than image.\n", __func__);
++		return -1;
++	}
++
++	if (memcmp(&buf[h->pe_header],
++		   loongarch_pe_machtype, sizeof(loongarch_pe_machtype))) {
++		dbgprintf("%s: PE header doesn't match machine type.\n", __func__);
++		return -1;
++	}
++
 +	ret = pez_prepare(buf, buf_sz, &kernel_fd, &decompressed_size);
- 
- 	if (!ret) {
- 	    /* validate the arm64 specific header */
-@@ -98,8 +99,23 @@ bad_header:
- int pez_arm64_load(int argc, char **argv, const char *buf, off_t len,
- 			struct kexec_info *info)
- {
++
++	/* Fixme: add sanity check of the decompressed kernel before return */
++	return ret;
++}
++
++int pez_loongarch_load(int argc, char **argv, const char *buf, off_t len,
++			struct kexec_info *info)
++{
 +	char *kbuf;
 +
- 	info->kernel_fd = kernel_fd;
--	return image_arm64_load(argc, argv, buf, len, info);
++	info->kernel_fd = kernel_fd;
 +	if (kernel_fd > 0 && decompressed_size > 0) {
 +		off_t nread;
 +
@@ -146,57 +235,15 @@ index c0ee47c8f50a..8f378d8fa6d0 100644
 +		return -1;
 +	}
 +
-+	return image_arm64_load(argc, argv, kbuf, decompressed_size, info);
- }
- 
- void pez_arm64_usage(void)
-diff --git a/kexec/kexec-pe-zboot.c b/kexec/kexec-pe-zboot.c
-index 2f2e052b76c5..3abd17d9fe59 100644
---- a/kexec/kexec-pe-zboot.c
-+++ b/kexec/kexec-pe-zboot.c
-@@ -37,7 +37,8 @@
-  *
-  * crude_buf: the content, which is read from the kernel file without any processing
-  */
--int pez_prepare(const char *crude_buf, off_t buf_sz, int *kernel_fd)
-+int pez_prepare(const char *crude_buf, off_t buf_sz, int *kernel_fd,
-+		off_t *kernel_size)
- {
- 	int ret = -1;
- 	int fd = 0;
-@@ -110,6 +111,7 @@ int pez_prepare(const char *crude_buf, off_t buf_sz, int *kernel_fd)
- 		goto fail_bad_header;
- 	}
- 
-+	*kernel_size = decompressed_size;
- 	dbgprintf("%s: done\n", __func__);
- 
- 	ret = 0;
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index c3b182e254e0..1edbd349c86d 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -489,7 +489,7 @@ static int add_backup_segments(struct kexec_info *info,
- 	return 0;
- }
- 
--static char *slurp_fd(int fd, const char *filename, off_t size, off_t *nread)
-+char *slurp_fd(int fd, const char *filename, off_t size, off_t *nread)
- {
- 	char *buf;
- 	off_t progress;
-diff --git a/kexec/kexec.h b/kexec/kexec.h
-index ed3b499a80f2..093338969c57 100644
---- a/kexec/kexec.h
-+++ b/kexec/kexec.h
-@@ -267,6 +267,7 @@ extern void die(const char *fmt, ...)
- 	__attribute__ ((format (printf, 1, 2)));
- extern void *xmalloc(size_t size);
- extern void *xrealloc(void *ptr, size_t size);
-+extern char *slurp_fd(int fd, const char *filename, off_t size, off_t *nread);
- extern char *slurp_file(const char *filename, off_t *r_size);
- extern char *slurp_file_mmap(const char *filename, off_t *r_size);
- extern char *slurp_file_len(const char *filename, off_t size, off_t *nread);
++	return pei_loongarch_load(argc, argv, kbuf, decompressed_size, info);
++}
++
++void pez_loongarch_usage(void)
++{
++	printf(
++"     An LoongArch vmlinuz, PE image of a compressed, little endian.\n"
++"     kernel, built with ZBOOT enabled.\n\n");
++}
 -- 
 2.37.2
 
