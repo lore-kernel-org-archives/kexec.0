@@ -4,74 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AB230EE7FF4
-	for <kexec@archiver.kernel.org>; Mon, 11 Sep 2023 10:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A00B4EE7FF4
+	for <kexec@archiver.kernel.org>; Mon, 11 Sep 2023 10:37:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=z7OulugWIsWrwPaJ5z28rXkTvj7AWBHFuqrCPjnKvV4=; b=Rn+U2+ns0N2ujL
-	V+t1bJr5mbByo23OLpBX1RvblRTFRdxfXopvtxyLp5RdNnOE/+ICDibHw718cyprXOHP4FJzVGb6H
-	hr9+W3yvAbpxV9W7xlIyoQ9JS3370ACL/nsmzZ0h/RKpv6q7jiMssEmpZ+miqhYZWU+3KFNqrmhlD
-	TmD4ikdRXW3hwdwGsU/+gf6kJyHUWdDcFtAa6J9/p9YG3GGzXhgj6nvVSHU4DcjaYQ3Sc/huTKLS7
-	h5Yn+iQcJiYnLCad0K7XkhHwBQ6+jYwO3M0Zaj7oY0kwDgvHe9unDhQ2WBLvRzSY4hHdYL/mnbimo
-	AoLT45PUutnfbf/IcOGA==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=/dzcU7KqpFsO2ZjQSlwH/qQgdjME7tPfIiFamhLztN0=; b=neCdMhBpqjbyYB
+	zxINl4vRt3rrTtFM2V+ymT4tup2btBqusY/lL32gp3GmLbPoaw1XDFGf1Ex3qhSCRHXJO5x3BaJHN
+	0AWot/ICuWDWLTgg/yxyO82hFD+TQSjtmJZlqRGkdWpBN3gZCDhMhddxZmpYoh3eKOY057kq/80oN
+	piAIIPP/Zq/2XygYidMEFA4sRO8rf6hCpa5anqWdZi6nuZR+jLoRypTehK02rmpqMuKa+pAwsX49e
+	oTpkbmtTwhR20uQEOjFmbqE2C6dwOKnfcoIH6wJY8R6if0qmSnzSA8BaBlo6jY9AmvEVW+kjcZ9+8
+	glPXGMIC0qUojfTCDZdg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qfeCu-000DfP-19;
-	Mon, 11 Sep 2023 10:31:52 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1qfeIW-000HD8-0m;
+	Mon, 11 Sep 2023 10:37:40 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qfeCr-000Dcx-1b
+	id 1qfeIT-000H9T-0Q
 	for kexec@lists.infradead.org;
-	Mon, 11 Sep 2023 10:31:50 +0000
+	Mon, 11 Sep 2023 10:37:38 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1694428308;
+	s=mimecast20190719; t=1694428654;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=scL+PN7rvFW0rRtuvyrop8LP1MAlxFU5fgMf6KSanRA=;
-	b=PtnrUy/RT/Ry654TiqlfuZ+dkS0/197mKmSvLNZK1QMLpLsR07wFpE3oIjovdTyxR44yzt
-	JpVzPvoF5RPNrrcmmy2DG/eruXposjMKxI9EXD0C3d7K7sZvDsLIXR1w7NU637RnWwdfrI
-	sSFV1iJ8GVl9qaDLwTUXdLA1toP4IZw=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-630-bOa0vEtiPUa0zpz8zjb7vQ-1; Mon, 11 Sep 2023 06:31:44 -0400
-X-MC-Unique: bOa0vEtiPUa0zpz8zjb7vQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=x+GIKG0+QWhazz4vzf/BgCwK4+E3GrXL0V04spD/dAg=;
+	b=f4GMXMXTBLG1FeQBTkV6gmwwSH45KJ7hGaHl1VFrSqWeN7ZE5LB4gKAW9/dhcwqfCs7zKW
+	PmpoRq5iFI1JgrLxH1dsSOugIYIihWvz9mSbA3NQfEDDVPbaQbfnlfuZjZqXpVHIyvHdn7
+	HU9UtwM/rS7O3jmtZUz0o6zvr8IWgKA=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-119-L2A1rv3qP7OIRvb8h5gD3A-1; Mon, 11 Sep 2023 06:37:33 -0400
+X-MC-Unique: L2A1rv3qP7OIRvb8h5gD3A-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 662A5382254A;
-	Mon, 11 Sep 2023 10:31:44 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.35])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4FB1F40C200A;
-	Mon, 11 Sep 2023 10:31:42 +0000 (UTC)
-Date: Mon, 11 Sep 2023 18:31:39 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Hari Bathini <hbathini@linux.ibm.com>,
-	lkml <linux-kernel@vger.kernel.org>,
-	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-	Kexec-ml <kexec@lists.infradead.org>,
-	Dave Young <dyoung@redhat.com>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Sourabh Jain <sourabhjain@linux.ibm.com>
-Subject: Re: [PATCH v2 2/3] vmcore: allow fadump to export vmcore even if
- is_kdump_kernel() is false
-Message-ID: <ZP7si3UMVpPfYV+w@MiWiFi-R3L-srv>
-References: <20230905183604.568996-1-hbathini@linux.ibm.com>
- <20230905183604.568996-2-hbathini@linux.ibm.com>
- <8734zltc6z.fsf@mail.lhotse>
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 55857916EE2;
+	Mon, 11 Sep 2023 10:37:33 +0000 (UTC)
+Received: from darkstar.users.ipa.redhat.com (unknown [10.72.112.254])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 3CDFC44029;
+	Mon, 11 Sep 2023 10:37:30 +0000 (UTC)
+From: Dave Young <dyoung@redhat.com>
+To: kexec@lists.infradead.org
+Cc: Simon Horman <horms@kernel.org>,
+	Pingfan Liu <piliu@redhat.com>
+Subject: [PATCH 1/2] zboot: enable arm64 kexec_load for zboot image
+Date: Tue, 12 Sep 2023 02:37:21 +0800
+Message-Id: <20230911183722.11173-1-dyoung@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <8734zltc6z.fsf@mail.lhotse>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230911_033149_604416_867B93BC 
-X-CRM114-Status: GOOD (  28.74  )
+X-CRM114-CacheID: sfid-20230911_033737_254729_3861D386 
+X-CRM114-Status: GOOD (  18.47  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -88,94 +79,126 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 09/11/23 at 05:13pm, Michael Ellerman wrote:
-> Hari Bathini <hbathini@linux.ibm.com> writes:
-> > Currently, is_kdump_kernel() returns true when elfcorehdr_addr is set.
-> > While elfcorehdr_addr is set for kexec based kernel dump mechanism,
-> > alternate dump capturing methods like fadump [1] also set it to export
-> > the vmcore. Since, is_kdump_kernel() is used to restrict resources in
-> > crash dump capture kernel and such restrictions are not desirable for
-> > fadump, allow is_kdump_kernel() to be defined differently for fadump
-> > case. With that change, include is_fadump_active() check in functions
-> > is_vmcore_usable() & vmcore_unusable() to be able to export vmcore for
-> > fadump case too.
-> ...
-> > diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
-> > index 0f3a656293b0..de8a9fabfb6f 100644
-> > --- a/include/linux/crash_dump.h
-> > +++ b/include/linux/crash_dump.h
-> > @@ -50,6 +50,7 @@ void vmcore_cleanup(void);
-> >  #define vmcore_elf64_check_arch(x) (elf_check_arch(x) || vmcore_elf_check_arch_cross(x))
-> >  #endif
-> >  
-> > +#ifndef is_kdump_kernel
-> >  /*
-> >   * is_kdump_kernel() checks whether this kernel is booting after a panic of
-> >   * previous kernel or not. This is determined by checking if previous kernel
-> > @@ -64,6 +65,19 @@ static inline bool is_kdump_kernel(void)
-> >  {
-> >  	return elfcorehdr_addr != ELFCORE_ADDR_MAX;
-> >  }
-> > +#endif
-> > +
-> > +#ifndef is_fadump_active
-> > +/*
-> > + * If f/w assisted dump capturing mechanism (fadump), instead of kexec based
-> > + * dump capturing mechanism (kdump) is exporting the vmcore, then this function
-> > + * will be defined in arch specific code to return true, when appropriate.
-> > + */
-> > +static inline bool is_fadump_active(void)
-> > +{
-> > +	return false;
-> > +}
-> > +#endif
-> >  
-> >  /* is_vmcore_usable() checks if the kernel is booting after a panic and
-> >   * the vmcore region is usable.
-> > @@ -75,7 +89,8 @@ static inline bool is_kdump_kernel(void)
-> >  
-> >  static inline int is_vmcore_usable(void)
-> >  {
-> > -	return is_kdump_kernel() && elfcorehdr_addr != ELFCORE_ADDR_ERR ? 1 : 0;
-> > +	return (is_kdump_kernel() || is_fadump_active())
-> > +		&& elfcorehdr_addr != ELFCORE_ADDR_ERR ? 1 : 0;
-> >  }
-> >  
-> >  /* vmcore_unusable() marks the vmcore as unusable,
-> > @@ -84,7 +99,7 @@ static inline int is_vmcore_usable(void)
-> >  
-> >  static inline void vmcore_unusable(void)
-> >  {
-> > -	if (is_kdump_kernel())
-> > +	if (is_kdump_kernel() || is_fadump_active())
-> >  		elfcorehdr_addr = ELFCORE_ADDR_ERR;
-> >  }
-> 
-> I think it would be cleaner to decouple is_vmcore_usable() and
-> vmcore_usable() from is_kdump_kernel().
-> 
-> ie, make them operate solely based on the value of elforehdr_addr:
-> 
-> static inline int is_vmcore_usable(void)
-> {
-> 	elfcorehdr_addr != ELFCORE_ADDR_ERR && \
-> 		elfcorehdr_addr != ELFCORE_ADDR_MAX;
+kexec_file_load support of zboot kernel image decompressed the vmlinuz,
+so in kexec_load code just load the kernel with reading the decompressed
+kernel fd into a new buffer and use it directly.
 
-Agree. I fell into the blind corner of thinking earlier. Above change
-is better.
+Signed-off-by: Dave Young <dyoung@redhat.com>
+---
+ include/kexec-pe-zboot.h               |  3 ++-
+ kexec/arch/arm64/kexec-vmlinuz-arm64.c | 20 ++++++++++++++++++--
+ kexec/kexec-pe-zboot.c                 |  4 +++-
+ kexec/kexec.c                          |  2 +-
+ kexec/kexec.h                          |  1 +
+ 5 files changed, 25 insertions(+), 5 deletions(-)
 
-> }
-> 
-> static inline void vmcore_unusable(void)
-> {
-> 	elfcorehdr_addr = ELFCORE_ADDR_ERR;
-> }
-> 
-> 
-> Then all we need on powerpc is a way to override is_kdump_kernel().
-> 
-> cheers
-> 
+diff --git a/include/kexec-pe-zboot.h b/include/kexec-pe-zboot.h
+index e2e0448a81f2..374916cbe883 100644
+--- a/include/kexec-pe-zboot.h
++++ b/include/kexec-pe-zboot.h
+@@ -11,5 +11,6 @@ struct linux_pe_zboot_header {
+ 	uint32_t compress_type;
+ };
+ 
+-int pez_prepare(const char *crude_buf, off_t buf_sz, int *kernel_fd);
++int pez_prepare(const char *crude_buf, off_t buf_sz, int *kernel_fd,
++		off_t *kernel_size);
+ #endif
+diff --git a/kexec/arch/arm64/kexec-vmlinuz-arm64.c b/kexec/arch/arm64/kexec-vmlinuz-arm64.c
+index c0ee47c8f50a..8f378d8fa6d0 100644
+--- a/kexec/arch/arm64/kexec-vmlinuz-arm64.c
++++ b/kexec/arch/arm64/kexec-vmlinuz-arm64.c
+@@ -34,6 +34,7 @@
+ #include "arch/options.h"
+ 
+ static int kernel_fd = -1;
++static off_t decompressed_size;
+ 
+ /* Returns:
+  * -1 : in case of error/invalid format (not a valid PE+compressed ZBOOT format.
+@@ -72,7 +73,7 @@ int pez_arm64_probe(const char *kernel_buf, off_t kernel_size)
+ 		return -1;
+ 	}
+ 
+-	ret = pez_prepare(buf, buf_sz, &kernel_fd);
++	ret = pez_prepare(buf, buf_sz, &kernel_fd, &decompressed_size);
+ 
+ 	if (!ret) {
+ 	    /* validate the arm64 specific header */
+@@ -98,8 +99,23 @@ bad_header:
+ int pez_arm64_load(int argc, char **argv, const char *buf, off_t len,
+ 			struct kexec_info *info)
+ {
++	char *kbuf;
++
+ 	info->kernel_fd = kernel_fd;
+-	return image_arm64_load(argc, argv, buf, len, info);
++	if (kernel_fd > 0 && decompressed_size > 0) {
++		off_t nread;
++
++		kbuf = slurp_fd(kernel_fd, NULL, decompressed_size, &nread);
++		if (!kbuf || nread != decompressed_size) {
++			dbgprintf("%s: failed.\n", __func__);
++			return -1;
++		}
++	} else {
++		dbgprintf("%s: wrong file descriptor.\n", __func__);
++		return -1;
++	}
++
++	return image_arm64_load(argc, argv, kbuf, decompressed_size, info);
+ }
+ 
+ void pez_arm64_usage(void)
+diff --git a/kexec/kexec-pe-zboot.c b/kexec/kexec-pe-zboot.c
+index 2f2e052b76c5..3abd17d9fe59 100644
+--- a/kexec/kexec-pe-zboot.c
++++ b/kexec/kexec-pe-zboot.c
+@@ -37,7 +37,8 @@
+  *
+  * crude_buf: the content, which is read from the kernel file without any processing
+  */
+-int pez_prepare(const char *crude_buf, off_t buf_sz, int *kernel_fd)
++int pez_prepare(const char *crude_buf, off_t buf_sz, int *kernel_fd,
++		off_t *kernel_size)
+ {
+ 	int ret = -1;
+ 	int fd = 0;
+@@ -110,6 +111,7 @@ int pez_prepare(const char *crude_buf, off_t buf_sz, int *kernel_fd)
+ 		goto fail_bad_header;
+ 	}
+ 
++	*kernel_size = decompressed_size;
+ 	dbgprintf("%s: done\n", __func__);
+ 
+ 	ret = 0;
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index c3b182e254e0..1edbd349c86d 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -489,7 +489,7 @@ static int add_backup_segments(struct kexec_info *info,
+ 	return 0;
+ }
+ 
+-static char *slurp_fd(int fd, const char *filename, off_t size, off_t *nread)
++char *slurp_fd(int fd, const char *filename, off_t size, off_t *nread)
+ {
+ 	char *buf;
+ 	off_t progress;
+diff --git a/kexec/kexec.h b/kexec/kexec.h
+index ed3b499a80f2..093338969c57 100644
+--- a/kexec/kexec.h
++++ b/kexec/kexec.h
+@@ -267,6 +267,7 @@ extern void die(const char *fmt, ...)
+ 	__attribute__ ((format (printf, 1, 2)));
+ extern void *xmalloc(size_t size);
+ extern void *xrealloc(void *ptr, size_t size);
++extern char *slurp_fd(int fd, const char *filename, off_t size, off_t *nread);
+ extern char *slurp_file(const char *filename, off_t *r_size);
+ extern char *slurp_file_mmap(const char *filename, off_t *r_size);
+ extern char *slurp_file_len(const char *filename, off_t size, off_t *nread);
+-- 
+2.37.2
 
 
 _______________________________________________
