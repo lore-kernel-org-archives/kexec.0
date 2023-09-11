@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7C83CEE7FF4
-	for <kexec@archiver.kernel.org>; Mon, 11 Sep 2023 13:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3EA8FEE7FF4
+	for <kexec@archiver.kernel.org>; Mon, 11 Sep 2023 13:19:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=qdHmKz17tLuEyvHEcZHlU4vVUkHOI2jZjxCRjo/05HI=; b=a8ht247cB1Te26
-	xEQQ3auBoETyTr2/OSHfpz5fyRcXls56huUw2YIiq+BWavBiBgDPCluT4WEZnq/t9tYQAhwKexOGI
-	22SF1UdyMVKOd7VoPWgJEUZgaJ6EKq5ysQKCUM4FZFHpsTDdEU60az4+BnRntpnLr+VydHeFt/Jiw
-	7/m2mNFWKGxbO/9Od6c5M4GWqU4kHV0i0all8/9g1dMQ/rwUvngFHiZSvbjnK1SJL7PtGq0f5JO4+
-	5l9Z0dVyQ783rbjEe+vN4avUirV65rENJp7EMS+HVx7GRrN6CCT7KOLq0wMfWyYSoH0HfXxz+iPFz
-	E9yGsOoOyUhJd5BZoquQ==;
+	List-Owner; bh=UYNKASgFAWfg8FrtmFwfzFDLpW14RHEG4PbbuCr+cac=; b=e5yZbb2rNKc7fQ
+	vMtMX4t0lxm/nMWCuJPYGCv0431kXxMQV1TtvQCehz36BegNrM7MtiDsMcvbHHrBcNxW7pEahzRqN
+	9aXw0h8zZWB/BFQXUxAUbndec3uMYs5+glMcL5M/TyH34gWTZuQdqLakjEjVEftdRiCpDHPMlnRR0
+	YD6z5LA3H01ZaiMpmDzGrWMljuUoisYeAHaG7cL16wAHrUck23mxorGOKFxYV4PhC5KxYJtKPz8Ru
+	5cY/0AEXrxHaT4d9AditdwJVX3K5icWYYPVsLi3vX+KAs1/JV8NKA+Kkphdvu3VC/A4J+AqsexuYp
+	sY4cNWl3pru4glZ7k7PQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qfgp3-000amW-2d;
-	Mon, 11 Sep 2023 13:19:25 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1qfgpC-000apN-1c;
+	Mon, 11 Sep 2023 13:19:34 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qfgp0-000alY-1j
+	id 1qfgp9-000ao4-2a
 	for kexec@lists.infradead.org;
-	Mon, 11 Sep 2023 13:19:24 +0000
+	Mon, 11 Sep 2023 13:19:33 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1694438359;
+	s=mimecast20190719; t=1694438370;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Hbw5LcVAhn/MF5vOS6EegrWEmv1/qJLDPF4qVdxgL4s=;
-	b=bHHZyfYgR+beSFNUnkeqcLUDaegdgq4Xo6uSjFMdSh+COl2ZFwhUyUlI9FvYHNmedl7YBy
-	kTFZs/E6p3vkESdufKRaUy8bxyGCLvkWbsU9kBFtc3SxQ2ZtoZG+fzk8Z9s5c1qbLlrf++
-	sVQgW+qbbGksYeRyNhNKs4wH43k2PR8=
+	bh=5yxdIJbaGiIuKfn4dTU1w7m087z69ppgEQmWV8CJO58=;
+	b=YZtjeLP88bqjcqe/pg1OSAB0A7IjsSOH5Zytv2m8Uv8/yULXmG8oQvAAbwVzbpRkNcwcuI
+	EAEznIfoSo7O6ijzU4iS/f4LPsqxcsnrWfasXPJ/J75TwsQ4PiUP6T+AI5gAUHAnZzLlou
+	SJMC4DaB+bFdulmZkrZntgoIqWsEto4=
 Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
  by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-348-XQhtsyerOp25TxNVgyqOQg-1; Mon, 11 Sep 2023 09:19:16 -0400
-X-MC-Unique: XQhtsyerOp25TxNVgyqOQg-1
+ us-mta-651-uEgk5U3ZNdmVuHLOq4BaPQ-1; Mon, 11 Sep 2023 09:19:26 -0400
+X-MC-Unique: uEgk5U3ZNdmVuHLOq4BaPQ-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C1D0E38117E9;
-	Mon, 11 Sep 2023 13:19:15 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CC9DD3C0D874;
+	Mon, 11 Sep 2023 13:19:20 +0000 (UTC)
 Received: from piliu.users.ipa.redhat.com (unknown [10.72.120.8])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 617D12156701;
-	Mon, 11 Sep 2023 13:19:11 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 6A7332156702;
+	Mon, 11 Sep 2023 13:19:16 +0000 (UTC)
 From: Pingfan Liu <piliu@redhat.com>
 To: linuxppc-dev@lists.ozlabs.org
 Cc: Pingfan Liu <piliu@redhat.com>,
@@ -61,9 +61,9 @@ Cc: Pingfan Liu <piliu@redhat.com>,
 	Baoquan He <bhe@redhat.com>,
 	Ming Lei <ming.lei@redhat.com>,
 	kexec@lists.infradead.org
-Subject: [PATCHv6 2/3] powerpc/setup: Handle the case when boot_cpuid greater than nr_cpus
-Date: Mon, 11 Sep 2023 21:18:54 +0800
-Message-Id: <20230911131855.40738-3-piliu@redhat.com>
+Subject: [PATCHv6 3/3] powerpc/setup: alloc extra paca_ptrs to hold boot_cpuid
+Date: Mon, 11 Sep 2023 21:18:55 +0800
+Message-Id: <20230911131855.40738-4-piliu@redhat.com>
 In-Reply-To: <20230911131855.40738-1-piliu@redhat.com>
 References: <20230911131855.40738-1-piliu@redhat.com>
 MIME-Version: 1.0
@@ -71,8 +71,8 @@ X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230911_061922_704372_1375814E 
-X-CRM114-Status: GOOD (  17.14  )
+X-CRM114-CacheID: sfid-20230911_061931_964728_E565E339 
+X-CRM114-Status: GOOD (  16.38  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,12 +89,17 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-If the boot_cpuid is smaller than nr_cpus, it requires extra effort to
-ensure the boot_cpu is in cpu_present_mask. This can be achieved by
-reserving the last quota for the boot cpu.
+paca_ptrs should be large enough to hold the boot_cpuid, hence, its
+lower boundary is set to the bigger one between boot_cpuid+1 and
+nr_cpus.
 
-Note: the restriction on nr_cpus will be lifted with more effort in the
-next patch
+On the other hand, some kernel component: -1. the timer assumes cpu0
+online since the timer_list->flags subfield 'TIMER_CPUMASK' is zero if
+not initialized to a proper present cpu.  -2. power9_idle_stop() assumes
+the primary thread's paca is allocated.
+
+Hence lift nr_cpu_ids from one to two to ensure cpu0 is onlined, if the
+boot cpu is not cpu0.
 
 Signed-off-by: Pingfan Liu <piliu@redhat.com>
 Cc: Michael Ellerman <mpe@ellerman.id.au>
@@ -107,70 +112,64 @@ Cc: Ming Lei <ming.lei@redhat.com>
 Cc: kexec@lists.infradead.org
 To: linuxppc-dev@lists.ozlabs.org
 ---
- arch/powerpc/kernel/setup-common.c | 25 ++++++++++++++++++++++---
- 1 file changed, 22 insertions(+), 3 deletions(-)
+ arch/powerpc/kernel/paca.c | 10 ++++++----
+ arch/powerpc/kernel/prom.c |  9 ++++++---
+ 2 files changed, 12 insertions(+), 7 deletions(-)
 
-diff --git a/arch/powerpc/kernel/setup-common.c b/arch/powerpc/kernel/setup-common.c
-index a07af8de6674..58a988c64dd2 100644
---- a/arch/powerpc/kernel/setup-common.c
-+++ b/arch/powerpc/kernel/setup-common.c
-@@ -456,8 +456,8 @@ struct interrupt_server_node {
- void __init smp_setup_cpu_maps(void)
+diff --git a/arch/powerpc/kernel/paca.c b/arch/powerpc/kernel/paca.c
+index cda4e00b67c1..91e2401de1bd 100644
+--- a/arch/powerpc/kernel/paca.c
++++ b/arch/powerpc/kernel/paca.c
+@@ -242,9 +242,10 @@ static int __initdata paca_struct_size;
+ 
+ void __init allocate_paca_ptrs(void)
  {
- 	struct device_node *dn;
--	int shift = 0, cpu = 0;
--	int j, nthreads = 1;
-+	int terminate, shift = 0, cpu = 0;
-+	int j, bt_thread = 0, nthreads = 1;
- 	int len;
- 	struct interrupt_server_node *intserv_node, *n;
- 	struct list_head *bt_node, head;
-@@ -520,6 +520,7 @@ void __init smp_setup_cpu_maps(void)
- 			for (j = 0 ; j < nthreads; j++) {
- 				if (be32_to_cpu(intserv[j]) == boot_cpu_hwid) {
- 					bt_node = &intserv_node->node;
-+					bt_thread = j;
- 					found_boot_cpu = true;
- 					/*
- 					 * Record the round-shift between dt
-@@ -539,11 +540,21 @@ void __init smp_setup_cpu_maps(void)
- 	/* Select the primary thread, the boot cpu's slibing, as the logic 0 */
- 	list_add_tail(&head, bt_node);
- 	pr_info("the round shift between dt seq and the cpu logic number: %d\n", shift);
-+	terminate = nr_cpu_ids;
- 	list_for_each_entry(intserv_node, &head, node) {
+-	paca_nr_cpu_ids = nr_cpu_ids;
++	int n = (boot_cpuid + 1) > nr_cpu_ids ? (boot_cpuid + 1) : nr_cpu_ids;
  
-+		j = 0;
-+		/* Choose a start point to cover the boot cpu */
-+		if (nr_cpu_ids - 1 < bt_thread) {
+-	paca_ptrs_size = sizeof(struct paca_struct *) * nr_cpu_ids;
++	paca_nr_cpu_ids = n;
++	paca_ptrs_size = sizeof(struct paca_struct *) * n;
+ 	paca_ptrs = memblock_alloc_raw(paca_ptrs_size, SMP_CACHE_BYTES);
+ 	if (!paca_ptrs)
+ 		panic("Failed to allocate %d bytes for paca pointers\n",
+@@ -287,13 +288,14 @@ void __init allocate_paca(int cpu)
+ void __init free_unused_pacas(void)
+ {
+ 	int new_ptrs_size;
++	int n = (boot_cpuid + 1) > nr_cpu_ids ? (boot_cpuid + 1) : nr_cpu_ids;
+ 
+-	new_ptrs_size = sizeof(struct paca_struct *) * nr_cpu_ids;
++	new_ptrs_size = sizeof(struct paca_struct *) * n;
+ 	if (new_ptrs_size < paca_ptrs_size)
+ 		memblock_phys_free(__pa(paca_ptrs) + new_ptrs_size,
+ 				   paca_ptrs_size - new_ptrs_size);
+ 
+-	paca_nr_cpu_ids = nr_cpu_ids;
++	paca_nr_cpu_ids = n;
+ 	paca_ptrs_size = new_ptrs_size;
+ 
+ #ifdef CONFIG_PPC_64S_HASH_MMU
+diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
+index cb3f3e040455..28441edbc42d 100644
+--- a/arch/powerpc/kernel/prom.c
++++ b/arch/powerpc/kernel/prom.c
+@@ -362,9 +362,12 @@ static int __init early_init_dt_scan_cpus(unsigned long node,
+ 			 */
+ 			boot_cpuid = i;
+ 			found = true;
+-			/* This works around the hole in paca_ptrs[]. */
+-			if (nr_cpu_ids < nthreads)
+-				set_nr_cpu_ids(nthreads);
 +			/*
-+			 * The processor core puts assumption on the thread id,
-+			 * not to breach the assumption.
++			 * Ideally, nr_cpus=1 can be achieved if each kernel
++			 * component does not assume cpu0 is onlined.
 +			 */
-+			terminate = nr_cpu_ids - 1;
-+		}
- 		avail = intserv_node->avail;
- 		nthreads = intserv_node->len / sizeof(int);
--		for (j = 0; j < nthreads && cpu < nr_cpu_ids; j++) {
-+		for (; j < nthreads && cpu < terminate; j++) {
- 			set_cpu_present(cpu, avail);
- 			set_cpu_possible(cpu, true);
- 			cpu_to_phys_id[cpu] = be32_to_cpu(intserv_node->intserv[j]);
-@@ -551,6 +562,14 @@ void __init smp_setup_cpu_maps(void)
- 			    j, cpu, be32_to_cpu(intserv[j]));
- 			cpu++;
++			if (boot_cpuid != 0 && nr_cpu_ids < 2)
++				set_nr_cpu_ids(2);
  		}
-+		/* Online the boot cpu */
-+		if (nr_cpu_ids - 1 < bt_thread) {
-+			set_cpu_present(bt_thread, avail);
-+			set_cpu_possible(bt_thread, true);
-+			cpu_to_phys_id[bt_thread] = be32_to_cpu(intserv_node->intserv[bt_thread]);
-+			DBG("    thread %d -> cpu %d (hard id %d)\n",
-+			    bt_thread, bt_thread, be32_to_cpu(intserv[bt_thread]));
-+		}
- 	}
- 
- 	list_for_each_entry_safe(intserv_node, n, &head, node) {
+ #ifdef CONFIG_SMP
+ 		/* logical cpu id is always 0 on UP kernels */
 -- 
 2.31.1
 
