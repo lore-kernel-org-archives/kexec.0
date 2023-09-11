@@ -4,68 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8E7C1EE57DF
-	for <kexec@archiver.kernel.org>; Mon, 11 Sep 2023 10:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C87C8EEB57D
+	for <kexec@archiver.kernel.org>; Mon, 11 Sep 2023 11:21:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=MaiM4waq+TT+r149qfbDoe+zOTnOa+r3AW+p5t2VcOo=; b=AJAfFWXuTYfTbP
-	ql2uEt7+aXF1L/tGXyK2ZpGbfK6oKMLxdRSwTdI/LqFU2DY1YOuX0MLrfXu/sqEXt6h0nao8Zx1yT
-	ujLliEtftPERW+3FpQmX2kbzGJCxnf5ZLc5fgxKSXSVfgL3QnN/NwjVCA1q9uxLjiI8+b6FmbzHjD
-	K5MDg+6O4fKfUnfqSSO+mj1iEmJlSIVJMmW3nH/bjJql1K9neQPL8Omv+sGxqodkTsQueYhNE+xKM
-	Ym6mZeqBs4irdlMetGuGi+b0gIO3ARBj+au3B65SyZrF4DWBf4eCuEiGmiQMf8R8la9hSjhUa7V5L
-	kZnT+i4paZ6hVPqc48sQ==;
+	List-Owner; bh=BhXTphQnIYm72SL0aalkq6mm2E685jBXNnUPN07T48A=; b=nQuYbmtOIEe39r
+	km0DboF2DWvfoaOVipL86nomQ5jOhWUhne2j86fcWfops6cZLSYsT5hbfgnODb8LMA7bOeKSEEJTE
+	zRq0s0KgycP2SMsVTXZiTC3gZFlzM8gMU0i2pbxMg/7Q3eQpghAfARQ7+ZPpJ/oXkPGXI9KiadSxC
+	dyB1jcKURtDST6By7OA4YuMTvzI5JZDzas559XdydlGuKMEWYvXy5K7xmFCWjWGZWC4m1bEnr5mGb
+	2kawbpTecrmlMs/9PwcEu8mCVILH4+qM7N0ncAkxCvo5KvR0qPO9nXZgPPe7mYAK3IF4jnTLsweJt
+	NidMAGsVTlFmaJc+VlwQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qfeIX-000HEJ-2c;
-	Mon, 11 Sep 2023 10:37:41 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1qfez5-000N9s-2s;
+	Mon, 11 Sep 2023 11:21:39 +0000
+Received: from mgamail.intel.com ([192.55.52.151])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qfeIV-000HBj-09
+	id 1qfez3-000N93-0h
 	for kexec@lists.infradead.org;
-	Mon, 11 Sep 2023 10:37:40 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1694428658;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SJpwkMLVy2GMDrbXNM7PEcDjSodKzBCld5DjqeJJlIU=;
-	b=MFof0GDJzpbfmM5Nvn7yYaKjXhyj4k/T5vyD0HxL8FKsX5xAVxuaEMhQHZkqG/S4oSGJ94
-	2LE032Blggye6rTWkDLp8IOVsknJkgqJslzx4NGWdlJZ3lKro+KL+wC7LUk6tM++ky1yy7
-	tZOzDeRE76KSBKqYjFctQ6TN7qWz+KA=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-50-M5-aSlsfN4icUuqPRuIqQg-1; Mon, 11 Sep 2023 06:37:36 -0400
-X-MC-Unique: M5-aSlsfN4icUuqPRuIqQg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 15E09800962;
-	Mon, 11 Sep 2023 10:37:36 +0000 (UTC)
-Received: from darkstar.users.ipa.redhat.com (unknown [10.72.112.254])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 032E544029;
-	Mon, 11 Sep 2023 10:37:33 +0000 (UTC)
-From: Dave Young <dyoung@redhat.com>
-To: kexec@lists.infradead.org
-Cc: Simon Horman <horms@kernel.org>,
-	Pingfan Liu <piliu@redhat.com>
-Subject: [PATCH 2/2] zboot: add loongarch kexec_load support
-Date: Tue, 12 Sep 2023 02:37:22 +0800
-Message-Id: <20230911183722.11173-2-dyoung@redhat.com>
-In-Reply-To: <20230911183722.11173-1-dyoung@redhat.com>
-References: <20230911183722.11173-1-dyoung@redhat.com>
+	Mon, 11 Sep 2023 11:21:38 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694431297; x=1725967297;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Zw3TazwdjRU8wNvK9+zXRRn6LyFt0jKcjaf9En8Up90=;
+  b=AJWH2tglzJdSddm09quCgpkVRavZr6ITm1VtkgdMgQSPqkzJKrIDHHN5
+   R17+ydgic9zXWM2zQXrVtOM4bEPF5vRIkxYj/gEXGHcRQTBz/O69FHVHQ
+   mr2evH/lkUmoLTqxmKin67GQvDPW82J/qK8svrTtWaUrvEqwv6zxJzvTI
+   akQNs/uSlCNOHuxemjAbUBFpvzRoSR53M3nd/DKJAwKCd+M/0h0Gj62sy
+   TbiUUdAX+6tUweiA8tKDq+W1uUyIgCPy3AI0YQpE1H6FQFHVelLVuoadF
+   L4AQ2WtlXS+pIN+Toh3bPSA1C4dlLkEGN+oegqp21p940CrOZidl9LzUx
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10829"; a="358358413"
+X-IronPort-AV: E=Sophos;i="6.02,243,1688454000"; 
+   d="scan'208";a="358358413"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 04:21:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10829"; a="778356397"
+X-IronPort-AV: E=Sophos;i="6.02,243,1688454000"; 
+   d="scan'208";a="778356397"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.251.216.218])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Sep 2023 04:21:30 -0700
+From: Adrian Hunter <adrian.hunter@intel.com>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Ard Biesheuvel <ardb@kernel.org>
+Cc: Dave Hansen <dave.hansen@intel.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Mike Rapoport <rppt@linux.ibm.com>,
+	Lorenzo Stoakes <lstoakes@gmail.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Baoquan He <bhe@redhat.com>,
+	Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-coco@lists.linux.dev,
+	linux-efi@vger.kernel.org,
+	kexec@lists.infradead.org
+Subject: [PATCH V2 1/2] efi/unaccepted: Do not let /proc/vmcore try to access unaccepted memory
+Date: Mon, 11 Sep 2023 14:21:13 +0300
+Message-Id: <20230911112114.91323-2-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230911112114.91323-1-adrian.hunter@intel.com>
+References: <20230911112114.91323-1-adrian.hunter@intel.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230911_033739_151497_B4D0E6E1 
-X-CRM114-Status: GOOD (  19.42  )
+X-CRM114-CacheID: sfid-20230911_042137_263435_264DD7CA 
+X-CRM114-Status: GOOD (  12.85  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,170 +97,82 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: "dyoung@redhat.com" <dyoung@redhat.com>
+Support for unaccepted memory was added recently, refer commit dcdfdd40fa82
+("mm: Add support for unaccepted memory"), whereby a virtual machine may
+need to accept memory before it can be used.
 
-Copy arm64 code and change for loongarch so that the kexec -c can load
-a zboot image.
-Note: probe zboot image first otherwise the pei-loongarch file type will
-be used.
+Do not let /proc/vmcore try to access unaccepted memory because it can
+cause the guest to fail.
 
-Signed-off-by: Dave Young <dyoung@redhat.com>
+For /proc/vmcore, which is read-only, this means a read or mmap of
+unaccepted memory will return zeros.
+
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- kexec/arch/loongarch/Makefile              |  1 +
- kexec/arch/loongarch/image-header.h        |  1 +
- kexec/arch/loongarch/kexec-loongarch.c     |  1 +
- kexec/arch/loongarch/kexec-loongarch.h     |  4 +
- kexec/arch/loongarch/kexec-pez-loongarch.c | 88 ++++++++++++++++++++++
- 5 files changed, 95 insertions(+)
- create mode 100644 kexec/arch/loongarch/kexec-pez-loongarch.c
+ drivers/firmware/efi/unaccepted_memory.c | 20 ++++++++++++++++++++
+ include/linux/mm.h                       |  7 +++++++
+ 2 files changed, 27 insertions(+)
 
-diff --git a/kexec/arch/loongarch/Makefile b/kexec/arch/loongarch/Makefile
-index 3b33b9693287..cee7e569a2a2 100644
---- a/kexec/arch/loongarch/Makefile
-+++ b/kexec/arch/loongarch/Makefile
-@@ -6,6 +6,7 @@ loongarch_KEXEC_SRCS += kexec/arch/loongarch/kexec-elf-loongarch.c
- loongarch_KEXEC_SRCS += kexec/arch/loongarch/kexec-pei-loongarch.c
- loongarch_KEXEC_SRCS += kexec/arch/loongarch/kexec-elf-rel-loongarch.c
- loongarch_KEXEC_SRCS += kexec/arch/loongarch/crashdump-loongarch.c
-+loongarch_KEXEC_SRCS += kexec/arch/loongarch/kexec-pez-loongarch.c
+
+Changes in V2:
+
+          Change patch subject and commit message
+          Use vmcore_cb->.pfn_is_ram() instead of changing vmcore.c
+
+
+diff --git a/drivers/firmware/efi/unaccepted_memory.c b/drivers/firmware/efi/unaccepted_memory.c
+index 853f7dc3c21d..79ba576b22e3 100644
+--- a/drivers/firmware/efi/unaccepted_memory.c
++++ b/drivers/firmware/efi/unaccepted_memory.c
+@@ -3,6 +3,7 @@
+ #include <linux/efi.h>
+ #include <linux/memblock.h>
+ #include <linux/spinlock.h>
++#include <linux/crash_dump.h>
+ #include <asm/unaccepted_memory.h>
  
- loongarch_MEM_REGIONS = kexec/mem_regions.c
+ /* Protects unaccepted memory bitmap */
+@@ -145,3 +146,22 @@ bool range_contains_unaccepted_memory(phys_addr_t start, phys_addr_t end)
  
-diff --git a/kexec/arch/loongarch/image-header.h b/kexec/arch/loongarch/image-header.h
-index 3b7576552685..223d81f77d9f 100644
---- a/kexec/arch/loongarch/image-header.h
-+++ b/kexec/arch/loongarch/image-header.h
-@@ -33,6 +33,7 @@ struct loongarch_image_header {
- };
- 
- static const uint8_t loongarch_image_pe_sig[2] = {'M', 'Z'};
-+static const uint8_t loongarch_pe_machtype[6] = {'P','E', 0x0, 0x0, 0x64, 0x62};
- 
- /**
-  * loongarch_header_check_pe_sig - Helper to check the loongarch image header.
-diff --git a/kexec/arch/loongarch/kexec-loongarch.c b/kexec/arch/loongarch/kexec-loongarch.c
-index f47c99861674..62ff8fd1aeb7 100644
---- a/kexec/arch/loongarch/kexec-loongarch.c
-+++ b/kexec/arch/loongarch/kexec-loongarch.c
-@@ -165,6 +165,7 @@ int get_memory_ranges(struct memory_range **range, int *ranges,
- 
- struct file_type file_type[] = {
- 	{"elf-loongarch", elf_loongarch_probe, elf_loongarch_load, elf_loongarch_usage},
-+	{"pez-loongarch", pez_loongarch_probe, pez_loongarch_load, pez_loongarch_usage},
- 	{"pei-loongarch", pei_loongarch_probe, pei_loongarch_load, pei_loongarch_usage},
- };
- int file_types = sizeof(file_type) / sizeof(file_type[0]);
-diff --git a/kexec/arch/loongarch/kexec-loongarch.h b/kexec/arch/loongarch/kexec-loongarch.h
-index 5120a26fd513..2c7624f2fd3a 100644
---- a/kexec/arch/loongarch/kexec-loongarch.h
-+++ b/kexec/arch/loongarch/kexec-loongarch.h
-@@ -27,6 +27,10 @@ int pei_loongarch_probe(const char *buf, off_t len);
- int pei_loongarch_load(int argc, char **argv, const char *buf, off_t len,
- 	struct kexec_info *info);
- void pei_loongarch_usage(void);
-+int pez_loongarch_probe(const char *kernel_buf, off_t kernel_size);
-+int pez_loongarch_load(int argc, char **argv, const char *buf, off_t len,
-+		       struct kexec_info *info);
-+void pez_loongarch_usage(void);
- 
- int loongarch_process_image_header(const struct loongarch_image_header *h);
- 
-diff --git a/kexec/arch/loongarch/kexec-pez-loongarch.c b/kexec/arch/loongarch/kexec-pez-loongarch.c
-new file mode 100644
-index 000000000000..6d94a405d54a
---- /dev/null
-+++ b/kexec/arch/loongarch/kexec-pez-loongarch.c
-@@ -0,0 +1,88 @@
-+/*
-+ * LoongArch PE compressed Image (vmlinuz, ZBOOT) support.
-+ * Based on arm64 code
-+ */
+ 	return ret;
+ }
 +
-+#define _GNU_SOURCE
-+#include <fcntl.h>
-+#include <unistd.h>
-+#include <stdlib.h>
-+#include "kexec.h"
-+#include "kexec-loongarch.h"
-+#include <kexec-pe-zboot.h>
-+#include "arch/options.h"
-+
-+static int kernel_fd = -1;
-+static off_t decompressed_size;
-+
-+/* Returns:
-+ * -1 : in case of error/invalid format (not a valid PE+compressed ZBOOT format.
-+ */
-+int pez_loongarch_probe(const char *kernel_buf, off_t kernel_size)
++#ifdef CONFIG_PROC_VMCORE
++static bool unaccepted_memory_vmcore_pfn_is_ram(struct vmcore_cb *cb,
++						unsigned long pfn)
 +{
-+	int ret = -1;
-+	const struct loongarch_image_header *h;
-+	char *buf;
-+	off_t buf_sz;
-+
-+	buf = (char *)kernel_buf;
-+	buf_sz = kernel_size;
-+	if (!buf)
-+		return -1;
-+	h = (const struct loongarch_image_header *)buf;
-+
-+	dbgprintf("%s: PROBE.\n", __func__);
-+	if (buf_sz < sizeof(struct loongarch_image_header)) {
-+		dbgprintf("%s: Not large enough to be a PE image.\n", __func__);
-+		return -1;
-+	}
-+	if (!loongarch_header_check_pe_sig(h)) {
-+		dbgprintf("%s: Not an PE image.\n", __func__);
-+		return -1;
-+	}
-+
-+	if (buf_sz < sizeof(struct loongarch_image_header) + h->pe_header) {
-+		dbgprintf("%s: PE image offset larger than image.\n", __func__);
-+		return -1;
-+	}
-+
-+	if (memcmp(&buf[h->pe_header],
-+		   loongarch_pe_machtype, sizeof(loongarch_pe_machtype))) {
-+		dbgprintf("%s: PE header doesn't match machine type.\n", __func__);
-+		return -1;
-+	}
-+
-+	ret = pez_prepare(buf, buf_sz, &kernel_fd, &decompressed_size);
-+
-+	/* Fixme: add sanity check of the decompressed kernel before return */
-+	return ret;
++	return !pfn_is_unaccepted_memory(pfn);
 +}
 +
-+int pez_loongarch_load(int argc, char **argv, const char *buf, off_t len,
-+			struct kexec_info *info)
++static struct vmcore_cb vmcore_cb = {
++	.pfn_is_ram = unaccepted_memory_vmcore_pfn_is_ram,
++};
++
++static int __init unaccepted_memory_init_kdump(void)
 +{
-+	char *kbuf;
++	register_vmcore_cb(&vmcore_cb);
++	return 0;
++}
++core_initcall(unaccepted_memory_init_kdump);
++#endif /* CONFIG_PROC_VMCORE */
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index bf5d0b1b16f4..86511150f1d4 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -4062,4 +4062,11 @@ static inline void accept_memory(phys_addr_t start, phys_addr_t end)
+ 
+ #endif
+ 
++static inline bool pfn_is_unaccepted_memory(unsigned long pfn)
++{
++	phys_addr_t paddr = pfn << PAGE_SHIFT;
 +
-+	info->kernel_fd = kernel_fd;
-+	if (kernel_fd > 0 && decompressed_size > 0) {
-+		off_t nread;
-+
-+		kbuf = slurp_fd(kernel_fd, NULL, decompressed_size, &nread);
-+		if (!kbuf || nread != decompressed_size) {
-+			dbgprintf("%s: failed.\n", __func__);
-+			return -1;
-+		}
-+	} else {
-+		dbgprintf("%s: wrong file descriptor.\n", __func__);
-+		return -1;
-+	}
-+
-+	return pei_loongarch_load(argc, argv, kbuf, decompressed_size, info);
++	return range_contains_unaccepted_memory(paddr, paddr + PAGE_SIZE);
 +}
 +
-+void pez_loongarch_usage(void)
-+{
-+	printf(
-+"     An LoongArch vmlinuz, PE image of a compressed, little endian.\n"
-+"     kernel, built with ZBOOT enabled.\n\n");
-+}
+ #endif /* _LINUX_MM_H */
 -- 
-2.37.2
+2.34.1
 
 
 _______________________________________________
