@@ -4,64 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A08E4CA0EC3
-	for <kexec@archiver.kernel.org>; Mon, 11 Sep 2023 22:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8CBC1CA0EC6
+	for <kexec@archiver.kernel.org>; Mon, 11 Sep 2023 22:56:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:References:To:From:Subject:
-	Cc:Message-Id:Date:Mime-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Subject:Cc:To:From:Date:References:
+	In-Reply-To:Message-Id:Mime-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=YojqENfxfka8QpojVRrby3UUN2yKdhm7IWEMe4T3yto=; b=OwRyH/Q/qwHmlV
-	ZJupqM8ZNJurhHYln+aWVYOG+3oCAFIqwK0IpbDtSVT+Mqy8MBeJrPtRUGjPOrkSCJBghCoLVGeSJ
-	P/ITSWYdtK4jWYM8FqoZIq+5C9WIe8ig/zXlpdXxol9kFxPBlzMMWBPGv6HvLPfXBZuMHizPmd5RK
-	KQ5Jl+wb6Jsowdil/aOFWUujAEmCs0fGjvOjCHGi9F+TW+0kWk6+R2dVyXlI6KCcxd5m9/aTOI+DS
-	6Ss1fDXMx/Dx/314QQhZQE/u+ruxyCtvDL33ZsHtKinPyHSjBiGZtrWky/Gl4AvTgN1/N5LuqS14S
-	fEUlxfcdykqsZzJKhqJA==;
+	List-Owner; bh=Wyh0VsT/criywN73crbZMD52bnycbq/0SKTFRs7Gvz0=; b=b1dsNJCMJGBUkD
+	bVZj0QZdWC0pELrn62uMDr3GprUSIeZJ6+aN9efIimNsRs02uXOwBQJFHwkfjjF8Ihjrx4NuhP/sO
+	rURK5si8+34Of9tdOULaWbAfMb+P6fly60ABfPSLsRtoR2d7XXkJ/YWU5D3TtGH1Cjz3Id6X7NS7M
+	Yf6eepNIqN4D9edueCa8fvJVW55brYlArFCR6RsfEuXF82EkYYNfC0FPi+5hJcgM7Ne8i5byEdtxe
+	fQ8+jQkQk5LN55V56O/bWCmvGBvZhLfppZB9AIaDqf59kXqT0WIsA3fGYiGy3zBJrWFx8e5qxudgc
+	PUnabUO/CpQdIvly2f+A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qfozJ-001SYp-1W;
-	Mon, 11 Sep 2023 22:02:33 +0000
-Received: from dfw.source.kernel.org ([139.178.84.217])
+	id 1qfppN-001YJX-2h;
+	Mon, 11 Sep 2023 22:56:21 +0000
+Received: from wout1-smtp.messagingengine.com ([64.147.123.24])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qfozH-001SYL-08
+	id 1qfppK-001YIA-36
 	for kexec@lists.infradead.org;
-	Mon, 11 Sep 2023 22:02:32 +0000
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id D66206151A;
-	Mon, 11 Sep 2023 22:02:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1C53C116AA;
-	Mon, 11 Sep 2023 22:02:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1694469749;
-	bh=BPQ6dr22xKZeaU3Kgfesl8AdYcWadqw/YEcuDpmDST4=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=N5GwXa+SDYrhEIk4TuMtZ7tTjNdzDnsTrHuml88ub+VqXsSBsN2OjmWvPuZBZ4UWP
-	 Mo49LFkDV40SawEe1+qf9LrZFe2/UVm2Y3OAcZPB8mWpNvFAcyBv04yeQul4kPWO9X
-	 oG9Fgvw400MHs8NRjIuBih87jiOL752wxzGUr0Q75CZiY3EWwNOgqkWPYm/yVFsVXc
-	 dvtv3gz7NSqvABf8ilXAYQPtk+lRYTgqBosEks/u89WYpaP+zysbbOJaMRdxWEogpn
-	 1hqlYlgt6t2JcOKR8cvXXltniUzh+izqSBl3VsajRTS94b7/l+7asMGhXiD26IsRRg
-	 erZQgH3kXmONw==
+	Mon, 11 Sep 2023 22:56:21 +0000
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.west.internal (Postfix) with ESMTP id F06373200918;
+	Mon, 11 Sep 2023 18:56:11 -0400 (EDT)
+Received: from imap49 ([10.202.2.99])
+  by compute6.internal (MEProxy); Mon, 11 Sep 2023 18:56:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:sender
+	:subject:subject:to:to; s=fm3; t=1694472971; x=1694559371; bh=Ea
+	pXY/dHk/L+KfdsJnZIXaxdmbC/YxZh0fcsusxzVFI=; b=Z1qW4isTxdg0I62aD1
+	I6xzs2VtaTEAsQ3HsKYDilLUwxksu1tbRY7mkgyromFZzzxkqw2HD1OytTiahXb+
+	Nx++gyTMlYhEOXbv5M15Sv3+PtNQihmUsv3dOXcMUtH4uwaQKDG+Ke/WcFaO7JJD
+	aWeyNoWEb0IIa0nI/WAbnscDv5AfH0utP2SU6SMXqufpPeS5IhkHAWdMizSCIZK8
+	Rz7/9L4qibgjCRoAvPnTFe0cpuOXJ48NBHwsFq99KJKgcmlKi/Uov1iytDlEUxzq
+	8+Tp6wiTCdkbuTSw+voRiO9HvyeHG+JWSKYabZ+xsSS3dUAIumWHMwWBCFWYF9mh
+	ClIA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm1; t=1694472971; x=1694559371; bh=EapXY/dHk/L+K
+	fdsJnZIXaxdmbC/YxZh0fcsusxzVFI=; b=yJVLsQbOVAvTKRVKS6v75wpQgMsoT
+	9ywUmKRPfsf1BBXCY1CutXWcP7i+S+utGssDMp7J1Two2sJEdzhkuWaz1mMBECld
+	BBjrrwYVyp/rU/5zE0a/OfxQFuTohRzT8ONhSZ1v5Obka3Ca+TOmBJq3oMmTjQq1
+	8ofvp3OmG0Otplz7RMq7oH75+X95yAahcq9rqtZnPK5yJQ3eowitbf9xw+l+B719
+	bVH1NVp76WU/he8clQ/fxPKSUVuyza4XyVwFIszRYV+bcvZIjpynjaYSYnjCipRP
+	ukY7Gq9Ls7qeZvo5Xan5Kaf9L3BwiPL1ovkg+VNiCwo5p0iNvkJbR2ciw==
+X-ME-Sender: <xms:C5v_ZEpwyEBB74Zm39jhT64htpAlb6MdMT-bXMXlW4cKqlytXz5fXg>
+    <xme:C5v_ZKpnaKI4JTufIEfztGy9tX4JHGg_xeZiadJLZl8SM8R6xxeO96G7pu7293XXi
+    GKiEJCQuFZAYiD7jWs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrudeihedgudegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    gfrhhlucfvnfffucdluddtmdenucfjughrpefofgggkfgjfhffhffvvefutgesthdtredt
+    reertdenucfhrhhomhepfdflrghnucfjvghnughrihhkucfhrghrrhdfuceokhgvrhhnvg
+    hlsehjfhgrrhhrrdgttgeqnecuggftrfgrthhtvghrnhepteeluefhfeehtdejvdduvdel
+    hfffueevteefgeeuhedtiefgtedtheekhfefiedunecuffhomhgrihhnpehurghpihdqgh
+    hrohhuphdrohhrghdprghrtghhlhhinhhugidrohhrghdpfhgvughorhgrphhrohhjvggt
+    thdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
+    hmpehkvghrnhgvlhesjhhfrghrrhdrtggt
+X-ME-Proxy: <xmx:C5v_ZJM3r-dc6IffYP6H__wC090VsMK6o19bPReC26my5OUjiXLX6w>
+    <xmx:C5v_ZL4n8AvAAM-g_ClsLtVIwL1EW8AyhNcUWsrH0sj9qsY7PP3V4w>
+    <xmx:C5v_ZD5kYXz49K8Fj_OGtrvGT6f35vMs4ZRrwW4uTHAdtcKGdgvLDQ>
+    <xmx:C5v_ZAyCAZRXV9ddr4oruuG9fD_5ZU-TmNH4hCtm0tQwHvP3F5eNPw>
+Feedback-ID: i0fc947c4:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id E597B15A0091; Mon, 11 Sep 2023 18:56:10 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-745-g95dd7bea33-fm-20230905.001-g95dd7bea
 Mime-Version: 1.0
-Date: Tue, 12 Sep 2023 01:02:24 +0300
-Message-Id: <CVGFE6FRWFHR.DVG9NUQID4EA@suppilovahvero>
-Cc: <kexec@lists.infradead.org>, <x86@kernel.org>, <tglx@linutronix.de>,
- <dhowells@redhat.com>, <vgoyal@redhat.com>, <keyrings@vger.kernel.org>,
- <akpm@linux-foundation.org>, <bhe@redhat.com>, <bhelgaas@google.com>,
- <lennart@poettering.net>, <bluca@debian.org>,
- <systemd-devel@lists.freedesktop.org>
-Subject: Re: [PATCH 0/1] x86/kexec: UKI support
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Jan Hendrik Farr" <kernel@jfarr.cc>, <linux-kernel@vger.kernel.org>
-X-Mailer: aerc 0.14.0
+Message-Id: <1d974586-1bf7-42e8-9dae-e5e41a3dbc9f@app.fastmail.com>
+In-Reply-To: <CVGFE6FRWFHR.DVG9NUQID4EA@suppilovahvero>
 References: <20230909161851.223627-1-kernel@jfarr.cc>
-In-Reply-To: <20230909161851.223627-1-kernel@jfarr.cc>
+ <CVGFE6FRWFHR.DVG9NUQID4EA@suppilovahvero>
+Date: Tue, 12 Sep 2023 00:54:32 +0200
+From: "Jan Hendrik Farr" <kernel@jfarr.cc>
+To: "Jarkko Sakkinen" <jarkko@kernel.org>, linux-kernel@vger.kernel.org
+Cc: kexec@lists.infradead.org, x86@kernel.org, tglx@linutronix.de,
+ dhowells@redhat.com, vgoyal@redhat.com, keyrings@vger.kernel.org,
+ akpm@linux-foundation.org, bhe@redhat.com, bhelgaas@google.com,
+ lennart@poettering.net, "Luca Boccassi" <bluca@debian.org>
+Subject: Re: [PATCH 0/1] x86/kexec: UKI support
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230911_150231_129175_3269C1F8 
-X-CRM114-Status: GOOD (  12.60  )
+X-CRM114-CacheID: sfid-20230911_155619_194341_9121C2FD 
+X-CRM114-Status: GOOD (  11.58  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,45 +109,20 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sat Sep 9, 2023 at 7:18 PM EEST, Jan Hendrik Farr wrote:
-> Hello,
->
-> this patch implements UKI support for kexec_file_load. It will require support
-> in the kexec-tools userspace utility. For testing purposes the following can be used:
-> https://github.com/Cydox/kexec-test/
->
-> There has been discussion on this topic in an issue on GitHub that is linked below
-> for reference.
->
->
-> Some links:
-> - Related discussion: https://github.com/systemd/systemd/issues/28538
-> - Documentation of UKIs: https://uapi-group.org/specifications/specs/unified_kernel_image/
->
-> Jan Hendrik Farr (1):
->   x86/kexec: UKI support
->
->  arch/x86/include/asm/kexec-uki.h       |   7 ++
->  arch/x86/include/asm/parse_pefile.h    |  32 +++++++
->  arch/x86/kernel/Makefile               |   2 +
->  arch/x86/kernel/kexec-uki.c            | 113 +++++++++++++++++++++++++
->  arch/x86/kernel/machine_kexec_64.c     |   2 +
->  arch/x86/kernel/parse_pefile.c         | 110 ++++++++++++++++++++++++
->  crypto/asymmetric_keys/mscode_parser.c |   2 +-
->  crypto/asymmetric_keys/verify_pefile.c | 110 +++---------------------
->  crypto/asymmetric_keys/verify_pefile.h |  16 ----
->  9 files changed, 278 insertions(+), 116 deletions(-)
->  create mode 100644 arch/x86/include/asm/kexec-uki.h
->  create mode 100644 arch/x86/include/asm/parse_pefile.h
->  create mode 100644 arch/x86/kernel/kexec-uki.c
->  create mode 100644 arch/x86/kernel/parse_pefile.c
->
-> -- 
-> 2.40.1
+> What the heck is UKI?
 
-What the heck is UKI?
+UKI (Unified Kernel Image) is the kernel image + initrd + cmdline (+ some other optional stuff) all packaged up together as one EFI application.
 
-BR, Jarkko
+This EFI application can then be launched directly by the UEFI without the need for any additional stuff (or by systemd-boot). It's all self contained. One benefit is that this is a convenient way to distribute kernels all in one file. Another benefit is that the whole combination of kernel image, initrd, and cmdline can all be signed together so only that particular combination can be executed if you are using secure boot.
+
+The format itself is rather simple. It's just a PE file (as required by the UEFI spec) that contains a small stub application in the .text, .data, etc sections that is responsible for invoking the contained kernel and initrd with the contained cmdline. The kernel image is placed into a .kernel section, the initrd into a .initrd section, and the cmdline into a .cmdline section in the PE executable.
+
+If we want to kexec a UKI we could obviously just have userspace pick it apart and kexec it like normal. However in lockdown mode this will only work if you sign the kernel image that is contained inside the UKI. The problem with that is that anybody can then grab that signed kernel and launch it with any initrd or cmdline. So instead this patch makes the kernel do the work instead. The kernel verifies the signature on the entire UKI and then passes its components on to the normal kexec bzimage loader.
+
+Useful Links:
+UKI format documentation: https://uapi-group.org/specifications/specs/unified_kernel_image/
+Arch wiki: https://wiki.archlinux.org/title/Unified_kernel_image
+Fedora UKI support: https://fedoraproject.org/wiki/Changes/Unified_Kernel_Support_Phase_1
 
 _______________________________________________
 kexec mailing list
