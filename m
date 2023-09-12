@@ -4,105 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id F3B3ACA0EC3
-	for <kexec@archiver.kernel.org>; Tue, 12 Sep 2023 09:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5B75BCA0ECF
+	for <kexec@archiver.kernel.org>; Tue, 12 Sep 2023 10:33:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:References:Subject:Cc:To:
+	From:Message-Id:Date:Mime-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=/39PkruDz+mQKl8+//LrfB1qJAb28r/yiz2TS7aY63k=; b=SAokfwFJ5clcOQ
-	Bw0DrSA4qb2DLHk5Wh2UyclpHBi34JGDOXwSYsZOnv+tAw3X27eFP54xNdmwPIJEBFoMXYF8egtUp
-	+WroQnOksscYtFb1h+wukaBc5Oo7coiMPhPLE2UzE7T2I9oYS5N27Va4sJWLSqVQnrEgqDDFeXZbb
-	t5R69sW6DX3X4ivPBajYb9Rp4/AYZpUjHwk55y0suzoQyUm5owVkNw1syzi4cTpLHsjM3PHsqrfcY
-	zyz2ltXccuzV6XAFjo+q8GqMnCiyVuRQui/+JP3gmkgs3jkk+XgjrVvuvZMGX0OBmfnSJFToC2gKM
-	ksej85A478WSXeOySqOg==;
+	List-Owner; bh=uCVgcRAaAk6ZRvbV6UNZeCa20vvEZtXWVE/HkYElr+M=; b=LpTKk+WJaGrwP3
+	6JU6mWNVzD0Eb7miOIbfXYzli0PUsZ9ie7NzKcSBS+FdW2GfkVontFbDJmEjR1D4A2muD1USDD3hk
+	6pLb22CTncxKLkYuPJwrnspZHkcR1X2P85L48BQ/+BB8T8s3phgGlNOayGq9U+8w/G4lghAT953qT
+	rXk9K1O+XT7wGsL/12h2r9/OWXR/GWXhyqjNYsqyvtMpKeZD3T1jsFZeLVSTgodPOXpdz5Nouap7k
+	Rg7A4iPkIxoM3soOAFF8/jUw8t+AvMYU0f3INEpiwUaweBG/1M9RQrWLnutTuSRY1imj5tXEzr6Wp
+	5G9HAGdDXgEttkMDCCZQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qfzMP-002fap-1z;
-	Tue, 12 Sep 2023 09:07:05 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1qg0ho-002yFf-2c;
+	Tue, 12 Sep 2023 10:33:16 +0000
+Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qfzML-002fYa-2U
+	id 1qg0hl-002yF3-1J
 	for kexec@lists.infradead.org;
-	Tue, 12 Sep 2023 09:07:03 +0000
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38C91vIP025553;
-	Tue, 12 Sep 2023 09:06:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=Y8OCtdSde7iA1uZkyu+o7yedisY27qz84tjNtsqMNEg=;
- b=L1N3JWWA0vO4qs2PA9t33mqpO5GRCth/e0c7r1OmHofpL4k3WMKb18l+IjEeUBOo/fq3
- hOu0tIqphoTl7zWjKWRnPr3bwUep7Yp1Qj4YIKwExB6Cll3GaZ6OeOsmpdtijBwkQpJE
- IL0e5cG20KcduTM78UdSaN1dsGIK/QzsyNpdBA+v01uNtVRCjhv7tCMvPRlMphQvRWhx
- rrOse1BwBDvPIkAwafQ9VvUdy2EqV6uEBwIvF16k/TsC7or7+rI3UkDu4XB7rBzIUKQh
- y/Er71hu5DJT9C9khxlSkXep03ArOVbisRM4iYKAtV7fvU29gK6k12d/aluiJh8adCyd 2A== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t2n01g8tx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 12 Sep 2023 09:06:54 +0000
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 38C91qhh025374;
-	Tue, 12 Sep 2023 09:06:51 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t2n01g881-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 12 Sep 2023 09:06:51 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38C7XstN012005;
-	Tue, 12 Sep 2023 08:31:19 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3t15r1s348-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 12 Sep 2023 08:31:19 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38C8VGL624838720
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 12 Sep 2023 08:31:17 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D36B42004B;
-	Tue, 12 Sep 2023 08:31:16 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1CD8520040;
-	Tue, 12 Sep 2023 08:31:15 +0000 (GMT)
-Received: from [9.203.106.137] (unknown [9.203.106.137])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 12 Sep 2023 08:31:14 +0000 (GMT)
-Message-ID: <ad792aec-412e-27da-f39e-fd9c208ba154@linux.ibm.com>
-Date: Tue, 12 Sep 2023 14:01:14 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v2 2/3] vmcore: allow fadump to export vmcore even if
- is_kdump_kernel() is false
-Content-Language: en-US
-To: Baoquan He <bhe@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>
-Cc: lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Kexec-ml <kexec@lists.infradead.org>, Dave Young <dyoung@redhat.com>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>
-References: <20230905183604.568996-1-hbathini@linux.ibm.com>
- <20230905183604.568996-2-hbathini@linux.ibm.com> <8734zltc6z.fsf@mail.lhotse>
- <ZP7si3UMVpPfYV+w@MiWiFi-R3L-srv>
-From: Hari Bathini <hbathini@linux.ibm.com>
-In-Reply-To: <ZP7si3UMVpPfYV+w@MiWiFi-R3L-srv>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: UmsV8Qg1inj0-tWnQ5ORHQ9HC3NGCT4b
-X-Proofpoint-GUID: GbOruLY-scl7YyZ4pQ8FUQ1KOR7yBjmF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-12_06,2023-09-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=737 mlxscore=0
- lowpriorityscore=0 suspectscore=0 adultscore=0 priorityscore=1501
- malwarescore=0 spamscore=0 phishscore=0 bulkscore=0 clxscore=1015
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2308100000 definitions=main-2309120076
+	Tue, 12 Sep 2023 10:33:14 +0000
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id C556E604EF;
+	Tue, 12 Sep 2023 10:33:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3DE0C433C8;
+	Tue, 12 Sep 2023 10:33:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1694514792;
+	bh=G6tVIRokXJPGvWKTOTzEY6bZMaPMLiU8C0XfnDPSZEo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Q70e/AuK1dlDgyzk41Krdj9+9w+iAK60hbwst/thT3/E+V0KBqHGq1bFVgnz1Y5tE
+	 BNcZP8gyWxZmWST7xvNT50QLa1ma63GmiAsqDWy8g7fdExd57pqsnNBpEGG5y1CZZ4
+	 2heJ6mtCFwi67ozo4eMk4t6tHr94WJ0+E7dwbUXTNqGn7j9LaJoii57znlFVGsSLTr
+	 CalxdbClCdh/LrVxIBFE7zWni43Mp/BcEIcZiCJ88jtqnZd7S+8SJsueC3Lp4b40+d
+	 +fJZjQLcQazODhw0TaBJUbAqaBJzs0VoOyrGVHiL5tqKRbPbbB7mhVtMICse6Raz7p
+	 hKI6oYLR2eDCg==
+Mime-Version: 1.0
+Date: Tue, 12 Sep 2023 13:33:07 +0300
+Message-Id: <CVGVCYUGNKAI.1WYRZGI9HYDMC@suppilovahvero>
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Jan Hendrik Farr" <kernel@jfarr.cc>, <linux-kernel@vger.kernel.org>
+Cc: <kexec@lists.infradead.org>, <x86@kernel.org>, <tglx@linutronix.de>,
+ <dhowells@redhat.com>, <vgoyal@redhat.com>, <keyrings@vger.kernel.org>,
+ <akpm@linux-foundation.org>, <bhe@redhat.com>, <bhelgaas@google.com>,
+ <lennart@poettering.net>, "Luca Boccassi" <bluca@debian.org>
+Subject: Re: [PATCH 0/1] x86/kexec: UKI support
+X-Mailer: aerc 0.14.0
+References: <20230909161851.223627-1-kernel@jfarr.cc>
+ <CVGFE6FRWFHR.DVG9NUQID4EA@suppilovahvero>
+ <1d974586-1bf7-42e8-9dae-e5e41a3dbc9f@app.fastmail.com>
+In-Reply-To: <1d974586-1bf7-42e8-9dae-e5e41a3dbc9f@app.fastmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230912_020702_022535_0FA3DAE8 
-X-CRM114-Status: GOOD (  24.31  )
+X-CRM114-CacheID: sfid-20230912_033313_503922_F18EF1E2 
+X-CRM114-Status: GOOD (  21.17  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -114,94 +74,53 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On Tue Sep 12, 2023 at 1:54 AM EEST, Jan Hendrik Farr wrote:
+> > What the heck is UKI?
+>
+> UKI (Unified Kernel Image) is the kernel image + initrd + cmdline (+
+> some other optional stuff) all packaged up together as one EFI
+> application.
+>
+> This EFI application can then be launched directly by the UEFI without
+> the need for any additional stuff (or by systemd-boot). It's all self
+> contained. One benefit is that this is a convenient way to distribute
+> kernels all in one file. Another benefit is that the whole combination
+> of kernel image, initrd, and cmdline can all be signed together so
+> only that particular combination can be executed if you are using
+> secure boot.
 
+Is this also for generic purpose distributions? I mean it is not
+uncommon having to tweak the command-line in a workstation.
 
-On 11/09/23 4:01 pm, Baoquan He wrote:
-> On 09/11/23 at 05:13pm, Michael Ellerman wrote:
->> Hari Bathini <hbathini@linux.ibm.com> writes:
->>> Currently, is_kdump_kernel() returns true when elfcorehdr_addr is set.
->>> While elfcorehdr_addr is set for kexec based kernel dump mechanism,
->>> alternate dump capturing methods like fadump [1] also set it to export
->>> the vmcore. Since, is_kdump_kernel() is used to restrict resources in
->>> crash dump capture kernel and such restrictions are not desirable for
->>> fadump, allow is_kdump_kernel() to be defined differently for fadump
->>> case. With that change, include is_fadump_active() check in functions
->>> is_vmcore_usable() & vmcore_unusable() to be able to export vmcore for
->>> fadump case too.
->> ...
->>> diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
->>> index 0f3a656293b0..de8a9fabfb6f 100644
->>> --- a/include/linux/crash_dump.h
->>> +++ b/include/linux/crash_dump.h
->>> @@ -50,6 +50,7 @@ void vmcore_cleanup(void);
->>>   #define vmcore_elf64_check_arch(x) (elf_check_arch(x) || vmcore_elf_check_arch_cross(x))
->>>   #endif
->>>   
->>> +#ifndef is_kdump_kernel
->>>   /*
->>>    * is_kdump_kernel() checks whether this kernel is booting after a panic of
->>>    * previous kernel or not. This is determined by checking if previous kernel
->>> @@ -64,6 +65,19 @@ static inline bool is_kdump_kernel(void)
->>>   {
->>>   	return elfcorehdr_addr != ELFCORE_ADDR_MAX;
->>>   }
->>> +#endif
->>> +
->>> +#ifndef is_fadump_active
->>> +/*
->>> + * If f/w assisted dump capturing mechanism (fadump), instead of kexec based
->>> + * dump capturing mechanism (kdump) is exporting the vmcore, then this function
->>> + * will be defined in arch specific code to return true, when appropriate.
->>> + */
->>> +static inline bool is_fadump_active(void)
->>> +{
->>> +	return false;
->>> +}
->>> +#endif
->>>   
->>>   /* is_vmcore_usable() checks if the kernel is booting after a panic and
->>>    * the vmcore region is usable.
->>> @@ -75,7 +89,8 @@ static inline bool is_kdump_kernel(void)
->>>   
->>>   static inline int is_vmcore_usable(void)
->>>   {
->>> -	return is_kdump_kernel() && elfcorehdr_addr != ELFCORE_ADDR_ERR ? 1 : 0;
->>> +	return (is_kdump_kernel() || is_fadump_active())
->>> +		&& elfcorehdr_addr != ELFCORE_ADDR_ERR ? 1 : 0;
->>>   }
->>>   
->>>   /* vmcore_unusable() marks the vmcore as unusable,
->>> @@ -84,7 +99,7 @@ static inline int is_vmcore_usable(void)
->>>   
->>>   static inline void vmcore_unusable(void)
->>>   {
->>> -	if (is_kdump_kernel())
->>> +	if (is_kdump_kernel() || is_fadump_active())
->>>   		elfcorehdr_addr = ELFCORE_ADDR_ERR;
->>>   }
->>
->> I think it would be cleaner to decouple is_vmcore_usable() and
->> vmcore_usable() from is_kdump_kernel().
->>
->> ie, make them operate solely based on the value of elforehdr_addr:
->>
->> static inline int is_vmcore_usable(void)
->> {
->> 	elfcorehdr_addr != ELFCORE_ADDR_ERR && \
->> 		elfcorehdr_addr != ELFCORE_ADDR_MAX;
-> 
-> Agree. I fell into the blind corner of thinking earlier. Above change
-> is better.
+> The format itself is rather simple. It's just a PE file (as required
+> by the UEFI spec) that contains a small stub application in the .text,
+> .data, etc sections that is responsible for invoking the contained
+> kernel and initrd with the contained cmdline. The kernel image is
+> placed into a .kernel section, the initrd into a .initrd section, and
+> the cmdline into a .cmdline section in the PE executable.
 
-Thanks for the reviews.
-Posted v3.
+How does this interact with the existing EFI stub support in linux?
 
-- Hari
+> If we want to kexec a UKI we could obviously just have userspace pick
+> it apart and kexec it like normal. However in lockdown mode this will
+> only work if you sign the kernel image that is contained inside the
+> UKI. The problem with that is that anybody can then grab that signed
+> kernel and launch it with any initrd or cmdline. So instead this patch
+> makes the kernel do the work instead. The kernel verifies the
+> signature on the entire UKI and then passes its components on to the
+> normal kexec bzimage loader.
+>
+> Useful Links:
+> UKI format documentation: https://uapi-group.org/specifications/specs/unified_kernel_image/
+> Arch wiki: https://wiki.archlinux.org/title/Unified_kernel_image
+> Fedora UKI support: https://fedoraproject.org/wiki/Changes/Unified_Kernel_Support_Phase_1
+
+BR, Jarkko
 
 _______________________________________________
 kexec mailing list
