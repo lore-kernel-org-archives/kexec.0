@@ -4,73 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 64CD7CA0ECA
-	for <kexec@archiver.kernel.org>; Tue, 12 Sep 2023 07:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 89702CA0ED3
+	for <kexec@archiver.kernel.org>; Tue, 12 Sep 2023 07:19:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
 	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
 	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
 	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=R19bM/dvmRkwCYHJvva9FHSIR7N3EoqeU0N1iQKZ3Fk=; b=Oz2hgUIYxSrHIc
-	lFy6ogA4VvRhK1LVMHsAmR4d1gW9TWatqksn/cheYGljNhumWwWp5/Py7bWw9OUDJasaiGpev1PQT
-	pU2UNCX7+G/C/+AJiC2nQAYQUUitrACkmO1ZVSty4qKDBRKcOCBVASNlG2qSVl6T9mzk8izY83mId
-	g2tEdNVKOb6u8YJtH4017ttqFMHR04fwpcbCYy+3KZqPHmNE40xW4LYZNbDLuXpzsfuK7mgZvWosF
-	8Op590Y/ucUNtmoubiRR6Grm6V2C5ud3efxx6XXykw6qaJuHl7HQsG5YZVv887S0xEk2D5EQUbCKV
-	MyPpysI0/o50GqH4nJ/Q==;
+	List-Owner; bh=HtZBK/ltJDAw1oyCAEsI0dGtleHZZKoW87QqYmrLiL8=; b=VS2sq4/mdDePH7
+	ni4fEZpC2a0zIBYHRKkqeriyAmWDcnJOiYC8DBoIIZcS0uGsIHYRi/YlHfpGvs5U7J2mF7QriAM99
+	kgD2uiEn6eNoZ0vtcKnaJgzcdsQL3eb0BAR0Igga9aGf1kaIMQj6NiyPAnNRDyQTA9nJZTYKu2Sx5
+	5oiuCmQSRKKzazIrZMIn0uD3xznY3xKcfU335CW7CQE2Wk90ek2IjpW4WAx1jJ12NL5rDouoFNuVX
+	KdH+Dpt/Pd35PNTG9nyi7xuHIzbppdTmqB119ly4AMpAuH2TolvmIiuzdOG1bqFqe6jCxo905GvBq
+	JbOqzPnO+4uLGk3LT/5A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qfxfR-002NGB-2T;
-	Tue, 12 Sep 2023 07:18:37 +0000
+	id 1qfxgY-002NYU-00;
+	Tue, 12 Sep 2023 07:19:46 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qfxfP-002NFH-2H
+	id 1qfxgV-002NXA-36
 	for kexec@lists.infradead.org;
-	Tue, 12 Sep 2023 07:18:36 +0000
+	Tue, 12 Sep 2023 07:19:45 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1694503114;
+	s=mimecast20190719; t=1694503183;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+OodWnETEUgz5EFst9JGpxDf54xHXqhw04bLaPZH7zA=;
-	b=CfJufZ0+jnXUOpY16coEfCS98QFO6LyZiJN9ZQMEe4HxCEEczHeF8QRji3hYNbeDMVubLi
-	gHqDdWxKeZudQiHsUd87wPqpjxK1HDtphR7kFywyJrwBO45UzoqF2qdoKhL9doH/MrBHQR
-	2veEcmGi/Pw8q2Awo+KXC6QZ231lHVg=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=UcEya9HqsW3o+5ldQKv7HTPg9J+Z7fGPS0QxHHzAjY0=;
+	b=Llhd2xeNnpjLByHP4tUI6MoGML/jPRat3EwY7wLIXtprvvu4h7/2H+3gAL3Q5N4ETSiiBw
+	6RVrXqFnPstkSiuz34AzxLExKlOmL8dVbhtAmMfqsP4F7gBPv+KF5CJ8Efov725ygPnhYJ
+	y9Pq1x87EWk1IwFQEUpB4KSbJtVvWxg=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-30-udRNoAnKMNiyaJwdKoqkUw-1; Tue, 12 Sep 2023 03:18:33 -0400
-X-MC-Unique: udRNoAnKMNiyaJwdKoqkUw-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-402cd372b8bso42409865e9.2
-        for <kexec@lists.infradead.org>; Tue, 12 Sep 2023 00:18:33 -0700 (PDT)
+ us-mta-384-7VF65HJeNjKRXxHZtqmvFQ-1; Tue, 12 Sep 2023 03:19:41 -0400
+X-MC-Unique: 7VF65HJeNjKRXxHZtqmvFQ-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-3fbdf341934so41527505e9.3
+        for <kexec@lists.infradead.org>; Tue, 12 Sep 2023 00:19:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694503112; x=1695107912;
+        d=1e100.net; s=20230601; t=1694503180; x=1695107980;
         h=content-transfer-encoding:in-reply-to:organization:from:references
          :cc:to:content-language:subject:user-agent:mime-version:date
          :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=+OodWnETEUgz5EFst9JGpxDf54xHXqhw04bLaPZH7zA=;
-        b=p7Nu2dupa7l1GeJ+fjNRNl1J5EFRkoxsciP0Sg9xoRUp2nKt6sbFsRty1U8YKtk83Y
-         jBm9+rIHv8+EJn1IBTCDcWvnF32orauQpSGA/R8m8K5sbiuQdIpUjfgkcdw2WelacEr5
-         UMPZyhexa+LthOIFU4mIamFLeNlVCMqEkck78fFJll1/3l+dg0DahIJ4Ox8EOodDZg6d
-         LCAvc9MFJQTtwdxQdBYxBwWq8LzOp/eOe7LFgG3wY74ybYWV5OAzBIC4A9Kr/pYB+9Db
-         7q3AzZHmrBupAUmWATx7hDvMp0PPqSrdEnDV7FYfv62kg7HRHfci6xdPRSIp1A98JXqR
-         KEOw==
-X-Gm-Message-State: AOJu0YwuM7ALLg9HAhSNBI3/EIH7r5sXQkwpwDDKAh3psOOs9BTRbA8F
-	pp775ppIWJvbl5NNa1dWcGWHSwcP7nSieHmT5EwNIvj5qIN9ZdJyV8IYsDEUaSOYzcmNzUTjwQS
-	Ok2wvJwEHzHfMDV92Bp0Y
-X-Received: by 2002:a7b:c853:0:b0:401:db82:3edf with SMTP id c19-20020a7bc853000000b00401db823edfmr9908949wml.39.1694503112136;
-        Tue, 12 Sep 2023 00:18:32 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFQr59YxQoahIdt2pGpOn3n/3cyfcIn7qrajZoDiICpNrmoOnS/ynh5Tia67CgdCYHJ/KD0yA==
-X-Received: by 2002:a7b:c853:0:b0:401:db82:3edf with SMTP id c19-20020a7bc853000000b00401db823edfmr9908928wml.39.1694503111718;
-        Tue, 12 Sep 2023 00:18:31 -0700 (PDT)
+        bh=UcEya9HqsW3o+5ldQKv7HTPg9J+Z7fGPS0QxHHzAjY0=;
+        b=R24YNWawvxk8Zh5G0M/Hl4MwSeRjoTJJ/1pQbjjTxtduDcMS6BvB/0K54IxHO2my2Q
+         6zKbSseb3G8aFVBMwANgcwnvf0t5X09TJMUWJdH/7z7SXHNfoQV9uwypKRvgfDEZjqMd
+         20lSxk/nV7pe6Ja3JHpKFBea1au/o2gWBG0nJT76YdgTX9j4HVb/d/zNwOlBmtWz8lZH
+         U4WFm80Bhc6aBm5zv1QL+C0NGmJYCXXKqlPAmHgY11LmcbWNFo763tTKQoaZ9mF10VRv
+         q8OCcA+gMa7X7uBeTCAC5hjcbiEtgoljq93dJS6MAMypVQlUOesGpY2icyHDm7UDEZRd
+         i7LA==
+X-Gm-Message-State: AOJu0YycVV6JoLUOVacQCYWRW9pKtMmnW5sIpio4PSWXXL5dKIaft5Wv
+	3i7wQKzaCts/Muhmhz3qPL27U4/Hg75i3/1Yu/45DrvkVv4MXWE7Y4keaM5r6wHlBTPbP67FKqE
+	4SjmIiONuqt5lR/NoW5UP
+X-Received: by 2002:a1c:7c0e:0:b0:401:6800:703c with SMTP id x14-20020a1c7c0e000000b004016800703cmr11272007wmc.21.1694503180596;
+        Tue, 12 Sep 2023 00:19:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFBHMbRtiRZlVheP6qVSb8MqZ6oMl+4dwmRZR30fLEhp0pib6sKRWhTtFCZOTZU2I6KyZfYPg==
+X-Received: by 2002:a1c:7c0e:0:b0:401:6800:703c with SMTP id x14-20020a1c7c0e000000b004016800703cmr11271987wmc.21.1694503180236;
+        Tue, 12 Sep 2023 00:19:40 -0700 (PDT)
 Received: from ?IPV6:2003:cb:c74f:d600:c705:bc25:17b2:71c9? (p200300cbc74fd600c705bc2517b271c9.dip0.t-ipconnect.de. [2003:cb:c74f:d600:c705:bc25:17b2:71c9])
-        by smtp.gmail.com with ESMTPSA id y9-20020a7bcd89000000b003fed630f560sm12028942wmj.36.2023.09.12.00.18.30
+        by smtp.gmail.com with ESMTPSA id g17-20020a7bc4d1000000b003fc02e8ea68sm15188204wmk.13.2023.09.12.00.19.38
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Sep 2023 00:18:31 -0700 (PDT)
-Message-ID: <7f4881dc-885a-a8f5-47a5-0dd23886a416@redhat.com>
-Date: Tue, 12 Sep 2023 09:18:30 +0200
+        Tue, 12 Sep 2023 00:19:39 -0700 (PDT)
+Message-ID: <96f124d6-c1f2-adb3-1d3b-8329e85ff099@redhat.com>
+Date: Tue, 12 Sep 2023 09:19:38 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
@@ -96,8 +96,8 @@ X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230912_001835_813688_5B8966D3 
-X-CRM114-Status: GOOD (  15.49  )
+X-CRM114-CacheID: sfid-20230912_001944_067603_BB65FAB3 
+X-CRM114-Status: GOOD (  10.81  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -121,29 +121,11 @@ On 11.09.23 13:21, Adrian Hunter wrote:
 > 
 > Do not let /proc/vmcore try to access unaccepted memory because it can
 > cause the guest to fail.
-> 
-> For /proc/vmcore, which is read-only, this means a read or mmap of
-> unaccepted memory will return zeros.
-> 
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> ---
 
-[...]
+Oh, hold on. What are the actual side effects of this?
 
-> +static inline bool pfn_is_unaccepted_memory(unsigned long pfn)
-> +{
-> +	phys_addr_t paddr = pfn << PAGE_SHIFT;
-> +
-> +	return range_contains_unaccepted_memory(paddr, paddr + PAGE_SIZE);
-> +}
-> +
->   #endif /* _LINUX_MM_H */
-
-As stated, if the relevant table is not already properly populated with 
-information about unaccepted memory by the first kernel, this probably 
-logically belongs into Kirills series.
-
-Reviewed-by: David Hildenbrand <david@redhat.com>
+Once we're in the kdump kernel, any guest is already dead. So failing a 
+guest doesn't apply, no?
 
 -- 
 Cheers,
