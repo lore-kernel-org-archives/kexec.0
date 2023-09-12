@@ -4,79 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 89702CA0ED3
-	for <kexec@archiver.kernel.org>; Tue, 12 Sep 2023 07:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B87B0CA0EC3
+	for <kexec@archiver.kernel.org>; Tue, 12 Sep 2023 07:48:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
+	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=HtZBK/ltJDAw1oyCAEsI0dGtleHZZKoW87QqYmrLiL8=; b=VS2sq4/mdDePH7
-	ni4fEZpC2a0zIBYHRKkqeriyAmWDcnJOiYC8DBoIIZcS0uGsIHYRi/YlHfpGvs5U7J2mF7QriAM99
-	kgD2uiEn6eNoZ0vtcKnaJgzcdsQL3eb0BAR0Igga9aGf1kaIMQj6NiyPAnNRDyQTA9nJZTYKu2Sx5
-	5oiuCmQSRKKzazIrZMIn0uD3xznY3xKcfU335CW7CQE2Wk90ek2IjpW4WAx1jJ12NL5rDouoFNuVX
-	KdH+Dpt/Pd35PNTG9nyi7xuHIzbppdTmqB119ly4AMpAuH2TolvmIiuzdOG1bqFqe6jCxo905GvBq
-	JbOqzPnO+4uLGk3LT/5A==;
+	List-Owner; bh=wLWhi4KZIMrmopVNXUtG3bMkQ8Wc39j57BcTDXvtNZc=; b=jv2q3ii2cVkIa7
+	aJEkMjNsmyBiy4GPKZy2RALEg4wcm2Q0Eh6osQV7drv3ZnjtFJZWtQOxIue3GcqCEsZjkJXWTA7kf
+	cIRNnY2vSES2wZFciAqI7iahFdn40OHYtM/L7s3l31pNHgnre+Dto8v9H/3Z2/tJVp45aOyetUO9R
+	wF0u3OkRdpDufQjXLAs0sQL9udlxIf5f4mJc3fKs20STEfGm1CUlclBdBMHcugBHq+KI5/CMhOY/n
+	4JrA3DmDAp2r+9VJdCT78bgzhjhotm6awMuvVXTX6zh/5b9dsYB57reBk4R9ntAUSs/INfVwyUMhY
+	jZEVdAw/K7qR0tteYN7g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qfxgY-002NYU-00;
-	Tue, 12 Sep 2023 07:19:46 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1qfy7v-002Rfl-2k;
+	Tue, 12 Sep 2023 07:48:03 +0000
+Received: from mgamail.intel.com ([134.134.136.100])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qfxgV-002NXA-36
+	id 1qfy7s-002Rf1-2A
 	for kexec@lists.infradead.org;
-	Tue, 12 Sep 2023 07:19:45 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1694503183;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UcEya9HqsW3o+5ldQKv7HTPg9J+Z7fGPS0QxHHzAjY0=;
-	b=Llhd2xeNnpjLByHP4tUI6MoGML/jPRat3EwY7wLIXtprvvu4h7/2H+3gAL3Q5N4ETSiiBw
-	6RVrXqFnPstkSiuz34AzxLExKlOmL8dVbhtAmMfqsP4F7gBPv+KF5CJ8Efov725ygPnhYJ
-	y9Pq1x87EWk1IwFQEUpB4KSbJtVvWxg=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-384-7VF65HJeNjKRXxHZtqmvFQ-1; Tue, 12 Sep 2023 03:19:41 -0400
-X-MC-Unique: 7VF65HJeNjKRXxHZtqmvFQ-1
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-3fbdf341934so41527505e9.3
-        for <kexec@lists.infradead.org>; Tue, 12 Sep 2023 00:19:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694503180; x=1695107980;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UcEya9HqsW3o+5ldQKv7HTPg9J+Z7fGPS0QxHHzAjY0=;
-        b=R24YNWawvxk8Zh5G0M/Hl4MwSeRjoTJJ/1pQbjjTxtduDcMS6BvB/0K54IxHO2my2Q
-         6zKbSseb3G8aFVBMwANgcwnvf0t5X09TJMUWJdH/7z7SXHNfoQV9uwypKRvgfDEZjqMd
-         20lSxk/nV7pe6Ja3JHpKFBea1au/o2gWBG0nJT76YdgTX9j4HVb/d/zNwOlBmtWz8lZH
-         U4WFm80Bhc6aBm5zv1QL+C0NGmJYCXXKqlPAmHgY11LmcbWNFo763tTKQoaZ9mF10VRv
-         q8OCcA+gMa7X7uBeTCAC5hjcbiEtgoljq93dJS6MAMypVQlUOesGpY2icyHDm7UDEZRd
-         i7LA==
-X-Gm-Message-State: AOJu0YycVV6JoLUOVacQCYWRW9pKtMmnW5sIpio4PSWXXL5dKIaft5Wv
-	3i7wQKzaCts/Muhmhz3qPL27U4/Hg75i3/1Yu/45DrvkVv4MXWE7Y4keaM5r6wHlBTPbP67FKqE
-	4SjmIiONuqt5lR/NoW5UP
-X-Received: by 2002:a1c:7c0e:0:b0:401:6800:703c with SMTP id x14-20020a1c7c0e000000b004016800703cmr11272007wmc.21.1694503180596;
-        Tue, 12 Sep 2023 00:19:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFBHMbRtiRZlVheP6qVSb8MqZ6oMl+4dwmRZR30fLEhp0pib6sKRWhTtFCZOTZU2I6KyZfYPg==
-X-Received: by 2002:a1c:7c0e:0:b0:401:6800:703c with SMTP id x14-20020a1c7c0e000000b004016800703cmr11271987wmc.21.1694503180236;
-        Tue, 12 Sep 2023 00:19:40 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c74f:d600:c705:bc25:17b2:71c9? (p200300cbc74fd600c705bc2517b271c9.dip0.t-ipconnect.de. [2003:cb:c74f:d600:c705:bc25:17b2:71c9])
-        by smtp.gmail.com with ESMTPSA id g17-20020a7bc4d1000000b003fc02e8ea68sm15188204wmk.13.2023.09.12.00.19.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Sep 2023 00:19:39 -0700 (PDT)
-Message-ID: <96f124d6-c1f2-adb3-1d3b-8329e85ff099@redhat.com>
-Date: Tue, 12 Sep 2023 09:19:38 +0200
+	Tue, 12 Sep 2023 07:48:01 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694504880; x=1726040880;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=myILytDdutAkJHoVsjGJrHjJI0XRaM5nA9tqDHz8FOQ=;
+  b=KKNF208pbGslTV36/o3vVKkU1+5DPrGO6mUBSzwVzc1UXU7Qf8fwuruf
+   +HnElscS5akhh7YqfEnQw2eWnYeKTeWZ+y2em9OaxhIzA07axMCEQfRM9
+   CwkKaV2X/fSZtPIYo/xXksMuVQNcVC0yqHyEEzZ6y6zZrBpCnrtGQpDiZ
+   hgQJMaSnXZoGdG2/fZKtWdlmWWI0ssON7lYruztwD71i4RdYQ2Ui1jfda
+   pBzP68ittFpS6Ds33/RZwfrwdh8vQBA0dfsKlYVzmuDl73sOVuDSUZ+gP
+   yC30ELj28a6Tn/iXLk/qpCyjztVOyx1otiYp/2tn6C1sZFIDRwnoU1fCF
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="444742378"
+X-IronPort-AV: E=Sophos;i="6.02,245,1688454000"; 
+   d="scan'208";a="444742378"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2023 00:47:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10830"; a="867283368"
+X-IronPort-AV: E=Sophos;i="6.02,245,1688454000"; 
+   d="scan'208";a="867283368"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.249.45.152])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2023 00:47:53 -0700
+Message-ID: <1c736ca3-36e2-3225-2f98-e51149c468ef@intel.com>
+Date: Tue, 12 Sep 2023 10:47:49 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
+ Firefox/102.0 Thunderbird/102.15.0
 Subject: Re: [PATCH V2 1/2] efi/unaccepted: Do not let /proc/vmcore try to
  access unaccepted memory
-To: Adrian Hunter <adrian.hunter@intel.com>,
+Content-Language: en-US
+To: David Hildenbrand <david@redhat.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
  "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
  Borislav Petkov <bp@alien8.de>, Andrew Morton <akpm@linux-foundation.org>,
  Ard Biesheuvel <ardb@kernel.org>
@@ -89,15 +73,14 @@ Cc: Dave Hansen <dave.hansen@intel.com>, Vlastimil Babka <vbabka@suse.cz>,
  kexec@lists.infradead.org
 References: <20230911112114.91323-1-adrian.hunter@intel.com>
  <20230911112114.91323-2-adrian.hunter@intel.com>
-From: David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-In-Reply-To: <20230911112114.91323-2-adrian.hunter@intel.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
+ <96f124d6-c1f2-adb3-1d3b-8329e85ff099@redhat.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <96f124d6-c1f2-adb3-1d3b-8329e85ff099@redhat.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230912_001944_067603_BB65FAB3 
-X-CRM114-Status: GOOD (  10.81  )
+X-CRM114-CacheID: sfid-20230912_004800_752444_CE4E8E41 
+X-CRM114-Status: GOOD (  10.43  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -109,28 +92,27 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 11.09.23 13:21, Adrian Hunter wrote:
-> Support for unaccepted memory was added recently, refer commit dcdfdd40fa82
-> ("mm: Add support for unaccepted memory"), whereby a virtual machine may
-> need to accept memory before it can be used.
+On 12/09/23 10:19, David Hildenbrand wrote:
+> On 11.09.23 13:21, Adrian Hunter wrote:
+>> Support for unaccepted memory was added recently, refer commit dcdfdd40fa82
+>> ("mm: Add support for unaccepted memory"), whereby a virtual machine may
+>> need to accept memory before it can be used.
+>>
+>> Do not let /proc/vmcore try to access unaccepted memory because it can
+>> cause the guest to fail.
 > 
-> Do not let /proc/vmcore try to access unaccepted memory because it can
-> cause the guest to fail.
-
-Oh, hold on. What are the actual side effects of this?
-
-Once we're in the kdump kernel, any guest is already dead. So failing a 
-guest doesn't apply, no?
-
--- 
-Cheers,
-
-David / dhildenb
+> Oh, hold on. What are the actual side effects of this?
+> 
+> Once we're in the kdump kernel, any guest is already dead. So failing a guest doesn't apply, no?
+> 
+Unaccepted Memory is used by virtual machines.  In this case the guest
+has kexec'ed to a dump-capture kernel, so the virtual machine is still
+alive and running the dump-capture kernel.
 
 
 _______________________________________________
