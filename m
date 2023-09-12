@@ -4,75 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D98F9EE3F0C
-	for <kexec@archiver.kernel.org>; Tue, 12 Sep 2023 18:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5E48DEE3F0C
+	for <kexec@archiver.kernel.org>; Tue, 12 Sep 2023 18:57:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Subject:Cc:To:From:Date:References:
+	In-Reply-To:Message-Id:Mime-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=xQYUB6OPcz0WjbAlTmUp9Mu9TT9u8heaj3pL05h7gak=; b=WNTvY7ypnITxoP
-	apSZ3xKaoYOyGPYVkf4csFtVH/YCmEB2/uScdm5GtPEeDCQJYQByBpqi3cfcwUB7jvXfO3dtpwQYL
-	5tJi66wQktDg/K0ZvMNVQPb75vRjFkXFSXR4JhYIaXxdWapp3pPZRamiG5Mzkbi60zzTpGA2P4LhM
-	RujFOHUtKg9+pWcS7rWQkjhThQq7iYs2X++Ck5FP4J4IxsfBojAiwCON1/p6pwOUy85QBwfsRlMrP
-	ybrrZ5PuxYMK9MZ5l3aTbQw/TnbpVZMBOJpgPGNRdpRtNZmlMcI1X87sOrEclmM6Q+xcaYavKFS8W
-	+pdQKp3RrG+9TW7KOKDA==;
+	List-Owner; bh=CnhSCZ8kGDLiIHV8ihZTdHGur72KQ6QRDNwq9U+xqgc=; b=JWzoT4Q5Z86QAv
+	DxzCY3G3+85NYTl3bTZl6gcOutpH3LPnm2zWKI4mPE/unubl+TGpMVa9WqlTNhhvp5eWsqpq+cKWn
+	pvJKPx83u3HNQI9GOAwlBkOtJVtY9pjRS+t8TKafbUIQwER5Z9u+rzwIQ/RV2hj61OGCoh97mtzY3
+	aLoiidCG7FGhH/NUqm5PlEdh9kxsyG9Ak6diEE3El51NU7VJopufasbgU7M3GXB41kOGxi68FaukN
+	5c3LT+yvL3gC0xR+gvVjyxMbxrvhnOCPZvpCSV8jDo0opK4XSaSjsqK8Viy4u/AFmUKBLMr0FcKYz
+	GZJ1Rjdq+z924PPh3n1Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qg8Tu-0040o2-02;
-	Tue, 12 Sep 2023 18:51:26 +0000
-Received: from mgamail.intel.com ([134.134.136.65])
+	id 1qg8Zi-004185-2k;
+	Tue, 12 Sep 2023 18:57:26 +0000
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qg8Tq-0040nd-33
+	id 1qg8Zg-00417P-0I
 	for kexec@lists.infradead.org;
-	Tue, 12 Sep 2023 18:51:24 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694544682; x=1726080682;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=m4ArRUJq81IoQwOUurgDTOz0S2e8/xwn1JxXLNRgGXc=;
-  b=hPcpbJVc4c+v8/Q0KjpPr/Yc4RTZinlWWJ0Lh13abAeD8TdG/RalZ4JY
-   CFvQgZCdlC8ikI7arwmaz92sokD5o1C7yBbPQKjhgXXAKECwEwuryem9s
-   HVsyzPq9Zdsgk2Dv51pwcvGaeVfZbW+O47clQu/qzgNqaSbX4TdLlJl6t
-   DHS+XI+WPVOIN4M1a4eAXCwJaCItWNH7xuO066ePsDb5t0TcNivw9M4e+
-   83urUl7qgZ3JGzFemESnIKtuC8/hCTKILAafJRy5Lhi2KYOE/4o3VcbYH
-   VQsjkDzT48mlKgypwGznJ1k7kcQ6gWHHyEPZ2lCChFdOPbjiw5AAJdm/O
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10831"; a="382272923"
-X-IronPort-AV: E=Sophos;i="6.02,141,1688454000"; 
-   d="scan'208";a="382272923"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Sep 2023 11:51:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10831"; a="887041629"
-X-IronPort-AV: E=Sophos;i="6.02,141,1688454000"; 
-   d="scan'208";a="887041629"
-Received: from lkp-server02.sh.intel.com (HELO 47e905db7d2b) ([10.239.97.151])
-  by fmsmga001.fm.intel.com with ESMTP; 12 Sep 2023 11:50:45 -0700
-Received: from kbuild by 47e905db7d2b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1qg8Tf-00008v-17;
-	Tue, 12 Sep 2023 18:51:11 +0000
-Date: Wed, 13 Sep 2023 02:50:29 +0800
-From: kernel test robot <lkp@intel.com>
-To: Pingfan Liu <piliu@redhat.com>, linuxppc-dev@lists.ozlabs.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Baoquan He <bhe@redhat.com>, Pingfan Liu <piliu@redhat.com>,
-	kexec@lists.infradead.org, Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-	Ming Lei <ming.lei@redhat.com>, Wen Xiong <wenxiong@linux.ibm.com>,
-	Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCHv6 1/3] powerpc/setup: Loosen the mapping between cpu
- logical id and its seq in dt
-Message-ID: <202309130232.N2REwHBv-lkp@intel.com>
-References: <20230911131855.40738-2-piliu@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20230911131855.40738-2-piliu@redhat.com>
+	Tue, 12 Sep 2023 18:57:25 +0000
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.west.internal (Postfix) with ESMTP id 2EDF2320093B;
+	Tue, 12 Sep 2023 14:57:19 -0400 (EDT)
+Received: from imap49 ([10.202.2.99])
+  by compute6.internal (MEProxy); Tue, 12 Sep 2023 14:57:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:sender
+	:subject:subject:to:to; s=fm3; t=1694545038; x=1694631438; bh=IO
+	zvu/wQcUFkL4kn5T1Kjk+uNEL61aUsY9SPgQk7MK8=; b=fjRUzQkLRdHpPSr/bH
+	YcTbtRZRnuegXtWvPvj4mVPNpYgtfr88rYTfbN928dcorgSUOF05+NBMYMgvl33t
+	GXf4ud0A7HzXZ+jGZxjBFxZ/YyQ2wXJT4HZsShKYniX6FyJLLKeIOEAwb5VDHPAU
+	OYj6kZU20rvku9KyiDuzDKI1OySYFFWJiqKfFtSmGMM8MsJpuDw/oCQ0cz8zkcoR
+	u1RsINbT7mdE1onkHk6oBg3haf5cWbrly3f5h5HzATXHeMEwBlDR/CMqdq1cUUyQ
+	/5Sycynrnnd2yiZex1o6yx4daJ86HeVLIR6EpzHB3jIJ73QGI2+4uKQ5DH7KozcI
+	7Ufw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm1; t=1694545038; x=1694631438; bh=IOzvu/wQcUFkL
+	4kn5T1Kjk+uNEL61aUsY9SPgQk7MK8=; b=UYXKWnLMfWop89e7j4f9N7jjtixK5
+	CdgqFXswkYj/IVEA1NoNIbov+HV7iiYW9wjnxA/erO8gT0hIyTLtCBikUPMu8aAT
+	j3Hf+dtTe61bsHupLyeBa+1FLsJYp26mjDgwC5cYkAyDZh+RBPn02gPguwob5qfJ
+	LcnPmUp0GFNfydkk6wvLMPpe8KOzNTz62GfATX2NNDmPUDw18dB1kf8gZYN7eAkk
+	gFM3I+9PT5vW+xTHOBbOJ6Peef7HjIdF49XLUjYio6BTRpUojXZwVhMM9m4fUzMA
+	unzGyC6MnwsAU6rx+X34etqnnV0CeWdMNMJUJVhOYeOTUEjuqRwd69ghg==
+X-ME-Sender: <xms:jrQAZTCQbmetTJDuFCCQR61VfTjAAOCjGDB-K3C8dqSN-evJlV86_Q>
+    <xme:jrQAZZig1DMDWE_62DVpraDmk617hgxipymz-3rBAsH6Fn2KvIysmTAmsYeFKzpLS
+    4tPEI9kdGvHz24zpLA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrudeiiedgudefvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enfghrlhcuvffnffculdduhedmnecujfgurhepofgfggfkjghffffhvfevufgtsehttder
+    tderredtnecuhfhrohhmpedflfgrnhcujfgvnhgurhhikhcuhfgrrhhrfdcuoehkvghrnh
+    gvlhesjhhfrghrrhdrtggtqeenucggtffrrghtthgvrhhnpeffffeufefhiedvfeehgeev
+    ffffffduvdduhfefjeekgeeviefhuddvgeekvddvhfenucevlhhushhtvghrufhiiigvpe
+    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehkvghrnhgvlhesjhhfrghrrhdrtggt
+X-ME-Proxy: <xmx:jrQAZelIUe3yeq58-Ap3xp3GqR2zs-LFhkq_HncTgOMURCKDaL6sbA>
+    <xmx:jrQAZVzNzJwXgifUnRvbG7FbJ4JfQkS9annFNQz558KT-FgSwvQxPw>
+    <xmx:jrQAZYTcxxjd7h28Rrpfcz1snySktoEscXU88QJld8PoW_O8Kz9BRw>
+    <xmx:jrQAZdKXrtYBUrI-t_nS4nQjWDScGwY29_csWMpEGPUBsrC5Wt131w>
+Feedback-ID: i0fc947c4:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 492CD15A0091; Tue, 12 Sep 2023 14:57:18 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-745-g95dd7bea33-fm-20230905.001-g95dd7bea
+Mime-Version: 1.0
+Message-Id: <5a67051d-eb21-4a96-acc4-40f829a59e23@app.fastmail.com>
+In-Reply-To: <CVH4GZXQFZ1F.2V5BIZNSKQ1FA@suppilovahvero>
+References: <20230909161851.223627-1-kernel@jfarr.cc>
+ <CVGFE6FRWFHR.DVG9NUQID4EA@suppilovahvero>
+ <1d974586-1bf7-42e8-9dae-e5e41a3dbc9f@app.fastmail.com>
+ <CVGVCYUGNKAI.1WYRZGI9HYDMC@suppilovahvero>
+ <9580df76-c143-4077-8a39-b1fcc0ed37bd@app.fastmail.com>
+ <CVH4GZXQFZ1F.2V5BIZNSKQ1FA@suppilovahvero>
+Date: Tue, 12 Sep 2023 20:56:57 +0200
+From: "Jan Hendrik Farr" <kernel@jfarr.cc>
+To: "Jarkko Sakkinen" <jarkko@kernel.org>, linux-kernel@vger.kernel.org
+Cc: kexec@lists.infradead.org, x86@kernel.org, tglx@linutronix.de,
+ dhowells@redhat.com, vgoyal@redhat.com, keyrings@vger.kernel.org,
+ akpm@linux-foundation.org, "Baoquan He" <bhe@redhat.com>,
+ bhelgaas@google.com, lennart@poettering.net,
+ "Luca Boccassi" <bluca@debian.org>
+Subject: Re: [PATCH 0/1] x86/kexec: UKI support
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230912_115123_078760_3EAB35CB 
-X-CRM114-Status: GOOD (  11.90  )
+X-CRM114-CacheID: sfid-20230912_115724_420572_C0950AD0 
+X-CRM114-Status: GOOD (  12.80  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,41 +112,19 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Pingfan,
+> What sort of bottleneck does the EFI stub have so that we need yet
+> another envelope?
 
-kernel test robot noticed the following build errors:
+Well I can come up with a few advantages of UKI compared to normal bzImage with builtin initrd and cmdline.
 
-[auto build test ERROR on powerpc/fixes]
-[also build test ERROR on linus/master v6.6-rc1 next-20230912]
-[cannot apply to powerpc/next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+1. You already identified this one. Using addons to adjust your cmdline
+2. I can use my normal initramfs generation tooling. Just install my compiled kernel, my distros install script will generate the initramfs. Then I package it up as a UKI. This will be a lot more awkward with a builtin initrd.
+3. Measured boot. You can place PCR signatures in the UKI using systemd-measure. This will sign the expected PCR values for booting this UKI. I think with normal bzImage this will be a lot more difficult. If you place those PCR signatures in the builtin initrd this will change the kernel image which means now the values you signed no longer match (depending on how you measure the kernel; I don't think the normal EFI stub even measures the kernel in first place, but I could be mistaken about this)
+4. UKIs are automatically recognized by systemd-boot
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Pingfan-Liu/powerpc-setup-Loosen-the-mapping-between-cpu-logical-id-and-its-seq-in-dt/20230911-213042
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git fixes
-patch link:    https://lore.kernel.org/r/20230911131855.40738-2-piliu%40redhat.com
-patch subject: [PATCHv6 1/3] powerpc/setup: Loosen the mapping between cpu logical id and its seq in dt
-config: powerpc-randconfig-r032-20230912 (https://download.01.org/0day-ci/archive/20230913/202309130232.N2REwHBv-lkp@intel.com/config)
-compiler: clang version 17.0.0 (https://github.com/llvm/llvm-project.git 4a5ac14ee968ff0ad5d2cc1ffa0299048db4c88a)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230913/202309130232.N2REwHBv-lkp@intel.com/reproduce)
+There's probably more reasons. The main reason for me to go with UKIs initially was the good tooling around them.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202309130232.N2REwHBv-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> ld.lld: error: undefined symbol: boot_cpu_hwid
-   >>> referenced by setup-common.c:0 (arch/powerpc/kernel/setup-common.c:0)
-   >>>               arch/powerpc/kernel/setup-common.o:(smp_setup_cpu_maps) in archive vmlinux.a
-   >>> referenced by setup-common.c:0 (arch/powerpc/kernel/setup-common.c:0)
-   >>>               arch/powerpc/kernel/setup-common.o:(smp_setup_cpu_maps) in archive vmlinux.a
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+You could probably overcome some of these drawbacks in the default kernel EFI stub. For example it could also get a place to put signed PCR values. And it could also do TPM measurements. However in the process all you're doing is rebuilding what already exists today in systemd-stub and the tooling around UKIs.
 
 _______________________________________________
 kexec mailing list
