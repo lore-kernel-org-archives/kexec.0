@@ -4,101 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 99087EE3F22
-	for <kexec@archiver.kernel.org>; Tue, 12 Sep 2023 20:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 40A31EE3F3F
+	for <kexec@archiver.kernel.org>; Wed, 13 Sep 2023 00:37:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Subject:Cc:To:From:Date:References:
-	In-Reply-To:Message-Id:Mime-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References:Date:
+	Message-Id:From:Subject:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=Kt2yFEXX4PCe2kDPkEoFohD/zKlxaCl4CJ1YnylOQe0=; b=HcZdJaM7P1C/BH
-	bj8nKArdl4PmXMOSVjqqohVk8hLwmBNI1G3czurVY4aRBR1y6V0mp0n23z4pbnrBsIp0eIPK7J/28
-	N6Q/Qpu+m6/1vMXN4bPUhPtPixsH4esJcIKpHDdMKVUy4H35E33nKl658/cPTKUD9OJmlZcJoWij+
-	JLq4Ue1CqAobczfaoZDPWMRR9I57zLLGUknXCZaVpz1yQvq0enlO84Kj3jGsUH0enlQSnNFyXoLYC
-	OYmr972M0uthVgMz5/itKplly52ccdbBQGd0HED4SXzIdUBEeMegESbDCi2Ti87A2NxFrG3sE06ez
-	K540LslZYX+5vgpxgJkg==;
+	List-Owner; bh=3v7oxRuya1iOldqOdAWM5H/kGfUWXisSQ1R6c21tyqI=; b=CefVHPnGe9g5bg
+	Fk5itpF4v7wfuyyOFAOcgRPGqk/GpTyRXn7tQvjwJ/qsyQVG8QYK3VnRL1Xld5EEM/bgAvnp0HmPP
+	xXmkPCnWWtEA1GTAYCWR7tFdSqdqOTsrUmjadH+EIg9RbUVNL8i2nM927WHs5gbfRUNdyj5HYoQx+
+	B6XM4VMCACgHjC0mZawfJ56a1X40sjhtDnhsdj3E6H/cZjMCa+NX3wytqGU6jEbBQQBveXCYmYkCP
+	j+5VJEVODvnN3ezskw/O7Qus7VI+L3DSuebM28E7/sa+8erd6Tn4i3/1Z9Ns1AvLlo8giRJQR/PPp
+	ZfgDpOVLwoARgoSkT4Ag==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qgAKe-0046JS-02;
-	Tue, 12 Sep 2023 20:50:00 +0000
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25])
+	id 1qgDsY-004LtE-2T;
+	Wed, 13 Sep 2023 00:37:14 +0000
+Received: from sin.source.kernel.org ([145.40.73.55])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qgAKb-0046Ia-2L
-	for kexec@lists.infradead.org;
-	Tue, 12 Sep 2023 20:49:58 +0000
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailout.west.internal (Postfix) with ESMTP id 382963200954;
-	Tue, 12 Sep 2023 16:49:52 -0400 (EDT)
-Received: from imap49 ([10.202.2.99])
-  by compute6.internal (MEProxy); Tue, 12 Sep 2023 16:49:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm3; t=1694551791; x=1694638191; bh=Dv
-	Cb/EIqO1JW+sf1gb8MGaN948NTLFayPCF4KFvH4ug=; b=Zpx+QAadIrfUHY6wVf
-	Vbrmm+MyjRvASW54gJcsA4hetbwWutRn6RWvOYtQRSUNwQ43lX7KZmZAqH37v2Ec
-	s9cTHkc9DXu8CBHnwdP396U9JG+pttZBPKdInHKslhwJnr8tMfMTKmCwJnSJY7Bq
-	6LpzGVeui1dwYFi1JOhlK8d9dRo0ck//FXc+Z6hePBH5+bN8gwOYE50vc4vrGhJi
-	TpBxq1kGFNl+YGqr1CiNtQggBUoTtwtbhFm+z7Agq+lM0kdkYY6RPm+J6I3N6Y9D
-	2WzVnlY1MA/rtnsrmy+2Bd7/gym1Wedx7PMbovMb2+HEJ253s1OnOhZbx930niVC
-	/IeA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm1; t=1694551791; x=1694638191; bh=DvCb/EIqO1JW+
-	sf1gb8MGaN948NTLFayPCF4KFvH4ug=; b=af0d3cR5qR8XnTHMukkyjpBqXXsT6
-	B4OevtfhK74VrrdbQ+hVH0NoHRr6btQDyyHYeiejpjGmlIsVSG04GJhedLAEjjB/
-	1wGuDYJ7Jnd3rCYIdloAfKMrveOVZOwbcKKYLfj16ULAXvNdMOLv66RsyjWSVWYL
-	uphPRk3H3eBgog+jAT8CPs712Tm8s9SnxUsjjNxamggWQB262Hwh0YAh0a3cmwO+
-	YGckqd1tPnOj7GNDY/VH/MWnfsRRkok501kKVYLu3KwVMtlI/vsNUYvlk+chzxJa
-	mWutR1tSkb/x+6yAX68wP4KeGpCKbk39bvgCZPwbjbrtwlw5lE/0pW1fQ==
-X-ME-Sender: <xms:7s4AZUIIgzxTfkP56niPL64dW72pnyqCkFl3_LeeAoz89hzAzUnm3Q>
-    <xme:7s4AZULsA54M3zA-gh3GPX1ubmtfYzfRhlDSSNqa_V8-oAR1koUybcnnMW8OF-rPX
-    4EXMK8KsAso3E2Jpyw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrudeiiedgudehgecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enfghrlhcuvffnffculdduhedmnecujfgurhepofgfggfkjghffffhvfevufgtsehttder
-    tderredtnecuhfhrohhmpedflfgrnhcujfgvnhgurhhikhcuhfgrrhhrfdcuoehkvghrnh
-    gvlhesjhhfrghrrhdrtggtqeenucggtffrrghtthgvrhhnpeffffeufefhiedvfeehgeev
-    ffffffduvdduhfefjeekgeeviefhuddvgeekvddvhfenucevlhhushhtvghrufhiiigvpe
-    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehkvghrnhgvlhesjhhfrghrrhdrtggt
-X-ME-Proxy: <xmx:784AZUs8J84shFswdgIaQytbAaAMsI1MsHcSnJYEZBOwS7rkv-N7xw>
-    <xmx:784AZRZ65-owIok0-iFbhw14Ca6bXCaevSyXoxC6QfukkSzWpbIz7A>
-    <xmx:784AZbaDyti8-a4W676AmJSQSGG1-Tr7uAkq0CZrIdZeY54_hRQs5g>
-    <xmx:784AZYRvUR9LOJCU7v--icna8kQXS0CyPwWJuLIu8Mv8RKXkNm77dg>
-Feedback-ID: i0fc947c4:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id DFC7A15A0091; Tue, 12 Sep 2023 16:49:50 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-745-g95dd7bea33-fm-20230905.001-g95dd7bea
-Mime-Version: 1.0
-Message-Id: <1c342231-7672-450e-b945-e57cd17b4ae7@app.fastmail.com>
-In-Reply-To: <CVH6NGLENMPH.271W6X80061M@suppilovahvero>
-References: <20230909161851.223627-1-kernel@jfarr.cc>
- <CVGFE6FRWFHR.DVG9NUQID4EA@suppilovahvero>
- <1d974586-1bf7-42e8-9dae-e5e41a3dbc9f@app.fastmail.com>
- <CVGVCYUGNKAI.1WYRZGI9HYDMC@suppilovahvero>
- <9580df76-c143-4077-8a39-b1fcc0ed37bd@app.fastmail.com>
- <CVH4GZXQFZ1F.2V5BIZNSKQ1FA@suppilovahvero>
- <5a67051d-eb21-4a96-acc4-40f829a59e23@app.fastmail.com>
- <CVH6NGLENMPH.271W6X80061M@suppilovahvero>
-Date: Tue, 12 Sep 2023 22:49:00 +0200
-From: "Jan Hendrik Farr" <kernel@jfarr.cc>
-To: "Jarkko Sakkinen" <jarkko@kernel.org>, linux-kernel@vger.kernel.org
-Cc: kexec@lists.infradead.org, x86@kernel.org, tglx@linutronix.de,
- dhowells@redhat.com, vgoyal@redhat.com, keyrings@vger.kernel.org,
- akpm@linux-foundation.org, "Baoquan He" <bhe@redhat.com>,
- bhelgaas@google.com, lennart@poettering.net,
- "Luca Boccassi" <bluca@debian.org>
-Subject: Re: [PATCH 0/1] x86/kexec: UKI support
+	id 1qgDsO-004Lqg-1S;
+	Wed, 13 Sep 2023 00:37:12 +0000
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by sin.source.kernel.org (Postfix) with ESMTPS id ED8CFCE1FCA;
+	Wed, 13 Sep 2023 00:37:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 473AAC433C8;
+	Wed, 13 Sep 2023 00:37:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1694565420;
+	bh=srKgiw1+9R9KRwICqMzY0SIrsPWn+g9Gu8eRObYiO7Q=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=XDotN6mnkIxk5BwwtRJbhhYAc9wXZIDfi/y2pnldNwKoihG/Gny7S5Yn76/EDmxbg
+	 uwTooNoLcpFn+yCSO0YhGxIIkFJ1VoeMJVjgp1LbEGfcszktHmKAQx+fBHzMig6hI8
+	 ZRx46heOvgfjoUQS49Dqmlq41ANeV+/c6N6VYXx/fZXO5r1+xnl/fVzQ+8yFkaWPw1
+	 Q1U7JIyo5NSXUKkkd1xC2AzU784NYjg2rGtgbgE/OsEzNIJndsaulI15fqdTkV6M1A
+	 rM7OdYdPYFOGZLdQhu3tAVFLPZGUC/3E2cavirNdzcppdNtrtJJxnfFsLuiIDO5sOj
+	 Apa7qgZBGvaeQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2D3E8C04DD9;
+	Wed, 13 Sep 2023 00:37:00 +0000 (UTC)
+MIME-Version: 1.0
+Subject: Re: [PATCH V1 0/3] riscv: kexec: cleanup and fixups
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: <169456542018.30716.13506539771908013747.git-patchwork-notify@kernel.org>
+Date: Wed, 13 Sep 2023 00:37:00 +0000
+References: <20230907103304.590739-1-songshuaishuai@tinylab.org>
+In-Reply-To: <20230907103304.590739-1-songshuaishuai@tinylab.org>
+To: Song Shuai <songshuaishuai@tinylab.org>
+Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, conor.dooley@microchip.com,
+ lihuafei1@huawei.com, petr.tesarik.ext@huawei.com, duwe@suse.de,
+ ribalda@chromium.org, akpm@linux-foundation.org, keescook@chromium.org,
+ hi@alyssa.is, heiko@sntech.de, lizhengyu3@huawei.com, alexghiti@rivosinc.com,
+ schwab@suse.de, linux-kernel@vger.kernel.org, kexec@lists.infradead.org
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230912_134957_811448_ABC5E9B2 
-X-CRM114-Status: UNSURE (   5.29  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20230912_173704_656966_B5D5FB6D 
+X-CRM114-Status: GOOD (  10.68  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -115,12 +80,36 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+Hello:
 
-> These are sort of "tautological" arguments. There must be some
-> objective reasons why this architecture was chosen instead of
-> other (i.e. using what already pre-exists).
+This series was applied to riscv/linux.git (fixes)
+by Palmer Dabbelt <palmer@rivosinc.com>:
 
-I think I misunderstood you in my earlier reply. I do not understand in what way you think my arguments are tautological. Can you elaborate?
+On Thu,  7 Sep 2023 18:33:01 +0800 you wrote:
+> Hi,
+> 
+> I had posted 2 patches [1][2] for riscv/kexec, but there was no "effective"
+> response to them until now, so I merged them in this series with the 3rd fixup.
+> 
+> Anyway, this series contains a cleanup for riscv_kexec_relocate() and two fixups
+> for KEXEC_FILE and had passed the basic kexec test in my 64bit Qemu-virt.
+> 
+> [...]
+
+Here is the summary with links:
+  - [V1,1/3] riscv: kexec: Cleanup riscv_kexec_relocate
+    (no matching commit)
+  - [V1,2/3] riscv: kexec: Align the kexeced kernel entry
+    https://git.kernel.org/riscv/c/1bfb2b618d52
+  - [V1,3/3] riscv: kexec: Remove -fPIE for PURGATORY_CFLAGS
+    (no matching commit)
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
 
 _______________________________________________
 kexec mailing list
