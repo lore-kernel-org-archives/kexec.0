@@ -4,69 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A8FBCEDEC53
-	for <kexec@archiver.kernel.org>; Wed, 13 Sep 2023 14:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 696C5EDEC5C
+	for <kexec@archiver.kernel.org>; Wed, 13 Sep 2023 14:25:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=U0uXQ9IsgahHtEc/T5raGXwizbkC//Q7l4Pppe/gJ/w=; b=12RZqMZcki+GRn
-	rpYzP9ZMp8jXRDPMPVaZ6/UyvqEbcDDPuw2OTISPb8r1LaAPq+kOLqrwrQleieqtroLb16jfT/5qX
-	Qf7EeDOmD3ABL6GDRqZXBvoI63KDWtYpa1KpTLZ8k/pZXPsnOr+TkqWvM9eTsqpBwtzQPc4IYCmx+
-	YIHoJefEuSnnJwtmcUBOAtU+qYYQ/k5ALk3S+jmO0I4TqNFcXtC/MS88Rs0w0cRbVkmdGz0qsXkg8
-	0c8y8/FMME2V/kxTXu9s9J25L6XqVaKWkkG5M2Hbf4GhtoNoriUjHlf7rWjgCGIlh2R8zlazu1pAk
-	AMHIEJ0htNfyG7gjd1nA==;
+	List-Owner; bh=W/791Kyr9bOt9Mn1GstsQK988jAw/WqU6kqUaJJnhiQ=; b=o98A5zpIUSuxCY
+	su2yriqhvd89Nqan1AGL8iPlvpydVXxE+QwNDm8lPGQ40XtZyqO+J64JPh1CYbYDhE/7zpc1oY89O
+	pfuRvZmkqkl/ojHI4XLTmms67eYCKYWQvU1IAnLrT3IrMm7Q5oGUQ83I9N6buqLL3RN/Yb11oSbAS
+	C11a1LAMX1VrgnEuAZW2e8oQ+fMyW7JF3Kzi+sVPifrNNFI9GB0dv+jiVn2mPAj2WkyQzda8LSlE0
+	UNSfu+Qzc/Zakm1jQ17DIUfekrIqrTCxfb84US2jCa22O3IE1rtf0Ii9erBWWqt6y9E8GBx2xwyz7
+	PhvnUR2AoW7RxD+JTxpg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qgQT6-0065Kw-0r;
-	Wed, 13 Sep 2023 14:03:48 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1qgQnf-00673b-2y;
+	Wed, 13 Sep 2023 14:25:03 +0000
+Received: from mgamail.intel.com ([134.134.136.31])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qgQT1-0065Ix-2K
+	id 1qgQnc-00672u-1C
 	for kexec@lists.infradead.org;
-	Wed, 13 Sep 2023 14:03:45 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1694613815;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xS4/fTwaJzoinJru6fqZ1bq4iwGN/D53z+FVXXr+H7M=;
-	b=WKPsyBnt6+EU+v3063JQTVcrXLuGfT/PisMlWQ0kfA/pBgxEslib8NgEXBDINBpSeLlaPR
-	B+2QtG1FyW16Ch8qIHQ9cYuoW0tDyDR+qRyOTbPEwMGXKxpOpbMtVLDIdEwV55/lwH2koY
-	n0jUwIIERpwPs4rlwbv7aM3ZMuqcmgs=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-539-TQukLfSvNPe2LCPAt8_LrA-1; Wed, 13 Sep 2023 10:01:03 -0400
-X-MC-Unique: TQukLfSvNPe2LCPAt8_LrA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C4E27939A78;
-	Wed, 13 Sep 2023 14:00:48 +0000 (UTC)
-Received: from rotkaeppchen (unknown [10.39.192.155])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id B9BCF1008807;
-	Wed, 13 Sep 2023 14:00:46 +0000 (UTC)
-Date: Wed, 13 Sep 2023 16:00:45 +0200
-From: Philipp Rudo <prudo@redhat.com>
-To: Jan Hendrik Farr <kernel@jfarr.cc>
-Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, x86@kernel.org,
- tglx@linutronix.de, dhowells@redhat.com, vgoyal@redhat.com,
- keyrings@vger.kernel.org, akpm@linux-foundation.org, bhe@redhat.com,
- bhelgaas@google.com, bluca@debian.org, lennart@poettering.net
-Subject: Re: [PATCH v2 0/2] x86/kexec: UKI Support
-Message-ID: <20230913160045.40d377f9@rotkaeppchen>
-In-Reply-To: <20230911052535.335770-1-kernel@jfarr.cc>
-References: <20230911052535.335770-1-kernel@jfarr.cc>
-Organization: Red Hat inc.
+	Wed, 13 Sep 2023 14:25:01 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694615100; x=1726151100;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=XKOsmvZaoSUNMXOhheZXkeEtZd0F/hnfQCZH/hf2+EQ=;
+  b=m+ukyv+Za50O08hUtpJvlHEc3MtEcpGiLXU3QdIxa7bGjkuFTZitkP2b
+   41nseqRbOgZbJiNSTNPTkIGEmlrshXK8qjboxKi1ZUjrhuXmA/EB58jaz
+   OHvZWr5JGlnGpTo6RVNfbvnQQ+q6tBoeClCO3p1C07qih6CRJoUb/WVCL
+   /rcJ6O8Ywn6+66VXjjYLJgKBHCa+QNS9NWQ+gWKPbVmWOPFzzCYhkYJhb
+   NVoXph50Fl2INU7mynD2i9Li8F3LWsdNH64Jj83Gjbffe6NWPHM9ZiPgf
+   OHH1xDAr13gDP6wrO7IkGzA1TLzYiSsjvxbIXF4eOha3U/RJnyT+CktWf
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="442705096"
+X-IronPort-AV: E=Sophos;i="6.02,143,1688454000"; 
+   d="scan'208";a="442705096"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 07:24:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="747322619"
+X-IronPort-AV: E=Sophos;i="6.02,143,1688454000"; 
+   d="scan'208";a="747322619"
+Received: from mdhaisne-mobl.ger.corp.intel.com (HELO box.shutemov.name) ([10.249.45.137])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2023 07:24:18 -0700
+Received: by box.shutemov.name (Postfix, from userid 1000)
+	id D49C310940B; Wed, 13 Sep 2023 17:24:10 +0300 (+03)
+Date: Wed, 13 Sep 2023 17:24:10 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Dave Young <dyoung@redhat.com>
+Cc: Ard Biesheuvel <ardb@google.com>, Kees Cook <keescook@chromium.org>,
+	Aaron Lu <aaron.lu@intel.com>, Bagas Sanjaya <bagasdotme@gmail.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	kexec@lists.infradead.org, Tom Lendacky <thomas.lendacky@amd.com>,
+	x86@kernel.org
+Subject: Re: kexec reboot failed due to commit 75d090fd167ac
+Message-ID: <20230913142410.dfqsg3l5v44mr5j3@box>
+References: <20230829125939.bcg2r6hwqf45npko@box.shutemov.name>
+ <20230829140451.GA509854@ziqianlu-dell>
+ <20230907131409.masxz42ik6u456qp@box.shutemov.name>
+ <20230908060230.GA283801@ziqianlu-dell>
+ <20230908123233.dpbpohgrbyyxekzk@box.shutemov.name>
+ <202309080856.F066F92C98@keescook>
+ <CAGnOC3aG9BuoVEGs4LQhhczdhAF0gFBmXR7GXKAf4Z8FPTb1PQ@mail.gmail.com>
+ <20230909113209.actnan6hczrclz2d@box.shutemov.name>
+ <CALu+AoSKpgbbKmsL8iuWpQB2ANqnhhfXR5pN5m0EsKZeFUBPkw@mail.gmail.com>
+ <20230911145707.hslq47ngknshrlyk@box.shutemov.name>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
+Content-Disposition: inline
+In-Reply-To: <20230911145707.hslq47ngknshrlyk@box.shutemov.name>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230913_070343_911267_7B85F000 
-X-CRM114-Status: GOOD (  32.75  )
+X-CRM114-CacheID: sfid-20230913_072500_457640_EB0F00B0 
+X-CRM114-Status: GOOD (  25.02  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,102 +92,97 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Jan,
+On Mon, Sep 11, 2023 at 05:57:07PM +0300, Kirill A. Shutemov wrote:
+> On Mon, Sep 11, 2023 at 10:56:36PM +0800, Dave Young wrote:
+> > > early console in extract_kernel
+> > > input_data: 0x000000807eb433a8
+> > > input_len: 0x0000000000d26271
+> > > output: 0x000000807b000000
+> > > output_len: 0x0000000004800c10
+> > > kernel_total_size: 0x0000000003e28000
+> > > needed_size: 0x0000000004a00000
+> > > trampoline_32bit: 0x000000000009d000
+> > >
+> > > Decompressing Linux... out of pgt_buf in arch/x86/boot/compressed/ide=
+nt_map_64.c!?
+> > > pages->pgt_buf_offset: 0x0000000000006000
+> > > pages->pgt_buf_size: 0x0000000000006000
+> > >
+> > >
+> > > Error: kernel_ident_mapping_init() failed
+> > >
+> > > It crashes on #PF due to stbl->nr_tables dereference in
+> > > efi_get_conf_table() called from init_unaccepted_memory().
+> > >
+> > > I don't see anything special about stbl location: 0x775d6018.
+> > >
+> > > One other bit of information: disabling 5-level paging also helps the
+> > > issue.
+> > >
+> > > I will debug further.
+> =
 
-All in all the code looks fine to me. Nevertheless I don't think UKI support
-should be added at the moment. This is because IMHO you basically reinterpret
-the kexec_file systemcall and thus add a new uapi to the kernel. Once
-introduced it is extremely hard to remove or change an uapi again. The problem
-I see is that the spec you based your work on is in such a poor shape that I
-don't feel comfortable to add any new uapi based on it.
+> The problem is not limited to unaccepted memory, it also triggers if we
+> reach efi_get_rsdp_addr() in the same setup.
+> =
 
-For example there are two definitions for the UKI which contradict each other.
-The dedicated one [1] you have cited earlier and the one in the BLS for type #2
-entries [2]. In [1] the .linux and .initrd sections are mandatory and the
-.osrel and .cmdline sections are optional while in [2] it is the other way
-round. Which definition should the kernel follow?
+> I think we have several problems here.
+> =
 
-Furthermore, I absolutely don't understand how the spec should be read. All
-the spec does is defining some file formats. There is no word about which
-component in the boot chain is supposed to handle them and what exactly this
-component is supposed to do with it. But that is crucial if we want to add UKI
-support for kexec as the kexec systemcall will replace the stub. So we need to
-know what tasks the stub is supposed to perform. Currently this is only some
-implementation detail of the systemd-stub [3] that can change any moment and I
-strongly oppose to base any uapi on it.
+> - 6 pages for !RANDOMIZE_BASE is only enough for kernel, cmdline,
+>   boot_data and setup_data if we assume that they are in different 1G
+>   regions and do not cross the 1G boundaries. 4-level paging: 1 for PGD, 1
+>   for PUD, 4 for PMD tables.
+> =
 
-In the end the only benefit this series brings is to extend the signature
-checking on the whole UKI except of just the kernel image. Everything else can
-also be done in user space. Compared to the problems described above this is a
-very small gain for me.
+>   Looks like we never map EFI/ACPI memory explicitly.
+> =
 
-Until the spec got fixed I don't see a chance to add UKI support for kexec.
+>   It might work if kernel/cmdline/... are in single 1G and we have
+>   spare pages to handle page faults.
+> =
 
-Thanks
-Philipp
+> - No spare memory to handle mapping for cc_info and cc_info->cpuid_phys;
+> =
 
-[1] https://uapi-group.org/specifications/specs/unified_kernel_image/
-[2] https://uapi-group.org/specifications/specs/boot_loader_specification/#type-2-efi-unified-kernel-images
-[3] https://www.freedesktop.org/software/systemd/man/systemd-stub.html
+> - I didn't increase BOOT_INIT_PGT_SIZE when added 5-level paging support.
+>   And if start pagetables from scratch ('else' case of 'if (p4d_offset...=
+))
+>   we run out of memory.
+> =
 
-On Mon, 11 Sep 2023 07:25:33 +0200
-Jan Hendrik Farr <kernel@jfarr.cc> wrote:
+> I believe similar logic would apply for BOOT_PGT_SIZE for RANDOMIZE_BASE=
+=3Dy
+> case.
+> =
 
-> Hello,
-> 
-> this patch (v2) implements UKI support for kexec_file_load. It will require
-> support in the kexec-tools userspace utility. For testing purposes the
-> following can be used: https://github.com/Cydox/kexec-test/
-> 
-> Creating UKIs for testing can be done with ukify (included in systemd),
-> sbctl, and mkinitcpio, etc.
-> 
-> There has been discussion on this topic in an issue on GitHub that is linked
-> below for reference.
-> 
-> Changes for v2:
-> - .cmdline section is now optional
-> - moving pefile_parse_binary is now in a separate commit for clarity
-> - parse_pefile.c is now in /lib instead of arch/x86/kernel (not sure if
->   this is the best location, but it definetly shouldn't have been in an
->   architecture specific location)
-> - parse_pefile.h is now in include/kernel instead of architecture
->   specific location
-> - if initrd or cmdline is manually supplied EPERM is returned instead of
->   being silently ignored
-> - formatting tweaks
-> 
-> 
-> Some links:
-> - Related discussion: https://github.com/systemd/systemd/issues/28538
-> - Documentation of UKIs: https://uapi-group.org/specifications/specs/unified_kernel_image/
-> 
-> Jan Hendrik Farr (2):
->   move pefile_parse_binary to its own file
->   x86/kexec: UKI support
-> 
->  arch/x86/include/asm/kexec-uki.h       |   7 ++
->  arch/x86/kernel/Makefile               |   1 +
->  arch/x86/kernel/kexec-uki.c            | 126 +++++++++++++++++++++++++
->  arch/x86/kernel/machine_kexec_64.c     |   2 +
->  crypto/asymmetric_keys/mscode_parser.c |   2 +-
->  crypto/asymmetric_keys/verify_pefile.c | 110 +++------------------
->  crypto/asymmetric_keys/verify_pefile.h |  16 ----
->  include/linux/parse_pefile.h           |  32 +++++++
->  lib/Makefile                           |   3 +
->  lib/parse_pefile.c                     | 109 +++++++++++++++++++++
->  10 files changed, 292 insertions(+), 116 deletions(-)
->  create mode 100644 arch/x86/include/asm/kexec-uki.h
->  create mode 100644 arch/x86/kernel/kexec-uki.c
->  create mode 100644 include/linux/parse_pefile.h
->  create mode 100644 lib/parse_pefile.c
-> 
+> I don't know what the right fix here. We can increase the constants to be
+> enough to cover existing cases, but it is very fragile. I am not sure I
+> saw all users. Some of them could silently handled with pagefault handler
+> in some setups. And it is hard to catch new users during code review.
+> =
 
+> Also I'm not sure why do we need pagefault handler there. Looks like it
+> just masking problems. I think everything has to be mapped explicitly.
+> =
+
+> Any comments?
+
+I struggle to come up with anything better than increasing the constant to
+a value that "ought to be enough for anybody" =A9, let's say 128K.
+
+And we can eliminate logic on no-KASLR vs. KASLR vs. KASLR+VERBOSE_BOOTUP.
+
+Objections?
+
+-- =
+
+  Kiryl Shutsemau / Kirill A. Shutemov
 
 _______________________________________________
 kexec mailing list
