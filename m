@@ -4,55 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 51A33EDE998
-	for <kexec@archiver.kernel.org>; Thu, 14 Sep 2023 08:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3DF13EDE99E
+	for <kexec@archiver.kernel.org>; Thu, 14 Sep 2023 09:11:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=P8gV/b5e8uZXj4IguWNKg2ISrqJFpP47zGCOZSJFU7k=; b=WPcmKxnM3p5px6
-	psNO9oowmA7nrElOB2AbQYBH72nmgVO4iTF9lWd2zQXs6Q/vS9xr0dsLKFT1bUynwpsfx7TU0FJ15
-	tEqjTUce1/dIqkkHlclA0yeZO+tgSSBTPfPoVOx4V3IYpkt+1RTgtGdYMSwVPNK88JL7XAFr8fXlq
-	imfZhsbCjlT9fs/suMSn+gAXa2lKiv7Ss0dOnccSPc4LCuP+t0Ti/+WPhv9fmdE6sT4j1yKvJ5LOB
-	sbLmuH7SX6hvqx+QDSW8jqd9UwqnQTv8ohXUy0mHnSMco6CEOETbCuET0ro1GtiyWt7lzOTaGBlG5
-	7A55aEkiBl0tYPvYCzNA==;
+	List-Owner; bh=KV86NdSClnoLSFOf12bJS1fjB11RmJ7GjcpT5Oamzik=; b=ji5GQoS0nSKF0P
+	BIWXXbQezcxnRv6P2mqLuNipiaGFfq5tq5iN3b8GNYKfXLi4+RorOChGyW0oyj5LOryrukMJPGhWG
+	obeR+G/n4I76rxiuRnkmuLKRt2XXf44TtZ1Ia318F5bLyfT3kwDvmsEpjGDE4115HgjY5LutZNB22
+	0rRmvWtaJIZAk0zTFve1+Ps1nBs0sCZDeM+yaTfokA9YgQ2AU+mXioXQlSpurM9RyIcKvzW643bTF
+	PdfQqwxP4sOwRmqPO08RZ21PGgt+YjXylgIwH5jrz7aAw/7jOndx5yn22VbU12vkiWJcikQWNv8Vu
+	fss7xA2WNgVK1ZBpslDA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qgi9j-007lty-15;
-	Thu, 14 Sep 2023 08:56:59 +0000
-Received: from gardel.0pointer.net ([85.214.157.71])
+	id 1qgiNY-007oK1-0Y;
+	Thu, 14 Sep 2023 09:11:16 +0000
+Received: from gardel.0pointer.net ([2a01:238:43ed:c300:10c3:bcf3:3266:da74])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qgi9g-007lsE-0Z
+	id 1qgiNV-007oIm-0a
 	for kexec@lists.infradead.org;
-	Thu, 14 Sep 2023 08:56:57 +0000
+	Thu, 14 Sep 2023 09:11:14 +0000
 Received: from gardel-login.0pointer.net (gardel-mail [IPv6:2a01:238:43ed:c300:10c3:bcf3:3266:da74])
-	by gardel.0pointer.net (Postfix) with ESMTP id 5DD2AE801F5;
-	Thu, 14 Sep 2023 10:48:56 +0200 (CEST)
+	by gardel.0pointer.net (Postfix) with ESMTP id 41459E801F5;
+	Thu, 14 Sep 2023 11:11:09 +0200 (CEST)
 Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
-	id 0FC7C160258; Thu, 14 Sep 2023 10:48:55 +0200 (CEST)
-Date: Thu, 14 Sep 2023 10:48:55 +0200
+	id C9E14160258; Thu, 14 Sep 2023 11:11:08 +0200 (CEST)
+Date: Thu, 14 Sep 2023 11:11:08 +0200
 From: Lennart Poettering <mzxreary@0pointer.de>
-To: Jan Hendrik Farr <kernel@jfarr.cc>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>, linux-kernel@vger.kernel.org,
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Jan Hendrik Farr <kernel@jfarr.cc>, linux-kernel@vger.kernel.org,
 	kexec@lists.infradead.org, x86@kernel.org, tglx@linutronix.de,
 	dhowells@redhat.com, vgoyal@redhat.com, keyrings@vger.kernel.org,
 	akpm@linux-foundation.org, Baoquan He <bhe@redhat.com>,
 	bhelgaas@google.com, Luca Boccassi <bluca@debian.org>
 Subject: Re: [PATCH 0/1] x86/kexec: UKI support
-Message-ID: <ZQLI92sQrnTC9Wel@gardel-login>
+Message-ID: <ZQLOLLbu0fh27LpQ@gardel-login>
 References: <20230909161851.223627-1-kernel@jfarr.cc>
  <CVGFE6FRWFHR.DVG9NUQID4EA@suppilovahvero>
  <1d974586-1bf7-42e8-9dae-e5e41a3dbc9f@app.fastmail.com>
  <CVGVCYUGNKAI.1WYRZGI9HYDMC@suppilovahvero>
  <9580df76-c143-4077-8a39-b1fcc0ed37bd@app.fastmail.com>
+ <CVH4GZXQFZ1F.2V5BIZNSKQ1FA@suppilovahvero>
+ <5a67051d-eb21-4a96-acc4-40f829a59e23@app.fastmail.com>
+ <CVH6NGLENMPH.271W6X80061M@suppilovahvero>
+ <1c342231-7672-450e-b945-e57cd17b4ae7@app.fastmail.com>
+ <CVHVCHYZT8KG.3L0IH30QYT0WH@suppilovahvero>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <9580df76-c143-4077-8a39-b1fcc0ed37bd@app.fastmail.com>
+In-Reply-To: <CVHVCHYZT8KG.3L0IH30QYT0WH@suppilovahvero>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230914_015656_375128_B45F1BD3 
-X-CRM114-Status: GOOD (  15.62  )
+X-CRM114-CacheID: sfid-20230914_021113_363020_CD176486 
+X-CRM114-Status: GOOD (  19.46  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -69,28 +74,66 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Di, 12.09.23 17:32, Jan Hendrik Farr (kernel@jfarr.cc) wrote:
+On Mi, 13.09.23 17:45, Jarkko Sakkinen (jarkko@kernel.org) wrote:
 
-> >> The format itself is rather simple. It's just a PE file (as required
-> >> by the UEFI spec) that contains a small stub application in the .text,
-> >> .data, etc sections that is responsible for invoking the contained
-> >> kernel and initrd with the contained cmdline. The kernel image is
-> >> placed into a .kernel section, the initrd into a .initrd section, and
-> >> the cmdline into a .cmdline section in the PE executable.
+> On Tue Sep 12, 2023 at 11:49 PM EEST, Jan Hendrik Farr wrote:
 > >
-> > How does this interact with the existing EFI stub support in
-> > linux?
+> > > These are sort of "tautological" arguments. There must be some
+> > > objective reasons why this architecture was chosen instead of
+> > > other (i.e. using what already pre-exists).
+> >
+> > I think I misunderstood you in my earlier reply. I do not understand
+> > in what way you think my arguments are tautological. Can you
+> > elaborate?
 >
-> It doesn't. During normal boot of a UKI the stub in it is used
-> (systemd-stub, see:
-> https://www.freedesktop.org/software/systemd/man/systemd-stub.html). The
-> kernel's own EFI stub will still be in the binary inside the .linux
-> section but not used.
+> current Linux kernel has these features *already* in
+> place:
+>
+> 1. CONFIG_EFI_STUB
+> 2. CONFIG_CMDLINE
+> 3. CONFIG_INITRAMFS_SOURCE
+> 4. Secure boot with MOK keys and .machine keyring to manage them.
+>
+> Given that every single feature in IKU does exists in some form
+> in the Linux kernel, I think it is fair to ask why scrape away
+> this all existing science and reinvent the wheel?
 
-That's not true actually, if the inner kernel supports the EFI stub
-then systemd-stub actually defers to that for kernel execution. It's
-more portable that way, since the kernel then deals with the
-differences in the boot protocol on different architectures.
+Nah, systemd-stub does considerably more than what you list above.
+
+1. It measures the components of the UKI separately into PCR 11, 12,
+   13, which makes the mesaurements predictable, and allows vendors to
+   provide a signed PCR policy with can be used to unlock TPM2 secrets
+   that ause a PolicyAuthorize policy. This is a fundamental
+   improvement over mechanisms that bind to literal PCR values, since
+   the "brittleness" goes away.
+2. That said signed PCR policy is included in the UKI in another PE
+   section, that is made available to userspace.
+3. If you like it brings a boot splash to screen before passing
+   control off to the kernel, which is also contained
+4. It can contain a devicetree blob, which it will setup for the
+   kernel it spawns
+5. There's a random seed maintained by systemd-stub in the ESP that is
+   updated and passed to the kernel, which includes in in the pool.
+6. It picks up "credentials" (which are TPM protected, encrypted,
+   authenticated supported by systemd) that can be used to securely
+   parameterize the invoked system from the backing fs (i.e. the
+   ESP). Similar it can pick up sysext images (which is another
+   systemd thing, i.e. dm-verity protected, signed disk images which
+   can extend the initrd and the host, by being overlayed on /usr).
+7. It picks up "add-ons" -- which are PE binaries that actually contain
+   no code, but are SecureBoot signed/shim signed "mules" for carrying
+   addition kernel cmdlines, devictree blobs (and maybe in future
+   initrds) that allow some form of modularity in the UKI model.
+
+And there's more. This is just off the top of my head.
+
+Now, I can totally see you personally might not need any of this
+stuff, fine, but a claim that this stuff is redundant is just bogus.
+
+Afaics all big distributions are preparing to providing UKIs
+soonishly. It would be fantastic if kexec would just work with this
+too, and the dissection would be done on the kernel side instead of
+userspace.
 
 Lennart
 
