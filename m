@@ -4,66 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9208CEDE9BB
-	for <kexec@archiver.kernel.org>; Thu, 14 Sep 2023 12:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8922BEDE9BB
+	for <kexec@archiver.kernel.org>; Thu, 14 Sep 2023 12:30:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:References:To:From:Subject:
-	Cc:Message-Id:Date:Mime-Version:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=2iBCRpMWqsNS3NrRcb6viaI2TaPcrnQ8CesTRoFH27o=; b=hdCGGo8CBz7tQh
-	95LgA+9vObji9dv8lCbFmu/gDshDgrUnz2EdBHi69JAfpWCAuqE/M635AknCzPAkSr+L73FMT6+hi
-	yJfu+e+2xSXVXR3IGuyWOEpSCz5W1iYo9E3qdVs2Oby3gpJSFLhmJlb2EjBITsmSd/kGAcmBksFyq
-	8rQqtONXOVMSYJ7gZOpXOUPD0WjXbLrn52EsIelTwHlEs2r5xBa+IVDJSzN96whUGC7farWghUA5k
-	iwNbZaMc0Z4EGbR4cppOyP/x+Web++E7ap3Bh+tteDPq1hgqyFk8oaBVRTN9m++TyWgdvm2bIZq25
-	fYmnjbjnCudbbAUu3ftw==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=fn1udlheJA9BFWjwEoeXHxMT8+zj2sbroTUc/WHNVlc=; b=klOdvWfJ5rrsL2
+	5Q8AtLlu0t3VLj1aKVK+nLGa9qUIi6H3mBKXOXfNXgS53hcQQguWxISpXauMHGKeqKp72S/ednHGm
+	7FeselNdrCn8H3Nv4bXHygik5gz+sgx2qm0U3oEQpA0SZFvXGWAhhsqWTfDIWgw+KWBpKQeDprZvl
+	PgSlR/NElHZpaZvaImJ1eXEruWmcbYrYttyGa6uY2a6kBucbwXSpIRbqcmJn8gHbpBCoIzGZXiNxP
+	K+m6BtTNZcc9gisytJtt37YGTe5g+U43iZzzX7FxoiR3wfhW5Azb1OZplgSgf40zClI/h8VSYZfZv
+	xDl420pAsShab0pNKdAA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qglQL-008KBu-1U;
-	Thu, 14 Sep 2023 12:26:21 +0000
-Received: from sin.source.kernel.org ([145.40.73.55])
+	id 1qglU9-008Kem-1m;
+	Thu, 14 Sep 2023 12:30:17 +0000
+Received: from mgamail.intel.com ([134.134.136.126])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qglQI-008KB5-2e
+	id 1qglU6-008Kdr-35
 	for kexec@lists.infradead.org;
-	Thu, 14 Sep 2023 12:26:20 +0000
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by sin.source.kernel.org (Postfix) with ESMTPS id D021FCE265C;
-	Thu, 14 Sep 2023 12:26:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A3A2C433C8;
-	Thu, 14 Sep 2023 12:26:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1694694375;
-	bh=uwlERtgcIl0boGXES+0Lt7l/GYtqRgkvwlIpXYuTrm8=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=YMGgoK0vFJEZoIZLtjMUT/xcAi3HPriqpw9cgkjwNFEh6vBAofPrJ8v0/yo0uOC7i
-	 XWHuPDy/xbSvaK8C6WgylQQPRgD11XSQZOPvPV2nyKDynKecvnmcmvICbUgC0GSl0b
-	 olHpjVrfOBE+v/pzfg6/Fpt/BDA2ydU1f2W6xVJYWNrEhFYN+N8SluW9NSyfFRJ4hw
-	 WdL+XNAlkrdZWstCts+UpCRGFritbMLgy3VClfw5T7vB1QsUN/VefDbGATVrz3dAfT
-	 fNb3B4xndSvJUymSfj8S/H4Se7SG+Jxtq46MQqTUsm3QitAbhVnl4NYIwGpPEIHCCA
-	 Ul/gVfgqDt2nA==
-Mime-Version: 1.0
-Date: Thu, 14 Sep 2023 15:26:10 +0300
-Message-Id: <CVIN0M3IHRKL.3U005Y5QTOJL5@suppilovahvero>
-Cc: "Jan Hendrik Farr" <kernel@jfarr.cc>, <linux-kernel@vger.kernel.org>,
- <kexec@lists.infradead.org>, <x86@kernel.org>, <tglx@linutronix.de>,
- <dhowells@redhat.com>, <vgoyal@redhat.com>, <keyrings@vger.kernel.org>,
- <akpm@linux-foundation.org>, <bhe@redhat.com>, <bhelgaas@google.com>,
- <bluca@debian.org>
-Subject: Re: [PATCH v2 0/2] x86/kexec: UKI Support
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Lennart Poettering" <mzxreary@0pointer.de>, "Philipp Rudo"
- <prudo@redhat.com>
-X-Mailer: aerc 0.14.0
-References: <20230911052535.335770-1-kernel@jfarr.cc>
- <20230913160045.40d377f9@rotkaeppchen> <ZQLTJFb3S/xn5CWo@gardel-login>
-In-Reply-To: <ZQLTJFb3S/xn5CWo@gardel-login>
+	Thu, 14 Sep 2023 12:30:16 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694694614; x=1726230614;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=sR+zT73wsMXErBcopbNqQMDJkeQDLlNb2UdQEZ/50wo=;
+  b=lMk3VF2KstfTpOOmA7aKxNZIgVC8sObX2ZsrKHAU83Q0jFF9KwgZP134
+   +2hbuzEkiXvkG2XScWY5ZVnxiGmbjxRZDBGb5rVNlmJnupI4W8R4g2UfX
+   6I6YLMIbOKyhmKRSDcEsiXbBOplK2Qy7DQMrdDW6spGbb9NFBaMT59g0Q
+   fJqd4+gbQ/gw/9Sxbw10zQq3I2CfkIPXcJaTmu2WFvpihcj5cGN50wRTh
+   TwY9JsXi8V5SJj6YTJcjGASheeuLRgDFgt7ILjFzWWNqsLA27AfpDETRE
+   523dvp1wZB27coYZ3pB8qq1iqkvMH545BeLp/Pg9JnkdL4SIkKpr+C87a
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="363972236"
+X-IronPort-AV: E=Sophos;i="6.02,146,1688454000"; 
+   d="scan'208";a="363972236"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2023 05:30:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="747708268"
+X-IronPort-AV: E=Sophos;i="6.02,146,1688454000"; 
+   d="scan'208";a="747708268"
+Received: from njayagop-mobl2.ger.corp.intel.com (HELO box.shutemov.name) ([10.252.48.41])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2023 05:30:10 -0700
+Received: by box.shutemov.name (Postfix, from userid 1000)
+	id E3769109D89; Thu, 14 Sep 2023 15:30:07 +0300 (+03)
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Dave Hansen <dave.hansen@intel.com>,
+	Borislav Petkov <bp@alien8.de>
+Cc: Ard Biesheuvel <ardb@google.com>,
+	Kees Cook <keescook@chromium.org>,
+	Aaron Lu <aaron.lu@intel.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	x86@kernel.org,
+	kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.de,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCH] x86/boot/compressed: Reserve more memory for page tables
+Date: Thu, 14 Sep 2023 15:30:01 +0300
+Message-ID: <20230914123001.27659-1-kirill.shutemov@linux.intel.com>
+X-Mailer: git-send-email 2.41.0
+MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230914_052619_204390_6ED8E3A1 
-X-CRM114-Status: GOOD (  34.29  )
+X-CRM114-CacheID: sfid-20230914_053015_070258_114535FF 
+X-CRM114-Status: GOOD (  14.67  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,72 +91,74 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu Sep 14, 2023 at 12:32 PM EEST, Lennart Poettering wrote:
-> On Mi, 13.09.23 16:00, Philipp Rudo (prudo@redhat.com) wrote:
->
-> > For example there are two definitions for the UKI which contradict each other.
-> > The dedicated one [1] you have cited earlier and the one in the BLS for type #2
-> > entries [2]. In [1] the .linux and .initrd sections are mandatory and the
-> > .osrel and .cmdline sections are optional while in [2] it is the other way
-> > round. Which definition should the kernel follow?
-> >
-> > Furthermore, I absolutely don't understand how the spec should be read. All
-> > the spec does is defining some file formats. There is no word about which
-> > component in the boot chain is supposed to handle them and what exactly this
-> > component is supposed to do with it. But that is crucial if we want to add UKI
-> > support for kexec as the kexec systemcall will replace the stub. So we need to
-> > know what tasks the stub is supposed to perform. Currently this is only some
-> > implementation detail of the systemd-stub [3] that can change any moment and I
-> > strongly oppose to base any uapi on it.
-> >
-> > In the end the only benefit this series brings is to extend the signature
-> > checking on the whole UKI except of just the kernel image. Everything else can
-> > also be done in user space. Compared to the problems described above this is a
-> > very small gain for me.
-> >
-> > Until the spec got fixed I don't see a chance to add UKI support for kexec.
->
-> So that spec is initially just a generalization of what
-> systemd-stub/systemd-boot/ukify does. The descrepancies between the
-> cited specs mostly come from the that generalization. If you want to
-> enumerate kernels and order them the ".osrel" stuff for example is
-> necessary, hence the boot loader spec really wants it. If you don't
-> care about the boot loader spec though and just want to register the
-> kernel UKI PE directly in BootXXX efi vars for example, then there's
-> no need to include .osrel. That all said we should certainly make the
-> two specs align better, and clarify the situation. Suggestions/patches
-> more than welcome.
->
-> Ultimately, I think a spec written as description with a single
-> implementation in mind (i.e. systemd) is a generally a bad spec. Hence
-> if kexec in the Linux kernel wants to add support for it, that'd be
-> great but I'd see that as an opportunity to adjust the spec to the
-> needs of the Linux kernel in this area, so that it reflects well more
-> than just one backend implementation.
->
-> Hence, seeing the spec as set in stone and as inherently low quality
-> is the wrong way to see it I am sure. Instead, the goal here is to
-> adjust the spec to make it work really nicely for *both* systemd and
-> the kernel.
+The decompressor has a hard limit on the number of page tables it can
+allocate. This limit is defined at compile-time and will cause boot
+failure if it is reached.
 
-Bringing better backing story [1] would also help the spec. Immeditaly
-when there's some reflection surface, also the possible faults it the
-spec become more apparent. Also this makes spec refinement less boring,
-which can be boring and tedious if you write it isolated by yourself or
-in a small group :-)
+The kernel is very strict and calculates the limit precisely for the
+worst-case scenario based on the current configuration. However, it is
+easy to forget to adjust the limit when a new use-case arises. The
+worst-case scenario is rarely encountered during sanity checks.
 
-I need to check if I could with some effort extend my current testing
-environment for UKI [2]. Need to study this better at some point.
+In the case of enabling 5-level paging, a use-case was overlooked. The
+limit needs to be increased by one to accommodate the additional level.
+This oversight went unnoticed until Aaron attempted to run the kernel
+via kexec with 5-level paging and unaccepted memory enabled.
 
-> Lennart
->
-> --
-> Lennart Poettering, Berlin
+To address this issue, let's allocate some extra space for page tables.
+128K should be sufficient for any use-case. The logic can be simplified
+by using a single value for all kernel configurations.
 
-[1] https://social.kernel.org/notice/AZklKOsIYBZXDL9Bya
-[2] https://github.com/jarkkojs/buildroot-tpmdd/compare/master...linux-6.5.y
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Reported-by: Aaron Lu <aaron.lu@intel.com>
+Fixes: 34bbb0009f3b ("x86/boot/compressed: Enable 5-level paging during decompression stage")
+---
+ arch/x86/include/asm/boot.h | 27 ++++++++++++---------------
+ 1 file changed, 12 insertions(+), 15 deletions(-)
 
-BR, JKarkko
+diff --git a/arch/x86/include/asm/boot.h b/arch/x86/include/asm/boot.h
+index 9191280d9ea3..aaf1b2fc6ede 100644
+--- a/arch/x86/include/asm/boot.h
++++ b/arch/x86/include/asm/boot.h
+@@ -40,23 +40,20 @@
+ #ifdef CONFIG_X86_64
+ # define BOOT_STACK_SIZE	0x4000
+ 
+-# define BOOT_INIT_PGT_SIZE	(6*4096)
+-# ifdef CONFIG_RANDOMIZE_BASE
+ /*
+- * Assuming all cross the 512GB boundary:
+- * 1 page for level4
+- * (2+2)*4 pages for kernel, param, cmd_line, and randomized kernel
+- * 2 pages for first 2M (video RAM: CONFIG_X86_VERBOSE_BOOTUP).
+- * Total is 19 pages.
++ * Used by decompressor's startup_32() to allocate page tables for identity
++ * mapping of the 4G of RAM in 4-level paging mode.
++ *
++ * The additional page table needed for 5-level paging is allocated from
++ * trampoline_32bit memory.
+  */
+-#  ifdef CONFIG_X86_VERBOSE_BOOTUP
+-#   define BOOT_PGT_SIZE	(19*4096)
+-#  else /* !CONFIG_X86_VERBOSE_BOOTUP */
+-#   define BOOT_PGT_SIZE	(17*4096)
+-#  endif
+-# else /* !CONFIG_RANDOMIZE_BASE */
+-#  define BOOT_PGT_SIZE		BOOT_INIT_PGT_SIZE
+-# endif
++# define BOOT_INIT_PGT_SIZE	(6*4096)
++
++/*
++ * Total number of page table kernel_add_identity_map() can allocate,
++ * including page tables consumed by startup_32().
++ */
++# define BOOT_PGT_SIZE		(32*4096)
+ 
+ #else /* !CONFIG_X86_64 */
+ # define BOOT_STACK_SIZE	0x1000
+-- 
+2.41.0
+
 
 _______________________________________________
 kexec mailing list
