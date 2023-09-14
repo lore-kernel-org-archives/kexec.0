@@ -4,73 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 27F3ACA0ECD
-	for <kexec@archiver.kernel.org>; Thu, 14 Sep 2023 04:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C0308EDE98F
+	for <kexec@archiver.kernel.org>; Thu, 14 Sep 2023 08:13:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=+xRKhatft0/SY4TGc5ILoqnNyXaoeUew2m1ppXlnZmY=; b=3hHja4SaDuZ14a
-	wn2qqEJh1xqWm3ywwDUNUIESL5cdlVfdGcy8fcAalZw4rzPeLT1wSRmryP4EDzc0blHycCCkfGc7b
-	15JM1M52FSPY9F3zR2T7ulKfzKdNB9EGFeFLJcR1ExbN9XMgCtsVFb9ox36G1UDoDa11quRPKfhZ+
-	F4+BOVwcdll9SPTbNxhhEAYjncuB8kHTkY9m4s1DOepu9jiGXAQdzyxbHVReSrW/2l/EG9Wcdbg75
-	jkC8HicIiM9rLJOa9BWlq+/QFFdYbaagahvqpqDq5S8he5+aqljcAYy6dorHHisGgm2vvk8Av8x6r
-	lcAeqzenbsLBVYw/9/vA==;
+	List-Owner; bh=WWsU7SiDRvmvff4UFxpAjHNC25r71i3uAU0qR/DiCIE=; b=UUCPrTq7uPnsci
+	ThT6o1kAICAXDDgbGmaEU90pcNvyWcfatcvs2nsXVYDu5ND0pHAtMYnI1HyWFojwVD0Ktz9zX1Mrg
+	J8uIFp/BFqznw84E9y3DI93r9YtMqM6wPNayHCBVhVDJaX+5LQ1HpaCNOMCRIRAjqXbJgpDuzJ0cz
+	wWyY5Qe9kxe1tJB4tWzfClgkolFzlRxGiHfcrDvm/DX8hVIV81OYJR/6AuNjq2IE7S5Y9rHD3YuXq
+	rFpOV7Cb1ttiD9PLvG6McaqO2H6Cn7AH/VlFkJq2Y/sdFt8zyGt93FbuJumYUnpzHEg/mlhjdOClS
+	A6gQ4fQUJeWWXXNGYKzA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qgeB3-007MsT-0R;
-	Thu, 14 Sep 2023 04:42:05 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1qghTM-007fz6-1J;
+	Thu, 14 Sep 2023 08:13:12 +0000
+Received: from mgamail.intel.com ([134.134.136.65])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qgeB0-007Mrj-2B
-	for kexec@lists.infradead.org;
-	Thu, 14 Sep 2023 04:42:04 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1694666521;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gXhGZ4r4I1glj6Lql+/mnOOXVMF05GnccbGV18evrsY=;
-	b=dBV4gTF28Wspc2sW4neV2zf1Bn3vxH2Tt2DmRsvyS30c5+Fdr7E19p0ZSpxfqiaxfxwFU6
-	029f0PIeK65oFs1hN7YA3oW1Cp8fG7HIBJOcHcQy+3ALrXbvTaboQjDG61S3zMAtj6aCAV
-	CU/Oa9MReSW1l1VoO0INzF+DblDcAZc=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-412-Y8Vp1GdGOnaFVVQXkIOowA-1; Thu, 14 Sep 2023 00:41:58 -0400
-X-MC-Unique: Y8Vp1GdGOnaFVVQXkIOowA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 086B2101A529;
-	Thu, 14 Sep 2023 04:41:58 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.51])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 01CD92026D4B;
-	Thu, 14 Sep 2023 04:41:56 +0000 (UTC)
-Date: Thu, 14 Sep 2023 12:41:53 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Hari Bathini <hbathini@linux.ibm.com>
-Cc: lkml <linux-kernel@vger.kernel.org>,
-	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-	Kexec-ml <kexec@lists.infradead.org>,
-	Dave Young <dyoung@redhat.com>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Sourabh Jain <sourabhjain@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH v3 2/2] powerpc/fadump: make is_kdump_kernel() return
- false when fadump is active
-Message-ID: <ZQKPEd09+XvnQ5RN@MiWiFi-R3L-srv>
-References: <20230912082950.856977-1-hbathini@linux.ibm.com>
- <20230912082950.856977-2-hbathini@linux.ibm.com>
+	id 1qghTJ-007fxE-3D;
+	Thu, 14 Sep 2023 08:13:11 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1694679190; x=1726215190;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0HuLFSOV1iee1YccL1q6ba1Qi+BrJA064NEgTIarkeA=;
+  b=BeL1S4boKHipFP5a36bI8sYflSsqMUhS+X+pPuUtJuWSg48MGqLhm6Ux
+   jc43F7C4X8XxtvuwOkEmVgWRWRAqb+vYfshJxeDt1IUcr30lDWc8RT4vL
+   pLirXeGx6GVlh91RX/4nvgzDtRaiWPeZNNRHw7OmaUkjEkpj6x3U6shWj
+   qQjkuPNb7sqCB0uZ/9T1OcN8+ycQHwFxz1apsgEc4ZBVgaDdwnLNA4C1O
+   zWsFJbeN9fPrM28rshQ/kCYAWAW1xN9OF64UiqqdEgl4/OXLGI1mE+38Y
+   30TnJVIoJXvGK/WwIAnzdhlna34uq6OhWF3qA1uXvb+GWdGuqqnXgVsmg
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="382693808"
+X-IronPort-AV: E=Sophos;i="6.02,145,1688454000"; 
+   d="scan'208";a="382693808"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2023 01:13:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10832"; a="1075270812"
+X-IronPort-AV: E=Sophos;i="6.02,145,1688454000"; 
+   d="scan'208";a="1075270812"
+Received: from lkp-server02.sh.intel.com (HELO 9ef86b2655e5) ([10.239.97.151])
+  by fmsmga005.fm.intel.com with ESMTP; 14 Sep 2023 01:13:01 -0700
+Received: from kbuild by 9ef86b2655e5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1qghT9-0001MP-09;
+	Thu, 14 Sep 2023 08:12:59 +0000
+Date: Thu, 14 Sep 2023 16:12:41 +0800
+From: kernel test robot <lkp@intel.com>
+To: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	akpm@linux-foundation.org, thunder.leizhen@huawei.com,
+	catalin.marinas@arm.com, chenjiahao16@huawei.com,
+	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, x86@kernel.org,
+	Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v3 6/9] x86: kdump: use generic interface to simplify
+ crashkernel reservation code
+Message-ID: <202309141534.moH4dTcz-lkp@intel.com>
+References: <20230914033142.676708-7-bhe@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20230912082950.856977-2-hbathini@linux.ibm.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
+In-Reply-To: <20230914033142.676708-7-bhe@redhat.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230913_214202_929358_2F3FD5C1 
-X-CRM114-Status: GOOD (  19.46  )
+X-CRM114-CacheID: sfid-20230914_011310_074455_D426B42F 
+X-CRM114-Status: GOOD (  12.43  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,81 +89,61 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 09/12/23 at 01:59pm, Hari Bathini wrote:
-> Currently, is_kdump_kernel() returns true in crash dump capture kernel
-> for both kdump and fadump crash dump capturing methods, as both these
-> methods set elfcorehdr_addr. Some restrictions enforced for crash dump
-> capture kernel, based on is_kdump_kernel(), are specifically meant for
-> kdump case and not desirable for fadump - eg. IO queues restriction in
-> device drivers. So, define is_kdump_kernel() to return false when f/w
-> assisted dump is active.
-> 
-> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-> ---
->  arch/powerpc/include/asm/kexec.h |  8 ++++++--
->  arch/powerpc/kernel/crash_dump.c | 12 ++++++++++++
->  2 files changed, 18 insertions(+), 2 deletions(-)
+Hi Baoquan,
 
-LGTM,
+kernel test robot noticed the following build warnings:
 
-Acked-by: Baoquan He <bhe@redhat.com>
+[auto build test WARNING on powerpc/next]
+[also build test WARNING on powerpc/fixes linus/master v6.6-rc1 next-20230914]
+[cannot apply to arm64/for-next/core tip/x86/core]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> 
-> diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
-> index a1ddba01e7d1..e1b43aa12175 100644
-> --- a/arch/powerpc/include/asm/kexec.h
-> +++ b/arch/powerpc/include/asm/kexec.h
-> @@ -99,10 +99,14 @@ void relocate_new_kernel(unsigned long indirection_page, unsigned long reboot_co
->  
->  void kexec_copy_flush(struct kimage *image);
->  
-> -#if defined(CONFIG_CRASH_DUMP) && defined(CONFIG_PPC_RTAS)
-> +#if defined(CONFIG_CRASH_DUMP)
-> +bool is_kdump_kernel(void);
-> +#define is_kdump_kernel			is_kdump_kernel
-> +#if defined(CONFIG_PPC_RTAS)
->  void crash_free_reserved_phys_range(unsigned long begin, unsigned long end);
->  #define crash_free_reserved_phys_range crash_free_reserved_phys_range
-> -#endif
-> +#endif /* CONFIG_PPC_RTAS */
-> +#endif /* CONFIG_CRASH_DUMP */
->  
->  #ifdef CONFIG_KEXEC_FILE
->  extern const struct kexec_file_ops kexec_elf64_ops;
-> diff --git a/arch/powerpc/kernel/crash_dump.c b/arch/powerpc/kernel/crash_dump.c
-> index 9a3b85bfc83f..2086fa6cdc25 100644
-> --- a/arch/powerpc/kernel/crash_dump.c
-> +++ b/arch/powerpc/kernel/crash_dump.c
-> @@ -19,6 +19,7 @@
->  #include <linux/uio.h>
->  #include <asm/rtas.h>
->  #include <asm/inst.h>
-> +#include <asm/fadump.h>
->  
->  #ifdef DEBUG
->  #include <asm/udbg.h>
-> @@ -92,6 +93,17 @@ ssize_t copy_oldmem_page(struct iov_iter *iter, unsigned long pfn,
->  	return csize;
->  }
->  
-> +/*
-> + * Return true only when kexec based kernel dump capturing method is used.
-> + * This ensures all restritions applied for kdump case are not automatically
-> + * applied for fadump case.
-> + */
-> +bool is_kdump_kernel(void)
-> +{
-> +	return !is_fadump_active() && elfcorehdr_addr != ELFCORE_ADDR_MAX;
-> +}
-> +EXPORT_SYMBOL_GPL(is_kdump_kernel);
-> +
->  #ifdef CONFIG_PPC_RTAS
->  /*
->   * The crashkernel region will almost always overlap the RTAS region, so
-> -- 
-> 2.41.0
-> 
+url:    https://github.com/intel-lab-lkp/linux/commits/Baoquan-He/crash_core-c-remove-unnecessary-parameter-of-function/20230914-113546
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git next
+patch link:    https://lore.kernel.org/r/20230914033142.676708-7-bhe%40redhat.com
+patch subject: [PATCH v3 6/9] x86: kdump: use generic interface to simplify crashkernel reservation code
+config: i386-allnoconfig (https://download.01.org/0day-ci/archive/20230914/202309141534.moH4dTcz-lkp@intel.com/config)
+compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20230914/202309141534.moH4dTcz-lkp@intel.com/reproduce)
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202309141534.moH4dTcz-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> arch/x86/kernel/setup.c:476:15: warning: no previous prototype for function 'crash_low_size_default' [-Wmissing-prototypes]
+   unsigned long crash_low_size_default(void)
+                 ^
+   arch/x86/kernel/setup.c:476:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+   unsigned long crash_low_size_default(void)
+   ^
+   static 
+   1 warning generated.
+
+
+vim +/crash_low_size_default +476 arch/x86/kernel/setup.c
+
+   472	
+   473	/*
+   474	 * --------- Crashkernel reservation ------------------------------
+   475	 */
+ > 476	unsigned long crash_low_size_default(void)
+   477	{
+   478	#ifdef CONFIG_X86_64
+   479		return max(swiotlb_size_or_default() + (8UL << 20), 256UL << 20);
+   480	#else
+   481		return 0;
+   482	#endif
+   483	}
+   484	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
 _______________________________________________
 kexec mailing list
