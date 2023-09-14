@@ -4,69 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8459AEDE99E
-	for <kexec@archiver.kernel.org>; Thu, 14 Sep 2023 09:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AE23CEDE99C
+	for <kexec@archiver.kernel.org>; Thu, 14 Sep 2023 10:31:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=5z2Ei7cKxIRozwnn1HsdDorkxxpEm5fpn4ui9tX8fNM=; b=NJS1SvhbY7ZpMX
-	mYCCUtEWk26TH6QFFJK+93U3ar1Ib1i6wKPVLo4Bj8AJ9heXBC2oBxOJJbZn67VKcBfDCDOUwych7
-	lixzS2LQYYs6rqXMCPiEtRE93wClTU+awM5dYG1ikdPnSfYB6QkHjhXVZMxRZKZ/iZXCCOqACd0ti
-	cTSAWigoDY3VpieNl5xx40EyR7e7gz9e/5e0OrGcSNMMI21RbJWpXgs16odprrcHI5Z+qZrBd9Ha4
-	2kH0vuEtdR3rr5oYlAECsPp1Ifha52b8Dbv1Dghim/BuRRlNVuQlbPD1rhDxMDq3e6HiYBhsjSkjp
-	fp2j7sIvTtyqwr6WSWBg==;
+	List-Owner; bh=thXLkA1RkjiCpCSLP5mglfGb4CKZGCqDWvKAiceB3Zk=; b=tS40U6bqz5sbMR
+	VrLgfW1lRMk1vBWo69AbGjRSTrD7lyASh/xWI1QILZUIimGZVvq1Kx2Ay8Y02xg8y54TFVsfbtGFT
+	/CKvJQcgk2qjSNkfxjuHV4HpswSlmfYmoUjgvfl5JGyLVnHsFNhZHGUoZVClGB/KYSRDfH40a/ywb
+	eSxHiefiqWr3ExhzqAxfWHEGM0EmCWmgAc9nGK9+/CAD3k0qfQabSiLrBF7X7M7rN3pIy6ZiwMNso
+	V+Of5kMW81IoPRjX2aFLK0k1cJFzsNmRPwab33rtrYEj5AWFhcpvbqIZwv3hI1ONXKjksETP9jvBm
+	5QisxSbmbGONqh4W34dA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qgj4j-007toc-1W;
-	Thu, 14 Sep 2023 09:55:53 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1qgjcn-007zrc-1o;
+	Thu, 14 Sep 2023 10:31:05 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qgj4f-007tnv-1s
+	id 1qgjcl-007zqm-1U
 	for kexec@lists.infradead.org;
-	Thu, 14 Sep 2023 09:55:51 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1694685348;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XbzCaHSCASDUnmuzOQPrtJXNKZm/xofYLYD9/QhZhaI=;
-	b=J27z5Wxw7RDdQ0WehwrrNNth6nhUv2Sx11gHJBz+9lGxc1fOXide9whXfMEPIRxO4RT4ej
-	uR1Q36tfvkbHGK/L5Tj6D6vFK3V70BSnl3dGPJPSUoRy9akISj7YCubB2nRVP0QsxMsIte
-	tFxOv4KhPJ52ZiEOOine2aQtE8bz4mI=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-569-xOEQw2EDNL2lenJG7tDtZQ-1; Thu, 14 Sep 2023 05:55:45 -0400
-X-MC-Unique: xOEQw2EDNL2lenJG7tDtZQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8AE3688B7A1;
-	Thu, 14 Sep 2023 09:55:45 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.51])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id BFBBE9A;
-	Thu, 14 Sep 2023 09:55:44 +0000 (UTC)
-Date: Thu, 14 Sep 2023 17:55:41 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Dave Young <dyoung@redhat.com>
-Cc: kexec@lists.infradead.org, Simon Horman <horms@kernel.org>,
-	Pingfan Liu <piliu@redhat.com>
-Subject: Re: [PATCH v1 1/2] zboot: enable arm64 kexec_load for zboot image
-Message-ID: <ZQLYnYkYHbiIYi9M@MiWiFi-R3L-srv>
-References: <20230914085000.17982-1-dyoung@redhat.com>
- <20230914085000.17982-2-dyoung@redhat.com>
-MIME-Version: 1.0
-In-Reply-To: <20230914085000.17982-2-dyoung@redhat.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+	Thu, 14 Sep 2023 10:31:04 +0000
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38EAIV7W014898
+	for <kexec@lists.infradead.org>; Thu, 14 Sep 2023 10:30:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=pp1; bh=K/Dyp3lTsgNxvgfCzGzhlU2VcbfK0Wqh9DRcNQbFt4Q=;
+ b=VuHCHwfydpStGfeZGYvZvOwjq8s3lRZZYwt7lFkx1saIQawqU8jr6mYGEtnLFQFD1tgZ
+ vkjDcxhyimRp1NQ4NSFqqVrAto6su5G4KKEdZ10lGSlxGMqgyl8dCV0f7TKVJXsvsp22
+ WNJ7ElEA9+kNGC5kyCGHNPjXBwSXVEKf42yF20P3vfk9bCmPmUKjsZRjiaKJZ6UM6U6y
+ 6si63b1P3JNSeegWFNz2e4BTUjStjMBaXsJzSpVFeleHPb8XXJJJzlLWv53vt5iGqQk8
+ VfZFboyOO1erGBhjgkZ4fEWyIFxixkXs3ZqmIK+GFz4QnBXCOnr82FPDXQscV1MvLgFP YQ== 
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t40740hv6-11
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+	for <kexec@lists.infradead.org>; Thu, 14 Sep 2023 10:30:58 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38E83Ar9023099
+	for <kexec@lists.infradead.org>; Thu, 14 Sep 2023 09:35:37 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3t141p1vn5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+	for <kexec@lists.infradead.org>; Thu, 14 Sep 2023 09:35:37 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38E9ZYqN26739410
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 14 Sep 2023 09:35:34 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4F7E120043;
+	Thu, 14 Sep 2023 09:35:34 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1389320040;
+	Thu, 14 Sep 2023 09:35:33 +0000 (GMT)
+Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.ibm.com (unknown [9.109.199.72])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 14 Sep 2023 09:35:32 +0000 (GMT)
+Date: Thu, 14 Sep 2023 15:05:30 +0530
+From: Aditya Gupta <adityag@linux.ibm.com>
+To: kexec@lists.infradead.org
+Cc: Hari Bathini <hbathini@linux.ibm.com>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Sachin Sant <sachinp@linux.ibm.com>
+Subject: Re: [PATCH] makedumpfile: ppc64: do page traversal if vmemmap_list
+ not populated
+Message-ID: <eemtb6zypkvyps2xwwvy66cyk7qmch3lub33qzge5bfh4nyurt@zninepllmnmp>
+References: <20230914092223.172811-1-adityag@linux.ibm.com>
 Content-Disposition: inline
+In-Reply-To: <20230914092223.172811-1-adityag@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: qDAYVtnVytMPfWVYWiGBO8xuX05arr4-
+X-Proofpoint-ORIG-GUID: qDAYVtnVytMPfWVYWiGBO8xuX05arr4-
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-09-14_08,2023-09-13_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ priorityscore=1501 suspectscore=0 phishscore=0 mlxlogscore=409
+ impostorscore=0 lowpriorityscore=0 malwarescore=0 clxscore=1015
+ adultscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2308100000 definitions=main-2309140085
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230914_025549_689200_BFC88B5E 
-X-CRM114-Status: GOOD (  28.47  )
+X-CRM114-CacheID: sfid-20230914_033103_531667_549ABBCA 
+X-CRM114-Status: GOOD (  11.95  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,145 +108,20 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 09/14/23 at 04:49pm, Dave Young wrote:
-> kexec_file_load support of zboot kernel image decompressed the vmlinuz,
-> so in kexec_load code just load the kernel with reading the decompressed
-> kernel fd into a new buffer and use it directly.
-> 
-> Signed-off-by: Dave Young <dyoung@redhat.com>
-> ---
->  include/kexec-pe-zboot.h               |  3 ++-
->  kexec/arch/arm64/kexec-vmlinuz-arm64.c | 26 +++++++++++++++++++++++---
->  kexec/kexec-pe-zboot.c                 |  4 +++-
->  kexec/kexec.c                          |  2 +-
->  kexec/kexec.h                          |  1 +
->  5 files changed, 30 insertions(+), 6 deletions(-)
+To be able to test this on a system with Radix MMU, the kernel needs to be
+patched with given kernel patch, since makedumpfile requires
+'cpu_features.mmu_features' to check if MMU was Radix MMU:
 
-I got this problem too on arm64 machine, applied this patch to test, can
-confirm it works to fix the load failure when kexec_load is taken.
+https://lore.kernel.org/linuxppc-dev/20230911091409.415662-1-adityag@linux.ibm.com/T/#u
 
-Tested-by: Baoquan He <bhe@redhat.com>
+Or, the vmlinux can be provided to makedumpfile, so that it finds the
+'cur_cpu_spec.mmu_features' symbol, run makedumpfile with '-x' flag similar to
+this:
 
-> 
-> diff --git a/include/kexec-pe-zboot.h b/include/kexec-pe-zboot.h
-> index e2e0448a81f2..374916cbe883 100644
-> --- a/include/kexec-pe-zboot.h
-> +++ b/include/kexec-pe-zboot.h
-> @@ -11,5 +11,6 @@ struct linux_pe_zboot_header {
->  	uint32_t compress_type;
->  };
->  
-> -int pez_prepare(const char *crude_buf, off_t buf_sz, int *kernel_fd);
-> +int pez_prepare(const char *crude_buf, off_t buf_sz, int *kernel_fd,
-> +		off_t *kernel_size);
->  #endif
-> diff --git a/kexec/arch/arm64/kexec-vmlinuz-arm64.c b/kexec/arch/arm64/kexec-vmlinuz-arm64.c
-> index c0ee47c8f50a..e291a34c97ad 100644
-> --- a/kexec/arch/arm64/kexec-vmlinuz-arm64.c
-> +++ b/kexec/arch/arm64/kexec-vmlinuz-arm64.c
-> @@ -34,6 +34,7 @@
->  #include "arch/options.h"
->  
->  static int kernel_fd = -1;
-> +static off_t decompressed_size;
->  
->  /* Returns:
->   * -1 : in case of error/invalid format (not a valid PE+compressed ZBOOT format.
-> @@ -72,7 +73,7 @@ int pez_arm64_probe(const char *kernel_buf, off_t kernel_size)
->  		return -1;
->  	}
->  
-> -	ret = pez_prepare(buf, buf_sz, &kernel_fd);
-> +	ret = pez_prepare(buf, buf_sz, &kernel_fd, &decompressed_size);
->  
->  	if (!ret) {
->  	    /* validate the arm64 specific header */
-> @@ -98,8 +99,27 @@ bad_header:
->  int pez_arm64_load(int argc, char **argv, const char *buf, off_t len,
->  			struct kexec_info *info)
->  {
-> -	info->kernel_fd = kernel_fd;
-> -	return image_arm64_load(argc, argv, buf, len, info);
-> +	if (kernel_fd > 0 && decompressed_size > 0) {
-> +		char *kbuf;
-> +		off_t nread;
-> +		int fd;
-> +
-> +		info->kernel_fd = kernel_fd;
-> +		fd = dup(kernel_fd);
-> +		if (fd < 0) {
-> +			dbgprintf("%s: dup fd failed.\n", __func__);
-> +			return -1;
-> +		}
-> +		kbuf = slurp_fd(fd, NULL, decompressed_size, &nread);
-> +		if (!kbuf || nread != decompressed_size) {
-> +			dbgprintf("%s: slurp_fd failed.\n", __func__);
-> +			return -1;
-> +		}
-> +		return image_arm64_load(argc, argv, kbuf, decompressed_size, info);
-> +	}
-> +
-> +	dbgprintf("%s: wrong kernel file descriptor.\n", __func__);
-> +	return -1;
->  }
->  
->  void pez_arm64_usage(void)
-> diff --git a/kexec/kexec-pe-zboot.c b/kexec/kexec-pe-zboot.c
-> index 2f2e052b76c5..3abd17d9fe59 100644
-> --- a/kexec/kexec-pe-zboot.c
-> +++ b/kexec/kexec-pe-zboot.c
-> @@ -37,7 +37,8 @@
->   *
->   * crude_buf: the content, which is read from the kernel file without any processing
->   */
-> -int pez_prepare(const char *crude_buf, off_t buf_sz, int *kernel_fd)
-> +int pez_prepare(const char *crude_buf, off_t buf_sz, int *kernel_fd,
-> +		off_t *kernel_size)
->  {
->  	int ret = -1;
->  	int fd = 0;
-> @@ -110,6 +111,7 @@ int pez_prepare(const char *crude_buf, off_t buf_sz, int *kernel_fd)
->  		goto fail_bad_header;
->  	}
->  
-> +	*kernel_size = decompressed_size;
->  	dbgprintf("%s: done\n", __func__);
->  
->  	ret = 0;
-> diff --git a/kexec/kexec.c b/kexec/kexec.c
-> index c3b182e254e0..1edbd349c86d 100644
-> --- a/kexec/kexec.c
-> +++ b/kexec/kexec.c
-> @@ -489,7 +489,7 @@ static int add_backup_segments(struct kexec_info *info,
->  	return 0;
->  }
->  
-> -static char *slurp_fd(int fd, const char *filename, off_t size, off_t *nread)
-> +char *slurp_fd(int fd, const char *filename, off_t size, off_t *nread)
->  {
->  	char *buf;
->  	off_t progress;
-> diff --git a/kexec/kexec.h b/kexec/kexec.h
-> index ed3b499a80f2..093338969c57 100644
-> --- a/kexec/kexec.h
-> +++ b/kexec/kexec.h
-> @@ -267,6 +267,7 @@ extern void die(const char *fmt, ...)
->  	__attribute__ ((format (printf, 1, 2)));
->  extern void *xmalloc(size_t size);
->  extern void *xrealloc(void *ptr, size_t size);
-> +extern char *slurp_fd(int fd, const char *filename, off_t size, off_t *nread);
->  extern char *slurp_file(const char *filename, off_t *r_size);
->  extern char *slurp_file_mmap(const char *filename, off_t *r_size);
->  extern char *slurp_file_len(const char *filename, off_t size, off_t *nread);
-> -- 
-> 2.37.2
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
+makedumpfile -l -d 31 -x VMLINUX /proc/vmcore /var/crash/vmcore.kdump
+
+Thanks,
+Aditya Gupta
 
 
 _______________________________________________
