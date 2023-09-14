@@ -4,75 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D254DEEAA59
-	for <kexec@archiver.kernel.org>; Thu, 14 Sep 2023 17:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6FCE8EEAA65
+	for <kexec@archiver.kernel.org>; Thu, 14 Sep 2023 18:52:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=kwsmt8DFg7sMBhq42z7q+fvPkzfRVdug6+SPWdpHoWQ=; b=c7EKTAcu5cd4nj
-	wP2WXXrkIZwWZvlaIhiBLUSEy90CN3qMsHSDOoEn4ODnHaDBmOge53Qrx+TUvXylnR5QGWlyig54i
-	ZxYZ2KNBhB5yRGN8zJArG+0eA1H3hJLwj+leZk8YCrXTg85/B90T1n/4GeN/LR4m1+wzYIX0oaqlk
-	jlASGWrgDrbEVTtVlzdOiqlS0RJ5+4VG7pjF4LJ8100sAf/tjwafv1Dqd+VHNePgZphb4TBYjdgvi
-	IKVfm8ff02AP4lstdt6fuyIuIhPsNrsTihOnEnOv1pn8l55FcStP8OxpORTpU3We3/s8lcPwAqpcJ
-	bAJh44e/fWhXpTEA5RwA==;
+	List-Owner; bh=69f6bi3fUQURFTRVGXHX5bCRbJMChlP2JihTJmaVK9s=; b=R5GsYLErwuOPqd
+	eyUU+wOMspkjLk23t9KZe3gbBXecGgE8HfCXiMfPU1dQPOojILZfxIgU1+/LTW9yttQahgP9pyert
+	Xuw51VMspR27iVX5OAo1Ms59JmNc9WHDej9gLDV4PcrZ8CXeY0ChLdEDbamMIu9dYVFWsdGDNS916
+	OREXNK362EBJ/irgBYz9kCNANhbRAW+BuQGBrHbGZsDjO/+l9f3n0pifghtl1RB/1wQKT41NpRMsH
+	iBDelkZsH26imWlgzEyPA/roqoVx3kJdTiEwNLN7IT5xNRZYIZyrpzCC7oKNfHtYckW3roTH5IuCs
+	zJfUro6phtUfoBkyI+pQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qgq2y-008z1Z-0A;
-	Thu, 14 Sep 2023 17:22:32 +0000
-Received: from mail-qv1-xf33.google.com ([2607:f8b0:4864:20::f33])
+	id 1qgrRo-00973f-1x;
+	Thu, 14 Sep 2023 18:52:16 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qgq2u-008z0S-2d
+	id 1qgrRl-00972K-2H
 	for kexec@lists.infradead.org;
-	Thu, 14 Sep 2023 17:22:30 +0000
-Received: by mail-qv1-xf33.google.com with SMTP id 6a1803df08f44-649c6ea6e72so7029556d6.2
-        for <kexec@lists.infradead.org>; Thu, 14 Sep 2023 10:22:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1694712146; x=1695316946; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A8eQORumJtaroUI8JT9bu5D1IY7lPGvpUmpxNHPhsvg=;
-        b=zrKz4ovVV5RPfLvPR8icG3bYkXqv/dZMiHs5ALYPXhsajvjqL8IScBVRi3mGVthtaK
-         5xPdg1BPf3pr0bzH0htK4XYDGJrIlU7OU0jxYvaFnExhkeuyldNKu0HY/R2TXc7tmWl8
-         pSBOQhu528LYVHR5qOxd4JKq+voERqlx5/DEX/xtbI+L9yvsi8n8BhLQ0HAX+JruHwra
-         Kp/4ec9/BPT0xf4dYj9jl33qicvonQ9zfEiDO3yIBZEcTO4xYfnsONNsjC4AIShxQ46T
-         PzfMspOgb4OJgKrEj11jNnYoxSBI/brFUQ6YW+/4NNbty8jxuEMURR+EhkbvgujFCgRB
-         x2xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694712146; x=1695316946;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=A8eQORumJtaroUI8JT9bu5D1IY7lPGvpUmpxNHPhsvg=;
-        b=ZXjBzkKhyslW3cJ7lGZ2yL+pltW5fEn7C+hYV6UZvP4wH6EvgmEjrOJXMyqOgo3S9k
-         eeEyZ6xvi7cfDPYCBA9zRk3iFKv9cuHZge5xremghvoA2PkgzhAp3wfic/HfOTdiFyjE
-         Fe9yGHC+04etcMYtMkGFTnWCCg8FHnW062+gwu51RwrZi878RbQyKNMSVEEp+g9FQZEj
-         zLMAYa0IF0ew2nvGoht13GqdJHsuZwcWk35w6X1rdBpASUgIuwAbMd4cT6/yhzh+CKWH
-         icNVlTy4W+BaDl9R0CO9ENxg/kuxRoK/Nhf7SIBeZry04mORiZHhhw/0/m55136nZLfT
-         MlUQ==
-X-Gm-Message-State: AOJu0YwhpfJ1vTGCAVot6sqoNva6z6zOlQXotOE1z+/RBLgmjFyWxexP
-	vba50I8B+57ztRUh8LGO2L+mO3lVMMete4l+JiKBpg==
-X-Google-Smtp-Source: AGHT+IFA5G/u9fTxemIh7ppyemUF4heb6N+w5pTJ0x1vdhIE9rGnXqUnizt0BXWM/DV2ecQatLz805H4QnF5kKUSyAs=
-X-Received: by 2002:ad4:5851:0:b0:63d:7214:638e with SMTP id
- de17-20020ad45851000000b0063d7214638emr7042473qvb.56.1694712146470; Thu, 14
- Sep 2023 10:22:26 -0700 (PDT)
+	Thu, 14 Sep 2023 18:52:15 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1694717519;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Iu+JS5SuMu+Jb9YHdE7JVS58pPUJ1Oe641flT3ImSMA=;
+	b=hfUsnhQWUjmY7kl/SYtglmTCTwzv3zmMTLzfx9066rFocU49F5a1vIiobPSTzvXcvJowVw
+	V81ABgsPs5m5ixyUJm2OrxshN3k6ZGmOrvm6UaLLsXoIM3ujZKpqqkGx7vFl6ndZRQewUf
+	Q2b8YFp0KmHhNMgUmofwvkDPTG5I7f8=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-202-FJE1Tg3ROKupQEIU_u9tlA-1; Thu, 14 Sep 2023 14:51:56 -0400
+X-MC-Unique: FJE1Tg3ROKupQEIU_u9tlA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1C86D9700AF;
+	Thu, 14 Sep 2023 18:51:54 +0000 (UTC)
+Received: from rotkaeppchen (unknown [10.39.194.190])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id C5C2640C6EA8;
+	Thu, 14 Sep 2023 18:51:51 +0000 (UTC)
+Date: Thu, 14 Sep 2023 20:51:49 +0200
+From: Philipp Rudo <prudo@redhat.com>
+To: Lennart Poettering <mzxreary@0pointer.de>
+Cc: Jan Hendrik Farr <kernel@jfarr.cc>, linux-kernel@vger.kernel.org,
+ kexec@lists.infradead.org, x86@kernel.org, tglx@linutronix.de,
+ dhowells@redhat.com, vgoyal@redhat.com, keyrings@vger.kernel.org,
+ akpm@linux-foundation.org, bhe@redhat.com, bhelgaas@google.com,
+ bluca@debian.org
+Subject: Re: [PATCH v2 0/2] x86/kexec: UKI Support
+Message-ID: <20230914205149.51031bc9@rotkaeppchen>
+In-Reply-To: <ZQLTJFb3S/xn5CWo@gardel-login>
+References: <20230911052535.335770-1-kernel@jfarr.cc>
+	<20230913160045.40d377f9@rotkaeppchen>
+	<ZQLTJFb3S/xn5CWo@gardel-login>
+Organization: Red Hat inc.
 MIME-Version: 1.0
-References: <20230914170138.995606-1-song@kernel.org>
-In-Reply-To: <20230914170138.995606-1-song@kernel.org>
-From: Nick Desaulniers <ndesaulniers@google.com>
-Date: Thu, 14 Sep 2023 10:22:12 -0700
-Message-ID: <CAKwvOdnisbzAx3eQD_U8gQU05WzuOr48VRJfySu5WRTWZVDiPw@mail.gmail.com>
-Subject: Re: [PATCH v3] x86/purgatory: Remove LTO flags
-To: Song Liu <song@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Ricardo Ribalda <ribalda@chromium.org>, 
-	Sami Tolvanen <samitolvanen@google.com>, kexec@lists.infradead.org, x86@kernel.org, 
-	llvm@lists.linux.dev
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230914_102228_852618_3D05F032 
-X-CRM114-Status: GOOD (  20.31  )
+X-CRM114-CacheID: sfid-20230914_115213_848611_44F4927E 
+X-CRM114-Status: GOOD (  48.82  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,61 +81,140 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-T24gVGh1LCBTZXAgMTQsIDIwMjMgYXQgMTA6MDLigK9BTSBTb25nIExpdSA8c29uZ0BrZXJuZWwu
-b3JnPiB3cm90ZToKPgo+IC1mbHRvKiBpbXBsaWVzIC1mZnVuY3Rpb24tc2VjdGlvbnMuIFdpdGgg
-TFRPIGVuYWJsZWQsIGxkLmxsZCBnZW5lcmF0ZXMKPiBtdWx0aXBsZSAudGV4dCBzZWN0aW9ucyBm
-b3IgcHVyZ2F0b3J5LnJvOgo+Cj4gJCByZWFkZWxmIC1TIHB1cmdhdG9yeS5ybyAgfCBncmVwICIg
-LnRleHQiCj4gICBbIDFdIC50ZXh0ICAgICAgICAgICAgIFBST0dCSVRTICAgICAgICAgMDAwMDAw
-MDAwMDAwMDAwMCAgMDAwMDAwNDAKPiAgIFsgN10gLnRleHQucHVyZ2F0b3J5ICAgUFJPR0JJVFMg
-ICAgICAgICAwMDAwMDAwMDAwMDAwMDAwICAwMDAwMjBlMAo+ICAgWyA5XSAudGV4dC53YXJuICAg
-ICAgICBQUk9HQklUUyAgICAgICAgIDAwMDAwMDAwMDAwMDAwMDAgIDAwMDAyMWMwCj4gICBbMTNd
-IC50ZXh0LnNoYTI1Nl91cGRhIFBST0dCSVRTICAgICAgICAgMDAwMDAwMDAwMDAwMDAwMCAgMDAw
-MDIyZjAKPiAgIFsxNV0gLnRleHQuc2hhMjI0X3VwZGEgUFJPR0JJVFMgICAgICAgICAwMDAwMDAw
-MDAwMDAwMDAwICAwMDAwMmJlMAo+ICAgWzE3XSAudGV4dC5zaGEyNTZfZmluYSBQUk9HQklUUyAg
-ICAgICAgIDAwMDAwMDAwMDAwMDAwMDAgIDAwMDAyYmYwCj4gICBbMTldIC50ZXh0LnNoYTIyNF9m
-aW5hIFBST0dCSVRTICAgICAgICAgMDAwMDAwMDAwMDAwMDAwMCAgMDAwMDJjYzAKPgo+IFRoaXMg
-Y2F1c2UgV0FSTklORyBmcm9tIGtleGVjX3B1cmdhdG9yeV9zZXR1cF9zZWNoZHJzKCk6Cj4KPiBX
-QVJOSU5HOiBDUFU6IDI2IFBJRDogMTEwODk0IGF0IGtlcm5lbC9rZXhlY19maWxlLmM6OTE5Cj4g
-a2V4ZWNfbG9hZF9wdXJnYXRvcnkrMHgzN2YvMHgzOTAKPgo+IEZpeCB0aGlzIGJ5IGRpc2FibGlu
-ZyBMVE8gZm9yIHB1cmdhdG9yeS4KPgo+IFdlIGNvdWxkIGFsc28gZml4IHRoaXMgd2l0aCBhbiBl
-eHBsaWNpdCBsaW5rZXIgc2NyaXB0IHRvIHJlam9pbiAudGV4dC4qCj4gc2VjdGlvbnMgYmFjayBp
-bnRvIC50ZXh0LiBIb3dldmVyLCBnaXZlbiB0aGUgYmVuZWZpdCBvZiBMVE9pbmcgcHVnYXRvcnkK
-CnMvcHVnYXRvcnkvcHVyZ2F0b3J5LwoKKG1heWJlIHRoZSB4ODYgbWFpbnRhaW5lcnMgY2FuIGFw
-cGx5IHRoYXQgZml4dXAgaWYvd2hlbiBwaWNrZWQgdXApCgo+IGlzIHNtYWxsLCBzaW1wbHkgZGlz
-YWJsZSB0aGUgcHJvZHVjdGlvbiBvZiBtb3JlIC50ZXh0Liogc2VjdGlvbnMgZm9yIG5vdy4KPgo+
-IEZpeGVzOiBiMzNmZmYwN2UzZTMgKCJ4ODYsIGJ1aWxkOiBhbGxvdyBMVE8gdG8gYmUgc2VsZWN0
-ZWQiKQo+IENjOiBSaWNhcmRvIFJpYmFsZGEgPHJpYmFsZGFAY2hyb21pdW0ub3JnPgo+IENjOiBT
-YW1pIFRvbHZhbmVuIDxzYW1pdG9sdmFuZW5AZ29vZ2xlLmNvbT4KPiBDYzoga2V4ZWNAbGlzdHMu
-aW5mcmFkZWFkLm9yZwo+IENjOiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnCj4gQ2M6IHg4
-NkBrZXJuZWwub3JnCj4gQ2M6IGxsdm1AbGlzdHMubGludXguZGV2Cj4gU2lnbmVkLW9mZi1ieTog
-U29uZyBMaXUgPHNvbmdAa2VybmVsLm9yZz4KClRoYW5rcyBmb3IgdGhlIHBhdGNoIQpSZXZpZXdl
-ZC1ieTogTmljayBEZXNhdWxuaWVycyA8bmRlc2F1bG5pZXJzQGdvb2dsZS5jb20+Cgo+Cj4gLS0t
-Cj4gQUZBSUNULCB4ODYgaXMgdGhlIG9ubHkgYXJjaCB0aGF0IHN1cHBvcnRzIExUTyBhbmQgcHVy
-Z2F0b3J5Lgo+Cj4gQ2hhbmdlcyBpbiB2MzoKPiAxLiBGaXggIkZpeGVzIiB0YWcuIChOaWNrIERl
-c2F1bG5pZXJzKQo+IDIuIEFkZCBkZXNjcmlwdGlvbiBvZiBhbiBhbHRlcm5hdGl2ZSBmaXgsIHdp
-dGggbGlua2VyIHNjcmlwdC4KPiAgICAoTmljayBEZXNhdWxuaWVycykKPgo+IENoYW5nZXMgaW4g
-djI6Cj4gMS4gVXNlIENDX0ZMQUdTX0xUTyBpbnN0ZWFkIG9mIGhhcmRjb2RlIC1mbHRvLiAoTmlj
-ayBEZXNhdWxuaWVycykKPiAtLS0KPiAgYXJjaC94ODYvcHVyZ2F0b3J5L01ha2VmaWxlIHwgNCAr
-KysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKykKPgo+IGRpZmYgLS1naXQgYS9h
-cmNoL3g4Ni9wdXJnYXRvcnkvTWFrZWZpbGUgYi9hcmNoL3g4Ni9wdXJnYXRvcnkvTWFrZWZpbGUK
-PiBpbmRleCBjMmEyOWJlMzVjMDEuLjA4YWEwZjI1ZjEyYSAxMDA2NDQKPiAtLS0gYS9hcmNoL3g4
-Ni9wdXJnYXRvcnkvTWFrZWZpbGUKPiArKysgYi9hcmNoL3g4Ni9wdXJnYXRvcnkvTWFrZWZpbGUK
-PiBAQCAtMTksNiArMTksMTAgQEAgQ0ZMQUdTX3NoYTI1Ni5vIDo9IC1EX19ESVNBQkxFX0VYUE9S
-VFMgLURfX05PX0ZPUlRJRlkKPiAgIyBvcHRpbWl6YXRpb24gZmxhZ3MuCj4gIEtCVUlMRF9DRkxB
-R1MgOj0gJChmaWx0ZXItb3V0IC1mcHJvZmlsZS1zYW1wbGUtdXNlPSUgLWZwcm9maWxlLXVzZT0l
-LCQoS0JVSUxEX0NGTEFHUykpCj4KPiArIyBXaGVuIExUTyBpcyBlbmFibGVkLCBsbHZtIGVtaXRz
-IG1hbnkgdGV4dCBzZWN0aW9ucywgd2hpY2ggaXMgbm90IHN1cHBvcnRlZAo+ICsjIGJ5IGtleGVj
-LiBSZW1vdmUgLWZsdG89KiBmbGFncy4KPiArS0JVSUxEX0NGTEFHUyA6PSAkKGZpbHRlci1vdXQg
-JChDQ19GTEFHU19MVE8pLCQoS0JVSUxEX0NGTEFHUykpCj4gKwo+ICAjIFdoZW4gbGlua2luZyBw
-dXJnYXRvcnkucm8gd2l0aCAtciB1bnJlc29sdmVkIHN5bWJvbHMgYXJlIG5vdCBjaGVja2VkLAo+
-ICAjIGFsc28gbGluayBhIHB1cmdhdG9yeS5jaGsgYmluYXJ5IHdpdGhvdXQgLXIgdG8gY2hlY2sg
-Zm9yIHVucmVzb2x2ZWQgc3ltYm9scy4KPiAgUFVSR0FUT1JZX0xERkxBR1MgOj0gLWUgcHVyZ2F0
-b3J5X3N0YXJ0IC16IG5vZGVmYXVsdGxpYgo+IC0tCj4gMi4zNC4xCj4KCgotLSAKVGhhbmtzLAp+
-TmljayBEZXNhdWxuaWVycwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
-cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Hi Lennart,
+
+On Thu, 14 Sep 2023 11:32:20 +0200
+Lennart Poettering <mzxreary@0pointer.de> wrote:
+
+> On Mi, 13.09.23 16:00, Philipp Rudo (prudo@redhat.com) wrote:
+> 
+> > For example there are two definitions for the UKI which contradict each other.
+> > The dedicated one [1] you have cited earlier and the one in the BLS for type #2
+> > entries [2]. In [1] the .linux and .initrd sections are mandatory and the
+> > .osrel and .cmdline sections are optional while in [2] it is the other way
+> > round. Which definition should the kernel follow?
+> >
+> > Furthermore, I absolutely don't understand how the spec should be read. All
+> > the spec does is defining some file formats. There is no word about which
+> > component in the boot chain is supposed to handle them and what exactly this
+> > component is supposed to do with it. But that is crucial if we want to add UKI
+> > support for kexec as the kexec systemcall will replace the stub. So we need to
+> > know what tasks the stub is supposed to perform. Currently this is only some
+> > implementation detail of the systemd-stub [3] that can change any moment and I
+> > strongly oppose to base any uapi on it.
+> >
+> > In the end the only benefit this series brings is to extend the signature
+> > checking on the whole UKI except of just the kernel image. Everything else can
+> > also be done in user space. Compared to the problems described above this is a
+> > very small gain for me.
+> >
+> > Until the spec got fixed I don't see a chance to add UKI support for kexec.  
+> 
+> So that spec is initially just a generalization of what
+> systemd-stub/systemd-boot/ukify does. The descrepancies between the
+> cited specs mostly come from the that generalization. If you want to
+> enumerate kernels and order them the ".osrel" stuff for example is
+> necessary, hence the boot loader spec really wants it. If you don't
+> care about the boot loader spec though and just want to register the
+> kernel UKI PE directly in BootXXX efi vars for example, then there's
+> no need to include .osrel. That all said we should certainly make the
+> two specs align better, and clarify the situation. Suggestions/patches
+> more than welcome.
+
+Thanks for the explanation. I know that writing a spec isn't easy and
+no matter how hard you try it will never be "perfect". That's why I
+think it's important to have a proper Introduction at the beginning of
+the spec that gives a context to the reader on the problem the spec is
+trying to solve, the different use cases/environments considered
+while writing the spec, the different components involved and how they
+interact with each other, which limitations there are, etc.. The BLS
+sort of has it (if you also consider the "Additional discussion") but
+for the UKI the introduction basically boils down to "it's a file that
+contains stuff", which isn't very helpful. Having such a context not
+only makes it easier to understand where such contradictions come from
+but also help to prevent problems where people from different
+backgrounds interpret the spec differently because they look at it from
+their context.
+
+An other thing I don't understand is, why the Extension Images (I
+assume describe the "Companion Files" in the systmd-stub man pages) are
+a separate spec. With the initrd and cmdline being part of the UKI and
+thus fixed you take away a lot of flexibility users have today. These
+extensions bring back part of the flexibility which IMHO is needed by
+general purpose distros as for them a simple one-size-fits-all solution
+doesn't work. That's why for me both belong together and thus should be
+described in the same spec.
+
+The extensions are also a good example why you need to properly define
+the different components and their responsibility. In a secureboot
+environment these extensions need to be signed and verified during
+boot. But wich component is responsible to check the signature? Is it
+the stub? The kernel? or even the initrd? If you don't define that in
+the spec you will eventually end up in situations where nobody checks
+the signature because everybody is sure it's "someone else's job".
+
+> Ultimately, I think a spec written as description with a single
+> implementation in mind (i.e. systemd) is a generally a bad spec. Hence
+> if kexec in the Linux kernel wants to add support for it, that'd be
+> great but I'd see that as an opportunity to adjust the spec to the
+> needs of the Linux kernel in this area, so that it reflects well more
+> than just one backend implementation.
+
+Fully agree. I must admit my first mail sounds pretty negative. But I
+don't oppose the UKI. All I wanted to say that at the moment the spec
+doesn't work for the kernel. But it can (and should) be fixed.
+
+In this context I hope it is also clear to you that when more and more
+people rely on the spec you need a more formal process when including
+changes. Especially when the change might break the implementation of
+others. So no more making the .cmdline optional and allowing it to be
+overwritten all on the same day.
+
+Having that said, what does "local override" exactly mean? Does that
+mean a distro can allow a user to freely choose the cmdline without
+checking any signatures? I.e. does that mean we can get rid of this
+https://github.com/systemd/systemd/issues/24539
+
+> Hence, seeing the spec as set in stone and as inherently low quality
+> is the wrong way to see it I am sure. Instead, the goal here is to
+> adjust the spec to make it work really nicely for *both* systemd and
+> the kernel.
+
+Sorry, I never wanted to intend that the spec inherently low quality.
+Just that it doesn't meat my expectations, yet. But that is fine. The
+spec isn't even a year old and there's only a single implementation,
+yet. So it's more documentation rather than a spec.
+
+Furthermore I don't expect the spec to be ever "set in stone". A spec
+always needs to adjust to an ever changing world. If it doesn't it's
+dead. But once other people rely on it you mustn't break backward
+compatibility. Meaning the more people rely on it the more careful you
+have to be which changes you make.
+
+Anyway, I hope I could make clear what my pain points are and by
+that help to make it work for both sides.
+
+Thanks
+Philipp
+
+> Lennart
+> 
+> --
+> Lennart Poettering, Berlin
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
