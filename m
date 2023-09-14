@@ -4,74 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id F3C20EEAA4E
-	for <kexec@archiver.kernel.org>; Thu, 14 Sep 2023 15:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6B0B7EEAA55
+	for <kexec@archiver.kernel.org>; Thu, 14 Sep 2023 16:12:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:List-Subscribe:List-Help
-	:List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:
-	Cc:To:Subject:MIME-Version:Date:Message-ID:Content-Type:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=VazNXpI1/P94IIAQtiHmM3xJkU+FkfwR+Q21obVo84Q=; b=qkB+t6KasKLQRHGt+r00yZCoDq
-	xE5vBgtuD53KcNtwRl4KPFW9G0VPgavQ+5i9C4HU3gj0wcx7qEvcSs2TovWBn3ieFwBl4xwCrEHhJ
-	1cqF+wqTZyKixiiH90an+mq4mO7ewUcJo1CTVEnDx92ve3IFCRwhiwCYnPbSc94HY9mgGO8cQnYhr
-	WWyqpMsxKOiZwbjfIPEZzzmAq2YWfE0eN3lcZyQNsaZmQKYVrGWduUhCiFa0ZhmSwyaQ/7VdEV3xi
-	aRzMFK3SZS5tubyeQIlNVC0SJAcyZ/yf276SyHxevrcOIi+pW8R/uMGhPS3xBgIfELC8yhq6/VJnd
-	zxxtFJbw==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:Subject:Cc:To:From:Date:References:
+	In-Reply-To:Message-Id:Mime-Version:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=LqHEqV33N9y1qUAZNKKz1NBvR2zwhyl/GPMFj8MB6B4=; b=qjsugdEIk7jtkr
+	CPfoGukDFnZ2+QUfEQYFzazL9Lyhm9g7QzUOpitkrTKFC1CIJd2y4fEJUQRwZVm2Nyc1YvmgNcej+
+	ZPMqHwS8nVFLH18vV6wNECbB/2DuC87k4Cwa7+3nTR6YKnDmdTHQc7HZWFlumNxB9y/dS2M+lARj3
+	izPxdkYsxfVoMnNFqEiqqUf+w74t0YSDQcisBdsvkfPLnsrnX/oJ0VYpBLihcLo+0H8bg84Q6myVX
+	FuPC3uWoZrjHJ2J3sxOsIxwW4MaeL0wjf0EQSQNWpc1OzbiGTixxiDQeIC3sUeNNHSQmeDFJUEIyJ
+	FYUeTEc919Jv1LATErCA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qgodN-008psY-2u;
-	Thu, 14 Sep 2023 15:52:01 +0000
-Received: from mgamail.intel.com ([134.134.136.126])
+	id 1qgoxI-008sse-08;
+	Thu, 14 Sep 2023 16:12:36 +0000
+Received: from out2-smtp.messagingengine.com ([66.111.4.26])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qgodK-008pqG-1P
+	id 1qgoxD-008smD-2T
 	for kexec@lists.infradead.org;
-	Thu, 14 Sep 2023 15:52:00 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694706718; x=1726242718;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to;
-  bh=osGMSR+/Sl/IIMT4WBHGk2JmyeEImW8mWC+HknDgaww=;
-  b=WfBnXkawvi9eacdSVnzQGHhulG8SG0XNasLh54fY3u/62OB92o2raF+r
-   GBoXOS3KYZcFFAwEuj+I4IiAeAKJWBknPdZs7iJStZeiNRagE0dY9q5NO
-   IxxwC7ma54C6bVgY9jaUcIms3Kq5toFjYh264wRNhJHGThq0RkchDJY6L
-   ASqlbFN83s44phZElbfQoYEiwXnT/dbjChhWGiiQymgnBVm/cKCLnop0k
-   ArdDWC3XwB6Q0sed2/KdVtm37IOaRE+GeT3IdtGv5T318e7r+ox6soNFT
-   zY+2wEc7W+1z/6kGg180pYfFUlrdoYud9RDkiJKwdD8QhiLcUwypJSwXo
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10833"; a="364040314"
-X-IronPort-AV: E=Sophos;i="6.02,146,1688454000"; 
-   d="scan'208";a="364040314"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2023 08:51:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10833"; a="694354783"
-X-IronPort-AV: E=Sophos;i="6.02,146,1688454000"; 
-   d="scan'208";a="694354783"
-Received: from spswartz-mobl.amr.corp.intel.com (HELO [10.209.21.97]) ([10.209.21.97])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2023 08:51:51 -0700
-Content-Type: multipart/mixed; boundary="------------s3GVNQ58hbmXD3GP00R55XLl"
-Message-ID: <45cdb5ae-986e-d186-f0fd-a308f946ce8d@intel.com>
-Date: Thu, 14 Sep 2023 08:51:50 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.0
-Subject: Re: [PATCH] x86/boot/compressed: Reserve more memory for page tables
-Content-Language: en-US
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>
-Cc: Ard Biesheuvel <ardb@google.com>, Kees Cook <keescook@chromium.org>,
- Aaron Lu <aaron.lu@intel.com>, Bagas Sanjaya <bagasdotme@gmail.com>,
- Tom Lendacky <thomas.lendacky@amd.com>, x86@kernel.org,
- kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.de
-References: <20230914123001.27659-1-kirill.shutemov@linux.intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <20230914123001.27659-1-kirill.shutemov@linux.intel.com>
+	Thu, 14 Sep 2023 16:12:34 +0000
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.nyi.internal (Postfix) with ESMTP id 6692D5C0129;
+	Thu, 14 Sep 2023 12:12:20 -0400 (EDT)
+Received: from imap49 ([10.202.2.99])
+  by compute6.internal (MEProxy); Thu, 14 Sep 2023 12:12:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:sender
+	:subject:subject:to:to; s=fm1; t=1694707940; x=1694794340; bh=Xi
+	qTMf+G8Iz9Kt1AWAyD7uk9c3iPMZoPGJgLyaqb6qE=; b=oPki5SIt24YuSDY/d5
+	5pfroamgkkvQnJuupS/qtTCycZHGJfgm+Rb2vrFHqZm+qeJQtSfJftgL1taTDfTC
+	qU4KN13e3qz8Nc49Uj2B77tmK7nqUjC+D4cs468Tu20ALTMUu+QkGKARsei/cn3f
+	Ix/qKy073jUF+HaiKm6lr0FQCKcdZuAtu5LSOHt7X1ixOjfcpT0lbc7tWd5iFXfA
+	k+xUqrbpKtDb4us6vWTd24KYnuUlAZOXLenv8kG7BLC919g226faiJV+EPBMXP23
+	6NO+3LcP3cpi2Ac1juvrjIB+okWOSbNc5jdT2/AsgeAFpBTQxcFBHYdxW8B3ngqj
+	Su2Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm2; t=1694707940; x=1694794340; bh=XiqTMf+G8Iz9K
+	t1AWAyD7uk9c3iPMZoPGJgLyaqb6qE=; b=I64Z4tAGR9egiP5LgMRtbzWXcS5B5
+	/fib2M8O3suwHu3fnzlvf7gJxna0WEKf/Tdh+TIhcXm0xUjHJFPgm+qEuaW5Dob5
+	cVCaDVLyitDnfcHl0QXstNOgt86KgVAVI2wdFbLcu6O4fxiqVebH6vh5Fbrn5az1
+	837aYqE2Z+1rNiuN/FAnRauZ8K0AxP5gEgA99beK3IgFRHkaesEVwiG0aFss/C+t
+	IliAxaxkia6BDWmcdnS2ibWfr8ov4kTe/23ALGumQ0Ddm7m1J70WlTBgn3F0TRZY
+	g1x9vvECUfoOvkw/R9cZtuQZEKFS0AySsjVUUbZpzeoGlPA7EWL2zXhJw==
+X-ME-Sender: <xms:4zADZVqzLGck7Jw3IZtS4FNB9lSY2OjrYb6hpeetkkpJLI_K5jnA9A>
+    <xme:4zADZXpVGcKNgz-LYvqTlUdsZXKKqoVh9Fzxe0fA7ebFoLhplM4CTgmL16YERcnIj
+    LE75XTdxaNvL5TIIIw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrudejtddgleeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    gfrhhlucfvnfffucdludehmdenucfjughrpefofgggkfgjfhffhffvvefutgesthdtredt
+    reertdenucfhrhhomhepfdflrghnucfjvghnughrihhkucfhrghrrhdfuceokhgvrhhnvg
+    hlsehjfhgrrhhrrdgttgeqnecuggftrfgrthhtvghrnhepudejhfffvdffieekvdekfeei
+    uedtffetleegteffhfekffehieehheevtdehteeinecuffhomhgrihhnpehgihhthhhusg
+    drtghomhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhm
+    pehkvghrnhgvlhesjhhfrghrrhdrtggt
+X-ME-Proxy: <xmx:4zADZSNZbfeiJt9mlJSJF6F1Voifxz28Tn6MxObKeHDxS-oDyISJuw>
+    <xmx:4zADZQ7Sy2Jbf7NfA4nlzNjfj0JCgreM6P_yqASq1c7quhY8eJ-PZA>
+    <xmx:4zADZU7IrDT94V-ilgSeVu_UIE_kl9FW92-sPojBqmhtTzD3XfbxTw>
+    <xmx:5DADZfJ7-DbCMojJ61nCSeh51SextikzNfEEVdhI82Q0ePyK5hFrKg>
+Feedback-ID: i0fc947c4:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 096B915A0091; Thu, 14 Sep 2023 12:12:18 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-745-g95dd7bea33-fm-20230905.001-g95dd7bea
+Mime-Version: 1.0
+Message-Id: <e215acd4-52fd-429c-a569-a20ba5a49d7e@app.fastmail.com>
+In-Reply-To: <CVIR0BGHX3VS.39FY5QL8KXR0F@suppilovahvero>
+References: <20230911052535.335770-1-kernel@jfarr.cc>
+ <20230913160045.40d377f9@rotkaeppchen> <ZQLTJFb3S/xn5CWo@gardel-login>
+ <CVIN0M3IHRKL.3U005Y5QTOJL5@suppilovahvero>
+ <CVIR0BGHX3VS.39FY5QL8KXR0F@suppilovahvero>
+Date: Thu, 14 Sep 2023 18:11:02 +0200
+From: "Jan Hendrik Farr" <kernel@jfarr.cc>
+To: "Jarkko Sakkinen" <jarkko@kernel.org>,
+ "Lennart Poettering" <mzxreary@0pointer.de>,
+ "Philipp Rudo" <prudo@redhat.com>
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, x86@kernel.org,
+ tglx@linutronix.de, dhowells@redhat.com, vgoyal@redhat.com,
+ keyrings@vger.kernel.org, akpm@linux-foundation.org,
+ "Baoquan He" <bhe@redhat.com>, bhelgaas@google.com,
+ "Luca Boccassi" <bluca@debian.org>, mjg59@google.com,
+ James.Bottomley@HansenPartnership.com
+Subject: Re: [PATCH v2 0/2] x86/kexec: UKI Support
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230914_085158_532258_BAB072BB 
-X-CRM114-Status: GOOD (  16.12  )
+X-CRM114-CacheID: sfid-20230914_091231_929462_8E0CA9F2 
+X-CRM114-Status: UNSURE (   6.95  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,64 +110,19 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-This is a multi-part message in MIME format.
---------------s3GVNQ58hbmXD3GP00R55XLl
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+> BTW, would not be a bad idea to extend CC list to at least Matthew and
+> James Bottomley on this patch.
 
-On 9/14/23 05:30, Kirill A. Shutemov wrote:
-> +/*
-> + * Total number of page table kernel_add_identity_map() can allocate,
-> + * including page tables consumed by startup_32().
-> + */
-> +# define BOOT_PGT_SIZE		(32*4096)
+Sure. Added Matthew and James in CC
 
-I agree that needing to know this in advance *exactly* is troublesome.
-
-But I do think that we should preserve the comment about the worst-case
-scenario.  Also, I thought this was triggered by unaccepted memory.  Am
-I remembering it wrong?  How was it in play?
-
-Either way, I think your general approach here is sound.  But let's add
-one little tweak to at least warn when we're getting close to the limit.
- Now that nobody has to worry about the limit for the immediate future
-it's a guarantee that in the long term someone will plow through it
-accidentally.
-
-Let's add a soft warning when we're nearing the limit so that there's a
-chance to catch these things in the future.
---------------s3GVNQ58hbmXD3GP00R55XLl
-Content-Type: text/x-patch; charset=UTF-8; name="pgtbuf.patch"
-Content-Disposition: attachment; filename="pgtbuf.patch"
-Content-Transfer-Encoding: base64
-
-ZGlmZiAtLWdpdCBhL2FyY2gveDg2L2Jvb3QvY29tcHJlc3NlZC9pZGVudF9tYXBfNjQuYyBi
-L2FyY2gveDg2L2Jvb3QvY29tcHJlc3NlZC9pZGVudF9tYXBfNjQuYwppbmRleCBiY2M5NTZj
-MTc4NzIuLjVkZmI2YTMxYmJiMSAxMDA2NDQKLS0tIGEvYXJjaC94ODYvYm9vdC9jb21wcmVz
-c2VkL2lkZW50X21hcF82NC5jCisrKyBiL2FyY2gveDg2L2Jvb3QvY29tcHJlc3NlZC9pZGVu
-dF9tYXBfNjQuYwpAQCAtNTksNiArNTksMTMgQEAgc3RhdGljIHZvaWQgKmFsbG9jX3BndF9w
-YWdlKHZvaWQgKmNvbnRleHQpCiAJCXJldHVybiBOVUxMOwogCX0KIAorCWlmIChwYWdlcy0+
-cGd0X2J1Zl9vZmZzZXQgPj0gcGFnZXMtPnBndF9idWZfc2l6ZSAqIDMgLyA0KSB7CisJCWRl
-YnVnX3B1dHN0cigicGd0X2J1ZiBydW5uaW5nIGxvdyBpbiAiIF9fRklMRV9fICJcbiIpOwor
-CQlkZWJ1Z19wdXRzdHIoIk5lZWQgdG8gcmFpc2UgQk9PVF9QR1RfU0laRT8/XG4iKTsKKwkJ
-ZGVidWdfcHV0YWRkcihwYWdlcy0+cGd0X2J1Zl9vZmZzZXQpOworCQlkZWJ1Z19wdXRhZGRy
-KHBhZ2VzLT5wZ3RfYnVmX3NpemUpOworCX0KKwogCWVudHJ5ID0gcGFnZXMtPnBndF9idWYg
-KyBwYWdlcy0+cGd0X2J1Zl9vZmZzZXQ7CiAJcGFnZXMtPnBndF9idWZfb2Zmc2V0ICs9IFBB
-R0VfU0laRTsKIAo=
-
---------------s3GVNQ58hbmXD3GP00R55XLl
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Also, I already made some minor changes. cmdline is now used from the syscall if there is no .cmdline section included in the UKI. find_section now returns the section_header as an ERR_PTR. You can find them in the uki-v3-wip branch at https://github.com/Cydox/linux/commits/uki-v3-wip
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---------------s3GVNQ58hbmXD3GP00R55XLl--
-
