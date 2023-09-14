@@ -4,93 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3283BEEAA4E
-	for <kexec@archiver.kernel.org>; Thu, 14 Sep 2023 14:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 10175EEAA53
+	for <kexec@archiver.kernel.org>; Thu, 14 Sep 2023 15:34:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:To:References:Message-Id:Cc:Date:
-	In-Reply-To:From:Subject:Mime-Version:Reply-To:Content-ID:Content-Description
-	:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=FxPOxui31m5hBcEU2gpN6QFVnuENvtt/sEuSbQB+vUU=; b=YEf9gukVLVVCLc
-	xsQyzEwAOIWIArkVZXo8HGjApi9nfCq3uP3WsQedc91/00QrRyMseu14zrlOGuwDfAlhxfbs0d7xH
-	bVq8lrEECBXrsoXNw+2iFlmDJqFDSKFQ/YWD4td3YkzRwvmhokQTlG1yzA3Znep8V5OMSRxLasg2A
-	TH+vM8s/3lggfodCXG288Wahtnf4eYl7JWXI2JsQx+3ePnpi3VTQwi3b/sTgMq/AYMonQRDuoZ5mA
-	OOt+MyYlRUBEwBwIPh1HiXvuin4Bx4Pub+Ob/S8FwI4Y1pzMlulDNLxzlUCtqtQ6wwCuv3usoISqd
-	8QJ3OVIg+Ukb2KyAyU7A==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:References:To:From:Subject:
+	Cc:Message-Id:Date:Mime-Version:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=WTQmNsIGYnHmKRaO8N7xqf7qZB98A7856RhbY4rjXqk=; b=OqpvCMiYtENrXd
+	Fv8IwtN2R1kW9anYAboOrhqqzkIiDXgUF3qZ82HaA3MKh46MXF0pGN63NbTPlVHxl+AcZvOvjck9j
+	//RBFF2RLhsKybQtGdKRQwTZeW53P1LayZSlewpKXfmkk6srkbZSLm+VfNmmv/NEUwJrU9ExlErZU
+	2BtIzjv6EZEfI7yxRT7Ic5qwToN0FDQKSWORzkoqyxKiG/MRzyQld40t+XtAmoFj9PCgE09HUcZTZ
+	iZ0OVCdTsv1cS7eV78oMHnFqA2wcPeA3495muZ9JHOIQdOwfCg6C6ij8UTmOPH+MihebOJhc9IVst
+	zXwTroH94SiHkuWfD6bg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qgnhl-008h96-2m;
-	Thu, 14 Sep 2023 14:52:29 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1qgoLy-008nl6-19;
+	Thu, 14 Sep 2023 15:34:02 +0000
+Received: from ams.source.kernel.org ([2604:1380:4601:e00::1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qgnhh-008h7l-15
+	id 1qgoLv-008nkC-19
 	for kexec@lists.infradead.org;
-	Thu, 14 Sep 2023 14:52:26 +0000
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38EEfupY028596
-	for <kexec@lists.infradead.org>; Thu, 14 Sep 2023 14:52:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=pp1;
- bh=5lxCinMqUzg9yV6DmlDgD/6ibMdrz6SNqLfCYFQziCw=;
- b=Ts++BvquE/MjZ/ZTpInCCoo5CKzxs9EReGTGBK42DazXknI6do4GF9cizRehvjG6phN3
- 50cTQZE0IM8JFb5JOKZ3G2F+c6paMyrq5IP/S/eFSi1iiA0s1D7+4/sbySzJrnAjXr0K
- bG32PpQsUm1EDiP1qxMT4id5DDZ6SRg8xLXbkn8Qk6FZ15qIX2QTwDMNJQ7cmBDVsHO3
- W5jN+C9uH2SGGC6sgYQtLmoL560N6N2IAU0TxPv8Z30f2vUmwwOE6kfeQzLNpmHAKrKh
- PauMeCjDLzFvH1cKdXvy9+l+jsy2BVZfUHbKeWflIzUsDX5Zija1v9unVjcuwYlo5r4h pw== 
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3t445u0c47-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <kexec@lists.infradead.org>; Thu, 14 Sep 2023 14:52:14 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 38EECXug024033
-	for <kexec@lists.infradead.org>; Thu, 14 Sep 2023 14:52:13 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3t131tm2nh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-	for <kexec@lists.infradead.org>; Thu, 14 Sep 2023 14:52:13 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 38EEqATf43778600
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 14 Sep 2023 14:52:10 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7D6D92004F;
-	Thu, 14 Sep 2023 14:52:10 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6BE9020040;
-	Thu, 14 Sep 2023 14:52:08 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.52.45])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 14 Sep 2023 14:52:08 +0000 (GMT)
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.700.6\))
-Subject: Re: [PATCH] makedumpfile: ppc64: do page traversal if vmemmap_list
- not populated
-From: Sachin Sant <sachinp@linux.ibm.com>
-In-Reply-To: <20230914092223.172811-1-adityag@linux.ibm.com>
-Date: Thu, 14 Sep 2023 20:22:03 +0530
-Cc: kexec@lists.infradead.org, Hari Bathini <hbathini@linux.ibm.com>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Message-Id: <B5F0F00E-F2B1-47D7-A143-5683D10DC29A@linux.ibm.com>
-References: <20230914092223.172811-1-adityag@linux.ibm.com>
-To: Aditya Gupta <adityag@linux.ibm.com>
-X-Mailer: Apple Mail (2.3731.700.6)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: gLjaQJCv07EI9Yz8wA7LQHgNm6xk6eSD
-X-Proofpoint-GUID: gLjaQJCv07EI9Yz8wA7LQHgNm6xk6eSD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-14_09,2023-09-14_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- bulkscore=0 suspectscore=0 adultscore=0 clxscore=1011 impostorscore=0
- mlxlogscore=999 spamscore=0 phishscore=0 malwarescore=0 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2308100000 definitions=main-2309140125
+	Thu, 14 Sep 2023 15:34:01 +0000
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by ams.source.kernel.org (Postfix) with ESMTPS id D43A2B8295A;
+	Thu, 14 Sep 2023 15:33:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D029BC433C8;
+	Thu, 14 Sep 2023 15:33:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1694705636;
+	bh=1KeR15MR0lzhn5Kwe9u+YNeU4/nutLkkCZN5KZakWas=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=rPamIDWjidl9aoOdYu4538eyG1jHEMWZEg2hgseAtAW4443e47amuR6bw/Z9KkHUn
+	 gA88wNMgwOUjCzTKID4ynAYNOFuqz3SbokqFHhFMuvZKopusr9QQXjsY3RkU60FNki
+	 A0mreV9IOF68fihVtB9m67vAE7uJbSfi73xxxKFnZv7jO1owPQEKT3yszKrZWsSBkw
+	 1/gJJcuJNndyGRRLwtpQ5mVVSVZ6M6EddjOl2CF6S3+3WWXutNxsYzWJOqYPpEi3yG
+	 XJkH6wkft6EOtfyYZP6VFdP4+sOSL2oApCfjPC5BsXAV/gGyXN7gZFPMqP6468h9R8
+	 M8EItT4mbi1Vw==
+Mime-Version: 1.0
+Date: Thu, 14 Sep 2023 18:33:51 +0300
+Message-Id: <CVIR0BGHX3VS.39FY5QL8KXR0F@suppilovahvero>
+Cc: "Jan Hendrik Farr" <kernel@jfarr.cc>, <linux-kernel@vger.kernel.org>,
+ <kexec@lists.infradead.org>, <x86@kernel.org>, <tglx@linutronix.de>,
+ <dhowells@redhat.com>, <vgoyal@redhat.com>, <keyrings@vger.kernel.org>,
+ <akpm@linux-foundation.org>, <bhe@redhat.com>, <bhelgaas@google.com>,
+ <bluca@debian.org>
+Subject: Re: [PATCH v2 0/2] x86/kexec: UKI Support
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Jarkko Sakkinen" <jarkko@kernel.org>, "Lennart Poettering"
+ <mzxreary@0pointer.de>, "Philipp Rudo" <prudo@redhat.com>
+X-Mailer: aerc 0.14.0
+References: <20230911052535.335770-1-kernel@jfarr.cc>
+ <20230913160045.40d377f9@rotkaeppchen> <ZQLTJFb3S/xn5CWo@gardel-login>
+ <CVIN0M3IHRKL.3U005Y5QTOJL5@suppilovahvero>
+In-Reply-To: <CVIN0M3IHRKL.3U005Y5QTOJL5@suppilovahvero>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230914_075225_592876_6A645EA4 
-X-CRM114-Status: GOOD (  21.45  )
+X-CRM114-CacheID: sfid-20230914_083359_691960_C0BEEB7F 
+X-CRM114-Status: GOOD (  43.61  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,38 +76,93 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Cgo+IE9uIDE0LVNlcC0yMDIzLCBhdCAyOjUyIFBNLCBBZGl0eWEgR3VwdGEgPGFkaXR5YWdAbGlu
-dXguaWJtLmNvbT4gd3JvdGU6Cj4gCj4gQ3VycmVudGx5ICdtYWtlZHVtcGZpbGUnIGZhaWxzIHRv
-IGNvbGxlY3Qgdm1jb3JlIG9uIHVwc3RyZWFtIGtlcm5lbCwKPiB3aXRoIHRoZSBlcnJvcnM6Cj4g
-Cj4gICAgcmVhZHBhZ2VfZWxmOiBBdHRlbXB0IHRvIHJlYWQgbm9uLWV4aXN0ZW50IHBhZ2UgYXQg
-MHg0MDAwMDAwMDAwMDAwMDAwLgo+ICAgIHJlYWRtZW06IHR5cGVfYWRkcjogMCwgYWRkcjowLCBz
-aXplOjgKPiAgICBnZXRfdm1lbW1hcF9saXN0X2luZm86IENhbid0IGdldCB2bWVtbWFwIHJlZ2lv
-biBhZGRyZXNzZXMKPiAgICBnZXRfbWFjaGRlcF9pbmZvX3BwYzY0OiBDYW4ndCBnZXQgdm1lbW1h
-cCBsaXN0IGluZm8uCj4gCj4gVGhpcyBvY2N1cnMgc2luY2UgbWFrZWR1bXBmaWxlIGRlcGVuZHMg
-b24gJ3ZtZW1tYXBfbGlzdCcgZm9yIHRyYW5zbGF0aW5nCj4gdm1lbW1hcCBhZGRyZXNzZXMuIEJ1
-dCB3aXRoIGJlbG93IGNvbW1pdCBpbiBMaW51eCwgdm1lbW1hcF9saXN0IGNhbiBiZQo+IGVtcHR5
-LCBpbiBjYXNlIG9mIFJhZGl4IE1NVSBvbiBQb3dlclBDNjQKPiAKPiAgICAzNjhhMDU5MGQ5NTQ6
-IChwb3dlcnBjL2Jvb2szczY0L3ZtZW1tYXA6IHN3aXRjaCByYWRpeCB0byB1c2UgYQo+ICAgIGRp
-ZmZlcmVudCB2bWVtbWFwIGhhbmRsaW5nIGZ1bmN0aW9uKQo+IAo+IEluIGNhc2Ugdm1lbW1hcF9s
-aXN0IGlzIGVtcHR5LCB0aGVuIGl0J3MgaGVhZCBpcyBOVUxMLCB3aGljaCBjYXVzZXMKPiBtYWtl
-ZHVtcGZpbGUgdG8gZmFpbCB3aXRoIGFib3ZlIGVycm9yLgo+IAo+IFNpbmNlIHdpdGggYWJvdmUg
-Y29tbWl0LCAndm1lbW1hcF9saXN0JyBpcyBub3QgcG9wdWxhdGVkICh3aGVuIE1NVSBpcwo+IFJh
-ZGl4IE1NVSksIGtlcm5lbCBwb3B1bGF0ZXMgY29ycmVzcG9uZGluZyBwYWdlIHRhYmxlIGVudHJp
-ZXMgaW4ga2VybmVsCj4gcGFnZSB0YWJsZS4gSGVuY2UsIGluc3RlYWQgb2YgZGVwZW5kaW5nIG9u
-ICd2bWVtbWFwX2xpc3QnIGZvciBhZGRyZXNzCj4gdHJhbnNsYXRpb24gZm9yIHZtZW1tYXAgYWRk
-cmVzc2VzLCBkbyBhIGtlcm5lbCBwYWdldGFibGUgd2Fsay4KPiAKPiBBbmQgc2luY2UgdGhlIHB0
-ZSBjYW4gYWxzbyBiZSBpbnRyb2R1Y2VkIGF0IGhpZ2hlciBsZXZlbHMgaW4gdGhlIHBhZ2UKPiB0
-YWJsZSwgc3VjaCBhcyBhdCBQTUQgbGV2ZWwsIGFkZCBodWdlcGFnZSBzdXBwb3J0LCBieSBjaGVj
-a2luZyBmb3IKPiBQQUdFX1BURSBmbGFnCj4gCj4gUmVwb3J0ZWQtYnk6IFNhY2hpbiBTYW50IDxz
-YWNoaW5wQGxpbnV4LmlibS5jb20+Cj4gU2lnbmVkLW9mZi1ieTogQWRpdHlhIEd1cHRhIDxhZGl0
-eWFnQGxpbnV4LmlibS5jb20+Cj4g4oCUClRoYW5rcyBmb3IgdGhlIGZpeC4gV2l0aCB0aGlzIChh
-bmQgdGhlIGNvcnJlc3BvbmRpbmcga2VybmVsKSBmaXggYXBwbGllZCwKSSBhbSBhYmxlIHRvIGNh
-cHR1cmUgY3Jhc2ggZHVtcC4KClRlc3RlZC1ieTogU2FjaGluIFNhbnQgPHNhY2hpbnBAbGludXgu
-aWJtLmNvbT4KCi0gU2FjaGluCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
-dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On Thu Sep 14, 2023 at 3:26 PM EEST, Jarkko Sakkinen wrote:
+> On Thu Sep 14, 2023 at 12:32 PM EEST, Lennart Poettering wrote:
+> > On Mi, 13.09.23 16:00, Philipp Rudo (prudo@redhat.com) wrote:
+> >
+> > > For example there are two definitions for the UKI which contradict each other.
+> > > The dedicated one [1] you have cited earlier and the one in the BLS for type #2
+> > > entries [2]. In [1] the .linux and .initrd sections are mandatory and the
+> > > .osrel and .cmdline sections are optional while in [2] it is the other way
+> > > round. Which definition should the kernel follow?
+> > >
+> > > Furthermore, I absolutely don't understand how the spec should be read. All
+> > > the spec does is defining some file formats. There is no word about which
+> > > component in the boot chain is supposed to handle them and what exactly this
+> > > component is supposed to do with it. But that is crucial if we want to add UKI
+> > > support for kexec as the kexec systemcall will replace the stub. So we need to
+> > > know what tasks the stub is supposed to perform. Currently this is only some
+> > > implementation detail of the systemd-stub [3] that can change any moment and I
+> > > strongly oppose to base any uapi on it.
+> > >
+> > > In the end the only benefit this series brings is to extend the signature
+> > > checking on the whole UKI except of just the kernel image. Everything else can
+> > > also be done in user space. Compared to the problems described above this is a
+> > > very small gain for me.
+> > >
+> > > Until the spec got fixed I don't see a chance to add UKI support for kexec.
+> >
+> > So that spec is initially just a generalization of what
+> > systemd-stub/systemd-boot/ukify does. The descrepancies between the
+> > cited specs mostly come from the that generalization. If you want to
+> > enumerate kernels and order them the ".osrel" stuff for example is
+> > necessary, hence the boot loader spec really wants it. If you don't
+> > care about the boot loader spec though and just want to register the
+> > kernel UKI PE directly in BootXXX efi vars for example, then there's
+> > no need to include .osrel. That all said we should certainly make the
+> > two specs align better, and clarify the situation. Suggestions/patches
+> > more than welcome.
+> >
+> > Ultimately, I think a spec written as description with a single
+> > implementation in mind (i.e. systemd) is a generally a bad spec. Hence
+> > if kexec in the Linux kernel wants to add support for it, that'd be
+> > great but I'd see that as an opportunity to adjust the spec to the
+> > needs of the Linux kernel in this area, so that it reflects well more
+> > than just one backend implementation.
+> >
+> > Hence, seeing the spec as set in stone and as inherently low quality
+> > is the wrong way to see it I am sure. Instead, the goal here is to
+> > adjust the spec to make it work really nicely for *both* systemd and
+> > the kernel.
+>
+> Bringing better backing story [1] would also help the spec. Immeditaly
+> when there's some reflection surface, also the possible faults it the
+> spec become more apparent. Also this makes spec refinement less boring,
+> which can be boring and tedious if you write it isolated by yourself or
+> in a small group :-)
+>
+> I need to check if I could with some effort extend my current testing
+> environment for UKI [2]. Need to study this better at some point.
+>
+> > Lennart
+> >
+> > --
+> > Lennart Poettering, Berlin
+>
+> [1] https://social.kernel.org/notice/AZklKOsIYBZXDL9Bya
+> [2] https://github.com/jarkkojs/buildroot-tpmdd/compare/master...linux-6.5.y
+>
+> BR, JKarkko
+
+I need to revisit one some months olds patch set from Matthew Garrett.
+It was about encrypted hibernate.
+
+I don't recall exactly what was the problem with PCR sealing but want
+to check. This is not hunch that this would affect the current patch
+set in review. Just want to revisit to remember why it did not go
+through in the end.
+
+BTW, would not be a bad idea to extend CC list to at least Matthew and
+James Bottomley on this patch.
+
+BR, Jarkko
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
