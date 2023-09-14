@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 50751CA0ECD
-	for <kexec@archiver.kernel.org>; Thu, 14 Sep 2023 03:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2AF6CCA0ED0
+	for <kexec@archiver.kernel.org>; Thu, 14 Sep 2023 03:32:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=eindnLq4bNy5jkDJWK6qMjFqtdfyb19tSc2JFG3jMLM=; b=zWX2W57Cn1zH7A
-	Q/0uidgIyG98eMKSTj7SHTkJxWogsoPR4c/PhlsjzAV3Aq4kklP7uhv+sjsr+hPunfFZMSb+argBo
-	IIvebkfthDlixMx/PtRzfAXNvBdAejEtJu/ugd2ryeWqekhTBu1gCBe9vraDeq4z9XHcehPQGUfuF
-	SNoJcqk9qoUB3jnjyMc3uqg05GUGVDd6MsDEMdjXYCr7PnWMff7XYisUQQyoZjsWR6dio+CrBmxyI
-	KWV1JVZVVWfmNWVPLo5D4mPrqL04GxxwliqgdWogfLyNYXd5EkntYeQaxVij4VfoIsx5uAWbNYqyV
-	Zf/9VLacChj/kB6Ll5eg==;
+	List-Owner; bh=bkfpJBvOfH712oiVD4Vu6hBrhglNqy4q9N2SOGRrKFk=; b=TCHJtBGZTNEr2S
+	NJGqRsygNeKODRLBnu7S9MYWdlSXsAZs8IRLzP6PteyzVnyN0lEz5s9TvyQzBbnnwsvMwVv+8Ebzm
+	I7qaF2xgqwk1SFFDLz+GNk4lPOJUzosWDQT+u2/eO8mUi+lcf1Vn6dqt3vn8oRvCj+Ou6rO+YOolr
+	whJmTdzxaK9AY0sW0kBDpsm5cUwIDZTKpGlbEoJnQLEyw9uUFEAbtxjEIpYvpQWdv+V4T3DR0vxiX
+	ooTg+R2uU0Fr5/OAl5nq85SAzff8ZxhMX3sebM6s7piBbXKDyeseNpMgOLpdEWgXCZw2u//dc1Kh3
+	9k1oTkJi7od1uywxs8ag==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qgd5e-007Fvh-2c;
-	Thu, 14 Sep 2023 03:32:26 +0000
+	id 1qgd5m-007G3p-07;
+	Thu, 14 Sep 2023 03:32:34 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qgd5Z-007Foi-1H
+	id 1qgd5a-007FpR-0C
 	for kexec@lists.infradead.org;
-	Thu, 14 Sep 2023 03:32:22 +0000
+	Thu, 14 Sep 2023 03:32:25 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1694662340;
+	s=mimecast20190719; t=1694662341;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CuyFNbtk2D5ZLNQLEQ3vxhJMzL7nFa+vxdXXthC35r8=;
-	b=dd8pgYi2myXfPvKeOkR28POzo1Ywd8nxevJs40XDp6YakLZVI9kowYwu8sevSiVqO+viEX
-	G+3fusw9fMLcTc9oWQOvKMfNNwxVANwgoQzgIaQcZVj6pEX6CVEtgH8wISMfmrwKxQFcLZ
-	bfYGTYYPAwjTTIlUQ9x4J0S64w3uUWI=
+	bh=znbCARmlc3jzayhQdsOeRF7d+N1aifD5+DGhNcydCJU=;
+	b=Kl6hGAWPDhQvycDYXQpikzGISTWaQQoW5EQVXenoRAtfPB+d7aEtvU+/9VnhvbsX3Yswob
+	kzvy3ErxI2Of1TY+gTgw3HDdyJTCMSpj2x/J7jdqjwlFzgBwcY5olEPAqfTpz0aOhZzWG+
+	R7YpR4EyzLk6h4aMDgQQK5a1UY2jBsU=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-42-VMWE-biJMa2FUkSHDLWytw-1; Wed, 13 Sep 2023 23:32:13 -0400
-X-MC-Unique: VMWE-biJMa2FUkSHDLWytw-1
+ us-mta-480-XI4B-DCONTu_dVRWa_Pb7g-1; Wed, 13 Sep 2023 23:32:17 -0400
+X-MC-Unique: XI4B-DCONTu_dVRWa_Pb7g-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9FC77857A9A;
-	Thu, 14 Sep 2023 03:32:12 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3A77B805B29;
+	Thu, 14 Sep 2023 03:32:17 +0000 (UTC)
 Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.112.51])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id A7E9510F1BE7;
-	Thu, 14 Sep 2023 03:32:08 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 546D710F1BEA;
+	Thu, 14 Sep 2023 03:32:13 +0000 (UTC)
 From: Baoquan He <bhe@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: akpm@linux-foundation.org,
@@ -61,16 +61,16 @@ Cc: akpm@linux-foundation.org,
 	linux-riscv@lists.infradead.org,
 	x86@kernel.org,
 	Baoquan He <bhe@redhat.com>
-Subject: [PATCH v3 5/9] crash_core: move crashk_*res definition into crash_core.c
-Date: Thu, 14 Sep 2023 11:31:38 +0800
-Message-ID: <20230914033142.676708-6-bhe@redhat.com>
+Subject: [PATCH v3 6/9] x86: kdump: use generic interface to simplify crashkernel reservation code
+Date: Thu, 14 Sep 2023 11:31:39 +0800
+Message-ID: <20230914033142.676708-7-bhe@redhat.com>
 In-Reply-To: <20230914033142.676708-1-bhe@redhat.com>
 References: <20230914033142.676708-1-bhe@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230913_203221_515597_39F4E788 
-X-CRM114-Status: GOOD (  15.08  )
+X-CRM114-CacheID: sfid-20230913_203222_197427_A4E4FDB2 
+X-CRM114-Status: GOOD (  27.69  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,118 +87,270 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Both crashk_res and crashk_low_res are used to mark the reserved
-crashkernel regions in iomem_resource tree. And later the generic
-crashkernel resrvation will be added into crash_core.c. So move
-crashk_res and crashk_low_res definition into crash_core.c to avoid
-compiling error if CONFIG_CRASH_CORE=on while CONFIG_KEXEC_CORE is
-unset.
+With the help of newly changed function parse_crashkernel() and
+generic reserve_crashkernel_generic(), crashkernel reservation can be
+simplified by steps:
 
-Meanwhile include <asm/crash_core.h> in <linux/crash_core.h> if generic
-reservation is needed. In that case, <asm/crash_core.h> need be added
-by ARCH. In asm/crash_core.h, ARCH can provide its own macro definitions
-to override macros in <linux/crash_core.h> if needed. Wrap the including
-into CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION ifdeffery scope to
-avoid compiling error in other ARCH-es which don't take the generic
-reservation way yet.
+1) Add a new header file <asm/crash_core.h>, and define CRASH_ALIGN,
+   CRASH_ADDR_LOW_MAX, CRASH_ADDR_HIGH_MAX and
+   DEFAULT_CRASH_KERNEL_LOW_SIZE in <asm/crash_core.h>;
+
+2) Add arch_reserve_crashkernel() to call parse_crashkernel() and
+   reserve_crashkernel_generic(), and do the ARCH specific work if
+   needed.
+
+3) Add ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION Kconfig in
+   arch/x86/Kconfig.
+
+When adding DEFAULT_CRASH_KERNEL_LOW_SIZE, add crash_low_size_default()
+to calculate crashkernel low memory because x86_64 has special
+requirement.
+
+The old reserve_crashkernel_low() and reserve_crashkernel() can be
+removed.
 
 Signed-off-by: Baoquan He <bhe@redhat.com>
 ---
- include/linux/crash_core.h |  8 ++++++++
- include/linux/kexec.h      |  4 ----
- kernel/crash_core.c        | 16 ++++++++++++++++
- kernel/kexec_core.c        | 17 -----------------
- 4 files changed, 24 insertions(+), 21 deletions(-)
+ arch/x86/Kconfig                  |   3 +
+ arch/x86/include/asm/crash_core.h |  34 +++++++
+ arch/x86/kernel/setup.c           | 144 ++++--------------------------
+ 3 files changed, 52 insertions(+), 129 deletions(-)
+ create mode 100644 arch/x86/include/asm/crash_core.h
 
-diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-index 4dbd6565e0ff..3c735a7e33fb 100644
---- a/include/linux/crash_core.h
-+++ b/include/linux/crash_core.h
-@@ -5,6 +5,14 @@
- #include <linux/linkage.h>
- #include <linux/elfcore.h>
- #include <linux/elf.h>
-+#ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
-+#include <asm/crash_core.h>
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 982b777eadc7..d5ebb2ad2ad6 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2062,6 +2062,9 @@ config ARCH_SUPPORTS_CRASH_DUMP
+ config ARCH_SUPPORTS_CRASH_HOTPLUG
+ 	def_bool y
+ 
++config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
++	def_bool CRASH_CORE
++
+ config PHYSICAL_START
+ 	hex "Physical address where the kernel is loaded" if (EXPERT || CRASH_DUMP)
+ 	default "0x1000000"
+diff --git a/arch/x86/include/asm/crash_core.h b/arch/x86/include/asm/crash_core.h
+new file mode 100644
+index 000000000000..5fc5e4f94521
+--- /dev/null
++++ b/arch/x86/include/asm/crash_core.h
+@@ -0,0 +1,34 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _X86_CRASH_CORE_H
++#define _X86_CRASH_CORE_H
++
++/* 16M alignment for crash kernel regions */
++#define CRASH_ALIGN             SZ_16M
++
++/*
++ * Keep the crash kernel below this limit.
++ *
++ * Earlier 32-bits kernels would limit the kernel to the low 512 MB range
++ * due to mapping restrictions.
++ *
++ * 64-bit kdump kernels need to be restricted to be under 64 TB, which is
++ * the upper limit of system RAM in 4-level paging mode. Since the kdump
++ * jump could be from 5-level paging to 4-level paging, the jump will fail if
++ * the kernel is put above 64 TB, and during the 1st kernel bootup there's
++ * no good way to detect the paging mode of the target kernel which will be
++ * loaded for dumping.
++ */
++
++#ifdef CONFIG_X86_32
++# define CRASH_ADDR_LOW_MAX     SZ_512M
++# define CRASH_ADDR_HIGH_MAX    SZ_512M
++#else
++# define CRASH_ADDR_LOW_MAX     SZ_4G
++# define CRASH_ADDR_HIGH_MAX    SZ_64T
 +#endif
 +
-+/* Location of a reserved region to hold the crash kernel.
-+ */
-+extern struct resource crashk_res;
-+extern struct resource crashk_low_res;
- 
- #define CRASH_CORE_NOTE_NAME	   "CORE"
- #define CRASH_CORE_NOTE_HEAD_BYTES ALIGN(sizeof(struct elf_note), 4)
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 32c78078552c..8227455192b7 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -22,10 +22,6 @@
- #include <uapi/linux/kexec.h>
- #include <linux/verification.h>
- 
--/* Location of a reserved region to hold the crash kernel.
-- */
--extern struct resource crashk_res;
--extern struct resource crashk_low_res;
- extern note_buf_t __percpu *crash_notes;
- 
- #ifdef CONFIG_KEXEC_CORE
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index ca66b5f41dc7..ad7dc03f3993 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -35,6 +35,22 @@ u32 *vmcoreinfo_note;
- /* trusted vmcoreinfo, e.g. we can make a copy in the crash memory */
- static unsigned char *vmcoreinfo_data_safecopy;
- 
-+/* Location of the reserved area for the crash kernel */
-+struct resource crashk_res = {
-+	.name  = "Crash kernel",
-+	.start = 0,
-+	.end   = 0,
-+	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
-+	.desc  = IORES_DESC_CRASH_KERNEL
-+};
-+struct resource crashk_low_res = {
-+	.name  = "Crash kernel",
-+	.start = 0,
-+	.end   = 0,
-+	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
-+	.desc  = IORES_DESC_CRASH_KERNEL
-+};
++# define DEFAULT_CRASH_KERNEL_LOW_SIZE crash_low_size_default()
 +
++extern unsigned long crash_low_size_default(void);
++
++#endif /* _X86_CRASH_CORE_H */
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index f945d88215b4..0acc86587fc0 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -473,152 +473,38 @@ static void __init memblock_x86_reserve_range_setup_data(void)
  /*
-  * parsing the "crashkernel" commandline
-  *
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index 9dc728982d79..be5642a4ec49 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -52,23 +52,6 @@ atomic_t __kexec_lock = ATOMIC_INIT(0);
- /* Flag to indicate we are going to kexec a new kernel */
- bool kexec_in_progress = false;
- 
+  * --------- Crashkernel reservation ------------------------------
+  */
 -
--/* Location of the reserved area for the crash kernel */
--struct resource crashk_res = {
--	.name  = "Crash kernel",
--	.start = 0,
--	.end   = 0,
--	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
--	.desc  = IORES_DESC_CRASH_KERNEL
--};
--struct resource crashk_low_res = {
--	.name  = "Crash kernel",
--	.start = 0,
--	.end   = 0,
--	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
--	.desc  = IORES_DESC_CRASH_KERNEL
--};
+-/* 16M alignment for crash kernel regions */
+-#define CRASH_ALIGN		SZ_16M
 -
- int kexec_should_crash(struct task_struct *p)
+-/*
+- * Keep the crash kernel below this limit.
+- *
+- * Earlier 32-bits kernels would limit the kernel to the low 512 MB range
+- * due to mapping restrictions.
+- *
+- * 64-bit kdump kernels need to be restricted to be under 64 TB, which is
+- * the upper limit of system RAM in 4-level paging mode. Since the kdump
+- * jump could be from 5-level paging to 4-level paging, the jump will fail if
+- * the kernel is put above 64 TB, and during the 1st kernel bootup there's
+- * no good way to detect the paging mode of the target kernel which will be
+- * loaded for dumping.
+- */
+-#ifdef CONFIG_X86_32
+-# define CRASH_ADDR_LOW_MAX	SZ_512M
+-# define CRASH_ADDR_HIGH_MAX	SZ_512M
+-#else
+-# define CRASH_ADDR_LOW_MAX	SZ_4G
+-# define CRASH_ADDR_HIGH_MAX	SZ_64T
+-#endif
+-
+-static int __init reserve_crashkernel_low(void)
++unsigned long crash_low_size_default(void)
  {
- 	/*
+ #ifdef CONFIG_X86_64
+-	unsigned long long base, low_base = 0, low_size = 0;
+-	unsigned long low_mem_limit;
+-	int ret;
+-
+-	low_mem_limit = min(memblock_phys_mem_size(), CRASH_ADDR_LOW_MAX);
+-
+-	/* crashkernel=Y,low */
+-	ret = parse_crashkernel_low(boot_command_line, low_mem_limit, &low_size, &base);
+-	if (ret) {
+-		/*
+-		 * two parts from kernel/dma/swiotlb.c:
+-		 * -swiotlb size: user-specified with swiotlb= or default.
+-		 *
+-		 * -swiotlb overflow buffer: now hardcoded to 32k. We round it
+-		 * to 8M for other buffers that may need to stay low too. Also
+-		 * make sure we allocate enough extra low memory so that we
+-		 * don't run out of DMA buffers for 32-bit devices.
+-		 */
+-		low_size = max(swiotlb_size_or_default() + (8UL << 20), 256UL << 20);
+-	} else {
+-		/* passed with crashkernel=0,low ? */
+-		if (!low_size)
+-			return 0;
+-	}
+-
+-	low_base = memblock_phys_alloc_range(low_size, CRASH_ALIGN, 0, CRASH_ADDR_LOW_MAX);
+-	if (!low_base) {
+-		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
+-		       (unsigned long)(low_size >> 20));
+-		return -ENOMEM;
+-	}
+-
+-	pr_info("Reserving %ldMB of low memory at %ldMB for crashkernel (low RAM limit: %ldMB)\n",
+-		(unsigned long)(low_size >> 20),
+-		(unsigned long)(low_base >> 20),
+-		(unsigned long)(low_mem_limit >> 20));
+-
+-	crashk_low_res.start = low_base;
+-	crashk_low_res.end   = low_base + low_size - 1;
+-	insert_resource(&iomem_resource, &crashk_low_res);
+-#endif
++	return max(swiotlb_size_or_default() + (8UL << 20), 256UL << 20);
++#else
+ 	return 0;
++#endif
+ }
+ 
+-static void __init reserve_crashkernel(void)
++static void __init arch_reserve_crashkernel(void)
+ {
+-	unsigned long long crash_size, crash_base, total_mem;
++	unsigned long long crash_base, crash_size, low_size = 0;
++	char *cmdline = boot_command_line;
+ 	bool high = false;
+ 	int ret;
+ 
+ 	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
+ 		return;
+ 
+-	total_mem = memblock_phys_mem_size();
+-
+-	/* crashkernel=XM */
+-	ret = parse_crashkernel(boot_command_line, total_mem,
+-				&crash_size, &crash_base, NULL, NULL);
+-	if (ret != 0 || crash_size <= 0) {
+-		/* crashkernel=X,high */
+-		ret = parse_crashkernel_high(boot_command_line, total_mem,
+-					     &crash_size, &crash_base);
+-		if (ret != 0 || crash_size <= 0)
+-			return;
+-		high = true;
+-	}
++	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
++				&crash_size, &crash_base,
++				&low_size, &high);
++	if (ret)
++		return;
+ 
+ 	if (xen_pv_domain()) {
+ 		pr_info("Ignoring crashkernel for a Xen PV domain\n");
+ 		return;
+ 	}
+ 
+-	/* 0 means: find the address automatically */
+-	if (!crash_base) {
+-		/*
+-		 * Set CRASH_ADDR_LOW_MAX upper bound for crash memory,
+-		 * crashkernel=x,high reserves memory over 4G, also allocates
+-		 * 256M extra low memory for DMA buffers and swiotlb.
+-		 * But the extra memory is not required for all machines.
+-		 * So try low memory first and fall back to high memory
+-		 * unless "crashkernel=size[KMG],high" is specified.
+-		 */
+-		if (!high)
+-			crash_base = memblock_phys_alloc_range(crash_size,
+-						CRASH_ALIGN, CRASH_ALIGN,
+-						CRASH_ADDR_LOW_MAX);
+-		if (!crash_base)
+-			crash_base = memblock_phys_alloc_range(crash_size,
+-						CRASH_ALIGN, CRASH_ALIGN,
+-						CRASH_ADDR_HIGH_MAX);
+-		if (!crash_base) {
+-			pr_info("crashkernel reservation failed - No suitable area found.\n");
+-			return;
+-		}
+-	} else {
+-		unsigned long long start;
+-
+-		start = memblock_phys_alloc_range(crash_size, SZ_1M, crash_base,
+-						  crash_base + crash_size);
+-		if (start != crash_base) {
+-			pr_info("crashkernel reservation failed - memory is in use.\n");
+-			return;
+-		}
+-	}
+-
+-	if (crash_base >= (1ULL << 32) && reserve_crashkernel_low()) {
+-		memblock_phys_free(crash_base, crash_size);
+-		return;
+-	}
+-
+-	pr_info("Reserving %ldMB of memory at %ldMB for crashkernel (System RAM: %ldMB)\n",
+-		(unsigned long)(crash_size >> 20),
+-		(unsigned long)(crash_base >> 20),
+-		(unsigned long)(total_mem >> 20));
+-
+-	crashk_res.start = crash_base;
+-	crashk_res.end   = crash_base + crash_size - 1;
+-	insert_resource(&iomem_resource, &crashk_res);
++	reserve_crashkernel_generic(cmdline, crash_size, crash_base,
++				    low_size, high);
+ }
+ 
+ static struct resource standard_io_resources[] = {
+@@ -1232,7 +1118,7 @@ void __init setup_arch(char **cmdline_p)
+ 	 * Reserve memory for crash kernel after SRAT is parsed so that it
+ 	 * won't consume hotpluggable memory.
+ 	 */
+-	reserve_crashkernel();
++	arch_reserve_crashkernel();
+ 
+ 	memblock_find_dma_reserve();
+ 
 -- 
 2.41.0
 
