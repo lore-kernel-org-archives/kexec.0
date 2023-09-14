@@ -4,74 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C7B52EEAA59
-	for <kexec@archiver.kernel.org>; Thu, 14 Sep 2023 17:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D254DEEAA59
+	for <kexec@archiver.kernel.org>; Thu, 14 Sep 2023 17:22:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=bfkMqxd1Q5eatPgYUOnJi/V5WqF5srHnz1GuYlcjGjc=; b=PeEziPCeidtP78
-	UVIehYutc9kuqLhc5QgeWZNJDqjYBiosFflbC1oJHJsZG+UtMFKCY+dN/ebShnjhZ3xNTzgQqjF9p
-	NbxtoLkOslNKd29XmwziR51Vo9P+OWyulXxmNHTjw300USV0PGrsSmTnFygj2/HZkxAf3cyy1Oszi
-	jxgzoP2EcNk/a/myB48mOlXD2UibWbmOLpYC0bqv1zaIDCYW0+TJvk/Wqd97wjTVz5aQAdhpSnsl3
-	jWuirVB7KT+B6LG3m9WHAuqw5KPgnbL/BXdCSZlijqv4rTqCIaMPCt82ypMo98vH9e4a1UnjZfn7b
-	P9+hx1LESWg3GvZcadzQ==;
+	List-Owner; bh=kwsmt8DFg7sMBhq42z7q+fvPkzfRVdug6+SPWdpHoWQ=; b=c7EKTAcu5cd4nj
+	wP2WXXrkIZwWZvlaIhiBLUSEy90CN3qMsHSDOoEn4ODnHaDBmOge53Qrx+TUvXylnR5QGWlyig54i
+	ZxYZ2KNBhB5yRGN8zJArG+0eA1H3hJLwj+leZk8YCrXTg85/B90T1n/4GeN/LR4m1+wzYIX0oaqlk
+	jlASGWrgDrbEVTtVlzdOiqlS0RJ5+4VG7pjF4LJ8100sAf/tjwafv1Dqd+VHNePgZphb4TBYjdgvi
+	IKVfm8ff02AP4lstdt6fuyIuIhPsNrsTihOnEnOv1pn8l55FcStP8OxpORTpU3We3/s8lcPwAqpcJ
+	bAJh44e/fWhXpTEA5RwA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qgpoY-008xpO-38;
-	Thu, 14 Sep 2023 17:07:38 +0000
-Received: from mgamail.intel.com ([134.134.136.65])
+	id 1qgq2y-008z1Z-0A;
+	Thu, 14 Sep 2023 17:22:32 +0000
+Received: from mail-qv1-xf33.google.com ([2607:f8b0:4864:20::f33])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qgpoX-008xog-0N
+	id 1qgq2u-008z0S-2d
 	for kexec@lists.infradead.org;
-	Thu, 14 Sep 2023 17:07:38 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1694711257; x=1726247257;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/eQr3ybfflzRpAXDDtun+U9e54s/8RMewMOTgkhAo/s=;
-  b=OaOblyQU6Qf6erGh8i2rTN+J2fN6cyNMbhhRsEBHcOpms/7QWSms6XpL
-   mo1CzGmKU+XyGXkCk8++AvImMf6oNzyY2nFyg/RAwvetBTm0lcQeaBdHd
-   25j6iAgdwhoAHwhm34iYopzfmV9mbhnUnMdAHTYUhGlhJRpxdh8yaok0p
-   YH3OKAcXwcQ/WaevtEboXVLbSrW22oloGj7eOvS9j0qQ6GkhHSNpO/I5l
-   gix3W+oko1VqiS6FsMNzTjpvrMdZCN+9noIVyCtsGFzU31xROJrBweJp/
-   89lGNc0sx/L3EKgqv2r05dMWVvkSJQyOsnzeRQI0i3WVKo8EvF6k5aqKV
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10833"; a="382832866"
-X-IronPort-AV: E=Sophos;i="6.02,146,1688454000"; 
-   d="scan'208";a="382832866"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2023 10:07:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10833"; a="1075471230"
-X-IronPort-AV: E=Sophos;i="6.02,146,1688454000"; 
-   d="scan'208";a="1075471230"
-Received: from njayagop-mobl2.ger.corp.intel.com (HELO box.shutemov.name) ([10.252.48.41])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2023 10:07:29 -0700
-Received: by box.shutemov.name (Postfix, from userid 1000)
-	id 5E48B109D89; Thu, 14 Sep 2023 20:07:26 +0300 (+03)
-Date: Thu, 14 Sep 2023 20:07:26 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
-	Ard Biesheuvel <ardb@google.com>, Kees Cook <keescook@chromium.org>,
-	Aaron Lu <aaron.lu@intel.com>, Bagas Sanjaya <bagasdotme@gmail.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>, x86@kernel.org,
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.de
-Subject: Re: [PATCH] x86/boot/compressed: Reserve more memory for page tables
-Message-ID: <20230914170726.4am7xi36m4hdgiyk@box>
-References: <20230914123001.27659-1-kirill.shutemov@linux.intel.com>
- <45cdb5ae-986e-d186-f0fd-a308f946ce8d@intel.com>
+	Thu, 14 Sep 2023 17:22:30 +0000
+Received: by mail-qv1-xf33.google.com with SMTP id 6a1803df08f44-649c6ea6e72so7029556d6.2
+        for <kexec@lists.infradead.org>; Thu, 14 Sep 2023 10:22:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1694712146; x=1695316946; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A8eQORumJtaroUI8JT9bu5D1IY7lPGvpUmpxNHPhsvg=;
+        b=zrKz4ovVV5RPfLvPR8icG3bYkXqv/dZMiHs5ALYPXhsajvjqL8IScBVRi3mGVthtaK
+         5xPdg1BPf3pr0bzH0htK4XYDGJrIlU7OU0jxYvaFnExhkeuyldNKu0HY/R2TXc7tmWl8
+         pSBOQhu528LYVHR5qOxd4JKq+voERqlx5/DEX/xtbI+L9yvsi8n8BhLQ0HAX+JruHwra
+         Kp/4ec9/BPT0xf4dYj9jl33qicvonQ9zfEiDO3yIBZEcTO4xYfnsONNsjC4AIShxQ46T
+         PzfMspOgb4OJgKrEj11jNnYoxSBI/brFUQ6YW+/4NNbty8jxuEMURR+EhkbvgujFCgRB
+         x2xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694712146; x=1695316946;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=A8eQORumJtaroUI8JT9bu5D1IY7lPGvpUmpxNHPhsvg=;
+        b=ZXjBzkKhyslW3cJ7lGZ2yL+pltW5fEn7C+hYV6UZvP4wH6EvgmEjrOJXMyqOgo3S9k
+         eeEyZ6xvi7cfDPYCBA9zRk3iFKv9cuHZge5xremghvoA2PkgzhAp3wfic/HfOTdiFyjE
+         Fe9yGHC+04etcMYtMkGFTnWCCg8FHnW062+gwu51RwrZi878RbQyKNMSVEEp+g9FQZEj
+         zLMAYa0IF0ew2nvGoht13GqdJHsuZwcWk35w6X1rdBpASUgIuwAbMd4cT6/yhzh+CKWH
+         icNVlTy4W+BaDl9R0CO9ENxg/kuxRoK/Nhf7SIBeZry04mORiZHhhw/0/m55136nZLfT
+         MlUQ==
+X-Gm-Message-State: AOJu0YwhpfJ1vTGCAVot6sqoNva6z6zOlQXotOE1z+/RBLgmjFyWxexP
+	vba50I8B+57ztRUh8LGO2L+mO3lVMMete4l+JiKBpg==
+X-Google-Smtp-Source: AGHT+IFA5G/u9fTxemIh7ppyemUF4heb6N+w5pTJ0x1vdhIE9rGnXqUnizt0BXWM/DV2ecQatLz805H4QnF5kKUSyAs=
+X-Received: by 2002:ad4:5851:0:b0:63d:7214:638e with SMTP id
+ de17-20020ad45851000000b0063d7214638emr7042473qvb.56.1694712146470; Thu, 14
+ Sep 2023 10:22:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <45cdb5ae-986e-d186-f0fd-a308f946ce8d@intel.com>
+References: <20230914170138.995606-1-song@kernel.org>
+In-Reply-To: <20230914170138.995606-1-song@kernel.org>
+From: Nick Desaulniers <ndesaulniers@google.com>
+Date: Thu, 14 Sep 2023 10:22:12 -0700
+Message-ID: <CAKwvOdnisbzAx3eQD_U8gQU05WzuOr48VRJfySu5WRTWZVDiPw@mail.gmail.com>
+Subject: Re: [PATCH v3] x86/purgatory: Remove LTO flags
+To: Song Liu <song@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Ricardo Ribalda <ribalda@chromium.org>, 
+	Sami Tolvanen <samitolvanen@google.com>, kexec@lists.infradead.org, x86@kernel.org, 
+	llvm@lists.linux.dev
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230914_100737_219240_76910BD3 
-X-CRM114-Status: GOOD (  18.75  )
+X-CRM114-CacheID: sfid-20230914_102228_852618_3D05F032 
+X-CRM114-Status: GOOD (  20.31  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,68 +84,61 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Sep 14, 2023 at 08:51:50AM -0700, Dave Hansen wrote:
-> On 9/14/23 05:30, Kirill A. Shutemov wrote:
-> > +/*
-> > + * Total number of page table kernel_add_identity_map() can allocate,
-> > + * including page tables consumed by startup_32().
-> > + */
-> > +# define BOOT_PGT_SIZE		(32*4096)
-> 
-> I agree that needing to know this in advance *exactly* is troublesome.
-> 
-> But I do think that we should preserve the comment about the worst-case
-> scenario.
-
-Want me to send v2 for that?
-
-> Also, I thought this was triggered by unaccepted memory.  Am
-> I remembering it wrong?  How was it in play?
-
-Unaccepted memory touched EFI system table. I was able to reproduce
-without unaccepted memory enabled: if get_rsdp_addr() takes
-efi_get_rsdp_addr() path. So it is not the root cause, just a trigger.
-
-So we need several things to run into the problem:
-
-- System supports 5-level paging and it is enabled;
-
-- Decompressor takes control in 64-bit mode, so it uses page tables
-  inherited from bootloader until initialize_identity_maps().
-
-  In initialize_identity_maps() kernel resets page tables, rebuilding them
-  from scratch. Here we only map what is definitely required: kernel,
-  cmdline, boot_patams, setup_data.
-
-  Entering in 32-bit mode would make startup_32() map the first 4G
-  unconditionally, but in this setup we rely more on #PF to fill page
-  table. It masks problem as we rarely need all four PMD tables.
-
-- Make kernel touch at least one page per-gigabyte in the first 4G.
-
-  In our case, unaccepted memory path was the last straw: it triggered
-  allocation of the fourth PMD table which failed. 
-
-We can increase the constant by one and it will work as long as nobody
-need anything beyond the first 4G (or any 1G-aligned 4G region where we've
-got loaded, I guess). I am not sure we can guarantee this with
-(potentially buggy) ACPI and EFI in the picture.
-
-> Either way, I think your general approach here is sound.  But let's add
-> one little tweak to at least warn when we're getting close to the limit.
-
-Yeah, makes sense.
-
-
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVGh1LCBTZXAgMTQsIDIwMjMgYXQgMTA6MDLigK9BTSBTb25nIExpdSA8c29uZ0BrZXJuZWwu
+b3JnPiB3cm90ZToKPgo+IC1mbHRvKiBpbXBsaWVzIC1mZnVuY3Rpb24tc2VjdGlvbnMuIFdpdGgg
+TFRPIGVuYWJsZWQsIGxkLmxsZCBnZW5lcmF0ZXMKPiBtdWx0aXBsZSAudGV4dCBzZWN0aW9ucyBm
+b3IgcHVyZ2F0b3J5LnJvOgo+Cj4gJCByZWFkZWxmIC1TIHB1cmdhdG9yeS5ybyAgfCBncmVwICIg
+LnRleHQiCj4gICBbIDFdIC50ZXh0ICAgICAgICAgICAgIFBST0dCSVRTICAgICAgICAgMDAwMDAw
+MDAwMDAwMDAwMCAgMDAwMDAwNDAKPiAgIFsgN10gLnRleHQucHVyZ2F0b3J5ICAgUFJPR0JJVFMg
+ICAgICAgICAwMDAwMDAwMDAwMDAwMDAwICAwMDAwMjBlMAo+ICAgWyA5XSAudGV4dC53YXJuICAg
+ICAgICBQUk9HQklUUyAgICAgICAgIDAwMDAwMDAwMDAwMDAwMDAgIDAwMDAyMWMwCj4gICBbMTNd
+IC50ZXh0LnNoYTI1Nl91cGRhIFBST0dCSVRTICAgICAgICAgMDAwMDAwMDAwMDAwMDAwMCAgMDAw
+MDIyZjAKPiAgIFsxNV0gLnRleHQuc2hhMjI0X3VwZGEgUFJPR0JJVFMgICAgICAgICAwMDAwMDAw
+MDAwMDAwMDAwICAwMDAwMmJlMAo+ICAgWzE3XSAudGV4dC5zaGEyNTZfZmluYSBQUk9HQklUUyAg
+ICAgICAgIDAwMDAwMDAwMDAwMDAwMDAgIDAwMDAyYmYwCj4gICBbMTldIC50ZXh0LnNoYTIyNF9m
+aW5hIFBST0dCSVRTICAgICAgICAgMDAwMDAwMDAwMDAwMDAwMCAgMDAwMDJjYzAKPgo+IFRoaXMg
+Y2F1c2UgV0FSTklORyBmcm9tIGtleGVjX3B1cmdhdG9yeV9zZXR1cF9zZWNoZHJzKCk6Cj4KPiBX
+QVJOSU5HOiBDUFU6IDI2IFBJRDogMTEwODk0IGF0IGtlcm5lbC9rZXhlY19maWxlLmM6OTE5Cj4g
+a2V4ZWNfbG9hZF9wdXJnYXRvcnkrMHgzN2YvMHgzOTAKPgo+IEZpeCB0aGlzIGJ5IGRpc2FibGlu
+ZyBMVE8gZm9yIHB1cmdhdG9yeS4KPgo+IFdlIGNvdWxkIGFsc28gZml4IHRoaXMgd2l0aCBhbiBl
+eHBsaWNpdCBsaW5rZXIgc2NyaXB0IHRvIHJlam9pbiAudGV4dC4qCj4gc2VjdGlvbnMgYmFjayBp
+bnRvIC50ZXh0LiBIb3dldmVyLCBnaXZlbiB0aGUgYmVuZWZpdCBvZiBMVE9pbmcgcHVnYXRvcnkK
+CnMvcHVnYXRvcnkvcHVyZ2F0b3J5LwoKKG1heWJlIHRoZSB4ODYgbWFpbnRhaW5lcnMgY2FuIGFw
+cGx5IHRoYXQgZml4dXAgaWYvd2hlbiBwaWNrZWQgdXApCgo+IGlzIHNtYWxsLCBzaW1wbHkgZGlz
+YWJsZSB0aGUgcHJvZHVjdGlvbiBvZiBtb3JlIC50ZXh0Liogc2VjdGlvbnMgZm9yIG5vdy4KPgo+
+IEZpeGVzOiBiMzNmZmYwN2UzZTMgKCJ4ODYsIGJ1aWxkOiBhbGxvdyBMVE8gdG8gYmUgc2VsZWN0
+ZWQiKQo+IENjOiBSaWNhcmRvIFJpYmFsZGEgPHJpYmFsZGFAY2hyb21pdW0ub3JnPgo+IENjOiBT
+YW1pIFRvbHZhbmVuIDxzYW1pdG9sdmFuZW5AZ29vZ2xlLmNvbT4KPiBDYzoga2V4ZWNAbGlzdHMu
+aW5mcmFkZWFkLm9yZwo+IENjOiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnCj4gQ2M6IHg4
+NkBrZXJuZWwub3JnCj4gQ2M6IGxsdm1AbGlzdHMubGludXguZGV2Cj4gU2lnbmVkLW9mZi1ieTog
+U29uZyBMaXUgPHNvbmdAa2VybmVsLm9yZz4KClRoYW5rcyBmb3IgdGhlIHBhdGNoIQpSZXZpZXdl
+ZC1ieTogTmljayBEZXNhdWxuaWVycyA8bmRlc2F1bG5pZXJzQGdvb2dsZS5jb20+Cgo+Cj4gLS0t
+Cj4gQUZBSUNULCB4ODYgaXMgdGhlIG9ubHkgYXJjaCB0aGF0IHN1cHBvcnRzIExUTyBhbmQgcHVy
+Z2F0b3J5Lgo+Cj4gQ2hhbmdlcyBpbiB2MzoKPiAxLiBGaXggIkZpeGVzIiB0YWcuIChOaWNrIERl
+c2F1bG5pZXJzKQo+IDIuIEFkZCBkZXNjcmlwdGlvbiBvZiBhbiBhbHRlcm5hdGl2ZSBmaXgsIHdp
+dGggbGlua2VyIHNjcmlwdC4KPiAgICAoTmljayBEZXNhdWxuaWVycykKPgo+IENoYW5nZXMgaW4g
+djI6Cj4gMS4gVXNlIENDX0ZMQUdTX0xUTyBpbnN0ZWFkIG9mIGhhcmRjb2RlIC1mbHRvLiAoTmlj
+ayBEZXNhdWxuaWVycykKPiAtLS0KPiAgYXJjaC94ODYvcHVyZ2F0b3J5L01ha2VmaWxlIHwgNCAr
+KysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKykKPgo+IGRpZmYgLS1naXQgYS9h
+cmNoL3g4Ni9wdXJnYXRvcnkvTWFrZWZpbGUgYi9hcmNoL3g4Ni9wdXJnYXRvcnkvTWFrZWZpbGUK
+PiBpbmRleCBjMmEyOWJlMzVjMDEuLjA4YWEwZjI1ZjEyYSAxMDA2NDQKPiAtLS0gYS9hcmNoL3g4
+Ni9wdXJnYXRvcnkvTWFrZWZpbGUKPiArKysgYi9hcmNoL3g4Ni9wdXJnYXRvcnkvTWFrZWZpbGUK
+PiBAQCAtMTksNiArMTksMTAgQEAgQ0ZMQUdTX3NoYTI1Ni5vIDo9IC1EX19ESVNBQkxFX0VYUE9S
+VFMgLURfX05PX0ZPUlRJRlkKPiAgIyBvcHRpbWl6YXRpb24gZmxhZ3MuCj4gIEtCVUlMRF9DRkxB
+R1MgOj0gJChmaWx0ZXItb3V0IC1mcHJvZmlsZS1zYW1wbGUtdXNlPSUgLWZwcm9maWxlLXVzZT0l
+LCQoS0JVSUxEX0NGTEFHUykpCj4KPiArIyBXaGVuIExUTyBpcyBlbmFibGVkLCBsbHZtIGVtaXRz
+IG1hbnkgdGV4dCBzZWN0aW9ucywgd2hpY2ggaXMgbm90IHN1cHBvcnRlZAo+ICsjIGJ5IGtleGVj
+LiBSZW1vdmUgLWZsdG89KiBmbGFncy4KPiArS0JVSUxEX0NGTEFHUyA6PSAkKGZpbHRlci1vdXQg
+JChDQ19GTEFHU19MVE8pLCQoS0JVSUxEX0NGTEFHUykpCj4gKwo+ICAjIFdoZW4gbGlua2luZyBw
+dXJnYXRvcnkucm8gd2l0aCAtciB1bnJlc29sdmVkIHN5bWJvbHMgYXJlIG5vdCBjaGVja2VkLAo+
+ICAjIGFsc28gbGluayBhIHB1cmdhdG9yeS5jaGsgYmluYXJ5IHdpdGhvdXQgLXIgdG8gY2hlY2sg
+Zm9yIHVucmVzb2x2ZWQgc3ltYm9scy4KPiAgUFVSR0FUT1JZX0xERkxBR1MgOj0gLWUgcHVyZ2F0
+b3J5X3N0YXJ0IC16IG5vZGVmYXVsdGxpYgo+IC0tCj4gMi4zNC4xCj4KCgotLSAKVGhhbmtzLAp+
+TmljayBEZXNhdWxuaWVycwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
+cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
