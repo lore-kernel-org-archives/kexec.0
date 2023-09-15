@@ -4,66 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 04C29EEAA42
-	for <kexec@archiver.kernel.org>; Fri, 15 Sep 2023 03:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 36B79EE021D
+	for <kexec@archiver.kernel.org>; Fri, 15 Sep 2023 05:59:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=PM6dXaqp8ONGtbAv8sSExI/7s8K8n9fE0VGwBaLc8eg=; b=FU3jso80zDeb1w
-	T2pn/NXw+zLM6pvwvyPLBUhaBVvZu9l87un39UnGFvC3D4I8BtB6Iz5qRKW4QX/d4oRXoeg3W4p5/
-	nKfd7g9uAuNXQScHADRNYebTf5VqdQjwKwSq9DG5K9Lrv7HhpAsAJECFgSCH3ZqQqrrfmhNAoe54M
-	raXK/X75+p2Rw7/NfV8jfiBx1aaNeaVghDgJ5mLqZubxUr2cbFuBGoPabwpBgl9Ef2yPKfgCq1TqJ
-	E/hTPmxVS9M4yftmRDbtFKP6T6y6zGQwcKu3ElsDeViOSKFMpZaPbR1qy5ig8ZyDk68P8h+Ib22Pi
-	4MWhJWld63U8y00s6mtA==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=4i4oqy9oGsgstBvzw91K9UBx0Q0vLNS9y1Ve1HxCdPw=; b=rhMhv7isQkpPnp
+	iXARur34Wj8TzzFxXck0Qtz2rOPR3DYujdpXCaGxJNdrn66KzCdUdlG4i0Ob+Q8ajIHQlo9NTq0w0
+	B4Ee1fRNhgMWMMua+xhebnNLlwGX4Vfcb3cR5vMyKbFu5LTgHD5eTadtBOA/LbHx6esYhGrcz0hFH
+	eC85rfOpIp8Xgy+xlFXMIIzFCSnGB5IqpctCCa/cN27GansYEjJxWYXHY9cKixg2VpSiqpC0d/kxb
+	2dQXwwq+XLwFP2TimC/GyEXvLuochqXKjmB0b0RTyM1ZPhjcavsAcraH/h4YYOADRZn2nazJyySTP
+	Zon6Z5aSN6hDd3R1Oh/g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qgzz0-009hsp-2M;
-	Fri, 15 Sep 2023 03:59:06 +0000
-Received: from bg4.exmail.qq.com ([43.155.67.158])
+	id 1qh1r0-009r53-0T;
+	Fri, 15 Sep 2023 05:58:58 +0000
+Received: from out30-118.freemail.mail.aliyun.com ([115.124.30.118])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qgzyx-009hsJ-0a
+	id 1qh1qw-009r3Y-2l
 	for kexec@lists.infradead.org;
-	Fri, 15 Sep 2023 03:59:05 +0000
-X-QQ-mid: bizesmtp62t1694750323tma1493k
-Received: from localhost.localdomain ( [221.226.144.218])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 15 Sep 2023 11:58:41 +0800 (CST)
-X-QQ-SSF: 01200000000000B0B000000A0000000
-X-QQ-FEAT: 3M0okmaRx3jGTgfnGrNzeuqkm0gcfod1YFr7cnsHi9Z9pxybHEXdinaiYhp/0
-	82dr4h0idcVS8ItiSYUgNAYTOc/9+z/HEmLiCUmgp5dLZxei3N0nWRzpxmJ9R3Qb/BjzcTw
-	2tVQ1y/7YbrC5zuyOHvq92qDxbNfuWDlgWPT5UfxcG1WP7AsguFmg6/oFtlK7IYEt13iZ1/
-	tp0bS2d0F34ND4xIr00QR5geFCSm4G518F//4LWkIandibXcMCNpKwuxbXZ5fcnSbQFFmpk
-	/iSbw1Tt5Wn9zIlGR0MdzZblNJdF83ZaBg2wvXp8wwS5l1WOx5m98shZqm08WMb3bSYYVUP
-	MDpzRwQAg/VQ2XNImpy5HkDH16sJ9akuW4iT/c2fUotaFzoa2kdsHlCRbxNJ9eUSjZbh1Mg
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 835693574831453369
-From: Song Shuai <songshuaishuai@tinylab.org>
-To: lizhengyu3@huawei.com,
-	liaochang1@huawei.com,
-	xianting.tian@linux.alibaba.com,
-	guoren@kernel.org,
-	horms@kernel.org,
-	horms@verge.net.au,
-	huanyi.xj@alibaba-inc.com,
-	mick@ics.forth.gr,
-	yixun.lan@gmail.com
-Cc: kexec@lists.infradead.org,
-	Song Shuai <songshuaishuai@tinylab.org>
-Subject: [PATCH 7/7] RISC-V: Support loading Image binary file
-Date: Fri, 15 Sep 2023 11:50:13 +0800
-Message-Id: <20230915035013.1582679-8-songshuaishuai@tinylab.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20230915035013.1582679-1-songshuaishuai@tinylab.org>
-References: <20230915035013.1582679-1-songshuaishuai@tinylab.org>
+	Fri, 15 Sep 2023 05:58:57 +0000
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R521e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=yang.lee@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0Vs5xRfp_1694757525;
+Received: from localhost(mailfrom:yang.lee@linux.alibaba.com fp:SMTPD_---0Vs5xRfp_1694757525)
+          by smtp.aliyun-inc.com;
+          Fri, 15 Sep 2023 13:58:46 +0800
+From: Yang Li <yang.lee@linux.alibaba.com>
+To: bhe@redhat.com
+Cc: vgoyal@redhat.com,
+	dyoung@redhat.com,
+	kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Yang Li <yang.lee@linux.alibaba.com>
+Subject: [PATCH -next] crash_core: Remove duplicated include in crash_core.c
+Date: Fri, 15 Sep 2023 13:58:44 +0800
+Message-Id: <20230915055844.37935-1-yang.lee@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1.7.g153144c
 MIME-Version: 1.0
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:tinylab.org:qybglogicsvrsz:qybglogicsvrsz4a-0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230914_205903_546971_22D3EED9 
-X-CRM114-Status: GOOD (  19.53  )
+X-CRM114-CacheID: sfid-20230914_225855_080920_F85074E8 
+X-CRM114-Status: UNSURE (   5.75  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,273 +63,27 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Add image-riscv file_type to probe/load Image file type,
+./kernel/crash_core.c: linux/kexec.h is included more than once.
 
-As for kexec_load, find the pbase aligned text_offset from image header
-and prepare segments for this syscall.
-
-for kexec_file_load, setup the related options and let kernel part to
-deal with the Image.
-
-Signed-off-by: Song Shuai <songshuaishuai@tinylab.org>
+Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
 ---
- kexec/arch/riscv/Makefile            |  2 +
- kexec/arch/riscv/image-header.h      | 88 ++++++++++++++++++++++++++
- kexec/arch/riscv/kexec-image-riscv.c | 95 ++++++++++++++++++++++++++++
- kexec/arch/riscv/kexec-riscv.c       |  1 +
- kexec/arch/riscv/kexec-riscv.h       |  7 ++
- 5 files changed, 193 insertions(+)
- create mode 100644 kexec/arch/riscv/image-header.h
- create mode 100644 kexec/arch/riscv/kexec-image-riscv.c
+ kernel/crash_core.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/kexec/arch/riscv/Makefile b/kexec/arch/riscv/Makefile
-index f26cc90..37ef760 100644
---- a/kexec/arch/riscv/Makefile
-+++ b/kexec/arch/riscv/Makefile
-@@ -3,6 +3,7 @@
- #
- riscv_KEXEC_SRCS =  kexec/arch/riscv/kexec-riscv.c
- riscv_KEXEC_SRCS += kexec/arch/riscv/kexec-elf-riscv.c
-+riscv_KEXEC_SRCS += kexec/arch/riscv/kexec-image-riscv.c
- riscv_KEXEC_SRCS += kexec/arch/riscv/crashdump-riscv.c
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 1a77d466eaed..90fc1b636ba0 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -13,7 +13,6 @@
+ #include <linux/memory.h>
+ #include <linux/cpuhotplug.h>
+ #include <linux/memblock.h>
+-#include <linux/kexec.h>
+ #include <linux/kmemleak.h>
  
- riscv_MEM_REGIONS = kexec/mem_regions.c
-@@ -15,6 +16,7 @@ riscv_CPPFLAGS += -I $(srcdir)/kexec/
- 
- dist += kexec/arch/riscv/Makefile $(riscv_KEXEC_SRCS)			\
- 	kexec/arch/riscv/kexec-riscv.h					\
-+	kexec/arch/riscv/image-header.h					\
- 	kexec/arch/riscv/include/arch/options.h
- 
- ifdef HAVE_LIBFDT
-diff --git a/kexec/arch/riscv/image-header.h b/kexec/arch/riscv/image-header.h
-new file mode 100644
-index 0000000..a677546
---- /dev/null
-+++ b/kexec/arch/riscv/image-header.h
-@@ -0,0 +1,88 @@
-+/*
-+ * RISCV64 binary image header.
-+ * token from arm64/image-header.h
-+ */
-+
-+#if !defined(__RISCV_IMAGE_HEADER_H)
-+#define __RISCV_IMAGE_HEADER_H
-+
-+#include <endian.h>
-+#include <stdint.h>
-+
-+/**
-+ * struct riscv_image_header - riscv kernel image header.
-+ *
-+ **/
-+struct riscv_image_header {
-+        uint32_t code0;
-+        uint32_t code1;
-+        uint64_t text_offset;
-+        uint64_t image_size;
-+        uint64_t flags;
-+        uint32_t version;
-+        uint32_t res1;
-+        uint64_t res2;
-+        uint64_t magic;
-+        uint32_t magic2;
-+        uint32_t res3;
-+};
-+
-+#define RISCV_IMAGE_MAGIC       0x5643534952
-+#define RISCV_IMAGE_MAGIC2      0x05435352
-+
-+#define RISCV_HEADER_VERSION_MAJOR 0
-+#define RISCV_HEADER_VERSION_MINOR 2
-+
-+#define RISCV_HEADER_VERSION (RISCV_HEADER_VERSION_MAJOR << 16 | \
-+		                              RISCV_HEADER_VERSION_MINOR)
-+
-+
-+static const uint64_t riscv_image_flag_be = (1UL << 0);
-+
-+/**
-+ * riscv_header_check_magic - Helper to check the riscv image header.
-+ *
-+ * Returns non-zero if header is OK.
-+ */
-+
-+static inline int riscv_header_check_magic(const struct riscv_image_header *h)
-+{
-+	if (!h)
-+		return 0;
-+
-+	return (h->version >= RISCV_HEADER_VERSION && h->magic2 == RISCV_IMAGE_MAGIC2);
-+}
-+
-+/**
-+ * riscv_header_check_endiannes - Helper to check the riscv image header.
-+ *
-+ * Returns non-zero if the image was built as big endian.
-+ */
-+
-+static inline int riscv_header_check_endiannes(const struct riscv_image_header *h)
-+{
-+	if (!h)
-+		return 0;
-+
-+	return (le64toh(h->flags) & riscv_image_flag_be) >> 0;
-+}
-+
-+
-+
-+static inline uint64_t riscv_header_text_offset(const struct riscv_image_header *h)
-+{
-+	if (!h)
-+		return 0;
-+
-+	return le64toh(h->text_offset);
-+}
-+
-+static inline uint64_t riscv_header_image_size(const struct riscv_image_header *h)
-+{
-+	if (!h)
-+		return 0;
-+
-+	return le64toh(h->image_size);
-+}
-+
-+#endif
-diff --git a/kexec/arch/riscv/kexec-image-riscv.c b/kexec/arch/riscv/kexec-image-riscv.c
-new file mode 100644
-index 0000000..8e0654c
---- /dev/null
-+++ b/kexec/arch/riscv/kexec-image-riscv.c
-@@ -0,0 +1,95 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * RISC-V kexec binary image support.
-+ *
-+ * Author: Song Shuai <songhshuaishuai@tinylab.org>
-+ */
-+
-+#define _GNU_SOURCE
-+
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <limits.h>
-+#include "image-header.h"
-+#include "kexec.h"
-+#include "kexec-riscv.h"
-+#include "kexec-syscall.h"
-+#include "arch/options.h"
-+
-+int image_riscv_probe(const char *kernel_buf, off_t kernel_size)
-+{
-+	const struct riscv_image_header *h;
-+
-+	if (kernel_size < sizeof(struct riscv_image_header)) {
-+		dbgprintf("%s: No riscv image header.\n", __func__);
-+		return -1;
-+	}
-+
-+	h = (const struct riscv_image_header *)(kernel_buf);
-+
-+	if (!riscv_header_check_magic(h)) {
-+		dbgprintf("%s: Bad riscv image header.\n", __func__);
-+		return -1;
-+	}
-+
-+	return 0;
-+}
-+
-+int image_riscv_load(int argc, char **argv, const char *kernel_buf,
-+	off_t kernel_size, struct kexec_info *info)
-+{
-+	const struct riscv_image_header *h;
-+	unsigned long text_offset, image_size;
-+	off_t new_base_addr = 0;
-+
-+	int ret;
-+
-+	if (info->file_mode) {
-+		return prepare_kexec_file_options(info);
-+	}
-+
-+	h = (const struct riscv_image_header *)(kernel_buf);
-+
-+	/* Check header */
-+	if (!h->image_size){
-+		dbgprintf("Kernel image size is NULL\n");
-+		ret = EFAILED;
-+		goto exit;
-+	}
-+
-+	if(riscv_header_check_endiannes(h)){
-+		dbgprintf("Kernel image was built as big endian\n");
-+		ret = EFAILED;
-+		goto exit;
-+	}
-+
-+	text_offset = riscv_header_text_offset(h);
-+	image_size = riscv_header_image_size(h);
-+
-+	/* Setup the entry and segments */
-+
-+	ret = elf_riscv_find_pbase(info, &new_base_addr, image_size, text_offset);
-+	if (ret < 0) {
-+		fprintf(stderr, "Could not find a memory region for the "
-+				"provided Image\n");
-+		goto exit;
-+	}
-+
-+	info->entry = (void *) new_base_addr;
-+	dbgprintf("Entry point for the Image: 0x%lX\n", new_base_addr);
-+
-+	add_segment(info, kernel_buf, kernel_size, new_base_addr, image_size);
-+
-+	ret = load_extra_segments(info, text_offset, image_size, ULONG_MAX);
-+exit:
-+        if (ret)
-+                fprintf(stderr, "kexec: load failed.\n");
-+        return ret;
-+}
-+
-+void image_riscv_usage(void)
-+{
-+	printf(
-+"     An RISC-V binary image, uncompressed, little endian.\n"
-+"     Typically an Image file.\n\n");
-+}
-diff --git a/kexec/arch/riscv/kexec-riscv.c b/kexec/arch/riscv/kexec-riscv.c
-index 74feef2..9536a95 100644
---- a/kexec/arch/riscv/kexec-riscv.c
-+++ b/kexec/arch/riscv/kexec-riscv.c
-@@ -34,6 +34,7 @@ const struct arch_map_entry arches[] = {
- 
- struct file_type file_type[] = {
- 	{"elf-riscv", elf_riscv_probe, elf_riscv_load, elf_riscv_usage},
-+	{"image-riscv", image_riscv_probe, image_riscv_load, image_riscv_usage},
- };
- int file_types = sizeof(file_type) / sizeof(file_type[0]);
- 
-diff --git a/kexec/arch/riscv/kexec-riscv.h b/kexec/arch/riscv/kexec-riscv.h
-index 233b137..324a251 100644
---- a/kexec/arch/riscv/kexec-riscv.h
-+++ b/kexec/arch/riscv/kexec-riscv.h
-@@ -40,7 +40,14 @@ int load_extra_segments(struct kexec_info *info, uint64_t kernel_base,
- int elf_riscv_find_pbase(struct kexec_info *info, off_t *addr,
- 				off_t size, off_t align);
- 
-+/* kexec-elf-riscv.c */
- int elf_riscv_probe(const char *buf, off_t len);
- void elf_riscv_usage(void);
- int elf_riscv_load(int argc, char **argv, const char *buf, off_t len,
- 		   struct kexec_info *info);
-+
-+/* kexec-image-riscv.c */
-+int image_riscv_probe(const char *buf, off_t len);
-+void image_riscv_usage(void);
-+int image_riscv_load(int argc, char **argv, const char *buf, off_t len,
-+		   struct kexec_info *info);
+ #include <asm/page.h>
 -- 
-2.20.1
+2.20.1.7.g153144c
 
 
 _______________________________________________
