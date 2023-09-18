@@ -4,76 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BA550CD37B0
-	for <kexec@archiver.kernel.org>; Mon, 18 Sep 2023 06:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CD339CD37B0
+	for <kexec@archiver.kernel.org>; Mon, 18 Sep 2023 08:16:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=buoZ9PPrXJbyVhsnWrLWFBS7VIukmD3F/zNtbVADFi4=; b=1MnYDO5pgoysBz
-	xsoc1PN0/H4DynMtQTAvCxPcH3buhIEbg+aFHeTweKoJ7QNnNWMvkHp8Z6WHBSsKEzn/2Io8CQMEr
-	qkZYqbzqUwsLBtshG1fUCAgne+kGSMT5YFQM+f48gJAZMIdvVmzlNbjEVpk8WKz1ACLdE4RpkwaeT
-	YGn90sIUmqn6crSqWg/bOS7LP9vW+WpvzCvgzfA1fEPjDfXr1uODYHgzke/gzKSBSt1gkN0T1FzUq
-	gICzfJHMbsW7itZeyJagAR1ecf2HYxbhTCvpa8OQQTwTuVSKqbXnYoJF1p6OA6bYVQEXhXSCRbTkD
-	DOPl0Q/4eVMTxM4Tz9TA==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Subject:To:From:Date:
+	Message-ID:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From
+	:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=+ippIz2r5OQ49sWIUSGa9B2e8QJ5GPK0BzEFFFx+Rtc=; b=raTF1Y1qkTIAKB
+	SDggrjX5NeMEA29E1A/xIsKMC9x6AvNf462cpQCCmCMXgunMuS1z7OYqJS2gLy/WFb4niaK0yZx0r
+	P3ehzMA2BrcSBIWktTiS+0VPcFuT7UBojziN/YioCKPgA1sT89TeDw/1XU80CpPpPxWF3yUILv88h
+	cREgr5d9vcEadnEJpFaoWF9I+XSQ3Wzl56sEypR/mNjJ3uuVHpsXD71bAJvn51d65Drk90ECaBqqi
+	MGOtjsEIdAkaFcjBjkfdGxOsGAno4FPgtIKV00U0HO3TwdOyrO0RNCjFu4ZpSQhz+8tzeF53HOIqE
+	LlIP4XLnMFlLveGw5dSQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qi8An-00Eakm-2V;
-	Mon, 18 Sep 2023 06:55:57 +0000
-Received: from mgamail.intel.com ([134.134.136.24])
+	id 1qi9R5-00EpSd-34;
+	Mon, 18 Sep 2023 08:16:51 +0000
+Received: from mail.blairton.pl ([141.94.250.72])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qi8Ai-00Eajd-38
+	id 1qi9R2-00EpRE-2X
 	for kexec@lists.infradead.org;
-	Mon, 18 Sep 2023 06:55:54 +0000
-X-IronPort-AV: E=McAfee;i="6600,9927,10836"; a="382323764"
-X-IronPort-AV: E=Sophos;i="6.02,156,1688454000"; 
-   d="scan'208";a="382323764"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2023 23:55:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10836"; a="695417720"
-X-IronPort-AV: E=Sophos;i="6.02,156,1688454000"; 
-   d="scan'208";a="695417720"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Sep 2023 23:55:30 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97-RC0)
-	(envelope-from <andy@kernel.org>)
-	id 1qi8AI-0000000DVlr-18aJ;
-	Mon, 18 Sep 2023 09:55:26 +0300
-Date: Mon, 18 Sep 2023 09:55:25 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Philipp Stanner <pstanner@redhat.com>,
-	Kees Cook <keescook@chromium.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Christian Brauner <brauner@kernel.org>,
-	David Disseldorp <ddiss@suse.de>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Siddh Raman Pant <code@siddh.me>,
-	Nick Alcock <nick.alcock@oracle.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Zack Rusin <zackr@vmware.com>,
-	VMware Graphics Reviewers <linux-graphics-maintainer@vmware.com>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org, linux-hardening@vger.kernel.org,
-	David Airlie <airlied@redhat.com>
-Subject: Re: [PATCH v2 1/5] string.h: add array-wrappers for (v)memdup_user()
-Message-ID: <ZQf0XfrKiwhvkxum@smile.fi.intel.com>
-References: <cover.1694202430.git.pstanner@redhat.com>
- <93001a9f3f101be0f374080090f9c32df73ca773.1694202430.git.pstanner@redhat.com>
- <b219788a-69e6-44cf-a609-91f9640967f5@moroto.mountain>
+	Mon, 18 Sep 2023 08:16:50 +0000
+Received: by mail.blairton.pl (Postfix, from userid 1002)
+	id 139EEA3C7C; Mon, 18 Sep 2023 08:15:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=blairton.pl; s=mail;
+	t=1695024956; bh=SQg0cr+HABfTdkcZROAFSg8TR3/oubMNjysx8YYpX80=;
+	h=Date:From:To:Subject:From;
+	b=gGwqfSLWVv6BiB8eE2xUcqo+5JdMII7l+cZnv2c/Vb9+rvBVtvbsqOUx2Xna1xzCj
+	 wn/mZK6NZtOhv4AufmPzwYJfECjH5U7tgu70ROF+wWB6VBbkv1RGiXk3+x0dlrIRGY
+	 lJxO/sim9HK6ZaN56aukAVE9MmaBszuXCRdC90EAEzEggl8vbfqT2dq4hrsklW6nwC
+	 nShuBKTZ1aBsig2JRNPVhvPjbjvc2q/lTyxMAGDowsoGWcX8cKvdOD5k27xaObkmwD
+	 CSsKJIifR37VepvMvmEuUi93aFHotSj0CEL1yTKr7JkHePO0EYYTLepyD525kRcs/5
+	 //wA3rd33PLYQ==
+Received: by mail.blairton.pl for <kexec@lists.infradead.org>; Mon, 18 Sep 2023 08:15:20 GMT
+Message-ID: <20230918064500-0.1.c3.gtvu.0.pacamkq09u@blairton.pl>
+Date: Mon, 18 Sep 2023 08:15:20 GMT
+From: =?UTF-8?Q?"Damian_Kwaczy=C5=84ski"?= <damian.kwaczynski@blairton.pl>
+To: <kexec@lists.infradead.org>
+Subject: Przechowywanie towaru w Gliwicach 
+X-Mailer: mail.blairton.pl
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <b219788a-69e6-44cf-a609-91f9640967f5@moroto.mountain>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230917_235553_073746_B2E4BB63 
-X-CRM114-Status: GOOD (  15.07  )
+X-CRM114-CacheID: sfid-20230918_011648_997202_C1542125 
+X-CRM114-Status: UNSURE (   1.59  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,46 +61,22 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sat, Sep 16, 2023 at 05:32:42PM +0300, Dan Carpenter wrote:
-> On Fri, Sep 08, 2023 at 09:59:40PM +0200, Philipp Stanner wrote:
-
-...
-
-> > +static inline void *memdup_array_user(const void __user *src, size_t n, size_t size)
-> > +{
-> > +	size_t nbytes;
-> > +
-> > +	if (unlikely(check_mul_overflow(n, size, &nbytes)))
-> > +		return ERR_PTR(-EOVERFLOW);
-> 
-> No need for an unlikely() because check_mul_overflow() already has one
-> inside.
-
-Makes sense.
-
-> I feel like -ENOMEM is more traditional but I doubt anyone/userspace
-> cares.
-
-ENOMEM is good for the real allocation calls, here is not the one (the one is
-below). Hence ENOMEM is not good candidate above. And whenever functions returns
-an error pointer the caller must not assume that it will be only ENOMEM for
-allocators.
-
-> > +	return memdup_user(src, nbytes);
-> > +}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+RHppZcWEIGRvYnJ5LAoKY3p5IGplc3QgbW/FvGxpd2/Fm8SHIG5hd2nEhXphbmlhIHdzcMOzxYJw
+cmFjeSB6IFBhxYRzdHdlbT8KClphcGV3bmlhbXkgb2JzxYJ1Z8SZIHRyYW5zcG9ydG93xIUgbmEg
+dHJhc2llIFBvbHNrYSAod29qLiDFm2zEhXNraWUpIC0gV8WCb2NoeSBpIFfFgm9jaHkgLSBQb2xz
+a2EgKHdvai4gxZtsxIVza2llKSBvYmVqbXVqxIVjxIUgb2RiacOzciwgdHJhbnNwb3J0IChjYcWC
+b3BvamF6ZG93eSwgY3rEmcWbY2lvd3kgb3JheiBkcm9ibmljb3d5KSwgb2RwcmF3eSBjZWxuZSBv
+cmF6IG1hZ2F6eW5vd2FuaWUgd3JheiB6IHVzxYJ1Z2FtaSBkb2RhbnltaS4gCgpaIG5hc3p5Y2gg
+cm96d2nEhXphxYQgdHJhbnNwb3J0b3d5Y2gga29yenlzdGEgd2llbGUgbWFyZWsgdyBQb2xzY2Us
+IHp5c2t1asSFYyBjacSFZ8WCb8WbxIcgxYJhxYRjdWNoYSBkb3N0YXcsIGpha2/Fm8SHIG9wZXJh
+Y3lqbsSFIHBvdHdpZXJkem9uxIUgd2llbG9tYSByZWZlcmVuY2phbWksIG9wdHltYWxpemFjasSZ
+IGtvc3p0w7N3IGkgc2tyw7Njb255IGN6YXMgdHJhbnp5dHUuCgpCxJlkxJkgd2R6acSZY3pueSB6
+YSBpbmZvcm1hY2rEmSBjenkgbW/FvGVteSBwb3Jvem1hd2lhxIcuCgoKUG96ZHJhd2lhbQpEYW1p
+YW4gS3dhY3p5xYRza2kKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
+Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
