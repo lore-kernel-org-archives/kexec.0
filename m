@@ -4,70 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E66B3CE79CF
-	for <kexec@archiver.kernel.org>; Wed, 20 Sep 2023 12:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E68B7CE79D0
+	for <kexec@archiver.kernel.org>; Wed, 20 Sep 2023 12:37:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=XwLL3JUiAAEjHHOIUzm2UscAxsFfMPxn2J7pq5mpgx0=; b=p2MSGo7oAOE+DM
-	uHpESM2hHO3soLmkDvLWe1RvpGfg2WJ+8oW/F0yi562UVTurEqCKUyJfXdWIdlInXpU75iMMNX7Rm
-	K9H/+YCVuhpwklJ4QSykcCwJbBKBn8dzoRayhKs5ZFqLOjXu9uLk0nyLdFaL8oiqQsXMc6MVSdJw9
-	WGqXwJZ+0v4ArVq1juAWg/CzWS/1jdGRPawoLi9RnILq9SM6/aYiQWHB7yB3hhmY+0o3dRtfzMrw7
-	NiLqwNfw5nAq4/D2U72TQQDjNMIJMtk+iQO4eq69MHwXOqSyC7+cAcRK3YGqs6gXhBUQyBuFfcC0j
-	AilO/wLT9GjiSrCMCSsQ==;
+	List-Owner; bh=Xdjg3+HK3S6L0i+U8C/Lrw+I84e3kiEv9awbO+N9MZg=; b=UINXmeEsXA4oYb
+	ay6Tzfj3NxHq35va/RcW3nK3r4xt5vXW1kPcsQ7a7/GQxQsXsQzhbDaa702idke9bZH6bzZ0cxvsY
+	505Et19RLQcgJl+ZknOOnpbuwzezY+e+gCmCs6cnWeNPfP6l2bUZmoP/Uof3dmNBPvGcHEKo87d84
+	gR2NKuyACfd58zVbzQ+/Vtcq9qgkj/P0mvG22FTpP+TjhMoCGv9fW9e997pNnIpbFioyeywZrcw9s
+	u+m/sje6urikP4VoysORHwv1TqVsr6Im4nGTV0ldgmO79vKCwZ0cbqKXyM1bJNaYnFa77J+0Z+sZK
+	f6vIkiTayZev0XgZlT/w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qiwRr-0032vq-1A;
-	Wed, 20 Sep 2023 12:36:55 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1qiwS3-00330G-0g;
+	Wed, 20 Sep 2023 12:37:07 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qiwRp-0032un-10
+	id 1qiwS0-0032yj-17
 	for kexec@lists.infradead.org;
-	Wed, 20 Sep 2023 12:36:54 +0000
+	Wed, 20 Sep 2023 12:37:05 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1695213412;
+	s=mimecast20190719; t=1695213423;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=48G0tj5zzQRFiALYPkyRPndfaCR4k/8e83lXW3c50mA=;
-	b=aVTm2Eq/CNWAL+srfl8Rb5N7tIwzgxY9BYkDYSTp39AbkkLpN9e/eqo/aktrH6oYrdUk5t
-	qzU628mVzhxwA5tuG4SESmm9YQKiPsuTa2HxNYFsF2cCX2bpdfqBy4UXTHDCMwgMepg43J
-	WpYCAqAhZlV/hLH92F1eJW1oil9Jc4s=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=CkUiTYo02brbH9rdldgLT7YiM95DCTjC6m+zHLs+f1Y=;
+	b=YLUYZKL1a/GCQeWmyP6lQkHfQSoQqcoo+fShY8IgKtOO6/DKY2EW9PCQ2+B0P2mkucllPK
+	uHFIUR6coPduM4IDqTl8/G4KiNP4pK1cvU5LtjVqdynUpG9BHlR41IcpEURt75yPNP/gHX
+	lxTvfQJ+4iFS/ood9VX0LSo+ZZGYISo=
+Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
+ [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-307-QRK6OB9VOEq1lPGRrMLlPg-1; Wed, 20 Sep 2023 08:36:50 -0400
-X-MC-Unique: QRK6OB9VOEq1lPGRrMLlPg-1
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-9aa1e8d983aso156321966b.0
-        for <kexec@lists.infradead.org>; Wed, 20 Sep 2023 05:36:50 -0700 (PDT)
+ us-mta-252--IRgNvrsMYC8mlB1ocDK5A-1; Wed, 20 Sep 2023 08:37:00 -0400
+X-MC-Unique: -IRgNvrsMYC8mlB1ocDK5A-1
+Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2be48142a6cso15826081fa.1
+        for <kexec@lists.infradead.org>; Wed, 20 Sep 2023 05:36:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695213409; x=1695818209;
+        d=1e100.net; s=20230601; t=1695213418; x=1695818218;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=48G0tj5zzQRFiALYPkyRPndfaCR4k/8e83lXW3c50mA=;
-        b=ixzA0mM9DtDc4RsjHXpsm2a7mGwKIPCQphPkLQE4au1jBGGCyh2hFgp5luHlRoHwsa
-         SFajOqAoa/bK/0QE9llkq0tvDAs3aogh+YNnMSNEINAsz/CmtYgA+kBW+DjZtfNEToHN
-         T5m/9jNVneloUXvJUDJccqDbBQo2EJgZf/RryBaF2ywHEi1zEU+hh1ivxduKYx1odyx/
-         BV2hrziCdFRodt/5e1DTzY70bkexUpvx41ETA8enW4dkRrUKPAc2dHr7Cum3AecN33my
-         LB5ZhIFvrsHRAS3y2OpFomaj9sRtvPsfl3UhbpccINKBEfGtRv9ENqaFPWNCqDcfvxjJ
-         yvCA==
-X-Gm-Message-State: AOJu0YwOFm6n3LDFXEB/W8JyVHSSDLF4VjP+ZyDrWGywo5p7YzvyU8Id
-	99cJkIXId0G2DlqAEkBmvsyTm6UHoVRGQxpvn94kDwGRmHnm6S40T4PpBddphYhxgmSb3D8Qd39
-	p7c2+2eYOqrIE6gdpvNoY
-X-Received: by 2002:a17:907:9512:b0:9ae:4492:df34 with SMTP id ew18-20020a170907951200b009ae4492df34mr1444619ejc.6.1695213409773;
-        Wed, 20 Sep 2023 05:36:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFmJTym5YvZ4MH52qjmmgnlm70HGxEIyE84IZpdWdDkioxeqQ+sBFeg2a5b+qpjuhd9RNuOjA==
-X-Received: by 2002:a17:907:9512:b0:9ae:4492:df34 with SMTP id ew18-20020a170907951200b009ae4492df34mr1444608ejc.6.1695213409547;
-        Wed, 20 Sep 2023 05:36:49 -0700 (PDT)
+        bh=CkUiTYo02brbH9rdldgLT7YiM95DCTjC6m+zHLs+f1Y=;
+        b=lMfcH/uBkdd3DUDODkWBHzia/2AJ3QzPRIA5TYmS7GCCnn5vVzqSVahn50cbhh2/Vu
+         O4eKHIL1RNjAwwu9g2FKePVlRjpJiz++0hYbeNOTR7apBkSFCKecd6ilMUMId+ySo3k7
+         RLlLVTfHK/pd4i1zEgRv8YA8D8SvMfDWcoaik1LAPf+uxHZq65PqDIkqqkDKTLmOnJml
+         ELZ3UmSDNHoqglEOxuuWMPMwFT3W4eH1ZEcogEr9Kt312hctRDI/gmpV2MKVAzJ13Je+
+         +CprHtj5tIV/90QSCRrp2bM5THqNvnQGBhX5ak64OFu1H6m94YF6H1/qLaOj9uQRuVRT
+         kj/g==
+X-Gm-Message-State: AOJu0YyapKmSqQw6rImplf1YJxg29RiKEgMAfd4giFOTdoSv2CCqLKDx
+	rJYBDMFv1+nLqpuphznsmiqql4qlbBfRPJqaDh2fCQ5SUWJ9W4n0oAxS4NN98jgmZh6ONa/7mgh
+	pMpRey+V+hWCcGOTRjwpm
+X-Received: by 2002:a05:651c:1693:b0:2c0:196c:e38f with SMTP id bd19-20020a05651c169300b002c0196ce38fmr1921133ljb.1.1695213418530;
+        Wed, 20 Sep 2023 05:36:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHGtYN79a4/Uyeq8meM3+9mCAQ2LGvBXOKnKduArpSa1zP3qsVYH9Wh1PFHrd4S88GImDITZQ==
+X-Received: by 2002:a05:651c:1693:b0:2c0:196c:e38f with SMTP id bd19-20020a05651c169300b002c0196ce38fmr1921120ljb.1.1695213418185;
+        Wed, 20 Sep 2023 05:36:58 -0700 (PDT)
 Received: from fedorinator.. ([2a01:599:906:7772:a505:d891:dcff:9565])
-        by smtp.gmail.com with ESMTPSA id u17-20020a1709064ad100b0098ce63e36e9sm9447247ejt.16.2023.09.20.05.36.44
+        by smtp.gmail.com with ESMTPSA id op15-20020a170906bcef00b009ae4ead6c01sm660073ejb.163.2023.09.20.05.36.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Sep 2023 05:36:47 -0700 (PDT)
+        Wed, 20 Sep 2023 05:36:55 -0700 (PDT)
 From: Philipp Stanner <pstanner@redhat.com>
 To: Kees Cook <keescook@chromium.org>,
 	Andy Shevchenko <andy@kernel.org>,
@@ -89,11 +89,10 @@ Cc: VMware Graphics Reviewers <linux-graphics-maintainer@vmware.com>,
 	kexec@lists.infradead.org,
 	linux-hardening@vger.kernel.org,
 	Philipp Stanner <pstanner@redhat.com>,
-	David Airlie <airlied@redhat.com>,
-	Baoquan He <bhe@redhat.com>
-Subject: [PATCH v3 2/5] kernel: kexec: copy user-array safely
-Date: Wed, 20 Sep 2023 14:36:10 +0200
-Message-ID: <20230920123612.16914-4-pstanner@redhat.com>
+	David Airlie <airlied@redhat.com>
+Subject: [PATCH v3 3/5] kernel: watch_queue: copy user-array safely
+Date: Wed, 20 Sep 2023 14:36:11 +0200
+Message-ID: <20230920123612.16914-5-pstanner@redhat.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20230920123612.16914-2-pstanner@redhat.com>
 References: <20230920123612.16914-2-pstanner@redhat.com>
@@ -101,8 +100,8 @@ MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230920_053653_454928_0CD0144A 
-X-CRM114-Status: GOOD (  11.98  )
+X-CRM114-CacheID: sfid-20230920_053704_481684_882FF2EA 
+X-CRM114-Status: GOOD (  12.09  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -126,25 +125,24 @@ duplicating the user-space array safely.
 
 Suggested-by: David Airlie <airlied@redhat.com>
 Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-Acked-by: Baoquan He <bhe@redhat.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
 Reviewed-by: Zack Rusin <zackr@vmware.com>
 ---
- kernel/kexec.c | 2 +-
+ kernel/watch_queue.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 107f355eac10..8f35a5a42af8 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -247,7 +247,7 @@ SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
- 		((flags & KEXEC_ARCH_MASK) != KEXEC_ARCH_DEFAULT))
+diff --git a/kernel/watch_queue.c b/kernel/watch_queue.c
+index d0b6b390ee42..778b4056700f 100644
+--- a/kernel/watch_queue.c
++++ b/kernel/watch_queue.c
+@@ -331,7 +331,7 @@ long watch_queue_set_filter(struct pipe_inode_info *pipe,
+ 	    filter.__reserved != 0)
  		return -EINVAL;
  
--	ksegments = memdup_user(segments, nr_segments * sizeof(ksegments[0]));
-+	ksegments = memdup_array_user(segments, nr_segments, sizeof(ksegments[0]));
- 	if (IS_ERR(ksegments))
- 		return PTR_ERR(ksegments);
+-	tf = memdup_user(_filter->filters, filter.nr_filters * sizeof(*tf));
++	tf = memdup_array_user(_filter->filters, filter.nr_filters, sizeof(*tf));
+ 	if (IS_ERR(tf))
+ 		return PTR_ERR(tf);
  
 -- 
 2.41.0
