@@ -4,70 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E68B7CE79D0
-	for <kexec@archiver.kernel.org>; Wed, 20 Sep 2023 12:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 645B4CE79D1
+	for <kexec@archiver.kernel.org>; Wed, 20 Sep 2023 12:37:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=Xdjg3+HK3S6L0i+U8C/Lrw+I84e3kiEv9awbO+N9MZg=; b=UINXmeEsXA4oYb
-	ay6Tzfj3NxHq35va/RcW3nK3r4xt5vXW1kPcsQ7a7/GQxQsXsQzhbDaa702idke9bZH6bzZ0cxvsY
-	505Et19RLQcgJl+ZknOOnpbuwzezY+e+gCmCs6cnWeNPfP6l2bUZmoP/Uof3dmNBPvGcHEKo87d84
-	gR2NKuyACfd58zVbzQ+/Vtcq9qgkj/P0mvG22FTpP+TjhMoCGv9fW9e997pNnIpbFioyeywZrcw9s
-	u+m/sje6urikP4VoysORHwv1TqVsr6Im4nGTV0ldgmO79vKCwZ0cbqKXyM1bJNaYnFa77J+0Z+sZK
-	f6vIkiTayZev0XgZlT/w==;
+	List-Owner; bh=zkCtlSWPzeAluQHp+PXi+6eos2RtthNPbh0zX2pycVA=; b=E6q+rP4ppXT885
+	vVQilD4ysv4jLTonviiYDeRTTsvIkHZhfdDnoSfnJI0J7RBeQ5KSRBRsbQQyN2AY7DumGxV4xJWoz
+	Zck7T0HimIIyqpjSUhti8/HJS+mNts3e1xQrgWnc4lietjb17QNrd3i+uIcKtoDfQXOU8HcAbKCOJ
+	k8uceUSCFYbbo+oo1O3hXWzShlGb4t2vNhPC8aXQKI0izVEBssaEcwm1Y8u9ipKmnGnPuSvzM6Y0k
+	xS7ZAzdyqUKA5Qp4E4+BqaEXoO45Nm8D1QHHU3ouG9ApkoaDxQyhwiRneEPM3LCcPnWLi8lHjMxdl
+	8f60r5Hm10RI2hTsE3qQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qiwS3-00330G-0g;
-	Wed, 20 Sep 2023 12:37:07 +0000
+	id 1qiwSB-00333D-2S;
+	Wed, 20 Sep 2023 12:37:15 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qiwS0-0032yj-17
+	id 1qiwS9-00332B-1u
 	for kexec@lists.infradead.org;
-	Wed, 20 Sep 2023 12:37:05 +0000
+	Wed, 20 Sep 2023 12:37:14 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1695213423;
+	s=mimecast20190719; t=1695213432;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CkUiTYo02brbH9rdldgLT7YiM95DCTjC6m+zHLs+f1Y=;
-	b=YLUYZKL1a/GCQeWmyP6lQkHfQSoQqcoo+fShY8IgKtOO6/DKY2EW9PCQ2+B0P2mkucllPK
-	uHFIUR6coPduM4IDqTl8/G4KiNP4pK1cvU5LtjVqdynUpG9BHlR41IcpEURt75yPNP/gHX
-	lxTvfQJ+4iFS/ood9VX0LSo+ZZGYISo=
-Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
- [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=7KRPqkETTBVBC/zv1aXEUiiiXJ1Cft936yka0iGNazc=;
+	b=GDssDO8BIGhK6TKMZh04cGJJnpoaaAjR4Dkx9sAIlFD1POzPVWi4Zot2wniwcVPb+TQMwX
+	VkZNBuiV2wuvq60oXW+bmakbfa8VIYK3nwbn7CJfPH9+rGZKxxBbIbrAwkZTZ4dXlC5CPi
+	n6nDeuOtyyiclJLWf7fxdpy5lAxOiB8=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-252--IRgNvrsMYC8mlB1ocDK5A-1; Wed, 20 Sep 2023 08:37:00 -0400
-X-MC-Unique: -IRgNvrsMYC8mlB1ocDK5A-1
-Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2be48142a6cso15826081fa.1
-        for <kexec@lists.infradead.org>; Wed, 20 Sep 2023 05:36:59 -0700 (PDT)
+ us-mta-638-SMZh7Uq9PWW8l9eViIb7GQ-1; Wed, 20 Sep 2023 08:37:10 -0400
+X-MC-Unique: SMZh7Uq9PWW8l9eViIb7GQ-1
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-404fc59b8acso13443815e9.0
+        for <kexec@lists.infradead.org>; Wed, 20 Sep 2023 05:37:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695213418; x=1695818218;
+        d=1e100.net; s=20230601; t=1695213429; x=1695818229;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CkUiTYo02brbH9rdldgLT7YiM95DCTjC6m+zHLs+f1Y=;
-        b=lMfcH/uBkdd3DUDODkWBHzia/2AJ3QzPRIA5TYmS7GCCnn5vVzqSVahn50cbhh2/Vu
-         O4eKHIL1RNjAwwu9g2FKePVlRjpJiz++0hYbeNOTR7apBkSFCKecd6ilMUMId+ySo3k7
-         RLlLVTfHK/pd4i1zEgRv8YA8D8SvMfDWcoaik1LAPf+uxHZq65PqDIkqqkDKTLmOnJml
-         ELZ3UmSDNHoqglEOxuuWMPMwFT3W4eH1ZEcogEr9Kt312hctRDI/gmpV2MKVAzJ13Je+
-         +CprHtj5tIV/90QSCRrp2bM5THqNvnQGBhX5ak64OFu1H6m94YF6H1/qLaOj9uQRuVRT
-         kj/g==
-X-Gm-Message-State: AOJu0YyapKmSqQw6rImplf1YJxg29RiKEgMAfd4giFOTdoSv2CCqLKDx
-	rJYBDMFv1+nLqpuphznsmiqql4qlbBfRPJqaDh2fCQ5SUWJ9W4n0oAxS4NN98jgmZh6ONa/7mgh
-	pMpRey+V+hWCcGOTRjwpm
-X-Received: by 2002:a05:651c:1693:b0:2c0:196c:e38f with SMTP id bd19-20020a05651c169300b002c0196ce38fmr1921133ljb.1.1695213418530;
-        Wed, 20 Sep 2023 05:36:58 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHGtYN79a4/Uyeq8meM3+9mCAQ2LGvBXOKnKduArpSa1zP3qsVYH9Wh1PFHrd4S88GImDITZQ==
-X-Received: by 2002:a05:651c:1693:b0:2c0:196c:e38f with SMTP id bd19-20020a05651c169300b002c0196ce38fmr1921120ljb.1.1695213418185;
-        Wed, 20 Sep 2023 05:36:58 -0700 (PDT)
+        bh=7KRPqkETTBVBC/zv1aXEUiiiXJ1Cft936yka0iGNazc=;
+        b=CW7heDU+NIU98A9FRD8ax/IuUnT50hLamN2/omWl2ds5RB6vayol4yaTbIbhnpZzLj
+         TI1fpj20uafgJsZxmIb6z8jjhNLXhnG767+yJnGkiuKZmsctgS/HZkfP915JprdhLEHl
+         OX3EM5p/NP2ijSVctqyD4FEXeelswjS9DFW1JPau4r8mLervzvlbJ+K0vaMKitnq/J21
+         ftOWFGpWMu9aSSEw3asNkroxOCXBqnoG/eddZAskpVBj82qdIkSxp4JMfPHn2iKV3SNF
+         sy1HYv3Z4t58IghXbLqwB6iIQdxGz4ArnY5dZ9aruwXm5NHNQKtIaoLK1aOEIUP9sL4M
+         rPUw==
+X-Gm-Message-State: AOJu0YxSQNGMtvG9eaydGKxr3UnBD4xWVuhobWmUPhzKum3nxIfplKYc
+	ZNYJ4C+lyeWsb2lKIsJHWm7IAAo0TQx67rhJnS76g+GcSn//2YSFJX80hQj0f1Fxfo1cgN9FHnz
+	L4VFkfKpCayf0UQD+nZgQ
+X-Received: by 2002:adf:ec48:0:b0:317:630d:1e8e with SMTP id w8-20020adfec48000000b00317630d1e8emr2031476wrn.2.1695213429374;
+        Wed, 20 Sep 2023 05:37:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGorWXFxi2CZ+i0Bq4z7I+sy7K13wS44rMjIuskory3+gtAyjUda2GeiUfH2k5vq773C10/rA==
+X-Received: by 2002:adf:ec48:0:b0:317:630d:1e8e with SMTP id w8-20020adfec48000000b00317630d1e8emr2031462wrn.2.1695213429120;
+        Wed, 20 Sep 2023 05:37:09 -0700 (PDT)
 Received: from fedorinator.. ([2a01:599:906:7772:a505:d891:dcff:9565])
-        by smtp.gmail.com with ESMTPSA id op15-20020a170906bcef00b009ae4ead6c01sm660073ejb.163.2023.09.20.05.36.54
+        by smtp.gmail.com with ESMTPSA id lg13-20020a170906f88d00b009ad88839665sm9297787ejb.70.2023.09.20.05.37.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Sep 2023 05:36:55 -0700 (PDT)
+        Wed, 20 Sep 2023 05:37:03 -0700 (PDT)
 From: Philipp Stanner <pstanner@redhat.com>
 To: Kees Cook <keescook@chromium.org>,
 	Andy Shevchenko <andy@kernel.org>,
@@ -90,9 +90,9 @@ Cc: VMware Graphics Reviewers <linux-graphics-maintainer@vmware.com>,
 	linux-hardening@vger.kernel.org,
 	Philipp Stanner <pstanner@redhat.com>,
 	David Airlie <airlied@redhat.com>
-Subject: [PATCH v3 3/5] kernel: watch_queue: copy user-array safely
-Date: Wed, 20 Sep 2023 14:36:11 +0200
-Message-ID: <20230920123612.16914-5-pstanner@redhat.com>
+Subject: [PATCH v3 4/5] drm_lease.c: copy user-array safely
+Date: Wed, 20 Sep 2023 14:36:12 +0200
+Message-ID: <20230920123612.16914-6-pstanner@redhat.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20230920123612.16914-2-pstanner@redhat.com>
 References: <20230920123612.16914-2-pstanner@redhat.com>
@@ -100,8 +100,8 @@ MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230920_053704_481684_882FF2EA 
-X-CRM114-Status: GOOD (  12.09  )
+X-CRM114-CacheID: sfid-20230920_053713_749345_C4648141 
+X-CRM114-Status: GOOD (  12.23  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -128,22 +128,24 @@ Signed-off-by: Philipp Stanner <pstanner@redhat.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
 Reviewed-by: Zack Rusin <zackr@vmware.com>
 ---
- kernel/watch_queue.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/drm_lease.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/watch_queue.c b/kernel/watch_queue.c
-index d0b6b390ee42..778b4056700f 100644
---- a/kernel/watch_queue.c
-+++ b/kernel/watch_queue.c
-@@ -331,7 +331,7 @@ long watch_queue_set_filter(struct pipe_inode_info *pipe,
- 	    filter.__reserved != 0)
- 		return -EINVAL;
- 
--	tf = memdup_user(_filter->filters, filter.nr_filters * sizeof(*tf));
-+	tf = memdup_array_user(_filter->filters, filter.nr_filters, sizeof(*tf));
- 	if (IS_ERR(tf))
- 		return PTR_ERR(tf);
- 
+diff --git a/drivers/gpu/drm/drm_lease.c b/drivers/gpu/drm/drm_lease.c
+index 150fe1555068..94375c6a5425 100644
+--- a/drivers/gpu/drm/drm_lease.c
++++ b/drivers/gpu/drm/drm_lease.c
+@@ -510,8 +510,8 @@ int drm_mode_create_lease_ioctl(struct drm_device *dev,
+ 	/* Handle leased objects, if any */
+ 	idr_init(&leases);
+ 	if (object_count != 0) {
+-		object_ids = memdup_user(u64_to_user_ptr(cl->object_ids),
+-					 array_size(object_count, sizeof(__u32)));
++		object_ids = memdup_array_user(u64_to_user_ptr(cl->object_ids),
++					       object_count, sizeof(__u32));
+ 		if (IS_ERR(object_ids)) {
+ 			ret = PTR_ERR(object_ids);
+ 			idr_destroy(&leases);
 -- 
 2.41.0
 
