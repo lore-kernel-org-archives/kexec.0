@@ -4,89 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1A01ACD4938
-	for <kexec@archiver.kernel.org>; Thu, 21 Sep 2023 03:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B6630CD4934
+	for <kexec@archiver.kernel.org>; Thu, 21 Sep 2023 05:00:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=U85LEuzLAM+Du8JcoekzQgU8/PJ/OzQ9jeojzrBGVP8=; b=cRr9Fl33Q2lpUf
-	O0aqsrpzhuVnvFE665Ev8NJjaNjl9r/mR03NDigEURjwhsym7wmao4RtI5jyuki5mQLe7DC/NU9U4
-	SdXoXacUkE+q4+X8eQRn4FjralUX8flMQAA2wQwM+/6kAYneK1N5f+kTDz6A1I7C7hnnTDMWKsMg8
-	FVA5wwzFJZxTRuZghtUgxlBcVMWYYfbWd572/b0ftyEKgCh1H03ibtMoT/tBh318QEn0wY1uZUpq1
-	Z+obKuB02zso6GNGBMCqs6vI8DAPvKm2PnhdF3tvx70m5MmdPbl7FBUIEt8cqVE0MgWQcsctNtRoD
-	mS4zRe8MzEPrIauNOBwQ==;
+	List-Owner; bh=vlBL0dXfmUtDstH0K6OY0hfvae/KquoivLORjC9TN10=; b=xgP5+b3ll6oa22
+	OXY3kQx80pbvXyMXqu5q5sqk4lmEZm/XcXhm1vsVlxj39FKQt6P2fydinYar+jhuDD1VIt8+ncArg
+	/u/Q0npDWWL835z9T47Sq4Mr0ySvx+twnL6gjyZ2taWcx39RCK5UOrX63a3iPqNdRjenFX0VAunmf
+	I/Bi5FtfZlH6UQPDK36h7BTZQr3bqKSaPTP22+FFIc/1d763fLCHlQQQI9wOqbWKqfoSEWCChr79T
+	efoaHFkYXrKcaNugyb2WqY3NmEJYSDjrVQB5ARTyQxKptqHarkQsRH995WKtgvUugqCFRrzgaaX4I
+	y2RcIQYyqpBs6q28r2gQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qjA9P-004sYi-1j;
-	Thu, 21 Sep 2023 03:14:47 +0000
+	id 1qjBno-0056nK-1b;
+	Thu, 21 Sep 2023 05:00:36 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qjA9M-004sXX-21
+	id 1qjBnj-0056lO-27
 	for kexec@lists.infradead.org;
-	Thu, 21 Sep 2023 03:14:46 +0000
+	Thu, 21 Sep 2023 05:00:35 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1695266081;
+	s=mimecast20190719; t=1695272427;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=icU0b2fTYif3b7hiacFBqJrLpjooJA9JwcaVPtcX+R4=;
-	b=C6inHUwHnu3dytozTh+wn4PQj6A9hM9mzPy4DSa1/R+OizB8/h1sje7pnEQZCD1z95VqW6
-	qiqXNrgHw/Woh/ljt6/X60mM/MtJdjjpqerrMHBROrJVPX6/yzCIzgDTaSYt3/QTQRzqS4
-	cCWOXt9Py7hy7YCaPukgazoxsf3SDtU=
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
- [209.85.166.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-453-uuGcHG3pP8KL2KhuM20R2Q-1; Wed, 20 Sep 2023 23:14:39 -0400
-X-MC-Unique: uuGcHG3pP8KL2KhuM20R2Q-1
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-79d6d3c5040so13260039f.0
-        for <kexec@lists.infradead.org>; Wed, 20 Sep 2023 20:14:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695266079; x=1695870879;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=icU0b2fTYif3b7hiacFBqJrLpjooJA9JwcaVPtcX+R4=;
-        b=PFKVQERNBmIasucU4OiCBbznNE9pX9dka58Vn7br6IrVq5fcV1k0VJHmgS3RRGsYhh
-         nTanymm77Y/hqKKb+JjzK59Fo5W9jKzJzavlb2SD9aQ1tmQq+oh5mVfgJFMHJlM/vLyO
-         nlMkghiTZp/G9P6MgOF/XMlHln+k5gxNQEmuT9trbLSuQA2Z1mLWzYSswz601rZ8m/cb
-         yytpcTFr+4RNmhUrj/CzWPv7cFhqYR8V2Xan737bWnd9TvCDnMDK+Jrzx0iSNw3wxUq4
-         AoVhYkXrKaRbiTtRswYZtCnlpGeX5ASULR2eZfdtNnZlPwtyDXqNJDyoB4oaK4xyFYkO
-         xMWw==
-X-Gm-Message-State: AOJu0YymtfnH4hnBFORMpSmWZvlVucm1kMhwF9q/Bgc5GNliWfGW+zqh
-	mxtbXZEziRvz/RtZE83nPRLm/Y+P+ko+IUxDdiJjwIm4lbkHyeZVfF2NM0tAVMnaihyw/YJ3UfY
-	ZxRJWNb1HQpUtL0BcsshKztrN5WHYuQ4urje9
-X-Received: by 2002:a92:d58d:0:b0:34c:d535:9f9d with SMTP id a13-20020a92d58d000000b0034cd5359f9dmr5048339iln.1.1695266078925;
-        Wed, 20 Sep 2023 20:14:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHP7GStAvqGB/5GhwIzzOELlz1QhzOEFsbxIgXQOXMy8ZZRXSpVQz/bcYgkugR12E/YJD7Hhvffg9l7Ezww5x0=
-X-Received: by 2002:a92:d58d:0:b0:34c:d535:9f9d with SMTP id
- a13-20020a92d58d000000b0034cd5359f9dmr5048326iln.1.1695266078650; Wed, 20 Sep
- 2023 20:14:38 -0700 (PDT)
+	bh=UMMavYCHBWGcbbAfcWzAVx7z+RZ7oLvoKa2eFe7kKpk=;
+	b=XfzbKGIXIqr3ye2HhFOc15WpOSHrr5p3SzkOIXI5D/6S0sqAr9Z7vwKlE8rLRtmNgvnMbm
+	k3QF35ib+8G6bzcWe+l6frYGj+QYHvhLdOu8GFTsInHb89EcoWun+ck9VymtiA3Ls9Rymx
+	RtuAVLstUvEklNEhUjgpkFqDZqIPakU=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-503-iP9KQ1_fN3q8cHPoL2jy3g-1; Thu, 21 Sep 2023 01:00:20 -0400
+X-MC-Unique: iP9KQ1_fN3q8cHPoL2jy3g-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E83291C05AB4;
+	Thu, 21 Sep 2023 05:00:19 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.40])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id D419FC15BB8;
+	Thu, 21 Sep 2023 05:00:16 +0000 (UTC)
+Date: Thu, 21 Sep 2023 13:00:13 +0800
+From: Baoquan He <bhe@redhat.com>
+To: "chenjiahao (C)" <chenjiahao16@huawei.com>
+Cc: linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+	thunder.leizhen@huawei.com, catalin.marinas@arm.com,
+	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, x86@kernel.org
+Subject: Re: [PATCH v3 8/9] riscv: kdump: use generic interface to simplify
+ crashkernel reservation
+Message-ID: <ZQvN3cViaPYHUBsf@MiWiFi-R3L-srv>
+References: <20230914033142.676708-1-bhe@redhat.com>
+ <20230914033142.676708-9-bhe@redhat.com>
+ <3e97290f-9031-a2f7-3505-c4ef6274f7da@huawei.com>
 MIME-Version: 1.0
-References: <20230911052535.335770-1-kernel@jfarr.cc> <20230913160045.40d377f9@rotkaeppchen>
- <63952cb0-5217-42a8-9b62-8be6d03f5844@app.fastmail.com> <CALu+AoTAUWWtx8yChQMKF9J5X_Qd8+x0hz0jzVwoOvAvh5VmHA@mail.gmail.com>
- <CALu+AoRiok-bzM4OQbiix44O-PUgO2N6Yi+_qTOn4iWtk_u4cg@mail.gmail.com>
- <CAMj1kXFkQ+T9OjK6NkKjfyR8gW4EZKFw5rEk0rgrzkHyK2BNXQ@mail.gmail.com>
- <CALu+AoTwqL3y=NhojN2Sb=Ms33id9Nco9QU8JccFrJ_nza5jAQ@mail.gmail.com> <CALu+AoRZ0CHiu_LLoCNxecBtVgwFDkzytw9suv5n0et9j7dX5g@mail.gmail.com>
-In-Reply-To: <CALu+AoRZ0CHiu_LLoCNxecBtVgwFDkzytw9suv5n0et9j7dX5g@mail.gmail.com>
-From: Dave Young <dyoung@redhat.com>
-Date: Thu, 21 Sep 2023 11:14:18 +0800
-Message-ID: <CALu+AoQhvk53+LbsdRjYrPu7vkWGd4m6Qokqz4902jEm_KO+Xg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] x86/kexec: UKI Support
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Jan Hendrik Farr <kernel@jfarr.cc>, Philipp Rudo <prudo@redhat.com>, linux-kernel@vger.kernel.org, 
-	kexec@lists.infradead.org, x86@kernel.org, tglx@linutronix.de, 
-	dhowells@redhat.com, vgoyal@redhat.com, keyrings@vger.kernel.org, 
-	akpm@linux-foundation.org, Baoquan He <bhe@redhat.com>, bhelgaas@google.com, 
-	Luca Boccassi <bluca@debian.org>, lennart@poettering.net, 
-	"Liu, Pingfan" <piliu@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+Content-Disposition: inline
+In-Reply-To: <3e97290f-9031-a2f7-3505-c4ef6274f7da@huawei.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230920_201444_739506_57AA5BE9 
-X-CRM114-Status: GOOD (  52.80  )
+X-CRM114-CacheID: sfid-20230920_220031_785083_3F57B88E 
+X-CRM114-Status: GOOD (  48.43  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -103,143 +85,309 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, 20 Sept 2023 at 20:18, Dave Young <dyoung@redhat.com> wrote:
->
-> On Wed, 20 Sept 2023 at 20:07, Dave Young <dyoung@redhat.com> wrote:
-> >
-> > On Wed, 20 Sept 2023 at 18:50, Ard Biesheuvel <ardb@kernel.org> wrote:
-> > >
-> > > On Wed, 20 Sept 2023 at 08:40, Dave Young <dyoung@redhat.com> wrote:
-> > > >
-> > > > On Wed, 20 Sept 2023 at 15:43, Dave Young <dyoung@redhat.com> wrote:
-> > > > >
-> > > > > > > In the end the only benefit this series brings is to extend the
-> > > > > > > signature checking on the whole UKI except of just the kernel image.
-> > > > > > > Everything else can also be done in user space. Compared to the
-> > > > > > > problems described above this is a very small gain for me.
-> > > > > >
-> > > > > > Correct. That is the benefit of pulling the UKI apart in the
-> > > > > > kernel. However having to sign the kernel inside the UKI defeats
-> > > > > > the whole point.
-> > > > >
-> > > > >
-> > > > > Pingfan added the zboot load support in kexec-tools, I know that he is
-> > > > > trying to sign the zboot image and the inside kernel twice. So
-> > > > > probably there are some common areas which can be discussed.
-> > > > > Added Ard and Pingfan in cc.
-> > > > > http://lists.infradead.org/pipermail/kexec/2023-August/027674.html
-> > > > >
-> > > >
-> > > > Here is another thread of the initial try in kernel with a few more
-> > > > options eg. some fake efi service helpers.
-> > > > https://lore.kernel.org/linux-arm-kernel/ZBvKSis+dfnqa+Vz@piliu.users.ipa.redhat.com/T/#m42abb0ad3c10126b8b3bfae8a596deb707d6f76e
-> > > >
-> > >
-> >
-> > Ard, thanks for the comments.
-> >
-> > > Currently, UKI's external interface is defined in terms of EFI
-> > > services, i.e., it is an executable PE/COFF binary that encapsulates
-> > > all the logic that performs the unpacking of the individual sections,
-> > > and loads the kernel as a PE/COFF binary as well (i.e., via
-> > > LoadImage/StartImage)
-> > >
-> > > As soon as we add support to Linux to unpack a UKI and boot the
-> > > encapsulated kernel using a boot protocol other than EFI, we are
-> > > painting ourselves into a corner, severely limiting the freedom of the
-> > > UKI effort to make changes to the interfaces that were implementation
-> > > details up to this point.
-> >
-> > Agreed, it seems UKI is more flexible and complex than the zboot,
-> > we do need to carefully think about a better solution.
-> >
-> > >
-> > > It also means that UKI handling in kexec will need to be taught about
-> > > every individual architecture again, which is something we are trying
-> > > to avoid with EFI support in general. Breaking the abstraction like
-> > > this lets the cat out of the bag, and will add yet another variation
-> > > of kexec that we will need to support and maintain forever.
-> > >
-> > > So the only way to do this properly and portably is to implement the
-> > > minimal set of EFI boot services [0] that Linux actually needs to run
-> > > its EFI stub (which is mostly identical to the set that UKI relies on
-> > > afaict), and expose them to the kexec image as it is being loaded.
-> > > This is not as bad as it sounds - I have some Rust code that could be
-> > > used as an inspiration [1] and which could be reused and shared
-> > > between architectures.
-> >
-> > Great!
-> >
-> > >
-> > > This would also reduce/remove the need for a purgatory: loading a EFI
-> > > binary in this way would run it up to the point were it calls
-> > > ExitBootServices(), and the actual kexec would invoke the image as if
-> > > it was returning from ExitBootServices().
-> > >
-> > > The only fundamental problem here is the need to allocate large chunks
-> > > of physical memory, which would need some kind of CMA support, I
-> > > imagine?
-> >
-> > Hmm, I thought that your idea is to write the efi stub code in "purgatory"
-> > so kexec can jump to it while rebooting then it will be able to access the
-> > whole usable memory, but it seems you want an efi app run under linux
-> > and somehow provide services to kexec?  My EFI knowledge is incomplete
-> > and outdated,  If my understanding of your proposal is true how can it keep
-> > running after switching to the new kernel stub?
->
-> Oops,  please ignore the quick reply and questioins, I apparently
-> forgot that this is the kexec loading
-> phase instead of the rebooting phase.  Yes as you said CMA might be
-> the only choice
-> for that proposal.
+On 09/21/23 at 10:36am, chenjiahao (C) wrote:
+> 
+> On 2023/9/14 11:31, Baoquan He wrote:
+> > With the help of newly changed function parse_crashkernel() and
+> > generic reserve_crashkernel_generic(), crashkernel reservation can be
+> > simplified by steps:
+> > 
+> > 1) Add a new header file <asm/crash_core.h>, and define CRASH_ALIGN,
+> >     CRASH_ADDR_LOW_MAX, CRASH_ADDR_HIGH_MAX and
+> >     DEFAULT_CRASH_KERNEL_LOW_SIZE in <asm/crash_core.h>;
+> > 
+> > 2) Add arch_reserve_crashkernel() to call parse_crashkernel() and
+> >     reserve_crashkernel_generic();
+> > 
+> > 3) Add ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION Kconfig in
+> >     arch/riscv/Kconfig.
+> > 
+> > The old reserve_crashkernel_low() and reserve_crashkernel() can be
+> > removed.
+> 
+> Hi Baoquan,
+> 
+> Sorry for the late response. The refactor code has unified multiple
+> arch via generic interface, which looks great!
+> 
+> However when I tested on my risc-v QEMU environment, a little problem
+> occurred with following messages:
+> 
+> [    0.000000] crashkernel low memory reserved: 0xf8000000 - 0x100000000 (128 MB)
+> [    0.000000] crashkernel reserved: 0x0000000177e00000 - 0x0000000277e00000 (4096 MB)
+> [    0.000000] ------------[ cut here ]------------
+> [    0.000000] WARNING: CPU: 0 PID: 0 at kernel/resource.c:779 __insert_resource+0x8e/0xd0
+> [    0.000000] Modules linked in:
+> [    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 6.6.0-rc2-next-20230920 #1
+> [    0.000000] Hardware name: riscv-virtio,qemu (DT)
+> [    0.000000] epc : __insert_resource+0x8e/0xd0
+> [    0.000000]  ra : insert_resource+0x28/0x4e
+> [    0.000000] epc : ffffffff80017344 ra : ffffffff8001742e sp : ffffffff81203db0
+> [    0.000000]  gp : ffffffff812ece98 tp : ffffffff8120dac0 t0 : ff600001f7ff2b00
+> [    0.000000]  t1 : 0000000000000000 t2 : 3428203030303030 s0 : ffffffff81203dc0
+> [    0.000000]  s1 : ffffffff81211e18 a0 : ffffffff81211e18 a1 : ffffffff81289380
+> [    0.000000]  a2 : 0000000277dfffff a3 : 0000000177e00000 a4 : 0000000177e00000
+> [    0.000000]  a5 : ffffffff81289380 a6 : 0000000277dfffff a7 : 0000000000000078
+> [    0.000000]  s2 : ffffffff81289380 s3 : ffffffff80a0bac8 s4 : ff600001f7ff2880
+> [    0.000000]  s5 : 0000000000000280 s6 : 8000000a00006800 s7 : 000000000000007f
+> [    0.000000]  s8 : 0000000080017038 s9 : 0000000080038ea0 s10: 0000000000000000
+> [    0.000000]  s11: 0000000000000000 t3 : ffffffff80a0bc00 t4 : ffffffff80a0bc00
+> [    0.000000]  t5 : ffffffff80a0bbd0 t6 : ffffffff80a0bc00
+> [    0.000000] status: 0000000200000100 badaddr: 0000000000000000 cause: 0000000000000003
+> [    0.000000] [<ffffffff80017344>] __insert_resource+0x8e/0xd0
+> [    0.000000] ---[ end trace 0000000000000000 ]---
+> [    0.000000] Failed to add a Crash kernel resource at 177e00000
+> 
+> The crashkernel memory has been allocated successfully, whereas
+> it seems failed to insert into iomem_resource. This should due to
+> the unique reserving logic in risc-v arch specific code, i.e.
+> crashk_res/crashk_low_res will be added into iomem_resource
+> later in init_resources(), which is not aligned with the
+> unified reserving logic.
 
-Ok, refreshed my memory with a brief discussion with Pingfan.  My
-understanding of the flow is like below:
+You are right, I didn't check this in riscv arch carefully. The resouce
+adding is done repeatedly.
 
-1. kexec loads the UKI image itself without any parsing of the internal files.
-2. reboot|crash -> jump to the fake stub
-3. the stub parse the UKI internal kernel/initrd/cmdline
-4. boot into the new kernel
+> 
+> My simple solution here is removing the arch specific code within
+> #ifdef CONFIG_KEXEC_CORE in init_resources(), which has been tested
+> OK with all your testcases. Or do you have any other idea?
 
-With above code flow, it is still not clear for me where do we need
-the large chunk
-of memory for the stub.
-in step 1 kexec loading does not need physical continuous big chunks as
-while jumping to the stub in step 2 the UKI image will be relocated again.
-the stub does need some page table setups but that is already done in current
-kexec code.
+Yeah, that sounds good to me. You can post a patch with a detailed log
+to describe the spotted problem and the root cause.
 
-Other than the boot service implementation, another issue here from my mind is
-the memory map information should be passed to the stub use.  Taking x86 as an
-example kexec will pass the raw e820 table to 2nd kernel according to the x86
-boot protocol.  Now if we move to a chain load case, there will be similar
-requirement for the stub.
+Thanks for working on this, Jiahao.
 
-Another thing is in case the stub can be more complex in the future, how can
-we debug it.  The boot service conout is not usable, and since graphic kms switc
-hing, I'm not sure the boot framebuffer will be usable as well.  Probably the
-only way is to add serial output support.  Anyway this is something could be
-hard to handle.
-
->
-> >
-> > >
-> > > Maybe we should do a BoF at LPC to discuss this further?
-> >
-> > It does deserve more discussion, unfortunately I will not be able to join LPC,
-> > Philipp Rudo (cced) planned attend the conf, so I think you guys can
-> > discuss together with
-> > other people interested. I think I will watch the recordings or
-> > joining virtually if possible.
-> >
-> > >
-> > > [0] this is not as bad as it sounds: beyond a protocol database, a
-> > > heap allocator and a memory map, there is actually very little needed
-> > > to boot Linux via the EFI stub (although UKI needs
-> > > LoadImage/StartImage as well)
-> > >
-> > > [1] https://github.com/ardbiesheuvel/efilite
-> > >
+> 
+> 
+> > 
+> > Signed-off-by: Baoquan He <bhe@redhat.com>
+> > ---
+> >   arch/riscv/Kconfig                  |   3 +
+> >   arch/riscv/include/asm/crash_core.h |  11 +++
+> >   arch/riscv/include/asm/processor.h  |   2 +
+> >   arch/riscv/mm/init.c                | 141 +++-------------------------
+> >   4 files changed, 27 insertions(+), 130 deletions(-)
+> >   create mode 100644 arch/riscv/include/asm/crash_core.h
+> > 
+> > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> > index d607ab0f7c6d..25474f8c12b7 100644
+> > --- a/arch/riscv/Kconfig
+> > +++ b/arch/riscv/Kconfig
+> > @@ -694,6 +694,9 @@ config ARCH_SUPPORTS_KEXEC_PURGATORY
+> >   config ARCH_SUPPORTS_CRASH_DUMP
+> >   	def_bool y
+> > +config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
+> > +	def_bool CRASH_CORE
+> > +
+> >   config COMPAT
+> >   	bool "Kernel support for 32-bit U-mode"
+> >   	default 64BIT
+> > diff --git a/arch/riscv/include/asm/crash_core.h b/arch/riscv/include/asm/crash_core.h
+> > new file mode 100644
+> > index 000000000000..e1874b23feaf
+> > --- /dev/null
+> > +++ b/arch/riscv/include/asm/crash_core.h
+> > @@ -0,0 +1,11 @@
+> > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > +#ifndef _RISCV_CRASH_CORE_H
+> > +#define _RISCV_CRASH_CORE_H
+> > +
+> > +#define CRASH_ALIGN			PMD_SIZE
+> > +
+> > +#define CRASH_ADDR_LOW_MAX		dma32_phys_limit
+> > +#define CRASH_ADDR_HIGH_MAX		memblock_end_of_DRAM()
+> > +
+> > +extern phys_addr_t memblock_end_of_DRAM(void);
+> > +#endif
+> > diff --git a/arch/riscv/include/asm/processor.h b/arch/riscv/include/asm/processor.h
+> > index 3e23e1786d05..441da1839c94 100644
+> > --- a/arch/riscv/include/asm/processor.h
+> > +++ b/arch/riscv/include/asm/processor.h
+> > @@ -116,6 +116,8 @@ static inline void wait_for_interrupt(void)
+> >   	__asm__ __volatile__ ("wfi");
+> >   }
+> > +extern phys_addr_t dma32_phys_limit;
+> > +
+> >   struct device_node;
+> >   int riscv_of_processor_hartid(struct device_node *node, unsigned long *hartid);
+> >   int riscv_early_of_processor_hartid(struct device_node *node, unsigned long *hartid);
+> > diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> > index 9fe448900059..d9a4e8702864 100644
+> > --- a/arch/riscv/mm/init.c
+> > +++ b/arch/riscv/mm/init.c
+> > @@ -65,7 +65,7 @@ extern char _start[];
+> >   void *_dtb_early_va __initdata;
+> >   uintptr_t _dtb_early_pa __initdata;
+> > -static phys_addr_t dma32_phys_limit __initdata;
+> > +phys_addr_t dma32_phys_limit __initdata;
+> >   static void __init zone_sizes_init(void)
+> >   {
+> > @@ -1333,28 +1333,6 @@ static inline void setup_vm_final(void)
+> >   }
+> >   #endif /* CONFIG_MMU */
+> > -/* Reserve 128M low memory by default for swiotlb buffer */
+> > -#define DEFAULT_CRASH_KERNEL_LOW_SIZE	(128UL << 20)
+> > -
+> > -static int __init reserve_crashkernel_low(unsigned long long low_size)
+> > -{
+> > -	unsigned long long low_base;
+> > -
+> > -	low_base = memblock_phys_alloc_range(low_size, PMD_SIZE, 0, dma32_phys_limit);
+> > -	if (!low_base) {
+> > -		pr_err("cannot allocate crashkernel low memory (size:0x%llx).\n", low_size);
+> > -		return -ENOMEM;
+> > -	}
+> > -
+> > -	pr_info("crashkernel low memory reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
+> > -		low_base, low_base + low_size, low_size >> 20);
+> > -
+> > -	crashk_low_res.start = low_base;
+> > -	crashk_low_res.end = low_base + low_size - 1;
+> > -
+> > -	return 0;
+> > -}
+> > -
+> >   /*
+> >    * reserve_crashkernel() - reserves memory for crash kernel
+> >    *
+> > @@ -1362,122 +1340,25 @@ static int __init reserve_crashkernel_low(unsigned long long low_size)
+> >    * line parameter. The memory reserved is used by dump capture kernel when
+> >    * primary kernel is crashing.
+> >    */
+> > -static void __init reserve_crashkernel(void)
+> > +static void __init arch_reserve_crashkernel(void)
+> >   {
+> > -	unsigned long long crash_base = 0;
+> > -	unsigned long long crash_size = 0;
+> > -	unsigned long long crash_low_size = 0;
+> > -	unsigned long search_start = memblock_start_of_DRAM();
+> > -	unsigned long search_end = (unsigned long)dma32_phys_limit;
+> > +	unsigned long long low_size = 0;
+> > +	unsigned long long crash_base, crash_size;
+> >   	char *cmdline = boot_command_line;
+> > -	bool fixed_base = false;
+> >   	bool high = false;
+> > -
+> > -	int ret = 0;
+> > +	int ret;
+> >   	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
+> >   		return;
+> > -	/*
+> > -	 * Don't reserve a region for a crash kernel on a crash kernel
+> > -	 * since it doesn't make much sense and we have limited memory
+> > -	 * resources.
+> > -	 */
+> > -	if (is_kdump_kernel()) {
+> > -		pr_info("crashkernel: ignoring reservation request\n");
+> > -		return;
+> > -	}
+> >   	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
+> > -				&crash_size, &crash_base, NULL, NULL);
+> > -	if (ret == -ENOENT) {
+> > -		/* Fallback to crashkernel=X,[high,low] */
+> > -		ret = parse_crashkernel_high(cmdline, 0, &crash_size, &crash_base);
+> > -		if (ret || !crash_size)
+> > -			return;
+> > -
+> > -		/*
+> > -		 * crashkernel=Y,low is valid only when crashkernel=X,high
+> > -		 * is passed.
+> > -		 */
+> > -		ret = parse_crashkernel_low(cmdline, 0, &crash_low_size, &crash_base);
+> > -		if (ret == -ENOENT)
+> > -			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
+> > -		else if (ret)
+> > -			return;
+> > -
+> > -		search_start = (unsigned long)dma32_phys_limit;
+> > -		search_end = memblock_end_of_DRAM();
+> > -		high = true;
+> > -	} else if (ret || !crash_size) {
+> > -		/* Invalid argument value specified */
+> > +				&crash_size, &crash_base,
+> > +				&low_size, &high);
+> > +	if (ret)
+> >   		return;
+> > -	}
+> > -
+> > -	crash_size = PAGE_ALIGN(crash_size);
+> > -
+> > -	if (crash_base) {
+> > -		fixed_base = true;
+> > -		search_start = crash_base;
+> > -		search_end = crash_base + crash_size;
+> > -	}
+> > -
+> > -	/*
+> > -	 * Current riscv boot protocol requires 2MB alignment for
+> > -	 * RV64 and 4MB alignment for RV32 (hugepage size)
+> > -	 *
+> > -	 * Try to alloc from 32bit addressible physical memory so that
+> > -	 * swiotlb can work on the crash kernel.
+> > -	 */
+> > -	crash_base = memblock_phys_alloc_range(crash_size, PMD_SIZE,
+> > -					       search_start, search_end);
+> > -	if (crash_base == 0) {
+> > -		/*
+> > -		 * For crashkernel=size[KMG]@offset[KMG], print out failure
+> > -		 * message if can't reserve the specified region.
+> > -		 */
+> > -		if (fixed_base) {
+> > -			pr_warn("crashkernel: allocating failed with given size@offset\n");
+> > -			return;
+> > -		}
+> > -
+> > -		if (high) {
+> > -			/*
+> > -			 * For crashkernel=size[KMG],high, if the first attempt was
+> > -			 * for high memory, fall back to low memory.
+> > -			 */
+> > -			search_start = memblock_start_of_DRAM();
+> > -			search_end = (unsigned long)dma32_phys_limit;
+> > -		} else {
+> > -			/*
+> > -			 * For crashkernel=size[KMG], if the first attempt was for
+> > -			 * low memory, fall back to high memory, the minimum required
+> > -			 * low memory will be reserved later.
+> > -			 */
+> > -			search_start = (unsigned long)dma32_phys_limit;
+> > -			search_end = memblock_end_of_DRAM();
+> > -			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
+> > -		}
+> > -
+> > -		crash_base = memblock_phys_alloc_range(crash_size, PMD_SIZE,
+> > -						       search_start, search_end);
+> > -		if (crash_base == 0) {
+> > -			pr_warn("crashkernel: couldn't allocate %lldKB\n",
+> > -				crash_size >> 10);
+> > -			return;
+> > -		}
+> > -	}
+> > -
+> > -	if ((crash_base >= dma32_phys_limit) && crash_low_size &&
+> > -	     reserve_crashkernel_low(crash_low_size)) {
+> > -		memblock_phys_free(crash_base, crash_size);
+> > -		return;
+> > -	}
+> > -
+> > -	pr_info("crashkernel: reserved 0x%016llx - 0x%016llx (%lld MB)\n",
+> > -		crash_base, crash_base + crash_size, crash_size >> 20);
+> > -	crashk_res.start = crash_base;
+> > -	crashk_res.end = crash_base + crash_size - 1;
+> > +	reserve_crashkernel_generic(cmdline, crash_size, crash_base,
+> > +				    low_size, high);
+> >   }
+> >   void __init paging_init(void)
+> > @@ -1495,7 +1376,7 @@ void __init misc_mem_init(void)
+> >   	arch_numa_init();
+> >   	sparse_init();
+> >   	zone_sizes_init();
+> > -	reserve_crashkernel();
+> > +	arch_reserve_crashkernel();
+> >   	memblock_dump_all();
+> >   }
+> 
 
 
 _______________________________________________
