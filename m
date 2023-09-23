@@ -4,70 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5DDCBCE7A81
-	for <kexec@archiver.kernel.org>; Sat, 23 Sep 2023 00:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 42A35CE7A88
+	for <kexec@archiver.kernel.org>; Sat, 23 Sep 2023 03:26:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=WzIudOVd8LUj+se8cn89uCYd4EPAMLBi8lKn6r5EM+o=; b=VbUQ7mI0LEWeOg
-	dszBWAk990w0PfPh4xYXWvtIQlGYXC7Lt3bnms0SaDE/CL2ANG+6IhUB2L0v3+jiuw9e28y+fE+Z3
-	tAx59RPmEOyoHUjqmOVLN+0GF9+cfa0DSk89RDl5wgVc+RSKCZLsDU5c2+fYadBfiKeKBC2G7Tcn6
-	FkFKdxlC//ckN36I4bRpRe5PgqkqMz6FnbVJIE/4x5evg01Rt4avCpv2bl/MN/YvVU7vcSkHvAlOH
-	/2vQfkWfwosDJl3yMJee/z7DHmF8jO5WO1Ypv78KeWTMWc5Y2HVQvFK+51bZYc17eF+bgo7dxdpIK
-	fSzP5N9y3fBUbOg+wB/g==;
+	List-Owner; bh=DEoAGKXW9bIQIrxAJcH1PU4O44tt5AefF3xNTQN7bgM=; b=J+q+ZZHWjFJ1Z9
+	CZB65zWVQ75RUi35yoix2xzJ+kocEfAAo/Y7JRLTX9pqW+bpBffWByEhICti5e2Iz/eb2C/b9QWt/
+	jVRSl2UnNWh1CAoRWaNpHetiFPNI94hMUxWuLcOud912IdWS1Sm3i1q23CfHK6PqFE8FNRyXjPtem
+	xXh86+CuJvdmSSEO9d9vfm+SLn7XMFIcaKaPeWb2pLUvWN8mZxCjdqqZ8RpZPXPkMkUufl6rMx7zh
+	l0nX4dvMYdLswqUKl7PKGSEyJmhLHDvvOvW6c2+8aWPAQ9uvXUgVeUbZjR6PfTQ0HLaBSuT5v3tl7
+	DUKaup3W8W7zHfKP3exw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qjqnZ-00A3di-2L;
-	Sat, 23 Sep 2023 00:47:05 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1qjtHU-00AMHG-2P;
+	Sat, 23 Sep 2023 03:26:08 +0000
+Received: from mail-pf1-x42f.google.com ([2607:f8b0:4864:20::42f])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qjqnW-00A3d6-16
+	id 1qjtHP-00AMGF-2z
 	for kexec@lists.infradead.org;
-	Sat, 23 Sep 2023 00:47:03 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1695430015;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lFq6zMaaGytyLVjCRlM3YGZB/pczKiOV+8u9ckMtHlE=;
-	b=G3vrTVVC1of69IpxZZuPPqUi+P5WnXPwduI0eWjoclZyr0X+S5ZU9zgV7vvtFAop58koAq
-	LfyPQ//gY1F+PcbHfwfZm6hHVP42zwuP25aDSm3ET9r5yv6/g/7I8euN2wnMxPw9XHThUG
-	N3om5xZRRnKAN/q7UY9KsdLllkyPKpQ=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-82-UHzJRoO2NxSdEjhQPdTCeg-1; Fri, 22 Sep 2023 20:46:52 -0400
-X-MC-Unique: UHzJRoO2NxSdEjhQPdTCeg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9CC3185A5BA;
-	Sat, 23 Sep 2023 00:46:51 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.18])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id DB10928FB;
-	Sat, 23 Sep 2023 00:46:50 +0000 (UTC)
-Date: Sat, 23 Sep 2023 08:46:47 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Kees Cook <keescook@chromium.org>
+	Sat, 23 Sep 2023 03:26:07 +0000
+Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-6907e44665bso2888252b3a.1
+        for <kexec@lists.infradead.org>; Fri, 22 Sep 2023 20:26:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1695439561; x=1696044361; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=LR9DR3BeUG86XkT5sEqTxjBnOBqP8nuIev7GEpE4GGc=;
+        b=fYxu99FEEG5YrB1iXViDvy/3F3Vk1PYt20St6VvDV+q6QtWC+JULL7VhDwCFeLTHF6
+         YfcVk9ymG3r2zfBvPEcTXhXUuHez5iYZWyvXHnYAvK2rCFKXhYEpkPzMEQ+WFUGn2c44
+         Eq1QaqqadhTtYtSJGKhmCnwodUok6Fe3mjTaE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695439561; x=1696044361;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LR9DR3BeUG86XkT5sEqTxjBnOBqP8nuIev7GEpE4GGc=;
+        b=PwYTmaWH3DPWOkrM5Es9h4o8hZjugwhn/y9V9td+AHeoyh1fyIuHDpT3bzGvQO82AU
+         0nqranvh2600lZ0Q7YEWPHWGgPKO3YzDxKou1lmvgoDfJbZTpzqu4hZTEWCdSaQHjPMC
+         tCtw1jnmNFZZ7prYhNLguuhaPAZI1tS0SeJIvLsRT+/7fcKQeJx1UFXt9dfne6z1GJ8r
+         ot+Cgwa6oHkqhC/4I5hv9m0vipsQQp7KPxiFvgfB5Y8FedlBTHDTxcvefFXcuHf2D5lS
+         ScZ4/JcUHtcF2tdxLBWDJd12wZt6KNe65PqgINQPzCilhq6mpUydBPMN4boJwGH+h7ba
+         5EXw==
+X-Gm-Message-State: AOJu0YxjblkfnXr3WN0t7i74IZB0C/ByLRSSk6tX1liLJDdy98qCXsZG
+	Di4MZQ2PXKw9rh9sMKoggF2m3qdbYzoaLYbql+515w==
+X-Google-Smtp-Source: AGHT+IG+yKlVthCSQJVmhQADSNEyr7VJLqnwS4nHKn7LFSAEe8auAjxigMDQH74ce+YiDA1xBlG0bQ==
+X-Received: by 2002:a05:6a00:2d85:b0:690:c5cf:91f4 with SMTP id fb5-20020a056a002d8500b00690c5cf91f4mr1235039pfb.12.1695439561233;
+        Fri, 22 Sep 2023 20:26:01 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id s24-20020aa78298000000b0068fe8a42f45sm3894818pfm.207.2023.09.22.20.26.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Sep 2023 20:26:00 -0700 (PDT)
+Date: Fri, 22 Sep 2023 20:25:59 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Baoquan He <bhe@redhat.com>
 Cc: Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org,
 	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
 	Nathan Chancellor <nathan@kernel.org>,
 	Nick Desaulniers <ndesaulniers@google.com>,
 	Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+	llvm@lists.linux.dev, linux-hardening@vger.kernel.org,
+	Shakeel Butt <shakeelb@google.com>
 Subject: Re: [PATCH] kexec: Annotate struct crash_mem with __counted_by
-Message-ID: <ZQ41d5majBepW48Z@MiWiFi-R3L-srv>
+Message-ID: <202309222012.49E3C0AA@keescook>
 References: <20230922175224.work.712-kees@kernel.org>
+ <ZQ41d5majBepW48Z@MiWiFi-R3L-srv>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20230922175224.work.712-kees@kernel.org>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
+In-Reply-To: <ZQ41d5majBepW48Z@MiWiFi-R3L-srv>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230922_174702_475768_FDB93CF0 
-X-CRM114-Status: GOOD (  18.55  )
+X-CRM114-CacheID: sfid-20230922_202604_394404_FD49B48E 
+X-CRM114-Status: GOOD (  24.00  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,47 +94,96 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 09/22/23 at 10:52am, Kees Cook wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
+On Sat, Sep 23, 2023 at 08:46:47AM +0800, Baoquan He wrote:
+> On 09/22/23 at 10:52am, Kees Cook wrote:
+> > Prepare for the coming implementation by GCC and Clang of the __counted_by
+> > attribute. Flexible array members annotated with __counted_by can have
+> > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+> > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> > functions).
+> > 
+> > As found with Coccinelle[1], add __counted_by for struct crash_mem.
+> > 
+> > [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+> > 
+> > Cc: Eric Biederman <ebiederm@xmission.com>
+> > Cc: kexec@lists.infradead.org
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  include/linux/crash_core.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+> > index 3426f6eef60b..5126a4fecb44 100644
+> > --- a/include/linux/crash_core.h
+> > +++ b/include/linux/crash_core.h
+> > @@ -131,7 +131,7 @@ static inline void __init reserve_crashkernel_generic(char *cmdline,
+> >  struct crash_mem {
+> >  	unsigned int max_nr_ranges;
+> >  	unsigned int nr_ranges;
+> > -	struct range ranges[];
+> > +	struct range ranges[] __counted_by(max_nr_ranges);
 > 
-> As found with Coccinelle[1], add __counted_by for struct crash_mem.
-> 
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
-> 
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: kexec@lists.infradead.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  include/linux/crash_core.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-> index 3426f6eef60b..5126a4fecb44 100644
-> --- a/include/linux/crash_core.h
-> +++ b/include/linux/crash_core.h
-> @@ -131,7 +131,7 @@ static inline void __init reserve_crashkernel_generic(char *cmdline,
->  struct crash_mem {
->  	unsigned int max_nr_ranges;
->  	unsigned int nr_ranges;
-> -	struct range ranges[];
-> +	struct range ranges[] __counted_by(max_nr_ranges);
+> This __counted_by() only makes sense when there's a obvious upper
+> boundary, max_nr_ranges in this case.
 
-This __counted_by() only makes sense when there's a obvious upper
-boundary, max_nr_ranges in this case. This heavily depends and isn't
-much in kernel? E.g struct swap_info_struct->avail_lists[]. Just
-curious, not related to this patch though.
+Yes; it's designed to be the array element count used for the
+allocation. For example with the above case:
 
->  };
->  
->  extern int crash_exclude_mem_range(struct crash_mem *mem,
-> -- 
-> 2.34.1
-> 
+        nr_ranges += 2;
+        cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
+        if (!cmem)
+                return NULL;
 
+        cmem->max_nr_ranges = nr_ranges;
+        cmem->nr_ranges = 0;
+
+nr_ranges is the max count of the elements.
+
+_However_, if a structure (like this one) has _two_ counters, one for
+"in use" and another for "max available", __counted_by could specify the
+"in use" case, as long as array indexing only happens when that "in use"
+has been updated. So, if it were:
+
+struct crash_mem {
+    unsigned int max_nr_ranges;
+    unsigned int nr_ranges;
+    struct range ranges[] __counted_by(nr_ranges);
+};
+
+then this would trigger the bounds checking:
+
+	cmem->ranges[0] = some_range;	/* "nr_ranges" is still 0 so index 0 isn't allowed */
+	cmem->nr_ranges ++;
+
+but this would not:
+
+	cmem->nr_ranges ++;		/* index 0 is now available for use. */
+	cmem->ranges[0] = some_range;
+
+> This heavily depends and isn't much in kernel?
+
+Which "this" do you mean? The tracking of max allocation is common.
+Tracking max and "in use" happens in some places (like here), but is
+less common.
+
+> E.g struct swap_info_struct->avail_lists[].
+
+This is even less common: tracking the count externally from the struct,
+as done there with nr_node_ids. Shakeel asked a very similar question
+and also pointed out nr_node_ids:
+https://lore.kernel.org/all/202309221128.6AC35E3@keescook/
+
+> Just curious, not related to this patch though.
+
+I'm happy to answer questions! Yeah, as I said in the above thread,
+I expect to expand what __counted_by can use, and I suspect (hope)
+a global would be easier to add than an arbitrary expression. :)
+
+-Kees
+
+-- 
+Kees Cook
 
 _______________________________________________
 kexec mailing list
