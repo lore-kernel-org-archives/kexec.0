@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2370ECE79A5
-	for <kexec@archiver.kernel.org>; Mon, 25 Sep 2023 21:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 347AFCE79A5
+	for <kexec@archiver.kernel.org>; Mon, 25 Sep 2023 21:28:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:To:From:Subject:Reply-To:Cc:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=0la8E0bO1A1zBCD6xvF0oQGi1XXtr4F3pRdaYeyRFQA=; b=RB8vdbvpKVAW+r
-	IzmA5mKGA27jSi26hNL/bQEdEii4L/13hgEK+CYO04wWekx30Ulr3Mtd6FVJhZN/ddzZiSxm2Mu8g
-	4z8eoATpXpVXqllFWzBc2GXwikNwqfA6OyMBZZFlG5Pgvaxykyx31TubgmXiR6m0c8aXTFQ+WqS8/
-	AzRu99HAMwOBBggzC1wgy3ZroTwTbre/C9DtxbUbLMyWNk2zJEXOIiCsfZJa/R2omYNFSLIKN5AFW
-	olLrQsdUHelNcYXO5YS0AmtjiDHqmR8TdFVuARCrKjiMf9J0ILU360OwBiepI/KJV+KkseUiNWp0O
-	zKgeHUcYzstTphYpkY5g==;
+	List-Owner; bh=2R6lLkmRrfuIyltPAHvk7YY9LvAza6U/+Xc5CZRhDNo=; b=qGFCKrKzUACIT4
+	jk5PBw1xIMP7xBC0x0t0rfWEP51UWlg4XCqzi21LstNpeqfe4ox7TRyb7pHileNHyGUoabQasK8iD
+	Ix7WgwJC2fuLKZZlInnbwYYYmR+WMBcgizQdS2OdWIKsD5xFXx5d2cJx6223hlPCad9cmnNwVE7Or
+	n1sb+ufrKWS9wTZwhpuOJUeLTNIu3pjcWc09eUwgm0+ZWMCVDpwtkZgiadPYqIXXsDDzFA/wECmHH
+	TMEK3eyKuRtBzmml01VtzKjltnwz32u3t39BGTDMgG6VBUhW/x7QiV8Sg642X43igYKpi6sUwTTpv
+	VdHxaxG5rMbK+opJSlyQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qkt7s-00F3Tm-1Z;
-	Mon, 25 Sep 2023 21:28:20 +0000
+	id 1qkt7z-00F3Y2-1p;
+	Mon, 25 Sep 2023 21:28:27 +0000
 Received: from linux.microsoft.com ([13.77.154.182])
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qkt7p-00F3S8-1Z
+	id 1qkt7w-00F3Vr-0U
 	for kexec@lists.infradead.org;
-	Mon, 25 Sep 2023 21:28:18 +0000
+	Mon, 25 Sep 2023 21:28:25 +0000
 Received: from skinsburskii. (c-67-170-100-148.hsd1.wa.comcast.net [67.170.100.148])
-	by linux.microsoft.com (Postfix) with ESMTPSA id BAA54212C81A;
-	Mon, 25 Sep 2023 14:28:16 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BAA54212C81A
+	by linux.microsoft.com (Postfix) with ESMTPSA id 874BA212C81C;
+	Mon, 25 Sep 2023 14:28:22 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 874BA212C81C
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1695677297;
-	bh=oG2PUbwyF0nuBD1C3aXahDUjw4ck7gfs8NgK91ItcqM=;
+	s=default; t=1695677303;
+	bh=JfnfRf/8Z1j91lE6hWWpyKLJ8dXQ6U0FUQpoylAZ8tA=;
 	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=Fi/3N9OAw/nGt/uwjjhNLNgVqdjSu5ywBK7Yy8dfefOgTdcr/WjZzNrDbHg0WhJ55
-	 Y25/hspsoEK6nJI/6xzI5raCpMqxrjwwOEcPl5ctm31eKl1pZN++J+F1xlrrFqVMmF
-	 LTsPS7A3Wi0BG7kILvcMt7YSK0LUmYIm/6B2OlyI=
-Subject: [RFC PATCH v2 5/7] pmpool: Update device tree on kexec
+	b=dWbNHl0rs/Szzl5OmMYUUNSVUH665li3UCcaxU37P8vzb09CFwp0HrmaCMsLneC+Z
+	 8Fu0yKAok1W6TAZoSnLmhtoenEBITTdDJE8ihS2PFKq8oikP7fEL+cShCODKI6iKgC
+	 PrYgG7tRVKKfqrnvXyTfcMuCYeMCcAkaqfR04VHI=
+Subject: [RFC PATCH v2 6/7] pmpool: Restore state from device tree post-kexec
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 To: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
  dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
@@ -47,15 +47,15 @@ To: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
  linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-mm@kvack.org,
  kys@microsoft.com, jgowans@amazon.com, wei.liu@kernel.org, arnd@arndb.de,
  gregkh@linuxfoundation.org, graf@amazon.de, pbonzini@redhat.com
-Date: Mon, 25 Sep 2023 14:28:16 -0700
-Message-ID: <169567729602.19708.7544090989330715724.stgit@skinsburskii.>
+Date: Mon, 25 Sep 2023 14:28:22 -0700
+Message-ID: <169567730206.19708.13228262570187347469.stgit@skinsburskii.>
 In-Reply-To: <169567722094.19708.3583735425859054859.stgit@skinsburskii.>
 References: <169567722094.19708.3583735425859054859.stgit@skinsburskii.>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230925_142817_576354_4BE93235 
-X-CRM114-Status: GOOD (  15.49  )
+X-CRM114-CacheID: sfid-20230925_142824_216742_2DBE1A26 
+X-CRM114-Status: GOOD (  10.11  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,126 +74,84 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: Stanislav Kinsburskii <stanislav.kinsburskii@gmail.com>
 
-Introduce a pmpool kexec fdt notifier that enables pmpool to pass its
-metadata, including the bitmap address, to the new kernel during kexec.
+Retrieve the pmpool bitmap from metadata in the fdt passed over kexec,
+bypassing the need for reinitialization. This ensures the seamless transfer
+of the pmpool state across kexec.
 
 Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
 ---
- mm/Kconfig  |    1 +
- mm/pmpool.c |   64 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 64 insertions(+), 1 deletion(-)
+ mm/pmpool.c |   46 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
-diff --git a/mm/Kconfig b/mm/Kconfig
-index e7c10094fb10..1eefdd4c82ba 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -925,6 +925,7 @@ config CMA_AREAS
- config PMPOOL
- 	bool "Persistent memory pool support"
- 	select CMA
-+	select LIBFDT
- 	help
- 	  This option adds support for CMA-based persistent memory pool
- 	  feature, which provides pages allocation and freeing from a set of
 diff --git a/mm/pmpool.c b/mm/pmpool.c
-index 12a8cac75558..f2173db782d6 100644
+index f2173db782d6..6c1a28fd3493 100644
 --- a/mm/pmpool.c
 +++ b/mm/pmpool.c
-@@ -6,6 +6,7 @@
- #include <linux/cma.h>
- #include <linux/io.h>
- #include <linux/kexec.h>
-+#include <linux/libfdt.h>
+@@ -9,6 +9,7 @@
+ #include <linux/libfdt.h>
  #include <linux/memblock.h>
  #include <linux/mm.h>
++#include <linux/of.h>
  #include <linux/pmpool.h>
-@@ -58,6 +59,59 @@ static int __init default_pmpool_fixup_cma(void)
- }
- postcore_initcall(default_pmpool_fixup_cma);
  
-+static int pmpool_fdt_update(struct notifier_block *nb, unsigned long val,
-+			     void *data)
+ #include "cma.h"
+@@ -49,11 +50,56 @@ static void pmpool_fixup_cma(struct cma *cma)
+ 	pr_info("CMA bitmap moved to %#llx\n", virt_to_phys(cma->bitmap));
+ }
+ 
++static int pmpool_fdt_restore(struct cma *cma)
 +{
-+	void *fdt = data;
-+	int node, status;
++	struct device_node *dn;
++	u64 val;
 +
-+	if (!fdt)
-+		goto err;
++	dn = of_find_compatible_node(NULL, NULL, "pmpool");
++	if (!dn)
++		return -ENOENT;
 +
-+	node = fdt_subnode_offset(fdt, 0, "chosen");
-+	if (node < 0) {
-+		node = fdt_add_subnode(fdt, 0, "chosen");
-+		if (node < 0)
-+			goto err;
++	if (of_property_read_u64(dn, "base", &val)) {
++		pr_err("invalid fdt: no base\n");
++		return -EINVAL;
++	}
++	if (val != PFN_PHYS(cma->base_pfn)) {
++		pr_err("fdt base doesn't match: %#llx != %#llx\n",
++			val, PFN_PHYS(cma->base_pfn));
++		return -EINVAL;
 +	}
 +
-+	node = fdt_add_subnode(fdt, node, "default_pmpool");
-+	if (node == -FDT_ERR_EXISTS)
-+		return 0;
-+	if (node < 0)
-+		goto err;
++	if (of_property_read_u64(dn, "size", &val)) {
++		pr_err("invalid fdt: no size\n");
++		return -EINVAL;
++	}
++	if (val != (cma->count << PAGE_SHIFT)) {
++		pr_err("fdt size doesn't match: %#llx != %#lx\n",
++			val, cma->count << PAGE_SHIFT);
++		return -EINVAL;
++	}
 +
-+	status = fdt_setprop(fdt, node, "compatible",
-+			     "pmpool", sizeof("pmpool"));
-+	if (status)
-+		goto err;
++	if (of_property_read_u64(dn, "bitmap", &val)) {
++		pr_err("invalid fdt: no bitmap\n");
++		return -EINVAL;
++	}
 +
-+	status = fdt_setprop_u64(fdt, node, "bitmap",
-+				 virt_to_phys(default_pmpool->cma->bitmap));
-+	if (status)
-+		goto err;
++	pr_info("CMA bitmap restored to %#llx\n", val);
 +
-+	status = fdt_setprop_u64(fdt, node, "size",
-+				 default_pmpool->cma->count << PAGE_SHIFT);
-+	if (status)
-+		goto err;
++	bitmap_free(cma->bitmap);
++	cma->bitmap = phys_to_virt(val);
 +
-+	status = fdt_setprop_u64(fdt, node, "base",
-+				 default_pmpool->cma->base_pfn << PAGE_SHIFT);
-+	if (status)
-+		goto err;
-+
-+	return NOTIFY_DONE;
-+
-+err:
-+	pr_err("failed to update fdt\n");
-+	return NOTIFY_DONE;
++	return 0;
 +}
 +
-+static struct notifier_block pmpool_kexec_fdt_nb = {
-+	.notifier_call  = pmpool_fdt_update,
-+};
-+
- static int __init parse_pmpool_opt(char *str)
+ static int __init default_pmpool_fixup_cma(void)
  {
- 	static struct pmpool pmpool;
-@@ -80,10 +134,16 @@ static int __init parse_pmpool_opt(char *str)
+ 	if (!default_pmpool)
  		return 0;
- 	}
  
-+	err = register_kexec_fdt_notifier(&pmpool_kexec_fdt_nb);
-+	if (err) {
-+		pr_err("failed to register kexec fdt notifier: %d\n", err);
-+		goto free_memblock;
-+	}
++	if (!pmpool_fdt_restore(default_pmpool->cma))
++		return 0;
 +
- 	err = cma_init_reserved_mem(base, size, 0, "pmpool", &pmpool.cma);
- 	if (err) {
- 		pr_err("failed to initialize CMA: %d\n", err);
--		goto free_memblock;
-+		goto notifier_unregister;
- 	}
- 
- 	pr_info("default memory pool is created: %#llx-%#llx\n",
-@@ -93,6 +153,8 @@ static int __init parse_pmpool_opt(char *str)
- 
+ 	pmpool_fixup_cma(default_pmpool->cma);
  	return 0;
- 
-+notifier_unregister:
-+	unregister_kexec_fdt_notifier(&pmpool_kexec_fdt_nb);
- free_memblock:
- 	memblock_phys_free(base, size);
- 	return 0;
+ }
 
 
 
