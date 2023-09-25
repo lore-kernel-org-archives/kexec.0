@@ -4,77 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CF4B8CE7A81
-	for <kexec@archiver.kernel.org>; Mon, 25 Sep 2023 15:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BCD34CE7AA3
+	for <kexec@archiver.kernel.org>; Mon, 25 Sep 2023 16:43:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:References:Cc:To:From:
+	Subject:Message-Id:Date:Mime-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=IgGFts/PzmBF1pjMjR38lc9n2zMARCNzXckugiaXzCU=; b=3QRDu6F/9YniDp
-	6N49QTqu8LltzVmVZjULYv2vY9g0nhKAQ88tMgHPPZnfyEHkRLWp4lLrrZi27SemnIhCJWf0mgcTN
-	32wg1H1XsxfCCvBpG1i0sVMGyyVpmLhhit+da8AnIV3bj2gMxKpED9m+8WqqH4/wreuLtUcUnrC9K
-	hRhqcvIgG44ls1DZJWBXannIzM/RuBdo3FQ9V9Qv9IatQ56BK4wPM0FNyXJgGryruwB1QBqsdutPr
-	82M2xn/uP1zjljGhgxd79NUdWBDJPzvI75QU2+WzpnFyMDE0YcOPXwd56C0r1bLI/g6HtBt9aUpSv
-	g5yd9zgBfvnd0OTGMeug==;
+	List-Owner; bh=vnsO6m5xOcC5hYPXVxgcGC7x2/LJ2iQdsXlQlY4jz0g=; b=Xj80Xt0yxf9Q/I
+	0SupkpXKQtL89AJTfthxRU9UB274EqW1OKbmFMFSLM3vhK8mfTIbE8Uz1wCG7/H+1Z17Vg7K6ZjZK
+	nRXmEKmC27T9D9nmEPKMwSN9a7woQpDBVf+tF1QIy0wwLFX98epO0mmSK7/AWsa7ZRqScQnvaZlM6
+	Hc5ajVWqMxdfhPwcFwtPRmk0f8RC9KMSb/igFrSxuE4FTdOf5IF6NeeHK0mKNVe7Hj0sjcMDMn8m1
+	XWosAyVbjqVoWND9zuoSk8tskHI9hAcLzVFlLSeTt/uDbnFhARkxh6X/AzyzS+Jt+XMxrorNJK9Co
+	waA6dSiILUpDHIZW0nUw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qknS7-00EXq8-0B;
-	Mon, 25 Sep 2023 15:24:51 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1qkogZ-00Egq9-2L;
+	Mon, 25 Sep 2023 16:43:51 +0000
+Received: from ams.source.kernel.org ([2604:1380:4601:e00::1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qknS3-00EXnS-1U
+	id 1qkogV-00EgpD-2c
 	for kexec@lists.infradead.org;
-	Mon, 25 Sep 2023 15:24:48 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1695655483;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ErHGI2tx+W7X3lDOKij5J6HSuxHR/AE8g5DA/kexz/Y=;
-	b=UqLJw1ji0ED1FvwlJw+Z0MKWyVw6JvZGCHLuu3MrG/9e9Gu23RI/3j8FsZBpkUdxahK39j
-	X3NCQ0ZEeHk9kCDZZmOSedXqkvylgznE5XYlZd1ozFFH/tMIHWa8Tww9HwKazPPYUgaLHb
-	AR1vjFZFOkA0E2zIqDzPoVENPIa3meo=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-421-lDo9LDuoNxSHHK5gmxEbbg-1; Mon, 25 Sep 2023 11:24:38 -0400
-X-MC-Unique: lDo9LDuoNxSHHK5gmxEbbg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4752729AB3FC;
-	Mon, 25 Sep 2023 15:24:37 +0000 (UTC)
-Received: from rotkaeppchen (unknown [10.39.192.111])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 7CBE02156702;
-	Mon, 25 Sep 2023 15:24:34 +0000 (UTC)
-Date: Mon, 25 Sep 2023 17:24:32 +0200
-From: Philipp Rudo <prudo@redhat.com>
-To: Dave Young <dyoung@redhat.com>
-Cc: Jan Hendrik Farr <kernel@jfarr.cc>, Pingfan Liu <kernelfans@gmail.com>,
- linux-arm-kernel@lists.infradead.org, linux-efi@vger.kernel.org,
- kexec@lists.infradead.org, Pingfan Liu <piliu@redhat.com>, Baoquan He
- <bhe@redhat.com>, Ard Biesheuvel <ardb@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, keyrings@vger.kernel.org, Luca Boccassi
- <bluca@debian.org>, lennart@poettering.net, Jarkko Sakkinen
- <jarkko@kernel.org>, linux-integrity@vger.kernel.org,
- linux-security-module@vger.kernel.org, mjg59@google.com,
- James.Bottomley@hansenpartnership.com
-Subject: Re: [PATCH 0/2] Sign the Image which is zboot's payload
-Message-ID: <20230925172432.78b45f80@rotkaeppchen>
-In-Reply-To: <CALu+AoQHZOBcbCJJnhSyEcTyX6C3VttLxMKt2mdHgT7A6xHN9w@mail.gmail.com>
-References: <20230921133703.39042-1-kernelfans@gmail.com>
-	<ZQ0j6Es88aR8cjRv@desktop>
-	<CALu+AoQHZOBcbCJJnhSyEcTyX6C3VttLxMKt2mdHgT7A6xHN9w@mail.gmail.com>
-Organization: Red Hat inc.
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
+	Mon, 25 Sep 2023 16:43:49 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by ams.source.kernel.org (Postfix) with ESMTP id 1C42EB80D7A;
+	Mon, 25 Sep 2023 16:43:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D39D3C433C7;
+	Mon, 25 Sep 2023 16:43:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1695660223;
+	bh=iptOd//4GXzFCwWM9L7SD9q66r8M+qbkCRBfCuZ7Lpk=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=Uvf/hphfDgJaZQyn421/HgoOCcUfj4eh11ZR8eHsjXR8AgyYeLMVz7vpkGE0/CnJa
+	 G7MJ/WUDsM+rHitk9O2s31pM7V17eIhVWAiGffpXh2u5YB5mgSSRB+Y7CJJTmFt0iT
+	 D8ZRphEtpfdkL3mW5IHg8/UOR4rBCxb8LrMsQeRno24Jw2qXjJ1tFihK2ZFHoyu4z+
+	 +1Dy71DHUw5FkD2D01dmlJN+bhGmpeLYEb34paru+Qsvt+vFNgxFCQX4frsUIMMnI2
+	 MvwBfc2D0hqmNsYgUfZjvlDTBXLQwUsVkI5Q+05rP3A8w8BAHBck/xY3Ayx5JpcvmC
+	 h6cDJWho5QTcQ==
+Mime-Version: 1.0
+Date: Mon, 25 Sep 2023 19:43:38 +0300
+Message-Id: <CVS5DQME8XMT.2DEPELDXBPGIX@suppilovahvero>
+Subject: Re: [systemd-devel] [PATCH 0/1] x86/kexec: UKI support
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Dimitri John Ledkov" <dimitri.ledkov@canonical.com>
+Cc: "Neal Gompa" <ngompa13@gmail.com>,
+ <systemd-devel@lists.freedesktop.org>, <x86@kernel.org>,
+ <kexec@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+ <dhowells@redhat.com>, <keyrings@vger.kernel.org>, <bhelgaas@google.com>,
+ "Jan Hendrik Farr" <kernel@jfarr.cc>, <tglx@linutronix.de>,
+ <akpm@linux-foundation.org>, <bluca@debian.org>
+X-Mailer: aerc 0.14.0
+References: <20230909161851.223627-1-kernel@jfarr.cc>
+ <CVGFE6FRWFHR.DVG9NUQID4EA@suppilovahvero>
+ <CAEg-Je9GF5S+QcsspM_CzDSxzCN8h2eRp7BbctC1x7-rH8j68g@mail.gmail.com>
+ <CVGVGJIQPIZ2.WN97L6BV5S97@suppilovahvero>
+ <CADWks+bRm9LnujBo1SiATDfC1sCNU0vvCy_r=YBpYLXcQrbQeA@mail.gmail.com>
+In-Reply-To: <CADWks+bRm9LnujBo1SiATDfC1sCNU0vvCy_r=YBpYLXcQrbQeA@mail.gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230925_082447_565928_1300ED3D 
-X-CRM114-Status: GOOD (  32.84  )
+X-CRM114-CacheID: sfid-20230925_094348_117078_FDFE4D00 
+X-CRM114-Status: GOOD (  37.55  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,88 +75,107 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Dave,
-
-On Fri, 22 Sep 2023 13:41:22 +0800
-Dave Young <dyoung@redhat.com> wrote:
-
-> Hi Jan,
-> 
-> On Fri, 22 Sept 2023 at 13:19, Jan Hendrik Farr <kernel@jfarr.cc> wrote:
-> >
-> > Hi Pingfan!
-> >
-> > On 21 21:37:01, Pingfan Liu wrote:  
-> > > From: Pingfan Liu <piliu@redhat.com>
-> > >  
-> >  
-> > > For security boot, the vmlinuz.efi will be signed so UEFI boot loader
-> > > can check against it. But at present, there is no signature for kexec
-> > > file load, this series makes a signature on the zboot's payload -- Image
-> > > before it is compressed. As a result, the kexec-tools parses and
-> > > decompresses the Image.gz to get the Image, which has signature and can
-> > > be checked against during kexec file load  
-> >
-> > I missed some of the earlier discussion about this zboot kexec support.
-> > So just let me know if I'm missing something here. You were exploring
-> > these two options in getting this supported:
-> >
-> > 1. Making kexec_file_load do all the work.
-> >
-> > This option makes the signature verification easy. kexec_file_load
-> > checks the signature on the pe file and then extracts it and does the
-> > kexec.
-> >
-> > This is similar to how I'm approaching UKI support in [1].
-> >
-> > 2. Extract in userspace and pass decompressed kernel to kexec_file_load
-> >
-> > This options requires the decompressed kernel to have a valid signature on
-> > it. That's why this patch adds the ability to add that signature to the
-> > kernel contained inside the zboot image.
-> >
-> > This option would not make sense for UKI support as it would not
-> > validate the signature with respect to the initrd and cmdline that it
-> > contains.  
-> 
-> Another possibility for the cmdline could be using the bootconfig
-> facility which was
-> introduced for boot time tracking:
-> Documentation/admin-guide/bootconfig.rst
-> 
-> So the initrd+cmdline can be signed as well.  Has this been discussed
-> before for UKI?
-
-Not that I know of. But I'm not sure if the bootconfig the way it works
-today does the trick.
-
-For one the bootconfig is simply glued to the end of the initrd. But
-that makes it part of the UKI as well. So there is no added gain.
-
-Plus, adding the cmdline to the UKI was done on purpose to prevent any
-unauthorized editing. That basically means that any change to the
-cmdline needs to be signed as well. But I don't see any signature
-verification while processing the bootconfig. 
-
-Finally the bootconfig is setup too late in the boot process,
-in particular after setup_arch which reserves the crashkernel
-memory and needs to parse the kernel command line for that. An even more
-extreme example is the decompressor phase on s390. There the command
-line is parsed as well. And that is code that runs before start_kernel.
-
-All in all I don't believe that using the bootconfig adds much benefit
-for the UKI.
-
-Thanks
-Philipp
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gTW9uIFNlcCAxOCwgMjAyMyBhdCA2OjQxIFBNIEVFU1QsIERpbWl0cmkgSm9obiBMZWRrb3Yg
+d3JvdGU6Cj4gT24gVHVlLCAxMiBTZXB0IDIwMjMgYXQgMTE6MzgsIEphcmtrbyBTYWtraW5lbiA8
+amFya2tvQGtlcm5lbC5vcmc+IHdyb3RlOgo+ID4KPiA+IE9uIFR1ZSBTZXAgMTIsIDIwMjMgYXQg
+MjoyMCBBTSBFRVNULCBOZWFsIEdvbXBhIHdyb3RlOiA+IE9uIE1vbiwgU2VwIDExLCAyMDIzIGF0
+IDc6MTXigK9QTSBKYXJra28gU2Fra2luZW4gPGphcmtrb0BrZXJuZWwub3JnPiB3cm90ZToKPiA+
+ID4gPiBPbiBTYXQgU2VwIDksIDIwMjMgYXQgNzoxOCBQTSBFRVNULCBKYW4gSGVuZHJpayBGYXJy
+IHdyb3RlOgo+ID4gPiA+ID4gSGVsbG8sCj4gPiA+ID4gPgo+ID4gPiA+ID4gdGhpcyBwYXRjaCBp
+bXBsZW1lbnRzIFVLSSBzdXBwb3J0IGZvciBrZXhlY19maWxlX2xvYWQuIEl0IHdpbGwgcmVxdWly
+ZSBzdXBwb3J0Cj4gPiA+ID4gPiBpbiB0aGUga2V4ZWMtdG9vbHMgdXNlcnNwYWNlIHV0aWxpdHku
+IEZvciB0ZXN0aW5nIHB1cnBvc2VzIHRoZSBmb2xsb3dpbmcgY2FuIGJlIHVzZWQ6Cj4gPiA+ID4g
+PiBodHRwczovL2dpdGh1Yi5jb20vQ3lkb3gva2V4ZWMtdGVzdC8KPiA+ID4gPiA+Cj4gPiA+ID4g
+PiBUaGVyZSBoYXMgYmVlbiBkaXNjdXNzaW9uIG9uIHRoaXMgdG9waWMgaW4gYW4gaXNzdWUgb24g
+R2l0SHViIHRoYXQgaXMgbGlua2VkIGJlbG93Cj4gPiA+ID4gPiBmb3IgcmVmZXJlbmNlLgo+ID4g
+PiA+ID4KPiA+ID4gPiA+Cj4gPiA+ID4gPiBTb21lIGxpbmtzOgo+ID4gPiA+ID4gLSBSZWxhdGVk
+IGRpc2N1c3Npb246IGh0dHBzOi8vZ2l0aHViLmNvbS9zeXN0ZW1kL3N5c3RlbWQvaXNzdWVzLzI4
+NTM4Cj4gPiA+ID4gPiAtIERvY3VtZW50YXRpb24gb2YgVUtJczogaHR0cHM6Ly91YXBpLWdyb3Vw
+Lm9yZy9zcGVjaWZpY2F0aW9ucy9zcGVjcy91bmlmaWVkX2tlcm5lbF9pbWFnZS8KPiA+ID4gPiA+
+Cj4gPiA+ID4gPiBKYW4gSGVuZHJpayBGYXJyICgxKToKPiA+ID4gPiA+ICAgeDg2L2tleGVjOiBV
+S0kgc3VwcG9ydAo+ID4gPiA+ID4KPiA+ID4gPiA+ICBhcmNoL3g4Ni9pbmNsdWRlL2FzbS9rZXhl
+Yy11a2kuaCAgICAgICB8ICAgNyArKwo+ID4gPiA+ID4gIGFyY2gveDg2L2luY2x1ZGUvYXNtL3Bh
+cnNlX3BlZmlsZS5oICAgIHwgIDMyICsrKysrKysKPiA+ID4gPiA+ICBhcmNoL3g4Ni9rZXJuZWwv
+TWFrZWZpbGUgICAgICAgICAgICAgICB8ICAgMiArCj4gPiA+ID4gPiAgYXJjaC94ODYva2VybmVs
+L2tleGVjLXVraS5jICAgICAgICAgICAgfCAxMTMgKysrKysrKysrKysrKysrKysrKysrKysrKwo+
+ID4gPiA+ID4gIGFyY2gveDg2L2tlcm5lbC9tYWNoaW5lX2tleGVjXzY0LmMgICAgIHwgICAyICsK
+PiA+ID4gPiA+ICBhcmNoL3g4Ni9rZXJuZWwvcGFyc2VfcGVmaWxlLmMgICAgICAgICB8IDExMCAr
+KysrKysrKysrKysrKysrKysrKysrKysKPiA+ID4gPiA+ICBjcnlwdG8vYXN5bW1ldHJpY19rZXlz
+L21zY29kZV9wYXJzZXIuYyB8ICAgMiArLQo+ID4gPiA+ID4gIGNyeXB0by9hc3ltbWV0cmljX2tl
+eXMvdmVyaWZ5X3BlZmlsZS5jIHwgMTEwICsrKy0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+ID4gPiA+
+ID4gIGNyeXB0by9hc3ltbWV0cmljX2tleXMvdmVyaWZ5X3BlZmlsZS5oIHwgIDE2IC0tLS0KPiA+
+ID4gPiA+ICA5IGZpbGVzIGNoYW5nZWQsIDI3OCBpbnNlcnRpb25zKCspLCAxMTYgZGVsZXRpb25z
+KC0pCj4gPiA+ID4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gveDg2L2luY2x1ZGUvYXNtL2tl
+eGVjLXVraS5oCj4gPiA+ID4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gveDg2L2luY2x1ZGUv
+YXNtL3BhcnNlX3BlZmlsZS5oCj4gPiA+ID4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gveDg2
+L2tlcm5lbC9rZXhlYy11a2kuYwo+ID4gPiA+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL3g4
+Ni9rZXJuZWwvcGFyc2VfcGVmaWxlLmMKPiA+ID4gPiA+Cj4gPiA+ID4gPiAtLQo+ID4gPiA+ID4g
+Mi40MC4xCj4gPiA+ID4KPiA+ID4gPiBXaGF0IHRoZSBoZWNrIGlzIFVLST8KPiA+ID4KPiA+ID4g
+VW5pZmllZCBLZXJuZWwgSW1hZ2VzLiBNb3JlIGRldGFpbHMgYXZhaWxhYmxlIGhlcmU6Cj4gPiA+
+IGh0dHBzOi8vdWFwaS1ncm91cC5vcmcvc3BlY2lmaWNhdGlvbnMvc3BlY3MvdW5pZmllZF9rZXJu
+ZWxfaW1hZ2UvCj4gPiA+Cj4gPiA+IEl0J3MgYSB3YXkgb2YgY3JlYXRpbmcgaW5pdHJhbWZzLXN0
+eWxlIGltYWdlcyBhcyBmdWxseSBnZW5lcmljLAo+ID4gPiByZXByb2R1Y2libGUgaW1hZ2VzIHRo
+YXQgY2FuIGJlIGJ1aWx0IHNlcnZlci1zaWRlLgo+ID4KPiA+IFlvdSBjYW4gYnVpbGQgdG9kYXkg
+YSBrZXJuZWwgd2l0aCB0aGVzZSBjb21waWxlZCBpbjoKPiA+Cj4gPiAxLiBFRkkgc3R1Ygo+ID4g
+Mi4gaW5pdGVyYW1mcwo+ID4gMy4gY21kbGluZQo+ID4KPiA+IFdoeSBhbm90aGVyIHdheSAoYW5k
+IGxhYmVsICdVS0knKSBmb3IgYSBwcmUtZXhpc3RpbmcgZmVhdHVyZT8KPiA+Cj4KPiBJbiBVYnVu
+dHUsIHdlIGhhdmUgY29uc2lkZXJlZCB0byB1c2UgdGhlIGV4aXN0aW5nIGtlcm5lbCBmZWF0dXJl
+cwo+IGJlZm9yZSBnb2luZyBvZmYgdG8gdXNlIFVLSS4gSGVyZSBhcmUgc29tZSBvZiB0aGUgcmVh
+c29ucyB3aHkgd2UKPiBkaWRuJ3Qgb3B0IHRvIHVzZSB0aGUga2VybmVsIGJ1aWx0aW4gdGhpbmdz
+Ogo+IDEpIHdlIHdhbnRlZCB0byBoYXZlIGFiaWxpdHkgdG8gaGF2ZSBUUE0gbWVhc3VyZWQga2Vy
+bmVsIGNvbW1hbmRsaW5lCj4gcGVyZm9ybWVkIGJlZm9yZSBrZXJuZWwgaXMgYmVpbmcgZXhlY3V0
+ZWQsIHdoaWNoIGlzIHdoYXQgc2Qtc3R1Ygo+IHByb3ZpZGVzIHVzCgpPSyB0aGlzIGRvZXMgbWFr
+ZSBhIGxvdCBvZiBzZW5zZS4KCj4gMikgd2Ugd2FudGVkIHRvIGhhdmUgYWJpbGl0eSB0byB1cGRh
+dGUgLyByZWdlbmVyYXRlIGluaXRyZCwgd2l0aG91dAo+IHJlYnVpbGRpbmcga2VybmVsLiBUaHVz
+IHdoZW5ldmVyIHVzZXJzcGFjZSBpbiB0aGUgaW5pdHJkIG5lZWRzCj4gdXBkYXRpbmcsIHdlIGNh
+biBnZW5lcmF0ZSBuZXcgaW5pdHJkIGZvciBleGlzdGluZyBrZXJuZWwgYnVpbGQsIGNyZWF0ZQo+
+IG5ldyBrZXJuZWwuZWZpLCB3aGlsc3QgdXNpbmcgZXhpc3RpbmcgLmxpbnV4IC8gdm1saW51eiBi
+dWlsZC4gSSBkb24ndAo+IGJlbGlldmUgaXQgaXMgY3VycmVudGx5IHRyaXZpYWwgdG8gcmVsaW5r
+IHZtbGludXogd2l0aCBidWlsdGluIGluaXRyZC4KPiAzKSBsaWNlbnNpbmcgd2lzZSBpdCB3YXMg
+bm90IGNsZWFyIGlmIGluaXRyZCBoYXMgdG8gYmUgR1BMdjIKPiBjb21wYXRpYmxlIHdoZW4gbGlu
+a2VkIGluc2lkZSB2bWxpbnV6LCBvciBpZiBpdCBjYW4gY29udGFpbiBHUEx2MyAvCj4gTEdQTHYz
+IHVzZXJzcGFjZSBjb2RlIC0gd2l0aCBVS0kgaXQgaXMgYmVsaWV2ZWQgdW5hbWJpZ2lvdXNseSB0
+cnVlLAo+IGJlY2F1c2Ugdm1saW51eiBib290cyBieSBpdHNlbGYgc3RhbmRhbG9uZSBhbmQgaXMg
+Y29tcGlsZWQgc2VwYXJhdGVseQo+IG9mIHRoZSBVS0kuCgpSaWdodCBVS0kgd3JhcHMga2VybmVs
+IGFuZCBrZXJuZWwgaXMgYSAibGVhZiBvYmplY3QiLgoKPiA0KSB3ZSB3YW50ZWQgdG8gaGF2ZSBh
+YmlsaXR5IHRvIG92ZXJyaWRlIGNtZGxpbmUgdmlhIGtlcm5lbCBhcmdzCj4gd2l0aG91dCBzZWN1
+cmVib290LCBhbmQgdXNlIHN0b2NrIGNtZGxpbmUgYXJncyB1bmRlciBzZWN1cmVib290LCB0bwo+
+IGFsbG93IGRlYnVnZ2luZyAmIHByb2R1Y3Rpb24gYmVoYXZpb3VyIGZyb20gYSBzaW5nbGUgc2ln
+bmVkIGtlcm5lbC5lZmkKPiAodGhhdCB3YXMgY3VzdG9tIGRldmVsb3BtZW50LCBhbmQgY291bGQg
+YmUgZG9uZSBpbiB0aGUgc3RvY2sgdm1saW51ego+IHRvbykuCj4gNSkgb2J2aW91cyBtZW50aW9u
+LCB0aGUgaW50ZW50aW9uIGhlcmUgaXMgdG8gaGF2ZSBUUE0gUENSIG1lYXN1cmVtZW50cwo+IGFu
+ZCBTZWN1cmVib290IHNpZ25hdHVyZSBmb3Igdm1saW51eiBhbmQgaW5pdHJkIGFuZCBjbWRsaW5l
+IGFuZCBkdGIuCj4gVGhlcmUgaXMgb3RoZXJ3aXNlIG5vIHN1cHBvcnQgZm9yIHN0YW5kYWxvbmUg
+c2lnbmVkIGluaXRyZCwgY21kbGluZSwKPiBkdGIgdG9kYXkuIE5vciBkb2VzIHZlbmRvcmluZyBp
+dCBpbnRvIHZtbGludXogYWNoaWV2ZXMgdGhpcyB0byB0aGUKPiBzYW1lIGV4dGVudCAoYW5kIGVh
+c2Ugb2YgcHJlZGljdGluZyBmb3Igc2VhbGluZyAvIHJlc2VhbGluZyBwdXJwb3NlcykuCgpvawoK
+PiA2KSBpbiBVYnVudHUga2VybmVsLmVmaSBhbHNvIGhhcyBzYmF0IHNlY3Rpb24gZm9yIHRhcmdl
+dGVkIHJldm9jYXRpb25zCj4gKGRpc2N1c3NlZCBzZXBhcmF0ZWx5IGVsc2V3aGVyZSkKPgo+IE92
+ZXJhbGwsIGl0IGlzIG1vc3RseSBhYm91dCBmbGV4aWJpbGl0eSB0byBiZSBhYmxlIHRvIHJldXNl
+IHRoZSBzYW1lCj4gaW5pdHJkIGFnYWluc3QgbXVsdGlwbGUga2VybmVsIGJ1aWxkcywgb3IgdXBk
+YXRlIHVzZSBtdWx0aXBsZSBpbml0cmQKPiBhZ2FpbnN0IHRoZSBzYW1lIGtlcm5lbCBidWlsZC4g
+VGhpcyBpcyBpbWhvIHRoZSBiaWdnZXN0IGlzc3VlIHdpdGgKPiB1c2luZyBpbml0cmQgYnVpbHQt
+aW50byB0aGUgdm1saW51eiBpdHNlbGYuCj4gUmVzb3VyY2Ugd2lzZSwgdGhlIGluaXRyZCBwYXNz
+ZWQgaW4gdmlhIGtlcm5lbC5lZmkgY2FuIGJlIGZyZWVkLCBhcwo+IGZhciBhcyBJIHVuZGVyc3Rh
+bmQuIEkgZG9uJ3Qga25vdyBpZiB0aGUgb25lIGJ1aWx0LWludG8gdGhlIHZtbGludXogaXMKPiBm
+cmVlYWJsZS4KPgo+IEltcHJvdmluZyBkZXNpZ24gdG8gZG8gc29tZXRoaW5nIGVsc2UgaW5zdGVh
+ZCBvZiBVS0kgd291bGQgYmUKPiB3ZWxjb21lZC4gT3IgZm9yIGV4YW1wbGUgaW1wcm92aW5nIHRo
+ZSB6aW1nIGxpbnVzIHVwc3RyZWFtIGZvcm1hdCB0bwo+IGJlIGEgcGFydGlhbCBvciBhIHZhbGlk
+IFVLSSB3b3VsZCBoZWxwIGFzIHdlbGwuIEZvciBleGFtcGxlLCBidWlsZGluZwo+IHRoZSBrZXJu
+ZWwgYnVpbHQtaW4gaW5pdHJkIGFzIGEgLmluaXRyZCBzZWN0aW9uIHRoYXQgaXMgcmVwbGFjYWJs
+ZQo+IHdvdWxkIGJlIG5pY2UsIG9yIGFsbG93aW5nIHRvIHByZWxvYWQgemltZyB3aXRoIC5kdGIg
+b3IgLmNtZGxpbmUKPiBzZWN0aW9ucyB3b3VsZCBoZWxwLCBhbmQgYXBwcm9wcmlhdGVseSBpbXBy
+b3ZlIHRoZSBsaW51eCBlZmkgc3RhYiB0bwo+IGRvIG1lYXN1cmVtZW50cyBhbmQgbG9hZGluZyBv
+ZiAuZHRiIC8gLmluaXRyZCBmcm9tIGl0c2VsZiB3b3VsZCBiZQo+IG5pY2UuIEJlY2F1c2UgdGhl
+biBhbGwgdGhlIGJlbmVmaXRzIC8gcmVxdWlyZW1lbnRzIGRlc2NyaWJlZCBhYm92ZQo+IGNvdWxk
+IGJlIG1hZGUgYXZhaWxhYmxlIG91dCBvZiB0aGUgYm94IGFuZCBiZSB0cml2aWFsbHkgdXBkYXRh
+YmxlLiBUaGUKPiBiaWdnZXN0IG9uZSBiZWluZyBzcGxpdHRpbmcgb3V0IHRoaW5ncyBpbnRvIHNl
+Y3Rpb25zIHRoYXQgY2FuIGJlCj4gdXBkYXRlZCB3aXRoIG9iamNvcHkuCgpCUiwgSmFya2tvCgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWls
+aW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
