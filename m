@@ -4,66 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BCD34CE7AA3
-	for <kexec@archiver.kernel.org>; Mon, 25 Sep 2023 16:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2BD2FCE79A6
+	for <kexec@archiver.kernel.org>; Mon, 25 Sep 2023 21:27:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:References:Cc:To:From:
-	Subject:Message-Id:Date:Mime-Version:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=vnsO6m5xOcC5hYPXVxgcGC7x2/LJ2iQdsXlQlY4jz0g=; b=Xj80Xt0yxf9Q/I
-	0SupkpXKQtL89AJTfthxRU9UB274EqW1OKbmFMFSLM3vhK8mfTIbE8Uz1wCG7/H+1Z17Vg7K6ZjZK
-	nRXmEKmC27T9D9nmEPKMwSN9a7woQpDBVf+tF1QIy0wwLFX98epO0mmSK7/AWsa7ZRqScQnvaZlM6
-	Hc5ajVWqMxdfhPwcFwtPRmk0f8RC9KMSb/igFrSxuE4FTdOf5IF6NeeHK0mKNVe7Hj0sjcMDMn8m1
-	XWosAyVbjqVoWND9zuoSk8tskHI9hAcLzVFlLSeTt/uDbnFhARkxh6X/AzyzS+Jt+XMxrorNJK9Co
-	waA6dSiILUpDHIZW0nUw==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:To:From:
+	Subject:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=4n2wqu7dzdZdvegV8YhwFaxh5TyZP1VB+kq+b9lykZk=; b=fpp+BBdko6ZbmF
+	ZaFZ3B04MZMLjJPr5vX45zX8Chmqp5+hzXl//YHAYOIAZdvenRc+ipYfyksAxKVLvv9cfkCbLo0Sj
+	RSvbmcfBE4nVE3GYsOIwpBP475Krtyl+Q/Kat0S5ph7BkVhbetVBILu68xAunU9jYPw3vtR/gnFCY
+	SlMz9989eEiqGfI3rnax21hOaQQycyAVmN+U/EiAS8V06H/dJuo61G3yEXkQ63rAwh4iN0nlXhUBk
+	HTrLZE5AqKu/8iw8DNs3JnlhDWly4Co9H4mnYDQ16jm6OA876pbu2EhFOsmRJ2BUU9WZJrouE0jr3
+	8yGB7EHjr2uoEoRzOKYQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qkogZ-00Egq9-2L;
-	Mon, 25 Sep 2023 16:43:51 +0000
-Received: from ams.source.kernel.org ([2604:1380:4601:e00::1])
-	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qkogV-00EgpD-2c
+	id 1qkt7N-00F3DM-0q;
+	Mon, 25 Sep 2023 21:27:49 +0000
+Received: from linux.microsoft.com ([13.77.154.182])
+	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
+	id 1qkt7K-00F3Bg-1L
 	for kexec@lists.infradead.org;
-	Mon, 25 Sep 2023 16:43:49 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by ams.source.kernel.org (Postfix) with ESMTP id 1C42EB80D7A;
-	Mon, 25 Sep 2023 16:43:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D39D3C433C7;
-	Mon, 25 Sep 2023 16:43:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1695660223;
-	bh=iptOd//4GXzFCwWM9L7SD9q66r8M+qbkCRBfCuZ7Lpk=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=Uvf/hphfDgJaZQyn421/HgoOCcUfj4eh11ZR8eHsjXR8AgyYeLMVz7vpkGE0/CnJa
-	 G7MJ/WUDsM+rHitk9O2s31pM7V17eIhVWAiGffpXh2u5YB5mgSSRB+Y7CJJTmFt0iT
-	 D8ZRphEtpfdkL3mW5IHg8/UOR4rBCxb8LrMsQeRno24Jw2qXjJ1tFihK2ZFHoyu4z+
-	 +1Dy71DHUw5FkD2D01dmlJN+bhGmpeLYEb34paru+Qsvt+vFNgxFCQX4frsUIMMnI2
-	 MvwBfc2D0hqmNsYgUfZjvlDTBXLQwUsVkI5Q+05rP3A8w8BAHBck/xY3Ayx5JpcvmC
-	 h6cDJWho5QTcQ==
-Mime-Version: 1.0
-Date: Mon, 25 Sep 2023 19:43:38 +0300
-Message-Id: <CVS5DQME8XMT.2DEPELDXBPGIX@suppilovahvero>
-Subject: Re: [systemd-devel] [PATCH 0/1] x86/kexec: UKI support
-From: "Jarkko Sakkinen" <jarkko@kernel.org>
-To: "Dimitri John Ledkov" <dimitri.ledkov@canonical.com>
-Cc: "Neal Gompa" <ngompa13@gmail.com>,
- <systemd-devel@lists.freedesktop.org>, <x86@kernel.org>,
- <kexec@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
- <dhowells@redhat.com>, <keyrings@vger.kernel.org>, <bhelgaas@google.com>,
- "Jan Hendrik Farr" <kernel@jfarr.cc>, <tglx@linutronix.de>,
- <akpm@linux-foundation.org>, <bluca@debian.org>
-X-Mailer: aerc 0.14.0
-References: <20230909161851.223627-1-kernel@jfarr.cc>
- <CVGFE6FRWFHR.DVG9NUQID4EA@suppilovahvero>
- <CAEg-Je9GF5S+QcsspM_CzDSxzCN8h2eRp7BbctC1x7-rH8j68g@mail.gmail.com>
- <CVGVGJIQPIZ2.WN97L6BV5S97@suppilovahvero>
- <CADWks+bRm9LnujBo1SiATDfC1sCNU0vvCy_r=YBpYLXcQrbQeA@mail.gmail.com>
-In-Reply-To: <CADWks+bRm9LnujBo1SiATDfC1sCNU0vvCy_r=YBpYLXcQrbQeA@mail.gmail.com>
+	Mon, 25 Sep 2023 21:27:48 +0000
+Received: from skinsburskii. (c-67-170-100-148.hsd1.wa.comcast.net [67.170.100.148])
+	by linux.microsoft.com (Postfix) with ESMTPSA id DDCDC212C81A;
+	Mon, 25 Sep 2023 14:27:41 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DDCDC212C81A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1695677262;
+	bh=hmiXPEKTxjWEpYohVVXoJZw5lHawLeSYKZ1nAgM5rOU=;
+	h=Subject:From:To:Date:From;
+	b=Y6F8iX0PEngloXvHldjwJs4qLPA+37QFBLJJLHx8XTvU6BW+MxihCBXHsuCn78M+4
+	 thY7oibUo0B5VVOpodRaMdMC/z/HLKbdB751/pSqGPNHnV7xnrPod7kRANVbANVs1l
+	 fKhksFV2MsV3hZfAJmP2wZVchvGg15vCgoUg2qX8=
+Subject: [RFC PATCH v2 0/7] Introduce persistent memory pool
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+To: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ ebiederm@xmission.com, akpm@linux-foundation.org,
+ stanislav.kinsburskii@gmail.com, corbet@lwn.net,
+ linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-mm@kvack.org,
+ kys@microsoft.com, jgowans@amazon.com, wei.liu@kernel.org, arnd@arndb.de,
+ gregkh@linuxfoundation.org, graf@amazon.de, pbonzini@redhat.com
+Date: Mon, 25 Sep 2023 14:27:40 -0700
+Message-ID: <169567722094.19708.3583735425859054859.stgit@skinsburskii.>
+User-Agent: StGit/0.19
+MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230925_094348_117078_FDFE4D00 
-X-CRM114-Status: GOOD (  37.55  )
+X-CRM114-CacheID: sfid-20230925_142746_511444_A8FA7ECF 
+X-CRM114-Status: GOOD (  15.64  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -75,107 +65,93 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-T24gTW9uIFNlcCAxOCwgMjAyMyBhdCA2OjQxIFBNIEVFU1QsIERpbWl0cmkgSm9obiBMZWRrb3Yg
-d3JvdGU6Cj4gT24gVHVlLCAxMiBTZXB0IDIwMjMgYXQgMTE6MzgsIEphcmtrbyBTYWtraW5lbiA8
-amFya2tvQGtlcm5lbC5vcmc+IHdyb3RlOgo+ID4KPiA+IE9uIFR1ZSBTZXAgMTIsIDIwMjMgYXQg
-MjoyMCBBTSBFRVNULCBOZWFsIEdvbXBhIHdyb3RlOiA+IE9uIE1vbiwgU2VwIDExLCAyMDIzIGF0
-IDc6MTXigK9QTSBKYXJra28gU2Fra2luZW4gPGphcmtrb0BrZXJuZWwub3JnPiB3cm90ZToKPiA+
-ID4gPiBPbiBTYXQgU2VwIDksIDIwMjMgYXQgNzoxOCBQTSBFRVNULCBKYW4gSGVuZHJpayBGYXJy
-IHdyb3RlOgo+ID4gPiA+ID4gSGVsbG8sCj4gPiA+ID4gPgo+ID4gPiA+ID4gdGhpcyBwYXRjaCBp
-bXBsZW1lbnRzIFVLSSBzdXBwb3J0IGZvciBrZXhlY19maWxlX2xvYWQuIEl0IHdpbGwgcmVxdWly
-ZSBzdXBwb3J0Cj4gPiA+ID4gPiBpbiB0aGUga2V4ZWMtdG9vbHMgdXNlcnNwYWNlIHV0aWxpdHku
-IEZvciB0ZXN0aW5nIHB1cnBvc2VzIHRoZSBmb2xsb3dpbmcgY2FuIGJlIHVzZWQ6Cj4gPiA+ID4g
-PiBodHRwczovL2dpdGh1Yi5jb20vQ3lkb3gva2V4ZWMtdGVzdC8KPiA+ID4gPiA+Cj4gPiA+ID4g
-PiBUaGVyZSBoYXMgYmVlbiBkaXNjdXNzaW9uIG9uIHRoaXMgdG9waWMgaW4gYW4gaXNzdWUgb24g
-R2l0SHViIHRoYXQgaXMgbGlua2VkIGJlbG93Cj4gPiA+ID4gPiBmb3IgcmVmZXJlbmNlLgo+ID4g
-PiA+ID4KPiA+ID4gPiA+Cj4gPiA+ID4gPiBTb21lIGxpbmtzOgo+ID4gPiA+ID4gLSBSZWxhdGVk
-IGRpc2N1c3Npb246IGh0dHBzOi8vZ2l0aHViLmNvbS9zeXN0ZW1kL3N5c3RlbWQvaXNzdWVzLzI4
-NTM4Cj4gPiA+ID4gPiAtIERvY3VtZW50YXRpb24gb2YgVUtJczogaHR0cHM6Ly91YXBpLWdyb3Vw
-Lm9yZy9zcGVjaWZpY2F0aW9ucy9zcGVjcy91bmlmaWVkX2tlcm5lbF9pbWFnZS8KPiA+ID4gPiA+
-Cj4gPiA+ID4gPiBKYW4gSGVuZHJpayBGYXJyICgxKToKPiA+ID4gPiA+ICAgeDg2L2tleGVjOiBV
-S0kgc3VwcG9ydAo+ID4gPiA+ID4KPiA+ID4gPiA+ICBhcmNoL3g4Ni9pbmNsdWRlL2FzbS9rZXhl
-Yy11a2kuaCAgICAgICB8ICAgNyArKwo+ID4gPiA+ID4gIGFyY2gveDg2L2luY2x1ZGUvYXNtL3Bh
-cnNlX3BlZmlsZS5oICAgIHwgIDMyICsrKysrKysKPiA+ID4gPiA+ICBhcmNoL3g4Ni9rZXJuZWwv
-TWFrZWZpbGUgICAgICAgICAgICAgICB8ICAgMiArCj4gPiA+ID4gPiAgYXJjaC94ODYva2VybmVs
-L2tleGVjLXVraS5jICAgICAgICAgICAgfCAxMTMgKysrKysrKysrKysrKysrKysrKysrKysrKwo+
-ID4gPiA+ID4gIGFyY2gveDg2L2tlcm5lbC9tYWNoaW5lX2tleGVjXzY0LmMgICAgIHwgICAyICsK
-PiA+ID4gPiA+ICBhcmNoL3g4Ni9rZXJuZWwvcGFyc2VfcGVmaWxlLmMgICAgICAgICB8IDExMCAr
-KysrKysrKysrKysrKysrKysrKysrKysKPiA+ID4gPiA+ICBjcnlwdG8vYXN5bW1ldHJpY19rZXlz
-L21zY29kZV9wYXJzZXIuYyB8ICAgMiArLQo+ID4gPiA+ID4gIGNyeXB0by9hc3ltbWV0cmljX2tl
-eXMvdmVyaWZ5X3BlZmlsZS5jIHwgMTEwICsrKy0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+ID4gPiA+
-ID4gIGNyeXB0by9hc3ltbWV0cmljX2tleXMvdmVyaWZ5X3BlZmlsZS5oIHwgIDE2IC0tLS0KPiA+
-ID4gPiA+ICA5IGZpbGVzIGNoYW5nZWQsIDI3OCBpbnNlcnRpb25zKCspLCAxMTYgZGVsZXRpb25z
-KC0pCj4gPiA+ID4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gveDg2L2luY2x1ZGUvYXNtL2tl
-eGVjLXVraS5oCj4gPiA+ID4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gveDg2L2luY2x1ZGUv
-YXNtL3BhcnNlX3BlZmlsZS5oCj4gPiA+ID4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gveDg2
-L2tlcm5lbC9rZXhlYy11a2kuYwo+ID4gPiA+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL3g4
-Ni9rZXJuZWwvcGFyc2VfcGVmaWxlLmMKPiA+ID4gPiA+Cj4gPiA+ID4gPiAtLQo+ID4gPiA+ID4g
-Mi40MC4xCj4gPiA+ID4KPiA+ID4gPiBXaGF0IHRoZSBoZWNrIGlzIFVLST8KPiA+ID4KPiA+ID4g
-VW5pZmllZCBLZXJuZWwgSW1hZ2VzLiBNb3JlIGRldGFpbHMgYXZhaWxhYmxlIGhlcmU6Cj4gPiA+
-IGh0dHBzOi8vdWFwaS1ncm91cC5vcmcvc3BlY2lmaWNhdGlvbnMvc3BlY3MvdW5pZmllZF9rZXJu
-ZWxfaW1hZ2UvCj4gPiA+Cj4gPiA+IEl0J3MgYSB3YXkgb2YgY3JlYXRpbmcgaW5pdHJhbWZzLXN0
-eWxlIGltYWdlcyBhcyBmdWxseSBnZW5lcmljLAo+ID4gPiByZXByb2R1Y2libGUgaW1hZ2VzIHRo
-YXQgY2FuIGJlIGJ1aWx0IHNlcnZlci1zaWRlLgo+ID4KPiA+IFlvdSBjYW4gYnVpbGQgdG9kYXkg
-YSBrZXJuZWwgd2l0aCB0aGVzZSBjb21waWxlZCBpbjoKPiA+Cj4gPiAxLiBFRkkgc3R1Ygo+ID4g
-Mi4gaW5pdGVyYW1mcwo+ID4gMy4gY21kbGluZQo+ID4KPiA+IFdoeSBhbm90aGVyIHdheSAoYW5k
-IGxhYmVsICdVS0knKSBmb3IgYSBwcmUtZXhpc3RpbmcgZmVhdHVyZT8KPiA+Cj4KPiBJbiBVYnVu
-dHUsIHdlIGhhdmUgY29uc2lkZXJlZCB0byB1c2UgdGhlIGV4aXN0aW5nIGtlcm5lbCBmZWF0dXJl
-cwo+IGJlZm9yZSBnb2luZyBvZmYgdG8gdXNlIFVLSS4gSGVyZSBhcmUgc29tZSBvZiB0aGUgcmVh
-c29ucyB3aHkgd2UKPiBkaWRuJ3Qgb3B0IHRvIHVzZSB0aGUga2VybmVsIGJ1aWx0aW4gdGhpbmdz
-Ogo+IDEpIHdlIHdhbnRlZCB0byBoYXZlIGFiaWxpdHkgdG8gaGF2ZSBUUE0gbWVhc3VyZWQga2Vy
-bmVsIGNvbW1hbmRsaW5lCj4gcGVyZm9ybWVkIGJlZm9yZSBrZXJuZWwgaXMgYmVpbmcgZXhlY3V0
-ZWQsIHdoaWNoIGlzIHdoYXQgc2Qtc3R1Ygo+IHByb3ZpZGVzIHVzCgpPSyB0aGlzIGRvZXMgbWFr
-ZSBhIGxvdCBvZiBzZW5zZS4KCj4gMikgd2Ugd2FudGVkIHRvIGhhdmUgYWJpbGl0eSB0byB1cGRh
-dGUgLyByZWdlbmVyYXRlIGluaXRyZCwgd2l0aG91dAo+IHJlYnVpbGRpbmcga2VybmVsLiBUaHVz
-IHdoZW5ldmVyIHVzZXJzcGFjZSBpbiB0aGUgaW5pdHJkIG5lZWRzCj4gdXBkYXRpbmcsIHdlIGNh
-biBnZW5lcmF0ZSBuZXcgaW5pdHJkIGZvciBleGlzdGluZyBrZXJuZWwgYnVpbGQsIGNyZWF0ZQo+
-IG5ldyBrZXJuZWwuZWZpLCB3aGlsc3QgdXNpbmcgZXhpc3RpbmcgLmxpbnV4IC8gdm1saW51eiBi
-dWlsZC4gSSBkb24ndAo+IGJlbGlldmUgaXQgaXMgY3VycmVudGx5IHRyaXZpYWwgdG8gcmVsaW5r
-IHZtbGludXogd2l0aCBidWlsdGluIGluaXRyZC4KPiAzKSBsaWNlbnNpbmcgd2lzZSBpdCB3YXMg
-bm90IGNsZWFyIGlmIGluaXRyZCBoYXMgdG8gYmUgR1BMdjIKPiBjb21wYXRpYmxlIHdoZW4gbGlu
-a2VkIGluc2lkZSB2bWxpbnV6LCBvciBpZiBpdCBjYW4gY29udGFpbiBHUEx2MyAvCj4gTEdQTHYz
-IHVzZXJzcGFjZSBjb2RlIC0gd2l0aCBVS0kgaXQgaXMgYmVsaWV2ZWQgdW5hbWJpZ2lvdXNseSB0
-cnVlLAo+IGJlY2F1c2Ugdm1saW51eiBib290cyBieSBpdHNlbGYgc3RhbmRhbG9uZSBhbmQgaXMg
-Y29tcGlsZWQgc2VwYXJhdGVseQo+IG9mIHRoZSBVS0kuCgpSaWdodCBVS0kgd3JhcHMga2VybmVs
-IGFuZCBrZXJuZWwgaXMgYSAibGVhZiBvYmplY3QiLgoKPiA0KSB3ZSB3YW50ZWQgdG8gaGF2ZSBh
-YmlsaXR5IHRvIG92ZXJyaWRlIGNtZGxpbmUgdmlhIGtlcm5lbCBhcmdzCj4gd2l0aG91dCBzZWN1
-cmVib290LCBhbmQgdXNlIHN0b2NrIGNtZGxpbmUgYXJncyB1bmRlciBzZWN1cmVib290LCB0bwo+
-IGFsbG93IGRlYnVnZ2luZyAmIHByb2R1Y3Rpb24gYmVoYXZpb3VyIGZyb20gYSBzaW5nbGUgc2ln
-bmVkIGtlcm5lbC5lZmkKPiAodGhhdCB3YXMgY3VzdG9tIGRldmVsb3BtZW50LCBhbmQgY291bGQg
-YmUgZG9uZSBpbiB0aGUgc3RvY2sgdm1saW51ego+IHRvbykuCj4gNSkgb2J2aW91cyBtZW50aW9u
-LCB0aGUgaW50ZW50aW9uIGhlcmUgaXMgdG8gaGF2ZSBUUE0gUENSIG1lYXN1cmVtZW50cwo+IGFu
-ZCBTZWN1cmVib290IHNpZ25hdHVyZSBmb3Igdm1saW51eiBhbmQgaW5pdHJkIGFuZCBjbWRsaW5l
-IGFuZCBkdGIuCj4gVGhlcmUgaXMgb3RoZXJ3aXNlIG5vIHN1cHBvcnQgZm9yIHN0YW5kYWxvbmUg
-c2lnbmVkIGluaXRyZCwgY21kbGluZSwKPiBkdGIgdG9kYXkuIE5vciBkb2VzIHZlbmRvcmluZyBp
-dCBpbnRvIHZtbGludXogYWNoaWV2ZXMgdGhpcyB0byB0aGUKPiBzYW1lIGV4dGVudCAoYW5kIGVh
-c2Ugb2YgcHJlZGljdGluZyBmb3Igc2VhbGluZyAvIHJlc2VhbGluZyBwdXJwb3NlcykuCgpvawoK
-PiA2KSBpbiBVYnVudHUga2VybmVsLmVmaSBhbHNvIGhhcyBzYmF0IHNlY3Rpb24gZm9yIHRhcmdl
-dGVkIHJldm9jYXRpb25zCj4gKGRpc2N1c3NlZCBzZXBhcmF0ZWx5IGVsc2V3aGVyZSkKPgo+IE92
-ZXJhbGwsIGl0IGlzIG1vc3RseSBhYm91dCBmbGV4aWJpbGl0eSB0byBiZSBhYmxlIHRvIHJldXNl
-IHRoZSBzYW1lCj4gaW5pdHJkIGFnYWluc3QgbXVsdGlwbGUga2VybmVsIGJ1aWxkcywgb3IgdXBk
-YXRlIHVzZSBtdWx0aXBsZSBpbml0cmQKPiBhZ2FpbnN0IHRoZSBzYW1lIGtlcm5lbCBidWlsZC4g
-VGhpcyBpcyBpbWhvIHRoZSBiaWdnZXN0IGlzc3VlIHdpdGgKPiB1c2luZyBpbml0cmQgYnVpbHQt
-aW50byB0aGUgdm1saW51eiBpdHNlbGYuCj4gUmVzb3VyY2Ugd2lzZSwgdGhlIGluaXRyZCBwYXNz
-ZWQgaW4gdmlhIGtlcm5lbC5lZmkgY2FuIGJlIGZyZWVkLCBhcwo+IGZhciBhcyBJIHVuZGVyc3Rh
-bmQuIEkgZG9uJ3Qga25vdyBpZiB0aGUgb25lIGJ1aWx0LWludG8gdGhlIHZtbGludXogaXMKPiBm
-cmVlYWJsZS4KPgo+IEltcHJvdmluZyBkZXNpZ24gdG8gZG8gc29tZXRoaW5nIGVsc2UgaW5zdGVh
-ZCBvZiBVS0kgd291bGQgYmUKPiB3ZWxjb21lZC4gT3IgZm9yIGV4YW1wbGUgaW1wcm92aW5nIHRo
-ZSB6aW1nIGxpbnVzIHVwc3RyZWFtIGZvcm1hdCB0bwo+IGJlIGEgcGFydGlhbCBvciBhIHZhbGlk
-IFVLSSB3b3VsZCBoZWxwIGFzIHdlbGwuIEZvciBleGFtcGxlLCBidWlsZGluZwo+IHRoZSBrZXJu
-ZWwgYnVpbHQtaW4gaW5pdHJkIGFzIGEgLmluaXRyZCBzZWN0aW9uIHRoYXQgaXMgcmVwbGFjYWJs
-ZQo+IHdvdWxkIGJlIG5pY2UsIG9yIGFsbG93aW5nIHRvIHByZWxvYWQgemltZyB3aXRoIC5kdGIg
-b3IgLmNtZGxpbmUKPiBzZWN0aW9ucyB3b3VsZCBoZWxwLCBhbmQgYXBwcm9wcmlhdGVseSBpbXBy
-b3ZlIHRoZSBsaW51eCBlZmkgc3RhYiB0bwo+IGRvIG1lYXN1cmVtZW50cyBhbmQgbG9hZGluZyBv
-ZiAuZHRiIC8gLmluaXRyZCBmcm9tIGl0c2VsZiB3b3VsZCBiZQo+IG5pY2UuIEJlY2F1c2UgdGhl
-biBhbGwgdGhlIGJlbmVmaXRzIC8gcmVxdWlyZW1lbnRzIGRlc2NyaWJlZCBhYm92ZQo+IGNvdWxk
-IGJlIG1hZGUgYXZhaWxhYmxlIG91dCBvZiB0aGUgYm94IGFuZCBiZSB0cml2aWFsbHkgdXBkYXRh
-YmxlLiBUaGUKPiBiaWdnZXN0IG9uZSBiZWluZyBzcGxpdHRpbmcgb3V0IHRoaW5ncyBpbnRvIHNl
-Y3Rpb25zIHRoYXQgY2FuIGJlCj4gdXBkYXRlZCB3aXRoIG9iamNvcHkuCgpCUiwgSmFya2tvCgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWls
-aW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+This patch introduces a memory allocator specifically tailored for
+persistent memory within the kernel. The allocator maintains
+kernel-specific states like DMA passthrough device states, IOMMU state, and
+more across kexec.
+
+The current implementation provides a foundation for custom solutions that
+may be developed in the future. Although the design is kept concise and
+straightforward to encourage discussion and feedback, it remains fully
+functional.
+
+The persistent memory pool builds upon the continuous memory allocator
+(CMA) and ensures CMA state persistency across kexec by incorporating the
+CMA bitmap into the memory region instead of allocation it from kernel
+memory.
+
+Persistent memory pool metadata is passed across kexec by using Flattened
+Device Tree, which is added as another kexec segment for x86 architecture.
+
+Potential applications include:
+
+  1. Enabling various in-kernel entities to allocate persistent pages from
+     a unified memory pool, obviating the need for reserving multiple
+     regions.
+
+  2. For in-kernel components that need the allocation address to be
+     retained on kernel kexec, this address can be exposed to user space
+     and subsequently passed through the command line.
+
+  3. Distinct subsystems or drivers can set aside their region, allocating
+     a segment for their persistent memory pool, suitable for uses such as
+     file systems, key-value stores, and other applications.
+
+Notes:
+
+  1. The last patch of the series represents a use case for the feature.
+     However, the patch won't compile and is for illustrative purposes only
+     as the code being patched hasn't been merged yet.
+
+  2. The code being patched is currently under review by the community. The
+     series is named "Introduce /dev/mshv drivers":
+
+         https://lkml.org/lkml/2023/9/22/1117
+
+
+Changes since v1:
+
+  1. Persistent memory pool is now a wrapper on top of CMA instead of being a
+     new allocator.
+
+  2. Persistent memory pool metadata doesn't belong to the pool anymore and
+     is now passed via Flattened Device Tree instead over kexec to the new
+     kernel.
+
+The following series implements...
+
+---
+
+Stanislav Kinsburskii (7):
+      kexec_file: Add fdt modification callback support
+      x86: kexec: Transfer existing fdt to the new kernel
+      x86: kexec: Enable fdt modification in callbacks
+      pmpool: Introduce persistent memory pool
+      pmpool: Update device tree on kexec
+      pmpool: Restore state from device tree post-kexec
+      Drivers: hv: Allocate persistent pages for root partition
+
+
+ arch/x86/Kconfig                  |   16 +++
+ arch/x86/kernel/kexec-bzimage64.c |   97 +++++++++++++++++
+ drivers/hv/hv_common.c            |   13 ++
+ include/linux/kexec.h             |    7 +
+ include/linux/pmpool.h            |   22 ++++
+ kernel/kexec_file.c               |   24 ++++
+ mm/Kconfig                        |    9 ++
+ mm/Makefile                       |    1 
+ mm/pmpool.c                       |  208 +++++++++++++++++++++++++++++++++++++
+ 9 files changed, 394 insertions(+), 3 deletions(-)
+ create mode 100644 include/linux/pmpool.h
+ create mode 100644 mm/pmpool.c
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
