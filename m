@@ -4,63 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 395B3E732E7
-	for <kexec@archiver.kernel.org>; Thu, 28 Sep 2023 16:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7D8B7E732FE
+	for <kexec@archiver.kernel.org>; Thu, 28 Sep 2023 17:13:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=QaEP83MT5ed53IhcFVtUAsgVY3m6AzWI40N53m9VuxA=; b=uH29Kht4M8PzQt
-	ORckFdvRaiYNqxT/2gYRfLv/r2aGg//OQql16wKAYb+7x6LQo9Ap8DDbh5o7jc/vOPWZKpPOumYFn
-	4UPb+XvhWPTWadxDqDaykbRE579NB27+bNaDBSFcsY9bXdOint24JHFO95UzsGLQwBPdBqMd5MRQs
-	pkBqKtK92Mz6ebHmz3U0aOxearp9M7v6vq3cf0TXOWsjlVH/sfTY5t8yyLbqYhoz0bwXnf/9x29P7
-	OCSXK5jGqt2GunHWSjvZ34/+ojbTdQnJsU3dZs5j3cVaIT3YABIBKWvZ2XU3wWgOU1lX70m0IbLpX
-	JV71hTzLk9tLlaG49hCQ==;
+	List-Owner; bh=m1WyEMompkbaerIHUFT+eHCbn3a5jlgTYPg5m6JUfH4=; b=t4Xo3ItxOEOVUx
+	4fviu0aBuOXUvLKJhaVkfWHqi1vbiyYEukZnPPflAgRLmPhC0UBmgYQG/XHqYBAIpb0Z6OeEyKSw7
+	7jKBrf8EthtGJAfb/SV9W08yoMSPFZN0WSxMQI007rCicWMc7kUyWFj8scZMSigDw9ur6BQyFIUvc
+	hRqA1YgZibD/6hfjKSa6IIvhcEqcCE8UF9bbqQfPi879Eo7SiLjTANV/8pUQ7N0wWDQUPlM6Eg8GB
+	G5iDD0Z5Jc8TBbFKQIZmmvTWNOE4sHg6LOQd1foAa4vyKfSwXsQ+mh9B3ykxb2q+4PY5qoUAj5tRz
+	2zuSJcVMjK9gYn5n/K/w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qltyv-0064Sx-10;
-	Thu, 28 Sep 2023 16:35:17 +0000
+	id 1qluZW-006P1V-0w;
+	Thu, 28 Sep 2023 17:13:06 +0000
 Received: from linux.microsoft.com ([13.77.154.182])
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qltyq-0064Lw-0B
+	id 1qluZS-006P0j-2K
 	for kexec@lists.infradead.org;
-	Thu, 28 Sep 2023 16:35:15 +0000
+	Thu, 28 Sep 2023 17:13:04 +0000
 Received: from skinsburskii. (c-67-170-100-148.hsd1.wa.comcast.net [67.170.100.148])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 8A59F20B74C0;
-	Thu, 28 Sep 2023 09:35:07 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8A59F20B74C0
+	by linux.microsoft.com (Postfix) with ESMTPSA id 3105020B74C0;
+	Thu, 28 Sep 2023 10:13:01 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3105020B74C0
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1695918908;
-	bh=20rY7wCfQkNIai47fHlCR2wiN/P/+IE4P5kF7PJk2Ow=;
+	s=default; t=1695921181;
+	bh=WHD7w8p4ig6hZvJ2HDlS2yknFytIbx+O5dBVV0TdS9o=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cm2G3VB74wif6uU/gwtXWT1K2ZNlYLauxazS8xqu+ch2bgGeRNMojVmIISOmrFVfD
-	 HMKW9vSG9S/9Xr9CRzDlGb2gFLMIjUnDnwqnCxviIozFMyfKNhJlvsxBxXF/l2Tf5w
-	 JfmJkA3d67Lx65PqBMYNUD4rNQ7mG9RW/4TtqD/E=
-Date: Wed, 27 Sep 2023 15:44:45 -0700
+	b=BN+O+Hzs4pIM424F5eKC0n/EsDjESogGkGqVZh9mS53ithFDLcEae9I207mN3piB3
+	 iYLiX52ica6itYY25Bf8TDkXOeQEX15tNQ+E7se//LrdKtJXjlQSNI+CXpZI1sl4IS
+	 Bj+9f33ilTHKzi/UIx20ACz8Wa6bWPz2ig9ieBRU=
+Date: Wed, 27 Sep 2023 16:25:48 -0700
 From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: Baoquan He <bhe@redhat.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	ebiederm@xmission.com, akpm@linux-foundation.org,
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Baoquan He <bhe@redhat.com>, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+	hpa@zytor.com, ebiederm@xmission.com, akpm@linux-foundation.org,
 	stanislav.kinsburskii@gmail.com, corbet@lwn.net,
 	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
 	linux-mm@kvack.org, kys@microsoft.com, jgowans@amazon.com,
 	wei.liu@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org,
-	graf@amazon.de, pbonzini@redhat.com, david@redhat.com
+	graf@amazon.de, pbonzini@redhat.com
 Subject: Re: [RFC PATCH v2 0/7] Introduce persistent memory pool
-Message-ID: <20230927224445.GA20200@skinsburskii.>
+Message-ID: <20230927232548.GA20221@skinsburskii.>
 References: <01828.123092517290700465@us-mta-156.us.mimecast.lan>
  <ZRPBRkXrYvbw8+Lt@MiWiFi-R3L-srv>
- <58146.123092712145601339@us-mta-73.us.mimecast.lan>
- <ZRVUqLSH7HfVLy+G@MiWiFi-R3L-srv>
+ <20230927161319.GA19976@skinsburskii.>
+ <ee1907a1-2f04-cfa3-9f09-75b94994e88b@intel.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <ZRVUqLSH7HfVLy+G@MiWiFi-R3L-srv>
+In-Reply-To: <ee1907a1-2f04-cfa3-9f09-75b94994e88b@intel.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230928_093512_147804_8D38B801 
-X-CRM114-Status: GOOD (  25.17  )
+X-CRM114-CacheID: sfid-20230928_101303_484837_D4FA3A5C 
+X-CRM114-Status: GOOD (  15.54  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,63 +77,51 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Sep 28, 2023 at 06:25:44PM +0800, Baoquan He wrote:
-> On 09/27/23 at 09:13am, Stanislav Kinsburskii wrote:
-> > On Wed, Sep 27, 2023 at 01:44:38PM +0800, Baoquan He wrote:
-> > > Hi Stanislav,
-> > > 
-> > > On 09/25/23 at 02:27pm, Stanislav Kinsburskii wrote:
-> > > > This patch introduces a memory allocator specifically tailored for
-> > > > persistent memory within the kernel. The allocator maintains
-> > > > kernel-specific states like DMA passthrough device states, IOMMU state, and
-> > > > more across kexec.
-> > > 
-> > > Can you give more details about how this persistent memory pool will be
-> > > utilized in a actual scenario? I mean, what problem have you met so that
-> > > you have to introduce persistent memory pool to solve it?
-> > > 
-> > 
-> > The major reason we have at the moment, is that Linux root partition
-> > running on top of the Microsoft hypervisor needs to deposit pages to
-> > hypervisor in runtime, when hypervisor runs out of memory.
-> > "Depositing" here means, that Linux passes a set of its PFNs to the
-> > hypervisor via hypercall, and hypervisor then uses these pages for its
-> > own needs.
-> > 
+On Thu, Sep 28, 2023 at 06:22:54AM -0700, Dave Hansen wrote:
+> On 9/27/23 09:13, Stanislav Kinsburskii wrote:
 > > Once deposited, these pages can't be accessed by Linux anymore and thus
 > > must be preserved in "used" state across kexec, as hypervisor state is
-> > unware of kexec. In the same time, these pages can we withdrawn when
-> > usused. Thus, an allocator persistent across kexec looks reasonable for
-> > this particular matter.
+> > unware of kexec.
 > 
-> Thanks for these details.
->  
-> The deposit and withdraw remind me the Balloon driver, David's virtio-mem,
-> DLPAR on ppc which can hot increasing or shrinking phisical memory on guest
-> OS. Can't microsoft hypervisor do the similar thing to reclaim or give
-> back the memory from or to the 'Linux root partition' running on top of
-> the hypervisor?
-> 
+> If Linux can't access them, they're not RAM any more.  I'd much rather
+> remove them from the memory map and move on with life rather than
+> implement a bunch of new ABI that's got to be handed across kernels.
 
-Although Microsoft hypervisor is a type 1 hypervisor and runs on the
-physical hardware, like Xen, it doens't control all the memory, but is
-rather granted with memory by either boot loader or by Linux root
-partition (similar priveleged VM is called "Dom0" in Xen world). IOW,
-this works in the oposite direction: Linux gives memory to hypervisor,
-and can reclaim it back. However, doing so on kexec increases downtime
-as withdrawn pages must be deposited back again after booting to restore
-the guests ("DomU" in Xen terminology).
+Could you elaborate more on the new ABIs? FDT is handled by x86 already,
+and passing it over kexec looks like a natural extension.
+Also, adding more state to it also doens't look like a new ABI.
+Or does it?
 
-It worth mentionining, that the "deposited pages" in this context don't
-mean guest pages, but the pages required by the hypevisor to store Linux
-root partition state user to control guest partitions.
+Let me also comment on removing this regions from the memory map. The
+major peculiarity here is that hypervisor distinguish between the pages,
+deposited for guests to rnu and the pages deposited for the Linux root
+partition to keep the guest-related portion of hypervisor state in the
+root partition. And the latter is the matter in question.
 
-Also, pages reclaim is not possible, if guests are left running during
-kexec, as hypervisor requires to keep the Linux root partition-related
-state intact to keep the guest state consistent.
+We can indeed isolate and deposit a excessive amount of memory upfront
+in hope that hypervisor will never get into the situation, when it needs
+more memory.
+However, it's not reliable, as the amount of memory will always be an
+estimation, depending on the number of expected guests, guest-attached
+devices, etc. And this becomes even a bigger problem when most of the
+memory is already removed from the memory map to host guest partitions.
+It's also not efficient as the amount of memory required by hypervisor
+can grow or shrink depending on the use case or host configuration, and
+deposting excessive amount of memory will be a waste.
 
-> Thanks
-> Baoquan
+But, actually, the idea of removing the pages from memory map was
+reflected to some extent in the first version of this proposal,
+so let me elaborate on it a bit.
+
+Effectively, instead of reserving and depositing a lot of memory to
+hypervisor upfront, the memory can be allocated from kernel memory when
+needed and then returned back when unused.
+This would still require pages removal from the memory map upon kexec,
+but that's another problem.
+
+Thanks,
+Stanislav
+
 
 _______________________________________________
 kexec mailing list
