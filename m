@@ -4,77 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E64F7E732D1
-	for <kexec@archiver.kernel.org>; Thu, 28 Sep 2023 13:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 395B3E732E7
+	for <kexec@archiver.kernel.org>; Thu, 28 Sep 2023 16:35:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
-	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=8S54QHHMaq1yr7IbeDvTOC1MUCB7Qj+nBztDL9KVs6c=; b=rdGURY4YgpHbOZ
-	592Ap/KEaEhq2+XG7DP9kRDs3rVBrwq8zFAgfZKiK4btxE0Fa8KzCXOl43aE1OrEjM1oCrQ+EhRDb
-	WsbirEQr4VdqWfHspzMbdDYRyyc9NOUXyZRgI6W6U0EhFqsRCNmEJkkZB1mej/c6q2jKJt/W51Gvt
-	K21jzK+BSl1cmtCOLU5DjJ+RglT1sUCMlLAHIcz8EgCxvCChWymYPD1UiIRI2HXugknIVgc9NRUu4
-	YqNEL5IvMR6fYm3XCIZvlSQ0ywkq0q8tEMeU46iEMQCjd/eJ1wR2T6OHl5dC5YrKux1MrTdMn6QOu
-	blhzxEH9S0I2GxqIrIqA==;
+	List-Owner; bh=QaEP83MT5ed53IhcFVtUAsgVY3m6AzWI40N53m9VuxA=; b=uH29Kht4M8PzQt
+	ORckFdvRaiYNqxT/2gYRfLv/r2aGg//OQql16wKAYb+7x6LQo9Ap8DDbh5o7jc/vOPWZKpPOumYFn
+	4UPb+XvhWPTWadxDqDaykbRE579NB27+bNaDBSFcsY9bXdOint24JHFO95UzsGLQwBPdBqMd5MRQs
+	pkBqKtK92Mz6ebHmz3U0aOxearp9M7v6vq3cf0TXOWsjlVH/sfTY5t8yyLbqYhoz0bwXnf/9x29P7
+	OCSXK5jGqt2GunHWSjvZ34/+ojbTdQnJsU3dZs5j3cVaIT3YABIBKWvZ2XU3wWgOU1lX70m0IbLpX
+	JV71hTzLk9tLlaG49hCQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qlr98-004Nfl-30;
-	Thu, 28 Sep 2023 13:33:38 +0000
-Received: from mgamail.intel.com ([134.134.136.126])
-	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qlr95-004NY6-0G
+	id 1qltyv-0064Sx-10;
+	Thu, 28 Sep 2023 16:35:17 +0000
+Received: from linux.microsoft.com ([13.77.154.182])
+	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
+	id 1qltyq-0064Lw-0B
 	for kexec@lists.infradead.org;
-	Thu, 28 Sep 2023 13:33:36 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1695908015; x=1727444015;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=TV50ur6EsvFD+NIQva87XnbSKRPe7K1V/2028Lb4zYE=;
-  b=nB0fxQWodNeFGx3neNaqv+4Jv0Rin06eJ8FEwiIWFV85SjgPCFaqxzvr
-   fqrxvknU/Sw5/vrF6NjwyzQ5nMNnkAwX7tiGzNKewNtjov4Mpv+734Dfz
-   FWsV5RTRXavJHzQok1ad09FoNDnBy+g+nG60kDylbp4z+zWQhaUGUN4Nz
-   z4eCS13tl00a8T6tbmn7mFqqptkbLdkSaZ62kFqi2ctc3gqih0i6LUGSB
-   vlQsETmbELnEgUlToOMpoXk1DtBr4nYTySq80vg7LRPmr8ZhJITIiw/I4
-   8Ngn1wcj9PmYn6WkGizHwbw+AhQ0el6AL1I4L6tmFTOoy22Od4GAtq6i4
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10846"; a="367123736"
-X-IronPort-AV: E=Sophos;i="6.03,184,1694761200"; 
-   d="scan'208";a="367123736"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2023 06:22:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10846"; a="784686572"
-X-IronPort-AV: E=Sophos;i="6.03,184,1694761200"; 
-   d="scan'208";a="784686572"
-Received: from jveerasa-mobl.amr.corp.intel.com (HELO [10.255.231.134]) ([10.255.231.134])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2023 06:22:54 -0700
-Message-ID: <ee1907a1-2f04-cfa3-9f09-75b94994e88b@intel.com>
-Date: Thu, 28 Sep 2023 06:22:54 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [RFC PATCH v2 0/7] Introduce persistent memory pool
-Content-Language: en-US
-To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
- Baoquan He <bhe@redhat.com>
+	Thu, 28 Sep 2023 16:35:15 +0000
+Received: from skinsburskii. (c-67-170-100-148.hsd1.wa.comcast.net [67.170.100.148])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 8A59F20B74C0;
+	Thu, 28 Sep 2023 09:35:07 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8A59F20B74C0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1695918908;
+	bh=20rY7wCfQkNIai47fHlCR2wiN/P/+IE4P5kF7PJk2Ow=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cm2G3VB74wif6uU/gwtXWT1K2ZNlYLauxazS8xqu+ch2bgGeRNMojVmIISOmrFVfD
+	 HMKW9vSG9S/9Xr9CRzDlGb2gFLMIjUnDnwqnCxviIozFMyfKNhJlvsxBxXF/l2Tf5w
+	 JfmJkA3d67Lx65PqBMYNUD4rNQ7mG9RW/4TtqD/E=
+Date: Wed, 27 Sep 2023 15:44:45 -0700
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+To: Baoquan He <bhe@redhat.com>
 Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- ebiederm@xmission.com, akpm@linux-foundation.org,
- stanislav.kinsburskii@gmail.com, corbet@lwn.net,
- linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-mm@kvack.org,
- kys@microsoft.com, jgowans@amazon.com, wei.liu@kernel.org, arnd@arndb.de,
- gregkh@linuxfoundation.org, graf@amazon.de, pbonzini@redhat.com
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	ebiederm@xmission.com, akpm@linux-foundation.org,
+	stanislav.kinsburskii@gmail.com, corbet@lwn.net,
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+	linux-mm@kvack.org, kys@microsoft.com, jgowans@amazon.com,
+	wei.liu@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org,
+	graf@amazon.de, pbonzini@redhat.com, david@redhat.com
+Subject: Re: [RFC PATCH v2 0/7] Introduce persistent memory pool
+Message-ID: <20230927224445.GA20200@skinsburskii.>
 References: <01828.123092517290700465@us-mta-156.us.mimecast.lan>
- <ZRPBRkXrYvbw8+Lt@MiWiFi-R3L-srv> <20230927161319.GA19976@skinsburskii.>
-From: Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <20230927161319.GA19976@skinsburskii.>
+ <ZRPBRkXrYvbw8+Lt@MiWiFi-R3L-srv>
+ <58146.123092712145601339@us-mta-73.us.mimecast.lan>
+ <ZRVUqLSH7HfVLy+G@MiWiFi-R3L-srv>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <ZRVUqLSH7HfVLy+G@MiWiFi-R3L-srv>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230928_063335_234849_E7EB824F 
-X-CRM114-Status: UNSURE (   9.30  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20230928_093512_147804_8D38B801 
+X-CRM114-Status: GOOD (  25.17  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,14 +77,63 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 9/27/23 09:13, Stanislav Kinsburskii wrote:
-> Once deposited, these pages can't be accessed by Linux anymore and thus
-> must be preserved in "used" state across kexec, as hypervisor state is
-> unware of kexec.
+On Thu, Sep 28, 2023 at 06:25:44PM +0800, Baoquan He wrote:
+> On 09/27/23 at 09:13am, Stanislav Kinsburskii wrote:
+> > On Wed, Sep 27, 2023 at 01:44:38PM +0800, Baoquan He wrote:
+> > > Hi Stanislav,
+> > > 
+> > > On 09/25/23 at 02:27pm, Stanislav Kinsburskii wrote:
+> > > > This patch introduces a memory allocator specifically tailored for
+> > > > persistent memory within the kernel. The allocator maintains
+> > > > kernel-specific states like DMA passthrough device states, IOMMU state, and
+> > > > more across kexec.
+> > > 
+> > > Can you give more details about how this persistent memory pool will be
+> > > utilized in a actual scenario? I mean, what problem have you met so that
+> > > you have to introduce persistent memory pool to solve it?
+> > > 
+> > 
+> > The major reason we have at the moment, is that Linux root partition
+> > running on top of the Microsoft hypervisor needs to deposit pages to
+> > hypervisor in runtime, when hypervisor runs out of memory.
+> > "Depositing" here means, that Linux passes a set of its PFNs to the
+> > hypervisor via hypercall, and hypervisor then uses these pages for its
+> > own needs.
+> > 
+> > Once deposited, these pages can't be accessed by Linux anymore and thus
+> > must be preserved in "used" state across kexec, as hypervisor state is
+> > unware of kexec. In the same time, these pages can we withdrawn when
+> > usused. Thus, an allocator persistent across kexec looks reasonable for
+> > this particular matter.
+> 
+> Thanks for these details.
+>  
+> The deposit and withdraw remind me the Balloon driver, David's virtio-mem,
+> DLPAR on ppc which can hot increasing or shrinking phisical memory on guest
+> OS. Can't microsoft hypervisor do the similar thing to reclaim or give
+> back the memory from or to the 'Linux root partition' running on top of
+> the hypervisor?
+> 
 
-If Linux can't access them, they're not RAM any more.  I'd much rather
-remove them from the memory map and move on with life rather than
-implement a bunch of new ABI that's got to be handed across kernels.
+Although Microsoft hypervisor is a type 1 hypervisor and runs on the
+physical hardware, like Xen, it doens't control all the memory, but is
+rather granted with memory by either boot loader or by Linux root
+partition (similar priveleged VM is called "Dom0" in Xen world). IOW,
+this works in the oposite direction: Linux gives memory to hypervisor,
+and can reclaim it back. However, doing so on kexec increases downtime
+as withdrawn pages must be deposited back again after booting to restore
+the guests ("DomU" in Xen terminology).
+
+It worth mentionining, that the "deposited pages" in this context don't
+mean guest pages, but the pages required by the hypevisor to store Linux
+root partition state user to control guest partitions.
+
+Also, pages reclaim is not possible, if guests are left running during
+kexec, as hypervisor requires to keep the Linux root partition-related
+state intact to keep the guest state consistent.
+
+> Thanks
+> Baoquan
 
 _______________________________________________
 kexec mailing list
