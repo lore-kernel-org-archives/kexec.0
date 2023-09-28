@@ -4,85 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7605BCE7B0C
-	for <kexec@archiver.kernel.org>; Thu, 28 Sep 2023 08:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 629E9CE7B19
+	for <kexec@archiver.kernel.org>; Thu, 28 Sep 2023 10:26:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:References
-	:In-Reply-To:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=ygpq1GzDZrr7svhSeg167FX/NtAQuOleNgyKWbr0aJQ=; b=l/tqm7p7jbyjrv
-	drP3GQ+dPZZ7HosaQOQpbxK7XkTLip7e5d8LpyD20/EKw3a6GZntg2/0S98Wf0lVL9+kaDYm9D1TM
-	jl0yCpGA258ETaYBWJx1kJIM7Vjw1Dwxg0WUDRHJO8S/dL19l2cZpJEmCZt/ejI6Z2VeQxQH8uQBo
-	2v0BraxnrAoNawzA/8PyTroBKeiHHmn3N2AZqGtklmnhn3u/puPyNL64KvlMh3+T+zLqqln3d9qg5
-	jWBoSppPgc7ChtNS+WARoshbmzZGtMVVFCtzLmdbn5cxKU0/kNBqFgJT57s2Nd6NKNKmCmbuK+UDP
-	JXDXzXDs4S7fl94OYU2A==;
+	List-Owner; bh=J+t0w2rpm0h6SWq1wyDHshDdFarwEtG5hb97I2de+Uk=; b=lH717XwaoqBcg2
+	MlgvmY9TdH4FBedyJocZH7YN+F441qDWjyzuH8LKvaiHlLM+p88lBzQ16FvJcDPhNXNatA20LOth/
+	0TbI2l43ikhYzPy/UOtQt692My5qybCW18wPRfdm3OsxBRfX4s/BdMxvypzadJifhMONDAXwsceRL
+	Rx2xeV61fesjkUqZzyQiC/XaCDgEJ3Yfmw4rBqThphcyIMiYlLNtVv1zLYaDRrXVKHMGC1qCgW/6/
+	7Dpq9tD7SQX7O3450q1LjO1DA+g9R+tHvUqLrsmfglJH+0oQF7u6Z5RycF0ZtvOOBb5aPRN43aAmj
+	ebDYr6BpV2wC3/YFjpPg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qlmkY-002ezJ-0H;
-	Thu, 28 Sep 2023 08:51:58 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1qloDW-002pAk-2y;
+	Thu, 28 Sep 2023 10:25:59 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qlmkT-002eyp-1u
+	id 1qloDT-002p8l-22
 	for kexec@lists.infradead.org;
-	Thu, 28 Sep 2023 08:51:54 +0000
+	Thu, 28 Sep 2023 10:25:57 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1695891111;
+	s=mimecast20190719; t=1695896754;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=NkWcflk7o2IhAoW5ugdA3P4TxFldRrvEEsOTDIfjw5E=;
-	b=LlGrtTweUgG0Mw1ZuDKwRx8D7xFVIg6oVj3O+e95APmwxe6xcv1w9hg214uuzQL5SQdVBN
-	zRicWYE675AhbXkHfWzwNFX9YBFwBSdpHeEPGD7hjqhZYN/vqlhPalvfm+Enadsjzci+2A
-	3XvrpccJqYtfjFlLVg3i6HWHZCNmMe4=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-651-3X3ecwYdPK68KfGIWFfMpg-1; Thu, 28 Sep 2023 04:51:49 -0400
-X-MC-Unique: 3X3ecwYdPK68KfGIWFfMpg-1
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-418225fb5d6so113969871cf.3
-        for <kexec@lists.infradead.org>; Thu, 28 Sep 2023 01:51:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695891109; x=1696495909;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NkWcflk7o2IhAoW5ugdA3P4TxFldRrvEEsOTDIfjw5E=;
-        b=ssc8DsR7R27Wjn7eq47v0l+M+SS4QtFa00FcwQyfYPRp2NpRmp0BPLKnTGhXunbMpW
-         fYyq6ivIv9MX7/2XVn5b8cLByYqE6LAYwAVeJ/UFBuV0Zewt69DKKUE2uUaeh80wL1gb
-         DrmwCmFUtKzq3NZrdghqOEGh2+CDu9JlzTHlN5aACjKfiUm4gSki/baEa8vU22mCANVp
-         w4WkoWDiZ7VRxGnfFdeCD4bnXfoSpW3cZXZVhyo6Hcyvu9KKfzSgt4Wt/c2Y28uzyqsB
-         UTgXX9TU+vtAp71OAmEJF3Gw2Ay5eYMUcfU685OZSQc+Ck+FUV26EXzmyfCJ/60hce+N
-         sPGQ==
-X-Gm-Message-State: AOJu0YxFDHM5TMk13VLzhM4ApJpd/+mlrcgL3C1ibeHEqQJmUI16AXj6
-	4VwTHub2AC7jtBaLad0HEvjcxhoHvjkLaZYgEukWy0r5RESvov/xpNawMVJhgAqWzbjoedI1wLb
-	BxqRZQVHkEzT7O76EwzVGBcZ8Zv+0
-X-Received: by 2002:a05:622a:138b:b0:412:191c:ffa with SMTP id o11-20020a05622a138b00b00412191c0ffamr637756qtk.26.1695891109113;
-        Thu, 28 Sep 2023 01:51:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE+H2XpyC6g5cXAzUKMgVxYhAIA1uZrXD5jkN2vZZOVsLgR0f4SYCEkiNop7wfk3UqIpQAm2g==
-X-Received: by 2002:a05:622a:138b:b0:412:191c:ffa with SMTP id o11-20020a05622a138b00b00412191c0ffamr637746qtk.26.1695891108882;
-        Thu, 28 Sep 2023 01:51:48 -0700 (PDT)
-Received: from vschneid.remote.csb ([80.215.217.124])
-        by smtp.gmail.com with ESMTPSA id ig8-20020a05622a6a4800b004181127a230sm3614173qtb.76.2023.09.28.01.51.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Sep 2023 01:51:48 -0700 (PDT)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
-Cc: kexec@lists.infradead.org, akpm@linux-foundation.org,
- eric.devolder@oracle.com, sourabhjain@linux.ibm.com, Baoquan He
- <bhe@redhat.com>
-Subject: Re: [PATCH v3] Crash: add lock to serialize crash hotplug handling
-In-Reply-To: <20230926120905.392903-1-bhe@redhat.com>
-References: <20230926120905.392903-1-bhe@redhat.com>
-Date: Thu, 28 Sep 2023 10:51:45 +0200
-Message-ID: <xhsmhy1gqu1cu.mognet@vschneid.remote.csb>
+	bh=AJu1zUMjVZ+lx0EEl0IqbzumrKDe4gTjJqCGJOtK7tM=;
+	b=PxU131Od8bDSN7r/gAP9U4rgkrPnhYHdBRniDYZOZKKI2iHvVUDmuexYz359dAGxnKDms3
+	nyucYusAXJzig61lG0KeAYTZZenLvQQJfVfoM92e0OOL7+ia5blPDlV6vLJt2JIJTK0Bf0
+	o1rlxGNydEFJQLFaQIXg/SLhDAgHZ20=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-224-NZW55hpLN0K6FJOvmhO7Rg-1; Thu, 28 Sep 2023 06:25:50 -0400
+X-MC-Unique: NZW55hpLN0K6FJOvmhO7Rg-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 600CB18811FB;
+	Thu, 28 Sep 2023 10:25:49 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.50])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id C4770492B16;
+	Thu, 28 Sep 2023 10:25:47 +0000 (UTC)
+Date: Thu, 28 Sep 2023 18:25:44 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	ebiederm@xmission.com, akpm@linux-foundation.org,
+	stanislav.kinsburskii@gmail.com, corbet@lwn.net,
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+	linux-mm@kvack.org, kys@microsoft.com, jgowans@amazon.com,
+	wei.liu@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org,
+	graf@amazon.de, pbonzini@redhat.com, david@redhat.com
+Subject: Re: [RFC PATCH v2 0/7] Introduce persistent memory pool
+Message-ID: <ZRVUqLSH7HfVLy+G@MiWiFi-R3L-srv>
+References: <01828.123092517290700465@us-mta-156.us.mimecast.lan>
+ <ZRPBRkXrYvbw8+Lt@MiWiFi-R3L-srv>
+ <58146.123092712145601339@us-mta-73.us.mimecast.lan>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+Content-Disposition: inline
+In-Reply-To: <58146.123092712145601339@us-mta-73.us.mimecast.lan>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230928_015153_706126_79AE2518 
-X-CRM114-Status: UNSURE (   9.06  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20230928_032555_758226_0F545AB7 
+X-CRM114-Status: GOOD (  20.58  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,32 +88,44 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 26/09/23 20:09, Baoquan He wrote:
-> Eric reported that handling corresponding crash hotplug event can be
-> failed easily when many memory hotplug event are notified in a short
-> period. They failed because failing to take __kexec_lock.
->
-> =======
-> [   78.714569] Fallback order for Node 0: 0
-> [   78.714575] Built 1 zonelists, mobility grouping on.  Total pages: 1817886
-> [   78.717133] Policy zone: Normal
-> [   78.724423] crash hp: kexec_trylock() failed, elfcorehdr may be inaccurate
-> [   78.727207] crash hp: kexec_trylock() failed, elfcorehdr may be inaccurate
-> [   80.056643] PEFILE: Unsigned PE binary
-> =======
->
-> The memory hotplug events are notified very quickly and very many,
-> while the handling of crash hotplug is much slower relatively. So the
-> atomic variable __kexec_lock and kexec_trylock() can't guarantee the
-> serialization of crash hotplug handling.
->
-> Here, add a new mutex lock __crash_hotplug_lock to serialize crash
-> hotplug handling specifically. This doesn't impact the usage of
-> __kexec_lock.
->
-> Signed-off-by: Baoquan He <bhe@redhat.com>
+On 09/27/23 at 09:13am, Stanislav Kinsburskii wrote:
+> On Wed, Sep 27, 2023 at 01:44:38PM +0800, Baoquan He wrote:
+> > Hi Stanislav,
+> > 
+> > On 09/25/23 at 02:27pm, Stanislav Kinsburskii wrote:
+> > > This patch introduces a memory allocator specifically tailored for
+> > > persistent memory within the kernel. The allocator maintains
+> > > kernel-specific states like DMA passthrough device states, IOMMU state, and
+> > > more across kexec.
+> > 
+> > Can you give more details about how this persistent memory pool will be
+> > utilized in a actual scenario? I mean, what problem have you met so that
+> > you have to introduce persistent memory pool to solve it?
+> > 
+> 
+> The major reason we have at the moment, is that Linux root partition
+> running on top of the Microsoft hypervisor needs to deposit pages to
+> hypervisor in runtime, when hypervisor runs out of memory.
+> "Depositing" here means, that Linux passes a set of its PFNs to the
+> hypervisor via hypercall, and hypervisor then uses these pages for its
+> own needs.
+> 
+> Once deposited, these pages can't be accessed by Linux anymore and thus
+> must be preserved in "used" state across kexec, as hypervisor state is
+> unware of kexec. In the same time, these pages can we withdrawn when
+> usused. Thus, an allocator persistent across kexec looks reasonable for
+> this particular matter.
 
-Reviewed-by: Valentin Schneider <vschneid@redhat.com>
+Thanks for these details.
+ 
+The deposit and withdraw remind me the Balloon driver, David's virtio-mem,
+DLPAR on ppc which can hot increasing or shrinking phisical memory on guest
+OS. Can't microsoft hypervisor do the similar thing to reclaim or give
+back the memory from or to the 'Linux root partition' running on top of
+the hypervisor?
+
+Thanks
+Baoquan
 
 
 _______________________________________________
