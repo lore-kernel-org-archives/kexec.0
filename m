@@ -4,78 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DE333E732FD
-	for <kexec@archiver.kernel.org>; Thu, 28 Sep 2023 17:35:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E11F5E732FE
+	for <kexec@archiver.kernel.org>; Thu, 28 Sep 2023 17:38:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
+	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=sd3eNrsOkAmGrTRGe/3IyjCQ/ykX1z36s9AKSV2v4ao=; b=tlOlF9Lou30TvF
-	6zTXohPF7t34/9e3sUc64WfGEYh2Mmrnw6M3bbgIpmNWpd6W0qYSq1MyxHmKVlJnZkxuSm7JGWezK
-	SqYyFntu+2KqaPTZTDdFToO0oUlTaXo2mNdBjczVrdJFbMSg24dxEQ1PimIcJAFyhVJ0d9LaTFZ3t
-	wV0hjrgMpLClsaT8Nf6i9WKSu2o5V8+G+vDOerTzKiUneFRFZHSfvW1F/aDKeFR1UFR/j0R0b77dL
-	ki8mgw73tCdLbxP76JZ3ipfcEb7T6kaCwJX8FRzL5SV5yTMuIp5m5nTSyD4iYvfPBbCKGKq9k7do3
-	XYDRJ+jqJPaWgBJngsnQ==;
+	List-Owner; bh=1I9ubz3P64SExOC4F1njor5xuB6Jdp4KhUahWsU0DCk=; b=P3ZJ+yvDx5zTC2
+	45P44VYJHopmheERbVxurHfGjDIOl3VixKQB6IX8f6bOaRSUGrBDZwZUMSJZixDr814W9UP2L54Bf
+	8nlHVUTf9FSVTnlqMA8NSwthBADe/9Wss2JzECnNP9ryDLivfKqr9awr+GGD4PqJL1eezAuOXdTHz
+	2v62bPNoSURDuq+vm0y26XbfVPhS2x8JTDwViKiXvt50QHM1CDq4wwwlvaHvE6g3LpHWbrDntefWE
+	WMNnXluP+zwUhUs/MtAyFqwEBdzzN9IOMDOwFwruOUz9VSgDLAp7bJhqgMGgGrkhs41/yGmND1yO/
+	fY+DvU8D83rSxOkMY08g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qluvQ-006RQb-1U;
-	Thu, 28 Sep 2023 17:35:44 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1qluxi-006RbM-0d;
+	Thu, 28 Sep 2023 17:38:06 +0000
+Received: from mgamail.intel.com ([134.134.136.100])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qluvM-006RNw-0b
+	id 1qluxd-006RZZ-2w
 	for kexec@lists.infradead.org;
-	Thu, 28 Sep 2023 17:35:42 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1695922537;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bhJQz2nsCHp2m+57NVX3KFHSV/EDTbVztb5rANet7Mk=;
-	b=AfbKWxAV8Z4Qj4NMqWIFy1uA10sRE5DzBsl1ZS9h83tRtYUcYSxIvF9G7AmepLTdYP7UL3
-	/aaurcBVcZbId/oxPL98dxdpD41MsWRQWcUhi4nX1PvvleU9QQ6lj3mjYrBkYt/BNAGPxL
-	GrF9+As0qB2rg2J0ovhntIEPGb5Tok8=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-245-hazlMqc8OD-WQO79YCJFSw-1; Thu, 28 Sep 2023 13:35:35 -0400
-X-MC-Unique: hazlMqc8OD-WQO79YCJFSw-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4065478afd3so4112005e9.0
-        for <kexec@lists.infradead.org>; Thu, 28 Sep 2023 10:35:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695922534; x=1696527334;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bhJQz2nsCHp2m+57NVX3KFHSV/EDTbVztb5rANet7Mk=;
-        b=I2Z4Bh0LTmd8sAD90EEqlaYXt56uHsTieJ/DNNjCRSrmWgpcJ30WBSQ9Nb9iVd+cgI
-         F+dWJMQt7DnullyBfFo+/t+2j/ja8XvkBCOb2Y0vUSY3FXadWguvjb4QvfYILDTunY/P
-         WkuYX191cskl7yEj0TNEPQcIC2ol79olc9ZvrcG5nwtMvDfsJ9mf0YR6L1tID+sEtkec
-         j96DGQAlegFlTn9LMUn8KMSk55O7GGvor5jmDIB/irowIUq0sDam6JCp+2uhs1zZCSjk
-         WvgSPeXSmYO4c8umItuvY3KmIURhsXK9U3Qt/M5f70e1K8ul36EOLJjhEVLSHwHgFYMJ
-         cmDQ==
-X-Gm-Message-State: AOJu0Yz4VVm9Q8RVLh2fk0ovDllay+uyB8Z4yvi/79FRMdIFmGUCEAm5
-	lpY3sBBfH8KY2AJDGkRi2oCXEMkZi7yYh/3yaXzyZbeGrX+bzBAdwtYpimoIBE21wtzyqVtuTXR
-	6dhFqSURC4fYddTBG/x82
-X-Received: by 2002:a7b:cd95:0:b0:405:95ae:4a94 with SMTP id y21-20020a7bcd95000000b0040595ae4a94mr1736586wmj.5.1695922534551;
-        Thu, 28 Sep 2023 10:35:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG1D4mtRbNaTqnzKHYbzNWGSnEHm8nnG9RRLTvd9ee4kE9dx1bCsUvsR1IDCdX32RkbnUVjNw==
-X-Received: by 2002:a7b:cd95:0:b0:405:95ae:4a94 with SMTP id y21-20020a7bcd95000000b0040595ae4a94mr1736570wmj.5.1695922534181;
-        Thu, 28 Sep 2023 10:35:34 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c718:f00:b37d:4253:cd0d:d213? (p200300cbc7180f00b37d4253cd0dd213.dip0.t-ipconnect.de. [2003:cb:c718:f00:b37d:4253:cd0d:d213])
-        by smtp.gmail.com with ESMTPSA id x5-20020a05600c21c500b0040644e699a0sm4315192wmj.45.2023.09.28.10.35.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 Sep 2023 10:35:33 -0700 (PDT)
-Message-ID: <fa924c8d-c954-5612-37eb-43e1976a1b7b@redhat.com>
-Date: Thu, 28 Sep 2023 19:35:32 +0200
+	Thu, 28 Sep 2023 17:38:04 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1695922681; x=1727458681;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=vUYvjPlgFPXD0fht4ZgNaZaIp5jz+/28FbQ6ukEjL3g=;
+  b=NtQYw9eO7Eay8afcUWfvSWi5W/IVYJXy7TD2HncZpVuNUOFd0/OsuCPF
+   LfcSb1PO2EjKVeWOVVqLBUsSMPK0+syyA5IO+WaPxSGEqiqjJ9iP+neH+
+   qt0iyp/xx3KWhRvE3Nk6yKFOV1qCx1uq11VvL7FfvbhKhRBrVnLO4wcht
+   KlQLvyaS1uzPD8xTIEjtp2BSeMen5ZULVfJz9pOe5HAWCRnjMVmEEDGXu
+   vBZemmEHIaL2NAYFtWcWUjE0KGfYXFyZoaBZ5BlNNah/MDw7lfNWDp2ML
+   SuyjM40mXffWMUdungjgmigNR35S3zrZC7bHi1j5/kiPsFR1LKvZhrIi8
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10847"; a="448618134"
+X-IronPort-AV: E=Sophos;i="6.03,184,1694761200"; 
+   d="scan'208";a="448618134"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2023 10:37:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10847"; a="699365408"
+X-IronPort-AV: E=Sophos;i="6.03,184,1694761200"; 
+   d="scan'208";a="699365408"
+Received: from jveerasa-mobl.amr.corp.intel.com (HELO [10.255.231.134]) ([10.255.231.134])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2023 10:37:56 -0700
+Message-ID: <f0f68a16-9bf2-703a-345f-5061e821e80a@intel.com>
+Date: Thu, 28 Sep 2023 10:37:56 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.15.1
 Subject: Re: [RFC PATCH v2 0/7] Introduce persistent memory pool
-To: Dave Hansen <dave.hansen@intel.com>,
+Content-Language: en-US
+To: David Hildenbrand <david@redhat.com>,
  Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
  Baoquan He <bhe@redhat.com>
 Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
@@ -88,15 +71,12 @@ Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
 References: <01828.123092517290700465@us-mta-156.us.mimecast.lan>
  <ZRPBRkXrYvbw8+Lt@MiWiFi-R3L-srv> <20230927161319.GA19976@skinsburskii.>
  <ee1907a1-2f04-cfa3-9f09-75b94994e88b@intel.com>
-From: David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-In-Reply-To: <ee1907a1-2f04-cfa3-9f09-75b94994e88b@intel.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
+ <fa924c8d-c954-5612-37eb-43e1976a1b7b@redhat.com>
+From: Dave Hansen <dave.hansen@intel.com>
+In-Reply-To: <fa924c8d-c954-5612-37eb-43e1976a1b7b@redhat.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230928_103540_294812_EC8D7D08 
-X-CRM114-Status: GOOD (  10.64  )
+X-CRM114-CacheID: sfid-20230928_103802_001330_48A94B69 
+X-CRM114-Status: GOOD (  10.33  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -108,34 +88,25 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 28.09.23 15:22, Dave Hansen wrote:
-> On 9/27/23 09:13, Stanislav Kinsburskii wrote:
->> Once deposited, these pages can't be accessed by Linux anymore and thus
->> must be preserved in "used" state across kexec, as hypervisor state is
->> unware of kexec.
-> 
-> If Linux can't access them, they're not RAM any more.  I'd much rather
-> remove them from the memory map and move on with life rather than
-> implement a bunch of new ABI that's got to be handed across kernels.
-
-The motivation of handling kexec (faster?) in a hyper-v domain doesn't 
-sound particularly compelling got me for such features. If you inflated 
-memory, just don't allow to kexec. It's been broken for years IIUC.
-
-Maybe the other use cases are more "relevant".
-
--- 
-Cheers,
-
-David / dhildenb
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gOS8yOC8yMyAxMDozNSwgRGF2aWQgSGlsZGVuYnJhbmQgd3JvdGU6Cj4gT24gMjguMDkuMjMg
+MTU6MjIsIERhdmUgSGFuc2VuIHdyb3RlOgo+PiBPbiA5LzI3LzIzIDA5OjEzLCBTdGFuaXNsYXYg
+S2luc2J1cnNraWkgd3JvdGU6Cj4+PiBPbmNlIGRlcG9zaXRlZCwgdGhlc2UgcGFnZXMgY2FuJ3Qg
+YmUgYWNjZXNzZWQgYnkgTGludXggYW55bW9yZSBhbmQgdGh1cwo+Pj4gbXVzdCBiZSBwcmVzZXJ2
+ZWQgaW4gInVzZWQiIHN0YXRlIGFjcm9zcyBrZXhlYywgYXMgaHlwZXJ2aXNvciBzdGF0ZSBpcwo+
+Pj4gdW53YXJlIG9mIGtleGVjLgo+Pgo+PiBJZiBMaW51eCBjYW4ndCBhY2Nlc3MgdGhlbSwgdGhl
+eSdyZSBub3QgUkFNIGFueSBtb3JlLsKgIEknZCBtdWNoIHJhdGhlcgo+PiByZW1vdmUgdGhlbSBm
+cm9tIHRoZSBtZW1vcnkgbWFwIGFuZCBtb3ZlIG9uIHdpdGggbGlmZSByYXRoZXIgdGhhbgo+PiBp
+bXBsZW1lbnQgYSBidW5jaCBvZiBuZXcgQUJJIHRoYXQncyBnb3QgdG8gYmUgaGFuZGVkIGFjcm9z
+cyBrZXJuZWxzLgo+IAo+IFRoZSBtb3RpdmF0aW9uIG9mIGhhbmRsaW5nIGtleGVjIChmYXN0ZXI/
+KSBpbiBhIGh5cGVyLXYgZG9tYWluIGRvZXNuJ3QKPiBzb3VuZCBwYXJ0aWN1bGFybHkgY29tcGVs
+bGluZyBnb3QgbWUgZm9yIHN1Y2ggZmVhdHVyZXMuIElmIHlvdSBpbmZsYXRlZAo+IG1lbW9yeSwg
+anVzdCBkb24ndCBhbGxvdyB0byBrZXhlYy4gSXQncyBiZWVuIGJyb2tlbiBmb3IgeWVhcnMgSUlV
+Qy4KClRoYXQncyBhIGdvb2QgcG9pbnQuICBXaGF0IHByZXZlbnRzIGRlZmxhdGluZyBiZWZvcmUg
+a2V4ZWM/CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpr
+ZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
+aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
