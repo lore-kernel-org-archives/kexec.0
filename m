@@ -4,70 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 40133E743D4
-	for <kexec@archiver.kernel.org>; Fri, 29 Sep 2023 00:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 474E0E743D9
+	for <kexec@archiver.kernel.org>; Fri, 29 Sep 2023 02:12:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=p05JzgUB654iQG/SwoqhV7CwSrRgIBc/XIk5btQM6CU=; b=ZE41REimo0o+bO
-	vVs1M/GOzglwVQvFfSiSIffiXC9WqCp1y9MJ07JJeuJT36AlHyFdQFzirob4g++RZWvUOiNEOZd0I
-	Y6d+gS8aY+fwCxq2r4ISq03Nmu+lbElIuTBpxr38Bm0bInwd2FcnY4xmBqbrYSu4yoLy0GV1evW2s
-	B9+kT1hqJk9LCvg6aBgMaWFIAuv3S9XKXTx8IZjhG8sYf7RF4vOORj2AilGZsD8Q0qrTyEgx8RhcD
-	LLz9fEB+pp0whln3peTArQkiz5BxevwkPTTG42ADuV3Dg+fJZkaLax35Q0A1hkRvEi1mxh/UnWgxF
-	9pW/i8OXcynglNYelYEA==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=udxXBTfzH+bOU6QFnfp6REksIJNPPwoo4jgMcX9SGJ8=; b=pPtEijt30xKrqh
+	H3xGAXexVNSi3Pg1wydcxUTh8IAuacBfgixT/MhnKzlakFF03aVJ+3wjf/DYnvdzxgdTfjAxO/Dn0
+	lnwoQNeuGKoZjVT3e31Jva58JHfQwl6l5yFScUy+8wKAFKGjrHn/xHamlDJ9wne8UB4dJDWtIWlhZ
+	HBRuneMDzH+ezHUb41p6dGP0c+nE6xNIdJUwtZNnSdPVqHMMWzvmE+l7RcRMgljTTvbcI/ETQqr32
+	oZi9XR8xE3TUDY74inAup6ehTt7l9P0qCB6c3SGVvkfm/Iav23IJAtT28ec4xcCW2nAm6/7IsGVnE
+	NA22L+yOQmV9QiR51LoA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qm1NL-006vMn-2X;
-	Fri, 29 Sep 2023 00:28:59 +0000
-Received: from linux.microsoft.com ([13.77.154.182])
-	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qm1NJ-006vMB-0b
+	id 1qm2zS-0070rC-0T;
+	Fri, 29 Sep 2023 02:12:26 +0000
+Received: from mail-il1-x131.google.com ([2607:f8b0:4864:20::131])
+	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
+	id 1qm2zP-0070qQ-1d
 	for kexec@lists.infradead.org;
-	Fri, 29 Sep 2023 00:28:59 +0000
-Received: from skinsburskii. (c-67-170-100-148.hsd1.wa.comcast.net [67.170.100.148])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 79A8720B74C0;
-	Thu, 28 Sep 2023 17:28:54 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 79A8720B74C0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1695947334;
-	bh=xgeY38Tc+T0v8c84zmmWXI9zmkBg/uqKuMksz6AO048=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ml64FUlgShU5OWB0t2BMxt7rTJPD/xKaUHP1yd3wPvEGtfovoYljm1zG+tcbqe3he
-	 rYz1TMsVKax5HEdxT8GoyIwL2Nev/pmfNPz90V2Pv1IP1nAhV/KTQsRRbBR1aGOQDS
-	 Ou1FOISjnpf9Xts0laDY74+FSDzplj50wkWzeKBo=
-Date: Thu, 28 Sep 2023 00:18:01 -0700
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: Baoquan He <bhe@redhat.com>
-Cc: Dave Hansen <dave.hansen@intel.com>, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, ebiederm@xmission.com,
-	akpm@linux-foundation.org, stanislav.kinsburskii@gmail.com,
-	corbet@lwn.net, linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org, linux-mm@kvack.org, kys@microsoft.com,
-	jgowans@amazon.com, wei.liu@kernel.org, arnd@arndb.de,
-	gregkh@linuxfoundation.org, graf@amazon.de, pbonzini@redhat.com,
-	"Shutemov, Kirill" <kirill.shutemov@intel.com>
-Subject: Re: [RFC PATCH v2 0/7] Introduce persistent memory pool
-Message-ID: <20230928071801.GA20527@skinsburskii.>
-References: <20230927161319.GA19976@skinsburskii.>
- <ee1907a1-2f04-cfa3-9f09-75b94994e88b@intel.com>
- <20230927232548.GA20221@skinsburskii.>
- <b684d339-991d-be85-692c-75f21679ca69@intel.com>
- <20230928000230.GA20259@skinsburskii.>
- <760bbb08-83b4-7bb1-822f-2ceba26278a6@intel.com>
- <20230928003831.GA20366@skinsburskii.>
- <340596c9-d55d-5f8a-fa27-d95b0e10b20a@intel.com>
- <64208.123092816192300612@us-mta-483.us.mimecast.lan>
- <ZRYStfGZ0/FrRh8Z@MiWiFi-R3L-srv>
+	Fri, 29 Sep 2023 02:12:24 +0000
+Received: by mail-il1-x131.google.com with SMTP id e9e14a558f8ab-3512740906dso36491735ab.0
+        for <kexec@lists.infradead.org>; Thu, 28 Sep 2023 19:12:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google; t=1695953538; x=1696558338; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Aqq4K4J4v3GU1zpra4AFU6+X76RkkP22ZNAXzHknflA=;
+        b=vmiCBmnKTAurhpyare3JoJbrZje474SDnjx/RRt+kL/0idI/C3LIj63Fc1vTK4JSF9
+         z3hmvXSJ2Iwui46kll4+Y5zAoMC0JkTsPFl8MCGyKS6k5fgmRmQFsQOhydSv2oVjGoUo
+         4Z3uSFGS98DxPCrp/LR6cYI7lfpT8OSXc70nk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695953538; x=1696558338;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Aqq4K4J4v3GU1zpra4AFU6+X76RkkP22ZNAXzHknflA=;
+        b=To/AB+h29ldpSr3Jr7VhOHxOTSwUZ8NnjOBfT9BlBb1QtCqSstNarDn0wA4Dx8jl0M
+         DUhHxsiVz+LLs0StL3yo0LmhLqdF7fANvDDlqpI1Zxm9CYzHegiyFyzKo343kFP0qgYd
+         2zPWYf0sYokhNiF2FJ0x1IPHKP7KIUlQWCv67T5lMluv8YB/KFstU9J9vnhBmihGvhe/
+         gLtbd1HlOO8aiIskyxwfhx+69Z2mmUWE6BFw5vk0eXn3L56JpAzr5VJl3D3VGSsXEDnE
+         S7dSeXvsHVFENDZYQc2OimXeMalAFd8am3Kor9oMiXVjMdabLWz7hE7H0JLMu1VipKBR
+         qwZw==
+X-Gm-Message-State: AOJu0Yw3LvUbbEIVkXraoex2cwAH9UBf55HSQV1Ef5TLmUVK1E16l728
+	7duVUTlU+vKOPmHdjvz5R5UgFQ==
+X-Google-Smtp-Source: AGHT+IEai1UK0aHYmKd2wVeivdN2wmsYyz+oQOdL6LbVDKwokuooeNmu4Sjc7PYclcGvO3aCbuUCRw==
+X-Received: by 2002:a05:6e02:152e:b0:351:5acb:271 with SMTP id i14-20020a056e02152e00b003515acb0271mr3427556ilu.1.1695953537852;
+        Thu, 28 Sep 2023 19:12:17 -0700 (PDT)
+Received: from joelboxx5.c.googlers.com.com (161.74.123.34.bc.googleusercontent.com. [34.123.74.161])
+        by smtp.gmail.com with ESMTPSA id g6-20020a02c546000000b004290f6c15bfsm4937018jaj.145.2023.09.28.19.12.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 Sep 2023 19:12:16 -0700 (PDT)
+From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To: linux-kernel@vger.kernel.org,
+	Eric Biederman <ebiederm@xmission.com>
+Cc: "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ricardo Ribalda <ribalda@google.com>,
+	Ross Zwisler <zwisler@google.com>,
+	Rob Clark <robdclark@gmail.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	kexec@lists.infradead.org
+Subject: [PATCH] kexec: Fix reboot race during device_shutdown()
+Date: Fri, 29 Sep 2023 02:12:12 +0000
+Message-ID: <20230929021213.2364883-1-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.42.0.582.g8ccd20d70d-goog
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <ZRYStfGZ0/FrRh8Z@MiWiFi-R3L-srv>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230928_172857_283518_F79980BC 
-X-CRM114-Status: GOOD (  62.69  )
+X-CRM114-CacheID: sfid-20230928_191223_549468_0B231D31 
+X-CRM114-Status: GOOD (  11.74  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,129 +92,78 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Sep 29, 2023 at 07:56:37AM +0800, Baoquan He wrote:
-> On 09/27/23 at 07:46pm, Stanislav Kinsburskii wrote:
-> > On Thu, Sep 28, 2023 at 12:16:31PM -0700, Dave Hansen wrote:
-> > > On 9/27/23 17:38, Stanislav Kinsburskii wrote:
-> > > > On Thu, Sep 28, 2023 at 11:00:12AM -0700, Dave Hansen wrote:
-> > > >> On 9/27/23 17:02, Stanislav Kinsburskii wrote:
-> > > >>> On Thu, Sep 28, 2023 at 10:29:32AM -0700, Dave Hansen wrote:
-> > > >> ...
-> > > >>> Well, not exactly. That's something I'd like to have indeed, but from my
-> > > >>> POV this goal is out of scope of discussion at the moment.
-> > > >>> Let me try to express it the same way you did above:
-> > > >>>
-> > > >>> 1. Boot some kernel
-> > > >>> 2. Grow the deposited memory a bunch
-> > > >>> 5. Kexec
-> > > >>> 4. Kernel panic due to GPF upon accessing the memory deposited to
-> > > >>> hypervisor.
-> > > >>
-> > > >> I basically consider this a bug in the first kernel.  It *can't* kexec
-> > > >> when it's left RAM in shambles.  It doesn't know what features the new
-> > > >> kernel has and whether this is even safe.
-> > > >>
-> > > > 
-> > > > Could you elaborate more on why this is a bug in the first kernel?
-> > > > Say, kernel memory can be allocated in big physically consequitive
-> > > > chunks by the first kernel for depositing. The information about these
-> > > > chunks is then passed the the second kernel via FDT or even command
-> > > > line, so the seconds kernel can reserve this region during booting.
-> > > > What's wrong with this approach?
-> > > 
-> > > How do you know the second kernel can parse the FDT entry or the
-> > > command-line you pass to it?
-> > > 
-> > > >> Can the new kernel even read the new device tree data?
-> > > > 
-> > > > I'm not sure I understand the question, to be honest.
-> > > > Why can't it? This series contains code parts for both first and seconds
-> > > > kernels.
-> > > 
-> > > How do you know the second kernel isn't the version *before* this series
-> > > gets merged?
-> > > 
-> > 
-> > The answer to both questions above is the following: the feature is deployed
-> > fleed-wide first, and enabled only upon the next deployment.
-> > It worth mentioning, that fleet-wide deployments usually don't need to support
-> > updates to a version older that the previous one.
-> > Also, since kexec is initialited by user space, it always can be
-> > enlightened about kernel capabilities and simply don't kexec to an
-> > incompatible kernel version.
-> > One more bit to mention, that it real life this problme exists only
-> > during initial transition, as once the upgrade to a kernel with a
-> > feature has happened, there won't be a revert to a versoin without it.
-> > 
-> > > ...
-> > > >> I still think the only way this will possibly work when kexec'ing both
-> > > >> old and new kernels is to do it with the memory maps that *all* kernels
-> > > >> can read.
-> > > > 
-> > > > Could you elaborate more on this?
-> > > > The avaiable memory map actually stays the same for both kernels. The
-> > > > difference here can be in a different list of memory regions to reserve,
-> > > > when the first kernel allocated and deposited another chunk, and thus
-> > > > the second kernel needs to reserve this memory as a new region upon
-> > > > booting.
-> > > 
-> > > Please take a step back from your implementation for a moment.  There
-> > > are two basic design points that need to be considered.
-> > > 
-> > > First, *must* "System RAM" (according to the memory map) be persisted
-> > > across kexec?  If no, then there's no problem to solve and we can stop
-> > > this thread.  If yes, then some mechanism must be used to tell the new
-> > > kernel that the "System RAM" in the memory map is not normal RAM.
-> > > 
-> > > Second, *if* we agree that some data must communicate across kexec, then
-> > > what mechanism should be used?  You're arguing for a new mechanism that
-> > > only new kernels can use.  I'm arguing that you should likely reuse an
-> > > existing mechanism (probably the UEFI/e820 maps) so that *ALL* kernels
-> > > can consume the information, old and new.
-> > > 
-> > 
-> > I'd answer yes, "System MAP" must be persisted across kexec.
-> > Could you elaborate on why there should be a mechanism to tell the
-> > kernel anything special about the existent "System map" in this context?
-> > Say, one can reserve a CMA region (or a crash kernel region, etc), store
-> > there some data, and then pass it across kexec. Reserved CMA region will
-> > still be a part of the "System MAP", won't it?
-> 
-> Well, I haven't gone through all the discusison thread and clearly got
-> your intention and motivation. But here I have to say there's
-> misunderstanding. At least I am astonished when I heard the above
-> description. Who said a CMA region or a crahs kernel region need be
-> passed across kexec. Think kexec as a bootloader, in essence it's no
-> different than any other bootloader. When it jumps to 2nd kernel, the
-> whole system will be booted up and reconstructed on the system resources.
-> All the difference kexec has is it won't go through firmware to do those
-> detecting/testing/init. If the intentionn is to preserve any state or
-> region in 1st kernel, you absolutely got it wrong.
-> 
-> This is not the first time people want to put burden on kexec because
-> of a specifica scenario, and this is not the 2nd time, and not 3rd time
-> in the recent 2 years. But I would say please think about what is kexec
-> reboot, what we expect it to do, whether the problem be fixed in its own
-> side.
+During kexec reboot, it is possible for a race to occur between
+device_shutdown() and userspace.  This causes accesses to GPU after pm_runtime
+suspend has already happened. Fix this by calling freeze_processes() before
+device_shutdown().
 
-Frankly, I'm confused as I don't really understand, what you are arguing
-with exactly... Maybe I triggered some pain point, but I don't think you
-are reacting to what I actually said.
-I never said, that either CMA or crash kernel needs to be passed across
-kexec: I said they may be (and, actually are) passed in real worlds
-scenarios. Also, it's not just CMA, but pmem backed by RAM as well.
-What do I miss here?
+Such freezing is already being done if kernel supports KEXEC_JUMP and
+kexec_image->preserve_context is true. However, doing it if either of these are
+not true prevents crashes/races.
 
-And to me it looks like I do think about kexec as a boot loader just
-like you mentioned, as the proposal in this series is to construct a
-device tree exactly the same way as it it's constructed by (for example)
-uboot for both x86 and arm64.
-So, if we think about kexec as a bootloader, why uboot can pass a
-resource to the new kernel, while the previous kernel can't do the same
-and why may it be considered as an additional burden?
+This fixes the following crash during kexec reboot on an ARM64 device
+with adreno GPU:
 
-Thanks,
-Stanislav
+[  292.534314] Kernel panic - not syncing: Asynchronous SError Interrupt
+[  292.534323] Hardware name: Google Lazor (rev3 - 8) with LTE (DT)
+[  292.534326] Call trace:
+[  292.534328]  dump_backtrace+0x0/0x1d4
+[  292.534337]  show_stack+0x20/0x2c
+[  292.534342]  dump_stack_lvl+0x60/0x78
+[  292.534347]  dump_stack+0x18/0x38
+[  292.534352]  panic+0x148/0x3b0
+[  292.534357]  nmi_panic+0x80/0x94
+[  292.534364]  arm64_serror_panic+0x70/0x7c
+[  292.534369]  do_serror+0x0/0x7c
+[  292.534372]  do_serror+0x54/0x7c
+[  292.534377]  el1h_64_error_handler+0x34/0x4c
+[  292.534381]  el1h_64_error+0x7c/0x80
+[  292.534386]  el1_interrupt+0x20/0x58
+[  292.534389]  el1h_64_irq_handler+0x18/0x24
+[  292.534395]  el1h_64_irq+0x7c/0x80
+[  292.534399]  local_daif_inherit+0x10/0x18
+[  292.534405]  el1h_64_sync_handler+0x48/0xb4
+[  292.534410]  el1h_64_sync+0x7c/0x80
+[  292.534414]  a6xx_gmu_set_oob+0xbc/0x1fc
+[  292.534422]  a6xx_get_timestamp+0x40/0xb4
+[  292.534426]  adreno_get_param+0x12c/0x1e0
+[  292.534433]  msm_ioctl_get_param+0x64/0x70
+[  292.534440]  drm_ioctl_kernel+0xe8/0x158
+[  292.534448]  drm_ioctl+0x208/0x320
+[  292.534453]  __arm64_sys_ioctl+0x98/0xd0
+[  292.534461]  invoke_syscall+0x4c/0x118
+
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ricardo Ribalda <ribalda@google.com>
+Cc: Ross Zwisler <zwisler@google.com>
+Cc: Rob Clark <robdclark@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Tested-by: Ricardo Ribalda <ribalda@google.com>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+---
+ kernel/kexec_core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index e2f2574d8b74..6599f485e42d 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -1299,6 +1299,12 @@ int kernel_kexec(void)
+ 	} else
+ #endif
+ 	{
++		error = freeze_processes();
++		if (error) {
++			error = -EBUSY;
++			goto Unlock;
++		}
++
+ 		kexec_in_progress = true;
+ 		kernel_restart_prepare("kexec reboot");
+ 		migrate_to_reboot_cpu();
+-- 
+2.42.0.582.g8ccd20d70d-goog
+
 
 _______________________________________________
 kexec mailing list
