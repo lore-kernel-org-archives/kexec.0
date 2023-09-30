@@ -4,70 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0E94DE728C4
-	for <kexec@archiver.kernel.org>; Fri, 29 Sep 2023 16:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9B8FBE77371
+	for <kexec@archiver.kernel.org>; Sat, 30 Sep 2023 11:47:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=fUU5GiYneJeSr/re+LTfbFWY2yvMzG7MiNEw/9wMrj4=; b=ImEWkRcfXbZaxW
-	6Oly3m53ma0zryYqYin0tLPIzvfXDQ48TueVhYVnBBnxNup3Z+Dt3eND1ndJjnAC7adXuCcaVwdey
-	/Vx7ZdupgSdA/Ukw8R2S/xkttrAwJ6RqGAiTduLks6LpaZKrgVWkJx/1EHOYGJ9167Dk+VUDmw/ni
-	dWeM1SP0/TM+otWHKDO0sJ/I1Ev9RDm9anXyPao+tkxpzMCfwoG1f7h3p1KTRUZPLQgSJJIhPo0MU
-	uJGJQ7XruqxVKLgq8ZSgnG3lgDloZfuA8+7JDoupFJWIRDleDM1XjhhvoP/kY3DdD9poMNfm2bDBI
-	yaRqk5wWuDFJ/uKNvwLA==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:Message-ID:References:In-Reply-To:Subject:Cc:To:From
+	:Date:MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=xipyE/1ac9Glz1ZAb8n/Ku6xmvrizfThgRMRsgZmQLw=; b=EqTQj7n5o0NbRzbK1grsJMAieZ
+	vhrOSstuCXwETl9oRbKyes00g4guy6+fmqYXzvpuf06SV5D5DxgnSZDeBQhDDttd08AqTVa67+sxC
+	Gu35DK2Tnvj1GYFqcfR8Wu5xQLyFOTDUk2c0TzJw3iup+sC/zkO4mqeVdV1QJeHqCEh1etXab7Hl7
+	KrtlvlFOdU76FqjVq7XQ7nK6bvWXGqBJaG/lp8JN3G0Hl071/gXDCuW2x8Sb3ySJqFb08b3bfORuA
+	8KCqnX9f7CpJhIVXzelP0F3rQVQimg37P1rtNdTUKiWN2MQQ9WiVmmezv6wxWfAoqJ/t/6c2+port
+	LGPbpbCw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qmG3m-008GTb-0E;
-	Fri, 29 Sep 2023 16:09:46 +0000
-Received: from linux.microsoft.com ([13.77.154.182])
-	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qmG3j-008GTH-12
+	id 1qmYRJ-009To2-1Q;
+	Sat, 30 Sep 2023 11:47:17 +0000
+Received: from smtp2-g21.free.fr ([212.27.42.2])
+	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
+	id 1qmYRC-009Tn8-0i
 	for kexec@lists.infradead.org;
-	Fri, 29 Sep 2023 16:09:44 +0000
-Received: from skinsburskii. (c-67-170-100-148.hsd1.wa.comcast.net [67.170.100.148])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 1E11020B74C0;
-	Fri, 29 Sep 2023 09:09:41 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1E11020B74C0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1696003781;
-	bh=hBRFFChWfIJKYy72bpQH7xKGGzU+r4Wzml1eGPFHEBs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Lv3AqhUOg8n151/bqh1okWzXQRnbJgv18TSyBOBoKBUSs7z96qc9wIslOfmYcIj20
-	 CX5yJ/0tbuQmucA2aTIQJ3ol3I886vdUGrp40UFE1NeZwEgGJi/tVjsIKiezjtqnti
-	 YKg4s4TCMmGlxuZx+vugASYdS7colcK7Tnp+TSbs=
-Date: Thu, 28 Sep 2023 02:16:41 -0700
-From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
-To: "Shutemov, Kirill" <kirill.shutemov@intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>, Baoquan He <bhe@redhat.com>,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	ebiederm@xmission.com, akpm@linux-foundation.org,
-	stanislav.kinsburskii@gmail.com, corbet@lwn.net,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	linux-mm@kvack.org, kys@microsoft.com, jgowans@amazon.com,
-	wei.liu@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org,
-	graf@amazon.de, pbonzini@redhat.com
-Subject: Re: [RFC PATCH v2 0/7] Introduce persistent memory pool
-Message-ID: <20230928091641.GA20562@skinsburskii.>
-References: <20230927161319.GA19976@skinsburskii.>
- <ee1907a1-2f04-cfa3-9f09-75b94994e88b@intel.com>
- <20230927232548.GA20221@skinsburskii.>
- <b684d339-991d-be85-692c-75f21679ca69@intel.com>
- <20230928000230.GA20259@skinsburskii.>
- <760bbb08-83b4-7bb1-822f-2ceba26278a6@intel.com>
- <20230928003831.GA20366@skinsburskii.>
- <340596c9-d55d-5f8a-fa27-d95b0e10b20a@intel.com>
- <20230928024636.GA20423@skinsburskii.>
- <20230929101324.jgixt4jmqialchno@box.shutemov.name>
+	Sat, 30 Sep 2023 11:47:14 +0000
+Received: from webmail.free.fr (unknown [172.20.246.2])
+	(Authenticated sender: ju.o@free.fr)
+	by smtp2-g21.free.fr (Postfix) with ESMTPA id C60582003AE;
+	Sat, 30 Sep 2023 13:46:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=free.fr;
+	s=smtp-20201208; t=1696074416;
+	bh=oO6VvdZgndBCbZZcm5nOc6eoKX42G19oM38bo4s5x/g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=h3cPiv4YMVdi0lOYDVZSIyo8ibSHvp63etIaMLZQXXkaYOTCoOBfTj448eaWx+prU
+	 gyMEd68Fj+IFdEs8Lqi8ScwCqNuCfkVBNiBo/C2RFOyAeq7Mc+UP8GQCFtV0mMlake
+	 dKj7TtleYEnBYwfKzbxjVRxSfRhE4ubD41pux7KoMMnu6VGHEPymgNzrdGkBug6jxt
+	 wngawVHUqrTpYVNBE2tmHJFoIiCaii1YDgoKAtJ+t3knfyujT3xKhZpkuTheWx8QHz
+	 LMrUPWwleNl7DcQ75MBBsoU1a6Rn36aY+3duhclK1OImNGAKz33uWSYVofv1Bzv34c
+	 hVLv8kUwtvSQA==
+Received: from 82-64-214-120.subs.proxad.net ([82.64.214.120:36076])
+ via 82-64-214-120.subs.proxad.net ([82.64.214.120])
+ by webmail.free.fr
+ with HTTP (HTTP/1.0 POST); Sat, 30 Sep 2023 13:46:55 +0200
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20230929101324.jgixt4jmqialchno@box.shutemov.name>
+Date: Sat, 30 Sep 2023 13:46:55 +0200
+From: Julien Olivain <ju.o@free.fr>
+To: Dave Young <dyoung@redhat.com>
+Cc: kexec@lists.infradead.org
+Subject: Re: [PATCH 1/1] kexec: provide a memfd_create() wrapper if not
+ present in libc
+In-Reply-To: <CALu+AoQw_kwWi97ntkmQ+VCrkQdPSFhjwCuc-9BZso=op11PWw@mail.gmail.com>
+References: <20230923164606.58424-1-ju.o@free.fr>
+ <CALu+AoQw_kwWi97ntkmQ+VCrkQdPSFhjwCuc-9BZso=op11PWw@mail.gmail.com>
+User-Agent: Webmail Free/1.6.3
+Message-ID: <4e1afe7fc304c2582a91afa2c1b32f24@free.fr>
+X-Sender: ju.o@free.fr
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230929_090943_412978_ED9F9CA8 
-X-CRM114-Status: GOOD (  18.29  )
+X-CRM114-CacheID: sfid-20230930_044710_704460_09BD1C04 
+X-CRM114-Status: GOOD (  20.41  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,49 +72,94 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Sep 29, 2023 at 01:13:24PM +0300, Shutemov, Kirill wrote:
-> On Wed, Sep 27, 2023 at 07:46:36PM -0700, Stanislav Kinsburskii wrote:
-> > I'd answer yes, "System MAP" must be persisted across kexec.
-> > Could you elaborate on why there should be a mechanism to tell the
-> > kernel anything special about the existent "System map" in this context?
-> > Say, one can reserve a CMA region (or a crash kernel region, etc), store
-> > there some data, and then pass it across kexec. Reserved CMA region will
-> > still be a part of the "System MAP", won't it?
+Hi Dave,
+
+On 27/09/2023 08:45, Dave Young wrote:
+> On Sun, 24 Sept 2023 at 00:47, Julien Olivain <ju.o@free.fr> wrote:
+>> 
+>> Commit 714fa115 "kexec/arm64: Simplify the code for zImage" introduced
+>> a use of the memfd_create() system call, included in version
+>> kexec-tools v2.0.27.
+>> 
+>> This system call was introduced in kernel commit [1], first included
+>> in kernel v3.17 (released on 2014-10-05).
+>> 
+>> The memfd_create() glibc wrapper function was added much later in
+>> commit [2], first included in glibc version 2.27 (released on
+>> 2018-02-01).
+>> 
+>> This direct use memfd_create() introduced a requirement on
+>> Kernel >= 3.17 and glibc >= 2.27.
+>> 
+>> There is old toolchains like [3] for example (which ships gcc 7.3.1,
+>> glibc 2.25 and includes kernel v4.10 headers), that can still be used
+>> to build newer kernels. Even if such toolchains can be seen as
+>> outdated, they are is still claimed as supported by recent kernel.
+>> For example, Kernel v6.5.5 has a requirement on gcc version 5.1 and
+>> greater. See [4].
+>> 
+>> Moreover, kexec-tools <= 2.0.26 could be compiled using recent
+>> toolchains with alternative libc (e.g. uclibc-ng, musl) which are not
+>> providing the memfd_create() wrapper.
+>> 
+>> When compiling kexec-tools v2.0.27 with a toolchain not providing the
+>> memfd_create() syscall wrapper, the compilation fail with message:
+>> 
+>>     kexec/kexec.c: In function 'copybuf_memfd':
+>>     kexec/kexec.c:645:7: warning: implicit declaration of function 
+>> 'memfd_create'; did you mean 'SYS_memfd_create'? 
+>> [-Wimplicit-function-declaration]
+>>       fd = memfd_create("kernel", MFD_ALLOW_SEALING);
+>>            ^~~~~~~~~~~~
+>>            SYS_memfd_create
+>>     kexec/kexec.c:645:30: error: 'MFD_ALLOW_SEALING' undeclared (first 
+>> use in this function); did you mean '_PC_ALLOC_SIZE_MIN'?
+>>       fd = memfd_create("kernel", MFD_ALLOW_SEALING);
+>>                                   ^~~~~~~~~~~~~~~~~
+>>                                   _PC_ALLOC_SIZE_MIN
+>> 
+>> In order to let kexec-tools compile in a wider range of 
+>> configurations,
+>> this commit adds a memfd_create() function check in autoconf configure
+>> script, and adds a system call wrapper which will be used if the
+>> function is not available. With this commit, the environment
+>> requirement is relaxed to only kernel >= v3.17.
+>> 
+>> Note: this issue was found in kexec-tools integration in Buildroot [5]
+>> using the command "utils/test-pkg -a -p kexec", which tests many
+>> toolchain/arch combinations.
 > 
-> Em. When crash kernel starts all System RAM of the the first kernel
-> becomes E820_TYPE_RESERVED and only memory pre-allocated for crash
-> scenario becomes E820_TYPE_RAM. See crash_setup_memmap_entries().
-> 
-> Can't you go the same path? Report all deposited memory as
-> E820_TYPE_RESERVED.
-> 
+> I guess maybe the test was done on non x86 arch,  when I tried to
+> build on old versions
+> I got another failure of lacking "getrandom".    Only quickly did a
+> build test with commenting out
+> the getrandom code, the build passed with your patch.
 
-Sure I can.
-This approach will have the corresponding command line option as a
-requirement, and therefore is less flexible. But if passing device tree
-across kexec on x86 is the major concern, then of course I can change it
-the way you suggest.
+Thanks for testing!
 
-> Or do you have too many deposited memory ranges, so we would run out of
-> e820 entries?
-> 
+Regarding the getrandom() issue: according to [1], it requires
+Kernel 3.17 and glibc 2.25. It is also implemented in uclibc-ng
+and musl which is why I didn't see the issue.
 
-No, I don't think I have.
-I can imagine how such a pool with a lot of regions can exhaust e820
-table, but the implementation currently proposed is based on CMA and thus
-limited by 19 entires by default, so I guess running out of e820 entries
-is unlikely in real world scenarios.
+getrandom() being a GNU extension, it needs '_GNU_SOURCE' to be
+defined in uclibc-ng. Patch [2] was proposed a while back to fix
+builds on m68k and uclibc-ng.
 
-Thanks,
-Stanislav
+> Thanks
+> Dave
 
-> -- 
->   Kiryl Shutsemau / Kirill A. Shutemov
+Best regards,
+
+Julien.
+
+[1] https://man7.org/linux/man-pages/man2/getrandom.2.html#HISTORY
+[2] 
+https://lore.kernel.org/kexec/20230422095904.1303434-1-laurent@vivier.eu/
 
 _______________________________________________
 kexec mailing list
