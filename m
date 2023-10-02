@@ -4,63 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9B8FBE77371
-	for <kexec@archiver.kernel.org>; Sat, 30 Sep 2023 11:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1333CE74902
+	for <kexec@archiver.kernel.org>; Mon,  2 Oct 2023 18:19:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:Message-ID:References:In-Reply-To:Subject:Cc:To:From
-	:Date:MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=xipyE/1ac9Glz1ZAb8n/Ku6xmvrizfThgRMRsgZmQLw=; b=EqTQj7n5o0NbRzbK1grsJMAieZ
-	vhrOSstuCXwETl9oRbKyes00g4guy6+fmqYXzvpuf06SV5D5DxgnSZDeBQhDDttd08AqTVa67+sxC
-	Gu35DK2Tnvj1GYFqcfR8Wu5xQLyFOTDUk2c0TzJw3iup+sC/zkO4mqeVdV1QJeHqCEh1etXab7Hl7
-	KrtlvlFOdU76FqjVq7XQ7nK6bvWXGqBJaG/lp8JN3G0Hl071/gXDCuW2x8Sb3ySJqFb08b3bfORuA
-	8KCqnX9f7CpJhIVXzelP0F3rQVQimg37P1rtNdTUKiWN2MQQ9WiVmmezv6wxWfAoqJ/t/6c2+port
-	LGPbpbCw==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=fT1Sbb89piu7uxd9J2ElQ2XAcwWeL4FISYx1oX6LkT4=; b=XRlVMoaeegcbzx
+	hah3pNuSfJiah/605vXVmzP+EAZzCXMLowXiHEuHeU+QPsT6DMi5a+3XEGhIKLMEb3+cvNjkvfgwu
+	09UopLNd+Dd8bYfkMOym5lDr8LjPnXV/88LgTBpwYAUYJtt/E+1VC90gZyqVswrHBg2y0jDSHiCSu
+	9Omlra72gVY6X1cMnDvTJOZ1UlyE921RH6Fn2lsEXGR7z8pXiCx2GcEP4pdKiP8WwixLpWneTWHT2
+	lkwEhgqJuvi0dWQRKDF+7KJWxyAO1+ZZ69LYscoY1DGkEzvYdbzGY0obhy9hy9qX+a+9WRAwZAX+5
+	5l1liteB2DaCNaaoGHrA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qmYRJ-009To2-1Q;
-	Sat, 30 Sep 2023 11:47:17 +0000
-Received: from smtp2-g21.free.fr ([212.27.42.2])
+	id 1qnNVl-00DCj0-1V;
+	Mon, 02 Oct 2023 18:19:17 +0000
+Received: from mail-lf1-x12e.google.com ([2a00:1450:4864:20::12e])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qmYRC-009Tn8-0i
+	id 1qnNVg-00DCiG-2S
 	for kexec@lists.infradead.org;
-	Sat, 30 Sep 2023 11:47:14 +0000
-Received: from webmail.free.fr (unknown [172.20.246.2])
-	(Authenticated sender: ju.o@free.fr)
-	by smtp2-g21.free.fr (Postfix) with ESMTPA id C60582003AE;
-	Sat, 30 Sep 2023 13:46:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=free.fr;
-	s=smtp-20201208; t=1696074416;
-	bh=oO6VvdZgndBCbZZcm5nOc6eoKX42G19oM38bo4s5x/g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=h3cPiv4YMVdi0lOYDVZSIyo8ibSHvp63etIaMLZQXXkaYOTCoOBfTj448eaWx+prU
-	 gyMEd68Fj+IFdEs8Lqi8ScwCqNuCfkVBNiBo/C2RFOyAeq7Mc+UP8GQCFtV0mMlake
-	 dKj7TtleYEnBYwfKzbxjVRxSfRhE4ubD41pux7KoMMnu6VGHEPymgNzrdGkBug6jxt
-	 wngawVHUqrTpYVNBE2tmHJFoIiCaii1YDgoKAtJ+t3knfyujT3xKhZpkuTheWx8QHz
-	 LMrUPWwleNl7DcQ75MBBsoU1a6Rn36aY+3duhclK1OImNGAKz33uWSYVofv1Bzv34c
-	 hVLv8kUwtvSQA==
-Received: from 82-64-214-120.subs.proxad.net ([82.64.214.120:36076])
- via 82-64-214-120.subs.proxad.net ([82.64.214.120])
- by webmail.free.fr
- with HTTP (HTTP/1.0 POST); Sat, 30 Sep 2023 13:46:55 +0200
+	Mon, 02 Oct 2023 18:19:14 +0000
+Received: by mail-lf1-x12e.google.com with SMTP id 2adb3069b0e04-5046bf37ec1so16426668e87.1
+        for <kexec@lists.infradead.org>; Mon, 02 Oct 2023 11:19:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google; t=1696270750; x=1696875550; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZmYFxSTwzJ+srWcIfoZo1SLlX6AH34QQsRUSP7AjE6E=;
+        b=KlTFhYjafjYvh8aARs4ofIu6+rJwibD9+J85px3UjoYwdtip0XNwvtYmlmJeoEQD63
+         4dukZYC3EHhkSDpjsIDbBrOTo5QVJPSKPDMM0l5eiBULUwmKjuACWAyfhFi7YOcz76G6
+         SJ3eNm0cejxgTwbPCt4hxjA+6Xz6AX0f5VYqw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696270750; x=1696875550;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZmYFxSTwzJ+srWcIfoZo1SLlX6AH34QQsRUSP7AjE6E=;
+        b=gJGsH6TitnmuM2SGzv5IDkJ7JgG+PfgD/+ToEvNiBJGOXlc1RwM9ONVH4qJJKCTSzA
+         B3RK4J9+sH7UPuFk/+MbEICAEq9ePEQW4ANYpwZyWbeYmxdt7eMY9I1uynEqkqclu1Ha
+         GHxbcmDWrDKqAMwkHd6a/2wn+2v9/I/kXiBi3DVsFtPfQUFxDl2+tcZ9kNvLKKbB2bqK
+         1yWt8VkGmRdCiTEdSSfvQLhWNaL7x7qSslEUUfGuBy0toV0WAmsKcd2fH0FzIhCra7Ow
+         A+9Qi1S1I+aOP3PpC0rHc2c/FCHVO7LrPY7k6ikhFatUE7IZzvrlC3m1eH1FnThUhu1h
+         ZB4g==
+X-Gm-Message-State: AOJu0YxsGxzIzfTU529Ri8f0X67AIRwSFTTx14/KuEZF9WVQuHwEj/OX
+	V0TVYOpMbkqEyVuIkyoHc29VMD0FEwYeirCUKIuFhg==
+X-Google-Smtp-Source: AGHT+IHbOd875gpdjPofvtrlgTr+wHiCla5vNQdnG5xXttbr+WjmmnUwdNy/rHwCgl58Mckl03RBmsvfu12qFYDSn08=
+X-Received: by 2002:a05:6512:3c87:b0:4fd:fabf:b6ee with SMTP id
+ h7-20020a0565123c8700b004fdfabfb6eemr12141694lfv.9.1696270749716; Mon, 02 Oct
+ 2023 11:19:09 -0700 (PDT)
 MIME-Version: 1.0
-Date: Sat, 30 Sep 2023 13:46:55 +0200
-From: Julien Olivain <ju.o@free.fr>
-To: Dave Young <dyoung@redhat.com>
-Cc: kexec@lists.infradead.org
-Subject: Re: [PATCH 1/1] kexec: provide a memfd_create() wrapper if not
- present in libc
-In-Reply-To: <CALu+AoQw_kwWi97ntkmQ+VCrkQdPSFhjwCuc-9BZso=op11PWw@mail.gmail.com>
-References: <20230923164606.58424-1-ju.o@free.fr>
- <CALu+AoQw_kwWi97ntkmQ+VCrkQdPSFhjwCuc-9BZso=op11PWw@mail.gmail.com>
-User-Agent: Webmail Free/1.6.3
-Message-ID: <4e1afe7fc304c2582a91afa2c1b32f24@free.fr>
-X-Sender: ju.o@free.fr
+References: <20230929021213.2364883-1-joel@joelfernandes.org> <87bkdl55qm.fsf@email.froward.int.ebiederm.org>
+In-Reply-To: <87bkdl55qm.fsf@email.froward.int.ebiederm.org>
+From: Joel Fernandes <joel@joelfernandes.org>
+Date: Mon, 2 Oct 2023 14:18:58 -0400
+Message-ID: <CAEXW_YQ=HGok600ARtCKBNDs1OHSc=UM4hWmBdQ=sXZvif0Z5g@mail.gmail.com>
+Subject: Re: [PATCH] kexec: Fix reboot race during device_shutdown()
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
+	Ricardo Ribalda <ribalda@google.com>, Ross Zwisler <zwisler@google.com>, Rob Clark <robdclark@gmail.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, kexec@lists.infradead.org
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20230930_044710_704460_09BD1C04 
-X-CRM114-Status: GOOD (  20.41  )
+X-CRM114-CacheID: sfid-20231002_111912_805566_B11288D1 
+X-CRM114-Status: GOOD (  29.26  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -72,96 +81,55 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Dave,
-
-On 27/09/2023 08:45, Dave Young wrote:
-> On Sun, 24 Sept 2023 at 00:47, Julien Olivain <ju.o@free.fr> wrote:
->> 
->> Commit 714fa115 "kexec/arm64: Simplify the code for zImage" introduced
->> a use of the memfd_create() system call, included in version
->> kexec-tools v2.0.27.
->> 
->> This system call was introduced in kernel commit [1], first included
->> in kernel v3.17 (released on 2014-10-05).
->> 
->> The memfd_create() glibc wrapper function was added much later in
->> commit [2], first included in glibc version 2.27 (released on
->> 2018-02-01).
->> 
->> This direct use memfd_create() introduced a requirement on
->> Kernel >= 3.17 and glibc >= 2.27.
->> 
->> There is old toolchains like [3] for example (which ships gcc 7.3.1,
->> glibc 2.25 and includes kernel v4.10 headers), that can still be used
->> to build newer kernels. Even if such toolchains can be seen as
->> outdated, they are is still claimed as supported by recent kernel.
->> For example, Kernel v6.5.5 has a requirement on gcc version 5.1 and
->> greater. See [4].
->> 
->> Moreover, kexec-tools <= 2.0.26 could be compiled using recent
->> toolchains with alternative libc (e.g. uclibc-ng, musl) which are not
->> providing the memfd_create() wrapper.
->> 
->> When compiling kexec-tools v2.0.27 with a toolchain not providing the
->> memfd_create() syscall wrapper, the compilation fail with message:
->> 
->>     kexec/kexec.c: In function 'copybuf_memfd':
->>     kexec/kexec.c:645:7: warning: implicit declaration of function 
->> 'memfd_create'; did you mean 'SYS_memfd_create'? 
->> [-Wimplicit-function-declaration]
->>       fd = memfd_create("kernel", MFD_ALLOW_SEALING);
->>            ^~~~~~~~~~~~
->>            SYS_memfd_create
->>     kexec/kexec.c:645:30: error: 'MFD_ALLOW_SEALING' undeclared (first 
->> use in this function); did you mean '_PC_ALLOC_SIZE_MIN'?
->>       fd = memfd_create("kernel", MFD_ALLOW_SEALING);
->>                                   ^~~~~~~~~~~~~~~~~
->>                                   _PC_ALLOC_SIZE_MIN
->> 
->> In order to let kexec-tools compile in a wider range of 
->> configurations,
->> this commit adds a memfd_create() function check in autoconf configure
->> script, and adds a system call wrapper which will be used if the
->> function is not available. With this commit, the environment
->> requirement is relaxed to only kernel >= v3.17.
->> 
->> Note: this issue was found in kexec-tools integration in Buildroot [5]
->> using the command "utils/test-pkg -a -p kexec", which tests many
->> toolchain/arch combinations.
-> 
-> I guess maybe the test was done on non x86 arch,  when I tried to
-> build on old versions
-> I got another failure of lacking "getrandom".    Only quickly did a
-> build test with commenting out
-> the getrandom code, the build passed with your patch.
-
-Thanks for testing!
-
-Regarding the getrandom() issue: according to [1], it requires
-Kernel 3.17 and glibc 2.25. It is also implemented in uclibc-ng
-and musl which is why I didn't see the issue.
-
-getrandom() being a GNU extension, it needs '_GNU_SOURCE' to be
-defined in uclibc-ng. Patch [2] was proposed a while back to fix
-builds on m68k and uclibc-ng.
-
-> Thanks
-> Dave
-
-Best regards,
-
-Julien.
-
-[1] https://man7.org/linux/man-pages/man2/getrandom.2.html#HISTORY
-[2] 
-https://lore.kernel.org/kexec/20230422095904.1303434-1-laurent@vivier.eu/
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgRXJpYywKCk9uIEZyaSwgU2VwIDI5LCAyMDIzIGF0IDEyOjAx4oCvUE0gRXJpYyBXLiBCaWVk
+ZXJtYW4KPGViaWVkZXJtQHhtaXNzaW9uLmNvbT4gd3JvdGU6Cj4KPiAiSm9lbCBGZXJuYW5kZXMg
+KEdvb2dsZSkiIDxqb2VsQGpvZWxmZXJuYW5kZXMub3JnPiB3cml0ZXM6Cj4KPiA+IER1cmluZyBr
+ZXhlYyByZWJvb3QsIGl0IGlzIHBvc3NpYmxlIGZvciBhIHJhY2UgdG8gb2NjdXIgYmV0d2Vlbgo+
+ID4gZGV2aWNlX3NodXRkb3duKCkgYW5kIHVzZXJzcGFjZS4gIFRoaXMgY2F1c2VzIGFjY2Vzc2Vz
+IHRvIEdQVSBhZnRlciBwbV9ydW50aW1lCj4gPiBzdXNwZW5kIGhhcyBhbHJlYWR5IGhhcHBlbmVk
+LiBGaXggdGhpcyBieSBjYWxsaW5nIGZyZWV6ZV9wcm9jZXNzZXMoKSBiZWZvcmUKPiA+IGRldmlj
+ZV9zaHV0ZG93bigpLgo+Cj4gSXMgdGhlcmUgYW55IHJlYXNvbiB3aHkgdGhpcyBzYW1lIHJhY2Ug
+d2l0aCBiZXR3ZWVuIHN5c19rZXhlYyBhbmQgdGhlCj4gYWRyZW5vX2lvY3RsIGNhbiBub3QgaGFw
+cGVuIGR1cmluZyBhIG5vcm1hbCByZWJvb3Q/CgpUaGFua3MgZm9yIHRoZSByZXNwb25zZS4gSXQg
+Y2FuIGhhcHBlbiBkdXJpbmcgYSBub3JtYWwgcmVib290LiBJIHRoaW5rCnRoZSByZWFzb24gaXQg
+ZG9lcyBub3Qgc2hvdyB1cCBpbiB0aGUgd2lsZCBpcyBiZWNhdXNlIHRoZSAicmVib290Igpjb21t
+YW5kIGltcGxlbWVudGF0aW9uIHR5cGljYWxseSBzZW5kcyBvbmUgb2YgU0lHU1RPUCBvciBTSUdL
+SUxMIHRvCmFsbCBwcm9jZXNzZXMgd2hpY2ggZWZmZWN0aXZlbHkgcHJldmVudHMgdGhlIHJhY2Uu
+CgpJbiBhbnkgY2FzZSwgdGhlcmUgaXMgYWxzbyBhIHNjaG9vbCBvZiB0aG91Z2h0IHRoYXQgc2F5
+cyB0aGUga2VybmVsCnNob3VsZCBiZSByZXNpbGllbnQgdG8gY3Jhc2hlcyBhbmQgYSB1c2Vyc3Bh
+Y2Ugd29ya2Fyb3VuZCBpbnZvbHZpbmcKc2VuZGluZyBzaWduYWxzIGNvdWxkIGJlIGxvb2tlZCBh
+dCBhcyBwYXBlcmluZyBvdmVyIHRoZSByZWFsIGlzc3VlLiBJCmRvIHN5bXBhdGhpemUvYWdyZWUg
+d2l0aCB0aGF0IHNjaG9vbCBvZiB0aG91Z2h0IGFzIHdlbGwuCgo+IElzIHRoZXJlIGFueSByZWFz
+b24gd2h5IHRoZXJlIGlzIG5vdCBhIC5zaHV0ZG93biBtZXRob2QgdG8gcHJldmVudCB0aGUKPiBy
+YWNlPwo+IEkgd291bGQgdGhpbmsgdGhlIHRoaW5nIHRvIGRvIGlzIHRvIHByZXZlbnQgdGhpcyBy
+YWNlIGluCj4ga2VybmVsX3Jlc3RhcnRfcHJlcGFyZSBvciBpbiB0aGUgR1BVcyAuc2h1dGRvd24g
+bWV0aG9kLiAgQXMgSSBkb24ndCBzZWUKPiBhbnl0aGluZyB0aGF0IHdvdWxkIHByZXZlbnQgdGhp
+cyBkdXJpbmcgYSBub3JtYWwgcmVib290LgoKV2hhdCB5b3UncmUgc2F5aW5nIGlzIGVzc2VudGlh
+bGx5IHdoYXQgSSByZW1lbWJlciB0cnlpbmcsIHRoZSBpc3N1ZSBpcwpub3QgaW4gdGhlIEdQVSBk
+cml2ZXIgYnV0IHJhdGhlciB0aGVyZSB0aGUgaW50ZXJjb25uZWN0IGluIHRoZSBTb0MKc2h1dGRv
+d24gYW5kIGNhdXNlcyBhbiAiU0Vycm9yIiBleGNlcHRpb24gaWYgdGhlIENQVSB0cmllcyB0byBh
+Y2Nlc3MKdGhlIG1lbW9yeSBsb2NhdGlvbnMsIGFzIGFsc28gc2VlbiBpbiB0aGUgc3RhY2suIEkg
+d2FzIG5vdCBhYmxlIHRvCnRyYWNlIGV4YWN0bHkgd2hlbiB0aGUgaW50ZXJjb25uZWN0IGJlY29t
+ZXMgdW5hdmFpbGFibGUgYW5kIHBlcmhhcHMKdGhlcmUgaXMgYSBwb3NzaWJpbGl0eSBvZiBhIG1v
+cmUgaW50cmljYXRlIGZpeCB3aGVyZSB3ZSBjYW4gc2lnbmFsIHRoZQpHUFUgZHJpdmVyIHRvIG5v
+dCBhY2Nlc3MgdGhlIGJ1cyBhbnltb3JlLCBidXQgbXkgc3VzcGljaW9uIGlzIHRoYXQKd2lsbCBh
+ZGQgYSBsb3Qgb2YgY29tcGxleGl0eSBhbmQgcGVyaGFwcyBsZWF2ZSB0aGUgZG9vciBvcGVuIHRv
+CnNpbWlsYXIgaXNzdWVzLgoKPiA+IFN1Y2ggZnJlZXppbmcgaXMgYWxyZWFkeSBiZWluZyBkb25l
+IGlmIGtlcm5lbCBzdXBwb3J0cyBLRVhFQ19KVU1QIGFuZAo+ID4ga2V4ZWNfaW1hZ2UtPnByZXNl
+cnZlX2NvbnRleHQgaXMgdHJ1ZS4gSG93ZXZlciwgZG9pbmcgaXQgaWYgZWl0aGVyIG9mIHRoZXNl
+IGFyZQo+ID4gbm90IHRydWUgcHJldmVudHMgY3Jhc2hlcy9yYWNlcy4KPgo+IFRoZSBLRVhFQ19K
+VU1QIGNhc2UgaXMgc29tZXRoaW5nIGVsc2UgZW50aXJlbHkuICBJdCBpcyBzdXBwb3NlZCB0byB3
+b3JrCj4gbGlrZSBzdXNwZW5kIHRvIFJBTS4gIE1heWJlIHJlYm9vdCBzaG91bGQgYXMgd2VsbCwg
+YnV0IEkgYW0KPiB1bmNvbWZvcnRhYmxlIG1ha2luZyBhIGdlbmVyaWMgZGV2aWNlIGZpeCBrZXhl
+YyBzcGVjaWZpYy4KCkkgc2VlIHlvdXIgcG9pbnQgb2Ygdmlldy4gSSB0aGluayByZWd1bGFyIHJl
+Ym9vdCBzaG91bGQgYWxzbyBiZSBmaXhlZAp0byBhdm9pZCBzaW1pbGFyIGNyYXNoIHBvc3NpYmls
+aXRpZXMuIEkgYW0gaGFwcHkgdG8gbWFrZSBhIGNoYW5nZSBmb3IKdGhhdCBzaW1pbGFyIHRvIHRo
+aXMgcGF0Y2ggaWYgd2Ugd2FudCB0byBwcm9jZWVkIHRoYXQgd2F5LgoKVGhvdWdodHM/Cgp0aGFu
+a3MsCgogLSBKb2VsCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
+bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
