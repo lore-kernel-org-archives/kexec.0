@@ -4,130 +4,101 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9362DE784A8
-	for <kexec@archiver.kernel.org>; Tue,  3 Oct 2023 04:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 87B09E7AD59
+	for <kexec@archiver.kernel.org>; Tue,  3 Oct 2023 18:07:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-ID:In-Reply-To:
-	References:Message-ID:Date:Subject:To:From:Reply-To:Cc:Content-Description:
+	Content-Transfer-Encoding:Content-Type:Reply-To:List-Subscribe:List-Help:
+	List-Post:List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=z7xa+sAOMQGrmesVTuLS+wfYSXiJKkVi2+BPk8ujL3U=; b=Db9r7HPKAy0owD
-	Wz52JxJS7+yL4GgSinA/x6xvWhnzLk7dXqA3l6nhmqqVIey+oNRMDIUJSQmBGPAaZXzoeb1mUon8l
-	ndTxXAgaEQwJhX/3DD38hWzcm8QDb227Io572cmcSfG3REpRWNFUfuQwlKAcdNjlduDWfO9wIySll
-	y3fhwnIx78mY2163xf5LvYaFyuCR6sFYlxoT1mALp3cdF97GsW074u+KOQ5qlYZqOiSgolZf23pe5
-	KWcCUDFEWg+Tm6lGzD819otO5t/MvgQXgJaDVAJxRNml01TNt6Bj72yCxsLB9SDod50dcCE8prmZe
-	/DYoDJx7hAp6l7peG7MQ==;
+	List-Owner; bh=1/EpIHaN7TDEgOK/R19VyKXYPV0HAvGrPPfdn9u7tDc=; b=Zyou1rldBhEaJA
+	3zDsJyxTg2K6P7B6Wjnq9SGX0TwI9+n8MChkYRs07HKtmxH/LDLFWZpqkoT9gg+nV4Dmjy1CABHm9
+	h/XkJIl7bujsWX5AeCRiqlJKjEPXYdC3boUhAibD0LqKrP0WHWulXxgHqUfl+LGQDimGrU2FctOE0
+	Tq+6ReaCdEv2FGLTcSe2yIyPp6K/3MHXkYrSwaotc2hFzx7jKfJ4G7oNQQ9AQHukyX6c4EENSrL1U
+	9iLZN6hDCExkN8MI8+6np7OLXQhZtgSZZs2/JwRT6ssQxd3kNpYoCwltSZwHKLuInMd7BE4TpzfLY
+	dRNPGlBjgE4Vq2g8+Ztw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qnWvx-00DmEN-2A;
-	Tue, 03 Oct 2023 04:22:57 +0000
-Received: from mail-os0jpn01on2060e.outbound.protection.outlook.com ([2a01:111:f403:700c::60e] helo=JPN01-OS0-obe.outbound.protection.outlook.com)
+	id 1qnjnN-00F5ns-0v;
+	Tue, 03 Oct 2023 18:06:57 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qnWvt-00DmCe-31
+	id 1qnjnK-00F5ls-0D
 	for kexec@lists.infradead.org;
-	Tue, 03 Oct 2023 04:22:56 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RNLtUdQVyDfjjlY1RC0vuIWOIOYrQmh8u5ss3jbRupwQPTL6uPLa9ev3EoUEduz9Vt3zgKvmPVLN/vIBqxX8db4FuqxScQr41cdwtO+Yd6LW0f78T2NDSpQyE6fWHXqB+3DAGhRe2Rlty3eSxGW1qa3/8YBmi80Z80l4Hgxc0l57AFooxa6KH9w4/mgcZYXubv8iwJX94+3ELJU5kzi79JXcShUrGXS9XeZVq3T2+Z4mkdWgntiZnpAxNH90E50rWj43v96P+n9kkVlSF04rnlWqiY5N3jhf+WUojBFCZ8LHuwLrQDh7BZpVyQ7DMxbEgLhoJaoeurimf7S7/i5NbQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tI+565pL7bl4G5ayy/xzLMqYX4VLy5mNBNvzuNwsJH8=;
- b=Of3A6zu2Cmtf/a2phUuhDF2+QQ4l31Sy4YenmVYAjCpwlwv6tz5aBDccr9VT2ScQZG2UG6V/2nHh0yXPtOd4RiezpbQgPUZSNCwNUU+DuFf+kBGkmrsI1IGh4ZJvCwWiZopM61s9oeQemnOYjaXMo56RXK9fhulrZwxPb8zJ9x/OhR0rMi5Kv3v+f2gObRX6aInTfGpsUb0Fwp8WldQuMtTiV2+yXHU7j1YPM/VhSWUopuH6v3/zb7GGVRcLAWvwADy7kIc5ddAuNUJKU4/s0sp7bjkrU7S/DlO/k36hoxx1JTYcw/8hmwMmjh54/H4yY0r+86XpCwmXiyIdXNUT8g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nec.com; dmarc=pass action=none header.from=nec.com; dkim=pass
- header.d=nec.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nec.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tI+565pL7bl4G5ayy/xzLMqYX4VLy5mNBNvzuNwsJH8=;
- b=cD4smC+XKW7GxKcJF5wxvWFoe++nng9iglKmn3bZ0Ax2eIN/x9lhW/9XcjhC6s8Y8VbP55ceyeYG4ATMmXDFRX0Bpr6fzckeLT+HHl7hPDVGrewjez8aJO2vFaB5C0iV/9K+65XXdFcUaHEl7g5xWMZ6MBeQ2B/hzfOP8BeBC88=
-Received: from TYYPR01MB6777.jpnprd01.prod.outlook.com (2603:1096:400:cc::9)
- by OSZPR01MB8204.jpnprd01.prod.outlook.com (2603:1096:604:1a5::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6838.33; Tue, 3 Oct
- 2023 04:22:28 +0000
-Received: from TYYPR01MB6777.jpnprd01.prod.outlook.com
- ([fe80::ca4d:34d:1e30:b93a]) by TYYPR01MB6777.jpnprd01.prod.outlook.com
- ([fe80::ca4d:34d:1e30:b93a%7]) with mapi id 15.20.6838.033; Tue, 3 Oct 2023
- 04:22:28 +0000
-From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
-	<k-hagio-ab@nec.com>
-To: Song Shuai <songshuaishuai@tinylab.org>, "kexec@lists.infradead.org"
-	<kexec@lists.infradead.org>
-Subject: Re: [PATCH makedumpfile 0/2] Add riscv64 support for makedumpfile
-Thread-Topic: [PATCH makedumpfile 0/2] Add riscv64 support for makedumpfile
-Thread-Index: AQHZ8TR3j0iN0urU5U6xRgHvpfHfSLA3gAWA
-Date: Tue, 3 Oct 2023 04:22:28 +0000
-Message-ID: <b7d09d33-c606-0c76-8865-e4e43a5d43ce@nec.com>
-References: <20230927111822.180630-1-songshuaishuai@tinylab.org>
-In-Reply-To: <20230927111822.180630-1-songshuaishuai@tinylab.org>
-Accept-Language: ja-JP, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nec.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYYPR01MB6777:EE_|OSZPR01MB8204:EE_
-x-ms-office365-filtering-correlation-id: 6afd1841-16c8-4b98-bc14-08dbc3c85abd
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: KIXlnDX01GR9lm1JxRehODaX9cnrWYc+3FSGxyhBO8lgQ9SquTHaWz8dW264dpI6/ZRlYSXin/r1iOsV8Q8oBL6jE3pXueu5WKv7IKQuGzKAy8M/AyHEQHp/bf1it45Bm5TWHhgQ6MDnapi7212w/Nm9hab679S0HxS1r/HXJq5Y8+RsXxavVcudrnNV7UARzCMrVMJO/OysgGWsyGy/2eJRIArEX4Qkm99/KKljv3Zc6SuC4dd2gkkBdsUg0ajwktmZ44qHaYmjbrJ/r0noldJ2smC4a3E0qCo1nqqCmxd9U8312ou4xmdQKlJo8x5zrLmS1eY8/sUka5laLBqnBIsskYB1GdiSP0zbfszve647mu6Pv820TTn/MBgfZqkAGK3ELq4250wPxyvpdQVo83KVqVsgDgxmQeR86XGGFx+lOdHGVcMZoBv1FHSwfiswQ4jjN/k1+d9gU0yu0aIhpVkEfL2AP+oCsc9Q6lt5vemQJGsoBNNDlVrAVmIofZ3RwUz8ERv8Wipx/EuruzjrrBrXP+wtuuCF3CYw9kWBo3N0aQhOLPVBL3DOoeUCDw+7wWG3sB3whVHXLWQYPPojt806qTdtEeaHTPQItLLFGn/V7tipDoXcJcOzP8ctEFVsPr1BidMvmoSt57tteOjBhg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYYPR01MB6777.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(376002)(346002)(136003)(39860400002)(396003)(230922051799003)(64100799003)(186009)(451199024)(1800799009)(83380400001)(478600001)(6486002)(31686004)(26005)(82960400001)(53546011)(6512007)(122000001)(6506007)(31696002)(2906002)(5660300002)(8936002)(8676002)(71200400001)(38070700005)(38100700002)(64756008)(316002)(85182001)(36756003)(66476007)(66446008)(41300700001)(76116006)(66946007)(66556008)(110136005)(86362001)(2616005)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?dGJJUVF1VGlZV3F2bHJNZkZMYVhRZTVpSzFJRHJzVUt0aXNVaE1URFBDOXNZ?=
- =?utf-8?B?ZEh1OWtYaHlGTXUya05KWFpXWWxpQ0liVi8zM1BpRHBPdFFuZFpOSDNCQUwz?=
- =?utf-8?B?ZUZyeTJUUEptQWdWckhBcSs1YnRSOHpIcm5QM1lmRitvSjdueGdDZ1Y3RUlx?=
- =?utf-8?B?VTkyUlFYSDh3MzNwMkZ1VTc4aWEwWEZPWGVURVJJTGxUdHl6UmgwLzlJTVJj?=
- =?utf-8?B?VUpwOVFqM0NKOG1sZkgybzBkWjVHOVRKVk9OOTM5bGVPSEpqdzl0bTJjVVNH?=
- =?utf-8?B?WSt5cEJCWXRIa09OQ1VWOCtKYTZoT1JoN3dXMTdOMldUSitMalhJZFQ5ajk1?=
- =?utf-8?B?NmdKL1BVVHpoVWppd2pnZmsvSGFqUlRjVUZ5T0lkMFZkZHMwUFdXZ3NlQm1y?=
- =?utf-8?B?T2pVRXBncHFWbnpLRVJkUFFZeE9WNFdHWWVwd01lUHlmRjlEZWpuRHpIdTZ2?=
- =?utf-8?B?MEpaaXdKdS9HMEllbDc2dzFGSWdTM1VlQnRacHdEaGxKRVJYMkFoNklZaUdG?=
- =?utf-8?B?RFI5Zi9ZeFRRQ25YVG1ZODRMdklaWTZNdlVId0ZQejdiVTBHWWtOaXBaQUsw?=
- =?utf-8?B?MkQyUytvaGRXSm1jazk1dDdZNWFEejZoSHMxaVQraFBOZDZxRHZXa1EzNW1K?=
- =?utf-8?B?cWZNb1pDbnRSWnlna2pFK09oelppc0Z4RmMxMjRJZE5MVGpYNGFxMlpQK2tV?=
- =?utf-8?B?ZDkreElrV0VaSnZWbjRGNi9mbllLMklIeFo2bmN5Y2RuajN3OVlWeDU2TzhC?=
- =?utf-8?B?T1grUFpRdHE3ZnhpZ3R1Y3ZFRCtGdjNGNVpoNFA5SkhPYXhpeER1bEpremRt?=
- =?utf-8?B?QkFXTjFSc1VyZEdaUm9NSGhrMGRJVmY0cC83SFArcFFxR2VyQ1laY0NpSEls?=
- =?utf-8?B?ZEVuOC9sNHRYWURtQm1DTk1nRVdKTXN0QWJ4aFlaV29mY3ZjM1A1cFZVMGJD?=
- =?utf-8?B?RUJ3ejQ3RktHV1E2ckpwOGVxQXJMUnpyWkx1b2ZGMGJxczc5L3VBSms3WURk?=
- =?utf-8?B?dHZDYjNpa0g2a0JGcWEwVzcrOHIycDA1eE5Hck1qMkFoWlZEdGxHRC9QOUZv?=
- =?utf-8?B?V2lQMGkrVXJVSTNvbld3TW9TSTJjNXNoT1NZb2Y4dDFzWUZiTUVJaHBCT3Bi?=
- =?utf-8?B?VW4wVlQxYXdFK3lVMnAvUTRER3ZrSTZpL05HMUlWdTBSRmRBZU55VElMcU1q?=
- =?utf-8?B?R1lnajNjNzU1U2RVS0lRM1pxRU5panBqWEpRYThQL040S3lQaUtMMyt1NlRt?=
- =?utf-8?B?RFY4Y0dVU3VTaGFJc3JUUk54TjJmbExsUWcrU3RCMEExeStsYU15SHozNHIx?=
- =?utf-8?B?Vkwza1dYTCsra2dJU1luaFhoeTV3TzlOWTFYZXRmZUZNdEhDV1YvM1lvNWJa?=
- =?utf-8?B?ZVQxYlV4dUhWVUdFMHZ4K3VKcjdqUE1uSDNxWmxOVTdjVndwQi94VjNXc1JG?=
- =?utf-8?B?NGd6NDBpczVDL0hubTFqaW1ram9hcExiQllhWVN5bDZ2VlhWWlZFMFE5a2d1?=
- =?utf-8?B?WW9SUENTbGtUTWtpZk5LdTE1ZWM4RHFIZlN5WUNqdmFvTzcwek5OZTd0OHFT?=
- =?utf-8?B?d2xSNTc0Y1FiMmYvMUI3aDB4NjNQdEJlVER2ZWFpU0RXWC9yLzVqSDlBUk9T?=
- =?utf-8?B?aHhqUTV3L0IvVzZNU001RElNUVlPcnQvSUk3Z0tLdElMWnNLOWFJTkZnK2J5?=
- =?utf-8?B?R3V5UlAxQUhyRVNtUW9JZmIzMkVvdE1wbkt5eXByajh6dWh6UmxHRW44V3FD?=
- =?utf-8?B?VHVDN1c1bFN3T1hHTHJHbjd0U2sxTCtYUVp6cncrYUtJV2VjUk1oR2xpdWV4?=
- =?utf-8?B?UXJHTVJ0R3R5TVd6M3ZsL1Y2QzVyWk1LemNSTHpITHdhQlBWMjJodDZ2d090?=
- =?utf-8?B?TVJuTHBCQUZoZ0Q5TnR2c1N1NlE3MHAvdFJZdVMvWVlKSlBHUTNtTHFseEU0?=
- =?utf-8?B?bUU1ZEphSUc5ejYxY0taazJrUXhMMkJ2QlhFUmlvQ2h6OStnRFd4dGZ2UWEz?=
- =?utf-8?B?UFF1SDI2bmVJVUJMTXNqbGNXUVI4Q29vVk5kdHQyZXh2bkZxRGtQYzROVDlz?=
- =?utf-8?B?WGVQbjRuYWhudjJEVDFTVjVncUhEczlESkZKeUVCcHVIcUt0U2gxZ0RBekxq?=
- =?utf-8?Q?AA7ph6gcMkMfZ4kpkqH/G8fgE?=
-Content-ID: <8B0CBA921B8CF0489DE4AB87B4583B9B@jpnprd01.prod.outlook.com>
+	Tue, 03 Oct 2023 18:06:56 +0000
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 393Hre1g007670;
+	Tue, 3 Oct 2023 18:06:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : reply-to : references : mime-version : content-type
+ : in-reply-to; s=pp1; bh=1Chg+dAO7ZyaoaMon6oDQvJoPb9jB8R1ynJEe3hSZ3M=;
+ b=J/SKV7BxpmPUMeYnlw58TBTxi5AYITUFCX5vAlkCMTrSF50fL6stk0lb5O6GTKIgJDua
+ uKCd62NnHqL1J9111aYvsGkb5lxzF6bjnMOLMn6JVK2umLt04vmOc+th4Z75WAs8Qtlz
+ wytwaX/cN1qMK2Tgo0qV7GbCi7Ic4fW+XhjzWrw+RzStxKG57VD9cUjTEkXqgz7W1Md1
+ mVW4jJc3LpYTCfqSLBKqzBKN3d4ZdjSZ36ZBpbXW5wPLTC4vdXlSDsuKKwaHVr5WEZ83
+ 0x3QV1Fkwl6RofkDCyiORWLO3HXyzZUBgqi6Tj5G3fdvPkW7bEmzhfh32uP+i4jOH/gD wA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tgqrr8fmq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 03 Oct 2023 18:06:32 +0000
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 393HsoxS009218;
+	Tue, 3 Oct 2023 18:06:27 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tgqrr8f95-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 03 Oct 2023 18:06:26 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 393H0wKu005859;
+	Tue, 3 Oct 2023 18:06:22 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3tex0smr3j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 03 Oct 2023 18:06:22 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 393I6Kkx43188916
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 3 Oct 2023 18:06:20 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6DA0C2004B;
+	Tue,  3 Oct 2023 18:06:20 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8ED182004E;
+	Tue,  3 Oct 2023 18:06:18 +0000 (GMT)
+Received: from in.ibm.com (unknown [9.171.82.237])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue,  3 Oct 2023 18:06:18 +0000 (GMT)
+Date: Tue, 3 Oct 2023 23:36:15 +0530
+From: Mahesh J Salgaonkar <mahesh@linux.ibm.com>
+To: Pingfan Liu <piliu@redhat.com>
+Cc: linuxppc-dev@lists.ozlabs.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Wen Xiong <wenxiong@us.ibm.com>, Baoquan He <bhe@redhat.com>,
+        Ming Lei <ming.lei@redhat.com>, kexec@lists.infradead.org
+Subject: Re: [PATCHv7 4/4] powerpc/setup: alloc extra paca_ptrs to hold
+ boot_cpuid
+Message-ID: <zuptut5gbcd3cyaphv5axgrqrful2knkzkmxxjslgtgb75n6yi@l5ndw6ajw6im>
+References: <20230925075348.16654-1-piliu@redhat.com>
+ <20230925075348.16654-5-piliu@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nec.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYYPR01MB6777.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6afd1841-16c8-4b98-bc14-08dbc3c85abd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Oct 2023 04:22:28.6279
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: e67df547-9d0d-4f4d-9161-51c6ed1f7d11
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vzFGc2FfkS3x2KRXqeuoqtDfv51tqlK4B4P6aD/52UeBmYF76iyQEwwPbMQghKlPTzImXMxqymRMzFuIV/z5ng==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSZPR01MB8204
+Content-Disposition: inline
+In-Reply-To: <20230925075348.16654-5-piliu@redhat.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: dWk9GSvWMTp_rhi3bIImD5MQSIY2OGbv
+X-Proofpoint-ORIG-GUID: DzN-R5mlOZ3CRgqTWAqCQf8JzoyPJCVm
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-03_15,2023-10-02_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 phishscore=0 mlxlogscore=999 spamscore=0 adultscore=0
+ bulkscore=0 priorityscore=1501 mlxscore=0 malwarescore=0 clxscore=1011
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2309180000 definitions=main-2310030136
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231002_212255_354061_C22EEC16 
-X-CRM114-Status: GOOD (  24.55  )
+X-CRM114-CacheID: sfid-20231003_110654_461102_C036F2A6 
+X-CRM114-Status: GOOD (  33.04  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -139,150 +110,172 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: mahesh@linux.ibm.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi,
-
-thank you for the patch.
-
-On 2023/09/27 20:18, Song Shuai wrote:
-> These 2 patches add riscv64 support for makedumpfile:
+On 2023-09-25 15:53:48 Mon, Pingfan Liu wrote:
+> paca_ptrs should be large enough to hold the boot_cpuid, hence, its
+> lower boundary is set to the bigger one between boot_cpuid+1 and
+> nr_cpus.
 > 
-> Patch1 - Add riscv64 support
-> ===========================
+> On the other hand, some kernel component: -1. the timer assumes cpu0
+> online since the timer_list->flags subfield 'TIMER_CPUMASK' is zero if
+> not initialized to a proper present cpu.  -2. power9_idle_stop() assumes
+> the primary thread's paca is allocated.
 > 
-> This patch adds support for riscv64 in makedumpfile.
-> It implements the "vtop" for kenrel memory regions
-> and supports Sv39/Sv48/Sv57 page modes for RV64.
-
-Could I have a log of makedumpfile with --message-level 31 option for 
-reference? e.g.
-   makedumpfile -c -d 31 --message-level 31 vmcore dumpfile > mkdf.log
-
-(IIRC the kexec mail list doesn't accept attached files, so please send 
-it off-list.)
-
+> Hence lift nr_cpu_ids from one to two to ensure cpu0 is onlined, if the
+> boot cpu is not cpu0.
 > 
-> 
-> Patch2 - riscv64: Correct the pfn_start for flatmem
-> ==================================================
-> 
-> This patch temporarily fixes a issue of the tests about FLATMEM,
-> as the commit-msg says:
->    
->      To let info->max_mapnr indicte the direct max PFN and then
+> Result:
+> When nr_cpus=1, taskset -c 14 bash -c 'echo c > /proc/sysrq-trigger'
+> the kdump kernel brings up two cpus.
+> While when taskset -c 4 bash -c 'echo c > /proc/sysrq-trigger',
+> the kdump kernel brings up one cpu.
 
-This means "indicate", right?
+I tried your changes on power9 and power10 systems. However, on power10 lpar I
+see bellow backtrace in kdump kernel bootup with nr_cpus=1.
+
+$ taskset -c 4 bash -c 'echo c > /proc/sysrq-trigger'
+[...]
+[    0.000000] Hardware name: IBM,9105-22A POWER10 (raw) 0x800200 0xf000006 of:IBM,FW1040.00 (NL1040_005) hv:phyp pSeries
+[    0.000000] printk: bootconsole [udbg0] enabled
+[    0.000000] the round shift between dt seq and the cpu logic number: 8
+[    0.000000] Partition configured for 16 cpus, operating system maximum is 2.
+[    0.000000] CPU maps initialized for 8 threads per core
+[...]
+[    0.002249] BUG: Unable to handle kernel data access at 0x88888888888888c0
+[    0.002260] Faulting instruction address: 0xc00000001201226c
+[    0.002268] Oops: Kernel access of bad area, sig: 11 [#1]
+[    0.002274] LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=2048 NUMA pSeries
+[    0.002282] Modules linked in:
+[    0.002288] CPU: 4 PID: 1 Comm: swapper/4 Not tainted 6.6.0-rc4 #1
+[    0.002296] Hardware name: IBM,9105-22A POWER10 (raw) 0x800200 0xf000006 of:IBM,FW1040.00 (NL1040_005) hv:phyp pSeries
+[    0.002305] NIP:  c00000001201226c LR: c000000012012234 CTR: 0000000000000004
+[    0.002312] REGS: c0000000167ff8f0 TRAP: 0380   Not tainted  (6.6.0-rc4)
+[    0.002321] MSR:  8000000002009033 <SF,VEC,EE,ME,IR,DR,RI,LE>  CR: 24000844  XER: 0000000a
+[    0.002346] CFAR: c00000001201231c IRQMASK: 0
+[    0.002346] GPR00: c000000012012234 c0000000167ffb90 c000000011b61900 0000000000000002
+[    0.002346] GPR04: 0000000000000000 0000000000000001 0000000000000001 c00000004ffeff80
+[    0.002346] GPR08: 0000000000000000 8888888888888888 0000000000000002 0000000000000000
+[    0.002346] GPR12: 0000000000000000 c000000013141000 c000000010011058 0000000000000000
+[    0.002346] GPR16: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+[    0.002346] GPR20: 0000000000000028 c000000012170968 c0000000120a3e80 0000000000000016
+[    0.002346] GPR24: c00000004ffdcfd0 0000000000000000 c000000012b82058 0000000000000000
+[    0.002346] GPR28: c00000004fc80a68 c000000012bf0350 c0000000120a3e2c 0000000000000000
+[    0.002426] NIP [c00000001201226c] update_mask_from_threadgroup+0x98/0x174
+[    0.002437] LR [c000000012012234] update_mask_from_threadgroup+0x60/0x174
+[    0.002444] Call Trace:
+[    0.002451] [c0000000167ffb90] [c000000012012234] update_mask_from_threadgroup+0x60/0x174 (unreliable)
+[    0.002464] [c0000000167ffbe0] [c0000000120125f8] init_thread_group_cache_map+0x2b0/0x328
+[    0.002477] [c0000000167ffc50] [c00000001201296c] smp_prepare_cpus+0x2fc/0x4f0
+[    0.002497] [c0000000167ffd10] [c000000012004e40] kernel_init_freeable+0x198/0x3cc
+[    0.002509] [c0000000167ffde0] [c000000010011084] kernel_init+0x34/0x1b0
+[    0.002531] [c0000000167ffe50] [c00000001000dd3c] ret_from_kernel_user_thread+0x14/0x1c
+[    0.002547] --- interrupt: 0 at 0x0
+[    0.002553] NIP:  0000000000000000 LR: 0000000000000000 CTR: 0000000000000000
+[    0.002563] REGS: c0000000167ffe80 TRAP: 0000   Not tainted  (6.6.0-rc4)
+[    0.002569] MSR:  0000000000000000 <>  CR: 00000000  XER: 00000000
+[    0.002576] CFAR: 0000000000000000 IRQMASK: 0
+[    0.002576] GPR00: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+[    0.002576] GPR04: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+[    0.002576] GPR08: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+[    0.002576] GPR12: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+[    0.002576] GPR16: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+[    0.002576] GPR20: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+[    0.002576] GPR24: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+[    0.002576] GPR28: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+[    0.002671] NIP [0000000000000000] 0x0
+[    0.002680] LR [0000000000000000] 0x0
+[    0.002689] --- interrupt: 0
+[    0.002697] Code: 7feafb78 813d0000 7d29fa14 7f895000 409d00d4 3ce20102 38e74758 79491f24 e87e0006 39000000 e8e70000 7d27482a <a8890038> 7f834000 79090020 419e005c
+[    0.002727] ---[ end trace 0000000000000000 ]---
+[    0.002739]
+[    1.002749] Kernel panic - not syncing: Fatal exception
+[    1.002795] Rebooting in 10 seconds..
 
 Thanks,
-Kazu
+-Mahesh.
 
->      make the kdump header's max_mapnr_64 correct, riscv64 port
->      didn't define ARCH_PFN_OFFSET.
->      
->      As for FLATMEM type, the pfn region of mem_map_data should
->      be adjusted to start from info->phys_base instead of zero.
 > 
-> Not taking other arches into consideration and test, so I simplely
-> judge the __riscv64__ instead of ARCH_PFN_OFFSET. Maybe we can improve it.
+> Signed-off-by: Pingfan Liu <piliu@redhat.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
+> Cc: Wen Xiong <wenxiong@us.ibm.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Ming Lei <ming.lei@redhat.com>
+> Cc: kexec@lists.infradead.org
+> To: linuxppc-dev@lists.ozlabs.org
+> ---
+>  arch/powerpc/kernel/paca.c | 10 ++++++----
+>  arch/powerpc/kernel/prom.c |  9 ++++++---
+>  2 files changed, 12 insertions(+), 7 deletions(-)
 > 
+> diff --git a/arch/powerpc/kernel/paca.c b/arch/powerpc/kernel/paca.c
+> index cda4e00b67c1..91e2401de1bd 100644
+> --- a/arch/powerpc/kernel/paca.c
+> +++ b/arch/powerpc/kernel/paca.c
+> @@ -242,9 +242,10 @@ static int __initdata paca_struct_size;
+>  
+>  void __init allocate_paca_ptrs(void)
+>  {
+> -	paca_nr_cpu_ids = nr_cpu_ids;
+> +	int n = (boot_cpuid + 1) > nr_cpu_ids ? (boot_cpuid + 1) : nr_cpu_ids;
+>  
+> -	paca_ptrs_size = sizeof(struct paca_struct *) * nr_cpu_ids;
+> +	paca_nr_cpu_ids = n;
+> +	paca_ptrs_size = sizeof(struct paca_struct *) * n;
+>  	paca_ptrs = memblock_alloc_raw(paca_ptrs_size, SMP_CACHE_BYTES);
+>  	if (!paca_ptrs)
+>  		panic("Failed to allocate %d bytes for paca pointers\n",
+> @@ -287,13 +288,14 @@ void __init allocate_paca(int cpu)
+>  void __init free_unused_pacas(void)
+>  {
+>  	int new_ptrs_size;
+> +	int n = (boot_cpuid + 1) > nr_cpu_ids ? (boot_cpuid + 1) : nr_cpu_ids;
+>  
+> -	new_ptrs_size = sizeof(struct paca_struct *) * nr_cpu_ids;
+> +	new_ptrs_size = sizeof(struct paca_struct *) * n;
+>  	if (new_ptrs_size < paca_ptrs_size)
+>  		memblock_phys_free(__pa(paca_ptrs) + new_ptrs_size,
+>  				   paca_ptrs_size - new_ptrs_size);
+>  
+> -	paca_nr_cpu_ids = nr_cpu_ids;
+> +	paca_nr_cpu_ids = n;
+>  	paca_ptrs_size = new_ptrs_size;
+>  
+>  #ifdef CONFIG_PPC_64S_HASH_MMU
+> diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
+> index 87272a2d8c10..15c994f54bf9 100644
+> --- a/arch/powerpc/kernel/prom.c
+> +++ b/arch/powerpc/kernel/prom.c
+> @@ -362,9 +362,12 @@ static int __init early_init_dt_scan_cpus(unsigned long node,
+>  			 */
+>  			boot_cpuid = i;
+>  			found = true;
+> -			/* This works around the hole in paca_ptrs[]. */
+> -			if (nr_cpu_ids < nthreads)
+> -				set_nr_cpu_ids(nthreads);
+> +			/*
+> +			 * Ideally, nr_cpus=1 can be achieved if each kernel
+> +			 * component does not assume cpu0 is onlined.
+> +			 */
+> +			if (boot_cpuid != 0 && nr_cpu_ids < 2)
+> +				set_nr_cpu_ids(2);
+>  		}
+>  #ifdef CONFIG_SMP
+>  		/* logical cpu id is always 0 on UP kernels */
+> -- 
+> 2.31.1
 > 
-> Tests
-> =====
-> 
-> With these 2 patches, the following tests had passed in RV64 Qemu virt machine:
-> 
-> Preparation:
-> -----------
-> 
-> 1. build kernel with FLATMEM and SPARSE memory models
-> 2. boot kernel with 3 different page-modes by setting nov4l/nov5l in cmdline
-> 3. panic kernel
-> 
-> Tests:
-> -----
-> 
-> 1. create kdump-compressed file via this command
->     - `/mnt/mkdf_f -d31 -f -c /proc/vmcore /mnt/dump.file1`
->     - or with `--vtop` option to translate some typical addresses (like:
->       kernel_link_addr, vmalloc_start, page_offset)
-> 
-> 2. start crash with kdump file and do some VTOPs
-> 
-> 
-> A test log:
-> -----------
-> 
-> # With the Sv57 and SPARSE_EXTREME kernel
-> # vtop the vmalloc start address -- 0xff20000000000000
-> 
-> 
-> # /mnt/mkdf_f  --vtop 0xff20000000000000 -d31 -f --non-mmap -c /proc/vmcore /mnt/dump.file1
-> 
-> Translating virtual address ff20000000000000 to physical address.
-> VIRTUAL           PHYSICAL
-> ff20000000000000  80087000
-> 
-> Copying data                                      : [100.0 %] |
-> eta: 0s
-> 
-> The dumpfile is saved to /mnt/dump.file1.
-> 
-> makedumpfile Completed.
-> 
-> # sudo ../crash/crash /home/song/9_linux/linux/00_rv_def/vmlinux /tmp/hello/dump.file1
-> ...
->        KERNEL: /home/song/9_linux/linux/00_rv_def/vmlinux
->      DUMPFILE: /tmp/hello/dump.file1  [PARTIAL DUMP]
->          CPUS: 2
->          DATE: Wed Sep 27 18:37:45 CST 2023
->        UPTIME: 00:00:18
-> LOAD AVERAGE: 0.00, 0.00, 0.00
->         TASKS: 55
->      NODENAME: (none)
->       RELEASE: 6.6.0-rc1-00007-g22bfc766389c
->       VERSION: #1 SMP Mon Sep 25 19:29:05 CST 2023
->       MACHINE: riscv64  (unknown Mhz)
->        MEMORY: 511.8 MB
->         PANIC: "Kernel panic - not syncing: sysrq triggered crash"
->           PID: 1
->       COMMAND: "sh"
->          TASK: ff600000000e0000  [THREAD_INFO: ff600000000e0000]
->           CPU: 1
->         STATE: TASK_RUNNING (PANIC)
-> 
-> crash> vtop 0xff20000000000000
-> VIRTUAL           PHYSICAL
-> ff20000000000000  80087000
-> 
->    PGD: ffffffff814fa900 => 20010c01
->    P4D: 0000000080043000 => 0000000020025401
->    PUD: 0000000080095000 => 0000000020025801
->    PMD: 0000000080096000 => 0000000020026001
->    PTE: 80098000 => 20021ce7
->   PAGE: 0000000080087000
-> 
->    PTE     PHYSICAL  FLAGS
-> 20021ce7  80087000  (PRESENT|READ|WRITE|GLOBAL|ACCESSED|DIRTY)
-> 
->        PAGE       PHYSICAL      MAPPING       INDEX CNT FLAGS
-> ff1c0000020021c0 80087000                0        0  1 0  // same as the makedumpfile's vtop
-> 
-> 
-> Song Shuai (2):
->    Add riscv64 support
->    riscv64: Correct the pfn_start for flatmem
-> 
->   Makefile       |   2 +-
->   arch/riscv64.c | 219 +++++++++++++++++++++++++++++++++++++++++++++++++
->   makedumpfile.c |  18 ++++
->   makedumpfile.h | 107 ++++++++++++++++++++++++
->   4 files changed, 345 insertions(+), 1 deletion(-)
->   create mode 100644 arch/riscv64.c
-> 
+
+-- 
+Mahesh J Salgaonkar
+
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
