@@ -4,142 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 18352E92FC8
-	for <kexec@archiver.kernel.org>; Thu,  5 Oct 2023 22:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8D735E92FCB
+	for <kexec@archiver.kernel.org>; Thu,  5 Oct 2023 22:29:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:Cc:To:
-	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=2n7IC9kuXGibQAfTHiei5lI2Mj00t48sTrETE52VkRo=; b=3jDec1lITRJkunxGr8CfCOL4lL
-	NxVRbL3bmIvUupy0NCESlrzCDzSC9xYSMILYVuYLn4simKI6Ak4QCdcZPfzEhRsZwfUkoWAqPBAk3
-	OoaVl/lXXsSjWGOoX9E0uyVzi5O9/l7AEqPJNuVDUcE3zg1ZKtBE48WiEJKG7SKVqc3qaytdJxeDH
-	MkrYq3gBKTmENzp0QjFhx9DZpIoJEmyKXElBvfv8f0qYYEwYGaJ18l5KCINPooVu4eMnOoWQ+2TxP
-	6pnxtaRX0/JXU3d2Ijjshv3jP4ITcrDttT9XDY9LwlYDtUO2n+kIOrXZ5yYTtLj2asb3TLlVFB07m
-	wqmjVtRw==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=RbFOFJt/+M4Lo7eBwdxbVW0erEJKjzJKtPGhnUBZl7k=; b=qYY28y4aFnlFNx
+	URJ8KFRBONozCZ6hmxtgZgBpoBNCuHr1G3ejyHxzQzpOXybnUYtk0IVHrlmk4ICFCIYJpduZ54Kpf
+	WsxfjyqwJDyPPRw0ug7SgpChJsGASOpvGLIUZo0rmLWkS5o7q8e/PgOofqAI7rS8ryil65Otmx4Sd
+	BNXMxp8UHY9aopfWHogXe/qBiKC2uWdDH+TVcmEO1yxplAwxlG0wcCGWHxsdjbx1/9fu5pprztb0O
+	y4cClQGIS4mgl7epuF6KKXJKBlXxXKSVyT9jfoUBK8oR6v4ggfJaYLJC3ZRLeID6VhuFjvLbN3vyc
+	8nYTr1cxwQ4FPHyfWq6w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qoWPd-004XvW-2Z;
-	Thu, 05 Oct 2023 22:01:41 +0000
-Received: from mail-dm6nam12on20615.outbound.protection.outlook.com ([2a01:111:f400:fe59::615] helo=NAM12-DM6-obe.outbound.protection.outlook.com)
+	id 1qoWqB-004Z0t-0f;
+	Thu, 05 Oct 2023 22:29:07 +0000
+Received: from mgamail.intel.com ([192.198.163.7])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qoWPa-004Xur-1k
+	id 1qoWq7-004Yzx-2T
 	for kexec@lists.infradead.org;
-	Thu, 05 Oct 2023 22:01:39 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ILlZvg/Ez4MH9Q3v5dbh80HANBMBgNiyhieUzFU48eaoCyQYYmX9q0BFkILUXkKfGk2FhegW8UMDaaKuGlmfltlOVeeuGKPl4yg68aFjgC7XsycZW+kDmwPhULpFgmtXqYs7KEEFOJ7hE5ZfV8wcEgoVH79Z7vtEnTtxrfLAjG/wbuxaJCAoON33eGCRUsM+S7/oR7LauCUjQnnTFStJPOS6NV60OnuyoCtBJJvP0Y6wF78t/vMYTHys3qcEhG0cVc0fpR700PmtyUnjyCJfxZ8nVnlNH5AuOAPE1FjEKS2EMWMpqA1tmD5s7cboU0VYENSNML9wv9z46or4ZpzZfQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+YOUjXjhgnt3AKsdzIZrNF42fieVxjJsDSM68u1QEbU=;
- b=XDVOhcUnpEc7EaA30TJg1m0/Wij7La4EscgODkV/lp3GSU7FS8NpKzIyFu9tuDGhkWglJXkYuJHE4cBxljllW1bWqDDnnzVe0UP1EWi9nnSN9+wAavwZ1sIr7uQSHxoyqUk1fX3jmsa4jTmzCzzvLqHVytZHWHuBi4kL8cNYhD+83z2UBl193G/pn4ryIxgmxkfkijZ84aCZHiHq5e5YR5N04pygueL4l1QvKhL0O8z8Y2GIinGGOJO17kcNbAlmUj/p0zJskNxoRmcod+W7G+XONKshHix8dlGiP1mqhA8Rxw9/oIATbdVe1dQMlJm8kHE+j/9Kqipn0B6Dz44YTA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+YOUjXjhgnt3AKsdzIZrNF42fieVxjJsDSM68u1QEbU=;
- b=vs1ueKbHnZ56I46+WefqLm5AbZDIKB+TFkqWSTu2qASewlaECi/aglNXfE/XSSYNafK32mHaGb1uRtIVrh8SrFONXn3bQz9SOS0Lz6y3wWpxiTzl4bp13DEfO4lq46EYRwc6Q6LBGaASNa0GvpRkaDTM2eEemQG3gmc8Kzyy7V0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from SN6PR12MB2767.namprd12.prod.outlook.com (2603:10b6:805:75::23)
- by SJ2PR12MB8829.namprd12.prod.outlook.com (2603:10b6:a03:4d0::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6838.35; Thu, 5 Oct
- 2023 22:01:25 +0000
-Received: from SN6PR12MB2767.namprd12.prod.outlook.com
- ([fe80::6ac8:eb30:6faf:32b2]) by SN6PR12MB2767.namprd12.prod.outlook.com
- ([fe80::6ac8:eb30:6faf:32b2%5]) with mapi id 15.20.6838.033; Thu, 5 Oct 2023
- 22:01:25 +0000
-Message-ID: <e0459b50-7e21-7548-8151-9010ee88b0a6@amd.com>
-Date: Thu, 5 Oct 2023 17:01:23 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.1
+	Thu, 05 Oct 2023 22:29:05 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1696544943; x=1728080943;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3ak/CqPJFuvAGz1nL0ORtkufKNGBvhTu0OaUcGSyyRI=;
+  b=AlV0j3C4M5PdqRrWEAyFMt5mFE+4OqbWnqvXpR0+hTBgRIwDWKBjQqIw
+   ROXhcnlvWBTA7v3R/vurlSVIJpj+4wTA9EIXsLzWkfUVNfmZV4h+rhbd4
+   1zE/gm7dI7xf/8uiMQntUXrZJKoiLdBgr4SHLJsdeEKLCbm0VW2M60jxU
+   afTQ0Zb3ToZZa9yco7OS7+N9bbJZqQ58ksAt5dMvrfJNDgyTj6OIbCGNV
+   uyu9iKtV5pit1nOELpwT2/k1bybzX3fC8IbbOo0yBQc4tjwO1QVZJki1d
+   3SB85l6YdhuaN2hATn/5fNii/L/uMwS9hN6iEWCOfdppTzaroLLQe2oYv
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="5195872"
+X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
+   d="scan'208";a="5195872"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2023 15:28:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="817796476"
+X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
+   d="scan'208";a="817796476"
+Received: from kvsudesh-mobl1.gar.corp.intel.com (HELO box.shutemov.name) ([10.251.222.76])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2023 15:28:43 -0700
+Received: by box.shutemov.name (Postfix, from userid 1000)
+	id BFE0B10A12D; Fri,  6 Oct 2023 01:28:39 +0300 (+03)
+Date: Fri, 6 Oct 2023 01:28:39 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: "Kalra, Ashish" <ashish.kalra@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Elena Reshetova <elena.reshetova@intel.com>,
+	Jun Nakajima <jun.nakajima@intel.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>, kexec@lists.infradead.org,
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH 10/13] x86/tdx: Convert shared memory back to private on
  kexec
-Content-Language: en-US
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
- Elena Reshetova <elena.reshetova@intel.com>,
- Jun Nakajima <jun.nakajima@intel.com>,
- Rick Edgecombe <rick.p.edgecombe@intel.com>,
- Tom Lendacky <thomas.lendacky@amd.com>, kexec@lists.infradead.org,
- linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+Message-ID: <20231005222839.jt2du72xogg3c5ny@box>
 References: <20231005131402.14611-1-kirill.shutemov@linux.intel.com>
  <20231005131402.14611-11-kirill.shutemov@linux.intel.com>
  <8d0e4e71-0614-618a-0f84-55eeb6d27a6d@amd.com>
  <20231005212828.veeekxqc7rwvrbig@box>
-From: "Kalra, Ashish" <ashish.kalra@amd.com>
-In-Reply-To: <20231005212828.veeekxqc7rwvrbig@box>
-X-ClientProxiedBy: SA9PR13CA0013.namprd13.prod.outlook.com
- (2603:10b6:806:21::18) To SN6PR12MB2767.namprd12.prod.outlook.com
- (2603:10b6:805:75::23)
+ <e0459b50-7e21-7548-8151-9010ee88b0a6@amd.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN6PR12MB2767:EE_|SJ2PR12MB8829:EE_
-X-MS-Office365-Filtering-Correlation-Id: 92821f89-4c19-40ce-bb58-08dbc5ee9e80
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +A2y9vwl9TJ4qegqaWrbd+TzFAvigoh5M7Y8coL2tKBlXM0FVBnbSMxMHrolnjyVGpAkWOcObDP3FWCDbe0wvPFQLHAPXJ8QsnQCKUJfZYq9xYwBHLd0dOpqQZlHdZYUt/yERBAHb05mXx3BMQMkeVdINog0NSp2IDMOm2WxUYJVU2AXY+sVO2f0K5ID7qbAoZzc65vJ9058ITP/ZrUNcIuHigrf/isAQ7HfctHKUFXhQPUR56Qc/ab6BN2aNl66Bl9shJ9PFi5DcHvPgyagDc/1WAWAaF3AvHE6i2An3AsSHoFrMgnDIXMchDFthnCaN9cHYQsAeiSZvItbzZNwK6O/KX4l56RtaqrljYCpk4JtStXAVB+cAzX1poowN5x+DYNNNTMv9v91h5Fh39o/ALZmbxfIqySO0lCO7Y8KMQntAi4hSKo4NaV2auQMZzKpkjSC/CrkLSfuq3ugkQhpmiOhh9jYJ+gnUPWgdPH06GtW6sbZ+PGW+Ji5rKrjW2VIMhS1Toh2mc+ShJcuZ+IqrXiIBRvoAqfbR4ANw1wxqQ0h1LEScssBo8D7Qs8P2B3IWqFXg+GEOFevMkTl76DgdaPqnvidoWar6HOrxVhvGmbNxvWfov/LYQpF3ZACGHnDPJiwr/Ubu4u58fqo9J7IAA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2767.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(136003)(346002)(366004)(39860400002)(376002)(230922051799003)(64100799003)(451199024)(1800799009)(186009)(31686004)(6506007)(6486002)(53546011)(478600001)(2616005)(86362001)(38100700002)(36756003)(31696002)(7416002)(41300700001)(2906002)(83380400001)(6512007)(26005)(54906003)(8936002)(66556008)(66476007)(316002)(66946007)(6916009)(5660300002)(4326008)(8676002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VlFNRGNjUHlxM1NNT1Q5bTcrQkR6a0FrczZxTm81d1NUUXhTV1lSSE55a3NP?=
- =?utf-8?B?bWNsSHF3bjdZSUJzU3JRR0RkcWt4VUJPVVEzejJLSGZFREw1c1hzZXJ1OGRO?=
- =?utf-8?B?NWpXZmhyVGlmdWw1Q2d5T3NHd1dBMkQ4aVBHVEpUNDZzd0J6UlNhSld2Nnkw?=
- =?utf-8?B?T2YrQTc0NDBUM1ZaWTlYWURTSGw3MzRFaHJyZkpYYkdzclcwa29BRGRIaHU2?=
- =?utf-8?B?MnExZ1YzRDhHTks0cTIzTGs4QXJ6b2xuRmdPSFE4WGlZZHR1R29uNzY2UEQr?=
- =?utf-8?B?UGhvV29oZmhUUStHOXJMeHJXa1RkRDBRQVo0OXpDK0NYYWVQSFZmeVlBNlpX?=
- =?utf-8?B?dXljRW95aURlOXNjdUlLWnFrNnk0THZ2Vm9MR0pnZnFiNHlET0FaRm4ycVBr?=
- =?utf-8?B?OEpTWHdLeTBwalRabkx6SFFZSy9aV0U0ZC9iVURVdFhPdWNod2o4N2NkVGl2?=
- =?utf-8?B?QXlCdXpRMDF1VUVMZ1prZ3F6RldlSzNQTDVrR1ZzUThDcE9veGtDZGZYVyt5?=
- =?utf-8?B?ZlQ3YUhYVW9RMkhmL3dSMFZwN3k3YWNNdlRKUlVGcW8xa0l5b2VrZHBpQUxm?=
- =?utf-8?B?UUNMcmhxd0pKSlJCMElvTEFXRCtTUklRaDVCMTBjcXhQSXNYc0ZXSUVpYmtI?=
- =?utf-8?B?SjRWbGVSMlRiODU3cFlrYjAzUVF1SGJUOTUvdjF3eUt5akNvUkFHc3JMeSto?=
- =?utf-8?B?bU1JNVlGUkhVSkkyUzRqRCsreEltMU5uMlBwQW9HR3hwVkx0ZTFpR2cvNDRp?=
- =?utf-8?B?ejNGd3pPbFNxZVVLVWc0TmZzRzZac3BZRkNUZ0lqNzdnL2xXaE90SStaQTJI?=
- =?utf-8?B?blJjREtrYzBhV0tUQW8rT3k5eDR5Yy9EaEROd0R4dE43Si9ralFlYVZXZzVM?=
- =?utf-8?B?MWQ5R2paZmN6OE8wL1p4dXpWeDZxUFd3WWlNalNxSUFtSGJ0Z2hiMmc1WmRE?=
- =?utf-8?B?RGhISnhPY0JtV2pCL0pnc1YrcmExSFVuTWp2OVkybGV3UWQ3a2htb1NJZlND?=
- =?utf-8?B?czY2eUxJMXdSZWhQY05qT3g5R2lNYkk1ZmY5clRzcmJ2SjUrZ2RCUERFYnBT?=
- =?utf-8?B?MGwwc0tFUEMxVXZweE5tVVBPeDFhQ3N2OFkwYmVDWlptNGcxMndsdDZWQU5o?=
- =?utf-8?B?WXVidytaaG1zWktNK0s4eFpsMzFCNHF2NHB2MFBBNGY3MWxyTnFBYVJJaVlN?=
- =?utf-8?B?YWVjQkFub3pCYkJZalZZT1BnTUhTM3YrVW9GVlU5NDJKNnMyckxmcFhqeVNJ?=
- =?utf-8?B?R1JaamlvVXBLcVRiQXVsekszVnc5eGhSYjlKSDhDbks5WHdvNlREc1ZQYzk5?=
- =?utf-8?B?V3VLWThSZjNrRjdXVHVlaUlLVjNKTVhIWmVXMHAycXBmQjR1NklDdGFuaEpF?=
- =?utf-8?B?VmwyRVU2OEJIb1RxVStYRExTQVdVR2hUUlg0WTJKc2NTSU12OTFkMUFFU0Ez?=
- =?utf-8?B?MjhIU0tRQ09EOTdTa29JUWROeWp0ZWVIL2NTZzNUYWpHNVg2eXEzTHJDbDdF?=
- =?utf-8?B?b0RxSzZuYVhRSG0zcE9OOHhneUlIbmwzK2g2bTVEM0g4c2krdjhheWlTNWwx?=
- =?utf-8?B?YS9yVTRxcmpXTEw2MHdXR1VuQmVJdnhHUlZ1SDlWYzNRNGowQndLOSsxeTMy?=
- =?utf-8?B?VnlzNEIvZElGK3NaSitTWjU2Y3ZkdGgrUjhVb1lzUEdmU1lYWjFiajFlRktm?=
- =?utf-8?B?K3E5MnhzQnpndFZGeHRkQ09NU25TTVREMjdIS3pMNkdJK1owd0E5L21tN3Yv?=
- =?utf-8?B?cHMxd1cxTnI1NWlKLy92TUhUL2RaZU5MTWhpYVZ0ZUFBWmc2TFUydXVIYmF5?=
- =?utf-8?B?Qnc3ZTJBdFJ2UHYvemYvdXM0d1FBVE1KS01STlk3MjlUNWVVWWsvZllpcEkr?=
- =?utf-8?B?Nzc1bElRdjg3R216WFlIcDc0U3AzRTZRRDBDWkdVd1lzU1BHcHVNcHFDTVE3?=
- =?utf-8?B?ckI4eEt1T0wrN0p1eHJIUEl3Zy8zelJhQmpOUndpZHVEcHdzNWRUNkVwWHdn?=
- =?utf-8?B?cnpuRVM1TWlHa3RRUm0rMUZ0OFptdVFwTDJMeVI0SnE5Q1o2RG9CQUNvalJv?=
- =?utf-8?B?OXV5QXRkaUdBZ2lyZFZVV0ZVQW5lRVBqQUhVYjhYZ0RPQkJVdjhCQnhEWU5O?=
- =?utf-8?Q?H9fw1HoyJskideTrgWHMDCCqj?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 92821f89-4c19-40ce-bb58-08dbc5ee9e80
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2767.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Oct 2023 22:01:25.6740
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Ckdn0OHKCqi/zj9bMypgw751F0jmNae2I5KsYqgclC0oxL0k3YdWyq/Uv+AgUky+YfZWzjBZhzz/CXd0/Pdnew==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8829
+Content-Disposition: inline
+In-Reply-To: <e0459b50-7e21-7548-8151-9010ee88b0a6@amd.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231005_150138_578578_4F3AE444 
-X-CRM114-Status: GOOD (  17.26  )
+X-CRM114-CacheID: sfid-20231005_152903_839632_22259D2A 
+X-CRM114-Status: GOOD (  29.67  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -151,83 +93,100 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 10/5/2023 4:28 PM, Kirill A. Shutemov wrote:
-> On Thu, Oct 05, 2023 at 01:41:38PM -0500, Kalra, Ashish wrote:
->>> +static void unshare_all_memory(bool unmap)
->>> +{
->>> +	unsigned long addr, end;
->>> +	long found = 0, shared;
->>> +
->>> +	/*
->>> +	 * Walk direct mapping and convert all shared memory back to private,
->>> +	 */
->>> +
->>> +	addr = PAGE_OFFSET;
->>> +	end  = PAGE_OFFSET + get_max_mapped();
->>> +
->>> +	while (addr < end) {
->>> +		unsigned long size;
->>> +		unsigned int level;
->>> +		pte_t *pte;
->>> +
->>> +		pte = lookup_address(addr, &level);
->>
->> IIRC, you were earlier walking the direct mapping using
->> walk_page_range_novma(), any particular reason to use lookup_address()
->> instead ?
+On Thu, Oct 05, 2023 at 05:01:23PM -0500, Kalra, Ashish wrote:
+> On 10/5/2023 4:28 PM, Kirill A. Shutemov wrote:
+> > On Thu, Oct 05, 2023 at 01:41:38PM -0500, Kalra, Ashish wrote:
+> > > > +static void unshare_all_memory(bool unmap)
+> > > > +{
+> > > > +	unsigned long addr, end;
+> > > > +	long found = 0, shared;
+> > > > +
+> > > > +	/*
+> > > > +	 * Walk direct mapping and convert all shared memory back to private,
+> > > > +	 */
+> > > > +
+> > > > +	addr = PAGE_OFFSET;
+> > > > +	end  = PAGE_OFFSET + get_max_mapped();
+> > > > +
+> > > > +	while (addr < end) {
+> > > > +		unsigned long size;
+> > > > +		unsigned int level;
+> > > > +		pte_t *pte;
+> > > > +
+> > > > +		pte = lookup_address(addr, &level);
+> > > 
+> > > IIRC, you were earlier walking the direct mapping using
+> > > walk_page_range_novma(), any particular reason to use lookup_address()
+> > > instead ?
+> > 
+> > walk_page_range_novma() wants mmap lock to be taken, but it is tricky as
+> > we run here from atomic context in case of crash.
+> > 
+> > I considered using trylock to bypass the limitation, but it is a hack.
+> > 
+> > > 
+> > > > +		size = page_level_size(level);
+> > > > +
+> > > > +		if (pte && pte_decrypted(*pte)) {
+> > > 
+> > > Additionally need to add check for pte_none() here to handle physical memory
+> > > holes in direct mapping.
+> > 
+> > lookup_address() returns NULL for none entries.
+> > 
 > 
-> walk_page_range_novma() wants mmap lock to be taken, but it is tricky as
-> we run here from atomic context in case of crash.
-> 
-> I considered using trylock to bypass the limitation, but it is a hack.
-> 
->>
->>> +		size = page_level_size(level);
->>> +
->>> +		if (pte && pte_decrypted(*pte)) {
->>
->> Additionally need to add check for pte_none() here to handle physical memory
->> holes in direct mapping.
-> 
-> lookup_address() returns NULL for none entries.
->
+> Looking at lookup_address_in_pgd(), at pte level it is simply returning
+> pte_offset_kernel() and there does not seem to be a check for returning NULL
+> if pte_none() ?
 
-Looking at lookup_address_in_pgd(), at pte level it is simply returning
-pte_offset_kernel() and there does not seem to be a check for returning 
-NULL if pte_none() ?
+Hm. You are right.
 
->>> +			int pages = size / PAGE_SIZE;
->>> +
->>> +			/*
->>> +			 * Touching memory with shared bit set triggers implicit
->>> +			 * conversion to shared.
->>> +			 *
->>> +			 * Make sure nobody touches the shared range from
->>> +			 * now on.
->>> +			 *
->>> +			 * Bypass unmapping for crash scenario. Unmapping
->>> +			 * requires sleepable context, but in crash case kernel
->>> +			 * hits the code path with interrupts disabled.
->>
->> In case of SNP we will need to temporarily enable interrupts during this
->> unsharing as we invoke set_memory_encrypted() which then hits a BUG_ON() in
->> cpa_flush() if interrupts are disabled.
-> 
-> Do you really need full set_memory_encrypted()? Can't you do something
-> ligher?
-> 
-We need to modify the PTE for setting c-bit to 1 so that will require 
-cpa_flush(), though probably can add something lighter to do
-clflush_cache_range() directly ?
+I think it yet another quirk in how lookup_address() implemented. We need
+to make it straight too.
 
-Thanks,
-Ashish
+There's two options: either make lookup_address() return pointer for entry
+even if it is NULL, or add check for pte_none() after pte_offset_kernel()
+and return NULL if it is true.
 
+I like the first option more as it allows caller to populate the entry if
+it wants.
+
+> > > > +			int pages = size / PAGE_SIZE;
+> > > > +
+> > > > +			/*
+> > > > +			 * Touching memory with shared bit set triggers implicit
+> > > > +			 * conversion to shared.
+> > > > +			 *
+> > > > +			 * Make sure nobody touches the shared range from
+> > > > +			 * now on.
+> > > > +			 *
+> > > > +			 * Bypass unmapping for crash scenario. Unmapping
+> > > > +			 * requires sleepable context, but in crash case kernel
+> > > > +			 * hits the code path with interrupts disabled.
+> > > 
+> > > In case of SNP we will need to temporarily enable interrupts during this
+> > > unsharing as we invoke set_memory_encrypted() which then hits a BUG_ON() in
+> > > cpa_flush() if interrupts are disabled.
+> > 
+> > Do you really need full set_memory_encrypted()? Can't you do something
+> > ligher?
+> > 
+> We need to modify the PTE for setting c-bit to 1 so that will require
+> cpa_flush(), though probably can add something lighter to do
+> clflush_cache_range() directly ?
+
+For TDX, I don't touch shared bit as nobody suppose to touch the memory
+after the point (ans set_memory_np() enforces it for !crash case).
+
+Can't SNP do the same?
+
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
 
 _______________________________________________
 kexec mailing list
