@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A5BD0E9370C
-	for <kexec@archiver.kernel.org>; Thu,  5 Oct 2023 13:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BD88CE9370D
+	for <kexec@archiver.kernel.org>; Thu,  5 Oct 2023 13:17:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=2dUeCnP3LuLu97KQQdOV8/40DfqXKAW20bqxnXet0AU=; b=Pu2OeV1Y0EuWYg
-	Sk/tai12faJgdw1IaQzAMVXF3+uYtwSOoqK9ddTz2QqbTB2BdmmFvTXNoCnX2RdYH6qZNWKjOlXjJ
-	LkTY4RajrIvp8scGDtbwnljzcIUGo99dqtKZtQpzf18BlXD3Qhys3MdbiVSCnFnhBLmGZPc3cTtRC
-	O/RKsd/xTzKQxMU0mcPP5VsZHrOvv8SzNvi7Hb4n3dF2oJI/ECSJjr/eSBHRmnmjSuGdiuW3P7CYy
-	zmAPpa1mD5vWf1kAhb2mwqnsrX828snlYV2UGaHsjZUqmhuywTTRorFuO/2wC5zwCUSKWD77JqT6B
-	PcQEnBeL42PgKaitfcZw==;
+	List-Owner; bh=edcx3PPOeIqGjGCRdjl5pBb3idJFVU4KbWuVnvAJYZk=; b=olsPZxinr2vaQE
+	HK0LlgoKYRYOeQl70jphot1Ix4/c0IrQB3mGyqWBjMDaCiuza9dtxL+/ekTdgGlqW1CiUPRTpUuWe
+	uBF4fXcYWD9cgYdyle+7SuwRtAQEhbFrF8J4L2jtQmucqHOfRYhd81tR9d5pLT4U+xFqbw7WQLcbl
+	lL7VEm4hIJeYFVCagCYkqsBhfZibVGFLj3tuHD8TqVSloZi/+1wh9b91KgczMNhx5HtwZyjwKUDxB
+	7g5cm+E4RkqKRs0X273OBf6gxomlCJGvLVFRCnzNNzwIdtm43DxYLd0MeZjzQ89cxh1PwkpyOcAjn
+	Bz6BJXAngEyAsew7mTXg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qoODt-003H17-28;
-	Thu, 05 Oct 2023 13:17:01 +0000
+	id 1qoODx-003H6O-2B;
+	Thu, 05 Oct 2023 13:17:05 +0000
 Received: from mgamail.intel.com ([192.55.52.120])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qoODo-003GlX-0i
+	id 1qoODu-003GlX-0O
 	for kexec@lists.infradead.org;
-	Thu, 05 Oct 2023 13:17:00 +0000
+	Thu, 05 Oct 2023 13:17:03 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696511816; x=1728047816;
+  t=1696511822; x=1728047822;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=UutLKR1Vg2FeYITzS3ethN6UgzHw9Sr7YlTqsZDUwd0=;
-  b=ON0sLeyfWa03ZEfuc5aEu3OFECUZTYUemFkZgGl/A9ZQWGTXtOGXtY3W
-   dlEb+qaz6pb9RYNEs1geYagMFAtQHMQ4AXI6m0DoKpZvyigjos4BY8Q3J
-   BTiGqlktJgTrukQqqBxZLu1ghKzg4jx3aga+jZsRJjkr5seiYYR6HA8LH
-   bgKquz2hspGpHJy3DoTUf5MQEnyd1IlsnQUZUf0PTSZruERDNcASVND7X
-   RqmhahQx3uNux++ZprnVG3spLJzjoHVhi0Ps38xOEogR/DQURwDO76buR
-   aAZrVcBQlm5Faj75vY4qF2v5qgijFhD22YXKsNliqhHibcA0/zxx6l/3J
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="382357455"
+  bh=7MgS2tz+eXb3t+LyzYLE/xkq/zAhJTq68EvRtEFLASY=;
+  b=WG4c23+x5eZw/txGseHnwH2fGpIpzAvVw8X59Oob3teDO5No+rNppCGS
+   R56QaYDHKKcUr3MCsUPsoiTackrzZWFBxhs8Z80nBMoPRVo3Y0Gqoeshh
+   bvrp72izOLI2UFo18fX/6d8k+UYsgIhUIQtqhVtQsmZjvIueOJwoONmHF
+   /U49HglJB4q68V2vHWTloQhwUQn3b9YsG5+lehg3NjHmrX8NNZzRFhUtr
+   SZn0OuIL3J+TDHM1nMYQj1v7afJF7tO5XNDMnAl3vyCZa8NFGr1jCg25S
+   skJM8MR3aM5v1bXUqGs1jcJi451SqyQcC68WAExwdy1rTtvaL3WG0Q2oR
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="382357565"
 X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
-   d="scan'208";a="382357455"
+   d="scan'208";a="382357565"
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2023 06:14:21 -0700
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2023 06:14:27 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="817564303"
+X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="817564320"
 X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
-   d="scan'208";a="817564303"
+   d="scan'208";a="817564320"
 Received: from skwasnia-mobl.ger.corp.intel.com (HELO box.shutemov.name) ([10.251.222.71])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2023 06:14:16 -0700
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2023 06:14:23 -0700
 Received: by box.shutemov.name (Postfix, from userid 1000)
-	id 2BD9910A14A; Thu,  5 Oct 2023 16:14:14 +0300 (+03)
+	id 52B2510A150; Thu,  5 Oct 2023 16:14:14 +0300 (+03)
 From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -71,16 +71,16 @@ Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
 	linux-coco@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH 03/13] cpu/hotplug, x86/acpi: Disable CPU hotplug for ACPI MADT wakeup
-Date: Thu,  5 Oct 2023 16:13:52 +0300
-Message-ID: <20231005131402.14611-4-kirill.shutemov@linux.intel.com>
+Subject: [PATCH 07/13] x86/mm: Return correct level from lookup_address() if pte is none
+Date: Thu,  5 Oct 2023 16:13:56 +0300
+Message-ID: <20231005131402.14611-8-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20231005131402.14611-1-kirill.shutemov@linux.intel.com>
 References: <20231005131402.14611-1-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231005_061656_466531_0B7EFCC8 
-X-CRM114-Status: GOOD (  17.30  )
+X-CRM114-CacheID: sfid-20231005_061702_415792_1440BDC3 
+X-CRM114-Status: GOOD (  13.28  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,88 +97,75 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-ACPI MADT doesn't allow to offline CPU after it got woke up.
+lookup_address() only returns correct page table level for the entry if
+the entry is not none.
 
-Currently hotplug prevented based on the confidential computing
-attribute which is set for Intel TDX. But TDX is not the only possible
-user of the wake up method.
+Make the helper to always return correct 'level'. It allows to implement
+iterator over kernel page tables using lookup_address().
 
-Mark CPU hotplug as "not supported" on ACPI MADT wakeup enumeration.
+Add one more entry into enum pg_level to indicate size of VA covered by
+one PGD entry in 5-level paging mode.
 
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Reviewed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 ---
- arch/x86/coco/core.c               |  1 -
- arch/x86/kernel/acpi/madt_wakeup.c |  4 ++++
- include/linux/cc_platform.h        | 10 ----------
- kernel/cpu.c                       |  2 +-
- 4 files changed, 5 insertions(+), 12 deletions(-)
+ arch/x86/include/asm/pgtable_types.h | 1 +
+ arch/x86/mm/pat/set_memory.c         | 8 ++++----
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/coco/core.c b/arch/x86/coco/core.c
-index eeec9986570e..f07c3bb7deab 100644
---- a/arch/x86/coco/core.c
-+++ b/arch/x86/coco/core.c
-@@ -20,7 +20,6 @@ static bool noinstr intel_cc_platform_has(enum cc_attr attr)
- {
- 	switch (attr) {
- 	case CC_ATTR_GUEST_UNROLL_STRING_IO:
--	case CC_ATTR_HOTPLUG_DISABLED:
- 	case CC_ATTR_GUEST_MEM_ENCRYPT:
- 	case CC_ATTR_MEM_ENCRYPT:
- 		return true;
-diff --git a/arch/x86/kernel/acpi/madt_wakeup.c b/arch/x86/kernel/acpi/madt_wakeup.c
-index 1b9747bfd5b9..15bdf10b1393 100644
---- a/arch/x86/kernel/acpi/madt_wakeup.c
-+++ b/arch/x86/kernel/acpi/madt_wakeup.c
-@@ -1,4 +1,5 @@
- #include <linux/acpi.h>
-+#include <linux/cpu.h>
- #include <asm/apic.h>
- 
- /* Physical address of the Multiprocessor Wakeup Structure mailbox */
-@@ -74,6 +75,9 @@ int __init acpi_parse_mp_wake(union acpi_subtable_headers *header,
- 
- 	acpi_mp_wake_mailbox_paddr = mp_wake->base_address;
- 
-+	/* Disable CPU onlining/offlining */
-+	cpu_hotplug_not_supported();
-+
- 	apic_update_callback(wakeup_secondary_cpu_64, acpi_wakeup_cpu);
- 
- 	return 0;
-diff --git a/include/linux/cc_platform.h b/include/linux/cc_platform.h
-index cb0d6cd1c12f..d08dd65b5c43 100644
---- a/include/linux/cc_platform.h
-+++ b/include/linux/cc_platform.h
-@@ -80,16 +80,6 @@ enum cc_attr {
- 	 * using AMD SEV-SNP features.
- 	 */
- 	CC_ATTR_GUEST_SEV_SNP,
--
--	/**
--	 * @CC_ATTR_HOTPLUG_DISABLED: Hotplug is not supported or disabled.
--	 *
--	 * The platform/OS is running as a guest/virtual machine does not
--	 * support CPU hotplug feature.
--	 *
--	 * Examples include TDX Guest.
--	 */
--	CC_ATTR_HOTPLUG_DISABLED,
+diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
+index 0b748ee16b3d..3f648ffdfbe5 100644
+--- a/arch/x86/include/asm/pgtable_types.h
++++ b/arch/x86/include/asm/pgtable_types.h
+@@ -548,6 +548,7 @@ enum pg_level {
+ 	PG_LEVEL_2M,
+ 	PG_LEVEL_1G,
+ 	PG_LEVEL_512G,
++	PG_LEVEL_256T,
+ 	PG_LEVEL_NUM
  };
  
- #ifdef CONFIG_ARCH_HAS_CC_PLATFORM
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index cf536fe1a88a..9d4279476b40 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -1522,7 +1522,7 @@ static int cpu_down_maps_locked(unsigned int cpu, enum cpuhp_state target)
- 	 * If the platform does not support hotplug, report it explicitly to
- 	 * differentiate it from a transient offlining failure.
- 	 */
--	if (cc_platform_has(CC_ATTR_HOTPLUG_DISABLED) || !cpu_hotplug_supported)
-+	if (!cpu_hotplug_supported)
- 		return -EOPNOTSUPP;
- 	if (cpu_hotplug_disabled)
- 		return -EBUSY;
+diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+index 6fbf22d5fa56..01f827eb8e80 100644
+--- a/arch/x86/mm/pat/set_memory.c
++++ b/arch/x86/mm/pat/set_memory.c
+@@ -666,32 +666,32 @@ pte_t *lookup_address_in_pgd(pgd_t *pgd, unsigned long address,
+ 	pud_t *pud;
+ 	pmd_t *pmd;
+ 
+-	*level = PG_LEVEL_NONE;
++	*level = PG_LEVEL_256T;
+ 
+ 	if (pgd_none(*pgd))
+ 		return NULL;
+ 
++	*level = PG_LEVEL_512G;
+ 	p4d = p4d_offset(pgd, address);
+ 	if (p4d_none(*p4d))
+ 		return NULL;
+ 
+-	*level = PG_LEVEL_512G;
+ 	if (p4d_large(*p4d) || !p4d_present(*p4d))
+ 		return (pte_t *)p4d;
+ 
++	*level = PG_LEVEL_1G;
+ 	pud = pud_offset(p4d, address);
+ 	if (pud_none(*pud))
+ 		return NULL;
+ 
+-	*level = PG_LEVEL_1G;
+ 	if (pud_large(*pud) || !pud_present(*pud))
+ 		return (pte_t *)pud;
+ 
++	*level = PG_LEVEL_2M;
+ 	pmd = pmd_offset(pud, address);
+ 	if (pmd_none(*pmd))
+ 		return NULL;
+ 
+-	*level = PG_LEVEL_2M;
+ 	if (pmd_large(*pmd) || !pmd_present(*pmd))
+ 		return (pte_t *)pmd;
+ 
 -- 
 2.41.0
 
