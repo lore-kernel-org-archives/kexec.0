@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BD88CE9370D
-	for <kexec@archiver.kernel.org>; Thu,  5 Oct 2023 13:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 12C54E9370C
+	for <kexec@archiver.kernel.org>; Thu,  5 Oct 2023 13:17:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=edcx3PPOeIqGjGCRdjl5pBb3idJFVU4KbWuVnvAJYZk=; b=olsPZxinr2vaQE
-	HK0LlgoKYRYOeQl70jphot1Ix4/c0IrQB3mGyqWBjMDaCiuza9dtxL+/ekTdgGlqW1CiUPRTpUuWe
-	uBF4fXcYWD9cgYdyle+7SuwRtAQEhbFrF8J4L2jtQmucqHOfRYhd81tR9d5pLT4U+xFqbw7WQLcbl
-	lL7VEm4hIJeYFVCagCYkqsBhfZibVGFLj3tuHD8TqVSloZi/+1wh9b91KgczMNhx5HtwZyjwKUDxB
-	7g5cm+E4RkqKRs0X273OBf6gxomlCJGvLVFRCnzNNzwIdtm43DxYLd0MeZjzQ89cxh1PwkpyOcAjn
-	Bz6BJXAngEyAsew7mTXg==;
+	List-Owner; bh=hbe+dTQFlFi6phtT5X457/DwYaX9rpgIjiRJSIxzA7Q=; b=tE+1ucarWImZ5A
+	0CfSxaxObENgNaXjPTBBnBDeJv4iE56Ceb3kx5A5N2/VJpIU4U+8OJZ/kb/5FxgIdGj305TRbSUlo
+	+pOpj787Cve8F/Pd3PAx2T2etPOVRFMpRDfzANUZkuMKGVNKyawAfdZVtkKqpp4fn/U2zpF3fis7/
+	8mq6MkWhzhrywQbBwsh7UATQaHiZMGKuXLCaLbrUSh6nQchKwco3+dxWV5NZEWXeeKFtbbDYQcA4A
+	O8IMGCmK3ViKH/Fd4u7GgptVA/JE8ZCFHH0AesBs9E0s4cF0xle0jxwaBN7qtv2yp9UOtPt/pqkMh
+	g6aD3/kTyJNlV0AH8WyQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qoODx-003H6O-2B;
-	Thu, 05 Oct 2023 13:17:05 +0000
+	id 1qoODz-003H9U-35;
+	Thu, 05 Oct 2023 13:17:07 +0000
 Received: from mgamail.intel.com ([192.55.52.120])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qoODu-003GlX-0O
+	id 1qoODv-003H2S-0e
 	for kexec@lists.infradead.org;
-	Thu, 05 Oct 2023 13:17:03 +0000
+	Thu, 05 Oct 2023 13:17:05 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696511822; x=1728047822;
+  t=1696511823; x=1728047823;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=7MgS2tz+eXb3t+LyzYLE/xkq/zAhJTq68EvRtEFLASY=;
-  b=WG4c23+x5eZw/txGseHnwH2fGpIpzAvVw8X59Oob3teDO5No+rNppCGS
-   R56QaYDHKKcUr3MCsUPsoiTackrzZWFBxhs8Z80nBMoPRVo3Y0Gqoeshh
-   bvrp72izOLI2UFo18fX/6d8k+UYsgIhUIQtqhVtQsmZjvIueOJwoONmHF
-   /U49HglJB4q68V2vHWTloQhwUQn3b9YsG5+lehg3NjHmrX8NNZzRFhUtr
-   SZn0OuIL3J+TDHM1nMYQj1v7afJF7tO5XNDMnAl3vyCZa8NFGr1jCg25S
-   skJM8MR3aM5v1bXUqGs1jcJi451SqyQcC68WAExwdy1rTtvaL3WG0Q2oR
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="382357565"
+  bh=ja5J3yNUmltgYZsQ6ex9qPK0e1eU53KBqHupwbwonDY=;
+  b=G+OlSlHtnBZQRgYT2liv48z7pPRvqYmOi6BrCcVfoLsUEtwTexfZW+b7
+   x2s2Yo/+CUSlGaSoZvnRJaUsuaGBaV2JS8NX2976PzscOT/3E87NyV4pT
+   /gS0ztwd9Qpf37q1WfgCnUjQJTqCpsrFK2iXdIhC5jJaj9AYxyCPhxZC8
+   VyhBeUOTZKnRziScdw/6KWXnt1g+XySXbUnUbEkiHn/92bmINNrRNXxDA
+   HkQ/NZTQJvZJd7SEQJbvf0gCLxueVR1KtDtRLdC8gGh99V5YBOKJV6y9R
+   in3nHiCXpbGt9cGeTp6Az3/ABlg2TISZBjwuwb6UtotF27tN/wekhkAfZ
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="382357578"
 X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
-   d="scan'208";a="382357565"
+   d="scan'208";a="382357578"
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
   by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2023 06:14:27 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="817564320"
+X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="817564322"
 X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
-   d="scan'208";a="817564320"
+   d="scan'208";a="817564322"
 Received: from skwasnia-mobl.ger.corp.intel.com (HELO box.shutemov.name) ([10.251.222.71])
   by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2023 06:14:23 -0700
 Received: by box.shutemov.name (Postfix, from userid 1000)
-	id 52B2510A150; Thu,  5 Oct 2023 16:14:14 +0300 (+03)
+	id 6748410A153; Thu,  5 Oct 2023 16:14:14 +0300 (+03)
 From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -71,16 +71,16 @@ Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
 	linux-coco@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH 07/13] x86/mm: Return correct level from lookup_address() if pte is none
-Date: Thu,  5 Oct 2023 16:13:56 +0300
-Message-ID: <20231005131402.14611-8-kirill.shutemov@linux.intel.com>
+Subject: [PATCH 09/13] x86/tdx: Account shared memory
+Date: Thu,  5 Oct 2023 16:13:58 +0300
+Message-ID: <20231005131402.14611-10-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20231005131402.14611-1-kirill.shutemov@linux.intel.com>
 References: <20231005131402.14611-1-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231005_061702_415792_1440BDC3 
-X-CRM114-Status: GOOD (  13.28  )
+X-CRM114-CacheID: sfid-20231005_061703_368555_4340C06E 
+X-CRM114-Status: GOOD (  16.31  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,75 +97,121 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-lookup_address() only returns correct page table level for the entry if
-the entry is not none.
+The kernel will convert all shared memory back to private during kexec.
+The direct mapping page tables will provide information on which memory
+is shared.
 
-Make the helper to always return correct 'level'. It allows to implement
-iterator over kernel page tables using lookup_address().
+It is extremely important to convert all shared memory. If a page is
+missed, it will cause the target kernel to crash when it accesses it.
 
-Add one more entry into enum pg_level to indicate size of VA covered by
-one PGD entry in 5-level paging mode.
+Keep track of the number of shared pages. This will allow for
+cross-checking against the shared information in the direct mapping and
+reporting if the shared bit is lost.
+
+Include a debugfs interface that allows for the check to be performed at
+any point.
 
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Reviewed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 ---
- arch/x86/include/asm/pgtable_types.h | 1 +
- arch/x86/mm/pat/set_memory.c         | 8 ++++----
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ arch/x86/coco/tdx/tdx.c | 67 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
 
-diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
-index 0b748ee16b3d..3f648ffdfbe5 100644
---- a/arch/x86/include/asm/pgtable_types.h
-+++ b/arch/x86/include/asm/pgtable_types.h
-@@ -548,6 +548,7 @@ enum pg_level {
- 	PG_LEVEL_2M,
- 	PG_LEVEL_1G,
- 	PG_LEVEL_512G,
-+	PG_LEVEL_256T,
- 	PG_LEVEL_NUM
- };
+diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
+index 46022283d955..56e152126f20 100644
+--- a/arch/x86/coco/tdx/tdx.c
++++ b/arch/x86/coco/tdx/tdx.c
+@@ -5,6 +5,7 @@
+ #define pr_fmt(fmt)     "tdx: " fmt
  
-diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index 6fbf22d5fa56..01f827eb8e80 100644
---- a/arch/x86/mm/pat/set_memory.c
-+++ b/arch/x86/mm/pat/set_memory.c
-@@ -666,32 +666,32 @@ pte_t *lookup_address_in_pgd(pgd_t *pgd, unsigned long address,
- 	pud_t *pud;
- 	pmd_t *pmd;
+ #include <linux/cpufeature.h>
++#include <linux/debugfs.h>
+ #include <linux/export.h>
+ #include <linux/io.h>
+ #include <asm/coco.h>
+@@ -37,6 +38,13 @@
  
--	*level = PG_LEVEL_NONE;
-+	*level = PG_LEVEL_256T;
+ #define TDREPORT_SUBTYPE_0	0
  
- 	if (pgd_none(*pgd))
- 		return NULL;
++static atomic_long_t nr_shared;
++
++static inline bool pte_decrypted(pte_t pte)
++{
++	return cc_mkdec(pte_val(pte)) == pte_val(pte);
++}
++
+ /* Called from __tdx_hypercall() for unrecoverable failure */
+ noinstr void __noreturn __tdx_hypercall_failed(void)
+ {
+@@ -799,6 +807,11 @@ static int tdx_enc_status_change_finish(unsigned long vaddr, int numpages,
+ 	if (!enc && !tdx_enc_status_changed(vaddr, numpages, enc))
+ 		return -EIO;
  
-+	*level = PG_LEVEL_512G;
- 	p4d = p4d_offset(pgd, address);
- 	if (p4d_none(*p4d))
- 		return NULL;
++	if (enc)
++		atomic_long_sub(numpages, &nr_shared);
++	else
++		atomic_long_add(numpages, &nr_shared);
++
+ 	return 0;
+ }
  
--	*level = PG_LEVEL_512G;
- 	if (p4d_large(*p4d) || !p4d_present(*p4d))
- 		return (pte_t *)p4d;
+@@ -871,3 +884,57 @@ void __init tdx_early_init(void)
  
-+	*level = PG_LEVEL_1G;
- 	pud = pud_offset(p4d, address);
- 	if (pud_none(*pud))
- 		return NULL;
- 
--	*level = PG_LEVEL_1G;
- 	if (pud_large(*pud) || !pud_present(*pud))
- 		return (pte_t *)pud;
- 
-+	*level = PG_LEVEL_2M;
- 	pmd = pmd_offset(pud, address);
- 	if (pmd_none(*pmd))
- 		return NULL;
- 
--	*level = PG_LEVEL_2M;
- 	if (pmd_large(*pmd) || !pmd_present(*pmd))
- 		return (pte_t *)pmd;
- 
+ 	pr_info("Guest detected\n");
+ }
++
++#ifdef CONFIG_DEBUG_FS
++static int tdx_shared_memory_show(struct seq_file *m, void *p)
++{
++	unsigned long addr, end;
++	unsigned long found = 0;
++
++	addr = PAGE_OFFSET;
++	end  = PAGE_OFFSET + get_max_mapped();
++
++	while (addr < end) {
++		unsigned long size;
++		unsigned int level;
++		pte_t *pte;
++
++		pte = lookup_address(addr, &level);
++		size = page_level_size(level);
++
++		if (pte && pte_decrypted(*pte))
++			found += size / PAGE_SIZE;
++
++		addr += size;
++	}
++
++	seq_printf(m, "Number of unshared pages in kernel page tables:  %16lu\n",
++		   found);
++	seq_printf(m, "Number of pages accounted as unshared:           %16ld\n",
++		   atomic_long_read(&nr_shared));
++	return 0;
++}
++
++static int tdx_shared_memory_open(struct inode *inode, struct file *file)
++{
++	return single_open(file, tdx_shared_memory_show, NULL);
++}
++
++static const struct file_operations tdx_shared_memory_fops = {
++	.open           = tdx_shared_memory_open,
++	.read           = seq_read,
++	.llseek         = seq_lseek,
++	.release        = single_release,
++};
++
++static __init int debug_tdx_shared_memory(void)
++{
++	if (!cpu_feature_enabled(X86_FEATURE_TDX_GUEST))
++		return 0;
++
++	debugfs_create_file("tdx_shared_memory", S_IRUSR, arch_debugfs_dir,
++			    NULL, &tdx_shared_memory_fops);
++	return 0;
++}
++fs_initcall(debug_tdx_shared_memory);
++#endif
 -- 
 2.41.0
 
