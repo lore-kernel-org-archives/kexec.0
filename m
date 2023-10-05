@@ -4,83 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A85D6E9370D
-	for <kexec@archiver.kernel.org>; Thu,  5 Oct 2023 13:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F0800E92723
+	for <kexec@archiver.kernel.org>; Thu,  5 Oct 2023 18:26:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=lXHUsgU+Uq9AzbCGVMJk6EwGGV7VT5y+TDL/UkgRPJs=; b=ydh3IjRQsQmQdy
-	whddjU/CcRTau9GixG32U8oH2pLPk60OSWs2ZnnfDXRw9r1Lw+KRFkccRywmzxzEDxcLW6Qo5q2zL
-	c51lxFJBqMuBzak3pLSx3FA4qj54N+l6Xjhm1VN4LLB/1Wdz3mcCdu+eDmb4gU+7N+OqBcqK9xsj/
-	sWdXFPAYexBnUMhHWUCOIT2UWiGeHUQCYMUUvU2yAS0dk375GAMzC8oonakCQuRt7znPGYMRsnp6X
-	dRWawKRpaYEJQA35yxqavr+GanCgtwaWPahmuPLe99uQgqFuTL+VAi+o9db2zHEaS/RTo4+Z9Ug1u
-	08VsITmgZrbh+KXC0GTA==;
+	List-Owner; bh=TNBphJdNRm2l4NUdbMw87cAoUdQThoo8FAfgmQQbUbU=; b=vLOzmZrbQQULeH
+	CoEEh/8BW/hWe7qKyOvOkpgCXXCMhigEZeuVVm+Eu7tck1uuaqfOefikPfNU8AXy+7nSKvIEPmC2t
+	Fs4phupZMNogsyrNSQsR30PDSlashokBP5xF3DvXcUa8FluExwE99PBys5DJCZXQzzjSuioEnm7R9
+	/WXY4ZJSB5JCw1vNC1Utkzy963gPOig9SO+Gk0CVbblV7w0o4EwBnkZCMPpE1NxEza+MB9Vkvaag9
+	Zdbip2TkWzSZZqtKsbi7lBE+U51Bgw4cU5dFdaMFoLd9G2S7bVp6SH5rGwKvmplRdFJqYXrfsSf91
+	dziNNwTMry84m8uk1/AA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qoOE2-003HC8-0l;
-	Thu, 05 Oct 2023 13:17:10 +0000
-Received: from mgamail.intel.com ([192.55.52.120])
-	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qoODw-003H3r-0p
+	id 1qoT3C-004HSV-1j;
+	Thu, 05 Oct 2023 18:26:18 +0000
+Received: from linux.microsoft.com ([13.77.154.182])
+	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
+	id 1qoT37-004HPv-2S
 	for kexec@lists.infradead.org;
-	Thu, 05 Oct 2023 13:17:06 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696511824; x=1728047824;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=dQGt0n5D7SP1i4kXyMIPUS/joI3SOgsexxI/o9/iCB0=;
-  b=ER8FQPRt78Cbxnn9UprTxIX4f8V7Ps/J6teq3bv44ypy+UFvJi7+BkAC
-   63jwe+992fR1HGR5oUEEmXUa8unVxkKRt5EWV7WNVMckbwRLsfdZTRFT6
-   cgxfyc6QutxWSJJg9F65bOpQ6Rqt8rVOMal+Loanwx/Mnz5IBDLiumkgU
-   r0+z956UWsHPkfJVce7EywEio9snGsDqwhxZ8gD6lQ2FyabZt6mAWfi8M
-   KYlUCYMf2h1xykoV1aFrlRbP6OAKOwClBuoBcZTMbmA3+uu55mlzxRqOF
-   GAXPLCKSICbO06kp3hod4INuq7tbtHA+9P/HWzz+oRinTgfIbfXHUCAkS
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="382357600"
-X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
-   d="scan'208";a="382357600"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2023 06:14:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="817564325"
-X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
-   d="scan'208";a="817564325"
-Received: from skwasnia-mobl.ger.corp.intel.com (HELO box.shutemov.name) ([10.251.222.71])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2023 06:14:23 -0700
-Received: by box.shutemov.name (Postfix, from userid 1000)
-	id 5CDA710A152; Thu,  5 Oct 2023 16:14:14 +0300 (+03)
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Elena Reshetova <elena.reshetova@intel.com>,
-	Jun Nakajima <jun.nakajima@intel.com>,
-	Rick Edgecombe  <rick.p.edgecombe@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
+	Thu, 05 Oct 2023 18:26:15 +0000
+Received: from tushar-HP-Pavilion-Laptop-15-eg0xxx.lan (unknown [50.46.228.62])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 4FD0220B74C5;
+	Thu,  5 Oct 2023 11:26:13 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4FD0220B74C5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1696530373;
+	bh=Udqv0jaboMhxWHknI6g5+GDLvPqkVFywTKuSTdC2gbc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=LqSMC7bERhS0/N9DffbA9GM3BY+SW1tOE0W+Jh2x5uqnVbKTyjgIlB8ngOwdezyxc
+	 05WBHartxAG3n2JcJcb1tcSE44PT/HLgJLdRVwqlRLdkRSonltLyrengvISLxTUMXq
+	 GQLsQf09S+iFLhmHqu/NN8s7Dv/zDE6kxL+QPpRI=
+From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+To: zohar@linux.ibm.com,
+	ebiederm@xmission.com,
+	noodles@fb.com,
+	bauermann@kolabnow.com,
 	kexec@lists.infradead.org,
-	linux-coco@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH 08/13] KVM: x86: Add config option to gate emergency virt callback support
-Date: Thu,  5 Oct 2023 16:13:57 +0300
-Message-ID: <20231005131402.14611-9-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20231005131402.14611-1-kirill.shutemov@linux.intel.com>
-References: <20231005131402.14611-1-kirill.shutemov@linux.intel.com>
+	linux-integrity@vger.kernel.org
+Cc: code@tyhicks.com,
+	nramas@linux.microsoft.com,
+	paul@paul-moore.com
+Subject: [PATCH v2 4/7] kexec: update kexec_file_load syscall to call ima_kexec_post_load
+Date: Thu,  5 Oct 2023 11:25:59 -0700
+Message-Id: <20231005182602.634615-5-tusharsu@linux.microsoft.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20231005182602.634615-1-tusharsu@linux.microsoft.com>
+References: <20231005182602.634615-1-tusharsu@linux.microsoft.com>
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231005_061704_487717_075517F2 
-X-CRM114-Status: GOOD (  13.79  )
+X-CRM114-CacheID: sfid-20231005_112613_872514_E99CDB07 
+X-CRM114-Status: GOOD (  13.92  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,93 +74,54 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-KVM uses emergency virt call back to shutdown virtualization extension
-during crash, so the crash kernel can work correctly.
+The kexec_file_load() syscall is used to load a new Kernel for kexec.
+The syscall needs to be updated to call ima_kexec_post_load(),
+which was implemented in a previous patch.  ima_kexec_post_load() should
+take care of mapping the IMA log buffer segment into the next Kernel. It
+should also register a reboot notifier which would call a function to
+dump the IMA measurements into IMA log buffer segment during kexec soft
+reboot.
 
-So far the virt callback is only supported if KVM_INTEL or KVM_AMD is
-enabled. TDX guest has similar needs.
+Modify the kexec_file_load() syscall to call ima_kexec_post_load() after
+the image has been loaded and prepared for kexec.  This ensures that the
+IMA measurement list will be available to the next Kernel after a kexec
+soft reboot.  This also ensures the measurements taken in the window
+between kexec 'load' and 'execute' are captured and passed to the next
+Kernel.
 
-Add a config option to gate virt emergency callback support.
-
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
 ---
- arch/x86/include/asm/reboot.h | 4 ++--
- arch/x86/kernel/reboot.c      | 4 ++--
- arch/x86/kvm/Kconfig          | 5 +++++
- 3 files changed, 9 insertions(+), 4 deletions(-)
+ kernel/kexec_file.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/x86/include/asm/reboot.h b/arch/x86/include/asm/reboot.h
-index 6536873f8fc0..f72bdd4abbe8 100644
---- a/arch/x86/include/asm/reboot.h
-+++ b/arch/x86/include/asm/reboot.h
-@@ -25,14 +25,14 @@ void __noreturn machine_real_restart(unsigned int type);
- #define MRR_BIOS	0
- #define MRR_APM		1
- 
--#if IS_ENABLED(CONFIG_KVM_INTEL) || IS_ENABLED(CONFIG_KVM_AMD)
-+#ifdef CONFIG_EMERGENCY_VIRT_CALLBACK
- typedef void (cpu_emergency_virt_cb)(void);
- void cpu_emergency_register_virt_callback(cpu_emergency_virt_cb *callback);
- void cpu_emergency_unregister_virt_callback(cpu_emergency_virt_cb *callback);
- void cpu_emergency_disable_virtualization(void);
- #else
- static inline void cpu_emergency_disable_virtualization(void) {}
--#endif /* CONFIG_KVM_INTEL || CONFIG_KVM_AMD */
-+#endif /* CONFIG_EMERGENCY_VIRT_CALLBACK */
- 
- typedef void (*nmi_shootdown_cb)(int, struct pt_regs*);
- void nmi_shootdown_cpus(nmi_shootdown_cb callback);
-diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-index 830425e6d38e..6a781f2f11c8 100644
---- a/arch/x86/kernel/reboot.c
-+++ b/arch/x86/kernel/reboot.c
-@@ -529,7 +529,7 @@ static inline void kb_wait(void)
- 
- static inline void nmi_shootdown_cpus_on_restart(void);
- 
--#if IS_ENABLED(CONFIG_KVM_INTEL) || IS_ENABLED(CONFIG_KVM_AMD)
-+#ifdef CONFIG_EMERGENCY_VIRT_CALLBACK
- /* RCU-protected callback to disable virtualization prior to reboot. */
- static cpu_emergency_virt_cb __rcu *cpu_emergency_virt_callback;
- 
-@@ -599,7 +599,7 @@ static void emergency_reboot_disable_virtualization(void)
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index f989f5f1933b..617dbbb6e46d 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -184,6 +184,11 @@ kimage_validate_signature(struct kimage *image)
  }
- #else
- static void emergency_reboot_disable_virtualization(void) { }
--#endif /* CONFIG_KVM_INTEL || CONFIG_KVM_AMD */
-+#endif /* CONFIG_EMERGENCY_VIRT_CALLBACK */
+ #endif
  
- void __attribute__((weak)) mach_reboot_fixups(void)
- {
-diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
-index ed90f148140d..7df3f0c45cfe 100644
---- a/arch/x86/kvm/Kconfig
-+++ b/arch/x86/kvm/Kconfig
-@@ -80,6 +80,7 @@ config KVM_WERROR
- config KVM_INTEL
- 	tristate "KVM for Intel (and compatible) processors support"
- 	depends on KVM && IA32_FEAT_CTL
-+	select EMERGENCY_VIRT_CALLBACK
- 	help
- 	  Provides support for KVM on processors equipped with Intel's VT
- 	  extensions, a.k.a. Virtual Machine Extensions (VMX).
-@@ -102,6 +103,7 @@ config X86_SGX_KVM
- config KVM_AMD
- 	tristate "KVM for AMD processors support"
- 	depends on KVM && (CPU_SUP_AMD || CPU_SUP_HYGON)
-+	select EMERGENCY_VIRT_CALLBACK
- 	help
- 	  Provides support for KVM on AMD processors equipped with the AMD-V
- 	  (SVM) extensions.
-@@ -155,3 +157,6 @@ config KVM_EXTERNAL_WRITE_TRACKING
- 	bool
- 
- endif # VIRTUALIZATION
++void kimage_file_post_load(struct kimage *image)
++{
++	ima_kexec_post_load(image);
++}
 +
-+config EMERGENCY_VIRT_CALLBACK
-+	bool
+ /*
+  * In file mode list of segments is prepared by kernel. Copy relevant
+  * data from user space, do error checking, prepare segment list
+@@ -399,6 +404,9 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+ 
+ 	kimage_terminate(image);
+ 
++	if (!(flags & KEXEC_FILE_ON_CRASH))
++		kimage_file_post_load(image);
++
+ 	ret = machine_kexec_post_load(image);
+ 	if (ret)
+ 		goto out;
 -- 
-2.41.0
+2.25.1
 
 
 _______________________________________________
