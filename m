@@ -4,184 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4B611E92FFB
-	for <kexec@archiver.kernel.org>; Fri,  6 Oct 2023 10:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 45D6CE81DE8
+	for <kexec@archiver.kernel.org>; Fri,  6 Oct 2023 12:00:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-ID:In-Reply-To:
-	References:Message-ID:Date:Subject:CC:To:From:Reply-To:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=0XuxNimfqVhLd5d6LwNXxHNDli2DTyHMCrOlv1dM914=; b=O65Ae4+2rQSVdH
-	Gs2zWlA10zja26Ors7ITOGgbfFSt5QjRGOUyxpzUPEedPov2/L3EmNIKuXgYD+CcukpzttBD6nfr6
-	2YQclaTs4lK4Hb7rFz/4ABQH1ZTF3Fh/fk21Bi255OU8NSXtlZfWdkgxhW5xIGEnHJ3mK+fH2kq/r
-	kcQp5o+OEsmZTzF/yguuj35Jki+GSn1j6m2CTSC+hGjy+VVqvWb3TVB7Mvqlz/Z31t9V//DwzwCTh
-	i3QwFuEXEGAmh1mTpbBx/o9xQQv7QqPOC5ixYdJRXVS4Niqy1L7FTuSXwIuJkxPE061nG/uMTVpiJ
-	n2fcex2bPdarw3c+AeHg==;
+	List-Owner; bh=571q8RCnKVF09hh66utrPE4b0FmxKXCD5T2BUzD+fpc=; b=W02KZUCJdOaCCt
+	nOIl11qRhbhQ2spKtEioewOWU2YUPMrx10O+Wn87l9NEdXtezkkFWSKR2D0yRCE7ng7mSlzo2AA0o
+	mnIoun/qxOfO5oMYEmc8qkgrO9x5QFamsnZVvuVDlI7PBl/0UPV7u25kF4moOLgh/4oTieAxq9FT2
+	nSV0jRFNjBCEjzthUVV67egO0Wd1oVHTwjsxvYN5Xjhw1+WnobRj7bjBmZJfuPtC6Z0GmMHq/zHUo
+	W7TqndwvDhh77WoJga2+ptcgcvdp5vgBnbrTUs1H0deH1sRWb6wrNieiNSXyEkUbvpzzcaJHLsaLN
+	ZIxVz4xMZ9dHMVQPj5eQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qohz9-005YVX-20;
-	Fri, 06 Oct 2023 10:23:07 +0000
-Received: from mgamail.intel.com ([134.134.136.126])
+	id 1qojVW-005jho-0A;
+	Fri, 06 Oct 2023 12:00:38 +0000
+Received: from mgamail.intel.com ([192.55.52.88])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qohz5-005YQq-2A
+	id 1qojVT-005jgs-17
 	for kexec@lists.infradead.org;
-	Fri, 06 Oct 2023 10:23:05 +0000
+	Fri, 06 Oct 2023 12:00:37 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696587783; x=1728123783;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=6UoK+trP3hABfpYWtammAMcZ8Wa5jsDn7Bj/8dIZpu8=;
-  b=caIwyDIag8zlERmAbp1zNTqm7bP4CR890tAaysrZf9uSzo5OCAApPFpw
-   A/EJXjphyvGi1oisUpq/qqufMV00XNzso0XY5oTLypx+Jx5rb6DXs68XP
-   oLv1ejj/UnFjrxliOvmO1VMyQwRCNCYWe3aeLZryjdzVkNSqSb1FAL0Ba
-   kRXDCSAVp0bLrzRwF8zh7fzd4p7SbinJdz4KP1NSlmTXK59ulCHIrFLWN
-   WTYf25cP0fyYRiOibAw5tQhso8VcmTXYnTq0YchdVb97y1KUOMfBeuUoS
-   og4ppAEccbP9MjmRjCIXbSXu2NyYy/F8/WfVAY6rFpsZIe1p7JKgwohv3
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="368799450"
-X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
-   d="scan'208";a="368799450"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 03:22:58 -0700
+  t=1696593635; x=1728129635;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=yh5MuiZGQXQ6liK7/Tt2HXhGriUga9iujO4PJpKEKQU=;
+  b=S8Ewy1qif1xLB61TmBLQiNJ/1BaUVkLTu98fOb179NRi2ZdsDW8NhbTF
+   gmPZxoHUBTdaPOdzSNVHVhUGTNy92g5D68tCRemZOu1NLgLkKNdmuwb/c
+   AzB9QSQMEZB7rquh0Eg/p6jkVY4rmeCfeXa/MtT92/xfZMXWxFeBDMbVC
+   UvYElE5XfzM9+Z90MdX01AiMCNqZevolB/v/VGj8baPBtjkXNmMyNgyiF
+   vW/l47k62SvWzRqn0cRsIq5JQjMsN2dCUNbyE4wMX5qjgv4cdZtN8vzN+
+   dJUqy20Uy4/LNTJGOzgY9va1yPqj4zA/fxBeI8ssrYv5WJUYpbxfW7UhK
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="414732559"
+X-IronPort-AV: E=Sophos;i="6.03,204,1694761200"; 
+   d="scan'208";a="414732559"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 04:59:43 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="868293947"
-X-IronPort-AV: E=Sophos;i="6.03,203,1694761200"; 
-   d="scan'208";a="868293947"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 06 Oct 2023 03:22:58 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Fri, 6 Oct 2023 03:22:57 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32; Fri, 6 Oct 2023 03:22:57 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.32 via Frontend Transport; Fri, 6 Oct 2023 03:22:57 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.173)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.32; Fri, 6 Oct 2023 03:22:57 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=T1gjmVuzaqnAE5kTYjI8Bue86/hI5jpb3CHCjwjIMa1+H800Do5G4/gtNESfG789HucEmucCh2oXBcoZ/F1nXZm8Ec1m2KKi/8iCJ7ICjFTSynnAGrZfRB0MCJiqqmlgS8RJB/j10Lb0lF0YzMlu8XaB9rTDFZDoz373gDtOpUkxL5LpHF32kj12xI5N68HEC8wPKvsHn//wAkfUY4JIPRfE0DmtHxNcmzlC6+/7HoFqa1M9eBAGO0AIV4atY6UbrvoBN5Pdyu25vpEwNqL4nt2di0hmdrbZeARA4P9r5N2VNEGp6eVrzT9/KZgIYjDSzKUoy9UiPI+RAP1QYa8xVg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6UoK+trP3hABfpYWtammAMcZ8Wa5jsDn7Bj/8dIZpu8=;
- b=Rkdpvjl2xX7WVIusBpeOuZYDvbWYmElKr9WnaC/v6reAFMdpCDyCoaph2twGtwEDcHZdLeWcud4ZHiTYu3aB86N1Pm2JLrXLX+5h9RS8PCGzvsptAOjoWWJevh6tVu/nNxbQ4eeNOjNQS5vb3F8XJcrdvExQG3s6Gy0DvB3CfxF81hRwbsI95zuNX0mWH3T1jqjW2714XUy6JDn4rf+Q5AcUKuFVGg7bAN1J5KZYTsgDVPeDxxj9seTqSsYYNPSVUmFKX4C2qM1S4IO4/T+WJLo/4zsghaMIR7rjkITWl4f59Bw0936qmqQ/OOoEZwUa35ai9uwyjitSfjB5P74EzA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BL1PR11MB5978.namprd11.prod.outlook.com (2603:10b6:208:385::18)
- by SJ2PR11MB8470.namprd11.prod.outlook.com (2603:10b6:a03:56f::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6838.38; Fri, 6 Oct
- 2023 10:22:55 +0000
-Received: from BL1PR11MB5978.namprd11.prod.outlook.com
- ([fe80::31a9:b803:fe81:5236]) by BL1PR11MB5978.namprd11.prod.outlook.com
- ([fe80::31a9:b803:fe81:5236%4]) with mapi id 15.20.6838.033; Fri, 6 Oct 2023
- 10:22:55 +0000
-From: "Huang, Kai" <kai.huang@intel.com>
-To: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com"
-	<mingo@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "bp@alien8.de"
-	<bp@alien8.de>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>
-CC: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, "Reshetova, Elena"
-	<elena.reshetova@intel.com>, "Nakajima, Jun" <jun.nakajima@intel.com>,
-	"rafael@kernel.org" <rafael@kernel.org>, "peterz@infradead.org"
-	<peterz@infradead.org>, "sathyanarayanan.kuppuswamy@linux.intel.com"
-	<sathyanarayanan.kuppuswamy@linux.intel.com>, "Hunter, Adrian"
-	<adrian.hunter@intel.com>, "thomas.lendacky@amd.com"
-	<thomas.lendacky@amd.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "kexec@lists.infradead.org"
-	<kexec@lists.infradead.org>, "linux-coco@lists.linux.dev"
-	<linux-coco@lists.linux.dev>
+X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="1083426786"
+X-IronPort-AV: E=Sophos;i="6.03,204,1694761200"; 
+   d="scan'208";a="1083426786"
+Received: from kvsudesh-mobl1.gar.corp.intel.com (HELO box.shutemov.name) ([10.251.222.76])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 04:59:39 -0700
+Received: by box.shutemov.name (Postfix, from userid 1000)
+	id 2368510A12D; Fri,  6 Oct 2023 14:59:37 +0300 (+03)
+Date: Fri, 6 Oct 2023 14:59:37 +0300
+From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
+To: "Huang, Kai" <kai.huang@intel.com>
+Cc: "tglx@linutronix.de" <tglx@linutronix.de>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"x86@kernel.org" <x86@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+	"Reshetova, Elena" <elena.reshetova@intel.com>,
+	"Nakajima, Jun" <jun.nakajima@intel.com>,
+	"rafael@kernel.org" <rafael@kernel.org>,
+	"peterz@infradead.org" <peterz@infradead.org>,
+	"sathyanarayanan.kuppuswamy@linux.intel.com" <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	"Hunter, Adrian" <adrian.hunter@intel.com>,
+	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>
 Subject: Re: [PATCH 01/13] x86/acpi: Extract ACPI MADT wakeup code into a
  separate file
-Thread-Topic: [PATCH 01/13] x86/acpi: Extract ACPI MADT wakeup code into a
- separate file
-Thread-Index: AQHZ948jgFv/HBrZr06FJhLv6gJebLA8jvuA
-Date: Fri, 6 Oct 2023 10:22:54 +0000
-Message-ID: <e11888bc9775a8083b72cce8c58ee71b39d0e17f.camel@intel.com>
+Message-ID: <20231006115937.js5zkqlbqyv3venr@box.shutemov.name>
 References: <20231005131402.14611-1-kirill.shutemov@linux.intel.com>
-	 <20231005131402.14611-2-kirill.shutemov@linux.intel.com>
-In-Reply-To: <20231005131402.14611-2-kirill.shutemov@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.48.4 (3.48.4-1.fc38) 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BL1PR11MB5978:EE_|SJ2PR11MB8470:EE_
-x-ms-office365-filtering-correlation-id: e29b4ed0-9459-48a8-45e5-08dbc65633f2
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: SrvkBZd/ThyLsVK2PiMsW6sh3SP5ee4w6Wj1P7BD5rz8FoFGGjT37/L8iyPV32WgN2abZ5N10mUTwl3BTNNVnLNSekDVb79cs51QbM+f65Q/zyBvXgowj2Tu4SuRZmkBXQsVP1zLcoHiLqS+X0cUyjzAEL8oKDT/C9FX+e0s/FdqPHnzByoLqLcf9AFuw5Hw60OrsC0KMJGG3e/MxLhU2vJb+wvH8ZHCpMzbdIzRkymav3FUO42hFb2zmqn010iijNKUS+FrPvTaAzC8xw2x9R8ilXRbDPXwJrnEEhqXF55bo97q5cqMn0sUrX1EHGOpJ+Sk0UmXZpOuOGsxfaW1+ciFfnmVjJuCjXMI/j2tKnj+/Om6/ChF7Og0faSLZ6XlQRN/0p7OJUPFhhRDRH67vTFXrzUGRzkZDBF8TnX/J1U/3ZBf2zslrtkwpTTFYsISDeOmzy3jtI1s7isRoKMXDqZzoetHO4gEJXTDhCwwf8zhzWv33IQNtzUEPEKWSl4GdM1ePMhyuj9wF+Dk3b6WFvz+3EFUosi+TTLwe07BS1DPVRj0IXucPrKElOzLrnXTzscC4k3i0aEdXXa9S8HNtyimCVvRyUq5f5iEMJUFCp2jJedoerFItCIdmbAYTq9z
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR11MB5978.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(366004)(376002)(39860400002)(136003)(396003)(230922051799003)(186009)(64100799003)(451199024)(1800799009)(6486002)(83380400001)(6506007)(82960400001)(71200400001)(6512007)(2616005)(38100700002)(38070700005)(26005)(110136005)(64756008)(54906003)(316002)(41300700001)(122000001)(478600001)(66946007)(66446008)(66556008)(66476007)(76116006)(91956017)(8936002)(8676002)(5660300002)(7416002)(4326008)(86362001)(36756003)(2906002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Uk5CeWIwVVp4NGNySkxEWHRCeGowOVVQbXVmOFE4SFVzaGtPK1ZXSFpaZkpG?=
- =?utf-8?B?SkFFcTd2MTNlbi9tMnlaS3VuRHZlMitCeXN4cGFkTE5EdEdtSnZ4M1pDQWZB?=
- =?utf-8?B?R2NONXVPd0ZIV1VudVl2WG5mUjRxNjNTZ3FuS1h5VGZVRElJTGkrbGlWWDJK?=
- =?utf-8?B?QVJLeCtURnpiVnVQaHFLdDdHSXI4YUMzL0gxVTUrVUlDK2ladkFRVmk2dFU5?=
- =?utf-8?B?cVYxRlRJZVQ0YStSanVrWnJ0K2xqMGNnaWJlc3pWaU10QzAwVWpwZG85aTlm?=
- =?utf-8?B?S2NWV3owU3ZTNzZGQUMyZHZ0dnZDYUdmcFVYUE5EWG50eDdiQUZCaHRJVVBB?=
- =?utf-8?B?Ymw1bmEvMU5SQVh6OW9oTlhqaTZGdC9VeEZTOGFlaUI5U0I1T0NWZ01QU1dl?=
- =?utf-8?B?SzdhcDE3SlZHcmxWU2dxUkZJWTJUZk9OTEZ2SnJwclJCRHQyNGx5eDFnMjVJ?=
- =?utf-8?B?cFFuVTFRK2E0eVR6blZCSS8zbUhDbXVOVExIQVg1WVV1SWo0ZWdndk0zWFpk?=
- =?utf-8?B?NnA3cDZaVUU1VTlQYkd5dGVTQlhmUk1tV2NkK0VjRVk5eDdIZUhMN3hpaTBH?=
- =?utf-8?B?bFM2SG5jTXRVTXV2SXpHcDJacWwyQnRrWGdYcGhBY3BZM09WQXZ4TU1yd2ky?=
- =?utf-8?B?cVZZRkZpSmczVi93QVBGeXFKb1JRNERlM2p1Q2hzR1NzbDdMWGRBQm9vekNZ?=
- =?utf-8?B?bHlhaHJSWjZxSzcyUFBuUllJQTI0cm9sR1pKS2xrTk03QjBDZG9iNHJ0V05C?=
- =?utf-8?B?TVQ4WHF1ZGJKYXo4M1NGUEppUU5NczZlRlN0dkFUVVpSY0t3eGtjVDB4STh1?=
- =?utf-8?B?U0ZOVFh6ekFBcHZseHE1RTlleFFoaWJJZmZLMUZIeXNLc2lGVUNpcW9FV1dh?=
- =?utf-8?B?Z0s1ODhlWG1LUzk3eUZDMVdKQXJSTGp2Yk5oV2txNXVLdkhXYXVuQWpGWFEy?=
- =?utf-8?B?NVdIQWRSb25kc3NMb0xtc2IwbHFDME5EOEFWdTJaeW92dUZ6NzIxODBiNlVm?=
- =?utf-8?B?OUdlWkJkUUUxcmY3VjJKdzZiV1pPYWlMQ1RLQXp0Yi9iaXhIdE10SXlQazc3?=
- =?utf-8?B?dWtCNyt3VTRyM0FnbGd2bHJSOXpWREhoL2V0cVJ6RTFhdnN0QUd2Z1d3ZHlD?=
- =?utf-8?B?ekpGNlRVRHdZRG85VUQ0SWNHY3ZBeWUxempyUU5Lc202UFJhcDhyNGo5dXpG?=
- =?utf-8?B?UUNKU3FORGt4VVpiYUYxeDNYd0ZmRkZnYzBQbWxTRGRUUnNuZFFHR0RWQXVs?=
- =?utf-8?B?OC9vRlJrRmFaSjJCNXFORWxSRWhWTlVHenVCbmpwVEVxVWtFbmhIRWFzekEy?=
- =?utf-8?B?aHRRcTkrOXdrd2VjNG5XUUYrSmRoZFh5anNnSnFvSUU2L1JtaGZnb1BaTGE1?=
- =?utf-8?B?c3l3ZGtVNFk1QXE5Vlc2MzA5RjZVWktLcUNKb2oxdG44Q3RtN1NUSUxqbzQx?=
- =?utf-8?B?by9tTEo4dnpvUGgyejZNeHNZQS93T290cU4xSytBb3ZkRnYzMVAwV2kyaGhm?=
- =?utf-8?B?Skw5OGVBMVR3RnpMb01jYkR6OERxUWVFb0hEdnV0Z2JLZ0VQbENCbm9OR0xQ?=
- =?utf-8?B?V1BISjVoSE1zUE1id0luWmxFMHhTaVNwVTFIVSs4NVNXWStlRy82cU9HaHJB?=
- =?utf-8?B?c0gxeFRTdFpGMDcrK3VCaFd3SE5IYW1lNGhZdmZxck45VHB4ODVKT1lpZFRY?=
- =?utf-8?B?bnFZbGJTcFZzYmswV2JhL3dCRnVCaVJTUTJuZTRrR0dLOHdTSGd1Z2gxaUNR?=
- =?utf-8?B?b3FZeWNsMVNldkJwRUJRQnBUOGE3UGc3NmFGVXV3RTBvMlBzMWtXNGhUYWhw?=
- =?utf-8?B?cTdrTGpuRWVicTE2NUVXNTdyL2FRd2lid2k4dG4veFRhaVZOYlp1WmU3ODc2?=
- =?utf-8?B?RkcwSGF0Wmh2UGxRak5wcUV1QThLQk82YUtFcTdrM3lHUWNQQVJyeG40VGFF?=
- =?utf-8?B?SEg2Z2pxZmhRcmNacHJkZHlteThIRkp2c2U2d21BcXhWaVlOWjl6TkJMd3Fu?=
- =?utf-8?B?YXBNNzBnV29reERtbXc1TXlpak1COFl3dytyeHlvWnZ5MGdYbkF1Z2JCdUNE?=
- =?utf-8?B?cEt4WG96YXJ2TGRYY1A0ZG5oWTlyeDFRYzFod29CVXNPaEtjMU5vRkdKazRD?=
- =?utf-8?B?MUhzbUxXNFQwamNHVzFrL1ZZVUdmQi9VVEkyREl0Q3ZkeXd3Rk9TL2xuMFNJ?=
- =?utf-8?B?Y2c9PQ==?=
-Content-ID: <9BF32015AA84A54F9517C094FB54CC71@namprd11.prod.outlook.com>
+ <20231005131402.14611-2-kirill.shutemov@linux.intel.com>
+ <e11888bc9775a8083b72cce8c58ee71b39d0e17f.camel@intel.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR11MB5978.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e29b4ed0-9459-48a8-45e5-08dbc65633f2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Oct 2023 10:22:54.3522
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OJd9ARo0L6ma/uC8zz68oegVitvZBmPHwS4DKD3sBiH5IoXpBxPSKj5w0FRMYSfagoHHVZMgm02yDE3efC0M2w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB8470
-X-OriginatorOrg: intel.com
+Content-Disposition: inline
+In-Reply-To: <e11888bc9775a8083b72cce8c58ee71b39d0e17f.camel@intel.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231006_032303_845762_9DAB7614 
-X-CRM114-Status: GOOD (  23.57  )
+X-CRM114-CacheID: sfid-20231006_050035_505978_9AE9E015 
+X-CRM114-Status: GOOD (  42.67  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -193,125 +94,230 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-T24gVGh1LCAyMDIzLTEwLTA1IGF0IDE2OjEzICswMzAwLCBLaXJpbGwgQS4gU2h1dGVtb3Ygd3Jv
-dGU6DQo+IEluIG9yZGVyIHRvIHByZXBhcmUgZm9yIHRoZSBleHBhbnNpb24gb2Ygc3VwcG9ydCBm
-b3IgdGhlIEFDUEkgTUFEVA0KPiB3YWtldXAgbWV0aG9kLCB0aGUgcmVsZXZhbnQgY29kZSBoYXMg
-YmVlbiBtb3ZlZCBpbnRvIGEgc2VwYXJhdGUgZmlsZS4NCj4gQSBuZXcgY29uZmlndXJhdGlvbiBv
-cHRpb24gaGFzIGJlZW4gaW50cm9kdWNlZCB0byBjbGVhcmx5IGluZGljYXRlDQo+IGRlcGVuZGVu
-Y2llcyB3aXRob3V0IHRoZSB1c2Ugb2YgaWZkZWZzLg0KDQpVc2UgaW1wZXJhdGl2ZSBtb29kPyDC
-oA0KDQotIE1vdmUgdGhlIHJlbGV2YW50IGNvZGUgaW50byAuLi4NCi0gSW50cm9kdWNlIGEgbmV3
-IGNvbmZpZ3VyYXRpb24gb3B0aW9uIHRvIC4uLg0KIA0KPiANCj4gVGhlcmUgaGF2ZSBiZWVuIG5v
-IGZ1bmN0aW9uYWwgY2hhbmdlcy4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEtpcmlsbCBBLiBTaHV0
-ZW1vdiA8a2lyaWxsLnNodXRlbW92QGxpbnV4LmludGVsLmNvbT4NCj4gLS0tDQo+ICBhcmNoL3g4
-Ni9LY29uZmlnICAgICAgICAgICAgICAgICAgIHwgIDcgKysrDQo+ICBhcmNoL3g4Ni9pbmNsdWRl
-L2FzbS9hY3BpLmggICAgICAgIHwgIDUgKysNCj4gIGFyY2gveDg2L2tlcm5lbC9hY3BpL01ha2Vm
-aWxlICAgICAgfCAxMSArKy0tDQo+ICBhcmNoL3g4Ni9rZXJuZWwvYWNwaS9ib290LmMgICAgICAg
-IHwgODYgKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ICBhcmNoL3g4Ni9rZXJuZWwv
-YWNwaS9tYWR0X3dha2V1cC5jIHwgODAgKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ICA1
-IGZpbGVzIGNoYW5nZWQsIDk5IGluc2VydGlvbnMoKyksIDkwIGRlbGV0aW9ucygtKQ0KPiAgY3Jl
-YXRlIG1vZGUgMTAwNjQ0IGFyY2gveDg2L2tlcm5lbC9hY3BpL21hZHRfd2FrZXVwLmMNCj4gDQo+
-IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9LY29uZmlnIGIvYXJjaC94ODYvS2NvbmZpZw0KPiBpbmRl
-eCAzMTU0ZGJjNDljZjUuLjczNjhkMjU0ZDAxZiAxMDA2NDQNCj4gLS0tIGEvYXJjaC94ODYvS2Nv
-bmZpZw0KPiArKysgYi9hcmNoL3g4Ni9LY29uZmlnDQo+IEBAIC0xMTA4LDYgKzExMDgsMTMgQEAg
-Y29uZmlnIFg4Nl9MT0NBTF9BUElDDQo+ICAJZGVwZW5kcyBvbiBYODZfNjQgfHwgU01QIHx8IFg4
-Nl8zMl9OT05fU1RBTkRBUkQgfHwgWDg2X1VQX0FQSUMgfHwgUENJX01TSQ0KPiAgCXNlbGVjdCBJ
-UlFfRE9NQUlOX0hJRVJBUkNIWQ0KPiAgDQo+ICtjb25maWcgWDg2X0FDUElfTUFEVF9XQUtFVVAN
-Cj4gKwlkZWZfYm9vbCB5DQo+ICsJZGVwZW5kcyBvbiBYODZfNjQNCj4gKwlkZXBlbmRzIG9uIEFD
-UEkNCj4gKwlkZXBlbmRzIG9uIFNNUA0KPiArCWRlcGVuZHMgb24gWDg2X0xPQ0FMX0FQSUMNCj4g
-Kw0KPiAgY29uZmlnIFg4Nl9JT19BUElDDQo+ICAJZGVmX2Jvb2wgeQ0KPiAgCWRlcGVuZHMgb24g
-WDg2X0xPQ0FMX0FQSUMgfHwgWDg2X1VQX0lPQVBJQw0KPiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYv
-aW5jbHVkZS9hc20vYWNwaS5oIGIvYXJjaC94ODYvaW5jbHVkZS9hc20vYWNwaS5oDQo+IGluZGV4
-IGM4YTdmYzIzZjYzYy4uYjUzNmI1YTZhNTdiIDEwMDY0NA0KPiAtLS0gYS9hcmNoL3g4Ni9pbmNs
-dWRlL2FzbS9hY3BpLmgNCj4gKysrIGIvYXJjaC94ODYvaW5jbHVkZS9hc20vYWNwaS5oDQo+IEBA
-IC03Myw2ICs3MywxMSBAQCBzdGF0aWMgaW5saW5lIGJvb2wgYWNwaV9za2lwX3NldF93YWtldXBf
-YWRkcmVzcyh2b2lkKQ0KPiAgDQo+ICAjZGVmaW5lIGFjcGlfc2tpcF9zZXRfd2FrZXVwX2FkZHJl
-c3MgYWNwaV9za2lwX3NldF93YWtldXBfYWRkcmVzcw0KPiAgDQo+ICt1bmlvbiBhY3BpX3N1YnRh
-YmxlX2hlYWRlcnM7DQo+ICsNCj4gK2ludCBfX2luaXQgYWNwaV9wYXJzZV9tcF93YWtlKHVuaW9u
-IGFjcGlfc3VidGFibGVfaGVhZGVycyAqaGVhZGVyLA0KPiArCQkJICAgICAgY29uc3QgdW5zaWdu
-ZWQgbG9uZyBlbmQpOw0KPiArDQo+ICAvKg0KPiAgICogQ2hlY2sgaWYgdGhlIENQVSBjYW4gaGFu
-ZGxlIEMyIGFuZCBkZWVwZXINCj4gICAqLw0KPiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYva2VybmVs
-L2FjcGkvTWFrZWZpbGUgYi9hcmNoL3g4Ni9rZXJuZWwvYWNwaS9NYWtlZmlsZQ0KPiBpbmRleCBm
-YzE3YjNmMTM2ZmUuLjhjNzMyOWM4OGE3NSAxMDA2NDQNCj4gLS0tIGEvYXJjaC94ODYva2VybmVs
-L2FjcGkvTWFrZWZpbGUNCj4gKysrIGIvYXJjaC94ODYva2VybmVsL2FjcGkvTWFrZWZpbGUNCj4g
-QEAgLTEsMTEgKzEsMTIgQEANCj4gICMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAN
-Cj4gIA0KPiAtb2JqLSQoQ09ORklHX0FDUEkpCQkrPSBib290Lm8NCj4gLW9iai0kKENPTkZJR19B
-Q1BJX1NMRUVQKQkrPSBzbGVlcC5vIHdha2V1cF8kKEJJVFMpLm8NCj4gLW9iai0kKENPTkZJR19B
-Q1BJX0FQRUkpCQkrPSBhcGVpLm8NCj4gLW9iai0kKENPTkZJR19BQ1BJX0NQUENfTElCKQkrPSBj
-cHBjLm8NCj4gK29iai0kKENPTkZJR19BQ1BJKQkJCSs9IGJvb3Qubw0KPiArb2JqLSQoQ09ORklH
-X0FDUElfU0xFRVApCQkrPSBzbGVlcC5vIHdha2V1cF8kKEJJVFMpLm8NCj4gK29iai0kKENPTkZJ
-R19BQ1BJX0FQRUkpCQkJKz0gYXBlaS5vDQo+ICtvYmotJChDT05GSUdfQUNQSV9DUFBDX0xJQikJ
-CSs9IGNwcGMubw0KPiArb2JqLSQoQ09ORklHX1g4Nl9BQ1BJX01BRFRfV0FLRVVQKQkrPSBtYWR0
-X3dha2V1cC5vDQo+ICANCj4gIGlmbmVxICgkKENPTkZJR19BQ1BJX1BST0NFU1NPUiksKQ0KPiAt
-b2JqLXkJCQkJKz0gY3N0YXRlLm8NCj4gK29iai15CQkJCQkrPSBjc3RhdGUubw0KPiAgZW5kaWYN
-Cg0KdW5pbnRlbmRlZCBjb2RlIGNoYW5nZT8NCg0KWy4uLl0NCg0KPiANCj4gZGlmZiAtLWdpdCBh
-L2FyY2gveDg2L2tlcm5lbC9hY3BpL21hZHRfd2FrZXVwLmMgYi9hcmNoL3g4Ni9rZXJuZWwvYWNw
-aS9tYWR0X3dha2V1cC5jDQo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+IGluZGV4IDAwMDAwMDAw
-MDAwMC4uMWI5NzQ3YmZkNWI5DQo+IC0tLSAvZGV2L251bGwNCj4gKysrIGIvYXJjaC94ODYva2Vy
-bmVsL2FjcGkvbWFkdF93YWtldXAuYw0KPiBAQCAtMCwwICsxLDgwIEBADQo+ICsjaW5jbHVkZSA8
-bGludXgvYWNwaS5oPg0KPiArI2luY2x1ZGUgPGFzbS9hcGljLmg+DQoNCkZ1bmN0aW9ucyBsaWtl
-IG1lbXJlbWFwKCksIHNtcF9zdG9yZV9yZWxlYXNlKCkgYW5kIGNwdV9yZWxheCgpIGFyZSB1c2Vk
-IGluIHRoaXMNCmZpbGUuICBTaG91bGQgd2UgZXhwbGljaXRseSBpbmNsdWRlIHRoZSByZWxldmFu
-dCBoZWFkZXJzPw0KDQo+ICsNCj4gKy8qIFBoeXNpY2FsIGFkZHJlc3Mgb2YgdGhlIE11bHRpcHJv
-Y2Vzc29yIFdha2V1cCBTdHJ1Y3R1cmUgbWFpbGJveCAqLw0KPiArc3RhdGljIHU2NCBhY3BpX21w
-X3dha2VfbWFpbGJveF9wYWRkcjsNCj4gKy8qIFZpcnR1YWwgYWRkcmVzcyBvZiB0aGUgTXVsdGlw
-cm9jZXNzb3IgV2FrZXVwIFN0cnVjdHVyZSBtYWlsYm94ICovDQo+ICtzdGF0aWMgc3RydWN0IGFj
-cGlfbWFkdF9tdWx0aXByb2Nfd2FrZXVwX21haWxib3ggKmFjcGlfbXBfd2FrZV9tYWlsYm94Ow0K
-PiArDQo+ICtzdGF0aWMgaW50IGFjcGlfd2FrZXVwX2NwdShpbnQgYXBpY2lkLCB1bnNpZ25lZCBs
-b25nIHN0YXJ0X2lwKQ0KPiArew0KPiArCS8qDQo+ICsJICogUmVtYXAgbWFpbGJveCBtZW1vcnkg
-b25seSBmb3IgdGhlIGZpcnN0IGNhbGwgdG8gYWNwaV93YWtldXBfY3B1KCkuDQo+ICsJICoNCj4g
-KwkgKiBXYWtldXAgb2Ygc2Vjb25kYXJ5IENQVXMgaXMgZnVsbHkgc2VyaWFsaXplZCBpbiB0aGUg
-Y29yZSBjb2RlLg0KPiArCSAqIE5vIG5lZWQgdG8gcHJvdGVjdCBhY3BpX21wX3dha2VfbWFpbGJv
-eCBmcm9tIGNvbmN1cnJlbnQgYWNjZXNzZXMuDQo+ICsJICovDQo+ICsJaWYgKCFhY3BpX21wX3dh
-a2VfbWFpbGJveCkgew0KPiArCQlhY3BpX21wX3dha2VfbWFpbGJveCA9IG1lbXJlbWFwKGFjcGlf
-bXBfd2FrZV9tYWlsYm94X3BhZGRyLA0KPiArCQkJCQkJc2l6ZW9mKCphY3BpX21wX3dha2VfbWFp
-bGJveCksDQo+ICsJCQkJCQlNRU1SRU1BUF9XQik7DQo+ICsJfQ0KPiArDQo+ICsJLyoNCj4gKwkg
-KiBNYWlsYm94IG1lbW9yeSBpcyBzaGFyZWQgYmV0d2VlbiB0aGUgZmlybXdhcmUgYW5kIE9TLiBG
-aXJtd2FyZSB3aWxsDQo+ICsJICogbGlzdGVuIG9uIG1haWxib3ggY29tbWFuZCBhZGRyZXNzLCBh
-bmQgb25jZSBpdCByZWNlaXZlcyB0aGUgd2FrZXVwDQo+ICsJICogY29tbWFuZCwgdGhlIENQVSBh
-c3NvY2lhdGVkIHdpdGggdGhlIGdpdmVuIGFwaWNpZCB3aWxsIGJlIGJvb3RlZC4NCj4gKwkgKg0K
-PiArCSAqIFRoZSB2YWx1ZSBvZiAnYXBpY19pZCcgYW5kICd3YWtldXBfdmVjdG9yJyBtdXN0IGJl
-IHZpc2libGUgdG8gdGhlDQo+ICsJICogZmlybXdhcmUgYmVmb3JlIHRoZSB3YWtldXAgY29tbWFu
-ZCBpcyB2aXNpYmxlLiAgc21wX3N0b3JlX3JlbGVhc2UoKQ0KPiArCSAqIGVuc3VyZXMgb3JkZXJp
-bmcgYW5kIHZpc2liaWxpdHkuDQo+ICsJICovDQo+ICsJYWNwaV9tcF93YWtlX21haWxib3gtPmFw
-aWNfaWQJICAgID0gYXBpY2lkOw0KPiArCWFjcGlfbXBfd2FrZV9tYWlsYm94LT53YWtldXBfdmVj
-dG9yID0gc3RhcnRfaXA7DQo+ICsJc21wX3N0b3JlX3JlbGVhc2UoJmFjcGlfbXBfd2FrZV9tYWls
-Ym94LT5jb21tYW5kLA0KPiArCQkJICBBQ1BJX01QX1dBS0VfQ09NTUFORF9XQUtFVVApOw0KPiAr
-DQo+ICsJLyoNCj4gKwkgKiBXYWl0IGZvciB0aGUgQ1BVIHRvIHdha2UgdXAuDQo+ICsJICoNCj4g
-KwkgKiBUaGUgQ1BVIGJlaW5nIHdva2VuIHVwIGlzIGVzc2VudGlhbGx5IGluIGEgc3BpbiBsb29w
-IHdhaXRpbmcgdG8gYmUNCj4gKwkgKiB3b2tlbiB1cC4gSXQgc2hvdWxkIG5vdCB0YWtlIGxvbmcg
-Zm9yIGl0IHdha2UgdXAgYW5kIGFja25vd2xlZGdlIGJ5DQo+ICsJICogemVyb2luZyBvdXQgLT5j
-b21tYW5kLg0KPiArCSAqDQo+ICsJICogQUNQSSBzcGVjaWZpY2F0aW9uIGRvZXNuJ3QgcHJvdmlk
-ZSBhbnkgZ3VpZGFuY2Ugb24gaG93IGxvbmcga2VybmVsDQo+ICsJICogaGFzIHRvIHdhaXQgZm9y
-IGEgd2FrZSB1cCBhY2tub3dsZWRnZW1lbnQuIEl0IGFsc28gZG9lc24ndCBwcm92aWRlDQo+ICsJ
-ICogYSB3YXkgdG8gY2FuY2VsIGEgd2FrZSB1cCByZXF1ZXN0IGlmIGl0IHRha2VzIHRvbyBsb25n
-Lg0KPiArCSAqDQo+ICsJICogSW4gVERYIGVudmlyb25tZW50LCB0aGUgVk1NIGhhcyBjb250cm9s
-IG92ZXIgaG93IGxvbmcgaXQgdGFrZXMgdG8NCj4gKwkgKiB3YWtlIHVwIHNlY29uZGFyeS4gSXQg
-Y2FuIHBvc3Rwb25lIHNjaGVkdWxpbmcgc2Vjb25kYXJ5IHZDUFUNCj4gKwkgKiBpbmRlZmluaXRl
-bHkuIEdpdmluZyB1cCBvbiB3YWtlIHVwIHJlcXVlc3QgYW5kIHJlcG9ydGluZyBlcnJvciBvcGVu
-cw0KPiArCSAqIHBvc3NpYmxlIGF0dGFjayB2ZWN0b3IgZm9yIFZNTTogaXQgY2FuIHdha2UgdXAg
-YSBzZWNvbmRhcnkgQ1BVIHdoZW4NCj4gKwkgKiBrZXJuZWwgZG9lc24ndCBleHBlY3QgaXQuIFdh
-aXQgdW50aWwgcG9zaXRpdmUgcmVzdWx0IG9mIHRoZSB3YWtlIHVwDQo+ICsJICogcmVxdWVzdC4N
-Cj4gKwkgKi8NCj4gKwl3aGlsZSAoUkVBRF9PTkNFKGFjcGlfbXBfd2FrZV9tYWlsYm94LT5jb21t
-YW5kKSkNCj4gKwkJY3B1X3JlbGF4KCk7DQo+ICsNCj4gKwlyZXR1cm4gMDsNCj4gK30NCj4gKw0K
-PiAraW50IF9faW5pdCBhY3BpX3BhcnNlX21wX3dha2UodW5pb24gYWNwaV9zdWJ0YWJsZV9oZWFk
-ZXJzICpoZWFkZXIsDQo+ICsJCQkgICAgICBjb25zdCB1bnNpZ25lZCBsb25nIGVuZCkNCj4gK3sN
-Cj4gKwlzdHJ1Y3QgYWNwaV9tYWR0X211bHRpcHJvY193YWtldXAgKm1wX3dha2U7DQo+ICsNCj4g
-KwlpZiAoIUlTX0VOQUJMRUQoQ09ORklHX1NNUCkpDQo+ICsJCXJldHVybiAtRU5PREVWOw0KDQpO
-b3cgeW91IGhhdmUgbWFkZSBYODZfQUNQSV9NQURUX1dBS0VVUCBkZXBlbmQgb24gU01QLCBhbmQg
-dGhpcyBmaWxlIHdpbGwgb25seSBiZQ0KY29tcGlsZWQgd2hlbiAgWDg2X0FDUElfTUFEVF9XQUtF
-VVAgaXMgdHVybmVkIG9uLiAgSUlVQyB0aGlzIGVzc2VudGlhbGx5IG1lYW5zDQpJU19FTkFCTEVE
-KENPTkZJR19TTVApIHdpbGwgYWx3YXlzIHJlcG9ydCB0cnVlPw0KDQo+ICsNCj4gKwltcF93YWtl
-ID0gKHN0cnVjdCBhY3BpX21hZHRfbXVsdGlwcm9jX3dha2V1cCAqKWhlYWRlcjsNCj4gKwlpZiAo
-QkFEX01BRFRfRU5UUlkobXBfd2FrZSwgZW5kKSkNCj4gKwkJcmV0dXJuIC1FSU5WQUw7DQo+ICsN
-Cj4gKwlhY3BpX3RhYmxlX3ByaW50X21hZHRfZW50cnkoJmhlYWRlci0+Y29tbW9uKTsNCj4gKw0K
-PiArCWFjcGlfbXBfd2FrZV9tYWlsYm94X3BhZGRyID0gbXBfd2FrZS0+YmFzZV9hZGRyZXNzOw0K
-PiArDQo+ICsJYXBpY191cGRhdGVfY2FsbGJhY2sod2FrZXVwX3NlY29uZGFyeV9jcHVfNjQsIGFj
-cGlfd2FrZXVwX2NwdSk7DQo+ICsNCj4gKwlyZXR1cm4gMDsNCj4gK30NCg0KX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0Cmtl
-eGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9rZXhlYwo=
+On Fri, Oct 06, 2023 at 10:22:54AM +0000, Huang, Kai wrote:
+> On Thu, 2023-10-05 at 16:13 +0300, Kirill A. Shutemov wrote:
+> > In order to prepare for the expansion of support for the ACPI MADT
+> > wakeup method, the relevant code has been moved into a separate file.
+> > A new configuration option has been introduced to clearly indicate
+> > dependencies without the use of ifdefs.
+> =
+
+> Use imperative mood? =A0
+> =
+
+> - Move the relevant code into ...
+> - Introduce a new configuration option to ...
+
+Okay.
+
+> > There have been no functional changes.
+> > =
+
+> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> > ---
+> >  arch/x86/Kconfig                   |  7 +++
+> >  arch/x86/include/asm/acpi.h        |  5 ++
+> >  arch/x86/kernel/acpi/Makefile      | 11 ++--
+> >  arch/x86/kernel/acpi/boot.c        | 86 +-----------------------------
+> >  arch/x86/kernel/acpi/madt_wakeup.c | 80 +++++++++++++++++++++++++++
+> >  5 files changed, 99 insertions(+), 90 deletions(-)
+> >  create mode 100644 arch/x86/kernel/acpi/madt_wakeup.c
+> > =
+
+> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> > index 3154dbc49cf5..7368d254d01f 100644
+> > --- a/arch/x86/Kconfig
+> > +++ b/arch/x86/Kconfig
+> > @@ -1108,6 +1108,13 @@ config X86_LOCAL_APIC
+> >  	depends on X86_64 || SMP || X86_32_NON_STANDARD || X86_UP_APIC || PCI=
+_MSI
+> >  	select IRQ_DOMAIN_HIERARCHY
+> >  =
+
+> > +config X86_ACPI_MADT_WAKEUP
+> > +	def_bool y
+> > +	depends on X86_64
+> > +	depends on ACPI
+> > +	depends on SMP
+> > +	depends on X86_LOCAL_APIC
+> > +
+> >  config X86_IO_APIC
+> >  	def_bool y
+> >  	depends on X86_LOCAL_APIC || X86_UP_IOAPIC
+> > diff --git a/arch/x86/include/asm/acpi.h b/arch/x86/include/asm/acpi.h
+> > index c8a7fc23f63c..b536b5a6a57b 100644
+> > --- a/arch/x86/include/asm/acpi.h
+> > +++ b/arch/x86/include/asm/acpi.h
+> > @@ -73,6 +73,11 @@ static inline bool acpi_skip_set_wakeup_address(void)
+> >  =
+
+> >  #define acpi_skip_set_wakeup_address acpi_skip_set_wakeup_address
+> >  =
+
+> > +union acpi_subtable_headers;
+> > +
+> > +int __init acpi_parse_mp_wake(union acpi_subtable_headers *header,
+> > +			      const unsigned long end);
+> > +
+> >  /*
+> >   * Check if the CPU can handle C2 and deeper
+> >   */
+> > diff --git a/arch/x86/kernel/acpi/Makefile b/arch/x86/kernel/acpi/Makef=
+ile
+> > index fc17b3f136fe..8c7329c88a75 100644
+> > --- a/arch/x86/kernel/acpi/Makefile
+> > +++ b/arch/x86/kernel/acpi/Makefile
+> > @@ -1,11 +1,12 @@
+> >  # SPDX-License-Identifier: GPL-2.0
+> >  =
+
+> > -obj-$(CONFIG_ACPI)		+=3D boot.o
+> > -obj-$(CONFIG_ACPI_SLEEP)	+=3D sleep.o wakeup_$(BITS).o
+> > -obj-$(CONFIG_ACPI_APEI)		+=3D apei.o
+> > -obj-$(CONFIG_ACPI_CPPC_LIB)	+=3D cppc.o
+> > +obj-$(CONFIG_ACPI)			+=3D boot.o
+> > +obj-$(CONFIG_ACPI_SLEEP)		+=3D sleep.o wakeup_$(BITS).o
+> > +obj-$(CONFIG_ACPI_APEI)			+=3D apei.o
+> > +obj-$(CONFIG_ACPI_CPPC_LIB)		+=3D cppc.o
+> > +obj-$(CONFIG_X86_ACPI_MADT_WAKEUP)	+=3D madt_wakeup.o
+> >  =
+
+> >  ifneq ($(CONFIG_ACPI_PROCESSOR),)
+> > -obj-y				+=3D cstate.o
+> > +obj-y					+=3D cstate.o
+> >  endif
+> =
+
+> unintended code change?
+
+No. It keeps +=3D aligned as they are before the patch.
+> =
+
+> [...]
+> =
+
+> > =
+
+> > diff --git a/arch/x86/kernel/acpi/madt_wakeup.c b/arch/x86/kernel/acpi/=
+madt_wakeup.c
+> > new file mode 100644
+> > index 000000000000..1b9747bfd5b9
+> > --- /dev/null
+> > +++ b/arch/x86/kernel/acpi/madt_wakeup.c
+> > @@ -0,0 +1,80 @@
+> > +#include <linux/acpi.h>
+> > +#include <asm/apic.h>
+> =
+
+> Functions like memremap(), smp_store_release() and cpu_relax() are used i=
+n this
+> file.  Should we explicitly include the relevant headers?
+
+Okay, will do.
+
+> > +
+> > +/* Physical address of the Multiprocessor Wakeup Structure mailbox */
+> > +static u64 acpi_mp_wake_mailbox_paddr;
+> > +/* Virtual address of the Multiprocessor Wakeup Structure mailbox */
+> > +static struct acpi_madt_multiproc_wakeup_mailbox *acpi_mp_wake_mailbox;
+> > +
+> > +static int acpi_wakeup_cpu(int apicid, unsigned long start_ip)
+> > +{
+> > +	/*
+> > +	 * Remap mailbox memory only for the first call to acpi_wakeup_cpu().
+> > +	 *
+> > +	 * Wakeup of secondary CPUs is fully serialized in the core code.
+> > +	 * No need to protect acpi_mp_wake_mailbox from concurrent accesses.
+> > +	 */
+> > +	if (!acpi_mp_wake_mailbox) {
+> > +		acpi_mp_wake_mailbox =3D memremap(acpi_mp_wake_mailbox_paddr,
+> > +						sizeof(*acpi_mp_wake_mailbox),
+> > +						MEMREMAP_WB);
+> > +	}
+> > +
+> > +	/*
+> > +	 * Mailbox memory is shared between the firmware and OS. Firmware will
+> > +	 * listen on mailbox command address, and once it receives the wakeup
+> > +	 * command, the CPU associated with the given apicid will be booted.
+> > +	 *
+> > +	 * The value of 'apic_id' and 'wakeup_vector' must be visible to the
+> > +	 * firmware before the wakeup command is visible.  smp_store_release()
+> > +	 * ensures ordering and visibility.
+> > +	 */
+> > +	acpi_mp_wake_mailbox->apic_id	    =3D apicid;
+> > +	acpi_mp_wake_mailbox->wakeup_vector =3D start_ip;
+> > +	smp_store_release(&acpi_mp_wake_mailbox->command,
+> > +			  ACPI_MP_WAKE_COMMAND_WAKEUP);
+> > +
+> > +	/*
+> > +	 * Wait for the CPU to wake up.
+> > +	 *
+> > +	 * The CPU being woken up is essentially in a spin loop waiting to be
+> > +	 * woken up. It should not take long for it wake up and acknowledge by
+> > +	 * zeroing out ->command.
+> > +	 *
+> > +	 * ACPI specification doesn't provide any guidance on how long kernel
+> > +	 * has to wait for a wake up acknowledgement. It also doesn't provide
+> > +	 * a way to cancel a wake up request if it takes too long.
+> > +	 *
+> > +	 * In TDX environment, the VMM has control over how long it takes to
+> > +	 * wake up secondary. It can postpone scheduling secondary vCPU
+> > +	 * indefinitely. Giving up on wake up request and reporting error ope=
+ns
+> > +	 * possible attack vector for VMM: it can wake up a secondary CPU when
+> > +	 * kernel doesn't expect it. Wait until positive result of the wake up
+> > +	 * request.
+> > +	 */
+> > +	while (READ_ONCE(acpi_mp_wake_mailbox->command))
+> > +		cpu_relax();
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +int __init acpi_parse_mp_wake(union acpi_subtable_headers *header,
+> > +			      const unsigned long end)
+> > +{
+> > +	struct acpi_madt_multiproc_wakeup *mp_wake;
+> > +
+> > +	if (!IS_ENABLED(CONFIG_SMP))
+> > +		return -ENODEV;
+> =
+
+> Now you have made X86_ACPI_MADT_WAKEUP depend on SMP, and this file will =
+only be
+> compiled when  X86_ACPI_MADT_WAKEUP is turned on.  IIUC this essentially =
+means
+> IS_ENABLED(CONFIG_SMP) will always report true?
+
+Good catch. I didn't have 'depends SMP' initially, but it triggered build
+issue, so I added it, but forgot to drop IS_ENABLED().
+
+> > +
+> > +	mp_wake =3D (struct acpi_madt_multiproc_wakeup *)header;
+> > +	if (BAD_MADT_ENTRY(mp_wake, end))
+> > +		return -EINVAL;
+> > +
+> > +	acpi_table_print_madt_entry(&header->common);
+> > +
+> > +	acpi_mp_wake_mailbox_paddr =3D mp_wake->base_address;
+> > +
+> > +	apic_update_callback(wakeup_secondary_cpu_64, acpi_wakeup_cpu);
+> > +
+> > +	return 0;
+> > +}
+> =
+
+
+-- =
+
+  Kiryl Shutsemau / Kirill A. Shutemov
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
