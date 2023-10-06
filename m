@@ -4,85 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 45D6CE81DE8
-	for <kexec@archiver.kernel.org>; Fri,  6 Oct 2023 12:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 31F43E81DFF
+	for <kexec@archiver.kernel.org>; Fri,  6 Oct 2023 14:37:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=571q8RCnKVF09hh66utrPE4b0FmxKXCD5T2BUzD+fpc=; b=W02KZUCJdOaCCt
-	nOIl11qRhbhQ2spKtEioewOWU2YUPMrx10O+Wn87l9NEdXtezkkFWSKR2D0yRCE7ng7mSlzo2AA0o
-	mnIoun/qxOfO5oMYEmc8qkgrO9x5QFamsnZVvuVDlI7PBl/0UPV7u25kF4moOLgh/4oTieAxq9FT2
-	nSV0jRFNjBCEjzthUVV67egO0Wd1oVHTwjsxvYN5Xjhw1+WnobRj7bjBmZJfuPtC6Z0GmMHq/zHUo
-	W7TqndwvDhh77WoJga2+ptcgcvdp5vgBnbrTUs1H0deH1sRWb6wrNieiNSXyEkUbvpzzcaJHLsaLN
-	ZIxVz4xMZ9dHMVQPj5eQ==;
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:From:Subject:Message-ID:
+	References:Mime-Version:In-Reply-To:Date:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Owner;
+	bh=jA3lhRrEUMHNfvhuDREyjgJP5O7PJhfL7iX4qPxN5FI=; b=EENk7Wm97x/Sf15tgXjExKGOhR
+	n8od0cIOALtoP2jXfuNgdnMLZLhmIdcBVvS/OTP6COEvJ/meRhCTYFDHgzR8kdnuchHZEeyf0u5iJ
+	Yy5Vzg2wYc8ffsSMxCjk5UecbwiAHHA6S52x5SQ67nbI58BaTmmwnu8tv8+2QOdSdqtmnDtflXuwj
+	z5gm3f5M4catsL+4FxYLPC16DFcHkHkkQ3gHqv/eVT/c6cIZgXv5rCUTrDVvEuZVpRKdNXN4ISM98
+	+ZbXvcJq7TVbed6LANa44IRBH+PPSOjOFZA5fyz7YeQik2L3MbA+0WdSNOdke7q32jJQoshzQi9S+
+	RssKuIcA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qojVW-005jho-0A;
-	Fri, 06 Oct 2023 12:00:38 +0000
-Received: from mgamail.intel.com ([192.55.52.88])
+	id 1qolwq-005zgk-2f;
+	Fri, 06 Oct 2023 14:37:00 +0000
+Received: from mail-yw1-x1149.google.com ([2607:f8b0:4864:20::1149])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qojVT-005jgs-17
+	id 1qolwn-005zfT-18
 	for kexec@lists.infradead.org;
-	Fri, 06 Oct 2023 12:00:37 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696593635; x=1728129635;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=yh5MuiZGQXQ6liK7/Tt2HXhGriUga9iujO4PJpKEKQU=;
-  b=S8Ewy1qif1xLB61TmBLQiNJ/1BaUVkLTu98fOb179NRi2ZdsDW8NhbTF
-   gmPZxoHUBTdaPOdzSNVHVhUGTNy92g5D68tCRemZOu1NLgLkKNdmuwb/c
-   AzB9QSQMEZB7rquh0Eg/p6jkVY4rmeCfeXa/MtT92/xfZMXWxFeBDMbVC
-   UvYElE5XfzM9+Z90MdX01AiMCNqZevolB/v/VGj8baPBtjkXNmMyNgyiF
-   vW/l47k62SvWzRqn0cRsIq5JQjMsN2dCUNbyE4wMX5qjgv4cdZtN8vzN+
-   dJUqy20Uy4/LNTJGOzgY9va1yPqj4zA/fxBeI8ssrYv5WJUYpbxfW7UhK
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="414732559"
-X-IronPort-AV: E=Sophos;i="6.03,204,1694761200"; 
-   d="scan'208";a="414732559"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 04:59:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10854"; a="1083426786"
-X-IronPort-AV: E=Sophos;i="6.03,204,1694761200"; 
-   d="scan'208";a="1083426786"
-Received: from kvsudesh-mobl1.gar.corp.intel.com (HELO box.shutemov.name) ([10.251.222.76])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2023 04:59:39 -0700
-Received: by box.shutemov.name (Postfix, from userid 1000)
-	id 2368510A12D; Fri,  6 Oct 2023 14:59:37 +0300 (+03)
-Date: Fri, 6 Oct 2023 14:59:37 +0300
-From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
-To: "Huang, Kai" <kai.huang@intel.com>
-Cc: "tglx@linutronix.de" <tglx@linutronix.de>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"x86@kernel.org" <x86@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-	"Reshetova, Elena" <elena.reshetova@intel.com>,
-	"Nakajima, Jun" <jun.nakajima@intel.com>,
-	"rafael@kernel.org" <rafael@kernel.org>,
-	"peterz@infradead.org" <peterz@infradead.org>,
-	"sathyanarayanan.kuppuswamy@linux.intel.com" <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	"Hunter, Adrian" <adrian.hunter@intel.com>,
-	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>
-Subject: Re: [PATCH 01/13] x86/acpi: Extract ACPI MADT wakeup code into a
- separate file
-Message-ID: <20231006115937.js5zkqlbqyv3venr@box.shutemov.name>
-References: <20231005131402.14611-1-kirill.shutemov@linux.intel.com>
- <20231005131402.14611-2-kirill.shutemov@linux.intel.com>
- <e11888bc9775a8083b72cce8c58ee71b39d0e17f.camel@intel.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <e11888bc9775a8083b72cce8c58ee71b39d0e17f.camel@intel.com>
+	Fri, 06 Oct 2023 14:36:58 +0000
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5a1df5b7830so33862847b3.1
+        for <kexec@lists.infradead.org>; Fri, 06 Oct 2023 07:36:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1696603016; x=1697207816; darn=lists.infradead.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=i58l4QdfZN6X+tVl9sXUSU5MssTQt5gV2xYo4Yk/tro=;
+        b=RhevwWLnFfK6NLrRM1prD+R5g+0lslutWfs5y6dpYXD7J+25GfFmsOd0nq8cLkRqbN
+         oZZLaAr2ImbU9n6C1as2j+N0RD8lYqL90Q49mwCvHPSMq+aFhy21n/gc42c7n7XcaV07
+         XCzK60AJzSNi0fkF/v2C/uVEwU4uZFX25zQKKROkNNlxBCrYzbq7PFmb61X1bPX14j5o
+         uJN5GRXZVEBEo/927hCqUuzJsxXn1WvFOz8Ok1PXEDq/pPmTp9ln7J4vtbKzWymU1ytE
+         gS0HAcTwlPMS7klGyLqYtPxHC3gO2zlGFKK5b5dynw+63rXARANjdwP5RvlBIttsmZ71
+         PZFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696603016; x=1697207816;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=i58l4QdfZN6X+tVl9sXUSU5MssTQt5gV2xYo4Yk/tro=;
+        b=L1UaRkY9kEf7ZfAjkNShFVgSgUNaSqUTPbu91pPezjwJFcIe5wkoKrHoQMcUitpQPU
+         FJZ+Lgz3mOwGJ2K0A0g6f4+9pvAT98v8/S5o3Hpt8xMKVZOfoIndadEbJSL3Y/nSiGAs
+         Lv6udMSV5IX8O6rozlbA9fbZcjixHEtntL//MdY/0yU2Eu6jnpNlLRfggqpkPOufhNf/
+         qGin1teTesuUdZJKusP4rrnLTVxpINwEd043uTGXMkI4eAvKvARz8iuxy0kxZnCX4JuW
+         M+Sk7o8zsXgDvrQpffDKeyFpgQgb3hVzZBYh9LK7HsF/q0+NZNTtNfQFDuyF71W5FMMf
+         CiNw==
+X-Gm-Message-State: AOJu0Yz1UgqOju89spzviYLxwqACWYOcs3Xq8akAkA2pDZQk4sZKlaKz
+	Aud/axqMwU3+YT5BTG0xv4TiU0PFpPc=
+X-Google-Smtp-Source: AGHT+IFQPwuq8dktatytMOhE25UzyzqCNlQC2UUPVzg1lqdTu+UMho1qRpPPz4wW/QHlMjyqJHF5XE+bNrg=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a25:ae59:0:b0:d7e:752f:baee with SMTP id
+ g25-20020a25ae59000000b00d7e752fbaeemr117773ybe.10.1696603015772; Fri, 06 Oct
+ 2023 07:36:55 -0700 (PDT)
+Date: Fri, 6 Oct 2023 07:36:54 -0700
+In-Reply-To: <20231005131402.14611-5-kirill.shutemov@linux.intel.com>
+Mime-Version: 1.0
+References: <20231005131402.14611-1-kirill.shutemov@linux.intel.com> <20231005131402.14611-5-kirill.shutemov@linux.intel.com>
+Message-ID: <ZSAbhk7fu_w3ClOv@google.com>
+Subject: Re: [PATCH 04/13] x86/kvm: Do not try to disable kvmclock if it was
+ not enabled
+From: Sean Christopherson <seanjc@google.com>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, 
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, 
+	Elena Reshetova <elena.reshetova@intel.com>, Jun Nakajima <jun.nakajima@intel.com>, 
+	Rick Edgecombe <rick.p.edgecombe@intel.com>, Tom Lendacky <thomas.lendacky@amd.com>, 
+	kexec@lists.infradead.org, linux-coco@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231006_050035_505978_9AE9E015 
-X-CRM114-Status: GOOD (  42.67  )
+X-CRM114-CacheID: sfid-20231006_073657_432372_3D2F6666 
+X-CRM114-Status: GOOD (  22.82  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,228 +91,102 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Oct 06, 2023 at 10:22:54AM +0000, Huang, Kai wrote:
-> On Thu, 2023-10-05 at 16:13 +0300, Kirill A. Shutemov wrote:
-> > In order to prepare for the expansion of support for the ACPI MADT
-> > wakeup method, the relevant code has been moved into a separate file.
-> > A new configuration option has been introduced to clearly indicate
-> > dependencies without the use of ifdefs.
-> =
++Paolo
 
-> Use imperative mood? =A0
-> =
+Please use get_maintainers...
 
-> - Move the relevant code into ...
-> - Introduce a new configuration option to ...
+On Thu, Oct 05, 2023, Kirill A. Shutemov wrote:
+> kvm_guest_cpu_offline() tries to disable kvmclock regardless if it is
+> present in the VM. It leads to write to a MSR that doesn't exist on some
+> configurations, namely in TDX guest:
+> 
+> 	unchecked MSR access error: WRMSR to 0x12 (tried to write 0x0000000000000000)
+> 	at rIP: 0xffffffff8110687c (kvmclock_disable+0x1c/0x30)
+> 
+> kvmclock enabling is gated by CLOCKSOURCE and CLOCKSOURCE2 KVM paravirt
+> features.
+> 
+> Do not disable kvmclock if it was not enumerated or disabled by user
+> from kernel command line.
+> 
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Fixes: c02027b5742b ("x86/kvm: Disable kvmclock on all CPUs on shutdown")
+> ---
+>  arch/x86/kernel/kvmclock.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/kvmclock.c b/arch/x86/kernel/kvmclock.c
+> index fb8f52149be9..cba2e732e53f 100644
+> --- a/arch/x86/kernel/kvmclock.c
+> +++ b/arch/x86/kernel/kvmclock.c
+> @@ -22,7 +22,7 @@
+>  #include <asm/x86_init.h>
+>  #include <asm/kvmclock.h>
+>  
+> -static int kvmclock __initdata = 1;
+> +static int kvmclock __ro_after_init = 1;
+>  static int kvmclock_vsyscall __initdata = 1;
+>  static int msr_kvm_system_time __ro_after_init = MSR_KVM_SYSTEM_TIME;
+>  static int msr_kvm_wall_clock __ro_after_init = MSR_KVM_WALL_CLOCK;
+> @@ -195,7 +195,12 @@ static void kvm_setup_secondary_clock(void)
+>  
+>  void kvmclock_disable(void)
+>  {
+> -	native_write_msr(msr_kvm_system_time, 0, 0);
+> +	if (!kvm_para_available() || !kvmclock)
+> +		return;
+> +
+> +	if (kvm_para_has_feature(KVM_FEATURE_CLOCKSOURCE) ||
+> +	    kvm_para_has_feature(KVM_FEATURE_CLOCKSOURCE2))
+> +		native_write_msr(msr_kvm_system_time, 0, 0);
 
-Okay.
+Rather than recheck everything and preserve kvmclock, what about leaving the MSR
+indices '0' by default and then disable msr_kvm_system_time iff it's non-zero.
+That way the disable path won't become stale if the conditions for enabling
+kvmclock change.
 
-> > There have been no functional changes.
-> > =
+diff --git a/arch/x86/kernel/kvmclock.c b/arch/x86/kernel/kvmclock.c
+index fb8f52149be9..f2fff625576d 100644
+--- a/arch/x86/kernel/kvmclock.c
++++ b/arch/x86/kernel/kvmclock.c
+@@ -24,8 +24,8 @@
+ 
+ static int kvmclock __initdata = 1;
+ static int kvmclock_vsyscall __initdata = 1;
+-static int msr_kvm_system_time __ro_after_init = MSR_KVM_SYSTEM_TIME;
+-static int msr_kvm_wall_clock __ro_after_init = MSR_KVM_WALL_CLOCK;
++static int msr_kvm_system_time __ro_after_init;
++static int msr_kvm_wall_clock __ro_after_init;
+ static u64 kvm_sched_clock_offset __ro_after_init;
+ 
+ static int __init parse_no_kvmclock(char *arg)
+@@ -195,7 +195,8 @@ static void kvm_setup_secondary_clock(void)
+ 
+ void kvmclock_disable(void)
+ {
+-       native_write_msr(msr_kvm_system_time, 0, 0);
++       if (msr_kvm_system_time)
++               native_write_msr(msr_kvm_system_time, 0, 0);
+ }
+ 
+ static void __init kvmclock_init_mem(void)
+@@ -294,7 +295,10 @@ void __init kvmclock_init(void)
+        if (kvm_para_has_feature(KVM_FEATURE_CLOCKSOURCE2)) {
+                msr_kvm_system_time = MSR_KVM_SYSTEM_TIME_NEW;
+                msr_kvm_wall_clock = MSR_KVM_WALL_CLOCK_NEW;
+-       } else if (!kvm_para_has_feature(KVM_FEATURE_CLOCKSOURCE)) {
++       } else if (kvm_para_has_feature(KVM_FEATURE_CLOCKSOURCE)) {
++               msr_kvm_system_time = MSR_KVM_SYSTEM_TIME;
++               msr_kvm_wall_clock = MSR_KVM_WALL_CLOCK;
++       } else {
+                return;
+        }
 
-> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > ---
-> >  arch/x86/Kconfig                   |  7 +++
-> >  arch/x86/include/asm/acpi.h        |  5 ++
-> >  arch/x86/kernel/acpi/Makefile      | 11 ++--
-> >  arch/x86/kernel/acpi/boot.c        | 86 +-----------------------------
-> >  arch/x86/kernel/acpi/madt_wakeup.c | 80 +++++++++++++++++++++++++++
-> >  5 files changed, 99 insertions(+), 90 deletions(-)
-> >  create mode 100644 arch/x86/kernel/acpi/madt_wakeup.c
-> > =
-
-> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> > index 3154dbc49cf5..7368d254d01f 100644
-> > --- a/arch/x86/Kconfig
-> > +++ b/arch/x86/Kconfig
-> > @@ -1108,6 +1108,13 @@ config X86_LOCAL_APIC
-> >  	depends on X86_64 || SMP || X86_32_NON_STANDARD || X86_UP_APIC || PCI=
-_MSI
-> >  	select IRQ_DOMAIN_HIERARCHY
-> >  =
-
-> > +config X86_ACPI_MADT_WAKEUP
-> > +	def_bool y
-> > +	depends on X86_64
-> > +	depends on ACPI
-> > +	depends on SMP
-> > +	depends on X86_LOCAL_APIC
-> > +
-> >  config X86_IO_APIC
-> >  	def_bool y
-> >  	depends on X86_LOCAL_APIC || X86_UP_IOAPIC
-> > diff --git a/arch/x86/include/asm/acpi.h b/arch/x86/include/asm/acpi.h
-> > index c8a7fc23f63c..b536b5a6a57b 100644
-> > --- a/arch/x86/include/asm/acpi.h
-> > +++ b/arch/x86/include/asm/acpi.h
-> > @@ -73,6 +73,11 @@ static inline bool acpi_skip_set_wakeup_address(void)
-> >  =
-
-> >  #define acpi_skip_set_wakeup_address acpi_skip_set_wakeup_address
-> >  =
-
-> > +union acpi_subtable_headers;
-> > +
-> > +int __init acpi_parse_mp_wake(union acpi_subtable_headers *header,
-> > +			      const unsigned long end);
-> > +
-> >  /*
-> >   * Check if the CPU can handle C2 and deeper
-> >   */
-> > diff --git a/arch/x86/kernel/acpi/Makefile b/arch/x86/kernel/acpi/Makef=
-ile
-> > index fc17b3f136fe..8c7329c88a75 100644
-> > --- a/arch/x86/kernel/acpi/Makefile
-> > +++ b/arch/x86/kernel/acpi/Makefile
-> > @@ -1,11 +1,12 @@
-> >  # SPDX-License-Identifier: GPL-2.0
-> >  =
-
-> > -obj-$(CONFIG_ACPI)		+=3D boot.o
-> > -obj-$(CONFIG_ACPI_SLEEP)	+=3D sleep.o wakeup_$(BITS).o
-> > -obj-$(CONFIG_ACPI_APEI)		+=3D apei.o
-> > -obj-$(CONFIG_ACPI_CPPC_LIB)	+=3D cppc.o
-> > +obj-$(CONFIG_ACPI)			+=3D boot.o
-> > +obj-$(CONFIG_ACPI_SLEEP)		+=3D sleep.o wakeup_$(BITS).o
-> > +obj-$(CONFIG_ACPI_APEI)			+=3D apei.o
-> > +obj-$(CONFIG_ACPI_CPPC_LIB)		+=3D cppc.o
-> > +obj-$(CONFIG_X86_ACPI_MADT_WAKEUP)	+=3D madt_wakeup.o
-> >  =
-
-> >  ifneq ($(CONFIG_ACPI_PROCESSOR),)
-> > -obj-y				+=3D cstate.o
-> > +obj-y					+=3D cstate.o
-> >  endif
-> =
-
-> unintended code change?
-
-No. It keeps +=3D aligned as they are before the patch.
-> =
-
-> [...]
-> =
-
-> > =
-
-> > diff --git a/arch/x86/kernel/acpi/madt_wakeup.c b/arch/x86/kernel/acpi/=
-madt_wakeup.c
-> > new file mode 100644
-> > index 000000000000..1b9747bfd5b9
-> > --- /dev/null
-> > +++ b/arch/x86/kernel/acpi/madt_wakeup.c
-> > @@ -0,0 +1,80 @@
-> > +#include <linux/acpi.h>
-> > +#include <asm/apic.h>
-> =
-
-> Functions like memremap(), smp_store_release() and cpu_relax() are used i=
-n this
-> file.  Should we explicitly include the relevant headers?
-
-Okay, will do.
-
-> > +
-> > +/* Physical address of the Multiprocessor Wakeup Structure mailbox */
-> > +static u64 acpi_mp_wake_mailbox_paddr;
-> > +/* Virtual address of the Multiprocessor Wakeup Structure mailbox */
-> > +static struct acpi_madt_multiproc_wakeup_mailbox *acpi_mp_wake_mailbox;
-> > +
-> > +static int acpi_wakeup_cpu(int apicid, unsigned long start_ip)
-> > +{
-> > +	/*
-> > +	 * Remap mailbox memory only for the first call to acpi_wakeup_cpu().
-> > +	 *
-> > +	 * Wakeup of secondary CPUs is fully serialized in the core code.
-> > +	 * No need to protect acpi_mp_wake_mailbox from concurrent accesses.
-> > +	 */
-> > +	if (!acpi_mp_wake_mailbox) {
-> > +		acpi_mp_wake_mailbox =3D memremap(acpi_mp_wake_mailbox_paddr,
-> > +						sizeof(*acpi_mp_wake_mailbox),
-> > +						MEMREMAP_WB);
-> > +	}
-> > +
-> > +	/*
-> > +	 * Mailbox memory is shared between the firmware and OS. Firmware will
-> > +	 * listen on mailbox command address, and once it receives the wakeup
-> > +	 * command, the CPU associated with the given apicid will be booted.
-> > +	 *
-> > +	 * The value of 'apic_id' and 'wakeup_vector' must be visible to the
-> > +	 * firmware before the wakeup command is visible.  smp_store_release()
-> > +	 * ensures ordering and visibility.
-> > +	 */
-> > +	acpi_mp_wake_mailbox->apic_id	    =3D apicid;
-> > +	acpi_mp_wake_mailbox->wakeup_vector =3D start_ip;
-> > +	smp_store_release(&acpi_mp_wake_mailbox->command,
-> > +			  ACPI_MP_WAKE_COMMAND_WAKEUP);
-> > +
-> > +	/*
-> > +	 * Wait for the CPU to wake up.
-> > +	 *
-> > +	 * The CPU being woken up is essentially in a spin loop waiting to be
-> > +	 * woken up. It should not take long for it wake up and acknowledge by
-> > +	 * zeroing out ->command.
-> > +	 *
-> > +	 * ACPI specification doesn't provide any guidance on how long kernel
-> > +	 * has to wait for a wake up acknowledgement. It also doesn't provide
-> > +	 * a way to cancel a wake up request if it takes too long.
-> > +	 *
-> > +	 * In TDX environment, the VMM has control over how long it takes to
-> > +	 * wake up secondary. It can postpone scheduling secondary vCPU
-> > +	 * indefinitely. Giving up on wake up request and reporting error ope=
-ns
-> > +	 * possible attack vector for VMM: it can wake up a secondary CPU when
-> > +	 * kernel doesn't expect it. Wait until positive result of the wake up
-> > +	 * request.
-> > +	 */
-> > +	while (READ_ONCE(acpi_mp_wake_mailbox->command))
-> > +		cpu_relax();
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +int __init acpi_parse_mp_wake(union acpi_subtable_headers *header,
-> > +			      const unsigned long end)
-> > +{
-> > +	struct acpi_madt_multiproc_wakeup *mp_wake;
-> > +
-> > +	if (!IS_ENABLED(CONFIG_SMP))
-> > +		return -ENODEV;
-> =
-
-> Now you have made X86_ACPI_MADT_WAKEUP depend on SMP, and this file will =
-only be
-> compiled when  X86_ACPI_MADT_WAKEUP is turned on.  IIUC this essentially =
-means
-> IS_ENABLED(CONFIG_SMP) will always report true?
-
-Good catch. I didn't have 'depends SMP' initially, but it triggered build
-issue, so I added it, but forgot to drop IS_ENABLED().
-
-> > +
-> > +	mp_wake =3D (struct acpi_madt_multiproc_wakeup *)header;
-> > +	if (BAD_MADT_ENTRY(mp_wake, end))
-> > +		return -EINVAL;
-> > +
-> > +	acpi_table_print_madt_entry(&header->common);
-> > +
-> > +	acpi_mp_wake_mailbox_paddr =3D mp_wake->base_address;
-> > +
-> > +	apic_update_callback(wakeup_secondary_cpu_64, acpi_wakeup_cpu);
-> > +
-> > +	return 0;
-> > +}
-> =
-
-
--- =
-
-  Kiryl Shutsemau / Kirill A. Shutemov
 
 _______________________________________________
 kexec mailing list
