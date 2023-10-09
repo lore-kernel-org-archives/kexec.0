@@ -4,80 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9BEC3E95A8E
-	for <kexec@archiver.kernel.org>; Mon,  9 Oct 2023 13:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4C924E95A91
+	for <kexec@archiver.kernel.org>; Mon,  9 Oct 2023 14:00:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=CDmwH+/OoBnKIxyXN4y0KioJO+wS4lTKhReRNVn6U1c=; b=SDeXuA42rC/Ej3
-	T5FNlZBUuFHIOWP7Cqo7ULN4AHTvoV+DHYpHMR+0tVATOio05MQ2zOw6edcT3oe5vNJXPRI0DWReZ
-	tN7DXGzoQEuMYa9aSOksIohwrUo2h/nvQdqQCqgkXHpgbWX00ll+qHcZa0BBjpiEqVcKMbj3Llf6W
-	G/wrwaT1jWlk32jVoZ6+eMmXAM7xTkhUW6SmOYeTtOWNg1jVTdcHdq+kfLn3v2Pb7iOKfTAlD7C3Q
-	+LYIcwW6lT2R8DEi/bI4r5V41/Ah0MgkQYsA0XknoX2MhkcgjIBXqtYfqmhdBBXXSDUngAV0+wiMB
-	gHTCozSevInqgdUCx/6Q==;
+	List-Owner; bh=ovtnywU9gsMol7AdF1Nl9TL8YBA94zJQHTNS8UTqvpA=; b=a881issCl2tdar
+	vvqUsX3VcAYPat9K79/vy8EfSvSp1Wo5UgLsOuKc/+2GH2qEaLM79e5RZ8WYrD8iP7md4u7Em9KrP
+	ksoJQAxIGjTDNXlZBbhGe/oURmO3/8KET80D8btr0/bcu5OzEc7YeUV2cDHICIYTbg5F855rbTsmy
+	6THBuDpEfl98Fg4Lqb371VchtJM7D/VgNGE+MAy9sh9Ug4TB4H2kX2drDM+ZJnpS43sTn9v6uysnB
+	2RDmeiUgHwTstmU36XfG0aFN24ZNkFMWgJSVPb18ixCu/nm3X3QMLNy/Y+muxbVMJLdrI9Zo2MiN0
+	IEQYzgCxo/bpyBUXGLDQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qpqRW-00Ap2p-1U;
-	Mon, 09 Oct 2023 13:37:06 +0000
-Received: from mgamail.intel.com ([134.134.136.100])
+	id 1qpqoQ-00AsP4-0L;
+	Mon, 09 Oct 2023 14:00:46 +0000
+Received: from sin.source.kernel.org ([145.40.73.55])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qpqRT-00Ap1v-2D
+	id 1qpqoN-00AsNQ-2m
 	for kexec@lists.infradead.org;
-	Mon, 09 Oct 2023 13:37:04 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696858623; x=1728394623;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=pTBhh0Z/eWz4qUWI59Hqv+z4l97YfU9wayl/EFDoxSw=;
-  b=fhPvEhQAQLfkY2E5WldCWKNKM1gIUsX1g7uxFCccOTNgdjSj8J2gsy+J
-   PthyFCv2RRuIXHlGJ6QXCczZSe4NUkI8491xHNgROZz2eqG5W1w8a7Ocb
-   ZV1ENcoqTm6tJxYUT0Y6RJNjqogew97U07mmffD2huAKh0VndQsha10VC
-   bQG7mhMLXfYN4tTytruoOYmyojdpYIjhDbgQgYevqq0H/wf1P+kQr2RxB
-   dQTDzMcFM5/9kgGnVY8GveP9GYyQ4HPqxfdWi4Tr17ROsYu4xRbJEbV31
-   T43W69kq2gjnpQ9AYBic30RhtSue2YcQh9OijrVfaFY08/GUl9/cr9xrJ
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10858"; a="450645443"
-X-IronPort-AV: E=Sophos;i="6.03,210,1694761200"; 
-   d="scan'208";a="450645443"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2023 06:37:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10858"; a="756721610"
-X-IronPort-AV: E=Sophos;i="6.03,210,1694761200"; 
-   d="scan'208";a="756721610"
-Received: from ahuge-mobl.ger.corp.intel.com (HELO box.shutemov.name) ([10.252.40.233])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2023 06:36:58 -0700
-Received: by box.shutemov.name (Postfix, from userid 1000)
-	id E967510A196; Mon,  9 Oct 2023 16:36:55 +0300 (+03)
-Date: Mon, 9 Oct 2023 16:36:55 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Baoquan He <bhe@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Elena Reshetova <elena.reshetova@intel.com>,
-	Jun Nakajima <jun.nakajima@intel.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>, kexec@lists.infradead.org,
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/13] x86/tdx: Add kexec support
-Message-ID: <20231009133655.3aqi4kwx7wtqgqtm@box.shutemov.name>
-References: <20231005131402.14611-1-kirill.shutemov@linux.intel.com>
- <ZSNADxBZEDyxEnZ4@MiWiFi-R3L-srv>
+	Mon, 09 Oct 2023 14:00:45 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sin.source.kernel.org (Postfix) with ESMTP id 1CCCFCE111C;
+	Mon,  9 Oct 2023 14:00:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33379C433C8;
+	Mon,  9 Oct 2023 14:00:37 +0000 (UTC)
+Date: Mon, 9 Oct 2023 10:01:55 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Joel Fernandes <joel@joelfernandes.org>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>,
+ linux-kernel@vger.kernel.org, Ricardo Ribalda <ribalda@google.com>, Ross
+ Zwisler <zwisler@google.com>, Rob Clark <robdclark@gmail.com>, Linus
+ Torvalds <torvalds@linux-foundation.org>, kexec@lists.infradead.org
+Subject: Re: [PATCH] kexec: Fix reboot race during device_shutdown()
+Message-ID: <20231009100155.6d71490f@gandalf.local.home>
+In-Reply-To: <CAEXW_YQ3YZExYb6FLg3fvWr9K+FGgNQx7xk3p-PngLG6rt8Ntw@mail.gmail.com>
+References: <20230929021213.2364883-1-joel@joelfernandes.org>
+	<87bkdl55qm.fsf@email.froward.int.ebiederm.org>
+	<CAEXW_YQ=HGok600ARtCKBNDs1OHSc=UM4hWmBdQ=sXZvif0Z5g@mail.gmail.com>
+	<CAEXW_YQ3YZExYb6FLg3fvWr9K+FGgNQx7xk3p-PngLG6rt8Ntw@mail.gmail.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <ZSNADxBZEDyxEnZ4@MiWiFi-R3L-srv>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231009_063703_766789_F37C162C 
-X-CRM114-Status: GOOD (  19.16  )
+X-CRM114-CacheID: sfid-20231009_070044_099037_BB19AFFD 
+X-CRM114-Status: GOOD (  10.44  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,28 +67,20 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Oct 09, 2023 at 07:49:35AM +0800, Baoquan He wrote:
-> On 10/05/23 at 04:13pm, Kirill A. Shutemov wrote:
-> > The patchset adds bits and pieces to get kexec (and crashkernel) work on
-> > TDX guest.
-> > 
-> > They bring kexec support to the point when we can start the new kernel,
-> > but it will only be able to use single CPU. It should be enough to cover
-> > the most common case: crashkernel.
-> 
-> Not sure if this question has been raised and answered in the past. Please
-> forgive my bad memory if it has. The one cpu is fine to kdump kernel most
-> of time, while we enable all CPUs by default when kexec rebooting. And kdump
-> kernel with multiple cpu is allowed too. Wondering if there's plan to
-> support the multiple cpu on TDX in the future.
+On Sat, 7 Oct 2023 21:30:42 -0400
+Joel Fernandes <joel@joelfernandes.org> wrote:
 
-Sorry, I didn't update this part of cover letter properly, but the last
-patch of the patchset makes possible to kexec with multiple CPUs and the
-2nd kernel will see them all. It requires support on BIOS side, otherwise
-we fallback to single CPU kexec.
+> Just checking how we want to proceed, is the consensus that we should
+> prevent kernel crashes without relying on userspace stopping all
+> processes? Should we fix regular reboot syscall as well and not just
+> kexec reboot?
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+If you can show that we can trigger the crash on normal reboot, then I
+don't see why not. That is, if you have a program that does the reboot
+(without the SIGSTOP/SIGKILL calls) and triggers this crash, I think that's
+a legitimate reason to fix it on normal reboot too.
+
+-- Steve
 
 _______________________________________________
 kexec mailing list
