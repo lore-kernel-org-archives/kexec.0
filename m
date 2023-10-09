@@ -4,85 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B4BF9E95A91
-	for <kexec@archiver.kernel.org>; Mon,  9 Oct 2023 13:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4358FE95A96
+	for <kexec@archiver.kernel.org>; Mon,  9 Oct 2023 13:35:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=4XEt+xjfNxuyAgKbEAslVbR/DJ2V4DJ6nCtuOwpkYWQ=; b=gS0FHmu8Nn2aie
-	OqcUpfqGZKP8YyqP9Ql+/qE9WgXDAF914AEZUJQP9/6Brhq3gwbKooUExMbSNYZZew/TEgjxbCpuC
-	QBbEfVFO1Yf76KiZ6oX3SpE8ZcjLyCFdtlEYDB3WooDg5s10FNmwoDpK41TDaFjRXdn8m9Sy4MB+Y
-	HUdizTaoR2Nditpuaegz2mrfXAGpFLRbcIeljDvfGypycwgRHsn7MQKwQHx5O+Y2jQS5rjb5Ch4hB
-	bAr5JJVPK3cr0cGB/4Q4nOQxfRPLxCGZSh0gvkqoKcITH3kRbiktIDTvOP+9W5E+pfmGl07I3Sp18
-	rfDXN8WG23F1URw4KNfw==;
+	List-Owner; bh=bftPyvWcidM0siyZ6PkKM8q5fFqZjwvoLy0bGQdROKY=; b=4cccdfl9VVmXSY
+	jYOIeqvB6f8tgFU0pqfLbGbj7khzWoPoTqbQWtph0qm4kQ1oJsqZPH/yHY4kDK51+uBv6y5Eqmv4Q
+	ZkIqbGzU1dCAXVM3tvE+3B5S0q7UAq9PADtmcnH/xQ+qDyfy2FPV3dk0X6FGnt6cSDup77fwgG0en
+	sW8wzK55+aG+FwDnSIgF+0d8v591ltQjj6TBbihgIdctCRmtTBdXvoEAj/A9oKr4CFsfaCOKlexvX
+	7dayuchND/PYVJ5jtkCWxUuMuM2kNt3xmdlEWkBRFyrq3tBgrUJuM8xusIzf8poWYsX+BMkgQztPZ
+	hTjnEACev3MGboIrB4CQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qpqNa-00Aoco-24;
-	Mon, 09 Oct 2023 13:33:02 +0000
-Received: from mgamail.intel.com ([134.134.136.20])
+	id 1qpqPo-00Aoqi-2d;
+	Mon, 09 Oct 2023 13:35:20 +0000
+Received: from mgamail.intel.com ([134.134.136.31])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qpqNZ-00Aobe-00
+	id 1qpqPk-00Aopk-2M
 	for kexec@lists.infradead.org;
-	Mon, 09 Oct 2023 13:33:02 +0000
+	Mon, 09 Oct 2023 13:35:18 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696858381; x=1728394381;
+  t=1696858516; x=1728394516;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=KQiIeN5ST8uGhtT0LhMJYQQaH+STe2BjgqRaOYnAfTw=;
-  b=DJgcpOlPZIB2dj+sLhHCtMVJ8tXeAqwY9oxK+sRq3Qrbq6kbYrwnhjGp
-   yBtA1+LFOdwZrlBhFc+erEuahbWI20XsAPDnPixM1Xx4syOgCgQFkYC7p
-   bCeC8wdNXJ57Nm+KhaPXBRoRbS6GJnvW1iQjdHUJBfdcrzaSMGXvH2mwM
-   Drgb7Lbu8GEm+IurT7Yz8DZetFsEiFgXJW+n0b1AjVrnYADNvQm2iG6tw
-   ewIwCksAz8qoPpkzDdYXNHTS3l4Hpq+vDntGdqOxW7liHHySbO+gS1Sh0
-   8uVk14czQ20TGM+lKf9EkJJhn4b30/DcmDj4zgm6jmcaVWb5LOyULr05T
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10858"; a="374473692"
+  bh=a8KWFLu3eVLALOO0s2Gfw3D3r4t41MgJmAmOQhK1GqY=;
+  b=nhNIc8q9nSlAArw2OjoRADUbM6MfzhVGVavpM6eu7SmrhoW0MbrU0EZu
+   AYgaOn/IALDkXalqC1wrbiM+SDEQqm8I/pWGx/5lgvVWdb8iIAwHLjq6T
+   XtK3fFB+D0N8JWketBhgIDOcApMENpPxFOj677Y0nOaa50y4dbTzJEeLC
+   UlebcsbYBFWTaypvVlrZNDnWz5kktQAvZxxd7sHXXFs3+x3gkd5phhpKe
+   qWIMZumCLnZX7NHlmPu5Es/9fSySTuzbsPRGHFBQX2qM3XR27vzhbODG2
+   9XJjykg2QEOxgvuWScSs3tGV7vQQb6Hcm5zk8fsgaydjmBbNGawhCUIym
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10858"; a="448332835"
 X-IronPort-AV: E=Sophos;i="6.03,210,1694761200"; 
-   d="scan'208";a="374473692"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2023 06:32:57 -0700
+   d="scan'208";a="448332835"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2023 06:35:10 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10858"; a="782491307"
+X-IronPort-AV: E=McAfee;i="6600,9927,10858"; a="1000209164"
 X-IronPort-AV: E=Sophos;i="6.03,210,1694761200"; 
-   d="scan'208";a="782491307"
+   d="scan'208";a="1000209164"
 Received: from ahuge-mobl.ger.corp.intel.com (HELO box.shutemov.name) ([10.252.40.233])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2023 06:32:53 -0700
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2023 06:35:03 -0700
 Received: by box.shutemov.name (Postfix, from userid 1000)
-	id 4EAB710A196; Mon,  9 Oct 2023 16:32:51 +0300 (+03)
-Date: Mon, 9 Oct 2023 16:32:51 +0300
-From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
-To: "Huang, Kai" <kai.huang@intel.com>
-Cc: "tglx@linutronix.de" <tglx@linutronix.de>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"x86@kernel.org" <x86@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-	"Reshetova, Elena" <elena.reshetova@intel.com>,
-	"Nakajima, Jun" <jun.nakajima@intel.com>,
-	"rafael@kernel.org" <rafael@kernel.org>,
-	"peterz@infradead.org" <peterz@infradead.org>,
-	"sathyanarayanan.kuppuswamy@linux.intel.com" <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	"Hunter, Adrian" <adrian.hunter@intel.com>,
-	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>
-Subject: Re: [PATCH 05/13] x86/kexec: Keep CR4.MCE set during kexec for TDX
- guest
-Message-ID: <20231009133251.lmdubojesxtwzdyl@box.shutemov.name>
+	id 6EDC110A196; Mon,  9 Oct 2023 16:35:00 +0300 (+03)
+Date: Mon, 9 Oct 2023 16:35:00 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Elena Reshetova <elena.reshetova@intel.com>,
+	Jun Nakajima <jun.nakajima@intel.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>, kexec@lists.infradead.org,
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 10/13] x86/tdx: Convert shared memory back to private on
+ kexec
+Message-ID: <20231009133500.su4ylwpbnaiyln4d@box.shutemov.name>
 References: <20231005131402.14611-1-kirill.shutemov@linux.intel.com>
- <20231005131402.14611-6-kirill.shutemov@linux.intel.com>
- <2c76fa83b154566e49425e3a7ccc9a268318d63a.camel@intel.com>
+ <20231005131402.14611-11-kirill.shutemov@linux.intel.com>
+ <ZSJpzw2e7KgtJAZy@MiWiFi-R3L-srv>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <2c76fa83b154566e49425e3a7ccc9a268318d63a.camel@intel.com>
+In-Reply-To: <ZSJpzw2e7KgtJAZy@MiWiFi-R3L-srv>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231009_063301_088508_A22D8B63 
-X-CRM114-Status: GOOD (  11.48  )
+X-CRM114-CacheID: sfid-20231009_063516_811342_88C6D6C1 
+X-CRM114-Status: GOOD (  13.49  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,24 +96,21 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Oct 09, 2023 at 12:30:55PM +0000, Huang, Kai wrote:
-> On Thu, 2023-10-05 at 16:13 +0300, Kirill A. Shutemov wrote:
-> > TDX guests are not allowed to clear CR4.MCE. Attempt to clear it leads
-> > to #VE.
+On Sun, Oct 08, 2023 at 04:35:27PM +0800, Baoquan He wrote:
+> On 10/05/23 at 04:13pm, Kirill A. Shutemov wrote:
+> > TDX guests allocate shared buffers to perform I/O. It is done by
+> > allocating pages normally from the buddy allocator and converting them
+> > to shared with set_memory_decrypted().
 > > 
-> > Use alternatives to keep the flag during kexec for TDX guests.
-> > 
-> > The change doesn't affect non-TDX environments.
+> > The target kernel has no idea what memory is converted this way. It only
+>       ~~~~~~~~~~~~~
+> > sees E820_TYPE_RAM.
 > 
-> Nit: non-TDX-guest environments. ?
+> I finally realized it means the 2nd kernel of kexec rebooting. Maybe we
+> can call it 2nd kernel always, it works for both kexec and kdump
+> jumping. 
 
-Okay, will fix.
-
-> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> 
-> Reviewed-by: Kai Huang <kai.huang@intel.com>
-
-Thanks.
+Okay. Will fix. I am new to kexec and I don't know proper terminology :)
 
 -- 
   Kiryl Shutsemau / Kirill A. Shutemov
