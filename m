@@ -4,56 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A1BD4CD8C80
-	for <kexec@archiver.kernel.org>; Tue, 10 Oct 2023 14:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 37847CD8C82
+	for <kexec@archiver.kernel.org>; Tue, 10 Oct 2023 14:14:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=xOMLMOamIrP4AmPnp89xZuEIAfolAA15p/WKbW4VGQM=; b=p4O1NZRBHoMkni
-	wJ1kCrqJ4a4KUgqntlZx5nXTbglAa4cbSVEZ7bz3f3aGFISPDPtFn8WIQWpi6J6S3VZBsIvrp7smI
-	Ssf+pP4Lj8ifuqo3UCN4dxm6/n1g/RilVgQTDhU6MuFIu5K6ict4JNoWv6kR65M/1o2WBUVTkPb2W
-	506Kw7ar03hWpjqTyMINhkLjd4wPxuv9gW7pgka0Mh7hxADduH2fxZc0PXIXjDSUVsJ8QuiJkWLv1
-	t6ORCKJjBLOYjYf7zdLacfkKM5NLZFPnlWJ9IYFeysyny/Hu5S+Y6PWoG1y8cGf3TZh74jv8Jt2NH
-	+OIasU6Rod5J1maMGXZA==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=ojMw8GmzCVmoX43Qcs4mqsNVy/jV1xki6CIWcDRmjRM=; b=owFSP5k7O7g8sW
+	1SFoL8MFW1voMb0mFjzkm/rvE3UCa1fW/OdxOo+5nsDIVquu80IQBpYF1v4f5k8mdzN0cCKpmyaKK
+	/F6v3qH656yZvTU4yWhgd/wZE4QH49C5R9uKGBRh9ouZIZ/f2/dV8ef5nSwwrCIV29C5LoGuRWGIz
+	BKr/Hqf7vZHphh2ql2eRTehy/GMyVBOwzfw+hs33BddLwcBNGaB/o7hKjGf+Fa3H9Cm82iDkXcjfl
+	T2Ipuk9uGb+ChwHb3dfUbOsYVFUi1G2Vf69RECM6QeC9pvxJ9IfdyU84Mgv0/ZFZN328a+1P5PZfE
+	KQeL9GegGaOMInZgilfA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qqDU9-00DXCt-1N;
-	Tue, 10 Oct 2023 14:13:21 +0000
+	id 1qqDV3-00DXJP-2Y;
+	Tue, 10 Oct 2023 14:14:17 +0000
 Received: from bg4.exmail.qq.com ([43.154.221.58])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qqDU4-00DXAc-26
+	id 1qqDUz-00DXIv-1f
 	for kexec@lists.infradead.org;
-	Tue, 10 Oct 2023 14:13:20 +0000
-X-QQ-mid: bizesmtp78t1696947178tke6kasn
+	Tue, 10 Oct 2023 14:14:15 +0000
+X-QQ-mid: bizesmtp71t1696947242t1m16hro
 Received: from localhost.localdomain ( [58.240.82.166])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 10 Oct 2023 22:12:56 +0800 (CST)
+	id ; Tue, 10 Oct 2023 22:14:00 +0800 (CST)
 X-QQ-SSF: 01200000000000B0B000000A0000000
-X-QQ-FEAT: LE7C6P2vL8QE2eY8LyspcvTwdgPM8GF7HNkT0XMiowMANBdihRB/HXUhL/bzk
-	d4caZsrgHdL/C3Aqxbb7HtxjXTnU0kOPwfcjLXBAYiRZjfl/LC6XzB+fiiR9syIOZrSCmlP
-	2hd2qVJlpwQYoVleppVj4Nv8M8yHmiEZA606Lw+kmCTdqK7nRHCMlPrZKBHIxRlOJQ+iYdh
-	9IU2QYSij0sKvgo9DFkiVacnk3FxbvGmfFQ1P8/JX6iCEW1MmPwvDrl13baVZxpWpD3Wxh5
-	Kf88kkgVEc1TFdblulUD1Rrw0Ndnpy2xRtYdeaLEUQYaRQZuIMpu+QcINto7aAiBFjvNQ5Y
-	SgpJT1Isc0EAG0bR0U=
+X-QQ-FEAT: UMQM+3VOEYuXAfQpD/sxYb+6nR6Hs7mGLR8bAdU0E/hM8hMdi/o+kCQ1dz02g
+	hJ63O+N5BbcI9Py4mChMHjWnRHRJ8I6uXk3z25lwKf2pmLE6Lusjs10Or4xwVTsVW8D7Zuy
+	Do5iRCYPg69E+IGPwBgp0phzW6miZRLVQk0ovRXWpFEEtIaZX2aR4AZDK+weNQbIyKLuQ0Y
+	D8DTPioP2fLtHt3Tbj0oKkMd0TVsQfiMO9VKq2nmfOxu36g4UplwAC2UreRqQBrk2JJ+jbt
+	yQSWkpKGG5bf46sq/ivJe81sIcd/G8maXZ9sAECfikD05Nd7nM26jrVP39BQDdAVnI9u2Zc
+	seDRU/6gkiiEl64NH/MXCisuXjtsmRDTBGKQjGa
 X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 6759393584709778382
+X-BIZMAIL-ID: 14708166619500005247
 From: Song Shuai <songshuaishuai@tinylab.org>
 To: k-hagio-ab@nec.com,
 	kexec@lists.infradead.org
 Cc: Song Shuai <songshuaishuai@tinylab.org>
-Subject: [PATCH makedumpfile V2 0/2] Add riscv64 support for makedumpfile
-Date: Tue, 10 Oct 2023 22:12:42 +0800
-Message-Id: <20231010141244.2261488-1-songshuaishuai@tinylab.org>
+Subject: [PATCH makedumpfile V2 1/2] Add riscv64 support
+Date: Tue, 10 Oct 2023 22:12:43 +0800
+Message-Id: <20231010141244.2261488-2-songshuaishuai@tinylab.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20231010141244.2261488-1-songshuaishuai@tinylab.org>
+References: <20231010141244.2261488-1-songshuaishuai@tinylab.org>
 MIME-Version: 1.0
 X-QQ-SENDSIZE: 520
 Feedback-ID: bizesmtp:tinylab.org:qybglogicsvrsz:qybglogicsvrsz4a-0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231010_071317_048738_788C469A 
-X-CRM114-Status: GOOD (  12.13  )
+X-CRM114-CacheID: sfid-20231010_071413_927799_A030B35D 
+X-CRM114-Status: GOOD (  22.84  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -70,129 +72,421 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Changes since V1:
-https://lore.kernel.org/kexec/20230927111822.180630-1-songshuaishuai@tinylab.org/
-
-- fix a typo in Patch2's commit-msg
-- adjust some indentions of Patch1
-
-
-These 2 patches add riscv64 support for makedumpfile:
-
-Patch1 - Add riscv64 support 
-===========================
-
 This patch adds support for riscv64 in makedumpfile.
 It implements the "vtop" for kenrel memory regions
 and supports Sv39/Sv48/Sv57 page modes for RV64.
 
-
-Patch2 - riscv64: Correct the pfn_start for flatmem
-==================================================
-
-This patch temporarily fixes a issue of the tests about FLATMEM, 
-as the commit-msg says:
-  
-    To let info->max_mapnr indicate the direct max PFN and then
-    make the kdump header's max_mapnr_64 correct, riscv64 port
-    didn't define ARCH_PFN_OFFSET.
-    
-    As for FLATMEM type, the pfn region of mem_map_data should
-    be adjusted to start from info->phys_base instead of zero.
-
-
-Tests
-=====
-
-With these 2 patches, the following tests had passed in RV64 Qemu virt machine:
-
-Preparation: 
------------
-
-1. build kernel with FLATMEM and SPARSE memory models 
-2. boot kernel with 3 different page-modes by setting nov4l/nov5l in cmdline 
-3. panic kernel 
-
-Tests:
------
-
-1. create kdump-compressed file via this command 
-   - `/mnt/mkdf_f -d31 -f -c /proc/vmcore /mnt/dump.file1`
-   - or with `--vtop` option to translate some typical addresses (like:
-     kernel_link_addr, vmalloc_start, page_offset)
-
-2. start crash with kdump file and do some VTOPs 
-
-
-A test log: 
------------
-
-# With the Sv57 and SPARSE_EXTREME kernel  
-# vtop the vmalloc start address -- 0xff20000000000000
-
-
-# /mnt/mkdf_f  --vtop 0xff20000000000000 -d31 -f --non-mmap -c /proc/vmcore /mnt/dump.file1
-
-Translating virtual address ff20000000000000 to physical address.
-VIRTUAL           PHYSICAL
-ff20000000000000  80087000
-
-Copying data                                      : [100.0 %] |
-eta: 0s
-
-The dumpfile is saved to /mnt/dump.file1.
-
-makedumpfile Completed.
-
-# sudo ../crash/crash /home/song/9_linux/linux/00_rv_def/vmlinux /tmp/hello/dump.file1
-...
-      KERNEL: /home/song/9_linux/linux/00_rv_def/vmlinux
-    DUMPFILE: /tmp/hello/dump.file1  [PARTIAL DUMP]
-        CPUS: 2
-        DATE: Wed Sep 27 18:37:45 CST 2023
-      UPTIME: 00:00:18
-LOAD AVERAGE: 0.00, 0.00, 0.00
-       TASKS: 55
-    NODENAME: (none)
-     RELEASE: 6.6.0-rc1-00007-g22bfc766389c
-     VERSION: #1 SMP Mon Sep 25 19:29:05 CST 2023
-     MACHINE: riscv64  (unknown Mhz)
-      MEMORY: 511.8 MB
-       PANIC: "Kernel panic - not syncing: sysrq triggered crash"
-         PID: 1
-     COMMAND: "sh"
-        TASK: ff600000000e0000  [THREAD_INFO: ff600000000e0000]
-         CPU: 1
-       STATE: TASK_RUNNING (PANIC)
-
-crash> vtop 0xff20000000000000
-VIRTUAL           PHYSICAL        
-ff20000000000000  80087000        
-
-  PGD: ffffffff814fa900 => 20010c01
-  P4D: 0000000080043000 => 0000000020025401
-  PUD: 0000000080095000 => 0000000020025801
-  PMD: 0000000080096000 => 0000000020026001
-  PTE: 80098000 => 20021ce7
- PAGE: 0000000080087000
-
-  PTE     PHYSICAL  FLAGS
-20021ce7  80087000  (PRESENT|READ|WRITE|GLOBAL|ACCESSED|DIRTY)  
-
-      PAGE       PHYSICAL      MAPPING       INDEX CNT FLAGS
-ff1c0000020021c0 80087000                0        0  1 0  // same as the makedumpfile's vtop  
-
-Song Shuai (2):
-  Add riscv64 support
-  riscv64: Correct the pfn_start for flatmem
-
+Signed-off-by: Song Shuai <songshuaishuai@tinylab.org>
+---
  Makefile       |   2 +-
  arch/riscv64.c | 219 +++++++++++++++++++++++++++++++++++++++++++++++++
- makedumpfile.c |  18 ++++
+ makedumpfile.c |  14 ++++
  makedumpfile.h | 107 ++++++++++++++++++++++++
- 4 files changed, 345 insertions(+), 1 deletion(-)
+ 4 files changed, 341 insertions(+), 1 deletion(-)
  create mode 100644 arch/riscv64.c
 
+diff --git a/Makefile b/Makefile
+index 0608035..1d0644c 100644
+--- a/Makefile
++++ b/Makefile
+@@ -47,7 +47,7 @@ endif
+ SRC_BASE = makedumpfile.c makedumpfile.h diskdump_mod.h sadump_mod.h sadump_info.h
+ SRC_PART = print_info.c dwarf_info.c elf_info.c erase_info.c sadump_info.c cache.c tools.c printk.c detect_cycle.c
+ OBJ_PART=$(patsubst %.c,%.o,$(SRC_PART))
+-SRC_ARCH = arch/arm.c arch/arm64.c arch/x86.c arch/x86_64.c arch/ia64.c arch/ppc64.c arch/s390x.c arch/ppc.c arch/sparc64.c arch/mips64.c arch/loongarch64.c
++SRC_ARCH = arch/arm.c arch/arm64.c arch/x86.c arch/x86_64.c arch/ia64.c arch/ppc64.c arch/s390x.c arch/ppc.c arch/sparc64.c arch/mips64.c arch/loongarch64.c arch/riscv64.c
+ OBJ_ARCH=$(patsubst %.c,%.o,$(SRC_ARCH))
+ 
+ LIBS = -ldw -lbz2 -ldl -lelf -lz
+diff --git a/arch/riscv64.c b/arch/riscv64.c
+new file mode 100644
+index 0000000..b4101e7
+--- /dev/null
++++ b/arch/riscv64.c
+@@ -0,0 +1,219 @@
++/*
++ * riscv64.c
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++#ifdef __riscv64__
++
++#include "../print_info.h"
++#include "../elf_info.h"
++#include "../makedumpfile.h"
++
++int
++get_phys_base_riscv64(void)
++{
++	if (NUMBER(phys_ram_base) != NOT_FOUND_NUMBER)
++		info->phys_base = NUMBER(phys_ram_base);
++	else
++		/* In case that you are using qemu rv64 env */
++		info->phys_base = 0x80200000;
++
++	DEBUG_MSG("phys_base    : %lx\n", info->phys_base);
++	return TRUE;
++}
++
++int
++get_machdep_info_riscv64(void)
++{
++
++	if(NUMBER(va_bits) == NOT_FOUND_NUMBER ||  NUMBER(page_offset) == NOT_FOUND_NUMBER ||
++	   NUMBER(vmalloc_start) == NOT_FOUND_NUMBER || NUMBER(vmalloc_end) == NOT_FOUND_NUMBER ||
++	   NUMBER(vmemmap_start) == NOT_FOUND_NUMBER ||  NUMBER(vmemmap_end) == NOT_FOUND_NUMBER ||
++	   NUMBER(modules_vaddr) == NOT_FOUND_NUMBER ||  NUMBER(modules_end) == NOT_FOUND_NUMBER ||
++	   NUMBER(kernel_link_addr) == NOT_FOUND_NUMBER || NUMBER(va_kernel_pa_offset) == NOT_FOUND_NUMBER)
++		return FALSE;
++
++	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
++		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
++	else
++		info->max_physmem_bits = _MAX_PHYSMEM_BITS;
++
++	if (NUMBER(SECTION_SIZE_BITS) != NOT_FOUND_NUMBER)
++		info->section_size_bits = NUMBER(SECTION_SIZE_BITS);
++	else
++		info->section_size_bits = _SECTION_SIZE_BITS;
++
++	info->page_offset = NUMBER(page_offset);
++
++	DEBUG_MSG("va_bits    : %ld\n", NUMBER(va_bits));
++	DEBUG_MSG("page_offset    : %lx\n", NUMBER(page_offset));
++	DEBUG_MSG("vmalloc_start    : %lx\n", NUMBER(vmalloc_start));
++	DEBUG_MSG("vmalloc_end    : %lx\n", NUMBER(vmalloc_end));
++	DEBUG_MSG("vmemmap_start    : %lx\n", NUMBER(vmemmap_start));
++	DEBUG_MSG("vmemmap_end    : %lx\n", NUMBER(vmemmap_end));
++	DEBUG_MSG("modules_vaddr    : %lx\n", NUMBER(modules_vaddr));
++	DEBUG_MSG("modules_end    : %lx\n", NUMBER(modules_end));
++	DEBUG_MSG("kernel_link_addr    : %lx\n", NUMBER(kernel_link_addr));
++	DEBUG_MSG("va_kernel_pa_offset    : %lx\n", NUMBER(va_kernel_pa_offset));
++
++	return TRUE;
++}
++
++/*
++ * For direct memory mapping
++ */
++
++#define VTOP(X) ({ 									\
++	ulong _X = X;									\
++	(_X) >= NUMBER(kernel_link_addr) ? ((_X) - (NUMBER(va_kernel_pa_offset))):	\
++	((_X) - PAGE_OFFSET + (info->phys_base));					\
++	})
++
++static unsigned long long
++vtop_riscv64(pgd_t * pgd, unsigned long vaddr, long va_bits)
++{
++	unsigned long long paddr = NOT_PADDR;
++	pgd_t *pgda;
++	p4d_t *p4da;
++	pud_t *puda;
++	pmd_t *pmda;
++	pte_t *ptea;
++	ulong pt_val, pt_phys;
++
++#define pgd_index(X) ((va_bits == VA_BITS_SV57) ? pgd_index_l5(X) : 	\
++	((va_bits == VA_BITS_SV48) ? pgd_index_l4(X) : pgd_index_l3(X)))
++
++	/* PGD */
++	pgda = (pgd_t *)(pgd) + pgd_index(vaddr);
++	if (!readmem(PADDR, (unsigned long long)pgda, &pt_val, sizeof(pt_val))) {
++		ERRMSG("Can't read pgd\n");
++		goto invalid;
++	}
++
++	pt_val &= PTE_PFN_PROT_MASK;
++
++	if (!(pt_val & _PAGE_PRESENT)) {
++		ERRMSG("Can't get a valid pgd.\n");
++		goto invalid;
++	}
++
++	pt_phys = (pt_val >> _PAGE_PFN_SHIFT) << PAGESHIFT();
++
++	if(pt_val & _PAGE_LEAF)
++		goto out;
++
++	if(va_bits == VA_BITS_SV57)
++		goto p4d;
++	else if (va_bits == VA_BITS_SV48)
++		goto pud;
++	else
++		goto pmd;
++p4d:
++	/* P4D */
++	p4da = (p4d_t *)(pt_phys) + p4d_index(vaddr);
++	if (!readmem(PADDR, (unsigned long long)p4da, &pt_val, sizeof(pt_val))) {
++		ERRMSG("Can't read p4d\n");
++		goto invalid;
++	}
++
++	pt_val &= PTE_PFN_PROT_MASK;
++
++	if (!(pt_val & _PAGE_PRESENT)) {
++		ERRMSG("Can't get a valid p4d.\n");
++		goto invalid;
++	}
++
++	pt_phys = (pt_val >> _PAGE_PFN_SHIFT) << PAGESHIFT();
++
++	if(pt_val & _PAGE_LEAF)
++		goto out;
++pud:
++	/* PUD */
++	puda = (pud_t *)(pt_phys) + pud_index(vaddr);
++	if (!readmem(PADDR, (unsigned long long)puda, &pt_val, sizeof(pt_val))) {
++		ERRMSG("Can't read pud\n");
++		goto invalid;
++	}
++
++	pt_val &= PTE_PFN_PROT_MASK;
++
++	if (!(pt_val & _PAGE_PRESENT)) {
++		ERRMSG("Can't get a valid pud.\n");
++		goto invalid;
++	}
++
++	pt_phys = (pt_val >> _PAGE_PFN_SHIFT) << PAGESHIFT();
++
++	if(pt_val & _PAGE_LEAF)
++		goto out;
++pmd:
++	/* PMD */
++	pmda = (pmd_t *)(pt_phys) + pmd_index(vaddr);
++	if (!readmem(PADDR, (unsigned long long)pmda, &pt_val, sizeof(pt_val))) {
++		ERRMSG("Can't read pmd\n");
++		goto invalid;
++	}
++
++	pt_val &= PTE_PFN_PROT_MASK;
++
++	if (!(pt_val & _PAGE_PRESENT)) {
++		ERRMSG("Can't get a valid pmd.\n");
++		goto invalid;
++	}
++
++	pt_phys = (pt_val >> _PAGE_PFN_SHIFT) << PAGESHIFT();
++
++	if(pt_val & _PAGE_LEAF)
++		goto out;
++
++	/* PTE */
++	ptea = (pte_t *)(pt_phys) + pte_index(vaddr);
++	if (!readmem(PADDR, (unsigned long long)ptea, &pt_val, sizeof(pt_val))) {
++		ERRMSG("Can't read pte\n");
++		goto invalid;
++	}
++
++	pt_val &= PTE_PFN_PROT_MASK;
++
++	if (!(pt_val & _PAGE_PRESENT)) {
++		ERRMSG("Can't get a valid pte.\n");
++		goto invalid;
++	}
++
++	pt_phys = (pt_val >> _PAGE_PFN_SHIFT) << PAGESHIFT();
++
++out:
++	paddr = pt_phys + PAGEOFFSET(vaddr);
++invalid:
++	return paddr;
++}
++
++unsigned long long
++vaddr_to_paddr_riscv64(unsigned long vaddr)
++{
++	unsigned long long swapper_phys;
++
++	if (vaddr >= PAGE_OFFSET &&
++	    !(vaddr >= NUMBER(modules_vaddr) && vaddr <= NUMBER(modules_end))){
++		return VTOP(vaddr);
++	}
++
++	if (SYMBOL(swapper_pg_dir) == NOT_FOUND_SYMBOL) {
++		ERRMSG("Can't get the symbol of swapper_pg_dir.\n");
++		return NOT_PADDR;
++	}
++
++	swapper_phys = VTOP(SYMBOL(swapper_pg_dir));
++
++	return vtop_riscv64((pgd_t *)swapper_phys, vaddr, NUMBER(va_bits));
++}
++
++#endif /* __riscv64__ */
+diff --git a/makedumpfile.c b/makedumpfile.c
+index cadc596..42d5565 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -2972,6 +2972,20 @@ read_vmcoreinfo(void)
+ 	READ_NUMBER_UNSIGNED("kimage_voffset", kimage_voffset);
+ #endif
+ 
++#ifdef __riscv64__
++	READ_NUMBER("VA_BITS", va_bits);
++	READ_NUMBER_UNSIGNED("phys_ram_base", phys_ram_base);
++	READ_NUMBER_UNSIGNED("PAGE_OFFSET", page_offset);
++	READ_NUMBER_UNSIGNED("VMALLOC_START", vmalloc_start);
++	READ_NUMBER_UNSIGNED("VMALLOC_END", vmalloc_end);
++	READ_NUMBER_UNSIGNED("VMEMMAP_START", vmemmap_start);
++	READ_NUMBER_UNSIGNED("VMEMMAP_END", vmemmap_end);
++	READ_NUMBER_UNSIGNED("MODULES_VADDR", modules_vaddr);
++	READ_NUMBER_UNSIGNED("MODULES_END", modules_end);
++	READ_NUMBER_UNSIGNED("KERNEL_LINK_ADDR", kernel_link_addr);
++	READ_NUMBER_UNSIGNED("va_kernel_pa_offset", va_kernel_pa_offset);
++#endif
++
+ 	READ_NUMBER("HUGETLB_PAGE_DTOR", HUGETLB_PAGE_DTOR);
+ 
+ 	return TRUE;
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 85e5a49..f021423 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -1046,6 +1046,77 @@ typedef unsigned long pgd_t;
+ 
+ #endif /* loongarch64 */
+ 
++#ifdef __riscv64__
++/*
++ * Referencing the riscv64_is_kvaddr() in Crash-utility,
++ * set the vmemmap start address as the lowest kernel virtual base.
++ * */
++#define KVBASE			(NUMBER(vmemmap_start))
++#define _SECTION_SIZE_BITS	(27)
++#define _MAX_PHYSMEM_BITS	(56)
++
++typedef ulong pgd_t;
++typedef ulong p4d_t;
++typedef ulong pud_t;
++typedef ulong pmd_t;
++typedef ulong pte_t;
++
++/* arch/riscv/include/asm/pgtable-64.h */
++
++#define PGD_SHIFT_L3		(30)
++#define PGD_SHIFT_L4		(39)
++#define PGD_SHIFT_L5		(48)
++
++#define P4D_SHIFT		(39)
++#define PUD_SHIFT		(30)
++#define PMD_SHIFT		(21)
++
++#define PTRS_PER_PGD		(512)
++#define PTRS_PER_P4D		(512)
++#define PTRS_PER_PUD		(512)
++#define PTRS_PER_PMD		(512)
++#define PTRS_PER_PTE		(512)
++
++/*
++ * 3/4/5-levels pg indexs
++ */
++#define pgd_index_l3(addr)	(((addr) >> PGD_SHIFT_L3) & (PTRS_PER_PGD - 1))
++#define pgd_index_l4(addr)	(((addr) >> PGD_SHIFT_L4) & (PTRS_PER_PGD - 1))
++#define pgd_index_l5(addr)	(((addr) >> PGD_SHIFT_L5) & (PTRS_PER_PGD - 1))
++#define p4d_index(addr)		(((addr) >> P4D_SHIFT) & (PTRS_PER_P4D - 1))
++#define pud_index(addr)		(((addr) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
++#define pmd_index(addr)		(((addr) >> PMD_SHIFT) & (PTRS_PER_PMD - 1))
++#define pte_index(addr)		(((addr) >> PAGESHIFT()) & (PTRS_PER_PTE - 1))
++
++/* arch/riscv/include/asm/pgtable-bits.h */
++
++#define _PAGE_PRESENT	(1 << 0)
++#define _PAGE_READ	(1 << 1)	/* Readable */
++#define _PAGE_WRITE	(1 << 2)	/* Writable */
++#define _PAGE_EXEC	(1 << 3)	/* Executable */
++#define _PAGE_USER	(1 << 4)	/* User */
++#define _PAGE_GLOBAL	(1 << 5)	/* Global */
++#define _PAGE_ACCESSED	(1 << 6)	/* Set by hardware on any access */
++#define _PAGE_DIRTY	(1 << 7)	/* Set by hardware on any write */
++#define _PAGE_SOFT	(1 << 8)	/* Reserved for software */
++
++#define _PAGE_PFN_SHIFT	(10)
++#define _PAGE_LEAF	(_PAGE_READ | _PAGE_WRITE | _PAGE_EXEC)
++
++/*
++ * Mask for bit 0~53(PROT and PPN) of PTE
++ * 63 6261  60    54  53 10  9 8 7 6 5 4 3 2 1 0
++ * N  PBMT  Reserved  P P N  RSW D A G U X W R V
++ */
++#define PTE_PFN_PROT_MASK	0x3FFFFFFFFFFFFF
++
++#define VA_BITS_SV39	(39)
++#define VA_BITS_SV48	(48)
++#define VA_BITS_SV57	(57)
++
++#endif /* riscv64 */
++
++
+ /*
+  * The function of dependence on machine
+  */
+@@ -1233,6 +1304,22 @@ unsigned long long vaddr_to_paddr_loongarch64(unsigned long vaddr);
+ #define arch_crashkernel_mem_size()	stub_false()
+ #endif /* loongarch64 */
+ 
++#ifdef __riscv64__
++int get_phys_base_riscv64(void);
++int get_machdep_info_riscv64(void);
++unsigned long long vaddr_to_paddr_riscv64(unsigned long vaddr);
++#define paddr_to_vaddr_riscv64(X) ((X) + PAGE_OFFSET - info->phys_base)
++#define find_vmemmap()		stub_false()
++#define get_phys_base()		get_phys_base_riscv64()
++#define get_machdep_info()	get_machdep_info_riscv64()
++#define get_versiondep_info()	stub_true()
++#define get_kaslr_offset(X)	stub_false()
++#define vaddr_to_paddr(X)	vaddr_to_paddr_riscv64(X)
++#define paddr_to_vaddr(X)	paddr_to_vaddr_riscv64(X)
++#define is_phys_addr(X)		stub_true_ul(X)
++#define arch_crashkernel_mem_size()	stub_false()
++#endif /* riscv64 */
++
+ typedef unsigned long long mdf_pfn_t;
+ 
+ #ifndef ARCH_PFN_OFFSET
+@@ -2151,6 +2238,20 @@ struct number_table {
+ 	long	TCR_EL1_T1SZ;
+ 	unsigned long	PHYS_OFFSET;
+ 	unsigned long	kimage_voffset;
++#endif
++	/**/
++#ifdef __riscv64__
++	long va_bits;
++	unsigned long phys_ram_base;
++	unsigned long page_offset;
++	unsigned long vmalloc_start;
++	unsigned long vmalloc_end;
++	unsigned long vmemmap_start;
++	unsigned long vmemmap_end;
++	unsigned long modules_vaddr;
++	unsigned long modules_end;
++	unsigned long kernel_link_addr;
++	unsigned long va_kernel_pa_offset;
+ #endif
+ };
+ 
+@@ -2390,6 +2491,12 @@ int get_xen_info_ia64(void);
+ #define get_xen_info_arch(X) FALSE
+ #endif /* loongarch64 */
+ 
++#ifdef __riscv64__ /* riscv64 */
++#define kvtop_xen(X)	FALSE
++#define get_xen_basic_info_arch(X) FALSE
++#define get_xen_info_arch(X) FALSE
++#endif /* riscv64 */
++
+ struct cycle {
+ 	mdf_pfn_t start_pfn;
+ 	mdf_pfn_t end_pfn;
 -- 
 2.20.1
 
