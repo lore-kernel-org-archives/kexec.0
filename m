@@ -4,79 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7355DCD80DB
-	for <kexec@archiver.kernel.org>; Tue, 10 Oct 2023 13:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A1BD4CD8C80
+	for <kexec@archiver.kernel.org>; Tue, 10 Oct 2023 14:13:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
-	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=JbdjjKF7s6I42th3AMGo3bvY+IO6oSTy4+QYxhD3XK8=; b=BiB3r2/ogW3Gq2
-	DHJ73f/oDks01+AGz8FNoBk99pNJSmX/oRqUMHr6r3GAwdu05EqcXImeMPFT/LOefPTgjIoKV9Eer
-	DbqYjXKV8LuNizv+LXcLD2QDaRDUiBGjuchoMUw7M1XLAQ80f/5itAQNRh4o4Pqos2mIrmzpK81cs
-	0E1GsCPhx14IdGNPVliZaCixlJyuP+k2y/c6BNJpvZ9OBWomdJsZxUDZPMpIdyMabvQUDlZkl7KkJ
-	a2rEyHwM66tgevcCqqUd+xPv5sXvamB+Fe5vE2NgWCCxfPIXWrSP/4zhVPBfyDMUy6ON+S0FlQg+7
-	JAQGeIXQL0ReDAG4Rlfw==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=xOMLMOamIrP4AmPnp89xZuEIAfolAA15p/WKbW4VGQM=; b=p4O1NZRBHoMkni
+	wJ1kCrqJ4a4KUgqntlZx5nXTbglAa4cbSVEZ7bz3f3aGFISPDPtFn8WIQWpi6J6S3VZBsIvrp7smI
+	Ssf+pP4Lj8ifuqo3UCN4dxm6/n1g/RilVgQTDhU6MuFIu5K6ict4JNoWv6kR65M/1o2WBUVTkPb2W
+	506Kw7ar03hWpjqTyMINhkLjd4wPxuv9gW7pgka0Mh7hxADduH2fxZc0PXIXjDSUVsJ8QuiJkWLv1
+	t6ORCKJjBLOYjYf7zdLacfkKM5NLZFPnlWJ9IYFeysyny/Hu5S+Y6PWoG1y8cGf3TZh74jv8Jt2NH
+	+OIasU6Rod5J1maMGXZA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qqDBD-00DUlx-0s;
-	Tue, 10 Oct 2023 13:53:47 +0000
-Received: from mgamail.intel.com ([198.175.65.9])
+	id 1qqDU9-00DXCt-1N;
+	Tue, 10 Oct 2023 14:13:21 +0000
+Received: from bg4.exmail.qq.com ([43.154.221.58])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qqDB6-00DUjn-0d
+	id 1qqDU4-00DXAc-26
 	for kexec@lists.infradead.org;
-	Tue, 10 Oct 2023 13:53:43 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1696946020; x=1728482020;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=STfmPYVLdo6+qt87QB/G2RvqDg2ED/4+X+sOB+AaltU=;
-  b=En+Fut0GJcF4mRVR3bpZ4ZZ4yR3P9IUf5pMa0vZA/ElkZxIKj2NA9KXN
-   udgmtQLcFOBcoFkUlmlO1Kto/fABBXTKQ0nWQOUWBp6ehvKtqdojSyx5T
-   xhDXcJHPetopo2DKptjjmucPdXUkkbwZXnyWM242FaHN2UhxTV5t2Vh9e
-   8K9Ae14z4nHl4FwaWR0rlxlAdFBRXvij78rhpsE8qXoI+rx2cysmNNWUF
-   Si203GqfsB4SqnMS+OofoKFju4wjihLKCXofo8m+roGifmw+0RHvg9Afk
-   di+IN5dg8/hfZm91CT5PClYjE1fwImZaQfB8p+1au4Jh8IszTdocwFx2X
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10859"; a="2990218"
-X-IronPort-AV: E=Sophos;i="6.03,212,1694761200"; 
-   d="scan'208";a="2990218"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2023 06:53:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10859"; a="747075063"
-X-IronPort-AV: E=Sophos;i="6.03,212,1694761200"; 
-   d="scan'208";a="747075063"
-Received: from patinira-mobl.amr.corp.intel.com (HELO [10.212.128.216]) ([10.212.128.216])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2023 06:53:27 -0700
-Message-ID: <b69b21b8-7915-4854-b5f7-5124cd4e5bbf@linux.intel.com>
-Date: Tue, 10 Oct 2023 06:53:27 -0700
+	Tue, 10 Oct 2023 14:13:20 +0000
+X-QQ-mid: bizesmtp78t1696947178tke6kasn
+Received: from localhost.localdomain ( [58.240.82.166])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 10 Oct 2023 22:12:56 +0800 (CST)
+X-QQ-SSF: 01200000000000B0B000000A0000000
+X-QQ-FEAT: LE7C6P2vL8QE2eY8LyspcvTwdgPM8GF7HNkT0XMiowMANBdihRB/HXUhL/bzk
+	d4caZsrgHdL/C3Aqxbb7HtxjXTnU0kOPwfcjLXBAYiRZjfl/LC6XzB+fiiR9syIOZrSCmlP
+	2hd2qVJlpwQYoVleppVj4Nv8M8yHmiEZA606Lw+kmCTdqK7nRHCMlPrZKBHIxRlOJQ+iYdh
+	9IU2QYSij0sKvgo9DFkiVacnk3FxbvGmfFQ1P8/JX6iCEW1MmPwvDrl13baVZxpWpD3Wxh5
+	Kf88kkgVEc1TFdblulUD1Rrw0Ndnpy2xRtYdeaLEUQYaRQZuIMpu+QcINto7aAiBFjvNQ5Y
+	SgpJT1Isc0EAG0bR0U=
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 6759393584709778382
+From: Song Shuai <songshuaishuai@tinylab.org>
+To: k-hagio-ab@nec.com,
+	kexec@lists.infradead.org
+Cc: Song Shuai <songshuaishuai@tinylab.org>
+Subject: [PATCH makedumpfile V2 0/2] Add riscv64 support for makedumpfile
+Date: Tue, 10 Oct 2023 22:12:42 +0800
+Message-Id: <20231010141244.2261488-1-songshuaishuai@tinylab.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 04/13] x86/kvm: Do not try to disable kvmclock if it was
- not enabled
-Content-Language: en-US
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Elena Reshetova <elena.reshetova@intel.com>,
- Jun Nakajima <jun.nakajima@intel.com>,
- Rick Edgecombe <rick.p.edgecombe@intel.com>,
- Tom Lendacky <thomas.lendacky@amd.com>, kexec@lists.infradead.org,
- linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20231005131402.14611-1-kirill.shutemov@linux.intel.com>
- <20231005131402.14611-5-kirill.shutemov@linux.intel.com>
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20231005131402.14611-5-kirill.shutemov@linux.intel.com>
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:tinylab.org:qybglogicsvrsz:qybglogicsvrsz4a-0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231010_065340_275984_DB1F5FE7 
-X-CRM114-Status: GOOD (  19.74  )
+X-CRM114-CacheID: sfid-20231010_071317_048738_788C469A 
+X-CRM114-Status: GOOD (  12.13  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -93,64 +70,132 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+Changes since V1:
+https://lore.kernel.org/kexec/20230927111822.180630-1-songshuaishuai@tinylab.org/
+
+- fix a typo in Patch2's commit-msg
+- adjust some indentions of Patch1
 
 
-On 10/5/2023 6:13 AM, Kirill A. Shutemov wrote:
-> kvm_guest_cpu_offline() tries to disable kvmclock regardless if it is
-> present in the VM. It leads to write to a MSR that doesn't exist on some
-> configurations, namely in TDX guest:
-> 
-> 	unchecked MSR access error: WRMSR to 0x12 (tried to write 0x0000000000000000)
-> 	at rIP: 0xffffffff8110687c (kvmclock_disable+0x1c/0x30)
-> 
-> kvmclock enabling is gated by CLOCKSOURCE and CLOCKSOURCE2 KVM paravirt
-> features.
-> 
-> Do not disable kvmclock if it was not enumerated or disabled by user
-> from kernel command line.
+These 2 patches add riscv64 support for makedumpfile:
 
-For the above warning,  check for CLOCKSOURCE and CLOCKSOURCE2
-feature is sufficient, right? Do we need to include user/command-line
-disable check here?
+Patch1 - Add riscv64 support 
+===========================
 
-> 
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Fixes: c02027b5742b ("x86/kvm: Disable kvmclock on all CPUs on shutdown")
-> ---
->  arch/x86/kernel/kvmclock.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/kvmclock.c b/arch/x86/kernel/kvmclock.c
-> index fb8f52149be9..cba2e732e53f 100644
-> --- a/arch/x86/kernel/kvmclock.c
-> +++ b/arch/x86/kernel/kvmclock.c
-> @@ -22,7 +22,7 @@
->  #include <asm/x86_init.h>
->  #include <asm/kvmclock.h>
->  
-> -static int kvmclock __initdata = 1;
-> +static int kvmclock __ro_after_init = 1;
->  static int kvmclock_vsyscall __initdata = 1;
->  static int msr_kvm_system_time __ro_after_init = MSR_KVM_SYSTEM_TIME;
->  static int msr_kvm_wall_clock __ro_after_init = MSR_KVM_WALL_CLOCK;
-> @@ -195,7 +195,12 @@ static void kvm_setup_secondary_clock(void)
->  
->  void kvmclock_disable(void)
->  {
-> -	native_write_msr(msr_kvm_system_time, 0, 0);
-> +	if (!kvm_para_available() || !kvmclock)
-> +		return;
-> +
-> +	if (kvm_para_has_feature(KVM_FEATURE_CLOCKSOURCE) ||
-> +	    kvm_para_has_feature(KVM_FEATURE_CLOCKSOURCE2))
-> +		native_write_msr(msr_kvm_system_time, 0, 0);
->  }
->  
->  static void __init kvmclock_init_mem(void)
+This patch adds support for riscv64 in makedumpfile.
+It implements the "vtop" for kenrel memory regions
+and supports Sv39/Sv48/Sv57 page modes for RV64.
+
+
+Patch2 - riscv64: Correct the pfn_start for flatmem
+==================================================
+
+This patch temporarily fixes a issue of the tests about FLATMEM, 
+as the commit-msg says:
+  
+    To let info->max_mapnr indicate the direct max PFN and then
+    make the kdump header's max_mapnr_64 correct, riscv64 port
+    didn't define ARCH_PFN_OFFSET.
+    
+    As for FLATMEM type, the pfn region of mem_map_data should
+    be adjusted to start from info->phys_base instead of zero.
+
+
+Tests
+=====
+
+With these 2 patches, the following tests had passed in RV64 Qemu virt machine:
+
+Preparation: 
+-----------
+
+1. build kernel with FLATMEM and SPARSE memory models 
+2. boot kernel with 3 different page-modes by setting nov4l/nov5l in cmdline 
+3. panic kernel 
+
+Tests:
+-----
+
+1. create kdump-compressed file via this command 
+   - `/mnt/mkdf_f -d31 -f -c /proc/vmcore /mnt/dump.file1`
+   - or with `--vtop` option to translate some typical addresses (like:
+     kernel_link_addr, vmalloc_start, page_offset)
+
+2. start crash with kdump file and do some VTOPs 
+
+
+A test log: 
+-----------
+
+# With the Sv57 and SPARSE_EXTREME kernel  
+# vtop the vmalloc start address -- 0xff20000000000000
+
+
+# /mnt/mkdf_f  --vtop 0xff20000000000000 -d31 -f --non-mmap -c /proc/vmcore /mnt/dump.file1
+
+Translating virtual address ff20000000000000 to physical address.
+VIRTUAL           PHYSICAL
+ff20000000000000  80087000
+
+Copying data                                      : [100.0 %] |
+eta: 0s
+
+The dumpfile is saved to /mnt/dump.file1.
+
+makedumpfile Completed.
+
+# sudo ../crash/crash /home/song/9_linux/linux/00_rv_def/vmlinux /tmp/hello/dump.file1
+...
+      KERNEL: /home/song/9_linux/linux/00_rv_def/vmlinux
+    DUMPFILE: /tmp/hello/dump.file1  [PARTIAL DUMP]
+        CPUS: 2
+        DATE: Wed Sep 27 18:37:45 CST 2023
+      UPTIME: 00:00:18
+LOAD AVERAGE: 0.00, 0.00, 0.00
+       TASKS: 55
+    NODENAME: (none)
+     RELEASE: 6.6.0-rc1-00007-g22bfc766389c
+     VERSION: #1 SMP Mon Sep 25 19:29:05 CST 2023
+     MACHINE: riscv64  (unknown Mhz)
+      MEMORY: 511.8 MB
+       PANIC: "Kernel panic - not syncing: sysrq triggered crash"
+         PID: 1
+     COMMAND: "sh"
+        TASK: ff600000000e0000  [THREAD_INFO: ff600000000e0000]
+         CPU: 1
+       STATE: TASK_RUNNING (PANIC)
+
+crash> vtop 0xff20000000000000
+VIRTUAL           PHYSICAL        
+ff20000000000000  80087000        
+
+  PGD: ffffffff814fa900 => 20010c01
+  P4D: 0000000080043000 => 0000000020025401
+  PUD: 0000000080095000 => 0000000020025801
+  PMD: 0000000080096000 => 0000000020026001
+  PTE: 80098000 => 20021ce7
+ PAGE: 0000000080087000
+
+  PTE     PHYSICAL  FLAGS
+20021ce7  80087000  (PRESENT|READ|WRITE|GLOBAL|ACCESSED|DIRTY)  
+
+      PAGE       PHYSICAL      MAPPING       INDEX CNT FLAGS
+ff1c0000020021c0 80087000                0        0  1 0  // same as the makedumpfile's vtop  
+
+Song Shuai (2):
+  Add riscv64 support
+  riscv64: Correct the pfn_start for flatmem
+
+ Makefile       |   2 +-
+ arch/riscv64.c | 219 +++++++++++++++++++++++++++++++++++++++++++++++++
+ makedumpfile.c |  18 ++++
+ makedumpfile.h | 107 ++++++++++++++++++++++++
+ 4 files changed, 345 insertions(+), 1 deletion(-)
+ create mode 100644 arch/riscv64.c
 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+2.20.1
+
 
 _______________________________________________
 kexec mailing list
