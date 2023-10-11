@@ -4,131 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4B785CD98CC
-	for <kexec@archiver.kernel.org>; Tue, 10 Oct 2023 23:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BF7B5CD98E7
+	for <kexec@archiver.kernel.org>; Wed, 11 Oct 2023 02:30:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-ID:In-Reply-To:
-	References:Message-ID:Date:Subject:To:From:Reply-To:Cc:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=IQREjNhUuOliPm7iz/G9pOalyDXmm6vPyWRRLw0mtkQ=; b=4IEKx05h5USrgB
-	LB6tHhsLHLG40ZjzThH1KuObpnVaCMAx8FNnwnSoR560zgvj3hwBnYUgk6aL7oGtSgcmdDDIshREh
-	Fn2WAy5/J7gaxDXso+NmZkxKA0Q4MIstPuyOva6SglV/nZlE9R6weJNlDRuUsvka0tERwotrOYdgE
-	UyCXJJsGTobzmTFAw93I3VJzHcsjEVfRJKVfdmjI/6C2TJQyHJ5ZJlcd/mZF+PNQ7reP257FwRn41
-	EtEvBO7+yRcgStknK5CME6Eb5gwCasFo27Rcp+9i/fwIk1NNn4zadrm63bm8tEw3e+FnU9F7wgnqd
-	nuhcZoSn0D7exsCknX9A==;
+	List-Owner; bh=iIHYOlFAlz3jfNgK1uU1uFrpYeGbUPrP17a4hCDgD3A=; b=46r3W2j5jemaoo
+	TwaRJIYgAZpjmOTLiTzt+U0Sw6aWPej++1PKBumxi77U3Dauf/jplnWC3SAeA5k5qux9bmYvNBRdD
+	TbJujGgN9nckoq6xUhQKfEb0X2wD7TyNFovUPAQmujIVUXeU5UHlAY2GsLucgkv3vfOeRWyxvXzzU
+	FJAVPnOn4KvWGROXPT/cPZ4Kl/4JrxMf3BtzK/YbebkZPahmFaT6dH9MBjZBJ59Zp9RvXPPw9EHtE
+	UEx1aEihxVxq++X3uftJ5+iNaLqlXvfRmXN1mtNMRrA03xKieyCh+KFXrQScNVlj19mlUYG66R8sd
+	/w8oDnHIQp4XNOSzcJYQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qqMSy-00ENJF-0P;
-	Tue, 10 Oct 2023 23:48:44 +0000
-Received: from mail-tycjpn01on20616.outbound.protection.outlook.com ([2a01:111:f403:7010::616] helo=JPN01-TYC-obe.outbound.protection.outlook.com)
+	id 1qqOzV-00Eadn-1x;
+	Wed, 11 Oct 2023 02:30:29 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qqMSu-00ENIg-2P
+	id 1qqOzS-00EadL-0o
 	for kexec@lists.infradead.org;
-	Tue, 10 Oct 2023 23:48:42 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QjwCFIipcSkCnQRKYWN89PbPtdKexCJGEPcLJARIl96sQjnYB6bpv9Hff4fJzCd5VqOvTHwOEPZu7UMrYfTCgY+KKcHLe5ulRic2Ox6ht7iG7lzRctrz5RZ6SucuHjTYGhKlI1Q7IM1dnsrU5tHxkNEu1XJL8fVUPIMQjyOcwhBgtgFcy13Ypwyawa3lJo0sI6vA+byT9TiwzsVkMnwdX9ETH53K2gSIKuQkpc/qhE15oagsNFecOOZF1BgfjjTXhztddE2yomssq+hfwKD+IcD90mkH//w5QntNrNEfcwDg/JM5HswtrtV72DUz7BQJ3lZ1R3bEfziyPqeuO3i2Jg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=84yYQEJMku68GtTbIkOOTIZInhgP/BjjH/IDQcEjfag=;
- b=VqmdokQ+FBp2diDrCID6MfqP4sA7vPXBTxuS+vID724k08ShEfnA/A/Wb/AIxvE58ABxYkF4ZLkTDgH5JQ0MOIYy8ZZ4j+o5ild7laANadRSfRla6TmcgXLvfLnPLW8yBOJ17+CNM/3AzZUMvqs+nhx+wLO7ElCUejcp3JKHm0Ea0jOGeJ5mPAGxNCxf0IderiGBYD6RuPKeLfRTIpTUiniPvoFIgCC/Xy3iWO1E2Tsx4g/147So8ORi9c2bgDInJYksDwufiSCz2tdNJvcNnnMxADNWIMx92TRGepXJ1eVyvnUu/3skd8bVKlQeHAxIuzOevd8noKTPUuEi2MIa5w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nec.com; dmarc=pass action=none header.from=nec.com; dkim=pass
- header.d=nec.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nec.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=84yYQEJMku68GtTbIkOOTIZInhgP/BjjH/IDQcEjfag=;
- b=BXHoeLcj0TsjdKEAd3RAc88rI0p4HCQKVe9P6hhx46CeSTb1S989CzDGufAR+gKXGRwwY192nBmdDAxpXd6dOXh12xzkyxHfmQS4xtAqNBkAXWztLBYEogVq5/cKozFazqfKXb+47txXmgXXig588W/h/Hjm0SiFTOIdCKR5ugk=
-Received: from TYYPR01MB6777.jpnprd01.prod.outlook.com (2603:1096:400:cc::9)
- by TYCPR01MB8641.jpnprd01.prod.outlook.com (2603:1096:400:15b::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6863.41; Tue, 10 Oct
- 2023 23:47:15 +0000
-Received: from TYYPR01MB6777.jpnprd01.prod.outlook.com
- ([fe80::114b:1c1a:b05f:8b72]) by TYYPR01MB6777.jpnprd01.prod.outlook.com
- ([fe80::114b:1c1a:b05f:8b72%5]) with mapi id 15.20.6863.040; Tue, 10 Oct 2023
- 23:47:15 +0000
-From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
-	<k-hagio-ab@nec.com>
-To: Song Shuai <songshuaishuai@tinylab.org>, "kexec@lists.infradead.org"
-	<kexec@lists.infradead.org>
-Subject: Re: [PATCH makedumpfile V2 0/2] Add riscv64 support for makedumpfile
-Thread-Topic: [PATCH makedumpfile V2 0/2] Add riscv64 support for makedumpfile
-Thread-Index: AQHZ+4PngD0SLH7kVEGTCny24CwIQ7BDsSgA
-Date: Tue, 10 Oct 2023 23:47:15 +0000
-Message-ID: <31a44176-b4d2-ede7-fb02-58606a17f5f3@nec.com>
-References: <20231010141244.2261488-1-songshuaishuai@tinylab.org>
-In-Reply-To: <20231010141244.2261488-1-songshuaishuai@tinylab.org>
-Accept-Language: ja-JP, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nec.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYYPR01MB6777:EE_|TYCPR01MB8641:EE_
-x-ms-office365-filtering-correlation-id: 9548e9c0-deb4-4611-8886-08dbc9eb3b9f
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: jKlbFNpI8l8qez7/NuxeMNfFzsBm1yLzB4PwrDZl6eYE/u8M034poTbSUSVDVju2cVHy/8yhlOEjjXvHr5q3RTR4EvUMAUvQcbSuAhkGjD82Cn9dtUpZSqhOJunvVveQs5gmCzx9XdwH+1tP+wNOP4gqrEk6EzlpmaQ8hoAeywpJSiBY/wUfUrtjOWkdhlU9cpBxepeCxKAJLja+IBUQStTRJLioQktkVPcxyJ9O883etCNtgBzlg6HgHWxwBH682Sj9wrVWgQBInYxXIqRM1EpaLwXuuoBpjFVJ0uX1pOVtc20hRs6Hl8tpe6ArZUIvUUim5CZa6/ZLafuEoCxzRx5ZsZGhcvM80Z9gesClt1Zw7oNc7dxrcJF1OoCckmmjLePiVqDQGSrzrpL5MaWVsIdgXN6ctCVrvL5Lu3mRqRJrkNUO5+IVkSUGZGEjAdeiVqHYQ45WmfQOxGCHfH/IUtWwe2G4ojiONCJSBxS24um/buxMs07V5YjuZSzpySgxVJEH7+RK8a83JKt5LW7W7qEgMXOHhEGQKrncyHZGAU+RPfAsyu76ZFixk61MTdLCgZ/72KrT7ggqN/kJIYlG3FFDifhdACa9Ya4CbAwNxKXatKbJrugFs+IPjSKii0vNNBljZGV9KzLgIoS85kv7i97xzlGI1tr7/taFGWNVpuo=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYYPR01MB6777.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(366004)(136003)(376002)(39850400004)(346002)(230922051799003)(186009)(1800799009)(64100799003)(451199024)(41300700001)(76116006)(66946007)(8936002)(8676002)(31686004)(2906002)(71200400001)(6506007)(64756008)(66556008)(66446008)(66476007)(5660300002)(110136005)(316002)(478600001)(6486002)(966005)(31696002)(83380400001)(86362001)(26005)(6512007)(85182001)(2616005)(36756003)(38070700005)(82960400001)(38100700002)(122000001)(53546011)(55236004)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?VEdPZHk5c0pka3JOMXo4RnJ2Nnl2alMrRVBUQTFVYUZCMDVyWmhJb1hvQzFw?=
- =?utf-8?B?aVU4V0VRL0poTHVBckozNEM0REFBYjJ0YU5FeG9xNHBaci8vc2FOaEdtanRF?=
- =?utf-8?B?cVFLVE01TGJkc2xJMlZlOExYMWJEQ3JBcGJiMTJKRWVxZTZLVnhCUnRhRTNw?=
- =?utf-8?B?ZHlSTWNkQTV2Y2QxbXlOOU5rZW9iSnZsb2ZrTWMyYkdNOGJPRmw0cUhKYzBL?=
- =?utf-8?B?RmFUNmtOeFBIQzdDQ2J5cnZrbDJGckdsTHdmd2FtUmpuR2xyd2xsSURqOFU2?=
- =?utf-8?B?NThCbTQ5VkF6d3RnN2JTQkVFdjduNmw5SyttWHZNbFZGeW1SQ1lUcExjdXhG?=
- =?utf-8?B?eVRnMzQ1MlUvSVphcjk4UGVobmp4eks2WVZveitvTTdGUTh6enNhbE5qOFMy?=
- =?utf-8?B?dTJtUjlEMGZwMkNZdHdYekZDcFJTeVhaRGZoejVxMXEzRmJtTllYNVNmYkRY?=
- =?utf-8?B?OHozdFEzRk1PaE1GT2ZTSWM3WUx4VHIxUHJQdXh0TFVSN3NYUjFqdEwyMVNp?=
- =?utf-8?B?WVRkaHdXQnE2dHlFcHVOK0lMVzdQaGNtcythN2tCcXczWEJWbWl2NkRFTU9Q?=
- =?utf-8?B?YUdSNXNaOFdqcm5TK1YwbGtjYkI1eU9iT1dWR3VVUUt3SGoxdmdLRnFmMGJ6?=
- =?utf-8?B?dkNLcHphVnpxdWF5enVDaVBOdU42OXNLdytxT3FLMjB0YUd3RmtON1RsamJD?=
- =?utf-8?B?azU5dXBTSTNSNzlSc0tRS0tDZmJxL0hWNHRLamRMdjRXTmd6N0RTY0Fvcjl4?=
- =?utf-8?B?S0dJQnJ6SGlDaGtsWk9LMS9CbFNuaFZ6SENXMUkxUEk2Uzl2VjdTdGdva0Y1?=
- =?utf-8?B?a25wdGtiaTZBOGU0MlJFeXVmTkhNNGJ4N2N5VFRoNWo4VjJJdFVuTkRBUGhQ?=
- =?utf-8?B?azdXMkYvQVl6bmc5aUxzc0RZOG5OQWZNTTN0RFYrRnVUbEdkaU16dTR4N3BB?=
- =?utf-8?B?Z1lwdmVDWHU5U3ZvUkRWb25mbHpNQ0loTi8zMkMxYW00K20yQTlGYUNTNmx4?=
- =?utf-8?B?OWNmWm1TY01BQ3lHVkZqRGJuamtlRFhOSmpEU2pOZllOemxWQjJyNmlGK2RY?=
- =?utf-8?B?T1dMckVwcjNqYTkyMGkzNmJ4bWRXSGNpaXJZa3NOV1hlNmtuWDBDQkgwM1oz?=
- =?utf-8?B?M21EM0RBM0QxeVFhVzM5dnFrTEx6aytLc1dia2ZLa0VxWjFxSlhnVDJINGNS?=
- =?utf-8?B?YTNrOGZmVHhqS3lCcnhWK1I3Syt6N2lackxIZkJYcU9QemRJd1BhOTVFUnhn?=
- =?utf-8?B?eC96cFlrakFSY2tCcUFYNVhYM3BPRXAvdUo2cExybHhodWRSM0hBTjJzRDQx?=
- =?utf-8?B?S1Q4M2haWm1pRWRzQjNqcWQxSExZTEZyOVQ1RHd1d21ya0tSWDVrTHV1ZU5P?=
- =?utf-8?B?VjVlTzJ3THFtWXRmVkZhRTVianpxeTNUZG9jQ0VOLzNHVG94eWc5T1g2V0Ni?=
- =?utf-8?B?SmtRS251dTRzR05JSmFZUk9TVHFvazNyejRwY0tjbnVVS3V1U3FCeENpbjVo?=
- =?utf-8?B?YUgyT3ViSS9nNElsOEtiaGRaV0lzaHpRNTJ5MlhrN3JjOFRNejhyYlRrcW03?=
- =?utf-8?B?bjBPa0xJOGM5aVJEbnhNcWExM1NXSkFKSnpBZGV2WExkRGVjdXU4TFcrV3A5?=
- =?utf-8?B?VjJ3Z3hzS2V0MnZrVXZVQ0h5K25VMEVCaXloQVBSNStUZGk1N0RjMks3dU44?=
- =?utf-8?B?L01KaWRjY0ZmQ1o5U3ZLL1c5WjluTThYd0ZWQ0Q2bEY1VVdRRjhORG5TNTFR?=
- =?utf-8?B?aGZmd2IwcmRFZEF6VkVtNVJzMGJwWjFtMWpFQ041bjhQNmJaT013dm5kMlJZ?=
- =?utf-8?B?dEhVMUpCdjJEYjFGMjJKQUhwLzBMTXloUmFNYzJReXl5M25LMHVhWWRYdUpL?=
- =?utf-8?B?V1VsWUNYQk0rVTk3dkExVXhya1Q4NSszZDdCYjhiaDVVUE1OVjFiUVBNUzA0?=
- =?utf-8?B?aVlCRmp5Um93cHkzTVYzRmo0b0U4VkpDT29PVk03RWpWOEh2eUxsaDhhVVRi?=
- =?utf-8?B?bHQ1bVY3Qkk3c2pzckVKYjVtZTh0Rkt5dkl5QjlEYVQycktQbUE0d1pURzE1?=
- =?utf-8?B?ME9TcEg1ajlEUUtKSjE0SkVtWWJ3OXIxdUY5YnI4dVNrNW5BNnJJbTZ0b3p0?=
- =?utf-8?B?alVxZGJNaGxQbU1MdU9qUTRlY1B5VEY3QUpxTndzMFJrMGFPME1BaDl2VEww?=
- =?utf-8?B?cGc9PQ==?=
-Content-ID: <D09726A261E3B3488682D28C3412B4D3@jpnprd01.prod.outlook.com>
+	Wed, 11 Oct 2023 02:30:28 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1696991421;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rcUpikdqlVkBFBhmn8IVM/gEwzIZ0mlDiQYCj1NI/Vs=;
+	b=grXQeIyhHUMu99KWl97XAG4N4F5lybKqSCPsTK9+JlWIqRlxbAuX8IOE47NXDbciaAwteo
+	kkcoIfIlIfL85xfYw/YAVsPk1DUcgA4a6mLtmtKVGgGusK9Fi9C4h930azG5Ghyx1aC0Tj
+	fl1ojGNnuy0Qm4oouktk1XDohvztXmQ=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-152-mTBYO2vIN4K-a7mC1a4OeA-1; Tue, 10 Oct 2023 22:30:13 -0400
+X-MC-Unique: mTBYO2vIN4K-a7mC1a4OeA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 11513101A585;
+	Wed, 11 Oct 2023 02:30:13 +0000 (UTC)
+Received: from piliu.users.ipa.redhat.com (unknown [10.72.120.9])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7AE0C40C6F79;
+	Wed, 11 Oct 2023 02:30:08 +0000 (UTC)
+Date: Wed, 11 Oct 2023 10:30:04 +0800
+From: Pingfan Liu <piliu@redhat.com>
+To: Sourabh Jain <sourabhjain@linux.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org, Baoquan He <bhe@redhat.com>,
+	kexec@lists.infradead.org, Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+	Nicholas Piggin <npiggin@gmail.com>, Ming Lei <ming.lei@redhat.com>,
+	Wen Xiong <wenxiong@us.ibm.com>
+Subject: Re: [PATCHv8 1/5] powerpc/setup : Enable boot_cpu_hwid for PPC32
+Message-ID: <ZSYIrNRSxzkiPqv+@piliu.users.ipa.redhat.com>
+References: <20231009113036.45988-1-piliu@redhat.com>
+ <20231009113036.45988-2-piliu@redhat.com>
+ <36b2aa11-dfd9-529d-0386-aa181caeb93f@linux.ibm.com>
+ <7da645c3-2899-fb01-bf11-392b9bd52e38@linux.ibm.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nec.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYYPR01MB6777.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9548e9c0-deb4-4611-8886-08dbc9eb3b9f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Oct 2023 23:47:15.7763
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: e67df547-9d0d-4f4d-9161-51c6ed1f7d11
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: E9O1LGWG+zRGFLxAG9RZgmnV8cOfgDbVJVCDwxIgg+gER/m7BDjwVR270+X4hpNoS7CYLLHe3xsa0aATKqoiJQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB8641
+In-Reply-To: <7da645c3-2899-fb01-bf11-392b9bd52e38@linux.ibm.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231010_164841_071069_22ADA188 
-X-CRM114-Status: GOOD (  22.64  )
+X-CRM114-CacheID: sfid-20231010_193026_388884_24A9E7CF 
+X-CRM114-Status: GOOD (  23.94  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -140,144 +83,273 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2023/10/10 23:12, Song Shuai wrote:
-> Changes since V1:
-> https://lore.kernel.org/kexec/20230927111822.180630-1-songshuaishuai@tinylab.org/
-> 
-> - fix a typo in Patch2's commit-msg
-> - adjust some indentions of Patch1
+On Tue, Oct 10, 2023 at 02:38:40PM +0530, Sourabh Jain wrote:
+> Hello Pingfan,
+> =
 
-Thank you, but already applied the v1 patches with fixes on my end:
-https://github.com/makedumpfile/makedumpfile/compare/a34f017...aee7f3b
+> > =
 
-I should have sent this link, sorry about that.
+> > With this patch series applied, the kdump kernel fails to boot on
+> > powerpc with nr_cpus=3D1.
+> > =
+
+> > Console logs:
+> > -------------------
+> > [root]# echo c > /proc/sysrq-trigger
+> > [=A0=A0 74.783235] sysrq: Trigger a crash
+> > [=A0=A0 74.783244] Kernel panic - not syncing: sysrq triggered crash
+> > [=A0=A0 74.783252] CPU: 58 PID: 3838 Comm: bash Kdump: loaded Not taint=
+ed
+> > 6.6.0-rc5pf-nr-cpus+ #3
+> > [=A0=A0 74.783259] Hardware name: POWER10 (raw) phyp pSeries
+> > [=A0=A0 74.783275] Call Trace:
+> > [=A0=A0 74.783280] [c00000020f4ebac0] [c000000000ed9f38]
+> > dump_stack_lvl+0x6c/0x9c (unreliable)
+> > [=A0=A0 74.783291] [c00000020f4ebaf0] [c000000000150300] panic+0x178/0x=
+438
+> > [=A0=A0 74.783298] [c00000020f4ebb90] [c000000000936d48]
+> > sysrq_handle_crash+0x28/0x30
+> > [=A0=A0 74.783304] [c00000020f4ebbf0] [c00000000093773c]
+> > __handle_sysrq+0x10c/0x250
+> > [=A0=A0 74.783309] [c00000020f4ebc90] [c000000000937fa8]
+> > write_sysrq_trigger+0xc8/0x168
+> > [=A0=A0 74.783314] [c00000020f4ebcd0] [c000000000665d8c]
+> > proc_reg_write+0x10c/0x1b0
+> > [=A0=A0 74.783321] [c00000020f4ebd00] [c00000000058da54]
+> > vfs_write+0x104/0x4b0
+> > [=A0=A0 74.783326] [c00000020f4ebdc0] [c00000000058dfdc]
+> > ksys_write+0x7c/0x140
+> > [=A0=A0 74.783331] [c00000020f4ebe10] [c000000000033a64]
+> > system_call_exception+0x144/0x3a0
+> > [=A0=A0 74.783337] [c00000020f4ebe50] [c00000000000c554]
+> > system_call_common+0xf4/0x258
+> > [=A0=A0 74.783343] --- interrupt: c00 at 0x7fffa0721594
+> > [=A0=A0 74.783352] NIP:=A0 00007fffa0721594 LR: 00007fffa0697bf4 CTR:
+> > 0000000000000000
+> > [=A0=A0 74.783364] REGS: c00000020f4ebe80 TRAP: 0c00=A0=A0 Not tainted
+> > (6.6.0-rc5pf-nr-cpus+)
+> > [=A0=A0 74.783376] MSR:=A0 800000000280f033
+> > <SF,VEC,VSX,EE,PR,FP,ME,IR,DR,RI,LE>=A0 CR: 28222202=A0 XER: 00000000
+> > [=A0=A0 74.783394] IRQMASK: 0
+> > [=A0=A0 74.783394] GPR00: 0000000000000004 00007ffffc4b6800 00007fffa08=
+07300
+> > 0000000000000001
+> > [=A0=A0 74.783394] GPR04: 000000013549ea60 0000000000000002 00000000000=
+00010
+> > 0000000000000000
+> > [=A0=A0 74.783394] GPR08: 0000000000000000 0000000000000000 00000000000=
+00000
+> > 0000000000000000
+> > [=A0=A0 74.783394] GPR12: 0000000000000000 00007fffa0abaf70 00000000400=
+00000
+> > 000000011a0f9798
+> > [=A0=A0 74.783394] GPR16: 000000011a0f9724 000000011a097688 000000011a0=
+2ff70
+> > 000000011a0fd568
+> > [=A0=A0 74.783394] GPR20: 0000000135554bf0 0000000000000001 000000011a0=
+aa478
+> > 00007ffffc4b6a24
+> > [=A0=A0 74.783394] GPR24: 00007ffffc4b6a20 000000011a0faf94 00000000000=
+00002
+> > 000000013549ea60
+> > [=A0=A0 74.783394] GPR28: 0000000000000002 00007fffa08017a0 00000001354=
+9ea60
+> > 0000000000000002
+> > [=A0=A0 74.783440] NIP [00007fffa0721594] 0x7fffa0721594
+> > [=A0=A0 74.783443] LR [00007fffa0697bf4] 0x7fffa0697bf4
+> > [=A0=A0 74.783447] --- interrupt: c00
+> > I'm in purgatory
+> > [=A0=A0=A0 0.000000] radix-mmu: Page sizes from device-tree:
+> > [=A0=A0=A0 0.000000] radix-mmu: Page size shift =3D 12 AP=3D0x0
+> > [=A0=A0=A0 0.000000] radix-mmu: Page size shift =3D 16 AP=3D0x5
+> > [=A0=A0=A0 0.000000] radix-mmu: Page size shift =3D 21 AP=3D0x1
+> > [=A0=A0=A0 0.000000] radix-mmu: Page size shift =3D 30 AP=3D0x2
+> > [=A0=A0=A0 0.000000] Activating Kernel Userspace Access Prevention
+> > [=A0=A0=A0 0.000000] Activating Kernel Userspace Execution Prevention
+> > [=A0=A0=A0 0.000000] radix-mmu: Mapped 0x0000000000000000-0x00000000000=
+10000
+> > with 64.0 KiB pages (exec)
+> > [=A0=A0=A0 0.000000] radix-mmu: Mapped 0x0000000000010000-0x00000000002=
+00000
+> > with 64.0 KiB pages
+> > [=A0=A0=A0 0.000000] radix-mmu: Mapped 0x0000000000200000-0x00000000200=
+00000
+> > with 2.00 MiB pages
+> > [=A0=A0=A0 0.000000] radix-mmu: Mapped 0x0000000020000000-0x00000000226=
+00000
+> > with 2.00 MiB pages (exec)
+> > [=A0=A0=A0 0.000000] radix-mmu: Mapped 0x0000000022600000-0x00000000400=
+00000
+> > with 2.00 MiB pages
+> > [=A0=A0=A0 0.000000] radix-mmu: Mapped 0x0000000040000000-0x00000001800=
+00000
+> > with 1.00 GiB pages
+> > [=A0=A0=A0 0.000000] radix-mmu: Mapped 0x0000000180000000-0x00000001a00=
+00000
+> > with 2.00 MiB pages
+> > [=A0=A0=A0 0.000000] lpar: Using radix MMU under hypervisor
+> > [=A0=A0=A0 0.000000] Linux version 6.6.0-rc5pf-nr-cpus+
+> > (root@ltcever7x0-lp1.aus.stglabs.ibm.com) (gcc (GCC) 8.5.0 20210514 (Red
+> > Hat 8.5.0-20), GNU ld version 2.30-123.el8) #3 SMP Mon Oct=A0 9 11:07:
+> > 41 CDT 2023
+> > [=A0=A0=A0 0.000000] Found initrd at 0xc000000022e60000:0xc0000000248f0=
+8d8
+> > [=A0=A0=A0 0.000000] Hardware name: IBM,9043-MRX POWER10 (raw) 0x800200
+> > 0xf000006 of:IBM,FW1060.00 (NM1060_016) hv:phyp pSeries
+> > [=A0=A0=A0 0.000000] printk: bootconsole [udbg0] enabled
+> > [=A0=A0=A0 0.000000] the round shift between dt seq and the cpu logic n=
+umber:
+> > 56
+> > [=A0=A0=A0 0.000000] BUG: Unable to handle kernel data access on write =
+at
+> > 0xc0000001a0000000
+> > [=A0=A0=A0 0.000000] Faulting instruction address: 0xc000000022009c64
+> > [=A0=A0=A0 0.000000] Oops: Kernel access of bad area, sig: 11 [#1]
+> > [=A0=A0=A0 0.000000] LE PAGE_SIZE=3D64K MMU=3DRadix SMP NR_CPUS=3D2048 =
+NUMA pSeries
+> > [=A0=A0=A0 0.000000] Modules linked in:
+> > [=A0=A0=A0 0.000000] CPU: 2 PID: 0 Comm: swapper Not tainted
+> > 6.6.0-rc5pf-nr-cpus+ #3
+> > [=A0=A0=A0 0.000000] Hardware name:=A0 POWER10 (raw)=A0 hv:phyp pSeries
+> > [=A0=A0=A0 0.000000] NIP:=A0 c000000022009c64 LR: c000000022009c54 CTR:
+> > c0000000201ff348
+> > [=A0=A0=A0 0.000000] REGS: c000000022aebb00 TRAP: 0300=A0=A0 Not tainted
+> > (6.6.0-rc5pf-nr-cpus+)
+> > [=A0=A0=A0 0.000000] MSR:=A0 8000000000001033 <SF,ME,IR,DR,RI,LE> CR: 2=
+8222824=A0
+> > XER: 00000001
+> > [=A0=A0=A0 0.000000] CFAR: c000000020031574 DAR: c0000001a0000000 DSISR:
+> > 42000000 IRQMASK: 1
+> > [=A0=A0=A0 0.000000] GPR00: c000000022009ba0 c000000022aebda0 c00000002=
+13d1300
+> > 0000000000000004
+> > [=A0=A0=A0 0.000000] GPR04: 0000000000000001 c000000022aebbc0 c00000002=
+2aebbb8
+> > 0000000000000000
+> > [=A0=A0=A0 0.000000] GPR08: 0000000000000001 c00000019ffffff8 000000000=
+000003a
+> > c0000000229c8a78
+> > [=A0=A0=A0 0.000000] GPR12: 0000000000002000 c000000022e4a800 c00000002=
+11d34b8
+> > c0000000211d3aa8
+> > [=A0=A0=A0 0.000000] GPR16: c0000000211d75a0 c0000000211d75b0 c00000002=
+25f3b98
+> > 0000000000000000
+> > [=A0=A0=A0 0.000000] GPR20: 0000000000000001 0000000000000001 000000000=
+0000001
+> > 0000000000000001
+> > [=A0=A0=A0 0.000000] GPR24: 0000000000000008 0000000000000000 000000000=
+0000001
+> > c00000019ffffdc0
+> > [=A0=A0=A0 0.000000] GPR28: 0000000000000002 c000000022b368e0 c00000002=
+2aebe08
+> > 0000000000000008
+> > [=A0=A0=A0 0.000000] NIP [c000000022009c64] smp_setup_cpu_maps+0x420/0x=
+724
+> > [=A0=A0=A0 0.000000] LR [c000000022009c54] smp_setup_cpu_maps+0x410/0x7=
+24
+> > [=A0=A0=A0 0.000000] Call Trace:
+> > [=A0=A0=A0 0.000000] [c000000022aebda0] [c000000022009ba0]
+> > smp_setup_cpu_maps+0x35c/0x724 (unreliable)
+> > [=A0=A0=A0 0.000000] [c000000022aebeb0] [c00000002200a19c]
+> > setup_arch+0x1b8/0x54c
+> > [=A0=A0=A0 0.000000] [c000000022aebf30] [c000000022003f88]
+> > start_kernel+0xb0/0x768
+> > [=A0=A0=A0 0.000000] [c000000022aebfe0] [c00000002000d888]
+> > start_here_common+0x1c/0x20
+> > [=A0=A0=A0 0.000000] Code: 3929ffff 7f89e040 409c002c 7ec4b378 7f83e378
+> > 4a027939 7f83e378 4a0278e5 e95b0018 3d22017d e929f028 7d4ac42c
+> > <7d49c12e> eb7b0000 7e99a378 4bffff3c
+> =
+
+> The faulting instruction address, 0xc000000022009c6, corresponds to the c=
+ode
+> below:
+> =
+
+> File:
+> arch/powerpc/kernel/setup-common.c
+> =
+
+> Function
+> void __init smp_setup_cpu_maps(void)
+> {
+> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 ...
+> =A0=A0 =A0=A0=A0=A0 =A0=A0=A0 cpu_to_phys_id[bt_thread] =3D
+> be32_to_cpu(intserv_node->intserv[bt_thread]);
+> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 ...
+> }
+> =
+
+> Hope it helps.
+> =
+
+
+Appreciate your help.
+
+This issue should be linked with the capability of cpu_to_phys_id[].
+
+Could you please to try the fix suggested at the end of the email? =
+
+It should be a fix for =
+
+[PATCHv8 3/5] powerpc/setup: Handle the case when boot_cpuid greater than n=
+r_cpus
+
 
 Thanks,
-Kazu
 
-> 
-> 
-> These 2 patches add riscv64 support for makedumpfile:
-> 
-> Patch1 - Add riscv64 support
-> ===========================
-> 
-> This patch adds support for riscv64 in makedumpfile.
-> It implements the "vtop" for kenrel memory regions
-> and supports Sv39/Sv48/Sv57 page modes for RV64.
-> 
-> 
-> Patch2 - riscv64: Correct the pfn_start for flatmem
-> ==================================================
-> 
-> This patch temporarily fixes a issue of the tests about FLATMEM,
-> as the commit-msg says:
->    
->      To let info->max_mapnr indicate the direct max PFN and then
->      make the kdump header's max_mapnr_64 correct, riscv64 port
->      didn't define ARCH_PFN_OFFSET.
->      
->      As for FLATMEM type, the pfn region of mem_map_data should
->      be adjusted to start from info->phys_base instead of zero.
-> 
-> 
-> Tests
-> =====
-> 
-> With these 2 patches, the following tests had passed in RV64 Qemu virt machine:
-> 
-> Preparation:
-> -----------
-> 
-> 1. build kernel with FLATMEM and SPARSE memory models
-> 2. boot kernel with 3 different page-modes by setting nov4l/nov5l in cmdline
-> 3. panic kernel
-> 
-> Tests:
-> -----
-> 
-> 1. create kdump-compressed file via this command
->     - `/mnt/mkdf_f -d31 -f -c /proc/vmcore /mnt/dump.file1`
->     - or with `--vtop` option to translate some typical addresses (like:
->       kernel_link_addr, vmalloc_start, page_offset)
-> 
-> 2. start crash with kdump file and do some VTOPs
-> 
-> 
-> A test log:
-> -----------
-> 
-> # With the Sv57 and SPARSE_EXTREME kernel
-> # vtop the vmalloc start address -- 0xff20000000000000
-> 
-> 
-> # /mnt/mkdf_f  --vtop 0xff20000000000000 -d31 -f --non-mmap -c /proc/vmcore /mnt/dump.file1
-> 
-> Translating virtual address ff20000000000000 to physical address.
-> VIRTUAL           PHYSICAL
-> ff20000000000000  80087000
-> 
-> Copying data                                      : [100.0 %] |
-> eta: 0s
-> 
-> The dumpfile is saved to /mnt/dump.file1.
-> 
-> makedumpfile Completed.
-> 
-> # sudo ../crash/crash /home/song/9_linux/linux/00_rv_def/vmlinux /tmp/hello/dump.file1
-> ...
->        KERNEL: /home/song/9_linux/linux/00_rv_def/vmlinux
->      DUMPFILE: /tmp/hello/dump.file1  [PARTIAL DUMP]
->          CPUS: 2
->          DATE: Wed Sep 27 18:37:45 CST 2023
->        UPTIME: 00:00:18
-> LOAD AVERAGE: 0.00, 0.00, 0.00
->         TASKS: 55
->      NODENAME: (none)
->       RELEASE: 6.6.0-rc1-00007-g22bfc766389c
->       VERSION: #1 SMP Mon Sep 25 19:29:05 CST 2023
->       MACHINE: riscv64  (unknown Mhz)
->        MEMORY: 511.8 MB
->         PANIC: "Kernel panic - not syncing: sysrq triggered crash"
->           PID: 1
->       COMMAND: "sh"
->          TASK: ff600000000e0000  [THREAD_INFO: ff600000000e0000]
->           CPU: 1
->         STATE: TASK_RUNNING (PANIC)
-> 
-> crash> vtop 0xff20000000000000
-> VIRTUAL           PHYSICAL
-> ff20000000000000  80087000
-> 
->    PGD: ffffffff814fa900 => 20010c01
->    P4D: 0000000080043000 => 0000000020025401
->    PUD: 0000000080095000 => 0000000020025801
->    PMD: 0000000080096000 => 0000000020026001
->    PTE: 80098000 => 20021ce7
->   PAGE: 0000000080087000
-> 
->    PTE     PHYSICAL  FLAGS
-> 20021ce7  80087000  (PRESENT|READ|WRITE|GLOBAL|ACCESSED|DIRTY)
-> 
->        PAGE       PHYSICAL      MAPPING       INDEX CNT FLAGS
-> ff1c0000020021c0 80087000                0        0  1 0  // same as the makedumpfile's vtop
-> 
-> Song Shuai (2):
->    Add riscv64 support
->    riscv64: Correct the pfn_start for flatmem
-> 
->   Makefile       |   2 +-
->   arch/riscv64.c | 219 +++++++++++++++++++++++++++++++++++++++++++++++++
->   makedumpfile.c |  18 ++++
->   makedumpfile.h | 107 ++++++++++++++++++++++++
->   4 files changed, 345 insertions(+), 1 deletion(-)
->   create mode 100644 arch/riscv64.c
-> 
+Pingfan
+
+---
+
+diff --git a/arch/powerpc/kernel/setup-common.c b/arch/powerpc/kernel/setup=
+-common.c
+index bd7853a4bc91..849adc7a4b47 100644
+--- a/arch/powerpc/kernel/setup-common.c
++++ b/arch/powerpc/kernel/setup-common.c
+@@ -464,12 +464,6 @@ void __init smp_setup_cpu_maps(void)
+ 	DBG("smp_setup_cpu_maps()\n");
+ =
+
+ 	INIT_LIST_HEAD(&head);
+-	cpu_to_phys_id =3D memblock_alloc(nr_cpu_ids * sizeof(u32),
+-					__alignof__(u32));
+-	if (!cpu_to_phys_id)
+-		panic("%s: Failed to allocate %zu bytes align=3D0x%zx\n",
+-		      __func__, nr_cpu_ids * sizeof(u32), __alignof__(u32));
+-
+ 	for_each_node_by_type(dn, "cpu") {
+ 		const __be32 *intserv;
+ 		__be32 cpu_be;
+@@ -533,6 +527,16 @@ void __init smp_setup_cpu_maps(void)
+ 		}
+ =
+
+ 	}
++
++	/* There may be hole between cpu0 and boot cpu */
++	j =3D (bt_thread + 1) > nr_cpu_ids ? (bt_thread + 1) : nr_cpu_ids;
++	cpu_to_phys_id =3D memblock_alloc(j * sizeof(u32),
++					__alignof__(u32));
++	if (!cpu_to_phys_id)
++		panic("%s: Failed to allocate %zu bytes align=3D0x%zx\n",
++		      __func__, nr_cpu_ids * sizeof(u32), __alignof__(u32));
++
++
+ 	cpu =3D 0;
+ 	list_del_init(&head);
+ 	/* Select the primary thread, the boot cpu's slibing, as the logic 0 */
+-- =
+
+2.31.1
+
+
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
