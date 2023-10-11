@@ -4,42 +4,42 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id F35D8CD6119
-	for <kexec@archiver.kernel.org>; Wed, 11 Oct 2023 08:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EB5A4CD6115
+	for <kexec@archiver.kernel.org>; Wed, 11 Oct 2023 08:33:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=nf/a/VE2h/cfstsjZXiYU9AWaMxFX2F14je7PlSTBV4=; b=YjA42JyaGFDIB2
-	ROIIfkuRfw8DmVwo6p1su+R6GCwVYJRwrOjRNgEdkX6TBvQxswjm7bcoom8xaD8XaimUqz2oL4hr6
-	c6bUoDsFhFg4vSjILFZNV/V/JMHpRvBgm3+3n9n+KPUMgLD7MKhVv3bL6C3cFloHAAd+GQ5HguGYx
-	j2xZ+VSCPa+7rNbaQWdLZ4jyZ2cpS4DirqgKYnpV00AWKGbyuMno4jcrbEkXfYTrkZBDMJhItIZZD
-	T33cPwmFbTF8H7IN/ODmd3tBmam3qodjTVXoLTsKTUOgGv9yhmixc4bO8awoWr5mvNP6u6+4E2w/T
-	04CLTBQQvkMULsFi9ATA==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=SsYSPIIwTn4a98tx1Wk62adBCycyTb3lU2JcvIm4eqQ=; b=fQMml5Wx57RS6V
+	mE8SAw0bemWWN50DbvclD+XiM6C6b4vBxCWVroTiajmxlenzbxaf2E3qd+5EraWeQVHjPQA40WyU3
+	eGDgyV/cbEN1oaC/unaG8csTLcbNHB/ZCzq6aUxL7O1gkYZO0mPn+z8P2OspmDz91bLndANqY38R3
+	X6qKn8jb6SZqlnAlDz+w3/8Y893GZl+u9LJjhfHn/FkeUwiQSDe222EQ0e7KigOSWjDfZw6hglTyy
+	SU//0JzcApnLDwbzStq07yzmaGQceTlL71bdsKlhSg+qIl3+sn5CeT3SwgVRz+NSiFN+o7Ih8+Eew
+	Mzye1KVfb9YpSrlI5Gyg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qqUeV-00FEOW-0n;
-	Wed, 11 Oct 2023 08:33:11 +0000
+	id 1qqUfE-00FEUa-1X;
+	Wed, 11 Oct 2023 08:33:56 +0000
 Received: from bg4.exmail.qq.com ([43.155.67.158])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qqUeR-00FENv-1A
+	id 1qqUfA-00FETu-2b
 	for kexec@lists.infradead.org;
-	Wed, 11 Oct 2023 08:33:09 +0000
-X-QQ-mid: bizesmtp79t1697013121tlm25yi8
+	Wed, 11 Oct 2023 08:33:55 +0000
+X-QQ-mid: bizesmtp86t1697013186tw7nlhwm
 Received: from localhost.localdomain ( [58.240.82.166])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 11 Oct 2023 16:31:58 +0800 (CST)
+	id ; Wed, 11 Oct 2023 16:33:04 +0800 (CST)
 X-QQ-SSF: 01200000000000B0B000000A0000000
-X-QQ-FEAT: C46Rb8GPIEdRSjq04tLpVIm4rBqIg5ZDlkNPqFv6Y1o3yJcnC8ZRmxn2xUPbG
-	5aqHDTFlNXyfj9EkRqGPEVLCeEME8D4N5AzoJUCDAT3UjzV5Z0ci7+03OQwZkTZLsqT64MD
-	T3ppIzbnyfGx1e8sgzAkoZrig0RpTYyQD70vxYnOf7jHBi+18d9R9W2t1SXwMwkehA42LUA
-	epsjv/QxJYlIW/iExD63iNaVCDclscyD3+WHo4bG0As7W+VaJPI7hyDtJ8Oa8EPnaD3XSoS
-	KixdppXwX0rrquohicpmRPgk0rYlV8M8UJVN2n6X81C8Q48pgjLEM90fTs3637yXkF2X+5w
-	rwxmvRrV2vPyRNqALNrym8K18haX46uW0fzwoZlSB7pU00ib60YvCmV0srlyg==
+X-QQ-FEAT: DpiahrQ8wyJg9GMX+5CGpkVkHTz8Lz+LJrrpYtf7D73/ry6DrR747E+FghQW5
+	oRfhUKD/daG8ib41PZLKypfiA15MjMNzpNJcN7b9TeoNlyAsjLntA3SiTG/Aegv2eu46FYQ
+	ML+3IzlgjZJzeHFxNOx6fpFv+6OuY2ANQffMIsToUB3sW0RlgKkwD5ufbiVmJeIfJ0wTzBf
+	hXoA8IWPnZ/q/GVVT7ZaXYE/e7769qWdhciPKxZ/5TtYfGSXCHHQgsscy6BCzN19bAlOIcT
+	4+poDAX0vDzH1UEnYJ+3Ck1UYh8nancQhSqDqGzTN7yqikEH8t577Rrzg5m2FtRiQ4ECeOO
+	jUIVdSkjNfCWRiZwQzGyw9PBJoaI8bDUrbUrkmpBe22KYXSDDppoRtcfqNtAw==
 X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 15077306528228941013
+X-BIZMAIL-ID: 18166619308426436661
 From: Song Shuai <songshuaishuai@tinylab.org>
 To: paul.walmsley@sifive.com,
 	palmer@dabbelt.com,
@@ -59,17 +59,18 @@ To: paul.walmsley@sifive.com,
 Cc: linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	kexec@lists.infradead.org
-Subject: [PATCH V2 0/2] riscv: kexec: cleanup and fixups
-Date: Wed, 11 Oct 2023 16:31:30 +0800
-Message-Id: <20231011083132.2428720-1-songshuaishuai@tinylab.org>
+Subject: [PATCH 1/2] riscv: kexec: Cleanup riscv_kexec_relocate
+Date: Wed, 11 Oct 2023 16:31:31 +0800
+Message-Id: <20231011083132.2428720-2-songshuaishuai@tinylab.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20231011083132.2428720-1-songshuaishuai@tinylab.org>
+References: <20231011083132.2428720-1-songshuaishuai@tinylab.org>
 MIME-Version: 1.0
 X-QQ-SENDSIZE: 520
 Feedback-ID: bizesmtp:tinylab.org:qybglogicsvrsz:qybglogicsvrsz4a-0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231011_013307_722340_92996930 
-X-CRM114-Status: UNSURE (   8.20  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20231011_013353_174064_F8785049 
+X-CRM114-Status: GOOD (  10.18  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,47 +87,130 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Changes since V1:
-https://lore.kernel.org/linux-riscv/20230907103304.590739-1-songshuaishuai@tinylab.org/
-
-- the old Patch2 in V1 had been merged to riscv/fixes, so take it out of this series  
-- Patch1 : replace `.align 2` with `.balign 4` as Andreas suggested
-- Patch2 : fix the conflict caused by commit a72ab0361110 ("riscv/purgatory: Disable CFI")
-
-
-riscv: kexec: Cleanup riscv_kexec_relocate (Patch1)
-==================================================
-
 For readability and simplicity, cleanup the riscv_kexec_relocate code:
 
- - Re-sort the first 4 `mv` instructions against `riscv_kexec_method()`
- - Eliminate registers for debugging (s9,s10,s11) and storing const-value (s5,s6)
- - Replace `jalr` with `jr` for no-link jump
+- Re-sort the first 4 `mv` instructions against `riscv_kexec_method()`
+- Eliminate registers for debugging (s9,s10,s11) and storing const-value (s5,s6)
+- Replace `jalr` with `jr` for no-link jump
 
-riscv: kexec: Remove -fPIE for PURGATORY_CFLAGS (Patch2 : the Patch3 in V1)
-==========================================================================
+I tested this on Qemu virt machine and works as it was.
 
-With CONFIG_RELOCATABLE enabled, KBUILD_CFLAGS had a -fPIE option
-and then the purgatory/string.o was built to reference _ctype symbol
-via R_RISCV_GOT_HI20 relocations which can't be handled by purgatory.
-
-As a consequence, the kernel failed kexec_load_file() with:
-
-[  880.386562] kexec_image: The entry point of kernel at 0x80200000
-[  880.388650] kexec_image: Unknown rela relocation: 20
-[  880.389173] kexec_image: Error loading purgatory ret=-8
-
-So remove the -fPIE option for PURGATORY_CFLAGS to generate
-R_RISCV_PCREL_HI20 relocations type making puragtory work as it was.
-
-Song Shuai (2):
-  riscv: kexec: Cleanup riscv_kexec_relocate
-  riscv: kexec: Remove -fPIE for PURGATORY_CFLAGS
-
+Signed-off-by: Song Shuai <songshuaishuai@tinylab.org>
+---
  arch/riscv/kernel/kexec_relocate.S | 54 +++++++++++++-----------------
- arch/riscv/purgatory/Makefile      |  4 +++
- 2 files changed, 28 insertions(+), 30 deletions(-)
+ 1 file changed, 24 insertions(+), 30 deletions(-)
 
+diff --git a/arch/riscv/kernel/kexec_relocate.S b/arch/riscv/kernel/kexec_relocate.S
+index 059c5e216ae7..ece5591abc4e 100644
+--- a/arch/riscv/kernel/kexec_relocate.S
++++ b/arch/riscv/kernel/kexec_relocate.S
+@@ -17,27 +17,17 @@ SYM_CODE_START(riscv_kexec_relocate)
+ 	 * s1: (const) Phys address to jump to after relocation
+ 	 * s2: (const) Phys address of the FDT image
+ 	 * s3: (const) The hartid of the current hart
+-	 * s4: Pointer to the destination address for the relocation
+-	 * s5: (const) Number of words per page
+-	 * s6: (const) 1, used for subtraction
+-	 * s7: (const) kernel_map.va_pa_offset, used when switching MMU off
+-	 * s8: (const) Physical address of the main loop
+-	 * s9: (debug) indirection page counter
+-	 * s10: (debug) entry counter
+-	 * s11: (debug) copied words counter
++	 * s4: (const) kernel_map.va_pa_offset, used when switching MMU off
++	 * s5: Pointer to the destination address for the relocation
++	 * s6: (const) Physical address of the main loop
+ 	 */
+ 	mv	s0, a0
+ 	mv	s1, a1
+ 	mv	s2, a2
+ 	mv	s3, a3
+-	mv	s4, zero
+-	li	s5, (PAGE_SIZE / RISCV_SZPTR)
+-	li	s6, 1
+-	mv	s7, a4
+-	mv	s8, zero
+-	mv	s9, zero
+-	mv	s10, zero
+-	mv	s11, zero
++	mv	s4, a4
++	mv	s5, zero
++	mv	s6, zero
+ 
+ 	/* Disable / cleanup interrupts */
+ 	csrw	CSR_SIE, zero
+@@ -52,21 +42,27 @@ SYM_CODE_START(riscv_kexec_relocate)
+ 	 * the start of the loop below so that we jump there in
+ 	 * any case.
+ 	 */
+-	la	s8, 1f
+-	sub	s8, s8, s7
+-	csrw	CSR_STVEC, s8
++	la	s6, 1f
++	sub	s6, s6, s4
++	csrw	CSR_STVEC, s6
++
++	/*
++	 * With C-extension, here we get 42 Bytes and the next
++	 * .balign directive would pad zeros here up to 44 Bytes.
++	 * So manually put a nop here to avoid zeros padding.
++	*/
++	nop
+ 
+ 	/* Process entries in a loop */
+-.align 2
++.balign 4
+ 1:
+-	addi	s10, s10, 1
+ 	REG_L	t0, 0(s0)		/* t0 = *image->entry */
+ 	addi	s0, s0, RISCV_SZPTR	/* image->entry++ */
+ 
+ 	/* IND_DESTINATION entry ? -> save destination address */
+ 	andi	t1, t0, 0x1
+ 	beqz	t1, 2f
+-	andi	s4, t0, ~0x1
++	andi	s5, t0, ~0x1
+ 	j	1b
+ 
+ 2:
+@@ -74,9 +70,8 @@ SYM_CODE_START(riscv_kexec_relocate)
+ 	andi	t1, t0, 0x2
+ 	beqz	t1, 2f
+ 	andi	s0, t0, ~0x2
+-	addi	s9, s9, 1
+ 	csrw	CSR_SATP, zero
+-	jalr	zero, s8, 0
++	jr	s6
+ 
+ 2:
+ 	/* IND_DONE entry ? -> jump to done label */
+@@ -92,14 +87,13 @@ SYM_CODE_START(riscv_kexec_relocate)
+ 	andi	t1, t0, 0x8
+ 	beqz	t1, 1b		/* Unknown entry type, ignore it */
+ 	andi	t0, t0, ~0x8
+-	mv	t3, s5		/* i = num words per page */
++	li	t3, (PAGE_SIZE / RISCV_SZPTR)	/* i = num words per page */
+ 3:	/* copy loop */
+ 	REG_L	t1, (t0)	/* t1 = *src_ptr */
+-	REG_S	t1, (s4)	/* *dst_ptr = *src_ptr */
++	REG_S	t1, (s5)	/* *dst_ptr = *src_ptr */
+ 	addi	t0, t0, RISCV_SZPTR /* stc_ptr++ */
+-	addi	s4, s4, RISCV_SZPTR /* dst_ptr++ */
+-	sub	t3, t3, s6	/* i-- */
+-	addi	s11, s11, 1	/* c++ */
++	addi	s5, s5, RISCV_SZPTR /* dst_ptr++ */
++	addi	t3, t3, -0x1	/* i-- */
+ 	beqz	t3, 1b		/* copy done ? */
+ 	j	3b
+ 
+@@ -146,7 +140,7 @@ SYM_CODE_START(riscv_kexec_relocate)
+ 	 */
+ 	fence.i
+ 
+-	jalr	zero, a2, 0
++	jr	a2
+ 
+ SYM_CODE_END(riscv_kexec_relocate)
+ riscv_kexec_relocate_end:
 -- 
 2.20.1
 
