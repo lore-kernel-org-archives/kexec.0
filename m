@@ -4,76 +4,106 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 07405CD6E7F
-	for <kexec@archiver.kernel.org>; Wed, 11 Oct 2023 15:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 54F50CDB46E
+	for <kexec@archiver.kernel.org>; Thu, 12 Oct 2023 05:36:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=otpXjO6gJas7jq/N/MZV8yL1aOt98+qaDfgVYONFTVU=; b=Hk1xHe4CnEVSyh
-	12s+15+zhGFu0D2BTZ/Y2xsZnS6gh46BFXTHMdexmnJPI6oLTqXcRh9yzI/J7T72mDOfAsqifRUea
-	+dwCGMtu+4iedcg6SIaPa9igrgLs5N/Quu0w5nsAwcZo4b7dyMbDZR42Xi9MulQTuiPm5ZplVxtHW
-	WXNOnTT0EbUqWWZDBiOoGz0c/gPfGlI677KN2c6BtJ18Z3tgu07xmx7v/uxzdq+BlXU4Hhpdxnl0u
-	Pfm3GIjjYS+k9/ijqckBWktGilGW2x3B82UXXb4bBicqb6tVqbQoDfT6iukU1dLwHlcJk1Dafifd5
-	DVMZ3c7Xl38R6yLZoPow==;
+	List-Owner; bh=u41pGd5ozrZ/pdRyZlc8LFSAHUuRc/p5Hywt4Jigxos=; b=H1t+f6bITu2HkR
+	PR1BbUy4EK26/xudf1y/BLuS1M6diUKuhxAyfD8v4CUgz2kofaRgigTUeywU+60Pm+Oq5RztPujND
+	jlsGAb9Tr8gvuQLOL73P0hhBNdArFuVB6HDA7TGDqK+0kohNaFfiv5JpfBW80rZsE5scJt0h8u212
+	CKocFBQM+XDWiViB0RrpFmdNzUtLuE8QStzfL4gx5XIN/B8IWwRCmSvVrNuce+1GOg6fWhRsN/AoR
+	zmwRRVhAMCRsZwg2xbsG8C3rtziiSKhK15RQkACBapcEVFrkByw4OuLNnnbpxZksei2sReRD43DW/
+	e9KBeV9d+znmmfngqz0w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qqbWR-00GDfp-2K;
-	Wed, 11 Oct 2023 15:53:19 +0000
-Received: from mail-lj1-x232.google.com ([2a00:1450:4864:20::232])
+	id 1qqoN3-00HTBG-0i;
+	Thu, 12 Oct 2023 05:36:29 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qqbWP-00GDeT-0x
+	id 1qqoMy-00HTAm-05
 	for kexec@lists.infradead.org;
-	Wed, 11 Oct 2023 15:53:18 +0000
-Received: by mail-lj1-x232.google.com with SMTP id 38308e7fff4ca-2c3ca6ff5a7so60295481fa.1
-        for <kexec@lists.infradead.org>; Wed, 11 Oct 2023 08:53:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google; t=1697039589; x=1697644389; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gHhDRJtv88GUtolhSfk/M6EnhLggiBTlRi1I9TUAYxE=;
-        b=viaxMCyhk5hQHKZJ2fsSIrtvWQhJvPTkJDFdu6a9lTjOWtHtkz3CcDOD+PONyglGwC
-         XjNa+De4MxbkbajS+45M8ESBIuY9Guk5HG2Q7Q6SphBJJR9nbS4tr6bPE27ioZe7R550
-         /bD325kx5lm+iETZkE9k/522ft4KRiyuVGdfw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697039589; x=1697644389;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gHhDRJtv88GUtolhSfk/M6EnhLggiBTlRi1I9TUAYxE=;
-        b=NqJVvSFV82+HpZB8If57c5OUllgGaotavKYxrqwIaZC7Ufd91GF6V7FcuUVmAEepjU
-         BXk7v1ARDXjQ7dpldrR6sVDCxeeOasYfTeqYMxxHgLMZmaNXYRQed2NPuTjGb+Efp31A
-         dTkg1dk+RIMRREJI0bp59EctYqPHPB2eKgWU6Zgk9L0Oy7ANfqzX0yOZbqUW9MlQ6YkC
-         CeC9MR3iY0KC+3LScg7w8H2yYUhehH752sxXTlm1NajeAHUFVPBoq9dUYeka8iwzdVZh
-         o10mbwEAxSFAv+NB5f4WPKbUkZCtV0Q+b+fWIHyy0QZ/A6qbtWutqf2Qpvle+EkCEXPt
-         UM/A==
-X-Gm-Message-State: AOJu0YwdRplX/ilt/mtxOHWBL7uHcFcueYL1tN8n2XBeJV2D1aQP6Ylf
-	57FQrue20VGw2Qfke+iHZvZD8A7lEhHTQK17/5GYnQ==
-X-Google-Smtp-Source: AGHT+IFAHZaip1J9zeajKEpAb5YV3c9gzGgz3OmrihXxQNsyJWbI2IkKeT2npiPX4t/KAAzUr0Cb58QohVGr/xX8Hbc=
-X-Received: by 2002:a2e:b781:0:b0:2c2:c38b:2141 with SMTP id
- n1-20020a2eb781000000b002c2c38b2141mr17098551ljo.49.1697039588905; Wed, 11
- Oct 2023 08:53:08 -0700 (PDT)
+	Thu, 12 Oct 2023 05:36:27 +0000
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39C5Db2q021480;
+	Thu, 12 Oct 2023 05:36:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=zTTyFiLcXXGKvFzVglfAIx31wIMbASNF7keLhqF+43c=;
+ b=mlrUtjXnZPzbv/wZFrMotFPUzwwZuaaa8ABS1Gp/crkrQ6+vfJYxAeoNak8iolGDhVrf
+ hAskj+DjGjV9Mx4Z+trY7gqGNQVs4UEzEJKr8VicVu2xp/6HvPZLSMSMeZD18l4/NBvZ
+ BTAIGdQut3b04gu+hU8NL4uaf1fvt1nw9GUDRz9x0fRFaMjaiCc5xpUVolCQO1cixt2Y
+ 33YjRvnKqK6i0a7KDA3qPiU85r4PtwaUkugi5q18SdYxWhgeFSQsupFhPV0XwZVBcFyX
+ TuTP4gvSrntL+lU25TDV9/+YypFz/hMLDz88YDUVVdvaQSjB4TPfelZFj/c/7p17ztV5 qA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tpab4gpvq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Oct 2023 05:36:17 +0000
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39C5Mx7f018271;
+	Thu, 12 Oct 2023 05:36:17 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tpab4gpt3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Oct 2023 05:36:17 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39C4HuA8000693;
+	Thu, 12 Oct 2023 05:32:25 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3tkk5kw6da-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 12 Oct 2023 05:32:25 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 39C5WM5X38863352
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 12 Oct 2023 05:32:22 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8F576200B7;
+	Thu, 12 Oct 2023 05:32:22 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3BE7F200B8;
+	Thu, 12 Oct 2023 05:32:21 +0000 (GMT)
+Received: from [9.203.106.137] (unknown [9.203.106.137])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 12 Oct 2023 05:32:21 +0000 (GMT)
+Message-ID: <fb374fcc-487b-cb6c-6aa6-76fb49eee99a@linux.ibm.com>
+Date: Thu, 12 Oct 2023 11:02:20 +0530
 MIME-Version: 1.0
-References: <20230929021213.2364883-1-joel@joelfernandes.org>
- <87bkdl55qm.fsf@email.froward.int.ebiederm.org> <CAEXW_YQ=HGok600ARtCKBNDs1OHSc=UM4hWmBdQ=sXZvif0Z5g@mail.gmail.com>
- <CAEXW_YQ3YZExYb6FLg3fvWr9K+FGgNQx7xk3p-PngLG6rt8Ntw@mail.gmail.com>
- <87il7fzusf.fsf@email.froward.int.ebiederm.org> <CAEXW_YRv4Uqfn-9cQvDTRGNbCbC9s3jg+PP1-nqYP-DNO54R-w@mail.gmail.com>
- <87fs2ii3tf.fsf@email.froward.int.ebiederm.org>
-In-Reply-To: <87fs2ii3tf.fsf@email.froward.int.ebiederm.org>
-From: Joel Fernandes <joel@joelfernandes.org>
-Date: Wed, 11 Oct 2023 11:52:58 -0400
-Message-ID: <CAEXW_YT4JrLaVg9iXdbny9o4DrhUN21WNGDfVNbwJCa-ZvUPOQ@mail.gmail.com>
-Subject: Re: [PATCH] kexec: Fix reboot race during device_shutdown()
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
-	Ricardo Ribalda <ribalda@google.com>, Ross Zwisler <zwisler@google.com>, Rob Clark <robdclark@gmail.com>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, kexec@lists.infradead.org
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCHv8 3/5] powerpc/setup: Handle the case when boot_cpuid
+ greater than nr_cpus
+Content-Language: en-US
+To: Pingfan Liu <piliu@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org,
+        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+        Nicholas Piggin
+ <npiggin@gmail.com>, Ming Lei <ming.lei@redhat.com>,
+        Wen Xiong <wenxiong@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
+References: <20231009113036.45988-1-piliu@redhat.com>
+ <20231009113036.45988-4-piliu@redhat.com>
+ <8216e3e3-8475-158f-dc79-1b5ba1032150@linux.ibm.com>
+ <ZSYQ9odHpQDWN5ca@piliu.users.ipa.redhat.com>
+From: Hari Bathini <hbathini@linux.ibm.com>
+In-Reply-To: <ZSYQ9odHpQDWN5ca@piliu.users.ipa.redhat.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 15gWf4GiB0jZEvv5BJ-Hj4Vxbv_n-AmV
+X-Proofpoint-ORIG-GUID: y0ZbYGqCNdIRYEKCmNU9bTtJcOjWyHtt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-12_02,2023-10-11_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ lowpriorityscore=0 malwarescore=0 adultscore=0 spamscore=0 bulkscore=0
+ impostorscore=0 clxscore=1015 mlxscore=0 priorityscore=1501 phishscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2309180000 definitions=main-2310120046
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231011_085317_335276_49D4170D 
-X-CRM114-Status: GOOD (  24.02  )
+X-CRM114-CacheID: sfid-20231011_223624_405875_01C26EC2 
+X-CRM114-Status: GOOD (  28.99  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,45 +115,103 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-T24gVHVlLCBPY3QgMTAsIDIwMjMgYXQgNTowOOKAr1BNIEVyaWMgVy4gQmllZGVybWFuIDxlYmll
-ZGVybUB4bWlzc2lvbi5jb20+IHdyb3RlOgo+Cj4gSm9lbCBGZXJuYW5kZXMgPGpvZWxAam9lbGZl
-cm5hbmRlcy5vcmc+IHdyaXRlczoKWy4uLl0KPiA+PiBUaGF0IHdheSB5b3UgY2FuIGdldCB0aGUg
-b3JkZXJseSBzaHV0ZG93bgo+ID4+IG9mIHVzZXJzcGFjZSBkYWVtb25zL3NlcnZpY2VzIGFsb25n
-IHdpdGggYW4gb3JkZXJseSBzaHV0ZG93biBvZgo+ID4+IGV2ZXJ5dGhpbmcgdGhlIGtlcm5lbCBp
-cyByZXNwb25zaWJsZSBmb3IuCj4gPgo+ID4gRml4aW5nIGluIHVzZXJzcGFjZSBpcyBhbiBvcHRp
-b24gYnV0IHBlb3BsZSBhcmUgbm90IGhhcHB5IHRoYXQgdGhlCj4gPiBrZXJuZWwgY2FuIGNyYXNo
-IGxpa2UgdGhhdC4KPgo+IEluIGEga2V4ZWMgb24gcGFuaWMgc2NlbmFyaW8gdGhlIGtlcm5lbCBu
-ZWVkcyB0byBwZXJmb3JtIHRoYXQgYWJzb2x1dGUKPiBiYXJlIGVzc2VudGlhbCBzaHV0ZG93biBi
-ZWZvcmUgY2FsbGluZyBrZXhlYyAoYmFzaWNhbGx5IG5vdGhpbmcpLgo+IER1cmluZyBrZXhlYy1v
-bi1wYW5pYyBub3RoaW5nIGNhbiBiZSByZWxpZWQgdXBvbiBiZWNhdXNlIHdlIGRvbid0IGtub3cK
-PiB3aGF0IGlzIGJyb2tlbi4gIElmIHRoYXQgaXMgd2hhdCB5b3UgY2FyZSBhYm91dCAoYXMgc3Vn
-Z2VzdGVkIGJ5IHRoZQo+IHVuaXQgdGVzdCkgeW91IG5lZWQgdG8gZml4IHRoZSBkZXZpY2UgaW5p
-dGlhbGl6YXRpb24uCj4KPiBJbiBhIG5vcm1hbCBrZXhlYyBzY2VuYXJpbyB0aGUgd2hvbGUgbm9y
-bWFsIHJlYm9vdCBwcm9jZXNzIGlzIGV4cGVjdGVkLgo+IEkgaGF2ZSBubyBwcm9ibGVtcyB3aXRo
-IGZpeGluZyB0aGUga2VybmVsIHRvIGhhbmRsZSB0aGF0IHNjZW5hcmlvLAo+IGJ1dCBpbiB0aGUg
-cmVhbCB3b3JsZCB0aGUgZW50aXJlIG9yZGVybHkgc2h1dGRvd24gYm90aCwga2VybmVsCj4gYW5k
-IHVzZXJzcGFjZSBzaG91bGQgYmUgcGVyZm9ybWVkLgoKU291bmRzIGdvb2QuIFNpbmNlIHlvdSBt
-ZW50aW9uZWQgeW91IGhhdmUgbm8gcHJvYmxlbSB3aXRoIGZpeGluZwpyZWd1bGFyIHJlYm9vdCBp
-biB0aGUga2VybmVsLCB3ZSB3aWxsIHdvcmsgb24gcmVwcm9kdWNpbmcgdGhlIGlzc3VlCndpdGgg
-cmVndWxhciByZWJvb3QgYXMgd2VsbCBhbmQgZml4IHRoYXQuCgpJIHRoaW5rIGEgc3lzY2FsbCBj
-YXVzaW5nIHRoZSBrZXJuZWwgdG8gY3Jhc2ggaW5zdGVhZCBvZiBvcGVyYXRlCm5vcm1hbGx5IGlz
-IGEgY2F1c2Ugb2YgY29uY2Vybiwgc28gbGV0IHVzIGZpeCB0aGUga2VybmVsIGFzIHdlbGwKKG90
-aGVyIHRoYW4gaW1wcm92aW5nIHRoZSB0ZXN0IGNhc2UgYXMgeW91IG1lbnRpb25lZCkuCgo+ID4+
-IEF0IHRoZSBrZXJuZWwgbGV2ZWwgYSBrZXhlYyByZWJvb3QgYW5kIGEgbm9ybWFsIHJlYm9vdCBo
-YXZlIGJlZW4KPiA+PiBkZWxpYmVyYXRlbHkga2VwdCBhcyBjbG9zZSBhcyBwb3NzaWJsZS4gIFdo
-aWNoIGlzIHdoeSBJIHNheSB3ZSBzaG91bGQKPiA+PiBmaXggaXQgaW4gcmVib290Lgo+ID4KPiA+
-IFlvdSBtZWFuIGZpeCBpdCBpbiB1c2Vyc3BhY2U/Cj4KPiBOby4gIEkgbWVhbiBpbiB0aGUga2Vy
-bmVsIHRoZSBvcmRlcmx5IHNodXRkb3duIGZvciBhIGtleGVjIHJlYm9vdCBhbmQgYW4KPiBvcmRp
-bmFyeSByZWJvb3QgYXJlIGtlcHQgYXMgY2xvc2UgdG8gdGhlIHNhbWUgYXMgcG9zc2libGUuCj4K
-PiBJdCBzaG91bGQgYmUgdGhlIGNhc2UgdGhhdCB0aGUgb25seSBkaWZmZXJlbmNlcyBiZXR3ZWVu
-IHRoZSB0d28gaXMgdGhhdAo+IGluIG9uY2UgY2FzZSBzeXN0ZW0gZmlybXdhcmUgdGFrZXMgb3Zl
-ciBhZnRlciB0aGUgb3JkZXJseSBzaHV0ZG93biwKPiBhbmQgaW4gdGhlIG90aGVyIGNhc2UgYSBu
-ZXcga2VybmVsIHRha2VzIG92ZXIgYWZ0ZXIgdGhlIG9yZGVybHkgc2h1dGRvd24uCgpBZ3JlZWQu
-Cgp0aGFua3MsCgogLSBKb2VsCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
-dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+
+
+On 11/10/23 8:35 am, Pingfan Liu wrote:
+> On Tue, Oct 10, 2023 at 01:56:13PM +0530, Hari Bathini wrote:
+>>
+>>
+>> On 09/10/23 5:00 pm, Pingfan Liu wrote:
+>>> If the boot_cpuid is smaller than nr_cpus, it requires extra effort to
+>>> ensure the boot_cpu is in cpu_present_mask. This can be achieved by
+>>> reserving the last quota for the boot cpu.
+>>>
+>>> Note: the restriction on nr_cpus will be lifted with more effort in the
+>>> successive patches
+>>>
+>>> Signed-off-by: Pingfan Liu <piliu@redhat.com>
+>>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>>> Cc: Nicholas Piggin <npiggin@gmail.com>
+>>> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+>>> Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
+>>> Cc: Wen Xiong <wenxiong@linux.ibm.com>
+>>> Cc: Baoquan He <bhe@redhat.com>
+>>> Cc: Ming Lei <ming.lei@redhat.com>
+>>> Cc: kexec@lists.infradead.org
+>>> To: linuxppc-dev@lists.ozlabs.org
+>>> ---
+>>>    arch/powerpc/kernel/setup-common.c | 25 ++++++++++++++++++++++---
+>>>    1 file changed, 22 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/arch/powerpc/kernel/setup-common.c b/arch/powerpc/kernel/setup-common.c
+>>> index 81291e13dec0..f9ef0a2666b0 100644
+>>> --- a/arch/powerpc/kernel/setup-common.c
+>>> +++ b/arch/powerpc/kernel/setup-common.c
+>>> @@ -454,8 +454,8 @@ struct interrupt_server_node {
+>>>    void __init smp_setup_cpu_maps(void)
+>>>    {
+>>>    	struct device_node *dn;
+>>> -	int shift = 0, cpu = 0;
+>>> -	int j, nthreads = 1;
+>>> +	int terminate, shift = 0, cpu = 0;
+>>> +	int j, bt_thread = 0, nthreads = 1;
+>>>    	int len;
+>>>    	struct interrupt_server_node *intserv_node, *n;
+>>>    	struct list_head *bt_node, head;
+>>> @@ -518,6 +518,7 @@ void __init smp_setup_cpu_maps(void)
+>>>    			for (j = 0 ; j < nthreads; j++) {
+>>>    				if (be32_to_cpu(intserv[j]) == boot_cpu_hwid) {
+>>>    					bt_node = &intserv_node->node;
+>>> +					bt_thread = j;
+>>>    					found_boot_cpu = true;
+>>>    					/*
+>>>    					 * Record the round-shift between dt
+>>> @@ -537,11 +538,21 @@ void __init smp_setup_cpu_maps(void)
+>>>    	/* Select the primary thread, the boot cpu's slibing, as the logic 0 */
+>>>    	list_add_tail(&head, bt_node);
+>>>    	pr_info("the round shift between dt seq and the cpu logic number: %d\n", shift);
+>>> +	terminate = nr_cpu_ids;
+>>>    	list_for_each_entry(intserv_node, &head, node) {
+>>> +		j = 0;
+>>
+>>> +		/* Choose a start point to cover the boot cpu */
+>>> +		if (nr_cpu_ids - 1 < bt_thread) {
+>>> +			/*
+>>> +			 * The processor core puts assumption on the thread id,
+>>> +			 * not to breach the assumption.
+>>> +			 */
+>>> +			terminate = nr_cpu_ids - 1;
+>>
+>> nthreads is anyway assumed to be same for all cores. So, enforcing
+>> nr_cpu_ids to a minimum of nthreads (and multiple of nthreads) should
+>> make the code much simpler without the need for above check and the
+>> other complexities addressed in the subsequent patches...
+>>
+> 
+> Indeed, this series can be splited into two partsk, [1-2/5] and [3-5/5].
+> In [1-2/5], if smaller, the nr_cpu_ids is enforced to be equal to
+> nthreads. I will make it align upward on nthreads in the next version.
+> So [1-2/5] can be totally independent from the rest patches in this
+> series.
+
+Yup. Would prefer it that way.
+
+>  From an engineer's perspective, [3-5/5] are added to maintain the
+> nr_cpus semantics. (Finally, nr_cpus=1 can be achieved but requiring
+> effort on other subsystem)
+
+I understand it would be nice to maintain semantics but not worth the
+complexity it brings, IMHO. So, my suggest would be to drop [3-5/5].
+
+Thanks
+Hari
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
