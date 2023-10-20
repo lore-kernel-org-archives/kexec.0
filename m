@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 85828C0032E
-	for <kexec@archiver.kernel.org>; Fri, 20 Oct 2023 15:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B5C21C07480
+	for <kexec@archiver.kernel.org>; Fri, 20 Oct 2023 15:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=bxkcJY8Kx51W1XOS4sJmh4BRZr5zN/q0DokLBlNCqJI=; b=YSz3xZ/jlDaPSS
-	eoxFUnwu2msCXnV6EH9ivhCbCVGMvvOxQy9J5pFV/Jnls3GuKyqGYyFZU+BcEnUxun54EgVuxkfTC
-	+vjtWmEYDU1+WRkjFxoZjksp1+1LUOhh7XIMPacaGeFlgsHLNZTwgasHg3EpCnX1eE3yGvBcJAk0a
-	FuuaZUDCN6s5ovAIDdrZEbk3Xj2f68wPaWEfM4iMGeTchq3nnDhwdr4f9DMogr0hLKjOcL0hPddzd
-	hZ3sa2Igizi1Zu4yiuLGIek6BtEa2ICvdm2pr1ZEpMKUBOG+/akJvSdy12eVIrrsr6RyRdRfziRjK
-	KDgJVNMr2xRyexyNcJWg==;
+	List-Owner; bh=GfIWYWf+8EzOJ2R4GCz/8Ylweeny9Bt4UMrDTLLsHX4=; b=odBNmfsB3sCCl/
+	cYPYxfEuvJbzOJmjJdnuti363mIqzUnx4wq8D7UPocyNqtVX/8VJaB+K9tM/ll52qpupxtSUPVmZV
+	tQijr2Vl4wbq3Rp9n6nrq26LbA4tQvMcI3jFBz+TDQm93/nrvHHPtewcw0lO0AlTsawtO/e6o8uGB
+	WDLieL45BYIfKdrSBxd1jLHGckbV4Sw/2tsrGZkfCO2pSnpDGXxJTKxW5TPJU0E5t+jeLaPeaeJzh
+	cnjXQIqMlsnV2SOjrnVXTamUeCq/oKfC48K7ZeVnBX2qwRpGEWQ7+nI3KLb+dEmg1nMLzM8dnPyIn
+	qK3V3L2jwDu2vXwrukFA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qtrBW-002Zkm-13;
-	Fri, 20 Oct 2023 15:13:10 +0000
+	id 1qtrBX-002ZmB-2b;
+	Fri, 20 Oct 2023 15:13:11 +0000
 Received: from mgamail.intel.com ([134.134.136.20])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qtrBQ-002Zcr-05
+	id 1qtrBR-002ZaP-2D
 	for kexec@lists.infradead.org;
-	Fri, 20 Oct 2023 15:13:07 +0000
+	Fri, 20 Oct 2023 15:13:08 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1697814784; x=1729350784;
+  t=1697814785; x=1729350785;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=MPIjCtbNsICrtwqXzYBNDwDeX3sLS3gFAi6SoZOpAO8=;
-  b=ASf3+NNvmnqZXAycQ4dL4/FACr6v743C9nQp2wjhWiqFnW6oHQ4zBABu
-   urDw9/C2cqCU8R7fUwhKazUWoybEkYCmZ8lHeyE/citNjQoBHn3bGiE5b
-   nP6MbmXF4hxoDk3jOXbTSe98DhJ41XIgnctazbYPZbdtybFBTCFiRmNlF
-   N+Oi48XD9maD7PKvY121Z5ENwK6NrqN2rLAPG5pYrQ9vTl74t/K9mIopj
-   le9EGL9iEfkY/cxCJM7EWAX9c3DHnnIR0qrqarF9WGYuJwR3UOWc5BJKf
-   JvM6ZO4Z3lEQ6+HCxhNgiqAIz6+zVXKgto9WVbB69t4/60xjLKrt+i459
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10869"; a="376893627"
+  bh=6+Xn4E2qr8LKB1fom9PaZEE3U7cyiyObDREDtKSMetw=;
+  b=g5AXioXMX5a90mN0p+mAC8Fp1wO/4HGxVM3S7u51XN0r/pK0p+E9iyah
+   StQmKodyqNbo6Bjcv3vAPBSVaAUttqn6gu93874jEEbohSufg7m+pbYFH
+   KDk1/zBzKipDVGEkFZZWhLtqDl0gcPW8ldg4HjUU0dh1H4oMpaPtN11tW
+   RpFQJLCCMIWHug0T++jr2YAjbXOvbLW6eQc8TDUwWsnQKcNUIL8WZP3ZJ
+   dAhzA+c1x2bRVtCeKLeFvo+DB3g8y1c3vPm+YhrzJQhMEeitibvr3sDGX
+   WzRE3OpkcqDca4YdEuxWliuLD6a83D8bQNeQ6Hdx5DI/OoK1flh5lKjHm
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10869"; a="376893669"
 X-IronPort-AV: E=Sophos;i="6.03,239,1694761200"; 
-   d="scan'208";a="376893627"
+   d="scan'208";a="376893669"
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2023 08:12:55 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2023 08:13:01 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10869"; a="761080250"
+X-IronPort-AV: E=McAfee;i="6600,9927,10869"; a="761080285"
 X-IronPort-AV: E=Sophos;i="6.03,239,1694761200"; 
-   d="scan'208";a="761080250"
+   d="scan'208";a="761080285"
 Received: from dgutows1-mobl.ger.corp.intel.com (HELO box.shutemov.name) ([10.249.39.237])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2023 08:12:48 -0700
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2023 08:12:56 -0700
 Received: by box.shutemov.name (Postfix, from userid 1000)
-	id 10D5D10A296; Fri, 20 Oct 2023 18:12:45 +0300 (+03)
+	id 67D2710A29E; Fri, 20 Oct 2023 18:12:45 +0300 (+03)
 From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -74,20 +74,17 @@ Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
 	kexec@lists.infradead.org,
 	linux-coco@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Wanpeng Li <wanpengli@tencent.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: [PATCHv2 04/13] x86/kvm: Do not try to disable kvmclock if it was not enabled
-Date: Fri, 20 Oct 2023 18:12:33 +0300
-Message-ID: <20231020151242.1814-5-kirill.shutemov@linux.intel.com>
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCHv2 12/13] x86/acpi: Rename fields in acpi_madt_multiproc_wakeup structure
+Date: Fri, 20 Oct 2023 18:12:41 +0300
+Message-ID: <20231020151242.1814-13-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20231020151242.1814-1-kirill.shutemov@linux.intel.com>
 References: <20231020151242.1814-1-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231020_081304_173437_A6BBA7B4 
-X-CRM114-Status: GOOD (  15.01  )
+X-CRM114-CacheID: sfid-20231020_081305_856733_2E23E96C 
+X-CRM114-Status: GOOD (  13.00  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,65 +101,64 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-kvm_guest_cpu_offline() tries to disable kvmclock regardless if it is
-present in the VM. It leads to write to a MSR that doesn't exist on some
-configurations, namely in TDX guest:
+To prepare for the addition of support for MADT wakeup structure version
+1, it is necessary to provide more appropriate names for the fields in
+the structure.
 
-	unchecked MSR access error: WRMSR to 0x12 (tried to write 0x0000000000000000)
-	at rIP: 0xffffffff8110687c (kvmclock_disable+0x1c/0x30)
+The field 'mailbox_version' renamed as 'version'. This field signifies
+the version of the structure and the related protocols, rather than the
+version of the mailbox. This field has not been utilized in the code
+thus far.
 
-kvmclock enabling is gated by CLOCKSOURCE and CLOCKSOURCE2 KVM paravirt
-features.
-
-Do not disable kvmclock if it was not enabled.
+The field 'base_address' renamed as 'mailbox_address' to clarify the
+kind of address it represents. In version 1, the structure includes the
+reset vector address. Clear and distinct naming helps to prevent any
+confusion.
 
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Fixes: c02027b5742b ("x86/kvm: Disable kvmclock on all CPUs on shutdown")
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Wanpeng Li <wanpengli@tencent.com>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kernel/kvmclock.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ arch/x86/kernel/acpi/madt_wakeup.c | 4 ++--
+ include/acpi/actbl2.h              | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kernel/kvmclock.c b/arch/x86/kernel/kvmclock.c
-index fb8f52149be9..f2fff625576d 100644
---- a/arch/x86/kernel/kvmclock.c
-+++ b/arch/x86/kernel/kvmclock.c
-@@ -24,8 +24,8 @@
+diff --git a/arch/x86/kernel/acpi/madt_wakeup.c b/arch/x86/kernel/acpi/madt_wakeup.c
+index 9bbe829737e7..ad170def2367 100644
+--- a/arch/x86/kernel/acpi/madt_wakeup.c
++++ b/arch/x86/kernel/acpi/madt_wakeup.c
+@@ -79,7 +79,7 @@ int __init acpi_parse_mp_wake(union acpi_subtable_headers *header,
  
- static int kvmclock __initdata = 1;
- static int kvmclock_vsyscall __initdata = 1;
--static int msr_kvm_system_time __ro_after_init = MSR_KVM_SYSTEM_TIME;
--static int msr_kvm_wall_clock __ro_after_init = MSR_KVM_WALL_CLOCK;
-+static int msr_kvm_system_time __ro_after_init;
-+static int msr_kvm_wall_clock __ro_after_init;
- static u64 kvm_sched_clock_offset __ro_after_init;
+ 	acpi_table_print_madt_entry(&header->common);
  
- static int __init parse_no_kvmclock(char *arg)
-@@ -195,7 +195,8 @@ static void kvm_setup_secondary_clock(void)
+-	acpi_mp_wake_mailbox_paddr = mp_wake->base_address;
++	acpi_mp_wake_mailbox_paddr = mp_wake->mailbox_address;
  
- void kvmclock_disable(void)
- {
--	native_write_msr(msr_kvm_system_time, 0, 0);
-+	if (msr_kvm_system_time)
-+		native_write_msr(msr_kvm_system_time, 0, 0);
- }
+ 	cpu_hotplug_disable_offlining();
  
- static void __init kvmclock_init_mem(void)
-@@ -294,7 +295,10 @@ void __init kvmclock_init(void)
- 	if (kvm_para_has_feature(KVM_FEATURE_CLOCKSOURCE2)) {
- 		msr_kvm_system_time = MSR_KVM_SYSTEM_TIME_NEW;
- 		msr_kvm_wall_clock = MSR_KVM_WALL_CLOCK_NEW;
--	} else if (!kvm_para_has_feature(KVM_FEATURE_CLOCKSOURCE)) {
-+	} else if (kvm_para_has_feature(KVM_FEATURE_CLOCKSOURCE)) {
-+		msr_kvm_system_time = MSR_KVM_SYSTEM_TIME;
-+		msr_kvm_wall_clock = MSR_KVM_WALL_CLOCK;
-+	} else {
- 		return;
- 	}
+@@ -98,7 +98,7 @@ int __init acpi_parse_mp_wake(union acpi_subtable_headers *header,
+ 	 *
+ 	 * This is Linux-specific protocol and not reflected in ACPI spec.
+ 	 */
+-	mp_wake->base_address = 0;
++	mp_wake->mailbox_address = 0;
  
+ 	apic_update_callback(wakeup_secondary_cpu_64, acpi_wakeup_cpu);
+ 
+diff --git a/include/acpi/actbl2.h b/include/acpi/actbl2.h
+index 3751ae69432f..23b4cfb640fc 100644
+--- a/include/acpi/actbl2.h
++++ b/include/acpi/actbl2.h
+@@ -1109,9 +1109,9 @@ struct acpi_madt_generic_translator {
+ 
+ struct acpi_madt_multiproc_wakeup {
+ 	struct acpi_subtable_header header;
+-	u16 mailbox_version;
++	u16 version;
+ 	u32 reserved;		/* reserved - must be zero */
+-	u64 base_address;
++	u64 mailbox_address;
+ };
+ 
+ #define ACPI_MULTIPROC_WAKEUP_MB_OS_SIZE        2032
 -- 
 2.41.0
 
