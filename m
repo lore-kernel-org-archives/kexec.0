@@ -4,74 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CBA01CDB474
-	for <kexec@archiver.kernel.org>; Sun, 22 Oct 2023 23:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DCCFEC0032E
+	for <kexec@archiver.kernel.org>; Mon, 23 Oct 2023 02:31:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=tl/ZRnyJloMkUVIJjPeeaoqko4U2e9ExHfzsbbNGmnw=; b=ezd4WcglqwRVFz
-	z1x6PBtUb5R1aVer0/OKUZPV/wEb4OUC1u6OiBp6/v3oGxdcX3WFbgnE4eJTOicz9jfcCgXcV/T9v
-	OyoFLyRg1J8/zl8l39zdwxE8eCbg0GxaQnbIYaHhffTd+19EWoLIy5Kbvv8Ny0dmPP6Cme96oj5j6
-	UePzNsj5a9Qsq4UNNlVeRIkoh2fzrktxkXGJE3Vf7gs7Gl6Ovnlc7BFWzE9e8eR5fZhujmX7G+0Mw
-	Br4HvsNfc3aSkcnlY44AzkIlXb94p7zJeOaktn/BatJjrqoSqMnRJ+bztMG73WqhZ/NQmuD1qtEso
-	fbAsxa5FL17uQ+TS+xWg==;
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:From:Subject:Message-ID:
+	Mime-Version:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:
+	References:List-Owner; bh=4MRu8YRopJzy72ZAbMgCyQMtUBiqyuOFUoumC33PlZ8=; b=SbJ
+	BRGiW4ILU9f1hbfPh64C7jbjSbkr0ayP8oX32ZhRx6rIdgn3ffjqrTmzxq/DFEVHYbrUCiZ6G1HPM
+	Bg76ON6PPe426ow7jQuez1LqfcD1zwerhX4xQYlMaGtyxvW+WCuhqLdhypuF/lw7Wnu2yteX3RhmE
+	ObvALlVpARYrwynd+1v2/vLJe6GI1hTxIHi0NqC/mmEQY8uPjDoSKjeAqOcfnYapDxs7u6KHOzPj6
+	ON0CgjgbvYwASFv31pnsdddqyZoCvIORtzZq129fmz18ubbwhO8HLhuwPXHRfmgUs8MA2+xjahmP4
+	c2+3uGOE2HevtTvMUCiWd//N94/P8rw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1quhib-0062LL-30;
-	Sun, 22 Oct 2023 23:18:49 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1qukj3-006FwG-0i;
+	Mon, 23 Oct 2023 02:31:29 +0000
+Received: from mail-yb1-xb4a.google.com ([2607:f8b0:4864:20::b4a])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1quhiV-0062Ka-1d
+	id 1qukj0-006Fvt-3B
 	for kexec@lists.infradead.org;
-	Sun, 22 Oct 2023 23:18:44 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1698016719;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jX1G92KJ9HaLCLXW5bUq4SsuwL/Pf25kDHN6JaMRMeE=;
-	b=OiXtuHi4qV/bMRWG6qvG3e77Ful0PmMr52fl7XcwZVJBHDujv9LZxSp2Kcob6snyC/oi7P
-	kDRupEoQVQ+DIFYuvM9/phW1ovc8t55fNreT6M/zsCgTYBPvwEEObtMW4+ub07VAPKaobG
-	394NKLcR/6ASWIupQVcgA4E9FXxhd3o=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-594-4n3qW8V3Pkmn-zUTc4khOg-1; Sun, 22 Oct 2023 19:18:35 -0400
-X-MC-Unique: 4n3qW8V3Pkmn-zUTc4khOg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3BB0529AA2EF;
-	Sun, 22 Oct 2023 23:18:35 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.37])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 343C3503B;
-	Sun, 22 Oct 2023 23:18:33 +0000 (UTC)
-Date: Mon, 23 Oct 2023 07:18:31 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Vegard Nossum <vegard.nossum@oracle.com>
-Cc: Eric Biederman <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Tony Krowiak <akrowiak@linux.ibm.com>,
-	Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH] kdump: fix reference to nonexistent file
-Message-ID: <ZTWtxzSojtHMwrHu@MiWiFi-R3L-srv>
-References: <20231022190424.919982-1-vegard.nossum@oracle.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20231022190424.919982-1-vegard.nossum@oracle.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+	Mon, 23 Oct 2023 02:31:28 +0000
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d86dac81f8fso3648215276.1
+        for <kexec@lists.infradead.org>; Sun, 22 Oct 2023 19:31:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1698028285; x=1698633085; darn=lists.infradead.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=i051oq9Sq7RRdnOZ5mTNUWUdMgsVYPFmVIteiDrh8b4=;
+        b=f5bkPIfwMW7/9NUZEOq+eSgJAuN+C0GM2AcIlHB8Ci7iWK7Kx8WG360VEBfTh2NkvY
+         9ZI4WwTGoilKfXvyCUI0h+l+gLvi3bO7fSpRSZ0Fepz6eRQoMO7WCiJkCvzbuceQUMVm
+         hOADN4RYsaJKrBzR3o/7gIlZZpbpYO/1ixThptcIZqpUg0fu+n/nBcRTUWT+s4wl/hrL
+         C/PoBAijUeFcj9djoSW9zaqOtEMKpvqzLOAZuCVc4IKe87zJHs8TfAeeooTdCzZ6Kfpy
+         /FbxbiIfpiFtLP5BV3EdPtNQBPkBRE1FtsgbWQoKIpXCX3Y7au7vlUM7AFwmR4Fn0Nto
+         FRsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698028285; x=1698633085;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=i051oq9Sq7RRdnOZ5mTNUWUdMgsVYPFmVIteiDrh8b4=;
+        b=dCHu8H5PGzzHQ89jBlBA3hfDUtLrEzqFAYTDwpghqCvYw6j5qMisVHJheutl7tnv+w
+         K5X3ZTpIm8pH6wIzwUopTv8dZVsqn57A0huAAlD/m/fZHdwcbJIvuWBSPIt8OdUYIXrY
+         ormG1IbwCa4UjUtkG0eRPwAmSHv9L0ugF77ByuxeNpHNR8E70iCZ3LBrW1pavzrKuGeh
+         0b9te/0S4m17OTFfWloqDiFEmY+p8m/Pmb2wI6dtXP7TFl+zqL54BtZy8mxlNCN/oHQ3
+         /wQ8ZVzndTr9QOrBzevNrx8G2IT5C38AfsVr5g+uyypOiIK037D6eBAjCEm7xOtsPogI
+         RSjg==
+X-Gm-Message-State: AOJu0YxVl2hP69MbMsqrCFsqi2wy9ThD3IzW3LLzJhArgFYijFD1Mpom
+	KK2cuL+Fyaj8EM/9P6sYjLvwUpmXOvjimZ0=
+X-Google-Smtp-Source: AGHT+IEDHKZ2WJeGWk0321vcZMf4DAg9fPUhtFHtJdXcej40bv7/okhqiWF2bcMvcq2G55IOELysT0o7SeVgSEg=
+X-Received: from jsperbeck7.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:26dc])
+ (user=jsperbeck job=sendgmr) by 2002:a25:3491:0:b0:d9a:3dac:6c1a with SMTP id
+ b139-20020a253491000000b00d9a3dac6c1amr155361yba.11.1698028285033; Sun, 22
+ Oct 2023 19:31:25 -0700 (PDT)
+Date: Mon, 23 Oct 2023 02:31:21 +0000
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.42.0.655.g421f12c284-goog
+Message-ID: <20231023023121.1464544-1-jsperbeck@google.com>
+Subject: [PATCH] x86/kexec: set MIN_KERNEL_LOAD_ADDR to 0x01000000
+From: John Sperbeck <jsperbeck@google.com>
+To: Eric Biederman <ebiederm@xmission.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin " <hpa@zytor.com>, 
+	Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org
+Cc: Dave Hansen <dave.hansen@linux.intel.com>, Zac Tang <zactang@google.com>, 
+	Cloud Hsu <cloudhsu@google.com>, linux-kernel@vger.kernel.org, 
+	John Sperbeck <jsperbeck@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231022_161843_666975_9564CEB3 
-X-CRM114-Status: GOOD (  15.51  )
+X-CRM114-CacheID: sfid-20231022_193127_029764_FD682E27 
+X-CRM114-Status: GOOD (  18.56  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,57 +84,62 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 10/22/23 at 09:04pm, Vegard Nossum wrote:
-> All the s390 docs were moved from Documentation/s390/ to
-> Documentation/arch/s390/ but this reference didn't get updated. Fix it.
-> =
+The physical memory range that kexec selects for the compressed
+bzimage target kernel, might not be where it runs from.  The
+startup_64() code in head_64.S copies itself out of the way
+before the decompression so it doesn't clobber itself.
 
-> Fixes: 37002bc6b603 ("docs: move s390 under arch")
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: Costa Shulyupin <costa.shul@redhat.com>
-> Cc: Tony Krowiak <akrowiak@linux.ibm.com>
-> Cc: Philippe Mathieu-Daud=E9 <philmd@linaro.org>
-> Cc: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Heiko Carstens <hca@linux.ibm.com>
-> Cc: kexec@lists.infradead.org
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: linux-doc@vger.kernel.org
-> Signed-off-by: Vegard Nossum <vegard.nossum@oracle.com>
-> ---
->  kernel/Kconfig.kexec | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+If the start of the memory range selected by kexec is above
+LOAD_PHYSICAL_ADDR (0x01000000 by default), then the copy remains
+within the memory area.  But if the start is below this range,
+then the copy will likely end up outside the range.
 
-LGTM,
+Usually, this will be harmless because not much memory is in use
+at the time of the pre-decompression copy, so there is little
+to accidentally clobber.  However, an unlucky choice for the
+adress of the kernel and the initrd could put the initrd in harm's
+way.  For example:
 
-Acked-by: Baoquan He <bhe@redhat.com>
+    0x00400000 - physical address for target kernel
+    0x03ff8000 - physical address of seven-page initrd
+    0x0302c000 - size of uncompressed kernel (about 50 Mbytes)
 
-> =
+The decompressed kernel will span 0x01000000 through 0x0402c000,
+which will overwrite the initrd.
 
-> diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
-> index 9bfe68fe9676..7aff28ded2f4 100644
-> --- a/kernel/Kconfig.kexec
-> +++ b/kernel/Kconfig.kexec
-> @@ -110,7 +110,7 @@ config CRASH_DUMP
->  	  For more details see Documentation/admin-guide/kdump/kdump.rst
->  =
+If the kexec code restricts itself to physical addresses above
+0x01000000, then the pre-decompression copy and the decompression
+itself will stay within the bounds of the memory kexec selected
+(unless a non-default value is used in the target kernel for
+CONFIG_PHYSICAL_START, which will change LOAD_PHYSICAL_ADDR,
+but that's probably unsolvable unless the target kernel were to
+somehow communicate this to kexec).
 
->  	  For s390, this option also enables zfcpdump.
-> -	  See also <file:Documentation/s390/zfcpdump.rst>
-> +	  See also <file:Documentation/arch/s390/zfcpdump.rst>
->  =
+Signed-off-by: John Sperbeck <jsperbeck@google.com>
+---
+ arch/x86/kernel/kexec-bzimage64.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->  config CRASH_HOTPLUG
->  	bool "Update the crash elfcorehdr on system configuration changes"
-> -- =
-
-> 2.34.1
-> =
-
+diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+index a61c12c01270..d6bf6c13dab1 100644
+--- a/arch/x86/kernel/kexec-bzimage64.c
++++ b/arch/x86/kernel/kexec-bzimage64.c
+@@ -36,7 +36,7 @@
+  */
+ #define MIN_PURGATORY_ADDR	0x3000
+ #define MIN_BOOTPARAM_ADDR	0x3000
+-#define MIN_KERNEL_LOAD_ADDR	0x100000
++#define MIN_KERNEL_LOAD_ADDR	0x1000000
+ #define MIN_INITRD_LOAD_ADDR	0x1000000
+ 
+ /*
+-- 
+2.42.0.655.g421f12c284-goog
 
 
 _______________________________________________
