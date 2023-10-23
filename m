@@ -4,87 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 685CDC00A8F
-	for <kexec@archiver.kernel.org>; Mon, 23 Oct 2023 14:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9E5A8C004C0
+	for <kexec@archiver.kernel.org>; Mon, 23 Oct 2023 15:35:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:From:Subject:Message-ID:
-	References:Mime-Version:In-Reply-To:Date:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Owner;
-	bh=uGo4fNkZQUDUcbCZdUowRCrR8z2mFIj0JhDncDgzJYg=; b=eRbXUti8ZP8+e1lHPOu7bLshc+
-	U1KR3hIRxujz1UytK5NBkl3Z7XIh+2S5+yoFFAr1GHiHViHswhzZV0YSYLIMfcQZCWkBWs9teQBR4
-	QnCLUZKNYNx1WlXr+ig8n3+0iff8KeSyba0FaIk3lSszrOUuoR64wW+WGJzNd4wdqyk64MNVOvrcU
-	NAoj4GH2oA1LGO8qLVsFDqYnWvMAzJC/UvL4YzbcI7wz3GvyxO4IUmDJwOcA/ZGFKpaAyrwmy9bSA
-	Ye1A/+6tnsyUt5InxjlALFtAonP0HzR+MYBfBR+B6SmTeTGVvelYf1Mojje4MGRVQTKIaq/wF9H8t
-	RvyYbAXA==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=AzuWWBkFdjVll+3FPzE+7CHEc2OThwzVUEJpaox8Rp0=; b=HYgZQOCQCtJdng
+	rk8OXmcwRR0TG6BE/av/TDMJnsXtri3E6P7L/2zQBIS+KGPpya3TOrcFbCpQAUOtPLNcuHzr0HigD
+	bhzsFURy5UxIBRsQOF8WWfwOn6Gtslq9huZY3gWqdLgHS+uKVw0vTEQrivT1Ii4I48SrG3b8b1aEU
+	ALghd4ajo2H+jfFBlonEwLDcH9NEoJiZaaQtPxGwbxtJhenZ01pWhele7gXWVXdxH0EqMOym0Jn63
+	wYLKjEcfg/k+YmhQMA6QG1k4Fckq97LDhFTLTwBlGVbI6GJvzpPSku+9JUOsmYQsD0JxraVtJd/ZF
+	0l1oZUWkkvDCZWGf0m+A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1quw7i-007aNL-1L;
-	Mon, 23 Oct 2023 14:41:42 +0000
-Received: from mail-pg1-x54a.google.com ([2607:f8b0:4864:20::54a])
+	id 1quwy2-007hcB-17;
+	Mon, 23 Oct 2023 15:35:46 +0000
+Received: from mgamail.intel.com ([192.55.52.120])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1quw6w-007Zfz-1q
+	id 1quwxz-007hb6-0x
 	for kexec@lists.infradead.org;
-	Mon, 23 Oct 2023 14:40:57 +0000
-Received: by mail-pg1-x54a.google.com with SMTP id 41be03b00d2f7-5b8ae483459so681231a12.1
-        for <kexec@lists.infradead.org>; Mon, 23 Oct 2023 07:40:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1698072052; x=1698676852; darn=lists.infradead.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TOIO+H7vBCJRfyqao5vTRDK/ZnUXqp5753SeNzy629c=;
-        b=NVM4YLwlQ2J8Fp/ioDfFowdcuTw1SP6sVN0LEOFOJfvgfyeozpQg+e5gBTZU5fnf8R
-         wpvVeeQsDz5j4zX/lIvc63L5SBwyzpLrOY51iIIe9u48NabOSe4fExAnYr9sqi3pTDSi
-         uViwYpMdsVUhsNLj9mOSJHWpgPCwWW62EM3t/GOBmpwV6ZY4vqMMcGevA9v7YRJnNa7m
-         38tCglpaql6i2DR541QDrHa3+RBAU5In88zkxK3/NHjHMjpQSMEs6phOYFPJ+SI6OVqW
-         F7vaRyve9Bx5SjUr1mDrk9RtSbJH9DNYFHdyipPRmBwi/u3YzsQBOXnI01Tsv6ZUg8KB
-         +08A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698072052; x=1698676852;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TOIO+H7vBCJRfyqao5vTRDK/ZnUXqp5753SeNzy629c=;
-        b=WjSutBDbVMXRt0GkcPiDP1W5pt7fMu7mxmP/O+BSqxLeNCtHITNrUNJn80HHSIMyrv
-         rDbYenDP4M6shtAr0Gs7m3IVQxaAHJnxCHT4btXZSfGGT/+Pqb+J4dW7U20WRRaYqW7j
-         LcGLvulAvjHO8bnhJ/6i97+Om/O/TUxMYubNBUcd1O1XsuE2uxssyTJz169xXmgH8XnY
-         PBH3xGSvbOYpFNVbSzw93lIuI6YZvPh+BItADtBjDQotWxkhII64CInTLF2ps9CZ5hK+
-         hvFMyHj26DFMvXLQhSdBgovDYs6QjlMC7KvccFp5lGmbUASwDUufoTowZgYE2aGhYCFU
-         2Deg==
-X-Gm-Message-State: AOJu0Yykeqc9N4nKUTSC901jfqLynqNFH9a7avHgJ6/sXT1E5U9jEtWx
-	1NcIGMtxe36i89PWf6L2zFN9yvxfzS4=
-X-Google-Smtp-Source: AGHT+IExAuTTDvPv+uDKpzbze6eiqwdc7PLWiowzJWFsT1Fls/h45TIz/DhVhP8uEFt0TqXIZLj2MgO8bn8=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a63:e551:0:b0:584:dd94:24c1 with SMTP id
- z17-20020a63e551000000b00584dd9424c1mr155269pgj.11.1698072052492; Mon, 23 Oct
- 2023 07:40:52 -0700 (PDT)
-Date: Mon, 23 Oct 2023 07:40:50 -0700
-In-Reply-To: <87r0ll4thx.fsf@redhat.com>
-Mime-Version: 1.0
+	Mon, 23 Oct 2023 15:35:44 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1698075343; x=1729611343;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Rh3WIkroWfusSZh8pyM6xIJoI8clu8Gzvxh74Q9Cu1A=;
+  b=AKPGAb0/jc5FfAl2fWdRgn94CgdgJ1pSnfg3S2sIqIWc/U/ZPOvP+tR0
+   zLBcBzwwhSdhE7wIbT7WTgmt+KCTJXDv1QcUVjCBjsAjkqmMLkt5gApl+
+   Giw3EqMYpnpNvON8oBxO3bfcDOz6pjasGFsTNkF6QyBZ52xSG1T9XDtR9
+   i9RO+6NazNglV+nGsUaCvShdhxmjC3sRxixXRbIMmkT4/fteSAROh85aF
+   DEmSqkRIWIFCDHp4NAHbn845ODCevodMFMsLpPkrScOHZ45GaMFg1MIXY
+   joC3oLmHVyaUyIb+hlZDB6CWCOdYhYyXiztnvz6gvccKOQfSqK1UwGnW+
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10872"; a="385762203"
+X-IronPort-AV: E=Sophos;i="6.03,244,1694761200"; 
+   d="scan'208";a="385762203"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2023 08:31:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10872"; a="828480810"
+X-IronPort-AV: E=Sophos;i="6.03,244,1694761200"; 
+   d="scan'208";a="828480810"
+Received: from swidman-mobl2.ger.corp.intel.com (HELO box.shutemov.name) ([10.251.211.241])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2023 08:31:45 -0700
+Received: by box.shutemov.name (Postfix, from userid 1000)
+	id D62B9109B10; Mon, 23 Oct 2023 18:31:42 +0300 (+03)
+Date: Mon, 23 Oct 2023 18:31:42 +0300
+From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
+To: "Huang, Kai" <kai.huang@intel.com>
+Cc: "tglx@linutronix.de" <tglx@linutronix.de>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"x86@kernel.org" <x86@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+	"Reshetova, Elena" <elena.reshetova@intel.com>,
+	"Nakajima, Jun" <jun.nakajima@intel.com>,
+	"rafael@kernel.org" <rafael@kernel.org>,
+	"peterz@infradead.org" <peterz@infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"sathyanarayanan.kuppuswamy@linux.intel.com" <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	"Hunter, Adrian" <adrian.hunter@intel.com>,
+	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+	"ashish.kalra@amd.com" <ashish.kalra@amd.com>,
+	"kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+	"Christopherson,, Sean" <seanjc@google.com>,
+	"bhe@redhat.com" <bhe@redhat.com>,
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>
+Subject: Re: [PATCHv2 02/13] kernel/cpu: Add support for declaring CPU
+ offlining not supported
+Message-ID: <20231023153142.bes7zxcjc2soihsl@box>
 References: <20231020151242.1814-1-kirill.shutemov@linux.intel.com>
- <20231020151242.1814-5-kirill.shutemov@linux.intel.com> <87wmvh47zb.fsf@redhat.com>
- <ZTKg9XMxeBQ36f5L@google.com> <87r0ll4thx.fsf@redhat.com>
-Message-ID: <ZTaF8n9WM5BQ3rYS@google.com>
-Subject: Re: [PATCHv2 04/13] x86/kvm: Do not try to disable kvmclock if it was
- not enabled
-From: Sean Christopherson <seanjc@google.com>
-To: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, 
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, 
-	Elena Reshetova <elena.reshetova@intel.com>, Jun Nakajima <jun.nakajima@intel.com>, 
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, Tom Lendacky <thomas.lendacky@amd.com>, 
-	Ashish Kalra <ashish.kalra@amd.com>, Kai Huang <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>, 
-	kexec@lists.infradead.org, linux-coco@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>, 
-	Wanpeng Li <wanpengli@tencent.com>
+ <20231020151242.1814-3-kirill.shutemov@linux.intel.com>
+ <0a29fef814e51a2aa0030ec9cc97366718859411.camel@intel.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <0a29fef814e51a2aa0030ec9cc97366718859411.camel@intel.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231023_074054_638588_1FF6B70F 
-X-CRM114-Status: GOOD (  24.18  )
+X-CRM114-CacheID: sfid-20231023_083543_346698_39016C43 
+X-CRM114-Status: GOOD (  20.16  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -101,59 +102,43 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Oct 23, 2023, Vitaly Kuznetsov wrote:
-> Sean Christopherson <seanjc@google.com> writes:
+On Mon, Oct 23, 2023 at 09:30:59AM +0000, Huang, Kai wrote:
+> IMHO it's a little bit odd to have two mechanisms in place, even in this middle
+> state patch.  Is it better to completely replace CC_ATTR_HOTPLUG_DISABLED with
+> the new cpu_hotplug_offline_disabled in this patch? You can explicitly call
+> cpu_hotplug_disable_offlining() in tdx_early_init() so no functional change is
+> done.
+
+I can. But I don't see how it makes a difference.
+
+> Or I am wondering why cannot just merge this and the next patch together, with a
+> proper justification?
+
+Because the very next thing reviewers would ask is to split them :P
+
+> Btw, IMHO the changelog (this and next patch's) seems didn't explain the true
+> reason to replace CC_ATTR_HOTPLUG_DISABLED.
 > 
-> > On Fri, Oct 20, 2023, Vitaly Kuznetsov wrote:
-> >> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> >> index b8ab9ee5896c..1ee49c98e70a 100644
-> >> --- a/arch/x86/kernel/kvm.c
-> >> +++ b/arch/x86/kernel/kvm.c
-> >> @@ -454,7 +454,9 @@ static void kvm_guest_cpu_offline(bool shutdown)
-> >>         kvm_pv_disable_apf();
-> >>         if (!shutdown)
-> >>                 apf_task_wake_all();
-> >> -       kvmclock_disable();
-> >> +       if (kvm_para_has_feature(KVM_FEATURE_CLOCKSOURCE2) ||
-> >> +           kvm_para_has_feature(KVM_FEATURE_CLOCKSOURCE))
-> >> +               kvmclock_disable();
-> >>  }
-> >
-> > That would result in an unnecessray WRMSR in the case where kvmclock is disabled
-> > on the command line.  It _should_ be benign given how the code is written, but
-> > it's not impossible to imagine a scenario where someone disabled kvmclock in the
-> > guest because of a hypervisor bug.  And the WRMSR would become a bogus write to
-> > MSR 0x0 if someone made a "cleanup" to set msr_kvm_system_time if and only if
-> > kvmclock is actually used, e.g. if someone made Kirill's change sans the check in
-> > kvmclock_disable().
+> 	Currently hotplug prevented based on the confidential computing
+> 	attribute which is set for Intel TDX. But TDX is not the only possible
+> 	user of the wake up method.
 > 
-> True but we don't have such module params to disable other PV features so
-> e.g. KVM_FEATURE_PV_EOI/KVM_FEATURE_MIGRATION_CONTROL are written to
-> unconditionally. Wouldn't it be better to handle parameters like
-> 'no-kvmclock' by clearing the feature bit in kvm_arch_para_features()'s
-> return value so all kvm_para_has_feature() calls for it just return
-> 'false'? We can even do an umbreall "no-kvm-features=<mask>" to cover
-> all possible debug cases.
+> "TDX is not the only possible user of the wake up method" doesn't mean we need
+> to replace CC_ATTR_HOTPLUG_DISABLED.  E.g., other CoCo VM type can also select
+> CC_ATTR_HOTPLUG_DISABLED if it uses MADT wake up method.
+> 
+> To me the true reason is the new MADT wake up version actually brings the
+> support of offlining cpu, thus it's more suitable to decide whether the CoCo VM
+> needs to disable CPU offline based on the MADT wake up version, but not the CC_*
+> attributes that is determined by CoCo VM type.
 
-I don't know that it's worth the effort, or that it'd even be a net positive.
+No. MADT is orthogonal to CoCo. It can be implemented outside of CoCo
+environment and CoCo platform can implement other wake up methods. It is
+not up to TDX/SEV/whatever to decide if offlining is supported. It is
+property of the wakeup method implemented on the platform.
 
-Today, kvm_para_has_feature() goes through to CPUID every time, e.g. we'd have
-to add a small bit of infrastructure to snapshot and clear bits, or rework things
-to let kvm_para_has_feature peek at kvmclock.
-
-And things like KVM_FEATURE_PV_TLB_FLUSH would be quite weird, e.g. we either end
-up leaving the feature bit set while returning "false" for pv_tlb_flush_supported(),
-or we'd clear the feature bit for a rather large number of conditions that don't
-really have anything to do with KVM_FEATURE_PV_TLB_FLUSH being available.
-
-  static bool pv_tlb_flush_supported(void)
-  {
-	return (kvm_para_has_feature(KVM_FEATURE_PV_TLB_FLUSH) &&
-		!kvm_para_has_hint(KVM_HINTS_REALTIME) &&
-		kvm_para_has_feature(KVM_FEATURE_STEAL_TIME) &&
-		!boot_cpu_has(X86_FEATURE_MWAIT) &&
-		(num_possible_cpus() != 1));
-  }
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
 
 _______________________________________________
 kexec mailing list
