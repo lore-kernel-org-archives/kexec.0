@@ -4,88 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9E5A8C004C0
-	for <kexec@archiver.kernel.org>; Mon, 23 Oct 2023 15:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CC9CCC25B46
+	for <kexec@archiver.kernel.org>; Mon, 23 Oct 2023 21:55:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=AzuWWBkFdjVll+3FPzE+7CHEc2OThwzVUEJpaox8Rp0=; b=HYgZQOCQCtJdng
-	rk8OXmcwRR0TG6BE/av/TDMJnsXtri3E6P7L/2zQBIS+KGPpya3TOrcFbCpQAUOtPLNcuHzr0HigD
-	bhzsFURy5UxIBRsQOF8WWfwOn6Gtslq9huZY3gWqdLgHS+uKVw0vTEQrivT1Ii4I48SrG3b8b1aEU
-	ALghd4ajo2H+jfFBlonEwLDcH9NEoJiZaaQtPxGwbxtJhenZ01pWhele7gXWVXdxH0EqMOym0Jn63
-	wYLKjEcfg/k+YmhQMA6QG1k4Fckq97LDhFTLTwBlGVbI6GJvzpPSku+9JUOsmYQsD0JxraVtJd/ZF
-	0l1oZUWkkvDCZWGf0m+A==;
+	List-Owner; bh=BKu5LS5kkadwxG4PM5woHIKEFt8I9rrV6qbW2Y2Kwlg=; b=bRUJg+CUASLLXA
+	+grVlmME886I1Y59vw41k4bqZsltJy7wznqH9u/5aEh0NPz6p00P+N7YMU/Zbd+xkODD4RXx4OHUG
+	LttyC6M/uXi0OnNDpXOV490rtRNH5ZNA8PRXPfF/aB2OEuGbDTtOpAX9otGLhAoMN+EQxW4EYTb+M
+	/1UFnqwtIGk8rQjgd5wTq7m8N6pmyRJ5msI/0dNhHYzB3SVU4loeYmXXjtPs8vmf9E/NnLgVkzS5t
+	wsJyUS1dIdbJ5pAOTO4bYUbZJox92Sf/GTMAbPQL52Hzrf6ngppRsohQGkjR8N2YrhwO7i1pjX9lD
+	z/XWGkQQ9NGzGgvgUbQg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1quwy2-007hcB-17;
-	Mon, 23 Oct 2023 15:35:46 +0000
-Received: from mgamail.intel.com ([192.55.52.120])
+	id 1qv2t5-008L1W-36;
+	Mon, 23 Oct 2023 21:55:03 +0000
+Received: from mail-qt1-x834.google.com ([2607:f8b0:4864:20::834])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1quwxz-007hb6-0x
+	id 1qv2t0-008L0c-30
 	for kexec@lists.infradead.org;
-	Mon, 23 Oct 2023 15:35:44 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698075343; x=1729611343;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Rh3WIkroWfusSZh8pyM6xIJoI8clu8Gzvxh74Q9Cu1A=;
-  b=AKPGAb0/jc5FfAl2fWdRgn94CgdgJ1pSnfg3S2sIqIWc/U/ZPOvP+tR0
-   zLBcBzwwhSdhE7wIbT7WTgmt+KCTJXDv1QcUVjCBjsAjkqmMLkt5gApl+
-   Giw3EqMYpnpNvON8oBxO3bfcDOz6pjasGFsTNkF6QyBZ52xSG1T9XDtR9
-   i9RO+6NazNglV+nGsUaCvShdhxmjC3sRxixXRbIMmkT4/fteSAROh85aF
-   DEmSqkRIWIFCDHp4NAHbn845ODCevodMFMsLpPkrScOHZ45GaMFg1MIXY
-   joC3oLmHVyaUyIb+hlZDB6CWCOdYhYyXiztnvz6gvccKOQfSqK1UwGnW+
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10872"; a="385762203"
-X-IronPort-AV: E=Sophos;i="6.03,244,1694761200"; 
-   d="scan'208";a="385762203"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2023 08:31:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10872"; a="828480810"
-X-IronPort-AV: E=Sophos;i="6.03,244,1694761200"; 
-   d="scan'208";a="828480810"
-Received: from swidman-mobl2.ger.corp.intel.com (HELO box.shutemov.name) ([10.251.211.241])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2023 08:31:45 -0700
-Received: by box.shutemov.name (Postfix, from userid 1000)
-	id D62B9109B10; Mon, 23 Oct 2023 18:31:42 +0300 (+03)
-Date: Mon, 23 Oct 2023 18:31:42 +0300
-From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
-To: "Huang, Kai" <kai.huang@intel.com>
-Cc: "tglx@linutronix.de" <tglx@linutronix.de>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"x86@kernel.org" <x86@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-	"Reshetova, Elena" <elena.reshetova@intel.com>,
-	"Nakajima, Jun" <jun.nakajima@intel.com>,
-	"rafael@kernel.org" <rafael@kernel.org>,
-	"peterz@infradead.org" <peterz@infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"sathyanarayanan.kuppuswamy@linux.intel.com" <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	"Hunter, Adrian" <adrian.hunter@intel.com>,
-	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-	"ashish.kalra@amd.com" <ashish.kalra@amd.com>,
-	"kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-	"Christopherson,, Sean" <seanjc@google.com>,
-	"bhe@redhat.com" <bhe@redhat.com>,
-	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>
-Subject: Re: [PATCHv2 02/13] kernel/cpu: Add support for declaring CPU
- offlining not supported
-Message-ID: <20231023153142.bes7zxcjc2soihsl@box>
-References: <20231020151242.1814-1-kirill.shutemov@linux.intel.com>
- <20231020151242.1814-3-kirill.shutemov@linux.intel.com>
- <0a29fef814e51a2aa0030ec9cc97366718859411.camel@intel.com>
+	Mon, 23 Oct 2023 21:55:00 +0000
+Received: by mail-qt1-x834.google.com with SMTP id d75a77b69052e-41cdc669c5eso44851cf.1
+        for <kexec@lists.infradead.org>; Mon, 23 Oct 2023 14:54:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1698098096; x=1698702896; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=z5LWS4K5/4iKfNn5YiAzdNMefXt8v/R2dnYlMsD5khk=;
+        b=slqkvSYd7OUQVSM64J21q4Iexf8Pu5E7GZxivelsU4FQGQTjvqpCMviHkgLefE7Y6q
+         d8NPepouyH9yAc3IRf7SBcR9N1fYmk/W4Ya+SBp/h20m3SOo4PnrI32wi4CjEg3x4Q5/
+         8BmDMzXZul6yPVb9qoITQS9QBU2O21c1os5m9XXyJ3Bgxwb9NIYySHP4nUciQO2JyWHF
+         y+ZlTIrb39BJU/TmyJ6Feosd0PP8K5rNz1y0JlFH5SRxbo4vdoER1p9wStPnMqiIrRZM
+         WZ/uhqg01J5NMLH0K9cgJCh7GF0EazqOxEqRbKtulJZ6BRa5BLGrAACo2An30/szYF4f
+         jYUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698098096; x=1698702896;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=z5LWS4K5/4iKfNn5YiAzdNMefXt8v/R2dnYlMsD5khk=;
+        b=KWLxpd4l88aMzPAdMesHD12q7ihhCfex5qtRvRDxuQQtMCBUO931bRYIUQJXKIX7kB
+         8l+6h846Gguypt34h1wc+MmkOfGxS2j5JWozuI3t4qca9LtbjfBRTtet4h3oqB/lremB
+         PUv/ieIXsQAszxktGx7dJ11Uiy5EQQX0tkNJQ1GqYKy+xeyNnMr/XMF6Jieq3MCGbD6+
+         pMc+RebsDEIf2ZCY4D3kKpXpCA1c1hC5YZ5/utDwgdjLbPGN7CkZb633k+w8m0WoKbv4
+         SyRAoKcSNfhT3xfUVM7jSekq8Fr0WZpHvbgfTyxC6sB2IwHeVgjfbpzU7jN78C4nbTOU
+         DReQ==
+X-Gm-Message-State: AOJu0YwxDtExH4DTRxoPjCuHNMUD9qUwuD8UXjfoS8lR5y7BIMwNfcZm
+	MpfdWg1BwmmvTcvqDxoxtbG2QNmj855OEQbSPhS7yg==
+X-Google-Smtp-Source: AGHT+IE2D+QLdS8YjjqB+PJOwtagyXlMsmDom9XQlRavmOeQBvXuC7m/nzHYgfableqs7DnMwXJVVHEPALVV0vUc6AU=
+X-Received: by 2002:a05:622a:2282:b0:41e:29ad:8b8b with SMTP id
+ ay2-20020a05622a228200b0041e29ad8b8bmr15969qtb.10.1698098095867; Mon, 23 Oct
+ 2023 14:54:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <0a29fef814e51a2aa0030ec9cc97366718859411.camel@intel.com>
+References: <20231023023121.1464544-1-jsperbeck@google.com> <4FDF6E7A-C6E2-415D-A82B-342DAE6BD561@zytor.com>
+In-Reply-To: <4FDF6E7A-C6E2-415D-A82B-342DAE6BD561@zytor.com>
+From: John Sperbeck <jsperbeck@google.com>
+Date: Mon, 23 Oct 2023 14:54:43 -0700
+Message-ID: <CAFNjLiVAdcPEc+UK_5Z+uutqAVki5geWgpWewzu9iyJsYyiRjw@mail.gmail.com>
+Subject: Re: [PATCH] x86/kexec: set MIN_KERNEL_LOAD_ADDR to 0x01000000
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Eric Biederman <ebiederm@xmission.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Baoquan He <bhe@redhat.com>, 
+	kexec@lists.infradead.org, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Zac Tang <zactang@google.com>, Cloud Hsu <cloudhsu@google.com>, linux-kernel@vger.kernel.org
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231023_083543_346698_39016C43 
-X-CRM114-Status: GOOD (  20.16  )
+X-CRM114-CacheID: sfid-20231023_145459_011294_5A3987B8 
+X-CRM114-Status: GOOD (  30.94  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,50 +85,81 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Oct 23, 2023 at 09:30:59AM +0000, Huang, Kai wrote:
-> IMHO it's a little bit odd to have two mechanisms in place, even in this middle
-> state patch.  Is it better to completely replace CC_ATTR_HOTPLUG_DISABLED with
-> the new cpu_hotplug_offline_disabled in this patch? You can explicitly call
-> cpu_hotplug_disable_offlining() in tdx_early_init() so no functional change is
-> done.
-
-I can. But I don't see how it makes a difference.
-
-> Or I am wondering why cannot just merge this and the next patch together, with a
-> proper justification?
-
-Because the very next thing reviewers would ask is to split them :P
-
-> Btw, IMHO the changelog (this and next patch's) seems didn't explain the true
-> reason to replace CC_ATTR_HOTPLUG_DISABLED.
-> 
-> 	Currently hotplug prevented based on the confidential computing
-> 	attribute which is set for Intel TDX. But TDX is not the only possible
-> 	user of the wake up method.
-> 
-> "TDX is not the only possible user of the wake up method" doesn't mean we need
-> to replace CC_ATTR_HOTPLUG_DISABLED.  E.g., other CoCo VM type can also select
-> CC_ATTR_HOTPLUG_DISABLED if it uses MADT wake up method.
-> 
-> To me the true reason is the new MADT wake up version actually brings the
-> support of offlining cpu, thus it's more suitable to decide whether the CoCo VM
-> needs to disable CPU offline based on the MADT wake up version, but not the CC_*
-> attributes that is determined by CoCo VM type.
-
-No. MADT is orthogonal to CoCo. It can be implemented outside of CoCo
-environment and CoCo platform can implement other wake up methods. It is
-not up to TDX/SEV/whatever to decide if offlining is supported. It is
-property of the wakeup method implemented on the platform.
-
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gU3VuLCBPY3QgMjIsIDIwMjMgYXQgNzo0MuKAr1BNIEguIFBldGVyIEFudmluIDxocGFAenl0
+b3IuY29tPiB3cm90ZToKPgo+IE9uIE9jdG9iZXIgMjIsIDIwMjMgNzozMToyMSBQTSBQRFQsIEpv
+aG4gU3BlcmJlY2sgPGpzcGVyYmVja0Bnb29nbGUuY29tPiB3cm90ZToKPiA+VGhlIHBoeXNpY2Fs
+IG1lbW9yeSByYW5nZSB0aGF0IGtleGVjIHNlbGVjdHMgZm9yIHRoZSBjb21wcmVzc2VkCj4gPmJ6
+aW1hZ2UgdGFyZ2V0IGtlcm5lbCwgbWlnaHQgbm90IGJlIHdoZXJlIGl0IHJ1bnMgZnJvbS4gIFRo
+ZQo+ID5zdGFydHVwXzY0KCkgY29kZSBpbiBoZWFkXzY0LlMgY29waWVzIGl0c2VsZiBvdXQgb2Yg
+dGhlIHdheQo+ID5iZWZvcmUgdGhlIGRlY29tcHJlc3Npb24gc28gaXQgZG9lc24ndCBjbG9iYmVy
+IGl0c2VsZi4KPiA+Cj4gPklmIHRoZSBzdGFydCBvZiB0aGUgbWVtb3J5IHJhbmdlIHNlbGVjdGVk
+IGJ5IGtleGVjIGlzIGFib3ZlCj4gPkxPQURfUEhZU0lDQUxfQUREUiAoMHgwMTAwMDAwMCBieSBk
+ZWZhdWx0KSwgdGhlbiB0aGUgY29weSByZW1haW5zCj4gPndpdGhpbiB0aGUgbWVtb3J5IGFyZWEu
+ICBCdXQgaWYgdGhlIHN0YXJ0IGlzIGJlbG93IHRoaXMgcmFuZ2UsCj4gPnRoZW4gdGhlIGNvcHkg
+d2lsbCBsaWtlbHkgZW5kIHVwIG91dHNpZGUgdGhlIHJhbmdlLgo+ID4KPiA+VXN1YWxseSwgdGhp
+cyB3aWxsIGJlIGhhcm1sZXNzIGJlY2F1c2Ugbm90IG11Y2ggbWVtb3J5IGlzIGluIHVzZQo+ID5h
+dCB0aGUgdGltZSBvZiB0aGUgcHJlLWRlY29tcHJlc3Npb24gY29weSwgc28gdGhlcmUgaXMgbGl0
+dGxlCj4gPnRvIGFjY2lkZW50YWxseSBjbG9iYmVyLiAgSG93ZXZlciwgYW4gdW5sdWNreSBjaG9p
+Y2UgZm9yIHRoZQo+ID5hZHJlc3Mgb2YgdGhlIGtlcm5lbCBhbmQgdGhlIGluaXRyZCBjb3VsZCBw
+dXQgdGhlIGluaXRyZCBpbiBoYXJtJ3MKPiA+d2F5LiAgRm9yIGV4YW1wbGU6Cj4gPgo+ID4gICAg
+MHgwMDQwMDAwMCAtIHBoeXNpY2FsIGFkZHJlc3MgZm9yIHRhcmdldCBrZXJuZWwKPiA+ICAgIDB4
+MDNmZjgwMDAgLSBwaHlzaWNhbCBhZGRyZXNzIG9mIHNldmVuLXBhZ2UgaW5pdHJkCj4gPiAgICAw
+eDAzMDJjMDAwIC0gc2l6ZSBvZiB1bmNvbXByZXNzZWQga2VybmVsIChhYm91dCA1MCBNYnl0ZXMp
+Cj4gPgo+ID5UaGUgZGVjb21wcmVzc2VkIGtlcm5lbCB3aWxsIHNwYW4gMHgwMTAwMDAwMCB0aHJv
+dWdoIDB4MDQwMmMwMDAsCj4gPndoaWNoIHdpbGwgb3ZlcndyaXRlIHRoZSBpbml0cmQuCj4gPgo+
+ID5JZiB0aGUga2V4ZWMgY29kZSByZXN0cmljdHMgaXRzZWxmIHRvIHBoeXNpY2FsIGFkZHJlc3Nl
+cyBhYm92ZQo+ID4weDAxMDAwMDAwLCB0aGVuIHRoZSBwcmUtZGVjb21wcmVzc2lvbiBjb3B5IGFu
+ZCB0aGUgZGVjb21wcmVzc2lvbgo+ID5pdHNlbGYgd2lsbCBzdGF5IHdpdGhpbiB0aGUgYm91bmRz
+IG9mIHRoZSBtZW1vcnkga2V4ZWMgc2VsZWN0ZWQKPiA+KHVubGVzcyBhIG5vbi1kZWZhdWx0IHZh
+bHVlIGlzIHVzZWQgaW4gdGhlIHRhcmdldCBrZXJuZWwgZm9yCj4gPkNPTkZJR19QSFlTSUNBTF9T
+VEFSVCwgd2hpY2ggd2lsbCBjaGFuZ2UgTE9BRF9QSFlTSUNBTF9BRERSLAo+ID5idXQgdGhhdCdz
+IHByb2JhYmx5IHVuc29sdmFibGUgdW5sZXNzIHRoZSB0YXJnZXQga2VybmVsIHdlcmUgdG8KPiA+
+c29tZWhvdyBjb21tdW5pY2F0ZSB0aGlzIHRvIGtleGVjKS4KPiA+Cj4gPlNpZ25lZC1vZmYtYnk6
+IEpvaG4gU3BlcmJlY2sgPGpzcGVyYmVja0Bnb29nbGUuY29tPgo+ID4tLS0KPiA+IGFyY2gveDg2
+L2tlcm5lbC9rZXhlYy1iemltYWdlNjQuYyB8IDIgKy0KPiA+IDEgZmlsZSBjaGFuZ2VkLCAxIGlu
+c2VydGlvbigrKSwgMSBkZWxldGlvbigtKQo+ID4KPiA+ZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tl
+cm5lbC9rZXhlYy1iemltYWdlNjQuYyBiL2FyY2gveDg2L2tlcm5lbC9rZXhlYy1iemltYWdlNjQu
+Ywo+ID5pbmRleCBhNjFjMTJjMDEyNzAuLmQ2YmY2YzEzZGFiMSAxMDA2NDQKPiA+LS0tIGEvYXJj
+aC94ODYva2VybmVsL2tleGVjLWJ6aW1hZ2U2NC5jCj4gPisrKyBiL2FyY2gveDg2L2tlcm5lbC9r
+ZXhlYy1iemltYWdlNjQuYwo+ID5AQCAtMzYsNyArMzYsNyBAQAo+ID4gICovCj4gPiAjZGVmaW5l
+IE1JTl9QVVJHQVRPUllfQUREUiAgICAweDMwMDAKPiA+ICNkZWZpbmUgTUlOX0JPT1RQQVJBTV9B
+RERSICAgIDB4MzAwMAo+ID4tI2RlZmluZSBNSU5fS0VSTkVMX0xPQURfQUREUiAgMHgxMDAwMDAK
+PiA+KyNkZWZpbmUgTUlOX0tFUk5FTF9MT0FEX0FERFIgIDB4MTAwMDAwMAo+ID4gI2RlZmluZSBN
+SU5fSU5JVFJEX0xPQURfQUREUiAgMHgxMDAwMDAwCj4gPgo+ID4gLyoKPgo+IFRoaXMgZG9lc24n
+dCBtYWtlIGFueSBzZW5zZSB0byBtZS4gVGhlcmUgaXMgYWxyZWFkeSBhIGhpZ2ggd2F0ZXIgbWFy
+ayBmb3IgaGlzIG11Y2ggbWVtb3J5IHRoZSBrZXJuZWwgbmVlZHMgdW50aWwgYW4gaW5pdHJkIG9y
+IHNldHVwX2RhdGEgaXRlbSBjYW4gYXBwZWFyLiBUaGlzIGlzIGp1c3QgYSBoYWNrLCBwbGVhc2Ug
+Zml4IGl0IHByb3Blcmx5LgoKVGhlIHN0YXJ0dXBfNjQoKSBjb2RlIGluIGhlYWRfNjQuUyBjaGFu
+Z2VzIGJlaGF2aW9yIGJhc2VkIG9uIHdoZXRoZXIKaXQncyBydW5uaW5nIGJlbG93IG9yIGFib3Zl
+IExPQURfUEhZU0lDQUxfQUREUjoKCiNpZmRlZiBDT05GSUdfUkVMT0NBVEFCTEUKICAgICAgICBs
+ZWFxICAgIHN0YXJ0dXBfMzIoJXJpcCkgLyogLSAkc3RhcnR1cF8zMiAqLywgJXJicAogICAgICAg
+IG1vdmwgICAgQlBfa2VybmVsX2FsaWdubWVudCglcnNpKSwgJWVheAogICAgICAgIGRlY2wgICAg
+JWVheAogICAgICAgIGFkZHEgICAgJXJheCwgJXJicAogICAgICAgIG5vdHEgICAgJXJheAogICAg
+ICAgIGFuZHEgICAgJXJheCwgJXJicAogICAgICAgIGNtcHEgICAgJExPQURfUEhZU0lDQUxfQURE
+UiwgJXJicAogICAgICAgIGphZSAgICAgMWYKI2VuZGlmCiAgICAgICAgbW92cSAgICAkTE9BRF9Q
+SFlTSUNBTF9BRERSLCAlcmJwCjE6CgpJbiBteSBleGFtcGxlLCB3ZSB3ZXJlIHJ1bm5pbmcgZnJv
+bSBhZGRyZXNzIDB4MDA0MDAwMDAuICBUaGUgJXJicApyZWdpc3RlciB3aWxsIHN0YXJ0IHdpdGgg
+MHgwMDQwMDAwMCwgYnV0IHdpbGwgYmUgY2hhbmdlZCB0byAweDAxMDAwMDAwCmFmdGVyIHRoZSBj
+aGVjayBhZ2FpbnN0IExPQURfUEhZU0lDQUxfQUREUiBmYWlscy4KClRoZSAweDAxMDAwMDAwIHZh
+bHVlIGluICVyYnAgaXMgcGFzc2VkIHRvIGV4dHJhY3Rfa2VybmVsIGFzIHRoZQonb3V0cHV0JyBh
+cmd1bWVudC4gIFVubGVzcyBjaG9vc2VfcmFuZG9tX2xvY2F0aW9uKCkgZGVjaWRlcwpkaWZmZXJl
+bnRseSwgdGhpcyB3aWxsIGJlIHdoZXJlIHRoZSBrZXJuZWwgaXMgZGVjb21wcmVzc2VkIHRvLiAg
+VGhlCnNpemUgb2YgdGhlIGtlcm5lbCBpcyBsYXJnZSBlbm91Z2ggaW4gbXkgZXhhbXBsZSB0aGF0
+IHRoZQpkZWNvbXByZXNzaW9uIG92ZXJydW5zIHRoZSBpbml0cmQuCgpJZiB0aGUgc3RhcnR1cF82
+NCgpIGNvZGUgZGlkbid0IGhhdmUgdGhlIExPQURfUEhZU0lDQUxfQUREUiBjaGVjayBhbmQKdXNl
+ZCAlcnBiIGFzIGlzLCB0aGVuIHRoZXJlIHdvdWxkIGJlIG5vIGlzc3VlLiAgVGhlIGRlY29tcHJl
+c3Npb24Kd291bGQgaGF2ZSBiZWVuIHRvIDB4MDA0MDAwMDAgYW5kIHdvdWxkIGhhdmUgY29tcGxl
+dGVkIGJlZm9yZSByZWFjaGluZwp0aGUgaW5pdHJkIG1lbW9yeS4KClRoYXQgaXMsIHRoZSBrZXhl
+YyBjb2RlIGlzIGJlaW5nIGNhcmVmdWwgdG8gZW5zdXJlIHRoYXQgdGhlIGtlcm5lbCBhbmQKaW5p
+dHJkIG1lbW9yeSBkb2Vzbid0IG92ZXJsYXAsIGJ1dCBpc24ndCBwYXlpbmcgYXR0ZW50aW9uIHRv
+IHdoYXQKaGFwcGVucyBpZiB0aGUga2VybmVsIG1lbW9yeSBpcyBiZWxvdyBMT0FEX1BIWVNJQ0FM
+X0FERFIgKHRoZSBrZXJuZWwKYWRkcmVzcyBpcyBlZmZlY3RpdmVseSBjaGFuZ2VkIHRvIGEgZGlm
+ZmVyZW50IGxvY2F0aW9uKS4gIE15IHByb3Bvc2VkCmNoYW5nZSBtYWtlcyBpdCBhd2FyZSwgYW5k
+IGF2b2lkcyBzdWNoIGFkZHJlc3Nlcy4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQu
+b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
