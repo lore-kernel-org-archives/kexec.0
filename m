@@ -4,73 +4,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DF57EC25B47
-	for <kexec@archiver.kernel.org>; Wed, 25 Oct 2023 09:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 98BBFC25B48
+	for <kexec@archiver.kernel.org>; Thu, 26 Oct 2023 20:19:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Mime-Version:References:In-Reply-To:
+	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=BwbhEZAbmOFpoesf6wygUK2EHNWN114I3pncfS+ie+o=; b=pCLRB3PrePwO0V
-	s0zzrVyZvPF7l/EZGAU+4jmJvUJg0qHDc+fo4nl+RZ1Pa3qLcLE4KQ5Feul5Wh2LRTz29EH5vGnwZ
-	I2QN03NbADGNbOlZsAUBWNhaSSHvWeT29dji3Mlo4Nk5yX9H+qfETgxCEVQnmLzCxdczKt20YDHuG
-	i+eVP0DCfOsdZsYx5i4zQxvm7AoPTxa81/8owFE3RTE7oRkYOPo9fncB5lJnmNYGGOkJDHTRu5IGx
-	Aa0n3TOzcxq2SzHSQE/QYxmnJAsP7AorSPDMfitmvLVrJpcUJqnLWz7+Zva7y6XWL1aZtmHYfA8XE
-	NUKCbFTbSysiL4IzKw9w==;
+	List-Owner; bh=JYVTsx/u5RVM1qJxzfVmNd+eMq9lDWS1hNEneM4o/BM=; b=m7V+kv/cpAfeBp
+	URlwBTsnMAEIckg9CPdhXrcCgM7MsttZrKhmBWrVOE18eXey4+eqjMb3cksIQ4tEnk11U/4yTP0uF
+	koWoQRbxQtbVAY1foTW1aGVIBgPbhNaEUK8zU17NCbQaHNrwKOVmZa+hIGHCTEwvFGVlfnLh8SToh
+	VDZAdIVmH9rNt2bWzQzAWmXwNtAwQpM/3gyIKQRMlW8CGrg12FypPpwNEtHLBF5XKSyOFIr9xSW1i
+	A0vvKz6NrXc+Xtnrvnva47YmG/12qC1MXu2t2s5ZvkUhrSji1jeUILKcYPD2GwNOqLrBOwcoqmdNM
+	xAXgXlRUeQkwW/y83FKA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qvaef-00BtNK-0q;
-	Wed, 25 Oct 2023 09:58:25 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1qw6pA-00F7A5-1r;
+	Thu, 26 Oct 2023 20:19:24 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qvaeb-00BtLa-1Y
+	id 1qw6p3-00F75B-2T
 	for kexec@lists.infradead.org;
-	Wed, 25 Oct 2023 09:58:22 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1698227898;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hY1uTHtPvGX6qPxYPyCytvqtD0NKbkwvoAm0a0RsVuk=;
-	b=dsPTp+U0yUxkJQkthcLgvT81LOVLGMEZvQIvsctDmK5qfQ5NZF3C8cKO79/Wslj8Q0/Jyu
-	9sVxVR3AVJv/A0yYJOu6+EBr2pTcDSqKJ6p2Kc6rzVaEvQmbwmxEgf9MkS9hQdm8+woTC4
-	vlq0QCUiN+9cBezyMjnHiNW6qHE71EQ=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-347-4ArESoOsO4WzaKRFgFR3qQ-1; Wed,
- 25 Oct 2023 05:58:14 -0400
-X-MC-Unique: 4ArESoOsO4WzaKRFgFR3qQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0F3B73C0E237;
-	Wed, 25 Oct 2023 09:58:14 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.53])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 0ADFA40C6F79;
-	Wed, 25 Oct 2023 09:58:12 +0000 (UTC)
-Date: Wed, 25 Oct 2023 17:58:10 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Arnd Bergmann <arnd@arndb.de>, eric_devolder@yahoo.com
-Cc: Vivek Goyal <vgoyal@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	x86@kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-crypto@vger.kernel.org
-Subject: Re: [PATCH 1/2] kexec: fix KEXEC_FILE dependencies
-Message-ID: <ZTjmsku919U6u6wt@MiWiFi-R3L-srv>
-References: <20231023110308.1202042-1-arnd@kernel.org>
- <ZTe8NOgAjvKDA6z0@MiWiFi-R3L-srv>
- <b71034f4-5cdc-44e0-b72f-1a8ffae0593e@app.fastmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <b71034f4-5cdc-44e0-b72f-1a8ffae0593e@app.fastmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+	Thu, 26 Oct 2023 20:19:22 +0000
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39QJoU3k017861;
+	Thu, 26 Oct 2023 20:16:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=2DG1HxntyqMQQCjGfSLDTWCmytflfPcq4+Rip69/fMI=;
+ b=TFYQe/Os6uWuYID/b+1VD438xq0QqxzMLtsLh2npLCeniwCKZpKuLJUC3EdT/J2iFQvD
+ wfVEg3bVpMzAPck2FGhcKhYTyCL6jQMGiVNy/AptFN7mnkUrooC13bH23H4GkH+Ug0j6
+ nX1VqMx9UjRvYlslArgyYhmLu76fknnWpqfqYDvg+Kl3UqMOWRDoY/kQVZ7nFO8OHkre
+ +4RxMQnAhx7z/kzFnIbUdIgkdfQNtS2A7Bu8zkQBsqAyBuQ+4C8dNk4FP2JWcuY5lDQh
+ DecgBp+mZkEd/z5sdo3dFWTDKY0A9N3yM1QTcc1M9nkbpXedglpjHb0B8WLFeZjmBztl Mg== 
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tyxm48xr2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 26 Oct 2023 20:16:54 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39QInN4g021697;
+	Thu, 26 Oct 2023 20:16:53 GMT
+Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3tywqs8edn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 26 Oct 2023 20:16:53 +0000
+Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
+	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 39QKGqZ920710086
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 26 Oct 2023 20:16:52 GMT
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 61F9258052;
+	Thu, 26 Oct 2023 20:16:52 +0000 (GMT)
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B96FA5805E;
+	Thu, 26 Oct 2023 20:16:51 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.watson.ibm.com (unknown [9.31.99.90])
+	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 26 Oct 2023 20:16:51 +0000 (GMT)
+Message-ID: <1aa5524b52fdb46df4948a21b1139cf833758cde.camel@linux.ibm.com>
+Subject: Re: [PATCH v2 1/7] ima: refactor ima_dump_measurement_list to move
+ memory allocation to a separate function
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Tushar Sugandhi <tusharsu@linux.microsoft.com>, ebiederm@xmission.com,
+        noodles@fb.com, bauermann@kolabnow.com, kexec@lists.infradead.org,
+        linux-integrity@vger.kernel.org
+Cc: code@tyhicks.com, nramas@linux.microsoft.com, paul@paul-moore.com
+Date: Thu, 26 Oct 2023 16:16:51 -0400
+In-Reply-To: <20231005182602.634615-2-tusharsu@linux.microsoft.com>
+References: <20231005182602.634615-1-tusharsu@linux.microsoft.com>
+	 <20231005182602.634615-2-tusharsu@linux.microsoft.com>
+X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
+Mime-Version: 1.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: -jMICOWNNEGbjvljbRMScLQxONmblViD
+X-Proofpoint-GUID: -jMICOWNNEGbjvljbRMScLQxONmblViD
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-26_19,2023-10-26_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ clxscore=1011 bulkscore=0 mlxlogscore=999 lowpriorityscore=0 phishscore=0
+ suspectscore=0 spamscore=0 priorityscore=1501 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2310240000 definitions=main-2310260175
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231025_025821_620577_9D71CEC2 
-X-CRM114-Status: GOOD (  41.02  )
+X-CRM114-CacheID: sfid-20231026_131918_153689_01ACDB54 
+X-CRM114-Status: GOOD (  44.17  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,132 +107,230 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 10/24/23 at 03:17pm, Arnd Bergmann wrote:
-> On Tue, Oct 24, 2023, at 14:44, Baoquan He wrote:
-> > Just add people and mailing list to CC since I didn't find this mail in
-> > my box, just drag it via 'b4 am'.
-> >
-> > On 10/23/23 at 01:01pm, Arnd Bergmann wrote:
-> > ......
-> 
-> >> diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
-> >> index 7aff28ded2f48..bfc636d64ff2b 100644
-> >> --- a/kernel/Kconfig.kexec
-> >> +++ b/kernel/Kconfig.kexec
-> >> @@ -36,6 +36,7 @@ config KEXEC
-> >>  config KEXEC_FILE
-> >>  	bool "Enable kexec file based system call"
-> >>  	depends on ARCH_SUPPORTS_KEXEC_FILE
-> >> +	depends on CRYPTO_SHA256=y || !ARCH_SUPPORTS_KEXEC_PURGATORY
-> >
-> > I am not sure if the logic is correct. In theory, kexec_file code
-> > utilizes purgatory to verify the checksum digested during kernel loading
-> > when try to jump to the kernel. That means kexec_file depends on
-> > purgatory, but not contrary?
-> 
-> The expression I wrote is a bit confusing, but I think this just
-> keeps the existing behavior:
-> 
-> - on architectures that select ARCH_SUPPORTS_KEXEC_PURGATORY
->   (powerpc, riscv, s390 and x86), we also require CRYPTO_SHA256
->   to be built-in.
-> - on architectures that do not have ARCH_SUPPORTS_KEXEC_PURGATORY
->   (arm64 and parisc), CRYPTO_SHA256 is not used and can be disabled
->   or =m.
-> 
-> Since ARCH_SUPPORTS_KEXEC_PURGATORY is a 'bool' symbol, it could
-> be written as
-> 
-> depends on (ARCH_SUPPORTS_KEXEC_PURGATORY && CRYPTO_SHA256=y) \
->            || !ARCH_SUPPORTS_KEXEC_PURGATORY
+Hi Tushar,
 
-Yes, this seems to be clearer to me. Thanks.
+According to Documentation/process/submitting-patches.rst, the subject
+line should be between 70-75 characters.
 
-> 
-> if you find that clearer. I see that the second patch
-> actually gets this wrong, it should actually do
-> 
-> select CRYPTO if ARCH_SUPPORTS_KEXEC_PURGATORY
-> select CRYPTO_SHA256 if ARCH_SUPPORTS_KEXEC_PURGATORY
+Perhaps something like "ima: define and call ima_alloc_kexec_buffer()".
 
-Yeah, makes sense to me.
+On Thu, 2023-10-05 at 11:25 -0700, Tushar Sugandhi wrote:
+> IMA allocates memory and dumps the measurement during kexec soft reboot
+> as a single function call ima_dump_measurement_list().  It gets called
+> during kexec 'load' operation.  It results in the IMA measurements
+> between the window of kexec 'load' and 'execute' getting dropped when the
+> system boots into the new Kernel.  One of the kexec requirements is the
+> segment size cannot change between the 'load' and the 'execute'.
+> Therefore, to address this problem, ima_dump_measurement_list() needs
+> to be refactored to allocate the memory at kexec 'load', and dump the
+> measurements at kexec 'execute'.  The function that allocates the memory
+> should handle the scenario where the kexec load is called multiple times
 
-Hi Eric,
+The above pragraph is unnecessary.
 
-Do you have comment about these?
+> Refactor ima_dump_measurement_list() to move the memory allocation part
+> to a separate function ima_alloc_kexec_buf() to allocate buffer of size
+> 'kexec_segment_size' at kexec 'load'.  Make the local variables in
+> function ima_dump_measurement_list() global, so that they can be accessed
+> from ima_alloc_kexec_buf().  Make necessary changes to the function
+> ima_add_kexec_buffer() to call the above two functions.
 
+Fix the wording based on the suggested changes below.
+
+> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+
+Before re-posting this patch set, verify there aren't any
+"checkpatch.pl --strict" issues.
+After applying each patch, compile the kernel and verify it still
+works.
+
+> ---
+>  security/integrity/ima/ima_kexec.c | 126 +++++++++++++++++++++--------
+>  1 file changed, 93 insertions(+), 33 deletions(-)
 > 
-> > With these changes, we can achieve the goal to avoid building issue,
-> > whereas the code logic becomes confusing. E.g people could disable
-> > CONFIG_KEXEC_FILE, but still get purgatory code built in which is
-> > totally useless.
-> >
-> > Not sure if I think too much over this.
-> 
-> I see your point here, and I would suggest changing the
-> CONFIG_ARCH_SUPPORTS_KEXEC_PURGATORY symbol to just indicate
-> the availability of the purgatory code for the arch, rather
-> than actually controlling the code itself. I already mentioned
-> this for s390, but riscv would need the same thing on top.
-> 
-> I think the change below should address your concern.
-> 
->      Arnd
-> 
-> diff --git a/arch/riscv/kernel/elf_kexec.c b/arch/riscv/kernel/elf_kexec.c
-> index e60fbd8660c4..3ac341d296db 100644
-> --- a/arch/riscv/kernel/elf_kexec.c
-> +++ b/arch/riscv/kernel/elf_kexec.c
-> @@ -266,7 +266,7 @@ static void *elf_kexec_load(struct kimage *image, char *kernel_buf,
->                 cmdline = modified_cmdline;
->         }
+> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
+> index 419dc405c831..307e07991865 100644
+> --- a/security/integrity/ima/ima_kexec.c
+> +++ b/security/integrity/ima/ima_kexec.c
+> @@ -15,61 +15,114 @@
+>  #include "ima.h"
 >  
-> -#ifdef CONFIG_ARCH_SUPPORTS_KEXEC_PURGATORY
-> +#ifdef CONFIG_KEXEC_FILE
->         /* Add purgatory to the image */
->         kbuf.top_down = true;
->         kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-> @@ -280,7 +280,7 @@ static void *elf_kexec_load(struct kimage *image, char *kernel_buf,
->                                              sizeof(kernel_start), 0);
->         if (ret)
->                 pr_err("Error update purgatory ret=%d\n", ret);
-> -#endif /* CONFIG_ARCH_SUPPORTS_KEXEC_PURGATORY */
-> +#endif /* CONFIG_KEXEC_FILE */
+>  #ifdef CONFIG_IMA_KEXEC
+> +struct seq_file ima_kexec_file;
 
-If so, we don't need the CONFIG_KEXEC_FILE ifdeffery because the
-file elf_kexec.c relied on CONFIG_KEXEC_FILE enabling to build in.
-We can just remove the "#ifdef CONFIG_KEXEC_FILE..#endif" as x86 does.
+Define "ima_kexec_file" as static since it only used in this file.  
+Since the variable does not need to be global, is there still a reason
+for changing its name?   Minimize code change.
 
+> +struct ima_kexec_hdr ima_khdr;
+> +
+> +void ima_clear_kexec_file(void)
+
+The opposite of "set" is "clear" (e.g. set_git, clear_bit).  The
+opposite of "alloc" would be "free" (e.g. ima_alloc_kexec_buf,
+ima_free_kexec_buf)
+
+> +{
+> +	vfree(ima_kexec_file.buf);
+> +	ima_kexec_file.buf = NULL;
+> +	ima_kexec_file.size = 0;
+> +	ima_kexec_file.read_pos = 0;
+> +	ima_kexec_file.count = 0;
+> +}
+> +
+> +static int ima_alloc_kexec_buf(size_t kexec_segment_size)
+> +{
+> +	if ((kexec_segment_size == 0) ||
+> +	    (kexec_segment_size == ULONG_MAX) ||
+> +	    ((kexec_segment_size >> PAGE_SHIFT) > totalram_pages() / 2)) {
+> +		pr_err("%s: Invalid segment size for kexec: %zu\n",
+> +			__func__, kexec_segment_size);
+> +		return -EINVAL;
+> +	}
+
+Please avoid code duplication.  If moving the test here, then remove it
+from its original place.
+
+> +
+> +	/*
+> +	 * If kexec load was called before, clear the existing buffer
+> +	 * before allocating a new one
+> +	 */
+
+> +	if (ima_kexec_file.buf)
+> +		ima_clear_kexec_file();
+
+Perhaps instead of always freeing the buffer, check and see whether the
+size has changed.  If it hasn't changed, then simply return.  If it has
+changed, perhaps use realloc().  Possible wording:
+
+"Kexec may be called multiple times.  Free and re-alloc the buffer if
+the size changed."
+
+> +
+> +	/* segment size can't change between kexec load and execute */
+> +	ima_kexec_file.buf = vmalloc(kexec_segment_size);
+> +	if (!ima_kexec_file.buf) {
+> +		pr_err("%s: No memory for ima kexec measurement buffer\n",
+> +			__func__);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	ima_kexec_file.size = kexec_segment_size;
+> +	ima_kexec_file.read_pos = 0;
+> +	ima_kexec_file.count = sizeof(ima_khdr);	/* reserved space */
+> +
+> +	memset(&ima_khdr, 0, sizeof(ima_khdr));
+> +	ima_khdr.version = 1;
+> +
+> +	return 0;
+> +}
+> +
+>  static int ima_dump_measurement_list(unsigned long *buffer_size, void **buffer,
+>  				     unsigned long segment_size)
+>  {
+>  	struct ima_queue_entry *qe;
+> -	struct seq_file file;
+> -	struct ima_kexec_hdr khdr;
+>  	int ret = 0;
 >  
->         /* Add the initrd to the image */
->         if (initrd != NULL) {
-> diff --git a/arch/riscv/Kbuild b/arch/riscv/Kbuild
-> index d25ad1c19f88..ab181d187c23 100644
-> --- a/arch/riscv/Kbuild
-> +++ b/arch/riscv/Kbuild
-> @@ -5,7 +5,7 @@ obj-$(CONFIG_BUILTIN_DTB) += boot/dts/
->  obj-y += errata/
->  obj-$(CONFIG_KVM) += kvm/
+> -	/* segment size can't change between kexec load and execute */
+> -	file.buf = vmalloc(segment_size);
+> -	if (!file.buf) {
+> -		ret = -ENOMEM;
+> -		goto out;
+> +	if (!ima_kexec_file.buf) {
+> +		pr_err("%s: Kexec file buf not allocated\n",
+> +			__func__);
+> +		return -EINVAL;
+>  	}
 >  
-> -obj-$(CONFIG_ARCH_SUPPORTS_KEXEC_PURGATORY) += purgatory/
-> +obj-$(CONFIG_KEXEC_FILE) += purgatory/
+> -	file.size = segment_size;
+> -	file.read_pos = 0;
+> -	file.count = sizeof(khdr);	/* reserved space */
+> +	/*
+> +	 * Ensure the kexec buffer is large enough to hold ima_khdr
+> +	 */
+> +	if (ima_kexec_file.size < sizeof(ima_khdr)) {
+> +		pr_err("%s: Kexec buffer size too low to hold ima_khdr\n",
+> +			__func__);
+> +		ima_clear_kexec_file();
+> +		return -ENOMEM;
+> +	}
+
+Is this necessary?
+ 
+> -	memset(&khdr, 0, sizeof(khdr));
+> -	khdr.version = 1;
+> +	/*
+> +	 * If we reach here, then there is enough memory
+> +	 * of size kexec_segment_size in ima_kexec_file.buf
+> +	 * to copy at least partial IMA log.
+> +	 * Make best effort to copy as many IMA measurements
+> +	 * as possible.
+> +	 */
+
+Suggestion:
+
+/* Copy as many IMA measurements list records as possible */
+
+>  	list_for_each_entry_rcu(qe, &ima_measurements, later) {
+> -		if (file.count < file.size) {
+> -			khdr.count++;
+> -			ima_measurements_show(&file, qe);
+> +		if (ima_kexec_file.count < ima_kexec_file.size) {
+> +			ima_khdr.count++;
+> +			ima_measurements_show(&ima_kexec_file, qe);
+>  		} else {
+> -			ret = -EINVAL;
+> +			ret = EFBIG;
+> +			pr_err("%s: IMA log file is too big for Kexec buf\n",
+> +				__func__);
+>  			break;
+>  		}
+>  	}
 >  
->  # for cleaning
->  subdir- += boot
-> diff --git a/arch/s390/Kbuild b/arch/s390/Kbuild
-> index a5d3503b353c..361aa01dbd49 100644
-> --- a/arch/s390/Kbuild
-> +++ b/arch/s390/Kbuild
-> @@ -7,7 +7,7 @@ obj-$(CONFIG_S390_HYPFS)        += hypfs/
->  obj-$(CONFIG_APPLDATA_BASE)    += appldata/
->  obj-y                          += net/
->  obj-$(CONFIG_PCI)              += pci/
-> -obj-$(CONFIG_ARCH_SUPPORTS_KEXEC_PURGATORY) += purgatory/
-> +obj-$(CONFIG_KEXEC_FILE)       += purgatory/
+> -	if (ret < 0)
+> -		goto out;
+> -
+>  	/*
+>  	 * fill in reserved space with some buffer details
+>  	 * (eg. version, buffer size, number of measurements)
+>  	 */
+> -	khdr.buffer_size = file.count;
+> +	ima_khdr.buffer_size = ima_kexec_file.count;
+>  	if (ima_canonical_fmt) {
+> -		khdr.version = cpu_to_le16(khdr.version);
+> -		khdr.count = cpu_to_le64(khdr.count);
+> -		khdr.buffer_size = cpu_to_le64(khdr.buffer_size);
+> +		ima_khdr.version = cpu_to_le16(ima_khdr.version);
+> +		ima_khdr.count = cpu_to_le64(ima_khdr.count);
+> +		ima_khdr.buffer_size = cpu_to_le64(ima_khdr.buffer_size);
+>  	}
+> -	memcpy(file.buf, &khdr, sizeof(khdr));
+> +	memcpy(ima_kexec_file.buf, &ima_khdr, sizeof(ima_khdr));
 >  
->  # for cleaning
->  subdir- += boot tools
-> 
+>  	print_hex_dump_debug("ima dump: ", DUMP_PREFIX_NONE, 16, 1,
+> -			     file.buf, file.count < 100 ? file.count : 100,
+> +			     ima_kexec_file.buf, ima_kexec_file.count < 100 ?
+> +			     ima_kexec_file.count : 100,
+>  			     true);
+>  
+> -	*buffer_size = file.count;
+> -	*buffer = file.buf;
+> -out:
+> -	if (ret == -EINVAL)
+> -		vfree(file.buf);
+> +	*buffer_size = ima_kexec_file.count;
+> +	*buffer = ima_kexec_file.buf;
+> +
+>  	return ret;
+>  }
+
+-- 
+thanks,
+
+Mimi
 
 
 _______________________________________________
