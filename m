@@ -4,94 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4D030C25B48
-	for <kexec@archiver.kernel.org>; Fri, 27 Oct 2023 03:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 61A50C25B47
+	for <kexec@archiver.kernel.org>; Fri, 27 Oct 2023 09:33:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Mime-Version:References:In-Reply-To:
-	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=u5QrE2m868XcZFMLxRbmtrghLtBOU4CF/B3axSXZfsg=; b=tkcudB9N3lJ4Fr
-	hHVP9tJ5wQ3kaUaa+ecmAh3E98hsJQRwHcmLUnh2E6fYJXtm6RK1WKrYSs9iFhtUt8/Btl7/PI7+w
-	JxxOQxNu4qhOzauyMr5g3NFt0qhljiNFZ+hhaSBwIiqCwhanC4TUbf/NuYyg+dhUT5hPOGh5E+5VU
-	aqkCVX5hdJFUsmDWAg7tjy03jSXi+6QpSuyLi17MTjKjFqLOBZwjxB1jtwHmgz1Ee3qu+4eTQb5+1
-	ecMO4a7SeaoUdU/qVNXybMjFoOU6Sfn6tlj+HvkOKdm0YhLvqjss8e58ZdbrrqC5o4W2mKG2VgXlx
-	CMN8c3/+WTEDfPmCgYNg==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Subject:To:From
+	:Date:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=cGyfhumXTkIIJniGxrLkM2DfMoyOGqZbL8z9uU/BAHk=; b=2mBFbUcWjHfI8y
+	WMSY8qMXoAKX0jHfXXmVjwSGxjlBVpIZ5yu2baiHmBnCPdTeh/sIWzahtSkBbj+1KBRdNfZqLEp2x
+	TEmSeMuPtyPebt6dsfo3+V20y2bVsIja1n4o/WTxQzFJ+zjnH2U7BFYdXSvCbCaab+GckTpkvfgTI
+	huxCAt8sEA7wpP9YO3B0xcOIBBgHTPIEyEWFkJfokAT4Cqu2XlOrYagLtzzKpRkuZgvGOsf21u3+I
+	JiWeFhh89gjGBemhjbZp16TlylE4mPrIZk+aJQKNZNSn2eyJQ85OPMwexynqGaavVjAXSljZh8jAE
+	biTp0F5tdaiPvf8d28RA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qwDU8-00FV7Z-12;
-	Fri, 27 Oct 2023 03:26:08 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1qwJDY-00G2Y6-0F;
+	Fri, 27 Oct 2023 09:33:24 +0000
+Received: from mail.antaris-organics.com ([91.227.220.155])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qwDU5-00FV73-1W
+	id 1qwJDV-00G2Wh-1Z
 	for kexec@lists.infradead.org;
-	Fri, 27 Oct 2023 03:26:07 +0000
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39R3MLKi002744;
-	Fri, 27 Oct 2023 03:25:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=zhaiPMeLQ80QhVz+4CRLvcHnc+KySMeU3dhECAb4LkA=;
- b=oIp/3oDdrUuh34HgOwFNoTwZznM6sB8zA9TZtX9Z77ysaSeBWn5PF9cLqidzoUV4CrBq
- ioxVAckYXIkHl3iBgoj7qjESMrjfrp7Li9L1tDGsgEb1FkktG93l9VHnd9fHPfHv50KO
- MIg96eFPqOwhxeg5sO1OIsWkkHkmHSKVfmenZ9gquQ5kvSUqDQJPrKt4Wv25CDzSg2Sd
- sTENBPxS3GnNck0RPejLmBwRAT3G8m20xPE/ipUoh63c6058IZaFzFgMAi9RrCozeqey
- Bpw0Ueyr+pAd5ee1ouXu+yGe42uzdIWylPkR4SxwoZDX/L2gvm/oSgVzdAVAG8iJUdif Cw== 
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3u0588g2tt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Oct 2023 03:25:50 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39R110D8021491;
-	Fri, 27 Oct 2023 03:25:49 GMT
-Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3tywqrabug-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Oct 2023 03:25:49 +0000
-Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
-	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 39R3Pnj920054594
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 27 Oct 2023 03:25:49 GMT
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EDAA458056;
-	Fri, 27 Oct 2023 03:25:48 +0000 (GMT)
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6AB225803F;
-	Fri, 27 Oct 2023 03:25:48 +0000 (GMT)
-Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.61.171.37])
-	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 27 Oct 2023 03:25:48 +0000 (GMT)
-Message-ID: <e4e92a1816475596b91bbbb2fdf33c11ce375cf1.camel@linux.ibm.com>
-Subject: Re: [PATCH v2 1/7] ima: refactor ima_dump_measurement_list to move
- memory allocation to a separate function
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Tushar Sugandhi <tusharsu@linux.microsoft.com>, ebiederm@xmission.com,
-        noodles@fb.com, bauermann@kolabnow.com, kexec@lists.infradead.org,
-        linux-integrity@vger.kernel.org
-Cc: code@tyhicks.com, nramas@linux.microsoft.com, paul@paul-moore.com
-Date: Thu, 26 Oct 2023 23:25:48 -0400
-In-Reply-To: <1aa5524b52fdb46df4948a21b1139cf833758cde.camel@linux.ibm.com>
-References: <20231005182602.634615-1-tusharsu@linux.microsoft.com>
-	 <20231005182602.634615-2-tusharsu@linux.microsoft.com>
-	 <1aa5524b52fdb46df4948a21b1139cf833758cde.camel@linux.ibm.com>
-X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
-Mime-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: JrPa0dbZ4HtCYKzMYqbDw7Dt41pFFOCN
-X-Proofpoint-ORIG-GUID: JrPa0dbZ4HtCYKzMYqbDw7Dt41pFFOCN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-10-26_22,2023-10-26_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- impostorscore=0 mlxlogscore=999 priorityscore=1501 phishscore=0
- bulkscore=0 spamscore=0 clxscore=1015 malwarescore=0 mlxscore=0
- adultscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2310240000 definitions=main-2310270028
+	Fri, 27 Oct 2023 09:33:22 +0000
+Date: Fri, 27 Oct 2023 11:33:15 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mareichelt.com;
+	s=202107; t=1698399196;
+	bh=TCOrvOzK4dRFE5bYJ4UUf2DElWrT9Zwd1Pb3oIMfSTs=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:Cc:Cc:
+	 content-type:content-type:date:date:From:from:in-reply-to:
+	 in-reply-to:message-id:mime-version:references:reply-to:Sender:
+	 Subject:Subject:To:To;
+	b=wNcNukvLiMvl3bxuDcLgcjldyunoJhjl2+cLeHca/3ZIWw+LZ16QXizAnmnDPWy3D
+	 yk7TxzqOaZHjFdxxUPTjFjw6Sd01zKh4iypMuLDu+ATDKFgifK2eNbDYIOvq2v/NXO
+	 LJDb4ZiHwFFUhgKHCpe7LWc9ZCKUMEEUVRGMHBDSRG2EJF8ZszSPlSXOK1hT5uL1u/
+	 dTbKzkpCnvL+eI5N0vWdYn6uqlv1Ip+pzJpH+e9o8vbKimRgLWz3OZC1bDrr8qXr8w
+	 dNEE9m3s0lZLy+aTLzCS9CmtwQWptsCJ+ewEbn4q4JtQrxuPXaIUt/qaRNz8BRIkvp
+	 m0Tky9XDR2c4g==
+From: Markus Reichelt <ml@mareichelt.com>
+To: kexec@lists.infradead.org
+Subject: use one cert for all; modules, kernel, kexec
+Message-ID: <20231027093315.GA2560@pc21.mareichelt.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+Organization: still stuck in reorganization mode
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231026_202605_537800_E6B1E341 
-X-CRM114-Status: GOOD (  48.52  )
+X-CRM114-CacheID: sfid-20231027_023321_671286_E3692834 
+X-CRM114-Status: UNSURE (   4.85  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -108,237 +68,19 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, 2023-10-26 at 16:16 -0400, Mimi Zohar wrote:
-> Hi Tushar,
-> 
-> According to Documentation/process/submitting-patches.rst, the subject
-> line should be between 70-75 characters.
-> 
-> Perhaps something like "ima: define and call ima_alloc_kexec_buffer()".
-> 
-> On Thu, 2023-10-05 at 11:25 -0700, Tushar Sugandhi wrote:
-> > IMA allocates memory and dumps the measurement during kexec soft reboot
-> > as a single function call ima_dump_measurement_list().  It gets called
-> > during kexec 'load' operation.  It results in the IMA measurements
-> > between the window of kexec 'load' and 'execute' getting dropped when the
-> > system boots into the new Kernel.  One of the kexec requirements is the
-> > segment size cannot change between the 'load' and the 'execute'.
-> > Therefore, to address this problem, ima_dump_measurement_list() needs
-> > to be refactored to allocate the memory at kexec 'load', and dump the
-> > measurements at kexec 'execute'.  The function that allocates the memory
-> > should handle the scenario where the kexec load is called multiple times
-> 
-> The above pragraph is unnecessary.
-> 
-> > Refactor ima_dump_measurement_list() to move the memory allocation part
-> > to a separate function ima_alloc_kexec_buf() to allocate buffer of size
-> > 'kexec_segment_size' at kexec 'load'.  Make the local variables in
-> > function ima_dump_measurement_list() global, so that they can be accessed
-> > from ima_alloc_kexec_buf().  Make necessary changes to the function
-> > ima_add_kexec_buffer() to call the above two functions.
-> 
-> Fix the wording based on the suggested changes below.
-> 
-> > Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> 
-> - Before re-posting this patch set, verify there aren't any
-> "checkpatch.pl --strict" issues.
-> - After applying each patch, compile the kernel and verify it still
-> works.
+Hi,
 
-Doing this will detect whether or not the patch set is bisect safe.
+I already use signed modules and do wonder if the same cert can be used
+to sign the kernel, and verified by kexec when loading such a kernel.
+Failing to verify a signed kernel, kexec shall not load it.
 
-> > ---
-> >  security/integrity/ima/ima_kexec.c | 126 +++++++++++++++++++++--------
-> >  1 file changed, 93 insertions(+), 33 deletions(-)
-> > 
-> > diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-> > index 419dc405c831..307e07991865 100644
-> > --- a/security/integrity/ima/ima_kexec.c
-> > +++ b/security/integrity/ima/ima_kexec.c
-> > @@ -15,61 +15,114 @@
-> >  #include "ima.h"
-> >  
-> >  #ifdef CONFIG_IMA_KEXEC
-> > +struct seq_file ima_kexec_file;
-> 
-> Define "ima_kexec_file" as static since it only used in this file.  
-> Since the variable does not need to be global, is there still a reason
-> for changing its name?   Minimize code change.
+Is that doable with current kexec-tools?
+If not, is there a real chance this could be added?
 
-Adding "static" would make ima_kexec_file a global static variable. 
-Please ignore my comment about reverting the variable name change.
+My trust scenario is simple, use one cert for all.
 
-Mimi
-
-> 
-> > +struct ima_kexec_hdr ima_khdr;
-> > +
-> > +void ima_clear_kexec_file(void)
-> 
-> The opposite of "set" is "clear" (e.g. set_git, clear_bit).  The
-> opposite of "alloc" would be "free" (e.g. ima_alloc_kexec_buf,
-> ima_free_kexec_buf)
-> 
-> > +{
-> > +	vfree(ima_kexec_file.buf);
-> > +	ima_kexec_file.buf = NULL;
-> > +	ima_kexec_file.size = 0;
-> > +	ima_kexec_file.read_pos = 0;
-> > +	ima_kexec_file.count = 0;
-> > +}
-> > +
-> > +static int ima_alloc_kexec_buf(size_t kexec_segment_size)
-> > +{
-> > +	if ((kexec_segment_size == 0) ||
-> > +	    (kexec_segment_size == ULONG_MAX) ||
-> > +	    ((kexec_segment_size >> PAGE_SHIFT) > totalram_pages() / 2)) {
-> > +		pr_err("%s: Invalid segment size for kexec: %zu\n",
-> > +			__func__, kexec_segment_size);
-> > +		return -EINVAL;
-> > +	}
-> 
-> Please avoid code duplication.  If moving the test here, then remove it
-> from its original place.
-> 
-> > +
-> > +	/*
-> > +	 * If kexec load was called before, clear the existing buffer
-> > +	 * before allocating a new one
-> > +	 */
-> 
-> > +	if (ima_kexec_file.buf)
-> > +		ima_clear_kexec_file();
-> 
-> Perhaps instead of always freeing the buffer, check and see whether the
-> size has changed.  If it hasn't changed, then simply return.  If it has
-> changed, perhaps use realloc().  Possible wording:
-> 
-> "Kexec may be called multiple times.  Free and re-alloc the buffer if
-> the size changed."
-> 
-> > +
-> > +	/* segment size can't change between kexec load and execute */
-> > +	ima_kexec_file.buf = vmalloc(kexec_segment_size);
-> > +	if (!ima_kexec_file.buf) {
-> > +		pr_err("%s: No memory for ima kexec measurement buffer\n",
-> > +			__func__);
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	ima_kexec_file.size = kexec_segment_size;
-> > +	ima_kexec_file.read_pos = 0;
-> > +	ima_kexec_file.count = sizeof(ima_khdr);	/* reserved space */
-> > +
-> > +	memset(&ima_khdr, 0, sizeof(ima_khdr));
-> > +	ima_khdr.version = 1;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static int ima_dump_measurement_list(unsigned long *buffer_size, void **buffer,
-> >  				     unsigned long segment_size)
-> >  {
-> >  	struct ima_queue_entry *qe;
-> > -	struct seq_file file;
-> > -	struct ima_kexec_hdr khdr;
-> >  	int ret = 0;
-> >  
-> > -	/* segment size can't change between kexec load and execute */
-> > -	file.buf = vmalloc(segment_size);
-> > -	if (!file.buf) {
-> > -		ret = -ENOMEM;
-> > -		goto out;
-> > +	if (!ima_kexec_file.buf) {
-> > +		pr_err("%s: Kexec file buf not allocated\n",
-> > +			__func__);
-> > +		return -EINVAL;
-> >  	}
-> >  
-> > -	file.size = segment_size;
-> > -	file.read_pos = 0;
-> > -	file.count = sizeof(khdr);	/* reserved space */
-> > +	/*
-> > +	 * Ensure the kexec buffer is large enough to hold ima_khdr
-> > +	 */
-> > +	if (ima_kexec_file.size < sizeof(ima_khdr)) {
-> > +		pr_err("%s: Kexec buffer size too low to hold ima_khdr\n",
-> > +			__func__);
-> > +		ima_clear_kexec_file();
-> > +		return -ENOMEM;
-> > +	}
-> 
-> Is this necessary?
->  
-> > -	memset(&khdr, 0, sizeof(khdr));
-> > -	khdr.version = 1;
-> > +	/*
-> > +	 * If we reach here, then there is enough memory
-> > +	 * of size kexec_segment_size in ima_kexec_file.buf
-> > +	 * to copy at least partial IMA log.
-> > +	 * Make best effort to copy as many IMA measurements
-> > +	 * as possible.
-> > +	 */
-> 
-> Suggestion:
-> 
-> /* Copy as many IMA measurements list records as possible */
-> 
-> >  	list_for_each_entry_rcu(qe, &ima_measurements, later) {
-> > -		if (file.count < file.size) {
-> > -			khdr.count++;
-> > -			ima_measurements_show(&file, qe);
-> > +		if (ima_kexec_file.count < ima_kexec_file.size) {
-> > +			ima_khdr.count++;
-> > +			ima_measurements_show(&ima_kexec_file, qe);
-> >  		} else {
-> > -			ret = -EINVAL;
-> > +			ret = EFBIG;
-> > +			pr_err("%s: IMA log file is too big for Kexec buf\n",
-> > +				__func__);
-> >  			break;
-> >  		}
-> >  	}
-> >  
-> > -	if (ret < 0)
-> > -		goto out;
-> > -
-> >  	/*
-> >  	 * fill in reserved space with some buffer details
-> >  	 * (eg. version, buffer size, number of measurements)
-> >  	 */
-> > -	khdr.buffer_size = file.count;
-> > +	ima_khdr.buffer_size = ima_kexec_file.count;
-> >  	if (ima_canonical_fmt) {
-> > -		khdr.version = cpu_to_le16(khdr.version);
-> > -		khdr.count = cpu_to_le64(khdr.count);
-> > -		khdr.buffer_size = cpu_to_le64(khdr.buffer_size);
-> > +		ima_khdr.version = cpu_to_le16(ima_khdr.version);
-> > +		ima_khdr.count = cpu_to_le64(ima_khdr.count);
-> > +		ima_khdr.buffer_size = cpu_to_le64(ima_khdr.buffer_size);
-> >  	}
-> > -	memcpy(file.buf, &khdr, sizeof(khdr));
-> > +	memcpy(ima_kexec_file.buf, &ima_khdr, sizeof(ima_khdr));
-> >  
-> >  	print_hex_dump_debug("ima dump: ", DUMP_PREFIX_NONE, 16, 1,
-> > -			     file.buf, file.count < 100 ? file.count : 100,
-> > +			     ima_kexec_file.buf, ima_kexec_file.count < 100 ?
-> > +			     ima_kexec_file.count : 100,
-> >  			     true);
-> >  
-> > -	*buffer_size = file.count;
-> > -	*buffer = file.buf;
-> > -out:
-> > -	if (ret == -EINVAL)
-> > -		vfree(file.buf);
-> > +	*buffer_size = ima_kexec_file.count;
-> > +	*buffer = ima_kexec_file.buf;
-> > +
-> >  	return ret;
-> >  }
-> 
-
-
+Thanks,
+Markus
 
 _______________________________________________
 kexec mailing list
