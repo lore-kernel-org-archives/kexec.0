@@ -4,87 +4,114 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2CC7CC4332F
-	for <kexec@archiver.kernel.org>; Mon, 30 Oct 2023 00:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8ACA4C4332F
+	for <kexec@archiver.kernel.org>; Mon, 30 Oct 2023 07:57:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=8Dle5u5uss81eElSuL6eYTjjlRXxTdyTAZb609nc09g=; b=GXGlJ7KGzXtCRV
-	BkmBjS3nrqfT4y6POJqwqe3Aw0nKvUaYtrhUejN+OABPY8O2nYR6DqdAbAt2r/BSLULrgBQAv6S9S
-	IX9GQiq8KXTGNUM0/kOdyh9U4jB2g4KQeosn4RH2MLP8bXrNBFm+47DgRYUIwDz3otQLiZ/7VHryp
-	0C9rMQbw1pBOc6F1fwQ6MUsLmIx//nJEqZ4GPF9FmstnBRQHUQiEToCFxrDlKcSsRLn9kVZikF/Hl
-	ZlVgYs3LbOoLqunQeTzQGMQqStPEHTbFVNPgrbr7z4epwjSrAZ291M8Hhxh2b7BC1gqYZ4y1VLdSl
-	r0Bg5/LF6DoiMxU5FAag==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:Cc:To:
+	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=p/HoMNSzMO/f2Mv8yQGOpiSDWetG+rWZy2kh32tngto=; b=xsRZ4byOAHX5DzIfSlMbCBFxxn
+	wkWcU+CqzwckZGxwAbjcY+/A3sDG4iWQe5zr8ZOzWwOst+vRx/GD0De06+ytfx1st1woZHc3q0ZV8
+	qcvZRgqckTbnUQGOzj/M/a35d4dtPLvR1C7YOqugHM7qNyTOWHkHjmtqO4wwo+IIXEVBc2GjiyYO8
+	1lHqKl2Z17KKjxX2pH5Sw8ZShBifPnIzVlo6QdMStrsopGVjzCYH2pxynwVwSKn+j269nWrA8YdXW
+	6uvQqbjr+c8O4uyk38eqeXrnoLEYJRkPhShKVGMvm0AhUL8tyW8xJrRBD4SUfbXLcF0aXmuFjNGnJ
+	O0Cg1imw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1qxGNs-002Kdr-32;
-	Mon, 30 Oct 2023 00:44:00 +0000
-Received: from mgamail.intel.com ([192.55.52.43])
+	id 1qxN9H-002nKf-1h;
+	Mon, 30 Oct 2023 07:57:23 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1qxGNp-002Kcy-2n
+	id 1qxN9E-002nKL-2Q
 	for kexec@lists.infradead.org;
-	Mon, 30 Oct 2023 00:43:59 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698626637; x=1730162637;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=g1ypwRov0tzM3HEybZ/eYo/bLezi/zNSOOpCeGQJlxc=;
-  b=QG+DqKzGlDYOXTkM+z26z/NQu5B3HTN+vbmDpUjZhZEE/5eQY/JeGoo8
-   6gsKmD104/nhIQMqclW/49O6A1dTA/Bc9TAEx7TccXWwU8AD0/elGNVNv
-   zOhcxQiCMJTnfTT+hPQaw3Ul6RnUTCd6ZMwgKB9rtr+RPFfhFbdhNCqEe
-   QuZOlIdtyeXZ8fuRrsQTdLV5cOhXdacz7l6LFnhZhTyCc/Xm+LyqL4PxA
-   n3IoS7iQRt+bFQnF2KD0qz0BQbIp/Arv/8NdAOc3VNZu7adIZg/O4ZOu7
-   A86kHODrrRZbVJr8+YhP+HT7wLAJFD1pnfm7DQ0xqa4ZfGlpvg5X+R3Ze
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10878"; a="474225181"
-X-IronPort-AV: E=Sophos;i="6.03,262,1694761200"; 
-   d="scan'208";a="474225181"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Oct 2023 17:43:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10878"; a="933627203"
-X-IronPort-AV: E=Sophos;i="6.03,262,1694761200"; 
-   d="scan'208";a="933627203"
-Received: from lkp-server01.sh.intel.com (HELO 8917679a5d3e) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 29 Oct 2023 17:43:45 -0700
-Received: from kbuild by 8917679a5d3e with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1qxGNa-000Cwh-1R;
-	Mon, 30 Oct 2023 00:43:42 +0000
-Date: Mon, 30 Oct 2023 08:43:22 +0800
-From: kernel test robot <lkp@intel.com>
-To: Sourabh Jain <sourabhjain@linux.ibm.com>, linuxppc-dev@ozlabs.org
-Cc: oe-kbuild-all@lists.linux.dev, David Hildenbrand <david@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	Eric DeVolder <eric.devolder@oracle.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Baoquan He <bhe@redhat.com>, x86@kernel.org,
-	Laurent Dufour <laurent.dufour@fr.ibm.com>,
-	Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Hari Bathini <hbathini@linux.ibm.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	kexec@lists.infradead.org, Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-	Akhil Raj <lf32.dev@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>
+	Mon, 30 Oct 2023 07:57:22 +0000
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39U7BHrb015037;
+	Mon, 30 Oct 2023 07:57:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=x0DHrCrbA3J0aEmgZ2ZvFDDkwNYNZ9zfSIbaGC8A9BM=;
+ b=YdMsFA6ZjIVOyhlTTnA5EoPiCZCd5H6IpmegwJPLt9LawV2RXxB/ray400J5QPEY+8eL
+ kTRKawZ647fqYP09G4a8eAFajgRP5g85oHBk8KQUwox14r0kMdRY9/RfSs3TICPnBXoy
+ NwYyAltG+BiRedd/Fb7FthZy0Ih/oaD5nraRAjaR09w5IJKdflUPS9cDkGfaavzJ41Ml
+ 6JBIBaKNMDkK8Mc++XZWjPbR2o6RXkzSnvqlUaQEXSUN6guWIUY/y5wpd2zAXE+bWH9x
+ QYY1zeAmqLxPD8hB6s35LliPI4g5A0nz36mPY4NyZtgDeDQfIq7UIORCxFLnIncSih2P QA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3u251p4xjr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Oct 2023 07:57:01 +0000
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39U7KjNw024225;
+	Mon, 30 Oct 2023 07:57:00 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3u251p4xj2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Oct 2023 07:57:00 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39U5cHsw007713;
+	Mon, 30 Oct 2023 07:56:59 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3u1dmn7kex-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 30 Oct 2023 07:56:58 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 39U7utEk18940668
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 30 Oct 2023 07:56:55 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 98C6D2004B;
+	Mon, 30 Oct 2023 07:56:55 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C036820040;
+	Mon, 30 Oct 2023 07:56:51 +0000 (GMT)
+Received: from [9.43.56.123] (unknown [9.43.56.123])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 30 Oct 2023 07:56:51 +0000 (GMT)
+Message-ID: <d6e87443-4402-402f-9c98-449cc9fd158f@linux.ibm.com>
+Date: Mon, 30 Oct 2023 13:26:50 +0530
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v12 6/6] powerpc: add crash memory hotplug support
-Message-ID: <202310300812.yN6FuPcZ-lkp@intel.com>
+To: kernel test robot <lkp@intel.com>, linuxppc-dev@ozlabs.org
+Cc: oe-kbuild-all@lists.linux.dev, David Hildenbrand <david@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Eric DeVolder <eric.devolder@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Valentin Schneider <vschneid@redhat.com>, Baoquan He <bhe@redhat.com>,
+        x86@kernel.org, Laurent Dufour <laurent.dufour@fr.ibm.com>,
+        Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kexec@lists.infradead.org, Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+        Akhil Raj <lf32.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>
 References: <20231029124039.6158-7-sourabhjain@linux.ibm.com>
+ <202310300812.yN6FuPcZ-lkp@intel.com>
+Content-Language: en-US
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+In-Reply-To: <202310300812.yN6FuPcZ-lkp@intel.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: YUg_rupIguVp5iY-e6851HQxd-kryJB5
+X-Proofpoint-ORIG-GUID: K7-O8qPNq3ZpO55X5WXf8VxaqHoKC1AI
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20231029124039.6158-7-sourabhjain@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-30_06,2023-10-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 bulkscore=0
+ mlxscore=0 mlxlogscore=999 adultscore=0 lowpriorityscore=0 impostorscore=0
+ malwarescore=0 suspectscore=0 priorityscore=1501 spamscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2310240000
+ definitions=main-2310300059
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231029_174357_915276_457F560E 
-X-CRM114-Status: GOOD (  12.50  )
+X-CRM114-CacheID: sfid-20231030_005720_821454_6F5302E7 
+X-CRM114-Status: GOOD (  24.08  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -96,56 +123,67 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Sourabh,
+Hello,
 
-kernel test robot noticed the following build errors:
+On 30/10/23 06:13, kernel test robot wrote:
+> Hi Sourabh,
+>
+> kernel test robot noticed the following build errors:
+>
+> [auto build test ERROR on akpm-mm/mm-everything]
+> [also build test ERROR on linus/master v6.6-rc7]
+> [cannot apply to powerpc/next powerpc/fixes tip/x86/core next-20231027]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>
+> url:    https://github.com/intel-lab-lkp/linux/commits/Sourabh-Jain/crash-forward-memory_notify-arg-to-arch-crash-hotplug-handler/20231029-213858
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+> patch link:    https://lore.kernel.org/r/20231029124039.6158-7-sourabhjain%40linux.ibm.com
+> patch subject: [PATCH v12 6/6] powerpc: add crash memory hotplug support
+> config: powerpc64-randconfig-001-20231029 (https://download.01.org/0day-ci/archive/20231030/202310300812.yN6FuPcZ-lkp@intel.com/config)
+> compiler: powerpc64-linux-gcc (GCC) 13.2.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231030/202310300812.yN6FuPcZ-lkp@intel.com/reproduce)
+>
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202310300812.yN6FuPcZ-lkp@intel.com/
+>
+> All errors (new ones prefixed by >>):
+>
+>     powerpc64-linux-ld: warning: discarding dynamic section .glink
+>     powerpc64-linux-ld: warning: discarding dynamic section .plt
+>     powerpc64-linux-ld: linkage table error against `add_opal_mem_range'
+>     powerpc64-linux-ld: stubs don't match calculated size
+>     powerpc64-linux-ld: can not build stubs: bad value
+>     powerpc64-linux-ld: arch/powerpc/kexec/core_64.o: in function `get_crash_memory_ranges':
+>     core_64.c:(.text+0x1010): undefined reference to `add_mem_range'
+>     powerpc64-linux-ld: core_64.c:(.text+0x1064): undefined reference to `sort_memory_ranges'
+>     powerpc64-linux-ld: core_64.c:(.text+0x1128): undefined reference to `add_rtas_mem_range'
+>     powerpc64-linux-ld: core_64.c:(.text+0x1140): undefined reference to `add_opal_mem_range'
+>     powerpc64-linux-ld: core_64.c:(.text+0x1160): undefined reference to `add_mem_range'
+>     powerpc64-linux-ld: core_64.c:(.text+0x1188): undefined reference to `sort_memory_ranges'
+>     powerpc64-linux-ld: core_64.c:(.text+0x11e0): undefined reference to `realloc_mem_ranges'
+>     powerpc64-linux-ld: arch/powerpc/kexec/core_64.o: in function `arch_crash_handle_hotplug_event':
+>>> core_64.c:(.text+0x1900): undefined reference to `remove_mem_range'
 
-[auto build test ERROR on akpm-mm/mm-everything]
-[also build test ERROR on linus/master v6.6-rc7]
-[cannot apply to powerpc/next powerpc/fixes tip/x86/core next-20231027]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+The patch series uses a couple of functions defined in 
+arch/powerpc/kexec/ranges.c. Since this file
+only builds when CONFIG_KEXEC_FILE is set, we are encountering this 
+build issue.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Sourabh-Jain/crash-forward-memory_notify-arg-to-arch-crash-hotplug-handler/20231029-213858
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-patch link:    https://lore.kernel.org/r/20231029124039.6158-7-sourabhjain%40linux.ibm.com
-patch subject: [PATCH v12 6/6] powerpc: add crash memory hotplug support
-config: powerpc64-randconfig-001-20231029 (https://download.01.org/0day-ci/archive/20231030/202310300812.yN6FuPcZ-lkp@intel.com/config)
-compiler: powerpc64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231030/202310300812.yN6FuPcZ-lkp@intel.com/reproduce)
+If CONFIG_KEXEC_FILE is set, then this issue is not observed.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202310300812.yN6FuPcZ-lkp@intel.com/
+I will fix the above warnings and post the next version.
 
-All errors (new ones prefixed by >>):
-
-   powerpc64-linux-ld: warning: discarding dynamic section .glink
-   powerpc64-linux-ld: warning: discarding dynamic section .plt
-   powerpc64-linux-ld: linkage table error against `add_opal_mem_range'
-   powerpc64-linux-ld: stubs don't match calculated size
-   powerpc64-linux-ld: can not build stubs: bad value
-   powerpc64-linux-ld: arch/powerpc/kexec/core_64.o: in function `get_crash_memory_ranges':
-   core_64.c:(.text+0x1010): undefined reference to `add_mem_range'
-   powerpc64-linux-ld: core_64.c:(.text+0x1064): undefined reference to `sort_memory_ranges'
-   powerpc64-linux-ld: core_64.c:(.text+0x1128): undefined reference to `add_rtas_mem_range'
-   powerpc64-linux-ld: core_64.c:(.text+0x1140): undefined reference to `add_opal_mem_range'
-   powerpc64-linux-ld: core_64.c:(.text+0x1160): undefined reference to `add_mem_range'
-   powerpc64-linux-ld: core_64.c:(.text+0x1188): undefined reference to `sort_memory_ranges'
-   powerpc64-linux-ld: core_64.c:(.text+0x11e0): undefined reference to `realloc_mem_ranges'
-   powerpc64-linux-ld: arch/powerpc/kexec/core_64.o: in function `arch_crash_handle_hotplug_event':
->> core_64.c:(.text+0x1900): undefined reference to `remove_mem_range'
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+Sourabh
 
 _______________________________________________
 kexec mailing list
