@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id F183DC4332F
-	for <kexec@archiver.kernel.org>; Tue,  7 Nov 2023 13:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2528BC0018C
+	for <kexec@archiver.kernel.org>; Tue,  7 Nov 2023 13:52:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:Reply-To:List-Subscribe:List-Help:
 	List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References:
 	Message-Id:MIME-Version:Subject:Date:From:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=alYYfqA00JZ98ul/eCJUzOdurywLOdmok/4l0KHFl60=; b=uC1nv69gEi4eMc
-	EcRzZrfKKkPqZUjVseWYvBuTWzWPDuNV02cphK/rVMKNHrkwBxdaqxe3keLGu9yiQrAI/7GHD/0B6
-	Yk++72xKIs9B1VnPAYfVAhT9fYLY4EV90yJO5kN/QMjlHV247qASyr87yzrtWy4RP0dBMEzc5JSC9
-	ViLCkcb3JudhviYBmXejad4GQUO+0bD/bfd0PTbUyDflPOC2szjxgmTf3Rj7Vyoi0pJcvZlVKbvJ/
-	yV7/a4yIeo0ExhHDLjFnqN6ynPOc387o6PUuOiBRFQFc8ighcz27snuJRhYkuTiUxmzyP0e5aHB9G
-	c/aab4rbS9huam05ScOg==;
+	List-Owner; bh=JkxDrlR43+7t0fq7EkPEmq8+2zvBtssvg5yX9VcwAe0=; b=XRCzk9ie1AxIxj
+	buEkw+KbdELd2Tdo54jyKFrn/4ZBasvOhnwmezqBUrv4hECaq1FWyIAGeeDV7Cm47busL3DBOVTy4
+	3cm/wAegfv5Yu8eShOOHRWjCGrRXNAFTRDFj/T6ELEdJhFtiq7JuzzD03J+RkHh4qrU8XUB7WgiZY
+	wVI3eT8UaPpphYOzm+Y9epd5fsll288oaC05/NpADSh+8lgjpKYxNs9kOB+M72iZG4zJvJBSjT7QR
+	aZismELvMGnKw8NkpC5BvQtlyAwlTnD/XEBMZ0NH2vuYtcpV/0loUeYyUR4m58wV6r/FkjZvTz9PN
+	Jy2m2LjhnkN5iNpsOXYQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r0MVQ-001fMD-2z;
-	Tue, 07 Nov 2023 13:52:36 +0000
-Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
+	id 1r0MVS-001fMq-2j;
+	Tue, 07 Nov 2023 13:52:38 +0000
+Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r0MOK-001e5U-1i
+	id 1r0MOL-001e7u-2k
 	for kexec@lists.infradead.org;
-	Tue, 07 Nov 2023 13:45:19 +0000
+	Tue, 07 Nov 2023 13:45:21 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id 1773F61226;
+	by dfw.source.kernel.org (Postfix) with ESMTP id B7F5361245;
 	Tue,  7 Nov 2023 13:45:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7EBB0C433BB;
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C5E6EC116AF;
 	Tue,  7 Nov 2023 13:45:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1699364713;
-	bh=ObpMazyJAc9ynk+EHag+YrlsvY0hIfWuMvTMCmZzkQc=;
+	bh=MEly15joX3iGPNe4Bqgq2fyROyUdrn2/gZnJBP4EApw=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=db8UkwCtxkR0AVCzsfl4QwWzaeRpAHGVpQvU5Hf45+XEMRCFzcLhqOvilLqRxwFMA
-	 5R7SnhOf7i6GwLiOys7agJ64LYdSMdqju5l3ROwZKqm+g9X0n/RE1k44rJwEaM298J
-	 2hfDSbkTO1tkHZ/6K4md4a3fYyjeC10vxlQtRsjgeImUbdJ7pc67qLvz7IA3a/HuZq
-	 5YajAE4SOlewLtSJL5olwX/9nSnxQcLleDxXnlzt6fCBWzAwDSSQB54WhgAo//ji9p
-	 nAbH54C+TCexSiZ2xI8HpwtC34d4yIlGhdJTKlqr4o9Nlg5r28SUrMqEIEwS5ob4Yl
-	 iIVigfhSlEcMA==
+	b=Fxl0cKLNml8AzZg3nbyxZUINPRnwD9eHc/uU472w+YRwp3RIhHI7WifpQgV/3eJ+f
+	 8G1kJ+E/rmPKkdB8gj6hRuC3Pn9Y2IUA8Lyv0x4RcRSFEVKZNcN3PXD8LisIB1zJxP
+	 qqbrkrO+pCdvQhSId+wC1XboCtdIQfdnAmdVcclQv1ekOySKNNF3bJOxoO/BB0Pymc
+	 Q0M49xS4Epq7U92tZWGUAmLrxUupTGSkI3TRsvIG94Ax2Id84sMudbn4DYknPaCvdk
+	 /Fyn+3JGdwtjRWwC4z9oa7hbMt6LFStqwIIDYfPIe+00qoAJIwx633mwMPm7kXWyxn
+	 kWqnCFfcqCK1Q==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6795BC4332F;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B194DC4332F;
 	Tue,  7 Nov 2023 13:45:13 +0000 (UTC)
 From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
-Date: Tue, 07 Nov 2023 14:45:03 +0100
-Subject: [PATCH 03/10] ftrace: Remove the now superfluous sentinel elements
+Date: Tue, 07 Nov 2023 14:45:07 +0100
+Subject: [PATCH 07/10] printk: Remove the now superfluous sentinel elements
  from ctl_table array
 MIME-Version: 1.0
-Message-Id: <20231107-jag-sysctl_remove_empty_elem_kernel-v1-3-e4ce1388dfa0@samsung.com>
+Message-Id: <20231107-jag-sysctl_remove_empty_elem_kernel-v1-7-e4ce1388dfa0@samsung.com>
 References: <20231107-jag-sysctl_remove_empty_elem_kernel-v1-0-e4ce1388dfa0@samsung.com>
 In-Reply-To: <20231107-jag-sysctl_remove_empty_elem_kernel-v1-0-e4ce1388dfa0@samsung.com>
 To: Luis Chamberlain <mcgrof@kernel.org>, willy@infradead.org, 
@@ -84,25 +84,24 @@ Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
  linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
  bpf@vger.kernel.org, Joel Granados <j.granados@samsung.com>
 X-Mailer: b4 0.13-dev-86aa5
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1388;
- i=j.granados@samsung.com; h=from:subject:message-id;
- bh=d6hPZmC0K0IZzUwuA4aA7VK86RM6Vm7GkvrWR105S0E=;
- b=owEB7QES/pANAwAKAbqXzVK3lkFPAcsmYgBlSj9lKwF0fwW5XohsA5vvIrvTl6CihI1Q3EeNJ
- 1+nbY0Q/K6JAbMEAAEKAB0WIQSuRwlXJeYxJc7LJ5C6l81St5ZBTwUCZUo/ZQAKCRC6l81St5ZB
- T4lYC/95wZ4kifDVujQZe0FCBvIwJyiKps3QZSfbJ79+rERGzcohQ++TiJw7ZyOi4hRzK3EiPYT
- p+cbzWPvvvihGq/oGOA6EGSIuQg2p3Xrsx5XSvuQnML8O1+wEkgiPWaeI+SWN8l0aDN6IMNZZcb
- txsFxM+IQTvCL9BBs8oOU3y3/8/7X1e/GJ90E/roVtTI4pE3VOQRy4s07Ah8WsFaMvWaCna70kW
- DQxvwXFmfeaC2b3bcM4fh4evrnw0Uf9NIRk2HepfG4qOq/hTywIPExdzlmdkpkoXGETgrkkFJte
- J/WDVMw1D4UcPI/MYKMQc81OCVnJh3AXc1BVRExO8OPH9h+Z5QSwlyXwhSmQoHpldVT21rZTevU
- cFVhJwUOeZ1xQlPvOXycjFtpOw6YTqXqgRGJfdogL25Z3X82bdmsnjSln7B2J013ZounxTYi0Hu
- Rt53vLQUCKnZKYnj1S4BsunkR9corlfOEoO5q/qU+hjvcNxWDIS8SOD/tdD5DS95+9lTQ=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=873; i=j.granados@samsung.com;
+ h=from:subject:message-id; bh=4F7FfvA5YIYVfM3aTH/t6RzZ+sHqLku1lqY0e/c0V1o=;
+ b=owEB7QES/pANAwAKAbqXzVK3lkFPAcsmYgBlSj9mSKxvYgMV+EZ9fAXhr9RqLxPpdn0SBoshU
+ cESPw29PkqJAbMEAAEKAB0WIQSuRwlXJeYxJc7LJ5C6l81St5ZBTwUCZUo/ZgAKCRC6l81St5ZB
+ T5DFC/9BuvcmChEcZ6WGOaVO1nSJgybOZgQryx5Pjk1ep8Z8kkFbQOvz9rq5RAcFej2KwBaRNsP
+ KmdFgK16LHM23jK1tneJG7PdCGtjZ1de1I/55cMWNQ7xR+D9eV0muryi36FGrL6kaDPk/giYWTo
+ 1ii/PseR44gfIGj1OPNHPdeqCRJEQX5bGOtqM0u0oZkX7qPjD3skvNlBVd/fZZVr53rl7kJqUkP
+ qbi56CUNGIEjzRRQqszRHrgLtXd0DoExFlNIVwVu42kCYtGhUoXPeH+VZjVuao3QRsoWUy1u3FJ
+ Qh5L/ryAR9bWATY4nBhZ92paw3gr6zYl9BKB13NxYUHMENYMwj4/Fqb+tVTGie9FS4drplN0DIy
+ 9w4GSs2m9PvIlpAgRMWVPgFNAT/+ca+Sk0FrwGKaaZDDg0UUGmyG6usqHs4MYK68kdn6/qkfwea
+ LNg5nV/tvgW8pkqw3xhBTf6W10DHUHyw8OfXeh7VxJPm2tNKgw2lIzdkrExZWEZys6ytM=
 X-Developer-Key: i=j.granados@samsung.com; a=openpgp;
  fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
 X-Endpoint-Received: by B4 Relay for j.granados@samsung.com/default with auth_id=70
 X-Original-From: Joel Granados <j.granados@samsung.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231107_054516_654125_BF1B1AC5 
-X-CRM114-Status: GOOD (  12.81  )
+X-CRM114-CacheID: sfid-20231107_054517_990531_93567179 
+X-CRM114-Status: GOOD (  12.61  )
 X-Mailman-Approved-At: Tue, 07 Nov 2023 05:52:34 -0800
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -129,38 +128,25 @@ will reduce the overall build time size of the kernel and run time
 memory bloat by ~64 bytes per sentinel (further information Link :
 https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
 
-Remove sentinel elements from ftrace_sysctls and user_event_sysctls
+rm sentinel element from printk_sysctls
 
 Signed-off-by: Joel Granados <j.granados@samsung.com>
 ---
- kernel/trace/ftrace.c            | 1 -
- kernel/trace/trace_events_user.c | 1 -
- 2 files changed, 2 deletions(-)
+ kernel/printk/sysctl.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 8de8bec5f366..fd40d02a23c7 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -8264,7 +8264,6 @@ static struct ctl_table ftrace_sysctls[] = {
- 		.mode           = 0644,
- 		.proc_handler   = ftrace_enable_sysctl,
+diff --git a/kernel/printk/sysctl.c b/kernel/printk/sysctl.c
+index c228343eeb97..3e47dedce9e5 100644
+--- a/kernel/printk/sysctl.c
++++ b/kernel/printk/sysctl.c
+@@ -76,7 +76,6 @@ static struct ctl_table printk_sysctls[] = {
+ 		.extra1		= SYSCTL_ZERO,
+ 		.extra2		= SYSCTL_TWO,
  	},
 -	{}
  };
  
- static int __init ftrace_sysctl_init(void)
-diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-index 6f046650e527..bef1bdc62acf 100644
---- a/kernel/trace/trace_events_user.c
-+++ b/kernel/trace/trace_events_user.c
-@@ -2694,7 +2694,6 @@ static struct ctl_table user_event_sysctls[] = {
- 		.mode		= 0644,
- 		.proc_handler	= set_max_user_events_sysctl,
- 	},
--	{}
- };
- 
- static int __init trace_events_user_init(void)
+ void __init printk_sysctl_init(void)
 
 -- 
 2.30.2
