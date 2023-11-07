@@ -4,69 +4,105 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8BBA7C4332F
-	for <kexec@archiver.kernel.org>; Tue,  7 Nov 2023 12:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0A662C4167D
+	for <kexec@archiver.kernel.org>; Tue,  7 Nov 2023 13:52:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	Content-Transfer-Encoding:Content-Type:Reply-To:List-Subscribe:List-Help:
+	List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References:
+	Message-Id:MIME-Version:Subject:Date:From:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=v6Y6mSdubiKrc4Az2RxpXNezUHm81yXiPH/FKEfEP+Q=; b=tIYPua6XuKzQ2A
-	KRO6+keXcj7P8eF8QiXLCPfvd+Co/ir5WmcwkZrJ8ILUaC0NqlwGD8MLGmpSYMblJwImPJintn2bm
-	UJMTnPeWWJIVex8sktvxyLleyrH2nuHhCeN4zEuLJ2xj8dSgAS1oCuNNn35QszhgRw5CZ/qz9eOsR
-	/sHmJf1zCtJqzmuBYk1Sxv/hyhvaSTx/J4vU0czxBecoOh3qxbf1rkLKNPwlmIvNPMOszRxfcSuJL
-	unqRkvJQMCA50SRLTiI++2W/5WxB2/wuneB3NCRO45HHT94MAvuuIxEOJNRfWZhSBxMtscA5brg3v
-	VhEqr7eANRYqJn6jba4A==;
+	List-Owner; bh=m5948zQONqyjfwHNhuZ4SqEN5LU7y0UsA+GsRcNSilA=; b=yf6IuQlcK1NAfs
+	2hVaSKDcImi3w9r8KXHKw+U1vI4xu8zvYKdNYNIOBl31q/hNTR4JX9LatQxSuHA9qiuo8KZxeprLZ
+	HmPsdp8VssEdt1UXj1YXIHN9EzSmdB7DoxQhqMZJ+F2+6V6tdwjPySxmxUsVudVKrl4P3TLQKvxL+
+	N0SfpJm91jTdw4GVSJpVfNa0k4QCpqYQyowxmL4gu7p+/D39hLCkLEoAav3MIPxgyehtJsxrElxcu
+	BnbEKE9IPk37jgm0YXy8fC4dUGLj9s2/3ZmplUF3Nx063SfHDx5iklXqDkjeYhrFnosznaY1buKzt
+	Ic7yGV9Mf1BI49x3tBfA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r0LDT-001Uov-2m;
-	Tue, 07 Nov 2023 12:29:59 +0000
-Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
+	id 1r0MVQ-001fLy-04;
+	Tue, 07 Nov 2023 13:52:36 +0000
+Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r0LDR-001Unu-19
+	id 1r0MOJ-001e5Y-30
 	for kexec@lists.infradead.org;
-	Tue, 07 Nov 2023 12:29:58 +0000
+	Tue, 07 Nov 2023 13:45:17 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id BD992611DE;
-	Tue,  7 Nov 2023 12:29:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E98CC433CA;
-	Tue,  7 Nov 2023 12:29:55 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTP id 5AFCE61227;
+	Tue,  7 Nov 2023 13:45:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8CCC1C433BC;
+	Tue,  7 Nov 2023 13:45:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699360196;
-	bh=D1PYTQZiTV/3FHNcwcS5n1/vZC1HqQlHbF/tyBrUkkg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CPR/Y1fURlGZj6dofCV3TXi5LEmG5gQ0k8Ebp9UX6tbeb8l4UpUj/gUXBaAXoSsNi
-	 sGP9vZ5TYxiduc6S5tteqxa1X/QuMWpZiYjhAMJti+ZElos1IIWm+jJRlH/qmVFxRC
-	 ekl3hyuisQXdaS+AdCZPjVEOG+J566dMzKeitB1+mDqGEyb852RIhVu4dFSwqY5JA1
-	 76rqFgEQSVjwY0Qdgq7RaMxnz4YX0r/ipdiWAfq7EGmcAN5sVqixNg8vJPZYRDeXqw
-	 t2kMkMX6sRlzbE1B8S7UWYcDQLeVhE43yAp7woH4LdSxBcYWtQRe7yqgBAAAeWiyRi
-	 W2YaMKOBbYsjA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Philipp Stanner <pstanner@redhat.com>,
-	David Airlie <airlied@redhat.com>,
-	Baoquan He <bhe@redhat.com>,
-	Kees Cook <keescook@chromium.org>,
-	Zack Rusin <zackr@vmware.com>,
-	Sasha Levin <sashal@kernel.org>,
-	ebiederm@xmission.com,
-	kexec@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.15 05/20] kernel: kexec: copy user-array safely
-Date: Tue,  7 Nov 2023 07:28:59 -0500
-Message-ID: <20231107122940.3762228-5-sashal@kernel.org>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231107122940.3762228-1-sashal@kernel.org>
-References: <20231107122940.3762228-1-sashal@kernel.org>
+	s=k20201202; t=1699364713;
+	bh=76OiXqny0I5FAtIEkgtQeFpTLfwhsiR4xIiHIe8GjjQ=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=hKEfTY6pgMSlSjVhFtW2zT+w6cS35Y3lUAQMKJ+cTa31bkazEsF1Y3Y1qGbIC4NmB
+	 Spn25qW1CXJoB7N0wE7jNp4MAf1uaVYs9fjn2kWaSjtVSuylzwtb0qdcr8dT3o+hUs
+	 KM6cHJFF/cfIWZKK1r47Nnudi4be4dyAE3oJX7na/NzE2BTbt6nwo5bec4IoYQYygU
+	 oOVvL9JGyAcN5ZvGqqcIkDZG1kNRuzD5q5hMQSBfF24k9RIW7DshcXlRvJRLNmNAaD
+	 t5JhUQfJoJYbQ5f6mOcV4XrlWTDt0ZH+l8QBm6INZpg+LgfirtwvDtTrdP5+oxbbj1
+	 sc8RD/Vhi9W/A==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A5EC4167D;
+	Tue,  7 Nov 2023 13:45:13 +0000 (UTC)
+From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
+Date: Tue, 07 Nov 2023 14:45:04 +0100
+Subject: [PATCH 04/10] timekeeping: Remove the now superfluous sentinel
+ elements from ctl_table array
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.137
+Message-Id: <20231107-jag-sysctl_remove_empty_elem_kernel-v1-4-e4ce1388dfa0@samsung.com>
+References: <20231107-jag-sysctl_remove_empty_elem_kernel-v1-0-e4ce1388dfa0@samsung.com>
+In-Reply-To: <20231107-jag-sysctl_remove_empty_elem_kernel-v1-0-e4ce1388dfa0@samsung.com>
+To: Luis Chamberlain <mcgrof@kernel.org>, willy@infradead.org, 
+ josh@joshtriplett.org, Kees Cook <keescook@chromium.org>, 
+ Eric Biederman <ebiederm@xmission.com>, Iurii Zaikin <yzaikin@google.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Thomas Gleixner <tglx@linutronix.de>, John Stultz <jstultz@google.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Andy Lutomirski <luto@amacapital.net>, 
+ Will Drewry <wad@chromium.org>, Ingo Molnar <mingo@redhat.com>, 
+ Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+ Vincent Guittot <vincent.guittot@linaro.org>, 
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+ Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+ Daniel Bristot de Oliveira <bristot@redhat.com>, 
+ Valentin Schneider <vschneid@redhat.com>, Petr Mladek <pmladek@suse.com>, 
+ John Ogness <john.ogness@linutronix.de>, 
+ Sergey Senozhatsky <senozhatsky@chromium.org>, 
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
+ Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Balbir Singh <bsingharora@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, 
+ John Fastabend <john.fastabend@gmail.com>, 
+ Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
+ linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ bpf@vger.kernel.org, Joel Granados <j.granados@samsung.com>
+X-Mailer: b4 0.13-dev-86aa5
+X-Developer-Signature: v=1; a=openpgp-sha256; l=864; i=j.granados@samsung.com;
+ h=from:subject:message-id; bh=rOgjyk+y2sTTf7UpdfCg7T7N07f0Drf2bm8cuUCjmf0=;
+ b=owEB7QES/pANAwAKAbqXzVK3lkFPAcsmYgBlSj9lo4lHq3W7DTuFj5cG9c2hzwCA1qpfvT7ET
+ DbdUecCRu2JAbMEAAEKAB0WIQSuRwlXJeYxJc7LJ5C6l81St5ZBTwUCZUo/ZQAKCRC6l81St5ZB
+ T4l5C/0crurghG7p8vkJdWnAocoHgECRX54CsB63XQcpAUcwN6D3li2qOQ9xTGuPXbQ7gAqbJ4z
+ iDEag+GTNufuTyGWM9fOV/cr750yQYoRv2CUBrmWmt774ir7jMqweCCXAk+Lk4hNjmCPHCwU0Kh
+ ls61PcywEqFj6ebTD/ux6pFErLrNVI4Cd1XXbyZKY98lGZFmS41eBEgN3KbacG4g6PZXipFGqr1
+ kKRa3xzpUR5ZOsF8eeWMeHY3vkAl/YtF7Zt1dwFsOPiqcvYA/0SM+BMVdHDH//iZmWLhahKwD/W
+ vvEwSFu2i/AKoccgpVJJfFJQ+/LHD9/RFb2V7qoXgo/8tTYAT3s6VkPjuHXRdCDEwVPbY8Z07N3
+ Oi+9iP4azjPvUTcmYcOHqPRaD4OPmqv6UNbce12jqoHR8WNscwxkNs9mXgDI4/pM9gN61UL2n8N
+ GFYoJeOf9EJS0IDLS3Q6VRC2XVLIfaTyAxkQtYLPpE2/KEdCoLpn+nxRsQWqKzmXkTWYc=
+X-Developer-Key: i=j.granados@samsung.com; a=openpgp;
+ fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
+X-Endpoint-Received: by B4 Relay for j.granados@samsung.com/default with auth_id=70
+X-Original-From: Joel Granados <j.granados@samsung.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231107_042957_434167_C99AD147 
-X-CRM114-Status: UNSURE (   9.84  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20231107_054516_061589_4886FBF7 
+X-CRM114-Status: GOOD (  12.82  )
+X-Mailman-Approved-At: Tue, 07 Nov 2023 05:52:34 -0800
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,47 +114,42 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: j.granados@samsung.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Philipp Stanner <pstanner@redhat.com>
+From: Joel Granados <j.granados@samsung.com>
 
-[ Upstream commit 569c8d82f95eb5993c84fb61a649a9c4ddd208b3 ]
+This commit comes at the tail end of a greater effort to remove the
+empty elements at the end of the ctl_table arrays (sentinels) which
+will reduce the overall build time size of the kernel and run time
+memory bloat by ~64 bytes per sentinel (further information Link :
+https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
 
-Currently, there is no overflow-check with memdup_user().
+Remove sentinel element from time_sysctl
 
-Use the new function memdup_array_user() instead of memdup_user() for
-duplicating the user-space array safely.
-
-Suggested-by: David Airlie <airlied@redhat.com>
-Signed-off-by: Philipp Stanner <pstanner@redhat.com>
-Acked-by: Baoquan He <bhe@redhat.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Zack Rusin <zackr@vmware.com>
-Signed-off-by: Dave Airlie <airlied@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20230920123612.16914-4-pstanner@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Joel Granados <j.granados@samsung.com>
 ---
- kernel/kexec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/time/timer.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index cb8e6e6f983c7..5ff1dcc4acb78 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -240,7 +240,7 @@ SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
- 		((flags & KEXEC_ARCH_MASK) != KEXEC_ARCH_DEFAULT))
- 		return -EINVAL;
+diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+index 63a8ce7177dd..475826ad78df 100644
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -260,7 +260,6 @@ static struct ctl_table timer_sysctl[] = {
+ 		.extra1		= SYSCTL_ZERO,
+ 		.extra2		= SYSCTL_ONE,
+ 	},
+-	{}
+ };
  
--	ksegments = memdup_user(segments, nr_segments * sizeof(ksegments[0]));
-+	ksegments = memdup_array_user(segments, nr_segments, sizeof(ksegments[0]));
- 	if (IS_ERR(ksegments))
- 		return PTR_ERR(ksegments);
- 
+ static int __init timer_sysctl_init(void)
+
 -- 
-2.42.0
+2.30.2
 
 
 _______________________________________________
