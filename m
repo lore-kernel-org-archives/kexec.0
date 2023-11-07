@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4F2B9C4167B
-	for <kexec@archiver.kernel.org>; Tue,  7 Nov 2023 12:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8BBA7C4332F
+	for <kexec@archiver.kernel.org>; Tue,  7 Nov 2023 12:30:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=v6Y6mSdubiKrc4Az2RxpXNezUHm81yXiPH/FKEfEP+Q=; b=QtZSabdQpbi85m
-	rNeBXGZzL+zt9T4HY8cQGUFAw8m2iJVLRublhQUy9HxRChbzy6ZuBAOKKXLomV4Q0lF571I8x2tsN
-	rNwsduu/DTQVr1wYdO6LJHNgK74Fi0VdkFoCnPGhxzF5UKNCHgJM+szYLeGXcgqemr86h9i+vR9fi
-	KBz5mhgzIHEk5knvXcVM+P9UiwpgLq+UOn0E9awnMyL++MRnWtQF3WCX/9gtcNkRF0H9AF8F8OcV1
-	CD34DQt6B7+UB3iupNiPt9B+4ApBbcHF2Hwo5CrfvZ2KAsQMq3njBXdEo/sJrCydCvkrw1X6T6xc7
-	Cvhnm43c9lWScLG48IHQ==;
+	List-Owner; bh=v6Y6mSdubiKrc4Az2RxpXNezUHm81yXiPH/FKEfEP+Q=; b=tIYPua6XuKzQ2A
+	KRO6+keXcj7P8eF8QiXLCPfvd+Co/ir5WmcwkZrJ8ILUaC0NqlwGD8MLGmpSYMblJwImPJintn2bm
+	UJMTnPeWWJIVex8sktvxyLleyrH2nuHhCeN4zEuLJ2xj8dSgAS1oCuNNn35QszhgRw5CZ/qz9eOsR
+	/sHmJf1zCtJqzmuBYk1Sxv/hyhvaSTx/J4vU0czxBecoOh3qxbf1rkLKNPwlmIvNPMOszRxfcSuJL
+	unqRkvJQMCA50SRLTiI++2W/5WxB2/wuneB3NCRO45HHT94MAvuuIxEOJNRfWZhSBxMtscA5brg3v
+	VhEqr7eANRYqJn6jba4A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r0LBz-001UNq-1q;
-	Tue, 07 Nov 2023 12:28:27 +0000
+	id 1r0LDT-001Uov-2m;
+	Tue, 07 Nov 2023 12:29:59 +0000
 Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r0LBw-001UMZ-1o
+	id 1r0LDR-001Unu-19
 	for kexec@lists.infradead.org;
-	Tue, 07 Nov 2023 12:28:26 +0000
+	Tue, 07 Nov 2023 12:29:58 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id DA0E66117F;
-	Tue,  7 Nov 2023 12:28:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94EE6C433CB;
-	Tue,  7 Nov 2023 12:28:22 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTP id BD992611DE;
+	Tue,  7 Nov 2023 12:29:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E98CC433CA;
+	Tue,  7 Nov 2023 12:29:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1699360103;
+	s=k20201202; t=1699360196;
 	bh=D1PYTQZiTV/3FHNcwcS5n1/vZC1HqQlHbF/tyBrUkkg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=I8li8544GsDlRrrbHH96lSjt/upuvLRBf4rO7d1aioJmj2CbKd+UfqEglNu7wm2E6
-	 1+nuaJjcPnH4QTH6NmVpypHomj7G8f4UrgrEbhpY1/muwRRX/wJOw2gMfsOUn7GOkq
-	 anxWgs6YyN1KHm0k5IQ9I/dJrA2offxATeKKCE8OHsokMbXCkdXFcfr1OhgkJ1m1HF
-	 RVo19DyF435rtYOCTAc/uHW8dgrwi9sGqfXosmjjnO/KffMDc74EzndP48VRBikenx
-	 dbcDP9NN1NOVqkoSVMp1iJWsgmBzMuTQWrx6N/5w88yEBCNnmd6jo2xCDBmWCT6dwf
-	 HQjg76Qm2Cjsw==
+	b=CPR/Y1fURlGZj6dofCV3TXi5LEmG5gQ0k8Ebp9UX6tbeb8l4UpUj/gUXBaAXoSsNi
+	 sGP9vZ5TYxiduc6S5tteqxa1X/QuMWpZiYjhAMJti+ZElos1IIWm+jJRlH/qmVFxRC
+	 ekl3hyuisQXdaS+AdCZPjVEOG+J566dMzKeitB1+mDqGEyb852RIhVu4dFSwqY5JA1
+	 76rqFgEQSVjwY0Qdgq7RaMxnz4YX0r/ipdiWAfq7EGmcAN5sVqixNg8vJPZYRDeXqw
+	 t2kMkMX6sRlzbE1B8S7UWYcDQLeVhE43yAp7woH4LdSxBcYWtQRe7yqgBAAAeWiyRi
+	 W2YaMKOBbYsjA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -53,18 +53,18 @@ Cc: Philipp Stanner <pstanner@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
 	ebiederm@xmission.com,
 	kexec@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.1 08/25] kernel: kexec: copy user-array safely
-Date: Tue,  7 Nov 2023 07:26:47 -0500
-Message-ID: <20231107122745.3761613-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 05/20] kernel: kexec: copy user-array safely
+Date: Tue,  7 Nov 2023 07:28:59 -0500
+Message-ID: <20231107122940.3762228-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231107122745.3761613-1-sashal@kernel.org>
-References: <20231107122745.3761613-1-sashal@kernel.org>
+In-Reply-To: <20231107122940.3762228-1-sashal@kernel.org>
+References: <20231107122940.3762228-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.61
+X-stable-base: Linux 5.15.137
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231107_042824_650512_047BAF38 
+X-CRM114-CacheID: sfid-20231107_042957_434167_C99AD147 
 X-CRM114-Status: UNSURE (   9.84  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
