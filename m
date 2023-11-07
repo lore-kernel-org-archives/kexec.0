@@ -4,51 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B8200C4167B
-	for <kexec@archiver.kernel.org>; Tue,  7 Nov 2023 14:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CD9F3C4167B
+	for <kexec@archiver.kernel.org>; Thu,  9 Nov 2023 16:23:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=ez6WWYvCoyg48iBFWe9XxZrzPycoYA1AEnCVIvjNYMc=; b=I923eTLOk4uhrG
-	YEJ9kmnWFMxfL4/xJ1LbGE2lKh1OcjrgCLLcOJwn3lUp8vA3YpmwbE1S366AODmeHat4OleVa27DO
-	i1Ig8v89UZmoPu649XUQbv1NUc8zs2GbKvhgbF6YuLGOUKW50lsZHPecqfs3voItGvN72wKS1PKiI
-	fnClNdP3Aq88sHvprbqzFrz6BLv+LCWNtAepSfomsay63Fr6ekU9OpqMGR4wauIq4btESkWNsp0C/
-	VkhseP61zk/0aWb6HApnvxsRRmoqlOr4UTl+BizVB5T6jdFDA23L+z0G55SEyuY378pD418wyh2oh
-	65kCTVyiLzzHkLqy+X1g==;
+	List-Owner; bh=3fADiqB0K4PtBavm/SmnjeWLCa1NnqRc1IlS1DUHeaE=; b=MSClMBNUMbv3B6
+	aRLsUdojMIqQQD5gk6ywEJczTteNr/5eOxuSGLhMI20fIRHVPnEb+uu/Hl/bnZfqdin8k3dmnFAFY
+	spCYK8cghB3nD0w9/I0D37im/N3Nv3Sqb6QsyFjgCgC4V05phPgWevuAyvZxwWKdZg42dQ1iC/W7V
+	ALlLGo9dcFr8U12Wa7tPTI6eHwFN51E0c53WXmLAl3U22B1E0nke4UdWnSB66WmbXR77CWy5uhce+
+	iJsfo5luyhU0IL8wfxLFNeJkafT+sVOugxMlZJg3GlHD39QmCYtW48VWHvtuQ9HKJqgeefhPeIyqm
+	3EhEfVAkPuH6M9UxdxCQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r0NWO-001lqp-1n;
-	Tue, 07 Nov 2023 14:57:40 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1r17oE-006hy4-2J;
+	Thu, 09 Nov 2023 16:23:10 +0000
+Received: from mail-pl1-x630.google.com ([2607:f8b0:4864:20::630])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r0NOK-001kzv-03
-	for kexec@bombadil.infradead.org;
-	Tue, 07 Nov 2023 14:49:20 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=aUPKeGDPANiKH2z7X9OP/b73LHeCDXnx5PDCsJAh+M4=; b=gDp1g+zKei5Pp+ErPuqJGvyIYg
-	xGzHGyM11dG9jI9jae1Aj9AR57XGf62CEXNahL6Witq3vqXbFBnNnn2w0zuJChY94qURrK+HiBImH
-	pWESyPMcD4dOmnpU5lllX9UAYbdxJMpr5Ln6txhpke+KZA2YAyh0sLInwJyzX7Hix9TdvwjCT5etA
-	vV6IZ4jD173+OaWlbqxnaiHufqRf8DGIwc2RwgkWBfYb0+SZiO3M6Nu99qQsiypQ/2N2ILlgk4WL0
-	4RjUb2cNWqjRKD2DPUeQnVEwPsssD2ETwgrhPYUPT3iMCDtuN/5uoJjMr6+nHbbvyIaLpUvpxIbX0
-	rO+83T8g==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1r0NOA-00C4Bw-2I;
-	Tue, 07 Nov 2023 14:49:10 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 5BAC530049D; Tue,  7 Nov 2023 15:49:10 +0100 (CET)
-Date: Tue, 7 Nov 2023 15:49:10 +0100
-From: Peter Zijlstra <peterz@infradead.org>
+	id 1r0SAp-002IlF-1d
+	for kexec@lists.infradead.org;
+	Tue, 07 Nov 2023 19:55:44 +0000
+Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1cc0e78ec92so41143735ad.3
+        for <kexec@lists.infradead.org>; Tue, 07 Nov 2023 11:55:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1699386941; x=1699991741; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=HNeFqgo6zpROkihy0ShoA85fAr1c1+bU52BjgzWcK1o=;
+        b=jGUtn8OQLrJ0gqUCR0pv4sY5ZzdGacj1QEsakIof6tK90cHg/ZWaxQ8rKuVju7R+ic
+         0i6A3Qw/LJmZfMNf+CXdaZT7Zhu3jlOSthxwphoaivfRKJj0G2fpcqjOhLhmTp2qmL7E
+         DkMF5ZVz6Rv14n3vPH9pZekKL/e+7Otlv8lq4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699386941; x=1699991741;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HNeFqgo6zpROkihy0ShoA85fAr1c1+bU52BjgzWcK1o=;
+        b=Kkr9i066UY/Qk4iYTGXFrZQfZTciA0EPkQviHMKUshV7cNiVXjTrXu3EEiVsjaYM94
+         bG7fPtCfglyQIV9jXAxtIHOgtG+/62nfF7c8fqdy8BwthEnBhO1vQjqgFO7fRhGTtEhT
+         26HQFBenUGHxN4i5OCtuvlwER6w+3ZGaVvuFdi87EtZ06+dRhSz3Whf7oRg5TYS86Ccu
+         Z3Ph4JZp5AMfCzjrbpa177exuMt8lKXRh0aCHvrRMef5lyw+iObNRYqxL130w7RBBPV4
+         PjrTaHbEzUFOlesUvi8V692nI5FeJT5BY6NtgRt7nU5OPFyQmEcWS9pQZkHRZN61tmpv
+         uWMA==
+X-Gm-Message-State: AOJu0YxKN+sNuR+65fxQ6NkZrOLBWCPON34LODdl7bB1UDMzkFfxVGO+
+	7ZJfSoeCG0BMK3cL3TKE3MDC3A==
+X-Google-Smtp-Source: AGHT+IEZgybC45XGlQUGbU637Xhd/YQognaCWgtAXzdYdCdXOmVngLWoQt1kbfTCkOpNfx5sZXCftA==
+X-Received: by 2002:a17:903:2282:b0:1cc:ee07:1654 with SMTP id b2-20020a170903228200b001ccee071654mr35008plh.14.1699386940686;
+        Tue, 07 Nov 2023 11:55:40 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id jw24-20020a170903279800b001cc3a8af18dsm209511plb.60.2023.11.07.11.55.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Nov 2023 11:55:39 -0800 (PST)
+Date: Tue, 7 Nov 2023 11:55:38 -0800
+From: Kees Cook <keescook@chromium.org>
 To: j.granados@samsung.com
 Cc: Luis Chamberlain <mcgrof@kernel.org>, willy@infradead.org,
-	josh@joshtriplett.org, Kees Cook <keescook@chromium.org>,
-	Eric Biederman <ebiederm@xmission.com>,
+	josh@joshtriplett.org, Eric Biederman <ebiederm@xmission.com>,
 	Iurii Zaikin <yzaikin@google.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -57,6 +71,7 @@ Cc: Luis Chamberlain <mcgrof@kernel.org>, willy@infradead.org,
 	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
 	Andy Lutomirski <luto@amacapital.net>,
 	Will Drewry <wad@chromium.org>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
 	Juri Lelli <juri.lelli@redhat.com>,
 	Vincent Guittot <vincent.guittot@linaro.org>,
 	Dietmar Eggemann <dietmar.eggemann@arm.com>,
@@ -81,15 +96,18 @@ Cc: Luis Chamberlain <mcgrof@kernel.org>, willy@infradead.org,
 	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
 	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
 	bpf@vger.kernel.org
-Subject: Re: [PATCH 06/10] scheduler: Remove the now superfluous sentinel
+Subject: Re: [PATCH 05/10] seccomp: Remove the now superfluous sentinel
  elements from ctl_table array
-Message-ID: <20231107144910.GY8262@noisy.programming.kicks-ass.net>
+Message-ID: <202311071155.EE9C0FBF@keescook>
 References: <20231107-jag-sysctl_remove_empty_elem_kernel-v1-0-e4ce1388dfa0@samsung.com>
- <20231107-jag-sysctl_remove_empty_elem_kernel-v1-6-e4ce1388dfa0@samsung.com>
+ <20231107-jag-sysctl_remove_empty_elem_kernel-v1-5-e4ce1388dfa0@samsung.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20231107-jag-sysctl_remove_empty_elem_kernel-v1-6-e4ce1388dfa0@samsung.com>
-X-Mailman-Approved-At: Tue, 07 Nov 2023 06:57:39 -0800
+In-Reply-To: <20231107-jag-sysctl_remove_empty_elem_kernel-v1-5-e4ce1388dfa0@samsung.com>
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20231107_115543_576516_BC721E7B 
+X-CRM114-Status: GOOD (  12.59  )
+X-Mailman-Approved-At: Thu, 09 Nov 2023 08:23:08 -0800
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -106,7 +124,7 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Nov 07, 2023 at 02:45:06PM +0100, Joel Granados via B4 Relay wrote:
+On Tue, Nov 07, 2023 at 02:45:05PM +0100, Joel Granados via B4 Relay wrote:
 > From: Joel Granados <j.granados@samsung.com>
 > 
 > This commit comes at the tail end of a greater effort to remove the
@@ -115,19 +133,14 @@ On Tue, Nov 07, 2023 at 02:45:06PM +0100, Joel Granados via B4 Relay wrote:
 > memory bloat by ~64 bytes per sentinel (further information Link :
 > https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
 > 
-> rm sentinel element from ctl_table arrays
+> Remove sentinel element from seccomp_sysctl_table.
 > 
 > Signed-off-by: Joel Granados <j.granados@samsung.com>
-> ---
->  kernel/sched/autogroup.c | 1 -
->  kernel/sched/core.c      | 1 -
->  kernel/sched/deadline.c  | 1 -
->  kernel/sched/fair.c      | 1 -
->  kernel/sched/rt.c        | 1 -
->  kernel/sched/topology.c  | 1 -
->  6 files changed, 6 deletions(-)
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Kees Cook <keescook@chromium.org>
+
+-- 
+Kees Cook
 
 _______________________________________________
 kexec mailing list
