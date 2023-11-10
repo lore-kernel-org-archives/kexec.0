@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2588EC074FD
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4C52BC074FE
 	for <kexec@archiver.kernel.org>; Fri, 10 Nov 2023 22:28:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
@@ -12,51 +12,51 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=J+eJ6zQDJoHjVMIiMLcCcu63ni5XJbPvtIehAwT/HbI=; b=DTxWm6zzUcsc7z
-	kQzZZL4ms9nIx16tJdCCyzkb483jACL0RlOvzMRKFN9Vx8IcQ79t5VZ7JtPLArqiG3/qQxHYHz6k3
-	0JFetKs093Z6+xHuLHzB3vxE3ezd8kzyakhi/PaDd9fsmWfjDafwZpHOx3SkPPI2egYNE5QzB6DeV
-	xCWsYpc2mS5Rdq2fH5Thb+BUQFCsrs8dj99o/TmguA3EswTPMKFgST23SBY/TPzrYdjScQEQbo77t
-	m//DkmN88iFtDZch6ml5PBbuZE1Atcl99GhysxtlBEMukk5DiHaA9SgSsq8NCgDffHqQZmKTriLMS
-	vyHFAYcyQ5V8SFj3kBQA==;
+	List-Owner; bh=TosA358iKd9TxAJ3d+xP27nuKhNKrLprz2GHfNs5rHI=; b=kjdVVf6nSB4Xpx
+	EuyQ7xSCQrZ1UkN+IGnOYOI2ytu3fruTz3bJf+zvhYQKvB/hdRaiVTh7ZuOpjbvLQEMb+PaPIT3f4
+	6Eb12ExmlAuFuaobyZHamQ5Ey+wJRajcMkYyA1lL8QAFLq5/utM3LKge+lTQ6GiG0pa27tjULuLIS
+	F7O0ZyGx54LWvlmijkdFhqcH48mJDk6T6gKW/s8mkiP0SY3sRxn0Jx2ZwFG3jKWUfKaGhHe7DhU3A
+	oJPgD0rvHeUs6ZSFTpevkEFZgpvD9ABKo45MwXGrMy8DSGcBiSAIfStcVGhh/iJoI7dDkXSW8gGxS
+	o1BSYGt3heEcf1mebgKA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r1ZzQ-009YUx-2c;
-	Fri, 10 Nov 2023 22:28:36 +0000
+	id 1r1ZzR-009YVP-14;
+	Fri, 10 Nov 2023 22:28:37 +0000
 Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r1ZzJ-009YRY-2J
+	id 1r1ZzJ-009YRX-2E
 	for kexec@lists.infradead.org;
-	Fri, 10 Nov 2023 22:28:33 +0000
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AAHiIst020588;
-	Fri, 10 Nov 2023 22:28:09 GMT
+	Fri, 10 Nov 2023 22:28:34 +0000
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AAHicQh030763;
+	Fri, 10 Nov 2023 22:28:02 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2023-03-30;
- bh=GKauPTtNdSk3fkzWv10kdNJl8kVDWJLiFM0GZ5EYFVs=;
- b=ccsZ1ZwdERjPOTms27WSUyLPwC3u2weuulczZ9YCnwNnhjeslyOAFjGJ6a2QGDFccWqy
- kb4Qedsf7Z7uvw7avVNdgXQ/R1bsvwmhYF2pllLMaA5nI7M95OCIUicdpforwMMeErIZ
- hXZNTlk0d+lBB//sgnQT5sq1uwMwccOcrWcMFGTmEpCuVInhSBtOCANTJRn2eQZt699H
- irj2EVTR2EVII+5gcde9sQGeW+julk8fjmVPYfjnOjafW7Y9NSDIa13ik1bN3r8QQUAm
- Na2nc1Ofjm+qwc7UD8p8VVfqxglIHE+XPPUbdwwPBmc8gXPF0FV2S3IrbTmq95Vu9UiD Jg== 
+ bh=XAsDXij3MP4A24VAlsCQB2bAmr9/A1dvk/cNf1BVoW4=;
+ b=qKZX2i6bfqbx/IpT24ZeMDP0AXvRt5ue2++cORoVSocTgQDw8BTEF66GPoGDRw3oNe4l
+ TXwBU0w0B6uCsh3qYYjQxUr1FM9zPttGkt0Xw/8b+8oxMrw2KT+bz+1uOtVg+4Z+K1b3
+ 7HBqKR70t/Va7eo+vKLSoSJ64rh8miuuqjvaY45x1Vqhm3PK053ZixBrnCSn6tkBA3M0
+ FFhCUkxqfy87h794WnOWZ6/7XXIDiUSb1cJ8roosiFrTDTqMSRst1XybvaXe/HXG3IdG
+ uIEgxiooN4W/NzHV/uuyvQnDFjVPcag6/PdKlcWNkllr0nUGKKuHa92QSIRZPQfnP68L Dg== 
 Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3u7w23pysd-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3u7w23q0v1-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 10 Nov 2023 22:28:09 +0000
+	Fri, 10 Nov 2023 22:28:02 +0000
 Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3AAK53Y6023844;
-	Fri, 10 Nov 2023 22:28:07 GMT
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3AAKA3tF024240;
+	Fri, 10 Nov 2023 22:28:00 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3u7w28nb42-1
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3u7w28nb1d-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 10 Nov 2023 22:28:07 +0000
+	Fri, 10 Nov 2023 22:28:00 +0000
 Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3AAMRsaO039112;
-	Fri, 10 Nov 2023 22:28:07 GMT
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3AAMRsaA039112;
+	Fri, 10 Nov 2023 22:28:00 GMT
 Received: from ovs113.us.oracle.com (ovs113.us.oracle.com [10.149.224.213])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3u7w28nayh-14
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3u7w28nayh-7
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 10 Nov 2023 22:28:06 +0000
+	Fri, 10 Nov 2023 22:28:00 +0000
 From: Ross Philipson <ross.philipson@oracle.com>
 To: linux-kernel@vger.kernel.org, x86@kernel.org,
         linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
@@ -68,9 +68,9 @@ Cc: ross.philipson@oracle.com, dpsmith@apertussolutions.com,
         James.Bottomley@hansenpartnership.com, luto@amacapital.net,
         nivedita@alum.mit.edu, kanth.ghatraju@oracle.com,
         trenchboot-devel@googlegroups.com
-Subject: [PATCH v7 13/13] tpm: Allow locality 2 to be set when initializing the TPM for Secure Launch
-Date: Fri, 10 Nov 2023 17:27:51 -0500
-Message-Id: <20231110222751.219836-14-ross.philipson@oracle.com>
+Subject: [PATCH v7 06/13] x86: Add early SHA support for Secure Launch early measurements
+Date: Fri, 10 Nov 2023 17:27:44 -0500
+Message-Id: <20231110222751.219836-7-ross.philipson@oracle.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20231110222751.219836-1-ross.philipson@oracle.com>
 References: <20231110222751.219836-1-ross.philipson@oracle.com>
@@ -82,11 +82,11 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 p
  spamscore=0 mlxscore=0 adultscore=0 malwarescore=0 bulkscore=0
  suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2311060000 definitions=main-2311100187
-X-Proofpoint-GUID: EU4eaKX42DB7eE9dHiylfHKU3qY5XorR
-X-Proofpoint-ORIG-GUID: EU4eaKX42DB7eE9dHiylfHKU3qY5XorR
+X-Proofpoint-ORIG-GUID: ojsq13qR-0XI81QkowQNNlH01txBhpsA
+X-Proofpoint-GUID: ojsq13qR-0XI81QkowQNNlH01txBhpsA
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231110_142829_758235_5FCBB177 
-X-CRM114-Status: GOOD (  17.89  )
+X-CRM114-CacheID: sfid-20231110_142829_744841_DEF06140 
+X-CRM114-Status: GOOD (  27.00  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -103,48 +103,177 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The Secure Launch MLE environment uses PCRs that are only accessible from
-the DRTM locality 2. By default the TPM drivers always initialize the
-locality to 0. When a Secure Launch is in progress, initialize the
-locality to 2.
+From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
 
+The SHA algorithms are necessary to measure configuration information into
+the TPM as early as possible before using the values. This implementation
+uses the established approach of #including the SHA libraries directly in
+the code since the compressed kernel is not uncompressed at this point.
+
+The SHA code here has its origins in the code from the main kernel:
+
+commit c4d5b9ffa31f ("crypto: sha1 - implement base layer for SHA-1")
+
+A modified version of this code was introduced to the lib/crypto/sha1.c
+to bring it in line with the sha256 code and allow it to be pulled into the
+setup kernel in the same manner as sha256 is.
+
+Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
 Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
 ---
- drivers/char/tpm/tpm-chip.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ arch/x86/boot/compressed/Makefile       |  2 +
+ arch/x86/boot/compressed/early_sha1.c   | 12 ++++
+ arch/x86/boot/compressed/early_sha256.c |  6 ++
+ include/crypto/sha1.h                   |  1 +
+ lib/crypto/sha1.c                       | 81 +++++++++++++++++++++++++
+ 5 files changed, 102 insertions(+)
+ create mode 100644 arch/x86/boot/compressed/early_sha1.c
+ create mode 100644 arch/x86/boot/compressed/early_sha256.c
 
-diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
-index 42b1062e33cd..0217ceb96c42 100644
---- a/drivers/char/tpm/tpm-chip.c
-+++ b/drivers/char/tpm/tpm-chip.c
-@@ -23,6 +23,7 @@
- #include <linux/major.h>
- #include <linux/tpm_eventlog.h>
- #include <linux/hw_random.h>
-+#include <linux/slaunch.h>
- #include "tpm.h"
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index 71fc531b95b4..07a2f56cd571 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -118,6 +118,8 @@ vmlinux-objs-$(CONFIG_EFI) += $(obj)/efi.o
+ vmlinux-objs-$(CONFIG_EFI_MIXED) += $(obj)/efi_mixed.o
+ vmlinux-objs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
  
- DEFINE_IDR(dev_nums_idr);
-@@ -39,12 +40,18 @@ dev_t tpm_devt;
- 
- static int tpm_request_locality(struct tpm_chip *chip)
- {
-+	int locality;
- 	int rc;
- 
- 	if (!chip->ops->request_locality)
- 		return 0;
- 
--	rc = chip->ops->request_locality(chip, 0);
-+	if (slaunch_get_flags() & SL_FLAG_ACTIVE)
-+		locality = 2;
-+	else
-+		locality = 0;
++vmlinux-objs-$(CONFIG_SECURE_LAUNCH) += $(obj)/early_sha1.o $(obj)/early_sha256.o
 +
-+	rc = chip->ops->request_locality(chip, locality);
- 	if (rc < 0)
- 		return rc;
+ $(obj)/vmlinux: $(vmlinux-objs-y) FORCE
+ 	$(call if_changed,ld)
  
+diff --git a/arch/x86/boot/compressed/early_sha1.c b/arch/x86/boot/compressed/early_sha1.c
+new file mode 100644
+index 000000000000..0c7cf6f8157a
+--- /dev/null
++++ b/arch/x86/boot/compressed/early_sha1.c
+@@ -0,0 +1,12 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2022 Apertus Solutions, LLC.
++ */
++
++#include <linux/init.h>
++#include <linux/linkage.h>
++#include <linux/string.h>
++#include <asm/boot.h>
++#include <asm/unaligned.h>
++
++#include "../../../../lib/crypto/sha1.c"
+diff --git a/arch/x86/boot/compressed/early_sha256.c b/arch/x86/boot/compressed/early_sha256.c
+new file mode 100644
+index 000000000000..54930166ffee
+--- /dev/null
++++ b/arch/x86/boot/compressed/early_sha256.c
+@@ -0,0 +1,6 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2022 Apertus Solutions, LLC
++ */
++
++#include "../../../../lib/crypto/sha256.c"
+diff --git a/include/crypto/sha1.h b/include/crypto/sha1.h
+index 044ecea60ac8..d715dd5332e1 100644
+--- a/include/crypto/sha1.h
++++ b/include/crypto/sha1.h
+@@ -42,5 +42,6 @@ extern int crypto_sha1_finup(struct shash_desc *desc, const u8 *data,
+ #define SHA1_WORKSPACE_WORDS	16
+ void sha1_init(__u32 *buf);
+ void sha1_transform(__u32 *digest, const char *data, __u32 *W);
++void sha1(const u8 *data, unsigned int len, u8 *out);
+ 
+ #endif /* _CRYPTO_SHA1_H */
+diff --git a/lib/crypto/sha1.c b/lib/crypto/sha1.c
+index 1aebe7be9401..10152125b338 100644
+--- a/lib/crypto/sha1.c
++++ b/lib/crypto/sha1.c
+@@ -137,4 +137,85 @@ void sha1_init(__u32 *buf)
+ }
+ EXPORT_SYMBOL(sha1_init);
+ 
++static void __sha1_transform(u32 *digest, const char *data)
++{
++       u32 ws[SHA1_WORKSPACE_WORDS];
++
++       sha1_transform(digest, data, ws);
++
++       memzero_explicit(ws, sizeof(ws));
++}
++
++static void sha1_update(struct sha1_state *sctx, const u8 *data, unsigned int len)
++{
++	unsigned int partial = sctx->count % SHA1_BLOCK_SIZE;
++
++	sctx->count += len;
++
++	if (likely((partial + len) >= SHA1_BLOCK_SIZE)) {
++		int blocks;
++
++		if (partial) {
++			int p = SHA1_BLOCK_SIZE - partial;
++
++			memcpy(sctx->buffer + partial, data, p);
++			data += p;
++			len -= p;
++
++			__sha1_transform(sctx->state, sctx->buffer);
++		}
++
++		blocks = len / SHA1_BLOCK_SIZE;
++		len %= SHA1_BLOCK_SIZE;
++
++		if (blocks) {
++			while (blocks--) {
++				__sha1_transform(sctx->state, data);
++				data += SHA1_BLOCK_SIZE;
++			}
++		}
++		partial = 0;
++	}
++
++	if (len)
++		memcpy(sctx->buffer + partial, data, len);
++}
++
++static void sha1_final(struct sha1_state *sctx, u8 *out)
++{
++	const int bit_offset = SHA1_BLOCK_SIZE - sizeof(__be64);
++	unsigned int partial = sctx->count % SHA1_BLOCK_SIZE;
++	__be64 *bits = (__be64 *)(sctx->buffer + bit_offset);
++	__be32 *digest = (__be32 *)out;
++	int i;
++
++	sctx->buffer[partial++] = 0x80;
++	if (partial > bit_offset) {
++		memset(sctx->buffer + partial, 0x0, SHA1_BLOCK_SIZE - partial);
++		partial = 0;
++
++		__sha1_transform(sctx->state, sctx->buffer);
++	}
++
++	memset(sctx->buffer + partial, 0x0, bit_offset - partial);
++	*bits = cpu_to_be64(sctx->count << 3);
++	__sha1_transform(sctx->state, sctx->buffer);
++
++	for (i = 0; i < SHA1_DIGEST_SIZE / sizeof(__be32); i++)
++		put_unaligned_be32(sctx->state[i], digest++);
++
++	*sctx = (struct sha1_state){};
++}
++
++void sha1(const u8 *data, unsigned int len, u8 *out)
++{
++	struct sha1_state sctx = {0};
++
++	sha1_init(sctx.state);
++	sctx.count = 0;
++	sha1_update(&sctx, data, len);
++	sha1_final(&sctx, out);
++}
++EXPORT_SYMBOL(sha1);
++
+ MODULE_LICENSE("GPL");
 -- 
 2.39.3
 
