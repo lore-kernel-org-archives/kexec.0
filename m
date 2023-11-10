@@ -4,75 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0AD09C4332F
-	for <kexec@archiver.kernel.org>; Thu,  9 Nov 2023 16:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4C5EBC4332F
+	for <kexec@archiver.kernel.org>; Fri, 10 Nov 2023 10:13:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=hXOWRVAZUrcCUkJuZGTFVndTn1K3WYDkGexiGqdXFFU=; b=N8JjBSPaKIV7/N
-	UekPB9uOyy3wQWVoMU+AW5pOeKoxEUYGOQGZoyqBMDP5D+EYz96ishUAerMdh7wnMZOOq3TTW1/7k
-	1whmHHe4yl+lh1qkm5tcks6TZnqqtYX4ChDcueX7UEVgD0xRGRspBR+VUwUj6FImNY6+m53jQz4XB
-	prnegsasketncgvxVLf6TcR/Vj0tseZ74mNF83Q2IQZuKAr4jOXM5GSdpxdmaQEkSaFPAH7jpoYvN
-	Ee4mpHYmE4qoRMfd7O4GqILHr6v9Z6RZo99wxYNbShLBwc+fnH276bfrQYQ91UmwQ6WAWuR8tD4wX
-	1e/Id0klL+sR6zQe349A==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Subject:To:From:Date:
+	Message-ID:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From
+	:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=nJjg67EbZsxLb8Ph8Ue/RvaeM3R7keg7hJncsNG2Vss=; b=taDYwe9kFD/OUK
+	sAdW+vL+LZ8fqAxYLOhGac+8mzmsNDuRB7rhGHe1zckGeZ7WmjuDOtCfSSqMIhSCceooMiYfKCvHN
+	8VnwM2mFJAG4U40Of7wZ1wtley5iBPYbNKUiHcqekA+D6ZIfskz6BKGVzRGsCRBPC4sUXHdTmxhkR
+	A8E6LciPa6sH5Jz8qgTFWB5r5MvaddUADw5CMUeUE9XYKipPV2U+SPxiLARCyDAaLZDjmFx1r6sZH
+	o7hPOwdpwAQk5d4GkmqOu3RYCqEKQ/Y30zJHE14bd/Yd1wP36oFoW2/+UUkEAfWNRQ4UgS9eFvU8K
+	1rjRDc7HLSo/diEVKkzg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r17oQ-006i16-0V;
-	Thu, 09 Nov 2023 16:23:22 +0000
-Received: from sin.source.kernel.org ([2604:1380:40e1:4800::1])
+	id 1r1OVb-008GaD-1z;
+	Fri, 10 Nov 2023 10:13:03 +0000
+Received: from [162.19.155.126] (helo=mail.commercesolutions.pl)
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r0lOp-004IfW-21
+	id 1r1OVX-008GZH-0z
 	for kexec@lists.infradead.org;
-	Wed, 08 Nov 2023 16:27:29 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sin.source.kernel.org (Postfix) with ESMTP id 5BAE3CE112D;
-	Wed,  8 Nov 2023 16:27:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE87BC433C8;
-	Wed,  8 Nov 2023 16:27:19 +0000 (UTC)
-Date: Wed, 8 Nov 2023 11:27:23 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: <j.granados@samsung.com>, Joel Granados via B4 Relay
- <devnull+j.granados.samsung.com@kernel.org>, Luis Chamberlain
- <mcgrof@kernel.org>, willy@infradead.org, josh@joshtriplett.org, Kees Cook
- <keescook@chromium.org>, Eric Biederman <ebiederm@xmission.com>, Iurii
- Zaikin <yzaikin@google.com>, Mark Rutland <mark.rutland@arm.com>, Thomas
- Gleixner <tglx@linutronix.de>, John Stultz <jstultz@google.com>, Stephen
- Boyd <sboyd@kernel.org>, Andy Lutomirski <luto@amacapital.net>, Will Drewry
- <wad@chromium.org>, Ingo Molnar <mingo@redhat.com>, Peter Zijlstra
- <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Daniel
- Bristot de Oliveira <bristot@redhat.com>, Valentin Schneider
- <vschneid@redhat.com>, Petr Mladek <pmladek@suse.com>, John Ogness
- <john.ogness@linutronix.de>, Sergey Senozhatsky <senozhatsky@chromium.org>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Anil S Keshavamurthy
- <anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>,
- Balbir Singh <bsingharora@gmail.com>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, John Fastabend
- <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, Martin
- KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, Yonghong Song
- <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, Stanislav
- Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa
- <jolsa@kernel.org>, linux-kernel@vger.kernel.org,
- kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH 03/10] ftrace: Remove the now superfluous sentinel
- elements from ctl_table array
-Message-ID: <20231108112723.275ae223@gandalf.local.home>
-In-Reply-To: <20231108192949.f19832c76d1cf18c5d614e72@kernel.org>
-References: <20231107-jag-sysctl_remove_empty_elem_kernel-v1-0-e4ce1388dfa0@samsung.com>
-	<20231107-jag-sysctl_remove_empty_elem_kernel-v1-3-e4ce1388dfa0@samsung.com>
-	<20231108192949.f19832c76d1cf18c5d614e72@kernel.org>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	Fri, 10 Nov 2023 10:13:02 +0000
+Received: by mail.commercesolutions.pl (Postfix, from userid 1002)
+	id C97A624BEF; Fri, 10 Nov 2023 10:11:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=commercesolutions.pl;
+	s=mail; t=1699611071;
+	bh=PcMncQpBfIZCnTOfZJY5G1G+gaLn4c9QPfFvoXrE4rA=;
+	h=Date:From:To:Subject:From;
+	b=X1EwxMcOI3M5BBa/I11oeMgxikyVM7gPVwXuLtv21UZWlGVVRdwzE/eh7tdyKpRcl
+	 mczTPFletBcmql03uLe1OEaXZnlEJY2gr0SAc/vo4m4gRtcBpQ+NJ/CG+z6FVl4cKb
+	 EIgj3PHECfFAuFRdlTrIG1FdaOUJSGyPzAPpIOnVIELF6hQA9oQUUcgZKVH8TwFCBm
+	 pX+/ntSwRShCAvSVQooRHV9YSJu+jukWZ7v9WfDDkLeQrBdpjmyK1F9n5qz9nkjEvX
+	 oCb2q22IbV1xnkymbOl07k9lrnJC95DXBkiDDuO2o7KA1F8csZS+U+y8j+E3H0QxjF
+	 uc+vvHZFgccHA==
+Received: by mail.commercesolutions.pl for <kexec@lists.infradead.org>; Fri, 10 Nov 2023 10:10:56 GMT
+Message-ID: <20231110085829-0.1.9u.1zozb.0.zhjcbraw0b@commercesolutions.pl>
+Date: Fri, 10 Nov 2023 10:10:56 GMT
+From: "Kamil Tralewski" <kamil.tralewski@commercesolutions.pl>
+To: <kexec@lists.infradead.org>
+Subject: =?UTF-8?Q?S=C5=82owa_kluczowe_do_wypozycjonowania?=
+X-Mailer: mail.commercesolutions.pl
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231108_082727_832647_5067BFA9 
-X-CRM114-Status: GOOD (  15.16  )
-X-Mailman-Approved-At: Thu, 09 Nov 2023 08:23:21 -0800
+X-CRM114-CacheID: sfid-20231110_021300_112354_09F979BD 
+X-CRM114-Status: UNSURE (   1.36  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,40 +62,18 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, 8 Nov 2023 19:29:49 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-
-> On Tue, 07 Nov 2023 14:45:03 +0100
-> Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org> wrote:
-> 
-> > From: Joel Granados <j.granados@samsung.com>
-> > 
-> > This commit comes at the tail end of a greater effort to remove the
-> > empty elements at the end of the ctl_table arrays (sentinels) which
-> > will reduce the overall build time size of the kernel and run time
-> > memory bloat by ~64 bytes per sentinel (further information Link :
-> > https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
-> > 
-> > Remove sentinel elements from ftrace_sysctls and user_event_sysctls
-> >   
-> 
-> Both looks good to me. (since register_sysctl_init() uses ARRAY_SIZE()
-> macro to get the array size.)
-> 
-> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Agreed.
-
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-
--- Steve
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+RHppZcWEIGRvYnJ5LAoKemFwb3puYcWCZW0gc2nEmSB6IFBhxYRzdHdhIG9mZXJ0xIUgaSB6IHBy
+enlqZW1ub8WbY2nEhSBwcnp5em5hasSZLCDFvGUgcHJ6eWNpxIVnYSB1d2FnxJkgaSB6YWNoxJlj
+YSBkbyBkYWxzenljaCByb3ptw7N3LiAKClBvbXnFm2xhxYJlbSwgxbxlIG1vxbxlIG3Ds2fFgmJ5
+bSBtaWXEhyBzd8OzaiB3a8WCYWQgdyBQYcWEc3R3YSByb3p3w7NqIGkgcG9tw7NjIGRvdHJ6ZcSH
+IHogdMSFIG9mZXJ0xIUgZG8gd2nEmWtzemVnbyBncm9uYSBvZGJpb3Jjw7N3LiBQb3p5Y2pvbnVq
+xJkgc3Ryb255IHd3dywgZHppxJlraSBjemVtdSBnZW5lcnVqxIUgxZt3aWV0bnkgcnVjaCB3IHNp
+ZWNpLgoKTW/FvGVteSBwb3Jvem1hd2lhxIcgdyBuYWpibGnFvHN6eW0gY3phc2llPwoKUG96ZHJh
+d2lhbQpLYW1pbCBUcmFsZXdza2kKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3Jn
+Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
