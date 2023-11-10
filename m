@@ -4,59 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E2CEAC4332F
-	for <kexec@archiver.kernel.org>; Fri, 10 Nov 2023 22:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 16C82C072AB
+	for <kexec@archiver.kernel.org>; Fri, 10 Nov 2023 22:28:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=7xa6fzHBWE280epzFtXPcWxNgGp4vXg/46lb8Gsg/zM=; b=3lJWDLgmfU/l1N
-	3JsauDC+T0jhS6xXAH/rmZPfrDhvWzCu99LZO8IASv/JvvTxi9CE70Q1wpjVXY04nzkulB6vCWr+0
-	yGaR57hATYbNdlZw3uRlU0lBb65lOEl1cZFYRooedSgylRi0xDN+g2cX054yhBwndUl6JXASTTJQb
-	AuzLoW6tj7swL8tuEZ9ww48XTKUKmgSpRcvHGvaBU9ngkrg+4G1ir1z3nSrEqc04IaayP34Xf85CQ
-	b/CrWZoMWX8xZGScyBgRwsiqUe8q8xqk5O8OXOywmuInDYg/3I7BhyWhuUHAzENhuboWsZCUtSxat
-	ayJUUmAzcJpPrAv4jRKA==;
+	List-Owner; bh=3h5/MUtE2ge9QMoTw997cA2st8QfWx+TJ1TGMHU4qac=; b=nWSDLRdyKCPz+l
+	A+XKBlMubC4nwc6L2KYZQz98KK5WqKzTEAdvF8HANOjHWCf3806S9RwX5ZnyqmjjtWCOYvMnHPCKT
+	KjiiXBNaM8O8UxYDd/CN39sipYzq84Lxy/HQC1JOju5/oRL91YhJSwEzRzUdaEaRU4r5BTGIdB8hL
+	Bck4UAcvzHTSH8hNbSsfDUn+P88CSarBtlq6rgvYrFneI7+MgjN/iErLnWd89LUicIjc5MRlVnmxR
+	O5ztQH7if7gRzIv9/jhENKWX1ch+xVpoRgfVxCBM3uTybHhWYGlZHjDBSWmMfOd2QddplHNAa3gm+
+	ntO0wTZUzAsdOwHUQbNA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r1ZzM-009YRz-0R;
+	id 1r1ZzM-009YTS-31;
 	Fri, 10 Nov 2023 22:28:32 +0000
 Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r1ZzH-009YPE-1j
+	id 1r1ZzI-009YPJ-0l
 	for kexec@lists.infradead.org;
-	Fri, 10 Nov 2023 22:28:29 +0000
+	Fri, 10 Nov 2023 22:28:30 +0000
 Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AAHiIss020588;
-	Fri, 10 Nov 2023 22:28:00 GMT
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AAHiI7g020606;
+	Fri, 10 Nov 2023 22:28:05 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2023-03-30;
- bh=/J1USLKHYBG5hNrFfPe8N+O7zw8z5jTGeKyBk6ktFDs=;
- b=JKEStwqNcvsIrDsZNjZ5V4YNXqFLwc1qV/gKiDuBlhfCbHfJJ61nkI4HI/jbCio+9HVv
- gJAvAv1/IXwDt1y6WZ5NVHks5/B7w0AgSQB3PCqSv5XWDKc7Keh7SgJ+KNM8D5cgtY/j
- VOX+GebU+LxmthsRrl5jkHmMfCM6GI86Kv0oCVVxUC/graN4obP+v9C0qj9zCjcmotN6
- hcF6YRgZUdtHM9aQJKbSwD2cpeBLgApl49VDdpGhbkf17ipI/aacaEy0ER5EGZqzEDaw
- GMAKxh5L+Yg2ACoJ34mxyr4pQqaBfnhfTMC8gmr5y8V8utWJ0N1v/oXca8hErBgZz0P5 PQ== 
+ bh=pTEEykeNC3Q3SWEcX9fjXti3Z4HD4e/23AnxgHkyIf8=;
+ b=m6+XqwLoXr3IN+ulTzisoWOfsRt76aviUWUUS79mCgXx9Jn13E0qnUI5bTgzx1RXJnLd
+ 77BylWpZ5Dn2dj7NkbTR45eDTsyb1fkmbsgv7drmKX2Zso5LRalR9LOqeqv0CJ4P+jmH
+ qKATz4OyJTbagAnCw4BNaDs9HhHb78u42scbPXbNLo8xIgMRk3LlALMb+CCjRASN9tBR
+ TxsrpDESkiYLD4LED7QT1qBK5a2OIeuJZPce+xnA1Z2l7SAnjvEAiKRKx7KwZo3YFQIV
+ cZydfxUbOINm4PoN0nWGKR2e5rs3zEbIOY+OoxyUW16eM/e8MRkLyCiF4OHD+Vafi3nV 4g== 
 Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3u7w23pys4-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3u7w23pys9-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 10 Nov 2023 22:27:59 +0000
+	Fri, 10 Nov 2023 22:28:05 +0000
 Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3AALP7lN023839;
-	Fri, 10 Nov 2023 22:27:58 GMT
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3AAK2YaR023798;
+	Fri, 10 Nov 2023 22:28:03 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3u7w28nb0n-1
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3u7w28nb2c-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 10 Nov 2023 22:27:57 +0000
+	Fri, 10 Nov 2023 22:28:03 +0000
 Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3AAMRsa4039112;
-	Fri, 10 Nov 2023 22:27:57 GMT
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3AAMRsaG039112;
+	Fri, 10 Nov 2023 22:28:03 GMT
 Received: from ovs113.us.oracle.com (ovs113.us.oracle.com [10.149.224.213])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3u7w28nayh-4
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3u7w28nayh-10
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 10 Nov 2023 22:27:57 +0000
+	Fri, 10 Nov 2023 22:28:03 +0000
 From: Ross Philipson <ross.philipson@oracle.com>
 To: linux-kernel@vger.kernel.org, x86@kernel.org,
         linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
@@ -68,9 +68,9 @@ Cc: ross.philipson@oracle.com, dpsmith@apertussolutions.com,
         James.Bottomley@hansenpartnership.com, luto@amacapital.net,
         nivedita@alum.mit.edu, kanth.ghatraju@oracle.com,
         trenchboot-devel@googlegroups.com
-Subject: [PATCH v7 03/13] x86: Secure Launch Kconfig
-Date: Fri, 10 Nov 2023 17:27:41 -0500
-Message-Id: <20231110222751.219836-4-ross.philipson@oracle.com>
+Subject: [PATCH v7 09/13] x86: Secure Launch SMP bringup support
+Date: Fri, 10 Nov 2023 17:27:47 -0500
+Message-Id: <20231110222751.219836-10-ross.philipson@oracle.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20231110222751.219836-1-ross.philipson@oracle.com>
 References: <20231110222751.219836-1-ross.philipson@oracle.com>
@@ -82,11 +82,11 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 p
  spamscore=0 mlxscore=0 adultscore=0 malwarescore=0 bulkscore=0
  suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2311060000 definitions=main-2311100187
-X-Proofpoint-GUID: AIdzskOBHWGssm5ENHrSQTwL5gDLOSDY
-X-Proofpoint-ORIG-GUID: AIdzskOBHWGssm5ENHrSQTwL5gDLOSDY
+X-Proofpoint-GUID: Anb6ZhN2o_e8OD1XbDk3zxexIPZW-3Qs
+X-Proofpoint-ORIG-GUID: Anb6ZhN2o_e8OD1XbDk3zxexIPZW-3Qs
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231110_142827_577151_4AED0516 
-X-CRM114-Status: GOOD (  13.55  )
+X-CRM114-CacheID: sfid-20231110_142828_310025_E807CAE8 
+X-CRM114-Status: GOOD (  29.64  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -103,37 +103,203 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Initial bits to bring in Secure Launch functionality. Add Kconfig
-options for compiling in/out the Secure Launch code.
+On Intel, the APs are left in a well documented state after TXT performs
+the late launch. Specifically they cannot have #INIT asserted on them so
+a standard startup via INIT/SIPI/SIPI cannot be performed. Instead the
+early SL stub code uses MONITOR and MWAIT to park the APs. The realmode/init.c
+code updates the jump address for the waiting APs with the location of the
+Secure Launch entry point in the RM piggy after it is loaded and fixed up.
+As the APs are woken up by writing the monitor, the APs jump to the Secure
+Launch entry point in the RM piggy which mimics what the real mode code would
+do then jumps to the standard RM piggy protected mode entry point.
 
 Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
 ---
- arch/x86/Kconfig | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/x86/include/asm/realmode.h      |  3 ++
+ arch/x86/kernel/smpboot.c            | 56 +++++++++++++++++++++++++++-
+ arch/x86/realmode/init.c             |  3 ++
+ arch/x86/realmode/rm/header.S        |  3 ++
+ arch/x86/realmode/rm/trampoline_64.S | 32 ++++++++++++++++
+ 5 files changed, 96 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 3762f41bb092..1b983e336611 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -2066,6 +2066,18 @@ config EFI_RUNTIME_MAP
+diff --git a/arch/x86/include/asm/realmode.h b/arch/x86/include/asm/realmode.h
+index 87e5482acd0d..339b48e2543d 100644
+--- a/arch/x86/include/asm/realmode.h
++++ b/arch/x86/include/asm/realmode.h
+@@ -38,6 +38,9 @@ struct real_mode_header {
+ #ifdef CONFIG_X86_64
+ 	u32	machine_real_restart_seg;
+ #endif
++#ifdef CONFIG_SECURE_LAUNCH
++	u32	sl_trampoline_start32;
++#endif
+ };
  
- 	  See also Documentation/ABI/testing/sysfs-firmware-efi-runtime-map.
+ /* This must match data at realmode/rm/trampoline_{32,64}.S */
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index 2cc2aa120b4b..6f2a5ee458ce 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -60,6 +60,7 @@
+ #include <linux/stackprotector.h>
+ #include <linux/cpuhotplug.h>
+ #include <linux/mc146818rtc.h>
++#include <linux/slaunch.h>
  
-+config SECURE_LAUNCH
-+	bool "Secure Launch support"
-+	default n
-+	depends on X86_64 && X86_X2APIC
-+	help
-+	   The Secure Launch feature allows a kernel to be loaded
-+	   directly through an Intel TXT measured launch. Intel TXT
-+	   establishes a Dynamic Root of Trust for Measurement (DRTM)
-+	   where the CPU measures the kernel image. This feature then
-+	   continues the measurement chain over kernel configuration
-+	   information and init images.
+ #include <asm/acpi.h>
+ #include <asm/cacheinfo.h>
+@@ -986,6 +987,56 @@ int common_cpu_up(unsigned int cpu, struct task_struct *idle)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_SECURE_LAUNCH
 +
- source "kernel/Kconfig.hz"
++static bool slaunch_is_txt_launch(void)
++{
++	if ((slaunch_get_flags() & (SL_FLAG_ACTIVE|SL_FLAG_ARCH_TXT)) ==
++	    (SL_FLAG_ACTIVE | SL_FLAG_ARCH_TXT))
++		return true;
++
++	return false;
++}
++
++/*
++ * TXT AP startup is quite different than normal. The APs cannot have #INIT
++ * asserted on them or receive SIPIs. The early Secure Launch code has parked
++ * the APs using monitor/mwait. This will wake the APs by writing the monitor
++ * and have them jump to the protected mode code in the rmpiggy where the rest
++ * of the SMP boot of the AP will proceed normally.
++ */
++static void slaunch_wakeup_cpu_from_txt(int cpu, int apicid)
++{
++	struct sl_ap_wake_info *ap_wake_info;
++	struct sl_ap_stack_and_monitor *stack_monitor = NULL;
++
++	ap_wake_info = slaunch_get_ap_wake_info();
++
++	stack_monitor = (struct sl_ap_stack_and_monitor *)__va(ap_wake_info->ap_wake_block +
++							       ap_wake_info->ap_stacks_offset);
++
++	for (unsigned int i = TXT_MAX_CPUS - 1; i >= 0; i--) {
++		if (stack_monitor[i].apicid == apicid) {
++			/* Write the monitor */
++			stack_monitor[i].monitor = 1;
++			break;
++		}
++	}
++}
++
++#else
++
++static inline bool slaunch_is_txt_launch(void)
++{
++	return false;
++}
++
++static inline void slaunch_wakeup_cpu_from_txt(int cpu, int apicid)
++{
++}
++
++#endif  /* !CONFIG_SECURE_LAUNCH */
++
+ /*
+  * NOTE - on most systems this is a PHYSICAL apic ID, but on multiquad
+  * (ie clustered apic addressing mode), this is a LOGICAL apic ID.
+@@ -1040,12 +1091,15 @@ static int do_boot_cpu(u32 apicid, int cpu, struct task_struct *idle)
  
- config ARCH_SUPPORTS_KEXEC
+ 	/*
+ 	 * Wake up a CPU in difference cases:
++	 * - Intel TXT DRTM launch uses its own method to wake the APs
+ 	 * - Use a method from the APIC driver if one defined, with wakeup
+ 	 *   straight to 64-bit mode preferred over wakeup to RM.
+ 	 * Otherwise,
+ 	 * - Use an INIT boot APIC message
+ 	 */
+-	if (apic->wakeup_secondary_cpu_64)
++	if (slaunch_is_txt_launch())
++		slaunch_wakeup_cpu_from_txt(cpu, apicid);
++	else if (apic->wakeup_secondary_cpu_64)
+ 		ret = apic->wakeup_secondary_cpu_64(apicid, start_ip);
+ 	else if (apic->wakeup_secondary_cpu)
+ 		ret = apic->wakeup_secondary_cpu(apicid, start_ip);
+diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
+index 788e5559549f..b548b3376765 100644
+--- a/arch/x86/realmode/init.c
++++ b/arch/x86/realmode/init.c
+@@ -4,6 +4,7 @@
+ #include <linux/memblock.h>
+ #include <linux/cc_platform.h>
+ #include <linux/pgtable.h>
++#include <linux/slaunch.h>
+ 
+ #include <asm/set_memory.h>
+ #include <asm/realmode.h>
+@@ -210,6 +211,8 @@ void __init init_real_mode(void)
+ 
+ 	setup_real_mode();
+ 	set_real_mode_permissions();
++
++	slaunch_fixup_jump_vector();
+ }
+ 
+ static int __init do_init_real_mode(void)
+diff --git a/arch/x86/realmode/rm/header.S b/arch/x86/realmode/rm/header.S
+index 2eb62be6d256..3b5cbcbbfc90 100644
+--- a/arch/x86/realmode/rm/header.S
++++ b/arch/x86/realmode/rm/header.S
+@@ -37,6 +37,9 @@ SYM_DATA_START(real_mode_header)
+ #ifdef CONFIG_X86_64
+ 	.long	__KERNEL32_CS
+ #endif
++#ifdef CONFIG_SECURE_LAUNCH
++	.long	pa_sl_trampoline_start32
++#endif
+ SYM_DATA_END(real_mode_header)
+ 
+ 	/* End signature, used to verify integrity */
+diff --git a/arch/x86/realmode/rm/trampoline_64.S b/arch/x86/realmode/rm/trampoline_64.S
+index c9f76fae902e..526d449d5383 100644
+--- a/arch/x86/realmode/rm/trampoline_64.S
++++ b/arch/x86/realmode/rm/trampoline_64.S
+@@ -120,6 +120,38 @@ SYM_CODE_END(sev_es_trampoline_start)
+ 
+ 	.section ".text32","ax"
+ 	.code32
++#ifdef CONFIG_SECURE_LAUNCH
++	.balign 4
++SYM_CODE_START(sl_trampoline_start32)
++	/*
++	 * The early secure launch stub AP wakeup code has taken care of all
++	 * the vagaries of launching out of TXT. This bit just mimics what the
++	 * 16b entry code does and jumps off to the real startup_32.
++	 */
++	cli
++	wbinvd
++
++	/*
++	 * The %ebx provided is not terribly useful since it is the physical
++	 * address of tb_trampoline_start and not the base of the image.
++	 * Use pa_real_mode_base, which is fixed up, to get a run time
++	 * base register to use for offsets to location that do not have
++	 * pa_ symbols.
++	 */
++	movl    $pa_real_mode_base, %ebx
++
++	LOCK_AND_LOAD_REALMODE_ESP lock_pa=1
++
++	lgdt    tr_gdt(%ebx)
++	lidt    tr_idt(%ebx)
++
++	movw	$__KERNEL_DS, %dx	# Data segment descriptor
++
++	/* Jump to where the 16b code would have jumped */
++	ljmpl	$__KERNEL32_CS, $pa_startup_32
++SYM_CODE_END(sl_trampoline_start32)
++#endif
++
+ 	.balign 4
+ SYM_CODE_START(startup_32)
+ 	movl	%edx, %ss
 -- 
 2.39.3
 
