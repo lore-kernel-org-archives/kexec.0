@@ -4,98 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4E0C2C4332F
-	for <kexec@archiver.kernel.org>; Sun, 12 Nov 2023 18:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3C84EC4332F
+	for <kexec@archiver.kernel.org>; Mon, 13 Nov 2023 18:14:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	List-Subscribe:List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:
-	In-Reply-To:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Reply-To:Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date
-	:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=uFHjAqIPQqGgdEVYLJdTZme3/1l6VkwDV9Pwv/7zOSw=; b=HR7iUVtDzx1Uj4UPmpGYuzWTq6
-	bo06iUsNlP4/jkSUrC39HtTxfMy/W8vy5ExBbAlLkM3m9/MUT0ONwBlXoLWz6ggXsqgjKcG3WXdJl
-	AyC6J5lVJYJ4rNerVzBEWbeUbWQ2a7TfnwAuO/7yi6c54uU4gD+rsdvdq0wdfJ15JJp+vyeAZ9FR5
-	aBinqYdViVHFbWUwPHSrYJU6FcM0liawrn+K9tHeHiGyMLGDEqEr2PCEGl3GOe+c9XCcXug1WcnsB
-	1Ga1isyPY/X8O5AQx5qfg/QZ+2R6n7XslOBfdsGcghAB6DTbk2vqGz+k3ZQMuDQ9DCzrP8GaNgzfO
-	tTpW2s5Q==;
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=NMkFGWqKhzwStE8IzZlbbo45T3OY8p3FbXOyV9dnCxs=; b=RCrdxv3uXITn6a
+	k6rdfalW0j6lAKlFYfSRgyS6V7bwxCk6AfmDwMf2tRrMlMU5FphLIZufd190qzVfSEvSaX8B+1auE
+	JNKQBI2hBTScJGGn9+Ue2kPKpBFaLKzQSL81tTV26fkxS3FmboCUV53k7238PU+MlTZp16TOJf0EV
+	Ek+FmZTmAJbX7T6ZpA2hv4F8Vwqt050WouckbX79xpslr3KZEsE+mM6bn0ds1ynREHre7wqyPEsbd
+	+iWS+1p+stM7D+lBk6oo74bGsM6W6bTh0QY4KWkcb81JzlixrwNVjnAwFYBSTKpBadMIwjqSgKO7g
+	nj/6YoDp73IISPdjPvlw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r2EsV-00CeFA-02;
-	Sun, 12 Nov 2023 18:08:11 +0000
-Received: from wout1-smtp.messagingengine.com ([64.147.123.24])
-	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r2EsR-00CeEU-08
+	id 1r2bSK-00EUDR-2l;
+	Mon, 13 Nov 2023 18:14:40 +0000
+Received: from linux.microsoft.com ([13.77.154.182])
+	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
+	id 1r2bSG-00EUD1-1v
 	for kexec@lists.infradead.org;
-	Sun, 12 Nov 2023 18:08:09 +0000
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.west.internal (Postfix) with ESMTP id 8E1BE320085B;
-	Sun, 12 Nov 2023 13:07:58 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Sun, 12 Nov 2023 13:08:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alyssa.is; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm2; t=1699812478; x=1699898878; bh=dD
-	uhcv1QYeJJwOpTS3JDJhN0uhtR6dQ7KzF3TyM4gRA=; b=MPQzx8xwFEKnzOCSkT
-	kh1cgM8xGf/7ziZVT0XTVWGeUMzgt01pDLkGcp6lOwDiTO3h9+daPJYOi4Htm0gX
-	JHoXFJbEOHJEBJnW0W8B0yGzgJ+MAKrmJhTr0qBNYJ9sSl6cUt2Pn1WO8rinmPu+
-	QpeWw1iej73A9hBhgrwPozIiXlwVqrFtLPAfWsbqVrhsbjx7E2GevLScjsZPZpD3
-	tMe2v9s8mouolaBv6Qv3VZOvKYm1n9gWt+jzFW1zkoxXP9+YeuZFXyFKWNQt0qPX
-	VQA3zjTzRqBI72XVMAKDf1Oh2siyqPM5dOIvjUSpyAIKk+NWHzW5z6KnfUyFoe1z
-	sZNQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm3; t=1699812478; x=1699898878; bh=dDuhcv1QYeJJw
-	OpTS3JDJhN0uhtR6dQ7KzF3TyM4gRA=; b=p7qDAPRKnXnBrevizNRxhKLU4Ua8o
-	qHc3nJg2FEP8MRyHq6Khnrk7yioOSlwz0kXuoi2LoIpqYxVG2ekbn6cCbPz8hK+7
-	M7DBqcVjEs/6x1lifGfGG0g8wbfPjRsnWOBM42a/VbZrrUNKH3HoY48FPehKYtia
-	MRoDusDMTYBTRj8FZB5ojrI1iWKacjYevS6XKecbEC0kS9GM4c9lEd2vrmXLlsAq
-	mDec6Xojhz+cfjme1iby6jCQAfVacesBwOPAGosq6qlwapYZ4ZvQG+gWc34CXyoL
-	G113vUAvKKKb3mbJ6DdAiFPUL9+GBYtzEqPXv+6YVok2cc6oj556uVn7g==
-X-ME-Sender: <xms:fBRRZdn-PjLzyqpEzd_UjRQMy2jmoc3HrZaJU8bUMFYuOiHcgfnCpw>
-    <xme:fBRRZY2Uy2NKuw7usHGToO9bjf_RGSyHHaJgcePl50sBXWaOk4lZYMios6PmnXiDI
-    X_L2gWJR23Nv9yeXg>
-X-ME-Received: <xmr:fBRRZTpGgZRZEjYh_VDGuQ-AacNM45zn3aKpFJaHmHRJ2sGKaF_JIMJClMikGiTC1ojWcFMY8jQqy-5Kxw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedruddvkedgudduudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvvefukfhfgggtuggjsehgtdfsredttddvnecuhfhrohhmpeetlhih
-    shhsrgcutfhoshhsuceohhhisegrlhihshhsrgdrihhsqeenucggtffrrghtthgvrhhnpe
-    dtjeeuteekheefueeluefgveeiffekhfetfeeivdefheeuhfejgedvieffiefhieenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehhihesrghlhi
-    hsshgrrdhish
-X-ME-Proxy: <xmx:fBRRZdlufq6OnU3oIGDpgJIqxDsliArdHJJ8d_uebhWMIsQukov7xQ>
-    <xmx:fBRRZb3su33UxIHW2kjrhkClWddzjTIu-kV9JM1QYjWuaBPcvszajA>
-    <xmx:fBRRZcs22ATr3A80AzUix0CDGtjJ_Ry4B9RZMEEQezYrE7wJy03RAQ>
-    <xmx:fhRRZQ5CpDlZMmPW41rCcK7RcUtapaOVlHnqaMYSXRSoQ1Td4A7bmQ>
-Feedback-ID: i12284293:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 12 Nov 2023 13:07:56 -0500 (EST)
-Received: by mbp.qyliss.net (Postfix, from userid 1000)
-	id BEEFA44AA; Sun, 12 Nov 2023 19:07:54 +0100 (CET)
-Date: Sun, 12 Nov 2023 19:07:54 +0100
-From: Alyssa Ross <hi@alyssa.is>
-To: Ross Philipson <ross.philipson@oracle.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
-	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	iommu@lists.linux-foundation.org, kexec@lists.infradead.org, linux-efi@vger.kernel.org, 
-	dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	hpa@zytor.com, ardb@kernel.org, mjg59@srcf.ucam.org, 
-	James.Bottomley@hansenpartnership.com, luto@amacapital.net, nivedita@alum.mit.edu, 
-	kanth.ghatraju@oracle.com, trenchboot-devel@googlegroups.com
-Subject: Re: [PATCH v7 02/13] Documentation/x86: Secure Launch kernel
- documentation
-Message-ID: <scpu273f2mprr2uvjlyk2xrjjtcduhse2eb45lmj7givn6jh4u@i2v4f2vbldu4>
-References: <20231110222751.219836-1-ross.philipson@oracle.com>
- <20231110222751.219836-3-ross.philipson@oracle.com>
+	Mon, 13 Nov 2023 18:14:37 +0000
+Received: from [10.137.114.52] (unknown [131.107.159.180])
+	by linux.microsoft.com (Postfix) with ESMTPSA id C5F7F20B74C1;
+	Mon, 13 Nov 2023 10:14:34 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C5F7F20B74C1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1699899275;
+	bh=PQZ5UmPmG9pef+E8G3YPru2uMvofveJcbTaptSpXym8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=If6jd5xAyRgPs1mkzjtt0JuLiVptdwy3eAWFRmV0jEc6GBjz9CKpOBgCdemAX9/OQ
+	 BUcs3cRJYY9NUnjcxmMd8YbDg5IN0bJQnobcdzFp2exSnOMR7/PVaz3vPz+nbFH/z+
+	 16Yr5nQc2vWnH3kaKyVCXQd87neogo/GzKDQeza8=
+Message-ID: <86366328-512e-47a0-950d-450412319c26@linux.microsoft.com>
+Date: Mon, 13 Nov 2023 10:14:34 -0800
 MIME-Version: 1.0
-In-Reply-To: <20231110222751.219836-3-ross.philipson@oracle.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC V2] IMA Log Snapshotting Design Proposal
+To: Ken Goldman <kgold@linux.ibm.com>,
+ Tushar Sugandhi <tusharsu@linux.microsoft.com>,
+ linux-integrity@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>,
+ peterhuewe@gmx.de, Jarkko Sakkinen <jarkko@kernel.org>, jgg@ziepe.ca,
+ bhe@redhat.com, vgoyal@redhat.com, Dave Young <dyoung@redhat.com>,
+ "kexec@lists.infradead.org" <kexec@lists.infradead.org>, jmorris@namei.org,
+ Paul Moore <paul@paul-moore.com>, serge@hallyn.com,
+ James Bottomley <James.Bottomley@HansenPartnership.com>,
+ linux-security-module@vger.kernel.org
+Cc: Tyler Hicks <tyhicks@linux.microsoft.com>,
+ Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+References: <6c0c32d5-e636-2a0e-5bdf-538c904ceea3@linux.microsoft.com>
+ <1f7bdb13-859e-46ce-b327-8043e7dbd598@linux.ibm.com>
+Content-Language: en-US
+From: Sush Shringarputale <sushring@linux.microsoft.com>
+In-Reply-To: <1f7bdb13-859e-46ce-b327-8043e7dbd598@linux.ibm.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231112_100807_740420_DC7BF885 
-X-CRM114-Status: GOOD (  23.26  )
+X-CRM114-CacheID: sfid-20231113_101436_697294_0D840F10 
+X-CRM114-Status: GOOD (  16.02  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -107,112 +73,58 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============4814177229415433319=="
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-
---===============4814177229415433319==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="yjlywfhxxmbqgjoq"
-Content-Disposition: inline
-
-
---yjlywfhxxmbqgjoq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-> +Load-time Integrity
-> +-------------------
-> +
-> +It is critical to understand what load-time integrity establishes about a
-> +system and what is assumed, i.e. what is being trusted. Load-time integrity is
-> +when a trusted entity, i.e. an entity with an assumed integrity, takes an
-> +action to assess an entity being loaded into memory before it is used. A
-> +variety of mechanisms may be used to conduct the assessment, each with
-> +different properties. A particular property is whether the mechanism creates an
-> +evidence of the assessment. Often either cryptographic signature checking or
-> +hashing are the common assessment operations used.
-> +
-> +A signature checking assessment functions by requiring a representation of the
-> +accepted authorities and uses those representations to assess if the entity has
-> +been signed by an accepted authority. The benefit to this process is that
-> +assessment process includes an adjudication of the assessment. The drawbacks
-> +are that 1) the adjudication is susceptible to tampering by the Trusted
-> +Computing Base (TCB), 2) there is no evidence to assert that an untampered
-> +adjudication was completed, and 3) the system must be an active participant in
-> +the key management infrastructure.
-> +
-> +A cryptographic hashing assessment does not adjudicate the assessment but
-> +instead, generates evidence of the assessment to be adjudicated independently.
-> +The benefits to this approach is that the assessment may be simple such that it
-> +may be implemented in an immutable mechanism, e.g. in hardware.  Additionally,
-> +it is possible for the adjudication to be conducted where it cannot be tampered
-> +with by the TCB. The drawback is that a compromised environment will be allowed
-> +to execute until an adjudication can be completed.
-> +
-> +Ultimately, load-time integrity provides confidence that the correct entity was
-> +loaded and in the absence of a run-time integrity mechanism assumes, i.e.
-> +trusts, that the entity will never become corrupted.
-
-I'm somewhat familiar with this area, but not massively (so probably the
-sort of person this documentation is aimed at!), and this was the only
-section of the documentation I had trouble understanding.
-
-The thing that confused me was that the first time I read this, I was
-thinking that a hashing assessment would be comparing the generated hash
-to a baked-in known good hash, simliar to how e.g. a verity root hash
-might be specified on the kernel command line, baked in to the OS image.
-This made me wonder why it wasn't considered to be adjudicated during
-assessment.  Upon reading it a second time, I now understand that what
-it's actually talking about is generating a hash, but not comparing it
-automatically against anything, and making it available for external
-adjudication somehow.
-
-I don't know if the approach I first thought of is used in early boot
-at all, but it might be worth contrasting the cryptographic hashing
-assessment described here with it, because I imagine that I'm not going
-to be the only reader who's more used to thinking about integrity
-slightly later in the boot process where adjudicating based on a static
-hash is common, and who's mind is going to go to that when they read
-about a "cryptographic hashing assessment".
-
-The rest of the documentation was easy to understand and very helpful to
-understanding system launch integrity.  Thanks!
-
---yjlywfhxxmbqgjoq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEH9wgcxqlHM/ARR3h+dvtSFmyccAFAmVRFG8ACgkQ+dvtSFmy
-ccCcEw/+Jw619NXwUMkOs9voraKryzuATed/FO89aG2LRZ7O7WtQMzA5jLC3xZfS
-/u0g17dDX08kUpbik40gguX15sYYQNKyiJITvY+ANpIV/78NEQ8YpfG0deZnUq+8
-CVdQ3uQvyJdvREyw4FTXnMrvxbWNVUMLczTER+VPETScMo8SEtqrZAiUFvaUb224
-RuVBQ9E+Qt3UgQc0NPDKl0aM8zOBS4EKjI0R1+g8Z4M79Gxd42sWrUh3GFBD809g
-QIr5wTKMfJ3t7gfP6mNEiFnnBUeJIv9ZTDZ6WSnvaOx1uM1Qi9N8hod2aSPCAzcS
-AhWYdh/haC8kwlIcEnX4SloCPA73e5FGIY7VPcSfVMd7YayfXhKNoGRm6+ir9y4B
-P2fl4wV5/X+29td/XPoMxpqHgk1ZP0SF8juRFUvsftYZGAs3DO/bNxJFrIpz/433
-1v2j5JT+zUbA653b4FvC664C4vrbOvrJkVpLLtz7Nh1aIrUUwJ+CuDLkxzTlBSsK
-Xy8gclV01t3S03wvcL2Utjb/xyc1yx7nzc1DgkctNxTDjd6DWn9qM3HJXOeFwW9h
-N12uI6+F0FAlUcx8hsKpcmDgW6S1d6RsgDPT/rQoqOltSCPw++G3DKQhHuYkxcI5
-/cmKv6oo0cx3rJ74AxL3QtcbqT4jqAYVgCDL1bYqh9gi280v2f0=
-=I5Za
------END PGP SIGNATURE-----
-
---yjlywfhxxmbqgjoq--
-
-
---===============4814177229415433319==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
-
---===============4814177229415433319==--
-
+CgpPbiAxMC8zMS8yMDIzIDExOjM3IEFNLCBLZW4gR29sZG1hbiB3cm90ZToKPiBPbiAxMC8xOS8y
+MDIzIDI6NDkgUE0sIFR1c2hhciBTdWdhbmRoaSB3cm90ZToKPj4gwqDCoCBmLiBBIG5ldyBldmVu
+dCwgInNuYXBzaG90X2FnZ3JlZ2F0ZSIsIHdpbGwgYmUgY29tcHV0ZWQgYW5kIG1lYXN1cmVkCj4+
+IMKgwqDCoMKgwqDCoMKgIGluIHRoZSBJTUEgbG9nIGFzIHBhcnQgb2YgdGhpcyBmZWF0dXJlLsKg
+IEl0IHNob3VsZCBoZWxwIHRoZQo+PiDCoMKgwqDCoMKgwqDCoCByZW1vdGUtYXR0ZXN0YXRpb24g
+Y2xpZW50L3NlcnZpY2UgdG8gYmVuZWZpdCBmcm9tIHRoZSBJTUEgbG9nCj4+IMKgwqDCoMKgwqDC
+oMKgIHNuYXBzaG90IGZlYXR1cmUuCj4+IMKgwqDCoMKgwqDCoMKgIFRoZSAic25hcHNob3RfYWdn
+cmVnYXRlIiBldmVudCBpcyBkZXNjcmliZWQgaW4gbW9yZSBkZXRhaWxzIGluCj4+IMKgwqDCoMKg
+wqDCoMKgIHNlY3Rpb24gIkQuMSBTbmFwc2hvdCBBZ2dyZWdhdGUgRXZlbnQiIGJlbG93Lgo+Cj4g
+V2hhdCBpcyB0aGUgdXNlIGNhc2UgZm9yIHRoZSBzbmFwc2hvdCBhZ2dyZWdhdGU/wqAgTXkgdGhp
+bmtpbmcgaXM6Cj4KPiAxLiBUaGUgcGxhdGZvcm0gbXVzdCByZXRhaW4gdGhlIGVudGlyZSBtZWFz
+dXJlbWVudCBsaXN0LsKgIEVhcmx5IAo+IG1lYXN1cmVtZW50cyBjYW4gbmV2ZXIgYmUgZGlzY2Fy
+ZGVkIGJlY2F1c2UgYSBuZXcgcXVvdGUgdmVyaWZpZXIKPiBtdXN0IHJlY2VpdmUgdGhlIGVudGly
+ZSBsb2cgc3RhcnRpbmcgYXQgdGhlIGZpcnN0IG1lYXN1cmVtZW50Lgo+Cj4gSW4gdGhpcyBjYXNl
+LCBpc24ndCB0aGUgc25hcHNob3QgYWdncmVnYXRlIHJlZHVuZGFudD8KTm90IHF1aXRlLiBUaGUg
+c25hcHNob3QgYWdncmVnYXRlIHN0aWxsIGhhcyBhIHB1cnBvc2UsIHdoaWNoIGlzIHRvIHN0aXRj
+aAp0b2dldGhlciB0aGUgc25hcHNob3RzIG9uIHRoZSBkaXNrIGFuZCB0aGUgaW4tbWVtb3J5IHNl
+Z21lbnQgb2YgdGhlIElNQQpsb2cuIFRoZSBzcGVjaWZpYyBkZXRhaWxzIGFyZSBpbiB0aGUgUkZD
+IFNlY3Rpb24gRC4xLCBxdW90ZWQgaGVyZToKClRoZSAic25hcHNob3RfYWdncmVnYXRlIiBtYXJr
+ZXIgcHJvdmlkZXMgdGhlIGZvbGxvd2luZyBiZW5lZml0czoKCmEuIEl0IGZhY2lsaXRhdGVzIHRo
+ZSBJTUEgbG9nIHRvIGJlIGRpdmlkZWQgaW50byBtdWx0aXBsZSBjaHVua3MgYW5kCnByb3ZpZGVz
+IG1lY2hhbmlzbSB0byB2ZXJpZnkgdGhlIGludGVncml0eSBvZiB0aGUgc3lzdGVtIHVzaW5nIG9u
+bHkgdGhlCmxhdGVzdCBjaHVua3MgZHVyaW5nIHJlbW90ZSBhdHRlc3RhdGlvbi4KCmIuIEl0IHBy
+b3ZpZGVzIHRhbmdpYmxlIGV2aWRlbmNlIGZyb20gS2VybmVsIHRvIHRoZSBhdHRlc3RhdGlvbiBj
+bGllbnQKdGhhdCBJTUEgbG9nIHNuYXBzaG90dGluZyBoYXMgYmVlbiBlbmFibGVkIGFuZCBhdCBs
+ZWFzdCBvbmUgc25hcHNob3QKZXhpc3RzIG9uIHRoZSBzeXN0ZW0uCgpjLiBJdCBoZWxwcyBib3Ro
+IHRoZSBLZXJuZWwgYW5kIFVNIGF0dGVzdGF0aW9uIGNsaWVudCBkZWZpbmUgY2xlYXIKYm91bmRh
+cmllcyBiZXR3ZWVuIG11bHRpcGxlIHNuYXBzaG90cy4KCmQuIEluIHRoZSBldmVudCBvZiBtdWx0
+aXBsZSBzbmFwc2hvdHMsIHRoZSBsYXN0IG1lYXN1cmVkCiJzbmFwc2hvdF9hZ2dyZWdhdGUiIG1h
+cmtlciwgd2hpY2ggaXMgcHJlc2VudCBpbiB0aGUgY3VycmVudCBzZWdtZW50IG9mCnRoZSBJTUEg
+bG9nLCBoYXMgc3VmZmljaWVudCBpbmZvcm1hdGlvbiB0byB2ZXJpZnkgdGhlIGludGVncml0eSBv
+ZiB0aGUKSU1BIGxvZyBzZWdtZW50IGFzIHdlbGwgYXMgdGhlIHByZXZpb3VzIHNuYXBzaG90cyB1
+c2luZyB0aGUgUENSIHF1b3Rlcy4KCmUuIEluIHRoZSBldmVudCBvZiBtdWx0aXBsZSBzbmFwc2hv
+dHMsIHNheSBOLCBpZiB0aGUgcmVtb3RlLWF0dGVzdGF0aW9uCnNlcnZpY2UgaGFzIGFscmVhZHkg
+cHJvY2Vzc2VkIHRoZSBsYXN0IE4tMSBzbmFwc2hvdHMsIGl0IGNhbiBlZmZpY2llbnRseQpwYXJz
+ZSB0aHJvdWdoIHRoZW0gYnkganVzdCBwcm9jZXNzaW5nICJzbmFwc2hvdF9hZ2dyZWdhdGUiIGV2
+ZW50cyB0bwpjb21wdXRlIHRoZSBQQ1IgcXVvdGVzIG5lZWRlZCB0byB2ZXJpZnkgdGhlIGV2ZW50
+cyBpbiB0aGUgbGFzdCBzbmFwc2hvdC4KVGhpcyBzaG91bGQgZHJhc3RpY2FsbHkgaW1wcm92ZSB0
+aGUgSU1BIGxvZyBwcm9jZXNzaW5nIGVmZmljaWVuY3kgb2YKdGhlIHNlcnZpY2UuCgo+Cj4gMi4g
+VGhlcmUgaXMgYSBkaXNhZHZhbnRhZ2UgdG8gcmVkdW5kYW50IGRhdGEuwqAgVGhlIHZlcmlmaWVy
+IG11c3QgCj4gc3VwcG9ydCB0aGlzIG5ldyBldmVudCB0eXBlLiBJdCByZWNlaXZlcyB0aGlzIGV2
+ZW50IGFuZCBtdXN0IHZhbGlkYXRlIAo+IHRoZSBhZ2dyZWdhdGUgYWdhaW5zdCB0aGUgc25hcHNo
+b3QtZWQgZXZlbnRzLiBUaGlzIGlzIGFuIGF0dGFjayAKPiBzdXJmYWNlLiBUaGUgYXR0YWNrZXIg
+Y2FuIHNlbmQgYW4gYWdncmVnYXRlIGFuZCBzbmFwc2hvdC1lZCAKPiBtZWFzdXJlbWVudHMgdGhh
+dCBkbyBub3QgbWF0Y2ggdG8gZXhwbG9pdCBhIGZsYXcgaW4gdGhlIHZlcmlmaWVyLgpJIGRpc2Fn
+cmVlIHdpdGggdGhpcy7CoCBSZWR1bmRhbmN5IGlzIGEgbW9vdCBwb2ludCBiZWNhdXNlCiJzbmFw
+c2hvdF9hZ2dyZWdhdGUiIGlzIHJlcXVpcmVkIGZvciB0aGUgcG9pbnRzIG1lbnRpb25lZCBhYm92
+ZS4KLSBTdXNoCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
+dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
