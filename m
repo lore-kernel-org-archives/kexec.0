@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 30B4FC4167D
-	for <kexec@archiver.kernel.org>; Tue, 14 Nov 2023 15:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 19794C4167D
+	for <kexec@archiver.kernel.org>; Tue, 14 Nov 2023 15:35:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=Rn818n+vIbbY0R4c84FlNA659ysmJaqD2+ajsitBKMM=; b=idYFwpGiBTS9XD
-	t06+cjDxGy+ZaETT3n4/EWdP0kyRUFwesl1y0qbnqH3JqrB/35eVjws32pv75dEWC4MZHBNG/2shh
-	k82jG8BRWW9YjYUhEbr+aMEkK/bdPCojwueR/+wEh6klOFYqS1gzaPv6b4bUJW3SUx6GcmlMYE6D1
-	CyGk6u2uorXKXsf5X/wC/ABeLwWuKwmAfEqGBzVNdYz94T4Q06he57GUUBjHOTOzGkXJOTUbhA4rD
-	YTE2cI4+VMhlWXlrAauJda4n9xTYqG4laJ8HGHhNSlEL3jpS9I7Zk1wcxoVrFctAWBlQwI4OeOfpb
-	qVXfH1FG6joRleemGqXw==;
+	List-Owner; bh=j9TtzRdMoRadPUeS3SGVDDzTKxDHBfG/qcB6ipHCmbQ=; b=Q3PInFXGMw7w8P
+	xMlM08iFjHiF75/yqPG9TgR0k4wbL4SnuyI2/CozQ3SDazrrRv1J9uf4yFqGSfxpzyqvI0jtPqbIt
+	ge39eoF2CYAuQgey2o4faCz9FGU+ef+0hlSOKCDt6nnlXQuxmfVuVFJFyfP+Gdk9HRvTs9VCiUvgf
+	A5Y/m18RnR/zzF69qJ4V6iJ/uvtq1/DtBj0zNhw6XLaCgLbJZ/cYKQL6ifrZC68FHRLWld/6AO6Vl
+	bvD2ole5cOBvBLJap4JDwGtaEkB/v+YN8p6HFDA1qmotAg1vb8zLZ6YzDqnfFKmWZ1+4D0Xp0srNU
+	6Yi2sTl6Vgqh7bmsBGlQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r2vQM-00GKDj-1s;
-	Tue, 14 Nov 2023 15:33:58 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1r2vRW-00GL3c-0Y;
+	Tue, 14 Nov 2023 15:35:10 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r2vQ5-00GJr1-0j
+	id 1r2vRT-00GL1Q-2u
 	for kexec@lists.infradead.org;
-	Tue, 14 Nov 2023 15:33:44 +0000
+	Tue, 14 Nov 2023 15:35:09 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1699976020;
+	s=mimecast20190719; t=1699976107;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Kb4+DII7/6KHxSjJBHtbYVb2dsfK5cLaIKA4IYKpJm4=;
-	b=RpPLc9hPfMqKsuW/0TLYZnkCZFbqgowOa0y52xXFwfW3mCD6UCM5f5zi/x2dmNjiIGAzhi
-	Ld7awxvSVNncMY6HIVaOKoBqq81A1KW13E/cSKDhyTIZ7ZQ8MMeshr62Ab2ekhFnB7hRbN
-	DKQH3m9Wm8ypciIV/F36oL30nPjcs5I=
+	bh=CfaOCzpQNXPNdiOU6+O8brbk3lbOzOfrbuJX1VTIoz4=;
+	b=HDWKd1OO9VqFTcwwgB300d4iFVGeZBbcOI63TuH4nZTCh5jYHDW68tl9hrDMD4DVzpD3Jm
+	stjsscq9gQkQoxZqVr+MVmroCzk5Co6bdnSqWnWk/5DRrv/yZelkhNCz1kP20eXDTQj7nP
+	8w9ZIfd24GMVMkQA6nGPs5seKgCPGgk=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-341-olRfaV0IOx2JxEGyaN4nSw-1; Tue, 14 Nov 2023 10:33:30 -0500
-X-MC-Unique: olRfaV0IOx2JxEGyaN4nSw-1
+ us-mta-62-AhpM6uI5MrejJ0TU97gRjg-1; Tue, 14 Nov 2023 10:34:23 -0500
+X-MC-Unique: AhpM6uI5MrejJ0TU97gRjg-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BC12310499B7;
-	Tue, 14 Nov 2023 15:33:14 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 038751022EE4;
+	Tue, 14 Nov 2023 15:33:26 +0000 (UTC)
 Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.112.231])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 9EDAE1C060B0;
-	Tue, 14 Nov 2023 15:33:11 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id DBC7A1C060B0;
+	Tue, 14 Nov 2023 15:33:22 +0000 (UTC)
 From: Baoquan He <bhe@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: kexec@lists.infradead.org,
@@ -60,16 +60,16 @@ Cc: kexec@lists.infradead.org,
 	linuxppc-dev@lists.ozlabs.org,
 	linux-parisc@vger.kernel.org,
 	Baoquan He <bhe@redhat.com>
-Subject: [PATCH 4/7] kexec_file, arm64: print out debugging message if required
-Date: Tue, 14 Nov 2023 23:32:50 +0800
-Message-ID: <20231114153253.241262-5-bhe@redhat.com>
+Subject: [PATCH 7/7] kexec_file, parisc: print out debugging message if required
+Date: Tue, 14 Nov 2023 23:32:53 +0800
+Message-ID: <20231114153253.241262-8-bhe@redhat.com>
 In-Reply-To: <20231114153253.241262-1-bhe@redhat.com>
 References: <20231114153253.241262-1-bhe@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231114_073341_405608_2508DB40 
-X-CRM114-Status: UNSURE (   9.56  )
+X-CRM114-CacheID: sfid-20231114_073508_011062_51885382 
+X-CRM114-Status: UNSURE (   9.80  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -90,95 +90,42 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 Replace pr_debug() with the newly added kexec_dprintk() in kexec_file
 loading related codes.
 
-And also remove the kimage->segment[] printing because the generic code
-has done the printing.
-
 Signed-off-by: Baoquan He <bhe@redhat.com>
 ---
- arch/arm64/kernel/kexec_image.c        |  2 +-
- arch/arm64/kernel/machine_kexec.c      | 24 ++++++------------------
- arch/arm64/kernel/machine_kexec_file.c |  6 +++---
- 3 files changed, 10 insertions(+), 22 deletions(-)
+ arch/parisc/kernel/kexec_file.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
-index 636be6715155..df71965178f5 100644
---- a/arch/arm64/kernel/kexec_image.c
-+++ b/arch/arm64/kernel/kexec_image.c
-@@ -122,7 +122,7 @@ static void *image_load(struct kimage *image,
- 	kernel_segment->memsz -= text_offset;
- 	image->start = kernel_segment->mem;
+diff --git a/arch/parisc/kernel/kexec_file.c b/arch/parisc/kernel/kexec_file.c
+index 8c534204f0fd..011545898da7 100644
+--- a/arch/parisc/kernel/kexec_file.c
++++ b/arch/parisc/kernel/kexec_file.c
+@@ -38,7 +38,7 @@ static void *elf_load(struct kimage *image, char *kernel_buf,
+ 	for (i = 0; i < image->nr_segments; i++)
+ 		image->segment[i].mem = __pa(image->segment[i].mem);
  
--	pr_debug("Loaded kernel at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-+	kexec_dprintk("Loaded kernel at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
- 				kernel_segment->mem, kbuf.bufsz,
- 				kernel_segment->memsz);
+-	pr_debug("Loaded the kernel at 0x%lx, entry at 0x%lx\n",
++	kexec_dprintk("Loaded the kernel at 0x%lx, entry at 0x%lx\n",
+ 		 kernel_load_addr, image->start);
  
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index 078910db77a4..efd4e03b95d3 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -34,24 +34,12 @@ static void _kexec_image_info(const char *func, int line,
- {
- 	unsigned long i;
+ 	if (initrd != NULL) {
+@@ -51,7 +51,7 @@ static void *elf_load(struct kimage *image, char *kernel_buf,
+ 		if (ret)
+ 			goto out;
  
--	pr_debug("%s:%d:\n", func, line);
--	pr_debug("  kexec kimage info:\n");
--	pr_debug("    type:        %d\n", kimage->type);
--	pr_debug("    start:       %lx\n", kimage->start);
--	pr_debug("    head:        %lx\n", kimage->head);
--	pr_debug("    nr_segments: %lu\n", kimage->nr_segments);
--	pr_debug("    dtb_mem: %pa\n", &kimage->arch.dtb_mem);
--	pr_debug("    kern_reloc: %pa\n", &kimage->arch.kern_reloc);
--	pr_debug("    el2_vectors: %pa\n", &kimage->arch.el2_vectors);
--
--	for (i = 0; i < kimage->nr_segments; i++) {
--		pr_debug("      segment[%lu]: %016lx - %016lx, 0x%lx bytes, %lu pages\n",
--			i,
--			kimage->segment[i].mem,
--			kimage->segment[i].mem + kimage->segment[i].memsz,
--			kimage->segment[i].memsz,
--			kimage->segment[i].memsz /  PAGE_SIZE);
--	}
-+	kexec_dprintk("%s:%d:\n", func, line);
-+	kexec_dprintk("  kexec kimage info:\n");
-+	kexec_dprintk("    type:        %d\n", kimage->type);
-+	kexec_dprintk("    head:        %lx\n", kimage->head);
-+	kexec_dprintk("    kern_reloc: %pa\n", &kimage->arch.kern_reloc);
-+	kexec_dprintk("    el2_vectors: %pa\n", &kimage->arch.el2_vectors);
- }
- 
- void machine_kexec_cleanup(struct kimage *kimage)
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index a11a6e14ba89..9f82401d99f4 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -127,7 +127,7 @@ int load_other_segments(struct kimage *image,
- 		image->elf_load_addr = kbuf.mem;
- 		image->elf_headers_sz = headers_sz;
- 
--		pr_debug("Loaded elf core header at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-+		kexec_dprintk("Loaded elf core header at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
- 			 image->elf_load_addr, kbuf.bufsz, kbuf.memsz);
+-		pr_debug("Loaded initrd at 0x%lx\n", kbuf.mem);
++		kexec_dprintk("Loaded initrd at 0x%lx\n", kbuf.mem);
+ 		image->arch.initrd_start = kbuf.mem;
+ 		image->arch.initrd_end = kbuf.mem + initrd_len;
  	}
+@@ -68,7 +68,7 @@ static void *elf_load(struct kimage *image, char *kernel_buf,
+ 		if (ret)
+ 			goto out;
  
-@@ -148,7 +148,7 @@ int load_other_segments(struct kimage *image,
- 			goto out_err;
- 		initrd_load_addr = kbuf.mem;
- 
--		pr_debug("Loaded initrd at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-+		kexec_dprintk("Loaded initrd at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
- 				initrd_load_addr, kbuf.bufsz, kbuf.memsz);
+-		pr_debug("Loaded cmdline at 0x%lx\n", kbuf.mem);
++		kexec_dprintk("Loaded cmdline at 0x%lx\n", kbuf.mem);
+ 		image->arch.cmdline = kbuf.mem;
  	}
- 
-@@ -179,7 +179,7 @@ int load_other_segments(struct kimage *image,
- 	image->arch.dtb = dtb;
- 	image->arch.dtb_mem = kbuf.mem;
- 
--	pr_debug("Loaded dtb at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-+	kexec_dprintk("Loaded dtb at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
- 			kbuf.mem, kbuf.bufsz, kbuf.memsz);
- 
- 	return 0;
+ out:
 -- 
 2.41.0
 
