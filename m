@@ -4,73 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 19794C4167D
-	for <kexec@archiver.kernel.org>; Tue, 14 Nov 2023 15:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5F82AC4332F
+	for <kexec@archiver.kernel.org>; Tue, 14 Nov 2023 16:03:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=j9TtzRdMoRadPUeS3SGVDDzTKxDHBfG/qcB6ipHCmbQ=; b=Q3PInFXGMw7w8P
-	xMlM08iFjHiF75/yqPG9TgR0k4wbL4SnuyI2/CozQ3SDazrrRv1J9uf4yFqGSfxpzyqvI0jtPqbIt
-	ge39eoF2CYAuQgey2o4faCz9FGU+ef+0hlSOKCDt6nnlXQuxmfVuVFJFyfP+Gdk9HRvTs9VCiUvgf
-	A5Y/m18RnR/zzF69qJ4V6iJ/uvtq1/DtBj0zNhw6XLaCgLbJZ/cYKQL6ifrZC68FHRLWld/6AO6Vl
-	bvD2ole5cOBvBLJap4JDwGtaEkB/v+YN8p6HFDA1qmotAg1vb8zLZ6YzDqnfFKmWZ1+4D0Xp0srNU
-	6Yi2sTl6Vgqh7bmsBGlQ==;
+	List-Owner; bh=VazqwRNw1YK0DqXyFfYETc87q3XT8c4w0CFqeRldfZc=; b=QlB7dSS2ig/yTT
+	LebVwvBet/8RVEs92Ho8gvqnkfiZfGCjQR6wS8JzI5N0fymq/sA67MG+DmUzD3KuihRkpsP5kqJ3W
+	Q6z1FZlT1aXA6mPXH62q2rbkz57c8renQA3dL6EmR2nY1YwQ8h2v7zRh9rQE5H//M7EcuppcoJe0V
+	Gtw2UVZYmpyVTX7ZItk69V3WljwE+GvhmeybmGLtpMqDmf7yXAky1qp10BVUItZcGC0ZtUfQrJpmB
+	X6CS7/ugtClPpmqwI7S4172La/TpN+hMv9JdWUW+XKhI8GSo04VqxNHcdrAFr6pmGBKMQm332bjS0
+	rnmySXVWLS96HLZRj6nw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r2vRW-00GL3c-0Y;
-	Tue, 14 Nov 2023 15:35:10 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1r2vt0-00GOBv-0D;
+	Tue, 14 Nov 2023 16:03:34 +0000
+Received: from smtprelay0011.hostedemail.com ([216.40.44.11] helo=relay.hostedemail.com)
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r2vRT-00GL1Q-2u
-	for kexec@lists.infradead.org;
-	Tue, 14 Nov 2023 15:35:09 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1699976107;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CfaOCzpQNXPNdiOU6+O8brbk3lbOzOfrbuJX1VTIoz4=;
-	b=HDWKd1OO9VqFTcwwgB300d4iFVGeZBbcOI63TuH4nZTCh5jYHDW68tl9hrDMD4DVzpD3Jm
-	stjsscq9gQkQoxZqVr+MVmroCzk5Co6bdnSqWnWk/5DRrv/yZelkhNCz1kP20eXDTQj7nP
-	8w9ZIfd24GMVMkQA6nGPs5seKgCPGgk=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-62-AhpM6uI5MrejJ0TU97gRjg-1; Tue, 14 Nov 2023 10:34:23 -0500
-X-MC-Unique: AhpM6uI5MrejJ0TU97gRjg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 038751022EE4;
-	Tue, 14 Nov 2023 15:33:26 +0000 (UTC)
-Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.112.231])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id DBC7A1C060B0;
-	Tue, 14 Nov 2023 15:33:22 +0000 (UTC)
-From: Baoquan He <bhe@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: kexec@lists.infradead.org,
-	x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-parisc@vger.kernel.org,
-	Baoquan He <bhe@redhat.com>
-Subject: [PATCH 7/7] kexec_file, parisc: print out debugging message if required
-Date: Tue, 14 Nov 2023 23:32:53 +0800
-Message-ID: <20231114153253.241262-8-bhe@redhat.com>
-In-Reply-To: <20231114153253.241262-1-bhe@redhat.com>
+	id 1r2vsx-00GOB4-1p;
+	Tue, 14 Nov 2023 16:03:33 +0000
+Received: from omf17.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 5849480ADD;
+	Tue, 14 Nov 2023 16:03:24 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf17.hostedemail.com (Postfix) with ESMTPA id B79FD17;
+	Tue, 14 Nov 2023 16:03:19 +0000 (UTC)
+Message-ID: <1e7863ec4e4ab10b84fd0e64f30f8464d2e484a3.camel@perches.com>
+Subject: Re: [PATCH 1/7] kexec_file: add kexec_file flag to control debug
+ printing
+From: Joe Perches <joe@perches.com>
+To: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
+Cc: kexec@lists.infradead.org, x86@kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-parisc@vger.kernel.org
+Date: Tue, 14 Nov 2023 08:03:17 -0800
+In-Reply-To: <20231114153253.241262-2-bhe@redhat.com>
 References: <20231114153253.241262-1-bhe@redhat.com>
+	 <20231114153253.241262-2-bhe@redhat.com>
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+X-Rspamd-Queue-Id: B79FD17
+X-Rspamd-Server: rspamout06
+X-Stat-Signature: hfguyu43qitk9i95uumxmjn7sq3qxaae
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX1+TPCSBX5eIBtFS7cutbFXyyoB+lO2Ea1A=
+X-HE-Tag: 1699977799-197779
+X-HE-Meta: U2FsdGVkX199MxvfdP2OiWMaMCgnF+zen3H+uDaMOt+eo18KFoigVkpo/j1mPnNdRxZsnaKbc/2TMWhhtZ1WYbE4xnaRnZ9D8ImVTw0nNbwHPVmM8K50LsJ54PlQr2IROfdWLMnnNPpRHRTXWI450/26vHlRs47bJHW69JfdozUlDgILIKSRfePjUbHAIXoIKr9/NzIpcA6QdsnzFrKhA8GVb/HExMWgTm+7q60/jyGC6TQFrwo3I1762UXDKC1ld2/TBOn7K4fNFKAezne04n/qoyaeJN2h75PDcDpXFrJm8izGV0wc97AWTmYxsKdc
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231114_073508_011062_51885382 
-X-CRM114-Status: UNSURE (   9.80  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20231114_080331_684091_5F191397 
+X-CRM114-Status: GOOD (  16.18  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,47 +71,68 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Replace pr_debug() with the newly added kexec_dprintk() in kexec_file
-loading related codes.
+On Tue, 2023-11-14 at 23:32 +0800, Baoquan He wrote:
+> When specifying 'kexec -c -d', kexec_load interface will print loading
+> information, e.g the regions where kernel/initrd/purgatory/cmdline
+> are put, the memmap passed to 2nd kernel taken as system RAM ranges,
+> and printing all contents of struct kexec_segment, etc. These are
+> very helpful for analyzing or positioning what's happening when
+> kexec/kdump itself failed. The debugging printing for kexec_load
+> interface is made in user space utility kexec-tools.
+> 
+> Whereas, with kexec_file_load interface, 'kexec -s -d' print nothing.
+> Because kexec_file code is mostly implemented in kernel space, and the
+> debugging printing functionality is missed. It's not convenient when
+> debugging kexec/kdump loading and jumping with kexec_file_load
+> interface.
+> 
+> Now add KEXEC_FILE_DEBUG to kexec_file flag to control the debugging
+> message printing. And add global variable kexec_file_dbg_print and
+> macro kexec_dprintk() to facilitate the printing.
+> 
+> This is a preparation, later kexec_dprintk() will be used to replace the
+> existing pr_debug(). Once 'kexec -s -d' is specified, it will print out
+> kexec/kdump loading information. If '-d' is not specified, it regresses
+> to pr_debug().
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
- arch/parisc/kernel/kexec_file.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Not quite as pr_debug is completely eliminated with
+zero object size when DEBUG is not #defined.
 
-diff --git a/arch/parisc/kernel/kexec_file.c b/arch/parisc/kernel/kexec_file.c
-index 8c534204f0fd..011545898da7 100644
---- a/arch/parisc/kernel/kexec_file.c
-+++ b/arch/parisc/kernel/kexec_file.c
-@@ -38,7 +38,7 @@ static void *elf_load(struct kimage *image, char *kernel_buf,
- 	for (i = 0; i < image->nr_segments; i++)
- 		image->segment[i].mem = __pa(image->segment[i].mem);
- 
--	pr_debug("Loaded the kernel at 0x%lx, entry at 0x%lx\n",
-+	kexec_dprintk("Loaded the kernel at 0x%lx, entry at 0x%lx\n",
- 		 kernel_load_addr, image->start);
- 
- 	if (initrd != NULL) {
-@@ -51,7 +51,7 @@ static void *elf_load(struct kimage *image, char *kernel_buf,
- 		if (ret)
- 			goto out;
- 
--		pr_debug("Loaded initrd at 0x%lx\n", kbuf.mem);
-+		kexec_dprintk("Loaded initrd at 0x%lx\n", kbuf.mem);
- 		image->arch.initrd_start = kbuf.mem;
- 		image->arch.initrd_end = kbuf.mem + initrd_len;
- 	}
-@@ -68,7 +68,7 @@ static void *elf_load(struct kimage *image, char *kernel_buf,
- 		if (ret)
- 			goto out;
- 
--		pr_debug("Loaded cmdline at 0x%lx\n", kbuf.mem);
-+		kexec_dprintk("Loaded cmdline at 0x%lx\n", kbuf.mem);
- 		image->arch.cmdline = kbuf.mem;
- 	}
- out:
--- 
-2.41.0
+Now the object size will be larger and contain the
+formats in .text.
+
+[]
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+[]
+> @@ -264,6 +264,18 @@ arch_kexec_apply_relocations(struct purgatory_info *pi, Elf_Shdr *section,
+>  	return -ENOEXEC;
+>  }
+>  #endif
+> +
+> +extern bool kexec_file_dbg_print;
+> +
+> +#define kexec_dprintk(fmt, args...)			\
+> +	do {						\
+> +		if (kexec_file_dbg_print)		\
+> +			printk(KERN_INFO fmt, ##args);	\
+> +		else					\
+> +			printk(KERN_DEBUG fmt, ##args);	\
+> +	} while (0)
+> +
+> +
+
+I don't know how many of these printks exist and if
+overall object size matters but using
+
+#define kexec_dprintkfmt, ...)					\
+	printk("%s" fmt,					\
+	       kexec_file_dbg_print ? KERN_INFO : KERN_DEBUG,	\
+	       ##__VA_ARGS__)
+
+should reduce overall object size by eliminating the
+mostly duplicated format in .text which differs only
+by the KERN_<PREFIX>
+
 
 
 _______________________________________________
