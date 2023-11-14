@@ -4,58 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6AD88C4332F
-	for <kexec@archiver.kernel.org>; Tue, 14 Nov 2023 22:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4CAF9C46CA6
+	for <kexec@archiver.kernel.org>; Tue, 14 Nov 2023 23:17:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:Mime-Version:References:In-Reply-To:
+	Message-Id:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=0Rrq33+st5vrKGZvOJJFlBPtR7lFxkcjVbv3dcWUG0w=; b=Eu/61qZJ2TvfzL
-	klMCrLb2HN7P2jueGx4hIumCb7pr/yF08e3KaiMfck9juukqtJtgVr92RZko8iu4nfIj+bEyrfb3g
-	UdP789BaL+INjpy55Pq3meLQQm5Z1e3WH5SNlybuQ4YCFC4Htfj+DVV3bWJT8/7wJeFdvhpnAkEyF
-	KGoud2IXJ/5C70oYtX7Lu1uQNi2CFXbjll5+GvUoJE0qVXhHKn3ocV4fOFguDIn+H6qAy5nGh0Pbt
-	DxKZCgFpUyJ78u9w0KPZvJXjOlnGPs+K4PuLfYyeThLcBhiJR00Fstucvg/u43sRMkvS+DoymppvQ
-	FVWjctwfNOEQpuu1WdLA==;
+	List-Owner; bh=SgQkU8AZvIUR9C7BCDBft+hps9BhXIuunEBD7qZUUNY=; b=xTqf4T/9Rd+GK8
+	Up6DmEeeQJitcFclwZFuyVN+JRNX4giW3UP2sV+5U7LS39O/s/l5A6jXlMlvHK6vyaOUnpLz2YvmN
+	XynevkPnBHYH+3d++gcEz8PB/DEGcd0dVEN79WePKk5IP5UsqSejqovlhuVeMHRVQrrjtNmP92DY6
+	xAbEcB1nQx9KCneu7gPHAclZYuIBnEv4UIaON1tT+lCvRUfiOQ509XnUwTe0suU7FGNtVG7ipAtVK
+	2eTdC6laOUG22RG6IKBZjOiVrPjkN6nRTjj3AqLbVclSetiagJ+41nOa5rli3u6KHopXpSgwgDgON
+	dO876VMhGSqgTlcxJz9w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r32Cm-00GwEY-1V;
-	Tue, 14 Nov 2023 22:48:24 +0000
-Received: from linux.microsoft.com ([13.77.154.182])
-	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r32Cj-00GwE9-1o
-	for kexec@lists.infradead.org;
-	Tue, 14 Nov 2023 22:48:23 +0000
-Received: from [192.168.86.69] (unknown [50.46.228.62])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 82D4F20B74C2;
-	Tue, 14 Nov 2023 14:48:20 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 82D4F20B74C2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1700002100;
-	bh=FkvFDL4hESySoL/7fU6eGKHYDbwpb0zJYt81Mi6Cve8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=LwA9DjbZ2ei//rqT1aU2RL8eFHW1ZSwsvzfPCFOm9Bpll1PuHPECVLi6YOg9KHNXB
-	 SvT4Tm5o7dmOpv66uuEisb6Ly1f9qYlByVcQC413jL484AonGvMemjYXgA6V1fKXnP
-	 QXEt5gpSj9HCwssajwWIwdqb4ZWAhb+WKrULMYpo=
-Message-ID: <5812e854-78db-4d68-a8a7-8dc033bded69@linux.microsoft.com>
-Date: Tue, 14 Nov 2023 14:48:20 -0800
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 7/7] ima: record log size at kexec load and execute
-Content-Language: en-US
-To: Mimi Zohar <zohar@linux.ibm.com>, ebiederm@xmission.com, noodles@fb.com,
- bauermann@kolabnow.com, kexec@lists.infradead.org,
- linux-integrity@vger.kernel.org
-Cc: code@tyhicks.com, nramas@linux.microsoft.com, paul@paul-moore.com
-References: <20231005182602.634615-1-tusharsu@linux.microsoft.com>
- <20231005182602.634615-8-tusharsu@linux.microsoft.com>
- <2b95e8b9ebe10a24c7cb6fc90cb2d1342a157ed5.camel@linux.ibm.com>
-From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-In-Reply-To: <2b95e8b9ebe10a24c7cb6fc90cb2d1342a157ed5.camel@linux.ibm.com>
+	id 1r32fK-00GxqD-0t;
+	Tue, 14 Nov 2023 23:17:54 +0000
+Received: from sin.source.kernel.org ([2604:1380:40e1:4800::1])
+	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
+	id 1r32fG-00GxpD-28;
+	Tue, 14 Nov 2023 23:17:52 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sin.source.kernel.org (Postfix) with ESMTP id 23C74CE1940;
+	Tue, 14 Nov 2023 23:17:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BDD5C433C8;
+	Tue, 14 Nov 2023 23:17:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1700003866;
+	bh=KB3X/TgdZDL/2SrctEZtbC9ABrG1q5tejZewZjojaG0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=I2FtgASHqT0NQ8pvMyoHDKY0L776FVzQEP+8MaG5h3awzZ83eZZkVJ5tDMyqMY0jb
+	 uNf09+vkik6GFj+3lMsunyHL6E+r2LTs8yQweYL9C7/V0/hHwRijTrIX+w/vU+Tbus
+	 VWm/hOguMarPwLXKltXgnv9nM3o8N2knOblTYH/4=
+Date: Tue, 14 Nov 2023 15:17:45 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, x86@kernel.org,
+ linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ ebiederm@xmission.com, takahiro.akashi@linaro.org
+Subject: Re: [PATCH 1/2] resource: add walk_system_ram_res_rev()
+Message-Id: <20231114151745.e77ed504b3fce325f54ec08e@linux-foundation.org>
+In-Reply-To: <20231114091658.228030-2-bhe@redhat.com>
+References: <20231114091658.228030-1-bhe@redhat.com>
+	<20231114091658.228030-2-bhe@redhat.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231114_144821_644302_F4F12070 
-X-CRM114-Status: GOOD (  31.74  )
+X-CRM114-CacheID: sfid-20231114_151750_876246_6CCE2567 
+X-CRM114-Status: GOOD (  19.45  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -67,139 +66,90 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On Tue, 14 Nov 2023 17:16:57 +0800 Baoquan He <bhe@redhat.com> wrote:
 
+> This function, being a variant of walk_system_ram_res() introduced in
+> commit 8c86e70acead ("resource: provide new functions to walk through
+> resources"), walks through a list of all the resources of System RAM
+> in reversed order, i.e., from higher to lower.
+> 
+> It will be used in kexec_file code to load kernel, initrd etc when
+> preparing kexec reboot.
+>
+> ...
+>
+> +/*
+> + * This function, being a variant of walk_system_ram_res(), calls the @func
+> + * callback against all memory ranges of type System RAM which are marked as
+> + * IORESOURCE_SYSTEM_RAM and IORESOUCE_BUSY in reversed order, i.e., from
+> + * higher to lower.
+> + */
+> +int walk_system_ram_res_rev(u64 start, u64 end, void *arg,
+> +				int (*func)(struct resource *, void *))
+> +{
+> +	struct resource res, *rams;
+> +	int rams_size = 16, i;
+> +	unsigned long flags;
+> +	int ret = -1;
+> +
+> +	/* create a list */
+> +	rams = kvcalloc(rams_size, sizeof(struct resource), GFP_KERNEL);
+> +	if (!rams)
+> +		return ret;
+> +
+> +	flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+> +	i = 0;
+> +	while ((start < end) &&
+> +		(!find_next_iomem_res(start, end, flags, IORES_DESC_NONE, &res))) {
+> +		if (i >= rams_size) {
+> +			/* re-alloc */
+> +			struct resource *rams_new;
+> +			int rams_new_size;
+> +
+> +			rams_new_size = rams_size + 16;
+> +			rams_new = kvcalloc(rams_new_size, sizeof(struct resource),
+> +					    GFP_KERNEL);
 
-On 10/27/23 07:56, Mimi Zohar wrote:
-> Hi Tushar,
-> 
-> On Thu, 2023-10-05 at 11:26 -0700, Tushar Sugandhi wrote:
->> The window between kexec 'load' and 'execute' could be arbitrarily long.
->> Even with the large chunk of memory allocated at kexec 'load', it may
->> run out which would result in missing events in IMA log after the system
->> soft reboots to the new Kernel.  This would result in IMA measurements
->> getting out of sync with the TPM PCR quotes which would result in remote
->> attestation failing for that system.  There is currently no way for the
->> new Kernel to know if the IMA log TPM PCR quote out of sync problem is
->> because of the missing measurements during kexec.
->>
->> Define two new IMA events, 'kexec_load' and 'kexec_execute', to be
->> measured at kexec 'load' and 'execute' respectively.
->>
->> IMA measures 'boot_aggregate' as the first event when the system boots -
->> either cold boot or kexec soft boot.  In case when the system goes
->> through multiple soft reboots, the number of 'boot_aggregate' events in
->> IMA log corresponds to total number of boots (cold boot plus multiple
->> kexec soft reboots).  With this change, there would be additional
->> 'kexec_load' and 'kexec_execute' events in between the two
->> 'boot_aggregate' events.  In rare cases, when the system runs out of
->> memory during kexec soft reboot, 'kexec_execute' won't be copied since
->> its one of the very last event measured just before kexec soft reboot.
->> The absence of the event 'kexec_execute' in between the two
->> boot_aggregate' events would signal the attestation service that the IMA
->> log on the system is out of sync with TPM PCR quotes and the system needs
->> to be cold booted for the remote attestation to succeed again.
->>
->> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> 
-> Adding a new type of critical data is fine.  The patch description
-> should describe the reason for it.  Please update the Subject line and
-> the patch description accordingly.
-> 
-Thanks.  I described the reasons in the code comment below, because I 
-thought it is important enough to stay with the code to give context. 
-But I can move it from the code comment to a patch description.
->> ---
->>   security/integrity/ima/ima_kexec.c | 35 +++++++++++++++++++++++++++++-
->>   1 file changed, 34 insertions(+), 1 deletion(-)
->>
->> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
->> index 6cd5f46a7208..0f9c424fe808 100644
->> --- a/security/integrity/ima/ima_kexec.c
->> +++ b/security/integrity/ima/ima_kexec.c
->> @@ -17,6 +17,8 @@
->>   #include "ima.h"
->>   
->>   #ifdef CONFIG_IMA_KEXEC
->> +#define IMA_KEXEC_EVENT_LEN 128
->> +
->>   struct seq_file ima_kexec_file;
->>   struct ima_kexec_hdr ima_khdr;
->>   static void *ima_kexec_buffer;
->> @@ -34,6 +36,8 @@ void ima_clear_kexec_file(void)
->>   
->>   static int ima_alloc_kexec_buf(size_t kexec_segment_size)
->>   {
->> +	char ima_kexec_event[IMA_KEXEC_EVENT_LEN];
->> +
->>   	if ((kexec_segment_size == 0) ||
->>   	    (kexec_segment_size == ULONG_MAX) ||
->>   	    ((kexec_segment_size >> PAGE_SHIFT) > totalram_pages() / 2)) {
->> @@ -64,6 +68,12 @@ static int ima_alloc_kexec_buf(size_t kexec_segment_size)
->>   	memset(&ima_khdr, 0, sizeof(ima_khdr));
->>   	ima_khdr.version = 1;
->>   
->> +	scnprintf(ima_kexec_event, IMA_KEXEC_EVENT_LEN,
->> +		  "kexec_segment_size=%lu;", kexec_segment_size);
->> +
->> +	ima_measure_critical_data("ima_kexec", "kexec_load", ima_kexec_event,
->> +				  strlen(ima_kexec_event), false, NULL, 0);
->> +
->>   	return 0;
->>   }
->>   
->> @@ -198,6 +208,7 @@ void ima_add_kexec_buffer(struct kimage *image)
->>   static int ima_update_kexec_buffer(struct notifier_block *self,
->>   				   unsigned long action, void *data)
->>   {
->> +	char ima_kexec_event[IMA_KEXEC_EVENT_LEN];
->>   	void *buf = NULL;
->>   	size_t buf_size;
->>   	bool resume = false;
->> @@ -213,9 +224,31 @@ static int ima_update_kexec_buffer(struct notifier_block *self,
->>   		return NOTIFY_OK;
->>   	}
->>   
->> +	buf_size = ima_get_binary_runtime_size();
->> +	scnprintf(ima_kexec_event, IMA_KEXEC_EVENT_LEN,
->> +		  "kexec_segment_size=%lu;ima_binary_runtime_size=%lu;",
->> +		  kexec_segment_size, buf_size);
->> +
->> +	/*
->> +	 * This is one of the very last events measured by IMA before kexec
->> +	 * soft rebooting into the new Kernal.
->> +	 * This event can be used as a marker after the system soft reboots
->> +	 * to the new Kernel to check if there was sufficient memory allocated
->> +	 * at kexec 'load' to capture the events measured between the window
->> +	 * of kexec 'load' and 'execute'.
->> +	 * This event needs to be present in the IMA log, in between the two
->> +	 * 'boot_aggregate' events that are logged for the previous boot and
->> +	 * the current soft reboot. If it is not present after the system soft
->> +	 * reboots into the new Kernel, it would mean the IMA log is not
->> +	 * consistent with the TPM PCR quotes, and the system needs to be
->> +	 * cold-booted for the attestation to succeed again.
->> +	 */
-> 
-> Comments like this don't belong in the code.  Please refer to section
-> "8) Commenting" of Documentation/process/coding-style.rst.
-Will do.
+kvrealloc()?
 
-~Tushar
-> 
->> +	ima_measure_critical_data("ima_kexec", "kexec_execute",
->> +				  ima_kexec_event, strlen(ima_kexec_event),
->> +				  false, NULL, 0);
->> +
->>   	ima_measurements_suspend();
->>   
->> -	buf_size = ima_get_binary_runtime_size();
->>   	ret = ima_dump_measurement_list(&buf_size, &buf,
->>   					kexec_segment_size);
->>   
+> +			if (!rams_new)
+> +				goto out;
+> +
+> +			memcpy(rams_new, rams,
+> +					sizeof(struct resource) * rams_size);
+> +			kvfree(rams);
+> +			rams = rams_new;
+> +			rams_size = rams_new_size;
+> +		}
+> +
+> +		rams[i].start = res.start;
+> +		rams[i++].end = res.end;
+> +
+> +		start = res.end + 1;
+> +	}
+> +
+> +	/* go reverse */
+> +	for (i--; i >= 0; i--) {
+> +		ret = (*func)(&rams[i], arg);
+> +		if (ret)
+> +			break;
+> +	}
+> +
+> +out:
+> +	kvfree(rams);
+> +	return ret;
+> +}
+> +
+>  /*
+>   * This function calls the @func callback against all memory ranges, which
+>   * are ranges marked as IORESOURCE_MEM and IORESOUCE_BUSY.
+> -- 
+> 2.41.0
 
 _______________________________________________
 kexec mailing list
