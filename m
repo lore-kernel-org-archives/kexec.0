@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 10F39C4167B
-	for <kexec@archiver.kernel.org>; Tue, 14 Nov 2023 15:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AE0C2C4332F
+	for <kexec@archiver.kernel.org>; Tue, 14 Nov 2023 15:33:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=B4/X3FRcZvWB5T5wKriXl+TWJ+VhnAT46Dy9KoUfIZU=; b=deRGRfV7Da7hXq
-	9DjRqwBnkOx3qnzSmtqyzjHgEmAQ2CpHzhP89UKsNT3XrZ9GEq9yxQOfkPC5APVKfsogzztEqfYK9
-	Y0vfnrCZlorUjHhxnBYnvkKKqVRO8yXSjl20dYZtUreKZMUrDI5Bidr/F8VxDLXIgJ4yNxfviD9c7
-	VL3uI5qUH8ZFr7IPnyqsbE8Y0qFBdo57LlJDNh0u8ql6tjiOy63WmTRq8cDr2wFmkBYv4mOqdTgRO
-	AcWz2l6g6UhLE84/mMHA9HJuioqc4k05y75Hoqa5FRA4CqSTeHuv7TUrB/J4iSQUvVz32SynoyXX9
-	CvvnKwdAswKpfEfgRsFg==;
+	List-Owner; bh=e3SKF94SKja/RT31lLNPd0nYNvJCOLp94a9Am0q7BgI=; b=yrG4LLPZU/btx/
+	oruIFVRHH5U7/s2RMeUq3LzwoisydADEoi8v2pUpqUwal4OJGvDnKIhRFt87XJ0YTLKjcA3Y2WOIN
+	AaS9sL/D971JefuWExOGUJpJQYxMqcupwD9sIveXaTgBG5YP5f4fVYD1kZHqvKV78t/E1rQvKI3hp
+	DJgApq6sIlGjBllomCFCol2RMjd4fJoFXonld2JGHk7Gbfy5CSZiVGHawQkL2cA0S+W9U8idrJBrQ
+	YL4CODVGb9XQbwWVsRj3yk6XKvc9Bu21ztXdnZiYUZfrwcgbvAf91CRj5v5o6Z8D/MbO1rt8AOMGI
+	xu1uYE4rAgsyfAWhzTvQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r2vQ6-00GJt4-1D;
-	Tue, 14 Nov 2023 15:33:42 +0000
+	id 1r2vQJ-00GK7w-0D;
+	Tue, 14 Nov 2023 15:33:55 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r2vPw-00GJhZ-2j
+	id 1r2vPz-00GJlg-3D
 	for kexec@lists.infradead.org;
-	Tue, 14 Nov 2023 15:33:34 +0000
+	Tue, 14 Nov 2023 15:33:41 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1699976012;
+	s=mimecast20190719; t=1699976015;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=uyeWVmLOn2JLlMGOiKTLkdbq3lsSPR6w1wGNV6RcYZE=;
-	b=CbB85c5dfziyVrIJftQ5mf7vtw1jPt0FFFjka0aYQ8nB5bO9t60xVIrR0MKKB4A/pOYxr4
-	qvm0nX2nnQD/e2+6CRIFNyF1U9fyEkg7UwowESEKLuaBGI392rLmW6PDd4CrOomkU60ddq
-	WIYSGQE6FJFuzXIQhr8eOtZB5Et2src=
+	bh=ddYSvqzlkNogyoNHz/ZYeptUXFMRcqTi26tdLDKHB50=;
+	b=HWavtPyxvZQqZXXrgH32z/XDtvDqdibGhgyBkzW1faF8t2wDZ6MXjhXVS+OXxTzljlqyUx
+	M2v/qeXpDpoZglqQzQq7PhBzP63tENjZ1AdfB1ztVchAmnSz34s9ZDbymKOUx7DLRzv/Cw
+	LQWd/QT75QJPD7vEPQF42w/rOP8Rq7o=
 Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
  by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-329-vpv-XXKAOiq83ZmBq6vDFQ-1; Tue,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-539-pAIkPdirOI-3O8elS13Yww-1; Tue,
  14 Nov 2023 10:33:30 -0500
-X-MC-Unique: vpv-XXKAOiq83ZmBq6vDFQ-1
+X-MC-Unique: pAIkPdirOI-3O8elS13Yww-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8B4BE3C02B55;
-	Tue, 14 Nov 2023 15:33:03 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 43FF838143BC;
+	Tue, 14 Nov 2023 15:33:22 +0000 (UTC)
 Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.112.231])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 6C7AE1C060AE;
-	Tue, 14 Nov 2023 15:33:00 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 1B0F11C060B5;
+	Tue, 14 Nov 2023 15:33:18 +0000 (UTC)
 From: Baoquan He <bhe@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: kexec@lists.infradead.org,
@@ -60,16 +60,16 @@ Cc: kexec@lists.infradead.org,
 	linuxppc-dev@lists.ozlabs.org,
 	linux-parisc@vger.kernel.org,
 	Baoquan He <bhe@redhat.com>
-Subject: [PATCH 1/7] kexec_file: add kexec_file flag to control debug printing
-Date: Tue, 14 Nov 2023 23:32:47 +0800
-Message-ID: <20231114153253.241262-2-bhe@redhat.com>
+Subject: [PATCH 6/7] kexec_file, power: print out debugging message if required
+Date: Tue, 14 Nov 2023 23:32:52 +0800
+Message-ID: <20231114153253.241262-7-bhe@redhat.com>
 In-Reply-To: <20231114153253.241262-1-bhe@redhat.com>
 References: <20231114153253.241262-1-bhe@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231114_073332_975709_BDD799A8 
-X-CRM114-Status: GOOD (  16.29  )
+X-CRM114-CacheID: sfid-20231114_073336_139209_3C704DE2 
+X-CRM114-Status: GOOD (  12.81  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,110 +86,115 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-When specifying 'kexec -c -d', kexec_load interface will print loading
-information, e.g the regions where kernel/initrd/purgatory/cmdline
-are put, the memmap passed to 2nd kernel taken as system RAM ranges,
-and printing all contents of struct kexec_segment, etc. These are
-very helpful for analyzing or positioning what's happening when
-kexec/kdump itself failed. The debugging printing for kexec_load
-interface is made in user space utility kexec-tools.
-
-Whereas, with kexec_file_load interface, 'kexec -s -d' print nothing.
-Because kexec_file code is mostly implemented in kernel space, and the
-debugging printing functionality is missed. It's not convenient when
-debugging kexec/kdump loading and jumping with kexec_file_load
-interface.
-
-Now add KEXEC_FILE_DEBUG to kexec_file flag to control the debugging
-message printing. And add global variable kexec_file_dbg_print and
-macro kexec_dprintk() to facilitate the printing.
-
-This is a preparation, later kexec_dprintk() will be used to replace the
-existing pr_debug(). Once 'kexec -s -d' is specified, it will print out
-kexec/kdump loading information. If '-d' is not specified, it regresses
-to pr_debug().
+Replace pr_debug() with the newly added kexec_dprintk() in kexec_file
+loading related codes.
 
 Signed-off-by: Baoquan He <bhe@redhat.com>
 ---
- include/linux/kexec.h      | 14 +++++++++++++-
- include/uapi/linux/kexec.h |  1 +
- kernel/kexec_file.c        |  5 +++++
- 3 files changed, 19 insertions(+), 1 deletion(-)
+ arch/powerpc/kexec/elf_64.c       |  8 ++++----
+ arch/powerpc/kexec/file_load_64.c | 14 +++++++-------
+ 2 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 8227455192b7..189a6c5bec84 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -264,6 +264,18 @@ arch_kexec_apply_relocations(struct purgatory_info *pi, Elf_Shdr *section,
- 	return -ENOEXEC;
- }
- #endif
-+
-+extern bool kexec_file_dbg_print;
-+
-+#define kexec_dprintk(fmt, args...)			\
-+	do {						\
-+		if (kexec_file_dbg_print)		\
-+			printk(KERN_INFO fmt, ##args);	\
-+		else					\
-+			printk(KERN_DEBUG fmt, ##args);	\
-+	} while (0)
-+
-+
- #endif /* CONFIG_KEXEC_FILE */
+diff --git a/arch/powerpc/kexec/elf_64.c b/arch/powerpc/kexec/elf_64.c
+index eeb258002d1e..904016cf89ea 100644
+--- a/arch/powerpc/kexec/elf_64.c
++++ b/arch/powerpc/kexec/elf_64.c
+@@ -59,7 +59,7 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
+ 	if (ret)
+ 		goto out;
  
- #ifdef CONFIG_KEXEC_ELF
-@@ -403,7 +415,7 @@ bool kexec_load_permitted(int kexec_image_type);
+-	pr_debug("Loaded the kernel at 0x%lx\n", kernel_load_addr);
++	kexec_dprintk("Loaded the kernel at 0x%lx\n", kernel_load_addr);
  
- /* List of defined/legal kexec file flags */
- #define KEXEC_FILE_FLAGS	(KEXEC_FILE_UNLOAD | KEXEC_FILE_ON_CRASH | \
--				 KEXEC_FILE_NO_INITRAMFS)
-+				 KEXEC_FILE_NO_INITRAMFS | KEXEC_FILE_DEBUG)
+ 	ret = kexec_load_purgatory(image, &pbuf);
+ 	if (ret) {
+@@ -67,7 +67,7 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
+ 		goto out;
+ 	}
  
- /* flag to track if kexec reboot is in progress */
- extern bool kexec_in_progress;
-diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
-index 01766dd839b0..c17bb096ea68 100644
---- a/include/uapi/linux/kexec.h
-+++ b/include/uapi/linux/kexec.h
-@@ -25,6 +25,7 @@
- #define KEXEC_FILE_UNLOAD	0x00000001
- #define KEXEC_FILE_ON_CRASH	0x00000002
- #define KEXEC_FILE_NO_INITRAMFS	0x00000004
-+#define KEXEC_FILE_DEBUG	0x00000008
+-	pr_debug("Loaded purgatory at 0x%lx\n", pbuf.mem);
++	kexec_dprintk("Loaded purgatory at 0x%lx\n", pbuf.mem);
  
- /* These values match the ELF architecture values.
-  * Unless there is a good reason that should continue to be the case.
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index f9a419cd22d4..4c35500ae40a 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -38,6 +38,8 @@ void set_kexec_sig_enforced(void)
- }
- #endif
+ 	/* Load additional segments needed for panic kernel */
+ 	if (image->type == KEXEC_TYPE_CRASH) {
+@@ -99,7 +99,7 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
+ 			goto out;
+ 		initrd_load_addr = kbuf.mem;
  
-+bool kexec_file_dbg_print;
-+
- static int kexec_calculate_store_digests(struct kimage *image);
+-		pr_debug("Loaded initrd at 0x%lx\n", initrd_load_addr);
++		kexec_dprintk("Loaded initrd at 0x%lx\n", initrd_load_addr);
+ 	}
  
- /* Maximum size in bytes for kernel/initrd files. */
-@@ -123,6 +125,8 @@ void kimage_file_post_load_cleanup(struct kimage *image)
- 	 */
- 	kfree(image->image_loader_data);
- 	image->image_loader_data = NULL;
-+
-+	kexec_file_dbg_print = false;
- }
+ 	fdt = of_kexec_alloc_and_setup_fdt(image, initrd_load_addr,
+@@ -132,7 +132,7 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
  
- #ifdef CONFIG_KEXEC_SIG
-@@ -278,6 +282,7 @@ kimage_file_alloc_init(struct kimage **rimage, int kernel_fd,
- 	if (!image)
- 		return -ENOMEM;
+ 	fdt_load_addr = kbuf.mem;
  
-+	kexec_file_dbg_print = !!(flags & KEXEC_FILE_DEBUG);
- 	image->file_mode = 1;
+-	pr_debug("Loaded device tree at 0x%lx\n", fdt_load_addr);
++	kexec_dprintk("Loaded device tree at 0x%lx\n", fdt_load_addr);
  
- 	if (kexec_on_panic) {
+ 	slave_code = elf_info.buffer + elf_info.proghdrs[0].p_offset;
+ 	ret = setup_purgatory_ppc64(image, slave_code, fdt, kernel_load_addr,
+diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
+index 961a6dd67365..45089f53f875 100644
+--- a/arch/powerpc/kexec/file_load_64.c
++++ b/arch/powerpc/kexec/file_load_64.c
+@@ -577,7 +577,7 @@ static int add_usable_mem_property(void *fdt, struct device_node *dn,
+ 		       NODE_PATH_LEN, dn);
+ 		return -EOVERFLOW;
+ 	}
+-	pr_debug("Memory node path: %s\n", path);
++	kexec_dprintk("Memory node path: %s\n", path);
+ 
+ 	/* Now that we know the path, find its offset in kdump kernel's fdt */
+ 	node = fdt_path_offset(fdt, path);
+@@ -590,8 +590,8 @@ static int add_usable_mem_property(void *fdt, struct device_node *dn,
+ 	/* Get the address & size cells */
+ 	n_mem_addr_cells = of_n_addr_cells(dn);
+ 	n_mem_size_cells = of_n_size_cells(dn);
+-	pr_debug("address cells: %d, size cells: %d\n", n_mem_addr_cells,
+-		 n_mem_size_cells);
++	kexec_dprintk("address cells: %d, size cells: %d\n", n_mem_addr_cells,
++		      n_mem_size_cells);
+ 
+ 	um_info->idx  = 0;
+ 	if (!check_realloc_usable_mem(um_info, 2)) {
+@@ -664,7 +664,7 @@ static int update_usable_mem_fdt(void *fdt, struct crash_mem *usable_mem)
+ 
+ 	node = fdt_path_offset(fdt, "/ibm,dynamic-reconfiguration-memory");
+ 	if (node == -FDT_ERR_NOTFOUND)
+-		pr_debug("No dynamic reconfiguration memory found\n");
++		kexec_dprintk("No dynamic reconfiguration memory found\n");
+ 	else if (node < 0) {
+ 		pr_err("Malformed device tree: error reading /ibm,dynamic-reconfiguration-memory.\n");
+ 		return -EINVAL;
+@@ -776,7 +776,7 @@ static void update_backup_region_phdr(struct kimage *image, Elf64_Ehdr *ehdr)
+ 	for (i = 0; i < ehdr->e_phnum; i++) {
+ 		if (phdr->p_paddr == BACKUP_SRC_START) {
+ 			phdr->p_offset = image->arch.backup_start;
+-			pr_debug("Backup region offset updated to 0x%lx\n",
++			kexec_dprintk("Backup region offset updated to 0x%lx\n",
+ 				 image->arch.backup_start);
+ 			return;
+ 		}
+@@ -850,7 +850,7 @@ int load_crashdump_segments_ppc64(struct kimage *image,
+ 		pr_err("Failed to load backup segment\n");
+ 		return ret;
+ 	}
+-	pr_debug("Loaded the backup region at 0x%lx\n", kbuf->mem);
++	kexec_dprintk("Loaded the backup region at 0x%lx\n", kbuf->mem);
+ 
+ 	/* Load elfcorehdr segment - to export crashing kernel's vmcore */
+ 	ret = load_elfcorehdr_segment(image, kbuf);
+@@ -858,7 +858,7 @@ int load_crashdump_segments_ppc64(struct kimage *image,
+ 		pr_err("Failed to load elfcorehdr segment\n");
+ 		return ret;
+ 	}
+-	pr_debug("Loaded elf core header at 0x%lx, bufsz=0x%lx memsz=0x%lx\n",
++	kexec_dprintk("Loaded elf core header at 0x%lx, bufsz=0x%lx memsz=0x%lx\n",
+ 		 image->elf_load_addr, kbuf->bufsz, kbuf->memsz);
+ 
+ 	return 0;
 -- 
 2.41.0
 
