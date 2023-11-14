@@ -4,57 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5F82AC4332F
-	for <kexec@archiver.kernel.org>; Tue, 14 Nov 2023 16:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D70F0C4332F
+	for <kexec@archiver.kernel.org>; Tue, 14 Nov 2023 16:13:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=VazqwRNw1YK0DqXyFfYETc87q3XT8c4w0CFqeRldfZc=; b=QlB7dSS2ig/yTT
-	LebVwvBet/8RVEs92Ho8gvqnkfiZfGCjQR6wS8JzI5N0fymq/sA67MG+DmUzD3KuihRkpsP5kqJ3W
-	Q6z1FZlT1aXA6mPXH62q2rbkz57c8renQA3dL6EmR2nY1YwQ8h2v7zRh9rQE5H//M7EcuppcoJe0V
-	Gtw2UVZYmpyVTX7ZItk69V3WljwE+GvhmeybmGLtpMqDmf7yXAky1qp10BVUItZcGC0ZtUfQrJpmB
-	X6CS7/ugtClPpmqwI7S4172La/TpN+hMv9JdWUW+XKhI8GSo04VqxNHcdrAFr6pmGBKMQm332bjS0
-	rnmySXVWLS96HLZRj6nw==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=Ll7acMLJOMX286Bwh4wefAJ0802S0CPbRzUFvGgJtyE=; b=zSzIyIYtwCRXH1
+	AX4LgEFWiRoXQCVtuaTWGm4RWg3xM/kxZOEnZ3V8aeTn8sInEF9EeJt0ckFgHF+OukTx8mEt5lOrP
+	5Zoanskj1txaWIIwQhOyfiFzGRX7lBZ9HqhoDoO3owZ5PizSKE8d60ZuES2q9o2VmN5Q3gb3EFqG3
+	osUhCO+bXb/JMpfHl+uYmbPJK06rhaSiC4ozrbfDvQEmTNDxsdlvQ5zikrlmnZPVWkPEPRW9oRoxo
+	VL6Pex7C8NMmNTCXpqtvBZ01C+VxT4s3uli+7r7dKWVPter8hHQmPsb2bAS5P8xfMFfkEtJIyo+eT
+	oglFTSFvHoT7IZD/tvLA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r2vt0-00GOBv-0D;
-	Tue, 14 Nov 2023 16:03:34 +0000
-Received: from smtprelay0011.hostedemail.com ([216.40.44.11] helo=relay.hostedemail.com)
+	id 1r2w2N-00GPLH-31;
+	Tue, 14 Nov 2023 16:13:15 +0000
+Received: from mail-wm1-x32d.google.com ([2a00:1450:4864:20::32d])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r2vsx-00GOB4-1p;
-	Tue, 14 Nov 2023 16:03:33 +0000
-Received: from omf17.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id 5849480ADD;
-	Tue, 14 Nov 2023 16:03:24 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf17.hostedemail.com (Postfix) with ESMTPA id B79FD17;
-	Tue, 14 Nov 2023 16:03:19 +0000 (UTC)
-Message-ID: <1e7863ec4e4ab10b84fd0e64f30f8464d2e484a3.camel@perches.com>
-Subject: Re: [PATCH 1/7] kexec_file: add kexec_file flag to control debug
- printing
-From: Joe Perches <joe@perches.com>
-To: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
-Cc: kexec@lists.infradead.org, x86@kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-parisc@vger.kernel.org
-Date: Tue, 14 Nov 2023 08:03:17 -0800
-In-Reply-To: <20231114153253.241262-2-bhe@redhat.com>
-References: <20231114153253.241262-1-bhe@redhat.com>
-	 <20231114153253.241262-2-bhe@redhat.com>
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	id 1r2w2I-00GPID-1H
+	for kexec@lists.infradead.org;
+	Tue, 14 Nov 2023 16:13:14 +0000
+Received: by mail-wm1-x32d.google.com with SMTP id 5b1f17b1804b1-40853c639abso45463415e9.0
+        for <kexec@lists.infradead.org>; Tue, 14 Nov 2023 08:12:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1699978357; x=1700583157; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1lJaslXnMkKNGe8kNkSR81TKcfbPuYkx4sjlNhJ0HDw=;
+        b=BRzd+vo437BTNdgIQj74yUOH7ha3gZcmvGnVl7wJRgTRT+DpEhF6AxFdUxjJTShSC/
+         CsaCvJQTzNfsuy5S6LSXWXzvk61R5cxel0vokqr5qZwZgz3yqcKka6r5sfoiXems8CYy
+         PBBwKJI4jkBrSPMpBRwY4xnvj7g7isRswSvvyMfn8E1wcXM/gUlhcMv8ikTqNPWs5gYR
+         vyV+LjydSBakqr3BZ6xo7AirRV9jiKbvKLA1UUq4nSrvleYYv4M2ZoanDgD2AmLo3p4v
+         UFeBRGDoBcxfqqSMBo6gw9qVElQCVolM+TigV2TGAmssM6Ves0KTIRaken5+yBfziHnG
+         coAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699978357; x=1700583157;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1lJaslXnMkKNGe8kNkSR81TKcfbPuYkx4sjlNhJ0HDw=;
+        b=OnePoK6uV+GwytLPk2CEHmQiM6sXKDe+qDMZd5ZwtDCIDk+dk7Den3ISA8U5sGblWX
+         3xLSjetpUZJKlFJsYzUHTkejW+agT4ZA2AbKLszUKjllbvetF6PC7vT+VVRfun/h3IPy
+         1tNypUwuEJGPLOlpYZVzvSpzXHyzihpjIaOlUqxUFKh5mHZ779OV73Gj09kIga+x2cgi
+         Slq/9ZkEbC9g7g9ijbwGGLAyjbXqcadg998VZ4/EFyWFa4kgMt5YSYQ8VRmLSLzCLHJF
+         LFBvhFiJc2+xQQy8Z1WZokdgsPbtviCEjtwESw9gTl8FjEjyAxZiIeMojnprbBzJVIDp
+         z8XA==
+X-Gm-Message-State: AOJu0Yy7sr2myeSMb2/aBh45gNQSa4S/fQOMb61ujpFcntWxl1q3K662
+	zihu/KRkk+eH5nrfOWY3iCsWau4xInVHPQ==
+X-Google-Smtp-Source: AGHT+IGaOVZPLVYWe8c39Hj42PrASP9mm7yS8eZ/syrTJwvPgC3uBBYGSmTr3QeOrDl7+76KO43EZg==
+X-Received: by 2002:a05:600c:4f8e:b0:40a:3e41:7dd8 with SMTP id n14-20020a05600c4f8e00b0040a3e417dd8mr7451120wmq.13.1699978357319;
+        Tue, 14 Nov 2023 08:12:37 -0800 (PST)
+Received: from localhost.localdomain ([46.248.82.114])
+        by smtp.gmail.com with ESMTPSA id fk11-20020a05600c0ccb00b003feea62440bsm12052427wmb.43.2023.11.14.08.12.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Nov 2023 08:12:37 -0800 (PST)
+From: Uros Bizjak <ubizjak@gmail.com>
+To: kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Uros Bizjak <ubizjak@gmail.com>,
+	Eric Biederman <ebiederm@xmission.com>
+Subject: [PATCH] kexec: Use atomic_try_cmpxchg in crash_kexec
+Date: Tue, 14 Nov 2023 17:12:01 +0100
+Message-ID: <20231114161228.108516-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-X-Rspamd-Queue-Id: B79FD17
-X-Rspamd-Server: rspamout06
-X-Stat-Signature: hfguyu43qitk9i95uumxmjn7sq3qxaae
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX1+TPCSBX5eIBtFS7cutbFXyyoB+lO2Ea1A=
-X-HE-Tag: 1699977799-197779
-X-HE-Meta: U2FsdGVkX199MxvfdP2OiWMaMCgnF+zen3H+uDaMOt+eo18KFoigVkpo/j1mPnNdRxZsnaKbc/2TMWhhtZ1WYbE4xnaRnZ9D8ImVTw0nNbwHPVmM8K50LsJ54PlQr2IROfdWLMnnNPpRHRTXWI450/26vHlRs47bJHW69JfdozUlDgILIKSRfePjUbHAIXoIKr9/NzIpcA6QdsnzFrKhA8GVb/HExMWgTm+7q60/jyGC6TQFrwo3I1762UXDKC1ld2/TBOn7K4fNFKAezne04n/qoyaeJN2h75PDcDpXFrJm8izGV0wc97AWTmYxsKdc
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231114_080331_684091_5F191397 
-X-CRM114-Status: GOOD (  16.18  )
+X-CRM114-CacheID: sfid-20231114_081310_455535_6DB56BF4 
+X-CRM114-Status: GOOD (  10.49  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -71,68 +90,37 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, 2023-11-14 at 23:32 +0800, Baoquan He wrote:
-> When specifying 'kexec -c -d', kexec_load interface will print loading
-> information, e.g the regions where kernel/initrd/purgatory/cmdline
-> are put, the memmap passed to 2nd kernel taken as system RAM ranges,
-> and printing all contents of struct kexec_segment, etc. These are
-> very helpful for analyzing or positioning what's happening when
-> kexec/kdump itself failed. The debugging printing for kexec_load
-> interface is made in user space utility kexec-tools.
-> 
-> Whereas, with kexec_file_load interface, 'kexec -s -d' print nothing.
-> Because kexec_file code is mostly implemented in kernel space, and the
-> debugging printing functionality is missed. It's not convenient when
-> debugging kexec/kdump loading and jumping with kexec_file_load
-> interface.
-> 
-> Now add KEXEC_FILE_DEBUG to kexec_file flag to control the debugging
-> message printing. And add global variable kexec_file_dbg_print and
-> macro kexec_dprintk() to facilitate the printing.
-> 
-> This is a preparation, later kexec_dprintk() will be used to replace the
-> existing pr_debug(). Once 'kexec -s -d' is specified, it will print out
-> kexec/kdump loading information. If '-d' is not specified, it regresses
-> to pr_debug().
+Use atomic_try_cmpxchg instead of cmpxchg (*ptr, old, new) == old in
+crash_kexec().  x86 CMPXCHG instruction returns success in ZF flag,
+so this change saves a compare after cmpxchg.
 
-Not quite as pr_debug is completely eliminated with
-zero object size when DEBUG is not #defined.
+No functional change intended.
 
-Now the object size will be larger and contain the
-formats in .text.
+Cc: Eric Biederman <ebiederm@xmission.com>
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+---
+ kernel/kexec_core.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-[]
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-[]
-> @@ -264,6 +264,18 @@ arch_kexec_apply_relocations(struct purgatory_info *pi, Elf_Shdr *section,
->  	return -ENOEXEC;
->  }
->  #endif
-> +
-> +extern bool kexec_file_dbg_print;
-> +
-> +#define kexec_dprintk(fmt, args...)			\
-> +	do {						\
-> +		if (kexec_file_dbg_print)		\
-> +			printk(KERN_INFO fmt, ##args);	\
-> +		else					\
-> +			printk(KERN_DEBUG fmt, ##args);	\
-> +	} while (0)
-> +
-> +
-
-I don't know how many of these printks exist and if
-overall object size matters but using
-
-#define kexec_dprintkfmt, ...)					\
-	printk("%s" fmt,					\
-	       kexec_file_dbg_print ? KERN_INFO : KERN_DEBUG,	\
-	       ##__VA_ARGS__)
-
-should reduce overall object size by eliminating the
-mostly duplicated format in .text which differs only
-by the KERN_<PREFIX>
-
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index be5642a4ec49..bc4c096ab1f3 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -1063,9 +1063,10 @@ __bpf_kfunc void crash_kexec(struct pt_regs *regs)
+ 	 * panic().  Otherwise parallel calls of panic() and crash_kexec()
+ 	 * may stop each other.  To exclude them, we use panic_cpu here too.
+ 	 */
++	old_cpu = PANIC_CPU_INVALID;
+ 	this_cpu = raw_smp_processor_id();
+-	old_cpu = atomic_cmpxchg(&panic_cpu, PANIC_CPU_INVALID, this_cpu);
+-	if (old_cpu == PANIC_CPU_INVALID) {
++
++	if (atomic_try_cmpxchg(&panic_cpu, &old_cpu, this_cpu)) {
+ 		/* This is the 1st CPU which comes here, so go ahead. */
+ 		__crash_kexec(regs);
+ 
+-- 
+2.41.0
 
 
 _______________________________________________
