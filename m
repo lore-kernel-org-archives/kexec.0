@@ -4,60 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 122E9C2BB3F
-	for <kexec@archiver.kernel.org>; Wed, 15 Nov 2023 19:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 65B63C072A2
+	for <kexec@archiver.kernel.org>; Wed, 15 Nov 2023 20:13:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
+	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=04fh8Paju7HYoTL4T7emTJnzkSxQnhVASx9fo11WHwY=; b=RJ7/z/C6jwOm2+
-	kQSGKK5DqckjNYVqC3DobNBJAVRcb4VxDgm60oyy7KmC2AcbsyTqORftGZWRHxP6vOFxN6s+1e46k
-	PfMFKXC+ZNhn3oj6hNkbHQbsOCijIwUaoko21rgs/Bjh9c76J99h0nlXD8RdRR4GqSKM4RoRGWMR2
-	tSiYBnGGPWDMHsLC0kQxGpMPimuyG5gw+ilZo7lkv2oUXFjpE3dEYyPPdnG7PxFkMHf9ZQQ2ACk+M
-	oll221z0i4Pxbt2FhS8onKv8Unt2MVsLpfiKtnuocTWn53TGM7so/Rs6SXsvab/KwBw7VcJoew0t5
-	b9eYSH+zBcPLHcRZvO6Q==;
+	List-Owner; bh=Y6QPkmDY4Pwwc2CKNkTzUDEmnsAZvsgFHr0aPy51Xog=; b=HqVPa1V+pe4PE0
+	53obHRBhSMW2OKEj1toqCBa51bpY3wp9KoCDhHLhzE7zf6tzK0oAZXsy0Beei+bj8qQYtZcD7Lv3j
+	+fw0o20EKH8se9J0Qdd18K8/Yr4aVowCXUMOmcZ2P1cIJpCKM0lWc5mZv7phnmDc+lFkKUKQKfHzF
+	GxddrS2WxwVXwU5D5PwPfdWDk+RkzdF2CL8JdFPQTJON0r2785Jgysz0OCH86LfSMCLpBsfVVxsCP
+	uFdI3gIbbVWuD2cvsCm06+mw4QpRL0fERVE05SMgke9LG5AICLwbveFS/uvIF12MKSZ3a9jce4viV
+	doviag32lxMEUc76nfdg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r3LSX-001Zw7-2P;
-	Wed, 15 Nov 2023 19:21:57 +0000
-Received: from linux.microsoft.com ([13.77.154.182])
-	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r3LST-001ZvI-0A
+	id 1r3MG2-001eS2-0K;
+	Wed, 15 Nov 2023 20:13:06 +0000
+Received: from mgamail.intel.com ([198.175.65.9])
+	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
+	id 1r3MFy-001eQI-1M
 	for kexec@lists.infradead.org;
-	Wed, 15 Nov 2023 19:21:54 +0000
-Received: from [192.168.86.69] (unknown [50.46.228.62])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 2566A20B74C1;
-	Wed, 15 Nov 2023 11:21:49 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2566A20B74C1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1700076109;
-	bh=SaBUovaOZgPZmbXPH57FNEVFc+ljV6c65NGm0njD1cg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nZ6obCLJUSUBATwf80Ckn/zRTdXg8uJvglKGcSt85/6sEjSXcT6Gk4Buz7k6kwVLP
-	 0g9jPAom16Gu/crQMF+BBpQk7sT6Qj59jDBGbCZ4L8+Tn7GfG0pGplpKc40LFTfj1v
-	 Xpdw/iJmrljgwXIzNkMgIpajEUpQfauHM7gI8784=
-Message-ID: <d7f7c59e-a71c-45b3-a125-78fd6cd31e3c@linux.microsoft.com>
-Date: Wed, 15 Nov 2023 11:21:48 -0800
+	Wed, 15 Nov 2023 20:13:04 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1700079183; x=1731615183;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Lc1jWISARgFdJYQUQcrkIWD4qhOpyFCrbPiSfmP2Hk4=;
+  b=iRuCAxj8wKDo/ajx6qMDc7RMGwRTZ5thst0KpcxAO9/NrARrop62tieY
+   8ZqVay8DQuAu1Zs6alOioZKCDdTWpKiDhV3k7TXZ6L54hZwF24IRdYyfP
+   kzEMIX27Y6HoUPg3fPhlHOK0piiDKvd2gZU2xbZ3XftD3aSBXfmN1/9xF
+   7lR9UviVC/wkf1g5tWLT29AidOJNXEXjQj3xhx8L25J18bS2NaLW3g7K0
+   R99/ZcofIj/LZNiK0eR2Yg7WkfhGrHQMHBQADLTMHec9VN6wlmTids+aO
+   NVpcea8NBOLo9NJKY7ZOTc9ApLzFWjMlcN+zkcPC4Lr1RJegTUOyhBPST
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10895"; a="9587833"
+X-IronPort-AV: E=Sophos;i="6.03,306,1694761200"; 
+   d="scan'208";a="9587833"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2023 12:12:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10895"; a="855756093"
+X-IronPort-AV: E=Sophos;i="6.03,306,1694761200"; 
+   d="scan'208";a="855756093"
+Received: from ybradsha-mobl1.amr.corp.intel.com (HELO [10.212.204.204]) ([10.212.204.204])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2023 12:12:54 -0800
+Message-ID: <09e0c289-9693-4376-9b89-0f74715f7728@linux.intel.com>
+Date: Wed, 15 Nov 2023 12:12:54 -0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/7] ima: kexec: measure events between kexec load and
- execute
+Subject: Re: [PATCHv3 13/14] x86/acpi: Do not attempt to bring up secondary
+ CPUs in kexec case
 Content-Language: en-US
-To: Mimi Zohar <zohar@linux.ibm.com>, ebiederm@xmission.com, noodles@fb.com,
- bauermann@kolabnow.com, kexec@lists.infradead.org,
- linux-integrity@vger.kernel.org
-Cc: code@tyhicks.com, nramas@linux.microsoft.com, paul@paul-moore.com
-References: <20231005182602.634615-1-tusharsu@linux.microsoft.com>
- <8f87e7e4fe5c5a24cdc0d3e2267eeaf00825d1bb.camel@linux.ibm.com>
- <348e6e3ebd1c6ee1c85cd12f15591f32bb699fdc.camel@linux.ibm.com>
-From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-In-Reply-To: <348e6e3ebd1c6ee1c85cd12f15591f32bb699fdc.camel@linux.ibm.com>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Elena Reshetova <elena.reshetova@intel.com>,
+ Jun Nakajima <jun.nakajima@intel.com>,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>,
+ Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish"
+ <ashish.kalra@amd.com>, Sean Christopherson <seanjc@google.com>,
+ "Huang, Kai" <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>,
+ kexec@lists.infradead.org, linux-coco@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20231115120044.8034-1-kirill.shutemov@linux.intel.com>
+ <20231115120044.8034-14-kirill.shutemov@linux.intel.com>
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20231115120044.8034-14-kirill.shutemov@linux.intel.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231115_112153_168730_E80F6603 
-X-CRM114-Status: UNSURE (   4.86  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20231115_121302_528166_BBD411C8 
+X-CRM114-Status: GOOD (  25.22  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -69,25 +91,85 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 
 
-On 10/27/23 12:51, Mimi Zohar wrote:
-> Does this patch set take into account kexec_calculate_store_digests(),
-> which is called from kexec_load, and verify_sha256_digest()?
-I am not yet sure if my patches will impact the
-kexec_calculate_store_digests() and verify_sha256_digest()
-functionality.
+On 11/15/2023 4:00 AM, Kirill A. Shutemov wrote:
+> ACPI MADT doesn't allow to offline CPU after it got woke up. It limits
+> kexec: the second kernel won't be able to use more than one CPU.
+> 
+> Now acpi_mp_wake_mailbox_paddr already has the mailbox address.
+> The acpi_wakeup_cpu() will use it to bring up secondary cpus.
+> 
+> Zero out mailbox address in the ACPI MADT wakeup structure to indicate
+> that the mailbox is not usable.  This prevents the kexec()-ed kernel
+> from reading a vaild mailbox, which in turn makes the kexec()-ed kernel
+> only be able to use the boot CPU.
+> 
+> This is Linux-specific protocol and not reflected in ACPI spec.
+> 
+> Booting the second kernel with signle CPU is enough to cover the most
+> common case for kexec -- kdump.
+> 
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Reviewed-by: Kai Huang <kai.huang@intel.com>
+> ---
 
-I will investigate further and get back to you as soon as possible.
+Looks good to me.
 
-Thanks for bringing this up Mimi.
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-~Tushar
+>  arch/x86/kernel/acpi/madt_wakeup.c | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/acpi/madt_wakeup.c b/arch/x86/kernel/acpi/madt_wakeup.c
+> index 386adbb03094..5d92d12f1042 100644
+> --- a/arch/x86/kernel/acpi/madt_wakeup.c
+> +++ b/arch/x86/kernel/acpi/madt_wakeup.c
+> @@ -13,6 +13,11 @@ static struct acpi_madt_multiproc_wakeup_mailbox *acpi_mp_wake_mailbox __ro_afte
+>  
+>  static int acpi_wakeup_cpu(u32 apicid, unsigned long start_ip)
+>  {
+> +	if (!acpi_mp_wake_mailbox_paddr) {
+> +		pr_warn_once("No MADT mailbox: cannot bringup secondary CPUs. Booting with kexec?\n");
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+>  	/*
+>  	 * Remap mailbox memory only for the first call to acpi_wakeup_cpu().
+>  	 *
+> @@ -78,6 +83,23 @@ int __init acpi_parse_mp_wake(union acpi_subtable_headers *header,
+>  
+>  	cpu_hotplug_disable_offlining();
+>  
+> +	/*
+> +	 * ACPI MADT doesn't allow to offline CPU after it got woke up.
+> +	 * It limits kexec: the second kernel won't be able to use more than
+> +	 * one CPU.
+> +	 *
+> +	 * Now acpi_mp_wake_mailbox_paddr already has the mailbox address.
+> +	 * The acpi_wakeup_cpu() will use it to bring up secondary cpus.
+> +	 *
+> +	 * Zero out mailbox address in the ACPI MADT wakeup structure to
+> +	 * indicate that the mailbox is not usable.  This prevents the
+> +	 * kexec()-ed kernel from reading a vaild mailbox, which in turn
+> +	 * makes the kexec()-ed kernel only be able to use the boot CPU.
+> +	 *
+> +	 * This is Linux-specific protocol and not reflected in ACPI spec.
+> +	 */
+> +	mp_wake->mailbox_address = 0;
+> +
+>  	apic_update_callback(wakeup_secondary_cpu_64, acpi_wakeup_cpu);
+>  
+>  	return 0;
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
 _______________________________________________
 kexec mailing list
