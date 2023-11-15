@@ -4,70 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3B101C07548
-	for <kexec@archiver.kernel.org>; Wed, 15 Nov 2023 12:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3BD80C07548
+	for <kexec@archiver.kernel.org>; Wed, 15 Nov 2023 12:51:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=nX0MsIknidEjIGLFgKZqQ9NNm7tT49QBiucUPBDVTmU=; b=1/Px7oOSiLqzjO
-	K4peUeL03o1d7lErmyMW6cRs1/fG2XrJMC5hPExgBHRIuFSkcTjx4MMiRLpx176B3TQhhv005s6Ly
-	XRMdv0KWD77MCt8Wn7HB4GW4DcG1UalFnahxhX5xwGb1nE5HANrjpBuaCR5+s2AEIiLd6QczKC3TO
-	whmhJ4U01Rdx55mYho6r5y0rxmOGNH2YWuJM25TNJ7MRozYyg+WrY5fee+GBP1t4zPFp9yHNgymrE
-	UbzdgsRx3qErAFykzZv9j6Tjjj38bHY9yCQSaKh3HmmdF/C6t3EMMiktEOjl9UaACYBDKeBS0oSwr
-	oTM/LN1hfOY63QOCCGBw==;
+	List-Owner; bh=1GCYkmvTdBdDcDt5xotF38jNl0yeWTwJvoa3WEQivSM=; b=4XLBJmyNLtOldM
+	U6yUnqxqJHZOWh31e6n8MJkTLcO9YZ6jKdmWGPRUkJuyRIFdVQ+5ZanHUvYa1z8tYNM8eaFppWeJf
+	mYtj9PKtw+/67wlERsp5j4XaQ6V0u/mzZtU/eAkurO5/cdc7P7x2gihiNvZRoDTLUfDa0jLresfkK
+	woeVHqrBe5PL5S1gpbjOf5hEQYd1glfrPybRESvrdhUqP4mlejlMYEqCNcXBbi8k8dM2zkqsRWkzG
+	ztr7kV1t+qWEP/U2D0+q1Q9FNRazbUvXsUAt8z9/BY9KLGWNIGtOZBZngqkGiqqft2X+aVeKGLgXT
+	BZBJDTMspKpAWCwt6LqQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r3Evu-000liO-0a;
-	Wed, 15 Nov 2023 12:23:50 +0000
-Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
+	id 1r3FMb-000nmY-3C;
+	Wed, 15 Nov 2023 12:51:25 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r3Evr-000liC-3C
-	for kexec@bombadil.infradead.org;
-	Wed, 15 Nov 2023 12:23:47 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=fhDP8pl7DmtQJLtjZ7NvRUrsrSgQFICjei3CoSbh6X4=; b=Fl7yn3wJedcCW077qb0CEnptMW
-	15Iro+TMi2+101PsQ6KRgqyJ91TvxOKYbE7hpqFOSj6mbd2tJkFM//Dqx1pnEB4hmVOP6w/askEZ2
-	dwgaH5NSzYOv39+uTod+A9GPAWKrxwFuILTlQWEaxyndyG3UwgmYyJ8DO5ftw0oQQAPsxiwdTz5gY
-	MFa2PG2TouZAEStOBo5Q08RnpasMyt+xnDH/HQyF7PACYRvj0/QxlE5hivGMfkZ5mg7USwriXJntz
-	U6qyn68g2/7njPfjG4H5Y+A9o1pdTpC2Qb2lSg1pZBIMNmi4rq+Vbp1GF44X47N7sqSTp7cvUzYnU
-	NEY7peRg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1r3Evn-00E7nE-Mo; Wed, 15 Nov 2023 12:23:43 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 5CB21300427; Wed, 15 Nov 2023 13:23:43 +0100 (CET)
-Date: Wed, 15 Nov 2023 13:23:43 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Elena Reshetova <elena.reshetova@intel.com>,
-	Jun Nakajima <jun.nakajima@intel.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	"Kalra, Ashish" <ashish.kalra@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	"Huang, Kai" <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>,
-	kexec@lists.infradead.org, linux-coco@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv3 06/14] x86/kexec: Keep CR4.MCE set during kexec for TDX
- guest
-Message-ID: <20231115122343.GA8262@noisy.programming.kicks-ass.net>
-References: <20231115120044.8034-1-kirill.shutemov@linux.intel.com>
- <20231115120044.8034-7-kirill.shutemov@linux.intel.com>
+	id 1r3FMY-000nkX-2W
+	for kexec@lists.infradead.org;
+	Wed, 15 Nov 2023 12:51:24 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1700052675;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ehFjwhsPPcv7nimSjR09jzg4Dqe1DEZTTTAxghtYd8o=;
+	b=Bbx7OUieKyLhEbhg8f/de496HWsERiEdaT/xSroutd79BNgLmrtUdInZAZwKopz82ZGCH+
+	T7aIvJV8lnSKPeJwshbok2E6AT9oaPJNbCrQ0VCxtNheaq78YvLZnHy3RNTjURQg4yYQoC
+	xLRzSkVvzkBTK9RJK6g7llQD89VSqa8=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-378-LR_rUWiCNDKtUhiOdXXDbA-1; Wed,
+ 15 Nov 2023 07:51:13 -0500
+X-MC-Unique: LR_rUWiCNDKtUhiOdXXDbA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9AB1C1C068CA;
+	Wed, 15 Nov 2023 12:51:10 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.9])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id E5CD41121307;
+	Wed, 15 Nov 2023 12:51:09 +0000 (UTC)
+Date: Wed, 15 Nov 2023 20:51:06 +0800
+From: Baoquan He <bhe@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: kexec@lists.infradead.org, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	linux-parisc@vger.kernel.org
+Subject: Re: [PATCH v2 1/7] kexec_file: add kexec_file flag to control debug
+ printing
+Message-ID: <ZVS+usu5jCveUIiv@MiWiFi-R3L-srv>
+References: <20231114153253.241262-1-bhe@redhat.com>
+ <20231114153253.241262-2-bhe@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20231115120044.8034-7-kirill.shutemov@linux.intel.com>
+In-Reply-To: <20231114153253.241262-2-bhe@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20231115_045122_913473_973DE4B2 
+X-CRM114-Status: GOOD (  18.18  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,49 +85,113 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Nov 15, 2023 at 03:00:36PM +0300, Kirill A. Shutemov wrote:
-> TDX guests are not allowed to clear CR4.MCE. Attempt to clear it leads
-> to #VE.
-> 
-> Use alternatives to keep the flag during kexec for TDX guests.
-> 
-> The change doesn't affect non-TDX-guest environments.
-> 
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Reviewed-by: Kai Huang <kai.huang@intel.com>
-> ---
->  arch/x86/kernel/relocate_kernel_64.S | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-> index 56cab1bb25f5..bea89814b48e 100644
-> --- a/arch/x86/kernel/relocate_kernel_64.S
-> +++ b/arch/x86/kernel/relocate_kernel_64.S
-> @@ -145,11 +145,16 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
->  	 * Set cr4 to a known state:
->  	 *  - physical address extension enabled
->  	 *  - 5-level paging, if it was enabled before
-> +	 *  - Machine check exception on TDX guest. Clearing MCE is not allowed
-> +	 *    in TDX guests.
->  	 */
->  	movl	$X86_CR4_PAE, %eax
->  	testq	$X86_CR4_LA57, %r13
->  	jz	1f
->  	orl	$X86_CR4_LA57, %eax
-> +1:
-> +	ALTERNATIVE "jmp 1f", "", X86_FEATURE_TDX_GUEST
-> +	orl	$X86_CR4_MCE, %eax
->  1:
+When specifying 'kexec -c -d', kexec_load interface will print loading
+information, e.g the regions where kernel/initrd/purgatory/cmdline
+are put, the memmap passed to 2nd kernel taken as system RAM ranges,
+and printing all contents of struct kexec_segment, etc. These are
+very helpful for analyzing or positioning what's happening when
+kexec/kdump itself failed. The debugging printing for kexec_load
+interface is made in user space utility kexec-tools.
 
-	ALTERNATIVE "", "orl $X86_CR4_MCE, %eax", X86_FEATURE_TDX_GUEST
+Whereas, with kexec_file_load interface, 'kexec -s -d' print nothing.
+Because kexec_file code is mostly implemented in kernel space, and the
+debugging printing functionality is missed. It's not convenient when
+debugging kexec/kdump loading and jumping with kexec_file_load
+interface.
 
-?
+Now add KEXEC_FILE_DEBUG to kexec_file flag to control the debugging
+message printing. And add global variable kexec_file_dbg_print and
+macro kexec_dprintk() to facilitate the printing.
 
->  	movq	%rax, %cr4
->  
-> -- 
-> 2.41.0
-> 
+This is a preparation, later kexec_dprintk() will be used to replace the
+existing pr_debug(). Once 'kexec -s -d' is specified, it will print out
+kexec/kdump loading information at KERN_INFO level. If '-d' is not
+specified, it regresses to print message at KERN_DEBUG level.
+
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+v1->v2:
+- Rewrite the kexec_dprintk() macro as Joe suggested to reduce kernel
+  text size.
+
+ include/linux/kexec.h      | 10 +++++++++-
+ include/uapi/linux/kexec.h |  1 +
+ kernel/kexec_file.c        |  5 +++++
+ 3 files changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 8227455192b7..66997efe36f1 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -264,6 +264,14 @@ arch_kexec_apply_relocations(struct purgatory_info *pi, Elf_Shdr *section,
+ 	return -ENOEXEC;
+ }
+ #endif
++
++extern bool kexec_file_dbg_print;
++
++#define kexec_dprintk(fmt, ...)					\
++	printk("%s" fmt,					\
++	       kexec_file_dbg_print ? KERN_INFO : KERN_DEBUG,	\
++	       ##__VA_ARGS__)
++
+ #endif /* CONFIG_KEXEC_FILE */
+ 
+ #ifdef CONFIG_KEXEC_ELF
+@@ -403,7 +411,7 @@ bool kexec_load_permitted(int kexec_image_type);
+ 
+ /* List of defined/legal kexec file flags */
+ #define KEXEC_FILE_FLAGS	(KEXEC_FILE_UNLOAD | KEXEC_FILE_ON_CRASH | \
+-				 KEXEC_FILE_NO_INITRAMFS)
++				 KEXEC_FILE_NO_INITRAMFS | KEXEC_FILE_DEBUG)
+ 
+ /* flag to track if kexec reboot is in progress */
+ extern bool kexec_in_progress;
+diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
+index 01766dd839b0..c17bb096ea68 100644
+--- a/include/uapi/linux/kexec.h
++++ b/include/uapi/linux/kexec.h
+@@ -25,6 +25,7 @@
+ #define KEXEC_FILE_UNLOAD	0x00000001
+ #define KEXEC_FILE_ON_CRASH	0x00000002
+ #define KEXEC_FILE_NO_INITRAMFS	0x00000004
++#define KEXEC_FILE_DEBUG	0x00000008
+ 
+ /* These values match the ELF architecture values.
+  * Unless there is a good reason that should continue to be the case.
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index f9a419cd22d4..4c35500ae40a 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -38,6 +38,8 @@ void set_kexec_sig_enforced(void)
+ }
+ #endif
+ 
++bool kexec_file_dbg_print;
++
+ static int kexec_calculate_store_digests(struct kimage *image);
+ 
+ /* Maximum size in bytes for kernel/initrd files. */
+@@ -123,6 +125,8 @@ void kimage_file_post_load_cleanup(struct kimage *image)
+ 	 */
+ 	kfree(image->image_loader_data);
+ 	image->image_loader_data = NULL;
++
++	kexec_file_dbg_print = false;
+ }
+ 
+ #ifdef CONFIG_KEXEC_SIG
+@@ -278,6 +282,7 @@ kimage_file_alloc_init(struct kimage **rimage, int kernel_fd,
+ 	if (!image)
+ 		return -ENOMEM;
+ 
++	kexec_file_dbg_print = !!(flags & KEXEC_FILE_DEBUG);
+ 	image->file_mode = 1;
+ 
+ 	if (kexec_on_panic) {
+-- 
+2.41.0
+
 
 _______________________________________________
 kexec mailing list
