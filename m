@@ -4,70 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6A018C47074
-	for <kexec@archiver.kernel.org>; Wed, 15 Nov 2023 13:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 69072C07548
+	for <kexec@archiver.kernel.org>; Wed, 15 Nov 2023 13:03:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=8wIVWgbMWSmFA1SmBilDC86zcTRK0gV8GhKA/uRuKxA=; b=HvIIVSilIV/4XR
-	KnXCy9btu2nBFgppvrrUK5JuXKDGKB53s8rQOIQQDoijLrCirg4V0wDFpN44epnoA/23/AZyjf8na
-	PUrjrnCSjhQfDi/2L0xZeQYYLN1PJUs6Q35Qa9/kaulKjnqivCh8oh3zenQe51grWCpgnhdavszZh
-	8OV3px5gK2yYvgmRGCRiEn/7LCV+InBYPmf14E4A0CyZmpNg62h1O+BOC3w3YcYGA2HRe2Y6GAQBU
-	kWjEjDHgeO1lz3AC8m3hvm+FRQgidVrGpNAw+1+nDeVzMJDI+LRgkDgRgnEiXfSVIdoRn1ADOATfC
-	vnF4/yEhdUNeWgB2DXxw==;
+	List-Owner; bh=8u5OdvzHqin4P7VwNUN+EOPZuY+Jge9wQTSg/WIo4jE=; b=zy8yNrVIyoFCKX
+	Sl7km/3y+SNQCl1f6qbc9a69YLU+cKrJoBxZeaK9cxvaySm6w5CliuI4wo0slOkqnabhYzZTqbUTQ
+	eUkb/hjkoZkQmZfuzXiaqmzZP4MxJqyAZ7LtsJxl9oDiHhlGNyB9tO2V6SCIRr8wfFlv72OdRWCVC
+	0A7DgVAmmSQeIWbgz/nOJb22UoJwqJrME52FbJQ2bl2katYexUn5+GmVBcJRVMuxFfp7KqiJT1Mrd
+	yx1zZghI60ECUbuJDgD8Iah02zFSTxoAxZ/NAdtUTZGiQuXECqf8kNx7MwB+Yewq4ap81R++EEwny
+	c/K5YKjLt/bt9UtplFNQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r3FVa-000oho-1u;
-	Wed, 15 Nov 2023 13:00:42 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1r3FYB-000p9v-0W;
+	Wed, 15 Nov 2023 13:03:23 +0000
+Received: from mgamail.intel.com ([192.55.52.43])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r3FVX-000ogC-1B
+	id 1r3FY8-000p7X-15
 	for kexec@lists.infradead.org;
-	Wed, 15 Nov 2023 13:00:40 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1700053238;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MsmoLDm3Vg05W8pfD2SPdYXQ50SnWlB0SUHodkqBzuQ=;
-	b=g6+pULSS2UVdAw6CEkA15Vik1iQpQIknL6is3rLO4h/IOaXhcMAcat/gko03+87CFFxea4
-	nqctzZ6LmpVRexUtSfng3AKLlGP2SVvTm+A6bzp1xrikXtRnk+bqBccNHVVXc0STgp/Wov
-	vN/EWMHmhuALExicQWlm3Y0+xOUviNo=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-625-1eLEqSY3OeWVW86v4Tny6A-1; Wed, 15 Nov 2023 08:00:32 -0500
-X-MC-Unique: 1eLEqSY3OeWVW86v4Tny6A-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C3AC4810FC1;
-	Wed, 15 Nov 2023 13:00:31 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.9])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id BA6FF492BFD;
-	Wed, 15 Nov 2023 13:00:30 +0000 (UTC)
-Date: Wed, 15 Nov 2023 21:00:27 +0800
-From: Baoquan He <bhe@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: kexec@lists.infradead.org, x86@kernel.org, linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, akpm@linux-foundation.org,
-	ebiederm@xmission.com, takahiro.akashi@linaro.org
-Subject: [PATCH v2 1/2] resource: add walk_system_ram_res_rev()
-Message-ID: <ZVTA6z/06cLnWKUz@MiWiFi-R3L-srv>
-References: <20231114091658.228030-1-bhe@redhat.com>
- <20231114091658.228030-2-bhe@redhat.com>
+	Wed, 15 Nov 2023 13:03:21 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1700053400; x=1731589400;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=E4dKQNl6OtXKCpQsl6Lr+xytDUybE96dRWIvxmvWFcQ=;
+  b=YIPWmt85swVvfd/fmvd8jOgTyHXAuyQ4E4KZFNRCl+UgxfQ8DURtU8Ya
+   o3YbntRlGG5gg9X4QpZ3FjbYh4Gjbm3rqEvIzwU9yFRZkR1fOUkcktNYU
+   ZUTSJqc3UCviRWaBUcgracfMyPxEZ7V/Q3IMBDEaS5skDblIX0/WdZaZh
+   Mjhcg1L0lJuQTFI/DUpQ+O1aQyagFOhYOPlZtNDEodTx2TCpuHe/naIS9
+   Ag3Vobbv2kDz0vUHbWRKaqpeUTImSYDnJnOtzZhFqTMQlEWrjS/rRjGb2
+   m/kRlJJZk6+mSfHqNSPBWx5kMfqMfo0xSCkdK2GDIdGQ2iRkW/Ihgglr0
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10894"; a="477091540"
+X-IronPort-AV: E=Sophos;i="6.03,305,1694761200"; 
+   d="scan'208";a="477091540"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2023 05:03:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10894"; a="835391248"
+X-IronPort-AV: E=Sophos;i="6.03,305,1694761200"; 
+   d="scan'208";a="835391248"
+Received: from mituomis-mobl.ger.corp.intel.com (HELO box.shutemov.name) ([10.249.44.135])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2023 05:03:09 -0800
+Received: by box.shutemov.name (Postfix, from userid 1000)
+	id EE156109F3E; Wed, 15 Nov 2023 16:03:06 +0300 (+03)
+Date: Wed, 15 Nov 2023 16:03:06 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Elena Reshetova <elena.reshetova@intel.com>,
+	Jun Nakajima <jun.nakajima@intel.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	"Kalra, Ashish" <ashish.kalra@amd.com>,
+	Sean Christopherson <seanjc@google.com>,
+	"Huang, Kai" <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>,
+	kexec@lists.infradead.org, linux-coco@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv3 06/14] x86/kexec: Keep CR4.MCE set during kexec for TDX
+ guest
+Message-ID: <20231115130306.kmhaqsfpzi3gkpik@box.shutemov.name>
+References: <20231115120044.8034-1-kirill.shutemov@linux.intel.com>
+ <20231115120044.8034-7-kirill.shutemov@linux.intel.com>
+ <20231115122343.GA8262@noisy.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20231114091658.228030-2-bhe@redhat.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
+In-Reply-To: <20231115122343.GA8262@noisy.programming.kicks-ass.net>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231115_050039_474053_1067E0E8 
-X-CRM114-Status: GOOD (  16.95  )
+X-CRM114-CacheID: sfid-20231115_050320_420511_58F4087B 
+X-CRM114-Status: GOOD (  18.73  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,117 +99,51 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-This function, being a variant of walk_system_ram_res() introduced in
-commit 8c86e70acead ("resource: provide new functions to walk through
-resources"), walks through a list of all the resources of System RAM
-in reversed order, i.e., from higher to lower.
+On Wed, Nov 15, 2023 at 01:23:43PM +0100, Peter Zijlstra wrote:
+> On Wed, Nov 15, 2023 at 03:00:36PM +0300, Kirill A. Shutemov wrote:
+> > TDX guests are not allowed to clear CR4.MCE. Attempt to clear it leads
+> > to #VE.
+> > 
+> > Use alternatives to keep the flag during kexec for TDX guests.
+> > 
+> > The change doesn't affect non-TDX-guest environments.
+> > 
+> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> > Reviewed-by: Kai Huang <kai.huang@intel.com>
+> > ---
+> >  arch/x86/kernel/relocate_kernel_64.S | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+> > index 56cab1bb25f5..bea89814b48e 100644
+> > --- a/arch/x86/kernel/relocate_kernel_64.S
+> > +++ b/arch/x86/kernel/relocate_kernel_64.S
+> > @@ -145,11 +145,16 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+> >  	 * Set cr4 to a known state:
+> >  	 *  - physical address extension enabled
+> >  	 *  - 5-level paging, if it was enabled before
+> > +	 *  - Machine check exception on TDX guest. Clearing MCE is not allowed
+> > +	 *    in TDX guests.
+> >  	 */
+> >  	movl	$X86_CR4_PAE, %eax
+> >  	testq	$X86_CR4_LA57, %r13
+> >  	jz	1f
+> >  	orl	$X86_CR4_LA57, %eax
+> > +1:
+> > +	ALTERNATIVE "jmp 1f", "", X86_FEATURE_TDX_GUEST
+> > +	orl	$X86_CR4_MCE, %eax
+> >  1:
+> 
+> 	ALTERNATIVE "", "orl $X86_CR4_MCE, %eax", X86_FEATURE_TDX_GUEST
+> 
+> ?
 
-It will be used in kexec_file code to load kernel, initrd etc when
-preparing kexec reboot.
+Oh. Right. Silly me.
 
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
-v1->v2:
-- Use kvrealloc() to reallocate memory instead of kvcalloc(), this
-  simplifies code. Suggested by Andrew.
+Will fix.
 
- include/linux/ioport.h |  3 +++
- kernel/resource.c      | 57 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 60 insertions(+)
-
-diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-index 14f5cfabbbc8..db7fe25f3370 100644
---- a/include/linux/ioport.h
-+++ b/include/linux/ioport.h
-@@ -331,6 +331,9 @@ extern int
- walk_system_ram_res(u64 start, u64 end, void *arg,
- 		    int (*func)(struct resource *, void *));
- extern int
-+walk_system_ram_res_rev(u64 start, u64 end, void *arg,
-+			int (*func)(struct resource *, void *));
-+extern int
- walk_iomem_res_desc(unsigned long desc, unsigned long flags, u64 start, u64 end,
- 		    void *arg, int (*func)(struct resource *, void *));
- 
-diff --git a/kernel/resource.c b/kernel/resource.c
-index 866ef3663a0b..e8a244300e5b 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -27,6 +27,8 @@
- #include <linux/mount.h>
- #include <linux/resource_ext.h>
- #include <uapi/linux/magic.h>
-+#include <linux/string.h>
-+#include <linux/vmalloc.h>
- #include <asm/io.h>
- 
- 
-@@ -429,6 +431,61 @@ int walk_system_ram_res(u64 start, u64 end, void *arg,
- 				     func);
- }
- 
-+/*
-+ * This function, being a variant of walk_system_ram_res(), calls the @func
-+ * callback against all memory ranges of type System RAM which are marked as
-+ * IORESOURCE_SYSTEM_RAM and IORESOUCE_BUSY in reversed order, i.e., from
-+ * higher to lower.
-+ */
-+int walk_system_ram_res_rev(u64 start, u64 end, void *arg,
-+				int (*func)(struct resource *, void *))
-+{
-+	struct resource res, *rams;
-+	int rams_size = 16, i;
-+	unsigned long flags;
-+	int ret = -1;
-+
-+	/* create a list */
-+	rams = kvcalloc(rams_size, sizeof(struct resource), GFP_KERNEL);
-+	if (!rams)
-+		return ret;
-+
-+	flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
-+	i = 0;
-+	while ((start < end) &&
-+		(!find_next_iomem_res(start, end, flags, IORES_DESC_NONE, &res))) {
-+		if (i >= rams_size) {
-+			/* re-alloc */
-+			struct resource *rams_new;
-+
-+			rams_new = kvrealloc(rams, rams_size * sizeof(struct resource),
-+					     (rams_size + 16) * sizeof(struct resource),
-+					     GFP_KERNEL);
-+			if (!rams_new)
-+				goto out;
-+
-+			rams = rams_new;
-+			rams_size += 16;
-+		}
-+
-+		rams[i].start = res.start;
-+		rams[i++].end = res.end;
-+
-+		start = res.end + 1;
-+	}
-+
-+	/* go reverse */
-+	for (i--; i >= 0; i--) {
-+		ret = (*func)(&rams[i], arg);
-+		if (ret)
-+			break;
-+	}
-+
-+out:
-+	kvfree(rams);
-+	return ret;
-+}
-+
- /*
-  * This function calls the @func callback against all memory ranges, which
-  * are ranges marked as IORESOURCE_MEM and IORESOUCE_BUSY.
 -- 
-2.41.0
-
+  Kiryl Shutsemau / Kirill A. Shutemov
 
 _______________________________________________
 kexec mailing list
