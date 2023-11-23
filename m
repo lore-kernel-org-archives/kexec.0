@@ -4,91 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 53CAFC5AD4C
-	for <kexec@archiver.kernel.org>; Thu, 23 Nov 2023 13:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0434AC61DF7
+	for <kexec@archiver.kernel.org>; Thu, 23 Nov 2023 13:49:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=tEGuNTxZTsk+tVBZLvj+hdtyYvZhF2lmeR3R8wbVcDA=; b=JChLwbSL5woxBp
-	kdFypcGhOzMlPTT7jJdMpxSh0lNwyoKlcooPDXidz3lLc9FePg+Z6TQjCPO5dGL5hLQ+nE66pj3ZZ
-	aDE3BpvO9CH6UUVRBaWPlc81DW/ELPyoqFDqsKipHBQxvgMrh11p7X22gyzcNTr7ux5ZOKy9+sSaR
-	P90155yLTqGm0nsoWOD/4HjJmtxtlB76/Krq0zGF57vlI5N2keyvYx7ejw6FyLr8b+LA+GsTKR8sp
-	QBZnuK/dMlmm5E+AdtgmM1UEOEV8hDqpEeqklSSKXaC5Hgzw+Qd9za3JZ5jUZWLImubZ/29Di6K+v
-	9U8PTpxvBcUJMOX71FoQ==;
+	List-Owner; bh=Jg64R/UpvsVcc91w0jvubtjB4zqbTl9Fz0+1cjYEiNc=; b=BGTeb2ObdUp1FK
+	8tR2q8KM00Dvo4V6K0mQtYmbDKqwWqn1pkFIL8+pE0R5dyLybg08TpYLkUQEmuZLZZN767j7DBe98
+	gz3l1sT6xsB6SnBE0mmgMqE8UUElw4nwqQqH0BWz2oXbf4ybTLN7ds+QWDAe/XuK8mgv6hmTAJGzP
+	AAkaCvbgmMTiLYUhXUowDkZD4LFaIjCUr/RQUUnP4nwHeYFc2SQ8AYlKoImgu8j3Uo5N66toAEmvk
+	xXudYUfopwsygu+kGkEiYehUSnRX085c9+sgDcFtjyv44O6dwP7rCJPvx3a2fR+ri/bGogT2KziXc
+	cqKfllV24ymnLgn1A2ng==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r6A3Z-004wHb-1Z;
-	Thu, 23 Nov 2023 13:47:49 +0000
-Received: from mgamail.intel.com ([192.55.52.93])
+	id 1r6A5G-004wdB-0d;
+	Thu, 23 Nov 2023 13:49:34 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r6A3X-004wFo-0I
+	id 1r6A5C-004wbF-0R
 	for kexec@lists.infradead.org;
-	Thu, 23 Nov 2023 13:47:48 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1700747267; x=1732283267;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+3ldtTDXARvqNtIx8SpOQNFanxpj2hF5Q8A+SDJI1ck=;
-  b=lsAtoN3YifXFv9B+dzFLCmpUu6fi3OGOzYHzHfmvRzlMUsehRXNQP+Wz
-   6jw/kGXJ9aU20iE9TJfJr+qtWbOhACEs43gofj+VuvxMjtlhlWrEIYd2T
-   sPEjMwWyHwmoRz7RIEnyLJredMIheFG81F351IeoPj96yfuZJoZw7NHSH
-   DZYfvYk5hr3GmBi1/yTSVpNQroi6GIuQEAKsWRsApfI6LSZutnj6Y7rXF
-   k60TNQISLNqoPzkhuttM/CLsm5nvgj/LunC8a/Fx0/BQPhHK+UBGsVyQ5
-   VXThfm3aH7Bm9rRwHHAfL3zbNFqVMK62DNyR4LxqJJlM8EcvPvDDmTm5Y
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="389417772"
-X-IronPort-AV: E=Sophos;i="6.04,221,1695711600"; 
-   d="scan'208";a="389417772"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2023 05:47:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="833431403"
-X-IronPort-AV: E=Sophos;i="6.04,221,1695711600"; 
-   d="scan'208";a="833431403"
-Received: from ckochhof-mobl.ger.corp.intel.com (HELO box.shutemov.name) ([10.252.58.117])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2023 05:47:33 -0800
-Received: by box.shutemov.name (Postfix, from userid 1000)
-	id 6F5A210A38A; Thu, 23 Nov 2023 16:47:31 +0300 (+03)
-Date: Thu, 23 Nov 2023 16:47:31 +0300
-From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
-To: "Huang, Kai" <kai.huang@intel.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
-	"ashish.kalra@amd.com" <ashish.kalra@amd.com>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-	"Hunter, Adrian" <adrian.hunter@intel.com>,
-	"Reshetova, Elena" <elena.reshetova@intel.com>,
+	Thu, 23 Nov 2023 13:49:31 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1700747368;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sxe/WLsh7nIXyyUO9oSfkk7wRCeEdhack6GYCW6HjJ0=;
+	b=d6RQLGwEBO/KlAePUon008cDe56jMQPKOtWWtyXUJ673ChcM/qmSsv3Z5nQn0ONU9MbXoe
+	rDu3IsqLJtbe4HBE6youQ+cF7LU0s8BIt7UboDOpa3TWjsShYbybjjiRTTHnqUICNaJ+Z1
+	GIWdfKK+tmyYOFrjJLn1mLoviv13VS8=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-679-01FaU-9lNxS8bxXlt4ljHw-1; Thu,
+ 23 Nov 2023 08:49:25 -0500
+X-MC-Unique: 01FaU-9lNxS8bxXlt4ljHw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id AEF9428004ED;
+	Thu, 23 Nov 2023 13:49:24 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.97])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 0906B1121306;
+	Thu, 23 Nov 2023 13:49:23 +0000 (UTC)
+Date: Thu, 23 Nov 2023 21:49:20 +0800
+From: "bhe@redhat.com" <bhe@redhat.com>
+To: "Liu, Yujie" <yujie.liu@intel.com>
+Cc: lkp <lkp@intel.com>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+	"kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"oe-kbuild-all@lists.linux.dev" <oe-kbuild-all@lists.linux.dev>,
+	"llvm@lists.linux.dev" <llvm@lists.linux.dev>,
 	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"seanjc@google.com" <seanjc@google.com>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	"bhe@redhat.com" <bhe@redhat.com>,
-	"Nakajima, Jun" <jun.nakajima@intel.com>,
-	"peterz@infradead.org" <peterz@infradead.org>,
-	"bp@alien8.de" <bp@alien8.de>,
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-	"rafael@kernel.org" <rafael@kernel.org>,
-	"sathyanarayanan.kuppuswamy@linux.intel.com" <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	"x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCHv3 10/14] x86/tdx: Convert shared memory back to private
- on kexec
-Message-ID: <20231123134731.4zc3nq7gpzrcrbos@box.shutemov.name>
-References: <20231115120044.8034-1-kirill.shutemov@linux.intel.com>
- <20231115120044.8034-11-kirill.shutemov@linux.intel.com>
- <8277e9a1df4c3fd968edf670b0aa7dc1dd50dcf8.camel@intel.com>
- <20231121095859.36xiltn2gwgyxmwy@box.shutemov.name>
- <d7ac53b76217abbb9bc06717b76ec91a376ba210.camel@intel.com>
+	"linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH 2/7] kexec_file: print out debugging message if required
+Message-ID: <ZV9YYEK4L160ECQ+@MiWiFi-R3L-srv>
+References: <20231114153253.241262-3-bhe@redhat.com>
+ <202311160431.BXPc7NO9-lkp@intel.com>
+ <ZVcvBft/T3cbRBWr@MiWiFi-R3L-srv>
+ <39ccb4fda795a76996cf6d1c3b25909692358211.camel@intel.com>
+ <ZVdyLdAzgNBXfjiW@MiWiFi-R3L-srv>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <d7ac53b76217abbb9bc06717b76ec91a376ba210.camel@intel.com>
+In-Reply-To: <ZVdyLdAzgNBXfjiW@MiWiFi-R3L-srv>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231123_054747_152247_4A844447 
-X-CRM114-Status: GOOD (  32.10  )
+X-CRM114-CacheID: sfid-20231123_054930_243897_558A2ED7 
+X-CRM114-Status: GOOD (  22.20  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,98 +89,127 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Nov 22, 2023 at 10:07:44AM +0000, Huang, Kai wrote:
-> On Tue, 2023-11-21 at 12:58 +0300, kirill.shutemov@linux.intel.com wrote:
-> > On Tue, Nov 21, 2023 at 03:46:41AM +0000, Huang, Kai wrote:
-> > > 
-> > > >  
-> > > > +static atomic_t conversions_in_progress;
-> > > > +static bool conversion_allowed = true;
-> > > > 
-> > > 
-> > > [...]
-> > > 
-> > > >  /* Used while preparing memory map entries for second kernel */
-> > > >  struct crash_memmap_data {
-> > > > @@ -107,6 +108,9 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
-> > > >  
-> > > >  	crash_smp_send_stop();
-> > > >  
-> > > > +	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
-> > > > +		x86_platform.guest.enc_kexec_unshare_mem(true);
-> > > > +
-> > > >  	cpu_emergency_disable_virtualization();
-> > > >  
-> > > >  	/*
-> > > > diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-> > > > index 830425e6d38e..9fb302562bfd 100644
-> > > > --- a/arch/x86/kernel/reboot.c
-> > > > +++ b/arch/x86/kernel/reboot.c
-> > > > @@ -12,6 +12,7 @@
-> > > >  #include <linux/delay.h>
-> > > >  #include <linux/objtool.h>
-> > > >  #include <linux/pgtable.h>
-> > > > +#include <linux/kexec.h>
-> > > >  #include <acpi/reboot.h>
-> > > >  #include <asm/io.h>
-> > > >  #include <asm/apic.h>
-> > > > @@ -31,6 +32,7 @@
-> > > >  #include <asm/realmode.h>
-> > > >  #include <asm/x86_init.h>
-> > > >  #include <asm/efi.h>
-> > > > +#include <asm/tdx.h>
-> > > >  
-> > > >  /*
-> > > >   * Power off function, if any
-> > > > @@ -716,6 +718,9 @@ static void native_machine_emergency_restart(void)
-> > > >  
-> > > >  void native_machine_shutdown(void)
-> > > >  {
-> > > > +	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT) && kexec_in_progress)
-> > > > +		x86_platform.guest.enc_kexec_unshare_mem(false);
-> > > > +
-> > > >  	/* Stop the cpus and apics */
-> > > >  #ifdef CONFIG_X86_IO_APIC
-> > > >  	/*
-> > > 
-> > > In native_machine_crash_shutdown() the "unshare" is called after
-> > > crash_smp_send_stop(), but here it's called before the stop_other_cpus().
-> > > 
-> > > I am wondering if you call "unshare" after stop_other_cpus(), can we guarantee
-> > > there's only one cpu running in both normal and crash kexec in which case you
-> > > might be able to get rid of the "conversions_in_progress" and
-> > > "conversion_allowed" above?
-> > 
-> > For normal kexec we need to keep other CPUs going so they can finish
-> > conversion cleanly and get us to the known state. Note that the conversion
-> > is not atomic wrt preemption.
-> 
-> Yeah makes sense.
-> 
-> Add a comment to explain this?  That would help to remind us when we look at the
-> code like years later.
+On 11/17/23 at 10:01pm, Baoquan He wrote:
+> On 11/17/23 at 09:37am, Liu, Yujie wrote:
+> > Hi Baoquan,
+> > =
 
-Okay, will do.
+> > On Fri, 2023-11-17 at 17:14 +0800, Baoquan He wrote:
+> > > Hi,
+> > > =
 
-> > In crash scenario we do the best effort: detect if we race with conversion
-> > and report. We cannot really wait for conversions to finish: we get into
-> > crash path with IRQs disabled and in generally unknown state.
-> > 
-> 
-> Maybe it's good idea to add a TDVMCALL to query page status from the TDX module?
-> In that case we can avoid the inaccuracy when looking at the page table.
+> > > On 11/16/23 at 05:04am, kernel test robot wrote:
+> > > > Hi Baoquan,
+> > > > =
 
-No. TDX module has no control over what memory is shared. Shared-EPT is in
-full control of VMM and therefore we have to track unshared memory on the
-guest side to make sure that VMM doesn't do silly things.
+> > > > kernel test robot noticed the following build errors:
+> > > > =
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+> > > > [auto build test ERROR on arm64/for-next/core]
+> > > > [also build test ERROR on tip/x86/core powerpc/next powerpc/fixes l=
+inus/master v6.7-rc1 next-20231115]
+> > > > [If your patch is applied to the wrong git tree, kindly drop us a n=
+ote.
+> > > > And when submitting patch, we suggest to use '--base' as documented=
+ in
+> > > > https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> > > > =
+
+> > > > url:=A0=A0=A0 https://github.com/intel-lab-lkp/linux/commits/Baoqua=
+n-He/kexec_file-add-kexec_file-flag-to-control-debug-printing/20231114-2340=
+03
+> > > > base:=A0=A0 https://git.kernel.org/pub/scm/linux/kernel/git/arm64/l=
+inux.git=A0for-next/core
+> > > > patch link:=A0=A0=A0 https://lore.kernel.org/r/20231114153253.24126=
+2-3-bhe%40redhat.com
+> > > > patch subject: [PATCH 2/7] kexec_file: print out debugging message =
+if required
+> > > > config: hexagon-comet_defconfig (https://download.01.org/0day-ci/ar=
+chive/20231116/202311160431.BXPc7NO9-lkp@intel.com/config)
+> > > > compiler: clang version 16.0.4 (https://github.com/llvm/llvm-projec=
+t.git=A0ae42196bc493ffe877a7e3dff8be32035dea4d07)
+> > > > reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci=
+/archive/20231116/202311160431.BXPc7NO9-lkp@intel.com/reproduce)
+> > > > =
+
+> > > =
+
+> > > Thanks for reporting.
+> > > =
+
+> > > I met below failure when following the steps of provided reproducer.
+> > > Could anyone help check what's wrong with that?
+> > =
+
+> > Sorry this seems to be a bug in the reproducer. Could you please change
+> > the compiler parameter to "COMPILER=3Dclang-16" and rerun the command? =
+We
+> > will fix the issue ASAP.
+
+Any update for the reproducer? I would like to post v2 with the fix. I
+doubt it's the same issue as another report on this patch, while not
+quite sure.
+
+> =
+
+> Here you are. Thanks for your quick response.
+> ------------------------------
+> [root@~ linux]# COMPILER_INSTALL_PATH=3D$HOME/0day COMPILER=3Dclang-16 ~/=
+bin/make.cross W=3D1 O=3Dbuild_dir ARCH=3Dhexagon olddefconfig
+> Compiler will be installed in /root/0day
+> lftpget -c https://cdn.kernel.org/pub/tools/llvm/files/./llvm-16.0.6-x86_=
+64.tar.xz
+> /root/linux                                                              =
+               =
+
+> tar Jxf /root/0day/./llvm-16.0.6-x86_64.tar.xz -C /root/0day
+> PATH=3D/root/0day/llvm-16.0.6-x86_64/bin:/root/.local/bin:/root/bin:/usr/=
+lib64/ccache:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+> make --keep-going LLVM=3D1 CROSS_COMPILE=3Dhexagon-linux- LLVM_IAS=3D1 --=
+jobs=3D128 KCFLAGS=3D-Warray-bounds -Wundef -fstrict-flex-arrays=3D3 -funsi=
+gned-char -Wenum-conversion W=3D1 O=3Dbuild_dir ARCH=3Dhexagon olddefconfig
+> make[1]: Entering directory '/root/linux/build_dir'
+>   GEN     Makefile
+>   HOSTCC  scripts/basic/fixdep
+>   HOSTCC  scripts/kconfig/conf.o
+>   HOSTCC  scripts/kconfig/confdata.o
+>   HOSTCC  scripts/kconfig/expr.o
+>   HOSTCC  scripts/kconfig/lexer.lex.o
+>   HOSTCC  scripts/kconfig/menu.o
+>   HOSTCC  scripts/kconfig/parser.tab.o
+>   HOSTCC  scripts/kconfig/preprocess.o
+>   HOSTCC  scripts/kconfig/symbol.o
+>   HOSTCC  scripts/kconfig/util.o
+>   HOSTLD  scripts/kconfig/conf
+> #
+> # configuration written to .config
+> #
+> make[1]: Leaving directory '/root/linux/build_dir'
+> =
+
+> > =
+
+> > > [root@~ linux]# COMPILER_INSTALL_PATH=3D$HOME/0day COMPILER=3Dclang ~=
+/bin/make.cross W=3D1 O=3Dbuild_dir ARCH=3Dhexagon olddefconfig
+> > > Compiler will be installed in /root/0day
+> > > lftpget -c https://cdn.kernel.org/pub/tools/llvm/files/
+> > > get1: /pub/tools/llvm/files/: files/: Is a directory
+> > > Failed to download https://cdn.kernel.org/pub/tools/llvm/files/
+> > > clang crosstool install failed
+> > > Install clang compiler failed
+> > > setup_crosstool failed
+> > =
+
+> > =
+
+> =
+
+
 
 _______________________________________________
 kexec mailing list
