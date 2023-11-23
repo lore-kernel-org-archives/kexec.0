@@ -4,98 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 17C96C5AD4C
-	for <kexec@archiver.kernel.org>; Thu, 23 Nov 2023 13:43:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 53CAFC5AD4C
+	for <kexec@archiver.kernel.org>; Thu, 23 Nov 2023 13:47:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=+YW0fXTncNwr74vZsVugPAYolaqS94ccSPsYBIypRtQ=; b=NBTwoxJX+x0jHS
-	eyYCylSvZDzhgYXQOOEDiCy+Qr0jDVaNwLKsX8ncfMoyna2wioSZrLALiRV7/X07lXSn8BElkEX83
-	SOSfUAalzfSbs/+Au/cmYvi/+LHVUxxTS6yYM52zYhJA8OJe4l6ZzVS3V0Y77vHNeAHYVwfMF8Qvm
-	org8pliJwVLe9Noibl/BPcRmrkQzaFFRzjx5C5jDiSoNAJ0sEZAeG7395MkbW+h/GXKBqxreaXTkv
-	ZRU4jR7AWMVWlXqSXDBrvwjrUrfrrto+QI/I7ompM4yqmPv5zvWazqF8ih0JzgLmApeD/+wEV+3Zt
-	YWoYehjWcWYxZUY4Hz6Q==;
+	List-Owner; bh=tEGuNTxZTsk+tVBZLvj+hdtyYvZhF2lmeR3R8wbVcDA=; b=JChLwbSL5woxBp
+	kdFypcGhOzMlPTT7jJdMpxSh0lNwyoKlcooPDXidz3lLc9FePg+Z6TQjCPO5dGL5hLQ+nE66pj3ZZ
+	aDE3BpvO9CH6UUVRBaWPlc81DW/ELPyoqFDqsKipHBQxvgMrh11p7X22gyzcNTr7ux5ZOKy9+sSaR
+	P90155yLTqGm0nsoWOD/4HjJmtxtlB76/Krq0zGF57vlI5N2keyvYx7ejw6FyLr8b+LA+GsTKR8sp
+	QBZnuK/dMlmm5E+AdtgmM1UEOEV8hDqpEeqklSSKXaC5Hgzw+Qd9za3JZ5jUZWLImubZ/29Di6K+v
+	9U8PTpxvBcUJMOX71FoQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r69z7-004vT9-34;
-	Thu, 23 Nov 2023 13:43:13 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1r6A3Z-004wHb-1Z;
+	Thu, 23 Nov 2023 13:47:49 +0000
+Received: from mgamail.intel.com ([192.55.52.93])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r69z4-004vRd-0m;
-	Thu, 23 Nov 2023 13:43:12 +0000
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3ANCqhr1021827;
-	Thu, 23 Nov 2023 13:43:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=KRR7/FLcHHfVYwLFqhd7C1q8EsSoikY6fbR7WzttxZ0=;
- b=CWH0WcI541sXHITD98nZFLJRSHvY/2sZviXkWIExTTJkEDFE6RyYbe2Fn28iSJkwDHOx
- bp+4nuH6IfU2T+PmhoHoZyCTaLcu5UVqTScD17TmhAai1hod4sMQze9TRP9Y1Ig/3xcl
- vG8MWUOCxQV3vLgRqDAplyQtocFuHZnVHyqS5V4uGb+dQF/As8Yqx9AsUpbWRGy2ueEV
- BhIHh0gi/UOdZ4QDwomCxJkc49TLQ1IH3Nq87gzfk/LVudCq4mTIpYF0tuAQaPI9e/0f
- OPlRLB2ADxfbnpDimwPXJd/LAt/Tqxse+z/lxeKZ+B4clUbYX4ZGivGV6QcY0ep8gEnJ jw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uj74k15td-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 23 Nov 2023 13:43:05 +0000
-Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3ANDh5Id032355;
-	Thu, 23 Nov 2023 13:43:05 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uj74k15t2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 23 Nov 2023 13:43:05 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3ANBIg1p003481;
-	Thu, 23 Nov 2023 13:43:04 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3uf7ktfp4h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 23 Nov 2023 13:43:04 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3ANDh2jE8913568
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 23 Nov 2023 13:43:02 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8C4F120040;
-	Thu, 23 Nov 2023 13:43:02 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DCBDE20043;
-	Thu, 23 Nov 2023 13:43:01 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.171.80.84])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu, 23 Nov 2023 13:43:01 +0000 (GMT)
-Date: Thu, 23 Nov 2023 14:43:00 +0100
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Baoquan He <bhe@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        akpm@linux-foundation.org, ignat@cloudflare.com,
-        eric_devolder@yahoo.com
-Subject: Re: [PATCH 3/3] s390/Kconfig: drop select of KEXEC
-Message-ID: <ZV9W5AmmYhCFmN9e@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <20231123073652.507034-1-bhe@redhat.com>
- <20231123073652.507034-4-bhe@redhat.com>
+	id 1r6A3X-004wFo-0I
+	for kexec@lists.infradead.org;
+	Thu, 23 Nov 2023 13:47:48 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1700747267; x=1732283267;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+3ldtTDXARvqNtIx8SpOQNFanxpj2hF5Q8A+SDJI1ck=;
+  b=lsAtoN3YifXFv9B+dzFLCmpUu6fi3OGOzYHzHfmvRzlMUsehRXNQP+Wz
+   6jw/kGXJ9aU20iE9TJfJr+qtWbOhACEs43gofj+VuvxMjtlhlWrEIYd2T
+   sPEjMwWyHwmoRz7RIEnyLJredMIheFG81F351IeoPj96yfuZJoZw7NHSH
+   DZYfvYk5hr3GmBi1/yTSVpNQroi6GIuQEAKsWRsApfI6LSZutnj6Y7rXF
+   k60TNQISLNqoPzkhuttM/CLsm5nvgj/LunC8a/Fx0/BQPhHK+UBGsVyQ5
+   VXThfm3aH7Bm9rRwHHAfL3zbNFqVMK62DNyR4LxqJJlM8EcvPvDDmTm5Y
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="389417772"
+X-IronPort-AV: E=Sophos;i="6.04,221,1695711600"; 
+   d="scan'208";a="389417772"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2023 05:47:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="833431403"
+X-IronPort-AV: E=Sophos;i="6.04,221,1695711600"; 
+   d="scan'208";a="833431403"
+Received: from ckochhof-mobl.ger.corp.intel.com (HELO box.shutemov.name) ([10.252.58.117])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2023 05:47:33 -0800
+Received: by box.shutemov.name (Postfix, from userid 1000)
+	id 6F5A210A38A; Thu, 23 Nov 2023 16:47:31 +0300 (+03)
+Date: Thu, 23 Nov 2023 16:47:31 +0300
+From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
+To: "Huang, Kai" <kai.huang@intel.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
+	"ashish.kalra@amd.com" <ashish.kalra@amd.com>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+	"Hunter, Adrian" <adrian.hunter@intel.com>,
+	"Reshetova, Elena" <elena.reshetova@intel.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"seanjc@google.com" <seanjc@google.com>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"bhe@redhat.com" <bhe@redhat.com>,
+	"Nakajima, Jun" <jun.nakajima@intel.com>,
+	"peterz@infradead.org" <peterz@infradead.org>,
+	"bp@alien8.de" <bp@alien8.de>,
+	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+	"rafael@kernel.org" <rafael@kernel.org>,
+	"sathyanarayanan.kuppuswamy@linux.intel.com" <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	"x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCHv3 10/14] x86/tdx: Convert shared memory back to private
+ on kexec
+Message-ID: <20231123134731.4zc3nq7gpzrcrbos@box.shutemov.name>
+References: <20231115120044.8034-1-kirill.shutemov@linux.intel.com>
+ <20231115120044.8034-11-kirill.shutemov@linux.intel.com>
+ <8277e9a1df4c3fd968edf670b0aa7dc1dd50dcf8.camel@intel.com>
+ <20231121095859.36xiltn2gwgyxmwy@box.shutemov.name>
+ <d7ac53b76217abbb9bc06717b76ec91a376ba210.camel@intel.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20231123073652.507034-4-bhe@redhat.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: p97UOpER7j1y6xI193PSMYOEsM0_ReRh
-X-Proofpoint-ORIG-GUID: Q8_fDX5_sC5i010zY_FRtWNuycP5JyR9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-23_12,2023-11-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
- adultscore=0 mlxscore=0 spamscore=0 malwarescore=0 impostorscore=0
- priorityscore=1501 lowpriorityscore=0 clxscore=1011 mlxlogscore=357
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311060000 definitions=main-2311230098
+In-Reply-To: <d7ac53b76217abbb9bc06717b76ec91a376ba210.camel@intel.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231123_054310_616352_1BB3F10A 
-X-CRM114-Status: GOOD (  22.96  )
+X-CRM114-CacheID: sfid-20231123_054747_152247_4A844447 
+X-CRM114-Status: GOOD (  32.10  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -112,59 +105,93 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Nov 23, 2023 at 03:36:52PM +0800, Baoquan He wrote:
-
-Hi Baoquan,
-
-> No proof is found to require that S390 architecture has to select
-> KEXEC. At least from my testing at below, dropping select of KEXEC won't
-> impact anything.
-
-It does impact the outcome of defconfigs.
-Namely, CONFIG_KEXEC is not set with this patch.
-
-> ===testing 1===
-> CONFIG_CRASH_CORE=y
-> CONFIG_KEXEC_CORE=y
-> CONFIG_CRASH_DUMP=y
-> ===
+On Wed, Nov 22, 2023 at 10:07:44AM +0000, Huang, Kai wrote:
+> On Tue, 2023-11-21 at 12:58 +0300, kirill.shutemov@linux.intel.com wrote:
+> > On Tue, Nov 21, 2023 at 03:46:41AM +0000, Huang, Kai wrote:
+> > > 
+> > > >  
+> > > > +static atomic_t conversions_in_progress;
+> > > > +static bool conversion_allowed = true;
+> > > > 
+> > > 
+> > > [...]
+> > > 
+> > > >  /* Used while preparing memory map entries for second kernel */
+> > > >  struct crash_memmap_data {
+> > > > @@ -107,6 +108,9 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
+> > > >  
+> > > >  	crash_smp_send_stop();
+> > > >  
+> > > > +	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
+> > > > +		x86_platform.guest.enc_kexec_unshare_mem(true);
+> > > > +
+> > > >  	cpu_emergency_disable_virtualization();
+> > > >  
+> > > >  	/*
+> > > > diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+> > > > index 830425e6d38e..9fb302562bfd 100644
+> > > > --- a/arch/x86/kernel/reboot.c
+> > > > +++ b/arch/x86/kernel/reboot.c
+> > > > @@ -12,6 +12,7 @@
+> > > >  #include <linux/delay.h>
+> > > >  #include <linux/objtool.h>
+> > > >  #include <linux/pgtable.h>
+> > > > +#include <linux/kexec.h>
+> > > >  #include <acpi/reboot.h>
+> > > >  #include <asm/io.h>
+> > > >  #include <asm/apic.h>
+> > > > @@ -31,6 +32,7 @@
+> > > >  #include <asm/realmode.h>
+> > > >  #include <asm/x86_init.h>
+> > > >  #include <asm/efi.h>
+> > > > +#include <asm/tdx.h>
+> > > >  
+> > > >  /*
+> > > >   * Power off function, if any
+> > > > @@ -716,6 +718,9 @@ static void native_machine_emergency_restart(void)
+> > > >  
+> > > >  void native_machine_shutdown(void)
+> > > >  {
+> > > > +	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT) && kexec_in_progress)
+> > > > +		x86_platform.guest.enc_kexec_unshare_mem(false);
+> > > > +
+> > > >  	/* Stop the cpus and apics */
+> > > >  #ifdef CONFIG_X86_IO_APIC
+> > > >  	/*
+> > > 
+> > > In native_machine_crash_shutdown() the "unshare" is called after
+> > > crash_smp_send_stop(), but here it's called before the stop_other_cpus().
+> > > 
+> > > I am wondering if you call "unshare" after stop_other_cpus(), can we guarantee
+> > > there's only one cpu running in both normal and crash kexec in which case you
+> > > might be able to get rid of the "conversions_in_progress" and
+> > > "conversion_allowed" above?
+> > 
+> > For normal kexec we need to keep other CPUs going so they can finish
+> > conversion cleanly and get us to the known state. Note that the conversion
+> > is not atomic wrt preemption.
 > 
-> ===testing 2===
-> CONFIG_CRASH_CORE=y
-> CONFIG_KEXEC_CORE=y
-> CONFIG_KEXEC_FILE=y
-> CONFIG_CRASH_DUMP=y
-> ===
-
-Unfortunately, I do not quite realize what these testings were
-and what is the difference between the two.
-
-> So drop the select of KEXEC now.
-
-I suggest dropping this patch. Once the previous two are upstream
-we would remove 'select KEXEC' from Kconfig together with defconfig
-updates.
-
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> ---
->  arch/s390/Kconfig | 1 -
->  1 file changed, 1 deletion(-)
+> Yeah makes sense.
 > 
-> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-> index 3bec98d20283..1aec2e692dca 100644
-> --- a/arch/s390/Kconfig
-> +++ b/arch/s390/Kconfig
-> @@ -217,7 +217,6 @@ config S390
->  	select HAVE_VIRT_CPU_ACCOUNTING_IDLE
->  	select IOMMU_HELPER		if PCI
->  	select IOMMU_SUPPORT		if PCI
-> -	select KEXEC
->  	select MMU_GATHER_MERGE_VMAS
->  	select MMU_GATHER_NO_GATHER
->  	select MMU_GATHER_RCU_TABLE_FREE
-> -- 
+> Add a comment to explain this?  That would help to remind us when we look at the
+> code like years later.
 
-Thanks!
+Okay, will do.
+
+> > In crash scenario we do the best effort: detect if we race with conversion
+> > and report. We cannot really wait for conversions to finish: we get into
+> > crash path with IRQs disabled and in generally unknown state.
+> > 
+> 
+> Maybe it's good idea to add a TDVMCALL to query page status from the TDX module?
+> In that case we can avoid the inaccuracy when looking at the page table.
+
+No. TDX module has no control over what memory is shared. Shared-EPT is in
+full control of VMM and therefore we have to track unshared memory on the
+guest side to make sure that VMM doesn't do silly things.
+
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
 
 _______________________________________________
 kexec mailing list
