@@ -4,71 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 09E19C624B4
-	for <kexec@archiver.kernel.org>; Thu, 23 Nov 2023 14:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DBFB0C5AD4C
+	for <kexec@archiver.kernel.org>; Thu, 23 Nov 2023 15:41:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=s+LcJ+J7x1Bwh0Wdz0FElt38Lvjm9Lfg1NKKkohmDKE=; b=oR2Ainh+/g5wWA
-	x7xPsOJ8hfOpWp84RUNPym9nj5hxVkrE/UF2K+LeXALsV1uNGN5CNslBC/0QDBYnAbKAQFk2XmKwT
-	FL9/ZrZC6kzVkOMLYHvBIlTp3/C+q/pjidSWLlf3G3N8uejwTLTB/TQMudIR1i0Oa6abEk+2Tf5f1
-	7LW97Tb0N3HpduC+57yRCYjic1GdZpTrbEnrd9rwRJpskABCJ7oN+qzym/LxjjpmIbq9Kpq1RRUAv
-	NYTF54VNti1mAYDBXejP/bckmwONK3q9NA0PATV//S/D/rccO0OoE0Ksb0jMTET9da5J1q1RJZfcj
-	3F5GwS6Yq9WRsDH9U5+w==;
+	List-Owner; bh=NfwzhJSf29Q4L+IkfPfmK+lDF0TM/YKnpwcBVgIopZY=; b=mu+tSfdGfWsIM7
+	xDc48km3i+nnqt+QtolkaLuO5SMuRFv+J0STvICaY7t900cE4+q0nSX4a5X8/NhIrcKV942OszmNL
+	iUF48W2qLwmzyl0TwOUwbxLdr6z9ybZhpgYAPaYkuEr+TSP/sWD5E43m2ozubcodIgAtDk3nqlIME
+	aRuahHqfnTB9MoHqOZNPPyUrMJnidQtb83nptp+GncmqQns8gOi4bGBScf6OabVSNSwrjPgvi1Rv5
+	aqi1ctnSQcUhtulnGzJTbykwK+szNNYk2BzkcIfpk7IWvwwyylJCKeMzHHqxfT3mhkgQSxexWBeuH
+	+zuXGEgHaWbKYbsinMag==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r6AkV-0051WM-2Q;
-	Thu, 23 Nov 2023 14:32:11 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1r6Bpg-005CG1-1i;
+	Thu, 23 Nov 2023 15:41:36 +0000
+Received: from ams.source.kernel.org ([2604:1380:4601:e00::1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r6AkT-0051Ue-1w
-	for kexec@lists.infradead.org;
-	Thu, 23 Nov 2023 14:32:11 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1700749926;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7yzx9qOvDK5HqVyciE7l1diyIFw6Eysuxf8uBBLbzRo=;
-	b=TQI+bMu/E8altjBqMoA2MxLAL7z4d9P8u4lA/Mp6yBFrSFB2CsAai8XLyCgjJkGlQ7JMlb
-	4PpbfePnDc/yJPGNgDOlMnX2bzORbjWSiTqvyqNbahrtpYRvoNqx/Z1qLrYyVq5eS5KJNS
-	QrUjvyd7ukIKGMuNRjOf6T4oWL/bIh8=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-223-_SGWWHWgMVObeNhXt_Ynzw-1; Thu,
- 23 Nov 2023 09:32:03 -0500
-X-MC-Unique: _SGWWHWgMVObeNhXt_Ynzw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B69673C0BE39;
-	Thu, 23 Nov 2023 14:32:02 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.97])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 14ACC5028;
-	Thu, 23 Nov 2023 14:32:01 +0000 (UTC)
-Date: Thu, 23 Nov 2023 22:31:59 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-	akpm@linux-foundation.org, ignat@cloudflare.com,
-	eric_devolder@yahoo.com
-Subject: Re: [PATCH 3/3] s390/Kconfig: drop select of KEXEC
-Message-ID: <ZV9iX5HNftPjNr3S@MiWiFi-R3L-srv>
-References: <20231123073652.507034-1-bhe@redhat.com>
- <20231123073652.507034-4-bhe@redhat.com>
- <ZV9W5AmmYhCFmN9e@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+	id 1r6Bpc-005CEt-1y;
+	Thu, 23 Nov 2023 15:41:34 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by ams.source.kernel.org (Postfix) with ESMTP id 7FEDCB82DAB;
+	Thu, 23 Nov 2023 15:41:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30D54C433C8;
+	Thu, 23 Nov 2023 15:41:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700754089;
+	bh=wYo7fAMqhxFyBFMQMLKccEbNB96HsajO4uuHMmp53Og=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZDDf/GUUb7F28lHZof2kZ/ExvVGLi3nSeT3k5MbpJeP7J0VRZNmeH0n0637NQXiJB
+	 hXe8WuNM4qKqZGi8AinuhXcYMqOENZ9/wzckFUhv+cEJRM4/HmSMMksK/WN6Dy5Ma8
+	 crPwiGQ3GaiSK00zr+Kr3EpqT8dPwQzDEBl05EUafOfTas5YObKWcowYE6HhNzwKX4
+	 gyZ7Z+k9Vr2SNTiHif5d2ZK3xPjSD8Mo/PvaRTgwaABEKoQRtpYp2i3PjOPpa3mV3f
+	 8LRmCGmlgs78DL4EGWUkJDk7QoF8PY4psFMdIZKb0OGYKJMHSvVD3m8M16G4YVYpCF
+	 3WbWtHvt69uMQ==
+Date: Thu, 23 Nov 2023 08:41:27 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: "bhe@redhat.com" <bhe@redhat.com>
+Cc: "Liu, Yujie" <yujie.liu@intel.com>, lkp <lkp@intel.com>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+	"kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"oe-kbuild-all@lists.linux.dev" <oe-kbuild-all@lists.linux.dev>,
+	"llvm@lists.linux.dev" <llvm@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH 2/7] kexec_file: print out debugging message if required
+Message-ID: <20231123154127.GA3487126@dev-arch.thelio-3990X>
+References: <20231114153253.241262-3-bhe@redhat.com>
+ <202311160431.BXPc7NO9-lkp@intel.com>
+ <ZVcvBft/T3cbRBWr@MiWiFi-R3L-srv>
+ <39ccb4fda795a76996cf6d1c3b25909692358211.camel@intel.com>
+ <ZVdyLdAzgNBXfjiW@MiWiFi-R3L-srv>
+ <ZV9YYEK4L160ECQ+@MiWiFi-R3L-srv>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <ZV9W5AmmYhCFmN9e@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+In-Reply-To: <ZV9YYEK4L160ECQ+@MiWiFi-R3L-srv>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231123_063209_735860_808775F4 
-X-CRM114-Status: GOOD (  21.99  )
+X-CRM114-CacheID: sfid-20231123_074132_944837_AE3DCE99 
+X-CRM114-Status: GOOD (  24.81  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,77 +79,158 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 11/23/23 at 02:43pm, Alexander Gordeev wrote:
-> On Thu, Nov 23, 2023 at 03:36:52PM +0800, Baoquan He wrote:
-> 
-> Hi Baoquan,
-> 
-> > No proof is found to require that S390 architecture has to select
-> > KEXEC. At least from my testing at below, dropping select of KEXEC won't
-> > impact anything.
-> 
-> It does impact the outcome of defconfigs.
-> Namely, CONFIG_KEXEC is not set with this patch.
+On Thu, Nov 23, 2023 at 09:49:20PM +0800, bhe@redhat.com wrote:
+> On 11/17/23 at 10:01pm, Baoquan He wrote:
+> > On 11/17/23 at 09:37am, Liu, Yujie wrote:
+> > > Hi Baoquan,
+> > > =
 
-Right, CONFIG_KEXEC won't be set defaultly with this patch applied.
+> > > On Fri, 2023-11-17 at 17:14 +0800, Baoquan He wrote:
+> > > > Hi,
+> > > > =
 
-> 
-> > ===testing 1===
-> > CONFIG_CRASH_CORE=y
-> > CONFIG_KEXEC_CORE=y
-> > CONFIG_CRASH_DUMP=y
-> > ===
-> > 
-> > ===testing 2===
-> > CONFIG_CRASH_CORE=y
-> > CONFIG_KEXEC_CORE=y
-> > CONFIG_KEXEC_FILE=y
-> > CONFIG_CRASH_DUMP=y
-> > ===
-> 
-> Unfortunately, I do not quite realize what these testings were
-> and what is the difference between the two.
+> > > > On 11/16/23 at 05:04am, kernel test robot wrote:
+> > > > > Hi Baoquan,
+> > > > > =
 
-Both these two testings have CONFIG_KEXEC=n, and building all passed.
-I wound't present their difference, but two cases where no CONFIG_KEXEC
-is set and no dependency on CONFIG_KEXEC is seen.
+> > > > > kernel test robot noticed the following build errors:
+> > > > > =
 
-> 
-> > So drop the select of KEXEC now.
-> 
-> I suggest dropping this patch. Once the previous two are upstream
-> we would remove 'select KEXEC' from Kconfig together with defconfig
-> updates.
+> > > > > [auto build test ERROR on arm64/for-next/core]
+> > > > > [also build test ERROR on tip/x86/core powerpc/next powerpc/fixes=
+ linus/master v6.7-rc1 next-20231115]
+> > > > > [If your patch is applied to the wrong git tree, kindly drop us a=
+ note.
+> > > > > And when submitting patch, we suggest to use '--base' as document=
+ed in
+> > > > > https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> > > > > =
 
-I see your concern, will drop this one in v2. Thanks for checking these.
+> > > > > url:=A0=A0=A0 https://github.com/intel-lab-lkp/linux/commits/Baoq=
+uan-He/kexec_file-add-kexec_file-flag-to-control-debug-printing/20231114-23=
+4003
+> > > > > base:=A0=A0 https://git.kernel.org/pub/scm/linux/kernel/git/arm64=
+/linux.git=A0for-next/core
+> > > > > patch link:=A0=A0=A0 https://lore.kernel.org/r/20231114153253.241=
+262-3-bhe%40redhat.com
+> > > > > patch subject: [PATCH 2/7] kexec_file: print out debugging messag=
+e if required
+> > > > > config: hexagon-comet_defconfig (https://download.01.org/0day-ci/=
+archive/20231116/202311160431.BXPc7NO9-lkp@intel.com/config)
+> > > > > compiler: clang version 16.0.4 (https://github.com/llvm/llvm-proj=
+ect.git=A0ae42196bc493ffe877a7e3dff8be32035dea4d07)
+> > > > > reproduce (this is a W=3D1 build): (https://download.01.org/0day-=
+ci/archive/20231116/202311160431.BXPc7NO9-lkp@intel.com/reproduce)
+> > > > > =
 
-> 
-> > Signed-off-by: Baoquan He <bhe@redhat.com>
-> > ---
-> >  arch/s390/Kconfig | 1 -
-> >  1 file changed, 1 deletion(-)
-> > 
-> > diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-> > index 3bec98d20283..1aec2e692dca 100644
-> > --- a/arch/s390/Kconfig
-> > +++ b/arch/s390/Kconfig
-> > @@ -217,7 +217,6 @@ config S390
-> >  	select HAVE_VIRT_CPU_ACCOUNTING_IDLE
-> >  	select IOMMU_HELPER		if PCI
-> >  	select IOMMU_SUPPORT		if PCI
-> > -	select KEXEC
-> >  	select MMU_GATHER_MERGE_VMAS
-> >  	select MMU_GATHER_NO_GATHER
-> >  	select MMU_GATHER_RCU_TABLE_FREE
-> > -- 
-> 
-> Thanks!
-> 
+> > > > =
+
+> > > > Thanks for reporting.
+> > > > =
+
+> > > > I met below failure when following the steps of provided reproducer.
+> > > > Could anyone help check what's wrong with that?
+> > > =
+
+> > > Sorry this seems to be a bug in the reproducer. Could you please chan=
+ge
+> > > the compiler parameter to "COMPILER=3Dclang-16" and rerun the command=
+? We
+> > > will fix the issue ASAP.
+> =
+
+> Any update for the reproducer? I would like to post v2 with the fix. I
+> doubt it's the same issue as another report on this patch, while not
+> quite sure.
+
+Shouldn't you be able to run
+
+  $ COMPILER_INSTALL_PATH=3D$HOME/0day COMPILER=3Dclang-16 ~/bin/make.cross=
+ W=3D1 O=3Dbuild_dir ARCH=3Dhexagon SHELL=3D/bin/bash kernel/
+
+after the command you just ran to reproduce this now? It is
+essentially the same fix that they mention above but for the second
+invocation of make.cross.
+
+You can also not even bother with the wrapper altogether if you have the
+compiler installed in the default path that they provide (W=3D1 is not
+necessary to reproduce this issue):
+
+  $ mkdir -p build_dir
+  $ curl -LSso build_dir/.config https://download.01.org/0day-ci/archive/20=
+231116/202311160431.BXPc7NO9-lkp@intel.com/config
+  $ make -skj"$(nproc)" ARCH=3Dhexagon LLVM=3D$HOME/0day/llvm-16.0.6-x86_64=
+/bin/ O=3Dbuild_dir olddefconfig kernel/crash_core.o
+  ...
+  kernel/crash_core.c:554:3: error: call to undeclared function 'kexec_dpri=
+ntk'; ISO C99 and later do not support implicit function declarations [-Wim=
+plicit-function-declaration]
+                  kexec_dprintk("Crash PT_LOAD ELF header. phdr=3D%p vaddr=
+=3D0x%llx, paddr=3D0x%llx, "
+                  ^
+  1 error generated.
+
+> > Here you are. Thanks for your quick response.
+> > ------------------------------
+> > [root@~ linux]# COMPILER_INSTALL_PATH=3D$HOME/0day COMPILER=3Dclang-16 =
+~/bin/make.cross W=3D1 O=3Dbuild_dir ARCH=3Dhexagon olddefconfig
+> > Compiler will be installed in /root/0day
+> > lftpget -c https://cdn.kernel.org/pub/tools/llvm/files/./llvm-16.0.6-x8=
+6_64.tar.xz
+> > /root/linux                                                            =
+                 =
+
+> > tar Jxf /root/0day/./llvm-16.0.6-x86_64.tar.xz -C /root/0day
+> > PATH=3D/root/0day/llvm-16.0.6-x86_64/bin:/root/.local/bin:/root/bin:/us=
+r/lib64/ccache:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+> > make --keep-going LLVM=3D1 CROSS_COMPILE=3Dhexagon-linux- LLVM_IAS=3D1 =
+--jobs=3D128 KCFLAGS=3D-Warray-bounds -Wundef -fstrict-flex-arrays=3D3 -fun=
+signed-char -Wenum-conversion W=3D1 O=3Dbuild_dir ARCH=3Dhexagon olddefconf=
+ig
+> > make[1]: Entering directory '/root/linux/build_dir'
+> >   GEN     Makefile
+> >   HOSTCC  scripts/basic/fixdep
+> >   HOSTCC  scripts/kconfig/conf.o
+> >   HOSTCC  scripts/kconfig/confdata.o
+> >   HOSTCC  scripts/kconfig/expr.o
+> >   HOSTCC  scripts/kconfig/lexer.lex.o
+> >   HOSTCC  scripts/kconfig/menu.o
+> >   HOSTCC  scripts/kconfig/parser.tab.o
+> >   HOSTCC  scripts/kconfig/preprocess.o
+> >   HOSTCC  scripts/kconfig/symbol.o
+> >   HOSTCC  scripts/kconfig/util.o
+> >   HOSTLD  scripts/kconfig/conf
+> > #
+> > # configuration written to .config
+> > #
+> > make[1]: Leaving directory '/root/linux/build_dir'
+> > =
+
+> > > =
+
+> > > > [root@~ linux]# COMPILER_INSTALL_PATH=3D$HOME/0day COMPILER=3Dclang=
+ ~/bin/make.cross W=3D1 O=3Dbuild_dir ARCH=3Dhexagon olddefconfig
+> > > > Compiler will be installed in /root/0day
+> > > > lftpget -c https://cdn.kernel.org/pub/tools/llvm/files/
+> > > > get1: /pub/tools/llvm/files/: files/: Is a directory
+> > > > Failed to download https://cdn.kernel.org/pub/tools/llvm/files/
+> > > > clang crosstool install failed
+> > > > Install clang compiler failed
+> > > > setup_crosstool failed
+> > > =
+
+> > > =
+
+> > =
+
+> =
+
+> =
 
 
 _______________________________________________
