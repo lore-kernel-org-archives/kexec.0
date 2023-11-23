@@ -4,71 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 40A58C61DF7
-	for <kexec@archiver.kernel.org>; Thu, 23 Nov 2023 13:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 17C96C5AD4C
+	for <kexec@archiver.kernel.org>; Thu, 23 Nov 2023 13:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=K3BetRzybLw9YVPPvmL6kHrtr1P8PbFMTCuMWWgbPZs=; b=cmKTVWGNCTORmk
-	5AJAPkn2r8Dppi7hRpG7P9DHS1Nx+RGKrC9I3vqlH6bmV/+EHHAGiLYdQ2rY1ik2+ThCjJg3E4Kdg
-	VxVpZQuSOyUdeXkbbIMZm6k4Kqk0tY+jdaZoGGsoOGmWDEfPDyg2Crzpr/UyRaxjc1eaGJGZW8thd
-	uUSkEEvMAh6jqSGoeAk91D7cs6RYgLuDZzEvRxY4GDhA7PRnSiHCtxvmPB6MNrmk0/DX5TxGPhgIB
-	9RlbWAx3B/kFqge/7ScQZd6BS6pB1ZkdN8CUxn5LP2cC1nwyr03E7JvEPa41XDI+rc+WP/ZQ8JStD
-	U4Va4qE4xBArZiep01/Q==;
+	List-Owner; bh=+YW0fXTncNwr74vZsVugPAYolaqS94ccSPsYBIypRtQ=; b=NBTwoxJX+x0jHS
+	eyYCylSvZDzhgYXQOOEDiCy+Qr0jDVaNwLKsX8ncfMoyna2wioSZrLALiRV7/X07lXSn8BElkEX83
+	SOSfUAalzfSbs/+Au/cmYvi/+LHVUxxTS6yYM52zYhJA8OJe4l6ZzVS3V0Y77vHNeAHYVwfMF8Qvm
+	org8pliJwVLe9Noibl/BPcRmrkQzaFFRzjx5C5jDiSoNAJ0sEZAeG7395MkbW+h/GXKBqxreaXTkv
+	ZRU4jR7AWMVWlXqSXDBrvwjrUrfrrto+QI/I7ompM4yqmPv5zvWazqF8ih0JzgLmApeD/+wEV+3Zt
+	YWoYehjWcWYxZUY4Hz6Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r69kE-004stg-2u;
-	Thu, 23 Nov 2023 13:27:50 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1r69z7-004vT9-34;
+	Thu, 23 Nov 2023 13:43:13 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r69k9-004ss0-0J
-	for kexec@lists.infradead.org;
-	Thu, 23 Nov 2023 13:27:46 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1700746062;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XlCNcFS7+nGLr8i/szhMFxjsyTieH5TNHlOyuSvsHHk=;
-	b=N4/SHSmUGDfNdy3EytrA6vVPz8w5EiVjWxkSvKyI4ZAYzcOUBXfiNV/VluW4er4kybzMkF
-	gPeFmPUjd52ZrjeDENZEiSYHnXaI0zjc1zHzthK8l2hLXyNx8jqWKNH4YUVMlRWnjii+++
-	uLr5NBAUFJkyyXwLCje8GBQDmF7DGh0=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-313-LNixVYSgNR6zfKelwTaWZg-1; Thu,
- 23 Nov 2023 08:27:38 -0500
-X-MC-Unique: LNixVYSgNR6zfKelwTaWZg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 368F43C027B1;
-	Thu, 23 Nov 2023 13:27:38 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.97])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id AB1BD36E2;
-	Thu, 23 Nov 2023 13:27:29 +0000 (UTC)
-Date: Thu, 23 Nov 2023 21:27:25 +0800
-From: Baoquan He <bhe@redhat.com>
-To: akpm@linux-foundation.org
-Cc: kexec@lists.infradead.org, x86@kernel.org, linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ebiederm@xmission.com, takahiro.akashi@linaro.org
-Subject: Re: [PATCH v2 1/2] resource: add walk_system_ram_res_rev()
-Message-ID: <ZV9TPRw65TiCeXyS@MiWiFi-R3L-srv>
-References: <20231114091658.228030-1-bhe@redhat.com>
- <20231114091658.228030-2-bhe@redhat.com>
- <ZVTA6z/06cLnWKUz@MiWiFi-R3L-srv>
+	id 1r69z4-004vRd-0m;
+	Thu, 23 Nov 2023 13:43:12 +0000
+Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3ANCqhr1021827;
+	Thu, 23 Nov 2023 13:43:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=KRR7/FLcHHfVYwLFqhd7C1q8EsSoikY6fbR7WzttxZ0=;
+ b=CWH0WcI541sXHITD98nZFLJRSHvY/2sZviXkWIExTTJkEDFE6RyYbe2Fn28iSJkwDHOx
+ bp+4nuH6IfU2T+PmhoHoZyCTaLcu5UVqTScD17TmhAai1hod4sMQze9TRP9Y1Ig/3xcl
+ vG8MWUOCxQV3vLgRqDAplyQtocFuHZnVHyqS5V4uGb+dQF/As8Yqx9AsUpbWRGy2ueEV
+ BhIHh0gi/UOdZ4QDwomCxJkc49TLQ1IH3Nq87gzfk/LVudCq4mTIpYF0tuAQaPI9e/0f
+ OPlRLB2ADxfbnpDimwPXJd/LAt/Tqxse+z/lxeKZ+B4clUbYX4ZGivGV6QcY0ep8gEnJ jw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uj74k15td-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 23 Nov 2023 13:43:05 +0000
+Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3ANDh5Id032355;
+	Thu, 23 Nov 2023 13:43:05 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uj74k15t2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 23 Nov 2023 13:43:05 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3ANBIg1p003481;
+	Thu, 23 Nov 2023 13:43:04 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3uf7ktfp4h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 23 Nov 2023 13:43:04 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3ANDh2jE8913568
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 23 Nov 2023 13:43:02 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8C4F120040;
+	Thu, 23 Nov 2023 13:43:02 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DCBDE20043;
+	Thu, 23 Nov 2023 13:43:01 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.171.80.84])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 23 Nov 2023 13:43:01 +0000 (GMT)
+Date: Thu, 23 Nov 2023 14:43:00 +0100
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        akpm@linux-foundation.org, ignat@cloudflare.com,
+        eric_devolder@yahoo.com
+Subject: Re: [PATCH 3/3] s390/Kconfig: drop select of KEXEC
+Message-ID: <ZV9W5AmmYhCFmN9e@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+References: <20231123073652.507034-1-bhe@redhat.com>
+ <20231123073652.507034-4-bhe@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <ZVTA6z/06cLnWKUz@MiWiFi-R3L-srv>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+In-Reply-To: <20231123073652.507034-4-bhe@redhat.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: p97UOpER7j1y6xI193PSMYOEsM0_ReRh
+X-Proofpoint-ORIG-GUID: Q8_fDX5_sC5i010zY_FRtWNuycP5JyR9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-11-23_12,2023-11-22_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
+ adultscore=0 mlxscore=0 spamscore=0 malwarescore=0 impostorscore=0
+ priorityscore=1501 lowpriorityscore=0 clxscore=1011 mlxlogscore=357
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311060000 definitions=main-2311230098
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231123_052745_222644_05331665 
-X-CRM114-Status: GOOD (  25.29  )
+X-CRM114-CacheID: sfid-20231123_054310_616352_1BB3F10A 
+X-CRM114-Status: GOOD (  22.96  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,130 +112,59 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Andrew,
+On Thu, Nov 23, 2023 at 03:36:52PM +0800, Baoquan He wrote:
 
-On 11/15/23 at 09:00pm, Baoquan He wrote:
-> This function, being a variant of walk_system_ram_res() introduced in
-> commit 8c86e70acead ("resource: provide new functions to walk through
-> resources"), walks through a list of all the resources of System RAM
-> in reversed order, i.e., from higher to lower.
+Hi Baoquan,
+
+> No proof is found to require that S390 architecture has to select
+> KEXEC. At least from my testing at below, dropping select of KEXEC won't
+> impact anything.
+
+It does impact the outcome of defconfigs.
+Namely, CONFIG_KEXEC is not set with this patch.
+
+> ===testing 1===
+> CONFIG_CRASH_CORE=y
+> CONFIG_KEXEC_CORE=y
+> CONFIG_CRASH_DUMP=y
+> ===
 > 
-> It will be used in kexec_file code to load kernel, initrd etc when
-> preparing kexec reboot.
-> 
-> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> ===testing 2===
+> CONFIG_CRASH_CORE=y
+> CONFIG_KEXEC_CORE=y
+> CONFIG_KEXEC_FILE=y
+> CONFIG_CRASH_DUMP=y
+> ===
+
+Unfortunately, I do not quite realize what these testings were
+and what is the difference between the two.
+
+> So drop the select of KEXEC now.
+
+I suggest dropping this patch. Once the previous two are upstream
+we would remove 'select KEXEC' from Kconfig together with defconfig
+updates.
+
 > Signed-off-by: Baoquan He <bhe@redhat.com>
 > ---
-> v1->v2:
-> - Use kvrealloc() to reallocate memory instead of kvcalloc(), this
->   simplifies code. Suggested by Andrew.
+>  arch/s390/Kconfig | 1 -
+>  1 file changed, 1 deletion(-)
 > 
->  include/linux/ioport.h |  3 +++
->  kernel/resource.c      | 57 ++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 60 insertions(+)
-
-Gentle ping.
-
-Could you pick this patchset into next tree so that it can be run on
-testing robots?
-
-Thanks
-Baoquan
-
-> 
-> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-> index 14f5cfabbbc8..db7fe25f3370 100644
-> --- a/include/linux/ioport.h
-> +++ b/include/linux/ioport.h
-> @@ -331,6 +331,9 @@ extern int
->  walk_system_ram_res(u64 start, u64 end, void *arg,
->  		    int (*func)(struct resource *, void *));
->  extern int
-> +walk_system_ram_res_rev(u64 start, u64 end, void *arg,
-> +			int (*func)(struct resource *, void *));
-> +extern int
->  walk_iomem_res_desc(unsigned long desc, unsigned long flags, u64 start, u64 end,
->  		    void *arg, int (*func)(struct resource *, void *));
->  
-> diff --git a/kernel/resource.c b/kernel/resource.c
-> index 866ef3663a0b..e8a244300e5b 100644
-> --- a/kernel/resource.c
-> +++ b/kernel/resource.c
-> @@ -27,6 +27,8 @@
->  #include <linux/mount.h>
->  #include <linux/resource_ext.h>
->  #include <uapi/linux/magic.h>
-> +#include <linux/string.h>
-> +#include <linux/vmalloc.h>
->  #include <asm/io.h>
->  
->  
-> @@ -429,6 +431,61 @@ int walk_system_ram_res(u64 start, u64 end, void *arg,
->  				     func);
->  }
->  
-> +/*
-> + * This function, being a variant of walk_system_ram_res(), calls the @func
-> + * callback against all memory ranges of type System RAM which are marked as
-> + * IORESOURCE_SYSTEM_RAM and IORESOUCE_BUSY in reversed order, i.e., from
-> + * higher to lower.
-> + */
-> +int walk_system_ram_res_rev(u64 start, u64 end, void *arg,
-> +				int (*func)(struct resource *, void *))
-> +{
-> +	struct resource res, *rams;
-> +	int rams_size = 16, i;
-> +	unsigned long flags;
-> +	int ret = -1;
-> +
-> +	/* create a list */
-> +	rams = kvcalloc(rams_size, sizeof(struct resource), GFP_KERNEL);
-> +	if (!rams)
-> +		return ret;
-> +
-> +	flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
-> +	i = 0;
-> +	while ((start < end) &&
-> +		(!find_next_iomem_res(start, end, flags, IORES_DESC_NONE, &res))) {
-> +		if (i >= rams_size) {
-> +			/* re-alloc */
-> +			struct resource *rams_new;
-> +
-> +			rams_new = kvrealloc(rams, rams_size * sizeof(struct resource),
-> +					     (rams_size + 16) * sizeof(struct resource),
-> +					     GFP_KERNEL);
-> +			if (!rams_new)
-> +				goto out;
-> +
-> +			rams = rams_new;
-> +			rams_size += 16;
-> +		}
-> +
-> +		rams[i].start = res.start;
-> +		rams[i++].end = res.end;
-> +
-> +		start = res.end + 1;
-> +	}
-> +
-> +	/* go reverse */
-> +	for (i--; i >= 0; i--) {
-> +		ret = (*func)(&rams[i], arg);
-> +		if (ret)
-> +			break;
-> +	}
-> +
-> +out:
-> +	kvfree(rams);
-> +	return ret;
-> +}
-> +
->  /*
->   * This function calls the @func callback against all memory ranges, which
->   * are ranges marked as IORESOURCE_MEM and IORESOUCE_BUSY.
+> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+> index 3bec98d20283..1aec2e692dca 100644
+> --- a/arch/s390/Kconfig
+> +++ b/arch/s390/Kconfig
+> @@ -217,7 +217,6 @@ config S390
+>  	select HAVE_VIRT_CPU_ACCOUNTING_IDLE
+>  	select IOMMU_HELPER		if PCI
+>  	select IOMMU_SUPPORT		if PCI
+> -	select KEXEC
+>  	select MMU_GATHER_MERGE_VMAS
+>  	select MMU_GATHER_NO_GATHER
+>  	select MMU_GATHER_RCU_TABLE_FREE
 > -- 
-> 2.41.0
-> 
 
+Thanks!
 
 _______________________________________________
 kexec mailing list
