@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 46D6AC61D97
-	for <kexec@archiver.kernel.org>; Fri, 24 Nov 2023 01:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 49594C61D85
+	for <kexec@archiver.kernel.org>; Fri, 24 Nov 2023 01:58:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=L8x8LvYzKLBieJ1ZgebG9Wpnli4LUBHJCH5ok5e3V4c=; b=hgOz7XaPBfAHGv
-	nMi/jvj4fypkjEWytcR4qgmB5LV7xVg8UOdcrdnzep9n/+OlIMeZBOO/cthqybtnkJaREiVIci36j
-	ENZ+rR2pLxMCzWP8m1KvgFLN6TDSV12OQXd3GnvpfIw6gMrwjKKy3lcrH/7TSCzMlVFKwrUr6dhVb
-	vxmKV/lAeQ63xmC39Moci+oLYeTITfg21mqwFymcXIb8SA4tZmVY7xLB7M2IiNhs9mHx2c5iUENDh
-	rH1bb324W0ea1R6W2TgJoNLY1my35upMG8jDlfqkFrH9vXBHESEYafSACSjBWgbQD0WVYKj/TnOHP
-	U0Qq5+n39Td4EpoS9Wgg==;
+	List-Owner; bh=v669aqwyh5ussC6pAdAFA17aOhUMrPXaj7sB5SbYHhQ=; b=P37sOV8q43AQUK
+	WI8Ka6X2k8qkGnqh3FsQgWprlexRwlv9NiZHC3Wor0eZY7TgbjkZTneK31wAjxfSjMrO3rZGjIS7D
+	DRgFShuOrusXN5Y+hY90klJ4SYlMsrCbbmupg3Ff9PTxUqA5Bc9WdJs7aZDv086J1nWLTrkx0mJ/a
+	iscgJ92l3B4L3Tp+0dX9Vr4oxExdzwGo0r+4K6QmuwwgoJDN3Fa8aDMUewen3fDYV3ZpYIvDIUX8s
+	6ug5ZBdKRLqO/oOXfn2njXyZJCkbXZsisAjXB5x+uxyiaCgRgHb+eIaCjs5NkIzTzwD8xrzCJHyDG
+	6BMWC5hWCjqFbxbs6e+Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r6LQa-005x8r-1L;
-	Fri, 24 Nov 2023 01:56:20 +0000
+	id 1r6LSM-005xQT-1W;
+	Fri, 24 Nov 2023 01:58:10 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r6LQW-005x7e-2E
+	id 1r6LSJ-005xPB-0b
 	for kexec@lists.infradead.org;
-	Fri, 24 Nov 2023 01:56:18 +0000
+	Fri, 24 Nov 2023 01:58:09 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1700790975;
+	s=mimecast20190719; t=1700791086;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=kwa+nrELWZT3YCayKL8lw8jcAr2lDX2wSVDUihgmA1A=;
-	b=IC3TWY7MYzLrL/xkKJ/iBC2z9tq9VNdC80M17jfgCIENRAN3DgU7+9ihLTcNd/zEAfuBVz
-	iJFzUbqWINF+6zyFRNLf57QHcsUtd3+1vHm3U92piMYaYMg7AxsePy4hoJpRXIZIqmXAwL
-	k7Ule7FObjhcfUyJkSPvsR+USd1K6EE=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-57-7n5sp70ZOb663DWE_NI99A-1; Thu, 23 Nov 2023 20:56:12 -0500
-X-MC-Unique: 7n5sp70ZOb663DWE_NI99A-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	bh=SiHqBG5n3pSa5R94END0/8W0OBeOhpXL3D/OFSohC2M=;
+	b=ijRXAftj8POW/y+UTgPvOP2WCvvQLP/poHkJ8GaGZv4HXe1owr3938fZAoc8et9G8KW4dV
+	3jIiq5LzyIZYHq3c8wfqMI5wbJlJbgfj75SL0EiiBW6Jhc2gWDyN4QfL6JCerO+jv2fZBu
+	vOf6I+bari0+hY1HBzlxmL4HHfYUdhs=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-9-_W8SERA3N_Gf5HeqVWenIA-1; Thu,
+ 23 Nov 2023 20:58:02 -0500
+X-MC-Unique: _W8SERA3N_Gf5HeqVWenIA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id AB66180C345;
-	Fri, 24 Nov 2023 01:56:11 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A870E28EC110;
+	Fri, 24 Nov 2023 01:58:01 +0000 (UTC)
 Received: from localhost (unknown [10.72.112.8])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7126236E2;
-	Fri, 24 Nov 2023 01:56:06 +0000 (UTC)
-Date: Fri, 24 Nov 2023 09:56:03 +0800
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 03C1B2166B2A;
+	Fri, 24 Nov 2023 01:58:00 +0000 (UTC)
+Date: Fri, 24 Nov 2023 09:57:57 +0800
 From: "bhe@redhat.com" <bhe@redhat.com>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: "Liu, Yujie" <yujie.liu@intel.com>, lkp <lkp@intel.com>,
+To: Yujie Liu <yujie.liu@intel.com>
+Cc: lkp <lkp@intel.com>,
 	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
 	"kexec@lists.infradead.org" <kexec@lists.infradead.org>,
 	"x86@kernel.org" <x86@kernel.org>,
@@ -65,21 +65,21 @@ Cc: "Liu, Yujie" <yujie.liu@intel.com>, lkp <lkp@intel.com>,
 	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
 	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 Subject: Re: [PATCH 2/7] kexec_file: print out debugging message if required
-Message-ID: <ZWACs8vMnTq+hOrE@MiWiFi-R3L-srv>
+Message-ID: <ZWADJcg5smQHZzMT@MiWiFi-R3L-srv>
 References: <20231114153253.241262-3-bhe@redhat.com>
  <202311160431.BXPc7NO9-lkp@intel.com>
  <ZVcvBft/T3cbRBWr@MiWiFi-R3L-srv>
  <39ccb4fda795a76996cf6d1c3b25909692358211.camel@intel.com>
  <ZVdyLdAzgNBXfjiW@MiWiFi-R3L-srv>
  <ZV9YYEK4L160ECQ+@MiWiFi-R3L-srv>
- <20231123154127.GA3487126@dev-arch.thelio-3990X>
+ <ZV/55OkN7bV02LY8@yujie-X299>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20231123154127.GA3487126@dev-arch.thelio-3990X>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+In-Reply-To: <ZV/55OkN7bV02LY8@yujie-X299>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231123_175616_808031_24C337E2 
-X-CRM114-Status: GOOD (  29.16  )
+X-CRM114-CacheID: sfid-20231123_175807_387355_FB936801 
+X-CRM114-Status: GOOD (  26.10  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -96,7 +96,7 @@ Content-Transfer-Encoding: quoted-printable
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 11/23/23 at 08:41am, Nathan Chancellor wrote:
+On 11/24/23 at 09:18am, Yujie Liu wrote:
 > On Thu, Nov 23, 2023 at 09:49:20PM +0800, bhe@redhat.com wrote:
 > > On 11/17/23 at 10:01pm, Baoquan He wrote:
 > > > On 11/17/23 at 09:37am, Liu, Yujie wrote:
@@ -164,41 +164,18 @@ nd? We
 > > quite sure.
 > =
 
-> Shouldn't you be able to run
+> Setting "COMPILER=3Dclang-16" is exactly the correct fix and should
+> reproduce the issue in this report. We've fixed the steps of reproducer
+> but this will only take effect in future reports.
+
+Thanks, Yujie. I thought you were asking me to use "COMPILER=3Dclang-16"
+to get information to debug. I have done the testing according to
+Nathan's suggestion and can confirm it's the same issue as the one on
+arm64. Will post v2.
+
 > =
 
->   $ COMPILER_INSTALL_PATH=3D$HOME/0day COMPILER=3Dclang-16 ~/bin/make.cro=
-ss W=3D1 O=3Dbuild_dir ARCH=3Dhexagon SHELL=3D/bin/bash kernel/
-> =
-
-
-Yes, I can reproduce it, it's the same issue as the one reported on
-arm64. I thought Yujie is using the clang-16 to debug. Thanks for help.
-
-> after the command you just ran to reproduce this now? It is
-> essentially the same fix that they mention above but for the second
-> invocation of make.cross.
-> =
-
-> You can also not even bother with the wrapper altogether if you have the
-> compiler installed in the default path that they provide (W=3D1 is not
-> necessary to reproduce this issue):
-> =
-
->   $ mkdir -p build_dir
->   $ curl -LSso build_dir/.config https://download.01.org/0day-ci/archive/=
-20231116/202311160431.BXPc7NO9-lkp@intel.com/config
->   $ make -skj"$(nproc)" ARCH=3Dhexagon LLVM=3D$HOME/0day/llvm-16.0.6-x86_=
-64/bin/ O=3Dbuild_dir olddefconfig kernel/crash_core.o
->   ...
->   kernel/crash_core.c:554:3: error: call to undeclared function 'kexec_dp=
-rintk'; ISO C99 and later do not support implicit function declarations [-W=
-implicit-function-declaration]
->                   kexec_dprintk("Crash PT_LOAD ELF header. phdr=3D%p vadd=
-r=3D0x%llx, paddr=3D0x%llx, "
->                   ^
->   1 error generated.
-> =
+> > > =
 
 > > > Here you are. Thanks for your quick response.
 > > > ------------------------------
@@ -252,8 +229,6 @@ ng ~/bin/make.cross W=3D1 O=3Dbuild_dir ARCH=3Dhexagon olddefconfig
 > > > > =
 
 > > > =
-
-> > =
 
 > > =
 
