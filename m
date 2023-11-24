@@ -4,59 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id F2BA5C61D97
-	for <kexec@archiver.kernel.org>; Fri, 24 Nov 2023 07:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 73B47C61D97
+	for <kexec@archiver.kernel.org>; Fri, 24 Nov 2023 08:40:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=seMQu8kndNHvAy8FtDkzuMR5XCrICO090WJgP+FgjV8=; b=Hlbh1gYON83xT/
-	Qvj38yPzqTbAe+uue9fOv0bERJnozt0rNfEgig4l+pSWdEi/cJ+03FBd0MQhj+DzsyMVecK5BgDdR
-	uL4pInv/qym5fnFAY4MMzWwig0tJi3kmzJM98uMZ5LpIpfX+6z/lA8iM3tlQuE1qL2t0yq6RiG+H/
-	llPQlkHUyBDokMlZw+9FZ113zYoeFU0J+FPygl4KNoEtRGZRt/1IKN87Fo0+1cTnIp0bmrJYxvtPZ
-	2C6hLeAOzzV3MXhDPquWdJmv6kW54d7f6POlTi9EWY34OwED52LJO9+T7FFSJrUH7wDd/JEd3wkqh
-	F/AzLAqLhbmEJCQFJEuQ==;
+	List-Owner; bh=wu3rFqCvnSgtkAU1Jsx3nf0xQCqs9YJ9CN3q7jv1NxY=; b=pdn6aZ9sOArCXa
+	/8IjLEZ5fLQWKRIiC+HxxZfu0Tqd9r4Ci9RdKl0mlhZ3jit1L8GgFwwfGvyR6qzPaH7os9R7POlCX
+	dTpI+RPRH8YPAXo0k+yw5OQ6W+yz2p30VfOmPWBYyxAGDzNVXnMuB1PELmv7i83OvVDNMDPVS5YCL
+	rHAzK+ebZvGILPAeUFWmQJvlhqc5efhRLkuuJUStCTtkosClYILU3unO7yU9mAmxtEn3aIVL8Kl3p
+	b7VHlzZju87GOjC1eDsKpG8jXKtWjGG6NZmstmUkH05lMLC5GWIiiTM/6OJn1d9UPM831q5njD8f3
+	Ci+diU1sLwZD/Xsmv88Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r6QQu-006MYf-0w;
-	Fri, 24 Nov 2023 07:17:00 +0000
-Received: from smtprelay0017.hostedemail.com ([216.40.44.17] helo=relay.hostedemail.com)
+	id 1r6Rk2-006XbR-0U;
+	Fri, 24 Nov 2023 08:40:50 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r6QQr-006MXO-1m;
-	Fri, 24 Nov 2023 07:16:58 +0000
-Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 6CC5C409CB;
-	Fri, 24 Nov 2023 07:16:50 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf01.hostedemail.com (Postfix) with ESMTPA id 8CAE160009;
-	Fri, 24 Nov 2023 07:16:47 +0000 (UTC)
-Message-ID: <971ed2ceaeeba882d2b4c39015ee5ae5db3f5e82.camel@perches.com>
+	id 1r6Rjy-006XZJ-3C
+	for kexec@lists.infradead.org;
+	Fri, 24 Nov 2023 08:40:48 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1700815244;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TtiruDUnh8gIdyydjQh1DSHosPodlSxaPwJiylzKhys=;
+	b=UHqYsiPSRGncoRxfnKNePFUKADz3ZK8PoyjcBT9Ksod9CrU3JALsAOTHRC1zPZeE43WTSt
+	3ZM7raZ7VdSglS+C2QGIrNv/UX/rPMOXNYOiKdh9jau9gLGlsiSTfxouNROJIyY9jk8oGK
+	/OEWIZw6IfG/muQRWzQMG5sJB0YAGCk=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-103-QXyK2TnoOxKNhbHg3BDyOw-1; Fri, 24 Nov 2023 03:40:39 -0500
+X-MC-Unique: QXyK2TnoOxKNhbHg3BDyOw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 98B7D828CEA;
+	Fri, 24 Nov 2023 08:40:38 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.8])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id D59C0112130A;
+	Fri, 24 Nov 2023 08:40:36 +0000 (UTC)
+Date: Fri, 24 Nov 2023 16:40:33 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Joe Perches <joe@perches.com>
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	linux-parisc@vger.kernel.org, akpm@linux-foundation.org,
+	nathan@kernel.org, yujie.liu@intel.com
 Subject: Re: [PATCH v2 2/7] kexec_file: print out debugging message if
  required
-From: Joe Perches <joe@perches.com>
-To: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
-Cc: kexec@lists.infradead.org, x86@kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-parisc@vger.kernel.org, 
-	akpm@linux-foundation.org, nathan@kernel.org, yujie.liu@intel.com
-Date: Thu, 23 Nov 2023 23:16:46 -0800
-In-Reply-To: <20231124033642.520686-3-bhe@redhat.com>
+Message-ID: <ZWBhgfhFONEYcJZf@MiWiFi-R3L-srv>
 References: <20231124033642.520686-1-bhe@redhat.com>
-	 <20231124033642.520686-3-bhe@redhat.com>
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+ <20231124033642.520686-3-bhe@redhat.com>
+ <971ed2ceaeeba882d2b4c39015ee5ae5db3f5e82.camel@perches.com>
 MIME-Version: 1.0
-X-Rspamd-Queue-Id: 8CAE160009
-X-Stat-Signature: r4oqtahenar8h64oxpqpoeo1n6zbhmda
-X-Rspamd-Server: rspamout08
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX19c0OHTlDrKhb/Xt6M9rvhAh1ufC3tVTnk=
-X-HE-Tag: 1700810207-170549
-X-HE-Meta: U2FsdGVkX1+zlhNkZ9x3SOlShl6+X96epMaKjfHehHKyBsMtcvgR7F6Ii1tgURKZMXTJ4v77gzWxOCKJjrZ32dyx27aEd7KJtn+JaKan9d1JoOg5vx5spjNriOlsrJsAsKTNWoXgbsaaF0Aw9htJa6iNVZZnaP/omO8ddnk/a1hUgTJ/UY7dIv6hTgWYnyt0dTxqhxdXpQIY0i9zYhv989Np0jXyZefmSBvNLtvm6dtRPbiigZYQ2nQLsoXdSGX2/vxVXndB66Niab3Fp1e04lrREsrM7se2cR96ydP7F6f9OXdC0ttkSA5n1SXD5cD7
+Content-Disposition: inline
+In-Reply-To: <971ed2ceaeeba882d2b4c39015ee5ae5db3f5e82.camel@perches.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231123_231657_665838_654E6F83 
-X-CRM114-Status: UNSURE (   9.41  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20231124_004047_114544_FCD11C2D 
+X-CRM114-Status: GOOD (  13.02  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -73,45 +87,50 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, 2023-11-24 at 11:36 +0800, Baoquan He wrote:
-> Replace pr_debug() with the newly added kexec_dprintk() in kexec_file
-> loading related codes.
+On 11/23/23 at 11:16pm, Joe Perches wrote:
+> On Fri, 2023-11-24 at 11:36 +0800, Baoquan He wrote:
+> > Replace pr_debug() with the newly added kexec_dprintk() in kexec_file
+> > loading related codes.
+> 
+> trivia for pr_debug -> kexec_dprintk conversions for
+> the entire patch set:
 
-trivia for pr_debug -> kexec_dprintk conversions for
-the entire patch set:
+OK, will check all patchset and adjust the indendation, thanks.
 
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-[]
-> @@ -551,9 +551,12 @@ int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_map,
->  		phdr->p_filesz = phdr->p_memsz = mend - mstart + 1;
->  		phdr->p_align = 0;
->  		ehdr->e_phnum++;
-> -		pr_debug("Crash PT_LOAD ELF header. phdr=%p vaddr=0x%llx, paddr=0x%llx, sz=0x%llx e_phnum=%d p_offset=0x%llx\n",
-> +#ifdef CONFIG_KEXEC_FILE
-> +		kexec_dprintk("Crash PT_LOAD ELF header. phdr=%p vaddr=0x%llx, paddr=0x%llx, "
-> +			"sz=0x%llx e_phnum=%d p_offset=0x%llx\n",
->  			phdr, phdr->p_vaddr, phdr->p_paddr, phdr->p_filesz,
->  			ehdr->e_phnum, phdr->p_offset);
-
-It's good form to rewrap continuation lines to the open parenthesis
-
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-[]
-> @@ -389,11 +391,12 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
->  	if (ret)
->  		goto out;
->  
-> +	kexec_dprintk("nr_segments = %lu\n", image->nr_segments);
->  	for (i = 0; i < image->nr_segments; i++) {
->  		struct kexec_segment *ksegment;
->  
->  		ksegment = &image->segment[i];
-> -		pr_debug("Loading segment %d: buf=0x%p bufsz=0x%zx mem=0x%lx memsz=0x%zx\n",
-> +		kexec_dprintk("segment[%d]: buf=0x%p bufsz=0x%zx mem=0x%lx memsz=0x%zx\n",
->  			 i, ksegment->buf, ksegment->bufsz, ksegment->mem,
->  			 ksegment->memsz);
-
-here too etc...
+> 
+> > diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> []
+> > @@ -551,9 +551,12 @@ int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_map,
+> >  		phdr->p_filesz = phdr->p_memsz = mend - mstart + 1;
+> >  		phdr->p_align = 0;
+> >  		ehdr->e_phnum++;
+> > -		pr_debug("Crash PT_LOAD ELF header. phdr=%p vaddr=0x%llx, paddr=0x%llx, sz=0x%llx e_phnum=%d p_offset=0x%llx\n",
+> > +#ifdef CONFIG_KEXEC_FILE
+> > +		kexec_dprintk("Crash PT_LOAD ELF header. phdr=%p vaddr=0x%llx, paddr=0x%llx, "
+> > +			"sz=0x%llx e_phnum=%d p_offset=0x%llx\n",
+> >  			phdr, phdr->p_vaddr, phdr->p_paddr, phdr->p_filesz,
+> >  			ehdr->e_phnum, phdr->p_offset);
+> 
+> It's good form to rewrap continuation lines to the open parenthesis
+> 
+> > diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> []
+> > @@ -389,11 +391,12 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+> >  	if (ret)
+> >  		goto out;
+> >  
+> > +	kexec_dprintk("nr_segments = %lu\n", image->nr_segments);
+> >  	for (i = 0; i < image->nr_segments; i++) {
+> >  		struct kexec_segment *ksegment;
+> >  
+> >  		ksegment = &image->segment[i];
+> > -		pr_debug("Loading segment %d: buf=0x%p bufsz=0x%zx mem=0x%lx memsz=0x%zx\n",
+> > +		kexec_dprintk("segment[%d]: buf=0x%p bufsz=0x%zx mem=0x%lx memsz=0x%zx\n",
+> >  			 i, ksegment->buf, ksegment->bufsz, ksegment->mem,
+> >  			 ksegment->memsz);
+> 
+> here too etc...
+> 
 
 
 _______________________________________________
