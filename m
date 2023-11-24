@@ -4,69 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 858DEC61DF7
-	for <kexec@archiver.kernel.org>; Fri, 24 Nov 2023 19:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3C5B8C61D97
+	for <kexec@archiver.kernel.org>; Fri, 24 Nov 2023 19:58:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:Message-ID:
 	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-	List-Owner; bh=qcP46tLzb68/KGorXH5wai3UB2USali6TA8aMqV1pgc=; b=a5hYjgCkaJWGQe
-	5iUntD6YjqKryqwCGIY+9r96qMNF+mSu4cshFQcFDPyyzTUuiEoGCdSqTVQ22P092NNM75Y7B7y9/
-	WnCr4x+1di+F+A/CGHnmQnpTKTS+tl21eV++N+VKZEPUTOlE3enWKjO8ID8VwM/DiNNpwfrK80q8W
-	9RFMrdE4s9+0gTQ9EKmo2JvhJxrmzeo1xxPFsHusk/FNQaQgOzRb2pEHHK8ooxfwiO7VBQW56BPBB
-	SobkE8OP8AL9c1n9anSI26ud8JzJ80J8aChKUcOlOeCEj48+wa7O/RpUp+SatN0hJdqZN/5FmzaRN
-	SWXSG7/aw+pttyStW9DA==;
+	List-Owner; bh=s5005BSkxArKq/21tLCrNGSFxWIEGQdqNUg+/m2pOrQ=; b=xWPHM6MMK/a9Ng
+	8gIHQaIN5Iw1toprJCZgQB4i6U+hs/+RqKN44qKmS+09/Zc6dYJpKUg/ucJBs2+DAcnXEwTNTh3GR
+	KoGm6wAcZKxxtz7cN7d9SCBeX3MlZKl66Jw5Fq8dbZI62+FcVsVBGmZUyktjPyLBn4j3s+PYNeUNL
+	Ogn46R0SYuQWEy3nRBIR0C37LNwCpM5HPrBfM5XMLUMPL/AOVaL1B+xDEWy5Xh6zTp92wWdnhO6JU
+	aOAPIo8y6nlOgbxQPDaThi/qHimc2Q/EI0zpEhQu3AVypOJSk/oW9JS+jxXGPtilLPXA9j9nwc1L7
+	OBwlHOYe+ddlkc6avD3g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r6cJI-007zCD-2L;
-	Fri, 24 Nov 2023 19:57:56 +0000
+	id 1r6cJS-007zDw-1T;
+	Fri, 24 Nov 2023 19:58:06 +0000
 Received: from smtp-out2.suse.de ([195.135.223.131])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r6cJF-007zBj-1o
+	id 1r6cJQ-007zDO-0r
 	for kexec@lists.infradead.org;
-	Fri, 24 Nov 2023 19:57:55 +0000
+	Fri, 24 Nov 2023 19:58:05 +0000
 Received: from relay2.suse.de (unknown [149.44.160.134])
-	by smtp-out2.suse.de (Postfix) with ESMTP id 469591FE89;
-	Fri, 24 Nov 2023 19:57:51 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTP id CF9B21FE90;
+	Fri, 24 Nov 2023 19:58:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1700855871; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1700855882; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:  in-reply-to:in-reply-to;
-	bh=W/fT1pLSNri41feNsUCmL949IgVkjP0z0mkUiKdBhCw=;
-	b=GyCU9aqNKGMA1KdMC57xu14BtLdrUQSTPKe20/CvTYCk74TbAQZKm2diGqUl6kJ9uoh+AZ
-	0lPJzJFYCZ3VJ7qTMZOELCbZXaXNqheKH5/m6F1L6oKEqYo0NwYUPE7VTrCJLrG33lvYI/
-	wY5KvEnmClnS0SQ5rRRy2kZGlm5RaSI=
+	bh=rL7u06+WD+aE2+8equGsGoE7y/tVOqmNf5x3nllorEI=;
+	b=KjB4L2sXfNur0f/FabkZEkw3kNGcXvWSv11EpyAEscgbnt7t+V11Up9d4mybmigCfOdWmZ
+	jzcbAdjYNx62MzhKVTCJo/ms7tY0yuWDSJcCC4wPEbZEJ3D2+o8UqSNWyZvzEghXELnb20
+	cl4eUyNKIuxgFdHPU0spXJtUiaGD128=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1700855871;
+	s=susede2_ed25519; t=1700855882;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:  in-reply-to:in-reply-to;
-	bh=W/fT1pLSNri41feNsUCmL949IgVkjP0z0mkUiKdBhCw=;
-	b=BquKKDNfVhyNnLh2p64LgZzw/GK7mILivQI74biCSPeKBsjmm4iDFIjwm+C7BHkVOBXLLw
-	m/2XTBZVbZDkqIAQ==
+	bh=rL7u06+WD+aE2+8equGsGoE7y/tVOqmNf5x3nllorEI=;
+	b=Cw40MhUyvssBlKCwj8rHAwDqF5hVptjseRaftR9uOGzG+83CzXWkyqoVKylaTxMxO0BzjZ
+	vSPKUofr9NpUDxCQ==
 Received: from localhost (dwarf.suse.cz [10.100.12.32])
-	by relay2.suse.de (Postfix) with ESMTP id 700D72C145;
-	Fri, 24 Nov 2023 19:57:49 +0000 (UTC)
-Date: Fri, 24 Nov 2023 20:57:49 +0100
+	by relay2.suse.de (Postfix) with ESMTP id 103522C145;
+	Fri, 24 Nov 2023 19:58:01 +0000 (UTC)
+Date: Fri, 24 Nov 2023 20:58:00 +0100
 From: Jiri Bohac <jbohac@suse.cz>
 To: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
 	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org, mhocko@suse.cz
-Subject: [PATCH 1/4] kdump: add crashkernel cma suffix
-Message-ID: <ZWEAPXiCCgAf1WrY@dwarf.suse.cz>
+Subject: [PATCH 2/4] kdump: implement reserve_crashkernel_cma
+Message-ID: <ZWEASEz37xE2Cmb5@dwarf.suse.cz>
 MIME-Version: 1.0
 Content-Disposition: inline
 In-Reply-To: <ZWD_fAPqEWkFlEkM@dwarf.suse.cz>
-X-Spamd-Bar: ++++++++++++++++++
+X-Spamd-Bar: +++++++++++++
 X-Rspamd-Server: rspamd1
-X-Rspamd-Queue-Id: 469591FE89
+X-Rspamd-Queue-Id: CF9B21FE90
 Authentication-Results: smtp-out2.suse.de;
 	dkim=none;
 	dmarc=none;
 	spf=pass (smtp-out2.suse.de: domain of jbohac@suse.cz designates 149.44.160.134 as permitted sender) smtp.mailfrom=jbohac@suse.cz
-X-Spamd-Result: default: False [18.59 / 50.00];
+X-Spamd-Result: default: False [13.49 / 50.00];
 	 RDNS_NONE(1.00)[];
-	 BAYES_SPAM(5.10)[100.00%];
 	 SPAMHAUS_XBL(0.00)[149.44.160.134:from];
 	 TO_DN_SOME(0.00)[];
 	 R_SPF_ALLOW(-0.20)[+ip4:149.44.0.0/16:c];
@@ -94,8 +93,8 @@ X-Spamd-Result: default: False [18.59 / 50.00];
 	 RCVD_COUNT_TWO(0.00)[2];
 	 HFILTER_HOSTNAME_UNKNOWN(2.50)[]
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231124_115753_769754_84474AFA 
-X-CRM114-Status: GOOD (  14.89  )
+X-CRM114-CacheID: sfid-20231124_115804_469789_4DB120A0 
+X-CRM114-Status: GOOD (  12.64  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -112,238 +111,117 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Add a new optional ",cma" suffix to the crashkernel= command line option.
+reserve_crashkernel_cma() reserves CMA ranges for the
+crash kernel. If allocating the requested size fails, 
+try to reserve in smaller pieces.
 
-Add a new cma_size parameter to parse_crashkernel().
-When not NULL, call __parse_crashkernel to parse the CMA
-reservation size from "crashkernel=size,cma" and store it 
-in cma_size.
-
-Set cma_size to NULL in all calls to parse_crashkernel().
+Store the reserved ranges in the crashk_cma_ranges array
+and the number of ranges in crashk_cma_cnt.
 
 Signed-off-by: Jiri Bohac <jbohac@suse.cz>
----
- arch/arm/kernel/setup.c              |  2 +-
- arch/arm64/mm/init.c                 |  2 +-
- arch/loongarch/kernel/setup.c        |  2 +-
- arch/mips/kernel/setup.c             |  2 +-
- arch/powerpc/kernel/fadump.c         |  2 +-
- arch/powerpc/kexec/core.c            |  2 +-
- arch/powerpc/mm/nohash/kaslr_booke.c |  2 +-
- arch/riscv/mm/init.c                 |  2 +-
- arch/s390/kernel/setup.c             |  2 +-
- arch/sh/kernel/machine_kexec.c       |  2 +-
- arch/x86/kernel/setup.c              |  2 +-
- include/linux/crash_core.h           |  3 ++-
- kernel/crash_core.c                  | 20 ++++++++++++++++----
- 13 files changed, 29 insertions(+), 16 deletions(-)
 
-diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
-index ff2299ce1ad7..cb940553c757 100644
---- a/arch/arm/kernel/setup.c
-+++ b/arch/arm/kernel/setup.c
-@@ -1010,7 +1010,7 @@ static void __init reserve_crashkernel(void)
- 	total_mem = get_total_mem();
- 	ret = parse_crashkernel(boot_command_line, total_mem,
- 				&crash_size, &crash_base,
--				NULL, NULL);
-+				NULL, NULL, NULL);
- 	/* invalid value specified or crashkernel=0 */
- 	if (ret || !crash_size)
- 		return;
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 74c1db8ce271..819b8979584c 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -105,7 +105,7 @@ static void __init arch_reserve_crashkernel(void)
- 
- 	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
- 				&crash_size, &crash_base,
--				&low_size, &high);
-+				&low_size, NULL, &high);
- 	if (ret)
- 		return;
- 
-diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-index d183a745fb85..0489c8188b83 100644
---- a/arch/loongarch/kernel/setup.c
-+++ b/arch/loongarch/kernel/setup.c
-@@ -266,7 +266,7 @@ static void __init arch_parse_crashkernel(void)
- 	total_mem = memblock_phys_mem_size();
- 	ret = parse_crashkernel(boot_command_line, total_mem,
- 				&crash_size, &crash_base,
--				NULL, NULL);
-+				NULL, NULL, NULL);
- 	if (ret < 0 || crash_size <= 0)
- 		return;
- 
-diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index 2d2ca024bd47..98afa80ec002 100644
---- a/arch/mips/kernel/setup.c
-+++ b/arch/mips/kernel/setup.c
-@@ -456,7 +456,7 @@ static void __init mips_parse_crashkernel(void)
- 	total_mem = memblock_phys_mem_size();
- 	ret = parse_crashkernel(boot_command_line, total_mem,
- 				&crash_size, &crash_base,
--				NULL, NULL);
-+				NULL, NULL, NULL);
- 	if (ret != 0 || crash_size <= 0)
- 		return;
- 
-diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
-index d14eda1e8589..6fa5ab01f4e8 100644
---- a/arch/powerpc/kernel/fadump.c
-+++ b/arch/powerpc/kernel/fadump.c
-@@ -313,7 +313,7 @@ static __init u64 fadump_calculate_reserve_size(void)
- 	 * memory at a predefined offset.
- 	 */
- 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
--				&size, &base, NULL, NULL);
-+				&size, &base, NULL, NULL, NULL);
- 	if (ret == 0 && size > 0) {
- 		unsigned long max_size;
- 
-diff --git a/arch/powerpc/kexec/core.c b/arch/powerpc/kexec/core.c
-index 85846cadb9b5..c1e0afd94c90 100644
---- a/arch/powerpc/kexec/core.c
-+++ b/arch/powerpc/kexec/core.c
-@@ -112,7 +112,7 @@ void __init reserve_crashkernel(void)
- 	total_mem_sz = memory_limit ? memory_limit : memblock_phys_mem_size();
- 	/* use common parsing */
- 	ret = parse_crashkernel(boot_command_line, total_mem_sz,
--			&crash_size, &crash_base, NULL, NULL);
-+			&crash_size, &crash_base, NULL, NULL, NULL);
- 	if (ret == 0 && crash_size > 0) {
- 		crashk_res.start = crash_base;
- 		crashk_res.end = crash_base + crash_size - 1;
-diff --git a/arch/powerpc/mm/nohash/kaslr_booke.c b/arch/powerpc/mm/nohash/kaslr_booke.c
-index b4f2786a7d2b..df083fe158b6 100644
---- a/arch/powerpc/mm/nohash/kaslr_booke.c
-+++ b/arch/powerpc/mm/nohash/kaslr_booke.c
-@@ -178,7 +178,7 @@ static void __init get_crash_kernel(void *fdt, unsigned long size)
- 	int ret;
- 
- 	ret = parse_crashkernel(boot_command_line, size, &crash_size,
--				&crash_base, NULL, NULL);
-+				&crash_base, NULL, NULL, NULL);
- 	if (ret != 0 || crash_size == 0)
- 		return;
- 	if (crash_base == 0)
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index 2e011cbddf3a..d0bae97c9a7a 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -1355,7 +1355,7 @@ static void __init arch_reserve_crashkernel(void)
- 
- 	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
- 				&crash_size, &crash_base,
--				&low_size, &high);
-+				&low_size, NULL, &high);
- 	if (ret)
- 		return;
- 
-diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
-index 5701356f4f33..4d18b6b8f5ca 100644
---- a/arch/s390/kernel/setup.c
-+++ b/arch/s390/kernel/setup.c
-@@ -619,7 +619,7 @@ static void __init reserve_crashkernel(void)
- 	int rc;
- 
- 	rc = parse_crashkernel(boot_command_line, ident_map_size,
--			       &crash_size, &crash_base, NULL, NULL);
-+			       &crash_size, &crash_base, NULL, NULL, NULL);
- 
- 	crash_base = ALIGN(crash_base, KEXEC_CRASH_MEM_ALIGN);
- 	crash_size = ALIGN(crash_size, KEXEC_CRASH_MEM_ALIGN);
-diff --git a/arch/sh/kernel/machine_kexec.c b/arch/sh/kernel/machine_kexec.c
-index fa3a7b36190a..e754860a7236 100644
---- a/arch/sh/kernel/machine_kexec.c
-+++ b/arch/sh/kernel/machine_kexec.c
-@@ -154,7 +154,7 @@ void __init reserve_crashkernel(void)
- 	int ret;
- 
- 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
--			&crash_size, &crash_base, NULL, NULL);
-+			&crash_size, &crash_base, NULL, NULL, NULL);
- 	if (ret == 0 && crash_size > 0) {
- 		crashk_res.start = crash_base;
- 		crashk_res.end = crash_base + crash_size - 1;
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 1526747bedf2..f271b2cc3054 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -478,7 +478,7 @@ static void __init arch_reserve_crashkernel(void)
- 
- 	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
- 				&crash_size, &crash_base,
--				&low_size, &high);
-+				&low_size, NULL, &high);
- 	if (ret)
- 		return;
- 
+---
+ include/linux/crash_core.h |  9 +++++++
+ kernel/crash_core.c        | 52 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 61 insertions(+)
+
 diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-index 5126a4fecb44..f1edefcf7377 100644
+index f1edefcf7377..5afe3866d35a 100644
 --- a/include/linux/crash_core.h
 +++ b/include/linux/crash_core.h
-@@ -95,7 +95,8 @@ void final_note(Elf_Word *buf);
+@@ -14,6 +14,13 @@
+ extern struct resource crashk_res;
+ extern struct resource crashk_low_res;
  
- int __init parse_crashkernel(char *cmdline, unsigned long long system_ram,
- 		unsigned long long *crash_size, unsigned long long *crash_base,
--		unsigned long long *low_size, bool *high);
-+		unsigned long long *low_size, unsigned long long *cma_size,
-+		bool *high);
++extern struct range crashk_cma_ranges[];
++#ifdef CONFIG_CMA
++extern int crashk_cma_cnt;
++#else
++#define crashk_cma_cnt 0
++#endif
++
+ #define CRASH_CORE_NOTE_NAME	   "CORE"
+ #define CRASH_CORE_NOTE_HEAD_BYTES ALIGN(sizeof(struct elf_note), 4)
+ #define CRASH_CORE_NOTE_NAME_BYTES ALIGN(sizeof(CRASH_CORE_NOTE_NAME), 4)
+@@ -98,6 +105,8 @@ int __init parse_crashkernel(char *cmdline, unsigned long long system_ram,
+ 		unsigned long long *low_size, unsigned long long *cma_size,
+ 		bool *high);
  
++void __init reserve_crashkernel_cma(unsigned long long cma_size);
++
  #ifdef CONFIG_ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
  #ifndef DEFAULT_CRASH_KERNEL_LOW_SIZE
+ #define DEFAULT_CRASH_KERNEL_LOW_SIZE	(128UL << 20)
 diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index efe87d501c8c..1e952d2e451b 100644
+index 1e952d2e451b..d71ecd59f16b 100644
 --- a/kernel/crash_core.c
 +++ b/kernel/crash_core.c
-@@ -184,11 +184,13 @@ static int __init parse_crashkernel_simple(char *cmdline,
+@@ -15,6 +15,7 @@
+ #include <linux/memblock.h>
+ #include <linux/kexec.h>
+ #include <linux/kmemleak.h>
++#include <linux/cma.h>
  
- #define SUFFIX_HIGH 0
- #define SUFFIX_LOW  1
--#define SUFFIX_NULL 2
-+#define SUFFIX_CMA  2
-+#define SUFFIX_NULL 3
- static __initdata char *suffix_tbl[] = {
--	[SUFFIX_HIGH] = ",high",
--	[SUFFIX_LOW]  = ",low",
--	[SUFFIX_NULL] = NULL,
-+	[SUFFIX_HIGH]	= ",high",
-+	[SUFFIX_LOW]	= ",low",
-+	[SUFFIX_CMA]	= ",cma",
-+	[SUFFIX_NULL]	= NULL,
- };
- 
- /*
-@@ -310,9 +312,11 @@ int __init parse_crashkernel(char *cmdline,
- 			     unsigned long long *crash_size,
- 			     unsigned long long *crash_base,
- 			     unsigned long long *low_size,
-+			     unsigned long long *cma_size,
- 			     bool *high)
- {
- 	int ret;
-+	unsigned long long cma_base;
- 
- 	/* crashkernel=X[@offset] */
- 	ret = __parse_crashkernel(cmdline, system_ram, crash_size,
-@@ -343,6 +347,14 @@ int __init parse_crashkernel(char *cmdline,
- 
- 		*high = true;
- 	}
-+
-+	/*
-+	* optional CMA reservation
-+	* cma_base is ignored
-+	*/
-+	if (cma_size)
-+		__parse_crashkernel(cmdline, 0, cma_size,
-+			&cma_base, suffix_tbl[SUFFIX_CMA]);
+ #include <asm/page.h>
+ #include <asm/sections.h>
+@@ -475,6 +476,57 @@ void __init reserve_crashkernel_generic(char *cmdline,
+ }
  #endif
- 	if (!*crash_size)
- 		ret = -EINVAL;
+ 
++#ifdef CONFIG_CMA
++#define CRASHKERNEL_CMA_RANGES_MAX 4
++
++struct range crashk_cma_ranges[CRASHKERNEL_CMA_RANGES_MAX];
++int crashk_cma_cnt = 0;
++
++void __init reserve_crashkernel_cma(unsigned long long cma_size)
++{
++	unsigned long long request_size = roundup(cma_size, PAGE_SIZE);
++	unsigned long long reserved_size = 0;
++
++	while (cma_size > reserved_size &&
++	       crashk_cma_cnt < CRASHKERNEL_CMA_RANGES_MAX) {
++
++		struct cma *res;
++
++		if (cma_declare_contiguous(0, request_size, 0, 0, 0, false,
++				       "crashkernel", &res)) {
++			/* reservation failed, try half-sized blocks */
++			if (request_size <= PAGE_SIZE)
++				break;
++
++			request_size = roundup(request_size / 2, PAGE_SIZE);
++			continue;
++		}
++
++		crashk_cma_ranges[crashk_cma_cnt].start = cma_get_base(res);
++		crashk_cma_ranges[crashk_cma_cnt].end =
++			crashk_cma_ranges[crashk_cma_cnt].start +
++			cma_get_size(res) - 1;
++		++crashk_cma_cnt;
++		reserved_size += request_size;
++	}
++
++	if (cma_size > reserved_size)
++		pr_warn("crashkernel CMA reservation failed: %lld MB requested, %lld MB reserved in %d ranges\n",
++			cma_size >> 20, reserved_size >> 20, crashk_cma_cnt);
++	else
++		pr_info("crashkernel CMA reserved: %lld MB in %d ranges\n",
++			reserved_size >> 20, crashk_cma_cnt);
++}
++
++#else /* CONFIG_CMA */
++struct range crashk_cma_ranges[0];
++void __init reserve_crashkernel_cma(unsigned long long cma_size)
++{
++	if (cma_size)
++		pr_warn("crashkernel CMA reservation failed: CMA disabled\n");
++}
++#endif
++
+ int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_map,
+ 			  void **addr, unsigned long *sz)
+ {
 
 -- 
 Jiri Bohac <jbohac@suse.cz>
