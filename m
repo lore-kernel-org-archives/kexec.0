@@ -4,70 +4,160 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DBFB0C5AD4C
-	for <kexec@archiver.kernel.org>; Thu, 23 Nov 2023 15:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DB224C61D85
+	for <kexec@archiver.kernel.org>; Fri, 24 Nov 2023 01:23:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:References:
+	Message-ID:Subject:CC:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=NfwzhJSf29Q4L+IkfPfmK+lDF0TM/YKnpwcBVgIopZY=; b=mu+tSfdGfWsIM7
-	xDc48km3i+nnqt+QtolkaLuO5SMuRFv+J0STvICaY7t900cE4+q0nSX4a5X8/NhIrcKV942OszmNL
-	iUF48W2qLwmzyl0TwOUwbxLdr6z9ybZhpgYAPaYkuEr+TSP/sWD5E43m2ozubcodIgAtDk3nqlIME
-	aRuahHqfnTB9MoHqOZNPPyUrMJnidQtb83nptp+GncmqQns8gOi4bGBScf6OabVSNSwrjPgvi1Rv5
-	aqi1ctnSQcUhtulnGzJTbykwK+szNNYk2BzkcIfpk7IWvwwyylJCKeMzHHqxfT3mhkgQSxexWBeuH
-	+zuXGEgHaWbKYbsinMag==;
+	List-Owner; bh=Po35WYSlAvmTDPZcSFMDOsZ6cJ+lUHLkOnUUjHOIV2s=; b=SZpUPTB5C0IaEQ
+	v0zA+tTYR7K7D6G2wQSj8W3mbil4yRc05jwWDD07XJEV6SCgXzB5ZdgOwwyDA3qkykbAdi1uplCbb
+	Twr3/y7Op4D2GURF75ccMWq4O37QHsTNO95O8sqogezfOoj7oRuSFLepmF3fC14Xb4YphVGiw6cfa
+	pcISgFydf9Nntso1aVshmNz5vlUcgwgoksGi/2LizWfrcZ83S1Tw9Cgj0LSyzeY2FqXUJm2GA45Xq
+	YieASDzM0sEfBCIztCXR3YhgCmi8J75drapR/B/Ee4v0JEH4qgOlzIYuHxVKNuOt0PfohKt48n5mF
+	8mE2wEvtWTBRbopANbrw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r6Bpg-005CG1-1i;
-	Thu, 23 Nov 2023 15:41:36 +0000
-Received: from ams.source.kernel.org ([2604:1380:4601:e00::1])
+	id 1r6Kul-005v7I-2K;
+	Fri, 24 Nov 2023 01:23:27 +0000
+Received: from mgamail.intel.com ([192.55.52.88])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r6Bpc-005CEt-1y;
-	Thu, 23 Nov 2023 15:41:34 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by ams.source.kernel.org (Postfix) with ESMTP id 7FEDCB82DAB;
-	Thu, 23 Nov 2023 15:41:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30D54C433C8;
-	Thu, 23 Nov 2023 15:41:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700754089;
-	bh=wYo7fAMqhxFyBFMQMLKccEbNB96HsajO4uuHMmp53Og=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZDDf/GUUb7F28lHZof2kZ/ExvVGLi3nSeT3k5MbpJeP7J0VRZNmeH0n0637NQXiJB
-	 hXe8WuNM4qKqZGi8AinuhXcYMqOENZ9/wzckFUhv+cEJRM4/HmSMMksK/WN6Dy5Ma8
-	 crPwiGQ3GaiSK00zr+Kr3EpqT8dPwQzDEBl05EUafOfTas5YObKWcowYE6HhNzwKX4
-	 gyZ7Z+k9Vr2SNTiHif5d2ZK3xPjSD8Mo/PvaRTgwaABEKoQRtpYp2i3PjOPpa3mV3f
-	 8LRmCGmlgs78DL4EGWUkJDk7QoF8PY4psFMdIZKb0OGYKJMHSvVD3m8M16G4YVYpCF
-	 3WbWtHvt69uMQ==
-Date: Thu, 23 Nov 2023 08:41:27 -0700
-From: Nathan Chancellor <nathan@kernel.org>
+	id 1r6Kuh-005v5S-2P;
+	Fri, 24 Nov 2023 01:23:25 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1700789003; x=1732325003;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=giDLjx1pK5ou4jiCkT18aG2UVNLnT9eo67V5tjtuX/A=;
+  b=U0TQ9ng6gL9ipDdx3klEY+chdnN/+GCBTPMBqiLO00t+jxI7roo8eDdC
+   UEVSy8iglBaipFYiQSLw2QTrAkwUvnk20jqS5lZu4XLyF717g6duqQAh4
+   GIvcfCAb2W0Xs4DvmxPQOUhm3j2b0uIm228aZNTpBiw1ta2HN4JcJt9So
+   Y2c04EA0S6oxsudE4S/oc/1/dBnfGhxNStzudLshsiAv+6VAHXX3OwLzO
+   dwpSQTbGPjfhuugzqcooHPtpCpRwJhWrfqTvKiJaICXFoKDC/zdkd9Tyf
+   5sQaaxoTaoi8vPFjehn1PaCSJ25XA0NHjWcKz5bXpUstORAJVxQmDIJIB
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="423481099"
+X-IronPort-AV: E=Sophos;i="6.04,223,1695711600"; 
+   d="scan'208";a="423481099"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2023 17:23:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10902"; a="771104816"
+X-IronPort-AV: E=Sophos;i="6.04,223,1695711600"; 
+   d="scan'208";a="771104816"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by fmsmga007.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 23 Nov 2023 17:23:17 -0800
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34; Thu, 23 Nov 2023 17:23:16 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34 via Frontend Transport; Thu, 23 Nov 2023 17:23:16 -0800
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.41) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.34; Thu, 23 Nov 2023 17:23:16 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=csMlEy/sNVgLgV6eVV8mVTCRrNpSoVt4imjbnrH4tBsciMS8RSvFC1c6+ZEZFCe+xWr6Ncevkg5bZ6+d0jzxXGzal8/5ct93Z9M4ukzt5WzpALwND2R+4ohwhNTi8rNYBXhEv9H+YObA4vrj5uRf7iVXXR4Rdt8JnpZ0DK0tJ44T5vuRLD5n7GKOq9C8XADlP/ZznqRdGTaY+w4VHSZcaru/QxmRB587XkntKan8ItVDiCkl1Y6H9TmeY7wtEr0B0nB2cgqci8DfYlf6afk06I+DoEk70oFdO34n5E+EOI8EwVGpkvk8mPDL83A0AmkYhzMxq643JofDboo6PdKpuQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CD+m0I5nQ0jMzvqRH3BmQXwMn8MaqMiFtwS64hlFCrM=;
+ b=iIYy/Ez6ZiGfPQ+vJMc4x/4q2mhhsEMi38rLcJhhs9wKaIznzsAtUgx2bB2yEKpPL/sZxGwGs1g1x1IYoK0NTPWKTLBL6s4VcN03Pcf4xt8qT7nKr9+lgkxVqL4ZGLWOaK5rXoVYbFFCx3Op95tC3/97zshi0YEQ0m/hFcq9ICSn8z6hE6Nxm17Gzyy7n9SPsZ3pGCXBkWBI9EAulEZ3fkSAmFWVnQVqoSGL5+/3Q167FwbD7xr3Ud7Ie0LBX5c0zRkA43fuILvEVIZhYLephexEPyX1xFSCPccDoPCpI7vSCSiCw/VfrC4oADOm/pTKmHkCervmD/cAxr0eIZbvtw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS0PR11MB6397.namprd11.prod.outlook.com (2603:10b6:8:ca::12) by
+ PH0PR11MB5610.namprd11.prod.outlook.com (2603:10b6:510:e9::10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7025.20; Fri, 24 Nov 2023 01:23:07 +0000
+Received: from DS0PR11MB6397.namprd11.prod.outlook.com
+ ([fe80::e486:f8af:ca6c:7219]) by DS0PR11MB6397.namprd11.prod.outlook.com
+ ([fe80::e486:f8af:ca6c:7219%7]) with mapi id 15.20.7025.019; Fri, 24 Nov 2023
+ 01:23:07 +0000
+Date: Fri, 24 Nov 2023 09:18:28 +0800
+From: Yujie Liu <yujie.liu@intel.com>
 To: "bhe@redhat.com" <bhe@redhat.com>
-Cc: "Liu, Yujie" <yujie.liu@intel.com>, lkp <lkp@intel.com>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	"kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-	"x86@kernel.org" <x86@kernel.org>,
+CC: lkp <lkp@intel.com>, "linux-riscv@lists.infradead.org"
+	<linux-riscv@lists.infradead.org>, "kexec@lists.infradead.org"
+	<kexec@lists.infradead.org>, "x86@kernel.org" <x86@kernel.org>,
 	"oe-kbuild-all@lists.linux.dev" <oe-kbuild-all@lists.linux.dev>,
-	"llvm@lists.linux.dev" <llvm@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+	"llvm@lists.linux.dev" <llvm@lists.linux.dev>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-parisc@vger.kernel.org"
+	<linux-parisc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linuxppc-dev@lists.ozlabs.org"
+	<linuxppc-dev@lists.ozlabs.org>
 Subject: Re: [PATCH 2/7] kexec_file: print out debugging message if required
-Message-ID: <20231123154127.GA3487126@dev-arch.thelio-3990X>
+Message-ID: <ZV/55OkN7bV02LY8@yujie-X299>
 References: <20231114153253.241262-3-bhe@redhat.com>
  <202311160431.BXPc7NO9-lkp@intel.com>
  <ZVcvBft/T3cbRBWr@MiWiFi-R3L-srv>
  <39ccb4fda795a76996cf6d1c3b25909692358211.camel@intel.com>
  <ZVdyLdAzgNBXfjiW@MiWiFi-R3L-srv>
  <ZV9YYEK4L160ECQ+@MiWiFi-R3L-srv>
-MIME-Version: 1.0
 Content-Disposition: inline
 In-Reply-To: <ZV9YYEK4L160ECQ+@MiWiFi-R3L-srv>
+X-ClientProxiedBy: SG3P274CA0009.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:be::21)
+ To DS0PR11MB6397.namprd11.prod.outlook.com (2603:10b6:8:ca::12)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR11MB6397:EE_|PH0PR11MB5610:EE_
+X-MS-Office365-Filtering-Correlation-Id: be219e76-a4bb-4b89-244b-08dbec8be9b8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: TiCikscQSMD1iTaarxAD/5cTl8Cwdd2f4LdV5zKNfBWFEuOCplGKM22wKuWxTElYPGGEU/CqhYLTR+voPwa2yx6hoyg5tdCDZoLKmwP57KTHdVGsrYe7onQ0mDHXX9FqgxF/M+xk8Q1ptrvvMWuqk6oJQyvTpzOaqxp1vWF7s9ALEch+nJPi3wdYFXksDiIB9zZdf8R/Z93Zk7nje7r6tOc/W50x/DR6QHgq0aiKJ9V6NYF3NTkYETJa6CCwPOebAapYiQCKRU1HkSQRG/fTxs8NngrCrTnXZkp8SM67ZLk6rjeVCOEELnO/Vjcgf2kKi3+YwCda8/9c9pgt5B/OU1UfqXXAXGpfwtCqp/bWqMHE7+bRgU1GJqbRHD6GzbSYBqGx80P5kuTYumZPFBGAj1IXkvBE77nLwdEuRERkVtmc8HM4nIwlrwT95/AeR1Fqt5IwVuFfZ8mfhlb1oaEc3nv95qNsJmBPhE3K5JU54etXb/ycVtkaYhpZqmwioUc5vaelcJZ68q/xX7fQfz25ahmriBOcWVxbCQ0yHyqcMQrKe9m4K4MCVZCoILdZR3+r5gZZ2eHPN68rgbSITESt3A==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB6397.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(366004)(39860400002)(136003)(376002)(396003)(346002)(230922051799003)(186009)(451199024)(1800799012)(64100799003)(7416002)(15650500001)(2906002)(4001150100001)(44832011)(41300700001)(8676002)(8936002)(4326008)(5660300002)(316002)(66476007)(66556008)(54906003)(6916009)(86362001)(966005)(6486002)(6666004)(478600001)(83380400001)(6506007)(9686003)(6512007)(66946007)(26005)(33716001)(82960400001)(38100700002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?Kgji6FxfbMwf6om+C9KcMa/brpUq8Waq6ZM9hSisGicV2kWuzntJdDcIwW?=
+ =?iso-8859-1?Q?IWLkyOoPT3JVnYEbYakiqq6gnWoZ/wIQwgUpfHVOyNjFb4XNdTe8LMO3KC?=
+ =?iso-8859-1?Q?bswku3yJ3xZdWrdvDBKU/D8r5EXrwP48R8qRCeczI6APApAx2a9UaRLV9J?=
+ =?iso-8859-1?Q?3/4WcLcKMbLvS/NIuto4ZELQpwoBwVcCKwUJYOLFkPl7q1o+DeLMAkIbEh?=
+ =?iso-8859-1?Q?u3WMQqdh8YWybANHeSi2JHyVkwPGm2j+l1wq+iO1ySO1MWVVaFSSCg0t0C?=
+ =?iso-8859-1?Q?nL1vrfhQh5zhCMx962T/XF6hy10cr+1ETrWJrQYnw1mEFJ902V/FlW1NXU?=
+ =?iso-8859-1?Q?Yy3cT2BSdHjjix8DkQmggY7soC/rCqNrZVuknbYOle0AJ0CjuW9wIfOpzt?=
+ =?iso-8859-1?Q?yWGhLDmifULXShzcx8dmqnlQAU+EcLUPyUPLHz7klfRquSoIDq8t2ZI3rc?=
+ =?iso-8859-1?Q?ATT6KzxKj9lMENaXrYcYiTcnk2PS0YAsAxaOOUWUTspJEHpuFEHIisxdkV?=
+ =?iso-8859-1?Q?Xl/ANvfrkmSxQEfmh9zTnHalbvmyXDJXqXo+kKmebKWk8ePyFskI8U++9R?=
+ =?iso-8859-1?Q?OLzMDS8juAcUggupo2Xyl2sXe/IsktgBXSnsZHyZQn1L0ePcelAHNSv14t?=
+ =?iso-8859-1?Q?9fx9YqLuRwX0Ar/qyChV8xwzd645LOJWBt2smfKODUCPydIr4OxWUs8CG0?=
+ =?iso-8859-1?Q?+2w97oTWiBdsDzBNfNNEgD2Z/ZS8b98/NTXxhDjcxkuei6qRoHfwsqvaVC?=
+ =?iso-8859-1?Q?rxVsbWuqhKunbBmFn6FIkmqQwfr7DY5xdfT/hVnQHyZN6er8I2WYoNDRYM?=
+ =?iso-8859-1?Q?GlontphZlsZLI3qa+IXuec5mU/iehmKe54JZhkNq+8Q0KNsADciIPunK3U?=
+ =?iso-8859-1?Q?wvI3p4u5poUl3Rmji5GfHM9w4IGavkUNcfYdbSzRROpQKNOjk9UsSVdXQf?=
+ =?iso-8859-1?Q?vwUI4isLAg1mEeAElAAFEoplJ6+ZAp5TaXJc1Ijkyd8z9M6XsGQklfHxpQ?=
+ =?iso-8859-1?Q?inpl3S873NsFUzzHak7iqDEqbQgrnhATOJdSgTb+pXRVeAKa/V5nYMvfGO?=
+ =?iso-8859-1?Q?IDNb3hZtoEdpPN52FEIKySd5jkRg4fqIQVhub0POL+QLyAgXNXWzHhzYrP?=
+ =?iso-8859-1?Q?UeONDTVjNGCqsRGRas4hNrPruPeWz6xqHYG3AyHbvk1ntZ3HBg9goGX/Du?=
+ =?iso-8859-1?Q?iWV46gbv1sx0pz/nZJCmV1HObu+MFlE+32sKXo8txkGDX0TrBHQPS49tYE?=
+ =?iso-8859-1?Q?pwh2CTYJi25DDx5aJk5wy+BTlDZnj6i/ZL7EWi6b1QLimwiSAT2+R5Ni6F?=
+ =?iso-8859-1?Q?uzTajsJF6kgUu9/Uf70w9ZV1CqLtVJDeeNh+Errg3HKsp6SY8RHZcEYDu7?=
+ =?iso-8859-1?Q?76ORtYuys9VT7w8h+K+LBAehTM7Lo3A8sS5lXDUzj9mAM7LjLMaH6+3YKw?=
+ =?iso-8859-1?Q?jUVo+SddD+jHWcUwm2NoSoVBGTWhmPrNWb5BF3SznjEzF0XkKu6O/1Zils?=
+ =?iso-8859-1?Q?SZl00tJwwpc+/mpBCd5dJUIULSL62XPwrMRZhLtb6s316Ge+APObBHb7mR?=
+ =?iso-8859-1?Q?cEPeKWQehbIrpJDLPuCHIb87uGCx1re47rLZo9dAy900xIT6HpIkR8pqQp?=
+ =?iso-8859-1?Q?kwEqVeTX4sAZ1LuKJjTx3co+RUL3nny9jp?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: be219e76-a4bb-4b89-244b-08dbec8be9b8
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB6397.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Nov 2023 01:23:07.2136
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: sV/YbkV8w1kluPULThxwkFnQVDpSyR5rxxcGE5D07ZKr5naTp2wFcBlGAGn4kRXs4fbJmNMx2SQW7Yyh0aeL6w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5610
+X-OriginatorOrg: intel.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231123_074132_944837_AE3DCE99 
-X-CRM114-Status: GOOD (  24.81  )
+X-CRM114-CacheID: sfid-20231123_172323_843709_56D5A073 
+X-CRM114-Status: GOOD (  25.74  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -148,32 +238,14 @@ ge
 > doubt it's the same issue as another report on this patch, while not
 > quite sure.
 
-Shouldn't you be able to run
+Setting "COMPILER=3Dclang-16" is exactly the correct fix and should
+reproduce the issue in this report. We've fixed the steps of reproducer
+but this will only take effect in future reports.
 
-  $ COMPILER_INSTALL_PATH=3D$HOME/0day COMPILER=3Dclang-16 ~/bin/make.cross=
- W=3D1 O=3Dbuild_dir ARCH=3Dhexagon SHELL=3D/bin/bash kernel/
+Thanks,
+Yujie
 
-after the command you just ran to reproduce this now? It is
-essentially the same fix that they mention above but for the second
-invocation of make.cross.
-
-You can also not even bother with the wrapper altogether if you have the
-compiler installed in the default path that they provide (W=3D1 is not
-necessary to reproduce this issue):
-
-  $ mkdir -p build_dir
-  $ curl -LSso build_dir/.config https://download.01.org/0day-ci/archive/20=
-231116/202311160431.BXPc7NO9-lkp@intel.com/config
-  $ make -skj"$(nproc)" ARCH=3Dhexagon LLVM=3D$HOME/0day/llvm-16.0.6-x86_64=
-/bin/ O=3Dbuild_dir olddefconfig kernel/crash_core.o
-  ...
-  kernel/crash_core.c:554:3: error: call to undeclared function 'kexec_dpri=
-ntk'; ISO C99 and later do not support implicit function declarations [-Wim=
-plicit-function-declaration]
-                  kexec_dprintk("Crash PT_LOAD ELF header. phdr=3D%p vaddr=
-=3D0x%llx, paddr=3D0x%llx, "
-                  ^
-  1 error generated.
+> > =
 
 > > Here you are. Thanks for your quick response.
 > > ------------------------------
@@ -227,8 +299,6 @@ ig
 > > > =
 
 > > =
-
-> =
 
 > =
 
