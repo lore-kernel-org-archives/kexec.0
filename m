@@ -4,57 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 45B89C4167B
-	for <kexec@archiver.kernel.org>; Sat, 25 Nov 2023 21:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2A796C4167B
+	for <kexec@archiver.kernel.org>; Sat, 25 Nov 2023 21:27:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=+nJJLNKg1rG4HY+s9KMK1TJgRoCz5Jfp/9/abLLufsg=; b=BVkRm50jJlFSmB
-	/72n4XdbYiHWHmODsp46SXBYAa2ni+LjBRk8TysPNE2w3hE34dOrlNvfqtILbKcISy39dNWsvqGwf
-	+u4X26MzbPhakOy0iSQWaojvUcO1smw7uMECaTe9hoQlqxNCTLRDGjyEZyhjAKfDOhht14OnjeWwx
-	MFZVzHoi+GS82ujPkdVP2U13OdbtBcRk8jC2SR0rVFj7Hacpc++6Sq1beGIlaG/q9lkXf9NQGrwf8
-	zPXjapwX0xSevmmP+YYVXVcaUuSxwMRx2DDivetf53dg8iMMEa871CgI3gwqUUd5bMHHSgEuEo/xh
-	jzGtw1mspYvRuTJ55WbA==;
+	List-Owner; bh=LuzaF1GVoKo8xjlE3FjTrO5AUKcUNoG92CGjGAWbo2E=; b=ouMunFvhcnqzbH
+	osHJVh1wnU8uXPpAsxOR4kEoHXj4wDSh2qP2+krcuxpeb1ehVMoMyVEOyYTvNb54KGutCpQKWYYHZ
+	uPiPJjQeWwulUdthcFUBYBGuuqASVGtV1ASgvk1MbrTTAvMZeF8KoKZSn3DR6UCkebm6lO6pV3Uy5
+	XLOv5vMM6T6PFA514+beRy05va9c2YrKUZstCjsNlxDfvV/MVi7e+ikQLqh7iDK25DkY5fPicma/M
+	6EEIxOe3e6fqOBwM5iHftGvmiLzf844Ez/uysId0BbS0sivAfD6C6aUU+ggSF5+N4cgLXg/yLM1Oi
+	JS1X891r41UryiKJwXpA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r706o-009p8M-0h;
-	Sat, 25 Nov 2023 21:22:38 +0000
-Received: from smtp-out2.suse.de ([2a07:de40:b251:101:10:150:64:2])
+	id 1r70Bi-009pXp-2X;
+	Sat, 25 Nov 2023 21:27:42 +0000
+Received: from mgamail.intel.com ([192.198.163.8])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r706k-009p58-0z
-	for kexec@lists.infradead.org;
-	Sat, 25 Nov 2023 21:22:36 +0000
-Received: from relay2.suse.de (unknown [149.44.160.134])
-	by smtp-out2.suse.de (Postfix) with ESMTP id 180801FD26;
-	Sat, 25 Nov 2023 21:22:30 +0000 (UTC)
-Received: from localhost (dwarf.suse.cz [10.100.12.32])
-	by relay2.suse.de (Postfix) with ESMTP id 3868B2C142;
-	Sat, 25 Nov 2023 21:22:29 +0000 (UTC)
-Date: Sat, 25 Nov 2023 22:22:29 +0100
-From: Jiri Bohac <jbohac@suse.cz>
-To: Tao Liu <ltao@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org, mhocko@suse.cz
-Subject: Re: [PATCH 0/4] kdump: crashkernel reservation from CMA
-Message-ID: <ZWJllXCN0SDIELrX@dwarf.suse.cz>
-References: <ZWD_fAPqEWkFlEkM@dwarf.suse.cz>
- <CAO7dBbUVQn8xzPZQhhw1XqF+sQT0c6phk4sda+X=MrR6RmPE0A@mail.gmail.com>
+	id 1r70Be-009pXB-1y;
+	Sat, 25 Nov 2023 21:27:40 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1700947658; x=1732483658;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2msMvypUB/fdSacdfq9Xd4cZCJy1Df5Vy8rcx7wAbvU=;
+  b=ZMk/S1qeHSKcX+mWViGYXioMOKJRIU99fJAvsrzRXhCDmkiHrGn3Husb
+   wr2oovuKtojdfIUHFaHz9cRLkR7vTtADlSkE5vrpqMxnI8BRHEF+denVu
+   iC2R1ugHwFN3btFkwoi3UzJO5A4UncMLGTHrwOBvklW+/q1rqctejJ221
+   9GLCee4BebUF93Rx7wLEOFKrhaxDJXb7xrTXNE8vah9cJCTSFjInJgqQX
+   lZ6N0rboOe08sXIuRcpm6+Sz+5+2j7uLug2MjNYIymtpFLqSemMtcj3cq
+   PGfwW9HaJlyQKtyC09i+uWuPbXbAxFVfVGAgfQCvDLvR7qZOUWHv6fZcj
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10905"; a="5698986"
+X-IronPort-AV: E=Sophos;i="6.04,227,1695711600"; 
+   d="scan'208";a="5698986"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2023 13:27:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10905"; a="761258825"
+X-IronPort-AV: E=Sophos;i="6.04,227,1695711600"; 
+   d="scan'208";a="761258825"
+Received: from lkp-server01.sh.intel.com (HELO d584ee6ebdcc) ([10.239.97.150])
+  by orsmga007.jf.intel.com with ESMTP; 25 Nov 2023 13:27:04 -0800
+Received: from kbuild by d584ee6ebdcc with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1r70B3-0004RK-3B;
+	Sat, 25 Nov 2023 21:27:01 +0000
+Date: Sun, 26 Nov 2023 05:26:14 +0800
+From: kernel test robot <lkp@intel.com>
+To: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	kexec@lists.infradead.org, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	linux-parisc@vger.kernel.org, akpm@linux-foundation.org,
+	joe@perches.com, nathan@kernel.org, yujie.liu@intel.com,
+	Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v2 4/7] kexec_file, arm64: print out debugging message if
+ required
+Message-ID: <202311260548.1HaxcDnE-lkp@intel.com>
+References: <20231124033642.520686-5-bhe@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CAO7dBbUVQn8xzPZQhhw1XqF+sQT0c6phk4sda+X=MrR6RmPE0A@mail.gmail.com>
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Rspamd-Server: rspamd1
-X-Rspamd-Queue-Id: 180801FD26
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	 REPLY(-4.00)[]
+In-Reply-To: <20231124033642.520686-5-bhe@redhat.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231125_132234_516110_AE932152 
-X-CRM114-Status: GOOD (  12.87  )
+X-CRM114-CacheID: sfid-20231125_132738_685623_EBCB33DD 
+X-CRM114-Status: GOOD (  10.87  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -71,38 +90,59 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Tao, 
+Hi Baoquan,
 
-On Sat, Nov 25, 2023 at 09:51:54AM +0800, Tao Liu wrote:
-> Thanks for the idea of using CMA as part of memory for the 2nd kernel.
-> However I have a question:
-> 
-> What if there is on-going DMA/RDMA access on the CMA range when 1st
-> kernel crash? There might be data corruption when 2nd kernel and
-> DMA/RDMA write to the same place, how to address such an issue?
+kernel test robot noticed the following build errors:
 
-The crash kernel CMA area(s) registered via
-cma_declare_contiguous() are distinct from the
-dma_contiguous_default_area or device-specific CMA areas that
-dma_alloc_contiguous() would use to reserve memory for DMA.
+[auto build test ERROR on arm64/for-next/core]
+[also build test ERROR on tip/x86/core powerpc/next powerpc/fixes linus/master v6.7-rc2 next-20231124]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Kernel pages will not be allocated from the crash kernel CMA
-area(s), because they are not GFP_MOVABLE. The CMA area will only
-be used for user pages. 
+url:    https://github.com/intel-lab-lkp/linux/commits/Baoquan-He/kexec_file-add-kexec_file-flag-to-control-debug-printing/20231124-113942
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/core
+patch link:    https://lore.kernel.org/r/20231124033642.520686-5-bhe%40redhat.com
+patch subject: [PATCH v2 4/7] kexec_file, arm64: print out debugging message if required
+config: arm64-randconfig-001-20231126 (https://download.01.org/0day-ci/archive/20231126/202311260548.1HaxcDnE-lkp@intel.com/config)
+compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project.git f28c006a5895fc0e329fe15fead81e37457cb1d1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231126/202311260548.1HaxcDnE-lkp@intel.com/reproduce)
 
-User pages for RDMA, should be pinned with FOLL_LONGTERM and that
-would migrate them away from the CMA area.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202311260548.1HaxcDnE-lkp@intel.com/
 
-But you're right that DMA to user pages pinned without
-FOLL_LONGTERM would still be possible. Would this be a problem in
-practice? Do you see any way around it?
+All errors (new ones prefixed by >>):
 
-Thanks,
+>> arch/arm64/kernel/machine_kexec.c:35:2: error: implicit declaration of function 'kexec_dprintk' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
+           kexec_dprintk("%s:%d:\n", func, line);
+           ^
+   1 error generated.
+
+
+vim +/kexec_dprintk +35 arch/arm64/kernel/machine_kexec.c
+
+    27	
+    28	/**
+    29	 * kexec_image_info - For debugging output.
+    30	 */
+    31	#define kexec_image_info(_i) _kexec_image_info(__func__, __LINE__, _i)
+    32	static void _kexec_image_info(const char *func, int line,
+    33		const struct kimage *kimage)
+    34	{
+  > 35		kexec_dprintk("%s:%d:\n", func, line);
+    36		kexec_dprintk("  kexec kimage info:\n");
+    37		kexec_dprintk("    type:        %d\n", kimage->type);
+    38		kexec_dprintk("    head:        %lx\n", kimage->head);
+    39		kexec_dprintk("    kern_reloc: %pa\n", &kimage->arch.kern_reloc);
+    40		kexec_dprintk("    el2_vectors: %pa\n", &kimage->arch.el2_vectors);
+    41	}
+    42	
 
 -- 
-Jiri Bohac <jbohac@suse.cz>
-SUSE Labs, Prague, Czechia
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
 _______________________________________________
 kexec mailing list
