@@ -4,65 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1D476C4167B
-	for <kexec@archiver.kernel.org>; Sun, 26 Nov 2023 03:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A89D7C07CA9
+	for <kexec@archiver.kernel.org>; Sun, 26 Nov 2023 11:56:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=netgtxMH7L32AzjQOPIciuXdvZBr9nHM64NIJ2o63Cw=; b=DStsUe1cdXZcwq
-	HUQEh5RBpl/NdWarFoB97cJC4td+zzUY77dC6Ck3fO4HbBp9Ruuj4DgaonRoMDjiEuUJKYAu4TYy6
-	n1wIRpLWE2kd6izAaeSfxjPT+jM82olRmQ48CuQe2vrFnANJHt+VBEUpZ4bXXD7vLyLpSyA4nGnsI
-	xxE6qEhvEDmzJA5TgQn4E0osL0xdWS3D/0gjuQUTiZrLFL+63F7yk3IMMM+bMx8Flm/CTBiT780s/
-	awFZpWiOwE3Eqye8YTL+HjrpqawnBKyPZC0TYzkEnhNvSwCca6d189gKfZs6sSDQ1IMWfCtDf6MIz
-	PWazHTgfjzxGU9WeG/3A==;
+	List-Owner; bh=ADD4EfER8m14MlLMQyvXZxTc8YoIH1tQtArX/lQ7VOk=; b=HiL3G/gAR0mVE4
+	6hhihz3kMV/5KUSyzVBEYhJRxKcvgyvdFjvqEEy29v18jjM0K0qdb2zUKeNeUqXyCdLw54P6C9eWR
+	LohGpvnj9Q60OYOOS3gD6DroWBU4nhZeGjyvDbbCHs8dlZO2bsZfV9ktwke0S/ao62PABd4rFCeFa
+	aZXiriDIs1x2epZ8HV/iraTLO8QPbW2m7UEEFyuRrdMYTRS6MotslDvLX8YGyTbRjiRUdvizeVqy9
+	2W0vM3VJHxyzAdKguHkPqm6Hpe9NsIxQ4ui+Msv5avWhYkNfRKAbxAkGcX02wmxhYNKgN2XdcmL34
+	DEQNbiBudZXZsydBSXBg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r75p8-00AAKC-1L;
-	Sun, 26 Nov 2023 03:28:46 +0000
-Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
+	id 1r7Dk1-00AwDV-3B;
+	Sun, 26 Nov 2023 11:56:02 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r75p5-00AAJV-1h
+	id 1r7Djt-00Aw9G-13
 	for kexec@lists.infradead.org;
-	Sun, 26 Nov 2023 03:28:44 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id 0A4CA60D37
-	for <kexec@lists.infradead.org>; Sun, 26 Nov 2023 03:28:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA7EBC433C9
-	for <kexec@lists.infradead.org>; Sun, 26 Nov 2023 03:28:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700969322;
-	bh=HqIlTM9RKSfK7lwi5TdFbwO9vBS4WT6XZyPO21TEc8g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Z400rEpZEzaduKJG9XSno3MwRHUiYhXqeoq8kLe9b8j6hTy/Xxjv/PvY+zSAANpxX
-	 eCmBpnUutoprwJWS0VM9pL0IbLQULElVR4X4++K3UuA3VV6/40Os4SU+ZsprKZ7gHo
-	 a9Ln+SYmKm6wUfrbw/gQhjqdTlCqqdESVLSe70vpcXffFB3jhS7fyHq9uM0gOKUEeA
-	 SSWsE1y86XEl+uKhISmnRB8b0IBGciypspGE3LdZdmbCWO1RWlDPqtORpRSfYF7i90
-	 B5iA39t7SvGEVwYD/c7RCc355edhNXBCa5Lds4VFNtfqaF+5YBwcOknspEnUqJcgA8
-	 2Ah0ls0fw4Z4Q==
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-54b450bd014so215844a12.3
-        for <kexec@lists.infradead.org>; Sat, 25 Nov 2023 19:28:42 -0800 (PST)
-X-Gm-Message-State: AOJu0YypXW7q9T1it5JI69/X0wRRtbqg7rE+KT4QXNwZN7+BDbKOQvrM
-	th1cNrnoBaFlJ67S7dlg1rd/nYdWmZXsylnb/ho=
-X-Google-Smtp-Source: AGHT+IGXY6sCsdtfh0hJn2IOG120g97Pcs9O3qy2jMzWw0UBC9ISGKwVrIUMHT50uUAE6aVH++FZAR+6zLM3Vr4RALA=
-X-Received: by 2002:a17:906:24c:b0:a0c:2ace:5f72 with SMTP id
- 12-20020a170906024c00b00a0c2ace5f72mr2409599ejl.13.1700969321133; Sat, 25 Nov
- 2023 19:28:41 -0800 (PST)
+	Sun, 26 Nov 2023 11:55:59 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1700999750;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=10f/Bul9KbIaMsjeanbNOmm62BHIxQH0eftSF3zeoHA=;
+	b=IXiDeKM6E1pRz0aHXANjgB3J97HfSg2MI8kj1Qbv7ixMTk5kvOshWSH+1nfBzG9StVSS4L
+	rx26h/szJb9S2etl8A60o5/n/QXs0LxaRslobBpTAlxWyK/mw1rNSIvbUJchrJKmPWu9F9
+	CKfipjWZa3Nlz54iZdbEKhyDw31CuCw=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-76-n79wBA5hOnSAQHO1OAsXyg-1; Sun,
+ 26 Nov 2023 06:55:45 -0500
+X-MC-Unique: n79wBA5hOnSAQHO1OAsXyg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 90DF23C0C88A;
+	Sun, 26 Nov 2023 11:55:44 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.36])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id C8B1340C6EB9;
+	Sun, 26 Nov 2023 11:55:43 +0000 (UTC)
+Date: Sun, 26 Nov 2023 19:55:40 +0800
+From: Baoquan He <bhe@redhat.com>
+To: kernel test robot <lkp@intel.com>
+Cc: linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	oe-kbuild-all@lists.linux.dev, kexec@lists.infradead.org,
+	x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	linux-parisc@vger.kernel.org, akpm@linux-foundation.org,
+	joe@perches.com, nathan@kernel.org, yujie.liu@intel.com
+Subject: Re: [PATCH v2 4/7] kexec_file, arm64: print out debugging message if
+ required
+Message-ID: <ZWMyPB6HjxAczLzZ@MiWiFi-R3L-srv>
+References: <20231124033642.520686-5-bhe@redhat.com>
+ <202311260548.1HaxcDnE-lkp@intel.com>
 MIME-Version: 1.0
-References: <20231125065232.116319-1-wangrui@loongson.cn>
-In-Reply-To: <20231125065232.116319-1-wangrui@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Sun, 26 Nov 2023 11:28:29 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H4P5=DKQ5YRKAgYVZF1dn4OjoU=aZtc-asJ53EPZdd32w@mail.gmail.com>
-Message-ID: <CAAhV-H4P5=DKQ5YRKAgYVZF1dn4OjoU=aZtc-asJ53EPZdd32w@mail.gmail.com>
-Subject: Re: [PATCH v2] LoongArch: Load vmlinux.efi to the link address
-To: WANG Rui <wangrui@loongson.cn>
-Cc: kexec@lists.infradead.org, hev <r@hev.cc>
+Content-Disposition: inline
+In-Reply-To: <202311260548.1HaxcDnE-lkp@intel.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231125_192843_666824_2F4CCF0D 
-X-CRM114-Status: GOOD (  18.25  )
+X-CRM114-CacheID: sfid-20231126_035553_586121_725BD078 
+X-CRM114-Status: GOOD (  19.39  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,67 +82,117 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-UmV2aWV3ZWQtYnk6IEh1YWNhaSBDaGVuIDxjaGVuaHVhY2FpQGxvb25nc29uLmNuPgoKT24gU2F0
-LCBOb3YgMjUsIDIwMjMgYXQgMjo1M+KAr1BNIFdBTkcgUnVpIDx3YW5ncnVpQGxvb25nc29uLmNu
-PiB3cm90ZToKPgo+IEN1cnJlbnRseSwga2V4ZWMgbG9hZHMgdm1saW51eC5lZmkgdG8gYWRkcmVz
-cyAwIGluc3RlYWQgb2YgdGhlIGxpbmsKPiBhZGRyZXNzLiBUaGlzIGNhdXNlcyBrZXhlYyB0byBm
-YWlsIHRvIGJvb3QgdGhlIG5ldyB2bWxpbnV4LmVmaSBvbiBxZW11Lgo+Cj4gICBwZWlfbG9vbmdh
-cmNoX2xvYWQ6IGtlcm5lbF9zZWdtZW50OiAwMDAwMDAwMDAwMDAwMDAwCj4gICBwZWlfbG9vbmdh
-cmNoX2xvYWQ6IGtlcm5lbF9lbnRyeTogICAwMDAwMDAwMDAxM2YxMDAwCj4gICBwZWlfbG9vbmdh
-cmNoX2xvYWQ6IGltYWdlX3NpemU6ICAgICAwMDAwMDAwMDAxY2EwMDAwCj4gICBwZWlfbG9vbmdh
-cmNoX2xvYWQ6IHRleHRfb2Zmc2V0OiAgICAwMDAwMDAwMDAwMjAwMDAwCj4gICBwZWlfbG9vbmdh
-cmNoX2xvYWQ6IHBoeXNfb2Zmc2V0OiAgICAwMDAwMDAwMDAwMDAwMDAwCj4gICBwZWlfbG9vbmdh
-cmNoX2xvYWQ6IFBFIGZvcm1hdDogICAgICB5ZXMKPiAgIGxvb25nYXJjaF9sb2FkX290aGVyX3Nl
-Z21lbnRzOjMzMzogY29tbWFuZF9saW5lOiBrZXhlYyBjb25zb2xlPXR0eVMwLDExNTIwMAo+ICAg
-a2V4ZWNfbG9hZDogZW50cnkgPSAweDEzZjEwMDAgZmxhZ3MgPSAweDEwMjAwMDAKPiAgIG5yX3Nl
-Z21lbnRzID0gMgo+ICAgc2VnbWVudFswXS5idWYgICA9IDB4N2ZmZmVlYTM4MDEwCj4gICBzZWdt
-ZW50WzBdLmJ1ZnN6ID0gMHgxYjU1MjAwCj4gICBzZWdtZW50WzBdLm1lbSAgID0gKG5pbCkKPiAg
-IHNlZ21lbnRbMF0ubWVtc3ogPSAweDFjYTAwMDAKPiAgIHNlZ21lbnRbMV0uYnVmICAgPSAweDU1
-NTU1NzA5NDBiMAo+ICAgc2VnbWVudFsxXS5idWZzeiA9IDB4MjAwCj4gICBzZWdtZW50WzFdLm1l
-bSAgID0gMHgxY2EwMDAwCj4gICBzZWdtZW50WzFdLm1lbXN6ID0gMHg0MDAwCj4KPiBUaGlzIHBh
-dGNoIGNvbnN0cmFpbnMgdGhlIHJhbmdlIG9mIHRoZSBrZXJuZWwgc2VnbWVudCBieSBgaG9sZV9t
-aW5gCj4gYW5kIGBob2xlX21heGAgdG8gcGxhY2Ugdm1saW51eC5lZmkgZXhhY3RseSBhdCB0aGUg
-bGluayBhZGRyZXNzLgo+Cj4gICBwZWlfbG9vbmdhcmNoX2xvYWQ6IGtlcm5lbF9zZWdtZW50OiAw
-MDAwMDAwMDAwMjAwMDAwCj4gICBwZWlfbG9vbmdhcmNoX2xvYWQ6IGtlcm5lbF9lbnRyeTogICAw
-MDAwMDAwMDAxM2YxMDAwCj4gICBwZWlfbG9vbmdhcmNoX2xvYWQ6IGltYWdlX3NpemU6ICAgICAw
-MDAwMDAwMDAxY2EwMDAwCj4gICBwZWlfbG9vbmdhcmNoX2xvYWQ6IHRleHRfb2Zmc2V0OiAgICAw
-MDAwMDAwMDAwMjAwMDAwCj4gICBwZWlfbG9vbmdhcmNoX2xvYWQ6IHBoeXNfb2Zmc2V0OiAgICAw
-MDAwMDAwMDAwMDAwMDAwCj4gICBwZWlfbG9vbmdhcmNoX2xvYWQ6IFBFIGZvcm1hdDogICAgICB5
-ZXMKPiAgIGxvb25nYXJjaF9sb2FkX290aGVyX3NlZ21lbnRzOjMzOTogY29tbWFuZF9saW5lOiBr
-ZXhlYyBjb25zb2xlPXR0eVMwLDExNTIwMAo+ICAga2V4ZWNfbG9hZDogZW50cnkgPSAweDEzZjEw
-MDAgZmxhZ3MgPSAweDEwMjAwMDAKPiAgIG5yX3NlZ21lbnRzID0gMgo+ICAgc2VnbWVudFswXS5i
-dWYgICA9IDB4N2ZmZmYyMDI4MDEwCj4gICBzZWdtZW50WzBdLmJ1ZnN6ID0gMHgxYjU1MjAwCj4g
-ICBzZWdtZW50WzBdLm1lbSAgID0gMHgyMDAwMDAKPiAgIHNlZ21lbnRbMF0ubWVtc3ogPSAweDFj
-YTAwMDAKPiAgIHNlZ21lbnRbMV0uYnVmICAgPSAweDU1NTU1NzQ5ODA5OAo+ICAgc2VnbWVudFsx
-XS5idWZzeiA9IDB4MjAwCj4gICBzZWdtZW50WzFdLm1lbSAgID0gMHgxZWEwMDAwCj4gICBzZWdt
-ZW50WzFdLm1lbXN6ID0gMHg0MDAwCj4KPiBTaWduZWQtb2ZmLWJ5OiBXQU5HIFJ1aSA8d2FuZ3J1
-aUBsb29uZ3Nvbi5jbj4KPiAtLS0KPgo+IHYxLT52MjoKPiAgKiBGaXggdGhlIGlzc3VlIHByZXZl
-bnRpbmcgaXQgZnJvbSB3b3JraW5nIG9uIHRoZSBwaHlzaWNhbCBtYWNoaW5lLgo+Cj4gIGtleGVj
-L2FyY2gvbG9vbmdhcmNoL2tleGVjLWxvb25nYXJjaC5jIHwgMTAgKysrKysrKy0tLQo+ICAxIGZp
-bGUgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQo+Cj4gZGlmZiAtLWdp
-dCBhL2tleGVjL2FyY2gvbG9vbmdhcmNoL2tleGVjLWxvb25nYXJjaC5jIGIva2V4ZWMvYXJjaC9s
-b29uZ2FyY2gva2V4ZWMtbG9vbmdhcmNoLmMKPiBpbmRleCA2MmZmOGZkLi4zMmE0MmQyIDEwMDY0
-NAo+IC0tLSBhL2tleGVjL2FyY2gvbG9vbmdhcmNoL2tleGVjLWxvb25nYXJjaC5jCj4gKysrIGIv
-a2V4ZWMvYXJjaC9sb29uZ2FyY2gva2V4ZWMtbG9vbmdhcmNoLmMKPiBAQCAtMjY1LDkgKzI2NSwx
-MyBAQCB1bnNpZ25lZCBsb25nIGxvb25nYXJjaF9sb2NhdGVfa2VybmVsX3NlZ21lbnQoc3RydWN0
-IGtleGVjX2luZm8gKmluZm8pCj4gICAgICAgICAgICAgICAgICAgICAgICAgaG9sZSA9IFVMT05H
-X01BWDsKPiAgICAgICAgICAgICAgICAgfQo+ICAgICAgICAgfSBlbHNlIHsKPiAtICAgICAgICAg
-ICAgICAgaG9sZSA9IGxvY2F0ZV9ob2xlKGluZm8sCj4gLSAgICAgICAgICAgICAgICAgICAgICAg
-bG9vbmdhcmNoX21lbS50ZXh0X29mZnNldCArIGxvb25nYXJjaF9tZW0uaW1hZ2Vfc2l6ZSwKPiAt
-ICAgICAgICAgICAgICAgICAgICAgICBNaUIoMSksIDAsIFVMT05HX01BWCwgMSk7Cj4gKyAgICAg
-ICAgICAgICAgIHVuc2lnbmVkIGxvbmcgaG9sZV9taW47Cj4gKyAgICAgICAgICAgICAgIHVuc2ln
-bmVkIGxvbmcgaG9sZV9tYXg7Cj4gKwo+ICsgICAgICAgICAgICAgICBob2xlX21pbiA9IGxvb25n
-YXJjaF9tZW0udGV4dF9vZmZzZXQ7Cj4gKyAgICAgICAgICAgICAgIGhvbGVfbWF4ID0gaG9sZV9t
-aW4gKyBsb29uZ2FyY2hfbWVtLmltYWdlX3NpemU7Cj4gKyAgICAgICAgICAgICAgIGhvbGUgPSBs
-b2NhdGVfaG9sZShpbmZvLCBsb29uZ2FyY2hfbWVtLmltYWdlX3NpemUsCj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgTWlCKDEpLCBob2xlX21pbiwgaG9sZV9tYXgsIDEpOwo+Cj4gICAgICAgICAg
-ICAgICAgIGlmIChob2xlID09IFVMT05HX01BWCkKPiAgICAgICAgICAgICAgICAgICAgICAgICBk
-YmdwcmludGYoIiVzOiBsb2NhdGVfaG9sZSBmYWlsZWRcbiIsIF9fZnVuY19fKTsKPiAtLQo+IDIu
-NDIuMAo+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpr
-ZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
-aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On 11/26/23 at 05:26am, kernel test robot wrote:
+> Hi Baoquan,
+> 
+> kernel test robot noticed the following build errors:
+> 
+> [auto build test ERROR on arm64/for-next/core]
+> [also build test ERROR on tip/x86/core powerpc/next powerpc/fixes linus/master v6.7-rc2 next-20231124]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Baoquan-He/kexec_file-add-kexec_file-flag-to-control-debug-printing/20231124-113942
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/core
+> patch link:    https://lore.kernel.org/r/20231124033642.520686-5-bhe%40redhat.com
+> patch subject: [PATCH v2 4/7] kexec_file, arm64: print out debugging message if required
+> config: arm64-randconfig-001-20231126 (https://download.01.org/0day-ci/archive/20231126/202311260548.1HaxcDnE-lkp@intel.com/config)
+> compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project.git f28c006a5895fc0e329fe15fead81e37457cb1d1)
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231126/202311260548.1HaxcDnE-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202311260548.1HaxcDnE-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
+> 
+> >> arch/arm64/kernel/machine_kexec.c:35:2: error: implicit declaration of function 'kexec_dprintk' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
+>            kexec_dprintk("%s:%d:\n", func, line);
+>            ^
+>    1 error generated.
+
+Thanks for reporting. It has below kexec related config items, whereas
+the kexec_drpintk() is only defined in CONFIG_KEXEC_FILE ifdeffery
+scope, moving it to CONFIG_KEXEC_CORE iddeffery scope in <linux/kexec.h>
+can fix it as below draft code. Will update patch 1 to include the code
+change.
+
+===
+CONFIG_CRASH_CORE=y
+CONFIG_KEXEC_CORE=y
+CONFIG_KEXEC=y
+# CONFIG_KEXEC_FILE is not set
+CONFIG_CRASH_DUMP=y
+===
+
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 66997efe36f1..b457b0d70f3f 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -265,13 +265,6 @@ arch_kexec_apply_relocations(struct purgatory_info *pi, Elf_Shdr *section,
+ }
+ #endif
+ 
+-extern bool kexec_file_dbg_print;
+-
+-#define kexec_dprintk(fmt, ...)					\
+-	printk("%s" fmt,					\
+-	       kexec_file_dbg_print ? KERN_INFO : KERN_DEBUG,	\
+-	       ##__VA_ARGS__)
+-
+ #endif /* CONFIG_KEXEC_FILE */
+ 
+ #ifdef CONFIG_KEXEC_ELF
+@@ -508,6 +501,13 @@ static inline int crash_hotplug_memory_support(void) { return 0; }
+ static inline unsigned int crash_get_elfcorehdr_size(void) { return 0; }
+ #endif
+ 
++extern bool kexec_file_dbg_print;
++
++#define kexec_dprintk(fmt, ...)					\
++	printk("%s" fmt,					\
++	       kexec_file_dbg_print ? KERN_INFO : KERN_DEBUG,	\
++	       ##__VA_ARGS__)
++
+ #else /* !CONFIG_KEXEC_CORE */
+ struct pt_regs;
+ struct task_struct;
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index be5642a4ec49..bddba29a1557 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -52,6 +52,8 @@ atomic_t __kexec_lock = ATOMIC_INIT(0);
+ /* Flag to indicate we are going to kexec a new kernel */
+ bool kexec_in_progress = false;
+ 
++bool kexec_file_dbg_print;
++
+ int kexec_should_crash(struct task_struct *p)
+ {
+ 	/*
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 7ae1b0901aa4..8f87644b4eec 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -38,8 +38,6 @@ void set_kexec_sig_enforced(void)
+ }
+ #endif
+ 
+-bool kexec_file_dbg_print;
+-
+ static int kexec_calculate_store_digests(struct kimage *image);
+ 
+ /* Maximum size in bytes for kernel/initrd files. */
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
