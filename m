@@ -4,85 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6B718C4167B
-	for <kexec@archiver.kernel.org>; Sun, 26 Nov 2023 00:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 525CCC4167B
+	for <kexec@archiver.kernel.org>; Sun, 26 Nov 2023 03:28:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=KyVZ0TjLIAFHZKkMAhhciFxXibWWyCDmr3hvLkWnsgQ=; b=NCVe5KmL06cKOk
-	PLzPZlwVkGIb5F+hHZcmm6RxO+VLf6OxiqgIQrAzVoth2r4FtxYhq3gFk5jju2Af+DGWbu4P+5Yih
-	Ou5ydg03ysUex3OGlvhKAUgVOdV6v3PWJb1pGiL/ixQKr3fccdailtRxX4AyefArHhahYG7Ey+mVf
-	dtIIpOc122SSpxE6nretX4dlIrwioi2cd2eYD2CxstNnQ04DzkaQEKYlQqp2+rXMWlg3mH96hShG/
-	zxLlqtXdhxmkuS3yGyPsRp4tjNGwl0EerWcJpIRHq1pLj8JjwHjCTC7ub7pLjnrwlRs+uVyjFNOst
-	Iy0t4vHZEwOkmct89j1g==;
+	List-Owner; bh=nZwS3srZle+vGalj/rRruCvt5o90tZY4hGcM3pOlz0o=; b=AOjk7EVwY5uD5k
+	2NLDMHROSjbE7OBft8SoOtDGZJMxxPDxH1sB1nlnDjDr39NbUEjZ2KFHZdXidqxGIvEnZH9p2I7Nv
+	cc4ho7hd2bw3pM1/iQjU+LLub04veQub8HZLb79qVGJcTy7FZ8AMI/hnrrFnPYDqDI4RUbAJczJKm
+	f8fMQeeoE/3HfGU3S9EYe/smgIUpTmQdUtP3EdbTARX3If8eqI+ix8lmtcGeWMrRBCDoTfBeEj8ml
+	lHMce8n+1oxYbNpRB8VNdAH9OlSSvPxiVrGyVvaymUUvka+Mtn81+Lpa2inQThzehDn10qbk9ZfpC
+	zUaY5BQFYQIq79+Z5uaw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r72ga-009z3i-1t;
-	Sun, 26 Nov 2023 00:07:44 +0000
-Received: from sonic306-22.consmr.mail.ne1.yahoo.com ([66.163.189.84])
+	id 1r75oz-00AAIN-1C;
+	Sun, 26 Nov 2023 03:28:37 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r72gW-009z2Y-2U
+	id 1r75ow-00AAHc-0D
 	for kexec@lists.infradead.org;
-	Sun, 26 Nov 2023 00:07:42 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1700957254; bh=VOkfTpOmq17D1dSJ+Jm/40t0YEg9kmf39h8y5d76ulg=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=H75y2WMcuwE92zd4N89muiHtpEdiKyI7LUUmiyyRWXjKZcWcogIFtF0daOxNgZ1Xd98lDAop7FOnLdoEWbJ3GC21lQUl3LYPPJyjrrQeWEs+aKeDVt+nHf3IsKbbOgUdNJpqCWFHqPMflYvdpzZ/oxb78EIY3Hlek4E8Qc1Z4DnJx5sR802ue2sZ1eUBLx/u71GApXcgJtPnpg2+r76ruINwsw8OwgvZbHNU7TyrpKUK3Ow/ZDhejHJ+9nJvtinh2cMtXG3Z8SHDvv5hmCeR2PZfKZy5lsD8z9YaBKZWxrvnBks2ynm7AdsUmN8PtdVL2lh2Obx0pXJIlFFd0e70wQ==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1700957254; bh=obGfrgAMlmRv4h6ywM3ev7exycNZAfh0opSu0pk9QiX=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=MDeAajrJSuW819v2eRlt/X7UkG3tJSIgjGjHXg2pEpVKozEAD7W+4BFjqQa/A7DbKgelMj35YlCauZ11mSkbRjtAiSj+Eln9alOwpW4ajywZ/8kzKqNlN6ldo3efw2m6PLg5wTSs5KZCc+7bKP4BsJlYvlejOQvnSQ/8IMne2oALZj+TkeoxOjniUXCYD+VxOkI6i/ob0IYsDjXNWnHA4aLbzSComM05AKqihXKNnX+Cds7IlBPFX7V3zRzpb7/vfFoPs5eE6hc1o0pLaX/iqGcrb48G6fQZO593Qn0GQRPDDK7rsNJOTzpWBgAyj7lU8xWy0WmquP/3Bkc7u+ACkg==
-X-YMail-OSG: R20dOCsVM1nj2FsYcnJkU1x2XJ1s0Q04jmjXXQatqjvhdah5S8F6M2Lz7_qXSX2
- OPEvLJ5hwPCe1hLuOIBu7nkQ70M1MnFNh7zgi._3d6lY7.I_YseEwLR4lknqZ6pBc1qluF_qmuzg
- VKfoBQ6UCM_EUwUe5jIiwtXLn8Ppk_rDKFjr5mqiwUj7utE.sEK.3putvNylPUJBLe_oHe1Kx6Gx
- 3aaGa1wwWd2Z0uRWCmI_Q.E0pSzlPoPHu7B0c4nvlu99EzBeAvMyDqJ.ine9M3C3DHU3CZkc_vHJ
- pP0CUg4bFfQZDwXJP5ucXNc4MNfFPC7i9QJLKgyRRXZu9.9JrfcgO5RYGbI.8iggdkHbdRCKm28.
- lXLBRBLYnlcWHkyJxlF2bwhauzMXQZLMEpxNW8u9ZWdbQ6etqbN3chxrLq36j3QHu3cW2MjgbWRH
- t8pIt.VabXomBSTSop.dIMla.9yJw.z5xf4RwFzG4Nbt4FTEeyqXxaHWvaXOcNtY8WXV.yvEGes6
- vQfY_dyf1tljuElFiQEdiOPtDreIYw1Jgh2ZapjWjYCtMNY.YPfCnv3wOlW_rcqd4GBusxR6sP9U
- j_YoT2DG0Y_FhC_vyvTumPpuB64dR0_hb3t9VAavilWmEhqlTtnkys6.JiHPJoTRcPLLSZd7lqbl
- 4ZkdtWGo77u.3oOMk_A31aj45S0PCEyLt7yD_fICF_qaq8DqnuxxmKBZIiQlp8BJLiH68zMZ9YBv
- G8qRbnJ4EO5c759S4lFLMle402IYlqDJy_8floFPFTlUuULWYY4fXhrRQtjelwKjzumYf85ljY42
- dGcFheIymaFTUDHlJkcs.kBXEft6Y.x7i5sqEm55nIzk_ZwoK.9AsKxqkw1S.5BI6_tOiqEazRme
- 4A9L.pWNM4E0t8wdlKdftWRM8DFshrNKHcmYR4XA8VnCdOkvDV.7jAIqAYC8IrY4Yjrnch8aq1mF
- WFQjBw2ydpCDVPKKFG5oP7Yt2f7p6Y_qU5_8Q1jsSMsDVksw1SmE2DwHFHICJPnz.ATPHVFGLLYv
- 9sipqExspUYcFiSbnZj3acUJOxIKll.gIhnN84K0Cr4QYzEz.AITMxbwVxOiPCuZK6G4Zkrw05MI
- LVjkBstdwyM_MRZee38zV.8oqLOcogVjfptFxCcgKkXJrYD9XW1fhHKLY3wIpP6BuuUHKh4WBiKI
- hIK.Yi9hJh3a98iA_JZBMNCd3bfRGyypdqj5Te7K2gFLx51l6GnL1kT4asU8PtMx8bjKcqijEid6
- h93eYMhsd16GZmqSm7WDDOfdW9K4aFe0VvB7qmV9OoIqohiHczaLX5lZEkATrFzbtriczaRWwi5_
- 6z0JDfE9qPoETKf6jRTp7WAvOs25hBWfc4eNfA..nndzXg35z46gNyX4GWI1OtNiBgs5PNBEjlSu
- FJrTfcHBFrToA46reuXSFgvB6mefqAHvJ.jooguLuqYPu2mJeT3IQt8bxPGSQpTZYCklo2KNR.m5
- SWN4NFlE7SY5Wo0SYlWI5d8a7rIsPoc.LRruVcMh9BTyI9Y9jxYsvNlPNp6P5vg_GiHaOqYdU6vq
- kyEb8IK5FevHGmED6ONA4fqb1D6gxWBABds91YpipBy.dOa4MHkze6yLerV4N0k4OzJudkROCZeE
- 36P4gSrWQVCingXRncF7o8jy.M.Dnk8r0jqj_W7rsVWa.0fNhgehsitAEUrd5hE6X3O3SxPPUeMZ
- Bz4KqsbKrUnoZwvS.3PIsDECzeWvADZpRAZafa77PKDw0BUIBy6p.6SUkudDkdXogaooFY6hdNtk
- eYWZmXFMdZwZvJUhODSz.hf9rg_N_pbMmPs3j.qcO2sehiHkgh9AkQx3gP0mwGB90sXu55qrvfTw
- xFSxAjsIeJyLCJA8xqZfvNfu7OO..i1Yo4s5.z3gvtbhQ8xJlwjXwgt0j2SRSi8TkNUNSPW.ZY71
- teiFewVyKjuukWJNBIa7afcJn0gq0btbqZuDxqIDVknpppa3KHOGxX7BzWNb9E2itEoruJzEf4Hn
- rImYPvyDvR1YPdyw65f.csC.1AbY_QslZmIWKVyecmFrIJBlHr5Rq084l3GXsy43mD9B98B5rmOQ
- sQi95qH.5X5vA0eQSI91GliiJM67lwzKtiJMCnsDQQnAHaycIByyqL8LzHTZ4jHEKqkkQurkb7kC
- 0mUdpCgYMwuJncFznHHU.klVXX97WZn0.iFtu2yKV2n6QH4btPQktli1ZMEiCoJqIHsFcdLM1pXs
- 7rNz7eYN9sW3fFTY7pXiMQdimJmR4kpwjJZ91hZzRTNaOL32ZOx1eAGH4V7vwmGObWddkCLtFsEt
- PbyAM0w--
-X-Sonic-MF: <eric_devolder@yahoo.com>
-X-Sonic-ID: cdb36c69-f708-446d-9126-27534636572e
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic306.consmr.mail.ne1.yahoo.com with HTTP; Sun, 26 Nov 2023 00:07:34 +0000
-Received: by hermes--production-bf1-5f77bdbcd8-5xzjb (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID dd8da3a747f8cbf8b17a5db131ed2f58;
-          Sun, 26 Nov 2023 00:07:31 +0000 (UTC)
-Message-ID: <5ab45f48-9ec2-4611-81a2-4dc2f1854c4f@yahoo.com>
-Date: Sat, 25 Nov 2023 18:07:29 -0600
+	Sun, 26 Nov 2023 03:28:35 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 85E7060D58
+	for <kexec@lists.infradead.org>; Sun, 26 Nov 2023 03:28:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33AA7C433C9
+	for <kexec@lists.infradead.org>; Sun, 26 Nov 2023 03:28:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700969310;
+	bh=OYOHGNO0l10c6uw66DK7YJ/0AYaK9T9FtS3chTdnDhM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=kVnRW9hEZbK3hream57aZRVHH/hwWqei//DQOZ7dqGCRYCiXGWfEntb37Qfs0HY+4
+	 fzJ2+noWB6R5AOAYD9yC7KW34V1CLJBJBPofjYaNHi9z2JnOqcu/tLdjsjXCvVPmJn
+	 DOj4vRXzF9C3uworiZLpL0FbAnChyxSxvibhaxo1ZnsZqg8aRg/mTbaT/u9JDju5gg
+	 NYEMZxeKD6Yf5xNlQzjtPB1SnF1SwFUSrjCWBrrIJMsA+T9NR99Gu0M2a+sdHFQ3AU
+	 b9/04zwGUhLWb4hZNlk+GWw/xoqvorTBdo0X/97g4/KG2HUYk8kb8vTKs6RzH0tIei
+	 4OJ0LshipLNcA==
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-54af1daf6a9so3554543a12.1
+        for <kexec@lists.infradead.org>; Sat, 25 Nov 2023 19:28:29 -0800 (PST)
+X-Gm-Message-State: AOJu0YxZ1lGoyesrxDWKzmZ7rT3p6qkJ8OB4T1y68ne6CbAm35XNbkOs
+	fj5KL/NJPz/ayWWvqChgybYZjP/3PuufP2Epw8Q=
+X-Google-Smtp-Source: AGHT+IHph+umJtx0eO94MZ9Pi4YTFWvaEnEFL87k4jNTkYp4+r4hYWIJOpjOtLCLI4BCvgktx3xDzelh88h2mmaepOU=
+X-Received: by 2002:a05:6402:a41:b0:54a:fc86:f0c6 with SMTP id
+ bt1-20020a0564020a4100b0054afc86f0c6mr4923426edb.21.1700969307646; Sat, 25
+ Nov 2023 19:28:27 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] kernel/Kconfig.kexec: drop select of KEXEC for
- CRASH_DUMP
-Content-Language: en-US
-To: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
-Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-s390@vger.kernel.org, akpm@linux-foundation.org, ignat@cloudflare.com
-References: <20231123073652.507034-1-bhe@redhat.com>
-From: Eric DeVolder <eric_devolder@yahoo.com>
-In-Reply-To: <20231123073652.507034-1-bhe@redhat.com>
-X-Mailer: WebService/1.1.21896 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
+References: <20231124085410.107080-1-wangrui@loongson.cn>
+In-Reply-To: <20231124085410.107080-1-wangrui@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 26 Nov 2023 11:28:15 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7HyfD2bV+g3qfJXw9z0tC2WRRnHjbPgibdanNWGjxN1g@mail.gmail.com>
+Message-ID: <CAAhV-H7HyfD2bV+g3qfJXw9z0tC2WRRnHjbPgibdanNWGjxN1g@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Fix an issue with relocatable vmlinux
+To: WANG Rui <wangrui@loongson.cn>
+Cc: kexec@lists.infradead.org, Varad Gautam <vrd@amazon.de>, 
+	AKASHI Takahiro <takahiro.akashi@linaro.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231125_160740_855525_ABEC44E2 
-X-CRM114-Status: GOOD (  15.26  )
+X-CRM114-CacheID: sfid-20231125_192834_151144_CC008AFE 
+X-CRM114-Status: GOOD (  19.89  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,74 +75,38 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-
-On 11/23/23 01:36, Baoquan He wrote:
-> Ignat reported a potential config regression was introduced by
-> commit 89cde455915f ("kexec: consolidate kexec and crash options
-> into kernel/Kconfig.kexec"). Please click below link for more details:
->
-> https://lore.kernel.org/all/CALrw=nHpRQQaQTP_jZfREgrQEMpS8jBF8JQCv4ygqXycE-StaA@mail.gmail.com/T/#u
->
-> The patch 1 fix the regression by removing incorrect CONFIG_KEXEC
-> ifdeffery scope adding in arm's <asm/kexec.h>, then dropping the
-> select of KEXEC for CRASH_DUMP. This is tested and passed a cross
-> comiping of arm.
->
-> Patch 2 is to fix a build failure when I tested patch 1 on x86_64, the
-> wrong CONFIG_KEXEC iddeffery is replaced with CONFIG_KEXEC_CORE. Test
-> passed on x86_64.
->
-> Patch 3 is to fix an unnecessary 'select KEXEC' in s390 ARCH. Removing
-> the select won't impact anything. Test passed on a ibm-z system.
-
-I apologize for my delay in responding, I did not have a computer with 
-me during my holiday travel.
-
-I was able to re-run my Kconfig test script with this patch series (now 
-that I'm running this on private resources, it takes half a day 8( ). 
-The script only performs comparisons of the .config before (LHSB) and 
-after (RHSB) the patch series; it does NOT do any building. At any rate, 
-what that revealed was only differences in s390. That means that all 
-other arches do not have any unintended side effects. The differences 
-with patch3 applied look like:
-
-FAIL: allnoconfig arch/s390/configs/kasan.config
-LHSB {'CONFIG_CRASH_CORE': 'y', 'CONFIG_KEXEC_CORE': 'y', 
-'CONFIG_KEXEC': 'y'}
-RHSB {'CONFIG_KEXEC': 'n'}
-
-The 'allnoconfig' and 'olddefconfig' targets failed for all s390 
-defconfigs. The LHSB is the pre-patch values, and the RHSB is the 
-post-patch values. So this states that CRASH_CORE and KEXEC_CORE were 
-set previously, but now they are not. KEXEC obviously is being turned 
-off intentionally.
-
-Hope this helps some.
-
-Regards,
-
-eric
-
-
-
-> Baoquan He (3):
->    kernel/Kconfig.kexec: drop select of KEXEC for CRASH_DUMP
->    drivers/base/cpu: crash data showing should depends on KEXEC_CORE
->    s390/Kconfig: drop select of KEXEC
->
->   arch/arm/include/asm/kexec.h | 4 ----
->   arch/s390/Kconfig            | 1 -
->   drivers/base/cpu.c           | 6 +++---
->   kernel/Kconfig.kexec         | 1 -
->   4 files changed, 3 insertions(+), 9 deletions(-)
->
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+UmV2aWV3ZWQtYnk6IEh1YWNhaSBDaGVuIDxjaGVuaHVhY2FpQGxvb25nc29uLmNuPgoKT24gRnJp
+LCBOb3YgMjQsIDIwMjMgYXQgNDo1NOKAr1BNIFdBTkcgUnVpIDx3YW5ncnVpQGxvb25nc29uLmNu
+PiB3cm90ZToKPgo+IE5vcm1hbGx5IHZtbGludXggZm9yIExvb25nQXJjaCBpcyBvZiBFVF9FWEVD
+IHR5cGUsIHdoaWxlIGlmIGJ1aWx0IHdpdGgKPiBDT05GSUdfUkVMT0NBVEFCTEUgKHRoaXMgaXMg
+UElFKSBhbmQgQ2xhbmcsIGl0IHdpbGwgYmUgb2YgRVRfRFlOIHR5cGUuCj4gTWVhbndoaWxlLCBw
+aHlzaWNhbCBhZGRyZXNzIGZpZWxkIG9mIHNlZ21lbnRzIGluIHZtbGludXggaGFzIGFjdHVhbGx5
+Cj4gdGhlIHNhbWUgdmFsdWUgYXMgdmlydHVhbCBhZGRyZXNzIGZpZWxkLgo+Cj4gU2ltaWxhciB0
+byBhcm02NCwgdGhpcyBwYXRjaCBhbGxvd3MgdG8gdW5jb25kaXRpb25hbGx5IHNraXAgdGhlIGNo
+ZWNrCj4gb24gTG9vbmdBcmNoLgo+Cj4gTGluazogaHR0cHM6Ly9naXRodWIuY29tL0NsYW5nQnVp
+bHRMaW51eC9saW51eC9pc3N1ZXMvMTk2Mwo+IFNpZ25lZC1vZmYtYnk6IFdBTkcgUnVpIDx3YW5n
+cnVpQGxvb25nc29uLmNuPgo+IC0tLQo+ICBrZXhlYy9rZXhlYy1lbGYtZXhlYy5jIHwgNSArKyst
+LQo+ICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQo+Cj4g
+ZGlmZiAtLWdpdCBhL2tleGVjL2tleGVjLWVsZi1leGVjLmMgYi9rZXhlYy9rZXhlYy1lbGYtZXhl
+Yy5jCj4gaW5kZXggYmVhN2IzZS4uYjMzNzY0MiAxMDA2NDQKPiAtLS0gYS9rZXhlYy9rZXhlYy1l
+bGYtZXhlYy5jCj4gKysrIGIva2V4ZWMva2V4ZWMtZWxmLWV4ZWMuYwo+IEBAIC0zOSwxMiArMzks
+MTMgQEAgc3RhdGljIGludCBnZXRfZWxmX2V4ZWNfbG9hZF9iYXNlKHN0cnVjdCBtZW1fZWhkciAq
+ZWhkciwgc3RydWN0IGtleGVjX2luZm8gKmluZm8KPiAgICAgICAgIHVuc2lnbmVkIGxvbmcgZmly
+c3QsIGxhc3Q7Cj4gICAgICAgICBzaXplX3QgaTsKPgo+IC0gICAgICAgLyogTm90ZSBvbiBhcm02
+NDoKPiArICAgICAgIC8qIE5vdGUgb24gYXJtNjQgYW5kIGxvb25nYXJjaDY0Ogo+ICAgICAgICAg
+ICogYXJtNjQncyB2bWxpbnV4IGhhcyB2aXJ0dWFsIGFkZHJlc3MgaW4gcGh5c2ljYWwgYWRkcmVz
+cwo+ICAgICAgICAgICogZmllbGQgb2YgUFRfTE9BRCBzZWdtZW50cy4gU28gdGhlIGZvbGxvd2lu
+ZyB2YWxpZGl0eSBjaGVjawo+ICAgICAgICAgICogYW5kIHJlbG9jYXRpb24gbWFrZXMgbm8gc2Vu
+c2Ugb24gYXJtNjQuCj4gKyAgICAgICAgKiBUaGlzIGlzIGFsc28gYXBwbGllcyB0byBMb29uZ0Fy
+Y2guCj4gICAgICAgICAgKi8KPiAtICAgICAgIGlmIChlaGRyLT5lX21hY2hpbmUgPT0gRU1fQUFS
+Q0g2NCkKPiArICAgICAgIGlmIChlaGRyLT5lX21hY2hpbmUgPT0gRU1fQUFSQ0g2NCB8fCBlaGRy
+LT5lX21hY2hpbmUgPT0gRU1fTE9PTkdBUkNIKQo+ICAgICAgICAgICAgICAgICByZXR1cm4gMDsK
+Pgo+ICAgICAgICAgZmlyc3QgPSBVTE9OR19NQVg7Cj4gLS0KPiAyLjQzLjAKPgoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0
+CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9rZXhlYwo=
