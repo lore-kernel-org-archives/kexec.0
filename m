@@ -4,80 +4,123 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id F14A7C4167B
-	for <kexec@archiver.kernel.org>; Mon, 27 Nov 2023 01:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7EC0DC07CA9
+	for <kexec@archiver.kernel.org>; Mon, 27 Nov 2023 02:08:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=OYBa2cwHHydG2fnSxU6G9djY5/Gt4NnYE6MWDG3mLMs=; b=QJqH80rmWUhUwL
-	oLqflw/MC/WkJT0Ld8DMVfeLpbQutUAx7KeSj00zjIq5630oFOKJvPo81GrmMzdmSn+m9UnByVdNg
-	ZuDxk6A+M5kyZBHPEAVEase53As5H1ZTtJWtGRuwwoJyC1dZB/UW08d8T1y9UM+7Bfrx18w1/8+Ol
-	GjuDKpuV/8GFnL4r5pA/a/7crBFTC+WiiCJT50I7XPjKSwcVmiMlHSd/hDdflwHJLwEwlXXDeGqny
-	yMrpDEhf6DyblCLT37N1U72EGx5uoG1x7Z5LqdZe3U/oZ4iD+hNCePUz49th7hFctxL4U1Cn0V/yE
-	mPA6aNi6j6j+4Jnsc8ow==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=2eF/Avdo3wKW1Dc5EhsYk0isZzJGEbdCFlMFyOu8vkU=; b=geQ36rbuM08G2D
+	ICZm1aqAxc38lOP41n6wfPnr8qaq/HICieMfCrGgo0oPuj8dxIexPO5fyYnQKu8pjWT5xEPmCVs59
+	vcgOpM+XDtlVJDBw0Boz1jnq3h51SU3eiVf6j1BecwMBtU9NXCB8/Frlx1MokNLt332tnGChqw6W7
+	KjWeuXObgsj/1YyDtFd2B7GbPryoFFW9cu8a4odRntBuHD2U5Xv58k1WbTcPeLZ19b6xRHAvSp8eJ
+	Lslfc14oLHKdwDSdNQzaNfH8RFEyQqOuUGdUlvWkmzaoSttyZclbgJ14Qocv0n7rL09o93B/Bh6SF
+	SZY53uVj0eYLiEpmS3cg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r7QqX-000T9V-1K;
-	Mon, 27 Nov 2023 01:55:37 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1r7R2l-000a2z-1b;
+	Mon, 27 Nov 2023 02:08:15 +0000
+Received: from mail-sn1nam02on2071e.outbound.protection.outlook.com ([2a01:111:f400:7ea9::71e] helo=NAM02-SN1-obe.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r7QqP-000T5P-2C
+	id 1r7R2h-000ZzV-2P
 	for kexec@lists.infradead.org;
-	Mon, 27 Nov 2023 01:55:32 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1701050127;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ctth5Nh+2rAzjhGGA8ryb0kGXerLCZUwTpt4ADWW7qk=;
-	b=K5uUik3VJp90FhP+S5AcVuCJUFtRzDtukzqRsiKlogKQihbr3MAy6THnrClPPSBKovwxLQ
-	sxjXeJIyskPPO37K9MZ+40zfHSkPPbiVbSFqzIl7dKv+a3CRmodzzCH/O0s3voFej3gXaN
-	UZtElsRbfZ8lMKSxZ7XqaV+Egu6SMXg=
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
- [209.85.166.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-456-EVifhS25N1-7Yk-wOsA2pg-1; Sun, 26 Nov 2023 20:53:45 -0500
-X-MC-Unique: EVifhS25N1-7Yk-wOsA2pg-1
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-35b354b5b6cso3151545ab.0
-        for <kexec@lists.infradead.org>; Sun, 26 Nov 2023 17:53:45 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701050024; x=1701654824;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ctth5Nh+2rAzjhGGA8ryb0kGXerLCZUwTpt4ADWW7qk=;
-        b=Pno79+SgR9KQVAlBQgI57k1OH5zA0J+JmgfMg4JqSixe7hOm5LLs67wlLrl5y+kFxE
-         RLVQWVrSbXthaxEmTvTxSqNGoP+sLg/m/pRmDfvOpd4YVWGtkf2yHgPvPGSSwUJNtaN+
-         sFJzK5lMxuvWQkOCBMIqBBPgLahHBk+PLH4kGOLy7kuSCLisSgrv4KJUzE++upLQ4gap
-         N1GT/s42MYe3xMNZJsyuVBslD+G7dnhPxaG85IM6p6AP0F3oY5YI7iDXS2yGvlyAVfY8
-         8YQg61CFESadPjynZoC0GY/G1AGfRiLiLQC4W4QImV7eoLikjF/LtbZuB/IzgNKKR0vg
-         foLQ==
-X-Gm-Message-State: AOJu0YzJN9dkVVrvIL7e1hoq/i2ruRnuIUjK5jQherhbbfKj36IZXzDP
-	nw/6buajqK2uPN2Kqzzk7ZrV/a3ty7iW6u6Bm1PhqpGWP82lMyUV3jNJIGWqhF2V7uJQ367rYeS
-	AOdE8pxrVGzDyxdThZfY16ffxesKtcEkIkMWb
-X-Received: by 2002:a92:c84b:0:b0:35c:baec:750c with SMTP id b11-20020a92c84b000000b0035cbaec750cmr2348005ilq.1.1701050024423;
-        Sun, 26 Nov 2023 17:53:44 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGvRXqWMTsyYGdo5bH08PjLpalZgkVqh/Oiq68CjRnVbN9lfdIy7dIbS/o9j2fLiXMwf2q+8pEsEQnmn3+LRXs=
-X-Received: by 2002:a92:c84b:0:b0:35c:baec:750c with SMTP id
- b11-20020a92c84b000000b0035cbaec750cmr2347985ilq.1.1701050024022; Sun, 26 Nov
- 2023 17:53:44 -0800 (PST)
+	Mon, 27 Nov 2023 02:08:13 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iBTTPu9M6BBQoaj6daptJRWoEFGfzHaW7hy7SbSLVR4dX1VQGT9Hk98RLfgWKQS+g95B311UwQ/tVOj7lesf30HgOjEGWxvquGiZfxcc486Tjg+AtzYh0kaeVjtHycX7PuFe4Xv9DgWhihSpR57KW5dmh2ee8ifPsdM8eCI6UoGdo6WJA7gvOZc5Tm56Tm4wC5LuHhQCyqXXtSki9o56tg+kXEcGjrKIQ6TS5cqc8ixgXRvc5NTmHHghH3EMV0tRD0Uphuow5r5tQ8Tx2k5lW2CGO6qFxJzpsTJxnthIjznIx55JFZRS6xzMA7Ckf0aizr5nTCW0lvc/ITSH4v8UzQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QJydsXx1Ha46Vgcq4zg6QmrLj2CWYUVkrM2cHsJj6eA=;
+ b=dNYREbQ9f8yI4OU4o5pevy2sKPdH4I4qPuxTiRpBiCM32P7B8B6y21DRiC/lgBhioQUUMwHolmI8yYZwqtiPdSo0VLMzK0ysRM889DWvlRE54zU+5/vm6JO4OFC85Y9mivGW1n94zM8ggrvkSkWmZOurnaPZDe7uqXQ4vEzfJFKiaK9k1CggM5ocFqyO5smpte43hjBlNCfS0tzfbiJygO2p4IWn48SPspxEcoyYm4x2DL+IX8321EM//1+M4fADOrEOnuIjwxUYffjqvs0oc0DPEuHV1HmOYjLJ6KHCMFDfapSB0a5E2EZx/4O0MREgYsof0KYoBQ3knp7nF2rdgg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QJydsXx1Ha46Vgcq4zg6QmrLj2CWYUVkrM2cHsJj6eA=;
+ b=JpG3MkPZocaNGwT4yTKJy7SZD7DpUnHPE04JgjwgDlMuMXsrQSJY5+PXyfWY2etbG4DV0JeAys455yGzaSo2XgQn8GFkUegoPU+MehY2HuWp/wZ63UAbUxaVq6FQ2D5gYmmLQA3xyaSSrf4C92cqkLL9BN72AMqVBZDjVwgyDq8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from PH0PR01MB7975.prod.exchangelabs.com (2603:10b6:510:26d::15) by
+ SJ0PR01MB6381.prod.exchangelabs.com (2603:10b6:a03:29b::20) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7025.27; Mon, 27 Nov 2023 02:07:53 +0000
+Received: from PH0PR01MB7975.prod.exchangelabs.com
+ ([fe80::3f45:6905:e017:3b77]) by PH0PR01MB7975.prod.exchangelabs.com
+ ([fe80::3f45:6905:e017:3b77%7]) with mapi id 15.20.7025.020; Mon, 27 Nov 2023
+ 02:07:53 +0000
+From: Huang Shijie <shijie@os.amperecomputing.com>
+To: bhe@redhat.com
+Cc: vgoyal@redhat.com,
+	dyoung@redhat.com,
+	kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	patches@amperecomputing.com,
+	Huang Shijie <shijie@os.amperecomputing.com>
+Subject: [PATCH] crash_core: export vmemmap when CONFIG_SPARSEMEM_VMEMMAP is enabled
+Date: Mon, 27 Nov 2023 10:07:27 +0800
+Message-Id: <20231127020727.25296-1-shijie@os.amperecomputing.com>
+X-Mailer: git-send-email 2.40.1
+X-ClientProxiedBy: CY5PR10CA0029.namprd10.prod.outlook.com
+ (2603:10b6:930:1c::27) To PH0PR01MB7975.prod.exchangelabs.com
+ (2603:10b6:510:26d::15)
 MIME-Version: 1.0
-References: <20231125065232.116319-1-wangrui@loongson.cn>
-In-Reply-To: <20231125065232.116319-1-wangrui@loongson.cn>
-From: RuiRui Yang <ruyang@redhat.com>
-Date: Mon, 27 Nov 2023 09:53:32 +0800
-Message-ID: <CALu+AoRThqZWGv6+-d0PUFA2XNL1g2-H5HrxHGR5OrTerfpbiQ@mail.gmail.com>
-Subject: Re: [PATCH v2] LoongArch: Load vmlinux.efi to the link address
-To: WANG Rui <wangrui@loongson.cn>
-Cc: kexec@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>, hev <r@hev.cc>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR01MB7975:EE_|SJ0PR01MB6381:EE_
+X-MS-Office365-Filtering-Correlation-Id: 10038ec7-0fbb-4b63-932f-08dbeeeda9e6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: gMxgxyvz6uOZgWYjWmH7Ih6FBlkViWb/0+eKORhXXm8F/nP1rmY3YX9DVsAlRZst2NkgWdsfFjnt8v5o0ucAPHmOvDtwGLGxpRpH8Gx/aiI+mrCTf7omtTNvFG78MTo1rrwH/1auahrvhcx+Zz4+1FXCQYGrHrI2joKF6aflojtVs48leI9mObNVytMWL4jHg0T8XO84xcXSioOa9kSINvuLccX5YIZwYjpH+34WOY+XpkX48fM8CQdkSLj8siiju46VZwAT+K0A3Fej9irMOLG3t/Tz8d0HVHD1rv6MO3dUKUTbK8cuV8IJshZzBDQuem4v2er4shLkyA5KGvHOb4qDSbivwIDznFAPcC5Jt5tNVQiUbGKYRHZ6jpAuIMUZcoGkGAbQ0ZqZMt5r2UkCzkX3nINpWXS0WGxg6d/Uv4RhrpZcKGaHH9ZF6YN1Q8T/swqrGGxkZ5Dw8Mv51ikvfQaWnE1Gbfh5hbmRRbNCEs2Yn5MiW428A/KuA9BzbVPiTsut5KOB5mi1/J2QIfY12JUBTKcWh9F5wgzHXIMP9i72YH7nMzrHsoRreGe5nEwgDuGqCLbMU1GorUq/SSrK3JtO7XANFkiFt3e26rVlva69XBs38vDNP/g09Xl17nt8
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR01MB7975.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230031)(39840400004)(396003)(346002)(136003)(366004)(376002)(230922051799003)(64100799003)(1800799012)(186009)(451199024)(4326008)(41300700001)(2906002)(4744005)(8936002)(8676002)(6512007)(2616005)(107886003)(86362001)(52116002)(6506007)(316002)(66476007)(66556008)(38350700005)(66946007)(6916009)(5660300002)(1076003)(478600001)(26005)(6666004)(6486002)(38100700002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?DsoWxVtbugW9vwM2OAnhcIC7g19oRsdv+Vbf6pITwS0iVR1/BxNHFgquqCJf?=
+ =?us-ascii?Q?L0br6ynlIwTx2Qp9s4f1ZSHvEqRHZN2uhN66TojNWL3UuWaglgSq7vwv9g3H?=
+ =?us-ascii?Q?bRBMl8lycqwxta3lY+wY8Rdsn/oXX24VZNn283jwgs4241UdH3JYS0R1Gn6c?=
+ =?us-ascii?Q?Z8UvIp2t0z8BLfyqnuIYHSPC0fyaDf5Ty/6J+pfinkDRcMdyc6jBThNKIe8s?=
+ =?us-ascii?Q?AskOowLpIWSPC2WbHeY9dPVDwkl1QAXwqiInhMWNI3p0mvdZOYy+4bVtfkZr?=
+ =?us-ascii?Q?c3+8BXjV6aVc74CvAU0enoafNbaVWWUlSxyq7rdC2rIra5Xo5vBLswKQUHnA?=
+ =?us-ascii?Q?oH+6f48uMJHuBc4HZMjYKF4W6jfnqWtXdD2Wwq6VILMtdIJFVBhyqa6Jfcxc?=
+ =?us-ascii?Q?YUdg7BQiD3CJOAB+8sW15tu+xNgkka8i9kHUHAksHFKzyNjcfg+NH4teu96v?=
+ =?us-ascii?Q?8RwU/+zX15cThin/6EHZ282xB1nq0pfEYnI0GluOsaa3nFAwCiWWmSNrOa6b?=
+ =?us-ascii?Q?LMq8K4etrw4iwjFztnFH10AEMyaiKKwNXclIqixYrYbQYXyX9+4lxPXQPYiO?=
+ =?us-ascii?Q?xvKyGPf4tjxx3nYKbiNPurn2EreLZ9nVpUdMr88S1J6DCf1x57hFRLqbdx1R?=
+ =?us-ascii?Q?+dU54Hy2MEW4LDxNenbJHRYVa4WqHTRdhTcOPlrgUSYdJU3jwXbjIt1KqN6t?=
+ =?us-ascii?Q?7PcBa/Q7+kTrk6EVCpDvvgWJJsQyMK5fSGqnXXh2S+Quegl4xOoe3ar9vp9p?=
+ =?us-ascii?Q?5BUf6aHlftieh/nk0V9LZP/B0gY1VegWWRgtUsktbLdQ8B2UybPvIYcLLfPa?=
+ =?us-ascii?Q?M7fdQ1EgHXCAAclRhn6dzr30tw5glWcw8tlG9sHvflK+DU57mHSx7D+WKu2v?=
+ =?us-ascii?Q?Q4n0hRVdZXfvgobO3vdNn4UBF4pgQmPoXceuhZzBXOBOhxERfH0idigukJcO?=
+ =?us-ascii?Q?/URwRVc8RmQQbEglZE9N+ztSkq8xOGumqedVQmLdFKsNHVEw8lCqRi8c0j33?=
+ =?us-ascii?Q?j6moXkYdPlA/6dYMrJYZstQZWeaNkNkQdnV74KL5hthhqrDOM/yu7oiYuUvT?=
+ =?us-ascii?Q?PQBnSJqy+PmdPPyN4cDCNVEqjSmOoyX7HwiegBttlQ3ATyUDpZYdEiJKNfgK?=
+ =?us-ascii?Q?85uvxvB/sVmUGLqCpeEh6/E8kiOcBHum46Re9erusPHk986aDGtmMwF9vPYk?=
+ =?us-ascii?Q?jIZKqehomneh+g46eDz+zchPCghtL+270enwtPRFlenFJF86CbbyZzNdHCOh?=
+ =?us-ascii?Q?nYODY86v2e9qGZF/b18zWTF4D0mG10QI6AFnB9sP3ciLgFn1svqpSyH/rSWI?=
+ =?us-ascii?Q?Z3qZ6sO36OQrStwfHKpF0BWPQ58nv3rcOTA7KegrhQHOeLXED+i50NbuziQC?=
+ =?us-ascii?Q?Kxe7/DkuOP88vh90nbf9QxlBacK4bDGwMIACvQrP02LfXQo3wYS5O2ccvTti?=
+ =?us-ascii?Q?S6Y830zEV4MLVds1me2NDT8Jcamz3aP2fDmcAUpWMOrdU+PpoYSes7ymPXgz?=
+ =?us-ascii?Q?QxADido+BLazSR/sb/dDbqwowP8WigNSyzRSh/UBMNnIKqPHLsMapF1dDzwI?=
+ =?us-ascii?Q?1BFcHPSQKONOk7jmw3JdWKYGAFuGC1nq6l3idX1AQwzgU1KCV9i8n/eQhrXq?=
+ =?us-ascii?Q?LFqywBDPvpuBC/hLTRcf2iM=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 10038ec7-0fbb-4b63-932f-08dbeeeda9e6
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR01MB7975.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Nov 2023 02:07:53.1233
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dLEWB2YQr7Eeb4pdqVmJM0cFun/CyUm/x4RBGge7PQO6l5QQzGCt0gpJt84OXoJBfaJFzu1L4xC+vbHsdRQUXweuqwNsyOtnqJjHY1OjTPx7tQYbVkt5A/ZY6pmygIT9
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR01MB6381
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231126_175530_108535_06A52DC5 
-X-CRM114-Status: GOOD (  26.00  )
+X-CRM114-CacheID: sfid-20231126_180811_809574_BB763560 
+X-CRM114-Status: UNSURE (   8.80  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,118 +137,36 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sat, 25 Nov 2023 at 14:54, WANG Rui <wangrui@loongson.cn> wrote:
->
-> Currently, kexec loads vmlinux.efi to address 0 instead of the link
-> address. This causes kexec to fail to boot the new vmlinux.efi on qemu.
->
->   pei_loongarch_load: kernel_segment: 0000000000000000
->   pei_loongarch_load: kernel_entry:   00000000013f1000
->   pei_loongarch_load: image_size:     0000000001ca0000
->   pei_loongarch_load: text_offset:    0000000000200000
->   pei_loongarch_load: phys_offset:    0000000000000000
->   pei_loongarch_load: PE format:      yes
->   loongarch_load_other_segments:333: command_line: kexec console=ttyS0,115200
->   kexec_load: entry = 0x13f1000 flags = 0x1020000
->   nr_segments = 2
->   segment[0].buf   = 0x7fffeea38010
->   segment[0].bufsz = 0x1b55200
->   segment[0].mem   = (nil)
->   segment[0].memsz = 0x1ca0000
->   segment[1].buf   = 0x5555570940b0
->   segment[1].bufsz = 0x200
->   segment[1].mem   = 0x1ca0000
->   segment[1].memsz = 0x4000
->
-> This patch constrains the range of the kernel segment by `hole_min`
-> and `hole_max` to place vmlinux.efi exactly at the link address.
->
->   pei_loongarch_load: kernel_segment: 0000000000200000
->   pei_loongarch_load: kernel_entry:   00000000013f1000
->   pei_loongarch_load: image_size:     0000000001ca0000
->   pei_loongarch_load: text_offset:    0000000000200000
->   pei_loongarch_load: phys_offset:    0000000000000000
->   pei_loongarch_load: PE format:      yes
->   loongarch_load_other_segments:339: command_line: kexec console=ttyS0,115200
->   kexec_load: entry = 0x13f1000 flags = 0x1020000
->   nr_segments = 2
->   segment[0].buf   = 0x7ffff2028010
->   segment[0].bufsz = 0x1b55200
->   segment[0].mem   = 0x200000
->   segment[0].memsz = 0x1ca0000
->   segment[1].buf   = 0x555557498098
->   segment[1].bufsz = 0x200
->   segment[1].mem   = 0x1ea0000
->   segment[1].memsz = 0x4000
->
-> Signed-off-by: WANG Rui <wangrui@loongson.cn>
-> ---
->
-> v1->v2:
->  * Fix the issue preventing it from working on the physical machine.
->
->  kexec/arch/loongarch/kexec-loongarch.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
->
-> diff --git a/kexec/arch/loongarch/kexec-loongarch.c b/kexec/arch/loongarch/kexec-loongarch.c
-> index 62ff8fd..32a42d2 100644
-> --- a/kexec/arch/loongarch/kexec-loongarch.c
-> +++ b/kexec/arch/loongarch/kexec-loongarch.c
-> @@ -265,9 +265,13 @@ unsigned long loongarch_locate_kernel_segment(struct kexec_info *info)
->                         hole = ULONG_MAX;
->                 }
->         } else {
-> -               hole = locate_hole(info,
-> -                       loongarch_mem.text_offset + loongarch_mem.image_size,
-> -                       MiB(1), 0, ULONG_MAX, 1);
-> +               unsigned long hole_min;
-> +               unsigned long hole_max;
-> +
-> +               hole_min = loongarch_mem.text_offset;
-> +               hole_max = hole_min + loongarch_mem.image_size;
-> +               hole = locate_hole(info, loongarch_mem.image_size,
-> +                       MiB(1), hole_min, hole_max, 1);
->
->                 if (hole == ULONG_MAX)
->                         dbgprintf("%s: locate_hole failed\n", __func__);
+In memory_model.h, if CONFIG_SPARSEMEM_VMEMMAP is configed,
+kernel will use vmemmap to do the __pfn_to_page/page_to_pfn,
+and kernel will not use the "classic sparse" to do the
+__pfn_to_page/page_to_pfn.
 
-Hi,
+So export the vmemmap when CONFIG_SPARSEMEM_VMEMMAP is configed.
+This makes the user applications (crash, etc) get faster
+pfn_to_page/page_to_pfn operations too.
 
-Previously when I played with the zboot kernel on a kvm guest I
-noticed this issue, but I found that the 1st 2M memory is memblock
-reserved but it is not shown in /proc/iomem as reserved, I suspect the
-1st 2M is not usable for some arch specific reason but I was not sure.
-  Below patch can fix it but due to my rusty knowledge of loongarch I
-did not send it out. I suspect even if the locate_hole avoids the
-wrong memory, in the 2nd kernel it could still access it.  Correct?
+Signed-off-by: Huang Shijie <shijie@os.amperecomputing.com>
+---
+ kernel/crash_core.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Index: linux/arch/loongarch/kernel/mem.c
-===================================================================
---- linux.orig/arch/loongarch/kernel/mem.c      2023-06-02
-10:24:09.633593320 +0800
-+++ linux/arch/loongarch/kernel/mem.c   2023-10-05 15:27:05.609455460 +0800
-@@ -52,8 +52,8 @@
-        memblock_set_current_limit(PFN_PHYS(max_low_pfn));
-        memblock_set_node(0, PHYS_ADDR_MAX, &memblock.memory, 0);
-
--       /* Reserve the first 2MB */
--       memblock_reserve(PHYS_OFFSET, 0x200000);
-+       /* Mark the first 2MB as nomap */
-+       memblock_mark_nomap(PHYS_OFFSET, 0x200000);
-
-        /* Reserve the kernel text/data/bss */
-        memblock_reserve(__pa_symbol(&_text),
-
-
-> --
-> 2.42.0
->
->
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
->
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index efe87d501c8c..9653c4177191 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -765,6 +765,9 @@ static int __init crash_save_vmcoreinfo_init(void)
+ 	VMCOREINFO_SYMBOL(mem_map);
+ 	VMCOREINFO_SYMBOL(contig_page_data);
+ #endif
++#ifdef CONFIG_SPARSEMEM_VMEMMAP
++	VMCOREINFO_SYMBOL_ARRAY(vmemmap);
++#endif
+ #ifdef CONFIG_SPARSEMEM
+ 	VMCOREINFO_SYMBOL_ARRAY(mem_section);
+ 	VMCOREINFO_LENGTH(mem_section, NR_SECTION_ROOTS);
+-- 
+2.40.1
 
 
 _______________________________________________
