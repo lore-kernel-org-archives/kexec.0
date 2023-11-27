@@ -4,105 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 97D30C4167B
-	for <kexec@archiver.kernel.org>; Mon, 27 Nov 2023 04:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C3AF6C4167B
+	for <kexec@archiver.kernel.org>; Mon, 27 Nov 2023 13:32:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:References:Cc:To:From:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=9oyacPZMUClk/woJ44cGx5Zny2kHOgbr685CV/Tfwko=; b=L5IPtDVeU68xf1
-	w57sPnZajULNgOllbovqvrq36gwQDILNf1ZhOkWnxQdzxYoR3dfxmPd52cwybD6oWcgZJHiUp1qdg
-	Ou06G88EZ/72XFOazPgeTCVIlj+VcjUy/AzoMOyiqrIOFhwn9CSLsurrWkOCiCKobM6pbEVFEaf6Y
-	Eo0Q00PMJJKqL8lAxNIU213WkhH48jG5akxFV+L59N7g4npXZIX4sBfLEIAEuDZDAG4E20SPd96H/
-	fB9mrDRpOc9NeKoofR3RYPeA8GNbpZaTBbUv+cBXh40FYrm+2bYvoiyKLIA3dTLdO1FLQgERYsOoD
-	/9oeNNn0+ljlK0diPN8Q==;
+	List-Owner; bh=ySZnaxEeBCYLQpqmYgafaN3/yhiOmkAW8pNeM1DWfoQ=; b=zxtSGvfLdoypPB
+	W6iCEJ5fDP7aEIzlW5u3+fN4i3CrU28f/XeFlGlNbSDNkZa6DtTW+AEj6oYy2iPtOjHTznY372eSO
+	BbWqsnoEy4CTj0ZRCq9x0ImpJ45SEDfzgsYVpLXENrhdLul6AV6bGrtQ4xdowqPhfV8cZafJ6qUco
+	lvvUwIHqFKO2yDhekdcxiOn1J+16qqwSa4mjgETU98wWOQgptVVrzK1Dnpf9gNM9bNXiObDz2W8a/
+	C4w/6nSQmqPT/iHVT02htuS4jrXaBptYpWAkJqPAEgPvjGtuZEgJvHUPtp9fj8cICNnUzjx4cRBhv
+	sGEujPLrYskR6fV0TwJA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r7TGX-001JaV-0p;
-	Mon, 27 Nov 2023 04:30:37 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1r7biw-002aN3-1J;
+	Mon, 27 Nov 2023 13:32:30 +0000
+Received: from ams.source.kernel.org ([2604:1380:4601:e00::1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r7TGS-001JZV-0K
+	id 1r7biq-002aMC-0K
 	for kexec@lists.infradead.org;
-	Mon, 27 Nov 2023 04:30:35 +0000
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AR3FqwB008872;
-	Mon, 27 Nov 2023 04:30:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : from : to : cc : references : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=4PpYBJBU3+3xf/h6OTnt72r3nrwL0BEUTTLKHmzC7Do=;
- b=UJADP+j5ET72ECJx0X+qCO5lx6BWuWWKipG8fCraS+XQ8dYV2BM4WBMxcRgcATr8yhHR
- 3uCbhMXJ7XSmMc8ywaDlCt4qob+/z7yXAJiUFzbQKDUZyN05tXAiNuDuQ2NlkYYBEON7
- XwZfrBCQXf/AkOLBWts92EvlgO3HFGrNL5sHBItwzV0V12Mvh9CrnMNwMF7OqbhqI8Yz
- Hc6QJxdDfPr6mJ+jbLsVbR9Agv/DajPfWPj8QZA+96rG5fFnvgZlHtsyIFdy7DanguGe
- TNIqCw65yZVn7U0GP7Vx+PhrNwDJc7GonmiBJsn2s+uHQhFbneR/sZqI3TWeYLEX8ccl cw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3umdd2q3jt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 27 Nov 2023 04:30:22 +0000
-Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3AR4ULYi004454;
-	Mon, 27 Nov 2023 04:30:22 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3umdd2q3hu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 27 Nov 2023 04:30:21 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3AR446Of030534;
-	Mon, 27 Nov 2023 04:30:20 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ukv8n69u3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 27 Nov 2023 04:30:20 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3AR4UHM736700742
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 27 Nov 2023 04:30:17 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5AA6220040;
-	Mon, 27 Nov 2023 04:30:17 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 39CA12004B;
-	Mon, 27 Nov 2023 04:30:15 +0000 (GMT)
-Received: from [9.203.106.137] (unknown [9.203.106.137])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 27 Nov 2023 04:30:15 +0000 (GMT)
-Message-ID: <40ab9119-fa6c-4211-98b8-478a84d46e64@linux.ibm.com>
-Date: Mon, 27 Nov 2023 10:00:13 +0530
+	Mon, 27 Nov 2023 13:32:25 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by ams.source.kernel.org (Postfix) with ESMTP id B28C4B82910;
+	Mon, 27 Nov 2023 13:32:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68078C433C9;
+	Mon, 27 Nov 2023 13:32:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701091941;
+	bh=utB4E3wsYoCqGsLXaFQ6DZBCsGGvOtsIIljB5lzz0oA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MO/Ye4DPODdgGgfWfIbnUYo0L9MHlBP4uRsNQUEUfr6ovjk8JUWQ/itBIN24LU0hW
+	 +Gmzg4vOzECHem3ss4SsR1rPP2RhBFX5Cv7FExww5krDq1ppTmk4rL4wHt3EMJXvMB
+	 nJwhDMjLCQEV37r0WGtM36R5G78Dyb/eCVeQ6VM8D6XAwcLB/cHgj4Lp2VsiXLUVcl
+	 qPHdC8Fty3Z5UOcSqMflmrYmBpqmrOcDtK+4LrLNHRHRjOCnNb4VU4v9/d82IA447f
+	 LZXG1lJDAzvGEGlhfs2LAgRF2IgLGuyNPIIiN9ttZyTB0/C5xNnrA2OoyPURzo/ce4
+	 GHAdW5x5mW2hw==
+Date: Mon, 27 Nov 2023 13:32:18 +0000
+From: Simon Horman <horms@kernel.org>
+To: Baoquan He <bhe@redhat.com>
+Cc: kexec@lists.infradead.org
+Subject: Re: [PATCH] kexec_file: add kexec_file flag to support debug printing
+Message-ID: <20231127133218.GA3354982@kernel.org>
+References: <20231114152030.240945-1-bhe@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv9 2/2] powerpc/setup: Loosen the mapping between cpu
- logical id and its seq in dt
-From: Hari Bathini <hbathini@linux.ibm.com>
-To: Pingfan Liu <piliu@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>
-Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org,
-        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        Ming Lei <ming.lei@redhat.com>, Nicholas Piggin <npiggin@gmail.com>,
-        Wen Xiong <wenxiong@us.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-References: <20231017022806.4523-1-piliu@redhat.com>
- <20231017022806.4523-3-piliu@redhat.com>
- <064ae2ee-ad15-c0ab-f78b-7b3e7dc6612d@linux.ibm.com>
-Content-Language: en-US
-In-Reply-To: <064ae2ee-ad15-c0ab-f78b-7b3e7dc6612d@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: qKsw2bWhvDDWdtZ-GLpdToBaBe6805DW
-X-Proofpoint-ORIG-GUID: r70ka0NtWTUna9HtX85HKiVMhMF0sGVj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-27_01,2023-11-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 suspectscore=0 phishscore=0 priorityscore=1501 adultscore=0
- malwarescore=0 mlxscore=0 mlxlogscore=999 bulkscore=0 clxscore=1011
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311060000 definitions=main-2311270032
+Content-Disposition: inline
+In-Reply-To: <20231114152030.240945-1-bhe@redhat.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231126_203032_374829_A3A95D73 
-X-CRM114-Status: GOOD (  34.68  )
+X-CRM114-CacheID: sfid-20231127_053224_291778_CB3CFDE8 
+X-CRM114-Status: GOOD (  10.34  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -114,293 +66,23 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Pingfan, Michael,
-
-On 17/10/23 4:03 pm, Hari Bathini wrote:
+On Tue, Nov 14, 2023 at 11:20:30PM +0800, Baoquan He wrote:
+> This add KEXEC_FILE_DEBUG to kexec_file_flags so that it can be passed
+> to kernel when '-d' is added with kexec_file_load interface. With that
+> flag enabled, kernel can enable the debugging message printing.
 > 
-> 
-> On 17/10/23 7:58 am, Pingfan Liu wrote:
->> *** Idea ***
->> For kexec -p, the boot cpu can be not the cpu0, this causes the problem
->> of allocating memory for paca_ptrs[]. However, in theory, there is no
->> requirement to assign cpu's logical id as its present sequence in the
->> device tree. But there is something like cpu_first_thread_sibling(),
->> which makes assumption on the mapping inside a core. Hence partially
->> loosening the mapping, i.e. unbind the mapping of core while keep the
->> mapping inside a core.
->>
->> *** Implement ***
->> At this early stage, there are plenty of memory to utilize. Hence, this
->> patch allocates interim memory to link the cpu info on a list, then
->> reorder cpus by changing the list head. As a result, there is a rotate
->> shift between the sequence number in dt and the cpu logical number.
->>
->> *** Result ***
->> After this patch, a boot-cpu's logical id will always be mapped into the
->> range [0,threads_per_core).
->>
->> Besides this, at this phase, all threads in the boot core are forced to
->> be onlined. This restriction will be lifted in a later patch with
->> extra effort.
->>
->> Signed-off-by: Pingfan Liu <piliu@redhat.com>
->> Cc: Michael Ellerman <mpe@ellerman.id.au>
->> Cc: Nicholas Piggin <npiggin@gmail.com>
->> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
->> Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
->> Cc: Wen Xiong <wenxiong@us.ibm.com>
->> Cc: Baoquan He <bhe@redhat.com>
->> Cc: Ming Lei <ming.lei@redhat.com>
->> Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
->> Cc: Hari Bathini <hbathini@linux.ibm.com>
->> Cc: kexec@lists.infradead.org
->> To: linuxppc-dev@lists.ozlabs.org
-> 
-> Thanks for working on this, Pingfan.
-> Looks good to me.
-> 
-> Acked-by: Hari Bathini <hbathini@linux.ibm.com>
-> 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
 
-On second thoughts, probably better off with no impact for
-bootcpu < nr_cpu_ids case and changing only two cores logical
-numbering otherwise. Something like the below (Please share
-your thoughts):
+Thanks,
 
-diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
-index ec82f5bda908..78a8312aa8c4 100644
---- a/arch/powerpc/kernel/prom.c
-+++ b/arch/powerpc/kernel/prom.c
-@@ -76,7 +76,9 @@ u64 ppc64_rma_size;
-  unsigned int boot_cpu_node_count __ro_after_init;
-  #endif
-  static phys_addr_t first_memblock_size;
-+#ifdef CONFIG_SMP
-  static int __initdata boot_cpu_count;
-+#endif
-
-  static int __init early_parse_mem(char *p)
-  {
-@@ -357,6 +359,25 @@ static int __init early_init_dt_scan_cpus(unsigned 
-long node,
-  			fdt_boot_cpuid_phys(initial_boot_params)) {
-  			found = boot_cpu_count;
-  			found_thread = i;
-+			/*
-+			 * Map boot-cpu logical id into the range
-+			 * of [0, thread_per_core) if it can't be
-+			 * accommodated within nr_cpu_ids.
-+			 */
-+			if (i != boot_cpu_count && boot_cpu_count >= nr_cpu_ids) {
-+				boot_cpuid = i;
-+				DBG("Logical CPU number for boot CPU changed from %d to %d\n",
-+				    boot_cpu_count, i);
-+			} else {
-+				boot_cpuid = boot_cpu_count;
-+			}
-+
-+			/* Ensure boot thread is acconted for in nr_cpu_ids */
-+			if (boot_cpuid >= nr_cpu_ids) {
-+				set_nr_cpu_ids(boot_cpuid + 1);
-+				DBG("Adjusted nr_cpu_ids to %u, to include boot CPU.\n",
-+				    nr_cpu_ids);
-+			}
-  		}
-  #ifdef CONFIG_SMP
-  		/* logical cpu id is always 0 on UP kernels */
-@@ -368,9 +389,8 @@ static int __init early_init_dt_scan_cpus(unsigned 
-long node,
-  	if (found < 0)
-  		return 0;
-
--	DBG("boot cpu: logical %d physical %d\n", found,
-+	DBG("boot cpu: logical %d physical %d\n", boot_cpuid,
-  	    be32_to_cpu(intserv[found_thread]));
--	boot_cpuid = found;
-
-  	boot_cpu_hwid = be32_to_cpu(intserv[found_thread]);
-
-diff --git a/arch/powerpc/kernel/setup-common.c 
-b/arch/powerpc/kernel/setup-common.c
-index b7b733474b60..f7179525c774 100644
---- a/arch/powerpc/kernel/setup-common.c
-+++ b/arch/powerpc/kernel/setup-common.c
-@@ -409,6 +409,12 @@ static void __init cpu_init_thread_core_maps(int tpc)
-
-  u32 *cpu_to_phys_id = NULL;
-
-+struct interrupt_server_node {
-+	bool	avail;
-+	int	len;
-+	__be32 intserv[];
-+};
-+
-  /**
-   * setup_cpu_maps - initialize the following cpu maps:
-   *                  cpu_possible_mask
-@@ -429,9 +435,13 @@ u32 *cpu_to_phys_id = NULL;
-   */
-  void __init smp_setup_cpu_maps(void)
-  {
-+	struct interrupt_server_node *core0_node = NULL, *bt_node = NULL;
-+	int orig_boot_cpu = -1, orig_boot_thread = -1;
-+	bool found_boot_cpu = false;
-  	struct device_node *dn;
--	int cpu = 0;
-  	int nthreads = 1;
-+	int cpu = 0;
-+	int j, len;
-
-  	DBG("smp_setup_cpu_maps()\n");
-
-@@ -442,9 +452,9 @@ void __init smp_setup_cpu_maps(void)
-  		      __func__, nr_cpu_ids * sizeof(u32), __alignof__(u32));
-
-  	for_each_node_by_type(dn, "cpu") {
-+		bool avail, skip = false;
-  		const __be32 *intserv;
-  		__be32 cpu_be;
--		int j, len;
-
-  		DBG("  * %pOF...\n", dn);
-
-@@ -466,29 +476,121 @@ void __init smp_setup_cpu_maps(void)
-
-  		nthreads = len / sizeof(int);
-
--		for (j = 0; j < nthreads && cpu < nr_cpu_ids; j++) {
--			bool avail;
-+		avail = of_device_is_available(dn);
-+		if (!avail)
-+			avail = !of_property_match_string(dn,
-+					"enable-method", "spin-table");
-+
-+		for (j = 0; (cpu == 0 || !found_boot_cpu) && j < nthreads; j++) {
-+			if (be32_to_cpu(intserv[j]) == boot_cpu_hwid) {
-+				found_boot_cpu = true;
-+				if (cpu == 0)
-+					break;
-+
-+				/* Original logical CPU number of thread0 in boot core */
-+				orig_boot_cpu = cpu;
-+				orig_boot_thread = j;
-+				bt_node = memblock_alloc(sizeof(struct interrupt_server_node) + len,
-+						__alignof__(u32));
-+				if (!bt_node)
-+					panic("%s: Failed to allocate %zu bytes align=0x%zx\n",
-+						__func__,
-+						sizeof(struct interrupt_server_node) + len,
-+						__alignof__(u32));
-+				bt_node->len = len;
-+				memcpy(bt_node->intserv, intserv, len);
-+				bt_node->avail = avail;
-+				skip = true;
-+				break;
-+			}
-+		}
-
-+		/*
-+		 * Boot CPU not on core0.
-+		 * Hold off adding core0 until boot core is found as core0
-+		 * may have to be replaced with boot core if boot core can
-+		 * not be accommodated within nr_cpu_ids with its original
-+		 * logical CPU numbering.
-+		 */
-+		if (cpu == 0 && !found_boot_cpu) {
-+			core0_node = memblock_alloc(sizeof(struct interrupt_server_node) + len,
-+					__alignof__(u32));
-+			if (!core0_node)
-+				panic("%s: Failed to allocate %zu bytes align=0x%zx\n",
-+					__func__,
-+					sizeof(struct interrupt_server_node) + len,
-+					__alignof__(u32));
-+			core0_node->len = len;
-+			memcpy(core0_node->intserv, intserv, len);
-+			core0_node->avail = avail;
-+			skip = true;
-+		}
-+
-+		if (skip) {
-+			/* Assumes same number of threads for all cores */
-+			cpu += nthreads;
-+			continue;
-+		}
-+
-+		for (j = 0; j < nthreads && cpu < nr_cpu_ids; j++) {
-  			DBG("    thread %d -> cpu %d (hard id %d)\n",
-  			    j, cpu, be32_to_cpu(intserv[j]));
-
--			avail = of_device_is_available(dn);
--			if (!avail)
--				avail = !of_property_match_string(dn,
--						"enable-method", "spin-table");
--
-  			set_cpu_present(cpu, avail);
-  			set_cpu_possible(cpu, true);
-  			cpu_to_phys_id[cpu] = be32_to_cpu(intserv[j]);
-  			cpu++;
-  		}
-
--		if (cpu >= nr_cpu_ids) {
-+		if (found_boot_cpu && cpu >= nr_cpu_ids) {
-  			of_node_put(dn);
-  			break;
-  		}
-  	}
-
-+	/*
-+	 * Boot CPU not on core0.
-+	 *
-+	 * If nr_cpu_ids does not accommodate the original logical CPU 
-numbering for
-+	 * boot CPU core, use logical CPU numbers 0 to nthreads for boot CPU core.
-+	 * Note that boot cpu is already assigned with logical CPU number 
-somewhere
-+	 * between 0 to nthreads (depending on the boot thread within the core) in
-+	 * early_init_dt_scan_cpus() for this case.
-+	 *
-+	 * Otherwise, stick with the original logical CPU numbering.
-+	 */
-+	if (bt_node) {
-+		int core0_cpu;
-+
-+		if (orig_boot_cpu + orig_boot_thread >= nr_cpu_ids) {
-+			cpu = 0;
-+			core0_cpu = orig_boot_cpu;
-+		} else {
-+			cpu = orig_boot_cpu;
-+			core0_cpu = 0;
-+		}
-+
-+		for (j = 0; j < nthreads && core0_cpu < nr_cpu_ids; j++) {
-+			DBG("    thread %d -> cpu %d (hard id %d)\n",
-+			    j, core0_cpu, be32_to_cpu(core0_node->intserv[j]));
-+
-+			set_cpu_present(core0_cpu, core0_node->avail);
-+			set_cpu_possible(core0_cpu, true);
-+			cpu_to_phys_id[core0_cpu] = be32_to_cpu(core0_node->intserv[j]);
-+			core0_cpu++;
-+		}
-+
-+		for (j = 0; j < nthreads && cpu < nr_cpu_ids; j++) {
-+			DBG("    thread %d -> cpu %d (hard id %d)\n",
-+			    j, cpu, be32_to_cpu(bt_node->intserv[j]));
-+
-+			set_cpu_present(cpu, bt_node->avail);
-+			set_cpu_possible(cpu, true);
-+			cpu_to_phys_id[cpu] = be32_to_cpu(bt_node->intserv[j]);
-+			cpu++;
-+		}
-+	}
-+
-  	/* If no SMT supported, nthreads is forced to 1 */
-  	if (!cpu_has_feature(CPU_FTR_SMT)) {
-  		DBG("  SMT disabled ! nthreads forced to 1\n");
+this looks fine to me.
+But perhaps the corresponding Kernel patch should land first?
+Let me know what you think.
 
 _______________________________________________
 kexec mailing list
