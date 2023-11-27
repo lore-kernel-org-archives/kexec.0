@@ -4,73 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A89D7C07CA9
-	for <kexec@archiver.kernel.org>; Sun, 26 Nov 2023 11:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F14A7C4167B
+	for <kexec@archiver.kernel.org>; Mon, 27 Nov 2023 01:55:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=ADD4EfER8m14MlLMQyvXZxTc8YoIH1tQtArX/lQ7VOk=; b=HiL3G/gAR0mVE4
-	6hhihz3kMV/5KUSyzVBEYhJRxKcvgyvdFjvqEEy29v18jjM0K0qdb2zUKeNeUqXyCdLw54P6C9eWR
-	LohGpvnj9Q60OYOOS3gD6DroWBU4nhZeGjyvDbbCHs8dlZO2bsZfV9ktwke0S/ao62PABd4rFCeFa
-	aZXiriDIs1x2epZ8HV/iraTLO8QPbW2m7UEEFyuRrdMYTRS6MotslDvLX8YGyTbRjiRUdvizeVqy9
-	2W0vM3VJHxyzAdKguHkPqm6Hpe9NsIxQ4ui+Msv5avWhYkNfRKAbxAkGcX02wmxhYNKgN2XdcmL34
-	DEQNbiBudZXZsydBSXBg==;
+	List-Owner; bh=OYBa2cwHHydG2fnSxU6G9djY5/Gt4NnYE6MWDG3mLMs=; b=QJqH80rmWUhUwL
+	oLqflw/MC/WkJT0Ld8DMVfeLpbQutUAx7KeSj00zjIq5630oFOKJvPo81GrmMzdmSn+m9UnByVdNg
+	ZuDxk6A+M5kyZBHPEAVEase53As5H1ZTtJWtGRuwwoJyC1dZB/UW08d8T1y9UM+7Bfrx18w1/8+Ol
+	GjuDKpuV/8GFnL4r5pA/a/7crBFTC+WiiCJT50I7XPjKSwcVmiMlHSd/hDdflwHJLwEwlXXDeGqny
+	yMrpDEhf6DyblCLT37N1U72EGx5uoG1x7Z5LqdZe3U/oZ4iD+hNCePUz49th7hFctxL4U1Cn0V/yE
+	mPA6aNi6j6j+4Jnsc8ow==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r7Dk1-00AwDV-3B;
-	Sun, 26 Nov 2023 11:56:02 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1r7QqX-000T9V-1K;
+	Mon, 27 Nov 2023 01:55:37 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r7Djt-00Aw9G-13
+	id 1r7QqP-000T5P-2C
 	for kexec@lists.infradead.org;
-	Sun, 26 Nov 2023 11:55:59 +0000
+	Mon, 27 Nov 2023 01:55:32 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1700999750;
+	s=mimecast20190719; t=1701050127;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=10f/Bul9KbIaMsjeanbNOmm62BHIxQH0eftSF3zeoHA=;
-	b=IXiDeKM6E1pRz0aHXANjgB3J97HfSg2MI8kj1Qbv7ixMTk5kvOshWSH+1nfBzG9StVSS4L
-	rx26h/szJb9S2etl8A60o5/n/QXs0LxaRslobBpTAlxWyK/mw1rNSIvbUJchrJKmPWu9F9
-	CKfipjWZa3Nlz54iZdbEKhyDw31CuCw=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-76-n79wBA5hOnSAQHO1OAsXyg-1; Sun,
- 26 Nov 2023 06:55:45 -0500
-X-MC-Unique: n79wBA5hOnSAQHO1OAsXyg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 90DF23C0C88A;
-	Sun, 26 Nov 2023 11:55:44 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.36])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id C8B1340C6EB9;
-	Sun, 26 Nov 2023 11:55:43 +0000 (UTC)
-Date: Sun, 26 Nov 2023 19:55:40 +0800
-From: Baoquan He <bhe@redhat.com>
-To: kernel test robot <lkp@intel.com>
-Cc: linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-	oe-kbuild-all@lists.linux.dev, kexec@lists.infradead.org,
-	x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	linux-parisc@vger.kernel.org, akpm@linux-foundation.org,
-	joe@perches.com, nathan@kernel.org, yujie.liu@intel.com
-Subject: Re: [PATCH v2 4/7] kexec_file, arm64: print out debugging message if
- required
-Message-ID: <ZWMyPB6HjxAczLzZ@MiWiFi-R3L-srv>
-References: <20231124033642.520686-5-bhe@redhat.com>
- <202311260548.1HaxcDnE-lkp@intel.com>
+	bh=Ctth5Nh+2rAzjhGGA8ryb0kGXerLCZUwTpt4ADWW7qk=;
+	b=K5uUik3VJp90FhP+S5AcVuCJUFtRzDtukzqRsiKlogKQihbr3MAy6THnrClPPSBKovwxLQ
+	sxjXeJIyskPPO37K9MZ+40zfHSkPPbiVbSFqzIl7dKv+a3CRmodzzCH/O0s3voFej3gXaN
+	UZtElsRbfZ8lMKSxZ7XqaV+Egu6SMXg=
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
+ [209.85.166.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-456-EVifhS25N1-7Yk-wOsA2pg-1; Sun, 26 Nov 2023 20:53:45 -0500
+X-MC-Unique: EVifhS25N1-7Yk-wOsA2pg-1
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-35b354b5b6cso3151545ab.0
+        for <kexec@lists.infradead.org>; Sun, 26 Nov 2023 17:53:45 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701050024; x=1701654824;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ctth5Nh+2rAzjhGGA8ryb0kGXerLCZUwTpt4ADWW7qk=;
+        b=Pno79+SgR9KQVAlBQgI57k1OH5zA0J+JmgfMg4JqSixe7hOm5LLs67wlLrl5y+kFxE
+         RLVQWVrSbXthaxEmTvTxSqNGoP+sLg/m/pRmDfvOpd4YVWGtkf2yHgPvPGSSwUJNtaN+
+         sFJzK5lMxuvWQkOCBMIqBBPgLahHBk+PLH4kGOLy7kuSCLisSgrv4KJUzE++upLQ4gap
+         N1GT/s42MYe3xMNZJsyuVBslD+G7dnhPxaG85IM6p6AP0F3oY5YI7iDXS2yGvlyAVfY8
+         8YQg61CFESadPjynZoC0GY/G1AGfRiLiLQC4W4QImV7eoLikjF/LtbZuB/IzgNKKR0vg
+         foLQ==
+X-Gm-Message-State: AOJu0YzJN9dkVVrvIL7e1hoq/i2ruRnuIUjK5jQherhbbfKj36IZXzDP
+	nw/6buajqK2uPN2Kqzzk7ZrV/a3ty7iW6u6Bm1PhqpGWP82lMyUV3jNJIGWqhF2V7uJQ367rYeS
+	AOdE8pxrVGzDyxdThZfY16ffxesKtcEkIkMWb
+X-Received: by 2002:a92:c84b:0:b0:35c:baec:750c with SMTP id b11-20020a92c84b000000b0035cbaec750cmr2348005ilq.1.1701050024423;
+        Sun, 26 Nov 2023 17:53:44 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGvRXqWMTsyYGdo5bH08PjLpalZgkVqh/Oiq68CjRnVbN9lfdIy7dIbS/o9j2fLiXMwf2q+8pEsEQnmn3+LRXs=
+X-Received: by 2002:a92:c84b:0:b0:35c:baec:750c with SMTP id
+ b11-20020a92c84b000000b0035cbaec750cmr2347985ilq.1.1701050024022; Sun, 26 Nov
+ 2023 17:53:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <202311260548.1HaxcDnE-lkp@intel.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+References: <20231125065232.116319-1-wangrui@loongson.cn>
+In-Reply-To: <20231125065232.116319-1-wangrui@loongson.cn>
+From: RuiRui Yang <ruyang@redhat.com>
+Date: Mon, 27 Nov 2023 09:53:32 +0800
+Message-ID: <CALu+AoRThqZWGv6+-d0PUFA2XNL1g2-H5HrxHGR5OrTerfpbiQ@mail.gmail.com>
+Subject: Re: [PATCH v2] LoongArch: Load vmlinux.efi to the link address
+To: WANG Rui <wangrui@loongson.cn>
+Cc: kexec@lists.infradead.org, Huacai Chen <chenhuacai@kernel.org>, hev <r@hev.cc>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231126_035553_586121_725BD078 
-X-CRM114-Status: GOOD (  19.39  )
+X-CRM114-CacheID: sfid-20231126_175530_108535_06A52DC5 
+X-CRM114-Status: GOOD (  26.00  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,109 +94,118 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 11/26/23 at 05:26am, kernel test robot wrote:
-> Hi Baoquan,
-> 
-> kernel test robot noticed the following build errors:
-> 
-> [auto build test ERROR on arm64/for-next/core]
-> [also build test ERROR on tip/x86/core powerpc/next powerpc/fixes linus/master v6.7-rc2 next-20231124]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Baoquan-He/kexec_file-add-kexec_file-flag-to-control-debug-printing/20231124-113942
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/core
-> patch link:    https://lore.kernel.org/r/20231124033642.520686-5-bhe%40redhat.com
-> patch subject: [PATCH v2 4/7] kexec_file, arm64: print out debugging message if required
-> config: arm64-randconfig-001-20231126 (https://download.01.org/0day-ci/archive/20231126/202311260548.1HaxcDnE-lkp@intel.com/config)
-> compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project.git f28c006a5895fc0e329fe15fead81e37457cb1d1)
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231126/202311260548.1HaxcDnE-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202311260548.1HaxcDnE-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
-> 
-> >> arch/arm64/kernel/machine_kexec.c:35:2: error: implicit declaration of function 'kexec_dprintk' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
->            kexec_dprintk("%s:%d:\n", func, line);
->            ^
->    1 error generated.
+On Sat, 25 Nov 2023 at 14:54, WANG Rui <wangrui@loongson.cn> wrote:
+>
+> Currently, kexec loads vmlinux.efi to address 0 instead of the link
+> address. This causes kexec to fail to boot the new vmlinux.efi on qemu.
+>
+>   pei_loongarch_load: kernel_segment: 0000000000000000
+>   pei_loongarch_load: kernel_entry:   00000000013f1000
+>   pei_loongarch_load: image_size:     0000000001ca0000
+>   pei_loongarch_load: text_offset:    0000000000200000
+>   pei_loongarch_load: phys_offset:    0000000000000000
+>   pei_loongarch_load: PE format:      yes
+>   loongarch_load_other_segments:333: command_line: kexec console=ttyS0,115200
+>   kexec_load: entry = 0x13f1000 flags = 0x1020000
+>   nr_segments = 2
+>   segment[0].buf   = 0x7fffeea38010
+>   segment[0].bufsz = 0x1b55200
+>   segment[0].mem   = (nil)
+>   segment[0].memsz = 0x1ca0000
+>   segment[1].buf   = 0x5555570940b0
+>   segment[1].bufsz = 0x200
+>   segment[1].mem   = 0x1ca0000
+>   segment[1].memsz = 0x4000
+>
+> This patch constrains the range of the kernel segment by `hole_min`
+> and `hole_max` to place vmlinux.efi exactly at the link address.
+>
+>   pei_loongarch_load: kernel_segment: 0000000000200000
+>   pei_loongarch_load: kernel_entry:   00000000013f1000
+>   pei_loongarch_load: image_size:     0000000001ca0000
+>   pei_loongarch_load: text_offset:    0000000000200000
+>   pei_loongarch_load: phys_offset:    0000000000000000
+>   pei_loongarch_load: PE format:      yes
+>   loongarch_load_other_segments:339: command_line: kexec console=ttyS0,115200
+>   kexec_load: entry = 0x13f1000 flags = 0x1020000
+>   nr_segments = 2
+>   segment[0].buf   = 0x7ffff2028010
+>   segment[0].bufsz = 0x1b55200
+>   segment[0].mem   = 0x200000
+>   segment[0].memsz = 0x1ca0000
+>   segment[1].buf   = 0x555557498098
+>   segment[1].bufsz = 0x200
+>   segment[1].mem   = 0x1ea0000
+>   segment[1].memsz = 0x4000
+>
+> Signed-off-by: WANG Rui <wangrui@loongson.cn>
+> ---
+>
+> v1->v2:
+>  * Fix the issue preventing it from working on the physical machine.
+>
+>  kexec/arch/loongarch/kexec-loongarch.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+>
+> diff --git a/kexec/arch/loongarch/kexec-loongarch.c b/kexec/arch/loongarch/kexec-loongarch.c
+> index 62ff8fd..32a42d2 100644
+> --- a/kexec/arch/loongarch/kexec-loongarch.c
+> +++ b/kexec/arch/loongarch/kexec-loongarch.c
+> @@ -265,9 +265,13 @@ unsigned long loongarch_locate_kernel_segment(struct kexec_info *info)
+>                         hole = ULONG_MAX;
+>                 }
+>         } else {
+> -               hole = locate_hole(info,
+> -                       loongarch_mem.text_offset + loongarch_mem.image_size,
+> -                       MiB(1), 0, ULONG_MAX, 1);
+> +               unsigned long hole_min;
+> +               unsigned long hole_max;
+> +
+> +               hole_min = loongarch_mem.text_offset;
+> +               hole_max = hole_min + loongarch_mem.image_size;
+> +               hole = locate_hole(info, loongarch_mem.image_size,
+> +                       MiB(1), hole_min, hole_max, 1);
+>
+>                 if (hole == ULONG_MAX)
+>                         dbgprintf("%s: locate_hole failed\n", __func__);
 
-Thanks for reporting. It has below kexec related config items, whereas
-the kexec_drpintk() is only defined in CONFIG_KEXEC_FILE ifdeffery
-scope, moving it to CONFIG_KEXEC_CORE iddeffery scope in <linux/kexec.h>
-can fix it as below draft code. Will update patch 1 to include the code
-change.
+Hi,
 
-===
-CONFIG_CRASH_CORE=y
-CONFIG_KEXEC_CORE=y
-CONFIG_KEXEC=y
-# CONFIG_KEXEC_FILE is not set
-CONFIG_CRASH_DUMP=y
-===
+Previously when I played with the zboot kernel on a kvm guest I
+noticed this issue, but I found that the 1st 2M memory is memblock
+reserved but it is not shown in /proc/iomem as reserved, I suspect the
+1st 2M is not usable for some arch specific reason but I was not sure.
+  Below patch can fix it but due to my rusty knowledge of loongarch I
+did not send it out. I suspect even if the locate_hole avoids the
+wrong memory, in the 2nd kernel it could still access it.  Correct?
 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 66997efe36f1..b457b0d70f3f 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -265,13 +265,6 @@ arch_kexec_apply_relocations(struct purgatory_info *pi, Elf_Shdr *section,
- }
- #endif
- 
--extern bool kexec_file_dbg_print;
--
--#define kexec_dprintk(fmt, ...)					\
--	printk("%s" fmt,					\
--	       kexec_file_dbg_print ? KERN_INFO : KERN_DEBUG,	\
--	       ##__VA_ARGS__)
--
- #endif /* CONFIG_KEXEC_FILE */
- 
- #ifdef CONFIG_KEXEC_ELF
-@@ -508,6 +501,13 @@ static inline int crash_hotplug_memory_support(void) { return 0; }
- static inline unsigned int crash_get_elfcorehdr_size(void) { return 0; }
- #endif
- 
-+extern bool kexec_file_dbg_print;
-+
-+#define kexec_dprintk(fmt, ...)					\
-+	printk("%s" fmt,					\
-+	       kexec_file_dbg_print ? KERN_INFO : KERN_DEBUG,	\
-+	       ##__VA_ARGS__)
-+
- #else /* !CONFIG_KEXEC_CORE */
- struct pt_regs;
- struct task_struct;
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index be5642a4ec49..bddba29a1557 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -52,6 +52,8 @@ atomic_t __kexec_lock = ATOMIC_INIT(0);
- /* Flag to indicate we are going to kexec a new kernel */
- bool kexec_in_progress = false;
- 
-+bool kexec_file_dbg_print;
-+
- int kexec_should_crash(struct task_struct *p)
- {
- 	/*
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 7ae1b0901aa4..8f87644b4eec 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -38,8 +38,6 @@ void set_kexec_sig_enforced(void)
- }
- #endif
- 
--bool kexec_file_dbg_print;
--
- static int kexec_calculate_store_digests(struct kimage *image);
- 
- /* Maximum size in bytes for kernel/initrd files. */
+Index: linux/arch/loongarch/kernel/mem.c
+===================================================================
+--- linux.orig/arch/loongarch/kernel/mem.c      2023-06-02
+10:24:09.633593320 +0800
++++ linux/arch/loongarch/kernel/mem.c   2023-10-05 15:27:05.609455460 +0800
+@@ -52,8 +52,8 @@
+        memblock_set_current_limit(PFN_PHYS(max_low_pfn));
+        memblock_set_node(0, PHYS_ADDR_MAX, &memblock.memory, 0);
+
+-       /* Reserve the first 2MB */
+-       memblock_reserve(PHYS_OFFSET, 0x200000);
++       /* Mark the first 2MB as nomap */
++       memblock_mark_nomap(PHYS_OFFSET, 0x200000);
+
+        /* Reserve the kernel text/data/bss */
+        memblock_reserve(__pa_symbol(&_text),
+
+
+> --
+> 2.42.0
+>
+>
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+>
 
 
 _______________________________________________
