@@ -4,91 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 495C5C4167B
-	for <kexec@archiver.kernel.org>; Tue, 28 Nov 2023 15:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0B469C4167B
+	for <kexec@archiver.kernel.org>; Tue, 28 Nov 2023 23:36:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=VMBi5cPtukAcWr6N63YhpkGwNTg/2ILrtWAhmutLej8=; b=Lgb0DLX7fQU5vc
-	9N3WATMOWkO+o5hCL3PPqRPCAIqVMQUZEGfwf7f1fzPS/eY6pDMNfnCQLyll6Vp1sLmaZxPE7u8DX
-	KNVHcktcskPuVZUvRCPx6dtLmmielTJwwCTNa5NqGKU02UvxJrCyuCA3JOJxwcNnivv0nxt7d01Uj
-	CpKyhVz+4JCQ2Zw9nF6rQb3F/93KFDVALtIB781aVCHeBJSbA7EF1c3MyTOLlUT76NzWwMXxSBnjE
-	wSmIaIqZk1RSnYyaOXtuohT9GEGTuvSk7HI7yzDmEHi7HjNW4R4r6f/3Ypgs7zym/DvrFkuTryQyM
-	6alWE/zhxeVLqhlNf63Q==;
+	List-Owner; bh=VDbPkQxplJmxplne8oz1XooiyQ5x9QhSBu6+IJ3nzQY=; b=4mPRO28RBDXthE
+	zSvsn2gnt+yH7S2NMPfE1B461LszRpeU9oYwRM5ZvAwGw5xtMDaeJFyzdQKx7YbTQuyyd5ah7KaFL
+	5ulwn4eOS9viJM9CP/n5jwSJfEhYU58OxzoUf/UIMZxKeS9M2birc+VuSsPEgmvXL7vKz/rIud6N6
+	TOzGDBBjeLVsAsKW21gji5k7YoaAx7+IRTf44kq0l/AUq22uoJrHkQtkn8bVGBtS/BMAmCQI7BFuF
+	VUAd8aTA7f/kka2Ua8RlCj07eIN/TKLaGxq1x+dloEFpII5vPH4spaI8MlCbiDGv3f1cTTo3cnD+1
+	HnBYRx1i5K5h74C5XYBg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r80HQ-005isn-0b;
-	Tue, 28 Nov 2023 15:45:44 +0000
-Received: from mgamail.intel.com ([134.134.136.31])
+	id 1r87cV-006bcv-2k;
+	Tue, 28 Nov 2023 23:35:59 +0000
+Received: from sonic311-25.consmr.mail.ne1.yahoo.com ([66.163.188.206])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r80HN-005irj-24
+	id 1r87cS-006bbb-2n
 	for kexec@lists.infradead.org;
-	Tue, 28 Nov 2023 15:45:43 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701186341; x=1732722341;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=BTtNI/kP7Oj/cphm9g8LdfrDMhDpH3L8ToC6A/UuepU=;
-  b=fB74SdBNE3mbwjKOhyxZtBEf+nz3qlLu/UNCcgwu75sU0k0LpBBxDS+N
-   hv4TyyXpxOEXyouB5qLIXKjj+fib8zQdOECal7gzWGway+rvN5xxbvLuL
-   x5W9O8cE7B5vLFqrAVk6tpIJ+h8semPlSQNRs2D0WW4kuAYXrAJt6apbv
-   HViTuasJFRPIiiZORLSpwClTrSsGDfWYQMx3TOJfYP2hQmez1ySIFmqGN
-   rcsys0sOS8H7xsl871PD/vnhX1Szd1kjUbczH46IGgiQntmcyqpNcJSzw
-   SFb8Dv9l4dhyRcrf/IgzNtgAvtr0HcfRvisfjeKg5MJ7wzc4eHMq1fePl
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10908"; a="457274715"
-X-IronPort-AV: E=Sophos;i="6.04,234,1695711600"; 
-   d="scan'208";a="457274715"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2023 07:45:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10908"; a="744946511"
-X-IronPort-AV: E=Sophos;i="6.04,234,1695711600"; 
-   d="scan'208";a="744946511"
-Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2023 07:45:39 -0800
-Date: Tue, 28 Nov 2023 07:45:39 -0800
-From: Isaku Yamahata <isaku.yamahata@linux.intel.com>
-To: Baoquan He <bhe@redhat.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, ltao@redhat.com,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Elena Reshetova <elena.reshetova@intel.com>,
-	Jun Nakajima <jun.nakajima@intel.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	"Kalra, Ashish" <ashish.kalra@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	"Huang, Kai" <kai.huang@intel.com>, kexec@lists.infradead.org,
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
-	isaku.yamahata@linux.intel.com, isaku.yamahata@intel.com
-Subject: Re: [PATCHv3 00/14] x86/tdx: Add kexec support
-Message-ID: <20231128154539.GC1102144@ls.amr.corp.intel.com>
-References: <20231115120044.8034-1-kirill.shutemov@linux.intel.com>
- <ZVYGx1EwzjXbTEyX@MiWiFi-R3L-srv>
- <20231116125612.daxettqcapled7ac@box.shutemov.name>
- <ZVYkdI74X8acDtTq@MiWiFi-R3L-srv>
- <ZVYrA+Ks0DGFo/0p@MiWiFi-R3L-srv>
- <20231117124748.umfuc3no2qvh4shj@box.shutemov.name>
- <ZVeApN4lDqTLu7ma@MiWiFi-R3L-srv>
- <20231117154632.zvi6g6lblmtvikzt@box>
- <ZVxRBLsQcv8KRasA@MiWiFi-R3L-srv>
+	Tue, 28 Nov 2023 23:35:58 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1701214553; bh=Bc2KPXc7blYbEIDH86NzFbr1OPgQO8AjJMQ2HT74sw8=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=U8h3fdTTKnh+tXKLfLwQKQgTMI9wurO37bVvF55+JEJFCIVO6Ozbbt70ztL/yRGGJHixf6xsNGyA/U7xG6H/jvNn2j55bWWpcMJe6TYLWnVU8Da4oSeB07OoLmpETZ6Y8bTtJOj7501/G5yF7hRyO4kEgtR1r1YwPgoEX2tpbAJ2A34B1/75sZCxvK98+rMuMNLKCUpYbtDNysmB69uLYbyUaqYVfRqDylKmdvR1JTLXOk+x62cZDijEFhrp9KUauon19j/BRAryillnkYNtckh5pTsPIjOzYakrGseh+nDhp8AJpUMfRTxRu3XlDjTEKnBfZNIDAe3HQ35AJsdDCQ==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1701214553; bh=K32rrAF69yY7Iy9z2Kv0/QJMEMfNSLJetrav4zXxl4Z=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=SDXdiLzLZLmoxFq3AHjaPJ7mlvheK5PbAv++xCnOsjDb6S8tw9RddiiO/XiO9WiIRym/mZoYJDnSwFlggEyZNldBpbUCUlQsQmmXvdz/nh2xiXPYBkpFUgU+zohzILtMqxMsXEheL36iJE5IrAm/L3RJ4imklNl0Hjlw9HF5YP5GcoT9IHI/ngq0TP5eThoxgaUaJu4Mea1qTGstCv9SqVHZeuDV4bPCoV7KWzlvsThth2R/N5Wl7QYLFH/ao6YO2yfZnB9OmVfyjKQNQ6TDxnQfXRpZvAtpOETDWI5Uup9JI/q1lksvoKrMS4Y3iyC+h2mnYES3QeLOZ5LTcwEwDg==
+X-YMail-OSG: L.Ba3fQVM1nV9KEPQyqyTD9L_c40CMec37f2.y7YZX3p2FblIv6CukH5rWUyvMd
+ KWVBoO8JgL8Imz76eF18fXxNJMOj8Gz1tJYT.VxXyz0t85I_hN_NYQsMl4raleUF8JmFzBRnE9py
+ gorYwUiQvamqthkR5b6zKNm2i8iZKDkmIeVM8m_NoiG.q.jpHtMRQbBV56j6Men5XWivx43PX1ft
+ sEmZOVeM9YJEYd2P8DPmiTLUzby2_LzOgbtE0oz7Y2Me2OhIfpuJ9ELmSPnOsQEVpUGaA18WqkI2
+ uZMWRx7I12D65GIhM2IPWNvOedexCu4AbDyGdTWEgSb.oMaLPmQYUpytHKTwN0F969IM1HhT8j2L
+ jOtDn103V3PM7KgHevaCEZkLRqW9A5l4sMQc1gOLczWY_jM1umz7qjdS2wSwXx_PDGIM1SvSlcve
+ QVyWZHN98a5FPL5QkJ2HH8FdOhEm5KEofsWlduDCgaoJjVmWSoUE1YBpNgmCIvNpjqWu1w.q.6Sb
+ 5wmKx1kXLu.L.2XmexMwwMaRZeiT3Rug0PuHoNH0exG3M5.Jl_QidEClX7gN7GA79KLycPcumE4Y
+ f0cjNF8yjJBYVbvGLU3ubZOb5OCZQ1.CLT.CLDzQcPLJ7ozIQL1jK7Og_wsmFkteJAKKdhyA9keM
+ Gnbb_hXQewCwpDqxVCkWL.nC90nBIiXAXB1eOMBZdRM_GZ4LzPxbH43lPbQvNxyW1nKQ_U.AbWA.
+ QDP8PugsMnQpmx6GJS3u3XYgsmN5HtZlBr_RfNBWu7caMs8RlSSYJk9I7qSeuQnh2Z9zRjE1Y1rY
+ W0qDe2WikSahVq39BcCwjtThH6ILodqtQkEkXeLbLsZToZQv9DlKW4zpI67QiI.RUp55TimN1tpE
+ OLF_jtUjJ2.W0YBGDt35..4Pj94aHLpi8CCjGnDyxbpBpMGGTS0Vv4MhXUMaW5xukkgfBD8DDC4o
+ FPW6iF4HZq.WFMV7OTDG2WzUSf5OIOoffF275q2DkxAY0hX_jOxv7j8PROOo7uYEWHl9xkWBA4UX
+ iZjldzX0AIbiI_oU5tqxALYaoJ04i6fg.2AHmvM3swmezyjYIXvvYVwirRzQo4AU2nnde1JOAJNs
+ F1G2hxIPNm9KFYcGE1znH.F5JJN1irrgMjypBnE9m5NNHh7_DDhkBu8QMn43dYKeXAn8YPnj4z2f
+ J6U6hJPSubBaOSB.KMgsn3e3g0UopS86IWdmgjGfjJwzTetDCIZjWXHPLtM2gpf46BBd15.nhgno
+ zj6DWI41JA7UL815Bh60.TlTnW7zMzX7RtB049oSd4cjZabejz0Bjmypo_FzIkad8SlRQ2j41HS4
+ nIdpg8iuRDg8VvcWMnJ4th44ZVkLA8CpJJxFC4TIrZb.Kgq.2wPGPPaShvoda2TRRXj5iiNTCEsk
+ vdyhmdj7KTtrJ.7kX_yTON55rIPKUwxM34a8mTh3EBf4HdeKyt0q6hHk8PHmpxGXNmZMABadD8aN
+ RpgrY.FAWA6wi9AHbnyJDCt064vbEvmWKlSmfY.DtxIjQd7tlzjbjugMPGjLysReCDHKHrBgusOM
+ 6t34GOZgQZUFXkz1CqChX4ZsIhgVtuyMAsmvCw_nSsQcPH5nBcjvBJ4peYAjIbbY..DEq19ee2Kk
+ uuLgMl0HaqSrLCDh9mwTztN7AKIKUTm39v1Ea9IPZ3jOyUNVvaCpC2N_PUF6zmVKoyiDrNAyO_4P
+ EFXhYGmj3J.s.QQ9oIkXE0gnMg09bz9lUNGfosvRw2yPcelCeKq.neE836NhPfaBg.4hdpQRFipA
+ chs6LYawiRUg3Oli.mZDtGsDqC6t1exl4DNMqwe9orq_m.1zTY0hH9OmkMWQzKNpM0Ev_J6HjCUU
+ 9Zxru1JLaKVq0.nmL6y9xqt2iRci3o7KchaOBuARnqGSzneyjkvtmzohCCnTFjXC5HSjzf6GVaXB
+ zNn8uwkTsp7I2H6wItxY9WLGtJv._s9J3LdBCtTkw2wpu5xfj8vYeT3lDO7q_JIv5imAHTsaJARc
+ nBEW31QnG3jX35VqR0iokQ02H6AzBb27JszxCIs4WWasKkf57CZZDCe98w7vsXZ_lTO22wxPYdNw
+ 0ft3z2I9iS7L3TdV9MJLxjedMXrvTXkAaKjk7tAwE0mEpcxRLDtpxgbJphZYXzLwupJKxBOa957k
+ fIpO_seH31lc3sm60yPmC9D5K4sZblicLLw978df63Ha_eVA9oKJAlXB9Eqvqf4np4BXtn9urwWF
+ j3ibFs39XXFURacX2ocXlzDPoE08mB6360Xr87OqWHpg7FI2qWkBsqFLwA2FGcDUkLjd7Uz4PEWw
+ 46ec2bb35dg--
+X-Sonic-MF: <eric_devolder@yahoo.com>
+X-Sonic-ID: 8ba60698-3fd8-470f-99c4-b0f740ba3e4f
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic311.consmr.mail.ne1.yahoo.com with HTTP; Tue, 28 Nov 2023 23:35:53 +0000
+Received: by hermes--production-bf1-5d8dc66654-5vp49 (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID ca74304065a9f2006ba282ef404c19e0;
+          Tue, 28 Nov 2023 23:35:49 +0000 (UTC)
+Message-ID: <f876d8e6-cb93-4d22-9837-eae2764e7b07@yahoo.com>
+Date: Tue, 28 Nov 2023 17:35:47 -0600
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <ZVxRBLsQcv8KRasA@MiWiFi-R3L-srv>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] kernel/Kconfig.kexec: drop select of KEXEC for
+ CRASH_DUMP
+Content-Language: en-US
+To: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
+Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ akpm@linux-foundation.org, ignat@cloudflare.com, agordeev@linux.ibm.com
+References: <20231128054457.659452-1-bhe@redhat.com>
+From: Eric DeVolder <eric_devolder@yahoo.com>
+In-Reply-To: <20231128054457.659452-1-bhe@redhat.com>
+X-Mailer: WebService/1.1.21896 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231128_074541_742719_890119FD 
-X-CRM114-Status: GOOD (  31.49  )
+X-CRM114-CacheID: sfid-20231128_153556_964591_241746D7 
+X-CRM114-Status: GOOD (  18.46  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,97 +94,100 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Nov 21, 2023 at 02:41:08PM +0800,
-Baoquan He <bhe@redhat.com> wrote:
 
-> On 11/17/23 at 06:46pm, Kirill A. Shutemov wrote:
-> > On Fri, Nov 17, 2023 at 11:03:00PM +0800, Baoquan He wrote:
-> > > On 11/17/23 at 03:47pm, Kirill A. Shutemov wrote:
-> > > > On Thu, Nov 16, 2023 at 10:45:23PM +0800, Baoquan He wrote:
-> > > > > On 11/16/23 at 10:17pm, Baoquan He wrote:
-> > > > > > On 11/16/23 at 03:56pm, Kirill A. Shutemov wrote:
-> > > > > > > On Thu, Nov 16, 2023 at 08:10:47PM +0800, Baoquan He wrote:
-> > > > > > > > On 11/15/23 at 03:00pm, Kirill A. Shutemov wrote:
-> > > > > > > > > The patchset adds bits and pieces to get kexec (and crashkernel) work on
-> > > > > > > > > TDX guest.
-> > > > > > > > 
-> > > > > > > > I finally got a machine of intel-eaglestream-spr as host and built a
-> > > > > > > > tdx guest to give it a shot, the kexec reboot is working very well,
-> > > > > > > > while kdump kernel always failed to boot up. I only built kernel and
-> > > > > > > > installed it on tdx guest.
-> > > > > > > > ------------------------------------------
-> > > > > > > > [    1.422500] Run /init as init process
-> > > > > > > > [    1.423073] Failed to execute /init (error -2)
-> > > > > > > > [    1.423759] Run /sbin/init as init process
-> > > > > > > > [    1.424370] Run /etc/init as init process
-> > > > > > > > [    1.424969] Run /bin/init as init process
-> > > > > > > > [    1.425588] Run /bin/sh as init process
-> > > > > > > > [    1.426150] Kernel panic - not syncing: No working init found.  Try passing init= option to kernel. See Linux Documentation/admin-guide/init.rst for guidance.
-> > > > > > > > [    1.428122] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.7.0-rc1-00014-gbdba31ba3cec #3
-> > > > > > > > [    1.429232] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS unknown 2/2/2022
-> > > > > > > > [    1.430328] Call Trace:
-> > > > > > > > [    1.430717]  <TASK>
-> > > > > > > > [    1.431041]  dump_stack_lvl+0x33/0x50
-> > > > > > > > [    1.431581]  panic+0x324/0x340
-> > > > > > > > [    1.432037]  ? __pfx_kernel_init+0x10/0x10
-> > > > > > > > [    1.432629]  kernel_init+0x174/0x1c0
-> > > > > > > > [    1.433149]  ret_from_fork+0x2d/0x50
-> > > > > > > > [    1.433690]  ? __pfx_kernel_init+0x10/0x10
-> > > > > > > > [    1.434277]  ret_from_fork_asm+0x1b/0x30
-> > > > > > > > [    1.434850]  </TASK>
-> > > > > > > > [    1.435345] Kernel Offset: disabled
-> > > > > > > > [    1.439216] Rebooting in 10 seconds..
-> > > > > > > > qemu-kvm: cpus are not resettable, terminating
-> > > > > > > 
-> > > > > > > Could you shared your kernel config and details about your setup (qemu
-> > > > > > > command, kernel command line, ...)?
-> > > > > > 
-> > > > > > We followed tdx-tools README to setup the environment and built host and
-> > > > > > guest kernel, qemu command is as below. I copied the
-> > > > > > tdx-tools/build/rhel-9/intel-mvp-tdx-kernel/tdx-base.config to the
-> > > > > > latest upstream linxu kernel then execute 'make olddefconfig'. Because
-> > > > > > your patchset can't be applied to the stable kernel with the 731
-> > > > > > patches.
-> > > > > > 
-> > > > > > cd /home/root/tdx-tools
-> > > > > > ./start-qemu.sh -i /home/root/guest_tdx.qcow2 -b grub
-> > > > > 
-> > > > > This is the qemu command when execute above line of command, just for
-> > > > > your reference if you happen to not take this way.
-> > > > 
-> > > > Still failed to reproduce :/
-> > > > 
-> > > > Blind shot: could you check if the patch below makes any difference.
-> > > 
-> > > Still failed. And I found the normal reboot does't work either. I will
-> > > do more testing tomorrow, e.g use the tdx-tools's own rhel9 kernel
-> > > config and rebuild, and update host kernel too.
-> 
-> I did more tests, resuls are summarized as below: 
-> 
-> 1) kexec reboot works, but always fallback to 1 cpu even though multiple
-> cpus are specified;
-> 2) kdump kernel need more crashkernel memory to boot up,
->    crashkernel=512M works well in our case. But it failed in vmcore
->    saving process, either makedumpfile or cp can't access the 1st
->    kernel's old memory;
-> 3) Normal reboot always failed;
-...
-> 3) not sure if this is particular case on the system we tested on.
+On 11/27/23 23:44, Baoquan He wrote:
+> Ignat Korchagin complained that a potential config regression was
+> introduced by commit 89cde455915f ("kexec: consolidate kexec and
+> crash options into kernel/Kconfig.kexec"). Before the commit,
+> CONFIG_CRASH_DUMP has no dependency on CONFIG_KEXEC. After the commit,
+> CRASH_DUMP selects KEXEC. That enforces system to have CONFIG_KEXEC=y
+> as long as CONFIG_CRASH_DUMP=Y which people may not want.
+>
+> In Ignat's case, he sets CONFIG_CRASH_DUMP=y, CONFIG_KEXEC_FILE=y and
+> CONFIG_KEXEC=n because kexec_load interface could have security issue if
+> kernel/initrd has no chance to be signed and verified.
+>
+> CRASH_DUMP has select of KEXEC because Eric, author of above commit,
+> met a LKP report of build failure when posting patch of earlier version.
+> Please see below link to get detail of the LKP report:
+>
+>      https://lore.kernel.org/all/3e8eecd1-a277-2cfb-690e-5de2eb7b988e@oracle.com/T/#u
+>
+> In fact, that LKP report is triggered because arm's <asm/kexec.h> is
+> wrapped in CONFIG_KEXEC ifdeffery scope. That is wrong. CONFIG_KEXEC
+> controls the enabling/disabling of kexec_load interface, but not kexec
+> feature. Removing the wrongly added CONFIG_KEXEC ifdeffery scope in
+> <asm/kexec.h> of arm allows us to drop the select KEXEC for CRASH_DUMP.
+> Meanwhile, change arch/arm/kernel/Makefile to let machine_kexec.o
+> relocate_kernel.o depend on KEXEC_CORE.
+>
+> Fixes: commit 89cde455915f ("kexec: consolidate kexec and crash options into kernel/Kconfig.kexec")
+> Reported-by: Ignat Korchagin <ignat@cloudflare.com>
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> ---
+>   arch/arm/include/asm/kexec.h | 4 ----
+>   arch/arm/kernel/Makefile     | 2 +-
+>   kernel/Kconfig.kexec         | 1 -
+>   3 files changed, 1 insertion(+), 6 deletions(-)
+>
+> diff --git a/arch/arm/include/asm/kexec.h b/arch/arm/include/asm/kexec.h
+> index e62832dcba76..a8287e7ab9d4 100644
+> --- a/arch/arm/include/asm/kexec.h
+> +++ b/arch/arm/include/asm/kexec.h
+> @@ -2,8 +2,6 @@
+>   #ifndef _ARM_KEXEC_H
+>   #define _ARM_KEXEC_H
+>   
+> -#ifdef CONFIG_KEXEC
+> -
+>   /* Maximum physical address we can use pages from */
+>   #define KEXEC_SOURCE_MEMORY_LIMIT (-1UL)
+>   /* Maximum address we can reach in physical address mode */
+> @@ -82,6 +80,4 @@ static inline struct page *boot_pfn_to_page(unsigned long boot_pfn)
+>   
+>   #endif /* __ASSEMBLY__ */
+>   
+> -#endif /* CONFIG_KEXEC */
+> -
+>   #endif /* _ARM_KEXEC_H */
+> diff --git a/arch/arm/kernel/Makefile b/arch/arm/kernel/Makefile
+> index d53f56d6f840..771264d4726a 100644
+> --- a/arch/arm/kernel/Makefile
+> +++ b/arch/arm/kernel/Makefile
+> @@ -59,7 +59,7 @@ obj-$(CONFIG_FUNCTION_TRACER)	+= entry-ftrace.o
+>   obj-$(CONFIG_DYNAMIC_FTRACE)	+= ftrace.o insn.o patch.o
+>   obj-$(CONFIG_FUNCTION_GRAPH_TRACER)	+= ftrace.o insn.o patch.o
+>   obj-$(CONFIG_JUMP_LABEL)	+= jump_label.o insn.o patch.o
+> -obj-$(CONFIG_KEXEC)		+= machine_kexec.o relocate_kernel.o
+> +obj-$(CONFIG_KEXEC_CORE)	+= machine_kexec.o relocate_kernel.o
+>   # Main staffs in KPROBES are in arch/arm/probes/ .
+>   obj-$(CONFIG_KPROBES)		+= patch.o insn.o
+>   obj-$(CONFIG_OABI_COMPAT)	+= sys_oabi-compat.o
+> diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
+> index 7aff28ded2f4..1cc3b1c595d7 100644
+> --- a/kernel/Kconfig.kexec
+> +++ b/kernel/Kconfig.kexec
+> @@ -97,7 +97,6 @@ config CRASH_DUMP
+>   	depends on ARCH_SUPPORTS_KEXEC
+>   	select CRASH_CORE
+>   	select KEXEC_CORE
+> -	select KEXEC
+>   	help
+>   	  Generate crash dump after being started by kexec.
+>   	  This should be normally only set in special crash dump kernels
 
-qemu handles guest reset request as shutdown.  This is expected. 
-It is common for confidential guest support.
+I have run this change against the kconfig regression script, and it did 
+not find any differences!
 
-In theory it's possible for qemu to re-create TDX guest and start a new guest.
-Because the qemu implementation is too convoluted, it's not worthwhile to
-implement it.  Instead we can modify libvirt to restart qemu for reset request.
--- 
-Isaku Yamahata <isaku.yamahata@linux.intel.com>
+Reviewed-by: Eric DeVolder <eric_devolder@yahoo.com>
+
+
+
 
 _______________________________________________
 kexec mailing list
