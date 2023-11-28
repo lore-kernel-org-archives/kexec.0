@@ -4,85 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D0590C4167B
-	for <kexec@archiver.kernel.org>; Tue, 28 Nov 2023 13:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 495C5C4167B
+	for <kexec@archiver.kernel.org>; Tue, 28 Nov 2023 15:45:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=7Z4SbrnlLJDLhDuNl8mlI7P/OOkeEt5brW1COQPNr1U=; b=OWSMgCTpgle8fE
-	AxGBk+MGJB82RHR5ECL3f31Y1qOPu+AvYrPcDmCpFC6uLrWYXI7gJMboG6VkKFtVi49ntujLKIEX0
-	wRNh5r2BtZ4FEnrQ3ChtDdLTPmjM3O4mJ1Keg/notJGdDy3Rcx3iEPRJxLshh5PvC1qgkL3xjo1sE
-	+PzgC1FQ/5Fom2NE0yGUTVIT66OIwD4/MAD1B/imA7ErPu4e4xm7+/ZFGQY8Cas4mlYtxEzCEyyd5
-	awl7psUVeXb7gXyw/YE9Zjj6+3OspJz1gLZ3nUvUc6VhNmfjqZAjhfSf6tCnrMa2OoQbPDgirCvJl
-	yt4vJg2u6beRS71Rim8Q==;
+	List-Owner; bh=VMBi5cPtukAcWr6N63YhpkGwNTg/2ILrtWAhmutLej8=; b=Lgb0DLX7fQU5vc
+	9N3WATMOWkO+o5hCL3PPqRPCAIqVMQUZEGfwf7f1fzPS/eY6pDMNfnCQLyll6Vp1sLmaZxPE7u8DX
+	KNVHcktcskPuVZUvRCPx6dtLmmielTJwwCTNa5NqGKU02UvxJrCyuCA3JOJxwcNnivv0nxt7d01Uj
+	CpKyhVz+4JCQ2Zw9nF6rQb3F/93KFDVALtIB781aVCHeBJSbA7EF1c3MyTOLlUT76NzWwMXxSBnjE
+	wSmIaIqZk1RSnYyaOXtuohT9GEGTuvSk7HI7yzDmEHi7HjNW4R4r6f/3Ypgs7zym/DvrFkuTryQyM
+	6alWE/zhxeVLqhlNf63Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r7yX8-005Q8m-2t;
-	Tue, 28 Nov 2023 13:53:50 +0000
-Received: from sonic304-21.consmr.mail.ne1.yahoo.com ([66.163.191.147])
+	id 1r80HQ-005isn-0b;
+	Tue, 28 Nov 2023 15:45:44 +0000
+Received: from mgamail.intel.com ([134.134.136.31])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r7yX6-005Q7x-0g
+	id 1r80HN-005irj-24
 	for kexec@lists.infradead.org;
-	Tue, 28 Nov 2023 13:53:49 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1701179623; bh=FauI8fpf/CNgANuTPdYwuAuARRSWWVSTl36t3Qy63Lo=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=TGCbb29ZlOrVyftAdAuJHqTzqPyfHMK8+9dCOuemn9f57pF5p7U2nV2pCZVoVpxlOpZOb0hawfkSNeaoco1Y8/Wy56gu8DaCR8uhn5PRAuPZ/YqGUW5YKbqYdIglcM5WWI/8aJY6j4pUMNRCR7AUiZ032mMOTeuBLRGuaRQtLSTGAaOhMaxrimZaKgDSuU4mXos9UH2CRd6JZhvgMt+w6jkqGFfLzRnwYXz0NMjeeaCZuaM7UmQw3czGbX/gyjDKhFtWld9wYizUy+LOYVjhma+rSR2J8D3cp3v8DTN7MTpWXZY0Hrc+k6+KkbzQVGmTQy/E9SAbE30hi32NvzInMQ==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1701179623; bh=nRVT93Bi4WGbV5peCs1F9yqnl2egspOOkl1MkD7OCgf=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=jZSc+HVL9xVi+w2g/vFU7fT0BR8vckAke/R1r6oN7n8IDLNPTcEOs8bzf5H8WobWnj46Ah/pSyvZTmRXSefNzXoWV65H4Ed0gUz6T/aWO0e5uJSBMgwHP59qVsP0UPpnjWX9NmxdjHAjd2VhlHdNhHsyY0OKai0UaSFbsx141IgKcPRnG/5Xnvo6rteM/PK6jpDx+AaUlNv0U0GRtgzO8oW0o+AxiNCXKAFwgLZX5mj3PEmeLSaUQ5NMhubioXdXDMPwfuYK+/EH+wXa7d3XMfQn+5ikynElxPp+U+JXhvaBl7OfcSLkSXlo9eeCnu0dzSOLQWdjGjdHUQzmUxjUFw==
-X-YMail-OSG: yoFfnx8VM1l.SXckWZ4SPf0yffhAkCcnBHInopGIgHyAVgIUnqBXbuStB1EB03X
- p8B5E_YmUlZsMbmoCt2KcAaG.cM39_YaG36Ky2LrbKo2vmqqDsY82IqUFgjCS8HhohcWFV9Owl._
- K8rE2rpbFx3wYyAuggtWqWdm_x8_9ezk.fiugSCEoSAsA5CuFgnrc9zfR62xrrvbKxegMeL5XVVK
- bQwlI8NUmZWQ0NzMunZBTyeTx1AZBDDghfz4NcqvuOu_WuNJ6hWTk8N3lxLVh1CWC5Qu2P9IERmW
- yg1Uj9eK0JmRCTau9fwmILcF_3nJg.DE5eqdm.tg3aPaCOCjryIxEfLenNf.P4f3tnY7apgRsl7a
- KUTjHsFGFP6EFiIP8BNtlVsT8cbprKAjfwt2zTKVEcYrrcCsGhLqbiJ0OOkAv7zHU5JC1Ae8R2Yj
- nOII.o4Y.M_Ng9TuP5qh.fHuSxBS0acK0DgVyY7hWaV25P_Dq.ExnPNe3x_Txh9kBGyaVs7HCOQB
- O7hioAa11tM_6ubE6weuOyGjtLXlKsyRHi57D1B06HYHAPPoM9YfWWzFTtGCo3mo.dmopGYmDKqU
- woSnw.KpxfTST7qF1UqjQrDpeWl8YxiYLC8FU9mNUWhFKtsPqKeVowzyCJ5aF2nN17L5SoU9H1_x
- EWw_uObmp4FY1ABmE7bQKqt4D_yTrscbeqjMN4_9aTdKi.vnNoXtqd5rtFF4WmTxB0z6CoN0oR9y
- sv9Zpaz03puUOS.h8DVRuYCYrmxs2RLUIcEpgsfZ0nhwYpDMKHKzZ2AVIisz.tw7Crik2jrXOmSd
- _E_zsdyJRaaR29Jw9NEGDUURtOqGeDsBZWtqAHPGks2ZOF69QxT7kBC_MlKYweLAGJI8IgLtJZtY
- uNMStpE8oKlkx9BLRs7D0CQ1h3Ha.a67EvWp1R2ZheEwGu.gYB1PupnxZKP2LZhWILpY_UsfldhJ
- 0YONAsJpWMCObxsRm59h0.UC6e7jvmaDxra1XAlKWKmJx86AN87ohzS7qLkmoBbTdjYF4H4F64HK
- pjaLx3AbGDjJv3.AXqtroxTIoomur97vc.wgVewZMX7pZ8RbiGjI8LBgxdD2w9ppB2xEXyAqsP_d
- _c5nTlN3uqujRdsZR5fjI6U3YY6hbGDZemNvrtbGPsgzl1mGH19oAvLMW5oyaraNVcAoPMuuP5Lu
- R.Tq2IiiKOV21QH2HdXqPVC1ymf7eQmNjmABRAREa.fY7VTYVAVKeeEM6yhHfVmvIhJ9NWuMFeHJ
- wSodfCjv5Eygho7dKsCN9rEY86emd4Ej6ZmiGfKvgQ6MGEtNGwuQ2PMdzbk5ti2K..K97hFQl4rK
- PXBH7NI0zHA215Si8IjSgvwUDRjgK7ojQN_tAjbdEoOLARsjcZOr60SMFRB0hjssay_9z7AyMFpq
- UOP.bvo03Y6VjHZ08rr9vdoDiKFg5ZwGa0PZ6B4FMRvEZGHTFLdh_s8zu4Q1BX.x_Sn487r9e4O8
- jAvIf0g1jXmkV0M6tey46jXUkNdx.U365pGjP2WsohB8pNQx3jvOV9QRCxoubh4FugfFPpGCZaEO
- rnaboelADhqmwEXuyevvzvlONy0XyFyHB7FT1Rt7aIqXKx5ginqARPAtpDw8q7.WpuHoVOlgu8IZ
- wvv2znlaDm2K75odYd3EKuhpuhMdrr54cY.uV0ErOVDDa6qwoGRWbRqTdJpSAF0PgpRMagIgC8uf
- xk737tee.8LU1ksiKuM_RbcOzaxQP4FJc3ro9O6UhkLfcb3CdtcYNgu2kiIQhmdJksTvGlUNt223
- OnqeOm2hJH1AXWpYxgfo5xnO81L4eUdRCNOjn9Csjg919NksjKDHKjket19naJdZ13IabUX9ZQYG
- XASWE3N96bPtbWM41d5AsTHvrbZYipLGBu2GXq9z2cps235yt.OGHsr55qEXLoHGin7waOXnbYD5
- x1oX1926uA8KlIedjAtMwYZgaYJ3Rk5QF7qlPPMrVMCiw.xGKlgWD16dQPXNgRzaaouL5wzrWTbM
- aJqgxUI.bpSRvlxgfqa1x7vZgY6t8ujBVGkkPq6S8XEjJepk5HfM4Fr5bIe3R3lPXCxa3gqTzBqf
- PSSttIKq.o0pZpHBi2aehiM1OoVeLRtlNBg4USAkXEgL6JBPB64ZJjJt2PjV47X_PdLugYi0DO4m
- egVjtlVgL1N.KqoYIFbg_vs0h2si0h88NOTP61g0OiawpN2il2U4izHEO.dSsVCWiMBn7xjrITxP
- Swi3Pm1rEltkGfKPENdkGuRYesL2IDsJz99GV2S0dXz23sSxz38Y0z5dWpwShYodG52N5H6j8.mL
- GiWz0
-X-Sonic-MF: <eric_devolder@yahoo.com>
-X-Sonic-ID: 2c111f83-4a3d-4d13-b9f6-c9d7c58ce06a
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic304.consmr.mail.ne1.yahoo.com with HTTP; Tue, 28 Nov 2023 13:53:43 +0000
-Received: by hermes--production-bf1-5d8dc66654-q8vhw (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 384bd59aae204a6b4d730f6db7611597;
-          Tue, 28 Nov 2023 13:53:42 +0000 (UTC)
-Message-ID: <68f993cb-26a6-4e38-8361-4529766e0f83@yahoo.com>
-Date: Tue, 28 Nov 2023 07:53:40 -0600
+	Tue, 28 Nov 2023 15:45:43 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1701186341; x=1732722341;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=BTtNI/kP7Oj/cphm9g8LdfrDMhDpH3L8ToC6A/UuepU=;
+  b=fB74SdBNE3mbwjKOhyxZtBEf+nz3qlLu/UNCcgwu75sU0k0LpBBxDS+N
+   hv4TyyXpxOEXyouB5qLIXKjj+fib8zQdOECal7gzWGway+rvN5xxbvLuL
+   x5W9O8cE7B5vLFqrAVk6tpIJ+h8semPlSQNRs2D0WW4kuAYXrAJt6apbv
+   HViTuasJFRPIiiZORLSpwClTrSsGDfWYQMx3TOJfYP2hQmez1ySIFmqGN
+   rcsys0sOS8H7xsl871PD/vnhX1Szd1kjUbczH46IGgiQntmcyqpNcJSzw
+   SFb8Dv9l4dhyRcrf/IgzNtgAvtr0HcfRvisfjeKg5MJ7wzc4eHMq1fePl
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10908"; a="457274715"
+X-IronPort-AV: E=Sophos;i="6.04,234,1695711600"; 
+   d="scan'208";a="457274715"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2023 07:45:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10908"; a="744946511"
+X-IronPort-AV: E=Sophos;i="6.04,234,1695711600"; 
+   d="scan'208";a="744946511"
+Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2023 07:45:39 -0800
+Date: Tue, 28 Nov 2023 07:45:39 -0800
+From: Isaku Yamahata <isaku.yamahata@linux.intel.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, ltao@redhat.com,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Elena Reshetova <elena.reshetova@intel.com>,
+	Jun Nakajima <jun.nakajima@intel.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	"Kalra, Ashish" <ashish.kalra@amd.com>,
+	Sean Christopherson <seanjc@google.com>,
+	"Huang, Kai" <kai.huang@intel.com>, kexec@lists.infradead.org,
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
+	isaku.yamahata@linux.intel.com, isaku.yamahata@intel.com
+Subject: Re: [PATCHv3 00/14] x86/tdx: Add kexec support
+Message-ID: <20231128154539.GC1102144@ls.amr.corp.intel.com>
+References: <20231115120044.8034-1-kirill.shutemov@linux.intel.com>
+ <ZVYGx1EwzjXbTEyX@MiWiFi-R3L-srv>
+ <20231116125612.daxettqcapled7ac@box.shutemov.name>
+ <ZVYkdI74X8acDtTq@MiWiFi-R3L-srv>
+ <ZVYrA+Ks0DGFo/0p@MiWiFi-R3L-srv>
+ <20231117124748.umfuc3no2qvh4shj@box.shutemov.name>
+ <ZVeApN4lDqTLu7ma@MiWiFi-R3L-srv>
+ <20231117154632.zvi6g6lblmtvikzt@box>
+ <ZVxRBLsQcv8KRasA@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] drivers/base/cpu: crash data showing should depends on
- KEXEC_CORE
-Content-Language: en-US
-To: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
-Cc: kexec@lists.infradead.org, x86@kernel.org, akpm@linux-foundation.org,
- ignat@cloudflare.com, agordeev@linux.ibm.com
-References: <20231128055248.659808-1-bhe@redhat.com>
-From: Eric DeVolder <eric_devolder@yahoo.com>
-In-Reply-To: <20231128055248.659808-1-bhe@redhat.com>
-X-Mailer: WebService/1.1.21896 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
+Content-Disposition: inline
+In-Reply-To: <ZVxRBLsQcv8KRasA@MiWiFi-R3L-srv>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231128_055348_304507_A2537352 
-X-CRM114-Status: GOOD (  15.10  )
+X-CRM114-CacheID: sfid-20231128_074541_742719_890119FD 
+X-CRM114-Status: GOOD (  31.49  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,53 +100,99 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Ck9uIDExLzI3LzIzIDIzOjUyLCBCYW9xdWFuIEhlIHdyb3RlOgo+IEFmdGVyIGNvbW1pdCA4OGE2
-Zjg5OTQ0MjEgKCJjcmFzaDogbWVtb3J5IGFuZCBDUFUgaG90cGx1ZyBzeXNmcwo+IGF0dHJpYnV0
-ZXMiKSwgb24geDg2XzY0LCBpZiBvbmx5IGJlbG93IGtlcm5lbCBjb25maWdzIHJlbGF0ZWQgdG8g
-a2R1bXAKPiBhcmUgc2V0LCBjb21waWxpbmcgZXJyb3IgYXJlIHRyaWdnZXJlZC4KPgo+IC0tLS0K
-PiBDT05GSUdfQ1JBU0hfQ09SRT15Cj4gQ09ORklHX0tFWEVDX0NPUkU9eQo+IENPTkZJR19DUkFT
-SF9EVU1QPXkKPiBDT05GSUdfQ1JBU0hfSE9UUExVRz15Cj4gLS0tLS0tCj4KPiAtLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiBkcml2ZXJzL2Jh
-c2UvY3B1LmM6IEluIGZ1bmN0aW9uIOKAmGNyYXNoX2hvdHBsdWdfc2hvd+KAmToKPiBkcml2ZXJz
-L2Jhc2UvY3B1LmM6MzA5OjQwOiBlcnJvcjogaW1wbGljaXQgZGVjbGFyYXRpb24gb2YgZnVuY3Rp
-b24g4oCYY3Jhc2hfaG90cGx1Z19jcHVfc3VwcG9ydOKAmTsgZGlkIHlvdSBtZWFuIOKAmGNyYXNo
-X2hvdHBsdWdfc2hvd+KAmT8gWy1XZXJyb3I9aW1wbGljaXQtZnVuY3Rpb24tZGVjbGFyYXRpb25d
-Cj4gICAgMzA5IHwgICAgICAgICByZXR1cm4gc3lzZnNfZW1pdChidWYsICIlZFxuIiwgY3Jhc2hf
-aG90cGx1Z19jcHVfc3VwcG9ydCgpKTsKPiAgICAgICAgfCAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICBefn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+Cj4gICAgICAgIHwgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY3Jhc2hfaG90cGx1Z19zaG93Cj4g
-Y2MxOiBzb21lIHdhcm5pbmdzIGJlaW5nIHRyZWF0ZWQgYXMgZXJyb3JzCj4gLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4KPiBDT05GSUdfS0VY
-RUMgaXMgdXNlZCB0byBlbmFibGUga2V4ZWNfbG9hZCBpbnRlcmZhY2UsIHRoZQo+IGNyYXNoX25v
-dGVzL2NyYXNoX25vdGVzX3NpemUvY3Jhc2hfaG90cGx1ZyBzaG93aW5nIGRlcGVuZHMgb24KPiBD
-T05GSUdfS0VYRUMgaXMgaW5jb3JyZWN0LiBJdCBzaG91bGQgZGVwZW5kIG9uIEtFWEVDX0NPUkUg
-aW5zdGVhZC4KPgo+IEZpeCBpdCBub3cuCj4KPiBGaXhlczogY29tbWl0IDg4YTZmODk5NDQyMSAo
-ImNyYXNoOiBtZW1vcnkgYW5kIENQVSBob3RwbHVnIHN5c2ZzIGF0dHJpYnV0ZXMiKQo+IFNpZ25l
-ZC1vZmYtYnk6IEJhb3F1YW4gSGUgPGJoZUByZWRoYXQuY29tPgoKUmV2aWV3ZWQtYnk6IEVyaWMg
-RGVWb2xkZXIgPGVyaWNfZGV2b2xkZXJAeWFob28uY29tPgoKCj4gLS0tCj4gICBkcml2ZXJzL2Jh
-c2UvY3B1LmMgfCA2ICsrKy0tLQo+ICAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwg
-MyBkZWxldGlvbnMoLSkKPgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Jhc2UvY3B1LmMgYi9kcml2
-ZXJzL2Jhc2UvY3B1LmMKPiBpbmRleCA5ZWEyMmUxNjVhY2QuLjU0ODQ5MWRlODE4ZSAxMDA2NDQK
-PiAtLS0gYS9kcml2ZXJzL2Jhc2UvY3B1LmMKPiArKysgYi9kcml2ZXJzL2Jhc2UvY3B1LmMKPiBA
-QCAtMTQ0LDcgKzE0NCw3IEBAIHN0YXRpYyBERVZJQ0VfQVRUUihyZWxlYXNlLCBTX0lXVVNSLCBO
-VUxMLCBjcHVfcmVsZWFzZV9zdG9yZSk7Cj4gICAjZW5kaWYgLyogQ09ORklHX0FSQ0hfQ1BVX1BS
-T0JFX1JFTEVBU0UgKi8KPiAgICNlbmRpZiAvKiBDT05GSUdfSE9UUExVR19DUFUgKi8KPiAgIAo+
-IC0jaWZkZWYgQ09ORklHX0tFWEVDCj4gKyNpZmRlZiBDT05GSUdfS0VYRUNfQ09SRQo+ICAgI2lu
-Y2x1ZGUgPGxpbnV4L2tleGVjLmg+Cj4gICAKPiAgIHN0YXRpYyBzc2l6ZV90IGNyYXNoX25vdGVz
-X3Nob3coc3RydWN0IGRldmljZSAqZGV2LAo+IEBAIC0xODksMTQgKzE4OSwxNCBAQCBzdGF0aWMg
-Y29uc3Qgc3RydWN0IGF0dHJpYnV0ZV9ncm91cCBjcmFzaF9ub3RlX2NwdV9hdHRyX2dyb3VwID0g
-ewo+ICAgI2VuZGlmCj4gICAKPiAgIHN0YXRpYyBjb25zdCBzdHJ1Y3QgYXR0cmlidXRlX2dyb3Vw
-ICpjb21tb25fY3B1X2F0dHJfZ3JvdXBzW10gPSB7Cj4gLSNpZmRlZiBDT05GSUdfS0VYRUMKPiAr
-I2lmZGVmIENPTkZJR19LRVhFQ19DT1JFCj4gICAJJmNyYXNoX25vdGVfY3B1X2F0dHJfZ3JvdXAs
-Cj4gICAjZW5kaWYKPiAgIAlOVUxMCj4gICB9Owo+ICAgCj4gICBzdGF0aWMgY29uc3Qgc3RydWN0
-IGF0dHJpYnV0ZV9ncm91cCAqaG90cGx1Z2FibGVfY3B1X2F0dHJfZ3JvdXBzW10gPSB7Cj4gLSNp
-ZmRlZiBDT05GSUdfS0VYRUMKPiArI2lmZGVmIENPTkZJR19LRVhFQ19DT1JFCj4gICAJJmNyYXNo
-X25vdGVfY3B1X2F0dHJfZ3JvdXAsCj4gICAjZW5kaWYKPiAgIAlOVUxMCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4
-ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2tleGVjCg==
+On Tue, Nov 21, 2023 at 02:41:08PM +0800,
+Baoquan He <bhe@redhat.com> wrote:
+
+> On 11/17/23 at 06:46pm, Kirill A. Shutemov wrote:
+> > On Fri, Nov 17, 2023 at 11:03:00PM +0800, Baoquan He wrote:
+> > > On 11/17/23 at 03:47pm, Kirill A. Shutemov wrote:
+> > > > On Thu, Nov 16, 2023 at 10:45:23PM +0800, Baoquan He wrote:
+> > > > > On 11/16/23 at 10:17pm, Baoquan He wrote:
+> > > > > > On 11/16/23 at 03:56pm, Kirill A. Shutemov wrote:
+> > > > > > > On Thu, Nov 16, 2023 at 08:10:47PM +0800, Baoquan He wrote:
+> > > > > > > > On 11/15/23 at 03:00pm, Kirill A. Shutemov wrote:
+> > > > > > > > > The patchset adds bits and pieces to get kexec (and crashkernel) work on
+> > > > > > > > > TDX guest.
+> > > > > > > > 
+> > > > > > > > I finally got a machine of intel-eaglestream-spr as host and built a
+> > > > > > > > tdx guest to give it a shot, the kexec reboot is working very well,
+> > > > > > > > while kdump kernel always failed to boot up. I only built kernel and
+> > > > > > > > installed it on tdx guest.
+> > > > > > > > ------------------------------------------
+> > > > > > > > [    1.422500] Run /init as init process
+> > > > > > > > [    1.423073] Failed to execute /init (error -2)
+> > > > > > > > [    1.423759] Run /sbin/init as init process
+> > > > > > > > [    1.424370] Run /etc/init as init process
+> > > > > > > > [    1.424969] Run /bin/init as init process
+> > > > > > > > [    1.425588] Run /bin/sh as init process
+> > > > > > > > [    1.426150] Kernel panic - not syncing: No working init found.  Try passing init= option to kernel. See Linux Documentation/admin-guide/init.rst for guidance.
+> > > > > > > > [    1.428122] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.7.0-rc1-00014-gbdba31ba3cec #3
+> > > > > > > > [    1.429232] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS unknown 2/2/2022
+> > > > > > > > [    1.430328] Call Trace:
+> > > > > > > > [    1.430717]  <TASK>
+> > > > > > > > [    1.431041]  dump_stack_lvl+0x33/0x50
+> > > > > > > > [    1.431581]  panic+0x324/0x340
+> > > > > > > > [    1.432037]  ? __pfx_kernel_init+0x10/0x10
+> > > > > > > > [    1.432629]  kernel_init+0x174/0x1c0
+> > > > > > > > [    1.433149]  ret_from_fork+0x2d/0x50
+> > > > > > > > [    1.433690]  ? __pfx_kernel_init+0x10/0x10
+> > > > > > > > [    1.434277]  ret_from_fork_asm+0x1b/0x30
+> > > > > > > > [    1.434850]  </TASK>
+> > > > > > > > [    1.435345] Kernel Offset: disabled
+> > > > > > > > [    1.439216] Rebooting in 10 seconds..
+> > > > > > > > qemu-kvm: cpus are not resettable, terminating
+> > > > > > > 
+> > > > > > > Could you shared your kernel config and details about your setup (qemu
+> > > > > > > command, kernel command line, ...)?
+> > > > > > 
+> > > > > > We followed tdx-tools README to setup the environment and built host and
+> > > > > > guest kernel, qemu command is as below. I copied the
+> > > > > > tdx-tools/build/rhel-9/intel-mvp-tdx-kernel/tdx-base.config to the
+> > > > > > latest upstream linxu kernel then execute 'make olddefconfig'. Because
+> > > > > > your patchset can't be applied to the stable kernel with the 731
+> > > > > > patches.
+> > > > > > 
+> > > > > > cd /home/root/tdx-tools
+> > > > > > ./start-qemu.sh -i /home/root/guest_tdx.qcow2 -b grub
+> > > > > 
+> > > > > This is the qemu command when execute above line of command, just for
+> > > > > your reference if you happen to not take this way.
+> > > > 
+> > > > Still failed to reproduce :/
+> > > > 
+> > > > Blind shot: could you check if the patch below makes any difference.
+> > > 
+> > > Still failed. And I found the normal reboot does't work either. I will
+> > > do more testing tomorrow, e.g use the tdx-tools's own rhel9 kernel
+> > > config and rebuild, and update host kernel too.
+> 
+> I did more tests, resuls are summarized as below: 
+> 
+> 1) kexec reboot works, but always fallback to 1 cpu even though multiple
+> cpus are specified;
+> 2) kdump kernel need more crashkernel memory to boot up,
+>    crashkernel=512M works well in our case. But it failed in vmcore
+>    saving process, either makedumpfile or cp can't access the 1st
+>    kernel's old memory;
+> 3) Normal reboot always failed;
+...
+> 3) not sure if this is particular case on the system we tested on.
+
+qemu handles guest reset request as shutdown.  This is expected. 
+It is common for confidential guest support.
+
+In theory it's possible for qemu to re-create TDX guest and start a new guest.
+Because the qemu implementation is too convoluted, it's not worthwhile to
+implement it.  Instead we can modify libvirt to restart qemu for reset request.
+-- 
+Isaku Yamahata <isaku.yamahata@linux.intel.com>
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
