@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 761CCC4167B
-	for <kexec@archiver.kernel.org>; Wed, 29 Nov 2023 07:58:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 798CCC4167B
+	for <kexec@archiver.kernel.org>; Wed, 29 Nov 2023 08:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=j/TXnoL+TysE3XhJBiNtCgbC+Edp4sdler76Mrc44lQ=; b=DHXPdb4PeN62a2
-	gd0h4NOs0jq+SRkDiAk8KSbIqcTvtvKIk2QsVDu+mvCAzF/gyVfQXmfKqa1BwDScSqeTxQq/5XHee
-	D0McJZOgRNMsVekFnnK3rvBZbYx+cg9GcB8vkE3cu+5u29kxqhZbIj74KEwTEGWsAGMTydO0CSYcr
-	4TAkNetIRtt+7LTqX66chCFQH5jYgRDNfihQjLrb2CFP/Q0LnBIQu6mKZf1Xlf92uv9nORpuaFcPL
-	H3yoBkXP1Sq6hcfj9gfZ67b8MAaa5DAPXRmIuO2pBLeHTF2UwyIFOEgixazatT4GTwhDcRdRZX9Eo
-	e1vwksIOB14SmZ4jmKkA==;
+	List-Owner; bh=aMvoTPfIK0bdm1EopgF5thkKcvZjiuhDI5eiKwUoMtg=; b=kY+1wLKtPhIyVs
+	Ro1TA3ERR3rMe86jx61yTPkuWIMAbiK5TNg5/wSpEgvd5gjDGl4CUC9eOS1YiMY+KSxCbpJfkYzBI
+	4TO+cz2uoEKp4nR+UbO9iiSzWd3A2doGhdQo5gDoz2oJs1bO8a5ne9a/heHyOA9aE6yxPU3f6JYlt
+	MOQkUbU9tKgoFo5dQJNgg0hC4BjzPGouOLR+i7796Q6haoiTl3djhWmYsreeMloDR7FMkkQlWdZq2
+	RRuSIEG7wUyiYoyTLoE3VqI8TZnmfTI043oMPUHn4u6cEUodvpGoqGwVTS3g1cZtUhqHlMoxwgNUf
+	bl+ivAmLDkGCzp/a0qtw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r8FSW-007PQn-0q;
-	Wed, 29 Nov 2023 07:58:12 +0000
+	id 1r8Ff7-007QgP-02;
+	Wed, 29 Nov 2023 08:11:13 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r8FST-007PQ1-0f
+	id 1r8Ff0-007Qg2-11
 	for kexec@lists.infradead.org;
-	Wed, 29 Nov 2023 07:58:10 +0000
+	Wed, 29 Nov 2023 08:11:10 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1701244687;
+	s=mimecast20190719; t=1701245465;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=8g8v5NESvRdEm67kdhAr+zNdrT8GqKRlUvJtdOuI41I=;
-	b=c/Aw02zrtWtnfPahmjwKwtPwNOR7B0hYgMTUS1dyYXW6xZyB9ZNJNEMw1owXwH51y/sDas
-	t/ZV9QIo8IZ99BycemWMuwzBOktzBHWr6BOiRh6qWDVRsI5I4dIBHH2SuhXLmCujL2S4uB
-	ShUXw9Kq24jTmralkQCVqL4yEwbT/zY=
+	bh=BC4uggJfBcsQ9J288hcUReQwagRBB7yxUyX9PfI8YC4=;
+	b=Zbo9zvev7oFvm294f+v4IH86pHHhCvESUodlMtyx5pEhNBXk1VK8ZqETc0UPbpYMRK/WIT
+	MPaQvzxPUSlLTvxrznQa9kk9XB9pFthmSPTg/mMx9/12n/tLu8Rghb6guxnh8oZC39k1eh
+	cq81ZhPAl+Bp2WASZQ1yuRtMRI3AwdY=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-662-m1DTePDEO8qKOmsP5YTK1Q-1; Wed, 29 Nov 2023 02:58:03 -0500
-X-MC-Unique: m1DTePDEO8qKOmsP5YTK1Q-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+ us-mta-350-Di-Svtm0OSiYAyIeYfDUdQ-1; Wed, 29 Nov 2023 03:11:00 -0500
+X-MC-Unique: Di-Svtm0OSiYAyIeYfDUdQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 56053811E7D;
-	Wed, 29 Nov 2023 07:58:03 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 103B18058EE;
+	Wed, 29 Nov 2023 08:11:00 +0000 (UTC)
 Received: from localhost (unknown [10.72.112.30])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 84923C1596F;
-	Wed, 29 Nov 2023 07:58:02 +0000 (UTC)
-Date: Wed, 29 Nov 2023 15:57:59 +0800
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 5857D1C060AE;
+	Wed, 29 Nov 2023 08:10:59 +0000 (UTC)
+Date: Wed, 29 Nov 2023 16:10:55 +0800
 From: Baoquan He <bhe@redhat.com>
-To: Michal Hocko <mhocko@suse.com>
+To: Michal Hocko <mhocko@suse.com>, ddutile@redhat.com
 Cc: Jiri Bohac <jbohac@suse.cz>, Pingfan Liu <piliu@redhat.com>,
 	Tao Liu <ltao@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
 	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org
 Subject: Re: [PATCH 0/4] kdump: crashkernel reservation from CMA
-Message-ID: <ZWbvB/4bKu69zMbd@MiWiFi-R3L-srv>
+Message-ID: <ZWbyDx3TJ7zo3jCw@MiWiFi-R3L-srv>
 References: <ZWD_fAPqEWkFlEkM@dwarf.suse.cz>
  <CAO7dBbUVQn8xzPZQhhw1XqF+sQT0c6phk4sda+X=MrR6RmPE0A@mail.gmail.com>
  <ZWJllXCN0SDIELrX@dwarf.suse.cz>
@@ -68,10 +68,10 @@ References: <ZWD_fAPqEWkFlEkM@dwarf.suse.cz>
 MIME-Version: 1.0
 Content-Disposition: inline
 In-Reply-To: <ZWWuBSiZZdF2W12j@tiehlicka>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231128_235809_336128_A2D01BC1 
-X-CRM114-Status: GOOD (  34.32  )
+X-CRM114-CacheID: sfid-20231129_001106_448663_C8B7B79B 
+X-CRM114-Status: GOOD (  32.57  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -109,7 +109,13 @@ On 11/28/23 at 10:08am, Michal Hocko wrote:
 > __gup_longterm_locked and its callers) and that will migrate away from
 > the any zone.
 
-OK, in that case, we don't need to worry about the risk of DMA.
+Add Don in this thread.
+
+I am not familiar with RDMA. If we reserve a range of 1G meory as cma in
+1st kernel, and RDMA or any other user space tools could use it. When
+corruption happened with any cause, that 1G cma memory will be reused as
+available MOVABLE memory of kdump kernel. If no risk at all, I mean 100%
+safe from RDMA, that would be great.
 
 >  
 > [...]
@@ -121,11 +127,6 @@ OK, in that case, we don't need to worry about the risk of DMA.
 > > do?
 > 
 > Don't use CMA backed crash memory then? This is an optional feature.
-
-Guess so. As I said earlier, this is more like a nice-to-have feature,
-can suggest user to try by themselves. Since Jiri didn't give how he
-will use it.
-
 >  
 > > So this looks like a nice to have to me. At least in fedora/rhel's
 > > usage, we may only back port this patch, and add one sentence in our
@@ -143,40 +144,10 @@ will use it.
 > memory consumer can increase its memory demand and get the overall
 > consumption off the cliff. So this is not an easy to maintain solution.
 > CMA backed crash memory can be much more generous while still usable.
-
-Hmm, Redhat could go in a different way. We have been trying to:
-1) customize initrd for kdump kernel specifically, e.g exclude unneeded
-devices's driver to save memory;
-2) monitor device and kenrel memory usage if they begin to consume much
-more memory than before. We have CI testing cases to watch this. We ever
-found one NIC even eat up GB level memory, then this need be
-investigated and fixed.
-
-With these effort, our default crashkernel values satisfy most of cases,
-surely not call cases. Only rare cases need be handled manually,
-increasing crashkernel. The crashkernel=,high was added in this case, a
-small low memory under 4G for DMA with crashkernel=,low, a big chunk of
-high memory above 4G with crashkernel=,high. I can't see where needs are
-not met.
-
-Wondering how you will use this crashkernel=,cma syntax. On normal
-machines and virt guests, not much meomry is needed, usually 256M or a
-little more is enough. On those high end systems with hundreds of Giga
-bytes, even Tera bytes of memory, I don't think the saved memory with
-crashkernel=,cma make much sense. Taking out 1G memory above 4G as
-crashkernel won't impact much. 
-
-So with my understanding, crashkernel=,cma adds an option user can take
-besides the existing crashkernel=,high. As I have said earlier, in
-Redhat, we may rebase it to fedora/RHEL and add one sentence into our
-user guide saying "one another crashkernel=,cma can be use to save
-memory, please feel free to try if you like." Then that's it. Guess SUSE
-will check user's configuration, e.g the dump level of makedumpfile, if
-no user space data needed, crashkernel=,cma is taken, otherwise the normal
-crashkernel=xM will be chosen?
-
-Thanks
-Baoquan
+> -- 
+> Michal Hocko
+> SUSE Labs
+> 
 
 
 _______________________________________________
