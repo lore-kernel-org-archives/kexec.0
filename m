@@ -4,64 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E1C0AC10DAA
-	for <kexec@archiver.kernel.org>; Thu, 30 Nov 2023 13:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 35DBBC4167B
+	for <kexec@archiver.kernel.org>; Thu, 30 Nov 2023 13:43:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=MYj6UUJMiHrZiiCpUDCPuB7zJHhbdbX/9KQw28AKVZk=; b=uUcV5PxKFPBPNu
-	djj0Xgk+MiOFF40I3xRCXElJVSfqjLzK0fzLuKWMtl/xwhHfkeoLevvFQ08Pj2iN98Z4jw8Ix5G4g
-	8N6wyyomD1IRv9O7NEhODCth11xYm+v1Q/Van4JtzCHW/4376NXaPuP0RcqIS4CxFa99ZF/JAl9LC
-	jg+ir2Y0NpjJBQBsH7l5rx7lssYpk+VvNq1WSrLly4qPu9baVBKqNKnQSoToKiiwtr1ab1J+ZCpuQ
-	vbc+2AD06IG5OfztrdJUNGZRSPpG8YOjJkF7mxqV2zrO7kqMGDxOfM7Je+xGxq2KlfUd6wjEspBp2
-	eC8qTthFFgH9tvFAiOAQ==;
+	List-Owner; bh=6pa8rCgSQnyrLjBuueQtXxA+Zdhnv4mLUm7o1Br64Sg=; b=hyKFrmQWUmyTa2
+	bCTKPgDlTNQE7E7O4uW45mYamOFG8ezBM2v4+nKRQhRkd9vzkmbFjHH9HYJET9dagHsIHWxOVBZby
+	inofKLbzAYHxx/cHSPkxaiICvPa96MPwDmB1MR0BsymltxaqBmQ0pGTAuqmL1b/7rFuZheFOBm95l
+	TgXp6/mSlungNzXOB2zeXotBxOyijLEtCipcRzIoWZw8zIAwEV5En89S7UMs1Y26RJzWeuna9Bj0z
+	OtCP7pZBUXa9cuN1i+yh5MCG7z5pFWaj1dGKl5dJcif2NdYYqw2qZb0h1I+e5Z6eNbN6JYzbgWiAK
+	Z+pqQi/HNZNmxFboQYPA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r8hI6-00Az5L-2a;
-	Thu, 30 Nov 2023 13:41:18 +0000
-Received: from smtp-out2.suse.de ([195.135.223.131])
+	id 1r8hK1-00Azdv-1W;
+	Thu, 30 Nov 2023 13:43:17 +0000
+Received: from smtp-out1.suse.de ([195.135.223.130])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r8hI3-00Az4g-1v
+	id 1r8hJw-00AzYF-0e
 	for kexec@lists.infradead.org;
-	Thu, 30 Nov 2023 13:41:17 +0000
+	Thu, 30 Nov 2023 13:43:15 +0000
 Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id CD3C71F8BF;
-	Thu, 30 Nov 2023 13:41:13 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id CF6D021A3C;
+	Thu, 30 Nov 2023 13:43:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1701351673; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1701351789; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9F9Mgbd1Q4nxfYba9ZeBtXatG2N5U9vDkUkfp7pibMc=;
-	b=NDNLxkDV7C7sVgY2ASW+FK9THKNYGKG9Uyf9jdGkIx/rUOWgxWzVeNVfAUva8bkjJR70UN
-	Rr49wObYN5j8iyFNhRpZbHH1/MHx37i9VvjqmB1q988TQMS1rVQyC7+5abTjwVI3xBBBJo
-	n0arfHpl0zPyW8Hi7NASLOoaXwuBTy4=
+	bh=E0xXRK+aUL8cLCXEAdHHc8BYb0q+10UFV8/xhlNkfxo=;
+	b=UqaGXeICW1+gaCJDa6EZhJWtlB4LY7R/CiHmE7gP5NDtbyhtrd5Q+id0DpmQy3PSdQXx3F
+	YmKFs6lmIf1ejZKglsIKpWaF9FPWZ+VoI60WHgMFsIUDiTkTgPCdVjHECXhi50gel2Va4A
+	8dRFvP2nKJJRJQPukyjxCPgNnS7KyJY=
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AAA8213AB1;
-	Thu, 30 Nov 2023 13:41:13 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AB59113AB1;
+	Thu, 30 Nov 2023 13:43:09 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id V4niJvmQaGWRQwAAD6G6ig
-	(envelope-from <mhocko@suse.com>); Thu, 30 Nov 2023 13:41:13 +0000
-Date: Thu, 30 Nov 2023 14:41:12 +0100
+	id q5nTJm2RaGUKRAAAD6G6ig
+	(envelope-from <mhocko@suse.com>); Thu, 30 Nov 2023 13:43:09 +0000
+Date: Thu, 30 Nov 2023 14:43:08 +0100
 From: Michal Hocko <mhocko@suse.com>
-To: Baoquan He <bhe@redhat.com>
-Cc: Donald Dutile <ddutile@redhat.com>, Jiri Bohac <jbohac@suse.cz>,
-	Pingfan Liu <piliu@redhat.com>, Tao Liu <ltao@redhat.com>,
+To: Pingfan Liu <piliu@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>, Donald Dutile <ddutile@redhat.com>,
+	Jiri Bohac <jbohac@suse.cz>, Tao Liu <ltao@redhat.com>,
 	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
 	kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH 0/4] kdump: crashkernel reservation from CMA
-Message-ID: <ZWiQ-II9CvGv8EWK@tiehlicka>
-References: <ZWJllXCN0SDIELrX@dwarf.suse.cz>
- <CAO7dBbVJ=ytRra_77VRZ8ud1wVkP9fub=Vj6cfTkx=CnYg5J2A@mail.gmail.com>
+Message-ID: <ZWiRbLGdBMO2jFGs@tiehlicka>
+References: <CAO7dBbVJ=ytRra_77VRZ8ud1wVkP9fub=Vj6cfTkx=CnYg5J2A@mail.gmail.com>
  <ZWVMUxmi66xLZPsr@MiWiFi-R3L-srv>
  <ZWWuBSiZZdF2W12j@tiehlicka>
  <ZWbyDx3TJ7zo3jCw@MiWiFi-R3L-srv>
@@ -69,11 +69,12 @@ References: <ZWJllXCN0SDIELrX@dwarf.suse.cz>
  <ZWf64BowWrYqA2Rf@MiWiFi-R3L-srv>
  <ZWhg_b3O6piZtkQ-@tiehlicka>
  <ZWh6ax8YmkhxAzIf@MiWiFi-R3L-srv>
- <ZWiAsJlLookvCI+h@MiWiFi-R3L-srv>
+ <ZWiOO-KNJ82f6Gxu@tiehlicka>
+ <CAF+s44QSJL5e6BVTAyyHR9Kzx7RJqZSkR=uXEypaouK_XuBbEw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <ZWiAsJlLookvCI+h@MiWiFi-R3L-srv>
-Authentication-Results: smtp-out2.suse.de;
+In-Reply-To: <CAF+s44QSJL5e6BVTAyyHR9Kzx7RJqZSkR=uXEypaouK_XuBbEw@mail.gmail.com>
+Authentication-Results: smtp-out1.suse.de;
 	none
 X-Spamd-Result: default: False [-3.60 / 50.00];
 	 ARC_NA(0.00)[];
@@ -86,6 +87,7 @@ X-Spamd-Result: default: False [-3.60 / 50.00];
 	 RCVD_COUNT_THREE(0.00)[3];
 	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
 	 RCPT_COUNT_SEVEN(0.00)[9];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
 	 FUZZY_BLOCKED(0.00)[rspamd.com];
 	 FROM_EQ_ENVFROM(0.00)[];
 	 MIME_TRACE(0.00)[0:+];
@@ -93,8 +95,8 @@ X-Spamd-Result: default: False [-3.60 / 50.00];
 	 RCVD_TLS_ALL(0.00)[];
 	 BAYES_HAM(-3.00)[100.00%]
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231130_054115_817050_C5CD0DD5 
-X-CRM114-Status: GOOD (  26.18  )
+X-CRM114-CacheID: sfid-20231130_054312_407225_5C04B5D1 
+X-CRM114-Status: GOOD (  40.42  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -106,71 +108,74 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu 30-11-23 20:31:44, Baoquan He wrote:
-[...]
-> > > which doesn't use the proper pinning API (which would migrate away from
-> > > the CMA) then what is the worst case? We will get crash kernel corrupted
-> > > potentially and fail to take a proper kernel crash, right? Is this
-> > > worrisome? Yes. Is it a real roadblock? I do not think so. The problem
-> 
-> We may fail to take a proper kernel crash, why isn't it a roadblock?
-
-It would be if the threat was practical. So far I only see very
-theoretical what-if concerns. And I do not mean to downplay those at
-all. As already explained proper CMA users shouldn't ever leak out any
-writes across kernel reboot.
-
-> We
-> have stable way with a little more memory, why would we take risk to
-> take another way, just for saving memory? Usually only high end server
-> needs the big memory for crashkernel and the big end server usually have
-> huge system ram. The big memory will be a very small percentage relative
-> to huge system RAM.
-
-Jiri will likely talk more specific about that but our experience tells
-that proper crashkernel memory scaling has turned out a real
-maintainability problem because existing setups tend to break with major
-kernel version upgrades or non trivial changes.
- 
-> > > seems theoretical to me and it is not CMA usage at fault here IMHO. It
-> > > is the said theoretical driver that needs fixing anyway.
-> 
-> Now, what we want to make clear is if it's a theoretical possibility, or
-> very likely happen. We have met several on-flight DMA stomping into
-> kexec kernel's initrd in the past two years because device driver didn't
-> provide shutdown() methor properly. For kdump, once it happen, the pain
-> is we don't know how to debug. For kexec reboot, customer allows to
-> login their system to reproduce and figure out the stomping. For kdump,
-> the system corruption rarely happend, and the stomping could rarely
-> happen too.
-
-yes, this is understood.
- 
-> The code change looks simple and the benefit is very attractive. I
-> surely like it if finally people confirm there's no risk. As I said, we
-> can't afford to take the risk if it possibly happen. But I don't object
-> if other people would rather take risk, we can let it land in kernel.
-
-I think it is fair to be cautious and I wouldn't impose the new method
-as a default. Only time can tell how safe this really is. It is hard to
-protect agains theoretical issues though. Bugs should be fixed.
-I believe this option would allow to configure kdump much easier and
-less fragile.
- 
-> My personal opinion, thanks for sharing your thought.
-
-Thanks for sharing.
-
--- 
-Michal Hocko
-SUSE Labs
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVGh1IDMwLTExLTIzIDIxOjMzOjA0LCBQaW5nZmFuIExpdSB3cm90ZToKPiBPbiBUaHUsIE5v
+diAzMCwgMjAyMyBhdCA5OjI54oCvUE0gTWljaGFsIEhvY2tvIDxtaG9ja29Ac3VzZS5jb20+IHdy
+b3RlOgo+ID4KPiA+IE9uIFRodSAzMC0xMS0yMyAyMDowNDo1OSwgQmFvcXVhbiBIZSB3cm90ZToK
+PiA+ID4gT24gMTEvMzAvMjMgYXQgMTE6MTZhbSwgTWljaGFsIEhvY2tvIHdyb3RlOgo+ID4gPiA+
+IE9uIFRodSAzMC0xMS0yMyAxMTowMDo0OCwgQmFvcXVhbiBIZSB3cm90ZToKPiA+ID4gPiBbLi4u
+XQo+ID4gPiA+ID4gTm93LCB3ZSBhcmUgd29ycmllZCBpZiB0aGVyZSdzIHJpc2sgaWYgdGhlIENN
+QSBhcmVhIGlzIHJldGFrZW4gaW50byBrZHVtcAo+ID4gPiA+ID4ga2VybmVsIGFzIHN5c3RlbSBS
+QU0uIEUuZyBpcyBpdCBwb3NzaWJsZSB0aGF0IDFzdCBrZXJuZWwncyBvbmdvaW5nIFJETUEKPiA+
+ID4gPiA+IG9yIERNQSB3aWxsIGludGVyZmVyZSB3aXRoIGtkdW1wIGtlcm5lbCdzIG5vcm1hbCBt
+ZW1vcnkgYWNjZXNzaW5nPwo+ID4gPiA+ID4gQmVjYXVzZSBrZHVtcCBrZXJuZWwgdXN1YWxseSBv
+bmx5IHJlc2V0IGFuZCBpbml0aWFsaXplIHRoZSBuZWVkZWQKPiA+ID4gPiA+IGRldmljZSwgZS5n
+IGR1bXAgdGFyZ2V0LiBUaG9zZSB1bm5lZWRlZCBkZXZpY2VzIHdpbGwgYmUgdW5zaHV0ZG93biBh
+bmQKPiA+ID4gPiA+IGxldCBnby4KPiA+ID4gPgo+ID4gPiA+IEkgZG8gbm90IHJlYWxseSB3YW50
+IHRvIGRpc2NvdW50IHlvdXIgY29uY2VybnMgYnV0IEkgYW0gYml0IGNvbmZ1c2VkIHdoeQo+ID4g
+PiA+IHRoaXMgbWF0dGVycyBzbyBtdWNoLiBGaXJzdCBvZiBhbGwsIGlmIHRoZXJlIGlzIGEgYnVn
+Z3kgUkRNQSBkcml2ZXIKPiA+ID4gPiB3aGljaCBkb2Vzbid0IHVzZSB0aGUgcHJvcGVyIHBpbm5p
+bmcgQVBJICh3aGljaCB3b3VsZCBtaWdyYXRlIGF3YXkgZnJvbQo+ID4gPiA+IHRoZSBDTUEpIHRo
+ZW4gd2hhdCBpcyB0aGUgd29yc3QgY2FzZT8gV2Ugd2lsbCBnZXQgY3Jhc2gga2VybmVsIGNvcnJ1
+cHRlZAo+ID4gPiA+IHBvdGVudGlhbGx5IGFuZCBmYWlsIHRvIHRha2UgYSBwcm9wZXIga2VybmVs
+IGNyYXNoLCByaWdodD8gSXMgdGhpcwo+ID4gPiA+IHdvcnJpc29tZT8gWWVzLiBJcyBpdCBhIHJl
+YWwgcm9hZGJsb2NrPyBJIGRvIG5vdCB0aGluayBzby4gVGhlIHByb2JsZW0KPiA+ID4gPiBzZWVt
+cyB0aGVvcmV0aWNhbCB0byBtZSBhbmQgaXQgaXMgbm90IENNQSB1c2FnZSBhdCBmYXVsdCBoZXJl
+IElNSE8uIEl0Cj4gPiA+ID4gaXMgdGhlIHNhaWQgdGhlb3JldGljYWwgZHJpdmVyIHRoYXQgbmVl
+ZHMgZml4aW5nIGFueXdheS4KPiA+ID4gPgo+ID4gPiA+IE5vdywgaXQgaXMgcmVhbGx5IGZhaXIg
+dG8gbWVudGlvbiB0aGF0IENNQSBiYWNrZWQgY3Jhc2gga2VybmVsIG1lbW9yeQo+ID4gPiA+IGhh
+cyBzb21lIGxpbWl0YXRpb25zCj4gPiA+ID4gICAgIC0gQ01BIHJlc2VydmF0aW9uIGNhbiBvbmx5
+IGJlIHVzZWQgYnkgdGhlIHVzZXJzcGFjZSBpbiB0aGUKPiA+ID4gPiAgICAgICBwcmltYXJ5IGtl
+cm5lbC4gSWYgdGhlIHNpemUgaXMgb3ZlcnNob3QgdGhpcyBtaWdodCBoYXZlCj4gPiA+ID4gICAg
+ICAgbmVnYXRpdmUgaW1wYWN0IG9uIGtlcm5lbCBhbGxvY2F0aW9ucwo+ID4gPiA+ICAgICAtIHVz
+ZXJzcGFjZSBtZW1vcnkgZHVtcGluZyBpbiB0aGUgY3Jhc2gga2VybmVsIGlzIGZ1bmRhbWVudGFs
+bHkKPiA+ID4gPiAgICAgICBpbmNvbXBsZXRlLgo+ID4gPgo+ID4gPiBJIGFtIG5vdCBzdXJlIGlm
+IHdlIGFyZSB0YWxraW5nIGFib3V0IHRoZSBzYW1lIHRoaW5nLiBNeSBjb25jZXJuIGlzOgo+ID4g
+PiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PQo+ID4gPiAxKSBzeXN0ZW0gY29ycnV0cHRpb24gaGFwcGVuZWQsIGNyYXNo
+IGR1bXBpbmcgaXMgcHJlcGFyZWQsIGNwdSBhbmQKPiA+ID4gaW50ZXJydXB0IGNvbnRyb2xsZXJz
+IGFyZSBzaHV0ZG93bjsKPiA+ID4gMikgYWxsIHBjaSBkZXZpY2VzIGFyZSBrZXB0IGFsaXZlOwo+
+ID4gPiAzKSBrZHVtcCBrZXJuZWwgYm9vdCB1cCwgaW5pdGlhbGl6YXRpb24gaXMgb25seSBkb25l
+IG9uIHRob3NlIGRldmljZXMKPiA+ID4gd2hpY2ggZHJpdmVycyBhcmUgYWRkZWQgaW50byBrZHVt
+cCBrZXJuZWwncyBpbml0cmQ7Cj4gPiA+IDQpIHRob3NlIG9uLWZsaWdodCBETUEgZW5naW5lIGNv
+dWxkIGJlIHN0aWxsIHdvcmtpbmcgaWYgdGhlaXIga2VybmVsCj4gPiA+IG1vZHVsZSBpcyBub3Qg
+bG9hZGVkOwo+ID4gPgo+ID4gPiBJbiB0aGlzIGNhc2UsIGlmIHRoZSBETUEncyBkZXN0aW5hdGlv
+biBpcyBsb2NhdGVkIGluIGNyYXNoa2VybmVsPSxjbWEKPiA+ID4gcmVnaW9uLCB0aGUgRE1BIHdy
+aXR0aW5nIGNvdWxkIGNvbnRpbnVlIGV2ZW4gd2hlbiBrZHVtcCBrZXJuZWwgaGFzIHB1dAo+ID4g
+PiBpbXBvcnRhbnQga2VybmVsIGRhdGEgaW50byB0aGUgYXJlYS4gSXMgdGhpcyBwb3NzaWJsZSBv
+ciBhYnNvbHV0ZWx5IG5vdAo+ID4gPiBwb3NzaWJsZSB3aXRoIERNQSwgUkRNQSwgb3IgYW55IG90
+aGVyIHN0dWZmIHdoaWNoIGNvdWxkIGtlZXAgYWNjZXNzaW5nCj4gPiA+IHRoYXQgYXJlYT8KPiA+
+Cj4gPiBJIGRvIG51ZGVyc3RhbmQgeW91ciBjb25jZXJuLiBCdXQgYXMgYWxyZWFkeSBzdGF0ZWQg
+aWYgYW55Ym9keSB1c2VzCj4gPiBtb3ZhYmxlIG1lbW9yeSAoQ01BIGluY2x1ZGluZykgYXMgYSB0
+YXJnZXQgb2Yge1J9RE1BIHRoZW4gdGhhdCBtZW1vcnkKPiA+IHNob3VsZCBiZSBwcm9wZXJseSBw
+aW5uZWQuIFRoYXQgd291bGQgbWVhbiB0aGF0IHRoZSBtZW1vcnkgd2lsbCBiZQo+ID4gbWlncmF0
+ZWQgdG8gc29tZXdoZXJlIG91dHNpZGUgb2YgbW92YWJsZSAoQ01BKSBtZW1vcnkgYmVmb3JlIHRo
+ZQo+ID4gdHJhbnNmZXIgaXMgY29uZmlndXJlZC4gU28gbW9kdWxvIGJ1Z3MgdGhpcyBzaG91bGRu
+J3QgcmVhbGx5IGhhcHBlbi4KPiA+IEFyZSB0aGVyZSB7Un1ETUEgZHJpdmVycyB0aGF0IGRvIG5v
+dCBwaW4gbWVtb3J5IGNvcnJlY3RseT8gUG9zc2libHkuIElzCj4gPiB0aGF0IGEgcm9hZCBibG9h
+Y2sgdG8gbm90IHVzaW5nIENNQSB0byBiYWNrIGNyYXNoIGtlcm5lbCBtZW1vcnksIEkgZG8KPiA+
+IG5vdCB0aGluayBzby4gVGhvc2UgZHJpdmVycyBzaG91bGQgYmUgZml4ZWQgaW5zdGVhZC4KPiA+
+Cj4gSSB0aGluayB0aGF0IGlzIG91ciBjb25jZXJuLiBJcyB0aGVyZSBhbnkgbWV0aG9kIHRvIGd1
+YXJhbnRlZSB0aGF0Cj4gd2lsbCBub3QgaGFwcGVuIGluc3RlYWQgb2YgJ3Nob3VsZCBiZScgPwo+
+IEFueSBzdGF0aWMgYW5hbHlzaXMgZHVyaW5nIGNvbXBpbGluZyB0aW1lIG9yIGR5bmFtaWMgY2hl
+Y2tpbmcgbWV0aG9kPwoKSSBhbSBub3QgYXdhcmUgb2YgYW55IG1ldGhvZCB0byBkZXRlY3QgYSBk
+cml2ZXIgaXMgZ29pbmcgdG8gY29uZmlndXJlIGEKUkRNQS4KIAo+IElmIHRoaXMgY2FuIGJlIHJl
+c29sdmVkLCBJIHRoaW5rIHRoaXMgbWV0aG9kIGlzIHByb21pc2luZy4KCkFyZSB5b3UgaW5kaWNh
+dGluZyB0aGlzIGlzIGEgbWFuZGF0b3J5IHByZXJlcXVpc2l0ZT8KLS0gCk1pY2hhbCBIb2NrbwpT
+VVNFIExhYnMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
+cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
