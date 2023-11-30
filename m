@@ -4,76 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 45D23C4167B
-	for <kexec@archiver.kernel.org>; Thu, 30 Nov 2023 02:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 25F20C4167B
+	for <kexec@archiver.kernel.org>; Thu, 30 Nov 2023 02:52:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=4ZcW9OfdDuEFYDN+LLdz5Nm8MSHRa5goc3pNtJZmTr4=; b=pNy9Ezo4wCrUYv
-	fH84nbocDJRNdNbR4cQePT010OT7iiJudoqRb+2aicF00zehmjuftrKLjznjygR1ksQGFTatbF8sI
-	jf/q+DEoIk711JrXceXWsllGDXxbR53ZbhGeczxo0ycbRVmhf/x9QHj7QuZLMBNp+XPh02XhumFPa
-	EOFoF0iwfeS8JGYkgRTDzXyYcUu1+TPcdUuYy/JHQLM1311k+WinR3LRAAHXjtjyD/8SERPQiQx8U
-	oB4Ah7cFZ5KanfVQe9/SdBk8CRtxlFZQdc+OCRoT9g5r8Zy78nmknJztqf+Y6lPeS8KIPRdcOO5uL
-	qfBdpIbZ3sLtdSAxdWdg==;
+	List-Owner; bh=tKuU0HGhMm6Z+QJp4umSBEv3Shmca0WhBZ+ng4kfwYo=; b=BRt3I+5g4ydptJ
+	XCl8SjjQ4FTawxI04TLvz8+E37mweqIPRUw2UtdOo9HKPdyGqeMV1PuHWd+myUDKT89SO+DAT4qVR
+	S+kHTXHUUFoRg9X46SNGPBrR6HA0O6xW3zXFeUalPAvXuLCf+6pP7MBInWrHjsGOnYcYKtyKk5Uqy
+	ChDraPdrRNcLpKdDxqRJjbNvPsUI9pQV7MafetenjujoPROTeL7y0AhHu1xQLsyKfmDJ0h3Iiw1ho
+	b/f8foyTMLMtQiJL7/Y6Xc3dlxSEtZ3MhYMF8WsPSzF+RcgCuXjxA0FHN/9dnF3xWOluJ4KuDPoFC
+	4LEwLcHxigrQC5ltqTeQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r8X0U-009nJI-0b;
-	Thu, 30 Nov 2023 02:42:26 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1r8XAJ-009o3p-0m;
+	Thu, 30 Nov 2023 02:52:35 +0000
+Received: from smtprelay0013.hostedemail.com ([216.40.44.13] helo=relay.hostedemail.com)
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r8X0R-009nIG-0P
-	for kexec@lists.infradead.org;
-	Thu, 30 Nov 2023 02:42:24 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1701312142;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OlnSo+MSVJ02cRZKA4QKHS15/hcZAeTG8jw5g53iRBQ=;
-	b=KTEIbtRuCvq7Ji64izVP1aK8BB+8UNgVh1J0aJF/YlHohUwjsUsz7+mlsfOj7Mc4rQ+FXs
-	a72I+pwvon+Ucg9vwtBOBwOR8rvLDTg13cS8+MhO5CHWXTmZ3yBXnecpo/rINc7WjjvM3v
-	mwevwHSdaRG6skd2CvIiIosEZ7aVs+I=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-306-57Xl6FtdMtiy8EYMFLhbpQ-1; Wed,
- 29 Nov 2023 21:42:17 -0500
-X-MC-Unique: 57Xl6FtdMtiy8EYMFLhbpQ-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5A8722815E20;
-	Thu, 30 Nov 2023 02:42:17 +0000 (UTC)
-Received: from localhost (unknown [10.72.113.121])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id A36F8492BFE;
-	Thu, 30 Nov 2023 02:42:16 +0000 (UTC)
-Date: Thu, 30 Nov 2023 10:42:13 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Michal Hocko <mhocko@suse.com>
-Cc: Jiri Bohac <jbohac@suse.cz>, Pingfan Liu <piliu@redhat.com>,
-	Tao Liu <ltao@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/4] kdump: crashkernel reservation from CMA
-Message-ID: <ZWf2hdX9L8SZhvzB@MiWiFi-R3L-srv>
-References: <ZWD_fAPqEWkFlEkM@dwarf.suse.cz>
- <CAO7dBbUVQn8xzPZQhhw1XqF+sQT0c6phk4sda+X=MrR6RmPE0A@mail.gmail.com>
- <ZWJllXCN0SDIELrX@dwarf.suse.cz>
- <CAO7dBbVJ=ytRra_77VRZ8ud1wVkP9fub=Vj6cfTkx=CnYg5J2A@mail.gmail.com>
- <ZWVMUxmi66xLZPsr@MiWiFi-R3L-srv>
- <ZWWuBSiZZdF2W12j@tiehlicka>
- <ZWbvB/4bKu69zMbd@MiWiFi-R3L-srv>
- <ZWcDiHNCJDNfCbaq@tiehlicka>
+	id 1r8XAG-009o38-15;
+	Thu, 30 Nov 2023 02:52:33 +0000
+Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 0CD43406F7;
+	Thu, 30 Nov 2023 02:52:28 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf05.hostedemail.com (Postfix) with ESMTPA id 2F8892000D;
+	Thu, 30 Nov 2023 02:52:25 +0000 (UTC)
+Message-ID: <81c62af671ebbfad61dd46aa056050a56bf535a2.camel@perches.com>
+Subject: Re: [PATCH v3 2/7] kexec_file: print out debugging message if
+ required
+From: Joe Perches <joe@perches.com>
+To: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
+Cc: kexec@lists.infradead.org, x86@kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-parisc@vger.kernel.org, 
+	akpm@linux-foundation.org, nathan@kernel.org
+Date: Wed, 29 Nov 2023 18:52:24 -0800
+In-Reply-To: <20231130023955.5257-3-bhe@redhat.com>
+References: <20231130023955.5257-1-bhe@redhat.com>
+	 <20231130023955.5257-3-bhe@redhat.com>
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <ZWcDiHNCJDNfCbaq@tiehlicka>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
+X-Rspamd-Queue-Id: 2F8892000D
+X-Stat-Signature: gwk7qi3h7jx8h1ywf1jic8xo76gqerwm
+X-Rspamd-Server: rspamout01
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX19dPUefOesSFHLQCs3wqOW/oGlv3aC7z+4=
+X-HE-Tag: 1701312745-366478
+X-HE-Meta: U2FsdGVkX18k/ADXByHc+CtueZc2/kIRg2iYeavR6SwxdbkG44laEheGJWfEZEWXVPPjQNlGsgWVgExQ2v2SkjkkfNjpPwEMSuNPMyCDovT0AEEC3qeJ3Q3CanYRUyaIkLf9UCVzbPHogNji1emX5sy1KMlEpsNMU2L1IT5Ygh0f8/d2RbC7l5Zlkk01sF8weznUFCSh7sTGbvtjt1bjs0D9vOhDdBlZRMDNhbUzmGZ+P97DoYPvnsvnrduPVTPJ/denAd96V06q4DDxaFl1zt06dspwDHAATuNX205GsU5+pYEk/u0vlxrjfS1T3iX3
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231129_184223_231288_756890D0 
-X-CRM114-Status: GOOD (  11.89  )
+X-CRM114-CacheID: sfid-20231129_185232_457534_C60E1E85 
+X-CRM114-Status: UNSURE (   6.66  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,24 +73,29 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 11/29/23 at 10:25am, Michal Hocko wrote:
-> On Wed 29-11-23 15:57:59, Baoquan He wrote:
-> [...]
-> > Hmm, Redhat could go in a different way. We have been trying to:
-> > 1) customize initrd for kdump kernel specifically, e.g exclude unneeded
-> > devices's driver to save memory;
-> > 2) monitor device and kenrel memory usage if they begin to consume much
-> > more memory than before. We have CI testing cases to watch this. We ever
-> > found one NIC even eat up GB level memory, then this need be
-> > investigated and fixed.
-> 
-> How do you simulate all different HW configuration setups that are using
-> out there in the wild?
+On Thu, 2023-11-30 at 10:39 +0800, Baoquan He wrote:
+> Replace pr_debug() with the newly added kexec_dprintk() in kexec_file
+> loading related codes.
 
-We don't simulate.
+trivia:
 
-We do this with best effort with existing systems in our LAB. And
-meantime partner company will test and report any OOM if they encounter.
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+[]
+> @@ -551,9 +551,12 @@ int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_map,
+>  		phdr->p_filesz = phdr->p_memsz = mend - mstart + 1;
+>  		phdr->p_align = 0;
+>  		ehdr->e_phnum++;
+> -		pr_debug("Crash PT_LOAD ELF header. phdr=%p vaddr=0x%llx, paddr=0x%llx, sz=0x%llx e_phnum=%d p_offset=0x%llx\n",
+> -			phdr, phdr->p_vaddr, phdr->p_paddr, phdr->p_filesz,
+> -			ehdr->e_phnum, phdr->p_offset);
+> +#ifdef CONFIG_KEXEC_FILE
+> +		kexec_dprintk("Crash PT_LOAD ELF header. phdr=%p vaddr=0x%llx, paddr=0x%llx, "
+> +			      "sz=0x%llx e_phnum=%d p_offset=0x%llx\n",
+> +			      phdr, phdr->p_vaddr, phdr->p_paddr, phdr->p_filesz,
+> +			      ehdr->e_phnum, phdr->p_offset);
+> +#endif
+
+Perhaps run checkpatch and coalesce the format string.
 
 
 _______________________________________________
