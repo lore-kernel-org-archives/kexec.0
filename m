@@ -4,91 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AEE5DC4167B
-	for <kexec@archiver.kernel.org>; Fri,  1 Dec 2023 12:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A9B13C4167B
+	for <kexec@archiver.kernel.org>; Fri,  1 Dec 2023 14:06:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=/H0IPJSy1Ou/U0bj+ynQ2C3L5I5ffxViEmD8c81xSgk=; b=of1qTUFtqP4eyV
-	vmmdoXDTy6qfbi0Jyt015SOy5uYrZ/6nNuOopuGlKQZSP/aPJFAvni2MtuiWP9FRhJxHoB6TgG5Ou
-	GeXXOGo/XZfeqJNobDyYW0DQOK6PH3To7Ildj6UBYYd2vh4ZnKHlygpItekdLDA77jnYReslrpadv
-	0KxvNPKN5Y/06tlJr66MywCORs2SQYKHs9iA/3c2o3k24q2ZeDC1HG7lbATgTGcxGRL96nnVCpfyG
-	vRbcpNYRaZtSbOpSJvtvLvX1Urcy+ErU036OZWRUpqlZskAriuyW8LXcVeC444MTDGC6MosNsmAJD
-	TlAP5HdVUlNwECZSQfDQ==;
+	List-Owner; bh=FP06sJN+eaWtU0tLHELKtRaQhVkAig0zEfdF6zTXPk0=; b=CfJTr7XR8J/Viy
+	U+UIg9chOVN35jBZ4jvyQqwKLoFQOuSfK5orSUqOPJjQieuq5dboY/2DGOhmKzCjc4H2NNvhmy4la
+	BG+zfickowUKjHbVsYRQ+SunlxGS6kz44at8/wEAKJFLNlXZ1fyVagHFNZJA2/+xx8tr7bDHPO3HK
+	DtZzeSBXiJlArmrb+2tw7vvSkL7G8ZdjRhKqPxCpokZdSM1tK4sFjIICFa8Dn5fCbwTNUKP6wA14P
+	pvQiZKBuz14i5XSxO+q1YcHOV5Jv059JSbPsiUjk9BB0PtOUauvgao9dp/SAgjoD4gOIVQ4COe6FG
+	BscecpvKV0+uJ6VFn0IQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r92kG-00DZyd-2Z;
-	Fri, 01 Dec 2023 12:35:48 +0000
-Received: from smtp-out2.suse.de ([2a07:de40:b251:101:10:150:64:2])
+	id 1r94AG-00Dtmg-1E;
+	Fri, 01 Dec 2023 14:06:44 +0000
+Received: from ams.source.kernel.org ([2604:1380:4601:e00::1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r92kD-00DZxu-2L
+	id 1r94AD-00Dtlc-1z
 	for kexec@lists.infradead.org;
-	Fri, 01 Dec 2023 12:35:47 +0000
-Received: from localhost (unknown [10.100.12.32])
-	by smtp-out2.suse.de (Postfix) with ESMTP id A98A51FD68;
-	Fri,  1 Dec 2023 12:35:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1701434141; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9qpSH/VFJA7oKeS3f7gAfhSd3U4lHBZHK5JZku/5WYQ=;
-	b=X+pFGdUQxOA8KtjhjRyMzN3ggAOsn24COaoxnTYbWMIZl5NJczGRliqrqTazExiUqFFmp8
-	sVuZvnWSipxXbC/o39m4A3vAu+kRgHkjPYU8yl2JiRvH6EpvZGkz+V+TAaMVxg+Uq5wcab
-	XwC0dr+/1U7TeWdotx8FhIorBGweUWg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1701434141;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9qpSH/VFJA7oKeS3f7gAfhSd3U4lHBZHK5JZku/5WYQ=;
-	b=+vVnfTwiXLhbdEvutNTmbGnGIaK/VlmQC9iU1KwONAYD5KTA1u01CcOhnJLGaE6BSyc4Zj
-	dIptQs22X3O2FBCw==
-Date: Fri, 1 Dec 2023 13:35:41 +0100
-From: Jiri Bohac <jbohac@suse.cz>
-To: Baoquan He <bhe@redhat.com>
-Cc: Michal Hocko <mhocko@suse.com>, Pingfan Liu <piliu@redhat.com>,
-	Tao Liu <ltao@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/4] kdump: crashkernel reservation from CMA
-Message-ID: <ZWnTHWXNWg06pLMg@dwarf.suse.cz>
-References: <ZWD_fAPqEWkFlEkM@dwarf.suse.cz>
- <CAO7dBbUVQn8xzPZQhhw1XqF+sQT0c6phk4sda+X=MrR6RmPE0A@mail.gmail.com>
- <ZWJllXCN0SDIELrX@dwarf.suse.cz>
- <CAO7dBbVJ=ytRra_77VRZ8ud1wVkP9fub=Vj6cfTkx=CnYg5J2A@mail.gmail.com>
- <ZWVMUxmi66xLZPsr@MiWiFi-R3L-srv>
- <ZWWuBSiZZdF2W12j@tiehlicka>
- <ZWbvB/4bKu69zMbd@MiWiFi-R3L-srv>
- <ZWcXyeDiI2v251F_@dwarf.suse.cz>
- <ZWgJIAYwfVvA+r8h@MiWiFi-R3L-srv>
+	Fri, 01 Dec 2023 14:06:43 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by ams.source.kernel.org (Postfix) with ESMTP id 81BACB847FF;
+	Fri,  1 Dec 2023 14:06:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2A94C433C8;
+	Fri,  1 Dec 2023 14:06:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701439596;
+	bh=Fhbe/OaBvMsOE8Z3H6LnoqT3yo2JLnt4anQY037eWP0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lDULkUbCWD4oW9WjWrpziEbob9bw88AQLaLa13nGLrqEda7+eG2KblPRPxnW2jnd3
+	 6JOkwQQqixRLKw0wc4NyEV9hYEFf5Y5yw/DNU1k/eJBCZuKgtutlIk+7Mfj7yQ84vj
+	 jbWWFxL9LED/T+xaAYvNGmWtH3UsWF5U2CcMYEyhPOyyaYZII81Vka1zm9ivW6gML5
+	 hbcexINWis48FwHaT1qbAlBpMYFKBx/+CKrn3Yv0b37U5Krb7rLugEbzwTYgDNOwph
+	 zIBhvpmyFsApuitham9j26WT8VuqeDRFuO4DzIbX7na5kxDdp7dAJKk5X/H3BVP40C
+	 yWqKtuwrFCybw==
+Date: Fri, 1 Dec 2023 14:06:33 +0000
+From: Simon Horman <horms@kernel.org>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Rui <wangrui@loongson.cn>, Dave Young <dyoung@redhat.com>,
+	RuiRui Yang <ruyang@redhat.com>, kexec@lists.infradead.org
+Subject: Re: [PATCH v2] LoongArch: Load vmlinux.efi to the link address
+Message-ID: <20231201140633.GA836278@kernel.org>
+References: <20231125065232.116319-1-wangrui@loongson.cn>
+ <CALu+AoRThqZWGv6+-d0PUFA2XNL1g2-H5HrxHGR5OrTerfpbiQ@mail.gmail.com>
+ <CALu+AoRVKT+E0TdRRQ3GcxeM9r5BHNE7pz-dN6pUV_MCnviYZg@mail.gmail.com>
+ <CAHirt9jp1MQQSZbFqmwxYK-eR+uNeM2eFLJ8=S+t004Pjhzn3w@mail.gmail.com>
+ <CAAhV-H4Uwkj-jP9WL9hk8DkuhwPe1BQ2N0g1AGh4kkAD-_QvbQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <ZWgJIAYwfVvA+r8h@MiWiFi-R3L-srv>
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spamd-Result: default: False [-0.98 / 50.00];
-	 ARC_NA(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_SPAM_SHORT(3.00)[1.000];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-0.88)[-0.880];
-	 MID_RHS_MATCH_FROMTLD(0.00)[];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 RCPT_COUNT_SEVEN(0.00)[8];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 RCVD_COUNT_ZERO(0.00)[0];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 BAYES_HAM(-3.00)[100.00%]
+In-Reply-To: <CAAhV-H4Uwkj-jP9WL9hk8DkuhwPe1BQ2N0g1AGh4kkAD-_QvbQ@mail.gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231201_043546_074409_6360AFA6 
-X-CRM114-Status: GOOD (  39.55  )
+X-CRM114-CacheID: sfid-20231201_060641_941682_20D33C71 
+X-CRM114-Status: GOOD (  39.46  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,107 +71,110 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Nov 30, 2023 at 12:01:36PM +0800, Baoquan He wrote:
-> On 11/29/23 at 11:51am, Jiri Bohac wrote:
-> > We get a lot of problems reported by partners testing kdump on
-> > their setups prior to release. But even if we tune the reserved
-> > size up, OOM is still the most common reason for kdump to fail
-> > when the product starts getting used in real life. It's been
-> > pretty frustrating for a long time.
-> 
-> I remember SUSE engineers ever told you will boot kernel and do an
-> estimation of kdump kernel usage, then set the crashkernel according to
-> the estimation. OOM will be triggered even that way is taken? Just
-> curious, not questioning the benefit of using ,cma to save memory.
-
-Yes, we do that during the kdump package build. We use this to
-find some baseline for memory requirements of the kdump kernel
-and tools on that specific product. Using these numbers we
-estimate the requirements on the system where kdump is
-configured by adding extra memory for the size of RAM, number of
-SCSI devices, etc. But apparently we get this wrong in too many cases,
-because the actual hardware differs too much from the virtual
-environment which we used to get the baseline numbers. We've been
-adding silly constants to the calculations and we still get OOMs on
-one hand and people hesitant to sacrifice the calculated amount
-of memory on the other. 
-
-The result is that kdump basically cannot be trusted unless the
-user verifies that the sacrificed memory is still enough after
-every major upgrade.
-
-This is the main motivation behind the CMA idea: to safely give
-kdump enough memory, including a safe margin, without sacrificing
-too much memory.
-
-> > I feel the exact opposite about VMs. Reserving hundreds of MB for
-> > crash kernel on _every_ VM on a busy VM host wastes the most
-> > memory. VMs are often tuned to well defined task and can be set
-> > up with very little memory, so the ~256 MB can be a huge part of
-> > that. And while it's theoretically better to dump from the
-> > hypervisor, users still often prefer kdump because the hypervisor
-> > may not be under their control. Also, in a VM it should be much
-> > easier to be sure the machine is safe WRT the potential DMA
-> > corruption as it has less HW drivers. So I actually thought the
-> > CMA reservation could be most useful on VMs.
-> 
-> Hmm, we ever discussed this in upstream with David Hildend who works in
-> virt team. VMs problem is much easier to solve if they complain the
-> default crashkernel value is wasteful. The shrinking interface is for
-> them. The crashkernel value can't be enlarged, but shrinking existing
-> crashkernel memory is functioning smoothly well. They can adjust that in
-> script in a very simple way.
-
-The shrinking does not solve this problem at all. It solves a
-different problem: the virtual hardware configuration can easily
-vary between boots and so will the crashkernel size requirements.
-And since crashkernel needs to be passed on the commandline, once
-the system is booted it's impossible to change it without a
-reboot. Here the shrinking mechanism comes in handy
-- we reserve enough for all configurations on the command line and
-during boot the requirements for the currently booted
-configuration can be determined and the reservation shrunk to
-the determined value.  But determining this value is the same
-unsolved problem as above and CMA could help in exactly the same
-way.
-
-> Anyway, let's discuss and figure out any risk of ,cma. If finally all
-> worries and concerns are proved unnecessary, then let's have a new great
-> feature. But we can't afford the risk if the ,cma area could be entangled
-> with 1st kernel's on-going action. As we know, not like kexec reboot, we
-> only shutdown CPUs, interrupt, most of devices are alive. And many of
-> them could be not reset and initialized in kdump kernel if the relevant
-> driver is not added in.
-
-Well since my patchset makes the use of ,cma completely optional
-and has _absolutely_ _no_ _effect_ on users that don't opt to use
-it, I think you're not taking any risk at all. We will never know
-how much DMA is a problem in practice unless we give users or
-distros a way to try and come up with good ways of determining if
-it's safe on whichever specific system based on the hardware,
-drivers, etc.
-
-I've successfully tested the patches on a few systems, physical
-and virtual. Of course this is not proof that the DMA problem
-does not exist but shows that it may be a solution that mostly
-works. If nothing else, for systems where sacrificing ~400 MB of
-memory is something that prevents the user from having any dump
-at all, having a dump that mostly works with a sacrifice of ~100
-MB may be useful.
-
-Thanks,
-
--- 
-Jiri Bohac <jbohac@suse.cz>
-SUSE Labs, Prague, Czechia
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gV2VkLCBOb3YgMjksIDIwMjMgYXQgMTI6MTU6MTdQTSArMDgwMCwgSHVhY2FpIENoZW4gd3Jv
+dGU6Cj4gSGksIGFsbCwKPiAKPiBPbiBUdWUsIE5vdiAyOCwgMjAyMyBhdCAyOjI34oCvUE0gV0FO
+RyBSdWkgPHdhbmdydWlAbG9vbmdzb24uY24+IHdyb3RlOgo+ID4KPiA+IEhpLAo+ID4KPiA+IE9u
+IE1vbiwgTm92IDI3LCAyMDIzIGF0IDEwOjM24oCvQU0gUnVpUnVpIFlhbmcgPHJ1eWFuZ0ByZWRo
+YXQuY29tPiB3cm90ZToKPiA+ID4KPiA+ID4gT24gTW9uLCAyNyBOb3YgMjAyMyBhdCAwOTo1Mywg
+UnVpUnVpIFlhbmcgPHJ1eWFuZ0ByZWRoYXQuY29tPiB3cm90ZToKPiA+ID4gPgo+ID4gPiA+IE9u
+IFNhdCwgMjUgTm92IDIwMjMgYXQgMTQ6NTQsIFdBTkcgUnVpIDx3YW5ncnVpQGxvb25nc29uLmNu
+PiB3cm90ZToKPiA+ID4gPiA+Cj4gPiA+ID4gPiBDdXJyZW50bHksIGtleGVjIGxvYWRzIHZtbGlu
+dXguZWZpIHRvIGFkZHJlc3MgMCBpbnN0ZWFkIG9mIHRoZSBsaW5rCj4gPiA+ID4gPiBhZGRyZXNz
+LiBUaGlzIGNhdXNlcyBrZXhlYyB0byBmYWlsIHRvIGJvb3QgdGhlIG5ldyB2bWxpbnV4LmVmaSBv
+biBxZW11Lgo+ID4gPiA+ID4KPiA+ID4gPiA+ICAgcGVpX2xvb25nYXJjaF9sb2FkOiBrZXJuZWxf
+c2VnbWVudDogMDAwMDAwMDAwMDAwMDAwMAo+ID4gPiA+ID4gICBwZWlfbG9vbmdhcmNoX2xvYWQ6
+IGtlcm5lbF9lbnRyeTogICAwMDAwMDAwMDAxM2YxMDAwCj4gPiA+ID4gPiAgIHBlaV9sb29uZ2Fy
+Y2hfbG9hZDogaW1hZ2Vfc2l6ZTogICAgIDAwMDAwMDAwMDFjYTAwMDAKPiA+ID4gPiA+ICAgcGVp
+X2xvb25nYXJjaF9sb2FkOiB0ZXh0X29mZnNldDogICAgMDAwMDAwMDAwMDIwMDAwMAo+ID4gPiA+
+ID4gICBwZWlfbG9vbmdhcmNoX2xvYWQ6IHBoeXNfb2Zmc2V0OiAgICAwMDAwMDAwMDAwMDAwMDAw
+Cj4gPiA+ID4gPiAgIHBlaV9sb29uZ2FyY2hfbG9hZDogUEUgZm9ybWF0OiAgICAgIHllcwo+ID4g
+PiA+ID4gICBsb29uZ2FyY2hfbG9hZF9vdGhlcl9zZWdtZW50czozMzM6IGNvbW1hbmRfbGluZTog
+a2V4ZWMgY29uc29sZT10dHlTMCwxMTUyMDAKPiA+ID4gPiA+ICAga2V4ZWNfbG9hZDogZW50cnkg
+PSAweDEzZjEwMDAgZmxhZ3MgPSAweDEwMjAwMDAKPiA+ID4gPiA+ICAgbnJfc2VnbWVudHMgPSAy
+Cj4gPiA+ID4gPiAgIHNlZ21lbnRbMF0uYnVmICAgPSAweDdmZmZlZWEzODAxMAo+ID4gPiA+ID4g
+ICBzZWdtZW50WzBdLmJ1ZnN6ID0gMHgxYjU1MjAwCj4gPiA+ID4gPiAgIHNlZ21lbnRbMF0ubWVt
+ICAgPSAobmlsKQo+ID4gPiA+ID4gICBzZWdtZW50WzBdLm1lbXN6ID0gMHgxY2EwMDAwCj4gPiA+
+ID4gPiAgIHNlZ21lbnRbMV0uYnVmICAgPSAweDU1NTU1NzA5NDBiMAo+ID4gPiA+ID4gICBzZWdt
+ZW50WzFdLmJ1ZnN6ID0gMHgyMDAKPiA+ID4gPiA+ICAgc2VnbWVudFsxXS5tZW0gICA9IDB4MWNh
+MDAwMAo+ID4gPiA+ID4gICBzZWdtZW50WzFdLm1lbXN6ID0gMHg0MDAwCj4gPiA+ID4gPgo+ID4g
+PiA+ID4gVGhpcyBwYXRjaCBjb25zdHJhaW5zIHRoZSByYW5nZSBvZiB0aGUga2VybmVsIHNlZ21l
+bnQgYnkgYGhvbGVfbWluYAo+ID4gPiA+ID4gYW5kIGBob2xlX21heGAgdG8gcGxhY2Ugdm1saW51
+eC5lZmkgZXhhY3RseSBhdCB0aGUgbGluayBhZGRyZXNzLgo+ID4gPiA+ID4KPiA+ID4gPiA+ICAg
+cGVpX2xvb25nYXJjaF9sb2FkOiBrZXJuZWxfc2VnbWVudDogMDAwMDAwMDAwMDIwMDAwMAo+ID4g
+PiA+ID4gICBwZWlfbG9vbmdhcmNoX2xvYWQ6IGtlcm5lbF9lbnRyeTogICAwMDAwMDAwMDAxM2Yx
+MDAwCj4gPiA+ID4gPiAgIHBlaV9sb29uZ2FyY2hfbG9hZDogaW1hZ2Vfc2l6ZTogICAgIDAwMDAw
+MDAwMDFjYTAwMDAKPiA+ID4gPiA+ICAgcGVpX2xvb25nYXJjaF9sb2FkOiB0ZXh0X29mZnNldDog
+ICAgMDAwMDAwMDAwMDIwMDAwMAo+ID4gPiA+ID4gICBwZWlfbG9vbmdhcmNoX2xvYWQ6IHBoeXNf
+b2Zmc2V0OiAgICAwMDAwMDAwMDAwMDAwMDAwCj4gPiA+ID4gPiAgIHBlaV9sb29uZ2FyY2hfbG9h
+ZDogUEUgZm9ybWF0OiAgICAgIHllcwo+ID4gPiA+ID4gICBsb29uZ2FyY2hfbG9hZF9vdGhlcl9z
+ZWdtZW50czozMzk6IGNvbW1hbmRfbGluZToga2V4ZWMgY29uc29sZT10dHlTMCwxMTUyMDAKPiA+
+ID4gPiA+ICAga2V4ZWNfbG9hZDogZW50cnkgPSAweDEzZjEwMDAgZmxhZ3MgPSAweDEwMjAwMDAK
+PiA+ID4gPiA+ICAgbnJfc2VnbWVudHMgPSAyCj4gPiA+ID4gPiAgIHNlZ21lbnRbMF0uYnVmICAg
+PSAweDdmZmZmMjAyODAxMAo+ID4gPiA+ID4gICBzZWdtZW50WzBdLmJ1ZnN6ID0gMHgxYjU1MjAw
+Cj4gPiA+ID4gPiAgIHNlZ21lbnRbMF0ubWVtICAgPSAweDIwMDAwMAo+ID4gPiA+ID4gICBzZWdt
+ZW50WzBdLm1lbXN6ID0gMHgxY2EwMDAwCj4gPiA+ID4gPiAgIHNlZ21lbnRbMV0uYnVmICAgPSAw
+eDU1NTU1NzQ5ODA5OAo+ID4gPiA+ID4gICBzZWdtZW50WzFdLmJ1ZnN6ID0gMHgyMDAKPiA+ID4g
+PiA+ICAgc2VnbWVudFsxXS5tZW0gICA9IDB4MWVhMDAwMAo+ID4gPiA+ID4gICBzZWdtZW50WzFd
+Lm1lbXN6ID0gMHg0MDAwCj4gPiA+ID4gPgo+ID4gPiA+ID4gU2lnbmVkLW9mZi1ieTogV0FORyBS
+dWkgPHdhbmdydWlAbG9vbmdzb24uY24+Cj4gPiA+ID4gPiAtLS0KPiA+ID4gPiA+Cj4gPiA+ID4g
+PiB2MS0+djI6Cj4gPiA+ID4gPiAgKiBGaXggdGhlIGlzc3VlIHByZXZlbnRpbmcgaXQgZnJvbSB3
+b3JraW5nIG9uIHRoZSBwaHlzaWNhbCBtYWNoaW5lLgo+ID4gPiA+ID4KPiA+ID4gPiA+ICBrZXhl
+Yy9hcmNoL2xvb25nYXJjaC9rZXhlYy1sb29uZ2FyY2guYyB8IDEwICsrKysrKystLS0KPiA+ID4g
+PiA+ICAxIGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQo+ID4g
+PiA+ID4KPiA+ID4gPiA+IGRpZmYgLS1naXQgYS9rZXhlYy9hcmNoL2xvb25nYXJjaC9rZXhlYy1s
+b29uZ2FyY2guYyBiL2tleGVjL2FyY2gvbG9vbmdhcmNoL2tleGVjLWxvb25nYXJjaC5jCj4gPiA+
+ID4gPiBpbmRleCA2MmZmOGZkLi4zMmE0MmQyIDEwMDY0NAo+ID4gPiA+ID4gLS0tIGEva2V4ZWMv
+YXJjaC9sb29uZ2FyY2gva2V4ZWMtbG9vbmdhcmNoLmMKPiA+ID4gPiA+ICsrKyBiL2tleGVjL2Fy
+Y2gvbG9vbmdhcmNoL2tleGVjLWxvb25nYXJjaC5jCj4gPiA+ID4gPiBAQCAtMjY1LDkgKzI2NSwx
+MyBAQCB1bnNpZ25lZCBsb25nIGxvb25nYXJjaF9sb2NhdGVfa2VybmVsX3NlZ21lbnQoc3RydWN0
+IGtleGVjX2luZm8gKmluZm8pCj4gPiA+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICBob2xl
+ID0gVUxPTkdfTUFYOwo+ID4gPiA+ID4gICAgICAgICAgICAgICAgIH0KPiA+ID4gPiA+ICAgICAg
+ICAgfSBlbHNlIHsKPiA+ID4gPiA+IC0gICAgICAgICAgICAgICBob2xlID0gbG9jYXRlX2hvbGUo
+aW5mbywKPiA+ID4gPiA+IC0gICAgICAgICAgICAgICAgICAgICAgIGxvb25nYXJjaF9tZW0udGV4
+dF9vZmZzZXQgKyBsb29uZ2FyY2hfbWVtLmltYWdlX3NpemUsCj4gPiA+ID4gPiAtICAgICAgICAg
+ICAgICAgICAgICAgICBNaUIoMSksIDAsIFVMT05HX01BWCwgMSk7Cj4gPiA+ID4gPiArICAgICAg
+ICAgICAgICAgdW5zaWduZWQgbG9uZyBob2xlX21pbjsKPiA+ID4gPiA+ICsgICAgICAgICAgICAg
+ICB1bnNpZ25lZCBsb25nIGhvbGVfbWF4Owo+ID4gPiA+ID4gKwo+ID4gPiA+ID4gKyAgICAgICAg
+ICAgICAgIGhvbGVfbWluID0gbG9vbmdhcmNoX21lbS50ZXh0X29mZnNldDsKPiA+ID4gPiA+ICsg
+ICAgICAgICAgICAgICBob2xlX21heCA9IGhvbGVfbWluICsgbG9vbmdhcmNoX21lbS5pbWFnZV9z
+aXplOwo+ID4gPiA+ID4gKyAgICAgICAgICAgICAgIGhvbGUgPSBsb2NhdGVfaG9sZShpbmZvLCBs
+b29uZ2FyY2hfbWVtLmltYWdlX3NpemUsCj4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAg
+ICBNaUIoMSksIGhvbGVfbWluLCBob2xlX21heCwgMSk7Cj4gPiA+ID4gPgo+ID4gPiA+ID4gICAg
+ICAgICAgICAgICAgIGlmIChob2xlID09IFVMT05HX01BWCkKPiA+ID4gPiA+ICAgICAgICAgICAg
+ICAgICAgICAgICAgIGRiZ3ByaW50ZigiJXM6IGxvY2F0ZV9ob2xlIGZhaWxlZFxuIiwgX19mdW5j
+X18pOwo+ID4gPiA+Cj4gPiA+ID4gSGksCj4gPiA+ID4KPiA+ID4gPiBQcmV2aW91c2x5IHdoZW4g
+SSBwbGF5ZWQgd2l0aCB0aGUgemJvb3Qga2VybmVsIG9uIGEga3ZtIGd1ZXN0IEkKPiA+ID4gPiBu
+b3RpY2VkIHRoaXMgaXNzdWUsIGJ1dCBJIGZvdW5kIHRoYXQgdGhlIDFzdCAyTSBtZW1vcnkgaXMg
+bWVtYmxvY2sKPiA+ID4gPiByZXNlcnZlZCBidXQgaXQgaXMgbm90IHNob3duIGluIC9wcm9jL2lv
+bWVtIGFzIHJlc2VydmVkLCBJIHN1c3BlY3QgdGhlCj4gPiA+ID4gMXN0IDJNIGlzIG5vdCB1c2Fi
+bGUgZm9yIHNvbWUgYXJjaCBzcGVjaWZpYyByZWFzb24gYnV0IEkgd2FzIG5vdCBzdXJlLgo+ID4g
+PiA+ICAgQmVsb3cgcGF0Y2ggY2FuIGZpeCBpdCBidXQgZHVlIHRvIG15IHJ1c3R5IGtub3dsZWRn
+ZSBvZiBsb29uZ2FyY2ggSQo+ID4gPgo+ID4gPiBDb3JyZWN0IGFib3V0IG15IEVuZ2xpc2ggd29y
+ZGluZyBhIGJpdCwgSSBtZWFudCBhYm91dCBydXN0eSBrbm93bGVkZ2UKPiA+ID4gb2Yga2V4ZWMg
+ZGV0YWlscyBhbmQgbmV3YmlzaCBsb29uZ2FyY2gga25vd2xlZGdlLAo+ID4gPiBCVFcsIHRoZSB3
+ZWJtYWlsIG9mdGVuIHJhbmRvbWx5IGNob29zZSB0aGUgc2VuZGVyIGVtYWlsLCBJIHVzdWFsbHkg
+dXNlCj4gPiA+IGFub3RoZXIgZW1haWwgZm9yIGNvbW11bml0eSwgdGhhdCBpcyBEYXZlIFlvdW5n
+IDxkeW91bmdAcmVkaGF0LmNvbT4sCj4gPiA+IHNhbWUgcGVyc29uIDspCj4gPiA+Cj4gPiA+IEFu
+eXdheSwgc2luY2UgdGhpcyBpcyBsb29uZ2FyY2ggc3BlY2lmaWMsIGl0IHdvdWxkIGJlIGJldHRl
+ciB0byBsZWF2ZQo+ID4gPiB5b3UgZ3V5cyB0aGUgYXJjaCBwZW9wbGUgdG8gc2VlIGhvdyB0byBm
+aXggaXQgYmV0dGVyLgo+ID4gPgo+ID4gPiA+IGRpZCBub3Qgc2VuZCBpdCBvdXQuIEkgc3VzcGVj
+dCBldmVuIGlmIHRoZSBsb2NhdGVfaG9sZSBhdm9pZHMgdGhlCj4gPiA+ID4gd3JvbmcgbWVtb3J5
+LCBpbiB0aGUgMm5kIGtlcm5lbCBpdCBjb3VsZCBzdGlsbCBhY2Nlc3MgaXQuICBDb3JyZWN0Pwo+
+ID4KPiA+IEkgY2FuIGNvbmZpcm0gdGhhdCB0aGUgbWFwcGluZyBvZiB0aGUgMXN0IDJNIGluIGlv
+bWVtIG9uIHFlbXUgY2F1c2VzCj4gPiBrZXhlYyB0byBub3Qgd29yay4gVGhlIHJvb3QgY2F1c2Ug
+aXMgdGhhdCBMb29uZ0FyY2gncyB2bWxpbnV4LmVmaSBjYW4KPiA+IG9ubHkgcnVuIG9uIHRoZSBs
+aW5rIGFkZHJlc3MsIHdoaWNoIGlzIHdoeSBJIGxpbWl0IHRoZSBhbGxvY2F0aW9uCj4gPiBsb2Nh
+dGlvbiBvZiB0aGUga2VybmVsIHNlZ21lbnQgdGhyb3VnaCBob2xlIG1pbi9tYXgsIG5vdCB0aGUg
+a2VybmVsJ3MKPiA+IGlvbWVtLgo+ID4KPiA+IEh1Y2FpLCB3aGF0IGRvIHlvdSB0aGluayBhYm91
+dCB0aGUgMXN0IDJNIG1hcHBpbmcgdHlwZSBpbiB0aGUga2VybmVsPwo+IEkgYWdyZWUgd2l0aCBX
+QU5HIFJ1aSwgdGhpcyBzaG91bGQgYmUgZml4ZWQgaW4ga2V4ZWMtdG9vbHMsIGFuZAo+ICdub21h
+cCcgaXMgbm90IGZvciBzdWNoIGEgdXNhZ2UuCgpDYW4gSSBjb25maXJtIHRoYXQgeW91J2Qgc3Rp
+bGwgbGlrZSB0aGlzIHBhdGNoIGFwcGxpZWQ/CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFk
+ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVj
+Cg==
