@@ -4,99 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B9719C4167B
-	for <kexec@archiver.kernel.org>; Fri,  1 Dec 2023 11:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AEE5DC4167B
+	for <kexec@archiver.kernel.org>; Fri,  1 Dec 2023 12:35:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=CRUlVdIMc/cQc6hh6DzjZ0HIQxRI2iOhIwkCocFBbgM=; b=ALug8KeDxcxeHS
-	1p/CSqn2WR9D1V/P6sXBO67GP2+H5B81OgQQ9v2hbz8HJaBdQqHdGqmyyEkTYEFX0Vkij1k+clwUe
-	5KjPml0rOnRuT3DnQ5XSTDMVZQm0EcuaLWoy74rjZx9ZKiXxJhyQva5K0Z5FXkaaH5Ga/FBTqwTS4
-	RFyZJYu0O9SoU2sAoh4LxyEAwGXgIto8tOvfnF7r7oYxHLEJNx+HbzeeVx6FMq5Ud4CdHr9tK+8LE
-	YJMTKQM8CvYpqLM/6SpZ55zv/8AwEXbTV+fvxfge8NdbNyWn0ggRjWHk+WCoboVC6vNFBh9xybQ62
-	nGLd6TEV+YHID/G7r6pQ==;
+	List-Owner; bh=/H0IPJSy1Ou/U0bj+ynQ2C3L5I5ffxViEmD8c81xSgk=; b=of1qTUFtqP4eyV
+	vmmdoXDTy6qfbi0Jyt015SOy5uYrZ/6nNuOopuGlKQZSP/aPJFAvni2MtuiWP9FRhJxHoB6TgG5Ou
+	GeXXOGo/XZfeqJNobDyYW0DQOK6PH3To7Ildj6UBYYd2vh4ZnKHlygpItekdLDA77jnYReslrpadv
+	0KxvNPKN5Y/06tlJr66MywCORs2SQYKHs9iA/3c2o3k24q2ZeDC1HG7lbATgTGcxGRL96nnVCpfyG
+	vRbcpNYRaZtSbOpSJvtvLvX1Urcy+ErU036OZWRUpqlZskAriuyW8LXcVeC444MTDGC6MosNsmAJD
+	TlAP5HdVUlNwECZSQfDQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r927l-00DV6K-0x;
-	Fri, 01 Dec 2023 11:56:01 +0000
-Received: from smtp-out1.suse.de ([195.135.223.130])
+	id 1r92kG-00DZyd-2Z;
+	Fri, 01 Dec 2023 12:35:48 +0000
+Received: from smtp-out2.suse.de ([2a07:de40:b251:101:10:150:64:2])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r927i-00DV5U-1Z
+	id 1r92kD-00DZxu-2L
 	for kexec@lists.infradead.org;
-	Fri, 01 Dec 2023 11:55:59 +0000
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 8C09A21A43;
-	Fri,  1 Dec 2023 11:55:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1701431753; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	Fri, 01 Dec 2023 12:35:47 +0000
+Received: from localhost (unknown [10.100.12.32])
+	by smtp-out2.suse.de (Postfix) with ESMTP id A98A51FD68;
+	Fri,  1 Dec 2023 12:35:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1701434141; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=G7vJ6YHg1yf1wXh0BFGY+i3PS9hKihQbt0xDIMplNys=;
-	b=Wd35BYDuN03/Sw3Tcau0xgrTofCMLtCPdLEuwtzmpEuTLjGc/qffasRDDGF6YWZlOUCnVD
-	dk/iyFT/i2HVpUzxMC8OV8H3nPqsTACBKcj3xf8DJFJH4ye3issVNTIvQ/tqSNgEwb22Kt
-	MjCiThSLh3J6lkmvvHAtuBG6U2i2Nbc=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6C4201369E;
-	Fri,  1 Dec 2023 11:55:53 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Uv1SF8nJaWWIfwAAD6G6ig
-	(envelope-from <mhocko@suse.com>); Fri, 01 Dec 2023 11:55:53 +0000
-Date: Fri, 1 Dec 2023 12:55:52 +0100
-From: Michal Hocko <mhocko@suse.com>
-To: Philipp Rudo <prudo@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>, Donald Dutile <ddutile@redhat.com>,
-	Jiri Bohac <jbohac@suse.cz>, Pingfan Liu <piliu@redhat.com>,
+	bh=9qpSH/VFJA7oKeS3f7gAfhSd3U4lHBZHK5JZku/5WYQ=;
+	b=X+pFGdUQxOA8KtjhjRyMzN3ggAOsn24COaoxnTYbWMIZl5NJczGRliqrqTazExiUqFFmp8
+	sVuZvnWSipxXbC/o39m4A3vAu+kRgHkjPYU8yl2JiRvH6EpvZGkz+V+TAaMVxg+Uq5wcab
+	XwC0dr+/1U7TeWdotx8FhIorBGweUWg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1701434141;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9qpSH/VFJA7oKeS3f7gAfhSd3U4lHBZHK5JZku/5WYQ=;
+	b=+vVnfTwiXLhbdEvutNTmbGnGIaK/VlmQC9iU1KwONAYD5KTA1u01CcOhnJLGaE6BSyc4Zj
+	dIptQs22X3O2FBCw==
+Date: Fri, 1 Dec 2023 13:35:41 +0100
+From: Jiri Bohac <jbohac@suse.cz>
+To: Baoquan He <bhe@redhat.com>
+Cc: Michal Hocko <mhocko@suse.com>, Pingfan Liu <piliu@redhat.com>,
 	Tao Liu <ltao@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
 	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org
 Subject: Re: [PATCH 0/4] kdump: crashkernel reservation from CMA
-Message-ID: <ZWnJyArAmFo_uYPA@tiehlicka>
-References: <ZWVMUxmi66xLZPsr@MiWiFi-R3L-srv>
+Message-ID: <ZWnTHWXNWg06pLMg@dwarf.suse.cz>
+References: <ZWD_fAPqEWkFlEkM@dwarf.suse.cz>
+ <CAO7dBbUVQn8xzPZQhhw1XqF+sQT0c6phk4sda+X=MrR6RmPE0A@mail.gmail.com>
+ <ZWJllXCN0SDIELrX@dwarf.suse.cz>
+ <CAO7dBbVJ=ytRra_77VRZ8ud1wVkP9fub=Vj6cfTkx=CnYg5J2A@mail.gmail.com>
+ <ZWVMUxmi66xLZPsr@MiWiFi-R3L-srv>
  <ZWWuBSiZZdF2W12j@tiehlicka>
- <ZWbyDx3TJ7zo3jCw@MiWiFi-R3L-srv>
- <91a31ce5-63d1-7470-18f7-92b039fda8e6@redhat.com>
- <ZWf64BowWrYqA2Rf@MiWiFi-R3L-srv>
- <ZWhg_b3O6piZtkQ-@tiehlicka>
- <ZWh6ax8YmkhxAzIf@MiWiFi-R3L-srv>
- <ZWiAsJlLookvCI+h@MiWiFi-R3L-srv>
- <ZWiQ-II9CvGv8EWK@tiehlicka>
- <20231201123353.2b3db7fa@rotkaeppchen>
+ <ZWbvB/4bKu69zMbd@MiWiFi-R3L-srv>
+ <ZWcXyeDiI2v251F_@dwarf.suse.cz>
+ <ZWgJIAYwfVvA+r8h@MiWiFi-R3L-srv>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20231201123353.2b3db7fa@rotkaeppchen>
-Authentication-Results: smtp-out1.suse.de;
+In-Reply-To: <ZWgJIAYwfVvA+r8h@MiWiFi-R3L-srv>
+Authentication-Results: smtp-out2.suse.de;
 	none
-X-Spamd-Result: default: False [-0.62 / 50.00];
+X-Spamd-Result: default: False [-0.98 / 50.00];
 	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
 	 FROM_HAS_DN(0.00)[];
 	 TO_DN_SOME(0.00)[];
 	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 NEURAL_SPAM_SHORT(3.00)[1.000];
 	 MIME_GOOD(-0.10)[text/plain];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	 RCPT_COUNT_SEVEN(0.00)[10];
+	 NEURAL_HAM_LONG(-0.88)[-0.880];
+	 MID_RHS_MATCH_FROMTLD(0.00)[];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 RCPT_COUNT_SEVEN(0.00)[8];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email];
 	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 RCVD_COUNT_ZERO(0.00)[0];
 	 FROM_EQ_ENVFROM(0.00)[];
 	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.02)[54.77%]
+	 BAYES_HAM(-3.00)[100.00%]
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231201_035558_672238_A39E74AA 
-X-CRM114-Status: UNSURE (   9.27  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20231201_043546_074409_6360AFA6 
+X-CRM114-Status: GOOD (  39.55  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -113,27 +105,100 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri 01-12-23 12:33:53, Philipp Rudo wrote:
-[...]
-> And yes, those are all what-if concerns but unfortunately that is all
-> we have right now.
+On Thu, Nov 30, 2023 at 12:01:36PM +0800, Baoquan He wrote:
+> On 11/29/23 at 11:51am, Jiri Bohac wrote:
+> > We get a lot of problems reported by partners testing kdump on
+> > their setups prior to release. But even if we tune the reserved
+> > size up, OOM is still the most common reason for kdump to fail
+> > when the product starts getting used in real life. It's been
+> > pretty frustrating for a long time.
+> 
+> I remember SUSE engineers ever told you will boot kernel and do an
+> estimation of kdump kernel usage, then set the crashkernel according to
+> the estimation. OOM will be triggered even that way is taken? Just
+> curious, not questioning the benefit of using ,cma to save memory.
 
-Should theoretical concerns without an actual evidence (e.g. multiple
-drivers known to be broken) become a roadblock for this otherwise useful
-feature? 
+Yes, we do that during the kdump package build. We use this to
+find some baseline for memory requirements of the kdump kernel
+and tools on that specific product. Using these numbers we
+estimate the requirements on the system where kdump is
+configured by adding extra memory for the size of RAM, number of
+SCSI devices, etc. But apparently we get this wrong in too many cases,
+because the actual hardware differs too much from the virtual
+environment which we used to get the baseline numbers. We've been
+adding silly constants to the calculations and we still get OOMs on
+one hand and people hesitant to sacrifice the calculated amount
+of memory on the other. 
 
-> Only alternative would be to run extended tests in
-> the field. Which means this user facing change needs to be included.
-> Which also means that we are stuck with it as once a user facing change
-> is in it's extremely hard to get rid of it again...
+The result is that kdump basically cannot be trusted unless the
+user verifies that the sacrificed memory is still enough after
+every major upgrade.
 
-I am not really sure I follow you here. Are you suggesting once
-crashkernel=cma is added it would become a user api and therefore
-impossible to get rid of?
+This is the main motivation behind the CMA idea: to safely give
+kdump enough memory, including a safe margin, without sacrificing
+too much memory.
+
+> > I feel the exact opposite about VMs. Reserving hundreds of MB for
+> > crash kernel on _every_ VM on a busy VM host wastes the most
+> > memory. VMs are often tuned to well defined task and can be set
+> > up with very little memory, so the ~256 MB can be a huge part of
+> > that. And while it's theoretically better to dump from the
+> > hypervisor, users still often prefer kdump because the hypervisor
+> > may not be under their control. Also, in a VM it should be much
+> > easier to be sure the machine is safe WRT the potential DMA
+> > corruption as it has less HW drivers. So I actually thought the
+> > CMA reservation could be most useful on VMs.
+> 
+> Hmm, we ever discussed this in upstream with David Hildend who works in
+> virt team. VMs problem is much easier to solve if they complain the
+> default crashkernel value is wasteful. The shrinking interface is for
+> them. The crashkernel value can't be enlarged, but shrinking existing
+> crashkernel memory is functioning smoothly well. They can adjust that in
+> script in a very simple way.
+
+The shrinking does not solve this problem at all. It solves a
+different problem: the virtual hardware configuration can easily
+vary between boots and so will the crashkernel size requirements.
+And since crashkernel needs to be passed on the commandline, once
+the system is booted it's impossible to change it without a
+reboot. Here the shrinking mechanism comes in handy
+- we reserve enough for all configurations on the command line and
+during boot the requirements for the currently booted
+configuration can be determined and the reservation shrunk to
+the determined value.  But determining this value is the same
+unsolved problem as above and CMA could help in exactly the same
+way.
+
+> Anyway, let's discuss and figure out any risk of ,cma. If finally all
+> worries and concerns are proved unnecessary, then let's have a new great
+> feature. But we can't afford the risk if the ,cma area could be entangled
+> with 1st kernel's on-going action. As we know, not like kexec reboot, we
+> only shutdown CPUs, interrupt, most of devices are alive. And many of
+> them could be not reset and initialized in kdump kernel if the relevant
+> driver is not added in.
+
+Well since my patchset makes the use of ,cma completely optional
+and has _absolutely_ _no_ _effect_ on users that don't opt to use
+it, I think you're not taking any risk at all. We will never know
+how much DMA is a problem in practice unless we give users or
+distros a way to try and come up with good ways of determining if
+it's safe on whichever specific system based on the hardware,
+drivers, etc.
+
+I've successfully tested the patches on a few systems, physical
+and virtual. Of course this is not proof that the DMA problem
+does not exist but shows that it may be a solution that mostly
+works. If nothing else, for systems where sacrificing ~400 MB of
+memory is something that prevents the user from having any dump
+at all, having a dump that mostly works with a sacrifice of ~100
+MB may be useful.
+
+Thanks,
 
 -- 
-Michal Hocko
-SUSE Labs
+Jiri Bohac <jbohac@suse.cz>
+SUSE Labs, Prague, Czechia
+
 
 _______________________________________________
 kexec mailing list
