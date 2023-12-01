@@ -4,88 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C321CC4167B
-	for <kexec@archiver.kernel.org>; Fri,  1 Dec 2023 15:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E5B77C4167B
+	for <kexec@archiver.kernel.org>; Fri,  1 Dec 2023 16:30:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=mLcJxu4mBJIvZ+goQ7nXD0MzCE7QrL2/aHRR+ARZonc=; b=bmcAOm6n7MX+Ic
-	g6NOurgcy8oFk+6us8SHyXHanr0+85xS9zNCsxs+3CFxtkgAGBpJ+6kUoPV/8y7xD6jyADLkj6sAB
-	GoKQX2xbi/I7uiZjBM21lWBkQQX3E9d7cM4DwHbATHDj+18iadrLNdEVmfPh/fxyJ47WUz+SDtEPC
-	Rr6KjVZn9bG24Q0NyeOA+OldhEev+aoxOrR2DHLt5cZY7mJcGDdlyuEGaj9Av7ZKGPa0DqUFwgZNl
-	CCJ1IqfHrd2jCZPSMZFLF0tQILeajbmTWFQEOPIa105ukU9RoRvSubNPKuG14rg9dIg01S1U+AfgX
-	rcTP7LWQmVB2BBXMjTSg==;
+	List-Owner; bh=LKpKQwciokM2ife3SQOWlLaQvZ5j+YGUCJQqDDF6XcI=; b=Ahn4w/pX9xQz89
+	boX6+miIiHEKZOaLJ/CgIz289TC0FT2IyWz/Yo6PIw8Tz2cNLFJUSd6e7uVMgoOF23SoYOi0RjbrZ
+	plb2m0Q+59uh4Bj5tDNQQBF/uGJxKucxWpYs5/D2tFjAmjkW3H5nExPMKb+NoLrfk6BuymeXgbYea
+	T3N6gnlsdFHV9CH4Ex+CeTbOMPc8dDFpUayZTvaxi9INGejKgXgt/NO9VrrmLJjf6vM037dBq35yw
+	U0+B3FxbwX9UseCbHB6isirqa+bJTSTitHE0Bh+b6P6Cy9M2CJ34WbjvTv/pDPnmAOmgNVb+Mlx6W
+	PCJSzXp5pxN+ogZukFug==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r95u1-00E60O-1n;
-	Fri, 01 Dec 2023 15:58:05 +0000
-Received: from mgamail.intel.com ([192.55.52.115])
+	id 1r96Pc-00EBxV-32;
+	Fri, 01 Dec 2023 16:30:44 +0000
+Received: from ams.source.kernel.org ([145.40.68.75])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r95tx-00E5zD-2t
+	id 1r96PZ-00EBx5-1t
 	for kexec@lists.infradead.org;
-	Fri, 01 Dec 2023 15:58:03 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701446281; x=1732982281;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=jUP4W+ON/TvFXhwyY13CHzC3+Zpylwt+iETAAn2F0U8=;
-  b=GJAduVTFp/Nl5vhkc+J9D7abBPPv75PZt14F3H6XdjPt3K4EgV3gw3OS
-   REOAa8u2MZCMKntaYUGk7N5+RHdTGXEZmV3Wk3gvFWzE/qp2QwopiZXp4
-   ELLIZBbbL9saKnAEyux9YytiuyHgfhcUmNCXaWSnlBYl+s2n7zX+Sh72d
-   sgm573pK6ut2EvGU3ysxIz2oLtrZu4LeADzdGVHG2Q31+l4VL8ERvYILr
-   01y6bbHq4WGnwLmfZ+fQcxqEYNcXxmutHwJRCPl91GSU7uiTyzpi3bvlc
-   gDK2np02BbUz5aiK1sDLk8K7It+vgtR7N2sg7zyU0ZUSnLDUqQ56CKeVN
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10911"; a="393250880"
-X-IronPort-AV: E=Sophos;i="6.04,241,1695711600"; 
-   d="scan'208";a="393250880"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2023 07:57:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10911"; a="773472906"
-X-IronPort-AV: E=Sophos;i="6.04,241,1695711600"; 
-   d="scan'208";a="773472906"
-Received: from hadasr-mobl.ger.corp.intel.com (HELO box.shutemov.name) ([10.249.33.176])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2023 07:57:41 -0800
-Received: by box.shutemov.name (Postfix, from userid 1000)
-	id 233E010A437; Fri,  1 Dec 2023 18:57:39 +0300 (+03)
-Date: Fri, 1 Dec 2023 18:57:39 +0300
-From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
-To: "Huang, Kai" <kai.huang@intel.com>
-Cc: "tglx@linutronix.de" <tglx@linutronix.de>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"x86@kernel.org" <x86@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-	"Reshetova, Elena" <elena.reshetova@intel.com>,
-	"Nakajima, Jun" <jun.nakajima@intel.com>,
-	"rafael@kernel.org" <rafael@kernel.org>,
-	"peterz@infradead.org" <peterz@infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"sathyanarayanan.kuppuswamy@linux.intel.com" <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	"Hunter, Adrian" <adrian.hunter@intel.com>,
-	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-	"ashish.kalra@amd.com" <ashish.kalra@amd.com>,
-	"kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-	"seanjc@google.com" <seanjc@google.com>,
-	"bhe@redhat.com" <bhe@redhat.com>,
-	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>
-Subject: Re: [PATCHv3 14/14] x86/acpi: Add support for CPU offlining for ACPI
- MADT wakeup method
-Message-ID: <20231201155739.rxo6l5om6mdw54rs@box.shutemov.name>
-References: <20231115120044.8034-1-kirill.shutemov@linux.intel.com>
- <20231115120044.8034-15-kirill.shutemov@linux.intel.com>
- <7012ba92206efaa6f0a0a2e1a28355d67d55265a.camel@intel.com>
+	Fri, 01 Dec 2023 16:30:43 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by ams.source.kernel.org (Postfix) with ESMTP id 3B8A8B847D8;
+	Fri,  1 Dec 2023 16:30:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6621CC433C7;
+	Fri,  1 Dec 2023 16:30:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701448238;
+	bh=wGD4K0cw99VQK48znJDhGdXOwT4UdHs957GwD5xw0CM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lsaJQfs17Pi7cwUJ+dGA0q6KFREd2RY4anOt2SIuN9NzEb9U5lfGVAW24jY4zB7jo
+	 SfiU4++3j70YeKJW5IN7qGtIcFKvFpVSRKsC+tWIpEUHCgMWX9NM6724a8JJs9u9CK
+	 yX6HCH/T2XWtOgACcSET8Q8cIVkOT6s82FiB7AhDCSolEna0wZ6BV+EsMUo+oLeKZw
+	 gP10CO2Q+NXiMhy24dgskBke3Sy7qFnQ0ceYA5UA0JKWhTsNIIAA9awmyihBtUYL2y
+	 fZN22Fpgev/MC2wNokxet2hQCs4er56tEbwY42zW695GyOMJUPY1u/9PB5Z4N9oAJP
+	 2Ih8ndVrT/YSw==
+Date: Fri, 1 Dec 2023 16:30:35 +0000
+From: Simon Horman <horms@kernel.org>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: WANG Rui <wangrui@loongson.cn>, Dave Young <dyoung@redhat.com>,
+	RuiRui Yang <ruyang@redhat.com>, kexec@lists.infradead.org
+Subject: Re: [PATCH v2] LoongArch: Load vmlinux.efi to the link address
+Message-ID: <20231201163035.GD836278@kernel.org>
+References: <20231125065232.116319-1-wangrui@loongson.cn>
+ <CALu+AoRThqZWGv6+-d0PUFA2XNL1g2-H5HrxHGR5OrTerfpbiQ@mail.gmail.com>
+ <CALu+AoRVKT+E0TdRRQ3GcxeM9r5BHNE7pz-dN6pUV_MCnviYZg@mail.gmail.com>
+ <CAHirt9jp1MQQSZbFqmwxYK-eR+uNeM2eFLJ8=S+t004Pjhzn3w@mail.gmail.com>
+ <CAAhV-H4Uwkj-jP9WL9hk8DkuhwPe1BQ2N0g1AGh4kkAD-_QvbQ@mail.gmail.com>
+ <20231201140633.GA836278@kernel.org>
+ <CAAhV-H7PeJWVCC8oZX_fn7XP2UYTLoOyAW4j9+3ZXMY8_R_xtg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <7012ba92206efaa6f0a0a2e1a28355d67d55265a.camel@intel.com>
+In-Reply-To: <CAAhV-H7PeJWVCC8oZX_fn7XP2UYTLoOyAW4j9+3ZXMY8_R_xtg@mail.gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231201_075801_943655_E674553A 
-X-CRM114-Status: GOOD (  32.18  )
+X-CRM114-CacheID: sfid-20231201_083041_947398_EA49BA97 
+X-CRM114-Status: GOOD (  43.18  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,321 +73,122 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, Nov 23, 2023 at 09:38:13AM +0000, Huang, Kai wrote:
-> =
-
-> > diff --git a/arch/x86/kernel/acpi/boot.c b/arch/x86/kernel/acpi/boot.c
-> > index 171d86fe71ef..602b5d3982ff 100644
-> > --- a/arch/x86/kernel/acpi/boot.c
-> > +++ b/arch/x86/kernel/acpi/boot.c
-> > @@ -22,6 +22,7 @@
-> >  #include <linux/efi-bgrt.h>
-> >  #include <linux/serial_core.h>
-> >  #include <linux/pgtable.h>
-> > +#include <linux/sched/hotplug.h>
-> >  =
-
-> >  #include <asm/e820/api.h>
-> >  #include <asm/irqdomain.h>
-> > @@ -33,6 +34,7 @@
-> >  #include <asm/smp.h>
-> >  #include <asm/i8259.h>
-> >  #include <asm/setup.h>
-> > +#include <asm/init.h>
-> =
-
-> The above two are leftovers I believe?
-> =
-
-> [...]
-> =
-
-
-Right.
-
-
-> > +
-> > +static atomic_t waiting_for_crash_ipi;
-> > +
-> > +void asm_acpi_mp_play_dead(u64 reset_vector, u64 pgd_pa);
-> > +
-> > +static void acpi_mp_play_dead(void)
-> > +{
-> > +	play_dead_common();
-> > +	asm_acpi_mp_play_dead(acpi_mp_reset_vector_paddr,
-> > +			      acpi_mp_pgd);
-> > +}
-> > +
-> > +static void acpi_mp_cpu_die(unsigned int cpu)
-> > +{
-> > +	u32 apicid =3D per_cpu(x86_cpu_to_apicid, cpu);
-> > +	unsigned long timeout;
-> > +
-> > +	/*
-> > +	 * Use TEST mailbox command to prove that BIOS got control over
-> > +	 * the CPU before declaring it dead.
-> > +	 *
-> > +	 * BIOS has to clear 'command' field of the mailbox.
-> > +	 */
-> > +	acpi_mp_wake_mailbox->apic_id =3D apicid;
-> > +	smp_store_release(&acpi_mp_wake_mailbox->command,
-> > +			  ACPI_MP_WAKE_COMMAND_TEST);
-> > +
-> > +	/* Don't wait longer than a second. */
-> > +	timeout =3D USEC_PER_SEC;
-> > +	while (READ_ONCE(acpi_mp_wake_mailbox->command) && timeout--)
-> > +		udelay(1);
-> > +}
-> > +
-> > +static void acpi_mp_stop_other_cpus(int wait)
-> > +{
-> > +	smp_shutdown_nonboot_cpus(smp_processor_id());
-> > +}
-> > +
-> > +static int crash_nmi_callback(unsigned int val, struct pt_regs *regs)
-> > +{
-> > +	local_irq_disable();
-> > +
-> > +	crash_save_cpu(regs, raw_smp_processor_id());
-> > +
-> > +	cpu_emergency_stop_pt();
-> > +
-> > +	disable_local_APIC();
-> > +
-> > +	/*
-> > +	 * Prepare the CPU for reboot _after_ invoking the callback so that t=
-he
-> > +	 * callback can safely use virtualization instructions, e.g. VMCLEAR.
-> > +	 */
-> > +	cpu_emergency_disable_virtualization();
-> > +
-> > +	atomic_dec(&waiting_for_crash_ipi);
-> > +
-> > +	asm_acpi_mp_play_dead(acpi_mp_reset_vector_paddr,
-> > +			      acpi_mp_pgd);
-> > +
-> > +	return NMI_HANDLED;
-> > +}
-> > +
-> > +static void acpi_mp_crash_stop_other_cpus(void)
-> > +{
-> > +	unsigned long timeout;
-> > +
-> > +	/* The kernel is broken so disable interrupts */
-> > +	local_irq_disable();
-> > +
-> > +
-> > +	atomic_set(&waiting_for_crash_ipi, num_online_cpus() - 1);
-> > +
-> > +	/* Would it be better to replace the trap vector here? */
-> > +	if (register_nmi_handler(NMI_LOCAL, crash_nmi_callback,
-> > +				 NMI_FLAG_FIRST, "crash"))
-> > +		return;		/* Return what? */
-> > +
-> > +	apic_send_IPI_allbutself(NMI_VECTOR);
-> > +
-> > +	/* Don't wait longer than a second. */
-> > +	timeout =3D USEC_PER_SEC;
-> > +	while (atomic_read(&waiting_for_crash_ipi) && timeout--)
-> > +		udelay(1);
-> > +}
-> > +
-> > =
-
-> =
-
-> [...]
-> =
-
-> > +	smp_ops.stop_other_cpus =3D acpi_mp_stop_other_cpus;
-> > +	smp_ops.crash_stop_other_cpus =3D acpi_mp_crash_stop_other_cpus;
-> > +
-> > =
-
-> =
-
-> The above acpi_mp_crash_stop_other_cpus() and crash_nmi_callback() etc ar=
-e kinda
-> duplicated code with the normal crash kexec() in reboot.c.
-> =
-
-> I am not expert here but spent some time looking into the code, and it ap=
-pears
-> the main reason preventing us from reusing that code should be TDX guest =
-doesn't
-> play nicely with mwait/halt staff when putting the cpu to offline. =A0
-> =
-
-> I am thinking if we skip/replace them with the asm_acpi_mp_play_dead(), we
-> should be able to just reuse the existing smp_ops.stop_other_cpus() and
-> smp_ops.crash_stop_other_cpus()?
-
-Okay, fair enough. See fixup below.
-
-> > +
-> >  int __init acpi_parse_mp_wake(union acpi_subtable_headers *header,
-> >  			      const unsigned long end)
-> >  {
-> >  	struct acpi_madt_multiproc_wakeup *mp_wake;
-> >  =
-
-> >  	mp_wake =3D (struct acpi_madt_multiproc_wakeup *)header;
-> > -	if (BAD_MADT_ENTRY(mp_wake, end))
-> > +	if (!mp_wake)
-> > +		return -EINVAL;
-> =
-
-> I think you can keep the BAD_MADT_ENTRY() check as a standard check, and =
-...
-
-No. BAD_MADT_ENTRY() will fail if the struct version is V0 because the
-size will be smaller than sizeof(struct acpi_madt_multiproc_wakeup).
-
-
-diff --git a/arch/x86/include/asm/smp.h b/arch/x86/include/asm/smp.h
-index 4fab2ed454f3..3c8efba86d5c 100644
---- a/arch/x86/include/asm/smp.h
-+++ b/arch/x86/include/asm/smp.h
-@@ -38,6 +38,7 @@ struct smp_ops {
- 	int (*cpu_disable)(void);
- 	void (*cpu_die)(unsigned int cpu);
- 	void (*play_dead)(void);
-+	void (*crash_play_dead)(void);
- =
-
- 	void (*send_call_func_ipi)(const struct cpumask *mask);
- 	void (*send_call_func_single_ipi)(int cpu);
-diff --git a/arch/x86/kernel/acpi/madt_wakeup.c b/arch/x86/kernel/acpi/madt=
-_wakeup.c
-index 782fe8fd533c..a801f773f9f1 100644
---- a/arch/x86/kernel/acpi/madt_wakeup.c
-+++ b/arch/x86/kernel/acpi/madt_wakeup.c
-@@ -25,6 +25,12 @@ static u64 acpi_mp_reset_vector_paddr __ro_after_init;
- =
-
- void asm_acpi_mp_play_dead(u64 reset_vector, u64 pgd_pa);
- =
-
-+static void crash_acpi_mp_play_dead(void)
-+{
-+	asm_acpi_mp_play_dead(acpi_mp_reset_vector_paddr,
-+			      acpi_mp_pgd);
-+}
-+
- static void acpi_mp_play_dead(void)
- {
- 	play_dead_common();
-@@ -58,57 +64,6 @@ static void acpi_mp_stop_other_cpus(int wait)
- 	smp_shutdown_nonboot_cpus(smp_processor_id());
- }
- =
-
--#ifdef CONFIG_KEXEC_CORE
--static atomic_t waiting_for_crash_ipi;
--
--static int crash_nmi_callback(unsigned int val, struct pt_regs *regs)
--{
--	local_irq_disable();
--
--	crash_save_cpu(regs, raw_smp_processor_id());
--
--	cpu_emergency_stop_pt();
--
--	disable_local_APIC();
--
--	/*
--	 * Prepare the CPU for reboot _after_ invoking the callback so that the
--	 * callback can safely use virtualization instructions, e.g. VMCLEAR.
--	 */
--	cpu_emergency_disable_virtualization();
--
--	atomic_dec(&waiting_for_crash_ipi);
--
--	asm_acpi_mp_play_dead(acpi_mp_reset_vector_paddr,
--			      acpi_mp_pgd);
--
--	return NMI_HANDLED;
--}
--
--static void acpi_mp_crash_stop_other_cpus(void)
--{
--	unsigned long timeout;
--
--	/* The kernel is broken so disable interrupts */
--	local_irq_disable();
--
--
--	atomic_set(&waiting_for_crash_ipi, num_online_cpus() - 1);
--
--	/* Would it be better to replace the trap vector here? */
--	if (register_nmi_handler(NMI_LOCAL, crash_nmi_callback,
--				 NMI_FLAG_FIRST, "crash"))
--		return;		/* Return what? */
--
--	apic_send_IPI_allbutself(NMI_VECTOR);
--
--	/* Don't wait longer than a second. */
--	timeout =3D USEC_PER_SEC;
--	while (atomic_read(&waiting_for_crash_ipi) && timeout--)
--		udelay(1);
--}
--#endif
--
- /* The argument is required to match type of x86_mapping_info::alloc_pgt_p=
-age */
- static void __init *alloc_pgt_page(void *dummy)
- {
-@@ -277,11 +232,9 @@ static int __init acpi_mp_setup_reset(u64 reset_vector)
- 	}
- =
-
- 	smp_ops.play_dead =3D acpi_mp_play_dead;
-+	smp_ops.crash_play_dead =3D crash_acpi_mp_play_dead;
- 	smp_ops.cpu_die =3D acpi_mp_cpu_die;
- 	smp_ops.stop_other_cpus =3D acpi_mp_stop_other_cpus;
--#ifdef CONFIG_KEXEC_CORE
--	smp_ops.crash_stop_other_cpus =3D acpi_mp_crash_stop_other_cpus;
--#endif
- =
-
- 	acpi_mp_reset_vector_paddr =3D reset_vector;
- 	acpi_mp_pgd =3D __pa(pgd);
-diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-index c81afffaa954..99e6ab552da0 100644
---- a/arch/x86/kernel/reboot.c
-+++ b/arch/x86/kernel/reboot.c
-@@ -878,10 +878,14 @@ static int crash_nmi_callback(unsigned int val, struc=
-t pt_regs *regs)
- 	cpu_emergency_disable_virtualization();
- =
-
- 	atomic_dec(&waiting_for_crash_ipi);
--	/* Assume hlt works */
--	halt();
--	for (;;)
--		cpu_relax();
-+
-+	if (smp_ops.crash_play_dead) {
-+	    smp_ops.crash_play_dead();
-+	} else {
-+		halt();
-+		for (;;)
-+			cpu_relax();
-+	}
- =
-
- 	return NMI_HANDLED;
- }
--- =
-
-  Kiryl Shutsemau / Kirill A. Shutemov
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gRnJpLCBEZWMgMDEsIDIwMjMgYXQgMTA6NTQ6NDlQTSArMDgwMCwgSHVhY2FpIENoZW4gd3Jv
+dGU6Cj4gSGksIFNpbW9uLAo+IAo+IE9uIEZyaSwgRGVjIDEsIDIwMjMgYXQgMTA6MDbigK9QTSBT
+aW1vbiBIb3JtYW4gPGhvcm1zQGtlcm5lbC5vcmc+IHdyb3RlOgo+ID4KPiA+IE9uIFdlZCwgTm92
+IDI5LCAyMDIzIGF0IDEyOjE1OjE3UE0gKzA4MDAsIEh1YWNhaSBDaGVuIHdyb3RlOgo+ID4gPiBI
+aSwgYWxsLAo+ID4gPgo+ID4gPiBPbiBUdWUsIE5vdiAyOCwgMjAyMyBhdCAyOjI34oCvUE0gV0FO
+RyBSdWkgPHdhbmdydWlAbG9vbmdzb24uY24+IHdyb3RlOgo+ID4gPiA+Cj4gPiA+ID4gSGksCj4g
+PiA+ID4KPiA+ID4gPiBPbiBNb24sIE5vdiAyNywgMjAyMyBhdCAxMDozNuKAr0FNIFJ1aVJ1aSBZ
+YW5nIDxydXlhbmdAcmVkaGF0LmNvbT4gd3JvdGU6Cj4gPiA+ID4gPgo+ID4gPiA+ID4gT24gTW9u
+LCAyNyBOb3YgMjAyMyBhdCAwOTo1MywgUnVpUnVpIFlhbmcgPHJ1eWFuZ0ByZWRoYXQuY29tPiB3
+cm90ZToKPiA+ID4gPiA+ID4KPiA+ID4gPiA+ID4gT24gU2F0LCAyNSBOb3YgMjAyMyBhdCAxNDo1
+NCwgV0FORyBSdWkgPHdhbmdydWlAbG9vbmdzb24uY24+IHdyb3RlOgo+ID4gPiA+ID4gPiA+Cj4g
+PiA+ID4gPiA+ID4gQ3VycmVudGx5LCBrZXhlYyBsb2FkcyB2bWxpbnV4LmVmaSB0byBhZGRyZXNz
+IDAgaW5zdGVhZCBvZiB0aGUgbGluawo+ID4gPiA+ID4gPiA+IGFkZHJlc3MuIFRoaXMgY2F1c2Vz
+IGtleGVjIHRvIGZhaWwgdG8gYm9vdCB0aGUgbmV3IHZtbGludXguZWZpIG9uIHFlbXUuCj4gPiA+
+ID4gPiA+ID4KPiA+ID4gPiA+ID4gPiAgIHBlaV9sb29uZ2FyY2hfbG9hZDoga2VybmVsX3NlZ21l
+bnQ6IDAwMDAwMDAwMDAwMDAwMDAKPiA+ID4gPiA+ID4gPiAgIHBlaV9sb29uZ2FyY2hfbG9hZDog
+a2VybmVsX2VudHJ5OiAgIDAwMDAwMDAwMDEzZjEwMDAKPiA+ID4gPiA+ID4gPiAgIHBlaV9sb29u
+Z2FyY2hfbG9hZDogaW1hZ2Vfc2l6ZTogICAgIDAwMDAwMDAwMDFjYTAwMDAKPiA+ID4gPiA+ID4g
+PiAgIHBlaV9sb29uZ2FyY2hfbG9hZDogdGV4dF9vZmZzZXQ6ICAgIDAwMDAwMDAwMDAyMDAwMDAK
+PiA+ID4gPiA+ID4gPiAgIHBlaV9sb29uZ2FyY2hfbG9hZDogcGh5c19vZmZzZXQ6ICAgIDAwMDAw
+MDAwMDAwMDAwMDAKPiA+ID4gPiA+ID4gPiAgIHBlaV9sb29uZ2FyY2hfbG9hZDogUEUgZm9ybWF0
+OiAgICAgIHllcwo+ID4gPiA+ID4gPiA+ICAgbG9vbmdhcmNoX2xvYWRfb3RoZXJfc2VnbWVudHM6
+MzMzOiBjb21tYW5kX2xpbmU6IGtleGVjIGNvbnNvbGU9dHR5UzAsMTE1MjAwCj4gPiA+ID4gPiA+
+ID4gICBrZXhlY19sb2FkOiBlbnRyeSA9IDB4MTNmMTAwMCBmbGFncyA9IDB4MTAyMDAwMAo+ID4g
+PiA+ID4gPiA+ICAgbnJfc2VnbWVudHMgPSAyCj4gPiA+ID4gPiA+ID4gICBzZWdtZW50WzBdLmJ1
+ZiAgID0gMHg3ZmZmZWVhMzgwMTAKPiA+ID4gPiA+ID4gPiAgIHNlZ21lbnRbMF0uYnVmc3ogPSAw
+eDFiNTUyMDAKPiA+ID4gPiA+ID4gPiAgIHNlZ21lbnRbMF0ubWVtICAgPSAobmlsKQo+ID4gPiA+
+ID4gPiA+ICAgc2VnbWVudFswXS5tZW1zeiA9IDB4MWNhMDAwMAo+ID4gPiA+ID4gPiA+ICAgc2Vn
+bWVudFsxXS5idWYgICA9IDB4NTU1NTU3MDk0MGIwCj4gPiA+ID4gPiA+ID4gICBzZWdtZW50WzFd
+LmJ1ZnN6ID0gMHgyMDAKPiA+ID4gPiA+ID4gPiAgIHNlZ21lbnRbMV0ubWVtICAgPSAweDFjYTAw
+MDAKPiA+ID4gPiA+ID4gPiAgIHNlZ21lbnRbMV0ubWVtc3ogPSAweDQwMDAKPiA+ID4gPiA+ID4g
+Pgo+ID4gPiA+ID4gPiA+IFRoaXMgcGF0Y2ggY29uc3RyYWlucyB0aGUgcmFuZ2Ugb2YgdGhlIGtl
+cm5lbCBzZWdtZW50IGJ5IGBob2xlX21pbmAKPiA+ID4gPiA+ID4gPiBhbmQgYGhvbGVfbWF4YCB0
+byBwbGFjZSB2bWxpbnV4LmVmaSBleGFjdGx5IGF0IHRoZSBsaW5rIGFkZHJlc3MuCj4gPiA+ID4g
+PiA+ID4KPiA+ID4gPiA+ID4gPiAgIHBlaV9sb29uZ2FyY2hfbG9hZDoga2VybmVsX3NlZ21lbnQ6
+IDAwMDAwMDAwMDAyMDAwMDAKPiA+ID4gPiA+ID4gPiAgIHBlaV9sb29uZ2FyY2hfbG9hZDoga2Vy
+bmVsX2VudHJ5OiAgIDAwMDAwMDAwMDEzZjEwMDAKPiA+ID4gPiA+ID4gPiAgIHBlaV9sb29uZ2Fy
+Y2hfbG9hZDogaW1hZ2Vfc2l6ZTogICAgIDAwMDAwMDAwMDFjYTAwMDAKPiA+ID4gPiA+ID4gPiAg
+IHBlaV9sb29uZ2FyY2hfbG9hZDogdGV4dF9vZmZzZXQ6ICAgIDAwMDAwMDAwMDAyMDAwMDAKPiA+
+ID4gPiA+ID4gPiAgIHBlaV9sb29uZ2FyY2hfbG9hZDogcGh5c19vZmZzZXQ6ICAgIDAwMDAwMDAw
+MDAwMDAwMDAKPiA+ID4gPiA+ID4gPiAgIHBlaV9sb29uZ2FyY2hfbG9hZDogUEUgZm9ybWF0OiAg
+ICAgIHllcwo+ID4gPiA+ID4gPiA+ICAgbG9vbmdhcmNoX2xvYWRfb3RoZXJfc2VnbWVudHM6MzM5
+OiBjb21tYW5kX2xpbmU6IGtleGVjIGNvbnNvbGU9dHR5UzAsMTE1MjAwCj4gPiA+ID4gPiA+ID4g
+ICBrZXhlY19sb2FkOiBlbnRyeSA9IDB4MTNmMTAwMCBmbGFncyA9IDB4MTAyMDAwMAo+ID4gPiA+
+ID4gPiA+ICAgbnJfc2VnbWVudHMgPSAyCj4gPiA+ID4gPiA+ID4gICBzZWdtZW50WzBdLmJ1ZiAg
+ID0gMHg3ZmZmZjIwMjgwMTAKPiA+ID4gPiA+ID4gPiAgIHNlZ21lbnRbMF0uYnVmc3ogPSAweDFi
+NTUyMDAKPiA+ID4gPiA+ID4gPiAgIHNlZ21lbnRbMF0ubWVtICAgPSAweDIwMDAwMAo+ID4gPiA+
+ID4gPiA+ICAgc2VnbWVudFswXS5tZW1zeiA9IDB4MWNhMDAwMAo+ID4gPiA+ID4gPiA+ICAgc2Vn
+bWVudFsxXS5idWYgICA9IDB4NTU1NTU3NDk4MDk4Cj4gPiA+ID4gPiA+ID4gICBzZWdtZW50WzFd
+LmJ1ZnN6ID0gMHgyMDAKPiA+ID4gPiA+ID4gPiAgIHNlZ21lbnRbMV0ubWVtICAgPSAweDFlYTAw
+MDAKPiA+ID4gPiA+ID4gPiAgIHNlZ21lbnRbMV0ubWVtc3ogPSAweDQwMDAKPiA+ID4gPiA+ID4g
+Pgo+ID4gPiA+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IFdBTkcgUnVpIDx3YW5ncnVpQGxvb25nc29u
+LmNuPgo+ID4gPiA+ID4gPiA+IC0tLQo+ID4gPiA+ID4gPiA+Cj4gPiA+ID4gPiA+ID4gdjEtPnYy
+Ogo+ID4gPiA+ID4gPiA+ICAqIEZpeCB0aGUgaXNzdWUgcHJldmVudGluZyBpdCBmcm9tIHdvcmtp
+bmcgb24gdGhlIHBoeXNpY2FsIG1hY2hpbmUuCj4gPiA+ID4gPiA+ID4KPiA+ID4gPiA+ID4gPiAg
+a2V4ZWMvYXJjaC9sb29uZ2FyY2gva2V4ZWMtbG9vbmdhcmNoLmMgfCAxMCArKysrKysrLS0tCj4g
+PiA+ID4gPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25z
+KC0pCj4gPiA+ID4gPiA+ID4KPiA+ID4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEva2V4ZWMvYXJjaC9s
+b29uZ2FyY2gva2V4ZWMtbG9vbmdhcmNoLmMgYi9rZXhlYy9hcmNoL2xvb25nYXJjaC9rZXhlYy1s
+b29uZ2FyY2guYwo+ID4gPiA+ID4gPiA+IGluZGV4IDYyZmY4ZmQuLjMyYTQyZDIgMTAwNjQ0Cj4g
+PiA+ID4gPiA+ID4gLS0tIGEva2V4ZWMvYXJjaC9sb29uZ2FyY2gva2V4ZWMtbG9vbmdhcmNoLmMK
+PiA+ID4gPiA+ID4gPiArKysgYi9rZXhlYy9hcmNoL2xvb25nYXJjaC9rZXhlYy1sb29uZ2FyY2gu
+Ywo+ID4gPiA+ID4gPiA+IEBAIC0yNjUsOSArMjY1LDEzIEBAIHVuc2lnbmVkIGxvbmcgbG9vbmdh
+cmNoX2xvY2F0ZV9rZXJuZWxfc2VnbWVudChzdHJ1Y3Qga2V4ZWNfaW5mbyAqaW5mbykKPiA+ID4g
+PiA+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICBob2xlID0gVUxPTkdfTUFYOwo+ID4gPiA+
+ID4gPiA+ICAgICAgICAgICAgICAgICB9Cj4gPiA+ID4gPiA+ID4gICAgICAgICB9IGVsc2Ugewo+
+ID4gPiA+ID4gPiA+IC0gICAgICAgICAgICAgICBob2xlID0gbG9jYXRlX2hvbGUoaW5mbywKPiA+
+ID4gPiA+ID4gPiAtICAgICAgICAgICAgICAgICAgICAgICBsb29uZ2FyY2hfbWVtLnRleHRfb2Zm
+c2V0ICsgbG9vbmdhcmNoX21lbS5pbWFnZV9zaXplLAo+ID4gPiA+ID4gPiA+IC0gICAgICAgICAg
+ICAgICAgICAgICAgIE1pQigxKSwgMCwgVUxPTkdfTUFYLCAxKTsKPiA+ID4gPiA+ID4gPiArICAg
+ICAgICAgICAgICAgdW5zaWduZWQgbG9uZyBob2xlX21pbjsKPiA+ID4gPiA+ID4gPiArICAgICAg
+ICAgICAgICAgdW5zaWduZWQgbG9uZyBob2xlX21heDsKPiA+ID4gPiA+ID4gPiArCj4gPiA+ID4g
+PiA+ID4gKyAgICAgICAgICAgICAgIGhvbGVfbWluID0gbG9vbmdhcmNoX21lbS50ZXh0X29mZnNl
+dDsKPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgaG9sZV9tYXggPSBob2xlX21pbiArIGxv
+b25nYXJjaF9tZW0uaW1hZ2Vfc2l6ZTsKPiA+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgaG9s
+ZSA9IGxvY2F0ZV9ob2xlKGluZm8sIGxvb25nYXJjaF9tZW0uaW1hZ2Vfc2l6ZSwKPiA+ID4gPiA+
+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICBNaUIoMSksIGhvbGVfbWluLCBob2xlX21heCwg
+MSk7Cj4gPiA+ID4gPiA+ID4KPiA+ID4gPiA+ID4gPiAgICAgICAgICAgICAgICAgaWYgKGhvbGUg
+PT0gVUxPTkdfTUFYKQo+ID4gPiA+ID4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIGRiZ3By
+aW50ZigiJXM6IGxvY2F0ZV9ob2xlIGZhaWxlZFxuIiwgX19mdW5jX18pOwo+ID4gPiA+ID4gPgo+
+ID4gPiA+ID4gPiBIaSwKPiA+ID4gPiA+ID4KPiA+ID4gPiA+ID4gUHJldmlvdXNseSB3aGVuIEkg
+cGxheWVkIHdpdGggdGhlIHpib290IGtlcm5lbCBvbiBhIGt2bSBndWVzdCBJCj4gPiA+ID4gPiA+
+IG5vdGljZWQgdGhpcyBpc3N1ZSwgYnV0IEkgZm91bmQgdGhhdCB0aGUgMXN0IDJNIG1lbW9yeSBp
+cyBtZW1ibG9jawo+ID4gPiA+ID4gPiByZXNlcnZlZCBidXQgaXQgaXMgbm90IHNob3duIGluIC9w
+cm9jL2lvbWVtIGFzIHJlc2VydmVkLCBJIHN1c3BlY3QgdGhlCj4gPiA+ID4gPiA+IDFzdCAyTSBp
+cyBub3QgdXNhYmxlIGZvciBzb21lIGFyY2ggc3BlY2lmaWMgcmVhc29uIGJ1dCBJIHdhcyBub3Qg
+c3VyZS4KPiA+ID4gPiA+ID4gICBCZWxvdyBwYXRjaCBjYW4gZml4IGl0IGJ1dCBkdWUgdG8gbXkg
+cnVzdHkga25vd2xlZGdlIG9mIGxvb25nYXJjaCBJCj4gPiA+ID4gPgo+ID4gPiA+ID4gQ29ycmVj
+dCBhYm91dCBteSBFbmdsaXNoIHdvcmRpbmcgYSBiaXQsIEkgbWVhbnQgYWJvdXQgcnVzdHkga25v
+d2xlZGdlCj4gPiA+ID4gPiBvZiBrZXhlYyBkZXRhaWxzIGFuZCBuZXdiaXNoIGxvb25nYXJjaCBr
+bm93bGVkZ2UsCj4gPiA+ID4gPiBCVFcsIHRoZSB3ZWJtYWlsIG9mdGVuIHJhbmRvbWx5IGNob29z
+ZSB0aGUgc2VuZGVyIGVtYWlsLCBJIHVzdWFsbHkgdXNlCj4gPiA+ID4gPiBhbm90aGVyIGVtYWls
+IGZvciBjb21tdW5pdHksIHRoYXQgaXMgRGF2ZSBZb3VuZyA8ZHlvdW5nQHJlZGhhdC5jb20+LAo+
+ID4gPiA+ID4gc2FtZSBwZXJzb24gOykKPiA+ID4gPiA+Cj4gPiA+ID4gPiBBbnl3YXksIHNpbmNl
+IHRoaXMgaXMgbG9vbmdhcmNoIHNwZWNpZmljLCBpdCB3b3VsZCBiZSBiZXR0ZXIgdG8gbGVhdmUK
+PiA+ID4gPiA+IHlvdSBndXlzIHRoZSBhcmNoIHBlb3BsZSB0byBzZWUgaG93IHRvIGZpeCBpdCBi
+ZXR0ZXIuCj4gPiA+ID4gPgo+ID4gPiA+ID4gPiBkaWQgbm90IHNlbmQgaXQgb3V0LiBJIHN1c3Bl
+Y3QgZXZlbiBpZiB0aGUgbG9jYXRlX2hvbGUgYXZvaWRzIHRoZQo+ID4gPiA+ID4gPiB3cm9uZyBt
+ZW1vcnksIGluIHRoZSAybmQga2VybmVsIGl0IGNvdWxkIHN0aWxsIGFjY2VzcyBpdC4gIENvcnJl
+Y3Q/Cj4gPiA+ID4KPiA+ID4gPiBJIGNhbiBjb25maXJtIHRoYXQgdGhlIG1hcHBpbmcgb2YgdGhl
+IDFzdCAyTSBpbiBpb21lbSBvbiBxZW11IGNhdXNlcwo+ID4gPiA+IGtleGVjIHRvIG5vdCB3b3Jr
+LiBUaGUgcm9vdCBjYXVzZSBpcyB0aGF0IExvb25nQXJjaCdzIHZtbGludXguZWZpIGNhbgo+ID4g
+PiA+IG9ubHkgcnVuIG9uIHRoZSBsaW5rIGFkZHJlc3MsIHdoaWNoIGlzIHdoeSBJIGxpbWl0IHRo
+ZSBhbGxvY2F0aW9uCj4gPiA+ID4gbG9jYXRpb24gb2YgdGhlIGtlcm5lbCBzZWdtZW50IHRocm91
+Z2ggaG9sZSBtaW4vbWF4LCBub3QgdGhlIGtlcm5lbCdzCj4gPiA+ID4gaW9tZW0uCj4gPiA+ID4K
+PiA+ID4gPiBIdWNhaSwgd2hhdCBkbyB5b3UgdGhpbmsgYWJvdXQgdGhlIDFzdCAyTSBtYXBwaW5n
+IHR5cGUgaW4gdGhlIGtlcm5lbD8KPiA+ID4gSSBhZ3JlZSB3aXRoIFdBTkcgUnVpLCB0aGlzIHNo
+b3VsZCBiZSBmaXhlZCBpbiBrZXhlYy10b29scywgYW5kCj4gPiA+ICdub21hcCcgaXMgbm90IGZv
+ciBzdWNoIGEgdXNhZ2UuCj4gPgo+ID4gQ2FuIEkgY29uZmlybSB0aGF0IHlvdSdkIHN0aWxsIGxp
+a2UgdGhpcyBwYXRjaCBhcHBsaWVkPwo+IFllcywgdjEgYnJlYWtzIHRoZSByZWFsIG1hY2hpbmUs
+IHdoaWxlIHYyIHdvcmtzIG9uIGJvdGggcmVhbCBtYWNoaW5lIGFuZCBxZW11LgoKVGhhbmtzLCBh
+cHBsaWVkLgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+a2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
+LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
