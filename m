@@ -4,83 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C920FC4167B
-	for <kexec@archiver.kernel.org>; Sat,  2 Dec 2023 10:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CA4AFC4167B
+	for <kexec@archiver.kernel.org>; Sat,  2 Dec 2023 12:30:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=z/iTzXGY38mDb+R6U7WSDwzKzLCsGXnKAvEf4j+DGOA=; b=lfcnX4SOSIPLGK
-	Aq/4xrl34KNc8TNdE+5lQOtsO/onTgwyxGzvTzji60z6PYSVyk7KBC4g04tAMN7vo+gH6wllVIg34
-	jIFBo3Dm7xL83qUpw3GdgfbSzlJRfdKSppVJ8x+02x2jm6BtzU0LFS/UST4Nvefp4Qc4UWMvmV7AE
-	SEjckp6G6j792N6i90EHgehqWTeWZFNzOFzNx42POOghDS1JO6nWqSYcqVqMZpZbXnOG9j51ykVGq
-	BMeDVWtozVBKDdRuhowOz8CTC7bQgEFcd6cfIq9CXUwinr+F9K/natUklVL5kwNd1RQY9e4XRHKBd
-	jHh3KyhezvS+4icrlLPg==;
+	List-Owner; bh=V+iluBAU0I+qBd8tk1X/qO6bMlZf3+Tn5z7F3S4WhoA=; b=0hNnva7rEdkQd4
+	+JOWLMk56D+cVdWt6LIpp3e8jpjTWU+7z7qymYFZrg4ORtsoCeCrrFqSYocsJ6hwboYLDwrRX4ZUQ
+	7wDM0O5vuQyT8vDmM2DwknxkXeDyOsD+iChltCs9p6K70naAtayYhsU1Hz9zyLjkpvyTCvkrI3Ce3
+	B78fEe8DEqgWsZOsOF1Df7LCRomwlPvhNeskURwx9RMpBbhFYaDWUfdKksUbbcRB/wt7OmCnc7Z1N
+	blNO/+LGpNa9lDmIXtK04e/dgEu/HipOYKZhNTR/RF5ybUHk2uZ3j8ph6GREgbui/gE28E0K7KTRY
+	VjfTxjN6TwprWxOo0cZQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r9Myg-00FQON-01;
-	Sat, 02 Dec 2023 10:12:02 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1r9P8z-00Fg7f-0b;
+	Sat, 02 Dec 2023 12:30:49 +0000
+Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r9Mye-00FQNR-1J
-	for kexec@bombadil.infradead.org;
-	Sat, 02 Dec 2023 10:12:00 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:MIME-Version
-	:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-Type:Content-ID:Content-Description;
-	bh=Om88+ItOYiUR9BkfKy8zBYVtfohIDz0iD3ZLER6hOtY=; b=IzZ03cABuKuctUjyMS84/HrbAa
-	6nSYxnCxAnWZUt+K3Vm+seR5ld0qUNoN6XgBIY3nGS6FpuAvthSwbnVp5PzhcTUJK8B5zfGggWjRq
-	DuNk0xf9zftWfcv4MDMWxm6jle24fnpIAAvYQoGFyKRx+CGDt/9nB2lkakSzpCY+XmmtL5fQCpvQD
-	94+USi9o1X/N1AdQmqRWH2e6El9TcDYWYaCgINGEUN1AyIQGn23F596dygwiLflf+kXqGV3QSkygr
-	FRM9GX1Hpkr/C8v/4Vf+aLRH4c2PBug2Mp1jOqkEk1WN5fAkAX+aALBt326lrgHQG9WAqECtMuKKs
-	rcMkkM7g==;
-Received: from mail.loongson.cn ([114.242.206.163])
-	by desiato.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r9MyW-003A05-11
+	id 1r9P8t-00Fg7E-2C
 	for kexec@lists.infradead.org;
-	Sat, 02 Dec 2023 10:11:57 +0000
-Received: from loongson.cn (unknown [112.22.232.197])
-	by gateway (Coremail) with SMTP id _____8CxfOrXAmtltl8+AA--.31534S3;
-	Sat, 02 Dec 2023 18:11:36 +0800 (CST)
-Received: from localhost.localdomain (unknown [112.22.232.197])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8Axm+TUAmtlkWdSAA--.53067S2;
-	Sat, 02 Dec 2023 18:11:35 +0800 (CST)
-From: WANG Rui <wangrui@loongson.cn>
-To: horms@kernel.org
-Cc: chenhuacai@kernel.org,
-	kexec@lists.infradead.org,
-	wangrui@loongson.cn
-Subject: Re: [PATCH] LoongArch: Load vmlinux.efi to the link address
-Date: Sat,  2 Dec 2023 18:11:28 +0800
-Message-ID: <20231202101128.133999-1-wangrui@loongson.cn>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231127134653.GC3354982@kernel.org>
-References: <20231127134653.GC3354982@kernel.org>
+	Sat, 02 Dec 2023 12:30:45 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 6CE0460B3B
+	for <kexec@lists.infradead.org>; Sat,  2 Dec 2023 12:30:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1761CC433C9
+	for <kexec@lists.infradead.org>; Sat,  2 Dec 2023 12:30:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701520240;
+	bh=D/+GUmX55OOmWdIp0QZMG5loKThjhznJ83WriSRLPIc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=LCXhtS/R4O0ufHGqGeZLPARBTzdRy6hDZdzQMwkyi2CFZXyE5gkQmH0T3bYnKLKCG
+	 VXa/5Eb5aDhx/qUza8QRpxOMAWV/Y71fWofKJzyEdtac3FSuOsh3Qo8XWJsXENCYbV
+	 HtzYfLytXRL6TbNdTiuvH5TbGrFaqGdL+175a8YzjYTYybR7G3DaEohMxHo6nlsTBa
+	 lcVGI5tVAxrPgMq4SmuIoWI2wVVybsnzsRL6Ds7q5bD/tAGp4ZJlgK/HR3w8J+Wj/C
+	 RrwjDv3BA+xRbWVnpGFjuQ/MoqWpgeEHPdKxXyL4MpwOrKgLcXId9V/jDzil+y62BX
+	 8B/bKpanAI/CA==
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-54c79968ffbso718033a12.3
+        for <kexec@lists.infradead.org>; Sat, 02 Dec 2023 04:30:40 -0800 (PST)
+X-Gm-Message-State: AOJu0YwyCTYn18NmuW5uW6YLkWmIgqka1GD50mppom90NxED/56V6oEy
+	l8aVX8IWOzCBGPGqTRZTbNfv1Wy9B6j2+Ci6/l8=
+X-Google-Smtp-Source: AGHT+IHvSA7y8iqiw0Xlb73rHm59uJa2yeBed5mZaJhyoUhstRQWNN09KQYX3MdAw6MuTeWqZHYofFCXh7nPF2k3QjY=
+X-Received: by 2002:aa7:ccda:0:b0:54c:4837:75a3 with SMTP id
+ y26-20020aa7ccda000000b0054c483775a3mr1721832edt.79.1701520238494; Sat, 02
+ Dec 2023 04:30:38 -0800 (PST)
 MIME-Version: 1.0
-X-CM-TRANSID: AQAAf8Axm+TUAmtlkWdSAA--.53067S2
-X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7WF48Aw18Cr13ArW7GF4kGrX_yoW8ZFWDpr
-	1UuFyrKr4xJr98GFyDt34Y9rn8J3sY9FW7JF1SkFWFkF4rJw1xXr45ta9rZF1Dtr45Zr1j
-	vFnrtw1YqF45GwcCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x
-	0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-	7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcV
-	C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
-	04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-	CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU1wL05UUUUU==
+References: <20231127134653.GC3354982@kernel.org> <20231202101128.133999-1-wangrui@loongson.cn>
+In-Reply-To: <20231202101128.133999-1-wangrui@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 2 Dec 2023 20:30:27 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4RBGAmvV8H3hwgadu=8WxdNkg_tWUj3sfxkrptSoUL9w@mail.gmail.com>
+Message-ID: <CAAhV-H4RBGAmvV8H3hwgadu=8WxdNkg_tWUj3sfxkrptSoUL9w@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Load vmlinux.efi to the link address
+To: WANG Rui <wangrui@loongson.cn>
+Cc: horms@kernel.org, kexec@lists.infradead.org
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231202_101153_627046_D8D8A07D 
-X-CRM114-Status: GOOD (  10.20  )
+X-CRM114-CacheID: sfid-20231202_043043_831206_8FB487A6 
+X-CRM114-Status: GOOD (  15.08  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -92,66 +74,53 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-> On Fri, Nov 24, 2023 at 11:46:58PM +0800, WANG Rui wrote:
-> > Currently, kexec loads vmlinux.efi to address 0 instead of the link
-> > address. This causes kexec to fail to boot the new vmlinux.efi on qemu.
-> > 
-> >   pei_loongarch_load: kernel_segment: 0000000000000000
-> >   pei_loongarch_load: kernel_entry:   00000000015dc000
-> >   pei_loongarch_load: image_size:     0000000001f30000
-> >   pei_loongarch_load: text_offset:    0000000000200000
-> >   pei_loongarch_load: phys_offset:    0000000000000000
-> >   pei_loongarch_load: PE format:      yes
-> >   loongarch_load_other_segments:333: command_line: kexec console=ttyS0,115200
-> >   kexec_load: entry = 0x15dc000 flags = 0x1020000
-> >   nr_segments = 2
-> >   segment[0].buf   = 0x7fffef664010
-> >   segment[0].bufsz = 0x1de9a00
-> >   segment[0].mem   = (nil)
-> >   segment[0].memsz = 0x1f30000
-> >   segment[1].buf   = 0x555555e480b0
-> >   segment[1].bufsz = 0x200
-> >   segment[1].mem   = 0x1f30000
-> >   segment[1].memsz = 0x4000
-> > 
-> > This patch adds `text_offset` when adding kernel segment to load
-> > vmlinux.efi to the link address.
-> > 
-> >   pei_loongarch_load: kernel_segment: 0000000000000000
-> >   pei_loongarch_load: kernel_entry:   00000000015dc000
-> >   pei_loongarch_load: image_size:     0000000001f30000
-> >   pei_loongarch_load: text_offset:    0000000000200000
-> >   pei_loongarch_load: phys_offset:    0000000000000000
-> >   pei_loongarch_load: PE format:      yes
-> >   loongarch_load_other_segments:335: command_line: kexec console=ttyS0,115200
-> >   kexec_load: entry = 0x15dc000 flags = 0x1020000
-> >   nr_segments = 2
-> >   segment[0].buf   = 0x7ffff1a04010
-> >   segment[0].bufsz = 0x1de9a00
-> >   segment[0].mem   = 0x200000
-> >   segment[0].memsz = 0x1f30000
-> >   segment[1].buf   = 0x555555b28098
-> >   segment[1].bufsz = 0x200
-> >   segment[1].mem   = 0x2130000
-> >   segment[1].memsz = 0x4000
-> > 
-> > Signed-off-by: WANG Rui <wangrui@loongson.cn>
-> 
-> Thanks, applied.
-
-Hi Simon,
-
-The patch v1 breaks the real machine. Could you please revert it and just keep v2? Thanks.
-
-- Rui
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gU2F0LCBEZWMgMiwgMjAyMyBhdCA2OjEx4oCvUE0gV0FORyBSdWkgPHdhbmdydWlAbG9vbmdz
+b24uY24+IHdyb3RlOgo+Cj4gPiBPbiBGcmksIE5vdiAyNCwgMjAyMyBhdCAxMTo0Njo1OFBNICsw
+ODAwLCBXQU5HIFJ1aSB3cm90ZToKPiA+ID4gQ3VycmVudGx5LCBrZXhlYyBsb2FkcyB2bWxpbnV4
+LmVmaSB0byBhZGRyZXNzIDAgaW5zdGVhZCBvZiB0aGUgbGluawo+ID4gPiBhZGRyZXNzLiBUaGlz
+IGNhdXNlcyBrZXhlYyB0byBmYWlsIHRvIGJvb3QgdGhlIG5ldyB2bWxpbnV4LmVmaSBvbiBxZW11
+Lgo+ID4gPgo+ID4gPiAgIHBlaV9sb29uZ2FyY2hfbG9hZDoga2VybmVsX3NlZ21lbnQ6IDAwMDAw
+MDAwMDAwMDAwMDAKPiA+ID4gICBwZWlfbG9vbmdhcmNoX2xvYWQ6IGtlcm5lbF9lbnRyeTogICAw
+MDAwMDAwMDAxNWRjMDAwCj4gPiA+ICAgcGVpX2xvb25nYXJjaF9sb2FkOiBpbWFnZV9zaXplOiAg
+ICAgMDAwMDAwMDAwMWYzMDAwMAo+ID4gPiAgIHBlaV9sb29uZ2FyY2hfbG9hZDogdGV4dF9vZmZz
+ZXQ6ICAgIDAwMDAwMDAwMDAyMDAwMDAKPiA+ID4gICBwZWlfbG9vbmdhcmNoX2xvYWQ6IHBoeXNf
+b2Zmc2V0OiAgICAwMDAwMDAwMDAwMDAwMDAwCj4gPiA+ICAgcGVpX2xvb25nYXJjaF9sb2FkOiBQ
+RSBmb3JtYXQ6ICAgICAgeWVzCj4gPiA+ICAgbG9vbmdhcmNoX2xvYWRfb3RoZXJfc2VnbWVudHM6
+MzMzOiBjb21tYW5kX2xpbmU6IGtleGVjIGNvbnNvbGU9dHR5UzAsMTE1MjAwCj4gPiA+ICAga2V4
+ZWNfbG9hZDogZW50cnkgPSAweDE1ZGMwMDAgZmxhZ3MgPSAweDEwMjAwMDAKPiA+ID4gICBucl9z
+ZWdtZW50cyA9IDIKPiA+ID4gICBzZWdtZW50WzBdLmJ1ZiAgID0gMHg3ZmZmZWY2NjQwMTAKPiA+
+ID4gICBzZWdtZW50WzBdLmJ1ZnN6ID0gMHgxZGU5YTAwCj4gPiA+ICAgc2VnbWVudFswXS5tZW0g
+ICA9IChuaWwpCj4gPiA+ICAgc2VnbWVudFswXS5tZW1zeiA9IDB4MWYzMDAwMAo+ID4gPiAgIHNl
+Z21lbnRbMV0uYnVmICAgPSAweDU1NTU1NWU0ODBiMAo+ID4gPiAgIHNlZ21lbnRbMV0uYnVmc3og
+PSAweDIwMAo+ID4gPiAgIHNlZ21lbnRbMV0ubWVtICAgPSAweDFmMzAwMDAKPiA+ID4gICBzZWdt
+ZW50WzFdLm1lbXN6ID0gMHg0MDAwCj4gPiA+Cj4gPiA+IFRoaXMgcGF0Y2ggYWRkcyBgdGV4dF9v
+ZmZzZXRgIHdoZW4gYWRkaW5nIGtlcm5lbCBzZWdtZW50IHRvIGxvYWQKPiA+ID4gdm1saW51eC5l
+ZmkgdG8gdGhlIGxpbmsgYWRkcmVzcy4KPiA+ID4KPiA+ID4gICBwZWlfbG9vbmdhcmNoX2xvYWQ6
+IGtlcm5lbF9zZWdtZW50OiAwMDAwMDAwMDAwMDAwMDAwCj4gPiA+ICAgcGVpX2xvb25nYXJjaF9s
+b2FkOiBrZXJuZWxfZW50cnk6ICAgMDAwMDAwMDAwMTVkYzAwMAo+ID4gPiAgIHBlaV9sb29uZ2Fy
+Y2hfbG9hZDogaW1hZ2Vfc2l6ZTogICAgIDAwMDAwMDAwMDFmMzAwMDAKPiA+ID4gICBwZWlfbG9v
+bmdhcmNoX2xvYWQ6IHRleHRfb2Zmc2V0OiAgICAwMDAwMDAwMDAwMjAwMDAwCj4gPiA+ICAgcGVp
+X2xvb25nYXJjaF9sb2FkOiBwaHlzX29mZnNldDogICAgMDAwMDAwMDAwMDAwMDAwMAo+ID4gPiAg
+IHBlaV9sb29uZ2FyY2hfbG9hZDogUEUgZm9ybWF0OiAgICAgIHllcwo+ID4gPiAgIGxvb25nYXJj
+aF9sb2FkX290aGVyX3NlZ21lbnRzOjMzNTogY29tbWFuZF9saW5lOiBrZXhlYyBjb25zb2xlPXR0
+eVMwLDExNTIwMAo+ID4gPiAgIGtleGVjX2xvYWQ6IGVudHJ5ID0gMHgxNWRjMDAwIGZsYWdzID0g
+MHgxMDIwMDAwCj4gPiA+ICAgbnJfc2VnbWVudHMgPSAyCj4gPiA+ICAgc2VnbWVudFswXS5idWYg
+ICA9IDB4N2ZmZmYxYTA0MDEwCj4gPiA+ICAgc2VnbWVudFswXS5idWZzeiA9IDB4MWRlOWEwMAo+
+ID4gPiAgIHNlZ21lbnRbMF0ubWVtICAgPSAweDIwMDAwMAo+ID4gPiAgIHNlZ21lbnRbMF0ubWVt
+c3ogPSAweDFmMzAwMDAKPiA+ID4gICBzZWdtZW50WzFdLmJ1ZiAgID0gMHg1NTU1NTViMjgwOTgK
+PiA+ID4gICBzZWdtZW50WzFdLmJ1ZnN6ID0gMHgyMDAKPiA+ID4gICBzZWdtZW50WzFdLm1lbSAg
+ID0gMHgyMTMwMDAwCj4gPiA+ICAgc2VnbWVudFsxXS5tZW1zeiA9IDB4NDAwMAo+ID4gPgo+ID4g
+PiBTaWduZWQtb2ZmLWJ5OiBXQU5HIFJ1aSA8d2FuZ3J1aUBsb29uZ3Nvbi5jbj4KPiA+Cj4gPiBU
+aGFua3MsIGFwcGxpZWQuCj4KPiBIaSBTaW1vbiwKPgo+IFRoZSBwYXRjaCB2MSBicmVha3MgdGhl
+IHJlYWwgbWFjaGluZS4gQ291bGQgeW91IHBsZWFzZSByZXZlcnQgaXQgYW5kIGp1c3Qga2VlcCB2
+Mj8gVGhhbmtzLgpIbW1tLCBpZiBwb3NzaWJsZSwgSSBzdWdnZXN0IHJlc2V0dGluZyB0aGUgb2xk
+IGNvbW1pdCBiZWZvcmUgdjEgYW5kCm9ubHkgYXBwbHkgdjIuLi4gVGhlIGN1cnJlbnQgc3RhdHVz
+IG1ha2VzIHRoZSBoaXN0b3J5IHZlcnkgdmVyeQpjb25mdXNpbmcuCgpIdWFjYWkKCj4KPiAtIFJ1
+aQo+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhl
+YyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
+cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
