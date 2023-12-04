@@ -4,138 +4,155 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 74F7EC47DA2
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 41E2FC4706C
 	for <kexec@archiver.kernel.org>; Fri, 12 Jan 2024 15:58:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=Lxr7rSV0q/DOlKG5FFoW4bm7aoK/C8HjCkbRUqmUkHw=; b=CIGiai3e5Wrhha
-	357XSRsFiGZ/lBgGUtCiFov1+CF/JKNVlsVi66Z4S1c26EJyky8occM1A9RVLfAZ1y90UnigO0F3M
-	zqEEsbngM6LLWvPzyATvHs/SU3dv+WPSnLaE9UpqPqEW3Gg0uTyk6VxeXZQgmRGlVRPCSEP8Esnu8
-	MpekZ3ncVMGI6YueSXasJKt+w5NBzaj3IvT8R0C9ru0LjueeE9bU5m9JSh65wGM8aoM+/P24f1/HT
-	paAnT7bx3KqqZ/+4al192TTU6VOx4Mko1rdsH/7nFqJzm7QFeoe8glotwdOKJfqHlZcq/QaJqyZFB
-	7updNZmhCHUdcAcdewBQ==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	List-Subscribe:List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:
+	References:In-Reply-To:MIME-Version:Message-ID:Subject:CC:To:From:Date:
+	Reply-To:Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date
+	:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=tgNEfPg7gP2H9J0MnVQZMGZ9aA0UDwfLopqkCN5JOqk=; b=0hTQeuqIf7ZXlNegvL3eIFTOwl
+	vyWLPRoVUdhPBmVNCV2Vc0IjNyWV6n077bOJw9jOUBAR176Ml6eRUxQdljB84XKxCJIjm5wijRFPw
+	xoeDLrEzEAwP5a4HjLLNLClkyeUG3bPtWBBylY2VpTYsYx0twoci+joyQqmIb/UUiLJNCmcFrYIfq
+	i1Pr9u/PBGAd3sy+y0saPTYeofFLGtb3yxtJjCrccRLZ1gcl8fxXvjvZUvkVguD/zaZk8kAlDJ0uU
+	HBEcyJ0mlWIH+wzfpPLSQv681ALxCOv1BukMkUiI3iA3r+9L8Mxniut+FbE2k5goeiUMA0sP2ryjR
+	YfDmrT4A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rOJvo-003E5g-1R;
-	Fri, 12 Jan 2024 15:58:52 +0000
-Received: from smtp-out1.suse.de ([2a07:de40:b251:101:10:150:64:1])
+	id 1rOJvn-003E5a-30;
+	Fri, 12 Jan 2024 15:58:51 +0000
+Received: from mailout1.w1.samsung.com ([210.118.77.11])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rAodQ-009c34-2B
+	id 1rA4kn-003Lep-2p
 	for kexec@lists.infradead.org;
-	Wed, 06 Dec 2023 09:56:06 +0000
-Received: from relay2.suse.de (unknown [149.44.160.134])
-	by smtp-out1.suse.de (Postfix) with ESMTP id 42E7E21F3E;
-	Wed,  6 Dec 2023 09:55:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1701856557; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=38oqPwid60kS6euzFAYt5HgeBK7Z4xKSWiLADq6sPMY=;
-	b=FKeU3LMZDT6YmQll0fLvK+UGD/SN8T7VGmFqsMDJZ9gc7NNDpRzn0VjFzbOasPnTTTwXm8
-	xPVqFHyCbTZoR93GW8VwteHKafJJLTvb8OSsW9IsNoI+X0Eqqx1X8Q9Bl9H/XbIz9boQoX
-	ZDeYZXSjELH22O3pRsNY1WMUbqC3LoU=
-Received: from suse.cz (unknown [10.100.201.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by relay2.suse.de (Postfix) with ESMTPS id 2839E2C153;
-	Wed,  6 Dec 2023 09:55:51 +0000 (UTC)
-Date: Wed, 6 Dec 2023 10:55:51 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: Joel Granados <j.granados@samsung.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, willy@infradead.org,
-	josh@joshtriplett.org, Kees Cook <keescook@chromium.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Iurii Zaikin <yzaikin@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
-	Andy Lutomirski <luto@amacapital.net>,
-	Will Drewry <wad@chromium.org>, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Balbir Singh <bsingharora@gmail.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
+	Mon, 04 Dec 2023 08:56:45 +0000
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20231204085631euoutp016a240434f45d9e7636d711aefd006cc2~dlR5hufzV1564315643euoutp01a;
+	Mon,  4 Dec 2023 08:56:31 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20231204085631euoutp016a240434f45d9e7636d711aefd006cc2~dlR5hufzV1564315643euoutp01a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1701680192;
+	bh=u5ANKrFOExU1KsjAsnD9uwlOV/7Kro3AtqZhq74Bz2E=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=H5q2Dmz8YbYW6HDuVxHJFTBQ750+njvkBd+kNR/cQIRXJCoP3s9LE17vWc0expRGf
+	 zkLEfnyEsJLvTppqN4ePO9ILunthWdlyfBuilsHn6Nc8vkzc5pCSEwjZTyBvRyIRbX
+	 MNlAQC1rB/12jRnNU4fZrP78QFg78wskifY9eZ6Q=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20231204085631eucas1p2162e2397cad033945a4f9963fd768b57~dlR5U3MvS2294222942eucas1p2E;
+	Mon,  4 Dec 2023 08:56:31 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges2new.samsung.com (EUCPMTA) with SMTP id 3B.2D.09814.F349D656; Mon,  4
+	Dec 2023 08:56:31 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20231204085631eucas1p1df3dd15338e0357dedfcc0b8aa64c2c8~dlR4zmVq01870318703eucas1p1Y;
+	Mon,  4 Dec 2023 08:56:31 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20231204085631eusmtrp223eb7e06b481cedd1f0e528a502c34c1~dlR4wvyTd0289802898eusmtrp2C;
+	Mon,  4 Dec 2023 08:56:31 +0000 (GMT)
+X-AuditID: cbfec7f4-727ff70000002656-d9-656d943f2436
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id FC.4E.09274.E349D656; Mon,  4
+	Dec 2023 08:56:30 +0000 (GMT)
+Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20231204085630eusmtip21962b3da8cd158ad7892bdaee280e817~dlR4etFaf2690626906eusmtip2b;
+	Mon,  4 Dec 2023 08:56:30 +0000 (GMT)
+Received: from localhost (106.110.32.133) by CAMSVWEXC02.scsc.local
+	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
+	Mon, 4 Dec 2023 08:56:30 +0000
+Date: Mon, 4 Dec 2023 09:56:28 +0100
+From: Joel Granados <j.granados@samsung.com>
+To: Petr Mladek <pmladek@suse.com>
+CC: Luis Chamberlain <mcgrof@kernel.org>, <willy@infradead.org>,
+	<josh@joshtriplett.org>, Kees Cook <keescook@chromium.org>, Eric Biederman
+	<ebiederm@xmission.com>, Iurii Zaikin <yzaikin@google.com>, Steven Rostedt
+	<rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+	<mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, John Stultz
+	<jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, Andy Lutomirski
+	<luto@amacapital.net>, Will Drewry <wad@chromium.org>, Ingo Molnar
+	<mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Juri Lelli
+	<juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall
+	<bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Daniel Bristot de
+	Oliveira <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>,
+	John Ogness <john.ogness@linutronix.de>, Sergey Senozhatsky
+	<senozhatsky@chromium.org>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, "David S. Miller"
+	<davem@davemloft.net>, Balbir Singh <bsingharora@gmail.com>, Alexei
+	Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, John
+	Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>,
 	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
+	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa
+	<jolsa@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<kexec@lists.infradead.org>, <linux-fsdevel@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <bpf@vger.kernel.org>
 Subject: Re: [PATCH 07/10] printk: Remove the now superfluous sentinel
  elements from ctl_table array
-Message-ID: <ZXBFJ3G9ERfI55Sc@alley>
-References: <20231107-jag-sysctl_remove_empty_elem_kernel-v1-0-e4ce1388dfa0@samsung.com>
- <20231107-jag-sysctl_remove_empty_elem_kernel-v1-7-e4ce1388dfa0@samsung.com>
- <CGME20231128140754eucas1p2cf2c17554954e94d0dc14967e1f5e750@eucas1p2.samsung.com>
- <ZWX0L4lV8TWOgcpv@alley>
- <20231204085628.pf7yxppacf4pm2cv@localhost>
+Message-ID: <20231204085628.pf7yxppacf4pm2cv@localhost>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20231204085628.pf7yxppacf4pm2cv@localhost>
-X-Spamd-Result: default: False [22.12 / 50.00];
-	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[149.44.160.134:from];
-	 RDNS_NONE(1.00)[];
-	 TO_DN_SOME(0.00)[];
-	 RWL_MAILSPIKE_GOOD(0.00)[149.44.160.134:from];
-	 HFILTER_HELO_IP_A(1.00)[relay2.suse.de];
-	 HFILTER_HELO_NORES_A_OR_MX(0.30)[relay2.suse.de];
-	 MX_GOOD(-0.01)[];
-	 RCVD_NO_TLS_LAST(0.10)[];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 R_DKIM_NA(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 FORGED_RECIPIENTS(2.00)[m:mgorman@suse.de,s:mgorman@imap.suse.de];
-	 BAYES_HAM(-3.00)[100.00%];
-	 RDNS_DNSFAIL(0.00)[];
-	 ARC_NA(0.00)[];
-	 R_SPF_FAIL(1.00)[-all];
-	 FROM_HAS_DN(0.00)[];
-	 DMARC_POLICY_QUARANTINE(1.50)[suse.com : No valid SPF, No valid DKIM,quarantine];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 NEURAL_SPAM_SHORT(2.12)[0.707];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 TO_MATCH_ENVRCPT_SOME(0.00)[];
-	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	 VIOLATED_DIRECT_SPF(3.50)[];
-	 NEURAL_SPAM_LONG(3.50)[1.000];
-	 RCPT_COUNT_TWELVE(0.00)[46];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 FREEMAIL_CC(0.00)[kernel.org,infradead.org,joshtriplett.org,chromium.org,xmission.com,google.com,goodmis.org,arm.com,linutronix.de,amacapital.net,redhat.com,linaro.org,suse.de,linux.ibm.com,intel.com,davemloft.net,gmail.com,iogearbox.net,linux.dev,vger.kernel.org,lists.infradead.org];
-	 HFILTER_HOSTNAME_UNKNOWN(2.50)[];
-	 SUSPICIOUS_RECIPS(1.50)[];
-	 RCVD_COUNT_TWO(0.00)[2]
-X-Spamd-Bar: ++++++++++++++++++++++
-X-Rspamd-Server: rspamd1
-Authentication-Results: smtp-out1.suse.de;
-	dkim=none;
-	dmarc=fail reason="No valid SPF, No valid DKIM" header.from=suse.com (policy=quarantine);
-	spf=fail (smtp-out1.suse.de: domain of pmladek@suse.com does not designate 149.44.160.134 as permitted sender) smtp.mailfrom=pmladek@suse.com
-X-Rspamd-Queue-Id: 42E7E21F3E
+In-Reply-To: <ZWX0L4lV8TWOgcpv@alley>
+X-Originating-IP: [106.110.32.133]
+X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
+	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
+X-Brightmail-Tracker: H4sIAAAAAAAAA2WTa0xTZxzG955z2lNwuENx+ApGl4osY8DELPAuG+IiiScxsi2azfBBh+sR
+	HFAclQ1Z3IrigDIccqcyrkqhRe4UWREYYxQERK4iBQYKIlCZCJUaLl3Lwblk337/y/O8z//D
+	y8P5DaQd77ToLBMq8gsScC0JVcuLLhev5GBmT4HWAS0tX8WR+rGWQIsvtCRaaNZwUc/Dfi5K
+	m44kUOZ0B4nyc5/jKLMrikCTCdU4MqqiSNSkaSDRhZuFGFL1ZQPUnCwzDXJC0EprOReN/JJC
+	oI64YKRu12Noqj4eQ3W32gjU+1smFzWXdhJIeUPCQdfvdWOoOLaIgwYTJgFKmnsEUL7cEfU0
+	5mBImbxKIk18I4aMD/UcVB8zhqG1gXIC9RhmCaQuz+MijXyViyorUnAU02xKWP3nEom0UiOJ
+	lg2md8aUKg4qqPXZ70r/pVsl6OKsYkBflXQTdFXRfYyulY2QdFT9EEnnVITRlYVOdH7dNEZL
+	B3twemjWk65QxHLp4YE6Lj135w5J50pScDohrxF8autr+ZGQCTr9LRP63r4vLQMeKUrJMzes
+	w42GMkwCpjdLgQUPUu/D0pJajpn5VCGAWXFuUmBp4kUAr5WscNhiAcCL90vwl4pKtRxnB3IA
+	G7OmyX+3oh4bAFtUApi28JQ0SwjKAda2PgBm5lLOsEs3vG61hRLAmeyRdSucKrSCxoSC9SQ2
+	1CmYnaFeF1hRHrAl/9IGW8O2jAlCCngmQTjMG/Zi0R7K13jmDQtqNxxMatlIKoB6XTyH5fPw
+	dtUQxvLUJlhz94BZCilvqBrfz7Zt4IymimR5OzTWZmPmZJBKArBh7SnJFkoACyL1G0Yfwqi+
+	iQ3Fx/Da8CTJmm6Gg0+szW3chImqNJxtW8GYn/jstiNUjuqIBLBL9p+7ZK/ukr26S7bu4wxz
+	1M+4/2u/CwtyZ3GWPWFJyd9EDiAVYCsTJg72Z8R7Rcx3rmK/YHGYyN/1q5DgCmD6V+1rmsWb
+	QD4z79oEMB5oAg4m8YMy5V1gR4hCRIxgi1XWUCDDtxL6nYtgQkNOhIYFMeImYM8jBFutdgt3
+	MnzK3+8sE8gwZ5jQl1OMZ2EnwSQ2O3JGrRUi78/jL/ePf6/udb+yPeabwXdupffrEoYdPNP7
+	4nZoAw5lyBeOJOoPpwmPOS51EkWxVJpBSu58ezpVYC+8ODtX6TufeMTtcEdGoNPRMosfRdGa
+	CM96jYrv07+vjjn4+nH76E2yQcmvsb4rv2e6nNROXFZsq3YZz2p11R8aBScbrngvH3jTvzA1
+	reqDT54c9VAeO26Y74Q/6K//XHywXiDXR0qKLj372te9zsc25ISn9J7ijeWWauVYdKrXF8/b
+	pyz8ubV2e7S7+FWfbetknC+cUupuM+Fv1eydqTZWnbc45/tHjHt6d02brUoz5e0h7x1QDPDF
+	2RHPVijha2UCQhzg5+aEh4r9/gGs7rVC0gQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA2VTe0xTVxzeuff2tnXpVh7OOzRqihCDs1Cehw3IXnGXjWwY4Y+NKXZyBwba
+	krbgNCOpDBPowqgRdBRGi4hQCkhbJGB5dIiAAwRB3o9VGCCPSYwg77JCWWay/77zfb/v+305
+	OYeB2ptxJ8Z5oZQSC/lxHHwP1mZpGTselCmgPJJHAuDyeg4Kjc+GMbi4OkyHL5tacNg90YvD
+	GzOXMZg7006HBfmvUJjbmYLBScVdFG5VpdBhY0sDHSZXFyOw6okKwKZMpVVQi+BGqw6HoxlZ
+	GGz/WQCNbUsInK5PR2Bt3UMM9tzLxWHTnQ4MastkNFjY/xiBpWkaGhxQTAJ47fkUgAVFrrDb
+	pEagNnOTDlvSTQjcmliiwfpUMwItfToMdq/MYdCou4nDlqJNHBr0WShMbbI2vPtgmQ6H5Vt0
+	uL5i3WPWVtHg7ZovP+SSf85vYmRpXikgc2SPMbJSM4iQNcpROplSP0Qn1foE0lDsRhbUziCk
+	fKAbJYfmAkl9SRpOjvTV4uTzR4/oZL4sCyUVN00g9J1vuAFiUYKUOhwjkkgDORE86Mnl+UOu
+	p7c/l+fld/p9Tx+Oe1BAFBV3PpESuwed5cbMJ/fT47V2P/ySt0CTgem35IDJINjehMFYhMrB
+	HoY9uxAQg/OvaDbhAKFb7N3FDsRGnxy3Db0ARMV0J7AdDIAwrtWh21MY+whR0zoOtjHOfo/o
+	nB/Z4R3ZHGJWNbqzAmUXs4gK9dWdWAf294Qq27hjYLH9iOaCK7up1xFi7PICZhPsiIfZf+1g
+	lJ1I9Go1VjPDivcTRRbGNs1kuxAD15pRW1UOsTSfvls7iXi5OQUUwEH5WpLytSTlf0k22o0Y
+	sMwg/6OPEbfz51AbDiTKyxcwNaCXAEcqQSKIFkg8uRK+QJIgjOaeEwn0wPq8q5pXK6uBZvYF
+	txEgDNAIjlid4xXaLuCECUVCiuPIyhuKpexZUfyLlyixKFKcEEdJGoGP9Rqvok57z4msf0Uo
+	jeT5evjwvH39PXz8fb04+1jB8al8e3Y0X0rFUlQ8Jf7XhzCYTjLkHi5N05TN/FhS1l349QXp
+	qXKD3Up+p/fnzxRffZut+cjFXa+eilT9NBBSfD+F2Q5PyEz3R5x5q4fMycODJPdogPwO+XHw
+	d8379/kd//3gk8lTISdrNe9KHfIzTjuHn5SGtY05Rzh+4pURUZaunO5v+OKzX5PWXHMOCPCD
+	PHYW0zB7bPypncteAQhgdq09CF8R1kVcMi9Pxwf3qGLbLqZ+amo9m3wrJTZ3Yi7cYglKr4ks
+	XwsLSbx1FFW8nXhmw/GNQ+FS9+scVivhXH0l7Y/WhiTxYVXliVBOqGnU883oLtehmqceHTfO
+	cGv/jvugB/ntgmkjTJu6uN5h9tDrCqJ0geIiDiaJ4fPcULGE/w/p9W0ycwQAAA==
+X-CMS-MailID: 20231204085631eucas1p1df3dd15338e0357dedfcc0b8aa64c2c8
+X-Msg-Generator: CA
+X-RootMTR: 20231128140754eucas1p2cf2c17554954e94d0dc14967e1f5e750
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20231128140754eucas1p2cf2c17554954e94d0dc14967e1f5e750
+References: <20231107-jag-sysctl_remove_empty_elem_kernel-v1-0-e4ce1388dfa0@samsung.com>
+	<20231107-jag-sysctl_remove_empty_elem_kernel-v1-7-e4ce1388dfa0@samsung.com>
+	<CGME20231128140754eucas1p2cf2c17554954e94d0dc14967e1f5e750@eucas1p2.samsung.com>
+	<ZWX0L4lV8TWOgcpv@alley>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231206_015604_865286_29584014 
-X-CRM114-Status: GOOD (  21.15  )
+X-CRM114-CacheID: sfid-20231204_005638_523135_589FE04F 
+X-CRM114-Status: GOOD (  21.42  )
 X-Mailman-Approved-At: Fri, 12 Jan 2024 07:58:47 -0800
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -148,49 +165,91 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============6607188145225601149=="
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon 2023-12-04 09:56:28, Joel Granados wrote:
-> Hey Petr
-> 
-> I missed this message somehow....
-> 
-> On Tue, Nov 28, 2023 at 03:07:43PM +0100, Petr Mladek wrote:
-> > On Tue 2023-11-07 14:45:07, Joel Granados via B4 Relay wrote:
-> > > From: Joel Granados <j.granados@samsung.com>
-> > > 
-> > > This commit comes at the tail end of a greater effort to remove the
-> > > empty elements at the end of the ctl_table arrays (sentinels) which
-> > > will reduce the overall build time size of the kernel and run time
-> > > memory bloat by ~64 bytes per sentinel (further information Link :
-> > > https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
-> > > 
-> > > rm sentinel element from printk_sysctls
-> > > 
-> > > Signed-off-by: Joel Granados <j.granados@samsung.com>
-> > 
-> > I am a bit sceptical if the size and time reduction is worth the
-> > effort. I feel that this change makes the access a bit less secure.
-> In what way "less secure"? Can you expand on that?
-> 
-> Notice that if you pass a pointer to the register functions, you will
-> get a warning/error on compilation.
+--===============6607188145225601149==
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="m334zefgib4niiyw"
+Content-Disposition: inline
 
-I have vague memories that some arrays were not static or the length
-has been somehow manipulated. But I might be wrong.
+--m334zefgib4niiyw
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-You are right that it should be safe with the static arrays.
-And the NULL sentinel might be more error-prone after all.
+Hey Petr
 
-Let's forget my mumbles.
+I missed this message somehow....
 
-Best Regards,
-Petr
+On Tue, Nov 28, 2023 at 03:07:43PM +0100, Petr Mladek wrote:
+> On Tue 2023-11-07 14:45:07, Joel Granados via B4 Relay wrote:
+> > From: Joel Granados <j.granados@samsung.com>
+> >=20
+> > This commit comes at the tail end of a greater effort to remove the
+> > empty elements at the end of the ctl_table arrays (sentinels) which
+> > will reduce the overall build time size of the kernel and run time
+> > memory bloat by ~64 bytes per sentinel (further information Link :
+> > https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
+> >=20
+> > rm sentinel element from printk_sysctls
+> >=20
+> > Signed-off-by: Joel Granados <j.granados@samsung.com>
+>=20
+> I am a bit sceptical if the size and time reduction is worth the
+> effort. I feel that this change makes the access a bit less secure.
+In what way "less secure"? Can you expand on that?
+
+Notice that if you pass a pointer to the register functions, you will
+get a warning/error on compilation.
+
+>=20
+> Well, almost all arrays are static so that it should just work.
+> The patch does what it says. Feel free to use:
+Thx for the review. will do.
+
+>=20
+> Reviewed-by: Petr Mladek <pmladek@suse.com>
+>=20
+> Best Regards,
+> Petr
+
+--=20
+
+Joel Granados
+
+--m334zefgib4niiyw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGyBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmVtlDwACgkQupfNUreW
+QU/0vwv4mRGhlKpI+9BXVTufcXHymQXIplwD2Pt0XmXATxwELEZSDrAhkOMuZnOE
+w+JGFka7O9MPuE5kHhtxfBDqZd2olH0zzMSxkXsHAd6nNXCdAXLpkPojlYwSfSNC
+xDaXiEtaHhAaW/U0WpLEBHL539sYYukjf5P9qha6XORNvA5y1B1g1pUWMrBUXiyF
+S5+txanFQmwulj1Kre/SFy95147+/UPo4SPAYl+9GIyN9KLKQ0++EKLLIRRRV09v
+I2zJYqkDyyZpbIPq7jj9XIceNk7MDhNdMIUP1pN4djlrt3IKWYnuJXBuiRWFIJ28
+LbpVTzIGfnH5IzaRU0547P/5U7QlIVSuUnh7l1cSdarm+sk3k4uRTogeaDtWKgho
+wBL9rnHITIlj7ZhLtFlm4CMWbed0rTeph4Vq1p/vvE9HFnaNQMtmM5GYBV7C5L5P
+cCpdN9/VZ9i32K8zh9jLFAk7xDBwqTd1yM07kFfUE1CZ/kk2LUrxLLgw8LbipU/z
+lmG1tIc=
+=c3TB
+-----END PGP SIGNATURE-----
+
+--m334zefgib4niiyw--
+
+
+--===============6607188145225601149==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============6607188145225601149==--
+
