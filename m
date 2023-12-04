@@ -4,59 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8A893C4167B
-	for <kexec@archiver.kernel.org>; Mon,  4 Dec 2023 10:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B4A74C4167B
+	for <kexec@archiver.kernel.org>; Mon,  4 Dec 2023 10:52:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=h0q4+MHRlOl6qQtk63z4sE9o56aP3FG/jOYts7palIc=; b=M56wweXkXPprHf
-	7KdksZPfuqMs1PwOdMWLlKm7LGJCJelPMLA2idcmehzGGJJ7roedltgaGRhUeW+l3MveL/0WBiTWa
-	I1y+e18hP8vc+rzHuSIKjWtON8a9JLLRfKN22akAIQa3i6XojCK7XBo5/RejnPUbbR4WAxKPKLszT
-	vcUJyrV7GWkxafM60JHL8Lg2YINOjm/RSqoTZUmIsptBz9UgsO8/+bkQDc8v3XJ5oaMkTGfU6K6LY
-	/y+PkyodjtXT7dVoCtLnLsVcz9hITs2Yxv4wUfVSxA5pVOKyksgjFhqvGWQaD7Ble4J6suLU4lzY7
-	vbwHcDIWoSTzfvVOdqRQ==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=Qk25CLolSi01ImF/JrLOQgpv7HgwCurNfK5O0DAfVBs=; b=oZveJg3VE1ZtZh
+	DQ5EBF2yXEklIStYTH9qFROwABhhfpjD3JdtSgFlvGOuoFcZWvn09d3ZRkAyuqfEYE8B8tS8egWge
+	s0UBoBKToO2aga7KHsQJTGXqSPz21HaNOtCWmi21xJLE7u/8hGJvNxcNyA9XSu3hHsyMu6PrEbHrV
+	1UfAYPFwJseDc6NQufSNV3ewp7EC0YKx+xwO6tToKHwGbLgxzD3SL7MnzC6tC9ei5Mb3xvRwFHSTL
+	baYxKPrp8PqFFnGQ6uWtPUxtu6NWojLT2qCcmBK5VGIniDk0XrSvn44v3az1M8Qknsaj9zP/1LOzU
+	KYI/E73LBZ0h/P251O0A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rA6Yj-003aDD-0o;
-	Mon, 04 Dec 2023 10:52:17 +0000
+	id 1rA6Yr-003aEl-25;
+	Mon, 04 Dec 2023 10:52:25 +0000
 Received: from bg4.exmail.qq.com ([43.155.67.158])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rA6Yc-003aC7-1y
+	id 1rA6Yh-003aCg-0S
 	for kexec@lists.infradead.org;
-	Mon, 04 Dec 2023 10:52:15 +0000
-X-QQ-mid: bizesmtp69t1701687053t1o89dv3
+	Mon, 04 Dec 2023 10:52:23 +0000
+X-QQ-mid: bizesmtp90t1701687117tuvc74ky
 Received: from localhost.localdomain ( [58.240.82.166])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Mon, 04 Dec 2023 18:50:51 +0800 (CST)
+	id ; Mon, 04 Dec 2023 18:51:56 +0800 (CST)
 X-QQ-SSF: 01200000000000B0B000000A0000000
-X-QQ-FEAT: f+ZzKTjTzV3mOc4r9pIU5vH4SLyW7FoVwXxvAeKIHBykbPDEKYM6jbFqIH73M
-	RIiAsR8da2wHfeTdtdwxS8ETE2q1KNkcBrW6JdLGzRwrnB0CePoH2FmVBrTbr44R7xWNsz8
-	vzoMVJ15TGTAkLFoZyF3I901NaoSy7v8eo+K3JOV1xjnd1tQFWxeb+D7Hsfj8fJJNe6uKwF
-	LBxN7mdzL6kGgAMKO2ojuILRTQ6kLtOGx2Qu4ggBO7a6MYZpx6OV/Vmc/on3akX1Rwd4ayt
-	Afdw30VViHhF+A9k3Z1Eh8pbNF5f1nqmRSUymqe4kt1DKilswxY4QaRgtbawGFOn+i3RCRB
-	NXSOiZKm2uk6o1as1nPtfi3HFaf+w==
+X-QQ-FEAT: 3M0okmaRx3jGwsqZsDHZwgl+psWHX2umXDNQx7NhgvakzCdZZ5I9iohFIH+Pe
+	WtVpd5FMB6rIgLKr0pFtElw4LsK8ZGA9qGw4xZQeXooTOcS1H1oXo4vtiMg8rTQBa80eY7J
+	lczxaszlMTAH/xgXMlo1i/HxT9wKjI2SHwCgFUNIVhkR/07N7izxpS096XWX0/xgHGmr7NV
+	L+pqwHKFmqfX9OtVtY/DgGYBTYXjcqM766BWTXU/xzqCyF4bY6VZPCGc8fV6GIuOrW0dL0u
+	L7kr+azXPCdt6wKbxmMs74PqLDia0d/Jpp0d35hLsGbrfEfHs6Kviw+wBEzOqgQnLa92iKj
+	RfkHJvZcyrxtAlLaWlSjWB7YoqQXeYn8o4DFeYIqPo0q02AqUQ=
 X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 3060734497869231758
+X-BIZMAIL-ID: 212379679253063436
 From: Song Shuai <songshuaishuai@tinylab.org>
 To: xianting.tian@linux.alibaba.com,
 	k-hagio-ab@nec.com,
 	kexec@lists.infradead.org,
 	crash-utility@redhat.com
 Cc: Song Shuai <songshuaishuai@tinylab.org>
-Subject: [PATCH 1/2] [Crash-utility] RISCV64: Dump NT_PRSTATUS in 'help -n'
-Date: Mon,  4 Dec 2023 18:50:14 +0800
-Message-Id: <20231204105015.2341055-1-songshuaishuai@tinylab.org>
+Subject: [PATCH 2/2] [Crash-utility] RISCV64: Fix 'bt' output when no ra on the stack top
+Date: Mon,  4 Dec 2023 18:50:15 +0800
+Message-Id: <20231204105015.2341055-2-songshuaishuai@tinylab.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20231204105015.2341055-1-songshuaishuai@tinylab.org>
+References: <20231204105015.2341055-1-songshuaishuai@tinylab.org>
 MIME-Version: 1.0
 X-QQ-SENDSIZE: 520
 Feedback-ID: bizesmtp:tinylab.org:qybglogicsvrsz:qybglogicsvrsz4a-0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231204_025211_064902_FD278DDE 
-X-CRM114-Status: UNSURE (   8.60  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20231204_025215_483710_665DA586 
+X-CRM114-Status: GOOD (  12.61  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -73,156 +74,86 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-With the patch we can get full dump of "struct elf_prstatus" in 'help -n':
+Same as the Linux commit f766f77a74f5 ("riscv/stacktrace: Fix
+stack output without ra on the stack top").
+
+When a function doesn't have a callee, then it will not
+push ra into the stack, such as lkdtm functions, so
+correct the FP of the second frame and use pt_regs to get
+the right PC of the second frame.
+
+TEST:
+
+Before this patch, the `bt -f` outputs only the first frame with
+the wrong PC and FP of next frame:
 
 ```
-crash> help -n
-<snip>
-Elf64_Nhdr:
-               n_namesz: 5 ("CORE")
-               n_descsz: 376
-                 n_type: 1 (NT_PRSTATUS)
-                         si.signo: 0  si.code: 0  si.errno: 0
-                         cursig: 0  sigpend: 0  sighold: 0
-                         pid: 0  ppid: 0  pgrp: 0  sid:0
-                         utime: 0.000000  stime: 0.000000
-                         cutime: 0.000000  cstime: 0.000000
-                         epc: ffffffff80822426   ra: ffffffff80822422 sp: ff20000000093f20
-                          gp: ffffffff814ee2a8   tp: ff60000000104800 t0: ff2000000027bb18
-                          t1: 0000000000000088   t2: 0000000000000000 s0: ff20000000093f30
-                          s1: 0000000000000001   a0: 0000000000000004 a1: 0000000000000008
-                          a2: ff6000009e9f0000   a3: 0000000000005fe4 a4: ffffffff80c1c290
-                          a5: 0000000000000000   a6: ff6000001f60a6b0 a7: 00000088e4450548
-                          s2: ffffffff814ef220   s3: 0000000000000002 s4: 000000000000003f
-                          s8: ffffffff814ef3d8   s9: 0000000000000000 s10: ffffffff814ef0d0
-                         s11: ffffffff81525d10   t3: ffffffff80c1d840 t4: 0000000000000000
-                          t5: 0000000000000001   t6: 00000000000000aa
-                         0000000000000000 0000000000000000
-                         0000000000000000 0000000000000000
-                         0000000000000000 0000000000000000
-                         0000000000000000 0000000000000000
-                         0000000000000000 0000000000000000
-                         0000000000000000 0000000000000000
-                         0000000000000000 0000000000000000
-                         ffffffff80822426 ffffffff80822422
-                         ff20000000093f20 ffffffff814ee2a8
-                         ff60000000104800 ff2000000027bb18
-<snip>
+crash> bt -f
+PID: 1        TASK: ff600000000e0000  CPU: 1    COMMAND: "sh"
+ #0 [ff20000000013cf0] lkdtm_EXCEPTION at ffffffff805303c0
+    [PC: ffffffff805303c0 RA: ff20000000013d10 SP: ff20000000013cf0 SIZE: 16] <- wrong next PC
+    ff20000000013cf0: 0000000000000001 ff20000000013d10 <- next FP
+    ff20000000013d00: ff20000000013d40
+crash>
 ```
+After this patch, the `bt` outputs the full frames:
 
+```
+crash> bt
+PID: 1        TASK: ff600000000e0000  CPU: 1    COMMAND: "sh"
+ #0 [ff20000000013cf0] lkdtm_EXCEPTION at ffffffff805303c0
+ #1 [ff20000000013d00] lkdtm_do_action at ffffffff8052fe36
+ #2 [ff20000000013d10] direct_entry at ffffffff80530018
+ #3 [ff20000000013d40] full_proxy_write at ffffffff80305044
+ #4 [ff20000000013d80] vfs_write at ffffffff801b68b4
+ #5 [ff20000000013e30] ksys_write at ffffffff801b6c4a
+ #6 [ff20000000013e80] __riscv_sys_write at ffffffff801b6cc4
+ #7 [ff20000000013e90] do_trap_ecall_u at ffffffff80836798
+crash>
+```
 Signed-off-by: Song Shuai <songshuaishuai@tinylab.org>
 ---
- netdump.c | 83 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 83 insertions(+)
+ riscv64.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/netdump.c b/netdump.c
-index 3907863..b266b27 100644
---- a/netdump.c
-+++ b/netdump.c
-@@ -2578,6 +2578,8 @@ dump_Elf64_Nhdr(Elf64_Off offset, int store)
- 				display_ELF_note(EM_PPC64, PRSTATUS_NOTE, note, nd->ofp);
- 			if (machine_type("ARM64") && (note->n_type == NT_PRSTATUS))
- 				display_ELF_note(EM_AARCH64, PRSTATUS_NOTE, note, nd->ofp);
-+			if (machine_type("RISCV64") && (note->n_type == NT_PRSTATUS))
-+				display_ELF_note(EM_RISCV, PRSTATUS_NOTE, note, nd->ofp);
- 		}
- 		for (i = lf = 0; i < note->n_descsz/sizeof(ulonglong); i++) {
- 			if (((i%2)==0)) {
-@@ -3399,6 +3401,79 @@ display_prstatus_arm64(void *note_ptr, FILE *ofp)
- 		space(sp), pr->pr_reg[33], pr->pr_fpvalid);
- }
+diff --git a/riscv64.c b/riscv64.c
+index 0aaa14b..872be59 100644
+--- a/riscv64.c
++++ b/riscv64.c
+@@ -747,11 +747,14 @@ riscv64_back_trace_cmd(struct bt_info *bt)
+ {
+ 	struct riscv64_unwind_frame current, previous;
+ 	struct stackframe curr_frame;
++	struct riscv64_register * regs;
+ 	int level = 0;
  
-+struct riscv64_elf_siginfo {
-+    int si_signo;
-+    int si_code;
-+    int si_errno;
-+};
-+
-+struct riscv64_elf_prstatus {
-+    struct riscv64_elf_siginfo pr_info;
-+    short pr_cursig;
-+    unsigned long pr_sigpend;
-+    unsigned long pr_sighold;
-+    pid_t pr_pid;
-+    pid_t pr_ppid;
-+    pid_t pr_pgrp;
-+    pid_t pr_sid;
-+    struct timeval pr_utime;
-+    struct timeval pr_stime;
-+    struct timeval pr_cutime;
-+    struct timeval pr_cstime;
-+/*  elf_gregset_t pr_reg; => typedef struct user_regs_struct elf_gregset_t; */
-+    unsigned long pr_reg[32];
-+    int pr_fpvalid;
-+};
-+
-+static void
-+display_prstatus_riscv64(void *note_ptr, FILE *ofp)
-+{
-+	struct riscv64_elf_prstatus *pr;
-+	Elf64_Nhdr *note;
-+	int sp;
-+
-+	note = (Elf64_Nhdr *)note_ptr;
-+	pr = (struct riscv64_elf_prstatus *)(
-+		(char *)note + sizeof(Elf64_Nhdr) + note->n_namesz);
-+	pr = (struct riscv64_elf_prstatus *)roundup((ulong)pr, 4);
-+	sp = nd->num_prstatus_notes ? 25 : 22;
-+
-+	fprintf(ofp,
-+		"%ssi.signo: %d  si.code: %d  si.errno: %d\n"
-+		"%scursig: %d  sigpend: %lx  sighold: %lx\n"
-+		"%spid: %d  ppid: %d  pgrp: %d  sid:%d\n"
-+		"%sutime: %01lld.%06d  stime: %01lld.%06d\n"
-+		"%scutime: %01lld.%06d  cstime: %01lld.%06d\n",
-+		space(sp), pr->pr_info.si_signo, pr->pr_info.si_code, pr->pr_info.si_errno,
-+		space(sp), pr->pr_cursig, pr->pr_sigpend, pr->pr_sighold,
-+		space(sp), pr->pr_pid, pr->pr_ppid, pr->pr_pgrp, pr->pr_sid,
-+		space(sp), (long long)pr->pr_utime.tv_sec, (int)pr->pr_utime.tv_usec,
-+		(long long)pr->pr_stime.tv_sec, (int)pr->pr_stime.tv_usec,
-+		space(sp), (long long)pr->pr_cutime.tv_sec, (int)pr->pr_cutime.tv_usec,
-+		(long long)pr->pr_cstime.tv_sec, (int)pr->pr_cstime.tv_usec);
-+	fprintf(ofp,
-+		"%sepc: %016lx   ra: %016lx   sp: %016lx\n"
-+		"%s gp: %016lx   tp: %016lx   t0: %016lx\n"
-+		"%s t1: %016lx   t2: %016lx   s0: %016lx\n"
-+		"%s s1: %016lx   a0: %016lx   a1: %016lx\n"
-+		"%s a2: %016lx   a3: %016lx   a4: %016lx\n"
-+		"%s a5: %016lx   a6: %016lx   a7: %016lx\n"
-+		"%s s2: %016lx   s3: %016lx   s4: %016lx\n"
-+		"%s s8: %016lx   s9: %016lx  s10: %016lx\n"
-+		"%ss11: %016lx   t3: %016lx   t4: %016lx\n"
-+		"%s t5: %016lx   t6: %016lx\n",
-+		space(sp), pr->pr_reg[0], pr->pr_reg[1], pr->pr_reg[2],
-+		space(sp), pr->pr_reg[3], pr->pr_reg[4], pr->pr_reg[5],
-+		space(sp), pr->pr_reg[6], pr->pr_reg[7], pr->pr_reg[8],
-+		space(sp), pr->pr_reg[9], pr->pr_reg[10], pr->pr_reg[11],
-+		space(sp), pr->pr_reg[12], pr->pr_reg[13], pr->pr_reg[14],
-+		space(sp), pr->pr_reg[15], pr->pr_reg[16], pr->pr_reg[17],
-+		space(sp), pr->pr_reg[18], pr->pr_reg[19], pr->pr_reg[20],
-+		space(sp), pr->pr_reg[21], pr->pr_reg[22], pr->pr_reg[23],
-+		space(sp), pr->pr_reg[24], pr->pr_reg[25], pr->pr_reg[26],
-+		space(sp), pr->pr_reg[27], pr->pr_reg[28], pr->pr_reg[29],
-+		space(sp), pr->pr_reg[30], pr->pr_reg[31]);
-+}
- 
- void
- display_ELF_note(int machine, int type, void *note, FILE *ofp)
-@@ -3449,6 +3524,14 @@ display_ELF_note(int machine, int type, void *note, FILE *ofp)
- 			break;
- 		}
- 		break;
-+	case EM_RISCV:
-+		switch (type)
-+		{
-+		case PRSTATUS_NOTE:
-+			display_prstatus_riscv64(note, ofp);
-+			break;
-+		}
-+		break;
- 
- 	default:
+ 	if (bt->flags & BT_REGS_NOT_FOUND)
  		return;
+ 
++	regs = (struct riscv64_register *) bt->machdep;
++
+ 	current.pc = bt->instptr;
+ 	current.sp = bt->stkptr;
+ 	current.fp = bt->frameptr;
+@@ -788,8 +791,16 @@ riscv64_back_trace_cmd(struct bt_info *bt)
+ 		    sizeof(curr_frame), "get stack frame", RETURN_ON_ERROR))
+ 			return;
+ 
+-		previous.pc = curr_frame.ra;
+-		previous.fp = curr_frame.fp;
++		/* correct PC and FP of the second frame when the first frame has no callee */
++
++		if (regs && (regs->regs[RISCV64_REGS_EPC] == current.pc) && curr_frame.fp & 0x7){
++			previous.pc = regs->regs[RISCV64_REGS_RA];
++			previous.fp = curr_frame.ra;
++		} else {
++			previous.pc = curr_frame.ra;
++			previous.fp = curr_frame.fp;
++		}
++
+ 		previous.sp = current.fp;
+ 
+ 		riscv64_dump_backtrace_entry(bt, symbol, &current, &previous, level++);
 -- 
 2.20.1
 
