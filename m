@@ -4,67 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 17F74C4167B
-	for <kexec@archiver.kernel.org>; Mon,  4 Dec 2023 02:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D767AC4167B
+	for <kexec@archiver.kernel.org>; Mon,  4 Dec 2023 02:19:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Subject:Cc:To:
-	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=F4Djx45D1VK2d+7R5y8lSKTkN9iC8J9WDqRhX/JfW8E=; b=LUD4Oh1bF3xZa2
-	+s+HsOmf915se+FaHqpNm9hy9ltikk1CRhVAMS5UIcKpjshYnb1GEwI9WAEHW8H0i3HQ10nM1ZOxW
-	lm8/yqcFYeEd6TVYwl3uAhoOUrMo7CJIKHBRmEqEbFCYKL51RKN3F3Qfvj5yNziCoOktsx7KoT3yH
-	1SpYXdWIGXbAsjnxVNUlNVYKtbD1l0OCZVBPJW250EEM1dI37n2uR4j4hxcKYCbCJR1iTi2ruKp4r
-	2mIglZpjTDv98I8rqWyWirYimmFMNoO4L0caGAkTxy0KONiS9cis6Hl8n8BWG79D1/aCCqZGB6KKv
-	7sO2bC5A4TnGP9oNZkRg==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=/ZTmSFs5hS0pZdJf/Lm5g38Reg+R+pj626FqybBMDn8=; b=SEph38bYK8ifQB
+	pr84e6+5vzjS8PLNs+m9GFjbNag93kjE9ufWexBg7CohgmIeZcDcTfkQtOfLe3bzMwU5pfKFrQdZi
+	3lyinE5/HRFgAL/RSkpC7q2Fk4fYxMq0N/RQHzppf+L/i74o9X9PP7NvD0dgBESfZeNzJH4NyiJG4
+	MvQX+uFsSyN0eCRDmN6/yQBglZcnzBrHGyxqMGNmt2JICu6Tt9mGpe5NmwVE7Y/dbcmKTQIOG9Pso
+	TgKEFSnO3DA7ag5mErTgDH5fOmhyse8aAys49ldafx5TRyTE1s02vpmHsI1qIiRzZoddEwCoGGofc
+	85VF+kPIuN4ROrvL59Ug==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1r9yPf-002ovB-33;
-	Mon, 04 Dec 2023 02:10:23 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1r9yYp-002pM0-2G;
+	Mon, 04 Dec 2023 02:19:52 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r9yPY-002otn-26
+	id 1r9yYk-002pKk-2E
 	for kexec@lists.infradead.org;
-	Mon, 04 Dec 2023 02:10:19 +0000
+	Mon, 04 Dec 2023 02:19:48 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1701655814;
+	s=mimecast20190719; t=1701656385;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=7DpzMW9l8USWbr/TXZ2mqrkhEXzMDf/T6QpMPtMWGcY=;
-	b=Vn67vVh5w2GF+vZxq+FysbZrhpkVyF6tv3J4veCe9hS0ofoFEWXxAnSVuR/xe8rkR3kGhU
-	k4erXSnaWnWx9wOGuZgLhcPN8tp029/13k4epUIKFCCsK75gFrKxgxhDtC99gsWqrmohbH
-	DXm9xVfnIBOIQ0rXxWFIat9MtHrsjdo=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-500-Xng4ZFAwNOuBMcJ3cikbmA-1; Sun, 03 Dec 2023 21:10:09 -0500
-X-MC-Unique: Xng4ZFAwNOuBMcJ3cikbmA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kEYLn+UWJXzVvOdXDQoSl0HV2uxdkFhIxrNZEqvidvw=;
+	b=bKNUhvejjTi2F8VnkWBXjstDBUm2CpscUvlVDOA0FR92ky5L7GoqD4orXNYYzk6bsUztI8
+	nah17naJUl2fz0BuBrIgVcTGiHjZvX59LQV8Dmn0yQYMuGfTx/lbwKvEnNJNuuHU2o+c77
+	wWTq/wCCr15DcqQ6gfM2XMfqgsl/Y3s=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-527-IJdQXgyNMci1xrid06S4Qw-1; Sun,
+ 03 Dec 2023 21:19:41 -0500
+X-MC-Unique: IJdQXgyNMci1xrid06S4Qw-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 801BF811E86;
-	Mon,  4 Dec 2023 02:10:08 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id F151E1C041BF;
+	Mon,  4 Dec 2023 02:19:40 +0000 (UTC)
 Received: from localhost (unknown [10.72.113.121])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id C25C5C1596F;
-	Mon,  4 Dec 2023 02:10:07 +0000 (UTC)
-Date: Mon, 4 Dec 2023 10:10:04 +0800
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4F2A9492BFC;
+	Mon,  4 Dec 2023 02:19:39 +0000 (UTC)
+Date: Mon, 4 Dec 2023 10:19:36 +0800
 From: Baoquan He <bhe@redhat.com>
 To: Randy Dunlap <rdunlap@infradead.org>
 Cc: Stephen Rothwell <sfr@canb.auug.org.au>, akpm@linux-foundation.org,
 	ignat@cloudflare.com, linux-next@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
 	kexec@lists.infradead.org, eric_devolder@yahoo.com
-Subject: Re: Re: linux-next: Tree for Dec 1 (riscv, crash_core)
-Message-ID: <ZW00/Cfk47Cc3kGo@MiWiFi-R3L-srv>
+Subject: [PATCH 1/2] riscv, crash: don't export some symbols when CONFIG_MMU=n
+Message-ID: <ZW03ODUKGGhP1ZGU@MiWiFi-R3L-srv>
+References: <ZW00/Cfk47Cc3kGo@MiWiFi-R3L-srv>
 MIME-Version: 1.0
 Content-Disposition: inline
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
-X-Bad-Reply: 'Re:' in Subject but no References or In-Reply-To headers
+In-Reply-To: <ZW00/Cfk47Cc3kGo@MiWiFi-R3L-srv>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231203_181016_895689_F635CC34 
-X-CRM114-Status: GOOD (  22.43  )
+X-CRM114-CacheID: sfid-20231203_181946_873775_776B10A6 
+X-CRM114-Status: GOOD (  12.97  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,136 +83,90 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-eric_devolder@yahoo.com, ignat@cloudflare.com,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-riscv <linux-riscv@lists.infradead.org>,
-	kexec <kexec@lists.infradead.org>
-Bcc: bhe@redhat.com
-Subject: Re: linux-next: Tree for Dec 1 (riscv, crash_core)
-Reply-To: 
-In-Reply-To: <bbd1bbfb-c482-433d-bce9-2b591b8e855e@infradead.org>
-
-On 12/01/23 at 11:53am, Randy Dunlap wrote:
-> 
-> 
-> On 11/30/23 18:37, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > Changes since 20231130:
-> > 
-> 
-> on riscv 32-bit or 64-bit, with
-> # CONFIG_MMU is not set
-
-Thanks for providing the kernel config to ease reproduction. In the config,
-there are:
-
+When dropping select of KEXEC and dependency on ARCH_SUPPORTS_KEXEC
+from CRASH_DUMP, compiling error is reported when below config items are
+set:
+-----------------------
 CONFIG_CRASH_CORE=y
 CONFIG_KEXEC_CORE=y
 CONFIG_CRASH_DUMP=y
 ......
-# CONFIG_MMU is not set
+-----------------------
 
-After investigation, I found this happened after Ignat's patch:
-commit 1c7a3fa49ef7 ("kexec: drop dependency on ARCH_SUPPORTS_KEXEC from CRASH_DUMP")
+-------------------------------------------------------------------------------------------------
+arch/riscv/kernel/crash_core.c:8:27: error: 'VA_BITS' undeclared (first use in this function)
+ 8 |         VMCOREINFO_NUMBER(VA_BITS);
+   |                           ^~~~~~~
+include/linux/crash_core.h:78:64: note: in definition of macro 'VMCOREINFO_NUMBER'
+78 |         vmcoreinfo_append_str("NUMBER(%s)=%ld\n", #name, (long)name)
+   |                                                                ^~~~
 
-Copy above commit change here for reference, and also risc-v's
-ARCH_SUPPORTS_KEXEC depends on MMU:
---------------------------------------------------------
-diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
-index fc38f1ae3a30..946dffa048b7 100644
---- a/kernel/Kconfig.kexec
-+++ b/kernel/Kconfig.kexec
-@@ -96,7 +96,6 @@ config KEXEC_JUMP
- config CRASH_DUMP
-        bool "kernel crash dumps"
-        depends on ARCH_SUPPORTS_CRASH_DUMP
--       depends on ARCH_SUPPORTS_KEXEC
-        select CRASH_CORE
-        select KEXEC_CORE
-        help
+arch/riscv/kernel/crash_core.c:14:64: error: 'VMEMMAP_START' undeclared (first use in this function)
+14 |         vmcoreinfo_append_str("NUMBER(VMEMMAP_START)=0x%lx\n", VMEMMAP_START);
+   |                                                                ^~~~~~~~~~~~~
+arch/riscv/kernel/crash_core.c:15:62: error: 'VMEMMAP_END' undeclared (first use in this function); did you mean 'MEMREMAP_ENC'?
+15 |         vmcoreinfo_append_str("NUMBER(VMEMMAP_END)=0x%lx\n", VMEMMAP_END);
+   |                                                              ^~~~~~~~~~~
+   |                                                              MEMREMAP_ENC
+arch/riscv/kernel/crash_core.c:17:64: error: 'MODULES_VADDR' undeclared (first use in this function)
+17 |         vmcoreinfo_append_str("NUMBER(MODULES_VADDR)=0x%lx\n", MODULES_VADDR);
+   |                                                                ^~~~~~~~~~~~~
+arch/riscv/kernel/crash_core.c:18:62: error: 'MODULES_END' undeclared (first use in this function)
+18 |         vmcoreinfo_append_str("NUMBER(MODULES_END)=0x%lx\n", MODULES_END);
+-------------------------------------------------------------------------------------------------
 
-arch/riscv/Kconfig
+Currently, riscv's ARCH_SUPPORTS_KEXEC has dependency on MMU. Before
+dropping ARCH_SUPPORTS_KEXEC, disabling CONFIG_MMU will unset
+CONFIG_CRASH_DUMP, CONFIG_KEXEC_CORE, CONFIG_CRASH_CORE. Hence
+crash_core related codes won't be compiled.
+
 ---------------------
+arch/riscv/Kconfig:
 config ARCH_SUPPORTS_KEXEC
         def_bool MMU
+---------------------
 
-Before Ignat's patch, once CONFIG_MMU is unset, CONFIG_CRASH_DUMP,
-CONFIG_KEXEC_CORE, CONFIG_CRASH_CORE are all unset automatically. The
-crash_core codes are not compiled. That's why no compiling error is
-seen.
+After dropping ARCH_SUPPORTS_KEXEC, CONFIG_CRASH_DUMP, CONFIG_KEXEC_CORE,
+CONFIG_CRASH_CORE can be set independently of CONFIG_MMU. However, there
+are several macro definitions, such as VA_BITS, VMEMMAP_START, VMEMMAP_END,
+MODULES_VADDR, MODULES_END are only available when CONFIG_MMU=y. Then
+compiling errors are triggered.
 
-After Ignat's patch applied, we can enable CONFIG_CRASH_DUMP,
-CONFIG_KEXEC_CORE, CONFIG_CRASH_CORE independently. However, there are
-several macro definitions, such as VA_BITS, VMEMMAP_START, VMEMMAP_END,
-MODULES_VADDR, MODULES_END are only available when CONFIG_MMU=y.
+Here, add CONFIG_MMU ifdeffery in arch_crash_save_vmcoreinfo() to export
+those symbols when CONFIG_MMU is enabled.
 
-I made two patches to decouple the kexec/crash code with CONFIG_MMU. Not
-sure if risc-v wants that.
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+ arch/riscv/kernel/crash_core.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Or we can simply add dependency on MMU for ARCH_SUPPORTS_CRASH_DUMP.
-Then when CONFIG_MMU=n, CONFIG_CRASH_DUMP, CONFIG_KEXEC_CORE,
-CONFIG_CRASH_CORE will be unset too. Please help check which one need be
-taken.
-
-
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 24c1799e2ec4..03d290da7262 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -708,6 +708,7 @@ config ARCH_SUPPORTS_KEXEC_PURGATORY
+diff --git a/arch/riscv/kernel/crash_core.c b/arch/riscv/kernel/crash_core.c
+index 55f1d7856b54..8706736fd4e2 100644
+--- a/arch/riscv/kernel/crash_core.c
++++ b/arch/riscv/kernel/crash_core.c
+@@ -5,17 +5,19 @@
  
- config ARCH_SUPPORTS_CRASH_DUMP
- 	def_bool y
-+	depends on MMU=y
+ void arch_crash_save_vmcoreinfo(void)
+ {
+-	VMCOREINFO_NUMBER(VA_BITS);
+ 	VMCOREINFO_NUMBER(phys_ram_base);
  
- config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
- 	def_bool CRASH_CORE
-
-> 
-> In file included from ../arch/riscv/kernel/crash_core.c:3:
-> ../arch/riscv/kernel/crash_core.c: In function 'arch_crash_save_vmcoreinfo':
-> ../arch/riscv/kernel/crash_core.c:8:27: error: 'VA_BITS' undeclared (first use in this function)
->     8 |         VMCOREINFO_NUMBER(VA_BITS);
->       |                           ^~~~~~~
-> ../include/linux/crash_core.h:78:64: note: in definition of macro 'VMCOREINFO_NUMBER'
->    78 |         vmcoreinfo_append_str("NUMBER(%s)=%ld\n", #name, (long)name)
->       |                                                                ^~~~
-> ../arch/riscv/kernel/crash_core.c:8:27: note: each undeclared identifier is reported only once for each function it appears in
->     8 |         VMCOREINFO_NUMBER(VA_BITS);
->       |                           ^~~~~~~
-> ../include/linux/crash_core.h:78:64: note: in definition of macro 'VMCOREINFO_NUMBER'
->    78 |         vmcoreinfo_append_str("NUMBER(%s)=%ld\n", #name, (long)name)
->       |                                                                ^~~~
-> ../arch/riscv/kernel/crash_core.c:12:58: warning: format '%lx' expects argument of type 'long unsigned int', but argument 2 has type 'int' [-Wformat=]
->    12 |         vmcoreinfo_append_str("NUMBER(VMALLOC_START)=0x%lx\n", VMALLOC_START);
->       |                                                        ~~^
->       |                                                          |
->       |                                                          long unsigned int
->       |                                                        %x
-> ../arch/riscv/kernel/crash_core.c:14:64: error: 'VMEMMAP_START' undeclared (first use in this function)
->    14 |         vmcoreinfo_append_str("NUMBER(VMEMMAP_START)=0x%lx\n", VMEMMAP_START);
->       |                                                                ^~~~~~~~~~~~~
-> ../arch/riscv/kernel/crash_core.c:15:62: error: 'VMEMMAP_END' undeclared (first use in this function); did you mean 'MEMREMAP_ENC'?
->    15 |         vmcoreinfo_append_str("NUMBER(VMEMMAP_END)=0x%lx\n", VMEMMAP_END);
->       |                                                              ^~~~~~~~~~~
->       |                                                              MEMREMAP_ENC
-> 
-> 64-bit only: 
-> 
-> ../arch/riscv/kernel/crash_core.c:17:64: error: 'MODULES_VADDR' undeclared (first use in this function)
->    17 |         vmcoreinfo_append_str("NUMBER(MODULES_VADDR)=0x%lx\n", MODULES_VADDR);
->       |                                                                ^~~~~~~~~~~~~
-> ../arch/riscv/kernel/crash_core.c:18:62: error: 'MODULES_END' undeclared (first use in this function)
->    18 |         vmcoreinfo_append_str("NUMBER(MODULES_END)=0x%lx\n", MODULES_END);
->       |                                                              ^~~~~~~~~~~
-> 
-> 
-> 
-> -- 
-> ~Randy
-> 
+ 	vmcoreinfo_append_str("NUMBER(PAGE_OFFSET)=0x%lx\n", PAGE_OFFSET);
+ 	vmcoreinfo_append_str("NUMBER(VMALLOC_START)=0x%lx\n", VMALLOC_START);
+ 	vmcoreinfo_append_str("NUMBER(VMALLOC_END)=0x%lx\n", VMALLOC_END);
++#ifdef CONFIG_MMU
++	VMCOREINFO_NUMBER(VA_BITS);
+ 	vmcoreinfo_append_str("NUMBER(VMEMMAP_START)=0x%lx\n", VMEMMAP_START);
+ 	vmcoreinfo_append_str("NUMBER(VMEMMAP_END)=0x%lx\n", VMEMMAP_END);
+ #ifdef CONFIG_64BIT
+ 	vmcoreinfo_append_str("NUMBER(MODULES_VADDR)=0x%lx\n", MODULES_VADDR);
+ 	vmcoreinfo_append_str("NUMBER(MODULES_END)=0x%lx\n", MODULES_END);
++#endif
+ #endif
+ 	vmcoreinfo_append_str("NUMBER(KERNEL_LINK_ADDR)=0x%lx\n", KERNEL_LINK_ADDR);
+ 	vmcoreinfo_append_str("NUMBER(va_kernel_pa_offset)=0x%lx\n",
+-- 
+2.41.0
 
 
 _______________________________________________
