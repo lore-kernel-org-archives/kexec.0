@@ -4,72 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 03690C4167B
-	for <kexec@archiver.kernel.org>; Mon,  4 Dec 2023 05:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DE86BC10F05
+	for <kexec@archiver.kernel.org>; Mon,  4 Dec 2023 05:33:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=+2DbmV0X62jy4grezpETjwtmw3fOFVJ2D1N1KF41ny0=; b=QeumZmg13Wkgpd
-	ps/iH+6Z8nH16850762ZJFDrS4HnOBdTm+bFnI3TN0AcReSaRnuljnK5V5O1z6aP7FwrorXadkJrk
-	Tg1vqTvPJOUAcdYebJwMamXxMT82ak/N3gvq1DYLe3t+D7MLTb+sdxl6xm5nBrOMAH0+BYuEePmSK
-	dgOHRlcYLwKgeHVSq/gMsSfxFx1L+6EzhP/Fnn+Zaw/heNLBCeA2FXWrwO5hQorb52/A+sR0xmuCJ
-	Xb+Gglz8EDjqxX78m2TyuugK650tZrTFZ22/6guQspWMAeFrx04XUFoNi+DNdUFdBCiz7dN7BR+yY
-	moVZoJIydFBxDhzTodUg==;
+	List-Owner; bh=jW2iohWJyJWzAoIK16pXrfphcDmshHgwGjMPTrABUvE=; b=SoMCoJTrIFNnn3
+	lMjCmvHIKcIo4ptiBhMrBpj/CQ1nXus/OIts3tVsI5oOdgaOV48TzOuYWuY88A4JcZchmZxCUw0AN
+	uRPkLIcrXTIg62CVvLNkgVoCyvfEHQ6lemHl061YudiDcn9q7QeVfXzVg8Q+RKYeNYyIWIAiqb2Fg
+	ymYRvXIWuR65rIZKNzAVPcpOdzpO76NzMUgytvQuzVcaIo2CJoN8XckSPzFZbsX3xdjhWjM1pimC4
+	RX2hvyfYa9ze5OJgUMpov7I+s0SFxR3Q6pw5LKFxE7R9l9V+bTsN43PfMUW/h1Ih8O7Fp8DeJgOOh
+	QXjsz5/YiQwH5vZdvM/Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rA1ad-00330A-0x;
-	Mon, 04 Dec 2023 05:33:55 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1rA1ae-00330M-0R;
+	Mon, 04 Dec 2023 05:33:56 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rA1aV-0032xg-2h
+	id 1rA1aZ-0032ya-1g
 	for kexec@lists.infradead.org;
-	Mon, 04 Dec 2023 05:33:49 +0000
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B44rfcO011271;
-	Mon, 4 Dec 2023 05:33:33 GMT
+	Mon, 04 Dec 2023 05:33:53 +0000
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B44Jg42032412;
+	Mon, 4 Dec 2023 05:33:27 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=pp1;
- bh=iLZAwxKLfdHbavc/+JNK76zPz9jW2Xal6th/Gh9ZIIU=;
- b=SE1+bH6CDG9y7XuxnoYOq2EPo2oisRqOh0HFmzXyj4aoYs3HHu20f67eOfm86Fu7TAqh
- dCkS5MkwM/ab8mtMd+PeZe7fvpKLY3NED6kVidYpsWSUT3BNxLiyVX8jht4yfNBtyUFU
- QIzYe6wPGTol0ei7bb4VhoS0w7ZSCWT8Uvgrkv9/9WTG6FSgIa+BzkADlgb9SMYHD5LZ
- j4mn1G/GMn2QZlTdZ+T5wMVJORD0fRk2/wmnPwDTx4Ci5tjgypkVUSjbJrciZCQ+e4r7
- J0zrKS84dx1NXbE375iuhV2rpS3RQn0o/j5Pn+WxyFkQk/QIX7/cBpm5AHygm1vWV/rw ug== 
+ bh=IpdWCv0SQiN9CpdQGaa0kagJcfQn/DHrCULs3Thlv8s=;
+ b=FrqfnwcobfBjVJJxvapnxCJEiIQwtCa4uBPvW9saZbYNWOFrVb8r9ItzkwZLTXhG3BW1
+ owvROqrIaQQKMN9NzYLXGHdUyM4ZUVju7Ky462YR1dOJFT8beklC5hHKlJ8U5kSG+1WU
+ sWxmWKke9JXvnts3W4dmhwnNrNYNK6JCO49wWpFrMXlaqcXq5eh3Vd5zAJvOTVu4J7GQ
+ lUO1U4aGmeag7u4odRoP4P8MtnvwslQRuO+BiLkx5OWGz1sNfclACPxieBPB/rKNvrU8
+ FCQKvYsTI0FKEj+LrG3EZ1EC4jF2iNRgs5Tm/k/w10y0bQaB7VX8o6N5jgqmpmkPGJ7+ GQ== 
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3us84x10tm-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3us7n0suqs-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 04 Dec 2023 05:33:32 +0000
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3B45LLwh024392;
-	Mon, 4 Dec 2023 05:33:32 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3us84x10sw-1
+	Mon, 04 Dec 2023 05:33:27 +0000
+Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3B44lsGk003192;
+	Mon, 4 Dec 2023 05:33:26 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3us7n0suq5-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 04 Dec 2023 05:33:32 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3B44nZvq014913;
-	Mon, 4 Dec 2023 05:33:31 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3urv8dk49n-1
+	Mon, 04 Dec 2023 05:33:26 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3B44nU0e025204;
+	Mon, 4 Dec 2023 05:33:25 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3urgdkp7ud-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 04 Dec 2023 05:33:31 +0000
+	Mon, 04 Dec 2023 05:33:24 +0000
 Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3B45XRsw43123026
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3B45XLmS21430900
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 4 Dec 2023 05:33:27 GMT
+	Mon, 4 Dec 2023 05:33:21 GMT
 Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B210020040;
-	Mon,  4 Dec 2023 05:33:27 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 41C5420043;
+	Mon,  4 Dec 2023 05:33:21 +0000 (GMT)
 Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 922CF20043;
-	Mon,  4 Dec 2023 05:33:22 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 9221120040;
+	Mon,  4 Dec 2023 05:33:15 +0000 (GMT)
 Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.c4p-in.ibmmobiledemo.com (unknown [9.43.24.184])
 	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  4 Dec 2023 05:33:22 +0000 (GMT)
+	Mon,  4 Dec 2023 05:33:15 +0000 (GMT)
 From: Sourabh Jain <sourabhjain@linux.ibm.com>
 To: linuxppc-dev@ozlabs.org
 Cc: Sourabh Jain <sourabhjain@linux.ibm.com>, Akhil Raj <lf32.dev@gmail.com>,
@@ -90,27 +90,27 @@ Cc: Sourabh Jain <sourabhjain@linux.ibm.com>, Akhil Raj <lf32.dev@gmail.com>,
         Valentin Schneider <vschneid@redhat.com>,
         Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org,
         x86@kernel.org
-Subject: [PATCH v13 3/6] crash: add a new kexec flag for FDT update
-Date: Mon,  4 Dec 2023 11:02:50 +0530
-Message-ID: <20231204053253.25305-4-sourabhjain@linux.ibm.com>
+Subject: [PATCH v13 2/6] crash: make CPU and Memory hotplug support reporting flexible
+Date: Mon,  4 Dec 2023 11:02:49 +0530
+Message-ID: <20231204053253.25305-3-sourabhjain@linux.ibm.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20231204053253.25305-1-sourabhjain@linux.ibm.com>
 References: <20231204053253.25305-1-sourabhjain@linux.ibm.com>
 MIME-Version: 1.0
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: o5C53qyVL9jGek2U1Yb0nt5Uh-sAHa_V
-X-Proofpoint-ORIG-GUID: l89ydKwzanUUSzSapO8FMaNjV6i6HwJg
+X-Proofpoint-ORIG-GUID: 6gmgtJNkT0agchej6C3q8RKoCs-ZSeU4
+X-Proofpoint-GUID: iIdl77HRPuSekrW-M_5rIFaNqOtSd-Wt
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2023-12-04_03,2023-11-30_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
- malwarescore=0 adultscore=0 lowpriorityscore=0 bulkscore=0 phishscore=0
- spamscore=0 mlxlogscore=999 priorityscore=1501 suspectscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311060000 definitions=main-2312040039
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
+ clxscore=1015 impostorscore=0 malwarescore=0 spamscore=0 mlxlogscore=999
+ bulkscore=0 priorityscore=1501 phishscore=0 lowpriorityscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311060000
+ definitions=main-2312040039
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231203_213348_072661_58E9B8CE 
-X-CRM114-Status: GOOD (  24.44  )
+X-CRM114-CacheID: sfid-20231203_213351_672781_1378B40B 
+X-CRM114-Status: GOOD (  28.70  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -127,21 +127,32 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The commit a72bbec70da2 ("crash: hotplug support for kexec_load()")
-introduced a new kexec flag, `KEXEC_UPDATE_ELFCOREHDR`. Kexec tool uses
-this flag to indicate kernel that it is safe to modify the elfcorehdr
-of kdump image loaded using kexec_load system call.
+Architectures' specific functions `arch_crash_hotplug_cpu_support()` and
+`arch_crash_hotplug_memory_support()` advertise the kernel's capability
+to update the kdump image on CPU and Memory hotplug events to userspace
+via the sysfs interface. These architecture-specific functions need to
+access various attributes of the `kexec_crash_image` object to determine
+whether the kernel can update the kdump image and advertise this
+information to userspace accordingly.
 
-Similarly, add a new kexec flag, `KEXEC_UPDATE_FDT`, for another kdump
-component named FDT (Flatten Device Tree). Architectures like PowerPC
-need to update FDT kdump image component on CPU hotplug events. Kexec
-tool passing `KEXEC_UPDATE_FDT` will be an indication to kernel that FDT
-segment is not part of SHA calculation hence it is safe to update it.
+As the architecture-specific code is not exposed to the APIs required to
+acquire the lock for accessing the `kexec_crash_image` object, it calls
+a generic function, `crash_check_update_elfcorehdr()`, to determine
+whether the kernel can update the kdump image or not.
 
-With the `KEXEC_UPDATE_ELFCOREHDR` and `KEXEC_UPDATE_FDT` kexec flags,
-crash hotplug support can be added to PowerPC for the kexec_load syscall
-while maintaining the backward compatibility with older kexec tools that
-do not have these newly introduced flags.
+The lack of access to the `kexec_crash_image` object in
+architecture-specific code restricts architectures from performing
+additional architecture-specific checks required to determine if the
+kdump image is updatable or not. For instance, on PowerPC, the kernel
+can update the kdump image only if both the elfcorehdr and FDT are
+marked as updatable for the `kexec_load` system call.
+
+So define two generic functions, `crash_hotplug_cpu_support()` and
+`crash_hotplug_memory_support()`, which are called when userspace
+attempts to read the crash CPU and Memory hotplug support via the sysfs
+interface. These functions take the necessary locks needed to access the
+`kexec_crash_image` object and then forward it to the
+architecture-specific handler to do the rest.
 
 Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
 Cc: Akhil Raj <lf32.dev@gmail.com>
@@ -167,61 +178,153 @@ Cc: Vivek Goyal <vgoyal@redhat.com>
 Cc: kexec@lists.infradead.org
 Cc: x86@kernel.org
 ---
- include/linux/kexec.h      | 6 ++++--
- include/uapi/linux/kexec.h | 1 +
- kernel/kexec.c             | 2 ++
- 3 files changed, 7 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/kexec.h |  8 ++++----
+ arch/x86/kernel/crash.c      | 20 +++++++++++++++-----
+ include/linux/kexec.h        | 13 +++++++------
+ kernel/crash_core.c          | 23 +++++++++++++++++------
+ 4 files changed, 43 insertions(+), 21 deletions(-)
 
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index 9bb6607e864e..5c88d27b086d 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -212,13 +212,13 @@ void arch_crash_handle_hotplug_event(struct kimage *image, void *arg);
+ #define arch_crash_handle_hotplug_event arch_crash_handle_hotplug_event
+ 
+ #ifdef CONFIG_HOTPLUG_CPU
+-int arch_crash_hotplug_cpu_support(void);
+-#define crash_hotplug_cpu_support arch_crash_hotplug_cpu_support
++int arch_crash_hotplug_cpu_support(struct kimage *image);
++#define arch_crash_hotplug_cpu_support arch_crash_hotplug_cpu_support
+ #endif
+ 
+ #ifdef CONFIG_MEMORY_HOTPLUG
+-int arch_crash_hotplug_memory_support(void);
+-#define crash_hotplug_memory_support arch_crash_hotplug_memory_support
++int arch_crash_hotplug_memory_support(struct kimage *image);
++#define arch_crash_hotplug_memory_support arch_crash_hotplug_memory_support
+ #endif
+ 
+ unsigned int arch_crash_get_elfcorehdr_size(void);
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index 0d7b2657beb6..ad5941665589 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -398,18 +398,28 @@ int crash_load_segments(struct kimage *image)
+ #undef pr_fmt
+ #define pr_fmt(fmt) "crash hp: " fmt
+ 
+-/* These functions provide the value for the sysfs crash_hotplug nodes */
++#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_MEMORY_HOTPLUG)
++static int crash_hotplug_support(struct kimage *image)
++{
++	if (image->file_mode)
++		return 1;
++
++	return image->update_elfcorehdr;
++}
++#endif
++
+ #ifdef CONFIG_HOTPLUG_CPU
+-int arch_crash_hotplug_cpu_support(void)
++/* These functions provide the value for the sysfs crash_hotplug nodes */
++int arch_crash_hotplug_cpu_support(struct kimage *image)
+ {
+-	return crash_check_update_elfcorehdr();
++	return crash_hotplug_support(image);
+ }
+ #endif
+ 
+ #ifdef CONFIG_MEMORY_HOTPLUG
+-int arch_crash_hotplug_memory_support(void)
++int arch_crash_hotplug_memory_support(struct kimage *image)
+ {
+-	return crash_check_update_elfcorehdr();
++	return crash_hotplug_support(image);
+ }
+ #endif
+ 
 diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 0f6ea35879ee..bcedb7625b1f 100644
+index ee28c09a7fb0..0f6ea35879ee 100644
 --- a/include/linux/kexec.h
 +++ b/include/linux/kexec.h
-@@ -319,6 +319,7 @@ struct kimage {
- #ifdef CONFIG_CRASH_HOTPLUG
- 	/* If set, allow changes to elfcorehdr of kexec_load'd image */
- 	unsigned int update_elfcorehdr:1;
-+	unsigned int update_fdt:1;
+@@ -486,16 +486,17 @@ static inline void arch_kexec_pre_free_pages(void *vaddr, unsigned int pages) {
+ static inline void arch_crash_handle_hotplug_event(struct kimage *image, void *arg) { }
  #endif
  
- #ifdef ARCH_HAS_KIMAGE_ARCH
-@@ -396,9 +397,10 @@ bool kexec_load_permitted(int kexec_image_type);
- 
- /* List of defined/legal kexec flags */
- #ifndef CONFIG_KEXEC_JUMP
--#define KEXEC_FLAGS    (KEXEC_ON_CRASH | KEXEC_UPDATE_ELFCOREHDR)
-+#define KEXEC_FLAGS    (KEXEC_ON_CRASH | KEXEC_UPDATE_ELFCOREHDR | KEXEC_UPDATE_FDT)
- #else
--#define KEXEC_FLAGS    (KEXEC_ON_CRASH | KEXEC_PRESERVE_CONTEXT | KEXEC_UPDATE_ELFCOREHDR)
-+#define KEXEC_FLAGS    (KEXEC_ON_CRASH | KEXEC_PRESERVE_CONTEXT | KEXEC_UPDATE_ELFCOREHDR | \
-+			KEXEC_UPDATE_FDT)
+-int crash_check_update_elfcorehdr(void);
+-
+-#ifndef crash_hotplug_cpu_support
+-static inline int crash_hotplug_cpu_support(void) { return 0; }
++#ifndef arch_crash_hotplug_cpu_support
++static inline int arch_crash_hotplug_cpu_support(struct kimage *image) { return 0; }
  #endif
  
- /* List of defined/legal kexec file flags */
-diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
-index 01766dd839b0..3d5b3d757bed 100644
---- a/include/uapi/linux/kexec.h
-+++ b/include/uapi/linux/kexec.h
-@@ -13,6 +13,7 @@
- #define KEXEC_ON_CRASH		0x00000001
- #define KEXEC_PRESERVE_CONTEXT	0x00000002
- #define KEXEC_UPDATE_ELFCOREHDR	0x00000004
-+#define KEXEC_UPDATE_FDT	0x00000008
- #define KEXEC_ARCH_MASK		0xffff0000
+-#ifndef crash_hotplug_memory_support
+-static inline int crash_hotplug_memory_support(void) { return 0; }
++#ifndef arch_crash_hotplug_memory_support
++static inline int arch_crash_hotplug_memory_support(struct kimage *image) { return 0; }
+ #endif
  
++extern int crash_hotplug_cpu_support(void);
++extern int crash_hotplug_memory_support(void);
++
+ #ifndef crash_get_elfcorehdr_size
+ static inline unsigned int crash_get_elfcorehdr_size(void) { return 0; }
+ #endif
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index b9190265fe52..b621f03c1104 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -892,12 +892,14 @@ DEFINE_MUTEX(__crash_hotplug_lock);
+ #define crash_hotplug_lock() mutex_lock(&__crash_hotplug_lock)
+ #define crash_hotplug_unlock() mutex_unlock(&__crash_hotplug_lock)
+ 
++#define CPU_HOTPLUG	0
++#define MEM_HOTPLUG	1
  /*
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 8f35a5a42af8..97eb151cd931 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -132,6 +132,8 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
- #ifdef CONFIG_CRASH_HOTPLUG
- 	if (flags & KEXEC_UPDATE_ELFCOREHDR)
- 		image->update_elfcorehdr = 1;
-+	if (flags & KEXEC_UPDATE_FDT)
-+		image->update_fdt = 1;
- #endif
+  * This routine utilized when the crash_hotplug sysfs node is read.
+  * It reflects the kernel's ability/permission to update the crash
+  * elfcorehdr directly.
+  */
+-int crash_check_update_elfcorehdr(void)
++static int crash_hotplug_support(int hotplug)
+ {
+ 	int rc = 0;
  
- 	ret = machine_kexec_prepare(image);
+@@ -909,18 +911,27 @@ int crash_check_update_elfcorehdr(void)
+ 		return 0;
+ 	}
+ 	if (kexec_crash_image) {
+-		if (kexec_crash_image->file_mode)
+-			rc = 1;
+-		else
+-			rc = kexec_crash_image->update_elfcorehdr;
++		if (hotplug == CPU_HOTPLUG)
++			rc = arch_crash_hotplug_cpu_support(kexec_crash_image);
++		else if (hotplug == MEM_HOTPLUG)
++			rc = arch_crash_hotplug_memory_support(kexec_crash_image);
+ 	}
+ 	/* Release lock now that update complete */
+ 	kexec_unlock();
+ 	crash_hotplug_unlock();
+-
+ 	return rc;
+ }
+ 
++int crash_hotplug_cpu_support(void)
++{
++	return crash_hotplug_support(CPU_HOTPLUG);
++}
++
++int crash_hotplug_memory_support(void)
++{
++	return crash_hotplug_support(MEM_HOTPLUG);
++}
++
+ /*
+  * To accurately reflect hot un/plug changes of cpu and memory resources
+  * (including onling and offlining of those resources), the elfcorehdr
 -- 
 2.41.0
 
