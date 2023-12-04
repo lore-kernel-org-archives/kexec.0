@@ -4,33 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 33AFEC4167B
-	for <kexec@archiver.kernel.org>; Mon,  4 Dec 2023 19:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4121FC10DC1
+	for <kexec@archiver.kernel.org>; Mon,  4 Dec 2023 19:14:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
 	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=iWH5IlC5Qp6+qYEOAytKM6QDGhQoVXrW/ekU/q2ByKk=; b=wtDlTdJs+qSPTZ
-	FgsPzwVahMlR2TI7sSPPXirnSnnrogSF2vJbY1kSsnKnlZoQJ40tO3Mjm55Tzc+6faZt86iSJoQXv
-	It44S4LsV4TnJc/C5l1nZZbVTS4OUmuRrBV3mSXl1K/+BnwvTFtrQR5qRInq6eX58Dhoe+RyOup/L
-	2hvO72/t9R5ons3xbynlqa9yllbbyrVucSCbANqMlR8s9PP9BL006FWlnr4kanTn+sFDgiRqj/Yvc
-	4aElI7weYs+O9YkKY9yiVLsI/6KxawCluJE1Xzqr0mOQNXR3ky9nt8AeVVD9G9C6K+WKtwyF1lsBi
-	qye+Tk6OQeoG6c/EdYig==;
+	List-Owner; bh=qaTcVtkyfWA0vy2rP1DGbTPrOErd/LqoCsk4jIVy3IU=; b=izt/6WmPjLBhQ9
+	LCHXZY+N/og6noNDZyCrk/X+G06o1AFMqq4GND9ykjxvZWDi07od9sMUPytIB3H1BR4QsYfJW50X3
+	rAewweYneG+d5U2j+ogRP7jvdw395/QTtbe6kJJUHT6og+p0WnNm4i3X+gG/IwwFjH7xYVQi6OEmi
+	MU3Opet7TUYdN0nFDApGtRthU14pMadzWf9Jj3353Rp8ib09lpD14O01HfldeUPVHjMFzCUzlnDN5
+	Z/KCkk24ts1YSLMN4lBhnLfcpb4M0B/HLg5q0fSFFbSucE5KEhmqFrkRrFKwv5a5iHnahKxl5/bAB
+	xekuvLEmTnwQ9nq6InxQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rAEM8-005QAE-1H;
-	Mon, 04 Dec 2023 19:11:48 +0000
+	id 1rAEOM-005QOn-1Q;
+	Mon, 04 Dec 2023 19:14:06 +0000
 Received: from [50.53.46.231] (helo=[192.168.254.15])
 	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1rAEM4-005Q9i-2R;
-	Mon, 04 Dec 2023 19:11:44 +0000
-Message-ID: <bcb0ec3f-d0ca-48fa-a201-1737ed5ddaec@infradead.org>
-Date: Mon, 4 Dec 2023 11:11:44 -0800
+	id 1rAEOJ-005QO4-3B;
+	Mon, 04 Dec 2023 19:14:04 +0000
+Message-ID: <694baf13-65d0-4877-b6c7-56e3006f83be@infradead.org>
+Date: Mon, 4 Dec 2023 11:14:03 -0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: Tree for Dec 1 (riscv, crash_core)
+Subject: Re: [PATCH 1/2] riscv, crash: don't export some symbols when
+ CONFIG_MMU=n
 Content-Language: en-US
 To: Baoquan He <bhe@redhat.com>
 Cc: Stephen Rothwell <sfr@canb.auug.org.au>, akpm@linux-foundation.org,
@@ -38,8 +39,9 @@ Cc: Stephen Rothwell <sfr@canb.auug.org.au>, akpm@linux-foundation.org,
  linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
  kexec@lists.infradead.org, eric_devolder@yahoo.com
 References: <ZW00/Cfk47Cc3kGo@MiWiFi-R3L-srv>
+ <ZW03ODUKGGhP1ZGU@MiWiFi-R3L-srv>
 From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <ZW00/Cfk47Cc3kGo@MiWiFi-R3L-srv>
+In-Reply-To: <ZW03ODUKGGhP1ZGU@MiWiFi-R3L-srv>
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -56,59 +58,86 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi,
 
-On 12/3/23 18:10, Baoquan He wrote:
-> eric_devolder@yahoo.com, ignat@cloudflare.com,
-> 	Linux Next Mailing List <linux-next@vger.kernel.org>,
-> 	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-> 	linux-riscv <linux-riscv@lists.infradead.org>,
-> 	kexec <kexec@lists.infradead.org>
-> Bcc: bhe@redhat.com
-> Subject: Re: linux-next: Tree for Dec 1 (riscv, crash_core)
-> Reply-To: 
-> In-Reply-To: <bbd1bbfb-c482-433d-bce9-2b591b8e855e@infradead.org>
-> 
-> On 12/01/23 at 11:53am, Randy Dunlap wrote:
->>
->>
->> On 11/30/23 18:37, Stephen Rothwell wrote:
->>> Hi all,
->>>
->>> Changes since 20231130:
->>>
->>
->> on riscv 32-bit or 64-bit, with
->> # CONFIG_MMU is not set
+
+On 12/3/23 18:19, Baoquan He wrote:
+> When dropping select of KEXEC and dependency on ARCH_SUPPORTS_KEXEC
+> from CRASH_DUMP, compiling error is reported when below config items are
+> set:
+> -----------------------
+> CONFIG_CRASH_CORE=y
+> CONFIG_KEXEC_CORE=y
+> CONFIG_CRASH_DUMP=y
+> ......
+> -----------------------
 > 
 
 []
 
-> I made two patches to decouple the kexec/crash code with CONFIG_MMU. Not
-> sure if risc-v wants that.
 > 
-> Or we can simply add dependency on MMU for ARCH_SUPPORTS_CRASH_DUMP.
-> Then when CONFIG_MMU=n, CONFIG_CRASH_DUMP, CONFIG_KEXEC_CORE,
-> CONFIG_CRASH_CORE will be unset too. Please help check which one need be
-> taken.
+> Currently, riscv's ARCH_SUPPORTS_KEXEC has dependency on MMU. Before
+> dropping ARCH_SUPPORTS_KEXEC, disabling CONFIG_MMU will unset
+> CONFIG_CRASH_DUMP, CONFIG_KEXEC_CORE, CONFIG_CRASH_CORE. Hence
+> crash_core related codes won't be compiled.
 > 
+> ---------------------
+> arch/riscv/Kconfig:
+> config ARCH_SUPPORTS_KEXEC
+>         def_bool MMU
+> ---------------------
 > 
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 24c1799e2ec4..03d290da7262 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -708,6 +708,7 @@ config ARCH_SUPPORTS_KEXEC_PURGATORY
+> After dropping ARCH_SUPPORTS_KEXEC, CONFIG_CRASH_DUMP, CONFIG_KEXEC_CORE,
+> CONFIG_CRASH_CORE can be set independently of CONFIG_MMU. However, there
+> are several macro definitions, such as VA_BITS, VMEMMAP_START, VMEMMAP_END,
+> MODULES_VADDR, MODULES_END are only available when CONFIG_MMU=y. Then
+> compiling errors are triggered.
+> 
+> Here, add CONFIG_MMU ifdeffery in arch_crash_save_vmcoreinfo() to export
+> those symbols when CONFIG_MMU is enabled.
+> 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> ---
+>  arch/riscv/kernel/crash_core.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/riscv/kernel/crash_core.c b/arch/riscv/kernel/crash_core.c
+> index 55f1d7856b54..8706736fd4e2 100644
+> --- a/arch/riscv/kernel/crash_core.c
+> +++ b/arch/riscv/kernel/crash_core.c
+> @@ -5,17 +5,19 @@
 >  
->  config ARCH_SUPPORTS_CRASH_DUMP
->  	def_bool y
-> +	depends on MMU=y
+>  void arch_crash_save_vmcoreinfo(void)
+>  {
+> -	VMCOREINFO_NUMBER(VA_BITS);
+>  	VMCOREINFO_NUMBER(phys_ram_base);
 >  
->  config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
->  	def_bool CRASH_CORE
-> 
+>  	vmcoreinfo_append_str("NUMBER(PAGE_OFFSET)=0x%lx\n", PAGE_OFFSET);
+>  	vmcoreinfo_append_str("NUMBER(VMALLOC_START)=0x%lx\n", VMALLOC_START);
+>  	vmcoreinfo_append_str("NUMBER(VMALLOC_END)=0x%lx\n", VMALLOC_END);
+> +#ifdef CONFIG_MMU
+> +	VMCOREINFO_NUMBER(VA_BITS);
+>  	vmcoreinfo_append_str("NUMBER(VMEMMAP_START)=0x%lx\n", VMEMMAP_START);
+>  	vmcoreinfo_append_str("NUMBER(VMEMMAP_END)=0x%lx\n", VMEMMAP_END);
+>  #ifdef CONFIG_64BIT
+>  	vmcoreinfo_append_str("NUMBER(MODULES_VADDR)=0x%lx\n", MODULES_VADDR);
+>  	vmcoreinfo_append_str("NUMBER(MODULES_END)=0x%lx\n", MODULES_END);
+> +#endif
+>  #endif
+>  	vmcoreinfo_append_str("NUMBER(KERNEL_LINK_ADDR)=0x%lx\n", KERNEL_LINK_ADDR);
+>  	vmcoreinfo_append_str("NUMBER(va_kernel_pa_offset)=0x%lx\n",
 
-That works if the RISC-V folks prefer it.
+Both riscv 32-bit and 64-bit complain:
 
+../arch/riscv/kernel/crash_core.c: In function 'arch_crash_save_vmcoreinfo':
+../arch/riscv/kernel/crash_core.c:11:58: warning: format '%lx' expects argument of type 'long unsigned int', but argument 2 has type 'int' [-Wformat=]
+   11 |         vmcoreinfo_append_str("NUMBER(VMALLOC_START)=0x%lx\n", VMALLOC_START);
+      |                                                        ~~^
+      |                                                          |
+      |                                                          long unsigned int
+      |                                                        %x
+
+
+Otherwise this builds without failure.
 
 Tested-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
 
