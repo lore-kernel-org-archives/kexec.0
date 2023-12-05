@@ -4,89 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 00860C4167B
-	for <kexec@archiver.kernel.org>; Tue,  5 Dec 2023 23:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 48A4EC4167B
+	for <kexec@archiver.kernel.org>; Tue,  5 Dec 2023 23:59:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-ID:In-Reply-To:
 	References:Message-ID:Date:Subject:CC:To:From:Reply-To:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=8VjzpuwAwylJeEe0uGpSm+M5cNu7CLIhuw9r/9qsJ9E=; b=xL9kKL3a6HkSye
-	W2wQflqSY/aCheJmROP/uylaCVRoD0/VGMwYReDTItkYGRRJlrLFvSJuYxBYda1sHZ1Ftbvs4cJ2K
-	LPPlI+bz/L43gfu8+woRyeYnqlrMN50DlIaAA9CubO1fx/73QQC7cSsEg2yO+jPpn2DzMG+gufE6V
-	2zLovGaRFSKe20KDSoEhwYIe1hmoONXeTw1HX0pM6HVAkruNKOMLGhCPOrjDVuBI2/uS59djr/DO9
-	yHgRTfO2QNrdbabiHI1g2RosiOZqVV3mkRNcYC8eO3EL8QalC7WZAQqjXFbK/aRewKzN5r1j8uhcS
-	OohzkO01a9QdhVo3Fb+A==;
+	List-Owner; bh=ZQIK3NviKkW/jMr3fioz/hktmDiiVq27pafNqfgZQfg=; b=ZVr/D5dF2hHzJl
+	IQXpbYq1oX+FzGfma+hrNbSsahIgZboqN+g3orWYyqQb3eXJfX1Rv/5Niey8qo5X7WWABwTDigmi0
+	8vZmOnQgfMmO/SOLm1/BrFhxu4RBiOnB8+ypv/eGrvYqk6E5Ym2jiEnvyJRYRKTS7SkGb0w/A9BrO
+	cH/+LmurH5Qa16N+thDeHOGBX/BBVO0Ed0GgAFC9kT5A4Q7VASokykRQ61cJE3fnXzO88iB5NYehn
+	62+zk6ar/KaVtgbQq9YJtKAWF1ZPE8SxuspLKv/ovV2EigXsrSyRJY/xQmv83iJddxlli8MqmVq2k
+	ci7VySRKPXuIgb1+UaXQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rAeyP-008dxk-1m;
-	Tue, 05 Dec 2023 23:37:05 +0000
-Received: from mgamail.intel.com ([192.198.163.8])
+	id 1rAfJc-008gOZ-2y;
+	Tue, 05 Dec 2023 23:59:00 +0000
+Received: from mgamail.intel.com ([192.55.52.136])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rAeyK-008dwn-2h
+	id 1rAfJY-008gLi-0G
 	for kexec@lists.infradead.org;
-	Tue, 05 Dec 2023 23:37:03 +0000
+	Tue, 05 Dec 2023 23:58:59 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701819421; x=1733355421;
+  t=1701820736; x=1733356736;
   h=from:to:cc:subject:date:message-id:references:
    in-reply-to:content-id:content-transfer-encoding:
    mime-version;
-  bh=K3h0JpJsw/P9CcIlBhk88qo1dFlkdlocvXXo2/hFKi4=;
-  b=NZrUWpGXVRrVShHCWKpFU0ymk89Vg21KW3EUzJZmdkAlbex6Cr3f6ULe
-   yxIfUT8vE9AMkPkv453kj8luEAlAu9Mz6735m6snxk5eSofGmoG2XTqoT
-   QGgbxX5QUu9D+yGM244/H0ZGMuj0dJzVNXYzqHE0KCvss/DG4vEt3sIwK
-   729u0VlIcjEaFhq9biSBzIn2h2LW0FqOpqcSD8Vgd9MCGN/WHgYZtcqNF
-   7Ua/t0fOllymrbQcVb+t7+q4pMGJKIwJJAWiT94T6voH3GZJhvrX8zJI0
-   +fpR4G0Z7CQ2XOQCgkBgXP8eUf7YV07hu9OUMs9pNuyQJ6TkGTVaPNa/o
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="7273091"
+  bh=//S91w2Dl2zlW6S7/FtaNdFv8O1Voy3PPY4J/Y8lKws=;
+  b=VePAap48Py8+nys2ZIDDl/U+DQzQO967zLhN6exONFDonAJyhaaEwoXh
+   4Bs41FrDACPrZZAF7nEx+6Vr4mMkZkjXvWqzWDQLeIuP2Q4JprO2PmjiM
+   n7qOtRsPPXw/Umdm7mLNSuDmD6U4NnA7WZgUuSZu78jOTRKKUs0t2Wn8L
+   YKe7Ay0hMw3R+TvHEw0m+C5tAOUN7YAMPkUN7c1SwF6rCcotJwFI/yOs6
+   DbkeuqXlks/MI/uzzKi1rrINBC59Llixb32mZju+qpra1AUMVgt6M0hy0
+   wUQAaGCSuRdOQyCN+6eO3eooGAgWQR/p6zaNpxwKTLmxiIgbXyhahpXFy
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="373438313"
 X-IronPort-AV: E=Sophos;i="6.04,253,1695711600"; 
-   d="scan'208";a="7273091"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 15:36:59 -0800
+   d="scan'208";a="373438313"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 15:58:50 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="771095713"
+X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="1018379438"
 X-IronPort-AV: E=Sophos;i="6.04,253,1695711600"; 
-   d="scan'208";a="771095713"
+   d="scan'208";a="1018379438"
 Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by orsmga002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Dec 2023 15:36:58 -0800
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+  by fmsmga006.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 05 Dec 2023 15:58:49 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
  ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 5 Dec 2023 15:36:58 -0800
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 5 Dec 2023 15:36:57 -0800
+ 15.1.2507.35; Tue, 5 Dec 2023 15:58:49 -0800
 Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Tue, 5 Dec 2023 15:36:57 -0800
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.41) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ 15.1.2507.35 via Frontend Transport; Tue, 5 Dec 2023 15:58:48 -0800
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.168)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.34; Tue, 5 Dec 2023 15:36:57 -0800
+ 15.1.2507.34; Tue, 5 Dec 2023 15:58:48 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eRZL1k7fxQHKSKstHcakLG6Wbd73sY80K+QSPDsWzyvdYRS22m1SGPQpHdiXJW0M9759IMnWPsU/reZ2Nyhh2BMIl+mszhwhLFGYjwZhkSlrdeDLJTK0zvrUZE64FuZnYzLy1VagFp13mfTwqvzoDLp6H6YCUUzM45j+OEbH0wjDxtkmIP/D2Y/9f8gpxrE+DWfzx7zeo6p6NC5DFKIFf7vsq3OOrke8KIvGo4z136Gx2jA0V5TBiOA3fepC6jVvPmpKQo3RNWSyF2ad7+ZSuEoXmP2XuyzzZ5gyx1alAWjeU7XVvc8Jz1dM849Gw8PM57j1DhTeEQdCi2+0YcA8kg==
+ b=E3fBkkIuLbOC0l67EQ2PA7ys0aSi9w/6wPNkfuZ+iiAqhOl0Otnqw6QTiVTlB+lGvPOv4b2rjjM/XCZgcnjszUZrQDkTD3gR0hcddHMPsB7isk99BOn8BGG7WJNLeRquvlYObIAak1AyP7sFpqptiM0eUtnBulXvj3XyLEdPBggRgnPI8lRFFQCCXpa/GA53JgXe1vWRa5BIEv/Eq2UkXf46IoLkq3J9ObY39dlBTBc7JhMGdJhDffrhPP8Kc3OMfU6lOrfaBlMEieKf4xFCsapcamjZt6ao+9FIn/+3XQpCFztLaHFwJLZlcnqvMR/T1komYcxGa0OkPhdftYgTmg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=K3h0JpJsw/P9CcIlBhk88qo1dFlkdlocvXXo2/hFKi4=;
- b=RDRXAygEvQWs5QAE/IHoaOKmyMkWKVzzBsPPAaPszkRHd0JuzIDzfyNY1wM/uTSGTQHEFPs5f338q3RjPSNClDtnf6r2apKf1yyXlojwuErTmecx3TEV6L+I318oWHJLroVi2tYI72/zSniyzkNy/KFR7W3tJ4M2yktm4GdqPEh9y9gKKDhS8N6zhlt7HLlJ19bWRMB3zgHtBYVW18vQATE/OqKzSVhBtAAFxyY/z56WOravg96ULhDYhl+k0nfH6zMh5IGkzQGoJALTARSwxPnzOhhMCRPyLN01hIza35Y07TZGWYNJ2vgTXNnAckZ7u9BQI5fN4telZClQKtYoeg==
+ bh=//S91w2Dl2zlW6S7/FtaNdFv8O1Voy3PPY4J/Y8lKws=;
+ b=EAM3ZBTGoTzQKbbspnKuiY31YlF++9atzLAVoU3xIG3qT3iX0eYCeIjw8O22vhdXj7l0PSEgVOnExOakTvJ1yg273UW6mfYjMxEC7HnyXgUOKxmcxGcChdHeBQ0tB5iTcfdJR/y1w2Ub58VGT38WAWM4U4ZGX53J5WagYniPwAhpuo5m/VdfSGQQ/xxBOjJwGiaHyOdxSipZEl8vuPUlRFvv2/7QhBbwzD64wu5zRisHZKOKLPPpUc+/7/Hw3p0PLl1wKkrL1IxYLZPeUinAt2Uqge92E4K3tr2tdIYYRksZF7fe3a6qhpIrQny3gD7z/qqeEVt5T2urfZUVU7Tscw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Received: from BL1PR11MB5978.namprd11.prod.outlook.com (2603:10b6:208:385::18)
- by SA2PR11MB5145.namprd11.prod.outlook.com (2603:10b6:806:113::6) with
+ by IA1PR11MB7678.namprd11.prod.outlook.com (2603:10b6:208:3f4::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.34; Tue, 5 Dec
- 2023 23:36:55 +0000
+ 2023 23:58:46 +0000
 Received: from BL1PR11MB5978.namprd11.prod.outlook.com
  ([fe80::5d1:aa22:7c98:f3c6]) by BL1PR11MB5978.namprd11.prod.outlook.com
  ([fe80::5d1:aa22:7c98:f3c6%7]) with mapi id 15.20.7068.025; Tue, 5 Dec 2023
- 23:36:55 +0000
+ 23:58:46 +0000
 From: "Huang, Kai" <kai.huang@intel.com>
 To: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
 	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com"
@@ -103,16 +99,16 @@ CC: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, "Reshetova, Elena"
 	"kexec@lists.infradead.org" <kexec@lists.infradead.org>, "seanjc@google.com"
 	<seanjc@google.com>, "bhe@redhat.com" <bhe@redhat.com>,
 	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>
-Subject: Re: [PATCHv4 14/14] x86/acpi: Add support for CPU offlining for ACPI
- MADT wakeup method
-Thread-Topic: [PATCHv4 14/14] x86/acpi: Add support for CPU offlining for ACPI
- MADT wakeup method
-Thread-Index: AQHaJxRg2LJJnT2of0eK3PTgcDCh0LCbWa0A
-Date: Tue, 5 Dec 2023 23:36:55 +0000
-Message-ID: <3a080962fea97efbb8e102c1de34bc766d7a53b6.camel@intel.com>
+Subject: Re: [PATCHv4 06/14] x86/kexec: Keep CR4.MCE set during kexec for TDX
+ guest
+Thread-Topic: [PATCHv4 06/14] x86/kexec: Keep CR4.MCE set during kexec for TDX
+ guest
+Thread-Index: AQHaJxRjCrpZEPs+S0m2hHcn7IWK3rCbX8iA
+Date: Tue, 5 Dec 2023 23:58:45 +0000
+Message-ID: <861f583e2550959616e19565235f0debbe27149b.camel@intel.com>
 References: <20231205004510.27164-1-kirill.shutemov@linux.intel.com>
-	 <20231205004510.27164-15-kirill.shutemov@linux.intel.com>
-In-Reply-To: <20231205004510.27164-15-kirill.shutemov@linux.intel.com>
+	 <20231205004510.27164-7-kirill.shutemov@linux.intel.com>
+In-Reply-To: <20231205004510.27164-7-kirill.shutemov@linux.intel.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -121,68 +117,68 @@ user-agent: Evolution 3.48.4 (3.48.4-1.fc38)
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BL1PR11MB5978:EE_|SA2PR11MB5145:EE_
-x-ms-office365-filtering-correlation-id: ef44d994-b718-4a8b-4fb7-08dbf5eb10c6
+x-ms-traffictypediagnostic: BL1PR11MB5978:EE_|IA1PR11MB7678:EE_
+x-ms-office365-filtering-correlation-id: e0315513-1beb-43b4-e3c7-08dbf5ee1e19
 x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: zZP9bbKwm7E7rsl1NWK69oKj4LUDeJyGJ3b0VWKrCNPSgBuSXx+RlC80u5/Zl4L/HvnXnlibhOCkJQPshTQxmX8LXBk3vAOnN/HlSjRGp+0LW/PMxqD1RmSjG76CRRuf4A5xCNgd91opEVv1NlqxpXp9f/NoZsSihVxtnW0V0F4ZT8rxTcZsk5vv3HTsyCT8nr3wI1eqofiOZSq8jslLjJzMYwOZAsfTgSVsEQMYsHs7sbOBZZZeYoWr9crTOW9bheFdfpFSxiDeFnNmX8U23IuNnQtxWi4CVKeK2sJZwi5603jrNAsjwVczo8nBsvPflzXQOLIfzCAkRpRxaGkxpYCwD3PZXr3Lv9oUpXaARsyy5rWS7YXrBPMhbE3CXk5Es2Fdu2Rv07Mp+6HNz4X6IT1kSgSRx6BYLkg15Vj8o6AAJKruyRuFjlpHNgFeLRLrgO7zzvdgJLTKSpUlsQb5qLqc4K7skj579RlWzakFIjeAWPF+9AW2xfxuC/nU3dAoPJZnf95EkmzaeoFmLIPLbDCJP1BroEn1TCYqqcoWrtkBhhDgzos8ov70QYAZLsDogq4qYW4575Ll7FOTjPd9h429qjhk5e+rDSyc/7q4TMmOFA47fPGGT2Ipk2L2aa4m
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR11MB5978.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(136003)(346002)(366004)(396003)(39860400002)(230922051799003)(1800799012)(451199024)(186009)(64100799003)(6486002)(83380400001)(478600001)(6512007)(2616005)(6506007)(26005)(71200400001)(110136005)(316002)(66476007)(91956017)(66446008)(64756008)(54906003)(66556008)(86362001)(36756003)(41300700001)(8936002)(66946007)(76116006)(38070700009)(8676002)(4326008)(7416002)(2906002)(122000001)(5660300002)(38100700002)(82960400001);DIR:OUT;SFP:1102;
+x-microsoft-antispam-message-info: zXRkODadw/MUPkeInb+bRWNUIG2MJF6TGYRli42/kD6CpbUpAnLtDiT4ZVglRLs5rV/7/TWR3xZyzU2KAQFfo1/IY5Sol7VzqVLgEg8ZqKaNMBvnCXq0HyqFrptwTZ8vkFguusYTW8bTHKqv3O6QtQlvLmp0D1V7LKPz49wMgz33n9s4qSp/I/vW+5LTCuOb9pVDCWuIjW/ypFauZd/DK4Kgq0E1hDpyUgm9E78+E8bLnX+USeUJ4xXKge2Q+VU/Y4dC4Q1+oQw20vJL13KGFpziDOfdlrBnXuSsmlMNxvR8QV8Z3jwQ4vKNbE+jYuiN2u1RjwMEaxVcDVbyiU0sfyhJdc5DZoMPGZaWf6mdO2xKSKfF9+XPXlQlfsHj3w/G8tCqdQ91NM2AJri+2ibA19YhCimUncwVEOkZehl1R7whvxUoyCVsMWwVhiH4reheOWaBN8llCuZBi7i8WBuSMgl7fby9iAjRbfNyiDIDU6vIFFhoeP+Aws5sadvlhhSOY2Z+gYhXQ+nEvFEVLZfpDVTO5NtTnusGjbu2wAoargLAYqTOmRXYTX6xS01iOtaV1QwebocVbMgIiSM9vsbCmO3Fwdt2+3H79SX1cMdGXrjfqkOlyDVOrgJbboRfrNRP
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR11MB5978.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(396003)(376002)(136003)(346002)(366004)(230922051799003)(186009)(1800799012)(64100799003)(451199024)(66946007)(54906003)(66446008)(76116006)(110136005)(64756008)(66476007)(316002)(66556008)(91956017)(478600001)(71200400001)(6486002)(38100700002)(7416002)(5660300002)(36756003)(41300700001)(38070700009)(2906002)(86362001)(8936002)(4326008)(8676002)(122000001)(2616005)(26005)(82960400001)(6512007)(6506007);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?MG43U3FXMFhUaVZqRFhWV1VMbXE5T1ZwMTd0dnRUUVVSYjdNczNicFNnVmgx?=
- =?utf-8?B?Tm43SXl5dDU3YlMwbVBRZ0tEcC80QWFQK0hhRGtxVHpvWmxsYlhXOVVmbUZo?=
- =?utf-8?B?TXhLYWdQTms5WTFCS3RlWklWY0picVA3eDFrMjZxMWdCZUdDUWF5bXpPRkRj?=
- =?utf-8?B?OGp4YnpvWWhrSTk0TnlDeVFBdUVkVEtKTXgwRU80VXZRSFhwa1FtSXR4SXZM?=
- =?utf-8?B?bm1ja1hGaHpvK0ExbE9VOGJqekRjM095QVUxQUppOFNSTmdIWVkzT1hvWEZQ?=
- =?utf-8?B?elVxSGVpT2tWSithOW9uQ1cwTDVFckc3OURUMVM4cjJLL29TeUNrQytsVTVH?=
- =?utf-8?B?czgrK2MwdDNTNFpBdmo4ZndyUTd4L2NhcFNYMnNrODRna1NPU3hHN2ptWWty?=
- =?utf-8?B?Ym1mUDZFcnZhN1c0SjZyVzhmVlpGVEFMQWNaRWJYMGgybXIxWERUVFFrMW5O?=
- =?utf-8?B?NUdPU1pUSU94ZzVtQzRtWXE3TnQ1ZUZ4c205cVp3L1h4aW83UWR3WjdUMU80?=
- =?utf-8?B?OGFRNWZIRUYxMVFTWkJvTklVZ2RBNGlGVmRlK2ZFRDhSUnBNK1EyL1B6K0Nz?=
- =?utf-8?B?bHd6VkM5djd6bzg2RVRielk1VHVYamVsSUdsZ01ha2gwVWdJYjlkb1RiTjA2?=
- =?utf-8?B?Zk9ZNXUwYUdLUTFPYnFvQk5HRDJuRVovMlJQaE9CSTNnbWtuQkx5S1g5VUk5?=
- =?utf-8?B?WUZPUHhWZVg0cmNDM2diMk92aDhnSG9HdXZwczBKSzA4eHF3cHBwQ3pmeHZx?=
- =?utf-8?B?cGpDY3g0ZVJ1ZGY2b2FSRGc2Z0tCV3J2S2M1eHBaNTNMaXlMaFpvcHJNVXlP?=
- =?utf-8?B?QlJ1VjduMUNoaUxGT3l2S1VXZUlsRnZZNktzSUFiMUVndWx1T2pHQnhjN3hl?=
- =?utf-8?B?WWpUa1QvZ2ZBZTdQaHRyUm5KbURjMjdvMTFRR0Q1UUVQcTdpZzgvVThRUmk3?=
- =?utf-8?B?Q0Z2OHl6bUw0MGt5b2VxN3FYWC9HMjR2ODNURzc3MkNDRDZCTU82dEswbTlL?=
- =?utf-8?B?OXNyZjhpdy9taFRRREJNUmNwOVFWVVErM3ZGQ011cFBoRTlzWVBjOXdWUkZp?=
- =?utf-8?B?UHBUc1Q3S05ZSmZEMXYxQk0wbWVObVJ2NWQ1N2tQY29tR0R2QkM1YzVkb1pU?=
- =?utf-8?B?ZDNkRXRuUjh1OXhyb3lIbk1hY1JXQ2E4d2hlZ0p3cWk0cERsZVZKV3FsMlYw?=
- =?utf-8?B?Yi9RWlBDa2FiUXhYNGJ6K2dmaXFzZXlCNkFuN2NOR055UVBSTVMwcDV2MUpQ?=
- =?utf-8?B?UmVtSkNkWUhCK3ZDMlA5ZzZ2bFY4SHozNXNTUkxUME00OVhJSnFtazBPRkNl?=
- =?utf-8?B?elh0czFqYWlIa21SeGpwdWpPNG9mUHZUdlpDY2ErUTFTU3JQSWJuazE3Y3dT?=
- =?utf-8?B?ZzQ3RS9CTSs3MjBnZXE5L1FjTGJLeGJ5eUpSZ2pkRENpTHpTeFZVSXNicTFL?=
- =?utf-8?B?NG5tdHZJcHVYR1c3N3prZmRidEdXVTU3bzV6Y3E0a2VUeGV1VG5zb2lSUVB2?=
- =?utf-8?B?T0VnZUpPaE1scEFXNXhrWGtqQnA1c3FhL3hBaHR2Zk1VY0ZmNlZJb0JldU91?=
- =?utf-8?B?ci9RencwdC9Sanh3dlZrbmJYYll5Y04vcEROZGExbko1eGlTaS9xaWl3WWda?=
- =?utf-8?B?cDdBK0tBSWVyOGVpYVdYRnhqQnJueDRuT0Vib3FXYWUwL0RpYWlsZmtJMUNq?=
- =?utf-8?B?K0FKUWJ5RFFEVXJic3N3SGx5SVpjQVhCNmVFUnFHWUtvRkdzTVVMNTBLQzd2?=
- =?utf-8?B?Ri9PL0ZlQU95Y0tRdjZmS3o2MzdHWlcrcVBkSzQ2V05TTWhEaWc0cjBBNXV6?=
- =?utf-8?B?d1V6Q1RsY3VHOHFKQ1ZyNkgxY0hZYXlvSTJFTjl1NGc2Z1NXT0JEZVVxZHNj?=
- =?utf-8?B?eVFJTVZLS0NMUHBWN2VnNUJZK3hEOGt2c21vanp4aHhYb3pvSmR6UWZ3U21T?=
- =?utf-8?B?NEw2MCtrMWZud3dBL0tuOTZobHRSbjRSYWZEOXVJNGsyakNBK2tKV2xVUFM5?=
- =?utf-8?B?ZHVxUE1Fb3pWbmN4cUZWMnhpT3ZXNUt3bFRPb05lcTRsQkkyYUVZa1h6ejA5?=
- =?utf-8?B?OFNOMWZ0dFZiWWxYWE5wRDZBTk8yaWp2RldqWTJRWkdtaG9pQ2VudkxwZUhs?=
- =?utf-8?B?ZEROVEMxN1hCUjFmaEdlS1BQU0k4VktYMXh3MFpPTWNsZUx6d1g4ZnVqd1ZO?=
- =?utf-8?B?Qnc9PQ==?=
-Content-ID: <73A22C34411FC142BCDD48E0FE9CB279@namprd11.prod.outlook.com>
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?bzM5V0RkSnNOdWNpNy9VK1IyREtzTGNCVjI0MHJGOG9wMERtZjVHbnVoV3JS?=
+ =?utf-8?B?OEcreFJQTTk4TWlvd3crdzZhdjlFc3F1R2tTUnJMMHpCenkvdVRMSkdhdHFy?=
+ =?utf-8?B?QTVaczdoSEFnMXJPSzgwSGc2bTZvaldjaEVWN1FpZTBsMGFRMENvYTg2cUpu?=
+ =?utf-8?B?a3pKQjNlbXRYSXl1NmRLRUJtNzZoWFl0Tno5VXJzODJKZ29WTHB5SUxBYjJF?=
+ =?utf-8?B?ODJIVFkxaVI5RjNQMnRXMytkdUtCNkVkUlpYK0d0cThveUhqOFNLbG9rYmxN?=
+ =?utf-8?B?QzRRUXRvNlJqajg5T2xYTjRyVFN1R3FGS2REem1NZTNvUmI0MUFBVzQ3VHAy?=
+ =?utf-8?B?aTdvYzZNRnpvNFdWdUpXNUNIbklkYlFqc0hSRTkwQ3ViRFpPd3BmcXNRTnlU?=
+ =?utf-8?B?TlBPWGNtVllZbnNkU0pEMGFmSW5OeVhwK2RYZFI2MGFrM3FuejFXU255blZn?=
+ =?utf-8?B?Nk9Xc3ZXdTZieWxyNFhLZm1JZld6SkloMVN4eG01d3Fyb2VNM1Y2bmdtNWxV?=
+ =?utf-8?B?RnZtVHk0OXdWZ1Z3WE5pc0RrK1JFeHhhNW5IWWlFVDZoYzY2SEpkNHZGc1VG?=
+ =?utf-8?B?ZSsvdnFSaWZTOEM5azd1MmtwRmpVVUxjcWRHcjRDN3NoN1prbU1qdUhkaExB?=
+ =?utf-8?B?WGlSL0c1c21zZ2JJcmw4ZjJQUmdlekE4a1A0cDNIb3JYaW9qTFdTNEtCVjJP?=
+ =?utf-8?B?QUJ3SGtJY3pRMXVlMno0WVV2M1Z4dnBzTVREMFBZbGt4T1BSUytOOGdFblRN?=
+ =?utf-8?B?QWlIOWJVekZDZnRyOURrWVp2d05td1RvN3lpeUQwanRaR0lyN3pNdTNOTmVi?=
+ =?utf-8?B?UWNGYzVXL0R4OGFRUW9Md1pMZ0pyRzZFZHNvNDhQeHRLWkF5Ky93RmY1QWVw?=
+ =?utf-8?B?bTM3d1pNOGNxSExrQitLM3UxdTNZL0YrMk05NU5YdmlwM0xDTTdRamtCVC9m?=
+ =?utf-8?B?U0lSSVZRSzZjWUF3a0ZmOXR1U3NHMEJQbDdHVmphblVCbGVtZHdqVjlQcGNp?=
+ =?utf-8?B?dzM5aWhMMklvNmRGSlI1M2VDbmZoM3U1UkJvT3RJREh2VVYvKzNOWk5hdW5t?=
+ =?utf-8?B?OHdoL3Zwby9NRmxKUjRjTGEyK1E0alRGZFQvSWNEcVVYcEdhTVF5MHBmRzZk?=
+ =?utf-8?B?VVVZVmpCRXkwVXY1RlhvakxxN1hnMTdTYmVOdk4vSlFRY2xxRkd5UG5raHVE?=
+ =?utf-8?B?eVlCWFMyemdocHB0ZnNoRUhFVkpTZWxGaGJseThkV3gvWG9GQmx4Zm1hTG5t?=
+ =?utf-8?B?Nk0yYUFoT2NUR09MQjFkSFpwSDRNR2huOWRVYnVxalJncGJPZWFoc3I3MmNP?=
+ =?utf-8?B?WmZEdURvS2RSRllMOHhpaXJWMkwwcFZkOGlyT2p4RGRYeFdjRUpJMGtFUWx0?=
+ =?utf-8?B?WlkyS25EQTI4Z24yczdpQ0xiV1RtNUxycVdwSGZNTy81b3hYeGhlQjFCT0Iy?=
+ =?utf-8?B?ZnlBd3Boc1MzNWE0b2diSnEySTJES1hSMEJhV2poUVdXdmxjYVl2am1PeHlq?=
+ =?utf-8?B?dkJtSnlCdTdnbkZrVFBvS1JlWUhjRUY1QkdKN2VoUngrMUJNVnhlTmhUL2Jz?=
+ =?utf-8?B?MEpCUXR3SHRCMzVkVzhIYVFpdnpuc0dGZEFpYmV1NGFUUzlUdCtVMGY3cXlM?=
+ =?utf-8?B?dEFaZ1FYVGpUa3ZHRGszcEpjQ1B6Ym9YT2cyMjZ1dHdObnJ1MEtpYVlFYmFz?=
+ =?utf-8?B?UGhpb0lYQVFFdEw5eHF2Ti9pZTN4c3NWZnhHQjV6clIrRkJFWEJsdDJDVGtN?=
+ =?utf-8?B?d08rOEZmMkkxanlYMHRrMHd0ZFp1L0FnUkpyMVpHM1llNklUQVpNVGtCamE3?=
+ =?utf-8?B?WHQ0SG9iU2V1djVkQ0RCY0FqQVNGWjZHcE9xK1pZVkpRaW1HYkxqWmFJRExr?=
+ =?utf-8?B?L1FFdFNzeHY3aEg5SHM1RXFYemFMcFRUUExZaVBsWFp1aS9UdGhXV05zdXVK?=
+ =?utf-8?B?QUZjbzNHeURuQjRUYzc0b29jbHJKQ2dDZUhWREE3Q0hSK1J6RVBXUTVhMU53?=
+ =?utf-8?B?cUQ2MjA1alQzblAzZ0xYb3VHOWEzdU1BVUFWd080emxpOFhLUUVQc2llV29w?=
+ =?utf-8?B?dDE3WnpCZjVjMzRNcGppZ0xhL0Z2MUZKcHZMUTNlZVErUTNZb1p1cHBYOG16?=
+ =?utf-8?B?T0h5QmJGTFM0SGs1ajBaZDk5RDBrN1lMbkh3dXRDWHhoNXcvd1R6SWhmYytp?=
+ =?utf-8?B?bkE9PQ==?=
+Content-ID: <627B8527FF49954F99B76A67238D8055@namprd11.prod.outlook.com>
 MIME-Version: 1.0
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: BL1PR11MB5978.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ef44d994-b718-4a8b-4fb7-08dbf5eb10c6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Dec 2023 23:36:55.0415
+X-MS-Exchange-CrossTenant-Network-Message-Id: e0315513-1beb-43b4-e3c7-08dbf5ee1e19
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Dec 2023 23:58:45.8549
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: dw3fE99DUC9oYbZmNMPuBnum2d5blnDW6ptTBjijrnidNRtdaZXGLOMiP+6B/UmHlbPAjPzX5atVlHoSabJ5jw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR11MB5145
+X-MS-Exchange-CrossTenant-userprincipalname: epDx9PfuvZ83pQ1wfzmOLNuSC45omJVGNkxBvWl/i1NmiOGsYRT9sCT5lZGn4axOxYUqIDhZGgPF8vEY/PcauA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB7678
 X-OriginatorOrg: intel.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231205_153701_168931_585D369C 
-X-CRM114-Status: GOOD (  19.71  )
+X-CRM114-CacheID: sfid-20231205_155856_206564_2C5E5FE1 
+X-CRM114-Status: GOOD (  15.58  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -199,204 +195,48 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-
-> +
-> +static void acpi_mp_stop_other_cpus(int wait)
-> +{
-> +	smp_shutdown_nonboot_cpus(smp_processor_id());
-> +}
-
-Is this and ...
-
-+	smp_ops.stop_other_cpus = acpi_mp_stop_other_cpus;
-
-... this below still needed?
-
-I think the current native_stop_other_cpus() should just work given you have set
-up ...
-
-+	smp_ops.crash_play_dead = crash_acpi_mp_play_dead;
-
-... for TDX guest?
-
-> +
-> +/* The argument is required to match type of x86_mapping_info::alloc_pgt_page */
-> +static void __init *alloc_pgt_page(void *dummy)
-> +{
-> +	return memblock_alloc(PAGE_SIZE, PAGE_SIZE);
-> +}
-> +
-> +/*
-> + * Make sure asm_acpi_mp_play_dead() is present in the identity mapping at
-> + * the same place as in the kernel page tables. asm_acpi_mp_play_dead() switches
-> + * to the identity mapping and the function has be present at the same spot in
-> + * the virtual address space before and after switching page tables.
-> + */
-> +static int __init init_transition_pgtable(pgd_t *pgd)
-> +{
-> +	pgprot_t prot = PAGE_KERNEL_EXEC_NOENC;
-> +	unsigned long vaddr, paddr;
-> +	p4d_t *p4d;
-> +	pud_t *pud;
-> +	pmd_t *pmd;
-> +	pte_t *pte;
-> +
-> +	vaddr = (unsigned long)asm_acpi_mp_play_dead;
-> +	pgd += pgd_index(vaddr);
-> +	if (!pgd_present(*pgd)) {
-> +		p4d = (p4d_t *)alloc_pgt_page(NULL);
-> +		if (!p4d)
-> +			return -ENOMEM;
-> +		set_pgd(pgd, __pgd(__pa(p4d) | _KERNPG_TABLE));
-> +	}
-> +	p4d = p4d_offset(pgd, vaddr);
-> +	if (!p4d_present(*p4d)) {
-> +		pud = (pud_t *)alloc_pgt_page(NULL);
-> +		if (!pud)
-> +			return -ENOMEM;
-> +		set_p4d(p4d, __p4d(__pa(pud) | _KERNPG_TABLE));
-> +	}
-> +	pud = pud_offset(p4d, vaddr);
-> +	if (!pud_present(*pud)) {
-> +		pmd = (pmd_t *)alloc_pgt_page(NULL);
-> +		if (!pmd)
-> +			return -ENOMEM;
-> +		set_pud(pud, __pud(__pa(pmd) | _KERNPG_TABLE));
-> +	}
-> +	pmd = pmd_offset(pud, vaddr);
-> +	if (!pmd_present(*pmd)) {
-> +		pte = (pte_t *)alloc_pgt_page(NULL);
-> +		if (!pte)
-> +			return -ENOMEM;
-> +		set_pmd(pmd, __pmd(__pa(pte) | _KERNPG_TABLE));
-> +	}
-> +	pte = pte_offset_kernel(pmd, vaddr);
-> +
-> +	paddr = __pa(vaddr);
-> +	set_pte(pte, pfn_pte(paddr >> PAGE_SHIFT, prot));
-> +
-> +	return 0;
-> +}
-
-Sorry for saying this late.  I think we can also use kernel_ident_mapping_init()
-to do the init_transition_pgtable()?  We can set struct x86_mapping_info::offset
-to __PAGE_OFFSET to do that?
-
-Looks set_up_temporary_mappings() in arch/x86/power/hibernate_64.c uses the same
-trick.
-
-Anyway I am not sure how many LoC (assuming can do) can be saved so up to you.
-
-> +
-> +static void __init free_pte(pmd_t *pmd)
-> +{
-> +	pte_t *pte = pte_offset_kernel(pmd, 0);
-> +
-> +	memblock_free(pte, PAGE_SIZE);
-> +}
-> +
-> +static void __init free_pmd(pud_t *pud)
-> +{
-> +	pmd_t *pmd = pmd_offset(pud, 0);
-> +	int i;
-> +
-> +	for (i = 0; i < PTRS_PER_PMD; i++) {
-> +		if (!pmd_present(pmd[i]))
-> +		    continue;
-> +
-> +		if (pmd_leaf(pmd[i]))
-> +		    continue;
-> +
-> +		free_pte(&pmd[i]);
-> +	}
-> +
-> +	memblock_free(pmd, PAGE_SIZE);
-> +}
-> +
-> +static void __init free_pud(p4d_t *p4d)
-> +{
-> +	pud_t *pud = pud_offset(p4d, 0);
-> +	int i;
-> +
-> +	for (i = 0; i < PTRS_PER_PUD; i++) {
-> +		if (!pud_present(pud[i]))
-> +			continue;
-> +
-> +		if (pud_leaf(pud[i]))
-> +		    continue;
-> +
-> +		free_pmd(&pud[i]);
-> +	}
-> +
-> +	memblock_free(pud, PAGE_SIZE);
-> +}
-> +
-> +static void __init free_p4d(pgd_t *pgd)
-> +{
-> +	p4d_t *p4d = p4d_offset(pgd, 0);
-> +	int i;
-> +
-> +	for (i = 0; i < PTRS_PER_P4D; i++) {
-> +		if (!p4d_present(p4d[i]))
-> +			continue;
-> +
-> +		free_pud(&p4d[i]);
-> +	}
-> +
-> +	if (pgtable_l5_enabled())
-> +		memblock_free(p4d, PAGE_SIZE);
-> +}
-> +
-> +static void __init free_pgd(pgd_t *pgd)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < PTRS_PER_PGD; i++) {
-> +		if (!pgd_present(pgd[i]))
-> +			continue;
-> +
-> +		free_p4d(&pgd[i]);
-> +	}
-> +
-> +	memblock_free(pgd, PAGE_SIZE);
-> +}
-
-It's a little bit sad such cleanup code isn't in common code, e.g., with a 
-
-	void (*free_pgt_page)(void *);
-
-to allow the user to specify how to free the page table.
-
-But this can be future job if needed.
-
-
-[...]
-
->  int __init acpi_parse_mp_wake(union acpi_subtable_headers *header,
->  			      const unsigned long end)
->  {
->  	struct acpi_madt_multiproc_wakeup *mp_wake;
+On Tue, 2023-12-05 at 03:45 +0300, Kirill A. Shutemov wrote:
+> TDX guests are not allowed to clear CR4.MCE. Attempt to clear it leads
+> to #VE.
+> 
+> Use alternatives to keep the flag during kexec for TDX guests.
+> 
+> The change doesn't affect non-TDX-guest environments.
+> 
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Reviewed-by: Kai Huang <kai.huang@intel.com>
+> ---
+>  arch/x86/kernel/relocate_kernel_64.S | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+> index 56cab1bb25f5..cd6a53667c6b 100644
+> --- a/arch/x86/kernel/relocate_kernel_64.S
+> +++ b/arch/x86/kernel/relocate_kernel_64.S
+> @@ -145,12 +145,15 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+>  	 * Set cr4 to a known state:
+>  	 *  - physical address extension enabled
+>  	 *  - 5-level paging, if it was enabled before
+> +	 *  - Machine check exception on TDX guest. Clearing MCE is not allowed
+> +	 *    in TDX guests.
+>  	 */
+>  	movl	$X86_CR4_PAE, %eax
+>  	testq	$X86_CR4_LA57, %r13
+>  	jz	1f
+>  	orl	$X86_CR4_LA57, %eax
+>  1:
+> +	ALTERNATIVE "", __stringify(orl $X86_CR4_MCE, %eax), X86_FEATURE_TDX_GUEST
+>  	movq	%rax, %cr4
 >  
->  	mp_wake = (struct acpi_madt_multiproc_wakeup *)header;
-> -	if (BAD_MADT_ENTRY(mp_wake, end))
-> +
-> +        /*
-> +         * Cannot use the standard BAD_MADT_ENTRY() to sanity check the @mp_wake
-> +         * entry.  'sizeof (struct acpi_madt_multiproc_wakeup)' can be larger
-> +         * than the actual size of the MP wakeup entry in ACPI table because the
-> +	 * 'reset_vector' is only available in the V1 MP wakeup structure.
-> +         */
+>  	jmp 1f
 
-Space/tab issue.
+Nit:
 
-> +	if (!mp_wake)
-> +		return -EINVAL;
-> +	if (end - (unsigned long)mp_wake < ACPI_MADT_MP_WAKEUP_SIZE_V0)
-> +		return -EINVAL;
-> +	if (mp_wake->header.length < ACPI_MADT_MP_WAKEUP_SIZE_V0)
->  		return -EINVAL;
->  
+It seems <asm/alternative.h> isn't included in relocate_kernel_64.S.  Maybe it's
+better to do it explicitly.
 
+Maybe even better to explicitly include <linux/stringify.h> too, but I see
+<asm/alternative.h> already does that.
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
