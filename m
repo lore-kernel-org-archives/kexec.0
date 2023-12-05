@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 69F43C4167B
-	for <kexec@archiver.kernel.org>; Tue,  5 Dec 2023 00:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 01E06C4167B
+	for <kexec@archiver.kernel.org>; Tue,  5 Dec 2023 00:45:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=ajjPIzO6BGEZ90mTPCFKSYFpgZUsHs/3Y6hVolXybtM=; b=I28VYMxRWZpqJL
-	tHooTRCuJIQorVFC9fU51N5OqXInJbpOrbhMZ3qgcntOexx7ZQjpAEQRKcaywUU725n9Pdmdyso81
-	YkswlRrJBTX5kNrGaezxlfZs+hbDI5+ONSzPxMKPGSCTFfd78ePBUaiOb3OsxoRbeEkf2UjQXVIYr
-	h0ZkZQoHL/t6ayJWW6Xi3HgUQD9Jv7rPUNwxlYgDhpS1ewBdVFH8kWGqHn1V00EB+KggBe6gjLRf2
-	wnjd5CyJEdHiiXyNm6hDW+tiu+UohvKRVqm8PxhhGKse/VD0eVXeZoX5lHfqNvJWsOJjrQZZx0ite
-	0qUUC5d8eRYqVA5tAyCQ==;
+	List-Owner; bh=8eJZL1U0DubVqUULsYBCdd9mS9jFOh9oAOYsp8PtVYA=; b=z2Tp7CNARA7Mc0
+	IXdWOK/rbxP+B53acsvF76pJ/fM1hLmIT9v/ntVoAvBIem5UjTiY/1EeK+dy+1a0bTIx2E6n85VoU
+	M9QCLOPakOBKHy8JCGSNzpS7mMnhiwBDp4hpCIwE2Mmd5sSEGrXU6iMWEl/0Hr7RPtbxF+lTj905e
+	9edge0QlS/ucpk7brISnC9Go+lCnOVG27fYFHyKAyk/HJInhm0YN1dtuyUAFMakmVXOQK2j9AvKkP
+	+ygQugpwV1uVAaXfNPmXBlE3PE/7wlOWxOYhBejwQezDvUPedalgMcg6haPyGk/6lyeqd0PymkrLB
+	390VR6qZN0sMKn7NozMw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rAJZE-005tiP-1x;
-	Tue, 05 Dec 2023 00:45:40 +0000
+	id 1rAJZH-005tl7-0C;
+	Tue, 05 Dec 2023 00:45:43 +0000
 Received: from mgamail.intel.com ([192.55.52.120])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rAJZ8-005tYa-32
+	id 1rAJZ9-005tcn-0v
 	for kexec@lists.infradead.org;
-	Tue, 05 Dec 2023 00:45:37 +0000
+	Tue, 05 Dec 2023 00:45:38 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701737134; x=1733273134;
+  t=1701737135; x=1733273135;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=wYs3fU4C0jZd+PnKZxc0e8e/KDE7b/5Kd3uwb7sJ62o=;
-  b=Qb2rTBYqT1YCgBPpUKZffe+VXslh7ruFlAP0N7wHYiza4djqc0gwNBa7
-   5rJV836ZOyxlgYWcqULyqj+61zpDSKDk4E8K2xWEHP1OyOZTH83Luu+iu
-   g5V2vJRDPyS7w3jqkCBmjVPwlI4Zp/xwyohmzWAfpZ+meYfqP6piTJrKc
-   7LKMt+3wZJGpqNvAOY/58/qshBeVEuLwCl+6UwhICz6zFN2cy/a/IKAvx
-   pYHaQoDcy3grocjYsfFN+J0DKVSxAvgdfNiA0t84rQm9u2A+DRHsi4Udu
-   v39zl6ZQ+Oq3Kskx+jaPI56/g3dCFp/nSOlTLnwxZ1v6MLe+AADFtvBiW
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="392688664"
+  bh=RP/Va3aoGG5zb/Y76A/szY23yia8vizTXE1CbaIASh0=;
+  b=d4uxwGRqsLO8MY5jI7Rcaw3E7aOZ5O/M8KFi3bGWq+mRn4IMZlp+2owi
+   1KpCn57uS8n+9Omo55V6OBvHJk0GPt9oVZRDARl4HVPY5L14g8eNe4Boe
+   61zxw4odZK9P15QM082Q5Aec2cgeRPelMies7aJa2EL7RarnKPkuvNw7M
+   zAIrVGHY4+BVg/dGmGHk76tQFljoDQR5o5inT5IrO77L7+R5Zo3q+uOxg
+   h2b04YSBVyTwz1ZopWjS8hloiNRsFRbfIF7AP/BbcaoSXUEC3e0PCLIQV
+   XGV0ZusYFGIrx1ii6KaR90TGWra5ph4cm4wJPczcjbBGAmfLG44tPM2bC
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="392688671"
 X-IronPort-AV: E=Sophos;i="6.04,251,1695711600"; 
-   d="scan'208";a="392688664"
+   d="scan'208";a="392688671"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
   by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2023 16:45:34 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="888704402"
+X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="888704404"
 X-IronPort-AV: E=Sophos;i="6.04,251,1695711600"; 
-   d="scan'208";a="888704402"
+   d="scan'208";a="888704404"
 Received: from abijaz-mobl2.ger.corp.intel.com (HELO box.shutemov.name) ([10.252.61.240])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2023 16:45:29 -0800
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2023 16:45:30 -0800
 Received: by box.shutemov.name (Postfix, from userid 1000)
-	id 67CE110A446; Tue,  5 Dec 2023 03:45:20 +0300 (+03)
+	id 8959010A44A; Tue,  5 Dec 2023 03:45:20 +0300 (+03)
 From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -75,17 +75,16 @@ Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
 	linux-coco@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv4 06/14] x86/kexec: Keep CR4.MCE set during kexec for TDX guest
-Date: Tue,  5 Dec 2023 03:45:02 +0300
-Message-ID: <20231205004510.27164-7-kirill.shutemov@linux.intel.com>
+Subject: [PATCHv4 09/14] x86/tdx: Account shared memory
+Date: Tue,  5 Dec 2023 03:45:05 +0300
+Message-ID: <20231205004510.27164-10-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20231205004510.27164-1-kirill.shutemov@linux.intel.com>
 References: <20231205004510.27164-1-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231204_164535_009165_DFE9CA4F 
-X-CRM114-Status: UNSURE (   9.40  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20231204_164535_934469_FA6752AF 
+X-CRM114-Status: GOOD (  16.60  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,39 +101,123 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-TDX guests are not allowed to clear CR4.MCE. Attempt to clear it leads
-to #VE.
+The kernel will convert all shared memory back to private during kexec.
+The direct mapping page tables will provide information on which memory
+is shared.
 
-Use alternatives to keep the flag during kexec for TDX guests.
+It is extremely important to convert all shared memory. If a page is
+missed, it will cause the second kernel to crash when it accesses it.
 
-The change doesn't affect non-TDX-guest environments.
+Keep track of the number of shared pages. This will allow for
+cross-checking against the shared information in the direct mapping and
+reporting if the shared bit is lost.
+
+Include a debugfs interface that allows for the check to be performed at
+any point.
 
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Reviewed-by: Kai Huang <kai.huang@intel.com>
 ---
- arch/x86/kernel/relocate_kernel_64.S | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/coco/tdx/tdx.c | 69 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 69 insertions(+)
 
-diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index 56cab1bb25f5..cd6a53667c6b 100644
---- a/arch/x86/kernel/relocate_kernel_64.S
-+++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -145,12 +145,15 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
- 	 * Set cr4 to a known state:
- 	 *  - physical address extension enabled
- 	 *  - 5-level paging, if it was enabled before
-+	 *  - Machine check exception on TDX guest. Clearing MCE is not allowed
-+	 *    in TDX guests.
- 	 */
- 	movl	$X86_CR4_PAE, %eax
- 	testq	$X86_CR4_LA57, %r13
- 	jz	1f
- 	orl	$X86_CR4_LA57, %eax
- 1:
-+	ALTERNATIVE "", __stringify(orl $X86_CR4_MCE, %eax), X86_FEATURE_TDX_GUEST
- 	movq	%rax, %cr4
+diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
+index 2d90043a0e91..fcc159497554 100644
+--- a/arch/x86/coco/tdx/tdx.c
++++ b/arch/x86/coco/tdx/tdx.c
+@@ -5,6 +5,7 @@
+ #define pr_fmt(fmt)     "tdx: " fmt
  
- 	jmp 1f
+ #include <linux/cpufeature.h>
++#include <linux/debugfs.h>
+ #include <linux/export.h>
+ #include <linux/io.h>
+ #include <asm/coco.h>
+@@ -37,6 +38,13 @@
+ 
+ #define TDREPORT_SUBTYPE_0	0
+ 
++static atomic_long_t nr_shared;
++
++static inline bool pte_decrypted(pte_t pte)
++{
++	return cc_mkdec(pte_val(pte)) == pte_val(pte);
++}
++
+ /* Called from __tdx_hypercall() for unrecoverable failure */
+ noinstr void __noreturn __tdx_hypercall_failed(void)
+ {
+@@ -820,6 +828,11 @@ static int tdx_enc_status_change_finish(unsigned long vaddr, int numpages,
+ 	if (!enc && !tdx_enc_status_changed(vaddr, numpages, enc))
+ 		return -EIO;
+ 
++	if (enc)
++		atomic_long_sub(numpages, &nr_shared);
++	else
++		atomic_long_add(numpages, &nr_shared);
++
+ 	return 0;
+ }
+ 
+@@ -895,3 +908,59 @@ void __init tdx_early_init(void)
+ 
+ 	pr_info("Guest detected\n");
+ }
++
++#ifdef CONFIG_DEBUG_FS
++static int tdx_shared_memory_show(struct seq_file *m, void *p)
++{
++	unsigned long addr, end;
++	unsigned long found = 0;
++
++	addr = PAGE_OFFSET;
++	end  = PAGE_OFFSET + get_max_mapped();
++
++	while (addr < end) {
++		unsigned long size;
++		unsigned int level;
++		pte_t *pte;
++
++		pte = lookup_address(addr, &level);
++		size = page_level_size(level);
++
++		if (pte && pte_decrypted(*pte))
++			found += size / PAGE_SIZE;
++
++		addr += size;
++
++		cond_resched();
++	}
++
++	seq_printf(m, "Number of shared pages in kernel page tables:  %16lu\n",
++		   found);
++	seq_printf(m, "Number of pages accounted as shared:           %16ld\n",
++		   atomic_long_read(&nr_shared));
++	return 0;
++}
++
++static int tdx_shared_memory_open(struct inode *inode, struct file *file)
++{
++	return single_open(file, tdx_shared_memory_show, NULL);
++}
++
++static const struct file_operations tdx_shared_memory_fops = {
++	.open           = tdx_shared_memory_open,
++	.read           = seq_read,
++	.llseek         = seq_lseek,
++	.release        = single_release,
++};
++
++static __init int debug_tdx_shared_memory(void)
++{
++	if (!cpu_feature_enabled(X86_FEATURE_TDX_GUEST))
++		return 0;
++
++	debugfs_create_file("tdx_shared_memory", S_IRUSR, arch_debugfs_dir,
++			    NULL, &tdx_shared_memory_fops);
++	return 0;
++}
++fs_initcall(debug_tdx_shared_memory);
++#endif
 -- 
 2.41.0
 
