@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8DEC8C4167B
-	for <kexec@archiver.kernel.org>; Tue,  5 Dec 2023 00:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4906FC4167B
+	for <kexec@archiver.kernel.org>; Tue,  5 Dec 2023 00:45:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=L0fehDijmFMxbcCsFkEbxvrsePr08QjNsE1iNUkeQlE=; b=ErcjElK8jWWKGV
-	H/eD2nr84/dpFxQPPnsrkbniKMuBjw6v+vw2bLcGTy0ELEIeztUKEgQyc2WBdxVwLD3KmGEYB4eDE
-	63RAy0rMaUkl7zmr8Hj8NW2PCOoaEiRg2p7NLFKIs/hN4s1iOLM0c56f+ay4g87IeKSd799v0YZOz
-	Arlk1qoflZMyhH05xNK9eH+yoZ7cRM3igmGZT1EljCZRf+tUqt1HL9gTJuhQFvdTF+OU5CXHBXXr8
-	Zv9eCcrTWHpTv6VooGs4iKRUHRxHDVF+19uQEWfW3ODMlDIdwYKjNdkRt++rE+1OhNIReo+j+sW4f
-	FciRVSEVBjWNeJW4n5sA==;
+	List-Owner; bh=edcx3PPOeIqGjGCRdjl5pBb3idJFVU4KbWuVnvAJYZk=; b=JSzWuI2YJcE/Xr
+	tFGJypoc7VgCj7P3stwjziq6rcEXMxUksQZ/9D4cxCdq+/PsPmBuIETxYKV/jrX1/1hRwQyxPzsK9
+	vt24ks+IAt3TKDK5fkBrrhcUpjoUDSyDr8LvIaBqDCieo0hTRUYy/HocydvWLoedKr2ZZP83DqSWz
+	3reE+0VSwAHUzSOZ45XLG5SieR5KYrXRs9Ro2E0YQu16QHLBLZerVfsipR2IKaRtzKE8H9wORvrHw
+	FZFYat7L7JS26wL2DRuZ6WBnaMNbaIrM2CTXVlbiEJWBd54N5V06JDgB/Jmek/gRKilyci94P89XX
+	HvPEDfCscK4EsL9turRQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rAJZL-005toy-0y;
-	Tue, 05 Dec 2023 00:45:47 +0000
+	id 1rAJZO-005tsa-0l;
+	Tue, 05 Dec 2023 00:45:50 +0000
 Received: from mgamail.intel.com ([192.55.52.120])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rAJZC-005tcn-2Z
+	id 1rAJZD-005tYa-39
 	for kexec@lists.infradead.org;
-	Tue, 05 Dec 2023 00:45:42 +0000
+	Tue, 05 Dec 2023 00:45:44 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701737138; x=1733273138;
+  t=1701737139; x=1733273139;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=YHWGA0FuyU0K8kQA0J/DX6ZgopiBD6JnQLF5bZFmbyE=;
-  b=dhNNpRA9Obouq9OMANke3oT1IGeobMqyL/WTLJu5Dj5H6YdgUe8jaapL
-   kwj5iebQ0q6VxE96QhHxDZPL8BUQpdwH7Wwn5SeFIB+hqDNZn0o6HZz+E
-   9/R4OgwUTweluXaFSaYveIgvYmDI7/5SMUA1cRR8Ya4SEaipMO66ZGiCm
-   vBYUei8+NFWKmE7x7tCr47fovmE+EiQhbDr1EMcWrhhXrWNUCP8coZmKi
-   tTlJ+yQErTKXY2kM5WMaXt1EoEKCIcuxWUwhYK0TG2o5c32E3AzqTxvLT
-   43usd6IMF5vVRtauUQVpMzMH+SZUZdt3/1UJCF7B+abSZ4wPtcdJGsnbh
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="392688704"
+  bh=7MgS2tz+eXb3t+LyzYLE/xkq/zAhJTq68EvRtEFLASY=;
+  b=GqH70m5oYOqSlhH7oObV2YTwKzPyO6Gag3cCPXPSXNR9pHhxhDK/g0lw
+   WBD1r18RJz3VkzYCH88/Wd9PRcJPdRa15mGJmoaAGYHUjNvCOds+uStPY
+   r/AVVBPZOTZ3JzaEuTddNekcbIyNesdgwQY+hjLzF8CF6BgairPV50GLB
+   6zAJx2vOqkouA2HwVnseOZbZaTXMjkkmRAXU7oLcgrqT3qz6aKX3RJ6kn
+   xD0WUNnvzL7SqZc8i55rmVd5fuEJO5rufJVXWyCBQCn8ID5iiGmwlspqb
+   kXWrHovo7awQp37wf1SyX6S4Lu1vbnyxNuHyAHzHOgucSleCNu1Cg0P24
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="392688716"
 X-IronPort-AV: E=Sophos;i="6.04,251,1695711600"; 
-   d="scan'208";a="392688704"
+   d="scan'208";a="392688716"
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
   by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2023 16:45:35 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="944067946"
+X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="944067949"
 X-IronPort-AV: E=Sophos;i="6.04,251,1695711600"; 
-   d="scan'208";a="944067946"
+   d="scan'208";a="944067949"
 Received: from abijaz-mobl2.ger.corp.intel.com (HELO box.shutemov.name) ([10.252.61.240])
   by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2023 16:45:30 -0800
 Received: by box.shutemov.name (Postfix, from userid 1000)
-	id 94C0110A44C; Tue,  5 Dec 2023 03:45:20 +0300 (+03)
+	id 7E6FD10A448; Tue,  5 Dec 2023 03:45:20 +0300 (+03)
 From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -75,16 +75,16 @@ Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
 	linux-coco@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv4 10/14] x86/tdx: Convert shared memory back to private on kexec
-Date: Tue,  5 Dec 2023 03:45:06 +0300
-Message-ID: <20231205004510.27164-11-kirill.shutemov@linux.intel.com>
+Subject: [PATCHv4 08/14] x86/mm: Return correct level from lookup_address() if pte is none
+Date: Tue,  5 Dec 2023 03:45:04 +0300
+Message-ID: <20231205004510.27164-9-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20231205004510.27164-1-kirill.shutemov@linux.intel.com>
 References: <20231205004510.27164-1-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231204_164538_906475_6455B5F5 
-X-CRM114-Status: GOOD (  27.50  )
+X-CRM114-CacheID: sfid-20231204_164540_048044_C427C52B 
+X-CRM114-Status: GOOD (  12.57  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -101,291 +101,75 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-TDX guests allocate shared buffers to perform I/O. It is done by
-allocating pages normally from the buddy allocator and converting them
-to shared with set_memory_decrypted().
+lookup_address() only returns correct page table level for the entry if
+the entry is not none.
 
-The second kernel has no idea what memory is converted this way. It only
-sees E820_TYPE_RAM.
+Make the helper to always return correct 'level'. It allows to implement
+iterator over kernel page tables using lookup_address().
 
-Accessing shared memory via private mapping is fatal. It leads to
-unrecoverable TD exit.
-
-On kexec walk direct mapping and convert all shared memory back to
-private. It makes all RAM private again and second kernel may use it
-normally.
+Add one more entry into enum pg_level to indicate size of VA covered by
+one PGD entry in 5-level paging mode.
 
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Reviewed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
 ---
- arch/x86/coco/tdx/kexec.c       |   0
- arch/x86/coco/tdx/tdx.c         | 120 +++++++++++++++++++++++++++++++-
- arch/x86/include/asm/x86_init.h |   1 +
- arch/x86/kernel/crash.c         |   4 ++
- arch/x86/kernel/reboot.c        |  10 +++
- 5 files changed, 133 insertions(+), 2 deletions(-)
- create mode 100644 arch/x86/coco/tdx/kexec.c
+ arch/x86/include/asm/pgtable_types.h | 1 +
+ arch/x86/mm/pat/set_memory.c         | 8 ++++----
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/coco/tdx/kexec.c b/arch/x86/coco/tdx/kexec.c
-new file mode 100644
-index 000000000000..e69de29bb2d1
-diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
-index fcc159497554..46355ea9f4cf 100644
---- a/arch/x86/coco/tdx/tdx.c
-+++ b/arch/x86/coco/tdx/tdx.c
-@@ -6,14 +6,17 @@
- 
- #include <linux/cpufeature.h>
- #include <linux/debugfs.h>
-+#include <linux/delay.h>
- #include <linux/export.h>
- #include <linux/io.h>
-+#include <linux/kexec.h>
- #include <asm/coco.h>
- #include <asm/tdx.h>
- #include <asm/vmx.h>
- #include <asm/insn.h>
- #include <asm/insn-eval.h>
- #include <asm/pgtable.h>
-+#include <asm/set_memory.h>
- 
- /* MMIO direction */
- #define EPT_READ	0
-@@ -40,6 +43,9 @@
- 
- static atomic_long_t nr_shared;
- 
-+static atomic_t conversions_in_progress;
-+static bool conversion_allowed = true;
-+
- static inline bool pte_decrypted(pte_t pte)
- {
- 	return cc_mkdec(pte_val(pte)) == pte_val(pte);
-@@ -725,6 +731,14 @@ static bool tdx_tlb_flush_required(bool private)
- 
- static bool tdx_cache_flush_required(void)
- {
-+	/*
-+	 * Avoid issuing CLFLUSH on set_memory_decrypted() if conversions
-+	 * stopped. Otherwise it can race with unshare_all_memory() and trigger
-+	 * implicit conversion to shared.
-+	 */
-+	if (!conversion_allowed)
-+		return false;
-+
- 	/*
- 	 * AMD SME/SEV can avoid cache flushing if HW enforces cache coherence.
- 	 * TDX doesn't have such capability.
-@@ -808,12 +822,25 @@ static bool tdx_enc_status_changed(unsigned long vaddr, int numpages, bool enc)
- static int tdx_enc_status_change_prepare(unsigned long vaddr, int numpages,
- 					 bool enc)
- {
-+	atomic_inc(&conversions_in_progress);
-+
-+	/*
-+	 * Check after bumping conversions_in_progress to serialize
-+	 * against tdx_shutdown().
-+	 */
-+	if (!conversion_allowed) {
-+		atomic_dec(&conversions_in_progress);
-+		return -EBUSY;
-+	}
-+
- 	/*
- 	 * Only handle shared->private conversion here.
- 	 * See the comment in tdx_early_init().
- 	 */
--	if (enc && !tdx_enc_status_changed(vaddr, numpages, enc))
-+	if (enc && !tdx_enc_status_changed(vaddr, numpages, enc)) {
-+		atomic_dec(&conversions_in_progress);
- 		return -EIO;
-+	}
- 
- 	return 0;
- }
-@@ -825,17 +852,104 @@ static int tdx_enc_status_change_finish(unsigned long vaddr, int numpages,
- 	 * Only handle private->shared conversion here.
- 	 * See the comment in tdx_early_init().
- 	 */
--	if (!enc && !tdx_enc_status_changed(vaddr, numpages, enc))
-+	if (!enc && !tdx_enc_status_changed(vaddr, numpages, enc)) {
-+		atomic_dec(&conversions_in_progress);
- 		return -EIO;
-+	}
- 
- 	if (enc)
- 		atomic_long_sub(numpages, &nr_shared);
- 	else
- 		atomic_long_add(numpages, &nr_shared);
- 
-+	atomic_dec(&conversions_in_progress);
-+
- 	return 0;
- }
- 
-+static void tdx_kexec_unshare_mem(bool crash)
-+{
-+	unsigned long addr, end;
-+	long found = 0, shared;
-+
-+	/* Stop new private<->shared conversions */
-+	conversion_allowed = false;
-+
-+	/*
-+	 * Crash kernel reaches here with interrupts disabled: can't wait for
-+	 * conversions to finish.
-+	 *
-+	 * If race happened, just report and proceed.
-+	 */
-+	if (!crash) {
-+		unsigned long timeout;
-+
-+		/*
-+		 * Wait for in-flight conversions to complete.
-+		 *
-+		 * Do not wait more than 30 seconds.
-+		 */
-+		timeout = 30 * USEC_PER_SEC;
-+		while (atomic_read(&conversions_in_progress) && timeout--)
-+			udelay(1);
-+	}
-+
-+	if (atomic_read(&conversions_in_progress))
-+		pr_warn("Failed to finish shared<->private conversions\n");
-+
-+	/*
-+	 * Walk direct mapping and convert all shared memory back to private,
-+	 */
-+
-+	addr = PAGE_OFFSET;
-+	end  = PAGE_OFFSET + get_max_mapped();
-+
-+	while (addr < end) {
-+		unsigned long size;
-+		unsigned int level;
-+		pte_t *pte;
-+
-+		pte = lookup_address(addr, &level);
-+		size = page_level_size(level);
-+
-+		if (pte && pte_decrypted(*pte)) {
-+			int pages = size / PAGE_SIZE;
-+
-+			/*
-+			 * Touching memory with shared bit set triggers implicit
-+			 * conversion to shared.
-+			 *
-+			 * Make sure nobody touches the shared range from
-+			 * now on.
-+			 *
-+			 * Bypass unmapping for crash scenario. Unmapping
-+			 * requires sleepable context, but in crash case kernel
-+			 * hits the code path with interrupts disabled.
-+			 * It shouldn't be a problem as all secondary CPUs are
-+			 * down and kernel runs with interrupts disabled, so
-+			 * there is no room for race.
-+			 */
-+			if (!crash)
-+				set_memory_np(addr, pages);
-+
-+			if (!tdx_enc_status_changed(addr, pages, true)) {
-+				pr_err("Failed to unshare range %#lx-%#lx\n",
-+				       addr, addr + size);
-+			}
-+
-+			found += pages;
-+		}
-+
-+		addr += size;
-+	}
-+
-+	shared = atomic_long_read(&nr_shared);
-+	if (shared != found) {
-+		pr_err("shared page accounting is off\n");
-+		pr_err("nr_shared = %ld, nr_found = %ld\n", shared, found);
-+	}
-+}
-+
- void __init tdx_early_init(void)
- {
- 	struct tdx_module_args args = {
-@@ -895,6 +1009,8 @@ void __init tdx_early_init(void)
- 	x86_platform.guest.enc_cache_flush_required  = tdx_cache_flush_required;
- 	x86_platform.guest.enc_tlb_flush_required    = tdx_tlb_flush_required;
- 
-+	x86_platform.guest.enc_kexec_unshare_mem     = tdx_kexec_unshare_mem;
-+
- 	/*
- 	 * TDX intercepts the RDMSR to read the X2APIC ID in the parallel
- 	 * bringup low level code. That raises #VE which cannot be handled
-diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
-index c9503fe2d13a..917358821a31 100644
---- a/arch/x86/include/asm/x86_init.h
-+++ b/arch/x86/include/asm/x86_init.h
-@@ -154,6 +154,7 @@ struct x86_guest {
- 	int (*enc_status_change_finish)(unsigned long vaddr, int npages, bool enc);
- 	bool (*enc_tlb_flush_required)(bool enc);
- 	bool (*enc_cache_flush_required)(void);
-+	void (*enc_kexec_unshare_mem)(bool crash);
+diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
+index 0b748ee16b3d..3f648ffdfbe5 100644
+--- a/arch/x86/include/asm/pgtable_types.h
++++ b/arch/x86/include/asm/pgtable_types.h
+@@ -548,6 +548,7 @@ enum pg_level {
+ 	PG_LEVEL_2M,
+ 	PG_LEVEL_1G,
+ 	PG_LEVEL_512G,
++	PG_LEVEL_256T,
+ 	PG_LEVEL_NUM
  };
  
- /**
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index c92d88680dbf..1618224775f5 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -40,6 +40,7 @@
- #include <asm/intel_pt.h>
- #include <asm/crash.h>
- #include <asm/cmdline.h>
-+#include <asm/tdx.h>
+diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+index 6fbf22d5fa56..01f827eb8e80 100644
+--- a/arch/x86/mm/pat/set_memory.c
++++ b/arch/x86/mm/pat/set_memory.c
+@@ -666,32 +666,32 @@ pte_t *lookup_address_in_pgd(pgd_t *pgd, unsigned long address,
+ 	pud_t *pud;
+ 	pmd_t *pmd;
  
- /* Used while preparing memory map entries for second kernel */
- struct crash_memmap_data {
-@@ -107,6 +108,9 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
+-	*level = PG_LEVEL_NONE;
++	*level = PG_LEVEL_256T;
  
- 	crash_smp_send_stop();
+ 	if (pgd_none(*pgd))
+ 		return NULL;
  
-+	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
-+		x86_platform.guest.enc_kexec_unshare_mem(true);
-+
- 	cpu_emergency_disable_virtualization();
++	*level = PG_LEVEL_512G;
+ 	p4d = p4d_offset(pgd, address);
+ 	if (p4d_none(*p4d))
+ 		return NULL;
  
- 	/*
-diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-index 830425e6d38e..c81afffaa954 100644
---- a/arch/x86/kernel/reboot.c
-+++ b/arch/x86/kernel/reboot.c
-@@ -12,6 +12,7 @@
- #include <linux/delay.h>
- #include <linux/objtool.h>
- #include <linux/pgtable.h>
-+#include <linux/kexec.h>
- #include <acpi/reboot.h>
- #include <asm/io.h>
- #include <asm/apic.h>
-@@ -31,6 +32,7 @@
- #include <asm/realmode.h>
- #include <asm/x86_init.h>
- #include <asm/efi.h>
-+#include <asm/tdx.h>
+-	*level = PG_LEVEL_512G;
+ 	if (p4d_large(*p4d) || !p4d_present(*p4d))
+ 		return (pte_t *)p4d;
  
- /*
-  * Power off function, if any
-@@ -716,6 +718,14 @@ static void native_machine_emergency_restart(void)
++	*level = PG_LEVEL_1G;
+ 	pud = pud_offset(p4d, address);
+ 	if (pud_none(*pud))
+ 		return NULL;
  
- void native_machine_shutdown(void)
- {
-+	/*
-+	 * Call enc_kexec_unshare_mem() while all CPUs are still active and
-+	 * interrupts are enabled. This will allow all in-flight memory
-+	 * conversions to finish cleanly before unsharing all memory.
-+	 */
-+	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT) && kexec_in_progress)
-+		x86_platform.guest.enc_kexec_unshare_mem(false);
-+
- 	/* Stop the cpus and apics */
- #ifdef CONFIG_X86_IO_APIC
- 	/*
+-	*level = PG_LEVEL_1G;
+ 	if (pud_large(*pud) || !pud_present(*pud))
+ 		return (pte_t *)pud;
+ 
++	*level = PG_LEVEL_2M;
+ 	pmd = pmd_offset(pud, address);
+ 	if (pmd_none(*pmd))
+ 		return NULL;
+ 
+-	*level = PG_LEVEL_2M;
+ 	if (pmd_large(*pmd) || !pmd_present(*pmd))
+ 		return (pte_t *)pmd;
+ 
 -- 
 2.41.0
 
