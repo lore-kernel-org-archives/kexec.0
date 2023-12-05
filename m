@@ -4,88 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 50C4FC4167B
-	for <kexec@archiver.kernel.org>; Tue,  5 Dec 2023 14:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2DBFBC4167B
+	for <kexec@archiver.kernel.org>; Tue,  5 Dec 2023 15:01:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=uCHumTS3FzpfbAKKrukMKPAaSXTp+DnvN9aGtxr6o1A=; b=eBKNis6I58SbJq
-	9yUby7hMLQQ/aiRoW1MnyLjYNpxzfjueb/Vts+QMcEpwGV4d+RVkOxLA/vKXd6GeFL81UmpI3bYm7
-	7XgAYV9HqzWT8lgfWV8TsQOw0Mwcb59Zp3FD/hQYl3M0VQEfQhfwVpJA54DC9Yr7qO18hiWYkxW56
-	Ep7vedldgN5JwDn9ivDq6aP8BqcLacxX0qozsG5a3tx+105LUOJjTf3b/8+E3GSOKqM6rB7qRyJR6
-	XonAD01YaJGZcSpsJZ46tB5sXtAK1/xZL8Z+1EeksuX61oxAveD3VUXR1cFCGeL5D5gnnpY9x7dtp
-	qdW2tyJ3Hlak4gHu0nTQ==;
+	List-Owner; bh=WOqqFNnfTtD2Qie0/rrr+6KCsGbj80R9Bszx2DubOYU=; b=L1epDmjRtJhYtw
+	Ku0kiLbs0WyPtEnuKMxsuG7HsvRFaJdSp+BA2u5pexhtDvR5VQTat5h0kQn48NVoDx1iywvye6x7k
+	44pGgKlOYZ1OQb2GtunQsw0Iufhr+YbCSbaBdXi7Ai0Yr7/s0JVd8mjML2Do81RuvxjS6cTYaSboh
+	jDiOJSAyPS2KsIR1KPInJ2pCb9zWHbsAMJpt6018JzFjwnfwD4kXU5ilwb33zJJqFJp/SRLX/pf5A
+	YhhsM5xy8HZodZlBYX9NuGEI735QvNAW8PIoiW1VFRx+fSfPeB5CT8mRKw6NF2Flhsi6APbMeHC0b
+	ZQoXCcLA1XVOonN/yK2w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rAWDR-007Zji-1i;
-	Tue, 05 Dec 2023 14:16:01 +0000
-Received: from mgamail.intel.com ([134.134.136.126])
+	id 1rAWvR-007fUJ-0U;
+	Tue, 05 Dec 2023 15:01:29 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rAWDO-007Zim-27
+	id 1rAWvM-007fSb-26
 	for kexec@lists.infradead.org;
-	Tue, 05 Dec 2023 14:16:00 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701785758; x=1733321758;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=HUtN95CBxY73WyhOnT1Lez/ETMiAOg2Qz+hvrK4nEdc=;
-  b=gFDa+OLeuPj/kN1orFWDAyfK++NJQtFfY8rgfpQxfhTmQvEvvaJ3y7U3
-   75Um9L1U19Xz/Tg6zRCK+i1gBLXhc9mogQCFR0ndTPudh06pzvqlIzohc
-   pWbwhNzodXMHEIUwtDs96kL7BU6iDZ8Ti4kmo4EcWaPaK8ZY4g7VOm7Xh
-   VsDjwD5FEFRL1elzmsr75e2zj3ApFPRj1/qWTKydVJTmeT9hunrhvl+As
-   4pVCOrew+kMiW2vHA9DHU3uf0AjYAsgIGkv06LZC9Eek1m3czpMM3vnb4
-   cKl/d92t8rvnUQMgXfqoBIseEqFouQBgBU1Gaj8aIT9xr4O8zXr7pIRZS
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="378924953"
-X-IronPort-AV: E=Sophos;i="6.04,252,1695711600"; 
-   d="scan'208";a="378924953"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 06:15:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="799984120"
-X-IronPort-AV: E=Sophos;i="6.04,252,1695711600"; 
-   d="scan'208";a="799984120"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga008.jf.intel.com with ESMTP; 05 Dec 2023 06:15:19 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rAWCi-000994-33;
-	Tue, 05 Dec 2023 14:15:16 +0000
-Date: Tue, 5 Dec 2023 22:14:51 +0800
-From: kernel test robot <lkp@intel.com>
-To: Sourabh Jain <sourabhjain@linux.ibm.com>, linuxppc-dev@ozlabs.org
-Cc: oe-kbuild-all@lists.linux.dev, David Hildenbrand <david@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	Eric DeVolder <eric.devolder@oracle.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Baoquan He <bhe@redhat.com>, x86@kernel.org,
-	Laurent Dufour <laurent.dufour@fr.ibm.com>,
-	Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Hari Bathini <hbathini@linux.ibm.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	kexec@lists.infradead.org, Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-	Sourabh Jain <sourabhjain@linux.ibm.com>,
-	Akhil Raj <lf32.dev@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>
-Subject: Re: [PATCH v13 5/6] powerpc: add crash CPU hotplug support
-Message-ID: <202312052234.Oinhx3bT-lkp@intel.com>
-References: <20231204053253.25305-6-sourabhjain@linux.ibm.com>
+	Tue, 05 Dec 2023 15:01:26 +0000
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B5EcuDS028329;
+	Tue, 5 Dec 2023 15:01:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=pp1;
+ bh=HVo0V+BSucAdzHLSaGr7Tcn/52HSjsSqm/M604043Lw=;
+ b=qicplluc3pJzUbF4Jphir1FZifKQV6rWfcQ5Q2g14hbJX1adZDwE988k22BubbzDAegX
+ UaIJUFQN1KUbjdifItyxhuHHK8sJc+lrUGNjf0ZfdSWIIRW4uZs6bXPKLVek/b/0AdqS
+ J3ls/VNqBwv/q3D3dTl5U+YHT10hKSyApAmeHFoIzH31S4uudedjkmHBFqUGorH23p/U
+ /ufEjgDBpfxOhcFsEH513o50izpYLqW0ZAH65aqA5nz2MrYnMA+pwM+aOyu3zSA6AvrD
+ YLq58kdyqnkkCklW0WnTPMhqep9f/3JTIchva+VT4V5FzfawGgd/EeSNTd8etytCgBD2 sA== 
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ut5tbrq6a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 05 Dec 2023 15:01:18 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3B5E5GNn000901;
+	Tue, 5 Dec 2023 15:01:16 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3urewtfetb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 05 Dec 2023 15:01:16 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3B5F1EwO64160076
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 5 Dec 2023 15:01:14 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4936D20043;
+	Tue,  5 Dec 2023 15:01:14 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 341F720040;
+	Tue,  5 Dec 2023 15:01:14 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue,  5 Dec 2023 15:01:14 +0000 (GMT)
+Date: Tue, 5 Dec 2023 16:01:13 +0100
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: HAGIO =?utf-8?B?S0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?= <k-hagio-ab@nec.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Subject: Re: [PATCH 2/2] s390x: uncouple virtual and physical address spaces
+Message-ID: <ZW87OaGBdXtCUnyC@tuxmaker.boeblingen.de.ibm.com>
+References: <cover.1701261329.git.agordeev@linux.ibm.com>
+ <173fd99d06d8fd09c0b370d3a33555b9bf11a8d9.1701261329.git.agordeev@linux.ibm.com>
+ <e0a46583-7f61-82fa-1698-d5255830eb72@nec.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20231204053253.25305-6-sourabhjain@linux.ibm.com>
+In-Reply-To: <e0a46583-7f61-82fa-1698-d5255830eb72@nec.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: i-rDbaQtzAkCgZjuI8cgWXvNs8nq28g6
+X-Proofpoint-GUID: i-rDbaQtzAkCgZjuI8cgWXvNs8nq28g6
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-05_10,2023-12-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 bulkscore=0 suspectscore=0 mlxlogscore=794 phishscore=0
+ mlxscore=0 spamscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2311060000 definitions=main-2312050116
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231205_061558_758645_EF5DB784 
-X-CRM114-Status: GOOD (  18.70  )
+X-CRM114-CacheID: sfid-20231205_070125_037072_49FB536E 
+X-CRM114-Status: GOOD (  21.66  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,97 +99,39 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Sourabh,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on powerpc/next]
-[also build test ERROR on powerpc/fixes tip/x86/core akpm-mm/mm-everything linus/master v6.7-rc4 next-20231205]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Sourabh-Jain/crash-make-CPU-and-Memory-hotplug-support-reporting-flexible/20231204-143305
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git next
-patch link:    https://lore.kernel.org/r/20231204053253.25305-6-sourabhjain%40linux.ibm.com
-patch subject: [PATCH v13 5/6] powerpc: add crash CPU hotplug support
-config: powerpc64-randconfig-001-20231205 (https://download.01.org/0day-ci/archive/20231205/202312052234.Oinhx3bT-lkp@intel.com/config)
-compiler: powerpc64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231205/202312052234.Oinhx3bT-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202312052234.Oinhx3bT-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   arch/powerpc/kexec/file_load_64.c: In function 'kexec_extra_fdt_size_ppc64':
->> arch/powerpc/kexec/file_load_64.c:953:52: error: 'threads_per_core' undeclared (first use in this function)
-     953 |         possible_cpu_nodes = num_possible_cpus() / threads_per_core;
-         |                                                    ^~~~~~~~~~~~~~~~
-   arch/powerpc/kexec/file_load_64.c:953:52: note: each undeclared identifier is reported only once for each function it appears in
-
-
-vim +/threads_per_core +953 arch/powerpc/kexec/file_load_64.c
-
-   915	
-   916		// Budget some space for the password blob. There's already extra space
-   917		// for the key name
-   918		if (plpks_is_available())
-   919			extra_size += (unsigned int)plpks_get_passwordlen();
-   920	
-   921		if (image->type != KEXEC_TYPE_CRASH)
-   922			return extra_size;
-   923	
-   924		/*
-   925		 * For kdump kernel, account for linux,usable-memory and
-   926		 * linux,drconf-usable-memory properties. Get an approximate on the
-   927		 * number of usable memory entries and use for FDT size estimation.
-   928		 */
-   929		if (drmem_lmb_size()) {
-   930			usm_entries = ((memory_hotplug_max() / drmem_lmb_size()) +
-   931				       (2 * (resource_size(&crashk_res) / drmem_lmb_size())));
-   932			extra_size += (unsigned int)(usm_entries * sizeof(u64));
-   933		}
-   934	
-   935		/*
-   936		 * Get the number of CPU nodes in the current DT. This allows to
-   937		 * reserve places for CPU nodes added since the boot time.
-   938		 */
-   939		cpu_nodes = 0;
-   940		for_each_node_by_type(dn, "cpu") {
-   941			cpu_nodes++;
-   942		}
-   943	
-   944		if (cpu_nodes > boot_cpu_node_count)
-   945			extra_size += (cpu_nodes - boot_cpu_node_count) * cpu_node_size();
-   946	
-   947	#ifdef CONFIG_CRASH_HOTPLUG
-   948		/*
-   949		 * Make sure enough space is reserved to accommodate possible CPU nodes
-   950		 * in the crash FDT. This allows packing possible CPU nodes which are
-   951		 * not yet present in the system without regenerating the entire FDT.
-   952		 */
- > 953		possible_cpu_nodes = num_possible_cpus() / threads_per_core;
-   954		if (image->type == KEXEC_TYPE_CRASH && possible_cpu_nodes > cpu_nodes)
-   955			extra_size += (possible_cpu_nodes - cpu_nodes) * cpu_node_size();
-   956	#endif
-   957	
-   958		return extra_size;
-   959	}
-   960	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVHVlLCBEZWMgMDUsIDIwMjMgYXQgMDc6MjQ6NTZBTSArMDAwMCwgSEFHSU8gS0FaVUhJVE8o
+6JCp5bC+IOS4gOS7gSkgd3JvdGU6CgpIaSBIQUdJTyEKCi4uLgo+ID4gK3N0cnVjdCBvc19pbmZv
+X2VudHJ5IHsKPiA+ICsJdW5pb24gewo+ID4gKwkJX191NjQJYWRkcjsKPiA+ICsJCV9fdTY0CXZh
+bDsKPiA+ICsJfTsKPiA+ICsJX191NjQJc2l6ZTsKPiA+ICsJX191MzIJY3N1bTsKPiA+ICt9IF9f
+YXR0cmlidXRlX18oKHBhY2tlZCkpOwo+ID4gKwo+ID4gK3N0cnVjdCBvc19pbmZvIHsKPiA+ICsJ
+X191NjQJbWFnaWM7Cj4gPiArCV9fdTMyCWNzdW07Cj4gPiArCV9fdTE2CXZlcnNpb25fbWFqb3I7
+Cj4gPiArCV9fdTE2CXZlcnNpb25fbWlub3I7Cj4gPiArCV9fdTY0CWNyYXNoa2VybmVsX2FkZHI7
+Cj4gPiArCV9fdTY0CWNyYXNoa2VybmVsX3NpemU7Cj4gPiArCXN0cnVjdAlvc19pbmZvX2VudHJ5
+IGVudHJ5WzEwXTsKPiA+ICsJX191OAlyZXNlcnZlZFszODY0XTsKPiA+ICt9IF9fYXR0cmlidXRl
+X18oKHBhY2tlZCkpOwo+IAo+IGFyZSB0aGUgX191KiB0eXBlcyBkZWZpbmVkIG9uIHMzOTB4PyAg
+YXQgbGVhc3QgbWFrZSB3aXRoIFRBUkdFVD1zMzkweHggCj4gb24geDg2XzY0IGJ5IG15IHRlc3Qg
+ZmFpbHMuCgpJdCBkb2VzIG5vdCBmYWlsIGZvciBzMzkweCwgYnV0IGl0IHNob3VsZCBub3QgYmUg
+dGhlcmUgYW55d2F5LCBpbmRlZWQuCkkgd2lsbCBwb3N0IHYyIGFzIGEgZm9sbG93LXVwIHRvIHRo
+aXMgbWFpbC4KCj4gJCBtYWtlIExJTktUWVBFPWR5bmFtaWMgVEFSR0VUPXMzOTB4eAo+IC4uLgo+
+IGNjICAtZyAtTzIgLVdhbGwgLURfRklMRV9PRkZTRVRfQklUUz02NCAtRF9MQVJHRUZJTEVfU09V
+UkNFIAo+IC1EX0xBUkdFRklMRTY0X1NPVVJDRSAtRF9fczM5MHhfXyAtVV9feDg2XzY0X18gLWMg
+LW8gLi9hcmNoL3MzOTB4Lm8gCj4gYXJjaC9zMzkweC5jCj4gYXJjaC9zMzkweC5jOjgwOjM6IGVy
+cm9yOiB1bmtub3duIHR5cGUgbmFtZSAnX191NjQnCj4gICAgIF9fdTY0IGFkZHI7Cj4gICAgIF5+
+fn5+Cj4gYXJjaC9zMzkweC5jOjgxOjM6IGVycm9yOiB1bmtub3duIHR5cGUgbmFtZSAnX191NjQn
+Cj4gICAgIF9fdTY0IHZhbDsKPiAgICAgXn5+fn4KPiAuLi4KPiBtYWtlOiAqKiogW01ha2VmaWxl
+OjExMTogYXJjaC9zMzkweC5vXSBFcnJvciAxCj4gCj4gKCJzMzkweHgiIGlzIHN0cmFuZ2UgYnV0
+IE1ha2VmaWxlIG5lZWRzIGl0IHNvbWVob3cuLi4pCi4uLgo+ID4gQEAgLTE4NjksNiArMTg3OCw3
+IEBAIHN0cnVjdCBzeW1ib2xfdGFibGUgewo+ID4gICAJICogdm1hbGxvY19zdGFydCBhZGRyZXNz
+IG9uIHMzOTB4IGFyY2gKPiA+ICAgCSAqLwo+ID4gICAJdW5zaWduZWQgbG9uZyBsb25nCWhpZ2hf
+bWVtb3J5Owo+ID4gKwl1bnNpZ25lZCBsb25nIGxvbmcJX19rZXJuZWxfYmFzZTsKPiAKPiBJcyBT
+WU1CT0woX19rZXJuZWxfYmFzZSkgbm90IHVzZWQ/ICBJZiBpdCB3aWxsIGJlIGludHJvZHVjZWQg
+YW5kIHVzZWQgCj4gbGF0ZXIsIHBsZWFzZSBhZGQgaXQgYXQgdGhhdCB0aW1lLgoKVGhhdCBpcyBh
+IGxlZnRvdmVyLiBSZW1vdmVkIGluIHYyLgoKPiBUaGFua3MsCj4gS2F6dQoKVGhhbmtzLCBLYXp1
+IQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMg
+bWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
+ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
