@@ -4,90 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6F846C4167B
-	for <kexec@archiver.kernel.org>; Tue,  5 Dec 2023 15:02:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 453E9C4167B
+	for <kexec@archiver.kernel.org>; Tue,  5 Dec 2023 16:49:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=tYuwJuBHwQR1vcDKjYxHRwbZZj9R9eueXA2HbDnXSyw=; b=dz/DuM5KTrOHvM
-	6AocEDWkm58dVkTXy4hrc7zSH8Ebjho1fybodDsrLiqUm+55+uLGa/3kCgBIo8phnCG2SxV3i8put
-	jk25fCCc1zpDRgUQbooJO1PHm6dNv12je5OiEEtvFAvOj8FvmQVgXTe0FA0LA25BRzg3FkQHTbqsu
-	WZKoOwlK3PaqzBjHUfZDfHb9otYyu4PydczORyOuzFdg1Iqo7WNRQCaW5JOLOSyNPoXywmsQtioWi
-	ND484AbDOJxzByUFkDqsQqy8VQIOmoME0stjVfpphiuGjT7Etfug6Fmu+MKa1V5wQIvktJGUBydDP
-	2KbjNUIOqipHnWogagKA==;
+	List-Owner; bh=bal3vq7VkBTjYa0x4PUcZXGonL7Ezv6rECsV+VwN6FA=; b=vo5k0Cc6eQe2U3
+	6kPcB9kJGVMEom9g0PvL1YxnBvxP8iF84LWanJyTX85hla2vSqHNP7fTpo9Ng7Ww8tgx5eaLFIGht
+	+N04eH7Ole8UE6CRXyaIL4gLLPQ9QLpcjOFEW4TqrFHXxeE5gEmzM7bw853iY8BcjGx18H4P8E3sE
+	EWQsBUHD50Hnxcz4JY58ttQRsxcxcdypIQp5bm69upw86HOxu7snVimqbiZtHi1IebrQ3U8Wf3UG8
+	qZ4oIx9h8lz+2jEMG/URh65N8BnyuWLcQUZocC1+YL0uVxyKLFtnnYnRe8uw2h0AlSmI2uGBJiRKM
+	WoChQ5tBG1fXWBNny0jA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rAWw1-007fYE-2l;
-	Tue, 05 Dec 2023 15:02:05 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1rAYbm-007us4-2b;
+	Tue, 05 Dec 2023 16:49:18 +0000
+Received: from mgamail.intel.com ([134.134.136.24])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rAWvy-007fXH-1p
+	id 1rAYbj-007uoH-0C
 	for kexec@lists.infradead.org;
-	Tue, 05 Dec 2023 15:02:04 +0000
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B5EvakY003145;
-	Tue, 5 Dec 2023 15:01:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=t1yFYwGf0hjA8WDuE2Oh/iKLf1fRv1wqoeaD0WUKGew=;
- b=h/V/BHbONfFUsfYYyCS4A37rnQmc8yO3jvTb6sGJOIL8Z4n6XqOWcvvBV0kPJDzB4TwR
- rGZ2BrkcCzOCMpWX4NjxR8fd2qUxvqPbBU5eGyVwpFGclgIUNeFRuAuEVi/KIwWGiD+9
- 0XveYGKoAYYAvEVS7/EF4bJbOW5MtVfV8CXsG+ICUTYeCgaED4kcNT+8BGuvCe9rd9Lx
- dXHXc9hQlZFfg8Ic+WE2VzqtPrZC5zCY2vSUpnEXHtiDcbmHDpkV22pHuKThjAkQby73
- aEy3KuPRHKaNgFVEujKn0BbXaNmFQ6NdK/Cy7PlzDS649YFxZpwd/V54nNu361+sv30H Qw== 
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ut62w85bx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Dec 2023 15:01:56 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3B5E5FsS009150;
-	Tue, 5 Dec 2023 15:01:54 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3urgdky73n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Dec 2023 15:01:54 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3B5F1qWZ39584206
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 5 Dec 2023 15:01:52 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D2FD320043;
-	Tue,  5 Dec 2023 15:01:52 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BB69B20040;
-	Tue,  5 Dec 2023 15:01:52 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue,  5 Dec 2023 15:01:52 +0000 (GMT)
-Date: Tue, 5 Dec 2023 16:01:51 +0100
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: HAGIO =?utf-8?B?S0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?= <k-hagio-ab@nec.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Subject: [PATCH v2 2/2] s390x: uncouple virtual and physical address spaces
-Message-ID: <ZW87X1IbgcGQ96fS@tuxmaker.boeblingen.de.ibm.com>
-References: <cover.1701261329.git.agordeev@linux.ibm.com>
- <173fd99d06d8fd09c0b370d3a33555b9bf11a8d9.1701261329.git.agordeev@linux.ibm.com>
- <e0a46583-7f61-82fa-1698-d5255830eb72@nec.com>
- <ZW87OaGBdXtCUnyC@tuxmaker.boeblingen.de.ibm.com>
+	Tue, 05 Dec 2023 16:49:16 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1701794955; x=1733330955;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=7vZuH5HdSCPRNmPWg/voqIUI80Iu2AQu2Qzt7cwlHqI=;
+  b=ObJ8vgKlOPPjtzbU6cH36xGUayQPAi9oYqaercy2kqzm4rPa8rol5/HC
+   edo3FvPVm5dWV4Rkic0D+0MfCjIs4iaRzqkXlIvtxZ0W6NlATWE7YNUS/
+   gd9ai/K9gBIEBa5NcqSKpG6KxoO4tKFdCpbxn6bqnKDCnBTIbZH42DfWD
+   /a/Nom1fKYCCTj2ZrE5hyq2akn3LN5cAISMxL5XxECnnQo2clLz6rAqw9
+   KvAHkpT0UnUofSZrcizCTwdAZXqTPhKGWc2DqxWiFcMVhIoxejtcG0YO7
+   K0O7XYmRjMrg/EpWkKkIV7geGE4Y2jfO5zrbFd7hnJG7Xnt0/niAdq/1u
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="396714342"
+X-IronPort-AV: E=Sophos;i="6.04,252,1695711600"; 
+   d="scan'208";a="396714342"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 08:49:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="944328444"
+X-IronPort-AV: E=Sophos;i="6.04,252,1695711600"; 
+   d="scan'208";a="944328444"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by orsmga005.jf.intel.com with ESMTP; 05 Dec 2023 08:49:05 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rAYbU-0009OE-1c;
+	Tue, 05 Dec 2023 16:49:00 +0000
+Date: Wed, 6 Dec 2023 00:48:40 +0800
+From: kernel test robot <lkp@intel.com>
+To: Sourabh Jain <sourabhjain@linux.ibm.com>, linuxppc-dev@ozlabs.org
+Cc: oe-kbuild-all@lists.linux.dev, David Hildenbrand <david@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Mimi Zohar <zohar@linux.ibm.com>,
+	Eric DeVolder <eric.devolder@oracle.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Baoquan He <bhe@redhat.com>, x86@kernel.org,
+	Laurent Dufour <laurent.dufour@fr.ibm.com>,
+	Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Hari Bathini <hbathini@linux.ibm.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	kexec@lists.infradead.org, Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+	Sourabh Jain <sourabhjain@linux.ibm.com>,
+	Akhil Raj <lf32.dev@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>
+Subject: Re: [PATCH v13 6/6] powerpc: add crash memory hotplug support
+Message-ID: <202312060059.JITEJl8B-lkp@intel.com>
+References: <20231204053253.25305-7-sourabhjain@linux.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <ZW87OaGBdXtCUnyC@tuxmaker.boeblingen.de.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: XFfjGCZHacF7JFeaz2OdBmAokp_eHNxF
-X-Proofpoint-ORIG-GUID: XFfjGCZHacF7JFeaz2OdBmAokp_eHNxF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-05_10,2023-12-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
- phishscore=0 suspectscore=0 adultscore=0 mlxscore=0 mlxlogscore=999
- malwarescore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2311060000 definitions=main-2312050118
+In-Reply-To: <20231204053253.25305-7-sourabhjain@linux.ibm.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231205_070202_632877_73722FFC 
-X-CRM114-Status: GOOD (  20.91  )
+X-CRM114-CacheID: sfid-20231205_084915_241445_B6659002 
+X-CRM114-Status: GOOD (  12.37  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,227 +102,70 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Rework vaddr_to_paddr() and paddr_to_vaddr() macros to reflect
-the future uncoupling of physical and virtual address spaces in
-kernel. Existing versions are not affected.
+Hi Sourabh,
 
-Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
----
- arch/s390x.c   | 134 ++++++++++++++++++++++++++++++++++++++++++++++++-
- makedumpfile.h |  11 +++-
- 2 files changed, 142 insertions(+), 3 deletions(-)
+kernel test robot noticed the following build errors:
 
-diff --git a/arch/s390x.c b/arch/s390x.c
-index a01f164..4a993be 100644
---- a/arch/s390x.c
-+++ b/arch/s390x.c
-@@ -59,6 +59,69 @@
- #define rsg_offset(x, y)	(rsg_index( x, y) * sizeof(unsigned long))
- #define pte_offset(x)		(pte_index(x) * sizeof(unsigned long))
- 
-+#define LOWCORE_SIZE		0x2000
-+
-+#define OS_INFO_VERSION_MAJOR	1
-+#define OS_INFO_VERSION_MINOR	1
-+
-+#define OS_INFO_VMCOREINFO	0
-+#define OS_INFO_REIPL_BLOCK	1
-+#define OS_INFO_FLAGS_ENTRY	2
-+#define OS_INFO_RESERVED	3
-+#define OS_INFO_IDENTITY_BASE	4
-+#define OS_INFO_KASLR_OFFSET	5
-+#define OS_INFO_KASLR_OFF_PHYS	6
-+#define OS_INFO_VMEMMAP		7
-+#define OS_INFO_AMODE31_START	8
-+#define OS_INFO_AMODE31_END	9
-+
-+struct os_info_entry {
-+	union {
-+		uint64_t	addr;
-+		uint64_t	val;
-+	};
-+	uint64_t		size;
-+	uint32_t		csum;
-+} __attribute__((packed));
-+
-+struct os_info {
-+	uint64_t		magic;
-+	uint32_t		csum;
-+	uint16_t		version_major;
-+	uint16_t		version_minor;
-+	uint64_t		crashkernel_addr;
-+	uint64_t		crashkernel_size;
-+	struct	os_info_entry	entry[10];
-+	uint8_t			reserved[3864];
-+} __attribute__((packed));
-+
-+#define S390X_LC_OS_INFO	0x0e18
-+
-+struct s390_ops {
-+	unsigned long long	(*virt_to_phys)(unsigned long vaddr);
-+	unsigned long		(*phys_to_virt)(unsigned long long paddr);
-+};
-+
-+static unsigned long long vaddr_to_paddr_s390x_legacy(unsigned long vaddr);
-+static unsigned long long vaddr_to_paddr_s390x_vr(unsigned long vaddr);
-+static unsigned long paddr_to_vaddr_s390x_legacy(unsigned long long paddr);
-+static unsigned long paddr_to_vaddr_s390x_vr(unsigned long long paddr);
-+
-+struct s390_ops s390_ops = {
-+	.virt_to_phys = vaddr_to_paddr_s390x_legacy,
-+	.phys_to_virt = paddr_to_vaddr_s390x_legacy,
-+};
-+
-+unsigned long long vaddr_to_paddr_s390x(unsigned long vaddr)
-+{
-+	return s390_ops.virt_to_phys(vaddr);
-+}
-+
-+unsigned long paddr_to_vaddr_s390x(unsigned long long paddr)
-+{
-+	return s390_ops.phys_to_virt(paddr);
-+}
-+
- int
- set_s390x_max_physmem_bits(void)
- {
-@@ -88,12 +151,53 @@ set_s390x_max_physmem_bits(void)
- 	return FALSE;
- }
- 
-+static int s390x_init_vm(void)
-+{
-+	struct os_info os_info;
-+	ulong addr;
-+
-+	if (!readmem(PADDR, S390X_LC_OS_INFO, &addr,
-+			sizeof(addr)) || !addr) {
-+		ERRMSG("Can't get s390x os_info ptr.\n");
-+		return FALSE;
-+	}
-+
-+	if (addr == 0)
-+		return TRUE;
-+
-+	if (!readmem(PADDR, addr, &os_info, offsetof(struct os_info, reserved))) {
-+		ERRMSG("Can't get os_info header.\n");
-+		return FALSE;
-+	}
-+
-+	if (!os_info.entry[OS_INFO_KASLR_OFFSET].val)
-+		return TRUE;
-+
-+	MSG("The -vr kernel detected.\n");
-+
-+	info->identity_map_base   = os_info.entry[OS_INFO_IDENTITY_BASE].val;
-+	info->kvbase              = os_info.entry[OS_INFO_KASLR_OFFSET].val;
-+	info->__kaslr_offset_phys = os_info.entry[OS_INFO_KASLR_OFF_PHYS].val;
-+	info->vmemmap_start       = os_info.entry[OS_INFO_VMEMMAP].val;
-+	info->amode31_start       = os_info.entry[OS_INFO_AMODE31_START].val;
-+	info->amode31_end         = os_info.entry[OS_INFO_AMODE31_END].val;
-+
-+	s390_ops.virt_to_phys	= vaddr_to_paddr_s390x_vr;
-+	s390_ops.phys_to_virt	= paddr_to_vaddr_s390x_vr;
-+
-+	return TRUE;
-+}
-+
-+
- int
- get_machdep_info_s390x(void)
- {
- 	unsigned long vmalloc_start;
- 	char *term_str = getenv("TERM");
- 
-+	if (!s390x_init_vm())
-+		return FALSE;
-+
- 	if (term_str && strcmp(term_str, "dumb") == 0)
- 		/* '\r' control character is ignored on "dumb" terminal. */
- 		flag_ignore_r_char = 1;
-@@ -295,8 +399,8 @@ vtop_s390x(unsigned long vaddr)
- 	return paddr;
- }
- 
--unsigned long long
--vaddr_to_paddr_s390x(unsigned long vaddr)
-+static unsigned long long
-+vaddr_to_paddr_s390x_legacy(unsigned long vaddr)
- {
- 	unsigned long long paddr;
- 
-@@ -320,6 +424,32 @@ vaddr_to_paddr_s390x(unsigned long vaddr)
- 	return paddr;
- }
- 
-+static unsigned long long
-+vaddr_to_paddr_s390x_vr(unsigned long vaddr)
-+{
-+	if (vaddr < LOWCORE_SIZE)
-+		return vaddr;
-+	if ((vaddr < info->amode31_end) && (vaddr >= info->amode31_start))
-+		return vaddr;
-+	if (vaddr < info->vmemmap_start)
-+		return vaddr - info->identity_map_base;
-+	if (vaddr >= info->kvbase)
-+		return vaddr - info->kvbase + info->__kaslr_offset_phys;
-+	return vtop_s390x(vaddr);
-+}
-+
-+unsigned long
-+paddr_to_vaddr_s390x_legacy(unsigned long long paddr)
-+{
-+	return (unsigned long)paddr_to_vaddr_general(paddr);
-+}
-+
-+unsigned long
-+paddr_to_vaddr_s390x_vr(unsigned long long paddr)
-+{
-+	return info->identity_map_base + (unsigned long)paddr;
-+}
-+
- struct addr_check {
- 	unsigned long addr;
- 	int found;
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 59a809c..f1619c5 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -1235,6 +1235,7 @@ unsigned long long vaddr_to_paddr_ppc(unsigned long vaddr);
- #ifdef __s390x__ /* s390x */
- int get_machdep_info_s390x(void);
- unsigned long long vaddr_to_paddr_s390x(unsigned long vaddr);
-+unsigned long paddr_to_vaddr_s390x(unsigned long long paddr);
- int is_iomem_phys_addr_s390x(unsigned long addr);
- #define find_vmemmap()		stub_false()
- #define get_phys_base()		stub_true()
-@@ -1242,7 +1243,7 @@ int is_iomem_phys_addr_s390x(unsigned long addr);
- #define get_versiondep_info()	stub_true()
- #define get_kaslr_offset(X)	get_kaslr_offset_general(X)
- #define vaddr_to_paddr(X)	vaddr_to_paddr_s390x(X)
--#define paddr_to_vaddr(X)	paddr_to_vaddr_general(X)
-+#define paddr_to_vaddr(X)	paddr_to_vaddr_s390x(X)
- #define is_phys_addr(X)		is_iomem_phys_addr_s390x(X)
- #define arch_crashkernel_mem_size()	stub_false()
- #endif          /* s390x */
-@@ -1760,6 +1761,14 @@ struct DumpInfo {
- 	pthread_mutex_t current_pfn_mutex;
- 	pthread_mutex_t page_data_mutex;
- 	pthread_mutex_t filter_mutex;
-+
-+#ifdef __s390x__ /* s390x */
-+	unsigned long identity_map_base;
-+	unsigned long kvbase;
-+	unsigned long __kaslr_offset_phys;
-+	unsigned long amode31_start;
-+	unsigned long amode31_end;
-+#endif
- };
- extern struct DumpInfo		*info;
- 
+[auto build test ERROR on powerpc/next]
+[also build test ERROR on powerpc/fixes tip/x86/core akpm-mm/mm-everything linus/master v6.7-rc4 next-20231205]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Sourabh-Jain/crash-make-CPU-and-Memory-hotplug-support-reporting-flexible/20231204-143305
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git next
+patch link:    https://lore.kernel.org/r/20231204053253.25305-7-sourabhjain%40linux.ibm.com
+patch subject: [PATCH v13 6/6] powerpc: add crash memory hotplug support
+config: powerpc64-randconfig-001-20231205 (https://download.01.org/0day-ci/archive/20231206/202312060059.JITEJl8B-lkp@intel.com/config)
+compiler: powerpc64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231206/202312060059.JITEJl8B-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202312060059.JITEJl8B-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   arch/powerpc/kexec/core_64.c: In function 'arch_crash_get_elfcorehdr_size':
+>> arch/powerpc/kexec/core_64.c:595:33: error: implicit declaration of function 'memory_hotplug_max' [-Werror=implicit-function-declaration]
+     595 |                 elf_phdr_cnt += memory_hotplug_max() / (2 * drmem_lmb_size());
+         |                                 ^~~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
+
+
+vim +/memory_hotplug_max +595 arch/powerpc/kexec/core_64.c
+
+   579	
+   580	/*
+   581	 * Advertise preferred elfcorehdr size to userspace via
+   582	 * /sys/kernel/crash_elfcorehdr_size sysfs interface.
+   583	 */
+   584	unsigned int arch_crash_get_elfcorehdr_size(void)
+   585	{
+   586		unsigned int sz;
+   587		unsigned long elf_phdr_cnt;
+   588	
+   589		/* Program header for CPU notes and vmcoreinfo */
+   590		elf_phdr_cnt = 2;
+   591		if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
+   592			/* In the worst case, a Phdr is needed for every other LMB to be
+   593			 * represented as an individual crash range.
+   594			 */
+ > 595			elf_phdr_cnt += memory_hotplug_max() / (2 * drmem_lmb_size());
+   596	
+   597		/* Do not cross the max limit */
+   598		if (elf_phdr_cnt > PN_XNUM)
+   599			elf_phdr_cnt = PN_XNUM;
+   600	
+   601		sz = sizeof(struct elfhdr) + (elf_phdr_cnt * sizeof(Elf64_Phdr));
+   602		return sz;
+   603	}
+   604	
+
 -- 
-2.40.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
 _______________________________________________
 kexec mailing list
