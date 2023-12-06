@@ -4,183 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 92EBCC4167B
-	for <kexec@archiver.kernel.org>; Wed,  6 Dec 2023 18:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 99CF2C10DCE
+	for <kexec@archiver.kernel.org>; Wed,  6 Dec 2023 23:22:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-ID:In-Reply-To:
-	References:Message-ID:Date:Subject:CC:To:From:Reply-To:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=uPzealkrCrwiLFbV6CBIk2TCz25N/CQ6my55HXKdgt0=; b=ETfG7Bi1ts7ATH
-	WXUkyyBxCSAJySJ+krE9WU7Fo91bW/8a8pjtCwp9zaVkK9iJl7NiGOvzjQszpysDeenu/O+VWJxeT
-	9ObWSi2+1XPWlE+H/9cpNqiJ/JjbY4dexnfoonVURAadAvBpJqN26LVsk2UzmxmLJ3Og/dRYc8I4o
-	iGkE1ZkoG5sANemXQehxd2Ktin+42Aj2lR4D70hT5Dv1G206+ylKvmRTW9m4EP71WNotDJG3/2L/D
-	rlEV3oxfebVA/QMsl069BBZLbG/jHdLcE3fSV6/WRxrrPBBxCeCpHqdC/AaVhnYBOofrbijQ/rXoL
-	Qyw0PF09wAzStWjgy7Gg==;
+	List-Owner; bh=Y6lRt3fZWXSCzuWHbbG3ansnr+cKbMu1Izb1+vo+wmw=; b=bljcvYjGBZVWcI
+	g8ZdOOek4iQXoPKkaP8QpOygJUhUEuBw7GgrLsrCnB/Gbx28Q3i1eAdN287D/v6CxJk0XxA2gCsAE
+	0WzC4oitqFrmabYVx7wAjlu4Eeb70qaEolHTddTFFp+9kdLPE6aXw0d5PeJUSdthR6ybLrf8H014g
+	Snk9zhTWb01zfrBXPRQ9QXM4xlsRJ35aRNvcfgYQLW5KPwynPCeOdieAzUoKwwsM0IFcXthRt0bcJ
+	NJPvSYRpyj9nzmX+o+nH6q2Wa8mTRg2mB2U3O1gCFNYu4V29ZPX+YSc5e4/ssqje7jHtJJekWTfPk
+	qU2Op+dL8HWwvFYMzQ1A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rAwhE-00B2lo-0b;
-	Wed, 06 Dec 2023 18:32:32 +0000
-Received: from mgamail.intel.com ([192.55.52.93])
+	id 1rB1Dd-00BTHp-0S;
+	Wed, 06 Dec 2023 23:22:17 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rAwhA-00B2iR-0p
+	id 1rB1Da-00BTGp-01
 	for kexec@lists.infradead.org;
-	Wed, 06 Dec 2023 18:32:31 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701887548; x=1733423548;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=PHrreIl0E+hBHtkIGrQoQ5kcFXnTnY97YuamR1PmptM=;
-  b=nvdJMVMYiFbhGKMRDVJWfKqNbw2WR8WtcjV8fCqp6rc5fcw6XFz1WVxp
-   bNDzWwd4PYs5+9WiELXVtYoQINHIlLH3smTs0BNW43+EUJAN1zzdHAMpH
-   IdewEbIcpvkudt8AR2nB/4HdCjxZfZG9Dbj4C1HH6fWXAmKCcKLQK/fjs
-   UvPL9K+7+WA3bU+9m0sb1+CPbjGCOCJfYi/3yjUUS/sdjSwZLqa9KsBki
-   32kJbbgYcDRrWtcHWFi/8ZOUeByOQxrBNLLiKxPPUHTDVCE7jM6CioJqk
-   8RXF2DM3+dzyjoDPwgqc+uIAzgv6pU8WFoCkPRzTbEn8zN/qDu2lncEtb
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10916"; a="391274856"
-X-IronPort-AV: E=Sophos;i="6.04,256,1695711600"; 
-   d="scan'208";a="391274856"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2023 10:32:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.04,256,1695711600"; 
-   d="scan'208";a="19407263"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orviesa001.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 06 Dec 2023 10:32:14 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 6 Dec 2023 10:32:13 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Wed, 6 Dec 2023 10:32:13 -0800
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.168)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 6 Dec 2023 10:32:13 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=M3ZJPO8IiI0rZPv0an/6Soj8EJKAqj6xEcfPNRNBU4yshBlssEjP2SbiZ2j22CvRdnwFagVaIpn/4gLXpPpp45p+sR0xI3qlP7S8BzLRITCVLyVlSRnlbqRtEpRonWp0WjBxHQPe00yapZNYstbnPYh/wrINw7dNhBlRvlmtymMP+TClcmCrlaZNZoh+NyTedmqvsa2K6elc4YuQbIVRD6xAnnhOyBlZ5nLvucXBYeMveHXwSIUSu93bxZOwNer3i9EY2LpHV9pECMiN+RibZ333HsB4Z7n14k4Moz1/gC6t+Wivi4AOjcupZ9+Sv+TjArw2H6emx0N3nqQiDeDNMg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PHrreIl0E+hBHtkIGrQoQ5kcFXnTnY97YuamR1PmptM=;
- b=EheJ6HzridjQWkbzgAFOTscc+EI3ZRUpZeNjl97ZqcEcpMicPrK10P4vUBgcEwelQqtFrPH6bWNWqv8hL5l+6xtNQyErHGntApD6KnUfUvEgV7iiyhiFn4h1IABwujBWaOezPvguPgyt6w/Y3tBY/zdI/w/AouV7SAvGhlneTlsYDT0S2VzWibyc40Z7Hpo0FpbVTlr7swDJtLP1MD/EcySnscFae4M3xithvvMJIQC3N5EfCPFTFYuhQeQhW/3RLg29YXsCQK6B3qFLZGQ7w7mIcW6tqO0hQlTTcUFgBFUyhVTxnsxaX7CSohnEsg14viwuPN2Z/k0q0tiEKrGXHw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from MN0PR11MB5963.namprd11.prod.outlook.com (2603:10b6:208:372::10)
- by SJ0PR11MB5071.namprd11.prod.outlook.com (2603:10b6:a03:2d7::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.25; Wed, 6 Dec
- 2023 18:32:11 +0000
-Received: from MN0PR11MB5963.namprd11.prod.outlook.com
- ([fe80::6dc:cee5:b26b:7d93]) by MN0PR11MB5963.namprd11.prod.outlook.com
- ([fe80::6dc:cee5:b26b:7d93%4]) with mapi id 15.20.7046.034; Wed, 6 Dec 2023
- 18:32:11 +0000
-From: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-To: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
-CC: "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>, "Huang, Kai"
-	<kai.huang@intel.com>, "ashish.kalra@amd.com" <ashish.kalra@amd.com>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, "Hunter, Adrian"
-	<adrian.hunter@intel.com>, "Reshetova, Elena" <elena.reshetova@intel.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"mingo@redhat.com" <mingo@redhat.com>, "seanjc@google.com"
-	<seanjc@google.com>, "tglx@linutronix.de" <tglx@linutronix.de>,
-	"bhe@redhat.com" <bhe@redhat.com>, "Nakajima, Jun" <jun.nakajima@intel.com>,
-	"peterz@infradead.org" <peterz@infradead.org>, "bp@alien8.de" <bp@alien8.de>,
-	"rafael@kernel.org" <rafael@kernel.org>,
-	"sathyanarayanan.kuppuswamy@linux.intel.com"
-	<sathyanarayanan.kuppuswamy@linux.intel.com>, "x86@kernel.org"
-	<x86@kernel.org>
-Subject: Re: [PATCHv4 10/14] x86/tdx: Convert shared memory back to private on
- kexec
-Thread-Topic: [PATCHv4 10/14] x86/tdx: Convert shared memory back to private
- on kexec
-Thread-Index: AQHaJxRg6aYbhJu/jEihwtrgSIlA/bCbeMWAgADk/oCAADkgAA==
-Date: Wed, 6 Dec 2023 18:32:11 +0000
-Message-ID: <33d90a6374cd0bab358725a0ba1b52fbe99f5170.camel@intel.com>
-References: <20231205004510.27164-1-kirill.shutemov@linux.intel.com>
-	 <20231205004510.27164-11-kirill.shutemov@linux.intel.com>
-	 <3cf8b953c449320cc4c085924ef0e2eed5eadcf7.camel@intel.com>
-	 <20231206150743.ylgdh2b3qjnacws3@box.shutemov.name>
-In-Reply-To: <20231206150743.ylgdh2b3qjnacws3@box.shutemov.name>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.44.4-0ubuntu2 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MN0PR11MB5963:EE_|SJ0PR11MB5071:EE_
-x-ms-office365-filtering-correlation-id: 7ba909b9-2185-4f83-ce7e-08dbf689a937
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: yEtb20sRj9jAtIGFZ5/ONngu4Kk5NIzjHgrub2nNKV0+IuYe9skWmyGKhe8Ze/hjfe/iM2IINWawR6ABZmPXGLxJ6/l/jSb57IrM8tDpzVMNyM3hySD3gsD1545MxSIeRX+U7/tXYAG/HVi7Vc1C3WskxIcAGn3MN+0RslFGZoNBkxB6OzyPH6uwJsrnL9UsLurEB5wvQZte7oaf4OvwtA0fv+dgAwAoKe4dAjWdUOR+a1v+ppM9g3BmLy1RwYmIeBvRiiR1J6gUNlkxEtfUIKPElQRjI8EnQy745qr80OBib6Gb9XN3VeB89ghDWyZ+iCZ/9s7dD6K8HomnkBKkesZ3lei1vqo8A8rYJmYT0OZxSdhJgnz7v1QUDiblNTw/7uvingzOSGYLcoAcJYc9JLcFKeUsvLoeM5BCq3N/Ts3J7XV7IdPUFgXMPo6l9dfIrgIhmg0K9wM9+34t+05VdMwHPKjyReHGuMqXCSUZxdraHfXIi/ktUKA0WjdSWG/e13b0auZl9yAyORgMKB7dSiAKtZL3qxPw8N3LoNsehc9xg4rD8L5OUYkkLAfIxy2SdjF0sGh7AMgxBkoX00BBL2j6Ywbh1ugxd2KWIdpYYgsMwlOnDajxCkAi1hPWXoT5
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB5963.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(366004)(376002)(136003)(39860400002)(346002)(230922051799003)(64100799003)(186009)(451199024)(1800799012)(6486002)(478600001)(82960400001)(71200400001)(6506007)(2616005)(38070700009)(41300700001)(6512007)(36756003)(26005)(83380400001)(76116006)(38100700002)(4326008)(122000001)(66946007)(66556008)(7416002)(2906002)(316002)(5660300002)(54906003)(64756008)(8936002)(6916009)(66446008)(66476007)(8676002)(91956017)(86362001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?eitlS0JZWXFpR0JSRjBHd3A4NzlNK2JuZlREdU5OZVlYWklRb2FZQjZFNUp3?=
- =?utf-8?B?UHAwL3JmcGdRWU02dWJxbWk0YWEySTI1WUR4MjdTL2FabmJLRzR4ZFJ1VTl6?=
- =?utf-8?B?VE0yRXlBZndKRjRVa2ZobFRjRnJXRE9XV2FlWngzU0VwZno0NVVxMVJISGl0?=
- =?utf-8?B?TWE1RitCYXZ2U2h6MXVtOWdrV2xERVpGeVpNbmJoL29MTnJVRlFwM2JtaGRV?=
- =?utf-8?B?NXZxV1ZseGV1djJHbU1lQUJaU2ZQTWpsSkhnelpDTjdyZklEa24wU2JCeEIr?=
- =?utf-8?B?aGVOK0NIVUJ3VGxsTVhEUTV1MHBQd3MxK1hCUmVFdkZEMGszc2dwU2MxN0VZ?=
- =?utf-8?B?emRLWmF6K2s4TEl0YzJOR2g1MXFyUk52cytXbURUZUtNTlZKVTgxUUlVdVdI?=
- =?utf-8?B?cFd0c2d4NmJ0S3hhMEV0cERucjdFS28zUzdpczcyUTZXN1V4a1FwNXJQUjdI?=
- =?utf-8?B?TUhoWGRGQjJ5RElLR3JPUElrQklKRm9waG04UDY1TE9TWHc0cDZYNUd6ajJl?=
- =?utf-8?B?WmN5MXkvclJabDI2WFYwRDJKUlo5Sm00MS9iTGNlQ1c1RmVPeEJ2S0hqWEFT?=
- =?utf-8?B?cloycllUYXBnOXFLd2RGTEZIZEMxY2JBdkxnd1l6dmc0SFNBc2RVYitJaEl2?=
- =?utf-8?B?cEFOR256d29CVm5ETVJXc0JmNlZLeDhoUjRJRlBOMFNvWUpkcXJuUDI2V0hD?=
- =?utf-8?B?N3dxSTlDV1NFcE5EZ3R1NzA4S0FmTVF0V1NUV0ZHckt2WXVJb3V2YTZ2YjlG?=
- =?utf-8?B?UGtBYkV2M0pQdWFRU3NmQktIOUh6RFR6VlRuM29SNU02Z3Q0d2NZb01YSWNj?=
- =?utf-8?B?Zld0c3lBbk84UklQZkl0Sk1GK1hjNitIWjdENytTb1FqQUoxd1prRTZBdTRz?=
- =?utf-8?B?amNzckhvUFdWbmdPdmFBVTkyQThVZVNXc0lqNUR1S2NIaG5STDRlV3VvNGNQ?=
- =?utf-8?B?UWorSnNNUnZSOGRBeVlkb3VJbE5tZS80TjRhTFIyV2h1NFNERHdkdmtDSkl5?=
- =?utf-8?B?QXBFSWhFQzIyRVNUR05kQ3pWQnV6SWljSUJMR2pXeWZpMXpSeEF6SDlVN05O?=
- =?utf-8?B?ZW5oOEFzUGVoTTFqYUQzeWs3eFE5ZmFoMzdLZWxmYkdjbGMzSHpEdVQyYW0v?=
- =?utf-8?B?Z1F2d3FVaUgrTllYYStCZHBJSmdRdm5VSy8yUnNNc2FTakZjc1pya3pydVhU?=
- =?utf-8?B?d01GdlNIVGgxdDI0bm1HUzM1WEZpOUMxMEFCb1d3Ymp2WUwvVXB2QktZQlJh?=
- =?utf-8?B?R2s4dFNSa3pFbithY0lRZEt5dmRqRGF6UW1BVmpvY1k1SnA4RjRVYW1wZHp4?=
- =?utf-8?B?UVU0N1Jlb0poa25LR1ROb3ZHMG9QYm9wREpNV29HM3FLbEF2RWFpM09IVkpL?=
- =?utf-8?B?ZzRGQVhuVHZBdDhHZnpZY2tIRFpvdnpLbTNSR1duK09mZ3pHdWo1dnQwc0Rs?=
- =?utf-8?B?VWdDMkhzUjJVT2ZSTExaODdmZ1ZBY1VsRHBQbmkvQXhvMlY0Nm5jOTFpZlIr?=
- =?utf-8?B?MWs4Rll0UUVnL1lSYU1jYldBTjIyL1hhZkdtVDV2MSthS2RXZXhzL0g0QjAv?=
- =?utf-8?B?elE1KzMyZzVkNWtqT1pWbVAvdnNLTzJnVW16dlJEZm5CUElWdkNqOWkweDFs?=
- =?utf-8?B?T1B1L1VGakx5ME5FSmtpSzJGV1pRbXhtclM5TzJFTGtQRkNTdzRsdkpFYVhM?=
- =?utf-8?B?K3h4RWpST3RQYzZYS3RPM1REVHQ1UERjRE85bExTMjFlL3RveU1xYTNBVE5F?=
- =?utf-8?B?UHNsRlJ2S3NJZHdwL1BRSkNLL0k2WlJWNU4vVWNpeHVWbHlJMDJlM0tZeVlP?=
- =?utf-8?B?Y1RTRU14T2JYbGlINUlRcHpsYXVzaGF6c3QvUW14dTVFekpwZ3N6RW14SGdN?=
- =?utf-8?B?YmpmcUhMUkhvR084am9kcDNPSkU3SGlKeU1SSGkwV1JvVnVlaTBBT01QaVRB?=
- =?utf-8?B?cTErSUdvSmVQUS9taElGYzZXSVJLRitpcUphd1RYS2NHVGlZNkpiNkR5dWxW?=
- =?utf-8?B?QVdqdVJ2TnMyTkZ5UzRZU1BtWXErL2g3QTI2OXhuUjhRUG02bWh6ZUxJR1BK?=
- =?utf-8?B?Q1B4QzV6emJtMFcrR3JUblp5Zm41OHhqNFZUL3pWNGVVRUtwYUduVUdNNXBC?=
- =?utf-8?B?NlB0NkorWlExTFcrV0YzYUdFSFFIVzNlRVFtakRGVkVwOUZDZW8wcmdnY0J6?=
- =?utf-8?B?ZFE9PQ==?=
-Content-ID: <A027DA36780E7242B6D5F7BD6851A7EF@namprd11.prod.outlook.com>
+	Wed, 06 Dec 2023 23:22:15 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1701904932;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zPCUsWG0BDGnbK296zNpXL4hsIM/iX88O2dTATbgstU=;
+	b=ign0pbAXBUIAwU6VqF1Q9ofbxcILEGnum2dzr6h60YQyPMBkhIExOfB56IGe5yWVb5ytie
+	afQln1uAwbK50CG06N+3yTM/BSOOt8HXi0R+tVGPotudInc+SYo+PnKqa4R+KzByZzZLtf
+	cWULJrjmze1hFH8HTJ990lFRVk/mjmA=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-65-Ftl_v0_MOyKwGMvgDCVSqQ-1; Wed,
+ 06 Dec 2023 18:22:11 -0500
+X-MC-Unique: Ftl_v0_MOyKwGMvgDCVSqQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 776BE3806622;
+	Wed,  6 Dec 2023 23:22:10 +0000 (UTC)
+Received: from localhost (unknown [10.72.113.121])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id A3842C15A0C;
+	Wed,  6 Dec 2023 23:22:09 +0000 (UTC)
+Date: Thu, 7 Dec 2023 07:22:06 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Conor Dooley <conor@kernel.org>
+Cc: Conor Dooley <conor.dooley@microchip.com>, linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	linux-parisc@vger.kernel.org, akpm@linux-foundation.org,
+	joe@perches.com, nathan@kernel.org
+Subject: Re: [PATCH v3 5/7] kexec_file, ricv: print out debugging message if
+ required
+Message-ID: <ZXECHg37DRZ9BQsP@MiWiFi-R3L-srv>
+References: <20231130023955.5257-1-bhe@redhat.com>
+ <20231130023955.5257-6-bhe@redhat.com>
+ <20231201-blog-blasphemy-985d2665903c@wendy>
+ <ZW3yXWJ7rTrtZzyg@MiWiFi-R3L-srv>
+ <20231204-liftoff-enclosure-d3e3daf0ab6e@spud>
+ <ZXCVUD9cCYEShrrj@MiWiFi-R3L-srv>
+ <20231206-pasta-embassy-c7250740b16c@spud>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB5963.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7ba909b9-2185-4f83-ce7e-08dbf689a937
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Dec 2023 18:32:11.2923
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6vm4NSg6Ftlnc+LxvaqfIuoM2dvtSgjdBk5m2TD8mgqQY621oRIn9rMytQnda/65ZLHXE13fc+iOr03lh+EYpNBBAcglpfAvNjqxg1gffi0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB5071
-X-OriginatorOrg: intel.com
+Content-Disposition: inline
+In-Reply-To: <20231206-pasta-embassy-c7250740b16c@spud>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231206_103228_352900_49773082 
-X-CRM114-Status: GOOD (  16.67  )
+X-CRM114-CacheID: sfid-20231206_152214_119326_FA2916D0 
+X-CRM114-Status: GOOD (  51.33  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -192,35 +87,183 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-T24gV2VkLCAyMDIzLTEyLTA2IGF0IDE4OjA3ICswMzAwLCBraXJpbGwuc2h1dGVtb3ZAbGludXgu
-aW50ZWwuY29tDQp3cm90ZToNCj4gwqBJIGNhbid0IHRoaW5rIG9mIGFueSBub24tcmlkaWN1bG91
-cyB3YXkgdG8gaGFuZGxlIHRoaXMgY2FzZS4gTWF5YmUNCj4gd2UNCj4gPiBuZWVkIFZNTSBoZWxw
-Lg0KPiANCj4gRG8geW91IHNlZSBhIHNwZWNpZmljIHdheSBob3cgVk1NIGNhbiBoZWxwIGhlcmU/
-DQoNCkkgZGlkbid0IGhhdmUgYSBzcGVjaWZpYyBpZGVhLiBJIHdhcyBqdXN0IHRoaW5raW5nIHRo
-YXQgdGhlIHByb2JsZW0gaXMNCnRoYXQgZ3Vlc3QgZG9lc24ndCBrbm93IHRoZSBleGFjdCBwcml2
-YXRlL3NoYXJlZCBzdGF0ZSBvZiB0aGUgR0ZOcw0KYmVjYXVzZSBvZiB0aGUgcG90ZW50aWFsbHkg
-aW50ZXJydXB0ZWQgY29udmVyc2lvbiBwcm9jZXNzZXMuIEJ1dCB0aGUNClZNTSBkb2VzIGhhdmUg
-dGhpcyBpbmZvcm1hdGlvbi4gDQoNCldoYXQgYWJvdXQgc29tZXRoaW5nIGxpa2U6IFRoZSBWTU0g
-Y291bGQgZXhwb3NlIHNvbWV0aGluZyBsaWtlIE1hcEdQQQ0KdGhhdCBzZWFyY2hlcyBmb3IgYSBz
-aGFyZWQgR1BBIGFuZCByZXR1cm4gaXQuIFNvIHlvdSBhc2sgaXQgdG8gY29udmVydA0KdGhlIG5l
-eHQgc2hhcmVkIEdQQSBpdCBjYW4gZmluZCB0byBwcml2YXRlIGFuZCBpdCBzZWFyY2hlcyAoaW4g
-dGhlDQpob3N0KSB0aGUgeGFycmF5IHN0dWZmIHRvIGZpbmQgYSBHUEEgdGhhdCBpcyBzaGFyZWQu
-IFRoZW4gaW4gdGhlIGd1ZXN0LA0KaXQgaGFzIGEgc2hhcmVkIEdQQSBhbmQgY2hlY2sgdGhlIGRp
-cmVjdCBtYXAgUFRFIHRvIHJlc2V0LCBhbmQgYWNjZXB0Lg0KDQpUaGUgZ3Vlc3QgY291bGQgY2Fs
-bCB0aGUgbmV3IE1hcEdQQS1saWtlIGh5cGVyY2FsbCBpbiBhIGxvb3AgdW50aWwgYWxsDQpHUEFz
-IGFyZSByZXNldC4NCg0KPiA+IEknZCBzdGlsbCB3b25kZXIgYWJvdXQgaWYgYW55dGhpbmcgbWln
-aHQgdHJ5IHRvDQo+ID4gYWNjZXNzIGEgc2hhcmVkIHBhZ2UgdHJpZ2dlcmVkIGJ5IHRoZSBjb25z
-b2xlIG91dHB1dC4NCj4gDQo+IHNldF9tZW1vcnlfbnAoKSB3b3VsZCBtYWtlIGl0IG9idmlvdXMg
-aWYgaXQgZXZlciBoYXBwZW5zLg0KDQpJIHRoaW5rIHRoaXMgaXMgYSB3b3J0aHdoaWxlIGltcHJv
-dmVtZW50IG92ZXIgdGhlIGV4aXN0aW5nIGNvbXBsZXRlDQpsYWNrIG9mIHN1cHBvcnQsIGJ1dMKg
-aXQncyBub3QgcmFjZSBmcmVlLiBXaXRoIHRoZSBiYXJyaWVyIGNvbW1lbnRzLCBhbmQNCmdpdmVu
-IHRoZSBsYWNrIG9mIGdvb2QgYWx0ZXJuYXRpdmVzOg0KDQpSZXZpZXdlZC1ieTogUmljayBFZGdl
-Y29tYmUgPHJpY2sucC5lZGdlY29tYmVAaW50ZWwuY29tPg0KDQpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlz
-dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2tleGVjCg==
+On 12/06/23 at 04:54pm, Conor Dooley wrote:
+> On Wed, Dec 06, 2023 at 11:37:52PM +0800, Baoquan He wrote:
+> > On 12/04/23 at 04:14pm, Conor Dooley wrote:
+> > > On Mon, Dec 04, 2023 at 11:38:05PM +0800, Baoquan He wrote:
+> > > > On 12/01/23 at 10:38am, Conor Dooley wrote:
+> > > > > On Thu, Nov 30, 2023 at 10:39:53AM +0800, Baoquan He wrote:
+> > > > > 
+> > > > > $subject has a typo in the arch bit :)
+> > > > 
+> > > > Indeed, will fix if need report. Thanks for careful checking.
+> > > > 
+> > > > > 
+> > > > > > Replace pr_debug() with the newly added kexec_dprintk() in kexec_file
+> > > > > > loading related codes.
+> > > > > 
+> > > > > Commit messages should be understandable in isolation, but this only
+> > > > > explains (part of) what is obvious in the diff. Why is this change
+> > > > > being made?
+> > > > 
+> > > > The purpose has been detailedly described in cover letter and patch 1
+> > > > log. Andrew has picked these patches into his tree and grabbed the cover
+> > > > letter log into the relevant commit for people's later checking. All
+> > > > these seven patches will be present in mainline together. This is common
+> > > > way when posting patch series? Please let me know if I misunderstand
+> > > > anything.
+> > > 
+> > > Each patch having a commit message that explains why a change is being
+> > > made is the expectation. It is especially useful to explain the why
+> > > here, since it is not just a mechanical conversion of pr_debug()s as the
+> > > commit message suggests.
+> > 
+> > Sounds reasonable. I rephrase the patch 3 log as below, do you think
+> > it's OK to you?
+> 
+> Yes, but with one comment.
+> 
+> > 
+> > I will also adjust patch logs on other ARCH once this one is done.
+> > Thanks.
+> > 
+> > =============================
+> > Subject: [PATCH v3 5/7] kexec_file, ricv: print out debugging message if required
+> > 
+> > Then when specifying '-d' for kexec_file_load interface, loaded
+> > locations of kernel/initrd/cmdline etc can be printed out to help debug.
+> > 
+> > Here replace pr_debug() with the newly added kexec_dprintk() in kexec_file
+> > loading related codes.
+> > 
+> 
+> > And also replace pr_notice() with kexec_dprintk() in elf_kexec_load()
+> > because it's make sense to always print out loaded location of purgatory
+              ~
+> > and device tree even though users don't expect the message.
+
+Fixed typo:
+==========
+
+And also replace pr_notice() with kexec_dprintk() in elf_kexec_load()
+because it doesn't make sense to always print out loaded location of
+purgatory and device tree even though users don't expect the message.
+
+> 
+> This seems to contradict what you said in your earlier mail, about
+> moving these from notice to debug. I think you missed a negation in your
+> new version of the commit message. What you said in response to me seems
+> like a more complete explanation anyway:
+
+Ah, I made mistake when typing, these printing is only for debugging,
+so always printing out them is not suggested.
+
+> 	always printing out the loaded location of purgatory and
+> 	device tree doesn't make sense. It will be confusing when users
+> 	see these even when they do normal kexec/kdump loading.
+> 
+> Thanks,
+> Conor.
+> 
+> > And also remove kexec_image_info() because the content has been printed
+> > out in generic code.
+> > 
+> > ============================
+> > 
+> > > 
+> > > > > 
+> > > > > > 
+> > > > > > And also remove kexec_image_info() because the content has been printed
+> > > > > > out in generic code.
+> > > > > > 
+> > > > > > Signed-off-by: Baoquan He <bhe@redhat.com>
+> > > > > > ---
+> > > > > >  arch/riscv/kernel/elf_kexec.c     | 11 ++++++-----
+> > > > > >  arch/riscv/kernel/machine_kexec.c | 26 --------------------------
+> > > > > >  2 files changed, 6 insertions(+), 31 deletions(-)
+> > > > > > 
+> > > > > > diff --git a/arch/riscv/kernel/elf_kexec.c b/arch/riscv/kernel/elf_kexec.c
+> > > > > > index e60fbd8660c4..5bd1ec3341fe 100644
+> > > > > > --- a/arch/riscv/kernel/elf_kexec.c
+> > > > > > +++ b/arch/riscv/kernel/elf_kexec.c
+> > > > > > @@ -216,7 +216,6 @@ static void *elf_kexec_load(struct kimage *image, char *kernel_buf,
+> > > > > >  	if (ret)
+> > > > > >  		goto out;
+> > > > > >  	kernel_start = image->start;
+> > > > > > -	pr_notice("The entry point of kernel at 0x%lx\n", image->start);
+> > > > > >  
+> > > > > >  	/* Add the kernel binary to the image */
+> > > > > >  	ret = riscv_kexec_elf_load(image, &ehdr, &elf_info,
+> > > > > > @@ -252,8 +251,8 @@ static void *elf_kexec_load(struct kimage *image, char *kernel_buf,
+> > > > > >  		image->elf_load_addr = kbuf.mem;
+> > > > > >  		image->elf_headers_sz = headers_sz;
+> > > > > >  
+> > > > > > -		pr_debug("Loaded elf core header at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+> > > > > > -			 image->elf_load_addr, kbuf.bufsz, kbuf.memsz);
+> > > > > > +		kexec_dprintk("Loaded elf core header at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+> > > > > > +			      image->elf_load_addr, kbuf.bufsz, kbuf.memsz);
+> > > > > >  
+> > > > > >  		/* Setup cmdline for kdump kernel case */
+> > > > > >  		modified_cmdline = setup_kdump_cmdline(image, cmdline,
+> > > > > > @@ -275,6 +274,8 @@ static void *elf_kexec_load(struct kimage *image, char *kernel_buf,
+> > > > > >  		pr_err("Error loading purgatory ret=%d\n", ret);
+> > > > > >  		goto out;
+> > > > > >  	}
+> > > > > > +	kexec_dprintk("Loaded purgatory at 0x%lx\n", kbuf.mem);
+> > > > > > +
+> > > > > >  	ret = kexec_purgatory_get_set_symbol(image, "riscv_kernel_entry",
+> > > > > >  					     &kernel_start,
+> > > > > >  					     sizeof(kernel_start), 0);
+> > > > > > @@ -293,7 +294,7 @@ static void *elf_kexec_load(struct kimage *image, char *kernel_buf,
+> > > > > >  		if (ret)
+> > > > > >  			goto out;
+> > > > > >  		initrd_pbase = kbuf.mem;
+> > > > > 
+> > > > > > -		pr_notice("Loaded initrd at 0x%lx\n", initrd_pbase);
+> > > > > > +		kexec_dprintk("Loaded initrd at 0x%lx\n", initrd_pbase);
+> > > > > 
+> > > > > This is not a pr_debug().
+> > > > > 
+> > > > > >  	}
+> > > > > >  
+> > > > > >  	/* Add the DTB to the image */
+> > > > > > @@ -318,7 +319,7 @@ static void *elf_kexec_load(struct kimage *image, char *kernel_buf,
+> > > > > >  	}
+> > > > > >  	/* Cache the fdt buffer address for memory cleanup */
+> > > > > >  	image->arch.fdt = fdt;
+> > > > > 
+> > > > > > -	pr_notice("Loaded device tree at 0x%lx\n", kbuf.mem);
+> > > > > > +	kexec_dprintk("Loaded device tree at 0x%lx\n", kbuf.mem);
+> > > > > 
+> > > > > Neither is this. Why are they being moved from pr_notice()?
+> > > > 
+> > > > You are right. 
+> > > > 
+> > > > While always printing out the loaded location of purgatory and
+> > > > device tree doesn't make sense. It will be confusing when users
+> > > > see these even when they do normal kexec/kdump loading. It should be
+> > > > changed to pr_debug().
+> > > > 
+> > > > Which way do you suggest?
+> > > > 1) change it back to pr_debug(), fix it in another patch;
+> > > > 2) keep it as is in the patch;
+> > > 
+> > > Personally I think it is fine to change them all in one patch, but the
+> > > rationale for converting pr_notice() to your new debug infrastructure
+> > > needs to be in the commit message.
+> > 
+> > Sure, sounds good to me. I have changed the patch log to reflect this as
+> > you suggested, please help check. Thanks again.
+> > 
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
