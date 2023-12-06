@@ -4,88 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 585A1C10F05
-	for <kexec@archiver.kernel.org>; Wed,  6 Dec 2023 15:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 52063C4167B
+	for <kexec@archiver.kernel.org>; Wed,  6 Dec 2023 15:38:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=+ZTjwDjRqFbZ/wIeFM0CbgajAhsg4YwbL6OFQ9B+Wj4=; b=rgEgdRLV34l2CK
-	bWoA/8Ait9cV4aKvZQFk5ypB5aE/ov13VDBU4wXAKTe6vqR6w03dkmIOiMTsdmbAo0aUSONeyWrry
-	+FXI6OWfldiMpcHtKXY1ltyf16UAsbNAWovOpgasxQgcERx3sSOt/gTFcqkz6siSQL4CJor9OzpmQ
-	mcPik5YhQOBXIjDEEOZDZpQnlfBLDmIg8rj8Of2lIo3Id1OdvMLDgXsMhT3GcDfEf4L/m+3ItBAIZ
-	sMlyTPI7+cKbcvxQSQFJVo8NjAhdln1oLbpYY/1qavJdw9SgoHBx/YChrtF6LX5J0vdLKjQdZmI4j
-	egN0xRHxXLl0IGMbKulw==;
+	List-Owner; bh=xnWNDgEWxSpjiZHlCnI5JhojVRNwKFNlo3VGzKxedwk=; b=NSkSMLeZUzqdWD
+	uMSFUe8SngxYIFU4hg4nH5qTGTsrrEERR/5tRj4alxN4yCAbCkgpgGCRzzdwBEKcnD+B4GgFbl9cx
+	ggONPusHqVo3e9j2zLiqS5OVvzVCrH//sjhhgKWc4WzGMiEbZrg1dYUY0m/phhEb/BjwlbBuhN+Ao
+	AJ0BBBd5gGzZtoIZwhrCsKrjjWe4skcYerqUE0rLjizN50Ao11NJg/FN3o4jf4I1SXPCtSn01wM9g
+	PAdrY2HcbDLrp05STTs1w6dGpNag9EGHCeNczFmB03CftPTGCATZe3FvFIMGlzkEGg7DGXQGdGj9w
+	UegXO6SvMc50z7JNxOrg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rAtVP-00Aax7-2A;
-	Wed, 06 Dec 2023 15:08:07 +0000
-Received: from mgamail.intel.com ([198.175.65.9])
+	id 1rAtyT-00Adu6-0W;
+	Wed, 06 Dec 2023 15:38:09 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rAtVL-00AavZ-1q
+	id 1rAtyP-00AdsG-1u
 	for kexec@lists.infradead.org;
-	Wed, 06 Dec 2023 15:08:06 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701875284; x=1733411284;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=OxpvoPymnRmbz5abQuGqeWGHWYBRoA/LaZb29RStz5I=;
-  b=hYZRztEBoB9LZ7drOGkkAJph3ZibTyUt2jY2+4TbnspXQksz9LWzUCgH
-   VZojJvJMPFGaMyxuu6+GfdVH6HnymfiHdpL7/cngKuSdQt/eCldLs34Pb
-   R57f4gCbNsa4Xev4zttKTRz4t2v+cMSDVvBfV0hSId/dHyo1oZEdsoK0b
-   wTAGrSzlT+jwflMSkFRoChl1hcJShelJk9i5IxmQNrNcdp7Jo2AFL2lCx
-   4JfkYnjHqVyUpJ1G5UUtndXNYnHRoCNA4G3S49Om7Vht9tBgMpjR/LNaU
-   qGb4T8y8/W604EOOt4hV6wB3/7yauAoZT8aJEYlgTqmuhETQ0QEYNlM5i
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10916"; a="12787919"
-X-IronPort-AV: E=Sophos;i="6.04,255,1695711600"; 
-   d="scan'208";a="12787919"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2023 07:07:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10916"; a="915215154"
-X-IronPort-AV: E=Sophos;i="6.04,255,1695711600"; 
-   d="scan'208";a="915215154"
-Received: from eborisov-mobl2.ger.corp.intel.com (HELO box.shutemov.name) ([10.252.46.36])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2023 07:07:46 -0800
-Received: by box.shutemov.name (Postfix, from userid 1000)
-	id 8C59410A3F5; Wed,  6 Dec 2023 18:07:43 +0300 (+03)
-Date: Wed, 6 Dec 2023 18:07:43 +0300
-From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
-To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-Cc: "tglx@linutronix.de" <tglx@linutronix.de>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"x86@kernel.org" <x86@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-	"Reshetova, Elena" <elena.reshetova@intel.com>,
-	"Nakajima, Jun" <jun.nakajima@intel.com>,
-	"rafael@kernel.org" <rafael@kernel.org>,
-	"peterz@infradead.org" <peterz@infradead.org>,
-	"Huang, Kai" <kai.huang@intel.com>,
-	"sathyanarayanan.kuppuswamy@linux.intel.com" <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	"Hunter, Adrian" <adrian.hunter@intel.com>,
-	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-	"ashish.kalra@amd.com" <ashish.kalra@amd.com>,
-	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
-	"seanjc@google.com" <seanjc@google.com>,
-	"bhe@redhat.com" <bhe@redhat.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCHv4 10/14] x86/tdx: Convert shared memory back to private
- on kexec
-Message-ID: <20231206150743.ylgdh2b3qjnacws3@box.shutemov.name>
-References: <20231205004510.27164-1-kirill.shutemov@linux.intel.com>
- <20231205004510.27164-11-kirill.shutemov@linux.intel.com>
- <3cf8b953c449320cc4c085924ef0e2eed5eadcf7.camel@intel.com>
+	Wed, 06 Dec 2023 15:38:07 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1701877083;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7m8xOH4+zttkQQNEKRFuMltiPwniLE68hwW+zcTlG4s=;
+	b=CA/0lzxKuC6cpQ5DozdLsLGDswsDLIkQCccAilY+5V/FBdcvKbjTm+HtEr+D1vQ/Sjxijz
+	OoB8K/zrAaHzm9RxszgwCrO+Cz5UErW3lYUFQl82OtC5TC8N7WuOHt+8cuiGnotlpG65D+
+	G1xfLhA22EVJ8RToWG9+baeogp5sY00=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-428-vpZ8jbrXNUaooO-lmVkN9w-1; Wed,
+ 06 Dec 2023 10:37:57 -0500
+X-MC-Unique: vpZ8jbrXNUaooO-lmVkN9w-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 414881C32941;
+	Wed,  6 Dec 2023 15:37:56 +0000 (UTC)
+Received: from localhost (unknown [10.72.113.121])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 8A16D8C0C;
+	Wed,  6 Dec 2023 15:37:55 +0000 (UTC)
+Date: Wed, 6 Dec 2023 23:37:52 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Conor Dooley <conor@kernel.org>
+Cc: Conor Dooley <conor.dooley@microchip.com>, linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	linux-parisc@vger.kernel.org, akpm@linux-foundation.org,
+	joe@perches.com, nathan@kernel.org
+Subject: Re: [PATCH v3 5/7] kexec_file, ricv: print out debugging message if
+ required
+Message-ID: <ZXCVUD9cCYEShrrj@MiWiFi-R3L-srv>
+References: <20231130023955.5257-1-bhe@redhat.com>
+ <20231130023955.5257-6-bhe@redhat.com>
+ <20231201-blog-blasphemy-985d2665903c@wendy>
+ <ZW3yXWJ7rTrtZzyg@MiWiFi-R3L-srv>
+ <20231204-liftoff-enclosure-d3e3daf0ab6e@spud>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <3cf8b953c449320cc4c085924ef0e2eed5eadcf7.camel@intel.com>
+In-Reply-To: <20231204-liftoff-enclosure-d3e3daf0ab6e@spud>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231206_070803_649865_1BC04615 
-X-CRM114-Status: GOOD (  35.37  )
+X-CRM114-CacheID: sfid-20231206_073805_724193_59B1C78D 
+X-CRM114-Status: GOOD (  43.06  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,148 +85,149 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Dec 06, 2023 at 01:28:08AM +0000, Edgecombe, Rick P wrote:
-> On Tue, 2023-12-05 at 03:45 +0300, Kirill A. Shutemov wrote:=A0
-> > +static void tdx_kexec_unshare_mem(bool crash)
-> > +{
-> > +=A0=A0=A0=A0=A0=A0=A0unsigned long addr, end;
-> > +=A0=A0=A0=A0=A0=A0=A0long found =3D 0, shared;
-> > +
-> > +=A0=A0=A0=A0=A0=A0=A0/* Stop new private<->shared conversions */
-> > +=A0=A0=A0=A0=A0=A0=A0conversion_allowed =3D false;
-> =
+On 12/04/23 at 04:14pm, Conor Dooley wrote:
+> On Mon, Dec 04, 2023 at 11:38:05PM +0800, Baoquan He wrote:
+> > On 12/01/23 at 10:38am, Conor Dooley wrote:
+> > > On Thu, Nov 30, 2023 at 10:39:53AM +0800, Baoquan He wrote:
+> > > 
+> > > $subject has a typo in the arch bit :)
+> > 
+> > Indeed, will fix if need report. Thanks for careful checking.
+> > 
+> > > 
+> > > > Replace pr_debug() with the newly added kexec_dprintk() in kexec_file
+> > > > loading related codes.
+> > > 
+> > > Commit messages should be understandable in isolation, but this only
+> > > explains (part of) what is obvious in the diff. Why is this change
+> > > being made?
+> > 
+> > The purpose has been detailedly described in cover letter and patch 1
+> > log. Andrew has picked these patches into his tree and grabbed the cover
+> > letter log into the relevant commit for people's later checking. All
+> > these seven patches will be present in mainline together. This is common
+> > way when posting patch series? Please let me know if I misunderstand
+> > anything.
+> 
+> Each patch having a commit message that explains why a change is being
+> made is the expectation. It is especially useful to explain the why
+> here, since it is not just a mechanical conversion of pr_debug()s as the
+> commit message suggests.
 
-> I wonder if this might need a compiler barrier here to be totally safe.
-> I'm not sure.
+Sounds reasonable. I rephrase the patch 3 log as below, do you think
+it's OK to you?
 
-Yeah, it should be cleaner with a barrier.
+I will also adjust patch logs on other ARCH once this one is done.
+Thanks.
 
-> > +
-> > +=A0=A0=A0=A0=A0=A0=A0/*
-> > +=A0=A0=A0=A0=A0=A0=A0 * Crash kernel reaches here with interrupts disa=
-bled: can't
-> > wait for
-> > +=A0=A0=A0=A0=A0=A0=A0 * conversions to finish.
-> > +=A0=A0=A0=A0=A0=A0=A0 *
-> > +=A0=A0=A0=A0=A0=A0=A0 * If race happened, just report and proceed.
-> > +=A0=A0=A0=A0=A0=A0=A0 */
-> > +=A0=A0=A0=A0=A0=A0=A0if (!crash) {
-> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0unsigned long timeout;
-> > +
-> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0/*
-> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 * Wait for in-flight con=
-versions to complete.
-> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 *
-> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 * Do not wait more than =
-30 seconds.
-> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 */
-> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0timeout =3D 30 * USEC_PER=
-_SEC;
-> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0while (atomic_read(&conve=
-rsions_in_progress) &&
-> > timeout--)
-> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0u=
-delay(1);
-> > +=A0=A0=A0=A0=A0=A0=A0}
-> > +
-> > +=A0=A0=A0=A0=A0=A0=A0if (atomic_read(&conversions_in_progress))
-> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0pr_warn("Failed to finish=
- shared<->private
-> > conversions\n");
-> =
+=============================
+Subject: [PATCH v3 5/7] kexec_file, ricv: print out debugging message if required
 
-> I can't think of any non-ridiculous way to handle this case. Maybe we
-> need VMM help.
+Then when specifying '-d' for kexec_file_load interface, loaded
+locations of kernel/initrd/cmdline etc can be printed out to help debug.
 
-Do you see a specific way how VMM can help here?
+Here replace pr_debug() with the newly added kexec_dprintk() in kexec_file
+loading related codes.
 
-> > diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-> > index 830425e6d38e..c81afffaa954 100644
-> > --- a/arch/x86/kernel/reboot.c
-> > +++ b/arch/x86/kernel/reboot.c
-> > @@ -12,6 +12,7 @@
-> > =A0#include <linux/delay.h>
-> > =A0#include <linux/objtool.h>
-> > =A0#include <linux/pgtable.h>
-> > +#include <linux/kexec.h>
-> > =A0#include <acpi/reboot.h>
-> > =A0#include <asm/io.h>
-> > =A0#include <asm/apic.h>
-> > @@ -31,6 +32,7 @@
-> > =A0#include <asm/realmode.h>
-> > =A0#include <asm/x86_init.h>
-> > =A0#include <asm/efi.h>
-> > +#include <asm/tdx.h>
-> > =A0
-> > =A0/*
-> > =A0 * Power off function, if any
-> > @@ -716,6 +718,14 @@ static void
-> > native_machine_emergency_restart(void)
-> > =A0
-> > =A0void native_machine_shutdown(void)
-> > =A0{
-> > +=A0=A0=A0=A0=A0=A0=A0/*
-> > +=A0=A0=A0=A0=A0=A0=A0 * Call enc_kexec_unshare_mem() while all CPUs ar=
-e still
-> > active and
-> > +=A0=A0=A0=A0=A0=A0=A0 * interrupts are enabled. This will allow all in=
--flight
-> > memory
-> > +=A0=A0=A0=A0=A0=A0=A0 * conversions to finish cleanly before unsharing=
- all memory.
-> > +=A0=A0=A0=A0=A0=A0=A0 */
-> > +=A0=A0=A0=A0=A0=A0=A0if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT) &&
-> > kexec_in_progress)
-> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0x86_platform.guest.enc_ke=
-xec_unshare_mem(false);
-> =
+And also replace pr_notice() with kexec_dprintk() in elf_kexec_load()
+because it's make sense to always print out loaded location of purgatory
+and device tree even though users don't expect the message.
 
-> These questions are coming from an incomplete understanding of the
-> kexec/reboot operation. Please disregard if it is not helpful.
-> =
+And also remove kexec_image_info() because the content has been printed
+out in generic code.
 
-> By doing this while other tasks can still run, it handles the
-> conversion races in the !crash case. But then it sets shared pages to
-> NP. What happens if another active task tries to write to one?
-> =
+============================
 
-> I guess we rely on the kernel_restart_prepare()->device_shutdown() to
-> clean up, which runs before native_machine_shutdown(). So there might
-> be conversions in progress when tdx_kexec_unshare_mem() is called, from
-> the allocator work queues. But the actual memory won't be accessed
-> during that operation.
+> 
+> > > 
+> > > > 
+> > > > And also remove kexec_image_info() because the content has been printed
+> > > > out in generic code.
+> > > > 
+> > > > Signed-off-by: Baoquan He <bhe@redhat.com>
+> > > > ---
+> > > >  arch/riscv/kernel/elf_kexec.c     | 11 ++++++-----
+> > > >  arch/riscv/kernel/machine_kexec.c | 26 --------------------------
+> > > >  2 files changed, 6 insertions(+), 31 deletions(-)
+> > > > 
+> > > > diff --git a/arch/riscv/kernel/elf_kexec.c b/arch/riscv/kernel/elf_kexec.c
+> > > > index e60fbd8660c4..5bd1ec3341fe 100644
+> > > > --- a/arch/riscv/kernel/elf_kexec.c
+> > > > +++ b/arch/riscv/kernel/elf_kexec.c
+> > > > @@ -216,7 +216,6 @@ static void *elf_kexec_load(struct kimage *image, char *kernel_buf,
+> > > >  	if (ret)
+> > > >  		goto out;
+> > > >  	kernel_start = image->start;
+> > > > -	pr_notice("The entry point of kernel at 0x%lx\n", image->start);
+> > > >  
+> > > >  	/* Add the kernel binary to the image */
+> > > >  	ret = riscv_kexec_elf_load(image, &ehdr, &elf_info,
+> > > > @@ -252,8 +251,8 @@ static void *elf_kexec_load(struct kimage *image, char *kernel_buf,
+> > > >  		image->elf_load_addr = kbuf.mem;
+> > > >  		image->elf_headers_sz = headers_sz;
+> > > >  
+> > > > -		pr_debug("Loaded elf core header at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+> > > > -			 image->elf_load_addr, kbuf.bufsz, kbuf.memsz);
+> > > > +		kexec_dprintk("Loaded elf core header at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+> > > > +			      image->elf_load_addr, kbuf.bufsz, kbuf.memsz);
+> > > >  
+> > > >  		/* Setup cmdline for kdump kernel case */
+> > > >  		modified_cmdline = setup_kdump_cmdline(image, cmdline,
+> > > > @@ -275,6 +274,8 @@ static void *elf_kexec_load(struct kimage *image, char *kernel_buf,
+> > > >  		pr_err("Error loading purgatory ret=%d\n", ret);
+> > > >  		goto out;
+> > > >  	}
+> > > > +	kexec_dprintk("Loaded purgatory at 0x%lx\n", kbuf.mem);
+> > > > +
+> > > >  	ret = kexec_purgatory_get_set_symbol(image, "riscv_kernel_entry",
+> > > >  					     &kernel_start,
+> > > >  					     sizeof(kernel_start), 0);
+> > > > @@ -293,7 +294,7 @@ static void *elf_kexec_load(struct kimage *image, char *kernel_buf,
+> > > >  		if (ret)
+> > > >  			goto out;
+> > > >  		initrd_pbase = kbuf.mem;
+> > > 
+> > > > -		pr_notice("Loaded initrd at 0x%lx\n", initrd_pbase);
+> > > > +		kexec_dprintk("Loaded initrd at 0x%lx\n", initrd_pbase);
+> > > 
+> > > This is not a pr_debug().
+> > > 
+> > > >  	}
+> > > >  
+> > > >  	/* Add the DTB to the image */
+> > > > @@ -318,7 +319,7 @@ static void *elf_kexec_load(struct kimage *image, char *kernel_buf,
+> > > >  	}
+> > > >  	/* Cache the fdt buffer address for memory cleanup */
+> > > >  	image->arch.fdt = fdt;
+> > > 
+> > > > -	pr_notice("Loaded device tree at 0x%lx\n", kbuf.mem);
+> > > > +	kexec_dprintk("Loaded device tree at 0x%lx\n", kbuf.mem);
+> > > 
+> > > Neither is this. Why are they being moved from pr_notice()?
+> > 
+> > You are right. 
+> > 
+> > While always printing out the loaded location of purgatory and
+> > device tree doesn't make sense. It will be confusing when users
+> > see these even when they do normal kexec/kdump loading. It should be
+> > changed to pr_debug().
+> > 
+> > Which way do you suggest?
+> > 1) change it back to pr_debug(), fix it in another patch;
+> > 2) keep it as is in the patch;
+> 
+> Personally I think it is fine to change them all in one patch, but the
+> rationale for converting pr_notice() to your new debug infrastructure
+> needs to be in the commit message.
 
-Right, devices has to be shutdown by then.
+Sure, sounds good to me. I have changed the patch log to reflect this as
+you suggested, please help check. Thanks again.
 
-> But the console must be active? Or otherwise who can see these
-> warnings. It doesn't use a shared page? Or the KVM clock, which looks
-> to clean up at cpu tear down, which now happens after
-> tdx_kexec_unshare_mem()? So I wonder if there might be cases.
-
-Virtio console is not functional by then, but serial is. Serial uses port
-I/O and doesn't need shared memory.
-
-> If so, maybe you could halt the conversions in
-> native_machine_shutdown(), then do the actual reset to private after
-> tasks can't schedule.
-
-It would also mean that we cannot use set_memory_np() there as it requires
-sleepable context. I would rather keep conversion in
-native_machine_shutdown() path.
-
-> I'd still wonder about if anything might try to
-> access a shared page triggered by the console output.
-
-set_memory_np() would make it obvious if it ever happens.
-
--- =
-
-  Kiryl Shutsemau / Kirill A. Shutemov
 
 _______________________________________________
 kexec mailing list
