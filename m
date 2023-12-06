@@ -4,88 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 46469C4167B
-	for <kexec@archiver.kernel.org>; Wed,  6 Dec 2023 13:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 83F34C4167B
+	for <kexec@archiver.kernel.org>; Wed,  6 Dec 2023 13:50:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=SjN3WAESqQ2W0XMfUIMTJ9+2msuY5F8t0o468z3uNI8=; b=HqHJ8evQZBhjap
-	mXAUj4GGU3VSc0juiQhoCsDVRJqj5f11vzOZzy+cfV3H6jz1aVDRrxc5dPwY7PjMD+fZ3CxK8bTA9
-	IK9mYgiMgEwfoAyzu+wbPL/VfCC17i8EVdA4wGGv/lFBhsrBMAuQYsaUzEtPS94gmemfexY7hWlYR
-	16Yy75XIznsXszTqaJ4nLFEM44mxiqUYI7GRBOV4g5Fm88Th4kTY5nVsIqZQ/3B5hHfa34wvq9DSm
-	Tl91euGNzp2S9zyHRuXN7cZT2Xfjf9Z6rnj774kKS47XiH2AvbR+hlXOdmv+cOA/yhOeTGRX/gR4M
-	8CxP2+/6DD8daszhd0kA==;
+	List-Owner; bh=FM7/wMd1ezXCQTo8PuNPnCJQGBjwsKrmB5imq1OQzz4=; b=nj0D3kHdpE9Hjc
+	oXlIKXTQXhzH4+tZMZzXAdZZxT44UEp2dspXJbjiay2ZZNxI6V70FdSgt79CCX+HIR7haVOkKQQCC
+	L4mBIAbwPdyV2YYrwFqRaVWCeNU2UswgvnVhc3BT14kAMRxmWV6W+D0anRFPnWKZOKKtOOkucIFUh
+	k1OHO3aVHNCGDUHy00qBiR8phY0ThbgaK564wX7P2VfHdpjOhnNMa4VW8JRm6W55pJWgeCaXtGSgd
+	kVIzg32ahxxW0HKDEmhcZUHOm9joOPXDVk0R8LgwTGOhepQ55TiWBmNrMoIbrVhTrcIxzAQmC13U4
+	VabLltpMwXoFy+jD3mmg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rArvF-00ANii-0a;
-	Wed, 06 Dec 2023 13:26:41 +0000
-Received: from mgamail.intel.com ([198.175.65.11])
+	id 1rAsHn-00AQLc-1Q;
+	Wed, 06 Dec 2023 13:49:59 +0000
+Received: from smtp-out2.suse.de ([195.135.223.131])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rArvC-00ANhc-1E
+	id 1rAsHj-00AQKg-2D
 	for kexec@lists.infradead.org;
-	Wed, 06 Dec 2023 13:26:39 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701869198; x=1733405198;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wvRatAZPIQq3Q3PGd/WkGxxbZ5rxDQhioWQiZbIj1vg=;
-  b=B7Hgn6XgRn6+rdiZH8ZFgB/5lsMTPkX2Px4Vn59UkL56IWYjjSlS9V/O
-   eibeh00kpbi2O9DlPmxPRNS1xiv8DcK8XSoOAHPSt6SJfMnJgJEa0T1Fs
-   dSS3N6Rp+i7iwJFq1EUnK2fgYdzJiehCVgAK2jxX8eOnYaWMzNPxfxsnZ
-   G23GTwFdccedmRm8doCzerpg20cSSIhfKJhyRBBWBX/bJihgXij2DCpqr
-   bZch2go21zmF+2HlUsS+jOsk5iqYQwQY1eeTFQW6B4D0R4FvnY9thRVSP
-   25VzXR1cyZT76+DQtTABKVciffuzM8XlOPSvtBEWZxirJBRl3LMwle/vs
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10916"; a="930861"
-X-IronPort-AV: E=Sophos;i="6.04,255,1695711600"; 
-   d="scan'208";a="930861"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2023 05:26:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10916"; a="721084730"
-X-IronPort-AV: E=Sophos;i="6.04,255,1695711600"; 
-   d="scan'208";a="721084730"
-Received: from eborisov-mobl2.ger.corp.intel.com (HELO box.shutemov.name) ([10.252.46.36])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2023 05:26:30 -0800
-Received: by box.shutemov.name (Postfix, from userid 1000)
-	id 0618B10A3F5; Wed,  6 Dec 2023 16:26:28 +0300 (+03)
-Date: Wed, 6 Dec 2023 16:26:27 +0300
-From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
-To: "Huang, Kai" <kai.huang@intel.com>
-Cc: "tglx@linutronix.de" <tglx@linutronix.de>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"x86@kernel.org" <x86@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-	"Reshetova, Elena" <elena.reshetova@intel.com>,
-	"Nakajima, Jun" <jun.nakajima@intel.com>,
-	"rafael@kernel.org" <rafael@kernel.org>,
-	"peterz@infradead.org" <peterz@infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"sathyanarayanan.kuppuswamy@linux.intel.com" <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	"Hunter, Adrian" <adrian.hunter@intel.com>,
-	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-	"ashish.kalra@amd.com" <ashish.kalra@amd.com>,
-	"kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-	"seanjc@google.com" <seanjc@google.com>,
-	"bhe@redhat.com" <bhe@redhat.com>,
-	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>
-Subject: Re: [PATCHv4 06/14] x86/kexec: Keep CR4.MCE set during kexec for TDX
- guest
-Message-ID: <20231206132627.5dx4sbgkypgnq6yn@box.shutemov.name>
-References: <20231205004510.27164-1-kirill.shutemov@linux.intel.com>
- <20231205004510.27164-7-kirill.shutemov@linux.intel.com>
- <861f583e2550959616e19565235f0debbe27149b.camel@intel.com>
+	Wed, 06 Dec 2023 13:49:57 +0000
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id B6BDB1F8D7;
+	Wed,  6 Dec 2023 13:49:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1701870591; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=64C5QQ6eD3zVjkzNd+FfGYCQlWWqe1ZkIuBmjwdiWno=;
+	b=UWpI+xvhxHqJUS47LW1yHDaap4t8CnMIeLqxuDuX0b1xg2KWDlKejiMrUWasp8XyNKTcG2
+	sZyyVhZutFRLcNkaZvQ+I2ms5gKv3z0iWRvTtjwdbSLgQoQ8ubH5h/5+mw9iDrPSUVnK+5
+	G3NAma4WyzoLUTZhXOVu7rfnWmsOjrk=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 91DA813408;
+	Wed,  6 Dec 2023 13:49:51 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id mHSJIP97cGXjJwAAD6G6ig
+	(envelope-from <mhocko@suse.com>); Wed, 06 Dec 2023 13:49:51 +0000
+Date: Wed, 6 Dec 2023 14:49:50 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: Philipp Rudo <prudo@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>, Donald Dutile <ddutile@redhat.com>,
+	Jiri Bohac <jbohac@suse.cz>, Pingfan Liu <piliu@redhat.com>,
+	Tao Liu <ltao@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	David Hildenbrand <dhildenb@redhat.com>
+Subject: Re: [PATCH 0/4] kdump: crashkernel reservation from CMA
+Message-ID: <ZXB7_rbC0GAkIp7p@tiehlicka>
+References: <ZWf64BowWrYqA2Rf@MiWiFi-R3L-srv>
+ <ZWhg_b3O6piZtkQ-@tiehlicka>
+ <ZWh6ax8YmkhxAzIf@MiWiFi-R3L-srv>
+ <ZWiAsJlLookvCI+h@MiWiFi-R3L-srv>
+ <ZWiQ-II9CvGv8EWK@tiehlicka>
+ <20231201123353.2b3db7fa@rotkaeppchen>
+ <ZWnJyArAmFo_uYPA@tiehlicka>
+ <20231201165113.43211a48@rotkaeppchen>
+ <ZWoQ1k2AikSiMjys@tiehlicka>
+ <20231206120805.4fdcb8ab@rotkaeppchen>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <861f583e2550959616e19565235f0debbe27149b.camel@intel.com>
+In-Reply-To: <20231206120805.4fdcb8ab@rotkaeppchen>
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spamd-Result: default: False [-2.60 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 RCPT_COUNT_SEVEN(0.00)[11];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231206_052638_479595_5A44C243 
-X-CRM114-Status: GOOD (  18.83  )
+X-CRM114-CacheID: sfid-20231206_054956_072686_CEBB851A 
+X-CRM114-Status: GOOD (  43.63  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,54 +113,94 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Dec 05, 2023 at 11:58:45PM +0000, Huang, Kai wrote:
-> On Tue, 2023-12-05 at 03:45 +0300, Kirill A. Shutemov wrote:
-> > TDX guests are not allowed to clear CR4.MCE. Attempt to clear it leads
-> > to #VE.
-> > 
-> > Use alternatives to keep the flag during kexec for TDX guests.
-> > 
-> > The change doesn't affect non-TDX-guest environments.
-> > 
-> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > Reviewed-by: Kai Huang <kai.huang@intel.com>
-> > ---
-> >  arch/x86/kernel/relocate_kernel_64.S | 3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-> > index 56cab1bb25f5..cd6a53667c6b 100644
-> > --- a/arch/x86/kernel/relocate_kernel_64.S
-> > +++ b/arch/x86/kernel/relocate_kernel_64.S
-> > @@ -145,12 +145,15 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
-> >  	 * Set cr4 to a known state:
-> >  	 *  - physical address extension enabled
-> >  	 *  - 5-level paging, if it was enabled before
-> > +	 *  - Machine check exception on TDX guest. Clearing MCE is not allowed
-> > +	 *    in TDX guests.
-> >  	 */
-> >  	movl	$X86_CR4_PAE, %eax
-> >  	testq	$X86_CR4_LA57, %r13
-> >  	jz	1f
-> >  	orl	$X86_CR4_LA57, %eax
-> >  1:
-> > +	ALTERNATIVE "", __stringify(orl $X86_CR4_MCE, %eax), X86_FEATURE_TDX_GUEST
-> >  	movq	%rax, %cr4
-> >  
-> >  	jmp 1f
+On Wed 06-12-23 12:08:05, Philipp Rudo wrote:
+> On Fri, 1 Dec 2023 17:59:02 +0100
+> Michal Hocko <mhocko@suse.com> wrote:
 > 
-> Nit:
+> > On Fri 01-12-23 16:51:13, Philipp Rudo wrote:
+> > > On Fri, 1 Dec 2023 12:55:52 +0100
+> > > Michal Hocko <mhocko@suse.com> wrote:
+> > >   
+> > > > On Fri 01-12-23 12:33:53, Philipp Rudo wrote:
+> > > > [...]  
+> > > > > And yes, those are all what-if concerns but unfortunately that is all
+> > > > > we have right now.    
+> > > > 
+> > > > Should theoretical concerns without an actual evidence (e.g. multiple
+> > > > drivers known to be broken) become a roadblock for this otherwise useful
+> > > > feature?   
+> > > 
+> > > Those concerns aren't just theoretical. They are experiences we have
+> > > from a related feature that suffers exactly the same problem regularly
+> > > which wouldn't exist if everybody would simply work "properly".  
+> > 
+> > What is the related feature?
 > 
-> It seems <asm/alternative.h> isn't included in relocate_kernel_64.S.  Maybe it's
-> better to do it explicitly.
-> 
-> Maybe even better to explicitly include <linux/stringify.h> too, but I see
-> <asm/alternative.h> already does that.
+> kexec
 
-Okay, I will add both.
+OK, but that is a completely different thing, no? crashkernel parameter
+doesn't affect kexec. Or what is the actual relation?
 
+> > > And yes, even purely theoretical concerns can become a roadblock for a
+> > > feature when the cost of those theoretical concerns exceed the benefit
+> > > of the feature. The thing is that bugs will be reported against kexec.
+> > > So _we_ need to figure out which of the shitty drivers caused the
+> > > problem. That puts additional burden on _us_. What we are trying to
+> > > evaluate at the moment is if the benefit outweighs the extra burden
+> > > with the information we have at the moment.  
+> > 
+> > I do understand your concerns! But I am pretty sure you do realize that
+> > it is really hard to argue theoreticals.  Let me restate what I consider
+> > facts. Hopefully we can agree on these points
+> > 	- the CMA region can be used by user space memory which is a
+> > 	  great advantage because the memory is not wasted and our
+> > 	  experience has shown that users do care about this a lot. We
+> > 	  _know_ that pressure on making those reservations smaller
+> > 	  results in a less reliable crashdump and more resources spent
+> > 	  on tuning and testing (especially after major upgrades).  A
+> > 	  larger reservation which is not completely wasted for the
+> > 	  normal runtime is addressing that concern.
+> > 	- There is no other known mechanism to achieve the reusability
+> > 	  of the crash kernel memory to stop the wastage without much
+> > 	  more intrusive code/api impact (e.g. a separate zone or
+> > 	  dedicated interface to prevent any hazardous usage like RDMA).
+> > 	- implementation wise the patch has a very small footprint. It
+> > 	  is using an existing infrastructure (CMA) and it adds a
+> > 	  minimal hooking into crashkernel configuration.
+> > 	- The only identified risk so far is RDMA acting on this memory
+> > 	  without using proper pinning interface. If it helps to have a
+> > 	  statement from RDMA maintainers/developers then we can pull
+> > 	  them in for a further discussion of course.
+> > 	- The feature requires an explicit opt-in so this doesn't bring
+> > 	  any new risk to existing crash kernel users until they decide
+> > 	  to use it. AFAIU there is no way to tell that the crash kernel
+> > 	  memory used to be CMA based in the primary kernel. If you
+> > 	  believe that having that information available for
+> > 	  debugability would help then I believe this shouldn't be hard
+> > 	  to add.  I think it would even make sense to mark this feature
+> > 	  experimental to make it clear to users that this needs some
+> > 	  time before it can be marked production ready.
+> > 
+> > I hope I haven't really missed anything important. The final
+> 
+> If I understand Documentation/core-api/pin_user_pages.rst correctly you
+> missed case 1 Direct IO. In that case "short term" DMA is allowed for
+> pages without FOLL_LONGTERM. Meaning that there is a way you can
+> corrupt the CMA and with that the crash kernel after the production
+> kernel has panicked.
+
+Could you expand on this? How exactly direct IO request survives across
+into the kdump kernel? I do understand the RMDA case because the IO is
+async and out of control of the receiving end.
+
+Also if direct IO is a problem how come this is not a problem for kexec
+in general. The new kernel usually shares all the memory with the 1st
+kernel.
+
+/me confused.
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Michal Hocko
+SUSE Labs
 
 _______________________________________________
 kexec mailing list
