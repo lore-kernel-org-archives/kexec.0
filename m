@@ -4,137 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6BDD3C4725D
-	for <kexec@archiver.kernel.org>; Fri, 12 Jan 2024 15:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A0651C47DA9
+	for <kexec@archiver.kernel.org>; Fri, 12 Jan 2024 15:58:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=tCUcRukpIqDAV+fGXlrnYhgIJZeqdifS5dG4SfKKXVo=; b=l/fL0O77KmkR1q
-	+SkEhvO2AJgFAg0zf0QlXgLyiiT3WpACtWMCZ3kCeCtHGcezxB0crpDODi6CJfjPzaqfvsutoTv6W
-	zwxL6lVDRRloD2bidyatdzIxTt0O6ZvaizFiTetMOf0tSMp9nsX1D4cCbglwT5Gr+tJ06285Tl9Zv
-	4/qR91iUPPBoKW1iKM3YajhqM6wk5CVWZaLppZkLVBxpUjYWdlsZDlN206FGn0kU587eze7lnlH3e
-	xM75CnNULSOzouua4J06Em+WjahYUBgqccqBSd7QSSUDiXRh3TbkI2slX/8ytipjFR3tVrcG0dOhA
-	UOIgP1IFtCF3iKpR27Vw==;
+	List-Owner; bh=wV6aQtj/n9dHKwM4xCNhLSnXv0OW6H9HmqjBLb8myw8=; b=0c+IX4jYruDj9K
+	mxOACR2M3VrfHZSxX2A3R6vmL8IpjrfKiRpuXDGjow/bJyJEKginVoq+CqUrn5Qjb7JG7LT/63H4d
+	xlfb0CQmQZxllFxAlrEcr8f3meEBzSmaoRdAb3dF66WKpyvRWHxQBo5s5TJaENj4MHyklwO8G2Ddz
+	iUjJ/yLEgw8j+iLIT34GsP7VcmfUttdu9TEi+cpkA/7bakUJkzQ3ufCp6+0/izDqhgymyeuqrmcDK
+	AqD4NNL7Edka8M3SgM3L+VVxZKx187Nt668CPVrHda9AuDlTwXx4+v2woy+EqiXJ9r1YNCin1tk5/
+	qOt4rPNO8lBOexUXLkLw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rOJvm-003E53-0J;
-	Fri, 12 Jan 2024 15:58:50 +0000
-Received: from smtp-out1.suse.de ([2a07:de40:b251:101:10:150:64:1])
+	id 1rOJvp-003E61-2r;
+	Fri, 12 Jan 2024 15:58:53 +0000
+Received: from smtp-out1.suse.de ([195.135.223.130])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1r7ykh-005Rjk-2P
+	id 1rAtgt-00AcKD-2I
 	for kexec@lists.infradead.org;
-	Tue, 28 Nov 2023 14:07:54 +0000
-Received: from relay2.suse.de (unknown [149.44.160.134])
-	by smtp-out1.suse.de (Postfix) with ESMTP id 0799F2199D;
-	Tue, 28 Nov 2023 14:07:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1701180468; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Szd0kfLvWrSYQ3QHqmPI1rgK3WdJ32bLnGKR57G4N6w=;
-	b=T6qJw7ISXA7Fi4iKSgAIz3Ci3iO4Hj5dsdiOgi/iNjyE2l49xviNFjkJbyvwWJqBPV0TQj
-	ucjBzs5PCwMb0LE/FC9ZrB/jEgLhJLFQ5yjPSkdON+6JAzmGsS2+s+ToTdB34n3Wv8cMKL
-	kQb+PuFAw5fQHCwHaszJUvKiMw0Ob1o=
-Received: from suse.cz (pmladek.tcp.ovpn2.prg.suse.de [10.100.208.146])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	Wed, 06 Dec 2023 15:20:01 +0000
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by relay2.suse.de (Postfix) with ESMTPS id 24C2F2C153;
-	Tue, 28 Nov 2023 14:07:43 +0000 (UTC)
-Date: Tue, 28 Nov 2023 15:07:43 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: j.granados@samsung.com
-Cc: Luis Chamberlain <mcgrof@kernel.org>, willy@infradead.org,
-	josh@joshtriplett.org, Kees Cook <keescook@chromium.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Iurii Zaikin <yzaikin@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
-	Andy Lutomirski <luto@amacapital.net>,
-	Will Drewry <wad@chromium.org>, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Balbir Singh <bsingharora@gmail.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH 07/10] printk: Remove the now superfluous sentinel
- elements from ctl_table array
-Message-ID: <ZWX0L4lV8TWOgcpv@alley>
-References: <20231107-jag-sysctl_remove_empty_elem_kernel-v1-0-e4ce1388dfa0@samsung.com>
- <20231107-jag-sysctl_remove_empty_elem_kernel-v1-7-e4ce1388dfa0@samsung.com>
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 14FB521E97;
+	Wed,  6 Dec 2023 15:19:56 +0000 (UTC)
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id ED5A2136CD;
+	Wed,  6 Dec 2023 15:19:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id wubtNhuRcGUjSgAAD6G6ig
+	(envelope-from <mhocko@suse.com>); Wed, 06 Dec 2023 15:19:55 +0000
+Date: Wed, 6 Dec 2023 16:19:51 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: Philipp Rudo <prudo@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>, Donald Dutile <ddutile@redhat.com>,
+	Jiri Bohac <jbohac@suse.cz>, Pingfan Liu <piliu@redhat.com>,
+	Tao Liu <ltao@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	David Hildenbrand <dhildenb@redhat.com>
+Subject: Re: [PATCH 0/4] kdump: crashkernel reservation from CMA
+Message-ID: <ZXCRF-bvm8ijXxr4@tiehlicka>
+References: <ZWhg_b3O6piZtkQ-@tiehlicka>
+ <ZWh6ax8YmkhxAzIf@MiWiFi-R3L-srv>
+ <ZWiAsJlLookvCI+h@MiWiFi-R3L-srv>
+ <ZWiQ-II9CvGv8EWK@tiehlicka>
+ <20231201123353.2b3db7fa@rotkaeppchen>
+ <ZWnJyArAmFo_uYPA@tiehlicka>
+ <20231201165113.43211a48@rotkaeppchen>
+ <ZWoQ1k2AikSiMjys@tiehlicka>
+ <20231206120805.4fdcb8ab@rotkaeppchen>
+ <ZXB7_rbC0GAkIp7p@tiehlicka>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20231107-jag-sysctl_remove_empty_elem_kernel-v1-7-e4ce1388dfa0@samsung.com>
-X-Spamd-Bar: +++++++++++++++++++++++++
-X-Rspamd-Server: rspamd1
+In-Reply-To: <ZXB7_rbC0GAkIp7p@tiehlicka>
+X-Rspamd-Queue-Id: 14FB521E97
+X-Spamd-Result: default: False [15.00 / 50.00];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_SPF_FAIL(1.00)[-all];
+	 ARC_NA(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 DMARC_POLICY_QUARANTINE(1.50)[suse.com : No valid SPF, No valid DKIM,quarantine];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[11];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 R_DKIM_NA(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-0.00)[39.47%]
+X-Spamd-Bar: +++++++++++++++
 Authentication-Results: smtp-out1.suse.de;
 	dkim=none;
-	spf=fail (smtp-out1.suse.de: domain of pmladek@suse.com does not designate 149.44.160.134 as permitted sender) smtp.mailfrom=pmladek@suse.com;
-	dmarc=fail reason="No valid SPF, No valid DKIM" header.from=suse.com (policy=quarantine)
-X-Rspamd-Queue-Id: 0799F2199D
-X-Spamd-Result: default: False [26.00 / 50.00];
-	 RDNS_NONE(1.00)[];
-	 SPAMHAUS_XBL(0.00)[149.44.160.134:from];
-	 TO_DN_SOME(0.00)[];
-	 RWL_MAILSPIKE_GOOD(0.00)[149.44.160.134:from];
-	 HFILTER_HELO_IP_A(1.00)[relay2.suse.de];
-	 HFILTER_HELO_NORES_A_OR_MX(0.30)[relay2.suse.de];
-	 R_RATELIMIT(0.00)[rip(RLa6h5sh378tcam5q78u)];
-	 MX_GOOD(-0.01)[];
-	 RCVD_NO_TLS_LAST(0.10)[];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 R_DKIM_NA(2.20)[];
-	 MIME_TRACE(0.00)[0:+];
-	 FORGED_RECIPIENTS(2.00)[m:mgorman@suse.de,s:mgorman@imap.suse.de];
-	 BAYES_HAM(-0.00)[29.52%];
-	 RDNS_DNSFAIL(0.00)[];
-	 ARC_NA(0.00)[];
-	 R_SPF_FAIL(1.00)[-all];
-	 FROM_HAS_DN(0.00)[];
-	 DMARC_POLICY_QUARANTINE(1.50)[suse.com : No valid SPF, No valid DKIM,quarantine];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 NEURAL_SPAM_SHORT(3.00)[1.000];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 TO_MATCH_ENVRCPT_SOME(0.00)[];
-	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	 VIOLATED_DIRECT_SPF(3.50)[];
-	 NEURAL_SPAM_LONG(3.50)[1.000];
-	 RCPT_COUNT_TWELVE(0.00)[46];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 FREEMAIL_CC(0.00)[kernel.org,infradead.org,joshtriplett.org,chromium.org,xmission.com,google.com,goodmis.org,arm.com,linutronix.de,amacapital.net,redhat.com,linaro.org,suse.de,linux.ibm.com,intel.com,davemloft.net,gmail.com,iogearbox.net,linux.dev,vger.kernel.org,lists.infradead.org];
-	 HFILTER_HOSTNAME_UNKNOWN(2.50)[];
-	 SUSPICIOUS_RECIPS(1.50)[];
-	 RCVD_COUNT_TWO(0.00)[2]
+	dmarc=fail reason="No valid SPF, No valid DKIM" header.from=suse.com (policy=quarantine);
+	spf=fail (smtp-out1.suse.de: domain of mhocko@suse.com does not designate 2a07:de40:b281:104:10:150:64:97 as permitted sender) smtp.mailfrom=mhocko@suse.com
+X-Rspamd-Server: rspamd1
+X-Spam: Yes
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231128_060751_933920_AE232EE1 
-X-CRM114-Status: GOOD (  13.75  )
+X-CRM114-CacheID: sfid-20231206_071959_918428_5FFB8988 
+X-CRM114-Status: GOOD (  16.32  )
 X-Mailman-Approved-At: Fri, 12 Jan 2024 07:58:47 -0800
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -152,29 +114,47 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue 2023-11-07 14:45:07, Joel Granados via B4 Relay wrote:
-> From: Joel Granados <j.granados@samsung.com>
+On Wed 06-12-23 14:49:51, Michal Hocko wrote:
+> On Wed 06-12-23 12:08:05, Philipp Rudo wrote:
+[...]
+> > If I understand Documentation/core-api/pin_user_pages.rst correctly you
+> > missed case 1 Direct IO. In that case "short term" DMA is allowed for
+> > pages without FOLL_LONGTERM. Meaning that there is a way you can
+> > corrupt the CMA and with that the crash kernel after the production
+> > kernel has panicked.
 > 
-> This commit comes at the tail end of a greater effort to remove the
-> empty elements at the end of the ctl_table arrays (sentinels) which
-> will reduce the overall build time size of the kernel and run time
-> memory bloat by ~64 bytes per sentinel (further information Link :
-> https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
-> 
-> rm sentinel element from printk_sysctls
-> 
-> Signed-off-by: Joel Granados <j.granados@samsung.com>
+> Could you expand on this? How exactly direct IO request survives across
+> into the kdump kernel? I do understand the RMDA case because the IO is
+> async and out of control of the receiving end.
 
-I am a bit sceptical if the size and time reduction is worth the
-effort. I feel that this change makes the access a bit less secure.
+OK, I guess I get what you mean. You are worried that there is 
+DIO request
+program DMA controller to read into CMA memory
+<panic>
+boot into crash kernel backed by CMA
+DMA transfer is done.
 
-Well, almost all arrays are static so that it should just work.
-The patch does what it says. Feel free to use:
+DIO doesn't migrate the pinned memory because it is considered a very
+quick operation which doesn't block the movability for too long. That is
+why I have considered that a non-problem. RDMA on the other might pin
+memory for transfer for much longer but that case is handled by
+migrating the memory away.
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+Now I agree that there is a chance of the corruption from DIO. The
+question I am not entirely clear about right now is how big of a real
+problem that is. DMA transfers should be a very swift operation. Would
+it help to wait for a grace period before jumping into the kdump kernel?
 
-Best Regards,
-Petr
+> Also if direct IO is a problem how come this is not a problem for kexec
+> in general. The new kernel usually shares all the memory with the 1st
+> kernel.
+
+This is also more clear now. Pure kexec is shutting down all the devices
+which should terminate the in-flight DMA transfers.
+
+-- 
+Michal Hocko
+SUSE Labs
 
 _______________________________________________
 kexec mailing list
