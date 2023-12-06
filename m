@@ -4,99 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 83F34C4167B
-	for <kexec@archiver.kernel.org>; Wed,  6 Dec 2023 13:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 585A1C10F05
+	for <kexec@archiver.kernel.org>; Wed,  6 Dec 2023 15:08:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=FM7/wMd1ezXCQTo8PuNPnCJQGBjwsKrmB5imq1OQzz4=; b=nj0D3kHdpE9Hjc
-	oXlIKXTQXhzH4+tZMZzXAdZZxT44UEp2dspXJbjiay2ZZNxI6V70FdSgt79CCX+HIR7haVOkKQQCC
-	L4mBIAbwPdyV2YYrwFqRaVWCeNU2UswgvnVhc3BT14kAMRxmWV6W+D0anRFPnWKZOKKtOOkucIFUh
-	k1OHO3aVHNCGDUHy00qBiR8phY0ThbgaK564wX7P2VfHdpjOhnNMa4VW8JRm6W55pJWgeCaXtGSgd
-	kVIzg32ahxxW0HKDEmhcZUHOm9joOPXDVk0R8LgwTGOhepQ55TiWBmNrMoIbrVhTrcIxzAQmC13U4
-	VabLltpMwXoFy+jD3mmg==;
+	List-Owner; bh=+ZTjwDjRqFbZ/wIeFM0CbgajAhsg4YwbL6OFQ9B+Wj4=; b=rgEgdRLV34l2CK
+	bWoA/8Ait9cV4aKvZQFk5ypB5aE/ov13VDBU4wXAKTe6vqR6w03dkmIOiMTsdmbAo0aUSONeyWrry
+	+FXI6OWfldiMpcHtKXY1ltyf16UAsbNAWovOpgasxQgcERx3sSOt/gTFcqkz6siSQL4CJor9OzpmQ
+	mcPik5YhQOBXIjDEEOZDZpQnlfBLDmIg8rj8Of2lIo3Id1OdvMLDgXsMhT3GcDfEf4L/m+3ItBAIZ
+	sMlyTPI7+cKbcvxQSQFJVo8NjAhdln1oLbpYY/1qavJdw9SgoHBx/YChrtF6LX5J0vdLKjQdZmI4j
+	egN0xRHxXLl0IGMbKulw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rAsHn-00AQLc-1Q;
-	Wed, 06 Dec 2023 13:49:59 +0000
-Received: from smtp-out2.suse.de ([195.135.223.131])
+	id 1rAtVP-00Aax7-2A;
+	Wed, 06 Dec 2023 15:08:07 +0000
+Received: from mgamail.intel.com ([198.175.65.9])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rAsHj-00AQKg-2D
+	id 1rAtVL-00AavZ-1q
 	for kexec@lists.infradead.org;
-	Wed, 06 Dec 2023 13:49:57 +0000
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id B6BDB1F8D7;
-	Wed,  6 Dec 2023 13:49:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1701870591; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=64C5QQ6eD3zVjkzNd+FfGYCQlWWqe1ZkIuBmjwdiWno=;
-	b=UWpI+xvhxHqJUS47LW1yHDaap4t8CnMIeLqxuDuX0b1xg2KWDlKejiMrUWasp8XyNKTcG2
-	sZyyVhZutFRLcNkaZvQ+I2ms5gKv3z0iWRvTtjwdbSLgQoQ8ubH5h/5+mw9iDrPSUVnK+5
-	G3NAma4WyzoLUTZhXOVu7rfnWmsOjrk=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 91DA813408;
-	Wed,  6 Dec 2023 13:49:51 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id mHSJIP97cGXjJwAAD6G6ig
-	(envelope-from <mhocko@suse.com>); Wed, 06 Dec 2023 13:49:51 +0000
-Date: Wed, 6 Dec 2023 14:49:50 +0100
-From: Michal Hocko <mhocko@suse.com>
-To: Philipp Rudo <prudo@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>, Donald Dutile <ddutile@redhat.com>,
-	Jiri Bohac <jbohac@suse.cz>, Pingfan Liu <piliu@redhat.com>,
-	Tao Liu <ltao@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	David Hildenbrand <dhildenb@redhat.com>
-Subject: Re: [PATCH 0/4] kdump: crashkernel reservation from CMA
-Message-ID: <ZXB7_rbC0GAkIp7p@tiehlicka>
-References: <ZWf64BowWrYqA2Rf@MiWiFi-R3L-srv>
- <ZWhg_b3O6piZtkQ-@tiehlicka>
- <ZWh6ax8YmkhxAzIf@MiWiFi-R3L-srv>
- <ZWiAsJlLookvCI+h@MiWiFi-R3L-srv>
- <ZWiQ-II9CvGv8EWK@tiehlicka>
- <20231201123353.2b3db7fa@rotkaeppchen>
- <ZWnJyArAmFo_uYPA@tiehlicka>
- <20231201165113.43211a48@rotkaeppchen>
- <ZWoQ1k2AikSiMjys@tiehlicka>
- <20231206120805.4fdcb8ab@rotkaeppchen>
+	Wed, 06 Dec 2023 15:08:06 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1701875284; x=1733411284;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=OxpvoPymnRmbz5abQuGqeWGHWYBRoA/LaZb29RStz5I=;
+  b=hYZRztEBoB9LZ7drOGkkAJph3ZibTyUt2jY2+4TbnspXQksz9LWzUCgH
+   VZojJvJMPFGaMyxuu6+GfdVH6HnymfiHdpL7/cngKuSdQt/eCldLs34Pb
+   R57f4gCbNsa4Xev4zttKTRz4t2v+cMSDVvBfV0hSId/dHyo1oZEdsoK0b
+   wTAGrSzlT+jwflMSkFRoChl1hcJShelJk9i5IxmQNrNcdp7Jo2AFL2lCx
+   4JfkYnjHqVyUpJ1G5UUtndXNYnHRoCNA4G3S49Om7Vht9tBgMpjR/LNaU
+   qGb4T8y8/W604EOOt4hV6wB3/7yauAoZT8aJEYlgTqmuhETQ0QEYNlM5i
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10916"; a="12787919"
+X-IronPort-AV: E=Sophos;i="6.04,255,1695711600"; 
+   d="scan'208";a="12787919"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2023 07:07:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10916"; a="915215154"
+X-IronPort-AV: E=Sophos;i="6.04,255,1695711600"; 
+   d="scan'208";a="915215154"
+Received: from eborisov-mobl2.ger.corp.intel.com (HELO box.shutemov.name) ([10.252.46.36])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2023 07:07:46 -0800
+Received: by box.shutemov.name (Postfix, from userid 1000)
+	id 8C59410A3F5; Wed,  6 Dec 2023 18:07:43 +0300 (+03)
+Date: Wed, 6 Dec 2023 18:07:43 +0300
+From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc: "tglx@linutronix.de" <tglx@linutronix.de>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"x86@kernel.org" <x86@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+	"Reshetova, Elena" <elena.reshetova@intel.com>,
+	"Nakajima, Jun" <jun.nakajima@intel.com>,
+	"rafael@kernel.org" <rafael@kernel.org>,
+	"peterz@infradead.org" <peterz@infradead.org>,
+	"Huang, Kai" <kai.huang@intel.com>,
+	"sathyanarayanan.kuppuswamy@linux.intel.com" <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	"Hunter, Adrian" <adrian.hunter@intel.com>,
+	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+	"ashish.kalra@amd.com" <ashish.kalra@amd.com>,
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
+	"seanjc@google.com" <seanjc@google.com>,
+	"bhe@redhat.com" <bhe@redhat.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCHv4 10/14] x86/tdx: Convert shared memory back to private
+ on kexec
+Message-ID: <20231206150743.ylgdh2b3qjnacws3@box.shutemov.name>
+References: <20231205004510.27164-1-kirill.shutemov@linux.intel.com>
+ <20231205004510.27164-11-kirill.shutemov@linux.intel.com>
+ <3cf8b953c449320cc4c085924ef0e2eed5eadcf7.camel@intel.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20231206120805.4fdcb8ab@rotkaeppchen>
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spamd-Result: default: False [-2.60 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	 RCPT_COUNT_SEVEN(0.00)[11];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%]
+In-Reply-To: <3cf8b953c449320cc4c085924ef0e2eed5eadcf7.camel@intel.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231206_054956_072686_CEBB851A 
-X-CRM114-Status: GOOD (  43.63  )
+X-CRM114-CacheID: sfid-20231206_070803_649865_1BC04615 
+X-CRM114-Status: GOOD (  35.37  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -108,99 +97,148 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed 06-12-23 12:08:05, Philipp Rudo wrote:
-> On Fri, 1 Dec 2023 17:59:02 +0100
-> Michal Hocko <mhocko@suse.com> wrote:
-> 
-> > On Fri 01-12-23 16:51:13, Philipp Rudo wrote:
-> > > On Fri, 1 Dec 2023 12:55:52 +0100
-> > > Michal Hocko <mhocko@suse.com> wrote:
-> > >   
-> > > > On Fri 01-12-23 12:33:53, Philipp Rudo wrote:
-> > > > [...]  
-> > > > > And yes, those are all what-if concerns but unfortunately that is all
-> > > > > we have right now.    
-> > > > 
-> > > > Should theoretical concerns without an actual evidence (e.g. multiple
-> > > > drivers known to be broken) become a roadblock for this otherwise useful
-> > > > feature?   
-> > > 
-> > > Those concerns aren't just theoretical. They are experiences we have
-> > > from a related feature that suffers exactly the same problem regularly
-> > > which wouldn't exist if everybody would simply work "properly".  
-> > 
-> > What is the related feature?
-> 
-> kexec
+On Wed, Dec 06, 2023 at 01:28:08AM +0000, Edgecombe, Rick P wrote:
+> On Tue, 2023-12-05 at 03:45 +0300, Kirill A. Shutemov wrote:=A0
+> > +static void tdx_kexec_unshare_mem(bool crash)
+> > +{
+> > +=A0=A0=A0=A0=A0=A0=A0unsigned long addr, end;
+> > +=A0=A0=A0=A0=A0=A0=A0long found =3D 0, shared;
+> > +
+> > +=A0=A0=A0=A0=A0=A0=A0/* Stop new private<->shared conversions */
+> > +=A0=A0=A0=A0=A0=A0=A0conversion_allowed =3D false;
+> =
 
-OK, but that is a completely different thing, no? crashkernel parameter
-doesn't affect kexec. Or what is the actual relation?
+> I wonder if this might need a compiler barrier here to be totally safe.
+> I'm not sure.
 
-> > > And yes, even purely theoretical concerns can become a roadblock for a
-> > > feature when the cost of those theoretical concerns exceed the benefit
-> > > of the feature. The thing is that bugs will be reported against kexec.
-> > > So _we_ need to figure out which of the shitty drivers caused the
-> > > problem. That puts additional burden on _us_. What we are trying to
-> > > evaluate at the moment is if the benefit outweighs the extra burden
-> > > with the information we have at the moment.  
-> > 
-> > I do understand your concerns! But I am pretty sure you do realize that
-> > it is really hard to argue theoreticals.  Let me restate what I consider
-> > facts. Hopefully we can agree on these points
-> > 	- the CMA region can be used by user space memory which is a
-> > 	  great advantage because the memory is not wasted and our
-> > 	  experience has shown that users do care about this a lot. We
-> > 	  _know_ that pressure on making those reservations smaller
-> > 	  results in a less reliable crashdump and more resources spent
-> > 	  on tuning and testing (especially after major upgrades).  A
-> > 	  larger reservation which is not completely wasted for the
-> > 	  normal runtime is addressing that concern.
-> > 	- There is no other known mechanism to achieve the reusability
-> > 	  of the crash kernel memory to stop the wastage without much
-> > 	  more intrusive code/api impact (e.g. a separate zone or
-> > 	  dedicated interface to prevent any hazardous usage like RDMA).
-> > 	- implementation wise the patch has a very small footprint. It
-> > 	  is using an existing infrastructure (CMA) and it adds a
-> > 	  minimal hooking into crashkernel configuration.
-> > 	- The only identified risk so far is RDMA acting on this memory
-> > 	  without using proper pinning interface. If it helps to have a
-> > 	  statement from RDMA maintainers/developers then we can pull
-> > 	  them in for a further discussion of course.
-> > 	- The feature requires an explicit opt-in so this doesn't bring
-> > 	  any new risk to existing crash kernel users until they decide
-> > 	  to use it. AFAIU there is no way to tell that the crash kernel
-> > 	  memory used to be CMA based in the primary kernel. If you
-> > 	  believe that having that information available for
-> > 	  debugability would help then I believe this shouldn't be hard
-> > 	  to add.  I think it would even make sense to mark this feature
-> > 	  experimental to make it clear to users that this needs some
-> > 	  time before it can be marked production ready.
-> > 
-> > I hope I haven't really missed anything important. The final
-> 
-> If I understand Documentation/core-api/pin_user_pages.rst correctly you
-> missed case 1 Direct IO. In that case "short term" DMA is allowed for
-> pages without FOLL_LONGTERM. Meaning that there is a way you can
-> corrupt the CMA and with that the crash kernel after the production
-> kernel has panicked.
+Yeah, it should be cleaner with a barrier.
 
-Could you expand on this? How exactly direct IO request survives across
-into the kdump kernel? I do understand the RMDA case because the IO is
-async and out of control of the receiving end.
+> > +
+> > +=A0=A0=A0=A0=A0=A0=A0/*
+> > +=A0=A0=A0=A0=A0=A0=A0 * Crash kernel reaches here with interrupts disa=
+bled: can't
+> > wait for
+> > +=A0=A0=A0=A0=A0=A0=A0 * conversions to finish.
+> > +=A0=A0=A0=A0=A0=A0=A0 *
+> > +=A0=A0=A0=A0=A0=A0=A0 * If race happened, just report and proceed.
+> > +=A0=A0=A0=A0=A0=A0=A0 */
+> > +=A0=A0=A0=A0=A0=A0=A0if (!crash) {
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0unsigned long timeout;
+> > +
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0/*
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 * Wait for in-flight con=
+versions to complete.
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 *
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 * Do not wait more than =
+30 seconds.
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 */
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0timeout =3D 30 * USEC_PER=
+_SEC;
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0while (atomic_read(&conve=
+rsions_in_progress) &&
+> > timeout--)
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0u=
+delay(1);
+> > +=A0=A0=A0=A0=A0=A0=A0}
+> > +
+> > +=A0=A0=A0=A0=A0=A0=A0if (atomic_read(&conversions_in_progress))
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0pr_warn("Failed to finish=
+ shared<->private
+> > conversions\n");
+> =
 
-Also if direct IO is a problem how come this is not a problem for kexec
-in general. The new kernel usually shares all the memory with the 1st
-kernel.
+> I can't think of any non-ridiculous way to handle this case. Maybe we
+> need VMM help.
 
-/me confused.
--- 
-Michal Hocko
-SUSE Labs
+Do you see a specific way how VMM can help here?
+
+> > diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+> > index 830425e6d38e..c81afffaa954 100644
+> > --- a/arch/x86/kernel/reboot.c
+> > +++ b/arch/x86/kernel/reboot.c
+> > @@ -12,6 +12,7 @@
+> > =A0#include <linux/delay.h>
+> > =A0#include <linux/objtool.h>
+> > =A0#include <linux/pgtable.h>
+> > +#include <linux/kexec.h>
+> > =A0#include <acpi/reboot.h>
+> > =A0#include <asm/io.h>
+> > =A0#include <asm/apic.h>
+> > @@ -31,6 +32,7 @@
+> > =A0#include <asm/realmode.h>
+> > =A0#include <asm/x86_init.h>
+> > =A0#include <asm/efi.h>
+> > +#include <asm/tdx.h>
+> > =A0
+> > =A0/*
+> > =A0 * Power off function, if any
+> > @@ -716,6 +718,14 @@ static void
+> > native_machine_emergency_restart(void)
+> > =A0
+> > =A0void native_machine_shutdown(void)
+> > =A0{
+> > +=A0=A0=A0=A0=A0=A0=A0/*
+> > +=A0=A0=A0=A0=A0=A0=A0 * Call enc_kexec_unshare_mem() while all CPUs ar=
+e still
+> > active and
+> > +=A0=A0=A0=A0=A0=A0=A0 * interrupts are enabled. This will allow all in=
+-flight
+> > memory
+> > +=A0=A0=A0=A0=A0=A0=A0 * conversions to finish cleanly before unsharing=
+ all memory.
+> > +=A0=A0=A0=A0=A0=A0=A0 */
+> > +=A0=A0=A0=A0=A0=A0=A0if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT) &&
+> > kexec_in_progress)
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0x86_platform.guest.enc_ke=
+xec_unshare_mem(false);
+> =
+
+> These questions are coming from an incomplete understanding of the
+> kexec/reboot operation. Please disregard if it is not helpful.
+> =
+
+> By doing this while other tasks can still run, it handles the
+> conversion races in the !crash case. But then it sets shared pages to
+> NP. What happens if another active task tries to write to one?
+> =
+
+> I guess we rely on the kernel_restart_prepare()->device_shutdown() to
+> clean up, which runs before native_machine_shutdown(). So there might
+> be conversions in progress when tdx_kexec_unshare_mem() is called, from
+> the allocator work queues. But the actual memory won't be accessed
+> during that operation.
+
+Right, devices has to be shutdown by then.
+
+> But the console must be active? Or otherwise who can see these
+> warnings. It doesn't use a shared page? Or the KVM clock, which looks
+> to clean up at cpu tear down, which now happens after
+> tdx_kexec_unshare_mem()? So I wonder if there might be cases.
+
+Virtio console is not functional by then, but serial is. Serial uses port
+I/O and doesn't need shared memory.
+
+> If so, maybe you could halt the conversions in
+> native_machine_shutdown(), then do the actual reset to private after
+> tasks can't schedule.
+
+It would also mean that we cannot use set_memory_np() there as it requires
+sleepable context. I would rather keep conversion in
+native_machine_shutdown() path.
+
+> I'd still wonder about if anything might try to
+> access a shared page triggered by the console output.
+
+set_memory_np() would make it obvious if it ever happens.
+
+-- =
+
+  Kiryl Shutsemau / Kirill A. Shutemov
 
 _______________________________________________
 kexec mailing list
