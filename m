@@ -4,78 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 99CF2C10DCE
-	for <kexec@archiver.kernel.org>; Wed,  6 Dec 2023 23:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3C820C4167B
+	for <kexec@archiver.kernel.org>; Thu,  7 Dec 2023 04:23:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=Y6lRt3fZWXSCzuWHbbG3ansnr+cKbMu1Izb1+vo+wmw=; b=bljcvYjGBZVWcI
-	g8ZdOOek4iQXoPKkaP8QpOygJUhUEuBw7GgrLsrCnB/Gbx28Q3i1eAdN287D/v6CxJk0XxA2gCsAE
-	0WzC4oitqFrmabYVx7wAjlu4Eeb70qaEolHTddTFFp+9kdLPE6aXw0d5PeJUSdthR6ybLrf8H014g
-	Snk9zhTWb01zfrBXPRQ9QXM4xlsRJ35aRNvcfgYQLW5KPwynPCeOdieAzUoKwwsM0IFcXthRt0bcJ
-	NJPvSYRpyj9nzmX+o+nH6q2Wa8mTRg2mB2U3O1gCFNYu4V29ZPX+YSc5e4/ssqje7jHtJJekWTfPk
-	qU2Op+dL8HWwvFYMzQ1A==;
+	List-Owner; bh=S+Uy96THQiVzgqN1p2PqlUKpQF/EgqeH012GgTzec8c=; b=t/GvGNqqLlCi1H
+	MLCqAoKrBzRKcywxInSGre1Cwganv2z74nkz0vwEZSf3UFcOkETMVSFzD5AH91FRT07V2aiv7Mh3U
+	5BXou7E1efE1KH72WpVs/KrMGZKv24DduF9bQzmoxqjxENWPYiQDuYiSUjWmNLcHdEcLZTIdYouV6
+	dNgjJIhwRL40GfleWMZ+ctrdlt1lmPVLemPWFfvA3boazY8s2welXoihrHknsO3Jt85eGUWJnD8Ik
+	iYyu4c3+hqfHMSWqstbUhMN4CacJYDSa3M/1AgFwOMrkrVyGYyX5EtLBf68TqszU7LLiCzP3Kmj8L
+	uM3QASxXjT//Ep6l+9/w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rB1Dd-00BTHp-0S;
-	Wed, 06 Dec 2023 23:22:17 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1rB5v2-00BpeU-1o;
+	Thu, 07 Dec 2023 04:23:24 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rB1Da-00BTGp-01
+	id 1rB5uz-00BpdQ-0T
 	for kexec@lists.infradead.org;
-	Wed, 06 Dec 2023 23:22:15 +0000
+	Thu, 07 Dec 2023 04:23:22 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1701904932;
+	s=mimecast20190719; t=1701922999;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=zPCUsWG0BDGnbK296zNpXL4hsIM/iX88O2dTATbgstU=;
-	b=ign0pbAXBUIAwU6VqF1Q9ofbxcILEGnum2dzr6h60YQyPMBkhIExOfB56IGe5yWVb5ytie
-	afQln1uAwbK50CG06N+3yTM/BSOOt8HXi0R+tVGPotudInc+SYo+PnKqa4R+KzByZzZLtf
-	cWULJrjmze1hFH8HTJ990lFRVk/mjmA=
+	bh=Ulgd6APR6tJoXOtI6Z0BNkxh6DNgXO1Xqt99EIAg7hA=;
+	b=gGr+mrv8+MYsZgtxt4J7acAQ1K3NCvrbSxLkxlGxubGlrETZYKLn2M/A8WIBuVthQy/NY8
+	dTq38LJxAsRgkJKPjObAk5ElV24BBKcp7iaejjqtOoQXDmeuAttqC6S4E0s4DLpVpoJLFo
+	15lKYgSRrDVjSBj4Iq/k8aK21iIk3CA=
 Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
  by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-65-Ftl_v0_MOyKwGMvgDCVSqQ-1; Wed,
- 06 Dec 2023 18:22:11 -0500
-X-MC-Unique: Ftl_v0_MOyKwGMvgDCVSqQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-610-SiG50LfSPIKl9dSEpEVupw-1; Wed,
+ 06 Dec 2023 23:23:17 -0500
+X-MC-Unique: SiG50LfSPIKl9dSEpEVupw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 776BE3806622;
-	Wed,  6 Dec 2023 23:22:10 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 37C781C05AE8;
+	Thu,  7 Dec 2023 04:23:17 +0000 (UTC)
 Received: from localhost (unknown [10.72.113.121])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id A3842C15A0C;
-	Wed,  6 Dec 2023 23:22:09 +0000 (UTC)
-Date: Thu, 7 Dec 2023 07:22:06 +0800
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7C10C8CD0;
+	Thu,  7 Dec 2023 04:23:16 +0000 (UTC)
+Date: Thu, 7 Dec 2023 12:23:13 +0800
 From: Baoquan He <bhe@redhat.com>
-To: Conor Dooley <conor@kernel.org>
-Cc: Conor Dooley <conor.dooley@microchip.com>, linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org, x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	linux-parisc@vger.kernel.org, akpm@linux-foundation.org,
-	joe@perches.com, nathan@kernel.org
-Subject: Re: [PATCH v3 5/7] kexec_file, ricv: print out debugging message if
- required
-Message-ID: <ZXECHg37DRZ9BQsP@MiWiFi-R3L-srv>
-References: <20231130023955.5257-1-bhe@redhat.com>
- <20231130023955.5257-6-bhe@redhat.com>
- <20231201-blog-blasphemy-985d2665903c@wendy>
- <ZW3yXWJ7rTrtZzyg@MiWiFi-R3L-srv>
- <20231204-liftoff-enclosure-d3e3daf0ab6e@spud>
- <ZXCVUD9cCYEShrrj@MiWiFi-R3L-srv>
- <20231206-pasta-embassy-c7250740b16c@spud>
+To: Michal Hocko <mhocko@suse.com>
+Cc: Philipp Rudo <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>,
+	Jiri Bohac <jbohac@suse.cz>, Pingfan Liu <piliu@redhat.com>,
+	Tao Liu <ltao@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	David Hildenbrand <dhildenb@redhat.com>
+Subject: Re: [PATCH 0/4] kdump: crashkernel reservation from CMA
+Message-ID: <ZXFIsZ+0GmUZMFk3@MiWiFi-R3L-srv>
+References: <ZWh6ax8YmkhxAzIf@MiWiFi-R3L-srv>
+ <ZWiAsJlLookvCI+h@MiWiFi-R3L-srv>
+ <ZWiQ-II9CvGv8EWK@tiehlicka>
+ <20231201123353.2b3db7fa@rotkaeppchen>
+ <ZWnJyArAmFo_uYPA@tiehlicka>
+ <20231201165113.43211a48@rotkaeppchen>
+ <ZWoQ1k2AikSiMjys@tiehlicka>
+ <20231206120805.4fdcb8ab@rotkaeppchen>
+ <ZXB7_rbC0GAkIp7p@tiehlicka>
+ <ZXCRF-bvm8ijXxr4@tiehlicka>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20231206-pasta-embassy-c7250740b16c@spud>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+In-Reply-To: <ZXCRF-bvm8ijXxr4@tiehlicka>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231206_152214_119326_FA2916D0 
-X-CRM114-Status: GOOD (  51.33  )
+X-CRM114-CacheID: sfid-20231206_202321_258150_3F454B4E 
+X-CRM114-Status: GOOD (  26.62  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -92,175 +94,73 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 12/06/23 at 04:54pm, Conor Dooley wrote:
-> On Wed, Dec 06, 2023 at 11:37:52PM +0800, Baoquan He wrote:
-> > On 12/04/23 at 04:14pm, Conor Dooley wrote:
-> > > On Mon, Dec 04, 2023 at 11:38:05PM +0800, Baoquan He wrote:
-> > > > On 12/01/23 at 10:38am, Conor Dooley wrote:
-> > > > > On Thu, Nov 30, 2023 at 10:39:53AM +0800, Baoquan He wrote:
-> > > > > 
-> > > > > $subject has a typo in the arch bit :)
-> > > > 
-> > > > Indeed, will fix if need report. Thanks for careful checking.
-> > > > 
-> > > > > 
-> > > > > > Replace pr_debug() with the newly added kexec_dprintk() in kexec_file
-> > > > > > loading related codes.
-> > > > > 
-> > > > > Commit messages should be understandable in isolation, but this only
-> > > > > explains (part of) what is obvious in the diff. Why is this change
-> > > > > being made?
-> > > > 
-> > > > The purpose has been detailedly described in cover letter and patch 1
-> > > > log. Andrew has picked these patches into his tree and grabbed the cover
-> > > > letter log into the relevant commit for people's later checking. All
-> > > > these seven patches will be present in mainline together. This is common
-> > > > way when posting patch series? Please let me know if I misunderstand
-> > > > anything.
-> > > 
-> > > Each patch having a commit message that explains why a change is being
-> > > made is the expectation. It is especially useful to explain the why
-> > > here, since it is not just a mechanical conversion of pr_debug()s as the
-> > > commit message suggests.
+On 12/06/23 at 04:19pm, Michal Hocko wrote:
+> On Wed 06-12-23 14:49:51, Michal Hocko wrote:
+> > On Wed 06-12-23 12:08:05, Philipp Rudo wrote:
+> [...]
+> > > If I understand Documentation/core-api/pin_user_pages.rst correctly you
+> > > missed case 1 Direct IO. In that case "short term" DMA is allowed for
+> > > pages without FOLL_LONGTERM. Meaning that there is a way you can
+> > > corrupt the CMA and with that the crash kernel after the production
+> > > kernel has panicked.
 > > 
-> > Sounds reasonable. I rephrase the patch 3 log as below, do you think
-> > it's OK to you?
+> > Could you expand on this? How exactly direct IO request survives across
+> > into the kdump kernel? I do understand the RMDA case because the IO is
+> > async and out of control of the receiving end.
 > 
-> Yes, but with one comment.
+> OK, I guess I get what you mean. You are worried that there is 
+> DIO request
+> program DMA controller to read into CMA memory
+> <panic>
+> boot into crash kernel backed by CMA
+> DMA transfer is done.
 > 
-> > 
-> > I will also adjust patch logs on other ARCH once this one is done.
-> > Thanks.
-> > 
-> > =============================
-> > Subject: [PATCH v3 5/7] kexec_file, ricv: print out debugging message if required
-> > 
-> > Then when specifying '-d' for kexec_file_load interface, loaded
-> > locations of kernel/initrd/cmdline etc can be printed out to help debug.
-> > 
-> > Here replace pr_debug() with the newly added kexec_dprintk() in kexec_file
-> > loading related codes.
-> > 
+> DIO doesn't migrate the pinned memory because it is considered a very
+> quick operation which doesn't block the movability for too long. That is
+> why I have considered that a non-problem. RDMA on the other might pin
+> memory for transfer for much longer but that case is handled by
+> migrating the memory away.
 > 
-> > And also replace pr_notice() with kexec_dprintk() in elf_kexec_load()
-> > because it's make sense to always print out loaded location of purgatory
-              ~
-> > and device tree even though users don't expect the message.
+> Now I agree that there is a chance of the corruption from DIO. The
+> question I am not entirely clear about right now is how big of a real
+> problem that is. DMA transfers should be a very swift operation. Would
+> it help to wait for a grace period before jumping into the kdump kernel?
 
-Fixed typo:
-==========
+On system with hardware IOMMU of x86_64, people finally had fixed it
+after very long history of trying, arguing. Until 2014, HPE's engineer came
+up with a series to copy the 1st kernel's iommu page table to kdump
+kernel so that the on-flight DMA from 1st kernel can continue
+transferring. Later, these attempts and discussions were converted codes
+into mainline kernel. Before that, people even tried to introduce
+reset_devices() before jumping to kdump kernel. But that was denied
+immediately because any extra unnecessary actions could cause uncertain
+failure of kdump kernel, given 1st kernel has been in an unpredictable
+unstable situation.
 
-And also replace pr_notice() with kexec_dprintk() in elf_kexec_load()
-because it doesn't make sense to always print out loaded location of
-purgatory and device tree even though users don't expect the message.
+We can't guarantee how swift the DMA transfer could be in the cma, case,
+it will be a venture.
+
+[3]
+[PATCH v9 00/13] Fix the on-flight DMA issue on system with amd iommu
+https://lists.openwall.net/linux-kernel/2017/08/01/399
+
+[2]
+[PATCH 00/19] Fix Intel IOMMU breakage in kdump kernel
+https://lists.openwall.net/linux-kernel/2015/06/13/72
+
+[1]
+[PATCH 0/8] iommu/vt-d: Fix crash dump failure caused by legacy DMA/IO
+https://lkml.org/lkml/2014/4/24/836
 
 > 
-> This seems to contradict what you said in your earlier mail, about
-> moving these from notice to debug. I think you missed a negation in your
-> new version of the commit message. What you said in response to me seems
-> like a more complete explanation anyway:
-
-Ah, I made mistake when typing, these printing is only for debugging,
-so always printing out them is not suggested.
-
-> 	always printing out the loaded location of purgatory and
-> 	device tree doesn't make sense. It will be confusing when users
-> 	see these even when they do normal kexec/kdump loading.
+> > Also if direct IO is a problem how come this is not a problem for kexec
+> > in general. The new kernel usually shares all the memory with the 1st
+> > kernel.
 > 
-> Thanks,
-> Conor.
-> 
-> > And also remove kexec_image_info() because the content has been printed
-> > out in generic code.
-> > 
-> > ============================
-> > 
-> > > 
-> > > > > 
-> > > > > > 
-> > > > > > And also remove kexec_image_info() because the content has been printed
-> > > > > > out in generic code.
-> > > > > > 
-> > > > > > Signed-off-by: Baoquan He <bhe@redhat.com>
-> > > > > > ---
-> > > > > >  arch/riscv/kernel/elf_kexec.c     | 11 ++++++-----
-> > > > > >  arch/riscv/kernel/machine_kexec.c | 26 --------------------------
-> > > > > >  2 files changed, 6 insertions(+), 31 deletions(-)
-> > > > > > 
-> > > > > > diff --git a/arch/riscv/kernel/elf_kexec.c b/arch/riscv/kernel/elf_kexec.c
-> > > > > > index e60fbd8660c4..5bd1ec3341fe 100644
-> > > > > > --- a/arch/riscv/kernel/elf_kexec.c
-> > > > > > +++ b/arch/riscv/kernel/elf_kexec.c
-> > > > > > @@ -216,7 +216,6 @@ static void *elf_kexec_load(struct kimage *image, char *kernel_buf,
-> > > > > >  	if (ret)
-> > > > > >  		goto out;
-> > > > > >  	kernel_start = image->start;
-> > > > > > -	pr_notice("The entry point of kernel at 0x%lx\n", image->start);
-> > > > > >  
-> > > > > >  	/* Add the kernel binary to the image */
-> > > > > >  	ret = riscv_kexec_elf_load(image, &ehdr, &elf_info,
-> > > > > > @@ -252,8 +251,8 @@ static void *elf_kexec_load(struct kimage *image, char *kernel_buf,
-> > > > > >  		image->elf_load_addr = kbuf.mem;
-> > > > > >  		image->elf_headers_sz = headers_sz;
-> > > > > >  
-> > > > > > -		pr_debug("Loaded elf core header at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-> > > > > > -			 image->elf_load_addr, kbuf.bufsz, kbuf.memsz);
-> > > > > > +		kexec_dprintk("Loaded elf core header at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-> > > > > > +			      image->elf_load_addr, kbuf.bufsz, kbuf.memsz);
-> > > > > >  
-> > > > > >  		/* Setup cmdline for kdump kernel case */
-> > > > > >  		modified_cmdline = setup_kdump_cmdline(image, cmdline,
-> > > > > > @@ -275,6 +274,8 @@ static void *elf_kexec_load(struct kimage *image, char *kernel_buf,
-> > > > > >  		pr_err("Error loading purgatory ret=%d\n", ret);
-> > > > > >  		goto out;
-> > > > > >  	}
-> > > > > > +	kexec_dprintk("Loaded purgatory at 0x%lx\n", kbuf.mem);
-> > > > > > +
-> > > > > >  	ret = kexec_purgatory_get_set_symbol(image, "riscv_kernel_entry",
-> > > > > >  					     &kernel_start,
-> > > > > >  					     sizeof(kernel_start), 0);
-> > > > > > @@ -293,7 +294,7 @@ static void *elf_kexec_load(struct kimage *image, char *kernel_buf,
-> > > > > >  		if (ret)
-> > > > > >  			goto out;
-> > > > > >  		initrd_pbase = kbuf.mem;
-> > > > > 
-> > > > > > -		pr_notice("Loaded initrd at 0x%lx\n", initrd_pbase);
-> > > > > > +		kexec_dprintk("Loaded initrd at 0x%lx\n", initrd_pbase);
-> > > > > 
-> > > > > This is not a pr_debug().
-> > > > > 
-> > > > > >  	}
-> > > > > >  
-> > > > > >  	/* Add the DTB to the image */
-> > > > > > @@ -318,7 +319,7 @@ static void *elf_kexec_load(struct kimage *image, char *kernel_buf,
-> > > > > >  	}
-> > > > > >  	/* Cache the fdt buffer address for memory cleanup */
-> > > > > >  	image->arch.fdt = fdt;
-> > > > > 
-> > > > > > -	pr_notice("Loaded device tree at 0x%lx\n", kbuf.mem);
-> > > > > > +	kexec_dprintk("Loaded device tree at 0x%lx\n", kbuf.mem);
-> > > > > 
-> > > > > Neither is this. Why are they being moved from pr_notice()?
-> > > > 
-> > > > You are right. 
-> > > > 
-> > > > While always printing out the loaded location of purgatory and
-> > > > device tree doesn't make sense. It will be confusing when users
-> > > > see these even when they do normal kexec/kdump loading. It should be
-> > > > changed to pr_debug().
-> > > > 
-> > > > Which way do you suggest?
-> > > > 1) change it back to pr_debug(), fix it in another patch;
-> > > > 2) keep it as is in the patch;
-> > > 
-> > > Personally I think it is fine to change them all in one patch, but the
-> > > rationale for converting pr_notice() to your new debug infrastructure
-> > > needs to be in the commit message.
-> > 
-> > Sure, sounds good to me. I have changed the patch log to reflect this as
-> > you suggested, please help check. Thanks again.
-> > 
+> This is also more clear now. Pure kexec is shutting down all the devices
+> which should terminate the in-flight DMA transfers.
 
+Exactly. That's what I have been noticing in this thread.
 
 
 _______________________________________________
