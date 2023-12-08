@@ -4,80 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D0891C10DC3
-	for <kexec@archiver.kernel.org>; Fri,  8 Dec 2023 02:11:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 21CA2C10F04
+	for <kexec@archiver.kernel.org>; Fri,  8 Dec 2023 07:43:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=RA0sL8vv5wFuB/wlku5/nx6JwpTR479CJJ6hg3wcbRo=; b=D/nKRH3muMPrZQ
-	Wr0wyJY3kj0qZtm+DQ+iCZBsnoayPjynk851mao1O97Tm0dsmhJwAFncdlcUM/Op6leCkpYX+K+rC
-	/kVVAWUna6F1fcOLe14gl/ydZSrDYVvxxRn2XF4F4RFN+MqfAwy5TN8i/QxpInwezOwoUbZpjZ+Uo
-	1dgOt0lPdyqyLPqHZ7JWvHk5xi/VL8jwmAKxkuY7YYETvCUg38RKrQknF2AWP1vclgetXDol4ZbOf
-	dvucGT/LtrmAilWTMNk5WLpDv9yspJCXy/MBLIbpZoF5TfhLu9JfmWKyF6KF69yihhHJ8wpgZWgyf
-	9aZIYb3IsaAG77wRb8FQ==;
+	List-Owner; bh=3lqK3HFVtYLFo/UuSJUSf7DuGZBSXatAvfB08PDq8CY=; b=h6AtjwD7U9bVux
+	IwGiynq9mKdU2PFYME5zrfiGeGmZis1DDRetTNVVo18n4c2gbhKHPocSvQUxXAWBKWSbaenZOzc8n
+	JEVDMSvAO4rdPCwRZaURUH5Gq8BoRTlvV7oMatTJ1zxpijGzm1p93uKlozjzBjDJseFsxbHFSCszU
+	t96zuBYONT88mJEWOMYhraB8G5uPd439TADjI81m8zxBIr3TXMcQOnPTq3vjrIyL1ynYKEWu9/k3V
+	CcL//nYl5MDxOzGKr+EYfX69waN5agwfqMOOTRlloMK+ZHzQnORDwpmg0nJoHvLh27pw8NjzkoCe/
+	cAskTjnmihyh3KucxmcQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rBQKQ-00EWOM-24;
-	Fri, 08 Dec 2023 02:10:58 +0000
+	id 1rBVWH-00EzD9-09;
+	Fri, 08 Dec 2023 07:43:33 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rBQKN-00EWNx-2l
+	id 1rBVWD-00EzCN-31
 	for kexec@lists.infradead.org;
-	Fri, 08 Dec 2023 02:10:57 +0000
+	Fri, 08 Dec 2023 07:43:31 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702001454;
+	s=mimecast20190719; t=1702021406;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Il5oopo58FBky7wapbSa4VtHGAOr6/LyABJzUA84HrQ=;
-	b=iflY99DwMp5u1Q4CJvgBb9xFfoamXNKGk25eNwU9ce10WGWdRLR+mCIgAf9vWcfOG1KD3m
-	jpLbbSrqJVeWcA0UVwi+Ir+tZELyYJ1GBkmWlG6J0xYd/uBhZl4cdHgjVxkNuNn5X0ZgCV
-	BzsVlzREaBP4xmpA9+87PqZx41qtdB8=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-303-1J2f_jeiOX62oP58qsBoLQ-1; Thu, 07 Dec 2023 21:10:51 -0500
-X-MC-Unique: 1J2f_jeiOX62oP58qsBoLQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	bh=mD12z3Ph+93M5Ou5tdqyf4RyVew89UEB1udxQaJBbFk=;
+	b=QGJrQDWjCH4obV445rTLcS7KffDO+BNTxQJQ4fzlsQIBYMeLBn/+UXEDi8Qy3NIo1EMtHo
+	B5ZyLuqtM06P/fRiIq12vkVSKmZ3WlFmHtvjmTU0t4m1KcUqjr32h0tdNBwKNdxSVq2a4y
+	NQer9PdlYW4qtTzETPXiEjM6MWro9vs=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-137-InC0YeG0PumZKyP_DYV22Q-1; Fri,
+ 08 Dec 2023 02:42:43 -0500
+X-MC-Unique: InC0YeG0PumZKyP_DYV22Q-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 95D37881DF1;
-	Fri,  8 Dec 2023 02:10:50 +0000 (UTC)
-Received: from localhost (unknown [10.72.113.121])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id D71DE40C6EB9;
-	Fri,  8 Dec 2023 02:10:49 +0000 (UTC)
-Date: Fri, 8 Dec 2023 10:10:46 +0800
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 37ABF3C0274D;
+	Fri,  8 Dec 2023 07:42:43 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.9])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 89CD58CD0;
+	Fri,  8 Dec 2023 07:42:42 +0000 (UTC)
+Date: Fri, 8 Dec 2023 15:42:39 +0800
 From: Baoquan He <bhe@redhat.com>
-To: Michal Hocko <mhocko@suse.com>
-Cc: Philipp Rudo <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>,
-	Jiri Bohac <jbohac@suse.cz>, Pingfan Liu <piliu@redhat.com>,
-	Tao Liu <ltao@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	David Hildenbrand <dhildenb@redhat.com>
-Subject: Re: [PATCH 0/4] kdump: crashkernel reservation from CMA
-Message-ID: <ZXJ7JpcZALSeFvox@MiWiFi-R3L-srv>
-References: <ZWiQ-II9CvGv8EWK@tiehlicka>
- <20231201123353.2b3db7fa@rotkaeppchen>
- <ZWnJyArAmFo_uYPA@tiehlicka>
- <20231201165113.43211a48@rotkaeppchen>
- <ZWoQ1k2AikSiMjys@tiehlicka>
- <20231206120805.4fdcb8ab@rotkaeppchen>
- <ZXB7_rbC0GAkIp7p@tiehlicka>
- <ZXCRF-bvm8ijXxr4@tiehlicka>
- <ZXFIsZ+0GmUZMFk3@MiWiFi-R3L-srv>
- <ZXGIeAgCcatUDa2h@tiehlicka>
+To: linux-kernel@vger.kernel.org
+Cc: linux-next@vger.kernel.org, loongarch@lists.linux.dev,
+	kexec@lists.infradead.org, linux-m68k@lists.linux-m68k.org,
+	linux-mips@vger.kernel.org, linux-sh@vger.kernel.org,
+	x86@kernel.org, akpm@linux-foundation.org, eric_devolder@yahoo.com,
+	sfr@canb.auug.org.au, ignat@cloudflare.com
+Subject: Re: [PATCH 0/5] kexec: fix the incorrect ifdeffery and dependency of
+ CONFIG_KEXEC
+Message-ID: <ZXLI748b85be459B@fedora>
+References: <20231208073036.7884-1-bhe@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <ZXGIeAgCcatUDa2h@tiehlicka>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+In-Reply-To: <20231208073036.7884-1-bhe@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231207_181055_980945_8F6D79A0 
-X-CRM114-Status: GOOD (  20.69  )
+X-CRM114-CacheID: sfid-20231207_234330_066402_470402EE 
+X-CRM114-Status: GOOD (  12.79  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,41 +85,70 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 12/07/23 at 09:55am, Michal Hocko wrote:
-> On Thu 07-12-23 12:23:13, Baoquan He wrote:
-> [...]
-> > We can't guarantee how swift the DMA transfer could be in the cma, case,
-> > it will be a venture.
+Forgot adding kexec to CC, add it now.
+
+On 12/08/23 at 03:30pm, Baoquan He wrote:
+> The select of KEXEC for CRASH_DUMP in kernel/Kconfig.kexec will be
+> dropped, then compiling errors will be triggered if below config
+> items are set:
 > 
-> We can't guarantee this of course but AFAIK the DMA shouldn't take
-> minutes, right? While not perfect, waiting for some time before jumping
-> into the crash kernel should be acceptable from user POV and it should
-> work around most of those potential lingering programmed DMA transfers.
+> ===
+> CONFIG_CRASH_CORE=y
+> CONFIG_KEXEC_CORE=y
+> CONFIG_CRASH_DUMP=y
+> ===
 > 
-> So I guess what we would like to hear from you as kdump maintainers is
-> this. Is it absolutely imperative that these issue must be proven
-> impossible or is a best effort approach something worth investing time
-> into? Because if the requirement is an absolute guarantee then I simply
-> do not see any feasible way to achieve the goal of reusable memory.
-
-Honestly, I think all the discussions and proof have told clearly it's
-not a good idea. This is not about who wants this, who doesn't. So
-far, this is an objective fact that taking ,cma area for crashkernel= is
-not a good idea, it's very risky.
-
-We don't deny this at the beginning. I tried to present all what I know,
-we have experienced, we have investigated, we have tried. I wanted to
-see if this time we can clarify some concerns may be mistaken. But it's
-not. The risk is obvious and very likely happen.
-
+> E.g on mips, below link error are seen:
+> --------------------------------------------------------------------
+> mipsel-linux-ld: kernel/kexec_core.o: in function `kimage_free':
+> kernel/kexec_core.c:(.text+0x2200): undefined reference to `machine_kexec_cleanup'
+> mipsel-linux-ld: kernel/kexec_core.o: in function `__crash_kexec':
+> kernel/kexec_core.c:(.text+0x2480): undefined reference to `machine_crash_shutdown'
+> mipsel-linux-ld: kernel/kexec_core.c:(.text+0x2488): undefined reference to `machine_kexec'
+> mipsel-linux-ld: kernel/kexec_core.o: in function `kernel_kexec':
+> kernel/kexec_core.c:(.text+0x29b8): undefined reference to `machine_shutdown'
+> mipsel-linux-ld: kernel/kexec_core.c:(.text+0x29c0): undefined reference to `machine_kexec'
+> --------------------------------------------------------------------
 > 
-> Let me reiterate that the existing reservation mechanism is showing its
-> limits for production systems and I strongly believe this is something
-> that needs addressing because crash dumps are very often the only tool
-> to investigate complex issues.
-
-Yes, I admit that. But it haven't got to the point that it's too bad to
-bear so that we have to take the risk to take ,cma instead.
+> Here, change the incorrect dependency of building kexec_core related object
+> files, and the ifdeffery on architectures from CONFIG_KEXEC to
+> CONFIG_KEXEC_CORE.
+> 
+> Testing:
+> ========
+> Passed on mips and loognarch with the LKP reproducer.
+> 
+> Baoquan He (5):
+>   loongarch, kexec: change dependency of object files
+>   m68k, kexec: fix the incorrect ifdeffery and build dependency of
+>     CONFIG_KEXEC
+>   mips, kexec: fix the incorrect ifdeffery and dependency of
+>     CONFIG_KEXEC
+>   sh, kexec: fix the incorrect ifdeffery and dependency of CONFIG_KEXEC
+>   x86, kexec: fix the wrong ifdeffery CONFIG_KEXEC
+> 
+>  arch/loongarch/kernel/Makefile  |  2 +-
+>  arch/m68k/include/asm/kexec.h   |  4 ++--
+>  arch/m68k/kernel/Makefile       |  2 +-
+>  arch/mips/cavium-octeon/smp.c   |  4 ++--
+>  arch/mips/include/asm/kexec.h   |  2 +-
+>  arch/mips/include/asm/smp-ops.h |  2 +-
+>  arch/mips/include/asm/smp.h     |  2 +-
+>  arch/mips/kernel/Makefile       |  2 +-
+>  arch/mips/kernel/smp-bmips.c    |  4 ++--
+>  arch/mips/kernel/smp-cps.c      | 10 +++++-----
+>  arch/mips/loongson64/reset.c    |  4 ++--
+>  arch/mips/loongson64/smp.c      |  2 +-
+>  arch/sh/include/asm/kexec.h     |  4 ++--
+>  arch/sh/kernel/Makefile         |  2 +-
+>  arch/sh/kernel/reboot.c         |  4 ++--
+>  arch/sh/kernel/setup.c          |  2 +-
+>  arch/x86/boot/compressed/acpi.c |  2 +-
+>  17 files changed, 27 insertions(+), 27 deletions(-)
+> 
+> -- 
+> 2.41.0
+> 
 
 
 _______________________________________________
