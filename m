@@ -4,97 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3FDD7C4167B
-	for <kexec@archiver.kernel.org>; Sat,  9 Dec 2023 07:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 66FC8C4167B
+	for <kexec@archiver.kernel.org>; Sat,  9 Dec 2023 14:15:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-ID:In-Reply-To:
-	References:Message-ID:Date:Subject:CC:To:From:Reply-To:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=tVh5XGkYIEUsddNTxvlJuC02fZzkkEHZ8JbIHj+eDiY=; b=XzxaikoyEYX3QL
-	4K2ycPd+C/BYCGQGOaYgA5YU7Yb3V0aSq1UuwihOM2lNMvmOecLLIGQMMxVu0Wfii7zibHkOulSjo
-	+iHez/c+idfnYe4nuA6h/+MT9f4DslO9zU+G16X7aG8RXZ3JeRSelAVR2lwibCdAqVx7AnUaSjxDK
-	anqvo+VceidhfVuUF+9jrXOsktQC/eKHUGYw8EexuTlw6fcWCqCxCYuiOhBa7zBKXqshfzMOjstUs
-	AL6uiUd56rD7WB9AmygDR+KY06eQNJTn4siJI/4VhV/nDxMLNI5T0Jkomxr/vhP2e+8YpOGxAS4QC
-	FdAG726euBDg7iVffiUQ==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=KJrPGMyR1H0LWOxoOg/YUiwaEb5c98pJJYbmRlXo3TA=; b=02zbegyqkA/kq9
+	feMdX8Mkf2dFrgIdkSCeL7ftpnbZxbJX0v0kwdQetARrLlqZC1BIge1QPocev8/woCfCV0lLE3B+F
+	yjdSr6LH30zo694lSubZB53GM0urDUw31tbl0r00xdt44vZmEPfYnrGXIRiqJhEAgCBa9NAw6EvSt
+	72BNONZk5HKQBzkarRs3CsLBtok1Fi8TuOI/1zKZ33ixGbqsqQ40B+tRGmUqRahJVrF7TN8kKgwI8
+	hR0UdYaOJritB5L/NaM3qg3sVdQ7J/mDjW1g0dpN2AN0XHjuM6hLyrHgOxF5JT01e9rCKorMNgRoD
+	xnb2mFSlfLSJetlwvTGA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rBrjl-00HFMG-20;
-	Sat, 09 Dec 2023 07:26:57 +0000
-Received: from smtp-fw-80007.amazon.com ([99.78.197.218])
+	id 1rBy70-000BWx-1g;
+	Sat, 09 Dec 2023 14:15:22 +0000
+Received: from mail-pf1-x431.google.com ([2607:f8b0:4864:20::431])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rBrjg-00HFLm-0M;
-	Sat, 09 Dec 2023 07:26:53 +0000
+	id 1rBy6y-000BWa-0A
+	for kexec@lists.infradead.org;
+	Sat, 09 Dec 2023 14:15:21 +0000
+Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-6ce9c8c45a7so2070347b3a.0
+        for <kexec@lists.infradead.org>; Sat, 09 Dec 2023 06:15:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1702106813; x=1733642813;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=4okwfpjiOL9ZonK2dWGC50lt5XsgIOEt8Jz9Lhvjzo4=;
-  b=mGb7vJyS2EOpon5TR24zhgBDo8ze6dJvIPcL7CCkj2ns0HL36vwhj9kH
-   wZfvHC10JB3w0jKAARx2YqEuW3jLxwX1FJWuAmUTqwi3ulMP4JZtLCPtK
-   DCznjl83rD1WdRQE+CR6YocipIKKVgo9iBLw0wueKmjK+13WCTkoDh3bq
-   8=;
-X-IronPort-AV: E=Sophos;i="6.04,262,1695686400"; 
-   d="scan'208";a="258537457"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-iad-1d-m6i4x-d8e96288.us-east-1.amazon.com) ([10.25.36.210])
-  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2023 07:26:47 +0000
-Received: from smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev (iad7-ws-svc-p70-lb3-vlan3.iad.amazon.com [10.32.235.38])
-	by email-inbound-relay-iad-1d-m6i4x-d8e96288.us-east-1.amazon.com (Postfix) with ESMTPS id C784184A4F;
-	Sat,  9 Dec 2023 07:26:41 +0000 (UTC)
-Received: from EX19MTAEUA002.ant.amazon.com [10.0.17.79:62225]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.20.114:2525] with esmtp (Farcaster)
- id 6f872b6f-41b3-41a6-ab54-db2adfc2df23; Sat, 9 Dec 2023 07:26:40 +0000 (UTC)
-X-Farcaster-Flow-ID: 6f872b6f-41b3-41a6-ab54-db2adfc2df23
-Received: from EX19D012EUC004.ant.amazon.com (10.252.51.220) by
- EX19MTAEUA002.ant.amazon.com (10.252.50.126) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Sat, 9 Dec 2023 07:26:37 +0000
-Received: from EX19D014EUC004.ant.amazon.com (10.252.51.182) by
- EX19D012EUC004.ant.amazon.com (10.252.51.220) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Sat, 9 Dec 2023 07:26:37 +0000
-Received: from EX19D014EUC004.ant.amazon.com ([fe80::76dd:4020:4ff2:1e41]) by
- EX19D014EUC004.ant.amazon.com ([fe80::76dd:4020:4ff2:1e41%3]) with mapi id
- 15.02.1118.040; Sat, 9 Dec 2023 07:26:37 +0000
-From: "Gowans, James" <jgowans@amazon.com>
-To: "pbonzini@redhat.com" <pbonzini@redhat.com>, "Graf (AWS), Alexander"
-	<graf@amazon.de>, "seanjc@google.com" <seanjc@google.com>,
-	=?utf-8?B?U2Now7ZuaGVyciwgSmFuIEgu?= <jschoenh@amazon.de>,
-	"ebiederm@xmission.com" <ebiederm@xmission.com>
-CC: "yuzenghui@huawei.com" <yuzenghui@huawei.com>, "atishp@atishpatra.org"
-	<atishp@atishpatra.org>, "kvm-riscv@lists.infradead.org"
-	<kvm-riscv@lists.infradead.org>, "james.morse@arm.com" <james.morse@arm.com>,
-	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>, "oliver.upton@linux.dev"
-	<oliver.upton@linux.dev>, "chenhuacai@kernel.org" <chenhuacai@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>, "maz@kernel.org"
-	<maz@kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"aleksandar.qemu.devel@gmail.com" <aleksandar.qemu.devel@gmail.com>,
-	"anup@brainfault.org" <anup@brainfault.org>, "kexec@lists.infradead.org"
-	<kexec@lists.infradead.org>
-Subject: Re: [PATCH v2 1/2] KVM: Use syscore_ops instead of reboot_notifier to
- hook restart/shutdown
-Thread-Topic: [PATCH v2 1/2] KVM: Use syscore_ops instead of reboot_notifier
- to hook restart/shutdown
-Thread-Index: AQHaKm9F6TfLvhzSVEeLxKjiUjwNTrCgjTCA
-Date: Sat, 9 Dec 2023 07:26:36 +0000
-Message-ID: <cfed942fc767fa7b2fabc68a3357a7b95bd6a589.camel@amazon.com>
-References: <20230512233127.804012-1-seanjc@google.com>
-	 <20230512233127.804012-2-seanjc@google.com>
-In-Reply-To: <20230512233127.804012-2-seanjc@google.com>
-Accept-Language: en-ZA, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.146.13.221]
-Content-ID: <A719B06918EA30498C61BE1015DC918C@amazon.com>
+        d=gmail.com; s=20230601; t=1702131318; x=1702736118; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dOqfTtQ7ulCx2hj31UovM4Dg0r3q4oUpbgRbtAdcj1A=;
+        b=bRKqJsTYtNmlwT7uknSuJtZFDGLq6cwPNXtgJmMRSPx7zIPWbiV2Th8Z5J9ZAKYDg7
+         T2yEDtOVF3jv3jGwzkPolIJnl2bJw8o642dWy+X5dYI8pKU9WGY/Zzo0RLv3imaGZBaW
+         9DjkxDvIM0bkMzmOrllDium8KOzBCbkJmeq7CmmmW4jNkEQaN4BKfuatxcLPGpH2CLyS
+         NgvZ4vJ3d4MYr1Dn0H9OKgbI2Hr132lStA1Gt/NU55P0TbMiT5txXC2s78SWdf1gJ/JE
+         AIF7GrGvbrEFsI9D87EB5/a7EcDtdoRtnsm26+x05a7w23ljFFoh8J6O1y5PGI3Vr2Js
+         l6xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702131318; x=1702736118;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dOqfTtQ7ulCx2hj31UovM4Dg0r3q4oUpbgRbtAdcj1A=;
+        b=RbBOHtQNKOQw6Efn8lTISYLKAckTlM37OzqyjThCJ/R0c3kJoiQBuq/FxF7dgJHqLg
+         l+iETjaj0sQ3Hhyxq3Ev6rV2Se0DpMXuL6eqHfI72uX7eYVyMGAdohHFaBadAsRrdYAe
+         28tajKVb0aLNEWesv193xH70oeA4kKUxO4EBfngaFZz7kKOGx9SwDMxKQPAYkJ5XDB4l
+         ZEK31/TpDFetSmLF1LaaC5wSIKC/IppLBT2AR03630J4Jhi74DPSco7vDQSXNR5cm1Vb
+         MboFAMw+jmS+bCcJ9duc0wHiu+qye42lE9WOxu1RsUnNLQ9fx7teJr9Z3RYfqhvbp/+d
+         X3Kw==
+X-Gm-Message-State: AOJu0YwbW5dNHrXPxcoAhpP72qiPEn4k2T5Ny6XtYb/IVxaBjK8kLmBM
+	12frRMSD5xHhaaK4tuPGT1E=
+X-Google-Smtp-Source: AGHT+IFSIBAclxcKznD5lC6fo4FRkGt5j4oI2WgZx0nii29/9XNjOwtW2hpoPiTe0YBtM1yrS9E1uw==
+X-Received: by 2002:a05:6a20:7fa6:b0:18f:dde5:7211 with SMTP id d38-20020a056a207fa600b0018fdde57211mr861786pzj.7.1702131318201;
+        Sat, 09 Dec 2023 06:15:18 -0800 (PST)
+Received: from code.. ([144.202.108.46])
+        by smtp.gmail.com with ESMTPSA id m2-20020a635802000000b005b6c1972c99sm3281644pgb.7.2023.12.09.06.15.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 09 Dec 2023 06:15:17 -0800 (PST)
+From: Yuntao Wang <ytcoode@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org
+Cc: Baoquan He <bhe@redhat.com>,
+	Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>,
+	Zhen Lei <thunder.leizhen@huawei.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Yuntao Wang <ytcoode@gmail.com>
+Subject: [PATCH] crash_core: Fix the check for whether crashkernel is from high memory
+Date: Sat,  9 Dec 2023 22:14:38 +0800
+Message-ID: <20231209141438.77233-1-ytcoode@gmail.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231208_232652_229006_35E3FD03 
-X-CRM114-Status: GOOD (  13.79  )
+X-CRM114-CacheID: sfid-20231209_061520_113730_E2986AF7 
+X-CRM114-Status: GOOD (  13.62  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -106,37 +89,64 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-SGkgU2VhbiwNCg0KQmxhc3QgZnJvbSB0aGUgcGFzdCBidXQgSSd2ZSBqdXN0IGJlZW4gYml0dGVu
-IGJ5IHRoaXMgcGF0Y2ggd2hlbg0KcmViYXNpbmcgYWNyb3NzIHY2LjQuDQoNCk9uIEZyaSwgMjAy
-My0wNS0xMiBhdCAxNjozMSAtMDcwMCwgU2VhbiBDaHJpc3RvcGhlcnNvbiB3cm90ZToNCj4gVXNl
-IHN5c2NvcmVfb3BzLnNodXRkb3duIHRvIGRpc2FibGUgaGFyZHdhcmUgdmlydHVhbGl6YXRpb24g
-ZHVyaW5nIGENCj4gcmVib290IGluc3RlYWQgb2YgdXNpbmcgdGhlIGRlZGljYXRlZCByZWJvb3Rf
-bm90aWZpZXIgc28gdGhhdCBLVk0gZGlzYWJsZXMNCj4gdmlydHVhbGl6YXRpb24gX2FmdGVyXyBz
-eXN0ZW1fc3RhdGUgaGFzIGJlZW4gdXBkYXRlZC7CoCBUaGlzIHdpbGwgYWxsb3cNCj4gZml4aW5n
-IGEgcmFjZSBpbiBLVk0ncyBoYW5kbGluZyBvZiBhIGZvcmNlZCByZWJvb3Qgd2hlcmUgS1ZNIGNh
-biBlbmQgdXANCj4gZW5hYmxpbmcgaGFyZHdhcmUgdmlydHVhbGl6YXRpb24gYmV0d2VlbiBrZXJu
-ZWxfcmVzdGFydF9wcmVwYXJlKCkgYW5kDQo+IG1hY2hpbmVfcmVzdGFydCgpLg0KDQpUaGUgaXNz
-dWUgaXMgdGhhdCwgQUZBSUNULCB0aGUgc3lzY29yZV9vcHMuc2h1dGRvd24gYXJlIG5vdCBjYWxs
-ZWQgd2hlbg0KZG9pbmcgYSBrZXhlYy4gUmVib290IG5vdGlmaWVycyBhcmUgY2FsbGVkIGFjcm9z
-cyBrZXhlYyB2aWE6DQoNCmtlcm5lbF9rZXhlYw0KICBrZXJuZWxfcmVzdGFydF9wcmVwYXJlDQog
-ICAgYmxvY2tpbmdfbm90aWZpZXJfY2FsbF9jaGFpbg0KICAgICAga3ZtX3JlYm9vdA0KDQpTbyBh
-ZnRlciB0aGlzIHBhdGNoLCBLVk0gaXMgbm90IHNodXRkb3duIGR1cmluZyBrZXhlYzsgaWYgaGFy
-ZHdhcmUgdmlydA0KbW9kZSBpcyBlbmFibGVkIHRoZW4gdGhlIGtleGVjIGhhbmdzIGluIGV4YWN0
-bHkgdGhlIHNhbWUgbWFubmVyIGFzIHlvdQ0KZGVzY3JpYmUgd2l0aCB0aGUgcmVib290Lg0KDQpT
-b21lIHNwZWNpZmljIHNodXRkb3duIGNhbGxiYWNrcywgZm9yIGV4YW1wbGUgSU9NTVUsIEhQRVQs
-IElSUSwgZXRjIGFyZQ0KY2FsbGVkIGluIG5hdGl2ZV9tYWNoaW5lX3NodXRkb3duLCBidXQgS1ZN
-IGlzIG5vdCBvbmUgb2YgdGhlc2UuDQoNClRob3VnaHRzIG9uIHBvc3NpYmxlIHdheXMgdG8gZml4
-IHRoaXM6DQphKSBnbyBiYWNrIHRvIHJlYm9vdCBub3RpZmllcnMNCmIpIGdldCBrZXhlYyB0byBj
-YWxsIHN5c2NvcmVfc2h1dGRvd24oKSB0byBpbnZva2UgYWxsIG9mIHRoZXNlIGNhbGxiYWNrcw0K
-YykgQWRkIGEgS1ZNLXNwZWNpZmljIGNhbGxiYWNrIHRvIG5hdGl2ZV9tYWNoaW5lX3NodXRkb3du
-KCk7IHdlIG9ubHkNCm5lZWQgdGhpcyBmb3IgSW50ZWwgeDg2LCByaWdodD8NCg0KTXkgc2xpZ2h0
-IHByZWZlcmVuY2UgaXMgdG93YXJkcyBhZGRpbmcgc3lzY29yZV9zaHV0ZG93bigpIHRvIGtleGVj
-LCBidXQNCkknbSBub3Qgc3VyZSB0aGF0J3MgZmVhc2libGUuIEFkZGluZyBrZXhlYyBtYWludGFp
-bmVycyBmb3IgaW5wdXQuDQoNCkpHDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9y
-ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+If crash_base is equal to CRASH_ADDR_LOW_MAX, it also indicates that
+the crashkernel memory is allocated from high memory. However, the
+current check only considers the case where crash_base is greater than
+CRASH_ADDR_LOW_MAX. Fix it.
+
+This patch also includes some minor cleanups.
+
+Fixes: 0ab97169aa05 ("crash_core: add generic function to do reservation")
+Signed-off-by: Yuntao Wang <ytcoode@gmail.com>
+---
+ kernel/crash_core.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index efe87d501c8c..d4313b53837e 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -199,7 +199,7 @@ static __initdata char *suffix_tbl[] = {
+  * It returns 0 on success and -EINVAL on failure.
+  */
+ static int __init parse_crashkernel_suffix(char *cmdline,
+-					   unsigned long long	*crash_size,
++					   unsigned long long *crash_size,
+ 					   const char *suffix)
+ {
+ 	char *cur = cmdline;
+@@ -268,9 +268,9 @@ static int __init __parse_crashkernel(char *cmdline,
+ 			     unsigned long long *crash_base,
+ 			     const char *suffix)
+ {
+-	char	*first_colon, *first_space;
+-	char	*ck_cmdline;
+-	char	*name = "crashkernel=";
++	char *first_colon, *first_space;
++	char *ck_cmdline;
++	char *name = "crashkernel=";
+ 
+ 	BUG_ON(!crash_size || !crash_base);
+ 	*crash_size = 0;
+@@ -440,7 +440,7 @@ void __init reserve_crashkernel_generic(char *cmdline,
+ 		return;
+ 	}
+ 
+-	if ((crash_base > CRASH_ADDR_LOW_MAX) &&
++	if ((crash_base >= CRASH_ADDR_LOW_MAX) &&
+ 	     crash_low_size && reserve_crashkernel_low(crash_low_size)) {
+ 		memblock_phys_free(crash_base, crash_size);
+ 		return;
+-- 
+2.43.0
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
