@@ -4,71 +4,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 21CA2C10F04
-	for <kexec@archiver.kernel.org>; Fri,  8 Dec 2023 07:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3FDD7C4167B
+	for <kexec@archiver.kernel.org>; Sat,  9 Dec 2023 07:27:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-ID:In-Reply-To:
+	References:Message-ID:Date:Subject:CC:To:From:Reply-To:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=3lqK3HFVtYLFo/UuSJUSf7DuGZBSXatAvfB08PDq8CY=; b=h6AtjwD7U9bVux
-	IwGiynq9mKdU2PFYME5zrfiGeGmZis1DDRetTNVVo18n4c2gbhKHPocSvQUxXAWBKWSbaenZOzc8n
-	JEVDMSvAO4rdPCwRZaURUH5Gq8BoRTlvV7oMatTJ1zxpijGzm1p93uKlozjzBjDJseFsxbHFSCszU
-	t96zuBYONT88mJEWOMYhraB8G5uPd439TADjI81m8zxBIr3TXMcQOnPTq3vjrIyL1ynYKEWu9/k3V
-	CcL//nYl5MDxOzGKr+EYfX69waN5agwfqMOOTRlloMK+ZHzQnORDwpmg0nJoHvLh27pw8NjzkoCe/
-	cAskTjnmihyh3KucxmcQ==;
+	List-Owner; bh=tVh5XGkYIEUsddNTxvlJuC02fZzkkEHZ8JbIHj+eDiY=; b=XzxaikoyEYX3QL
+	4K2ycPd+C/BYCGQGOaYgA5YU7Yb3V0aSq1UuwihOM2lNMvmOecLLIGQMMxVu0Wfii7zibHkOulSjo
+	+iHez/c+idfnYe4nuA6h/+MT9f4DslO9zU+G16X7aG8RXZ3JeRSelAVR2lwibCdAqVx7AnUaSjxDK
+	anqvo+VceidhfVuUF+9jrXOsktQC/eKHUGYw8EexuTlw6fcWCqCxCYuiOhBa7zBKXqshfzMOjstUs
+	AL6uiUd56rD7WB9AmygDR+KY06eQNJTn4siJI/4VhV/nDxMLNI5T0Jkomxr/vhP2e+8YpOGxAS4QC
+	FdAG726euBDg7iVffiUQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rBVWH-00EzD9-09;
-	Fri, 08 Dec 2023 07:43:33 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1rBrjl-00HFMG-20;
+	Sat, 09 Dec 2023 07:26:57 +0000
+Received: from smtp-fw-80007.amazon.com ([99.78.197.218])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rBVWD-00EzCN-31
-	for kexec@lists.infradead.org;
-	Fri, 08 Dec 2023 07:43:31 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702021406;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mD12z3Ph+93M5Ou5tdqyf4RyVew89UEB1udxQaJBbFk=;
-	b=QGJrQDWjCH4obV445rTLcS7KffDO+BNTxQJQ4fzlsQIBYMeLBn/+UXEDi8Qy3NIo1EMtHo
-	B5ZyLuqtM06P/fRiIq12vkVSKmZ3WlFmHtvjmTU0t4m1KcUqjr32h0tdNBwKNdxSVq2a4y
-	NQer9PdlYW4qtTzETPXiEjM6MWro9vs=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-137-InC0YeG0PumZKyP_DYV22Q-1; Fri,
- 08 Dec 2023 02:42:43 -0500
-X-MC-Unique: InC0YeG0PumZKyP_DYV22Q-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 37ABF3C0274D;
-	Fri,  8 Dec 2023 07:42:43 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.9])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 89CD58CD0;
-	Fri,  8 Dec 2023 07:42:42 +0000 (UTC)
-Date: Fri, 8 Dec 2023 15:42:39 +0800
-From: Baoquan He <bhe@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-next@vger.kernel.org, loongarch@lists.linux.dev,
-	kexec@lists.infradead.org, linux-m68k@lists.linux-m68k.org,
-	linux-mips@vger.kernel.org, linux-sh@vger.kernel.org,
-	x86@kernel.org, akpm@linux-foundation.org, eric_devolder@yahoo.com,
-	sfr@canb.auug.org.au, ignat@cloudflare.com
-Subject: Re: [PATCH 0/5] kexec: fix the incorrect ifdeffery and dependency of
- CONFIG_KEXEC
-Message-ID: <ZXLI748b85be459B@fedora>
-References: <20231208073036.7884-1-bhe@redhat.com>
+	id 1rBrjg-00HFLm-0M;
+	Sat, 09 Dec 2023 07:26:53 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1702106813; x=1733642813;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=4okwfpjiOL9ZonK2dWGC50lt5XsgIOEt8Jz9Lhvjzo4=;
+  b=mGb7vJyS2EOpon5TR24zhgBDo8ze6dJvIPcL7CCkj2ns0HL36vwhj9kH
+   wZfvHC10JB3w0jKAARx2YqEuW3jLxwX1FJWuAmUTqwi3ulMP4JZtLCPtK
+   DCznjl83rD1WdRQE+CR6YocipIKKVgo9iBLw0wueKmjK+13WCTkoDh3bq
+   8=;
+X-IronPort-AV: E=Sophos;i="6.04,262,1695686400"; 
+   d="scan'208";a="258537457"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-iad-1d-m6i4x-d8e96288.us-east-1.amazon.com) ([10.25.36.210])
+  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2023 07:26:47 +0000
+Received: from smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev (iad7-ws-svc-p70-lb3-vlan3.iad.amazon.com [10.32.235.38])
+	by email-inbound-relay-iad-1d-m6i4x-d8e96288.us-east-1.amazon.com (Postfix) with ESMTPS id C784184A4F;
+	Sat,  9 Dec 2023 07:26:41 +0000 (UTC)
+Received: from EX19MTAEUA002.ant.amazon.com [10.0.17.79:62225]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.20.114:2525] with esmtp (Farcaster)
+ id 6f872b6f-41b3-41a6-ab54-db2adfc2df23; Sat, 9 Dec 2023 07:26:40 +0000 (UTC)
+X-Farcaster-Flow-ID: 6f872b6f-41b3-41a6-ab54-db2adfc2df23
+Received: from EX19D012EUC004.ant.amazon.com (10.252.51.220) by
+ EX19MTAEUA002.ant.amazon.com (10.252.50.126) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Sat, 9 Dec 2023 07:26:37 +0000
+Received: from EX19D014EUC004.ant.amazon.com (10.252.51.182) by
+ EX19D012EUC004.ant.amazon.com (10.252.51.220) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Sat, 9 Dec 2023 07:26:37 +0000
+Received: from EX19D014EUC004.ant.amazon.com ([fe80::76dd:4020:4ff2:1e41]) by
+ EX19D014EUC004.ant.amazon.com ([fe80::76dd:4020:4ff2:1e41%3]) with mapi id
+ 15.02.1118.040; Sat, 9 Dec 2023 07:26:37 +0000
+From: "Gowans, James" <jgowans@amazon.com>
+To: "pbonzini@redhat.com" <pbonzini@redhat.com>, "Graf (AWS), Alexander"
+	<graf@amazon.de>, "seanjc@google.com" <seanjc@google.com>,
+	=?utf-8?B?U2Now7ZuaGVyciwgSmFuIEgu?= <jschoenh@amazon.de>,
+	"ebiederm@xmission.com" <ebiederm@xmission.com>
+CC: "yuzenghui@huawei.com" <yuzenghui@huawei.com>, "atishp@atishpatra.org"
+	<atishp@atishpatra.org>, "kvm-riscv@lists.infradead.org"
+	<kvm-riscv@lists.infradead.org>, "james.morse@arm.com" <james.morse@arm.com>,
+	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>, "oliver.upton@linux.dev"
+	<oliver.upton@linux.dev>, "chenhuacai@kernel.org" <chenhuacai@kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>, "maz@kernel.org"
+	<maz@kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"aleksandar.qemu.devel@gmail.com" <aleksandar.qemu.devel@gmail.com>,
+	"anup@brainfault.org" <anup@brainfault.org>, "kexec@lists.infradead.org"
+	<kexec@lists.infradead.org>
+Subject: Re: [PATCH v2 1/2] KVM: Use syscore_ops instead of reboot_notifier to
+ hook restart/shutdown
+Thread-Topic: [PATCH v2 1/2] KVM: Use syscore_ops instead of reboot_notifier
+ to hook restart/shutdown
+Thread-Index: AQHaKm9F6TfLvhzSVEeLxKjiUjwNTrCgjTCA
+Date: Sat, 9 Dec 2023 07:26:36 +0000
+Message-ID: <cfed942fc767fa7b2fabc68a3357a7b95bd6a589.camel@amazon.com>
+References: <20230512233127.804012-1-seanjc@google.com>
+	 <20230512233127.804012-2-seanjc@google.com>
+In-Reply-To: <20230512233127.804012-2-seanjc@google.com>
+Accept-Language: en-ZA, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.146.13.221]
+Content-ID: <A719B06918EA30498C61BE1015DC918C@amazon.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20231208073036.7884-1-bhe@redhat.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231207_234330_066402_470402EE 
-X-CRM114-Status: GOOD (  12.79  )
+X-CRM114-CacheID: sfid-20231208_232652_229006_35E3FD03 
+X-CRM114-Status: GOOD (  13.79  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,78 +106,37 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Forgot adding kexec to CC, add it now.
-
-On 12/08/23 at 03:30pm, Baoquan He wrote:
-> The select of KEXEC for CRASH_DUMP in kernel/Kconfig.kexec will be
-> dropped, then compiling errors will be triggered if below config
-> items are set:
-> 
-> ===
-> CONFIG_CRASH_CORE=y
-> CONFIG_KEXEC_CORE=y
-> CONFIG_CRASH_DUMP=y
-> ===
-> 
-> E.g on mips, below link error are seen:
-> --------------------------------------------------------------------
-> mipsel-linux-ld: kernel/kexec_core.o: in function `kimage_free':
-> kernel/kexec_core.c:(.text+0x2200): undefined reference to `machine_kexec_cleanup'
-> mipsel-linux-ld: kernel/kexec_core.o: in function `__crash_kexec':
-> kernel/kexec_core.c:(.text+0x2480): undefined reference to `machine_crash_shutdown'
-> mipsel-linux-ld: kernel/kexec_core.c:(.text+0x2488): undefined reference to `machine_kexec'
-> mipsel-linux-ld: kernel/kexec_core.o: in function `kernel_kexec':
-> kernel/kexec_core.c:(.text+0x29b8): undefined reference to `machine_shutdown'
-> mipsel-linux-ld: kernel/kexec_core.c:(.text+0x29c0): undefined reference to `machine_kexec'
-> --------------------------------------------------------------------
-> 
-> Here, change the incorrect dependency of building kexec_core related object
-> files, and the ifdeffery on architectures from CONFIG_KEXEC to
-> CONFIG_KEXEC_CORE.
-> 
-> Testing:
-> ========
-> Passed on mips and loognarch with the LKP reproducer.
-> 
-> Baoquan He (5):
->   loongarch, kexec: change dependency of object files
->   m68k, kexec: fix the incorrect ifdeffery and build dependency of
->     CONFIG_KEXEC
->   mips, kexec: fix the incorrect ifdeffery and dependency of
->     CONFIG_KEXEC
->   sh, kexec: fix the incorrect ifdeffery and dependency of CONFIG_KEXEC
->   x86, kexec: fix the wrong ifdeffery CONFIG_KEXEC
-> 
->  arch/loongarch/kernel/Makefile  |  2 +-
->  arch/m68k/include/asm/kexec.h   |  4 ++--
->  arch/m68k/kernel/Makefile       |  2 +-
->  arch/mips/cavium-octeon/smp.c   |  4 ++--
->  arch/mips/include/asm/kexec.h   |  2 +-
->  arch/mips/include/asm/smp-ops.h |  2 +-
->  arch/mips/include/asm/smp.h     |  2 +-
->  arch/mips/kernel/Makefile       |  2 +-
->  arch/mips/kernel/smp-bmips.c    |  4 ++--
->  arch/mips/kernel/smp-cps.c      | 10 +++++-----
->  arch/mips/loongson64/reset.c    |  4 ++--
->  arch/mips/loongson64/smp.c      |  2 +-
->  arch/sh/include/asm/kexec.h     |  4 ++--
->  arch/sh/kernel/Makefile         |  2 +-
->  arch/sh/kernel/reboot.c         |  4 ++--
->  arch/sh/kernel/setup.c          |  2 +-
->  arch/x86/boot/compressed/acpi.c |  2 +-
->  17 files changed, 27 insertions(+), 27 deletions(-)
-> 
-> -- 
-> 2.41.0
-> 
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgU2VhbiwNCg0KQmxhc3QgZnJvbSB0aGUgcGFzdCBidXQgSSd2ZSBqdXN0IGJlZW4gYml0dGVu
+IGJ5IHRoaXMgcGF0Y2ggd2hlbg0KcmViYXNpbmcgYWNyb3NzIHY2LjQuDQoNCk9uIEZyaSwgMjAy
+My0wNS0xMiBhdCAxNjozMSAtMDcwMCwgU2VhbiBDaHJpc3RvcGhlcnNvbiB3cm90ZToNCj4gVXNl
+IHN5c2NvcmVfb3BzLnNodXRkb3duIHRvIGRpc2FibGUgaGFyZHdhcmUgdmlydHVhbGl6YXRpb24g
+ZHVyaW5nIGENCj4gcmVib290IGluc3RlYWQgb2YgdXNpbmcgdGhlIGRlZGljYXRlZCByZWJvb3Rf
+bm90aWZpZXIgc28gdGhhdCBLVk0gZGlzYWJsZXMNCj4gdmlydHVhbGl6YXRpb24gX2FmdGVyXyBz
+eXN0ZW1fc3RhdGUgaGFzIGJlZW4gdXBkYXRlZC7CoCBUaGlzIHdpbGwgYWxsb3cNCj4gZml4aW5n
+IGEgcmFjZSBpbiBLVk0ncyBoYW5kbGluZyBvZiBhIGZvcmNlZCByZWJvb3Qgd2hlcmUgS1ZNIGNh
+biBlbmQgdXANCj4gZW5hYmxpbmcgaGFyZHdhcmUgdmlydHVhbGl6YXRpb24gYmV0d2VlbiBrZXJu
+ZWxfcmVzdGFydF9wcmVwYXJlKCkgYW5kDQo+IG1hY2hpbmVfcmVzdGFydCgpLg0KDQpUaGUgaXNz
+dWUgaXMgdGhhdCwgQUZBSUNULCB0aGUgc3lzY29yZV9vcHMuc2h1dGRvd24gYXJlIG5vdCBjYWxs
+ZWQgd2hlbg0KZG9pbmcgYSBrZXhlYy4gUmVib290IG5vdGlmaWVycyBhcmUgY2FsbGVkIGFjcm9z
+cyBrZXhlYyB2aWE6DQoNCmtlcm5lbF9rZXhlYw0KICBrZXJuZWxfcmVzdGFydF9wcmVwYXJlDQog
+ICAgYmxvY2tpbmdfbm90aWZpZXJfY2FsbF9jaGFpbg0KICAgICAga3ZtX3JlYm9vdA0KDQpTbyBh
+ZnRlciB0aGlzIHBhdGNoLCBLVk0gaXMgbm90IHNodXRkb3duIGR1cmluZyBrZXhlYzsgaWYgaGFy
+ZHdhcmUgdmlydA0KbW9kZSBpcyBlbmFibGVkIHRoZW4gdGhlIGtleGVjIGhhbmdzIGluIGV4YWN0
+bHkgdGhlIHNhbWUgbWFubmVyIGFzIHlvdQ0KZGVzY3JpYmUgd2l0aCB0aGUgcmVib290Lg0KDQpT
+b21lIHNwZWNpZmljIHNodXRkb3duIGNhbGxiYWNrcywgZm9yIGV4YW1wbGUgSU9NTVUsIEhQRVQs
+IElSUSwgZXRjIGFyZQ0KY2FsbGVkIGluIG5hdGl2ZV9tYWNoaW5lX3NodXRkb3duLCBidXQgS1ZN
+IGlzIG5vdCBvbmUgb2YgdGhlc2UuDQoNClRob3VnaHRzIG9uIHBvc3NpYmxlIHdheXMgdG8gZml4
+IHRoaXM6DQphKSBnbyBiYWNrIHRvIHJlYm9vdCBub3RpZmllcnMNCmIpIGdldCBrZXhlYyB0byBj
+YWxsIHN5c2NvcmVfc2h1dGRvd24oKSB0byBpbnZva2UgYWxsIG9mIHRoZXNlIGNhbGxiYWNrcw0K
+YykgQWRkIGEgS1ZNLXNwZWNpZmljIGNhbGxiYWNrIHRvIG5hdGl2ZV9tYWNoaW5lX3NodXRkb3du
+KCk7IHdlIG9ubHkNCm5lZWQgdGhpcyBmb3IgSW50ZWwgeDg2LCByaWdodD8NCg0KTXkgc2xpZ2h0
+IHByZWZlcmVuY2UgaXMgdG93YXJkcyBhZGRpbmcgc3lzY29yZV9zaHV0ZG93bigpIHRvIGtleGVj
+LCBidXQNCkknbSBub3Qgc3VyZSB0aGF0J3MgZmVhc2libGUuIEFkZGluZyBrZXhlYyBtYWludGFp
+bmVycyBmb3IgaW5wdXQuDQoNCkpHDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9y
+ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
