@@ -4,83 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5D91AC4167B
-	for <kexec@archiver.kernel.org>; Sun, 10 Dec 2023 04:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A32AEC4167B
+	for <kexec@archiver.kernel.org>; Sun, 10 Dec 2023 04:54:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=ifVIWKSZvbxCggX22tztw/viOrZjRQJDbx9tFRZWaCE=; b=kqUbjXSSSJKuzb
-	7RRauuXEd783OrmenCABjD5Xi7Am+lFZ8TeU1aeE5kzINFkrmxtkEJV0OHLhtpuZ4NLueEbTDnOsx
-	eLANR337flLIrj+47z0S9vj/doRos2FF7n7uv5mkbDe20ze9nLYgKyf3gmJgdZ48T2xfzuJAADyAd
-	c096rbY56fXBTKmlnn3mboHHcbkjFXbqgUiSiFsqxNn8iSqcY2136H21JEQG0PUL9ioZYR3raIi4R
-	qDr54rAe5lq8192puCPvLFKgamgbGZDakPxJ1CgtwNaHjzJEyw6jam9F1VUAYKdNf+0FxaUJEMsvj
-	oGcZ1QZ+7G2HfvIdkMpw==;
+	List-Archive:List-Unsubscribe:List-Id:Subject:MIME-Version:Message-ID:
+	In-Reply-To:Date:References:Cc:To:From:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Owner;
+	bh=IfC0CSrAY4AshQbNRMK9G/86qD9wgl02/2SiOQo/VuQ=; b=JU73sqvkCXDq14amdsrUHu9eDJ
+	kzMyVgOPe/64q8SsOFGPHp20CSScS9VuujiDdGbCgMRLMA99BkhsgsZfbjmmK9kZGm5xYAmWoQviR
+	JshKuksELlcEybuhQ9AffK5MBRIwCcSJ/OTloJJ2wkaMq8zAYfKZXnMI97uOI57/OwLPSI6VQezRX
+	RPa6q+wpESc4m6ws+YI1FmLJd5nMrmhhc4HOVN/Jr+W+S5ekP1jxF16JwvD9ATY6H77+Fr3mO4Yzr
+	d9qRfyFYBr7XlfABCtyzj9DvQSL7nVWpVAK4kB5DKIt6ptYuYKGHTtOKxV+X1CBlLMt+zqpBSN8/W
+	lP5n3NBQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rCB4X-000vhx-21;
-	Sun, 10 Dec 2023 04:05:41 +0000
-Received: from mail-pg1-x533.google.com ([2607:f8b0:4864:20::533])
+	id 1rCBpo-000y2D-05;
+	Sun, 10 Dec 2023 04:54:32 +0000
+Received: from out03.mta.xmission.com ([166.70.13.233])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rCB4U-000vhU-1x
-	for kexec@lists.infradead.org;
-	Sun, 10 Dec 2023 04:05:40 +0000
-Received: by mail-pg1-x533.google.com with SMTP id 41be03b00d2f7-517ab9a4a13so2829282a12.1
-        for <kexec@lists.infradead.org>; Sat, 09 Dec 2023 20:05:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702181132; x=1702785932; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PxTgIk35cBEBjNHmGIeLkGBa/rmxEyN1bVKNuPulPrw=;
-        b=M0XcEQFiXlWufuPst/LiNz7UjeTkx2ev0kAgmkputFXLpKsDDlvxF3AMp4ObB4wElW
-         PfpPUme4nr24dZKYsoIf/bHReRqe2Leu9ohLipF0V/XpuzwwyiF8L5Fxm7seTvjq3+hV
-         mlmp6KcRP0eXT4V6lmAoKaN3WqJ/YUn9OzOV27zuHSTkPWciuFgQHIKEWD6rVdzh4vSC
-         VmZxA3ByLQF86vQCkPSwjcGPnhQAMgNLIoky0ZglACAYO3fYIVQFFRKbSXSRwWViqA3q
-         yMUpd7ToFDf/gsfz1V778lxlqbHVpps4irEmLtsOzEtf0IfXd5Wzj61gPP/ieJpXbFfE
-         sBeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702181132; x=1702785932;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PxTgIk35cBEBjNHmGIeLkGBa/rmxEyN1bVKNuPulPrw=;
-        b=ovc8CTf/Ta1V5KEqC6i/50CuJdYW0k1JVlt0PXZ050E7esBX/Ts6nuGZtWVha9rMqH
-         12/7Ks8JgrBQMTexvyZSFMPTr87eUSrcOuD0b0fnsXNWF6/AKTUZ7mhVtW/cuk1nhieK
-         YD9bZwawJBcjqgWL+uzZitH1A2JklbW9A7AABI2kdEBLM5UNfFXENCNw9IsLBEzZ0N3C
-         x91J4lx13te+XmYlDi7QcSWi7JOwW/xB5+xFRnlmmgu27WmxMBXW5SUkazNWxrpFelBE
-         qly3KoKjaI3G8Qpr8N3WugU8THzqvTe6X+SPcos+T/RvGWyACZgNyA9s1SWzsfiUyUUF
-         UQMQ==
-X-Gm-Message-State: AOJu0YyENKY4YIDWNAiC9KVetjGvFtbyWhpUrCdOE33+7P39piboYftA
-	Zo2f3bEwV6FgHwSJRTXnqZI=
-X-Google-Smtp-Source: AGHT+IH0NUo/39sXHfVIC4mD3yLbQPWnO3hPMB22iKCPdmsCkTVV89PNHgoc96UnMjHFEPuey+GWtA==
-X-Received: by 2002:a05:6a20:d386:b0:190:1e0c:d29 with SMTP id iq6-20020a056a20d38600b001901e0c0d29mr4155604pzb.4.1702181132480;
-        Sat, 09 Dec 2023 20:05:32 -0800 (PST)
-Received: from code.. ([144.202.108.46])
-        by smtp.gmail.com with ESMTPSA id j6-20020a170902c3c600b001d1c96a0c66sm4112497plj.130.2023.12.09.20.05.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 Dec 2023 20:05:32 -0800 (PST)
-From: Yuntao Wang <ytcoode@gmail.com>
-To: akpm@linux-foundation.org
-Cc: bhe@redhat.com,
-	dyoung@redhat.com,
-	kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	thunder.leizhen@huawei.com,
-	vgoyal@redhat.com,
-	ytcoode@gmail.com
-Subject: [PATCH v2] crash_core: Fix the check for whether crashkernel is from high memory
-Date: Sun, 10 Dec 2023 12:05:09 +0800
-Message-ID: <20231210040509.106292-1-ytcoode@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231209143418.92f02de6b6c6db2b7b3b1815@linux-foundation.org>
-References: <20231209143418.92f02de6b6c6db2b7b3b1815@linux-foundation.org>
+	id 1rCBpl-000y1I-0L;
+	Sun, 10 Dec 2023 04:54:30 +0000
+Received: from in02.mta.xmission.com ([166.70.13.52]:33540)
+	by out03.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1rCBpP-00B9T9-5N; Sat, 09 Dec 2023 21:54:07 -0700
+Received: from ip68-227-168-167.om.om.cox.net ([68.227.168.167]:35840 helo=email.froward.int.ebiederm.org.xmission.com)
+	by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1rCBpN-00BEzy-T4; Sat, 09 Dec 2023 21:54:06 -0700
+From: "Eric W. Biederman" <ebiederm@xmission.com>
+To: "Gowans, James" <jgowans@amazon.com>
+Cc: "pbonzini@redhat.com" <pbonzini@redhat.com>,  "Graf (AWS), Alexander"
+ <graf@amazon.de>,  "seanjc@google.com" <seanjc@google.com>,  =?utf-8?Q?Sc?=
+ =?utf-8?Q?h=C3=B6nherr=2C_Jan_H=2E?= <jschoenh@amazon.de>,
+  "yuzenghui@huawei.com"
+ <yuzenghui@huawei.com>,  "atishp@atishpatra.org" <atishp@atishpatra.org>,
+  "kvm-riscv@lists.infradead.org" <kvm-riscv@lists.infradead.org>,
+  "james.morse@arm.com" <james.morse@arm.com>,  "suzuki.poulose@arm.com"
+ <suzuki.poulose@arm.com>,  "oliver.upton@linux.dev"
+ <oliver.upton@linux.dev>,  "chenhuacai@kernel.org"
+ <chenhuacai@kernel.org>,  "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>,  "kvmarm@lists.linux.dev"
+ <kvmarm@lists.linux.dev>,  "maz@kernel.org" <maz@kernel.org>,
+  "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+  "aleksandar.qemu.devel@gmail.com" <aleksandar.qemu.devel@gmail.com>,
+  "anup@brainfault.org" <anup@brainfault.org>,  "kexec@lists.infradead.org"
+ <kexec@lists.infradead.org>
+References: <20230512233127.804012-1-seanjc@google.com>
+	<20230512233127.804012-2-seanjc@google.com>
+	<cfed942fc767fa7b2fabc68a3357a7b95bd6a589.camel@amazon.com>
+Date: Sat, 09 Dec 2023 22:53:30 -0600
+In-Reply-To: <cfed942fc767fa7b2fabc68a3357a7b95bd6a589.camel@amazon.com>
+	(James Gowans's message of "Sat, 9 Dec 2023 07:26:36 +0000")
+Message-ID: <871qbud5f9.fsf@email.froward.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 MIME-Version: 1.0
+X-XM-SPF: eid=1rCBpN-00BEzy-T4;;;mid=<871qbud5f9.fsf@email.froward.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.168.167;;;frm=ebiederm@xmission.com;;;spf=pass
+X-XM-AID: U2FsdGVkX1+JmH+hfPfL+HY3DU2+KTDcxM737ZP9cTs=
+X-SA-Exim-Connect-IP: 68.227.168.167
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v2 1/2] KVM: Use syscore_ops instead of reboot_notifier
+ to hook restart/shutdown
+X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231209_200538_670532_BD42FD19 
-X-CRM114-Status: GOOD (  17.70  )
+X-CRM114-CacheID: sfid-20231209_205429_169690_EA02B371 
+X-CRM114-Status: GOOD (  18.78  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -92,85 +86,45 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The purpose of the reserve_crashkernel_generic() function is to allocate a
-block of memory for crash kernel, and if the block of memory is allocated
-from high memory, it will allocate an additional block from low memory.
-
-The method to determine if a block of memory is from high memory is to
-check if crash_base is greater than or equal to CRASH_ADDR_LOW_MAX.
-However, the current code only considers the case where crash_base is
-greater than CRASH_ADDR_LOW_MAX.
-
-This means that if the memory is allocated from high memory and its
-starting address is CRASH_ADDR_LOW_MAX, reserve_crashkernel_generic()
-will no longer allocate the additional memory from low memory for crash
-kernel, even if it is necessary.
-
-In fact, we can also take a look at the code before it was modified in
-these commits:
-
-  9c08a2a139fe ("x86: kdump: use generic interface to simplify crashkernel reservation code")
-  fdc268232dbb ("arm64: kdump: use generic interface to simplify crashkernel reservation")
-  39365395046f ("riscv: kdump: use generic interface to simplify crashkernel reservation")
-
-They all checked for the case where crash_base is equal to
-CRASH_ADDR_LOW_MAX.
-
-This patch also includes some minor cleanups.
-
-Fixes: 0ab97169aa05 ("crash_core: add generic function to do reservation")
-Signed-off-by: Yuntao Wang <ytcoode@gmail.com>
----
-v1->v2: Provide a more detailed description.
-
- kernel/crash_core.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index efe87d501c8c..d4313b53837e 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -199,7 +199,7 @@ static __initdata char *suffix_tbl[] = {
-  * It returns 0 on success and -EINVAL on failure.
-  */
- static int __init parse_crashkernel_suffix(char *cmdline,
--					   unsigned long long	*crash_size,
-+					   unsigned long long *crash_size,
- 					   const char *suffix)
- {
- 	char *cur = cmdline;
-@@ -268,9 +268,9 @@ static int __init __parse_crashkernel(char *cmdline,
- 			     unsigned long long *crash_base,
- 			     const char *suffix)
- {
--	char	*first_colon, *first_space;
--	char	*ck_cmdline;
--	char	*name = "crashkernel=";
-+	char *first_colon, *first_space;
-+	char *ck_cmdline;
-+	char *name = "crashkernel=";
- 
- 	BUG_ON(!crash_size || !crash_base);
- 	*crash_size = 0;
-@@ -440,7 +440,7 @@ void __init reserve_crashkernel_generic(char *cmdline,
- 		return;
- 	}
- 
--	if ((crash_base > CRASH_ADDR_LOW_MAX) &&
-+	if ((crash_base >= CRASH_ADDR_LOW_MAX) &&
- 	     crash_low_size && reserve_crashkernel_low(crash_low_size)) {
- 		memblock_phys_free(crash_base, crash_size);
- 		return;
--- 
-2.43.0
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+Ikdvd2FucywgSmFtZXMiIDxqZ293YW5zQGFtYXpvbi5jb20+IHdyaXRlczoKCj4gSGkgU2VhbiwK
+Pgo+IEJsYXN0IGZyb20gdGhlIHBhc3QgYnV0IEkndmUganVzdCBiZWVuIGJpdHRlbiBieSB0aGlz
+IHBhdGNoIHdoZW4KPiByZWJhc2luZyBhY3Jvc3MgdjYuNC4KPgo+IE9uIEZyaSwgMjAyMy0wNS0x
+MiBhdCAxNjozMSAtMDcwMCwgU2VhbiBDaHJpc3RvcGhlcnNvbiB3cm90ZToKPj4gVXNlIHN5c2Nv
+cmVfb3BzLnNodXRkb3duIHRvIGRpc2FibGUgaGFyZHdhcmUgdmlydHVhbGl6YXRpb24gZHVyaW5n
+IGEKPj4gcmVib290IGluc3RlYWQgb2YgdXNpbmcgdGhlIGRlZGljYXRlZCByZWJvb3Rfbm90aWZp
+ZXIgc28gdGhhdCBLVk0gZGlzYWJsZXMKPj4gdmlydHVhbGl6YXRpb24gX2FmdGVyXyBzeXN0ZW1f
+c3RhdGUgaGFzIGJlZW4gdXBkYXRlZC7CoCBUaGlzIHdpbGwgYWxsb3cKPj4gZml4aW5nIGEgcmFj
+ZSBpbiBLVk0ncyBoYW5kbGluZyBvZiBhIGZvcmNlZCByZWJvb3Qgd2hlcmUgS1ZNIGNhbiBlbmQg
+dXAKPj4gZW5hYmxpbmcgaGFyZHdhcmUgdmlydHVhbGl6YXRpb24gYmV0d2VlbiBrZXJuZWxfcmVz
+dGFydF9wcmVwYXJlKCkgYW5kCj4+IG1hY2hpbmVfcmVzdGFydCgpLgo+Cj4gVGhlIGlzc3VlIGlz
+IHRoYXQsIEFGQUlDVCwgdGhlIHN5c2NvcmVfb3BzLnNodXRkb3duIGFyZSBub3QgY2FsbGVkIHdo
+ZW4KPiBkb2luZyBhIGtleGVjLiBSZWJvb3Qgbm90aWZpZXJzIGFyZSBjYWxsZWQgYWNyb3NzIGtl
+eGVjIHZpYToKPgo+IGtlcm5lbF9rZXhlYwo+ICAga2VybmVsX3Jlc3RhcnRfcHJlcGFyZQo+ICAg
+ICBibG9ja2luZ19ub3RpZmllcl9jYWxsX2NoYWluCj4gICAgICAga3ZtX3JlYm9vdAo+Cj4gU28g
+YWZ0ZXIgdGhpcyBwYXRjaCwgS1ZNIGlzIG5vdCBzaHV0ZG93biBkdXJpbmcga2V4ZWM7IGlmIGhh
+cmR3YXJlIHZpcnQKPiBtb2RlIGlzIGVuYWJsZWQgdGhlbiB0aGUga2V4ZWMgaGFuZ3MgaW4gZXhh
+Y3RseSB0aGUgc2FtZSBtYW5uZXIgYXMgeW91Cj4gZGVzY3JpYmUgd2l0aCB0aGUgcmVib290LgoK
+a2VybmVsX3Jlc3RhcnRfcHJlcGFyZSBjYWxscyBkZXZpY2Vfc2h1dGRvd24uICBXaGljaCBzaG91
+bGQgY2FsbCBhbGwKb2YgdGhlIHNodXRkb3duIG9wZXJhdGlvbnMuICBUaGlzIGhhcyBiZWVuIHRo
+ZSB3YXkgdGhlIGNvZGUgaGFzIGJlZW4Kc3RydWN0dXJlZCBzaW5jZSBEZWNlbWJlciAyMDA1LgoK
+PiBTb21lIHNwZWNpZmljIHNodXRkb3duIGNhbGxiYWNrcywgZm9yIGV4YW1wbGUgSU9NTVUsIEhQ
+RVQsIElSUSwgZXRjIGFyZQo+IGNhbGxlZCBpbiBuYXRpdmVfbWFjaGluZV9zaHV0ZG93biwgYnV0
+IEtWTSBpcyBub3Qgb25lIG9mIHRoZXNlLgo+Cj4gVGhvdWdodHMgb24gcG9zc2libGUgd2F5cyB0
+byBmaXggdGhpczoKPiBhKSBnbyBiYWNrIHRvIHJlYm9vdCBub3RpZmllcnMKPiBiKSBnZXQga2V4
+ZWMgdG8gY2FsbCBzeXNjb3JlX3NodXRkb3duKCkgdG8gaW52b2tlIGFsbCBvZiB0aGVzZSBjYWxs
+YmFja3MKPiBjKSBBZGQgYSBLVk0tc3BlY2lmaWMgY2FsbGJhY2sgdG8gbmF0aXZlX21hY2hpbmVf
+c2h1dGRvd24oKTsgd2Ugb25seQo+IG5lZWQgdGhpcyBmb3IgSW50ZWwgeDg2LCByaWdodD8KPgo+
+IE15IHNsaWdodCBwcmVmZXJlbmNlIGlzIHRvd2FyZHMgYWRkaW5nIHN5c2NvcmVfc2h1dGRvd24o
+KSB0byBrZXhlYywgYnV0Cj4gSSdtIG5vdCBzdXJlIHRoYXQncyBmZWFzaWJsZS4gQWRkaW5nIGtl
+eGVjIG1haW50YWluZXJzIGZvciBpbnB1dC4KCldoeSBpc24ndCBkZXZpY2Vfc3V0aGRvd24gY2Fs
+bGluZyBzeXNjb3JlX3NodXRkb3duPwoKV2hhdCBwcm9ibGVtIGFyZSB5b3UgcnVubmluZyBpbnRv
+IHdpdGggeW91ciByZWJhc2UgdGhhdCB3b3JrZWQgd2l0aApyZWJvb3Qgbm90aWZpZXJzIHRoYXQg
+aXMgbm90IHdvcmtpbmcgd2l0aCBzeXNjb3JlX3NodXRkb3duPwoKRXJpYwoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0Cmtl
+eGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9rZXhlYwo=
