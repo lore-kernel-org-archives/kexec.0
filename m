@@ -4,87 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C34D7C4332F
-	for <kexec@archiver.kernel.org>; Mon, 11 Dec 2023 23:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 84C36C4332F
+	for <kexec@archiver.kernel.org>; Mon, 11 Dec 2023 23:51:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=TzAANNlr70JEB870DO//HaFRIrlmLxRVHJPfk9R9Ld0=; b=Ib4MXlVXu2a72E
-	H12mFO2MXx8Px5InaSNKeV7kK1aHFZWLYXTsukeqGU2XEVNYojKtI000FyrlaETkxZx4kYMspmGH+
-	dmXDEIKHeUX5j2qNVzDVVdmNLUkKNjwXpUVAa6EHVyWUpXE0B9Z37iqxuqlaB2S9eLizEAjc7k/R4
-	udK31tJjvA91yEabDJRYWEzSZjO8I0ivAcVfZyRziKita5KshIvlMW7gxVsWz/pzLNkO5nOP2HUzM
-	vLGsgAK3d27vnwEH2AnqXy1FaoCWiPvZeGXlo6unsmNpOGWpCLVwnnrT3mDqMlTeK1JIUaPLVg9kV
-	Ptf5yFTMwUkGt/ruuoFA==;
+	List-Archive:List-Unsubscribe:List-Id:Subject:MIME-Version:Message-ID:
+	In-Reply-To:Date:References:Cc:To:From:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Owner;
+	bh=otDOoZEtQmC4bzLomTPWH7caI06GJ8lnP6f8tLg6Pn8=; b=Mv1SE6rnq37k09yga6XWIoAzOp
+	AWMddr/l3ES1xl+E+4c/JpqpMxBECM3g10+y8QDofRPjNzIeoDbEKst6DuYe1uPIJLJJunt0ojq5A
+	UgJQGOcBJntZ9k/hexs9BWqv3ZnVfQtbdVEh0cw24Ntlvl9I/dTrK+QI7kN2G4n7zvnicAZpEBGs6
+	7bCHsZQURKhfRu+aKEJsNaSHZ3zMl72i/8igZtNOMCWwv1WSSzMwdplVzYxNCwN5iLYbCH+EHPvEI
+	4tuaXZdDRinA7mEd+as5KI+wzdYfBOI6I3Kv2QGr8YZK6S1of2hC0Lwl7oQnMasPWevKRuY72veFB
+	59B0VryA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rCpQH-009Y3a-2Z;
-	Mon, 11 Dec 2023 23:10:49 +0000
-Received: from mgamail.intel.com ([192.55.52.136])
+	id 1rCq3W-009vOb-1W;
+	Mon, 11 Dec 2023 23:51:22 +0000
+Received: from out03.mta.xmission.com ([166.70.13.233])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rCpQE-009Y08-0V
-	for kexec@lists.infradead.org;
-	Mon, 11 Dec 2023 23:10:47 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702336246; x=1733872246;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=fdZ2x/5+NDcHqfPGDDUoiJaMPSKPPuvvjvF9z/kpukA=;
-  b=PWFH0NxpyX8/GaUPcoDt++9+m/lPvolrrco+B0ISkM2CkcPy+wlEAvQL
-   //mkXDHm28iEW0CHm2XqLu5Nbyp+JWd2RfHJO8wNhuJHCbd4XC2zvS7rD
-   03WDIWfaEhtD5K2b2N5D1CqntJf8ihHVuOUdPUhGRi/247JTlEQo/uEIa
-   PFZ0Q0auTeJ0qDBqsIwki7l5i4HDSnMk1XQls7jLEw2dOGaSTToLrbKdU
-   6T71vvctxXnFXUhyaFcx2oBXgP6grcUzmME/0ZE3KujsjYDDRT+ImwzvF
-   iWQQZMYMsY/0E43Q89TgrTHg73rxiSaMF4QBIO1nXBNo29y19SKo6RAcY
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10921"; a="374229718"
-X-IronPort-AV: E=Sophos;i="6.04,268,1695711600"; 
-   d="scan'208";a="374229718"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2023 15:10:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10921"; a="722994661"
-X-IronPort-AV: E=Sophos;i="6.04,268,1695711600"; 
-   d="scan'208";a="722994661"
-Received: from liviuoct-mobl.ger.corp.intel.com (HELO box.shutemov.name) ([10.252.47.81])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2023 15:10:38 -0800
-Received: by box.shutemov.name (Postfix, from userid 1000)
-	id 9998110A290; Tue, 12 Dec 2023 02:10:35 +0300 (+03)
-Date: Tue, 12 Dec 2023 02:10:35 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Elena Reshetova <elena.reshetova@intel.com>,
-	Jun Nakajima <jun.nakajima@intel.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	"Kalra, Ashish" <ashish.kalra@amd.com>,
-	"Huang, Kai" <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>,
-	kexec@lists.infradead.org, linux-coco@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Wanpeng Li <wanpengli@tencent.com>
-Subject: Re: [PATCHv4 05/14] x86/kvm: Do not try to disable kvmclock if it
- was not enabled
-Message-ID: <20231211231035.743cesujphsp5eve@box.shutemov.name>
-References: <20231205004510.27164-1-kirill.shutemov@linux.intel.com>
- <20231205004510.27164-6-kirill.shutemov@linux.intel.com>
+	id 1rCq3T-009vAQ-1R;
+	Mon, 11 Dec 2023 23:51:20 +0000
+Received: from in02.mta.xmission.com ([166.70.13.52]:37898)
+	by out03.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1rCq36-00EVyC-FL; Mon, 11 Dec 2023 16:50:56 -0700
+Received: from ip68-227-168-167.om.om.cox.net ([68.227.168.167]:49742 helo=email.froward.int.ebiederm.org.xmission.com)
+	by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1rCq35-00F4Dc-Cg; Mon, 11 Dec 2023 16:50:56 -0700
+From: "Eric W. Biederman" <ebiederm@xmission.com>
+To: "Gowans, James" <jgowans@amazon.com>
+Cc: "Graf (AWS), Alexander" <graf@amazon.de>,  "seanjc@google.com"
+ <seanjc@google.com>,  =?utf-8?Q?Sch=C3=B6nherr=2C_Jan_H=2E?=
+ <jschoenh@amazon.de>,
+  "yuzenghui@huawei.com" <yuzenghui@huawei.com>,
+  "kvm-riscv@lists.infradead.org" <kvm-riscv@lists.infradead.org>,
+  "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+  "james.morse@arm.com" <james.morse@arm.com>,  "oliver.upton@linux.dev"
+ <oliver.upton@linux.dev>,  "suzuki.poulose@arm.com"
+ <suzuki.poulose@arm.com>,  "chenhuacai@kernel.org"
+ <chenhuacai@kernel.org>,  "atishp@atishpatra.org" <atishp@atishpatra.org>,
+  "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+  "maz@kernel.org" <maz@kernel.org>,  "pbonzini@redhat.com"
+ <pbonzini@redhat.com>,  "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+  "kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,  "anup@brainfault.org"
+ <anup@brainfault.org>,  "aleksandar.qemu.devel@gmail.com"
+ <aleksandar.qemu.devel@gmail.com>
+References: <20230512233127.804012-1-seanjc@google.com>
+	<20230512233127.804012-2-seanjc@google.com>
+	<cfed942fc767fa7b2fabc68a3357a7b95bd6a589.camel@amazon.com>
+	<871qbud5f9.fsf@email.froward.int.ebiederm.org>
+	<a02b40d3d9ae5b3037b9a9d5921cfb0144ab5610.camel@amazon.com>
+	<7e30cfc2359dfef39d038e3734f7e5e3d9e82d68.camel@amazon.com>
+Date: Mon, 11 Dec 2023 17:50:33 -0600
+In-Reply-To: <7e30cfc2359dfef39d038e3734f7e5e3d9e82d68.camel@amazon.com>
+	(James Gowans's message of "Mon, 11 Dec 2023 10:27:15 +0000")
+Message-ID: <87wmtk9u46.fsf@email.froward.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20231205004510.27164-6-kirill.shutemov@linux.intel.com>
+X-XM-SPF: eid=1rCq35-00F4Dc-Cg;;;mid=<87wmtk9u46.fsf@email.froward.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.168.167;;;frm=ebiederm@xmission.com;;;spf=pass
+X-XM-AID: U2FsdGVkX183erp/ctJyjnDuDEXnwg8YrcYEg8oGrjc=
+X-SA-Exim-Connect-IP: 68.227.168.167
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v2 1/2] KVM: Use syscore_ops instead of reboot_notifier
+ to hook restart/shutdown
+X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231211_151046_213411_8329D1D5 
-X-CRM114-Status: GOOD (  12.33  )
+X-CRM114-CacheID: sfid-20231211_155119_510048_22E52AAC 
+X-CRM114-Status: GOOD (  23.72  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -101,31 +94,57 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Dec 05, 2023 at 03:45:01AM +0300, Kirill A. Shutemov wrote:
-> kvm_guest_cpu_offline() tries to disable kvmclock regardless if it is
-> present in the VM. It leads to write to a MSR that doesn't exist on some
-> configurations, namely in TDX guest:
-> 
-> 	unchecked MSR access error: WRMSR to 0x12 (tried to write 0x0000000000000000)
-> 	at rIP: 0xffffffff8110687c (kvmclock_disable+0x1c/0x30)
-> 
-> kvmclock enabling is gated by CLOCKSOURCE and CLOCKSOURCE2 KVM paravirt
-> features.
-> 
-> Do not disable kvmclock if it was not enabled.
-> 
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Fixes: c02027b5742b ("x86/kvm: Disable kvmclock on all CPUs on shutdown")
-> Reviewed-by: Sean Christopherson <seanjc@google.com>
-> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Wanpeng Li <wanpengli@tencent.com>
+"Gowans, James" <jgowans@amazon.com> writes:
 
-Paolo, Sean, any chance you can get it in through KVM tree while the rest
-of kexec patchset is pending? The problem is visible on normal reboot too.
+> On Mon, 2023-12-11 at 09:54 +0200, James Gowans wrote:
+>> > 
+>> > What problem are you running into with your rebase that worked with
+>> > reboot notifiers that is not working with syscore_shutdown?
+>> 
+>> Prior to this commit [1] which changed KVM from reboot notifiers to
+>> syscore_ops, KVM's reboot notifier shutdown callback was invoked on
+>> kexec via kernel_restart_prepare.
+>> 
+>> After this commit, KVM is not being shut down because currently the
+>> kexec flow does not call syscore_shutdown.
+>
+> I think I missed what you're asking here; you're asking for a reproducer
+> for the specific failure? 
+>
+> 1. Launch a QEMU VM with -enable-kvm flag
+>
+> 2. Do an immediate (-f flag) kexec:
+> kexec -f --reuse-cmdline ./bzImage 
+>
+> Somewhere after doing the RET to new kernel in the relocate_kernel asm
+> function the new kernel starts triple faulting; I can't exactly figure
+> out where but I think it has to do with the new kernel trying to modify
+> CR3 while the VMXE bit is still set in CR4 causing the triple fault.
+>
+> If KVM has been shut down via the shutdown callback, or alternatively if
+> the QEMU process has actually been killed first (by not doing a -f exec)
+> then the VMXE bit is clear and the kexec goes smoothly.
+>
+> So, TL;DR: kexec -f use to work with a KVM VM active, now it goes into a
+> triple fault crash.
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+You mentioned I rebase so I thought your were backporting kernel patches.
+By rebase do you mean you porting your userspace to a newer kernel?
+
+
+In any event I believe the bug with respect to kexec was introduced in
+commit 6f389a8f1dd2 ("PM / reboot: call syscore_shutdown() after
+disable_nonboot_cpus()").  That is where syscore_shutdown was removed
+from kernel_restart_prepare().
+
+At this point it looks like someone just needs to add the missing
+syscore_shutdown call into kernel_kexec() right after
+migrate_to_reboot_cpu() is called.
+
+That said I am not seeing the reboot notifiers being called on the kexec
+path either so your issue with kvm might be deeper.
+
+Eric
 
 _______________________________________________
 kexec mailing list
