@@ -4,71 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id F11FDC4167B
-	for <kexec@archiver.kernel.org>; Mon, 11 Dec 2023 05:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6ADA9C4167B
+	for <kexec@archiver.kernel.org>; Mon, 11 Dec 2023 07:55:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-ID:In-Reply-To:
+	References:Message-ID:Date:CC:To:From:Subject:Reply-To:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=RvnetEiivImII1XMpRpI90cHi70YceZp/M/av9XwXd4=; b=auDQAynC7a8Zqq
-	0o5ih8cWlVAJzvVZKAxcoxzqeWtmjmN0LroPuUDfarWoeji+ipF18lpsIlFRtXoHyOZkswOBIm4MX
-	zFUr9Xq2Sc+aaiYxzZmGYGui8NkDuSmJ1AgKJJ6mTWUQOJQsbQQRWlXL1eHPXVBnOuZVOu/sofzLX
-	yc3YMlIFSerHyN+xCvkizdTnGt1BpiPDbb2zOZuKJO7ta7wK0emQj6UXBdWfgc/nBILQ4KD1QJ9E3
-	MOZtPa5O4LuVk+3pEyDm5d9ohsVKjvRN+fdz+GzQa7jMpoMr8jPKTNB/TR4p5b1MV/u0ZRY4uWRBa
-	tYlRjq4KhkDSw2BLMuRQ==;
+	List-Owner; bh=UNgwxGFaR7aa1leAH6SZh43SWev55lRiSyZQBwEFiVc=; b=mA3MwhHQaGgn5R
+	URJFb1j6F1C1IEAQpVR5/baPr+N7GhWbdyXRy+3ZB9lK9zcMTgJfGKEZQeguUH5bJa4/CpSf2IOMU
+	iG83GU7qyQUWWjnh7MP4kAI6N1WkWy7QBtENSSn+rRDaKpA/cdJLnWRG1ywcidmyr6ziVZoORkitS
+	HeDXf9cL7Az3ttWfonGVAxJcxQNn+du7CRDFTNDXGjGl+Ll8ifUswFXDVYGF1EweDd3iVcbH5p5KW
+	RlgZVB8f4ShrBxb41aZeTPUBY2H4/uNf03FWecLlhfq1Nc2il8eTFBMOCiWqRQ0IvpMCT6MMIRZBz
+	Kgxb/6vJ+bVB7tg1eSMA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rCZEe-0046c2-06;
-	Mon, 11 Dec 2023 05:53:44 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1rCb87-004Hu6-1K;
+	Mon, 11 Dec 2023 07:55:07 +0000
+Received: from smtp-fw-52003.amazon.com ([52.119.213.152])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rCZEa-0046b0-1s
-	for kexec@lists.infradead.org;
-	Mon, 11 Dec 2023 05:53:42 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702274017;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hQMg/oQLQ+AfY0dgegoDtJ1iAm0snwYJkd6yvNpoSzg=;
-	b=Z1PvKxbFCdY6Yw4WgQQwdcya6lQ76n4PGTLTIAHPmtksu0ZBdzlL8MY6xMt6Et0jtYIF+Z
-	nAbN7OjmdPAOXCFl0xDnFJUHJvnsR3I+A0XdpDKXK80VgCefXVGHz1drRMqIex6F7kYTXD
-	IEBAXw7dAcziqrAB5URIF+QyFcjlLPg=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-515-1DnNItMvMzGKeaaYkGtXLA-1; Mon, 11 Dec 2023 00:53:26 -0500
-X-MC-Unique: 1DnNItMvMzGKeaaYkGtXLA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 65501185A78B;
-	Mon, 11 Dec 2023 05:53:16 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.218])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7AD063C27;
-	Mon, 11 Dec 2023 05:53:15 +0000 (UTC)
-Date: Mon, 11 Dec 2023 13:53:12 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Yuntao Wang <ytcoode@gmail.com>, linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>,
-	Zhen Lei <thunder.leizhen@huawei.com>
-Subject: Re: [PATCH] crash_core: Fix the check for whether crashkernel is
- from high memory
-Message-ID: <ZXajyFKrSp5oRKwf@MiWiFi-R3L-srv>
-References: <20231209141438.77233-1-ytcoode@gmail.com>
- <20231209143418.92f02de6b6c6db2b7b3b1815@linux-foundation.org>
+	id 1rCb83-004Hs2-1U;
+	Mon, 11 Dec 2023 07:55:05 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1702281303; x=1733817303;
+  h=from:to:cc:date:message-id:references:in-reply-to:
+   content-id:content-transfer-encoding:mime-version:subject;
+  bh=r73lI5nXluUvYNLiP+U10mmGdgAqNSuQ7rSnDd3RcJk=;
+  b=deihBdlA2a25DBFfRrtFNAlVaH5bvfOJciIUYZHiID+sSg5vqFkWb3G1
+   ezfWKt5ZEfr4hbilfLKWxhEhjGP/a6ahPhPFL4E0aAtJn+V5nw/sUUWGg
+   4c+glmXZlgM+I7DpUgoFaVLpwmBvrdd9WnJotovVxNvQTUHJWyvmtJMZx
+   k=;
+X-IronPort-AV: E=Sophos;i="6.04,267,1695686400"; 
+   d="scan'208";a="624436526"
+Subject: Re: [PATCH v2 1/2] KVM: Use syscore_ops instead of reboot_notifier to hook
+ restart/shutdown
+Thread-Topic: [PATCH v2 1/2] KVM: Use syscore_ops instead of reboot_notifier to hook
+ restart/shutdown
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-iad-1a-m6i4x-366646a6.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-52003.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Dec 2023 07:54:54 +0000
+Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (iad7-ws-svc-p70-lb3-vlan2.iad.amazon.com [10.32.235.34])
+	by email-inbound-relay-iad-1a-m6i4x-366646a6.us-east-1.amazon.com (Postfix) with ESMTPS id 10901AAAFC;
+	Mon, 11 Dec 2023 07:54:49 +0000 (UTC)
+Received: from EX19MTAEUA002.ant.amazon.com [10.0.10.100:25155]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.40.11:2525] with esmtp (Farcaster)
+ id 93b94b21-a815-4010-9fac-0e3e3813c799; Mon, 11 Dec 2023 07:54:47 +0000 (UTC)
+X-Farcaster-Flow-ID: 93b94b21-a815-4010-9fac-0e3e3813c799
+Received: from EX19D012EUC004.ant.amazon.com (10.252.51.220) by
+ EX19MTAEUA002.ant.amazon.com (10.252.50.124) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Mon, 11 Dec 2023 07:54:43 +0000
+Received: from EX19D014EUC004.ant.amazon.com (10.252.51.182) by
+ EX19D012EUC004.ant.amazon.com (10.252.51.220) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Mon, 11 Dec 2023 07:54:42 +0000
+Received: from EX19D014EUC004.ant.amazon.com ([fe80::76dd:4020:4ff2:1e41]) by
+ EX19D014EUC004.ant.amazon.com ([fe80::76dd:4020:4ff2:1e41%3]) with mapi id
+ 15.02.1118.040; Mon, 11 Dec 2023 07:54:42 +0000
+From: "Gowans, James" <jgowans@amazon.com>
+To: "Graf (AWS), Alexander" <graf@amazon.de>, "seanjc@google.com"
+	<seanjc@google.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>,
+	=?utf-8?B?U2Now7ZuaGVyciwgSmFuIEgu?= <jschoenh@amazon.de>
+CC: "yuzenghui@huawei.com" <yuzenghui@huawei.com>,
+	"kvm-riscv@lists.infradead.org" <kvm-riscv@lists.infradead.org>,
+	"kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+	"james.morse@arm.com" <james.morse@arm.com>, "oliver.upton@linux.dev"
+	<oliver.upton@linux.dev>, "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
+	"chenhuacai@kernel.org" <chenhuacai@kernel.org>, "atishp@atishpatra.org"
+	<atishp@atishpatra.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "maz@kernel.org" <maz@kernel.org>,
+	"pbonzini@redhat.com" <pbonzini@redhat.com>, "kvm@vger.kernel.org"
+	<kvm@vger.kernel.org>, "kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
+	"anup@brainfault.org" <anup@brainfault.org>,
+	"aleksandar.qemu.devel@gmail.com" <aleksandar.qemu.devel@gmail.com>
+Thread-Index: AQHaKm9F6TfLvhzSVEeLxKjiUjwNTrCgjTCAgAFn6T+AAcSbgA==
+Date: Mon, 11 Dec 2023 07:54:42 +0000
+Message-ID: <a02b40d3d9ae5b3037b9a9d5921cfb0144ab5610.camel@amazon.com>
+References: <20230512233127.804012-1-seanjc@google.com>
+	 <20230512233127.804012-2-seanjc@google.com>
+	 <cfed942fc767fa7b2fabc68a3357a7b95bd6a589.camel@amazon.com>
+	 <871qbud5f9.fsf@email.froward.int.ebiederm.org>
+In-Reply-To: <871qbud5f9.fsf@email.froward.int.ebiederm.org>
+Accept-Language: en-ZA, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.146.13.111]
+Content-ID: <F320358D0A3B8147A9D633C6C3B3AEF4@amazon.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20231209143418.92f02de6b6c6db2b7b3b1815@linux-foundation.org>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231210_215340_743019_5D47C0E9 
-X-CRM114-Status: GOOD (  14.39  )
+X-CRM114-CacheID: sfid-20231210_235503_717749_9D34FA69 
+X-CRM114-Status: GOOD (  26.56  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,34 +107,64 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 12/09/23 at 02:34pm, Andrew Morton wrote:
-> On Sat,  9 Dec 2023 22:14:38 +0800 Yuntao Wang <ytcoode@gmail.com> wrote:
-> 
-> > If crash_base is equal to CRASH_ADDR_LOW_MAX, it also indicates that
-> > the crashkernel memory is allocated from high memory. However, the
-> > current check only considers the case where crash_base is greater than
-> > CRASH_ADDR_LOW_MAX. Fix it.
-> > 
-> > This patch also includes some minor cleanups.
-> 
-> Can we please include a description of the runtime effects of this
-> change?  ie, what happens now and under what circumstances, and how
-> does the fix alter these things?
-
-This is a good catch. Guess it's observed from code exploring.
-
-The runtime effects is that crashkernel high memory is successfully
-reserved, whereas the crashkernel low memory is bypassed in this
-case, then kdump kernel bootup will fail because of no low memory
-under 4G.
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gU2F0LCAyMDIzLTEyLTA5IGF0IDIyOjUzIC0wNjAwLCBFcmljIFcuIEJpZWRlcm1hbiB3cm90
+ZToNCj4gPiBPbiBGcmksIDIwMjMtMDUtMTIgYXQgMTY6MzEgLTA3MDAsIFNlYW4gQ2hyaXN0b3Bo
+ZXJzb24gd3JvdGU6DQo+ID4gPiBVc2Ugc3lzY29yZV9vcHMuc2h1dGRvd24gdG8gZGlzYWJsZSBo
+YXJkd2FyZSB2aXJ0dWFsaXphdGlvbiBkdXJpbmcgYQ0KPiA+ID4gcmVib290IGluc3RlYWQgb2Yg
+dXNpbmcgdGhlIGRlZGljYXRlZCByZWJvb3Rfbm90aWZpZXIgc28gdGhhdCBLVk0gZGlzYWJsZXMN
+Cj4gPiA+IHZpcnR1YWxpemF0aW9uIF9hZnRlcl8gc3lzdGVtX3N0YXRlIGhhcyBiZWVuIHVwZGF0
+ZWQuwqAgVGhpcyB3aWxsIGFsbG93DQo+ID4gPiBmaXhpbmcgYSByYWNlIGluIEtWTSdzIGhhbmRs
+aW5nIG9mIGEgZm9yY2VkIHJlYm9vdCB3aGVyZSBLVk0gY2FuIGVuZCB1cA0KPiA+ID4gZW5hYmxp
+bmcgaGFyZHdhcmUgdmlydHVhbGl6YXRpb24gYmV0d2VlbiBrZXJuZWxfcmVzdGFydF9wcmVwYXJl
+KCkgYW5kDQo+ID4gPiBtYWNoaW5lX3Jlc3RhcnQoKS4NCj4gPiANCj4gPiBUaGUgaXNzdWUgaXMg
+dGhhdCwgQUZBSUNULCB0aGUgc3lzY29yZV9vcHMuc2h1dGRvd24gYXJlIG5vdCBjYWxsZWQgd2hl
+bg0KPiA+IGRvaW5nIGEga2V4ZWMuIFJlYm9vdCBub3RpZmllcnMgYXJlIGNhbGxlZCBhY3Jvc3Mg
+a2V4ZWMgdmlhOg0KPiA+IA0KPiA+IGtlcm5lbF9rZXhlYw0KPiA+IMKgwqAga2VybmVsX3Jlc3Rh
+cnRfcHJlcGFyZQ0KPiA+IMKgwqDCoMKgIGJsb2NraW5nX25vdGlmaWVyX2NhbGxfY2hhaW4NCj4g
+PiDCoMKgwqDCoMKgwqAga3ZtX3JlYm9vdA0KPiA+IA0KPiA+IFNvIGFmdGVyIHRoaXMgcGF0Y2gs
+IEtWTSBpcyBub3Qgc2h1dGRvd24gZHVyaW5nIGtleGVjOyBpZiBoYXJkd2FyZSB2aXJ0DQo+ID4g
+bW9kZSBpcyBlbmFibGVkIHRoZW4gdGhlIGtleGVjIGhhbmdzIGluIGV4YWN0bHkgdGhlIHNhbWUg
+bWFubmVyIGFzIHlvdQ0KPiA+IGRlc2NyaWJlIHdpdGggdGhlIHJlYm9vdC4NCj4gDQo+IGtlcm5l
+bF9yZXN0YXJ0X3ByZXBhcmUgY2FsbHMgZGV2aWNlX3NodXRkb3duLsKgIFdoaWNoIHNob3VsZCBj
+YWxsIGFsbA0KPiBvZiB0aGUgc2h1dGRvd24gb3BlcmF0aW9ucy7CoCBUaGlzIGhhcyBiZWVuIHRo
+ZSB3YXkgdGhlIGNvZGUgaGFzIGJlZW4NCj4gc3RydWN0dXJlZCBzaW5jZSBEZWNlbWJlciAyMDA1
+Lg0KDQpZZXMsIGtlcm5lbF9yZXNldF9wcmVwYXJlIGNhbGxzIGRldmljZV9zaHV0ZG93biB3aGlj
+aCBjYWxscw0KZGV2LT5kcml2ZXItPnNodXRkb3duIGZvciBlYWNoIGRldiB3aGljaCBoYXMgYSBk
+cml2ZXIuIEtWTSwgaG93ZXZlciwgaXMNCm5vdCBhIGRldiB3aXRoIGEgZHJpdmVyLCBoZW5jZSBk
+b2Vzbid0IGhhdmUgYSBkZXYtPmRyaXZlci0+c2h1dGRvd24NCmNhbGxiYWNrLiBTbyBLVk0gaXMg
+bm8tb3AnZWQgaW4gZGV2aWNlX3NodXRkb3duLg0KDQpLVk0gYWRkcyBpdHMgc2h1dGRvd24gY2Fs
+bGJhY2sgdG8gc3lzY29yZV9vcHMgYW5kIGV4cGVjdHMgdG8gYmUgc2h1dA0KZG93biB0aGF0IHdh
+eS4NCg0KPiANCj4gPiBTb21lIHNwZWNpZmljIHNodXRkb3duIGNhbGxiYWNrcywgZm9yIGV4YW1w
+bGUgSU9NTVUsIEhQRVQsIElSUSwgZXRjIGFyZQ0KPiA+IGNhbGxlZCBpbiBuYXRpdmVfbWFjaGlu
+ZV9zaHV0ZG93biwgYnV0IEtWTSBpcyBub3Qgb25lIG9mIHRoZXNlLg0KPiA+IA0KPiA+IFRob3Vn
+aHRzIG9uIHBvc3NpYmxlIHdheXMgdG8gZml4IHRoaXM6DQo+ID4gYSkgZ28gYmFjayB0byByZWJv
+b3Qgbm90aWZpZXJzDQo+ID4gYikgZ2V0IGtleGVjIHRvIGNhbGwgc3lzY29yZV9zaHV0ZG93bigp
+IHRvIGludm9rZSBhbGwgb2YgdGhlc2UgY2FsbGJhY2tzDQo+ID4gYykgQWRkIGEgS1ZNLXNwZWNp
+ZmljIGNhbGxiYWNrIHRvIG5hdGl2ZV9tYWNoaW5lX3NodXRkb3duKCk7IHdlIG9ubHkNCj4gPiBu
+ZWVkIHRoaXMgZm9yIEludGVsIHg4NiwgcmlnaHQ/DQo+ID4gDQo+ID4gTXkgc2xpZ2h0IHByZWZl
+cmVuY2UgaXMgdG93YXJkcyBhZGRpbmcgc3lzY29yZV9zaHV0ZG93bigpIHRvIGtleGVjLCBidXQN
+Cj4gPiBJJ20gbm90IHN1cmUgdGhhdCdzIGZlYXNpYmxlLiBBZGRpbmcga2V4ZWMgbWFpbnRhaW5l
+cnMgZm9yIGlucHV0Lg0KPiANCj4gV2h5IGlzbid0IGRldmljZV9zdXRoZG93biBjYWxsaW5nIHN5
+c2NvcmVfc2h1dGRvd24/DQoNCkknbSBub3Qgc3VyZSAtIHRoYXQgd291bGQgaW5kZWVkIGJlIG9u
+ZSB3YXkgdG8gZml4OyBhZGRpbmcgYSBjYWxsIHRvDQpzeXNjb3JlX3NodXRkb3duKCkgaW5zaWRl
+IGRldmljZV9zaHV0ZG93bi4gV2UgbWF5IG5lZWQgdG8gY2xlYW4gdXAgb3RoZXINCmNhbGxlcnMg
+dG8gbm90IGRvIHRoZWlyIG93biBzeXNjb3JlX3NodXRkb3duIGFuZCByYXRoZXIgZGVwZW5kIG9u
+DQpkZXZpY2Vfc2h1dGRvd24gdG8gZG8gaXQgYWxsLg0KDQpXb3VsZCB5b3Ugc3VwcG9ydCBhZGRp
+bmcgc3lzY29yZV9zaHV0ZG93bigpIHRvIGRldmljZV9zaHV0ZG93bigpPw0KDQo+IA0KPiBXaGF0
+IHByb2JsZW0gYXJlIHlvdSBydW5uaW5nIGludG8gd2l0aCB5b3VyIHJlYmFzZSB0aGF0IHdvcmtl
+ZCB3aXRoDQo+IHJlYm9vdCBub3RpZmllcnMgdGhhdCBpcyBub3Qgd29ya2luZyB3aXRoIHN5c2Nv
+cmVfc2h1dGRvd24/DQoNClByaW9yIHRvIHRoaXMgY29tbWl0IFsxXSB3aGljaCBjaGFuZ2VkIEtW
+TSBmcm9tIHJlYm9vdCBub3RpZmllcnMgdG8NCnN5c2NvcmVfb3BzLCBLVk0ncyByZWJvb3Qgbm90
+aWZpZXIgc2h1dGRvd24gY2FsbGJhY2sgd2FzIGludm9rZWQgb24NCmtleGVjIHZpYSBrZXJuZWxf
+cmVzdGFydF9wcmVwYXJlLg0KDQpBZnRlciB0aGlzIGNvbW1pdCwgS1ZNIGlzIG5vdCBiZWluZyBz
+aHV0IGRvd24gYmVjYXVzZSBjdXJyZW50bHkgdGhlDQprZXhlYyBmbG93IGRvZXMgbm90IGNhbGwg
+c3lzY29yZV9zaHV0ZG93bi4NCg0KSkcNCg0KDQpbMV0gaHR0cHM6Ly9naXRodWIuY29tL3RvcnZh
+bGRzL2xpbnV4L2NvbW1pdC82NzM1MTUwYjY5OTcNCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZy
+YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4
+ZWMK
