@@ -4,75 +4,115 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AF7E0C4167B
-	for <kexec@archiver.kernel.org>; Mon, 11 Dec 2023 08:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CA9A7C4167B
+	for <kexec@archiver.kernel.org>; Mon, 11 Dec 2023 08:32:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=bteveyAjcuDqMxBOPx/ZBUhJ2GYaP4LKEkbE497HLXA=; b=ECB7eqrjNjbvP6
-	nG6E3QLkVZQA7U4uUSWsG+qpnj8pKtijmHFlquRWs+eXj7UUau3bylCnTfJkZGjF7c/mduYM+2Z3U
-	dVQAVhQh9NSQPYOMR7YPVDPEIpmP07kVWyAX9Eg2G/o2mcKF+NRH2qlk64TprM5GOWIN0cvPhQI7x
-	V2cU5JWhbXejdH6dxbxxFArOArYjPozTN0jfWReSYRNKonzmkvJ35gJEkOB8qKzF88hni/cLFR+aY
-	aZg7KDpxIi5QnmdXjQ4+aXc743tIpiAeYVa9Ln7yPwyAKahi3Fa9RXG7XXtghL3ek5eBVwPduVcVj
-	E5QqyFhWeNYFLPb/U/Hw==;
+	List-Owner; bh=7uVZE2EewKa0HZ2cE5iOAJEugv16kv97vfG+yhR0mwU=; b=z50tTByvxIKKN+
+	KxCQfo+JZnHVyP5zPpTp6O91vE+wqV/9VIRDlW7jjoqp7bj5ze45Q+Qo/OTE0xWKSONbaNbreW+g1
+	n4oKDFcGUWF2PBoWlmS2qe7dPfVVwhLcg7qCU9ma8NAWg3K8Ja6Dz+8PKzhkX5/53oaTcXdfmcHGk
+	mPTeBievZrBPtft4sRTVGaaaSYZZFbQrz70QqhP2kYaF6APCzyM4IyzfbUZwOevaEZskVmFXOx58o
+	fidW7pSL8NEh60pvHpiG0O0PoYtZTvIO7CzwyrhQIlmRNfu3mNi8gZGUs2bXVpiaZW7graYFiiQms
+	WbmrdExsv9igCzmpL41Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rCbbj-004Kfw-2S;
-	Mon, 11 Dec 2023 08:25:43 +0000
-Received: from mail-yw1-f176.google.com ([209.85.128.176])
+	id 1rCbiI-004LXP-2e;
+	Mon, 11 Dec 2023 08:32:30 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rCbbe-004Kb9-0H
+	id 1rCbiF-004LWH-0I
 	for kexec@lists.infradead.org;
-	Mon, 11 Dec 2023 08:25:40 +0000
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-5de93b677f4so23139737b3.2
-        for <kexec@lists.infradead.org>; Mon, 11 Dec 2023 00:25:37 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702283136; x=1702887936;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=j2eWe2oiRzSTkXAZdruL7FMLjSewImdzh7HyKdRxUqI=;
-        b=QUUGV197B0+Medfh9gXdcyochQRxsQzCdygnUQ2/psJtTHl2V76+7L+jmWtHD6mySz
-         PCWSKtPKy86LxAMQYRZigOblj7b5qhALWkJFsUtlQ5r8/DBnv4T1a1jCFyR2RyXTP0je
-         1+lfPww5h8ZQwSfAN5q6htRWt/j1UrMONGqpNQYOQz4GPpQsk+ldZdIZoeulhX+r2cnL
-         VWeVf1nCykV+D9UXItNcbCMwdQU2IEN73hMFLxySUGruBwp0EOtmBqIgcPCNIxwbS5e9
-         Pke4oUJ9cUBr0MFsienCKtkVWtdH8akjj1nmdx7QLlafwToKQ0Mmw3SrTn1MKAckkxRF
-         +vSQ==
-X-Gm-Message-State: AOJu0YzBSBPaQBBCk4/lYf4orlI7R+0Ko+HZvL1GmG4IYJr6cYHFhQw9
-	D+KTA4J2iLyKrDppiOoLHBYxbttEhfQ6dw==
-X-Google-Smtp-Source: AGHT+IGkp2hQZvcsWofcGz3KgEdl6w0E+510a18QZ/rYHHuiUttJ1lLiqhOX3+LpIjstu6SVHKOWQw==
-X-Received: by 2002:a81:8384:0:b0:5d3:5391:e10e with SMTP id t126-20020a818384000000b005d35391e10emr3037946ywf.9.1702283136555;
-        Mon, 11 Dec 2023 00:25:36 -0800 (PST)
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com. [209.85.128.175])
-        by smtp.gmail.com with ESMTPSA id v4-20020a818504000000b005d9729068f5sm2839826ywf.42.2023.12.11.00.25.35
-        for <kexec@lists.infradead.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Dec 2023 00:25:36 -0800 (PST)
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-5d74186170fso35540077b3.3
-        for <kexec@lists.infradead.org>; Mon, 11 Dec 2023 00:25:35 -0800 (PST)
-X-Received: by 2002:a81:7285:0:b0:5d8:74e6:e4c5 with SMTP id
- n127-20020a817285000000b005d874e6e4c5mr2853116ywc.98.1702283135734; Mon, 11
- Dec 2023 00:25:35 -0800 (PST)
+	Mon, 11 Dec 2023 08:32:29 +0000
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BB8Jq1Q019019;
+	Mon, 11 Dec 2023 08:31:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=ClCyGkV69ChTqANGLzx7kHrqlqNQly9NJ7SHdk9MgaI=;
+ b=e+cWcfiwSPWI2fs6WGuBnpzKAz5kg8ZoWJxB78sHHBJ1/DusC9A1qodPIBcnc/Y/ViZS
+ 5dz56BMJcMyTTv4QL2JK2o9WU82/q8GjV+S+l7gbG6GoofEPj7jiRijrqcPoGn4fotf4
+ kjIOhUErahuLwZQNlLHG1Tl8AYdYo+iey8E1XEI2nHBn9kSz4qvGyUxWDVbR3PWgJy5m
+ Uh2COciffIGWrK16mIGCAonEo6g2JhLzhWqXpOCLw8ULdx+CnQGFDETjiCwXSg0mSB/C
+ 7yYwuv+qKYVA6E8IFkKXynB8dAuoCSStP/QvmKYNrKHOedU+5kc8BxWqdwQCkt3qusyI Bw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uwwj9jpf6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 11 Dec 2023 08:31:54 +0000
+Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3BB8JwMl020273;
+	Mon, 11 Dec 2023 08:31:53 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3uwwj9jpea-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 11 Dec 2023 08:31:53 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BB7v4jW012588;
+	Mon, 11 Dec 2023 08:31:52 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3uw3jng3cx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 11 Dec 2023 08:31:52 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BB8VmHX18088522
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 11 Dec 2023 08:31:48 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9D0832004B;
+	Mon, 11 Dec 2023 08:31:48 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1F9D520043;
+	Mon, 11 Dec 2023 08:31:37 +0000 (GMT)
+Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.c4p-in.ibmmobiledemo.com (unknown [9.177.92.36])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 11 Dec 2023 08:31:36 +0000 (GMT)
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+To: linuxppc-dev@ozlabs.org
+Cc: Sourabh Jain <sourabhjain@linux.ibm.com>, Akhil Raj <lf32.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
+        Baoquan He <bhe@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dave Young <dyoung@redhat.com>, David Hildenbrand <david@redhat.com>,
+        Eric DeVolder <eric.devolder@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Laurent Dufour <laurent.dufour@fr.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mimi Zohar <zohar@linux.ibm.com>, Naveen N Rao <naveen@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Valentin Schneider <vschneid@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org,
+        x86@kernel.org
+Subject: [PATCH v14 2/6] crash: make CPU and Memory hotplug support reporting flexible
+Date: Mon, 11 Dec 2023 14:00:52 +0530
+Message-ID: <20231211083056.340404-3-sourabhjain@linux.ibm.com>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20231211083056.340404-1-sourabhjain@linux.ibm.com>
+References: <20231211083056.340404-1-sourabhjain@linux.ibm.com>
 MIME-Version: 1.0
-References: <20231208073036.7884-1-bhe@redhat.com> <ZXLI748b85be459B@fedora>
-In-Reply-To: <ZXLI748b85be459B@fedora>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 11 Dec 2023 09:25:24 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWAaM+eJtiVbXXBO0xOmpqhrOiCO5itNsNdTiOxRXVtVw@mail.gmail.com>
-Message-ID: <CAMuHMdWAaM+eJtiVbXXBO0xOmpqhrOiCO5itNsNdTiOxRXVtVw@mail.gmail.com>
-Subject: Re: [PATCH 0/5] kexec: fix the incorrect ifdeffery and dependency of CONFIG_KEXEC
-To: Baoquan He <bhe@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-next@vger.kernel.org, 
-	loongarch@lists.linux.dev, kexec@lists.infradead.org, 
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linux-sh@vger.kernel.org, x86@kernel.org, akpm@linux-foundation.org, 
-	eric_devolder@yahoo.com, sfr@canb.auug.org.au, ignat@cloudflare.com
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: mKXxonGtjeOtaIQEwGyuHeNVRkeU5kx6
+X-Proofpoint-ORIG-GUID: MP-8xmKRXBdsqp4_NPijZceTCT_rDq2o
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-11_02,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
+ lowpriorityscore=0 malwarescore=0 clxscore=1015 spamscore=0 bulkscore=0
+ adultscore=0 phishscore=0 suspectscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2312110071
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231211_002538_132621_F51E64CC 
-X-CRM114-Status: GOOD (  20.31  )
+X-CRM114-CacheID: sfid-20231211_003227_335188_CE4A8735 
+X-CRM114-Status: GOOD (  28.28  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,54 +124,216 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-SGkgQmFvcXVhbiwKCk9uIEZyaSwgRGVjIDgsIDIwMjMgYXQgODo0M+KAr0FNIEJhb3F1YW4gSGUg
-PGJoZUByZWRoYXQuY29tPiB3cm90ZToKPiBGb3Jnb3QgYWRkaW5nIGtleGVjIHRvIENDLCBhZGQg
-aXQgbm93Lgo+Cj4gT24gMTIvMDgvMjMgYXQgMDM6MzBwbSwgQmFvcXVhbiBIZSB3cm90ZToKPiA+
-IFRoZSBzZWxlY3Qgb2YgS0VYRUMgZm9yIENSQVNIX0RVTVAgaW4ga2VybmVsL0tjb25maWcua2V4
-ZWMgd2lsbCBiZQo+ID4gZHJvcHBlZCwgdGhlbiBjb21waWxpbmcgZXJyb3JzIHdpbGwgYmUgdHJp
-Z2dlcmVkIGlmIGJlbG93IGNvbmZpZwo+ID4gaXRlbXMgYXJlIHNldDoKPiA+Cj4gPiA9PT0KPiA+
-IENPTkZJR19DUkFTSF9DT1JFPXkKPiA+IENPTkZJR19LRVhFQ19DT1JFPXkKPiA+IENPTkZJR19D
-UkFTSF9EVU1QPXkKPiA+ID09PQo+ID4KPiA+IEUuZyBvbiBtaXBzLCBiZWxvdyBsaW5rIGVycm9y
-IGFyZSBzZWVuOgo+ID4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiA+IG1pcHNlbC1saW51eC1sZDoga2VybmVsL2tl
-eGVjX2NvcmUubzogaW4gZnVuY3Rpb24gYGtpbWFnZV9mcmVlJzoKPiA+IGtlcm5lbC9rZXhlY19j
-b3JlLmM6KC50ZXh0KzB4MjIwMCk6IHVuZGVmaW5lZCByZWZlcmVuY2UgdG8gYG1hY2hpbmVfa2V4
-ZWNfY2xlYW51cCcKPiA+IG1pcHNlbC1saW51eC1sZDoga2VybmVsL2tleGVjX2NvcmUubzogaW4g
-ZnVuY3Rpb24gYF9fY3Jhc2hfa2V4ZWMnOgo+ID4ga2VybmVsL2tleGVjX2NvcmUuYzooLnRleHQr
-MHgyNDgwKTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgbWFjaGluZV9jcmFzaF9zaHV0ZG93bicK
-PiA+IG1pcHNlbC1saW51eC1sZDoga2VybmVsL2tleGVjX2NvcmUuYzooLnRleHQrMHgyNDg4KTog
-dW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgbWFjaGluZV9rZXhlYycKPiA+IG1pcHNlbC1saW51eC1s
-ZDoga2VybmVsL2tleGVjX2NvcmUubzogaW4gZnVuY3Rpb24gYGtlcm5lbF9rZXhlYyc6Cj4gPiBr
-ZXJuZWwva2V4ZWNfY29yZS5jOigudGV4dCsweDI5YjgpOiB1bmRlZmluZWQgcmVmZXJlbmNlIHRv
-IGBtYWNoaW5lX3NodXRkb3duJwo+ID4gbWlwc2VsLWxpbnV4LWxkOiBrZXJuZWwva2V4ZWNfY29y
-ZS5jOigudGV4dCsweDI5YzApOiB1bmRlZmluZWQgcmVmZXJlbmNlIHRvIGBtYWNoaW5lX2tleGVj
-Jwo+ID4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0KPiA+Cj4gPiBIZXJlLCBjaGFuZ2UgdGhlIGluY29ycmVjdCBkZXBl
-bmRlbmN5IG9mIGJ1aWxkaW5nIGtleGVjX2NvcmUgcmVsYXRlZCBvYmplY3QKPiA+IGZpbGVzLCBh
-bmQgdGhlIGlmZGVmZmVyeSBvbiBhcmNoaXRlY3R1cmVzIGZyb20gQ09ORklHX0tFWEVDIHRvCj4g
-PiBDT05GSUdfS0VYRUNfQ09SRS4KPiA+Cj4gPiBUZXN0aW5nOgo+ID4gPT09PT09PT0KPiA+IFBh
-c3NlZCBvbiBtaXBzIGFuZCBsb29nbmFyY2ggd2l0aCB0aGUgTEtQIHJlcHJvZHVjZXIuCj4gPgo+
-ID4gQmFvcXVhbiBIZSAoNSk6Cj4gPiAgIGxvb25nYXJjaCwga2V4ZWM6IGNoYW5nZSBkZXBlbmRl
-bmN5IG9mIG9iamVjdCBmaWxlcwo+ID4gICBtNjhrLCBrZXhlYzogZml4IHRoZSBpbmNvcnJlY3Qg
-aWZkZWZmZXJ5IGFuZCBidWlsZCBkZXBlbmRlbmN5IG9mCj4gPiAgICAgQ09ORklHX0tFWEVDCj4g
-PiAgIG1pcHMsIGtleGVjOiBmaXggdGhlIGluY29ycmVjdCBpZmRlZmZlcnkgYW5kIGRlcGVuZGVu
-Y3kgb2YKPiA+ICAgICBDT05GSUdfS0VYRUMKPiA+ICAgc2gsIGtleGVjOiBmaXggdGhlIGluY29y
-cmVjdCBpZmRlZmZlcnkgYW5kIGRlcGVuZGVuY3kgb2YgQ09ORklHX0tFWEVDCj4gPiAgIHg4Niwg
-a2V4ZWM6IGZpeCB0aGUgd3JvbmcgaWZkZWZmZXJ5IENPTkZJR19LRVhFQwoKSSB1bmRlcnN0YW5k
-IHRoaXMgc2VyaWVzIGlzIHYzIG9mICJbUEFUQ0ggdjJdIGtleGVjX2NvcmU6IGNoYW5nZQpkZXBl
-bmRlbmN5IG9mIG9iamVjdCBmaWxlcyI/IEFzIHRoaXMgc2VyaWVzIGRvZXMgbm90IGNvbnRhaW4g
-YQpjaGFuZ2Vsb2csIGNhbiB5b3UgcGxlYXNlIHN1bW1hcml6ZSB3aGF0IHdhcyBjaGFuZ2VkPwpU
-aGFua3MhCgpHcntvZXRqZSxlZXRpbmd9cywKCiAgICAgICAgICAgICAgICAgICAgICAgIEdlZXJ0
-CgotLQpHZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBp
-YTMyIC0tIGdlZXJ0QGxpbnV4LW02OGsub3JnCgpJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdp
-dGggdGVjaG5pY2FsIHBlb3BsZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0CndoZW4gSSdt
-IHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRo
-aW5nIGxpa2UgdGhhdC4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBU
-b3J2YWxkcwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-a2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Architectures' specific functions `arch_crash_hotplug_cpu_support()` and
+`arch_crash_hotplug_memory_support()` advertise the kernel's capability
+to update the kdump image on CPU and Memory hotplug events to userspace
+via the sysfs interface. These architecture-specific functions need to
+access various attributes of the `kexec_crash_image` object to determine
+whether the kernel can update the kdump image and advertise this
+information to userspace accordingly.
+
+As the architecture-specific code is not exposed to the APIs required to
+acquire the lock for accessing the `kexec_crash_image` object, it calls
+a generic function, `crash_check_update_elfcorehdr()`, to determine
+whether the kernel can update the kdump image or not.
+
+The lack of access to the `kexec_crash_image` object in
+architecture-specific code restricts architectures from performing
+additional architecture-specific checks required to determine if the
+kdump image is updatable or not. For instance, on PowerPC, the kernel
+can update the kdump image only if both the elfcorehdr and FDT are
+marked as updatable for the `kexec_load` system call.
+
+So define two generic functions, `crash_hotplug_cpu_support()` and
+`crash_hotplug_memory_support()`, which are called when userspace
+attempts to read the crash CPU and Memory hotplug support via the sysfs
+interface. These functions take the necessary locks needed to access the
+`kexec_crash_image` object and then forward it to the
+architecture-specific handler to do the rest.
+
+Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+Cc: Akhil Raj <lf32.dev@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Borislav Petkov (AMD) <bp@alien8.de>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Eric DeVolder <eric.devolder@oracle.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Hari Bathini <hbathini@linux.ibm.com>
+Cc: Laurent Dufour <laurent.dufour@fr.ibm.com>
+Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Mimi Zohar <zohar@linux.ibm.com>
+Cc: Naveen N Rao <naveen@kernel.org>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Valentin Schneider <vschneid@redhat.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: kexec@lists.infradead.org
+Cc: x86@kernel.org
+---
+ arch/x86/include/asm/kexec.h |  8 ++++----
+ arch/x86/kernel/crash.c      | 20 +++++++++++++++-----
+ include/linux/kexec.h        | 13 +++++++------
+ kernel/crash_core.c          | 23 +++++++++++++++++------
+ 4 files changed, 43 insertions(+), 21 deletions(-)
+
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index 9bb6607e864e..5c88d27b086d 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -212,13 +212,13 @@ void arch_crash_handle_hotplug_event(struct kimage *image, void *arg);
+ #define arch_crash_handle_hotplug_event arch_crash_handle_hotplug_event
+ 
+ #ifdef CONFIG_HOTPLUG_CPU
+-int arch_crash_hotplug_cpu_support(void);
+-#define crash_hotplug_cpu_support arch_crash_hotplug_cpu_support
++int arch_crash_hotplug_cpu_support(struct kimage *image);
++#define arch_crash_hotplug_cpu_support arch_crash_hotplug_cpu_support
+ #endif
+ 
+ #ifdef CONFIG_MEMORY_HOTPLUG
+-int arch_crash_hotplug_memory_support(void);
+-#define crash_hotplug_memory_support arch_crash_hotplug_memory_support
++int arch_crash_hotplug_memory_support(struct kimage *image);
++#define arch_crash_hotplug_memory_support arch_crash_hotplug_memory_support
+ #endif
+ 
+ unsigned int arch_crash_get_elfcorehdr_size(void);
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index 0d7b2657beb6..ad5941665589 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -398,18 +398,28 @@ int crash_load_segments(struct kimage *image)
+ #undef pr_fmt
+ #define pr_fmt(fmt) "crash hp: " fmt
+ 
+-/* These functions provide the value for the sysfs crash_hotplug nodes */
++#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_MEMORY_HOTPLUG)
++static int crash_hotplug_support(struct kimage *image)
++{
++	if (image->file_mode)
++		return 1;
++
++	return image->update_elfcorehdr;
++}
++#endif
++
+ #ifdef CONFIG_HOTPLUG_CPU
+-int arch_crash_hotplug_cpu_support(void)
++/* These functions provide the value for the sysfs crash_hotplug nodes */
++int arch_crash_hotplug_cpu_support(struct kimage *image)
+ {
+-	return crash_check_update_elfcorehdr();
++	return crash_hotplug_support(image);
+ }
+ #endif
+ 
+ #ifdef CONFIG_MEMORY_HOTPLUG
+-int arch_crash_hotplug_memory_support(void)
++int arch_crash_hotplug_memory_support(struct kimage *image)
+ {
+-	return crash_check_update_elfcorehdr();
++	return crash_hotplug_support(image);
+ }
+ #endif
+ 
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index ee28c09a7fb0..0f6ea35879ee 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -486,16 +486,17 @@ static inline void arch_kexec_pre_free_pages(void *vaddr, unsigned int pages) {
+ static inline void arch_crash_handle_hotplug_event(struct kimage *image, void *arg) { }
+ #endif
+ 
+-int crash_check_update_elfcorehdr(void);
+-
+-#ifndef crash_hotplug_cpu_support
+-static inline int crash_hotplug_cpu_support(void) { return 0; }
++#ifndef arch_crash_hotplug_cpu_support
++static inline int arch_crash_hotplug_cpu_support(struct kimage *image) { return 0; }
+ #endif
+ 
+-#ifndef crash_hotplug_memory_support
+-static inline int crash_hotplug_memory_support(void) { return 0; }
++#ifndef arch_crash_hotplug_memory_support
++static inline int arch_crash_hotplug_memory_support(struct kimage *image) { return 0; }
+ #endif
+ 
++extern int crash_hotplug_cpu_support(void);
++extern int crash_hotplug_memory_support(void);
++
+ #ifndef crash_get_elfcorehdr_size
+ static inline unsigned int crash_get_elfcorehdr_size(void) { return 0; }
+ #endif
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index b9190265fe52..b621f03c1104 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -892,12 +892,14 @@ DEFINE_MUTEX(__crash_hotplug_lock);
+ #define crash_hotplug_lock() mutex_lock(&__crash_hotplug_lock)
+ #define crash_hotplug_unlock() mutex_unlock(&__crash_hotplug_lock)
+ 
++#define CPU_HOTPLUG	0
++#define MEM_HOTPLUG	1
+ /*
+  * This routine utilized when the crash_hotplug sysfs node is read.
+  * It reflects the kernel's ability/permission to update the crash
+  * elfcorehdr directly.
+  */
+-int crash_check_update_elfcorehdr(void)
++static int crash_hotplug_support(int hotplug)
+ {
+ 	int rc = 0;
+ 
+@@ -909,18 +911,27 @@ int crash_check_update_elfcorehdr(void)
+ 		return 0;
+ 	}
+ 	if (kexec_crash_image) {
+-		if (kexec_crash_image->file_mode)
+-			rc = 1;
+-		else
+-			rc = kexec_crash_image->update_elfcorehdr;
++		if (hotplug == CPU_HOTPLUG)
++			rc = arch_crash_hotplug_cpu_support(kexec_crash_image);
++		else if (hotplug == MEM_HOTPLUG)
++			rc = arch_crash_hotplug_memory_support(kexec_crash_image);
+ 	}
+ 	/* Release lock now that update complete */
+ 	kexec_unlock();
+ 	crash_hotplug_unlock();
+-
+ 	return rc;
+ }
+ 
++int crash_hotplug_cpu_support(void)
++{
++	return crash_hotplug_support(CPU_HOTPLUG);
++}
++
++int crash_hotplug_memory_support(void)
++{
++	return crash_hotplug_support(MEM_HOTPLUG);
++}
++
+ /*
+  * To accurately reflect hot un/plug changes of cpu and memory resources
+  * (including onling and offlining of those resources), the elfcorehdr
+-- 
+2.41.0
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
