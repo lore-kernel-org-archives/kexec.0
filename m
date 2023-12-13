@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A7509C4167D
-	for <kexec@archiver.kernel.org>; Wed, 13 Dec 2023 00:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 984E6C4167D
+	for <kexec@archiver.kernel.org>; Wed, 13 Dec 2023 00:06:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=Ao2Xp3+je4k+8/81axDdIOCR9amtFUdLq+2UOXLNyx4=; b=t0W62x4J0AC7MB
-	4Ea5IH5z0I7qVjZ9FSTp7rtz0/Odte082J4Hy066N9/F3x56UD6LwKih7WYCKPSKL6FqaQYP3B0d7
-	pjrj0De6rwTxvi3MhjPl9VXCj5POhWoFTsB+nHx51vSh3GPHcMpsJAEJE3nqmjew+2b/cBuxtXH0b
-	pUG9cXW121Mu0TrGQHYgdE6wStkgmSdnLAXLXEl7Ia3Sr5kcnNBAR9SXsO/G65vCODgQ/lXJ65yLk
-	NFy5NbctQNOWUK4llbJDQ2NvtmqB9AFKnudxB/mvRp+s/iOp/xUoOcE2xUwLBzkHs7aypYvkvKY0O
-	Hf5hQhXLp+pIYZ+99oxw==;
+	List-Owner; bh=Moiy0tqHZsf2SUAT/ZH9bnU591pQ+rR3roDMBCt13+4=; b=tKU+xUt2vZ9w7i
+	uJ8Ul/dH+dPFvGRobKTTcR8PcLul+OPuh6iPQDqk7Ko8ahuvs89rJSejJkx56t/R/1ByVu1iZ5MHn
+	PKleK4aoFbyqtaq8bpY9upTjYnbpcKaNO9DXuiTKakE5isCWRIeDXHx/RQSKXW4BArBYBcwrP+fLx
+	QzqbW34Z1G0u+AEKnWfBpwpKA6Q1mBjimWoPjFdWS3NIEmd+ci6aARIraehnjTEGAx/FxiCyVvMth
+	2RudQyfFlCMBayQ0fglM8vj7ZW+XQxoywECkvi10yqyWAd2W5WxNxsCAASM+JZVDEEAahhjHgfSHl
+	kX8tf06dtKxK3XJ1EkXw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rDClB-00D7Ic-02;
-	Wed, 13 Dec 2023 00:05:57 +0000
-Received: from smtp-fw-52004.amazon.com ([52.119.213.154])
+	id 1rDClb-00D7Xb-2m;
+	Wed, 13 Dec 2023 00:06:23 +0000
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rDCl7-00D7GE-1I;
-	Wed, 13 Dec 2023 00:05:55 +0000
+	id 1rDClZ-00D7VH-0W;
+	Wed, 13 Dec 2023 00:06:22 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1702425954; x=1733961954;
+  t=1702425982; x=1733961982;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=LESPtNw/smO8CIxZLa0BQCyFgAWbYWE2+aT46q12sNA=;
-  b=gnTtWcb8jHZuGkBD5XhPL8nCAre0vtMhlTQQkCjMaldhYUvIwBvUCg5n
-   iWhTwq8j9cFs1x7J/Vodfz0mnrQtKZlvmf4m+qeH833RzyLazr4d+wBks
-   /7LsfTATX87YVFewnftQydTVP/CH4KTNe292kzyD+T4pRRYdgA5Bpl76m
-   M=;
+  bh=2/g7t8dqwJHCv4j3q+tOmI1oayO/LeEOR2vQQ38tfk8=;
+  b=KYMkbudlQsuPO2/UgFg2jdL9MI2x2HwcLSNy3UPgGDzVqjoP6lSULV7V
+   s40e5Ywwslb7bSkDLE5JZ8nk2thVH4coBj22kWvINXvbaZICFhjfBmapd
+   5+ch+d83y80NMwErI8Vl5oCTSUUKWEpk0Of8jlhEUYFVR2GDfSzXvgWUr
+   I=;
 X-IronPort-AV: E=Sophos;i="6.04,271,1695686400"; 
-   d="scan'208";a="171586528"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-iad-1e-m6i4x-0aba4706.us-east-1.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-52004.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 00:05:50 +0000
-Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (iad7-ws-svc-p70-lb3-vlan2.iad.amazon.com [10.32.235.34])
-	by email-inbound-relay-iad-1e-m6i4x-0aba4706.us-east-1.amazon.com (Postfix) with ESMTPS id 4F134A54AC;
-	Wed, 13 Dec 2023 00:05:36 +0000 (UTC)
-Received: from EX19MTAUWA002.ant.amazon.com [10.0.38.20:55378]
+   d="scan'208";a="373412697"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-iad-1e-m6i4x-529f0975.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 00:06:19 +0000
+Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (iad7-ws-svc-p70-lb3-vlan3.iad.amazon.com [10.32.235.38])
+	by email-inbound-relay-iad-1e-m6i4x-529f0975.us-east-1.amazon.com (Postfix) with ESMTPS id CCC6E49815;
+	Wed, 13 Dec 2023 00:06:05 +0000 (UTC)
+Received: from EX19MTAUWA001.ant.amazon.com [10.0.21.151:23290]
  by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.43.236:2525] with esmtp (Farcaster)
- id ec187307-8427-47be-99c6-38fe9b03912f; Wed, 13 Dec 2023 00:05:36 +0000 (UTC)
-X-Farcaster-Flow-ID: ec187307-8427-47be-99c6-38fe9b03912f
+ id 5b333ece-94a3-4a4f-9c0a-106bd493cbae; Wed, 13 Dec 2023 00:06:04 +0000 (UTC)
+X-Farcaster-Flow-ID: 5b333ece-94a3-4a4f-9c0a-106bd493cbae
 Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
+ EX19MTAUWA001.ant.amazon.com (10.250.64.204) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 13 Dec 2023 00:05:35 +0000
+ 15.2.1118.40; Wed, 13 Dec 2023 00:06:04 +0000
 Received: from dev-dsk-graf-1a-5ce218e4.eu-west-1.amazon.com (10.253.83.51) by
  EX19D020UWC004.ant.amazon.com (10.13.138.149) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 13 Dec 2023 00:05:31 +0000
+ 15.2.1118.40; Wed, 13 Dec 2023 00:06:00 +0000
 From: Alexander Graf <graf@amazon.com>
 To: <linux-kernel@vger.kernel.org>
 CC: <linux-trace-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
@@ -71,19 +71,19 @@ CC: <linux-trace-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
 	<anthony.yznaga@oracle.com>, Usama Arif <usama.arif@bytedance.com>, David
  Woodhouse <dwmw@amazon.co.uk>, Benjamin Herrenschmidt
 	<benh@kernel.crashing.org>
-Subject: [PATCH 04/15] kexec: Add KHO parsing support
-Date: Wed, 13 Dec 2023 00:04:41 +0000
-Message-ID: <20231213000452.88295-5-graf@amazon.com>
+Subject: [PATCH 06/15] arm64: Add KHO support
+Date: Wed, 13 Dec 2023 00:04:43 +0000
+Message-ID: <20231213000452.88295-7-graf@amazon.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20231213000452.88295-1-graf@amazon.com>
 References: <20231213000452.88295-1-graf@amazon.com>
 MIME-Version: 1.0
 X-Originating-IP: [10.253.83.51]
-X-ClientProxiedBy: EX19D031UWC002.ant.amazon.com (10.13.139.212) To
+X-ClientProxiedBy: EX19D042UWA003.ant.amazon.com (10.13.139.44) To
  EX19D020UWC004.ant.amazon.com (10.13.138.149)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231212_160553_638919_6E83F38F 
-X-CRM114-Status: GOOD (  39.28  )
+X-CRM114-CacheID: sfid-20231212_160621_357462_7D997B97 
+X-CRM114-Status: GOOD (  22.94  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,406 +100,195 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-When we have a KHO kexec, we get a device tree, mem cache and scratch
-region to populate the state of the system. Provide helper functions
-that allow architecture code to easily handle memory reservations based
-on them and give device drivers visibility into the KHO DT and memory
-reservations so they can recover their own state.
+We now have all bits in place to support KHO kexecs. This patch adds
+awareness of KHO in the kexec file as well as boot path for arm64 and
+adds the respective kconfig option to the architecture so that it can
+use KHO successfully.
 
 Signed-off-by: Alexander Graf <graf@amazon.com>
 ---
- Documentation/ABI/testing/sysfs-firmware-kho |   9 +
- MAINTAINERS                                  |   1 +
- include/linux/kexec.h                        |  23 ++
- kernel/Makefile                              |   1 +
- kernel/kexec_kho_in.c                        | 298 +++++++++++++++++++
- 5 files changed, 332 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-firmware-kho
- create mode 100644 kernel/kexec_kho_in.c
+ arch/arm64/Kconfig        | 12 ++++++++++++
+ arch/arm64/kernel/setup.c |  2 ++
+ arch/arm64/mm/init.c      |  8 ++++++++
+ drivers/of/fdt.c          | 41 +++++++++++++++++++++++++++++++++++++++
+ drivers/of/kexec.c        | 36 ++++++++++++++++++++++++++++++++++
+ 5 files changed, 99 insertions(+)
 
-diff --git a/Documentation/ABI/testing/sysfs-firmware-kho b/Documentation/ABI/testing/sysfs-firmware-kho
-new file mode 100644
-index 000000000000..e4ed2cb7c810
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-firmware-kho
-@@ -0,0 +1,9 @@
-+What:		/sys/firmware/kho/dt
-+Date:		December 2023
-+Contact:	Alexander Graf <graf@amazon.com>
-+Description:
-+		When the kernel was booted with Kexec HandOver (KHO),
-+		the device tree that carries metadata about the previous
-+		kernel's state is in this file. This file may disappear
-+		when all consumers of it finished to interpret their
-+		metadata.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 4ebf7c5fd424..ec92a0dd628d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11769,6 +11769,7 @@ M:	Eric Biederman <ebiederm@xmission.com>
- L:	kexec@lists.infradead.org
- S:	Maintained
- W:	http://kernel.org/pub/linux/utils/kernel/kexec/
-+F:	Documentation/ABI/testing/sysfs-firmware-kho
- F:	Documentation/ABI/testing/sysfs-kernel-kho
- F:	include/linux/kexec.h
- F:	include/uapi/linux/kexec.h
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index db2597e5550d..a3c4fee6f86a 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -528,12 +528,35 @@ enum kho_event {
- extern phys_addr_t kho_scratch_phys;
- extern phys_addr_t kho_scratch_len;
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 7b071a00425d..1ba338ce7598 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -1501,6 +1501,18 @@ config ARCH_SUPPORTS_CRASH_DUMP
+ config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
+ 	def_bool CRASH_CORE
  
-+/* ingest handover metadata */
-+void kho_reserve_mem(void);
-+void kho_populate(phys_addr_t dt_phys, phys_addr_t scratch_phys, u64 scratch_len,
-+		  phys_addr_t mem_phys, u64 mem_len);
-+void kho_populate_refcount(void);
-+void *kho_get_fdt(void);
-+void kho_return_mem(const struct kho_mem *mem);
-+void *kho_claim_mem(const struct kho_mem *mem);
-+static inline bool is_kho_boot(void)
-+{
-+	return !!kho_scratch_phys;
-+}
++config KEXEC_KHO
++	bool "kexec handover"
++	depends on KEXEC
++	select MEMBLOCK_SCRATCH
++	select LIBFDT
++	select CMA
++	help
++	  Allow kexec to hand over state across kernels by generating and
++	  passing additional metadata to the target kernel. This is useful
++	  to keep data or state alive across the kexec. For this to work,
++	  both source and target kernels need to have this option enabled.
 +
- /* egest handover metadata */
- void kho_reserve(void);
- int register_kho_notifier(struct notifier_block *nb);
- int unregister_kho_notifier(struct notifier_block *nb);
- bool kho_is_active(void);
- #else
-+/* ingest handover metadata */
-+static inline void kho_reserve_mem(void) { }
-+static inline bool is_kho_boot(void) { return false; }
-+static inline void kho_populate(phys_addr_t dt_phys, phys_addr_t scratch_phys,
-+				u64 scratch_len, phys_addr_t mem_phys,
-+				u64 mem_len) { }
-+static inline void kho_populate_refcount(void) { }
-+static inline void *kho_get_fdt(void) { return NULL; }
+ config TRANS_TABLE
+ 	def_bool y
+ 	depends on HIBERNATION || KEXEC_CORE
+diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+index 417a8a86b2db..8035b673d96d 100644
+--- a/arch/arm64/kernel/setup.c
++++ b/arch/arm64/kernel/setup.c
+@@ -346,6 +346,8 @@ void __init __no_sanitize_address setup_arch(char **cmdline_p)
+ 
+ 	paging_init();
+ 
++	kho_reserve_mem();
 +
-+/* egest handover metadata */
- static inline void kho_reserve(void) { }
- static inline int register_kho_notifier(struct notifier_block *nb) { return -EINVAL; }
- static inline int unregister_kho_notifier(struct notifier_block *nb) { return -EINVAL; }
-diff --git a/kernel/Makefile b/kernel/Makefile
-index a6bd31e22c09..7c3065e40c75 100644
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -73,6 +73,7 @@ obj-$(CONFIG_KEXEC_CORE) += kexec_core.o
- obj-$(CONFIG_KEXEC) += kexec.o
- obj-$(CONFIG_KEXEC_FILE) += kexec_file.o
- obj-$(CONFIG_KEXEC_ELF) += kexec_elf.o
-+obj-$(CONFIG_KEXEC_KHO) += kexec_kho_in.o
- obj-$(CONFIG_KEXEC_KHO) += kexec_kho_out.o
- obj-$(CONFIG_BACKTRACE_SELF_TEST) += backtracetest.o
- obj-$(CONFIG_COMPAT) += compat.o
-diff --git a/kernel/kexec_kho_in.c b/kernel/kexec_kho_in.c
-new file mode 100644
-index 000000000000..12ec54fc537a
---- /dev/null
-+++ b/kernel/kexec_kho_in.c
-@@ -0,0 +1,298 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * kexec_kho_in.c - kexec handover code to ingest metadata.
-+ * Copyright (C) 2023 Alexander Graf <graf@amazon.com>
-+ */
+ 	acpi_table_upgrade();
+ 
+ 	/* Parse the ACPI tables for possible boot-time configuration */
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 74c1db8ce271..254d82f3383a 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -358,6 +358,8 @@ void __init bootmem_init(void)
+ 	 */
+ 	arch_reserve_crashkernel();
+ 
++	kho_reserve();
 +
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/kexec.h>
-+#include <linux/device.h>
-+#include <linux/compiler.h>
-+#include <linux/io.h>
-+#include <linux/kmsg_dump.h>
-+#include <linux/memblock.h>
-+
-+/* The kho dt during runtime */
-+static void *fdt;
-+
-+/* Globals to hand over phys/len from early to runtime */
-+static phys_addr_t handover_phys __initdata;
-+static u32 handover_len __initdata;
-+
-+static phys_addr_t mem_phys __initdata;
-+static u32 mem_len __initdata;
-+
-+phys_addr_t kho_scratch_phys;
-+phys_addr_t kho_scratch_len;
-+
-+void *kho_get_fdt(void)
-+{
-+	return fdt;
-+}
-+EXPORT_SYMBOL_GPL(kho_get_fdt);
-+
-+/**
-+ * kho_populate_refcount - Scan the DT for any memory ranges. Increase the
-+ * affected pages' refcount by 1 for each.
-+ */
-+__init void kho_populate_refcount(void)
-+{
-+	void *fdt = kho_get_fdt();
-+	void *mem_virt = __va(mem_phys);
-+	int offset = 0, depth = 0, initial_depth = 0, len;
-+
-+	if (!fdt)
-+		return;
-+
-+	/* Go through the mem list and add 1 for each reference */
-+	for (offset = 0;
-+	     offset >= 0 && depth >= initial_depth;
-+	     offset = fdt_next_node(fdt, offset, &depth)) {
-+		const struct kho_mem *mems;
-+		u32 i;
-+
-+		mems = fdt_getprop(fdt, offset, "mem", &len);
-+		if (!mems || len & (sizeof(*mems) - 1))
-+			continue;
-+
-+		for (i = 0; i < len; i += sizeof(*mems)) {
-+			const struct kho_mem *mem = ((void *)mems) + i;
-+			u64 start_pfn = PFN_DOWN(mem->addr);
-+			u64 end_pfn = PFN_UP(mem->addr + mem->len);
-+			u64 pfn;
-+
-+			for (pfn = start_pfn; pfn < end_pfn; pfn++)
-+				get_page(pfn_to_page(pfn));
-+		}
-+	}
-+
+ 	memblock_dump_all();
+ }
+ 
+@@ -386,6 +388,12 @@ void __init mem_init(void)
+ 	/* this will put all unused low memory onto the freelists */
+ 	memblock_free_all();
+ 
 +	/*
-+	 * Then reduce the reference count by 1 to offset the initial ref count
-+	 * of 1. In addition, unreserve the page. That way, we can free_page()
-+	 * it for every consumer and automatically free it to the global memory
-+	 * pool when everyone is done.
++	 * Now that all KHO pages are marked as reserved, let's flip them back
++	 * to normal pages with accurate refcount.
 +	 */
-+	for (offset = 0; offset < mem_len; offset += sizeof(struct kho_mem)) {
-+		struct kho_mem *mem = mem_virt + offset;
-+		u64 start_pfn = PFN_DOWN(mem->addr);
-+		u64 end_pfn = PFN_UP(mem->addr + mem->len);
-+		u64 pfn;
++	kho_populate_refcount();
 +
-+		for (pfn = start_pfn; pfn < end_pfn; pfn++) {
-+			struct page *page = pfn_to_page(pfn);
-+
-+			/*
-+			 * This is similar to free_reserved_page(), but
-+			 * preserves the reference count
-+			 */
-+			ClearPageReserved(page);
-+			__free_page(page);
-+			adjust_managed_page_count(page, 1);
-+		}
-+	}
-+}
-+
-+static void kho_return_pfn(ulong pfn)
-+{
-+	struct page *page = pfn_to_page(pfn);
-+
-+	if (WARN_ON(!page))
-+		return;
-+	__free_page(page);
-+}
-+
+ 	/*
+ 	 * Check boundaries twice: Some fundamental inconsistencies can be
+ 	 * detected at build time already.
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index bf502ba8da95..af95139351ed 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -1006,6 +1006,44 @@ void __init early_init_dt_check_for_usable_mem_range(void)
+ 		memblock_add(rgn[i].base, rgn[i].size);
+ }
+ 
 +/**
-+ * kho_return_mem - Notify the kernel that initially reserved memory is no
-+ * longer needed. When the last consumer of a page returns their mem, kho
-+ * returns the page to the buddy allocator as free page.
++ * early_init_dt_check_kho - Decode info required for kexec handover from DT
 + */
-+void kho_return_mem(const struct kho_mem *mem)
++void __init early_init_dt_check_kho(void)
 +{
-+	uint64_t start_pfn, end_pfn, pfn;
++#ifdef CONFIG_KEXEC_KHO
++	unsigned long node = chosen_node_offset;
++	u64 kho_start, scratch_start, scratch_size, mem_start, mem_size;
++	const __be32 *p;
++	int l;
 +
-+	start_pfn = PFN_DOWN(mem->addr);
-+	end_pfn = PFN_UP(mem->addr + mem->len);
-+
-+	for (pfn = start_pfn; pfn < end_pfn; pfn++)
-+		kho_return_pfn(pfn);
-+}
-+EXPORT_SYMBOL_GPL(kho_return_mem);
-+
-+static void kho_claim_pfn(ulong pfn)
-+{
-+	struct page *page = pfn_to_page(pfn);
-+
-+	WARN_ON(!page);
-+	if (WARN_ON(page_count(page) != 1))
-+		pr_err("Claimed non kho pfn %lx", pfn);
-+}
-+
-+/**
-+ * kho_claim_mem - Notify the kernel that a handed over memory range is now in
-+ * use by a kernel subsystem and considered an allocated page. This function
-+ * removes the reserved state for all pages that the mem spans.
-+ */
-+void *kho_claim_mem(const struct kho_mem *mem)
-+{
-+	u64 start_pfn, end_pfn, pfn;
-+	void *va = __va(mem->addr);
-+
-+	start_pfn = PFN_DOWN(mem->addr);
-+	end_pfn = PFN_UP(mem->addr + mem->len);
-+
-+	for (pfn = start_pfn; pfn < end_pfn; pfn++)
-+		kho_claim_pfn(pfn);
-+
-+	return va;
-+}
-+EXPORT_SYMBOL_GPL(kho_claim_mem);
-+
-+/**
-+ * kho_reserve_mem - Adds all memory reservations into memblocks
-+ * and moves us out of the scratch only phase. Must be called after page tables
-+ * are initialized and memblock_allow_resize().
-+ */
-+void __init kho_reserve_mem(void)
-+{
-+	void *mem_virt = __va(mem_phys);
-+	int off, err;
-+
-+	if (!handover_phys || !mem_phys)
++	if ((long)node < 0)
 +		return;
 +
-+	/*
-+	 * We reached here because we are running inside a working linear map
-+	 * that allows us to resize memblocks dynamically. Use the chance and
-+	 * populate the global fdt pointer
-+	 */
-+	fdt = __va(handover_phys);
-+
-+	off = fdt_path_offset(fdt, "/");
-+	if (off < 0) {
-+		fdt = NULL;
++	p = of_get_flat_dt_prop(node, "linux,kho-dt", &l);
++	if (l != (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32))
 +		return;
-+	}
 +
-+	err = fdt_node_check_compatible(fdt, off, "kho-v1");
-+	if (err) {
-+		pr_warn("KHO has invalid compatible, disabling.");
++	kho_start = dt_mem_next_cell(dt_root_addr_cells, &p);
++
++	p = of_get_flat_dt_prop(node, "linux,kho-scratch", &l);
++	if (l != (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32))
 +		return;
-+	}
 +
-+	/* Then populate all preserved memory areas as reserved */
-+	for (off = 0; off < mem_len; off += sizeof(struct kho_mem)) {
-+		struct kho_mem *mem = mem_virt + off;
++	scratch_start = dt_mem_next_cell(dt_root_addr_cells, &p);
++	scratch_size = dt_mem_next_cell(dt_root_addr_cells, &p);
 +
-+		memblock_reserve(mem->addr, mem->len);
-+	}
++	p = of_get_flat_dt_prop(node, "linux,kho-mem", &l);
++	if (l != (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32))
++		return;
 +
-+	/* Unreserve the mem cache - we don't need it from here on */
-+	memblock_phys_free(mem_phys, mem_len);
++	mem_start = dt_mem_next_cell(dt_root_addr_cells, &p);
++	mem_size = dt_mem_next_cell(dt_root_addr_cells, &p);
 +
-+	/*
-+	 * Now we know about all memory reservations, release the scratch only
-+	 * constraint and allow normal allocations from the scratch region.
-+	 */
-+	memblock_clear_scratch_only();
++	kho_populate(kho_start, scratch_start, scratch_size, mem_start, mem_size);
++#endif
 +}
 +
-+/* Handling for /sys/firmware/kho */
-+static struct kobject *kho_kobj;
+ #ifdef CONFIG_SERIAL_EARLYCON
+ 
+ int __init early_init_dt_scan_chosen_stdout(void)
+@@ -1304,6 +1342,9 @@ void __init early_init_dt_scan_nodes(void)
+ 
+ 	/* Handle linux,usable-memory-range property */
+ 	early_init_dt_check_for_usable_mem_range();
 +
-+static ssize_t raw_read(struct file *file, struct kobject *kobj,
-+			struct bin_attribute *attr, char *buf,
-+			loff_t pos, size_t count)
-+{
-+	memcpy(buf, attr->private + pos, count);
-+	return count;
-+}
-+
-+static BIN_ATTR(dt, 0400, raw_read, NULL, 0);
-+
-+static __init int kho_in_init(void)
++	/* Handle kexec handover */
++	early_init_dt_check_kho();
+ }
+ 
+ bool __init early_init_dt_scan(void *params)
+diff --git a/drivers/of/kexec.c b/drivers/of/kexec.c
+index 68278340cecf..a612e6bb8c75 100644
+--- a/drivers/of/kexec.c
++++ b/drivers/of/kexec.c
+@@ -264,6 +264,37 @@ static inline int setup_ima_buffer(const struct kimage *image, void *fdt,
+ }
+ #endif /* CONFIG_IMA_KEXEC */
+ 
++static int kho_add_chosen(const struct kimage *image, void *fdt, int chosen_node)
 +{
 +	int ret = 0;
 +
-+	if (!fdt)
-+		return 0;
++#ifdef CONFIG_KEXEC_KHO
++	if (!image->kho.dt.buffer || !image->kho.mem_cache.buffer)
++		goto out;
 +
-+	kho_kobj = kobject_create_and_add("kho", firmware_kobj);
-+	if (!kho_kobj) {
-+		ret = -ENOMEM;
-+		goto err;
-+	}
++	pr_debug("Adding kho metadata to DT");
 +
-+	bin_attr_dt.size = fdt_totalsize(fdt);
-+	bin_attr_dt.private = fdt;
-+	ret = sysfs_create_bin_file(kho_kobj, &bin_attr_dt);
++	ret = fdt_appendprop_addrrange(fdt, 0, chosen_node, "linux,kho-dt",
++				       image->kho.dt.mem, image->kho.dt.memsz);
 +	if (ret)
-+		goto err;
++		goto out;
 +
-+err:
++	ret = fdt_appendprop_addrrange(fdt, 0, chosen_node, "linux,kho-scratch",
++				       kho_scratch_phys, kho_scratch_len);
++	if (ret)
++		goto out;
++
++	ret = fdt_appendprop_addrrange(fdt, 0, chosen_node, "linux,kho-mem",
++				       image->kho.mem_cache.mem,
++				       image->kho.mem_cache.bufsz);
++	if (ret)
++		goto out;
++
++out:
++#endif
 +	return ret;
 +}
-+subsys_initcall(kho_in_init);
 +
-+void __init kho_populate(phys_addr_t handover_dt_phys, phys_addr_t scratch_phys,
-+			 u64 scratch_len, phys_addr_t mem_cache_phys,
-+			 u64 mem_cache_len)
-+{
-+	void *handover_dt;
+ /*
+  * of_kexec_alloc_and_setup_fdt - Alloc and setup a new Flattened Device Tree
+  *
+@@ -412,6 +443,11 @@ void *of_kexec_alloc_and_setup_fdt(const struct kimage *image,
+ 		}
+ 	}
+ 
++	/* Add kho metadata if this is a KHO image */
++	ret = kho_add_chosen(image, fdt, chosen_node);
++	if (ret)
++		goto out;
 +
-+	/* Determine the real size of the DT */
-+	handover_dt = early_memremap(handover_dt_phys, sizeof(struct fdt_header));
-+	if (!handover_dt) {
-+		pr_warn("setup: failed to memremap kexec FDT (0x%llx)\n", handover_dt_phys);
-+		return;
-+	}
-+
-+	if (fdt_check_header(handover_dt)) {
-+		pr_warn("setup: kexec handover FDT is invalid (0x%llx)\n", handover_dt_phys);
-+		early_memunmap(handover_dt, PAGE_SIZE);
-+		return;
-+	}
-+
-+	handover_len = fdt_totalsize(handover_dt);
-+	handover_phys = handover_dt_phys;
-+
-+	/* Reserve the DT so we can still access it in late boot */
-+	memblock_reserve(handover_phys, handover_len);
-+
-+	/* Reserve the mem cache so we can still access it later */
-+	memblock_reserve(mem_cache_phys, mem_cache_len);
-+
-+	/*
-+	 * We pass a safe contiguous block of memory to use for early boot purporses from
-+	 * the previous kernel so that we can resize the memblock array as needed.
-+	 */
-+	memblock_add(scratch_phys, scratch_len);
-+
-+	if (WARN_ON(memblock_mark_scratch(scratch_phys, scratch_len))) {
-+		pr_err("Kexec failed to mark the scratch region. Disabling KHO.");
-+		handover_len = 0;
-+		handover_phys = 0;
-+		return;
-+	}
-+	pr_debug("Marked 0x%lx+0x%lx as scratch", (long)scratch_phys, (long)scratch_len);
-+
-+	/*
-+	 * Now that we have a viable region of scratch memory, let's tell the memblocks
-+	 * allocator to only use that for any allocations. That way we ensure that nothing
-+	 * scribbles over in use data while we initialize the page tables which we will need
-+	 * to ingest all memory reservations from the previous kernel.
-+	 */
-+	memblock_set_scratch_only();
-+
-+	early_memunmap(handover_dt, sizeof(struct fdt_header));
-+
-+	/* Remember the mem cache location for kho_reserve_mem() */
-+	mem_len = mem_cache_len;
-+	mem_phys = mem_cache_phys;
-+
-+	/* Remember the scratch block - we will reuse it again for the next kexec */
-+	kho_scratch_phys = scratch_phys;
-+	kho_scratch_len = scratch_len;
-+
-+	pr_info("setup: Found kexec handover data. Will skip init for some devices\n");
-+}
+ 	/* add bootargs */
+ 	if (cmdline) {
+ 		ret = fdt_setprop_string(fdt, chosen_node, "bootargs", cmdline);
 -- 
 2.40.1
 
