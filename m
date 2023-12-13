@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 69DA9C4332F
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 72C84C4167D
 	for <kexec@archiver.kernel.org>; Wed, 13 Dec 2023 11:23:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
@@ -12,49 +12,49 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=kRXQVBM47WPRszMQxmov/D8Z8PU27JRxNTcWOOJyNUQ=; b=ySe+35USPp/crd
-	kn/SxRqFko8FkrFrd/wnQaybvs2DnLOYElSN86eSKPyNYvBM+fXkFXoGZHS8PaEp3h7S+cwTzIeOL
-	2Zm9loc2fkUS4oCLIsRHyHTk7hBIp3lrSspM10S/jOFaJzAeBngzD2F+AyBoNISNzS5ewYngkSf0o
-	YgpxceYqwSZJXOujP3qBFaN77E9WLjcZwc5xRgLKnzIUdtW69v+AT62xNJczGnOiApdOxcTjf/uwq
-	XGMPXWCWoPxposOJ9w99ltTgRa/fkKdadF305Hlpp2DGmk8Lq+Eh09Um+GapXrFmUYUyZVqfKr3x3
-	m/IJxRANY9+MPI0Yj4Eg==;
+	List-Owner; bh=CRgqeE2nfg/qXBlalLIKhzPAF97sV63vCGokNOXOrMk=; b=zgqBUSeK634eVi
+	pN60fNe2yq+leuC8VGdjIvlJOSchOoSgQnBLwzkdC3dJwI5qfCm90x143Kr083gIWyDuXh97x3lnC
+	1bg5tUC4p3PeZBQbJOLNe4AzGsPInMrE2U/8Ah5+JZ0eKcya4GLahmSEGVEYOquadg2eNElO2sbFo
+	E26KFiV55PR1O327AQZrxaOYymvHDbD2T27Pk9mcE9Ew9B9P0efgIdENDgXcuZMF+NwAqwf3KS8xJ
+	APEhqAhHuY1KBJggQCInXjA8+ULviolNAneL/GRb/zqm0itvo9p9ie3oHFygAyt8SDsfhzCDGKv6a
+	FIoIPEuuN4vIMQQARlvw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rDNKg-00EReP-0V;
-	Wed, 13 Dec 2023 11:23:18 +0000
-Received: from mgamail.intel.com ([192.55.52.115])
+	id 1rDNKh-00ERft-1g;
+	Wed, 13 Dec 2023 11:23:19 +0000
+Received: from mgamail.intel.com ([134.134.136.65])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rDNKb-00ERcU-0N;
+	id 1rDNKa-00ERc3-0J;
 	Wed, 13 Dec 2023 11:23:15 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702466593; x=1734002593;
+  t=1702466592; x=1734002592;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=EFKlP2H/rVAQxxvmv92h/YY7+JQJiLeLpwP988CiQ8I=;
-  b=Ff8Y/5cgwQ/cNPQhgw4k0ppcoG3U1Z0Eeq3eP+UeFxAh0mLVxBFJYAMs
-   7sLdmXZZRO5L07hweQA4VEUcPmPDhSaPUzdaTXxn7euY2LuX1SrleYc1F
-   ONPFhl1w7Kx6FGgw/19bIGhSOJ+s92QQxg0PikZcefoL2W85ehkXr580n
-   U8/G2qE6AiFsgqFKOmt0zoLUjy4eHSkkmdHRSlbMuaYAUSlf7stn07PMV
-   6TXlIUEABbF2a6LuCJpBJWzbMmfk1z6YDHVyGbT4Efped8rUmRDVYCV68
-   Mt6VJE1pgqpTrQm6gzYkOpaNQjSSdob9iRy2SXI7JwztlO24y8otJUnqG
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="394701097"
+  bh=0vG05tOcWt8hNkb/0MfvDKdSwDkxJN+d9TF+RoFO0kI=;
+  b=MiZtIqR+miyYS85jcAcGjyASGq0focOBre35ccJD2LPOLfl/u/+SIQ0E
+   ZjfbHZpjTlf8fzcRp1DM22MjyPYJj0VT0Lyq+nmZTQGT/Ggo1yeEJbtnt
+   Se0wizBdrgVElN6Ig9H994trsie3L62nvcUSixFW6ZMA00Oe3MFv/c7kW
+   wvN5T92fsinq2428+Z2mTKzhx44Y3ttwKjil4K5SVJtB8YXFzFmCD2ax6
+   7XoYzDZJBWS74aJk0bclFarkba7E1KFSpNuEogEl45uH5C5p7VSNIPkpP
+   asTRokKNJpvv52LDU4vpVQDjAHoWf//MJ6hH//ASoLctpXPC4ZLaKj/ql
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="398793308"
 X-IronPort-AV: E=Sophos;i="6.04,272,1695711600"; 
-   d="scan'208";a="394701097"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 03:23:11 -0800
+   d="scan'208";a="398793308"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 03:23:10 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="802851000"
+X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="864592315"
 X-IronPort-AV: E=Sophos;i="6.04,272,1695711600"; 
-   d="scan'208";a="802851000"
+   d="scan'208";a="864592315"
 Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga008.jf.intel.com with ESMTP; 13 Dec 2023 03:23:04 -0800
+  by FMSMGA003.fm.intel.com with ESMTP; 13 Dec 2023 03:23:03 -0800
 Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1rDNKP-000KTb-1L;
+	id 1rDNKP-000KTd-1U;
 	Wed, 13 Dec 2023 11:23:01 +0000
-Date: Wed, 13 Dec 2023 19:22:33 +0800
+Date: Wed, 13 Dec 2023 19:22:32 +0800
 From: kernel test robot <lkp@intel.com>
 To: Alexander Graf <graf@amazon.com>, linux-kernel@vger.kernel.org
 Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
@@ -63,6 +63,7 @@ Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
 	kexec@lists.infradead.org, linux-doc@vger.kernel.org,
 	x86@kernel.org, Eric Biederman <ebiederm@xmission.com>,
 	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
 	Rob Herring <robh+dt@kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Andrew Morton <akpm@linux-foundation.org>,
@@ -76,15 +77,15 @@ Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
 	Usama Arif <usama.arif@bytedance.com>,
 	David Woodhouse <dwmw@amazon.co.uk>,
 	Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH 06/15] arm64: Add KHO support
-Message-ID: <202312131958.BJ7skdaN-lkp@intel.com>
-References: <20231213000452.88295-7-graf@amazon.com>
+Subject: Re: [PATCH 08/15] tracing: Introduce names for ring buffers
+Message-ID: <202312131922.5dJORQu4-lkp@intel.com>
+References: <20231213000452.88295-9-graf@amazon.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20231213000452.88295-7-graf@amazon.com>
+In-Reply-To: <20231213000452.88295-9-graf@amazon.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231213_032313_172405_5DE25597 
-X-CRM114-Status: GOOD (  14.71  )
+X-CRM114-CacheID: sfid-20231213_032312_199144_46E42289 
+X-CRM114-Status: GOOD (  14.54  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -103,80 +104,117 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 Hi Alexander,
 
-kernel test robot noticed the following build warnings:
+kernel test robot noticed the following build errors:
 
-[auto build test WARNING on tip/x86/core]
-[also build test WARNING on arm64/for-next/core akpm-mm/mm-everything linus/master v6.7-rc5 next-20231213]
+[auto build test ERROR on tip/x86/core]
+[also build test ERROR on arm64/for-next/core akpm-mm/mm-everything linus/master v6.7-rc5 next-20231213]
 [If your patch is applied to the wrong git tree, kindly drop us a note.
 And when submitting patch, we suggest to use '--base' as documented in
 https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
 url:    https://github.com/intel-lab-lkp/linux/commits/Alexander-Graf/mm-memblock-Add-support-for-scratch-memory/20231213-080941
 base:   tip/x86/core
-patch link:    https://lore.kernel.org/r/20231213000452.88295-7-graf%40amazon.com
-patch subject: [PATCH 06/15] arm64: Add KHO support
-config: i386-buildonly-randconfig-001-20231213 (https://download.01.org/0day-ci/archive/20231213/202312131958.BJ7skdaN-lkp@intel.com/config)
+patch link:    https://lore.kernel.org/r/20231213000452.88295-9-graf%40amazon.com
+patch subject: [PATCH 08/15] tracing: Introduce names for ring buffers
+config: i386-buildonly-randconfig-003-20231213 (https://download.01.org/0day-ci/archive/20231213/202312131922.5dJORQu4-lkp@intel.com/config)
 compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231213/202312131958.BJ7skdaN-lkp@intel.com/reproduce)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231213/202312131922.5dJORQu4-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202312131958.BJ7skdaN-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202312131922.5dJORQu4-lkp@intel.com/
 
-All warnings (new ones prefixed by >>):
+All errors (new ones prefixed by >>):
 
->> drivers/of/fdt.c:1012:13: warning: no previous prototype for function 'early_init_dt_check_kho' [-Wmissing-prototypes]
-   void __init early_init_dt_check_kho(void)
-               ^
-   drivers/of/fdt.c:1012:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
-   void __init early_init_dt_check_kho(void)
+>> kernel/trace/ring_buffer_benchmark.c:435:53: error: too few arguments provided to function-like macro invocation
+           buffer = ring_buffer_alloc(1000000, RB_FL_OVERWRITE);
+                                                              ^
+   include/linux/ring_buffer.h:96:9: note: macro 'ring_buffer_alloc' defined here
+   #define ring_buffer_alloc(name, size, flags)                    \
+           ^
+>> kernel/trace/ring_buffer_benchmark.c:435:11: error: use of undeclared identifier 'ring_buffer_alloc'; did you mean '__ring_buffer_alloc'?
+           buffer = ring_buffer_alloc(1000000, RB_FL_OVERWRITE);
+                    ^~~~~~~~~~~~~~~~~
+                    __ring_buffer_alloc
+   include/linux/ring_buffer.h:88:1: note: '__ring_buffer_alloc' declared here
+   __ring_buffer_alloc(const char *name, unsigned long size, unsigned flags,
    ^
-   static 
-   1 warning generated.
+   2 errors generated.
+--
+>> kernel/trace/ring_buffer.c:6096:65: error: too few arguments provided to function-like macro invocation
+           buffer = ring_buffer_alloc(RB_TEST_BUFFER_SIZE, RB_FL_OVERWRITE);
+                                                                          ^
+   include/linux/ring_buffer.h:96:9: note: macro 'ring_buffer_alloc' defined here
+   #define ring_buffer_alloc(name, size, flags)                    \
+           ^
+>> kernel/trace/ring_buffer.c:6096:11: error: use of undeclared identifier 'ring_buffer_alloc'; did you mean '__ring_buffer_alloc'?
+           buffer = ring_buffer_alloc(RB_TEST_BUFFER_SIZE, RB_FL_OVERWRITE);
+                    ^~~~~~~~~~~~~~~~~
+                    __ring_buffer_alloc
+   kernel/trace/ring_buffer.c:1873:19: note: '__ring_buffer_alloc' declared here
+   EXPORT_SYMBOL_GPL(__ring_buffer_alloc);
+                     ^
+   2 errors generated.
 
 
-vim +/early_init_dt_check_kho +1012 drivers/of/fdt.c
+vim +435 kernel/trace/ring_buffer_benchmark.c
 
-  1008	
-  1009	/**
-  1010	 * early_init_dt_check_kho - Decode info required for kexec handover from DT
-  1011	 */
-> 1012	void __init early_init_dt_check_kho(void)
-  1013	{
-  1014	#ifdef CONFIG_KEXEC_KHO
-  1015		unsigned long node = chosen_node_offset;
-  1016		u64 kho_start, scratch_start, scratch_size, mem_start, mem_size;
-  1017		const __be32 *p;
-  1018		int l;
-  1019	
-  1020		if ((long)node < 0)
-  1021			return;
-  1022	
-  1023		p = of_get_flat_dt_prop(node, "linux,kho-dt", &l);
-  1024		if (l != (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32))
-  1025			return;
-  1026	
-  1027		kho_start = dt_mem_next_cell(dt_root_addr_cells, &p);
-  1028	
-  1029		p = of_get_flat_dt_prop(node, "linux,kho-scratch", &l);
-  1030		if (l != (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32))
-  1031			return;
-  1032	
-  1033		scratch_start = dt_mem_next_cell(dt_root_addr_cells, &p);
-  1034		scratch_size = dt_mem_next_cell(dt_root_addr_cells, &p);
-  1035	
-  1036		p = of_get_flat_dt_prop(node, "linux,kho-mem", &l);
-  1037		if (l != (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32))
-  1038			return;
-  1039	
-  1040		mem_start = dt_mem_next_cell(dt_root_addr_cells, &p);
-  1041		mem_size = dt_mem_next_cell(dt_root_addr_cells, &p);
-  1042	
-  1043		kho_populate(kho_start, scratch_start, scratch_size, mem_start, mem_size);
-  1044	#endif
-  1045	}
-  1046	
+5092dbc96f3acd Steven Rostedt 2009-05-05  429  
+5092dbc96f3acd Steven Rostedt 2009-05-05  430  static int __init ring_buffer_benchmark_init(void)
+5092dbc96f3acd Steven Rostedt 2009-05-05  431  {
+5092dbc96f3acd Steven Rostedt 2009-05-05  432  	int ret;
+5092dbc96f3acd Steven Rostedt 2009-05-05  433  
+5092dbc96f3acd Steven Rostedt 2009-05-05  434  	/* make a one meg buffer in overwite mode */
+5092dbc96f3acd Steven Rostedt 2009-05-05 @435  	buffer = ring_buffer_alloc(1000000, RB_FL_OVERWRITE);
+5092dbc96f3acd Steven Rostedt 2009-05-05  436  	if (!buffer)
+5092dbc96f3acd Steven Rostedt 2009-05-05  437  		return -ENOMEM;
+5092dbc96f3acd Steven Rostedt 2009-05-05  438  
+5092dbc96f3acd Steven Rostedt 2009-05-05  439  	if (!disable_reader) {
+5092dbc96f3acd Steven Rostedt 2009-05-05  440  		consumer = kthread_create(ring_buffer_consumer_thread,
+5092dbc96f3acd Steven Rostedt 2009-05-05  441  					  NULL, "rb_consumer");
+5092dbc96f3acd Steven Rostedt 2009-05-05  442  		ret = PTR_ERR(consumer);
+5092dbc96f3acd Steven Rostedt 2009-05-05  443  		if (IS_ERR(consumer))
+5092dbc96f3acd Steven Rostedt 2009-05-05  444  			goto out_fail;
+5092dbc96f3acd Steven Rostedt 2009-05-05  445  	}
+5092dbc96f3acd Steven Rostedt 2009-05-05  446  
+5092dbc96f3acd Steven Rostedt 2009-05-05  447  	producer = kthread_run(ring_buffer_producer_thread,
+5092dbc96f3acd Steven Rostedt 2009-05-05  448  			       NULL, "rb_producer");
+5092dbc96f3acd Steven Rostedt 2009-05-05  449  	ret = PTR_ERR(producer);
+5092dbc96f3acd Steven Rostedt 2009-05-05  450  
+5092dbc96f3acd Steven Rostedt 2009-05-05  451  	if (IS_ERR(producer))
+5092dbc96f3acd Steven Rostedt 2009-05-05  452  		goto out_kill;
+5092dbc96f3acd Steven Rostedt 2009-05-05  453  
+98e4833ba3c314 Ingo Molnar    2009-11-23  454  	/*
+98e4833ba3c314 Ingo Molnar    2009-11-23  455  	 * Run them as low-prio background tasks by default:
+98e4833ba3c314 Ingo Molnar    2009-11-23  456  	 */
+7ac07434048001 Steven Rostedt 2009-11-25  457  	if (!disable_reader) {
+4fd5750af02ab7 Peter Zijlstra 2020-07-20  458  		if (consumer_fifo >= 2)
+4fd5750af02ab7 Peter Zijlstra 2020-07-20  459  			sched_set_fifo(consumer);
+4fd5750af02ab7 Peter Zijlstra 2020-07-20  460  		else if (consumer_fifo == 1)
+4fd5750af02ab7 Peter Zijlstra 2020-07-20  461  			sched_set_fifo_low(consumer);
+4fd5750af02ab7 Peter Zijlstra 2020-07-20  462  		else
+7ac07434048001 Steven Rostedt 2009-11-25  463  			set_user_nice(consumer, consumer_nice);
+7ac07434048001 Steven Rostedt 2009-11-25  464  	}
+7ac07434048001 Steven Rostedt 2009-11-25  465  
+4fd5750af02ab7 Peter Zijlstra 2020-07-20  466  	if (producer_fifo >= 2)
+4fd5750af02ab7 Peter Zijlstra 2020-07-20  467  		sched_set_fifo(producer);
+4fd5750af02ab7 Peter Zijlstra 2020-07-20  468  	else if (producer_fifo == 1)
+4fd5750af02ab7 Peter Zijlstra 2020-07-20  469  		sched_set_fifo_low(producer);
+4fd5750af02ab7 Peter Zijlstra 2020-07-20  470  	else
+7ac07434048001 Steven Rostedt 2009-11-25  471  		set_user_nice(producer, producer_nice);
+98e4833ba3c314 Ingo Molnar    2009-11-23  472  
+5092dbc96f3acd Steven Rostedt 2009-05-05  473  	return 0;
+5092dbc96f3acd Steven Rostedt 2009-05-05  474  
+5092dbc96f3acd Steven Rostedt 2009-05-05  475   out_kill:
+5092dbc96f3acd Steven Rostedt 2009-05-05  476  	if (consumer)
+5092dbc96f3acd Steven Rostedt 2009-05-05  477  		kthread_stop(consumer);
+5092dbc96f3acd Steven Rostedt 2009-05-05  478  
+5092dbc96f3acd Steven Rostedt 2009-05-05  479   out_fail:
+5092dbc96f3acd Steven Rostedt 2009-05-05  480  	ring_buffer_free(buffer);
+5092dbc96f3acd Steven Rostedt 2009-05-05  481  	return ret;
+5092dbc96f3acd Steven Rostedt 2009-05-05  482  }
+5092dbc96f3acd Steven Rostedt 2009-05-05  483  
 
 -- 
 0-DAY CI Kernel Test Service
