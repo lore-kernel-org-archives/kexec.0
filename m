@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 57B35C4167B
-	for <kexec@archiver.kernel.org>; Wed, 13 Dec 2023 00:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7A388C4167B
+	for <kexec@archiver.kernel.org>; Wed, 13 Dec 2023 00:07:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=hoCwEaxc10X4BL2M9a7Mruo+yqFgm+gOHXV7cOK2lhI=; b=Cfvju3B90foeJP
-	/ScL1z6DgCGDw5iQGEqis1xx9jyHCfN695yQs/Ws8+8IYK4ddbr8hyx1c1V5a/xqzNQNbjzjnsSkw
-	3Q8WHRr/rpYv32MOUB5Qm5GHtzbcukg69+G1fKYUNjMBt9GhBrTBV1m8U1OfZ6+A2ZEuDc9wCJo4A
-	G70dC5GkRebvOgvCPsvbrSTHmN1Wts7kEoW3AmaSkE8gXJXlDu3x5JKdg3J56sCMEarYo2UE4ulBo
-	pTpo+Ozh/QyeFJ3Ky3r5FIv5w/PtZe/dphPm6s0ZY/D5Bam1Q/99YSfBGsGnfbwHZ5AKFE46wnvlO
-	GkeGJMufdG3xm+YEs/oA==;
+	List-Owner; bh=XbcxVZ5uTivnW4vnS1ykYUgmQUT1+kT4dEjzRv1RnC0=; b=fe9SwnkxcYsHuV
+	dcMJ0ivA05HSmnxNbCa7Kf4CQT/CLxLzQcAaI1M2nDEHhp0J1vQzcCxqtiG7KtqorZfNn6RqxaU5h
+	4n6MomuLMoMlLSBehSU2yZNsuYKmpsD0OqKmg5xGLlfohRamH+JXNUbw5vsTi0BdokO7x7D5JyeSV
+	lHZirwH1AoBoWdYZlaTpTDSsB+XzQCAM1OeSkMwFlikHzvjeKypV5VnXAngnrzTU5mggFubQ39ECm
+	dYpiH7wXc/aWXr4+VN0AsDO32ONfvOixIvd8eg4HzzGKDCYxZnITVPMcOSyG14xWy5+M29iRMGNdj
+	xedMP2/4+MVIJa+41aUg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rDCm2-00D7lR-24;
-	Wed, 13 Dec 2023 00:06:50 +0000
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10])
+	id 1rDCmf-00D88Y-0t;
+	Wed, 13 Dec 2023 00:07:29 +0000
+Received: from smtp-fw-80007.amazon.com ([99.78.197.218])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rDClz-00D7j5-04;
-	Wed, 13 Dec 2023 00:06:48 +0000
+	id 1rDCmc-00D877-0B;
+	Wed, 13 Dec 2023 00:07:27 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1702426007; x=1733962007;
+  t=1702426046; x=1733962046;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=W4f7NpctXKZH3cmvw+OkpzmI5P36spomZeCIdEWiFNg=;
-  b=DkbR7zzfwsrmsGshX3hhRfCzBMcF7zk+VBbnG4zcEKOkwWOOS0Lfdhrw
-   qlO/PG95sHD3MdIQFzZA51dRINcNWCTELZ0NXPFn9gfITZpHDHUlUZ4Iv
-   HB6jDwD1t7CuMndMzQ0C/nkw4BvFnwtk7KddlrioPDHu+hm4LLRfxCDpi
-   g=;
+  bh=DMVF+g90vjiGQ2+mH0UneD/R5uFZpo7f74QocXGx4Fo=;
+  b=tRDtD+LhnYzgtOK1RJfKEFTrLnAAz406kekZi6KY6QrVAW33tinmuhN4
+   koYhzwapNq6ehT8uQlyUROM/4ZlgN08kqB34wHcGojMZLRgVh1JhUo3gQ
+   clR2SbzmhgEZx8r/fsv1KZLsvSmO2kvcfMropD6NjyXpz8elDVTncrJwH
+   A=;
 X-IronPort-AV: E=Sophos;i="6.04,271,1695686400"; 
-   d="scan'208";a="316893079"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-pdx-2b-m6i4x-cadc3fbd.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-33001.sea14.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 00:06:43 +0000
-Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (pdx2-ws-svc-p26-lb5-vlan2.pdx.amazon.com [10.39.38.66])
-	by email-inbound-relay-pdx-2b-m6i4x-cadc3fbd.us-west-2.amazon.com (Postfix) with ESMTPS id 1B5EEA0AE1;
-	Wed, 13 Dec 2023 00:06:38 +0000 (UTC)
-Received: from EX19MTAUWA002.ant.amazon.com [10.0.38.20:30423]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.11.243:2525] with esmtp (Farcaster)
- id f27b5327-6195-40ac-be88-dcf792d94fa4; Wed, 13 Dec 2023 00:06:38 +0000 (UTC)
-X-Farcaster-Flow-ID: f27b5327-6195-40ac-be88-dcf792d94fa4
+   d="scan'208";a="259290097"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-iad-1a-m6i4x-bbc6e425.us-east-1.amazon.com) ([10.25.36.210])
+  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 00:07:24 +0000
+Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (iad7-ws-svc-p70-lb3-vlan3.iad.amazon.com [10.32.235.38])
+	by email-inbound-relay-iad-1a-m6i4x-bbc6e425.us-east-1.amazon.com (Postfix) with ESMTPS id 9684F806AE;
+	Wed, 13 Dec 2023 00:07:12 +0000 (UTC)
+Received: from EX19MTAUWC001.ant.amazon.com [10.0.38.20:42528]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.34.165:2525] with esmtp (Farcaster)
+ id d4eed612-db0d-44d2-b4c4-2cf51a2e8457; Wed, 13 Dec 2023 00:07:11 +0000 (UTC)
+X-Farcaster-Flow-ID: d4eed612-db0d-44d2-b4c4-2cf51a2e8457
 Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
+ EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 13 Dec 2023 00:06:38 +0000
+ 15.2.1118.40; Wed, 13 Dec 2023 00:07:11 +0000
 Received: from dev-dsk-graf-1a-5ce218e4.eu-west-1.amazon.com (10.253.83.51) by
  EX19D020UWC004.ant.amazon.com (10.13.138.149) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 13 Dec 2023 00:06:34 +0000
+ 15.2.1118.40; Wed, 13 Dec 2023 00:07:07 +0000
 From: Alexander Graf <graf@amazon.com>
 To: <linux-kernel@vger.kernel.org>
 CC: <linux-trace-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
@@ -71,19 +71,19 @@ CC: <linux-trace-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
 	<anthony.yznaga@oracle.com>, Usama Arif <usama.arif@bytedance.com>, David
  Woodhouse <dwmw@amazon.co.uk>, Benjamin Herrenschmidt
 	<benh@kernel.crashing.org>
-Subject: [PATCH 09/15] tracing: Introduce names for events
-Date: Wed, 13 Dec 2023 00:04:46 +0000
-Message-ID: <20231213000452.88295-10-graf@amazon.com>
+Subject: [PATCH 12/15] tracing: Recover trace buffers from kexec handover
+Date: Wed, 13 Dec 2023 00:04:49 +0000
+Message-ID: <20231213000452.88295-13-graf@amazon.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20231213000452.88295-1-graf@amazon.com>
 References: <20231213000452.88295-1-graf@amazon.com>
 MIME-Version: 1.0
 X-Originating-IP: [10.253.83.51]
-X-ClientProxiedBy: EX19D036UWB002.ant.amazon.com (10.13.139.139) To
+X-ClientProxiedBy: EX19D037UWB002.ant.amazon.com (10.13.138.121) To
  EX19D020UWC004.ant.amazon.com (10.13.138.149)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231212_160647_112389_FB2726AD 
-X-CRM114-Status: GOOD (  24.76  )
+X-CRM114-CacheID: sfid-20231212_160726_148383_FB9DEA3D 
+X-CRM114-Status: GOOD (  24.74  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,291 +100,260 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-With KHO (Kexec HandOver), we want to preserve trace buffers. To parse
-them, we need to ensure that all trace events that exist in the logs are
-identical to the ones we parse as. That means we need to match the
-events before and after kexec.
+When kexec handover is in place, we now know the location of all
+previous buffers for ftrace rings. With this patch applied, ftrace
+reassembles any new trace buffer that carries the same name as a
+previous one with the same data pages that the previous buffer had.
 
-As a first step towards that, let's give every event a unique name. That
-way we can clearly identify the event before and after kexec and restore
-its ID post-kexec.
+That way, a buffer that we had in place before kexec becomes readable
+after kexec again as soon as it gets initialized with the same name.
 
 Signed-off-by: Alexander Graf <graf@amazon.com>
 ---
- include/linux/trace_events.h         |  1 +
- include/trace/trace_events.h         |  2 ++
- kernel/trace/blktrace.c              |  1 +
- kernel/trace/trace_branch.c          |  1 +
- kernel/trace/trace_events.c          |  3 +++
- kernel/trace/trace_functions_graph.c |  4 +++-
- kernel/trace/trace_output.c          | 13 +++++++++++++
- kernel/trace/trace_probe.c           |  3 +++
- kernel/trace/trace_syscalls.c        | 29 ++++++++++++++++++++++++++++
- 9 files changed, 56 insertions(+), 1 deletion(-)
+ kernel/trace/ring_buffer.c | 173 ++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 171 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index d68ff9b1247f..7670224aa92d 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -149,6 +149,7 @@ struct trace_event {
- 	struct hlist_node		node;
- 	int				type;
- 	struct trace_event_functions	*funcs;
-+	const char			*name;
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 691d1236eeb1..f3d07cb90762 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -575,6 +575,28 @@ struct ring_buffer_iter {
+ 	int				missed_events;
  };
  
- extern int register_trace_event(struct trace_event *event);
-diff --git a/include/trace/trace_events.h b/include/trace/trace_events.h
-index c2f9cabf154d..bb4e6a33eef9 100644
---- a/include/trace/trace_events.h
-+++ b/include/trace/trace_events.h
-@@ -443,6 +443,7 @@ static struct trace_event_call __used event_##call = {			\
- 		.tp			= &__tracepoint_##call,		\
- 	},								\
- 	.event.funcs		= &trace_event_type_funcs_##template,	\
-+	.event.name		= __stringify(call),			\
- 	.print_fmt		= print_fmt_##template,			\
- 	.flags			= TRACE_EVENT_FL_TRACEPOINT,		\
- };									\
-@@ -460,6 +461,7 @@ static struct trace_event_call __used event_##call = {			\
- 		.tp			= &__tracepoint_##call,		\
- 	},								\
- 	.event.funcs		= &trace_event_type_funcs_##call,	\
-+	.event.name		= __stringify(template),		\
- 	.print_fmt		= print_fmt_##call,			\
- 	.flags			= TRACE_EVENT_FL_TRACEPOINT,		\
- };									\
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index d5d94510afd3..7f86fd41b38e 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -1584,6 +1584,7 @@ static struct trace_event_functions trace_blk_event_funcs = {
- static struct trace_event trace_blk_event = {
- 	.type		= TRACE_BLK,
- 	.funcs		= &trace_blk_event_funcs,
-+	.name		= "blk",
- };
- 
- static int __init init_blk_tracer(void)
-diff --git a/kernel/trace/trace_branch.c b/kernel/trace/trace_branch.c
-index e47fdb4c92fb..3372070f2e85 100644
---- a/kernel/trace/trace_branch.c
-+++ b/kernel/trace/trace_branch.c
-@@ -168,6 +168,7 @@ static struct trace_event_functions trace_branch_funcs = {
- static struct trace_event trace_branch_event = {
- 	.type		= TRACE_BRANCH,
- 	.funcs		= &trace_branch_funcs,
-+	.name		= "branch",
- };
- 
- static struct tracer branch_trace __read_mostly =
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index f29e815ca5b2..4f5d37f96a17 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -2658,6 +2658,9 @@ static int event_init(struct trace_event_call *call)
- 	if (WARN_ON(!name))
- 		return -EINVAL;
- 
-+	if (!call->event.name)
-+		call->event.name = name;
++struct trace_kho_cpu {
++	const struct kho_mem *mem;
++	uint32_t nr_mems;
++};
 +
- 	if (call->class->raw_init) {
- 		ret = call->class->raw_init(call);
- 		if (ret < 0 && ret != -ENOSYS)
-diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-index c35fbaab2a47..088dfd4a1a56 100644
---- a/kernel/trace/trace_functions_graph.c
-+++ b/kernel/trace/trace_functions_graph.c
-@@ -1342,11 +1342,13 @@ static struct trace_event_functions graph_functions = {
- static struct trace_event graph_trace_entry_event = {
- 	.type		= TRACE_GRAPH_ENT,
- 	.funcs		= &graph_functions,
-+	.name		= "graph_ent",
- };
- 
- static struct trace_event graph_trace_ret_event = {
- 	.type		= TRACE_GRAPH_RET,
--	.funcs		= &graph_functions
-+	.funcs		= &graph_functions,
-+	.name		= "graph_ret",
- };
- 
- static struct tracer graph_trace __tracer_data = {
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index d8b302d01083..f3677e0da795 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -1067,6 +1067,7 @@ static struct trace_event_functions trace_fn_funcs = {
- static struct trace_event trace_fn_event = {
- 	.type		= TRACE_FN,
- 	.funcs		= &trace_fn_funcs,
-+	.name		= "fn",
- };
- 
- /* TRACE_CTX an TRACE_WAKE */
-@@ -1207,6 +1208,7 @@ static struct trace_event_functions trace_ctx_funcs = {
- static struct trace_event trace_ctx_event = {
- 	.type		= TRACE_CTX,
- 	.funcs		= &trace_ctx_funcs,
-+	.name		= "ctx",
- };
- 
- static struct trace_event_functions trace_wake_funcs = {
-@@ -1219,6 +1221,7 @@ static struct trace_event_functions trace_wake_funcs = {
- static struct trace_event trace_wake_event = {
- 	.type		= TRACE_WAKE,
- 	.funcs		= &trace_wake_funcs,
-+	.name		= "wake",
- };
- 
- /* TRACE_STACK */
-@@ -1256,6 +1259,7 @@ static struct trace_event_functions trace_stack_funcs = {
- static struct trace_event trace_stack_event = {
- 	.type		= TRACE_STACK,
- 	.funcs		= &trace_stack_funcs,
-+	.name		= "stack",
- };
- 
- /* TRACE_USER_STACK */
-@@ -1309,6 +1313,7 @@ static struct trace_event_functions trace_user_stack_funcs = {
- static struct trace_event trace_user_stack_event = {
- 	.type		= TRACE_USER_STACK,
- 	.funcs		= &trace_user_stack_funcs,
-+	.name		= "user_stack",
- };
- 
- /* TRACE_HWLAT */
-@@ -1373,6 +1378,7 @@ static struct trace_event_functions trace_hwlat_funcs = {
- static struct trace_event trace_hwlat_event = {
- 	.type		= TRACE_HWLAT,
- 	.funcs		= &trace_hwlat_funcs,
-+	.name		= "hwlat",
- };
- 
- /* TRACE_OSNOISE */
-@@ -1443,6 +1449,7 @@ static struct trace_event_functions trace_osnoise_funcs = {
- static struct trace_event trace_osnoise_event = {
- 	.type		= TRACE_OSNOISE,
- 	.funcs		= &trace_osnoise_funcs,
-+	.name		= "osnoise",
- };
- 
- /* TRACE_TIMERLAT */
-@@ -1491,6 +1498,7 @@ static struct trace_event_functions trace_timerlat_funcs = {
- static struct trace_event trace_timerlat_event = {
- 	.type		= TRACE_TIMERLAT,
- 	.funcs		= &trace_timerlat_funcs,
-+	.name		= "timerlat",
- };
- 
- /* TRACE_BPUTS */
-@@ -1535,6 +1543,7 @@ static struct trace_event_functions trace_bputs_funcs = {
- static struct trace_event trace_bputs_event = {
- 	.type		= TRACE_BPUTS,
- 	.funcs		= &trace_bputs_funcs,
-+	.name		= "bputs",
- };
- 
- /* TRACE_BPRINT */
-@@ -1579,6 +1588,7 @@ static struct trace_event_functions trace_bprint_funcs = {
- static struct trace_event trace_bprint_event = {
- 	.type		= TRACE_BPRINT,
- 	.funcs		= &trace_bprint_funcs,
-+	.name		= "bprint",
- };
- 
- /* TRACE_PRINT */
-@@ -1616,6 +1626,7 @@ static struct trace_event_functions trace_print_funcs = {
- static struct trace_event trace_print_event = {
- 	.type	 	= TRACE_PRINT,
- 	.funcs		= &trace_print_funcs,
-+	.name		= "print",
- };
- 
- static enum print_line_t trace_raw_data(struct trace_iterator *iter, int flags,
-@@ -1645,6 +1656,7 @@ static struct trace_event_functions trace_raw_data_funcs = {
- static struct trace_event trace_raw_data_event = {
- 	.type	 	= TRACE_RAW_DATA,
- 	.funcs		= &trace_raw_data_funcs,
-+	.name		= "raw_data",
- };
- 
- static enum print_line_t
-@@ -1691,6 +1703,7 @@ static struct trace_event_functions trace_func_repeats_funcs = {
- static struct trace_event trace_func_repeats_event = {
- 	.type	 	= TRACE_FUNC_REPEATS,
- 	.funcs		= &trace_func_repeats_funcs,
-+	.name		= "func_repeats",
- };
- 
- static struct trace_event *events[] __initdata = {
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 4dc74d73fc1d..9356f3f2fdc0 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -1835,6 +1835,9 @@ int trace_probe_register_event_call(struct trace_probe *tp)
- 				  trace_probe_name(tp)))
- 		return -EEXIST;
- 
-+	if (!call->event.name)
-+		call->event.name = call->name;
-+
- 	ret = register_trace_event(&call->event);
- 	if (!ret)
- 		return -ENODEV;
-diff --git a/kernel/trace/trace_syscalls.c b/kernel/trace/trace_syscalls.c
-index 9c581d6da843..3e7e10b691f5 100644
---- a/kernel/trace/trace_syscalls.c
-+++ b/kernel/trace/trace_syscalls.c
-@@ -441,8 +441,29 @@ static void unreg_event_syscall_exit(struct trace_event_file *file,
- 	mutex_unlock(&syscall_trace_lock);
- }
- 
-+/**
-+ * trace_csum - a simple checksum generator
-+ *
-+ * This returns a checksum for data that should not generate
-+ * a lot of collisions, but is trivial to read.
-+ */
-+static u32 __init trace_csum(void *data, u32 len)
++#ifdef CONFIG_FTRACE_KHO
++static int trace_kho_replace_buffers(struct ring_buffer_per_cpu *cpu_buffer,
++				     struct trace_kho_cpu *kho);
++static int trace_kho_read_cpu(const char *name, int cpu, struct trace_kho_cpu *kho);
++#else
++static int trace_kho_replace_buffers(struct ring_buffer_per_cpu *cpu_buffer,
++				     struct trace_kho_cpu *kho)
 +{
-+	u32 r = 0, i;
-+	char *p = data;
-+
-+	if (!data)
-+		return 0;
-+
-+	for (i = 0; i < len; i++)
-+		r = (r >> 31) + (r << 1) + p[i];
-+
-+	return (r << 4) + len;
++	return -EINVAL;
 +}
 +
- static int __init init_syscall_trace(struct trace_event_call *call)
++static int trace_kho_read_cpu(const char *name, int cpu, struct trace_kho_cpu *kho)
++{
++	return -EINVAL;
++}
++#endif
++
+ #ifdef RB_TIME_32
+ 
+ /*
+@@ -1807,10 +1829,12 @@ struct trace_buffer *__ring_buffer_alloc(const char *name,
+ 					unsigned long size, unsigned flags,
+ 					struct lock_class_key *key)
  {
-+	u32 csum;
- 	int id;
- 	int num;
++	int cpu = raw_smp_processor_id();
++	struct trace_kho_cpu kho = {};
+ 	struct trace_buffer *buffer;
++	bool use_kho = false;
+ 	long nr_pages;
+ 	int bsize;
+-	int cpu;
+ 	int ret;
  
-@@ -456,9 +477,17 @@ static int __init init_syscall_trace(struct trace_event_call *call)
- 	if (set_syscall_print_fmt(call) < 0)
- 		return -ENOMEM;
+ 	/* keep it in its own cache line */
+@@ -1823,6 +1847,12 @@ struct trace_buffer *__ring_buffer_alloc(const char *name,
+ 		goto fail_free_buffer;
  
-+	csum = (trace_csum(call->print_fmt, strlen(call->print_fmt)) << 4) + num;
-+	call->event.name = kasprintf(GFP_KERNEL, "sc-%x", csum);
-+	if (!call->event.name) {
-+		free_syscall_print_fmt(call);
-+		return -ENOMEM;
+ 	nr_pages = DIV_ROUND_UP(size, BUF_PAGE_SIZE);
++	if (!trace_kho_read_cpu(name, cpu, &kho) && kho.nr_mems > 4) {
++		nr_pages = kho.nr_mems / 2;
++		use_kho = true;
++		pr_debug("Using kho for buffer '%s' on CPU [%03d]", name, cpu);
 +	}
 +
- 	id = trace_event_raw_init(call);
+ 	buffer->flags = flags;
+ 	buffer->clock = trace_clock_local;
+ 	buffer->reader_lock_key = key;
+@@ -1843,12 +1873,14 @@ struct trace_buffer *__ring_buffer_alloc(const char *name,
+ 	if (!buffer->buffers)
+ 		goto fail_free_cpumask;
  
- 	if (id < 0) {
-+		kfree(call->event.name);
- 		free_syscall_print_fmt(call);
- 		return id;
+-	cpu = raw_smp_processor_id();
+ 	cpumask_set_cpu(cpu, buffer->cpumask);
+ 	buffer->buffers[cpu] = rb_allocate_cpu_buffer(buffer, nr_pages, cpu);
+ 	if (!buffer->buffers[cpu])
+ 		goto fail_free_buffers;
+ 
++	if (use_kho && trace_kho_replace_buffers(buffer->buffers[cpu], &kho))
++		pr_warn("Could not revive all previous trace data");
++
+ 	ret = cpuhp_state_add_instance(CPUHP_TRACE_RB_PREPARE, &buffer->node);
+ 	if (ret < 0)
+ 		goto fail_free_buffers;
+@@ -5886,7 +5918,9 @@ EXPORT_SYMBOL_GPL(ring_buffer_read_page);
+  */
+ int trace_rb_cpu_prepare(unsigned int cpu, struct hlist_node *node)
+ {
++	struct trace_kho_cpu kho = {};
+ 	struct trace_buffer *buffer;
++	bool use_kho = false;
+ 	long nr_pages_same;
+ 	int cpu_i;
+ 	unsigned long nr_pages;
+@@ -5910,6 +5944,12 @@ int trace_rb_cpu_prepare(unsigned int cpu, struct hlist_node *node)
+ 	/* allocate minimum pages, user can later expand it */
+ 	if (!nr_pages_same)
+ 		nr_pages = 2;
++
++	if (!trace_kho_read_cpu(buffer->name, cpu, &kho) && kho.nr_mems > 4) {
++		nr_pages = kho.nr_mems / 2;
++		use_kho = true;
++	}
++
+ 	buffer->buffers[cpu] =
+ 		rb_allocate_cpu_buffer(buffer, nr_pages, cpu);
+ 	if (!buffer->buffers[cpu]) {
+@@ -5917,12 +5957,141 @@ int trace_rb_cpu_prepare(unsigned int cpu, struct hlist_node *node)
+ 		     cpu);
+ 		return -ENOMEM;
  	}
++
++	if (use_kho && trace_kho_replace_buffers(buffer->buffers[cpu], &kho))
++		pr_warn("Could not revive all previous trace data");
++
+ 	smp_wmb();
+ 	cpumask_set_cpu(cpu, buffer->cpumask);
+ 	return 0;
+ }
+ 
+ #ifdef CONFIG_FTRACE_KHO
++static int trace_kho_replace_buffers(struct ring_buffer_per_cpu *cpu_buffer,
++				     struct trace_kho_cpu *kho)
++{
++	bool first_loop = true;
++	struct list_head *tmp;
++	int err = 0;
++	int i = 0;
++
++	if (kho->nr_mems != cpu_buffer->nr_pages * 2)
++		return -EINVAL;
++
++	for (tmp = rb_list_head(cpu_buffer->pages);
++	     tmp != rb_list_head(cpu_buffer->pages) || first_loop;
++	     tmp = rb_list_head(tmp->next), first_loop = false) {
++		struct buffer_page *bpage = (struct buffer_page *)tmp;
++		const struct kho_mem *mem_bpage = &kho->mem[i++];
++		const struct kho_mem *mem_page = &kho->mem[i++];
++		const uint64_t rb_page_head = 1;
++		struct buffer_page *old_bpage;
++		void *old_page;
++
++		old_bpage = __va(mem_bpage->addr);
++		if (!bpage)
++			goto out;
++
++		if ((ulong)old_bpage->list.next & rb_page_head) {
++			struct list_head *new_lhead;
++			struct buffer_page *new_head;
++
++			new_lhead = rb_list_head(bpage->list.next);
++			new_head = (struct buffer_page *)new_lhead;
++
++			/* Assume the buffer is completely full */
++			cpu_buffer->tail_page = bpage;
++			cpu_buffer->commit_page = bpage;
++			/* Set the head pointers to what they were before */
++			cpu_buffer->head_page->list.prev->next = (struct list_head *)
++				((ulong)cpu_buffer->head_page->list.prev->next & ~rb_page_head);
++			cpu_buffer->head_page = new_head;
++			bpage->list.next = (struct list_head *)((ulong)new_lhead | rb_page_head);
++		}
++
++		if (rb_page_entries(old_bpage) || rb_page_write(old_bpage)) {
++			/*
++			 * We want to recycle the pre-kho page, it contains
++			 * trace data. To do so, we unreserve it and swap the
++			 * current data page with the pre-kho one
++			 */
++			old_page = kho_claim_mem(mem_page);
++
++			/* Recycle the old page, it contains data */
++			free_page((ulong)bpage->page);
++			bpage->page = old_page;
++
++			bpage->write = old_bpage->write;
++			bpage->entries = old_bpage->entries;
++			bpage->real_end = old_bpage->real_end;
++
++			local_inc(&cpu_buffer->pages_touched);
++		} else {
++			kho_return_mem(mem_page);
++		}
++
++		kho_return_mem(mem_bpage);
++	}
++
++out:
++	return err;
++}
++
++static int trace_kho_read_cpu(const char *name, int cpu,
++			      struct trace_kho_cpu *kho)
++{
++	void *fdt = kho_get_fdt();
++	int mem_len;
++	int err = 0;
++	char *path;
++	int off;
++
++	if (!fdt)
++		return -ENOENT;
++
++	if (!kho)
++		return -EINVAL;
++
++	path = kasprintf(GFP_KERNEL, "/ftrace/%s/buffer/cpu%x", name, cpu);
++	if (!path)
++		return -ENOMEM;
++
++	pr_debug("Trying to revive trace buffer '%s'", path);
++
++	off = fdt_path_offset(fdt, path);
++	if (off < 0) {
++		pr_debug("Could not find '%s' in DT", path);
++		err = -ENOENT;
++		goto out;
++	}
++
++	err = fdt_node_check_compatible(fdt, off, "ftrace,cpu-v1");
++	if (err) {
++		pr_warn("Node '%s' has invalid compatible", path);
++		err = -EINVAL;
++		goto out;
++	}
++
++	kho->mem = fdt_getprop(fdt, off, "mem", &mem_len);
++	if (!kho->mem) {
++		pr_warn("Node '%s' has invalid mem property", path);
++		err = -EINVAL;
++		goto out;
++	}
++
++	kho->nr_mems = mem_len / sizeof(*kho->mem);
++
++	/* Should follow "bpage 0, page 0, bpage 1, page 1, ..." pattern */
++	if ((kho->nr_mems & 1)) {
++		err = -EINVAL;
++		goto out;
++	}
++
++out:
++	kfree(path);
++	return err;
++}
++
+ static int trace_kho_write_cpu(void *fdt, struct trace_buffer *buffer, int cpu)
+ {
+ 	int i = 0;
 -- 
 2.40.1
 
