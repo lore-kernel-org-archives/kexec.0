@@ -4,70 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BA092C4332F
-	for <kexec@archiver.kernel.org>; Thu, 14 Dec 2023 10:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 66468C4332F
+	for <kexec@archiver.kernel.org>; Thu, 14 Dec 2023 14:13:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=l5mAQB5VHE/s9wcH9bxan5XYX01rKBwq45y5tzNpuIc=; b=RroukKQsWKFzNr
-	S7KZqtnhWRbfm6VoZqDblo8Kh0OklsrSzZ0V8g0USXdYpcBWo+DL6APm4jyxpHfCdQ40D0dFOdylZ
-	1NLUVgg9KPpOw2koiHIRQKPQTQQqYYTOWUYnD+siqf667mdFn80nk97gs0NvbB/PwJg4lXg42lrsK
-	0pNVOyGeNXllA/dpH1yf2/AEAq6vS5Od570lYR52rSfcJ1e4DKNZJafdxH7dWOvpi9cvX+IAgPRis
-	lcNlT5kr1VCK+eSAEGUsCj764ncrHrhKFa5bvhEQD6Ronxbt5zODK0w2+qSFQm4Y7a2XBqT0eA1HB
-	dW2EFzEgIF9Y6aifNliw==;
+	List-Owner; bh=4fbBL6IZD57NRtDznjuOr8wAnD/gOBWrNzcrgmHJvds=; b=mvsb37g45c8K5k
+	SUSds32oIAStlGgt6QwsjEVOSdksUd5xFACRNdAPqMuWUu8OzXcRSj9z5qRgMdDHnXTAdurKlv718
+	q25u6nQkwOdmnc/48vI8kSrbGDihtOFn06X7ym4OF564grRBbdNgFd2RhotEFb35bb3V+rzsOIfPI
+	Kxhln+yxVOfTM6caQBgpAr4ADowG4Oh+pw2xQiLG9aQ0tMy2ucGKrBWFXccNtcUcux83t7y53J+3l
+	acl/20oQtAmgq0ntWICMMESfYc7/zSwiJWv7h4bv9rCa51iHBKxDc8y21mjUimoS3ZQW5hgfN6FON
+	k9GXvzDMlIDLQMUga67Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rDixu-00HTWK-2l;
-	Thu, 14 Dec 2023 10:29:14 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1rDmTE-000W3N-09;
+	Thu, 14 Dec 2023 14:13:48 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rDixp-00HTVw-3D
+	id 1rDmTA-000W2i-2r
 	for kexec@lists.infradead.org;
-	Thu, 14 Dec 2023 10:29:11 +0000
+	Thu, 14 Dec 2023 14:13:46 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702549748;
+	s=mimecast20190719; t=1702563223;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WEGnuAcA6vcyz/hnSV1HfLQ52Yc/OzlpLIbZnnIF9xo=;
-	b=LYtNkeeviHlxPafvma9BTHbdjfRDFw9xGdqvok9ku27K176f0uUN3hN4ZqdKYNV9L+KdGF
-	MY9dcWnCCiFGSJlDBcuwcae0ue0HN5sod8ATEVuNsz7LyR5Y4P4Th1TvUaCw7x+5TO13kG
-	WJbqVCNeJlflnUCuKuDCroMHwyuTmOA=
+	bh=rWA4jrugxAphsdbeIh/acD095fJ5/82CDD3Wyi7fJAY=;
+	b=CDcYV2A7amDf0HRgs1KmxF64jRHuhcuDsmvNLhPVdxTqPuMKJHyH/N4fTWXzXdUP8/OKWd
+	TIcGYmgqGTXzLCJ3LAXTV6k2YnrK6Xmx4s1svtSCATGjvjaGijplugcuV9f8/kz34xvtvy
+	UxlRJ6V+VXhgArqgxn6tUiiVSXpMzqM=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-265-saQwzr8LNLeC1X0oZg-3ow-1; Thu, 14 Dec 2023 05:29:05 -0500
-X-MC-Unique: saQwzr8LNLeC1X0oZg-3ow-1
+ us-mta-610-sQoJWAN1MZCF3dhHJHsgwg-1; Thu, 14 Dec 2023 09:13:39 -0500
+X-MC-Unique: sQoJWAN1MZCF3dhHJHsgwg-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 10B6885A58A;
-	Thu, 14 Dec 2023 10:29:05 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1D51E86EB22;
+	Thu, 14 Dec 2023 14:13:37 +0000 (UTC)
 Received: from localhost (unknown [10.72.116.38])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 5AC703C25;
-	Thu, 14 Dec 2023 10:29:03 +0000 (UTC)
-Date: Thu, 14 Dec 2023 18:29:01 +0800
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id A46303C25;
+	Thu, 14 Dec 2023 14:13:35 +0000 (UTC)
+Date: Thu, 14 Dec 2023 22:13:33 +0800
 From: Baoquan He <bhe@redhat.com>
-To: fuqiang wang <fuqiang.wang@easystack.cn>
-Cc: Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kexec: avoid out of bounds in crash_exclude_mem_range()
-Message-ID: <ZXrY7QbXAlxydsSC@MiWiFi-R3L-srv>
-References: <20231127025641.62210-1-fuqiang.wang@easystack.cn>
- <ZWg9aZYoo0v+tCQ8@MiWiFi-R3L-srv>
- <e588c619-9b97-4627-bce1-b595c757e5c4@easystack.cn>
+To: Sourabh Jain <sourabhjain@linux.ibm.com>
+Cc: linuxppc-dev@ozlabs.org, Akhil Raj <lf32.dev@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Dave Young <dyoung@redhat.com>,
+	David Hildenbrand <david@redhat.com>,
+	Eric DeVolder <eric.devolder@oracle.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Hari Bathini <hbathini@linux.ibm.com>,
+	Laurent Dufour <laurent.dufour@fr.ibm.com>,
+	Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Mimi Zohar <zohar@linux.ibm.com>, Naveen N Rao <naveen@kernel.org>,
+	Oscar Salvador <osalvador@suse.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org,
+	x86@kernel.org
+Subject: Re: [PATCH v14 2/6] crash: make CPU and Memory hotplug support
+ reporting flexible
+Message-ID: <ZXsNjTT7Ax9blFIt@MiWiFi-R3L-srv>
+References: <20231211083056.340404-1-sourabhjain@linux.ibm.com>
+ <20231211083056.340404-3-sourabhjain@linux.ibm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <e588c619-9b97-4627-bce1-b595c757e5c4@easystack.cn>
+In-Reply-To: <20231211083056.340404-3-sourabhjain@linux.ibm.com>
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231214_022910_107484_598BED9F 
-X-CRM114-Status: GOOD (  35.09  )
+X-CRM114-CacheID: sfid-20231214_061344_994341_918F34ED 
+X-CRM114-Status: GOOD (  35.10  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,210 +99,220 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 11/30/23 at 09:20pm, fuqiang wang wrote:
-> =
+On 12/11/23 at 02:00pm, Sourabh Jain wrote:
+> Architectures' specific functions `arch_crash_hotplug_cpu_support()` and
+> `arch_crash_hotplug_memory_support()` advertise the kernel's capability
+> to update the kdump image on CPU and Memory hotplug events to userspace
+> via the sysfs interface. These architecture-specific functions need to
+> access various attributes of the `kexec_crash_image` object to determine
+> whether the kernel can update the kdump image and advertise this
+> information to userspace accordingly.
+> 
+> As the architecture-specific code is not exposed to the APIs required to
+> acquire the lock for accessing the `kexec_crash_image` object, it calls
+> a generic function, `crash_check_update_elfcorehdr()`, to determine
+> whether the kernel can update the kdump image or not.
+> 
+> The lack of access to the `kexec_crash_image` object in
+> architecture-specific code restricts architectures from performing
+> additional architecture-specific checks required to determine if the
+> kdump image is updatable or not. For instance, on PowerPC, the kernel
+> can update the kdump image only if both the elfcorehdr and FDT are
+> marked as updatable for the `kexec_load` system call.
+> 
+> So define two generic functions, `crash_hotplug_cpu_support()` and
+> `crash_hotplug_memory_support()`, which are called when userspace
+> attempts to read the crash CPU and Memory hotplug support via the sysfs
+> interface. These functions take the necessary locks needed to access the
+> `kexec_crash_image` object and then forward it to the
+> architecture-specific handler to do the rest.
+> 
+> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+> Cc: Akhil Raj <lf32.dev@gmail.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Borislav Petkov (AMD) <bp@alien8.de>
+> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Eric DeVolder <eric.devolder@oracle.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Hari Bathini <hbathini@linux.ibm.com>
+> Cc: Laurent Dufour <laurent.dufour@fr.ibm.com>
+> Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Mimi Zohar <zohar@linux.ibm.com>
+> Cc: Naveen N Rao <naveen@kernel.org>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Valentin Schneider <vschneid@redhat.com>
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> Cc: kexec@lists.infradead.org
+> Cc: x86@kernel.org
+> ---
+>  arch/x86/include/asm/kexec.h |  8 ++++----
+>  arch/x86/kernel/crash.c      | 20 +++++++++++++++-----
+>  include/linux/kexec.h        | 13 +++++++------
+>  kernel/crash_core.c          | 23 +++++++++++++++++------
+>  4 files changed, 43 insertions(+), 21 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+> index 9bb6607e864e..5c88d27b086d 100644
+> --- a/arch/x86/include/asm/kexec.h
+> +++ b/arch/x86/include/asm/kexec.h
+> @@ -212,13 +212,13 @@ void arch_crash_handle_hotplug_event(struct kimage *image, void *arg);
+>  #define arch_crash_handle_hotplug_event arch_crash_handle_hotplug_event
+>  
+>  #ifdef CONFIG_HOTPLUG_CPU
+> -int arch_crash_hotplug_cpu_support(void);
+> -#define crash_hotplug_cpu_support arch_crash_hotplug_cpu_support
+> +int arch_crash_hotplug_cpu_support(struct kimage *image);
+> +#define arch_crash_hotplug_cpu_support arch_crash_hotplug_cpu_support
+>  #endif
+>  
+>  #ifdef CONFIG_MEMORY_HOTPLUG
+> -int arch_crash_hotplug_memory_support(void);
+> -#define crash_hotplug_memory_support arch_crash_hotplug_memory_support
+> +int arch_crash_hotplug_memory_support(struct kimage *image);
+> +#define arch_crash_hotplug_memory_support arch_crash_hotplug_memory_support
+>  #endif
+>  
+>  unsigned int arch_crash_get_elfcorehdr_size(void);
+> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> index 0d7b2657beb6..ad5941665589 100644
+> --- a/arch/x86/kernel/crash.c
+> +++ b/arch/x86/kernel/crash.c
+> @@ -398,18 +398,28 @@ int crash_load_segments(struct kimage *image)
+>  #undef pr_fmt
+>  #define pr_fmt(fmt) "crash hp: " fmt
+>  
+> -/* These functions provide the value for the sysfs crash_hotplug nodes */
+> +#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_MEMORY_HOTPLUG)
+> +static int crash_hotplug_support(struct kimage *image)
+> +{
+> +	if (image->file_mode)
+> +		return 1;
+> +
+> +	return image->update_elfcorehdr;
+> +}
+> +#endif
+> +
+>  #ifdef CONFIG_HOTPLUG_CPU
+> -int arch_crash_hotplug_cpu_support(void)
+> +/* These functions provide the value for the sysfs crash_hotplug nodes */
+> +int arch_crash_hotplug_cpu_support(struct kimage *image)
+>  {
+> -	return crash_check_update_elfcorehdr();
+> +	return crash_hotplug_support(image);
+>  }
+>  #endif
+>  
+>  #ifdef CONFIG_MEMORY_HOTPLUG
+> -int arch_crash_hotplug_memory_support(void)
+> +int arch_crash_hotplug_memory_support(struct kimage *image)
+>  {
+> -	return crash_check_update_elfcorehdr();
+> +	return crash_hotplug_support(image);
+>  }
+>  #endif
+>  
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index ee28c09a7fb0..0f6ea35879ee 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -486,16 +486,17 @@ static inline void arch_kexec_pre_free_pages(void *vaddr, unsigned int pages) {
+>  static inline void arch_crash_handle_hotplug_event(struct kimage *image, void *arg) { }
+>  #endif
+>  
+> -int crash_check_update_elfcorehdr(void);
+> -
+> -#ifndef crash_hotplug_cpu_support
+> -static inline int crash_hotplug_cpu_support(void) { return 0; }
+> +#ifndef arch_crash_hotplug_cpu_support
+> +static inline int arch_crash_hotplug_cpu_support(struct kimage *image) { return 0; }
+>  #endif
+>  
+> -#ifndef crash_hotplug_memory_support
+> -static inline int crash_hotplug_memory_support(void) { return 0; }
+> +#ifndef arch_crash_hotplug_memory_support
+> +static inline int arch_crash_hotplug_memory_support(struct kimage *image) { return 0; }
+>  #endif
+>  
+> +extern int crash_hotplug_cpu_support(void);
+> +extern int crash_hotplug_memory_support(void);
+> +
+>  #ifndef crash_get_elfcorehdr_size
+>  static inline unsigned int crash_get_elfcorehdr_size(void) { return 0; }
+>  #endif
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index b9190265fe52..b621f03c1104 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -892,12 +892,14 @@ DEFINE_MUTEX(__crash_hotplug_lock);
+>  #define crash_hotplug_lock() mutex_lock(&__crash_hotplug_lock)
+>  #define crash_hotplug_unlock() mutex_unlock(&__crash_hotplug_lock)
+>  
+> +#define CPU_HOTPLUG	0
+> +#define MEM_HOTPLUG	1
+>  /*
+>   * This routine utilized when the crash_hotplug sysfs node is read.
+>   * It reflects the kernel's ability/permission to update the crash
+>   * elfcorehdr directly.
+>   */
+> -int crash_check_update_elfcorehdr(void)
+> +static int crash_hotplug_support(int hotplug)
 
-> On 2023/11/30 15:44, Baoquan He wrote:
-> > On 11/27/23 at 10:56am, fuqiang wang wrote:
-> > > When the split happened, judge whether mem->nr_ranges is equal to
-> > > mem->max_nr_ranges. If it is true, return -ENOMEM.
-> > > =
+Is it possible that we rename this function to different name? e.g
+crash_hotplug_check_support() or other name. We may easily mixing it up
+with the one of ARCH version. personal opinion.
 
-> > > The advantage of doing this is that it can avoid array bounds caused =
-by
-> > > some bugs. E.g., Before commit 4831be702b95 ("arm64/kexec: Fix missing
-> > > extra range for crashkres_low."), reserve both high and low memories =
-for
-> > > the crashkernel may cause out of bounds.
-> > > =
-
-> > > On the other hand, move this code before the split to ensure that the
-> > > array will not be changed when return error.
-> > If out of array boundary is caused, means the laoding failed, whether
-> > the out of boundary happened or not. I don't see how this code change
-> > makes sense. Do I miss anything?
-> > =
-
-> > Thanks
-> > Baoquan
-> > =
-
-> Hi baoquan,
-> =
-
-> In some configurations, out of bounds may not cause crash_exclude_mem_ran=
-ge()
-> returns error, then the load will succeed.
-> =
-
-> E.g.
-> There is a cmem before execute crash_exclude_mem_range():
-> =
-
-> =A0 cmem =3D {
-> =A0=A0=A0 max_nr_ranges =3D 3
-> =A0=A0=A0 nr_ranges =3D 2
-> =A0=A0=A0 ranges =3D {
-> =A0=A0=A0=A0=A0=A0 {start =3D 1,=A0=A0=A0=A0=A0 end =3D 1000}
-> =A0=A0=A0=A0=A0=A0 {start =3D 1001,=A0=A0=A0 end =3D 2000}
-> =A0=A0=A0 }
-> =A0 }
-> =
-
-> After executing twice crash_exclude_mem_range() with the start/end params
-> 100/200, 300/400 respectively, the cmem will be:
-> =
-
-> =A0 cmem =3D {
-> =A0=A0=A0 max_nr_ranges =3D 3
-> =A0=A0=A0 nr_ranges =3D 4=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0 <=3D=3D nr_ranges > max_nr_ranges
-> =A0=A0=A0 ranges =3D {
-> =A0=A0=A0=A0=A0 {start =3D 1,=A0=A0=A0=A0=A0=A0 end =3D 99=A0 }
-> =A0=A0=A0=A0=A0 {start =3D 201,=A0=A0=A0=A0 end =3D 299 }
-> =A0=A0=A0=A0=A0 {start =3D 401,=A0=A0=A0=A0 end =3D 1000}
-> =A0=A0=A0=A0=A0 {start =3D 1001,=A0=A0=A0 end =3D 2000}=A0 <=3D=3D OUT OF=
- BOUNDS
-> =A0=A0=A0 }
-> =A0 }
-
-Let me borrow your example and copy them here, but I will switch the
-order of start/end params 100/200, 300/400 executing at below:
-
-There is a cmem before execute crash_exclude_mem_range():
-
-=A0 cmem =3D {
-=A0=A0=A0 max_nr_ranges =3D 3
-=A0=A0=A0 nr_ranges =3D 2
-=A0=A0=A0 ranges =3D {
-=A0=A0=A0=A0=A0=A0 {start =3D 1,=A0=A0=A0=A0=A0 end =3D 1000}
-=A0=A0=A0=A0=A0=A0 {start =3D 1001,=A0=A0=A0 end =3D 2000}
-=A0=A0=A0 }
-=A0 }
-
-After executing twice crash_exclude_mem_range() with the start/end params
-300/400, the cmem will be:
-
-=A0 cmem =3D {
-=A0=A0=A0 max_nr_ranges =3D 3
-=A0=A0=A0 nr_ranges =3D 3=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0 <=3D=3D nr_ranges =3D=3D max_nr_ranges
-=A0=A0=A0 ranges =3D {
-=A0=A0=A0=A0=A0 {start =3D 1,=A0=A0=A0=A0=A0=A0 end =3D 299=A0 }  i=3D0
-=A0=A0=A0=A0=A0 {start =3D 401,=A0=A0=A0=A0 end =3D 1000}   i=3D1
-=A0=A0=A0=A0=A0 {start =3D 1001,=A0=A0=A0 end =3D 2000}=A0  i=3D2
-=A0=A0=A0 }
-=A0 }
-When it's executing the 100/200 excluding, we have:
-
-=A0 cmem =3D {
-=A0=A0=A0 max_nr_ranges =3D 3
-=A0=A0=A0 nr_ranges =3D 4=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0 <=3D=3D nr_ranges > max_nr_ranges
-=A0=A0=A0 ranges =3D {
-=A0=A0=A0=A0=A0 {start =3D 1,=A0=A0=A0=A0=A0=A0 end =3D 99=A0 }   i=3D0
-=A0=A0=A0=A0=A0 {start =3D 401,=A0=A0=A0=A0 end =3D 1000}
-=A0=A0=A0=A0=A0 {start =3D 1001,=A0=A0=A0 end =3D 2000}=A0 =
-
-=A0=A0=A0 }
-=A0 }
-
-Then splitting happened, i =3D=3D 0, then for loop is broken and jump out.
-Then we have the condition checking here:
-
-	/* Split happened */
-        if (i =3D=3D mem->max_nr_ranges - 1)
-                return -ENOMEM;
-
-Obviously the conditonal checking is incorrect (given the i =3D=3D 0 in
-above case), it should be =
-
-
-	/* Split happened */
-	if (mem->nr_ranges =3D=3D mem->max_nr_ranges)
-                return -ENOMEM;
-
-So, now there are two things which need be combed up in
-crash_exclude_mem_range():
-
-1) the above conditional check is incorrect, need be fixed;
-2) whether we need have the cmem->ranges[] partly changed, or keep it
-unchanged when OOB happened;
-
-And also the incorrect handling in crash_setup_memmap_entries():
-1) the insufficient array slot in crash_setup_memmap_entries();
-2) the uninitialized cmem->max_nr_ranges;
-
-
-> =
-
-> When an out of bounds occurs during the second execution, the function wi=
-ll not
-> return error.
-> =
-
-> Additionally, when the function returns error, means the load failed. It =
-seems
-> meaningless to keep the original data unchanged. But in my opinion, this =
-will
-> make this function more rigorous and more versatile. (However, I am not s=
-ure if
-> it is self-defeating and I hope to receive more suggestions).
-> =
-
-> Thanks
-> fuqiang
-> =
-
-> =
-
-> > > Signed-off-by: fuqiang wang <fuqiang.wang@easystack.cn>
-> > > ---
-> > >   kernel/crash_core.c | 6 +++---
-> > >   1 file changed, 3 insertions(+), 3 deletions(-)
-> > > =
-
-> > > diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> > > index efe87d501c8c..ffdc246cf425 100644
-> > > --- a/kernel/crash_core.c
-> > > +++ b/kernel/crash_core.c
-> > > @@ -611,6 +611,9 @@ int crash_exclude_mem_range(struct crash_mem *mem,
-> > >   		}
-> > >   		if (p_start > start && p_end < end) {
-> > > +			/* Split happened */
-> > > +			if (mem->nr_ranges =3D=3D mem->max_nr_ranges)
-> > > +				return -ENOMEM;
-> > >   			/* Split original range */
-> > >   			mem->ranges[i].end =3D p_start - 1;
-> > >   			temp_range.start =3D p_end + 1;
-> > > @@ -626,9 +629,6 @@ int crash_exclude_mem_range(struct crash_mem *mem,
-> > >   	if (!temp_range.end)
-> > >   		return 0;
-> > > -	/* Split happened */
-> > > -	if (i =3D=3D mem->max_nr_ranges - 1)
-> > > -		return -ENOMEM;
-> > >   	/* Location where new range should go */
-> > >   	j =3D i + 1;
-> > > -- =
-
-> > > 2.42.0
-> > > =
-
-> > > =
-
-> > > _______________________________________________
-> > > kexec mailing list
-> > > kexec@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/kexec
-> > > =
-
-> =
-
+>  {
+>  	int rc = 0;
+>  
+> @@ -909,18 +911,27 @@ int crash_check_update_elfcorehdr(void)
+>  		return 0;
+>  	}
+>  	if (kexec_crash_image) {
+> -		if (kexec_crash_image->file_mode)
+> -			rc = 1;
+> -		else
+> -			rc = kexec_crash_image->update_elfcorehdr;
+> +		if (hotplug == CPU_HOTPLUG)
+> +			rc = arch_crash_hotplug_cpu_support(kexec_crash_image);
+> +		else if (hotplug == MEM_HOTPLUG)
+> +			rc = arch_crash_hotplug_memory_support(kexec_crash_image);
+>  	}
+>  	/* Release lock now that update complete */
+>  	kexec_unlock();
+>  	crash_hotplug_unlock();
+> -
+>  	return rc;
+>  }
+>  
+> +int crash_hotplug_cpu_support(void)
+> +{
+> +	return crash_hotplug_support(CPU_HOTPLUG);
+> +}
+> +
+> +int crash_hotplug_memory_support(void)
+> +{
+> +	return crash_hotplug_support(MEM_HOTPLUG);
+> +}
+> +
+>  /*
+>   * To accurately reflect hot un/plug changes of cpu and memory resources
+>   * (including onling and offlining of those resources), the elfcorehdr
+> -- 
+> 2.41.0
+> 
 
 
 _______________________________________________
