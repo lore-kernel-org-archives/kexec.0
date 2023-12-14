@@ -4,90 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 66468C4332F
-	for <kexec@archiver.kernel.org>; Thu, 14 Dec 2023 14:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 73835C4332F
+	for <kexec@archiver.kernel.org>; Thu, 14 Dec 2023 14:59:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=4fbBL6IZD57NRtDznjuOr8wAnD/gOBWrNzcrgmHJvds=; b=mvsb37g45c8K5k
-	SUSds32oIAStlGgt6QwsjEVOSdksUd5xFACRNdAPqMuWUu8OzXcRSj9z5qRgMdDHnXTAdurKlv718
-	q25u6nQkwOdmnc/48vI8kSrbGDihtOFn06X7ym4OF564grRBbdNgFd2RhotEFb35bb3V+rzsOIfPI
-	Kxhln+yxVOfTM6caQBgpAr4ADowG4Oh+pw2xQiLG9aQ0tMy2ucGKrBWFXccNtcUcux83t7y53J+3l
-	acl/20oQtAmgq0ntWICMMESfYc7/zSwiJWv7h4bv9rCa51iHBKxDc8y21mjUimoS3ZQW5hgfN6FON
-	k9GXvzDMlIDLQMUga67Q==;
+	List-Archive:List-Unsubscribe:List-Id:Subject:MIME-Version:Message-ID:
+	In-Reply-To:Date:References:Cc:To:From:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Owner;
+	bh=djYn9WbOap921VMlsntfgyzfULsKU9Z6hI5ucnPnBus=; b=2tmQb+8bhbMlsrbzLU75JltBzC
+	5Oq6tSY9aIJClo6QKAZI1GNslHYkMiER1KV2eVd7YuHhtYZA7x7R8HWFgbm7+m/BFTtHTesgf1Lre
+	OHjZCdZSbgl4DZWi60nJYcv1BMSnkWv47xmRnJf7vS+wPrR8WO9DJOBau69VJ4SBEDQs8o45qnOOj
+	3ap+G13Wv3bwB3JC3TaUenApgJZLhVRHr0qc2BxTYu6nAXuloVc6mJK8Eg746nqsaON0r/lKnK2au
+	KIRIJ5sh8HhDuZgBGmQbUvAz5NX+fgM3xCR9dRpe7F+yTQ7iK222pnqiEt8gKTuN1r2edkXuMtUbR
+	ZPxKmTMA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rDmTE-000W3N-09;
-	Thu, 14 Dec 2023 14:13:48 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1rDnBT-000bcT-0r;
+	Thu, 14 Dec 2023 14:59:31 +0000
+Received: from out03.mta.xmission.com ([166.70.13.233])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rDmTA-000W2i-2r
-	for kexec@lists.infradead.org;
-	Thu, 14 Dec 2023 14:13:46 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702563223;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rWA4jrugxAphsdbeIh/acD095fJ5/82CDD3Wyi7fJAY=;
-	b=CDcYV2A7amDf0HRgs1KmxF64jRHuhcuDsmvNLhPVdxTqPuMKJHyH/N4fTWXzXdUP8/OKWd
-	TIcGYmgqGTXzLCJ3LAXTV6k2YnrK6Xmx4s1svtSCATGjvjaGijplugcuV9f8/kz34xvtvy
-	UxlRJ6V+VXhgArqgxn6tUiiVSXpMzqM=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-610-sQoJWAN1MZCF3dhHJHsgwg-1; Thu, 14 Dec 2023 09:13:39 -0500
-X-MC-Unique: sQoJWAN1MZCF3dhHJHsgwg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1D51E86EB22;
-	Thu, 14 Dec 2023 14:13:37 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.38])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id A46303C25;
-	Thu, 14 Dec 2023 14:13:35 +0000 (UTC)
-Date: Thu, 14 Dec 2023 22:13:33 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Sourabh Jain <sourabhjain@linux.ibm.com>
-Cc: linuxppc-dev@ozlabs.org, Akhil Raj <lf32.dev@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Dave Young <dyoung@redhat.com>,
-	David Hildenbrand <david@redhat.com>,
-	Eric DeVolder <eric.devolder@oracle.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Hari Bathini <hbathini@linux.ibm.com>,
-	Laurent Dufour <laurent.dufour@fr.ibm.com>,
-	Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Mimi Zohar <zohar@linux.ibm.com>, Naveen N Rao <naveen@kernel.org>,
-	Oscar Salvador <osalvador@suse.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org,
-	x86@kernel.org
-Subject: Re: [PATCH v14 2/6] crash: make CPU and Memory hotplug support
- reporting flexible
-Message-ID: <ZXsNjTT7Ax9blFIt@MiWiFi-R3L-srv>
-References: <20231211083056.340404-1-sourabhjain@linux.ibm.com>
- <20231211083056.340404-3-sourabhjain@linux.ibm.com>
+	id 1rDnBO-000bZ4-2w;
+	Thu, 14 Dec 2023 14:59:29 +0000
+Received: from in01.mta.xmission.com ([166.70.13.51]:55106)
+	by out03.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1rDnBD-00298x-8O; Thu, 14 Dec 2023 07:59:15 -0700
+Received: from ip68-227-168-167.om.om.cox.net ([68.227.168.167]:48054 helo=email.froward.int.ebiederm.org.xmission.com)
+	by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1rDnBC-009bes-10; Thu, 14 Dec 2023 07:59:14 -0700
+From: "Eric W. Biederman" <ebiederm@xmission.com>
+To: Alexander Graf <graf@amazon.com>
+Cc: <linux-kernel@vger.kernel.org>,  <linux-trace-kernel@vger.kernel.org>,
+  <linux-mm@kvack.org>,  <devicetree@vger.kernel.org>,
+  <linux-arm-kernel@lists.infradead.org>,  <kexec@lists.infradead.org>,
+  <linux-doc@vger.kernel.org>,  <x86@kernel.org>,  "H. Peter Anvin"
+ <hpa@zytor.com>,  Andy Lutomirski <luto@kernel.org>,  Peter Zijlstra
+ <peterz@infradead.org>,  "Rob Herring" <robh+dt@kernel.org>,  Steven
+ Rostedt <rostedt@goodmis.org>,  "Andrew Morton"
+ <akpm@linux-foundation.org>,  Mark Rutland <mark.rutland@arm.com>,  "Tom
+ Lendacky" <thomas.lendacky@amd.com>,  Ashish Kalra <ashish.kalra@amd.com>,
+  James Gowans <jgowans@amazon.com>,  Stanislav Kinsburskii
+ <skinsburskii@linux.microsoft.com>,  <arnd@arndb.de>,
+  <pbonzini@redhat.com>,  <madvenka@linux.microsoft.com>,  Anthony Yznaga
+ <anthony.yznaga@oracle.com>,  Usama Arif <usama.arif@bytedance.com>,
+  David Woodhouse <dwmw@amazon.co.uk>,  Benjamin Herrenschmidt
+ <benh@kernel.crashing.org>
+References: <20231213000452.88295-1-graf@amazon.com>
+Date: Thu, 14 Dec 2023 08:58:49 -0600
+In-Reply-To: <20231213000452.88295-1-graf@amazon.com> (Alexander Graf's
+	message of "Wed, 13 Dec 2023 00:04:37 +0000")
+Message-ID: <87r0jo7rva.fsf@email.froward.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20231211083056.340404-3-sourabhjain@linux.ibm.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Disposition: inline
+X-XM-SPF: eid=1rDnBC-009bes-10;;;mid=<87r0jo7rva.fsf@email.froward.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.168.167;;;frm=ebiederm@xmission.com;;;spf=pass
+X-XM-AID: U2FsdGVkX1/OhbNhEazZ4D40H/sN4yD6DjQIF1U06u0=
+X-SA-Exim-Connect-IP: 68.227.168.167
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 00/15] kexec: Allow preservation of ftrace buffers
+X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231214_061344_994341_918F34ED 
-X-CRM114-Status: GOOD (  35.10  )
+X-CRM114-CacheID: sfid-20231214_065926_972666_6DF355A2 
+X-CRM114-Status: GOOD (  37.01  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,216 +87,94 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 12/11/23 at 02:00pm, Sourabh Jain wrote:
-> Architectures' specific functions `arch_crash_hotplug_cpu_support()` and
-> `arch_crash_hotplug_memory_support()` advertise the kernel's capability
-> to update the kdump image on CPU and Memory hotplug events to userspace
-> via the sysfs interface. These architecture-specific functions need to
-> access various attributes of the `kexec_crash_image` object to determine
-> whether the kernel can update the kdump image and advertise this
-> information to userspace accordingly.
-> 
-> As the architecture-specific code is not exposed to the APIs required to
-> acquire the lock for accessing the `kexec_crash_image` object, it calls
-> a generic function, `crash_check_update_elfcorehdr()`, to determine
-> whether the kernel can update the kdump image or not.
-> 
-> The lack of access to the `kexec_crash_image` object in
-> architecture-specific code restricts architectures from performing
-> additional architecture-specific checks required to determine if the
-> kdump image is updatable or not. For instance, on PowerPC, the kernel
-> can update the kdump image only if both the elfcorehdr and FDT are
-> marked as updatable for the `kexec_load` system call.
-> 
-> So define two generic functions, `crash_hotplug_cpu_support()` and
-> `crash_hotplug_memory_support()`, which are called when userspace
-> attempts to read the crash CPU and Memory hotplug support via the sysfs
-> interface. These functions take the necessary locks needed to access the
-> `kexec_crash_image` object and then forward it to the
-> architecture-specific handler to do the rest.
-> 
-> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
-> Cc: Akhil Raj <lf32.dev@gmail.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Borislav Petkov (AMD) <bp@alien8.de>
-> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Dave Young <dyoung@redhat.com>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Eric DeVolder <eric.devolder@oracle.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Hari Bathini <hbathini@linux.ibm.com>
-> Cc: Laurent Dufour <laurent.dufour@fr.ibm.com>
-> Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Mimi Zohar <zohar@linux.ibm.com>
-> Cc: Naveen N Rao <naveen@kernel.org>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Valentin Schneider <vschneid@redhat.com>
-> Cc: Vivek Goyal <vgoyal@redhat.com>
-> Cc: kexec@lists.infradead.org
-> Cc: x86@kernel.org
-> ---
->  arch/x86/include/asm/kexec.h |  8 ++++----
->  arch/x86/kernel/crash.c      | 20 +++++++++++++++-----
->  include/linux/kexec.h        | 13 +++++++------
->  kernel/crash_core.c          | 23 +++++++++++++++++------
->  4 files changed, 43 insertions(+), 21 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-> index 9bb6607e864e..5c88d27b086d 100644
-> --- a/arch/x86/include/asm/kexec.h
-> +++ b/arch/x86/include/asm/kexec.h
-> @@ -212,13 +212,13 @@ void arch_crash_handle_hotplug_event(struct kimage *image, void *arg);
->  #define arch_crash_handle_hotplug_event arch_crash_handle_hotplug_event
->  
->  #ifdef CONFIG_HOTPLUG_CPU
-> -int arch_crash_hotplug_cpu_support(void);
-> -#define crash_hotplug_cpu_support arch_crash_hotplug_cpu_support
-> +int arch_crash_hotplug_cpu_support(struct kimage *image);
-> +#define arch_crash_hotplug_cpu_support arch_crash_hotplug_cpu_support
->  #endif
->  
->  #ifdef CONFIG_MEMORY_HOTPLUG
-> -int arch_crash_hotplug_memory_support(void);
-> -#define crash_hotplug_memory_support arch_crash_hotplug_memory_support
-> +int arch_crash_hotplug_memory_support(struct kimage *image);
-> +#define arch_crash_hotplug_memory_support arch_crash_hotplug_memory_support
->  #endif
->  
->  unsigned int arch_crash_get_elfcorehdr_size(void);
-> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-> index 0d7b2657beb6..ad5941665589 100644
-> --- a/arch/x86/kernel/crash.c
-> +++ b/arch/x86/kernel/crash.c
-> @@ -398,18 +398,28 @@ int crash_load_segments(struct kimage *image)
->  #undef pr_fmt
->  #define pr_fmt(fmt) "crash hp: " fmt
->  
-> -/* These functions provide the value for the sysfs crash_hotplug nodes */
-> +#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_MEMORY_HOTPLUG)
-> +static int crash_hotplug_support(struct kimage *image)
-> +{
-> +	if (image->file_mode)
-> +		return 1;
-> +
-> +	return image->update_elfcorehdr;
-> +}
-> +#endif
-> +
->  #ifdef CONFIG_HOTPLUG_CPU
-> -int arch_crash_hotplug_cpu_support(void)
-> +/* These functions provide the value for the sysfs crash_hotplug nodes */
-> +int arch_crash_hotplug_cpu_support(struct kimage *image)
->  {
-> -	return crash_check_update_elfcorehdr();
-> +	return crash_hotplug_support(image);
->  }
->  #endif
->  
->  #ifdef CONFIG_MEMORY_HOTPLUG
-> -int arch_crash_hotplug_memory_support(void)
-> +int arch_crash_hotplug_memory_support(struct kimage *image)
->  {
-> -	return crash_check_update_elfcorehdr();
-> +	return crash_hotplug_support(image);
->  }
->  #endif
->  
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index ee28c09a7fb0..0f6ea35879ee 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -486,16 +486,17 @@ static inline void arch_kexec_pre_free_pages(void *vaddr, unsigned int pages) {
->  static inline void arch_crash_handle_hotplug_event(struct kimage *image, void *arg) { }
->  #endif
->  
-> -int crash_check_update_elfcorehdr(void);
-> -
-> -#ifndef crash_hotplug_cpu_support
-> -static inline int crash_hotplug_cpu_support(void) { return 0; }
-> +#ifndef arch_crash_hotplug_cpu_support
-> +static inline int arch_crash_hotplug_cpu_support(struct kimage *image) { return 0; }
->  #endif
->  
-> -#ifndef crash_hotplug_memory_support
-> -static inline int crash_hotplug_memory_support(void) { return 0; }
-> +#ifndef arch_crash_hotplug_memory_support
-> +static inline int arch_crash_hotplug_memory_support(struct kimage *image) { return 0; }
->  #endif
->  
-> +extern int crash_hotplug_cpu_support(void);
-> +extern int crash_hotplug_memory_support(void);
-> +
->  #ifndef crash_get_elfcorehdr_size
->  static inline unsigned int crash_get_elfcorehdr_size(void) { return 0; }
->  #endif
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index b9190265fe52..b621f03c1104 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -892,12 +892,14 @@ DEFINE_MUTEX(__crash_hotplug_lock);
->  #define crash_hotplug_lock() mutex_lock(&__crash_hotplug_lock)
->  #define crash_hotplug_unlock() mutex_unlock(&__crash_hotplug_lock)
->  
-> +#define CPU_HOTPLUG	0
-> +#define MEM_HOTPLUG	1
->  /*
->   * This routine utilized when the crash_hotplug sysfs node is read.
->   * It reflects the kernel's ability/permission to update the crash
->   * elfcorehdr directly.
->   */
-> -int crash_check_update_elfcorehdr(void)
-> +static int crash_hotplug_support(int hotplug)
+Alexander Graf <graf@amazon.com> writes:
 
-Is it possible that we rename this function to different name? e.g
-crash_hotplug_check_support() or other name. We may easily mixing it up
-with the one of ARCH version. personal opinion.
+> Kexec today considers itself purely a boot loader: When we enter the new
+> kernel, any state the previous kernel left behind is irrelevant and the
+> new kernel reinitializes the system.
+>
+> However, there are use cases where this mode of operation is not what we
+> actually want. In virtualization hosts for example, we want to use kexec
+> to update the host kernel while virtual machine memory stays untouched.
+> When we add device assignment to the mix, we also need to ensure that
+> IOMMU and VFIO states are untouched. If we add PCIe peer to peer DMA, we
+> need to do the same for the PCI subsystem. If we want to kexec while an
+> SEV-SNP enabled virtual machine is running, we need to preserve the VM
+> context pages and physical memory. See James' and my Linux Plumbers
+> Conference 2023 presentation for details:
+>
+>   https://lpc.events/event/17/contributions/1485/
+>
+> To start us on the journey to support all the use cases above, this
+> patch implements basic infrastructure to allow hand over of kernel state
+> across kexec (Kexec HandOver, aka KHO). As example target, we use ftrace:
+> With this patch set applied, you can read ftrace records from the
+> pre-kexec environment in your post-kexec one. This creates a very powerful
+> debugging and performance analysis tool for kexec. It's also slightly
+> easier to reason about than full blown VFIO state preservation.
+>
+> == Alternatives ==
+>
+> There are alternative approaches to (parts of) the problems above:
+>
+>   * Memory Pools [1] - preallocated persistent memory region + allocator
+>   * PRMEM [2] - resizable persistent memory regions with fixed metadata
+>                 pointer on the kernel command line + allocator
+>   * Pkernfs [3] - preallocated file system for in-kernel data with fixed
+>                   address location on the kernel command line
+>   * PKRAM [4] - handover of user space pages using a fixed metadata page
+>                 specified via command line
+>
+> All of the approaches above fundamentally have the same problem: They
+> require the administrator to explicitly carve out a physical memory
+> location because they have no mechanism outside of the kernel command
+> line to pass data (including memory reservations) between kexec'ing
+> kernels.
+>
+> KHO provides that base foundation. We will determine later whether we
+> still need any of the approaches above for fast bulk memory handover of for
+> example IOMMU page tables. But IMHO they would all be users of KHO, with
+> KHO providing the foundational primitive to pass metadata and bulk memory
+> reservations as well as provide easy versioning for data.
 
->  {
->  	int rc = 0;
->  
-> @@ -909,18 +911,27 @@ int crash_check_update_elfcorehdr(void)
->  		return 0;
->  	}
->  	if (kexec_crash_image) {
-> -		if (kexec_crash_image->file_mode)
-> -			rc = 1;
-> -		else
-> -			rc = kexec_crash_image->update_elfcorehdr;
-> +		if (hotplug == CPU_HOTPLUG)
-> +			rc = arch_crash_hotplug_cpu_support(kexec_crash_image);
-> +		else if (hotplug == MEM_HOTPLUG)
-> +			rc = arch_crash_hotplug_memory_support(kexec_crash_image);
->  	}
->  	/* Release lock now that update complete */
->  	kexec_unlock();
->  	crash_hotplug_unlock();
-> -
->  	return rc;
->  }
->  
-> +int crash_hotplug_cpu_support(void)
-> +{
-> +	return crash_hotplug_support(CPU_HOTPLUG);
-> +}
-> +
-> +int crash_hotplug_memory_support(void)
-> +{
-> +	return crash_hotplug_support(MEM_HOTPLUG);
-> +}
-> +
->  /*
->   * To accurately reflect hot un/plug changes of cpu and memory resources
->   * (including onling and offlining of those resources), the elfcorehdr
-> -- 
-> 2.41.0
-> 
+What you are describe in many ways is the same problem as
+kexec-on-panic.  The goal of leaving devices running absolutely requires
+carving out memory for the new kernel to live in while it is coming up
+so that DMA from a device that was not shutdown down does not stomp the
+kernel coming up.
 
+If I understand the virtualization case some of those virtual machines
+are going to have virtual NICs that are going to want to DMA memory to
+the host system.  Which if I understand things correctly means that
+among the devices you explicitly want to keep running there is a not
+a way to avoid the chance of DMA coming in while the kernel is being
+changed.
+
+There is also a huge maintenance challenge associated with all of this.
+
+If you go with something that is essentially kexec-on-panic and then
+add a little bit to help find things in the memory of the previous
+kernel while the new kernel is coming up I can see it as a possibility.
+
+As an example I think preserving ftrace data of kexec seems bizarre.
+I don't see how that is an interesting use case at all.  Not in
+the situation of preserving virtual machines, and not in the situation
+of kexec on panic.
+
+If you are doing an orderly shutdown and kernel switch you should be
+able to manually change the memory.  If you are not doing an orderly
+shutdown then I really don't get it.
+
+I don't hate the capability you are trying to build.
+
+I have not read or looked at most of this so I am probably
+missing subtle details.
+
+As you are currently describing things I have the sense you have
+completely misframed the problem and are trying to solve the wrong parts
+of the problem.
+
+Eric
 
 _______________________________________________
 kexec mailing list
