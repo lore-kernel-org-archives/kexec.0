@@ -4,72 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5A63EC4167B
-	for <kexec@archiver.kernel.org>; Thu, 14 Dec 2023 09:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BA092C4332F
+	for <kexec@archiver.kernel.org>; Thu, 14 Dec 2023 10:29:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=cWbx5Np5SmC9LzpyoQPtS0JTb/0BiIDjOaLCAArqcys=; b=kcGw17nz1JFNOC
-	MeLahIieU7UfzMPLGCE2cwI+gsLevPsqWv0zQIxD138m8O/qFqz5mY5Co7qqe+BcE24ZCIezSMqEE
-	9N3WUhaNA16XfJUkCXygPmPwf8o2edlgwmqnKxZz6KqaqGAQDfKiSsBtBXQLOGKqInw4hk9sT66J3
-	YrHYtJcOllpWAr0VKunRXuk2IhTHIgjjZZIzY+DFfHPSOWF/vwRsLrEFjeWYLx+R3oweCK5aqBb3I
-	Cn4L58pqNK4V/meg8UWFmqPwbBvA/G1irACrAr1E4z8hSv4IPjjbKpsf4JxhEaXZaXogav+Wap3Xb
-	rqGTyFJjnGBoUIttCGaA==;
+	List-Owner; bh=l5mAQB5VHE/s9wcH9bxan5XYX01rKBwq45y5tzNpuIc=; b=RroukKQsWKFzNr
+	S7KZqtnhWRbfm6VoZqDblo8Kh0OklsrSzZ0V8g0USXdYpcBWo+DL6APm4jyxpHfCdQ40D0dFOdylZ
+	1NLUVgg9KPpOw2koiHIRQKPQTQQqYYTOWUYnD+siqf667mdFn80nk97gs0NvbB/PwJg4lXg42lrsK
+	0pNVOyGeNXllA/dpH1yf2/AEAq6vS5Od570lYR52rSfcJ1e4DKNZJafdxH7dWOvpi9cvX+IAgPRis
+	lcNlT5kr1VCK+eSAEGUsCj764ncrHrhKFa5bvhEQD6Ronxbt5zODK0w2+qSFQm4Y7a2XBqT0eA1HB
+	dW2EFzEgIF9Y6aifNliw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rDhqG-00HK4o-0r;
-	Thu, 14 Dec 2023 09:17:16 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1rDixu-00HTWK-2l;
+	Thu, 14 Dec 2023 10:29:14 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rDhqC-00HK2w-0O
+	id 1rDixp-00HTVw-3D
 	for kexec@lists.infradead.org;
-	Thu, 14 Dec 2023 09:17:13 +0000
+	Thu, 14 Dec 2023 10:29:11 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702545430;
+	s=mimecast20190719; t=1702549748;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=uUDsFrdozAvlpGaxLHtyNeP/OnotbqYqMUVE5yB4sEs=;
-	b=dDfCrwnIyws5JUJ3wyZbqQF6V79VgICboLF3p1EuxQ6w2QeblmBXvlp4hnh+XgHovTr7qA
-	wFU4r/5vWVICvF+36OjQSQeDE3B+IRpSUBdG9jDIzV2+sPuxjP9ZUikLNB8cmpxiK3Ebgc
-	vDCEDkCWzqFt/EPq14oO7oSMQSVzOxE=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-114-5ChW8uqMO92L_niAB7szIw-1; Thu,
- 14 Dec 2023 04:17:06 -0500
-X-MC-Unique: 5ChW8uqMO92L_niAB7szIw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	bh=WEGnuAcA6vcyz/hnSV1HfLQ52Yc/OzlpLIbZnnIF9xo=;
+	b=LYtNkeeviHlxPafvma9BTHbdjfRDFw9xGdqvok9ku27K176f0uUN3hN4ZqdKYNV9L+KdGF
+	MY9dcWnCCiFGSJlDBcuwcae0ue0HN5sod8ATEVuNsz7LyR5Y4P4Th1TvUaCw7x+5TO13kG
+	WJbqVCNeJlflnUCuKuDCroMHwyuTmOA=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-265-saQwzr8LNLeC1X0oZg-3ow-1; Thu, 14 Dec 2023 05:29:05 -0500
+X-MC-Unique: saQwzr8LNLeC1X0oZg-3ow-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9D7382820B79;
-	Thu, 14 Dec 2023 09:17:05 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 10B6885A58A;
+	Thu, 14 Dec 2023 10:29:05 +0000 (UTC)
 Received: from localhost (unknown [10.72.116.38])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id E2E112026D66;
-	Thu, 14 Dec 2023 09:17:03 +0000 (UTC)
-Date: Thu, 14 Dec 2023 17:17:00 +0800
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 5AC703C25;
+	Thu, 14 Dec 2023 10:29:03 +0000 (UTC)
+Date: Thu, 14 Dec 2023 18:29:01 +0800
 From: Baoquan He <bhe@redhat.com>
 To: fuqiang wang <fuqiang.wang@easystack.cn>
 Cc: Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
 	kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] kexec: avoid out of bounds in crash_exclude_mem_range()
-Message-ID: <ZXrIDNvvlpZyiLYK@MiWiFi-R3L-srv>
+Message-ID: <ZXrY7QbXAlxydsSC@MiWiFi-R3L-srv>
 References: <20231127025641.62210-1-fuqiang.wang@easystack.cn>
  <ZWg9aZYoo0v+tCQ8@MiWiFi-R3L-srv>
  <e588c619-9b97-4627-bce1-b595c757e5c4@easystack.cn>
- <ZXk2oBf/T1Ul6o0c@MiWiFi-R3L-srv>
- <92a1bdff-e988-48ff-8e78-2998834a3e02@easystack.cn>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <92a1bdff-e988-48ff-8e78-2998834a3e02@easystack.cn>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
+In-Reply-To: <e588c619-9b97-4627-bce1-b595c757e5c4@easystack.cn>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231214_011712_246185_7AAF9D50 
-X-CRM114-Status: GOOD (  41.90  )
+X-CRM114-CacheID: sfid-20231214_022910_107484_598BED9F 
+X-CRM114-Status: GOOD (  35.09  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,102 +79,213 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-T24gMTIvMTMvMjMgYXQgMDk6MTBwbSwgZnVxaWFuZyB3YW5nIHdyb3RlOgo+IOWcqCAyMDIzLzEy
-LzEzIDEyOjQ0LCBCYW9xdWFuIEhlIOWGmemBkzoKPiAKPiA+IE9uIDExLzMwLzIzIGF0IDA5OjIw
-cG0sIGZ1cWlhbmcgd2FuZyB3cm90ZToKPiA+ID4gT24gMjAyMy8xMS8zMCAxNTo0NCwgQmFvcXVh
-biBIZSB3cm90ZToKPiA+ID4gPiBPbiAxMS8yNy8yMyBhdCAxMDo1NmFtLCBmdXFpYW5nIHdhbmcg
-d3JvdGU6Cj4gPiA+ID4gPiBXaGVuIHRoZSBzcGxpdCBoYXBwZW5lZCwganVkZ2Ugd2hldGhlciBt
-ZW0tPm5yX3JhbmdlcyBpcyBlcXVhbCB0bwo+ID4gPiA+ID4gbWVtLT5tYXhfbnJfcmFuZ2VzLiBJ
-ZiBpdCBpcyB0cnVlLCByZXR1cm4gLUVOT01FTS4KPiA+ID4gPiA+IAo+ID4gPiA+ID4gVGhlIGFk
-dmFudGFnZSBvZiBkb2luZyB0aGlzIGlzIHRoYXQgaXQgY2FuIGF2b2lkIGFycmF5IGJvdW5kcyBj
-YXVzZWQgYnkKPiA+ID4gPiA+IHNvbWUgYnVncy4gRS5nLiwgQmVmb3JlIGNvbW1pdCA0ODMxYmU3
-MDJiOTUgKCJhcm02NC9rZXhlYzogRml4IG1pc3NpbmcKPiA+ID4gPiA+IGV4dHJhIHJhbmdlIGZv
-ciBjcmFzaGtyZXNfbG93LiIpLCByZXNlcnZlIGJvdGggaGlnaCBhbmQgbG93IG1lbW9yaWVzIGZv
-cgo+ID4gPiA+ID4gdGhlIGNyYXNoa2VybmVsIG1heSBjYXVzZSBvdXQgb2YgYm91bmRzLgo+ID4g
-PiA+ID4gCj4gPiA+ID4gPiBPbiB0aGUgb3RoZXIgaGFuZCwgbW92ZSB0aGlzIGNvZGUgYmVmb3Jl
-IHRoZSBzcGxpdCB0byBlbnN1cmUgdGhhdCB0aGUKPiA+ID4gPiA+IGFycmF5IHdpbGwgbm90IGJl
-IGNoYW5nZWQgd2hlbiByZXR1cm4gZXJyb3IuCj4gPiA+ID4gSWYgb3V0IG9mIGFycmF5IGJvdW5k
-YXJ5IGlzIGNhdXNlZCwgbWVhbnMgdGhlIGxhb2RpbmcgZmFpbGVkLCB3aGV0aGVyCj4gPiA+ID4g
-dGhlIG91dCBvZiBib3VuZGFyeSBoYXBwZW5lZCBvciBub3QuIEkgZG9uJ3Qgc2VlIGhvdyB0aGlz
-IGNvZGUgY2hhbmdlCj4gPiA+ID4gbWFrZXMgc2Vuc2UuIERvIEkgbWlzcyBhbnl0aGluZz8KPiA+
-ID4gPiAKPiA+ID4gPiBUaGFua3MKPiA+ID4gPiBCYW9xdWFuCj4gPiA+ID4gCj4gPiA+IEhpIGJh
-b3F1YW4sCj4gPiA+IAo+ID4gPiBJbiBzb21lIGNvbmZpZ3VyYXRpb25zLCBvdXQgb2YgYm91bmRz
-IG1heSBub3QgY2F1c2UgY3Jhc2hfZXhjbHVkZV9tZW1fcmFuZ2UoKQo+ID4gPiByZXR1cm5zIGVy
-cm9yLCB0aGVuIHRoZSBsb2FkIHdpbGwgc3VjY2VlZC4KPiA+ID4gCj4gPiA+IEUuZy4KPiA+ID4g
-VGhlcmUgaXMgYSBjbWVtIGJlZm9yZSBleGVjdXRlIGNyYXNoX2V4Y2x1ZGVfbWVtX3JhbmdlKCk6
-Cj4gPiA+IAo+ID4gPiAgwqAgY21lbSA9IHsKPiA+ID4gIMKgwqDCoCBtYXhfbnJfcmFuZ2VzID0g
-Mwo+ID4gPiAgwqDCoMKgIG5yX3JhbmdlcyA9IDIKPiA+ID4gIMKgwqDCoCByYW5nZXMgPSB7Cj4g
-PiA+ICDCoMKgwqDCoMKgwqAge3N0YXJ0ID0gMSzCoMKgwqDCoMKgIGVuZCA9IDEwMDB9Cj4gPiA+
-ICDCoMKgwqDCoMKgwqAge3N0YXJ0ID0gMTAwMSzCoMKgwqAgZW5kID0gMjAwMH0KPiA+ID4gIMKg
-wqDCoCB9Cj4gPiA+ICDCoCB9Cj4gPiA+IAo+ID4gPiBBZnRlciBleGVjdXRpbmcgdHdpY2UgY3Jh
-c2hfZXhjbHVkZV9tZW1fcmFuZ2UoKSB3aXRoIHRoZSBzdGFydC9lbmQgcGFyYW1zCj4gPiA+IDEw
-MC8yMDAsIDMwMC80MDAgcmVzcGVjdGl2ZWx5LCB0aGUgY21lbSB3aWxsIGJlOgo+ID4gPiAKPiA+
-ID4gIMKgIGNtZW0gPSB7Cj4gPiA+ICDCoMKgwqAgbWF4X25yX3JhbmdlcyA9IDMKPiA+ID4gIMKg
-wqDCoCBucl9yYW5nZXMgPSA0wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-PD09IG5yX3JhbmdlcyA+IG1heF9ucl9yYW5nZXMKPiA+ID4gIMKgwqDCoCByYW5nZXMgPSB7Cj4g
-PiA+ICDCoMKgwqDCoMKgIHtzdGFydCA9IDEswqDCoMKgwqDCoMKgIGVuZCA9IDk5wqAgfQo+ID4g
-PiAgwqDCoMKgwqDCoCB7c3RhcnQgPSAyMDEswqDCoMKgwqAgZW5kID0gMjk5IH0KPiA+ID4gIMKg
-wqDCoMKgwqAge3N0YXJ0ID0gNDAxLMKgwqDCoMKgIGVuZCA9IDEwMDB9Cj4gPiA+ICDCoMKgwqDC
-oMKgIHtzdGFydCA9IDEwMDEswqDCoMKgIGVuZCA9IDIwMDB9wqAgPD09IE9VVCBPRiBCT1VORFMK
-PiA+ID4gIMKgwqDCoCB9Cj4gPiA+ICDCoCB9Cj4gPiA+IAo+ID4gPiBXaGVuIGFuIG91dCBvZiBi
-b3VuZHMgb2NjdXJzIGR1cmluZyB0aGUgc2Vjb25kIGV4ZWN1dGlvbiwgdGhlIGZ1bmN0aW9uIHdp
-bGwgbm90Cj4gPiA+IHJldHVybiBlcnJvci4KPiA+ID4gCj4gPiA+IEFkZGl0aW9uYWxseSwgd2hl
-biB0aGUgZnVuY3Rpb24gcmV0dXJucyBlcnJvciwgbWVhbnMgdGhlIGxvYWQgZmFpbGVkLiBJdCBz
-ZWVtcwo+ID4gPiBtZWFuaW5nbGVzcyB0byBrZWVwIHRoZSBvcmlnaW5hbCBkYXRhIHVuY2hhbmdl
-ZC4gQnV0IGluIG15IG9waW5pb24sIHRoaXMgd2lsbAo+ID4gPiBtYWtlIHRoaXMgZnVuY3Rpb24g
-bW9yZSByaWdvcm91cyBhbmQgbW9yZSB2ZXJzYXRpbGUuIChIb3dldmVyLCBJIGFtIG5vdCBzdXJl
-IGlmCj4gPiA+IGl0IGlzIHNlbGYtZGVmZWF0aW5nIGFuZCBJIGhvcGUgdG8gcmVjZWl2ZSBtb3Jl
-IHN1Z2dlc3Rpb25zKS4KPiA+IFNvcnJ5IGZvciBsYXRlIHJlcGx5Lgo+ID4gCj4gPiBJIGNoZWNr
-ZWQgdGhlIGNvZGUgYWdhaW4sIHRoZXJlIHNlZW1zIHRvIGJlIGNhc2VzIG91dCBvZiBib3VuZHMg
-b2NjdXIKPiA+IHZlcnkgcG9zc2libGx5LiBXZSBtYXkgbmVlZCB0byBlbmxhcmdlIHRoZSBjbWVt
-IGFycmF5IHRvIGF2b2lkIHRoZSByaXNrLgo+ID4gCj4gPiBJbiBiZWxvdyBkcmFmdCBjb2RlLCB3
-ZSBuZWVkIGFkZCBhbm90aGVyIHNsb3QgdG8gZXhjbHVkZSB0aGUgbG93IDFNIGFyZWEKPiA+IHdo
-ZW4gcHJlcGFyaW5nIGVsZmNvcmVoZHIuIEFuZCB0byBleGNsdWRlIHRoZSBlbGYgaGVhZGVyIHJl
-Z2lvbiBmcm9tCj4gPiBjcmFzaCBrZXJuZWwgcmVnaW9uLCB3ZSBuZWVkIGNyZWF0ZSB0aGUgY21l
-bSB3aXRoIDIgc2xvdHMuCj4gPiAKPiA+IFdpdGggdGhlc2UgY2hhbmdlLCB3ZSBjYW4gYWJzb2x1
-dGVseSBhdm9pZCBvdXQgb2YgYm91bmRzIG9jY3VyZW5jZS4KPiA+IFdoYXQgZG8geW91IHRoaW5r
-Pwo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYva2VybmVsL2NyYXNoLmMgYi9hcmNoL3g4
-Ni9rZXJuZWwvY3Jhc2guYwo+ID4gaW5kZXggMTcxNWU1ZjA2YTU5Li4yMWZhY2FiY2Y2OTkgMTAw
-NjQ0Cj4gPiAtLS0gYS9hcmNoL3g4Ni9rZXJuZWwvY3Jhc2guYwo+ID4gKysrIGIvYXJjaC94ODYv
-a2VybmVsL2NyYXNoLmMKPiA+IEBAIC0xNDcsMTAgKzE0NywxMCBAQCBzdGF0aWMgc3RydWN0IGNy
-YXNoX21lbSAqZmlsbF91cF9jcmFzaF9lbGZfZGF0YSh2b2lkKQo+ID4gICAJCXJldHVybiBOVUxM
-Owo+ID4gICAJLyoKPiA+IC0JICogRXhjbHVzaW9uIG9mIGNyYXNoIHJlZ2lvbiBhbmQvb3IgY3Jh
-c2hrX2xvd19yZXMgbWF5IGNhdXNlCj4gPiAtCSAqIGFub3RoZXIgcmFuZ2Ugc3BsaXQuIFNvIGFk
-ZCBleHRyYSB0d28gc2xvdHMgaGVyZS4KPiA+ICsJICogRXhjbHVzaW9uIG9mIGxvdyAxTSwgY3Jh
-c2ggcmVnaW9uIGFuZC9vciBjcmFzaGtfbG93X3JlcyBtYXkKPiA+ICsJICogY2F1c2UgYW5vdGhl
-ciByYW5nZSBzcGxpdC4gU28gYWRkIGV4dHJhIHR3byBzbG90cyBoZXJlLgo+ID4gICAJICovCj4g
-PiAtCW5yX3JhbmdlcyArPSAyOwo+ID4gKwlucl9yYW5nZXMgKz0gMzsKPiA+ICAgCWNtZW0gPSB2
-emFsbG9jKHN0cnVjdF9zaXplKGNtZW0sIHJhbmdlcywgbnJfcmFuZ2VzKSk7Cj4gPiAgIAlpZiAo
-IWNtZW0pCj4gPiAgIAkJcmV0dXJuIE5VTEw7Cj4gSGkgYmFvcXVhbiwKPiAKPiBFeGNsdXNpb24g
-b2YgbG93IDFNIG1heSBub3QgY2F1c2UgbmV3IHJlZ2lvbi4gQmVjYXVzZSB3aGVuIGNhbGxpbmcK
-PiBjcmFzaF9leGNsdWRlX21lbV9yYW5nZSgpLCB0aGUgc3RhcnQgcGFyYW1ldGVyIGlzIDAgYW5k
-IHRoZSBjb25kaXRpb24gZm9yCj4gc3BsaXR0aW5nIGEgbmV3IHJlZ2lvbiBpcyB0aGF0IHRoZSBz
-dGFydCwgZW5kIHBhcmFtZXRlcnMgYXJlIGJvdGggaW4gYSBjZXJ0YWluCj4gZXhpc3RpbmcgcmVn
-aW9uIGluIGNtZW0gYW5kIGNhbm5vdCBiZSBlcXVhbCB0byBleGlzdGluZyByZWdpb24ncyBzdGFy
-dCBvciBlbmQuCj4gT2J2aW91c2x5LCBzdGFydCAoMCkgY2Fubm90IG1lZXQgdGhpcyBjb25kaXRp
-b24uCgpPSywgdGhpcyBpcyBhbiBzcGVjaWFsIGNhc2UuCgo+ID4gQEAgLTI4Miw3ICsyODIsNyBA
-QCBpbnQgY3Jhc2hfc2V0dXBfbWVtbWFwX2VudHJpZXMoc3RydWN0IGtpbWFnZSAqaW1hZ2UsIHN0
-cnVjdCBib290X3BhcmFtcyAqcGFyYW1zKQo+ID4gICAJc3RydWN0IGNyYXNoX21lbW1hcF9kYXRh
-IGNtZDsKPiA+ICAgCXN0cnVjdCBjcmFzaF9tZW0gKmNtZW07Cj4gPiAtCWNtZW0gPSB2emFsbG9j
-KHN0cnVjdF9zaXplKGNtZW0sIHJhbmdlcywgMSkpOwo+ID4gKwljbWVtID0gdnphbGxvYyhzdHJ1
-Y3Rfc2l6ZShjbWVtLCByYW5nZXMsIDIpKTsKPiA+ICAgCWlmICghY21lbSkKPiA+ICAgCQlyZXR1
-cm4gLUVOT01FTTsKPiA+IAo+IFllcywgeW91IGFyZSByaWdodC4gRXhjbHVkZSB0aGUgZWxmIGhl
-YWRlciByZWdpb24gZnJvbSBjcmFzaCBrZXJuZWwgcmVnaW9uIG1heQo+IGNhdXNlIHNwbGl0IGEg
-bmV3IHJlZ2lvbi4gQW5kIHRoZXJlIHNlZW1zIHRvIGJlIGFub3RoZXIgaXNzdWUgd2l0aCB0aGlz
-IGNvZGUKPiBwYXRoOiBCZWZvcmUgY2FsbGluZyBjcmFzaF9leGNsdWRlX21lbV9yYW5nZSgpLCBj
-bWVtLT5tYXhfbnJfcmFuZ2VzIHdhcyBub3QKPiBpbml0aWFsaXplZC4KClllYWgsIHRoZSBpbml0
-IG5lZWQgYmUgYWRkZWQuCgo+IAo+IEluIG15IG9waW5pb24sIHRoZXNlIGNoYW5nZSBjYW4gYWJz
-b2x1dGVseSBhdm9pZCBvdXQgb2YgYm91bmRzIG9jY3VyZW5jZS4gQnV0Cj4gd2hlbiB3ZSBmb3Jn
-ZXQgdG8gbW9kaWZ5IG1heF9ucl9yYW5nZXMgZHVlIHRvIGEgbWlzdGFrZXMgaW4gdGhlIGZ1dHVy
-ZSwgaXMgaXQKPiBiZXR0ZXIgdG8gcmVwb3J0IGl0IGJ5IHJldHVybmluZyBhbiBlcnJvciB0aHJv
-dWdoIGNyYXNoX2V4Y2x1ZGVfbWVtX3JhbmdlKCkuCj4gV2hhdCBkbyB5b3UgdGhpbmsgYWJvdXQg
-aXQ/CgpJIGRvbid0IHNlZSB0aGUgZGlmZmVyZW5jZSBiZXR3ZWVuIHlvdXIgcGF0Y2ggYW5kIHRo
-ZSBjdXJyZW50IGNvZGUuClBsZWFzZSBzZWUgbXkgY29tbWVudCBpbiB5b3VyIGVhcmxpZXIgZXhh
-bXBsZS4KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpr
-ZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
-aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On 11/30/23 at 09:20pm, fuqiang wang wrote:
+> =
+
+> On 2023/11/30 15:44, Baoquan He wrote:
+> > On 11/27/23 at 10:56am, fuqiang wang wrote:
+> > > When the split happened, judge whether mem->nr_ranges is equal to
+> > > mem->max_nr_ranges. If it is true, return -ENOMEM.
+> > > =
+
+> > > The advantage of doing this is that it can avoid array bounds caused =
+by
+> > > some bugs. E.g., Before commit 4831be702b95 ("arm64/kexec: Fix missing
+> > > extra range for crashkres_low."), reserve both high and low memories =
+for
+> > > the crashkernel may cause out of bounds.
+> > > =
+
+> > > On the other hand, move this code before the split to ensure that the
+> > > array will not be changed when return error.
+> > If out of array boundary is caused, means the laoding failed, whether
+> > the out of boundary happened or not. I don't see how this code change
+> > makes sense. Do I miss anything?
+> > =
+
+> > Thanks
+> > Baoquan
+> > =
+
+> Hi baoquan,
+> =
+
+> In some configurations, out of bounds may not cause crash_exclude_mem_ran=
+ge()
+> returns error, then the load will succeed.
+> =
+
+> E.g.
+> There is a cmem before execute crash_exclude_mem_range():
+> =
+
+> =A0 cmem =3D {
+> =A0=A0=A0 max_nr_ranges =3D 3
+> =A0=A0=A0 nr_ranges =3D 2
+> =A0=A0=A0 ranges =3D {
+> =A0=A0=A0=A0=A0=A0 {start =3D 1,=A0=A0=A0=A0=A0 end =3D 1000}
+> =A0=A0=A0=A0=A0=A0 {start =3D 1001,=A0=A0=A0 end =3D 2000}
+> =A0=A0=A0 }
+> =A0 }
+> =
+
+> After executing twice crash_exclude_mem_range() with the start/end params
+> 100/200, 300/400 respectively, the cmem will be:
+> =
+
+> =A0 cmem =3D {
+> =A0=A0=A0 max_nr_ranges =3D 3
+> =A0=A0=A0 nr_ranges =3D 4=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0 <=3D=3D nr_ranges > max_nr_ranges
+> =A0=A0=A0 ranges =3D {
+> =A0=A0=A0=A0=A0 {start =3D 1,=A0=A0=A0=A0=A0=A0 end =3D 99=A0 }
+> =A0=A0=A0=A0=A0 {start =3D 201,=A0=A0=A0=A0 end =3D 299 }
+> =A0=A0=A0=A0=A0 {start =3D 401,=A0=A0=A0=A0 end =3D 1000}
+> =A0=A0=A0=A0=A0 {start =3D 1001,=A0=A0=A0 end =3D 2000}=A0 <=3D=3D OUT OF=
+ BOUNDS
+> =A0=A0=A0 }
+> =A0 }
+
+Let me borrow your example and copy them here, but I will switch the
+order of start/end params 100/200, 300/400 executing at below:
+
+There is a cmem before execute crash_exclude_mem_range():
+
+=A0 cmem =3D {
+=A0=A0=A0 max_nr_ranges =3D 3
+=A0=A0=A0 nr_ranges =3D 2
+=A0=A0=A0 ranges =3D {
+=A0=A0=A0=A0=A0=A0 {start =3D 1,=A0=A0=A0=A0=A0 end =3D 1000}
+=A0=A0=A0=A0=A0=A0 {start =3D 1001,=A0=A0=A0 end =3D 2000}
+=A0=A0=A0 }
+=A0 }
+
+After executing twice crash_exclude_mem_range() with the start/end params
+300/400, the cmem will be:
+
+=A0 cmem =3D {
+=A0=A0=A0 max_nr_ranges =3D 3
+=A0=A0=A0 nr_ranges =3D 3=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0 <=3D=3D nr_ranges =3D=3D max_nr_ranges
+=A0=A0=A0 ranges =3D {
+=A0=A0=A0=A0=A0 {start =3D 1,=A0=A0=A0=A0=A0=A0 end =3D 299=A0 }  i=3D0
+=A0=A0=A0=A0=A0 {start =3D 401,=A0=A0=A0=A0 end =3D 1000}   i=3D1
+=A0=A0=A0=A0=A0 {start =3D 1001,=A0=A0=A0 end =3D 2000}=A0  i=3D2
+=A0=A0=A0 }
+=A0 }
+When it's executing the 100/200 excluding, we have:
+
+=A0 cmem =3D {
+=A0=A0=A0 max_nr_ranges =3D 3
+=A0=A0=A0 nr_ranges =3D 4=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0 <=3D=3D nr_ranges > max_nr_ranges
+=A0=A0=A0 ranges =3D {
+=A0=A0=A0=A0=A0 {start =3D 1,=A0=A0=A0=A0=A0=A0 end =3D 99=A0 }   i=3D0
+=A0=A0=A0=A0=A0 {start =3D 401,=A0=A0=A0=A0 end =3D 1000}
+=A0=A0=A0=A0=A0 {start =3D 1001,=A0=A0=A0 end =3D 2000}=A0 =
+
+=A0=A0=A0 }
+=A0 }
+
+Then splitting happened, i =3D=3D 0, then for loop is broken and jump out.
+Then we have the condition checking here:
+
+	/* Split happened */
+        if (i =3D=3D mem->max_nr_ranges - 1)
+                return -ENOMEM;
+
+Obviously the conditonal checking is incorrect (given the i =3D=3D 0 in
+above case), it should be =
+
+
+	/* Split happened */
+	if (mem->nr_ranges =3D=3D mem->max_nr_ranges)
+                return -ENOMEM;
+
+So, now there are two things which need be combed up in
+crash_exclude_mem_range():
+
+1) the above conditional check is incorrect, need be fixed;
+2) whether we need have the cmem->ranges[] partly changed, or keep it
+unchanged when OOB happened;
+
+And also the incorrect handling in crash_setup_memmap_entries():
+1) the insufficient array slot in crash_setup_memmap_entries();
+2) the uninitialized cmem->max_nr_ranges;
+
+
+> =
+
+> When an out of bounds occurs during the second execution, the function wi=
+ll not
+> return error.
+> =
+
+> Additionally, when the function returns error, means the load failed. It =
+seems
+> meaningless to keep the original data unchanged. But in my opinion, this =
+will
+> make this function more rigorous and more versatile. (However, I am not s=
+ure if
+> it is self-defeating and I hope to receive more suggestions).
+> =
+
+> Thanks
+> fuqiang
+> =
+
+> =
+
+> > > Signed-off-by: fuqiang wang <fuqiang.wang@easystack.cn>
+> > > ---
+> > >   kernel/crash_core.c | 6 +++---
+> > >   1 file changed, 3 insertions(+), 3 deletions(-)
+> > > =
+
+> > > diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> > > index efe87d501c8c..ffdc246cf425 100644
+> > > --- a/kernel/crash_core.c
+> > > +++ b/kernel/crash_core.c
+> > > @@ -611,6 +611,9 @@ int crash_exclude_mem_range(struct crash_mem *mem,
+> > >   		}
+> > >   		if (p_start > start && p_end < end) {
+> > > +			/* Split happened */
+> > > +			if (mem->nr_ranges =3D=3D mem->max_nr_ranges)
+> > > +				return -ENOMEM;
+> > >   			/* Split original range */
+> > >   			mem->ranges[i].end =3D p_start - 1;
+> > >   			temp_range.start =3D p_end + 1;
+> > > @@ -626,9 +629,6 @@ int crash_exclude_mem_range(struct crash_mem *mem,
+> > >   	if (!temp_range.end)
+> > >   		return 0;
+> > > -	/* Split happened */
+> > > -	if (i =3D=3D mem->max_nr_ranges - 1)
+> > > -		return -ENOMEM;
+> > >   	/* Location where new range should go */
+> > >   	j =3D i + 1;
+> > > -- =
+
+> > > 2.42.0
+> > > =
+
+> > > =
+
+> > > _______________________________________________
+> > > kexec mailing list
+> > > kexec@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/kexec
+> > > =
+
+> =
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
