@@ -4,131 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E2FD9C4332F
-	for <kexec@archiver.kernel.org>; Thu, 14 Dec 2023 08:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5A63EC4167B
+	for <kexec@archiver.kernel.org>; Thu, 14 Dec 2023 09:17:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-ID:In-Reply-To:
-	References:Message-ID:Date:Subject:CC:To:From:Reply-To:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=nV9q2ltuSj82DeYKyI3fbKQQ9epdPsLaf9TaynCWMSg=; b=GeRwPcjFuP62BE
-	6tnnMeuJa//4CHh1bKF63IhNHRfbP6zpVwD23aZI7C6hP6aBdhb2eyH//SYs/187p07kdhaUQ/hGL
-	RXApKDGox129kSIjpiNN15IlPpZhx487+IJHl+tt+PNEYyxURsgtukH3DUnpVXWeu6rXdGOLDJ0kT
-	w7jtMJvTY7xyZFGxGvFyf9H6cj/vbS5k+vJPCfC2i8wWcGWE6rmNizggWUkX6+PfTRA/2OYs5oM/q
-	hVw2mE75A4xMI86WRyKnbJgS9KkKH7orUFiDqLYoCQ6/eQl8nZTZnply7VTMd7oYtL6CG5iqpSKJ9
-	Vzy6VQNrOk/lRrpR4wyA==;
+	List-Owner; bh=cWbx5Np5SmC9LzpyoQPtS0JTb/0BiIDjOaLCAArqcys=; b=kcGw17nz1JFNOC
+	MeLahIieU7UfzMPLGCE2cwI+gsLevPsqWv0zQIxD138m8O/qFqz5mY5Co7qqe+BcE24ZCIezSMqEE
+	9N3WUhaNA16XfJUkCXygPmPwf8o2edlgwmqnKxZz6KqaqGAQDfKiSsBtBXQLOGKqInw4hk9sT66J3
+	YrHYtJcOllpWAr0VKunRXuk2IhTHIgjjZZIzY+DFfHPSOWF/vwRsLrEFjeWYLx+R3oweCK5aqBb3I
+	Cn4L58pqNK4V/meg8UWFmqPwbBvA/G1irACrAr1E4z8hSv4IPjjbKpsf4JxhEaXZaXogav+Wap3Xb
+	rqGTyFJjnGBoUIttCGaA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rDggJ-00HBpo-31;
-	Thu, 14 Dec 2023 08:02:55 +0000
-Received: from mail-os0jpn01on20601.outbound.protection.outlook.com ([2a01:111:f403:201a::601] helo=JPN01-OS0-obe.outbound.protection.outlook.com)
+	id 1rDhqG-00HK4o-0r;
+	Thu, 14 Dec 2023 09:17:16 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rDggG-00HBp4-1s
+	id 1rDhqC-00HK2w-0O
 	for kexec@lists.infradead.org;
-	Thu, 14 Dec 2023 08:02:55 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FyJ5Cfi3sixGltRlz0iykqNZtTAZkOYW3VIYa0Q5O7HT9VmA3UXOjmIq3IVudnArC0ZsCaBC10/xlAnHZDZC9fiCRFMq+c3aTMfLNLA1aTZX+vO3LtCawl6PKNKuU6GGOkc4Q91XYQPED0DZqGx7G11MWrWLmeoTGO3sHbiuw+cZbt+tQ7O357ZuFCOPWcpMVWNEpYw9+F9myMwP2yXx9IY6EALweSjzkf/l4VUolG1DbhTIZbiDn5w24H0T44gwr4+la2LMg0rPMf8H/F7P3HXdwsD590EPyPGWVMqRcuwuOkUnDqszWjhTqEhMtkD70Y1gswBUfyygvn/2zMzDYg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FusZUFXvsAtOZHbirJtbFaYiGchIy5wmzbajOg+QvV0=;
- b=SxaPF+/YeumiwpOPM1+6pBsIDkfTDbUrhUhmDXPVc8q7PTCsFp/EUYbzYP8WVNQy+VNNe/vHCv/6BMav1jPvEZZZWK4Z9cgDJ+OJfUrf0jPVPDKut1qTvYDjJxs0NM74diD8Zhq+gv2Dw2ygfXGxgpSxtuoZvh9yN0vdSnVTbUlQxx0Vxb1y6u/SNoHuPUWIzMRddbiT2A1N7q1CF5S9Wbn/a+BHutUCRzgnV7qEJ2rtuswH3mhVbmyp2wPtB50Vz28LTobVGzd+LPuFI+N49pB1Bjmvy6d1OqjfbIV7TvntaJv0GvcjaQ6VPFNJn9FOqZN0oU+45r8DuRmntjxO0w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nec.com; dmarc=pass action=none header.from=nec.com; dkim=pass
- header.d=nec.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nec.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FusZUFXvsAtOZHbirJtbFaYiGchIy5wmzbajOg+QvV0=;
- b=hXuU5E+6fJlnnxZz5Ce+PCejPNfpSak3K15xPYz4eps6UWusg4EveRPGoTfZKGPqZjBVlyvXZue0FMvdN2367LHasInwinwfjV6PGp+CGtxaM+WDZzLIBoiYhK4xHWj4k/qlv8cc1Y0lsZIccZlh/zgmv46iviNtgeUsN6u2ZsKxUWa2Mo8C340krMryLsthQ5DWUb0QOLmI8hlfEhjPvyTiVO3G7Z0ndc/RFub42UnTF+HyUZmaLx/Rywecd4J8DNoCm/u9AX3Jv6Ru9GjkQlf7OfiYAqdNYPnUDF9Ix3W38Ue9SqTjVvuj7Xq5AMLX9C0kaFLmdl4vts2h+CrXNg==
-Received: from TYYPR01MB6777.jpnprd01.prod.outlook.com (2603:1096:400:cc::9)
- by TYWPR01MB12074.jpnprd01.prod.outlook.com (2603:1096:400:442::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.8; Thu, 14 Dec
- 2023 08:02:39 +0000
-Received: from TYYPR01MB6777.jpnprd01.prod.outlook.com
- ([fe80::a38e:2545:fc3c:c13]) by TYYPR01MB6777.jpnprd01.prod.outlook.com
- ([fe80::a38e:2545:fc3c:c13%7]) with mapi id 15.20.7113.008; Thu, 14 Dec 2023
- 08:02:39 +0000
-From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
-	<k-hagio-ab@nec.com>
-To: Edward Chron <echron@arista.com>, "kexec@lists.infradead.org"
-	<kexec@lists.infradead.org>
-CC: "colona@arista.com" <colona@arista.com>
-Subject: Re: [PATCH] makedumpfile add dmesg PRINTK_CALLER id support
-Thread-Topic: [PATCH] makedumpfile add dmesg PRINTK_CALLER id support
-Thread-Index: AQHaLa0SM3sUSjKJ+E+bmRQiqU04BLCobHQA
-Date: Thu, 14 Dec 2023 08:02:39 +0000
-Message-ID: <fd16b101-0143-18bd-5434-0666215aea29@nec.com>
-References: <20231213101334.25072-1-echron@arista.com>
-In-Reply-To: <20231213101334.25072-1-echron@arista.com>
-Accept-Language: ja-JP, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nec.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYYPR01MB6777:EE_|TYWPR01MB12074:EE_
-x-ms-office365-filtering-correlation-id: 5d6fd973-1961-4dd4-87eb-08dbfc7b0ac0
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: FHqyvLomWsc6LF3LIAsfuewgO20UkJs+biNxQt9ICuoZ38Twmx9iD0mXf1iU0LYozm+fGqdBABQrnIaAzz1TWHNE20qAeVQjL7g1lktjSY5hnWX2WHJOvpjRCPmWiSiGULrJl7hx0OPdCXIpA7LdSI0E2cGrNNO3XjWeBaUwnVsgzKdoomfr5iPcJdriAAbKrO1uVZWlrZ+ALtwiasF64Xj3OT4yjuMyWP/Bqgy97EmNCfy+ZLgJrweakTvo42urAPudFJ/+m8uK+hOoXb1u6P8ZAbZFsDWfs7udw9ffJ0jN/AiaK6JyhkKE7SVru2J2e5UlKX6S4Fl2WnOGVOXRkC87+F2TKWxKOgzxkAwtxvXzIdkLSWBWaYN4ssMRsRIHtEcaCguJ76t478bqeBbrK3ut1dKKhP37cDIhd0p112/SWQks/jrk/9wGVsCaYTLZQrysLQqzpLXqz/Wn/K67i6uP0IZNkKsnTJIeUXRNM7YoHshsiCn/DoiYQIf1lGw2+KexTFOG8EFODXZ53RqLM1IUMeEA4/Y/h8LSFazhHe64XYOK3RGR50yfLmk1JgGGjmPqZETJn9VT1TQHXLaWQ+naOBpLqwEHml274GliNC5AxGWXna0Q4kc+n9WSDayAciZsjg5iIp2coTuwqNRSp0buKueZ3MGKc+OGHk5iYps=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYYPR01MB6777.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(39860400002)(366004)(346002)(136003)(376002)(230922051799003)(451199024)(186009)(64100799003)(1800799012)(478600001)(6486002)(2906002)(966005)(6506007)(6512007)(53546011)(8676002)(8936002)(5660300002)(4326008)(85182001)(36756003)(82960400001)(316002)(31696002)(64756008)(66446008)(66476007)(66556008)(66946007)(76116006)(110136005)(83380400001)(41300700001)(38100700002)(31686004)(122000001)(38070700009)(2616005)(26005)(86362001)(71200400001)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?eVNaVTg4TnVseGRBTmVTdGVucnN1dWNnck8weUhncXNUQm9aek56T3pQaDlq?=
- =?utf-8?B?bmN0S2ZINFFnbm1jODRrMnMrNFJqNkQ1NEZqL1RabnBVbmZLQmRLcTllMk00?=
- =?utf-8?B?VnlSYzFRa3pDUTdLSGF5YzkzRSt6dHF5S01sTTEvUWJRd09rSElGQ2FrRmls?=
- =?utf-8?B?NlROTXFaYkdhZW1BVUViaVdBYkVvVC9IL3pBOXRqNDQybEcwUGgrNWdPNjNm?=
- =?utf-8?B?ZlAzNDBNNGxOWFgzSHRJU2Zpb0pBalJBUXBvYjl6cDVnVm5wZzg4SFhibi9I?=
- =?utf-8?B?dUFHS0Q0UFllWXNtWTNuV0U5NERYaUtSNnkrUUFUc1h5K0NhYStmbVZwRDV6?=
- =?utf-8?B?V24zZDZCS014b2o3SHkvcUtNWTVKbXRKdm5reit0L1I4VGRBU0dHUW9BVkx4?=
- =?utf-8?B?YjNYTzQyampWZzZZQ3Ewam52bGdNU056MTcwY3Q1OVYzYWpXeWlUcmM4Z2li?=
- =?utf-8?B?UHJ2Q0FFL3NPSDRZTVF2QzdOUDA1VWdwemtDSkljL3J2RWtoN3lxWm5EU3B2?=
- =?utf-8?B?U2xuUlgwWW9oRE55STlGNGV2WU0xUXVJd3ZTbzFYcnBjWmdDcWl4V3JlS1RU?=
- =?utf-8?B?VnNFNGxCU1JMdm10LzdseitPK0dWTlJIQmliMXZueFFyLzhYQ1pROUtXemZv?=
- =?utf-8?B?QUoxSFJldE4zNm9aUGwwZElhd1RZMi9OcXFKL201SGJpczdnTWxSSFk3WURI?=
- =?utf-8?B?V1JMNlFKcGJUTnpHM1RWcVBsQ3NqVUxGemRrMGdnL2tKNHV5OUdzR3c4MnRU?=
- =?utf-8?B?Q2NvWlJHeTJVdGFJVE5LdmdTV1gvTjhpZnBMYnJBZnJveEhFZDFQYTNBTmhr?=
- =?utf-8?B?ZzArVUtwb2s2ZWZPRnlFU3JicFAvWHZHb3FNQ3VzRStWcWZRZURtUTFrR2JX?=
- =?utf-8?B?NC9hclVoZlBMbTRLMVNHd2cvcjRLczF6aE1rcERVazBVL295bGNhTlNrSW8r?=
- =?utf-8?B?YmdpdUVhNlJtZDlKWVdaU2F3VkpmMHp3Nnl1RFRlektUM1R3UzR0NCtoWUlC?=
- =?utf-8?B?WFVnUzlNZmEwVTcxODlnR3RJZUZYS0twcTNDS3ljWjRWejBKL2M5M2lMMjBV?=
- =?utf-8?B?Mm1vc1lHZ3Vab3ozK3JIOStURHhvMGxqT08wd2FUeTgzM3RnNTRRaXA1Wkhj?=
- =?utf-8?B?OG9TSGt2clVPMUQ1WjZoYVJPeXl1cW1iK1VOMWhQd28zWEhiVjJ2ZE53MVh4?=
- =?utf-8?B?M2x2c2dDTjgzT0J4YkhLa0tFRXBCaXpFeHR0T3dYY29hU2tHL3J0bHNKaUox?=
- =?utf-8?B?UXlJSUJNbjJIOTE1YTBHMm5RUEh1K0c4M1pTV0tJWE1EeWs4YUNIT2JoWjVq?=
- =?utf-8?B?MExlYTltMC8wU3BydGplWkFoSEorT0xtWnpJQ1I3NXZkRWM2SVlOMFdBWkZG?=
- =?utf-8?B?emdnRzhCUDZVT3BhRjZmQUNZWit4MzFjWXhtbzEwWUw2b3p1cnJSbzhock14?=
- =?utf-8?B?TC9Lb21LdXVMS0haR0tERktHNWJTdHppQnhNQTB1d0swTFJDWUFhYVlpSllm?=
- =?utf-8?B?Q0hBNnlUblAzYVppT3Rqd1BFMmRTRzhxTnRRNk5qYXFwVG1NQ0xCWWRqcXZF?=
- =?utf-8?B?Y015akNtYTZMQjJGZGVqMTN4WklXdm0vZlhoZEJqWmFKSitJWm0yaC83UXBL?=
- =?utf-8?B?OXEyWldVbkwxaDhZNHpmdDFFNXFJUlMzQk9Ca0R4YTRvV3p2NWYwcHpTUHJM?=
- =?utf-8?B?Z1YxazdDdHAwQzBoWVRxc3RxMUdvYkRqYWwyVnVJWHpiR1RtcmhDdndMNnJL?=
- =?utf-8?B?OUt5cVB0SUQ0VWY3eW8xcTlhN3ozV3VjRVM4UVBlL0xLUkoyZ2pVRm1RNUNZ?=
- =?utf-8?B?UGkya1hUMG5LV2creGZMeGNEeHhFaGtMVUlMMGVIcm1KcnZWNkxTeTBDTzRY?=
- =?utf-8?B?a0NlL1pVaElvTmxPQjJ4eWJ0UldDVm91YVVUN3hybnZrRzJUcDIwMXhTYWdR?=
- =?utf-8?B?cTQvZElpazA4SEZRYzkxbmJ3eE9MMDdjS1Z4cVJTMU0zR253bFVCNkltdmJp?=
- =?utf-8?B?ZG1ZUy9oaFJ3TFUvS1daaHBWOVMvR2FRd250TTJGTDZPM2dFelpIY1N5K0dv?=
- =?utf-8?B?VVRHSnM2d0JabzRQcnlZQ04xalRiaUd6anpLY3B4THVwVWhrTTFxSGo5NUlo?=
- =?utf-8?Q?lWvEXkAtOeoO6LBh7g+JXq3Wa?=
-Content-ID: <944DA069EEC4134FA1189C69924AFA11@jpnprd01.prod.outlook.com>
+	Thu, 14 Dec 2023 09:17:13 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1702545430;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uUDsFrdozAvlpGaxLHtyNeP/OnotbqYqMUVE5yB4sEs=;
+	b=dDfCrwnIyws5JUJ3wyZbqQF6V79VgICboLF3p1EuxQ6w2QeblmBXvlp4hnh+XgHovTr7qA
+	wFU4r/5vWVICvF+36OjQSQeDE3B+IRpSUBdG9jDIzV2+sPuxjP9ZUikLNB8cmpxiK3Ebgc
+	vDCEDkCWzqFt/EPq14oO7oSMQSVzOxE=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-114-5ChW8uqMO92L_niAB7szIw-1; Thu,
+ 14 Dec 2023 04:17:06 -0500
+X-MC-Unique: 5ChW8uqMO92L_niAB7szIw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9D7382820B79;
+	Thu, 14 Dec 2023 09:17:05 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.38])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id E2E112026D66;
+	Thu, 14 Dec 2023 09:17:03 +0000 (UTC)
+Date: Thu, 14 Dec 2023 17:17:00 +0800
+From: Baoquan He <bhe@redhat.com>
+To: fuqiang wang <fuqiang.wang@easystack.cn>
+Cc: Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kexec: avoid out of bounds in crash_exclude_mem_range()
+Message-ID: <ZXrIDNvvlpZyiLYK@MiWiFi-R3L-srv>
+References: <20231127025641.62210-1-fuqiang.wang@easystack.cn>
+ <ZWg9aZYoo0v+tCQ8@MiWiFi-R3L-srv>
+ <e588c619-9b97-4627-bce1-b595c757e5c4@easystack.cn>
+ <ZXk2oBf/T1Ul6o0c@MiWiFi-R3L-srv>
+ <92a1bdff-e988-48ff-8e78-2998834a3e02@easystack.cn>
 MIME-Version: 1.0
-X-OriginatorOrg: nec.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYYPR01MB6777.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5d6fd973-1961-4dd4-87eb-08dbfc7b0ac0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Dec 2023 08:02:39.4388
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: e67df547-9d0d-4f4d-9161-51c6ed1f7d11
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: z7jtjm6qTlYiJHDkydyUUu2QBoWO8EGZlLSz0+OsHoE8VV3OzfnBzistvDpJGXU1oHyWoEuEXtgEE61RJ+mSIA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYWPR01MB12074
+Content-Disposition: inline
+In-Reply-To: <92a1bdff-e988-48ff-8e78-2998834a3e02@easystack.cn>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231214_000253_110128_11282291 
-X-CRM114-Status: GOOD (  33.48  )
+X-CRM114-CacheID: sfid-20231214_011712_246185_7AAF9D50 
+X-CRM114-Status: GOOD (  41.90  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -140,264 +81,102 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2023/12/13 19:13, Edward Chron wrote:
-> Submission to Project: makedumpfile
-> Component: dmesg
-> Files: printk.c makedumpfile.c makedumpfile.h
-> Code level patch applied against: 1.7.4++ - latest code pulled from
->      https://github.com/makedumpfile/makedumpfile
-> makedumpfile Issue #13
->      https://github.com/makedumpfile/makedumpfile/issues/13
-> 
-> Add support so that dmesg entries include the optional Linux Kernel
-> debug CONFIG option PRINTK_CALLER which adds an optional dmesg field
-> that contains the Thread Id or CPU Id that is issuing the printk to
-> add the message to the kernel ring buffer. If enabled, this CONFIG
-> option makes debugging simpler as dmesg entries for a specific
-> thread or CPU can be recognized.
-> 
-> The dmesg command supports printing the PRINTK_CALLER field. The
-> old syslog format (dmesg -S) and recently support was added for dmesg
-> using /dev/kmsg interface.
-
-Hi Edward, thanks for the patch.
-
-How can I try the dmesg using /dev/kmsg with the caller support?
-I tried the latest one [1] and "dmesg -S" prints them but "dmesg" doesn't.
-
-# ./dmesg -S
-[11894.954745] [T59093] XFS (sdb2): Unmounting Filesystem a41e38db-e035-4995-8276-763f499a33df
-[11897.572717] [T59101] XFS (sdb2): Mounting V5 Filesystem a41e38db-e035-4995-8276-763f499a33df
-[11897.647821] [T59101] XFS (sdb2): Ending clean mount
-# ./dmesg
-[11894.954745] XFS (sdb2): Unmounting Filesystem a41e38db-e035-4995-8276-763f499a33df
-[11897.572717] XFS (sdb2): Mounting V5 Filesystem a41e38db-e035-4995-8276-763f499a33df
-[11897.647821] XFS (sdb2): Ending clean mount
-
-I would like to make the log format consistent with "dmesg" output.
-
-# ./makedumpfile --dump-dmesg /proc/kcore a
-
-The dmesg log is saved to a.
-
-makedumpfile Completed.
-[root@t110h ~]# tail -n 3 a
-[11894.954745][  T59093] XFS (sdb2): Unmounting Filesystem a41e38db-e035-4995-8276-763f499a33df
-[11897.572717][  T59101] XFS (sdb2): Mounting V5 Filesystem a41e38db-e035-4995-8276-763f499a33df
-[11897.647821][  T59101] XFS (sdb2): Ending clean mount
-
-[1] https://github.com/util-linux/util-linux  (top: be59729281c6)
-
-Thanks,
-Kazu
-
-> 
-> The additional field provided by PRINTK_CALLER is only present
-> if it was configured for the Linux kernel on the running system. The
-> PRINTK_CALLER is a debug option and not configured by default so the
-> dmesg output will only change for those kernels where the option was
-> configured when the kernel was built. For users who went to the
-> trouble to configure PRINTK_CALLER and have the extra field available
-> for debugging, having dmesg print the field is very helpful and so
-> it would be very useful to add makedumpfile support for it.
-> 
-> Size of the PRINTK_CALLER field is determined by the maximum number
-> tasks that can be run on the system which is limited by the value of
-> /proc/sys/kernel/pid_max as pid values are from 0 to value - 1.
-> This value determines the number of id digits needed by the caller id.
-> The PRINTK_CALLER field is printed as T<id> for a Task Id or C<id>
-> for a CPU Id for a printk in CPU context. The values are left space
-> padded and enclosed in parentheses such as:
->           [    T123]   or   [     C16]
-> For dmesg command the PRINTK_CALLER field when present is the last
-> field before the dmesg text so it makes sense to use the same format.
-> 
-> Signed-off-by: Ivan Delalande <colona@arista.com>
-> Signed-off-by: Edward Chron <echron@arista.com>
-> ---
->   makedumpfile.c | 35 ++++++++++++++++++++++++++++++++++-
->   makedumpfile.h | 22 ++++++++++++++++++++++
->   printk.c       | 29 ++++++++++++++++++++++++++++-
->   3 files changed, 84 insertions(+), 2 deletions(-)
-> 
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index a6ec9d4..5172ee2 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -2118,6 +2118,7 @@ module_end:
->   		SIZE_INIT(printk_info, "printk_info");
->   		OFFSET_INIT(printk_info.ts_nsec, "printk_info", "ts_nsec");
->   		OFFSET_INIT(printk_info.text_len, "printk_info", "text_len");
-> +		OFFSET_INIT(printk_info.caller_id, "printk_info", "caller_id");
->   
->   		OFFSET_INIT(atomic_long_t.counter, "atomic_long_t", "counter");
->   
-> @@ -2133,6 +2134,7 @@ module_end:
->   		OFFSET_INIT(printk_log.ts_nsec, "printk_log", "ts_nsec");
->   		OFFSET_INIT(printk_log.len, "printk_log", "len");
->   		OFFSET_INIT(printk_log.text_len, "printk_log", "text_len");
-> +		OFFSET_INIT(printk_info.caller_id, "printk_log", "caller_id");
->   	} else {
->   		info->flag_use_printk_ringbuffer = FALSE;
->   		info->flag_use_printk_log = FALSE;
-> @@ -2462,6 +2464,7 @@ write_vmcoreinfo_data(void)
->   
->   		WRITE_MEMBER_OFFSET("printk_info.ts_nsec", printk_info.ts_nsec);
->   		WRITE_MEMBER_OFFSET("printk_info.text_len", printk_info.text_len);
-> +		WRITE_MEMBER_OFFSET("printk_info.caller_id", printk_info.caller_id);
->   
->   		WRITE_MEMBER_OFFSET("atomic_long_t.counter", atomic_long_t.counter);
->   
-> @@ -2470,6 +2473,7 @@ write_vmcoreinfo_data(void)
->   		WRITE_MEMBER_OFFSET("printk_log.ts_nsec", printk_log.ts_nsec);
->   		WRITE_MEMBER_OFFSET("printk_log.len", printk_log.len);
->   		WRITE_MEMBER_OFFSET("printk_log.text_len", printk_log.text_len);
-> +		WRITE_MEMBER_OFFSET("printk_log.caller_id", printk_log.caller_id);
->   	} else {
->   		/* Compatibility with pre-3.11-rc4 */
->   		WRITE_MEMBER_OFFSET("log.ts_nsec", printk_log.ts_nsec);
-> @@ -2921,6 +2925,7 @@ read_vmcoreinfo(void)
->   		READ_STRUCTURE_SIZE("printk_info", printk_info);
->   		READ_MEMBER_OFFSET("printk_info.ts_nsec", printk_info.ts_nsec);
->   		READ_MEMBER_OFFSET("printk_info.text_len", printk_info.text_len);
-> +		READ_MEMBER_OFFSET("printk_info.caller_id", printk_info.caller_id);
->   
->   		READ_MEMBER_OFFSET("atomic_long_t.counter", atomic_long_t.counter);
->   
-> @@ -2932,6 +2937,7 @@ read_vmcoreinfo(void)
->   		READ_MEMBER_OFFSET("printk_log.ts_nsec", printk_log.ts_nsec);
->   		READ_MEMBER_OFFSET("printk_log.len", printk_log.len);
->   		READ_MEMBER_OFFSET("printk_log.text_len", printk_log.text_len);
-> +		READ_MEMBER_OFFSET("printk_log.caller_id", printk_log.caller_id);
->   	} else {
->   		info->flag_use_printk_ringbuffer = FALSE;
->   		info->flag_use_printk_log = FALSE;
-> @@ -5603,7 +5609,34 @@ dump_log_entry(char *logptr, int fp, const char *file_name)
->   	msg = logptr + SIZE(printk_log);
->   
->   	bufp = buf;
-> -	bufp += sprintf(buf, "[%5lld.%06ld] ", nanos, rem/1000);
-> +	bufp += sprintf(buf, "[%5lld.%06ld]", nanos, rem/1000);
-> +
-> +	if (OFFSET(printk_log.caller_id) > 0) {
-> +		ssize_t numspaces;
-> +		unsigned int pkc;
-> +		char idtype;
-> +		int digits;
-> +
-> +		/* Get id type, isolate id value in pkc for print */
-> +		pkc = UINT(logptr + OFFSET(printk_log.caller_id));
-> +		idtype = (pkc & 0x80000000) ? 'C' : 'T';
-> +		pkc &= ~0x80000000;
-> +		/* Determine size of padding space if needed */
-> +		digits = snprintf(NULL, 0, "%u", pkc);
-> +		numspaces = CALLER_ID_SIZE - digits;
-> +		if (numspaces > 0) {
-> +			char spc[16];
-> +
-> +			memset(spc, 0, sizeof(spc));
-> +			memset(spc, ' ', numspaces);
-> +			bufp += sprintf(bufp, "[%s%c%u] ", spc, idtype, pkc);
-> +		} else {
-> +			bufp += sprintf(bufp, "[%c%u] ", idtype, pkc);
-> +		}
-> +	} else {
-> +		bufp = stpcpy(bufp, " ");
-> +	}
-> +
->   	indent_len = strlen(buf);
->   
->   	/* How much buffer space is needed in the worst case */
-> diff --git a/makedumpfile.h b/makedumpfile.h
-> index f1619c5..0a7acb5 100644
-> --- a/makedumpfile.h
-> +++ b/makedumpfile.h
-> @@ -2116,10 +2116,16 @@ struct offset_table {
->   		long	p_memsz;
->   	} elf64_phdr;
->   
-> +	/* The caller_id was added by the Linux-5.1 Kernel to hold
-> +	 * the Thread id or CPU id of the caller adding a printk
-> +	 * dmesg to the ring buffer. As such older versions of the
-> +	 * kernel can ignore this field as it won't be filled in.
-> +	 */
->   	struct printk_log_s {
->   		long ts_nsec;
->   		long len;
->   		long text_len;
-> +		long caller_id;
->   	} printk_log;
->   
->   	/*
-> @@ -2671,6 +2677,22 @@ struct elf_prstatus {
->   
->   #endif
->   
-> +/*
-> + * Minimum size of the id portion of the PRINTK_CALLER dmesg field if it is
-> + * configured in the Linux Kernel. The size is used to pad with spaces the
-> + * PRINTK_CALLER field in each dmesg. For 32 bit kernels the maximum number
-> + * of PIDs supported was 2^15 so pid values 0 to 32,767 while 64 bit systems
-> + * support the value specified in /proc/sys/kernel/pid_max which is capped at
-> + * PID_MAX_LIMIT. We can use 7 digits as that accomodates both 32 bit and
-> + * current 64 bit systems as PID_MAX_LIMIT is currently 2^22 so that will
-> + * fit in 7 digits and the id will add an additional byte for the id type of
-> + * either thread 'T' or CPU 'C', where the Thread ids will have much larger
-> + * values, so the CPU ids will easily be accomodated. When systems exceed
-> + * 7 digits that won't break anything, but print statements needing more
-> + * then 7 digits will not precisely align.
-> + */
-> +#define CALLER_ID_SIZE 7
-> +
->   /*
->    * Below are options which getopt_long can recognize. From OPT_START options are
->    * non-printable, just used for implementation.
-> diff --git a/printk.c b/printk.c
-> index 61e0b26..5ebda45 100644
-> --- a/printk.c
-> +++ b/printk.c
-> @@ -113,7 +113,34 @@ dump_record(struct prb_map *m, unsigned long id)
->   	rem = (ulonglong)ts_nsec % (ulonglong)1000000000;
->   
->   	bufp = buf;
-> -	bufp += sprintf(buf, "[%5lld.%06ld] ", nanos, rem/1000);
-> +	bufp += sprintf(buf, "[%5lld.%06ld]", nanos, rem/1000);
-> +
-> +	if (OFFSET(printk_info.caller_id) > 0) {
-> +		ssize_t numspaces;
-> +		unsigned int pkc;
-> +		char idtype;
-> +		int digits;
-> +
-> +		/* Get id type, isolate id value in pkc for print */
-> +		pkc = UINT(inf + OFFSET(printk_info.caller_id));
-> +		idtype = (pkc & 0x80000000) ? 'C' : 'T';
-> +		pkc &= ~0x80000000;
-> +		/* Determine size of padding space if needed */
-> +		digits = snprintf(NULL, 0, "%u", pkc);
-> +		numspaces = CALLER_ID_SIZE - digits;
-> +		if (numspaces > 0) {
-> +			char spc[16];
-> +
-> +			memset(spc, 0, sizeof(spc));
-> +			memset(spc, ' ', numspaces);
-> +			bufp += sprintf(bufp, "[%s%c%u] ", spc, idtype, pkc);
-> +		} else {
-> +			bufp += sprintf(bufp, "[%c%u] ", idtype, pkc);
-> +		}
-> +	} else {
-> +		bufp = stpcpy(bufp, " ");
-> +	}
-> +
->   	indent_len = strlen(buf);
->   
->   	/* How much buffer space is needed in the worst case */
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gMTIvMTMvMjMgYXQgMDk6MTBwbSwgZnVxaWFuZyB3YW5nIHdyb3RlOgo+IOWcqCAyMDIzLzEy
+LzEzIDEyOjQ0LCBCYW9xdWFuIEhlIOWGmemBkzoKPiAKPiA+IE9uIDExLzMwLzIzIGF0IDA5OjIw
+cG0sIGZ1cWlhbmcgd2FuZyB3cm90ZToKPiA+ID4gT24gMjAyMy8xMS8zMCAxNTo0NCwgQmFvcXVh
+biBIZSB3cm90ZToKPiA+ID4gPiBPbiAxMS8yNy8yMyBhdCAxMDo1NmFtLCBmdXFpYW5nIHdhbmcg
+d3JvdGU6Cj4gPiA+ID4gPiBXaGVuIHRoZSBzcGxpdCBoYXBwZW5lZCwganVkZ2Ugd2hldGhlciBt
+ZW0tPm5yX3JhbmdlcyBpcyBlcXVhbCB0bwo+ID4gPiA+ID4gbWVtLT5tYXhfbnJfcmFuZ2VzLiBJ
+ZiBpdCBpcyB0cnVlLCByZXR1cm4gLUVOT01FTS4KPiA+ID4gPiA+IAo+ID4gPiA+ID4gVGhlIGFk
+dmFudGFnZSBvZiBkb2luZyB0aGlzIGlzIHRoYXQgaXQgY2FuIGF2b2lkIGFycmF5IGJvdW5kcyBj
+YXVzZWQgYnkKPiA+ID4gPiA+IHNvbWUgYnVncy4gRS5nLiwgQmVmb3JlIGNvbW1pdCA0ODMxYmU3
+MDJiOTUgKCJhcm02NC9rZXhlYzogRml4IG1pc3NpbmcKPiA+ID4gPiA+IGV4dHJhIHJhbmdlIGZv
+ciBjcmFzaGtyZXNfbG93LiIpLCByZXNlcnZlIGJvdGggaGlnaCBhbmQgbG93IG1lbW9yaWVzIGZv
+cgo+ID4gPiA+ID4gdGhlIGNyYXNoa2VybmVsIG1heSBjYXVzZSBvdXQgb2YgYm91bmRzLgo+ID4g
+PiA+ID4gCj4gPiA+ID4gPiBPbiB0aGUgb3RoZXIgaGFuZCwgbW92ZSB0aGlzIGNvZGUgYmVmb3Jl
+IHRoZSBzcGxpdCB0byBlbnN1cmUgdGhhdCB0aGUKPiA+ID4gPiA+IGFycmF5IHdpbGwgbm90IGJl
+IGNoYW5nZWQgd2hlbiByZXR1cm4gZXJyb3IuCj4gPiA+ID4gSWYgb3V0IG9mIGFycmF5IGJvdW5k
+YXJ5IGlzIGNhdXNlZCwgbWVhbnMgdGhlIGxhb2RpbmcgZmFpbGVkLCB3aGV0aGVyCj4gPiA+ID4g
+dGhlIG91dCBvZiBib3VuZGFyeSBoYXBwZW5lZCBvciBub3QuIEkgZG9uJ3Qgc2VlIGhvdyB0aGlz
+IGNvZGUgY2hhbmdlCj4gPiA+ID4gbWFrZXMgc2Vuc2UuIERvIEkgbWlzcyBhbnl0aGluZz8KPiA+
+ID4gPiAKPiA+ID4gPiBUaGFua3MKPiA+ID4gPiBCYW9xdWFuCj4gPiA+ID4gCj4gPiA+IEhpIGJh
+b3F1YW4sCj4gPiA+IAo+ID4gPiBJbiBzb21lIGNvbmZpZ3VyYXRpb25zLCBvdXQgb2YgYm91bmRz
+IG1heSBub3QgY2F1c2UgY3Jhc2hfZXhjbHVkZV9tZW1fcmFuZ2UoKQo+ID4gPiByZXR1cm5zIGVy
+cm9yLCB0aGVuIHRoZSBsb2FkIHdpbGwgc3VjY2VlZC4KPiA+ID4gCj4gPiA+IEUuZy4KPiA+ID4g
+VGhlcmUgaXMgYSBjbWVtIGJlZm9yZSBleGVjdXRlIGNyYXNoX2V4Y2x1ZGVfbWVtX3JhbmdlKCk6
+Cj4gPiA+IAo+ID4gPiAgwqAgY21lbSA9IHsKPiA+ID4gIMKgwqDCoCBtYXhfbnJfcmFuZ2VzID0g
+Mwo+ID4gPiAgwqDCoMKgIG5yX3JhbmdlcyA9IDIKPiA+ID4gIMKgwqDCoCByYW5nZXMgPSB7Cj4g
+PiA+ICDCoMKgwqDCoMKgwqAge3N0YXJ0ID0gMSzCoMKgwqDCoMKgIGVuZCA9IDEwMDB9Cj4gPiA+
+ICDCoMKgwqDCoMKgwqAge3N0YXJ0ID0gMTAwMSzCoMKgwqAgZW5kID0gMjAwMH0KPiA+ID4gIMKg
+wqDCoCB9Cj4gPiA+ICDCoCB9Cj4gPiA+IAo+ID4gPiBBZnRlciBleGVjdXRpbmcgdHdpY2UgY3Jh
+c2hfZXhjbHVkZV9tZW1fcmFuZ2UoKSB3aXRoIHRoZSBzdGFydC9lbmQgcGFyYW1zCj4gPiA+IDEw
+MC8yMDAsIDMwMC80MDAgcmVzcGVjdGl2ZWx5LCB0aGUgY21lbSB3aWxsIGJlOgo+ID4gPiAKPiA+
+ID4gIMKgIGNtZW0gPSB7Cj4gPiA+ICDCoMKgwqAgbWF4X25yX3JhbmdlcyA9IDMKPiA+ID4gIMKg
+wqDCoCBucl9yYW5nZXMgPSA0wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+PD09IG5yX3JhbmdlcyA+IG1heF9ucl9yYW5nZXMKPiA+ID4gIMKgwqDCoCByYW5nZXMgPSB7Cj4g
+PiA+ICDCoMKgwqDCoMKgIHtzdGFydCA9IDEswqDCoMKgwqDCoMKgIGVuZCA9IDk5wqAgfQo+ID4g
+PiAgwqDCoMKgwqDCoCB7c3RhcnQgPSAyMDEswqDCoMKgwqAgZW5kID0gMjk5IH0KPiA+ID4gIMKg
+wqDCoMKgwqAge3N0YXJ0ID0gNDAxLMKgwqDCoMKgIGVuZCA9IDEwMDB9Cj4gPiA+ICDCoMKgwqDC
+oMKgIHtzdGFydCA9IDEwMDEswqDCoMKgIGVuZCA9IDIwMDB9wqAgPD09IE9VVCBPRiBCT1VORFMK
+PiA+ID4gIMKgwqDCoCB9Cj4gPiA+ICDCoCB9Cj4gPiA+IAo+ID4gPiBXaGVuIGFuIG91dCBvZiBi
+b3VuZHMgb2NjdXJzIGR1cmluZyB0aGUgc2Vjb25kIGV4ZWN1dGlvbiwgdGhlIGZ1bmN0aW9uIHdp
+bGwgbm90Cj4gPiA+IHJldHVybiBlcnJvci4KPiA+ID4gCj4gPiA+IEFkZGl0aW9uYWxseSwgd2hl
+biB0aGUgZnVuY3Rpb24gcmV0dXJucyBlcnJvciwgbWVhbnMgdGhlIGxvYWQgZmFpbGVkLiBJdCBz
+ZWVtcwo+ID4gPiBtZWFuaW5nbGVzcyB0byBrZWVwIHRoZSBvcmlnaW5hbCBkYXRhIHVuY2hhbmdl
+ZC4gQnV0IGluIG15IG9waW5pb24sIHRoaXMgd2lsbAo+ID4gPiBtYWtlIHRoaXMgZnVuY3Rpb24g
+bW9yZSByaWdvcm91cyBhbmQgbW9yZSB2ZXJzYXRpbGUuIChIb3dldmVyLCBJIGFtIG5vdCBzdXJl
+IGlmCj4gPiA+IGl0IGlzIHNlbGYtZGVmZWF0aW5nIGFuZCBJIGhvcGUgdG8gcmVjZWl2ZSBtb3Jl
+IHN1Z2dlc3Rpb25zKS4KPiA+IFNvcnJ5IGZvciBsYXRlIHJlcGx5Lgo+ID4gCj4gPiBJIGNoZWNr
+ZWQgdGhlIGNvZGUgYWdhaW4sIHRoZXJlIHNlZW1zIHRvIGJlIGNhc2VzIG91dCBvZiBib3VuZHMg
+b2NjdXIKPiA+IHZlcnkgcG9zc2libGx5LiBXZSBtYXkgbmVlZCB0byBlbmxhcmdlIHRoZSBjbWVt
+IGFycmF5IHRvIGF2b2lkIHRoZSByaXNrLgo+ID4gCj4gPiBJbiBiZWxvdyBkcmFmdCBjb2RlLCB3
+ZSBuZWVkIGFkZCBhbm90aGVyIHNsb3QgdG8gZXhjbHVkZSB0aGUgbG93IDFNIGFyZWEKPiA+IHdo
+ZW4gcHJlcGFyaW5nIGVsZmNvcmVoZHIuIEFuZCB0byBleGNsdWRlIHRoZSBlbGYgaGVhZGVyIHJl
+Z2lvbiBmcm9tCj4gPiBjcmFzaCBrZXJuZWwgcmVnaW9uLCB3ZSBuZWVkIGNyZWF0ZSB0aGUgY21l
+bSB3aXRoIDIgc2xvdHMuCj4gPiAKPiA+IFdpdGggdGhlc2UgY2hhbmdlLCB3ZSBjYW4gYWJzb2x1
+dGVseSBhdm9pZCBvdXQgb2YgYm91bmRzIG9jY3VyZW5jZS4KPiA+IFdoYXQgZG8geW91IHRoaW5r
+Pwo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYva2VybmVsL2NyYXNoLmMgYi9hcmNoL3g4
+Ni9rZXJuZWwvY3Jhc2guYwo+ID4gaW5kZXggMTcxNWU1ZjA2YTU5Li4yMWZhY2FiY2Y2OTkgMTAw
+NjQ0Cj4gPiAtLS0gYS9hcmNoL3g4Ni9rZXJuZWwvY3Jhc2guYwo+ID4gKysrIGIvYXJjaC94ODYv
+a2VybmVsL2NyYXNoLmMKPiA+IEBAIC0xNDcsMTAgKzE0NywxMCBAQCBzdGF0aWMgc3RydWN0IGNy
+YXNoX21lbSAqZmlsbF91cF9jcmFzaF9lbGZfZGF0YSh2b2lkKQo+ID4gICAJCXJldHVybiBOVUxM
+Owo+ID4gICAJLyoKPiA+IC0JICogRXhjbHVzaW9uIG9mIGNyYXNoIHJlZ2lvbiBhbmQvb3IgY3Jh
+c2hrX2xvd19yZXMgbWF5IGNhdXNlCj4gPiAtCSAqIGFub3RoZXIgcmFuZ2Ugc3BsaXQuIFNvIGFk
+ZCBleHRyYSB0d28gc2xvdHMgaGVyZS4KPiA+ICsJICogRXhjbHVzaW9uIG9mIGxvdyAxTSwgY3Jh
+c2ggcmVnaW9uIGFuZC9vciBjcmFzaGtfbG93X3JlcyBtYXkKPiA+ICsJICogY2F1c2UgYW5vdGhl
+ciByYW5nZSBzcGxpdC4gU28gYWRkIGV4dHJhIHR3byBzbG90cyBoZXJlLgo+ID4gICAJICovCj4g
+PiAtCW5yX3JhbmdlcyArPSAyOwo+ID4gKwlucl9yYW5nZXMgKz0gMzsKPiA+ICAgCWNtZW0gPSB2
+emFsbG9jKHN0cnVjdF9zaXplKGNtZW0sIHJhbmdlcywgbnJfcmFuZ2VzKSk7Cj4gPiAgIAlpZiAo
+IWNtZW0pCj4gPiAgIAkJcmV0dXJuIE5VTEw7Cj4gSGkgYmFvcXVhbiwKPiAKPiBFeGNsdXNpb24g
+b2YgbG93IDFNIG1heSBub3QgY2F1c2UgbmV3IHJlZ2lvbi4gQmVjYXVzZSB3aGVuIGNhbGxpbmcK
+PiBjcmFzaF9leGNsdWRlX21lbV9yYW5nZSgpLCB0aGUgc3RhcnQgcGFyYW1ldGVyIGlzIDAgYW5k
+IHRoZSBjb25kaXRpb24gZm9yCj4gc3BsaXR0aW5nIGEgbmV3IHJlZ2lvbiBpcyB0aGF0IHRoZSBz
+dGFydCwgZW5kIHBhcmFtZXRlcnMgYXJlIGJvdGggaW4gYSBjZXJ0YWluCj4gZXhpc3RpbmcgcmVn
+aW9uIGluIGNtZW0gYW5kIGNhbm5vdCBiZSBlcXVhbCB0byBleGlzdGluZyByZWdpb24ncyBzdGFy
+dCBvciBlbmQuCj4gT2J2aW91c2x5LCBzdGFydCAoMCkgY2Fubm90IG1lZXQgdGhpcyBjb25kaXRp
+b24uCgpPSywgdGhpcyBpcyBhbiBzcGVjaWFsIGNhc2UuCgo+ID4gQEAgLTI4Miw3ICsyODIsNyBA
+QCBpbnQgY3Jhc2hfc2V0dXBfbWVtbWFwX2VudHJpZXMoc3RydWN0IGtpbWFnZSAqaW1hZ2UsIHN0
+cnVjdCBib290X3BhcmFtcyAqcGFyYW1zKQo+ID4gICAJc3RydWN0IGNyYXNoX21lbW1hcF9kYXRh
+IGNtZDsKPiA+ICAgCXN0cnVjdCBjcmFzaF9tZW0gKmNtZW07Cj4gPiAtCWNtZW0gPSB2emFsbG9j
+KHN0cnVjdF9zaXplKGNtZW0sIHJhbmdlcywgMSkpOwo+ID4gKwljbWVtID0gdnphbGxvYyhzdHJ1
+Y3Rfc2l6ZShjbWVtLCByYW5nZXMsIDIpKTsKPiA+ICAgCWlmICghY21lbSkKPiA+ICAgCQlyZXR1
+cm4gLUVOT01FTTsKPiA+IAo+IFllcywgeW91IGFyZSByaWdodC4gRXhjbHVkZSB0aGUgZWxmIGhl
+YWRlciByZWdpb24gZnJvbSBjcmFzaCBrZXJuZWwgcmVnaW9uIG1heQo+IGNhdXNlIHNwbGl0IGEg
+bmV3IHJlZ2lvbi4gQW5kIHRoZXJlIHNlZW1zIHRvIGJlIGFub3RoZXIgaXNzdWUgd2l0aCB0aGlz
+IGNvZGUKPiBwYXRoOiBCZWZvcmUgY2FsbGluZyBjcmFzaF9leGNsdWRlX21lbV9yYW5nZSgpLCBj
+bWVtLT5tYXhfbnJfcmFuZ2VzIHdhcyBub3QKPiBpbml0aWFsaXplZC4KClllYWgsIHRoZSBpbml0
+IG5lZWQgYmUgYWRkZWQuCgo+IAo+IEluIG15IG9waW5pb24sIHRoZXNlIGNoYW5nZSBjYW4gYWJz
+b2x1dGVseSBhdm9pZCBvdXQgb2YgYm91bmRzIG9jY3VyZW5jZS4gQnV0Cj4gd2hlbiB3ZSBmb3Jn
+ZXQgdG8gbW9kaWZ5IG1heF9ucl9yYW5nZXMgZHVlIHRvIGEgbWlzdGFrZXMgaW4gdGhlIGZ1dHVy
+ZSwgaXMgaXQKPiBiZXR0ZXIgdG8gcmVwb3J0IGl0IGJ5IHJldHVybmluZyBhbiBlcnJvciB0aHJv
+dWdoIGNyYXNoX2V4Y2x1ZGVfbWVtX3JhbmdlKCkuCj4gV2hhdCBkbyB5b3UgdGhpbmsgYWJvdXQg
+aXQ/CgpJIGRvbid0IHNlZSB0aGUgZGlmZmVyZW5jZSBiZXR3ZWVuIHlvdXIgcGF0Y2ggYW5kIHRo
+ZSBjdXJyZW50IGNvZGUuClBsZWFzZSBzZWUgbXkgY29tbWVudCBpbiB5b3VyIGVhcmxpZXIgZXhh
+bXBsZS4KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpr
+ZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
+aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
