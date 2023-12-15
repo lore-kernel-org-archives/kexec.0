@@ -4,78 +4,120 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2256DC4167D
-	for <kexec@archiver.kernel.org>; Fri, 15 Dec 2023 03:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A6BC7C4332F
+	for <kexec@archiver.kernel.org>; Fri, 15 Dec 2023 05:47:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=CIT8tUgIxFILCq4kh7Ru+vhjQbjxi8mAvSe14v69UU0=; b=pUWa7LUp51TnP0
-	nCzf47fLhWnRYTJ64fusNm1elN/ONz1aF6c/BWqPbp999j+FUaFYwC5y3xu7sw3vUCkkXpSBQSZ90
-	w9F41TLLroiL5ht53PEFi9R41IXwoVqTDos1qadCiSIzRlTRccSUTyznSQIoNdEKYF+Zo1h5Sy2qB
-	U1kIfyVi1d8UtEIyoAhY+Ko6UGBcsYOr0hFvXS9a9rybKhYPAJFsbWqYK8F0CT7p4W0/UyYMSpvjJ
-	8q3ZnUvrRlIqjLDMohBqJ8Y20Ub4oQ4vhX8ClA3gvyik2dNX4xjPdm2qOJ32rpS58D2De/Mh73T85
-	RsG3Vl9FSXLML9v3VJFQ==;
+	List-Owner; bh=frha1mVrK0tPnsI+rz8RZB/3G/3tnFLAMjMkry9RHkI=; b=maS9FghbWwF4Q1
+	7L0kF/zwP+tU9r3WLMrTOqTpNtxwPYPMqdqxFvrqWSVZFn1QvyaO6ZFNGE6HScCZY7FgvH8JHzvQt
+	Sf5ZfiK50Z6a+OAziNJPzkR5e8BhKvjbbTi61PkurWyrcM3v0pfBr3BEVQRCxI5ivC7gd5SrM6prx
+	gNcbYYe0TOrGKsQmZEEljrU6wMKWMD6LKKvdyJnXE3V3wBpGXB9xTQ5ExctzbfjEsJjkieP+TFG26
+	lz8cTty3lVG7cjW4YYqL9c0/RkvCu6dHRnxX2Irkz4vPG1Akj6FvMgpBlktIWfSoYiQQyzF9hhnWv
+	//XUR+GdRjIyOsnj8Szw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rDys7-001u5Q-2F;
-	Fri, 15 Dec 2023 03:28:19 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1rE12h-0026ZA-1N;
+	Fri, 15 Dec 2023 05:47:23 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rDys5-001u4n-0J
+	id 1rE12b-0026WJ-2W
 	for kexec@lists.infradead.org;
-	Fri, 15 Dec 2023 03:28:18 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702610896;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xFjrY9f7lb5ZXGSC5fJ2WhnwT5x2Q7SVpnoNQJclmZ8=;
-	b=Ag7eCNfJnFUqTbKaQgnwe3SeDQ/wQghhy3IW93Gmneg+ooJEYp49ci1rrG4X1v9BwKL8i5
-	w+0gr2eocBQI9JPXg9qt2xXprsHQ2wKwtMkBFHiDiaYhI++8rHBnVjxbvf2o9JioPXGMNW
-	tMlj/u/Z6b6cWrc4MAjJ6qR0o3h6c44=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-193-NkTdKl5KPOucS2szYBp4IQ-1; Thu, 14 Dec 2023 22:28:12 -0500
-X-MC-Unique: NkTdKl5KPOucS2szYBp4IQ-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 807EA101A555;
-	Fri, 15 Dec 2023 03:28:11 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.38])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id CB362492BF0;
-	Fri, 15 Dec 2023 03:28:10 +0000 (UTC)
-Date: Fri, 15 Dec 2023 11:28:07 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Yuntao Wang <ytcoode@gmail.com>
-Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, x86@kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>,
-	Hari Bathini <hbathini@linux.ibm.com>,
-	Eric DeVolder <eric.devolder@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Sourabh Jain <sourabhjain@linux.ibm.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Takashi Iwai <tiwai@suse.de>, Lianbo Jiang <lijiang@redhat.com>
-Subject: Re: [PATCH 2/3] x86/crash: use SZ_1M macro instead of hardcoded value
-Message-ID: <ZXvHx+HYI4zgV47b@MiWiFi-R3L-srv>
-References: <20231214163842.129139-1-ytcoode@gmail.com>
- <20231214163842.129139-3-ytcoode@gmail.com>
+	Fri, 15 Dec 2023 05:47:20 +0000
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BF4Wivg013603;
+	Fri, 15 Dec 2023 05:46:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=G8C4JCcUHSTTyPo3/q5F0LdFKK76tWUNMSiYqbvZEPc=;
+ b=lKTUBBTLG3A3M6ioeWGeWDIqq7KwP9emioloBv+ec0smxDPO58Uw//XbEmw27rmOFVTp
+ /DeEU+7MKeEEcWrbrVhZVtGvyxROWnQQqI4oL4nb6leROCOk6cwiZQlJMynWAvJWKUIR
+ 6cNYTEUfjc56ZKZk/PUDI4fbWZ/NY2iGjh2xtmcjbbihS6lXTKK3p4bAcgKcse7WldvV
+ TkYHX97nyfPEzAFbwZTY8pllpDa7Q0/kWJKsEwC4CScQARhG7JcmrVgtcTjJZhzDDm+T
+ QHo6Ym9YM3gx3zB2zWbsF/LA6mmqs/bOSgSXA8befSGUBNt/4r2isAAc/yUyEFCLN3ya 4g== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3v0fv1hjv9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 15 Dec 2023 05:46:43 +0000
+Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3BF5aiSA004809;
+	Fri, 15 Dec 2023 05:46:42 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3v0fv1hjux-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 15 Dec 2023 05:46:42 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BF33ApE005049;
+	Fri, 15 Dec 2023 05:46:41 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3uw4skwkv9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 15 Dec 2023 05:46:41 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BF5kc4k44105986
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 15 Dec 2023 05:46:38 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 622D72004D;
+	Fri, 15 Dec 2023 05:46:38 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 21AED20040;
+	Fri, 15 Dec 2023 05:46:33 +0000 (GMT)
+Received: from [9.79.186.169] (unknown [9.79.186.169])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 15 Dec 2023 05:46:32 +0000 (GMT)
+Message-ID: <02622173-c9a1-425d-99b2-ba1dee802029@linux.ibm.com>
+Date: Fri, 15 Dec 2023 11:16:31 +0530
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20231214163842.129139-3-ytcoode@gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v14 2/6] crash: make CPU and Memory hotplug support
+ reporting flexible
+To: Baoquan He <bhe@redhat.com>
+Cc: linuxppc-dev@ozlabs.org, Akhil Raj <lf32.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Boris Ostrovsky
+ <boris.ostrovsky@oracle.com>,
+        Christophe Leroy
+ <christophe.leroy@csgroup.eu>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dave Young <dyoung@redhat.com>, David Hildenbrand <david@redhat.com>,
+        Eric DeVolder <eric.devolder@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Laurent Dufour <laurent.dufour@fr.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mimi Zohar <zohar@linux.ibm.com>, Naveen N Rao <naveen@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Valentin Schneider <vschneid@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org,
+        x86@kernel.org
+References: <20231211083056.340404-1-sourabhjain@linux.ibm.com>
+ <20231211083056.340404-3-sourabhjain@linux.ibm.com>
+ <ZXsNjTT7Ax9blFIt@MiWiFi-R3L-srv>
+Content-Language: en-US
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+In-Reply-To: <ZXsNjTT7Ax9blFIt@MiWiFi-R3L-srv>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: uC2PU0LIbWEhLol4EIYDyboh6McGcCYg
+X-Proofpoint-ORIG-GUID: HEhJn4GifKh9x3hTUEmTcC264YDfLPUJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-15_02,2023-12-14_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ suspectscore=0 phishscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999
+ lowpriorityscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2311290000 definitions=main-2312150033
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231214_192817_203525_7CEFB8A7 
-X-CRM114-Status: GOOD (  15.45  )
+X-CRM114-CacheID: sfid-20231214_214718_173387_8D48D9A1 
+X-CRM114-Status: GOOD (  31.55  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,38 +129,229 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 12/15/23 at 12:38am, Yuntao Wang wrote:
-> Use SZ_1M macro instead of hardcoded 1<<20 to make code more readable.
-> 
-> Signed-off-by: Yuntao Wang <ytcoode@gmail.com>
-> ---
->  arch/x86/kernel/crash.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-> index 792231a56d11..249b5876e7ec 100644
-> --- a/arch/x86/kernel/crash.c
-> +++ b/arch/x86/kernel/crash.c
+Hello Baoquan,
 
-Acked-by: Baoquan He <bhe@redhat.com>
+On 14/12/23 19:43, Baoquan He wrote:
+> On 12/11/23 at 02:00pm, Sourabh Jain wrote:
+>> Architectures' specific functions `arch_crash_hotplug_cpu_support()` and
+>> `arch_crash_hotplug_memory_support()` advertise the kernel's capability
+>> to update the kdump image on CPU and Memory hotplug events to userspace
+>> via the sysfs interface. These architecture-specific functions need to
+>> access various attributes of the `kexec_crash_image` object to determine
+>> whether the kernel can update the kdump image and advertise this
+>> information to userspace accordingly.
+>>
+>> As the architecture-specific code is not exposed to the APIs required to
+>> acquire the lock for accessing the `kexec_crash_image` object, it calls
+>> a generic function, `crash_check_update_elfcorehdr()`, to determine
+>> whether the kernel can update the kdump image or not.
+>>
+>> The lack of access to the `kexec_crash_image` object in
+>> architecture-specific code restricts architectures from performing
+>> additional architecture-specific checks required to determine if the
+>> kdump image is updatable or not. For instance, on PowerPC, the kernel
+>> can update the kdump image only if both the elfcorehdr and FDT are
+>> marked as updatable for the `kexec_load` system call.
+>>
+>> So define two generic functions, `crash_hotplug_cpu_support()` and
+>> `crash_hotplug_memory_support()`, which are called when userspace
+>> attempts to read the crash CPU and Memory hotplug support via the sysfs
+>> interface. These functions take the necessary locks needed to access the
+>> `kexec_crash_image` object and then forward it to the
+>> architecture-specific handler to do the rest.
+>>
+>> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+>> Cc: Akhil Raj <lf32.dev@gmail.com>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+>> Cc: Baoquan He <bhe@redhat.com>
+>> Cc: Borislav Petkov (AMD) <bp@alien8.de>
+>> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+>> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+>> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+>> Cc: Dave Young <dyoung@redhat.com>
+>> Cc: David Hildenbrand <david@redhat.com>
+>> Cc: Eric DeVolder <eric.devolder@oracle.com>
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Cc: Hari Bathini <hbathini@linux.ibm.com>
+>> Cc: Laurent Dufour <laurent.dufour@fr.ibm.com>
+>> Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
+>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>> Cc: Mimi Zohar <zohar@linux.ibm.com>
+>> Cc: Naveen N Rao <naveen@kernel.org>
+>> Cc: Oscar Salvador <osalvador@suse.de>
+>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>> Cc: Valentin Schneider <vschneid@redhat.com>
+>> Cc: Vivek Goyal <vgoyal@redhat.com>
+>> Cc: kexec@lists.infradead.org
+>> Cc: x86@kernel.org
+>> ---
+>>   arch/x86/include/asm/kexec.h |  8 ++++----
+>>   arch/x86/kernel/crash.c      | 20 +++++++++++++++-----
+>>   include/linux/kexec.h        | 13 +++++++------
+>>   kernel/crash_core.c          | 23 +++++++++++++++++------
+>>   4 files changed, 43 insertions(+), 21 deletions(-)
+>>
+>> diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+>> index 9bb6607e864e..5c88d27b086d 100644
+>> --- a/arch/x86/include/asm/kexec.h
+>> +++ b/arch/x86/include/asm/kexec.h
+>> @@ -212,13 +212,13 @@ void arch_crash_handle_hotplug_event(struct kimage *image, void *arg);
+>>   #define arch_crash_handle_hotplug_event arch_crash_handle_hotplug_event
+>>   
+>>   #ifdef CONFIG_HOTPLUG_CPU
+>> -int arch_crash_hotplug_cpu_support(void);
+>> -#define crash_hotplug_cpu_support arch_crash_hotplug_cpu_support
+>> +int arch_crash_hotplug_cpu_support(struct kimage *image);
+>> +#define arch_crash_hotplug_cpu_support arch_crash_hotplug_cpu_support
+>>   #endif
+>>   
+>>   #ifdef CONFIG_MEMORY_HOTPLUG
+>> -int arch_crash_hotplug_memory_support(void);
+>> -#define crash_hotplug_memory_support arch_crash_hotplug_memory_support
+>> +int arch_crash_hotplug_memory_support(struct kimage *image);
+>> +#define arch_crash_hotplug_memory_support arch_crash_hotplug_memory_support
+>>   #endif
+>>   
+>>   unsigned int arch_crash_get_elfcorehdr_size(void);
+>> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+>> index 0d7b2657beb6..ad5941665589 100644
+>> --- a/arch/x86/kernel/crash.c
+>> +++ b/arch/x86/kernel/crash.c
+>> @@ -398,18 +398,28 @@ int crash_load_segments(struct kimage *image)
+>>   #undef pr_fmt
+>>   #define pr_fmt(fmt) "crash hp: " fmt
+>>   
+>> -/* These functions provide the value for the sysfs crash_hotplug nodes */
+>> +#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_MEMORY_HOTPLUG)
+>> +static int crash_hotplug_support(struct kimage *image)
+>> +{
+>> +	if (image->file_mode)
+>> +		return 1;
+>> +
+>> +	return image->update_elfcorehdr;
+>> +}
+>> +#endif
+>> +
+>>   #ifdef CONFIG_HOTPLUG_CPU
+>> -int arch_crash_hotplug_cpu_support(void)
+>> +/* These functions provide the value for the sysfs crash_hotplug nodes */
+>> +int arch_crash_hotplug_cpu_support(struct kimage *image)
+>>   {
+>> -	return crash_check_update_elfcorehdr();
+>> +	return crash_hotplug_support(image);
+>>   }
+>>   #endif
+>>   
+>>   #ifdef CONFIG_MEMORY_HOTPLUG
+>> -int arch_crash_hotplug_memory_support(void)
+>> +int arch_crash_hotplug_memory_support(struct kimage *image)
+>>   {
+>> -	return crash_check_update_elfcorehdr();
+>> +	return crash_hotplug_support(image);
+>>   }
+>>   #endif
+>>   
+>> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+>> index ee28c09a7fb0..0f6ea35879ee 100644
+>> --- a/include/linux/kexec.h
+>> +++ b/include/linux/kexec.h
+>> @@ -486,16 +486,17 @@ static inline void arch_kexec_pre_free_pages(void *vaddr, unsigned int pages) {
+>>   static inline void arch_crash_handle_hotplug_event(struct kimage *image, void *arg) { }
+>>   #endif
+>>   
+>> -int crash_check_update_elfcorehdr(void);
+>> -
+>> -#ifndef crash_hotplug_cpu_support
+>> -static inline int crash_hotplug_cpu_support(void) { return 0; }
+>> +#ifndef arch_crash_hotplug_cpu_support
+>> +static inline int arch_crash_hotplug_cpu_support(struct kimage *image) { return 0; }
+>>   #endif
+>>   
+>> -#ifndef crash_hotplug_memory_support
+>> -static inline int crash_hotplug_memory_support(void) { return 0; }
+>> +#ifndef arch_crash_hotplug_memory_support
+>> +static inline int arch_crash_hotplug_memory_support(struct kimage *image) { return 0; }
+>>   #endif
+>>   
+>> +extern int crash_hotplug_cpu_support(void);
+>> +extern int crash_hotplug_memory_support(void);
+>> +
+>>   #ifndef crash_get_elfcorehdr_size
+>>   static inline unsigned int crash_get_elfcorehdr_size(void) { return 0; }
+>>   #endif
+>> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+>> index b9190265fe52..b621f03c1104 100644
+>> --- a/kernel/crash_core.c
+>> +++ b/kernel/crash_core.c
+>> @@ -892,12 +892,14 @@ DEFINE_MUTEX(__crash_hotplug_lock);
+>>   #define crash_hotplug_lock() mutex_lock(&__crash_hotplug_lock)
+>>   #define crash_hotplug_unlock() mutex_unlock(&__crash_hotplug_lock)
+>>   
+>> +#define CPU_HOTPLUG	0
+>> +#define MEM_HOTPLUG	1
+>>   /*
+>>    * This routine utilized when the crash_hotplug sysfs node is read.
+>>    * It reflects the kernel's ability/permission to update the crash
+>>    * elfcorehdr directly.
+>>    */
+>> -int crash_check_update_elfcorehdr(void)
+>> +static int crash_hotplug_support(int hotplug)
+> Is it possible that we rename this function to different name? e.g
+> crash_hotplug_check_support() or other name. We may easily mixing it up
+> with the one of ARCH version. personal opinion
 
-> @@ -170,7 +170,7 @@ static int elf_header_exclude_ranges(struct crash_mem *cmem)
->  	int ret = 0;
->  
->  	/* Exclude the low 1M because it is always reserved */
-> -	ret = crash_exclude_mem_range(cmem, 0, (1<<20)-1);
-> +	ret = crash_exclude_mem_range(cmem, 0, SZ_1M - 1);
->  	if (ret)
->  		return ret;
->  
-> -- 
-> 2.43.0
-> 
+Sure I will rename the common function to crash_hotplug_check_support()
+and arch-specific function to arch_crash_hotplug_check_support.
+
+Thanks,
+Sourabh
+
+>
+>>   {
+>>   	int rc = 0;
+>>   
+>> @@ -909,18 +911,27 @@ int crash_check_update_elfcorehdr(void)
+>>   		return 0;
+>>   	}
+>>   	if (kexec_crash_image) {
+>> -		if (kexec_crash_image->file_mode)
+>> -			rc = 1;
+>> -		else
+>> -			rc = kexec_crash_image->update_elfcorehdr;
+>> +		if (hotplug == CPU_HOTPLUG)
+>> +			rc = arch_crash_hotplug_cpu_support(kexec_crash_image);
+>> +		else if (hotplug == MEM_HOTPLUG)
+>> +			rc = arch_crash_hotplug_memory_support(kexec_crash_image);
+>>   	}
+>>   	/* Release lock now that update complete */
+>>   	kexec_unlock();
+>>   	crash_hotplug_unlock();
+>> -
+>>   	return rc;
+>>   }
+>>   
+>> +int crash_hotplug_cpu_support(void)
+>> +{
+>> +	return crash_hotplug_support(CPU_HOTPLUG);
+>> +}
+>> +
+>> +int crash_hotplug_memory_support(void)
+>> +{
+>> +	return crash_hotplug_support(MEM_HOTPLUG);
+>> +}
+>> +
+>>   /*
+>>    * To accurately reflect hot un/plug changes of cpu and memory resources
+>>    * (including onling and offlining of those resources), the elfcorehdr
+>> -- 
+>> 2.41.0
+>>
 
 
 _______________________________________________
