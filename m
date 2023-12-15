@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D239AC4332F
-	for <kexec@archiver.kernel.org>; Fri, 15 Dec 2023 03:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2256DC4167D
+	for <kexec@archiver.kernel.org>; Fri, 15 Dec 2023 03:28:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=u/elnMP2RzQtij+yg+jpMrIug2/icnhAd91TT9iRrR0=; b=W+VAJp0XxnblEU
-	O9wNdetENIiIS3e743EhcFL7lcHUfkqCpK8gPMN+exLsTaeIp3AdDxdLxYGnJ9kNVkRLHtx6j4Rf1
-	NrWEsnGangBOW2S6SWaLaqkmkm+s1fbod19j56xXPt+olH/MvN403yIebwq/KURmMfWB0PXIo0zKa
-	3ggUwpmKYi+Ft4eHEEo3uh9SUFSp4c3QRBXCawbZqO2kMVg6j1PjQkE9NKxYxDaiYYUzwEzOFBVmh
-	GJnq4OqDFlO75Ll9kuYQ1gLRKj7MoByKkxZC329dUeKvSaSu7DR4pofFeeH1XvM3bhjUpDEmNUGcN
-	qWLWoxIf3POMlRYwT7qA==;
+	List-Owner; bh=CIT8tUgIxFILCq4kh7Ru+vhjQbjxi8mAvSe14v69UU0=; b=pUWa7LUp51TnP0
+	nCzf47fLhWnRYTJ64fusNm1elN/ONz1aF6c/BWqPbp999j+FUaFYwC5y3xu7sw3vUCkkXpSBQSZ90
+	w9F41TLLroiL5ht53PEFi9R41IXwoVqTDos1qadCiSIzRlTRccSUTyznSQIoNdEKYF+Zo1h5Sy2qB
+	U1kIfyVi1d8UtEIyoAhY+Ko6UGBcsYOr0hFvXS9a9rybKhYPAJFsbWqYK8F0CT7p4W0/UyYMSpvjJ
+	8q3ZnUvrRlIqjLDMohBqJ8Y20Ub4oQ4vhX8ClA3gvyik2dNX4xjPdm2qOJ32rpS58D2De/Mh73T85
+	RsG3Vl9FSXLML9v3VJFQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rDyrj-001u0Y-22;
-	Fri, 15 Dec 2023 03:27:55 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1rDys7-001u5Q-2F;
+	Fri, 15 Dec 2023 03:28:19 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rDyrh-001u09-0X
+	id 1rDys5-001u4n-0J
 	for kexec@lists.infradead.org;
-	Fri, 15 Dec 2023 03:27:54 +0000
+	Fri, 15 Dec 2023 03:28:18 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702610871;
+	s=mimecast20190719; t=1702610896;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=LwL29/cvUYFmPMFizthvB5mbwWT7pj5mVWcUZ0VQ95E=;
-	b=SdpO9BQaaq6+8Yp+Ixl36T6hv7/PCRybo8GMsu6AEU+sk5PnFIBysgBI2NmniRuA2y8ZVs
-	P46obyMCAg2OKv6CrdXPYTFGS4lY/llb5wV7ocPYuz3bzH/PGkvJL7g648ag0yksAa9obj
-	2e5VAobBiwwEmyMxkXVUM/ozV6EeYgs=
+	bh=xFjrY9f7lb5ZXGSC5fJ2WhnwT5x2Q7SVpnoNQJclmZ8=;
+	b=Ag7eCNfJnFUqTbKaQgnwe3SeDQ/wQghhy3IW93Gmneg+ooJEYp49ci1rrG4X1v9BwKL8i5
+	w+0gr2eocBQI9JPXg9qt2xXprsHQ2wKwtMkBFHiDiaYhI++8rHBnVjxbvf2o9JioPXGMNW
+	tMlj/u/Z6b6cWrc4MAjJ6qR0o3h6c44=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-176-YCg3eLfLP4ybHpWIskAtsg-1; Thu, 14 Dec 2023 22:27:48 -0500
-X-MC-Unique: YCg3eLfLP4ybHpWIskAtsg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+ us-mta-193-NkTdKl5KPOucS2szYBp4IQ-1; Thu, 14 Dec 2023 22:28:12 -0500
+X-MC-Unique: NkTdKl5KPOucS2szYBp4IQ-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id AD7A6101A555;
-	Fri, 15 Dec 2023 03:27:47 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 807EA101A555;
+	Fri, 15 Dec 2023 03:28:11 +0000 (UTC)
 Received: from localhost (unknown [10.72.116.38])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id ACB4140C6EB9;
-	Fri, 15 Dec 2023 03:27:46 +0000 (UTC)
-Date: Fri, 15 Dec 2023 11:27:43 +0800
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id CB362492BF0;
+	Fri, 15 Dec 2023 03:28:10 +0000 (UTC)
+Date: Fri, 15 Dec 2023 11:28:07 +0800
 From: Baoquan He <bhe@redhat.com>
 To: Yuntao Wang <ytcoode@gmail.com>
 Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, x86@kernel.org,
@@ -65,18 +65,17 @@ Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, x86@kernel.org,
 	Sourabh Jain <sourabhjain@linux.ibm.com>,
 	Sean Christopherson <seanjc@google.com>,
 	Takashi Iwai <tiwai@suse.de>, Lianbo Jiang <lijiang@redhat.com>
-Subject: Re: [PATCH 1/3] x86/crash: remove the unused image parameter from
- prepare_elf_headers()
-Message-ID: <ZXvHrx9ODn1yW9hf@MiWiFi-R3L-srv>
+Subject: Re: [PATCH 2/3] x86/crash: use SZ_1M macro instead of hardcoded value
+Message-ID: <ZXvHx+HYI4zgV47b@MiWiFi-R3L-srv>
 References: <20231214163842.129139-1-ytcoode@gmail.com>
- <20231214163842.129139-2-ytcoode@gmail.com>
+ <20231214163842.129139-3-ytcoode@gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20231214163842.129139-2-ytcoode@gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+In-Reply-To: <20231214163842.129139-3-ytcoode@gmail.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231214_192753_271324_6613BB26 
-X-CRM114-Status: GOOD (  18.67  )
+X-CRM114-CacheID: sfid-20231214_192817_203525_7CEFB8A7 
+X-CRM114-Status: GOOD (  15.45  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,59 +93,29 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 On 12/15/23 at 12:38am, Yuntao Wang wrote:
-> The image parameter is no longer in use, remove it. Also, tidy up the code
-> formatting.
+> Use SZ_1M macro instead of hardcoded 1<<20 to make code more readable.
 > 
 > Signed-off-by: Yuntao Wang <ytcoode@gmail.com>
 > ---
->  arch/x86/kernel/crash.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
+>  arch/x86/kernel/crash.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> index 792231a56d11..249b5876e7ec 100644
+> --- a/arch/x86/kernel/crash.c
+> +++ b/arch/x86/kernel/crash.c
 
 Acked-by: Baoquan He <bhe@redhat.com>
 
-> 
-> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-> index c92d88680dbf..792231a56d11 100644
-> --- a/arch/x86/kernel/crash.c
-> +++ b/arch/x86/kernel/crash.c
-> @@ -198,8 +198,8 @@ static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
->  }
+> @@ -170,7 +170,7 @@ static int elf_header_exclude_ranges(struct crash_mem *cmem)
+>  	int ret = 0;
 >  
->  /* Prepare elf headers. Return addr and size */
-> -static int prepare_elf_headers(struct kimage *image, void **addr,
-> -					unsigned long *sz, unsigned long *nr_mem_ranges)
-> +static int prepare_elf_headers(void **addr, unsigned long *sz,
-> +			       unsigned long *nr_mem_ranges)
->  {
->  	struct crash_mem *cmem;
->  	int ret;
-> @@ -221,7 +221,7 @@ static int prepare_elf_headers(struct kimage *image, void **addr,
->  	*nr_mem_ranges = cmem->nr_ranges;
->  
->  	/* By default prepare 64bit headers */
-> -	ret =  crash_prepare_elf64_headers(cmem, IS_ENABLED(CONFIG_X86_64), addr, sz);
-> +	ret = crash_prepare_elf64_headers(cmem, IS_ENABLED(CONFIG_X86_64), addr, sz);
->  
->  out:
->  	vfree(cmem);
-> @@ -349,7 +349,7 @@ int crash_load_segments(struct kimage *image)
->  				  .buf_max = ULONG_MAX, .top_down = false };
->  
->  	/* Prepare elf headers and add a segment */
-> -	ret = prepare_elf_headers(image, &kbuf.buffer, &kbuf.bufsz, &pnum);
-> +	ret = prepare_elf_headers(&kbuf.buffer, &kbuf.bufsz, &pnum);
+>  	/* Exclude the low 1M because it is always reserved */
+> -	ret = crash_exclude_mem_range(cmem, 0, (1<<20)-1);
+> +	ret = crash_exclude_mem_range(cmem, 0, SZ_1M - 1);
 >  	if (ret)
 >  		return ret;
 >  
-> @@ -452,7 +452,7 @@ void arch_crash_handle_hotplug_event(struct kimage *image)
->  	 * Create the new elfcorehdr reflecting the changes to CPU and/or
->  	 * memory resources.
->  	 */
-> -	if (prepare_elf_headers(image, &elfbuf, &elfsz, &nr_mem_ranges)) {
-> +	if (prepare_elf_headers(&elfbuf, &elfsz, &nr_mem_ranges)) {
->  		pr_err("unable to create new elfcorehdr");
->  		goto out;
->  	}
 > -- 
 > 2.43.0
 > 
