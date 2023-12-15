@@ -4,87 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 28CCEC46CA2
-	for <kexec@archiver.kernel.org>; Fri, 15 Dec 2023 08:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 16592C4332F
+	for <kexec@archiver.kernel.org>; Fri, 15 Dec 2023 08:55:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=g83bUuwPNOw2J43aIJQvhqWHxb1Yh1wQT+AXyci7c6E=; b=blq7xULPEdQMre
-	QsA2Ueq8L3lJNnia9BYiAWcUNjrxsJbvh4hS4wEvs0Mz/nLSVIKvDkcJncm2s70zOvYYx5afVWIq1
-	uRpyEf2OyRY2ili7iUK7eAcO9GNr4jyl1z9p9YKvYQMvqwJ+eh1reEUmFEXoHX7LMR5Yha4YF16PQ
-	WJ66uRm64zxff603XoGeTJHiQkXRpIP57PdF0T7YFS0AxsHLyHYiYkRfEGrr+nmvvUI8LA+LlRGKG
-	TB/ElOVmiePC6kLB9lHlidcsvGDUTX0focfjoThTgCC7seA24W3ocxWLc0VVpuonvaf1rM++IDLwE
-	plHdOClDvrATaqwvxDeA==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Subject:CC:To:
+	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=h3ytx2v4J7LzJ8wEG/PG0ZznGAAURjUT/6M7hB+Esas=; b=VwClMspCc3IzLZ
+	C2WlA8ufE4ywsfzaJLb73uJl32yXfexWLnG90aF6EsirDUMSsX6wVBwTU79UBhAZeLjKfBuX5UYNY
+	KGoPmaiJ7BmE1d/hr2JftxLsSXIH5x6UNxby0VzQz941cu6IIRS9Ppa/F4oVAb9NlfRqG/+ICPGH2
+	Fx6wWfKW6ZnYZk0cPzji6AEJEBZy3u70vDvo+Bl03Jfve/npgZmgnocVcGl8ralakMQhzuLHrcDmg
+	HAFQHkVopCNL9qkmoJgHZ8Lyx8en38f7J1hOqTk8jrpYauB+COwv2KibwKyQvLNu/74aSfdZ1guk9
+	g8+jzKHCBxZqJf6rJRxQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rE3Gy-002PxG-1Y;
-	Fri, 15 Dec 2023 08:10:16 +0000
-Received: from mail-pf1-x434.google.com ([2607:f8b0:4864:20::434])
+	id 1rE3yT-002Xls-0y;
+	Fri, 15 Dec 2023 08:55:13 +0000
+Received: from wxsgout04.xfusion.com ([36.139.87.180])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rE3Gw-002PuN-05
+	id 1rE3yO-002XiJ-2D
 	for kexec@lists.infradead.org;
-	Fri, 15 Dec 2023 08:10:15 +0000
-Received: by mail-pf1-x434.google.com with SMTP id d2e1a72fcca58-6ce7632b032so155706b3a.1
-        for <kexec@lists.infradead.org>; Fri, 15 Dec 2023 00:10:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702627809; x=1703232609; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jscYpo84xIlTIrjQEZDT5YAVqLMOQqnP0eOYv7+MbRw=;
-        b=W+0nDnyp/6yRXvO/RzYILzb68YUdCpaRp5zDXs4BMVWvMn/V+vdWk9amIyE3TNNsSh
-         AbvWYAW+m5O52qP9xrfKh471T2VYX6leNJGHWqGFdykZncKHei6ytSxjcCAcqxUH6PxS
-         QgdGXcP1FZ5TAvwnZj3fdHKZu+3DvfG/DAhunl8TUbxxiIY97FFI9Pr2e3KWUrR2Yu73
-         6gRDDjDYYOS4L4/F1kC7hPkONYApZu9i8khdBRmKvIn0eeiIU1ooVAre+6bZbCRltkkO
-         9sV7cj1WKIFnGVTDF9mcXDpEe9KmQ40Zw7O6eeFv0WcdAlY6en+rdFHWvjeYBzFMVsai
-         g7Ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702627809; x=1703232609;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jscYpo84xIlTIrjQEZDT5YAVqLMOQqnP0eOYv7+MbRw=;
-        b=Pwtljm840hbe5QnUMbwsFLz5MavegWclnAQHlkvZxwQIugWKVs8FclizlZLfGQ2NtO
-         yAPhoo//IkKzMklzaOGNdwQxj472XhjMA9yzeBDDNIhwSdiSmaOEfK07axn+0nHBc4jt
-         0vnj/oN4JRaUvRbFmImwxbITk9M2wXH3kpKg5qz5Ea3I0LWkT/awrzW9zsu3J3wLcIpt
-         +h2bBbzujhoC+FY3EOfOgzHyU6/XneDi7awfUMyyD2IoeKRgBypy2y6w/KgKAeCvo4QS
-         3GbLCufBAVyPkY9oOF91iqjVCgZ6u10Hf+Qfk7CD5d7/Z7dWL8ozjdaHToPP0l/dPOKq
-         ko8Q==
-X-Gm-Message-State: AOJu0Yym9kLdz1vGaH1kgXo70smHMjyws29PHGbRT/cWZslA6pqB9yMJ
-	LgpYD0qXamy0/4Z5jiDrLi8=
-X-Google-Smtp-Source: AGHT+IFvEn6WjjxL9AELNTiUvLF5ar5KlNxdVOf+PtdHoCcSbpAc03KyD4vE24Y4VgQbfpvos6DDnQ==
-X-Received: by 2002:a05:6a00:4601:b0:6cb:6a27:ab57 with SMTP id ko1-20020a056a00460100b006cb6a27ab57mr5960984pfb.14.1702627809447;
-        Fri, 15 Dec 2023 00:10:09 -0800 (PST)
-Received: from code.. ([144.202.108.46])
-        by smtp.gmail.com with ESMTPSA id d8-20020a056a00198800b006cee656cb35sm11783792pfl.156.2023.12.15.00.10.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Dec 2023 00:10:09 -0800 (PST)
-From: Yuntao Wang <ytcoode@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org,
-	x86@kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Yuntao Wang <ytcoode@gmail.com>
-Subject: [PATCH 3/3] x86/kexec: use pr_err() instead of pr_debug() when an error occurs
-Date: Fri, 15 Dec 2023 16:09:10 +0800
-Message-ID: <20231215080910.173338-4-ytcoode@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231215080910.173338-1-ytcoode@gmail.com>
-References: <20231215080910.173338-1-ytcoode@gmail.com>
+	Fri, 15 Dec 2023 08:55:11 +0000
+Received: from wuxshcsitd00600.xfusion.com (unknown [10.32.133.213])
+	by wxsgout04.xfusion.com (SkyGuard) with ESMTPS id 4Ss2y23c1MzB2Nhg;
+	Fri, 15 Dec 2023 16:51:22 +0800 (CST)
+Received: from localhost (10.82.147.3) by wuxshcsitd00600.xfusion.com
+ (10.32.133.213) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Fri, 15 Dec
+ 2023 16:54:52 +0800
+Date: Fri, 15 Dec 2023 16:54:51 +0800
+From: Wang Jinchao <wangjinchao@xfusion.com>
+To: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Young
+	<dyoung@redhat.com>, <kexec@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <stone.xulei@xfusion.com>, <wangjinchao@xfusion.com>
+Subject: [PATCH] crash_core: remove duplicated including of kexec.h
+Message-ID: <202312151654+0800-wangjinchao@xfusion.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+X-Originating-IP: [10.82.147.3]
+X-ClientProxiedBy: wuxshcsitd00602.xfusion.com (10.32.132.250) To
+ wuxshcsitd00600.xfusion.com (10.32.133.213)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231215_001014_066761_34CAA98A 
-X-CRM114-Status: GOOD (  13.11  )
+X-CRM114-CacheID: sfid-20231215_005509_033223_E4DACC2F 
+X-CRM114-Status: UNSURE (   5.58  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -101,45 +67,27 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-When an error is detected, use pr_err() instead of pr_debug() to output
-log message.
+remove second include of linux/kexec.h
 
-In addition, remove the unnecessary return from set_page_address().
-
-Signed-off-by: Yuntao Wang <ytcoode@gmail.com>
+Signed-off-by: Wang Jinchao <wangjinchao@xfusion.com>
 ---
- arch/x86/kernel/kexec-bzimage64.c | 2 +-
- mm/highmem.c                      | 2 --
- 2 files changed, 1 insertion(+), 3 deletions(-)
+ kernel/crash_core.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index a61c12c01270..472a45dbc79a 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -424,7 +424,7 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
- 	 * command line. Make sure it does not overflow
- 	 */
- 	if (cmdline_len + MAX_ELFCOREHDR_STR_LEN > header->cmdline_size) {
--		pr_debug("Appending elfcorehdr=<addr> to command line exceeds maximum allowed length\n");
-+		pr_err("Appending elfcorehdr=<addr> to command line exceeds maximum allowed length\n");
- 		return ERR_PTR(-EINVAL);
- 	}
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index efe87d501c8c..d72985222b16 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -13,7 +13,6 @@
+ #include <linux/memory.h>
+ #include <linux/cpuhotplug.h>
+ #include <linux/memblock.h>
+-#include <linux/kexec.h>
+ #include <linux/kmemleak.h>
  
-diff --git a/mm/highmem.c b/mm/highmem.c
-index e19269093a93..bd48ba445dd4 100644
---- a/mm/highmem.c
-+++ b/mm/highmem.c
-@@ -799,8 +799,6 @@ void set_page_address(struct page *page, void *virtual)
- 		}
- 		spin_unlock_irqrestore(&pas->lock, flags);
- 	}
--
--	return;
- }
- 
- void __init page_address_init(void)
+ #include <asm/page.h>
 -- 
-2.43.0
+2.40.0
 
 
 _______________________________________________
