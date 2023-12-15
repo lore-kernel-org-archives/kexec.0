@@ -4,79 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 21F9AC35274
-	for <kexec@archiver.kernel.org>; Fri, 15 Dec 2023 15:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AAC60C4332F
+	for <kexec@archiver.kernel.org>; Fri, 15 Dec 2023 17:47:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=HVgeZkT+5hO1pjWIjOttZLPq6DuhCV+HHMqRpYLPXRM=; b=3HVTKEuk017Pm/
-	oUpLT+9AwBYKtlr3ltC8exNUibvkaHfIHa9t/oSjJqiFewH9Yf/lWsQvQvgZxzKrA8WHCYFK2duzX
-	FdLuKO1lhIfiozP5fRO+8aa183h7/3SFRnkrOMPU/2AVEQ19qPKFOUeEZkFKYzABWo7k3S5dARz1c
-	7xXu2UbZrVlss1rHcuJqSdYK6Ii5UGC0dWh1YQkzIx154M0z5bKquKaaNjUnFuWjozLAhkSbWg4dq
-	cN8Ne2EoGCmmQgiJnjyOVwagCyZUPYtQ6YOhK80h5FjhZdimsa3OuIijlJviFWFy87CiuvBbQGYmI
-	MfQOyp0xOrZAL8dutPtA==;
+	List-Archive:List-Unsubscribe:List-Id:Subject:MIME-Version:Message-ID:
+	In-Reply-To:Date:References:Cc:To:From:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Owner;
+	bh=zpURTYnQzwiFMsyx1tSoe2TFcVZCMWI4d755k2PCqt4=; b=YtOp84GpmXV2xUrScGHVbXV4t9
+	W3ttpwolhspFCSN9AR8KPqE1O3e+0vq0Fa363JoN8U4ihTGGIjnUPkQxsyf6PbS6Zvtb5Gu/LOi6e
+	DC16ch20iF5pH66kvU+fIfExi7sARjh+IGoKgJdA0cKFkG9hkObZKodfKJQ40rGxU85RsTK+gP+bx
+	CcmKuizl7lliGc4b91BKZrMdpN2IqIHIyeP+XxeyybhMvqI3nA4fNaw1o602k2F8RtcHP7guom1M/
+	YI/ZT7ZshFCL853Ch0hrQjho25k40WgGl+yJ4XWrzWcqu0lmOy7iWKUKyBV0aLy9nJhCyqGcCGhP6
+	hoo5TKXA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rE9uN-003h4x-2Y;
-	Fri, 15 Dec 2023 15:15:23 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1rECH4-0048nR-2s;
+	Fri, 15 Dec 2023 17:46:58 +0000
+Received: from out02.mta.xmission.com ([166.70.13.232])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rE9uK-003h3V-2Z
+	id 1rECH2-0048iI-02
 	for kexec@lists.infradead.org;
-	Fri, 15 Dec 2023 15:15:22 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702653318;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xmBbuKgtcJTPsoI80iq/qmH5+IN/NVMKCIFpG3IS32o=;
-	b=cpUOngtr40SG+HCxytQEU4iVhczABo2EeePVjRI7d5ZNJOzum1Fa+3OOqrs4nu0Yhnc+q/
-	UYueEMV8f28rrh2GZkGhjBsZklAkpA99Tp2I40TPGqjc1bSx+9QYOcLWhFqPXg78CFlgtt
-	oLIPPyu8vZ/+zbJthjPNgntXTpAuluU=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-328-wXEn5tR-OSyoYd0oxYHwjQ-1; Fri, 15 Dec 2023 10:15:16 -0500
-X-MC-Unique: wXEn5tR-OSyoYd0oxYHwjQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1742D8432A4;
-	Fri, 15 Dec 2023 15:15:15 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.38])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 064EE1C060B1;
-	Fri, 15 Dec 2023 15:15:13 +0000 (UTC)
-Date: Fri, 15 Dec 2023 23:15:10 +0800
-From: Baoquan He <bhe@redhat.com>
+	Fri, 15 Dec 2023 17:46:57 +0000
+Received: from in01.mta.xmission.com ([166.70.13.51]:41064)
+	by out02.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1rECGj-00CCA6-Dn; Fri, 15 Dec 2023 10:46:37 -0700
+Received: from ip68-227-168-167.om.om.cox.net ([68.227.168.167]:50734 helo=email.froward.int.ebiederm.org.xmission.com)
+	by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1rECGi-00CJs3-Ex; Fri, 15 Dec 2023 10:46:37 -0700
+From: "Eric W. Biederman" <ebiederm@xmission.com>
 To: Yuntao Wang <ytcoode@gmail.com>
-Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, x86@kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>,
-	Hari Bathini <hbathini@linux.ibm.com>,
-	Eric DeVolder <eric.devolder@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Sourabh Jain <sourabhjain@linux.ibm.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Takashi Iwai <tiwai@suse.de>, Lianbo Jiang <lijiang@redhat.com>
-Subject: Re: [PATCH 3/3] crash_core: fix and simplify the logic of
- crash_exclude_mem_range()
-Message-ID: <ZXxtfpXpuFXLd+ge@MiWiFi-R3L-srv>
-References: <20231214163842.129139-1-ytcoode@gmail.com>
- <20231214163842.129139-4-ytcoode@gmail.com>
+Cc: linux-kernel@vger.kernel.org,  kexec@lists.infradead.org,
+  x86@kernel.org,  Andrew Morton <akpm@linux-foundation.org>,  Thomas
+ Gleixner <tglx@linutronix.de>,  Ingo Molnar <mingo@redhat.com>,  Borislav
+ Petkov <bp@alien8.de>,  Dave Hansen <dave.hansen@linux.intel.com>,  "H.
+ Peter Anvin" <hpa@zytor.com>,  Jonathan Corbet <corbet@lwn.net>
+References: <20231215080910.173338-1-ytcoode@gmail.com>
+	<20231215080910.173338-2-ytcoode@gmail.com>
+Date: Fri, 15 Dec 2023 11:46:28 -0600
+In-Reply-To: <20231215080910.173338-2-ytcoode@gmail.com> (Yuntao Wang's
+	message of "Fri, 15 Dec 2023 16:09:08 +0800")
+Message-ID: <87a5qb4avf.fsf@email.froward.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20231214163842.129139-4-ytcoode@gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+X-XM-SPF: eid=1rECGi-00CJs3-Ex;;;mid=<87a5qb4avf.fsf@email.froward.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.168.167;;;frm=ebiederm@xmission.com;;;spf=pass
+X-XM-AID: U2FsdGVkX189yCEqcjYR5MZGxwEuoh60iLC+05tSlWI=
+X-SA-Exim-Connect-IP: 68.227.168.167
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 1/3] kexec_file: fix incorrect end value passed to
+ kimage_is_destination_range()
+X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231215_071520_921506_DA1008B1 
-X-CRM114-Status: GOOD (  30.07  )
+X-CRM114-CacheID: sfid-20231215_094656_046407_63DA63FF 
+X-CRM114-Status: GOOD (  20.09  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -93,155 +80,59 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 12/15/23 at 12:38am, Yuntao Wang wrote:
-> The purpose of crash_exclude_mem_range() is to remove all memory ranges
-> that overlap with [mstart-mend]. However, the current logic only removes
-> the first overlapping memory range.
-> 
-> Commit a2e9a95d2190 ("kexec: Improve & fix crash_exclude_mem_range() to
-> handle overlapping ranges") attempted to address this issue, but it did not
-> fix all error cases.
+Yuntao Wang <ytcoode@gmail.com> writes:
 
-Hmm, this is a specific function for kdump kernel loading. So far it's
-sufficiently meet demands. Say so because we only need to exclude
-crashk_res and crashk_low_res when constructing elfcorehdr. region
-crashk_res/crashk_low_res are digged out from system RAM region. That's
-why the break is taken in the for loop in the current code. X86 needs
-exclude low 1M, the low 1M could span several system RAM regions because
-BIOS under low 1M reserved some spaces. And the elfcorehdr exluding from
-crashkernel region taken in x86 is also a splitting.
+> The end parameter received by kimage_is_destination_range() should be the
+> last valid byte address of the target memory segment plus 1. However, in
+> the locate_mem_hole_bottom_up() and locate_mem_hole_top_down() functions,
+> the corresponding value passed to kimage_is_destination_range() is the last
+> valid byte address of the target memory segment, which is 1 less. Fix
+> it.
 
-Generally speaking, crashk_res/crashk_low_res is inside a big chunk of
-continuous region. On x86, low 1M spans several complete region on x86,
-elfcorehdr region is inside continuous crashk_res region.
+If that is true we I think we should rather fix
+kimage_is_destination_range.
 
-You can see why crash_exclude_mem_range() looks like now it is. This patch
-makes crash_exclude_mem_range() be a generic region removing function. I do
-see the memmove can improve code readbility, while I have concern about the
-while loop.
+Otherwise we run the risk of having areas whose end is not
+representable, epecially on 32bit.
 
-Imagine we have a crashkernel region 256M reserved under 4G, say [2G, 2G+256M].
-Then after excluding the 256M from a region, it should stop. But now, this patch
-will make it continue scanning. Not sure if it's all in my mind.
 
-> 
-> Let's fix and simplify the logic of crash_exclude_mem_range().
-> 
+Eric
+
+
 > Signed-off-by: Yuntao Wang <ytcoode@gmail.com>
 > ---
->  kernel/crash_core.c | 70 ++++++++++++---------------------------------
->  1 file changed, 19 insertions(+), 51 deletions(-)
-> 
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index efe87d501c8c..0292a4c8bb2f 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -565,9 +565,8 @@ int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_map,
->  int crash_exclude_mem_range(struct crash_mem *mem,
->  			    unsigned long long mstart, unsigned long long mend)
->  {
-> -	int i, j;
-> +	int i;
->  	unsigned long long start, end, p_start, p_end;
-> -	struct range temp_range = {0, 0};
+>  kernel/kexec_file.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+>
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index f9a419cd22d4..26be070d3bdd 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -435,13 +435,12 @@ static int locate_mem_hole_top_down(unsigned long start, unsigned long end,
+>  		if (temp_start < start || temp_start < kbuf->buf_min)
+>  			return 0;
 >  
->  	for (i = 0; i < mem->nr_ranges; i++) {
->  		start = mem->ranges[i].start;
-> @@ -575,72 +574,41 @@ int crash_exclude_mem_range(struct crash_mem *mem,
->  		p_start = mstart;
->  		p_end = mend;
->  
-> -		if (mstart > end || mend < start)
-> +		if (p_start > end || p_end < start)
+> -		temp_end = temp_start + kbuf->memsz - 1;
+> -
+>  		/*
+>  		 * Make sure this does not conflict with any of existing
+>  		 * segments
+>  		 */
+> -		if (kimage_is_destination_range(image, temp_start, temp_end)) {
+> +		if (kimage_is_destination_range(image, temp_start,
+> +						temp_start + kbuf->memsz)) {
+>  			temp_start = temp_start - PAGE_SIZE;
 >  			continue;
->  
->  		/* Truncate any area outside of range */
-> -		if (mstart < start)
-> +		if (p_start < start)
->  			p_start = start;
-> -		if (mend > end)
-> +		if (p_end > end)
->  			p_end = end;
->  
->  		/* Found completely overlapping range */
->  		if (p_start == start && p_end == end) {
-> -			mem->ranges[i].start = 0;
-> -			mem->ranges[i].end = 0;
-> -			if (i < mem->nr_ranges - 1) {
-> -				/* Shift rest of the ranges to left */
-> -				for (j = i; j < mem->nr_ranges - 1; j++) {
-> -					mem->ranges[j].start =
-> -						mem->ranges[j+1].start;
-> -					mem->ranges[j].end =
-> -							mem->ranges[j+1].end;
-> -				}
-> -
-> -				/*
-> -				 * Continue to check if there are another overlapping ranges
-> -				 * from the current position because of shifting the above
-> -				 * mem ranges.
-> -				 */
-> -				i--;
-> -				mem->nr_ranges--;
-> -				continue;
-> -			}
-> +			memmove(&mem->ranges[i], &mem->ranges[i + 1],
-> +				(mem->nr_ranges - (i + 1)) * sizeof(mem->ranges[i]));
-> +			i--;
->  			mem->nr_ranges--;
-> -			return 0;
-> -		}
-> -
-> -		if (p_start > start && p_end < end) {
-> +		} else if (p_start > start && p_end < end) {
->  			/* Split original range */
-> +			if (mem->nr_ranges >= mem->max_nr_ranges)
-> +				return -ENOMEM;
-> +
-> +			memmove(&mem->ranges[i + 2], &mem->ranges[i + 1],
-> +				(mem->nr_ranges - (i + 1)) * sizeof(mem->ranges[i]));
-> +
->  			mem->ranges[i].end = p_start - 1;
-> -			temp_range.start = p_end + 1;
-> -			temp_range.end = end;
-> +			mem->ranges[i + 1].start = p_end + 1;
-> +			mem->ranges[i + 1].end = end;
-> +
-> +			i++;
-> +			mem->nr_ranges++;
->  		} else if (p_start != start)
->  			mem->ranges[i].end = p_start - 1;
->  		else
->  			mem->ranges[i].start = p_end + 1;
-> -		break;
-> -	}
-> -
-> -	/* If a split happened, add the split to array */
-> -	if (!temp_range.end)
-> -		return 0;
-> -
-> -	/* Split happened */
-> -	if (i == mem->max_nr_ranges - 1)
-> -		return -ENOMEM;
-> -
-> -	/* Location where new range should go */
-> -	j = i + 1;
-> -	if (j < mem->nr_ranges) {
-> -		/* Move over all ranges one slot towards the end */
-> -		for (i = mem->nr_ranges - 1; i >= j; i--)
-> -			mem->ranges[i + 1] = mem->ranges[i];
->  	}
->  
-> -	mem->ranges[j].start = temp_range.start;
-> -	mem->ranges[j].end = temp_range.end;
-> -	mem->nr_ranges++;
->  	return 0;
->  }
->  
-> -- 
-> 2.43.0
-> 
-
+>  		}
+> @@ -475,7 +474,7 @@ static int locate_mem_hole_bottom_up(unsigned long start, unsigned long end,
+>  		 * Make sure this does not conflict with any of existing
+>  		 * segments
+>  		 */
+> -		if (kimage_is_destination_range(image, temp_start, temp_end)) {
+> +		if (kimage_is_destination_range(image, temp_start, temp_end + 1)) {
+>  			temp_start = temp_start + PAGE_SIZE;
+>  			continue;
+>  		}
 
 _______________________________________________
 kexec mailing list
