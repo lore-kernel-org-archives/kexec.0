@@ -4,73 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3C7ADC4332F
-	for <kexec@archiver.kernel.org>; Fri, 15 Dec 2023 02:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D239AC4332F
+	for <kexec@archiver.kernel.org>; Fri, 15 Dec 2023 03:27:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=bg75/O4pxtZxQXUGqCPAS3i8H/SAHcBQIuub4wlcTJE=; b=4I736vQyWpZ+eH
-	agYs/yoZAGNWyqR9+fNJ2+pYdxpeJXOL+rbP1Y692DPbucLKDZUJ1QEd59Q6rIYTGl0Wdb9SLn3/b
-	bTyw3lGecp4fvGxdI0XwbrUuQXxZy/1IL3r2FfcxssSL7bHsmjpis72u3wDuHxvF8uOZOXdb+Zxy6
-	nRZRn+paDLqfjB774bUVpaasTRWY0J76JlT4YkoGNOaUIDcAKzk17Lwr2RZYIoscF4cjRMexdZqeC
-	xyUVZ7QFkVw33vxe1iuVsP30wLThqLlJ/3+w+v+LBoT3z1qKe6m8DlySn+ZAaQA+cBe/SeqAJrvb/
-	5FJHFpz2hceEeXl3GwiQ==;
+	List-Owner; bh=u/elnMP2RzQtij+yg+jpMrIug2/icnhAd91TT9iRrR0=; b=W+VAJp0XxnblEU
+	O9wNdetENIiIS3e743EhcFL7lcHUfkqCpK8gPMN+exLsTaeIp3AdDxdLxYGnJ9kNVkRLHtx6j4Rf1
+	NrWEsnGangBOW2S6SWaLaqkmkm+s1fbod19j56xXPt+olH/MvN403yIebwq/KURmMfWB0PXIo0zKa
+	3ggUwpmKYi+Ft4eHEEo3uh9SUFSp4c3QRBXCawbZqO2kMVg6j1PjQkE9NKxYxDaiYYUzwEzOFBVmh
+	GJnq4OqDFlO75Ll9kuYQ1gLRKj7MoByKkxZC329dUeKvSaSu7DR4pofFeeH1XvM3bhjUpDEmNUGcN
+	qWLWoxIf3POMlRYwT7qA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rDyBs-001pvn-1K;
-	Fri, 15 Dec 2023 02:44:40 +0000
-Received: from mail-wr1-x42d.google.com ([2a00:1450:4864:20::42d])
+	id 1rDyrj-001u0Y-22;
+	Fri, 15 Dec 2023 03:27:55 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rDyBp-001pto-16
+	id 1rDyrh-001u09-0X
 	for kexec@lists.infradead.org;
-	Fri, 15 Dec 2023 02:44:39 +0000
-Received: by mail-wr1-x42d.google.com with SMTP id ffacd0b85a97d-336417c565eso125317f8f.3
-        for <kexec@lists.infradead.org>; Thu, 14 Dec 2023 18:44:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1702608273; x=1703213073; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k9XDBQt8NyASWBhHRtYhXwFukuH9acGC67RiibDyL7E=;
-        b=imC1VhoEv2o6octwdP08zTWC6zFp5ScPl1S2jIggMHLgXgFtUF5WzVRfipbFQiJ0H8
-         Nh4MJowgem1Q9Omp0m7S2YX6honeWY32O1ZkagsgZn26smz5VCgGi2xiW8McPeP2RI2Q
-         TRROWqRzaVNxzNZx5gLV7nmRZzp/WqtIvg7Nf5WaHyBC15bJ5oLHAbnPRoYPDgvctACH
-         tx1Dunf7w/LlmRj8Hye496bZO9lIb+D3HZhJZ8EWde8ZNLXJxhgMjEojjGd+FBdpoq4G
-         ik8kor2zLxOn/66EuFkFMRpSjDR0VGIrPpavHDm4pqwxLLBTvBd5ThlqAI68EfOTAHfv
-         6+yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702608273; x=1703213073;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=k9XDBQt8NyASWBhHRtYhXwFukuH9acGC67RiibDyL7E=;
-        b=cvfVxQn6cBHk1lB2fUfhy1tD4Wsr+r+wpPvk17bk6kauydpXpHm7lExmKmY22Xt7Qn
-         A0E5ybgQZdt0OjtOCaw/oaqz8ZfAIJ9VJqnmj6cYE1yStl8KvcUcnbrWBuntqTS0Pn8G
-         6uFseYSYVVqZveCiPSYmO5voWyEwU9JLdzvYzS/DvmAtvrTk8uxmwT1TxThZa5DuXw+v
-         /gXdWTuRHPD4n3om269ADacbN9izG8wGDf6dxikCJaIDGJvsDIqso13v7m6xg+U37LUR
-         vFXg1+KPCZNq7kecJNYBYmOtRhMLifQE4g6G85mMuN/DXKKBTCNEest1MBdZbqLwhEOE
-         sHow==
-X-Gm-Message-State: AOJu0Yzv3uEycGfkpJt9qTMBD4Ug9ddBqX0SYJXDDf0/Un1u0e8Udc/h
-	pGdefbeUPBrBfyAtdolB8iL2Fd/M5ges5LZlpc8SmQ==
-X-Google-Smtp-Source: AGHT+IEHYFogUObtxR5bOjWEUZN9INgCImPWqK70oIiDi+VdLrk3rRhfc+3EQJvaALO54EkeT7OruMofARK/eN/0O5A=
-X-Received: by 2002:a05:6000:1d97:b0:336:26d3:8819 with SMTP id
- bk23-20020a0560001d9700b0033626d38819mr2973326wrb.41.1702608273373; Thu, 14
- Dec 2023 18:44:33 -0800 (PST)
+	Fri, 15 Dec 2023 03:27:54 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1702610871;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LwL29/cvUYFmPMFizthvB5mbwWT7pj5mVWcUZ0VQ95E=;
+	b=SdpO9BQaaq6+8Yp+Ixl36T6hv7/PCRybo8GMsu6AEU+sk5PnFIBysgBI2NmniRuA2y8ZVs
+	P46obyMCAg2OKv6CrdXPYTFGS4lY/llb5wV7ocPYuz3bzH/PGkvJL7g648ag0yksAa9obj
+	2e5VAobBiwwEmyMxkXVUM/ozV6EeYgs=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-176-YCg3eLfLP4ybHpWIskAtsg-1; Thu, 14 Dec 2023 22:27:48 -0500
+X-MC-Unique: YCg3eLfLP4ybHpWIskAtsg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id AD7A6101A555;
+	Fri, 15 Dec 2023 03:27:47 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.38])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id ACB4140C6EB9;
+	Fri, 15 Dec 2023 03:27:46 +0000 (UTC)
+Date: Fri, 15 Dec 2023 11:27:43 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Yuntao Wang <ytcoode@gmail.com>
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, x86@kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>,
+	Hari Bathini <hbathini@linux.ibm.com>,
+	Eric DeVolder <eric.devolder@oracle.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Sourabh Jain <sourabhjain@linux.ibm.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Takashi Iwai <tiwai@suse.de>, Lianbo Jiang <lijiang@redhat.com>
+Subject: Re: [PATCH 1/3] x86/crash: remove the unused image parameter from
+ prepare_elf_headers()
+Message-ID: <ZXvHrx9ODn1yW9hf@MiWiFi-R3L-srv>
+References: <20231214163842.129139-1-ytcoode@gmail.com>
+ <20231214163842.129139-2-ytcoode@gmail.com>
 MIME-Version: 1.0
-References: <CAA0N8zYyGKraVW8v3roMNakuJxQJOo3ddsB=e0D_KaD+Ji=81A@mail.gmail.com>
-In-Reply-To: <CAA0N8zYyGKraVW8v3roMNakuJxQJOo3ddsB=e0D_KaD+Ji=81A@mail.gmail.com>
-From: Chris Koch <chrisko@google.com>
-Date: Thu, 14 Dec 2023 18:44:15 -0800
-Message-ID: <CAA0N8zaYjfxJ7eTWU-t0qGRN7rsU9_O8+7XPNW5iejtmr57s3A@mail.gmail.com>
-Subject: Re: The conflict between PHYSICAL_START and MIN_KERNEL_LOAD_ADDR
-To: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Cloud Hsu <cloudhsu@google.com>
+Content-Disposition: inline
+In-Reply-To: <20231214163842.129139-2-ytcoode@gmail.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231214_184437_379632_257DC655 
-X-CRM114-Status: GOOD (  25.86  )
+X-CRM114-CacheID: sfid-20231214_192753_271324_6613BB26 
+X-CRM114-Status: GOOD (  18.67  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,63 +88,71 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-TXkgYXBvbG9naWVzLCBJIGRpZG4ndCByZWFsaXplIHg4NkAgd2Fzbid0IGEgbWFpbGluZyBsaXN0
-IGVhcmxpZXIuCkFkZGluZyB0aGUgbGlzdC4KCk9uIFRodSwgRGVjIDE0LCAyMDIzIGF0IDY6Mzfi
-gK9QTSBDaHJpcyBLb2NoIDxjaHJpc2tvQGdvb2dsZS5jb20+IHdyb3RlOgo+Cj4gSGkgYWxsLAo+
-Cj4gd2UgcmFuIGludG8gc29tZSBtZW1vcnkgY2xvYmJlcmluZyBvbiBrZXJuZWwgYm9vdCwgYW5k
-IHRoZXJlIHNlZW1zIHRvCj4gYmUgYSBiaXQgb2YgYSBjb25mbGljdCBiZXR3ZWVuIHRoZSBkb2N1
-bWVudGF0aW9uIGFuZCByZWFsaXR5LCBhbmQKPiBDT05GSUdfUEhZU0lDQUxfU1RBUlQgKGRlZmF1
-bHQgMHgxIDAwMCAwMDApIGFuZCBNSU5fS0VSTkVMX0xPQURfQUREUgo+IChkZWZhdWx0IDB4MTAw
-IDAwMCkuCj4KPiBGaXJzdCBvYnNlcnZhdGlvbjogYnppbWFnZSdzIHByZWZfYWRkcmVzcyBpcyBs
-aXN0ZWQgYXMgInByZWZlcnJlZCIgaW4KPiB0aGUgYm9vdCBkb2N1bWVudGF0aW9uIGZvciByZWxv
-Y2F0YWJsZSBrZXJuZWxzLCBidXQgd2hhdCBpcyBub3QKPiBtZW50aW9uZWQgaXMgdGhhdCBpZiB0
-aGUga2VybmVsIGlzIGxvYWRlZCBiZWxvdyBwcmVmX2FkZHJlc3MsIGl0IHdpbGwKPiByZWxvY2F0
-ZSBpdHNlbGYgdGhlcmUgWzFdLiBUaGUgZGVmYXVsdCBDT05GSUdfUEhZU0lDQUxfU1RBUlQgc2Vl
-bXMgdG8KPiBiZSAweDEwMDAwMDAsIGFuZCBhIHJldmlldyBvZiBib290bG9hZGVycyBzaG93cyB0
-aGF0IGluIGV2ZXJ5IGNhc2UgYnV0Cj4gR1JVQiBhIGtlcm5lbCB3aWxsIGdldCBsb2FkZWQgYmVs
-b3cgdGhhdCwgYW5kIHRoZW4gcmVsb2NhdGUgaXRzZWxmCj4gdGhlcmUuIChpcHhlIDB4MTAwMDAg
-b3IgMHgxMDAwMDAgZGVwZW5kaW5nIG9uIGNvbmZpZywga2V4ZWMtdG9vbHMKPiAweDEwMDAwMCwg
-a2V4ZWNfZmlsZSAweDEwMDAwMCkKPgo+IFRoaXMgbWVhbnMgaW4gYWxsIGRlZmF1bHQgY2FzZXMg
-ZXhjZXB0IEdSVUIsIHRoZSBrZXJuZWwgd2lsbCByZWxvY2F0ZQo+IGl0c2VsZiBhbmQgZGVjb21w
-cmVzcyBpbiBhbiBhcmVhIG9mIG1lbW9yeSBpdCB3YXMgbm90IGludGVuZGVkIGZvciwKPiBhbmQg
-d2hpY2ggbWF5IGhvbGQgcmVzZXJ2ZWQgZGF0YSBpbiB0aGUgbWVtb3J5IG1hcC4gKFRoaXMgaXMg
-d2hhdAo+IGhhcHBlbmVkIGluIG91ciBjYXNlLiBJdCB3YXMgY2xvYmJlcmluZyByZXNlcnZlZCBz
-dHVmZi4pCj4KPiBUaGlzIHN1Z2dlc3RzIHRoZSBmb2xsb3dpbmc6Cj4gMSkgVGhpcyBwcmVmX2Fk
-ZHJlc3MgYmVoYXZpb3Igc2hvdWxkIGJlIGRvY3VtZW50ZWQgaW4gYm9vdC5yc3QuCj4gU29tZXRo
-aW5nIGxpa2UgIkEgcmVsb2NhdGFibGUga2VybmVsIHdpbGwgcmVsb2NhdGUgaXRzZWxmIHRvCj4g
-cHJlZl9hZGRyZXNzICh3aGljaCBpcyBlcXVhbCB0byBDT05GSUdfUEhZU0lDQUxfU1RBUlQpIGlm
-IGl0IHdhcwo+IGxvYWRlZCBiZWxvdyB0aGF0IGFkZHJlc3MuIgo+Cj4gMikgRG9jdW1lbnRhdGlv
-biBmb3IgUEhZU0lDQUxfU1RBUlQgc2hvdWxkIGJlIHVwZGF0ZWQuIEl0IHN0YXRlcwo+Cj4gPiBJ
-ZiBrZXJuZWwgaXMgYSBub3QgcmVsb2NhdGFibGUgKENPTkZJR19SRUxPQ0FUQUJMRT1uKSB0aGVu
-Cj4gPiBiekltYWdlIHdpbGwgZGVjb21wcmVzcyBpdHNlbGYgdG8gYWJvdmUgcGh5c2ljYWwgYWRk
-cmVzcyBhbmQKPiA+IHJ1biBmcm9tIHRoZXJlLiBPdGhlcndpc2UsIGJ6SW1hZ2Ugd2lsbCBydW4g
-ZnJvbSB0aGUgYWRkcmVzcyB3aGVyZQo+ID4gaXQgaGFzIGJlZW4gbG9hZGVkIGJ5IHRoZSBib290
-IGxvYWRlciBhbmQgd2lsbCBpZ25vcmUgYWJvdmUgcGh5c2ljYWwKPiA+IGFkZHJlc3MuCj4KPiAz
-KSBTb21lIHBhdGNoZXMgc2hvdWxkIGJlIHNlbnQgdG8gaXB4ZSwga2V4ZWMtdG9vbHMgYW5kIGtl
-eGVjX2ZpbGUgdG8KPiByZXNwZWN0IHByZWZfYWRkcmVzcyBhcyBhIG1pbmltdW0gYWRkcmVzcywg
-bm90IGp1c3QgYSBwcmVmZXJyZWQKPiBhZGRyZXNzLgo+Cj4gNCkgVGhlIGRlZmF1bHQgdmFsdWVz
-IG9mIE1JTl9LRVhFQ19MT0FEX0FERFIgYW5kIENPTkZJR19QSFlTSUNBTF9TVEFSVAo+IHNob3Vs
-ZCBhbGlnbiB0byByZWR1Y2UgdGhlIGNoYW5jZXMgb2YgdGhpcyBoYXBwZW5pbmcgZm9yIHVzZXJz
-IHdobwo+IGFyZW4ndCBtZXNzaW5nIHdpdGggdGhlc2UgdmFsdWVzLiBHaXZlbiB3aGF0IGN1cnJl
-bnQgYm9vdCBsb2FkZXJzIGRvLAo+IHNob3VsZCBDT05GSUdfUEhZU0lDQUxfU1RBUlQgYmUgbG93
-ZXJlZCB0byAweDEwMDAwMCwgYXQgbGVhc3QgZm9yCj4gcmVsb2NhdGFibGUga2VybmVscz8gVGhp
-cyBtaWdodCBiZSB0aGUgbW9zdCBjb250cm92ZXJzaWFsIG9mIHRoZQo+IGNoYW5nZXMuCj4KPiA1
-KSBTaG91bGQgUEhZU0lDQUxfU1RBUlQgYmUgaWdub3JlZCBpbiByZWxvY2F0YWJsZSBrZXJuZWxz
-IGxpa2UgaXRzCj4gZG9jdW1lbnRhdGlvbiBzdWdnZXN0cz8gSXMgdGhlIHJlbG9jYXRpb24gYWJv
-dmUgdGhhdCB1bm5lY2Vzc2FyeT8KPgo+IFJlZ2FyZGxlc3Mgb2Ygd2hpY2ggY2hhbmdlIHdlIG1h
-a2UgZm9yIHRoZSBmdXR1cmUsIGV4aXN0aW5nIGJvb3QKPiBsb2FkZXJzICYga2VybmVscyBjb25m
-bGljdCBpbiB0aGVpciBiZWhhdmlvciBmb3IgcmVsb2NhdGFibGUga2VybmVscy4KPiBXaGF0IGlz
-IG1vc3QgbGlrZWx5IHRvIGZpeCB0aGlzIGlzc3VlIGZvciB1c2VycyAmIHByZXZlbnQgYnJlYWth
-Z2Ugb2YKPiBleGlzdGluZyB3b3JrZmxvd3M/Cj4KPiBJZiBJIHNlZSBhZ3JlZW1lbnQgb24gMSB0
-byAzLCBJIHdpbGwgc3RhcnQgc2VuZGluZyBwYXRjaGVzLiBXb3VsZCBsb3ZlCj4gdG8gaGVhciBv
-cGluaW9ucyBvbiA0ICYgNS4KPgo+IFRoYW5rcywKPiBDaHJpcwo+Cj4gWzFdIGh0dHBzOi8vZ2l0
-Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3N0YWJsZS9saW51eC5naXQvdHJl
-ZS9hcmNoL3g4Ni9ib290L2NvbXByZXNzZWQvaGVhZF82NC5TP2g9bGludXgtNi42LnkjbjMzMwoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFp
-bGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
-ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On 12/15/23 at 12:38am, Yuntao Wang wrote:
+> The image parameter is no longer in use, remove it. Also, tidy up the code
+> formatting.
+> 
+> Signed-off-by: Yuntao Wang <ytcoode@gmail.com>
+> ---
+>  arch/x86/kernel/crash.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+
+Acked-by: Baoquan He <bhe@redhat.com>
+
+> 
+> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> index c92d88680dbf..792231a56d11 100644
+> --- a/arch/x86/kernel/crash.c
+> +++ b/arch/x86/kernel/crash.c
+> @@ -198,8 +198,8 @@ static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
+>  }
+>  
+>  /* Prepare elf headers. Return addr and size */
+> -static int prepare_elf_headers(struct kimage *image, void **addr,
+> -					unsigned long *sz, unsigned long *nr_mem_ranges)
+> +static int prepare_elf_headers(void **addr, unsigned long *sz,
+> +			       unsigned long *nr_mem_ranges)
+>  {
+>  	struct crash_mem *cmem;
+>  	int ret;
+> @@ -221,7 +221,7 @@ static int prepare_elf_headers(struct kimage *image, void **addr,
+>  	*nr_mem_ranges = cmem->nr_ranges;
+>  
+>  	/* By default prepare 64bit headers */
+> -	ret =  crash_prepare_elf64_headers(cmem, IS_ENABLED(CONFIG_X86_64), addr, sz);
+> +	ret = crash_prepare_elf64_headers(cmem, IS_ENABLED(CONFIG_X86_64), addr, sz);
+>  
+>  out:
+>  	vfree(cmem);
+> @@ -349,7 +349,7 @@ int crash_load_segments(struct kimage *image)
+>  				  .buf_max = ULONG_MAX, .top_down = false };
+>  
+>  	/* Prepare elf headers and add a segment */
+> -	ret = prepare_elf_headers(image, &kbuf.buffer, &kbuf.bufsz, &pnum);
+> +	ret = prepare_elf_headers(&kbuf.buffer, &kbuf.bufsz, &pnum);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -452,7 +452,7 @@ void arch_crash_handle_hotplug_event(struct kimage *image)
+>  	 * Create the new elfcorehdr reflecting the changes to CPU and/or
+>  	 * memory resources.
+>  	 */
+> -	if (prepare_elf_headers(image, &elfbuf, &elfsz, &nr_mem_ranges)) {
+> +	if (prepare_elf_headers(&elfbuf, &elfsz, &nr_mem_ranges)) {
+>  		pr_err("unable to create new elfcorehdr");
+>  		goto out;
+>  	}
+> -- 
+> 2.43.0
+> 
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
