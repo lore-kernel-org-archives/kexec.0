@@ -4,89 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 11E8FC4332F
-	for <kexec@archiver.kernel.org>; Fri, 15 Dec 2023 02:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7F8AAC4332F
+	for <kexec@archiver.kernel.org>; Fri, 15 Dec 2023 02:38:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=2M6UfATQQWcoXL5e2fdXG3pKHJP/04l6puI5t2YREfs=; b=y03ZANIcxNpXmW
-	hSbOUC+hJqXB8mSvfIT3E/IPyfu41Ocb4ZHrCWQp2EhPM5VPvhe5NFoAXwy55TKEnJMh7XgenwcQK
-	lk5XoYly1YvGxqnRd0pyvfFLWxBwwnRCEEAysFWD6aIlP6VJ1uek2wCkoFC7RNrcvd15QTHQeQHhD
-	CwIR8nHq0zhLh0p9B8qJpd3ZaPnhXy7Vekj/eghkxeUAbT4egQqXbxshvi6VD5EUDx1IEcAmIeW5S
-	kyH5uKaci90FvNA90hz54MtTKATvDNp8UMc0BMMqrSXxIJPePRv7rgNGhwlEi5wKDRXVNKZVigs08
-	W/QAL8mOrb2LaYkAtx8g==;
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=A/E90RUdGBs6W7UVh4rsGR+B9CpjeS9Yj8kOhI61aLg=; b=RARNpYkDPzjaxg
+	RwHLoLGonNsTFSbfH+k1gS2wXZ/9vUfIgcvxli3z4EAE29Cwf3XFfM2sCnershYrzzHUtoTdCxKJG
+	TAczx37Z1XvEJw141WffwnszktIaFZYgx0uJZCAVrOXAZimP177ihVg7mOLQFKgu93U48bjNVEcY8
+	VGuo0UJn1oL9I4wEPb1+bCo3pm+d3e+cZ5PrH6fGSK0QUzXIfLYh/9UTGXmXbUZXCvqUW4qa2T5zG
+	f6Z5UeoB69oppr4uiWgOHrDEndahppLeJ+vaVPrlA0pkMGd0d+cmR7MvWXWfhfPw1MhnhWcDUFdJ8
+	AHyo96ZpLG5QcQAQ93zg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rDxwo-001nD6-1M;
-	Fri, 15 Dec 2023 02:29:06 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1rDy5j-001oa7-2t;
+	Fri, 15 Dec 2023 02:38:19 +0000
+Received: from mail-wm1-x335.google.com ([2a00:1450:4864:20::335])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rDxwm-001nBy-01
+	id 1rDy5f-001oWd-1Z
 	for kexec@lists.infradead.org;
-	Fri, 15 Dec 2023 02:29:05 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702607342;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xiQyckJTwnqYOVFcTln1GExvRHz6Chm9H/hFawrpLu4=;
-	b=Oy8Kv4vCnVXGaz5ukMiTo0y+tvX/yEWMh/JHyk+LefjGVQqwdOV+3EiQg7hPf+r8UV8eR2
-	aV1J29XX/s6z8XmXqLiT/g/BLNq2CGQAO07RvOJ12CzwyiMLlxFLvZAlzPwPvdzbiFn7xc
-	MWpoGO4RCd5vkPDFer87kxRybJSiH+Q=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-633-_ekwzBs_NQC2U-Afnm6wqA-1; Thu, 14 Dec 2023 21:28:58 -0500
-X-MC-Unique: _ekwzBs_NQC2U-Afnm6wqA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3DB13881B6B;
-	Fri, 15 Dec 2023 02:28:57 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.38])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id E298E2166B31;
-	Fri, 15 Dec 2023 02:28:55 +0000 (UTC)
-Date: Fri, 15 Dec 2023 10:28:53 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Sourabh Jain <sourabhjain@linux.ibm.com>
-Cc: linuxppc-dev@ozlabs.org, Akhil Raj <lf32.dev@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Dave Young <dyoung@redhat.com>,
-	David Hildenbrand <david@redhat.com>,
-	Eric DeVolder <eric.devolder@oracle.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Hari Bathini <hbathini@linux.ibm.com>,
-	Laurent Dufour <laurent.dufour@fr.ibm.com>,
-	Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Mimi Zohar <zohar@linux.ibm.com>, Naveen N Rao <naveen@kernel.org>,
-	Oscar Salvador <osalvador@suse.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org,
-	x86@kernel.org
-Subject: Re: [PATCH v14 3/6] crash: add a new kexec flag for FDT update
-Message-ID: <ZXu55ZXVSMeQDE/e@MiWiFi-R3L-srv>
-References: <20231211083056.340404-1-sourabhjain@linux.ibm.com>
- <20231211083056.340404-4-sourabhjain@linux.ibm.com>
+	Fri, 15 Dec 2023 02:38:18 +0000
+Received: by mail-wm1-x335.google.com with SMTP id 5b1f17b1804b1-40c6a71e88cso2648635e9.0
+        for <kexec@lists.infradead.org>; Thu, 14 Dec 2023 18:38:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1702607886; x=1703212686; darn=lists.infradead.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=qAQi20+vSGpECaeGFUzVVGWI33tnksS2uNPlPyTsk44=;
+        b=Rh1bO+1SaJHFIoBDDyigT9+J5j1kUebR7ixcLYFuQcyfvd8OY7LbWPhfMJYvYQoUSc
+         avudcscjYAQt/RdMEiLkPY8g/FeWljM1pUsRwyv11LVBbdU6I08M2IjyCfM8/Fo+AoIJ
+         IqlFtB4JnECShEwsZfS0yc1jmq9NQgg7RwJMoG8BR7bETkt454W4tqcomFYtLA/wht6l
+         zO0BXOngciyKJRWgmhcRP5AWD686zgETfhItoHTYlnXfWq1/XTH2+KnmmV5aNFRml+jN
+         TxTbJ3vo/+KUEWouEaDUu2XB+58FSrq8UPdl5LZn1qtTNz5/2hr6OJ/Jab5Oz8PgClI3
+         gaHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702607886; x=1703212686;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qAQi20+vSGpECaeGFUzVVGWI33tnksS2uNPlPyTsk44=;
+        b=uXRNgVXhfh5A2kIe5zuYxCyThGxXwW+ssnun1UonjIweSkCIkszDjBxv5GMHj3N55G
+         qRA0K0wdCYCpQFV56Am/1jsGA7ZcZ38qYZ3daa27dHsOMtPf7onuPiXzkuIYkVxqUBRz
+         G3LPqRNkUxNmIDlI+2VKdf1MywODpjSwxfLB0lprwRCyt00RPykKEZcJ8qwRbIVM/lGB
+         +Wv1rCoxo4NSUHPVDtKm1fYUaocUNqTp5JdLBHmFzRDzVBKRi9xoOf3vDcwrfGX8pZpa
+         kzUb7tgxDdCLBbSter1StR5BLZFOZepR86vw1WlZswcqTAUzwPpzXiBd9Q5KodlWgaFp
+         B82A==
+X-Gm-Message-State: AOJu0YxMkhmA7ClIhtRzyYox5+zmkDemtEOblUn2wAXk8VMyf6Qz+S56
+	G2kKSc9LUXt/qxHLH3w43TV45qkwA6pEq2QcQlY1qA==
+X-Google-Smtp-Source: AGHT+IFmtgqra5fSU7wTBqwdsFqsWb399+4nFVUJ3RKOW3ODfLwVhODJdlIAfTmyvu361w9QUN3QqXrrMAwJatMEm1Q=
+X-Received: by 2002:a05:6000:400c:b0:336:4a7c:f062 with SMTP id
+ cp12-20020a056000400c00b003364a7cf062mr1325514wrb.27.1702607886098; Thu, 14
+ Dec 2023 18:38:06 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20231211083056.340404-4-sourabhjain@linux.ibm.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Disposition: inline
+From: Chris Koch <chrisko@google.com>
+Date: Thu, 14 Dec 2023 18:37:44 -0800
+Message-ID: <CAA0N8zYyGKraVW8v3roMNakuJxQJOo3ddsB=e0D_KaD+Ji=81A@mail.gmail.com>
+Subject: The conflict between PHYSICAL_START and MIN_KERNEL_LOAD_ADDR
+To: x86@kernel.org, kexec@lists.infradead.org
+Cc: Cloud Hsu <cloudhsu@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231214_182904_111911_F82938E3 
-X-CRM114-Status: GOOD (  25.12  )
+X-CRM114-CacheID: sfid-20231214_183815_524903_4EE6F6FD 
+X-CRM114-Status: GOOD (  14.44  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -103,114 +83,67 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 12/11/23 at 02:00pm, Sourabh Jain wrote:
-> The commit a72bbec70da2 ("crash: hotplug support for kexec_load()")
-> introduced a new kexec flag, `KEXEC_UPDATE_ELFCOREHDR`. Kexec tool uses
-> this flag to indicate kernel that it is safe to modify the elfcorehdr
-> of kdump image loaded using kexec_load system call.
-> 
-> Similarly, add a new kexec flag, `KEXEC_UPDATE_FDT`, for another kdump
-> component named FDT (Flatten Device Tree). Architectures like PowerPC
-> need to update FDT kdump image component on CPU hotplug events. Kexec
-> tool passing `KEXEC_UPDATE_FDT` will be an indication to kernel that FDT
-> segment is not part of SHA calculation hence it is safe to update it.
-> 
-> With the `KEXEC_UPDATE_ELFCOREHDR` and `KEXEC_UPDATE_FDT` kexec flags,
-> crash hotplug support can be added to PowerPC for the kexec_load syscall
-> while maintaining the backward compatibility with older kexec tools that
-> do not have these newly introduced flags.
-> 
-> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
-> Cc: Akhil Raj <lf32.dev@gmail.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Borislav Petkov (AMD) <bp@alien8.de>
-> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Dave Young <dyoung@redhat.com>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Eric DeVolder <eric.devolder@oracle.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Hari Bathini <hbathini@linux.ibm.com>
-> Cc: Laurent Dufour <laurent.dufour@fr.ibm.com>
-> Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Mimi Zohar <zohar@linux.ibm.com>
-> Cc: Naveen N Rao <naveen@kernel.org>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Valentin Schneider <vschneid@redhat.com>
-> Cc: Vivek Goyal <vgoyal@redhat.com>
-> Cc: kexec@lists.infradead.org
-> Cc: x86@kernel.org
-> ---
->  include/linux/kexec.h      | 6 ++++--
->  include/uapi/linux/kexec.h | 1 +
->  kernel/kexec.c             | 2 ++
->  3 files changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index 0f6ea35879ee..bcedb7625b1f 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -319,6 +319,7 @@ struct kimage {
->  #ifdef CONFIG_CRASH_HOTPLUG
->  	/* If set, allow changes to elfcorehdr of kexec_load'd image */
->  	unsigned int update_elfcorehdr:1;
-> +	unsigned int update_fdt:1;
+Hi all,
 
-Can we unify this to one flag, e.g hotplug_update?
+we ran into some memory clobbering on kernel boot, and there seems to
+be a bit of a conflict between the documentation and reality, and
+CONFIG_PHYSICAL_START (default 0x1 000 000) and MIN_KERNEL_LOAD_ADDR
+(default 0x100 000).
 
-With this, on x86_64, we will skip the sha calculation for elfcorehdr. 
-On ppc, we will skip the sha calculation for elfcorehdr and fdt.
+First observation: bzimage's pref_address is listed as "preferred" in
+the boot documentation for relocatable kernels, but what is not
+mentioned is that if the kernel is loaded below pref_address, it will
+relocate itself there [1]. The default CONFIG_PHYSICAL_START seems to
+be 0x1000000, and a review of bootloaders shows that in every case but
+GRUB a kernel will get loaded below that, and then relocate itself
+there. (ipxe 0x10000 or 0x100000 depending on config, kexec-tools
+0x100000, kexec_file 0x100000)
 
->  #endif
->  
->  #ifdef ARCH_HAS_KIMAGE_ARCH
-> @@ -396,9 +397,10 @@ bool kexec_load_permitted(int kexec_image_type);
->  
->  /* List of defined/legal kexec flags */
->  #ifndef CONFIG_KEXEC_JUMP
-> -#define KEXEC_FLAGS    (KEXEC_ON_CRASH | KEXEC_UPDATE_ELFCOREHDR)
-> +#define KEXEC_FLAGS    (KEXEC_ON_CRASH | KEXEC_UPDATE_ELFCOREHDR | KEXEC_UPDATE_FDT)
->  #else
-> -#define KEXEC_FLAGS    (KEXEC_ON_CRASH | KEXEC_PRESERVE_CONTEXT | KEXEC_UPDATE_ELFCOREHDR)
-> +#define KEXEC_FLAGS    (KEXEC_ON_CRASH | KEXEC_PRESERVE_CONTEXT | KEXEC_UPDATE_ELFCOREHDR | \
-> +			KEXEC_UPDATE_FDT)
->  #endif
->  
->  /* List of defined/legal kexec file flags */
-> diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
-> index 01766dd839b0..3d5b3d757bed 100644
-> --- a/include/uapi/linux/kexec.h
-> +++ b/include/uapi/linux/kexec.h
-> @@ -13,6 +13,7 @@
->  #define KEXEC_ON_CRASH		0x00000001
->  #define KEXEC_PRESERVE_CONTEXT	0x00000002
->  #define KEXEC_UPDATE_ELFCOREHDR	0x00000004
-> +#define KEXEC_UPDATE_FDT	0x00000008
->  #define KEXEC_ARCH_MASK		0xffff0000
->  
->  /*
-> diff --git a/kernel/kexec.c b/kernel/kexec.c
-> index 8f35a5a42af8..97eb151cd931 100644
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-> @@ -132,6 +132,8 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
->  #ifdef CONFIG_CRASH_HOTPLUG
->  	if (flags & KEXEC_UPDATE_ELFCOREHDR)
->  		image->update_elfcorehdr = 1;
-> +	if (flags & KEXEC_UPDATE_FDT)
-> +		image->update_fdt = 1;
->  #endif
->  
->  	ret = machine_kexec_prepare(image);
-> -- 
-> 2.41.0
-> 
+This means in all default cases except GRUB, the kernel will relocate
+itself and decompress in an area of memory it was not intended for,
+and which may hold reserved data in the memory map. (This is what
+happened in our case. It was clobbering reserved stuff.)
 
+This suggests the following:
+1) This pref_address behavior should be documented in boot.rst.
+Something like "A relocatable kernel will relocate itself to
+pref_address (which is equal to CONFIG_PHYSICAL_START) if it was
+loaded below that address."
+
+2) Documentation for PHYSICAL_START should be updated. It states
+
+> If kernel is a not relocatable (CONFIG_RELOCATABLE=n) then
+> bzImage will decompress itself to above physical address and
+> run from there. Otherwise, bzImage will run from the address where
+> it has been loaded by the boot loader and will ignore above physical
+> address.
+
+3) Some patches should be sent to ipxe, kexec-tools and kexec_file to
+respect pref_address as a minimum address, not just a preferred
+address.
+
+4) The default values of MIN_KEXEC_LOAD_ADDR and CONFIG_PHYSICAL_START
+should align to reduce the chances of this happening for users who
+aren't messing with these values. Given what current boot loaders do,
+should CONFIG_PHYSICAL_START be lowered to 0x100000, at least for
+relocatable kernels? This might be the most controversial of the
+changes.
+
+5) Should PHYSICAL_START be ignored in relocatable kernels like its
+documentation suggests? Is the relocation above that unnecessary?
+
+Regardless of which change we make for the future, existing boot
+loaders & kernels conflict in their behavior for relocatable kernels.
+What is most likely to fix this issue for users & prevent breakage of
+existing workflows?
+
+If I see agreement on 1 to 3, I will start sending patches. Would love
+to hear opinions on 4 & 5.
+
+Thanks,
+Chris
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/arch/x86/boot/compressed/head_64.S?h=linux-6.6.y#n333
 
 _______________________________________________
 kexec mailing list
