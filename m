@@ -4,69 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7F8AAC4332F
-	for <kexec@archiver.kernel.org>; Fri, 15 Dec 2023 02:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3C7ADC4332F
+	for <kexec@archiver.kernel.org>; Fri, 15 Dec 2023 02:44:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=A/E90RUdGBs6W7UVh4rsGR+B9CpjeS9Yj8kOhI61aLg=; b=RARNpYkDPzjaxg
-	RwHLoLGonNsTFSbfH+k1gS2wXZ/9vUfIgcvxli3z4EAE29Cwf3XFfM2sCnershYrzzHUtoTdCxKJG
-	TAczx37Z1XvEJw141WffwnszktIaFZYgx0uJZCAVrOXAZimP177ihVg7mOLQFKgu93U48bjNVEcY8
-	VGuo0UJn1oL9I4wEPb1+bCo3pm+d3e+cZ5PrH6fGSK0QUzXIfLYh/9UTGXmXbUZXCvqUW4qa2T5zG
-	f6Z5UeoB69oppr4uiWgOHrDEndahppLeJ+vaVPrlA0pkMGd0d+cmR7MvWXWfhfPw1MhnhWcDUFdJ8
-	AHyo96ZpLG5QcQAQ93zg==;
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=bg75/O4pxtZxQXUGqCPAS3i8H/SAHcBQIuub4wlcTJE=; b=4I736vQyWpZ+eH
+	agYs/yoZAGNWyqR9+fNJ2+pYdxpeJXOL+rbP1Y692DPbucLKDZUJ1QEd59Q6rIYTGl0Wdb9SLn3/b
+	bTyw3lGecp4fvGxdI0XwbrUuQXxZy/1IL3r2FfcxssSL7bHsmjpis72u3wDuHxvF8uOZOXdb+Zxy6
+	nRZRn+paDLqfjB774bUVpaasTRWY0J76JlT4YkoGNOaUIDcAKzk17Lwr2RZYIoscF4cjRMexdZqeC
+	xyUVZ7QFkVw33vxe1iuVsP30wLThqLlJ/3+w+v+LBoT3z1qKe6m8DlySn+ZAaQA+cBe/SeqAJrvb/
+	5FJHFpz2hceEeXl3GwiQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rDy5j-001oa7-2t;
-	Fri, 15 Dec 2023 02:38:19 +0000
-Received: from mail-wm1-x335.google.com ([2a00:1450:4864:20::335])
+	id 1rDyBs-001pvn-1K;
+	Fri, 15 Dec 2023 02:44:40 +0000
+Received: from mail-wr1-x42d.google.com ([2a00:1450:4864:20::42d])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rDy5f-001oWd-1Z
+	id 1rDyBp-001pto-16
 	for kexec@lists.infradead.org;
-	Fri, 15 Dec 2023 02:38:18 +0000
-Received: by mail-wm1-x335.google.com with SMTP id 5b1f17b1804b1-40c6a71e88cso2648635e9.0
-        for <kexec@lists.infradead.org>; Thu, 14 Dec 2023 18:38:07 -0800 (PST)
+	Fri, 15 Dec 2023 02:44:39 +0000
+Received: by mail-wr1-x42d.google.com with SMTP id ffacd0b85a97d-336417c565eso125317f8f.3
+        for <kexec@lists.infradead.org>; Thu, 14 Dec 2023 18:44:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1702607886; x=1703212686; darn=lists.infradead.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=qAQi20+vSGpECaeGFUzVVGWI33tnksS2uNPlPyTsk44=;
-        b=Rh1bO+1SaJHFIoBDDyigT9+J5j1kUebR7ixcLYFuQcyfvd8OY7LbWPhfMJYvYQoUSc
-         avudcscjYAQt/RdMEiLkPY8g/FeWljM1pUsRwyv11LVBbdU6I08M2IjyCfM8/Fo+AoIJ
-         IqlFtB4JnECShEwsZfS0yc1jmq9NQgg7RwJMoG8BR7bETkt454W4tqcomFYtLA/wht6l
-         zO0BXOngciyKJRWgmhcRP5AWD686zgETfhItoHTYlnXfWq1/XTH2+KnmmV5aNFRml+jN
-         TxTbJ3vo/+KUEWouEaDUu2XB+58FSrq8UPdl5LZn1qtTNz5/2hr6OJ/Jab5Oz8PgClI3
-         gaHw==
+        d=google.com; s=20230601; t=1702608273; x=1703213073; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=k9XDBQt8NyASWBhHRtYhXwFukuH9acGC67RiibDyL7E=;
+        b=imC1VhoEv2o6octwdP08zTWC6zFp5ScPl1S2jIggMHLgXgFtUF5WzVRfipbFQiJ0H8
+         Nh4MJowgem1Q9Omp0m7S2YX6honeWY32O1ZkagsgZn26smz5VCgGi2xiW8McPeP2RI2Q
+         TRROWqRzaVNxzNZx5gLV7nmRZzp/WqtIvg7Nf5WaHyBC15bJ5oLHAbnPRoYPDgvctACH
+         tx1Dunf7w/LlmRj8Hye496bZO9lIb+D3HZhJZ8EWde8ZNLXJxhgMjEojjGd+FBdpoq4G
+         ik8kor2zLxOn/66EuFkFMRpSjDR0VGIrPpavHDm4pqwxLLBTvBd5ThlqAI68EfOTAHfv
+         6+yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702607886; x=1703212686;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qAQi20+vSGpECaeGFUzVVGWI33tnksS2uNPlPyTsk44=;
-        b=uXRNgVXhfh5A2kIe5zuYxCyThGxXwW+ssnun1UonjIweSkCIkszDjBxv5GMHj3N55G
-         qRA0K0wdCYCpQFV56Am/1jsGA7ZcZ38qYZ3daa27dHsOMtPf7onuPiXzkuIYkVxqUBRz
-         G3LPqRNkUxNmIDlI+2VKdf1MywODpjSwxfLB0lprwRCyt00RPykKEZcJ8qwRbIVM/lGB
-         +Wv1rCoxo4NSUHPVDtKm1fYUaocUNqTp5JdLBHmFzRDzVBKRi9xoOf3vDcwrfGX8pZpa
-         kzUb7tgxDdCLBbSter1StR5BLZFOZepR86vw1WlZswcqTAUzwPpzXiBd9Q5KodlWgaFp
-         B82A==
-X-Gm-Message-State: AOJu0YxMkhmA7ClIhtRzyYox5+zmkDemtEOblUn2wAXk8VMyf6Qz+S56
-	G2kKSc9LUXt/qxHLH3w43TV45qkwA6pEq2QcQlY1qA==
-X-Google-Smtp-Source: AGHT+IFmtgqra5fSU7wTBqwdsFqsWb399+4nFVUJ3RKOW3ODfLwVhODJdlIAfTmyvu361w9QUN3QqXrrMAwJatMEm1Q=
-X-Received: by 2002:a05:6000:400c:b0:336:4a7c:f062 with SMTP id
- cp12-20020a056000400c00b003364a7cf062mr1325514wrb.27.1702607886098; Thu, 14
- Dec 2023 18:38:06 -0800 (PST)
+        d=1e100.net; s=20230601; t=1702608273; x=1703213073;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=k9XDBQt8NyASWBhHRtYhXwFukuH9acGC67RiibDyL7E=;
+        b=cvfVxQn6cBHk1lB2fUfhy1tD4Wsr+r+wpPvk17bk6kauydpXpHm7lExmKmY22Xt7Qn
+         A0E5ybgQZdt0OjtOCaw/oaqz8ZfAIJ9VJqnmj6cYE1yStl8KvcUcnbrWBuntqTS0Pn8G
+         6uFseYSYVVqZveCiPSYmO5voWyEwU9JLdzvYzS/DvmAtvrTk8uxmwT1TxThZa5DuXw+v
+         /gXdWTuRHPD4n3om269ADacbN9izG8wGDf6dxikCJaIDGJvsDIqso13v7m6xg+U37LUR
+         vFXg1+KPCZNq7kecJNYBYmOtRhMLifQE4g6G85mMuN/DXKKBTCNEest1MBdZbqLwhEOE
+         sHow==
+X-Gm-Message-State: AOJu0Yzv3uEycGfkpJt9qTMBD4Ug9ddBqX0SYJXDDf0/Un1u0e8Udc/h
+	pGdefbeUPBrBfyAtdolB8iL2Fd/M5ges5LZlpc8SmQ==
+X-Google-Smtp-Source: AGHT+IEHYFogUObtxR5bOjWEUZN9INgCImPWqK70oIiDi+VdLrk3rRhfc+3EQJvaALO54EkeT7OruMofARK/eN/0O5A=
+X-Received: by 2002:a05:6000:1d97:b0:336:26d3:8819 with SMTP id
+ bk23-20020a0560001d9700b0033626d38819mr2973326wrb.41.1702608273373; Thu, 14
+ Dec 2023 18:44:33 -0800 (PST)
 MIME-Version: 1.0
+References: <CAA0N8zYyGKraVW8v3roMNakuJxQJOo3ddsB=e0D_KaD+Ji=81A@mail.gmail.com>
+In-Reply-To: <CAA0N8zYyGKraVW8v3roMNakuJxQJOo3ddsB=e0D_KaD+Ji=81A@mail.gmail.com>
 From: Chris Koch <chrisko@google.com>
-Date: Thu, 14 Dec 2023 18:37:44 -0800
-Message-ID: <CAA0N8zYyGKraVW8v3roMNakuJxQJOo3ddsB=e0D_KaD+Ji=81A@mail.gmail.com>
-Subject: The conflict between PHYSICAL_START and MIN_KERNEL_LOAD_ADDR
-To: x86@kernel.org, kexec@lists.infradead.org
+Date: Thu, 14 Dec 2023 18:44:15 -0800
+Message-ID: <CAA0N8zaYjfxJ7eTWU-t0qGRN7rsU9_O8+7XPNW5iejtmr57s3A@mail.gmail.com>
+Subject: Re: The conflict between PHYSICAL_START and MIN_KERNEL_LOAD_ADDR
+To: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc: Cloud Hsu <cloudhsu@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231214_183815_524903_4EE6F6FD 
-X-CRM114-Status: GOOD (  14.44  )
+X-CRM114-CacheID: sfid-20231214_184437_379632_257DC655 
+X-CRM114-Status: GOOD (  25.86  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,74 +82,63 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi all,
-
-we ran into some memory clobbering on kernel boot, and there seems to
-be a bit of a conflict between the documentation and reality, and
-CONFIG_PHYSICAL_START (default 0x1 000 000) and MIN_KERNEL_LOAD_ADDR
-(default 0x100 000).
-
-First observation: bzimage's pref_address is listed as "preferred" in
-the boot documentation for relocatable kernels, but what is not
-mentioned is that if the kernel is loaded below pref_address, it will
-relocate itself there [1]. The default CONFIG_PHYSICAL_START seems to
-be 0x1000000, and a review of bootloaders shows that in every case but
-GRUB a kernel will get loaded below that, and then relocate itself
-there. (ipxe 0x10000 or 0x100000 depending on config, kexec-tools
-0x100000, kexec_file 0x100000)
-
-This means in all default cases except GRUB, the kernel will relocate
-itself and decompress in an area of memory it was not intended for,
-and which may hold reserved data in the memory map. (This is what
-happened in our case. It was clobbering reserved stuff.)
-
-This suggests the following:
-1) This pref_address behavior should be documented in boot.rst.
-Something like "A relocatable kernel will relocate itself to
-pref_address (which is equal to CONFIG_PHYSICAL_START) if it was
-loaded below that address."
-
-2) Documentation for PHYSICAL_START should be updated. It states
-
-> If kernel is a not relocatable (CONFIG_RELOCATABLE=n) then
-> bzImage will decompress itself to above physical address and
-> run from there. Otherwise, bzImage will run from the address where
-> it has been loaded by the boot loader and will ignore above physical
-> address.
-
-3) Some patches should be sent to ipxe, kexec-tools and kexec_file to
-respect pref_address as a minimum address, not just a preferred
-address.
-
-4) The default values of MIN_KEXEC_LOAD_ADDR and CONFIG_PHYSICAL_START
-should align to reduce the chances of this happening for users who
-aren't messing with these values. Given what current boot loaders do,
-should CONFIG_PHYSICAL_START be lowered to 0x100000, at least for
-relocatable kernels? This might be the most controversial of the
-changes.
-
-5) Should PHYSICAL_START be ignored in relocatable kernels like its
-documentation suggests? Is the relocation above that unnecessary?
-
-Regardless of which change we make for the future, existing boot
-loaders & kernels conflict in their behavior for relocatable kernels.
-What is most likely to fix this issue for users & prevent breakage of
-existing workflows?
-
-If I see agreement on 1 to 3, I will start sending patches. Would love
-to hear opinions on 4 & 5.
-
-Thanks,
-Chris
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/arch/x86/boot/compressed/head_64.S?h=linux-6.6.y#n333
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+TXkgYXBvbG9naWVzLCBJIGRpZG4ndCByZWFsaXplIHg4NkAgd2Fzbid0IGEgbWFpbGluZyBsaXN0
+IGVhcmxpZXIuCkFkZGluZyB0aGUgbGlzdC4KCk9uIFRodSwgRGVjIDE0LCAyMDIzIGF0IDY6Mzfi
+gK9QTSBDaHJpcyBLb2NoIDxjaHJpc2tvQGdvb2dsZS5jb20+IHdyb3RlOgo+Cj4gSGkgYWxsLAo+
+Cj4gd2UgcmFuIGludG8gc29tZSBtZW1vcnkgY2xvYmJlcmluZyBvbiBrZXJuZWwgYm9vdCwgYW5k
+IHRoZXJlIHNlZW1zIHRvCj4gYmUgYSBiaXQgb2YgYSBjb25mbGljdCBiZXR3ZWVuIHRoZSBkb2N1
+bWVudGF0aW9uIGFuZCByZWFsaXR5LCBhbmQKPiBDT05GSUdfUEhZU0lDQUxfU1RBUlQgKGRlZmF1
+bHQgMHgxIDAwMCAwMDApIGFuZCBNSU5fS0VSTkVMX0xPQURfQUREUgo+IChkZWZhdWx0IDB4MTAw
+IDAwMCkuCj4KPiBGaXJzdCBvYnNlcnZhdGlvbjogYnppbWFnZSdzIHByZWZfYWRkcmVzcyBpcyBs
+aXN0ZWQgYXMgInByZWZlcnJlZCIgaW4KPiB0aGUgYm9vdCBkb2N1bWVudGF0aW9uIGZvciByZWxv
+Y2F0YWJsZSBrZXJuZWxzLCBidXQgd2hhdCBpcyBub3QKPiBtZW50aW9uZWQgaXMgdGhhdCBpZiB0
+aGUga2VybmVsIGlzIGxvYWRlZCBiZWxvdyBwcmVmX2FkZHJlc3MsIGl0IHdpbGwKPiByZWxvY2F0
+ZSBpdHNlbGYgdGhlcmUgWzFdLiBUaGUgZGVmYXVsdCBDT05GSUdfUEhZU0lDQUxfU1RBUlQgc2Vl
+bXMgdG8KPiBiZSAweDEwMDAwMDAsIGFuZCBhIHJldmlldyBvZiBib290bG9hZGVycyBzaG93cyB0
+aGF0IGluIGV2ZXJ5IGNhc2UgYnV0Cj4gR1JVQiBhIGtlcm5lbCB3aWxsIGdldCBsb2FkZWQgYmVs
+b3cgdGhhdCwgYW5kIHRoZW4gcmVsb2NhdGUgaXRzZWxmCj4gdGhlcmUuIChpcHhlIDB4MTAwMDAg
+b3IgMHgxMDAwMDAgZGVwZW5kaW5nIG9uIGNvbmZpZywga2V4ZWMtdG9vbHMKPiAweDEwMDAwMCwg
+a2V4ZWNfZmlsZSAweDEwMDAwMCkKPgo+IFRoaXMgbWVhbnMgaW4gYWxsIGRlZmF1bHQgY2FzZXMg
+ZXhjZXB0IEdSVUIsIHRoZSBrZXJuZWwgd2lsbCByZWxvY2F0ZQo+IGl0c2VsZiBhbmQgZGVjb21w
+cmVzcyBpbiBhbiBhcmVhIG9mIG1lbW9yeSBpdCB3YXMgbm90IGludGVuZGVkIGZvciwKPiBhbmQg
+d2hpY2ggbWF5IGhvbGQgcmVzZXJ2ZWQgZGF0YSBpbiB0aGUgbWVtb3J5IG1hcC4gKFRoaXMgaXMg
+d2hhdAo+IGhhcHBlbmVkIGluIG91ciBjYXNlLiBJdCB3YXMgY2xvYmJlcmluZyByZXNlcnZlZCBz
+dHVmZi4pCj4KPiBUaGlzIHN1Z2dlc3RzIHRoZSBmb2xsb3dpbmc6Cj4gMSkgVGhpcyBwcmVmX2Fk
+ZHJlc3MgYmVoYXZpb3Igc2hvdWxkIGJlIGRvY3VtZW50ZWQgaW4gYm9vdC5yc3QuCj4gU29tZXRo
+aW5nIGxpa2UgIkEgcmVsb2NhdGFibGUga2VybmVsIHdpbGwgcmVsb2NhdGUgaXRzZWxmIHRvCj4g
+cHJlZl9hZGRyZXNzICh3aGljaCBpcyBlcXVhbCB0byBDT05GSUdfUEhZU0lDQUxfU1RBUlQpIGlm
+IGl0IHdhcwo+IGxvYWRlZCBiZWxvdyB0aGF0IGFkZHJlc3MuIgo+Cj4gMikgRG9jdW1lbnRhdGlv
+biBmb3IgUEhZU0lDQUxfU1RBUlQgc2hvdWxkIGJlIHVwZGF0ZWQuIEl0IHN0YXRlcwo+Cj4gPiBJ
+ZiBrZXJuZWwgaXMgYSBub3QgcmVsb2NhdGFibGUgKENPTkZJR19SRUxPQ0FUQUJMRT1uKSB0aGVu
+Cj4gPiBiekltYWdlIHdpbGwgZGVjb21wcmVzcyBpdHNlbGYgdG8gYWJvdmUgcGh5c2ljYWwgYWRk
+cmVzcyBhbmQKPiA+IHJ1biBmcm9tIHRoZXJlLiBPdGhlcndpc2UsIGJ6SW1hZ2Ugd2lsbCBydW4g
+ZnJvbSB0aGUgYWRkcmVzcyB3aGVyZQo+ID4gaXQgaGFzIGJlZW4gbG9hZGVkIGJ5IHRoZSBib290
+IGxvYWRlciBhbmQgd2lsbCBpZ25vcmUgYWJvdmUgcGh5c2ljYWwKPiA+IGFkZHJlc3MuCj4KPiAz
+KSBTb21lIHBhdGNoZXMgc2hvdWxkIGJlIHNlbnQgdG8gaXB4ZSwga2V4ZWMtdG9vbHMgYW5kIGtl
+eGVjX2ZpbGUgdG8KPiByZXNwZWN0IHByZWZfYWRkcmVzcyBhcyBhIG1pbmltdW0gYWRkcmVzcywg
+bm90IGp1c3QgYSBwcmVmZXJyZWQKPiBhZGRyZXNzLgo+Cj4gNCkgVGhlIGRlZmF1bHQgdmFsdWVz
+IG9mIE1JTl9LRVhFQ19MT0FEX0FERFIgYW5kIENPTkZJR19QSFlTSUNBTF9TVEFSVAo+IHNob3Vs
+ZCBhbGlnbiB0byByZWR1Y2UgdGhlIGNoYW5jZXMgb2YgdGhpcyBoYXBwZW5pbmcgZm9yIHVzZXJz
+IHdobwo+IGFyZW4ndCBtZXNzaW5nIHdpdGggdGhlc2UgdmFsdWVzLiBHaXZlbiB3aGF0IGN1cnJl
+bnQgYm9vdCBsb2FkZXJzIGRvLAo+IHNob3VsZCBDT05GSUdfUEhZU0lDQUxfU1RBUlQgYmUgbG93
+ZXJlZCB0byAweDEwMDAwMCwgYXQgbGVhc3QgZm9yCj4gcmVsb2NhdGFibGUga2VybmVscz8gVGhp
+cyBtaWdodCBiZSB0aGUgbW9zdCBjb250cm92ZXJzaWFsIG9mIHRoZQo+IGNoYW5nZXMuCj4KPiA1
+KSBTaG91bGQgUEhZU0lDQUxfU1RBUlQgYmUgaWdub3JlZCBpbiByZWxvY2F0YWJsZSBrZXJuZWxz
+IGxpa2UgaXRzCj4gZG9jdW1lbnRhdGlvbiBzdWdnZXN0cz8gSXMgdGhlIHJlbG9jYXRpb24gYWJv
+dmUgdGhhdCB1bm5lY2Vzc2FyeT8KPgo+IFJlZ2FyZGxlc3Mgb2Ygd2hpY2ggY2hhbmdlIHdlIG1h
+a2UgZm9yIHRoZSBmdXR1cmUsIGV4aXN0aW5nIGJvb3QKPiBsb2FkZXJzICYga2VybmVscyBjb25m
+bGljdCBpbiB0aGVpciBiZWhhdmlvciBmb3IgcmVsb2NhdGFibGUga2VybmVscy4KPiBXaGF0IGlz
+IG1vc3QgbGlrZWx5IHRvIGZpeCB0aGlzIGlzc3VlIGZvciB1c2VycyAmIHByZXZlbnQgYnJlYWth
+Z2Ugb2YKPiBleGlzdGluZyB3b3JrZmxvd3M/Cj4KPiBJZiBJIHNlZSBhZ3JlZW1lbnQgb24gMSB0
+byAzLCBJIHdpbGwgc3RhcnQgc2VuZGluZyBwYXRjaGVzLiBXb3VsZCBsb3ZlCj4gdG8gaGVhciBv
+cGluaW9ucyBvbiA0ICYgNS4KPgo+IFRoYW5rcywKPiBDaHJpcwo+Cj4gWzFdIGh0dHBzOi8vZ2l0
+Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3N0YWJsZS9saW51eC5naXQvdHJl
+ZS9hcmNoL3g4Ni9ib290L2NvbXByZXNzZWQvaGVhZF82NC5TP2g9bGludXgtNi42LnkjbjMzMwoK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFp
+bGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
+ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
