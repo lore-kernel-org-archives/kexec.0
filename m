@@ -4,94 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 955A1C4332F
-	for <kexec@archiver.kernel.org>; Sat, 16 Dec 2023 01:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B2265C4332F
+	for <kexec@archiver.kernel.org>; Sat, 16 Dec 2023 02:22:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=Nf687i4vN75uti58wdrQdvpoFwf+0Qw3yrkucIIYWwk=; b=c6xNXSfrcsWuhy
-	EOcRSWJLKivgUf06XW34IDVr946g9YXpyohdW2E9IEcdCp5Rb4o/JDEPfOFOB7LGFujZAPFumjI+L
-	fhYeDkCdf2XBgVicT5peufE27x975FBtQyQzxdg6gQNEEbcOFyBycSmJGNW06ZhAhaKCGpCtzDbCj
-	X80zRObERSJS3fwQD0GpIU4zl8rNoN7rsEFmsoah1A/g0mywJvaNvwz7Vgh1lleAif8hLQxMEfu4B
-	m1SZeXKdyPStQqDMxjxOlo+N4eYnK31d8Qmd3nAZX2sKDgmGnsIOoTbySQVNramuTqU5g71DjNJ6c
-	w3R6dimiSKm5Hb0A7gpQ==;
+	List-Owner; bh=zFxsr/0FPSiby/7PZlPBnH9lSrhDSAOaOVCbztLhxkQ=; b=Ai7ltuXAcWIsDS
+	iRwYoiZoiy8eQEaJf32zqHkhWPuqQ0JTf29jsZRFny48/6UjA+2B6Lmy2cQv/xKHGBObSv6KAthSe
+	v9o6uyRnGm9IKuD7kUuA4doJdZYe4NrX7enfGdSqvRf/p4AuNSg9+IjG4c9vILLZ/AIrbtkDIkPRB
+	dk+62DW6fY0FCCC466lZHTw1zU1jCP7kL5q47g3hKWYNAKf/MsKppjJJsgxq1vRp2holPFMXQ60nW
+	QaiX3dhOpwGCMooBz6iJcX65UD6y/7wLioMLEhSxOem7S99FKC3KNLgMwCPDSel34Rc7dp/+9XY5Y
+	2Siq3GFDL6POTZxGIbSQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rEJsn-0057dm-2r;
-	Sat, 16 Dec 2023 01:54:25 +0000
-Received: from mail-oi1-x22f.google.com ([2607:f8b0:4864:20::22f])
+	id 1rEKJc-005A4E-04;
+	Sat, 16 Dec 2023 02:22:08 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rEJsk-0057dF-36
+	id 1rEKJY-005A3m-1f
 	for kexec@lists.infradead.org;
-	Sat, 16 Dec 2023 01:54:24 +0000
-Received: by mail-oi1-x22f.google.com with SMTP id 5614622812f47-3b86f3cdca0so1018190b6e.3
-        for <kexec@lists.infradead.org>; Fri, 15 Dec 2023 17:54:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702691661; x=1703296461; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XuZFf9TLsyeNevfCqjs6eOOovm2u77pXZ45scIzaN/o=;
-        b=K8RwjO22j3rQR0EPTnORbjska1eaB5/fclJqIy0CnbC8C1/qC6qsijapm9FWPHwg7X
-         Z+vvzUJDGj+sp+dyROM0rNlujVOcZo0IgA5xq3RGJWTLHftJ+8eGYpvVzHGw+EeyV87L
-         B21+5lBFBwWJxOM6xdYRuz8SgGe0X3m46vuNwNK0zxqK4n9/H1e070d96yzBIambV6qh
-         d+9qES/z8YRzSDEcx1bqq+ITDgrYNYQjaQe0nf3nkq/CZ7sEtChM8AY9io/opaZbkzEh
-         /mUjdEgZUKTGfRkDgTfvVFpV9j+AW3xBrKaNzCjdjRzQXxMINOmESWd27z1cq2gNjY41
-         mstA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702691661; x=1703296461;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XuZFf9TLsyeNevfCqjs6eOOovm2u77pXZ45scIzaN/o=;
-        b=A2S17cZIcq7YYxcgCcCVg0o/kthswAbCgJJxbhw0p1QpbYmDLd9aah6/mLcBVbInBo
-         ELzuaR9FU/Gq65x3PnP0+2JLu/uz+sNLqybGnNrf37SsEbBwEkUdsqL4rNgj5zoTeP6+
-         D+Nmzbupem72oV0ZHpWwdC1uXgrMsqb45RBRsyq1fPHaKm5XoJ3XuWkZWz2348ufhiQd
-         kp5tNPs8PFvAgdQhi5nLViGmw8ueqbGwI8IKjkGBAXsjQwhLbxy2TgASD8RPwqAD2AM9
-         QFrP/nDRCcM5GQv7ByCjEM2gmRaI92ZuutcEQxQyLgiU9H23L58Zv4LyvYnIlUSoYFTX
-         6UzA==
-X-Gm-Message-State: AOJu0YyI8PjBiYCj4jxaCdzvNCOXMVWZJq0i+KmflYTX/kgc3csMSp7s
-	EyUiO27QNHX3iFpD534ALQw=
-X-Google-Smtp-Source: AGHT+IElHsdK7kzoxwrGczqS5sCy0MkNGAofEJaLn4q6en4gr5qW5GYlKqZQN6W7pju0prltPwBSIg==
-X-Received: by 2002:a05:6808:14c4:b0:3b8:b402:74de with SMTP id f4-20020a05680814c400b003b8b40274demr16249503oiw.32.1702691660867;
-        Fri, 15 Dec 2023 17:54:20 -0800 (PST)
-Received: from code.. ([144.202.108.46])
-        by smtp.gmail.com with ESMTPSA id 10-20020a17090a19ca00b0028ad9d801e3sm203558pjj.46.2023.12.15.17.54.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Dec 2023 17:54:20 -0800 (PST)
-From: Yuntao Wang <ytcoode@gmail.com>
-To: bhe@redhat.com
-Cc: akpm@linux-foundation.org,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	dyoung@redhat.com,
-	eric.devolder@oracle.com,
-	hbathini@linux.ibm.com,
-	hpa@zytor.com,
-	kexec@lists.infradead.org,
-	lijiang@redhat.com,
-	linux-kernel@vger.kernel.org,
-	mingo@redhat.com,
-	seanjc@google.com,
-	sourabhjain@linux.ibm.com,
-	tglx@linutronix.de,
-	tiwai@suse.de,
-	vgoyal@redhat.com,
-	x86@kernel.org,
-	ytcoode@gmail.com
-Subject: Re: [PATCH 3/3] crash_core: fix and simplify the logic of crash_exclude_mem_range()
-Date: Sat, 16 Dec 2023 09:54:10 +0800
-Message-ID: <20231216015410.188924-1-ytcoode@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <ZXxtfpXpuFXLd+ge@MiWiFi-R3L-srv>
-References: <ZXxtfpXpuFXLd+ge@MiWiFi-R3L-srv>
+	Sat, 16 Dec 2023 02:22:06 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1702693323;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YDbMrrJMxJaNaZxmdjaWs9yxNCXUr/R3B3gdWPDjk0k=;
+	b=R1ECmBaRiROxesXKQm0MxLJjK349+XN+rDopV/IzPY8ZZOgQC3zd3KRxDW0xFAxrp3PwZ7
+	hSmPweuqyaA6BX9Rie41qbxjtlwxiHrJRuhO4X3LgEV/U7TnkflWIYPtHrhV+3kBBxTE9B
+	uLkBk+TdHTZBJwykq2fOct3HTtQwReA=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-618-VuBV7y_tPXOverfdkz6vmw-1; Fri,
+ 15 Dec 2023 21:21:59 -0500
+X-MC-Unique: VuBV7y_tPXOverfdkz6vmw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 427523C025BD;
+	Sat, 16 Dec 2023 02:21:58 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.38])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id E9F871C060B1;
+	Sat, 16 Dec 2023 02:21:56 +0000 (UTC)
+Date: Sat, 16 Dec 2023 10:21:53 +0800
+From: Baoquan He <bhe@redhat.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Yuntao Wang <ytcoode@gmail.com>, linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org, x86@kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH 1/3] kexec_file: fix incorrect end value passed to
+ kimage_is_destination_range()
+Message-ID: <ZX0JwbQ59XH5rqm9@MiWiFi-R3L-srv>
+References: <20231215080910.173338-1-ytcoode@gmail.com>
+ <20231215080910.173338-2-ytcoode@gmail.com>
+ <87a5qb4avf.fsf@email.froward.int.ebiederm.org>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <87a5qb4avf.fsf@email.froward.int.ebiederm.org>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231215_175423_211391_5CF820A8 
-X-CRM114-Status: GOOD (  19.89  )
+X-CRM114-CacheID: sfid-20231215_182204_630409_C8C0E7F2 
+X-CRM114-Status: GOOD (  26.78  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -108,52 +89,75 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, 15 Dec 2023 23:15:10 +0800, Baoquan He wrote:
-> On 12/15/23 at 12:38am, Yuntao Wang wrote:
-> > The purpose of crash_exclude_mem_range() is to remove all memory ranges
-> > that overlap with [mstart-mend]. However, the current logic only removes
-> > the first overlapping memory range.
-> > 
-> > Commit a2e9a95d2190 ("kexec: Improve & fix crash_exclude_mem_range() to
-> > handle overlapping ranges") attempted to address this issue, but it did not
-> > fix all error cases.
+On 12/15/23 at 11:46am, Eric W. Biederman wrote:
+> Yuntao Wang <ytcoode@gmail.com> writes:
 > 
-> Hmm, this is a specific function for kdump kernel loading. So far it's
-> sufficiently meet demands. Say so because we only need to exclude
-> crashk_res and crashk_low_res when constructing elfcorehdr. region
-> crashk_res/crashk_low_res are digged out from system RAM region. That's
-> why the break is taken in the for loop in the current code. X86 needs
-> exclude low 1M, the low 1M could span several system RAM regions because
-> BIOS under low 1M reserved some spaces. And the elfcorehdr exluding from
-> crashkernel region taken in x86 is also a splitting.
+> > The end parameter received by kimage_is_destination_range() should be the
+> > last valid byte address of the target memory segment plus 1. However, in
+> > the locate_mem_hole_bottom_up() and locate_mem_hole_top_down() functions,
+> > the corresponding value passed to kimage_is_destination_range() is the last
+> > valid byte address of the target memory segment, which is 1 less. Fix
+> > it.
 > 
-> Generally speaking, crashk_res/crashk_low_res is inside a big chunk of
-> continuous region. On x86, low 1M spans several complete region on x86,
-> elfcorehdr region is inside continuous crashk_res region.
+> If that is true we I think we should rather fix
+> kimage_is_destination_range.
+
+It's true wit the current implementation of
+kimage_is_destination_range(). Its callers pass the start/end+1
+pair. Agree we should fix kimage_is_destination_range() instead and
+adjust callers, such as kimage_alloc_normal_control_pages(), and
+kimage_alloc_page().
+
+
 > 
-> You can see why crash_exclude_mem_range() looks like now it is. This patch
-> makes crash_exclude_mem_range() be a generic region removing function. I do
-> see the memmove can improve code readbility, while I have concern about the
-> while loop.
+> Otherwise we run the risk of having areas whose end is not
+> representable, epecially on 32bit.
 > 
-> Imagine we have a crashkernel region 256M reserved under 4G, say [2G, 2G+256M].
-> Then after excluding the 256M from a region, it should stop. But now, this patch
-> will make it continue scanning. Not sure if it's all in my mind.
+> 
+> Eric
+> 
+> 
+> > Signed-off-by: Yuntao Wang <ytcoode@gmail.com>
+> > ---
+> >  kernel/kexec_file.c | 7 +++----
+> >  1 file changed, 3 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> > index f9a419cd22d4..26be070d3bdd 100644
+> > --- a/kernel/kexec_file.c
+> > +++ b/kernel/kexec_file.c
+> > @@ -435,13 +435,12 @@ static int locate_mem_hole_top_down(unsigned long start, unsigned long end,
+> >  		if (temp_start < start || temp_start < kbuf->buf_min)
+> >  			return 0;
+> >  
+> > -		temp_end = temp_start + kbuf->memsz - 1;
+> > -
+> >  		/*
+> >  		 * Make sure this does not conflict with any of existing
+> >  		 * segments
+> >  		 */
+> > -		if (kimage_is_destination_range(image, temp_start, temp_end)) {
+> > +		if (kimage_is_destination_range(image, temp_start,
+> > +						temp_start + kbuf->memsz)) {
+> >  			temp_start = temp_start - PAGE_SIZE;
+> >  			continue;
+> >  		}
+> > @@ -475,7 +474,7 @@ static int locate_mem_hole_bottom_up(unsigned long start, unsigned long end,
+> >  		 * Make sure this does not conflict with any of existing
+> >  		 * segments
+> >  		 */
+> > -		if (kimage_is_destination_range(image, temp_start, temp_end)) {
+> > +		if (kimage_is_destination_range(image, temp_start, temp_end + 1)) {
+> >  			temp_start = temp_start + PAGE_SIZE;
+> >  			continue;
+> >  		}
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
-Hi Baoquan,
-
-Thank you for such a detailed reply. Now I finally understand why the code is
-written this way.
-
-However, if we can guarantee its correctness, wouldn't it be better to use the
-generic region removing logic? At least it is more concise and clear, and other
-people reading this code for the first time wouldn't get confused like me.
-
-As for your concern about the while loop, I think it wouldn't affect performance
-much because the total number of loops is small.
-
-Sincerely,
-Yuntao
 
 _______________________________________________
 kexec mailing list
