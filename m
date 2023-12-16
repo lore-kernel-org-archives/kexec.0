@@ -4,64 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 69A68C46CA2
-	for <kexec@archiver.kernel.org>; Sat, 16 Dec 2023 11:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id ACC26C46CA2
+	for <kexec@archiver.kernel.org>; Sat, 16 Dec 2023 12:06:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=vssavKOlpEPofb/2koeaC/zO0T/czoScABhQDpmVwGk=; b=TcK0nJSS1nS50v
-	Nvzus845idUMFRGBtOsH2zGxRmeFTrOipwLKieqUWMtJiWNFr1sKeuu9buWV/IVSVK3hivB4oxMeF
-	LCyUO8VfMK8fXazetbxuwqkzUg/u/xmfvHZ/d1Miz4lVbNikVzziQuiEHZfVzgdncGKHQz3Zogcgu
-	jDw6mtILhT2dIkWj42MAq1VV/9Xz6Rtt69wiHwCJKA4/r9l5U92YQmnNqyLKMvVA5N9kqQQ9Hhk4F
-	ykjjAqyfvrtLQB/aiZ7FN07XJWSjVn6ODYi8YEMXj07Bv6dK1GZ8+yRaLX/yNhhxAAl+44qZhJpk7
-	tpWBaZa7l9j2q2gYR8ig==;
+	List-Owner; bh=HBMcRO/XCDtGDBf86z+nK8KTRdDbazwToZ36ajBd5No=; b=qU/uUqeNLO9K5f
+	bXc7YBACznq/datP21iShw4ESNDdXcvXFXXMvAjgIbawcqRMHNQDMnUP9ZFLWYEqdMW4MSG6vDCMD
+	O+1IqitxMSVx5xwcXAEWnGlTLHIXe1Jbz6Dp48cAaDs/1YqRSCHPgf3VX1n1VSQs9gXj448iY0Xia
+	6inbT3yQ925jooE6yReRByrFpkjrLwC9zrqRVlLSeYZttWaE+PRB11AyqCBQFHy5jfWo5mQ4Udzsc
+	nHxiqPcgIZ/21m5dcynhgHz1fDb8SDhycWiUwBc2jaobomS9biajgule9wQmCtT475W+CFSh1gZPp
+	uJ+w2gBbVQ1gt1ilJKng==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rESlt-005tVA-0p;
-	Sat, 16 Dec 2023 11:23:53 +0000
-Received: from mail-oi1-x22c.google.com ([2607:f8b0:4864:20::22c])
+	id 1rETQk-0060z7-08;
+	Sat, 16 Dec 2023 12:06:06 +0000
+Received: from mail-ot1-x336.google.com ([2607:f8b0:4864:20::336])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rESlp-005tQl-34
+	id 1rETQg-0060yb-2y
 	for kexec@lists.infradead.org;
-	Sat, 16 Dec 2023 11:23:51 +0000
-Received: by mail-oi1-x22c.google.com with SMTP id 5614622812f47-3b9e7f4a0d7so1302191b6e.1
-        for <kexec@lists.infradead.org>; Sat, 16 Dec 2023 03:23:46 -0800 (PST)
+	Sat, 16 Dec 2023 12:06:04 +0000
+Received: by mail-ot1-x336.google.com with SMTP id 46e09a7af769-6da579e6858so722740a34.3
+        for <kexec@lists.infradead.org>; Sat, 16 Dec 2023 04:06:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702725826; x=1703330626; darn=lists.infradead.org;
+        d=gmail.com; s=20230601; t=1702728360; x=1703333160; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qnMCgoEF3bBGwkMIyi+ffwyEvbkLUBGcU4ida8KYtA4=;
-        b=STrDlyJ5PLrdVxLjavb4i/GmLOPDbSLqLDqG16FVYF1rlaSj+YGBT8zmKhxDRVV2LX
-         6yaHAQD5kpLQeyAT8Flhe6WvALvj3jS/A87vTZr0b6DkFMZ52jt6Lowq3PX17/+DesdQ
-         rJzzuD9jL2M9KsX82XS6lGpRrhABdKztyEe4G5HNjGVwLL4jc0ew70eKZC+LY8oCvhmy
-         sE72tJMOtnR3rt0nhtFloTUC/Rz49+4/tuHtAsCR5LxIjylAxv9/OfwNfqZdFCw60oyk
-         ZXRaOCDdCpa4CGnAll1xPrFFgfDemSQh80DMPRmmuhuWiK394sJhRdZhv5Ysh5rV0jzx
-         sFkw==
+        bh=Keg0jGTD3cWCHOm6j1CzSfxv/wdbkTrGtYVZOjpfOPQ=;
+        b=eNUwy4A5eIF+sIXWTdJPF+mN4gJ/d2+Qg8fCVv4mUKYh/8WoFZZEj9ZXZwl/WURLeJ
+         gICy+/sB+qzPKjRVgGZbQZHgKiZyDMIM4zIqDl/fLI8neRqrvXFp4ps5CEAPiM8iE4af
+         yhcMxrOqQhuJDqebZwN8IZu+aZUs1PVOLa8f2Jnx5TDa+tt8O70AJtkZghsB6I9dieqr
+         CcuCYkhucepA8pCQfePcTJ6+McS8bA6WXR40NFQSMzCzkhXWe+OSfNVthNK8QxySxnLm
+         x0xzrxwuDdjkhFXBbgNns6PT6EuziCMb0phmDn5CYhfZtM4sgl06nKTRl88OaaX13v0L
+         BP4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702725826; x=1703330626;
+        d=1e100.net; s=20230601; t=1702728360; x=1703333160;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qnMCgoEF3bBGwkMIyi+ffwyEvbkLUBGcU4ida8KYtA4=;
-        b=KO2WaownXTaD+X1SqVJG5ruKs1ibjYxcl1EuYMK29PFWi35kT+D5LkQYEVDVle2KvZ
-         AFQ1fC0lRWuxhSSKfdfmJXvefKzX4ghrDJSN+ZrRNTfH4njbWLhu9vfwvRP9beXlLmxT
-         ryV5NuTszS7Fevuv0kby9k89XXGJiuCxHecOCaUZ1SAV3MlFlk38th545fAiutLGMRaN
-         smdNEv76qS6J2mRqZuW92exFPUx2eWVHbCYQPKVlxGoyCpWfYH8YQgFiIYnIDASZxSwH
-         kOr56m5g2jAEcG9XMLrzfQLyHH5neEAJ+KIVXrdZIXsVp2Yl5EPTbbk8Rk/fVZdl16hD
-         3P9w==
-X-Gm-Message-State: AOJu0YybkSSImx7dHzkHOzUzsULxIEQ7/2ol6AfAB61Vv8p5INQkUWSr
-	5z+Nv07Exu3gBI+IUTBPhnk=
-X-Google-Smtp-Source: AGHT+IFErTvBZa7RFfEFVfwrbzUjy2c/h8/SUdsTfJow2CaFwX1pn4Z+CA4CGhZHL+rKkTDKB/A4Iw==
-X-Received: by 2002:a05:6808:3c86:b0:3b9:e69f:c08d with SMTP id gs6-20020a0568083c8600b003b9e69fc08dmr19655056oib.52.1702725825763;
-        Sat, 16 Dec 2023 03:23:45 -0800 (PST)
+        bh=Keg0jGTD3cWCHOm6j1CzSfxv/wdbkTrGtYVZOjpfOPQ=;
+        b=qzXdraYv89mtbn9fVHkd0vidor88hkAdt44sjrb1X5Zc7tHISCs/weMaz5eTCdpdMo
+         YdwI1jhGyhXD7K+6kkHXBA9eo5ll+25KTvYi2AXg6LpCfMGHuzTXrNGcDm2KlJ5wGqB7
+         7Zr676R4xxjVnghthlwZ6mLEZUIGQzFrvPpUZosbAo1cuPPPPIs4YiUnjyek3Xn20Vd0
+         bHSBGju084ngGX3L1Nh/qZx4UCTCPlQN4XeyIv2GV21vOzBIP9ZfXubROI1lkojE+j2Y
+         n+FygKpMuZleHnXlsNHlP9C0KWAFLhVbF/qBIbGXuC0JcQULZeBDf/ms7q9VUCVe2KRx
+         vrwQ==
+X-Gm-Message-State: AOJu0YxUuk58j4anc08pMTaokT3OCa4oNBua0emunN8ghmwJGkOO+4+K
+	uhhU/qh+ZjH1ioCLPehmB6s=
+X-Google-Smtp-Source: AGHT+IF5AQxE0wcRh91KHA+StTcL6yRa58g2jp42WQyQBw4+JLdNW0sSqhoQbgcQ9iDQzFFV3oq1qQ==
+X-Received: by 2002:a9d:6e10:0:b0:6d9:c946:49c with SMTP id e16-20020a9d6e10000000b006d9c946049cmr13298083otr.5.1702728360562;
+        Sat, 16 Dec 2023 04:06:00 -0800 (PST)
 Received: from code.. ([144.202.108.46])
-        by smtp.gmail.com with ESMTPSA id x128-20020a626386000000b006cea1db00cbsm604902pfb.204.2023.12.16.03.23.41
+        by smtp.gmail.com with ESMTPSA id x34-20020a056a0018a200b006ce3a48b6a2sm15006866pfh.160.2023.12.16.04.05.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 Dec 2023 03:23:45 -0800 (PST)
+        Sat, 16 Dec 2023 04:06:00 -0800 (PST)
 From: Yuntao Wang <ytcoode@gmail.com>
 To: bhe@redhat.com
 Cc: akpm@linux-foundation.org,
@@ -76,15 +76,15 @@ Cc: akpm@linux-foundation.org,
 	tglx@linutronix.de,
 	x86@kernel.org,
 	ytcoode@gmail.com
-Subject: [PATCH 1/3 v3] kexec: modify the meaning of the end parameter in kimage_is_destination_range()
-Date: Sat, 16 Dec 2023 19:23:36 +0800
-Message-ID: <20231216112336.252557-1-ytcoode@gmail.com>
+Subject: [PATCH 1/3 v4] kexec: modify the meaning of the end parameter in kimage_is_destination_range()
+Date: Sat, 16 Dec 2023 20:05:51 +0800
+Message-ID: <20231216120551.289324-1-ytcoode@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <ZX1t/4Reai6HdoJf@MiWiFi-R3L-srv>
 References: <ZX1t/4Reai6HdoJf@MiWiFi-R3L-srv>
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231216_032349_995025_57C21134 
+X-CRM114-CacheID: sfid-20231216_040602_988726_7485DD87 
 X-CRM114-Status: GOOD (  16.09  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -130,11 +130,14 @@ v1->v2:
 v2->v3:
   Modify the assignment of eaddr as suggested by Baoquan.
 
+v3->v4:
+  `eaddr = epfn << PAGE_SHIFT - 1` causes a compilation warning, fix it.
+
  kernel/kexec_core.c | 8 ++++----
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index be5642a4ec49..e65e8f186eff 100644
+index be5642a4ec49..e3b1a699f087 100644
 --- a/kernel/kexec_core.c
 +++ b/kernel/kexec_core.c
 @@ -276,8 +276,8 @@ int kimage_is_destination_range(struct kimage *image,
@@ -153,7 +156,7 @@ index be5642a4ec49..e65e8f186eff 100644
  		epfn  = pfn + count;
  		addr  = pfn << PAGE_SHIFT;
 -		eaddr = epfn << PAGE_SHIFT;
-+		eaddr = epfn << PAGE_SHIFT - 1;
++		eaddr = (epfn << PAGE_SHIFT) - 1;
  		if ((epfn >= (KEXEC_CONTROL_MEMORY_LIMIT >> PAGE_SHIFT)) ||
  			      kimage_is_destination_range(image, addr, eaddr)) {
  			list_add(&pages->lru, &extra_pages);
