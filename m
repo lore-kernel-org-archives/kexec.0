@@ -4,40 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C6242C46CC6
-	for <kexec@archiver.kernel.org>; Sat, 16 Dec 2023 01:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 945CCC46CC5
+	for <kexec@archiver.kernel.org>; Sat, 16 Dec 2023 01:07:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=XzALYCTfPJUYKIfnVWru+BAgUu62DLd3SFAtFaoxvQ8=; b=dVXf8+FAvllBXt
-	L7U8dBWqhniRXexgYiqAwp582sSnXu1U85POZ5cYWuLEuZUQt8xLq22MS106u30Rp4T6Kh80EhXFu
-	/v45g33pT/uyjlhSGvZXRaN3ITzVQc/cgXQiMUvyqnSao0V20omnlJ1/mZV37XDiRLD46wigownEZ
-	T20r5z8aSP1F0/mgrpSsjn2v60SjikRauYEDFaI9W7pybI2WsanslwhPw6rDq/ei17XVijaWqkHNQ
-	hvgIsl4Fv3l99EvIwb7Dk9LFGRM2U5dcuOteBbSrDVKvwhpwdcy6CupcXxhClgFmGssOp676VXYD0
-	1r5wGysYJB59aw+osI9A==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=kqX8K4BTib8UrENyr2UnTlj7VbZGTb2Y6759Qsgw9o0=; b=Thxei6TlXw9GGK
+	SuQRzJ7qkgKiwzL1uJwm28GN3qobuGObFVBGiPNc2gfEMQS7mv63y3Vx/MYM5Y80IuQFRUZp1beAI
+	MzVHdG4jGv+CoQ1uw52ZQe9Lfod+/WiweOg4HJEE2r640Q1wg6SlSauZapGPyisPcr5GOKAFrbGxf
+	bRBpqSwYtcRppzoakisBijadV83o7O+Wzyqec4fFe3Z7V2T0c8C5ZQtvLbi3G1kpBvCnr7BH8C8hG
+	3HxvclXKd1GzGSF4eg7o8g2OPpLpJ0Ncc4XLHz4K5XTFonrSBshwCzQIgZLNyIxOYKhmxdF/t1GuS
+	UxpCQRwxBU0VVIP/5nIQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rEJ9i-00546a-0j;
-	Sat, 16 Dec 2023 01:07:50 +0000
+	id 1rEJ9g-00545x-2h;
+	Sat, 16 Dec 2023 01:07:48 +0000
 Received: from linux.microsoft.com ([13.77.154.182])
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rEJ9c-00542M-1S
+	id 1rEJ9c-00542N-0C
 	for kexec@lists.infradead.org;
-	Sat, 16 Dec 2023 01:07:47 +0000
+	Sat, 16 Dec 2023 01:07:46 +0000
 Received: from tushar-HP-Pavilion-Laptop-15-eg0xxx.lan (unknown [50.46.228.62])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 864372048D68;
-	Fri, 15 Dec 2023 17:07:38 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 864372048D68
+	by linux.microsoft.com (Postfix) with ESMTPSA id 425D92076F87;
+	Fri, 15 Dec 2023 17:07:39 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 425D92076F87
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1702688858;
-	bh=tJPozi2Vgk/XBxXY2R8duwn30Nm5WOpGFbXweXLG8To=;
-	h=From:To:Cc:Subject:Date:From;
-	b=b8v567WVce40Ggd47bhDR1cmis1bo9sOPQGnACGlCrfdJ/e+jVTuS45KEoF/iXLiV
-	 KvvHlFUgDoUeEZfDqmAaxx0vifTdLdg7s7Rm+DZAAs0yfusJNbsWaWOWvN6nKJfZ3D
-	 kbOSCGKsKzlmc4BQCIypASjCQ+GFtFJ0kzivYLTQ=
+	s=default; t=1702688859;
+	bh=IKFadLdNr1wjeUBEBwQBCsj9pGjOw1vl+gw5TjhUdIw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=r0fwN/ADMDFhLiBA7zf/4GHpNj1gJlm3tJvFguZdmZ9DDw+tkI7aGW4Cyi4Fhew8I
+	 5B8HMy7UtfJpIRxJeHJdOZrXKGrLGMo3R5NM7OC3YI8R52uVZSUumYJZ9+ne/bqc50
+	 Bnkcd9AVvuvVR6PAZwiPDaFWPkNs2Bh26VfuJ3wA=
 From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
 To: zohar@linux.ibm.com,
 	roberto.sassu@huaweicloud.com,
@@ -52,14 +52,16 @@ To: zohar@linux.ibm.com,
 Cc: code@tyhicks.com,
 	nramas@linux.microsoft.com,
 	paul@paul-moore.com
-Subject: [PATCH v3 0/7] ima: kexec: measure events between kexec load and execute
-Date: Fri, 15 Dec 2023 17:07:22 -0800
-Message-Id: <20231216010729.2904751-1-tusharsu@linux.microsoft.com>
+Subject: [PATCH v3 2/7] ima: kexec: move ima log copy from kexec load to execute
+Date: Fri, 15 Dec 2023 17:07:24 -0800
+Message-Id: <20231216010729.2904751-3-tusharsu@linux.microsoft.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20231216010729.2904751-1-tusharsu@linux.microsoft.com>
+References: <20231216010729.2904751-1-tusharsu@linux.microsoft.com>
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231215_170744_552837_369FE951 
-X-CRM114-Status: GOOD (  21.38  )
+X-CRM114-CacheID: sfid-20231215_170744_169697_9CD0836C 
+X-CRM114-Status: GOOD (  19.71  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,136 +78,213 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The current Kernel behavior is IMA measurements snapshot is taken at
-kexec 'load' and not at kexec 'execute'.  IMA log is then carried
-over to the new Kernel after kexec 'execute'.
+ima_dump_measurement_list() is called from  ima_add_kexec_buffer() during
+kexec 'load', which may result in loss of IMA measurements between kexec
+'load' and 'execute'.  It needs to be called during kexec 'execute'.
 
-New events can be measured after the IMA log snapshot at kexec 'load'
-and before the system boots to the new Kernel.  In this scenario, the TPM
-PCRs are extended with these events, but they are not carried over to the
-new Kernel after kexec soft reboot since the snapshot is already taken.
-This results in mismatch between TPM PCR quotes and the actual IMA 
-measurements list after kexec soft reboot, which in turn results in
-remote attestation failure.
+Implement ima_update_kexec_buffer(), to be called during kexec 'execute'.
+Move ima_dump_measurement_list() function call from ima_add_kexec_buffer()
+to ima_update_kexec_buffer().  Make the needed variables global for
+accessibility during kexec 'load' and 'execute'. Implement and call
+ima_measurements_suspend() and ima_measurements_resume() to help ensure
+the integrity of the IMA log during copy. Add a reboot notifier_block to
+trigger ima_update_kexec_buffer() during kexec soft-reboot.  Exclude ima
+segment from calculating and storing digest in function
+kexec_calculate_store_digests(), since ima segment can be modified
+after the digest is computed during kexec 'load'.
 
-To solve this problem allocate the necessary buffer at kexec 'load' time,
-populate the buffer with the IMA measurements at kexec 'execute' time, and
-measure two new IMA events 'kexec_load' and 'kexec_execute' as critical
-data to help detect missing events after kexec soft reboot.
+Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+---
+ include/linux/kexec.h              |  3 ++
+ kernel/kexec_file.c                |  8 ++++
+ security/integrity/ima/ima.h       |  2 +
+ security/integrity/ima/ima_kexec.c | 61 +++++++++++++++++++++++++-----
+ security/integrity/ima/ima_queue.c | 19 ++++++++++
+ 5 files changed, 84 insertions(+), 9 deletions(-)
 
-
-The solution details include:
- - refactoring the existing code to allocate a buffer to hold IMA
-   measurements at kexec 'load', and dump the measurements at kexec
-   'execute'
-
- - ima functionality to suspend and resume measurements as needed during
-   buffer copy at kexec 'execute',
-
- - ima functionality for mapping the measurement list from the current
-   Kernel to the subsequent one, 
-
- - necessary changes to the kexec_file_load syscall, enabling it to call
-   the ima functions,
-
- - registering a reboot notifier which gets called during kexec 
-   'execute',
-
- - introducing a new Kconfig option to configure the amount of memory
-   to be allocated for passing IMA log from the current Kernel to the
-   next,
-   
- - introducing two new events to be measured by IMA during kexec, to
-   help diagnose if the IMA log was copied fully or partially, from the
-   current Kernel to the next,
-
- - excluding ima segment while calculating and storing digest in function
-   kexec_calculate_store_digests(), since ima segment can be modified
-   after the digest is computed during kexec 'load',
-
-The modifications proposed in this series ensure the integrity of the ima
-measurements is preserved across kexec soft reboots, thus significantly
-improving the security of the Kernel post kexec soft reboots.
-
-There were previous attempts to fix this issue [1], [2], [3].  But they
-were not merged into the mainline Kernel.
-
-We took inspiration from the past work [1] and [2] while working on this
-patch series.
-
-V2 of this series is available here[4] for reference.
-
-References:
------------
-
-[1] [PATHC v2 5/9] ima: on soft reboot, save the measurement list
-https://lore.kernel.org/lkml/1472596811-9596-6-git-send-email-zohar@linux.vnet.ibm.com/
-
-[2] PATCH v2 4/6] kexec_file: Add mechanism to update kexec segments.
-https://lkml.org/lkml/2016/8/16/577
-
-[3] [PATCH 1/6] kexec_file: Add buffer hand-over support
-https://lore.kernel.org/linuxppc-dev/1466473476-10104-6-git-send-email-bauerman@linux.vnet.ibm.com/T/
-
-[4] [PATCH v2 0/7] ima: kexec: measure events between kexec load and execute
-https://lore.kernel.org/all/20231005182602.634615-1-tusharsu@linux.microsoft.com/
-
-Change Log v3:
- - Incorporated feedback from the community (Stefan Berger and
-   Mimi Zohar) on v2 of this series[4].
- - Renamed functions and removed extraneous checks and code comments.
- - Updated patch descriptions and titles as necessary.
- - Updated kexec_calculate_store_digests() in patch 2/7 to exclude ima
-   segment from calculating and storing digest.
- - Updated patch 3/7 to use kmalloc_array instead of kmalloc and freed
-   memory early to avoid potential memory leak.
- - Updated patch 6/7 to change Kconfig option IMA_KEXEC_EXTRA_PAGES to
-   IMA_KEXEC_EXTRA_MEMORY_KB to allocate the memory in kb rather than
-   in number of pages.
- - Optimized patch 7/7 not to free and alloc memory if the buffer size
-   hasn't changed during multiple kexec 'load' operations.
- - Fixed a bug in patch 7/7 to measure multiple 'kexec_load' events even
-   if buffer size hasn't changed.
- - Verified the patches are bisect-safe by compiling and booting into
-   each patch individually.
-
-
-Change Log v2:
- - Incorporated feedback from the community on v1 series.
- - Refactored the existing ima_dump_measurement_list to move buffer
-   allocation functionality to ima_alloc_kexec_buf() function.
- - Introduced a new Kconfig option to configure the memory.
- - Updated the logic to copy the IMA log only in case of kexec soft 
-   reboot, and not on kexec crash.
- - Updated the logic to copy as many IMA events as possible in case of
-   memory constraint, rather than just bailing out.
- - Introduced two new events to be measured by IMA during kexec, to
-   help diagnose if the IMA log was copied fully or partially from the
-   current Kernel to the next.
- - Refactored patches to ensure no warnings during individual patch
-   compilation.
- - Used virt_to_page instead of phys_to_page.
- - Updated patch descriptions as necessary.
-
-Tushar Sugandhi (7):
-  ima: define and call ima_alloc_kexec_file_buf
-  ima: kexec: move ima log copy from kexec load to execute
-  ima: kexec: map IMA buffer source pages to image after kexec load
-  kexec: update kexec_file_load syscall to alloc ima buffer after load
-  ima: suspend measurements during buffer copy at kexec execute
-  ima: configure memory to log events between kexec load and execute
-  ima: measure kexec load and exec events as critical data
-
- include/linux/ima.h                |   3 +
- include/linux/kexec.h              |  16 +++
- kernel/kexec_core.c                |  59 +++++++-
- kernel/kexec_file.c                |  16 +++
- security/integrity/ima/Kconfig     |   9 ++
- security/integrity/ima/ima.h       |   2 +
- security/integrity/ima/ima_kexec.c | 207 ++++++++++++++++++++++++-----
- security/integrity/ima/ima_queue.c |  32 +++++
- 8 files changed, 304 insertions(+), 40 deletions(-)
-
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 22b5cd24f581..fd94404acc66 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -366,6 +366,9 @@ struct kimage {
+ 
+ 	phys_addr_t ima_buffer_addr;
+ 	size_t ima_buffer_size;
++
++	unsigned long ima_segment_index;
++	bool is_ima_segment_index_set;
+ #endif
+ 
+ 	/* Core ELF header buffer */
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index f989f5f1933b..bf758fd5062c 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -734,6 +734,14 @@ static int kexec_calculate_store_digests(struct kimage *image)
+ 		if (ksegment->kbuf == pi->purgatory_buf)
+ 			continue;
+ 
++		/*
++		 * Skip the segment if ima_segment_index is set and matches
++		 * the current index
++		 */
++		if (image->is_ima_segment_index_set &&
++		    i == image->ima_segment_index)
++			continue;
++
+ 		ret = crypto_shash_update(desc, ksegment->kbuf,
+ 					  ksegment->bufsz);
+ 		if (ret)
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index c29db699c996..49a6047dd8eb 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -161,6 +161,8 @@ bool ima_template_has_modsig(const struct ima_template_desc *ima_template);
+ int ima_restore_measurement_entry(struct ima_template_entry *entry);
+ int ima_restore_measurement_list(loff_t bufsize, void *buf);
+ int ima_measurements_show(struct seq_file *m, void *v);
++void ima_measurements_suspend(void);
++void ima_measurements_resume(void);
+ unsigned long ima_get_binary_runtime_size(void);
+ int ima_init_template(void);
+ void ima_init_template_list(void);
+diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
+index ae27101d0615..0063d5e7b634 100644
+--- a/security/integrity/ima/ima_kexec.c
++++ b/security/integrity/ima/ima_kexec.c
+@@ -16,6 +16,8 @@
+ 
+ #ifdef CONFIG_IMA_KEXEC
+ struct seq_file ima_kexec_file;
++static void *ima_kexec_buffer;
++static size_t kexec_segment_size;
+ 
+ void ima_free_kexec_file_buf(struct seq_file *sf)
+ {
+@@ -120,7 +122,6 @@ void ima_add_kexec_buffer(struct kimage *image)
+ 	/* use more understandable variable names than defined in kbuf */
+ 	void *kexec_buffer = NULL;
+ 	size_t kexec_buffer_size;
+-	size_t kexec_segment_size;
+ 	int ret;
+ 
+ 	/*
+@@ -145,17 +146,10 @@ void ima_add_kexec_buffer(struct kimage *image)
+ 		return;
+ 	}
+ 
+-	ret = ima_dump_measurement_list(&kexec_buffer_size, &kexec_buffer,
+-					kexec_segment_size);
+-	if (ret < 0) {
+-		pr_err("%s: Failed to dump IMA measurements. Error:%d.\n",
+-		       __func__, ret);
+-		return;
+-	}
+-
+ 	kbuf.buffer = kexec_buffer;
+ 	kbuf.bufsz = kexec_buffer_size;
+ 	kbuf.memsz = kexec_segment_size;
++	image->is_ima_segment_index_set = false;
+ 	ret = kexec_add_buffer(&kbuf);
+ 	if (ret) {
+ 		pr_err("Error passing over kexec measurement buffer.\n");
+@@ -166,10 +160,59 @@ void ima_add_kexec_buffer(struct kimage *image)
+ 	image->ima_buffer_addr = kbuf.mem;
+ 	image->ima_buffer_size = kexec_segment_size;
+ 	image->ima_buffer = kexec_buffer;
++	image->ima_segment_index = image->nr_segments - 1;
++	image->is_ima_segment_index_set = true;
+ 
+ 	pr_debug("kexec measurement buffer for the loaded kernel at 0x%lx.\n",
+ 		 kbuf.mem);
+ }
++
++/*
++ * Called during kexec execute so that IMA can update the measurement list.
++ */
++static int ima_update_kexec_buffer(struct notifier_block *self,
++				   unsigned long action, void *data)
++{
++	void *buf = NULL;
++	size_t buf_size;
++	bool resume = false;
++	int ret = NOTIFY_OK;
++
++	if (!kexec_in_progress) {
++		pr_info("%s: No kexec in progress.\n", __func__);
++		return ret;
++	}
++
++	if (!ima_kexec_buffer) {
++		pr_err("%s: Kexec buffer not set.\n", __func__);
++		return ret;
++	}
++
++	ima_measurements_suspend();
++
++	ret = ima_dump_measurement_list(&buf_size, &buf,
++					kexec_segment_size);
++
++	if (!buf) {
++		pr_err("%s: Dump measurements failed. Error:%d\n",
++		       __func__, ret);
++		resume = true;
++		goto out;
++	}
++	memcpy(ima_kexec_buffer, buf, buf_size);
++out:
++	ima_kexec_buffer = NULL;
++
++	if (resume)
++		ima_measurements_resume();
++
++	return ret;
++}
++
++struct notifier_block update_buffer_nb = {
++	.notifier_call = ima_update_kexec_buffer,
++};
++
+ #endif /* IMA_KEXEC */
+ 
+ /*
+diff --git a/security/integrity/ima/ima_queue.c b/security/integrity/ima/ima_queue.c
+index 532da87ce519..cb9abc02a304 100644
+--- a/security/integrity/ima/ima_queue.c
++++ b/security/integrity/ima/ima_queue.c
+@@ -44,6 +44,11 @@ struct ima_h_table ima_htable = {
+  */
+ static DEFINE_MUTEX(ima_extend_list_mutex);
+ 
++/*
++ * Used internally by the kernel to suspend-resume ima measurements.
++ */
++static atomic_t suspend_ima_measurements;
++
+ /* lookup up the digest value in the hash table, and return the entry */
+ static struct ima_queue_entry *ima_lookup_digest_entry(u8 *digest_value,
+ 						       int pcr)
+@@ -148,6 +153,20 @@ static int ima_pcr_extend(struct tpm_digest *digests_arg, int pcr)
+ 	return result;
+ }
+ 
++void ima_measurements_suspend(void)
++{
++	mutex_lock(&ima_extend_list_mutex);
++	atomic_set(&suspend_ima_measurements, 1);
++	mutex_unlock(&ima_extend_list_mutex);
++}
++
++void ima_measurements_resume(void)
++{
++	mutex_lock(&ima_extend_list_mutex);
++	atomic_set(&suspend_ima_measurements, 0);
++	mutex_unlock(&ima_extend_list_mutex);
++}
++
+ /*
+  * Add template entry to the measurement list and hash table, and
+  * extend the pcr.
 -- 
 2.25.1
 
