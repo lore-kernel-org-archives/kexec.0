@@ -4,64 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id EC12CC3DA6E
-	for <kexec@archiver.kernel.org>; Sun, 17 Dec 2023 03:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6EC70C3DA6E
+	for <kexec@archiver.kernel.org>; Sun, 17 Dec 2023 03:36:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=cJ+42Snkp2ipdRpbA4lA9DJSF2I4ud8cPCzAncS02Ww=; b=I5IAzpHXgCf3i8
-	9JX/cy+NuCJHstp9F7jDVh94r96NsJHaVQkPhj9/89Vit4hJD4x+9OaRM7+W4yPno2ok9f+IBLSTO
-	nNtTN/53FOJaRJgY/c9JjvWZyipn5By/BoyTBeFqdhnUdrh4LmpJM3ky4P5KD6F1Ip/1sa//VGlm2
-	fE1pcCL0UpvQ9b4ymJwAQJxT0ez0A3lGIku5rluFbWu0ZEtWyjLz+D4gzDFXmP2Jb1qXEPER+oMSg
-	mlRqinxNilfJRkewTxP+mxkSMGeuXx2jI+8LjBYWSfolmPFitiXojnGjUhI1KMEOgysPafORc64S/
-	V/GzzVborynrh1mBh9CA==;
+	List-Owner; bh=g83bUuwPNOw2J43aIJQvhqWHxb1Yh1wQT+AXyci7c6E=; b=d2mP3NvxBHwshK
+	D1QizIzIrEcaVX0xrsOlnf7BTI9ZrfQYCZ9gnBUfmZId2wHNU5r9xHVW0PUVV5NXO4tNzLkcYYyPK
+	CknBClAUZdg1CVHpm5sToyerXosonZFJsMNMSo6BC8uJrn2MUTfj6lCYIRMMVMArUbzIQ3Rkb0/mW
+	+5Ult5mnGNrLVF4m11XnkeEWiY5XAzJJVlQ4oPMGWsOTnZOlRATEs8aEi2ib4eGCoJcABVF85Q5Yn
+	nihhpIy/lGhgfpdGGux/mLEli6FMjsMp2ZPBhW2Ee9z1kY39miI144YmV77DRScu+X02ADFctv/co
+	e2o5x5anYDes4h7O+2Mg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rEhxH-0075CO-1E;
-	Sun, 17 Dec 2023 03:36:39 +0000
-Received: from mail-io1-xd2e.google.com ([2607:f8b0:4864:20::d2e])
+	id 1rEhxN-0075EL-00;
+	Sun, 17 Dec 2023 03:36:45 +0000
+Received: from mail-oi1-x22f.google.com ([2607:f8b0:4864:20::22f])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rEhxE-0075Ai-2U
+	id 1rEhxK-0075DK-1k
 	for kexec@lists.infradead.org;
-	Sun, 17 Dec 2023 03:36:38 +0000
-Received: by mail-io1-xd2e.google.com with SMTP id ca18e2360f4ac-7b771176f80so168396639f.2
-        for <kexec@lists.infradead.org>; Sat, 16 Dec 2023 19:36:36 -0800 (PST)
+	Sun, 17 Dec 2023 03:36:43 +0000
+Received: by mail-oi1-x22f.google.com with SMTP id 5614622812f47-3b9d8bfe845so1639668b6e.0
+        for <kexec@lists.infradead.org>; Sat, 16 Dec 2023 19:36:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702784195; x=1703388995; darn=lists.infradead.org;
+        d=gmail.com; s=20230601; t=1702784201; x=1703389001; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3V8gSp8bUEZWRGRAcmamI1zQxxCYsLgl6TFXIZtXR8g=;
-        b=LZOPOql5+EC8HSR8uHm6a4g1I165e0u3EMpl3MnjQDNf/t9jXVNCrtk6gZNsYbcsvo
-         o5+VtRQhe7/VJUe8OBwlF28pSSfp1MuDsiMCX5rwYaRuRq4fVUG0qzfSxMjmm8vka7s+
-         tJY+S3wf5PcoX9WLLF/dYAIdJQPwmptvR1IEd7fAiMC8+PiCcOhr4E+B5gGV3x9TZ/Jm
-         CzdvDC+2IlD9MDtzSBpUldmAoHkOHv3t0aLV87nJYuAmqfJyZnriG2kDHInCcmSKhf2d
-         4R0LttaRaj/BCjkmAQwHjo/HQQ/rFNzX4xv5w/6LZEwwtSsL0s68DPN4kv9Cs3v7IFPk
-         PzBg==
+        bh=jscYpo84xIlTIrjQEZDT5YAVqLMOQqnP0eOYv7+MbRw=;
+        b=Tzyd1TLadhK0XfCzWa4TfgbbC8P57QqRefRH1ZgkZ19VY+XA66lUTJU7H6U0B4FuvE
+         6cZg4AdgkkB1bqsL3FGvb+xlwlxIS8rIsE3SbTSUzAkixP07uWEcABAy6jRPxMATm9pH
+         tMcRlxNYX2v4l5TV9O4UWiZ1/NFuUqpI20gXWC4iDg2nK/CqJvhlCcIyzuqeRjy7Hr3w
+         4rC0Radp1p6AJz7o9vcMXehf7cWwBG0oQz1BxcMBm4W0xlWSt2VD1lq9MhjaLfYZ2LQr
+         /Xe9yOP3p7xJ0EE5djGAAzO3koH6lqS3TD6espjt6W1JQ2VjxTpn6ULKslST7axeTTcj
+         pnsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702784195; x=1703388995;
+        d=1e100.net; s=20230601; t=1702784201; x=1703389001;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3V8gSp8bUEZWRGRAcmamI1zQxxCYsLgl6TFXIZtXR8g=;
-        b=Iwne8D9kzaNMDfxDfrip0wj4dTEBAo/sV8ebK5Wt130x3I/LJvINBZtVleqAJhuhnZ
-         xZrVppstnHc4tUCn6pawB/Vl1XwAdaIShrs1jhM0Hi71dcVI2jj+P2sQMwNnAyfAbcOw
-         4asN8fn61zKkQ4u6cFYVkA0cIuYRdtEjI2hStJrK3IOJp89RGntPx/6+Z+P9yHkexG7M
-         OfM6WOtid/YafpHmakx/iJxwxljjEUg7Tn2g9T7c4XSC/YWdtoRkaxxFdvhVs16MJqRI
-         K0x/Alr1sTPjzVqVhheSv8jhzdf7nGmR6wMcp0FEijG4IIcJLjksasTTukV5jTxpMIvN
-         SW1Q==
-X-Gm-Message-State: AOJu0YzbVDVMItHlT3//+pnF0MZ9yR5L2Z/TI53lU0NaiHFySvgtK1ta
-	/TPgSRrKxBDNlASte/RCiCY=
-X-Google-Smtp-Source: AGHT+IF19Uou+JFEzXr0eitLYlv+ldY8dy1/12JKbWr/jE+2XcuM/gbK5TyaB6a5sCN/Nkm2axS0Jw==
-X-Received: by 2002:a5d:8850:0:b0:7b4:28f8:526 with SMTP id t16-20020a5d8850000000b007b428f80526mr16927258ios.38.1702784195510;
-        Sat, 16 Dec 2023 19:36:35 -0800 (PST)
+        bh=jscYpo84xIlTIrjQEZDT5YAVqLMOQqnP0eOYv7+MbRw=;
+        b=CQG7b5bUokE16F7E5TRfG4RclmtHs1DqYgFEeAxDtKejCwDXZceOzkdJCD1dSMe3mh
+         jRufN4R8Fe4k2NwrxB5pnLkeTIBSPGhMmUMFscG6UF96P9peWh8V0aPghiamWWXxtPz4
+         JUTC47Fb3znshchKfAdk7m6BTJOL9Jz6kT2xtNSoMhT2BWOO+mG92HPrpGwql8yduZBc
+         u/+prg0Iri0x5HXm9DPLCyY86uSORl1ojT+HG/QD07prEf2Jy7cCit7BAZ7BUD7O2iXH
+         1oS0IIsOEYD08juKNutqK6Yf71isEKQ5WpX0aetq8zZWo493ZTnIlsHWf8kkS/F5tmXd
+         7UsA==
+X-Gm-Message-State: AOJu0YxuLs5NVAH/ar4ooxsid4giZ00ltr9Wa/pVLp32DHOKBG9UWRkN
+	iOwwPBpUuzqlwDbZzF8Xgpg=
+X-Google-Smtp-Source: AGHT+IHxfeJ2/5ZmVlwHFplWezFuqpKI/InwfEnH6Lv71yXTfqFxulFEco7zz2dzTje/5OiY9iM0Sg==
+X-Received: by 2002:a05:6808:3197:b0:3ba:18f:62c6 with SMTP id cd23-20020a056808319700b003ba018f62c6mr17936532oib.7.1702784201449;
+        Sat, 16 Dec 2023 19:36:41 -0800 (PST)
 Received: from code.. ([144.202.108.46])
-        by smtp.gmail.com with ESMTPSA id x26-20020a62fb1a000000b006ce48a0b7c6sm15768820pfm.109.2023.12.16.19.36.30
+        by smtp.gmail.com with ESMTPSA id x26-20020a62fb1a000000b006ce48a0b7c6sm15768820pfm.109.2023.12.16.19.36.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 Dec 2023 19:36:35 -0800 (PST)
+        Sat, 16 Dec 2023 19:36:41 -0800 (PST)
 From: Yuntao Wang <ytcoode@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	kexec@lists.infradead.org,
@@ -76,16 +76,16 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Eric Biederman <ebiederm@xmission.com>,
 	Baoquan He <bhe@redhat.com>,
 	Yuntao Wang <ytcoode@gmail.com>
-Subject: [PATCH v5 2/3] kexec_file: fix incorrect temp_start value in locate_mem_hole_top_down()
-Date: Sun, 17 Dec 2023 11:35:27 +0800
-Message-ID: <20231217033528.303333-3-ytcoode@gmail.com>
+Subject: [PATCH v5 3/3] x86/kexec: use pr_err() instead of pr_debug() when an error occurs
+Date: Sun, 17 Dec 2023 11:35:28 +0800
+Message-ID: <20231217033528.303333-4-ytcoode@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20231217033528.303333-1-ytcoode@gmail.com>
 References: <20231217033528.303333-1-ytcoode@gmail.com>
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231216_193636_814718_BF24E51B 
-X-CRM114-Status: GOOD (  14.43  )
+X-CRM114-CacheID: sfid-20231216_193642_579535_E77199D0 
+X-CRM114-Status: GOOD (  12.75  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,37 +102,43 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-temp_end represents the address of the last available byte. Therefore, the
-starting address of the memory segment with temp_end as its last available
-byte and a size of `kbuf->memsz`, that is, the value of temp_start, should
-be `temp_end - kbuf->memsz + 1` instead of `temp_end - kbuf->memsz`.
+When an error is detected, use pr_err() instead of pr_debug() to output
+log message.
 
-Additionally, use the ALIGN_DOWN macro instead of open-coding it directly
-in locate_mem_hole_top_down() to improve code readability.
+In addition, remove the unnecessary return from set_page_address().
 
 Signed-off-by: Yuntao Wang <ytcoode@gmail.com>
 ---
- kernel/kexec_file.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kernel/kexec-bzimage64.c | 2 +-
+ mm/highmem.c                      | 2 --
+ 2 files changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index f9a419cd22d4..336d085cbc47 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -426,11 +426,11 @@ static int locate_mem_hole_top_down(unsigned long start, unsigned long end,
- 	unsigned long temp_start, temp_end;
+diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+index a61c12c01270..472a45dbc79a 100644
+--- a/arch/x86/kernel/kexec-bzimage64.c
++++ b/arch/x86/kernel/kexec-bzimage64.c
+@@ -424,7 +424,7 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+ 	 * command line. Make sure it does not overflow
+ 	 */
+ 	if (cmdline_len + MAX_ELFCOREHDR_STR_LEN > header->cmdline_size) {
+-		pr_debug("Appending elfcorehdr=<addr> to command line exceeds maximum allowed length\n");
++		pr_err("Appending elfcorehdr=<addr> to command line exceeds maximum allowed length\n");
+ 		return ERR_PTR(-EINVAL);
+ 	}
  
- 	temp_end = min(end, kbuf->buf_max);
--	temp_start = temp_end - kbuf->memsz;
-+	temp_start = temp_end - kbuf->memsz + 1;
+diff --git a/mm/highmem.c b/mm/highmem.c
+index e19269093a93..bd48ba445dd4 100644
+--- a/mm/highmem.c
++++ b/mm/highmem.c
+@@ -799,8 +799,6 @@ void set_page_address(struct page *page, void *virtual)
+ 		}
+ 		spin_unlock_irqrestore(&pas->lock, flags);
+ 	}
+-
+-	return;
+ }
  
- 	do {
- 		/* align down start */
--		temp_start = temp_start & (~(kbuf->buf_align - 1));
-+		temp_start = ALIGN_DOWN(temp_start, kbuf->buf_align);
- 
- 		if (temp_start < start || temp_start < kbuf->buf_min)
- 			return 0;
+ void __init page_address_init(void)
 -- 
 2.43.0
 
