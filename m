@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C2ECDC46CD3
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 59262C46CD4
 	for <kexec@archiver.kernel.org>; Mon, 18 Dec 2023 05:23:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
@@ -12,56 +12,56 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=kt5OohYAER3B97NqQrAchWTVkgsUSiKgqecHHiJiA0c=; b=3C2TFgMUdOepmH
-	10fpZxVFN2HsxTI0Btuog0W0FoG6ofYlxC1IbqGcsxN3ajw1acwtyySdgUp47knXyHDz38PZVdYqU
-	gX6f/JCTSlbBhbTXizXfBn5ukZsS74bsjO2mxIJjipExF/THl4QyMZnnqhaIXrdQ5sImXtu6tK/Lk
-	OGy5CdXaB/foTPMXdhOoFSQ4SO9KjIBiws+pevgQj/FLcmtpImzPNeBFzY6trc8UXgQxn5dPXkSYB
-	XVCOAWNMRqva/2dTgrYssrjty70y/FrfxkV54Gjvh8y+xz0t3hkP+odun4CLqWbyeWVEY70IlOQKX
-	pqH2Q283OawrbiJzPVfw==;
+	List-Owner; bh=RSNHWbkE5saKHqQmYEQsK3p7wdFmRDE6Vt/99fkoG30=; b=bdgGPhwtiXBblA
+	0rUQpcZLoZoAWpTwep5yQ4GVTlaIUR+t80uS+njzfwKW2WljaKwS+hKtdUZdhxLj8Os4SKrN1/SJl
+	ceMTZXPAtEhtNGlwPrr6npfoa7/7ZGgleZkFFPSOEY0iXoBXYbfPiL5oo4LgWYssAHQnVOkrQAU9m
+	kXOPOmR5/0U1MqSpYJaUEqAtFbeIwzOShXwIP6fXll1Fqv/49iJ1B3/bDN7T2j+sqiHuj7JYX7/N9
+	UKIJauSp/iOxhka1e2aOu3BjLLDVcwJ+WJuI9AetRJooiekbB4/NVBTUzMvDEhoZKnNONA65hMt43
+	U4QkDNsE9b6DGRE+wz6A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rF66Y-00974q-2i;
-	Mon, 18 Dec 2023 05:23:50 +0000
-Received: from mail-pg1-x52a.google.com ([2607:f8b0:4864:20::52a])
-	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rF66W-00973V-1x
-	for kexec@lists.infradead.org;
+	id 1rF66X-00974F-00;
 	Mon, 18 Dec 2023 05:23:49 +0000
-Received: by mail-pg1-x52a.google.com with SMTP id 41be03b00d2f7-5c6bd3100fcso678675a12.3
-        for <kexec@lists.infradead.org>; Sun, 17 Dec 2023 21:23:47 -0800 (PST)
+Received: from mail-pl1-x62e.google.com ([2607:f8b0:4864:20::62e])
+	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
+	id 1rF66U-00972I-2B
+	for kexec@lists.infradead.org;
+	Mon, 18 Dec 2023 05:23:47 +0000
+Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1d098b87eeeso22687775ad.0
+        for <kexec@lists.infradead.org>; Sun, 17 Dec 2023 21:23:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702877026; x=1703481826; darn=lists.infradead.org;
+        d=gmail.com; s=20230601; t=1702877024; x=1703481824; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HQnwILLACfSGYQkjloIf0lXx3GTHPwbPk0Xy5aE3Myw=;
-        b=dfaCDzZF9i6WUfUoghXuwAOwZWL0u04Y0YqYraW/mZ82L3iCAIBYn0+pXJ1aFx/U05
-         1mGczst8BigXTn2AqFy5nbPljSdWHvegMLBaDnamEvkGTLZj8Ry0emGr6pRd+PXE7UKN
-         XoM/F9JUOqsqZKpelyVXsazNE1dusEc97TtusQoJa0E5IQvVo9dIGrwVkD8hBUNK/xxW
-         GKy3cDY7dyCf8K0FBsQQ/o9qNaGKWujjQkJpZ0ljgLL8LstdCc+2IEHTUq3CmRVl5BWY
-         TVdntNK1/4K4nxrjfR+eMHqft36q3NJLyp7mIOtwh/N0hbDWVFzhwxzQuuvMvumen1kj
-         ouDg==
+        bh=zUDEjuz7dTh6U48nS5xqrEvupkrEdoF0zsI9VXIhXHQ=;
+        b=a/xQ5QqNXOVhhZUNRIqnrzY9+bNW5prTDHAdz7cK3fMZZTpJ3tn/rAdraOqMNI5RYR
+         AvwmkHb1011R3GG1pC/KGP/SbxMjV0hI3xbOBvgoq6wn5metqvrBT5iLVA5pqbHKXOG1
+         dwbX+i47Brfb2dwNkEI3dtf5ky2sgbXt7bNyRS9/q3grLa1vifXhtQ7swQWFIhXWUyyS
+         cGd/m+iOF7+QEjsD81sCRRfzKWWxQqSbDQYi0AzsOq7o8MAv/NSqynvC+I/WbwmUb6bx
+         e3UHQ8L17RZDJL6hQGvVXdexUC1zQtY5BQVmIWsA5UWBzkCY93G/sYrJjCSTDJaV1ylb
+         XLVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702877026; x=1703481826;
+        d=1e100.net; s=20230601; t=1702877024; x=1703481824;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HQnwILLACfSGYQkjloIf0lXx3GTHPwbPk0Xy5aE3Myw=;
-        b=JhHq4XQE8SsLCUUgwIjagD2/Y8PnF/OSecVn5SQAyHITjLNqMEBYbXGq4xSTVNvCeT
-         pUQpmcRq7zC37Y0mSNaAB+Qt1utfSC5JU/fgRaZrMHrR+gzXuiuMUf5/cfmJtIn+mxD+
-         R4rzNmcSWiP0ki80EmWDjCGsV2egNRiLIh6TM54DvMVpM2fBM9TVwrFHVyO2JLs5EKKw
-         juiySMcrgg3lP8sdZeE0or334y1i3JWNMhSl8nD6fzdmy4KCBm3jKZxHZ5Iypm2Cdv5F
-         PrLR1/MTspoS+xJ23MHQfkeEE8GEIhHtehh/cG7gIVrahL505xnRFNOqI3gcDSNAVkbE
-         LW3g==
-X-Gm-Message-State: AOJu0Yx6YdSSxNghGOqSmBJiNtogvt3icDPDlQxneJn+t9LpTJGXbgHP
-	8Z1LhSvGzquPYlT+WSnUbfqxFlOTGe1m
-X-Google-Smtp-Source: AGHT+IFw5y65y0+JsjrN3MYStIkdT4JJeQW8vu+TO7+O+OqlJvfipHInYun5NcigxdUF3BjcEXQ8Rg==
-X-Received: by 2002:a17:903:947:b0:1d3:be34:7869 with SMTP id ma7-20020a170903094700b001d3be347869mr201389plb.45.1702877026556;
-        Sun, 17 Dec 2023 21:23:46 -0800 (PST)
+        bh=zUDEjuz7dTh6U48nS5xqrEvupkrEdoF0zsI9VXIhXHQ=;
+        b=pMNjZ3xz4ZsX5zUMZ5uQcyGe8XdSawLWjcgPUhlojXuGqnZsatZbY54OMDkEyJkXnB
+         q0agGQy3Iu7LZYs721c9OndZaTCyhkJ9xdT6Bjt0Z8Ua9auNHPDH8o70z2Ij52+AUJpe
+         7fGqOV02j4Sz8xMp0apKQaUUFUJMznw4uEotPguslRbHJf8vUFRAj88VKPVSvF/kZfrJ
+         EaAkAwlbw/vM0ZJZZl0AOzY4S5OyQNCEQnHFDuZgfsR7kX3HMaKvBwma8FYBIl0/86Y9
+         5dyl5ygCIzw0o/y0+D76TYjwOs90Xl8YysABZKLCAVXjbM55wmNpS8YyIAe6zG2uYFFE
+         qZtw==
+X-Gm-Message-State: AOJu0Yzr3eHdT+pkFRbbjLztCuqK8iYrMPlHm+LaGaIJH381+hN5LR9d
+	dVRXnnXxF8ofPtRN0sz89eop2kFcSgqs
+X-Google-Smtp-Source: AGHT+IHEjaBg3W8+ZNgbgNN0NJk6dr0/z7jB+nbIMxPgmI4Yba/GPQLUgblj6PYFPb+ZQQdqlDkGDg==
+X-Received: by 2002:a17:903:2447:b0:1d3:c58f:404d with SMTP id l7-20020a170903244700b001d3c58f404dmr268284pls.114.1702877024081;
+        Sun, 17 Dec 2023 21:23:44 -0800 (PST)
 Received: from piliu.users.ipa.redhat.com ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id d13-20020a170903230d00b001d3c0300c72sm582434plh.197.2023.12.17.21.23.44
+        by smtp.gmail.com with ESMTPSA id d13-20020a170903230d00b001d3c0300c72sm582434plh.197.2023.12.17.21.23.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Dec 2023 21:23:46 -0800 (PST)
+        Sun, 17 Dec 2023 21:23:43 -0800 (PST)
 From: Pingfan Liu <kernelfans@gmail.com>
 To: kexec@lists.infradead.org
 Cc: Pingfan Liu <piliu@redhat.com>,
@@ -70,16 +70,16 @@ Cc: Pingfan Liu <piliu@redhat.com>,
 	Philipp Rudo <prudo@redhat.com>,
 	Baoquan He <bhe@redhat.com>,
 	Dave Young <dyoung@redhat.com>
-Subject: [RFC 3/3] of: fdt: Parse properties of reusing CMA in kdump
-Date: Mon, 18 Dec 2023 13:23:25 +0800
-Message-Id: <20231218052325.20982-4-kernelfans@gmail.com>
+Subject: [RFC 2/3] of: kexec: Set up properties for reusing CMA in kdump
+Date: Mon, 18 Dec 2023 13:23:24 +0800
+Message-Id: <20231218052325.20982-3-kernelfans@gmail.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20231218052325.20982-1-kernelfans@gmail.com>
 References: <20231218052325.20982-1-kernelfans@gmail.com>
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231217_212348_648698_A00D921A 
-X-CRM114-Status: UNSURE (   9.65  )
+X-CRM114-CacheID: sfid-20231217_212346_711912_7C92690C 
+X-CRM114-Status: UNSURE (   9.07  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -107,84 +107,50 @@ Cc: Baoquan He <bhe@redhat.com>
 Cc: Dave Young <dyoung@redhat.com>
 To: kexec@lists.infradead.org
 ---
- drivers/of/fdt.c | 43 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+ drivers/of/kexec.c    | 14 ++++++++++++++
+ include/linux/kexec.h |  4 ++++
+ 2 files changed, 18 insertions(+)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index bf502ba8da95..09673440f876 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -620,6 +620,19 @@ static void __init fdt_reserve_elfcorehdr(void)
- 		elfcorehdr_size >> 10, elfcorehdr_addr);
- }
+diff --git a/drivers/of/kexec.c b/drivers/of/kexec.c
+index 68278340cecf..471b6cdf34ff 100644
+--- a/drivers/of/kexec.c
++++ b/drivers/of/kexec.c
+@@ -410,6 +410,20 @@ void *of_kexec_alloc_and_setup_fdt(const struct kimage *image,
+ 			if (ret)
+ 				goto out;
+ 		}
++
++		ret = fdt_appendprop_u64(fdt, chosen_node,
++				"kdump,cma_pfn", kdump_cma_pfn);
++		if (ret)
++			goto out;
++		ret = fdt_appendprop_u64(fdt, chosen_node,
++				"kdump,cma_pg_cnt", kdump_cma_pg_cnt);
++		if (ret)
++			goto out;
++		ret = fdt_appendprop_u64(fdt, chosen_node,
++				"kdump,cma_pg_paddr", kdump_cma_pg_paddr);
++		if (ret)
++			goto out;
++
+ 	}
  
-+static void __init fdt_reserve_kdump_cma(void)
-+{
-+	if (!IS_ENABLED(CONFIG_CRASH_DUMP))
-+		return;
-+
-+	if (!is_kdump_kernel())
-+		return;
-+	if (!kdump_cma_pfn || !kdump_cma_pg_cnt || !kdump_cma_pg_paddr)
-+		return;
-+	memblock_reserve(kdump_cma_pfn << PAGE_SHIFT, kdump_cma_pg_cnt << PAGE_SHIFT);
-+	pr_info("Reserving %llu KiB of memory at 0x%llx for kdump cma\n",
-+		kdump_cma_pg_cnt >> 10, kdump_cma_pfn << PAGE_SHIFT);
-+}
- /**
-  * early_init_fdt_scan_reserved_mem() - create reserved memory regions
-  *
-@@ -637,6 +650,7 @@ void __init early_init_fdt_scan_reserved_mem(void)
+ 	/* add bootargs */
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 95e19c814c93..bf2d8b9d8c07 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -408,6 +408,10 @@ bool kexec_load_permitted(int kexec_image_type);
+ /* flag to track if kexec reboot is in progress */
+ extern bool kexec_in_progress;
  
- 	fdt_scan_reserved_mem();
- 	fdt_reserve_elfcorehdr();
-+	fdt_reserve_kdump_cma();
- 
- 	/* Process header /memreserve/ fields */
- 	for (n = 0; ; n++) {
-@@ -1150,6 +1164,34 @@ int __init early_init_dt_scan_memory(void)
- 	return found_memory;
- }
- 
-+static void __init early_init_dt_check_kdump_cma(unsigned long node)
-+{
-+	const __be32 *prop;
-+	int len;
++extern u64 kdump_cma_pfn;
++extern u64 kdump_cma_pg_cnt;
++extern u64 kdump_cma_pg_paddr;
 +
-+	if (!IS_ENABLED(CONFIG_CRASH_DUMP))
-+		return;
-+	if (!is_kdump_kernel())
-+		return;
-+	pr_debug("Looking for kdump cma property... ");
-+
-+	prop = of_get_flat_dt_prop(node, "kdump,cma_pfn", &len);
-+	if (!prop)
-+		return;
-+	kdump_cma_pfn = *prop;
-+
-+	prop = of_get_flat_dt_prop(node, "kdump,cma_pg_cnt", &len);
-+	if (!prop)
-+		return;
-+	kdump_cma_pg_cnt = *prop;
-+
-+	prop = of_get_flat_dt_prop(node, "kdump,cma_pg_paddr", &len);
-+	if (!prop)
-+		return;
-+	kdump_cma_pg_paddr = *prop;
-+
-+}
-+
- int __init early_init_dt_scan_chosen(char *cmdline)
- {
- 	int l, node;
-@@ -1168,6 +1210,7 @@ int __init early_init_dt_scan_chosen(char *cmdline)
- 
- 	early_init_dt_check_for_initrd(node);
- 	early_init_dt_check_for_elfcorehdr(node);
-+	early_init_dt_check_kdump_cma(node);
- 
- 	rng_seed = of_get_flat_dt_prop(node, "rng-seed", &l);
- 	if (rng_seed && l > 0) {
+ int crash_shrink_memory(unsigned long new_size);
+ ssize_t crash_get_memory_size(void);
+ void kdump_kernel_reuse_mem(void);
 -- 
 2.31.1
 
