@@ -4,75 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AC5F2C35274
-	for <kexec@archiver.kernel.org>; Mon, 18 Dec 2023 13:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 97CB2C46CCD
+	for <kexec@archiver.kernel.org>; Mon, 18 Dec 2023 15:19:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=1c87P5cBRVoMUI9yL1BfL2CZ/qMOlqhtRP9ftfJdaFk=; b=YWCy107trye2Qx
-	RHT3UV5ncVY1A+OLV8W16C+UvlIkAq3DfmmLVjASq+Swf2I8xLakgRc31kgsBydpaIfadL5mYvJBM
-	o280uz4Gy3g9S0y0uZEUMTx3ZHGc+9px6tr8Ih8KddR0q/4eWqGdkoaRitSkmd9i9i734udXZST5q
-	YKrNFWM8IXnDYD4aL5qBE858WfnPV1Syx7VIkCP9hNWlMcUK1G2Icj4Ad++xTdhjL53JCU9hinXnR
-	6rXso3b7AIlrLAxwM7WZ71dQEHuKNGMzBxETG+zeZyEjEKC+1LWkCat3HgrvddSWwxVgAO6zcubDl
-	WXm7rJE9xJV8pF5bkAyQ==;
+	List-Owner; bh=Ck2IMiVbXY6R1df/Ab5e6QZyDoY95WwRMk0ln5nc7nM=; b=cx939oCB6CZ2Ug
+	i/feQwGvAGMUjTQf8fkBIh6GI+09wphtKVMNR3h++QAhafXBxpI5UfQXkWddMNYWWBESAAvSjjxmm
+	ImbxXEouEE+ChLnVHcPBLk20y58vN9kMBpo1uZ4mIeZxO+LBeUl/6rDr86ECCjos+0/1qgAVWJg9P
+	op3Zc55Zm4oZDudxQLgTX9rLv3I8+SeS6C6OKjtwWq/PBw2yNNYqJf0DfPonTpoWTuG1xoVoVKoj6
+	5U2KsTrEjGs4mP445sHRTIfa3tjrlzn8pBhrmvy4D/z9YkHvIiTSbAW6zxav5rOIM4TzitpghDU1s
+	KHjRCtKj4KRbO954g+eg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rFDwC-00AuiT-0D;
-	Mon, 18 Dec 2023 13:45:40 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1rFFP3-00BBjw-2e;
+	Mon, 18 Dec 2023 15:19:33 +0000
+Received: from smtp-out1.suse.de ([2a07:de40:b251:101:10:150:64:1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rFDw9-00Aug1-1e
+	id 1rFFP0-00BBi4-0V
 	for kexec@lists.infradead.org;
-	Mon, 18 Dec 2023 13:45:39 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702907133;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1ixXR3XKTH39hKKYBoKlldaXP+hnNl1nKybCK1Edi+M=;
-	b=SAiaqNnmKlUCIdzeHzpnaEJlcETnsapzVS0/1eJrbelLEvmXr0pK5WbMklOS3zg3TN+rhc
-	LfDRCI0LJSj/F5QbURo4ow2nzQcpTGXjNtxEVjZn9NkbCEblvYPunWg0Ht+6G2hk7DGLYP
-	Qnpg/rvr+GM376vwX8KuahIW77n3w0s=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-689-D2zy3ttpM2yrOdXBVjGhbg-1; Mon,
- 18 Dec 2023 08:45:30 -0500
-X-MC-Unique: D2zy3ttpM2yrOdXBVjGhbg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	Mon, 18 Dec 2023 15:19:31 +0000
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CAFDA1C3B641;
-	Mon, 18 Dec 2023 13:45:28 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.38])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 73714C159B0;
-	Mon, 18 Dec 2023 13:45:27 +0000 (UTC)
-Date: Mon, 18 Dec 2023 21:45:24 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Yuntao Wang <ytcoode@gmail.com>
-Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, x86@kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>,
-	Hari Bathini <hbathini@linux.ibm.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Takashi Iwai <tiwai@suse.de>
-Subject: Re: [PATCH 0/2] crash: fix potential cmem->ranges array overflow
-Message-ID: <ZYBM9MG1rjCDPykI@MiWiFi-R3L-srv>
-References: <20231218081915.24120-1-ytcoode@gmail.com>
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 39AF521E57;
+	Mon, 18 Dec 2023 15:19:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1702912765; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gkE3Ty1UFAMABO07gtqaHbzitATpH+Yca30i00FRs0I=;
+	b=oWPetQDH20PCee8AdXpkLJ0uWotz5BxuBmLmvn6Pwe7nRWVUPWF2W+EQd2gFXGDKp+lNLZ
+	3VXgXlGq+NZmEIzO9IwJGcKo7ODPSnF4QonVopRGBegW1e5u+enX7oniKGrIFRqXsnB3V6
+	yEzIJZjsVBJuHsw8lrHK7C7uMB/IQAE=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1702912765; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gkE3Ty1UFAMABO07gtqaHbzitATpH+Yca30i00FRs0I=;
+	b=oWPetQDH20PCee8AdXpkLJ0uWotz5BxuBmLmvn6Pwe7nRWVUPWF2W+EQd2gFXGDKp+lNLZ
+	3VXgXlGq+NZmEIzO9IwJGcKo7ODPSnF4QonVopRGBegW1e5u+enX7oniKGrIFRqXsnB3V6
+	yEzIJZjsVBJuHsw8lrHK7C7uMB/IQAE=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0F24413995;
+	Mon, 18 Dec 2023 15:19:24 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 2bIiO/xigGUUfAAAD6G6ig
+	(envelope-from <mhocko@suse.com>); Mon, 18 Dec 2023 15:19:24 +0000
+Date: Mon, 18 Dec 2023 16:19:20 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: Pingfan Liu <kernelfans@gmail.com>
+Cc: kexec@lists.infradead.org, Pingfan Liu <piliu@redhat.com>,
+	Jiri Bohac <jbohac@suse.cz>, Philipp Rudo <prudo@redhat.com>,
+	Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>
+Subject: Re: [RFC 0/3] kdump: Check mem_map of CMA area in kdump
+Message-ID: <ZYBi-Ljt2yhrEIUc@tiehlicka>
+References: <20231218052325.20982-1-kernelfans@gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20231218081915.24120-1-ytcoode@gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+In-Reply-To: <20231218052325.20982-1-kernelfans@gmail.com>
+X-Spamd-Result: default: False [0.40 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 RCPT_COUNT_SEVEN(0.00)[7];
+	 FREEMAIL_TO(0.00)[gmail.com];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-0.00)[43.84%]
+Authentication-Results: smtp-out1.suse.de;
+	none
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231218_054537_658239_A534FBC0 
-X-CRM114-Status: GOOD (  13.85  )
+X-CRM114-CacheID: sfid-20231218_071930_345409_B99CDF9C 
+X-CRM114-Status: GOOD (  15.48  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,33 +110,54 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Yuntao,
-
-On 12/18/23 at 04:19pm, Yuntao Wang wrote:
-> This series tries to fix the potential cmem->ranges array overflow.
-
-This series looks good to me. While you'd better talk to fuqiang to ask
-if he wants to post these or wants to give up. He posted patch to raise
-the potention issue and I suggested him to do these during the
-discussion. Without consulting him for opinion to take over a discussing
-work, it's not suggested, I would say.
-
-https://lore.kernel.org/all/ZXrY7QbXAlxydsSC@MiWiFi-R3L-srv/T/#u
-
+On Mon 18-12-23 13:23:22, Pingfan Liu wrote:
+> From: Pingfan Liu <piliu@redhat.com>
 > 
-> Yuntao Wang (2):
->   x86/crash: fix potential cmem->ranges array overflow
->   crash_core: fix out-of-bounds access check in
->     crash_exclude_mem_range()
 > 
->  arch/x86/kernel/crash.c | 9 +++++----
->  kernel/crash_core.c     | 2 +-
->  2 files changed, 6 insertions(+), 5 deletions(-)
+> First of all, this series is only for proof of concept. It only passes compilation.
 > 
-> -- 
-> 2.43.0
+> For years, CMA is proposed to be used as crashkernel reserved memory.
+> But DIO prevent us to follow it since DMA may be in-flight and ruin the
+> kdump kernel.
 > 
+> This series exports the crash kernel's CMA area information through
+> device-tree, and kdump kernel skips any page, which refcnt!=mapcount and
+> has a potential DMA activity.
 
+I didn't have time to look deeper into implementation (and I will get
+back to it only early Jan) but mapcount based checks are really tricky
+and unreliable.  folio_maybe_dma_pinned sounds like a better test. You
+definitely want to have that checked by more MM people and CC linux-mm.
+ 
+> The exported information include:
+> 	u64 kdump_cma_pfn;
+> 	u64 kdump_cma_pg_cnt;
+> 	u64 kdump_cma_pg_paddr;
+> 
+> And they should be filled with Jiri's series "[PATCH 0/4] kdump:
+> crashkernel reservation from CMA"
+> 
+> After the conjunction of two series, the CMA used for kdump has only the
+> following risk, where the following conditions:
+> 	-1.a wrong code forges _refcnt and mapcount to the same value
+> 	-2.the page is also used by DIO
+> 
+> 
+> Is it acceptable, or any rescue e.g. CRC on page?
+
+We alredy do have vm_debug=P which enables init time poisoning
+on all struct pages. The value is then checked when the page is
+allocated.
+ 
+> Please share your thoughts.
+
+Having a sanity check on exported cma pages makes some sense to me. The
+exact check might be more involved with false positives but they
+shouldn't be a major problem unless there are too many of them.
+
+-- 
+Michal Hocko
+SUSE Labs
 
 _______________________________________________
 kexec mailing list
