@@ -4,96 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 97CB2C46CCD
-	for <kexec@archiver.kernel.org>; Mon, 18 Dec 2023 15:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 25E86C46CD2
+	for <kexec@archiver.kernel.org>; Mon, 18 Dec 2023 16:48:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=Ck2IMiVbXY6R1df/Ab5e6QZyDoY95WwRMk0ln5nc7nM=; b=cx939oCB6CZ2Ug
-	i/feQwGvAGMUjTQf8fkBIh6GI+09wphtKVMNR3h++QAhafXBxpI5UfQXkWddMNYWWBESAAvSjjxmm
-	ImbxXEouEE+ChLnVHcPBLk20y58vN9kMBpo1uZ4mIeZxO+LBeUl/6rDr86ECCjos+0/1qgAVWJg9P
-	op3Zc55Zm4oZDudxQLgTX9rLv3I8+SeS6C6OKjtwWq/PBw2yNNYqJf0DfPonTpoWTuG1xoVoVKoj6
-	5U2KsTrEjGs4mP445sHRTIfa3tjrlzn8pBhrmvy4D/z9YkHvIiTSbAW6zxav5rOIM4TzitpghDU1s
-	KHjRCtKj4KRbO954g+eg==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Subject:To:From
+	:Date:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=gQxKNqGMALzdQ4EfvlXYZ4aoKsCbQZ+eviOBKvGax2Y=; b=omDVvK3E+MGjR3
+	9mWmBQbP5yvkIwra4aq75WEbXgBNUQLbBThnjlt0zAFKBWfHL2fa3/1q1WQ0z4LV5ZrPtqwgI0ewt
+	8pOlpb6kA4LbU/fXL66eHQqkyGUIzbi5OfGOiDnPL07pEc6gzc2bpi2uzUrY1eANk2UnVmYlKcEAq
+	bjquig6fTfnvejk4ie8s1sbTMjB8iCwppe3J2SqOCTmgL+/2qIBKxhrqlZXI0qJPlDByvtvyOhg8O
+	3V87omuCVaMZIYk1CVjDIhPL+KQDg1YFNZs+Kep5M107CXgH2YT8gGhQUXkGBCLqdcU4y183wo5j/
+	oFtvbEu5JsxZS/wT366w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rFFP3-00BBjw-2e;
-	Mon, 18 Dec 2023 15:19:33 +0000
-Received: from smtp-out1.suse.de ([2a07:de40:b251:101:10:150:64:1])
+	id 1rFGmw-00BW23-1w;
+	Mon, 18 Dec 2023 16:48:18 +0000
+Received: from ams.source.kernel.org ([145.40.68.75])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rFFP0-00BBi4-0V
+	id 1rFGms-00BW0P-1q
 	for kexec@lists.infradead.org;
-	Mon, 18 Dec 2023 15:19:31 +0000
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 39AF521E57;
-	Mon, 18 Dec 2023 15:19:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1702912765; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gkE3Ty1UFAMABO07gtqaHbzitATpH+Yca30i00FRs0I=;
-	b=oWPetQDH20PCee8AdXpkLJ0uWotz5BxuBmLmvn6Pwe7nRWVUPWF2W+EQd2gFXGDKp+lNLZ
-	3VXgXlGq+NZmEIzO9IwJGcKo7ODPSnF4QonVopRGBegW1e5u+enX7oniKGrIFRqXsnB3V6
-	yEzIJZjsVBJuHsw8lrHK7C7uMB/IQAE=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1702912765; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gkE3Ty1UFAMABO07gtqaHbzitATpH+Yca30i00FRs0I=;
-	b=oWPetQDH20PCee8AdXpkLJ0uWotz5BxuBmLmvn6Pwe7nRWVUPWF2W+EQd2gFXGDKp+lNLZ
-	3VXgXlGq+NZmEIzO9IwJGcKo7ODPSnF4QonVopRGBegW1e5u+enX7oniKGrIFRqXsnB3V6
-	yEzIJZjsVBJuHsw8lrHK7C7uMB/IQAE=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0F24413995;
-	Mon, 18 Dec 2023 15:19:24 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 2bIiO/xigGUUfAAAD6G6ig
-	(envelope-from <mhocko@suse.com>); Mon, 18 Dec 2023 15:19:24 +0000
-Date: Mon, 18 Dec 2023 16:19:20 +0100
-From: Michal Hocko <mhocko@suse.com>
-To: Pingfan Liu <kernelfans@gmail.com>
-Cc: kexec@lists.infradead.org, Pingfan Liu <piliu@redhat.com>,
-	Jiri Bohac <jbohac@suse.cz>, Philipp Rudo <prudo@redhat.com>,
-	Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>
-Subject: Re: [RFC 0/3] kdump: Check mem_map of CMA area in kdump
-Message-ID: <ZYBi-Ljt2yhrEIUc@tiehlicka>
-References: <20231218052325.20982-1-kernelfans@gmail.com>
+	Mon, 18 Dec 2023 16:48:15 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by ams.source.kernel.org (Postfix) with ESMTP id 00581B81038
+	for <kexec@lists.infradead.org>; Mon, 18 Dec 2023 16:48:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9FFEC433C9
+	for <kexec@lists.infradead.org>; Mon, 18 Dec 2023 16:48:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702918091;
+	bh=m2s5nMY/7ge0NmABCX7/6/XOb+1wuLsrKwG4msYK5BY=;
+	h=Date:From:To:Subject:From;
+	b=rEfr5/3Ot2gfcerGtFE1YtVDNX7woNkH+A5kMx3OrSWn9Z1d+d+oMo627/q2BOe+5
+	 F5FzJct83ibygQbho0gcVHDju02tXKZ4w+5XfpdIM/1itHfkVzmdINV81sQyLFGXmI
+	 eAhDpQ4gOKzhHByhI4EUhMyJ51/EGmWHeIQdFZWUlqmRpXkh218UmsLnqd3utQWgRe
+	 LYAq7S4Eord8mkLXFtGzXORDs+h1m0uGHVFAbivKwKARMrlVp5Qyt+/+40/GfrodDJ
+	 ycHNfa0SzCZAw0XNjUpd6pTjbRU1RNTi5I4N+W3kpmlwM/sLB1aqhncevNRciy2guB
+	 KfvHyL7OnXgug==
+Date: Mon, 18 Dec 2023 16:48:08 +0000
+From: Simon Horman <horms@kernel.org>
+To: kexec@lists.infradead.org
+Subject: [ANNOUNCE] kexec-tools v2.0.28 preparation
+Message-ID: <20231218164808.GA759837@kernel.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20231218052325.20982-1-kernelfans@gmail.com>
-X-Spamd-Result: default: False [0.40 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	 RCPT_COUNT_SEVEN(0.00)[7];
-	 FREEMAIL_TO(0.00)[gmail.com];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.00)[43.84%]
-Authentication-Results: smtp-out1.suse.de;
-	none
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231218_071930_345409_B99CDF9C 
-X-CRM114-Status: GOOD (  15.48  )
+X-CRM114-CacheID: sfid-20231218_084814_797209_1846238E 
+X-CRM114-Status: UNSURE (   7.81  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -110,54 +69,38 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon 18-12-23 13:23:22, Pingfan Liu wrote:
-> From: Pingfan Liu <piliu@redhat.com>
-> 
-> 
-> First of all, this series is only for proof of concept. It only passes compilation.
-> 
-> For years, CMA is proposed to be used as crashkernel reserved memory.
-> But DIO prevent us to follow it since DMA may be in-flight and ruin the
-> kdump kernel.
-> 
-> This series exports the crash kernel's CMA area information through
-> device-tree, and kdump kernel skips any page, which refcnt!=mapcount and
-> has a potential DMA activity.
+Hi all,
 
-I didn't have time to look deeper into implementation (and I will get
-back to it only early Jan) but mapcount based checks are really tricky
-and unreliable.  folio_maybe_dma_pinned sounds like a better test. You
-definitely want to have that checked by more MM people and CC linux-mm.
- 
-> The exported information include:
-> 	u64 kdump_cma_pfn;
-> 	u64 kdump_cma_pg_cnt;
-> 	u64 kdump_cma_pg_paddr;
-> 
-> And they should be filled with Jiri's series "[PATCH 0/4] kdump:
-> crashkernel reservation from CMA"
-> 
-> After the conjunction of two series, the CMA used for kdump has only the
-> following risk, where the following conditions:
-> 	-1.a wrong code forges _refcnt and mapcount to the same value
-> 	-2.the page is also used by DIO
-> 
-> 
-> Is it acceptable, or any rescue e.g. CRC on page?
+I am planning to release kexec-tools v2.0.28 in the next two weeks
+to roughly coincide with the release of the v6.7 kernel.
 
-We alredy do have vm_debug=P which enables init time poisoning
-on all struct pages. The value is then checked when the page is
-allocated.
- 
-> Please share your thoughts.
+I would like to ask interested parties to send any patches they would like
+included in v2.0.28 within one week so they can be considered for inclusion
+in an rc release.
 
-Having a sanity check on exported cma pages makes some sense to me. The
-exact check might be more involved with false positives but they
-shouldn't be a major problem unless there are too many of them.
+For reference the patches queued up since v2.0.27 are as follows.
 
--- 
-Michal Hocko
-SUSE Labs
+Thanks to everyone who has contributed to kexec-tools!
+
+549466430ae6 LoongArch: Load vmlinux.efi to the link address
+ba0ac0efe299 LoongArch: Fix an issue with relocatable vmlinux
+74dfaefd6316 m68k: fix getrandom() use with uclibc
+22dcf5cb940a lzma: Relax memory limit for lzma decompressor
+44e7b73c331f kexec: ppc64: print help to stdout instead of stderr
+74d66d405f30 workflow: update to Ubuntu 22.04
+ab3a70af8567 kexec/loongarch64: fix 'make dist' file loss issue
+6419b008fde7 kexec: provide a memfd_create() wrapper if not present in libc
+118b567ce74a crashdump/x86: set the elfcorehdr segment size for hotplug
+d59d17f37239 crashdump/x86: identify elfcorehdr segment for hotplug
+a56376080a93 crashdump: exclude elfcorehdr segment from digest for hotplug
+75ac71fd94ff crashdump: setup general hotplug support
+d6cfd2984844 crashdump: introduce the hotplug command line options
+c36d3e8b2e99 kexec: define KEXEC_UPDATE_ELFCOREHDR
+bd0200c47c45 kexec: update manpage with explicit mention of clean kexec
+2495ccfc5206 zboot: add loongarch kexec_load support
+8f08e3b51f25 zboot: enable arm64 kexec_load for zboot image
+c3f35ff06e54 build: fix tarball creation
+056c179cd3c2 kexec-tools 2.0.27.git
 
 _______________________________________________
 kexec mailing list
