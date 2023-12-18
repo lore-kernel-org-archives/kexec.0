@@ -4,62 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 81844C35274
-	for <kexec@archiver.kernel.org>; Mon, 18 Dec 2023 17:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4CC90C35274
+	for <kexec@archiver.kernel.org>; Mon, 18 Dec 2023 18:24:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:Mime-Version:References:In-Reply-To:
 	Message-Id:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=+cc5C/De+H6+pji8wllnFxWOSlwFhGoBE00CDJQy6t8=; b=W0epDKzrWGZ+s+
-	Lik717HpwBH7LyBDPVtsGzzfoyarw9nP04Q7fbN9fLuf2HX/0pP82N9tJDxg5QeDkKf1rVmclCjQG
-	0rvcJ9PMpY56r1i+5jlof3FZbKKSodzi9KrpCLO4f/xIx/0E6rEAk/rZF7y3Y0FXSmQtI/0yjjNp9
-	L5yZxoahqSuX2hNzbYAc0YMG7aFMY62IPK2rVCetY2p6EVq7QBNVrbsq2Vp8CBOznz9XHQa0hi49k
-	h85AI2BL8Kezuq8ivcHxLE0n16IZn9kjjJ/Z58pU+8H3ijcXswPHaq8NE41errjtySxylgWTjEe4N
-	nPD0iu7N7g/rqZuEVZ7A==;
+	List-Owner; bh=kBpLN0pRjyTUM6FNqkLWOXpyFujdYhA0q3B0MkiXnhI=; b=msdvulyPaiC0o8
+	us6CiO4O5pefvkYsHhmv1UTHfI6qNrYL4O2RpIChww/XU6qRvR1l47RCuFMwGnqHXSAOREnFR7/LT
+	e4AAH4QzoYEn1r3XQn8lvaYZ4YvHgUSLRILsllpSzM2iLXzZrGrseI6Jfp5bF3r88sdxQFBy8a05r
+	TQjYFT1Vd+yu5mirhSfUt/v0gvw46KAMjZw/sINFSYUZ0/3Kj4oAIwugXiP+LAs1X8oNbv2IW4rkM
+	k9ctwUUEFCCwj9EGfIka4rfe9O1b/CgGiEvylCgiViQDc/pUxS4cbsqk8kMvo9EeRQUKJ4a7G+yJn
+	mB7dg9LOcrktCg90YLwg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rFHQT-00Bdkz-1k;
-	Mon, 18 Dec 2023 17:29:09 +0000
-Received: from sin.source.kernel.org ([2604:1380:40e1:4800::1])
+	id 1rFIII-00Bku3-2y;
+	Mon, 18 Dec 2023 18:24:46 +0000
+Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rFHQQ-00Bdj4-1J
+	id 1rFIIF-00BksT-0o
 	for kexec@lists.infradead.org;
-	Mon, 18 Dec 2023 17:29:07 +0000
+	Mon, 18 Dec 2023 18:24:44 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sin.source.kernel.org (Postfix) with ESMTP id D1CC3CE128C;
-	Mon, 18 Dec 2023 17:29:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E2BCC433C8;
-	Mon, 18 Dec 2023 17:29:02 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTP id D2EE360EDE;
+	Mon, 18 Dec 2023 18:24:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BDB5C433C8;
+	Mon, 18 Dec 2023 18:24:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1702920543;
-	bh=ynjI4k0Sr9W4fKkiz4LK5kOla2xoyYoQCxBA58AjXe0=;
+	s=korg; t=1702923877;
+	bh=657RT1T9y1phDXkS/PHN8nnyPlTK2iy7Gb6uK7ychM4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=E5k/M/cevF1JpfantAKOdadkXEaBzQr18LSpDNV+KkWjeJQm8Z7yGIwVUutpN0+rL
-	 pcbqzMYKUCvcgCG7a9tIXnzPdus2F24TETbxOjZBjGzBU11ltvt82zQI8o7IbNAxSN
-	 KMQRyPWltAyCd3lVkb18dI8lEhAg/vHV1St9gksw=
-Date: Mon, 18 Dec 2023 09:29:02 -0800
+	b=lcoClL5r5VFKM+Vwx2E8RTpZRVRehkx37EPGW7dnqKX0wceVFir7l7S4oxOh+3KWB
+	 TdQ+jFzYNIdNRFQ8cX69IusNvbaA/9i/lw3vCOct1gj8RbHp6NRhgv8bUNlh+9aRdH
+	 i7/a0+HnsVql6jO5M/f7JBSj1zX/vN7oCl6Iyz64=
+Date: Mon, 18 Dec 2023 10:24:36 -0800
 From: Andrew Morton <akpm@linux-foundation.org>
 To: Yuntao Wang <ytcoode@gmail.com>
 Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, x86@kernel.org,
  Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
  Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal
- <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, Hari Bathini
- <hbathini@linux.ibm.com>, Sean Christopherson <seanjc@google.com>, Takashi
- Iwai <tiwai@suse.de>
-Subject: Re: [PATCH 2/2] crash_core: fix out-of-bounds access check in
- crash_exclude_mem_range()
-Message-Id: <20231218092902.9fae480cfcad3874e9e7236f@linux-foundation.org>
-In-Reply-To: <20231218081915.24120-3-ytcoode@gmail.com>
-References: <20231218081915.24120-1-ytcoode@gmail.com>
-	<20231218081915.24120-3-ytcoode@gmail.com>
+ "H. Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>, Eric
+ Biederman <ebiederm@xmission.com>, Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v5 3/3] x86/kexec: use pr_err() instead of pr_debug()
+ when an error occurs
+Message-Id: <20231218102436.4378f51a36525ce770f6cd30@linux-foundation.org>
+In-Reply-To: <20231217033528.303333-4-ytcoode@gmail.com>
+References: <20231217033528.303333-1-ytcoode@gmail.com>
+	<20231217033528.303333-4-ytcoode@gmail.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231218_092906_618460_326A7FFC 
-X-CRM114-Status: GOOD (  10.54  )
+X-CRM114-CacheID: sfid-20231218_102443_350479_9D5D4877 
+X-CRM114-Status: GOOD (  13.25  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,16 +74,29 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, 18 Dec 2023 16:19:15 +0800 Yuntao Wang <ytcoode@gmail.com> wrote:
+On Sun, 17 Dec 2023 11:35:28 +0800 Yuntao Wang <ytcoode@gmail.com> wrote:
 
-> mem->nr_ranges represents the current number of elements stored in
-> the mem->ranges array, and mem->max_nr_ranges represents the maximum number
-> of elements that the mem->ranges array can hold. Therefore, the correct
-> array out-of-bounds check should be mem->nr_ranges >= mem->max_nr_ranges.
+> When an error is detected, use pr_err() instead of pr_debug() to output
+> log message.
 > 
+> In addition, remove the unnecessary return from set_page_address().
+> 
+> ...
+>
+> --- a/arch/x86/kernel/kexec-bzimage64.c
+> +++ b/arch/x86/kernel/kexec-bzimage64.c
+> @@ -424,7 +424,7 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+>  	 * command line. Make sure it does not overflow
+>  	 */
+>  	if (cmdline_len + MAX_ELFCOREHDR_STR_LEN > header->cmdline_size) {
+> -		pr_debug("Appending elfcorehdr=<addr> to command line exceeds maximum allowed length\n");
+> +		pr_err("Appending elfcorehdr=<addr> to command line exceeds maximum allowed length\n");
+>  		return ERR_PTR(-EINVAL);
+>  	}
 
-This does not apply after your own "crash_core: fix and simplify the
-logic of crash_exclude_mem_range()".  What should be done?
+https://lkml.kernel.org/r/20231213055747.61826-4-bhe@redhat.com has
+already changed this to call kexec_dprintk().  I'll skip this patch.
+
 
 _______________________________________________
 kexec mailing list
