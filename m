@@ -4,72 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A84F0C3DA6E
-	for <kexec@archiver.kernel.org>; Sun, 17 Dec 2023 11:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C6A7EC35274
+	for <kexec@archiver.kernel.org>; Mon, 18 Dec 2023 03:40:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=pgT28aAAnO0iqvtW/Uw+Gjc/yRkkOomGOahVMQhWtnI=; b=1KNL7Pgk9e/+uG
-	PfXiXd4XoMIcjDyHL8mLXRQ3Vvt0ol+mPDcHErrgjFv3226A7QXMiUbOMpMetNxcBRUfBaJScg1qt
-	X0xdQx4Lb3O4mYaQUok2BzffNO9//RXKDX1CRnhwf0uq5nR8TB3pite5Phjl1EQWFIxFQu7DIR8Ox
-	dT9OrYpfIXU8319j/XLcUfl0fj6xZxOxtne5jZW0O9IrbAoksDLksyafdNi1r0FQbLCyXgUvxGzfW
-	kMe7u1x8uBYaTlVqaDSI+Q2B1beVeZ2XAtxNGzqDWErL4r1YJ6RMslpC1Fav6iRpL68ryPTwDDa9D
-	75R/4QXp0nffIOarF4vw==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=bc/xrB53HiFtRqSJSkJXoev7OSkJc3HoaTw4iueBxqE=; b=36wYSNfB/7W7Th
+	9iodQYRLPbMWjnTpvvqr2oyU2H8u3zhUMIcIHrF28fr1ByvuYM9cQ/hlC9KUgVT2etM9ILIrt7xnJ
+	VlEtKG9LF66qjrZxQ2RiypRk9AkhO3Bk0TbBmbA6jUgMrJfHQfv5psWKFFRTLugrgFVWcLlUoi++3
+	bcrQSMX//8hgNfayvmVu6ZKGSRr3mbq2bqKO9EPNCEl6s/QEMe/Ny+ReWmYGiUkbI9f9ddTP3qcgX
+	6LYVs+R+qPmwj7E4lh7sOqTebHREouVkF8F+K44HtHrxhCVSeQBZnUXP/3vWdONNgy9NKwMI37MUv
+	QTSDTJVbTWjn52U9Go4g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rEpkN-007iWc-0t;
-	Sun, 17 Dec 2023 11:55:51 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1rF4Un-008zLY-27;
+	Mon, 18 Dec 2023 03:40:45 +0000
+Received: from mail-pl1-x631.google.com ([2607:f8b0:4864:20::631])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rEpkG-007iW9-3B
+	id 1rF4Uk-008zKV-2V
 	for kexec@lists.infradead.org;
-	Sun, 17 Dec 2023 11:55:46 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702814140;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lMhXOzCGjIkOyucikWchP2GXTVEI4ULzcQxVu60/41w=;
-	b=B6yrCVLDiV124vOTXIPp1ITiTq2+HDojnnaxCXqQSfwA5pbYF3FUQu2nSsPl83v14T22zt
-	9O9o77NwV4uRZ+VyxfzBAAqIp8m8RC2y+tLv3LUnH7xzl1Bw34keaWFKklPng2Ed2q0sNo
-	LqgTGHYxrWpJVA0QWxluTXxHJ1M3dwE=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-132-MKc1GYshNPKpSGAKpxKcsw-1; Sun,
- 17 Dec 2023 06:55:37 -0500
-X-MC-Unique: MKc1GYshNPKpSGAKpxKcsw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 62C291C05AA8;
-	Sun, 17 Dec 2023 11:55:36 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.38])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4E706C15968;
-	Sun, 17 Dec 2023 11:55:35 +0000 (UTC)
-Date: Sun, 17 Dec 2023 19:55:32 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Yuntao Wang <ytcoode@gmail.com>
-Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, x86@kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>,
-	Eric Biederman <ebiederm@xmission.com>
-Subject: Re: [PATCH v5 0/3] Some bug fixes and cleanups related to kexec
-Message-ID: <ZX7htAE5rQJpEBxu@MiWiFi-R3L-srv>
-References: <20231217033528.303333-1-ytcoode@gmail.com>
+	Mon, 18 Dec 2023 03:40:44 +0000
+Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1d04c097e34so19068215ad.0
+        for <kexec@lists.infradead.org>; Sun, 17 Dec 2023 19:40:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702870836; x=1703475636; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rz8IcWFPrYshTIpMuCdGWLpKzFo5rZN3OabmtrFosFs=;
+        b=XNq4M+HXQekommd6t6yng2NSIHQyypXflZeFVF/5P5zDxzQBK2WEg349WtLSTNfMbx
+         8iMFFOgurWu19jxwOhZz4KLY4XlAJq/3Hst7K+r/MMXY3i32+lT52hsA34TbHP1HzgfB
+         giX1Y6K1FMTXEHa1LKz6JPly/SsMWAo0wf1sduy9i1zWHt/+8Rafr/W7KL5ZyKeAEPjR
+         cDBYH1PKdiaF0mZIj7Qlz4xDgCcSvMUvF++UFMdFQi+VKTzZ4H5QiY9e6h0jOZ2nfsw2
+         YuvKeKOE2giJDkmMf3N7YqbA+94DvEEz6jknUyBI/sE8U1USfVfoDGremzDpv4G6teO5
+         pNDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702870836; x=1703475636;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Rz8IcWFPrYshTIpMuCdGWLpKzFo5rZN3OabmtrFosFs=;
+        b=nnrVveCn4jWVPE7lXA6xKrBP5/H3HgR4dJJWF/xPqH2nrId7wuaXeRz70oFEapbU2e
+         CyZAvihpRceL3yps6Egkx9IvUZpS5tbUaiPWsil1J0C7ms00BNkaYstI+NREZX48vP/3
+         43t+83YJ/gR6XydYTPjurP1VKFgWvZ4BRGpe03cEP3RIxtfpLhY/1xef9ZwqR6KfNtZa
+         mLQRxEgGM2usDHNRMPtiKw0Tu/KYbuVCBVzA+nrJGs3VM4DYckv6WTifgM6KV/SoD8wW
+         AqHodq5dmb0hLrhfVqpIyZk5JRZkiszOFGwrhWu0ZqgoyTDUtSLdNVMc0Vr2mDt1h2uO
+         RP3Q==
+X-Gm-Message-State: AOJu0Yzzj23NF5ETjG60R0YJPs4vZt+VI3cMF2AANcUcXoeWL9eHeo+/
+	rps1GKOn0EwBCM0tDKwDwhXtZ4rVIg==
+X-Google-Smtp-Source: AGHT+IFahCfvx1/CbJczzX01ofVsrnySeJPh7YvA2dXKNATCrPA4pKLR6p82T8cydA88fmMHdz/nhA==
+X-Received: by 2002:a17:903:32c5:b0:1d0:6ffd:6118 with SMTP id i5-20020a17090332c500b001d06ffd6118mr19113719plr.58.1702870835855;
+        Sun, 17 Dec 2023 19:40:35 -0800 (PST)
+Received: from piliu.users.ipa.redhat.com ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id x5-20020a1709029a4500b001d340c71cc8sm8557804plv.128.2023.12.17.19.40.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 Dec 2023 19:40:35 -0800 (PST)
+From: Pingfan Liu <kernelfans@gmail.com>
+To: kexec@lists.infradead.org,
+	linux-doc@vger.kernel.org
+Cc: Pingfan Liu <piliu@redhat.com>,
+	Baoquan He <bhe@redhat.com>,
+	Dave Young <dyoung@redhat.com>
+Subject: [PATCH] Documentation: kdump: Clarify the default size of memory reserved by crashkernel low
+Date: Mon, 18 Dec 2023 11:40:20 +0800
+Message-Id: <20231218034020.15341-1-kernelfans@gmail.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20231217033528.303333-1-ytcoode@gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231217_035545_118008_83D8FBEB 
-X-CRM114-Status: GOOD (  15.12  )
+X-CRM114-CacheID: sfid-20231217_194042_812851_2C42A048 
+X-CRM114-Status: GOOD (  10.10  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,33 +91,38 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 12/17/23 at 11:35am, Yuntao Wang wrote:
-> This series includes some bug fixes and cleanups for kexec.
-> 
-> This v5 series introduces no changes to any patches. I just reorganize the
-> patches and repost them.
+From: Pingfan Liu <piliu@redhat.com>
 
-LGTM, thx.
+The default size reserved for crashkernel=,low is decided by the macro
+DEFAULT_CRASH_KERNEL_LOW_SIZE, which is based on arch.
 
-Acked-by: Baoquan He <bhe@redhat.com>
+Signed-off-by: Pingfan Liu <piliu@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>
+To: kexec@lists.infradead.org
+To: linux-doc@vger.kernel.org
+---
+ Documentation/admin-guide/kdump/kdump.rst | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-> 
-> Yuntao Wang (3):
->   kexec: modify the meaning of the end parameter in
->     kimage_is_destination_range()
->   kexec_file: fix incorrect temp_start value in
->     locate_mem_hole_top_down()
->   x86/kexec: use pr_err() instead of pr_debug() when an error occurs
-> 
->  arch/x86/kernel/kexec-bzimage64.c | 2 +-
->  kernel/kexec_core.c               | 8 ++++----
->  kernel/kexec_file.c               | 4 ++--
->  mm/highmem.c                      | 2 --
->  4 files changed, 7 insertions(+), 9 deletions(-)
-> 
-> -- 
-> 2.43.0
-> 
+diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
+index 5762e7477a0c..a021ff155012 100644
+--- a/Documentation/admin-guide/kdump/kdump.rst
++++ b/Documentation/admin-guide/kdump/kdump.rst
+@@ -310,8 +310,9 @@ crashkernel syntax
+    region above 4G, low memory under 4G is needed in this case. There are
+    three ways to get low memory:
+ 
+-      1) Kernel will allocate at least 256M memory below 4G automatically
+-         if crashkernel=Y,low is not specified.
++      1) Kernel will allocate a chunk of default size memory, which is based on
++         architecture, below 4G automatically if crashkernel=Y,low is not
++         specified.
+       2) Let user specify low memory size instead.
+       3) Specified value 0 will disable low memory allocation::
+ 
+-- 
+2.31.1
 
 
 _______________________________________________
