@@ -4,68 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E2AEEC41535
-	for <kexec@archiver.kernel.org>; Tue, 19 Dec 2023 07:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 926E3C46CA2
+	for <kexec@archiver.kernel.org>; Tue, 19 Dec 2023 07:29:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=SMhDYgOt3biJO7aDsuJenXfNA75ez3FMezJYrkU7KdU=; b=Wd9P6CzyP4MXjU
-	FF/tY04BP06Zr96pBKRrbm2cTQSUvEAlMVwFkSZZkb3/M+Apid/OIBRgApMs1SAtgs3mwNgbDdFZ1
-	DQ1VRB5QQjxPpjYv4Ruq5vM7CYteF46yFK19EvwYOsVqMvQN7LHe5rtmn0ZFFUYCfge59GHtfmOd3
-	PcVeWLW1ftFiMc0MMCQ8Xv/TX1E0S5qeJ4Gg2oRK4NT+k1BsdX1LwyYEPXK4qJ2x+L6tuXsuQ9Kiu
-	hgPKiaM+n422v6fFkaHYF4fupEpjBMCoJ4GJFd83hqKLt1W1TxvHTLCKSXC6uO2ZZWAyVUXvnfrFc
-	yqY9XtG3BbNpA+gtfP1A==;
+	List-Owner; bh=U6fgw8jw5KacyyeLxPE2+rYSpv0V38vGbt3ABU3kVBM=; b=i3Qp4VCLqRMPfz
+	GHkdAArUe/NpQJvC20KuVWindOIkfID9yLJtR2membMSrx8IEB1FQvEgzuG7g08bDkpHeXc6SH531
+	8XDU+rwbvmwm6gLmk+uPt0SHVxzD0vbizBqtOC5oP8tfUX5mQCmvdt0E6t+Z5v0xgYamiEQyS2CNf
+	C+5Ve9oLkSef44Mb+hQzU502zN/bR3nqrhca6YoTdtaZcFixBC4c/mCDNSfUQloVPUFZLX1scPh6Y
+	g25CuxIVeMsSA4fj5pGIFemSIz+qAqfbiuvAnzS64onVoP7FnYZFcbio47LHEpnpwURAIbUisCqrw
+	pck7N9htDR2Swe64eJIQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rFUXJ-00D6Cs-09;
-	Tue, 19 Dec 2023 07:29:05 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1rFUXW-00D6Hv-3B;
+	Tue, 19 Dec 2023 07:29:18 +0000
+Received: from mail-oa1-x2a.google.com ([2001:4860:4864:20::2a])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rFUXG-00D6Aa-39
+	id 1rFUXV-00D6H1-0k
 	for kexec@lists.infradead.org;
-	Tue, 19 Dec 2023 07:29:04 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702970940;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=z41OPAeFuRVfVwpG8mOU7SweUlkIZGPKy5DQ+DlmDTM=;
-	b=YBHQqiyyiYK2aqpKEMwwMcbViZzgCVo8RR4t8gDhooLQcJcx4AazNrlu5fI4mgIdIy6wnm
-	wwMQry1ThxTOG5iG3N5YvBadsNaGmGKWT6EehyQ4GvhP5gQx2fBsH9DhpMXxVecIz7S6uU
-	9EXKRQ3rcBAeJLgfzIGwQLjwcso6tBM=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-407-GXz9a8nTNNqDb8SpWVPjkw-1; Tue, 19 Dec 2023 02:28:56 -0500
-X-MC-Unique: GXz9a8nTNNqDb8SpWVPjkw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B1E92848C02;
-	Tue, 19 Dec 2023 07:28:55 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.38])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 05E791121306;
-	Tue, 19 Dec 2023 07:28:54 +0000 (UTC)
-Date: Tue, 19 Dec 2023 15:28:51 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Pingfan Liu <kernelfans@gmail.com>
-Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
-	Pingfan Liu <piliu@redhat.com>, Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] Documentation: kdump: Clarify the default size of memory
- reserved by crashkernel low
-Message-ID: <ZYFGMxkjfN3BVUq5@MiWiFi-R3L-srv>
-References: <20231218034020.15341-1-kernelfans@gmail.com>
+	Tue, 19 Dec 2023 07:29:18 +0000
+Received: by mail-oa1-x2a.google.com with SMTP id 586e51a60fabf-20306782371so2482769fac.1
+        for <kexec@lists.infradead.org>; Mon, 18 Dec 2023 23:29:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702970955; x=1703575755; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zVJnoRpc0nLQgXbaa396BAC/JfAbiv/gDW/cLPNXvHA=;
+        b=MyoxoeZaDNsYMk5r+1DankB/4Q2/3JvZaapKhEotR2updvfiWB9dDf6lJqFaE6VVSQ
+         A1ubI7TT2l+AdjDSODXWL0kkc+f0IFDj1n4YVQydg19FJn4Z4CqTizVtbFrolZEEKyOQ
+         Aygs8mUMxCbXJuhsbLlt7QuYSD2tX/u019/Z9kjxP8qXLgmsE0by48FT2mX3osbbzwFb
+         5kvS7TtC4Sz358ZARyVdczlrzt+aqW7++v+/y3Nxh/VgkTe3cQK/Z2MpVGoXAge8cMGU
+         kqWgCRk9OisLIzRwHL4JnIaqH8RNuO9ijIzMmFzbUubkllO2IlQXWBKmToZ7EnQxrkIL
+         46Rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702970955; x=1703575755;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zVJnoRpc0nLQgXbaa396BAC/JfAbiv/gDW/cLPNXvHA=;
+        b=fuagDFJbUG1mItaq1TfZqWdN4rpUHsX9E01WHNp0uLylVXNZpeX07VYo9XXFeL/dwW
+         dzQi4O+aWPXp+BgM27EbsilW9k0HSQbSvlXlqWZwsZi5kXLItLdpK6/AlwQjtNwTpIUq
+         IJtUjRpYPjh4tVxRuXT3qDTBauIyg6wydvDaF8wqcDRKxffCmRoPTz9kagAak6MSdYSy
+         hgqiK3DkGOo8Hp/YG6w0gzghFpCZFGxB2GLkrJQNE8w8INTfLe9m07ptsxf1PHDy1lQk
+         6gMr4bu8fWlu72BMx++KrZRpp0rJBSAiVlUq1VSTxdCucoK4h9Z7haBGcxW7a4wYSyR2
+         B6+w==
+X-Gm-Message-State: AOJu0YxaZ7s24w+1KZWhvLlCRofXCR7byoknG/nEF9Jq4DITguu1EqH9
+	JJCGYU/Uaf/551BsDEf/BJw=
+X-Google-Smtp-Source: AGHT+IHHdMs06uEO4+q/2bAZlRhxq6UUVNPFy9zVB4+gT6OvgQtBr2ly3NWW2ZDs89vzBi69wIq06w==
+X-Received: by 2002:a05:6870:ac1e:b0:203:b0e1:eb7b with SMTP id kw30-20020a056870ac1e00b00203b0e1eb7bmr4201311oab.29.1702970955215;
+        Mon, 18 Dec 2023 23:29:15 -0800 (PST)
+Received: from code.. ([144.202.108.46])
+        by smtp.gmail.com with ESMTPSA id a9-20020a654189000000b005c683937cc5sm16388600pgq.44.2023.12.18.23.29.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Dec 2023 23:29:15 -0800 (PST)
+From: Yuntao Wang <ytcoode@gmail.com>
+To: akpm@linux-foundation.org
+Cc: bhe@redhat.com,
+	bp@alien8.de,
+	corbet@lwn.net,
+	dave.hansen@linux.intel.com,
+	ebiederm@xmission.com,
+	hpa@zytor.com,
+	kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	mingo@redhat.com,
+	tglx@linutronix.de,
+	x86@kernel.org,
+	ytcoode@gmail.com
+Subject: [PATCH] x86/kexec: use pr_err() instead of kexec_dprintk() when an error occurs
+Date: Tue, 19 Dec 2023 15:29:01 +0800
+Message-ID: <20231219072902.90104-1-ytcoode@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20231218102436.4378f51a36525ce770f6cd30@linux-foundation.org>
+References: <20231218102436.4378f51a36525ce770f6cd30@linux-foundation.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20231218034020.15341-1-kernelfans@gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231218_232903_082369_B9B4A8A9 
-X-CRM114-Status: GOOD (  17.08  )
+X-CRM114-CacheID: sfid-20231218_232917_270007_B5C9C243 
+X-CRM114-Status: GOOD (  11.27  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,45 +102,45 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 12/18/23 at 11:40am, Pingfan Liu wrote:
-> From: Pingfan Liu <piliu@redhat.com>
-> 
-> The default size reserved for crashkernel=,low is decided by the macro
-> DEFAULT_CRASH_KERNEL_LOW_SIZE, which is based on arch.
-> 
-> Signed-off-by: Pingfan Liu <piliu@redhat.com>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Dave Young <dyoung@redhat.com>
-> To: kexec@lists.infradead.org
-> To: linux-doc@vger.kernel.org
-> ---
->  Documentation/admin-guide/kdump/kdump.rst | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
-> index 5762e7477a0c..a021ff155012 100644
-> --- a/Documentation/admin-guide/kdump/kdump.rst
-> +++ b/Documentation/admin-guide/kdump/kdump.rst
-> @@ -310,8 +310,9 @@ crashkernel syntax
->     region above 4G, low memory under 4G is needed in this case. There are
->     three ways to get low memory:
->  
-> -      1) Kernel will allocate at least 256M memory below 4G automatically
-> -         if crashkernel=Y,low is not specified.
-> +      1) Kernel will allocate a chunk of default size memory, which is based on
-> +         architecture, below 4G automatically if crashkernel=Y,low is not
-> +         specified.
+When an error is detected, use pr_err() instead of kexec_dprintk() to
+output log message.
 
-Good catch, thx.
+In addition, remove the unnecessary return from set_page_address().
 
-Acked-by: Baoquan He <bhe@redhat.com>
+Signed-off-by: Yuntao Wang <ytcoode@gmail.com>
+---
+ arch/x86/kernel/kexec-bzimage64.c | 2 +-
+ mm/highmem.c                      | 2 --
+ 2 files changed, 1 insertion(+), 3 deletions(-)
 
->        2) Let user specify low memory size instead.
->        3) Specified value 0 will disable low memory allocation::
->  
-> -- 
-> 2.31.1
-> 
+diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+index e9ae0eac6bf9..4a77d5dd4bce 100644
+--- a/arch/x86/kernel/kexec-bzimage64.c
++++ b/arch/x86/kernel/kexec-bzimage64.c
+@@ -429,7 +429,7 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+ 	 * command line. Make sure it does not overflow
+ 	 */
+ 	if (cmdline_len + MAX_ELFCOREHDR_STR_LEN > header->cmdline_size) {
+-		kexec_dprintk("Appending elfcorehdr=<addr> to command line exceeds maximum allowed length\n");
++		pr_err("Appending elfcorehdr=<addr> to command line exceeds maximum allowed length\n");
+ 		return ERR_PTR(-EINVAL);
+ 	}
+ 
+diff --git a/mm/highmem.c b/mm/highmem.c
+index e19269093a93..bd48ba445dd4 100644
+--- a/mm/highmem.c
++++ b/mm/highmem.c
+@@ -799,8 +799,6 @@ void set_page_address(struct page *page, void *virtual)
+ 		}
+ 		spin_unlock_irqrestore(&pas->lock, flags);
+ 	}
+-
+-	return;
+ }
+ 
+ void __init page_address_init(void)
+-- 
+2.43.0
 
 
 _______________________________________________
