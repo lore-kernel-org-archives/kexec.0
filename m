@@ -4,91 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 86A82C41535
-	for <kexec@archiver.kernel.org>; Tue, 19 Dec 2023 16:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 38202C41535
+	for <kexec@archiver.kernel.org>; Tue, 19 Dec 2023 20:22:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Mime-Version:References:In-Reply-To:
+	Message-Id:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=jXuYVsArJemVoI9j5GY6+wj8s1+wn3nhtq74dAnFj1Q=; b=z4NPjQNU3TFQbR
-	FS8tywv3vlqc6F8sGbvSeN9OzYwOcZ8Sk6LsoeNu97ayoQiXyw4qxhXfOty0LfNLj2eHMPLouHH0P
-	3yyQm3JDCcrxQqX3g/eRVv6IxVF8NY01a3afcj7n6ljD3Lg2+PI3zWQ/Bvb07htgtgHj2yuZ69yHS
-	JakQWz9lYyV4xwi3A450qAK6VDcTGkqqEKkmtxN+guyIejiI4F5ewhKK8cJevL1y6IPtTO8gcR5OL
-	I78x+cmK6e/QOJxak3CdDnEKYm50IjdjWv3h435fJaWeOLAnao29tD0snQwOH+ScOhkJi7LO6+zQP
-	nAlCL3rxFHIRAtbO44Cg==;
+	List-Owner; bh=YX3wJucfzNjPosCl0ob6oZYtXrO7c5psTH8+D214gs8=; b=B58wTN2CicKXpP
+	Q4gDKS4jgTdWN4hEaXO5kLY0bO2yv/gpL7LQrqMAp7+bqMjj8kCxtvawpS+tHAT7ZlSC4zB8Ogp9j
+	aAVI/JNmeuOLrOlW9Ip/VrCu57coibiUN7n0uDP/FSKES4S76ffxKaZHEOxFQZyulJYTvvcdIh5F8
+	ElkarbjfEosEy9Sz7HtjFY45uVt01Z4lQ2WY83N+2YhxIzbHc4p38R70E2We0vcVYvYaN2EpfkhRu
+	HanVZGhXThjyMI6wwaLl12fQetaEy1o7r8mB9vWj1rX2/owjUxCq75/snoQPNcDL2X5I1H4LK3+nN
+	QQukZIdGHNRtua9DivnQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rFd3E-00EiRR-0o;
-	Tue, 19 Dec 2023 16:34:36 +0000
-Received: from mail-pf1-x42e.google.com ([2607:f8b0:4864:20::42e])
+	id 1rFgbH-00FOIm-2T;
+	Tue, 19 Dec 2023 20:21:59 +0000
+Received: from sin.source.kernel.org ([2604:1380:40e1:4800::1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rFd3B-00EiQU-1J
+	id 1rFgbE-00FOI7-28
 	for kexec@lists.infradead.org;
-	Tue, 19 Dec 2023 16:34:34 +0000
-Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-6d7e67d31caso1495891b3a.1
-        for <kexec@lists.infradead.org>; Tue, 19 Dec 2023 08:34:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703003671; x=1703608471; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HTbe0FFkiWpC+TW0jPOJbtW/DMOk6SlTqa5fmcQzYNc=;
-        b=eI+5uc+qnr+D7UVEwo0MP+sSDuMKJ9u8iDofozBKO0sYs9nUkVZ15abl8/rJNQqcny
-         gpueUeEu+c0pD+P4uwaxdoR1xQv90/9HhOaqqFolFzsYerLPOGIHSkT8xMQQJeuN+Y4A
-         h1Vp0DSjV+LQ8fg3nEJqGIzdgkCdoJLjI2tCSoBxTPUsAObmRS0gbN/+fdpYIJbQiKGG
-         d/1k/v8jh383uLmT42ehet7vdt+pOo2nXkylZ7wIla02L2zrwgZZH/tWWm+ij6MFgzIX
-         Z6Js1uXCFTWO/scyKgCR26IC6eaPM5yoGynqpij379kz+V1s4NPpg8wiHplqeSNQaJOE
-         n2+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703003671; x=1703608471;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HTbe0FFkiWpC+TW0jPOJbtW/DMOk6SlTqa5fmcQzYNc=;
-        b=AhWFXvgOnJ2Dg8GD975DLIt2Sl2HWR9u3uBjvvt92LzMEL6RZ/Kb/4YbmS+Se67s00
-         Ldg/JZhQlWrN0pK1P7TE/kvv8qnYiBkmSgezhOYT4nZBX0jBOBYUqKgf4YyISkYmxs+/
-         aWsb7VcEFCIMDYykYM1R08Evejr2/rJdnQSquaD4xHyxZqs288Fq9IjSW0Zvc1La5IJ1
-         rrU50uuMfeWoxhIaOOZarSYgANRbGv8dAC51FXD4lnsc8CiiCvXTHjOhugqzsjBgzSX4
-         UdyOj1CBjzr8jRddt/dcQAOCJYPhU8Yq84EmtUyn3rkMiQfuu3k0hFCKlAU4vUgekBOM
-         DdOw==
-X-Gm-Message-State: AOJu0YwMc0DMEN68xmj5aFyjMGAJP++p4JBSg+VbWiBobyP9iGDVstWq
-	GgGnEnbOphaQpRAlN1jlLJc=
-X-Google-Smtp-Source: AGHT+IFby3sDY/fW2pan071Ch5YMA1tZy5GS/12pC3aFAT/8648QVZ7U1Wryd5SoCYIo2/SN0J3ttg==
-X-Received: by 2002:a05:6a20:9149:b0:18c:a9d3:4f96 with SMTP id x9-20020a056a20914900b0018ca9d34f96mr10624117pzc.32.1703003671264;
-        Tue, 19 Dec 2023 08:34:31 -0800 (PST)
-Received: from code.. ([144.202.108.46])
-        by smtp.gmail.com with ESMTPSA id s9-20020a056a00178900b006ce789d8022sm20232551pfg.59.2023.12.19.08.34.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Dec 2023 08:34:30 -0800 (PST)
-From: Yuntao Wang <ytcoode@gmail.com>
-To: akpm@linux-foundation.org
-Cc: bhe@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	dyoung@redhat.com,
-	hbathini@linux.ibm.com,
-	hpa@zytor.com,
-	kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	mingo@redhat.com,
-	seanjc@google.com,
-	tglx@linutronix.de,
-	tiwai@suse.de,
-	vgoyal@redhat.com,
-	x86@kernel.org,
-	ytcoode@gmail.com
-Subject: [PATCH] crash_core: optimize crash_exclude_mem_range()
-Date: Wed, 20 Dec 2023 00:34:18 +0800
-Message-ID: <20231219163418.108591-1-ytcoode@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231218092902.9fae480cfcad3874e9e7236f@linux-foundation.org>
-References: <20231218092902.9fae480cfcad3874e9e7236f@linux-foundation.org>
-MIME-Version: 1.0
+	Tue, 19 Dec 2023 20:21:58 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sin.source.kernel.org (Postfix) with ESMTP id BB524CE181A;
+	Tue, 19 Dec 2023 20:21:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EC87C433C8;
+	Tue, 19 Dec 2023 20:21:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1703017313;
+	bh=LTznM+nJnvfhzKJWRfp37Jsxl2aZjoXM7HdJ4keOzxE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=PFIpb+JI2WpqXlzcb8/eNuVhDXIZHv61W1U1GOkLLqBTA7ZwRlYwkKSx4lNBnz8zc
+	 K+J1kmoB0HqliqBhULCX6Ti76mZEnAhypX2buDp6tQWqZ9IDbQfIXB2WO1k9sM8tsx
+	 sHX2EW+qrG7XZIcF52/aPHU4raQG/PPIsXuBaWI0=
+Date: Tue, 19 Dec 2023 12:21:51 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Yuntao Wang <ytcoode@gmail.com>
+Cc: bhe@redhat.com, bp@alien8.de, corbet@lwn.net,
+ dave.hansen@linux.intel.com, ebiederm@xmission.com, hpa@zytor.com,
+ kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com,
+ tglx@linutronix.de, x86@kernel.org
+Subject: Re: [PATCH] x86/kexec: use pr_err() instead of kexec_dprintk() when
+ an error occurs
+Message-Id: <20231219122151.aa4ae562537abf74067588fe@linux-foundation.org>
+In-Reply-To: <20231219072902.90104-1-ytcoode@gmail.com>
+References: <20231218102436.4378f51a36525ce770f6cd30@linux-foundation.org>
+	<20231219072902.90104-1-ytcoode@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231219_083433_440090_00C68DAA 
-X-CRM114-Status: GOOD (  11.22  )
+X-CRM114-CacheID: sfid-20231219_122156_892504_D9CE609D 
+X-CRM114-Status: GOOD (  16.63  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -105,41 +73,50 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Because memory ranges in mem->ranges are stored in ascending order, when we
-detect `p_end < start`, we can break the for loop early, as the subsequent
-memory ranges must also be outside the range we are looking for.
+On Tue, 19 Dec 2023 15:29:01 +0800 Yuntao Wang <ytcoode@gmail.com> wrote:
 
-Signed-off-by: Yuntao Wang <ytcoode@gmail.com>
----
-Hi Andrew,
+> When an error is detected, use pr_err() instead of kexec_dprintk() to
+> output log message.
+>
+> In addition, remove the unnecessary return from set_page_address().
 
-Patch "[PATCH 2/2] crash_core: fix out-of-bounds access check in
-crash_exclude_mem_range()" can be ignored, use this patch instead.
+The above describes what the code does, which is already quite clear
+from looking at the code.
 
- kernel/crash_core.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Please write changelogs and code comments which describe *why* the code
+does something, rather than *what* it does.
 
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 9a219a918638..d425c4a106cd 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -575,9 +575,12 @@ int crash_exclude_mem_range(struct crash_mem *mem,
- 		p_start = mstart;
- 		p_end = mend;
- 
--		if (p_start > end || p_end < start)
-+		if (p_start > end)
- 			continue;
- 
-+		if (p_end < start)
-+			break;
-+
- 		/* Truncate any area outside of range */
- 		if (p_start < start)
- 			p_start = start;
--- 
-2.43.0
+>
+>
+> --- a/arch/x86/kernel/kexec-bzimage64.c
+> +++ b/arch/x86/kernel/kexec-bzimage64.c
+> @@ -429,7 +429,7 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+>  	 * command line. Make sure it does not overflow
+>  	 */
+>  	if (cmdline_len + MAX_ELFCOREHDR_STR_LEN > header->cmdline_size) {
+> -		kexec_dprintk("Appending elfcorehdr=<addr> to command line exceeds maximum allowed length\n");
+> +		pr_err("Appending elfcorehdr=<addr> to command line exceeds maximum allowed length\n");
 
+ie, what are the reasons for this change?
+
+>  		return ERR_PTR(-EINVAL);
+>  	}
+>  
+> diff --git a/mm/highmem.c b/mm/highmem.c
+> index e19269093a93..bd48ba445dd4 100644
+> --- a/mm/highmem.c
+> +++ b/mm/highmem.c
+> @@ -799,8 +799,6 @@ void set_page_address(struct page *page, void *virtual)
+>  		}
+>  		spin_unlock_irqrestore(&pas->lock, flags);
+>  	}
+> -
+> -	return;
+>  }
+>  
+>  void __init page_address_init(void)
+> -- 
+> 2.43.0
 
 _______________________________________________
 kexec mailing list
