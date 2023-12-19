@@ -4,86 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 58481C41535
-	for <kexec@archiver.kernel.org>; Tue, 19 Dec 2023 08:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7E355C41535
+	for <kexec@archiver.kernel.org>; Tue, 19 Dec 2023 08:56:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=+RqSaWumes1jh9WEIYCpWMqlX5A9i8Z+KbhK6Xr6dOU=; b=RxPFUZWeHw8IrF
-	FeR2YZhpHhEWrlcXYRkGRB2nijGalbNgtbSGtjv0WPwURvDVRZnaoOdivr6bH5ShriwaAs3d84kNZ
-	c5CvJjtkBW6J3ssJgTeezoKacEAORts+O2clfoBMic57Gj9s1u+/Rq9rNRB8wgmr+kP0efMY76KM4
-	vF+3N3x9PbLBQle6wr70b58SxnWmPBnJtzS0BNdbzHfX+99DwVA2DyArtRj1UQdcazSkeAzoO+NbH
-	vvV7uHLSuNntWw10nWz91sQaZHGIDZ4DSCHXOPE5/NRTrzDUoTUNyVymrE4zNZEVBbKMLim4PPe6i
-	K8zD+hgXqjZIhB9nJERQ==;
+	List-Owner; bh=PjgI++9oARTn0bli2yS/F/YPec66N2kUu8LrgIZFhw8=; b=mc35aScl3trRQt
+	w+IUgrJI0BlBxrSN1lbNdT4NiBcD7H1Aa8QN0RPTZ+pVmnys4hyFc1BsUvvm0KVPqADaAM5Tnnely
+	6iMU0pHPoubXwpK3oS3jeKzKsv96xe/lCrlDVxpjatTAVOugQ5JKheCP7+A+YaYwxxWFnPG12qBHN
+	6IYASCWNJNDJkDlnh/UNt6yGuaeyAGDrYdA2nLqCpQjqoGptQcAt05DVF+xcm0sz7ZzKqBTqlkXj+
+	lqtSq+akiGGGN0/AVVTeztrBGB2FuEAiUeP8wzNVpb+sqNZaVHQHOslw79Px6UKz38bVCnQ9C/xBL
+	S/HQICtD42E9sqeE1Ljg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rFVR9-00DJ3m-3D;
-	Tue, 19 Dec 2023 08:26:48 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1rFVu1-00DNSO-0v;
+	Tue, 19 Dec 2023 08:56:37 +0000
+Received: from mail-m17237.xmail.ntesmail.com ([45.195.17.237])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rFVR6-00DJ2L-22
+	id 1rFVtw-00DNRr-39
 	for kexec@lists.infradead.org;
-	Tue, 19 Dec 2023 08:26:47 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702974402;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=td3C4F14eqefor6PZNRVtU0ftiPg4SDbdyzMDoGzJzM=;
-	b=DYaQ6wNMHcbJ+MoD8n2CQ3AGK1oWCXW9CbUR2GgT0TXferx74enmGr0+IxUqHSbqMQP0bM
-	5hgZesj8IRh58fAGXuTFsduX4U5rDtROV/VkZ1kASw2EhBCMd8c3NsQCSPWK/yyJvcfpyU
-	Zvr2goWUjJ+fo822rUq64HoQFOZKPmY=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-655-3xfZhagFNXmOmrFsiCoxtA-1; Tue, 19 Dec 2023 03:26:35 -0500
-X-MC-Unique: 3xfZhagFNXmOmrFsiCoxtA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C8EDC185A78A;
-	Tue, 19 Dec 2023 08:26:34 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.38])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id AFAB73C27;
-	Tue, 19 Dec 2023 08:26:33 +0000 (UTC)
-Date: Tue, 19 Dec 2023 16:26:30 +0800
-From: "bhe@redhat.com" <bhe@redhat.com>
-To: "Gowans, James" <jgowans@amazon.com>
-Cc: "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-	"maz@kernel.org" <maz@kernel.org>,
-	"tony.luck@intel.com" <tony.luck@intel.com>,
-	"sre@kernel.org" <sre@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"seanjc@google.com" <seanjc@google.com>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"pbonzini@redhat.com" <pbonzini@redhat.com>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	"arnd@arndb.de" <arnd@arndb.de>, "wens@csie.org" <wens@csie.org>,
-	"ebiederm@xmission.com" <ebiederm@xmission.com>,
-	=?iso-8859-1?Q?Sch=F6nherr=2C_Jan_H=2E?= <jschoenh@amazon.de>,
-	"Graf (AWS), Alexander" <graf@amazon.de>,
-	"orsonzhai@gmail.com" <orsonzhai@gmail.com>,
-	"bp@alien8.de" <bp@alien8.de>,
-	"samuel@sholland.org" <samuel@sholland.org>,
-	"pavel@ucw.cz" <pavel@ucw.cz>,
-	"jernej.skrabec@gmail.com" <jernej.skrabec@gmail.com>
-Subject: Re: [PATCH] kexec: do syscore_shutdown() in kernel_kexec
-Message-ID: <ZYFTtubWqPb/n8tc@MiWiFi-R3L-srv>
-References: <20231213064004.2419447-1-jgowans@amazon.com>
- <ZYEafpms++a3a8ch@MiWiFi-R3L-srv>
- <9ffa2c4d3e808feb2afa6f02f4afabf1cd674516.camel@amazon.com>
+	Tue, 19 Dec 2023 08:56:35 +0000
+Received: from [10.9.0.234] (unknown [211.103.144.18])
+	by smtp.qiye.163.com (Hmail) with ESMTPA id 32DC6260110;
+	Tue, 19 Dec 2023 16:55:16 +0800 (CST)
+Message-ID: <3765549d-892e-4102-9b56-9add1d0a8089@easystack.cn>
+Date: Tue, 19 Dec 2023 16:55:16 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <9ffa2c4d3e808feb2afa6f02f4afabf1cd674516.camel@amazon.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] kexec: avoid out of bounds in crash_exclude_mem_range()
+Content-Language: en-US
+To: Yuntao Wang <ytcoode@gmail.com>
+Cc: bhe@redhat.com, dyoung@redhat.com, kexec@lists.infradead.org,
+ linux-kernel@vger.kernel.org, vgoyal@redhat.com
+References: <c797bdde-b5a5-4b2b-9106-c1386a0e7516@easystack.cn>
+ <20231219052955.40414-1-ytcoode@gmail.com>
+From: fuqiang wang <fuqiang.wang@easystack.cn>
+In-Reply-To: <20231219052955.40414-1-ytcoode@gmail.com>
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVlDSUJLVk5JSEsaSx5LSEJOH1UZERMWGhIXJBQOD1
+	lXWRgSC1lBWUlKSlVKS0hVSk9PVUpDWVdZFhoPEhUdFFlBWU9LSFVKTU9JTE5VSktLVUpCS0tZBg
+	++
+X-HM-Tid: 0a8c81495d980276kunm32dc6260110
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mi46Hhw5LjEwCQIIGU4uTEou
+	Vj0KFBxVSlVKTEtJQkxNSkpCT09DVTMWGhIXVR0OChIaFRxVDBoVHDseGggCCA8aGBBVGBVFWVdZ
+	EgtZQVlJSkpVSktIVUpPT1VKQ1lXWQgBWUFOS0hDNwY+
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231219_002645_886467_AE755CC0 
-X-CRM114-Status: GOOD (  33.12  )
+X-CRM114-CacheID: sfid-20231219_005633_256324_531A0AB4 
+X-CRM114-Status: GOOD (  23.32  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -95,96 +66,76 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 12/19/23 at 07:41am, Gowans, James wrote:
-> On Tue, 2023-12-19 at 12:22 +0800, Baoquan He wrote:
-> > Add Andrew to CC as Andrew helps to pick kexec/kdump patches.
-> 
-> Ah, thanks, I didn't realise that Andrew pulls in the kexec patches.
-> > 
-> > On 12/13/23 at 08:40am, James Gowans wrote:
-> > ......
-> > > This has been tested by doing a kexec on x86_64 and aarch64.
-> > 
-> > Hi James,
-> > 
-> > Thanks for this great patch. My colleagues have opened bug in rhel to
-> > track this and try to veryfy this patch. However, they can't reproduce
-> > the issue this patch is fixing. Could you tell more about where and how
-> > to reproduce so that we can be aware of it better? Thanks in advance.
-> 
-> Sure! The TL;DR is: run a VMX (Intel x86) KVM VM on Linux v6.4+ and do a
-> kexec while the  KVM VM is still running. Before this patch the system
-> will triple fault.
-
-Thanks a lot for these details, I will forward this to our QE to try.
-
-> 
-> In more detail:
-> Run a bare metal host on a modern Intel CPU with VMX support. The kernel
-> I was using was 6.7.0-rc5+.
-> You can totally do this with a QEMU "host" as well, btw, that's how I
-> did the debugging and attached GDB to it to figure out what was up.
-> 
-> If you want a virtual "host" launch with:
-> 
-> -cpu host -M q35,kernel-irqchip=split,accel=kvm -enable-kvm
-> 
-> Launch a KVM guest VM, eg:
-> 
-> qemu-system-x86_64 \
->   -enable-kvm \
->   -cdrom alpine-virt-3.19.0-x86_64.iso \
->   -nodefaults -nographic -M q35 \
->   -serial mon:stdio
-> 
-> While the guest VM is *still running* do a kexec on the host, eg:
-> 
-> kexec -l --reuse-cmdline --initrd=config-6.7.0-rc5+ vmlinuz-6.7.0-rc5+ && \
->   kexec -e
-> 
-> The kexec can be to anything, but I generally just kexec to the same
-> kernel/ramdisk as is currently running. Ie: same-version kexec.
-> 
-> Before this patch the kexec will get stuck, after this the kexec will go
-> smoothly and the system will end up in the new kernel in a few seconds.
-> 
-> I hope those steps are clear and you can repro this?
-> 
-> BTW, the reason that it's important for the KVM VM to still be running
-> when the host does the kexec is because KVM internally maintains a usage
-> counter and will disable virtualisation once all VMs have been
-> terminated, via:
-> 
-> __fput(kvm_fd)
->   kvm_vm_release
->     kvm_destroy_vm
->       hardware_disable_all
->         hardware_disable_all_nolock
->           kvm_usage_count--;
->           if (!kvm_usage_count)
->             on_each_cpu(hardware_disable_nolock, NULL, 1);
-> 
-> So if all KVM fds are closed then kexec will work because VMXE is
-> cleared on all CPUs when the last VM is destroyed. If the KVM fds are
-> still open (ie: QEMU process still exists) then the issue manifests.  It
-> sounds nasty to do a kexec while QEMU processes are still around but
-> this is a perfectly normal flow for live update:
-> 1. Pause and Serialise VM state
-> 2. kexec
-> 3. deserialise and resume VMs.
-> In that flow there's no need to actually kill the QEMU process, as long
-> as the VM is *paused* and has been serialised we can happily kexec.
-> 
-> JG
-> 
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+CuWcqCAyMDIzLzEyLzE5IDEzOjI5LCBZdW50YW8gV2FuZyDlhpnpgZM6Cj4gT24gVHVlLCAxOSBE
+ZWMgMjAyMyAxMTo1MDozMiArMDgwMCwgZnVxaWFuZyB3YW5nIDxmdXFpYW5nLndhbmdAZWFzeXN0
+YWNrLmNuPiB3cm90ZToKPj4g5ZyoIDIwMjMvMTIvMTkgMTA6NDcsIFl1bnRhbyBXYW5nIOWGmemB
+kzoKPj4KPj4+IEhpIGZ1cWlhbmcsCj4+Pgo+Pj4gWWVzdGVyZGF5LCBJIHBvc3RlZCB0d28gcGF0
+Y2hlcyB0aGF0IGhhcHBlbiB0byBhZGRyZXNzIHRoZSBidWdzIHlvdSBhbiBCYW9xdWFuCj4+PiBh
+cmUgY3VycmVudGx5IGRpc2N1c3NpbmcgaGVyZSwgSSB3YXNuJ3QgYXdhcmUgdGhhdCB5b3UgYm90
+aCB3ZXJlIGFsc28gd29ya2luZwo+Pj4gb24gZml4aW5nIHRoZXNlIGlzc3Vlcy4KPj4+Cj4+PiBC
+YW9xdWFuIHN1Z2dlc3RlZCBJIHRhbGsgdG8geW91IGFib3V0IGl0Lgo+Pj4KPj4+IElmIHlvdSdy
+ZSBpbnRlcmVzdGVkLCB5b3UgY2FuIHRha2UgYSBsb29rIGF0IG15IHBhdGNoZXMgYW5kIHJldmll
+dyB0aGVtIHRvIHNlZQo+Pj4gaWYgdGhlcmUgYXJlIGFueSBpc3N1ZXMuIElmIGV2ZXJ5dGhpbmcg
+aXMgZmluZSwgYW5kIGlmIHlvdSdyZSB3aWxsaW5nLCB5b3UgY2FuCj4+PiBhbHNvIGFkZCBhICdS
+ZXZpZXdlZC1ieScgdGFnIHRoZXJlLgo+Pj4KPj4+IFRoZSBmb2xsb3dpbmcgbGluayBpcyBmb3Ig
+dGhlIHR3byBwYXRjaGVzIEkgcG9zdGVkIHllc3RlcmRheToKPj4+Cj4+PiBodHRwczovL2xvcmUu
+a2VybmVsLm9yZy9sa21sLzIwMjMxMjE4MDgxOTE1LjI0MTIwLTMteXRjb29kZUBnbWFpbC5jb20v
+dC8jdQo+Pj4KPj4+IFNpbmNlcmVseSwKPj4+IFl1bnRhbwo+PiBIaSBZdW50YW8sCj4+Cj4+IEkn
+bSBnbGFkIHlvdSd2ZSBhbHNvIG5vdGljZWQgdGhpcyBpc3N1ZS4gQnV0IEknbSBzb3JyeSwgSSB3
+YW50IHRvIHNvbHZlIHRoaXMKPj4gcHJvYmxlbSBteXNlbGYgYmVjYXVzZSB0aGlzIGlzIG15IGZp
+cnN0IHRpbWUgcG9zdGluZyBhIHBhdGNoIGluIHRoZSBjb21tdW5pdHksCj4+IGFuZCBJIGNoZXJp
+c2ggdGhpcyBvcHBvcnR1bml0eSB2ZXJ5IG11Y2guCj4gSSBjYW4gdHJ1bHkgdW5kZXJzdGFuZCB5
+b3VyIGZlZWxpbmdzIGJlY2F1c2UgSSBzdGlsbCByZW1lbWJlciBob3cgdGhyaWxsZWQgSQo+IHdh
+cyB3aGVuIG15IGZpcnN0IHBhdGNoIGdvdCBtZXJnZWQuIFNvIGtlZXAgaXQgdXAhCgpIaSBZdW50
+YW8sCgpUaGFua3MgZm9yIHlvdXIgdW5kZXJzdGFuZGluZyBhbmQgZW5jb3VyYWdlLiA6KQoKPj4g
+SSBoYXZlIGNhcmVmdWxseSByZXZpZXdlZCB5b3VyIHBhdGNoLiBUaGVyZSBpcyBzb21lIGNoYW5n
+ZXMgd2hlcmUgbXkgdmlld3MgZGlmZmVyCj4+IGZyb20geW91cnM6Cj4+IGRpZmYgLS1naXQgYS9h
+cmNoL3g4Ni9rZXJuZWwvY3Jhc2guYyBiL2FyY2gveDg2L2tlcm5lbC9jcmFzaC5jCj4+IGluZGV4
+IGM5MmQ4ODY4MGRiZi4uM2JlNDZmNGI0NDFlIDEwMDY0NAo+PiAtLS0gYS9hcmNoL3g4Ni9rZXJu
+ZWwvY3Jhc2guYwo+PiArKysgYi9hcmNoL3g4Ni9rZXJuZWwvY3Jhc2guYwo+PiBAQCAtMjgyLDEw
+ICsyODIsNiBAQCBpbnQgY3Jhc2hfc2V0dXBfbWVtbWFwX2VudHJpZXMoc3RydWN0IGtpbWFnZSAq
+aW1hZ2UsIHN0cnVjdCBib290X3BhcmFtcyAqcGFyYW1zKQo+PiAgICAgICAgc3RydWN0IGNyYXNo
+X21lbW1hcF9kYXRhIGNtZDsKPj4gICAgICAgIHN0cnVjdCBjcmFzaF9tZW0gKmNtZW07Cj4+Cj4+
+IC0gICAgY21lbSA9IHZ6YWxsb2Moc3RydWN0X3NpemUoY21lbSwgcmFuZ2VzLCAxKSk7Cj4+IC0g
+ICAgaWYgKCFjbWVtKQo+PiAtICAgICAgICByZXR1cm4gLUVOT01FTTsKPj4gLQo+PiAgICAgICAg
+bWVtc2V0KCZjbWQsIDAsIHNpemVvZihzdHJ1Y3QgY3Jhc2hfbWVtbWFwX2RhdGEpKTsKPj4gICAg
+ICAgIGNtZC5wYXJhbXMgPSBwYXJhbXM7Cj4+Cj4+IEBAIC0zMjEsNiArMzE3LDExIEBAIGludCBj
+cmFzaF9zZXR1cF9tZW1tYXBfZW50cmllcyhzdHJ1Y3Qga2ltYWdlICppbWFnZSwgc3RydWN0IGJv
+b3RfcGFyYW1zICpwYXJhbXMpCj4+ICAgICAgICB9Cj4+Cj4+ICAgICAgICAvKiBFeGNsdWRlIHNv
+bWUgcmFuZ2VzIGZyb20gY3Jhc2hrX3JlcyBhbmQgYWRkIHJlc3QgdG8gbWVtbWFwICovCj4+ICsg
+ICAgY21lbSA9IHZ6YWxsb2Moc3RydWN0X3NpemUoY21lbSwgcmFuZ2VzLCAxKSk7Cj4+ICsgICAg
+aWYgKCFjbWVtKQo+PiArICAgICAgICByZXR1cm4gLUVOT01FTTsKPj4gKyAgICBjbWVtLT5tYXhf
+bnJfcmFuZ2VzID0gMTsKPj4gKwo+PiAgICAgICAgcmV0ID0gbWVtbWFwX2V4Y2x1ZGVfcmFuZ2Vz
+KGltYWdlLCBjbWVtLCBjcmFzaGtfcmVzLnN0YXJ0LCBjcmFzaGtfcmVzLmVuZCk7Cj4+ICAgICAg
+ICBpZiAocmV0KQo+PiAgICAgICAgICAgIGdvdG8gb3V0Owo+Pgo+PiAxLiBJIGRvbid0IGZlZWwg
+dmVyeSBnb29kIHRoYXQgeW91IGhhdmUgbW92ZWQgdnphbGxvYygpIHRvIGluIGZyb250IG9mCj4+
+IG1lbW1hcF9leGNsdWRlX3Jhbmdlcy4gQmVjYXVzZSBpZiBtZW1vcnkgYWxsb2NhdGlvbiBmYWls
+cywgdGhlcmUgaXMgbm8gbmVlZCB0bwo+PiBkbyBhbnl0aGluZyBlbHNlIGFmdGVyd2FyZHMuCj4g
+SSBtb3ZlZCBpdCBoZXJlIGJlY2F1c2Ugb25seSBtZW1tYXBfZXhjbHVkZV9yYW5nZXMoKSBhbmQg
+dGhlIGNvZGUgYmVsb3cgaXQgdXNlIGNtZW0uCj4KPiBJIHRoaW5rIGl0IGlzIGEgZ29vZCBwcmFj
+dGljZSB0byBwdXQgcmVsYXRlZCBjb2RlIHRvZ2V0aGVyLCB3aGljaCBhbHNvIGltcHJvdmVzCj4g
+Y29kZSByZWFkYWJpbGl0eS4KClRoYW5rIHlvdSB2ZXJ5IG11Y2ggZm9yIHlvdXIgcGF0aWVudCBj
+b21tZW50LiBUaGlzIGNoYW5nZSBkb2VzIGluZGVlZCBpbXByb3ZlCnJlYWRhYmlsaXR5LiBCdXQg
+YXMgYSBjb21iaW5hdGlvbiBvZiB0aGVzZSB0d28sIGhvdyBkbyB5b3UgZmVlbCBhYm91dCBtb3Zp
+bmcKY3Jhc2hfc2V0dXBfbWVtbWFwX2VudHJpZXMoKSBiZWhpbmQgdnphbGxvYygpLgo+PiAyLiBU
+aGUgY21lbS0+bWF4X25yX3JhbmdlcyBzaG91bGQgYmUgc2V0IHRvIDIuIEJlY2F1c2UgaW4KPj4g
+bWVtbWFwX2V4Y2x1ZGVfcmFuZ2VzLCBhIGNtZW0tPnJhbmdlc1tdIHdpbGwgYmUgZmlsbGVkIGlu
+IGFuZCBpZiBhIHNwbGl0IG9jY3Vycwo+PiBsYXRlciwgYW5vdGhlciBvbmUgd2lsbCBiZSBhZGRl
+ZC4KPiBXaXRoIHRoZSBjdXJyZW50IGNvZGUsIGltYWdlLT5lbGZfbG9hZF9hZGRyIHNob3VsZCBi
+ZSBlcXVhbCB0byBjcmFzaGtfcmVzLnN0YXJ0LAo+IHNvIHNwbGl0IHdpbGwgbm90IG9jY3VyIGlu
+IGNyYXNoX2V4Y2x1ZGVfbWVtX3JhbmdlKCkuIFRoZXJlZm9yZSwgc2V0dGluZwo+IGNtZW0tPm1h
+eF9ucl9yYW5nZXMgdG8gMSBpcyBzYWZlLgoKVGhlIGltYWdlLT5lbGZfbG9hZF9hZGRyIGlzIGRl
+dGVybWluZWQgYnkgYXJjaF9rZXhlY19sb2NhdGVfbWVtX2hvbGUoKSwgdGhpcwpmdW5jdGlvbiBj
+YW4gZW5zdXJlIHRoYXQgdGhlIHZhbHVlIGlzIHdpdGhpbiB0aGUgcmFuZ2Ugb2YgW2NyYXNoa19y
+ZXMuc3RhcnQsCmNyYXNoa19yZXMuZW5kKSwgYnV0IGl0IHNlZW1zIHRoYXQgaXQgY2Fubm90IGd1
+YXJhbnRlZSB0aGF0IGl0cyB2YWx1ZSB3aWxsCmFsd2F5cyBiZSBlcXVhbCB0byBjcmFzaGtfcmVz
+LnN0YXJ0LiBQZXJoYXBzIEkgaGF2ZSBzb21lIG9taXNzaW9ucywgcGxlYXNlCnBvaW50IHRoZW0g
+b3V0LgoKVGhhbmtzCmZ1cWlhbmcKPj4gVGhhbmtzCj4+IGZ1cWlhbmcKCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhl
+Y0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
+bGlzdGluZm8va2V4ZWMK
