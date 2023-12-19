@@ -4,82 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 67C25C41535
-	for <kexec@archiver.kernel.org>; Tue, 19 Dec 2023 05:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E2AEEC41535
+	for <kexec@archiver.kernel.org>; Tue, 19 Dec 2023 07:29:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=eIWigW4Uc4Q4ZZMpQzvxUTljcGWEVw1nlmzYteyOhHo=; b=CqxMV6RkgQjTh6
-	TBQUXgMl0H+bDqB3R7ibAX8wHVpVQX3x9HGcxjiIbOFwdp4VzyuDdK/WkQztuvINc0xObtRC4vcqs
-	BtgfKpJY3CfJy3kUX/3Jw3CSyDPKgFojjUSxMoUQ54o/Vy1omGK2H0fg5PZ+67+k9LXxXCMvKJXVu
-	m7njGUYEL5FxEOMtlBv5ip575IrEipz8vejCpnt5nQFwRhhuxMFTzxXWPcflVJOnxDAfkJ7w/c92i
-	RccMFwrWRddH6ICex9ifMaOfDEuTkzTNLPk1D/+FsTvgfaaJTlwiNzucV7qb5M4TSwcfQ18f6lOPN
-	pUMltNS1ALr7t+cRArjw==;
+	List-Owner; bh=SMhDYgOt3biJO7aDsuJenXfNA75ez3FMezJYrkU7KdU=; b=Wd9P6CzyP4MXjU
+	FF/tY04BP06Zr96pBKRrbm2cTQSUvEAlMVwFkSZZkb3/M+Apid/OIBRgApMs1SAtgs3mwNgbDdFZ1
+	DQ1VRB5QQjxPpjYv4Ruq5vM7CYteF46yFK19EvwYOsVqMvQN7LHe5rtmn0ZFFUYCfge59GHtfmOd3
+	PcVeWLW1ftFiMc0MMCQ8Xv/TX1E0S5qeJ4Gg2oRK4NT+k1BsdX1LwyYEPXK4qJ2x+L6tuXsuQ9Kiu
+	hgPKiaM+n422v6fFkaHYF4fupEpjBMCoJ4GJFd83hqKLt1W1TxvHTLCKSXC6uO2ZZWAyVUXvnfrFc
+	yqY9XtG3BbNpA+gtfP1A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rFSgA-00Ctx6-1H;
-	Tue, 19 Dec 2023 05:30:06 +0000
-Received: from mail-oo1-xc31.google.com ([2607:f8b0:4864:20::c31])
+	id 1rFUXJ-00D6Cs-09;
+	Tue, 19 Dec 2023 07:29:05 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rFSg7-00Ctwm-1l
+	id 1rFUXG-00D6Aa-39
 	for kexec@lists.infradead.org;
-	Tue, 19 Dec 2023 05:30:05 +0000
-Received: by mail-oo1-xc31.google.com with SMTP id 006d021491bc7-593ea4c2baaso87381eaf.3
-        for <kexec@lists.infradead.org>; Mon, 18 Dec 2023 21:30:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702963802; x=1703568602; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1KSDKlkaKqJ/0klbby4oepQ0g/PTqlT6o7kLyfpy1io=;
-        b=h0IfOrOIWXzXJ5a8H/rxqSd9dQXkOlEdnPi2QuMcVUeXCRnwj7tn7qjMKvx4AWAs+D
-         q/poMAIoGwE23MNLLU7/AkRJmKh/GFJiho9MZNXExoscRSl9M+IadZfx1p8lT7IupSp+
-         9IS571trBkeOWVLPcT/rO3iu4N60k/+JiMNu+KZ4sJAx1QHxeNuTx0uM0cqZrIkZoCXX
-         d7LWFGy1CrqtUuUU1bSlUufbaOhF4Gq19V5uXQGnNv3cD41w6PgTMhzwFhlNW6FHDB5+
-         S/zdNtwN3ruqoi9es5QXdOd3ee7Z/yFfRciWeGsnIn7Sq8M4IcCpfrqtzFFdQGqFlJbm
-         GQzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702963802; x=1703568602;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1KSDKlkaKqJ/0klbby4oepQ0g/PTqlT6o7kLyfpy1io=;
-        b=kNO0LOrZ6fYS9lHWUNpWabWz7N58vdgReZiSHaHtKPsxfaIpAYOxHNV/KB95MTucrF
-         XoG7Xn8WrPJADALWWyUBkFo2ODNXhtCNEC1vsFJxgQ6YXWU/OARr0GDhXSR0IPZZSVJj
-         LUrqcmBAG56voR98gmoC6Sfyb+3bQbt5ZtJJy3NYv6T4n425LmG913ajuOoIproyjx7L
-         XtVa+Ixen1RxDM5YWd6k8kT4uGscF2E7/7RlPuc312DPObpjUK8RfC6VgImECxGFhIL/
-         opikpHblSWspvtfczs05itpEJhApEt2KVkI46YPZKfg8mB+pYa222fiOB9WNjFjUP8o7
-         RstA==
-X-Gm-Message-State: AOJu0YzDOzO7uZV+Mp5xMkMJxVY9By/nP8H8TVBxf6mH7scJo7+Qi8br
-	yTIuq8V4pt1iZIXRC9Y+ktY=
-X-Google-Smtp-Source: AGHT+IGEThJt6CiGC764R0tEHsIGvawOxueOl2KAAAtuymZ2zRABXJEYv1oewzC0AqOEt2NXdSCojQ==
-X-Received: by 2002:a05:6358:248b:b0:170:6ed7:3148 with SMTP id m11-20020a056358248b00b001706ed73148mr12035927rwc.22.1702963802200;
-        Mon, 18 Dec 2023 21:30:02 -0800 (PST)
-Received: from code.. ([144.202.108.46])
-        by smtp.gmail.com with ESMTPSA id 17-20020a17090a195100b0028b1fce7c01sm568132pjh.37.2023.12.18.21.29.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Dec 2023 21:30:01 -0800 (PST)
-From: Yuntao Wang <ytcoode@gmail.com>
-To: fuqiang.wang@easystack.cn
-Cc: bhe@redhat.com,
-	dyoung@redhat.com,
-	kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	vgoyal@redhat.com,
-	ytcoode@gmail.com
-Subject: Re: [PATCH] kexec: avoid out of bounds in crash_exclude_mem_range()
-Date: Tue, 19 Dec 2023 13:29:29 +0800
-Message-ID: <20231219052955.40414-1-ytcoode@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <c797bdde-b5a5-4b2b-9106-c1386a0e7516@easystack.cn>
-References: <c797bdde-b5a5-4b2b-9106-c1386a0e7516@easystack.cn>
+	Tue, 19 Dec 2023 07:29:04 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1702970940;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=z41OPAeFuRVfVwpG8mOU7SweUlkIZGPKy5DQ+DlmDTM=;
+	b=YBHQqiyyiYK2aqpKEMwwMcbViZzgCVo8RR4t8gDhooLQcJcx4AazNrlu5fI4mgIdIy6wnm
+	wwMQry1ThxTOG5iG3N5YvBadsNaGmGKWT6EehyQ4GvhP5gQx2fBsH9DhpMXxVecIz7S6uU
+	9EXKRQ3rcBAeJLgfzIGwQLjwcso6tBM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-407-GXz9a8nTNNqDb8SpWVPjkw-1; Tue, 19 Dec 2023 02:28:56 -0500
+X-MC-Unique: GXz9a8nTNNqDb8SpWVPjkw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B1E92848C02;
+	Tue, 19 Dec 2023 07:28:55 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.38])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 05E791121306;
+	Tue, 19 Dec 2023 07:28:54 +0000 (UTC)
+Date: Tue, 19 Dec 2023 15:28:51 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Pingfan Liu <kernelfans@gmail.com>
+Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org,
+	Pingfan Liu <piliu@redhat.com>, Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH] Documentation: kdump: Clarify the default size of memory
+ reserved by crashkernel low
+Message-ID: <ZYFGMxkjfN3BVUq5@MiWiFi-R3L-srv>
+References: <20231218034020.15341-1-kernelfans@gmail.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20231218034020.15341-1-kernelfans@gmail.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231218_213003_589146_B45EA3C6 
-X-CRM114-Status: GOOD (  29.56  )
+X-CRM114-CacheID: sfid-20231218_232903_082369_B9B4A8A9 
+X-CRM114-Status: GOOD (  17.08  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,64 +77,53 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-T24gVHVlLCAxOSBEZWMgMjAyMyAxMTo1MDozMiArMDgwMCwgZnVxaWFuZyB3YW5nIDxmdXFpYW5n
-LndhbmdAZWFzeXN0YWNrLmNuPiB3cm90ZToKPiDlnKggMjAyMy8xMi8xOSAxMDo0NywgWXVudGFv
-IFdhbmcg5YaZ6YGTOgo+IAo+ID4gSGkgZnVxaWFuZywKPiA+Cj4gPiBZZXN0ZXJkYXksIEkgcG9z
-dGVkIHR3byBwYXRjaGVzIHRoYXQgaGFwcGVuIHRvIGFkZHJlc3MgdGhlIGJ1Z3MgeW91IGFuIEJh
-b3F1YW4KPiA+IGFyZSBjdXJyZW50bHkgZGlzY3Vzc2luZyBoZXJlLCBJIHdhc24ndCBhd2FyZSB0
-aGF0IHlvdSBib3RoIHdlcmUgYWxzbyB3b3JraW5nCj4gPiBvbiBmaXhpbmcgdGhlc2UgaXNzdWVz
-Lgo+ID4KPiA+IEJhb3F1YW4gc3VnZ2VzdGVkIEkgdGFsayB0byB5b3UgYWJvdXQgaXQuCj4gPgo+
-ID4gSWYgeW91J3JlIGludGVyZXN0ZWQsIHlvdSBjYW4gdGFrZSBhIGxvb2sgYXQgbXkgcGF0Y2hl
-cyBhbmQgcmV2aWV3IHRoZW0gdG8gc2VlCj4gPiBpZiB0aGVyZSBhcmUgYW55IGlzc3Vlcy4gSWYg
-ZXZlcnl0aGluZyBpcyBmaW5lLCBhbmQgaWYgeW91J3JlIHdpbGxpbmcsIHlvdSBjYW4KPiA+IGFs
-c28gYWRkIGEgJ1Jldmlld2VkLWJ5JyB0YWcgdGhlcmUuCj4gPgo+ID4gVGhlIGZvbGxvd2luZyBs
-aW5rIGlzIGZvciB0aGUgdHdvIHBhdGNoZXMgSSBwb3N0ZWQgeWVzdGVyZGF5Ogo+ID4KPiA+IGh0
-dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xrbWwvMjAyMzEyMTgwODE5MTUuMjQxMjAtMy15dGNvb2Rl
-QGdtYWlsLmNvbS90LyN1Cj4gPgo+ID4gU2luY2VyZWx5LAo+ID4gWXVudGFvCj4gCj4gSGkgWXVu
-dGFvLAo+IAo+IEknbSBnbGFkIHlvdSd2ZSBhbHNvIG5vdGljZWQgdGhpcyBpc3N1ZS4gQnV0IEkn
-bSBzb3JyeSwgSSB3YW50IHRvIHNvbHZlIHRoaXMKPiBwcm9ibGVtIG15c2VsZiBiZWNhdXNlIHRo
-aXMgaXMgbXkgZmlyc3QgdGltZSBwb3N0aW5nIGEgcGF0Y2ggaW4gdGhlIGNvbW11bml0eSwKPiBh
-bmQgSSBjaGVyaXNoIHRoaXMgb3Bwb3J0dW5pdHkgdmVyeSBtdWNoLgoKSSBjYW4gdHJ1bHkgdW5k
-ZXJzdGFuZCB5b3VyIGZlZWxpbmdzIGJlY2F1c2UgSSBzdGlsbCByZW1lbWJlciBob3cgdGhyaWxs
-ZWQgSQp3YXMgd2hlbiBteSBmaXJzdCBwYXRjaCBnb3QgbWVyZ2VkLiBTbyBrZWVwIGl0IHVwIQoK
-PiAKPiBJIGhhdmUgY2FyZWZ1bGx5IHJldmlld2VkIHlvdXIgcGF0Y2guIFRoZXJlIGlzIHNvbWUg
-Y2hhbmdlcyB3aGVyZSBteSB2aWV3cyBkaWZmZXIKPiBmcm9tIHlvdXJzOgo+IGRpZmYgLS1naXQg
-YS9hcmNoL3g4Ni9rZXJuZWwvY3Jhc2guYyBiL2FyY2gveDg2L2tlcm5lbC9jcmFzaC5jCj4gaW5k
-ZXggYzkyZDg4NjgwZGJmLi4zYmU0NmY0YjQ0MWUgMTAwNjQ0Cj4gLS0tIGEvYXJjaC94ODYva2Vy
-bmVsL2NyYXNoLmMKPiArKysgYi9hcmNoL3g4Ni9rZXJuZWwvY3Jhc2guYwo+IEBAIC0yODIsMTAg
-KzI4Miw2IEBAIGludCBjcmFzaF9zZXR1cF9tZW1tYXBfZW50cmllcyhzdHJ1Y3Qga2ltYWdlICpp
-bWFnZSwgc3RydWN0IGJvb3RfcGFyYW1zICpwYXJhbXMpCj4gICAgICAgc3RydWN0IGNyYXNoX21l
-bW1hcF9kYXRhIGNtZDsKPiAgICAgICBzdHJ1Y3QgY3Jhc2hfbWVtICpjbWVtOwo+IAo+IC0gICAg
-Y21lbSA9IHZ6YWxsb2Moc3RydWN0X3NpemUoY21lbSwgcmFuZ2VzLCAxKSk7Cj4gLSAgICBpZiAo
-IWNtZW0pCj4gLSAgICAgICAgcmV0dXJuIC1FTk9NRU07Cj4gLQo+ICAgICAgIG1lbXNldCgmY21k
-LCAwLCBzaXplb2Yoc3RydWN0IGNyYXNoX21lbW1hcF9kYXRhKSk7Cj4gICAgICAgY21kLnBhcmFt
-cyA9IHBhcmFtczsKPiAKPiBAQCAtMzIxLDYgKzMxNywxMSBAQCBpbnQgY3Jhc2hfc2V0dXBfbWVt
-bWFwX2VudHJpZXMoc3RydWN0IGtpbWFnZSAqaW1hZ2UsIHN0cnVjdCBib290X3BhcmFtcyAqcGFy
-YW1zKQo+ICAgICAgIH0KPiAKPiAgICAgICAvKiBFeGNsdWRlIHNvbWUgcmFuZ2VzIGZyb20gY3Jh
-c2hrX3JlcyBhbmQgYWRkIHJlc3QgdG8gbWVtbWFwICovCj4gKyAgICBjbWVtID0gdnphbGxvYyhz
-dHJ1Y3Rfc2l6ZShjbWVtLCByYW5nZXMsIDEpKTsKPiArICAgIGlmICghY21lbSkKPiArICAgICAg
-ICByZXR1cm4gLUVOT01FTTsKPiArICAgIGNtZW0tPm1heF9ucl9yYW5nZXMgPSAxOwo+ICsKPiAg
-ICAgICByZXQgPSBtZW1tYXBfZXhjbHVkZV9yYW5nZXMoaW1hZ2UsIGNtZW0sIGNyYXNoa19yZXMu
-c3RhcnQsIGNyYXNoa19yZXMuZW5kKTsKPiAgICAgICBpZiAocmV0KQo+ICAgICAgICAgICBnb3Rv
-IG91dDsKPiAKPiAxLiBJIGRvbid0IGZlZWwgdmVyeSBnb29kIHRoYXQgeW91IGhhdmUgbW92ZWQg
-dnphbGxvYygpIHRvIGluIGZyb250IG9mCj4gbWVtbWFwX2V4Y2x1ZGVfcmFuZ2VzLiBCZWNhdXNl
-IGlmIG1lbW9yeSBhbGxvY2F0aW9uIGZhaWxzLCB0aGVyZSBpcyBubyBuZWVkIHRvCj4gZG8gYW55
-dGhpbmcgZWxzZSBhZnRlcndhcmRzLgoKSSBtb3ZlZCBpdCBoZXJlIGJlY2F1c2Ugb25seSBtZW1t
-YXBfZXhjbHVkZV9yYW5nZXMoKSBhbmQgdGhlIGNvZGUgYmVsb3cgaXQgdXNlIGNtZW0uCgpJIHRo
-aW5rIGl0IGlzIGEgZ29vZCBwcmFjdGljZSB0byBwdXQgcmVsYXRlZCBjb2RlIHRvZ2V0aGVyLCB3
-aGljaCBhbHNvIGltcHJvdmVzCmNvZGUgcmVhZGFiaWxpdHkuCgo+IAo+IDIuIFRoZSBjbWVtLT5t
-YXhfbnJfcmFuZ2VzIHNob3VsZCBiZSBzZXQgdG8gMi4gQmVjYXVzZSBpbgo+IG1lbW1hcF9leGNs
-dWRlX3JhbmdlcywgYSBjbWVtLT5yYW5nZXNbXSB3aWxsIGJlIGZpbGxlZCBpbiBhbmQgaWYgYSBz
-cGxpdCBvY2N1cnMKPiBsYXRlciwgYW5vdGhlciBvbmUgd2lsbCBiZSBhZGRlZC4KCldpdGggdGhl
-IGN1cnJlbnQgY29kZSwgaW1hZ2UtPmVsZl9sb2FkX2FkZHIgc2hvdWxkIGJlIGVxdWFsIHRvIGNy
-YXNoa19yZXMuc3RhcnQsCnNvIHNwbGl0IHdpbGwgbm90IG9jY3VyIGluIGNyYXNoX2V4Y2x1ZGVf
-bWVtX3JhbmdlKCkuIFRoZXJlZm9yZSwgc2V0dGluZwpjbWVtLT5tYXhfbnJfcmFuZ2VzIHRvIDEg
-aXMgc2FmZS4KCj4gCj4gVGhhbmtzCj4gZnVxaWFuZwoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmlu
-ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9r
-ZXhlYwo=
+On 12/18/23 at 11:40am, Pingfan Liu wrote:
+> From: Pingfan Liu <piliu@redhat.com>
+> 
+> The default size reserved for crashkernel=,low is decided by the macro
+> DEFAULT_CRASH_KERNEL_LOW_SIZE, which is based on arch.
+> 
+> Signed-off-by: Pingfan Liu <piliu@redhat.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> To: kexec@lists.infradead.org
+> To: linux-doc@vger.kernel.org
+> ---
+>  Documentation/admin-guide/kdump/kdump.rst | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
+> index 5762e7477a0c..a021ff155012 100644
+> --- a/Documentation/admin-guide/kdump/kdump.rst
+> +++ b/Documentation/admin-guide/kdump/kdump.rst
+> @@ -310,8 +310,9 @@ crashkernel syntax
+>     region above 4G, low memory under 4G is needed in this case. There are
+>     three ways to get low memory:
+>  
+> -      1) Kernel will allocate at least 256M memory below 4G automatically
+> -         if crashkernel=Y,low is not specified.
+> +      1) Kernel will allocate a chunk of default size memory, which is based on
+> +         architecture, below 4G automatically if crashkernel=Y,low is not
+> +         specified.
+
+Good catch, thx.
+
+Acked-by: Baoquan He <bhe@redhat.com>
+
+>        2) Let user specify low memory size instead.
+>        3) Specified value 0 will disable low memory allocation::
+>  
+> -- 
+> 2.31.1
+> 
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
