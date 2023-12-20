@@ -4,58 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BDBBDC3DA6E
-	for <kexec@archiver.kernel.org>; Wed, 20 Dec 2023 05:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E0D42C46CD3
+	for <kexec@archiver.kernel.org>; Wed, 20 Dec 2023 15:41:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=LYQVSSaU/4cYgs0CO+bWeAoo0Jb/08vJXkRT/enpoBI=; b=Jtny+f7pWXjDBb
-	jeR4lj0iGmiY4Q0UGX3PS+p+hJtnz114v0wdu3VzjEkFumxI3icKkeqU9zzxHpw1xG7xWp9HT07ID
-	Ane6kbovrK9en/KAJQmdz+ifNZX1IgOvasiW8pbUNtdUdE0z2RrcI/ZiYiGxZjNt3VFoliUKrz7XQ
-	oBX5rPlv49u1BIPpItdXQ/8aNku2jvdt4hZ1dMm3umNsFYT27dF/TbNvBeoQAQUdAJ6ZqmWMOW88+
-	GTR1SlkKabaPYGDHTRJ53HbzyseKXDV7qvIWOfvtL/js2eZmXUuV1tFv9CZa0qNjSON94ZByku1Kq
-	blE6BCP5NJJQucs6Uq2Q==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=eDo013NMqDChQNC7zvAnuXB8DPSoIMW9rQD9iS4nAB8=; b=ZsdN8VI7eCor0d
+	AHvqPFKG9HjiDM68varqlKBYT/Qa5tj/Ay7hKz9WGNUK8N1VNc7dE4xivv/wqftYC3acSDma/cbDC
+	En5fZgaaDKKPfvLcBlt0JOMjMa+mx6PJF5ZpGjI1o95wmMw4E2FHRhBztdWz5lgwq7vswOytUPO6c
+	HNHeF6nAHsdJoTh9um72qELNsxdzCupROqTxVlLJIE4zH248P7bsH1QiNJbypHa18FlArvsC0oR2g
+	NdjXXWakvsuoq1dOfyZUe/iex1/q9prbIQTl6o/SNXDzpyS4zXM4MaL690odSYLIXGncUvTgLNtCS
+	mXyfoyImKwj937U1lS5A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rFpc7-00GEiZ-1C;
-	Wed, 20 Dec 2023 05:59:27 +0000
-Received: from mail-m12791.qiye.163.com ([115.236.127.91])
+	id 1rFyhf-000HhK-0O;
+	Wed, 20 Dec 2023 15:41:47 +0000
+Received: from mail-pl1-x636.google.com ([2607:f8b0:4864:20::636])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rFpc2-00GEgW-1t
+	id 1rFyha-000Hgx-2d
 	for kexec@lists.infradead.org;
-	Wed, 20 Dec 2023 05:59:24 +0000
-Received: from fedora.. (unknown [211.103.144.18])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id BD44F26015D;
-	Wed, 20 Dec 2023 13:57:44 +0800 (CST)
-From: fuqiang wang <fuqiang.wang@easystack.cn>
-To: Baoquan He <bhe@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>,
+	Wed, 20 Dec 2023 15:41:44 +0000
+Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-1d0c4d84bf6so28478825ad.1
+        for <kexec@lists.infradead.org>; Wed, 20 Dec 2023 07:41:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703086902; x=1703691702; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=p9mFvLLx7lZ73kFF3I62j/aGFgf0ra8eVik2ke1j8Zo=;
+        b=OAqsGYUr0Ux4H8gym10Hr6r2nZf8B/t3v86YWHqkZH7SI6TBYtW+VIBbykD6ursPqt
+         tNwO79Jxvz+pH5IOcFLpHMwuKfLUZTZ2VDrX+msDbBwB7A9tGMLlz2LqmeTAtjAE/gTA
+         qctINPx9eWaXerK8RR55aMVWwom3xwTXhDSYmxJWpX8fEk60McBmdSn8OU0oLVHwh2Sz
+         fj5Q5ScM0RDoFvYrDp7/z03UXe9FG7vEC4NPDqcwBd1n19dmJKrPGrKCoOjPW1jUqsi4
+         XhZ23JLkJr8vUpbudAA+bHO+4yCu0pn3HZxfaJH7f9T6J1f6FHZyoscdMci6IJrTiMFH
+         hnUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703086902; x=1703691702;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=p9mFvLLx7lZ73kFF3I62j/aGFgf0ra8eVik2ke1j8Zo=;
+        b=ZzrpUsoukuUM8aK8WUxSBjfxiqANizAT5Dit2okjKXaQB0ln1nHZ2XhfkS7QtWKkRJ
+         VKsem+JyGv3GqMKrTZsp8/EwYfvTc0HiveUzr4S93yvIQ1hHQR3N1BYNhzpTqWxO/tyh
+         n7i0zATVoQ0LZ++ZfiqYZGaI4crx0QfxfbqOf/sd8gF1MVIQ2kB50lcOR2Wuwziemb5g
+         CerIdkS8cgLYGAKPH+g1eRodKruc29dcg379fqTc/EmI6ulkKlkDiAuvh5pvRM6X36r8
+         UQR0pURmtF9gHsVmw9NTl3ySnS+YmBBGR9xDY8wIisGrSYVpgVZjYb5rkQnJS3dSA9nu
+         iKNA==
+X-Gm-Message-State: AOJu0Yz74kBJ16+TmSkUexfX7+giFrGmObjCrr7Uh26bwnAzYJ4MrvVm
+	ihMxNu1cbNbuu/QF4e2taWw=
+X-Google-Smtp-Source: AGHT+IE9NTARvHnxZGa80VQ2zRnWB2AD5Je+ZSkuhee+chKhEHjXud7Dv94+MDUssChXgrMhzO7Gsg==
+X-Received: by 2002:a17:902:f689:b0:1d3:b35e:7b16 with SMTP id l9-20020a170902f68900b001d3b35e7b16mr4559002plg.86.1703086901632;
+        Wed, 20 Dec 2023 07:41:41 -0800 (PST)
+Received: from code.. ([144.202.108.46])
+        by smtp.gmail.com with ESMTPSA id i12-20020a170902c94c00b001d07ebef623sm8790083pla.69.2023.12.20.07.41.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Dec 2023 07:41:40 -0800 (PST)
+From: Yuntao Wang <ytcoode@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>,
 	Yuntao Wang <ytcoode@gmail.com>
-Cc: kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] kexec: Fix potential out of bounds in crash_exclude_mem_range()
-Date: Wed, 20 Dec 2023 13:57:32 +0800
-Message-ID: <20231220055733.100325-3-fuqiang.wang@easystack.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231220055733.100325-1-fuqiang.wang@easystack.cn>
-References: <20231220055733.100325-1-fuqiang.wang@easystack.cn>
+Subject: [PATCH] x86/kexec: fix incorrect argument passed to kexec_dprintk()
+Date: Wed, 20 Dec 2023 23:41:05 +0800
+Message-ID: <20231220154105.215610-1-ytcoode@gmail.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVlCHxhPVk5IHksdTE0ZGk8YGFUZERMWGhIXJBQOD1
-	lXWRgSC1lBWUlKSlVKS0hVSk9PVUpDWVdZFhoPEhUdFFlBWU9LSFVKTU9JTE5VSktLVUpCS0tZBg
-	++
-X-HM-Tid: 0a8c85cd2dbc0276kunmbd44f26015d
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MS46Nxw6PzErFVEBDAMPCwgq
-	Ng4aCj5VSlVKTEtIS05KQ01NSUNIVTMWGhIXVR0OChIaFRxVDBoVHDseGggCCA8aGBBVGBVFWVdZ
-	EgtZQVlJSkpVSktIVUpPT1VKQ1lXWQgBWUFJSExKNwY+
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231219_215922_825782_08DB1031 
-X-CRM114-Status: GOOD (  10.15  )
+X-CRM114-CacheID: sfid-20231220_074142_851949_F166237E 
+X-CRM114-Status: GOOD (  12.84  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -72,45 +91,32 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-When the split does not occur on the last array member, the current code
-will not return an error. So the correct array out-of-bounds check should
-be mem->nr_ranges >= mem->max_nr_ranges.
+kexec_dprintk() expects the last argument to be kbuf.memsz, but the actual
+argument being passed is kbuf.bufsz.
 
-When the OOB happen, the cmem->ranges[] have changed, so return early to
-avoid it.
+Although these two values are currently equal, it is better to pass the
+correct one, in case these two values become different in the future.
 
-Signed-off-by: fuqiang wang <fuqiang.wang@easystack.cn>
+Signed-off-by: Yuntao Wang <ytcoode@gmail.com>
 ---
- kernel/crash_core.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ arch/x86/kernel/kexec-bzimage64.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index d4313b53837e..b1ab61c74fd2 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -611,6 +611,9 @@ int crash_exclude_mem_range(struct crash_mem *mem,
- 		}
+diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+index e9ae0eac6bf9..114cb690ec0b 100644
+--- a/arch/x86/kernel/kexec-bzimage64.c
++++ b/arch/x86/kernel/kexec-bzimage64.c
+@@ -496,7 +496,7 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+ 		goto out_free_params;
+ 	bootparam_load_addr = kbuf.mem;
+ 	kexec_dprintk("Loaded boot_param, command line and misc at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+-		      bootparam_load_addr, kbuf.bufsz, kbuf.bufsz);
++		      bootparam_load_addr, kbuf.bufsz, kbuf.memsz);
  
- 		if (p_start > start && p_end < end) {
-+			/* Split happened */
-+			if (mem->nr_ranges >= mem->max_nr_ranges)
-+				return -ENOMEM;
- 			/* Split original range */
- 			mem->ranges[i].end = p_start - 1;
- 			temp_range.start = p_end + 1;
-@@ -626,10 +629,6 @@ int crash_exclude_mem_range(struct crash_mem *mem,
- 	if (!temp_range.end)
- 		return 0;
- 
--	/* Split happened */
--	if (i == mem->max_nr_ranges - 1)
--		return -ENOMEM;
--
- 	/* Location where new range should go */
- 	j = i + 1;
- 	if (j < mem->nr_ranges) {
+ 	/* Load kernel */
+ 	kbuf.buffer = kernel + kern16_size;
 -- 
-2.42.0
+2.43.0
 
 
 _______________________________________________
