@@ -4,112 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 51F09C3DA6E
-	for <kexec@archiver.kernel.org>; Wed, 20 Dec 2023 22:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B52BBC3DA6E
+	for <kexec@archiver.kernel.org>; Wed, 20 Dec 2023 23:31:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=O5MRhfJTy4jMWWEQna6BxejsHrKICj2leQUNrXTKbmY=; b=VF2bPvQfnLdD4x
-	uxCxCeYCftEYh267AkZCu45oAnkVBJ28lQ8T1jewbLRPCutKWyZjhyaF/1pknweIshXNbT52k7R7L
-	DktO1Zrcu06OOg6wh3QPPT11UbfsV1SVhgllhxuoRlmznfZdqN7VMfS+IU0g4JBoX43dYaeqC/88Z
-	IW7CuiFOD8uFDqMXOSOhm/p2l1EH71U4hzfEdYboKJ3tsf0jVMkISnmh8PngrfyvPit2iclg58tP9
-	HhmR8vDB7G4sQksuGGcCpF73yKRjDI8iB8LAuIMwson/4O/XjjaEYA/+QqseF3tIW5G37GH7Hm0o3
-	WsvkhwuMLPetvhPr6BNA==;
+	List-Owner; bh=uqXA9UpFt4yWjKyEDHfb1h/bCkOsiOpOidlFzIEhAZ0=; b=Jif9NaVmi5SBN7
+	0iB3k2zqEjekawDOegWu9r+UAvpf97WjOSWaCdUCnj0PTJdlWS0ByzyieRLMSiTmCXq9w3qFQlOcV
+	oPIsUQrfjK9C+uHMDJoRTyn/UCYpcyYmmAyLTQB/dfGJAxrX+/HsW+u22aOpQLAVWWlp1EvK9xq/S
+	J2fKxmOUsTu6+ZEGuH8A7dAn0UareQD+eC4ssYa+nzlxK4END3GBf46n+vUBLBnCGGum3dKBDAH67
+	X4C6rCPB1jZJDPQQKkwJMYa5PrM8Xuz2KFRGiVIQH6xM8lGuDoQ+fDn1o58EBubuh+OgtivPUgX3N
+	zKL1PSiz5TUD6SPSvP1g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rG4pR-0012aH-09;
-	Wed, 20 Dec 2023 22:14:13 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1rG61n-001FcY-1w;
+	Wed, 20 Dec 2023 23:31:03 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rG4pO-0012YM-0r
+	id 1rG61l-001FbW-10
 	for kexec@lists.infradead.org;
-	Wed, 20 Dec 2023 22:14:12 +0000
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BKLRUcY004658;
-	Wed, 20 Dec 2023 22:13:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=Lme9PvKXLllsH+Mh5EhYOYKBv8+v9jzfCVw+p6oPtF8=;
- b=UX0vSB4SqHpjxVnbfc6C1k+QMHyj/FPDdaZHVuhBjySSqCl+CV0R8qcm+e/WU+l6Syg4
- OBz4uR9gQkhjjnJI4ST4DaCVbNHbMvHX5epourH7DnBE81J8xOyXI6yXRfmic1cKsEyY
- csO3ENneNcjmroDhuzj/MVFlu9WnE+JeczAlCYPshnQ/iGJaqJYn/qFq8a9/JtDliflT
- xXf731CgorhxcCmJYxHcQs84zdS7311yPGeFZOZL9i32i08FhauoVG+mBqi7tqy4drjM
- ZvW4NHyDuGuR5V5vkQPFieqLWv0kz0Ib6BR3YDBAfQebq7BCHz++Iw2D928I7o+ZAonv ew== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3v42q73crh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 20 Dec 2023 22:13:52 +0000
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3BKLbqu1021251;
-	Wed, 20 Dec 2023 22:13:51 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3v42q73cr9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 20 Dec 2023 22:13:51 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BKLNtYv012418;
-	Wed, 20 Dec 2023 22:13:51 GMT
-Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3v1rx20stm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 20 Dec 2023 22:13:50 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BKMDoNK22610544
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 20 Dec 2023 22:13:50 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3474058055;
-	Wed, 20 Dec 2023 22:13:50 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 96D585804B;
-	Wed, 20 Dec 2023 22:13:48 +0000 (GMT)
-Received: from [9.67.17.94] (unknown [9.67.17.94])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 20 Dec 2023 22:13:48 +0000 (GMT)
-Message-ID: <1c370ecf-272a-4052-8f06-4fcfd9bf08b5@linux.ibm.com>
-Date: Wed, 20 Dec 2023 17:13:47 -0500
+	Wed, 20 Dec 2023 23:31:02 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1703115056;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NpHzyetdfnFa+em1B7GLhPjt2d/LNwN97Oht9kcvxy0=;
+	b=G5CC6tV958fNdRre1M9LmM1aSB1w67VhvWWUPhU46LE6mfwkVkLkQ19QISV2M15tY1LzM8
+	Hv2Qvuz6y0maWJW2OuVZc0p1x2pNdzMsESyObrai43nLKmB0+8SpzD7ud/oUu9k1xP6tsR
+	vneg+wE0EsJWYZg/4OWzo22089r8oVA=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-320-si85M4twNxiIF802LZPQqA-1; Wed,
+ 20 Dec 2023 18:30:52 -0500
+X-MC-Unique: si85M4twNxiIF802LZPQqA-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 54B173C00094;
+	Wed, 20 Dec 2023 23:30:51 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.38])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 96C10492BFA;
+	Wed, 20 Dec 2023 23:30:50 +0000 (UTC)
+Date: Thu, 21 Dec 2023 07:30:47 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Conor Dooley <conor@kernel.org>, linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	linux-parisc@vger.kernel.org, joe@perches.com, nathan@kernel.org
+Subject: Re: [PATCH v4 5/7] kexec_file, ricv: print out debugging message if
+ required
+Message-ID: <ZYN5Jy4PVh3ghbxN@MiWiFi-R3L-srv>
+References: <20231213055747.61826-1-bhe@redhat.com>
+ <20231213055747.61826-6-bhe@redhat.com>
+ <20231219-twitch-many-ca8877857182@spud>
+ <ZYJsBW0Y7Y+XhSgf@MiWiFi-R3L-srv>
+ <20231220074634.cd736ec567cd7adf1e4c6d7e@linux-foundation.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC V2] IMA Log Snapshotting Design Proposal
-To: Paul Moore <paul@paul-moore.com>, Mimi Zohar <zohar@linux.ibm.com>
-Cc: Tushar Sugandhi <tusharsu@linux.microsoft.com>,
-        linux-integrity@vger.kernel.org, peterhuewe@gmx.de,
-        Jarkko Sakkinen <jarkko@kernel.org>, jgg@ziepe.ca, bhe@redhat.com,
-        vgoyal@redhat.com, Dave Young <dyoung@redhat.com>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        jmorris@namei.org, serge@hallyn.com,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        linux-security-module@vger.kernel.org,
-        Tyler Hicks <tyhicks@linux.microsoft.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Sush Shringarputale <sushring@linux.microsoft.com>
-References: <6c0c32d5-e636-2a0e-5bdf-538c904ceea3@linux.microsoft.com>
- <8bff2bf1a4629aacec7b6311d77f233cb75b2f8a.camel@linux.ibm.com>
- <CAHC9VhRm9Tzz3C-VTdXS4s1_-kPQQ6RXMt8JGCS4jorJ0VURyQ@mail.gmail.com>
- <CAHC9VhSJ7MKNM7nMXR3xE-cNMrYB4AT+B76wzF1cKy2JM9tBrA@mail.gmail.com>
- <1b6853e8354af7033e6d87e77cfb175526753c38.camel@linux.ibm.com>
- <CAHC9VhSnDQ-d9dh_icqNyhpT+cTGQOqGh8+cbN3QzF_qPehvaA@mail.gmail.com>
-Content-Language: en-US
-From: Ken Goldman <kgold@linux.ibm.com>
-In-Reply-To: <CAHC9VhSnDQ-d9dh_icqNyhpT+cTGQOqGh8+cbN3QzF_qPehvaA@mail.gmail.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: jdm9hFg47T3cry3by7vWsYkIffxDdom2
-X-Proofpoint-ORIG-GUID: JoqsYci3m-cIbuNnF9sp5yvfTxOvXDiv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-20_13,2023-12-20_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 suspectscore=0 mlxlogscore=909 bulkscore=0
- malwarescore=0 clxscore=1011 adultscore=0 mlxscore=0 priorityscore=1501
- spamscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2312200158
+Content-Disposition: inline
+In-Reply-To: <20231220074634.cd736ec567cd7adf1e4c6d7e@linux-foundation.org>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231220_141410_654980_629C7AEA 
-X-CRM114-Status: GOOD (  15.32  )
+X-CRM114-CacheID: sfid-20231220_153101_438789_8D19CC94 
+X-CRM114-Status: UNSURE (   9.21  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -121,31 +85,23 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-I'm still struggling with the "new root of trust" concept.
+On 12/20/23 at 07:46am, Andrew Morton wrote:
+> On Wed, 20 Dec 2023 12:22:29 +0800 Baoquan He <bhe@redhat.com> wrote:
+> 
+> > Could you help fix the typo in subject?
+> > 
+> > [PATCH v4 5/7] kexec_file, ricv: print out debugging message if required
+> >                            ~~~ s/ricv/riscv/
+> 
+> I made that change.
 
-Something - a user space agent, a third party, etc. - has to
-retain the entire log from event 0, because a new verifier
-needs all measurements.
+Thanks a lot.
 
-Therefore, the snapshot aggregate seems redundant.  It has to
-be verified to match the snapshotted events.
-
-A redundancy is an attack surface.  A badly written verifier
-might not do that verification, and this permits snapshotted
-events to be forged. No aggregate means the verifier can't
-make a mistake.
-
-On 11/22/2023 9:22 AM, Paul Moore wrote:
-> I believe the intent is to only pause the measurements while the
-> snapshot_aggregate is generated, not for the duration of the entire
-> snapshot process.  The purpose of the snapshot_aggregate is to
-> establish a new root of trust, similar to the boot_aggregate, to help
-> improve attestation performance.
 
 _______________________________________________
 kexec mailing list
