@@ -4,32 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4716DC3DA6E
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AABEBC46CD2
 	for <kexec@archiver.kernel.org>; Wed, 20 Dec 2023 05:59:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=5lDNpxbBg3AZ5HGcM/cj95c9pIuYaunGcWBVVr+ZG7U=; b=qrhz9/sSU5eSAR
-	qk3phfkDFNV7CQyhh9UHjB0nNIsTZSwCPABNTv9dVaMcNk8BNH7MEQDv1gxjM0xWkiBJKk0QkFp6n
-	L2iBkeFexKkHKxCvSM1ZsYpSUSLlN0zG2ygjOapUuGJ5lWVhm/AOyqEeuM99gmNeT2CVOylsnZhD+
-	tI1ZtwO9uoCodsfJe5AJoNacRuhCiHmSoYZ3Ow07QBE2HTdqzlyPAC0n6KBH5J2qxnyHrbJs+NAz3
-	mDrdkbr8esQmKoNd/kic2AYyzGw7oaqwm7k3Aguf3GJdetIsNOrFjGtpclbQfDcTcd/8dvK2z+f64
-	LRB8qYh5VasANBTMIsTQ==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=A22MSnOz6FrDotj30xzGGw2A1lW1FNFZyHtyK83dNpw=; b=aKSklySx6QVt4J
+	IA7z3RUsy959dEywhBqUK4M00ZoczXXrUhBWLcQDLOCpP+IhpJfe7rQh4PY/xu8w3w8juSY0IevFt
+	pXgO724OYH8FmftwEFo28RB1Q7o3BrjQuGZnsAWtRnXxe9f3BwOR8M61iW4ekI+CVt9AAAOC8Hivc
+	K30G7vHyh7gbJjNphBfGWQDwBDwnpoiSAJ2KweQTYV5hJSAJCI9iLTUNMq2EuEHbuUFRKQUqU5V+i
+	QrxoLTkEEWpDIahqoZVpyPdgDySbpI/hVj7HpJSsH4J52X1RI1M8gwhzTFoM3UIq7s+tsXr31CQ/F
+	sFDlURxgo/m8sy7aSqxw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rFpc4-00GEhW-15;
+	id 1rFpc4-00GEhg-2X;
 	Wed, 20 Dec 2023 05:59:24 +0000
-Received: from mail-m12789.qiye.163.com ([115.236.127.89])
+Received: from mail-m12790.qiye.163.com ([115.236.127.90])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rFpc1-00GEgQ-1A
+	id 1rFpc1-00GEgR-2M
 	for kexec@lists.infradead.org;
 	Wed, 20 Dec 2023 05:59:23 +0000
 Received: from fedora.. (unknown [211.103.144.18])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id 7353926010E;
-	Wed, 20 Dec 2023 13:57:40 +0800 (CST)
+	by smtp.qiye.163.com (Hmail) with ESMTPA id DF6E726015E;
+	Wed, 20 Dec 2023 13:57:42 +0800 (CST)
 From: fuqiang wang <fuqiang.wang@easystack.cn>
 To: Baoquan He <bhe@redhat.com>,
 	Vivek Goyal <vgoyal@redhat.com>,
@@ -37,23 +37,25 @@ To: Baoquan He <bhe@redhat.com>,
 	Yuntao Wang <ytcoode@gmail.com>
 Cc: kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/2] kexec: fix potential cmem->ranges out of bounds
-Date: Wed, 20 Dec 2023 13:57:30 +0800
-Message-ID: <20231220055733.100325-1-fuqiang.wang@easystack.cn>
+Subject: [PATCH v2 1/2] x86/kexec: Fix potential out of bounds in crash_setup_memmap_entries()
+Date: Wed, 20 Dec 2023 13:57:31 +0800
+Message-ID: <20231220055733.100325-2-fuqiang.wang@easystack.cn>
 X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20231220055733.100325-1-fuqiang.wang@easystack.cn>
+References: <20231220055733.100325-1-fuqiang.wang@easystack.cn>
 MIME-Version: 1.0
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVkaSxgfVkhLShoZSRkZTR1IGlUZERMWGhIXJBQOD1
-	lXWRgSC1lBWUlKSlVKS0hVSk9PVUpDWVdZFhoPEhUdFFlBWU9LSFVKSktISkNVSktLVUtZBg++
-X-HM-Tid: 0a8c85cd1f610276kunm7353926010e
+	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVkZHktOVkMdTx0aThlPHx4fGlUZERMWGhIXJBQOD1
+	lXWRgSC1lBWUlKSlVKS0hVSk9PVUpDWVdZFhoPEhUdFFlBWU9LSFVKTU9JTE5VSktLVUpCS0tZBg
+	++
+X-HM-Tid: 0a8c85cd26650276kunmdf6e726015e
 X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NBw6Qgw4VjE*SlEcDAwDCw4M
-	MRYwC0NVSlVKTEtIS05KQ01JTEtCVTMWGhIXVR0OChIaFRxVDBoVHDseGggCCA8aGBBVGBVFWVdZ
-	EgtZQVlJSkpVSktIVUpPT1VKQ1lXWQgBWUFJSk1ONwY+
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Ky46Igw6LzE2P1FOOgI4Cw4u
+	NwFPCjpVSlVKTEtIS05KQ01PTk1CVTMWGhIXVR0OChIaFRxVDBoVHDseGggCCA8aGBBVGBVFWVdZ
+	EgtZQVlJSkpVSktIVUpPT1VKQ1lXWQgBWUFITEJCNwY+
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231219_215921_568333_19730951 
-X-CRM114-Status: UNSURE (   7.34  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20231219_215921_946724_BEC8E19A 
+X-CRM114-Status: GOOD (  15.19  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -70,39 +72,70 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-This series tries to fix the potential cmem->ranges out of bounds.
+In memmap_exclude_ranges(), there will exclude elfheader from
+crashk_res. In the current x86 architecture code, the elfheader is
+always allocated at crashk_res.start. It seems that there won't be a
+split a new range. But it depends on the allocation position of
+elfheader in crashk_res. To avoid potential out of bounds in future, Set
+the array size to 2.
 
-On the v1 version, there are still some issues that need to be
-discussed, as follows:
+But similar issue will not exist in fill_up_crash_elf_data(). Because
+the range to be excluded is [0, 1M], start (0) is special and will not
+appear in the middle of existing cmem->ranges[]. I added a comment to
+explain it.
 
-1) Whether we need have the cmem->ranges[] partly changed, or keep it
-unchanged when OOB happened. Previously discussed link:[1].
-
-2) Set cmem->max_nr_ranges in crash_setup_memmap_entries() to 1 or 2.
-Previously discussed link:[2].
-
-3) To enhance crash_setup_memmap_entries() readability, how to move
-code. Previously discussed link:[2].
-
-v2:
-  - Fix potential out of bounds in crash_setup_memmap_entries().
-  - Add a comment in fill_up_crash_elf_data() to explain why the array
-    size do not need to be changed.
-
-v1:
-  Link: https://lore.kernel.org/all/20231127025641.62210-1-fuqiang.wang@easystack.cn/
-
-[1]: https://lore.kernel.org/all/ZXrY7QbXAlxydsSC@MiWiFi-R3L-srv/
-[2]: https://lore.kernel.org/all/273284e8-7680-4f5f-8065-c5d780987e59@easystack.cn/
-
-fuqiang wang (2):
-  x86/kexec: Fix potential out of bounds in crash_setup_memmap_entries()
-  kexec: Fix potential out of bounds in crash_exclude_mem_range()
-
+Signed-off-by: fuqiang wang <fuqiang.wang@easystack.cn>
+---
  arch/x86/kernel/crash.c | 20 ++++++++++++++------
- kernel/crash_core.c     |  7 +++----
- 2 files changed, 17 insertions(+), 10 deletions(-)
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index c92d88680dbf..1c15d0884c90 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -149,6 +149,13 @@ static struct crash_mem *fill_up_crash_elf_data(void)
+ 	/*
+ 	 * Exclusion of crash region and/or crashk_low_res may cause
+ 	 * another range split. So add extra two slots here.
++	 *
++	 * Exclusion of low 1M may not cause another range split, because the
++	 * range of exclude is [0, 1M] and the condition for splitting a new
++	 * region is that the start, end parameters are both in a certain
++	 * existing region in cmem and cannot be equal to existing region's
++	 * start or end. Obviously, the start of [0, 1M] cannot meet this
++	 * condition.
+ 	 */
+ 	nr_ranges += 2;
+ 	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
+@@ -282,9 +289,15 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
+ 	struct crash_memmap_data cmd;
+ 	struct crash_mem *cmem;
+ 
+-	cmem = vzalloc(struct_size(cmem, ranges, 1));
++	cmem = vzalloc(struct_size(cmem, ranges, 2));
+ 	if (!cmem)
+ 		return -ENOMEM;
++	cmem->max_nr_ranges = 2;
++
++	/* Exclude some ranges from crashk_res and add rest to memmap */
++	ret = memmap_exclude_ranges(image, cmem, crashk_res.start, crashk_res.end);
++	if (ret)
++		goto out;
+ 
+ 	memset(&cmd, 0, sizeof(struct crash_memmap_data));
+ 	cmd.params = params;
+@@ -320,11 +333,6 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
+ 		add_e820_entry(params, &ei);
+ 	}
+ 
+-	/* Exclude some ranges from crashk_res and add rest to memmap */
+-	ret = memmap_exclude_ranges(image, cmem, crashk_res.start, crashk_res.end);
+-	if (ret)
+-		goto out;
+-
+ 	for (i = 0; i < cmem->nr_ranges; i++) {
+ 		ei.size = cmem->ranges[i].end - cmem->ranges[i].start + 1;
+ 
 -- 
 2.42.0
 
