@@ -4,32 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AABEBC46CD2
-	for <kexec@archiver.kernel.org>; Wed, 20 Dec 2023 05:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BDBBDC3DA6E
+	for <kexec@archiver.kernel.org>; Wed, 20 Dec 2023 05:59:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=A22MSnOz6FrDotj30xzGGw2A1lW1FNFZyHtyK83dNpw=; b=aKSklySx6QVt4J
-	IA7z3RUsy959dEywhBqUK4M00ZoczXXrUhBWLcQDLOCpP+IhpJfe7rQh4PY/xu8w3w8juSY0IevFt
-	pXgO724OYH8FmftwEFo28RB1Q7o3BrjQuGZnsAWtRnXxe9f3BwOR8M61iW4ekI+CVt9AAAOC8Hivc
-	K30G7vHyh7gbJjNphBfGWQDwBDwnpoiSAJ2KweQTYV5hJSAJCI9iLTUNMq2EuEHbuUFRKQUqU5V+i
-	QrxoLTkEEWpDIahqoZVpyPdgDySbpI/hVj7HpJSsH4J52X1RI1M8gwhzTFoM3UIq7s+tsXr31CQ/F
-	sFDlURxgo/m8sy7aSqxw==;
+	List-Owner; bh=LYQVSSaU/4cYgs0CO+bWeAoo0Jb/08vJXkRT/enpoBI=; b=Jtny+f7pWXjDBb
+	jeR4lj0iGmiY4Q0UGX3PS+p+hJtnz114v0wdu3VzjEkFumxI3icKkeqU9zzxHpw1xG7xWp9HT07ID
+	Ane6kbovrK9en/KAJQmdz+ifNZX1IgOvasiW8pbUNtdUdE0z2RrcI/ZiYiGxZjNt3VFoliUKrz7XQ
+	oBX5rPlv49u1BIPpItdXQ/8aNku2jvdt4hZ1dMm3umNsFYT27dF/TbNvBeoQAQUdAJ6ZqmWMOW88+
+	GTR1SlkKabaPYGDHTRJ53HbzyseKXDV7qvIWOfvtL/js2eZmXUuV1tFv9CZa0qNjSON94ZByku1Kq
+	blE6BCP5NJJQucs6Uq2Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rFpc4-00GEhg-2X;
-	Wed, 20 Dec 2023 05:59:24 +0000
-Received: from mail-m12790.qiye.163.com ([115.236.127.90])
+	id 1rFpc7-00GEiZ-1C;
+	Wed, 20 Dec 2023 05:59:27 +0000
+Received: from mail-m12791.qiye.163.com ([115.236.127.91])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rFpc1-00GEgR-2M
+	id 1rFpc2-00GEgW-1t
 	for kexec@lists.infradead.org;
-	Wed, 20 Dec 2023 05:59:23 +0000
+	Wed, 20 Dec 2023 05:59:24 +0000
 Received: from fedora.. (unknown [211.103.144.18])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id DF6E726015E;
-	Wed, 20 Dec 2023 13:57:42 +0800 (CST)
+	by smtp.qiye.163.com (Hmail) with ESMTPA id BD44F26015D;
+	Wed, 20 Dec 2023 13:57:44 +0800 (CST)
 From: fuqiang wang <fuqiang.wang@easystack.cn>
 To: Baoquan He <bhe@redhat.com>,
 	Vivek Goyal <vgoyal@redhat.com>,
@@ -37,25 +37,25 @@ To: Baoquan He <bhe@redhat.com>,
 	Yuntao Wang <ytcoode@gmail.com>
 Cc: kexec@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] x86/kexec: Fix potential out of bounds in crash_setup_memmap_entries()
-Date: Wed, 20 Dec 2023 13:57:31 +0800
-Message-ID: <20231220055733.100325-2-fuqiang.wang@easystack.cn>
+Subject: [PATCH v2 2/2] kexec: Fix potential out of bounds in crash_exclude_mem_range()
+Date: Wed, 20 Dec 2023 13:57:32 +0800
+Message-ID: <20231220055733.100325-3-fuqiang.wang@easystack.cn>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20231220055733.100325-1-fuqiang.wang@easystack.cn>
 References: <20231220055733.100325-1-fuqiang.wang@easystack.cn>
 MIME-Version: 1.0
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVkZHktOVkMdTx0aThlPHx4fGlUZERMWGhIXJBQOD1
+	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVlCHxhPVk5IHksdTE0ZGk8YGFUZERMWGhIXJBQOD1
 	lXWRgSC1lBWUlKSlVKS0hVSk9PVUpDWVdZFhoPEhUdFFlBWU9LSFVKTU9JTE5VSktLVUpCS0tZBg
 	++
-X-HM-Tid: 0a8c85cd26650276kunmdf6e726015e
+X-HM-Tid: 0a8c85cd2dbc0276kunmbd44f26015d
 X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Ky46Igw6LzE2P1FOOgI4Cw4u
-	NwFPCjpVSlVKTEtIS05KQ01PTk1CVTMWGhIXVR0OChIaFRxVDBoVHDseGggCCA8aGBBVGBVFWVdZ
-	EgtZQVlJSkpVSktIVUpPT1VKQ1lXWQgBWUFITEJCNwY+
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MS46Nxw6PzErFVEBDAMPCwgq
+	Ng4aCj5VSlVKTEtIS05KQ01NSUNIVTMWGhIXVR0OChIaFRxVDBoVHDseGggCCA8aGBBVGBVFWVdZ
+	EgtZQVlJSkpVSktIVUpPT1VKQ1lXWQgBWUFJSExKNwY+
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231219_215921_946724_BEC8E19A 
-X-CRM114-Status: GOOD (  15.19  )
+X-CRM114-CacheID: sfid-20231219_215922_825782_08DB1031 
+X-CRM114-Status: GOOD (  10.15  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -72,70 +72,43 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-In memmap_exclude_ranges(), there will exclude elfheader from
-crashk_res. In the current x86 architecture code, the elfheader is
-always allocated at crashk_res.start. It seems that there won't be a
-split a new range. But it depends on the allocation position of
-elfheader in crashk_res. To avoid potential out of bounds in future, Set
-the array size to 2.
+When the split does not occur on the last array member, the current code
+will not return an error. So the correct array out-of-bounds check should
+be mem->nr_ranges >= mem->max_nr_ranges.
 
-But similar issue will not exist in fill_up_crash_elf_data(). Because
-the range to be excluded is [0, 1M], start (0) is special and will not
-appear in the middle of existing cmem->ranges[]. I added a comment to
-explain it.
+When the OOB happen, the cmem->ranges[] have changed, so return early to
+avoid it.
 
 Signed-off-by: fuqiang wang <fuqiang.wang@easystack.cn>
 ---
- arch/x86/kernel/crash.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+ kernel/crash_core.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index c92d88680dbf..1c15d0884c90 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -149,6 +149,13 @@ static struct crash_mem *fill_up_crash_elf_data(void)
- 	/*
- 	 * Exclusion of crash region and/or crashk_low_res may cause
- 	 * another range split. So add extra two slots here.
-+	 *
-+	 * Exclusion of low 1M may not cause another range split, because the
-+	 * range of exclude is [0, 1M] and the condition for splitting a new
-+	 * region is that the start, end parameters are both in a certain
-+	 * existing region in cmem and cannot be equal to existing region's
-+	 * start or end. Obviously, the start of [0, 1M] cannot meet this
-+	 * condition.
- 	 */
- 	nr_ranges += 2;
- 	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
-@@ -282,9 +289,15 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
- 	struct crash_memmap_data cmd;
- 	struct crash_mem *cmem;
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index d4313b53837e..b1ab61c74fd2 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -611,6 +611,9 @@ int crash_exclude_mem_range(struct crash_mem *mem,
+ 		}
  
--	cmem = vzalloc(struct_size(cmem, ranges, 1));
-+	cmem = vzalloc(struct_size(cmem, ranges, 2));
- 	if (!cmem)
- 		return -ENOMEM;
-+	cmem->max_nr_ranges = 2;
-+
-+	/* Exclude some ranges from crashk_res and add rest to memmap */
-+	ret = memmap_exclude_ranges(image, cmem, crashk_res.start, crashk_res.end);
-+	if (ret)
-+		goto out;
+ 		if (p_start > start && p_end < end) {
++			/* Split happened */
++			if (mem->nr_ranges >= mem->max_nr_ranges)
++				return -ENOMEM;
+ 			/* Split original range */
+ 			mem->ranges[i].end = p_start - 1;
+ 			temp_range.start = p_end + 1;
+@@ -626,10 +629,6 @@ int crash_exclude_mem_range(struct crash_mem *mem,
+ 	if (!temp_range.end)
+ 		return 0;
  
- 	memset(&cmd, 0, sizeof(struct crash_memmap_data));
- 	cmd.params = params;
-@@ -320,11 +333,6 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
- 		add_e820_entry(params, &ei);
- 	}
- 
--	/* Exclude some ranges from crashk_res and add rest to memmap */
--	ret = memmap_exclude_ranges(image, cmem, crashk_res.start, crashk_res.end);
--	if (ret)
--		goto out;
+-	/* Split happened */
+-	if (i == mem->max_nr_ranges - 1)
+-		return -ENOMEM;
 -
- 	for (i = 0; i < cmem->nr_ranges; i++) {
- 		ei.size = cmem->ranges[i].end - cmem->ranges[i].start + 1;
- 
+ 	/* Location where new range should go */
+ 	j = i + 1;
+ 	if (j < mem->nr_ranges) {
 -- 
 2.42.0
 
