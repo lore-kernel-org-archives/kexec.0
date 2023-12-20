@@ -4,72 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 44F83C3DA6E
-	for <kexec@archiver.kernel.org>; Wed, 20 Dec 2023 04:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4716DC3DA6E
+	for <kexec@archiver.kernel.org>; Wed, 20 Dec 2023 05:59:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=AoE6YjneYuJo+f/0HMT2QjDWx0PzKmJXvOPLh5/ARGo=; b=jyEhQqyPy7zYPx
-	KetZftvjhUy5E2oGKHDtAIRAEgnSjCT3IS85mGT15DqsY8jIMuNfAD92/aX20FT8Pk9zOYWIf1MQl
-	uFQsWSPToYiNHgFckSJODkvZhEsvkB1Pzwzyrp86RCGIH9WzVvEofAxYQiqVghGAJuCbh5WO9WMIW
-	Xy/y5BYXHDr8dNwJvyKgRzCEGPDhyKhc57cWbd0I/itmv5Y04UOc7TKxEZGPuSGAuX8ijw46jitM3
-	HtuEcdmxeufwm4Uvz15vp73IuvS5o6D129YUr5R0IJocJildDFu75IGrXsDpBEqPXBtb1fP4DNn9H
-	c8Au9bZrm97Q+pJIenZw==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=5lDNpxbBg3AZ5HGcM/cj95c9pIuYaunGcWBVVr+ZG7U=; b=qrhz9/sSU5eSAR
+	qk3phfkDFNV7CQyhh9UHjB0nNIsTZSwCPABNTv9dVaMcNk8BNH7MEQDv1gxjM0xWkiBJKk0QkFp6n
+	L2iBkeFexKkHKxCvSM1ZsYpSUSLlN0zG2ygjOapUuGJ5lWVhm/AOyqEeuM99gmNeT2CVOylsnZhD+
+	tI1ZtwO9uoCodsfJe5AJoNacRuhCiHmSoYZ3Ow07QBE2HTdqzlyPAC0n6KBH5J2qxnyHrbJs+NAz3
+	mDrdkbr8esQmKoNd/kic2AYyzGw7oaqwm7k3Aguf3GJdetIsNOrFjGtpclbQfDcTcd/8dvK2z+f64
+	LRB8qYh5VasANBTMIsTQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rFo6U-00G7zL-3C;
-	Wed, 20 Dec 2023 04:22:43 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1rFpc4-00GEhW-15;
+	Wed, 20 Dec 2023 05:59:24 +0000
+Received: from mail-m12789.qiye.163.com ([115.236.127.89])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rFo6R-00G7wW-1y
+	id 1rFpc1-00GEgQ-1A
 	for kexec@lists.infradead.org;
-	Wed, 20 Dec 2023 04:22:42 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1703046157;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G45CImyqsOOmdqDD2eGP+r9BP7+mm5bd9KiBb8nBAIM=;
-	b=CiOGIy9Kw6oQ0ZpO2ZUNgNABmiAArjFHoSdR2EULO16V8MQGKXaTQVNbH8Cyd5B7Vyxjpo
-	K0YNrlY3nmJwRvL3iwG4zkE5HCq/bQCbZEhFs5IGAeBQJgZ6PgPyTGghA6Rf8GASckkxQp
-	gnc0zNJAjPYmVz3i8XVxHd9H5h9XPv0=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-433-Tu1M_nxTPP6L7Ts-3ewPyw-1; Tue, 19 Dec 2023 23:22:34 -0500
-X-MC-Unique: Tu1M_nxTPP6L7Ts-3ewPyw-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6B6FA832D62;
-	Wed, 20 Dec 2023 04:22:33 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.38])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 83323492BE6;
-	Wed, 20 Dec 2023 04:22:32 +0000 (UTC)
-Date: Wed, 20 Dec 2023 12:22:29 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Conor Dooley <conor@kernel.org>, akpm@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	linux-parisc@vger.kernel.org, joe@perches.com, nathan@kernel.org
-Subject: Re: [PATCH v4 5/7] kexec_file, ricv: print out debugging message if
- required
-Message-ID: <ZYJsBW0Y7Y+XhSgf@MiWiFi-R3L-srv>
-References: <20231213055747.61826-1-bhe@redhat.com>
- <20231213055747.61826-6-bhe@redhat.com>
- <20231219-twitch-many-ca8877857182@spud>
+	Wed, 20 Dec 2023 05:59:23 +0000
+Received: from fedora.. (unknown [211.103.144.18])
+	by smtp.qiye.163.com (Hmail) with ESMTPA id 7353926010E;
+	Wed, 20 Dec 2023 13:57:40 +0800 (CST)
+From: fuqiang wang <fuqiang.wang@easystack.cn>
+To: Baoquan He <bhe@redhat.com>,
+	Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>,
+	Yuntao Wang <ytcoode@gmail.com>
+Cc: kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] kexec: fix potential cmem->ranges out of bounds
+Date: Wed, 20 Dec 2023 13:57:30 +0800
+Message-ID: <20231220055733.100325-1-fuqiang.wang@easystack.cn>
+X-Mailer: git-send-email 2.42.0
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20231219-twitch-many-ca8877857182@spud>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVkaSxgfVkhLShoZSRkZTR1IGlUZERMWGhIXJBQOD1
+	lXWRgSC1lBWUlKSlVKS0hVSk9PVUpDWVdZFhoPEhUdFFlBWU9LSFVKSktISkNVSktLVUtZBg++
+X-HM-Tid: 0a8c85cd1f610276kunm7353926010e
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NBw6Qgw4VjE*SlEcDAwDCw4M
+	MRYwC0NVSlVKTEtIS05KQ01JTEtCVTMWGhIXVR0OChIaFRxVDBoVHDseGggCCA8aGBBVGBVFWVdZ
+	EgtZQVlJSkpVSktIVUpPT1VKQ1lXWQgBWUFJSk1ONwY+
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231219_202239_743078_CFD10768 
-X-CRM114-Status: GOOD (  16.97  )
+X-CRM114-CacheID: sfid-20231219_215921_568333_19730951 
+X-CRM114-Status: UNSURE (   7.34  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,36 +70,41 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 12/19/23 at 02:44pm, Conor Dooley wrote:
-> On Wed, Dec 13, 2023 at 01:57:45PM +0800, Baoquan He wrote:
-> > Then when specifying '-d' for kexec_file_load interface, loaded
-> > locations of kernel/initrd/cmdline etc can be printed out to help debug.
-> > 
-> > Here replace pr_debug() with the newly added kexec_dprintk() in kexec_file
-> > loading related codes.
-> > 
-> > And also replace pr_notice() with kexec_dprintk() in elf_kexec_load()
-> > because loaded location of purgatory and device tree are only printed
-> > out for debugging, it doesn't make sense to always print them out.
-> > 
-> > And also remove kexec_image_info() because the content has been printed
-> > out in generic code.
-> > 
-> > Signed-off-by: Baoquan He <bhe@redhat.com>
-> 
-> I'm sorry - I meant to look at this several days ago but I forgot.
-> Apart from the typo that crept back into $subject, this version explains
-> the rationale behind what you're changing a lot better, thanks.
+This series tries to fix the potential cmem->ranges out of bounds.
 
-Thanks for careful checking. I forgot the typo fixing you have pointed
-out in v3 reviewing.
+On the v1 version, there are still some issues that need to be
+discussed, as follows:
 
-Hi Andrew,
+1) Whether we need have the cmem->ranges[] partly changed, or keep it
+unchanged when OOB happened. Previously discussed link:[1].
 
-Could you help fix the typo in subject?
+2) Set cmem->max_nr_ranges in crash_setup_memmap_entries() to 1 or 2.
+Previously discussed link:[2].
 
-[PATCH v4 5/7] kexec_file, ricv: print out debugging message if required
-                           ~~~ s/ricv/riscv/
+3) To enhance crash_setup_memmap_entries() readability, how to move
+code. Previously discussed link:[2].
+
+v2:
+  - Fix potential out of bounds in crash_setup_memmap_entries().
+  - Add a comment in fill_up_crash_elf_data() to explain why the array
+    size do not need to be changed.
+
+v1:
+  Link: https://lore.kernel.org/all/20231127025641.62210-1-fuqiang.wang@easystack.cn/
+
+[1]: https://lore.kernel.org/all/ZXrY7QbXAlxydsSC@MiWiFi-R3L-srv/
+[2]: https://lore.kernel.org/all/273284e8-7680-4f5f-8065-c5d780987e59@easystack.cn/
+
+fuqiang wang (2):
+  x86/kexec: Fix potential out of bounds in crash_setup_memmap_entries()
+  kexec: Fix potential out of bounds in crash_exclude_mem_range()
+
+ arch/x86/kernel/crash.c | 20 ++++++++++++++------
+ kernel/crash_core.c     |  7 +++----
+ 2 files changed, 17 insertions(+), 10 deletions(-)
+
+-- 
+2.42.0
 
 
 _______________________________________________
