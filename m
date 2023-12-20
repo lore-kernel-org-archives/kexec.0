@@ -4,68 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1C9CCC3DA6E
-	for <kexec@archiver.kernel.org>; Wed, 20 Dec 2023 20:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4B51AC3DA6E
+	for <kexec@archiver.kernel.org>; Wed, 20 Dec 2023 20:41:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:Mime-Version:References:In-Reply-To:
 	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=+OKSzlWabEXZVEtEJ6q3BeNGmuI7EKLHd4yinU8vqN0=; b=cMZxLNYJhOKQQk
-	cRnyxwMYGIhloKXMehUm+6/Ew+LZSs1p3kbR6wF8xtdFb1m3DkKtGryb+WQUnPsPa5WPs5XAo/Q4t
-	XiamKG0D0V9j6hnTbAG9zos2Rm6XHMycmBZcmrDfq0JvsGAbekVFV4dl2Qb1p4mW4DQpF5ycvfNpz
-	XihMU8o0F9Njyz/PTLGbdXz1ohqFrEHxkbxGaxSMrrLyMhWIZTjINTEgqLEt5CVJtLqoxTfcO7El1
-	KL4HLTSc8bE/zx3xP8iMDr+bQtHWYJeO75vVcfrW8mkEacF+x2ktsxJ09CLybZBO+Vkb4Z9eJGz4G
-	GwTd0N7QTWqgWquHyeIA==;
+	List-Owner; bh=vDggconwNxywu0GPt31iuYTQaPfcOQV7hjycFU5sd48=; b=fv+BQSa2OlVgZJ
+	lH9c7to8bHTronRiDy3qvs0/SHaJ1iuZ7ML2hSoPVpDlW2imT/uVGG0nqMelFYs2VQMXaalu+3Yxu
+	QC/vurxKH5TR/JqlY/5dtVNePDg9RZ2GeT8U28gpbEngnhIdPWBED/1RNP1FEsJcet0dPkNAVS209
+	cQO1PXcx/OHuGi99ehH+g0YuHNVBEmEUZVEr7KKYyk7pW9USco6CUiu2Rwlwcd8xgUe4pqa9b1erE
+	qcGHn2bp9ts9QH3X2bA7nUASiPTl8QQhYMn/5rFh8dW2miTFep8VvG85ASE6GpqweRGdIQKbn+Myo
+	J7lq84DP8GV7qYAtkGig==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rG31R-000pYk-24;
-	Wed, 20 Dec 2023 20:18:29 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1rG3O5-000rj0-3D;
+	Wed, 20 Dec 2023 20:41:54 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rG31O-000pYL-0q
+	id 1rG3O2-000ria-2v
 	for kexec@lists.infradead.org;
-	Wed, 20 Dec 2023 20:18:28 +0000
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BKJl0cA005212;
-	Wed, 20 Dec 2023 20:18:00 GMT
+	Wed, 20 Dec 2023 20:41:52 +0000
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BKJLaJo002707;
+	Wed, 20 Dec 2023 20:41:27 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
  from : to : cc : date : in-reply-to : references : content-type :
  mime-version : content-transfer-encoding; s=pp1;
- bh=QGrZ5WG1uTruUSRtoz27vaI8p+nzVgCsiiHShd6D+tY=;
- b=JczChYlYDIDrjV9l1ayMoGOj7EhoooPVqGlEULyYw3/IQH9hVAcj9E2XCQuOGmzPAT94
- mviFlCCwVOykMoTLebpgVqpGR8Cs/1wGjbxKPIT5wiJutB3hEmpgxaplZaoBMmwZdfJ5
- uys3JYQcAbBe8T0/74lbGSq87eJTtF3ss9pgOJO6Yl9Lfju+ugdPY54XcjX3x9mJnp38
- 4Jxa0kDJJhxN0Unxth/J1oSlRRpsM9D7jL3Rrv0kONRGYe8sI200ZHGiTDUQvo8nnHgN
- Ik6299qcbV/VmgSyPl/5MJOzmyhbNGcM8ktjda03zc8wCWI2QTVkCmfeLLpqoyvbLot+ Og== 
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3v46qrrmjk-1
+ bh=T93vEvWuWCv0q5ZYcBTMqIW/8+mV3l9hKuEhkSmmacY=;
+ b=WOI74b/20FkOn9CqkzY7B786Yb4Il+qH08f36Mvnh77yYPOfYB2yXODstiUvwusO/4PP
+ GnBN50x2HjEAqEsLfVzazDibtb2uZwmuGjlYnsHDIDYhcPBdmoIpeacYxiiCROLGME0W
+ W5dFgAFfGDjDldCAZEUQ6IFUKCUVTnEd1sF0p4eT6vXKE20ukGkxqeCQ/GMpauSdzeWt
+ vnZKCOllYG+ViEesD2wFLDz2UZcrbCSa6l/UrN9aC9mOIBwO/2HOPodNlM7h9XepyTjs
+ b1PB59LF/5GEPa/bRsPf42+GabBwscl4AGVaSYnLmA3TaL1CF9yaagTBm1C1Ku/5kwRj Iw== 
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3v441rx9fj-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 20 Dec 2023 20:17:59 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BKI1kjj027822;
-	Wed, 20 Dec 2023 20:15:34 GMT
-Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3v1rek8cca-1
+	Wed, 20 Dec 2023 20:41:26 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BKJ4Oqr029801;
+	Wed, 20 Dec 2023 20:41:25 GMT
+Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3v1p7ss2c1-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 20 Dec 2023 20:15:34 +0000
-Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BKKFXFE47382914
+	Wed, 20 Dec 2023 20:41:25 +0000
+Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
+	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BKKfPo815663870
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 20 Dec 2023 20:15:34 GMT
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D079E58058;
-	Wed, 20 Dec 2023 20:15:33 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 533445805C;
-	Wed, 20 Dec 2023 20:15:32 +0000 (GMT)
+	Wed, 20 Dec 2023 20:41:25 GMT
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6468858056;
+	Wed, 20 Dec 2023 20:41:25 +0000 (GMT)
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AB52E58052;
+	Wed, 20 Dec 2023 20:41:24 +0000 (GMT)
 Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.61.116.58])
-	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 20 Dec 2023 20:15:32 +0000 (GMT)
-Message-ID: <fbe6aa7577875b23a9913a39f858f06f1d2aa903.camel@linux.ibm.com>
-Subject: Re: [PATCH v3 6/7] ima: configure memory to log events between
- kexec load and execute
+	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 20 Dec 2023 20:41:24 +0000 (GMT)
+Message-ID: <0c98853722d57472d451e7838d4b1176665de1c0.camel@linux.ibm.com>
+Subject: Re: [PATCH v3 7/7] ima: measure kexec load and exec events as
+ critical data
 From: Mimi Zohar <zohar@linux.ibm.com>
 To: Tushar Sugandhi <tusharsu@linux.microsoft.com>,
         roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
@@ -73,26 +73,26 @@ To: Tushar Sugandhi <tusharsu@linux.microsoft.com>,
         noodles@fb.com, bauermann@kolabnow.com,
         linux-integrity@vger.kernel.org, kexec@lists.infradead.org
 Cc: code@tyhicks.com, nramas@linux.microsoft.com, paul@paul-moore.com
-Date: Wed, 20 Dec 2023 15:15:31 -0500
-In-Reply-To: <20231216010729.2904751-7-tusharsu@linux.microsoft.com>
+Date: Wed, 20 Dec 2023 15:41:24 -0500
+In-Reply-To: <20231216010729.2904751-8-tusharsu@linux.microsoft.com>
 References: <20231216010729.2904751-1-tusharsu@linux.microsoft.com>
-	 <20231216010729.2904751-7-tusharsu@linux.microsoft.com>
+	 <20231216010729.2904751-8-tusharsu@linux.microsoft.com>
 X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
 Mime-Version: 1.0
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: fyfM2qETtpX1VfoT_hQoIr6IcqZbw5xd
-X-Proofpoint-ORIG-GUID: fyfM2qETtpX1VfoT_hQoIr6IcqZbw5xd
+X-Proofpoint-GUID: mKUePe8h_PNzcJPOfNVMAbApsAIAC1Uj
+X-Proofpoint-ORIG-GUID: mKUePe8h_PNzcJPOfNVMAbApsAIAC1Uj
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2023-12-20_13,2023-12-20_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
- adultscore=0 priorityscore=1501 mlxlogscore=999 lowpriorityscore=0
- bulkscore=0 suspectscore=0 mlxscore=0 phishscore=0 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2312200143
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
+ adultscore=0 bulkscore=0 lowpriorityscore=0 spamscore=0 phishscore=0
+ malwarescore=0 priorityscore=1501 mlxlogscore=999 suspectscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2312200145
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231220_121826_529627_C9C835DA 
-X-CRM114-Status: GOOD (  29.89  )
+X-CRM114-CacheID: sfid-20231220_124151_080369_143D9B92 
+X-CRM114-Status: GOOD (  30.15  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -109,95 +109,107 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Tushar,
-
-The Subject line should include the word "extra".   The use of the
-extra memory isn't limited to the measurements between the kexec load
-and exec.  Additional records could be added as a result of the kexec
-load itself.  Let's simplify the title to "ima: make the kexec extra
-memory configurable".
-
-Please remove any references to measurements between kexec load and
-execute.
-
 On Fri, 2023-12-15 at 17:07 -0800, Tushar Sugandhi wrote:
-> IMA currently allocates half a PAGE_SIZE for the extra events that would
-> be measured between kexec 'load' and 'execute'.  Depending on the IMA
-> policy and the system state, that memory may not be sufficient to hold
-> the extra IMA events measured after kexec 'load'.  The memory
-> requirements vary from system to system and they should be configurable.
-
-The extra memory allocated for carrying the IMA measurement list across
-kexec is hardcoded as a half a PAGE.   Make it configurable.
-
-> Define a Kconfig option, IMA_KEXEC_EXTRA_MEMORY_KB, to configure the
-> extra memory (in kb) to be allocated for IMA measurements added in the
-> window from kexec 'load' to kexec 'execute'.
-
-> Update ima_add_kexec_buffer() function to allocate memory based on the 
-> Kconfig option value, rather than the currently hardcoded one.
+> There could be a potential mismatch between IMA measurements and TPM PCR
+> quotes caused by the indeterminate interval between kexec 'load' and
+> 'execute'.  Memory allocated at kexec 'load' for IMA log buffer may run
+> out. It can lead to missing events in the IMA log after a soft reboot to
+> the new Kernel, resulting in TPM PCR quotes mismatch and remote
+> attestation failures.
+> 
+> Define two new IMA events, 'kexec_load' and 'kexec_execute', to be 
+> measured as critical data at kexec 'load' and 'execute' respectively.
+> 
+> These events serve as markers in the IMA log to verify the IMA events are
+> captured between kexec 'load' and 'execute' window.  The presence of a
+> 'kexec_load' event in between the last two 'boot_aggregate' events in the
+> IMA log implies this is a kexec soft reboot, and not a cold-boot. And the
+> absence of 'kexec_execute' event after kexec soft reboot implies missing
+> events in that window which results in inconsistency with TPM PCR quotes,
+> necessitating a cold boot for further successful remote attestation.
 > 
 > Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
 > ---
->  security/integrity/ima/Kconfig     |  9 +++++++++
->  security/integrity/ima/ima_kexec.c | 13 ++++++++-----
->  2 files changed, 17 insertions(+), 5 deletions(-)
+>  security/integrity/ima/ima_kexec.c | 23 ++++++++++++++++++++++-
+>  1 file changed, 22 insertions(+), 1 deletion(-)
 > 
-> diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
-> index 60a511c6b583..8792b7aab768 100644
-> --- a/security/integrity/ima/Kconfig
-> +++ b/security/integrity/ima/Kconfig
-> @@ -338,3 +338,12 @@ config IMA_DISABLE_HTABLE
->  	default n
->  	help
->  	   This option disables htable to allow measurement of duplicate records.
-> +
-> +config IMA_KEXEC_EXTRA_MEMORY_KB
-> +	int
-> +	depends on IMA && IMA_KEXEC
-> +	default 64
-
-Since this isn't optional, the default should remain as a half page. 
-Since a page is architecture specific, the default will need to be arch
- specific.
-
-thanks,
-
-Mimih
-
-> +	help
-> +	  IMA_KEXEC_EXTRA_MEMORY_KB determines the extra memory to be
-> +	  allocated (in kb) for IMA measurements added in the window
-> +	  from kexec 'load' to kexec 'execute'.
 > diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-> index 55bd5362262e..063da9c834a0 100644
+> index 063da9c834a0..47da41a66dcc 100644
 > --- a/security/integrity/ima/ima_kexec.c
 > +++ b/security/integrity/ima/ima_kexec.c
-> @@ -128,15 +128,18 @@ void ima_add_kexec_buffer(struct kimage *image)
->  	int ret;
+> @@ -17,6 +17,8 @@
+>  #include "ima.h"
 >  
+>  #ifdef CONFIG_IMA_KEXEC
+> +#define IMA_KEXEC_EVENT_LEN 128
+> +
+>  struct seq_file ima_kexec_file;
+>  static void *ima_kexec_buffer;
+>  static size_t kexec_segment_size;
+> @@ -33,6 +35,8 @@ void ima_free_kexec_file_buf(struct seq_file *sf)
+>  
+>  static int ima_alloc_kexec_file_buf(size_t segment_size)
+>  {
+> +	char ima_kexec_event[IMA_KEXEC_EVENT_LEN];
+> +
 >  	/*
-> -	 * Reserve an extra half page of memory for additional measurements
-> -	 * added during the kexec load.
-> +	 * Reserve extra memory for measurements added in the window from
-> +	 * kexec 'load' to kexec 'execute'.
->  	 */
-> -	binary_runtime_size = ima_get_binary_runtime_size();
-> +	binary_runtime_size = ima_get_binary_runtime_size() +
-> +			      sizeof(struct ima_kexec_hdr) +
-> +			      (CONFIG_IMA_KEXEC_EXTRA_MEMORY_KB * 1024);
+>  	 * kexec 'load' may be called multiple times.
+>  	 * Free and realloc the buffer only if the segment_size is
+> @@ -42,7 +46,7 @@ static int ima_alloc_kexec_file_buf(size_t segment_size)
+>  	    ima_kexec_file.size == segment_size &&
+>  	    ima_kexec_file.read_pos == 0 &&
+>  	    ima_kexec_file.count == sizeof(struct ima_kexec_hdr))
+> -		return 0;
+> +		goto out;
+>  
+>  	ima_free_kexec_file_buf(&ima_kexec_file);
+>  
+> @@ -55,6 +59,13 @@ static int ima_alloc_kexec_file_buf(size_t segment_size)
+>  	ima_kexec_file.read_pos = 0;
+>  	ima_kexec_file.count = sizeof(struct ima_kexec_hdr);	/* reserved space */
+>  
+> +out:
+> +	scnprintf(ima_kexec_event, IMA_KEXEC_EVENT_LEN,
+> +		  "kexec_segment_size=%lu;", segment_size);
 > +
->  	if (binary_runtime_size >= ULONG_MAX - PAGE_SIZE)
->  		kexec_segment_size = ULONG_MAX;
->  	else
-> -		kexec_segment_size = ALIGN(ima_get_binary_runtime_size() +
-> -					   PAGE_SIZE / 2, PAGE_SIZE);
-> +		kexec_segment_size = ALIGN(binary_runtime_size, PAGE_SIZE);
+> +	ima_measure_critical_data("ima_kexec", "kexec_load", ima_kexec_event,
+> +				  strlen(ima_kexec_event), false, NULL, 0);
 > +
->  	if ((kexec_segment_size == ULONG_MAX) ||
->  	    ((kexec_segment_size >> PAGE_SHIFT) > totalram_pages() / 2)) {
->  		pr_err("Binary measurement list too large.\n");
+>  	return 0;
+>  }
+>  
+> @@ -179,6 +190,7 @@ void ima_add_kexec_buffer(struct kimage *image)
+>  static int ima_update_kexec_buffer(struct notifier_block *self,
+>  				   unsigned long action, void *data)
+>  {
+> +	char ima_kexec_event[IMA_KEXEC_EVENT_LEN];
+>  	void *buf = NULL;
+>  	size_t buf_size;
+>  	bool resume = false;
+> @@ -194,6 +206,15 @@ static int ima_update_kexec_buffer(struct notifier_block *self,
+>  		return ret;
+>  	}
+>  
+> +	buf_size = ima_get_binary_runtime_size();
+> +	scnprintf(ima_kexec_event, IMA_KEXEC_EVENT_LEN,
+> +		  "kexec_segment_size=%lu;ima_binary_runtime_size=%lu;",
+> +		  kexec_segment_size, buf_size);
+> +
+> +	ima_measure_critical_data("ima_kexec", "kexec_execute",
+> +				  ima_kexec_event, strlen(ima_kexec_event),
+> +				  false, NULL, 0);
+> +
 
+Please consider including the number of measurement records as well.
+
+>  	ima_measurements_suspend();
+>  
+>  	ret = ima_dump_measurement_list(&buf_size, &buf,
+
+-- 
+thanks,
+
+Mimi
 
 
 _______________________________________________
