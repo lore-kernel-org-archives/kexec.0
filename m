@@ -4,95 +4,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5985DC46CD3
-	for <kexec@archiver.kernel.org>; Thu, 21 Dec 2023 13:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D7745C35274
+	for <kexec@archiver.kernel.org>; Thu, 21 Dec 2023 14:15:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:MIME-Version:List-Subscribe:List-Help:
-	List-Post:List-Archive:List-Unsubscribe:List-Id:Message-Id:Date:Subject:Cc:To
+	List-Post:List-Archive:List-Unsubscribe:List-Id:Message-ID:Date:Subject:Cc:To
 	:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=utsaWHr2xAz/Dtph5hJ6CjSjjr6iVUVpFOrBO4Be8GA=; b=iyqmwuJ2Feiz73
-	y+N9nDoC4ezup0TANNcxStQjWkcKHXZ/SVCj5BI4a9NFjGl5QyBSGdxxr8vmiicKIIDNgEdyKpiGv
-	7yYZ+rew7El/uwJ5QK9jdzurP/3efX8Jyu8ln0QMoc6S3V1Dk0aOfXSr6deok2DnrAY2BZcdnBJaO
-	XVUKpvbMwdWBbJ0KG3dwvPrBxoi+7cgZSUKoiRsqOGrLA2dIqYKLcSp3LupBO+z0thWUZ+xKG0u3S
-	hb33h0viExaBbIbWv6GtWSyArxAytMnvjgqTvTlddT6Rzz/DDfcJlNz03AGS/I0TptVu7BgwiA16M
-	a1fVSR13z7s4l5iVlucg==;
+	List-Owner; bh=e6ZC/Q5ZyL1agOiUk/ltX6MfhtlhNp2SM5nxa7+g7E4=; b=QV3cFFJCxvLlUf
+	HgSRiI1T2pMyvqKEJ9XQUkF5o+TOFHFX2lYASahyuOB8v3rknppsELA4fq0yE+CIDlliRmc/GTVrS
+	SmKS5zOQcYy07VHcXXfyC8Z5b2nGp337R2QTCMGd4gqqT3Rz86WKKXrpIrW+tRzjzk1XV2D4sMYhl
+	LBpXy7hF9eAu4iHpUna0ElXKJzR6TXW7MhPYmpcgiueGISZxrR1Kh8hZarK+WxBDR8X4BYD/7CxNd
+	qOs/LqGOF6RqXtFt5BvrBOGDbfa8MN38zltrO/Xc1QwZVbMCs+GE13IlGdfGHvMnG+nJ6E+OKBva/
+	TzkL5J/AAfrsdDdsOcew==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGJ3T-002wrn-0z;
-	Thu, 21 Dec 2023 13:25:39 +0000
-Received: from mail-pj1-x1029.google.com ([2607:f8b0:4864:20::1029])
+	id 1rGJpQ-0039E9-1p;
+	Thu, 21 Dec 2023 14:15:12 +0000
+Received: from mail-ot1-x363.google.com ([2607:f8b0:4864:20::363])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGJ3P-002wnz-1p;
-	Thu, 21 Dec 2023 13:25:37 +0000
-Received: by mail-pj1-x1029.google.com with SMTP id 98e67ed59e1d1-28659348677so575234a91.0;
-        Thu, 21 Dec 2023 05:25:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703165132; x=1703769932; darn=lists.infradead.org;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h/DS3plAsGGkfXvSea0H3Njbv+EkemNe6sD3VMx3Ho4=;
-        b=k7fQIg7/RenwpvroJ9WAXQDY8FNrmIOQp2f7+lFlp/RYFgwMPME1EqLMla+p8aG3UT
-         9ZjrkXpkwJLDkNsm3IokbDV7VcywYnkgKZNsOY2PpMM+58cA0oBGzEIUERk2k33oNuVF
-         07n+3ElPoekBm/SVfAjP4Gi1BywTi9bEodRO/1YO+nOJlrtnSkcaDOG3O71XEXklS+AC
-         O9gjEEq5Mr0kGiKB7d1vni6hnQ0Komdn5VU/DP5rRSRxEE+xYGgr7QtWP3cWS8SDhnS2
-         tiJPr+3r5DbWQloV2yHZLHD8M6uH1sKVf4Rh6H1wfokcwk7NXUDuu5OFt7iQQDL5cS2U
-         8cfQ==
+	id 1rGJpM-0039Dn-1c
+	for kexec@lists.infradead.org;
+	Thu, 21 Dec 2023 14:15:11 +0000
+Received: by mail-ot1-x363.google.com with SMTP id 46e09a7af769-6da45aa5549so599862a34.0
+        for <kexec@lists.infradead.org>; Thu, 21 Dec 2023 06:15:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703165132; x=1703769932;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h/DS3plAsGGkfXvSea0H3Njbv+EkemNe6sD3VMx3Ho4=;
-        b=DZss97k6/d+yMqLorTUqEp1kdKOg68jQqDr27wgPLpyo5gITeQyGYp6Oprsx84W/V4
-         bX9OlPJamNRa8zCppjLza8X7a9p5FG7+Tn0R5o+UOH9bQzXVnq4Jr5J2S10iPqK8dRKQ
-         N6KoqjUWktU4wZCvYIauXA0VGmqpixSO1i+UuiyE4Nvc+X00gS+TS4Ngm8mrLUDBNCT8
-         NLo4vDdFeLT79BYup6TriMgGQzKfhhAi+3UI7vhI3uDVlnGTvKiq3EbFc9OYJzE2xafs
-         qUx5opFd+khAnSq9r2p3hGct5YompIFy1AqNJ+X50dNsKsbAmMOqw0mnCsvuSHo/So1K
-         YvVg==
-X-Gm-Message-State: AOJu0Yx/+aDY9Pyu0GyjgPcqz1HyP0wkjYfzdg8W0o8oM99wjIrrL2Iv
-	RfuEexgKZdYjXOLg+GG7uNE=
-X-Google-Smtp-Source: AGHT+IGkXBT8oqblE3YuI1ThaXHFX3DcdNh1gfUXgs4jHaYsZd5D1avj3ud8huyGboP9iYvj7uDzTA==
-X-Received: by 2002:a17:90b:4c12:b0:28b:cc1e:66f4 with SMTP id na18-20020a17090b4c1200b0028bcc1e66f4mr791145pjb.33.1703165132327;
-        Thu, 21 Dec 2023 05:25:32 -0800 (PST)
-Received: from ruipeng-ThinkCentre-M730e-N010.company.local (014136220210.static.ctinets.com. [14.136.220.210])
-        by smtp.gmail.com with ESMTPSA id a3-20020a17090abe0300b0028bc09a5e1fsm1760016pjs.12.2023.12.21.05.25.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Dec 2023 05:25:31 -0800 (PST)
-From: Ruipeng Qi <ruipengqi7@gmail.com>
-To: catalin.marinas@arm.com,
-	will@kernel.org,
-	bhe@redhat.com,
-	vgoyal@redhat.com,
-	dyoung@redhat.com,
-	pmladek@suse.com,
-	rostedt@goodmis.org,
-	john.ogness@linutronix.de,
-	senozhatsky@chromium.org,
-	akpm@linux-foundation.org
-Cc: qiruipeng@lixiang.com,
-	maz@kernel.org,
-	lecopzer.chen@mediatek.com,
-	ardb@kernel.org,
-	mark.rutland@arm.com,
-	yury.norov@gmail.com,
-	arnd@arndb.de,
-	mcgrof@kernel.org,
-	brauner@kernel.org,
-	dianders@chromium.org,
-	maninder1.s@samsung.com,
-	michael.christie@oracle.com,
-	samitolvanen@google.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org
-Subject: [RFC PATCH 2/7] osdump: reuse some code from crash_core to get vmcoreinfo
-Date: Thu, 21 Dec 2023 21:25:22 +0800
-Message-Id: <20231221132522.547-1-ruipengqi7@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        d=1e100.net; s=20230601; t=1703168106; x=1703772906;
+        h=content-transfer-encoding:message-id:date:subject:cc:to:from
+         :dkim-signature:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dSl+knmWTCSeLTh+1XO2hQUwQUQRVy6Za4rKUfujNIg=;
+        b=QJ96OyPC5my/lyLVnQqBhTy27X/0kNFDRMerK/gTQb2CeMPQmJitW3ICDy/DLqCYmm
+         ki2aY54gsPbSsyHFH5m04qE+UvQb/PFGiYiKf2kJJEDE5ltqJXYc3GoxpXQNXIF92aJN
+         uk2AwzbvuRKxlY88vxpgfj8oLE6WlNo9dVJ0GN1Is+CpxaF9iIpEk0WKYq92iA0BO82W
+         TOv5TNN/n/jJqYMRvAv+5F9KbZmG54y/vMgJbWkF/FtqGsgJkBdxHj8T8qFy00MMql8Y
+         orkinR9AOQr5Tm9DDclpS59B+jvwBQKTPL49SBteIFXPNp3NsyOPDFKYgnoMhzzHgokO
+         BtJw==
+X-Gm-Message-State: AOJu0YyvU9cwko+b3tL31uqLl7pxIxx4yOKQ9YQQnv+O8PLC0lti9fYk
+	PxsxY9zmwc3lWd+dIQy4yEUV8e5nLHLAYxGaw31V/YOYZNOmvAAX9Y94
+X-Google-Smtp-Source: AGHT+IHrPEp94BVGLPXW6cSEd/B6I9izEdCCqi4YVIQKZCf8LA1dzYwKY754TiDBDf+kimlUzLUzhzBx1P6i
+X-Received: by 2002:a05:6870:a119:b0:203:f1d5:2e9f with SMTP id m25-20020a056870a11900b00203f1d52e9fmr1968564oae.36.1703168105941;
+        Thu, 21 Dec 2023 06:15:05 -0800 (PST)
+Received: from smtp.aristanetworks.com ([74.123.28.25])
+        by smtp-relay.gmail.com with ESMTPS id s28-20020a63925c000000b00584ca579bc7sm74729pgn.12.2023.12.21.06.15.05
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 21 Dec 2023 06:15:05 -0800 (PST)
+X-Relaying-Domain: arista.com
+X-SMTP-Authentication: Allow-List-permitted
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arista.com;
+	s=Arista-A; t=1703168105;
+	bh=dSl+knmWTCSeLTh+1XO2hQUwQUQRVy6Za4rKUfujNIg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=H5oW2lqHW2oZoSC1LdFecpSFoD589sqWKjwe/FMdknLXm7XlJhcWZaP9NzIno1inP
+	 DjbhRBqydPKWFGBuiF+HhmEas5PR4EdgLNFEBw4l7V0hSI1jccII778Rqo6p5sq956
+	 QQNlDXgmggFdO7vyCGSR0E4tIctUVUIGpsG05we7ig2lMmn/a7ojXT6OzfRQdojDeY
+	 DLzS0ZJjRWaUsrXAiQcLO3a5GcdqltBTRU8hr/9AMilzBLPnBPcL2UEWDK84biCUT4
+	 pI3Gi+t+J2BaGrDj3akZInfCeKS6BOL5tv2DXkfXaFNokkyZjeiQwIfv9RpfoDhxTH
+	 dM/CDdkPxDMsA==
+X-SMTP-Authentication: Allow-List-permitted
+X-SMTP-Authentication: Allow-List-permitted
+Received: from us113.sjc.aristanetworks.com (us113.sjc.aristanetworks.com [10.242.240.8])
+	by smtp.aristanetworks.com (Postfix) with ESMTP id 3F9E14FEF00;
+	Thu, 21 Dec 2023 06:15:05 -0800 (PST)
+X-SMTP-Authentication: Allow-List-permitted
+X-SMTP-Authentication: Allow-List-permitted
+X-SMTP-Authentication: Allow-List-permitted
+Received: by us113.sjc.aristanetworks.com (Postfix, from userid 10383)
+	id 360A1B8407DA; Thu, 21 Dec 2023 06:15:05 -0800 (PST)
+X-SMTP-Authentication: Allow-List-permitted
+X-SMTP-Authentication: Allow-List-permitted
+X-SMTP-Authentication: Allow-List-permitted
+From: Edward Chron <echron@arista.com>
+X-SMTP-Authentication: Allow-List-permitted
+X-SMTP-Authentication: Allow-List-permitted
+X-SMTP-Authentication: Allow-List-permitted
+To: kexec@lists.infradead.org
+X-SMTP-Authentication: Allow-List-permitted
+X-SMTP-Authentication: Allow-List-permitted
+X-SMTP-Authentication: Allow-List-permitted
+Cc: k-hagio-ab@nec.com,
+	colona@arista.com,
+	echron@arista.com
+X-SMTP-Authentication: Allow-List-permitted
+X-SMTP-Authentication: Allow-List-permitted
+X-SMTP-Authentication: Allow-List-permitted
+Subject: [PATCH] makedumpfile add dmesg PRINTK_CALLER id support
+X-SMTP-Authentication: Allow-List-permitted
+X-SMTP-Authentication: Allow-List-permitted
+X-SMTP-Authentication: Allow-List-permitted
+Date: Thu, 21 Dec 2023 06:15:02 -0800
+X-SMTP-Authentication: Allow-List-permitted
+X-SMTP-Authentication: Allow-List-permitted
+X-SMTP-Authentication: Allow-List-permitted
+Message-ID: <20231221141503.21853-1-echron@arista.com>
+X-SMTP-Authentication: Allow-List-permitted
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231221_052535_609859_D3409B0C 
-X-CRM114-Status: GOOD (  23.40  )
+X-CRM114-CacheID: sfid-20231221_061509_123520_CD91EC90 
+X-CRM114-Status: GOOD (  28.94  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -110,371 +119,227 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: qiruipeng <qiruipeng@lixiang.com>
+Submission to Project: makedumpfile
+Component: dmesg
+Files: printk.c makedumpfile.c makedumpfile.h
+Code level patch applied against: 1.7.4++ - latest code pulled from
+    https://github.com/makedumpfile/makedumpfile
+makedumpfile Issue #13
+    https://github.com/makedumpfile/makedumpfile/issues/13
+Revision: #1 on 2023/12/15 per Kazu ensure spacing of dmesg output
+                           matches dmesg -S and new dmesg caller_id
+                           output format (space after timestamp)
+Revision: #2 on 2023/12/21 per Kazu use NOT_FOUND_STRUCTURE for caller_id
 
-Osdump is a new crash dumping solution like crash. It is interested in
-vmcoreinfo,too. Reuse some data and function from crash_core, but not full
-of them. So pick some code to get vmcoreinfo as needed.
+Add support so that dmesg entries include the optional Linux Kernel
+debug CONFIG option PRINTK_CALLER which adds an optional dmesg field
+that contains the Thread Id or CPU Id that is issuing the printk to
+add the message to the kernel ring buffer. If enabled, this CONFIG
+option makes debugging simpler as dmesg entries for a specific
+thread or CPU can be recognized.
 
-Signed-off-by: qiruipeng <qiruipeng@lixiang.com>
+The dmesg command supports printing the PRINTK_CALLER field. The
+old syslog format (dmesg -S) and recently support was added for dmesg
+using /dev/kmsg interface.
+
+The additional field provided by PRINTK_CALLER is only present
+if it was configured for the Linux kernel on the running system. The
+PRINTK_CALLER is a debug option and not configured by default so the
+dmesg output will only change for those kernels where the option was
+configured when the kernel was built. For users who went to the
+trouble to configure PRINTK_CALLER and have the extra field available
+for debugging, having dmesg print the field is very helpful and so
+it would be very useful to add makedumpfile support for it.
+
+Size of the PRINTK_CALLER field is determined by the maximum number
+tasks that can be run on the system which is limited by the value of
+/proc/sys/kernel/pid_max as pid values are from 0 to value - 1.
+This value determines the number of id digits needed by the caller id.
+The PRINTK_CALLER field is printed as T<id> for a Task Id or C<id>
+for a CPU Id for a printk in CPU context. The values are left space
+padded and enclosed in parentheses such as:
+         [    T123]   or   [     C16]
+For dmesg command the PRINTK_CALLER field when present is the last
+field before the dmesg text so it makes sense to use the same format.
+
+Signed-off-by: Ivan Delalande <colona@arista.com>
+Signed-off-by: Edward Chron <echron@arista.com>
 ---
- arch/arm64/kernel/Makefile |   1 +
- include/linux/buildid.h    |   3 +-
- kernel/Makefile            |   1 +
- kernel/crash_core_mini.c   | 275 +++++++++++++++++++++++++++++++++++++
- kernel/printk/printk.c     |   2 +-
- lib/buildid.c              |   3 +-
- 6 files changed, 282 insertions(+), 3 deletions(-)
- create mode 100644 kernel/crash_core_mini.c
+ makedumpfile.c | 33 +++++++++++++++++++++++++++++++++
+ makedumpfile.h | 22 ++++++++++++++++++++++
+ printk.c       | 27 +++++++++++++++++++++++++++
+ 3 files changed, 82 insertions(+)
 
-diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-index d95b3d6b471a..fd6d06e44ae2 100644
---- a/arch/arm64/kernel/Makefile
-+++ b/arch/arm64/kernel/Makefile
-@@ -67,6 +67,7 @@ obj-$(CONFIG_ARM64_RELOC_TEST)		+= arm64-reloc-test.o
- arm64-reloc-test-y := reloc_test_core.o reloc_test_syms.o
- obj-$(CONFIG_CRASH_DUMP)		+= crash_dump.o
- obj-$(CONFIG_CRASH_CORE)		+= crash_core.o
-+obj-$(CONFIG_OS_MINIDUMP)              += crash_core.o
- obj-$(CONFIG_ARM_SDE_INTERFACE)		+= sdei.o
- obj-$(CONFIG_ARM64_PTR_AUTH)		+= pointer_auth.o
- obj-$(CONFIG_ARM64_MTE)			+= mte.o
-diff --git a/include/linux/buildid.h b/include/linux/buildid.h
-index 8a582d242f06..157edba44068 100644
---- a/include/linux/buildid.h
-+++ b/include/linux/buildid.h
-@@ -11,7 +11,8 @@ int build_id_parse(struct vm_area_struct *vma, unsigned char *build_id,
- 		   __u32 *size);
- int build_id_parse_buf(const void *buf, unsigned char *build_id, u32 buf_size);
+diff --git a/makedumpfile.c b/makedumpfile.c
+index a6ec9d4..e14ed33 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -2118,6 +2118,7 @@ module_end:
+ 		SIZE_INIT(printk_info, "printk_info");
+ 		OFFSET_INIT(printk_info.ts_nsec, "printk_info", "ts_nsec");
+ 		OFFSET_INIT(printk_info.text_len, "printk_info", "text_len");
++		OFFSET_INIT(printk_info.caller_id, "printk_info", "caller_id");
  
--#if IS_ENABLED(CONFIG_STACKTRACE_BUILD_ID) || IS_ENABLED(CONFIG_CRASH_CORE)
-+#if IS_ENABLED(CONFIG_STACKTRACE_BUILD_ID) || IS_ENABLED(CONFIG_CRASH_CORE) \
-+	|| IS_ENABLED(CONFIG_OS_MINIDUMP)
- extern unsigned char vmlinux_build_id[BUILD_ID_SIZE_MAX];
- void init_vmlinux_build_id(void);
- #else
-diff --git a/kernel/Makefile b/kernel/Makefile
-index dc2b4ba5c953..14b7002f3279 100644
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -69,6 +69,7 @@ obj-$(CONFIG_KALLSYMS) += kallsyms.o
- obj-$(CONFIG_KALLSYMS_SELFTEST) += kallsyms_selftest.o
- obj-$(CONFIG_BSD_PROCESS_ACCT) += acct.o
- obj-$(CONFIG_CRASH_CORE) += crash_core.o
-+obj-$(CONFIG_OS_MINIDUMP) += crash_core_mini.o
- obj-$(CONFIG_KEXEC_CORE) += kexec_core.o
- obj-$(CONFIG_KEXEC) += kexec.o
- obj-$(CONFIG_KEXEC_FILE) += kexec_file.o
-diff --git a/kernel/crash_core_mini.c b/kernel/crash_core_mini.c
-new file mode 100644
-index 000000000000..a0f8d0c79bba
---- /dev/null
-+++ b/kernel/crash_core_mini.c
-@@ -0,0 +1,275 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * crash.c - kernel crash support code.
-+ * Copyright (C) 2002-2004 Eric Biederman  <ebiederm@xmission.com>
-+ */
-+
-+#include <linux/buildid.h>
-+#include <linux/init.h>
-+#include <linux/utsname.h>
-+#include <linux/vmalloc.h>
-+#include <linux/sizes.h>
-+#include <linux/kexec.h>
-+#include <linux/memory.h>
-+#include <linux/cpuhotplug.h>
-+#include <linux/memblock.h>
-+#include <linux/kexec.h>
-+#include <linux/kmemleak.h>
-+
-+#include <asm/page.h>
-+#include <asm/sections.h>
-+
-+#include <crypto/sha1.h>
-+
-+#include "kallsyms_internal.h"
-+#include "kexec_internal.h"
-+
-+/* Per cpu memory for storing cpu states in case of system crash. */
-+note_buf_t __percpu *crash_notes;
-+
-+/* vmcoreinfo stuff */
-+unsigned char *vmcoreinfo_data;
-+size_t vmcoreinfo_size;
-+u32 *vmcoreinfo_note;
-+
-+/* trusted vmcoreinfo, e.g. we can make a copy in the crash memory */
-+static unsigned char *vmcoreinfo_data_safecopy;
-+
-+
-+Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
-+			  void *data, size_t data_len)
-+{
-+	struct elf_note *note = (struct elf_note *)buf;
-+
-+	note->n_namesz = strlen(name) + 1;
-+	note->n_descsz = data_len;
-+	note->n_type   = type;
-+	buf += DIV_ROUND_UP(sizeof(*note), sizeof(Elf_Word));
-+	memcpy(buf, name, note->n_namesz);
-+	buf += DIV_ROUND_UP(note->n_namesz, sizeof(Elf_Word));
-+	memcpy(buf, data, data_len);
-+	buf += DIV_ROUND_UP(data_len, sizeof(Elf_Word));
-+
-+	return buf;
-+}
-+
-+void final_note(Elf_Word *buf)
-+{
-+	memset(buf, 0, sizeof(struct elf_note));
-+}
-+
-+static void update_vmcoreinfo_note(void)
-+{
-+	u32 *buf = vmcoreinfo_note;
-+
-+	if (!vmcoreinfo_size)
-+		return;
-+	buf = append_elf_note(buf, VMCOREINFO_NOTE_NAME, 0, vmcoreinfo_data,
-+			      vmcoreinfo_size);
-+	final_note(buf);
-+}
-+
-+void crash_update_vmcoreinfo_safecopy(void *ptr)
-+{
-+	if (ptr)
-+		memcpy(ptr, vmcoreinfo_data, vmcoreinfo_size);
-+
-+	vmcoreinfo_data_safecopy = ptr;
-+}
-+
-+void crash_save_vmcoreinfo(void)
-+{
-+	if (!vmcoreinfo_note)
-+		return;
-+
-+	/* Use the safe copy to generate vmcoreinfo note if have */
-+	if (vmcoreinfo_data_safecopy)
-+		vmcoreinfo_data = vmcoreinfo_data_safecopy;
-+
-+	vmcoreinfo_append_str("CRASHTIME=%lld\n", ktime_get_real_seconds());
-+	update_vmcoreinfo_note();
-+}
-+
-+void vmcoreinfo_append_str(const char *fmt, ...)
-+{
-+	va_list args;
-+	char buf[0x50];
-+	size_t r;
-+
-+	va_start(args, fmt);
-+	r = vscnprintf(buf, sizeof(buf), fmt, args);
-+	va_end(args);
-+
-+	r = min(r, (size_t)VMCOREINFO_BYTES - vmcoreinfo_size);
-+
-+	memcpy(&vmcoreinfo_data[vmcoreinfo_size], buf, r);
-+
-+	vmcoreinfo_size += r;
-+
-+	WARN_ONCE(vmcoreinfo_size == VMCOREINFO_BYTES,
-+		  "vmcoreinfo data exceeds allocated size, truncating");
-+}
-+
-+/*
-+ * provide an empty default implementation here -- architecture
-+ * code may override this
-+ */
-+void __weak arch_crash_save_vmcoreinfo(void)
-+{}
-+
-+phys_addr_t __weak paddr_vmcoreinfo_note(void)
-+{
-+	return __pa(vmcoreinfo_note);
-+}
-+EXPORT_SYMBOL(paddr_vmcoreinfo_note);
-+
-+int get_note_size(void)
-+{
-+	return VMCOREINFO_NOTE_SIZE;
-+}
-+
-+static int __init crash_save_vmcoreinfo_init(void)
-+{
-+	vmcoreinfo_data = (unsigned char *)get_zeroed_page(GFP_KERNEL);
-+	if (!vmcoreinfo_data) {
-+		pr_warn("Memory allocation for vmcoreinfo_data failed\n");
-+		return -ENOMEM;
-+	}
-+
-+	vmcoreinfo_note = alloc_pages_exact(VMCOREINFO_NOTE_SIZE,
-+						GFP_KERNEL | __GFP_ZERO);
-+	if (!vmcoreinfo_note) {
-+		free_page((unsigned long)vmcoreinfo_data);
-+		vmcoreinfo_data = NULL;
-+		pr_warn("Memory allocation for vmcoreinfo_note failed\n");
-+		return -ENOMEM;
-+	}
-+
-+	VMCOREINFO_OSRELEASE(init_uts_ns.name.release);
-+	VMCOREINFO_BUILD_ID();
-+	VMCOREINFO_PAGESIZE(PAGE_SIZE);
-+
-+	VMCOREINFO_SYMBOL(init_uts_ns);
-+	VMCOREINFO_OFFSET(uts_namespace, name);
-+	VMCOREINFO_SYMBOL(node_online_map);
-+#ifdef CONFIG_MMU
-+	VMCOREINFO_SYMBOL_ARRAY(swapper_pg_dir);
-+#endif
-+	VMCOREINFO_SYMBOL(_stext);
-+	VMCOREINFO_SYMBOL(vmap_area_list);
-+
-+#ifndef CONFIG_NUMA
-+	VMCOREINFO_SYMBOL(mem_map);
-+	VMCOREINFO_SYMBOL(contig_page_data);
-+#endif
-+#ifdef CONFIG_SPARSEMEM
-+	VMCOREINFO_SYMBOL_ARRAY(mem_section);
-+	VMCOREINFO_LENGTH(mem_section, NR_SECTION_ROOTS);
-+	VMCOREINFO_STRUCT_SIZE(mem_section);
-+	VMCOREINFO_OFFSET(mem_section, section_mem_map);
-+	VMCOREINFO_NUMBER(SECTION_SIZE_BITS);
-+	VMCOREINFO_NUMBER(MAX_PHYSMEM_BITS);
-+#endif
-+	VMCOREINFO_STRUCT_SIZE(page);
-+	VMCOREINFO_STRUCT_SIZE(pglist_data);
-+	VMCOREINFO_STRUCT_SIZE(zone);
-+	VMCOREINFO_STRUCT_SIZE(free_area);
-+	VMCOREINFO_STRUCT_SIZE(list_head);
-+	VMCOREINFO_SIZE(nodemask_t);
-+	VMCOREINFO_OFFSET(page, flags);
-+	VMCOREINFO_OFFSET(page, _refcount);
-+	VMCOREINFO_OFFSET(page, mapping);
-+	VMCOREINFO_OFFSET(page, lru);
-+	VMCOREINFO_OFFSET(page, _mapcount);
-+	VMCOREINFO_OFFSET(page, private);
-+	VMCOREINFO_OFFSET(page, compound_head);
-+	VMCOREINFO_OFFSET(pglist_data, node_zones);
-+	VMCOREINFO_OFFSET(pglist_data, nr_zones);
-+#ifdef CONFIG_FLATMEM
-+	VMCOREINFO_OFFSET(pglist_data, node_mem_map);
-+#endif
-+	VMCOREINFO_OFFSET(pglist_data, node_start_pfn);
-+	VMCOREINFO_OFFSET(pglist_data, node_spanned_pages);
-+	VMCOREINFO_OFFSET(pglist_data, node_id);
-+	VMCOREINFO_OFFSET(zone, free_area);
-+	VMCOREINFO_OFFSET(zone, vm_stat);
-+	VMCOREINFO_OFFSET(zone, spanned_pages);
-+	VMCOREINFO_OFFSET(free_area, free_list);
-+	VMCOREINFO_OFFSET(list_head, next);
-+	VMCOREINFO_OFFSET(list_head, prev);
-+	VMCOREINFO_OFFSET(vmap_area, va_start);
-+	VMCOREINFO_OFFSET(vmap_area, list);
-+	VMCOREINFO_LENGTH(zone.free_area, MAX_ORDER + 1);
-+	log_buf_vmcoreinfo_setup();
-+	VMCOREINFO_LENGTH(free_area.free_list, MIGRATE_TYPES);
-+	VMCOREINFO_NUMBER(NR_FREE_PAGES);
-+	VMCOREINFO_NUMBER(PG_lru);
-+	VMCOREINFO_NUMBER(PG_private);
-+	VMCOREINFO_NUMBER(PG_swapcache);
-+	VMCOREINFO_NUMBER(PG_swapbacked);
-+	VMCOREINFO_NUMBER(PG_slab);
-+#ifdef CONFIG_MEMORY_FAILURE
-+	VMCOREINFO_NUMBER(PG_hwpoison);
-+#endif
-+	VMCOREINFO_NUMBER(PG_head_mask);
-+#define PAGE_BUDDY_MAPCOUNT_VALUE	(~PG_buddy)
-+	VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
-+#ifdef CONFIG_HUGETLB_PAGE
-+	VMCOREINFO_NUMBER(PG_hugetlb);
-+#define PAGE_OFFLINE_MAPCOUNT_VALUE	(~PG_offline)
-+	VMCOREINFO_NUMBER(PAGE_OFFLINE_MAPCOUNT_VALUE);
-+#endif
-+
-+#ifdef CONFIG_KALLSYMS
-+	VMCOREINFO_SYMBOL(kallsyms_names);
-+	VMCOREINFO_SYMBOL(kallsyms_num_syms);
-+	VMCOREINFO_SYMBOL(kallsyms_token_table);
-+	VMCOREINFO_SYMBOL(kallsyms_token_index);
-+#ifdef CONFIG_KALLSYMS_BASE_RELATIVE
-+	VMCOREINFO_SYMBOL(kallsyms_offsets);
-+	VMCOREINFO_SYMBOL(kallsyms_relative_base);
-+#else
-+	VMCOREINFO_SYMBOL(kallsyms_addresses);
-+#endif /* CONFIG_KALLSYMS_BASE_RELATIVE */
-+#endif /* CONFIG_KALLSYMS */
-+
-+	arch_crash_save_vmcoreinfo();
-+	update_vmcoreinfo_note();
-+
-+	return 0;
-+}
-+
-+subsys_initcall(crash_save_vmcoreinfo_init);
-+
-+static int __init crash_notes_memory_init(void)
-+{
-+	/* Allocate memory for saving cpu registers. */
-+	size_t size, align;
-+
-+	/*
-+	 * crash_notes could be allocated across 2 vmalloc pages when percpu
-+	 * is vmalloc based . vmalloc doesn't guarantee 2 continuous vmalloc
-+	 * pages are also on 2 continuous physical pages. In this case the
-+	 * 2nd part of crash_notes in 2nd page could be lost since only the
-+	 * starting address and size of crash_notes are exported through sysfs.
-+	 * Here round up the size of crash_notes to the nearest power of two
-+	 * and pass it to __alloc_percpu as align value. This can make sure
-+	 * crash_notes is allocated inside one physical page.
-+	 */
-+	size = sizeof(note_buf_t);
-+	align = min(roundup_pow_of_two(sizeof(note_buf_t)), PAGE_SIZE);
-+
-+	/*
-+	 * Break compile if size is bigger than PAGE_SIZE since crash_notes
-+	 * definitely will be in 2 pages with that.
-+	 */
-+	BUILD_BUG_ON(size > PAGE_SIZE);
-+
-+	crash_notes = __alloc_percpu(size, align);
-+	if (!crash_notes) {
-+		pr_warn("Memory allocation for saving cpu register states failed\n");
-+		return -ENOMEM;
-+	}
-+	return 0;
-+}
-+subsys_initcall(crash_notes_memory_init);
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index f2444b581e16..f4dea403bda7 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -951,7 +951,7 @@ const struct file_operations kmsg_fops = {
- 	.release = devkmsg_release,
- };
+ 		OFFSET_INIT(atomic_long_t.counter, "atomic_long_t", "counter");
  
--#ifdef CONFIG_CRASH_CORE
-+#if defined(CONFIG_CRASH_CORE) || defined(CONFIG_OS_MINIDUMP)
+@@ -2133,6 +2134,7 @@ module_end:
+ 		OFFSET_INIT(printk_log.ts_nsec, "printk_log", "ts_nsec");
+ 		OFFSET_INIT(printk_log.len, "printk_log", "len");
+ 		OFFSET_INIT(printk_log.text_len, "printk_log", "text_len");
++		OFFSET_INIT(printk_info.caller_id, "printk_log", "caller_id");
+ 	} else {
+ 		info->flag_use_printk_ringbuffer = FALSE;
+ 		info->flag_use_printk_log = FALSE;
+@@ -2462,6 +2464,7 @@ write_vmcoreinfo_data(void)
+ 
+ 		WRITE_MEMBER_OFFSET("printk_info.ts_nsec", printk_info.ts_nsec);
+ 		WRITE_MEMBER_OFFSET("printk_info.text_len", printk_info.text_len);
++		WRITE_MEMBER_OFFSET("printk_info.caller_id", printk_info.caller_id);
+ 
+ 		WRITE_MEMBER_OFFSET("atomic_long_t.counter", atomic_long_t.counter);
+ 
+@@ -2470,6 +2473,7 @@ write_vmcoreinfo_data(void)
+ 		WRITE_MEMBER_OFFSET("printk_log.ts_nsec", printk_log.ts_nsec);
+ 		WRITE_MEMBER_OFFSET("printk_log.len", printk_log.len);
+ 		WRITE_MEMBER_OFFSET("printk_log.text_len", printk_log.text_len);
++		WRITE_MEMBER_OFFSET("printk_log.caller_id", printk_log.caller_id);
+ 	} else {
+ 		/* Compatibility with pre-3.11-rc4 */
+ 		WRITE_MEMBER_OFFSET("log.ts_nsec", printk_log.ts_nsec);
+@@ -2921,6 +2925,7 @@ read_vmcoreinfo(void)
+ 		READ_STRUCTURE_SIZE("printk_info", printk_info);
+ 		READ_MEMBER_OFFSET("printk_info.ts_nsec", printk_info.ts_nsec);
+ 		READ_MEMBER_OFFSET("printk_info.text_len", printk_info.text_len);
++		READ_MEMBER_OFFSET("printk_info.caller_id", printk_info.caller_id);
+ 
+ 		READ_MEMBER_OFFSET("atomic_long_t.counter", atomic_long_t.counter);
+ 
+@@ -2932,6 +2937,7 @@ read_vmcoreinfo(void)
+ 		READ_MEMBER_OFFSET("printk_log.ts_nsec", printk_log.ts_nsec);
+ 		READ_MEMBER_OFFSET("printk_log.len", printk_log.len);
+ 		READ_MEMBER_OFFSET("printk_log.text_len", printk_log.text_len);
++		READ_MEMBER_OFFSET("printk_log.caller_id", printk_log.caller_id);
+ 	} else {
+ 		info->flag_use_printk_ringbuffer = FALSE;
+ 		info->flag_use_printk_log = FALSE;
+@@ -5604,6 +5610,33 @@ dump_log_entry(char *logptr, int fp, const char *file_name)
+ 
+ 	bufp = buf;
+ 	bufp += sprintf(buf, "[%5lld.%06ld] ", nanos, rem/1000);
++
++	if (OFFSET(printk_log.caller_id) != NOT_FOUND_STRUCTURE) {
++		ssize_t numspaces;
++		unsigned int pkc;
++		char idtype;
++		int digits;
++
++		/* Get id type, isolate id value in pkc for print */
++		pkc = UINT(logptr + OFFSET(printk_log.caller_id));
++		idtype = (pkc & 0x80000000) ? 'C' : 'T';
++		pkc &= ~0x80000000;
++		/* Determine size of padding space if needed */
++		digits = snprintf(NULL, 0, "%u", pkc);
++		numspaces = CALLER_ID_SIZE - digits;
++		if (numspaces > 0) {
++			char spc[16];
++
++			memset(spc, 0, sizeof(spc));
++			memset(spc, ' ', numspaces);
++			bufp += sprintf(bufp, "[%s%c%u] ", spc, idtype, pkc);
++		} else {
++			bufp += sprintf(bufp, "[%c%u] ", idtype, pkc);
++		}
++	} else {
++		bufp = stpcpy(bufp, " ");
++	}
++
+ 	indent_len = strlen(buf);
+ 
+ 	/* How much buffer space is needed in the worst case */
+diff --git a/makedumpfile.h b/makedumpfile.h
+index f1619c5..0a7acb5 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -2116,10 +2116,16 @@ struct offset_table {
+ 		long	p_memsz;
+ 	} elf64_phdr;
+ 
++	/* The caller_id was added by the Linux-5.1 Kernel to hold
++	 * the Thread id or CPU id of the caller adding a printk
++	 * dmesg to the ring buffer. As such older versions of the
++	 * kernel can ignore this field as it won't be filled in.
++	 */
+ 	struct printk_log_s {
+ 		long ts_nsec;
+ 		long len;
+ 		long text_len;
++		long caller_id;
+ 	} printk_log;
+ 
+ 	/*
+@@ -2671,6 +2677,22 @@ struct elf_prstatus {
+ 
+ #endif
+ 
++/*
++ * Minimum size of the id portion of the PRINTK_CALLER dmesg field if it is
++ * configured in the Linux Kernel. The size is used to pad with spaces the
++ * PRINTK_CALLER field in each dmesg. For 32 bit kernels the maximum number
++ * of PIDs supported was 2^15 so pid values 0 to 32,767 while 64 bit systems
++ * support the value specified in /proc/sys/kernel/pid_max which is capped at
++ * PID_MAX_LIMIT. We can use 7 digits as that accomodates both 32 bit and
++ * current 64 bit systems as PID_MAX_LIMIT is currently 2^22 so that will
++ * fit in 7 digits and the id will add an additional byte for the id type of
++ * either thread 'T' or CPU 'C', where the Thread ids will have much larger
++ * values, so the CPU ids will easily be accomodated. When systems exceed
++ * 7 digits that won't break anything, but print statements needing more
++ * then 7 digits will not precisely align.
++ */
++#define CALLER_ID_SIZE 7
++
  /*
-  * This appends the listed symbols to /proc/vmcore
-  *
-diff --git a/lib/buildid.c b/lib/buildid.c
-index e3a7acdeef0e..78d7ce03b34e 100644
---- a/lib/buildid.c
-+++ b/lib/buildid.c
-@@ -174,7 +174,8 @@ int build_id_parse_buf(const void *buf, unsigned char *build_id, u32 buf_size)
- 	return parse_build_id_buf(build_id, NULL, buf, buf_size);
- }
+  * Below are options which getopt_long can recognize. From OPT_START options are
+  * non-printable, just used for implementation.
+diff --git a/printk.c b/printk.c
+index 61e0b26..85053b8 100644
+--- a/printk.c
++++ b/printk.c
+@@ -114,6 +114,33 @@ dump_record(struct prb_map *m, unsigned long id)
  
--#if IS_ENABLED(CONFIG_STACKTRACE_BUILD_ID) || IS_ENABLED(CONFIG_CRASH_CORE)
-+#if IS_ENABLED(CONFIG_STACKTRACE_BUILD_ID) || IS_ENABLED(CONFIG_CRASH_CORE) \
-+		|| (IS_ENABLED(CONFIG_OS_MINIDUMP))
- unsigned char vmlinux_build_id[BUILD_ID_SIZE_MAX] __ro_after_init;
+ 	bufp = buf;
+ 	bufp += sprintf(buf, "[%5lld.%06ld] ", nanos, rem/1000);
++
++	if (OFFSET(printk_info.caller_id) > NOT_FOUND_STRUCTURE) {
++		ssize_t numspaces;
++		unsigned int pkc;
++		char idtype;
++		int digits;
++
++		/* Get id type, isolate id value in pkc for print */
++		pkc = UINT(inf + OFFSET(printk_info.caller_id));
++		idtype = (pkc & 0x80000000) ? 'C' : 'T';
++		pkc &= ~0x80000000;
++		/* Determine size of padding space if needed */
++		digits = snprintf(NULL, 0, "%u", pkc);
++		numspaces = CALLER_ID_SIZE - digits;
++		if (numspaces > 0) {
++			char spc[16];
++
++			memset(spc, 0, sizeof(spc));
++			memset(spc, ' ', numspaces);
++			bufp += sprintf(bufp, "[%s%c%u] ", spc, idtype, pkc);
++		} else {
++			bufp += sprintf(bufp, "[%c%u] ", idtype, pkc);
++		}
++	} else {
++		bufp = stpcpy(bufp, " ");
++	}
++
+ 	indent_len = strlen(buf);
  
- /**
+ 	/* How much buffer space is needed in the worst case */
 -- 
-2.17.1
+2.43.0
 
 
 _______________________________________________
