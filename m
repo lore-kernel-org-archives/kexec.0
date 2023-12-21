@@ -4,104 +4,131 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D7745C35274
-	for <kexec@archiver.kernel.org>; Thu, 21 Dec 2023 14:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5D40BC35274
+	for <kexec@archiver.kernel.org>; Thu, 21 Dec 2023 16:25:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:List-Subscribe:List-Help:
-	List-Post:List-Archive:List-Unsubscribe:List-Id:Message-ID:Date:Subject:Cc:To
-	:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=e6ZC/Q5ZyL1agOiUk/ltX6MfhtlhNp2SM5nxa7+g7E4=; b=QV3cFFJCxvLlUf
-	HgSRiI1T2pMyvqKEJ9XQUkF5o+TOFHFX2lYASahyuOB8v3rknppsELA4fq0yE+CIDlliRmc/GTVrS
-	SmKS5zOQcYy07VHcXXfyC8Z5b2nGp337R2QTCMGd4gqqT3Rz86WKKXrpIrW+tRzjzk1XV2D4sMYhl
-	LBpXy7hF9eAu4iHpUna0ElXKJzR6TXW7MhPYmpcgiueGISZxrR1Kh8hZarK+WxBDR8X4BYD/7CxNd
-	qOs/LqGOF6RqXtFt5BvrBOGDbfa8MN38zltrO/Xc1QwZVbMCs+GE13IlGdfGHvMnG+nJ6E+OKBva/
-	TzkL5J/AAfrsdDdsOcew==;
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
+	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=nBfu5SOXgyygRTn1KMQrkVr+XTTnb1FGdi48b3B5L8E=; b=XwENcFiVIpeak3
+	HDtOZV1ku5aOvuoQSt4nn4BrY3zHJtNt4luCC4Ool2oKLfzxAmN7EnWSencsB2jeZnwH/Gm/iNEe5
+	r87x+xE90gZzLHylLLXCakzh10nfl2FYMhId86OUjjmCQnrisMFljNSx7IJtl79N75KDjO9609aml
+	3YSHXDOi0pyL4X1D24SmjZ9qPnegnv6DP4yj7NSFJxZh4RsxzJIZ6aAVjJZ/cN983ChXd+4SlJ8Ge
+	ahBAm8FSgiw+aJHwtpHlGVDCgYmV69uLaBfBRG6eqQTnEBaB9CkXvMOKTU3ZWUqAS0wBXWbMF0lyX
+	iUfr/7SxUpZsgScVSQXg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGJpQ-0039E9-1p;
-	Thu, 21 Dec 2023 14:15:12 +0000
-Received: from mail-ot1-x363.google.com ([2607:f8b0:4864:20::363])
+	id 1rGLrL-003Ufg-2m;
+	Thu, 21 Dec 2023 16:25:19 +0000
+Received: from mail-ed1-x533.google.com ([2a00:1450:4864:20::533])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGJpM-0039Dn-1c
+	id 1rGLrH-003Uea-2W
 	for kexec@lists.infradead.org;
-	Thu, 21 Dec 2023 14:15:11 +0000
-Received: by mail-ot1-x363.google.com with SMTP id 46e09a7af769-6da45aa5549so599862a34.0
-        for <kexec@lists.infradead.org>; Thu, 21 Dec 2023 06:15:06 -0800 (PST)
+	Thu, 21 Dec 2023 16:25:16 +0000
+Received: by mail-ed1-x533.google.com with SMTP id 4fb4d7f45d1cf-55322dbabf6so1095050a12.0
+        for <kexec@lists.infradead.org>; Thu, 21 Dec 2023 08:25:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1703175910; x=1703780710; darn=lists.infradead.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vYkF3QxFWZ70PZApTMjd5gYkgcD2vrrBVkS0UAyNySI=;
+        b=h+n5MpjQLRvVQV/j1DUylUKZNy6c4YEIuRTGl5bis9oLCEOnxchmGUhFFJshAVEHDE
+         sSx4kgUcP2S960FbtEdgw1eY1Opdjm9UJ4LBQvdD0Enb+175mNzEDcbentIzuDwD50vI
+         wNiWfxcMLqY+FV7Dgeb+L5YYC0hWj5e0W8kxhzSisgi6qMxdFEFnojYHQ1cCRLaCtkLS
+         3x+/+eAiPuTjfx1b/a9JnTY32+6J9gC/811sX78tghXKDYZS+RW4f8hxbNVCnHyyjdbn
+         xO9fU083UtlHsRxmRQ3qUZVlfDXlziwG9wVUjzG8IdKSaElLGd14r+KuMTR9k/RVWemg
+         R5xA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703168106; x=1703772906;
-        h=content-transfer-encoding:message-id:date:subject:cc:to:from
-         :dkim-signature:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dSl+knmWTCSeLTh+1XO2hQUwQUQRVy6Za4rKUfujNIg=;
-        b=QJ96OyPC5my/lyLVnQqBhTy27X/0kNFDRMerK/gTQb2CeMPQmJitW3ICDy/DLqCYmm
-         ki2aY54gsPbSsyHFH5m04qE+UvQb/PFGiYiKf2kJJEDE5ltqJXYc3GoxpXQNXIF92aJN
-         uk2AwzbvuRKxlY88vxpgfj8oLE6WlNo9dVJ0GN1Is+CpxaF9iIpEk0WKYq92iA0BO82W
-         TOv5TNN/n/jJqYMRvAv+5F9KbZmG54y/vMgJbWkF/FtqGsgJkBdxHj8T8qFy00MMql8Y
-         orkinR9AOQr5Tm9DDclpS59B+jvwBQKTPL49SBteIFXPNp3NsyOPDFKYgnoMhzzHgokO
-         BtJw==
-X-Gm-Message-State: AOJu0YyvU9cwko+b3tL31uqLl7pxIxx4yOKQ9YQQnv+O8PLC0lti9fYk
-	PxsxY9zmwc3lWd+dIQy4yEUV8e5nLHLAYxGaw31V/YOYZNOmvAAX9Y94
-X-Google-Smtp-Source: AGHT+IHrPEp94BVGLPXW6cSEd/B6I9izEdCCqi4YVIQKZCf8LA1dzYwKY754TiDBDf+kimlUzLUzhzBx1P6i
-X-Received: by 2002:a05:6870:a119:b0:203:f1d5:2e9f with SMTP id m25-20020a056870a11900b00203f1d52e9fmr1968564oae.36.1703168105941;
-        Thu, 21 Dec 2023 06:15:05 -0800 (PST)
-Received: from smtp.aristanetworks.com ([74.123.28.25])
-        by smtp-relay.gmail.com with ESMTPS id s28-20020a63925c000000b00584ca579bc7sm74729pgn.12.2023.12.21.06.15.05
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Dec 2023 06:15:05 -0800 (PST)
-X-Relaying-Domain: arista.com
-X-SMTP-Authentication: Allow-List-permitted
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arista.com;
-	s=Arista-A; t=1703168105;
-	bh=dSl+knmWTCSeLTh+1XO2hQUwQUQRVy6Za4rKUfujNIg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=H5oW2lqHW2oZoSC1LdFecpSFoD589sqWKjwe/FMdknLXm7XlJhcWZaP9NzIno1inP
-	 DjbhRBqydPKWFGBuiF+HhmEas5PR4EdgLNFEBw4l7V0hSI1jccII778Rqo6p5sq956
-	 QQNlDXgmggFdO7vyCGSR0E4tIctUVUIGpsG05we7ig2lMmn/a7ojXT6OzfRQdojDeY
-	 DLzS0ZJjRWaUsrXAiQcLO3a5GcdqltBTRU8hr/9AMilzBLPnBPcL2UEWDK84biCUT4
-	 pI3Gi+t+J2BaGrDj3akZInfCeKS6BOL5tv2DXkfXaFNokkyZjeiQwIfv9RpfoDhxTH
-	 dM/CDdkPxDMsA==
-X-SMTP-Authentication: Allow-List-permitted
-X-SMTP-Authentication: Allow-List-permitted
-Received: from us113.sjc.aristanetworks.com (us113.sjc.aristanetworks.com [10.242.240.8])
-	by smtp.aristanetworks.com (Postfix) with ESMTP id 3F9E14FEF00;
-	Thu, 21 Dec 2023 06:15:05 -0800 (PST)
-X-SMTP-Authentication: Allow-List-permitted
-X-SMTP-Authentication: Allow-List-permitted
-X-SMTP-Authentication: Allow-List-permitted
-Received: by us113.sjc.aristanetworks.com (Postfix, from userid 10383)
-	id 360A1B8407DA; Thu, 21 Dec 2023 06:15:05 -0800 (PST)
-X-SMTP-Authentication: Allow-List-permitted
-X-SMTP-Authentication: Allow-List-permitted
-X-SMTP-Authentication: Allow-List-permitted
-From: Edward Chron <echron@arista.com>
-X-SMTP-Authentication: Allow-List-permitted
-X-SMTP-Authentication: Allow-List-permitted
-X-SMTP-Authentication: Allow-List-permitted
-To: kexec@lists.infradead.org
-X-SMTP-Authentication: Allow-List-permitted
-X-SMTP-Authentication: Allow-List-permitted
-X-SMTP-Authentication: Allow-List-permitted
-Cc: k-hagio-ab@nec.com,
-	colona@arista.com,
-	echron@arista.com
-X-SMTP-Authentication: Allow-List-permitted
-X-SMTP-Authentication: Allow-List-permitted
-X-SMTP-Authentication: Allow-List-permitted
-Subject: [PATCH] makedumpfile add dmesg PRINTK_CALLER id support
-X-SMTP-Authentication: Allow-List-permitted
-X-SMTP-Authentication: Allow-List-permitted
-X-SMTP-Authentication: Allow-List-permitted
-Date: Thu, 21 Dec 2023 06:15:02 -0800
-X-SMTP-Authentication: Allow-List-permitted
-X-SMTP-Authentication: Allow-List-permitted
-X-SMTP-Authentication: Allow-List-permitted
-Message-ID: <20231221141503.21853-1-echron@arista.com>
-X-SMTP-Authentication: Allow-List-permitted
+        d=1e100.net; s=20230601; t=1703175910; x=1703780710;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vYkF3QxFWZ70PZApTMjd5gYkgcD2vrrBVkS0UAyNySI=;
+        b=t44/U73LBsPCZSz0CuCkfH+u+s8qRk3i2kFf4CZZJ2rf2CXWyYQJU9B2Eu6xe0nBZN
+         iPnGxTYFtJnuP6AVineSZn3IkC5feWiZA1T0qajN1t0rQXvKl0Dt26RFU73C3E+EWJnI
+         PNbSYmAvRhkzc+nZdRvGHPJB92HGWI1Hu0Ebgsl4YnPs4Nj3g3GHnb0A/bj1SmkCB9ta
+         Mg9SXt8tKXizoBDqlioV0ZWUTQkGEySE2KbIlODe34pWnQoSEVVq3sHElDV/8kDf5RMh
+         5af4A/L8MnS4tb+faMTDzPEUSn5sV9SxHkrygXi1wk4/TYnJsz96iR6xd4X5btLqGmNB
+         q2yw==
+X-Gm-Message-State: AOJu0YwrB1TrWVO0eCTMJ3gvsjIXwYJWSq0K938qckKv6a1VBsc0gNi2
+	pTlMs62P/N4s5Z5/XcTe46gMQA==
+X-Google-Smtp-Source: AGHT+IGqX6pV3e0WwZ2xsU9I/cBN0tYmnXkMZj5o0U4CevFoaW5gh3XuKhIb3wKLlg/307ZN95MbGg==
+X-Received: by 2002:a50:b410:0:b0:553:8e4a:75b1 with SMTP id b16-20020a50b410000000b005538e4a75b1mr2936572edh.32.1703175910690;
+        Thu, 21 Dec 2023 08:25:10 -0800 (PST)
+Received: from [192.168.0.22] ([78.10.206.178])
+        by smtp.gmail.com with ESMTPSA id d12-20020a056402078c00b0055335e89ed8sm1355346edy.30.2023.12.21.08.25.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Dec 2023 08:25:10 -0800 (PST)
+Message-ID: <e9aa311f-6f13-410e-bb35-20320275668c@linaro.org>
+Date: Thu, 21 Dec 2023 17:25:08 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/7] [RFC PATCH 1/7] osdump: Add one new os minidump
+ module
+Content-Language: en-US
+To: Ruipeng Qi <ruipengqi7@gmail.com>, catalin.marinas@arm.com,
+ will@kernel.org, bhe@redhat.com, vgoyal@redhat.com, dyoung@redhat.com,
+ linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Cc: zalbassam@google.com, dianders@chromium.org, mark.rutland@arm.com,
+ lecopzer.chen@mediatek.com, maz@kernel.org, arnd@arndb.de,
+ yury.norov@gmail.com, brauner@kernel.org, mcgrof@kernel.org,
+ maninder1.s@samsung.com, michael.christie@oracle.com,
+ samitolvanen@google.com, linux-arm-kernel@lists.infradead.org,
+ qiruipeng@lixiang.com
+References: <20231221130930.32634-1-ruipengqi7@gmail.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20231221130930.32634-1-ruipengqi7@gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231221_061509_123520_CD91EC90 
-X-CRM114-Status: GOOD (  28.94  )
+X-CRM114-CacheID: sfid-20231221_082515_820693_4904ED05 
+X-CRM114-Status: UNSURE (   4.74  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -113,233 +140,24 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Submission to Project: makedumpfile
-Component: dmesg
-Files: printk.c makedumpfile.c makedumpfile.h
-Code level patch applied against: 1.7.4++ - latest code pulled from
-    https://github.com/makedumpfile/makedumpfile
-makedumpfile Issue #13
-    https://github.com/makedumpfile/makedumpfile/issues/13
-Revision: #1 on 2023/12/15 per Kazu ensure spacing of dmesg output
-                           matches dmesg -S and new dmesg caller_id
-                           output format (space after timestamp)
-Revision: #2 on 2023/12/21 per Kazu use NOT_FOUND_STRUCTURE for caller_id
+On 21/12/2023 14:09, Ruipeng Qi wrote:
+> From: qiruipeng <qiruipeng@lixiang.com>
+> 
+> Osdump is a new crash dumping solution aiming at specific embedded
+> devices within automotive or Industrial.
+>  - limited memory.
+>  - reboot as soon as possible when system fault.
 
-Add support so that dmesg entries include the optional Linux Kernel
-debug CONFIG option PRINTK_CALLER which adds an optional dmesg field
-that contains the Thread Id or CPU Id that is issuing the printk to
-add the message to the kernel ring buffer. If enabled, this CONFIG
-option makes debugging simpler as dmesg entries for a specific
-thread or CPU can be recognized.
+NAK, sorry, work with Qualcomm minidump series to incorporate all your
+needs there.
 
-The dmesg command supports printing the PRINTK_CALLER field. The
-old syslog format (dmesg -S) and recently support was added for dmesg
-using /dev/kmsg interface.
-
-The additional field provided by PRINTK_CALLER is only present
-if it was configured for the Linux kernel on the running system. The
-PRINTK_CALLER is a debug option and not configured by default so the
-dmesg output will only change for those kernels where the option was
-configured when the kernel was built. For users who went to the
-trouble to configure PRINTK_CALLER and have the extra field available
-for debugging, having dmesg print the field is very helpful and so
-it would be very useful to add makedumpfile support for it.
-
-Size of the PRINTK_CALLER field is determined by the maximum number
-tasks that can be run on the system which is limited by the value of
-/proc/sys/kernel/pid_max as pid values are from 0 to value - 1.
-This value determines the number of id digits needed by the caller id.
-The PRINTK_CALLER field is printed as T<id> for a Task Id or C<id>
-for a CPU Id for a printk in CPU context. The values are left space
-padded and enclosed in parentheses such as:
-         [    T123]   or   [     C16]
-For dmesg command the PRINTK_CALLER field when present is the last
-field before the dmesg text so it makes sense to use the same format.
-
-Signed-off-by: Ivan Delalande <colona@arista.com>
-Signed-off-by: Edward Chron <echron@arista.com>
----
- makedumpfile.c | 33 +++++++++++++++++++++++++++++++++
- makedumpfile.h | 22 ++++++++++++++++++++++
- printk.c       | 27 +++++++++++++++++++++++++++
- 3 files changed, 82 insertions(+)
-
-diff --git a/makedumpfile.c b/makedumpfile.c
-index a6ec9d4..e14ed33 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -2118,6 +2118,7 @@ module_end:
- 		SIZE_INIT(printk_info, "printk_info");
- 		OFFSET_INIT(printk_info.ts_nsec, "printk_info", "ts_nsec");
- 		OFFSET_INIT(printk_info.text_len, "printk_info", "text_len");
-+		OFFSET_INIT(printk_info.caller_id, "printk_info", "caller_id");
- 
- 		OFFSET_INIT(atomic_long_t.counter, "atomic_long_t", "counter");
- 
-@@ -2133,6 +2134,7 @@ module_end:
- 		OFFSET_INIT(printk_log.ts_nsec, "printk_log", "ts_nsec");
- 		OFFSET_INIT(printk_log.len, "printk_log", "len");
- 		OFFSET_INIT(printk_log.text_len, "printk_log", "text_len");
-+		OFFSET_INIT(printk_info.caller_id, "printk_log", "caller_id");
- 	} else {
- 		info->flag_use_printk_ringbuffer = FALSE;
- 		info->flag_use_printk_log = FALSE;
-@@ -2462,6 +2464,7 @@ write_vmcoreinfo_data(void)
- 
- 		WRITE_MEMBER_OFFSET("printk_info.ts_nsec", printk_info.ts_nsec);
- 		WRITE_MEMBER_OFFSET("printk_info.text_len", printk_info.text_len);
-+		WRITE_MEMBER_OFFSET("printk_info.caller_id", printk_info.caller_id);
- 
- 		WRITE_MEMBER_OFFSET("atomic_long_t.counter", atomic_long_t.counter);
- 
-@@ -2470,6 +2473,7 @@ write_vmcoreinfo_data(void)
- 		WRITE_MEMBER_OFFSET("printk_log.ts_nsec", printk_log.ts_nsec);
- 		WRITE_MEMBER_OFFSET("printk_log.len", printk_log.len);
- 		WRITE_MEMBER_OFFSET("printk_log.text_len", printk_log.text_len);
-+		WRITE_MEMBER_OFFSET("printk_log.caller_id", printk_log.caller_id);
- 	} else {
- 		/* Compatibility with pre-3.11-rc4 */
- 		WRITE_MEMBER_OFFSET("log.ts_nsec", printk_log.ts_nsec);
-@@ -2921,6 +2925,7 @@ read_vmcoreinfo(void)
- 		READ_STRUCTURE_SIZE("printk_info", printk_info);
- 		READ_MEMBER_OFFSET("printk_info.ts_nsec", printk_info.ts_nsec);
- 		READ_MEMBER_OFFSET("printk_info.text_len", printk_info.text_len);
-+		READ_MEMBER_OFFSET("printk_info.caller_id", printk_info.caller_id);
- 
- 		READ_MEMBER_OFFSET("atomic_long_t.counter", atomic_long_t.counter);
- 
-@@ -2932,6 +2937,7 @@ read_vmcoreinfo(void)
- 		READ_MEMBER_OFFSET("printk_log.ts_nsec", printk_log.ts_nsec);
- 		READ_MEMBER_OFFSET("printk_log.len", printk_log.len);
- 		READ_MEMBER_OFFSET("printk_log.text_len", printk_log.text_len);
-+		READ_MEMBER_OFFSET("printk_log.caller_id", printk_log.caller_id);
- 	} else {
- 		info->flag_use_printk_ringbuffer = FALSE;
- 		info->flag_use_printk_log = FALSE;
-@@ -5604,6 +5610,33 @@ dump_log_entry(char *logptr, int fp, const char *file_name)
- 
- 	bufp = buf;
- 	bufp += sprintf(buf, "[%5lld.%06ld] ", nanos, rem/1000);
-+
-+	if (OFFSET(printk_log.caller_id) != NOT_FOUND_STRUCTURE) {
-+		ssize_t numspaces;
-+		unsigned int pkc;
-+		char idtype;
-+		int digits;
-+
-+		/* Get id type, isolate id value in pkc for print */
-+		pkc = UINT(logptr + OFFSET(printk_log.caller_id));
-+		idtype = (pkc & 0x80000000) ? 'C' : 'T';
-+		pkc &= ~0x80000000;
-+		/* Determine size of padding space if needed */
-+		digits = snprintf(NULL, 0, "%u", pkc);
-+		numspaces = CALLER_ID_SIZE - digits;
-+		if (numspaces > 0) {
-+			char spc[16];
-+
-+			memset(spc, 0, sizeof(spc));
-+			memset(spc, ' ', numspaces);
-+			bufp += sprintf(bufp, "[%s%c%u] ", spc, idtype, pkc);
-+		} else {
-+			bufp += sprintf(bufp, "[%c%u] ", idtype, pkc);
-+		}
-+	} else {
-+		bufp = stpcpy(bufp, " ");
-+	}
-+
- 	indent_len = strlen(buf);
- 
- 	/* How much buffer space is needed in the worst case */
-diff --git a/makedumpfile.h b/makedumpfile.h
-index f1619c5..0a7acb5 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -2116,10 +2116,16 @@ struct offset_table {
- 		long	p_memsz;
- 	} elf64_phdr;
- 
-+	/* The caller_id was added by the Linux-5.1 Kernel to hold
-+	 * the Thread id or CPU id of the caller adding a printk
-+	 * dmesg to the ring buffer. As such older versions of the
-+	 * kernel can ignore this field as it won't be filled in.
-+	 */
- 	struct printk_log_s {
- 		long ts_nsec;
- 		long len;
- 		long text_len;
-+		long caller_id;
- 	} printk_log;
- 
- 	/*
-@@ -2671,6 +2677,22 @@ struct elf_prstatus {
- 
- #endif
- 
-+/*
-+ * Minimum size of the id portion of the PRINTK_CALLER dmesg field if it is
-+ * configured in the Linux Kernel. The size is used to pad with spaces the
-+ * PRINTK_CALLER field in each dmesg. For 32 bit kernels the maximum number
-+ * of PIDs supported was 2^15 so pid values 0 to 32,767 while 64 bit systems
-+ * support the value specified in /proc/sys/kernel/pid_max which is capped at
-+ * PID_MAX_LIMIT. We can use 7 digits as that accomodates both 32 bit and
-+ * current 64 bit systems as PID_MAX_LIMIT is currently 2^22 so that will
-+ * fit in 7 digits and the id will add an additional byte for the id type of
-+ * either thread 'T' or CPU 'C', where the Thread ids will have much larger
-+ * values, so the CPU ids will easily be accomodated. When systems exceed
-+ * 7 digits that won't break anything, but print statements needing more
-+ * then 7 digits will not precisely align.
-+ */
-+#define CALLER_ID_SIZE 7
-+
- /*
-  * Below are options which getopt_long can recognize. From OPT_START options are
-  * non-printable, just used for implementation.
-diff --git a/printk.c b/printk.c
-index 61e0b26..85053b8 100644
---- a/printk.c
-+++ b/printk.c
-@@ -114,6 +114,33 @@ dump_record(struct prb_map *m, unsigned long id)
- 
- 	bufp = buf;
- 	bufp += sprintf(buf, "[%5lld.%06ld] ", nanos, rem/1000);
-+
-+	if (OFFSET(printk_info.caller_id) > NOT_FOUND_STRUCTURE) {
-+		ssize_t numspaces;
-+		unsigned int pkc;
-+		char idtype;
-+		int digits;
-+
-+		/* Get id type, isolate id value in pkc for print */
-+		pkc = UINT(inf + OFFSET(printk_info.caller_id));
-+		idtype = (pkc & 0x80000000) ? 'C' : 'T';
-+		pkc &= ~0x80000000;
-+		/* Determine size of padding space if needed */
-+		digits = snprintf(NULL, 0, "%u", pkc);
-+		numspaces = CALLER_ID_SIZE - digits;
-+		if (numspaces > 0) {
-+			char spc[16];
-+
-+			memset(spc, 0, sizeof(spc));
-+			memset(spc, ' ', numspaces);
-+			bufp += sprintf(bufp, "[%s%c%u] ", spc, idtype, pkc);
-+		} else {
-+			bufp += sprintf(bufp, "[%c%u] ", idtype, pkc);
-+		}
-+	} else {
-+		bufp = stpcpy(bufp, " ");
-+	}
-+
- 	indent_len = strlen(buf);
- 
- 	/* How much buffer space is needed in the worst case */
--- 
-2.43.0
+Best regards,
+Krzysztof
 
 
 _______________________________________________
