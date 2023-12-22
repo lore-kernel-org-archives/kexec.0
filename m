@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 332F1C41535
-	for <kexec@archiver.kernel.org>; Fri, 22 Dec 2023 19:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C0762C47073
+	for <kexec@archiver.kernel.org>; Fri, 22 Dec 2023 20:47:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=Y/xBlwdZYhiw8BUC6ky5YyBI+y7j5cLN+RTbjblBAMM=; b=Tyg7dCqQSjumD2
-	QU+W4teLYOJkYNXns8AUwGmnR9AQ//tYIoO5ljFzz96Av7Ec0BzuTviuVGg07J8oI4Y028wU/Ql1w
-	Gy3lKSEy8QEkQpadBMeeraMd1YgiXzMFoFpRs1CV0yI3FW2iDS/L6cJrWgi14dXWdLdE+ExIR61I/
-	WkCNn0pQqGksd3miKq9dAcfLwYbRvd0XFz2BkmjYK4OWr5/NkTCHPfmkrbokskEJ4OEZYROYDGVHt
-	DSGRm93Vw5wMLJrZ9wx0Yh992hwPGb2YstJyITfH3OZ7NLY2OOfYdc3WL8n3VP7sjKsbzpvHOimwE
-	/jCRyrTIXnv+5gcXFwBg==;
+	List-Owner; bh=A83XlxdnVonB+ajzSwmrJ/aDcmxDxTSmkYr8y7K5tZM=; b=xK/ZuyEcNu41QK
+	y2h6BrY+BM/RwHHNFl9v4niApIzIYZYidCQIRzZJW6+AJYt/S2y15o1M2WGBgojfCGT7vA/6apMqy
+	VyXoqBAT74fEExrpDi/97lRhJR29JzELV8CNi0PXJAIWIl3gtuXEfj4zCwKiUoH/Bs/5Rh1AZVkd+
+	xKrYIyE9X36GMg9r2OjI5iGZxEPdwgE+BvcJXrWLx+XDliYpWTZh8BfBRv4Oy31uHVcNpcGg0ULrZ
+	E8Bnc7EiWOylq3+Cw6t0gLzM1fnXCYxKbPLYgQbgfD0kVZ/nvbAPIznTppySTUhQYtdJFZL6YeMrv
+	68ZqY73zkI/GOyOp8B4g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGlau-006m1m-1F;
-	Fri, 22 Dec 2023 19:54:04 +0000
-Received: from smtp-fw-52002.amazon.com ([52.119.213.150])
+	id 1rGmQM-006poz-0D;
+	Fri, 22 Dec 2023 20:47:14 +0000
+Received: from smtp-fw-52003.amazon.com ([52.119.213.152])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGlam-006luJ-0N;
-	Fri, 22 Dec 2023 19:54:02 +0000
+	id 1rGlKu-006iUr-20;
+	Fri, 22 Dec 2023 19:37:35 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1703274836; x=1734810836;
+  t=1703273852; x=1734809852;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=a+3i4loybtPdN0BnSihZonArbdMyz7IERtq4xLgkTQM=;
-  b=UnmFO7dgnpQoIvHDXRPrXy5s8+CTuS4fPU/9ATOSqq6mp73kNjrpWCz8
-   CESTzsIfNwxpXTW15n1Q+pzr2YSdobCEDEZCLmDepUHXcnw3HsB3+E4a4
-   P+PBBh/icwJlUjldS+vV69tpyCTs7cMc8n2FSvcdSnDmDQSDDYZ7hLARW
-   U=;
+  bh=ZLYCMQzZdYknax/wRIALOVvHrvD35sO3OPXkV3K/85M=;
+  b=QAAmel78WlJ8DEf//6CTx7/t/5cM4CG3F2J+FtrpD0JY2phyGxxP/VZU
+   gaQC6dq2UE2Dv4If/9rOCqJ7XZUNZp/0OrffIbpskqncjjWYOup2aHo7M
+   GfPrC3+b04gA7RzTqBwYj+5I5SfkkM+HncfiZsqcl/YClOjqAciiCVvv6
+   0=;
 X-IronPort-AV: E=Sophos;i="6.04,297,1695686400"; 
-   d="scan'208";a="602627379"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-pdx-2b-m6i4x-f323d91c.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-52002.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 19:53:53 +0000
-Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (pdx2-ws-svc-p26-lb5-vlan2.pdx.amazon.com [10.39.38.66])
-	by email-inbound-relay-pdx-2b-m6i4x-f323d91c.us-west-2.amazon.com (Postfix) with ESMTPS id 69E8040DFE;
-	Fri, 22 Dec 2023 19:53:38 +0000 (UTC)
-Received: from EX19MTAUWA001.ant.amazon.com [10.0.7.35:18182]
+   d="scan'208";a="627319050"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-iad-1a-m6i4x-b5bd57cf.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-52003.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 19:37:28 +0000
+Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (iad7-ws-svc-p70-lb3-vlan3.iad.amazon.com [10.32.235.38])
+	by email-inbound-relay-iad-1a-m6i4x-b5bd57cf.us-east-1.amazon.com (Postfix) with ESMTPS id C66E4499DC;
+	Fri, 22 Dec 2023 19:37:21 +0000 (UTC)
+Received: from EX19MTAUWB001.ant.amazon.com [10.0.21.151:42367]
  by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.15.218:2525] with esmtp (Farcaster)
- id bf3bafa8-c33b-453a-b6f8-9e29248b4425; Fri, 22 Dec 2023 19:53:38 +0000 (UTC)
-X-Farcaster-Flow-ID: bf3bafa8-c33b-453a-b6f8-9e29248b4425
+ id 7d43c3c0-a068-40c5-899c-569b1b9ac52f; Fri, 22 Dec 2023 19:37:20 +0000 (UTC)
+X-Farcaster-Flow-ID: 7d43c3c0-a068-40c5-899c-569b1b9ac52f
 Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWA001.ant.amazon.com (10.250.64.204) with Microsoft SMTP Server
+ EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 22 Dec 2023 19:53:37 +0000
+ 15.2.1118.40; Fri, 22 Dec 2023 19:37:20 +0000
 Received: from dev-dsk-graf-1a-5ce218e4.eu-west-1.amazon.com (10.253.83.51) by
  EX19D020UWC004.ant.amazon.com (10.13.138.149) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 22 Dec 2023 19:53:33 +0000
+ 15.2.1118.40; Fri, 22 Dec 2023 19:37:16 +0000
 From: Alexander Graf <graf@amazon.com>
 To: <linux-kernel@vger.kernel.org>
 CC: <linux-trace-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
@@ -71,20 +71,19 @@ CC: <linux-trace-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
 	<anthony.yznaga@oracle.com>, Usama Arif <usama.arif@bytedance.com>, David
  Woodhouse <dwmw@amazon.co.uk>, Benjamin Herrenschmidt
 	<benh@kernel.crashing.org>
-Subject: [PATCH v2 17/17] devicetree: Add bindings for ftrace KHO
-Date: Fri, 22 Dec 2023 19:51:44 +0000
-Message-ID: <20231222195144.24532-12-graf@amazon.com>
+Subject: [PATCH v2 06/17] kexec: Add config option for KHO
+Date: Fri, 22 Dec 2023 19:35:56 +0000
+Message-ID: <20231222193607.15474-7-graf@amazon.com>
 X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20231222195144.24532-1-graf@amazon.com>
+In-Reply-To: <20231222193607.15474-1-graf@amazon.com>
 References: <20231222193607.15474-1-graf@amazon.com>
- <20231222195144.24532-1-graf@amazon.com>
 MIME-Version: 1.0
 X-Originating-IP: [10.253.83.51]
-X-ClientProxiedBy: EX19D035UWB003.ant.amazon.com (10.13.138.85) To
+X-ClientProxiedBy: EX19D037UWB001.ant.amazon.com (10.13.138.123) To
  EX19D020UWC004.ant.amazon.com (10.13.138.149)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231222_115356_384666_C8D741B9 
-X-CRM114-Status: GOOD (  20.70  )
+X-CRM114-CacheID: sfid-20231222_113732_819656_F3C19660 
+X-CRM114-Status: GOOD (  13.86  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -101,190 +100,39 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-With ftrace in KHO, we are creating an ABI between old kernel and new
-kernel about the state that they transfer. To ensure that we document
-that state and catch any breaking change, let's add its schema to the
-common devicetree bindings. This way, we can quickly reason about the
-state that gets passed.
+We have all generic code in place now to support Kexec with KHO. This
+patch adds a config option that depends on architecture support to
+enable KHO support.
 
 Signed-off-by: Alexander Graf <graf@amazon.com>
 ---
- .../bindings/kho/ftrace/ftrace-array.yaml     | 46 +++++++++++++++
- .../bindings/kho/ftrace/ftrace-cpu.yaml       | 56 +++++++++++++++++++
- .../bindings/kho/ftrace/ftrace.yaml           | 48 ++++++++++++++++
- 3 files changed, 150 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/kho/ftrace/ftrace-array.yaml
- create mode 100644 Documentation/devicetree/bindings/kho/ftrace/ftrace-cpu.yaml
- create mode 100644 Documentation/devicetree/bindings/kho/ftrace/ftrace.yaml
+ kernel/Kconfig.kexec | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/kho/ftrace/ftrace-array.yaml b/Documentation/devicetree/bindings/kho/ftrace/ftrace-array.yaml
-new file mode 100644
-index 000000000000..9960fefc292d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/kho/ftrace/ftrace-array.yaml
-@@ -0,0 +1,46 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/kho/ftrace/ftrace-array.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
+index 2fd510256604..909ab28f1341 100644
+--- a/kernel/Kconfig.kexec
++++ b/kernel/Kconfig.kexec
+@@ -91,6 +91,19 @@ config KEXEC_JUMP
+ 	  Jump between original kernel and kexeced kernel and invoke
+ 	  code in physical address mode via KEXEC
+ 
++config KEXEC_KHO
++	bool "kexec handover"
++	depends on ARCH_SUPPORTS_KEXEC_KHO
++	depends on KEXEC
++	select MEMBLOCK_SCRATCH
++	select LIBFDT
++	select CMA
++	help
++	  Allow kexec to hand over state across kernels by generating and
++	  passing additional metadata to the target kernel. This is useful
++	  to keep data or state alive across the kexec. For this to work,
++	  both source and target kernels need to have this option enabled.
 +
-+title: Ftrace trace array
-+
-+maintainers:
-+  - Alexander Graf <graf@amazon.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ftrace,array-v1
-+
-+  trace_flags:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      Bitmap of all the trace flags that were enabled in the trace array at the
-+      point of serialization.
-+
-+# Subnodes will be of type "ftrace,cpu-v1", one each per CPU
-+additionalProperties: true
-+
-+required:
-+  - compatible
-+  - trace_flags
-+
-+examples:
-+  - |
-+    ftrace {
-+        compatible = "ftrace-v1";
-+        events = <1 1 2 2 3 3>;
-+
-+        global_trace {
-+          compatible = "ftrace,array-v1";
-+          trace_flags = < 0x3354601 >;
-+
-+          cpu0 {
-+            compatible = "ftrace,cpu-v1";
-+            cpu = < 0x00 >;
-+            mem = < 0x101000000ULL 0x38ULL 0x101000100ULL 0x1000ULL 0x101000038ULL 0x38ULL 0x101002000ULL 0x1000ULL>;
-+          };
-+        };
-+      };
-diff --git a/Documentation/devicetree/bindings/kho/ftrace/ftrace-cpu.yaml b/Documentation/devicetree/bindings/kho/ftrace/ftrace-cpu.yaml
-new file mode 100644
-index 000000000000..58c715e93f37
---- /dev/null
-+++ b/Documentation/devicetree/bindings/kho/ftrace/ftrace-cpu.yaml
-@@ -0,0 +1,56 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/kho/ftrace/ftrace-cpu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Ftrace per-CPU ring buffer contents
-+
-+maintainers:
-+  - Alexander Graf <graf@amazon.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ftrace,cpu-v1
-+
-+  cpu:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      CPU number of the CPU that this ring buffer belonged to when it was
-+      serialized.
-+
-+  mem:
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+    description:
-+      Array of { u64 phys_addr, u64 len } elements that describe a list of ring
-+      buffer pages. Each page consists of two elements. The first element
-+      describes the location of the struct buffer_page that contains metadata
-+      for a given ring buffer page, such as the ring's head indicator. The
-+      second element points to the ring buffer data page which contains the raw
-+      trace data.
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - cpu
-+  - mem
-+
-+examples:
-+  - |
-+    ftrace {
-+        compatible = "ftrace-v1";
-+        events = <1 1 2 2 3 3>;
-+
-+        global_trace {
-+          compatible = "ftrace,array-v1";
-+          trace_flags = < 0x3354601 >;
-+
-+          cpu0 {
-+            compatible = "ftrace,cpu-v1";
-+            cpu = < 0x00 >;
-+            mem = < 0x101000000ULL 0x38ULL 0x101000100ULL 0x1000ULL 0x101000038ULL 0x38ULL 0x101002000ULL 0x1000ULL>;
-+          };
-+        };
-+      };
-diff --git a/Documentation/devicetree/bindings/kho/ftrace/ftrace.yaml b/Documentation/devicetree/bindings/kho/ftrace/ftrace.yaml
-new file mode 100644
-index 000000000000..b87a64843af3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/kho/ftrace/ftrace.yaml
-@@ -0,0 +1,48 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/kho/ftrace/ftrace.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Ftrace core data
-+
-+maintainers:
-+  - Alexander Graf <graf@amazon.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ftrace-v1
-+
-+  events:
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+    description:
-+      Array of { u32 crc, u32 type } elements. Each element contains a unique
-+      identifier for an event, followed by the identifier that this event had
-+      in the previous kernel's trace buffers.
-+
-+# Other child nodes will be of type "ftrace,array-v1". Each of which describe
-+# a trace buffer
-+additionalProperties: true
-+
-+required:
-+  - compatible
-+  - events
-+
-+examples:
-+  - |
-+    ftrace {
-+        compatible = "ftrace-v1";
-+        events = <1 1 2 2 3 3>;
-+
-+        global_trace {
-+          compatible = "ftrace,array-v1";
-+          trace_flags = < 0x3354601 >;
-+
-+          cpu0 {
-+            compatible = "ftrace,cpu-v1";
-+            cpu = < 0x00 >;
-+            mem = < 0x101000000ULL 0x38ULL 0x101000100ULL 0x1000ULL 0x101000038ULL 0x38ULL 0x101002000ULL 0x1000ULL>;
-+          };
-+        };
-+      };
+ config CRASH_DUMP
+ 	bool "kernel crash dumps"
+ 	depends on ARCH_SUPPORTS_CRASH_DUMP
 -- 
 2.40.1
 
