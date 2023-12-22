@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5B428C41535
-	for <kexec@archiver.kernel.org>; Fri, 22 Dec 2023 19:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8A709C41535
+	for <kexec@archiver.kernel.org>; Fri, 22 Dec 2023 19:38:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=h1Lt3ZRXEhj+w1pBXDyCK0CxbgIigGMYuwABbvCXya8=; b=vJpNiWYN7iqsbG
-	25NScwI4moEfHVc+FF8jWGdJFqvgv4Fd6fGq3VIUgagItcyH0b97c/xhanpNj3BjMbdb/YmOtc7Fe
-	KoWSmlVMQls0mWXO+eQDlZnypF/XVD5Nzs5yx2Rzm7z1HwK8WloI60ZbH1GOArJp9bnsdPPAsFhD3
-	6vFHpDZ5loB6c0AsGZDhH+xbpCYAOVcwMhFdH3wln3SDAe5lcfcfXklLlZhDcy0PtNCGVMTVOpNTt
-	Z5PQXDwuhOdKmbLV7MOhl/5L3ZvHLiu/kNKPt2Z37dfXwyHS1j1pCAEwR7D/3Pso9S7nNT2A0w9vV
-	3v3uMKaiZw4eR1oSfMAg==;
+	List-Owner; bh=KwkNYMiLQ1ue5GuhM761qXQbO/ykQh71RCeSTWC2/7Q=; b=vg+1UFvJOmuQml
+	JOTKUyk9Gfbl41B2wxp6GWvtzlysDzqP2ClhbV0ooCySi9HIkLgOzWUzjy++PdyDJ7VDS5hdPDuYx
+	qLN9WZRruWItFiR2ebt2SZAmeHDE5K4uRV++a2F2n2AI4g2psvpLfDJxm3a4zG0i5OYks4R+CHrkn
+	kTjbYnPII8kcLDx8tnqVTFaUj4JtJDjmKiDjZSmcSoacPiT/RhOaN/q+4GbN1Um6rRRbGPt9jOGGg
+	kW2tuXocyueoL5WCvjRpfTocnZAKUXemjYAl0XHZbBr2XjTiYG8C1dLajneROTXOVVsNYze4Oqs8G
+	P6Yqyq0ivXvqEo3GbGXw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGlL9-006igp-1d;
-	Fri, 22 Dec 2023 19:37:47 +0000
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10])
+	id 1rGlLU-006ixA-1R;
+	Fri, 22 Dec 2023 19:38:08 +0000
+Received: from smtp-fw-80007.amazon.com ([99.78.197.218])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGlKx-006iXq-2j;
-	Fri, 22 Dec 2023 19:37:41 +0000
+	id 1rGlLP-006isN-2j;
+	Fri, 22 Dec 2023 19:38:07 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1703273856; x=1734809856;
+  t=1703273884; x=1734809884;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=4hs41nrvxXplJ/QyH6HSlHLbtIDrbQgqX7R8fKuobQ4=;
-  b=fb5WtgA9BIIcTNptuBossX7z09sYwh7fY7jTEocFeMGfXK5odZvvN7Xe
-   V4DqEZ3tuGNUW8ngtsDwNMlk8bkVPuVsoq55g1Qd17jecYbMF1/tFGLI6
-   CGjd1wMOYZkdbX5NFyza3nw0PRTa/fxnUj/yn7/CH+/xQjW2ziHylbulQ
-   4=;
+  bh=dwhP9TX+qhNuxIBvRPP4G1COkpJHtM0yxRM6jOIEYyk=;
+  b=Ov2om9X46gGrX3w9PqWqvmcOr7cO5BK9ZKKKdCfR7HJOgMSHzjBv6ZDx
+   7Rup92KFw51O1ffCjsve0JiBN5Ps1jl8WE3JEcNJHDTwJUNZwtF45vp0Y
+   F9XUSss3VZMtfATeMe763FXNkUsOHOH8F/vV2wypDCCno/CHbtiRUAUKg
+   w=;
 X-IronPort-AV: E=Sophos;i="6.04,297,1695686400"; 
-   d="scan'208";a="318657015"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-pdx-2c-m6i4x-8c5b1df3.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-33001.sea14.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 19:37:32 +0000
-Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (pdx2-ws-svc-p26-lb5-vlan3.pdx.amazon.com [10.39.38.70])
-	by email-inbound-relay-pdx-2c-m6i4x-8c5b1df3.us-west-2.amazon.com (Postfix) with ESMTPS id DCC8F40D5B;
-	Fri, 22 Dec 2023 19:37:28 +0000 (UTC)
-Received: from EX19MTAUWA001.ant.amazon.com [10.0.38.20:1484]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.38.150:2525] with esmtp (Farcaster)
- id 8eb458e3-6f3d-4684-a6b2-2776439c40d0; Fri, 22 Dec 2023 19:37:28 +0000 (UTC)
-X-Farcaster-Flow-ID: 8eb458e3-6f3d-4684-a6b2-2776439c40d0
+   d="scan'208";a="262157740"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-pdx-1box-2bm6-32cf6363.us-west-2.amazon.com) ([10.25.36.210])
+  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 19:38:00 +0000
+Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (pdx2-ws-svc-p26-lb5-vlan2.pdx.amazon.com [10.39.38.66])
+	by email-inbound-relay-pdx-1box-2bm6-32cf6363.us-west-2.amazon.com (Postfix) with ESMTPS id BDB358B25B;
+	Fri, 22 Dec 2023 19:37:58 +0000 (UTC)
+Received: from EX19MTAUWB002.ant.amazon.com [10.0.7.35:5256]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.6.144:2525] with esmtp (Farcaster)
+ id ce48a30f-05bb-48a3-9e16-f52e7034e6f9; Fri, 22 Dec 2023 19:37:58 +0000 (UTC)
+X-Farcaster-Flow-ID: ce48a30f-05bb-48a3-9e16-f52e7034e6f9
 Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWA001.ant.amazon.com (10.250.64.204) with Microsoft SMTP Server
+ EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 22 Dec 2023 19:37:28 +0000
+ 15.2.1118.40; Fri, 22 Dec 2023 19:37:58 +0000
 Received: from dev-dsk-graf-1a-5ce218e4.eu-west-1.amazon.com (10.253.83.51) by
  EX19D020UWC004.ant.amazon.com (10.13.138.149) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 22 Dec 2023 19:37:24 +0000
+ 15.2.1118.40; Fri, 22 Dec 2023 19:37:54 +0000
 From: Alexander Graf <graf@amazon.com>
 To: <linux-kernel@vger.kernel.org>
 CC: <linux-trace-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
@@ -71,19 +71,19 @@ CC: <linux-trace-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
 	<anthony.yznaga@oracle.com>, Usama Arif <usama.arif@bytedance.com>, David
  Woodhouse <dwmw@amazon.co.uk>, Benjamin Herrenschmidt
 	<benh@kernel.crashing.org>
-Subject: [PATCH v2 08/17] arm64: Add KHO support
-Date: Fri, 22 Dec 2023 19:35:58 +0000
-Message-ID: <20231222193607.15474-9-graf@amazon.com>
+Subject: [PATCH v2 10/17] tracing: Initialize fields before registering
+Date: Fri, 22 Dec 2023 19:36:00 +0000
+Message-ID: <20231222193607.15474-11-graf@amazon.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20231222193607.15474-1-graf@amazon.com>
 References: <20231222193607.15474-1-graf@amazon.com>
 MIME-Version: 1.0
 X-Originating-IP: [10.253.83.51]
-X-ClientProxiedBy: EX19D037UWB001.ant.amazon.com (10.13.138.123) To
+X-ClientProxiedBy: EX19D041UWA004.ant.amazon.com (10.13.139.9) To
  EX19D020UWC004.ant.amazon.com (10.13.138.149)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231222_113735_965254_194994AA 
-X-CRM114-Status: GOOD (  21.23  )
+X-CRM114-CacheID: sfid-20231222_113803_938334_5B718BF7 
+X-CRM114-Status: GOOD (  20.33  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,212 +100,153 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-We now have all bits in place to support KHO kexecs. This patch adds
-awareness of KHO in the kexec file as well as boot path for arm64 and
-adds the respective kconfig option to the architecture so that it can
-use KHO successfully.
+With KHO, we need to know all event fields before we allocate an event
+type for a trace event so that we can recover it based on a previous
+execution context.
+
+Before this patch, fields were only initialized after we allocated a
+type id. After this patch, we try to allocate it early as well.
+
+This patch leaves the old late initialization logic in place. The field
+init code already validates whether there are any fields present, which
+means it's legal to call it multiple times. This way we're sure we don't
+miss any call sites.
 
 Signed-off-by: Alexander Graf <graf@amazon.com>
-
 ---
+ include/linux/trace_events.h      |  1 +
+ kernel/trace/trace_events.c       | 14 +++++++++-----
+ kernel/trace/trace_events_synth.c | 14 +++++++++-----
+ kernel/trace/trace_events_user.c  |  4 ++++
+ kernel/trace/trace_probe.c        |  4 ++++
+ 5 files changed, 27 insertions(+), 10 deletions(-)
 
-v1 -> v2:
-
-  - test bot warning fix
-  - Change kconfig option to ARCH_SUPPORTS_KEXEC_KHO
-  - s/kho_reserve_mem/kho_reserve_previous_mem/g
-  - s/kho_reserve/kho_reserve_scratch/g
-  - Remove / reduce ifdefs for kho fdt code
----
- arch/arm64/Kconfig        |  3 +++
- arch/arm64/kernel/setup.c |  2 ++
- arch/arm64/mm/init.c      |  8 ++++++
- drivers/of/fdt.c          | 39 ++++++++++++++++++++++++++++
- drivers/of/kexec.c        | 54 +++++++++++++++++++++++++++++++++++++++
- 5 files changed, 106 insertions(+)
-
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 7b071a00425d..4a2fd3deaa16 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -1495,6 +1495,9 @@ config ARCH_SUPPORTS_KEXEC_IMAGE_VERIFY_SIG
- config ARCH_DEFAULT_KEXEC_IMAGE_VERIFY_SIG
- 	def_bool y
+diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+index d68ff9b1247f..8fe8970b48e3 100644
+--- a/include/linux/trace_events.h
++++ b/include/linux/trace_events.h
+@@ -842,6 +842,7 @@ extern int trace_define_field(struct trace_event_call *call, const char *type,
+ extern int trace_add_event_call(struct trace_event_call *call);
+ extern int trace_remove_event_call(struct trace_event_call *call);
+ extern int trace_event_get_offsets(struct trace_event_call *call);
++extern int trace_event_define_fields(struct trace_event_call *call);
  
-+config ARCH_SUPPORTS_KEXEC_KHO
-+	def_bool y
+ int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set);
+ int trace_set_clr_event(const char *system, const char *event, int set);
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index f29e815ca5b2..fbf8be1d2806 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -462,6 +462,11 @@ static void test_event_printk(struct trace_event_call *call)
+ int trace_event_raw_init(struct trace_event_call *call)
+ {
+ 	int id;
++	int ret;
 +
- config ARCH_SUPPORTS_CRASH_DUMP
- 	def_bool y
++	ret = trace_event_define_fields(call);
++	if (ret)
++		return ret;
  
-diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-index 417a8a86b2db..9aa05b84d202 100644
---- a/arch/arm64/kernel/setup.c
-+++ b/arch/arm64/kernel/setup.c
-@@ -346,6 +346,8 @@ void __init __no_sanitize_address setup_arch(char **cmdline_p)
- 
- 	paging_init();
- 
-+	kho_reserve_previous_mem();
-+
- 	acpi_table_upgrade();
- 
- 	/* Parse the ACPI tables for possible boot-time configuration */
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 74c1db8ce271..1a8fc91509af 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -358,6 +358,8 @@ void __init bootmem_init(void)
- 	 */
- 	arch_reserve_crashkernel();
- 
-+	kho_reserve_scratch();
-+
- 	memblock_dump_all();
+ 	id = register_trace_event(&call->event);
+ 	if (!id)
+@@ -2402,8 +2407,7 @@ event_subsystem_dir(struct trace_array *tr, const char *name,
+ 	return NULL;
  }
  
-@@ -386,6 +388,12 @@ void __init mem_init(void)
- 	/* this will put all unused low memory onto the freelists */
- 	memblock_free_all();
+-static int
+-event_define_fields(struct trace_event_call *call)
++int trace_event_define_fields(struct trace_event_call *call)
+ {
+ 	struct list_head *head;
+ 	int ret = 0;
+@@ -2592,7 +2596,7 @@ event_create_dir(struct eventfs_inode *parent, struct trace_event_file *file)
  
-+	/*
-+	 * Now that all KHO pages are marked as reserved, let's flip them back
-+	 * to normal pages with accurate refcount.
-+	 */
-+	kho_populate_refcount();
-+
- 	/*
- 	 * Check boundaries twice: Some fundamental inconsistencies can be
- 	 * detected at build time already.
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index bf502ba8da95..f9b9a36fb722 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -1006,6 +1006,42 @@ void __init early_init_dt_check_for_usable_mem_range(void)
- 		memblock_add(rgn[i].base, rgn[i].size);
+ 	file->ei = ei;
+ 
+-	ret = event_define_fields(call);
++	ret = trace_event_define_fields(call);
+ 	if (ret < 0) {
+ 		pr_warn("Could not initialize trace point events/%s\n", name);
+ 		return ret;
+@@ -2978,7 +2982,7 @@ __trace_add_new_event(struct trace_event_call *call, struct trace_array *tr)
+ 	if (eventdir_initialized)
+ 		return event_create_dir(tr->event_dir, file);
+ 	else
+-		return event_define_fields(call);
++		return trace_event_define_fields(call);
  }
  
-+/**
-+ * early_init_dt_check_kho - Decode info required for kexec handover from DT
-+ */
-+static void __init early_init_dt_check_kho(void)
-+{
-+	unsigned long node = chosen_node_offset;
-+	u64 kho_start, scratch_start, scratch_size, mem_start, mem_size;
-+	const __be32 *p;
-+	int l;
-+
-+	if (!IS_ENABLED(CONFIG_KEXEC_KHO) || (long)node < 0)
-+		return;
-+
-+	p = of_get_flat_dt_prop(node, "linux,kho-dt", &l);
-+	if (l != (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32))
-+		return;
-+
-+	kho_start = dt_mem_next_cell(dt_root_addr_cells, &p);
-+
-+	p = of_get_flat_dt_prop(node, "linux,kho-scratch", &l);
-+	if (l != (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32))
-+		return;
-+
-+	scratch_start = dt_mem_next_cell(dt_root_addr_cells, &p);
-+	scratch_size = dt_mem_next_cell(dt_root_addr_cells, &p);
-+
-+	p = of_get_flat_dt_prop(node, "linux,kho-mem", &l);
-+	if (l != (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32))
-+		return;
-+
-+	mem_start = dt_mem_next_cell(dt_root_addr_cells, &p);
-+	mem_size = dt_mem_next_cell(dt_root_addr_cells, &p);
-+
-+	kho_populate(kho_start, scratch_start, scratch_size, mem_start, mem_size);
-+}
-+
- #ifdef CONFIG_SERIAL_EARLYCON
+ static void trace_early_triggers(struct trace_event_file *file, const char *name)
+@@ -3015,7 +3019,7 @@ __trace_early_add_new_event(struct trace_event_call *call,
+ 	if (!file)
+ 		return -ENOMEM;
  
- int __init early_init_dt_scan_chosen_stdout(void)
-@@ -1304,6 +1340,9 @@ void __init early_init_dt_scan_nodes(void)
+-	ret = event_define_fields(call);
++	ret = trace_event_define_fields(call);
+ 	if (ret)
+ 		return ret;
  
- 	/* Handle linux,usable-memory-range property */
- 	early_init_dt_check_for_usable_mem_range();
+diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
+index 846e02c0fb59..4db41218ccf7 100644
+--- a/kernel/trace/trace_events_synth.c
++++ b/kernel/trace/trace_events_synth.c
+@@ -880,17 +880,21 @@ static int register_synth_event(struct synth_event *event)
+ 	INIT_LIST_HEAD(&call->class->fields);
+ 	call->event.funcs = &synth_event_funcs;
+ 	call->class->fields_array = synth_event_fields_array;
++	call->flags = TRACE_EVENT_FL_TRACEPOINT;
++	call->class->reg = trace_event_reg;
++	call->class->probe = trace_event_raw_event_synth;
++	call->data = event;
++	call->tp = event->tp;
 +
-+	/* Handle kexec handover */
-+	early_init_dt_check_kho();
- }
- 
- bool __init early_init_dt_scan(void *params)
-diff --git a/drivers/of/kexec.c b/drivers/of/kexec.c
-index 68278340cecf..59070b09ad45 100644
---- a/drivers/of/kexec.c
-+++ b/drivers/of/kexec.c
-@@ -264,6 +264,55 @@ static inline int setup_ima_buffer(const struct kimage *image, void *fdt,
- }
- #endif /* CONFIG_IMA_KEXEC */
- 
-+static int kho_add_chosen(const struct kimage *image, void *fdt, int chosen_node)
-+{
-+	void *dt = NULL;
-+	phys_addr_t dt_mem = 0;
-+	phys_addr_t dt_len = 0;
-+	phys_addr_t scratch_mem = 0;
-+	phys_addr_t scratch_len = 0;
-+	void *mem_cache = NULL;
-+	phys_addr_t mem_cache_mem = 0;
-+	phys_addr_t mem_cache_len = 0;
-+	int ret = 0;
-+
-+#ifdef CONFIG_KEXEC_KHO
-+	dt = image->kho.dt.buffer;
-+	dt_mem = image->kho.dt.mem;
-+	dt_len = image->kho.dt.bufsz;
-+
-+	scratch_mem = kho_scratch_phys;
-+	scratch_len = kho_scratch_len;
-+
-+	mem_cache = image->kho.mem_cache.buffer;
-+	mem_cache_mem = image->kho.mem_cache.mem;
-+	mem_cache_len = image->kho.mem_cache.bufsz;
-+#endif
-+
-+	if (!dt || !mem_cache)
-+		goto out;
-+
-+	pr_debug("Adding kho metadata to DT");
-+
-+	ret = fdt_appendprop_addrrange(fdt, 0, chosen_node, "linux,kho-dt",
-+				       dt_mem, dt_len);
++	ret = trace_event_define_fields(call);
 +	if (ret)
 +		goto out;
-+
-+	ret = fdt_appendprop_addrrange(fdt, 0, chosen_node, "linux,kho-scratch",
-+				       scratch_mem, scratch_len);
-+	if (ret)
-+		goto out;
-+
-+	ret = fdt_appendprop_addrrange(fdt, 0, chosen_node, "linux,kho-mem",
-+				       mem_cache_mem, mem_cache_len);
-+	if (ret)
-+		goto out;
-+
-+out:
-+	return ret;
-+}
-+
- /*
-  * of_kexec_alloc_and_setup_fdt - Alloc and setup a new Flattened Device Tree
-  *
-@@ -412,6 +461,11 @@ void *of_kexec_alloc_and_setup_fdt(const struct kimage *image,
- 		}
+ 
+ 	ret = register_trace_event(&call->event);
+ 	if (!ret) {
+ 		ret = -ENODEV;
+ 		goto out;
  	}
+-	call->flags = TRACE_EVENT_FL_TRACEPOINT;
+-	call->class->reg = trace_event_reg;
+-	call->class->probe = trace_event_raw_event_synth;
+-	call->data = event;
+-	call->tp = event->tp;
  
-+	/* Add kho metadata if this is a KHO image */
-+	ret = kho_add_chosen(image, fdt, chosen_node);
+ 	ret = trace_add_event_call(call);
+ 	if (ret) {
+diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+index 9365ce407426..b9837e987525 100644
+--- a/kernel/trace/trace_events_user.c
++++ b/kernel/trace/trace_events_user.c
+@@ -1900,6 +1900,10 @@ static int user_event_trace_register(struct user_event *user)
+ {
+ 	int ret;
+ 
++	ret = trace_event_define_fields(&user->call);
 +	if (ret)
-+		goto out;
++		return ret;
 +
- 	/* add bootargs */
- 	if (cmdline) {
- 		ret = fdt_setprop_string(fdt, chosen_node, "bootargs", cmdline);
+ 	ret = register_trace_event(&user->call.event);
+ 
+ 	if (!ret)
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index 4dc74d73fc1d..da73a02246d8 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -1835,6 +1835,10 @@ int trace_probe_register_event_call(struct trace_probe *tp)
+ 				  trace_probe_name(tp)))
+ 		return -EEXIST;
+ 
++	ret = trace_event_define_fields(call);
++	if (ret)
++		return ret;
++
+ 	ret = register_trace_event(&call->event);
+ 	if (!ret)
+ 		return -ENODEV;
 -- 
 2.40.1
 
