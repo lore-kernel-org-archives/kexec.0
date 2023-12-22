@@ -4,57 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8A709C41535
-	for <kexec@archiver.kernel.org>; Fri, 22 Dec 2023 19:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C614CC41535
+	for <kexec@archiver.kernel.org>; Fri, 22 Dec 2023 19:38:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=KwkNYMiLQ1ue5GuhM761qXQbO/ykQh71RCeSTWC2/7Q=; b=vg+1UFvJOmuQml
-	JOTKUyk9Gfbl41B2wxp6GWvtzlysDzqP2ClhbV0ooCySi9HIkLgOzWUzjy++PdyDJ7VDS5hdPDuYx
-	qLN9WZRruWItFiR2ebt2SZAmeHDE5K4uRV++a2F2n2AI4g2psvpLfDJxm3a4zG0i5OYks4R+CHrkn
-	kTjbYnPII8kcLDx8tnqVTFaUj4JtJDjmKiDjZSmcSoacPiT/RhOaN/q+4GbN1Um6rRRbGPt9jOGGg
-	kW2tuXocyueoL5WCvjRpfTocnZAKUXemjYAl0XHZbBr2XjTiYG8C1dLajneROTXOVVsNYze4Oqs8G
-	P6Yqyq0ivXvqEo3GbGXw==;
+	List-Owner; bh=fFFYvgw5GdaEqUz0GS/WOvC4TncVo7Ua2B9CpBH75ZA=; b=cuSm6f6+/o0H5C
+	j6hXaJ2hogjS+fMtHqe41eqpOoANyKHsM3vlQAK5KPMgjARpyREnQokqMYjf3BaOrTEkHXCU26wse
+	PFDTSin0o9PyvNc/7AA1FkMory7qBM7Qx42bK1PvddPuR6IQmBcijrv7GAHP4tX2nnE1dJfaJruBW
+	GHmL/pB8ag8GQOcyiwfHSx/X+rsfAER0t8SEFqszvzGwXgtmpfYa+yg8ceUKv2ihfuPB7K99+0jt7
+	1aOgUysvRxFJjebIMAdLNipPEjP7pHev7MbYP7n9BsQl45STJtT3qdw+USaKJnxqHRkeO2Kn8Oerl
+	R43tEB7DB3g9mQexNFrQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGlLU-006ixA-1R;
-	Fri, 22 Dec 2023 19:38:08 +0000
-Received: from smtp-fw-80007.amazon.com ([99.78.197.218])
+	id 1rGlLi-006j7j-37;
+	Fri, 22 Dec 2023 19:38:22 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGlLP-006isN-2j;
-	Fri, 22 Dec 2023 19:38:07 +0000
+	id 1rGlLh-006j6V-0l;
+	Fri, 22 Dec 2023 19:38:21 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=qmhUZjf5F0irRMFPH4YUunFpNZODTBv7SKMl/vOJmCU=; b=HuUS6LOpmE56jzmEiKmfRtPd1c
+	Np0mOHtsb2DBM1sPm3NgH6GL+EY1I8nWEGHP3iPwQk+Aw6I1IsZL0gxUlH2KiL1xKMHx1E3/Rgnpa
+	Wlq6wUfSxmsms2c3HBL7W7i57ZxtAnhmmh9rN9VF7X0zU1cJroueesMj9ZjGruWdHn9klajDwjq4d
+	if+XLoh4I0bxdu4zZbCGbxmfD+AHkOTT6iVu3DIaRqgz+z8nk8LE7JBnX+cjJci2B0LLYZrsVT0Lc
+	zohn+FnzuAJKZO4Q9YA0uMD0TNurDNZOKqcZm3t40Jtf3emsfQJ+/ASsWrKoJliiJowLEViK3UFq6
+	pUp+LFIQ==;
+Received: from smtp-fw-9106.amazon.com ([207.171.188.206])
+	by desiato.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
+	id 1rGlLd-00FNQJ-26;
+	Fri, 22 Dec 2023 19:38:19 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1703273884; x=1734809884;
+  t=1703273898; x=1734809898;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=dwhP9TX+qhNuxIBvRPP4G1COkpJHtM0yxRM6jOIEYyk=;
-  b=Ov2om9X46gGrX3w9PqWqvmcOr7cO5BK9ZKKKdCfR7HJOgMSHzjBv6ZDx
-   7Rup92KFw51O1ffCjsve0JiBN5Ps1jl8WE3JEcNJHDTwJUNZwtF45vp0Y
-   F9XUSss3VZMtfATeMe763FXNkUsOHOH8F/vV2wypDCCno/CHbtiRUAUKg
-   w=;
+  bh=qmhUZjf5F0irRMFPH4YUunFpNZODTBv7SKMl/vOJmCU=;
+  b=qXh5ACNUHNxR3PVihFTGXpNDg9T8TAgD+P0M3010/RR103MppvPpsEKV
+   SPOYw+vgXIEt23i8AYH0KFfzr3HJP08qlg8QL3LLl3VrbK1iu7aJ/KwS+
+   8UYu5D3YMi5pqpzDC38b1TefYe9496+ymNu+l/2ho810aE8nGLTAWDQm/
+   U=;
 X-IronPort-AV: E=Sophos;i="6.04,297,1695686400"; 
-   d="scan'208";a="262157740"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-pdx-1box-2bm6-32cf6363.us-west-2.amazon.com) ([10.25.36.210])
-  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 19:38:00 +0000
+   d="scan'208";a="692781574"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-pdx-2a-m6i4x-1197e3af.us-west-2.amazon.com) ([10.25.36.210])
+  by smtp-border-fw-9106.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 19:38:06 +0000
 Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (pdx2-ws-svc-p26-lb5-vlan2.pdx.amazon.com [10.39.38.66])
-	by email-inbound-relay-pdx-1box-2bm6-32cf6363.us-west-2.amazon.com (Postfix) with ESMTPS id BDB358B25B;
-	Fri, 22 Dec 2023 19:37:58 +0000 (UTC)
-Received: from EX19MTAUWB002.ant.amazon.com [10.0.7.35:5256]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.6.144:2525] with esmtp (Farcaster)
- id ce48a30f-05bb-48a3-9e16-f52e7034e6f9; Fri, 22 Dec 2023 19:37:58 +0000 (UTC)
-X-Farcaster-Flow-ID: ce48a30f-05bb-48a3-9e16-f52e7034e6f9
+	by email-inbound-relay-pdx-2a-m6i4x-1197e3af.us-west-2.amazon.com (Postfix) with ESMTPS id 2C677100395;
+	Fri, 22 Dec 2023 19:38:04 +0000 (UTC)
+Received: from EX19MTAUWA002.ant.amazon.com [10.0.21.151:8114]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.6.30:2525] with esmtp (Farcaster)
+ id 118258fa-6e62-4bd3-8f88-fab34a1b9f0a; Fri, 22 Dec 2023 19:38:03 +0000 (UTC)
+X-Farcaster-Flow-ID: 118258fa-6e62-4bd3-8f88-fab34a1b9f0a
 Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
+ EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 22 Dec 2023 19:37:58 +0000
+ 15.2.1118.40; Fri, 22 Dec 2023 19:38:02 +0000
 Received: from dev-dsk-graf-1a-5ce218e4.eu-west-1.amazon.com (10.253.83.51) by
  EX19D020UWC004.ant.amazon.com (10.13.138.149) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 22 Dec 2023 19:37:54 +0000
+ 15.2.1118.40; Fri, 22 Dec 2023 19:37:58 +0000
 From: Alexander Graf <graf@amazon.com>
 To: <linux-kernel@vger.kernel.org>
 CC: <linux-trace-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
@@ -71,9 +85,9 @@ CC: <linux-trace-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
 	<anthony.yznaga@oracle.com>, Usama Arif <usama.arif@bytedance.com>, David
  Woodhouse <dwmw@amazon.co.uk>, Benjamin Herrenschmidt
 	<benh@kernel.crashing.org>
-Subject: [PATCH v2 10/17] tracing: Initialize fields before registering
-Date: Fri, 22 Dec 2023 19:36:00 +0000
-Message-ID: <20231222193607.15474-11-graf@amazon.com>
+Subject: [PATCH v2 11/17] tracing: Introduce kho serialization
+Date: Fri, 22 Dec 2023 19:36:01 +0000
+Message-ID: <20231222193607.15474-12-graf@amazon.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20231222193607.15474-1-graf@amazon.com>
 References: <20231222193607.15474-1-graf@amazon.com>
@@ -82,8 +96,8 @@ X-Originating-IP: [10.253.83.51]
 X-ClientProxiedBy: EX19D041UWA004.ant.amazon.com (10.13.139.9) To
  EX19D020UWC004.ant.amazon.com (10.13.138.149)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231222_113803_938334_5B718BF7 
-X-CRM114-Status: GOOD (  20.33  )
+X-CRM114-CacheID: sfid-20231222_193818_117108_4D979F52 
+X-CRM114-Status: GOOD (  15.86  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,153 +114,101 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-With KHO, we need to know all event fields before we allocate an event
-type for a trace event so that we can recover it based on a previous
-execution context.
+We want to be able to transfer ftrace state from one kernel to the next.
+To start off with, let's establish all the boiler plate to get a write
+hook when KHO wants to serialize and fill out basic data.
 
-Before this patch, fields were only initialized after we allocated a
-type id. After this patch, we try to allocate it early as well.
-
-This patch leaves the old late initialization logic in place. The field
-init code already validates whether there are any fields present, which
-means it's legal to call it multiple times. This way we're sure we don't
-miss any call sites.
+Follow-up patches will fill in serialization of ring buffers and events.
 
 Signed-off-by: Alexander Graf <graf@amazon.com>
----
- include/linux/trace_events.h      |  1 +
- kernel/trace/trace_events.c       | 14 +++++++++-----
- kernel/trace/trace_events_synth.c | 14 +++++++++-----
- kernel/trace/trace_events_user.c  |  4 ++++
- kernel/trace/trace_probe.c        |  4 ++++
- 5 files changed, 27 insertions(+), 10 deletions(-)
 
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index d68ff9b1247f..8fe8970b48e3 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -842,6 +842,7 @@ extern int trace_define_field(struct trace_event_call *call, const char *type,
- extern int trace_add_event_call(struct trace_event_call *call);
- extern int trace_remove_event_call(struct trace_event_call *call);
- extern int trace_event_get_offsets(struct trace_event_call *call);
-+extern int trace_event_define_fields(struct trace_event_call *call);
+---
+
+v1 -> v2:
+
+  - Remove ifdefs
+---
+ kernel/trace/trace.c | 47 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 199df497db07..6ec31879b4eb 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -32,6 +32,7 @@
+ #include <linux/percpu.h>
+ #include <linux/splice.h>
+ #include <linux/kdebug.h>
++#include <linux/kexec.h>
+ #include <linux/string.h>
+ #include <linux/mount.h>
+ #include <linux/rwsem.h>
+@@ -866,6 +867,8 @@ static struct tracer		*trace_types __read_mostly;
+  */
+ DEFINE_MUTEX(trace_types_lock);
  
- int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set);
- int trace_set_clr_event(const char *system, const char *event, int set);
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index f29e815ca5b2..fbf8be1d2806 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -462,6 +462,11 @@ static void test_event_printk(struct trace_event_call *call)
- int trace_event_raw_init(struct trace_event_call *call)
- {
- 	int id;
-+	int ret;
++static bool trace_in_kho;
 +
-+	ret = trace_event_define_fields(call);
-+	if (ret)
-+		return ret;
- 
- 	id = register_trace_event(&call->event);
- 	if (!id)
-@@ -2402,8 +2407,7 @@ event_subsystem_dir(struct trace_array *tr, const char *name,
- 	return NULL;
+ /*
+  * serialize the access of the ring buffer
+  *
+@@ -10560,12 +10563,56 @@ void __init early_trace_init(void)
+ 	init_events();
  }
  
--static int
--event_define_fields(struct trace_event_call *call)
-+int trace_event_define_fields(struct trace_event_call *call)
++static int trace_kho_notifier(struct notifier_block *self,
++			      unsigned long cmd,
++			      void *v)
++{
++	const char compatible[] = "ftrace-v1";
++	void *fdt = v;
++	int err = 0;
++
++	switch (cmd) {
++	case KEXEC_KHO_ABORT:
++		if (trace_in_kho)
++			mutex_unlock(&trace_types_lock);
++		trace_in_kho = false;
++		return NOTIFY_DONE;
++	case KEXEC_KHO_DUMP:
++		/* Handled below */
++		break;
++	default:
++		return NOTIFY_BAD;
++	}
++
++	if (unlikely(tracing_disabled))
++		return NOTIFY_DONE;
++
++	err |= fdt_begin_node(fdt, "ftrace");
++	err |= fdt_property(fdt, "compatible", compatible, sizeof(compatible));
++	err |= fdt_end_node(fdt);
++
++	if (!err) {
++		/* Hold all future allocations */
++		mutex_lock(&trace_types_lock);
++		trace_in_kho = true;
++	}
++
++	return err ? NOTIFY_BAD : NOTIFY_DONE;
++}
++
++static struct notifier_block trace_kho_nb = {
++	.notifier_call = trace_kho_notifier,
++};
++
+ void __init trace_init(void)
  {
- 	struct list_head *head;
- 	int ret = 0;
-@@ -2592,7 +2596,7 @@ event_create_dir(struct eventfs_inode *parent, struct trace_event_file *file)
+ 	trace_event_init();
  
- 	file->ei = ei;
- 
--	ret = event_define_fields(call);
-+	ret = trace_event_define_fields(call);
- 	if (ret < 0) {
- 		pr_warn("Could not initialize trace point events/%s\n", name);
- 		return ret;
-@@ -2978,7 +2982,7 @@ __trace_add_new_event(struct trace_event_call *call, struct trace_array *tr)
- 	if (eventdir_initialized)
- 		return event_create_dir(tr->event_dir, file);
- 	else
--		return event_define_fields(call);
-+		return trace_event_define_fields(call);
+ 	if (boot_instance_index)
+ 		enable_instances();
++
++	if (IS_ENABLED(CONFIG_FTRACE_KHO))
++		register_kho_notifier(&trace_kho_nb);
  }
  
- static void trace_early_triggers(struct trace_event_file *file, const char *name)
-@@ -3015,7 +3019,7 @@ __trace_early_add_new_event(struct trace_event_call *call,
- 	if (!file)
- 		return -ENOMEM;
- 
--	ret = event_define_fields(call);
-+	ret = trace_event_define_fields(call);
- 	if (ret)
- 		return ret;
- 
-diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
-index 846e02c0fb59..4db41218ccf7 100644
---- a/kernel/trace/trace_events_synth.c
-+++ b/kernel/trace/trace_events_synth.c
-@@ -880,17 +880,21 @@ static int register_synth_event(struct synth_event *event)
- 	INIT_LIST_HEAD(&call->class->fields);
- 	call->event.funcs = &synth_event_funcs;
- 	call->class->fields_array = synth_event_fields_array;
-+	call->flags = TRACE_EVENT_FL_TRACEPOINT;
-+	call->class->reg = trace_event_reg;
-+	call->class->probe = trace_event_raw_event_synth;
-+	call->data = event;
-+	call->tp = event->tp;
-+
-+	ret = trace_event_define_fields(call);
-+	if (ret)
-+		goto out;
- 
- 	ret = register_trace_event(&call->event);
- 	if (!ret) {
- 		ret = -ENODEV;
- 		goto out;
- 	}
--	call->flags = TRACE_EVENT_FL_TRACEPOINT;
--	call->class->reg = trace_event_reg;
--	call->class->probe = trace_event_raw_event_synth;
--	call->data = event;
--	call->tp = event->tp;
- 
- 	ret = trace_add_event_call(call);
- 	if (ret) {
-diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-index 9365ce407426..b9837e987525 100644
---- a/kernel/trace/trace_events_user.c
-+++ b/kernel/trace/trace_events_user.c
-@@ -1900,6 +1900,10 @@ static int user_event_trace_register(struct user_event *user)
- {
- 	int ret;
- 
-+	ret = trace_event_define_fields(&user->call);
-+	if (ret)
-+		return ret;
-+
- 	ret = register_trace_event(&user->call.event);
- 
- 	if (!ret)
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 4dc74d73fc1d..da73a02246d8 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -1835,6 +1835,10 @@ int trace_probe_register_event_call(struct trace_probe *tp)
- 				  trace_probe_name(tp)))
- 		return -EEXIST;
- 
-+	ret = trace_event_define_fields(call);
-+	if (ret)
-+		return ret;
-+
- 	ret = register_trace_event(&call->event);
- 	if (!ret)
- 		return -ENODEV;
+ __init static void clear_boot_tracer(void)
 -- 
 2.40.1
 
