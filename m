@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 17DE7C4706F
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CBE8CC47072
 	for <kexec@archiver.kernel.org>; Fri, 22 Dec 2023 23:52:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
@@ -12,47 +12,62 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=a/QnB13t93BMo9c02LPk06+OAFqy7WvUB8lefZ/uBL0=; b=fa3mNzS2gp43AB
-	/3OKNDyDnmvw1AbHmntK+SqIJ41KLrNNUPvscTKu8tv7yBuJbH8/ztLc2xsmdKpFssXmAFZS+K6K+
-	xAqdzabICU9nOGIhrij85CkTEJimw4yBBg2Gtr9KnZuUAe2DoJkKWgwIss/f5P6nWjo9E7dmY8gEY
-	p4TdqTwmAaQt0Xp/4OXrtYEblv8Zj/CLPOEVoTMku/EPEvatUCM949NiBPwv75hNQcZ13JvgJnEFX
-	v7nJDoFB5iXI/NQyr7NUoEGtlJz9UPej+dpClRUfXlzN+ohoGOhxkbAwOsh8Oa/djbjr84OyeYed6
-	0QSo9P0Wy6N+hXIma6Vw==;
+	List-Owner; bh=o9+uOgigr0LF2JIP6DAfAbNvWOX8wR/Hck0npBAVjI8=; b=WRWhvWJg1Xk2Nh
+	k8C3yNtQN0M5ixAbY5GMlu52YoHo7gQvxmtk62v9OeH8/8EN8a/BBAI6vUv+oo8s7UZPqbEnDuS3t
+	l3nhg4DFygooLFfGaTroru3eW0+4iVXZlJF9ttum2SLwa5MBQ1UPrTk8rEL+ddKMOXcMmJJlwiBI8
+	5cppuzX6w4FKqinvepXkWvAJLz5xLfQt6tmpWPKhDC8aIM9NiMDbit1CoV5YAUwdlmrEc//K8FDDp
+	1cllV0ttWT7hiQxG6UJF9ZcFN6dXk3cJ0y2u/pz6sGK4YCRDmZ2Ask9ZpCa6Ev9xULONAeTry58EO
+	CHGINT9DT2XmTGNkLywQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGpJw-00739K-3C;
-	Fri, 22 Dec 2023 23:52:49 +0000
-Received: from mgamail.intel.com ([192.198.163.10])
+	id 1rGpJy-0073A9-0C;
+	Fri, 22 Dec 2023 23:52:50 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGpJs-0072pJ-2c
+	id 1rGpJu-007363-2e
+	for kexec@bombadil.infradead.org;
+	Fri, 22 Dec 2023 23:52:46 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:MIME-Version
+	:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-Type:Content-ID:Content-Description;
+	bh=3KH5f6CWcQidM10Z+WVYilOIAJxlUOn95N5EqJfJdQg=; b=ImaVV0fIo8cRi4+n2/3ajWNeHA
+	ayuD5fIJ2KOZxvOEj/RbBmiNgfuqOwTIq9Bp2eMCbweJGL8iRinj2Vx/swIn81StoKxzfj0ReWxQq
+	+anC2sUAtlVyBbGa5Ep+n64FYgl+LytkYSKQUJoK72gAS1BbocgWxfXs35hxpremtjUavER7v8VKf
+	02YRr8K7pQeK4WwxnHgGUEVAKGOkzk6KmSkoX1R/eNQTO0Zpk2R9iQzUlAfsxwCnWSqF/upu+FTOA
+	oMe+F8B4sS3B3A0G8ydlSayT/NMshDeOhckInr9WEkWeVehAfqYTOs6mh6EZ3LIxWHsQrSJs+QL5z
+	ra0ifOqw==;
+Received: from mgamail.intel.com ([192.198.163.10])
+	by desiato.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
+	id 1rGpJq-00FQML-0l
 	for kexec@lists.infradead.org;
-	Fri, 22 Dec 2023 23:52:47 +0000
+	Fri, 22 Dec 2023 23:52:45 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703289165; x=1734825165;
+  t=1703289162; x=1734825162;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=7FoFTq51uBWBc/7DP/gCY8Z9wa/4rlsw9x9epfDBOIM=;
-  b=LcMgHjlRZDUwEeNpZRzHf7dTVkushXj+PKBbdvA0Sz5DZnuBVoiYBTVD
-   tAVCDESZVybmsnz07avZlLgtLk/Ko57Z9JNaYB5zimmhXDBeXoa3GLgQg
-   zrwBXGK9HGXGMRbtrpz977t1TtAvkKSWD4FSudHPW1ucoYeeP2Wx8DtYc
-   d8noco6xDck7LHLcOoVeVMgOWeIEUVEJMaR+LgUjv+uyuPrrzObUsDkGH
-   5ruR+pwCIYQ+zugtgXAXblaYhMnQ6iG8TOId2nUq21fx5wrcp4Vyht1CS
-   T6l1LEUFmpA5/nA1lfHZKQJIHy6IbxnmfniyNwSGcj4cKSmafvptW4xAw
+  bh=JV7Vomm3hL/vDYDiUsjcPKFfbqW2xkr31p+WaTWWLWA=;
+  b=ILTTDU0kkE7IMO/He9Y7MHraFQs7AsqrnjLSVW0WqRicHIjHxuKEo2qX
+   4pJ+IB7iXk/45HtQeZc4OI6yVTj+TnlzWZeFvtoGDTUuRF82SEYSu9i+S
+   BBu7WiaEiGkV6QB2xLj8vvd2wJo8wx3XJPr2VXVqk8rPNhWiZ+he+ZloT
+   SgArwun8OTa3prv3yN2Znh9zD7B8CX3+S3f716iuu3i5jq+SU08J+88id
+   2lymtj2OK30imTqBm7SZv+Eg6r+vpQIvfvsG/7zdjhTcM/efJjv61fxUN
+   KaOMyisMt6uLf4rVpjE2lhsNirYUpQcmt6FEfdRfskwilfFsmTWT8hCvf
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="3414360"
+X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="3414349"
 X-IronPort-AV: E=Sophos;i="6.04,297,1695711600"; 
-   d="scan'208";a="3414360"
+   d="scan'208";a="3414349"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
   by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 15:52:27 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="726961493"
+X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="726961491"
 X-IronPort-AV: E=Sophos;i="6.04,297,1695711600"; 
-   d="scan'208";a="726961493"
+   d="scan'208";a="726961491"
 Received: from jeroenke-mobl.ger.corp.intel.com (HELO box.shutemov.name) ([10.249.35.180])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 15:52:22 -0800
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 15:52:21 -0800
 Received: by box.shutemov.name (Postfix, from userid 1000)
-	id 5570C10A4DE; Sat, 23 Dec 2023 02:52:12 +0300 (+03)
+	id 387D010A4D9; Sat, 23 Dec 2023 02:52:12 +0300 (+03)
 From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -75,16 +90,16 @@ Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
 	linux-coco@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv5 12/16] x86/acpi: Rename fields in acpi_madt_multiproc_wakeup structure
-Date: Sat, 23 Dec 2023 02:52:04 +0300
-Message-ID: <20231222235209.32143-13-kirill.shutemov@linux.intel.com>
+Subject: [PATCHv5 09/16] x86/tdx: Account shared memory
+Date: Sat, 23 Dec 2023 02:52:01 +0300
+Message-ID: <20231222235209.32143-10-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20231222235209.32143-1-kirill.shutemov@linux.intel.com>
 References: <20231222235209.32143-1-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231222_155244_877313_DFB61AFF 
-X-CRM114-Status: GOOD (  12.28  )
+X-CRM114-CacheID: sfid-20231222_235242_785602_9BF85F3D 
+X-CRM114-Status: GOOD (  15.94  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -101,57 +116,123 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-To prepare for the addition of support for MADT wakeup structure version
-1, it is necessary to provide more appropriate names for the fields in
-the structure.
+The kernel will convert all shared memory back to private during kexec.
+The direct mapping page tables will provide information on which memory
+is shared.
 
-The field 'mailbox_version' renamed as 'version'. This field signifies
-the version of the structure and the related protocols, rather than the
-version of the mailbox. This field has not been utilized in the code
-thus far.
+It is extremely important to convert all shared memory. If a page is
+missed, it will cause the second kernel to crash when it accesses it.
 
-The field 'base_address' renamed as 'mailbox_address' to clarify the
-kind of address it represents. In version 1, the structure includes the
-reset vector address. Clear and distinct naming helps to prevent any
-confusion.
+Keep track of the number of shared pages. This will allow for
+cross-checking against the shared information in the direct mapping and
+reporting if the shared bit is lost.
+
+Include a debugfs interface that allows for the check to be performed at
+any point.
 
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Reviewed-by: Kai Huang <kai.huang@intel.com>
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 ---
- arch/x86/kernel/acpi/madt_wakeup.c | 2 +-
- include/acpi/actbl2.h              | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/coco/tdx/tdx.c | 69 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 69 insertions(+)
 
-diff --git a/arch/x86/kernel/acpi/madt_wakeup.c b/arch/x86/kernel/acpi/madt_wakeup.c
-index d222be8d7a07..004801b9b151 100644
---- a/arch/x86/kernel/acpi/madt_wakeup.c
-+++ b/arch/x86/kernel/acpi/madt_wakeup.c
-@@ -75,7 +75,7 @@ int __init acpi_parse_mp_wake(union acpi_subtable_headers *header,
+diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
+index 4397a6b2b04c..8a49484a2917 100644
+--- a/arch/x86/coco/tdx/tdx.c
++++ b/arch/x86/coco/tdx/tdx.c
+@@ -5,6 +5,7 @@
+ #define pr_fmt(fmt)     "tdx: " fmt
  
- 	acpi_table_print_madt_entry(&header->common);
+ #include <linux/cpufeature.h>
++#include <linux/debugfs.h>
+ #include <linux/export.h>
+ #include <linux/io.h>
+ #include <asm/coco.h>
+@@ -38,6 +39,13 @@
  
--	acpi_mp_wake_mailbox_paddr = mp_wake->base_address;
-+	acpi_mp_wake_mailbox_paddr = mp_wake->mailbox_address;
+ #define TDREPORT_SUBTYPE_0	0
  
- 	cpu_hotplug_disable_offlining();
++static atomic_long_t nr_shared;
++
++static inline bool pte_decrypted(pte_t pte)
++{
++	return cc_mkdec(pte_val(pte)) == pte_val(pte);
++}
++
+ /* Called from __tdx_hypercall() for unrecoverable failure */
+ noinstr void __noreturn __tdx_hypercall_failed(void)
+ {
+@@ -821,6 +829,11 @@ static int tdx_enc_status_change_finish(unsigned long vaddr, int numpages,
+ 	if (!enc && !tdx_enc_status_changed(vaddr, numpages, enc))
+ 		return -EIO;
  
-diff --git a/include/acpi/actbl2.h b/include/acpi/actbl2.h
-index 3751ae69432f..23b4cfb640fc 100644
---- a/include/acpi/actbl2.h
-+++ b/include/acpi/actbl2.h
-@@ -1109,9 +1109,9 @@ struct acpi_madt_generic_translator {
++	if (enc)
++		atomic_long_sub(numpages, &nr_shared);
++	else
++		atomic_long_add(numpages, &nr_shared);
++
+ 	return 0;
+ }
  
- struct acpi_madt_multiproc_wakeup {
- 	struct acpi_subtable_header header;
--	u16 mailbox_version;
-+	u16 version;
- 	u32 reserved;		/* reserved - must be zero */
--	u64 base_address;
-+	u64 mailbox_address;
- };
+@@ -896,3 +909,59 @@ void __init tdx_early_init(void)
  
- #define ACPI_MULTIPROC_WAKEUP_MB_OS_SIZE        2032
+ 	pr_info("Guest detected\n");
+ }
++
++#ifdef CONFIG_DEBUG_FS
++static int tdx_shared_memory_show(struct seq_file *m, void *p)
++{
++	unsigned long addr, end;
++	unsigned long found = 0;
++
++	addr = PAGE_OFFSET;
++	end  = PAGE_OFFSET + get_max_mapped();
++
++	while (addr < end) {
++		unsigned long size;
++		unsigned int level;
++		pte_t *pte;
++
++		pte = lookup_address(addr, &level);
++		size = page_level_size(level);
++
++		if (pte && pte_decrypted(*pte))
++			found += size / PAGE_SIZE;
++
++		addr += size;
++
++		cond_resched();
++	}
++
++	seq_printf(m, "Number of shared pages in kernel page tables:  %16lu\n",
++		   found);
++	seq_printf(m, "Number of pages accounted as shared:           %16ld\n",
++		   atomic_long_read(&nr_shared));
++	return 0;
++}
++
++static int tdx_shared_memory_open(struct inode *inode, struct file *file)
++{
++	return single_open(file, tdx_shared_memory_show, NULL);
++}
++
++static const struct file_operations tdx_shared_memory_fops = {
++	.open           = tdx_shared_memory_open,
++	.read           = seq_read,
++	.llseek         = seq_lseek,
++	.release        = single_release,
++};
++
++static __init int debug_tdx_shared_memory(void)
++{
++	if (!cpu_feature_enabled(X86_FEATURE_TDX_GUEST))
++		return 0;
++
++	debugfs_create_file("tdx_shared_memory", 0400, arch_debugfs_dir,
++			    NULL, &tdx_shared_memory_fops);
++	return 0;
++}
++fs_initcall(debug_tdx_shared_memory);
++#endif
 -- 
 2.41.0
 
