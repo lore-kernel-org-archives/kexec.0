@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B1672C47072
-	for <kexec@archiver.kernel.org>; Fri, 22 Dec 2023 20:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CFE77C47072
+	for <kexec@archiver.kernel.org>; Fri, 22 Dec 2023 21:02:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=JYCvcQQosBrm2wOlpe+fbQVnii5Dvo7pGPMckeSwMpk=; b=3dQwC44nJeHfV5
-	2zbxiXIDq/i1g67imvTOxQByRv4u0YaZ7i/NehttpCpvpgCPSSPjI/x+F1ixTa/zXY7u92kXKQ2M+
-	dLnQcvXbaTJXC0PJChknMKyKLngXANVQojBgBlTe5TdGPo1aQPibnX47R1eyOHXHJydtVMo08KVBE
-	V0o/csEJzSabjmG08Id8WjxEqPkv9nUfWw9QlSF7TyeQrqTZ5uxODxIUhQ5gjVDi2Z58llqjEGLTg
-	caBd5beDxO2/nxTqGp9P9LEqABcFqesQE0kTmQWMNR1rB8xppPQrbq1Rc5ML2ESaMmTDnJYoYIB0K
-	PCF0LQaa2wNkenI7Ab+Q==;
+	List-Owner; bh=JYCvcQQosBrm2wOlpe+fbQVnii5Dvo7pGPMckeSwMpk=; b=coGHC238kMDW+U
+	6YqsEpuBDoilBt7oMMkVlNW4hKrekXYQ18GaUvVV+/GODIa68YImNa4IKkzA3kaDNc7/Awuqri4Ze
+	tq9TzRTe7uzeAQRc4/Qw7gAjefRfTyW2hW/eouT+TTsB+Flumrx5EfrNk/OMiCr2sFgCo7cWm62LC
+	EjUiTxyx5GczVvjE2Tb6G03KcgD3yrn36E4mQt+5zShCpMqItsam7L/N9ILnlnvK4HF6ZkDdzd1v5
+	HKiBjWXA00kUHO7O2MHaor0DK5nZt3liH5jUf34sVyIw1ClKm6/SwX86rDE1b+wUIeYoyXtrVeThv
+	4cwo7fa4tq1Ct9rmsKMg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGmQM-006pp5-1a;
-	Fri, 22 Dec 2023 20:47:14 +0000
-Received: from smtp-fw-80008.amazon.com ([99.78.197.219])
+	id 1rGmes-006qlL-22;
+	Fri, 22 Dec 2023 21:02:14 +0000
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGlLQ-006ipa-0m;
-	Fri, 22 Dec 2023 19:38:08 +0000
+	id 1rGlZR-006kpb-2e;
+	Fri, 22 Dec 2023 19:52:40 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1703273884; x=1734809884;
+  t=1703274754; x=1734810754;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
   bh=GaYoJtOeVSzgmYS5gukWExN0RDseJvcoWD78p448UjE=;
-  b=ETnOgEAsYXGrkeSpedEkyZcaPmidFsacwn9nHugtKoORR49D7595eMN7
-   dKnLvffivWZ+znL8+gawlQLWFpAotkxqe2zeXlFuZGFd7D4WP4897rU+W
-   5qM6bPfgeHmdmpX+Fx2WpVn0HKC4INF10icQ6tiURCnM8swm0x8PMqhtC
-   U=;
+  b=bd598Tu5flRZ0Sg4V98pvl6ug/VdK1jyANeUR4yp9EYw8SNSJz9s8jiU
+   3cpuV8eBp1EWhRQPzWQ7Utb7iv2qlFVJCLi2eKDSPlxtXcpYM0LgSh6Tn
+   0DWb+Mvm3Quj8pICKCorjZVVvmJNWe7N4X2XIC930FE9RFxu4td+LP0F5
+   c=;
 X-IronPort-AV: E=Sophos;i="6.04,297,1695686400"; 
-   d="scan'208";a="53450946"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-pdx-2b-m6i4x-cadc3fbd.us-west-2.amazon.com) ([10.25.36.214])
-  by smtp-border-fw-80008.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 19:37:56 +0000
-Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (pdx2-ws-svc-p26-lb5-vlan2.pdx.amazon.com [10.39.38.66])
-	by email-inbound-relay-pdx-2b-m6i4x-cadc3fbd.us-west-2.amazon.com (Postfix) with ESMTPS id 78634A0ABC;
-	Fri, 22 Dec 2023 19:37:54 +0000 (UTC)
-Received: from EX19MTAUWC001.ant.amazon.com [10.0.7.35:14564]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.56.23:2525] with esmtp (Farcaster)
- id 78760084-28fe-498e-84c2-ddc497dcf85c; Fri, 22 Dec 2023 19:37:54 +0000 (UTC)
-X-Farcaster-Flow-ID: 78760084-28fe-498e-84c2-ddc497dcf85c
+   d="scan'208";a="385308504"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-iad-1a-m6i4x-617e30c2.us-east-1.amazon.com) ([10.25.36.214])
+  by smtp-border-fw-9102.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 19:52:32 +0000
+Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (iad7-ws-svc-p70-lb3-vlan2.iad.amazon.com [10.32.235.34])
+	by email-inbound-relay-iad-1a-m6i4x-617e30c2.us-east-1.amazon.com (Postfix) with ESMTPS id 15BEA697D5;
+	Fri, 22 Dec 2023 19:52:23 +0000 (UTC)
+Received: from EX19MTAUWB002.ant.amazon.com [10.0.7.35:63687]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.27.188:2525] with esmtp (Farcaster)
+ id cb4e22c4-a183-404a-86f3-2ce51b4d82d5; Fri, 22 Dec 2023 19:52:23 +0000 (UTC)
+X-Farcaster-Flow-ID: cb4e22c4-a183-404a-86f3-2ce51b4d82d5
 Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
+ EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 22 Dec 2023 19:37:54 +0000
+ 15.2.1118.40; Fri, 22 Dec 2023 19:52:23 +0000
 Received: from dev-dsk-graf-1a-5ce218e4.eu-west-1.amazon.com (10.253.83.51) by
  EX19D020UWC004.ant.amazon.com (10.13.138.149) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 22 Dec 2023 19:37:50 +0000
+ 15.2.1118.40; Fri, 22 Dec 2023 19:52:19 +0000
 From: Alexander Graf <graf@amazon.com>
 To: <linux-kernel@vger.kernel.org>
 CC: <linux-trace-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
@@ -72,18 +72,19 @@ CC: <linux-trace-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
  Woodhouse <dwmw@amazon.co.uk>, Benjamin Herrenschmidt
 	<benh@kernel.crashing.org>
 Subject: [PATCH v2 09/17] x86: Add KHO support
-Date: Fri, 22 Dec 2023 19:35:59 +0000
-Message-ID: <20231222193607.15474-10-graf@amazon.com>
+Date: Fri, 22 Dec 2023 19:51:36 +0000
+Message-ID: <20231222195144.24532-4-graf@amazon.com>
 X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20231222193607.15474-1-graf@amazon.com>
+In-Reply-To: <20231222195144.24532-1-graf@amazon.com>
 References: <20231222193607.15474-1-graf@amazon.com>
+ <20231222195144.24532-1-graf@amazon.com>
 MIME-Version: 1.0
 X-Originating-IP: [10.253.83.51]
-X-ClientProxiedBy: EX19D041UWA004.ant.amazon.com (10.13.139.9) To
+X-ClientProxiedBy: EX19D042UWA003.ant.amazon.com (10.13.139.44) To
  EX19D020UWC004.ant.amazon.com (10.13.138.149)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231222_113804_406705_3F39D390 
-X-CRM114-Status: GOOD (  31.17  )
+X-CRM114-CacheID: sfid-20231222_115233_947980_735F5A4B 
+X-CRM114-Status: GOOD (  31.23  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
