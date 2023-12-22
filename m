@@ -4,70 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CBE8CC47072
-	for <kexec@archiver.kernel.org>; Fri, 22 Dec 2023 23:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 64424C47074
+	for <kexec@archiver.kernel.org>; Fri, 22 Dec 2023 23:52:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=o9+uOgigr0LF2JIP6DAfAbNvWOX8wR/Hck0npBAVjI8=; b=WRWhvWJg1Xk2Nh
-	k8C3yNtQN0M5ixAbY5GMlu52YoHo7gQvxmtk62v9OeH8/8EN8a/BBAI6vUv+oo8s7UZPqbEnDuS3t
-	l3nhg4DFygooLFfGaTroru3eW0+4iVXZlJF9ttum2SLwa5MBQ1UPrTk8rEL+ddKMOXcMmJJlwiBI8
-	5cppuzX6w4FKqinvepXkWvAJLz5xLfQt6tmpWPKhDC8aIM9NiMDbit1CoV5YAUwdlmrEc//K8FDDp
-	1cllV0ttWT7hiQxG6UJF9ZcFN6dXk3cJ0y2u/pz6sGK4YCRDmZ2Ask9ZpCa6Ev9xULONAeTry58EO
-	CHGINT9DT2XmTGNkLywQ==;
+	List-Owner; bh=SJ2ZKGExmnMOEdyGptDKd7FNDiV2iksFTb36h13Dfko=; b=0nQKLxcOAJPngq
+	r3FVdwzekSs9Iw5p2e9RSaD1AwyGlniGW+xoaA3qWdA1j2G74kSGI9p03HOQ3qxJWolo0491LpASC
+	XAITrz/vFlikCVSRlcILnD3PODFFQS2e2vS5iAQkFrPR9a+dGW/PknaTuQ/Pe2+XGWAx2bBDOGCrS
+	khyJ1PSFZ6RedcMFdTKej9C0QqfHdcQGN8NLSUKvWlN3hDqdnzQu5k2xuhfjuRUbDP6MpfNxbXYGo
+	1T4yv5di/5COlRCk5xTGUfhS0yW8nMYHLy1Vo5CdVcsmwO2TkW0QfX1eqRtqj9/yMPP/TIAmb7eGa
+	OuJ8n1NrgKYY0qNy2F2Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGpJy-0073A9-0C;
-	Fri, 22 Dec 2023 23:52:50 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGpJu-007363-2e
-	for kexec@bombadil.infradead.org;
-	Fri, 22 Dec 2023 23:52:46 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:MIME-Version
-	:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-Type:Content-ID:Content-Description;
-	bh=3KH5f6CWcQidM10Z+WVYilOIAJxlUOn95N5EqJfJdQg=; b=ImaVV0fIo8cRi4+n2/3ajWNeHA
-	ayuD5fIJ2KOZxvOEj/RbBmiNgfuqOwTIq9Bp2eMCbweJGL8iRinj2Vx/swIn81StoKxzfj0ReWxQq
-	+anC2sUAtlVyBbGa5Ep+n64FYgl+LytkYSKQUJoK72gAS1BbocgWxfXs35hxpremtjUavER7v8VKf
-	02YRr8K7pQeK4WwxnHgGUEVAKGOkzk6KmSkoX1R/eNQTO0Zpk2R9iQzUlAfsxwCnWSqF/upu+FTOA
-	oMe+F8B4sS3B3A0G8ydlSayT/NMshDeOhckInr9WEkWeVehAfqYTOs6mh6EZ3LIxWHsQrSJs+QL5z
-	ra0ifOqw==;
+	id 1rGpJz-0073Bx-2t;
+	Fri, 22 Dec 2023 23:52:51 +0000
 Received: from mgamail.intel.com ([192.198.163.10])
-	by desiato.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGpJq-00FQML-0l
+	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
+	id 1rGpJv-0072pJ-0o
 	for kexec@lists.infradead.org;
-	Fri, 22 Dec 2023 23:52:45 +0000
+	Fri, 22 Dec 2023 23:52:50 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703289162; x=1734825162;
+  t=1703289167; x=1734825167;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=JV7Vomm3hL/vDYDiUsjcPKFfbqW2xkr31p+WaTWWLWA=;
-  b=ILTTDU0kkE7IMO/He9Y7MHraFQs7AsqrnjLSVW0WqRicHIjHxuKEo2qX
-   4pJ+IB7iXk/45HtQeZc4OI6yVTj+TnlzWZeFvtoGDTUuRF82SEYSu9i+S
-   BBu7WiaEiGkV6QB2xLj8vvd2wJo8wx3XJPr2VXVqk8rPNhWiZ+he+ZloT
-   SgArwun8OTa3prv3yN2Znh9zD7B8CX3+S3f716iuu3i5jq+SU08J+88id
-   2lymtj2OK30imTqBm7SZv+Eg6r+vpQIvfvsG/7zdjhTcM/efJjv61fxUN
-   KaOMyisMt6uLf4rVpjE2lhsNirYUpQcmt6FEfdRfskwilfFsmTWT8hCvf
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="3414349"
+  bh=Dc0fn0cOYNmC+8faZxlk7oVgDvtAyOINKlu8wudYcPc=;
+  b=k0+xo67QXIW5z0AmVPC/CnHes/9j7Ui5vZ2A3y9DOTBVe9jj6qlUQ7jb
+   CweNJgpsjqwoLEZWZj/FJpeBk2mt/e4CV4ZMfqv5yGxMwu3mgXse4NLL7
+   TaBWkRqKfM94fqf2zXmZu5J8pdRMTlDLmLm+8QkpFL3jEkY32TEeUKXKh
+   7FcK0qKeEOxbyh+Z7yg1+zAqdGPjXbVXZQ7KPWS8BMeYRx/bRco2Q0jsP
+   H3UXk0uR7ObQwFPsUUbKATqWCnYZSs8bZzKfeeRVsY5uYBG+dUp9lUxLM
+   lQZeq2KhXiStPFT7s3+axsqEwh+lpqExyjLZOkZyr/FtJtjU97Y2mQ+Bl
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="3414400"
 X-IronPort-AV: E=Sophos;i="6.04,297,1695711600"; 
-   d="scan'208";a="3414349"
+   d="scan'208";a="3414400"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 15:52:27 -0800
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 15:52:35 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="726961491"
+X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="726961509"
 X-IronPort-AV: E=Sophos;i="6.04,297,1695711600"; 
-   d="scan'208";a="726961491"
+   d="scan'208";a="726961509"
 Received: from jeroenke-mobl.ger.corp.intel.com (HELO box.shutemov.name) ([10.249.35.180])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 15:52:21 -0800
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 15:52:29 -0800
 Received: by box.shutemov.name (Postfix, from userid 1000)
-	id 387D010A4D9; Sat, 23 Dec 2023 02:52:12 +0300 (+03)
+	id 809C110A4E3; Sat, 23 Dec 2023 02:52:12 +0300 (+03)
 From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -90,16 +75,16 @@ Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
 	linux-coco@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv5 09/16] x86/tdx: Account shared memory
-Date: Sat, 23 Dec 2023 02:52:01 +0300
-Message-ID: <20231222235209.32143-10-kirill.shutemov@linux.intel.com>
+Subject: [PATCHv5 16/16] x86/acpi: Add support for CPU offlining for ACPI MADT wakeup method
+Date: Sat, 23 Dec 2023 02:52:08 +0300
+Message-ID: <20231222235209.32143-17-kirill.shutemov@linux.intel.com>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20231222235209.32143-1-kirill.shutemov@linux.intel.com>
 References: <20231222235209.32143-1-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231222_235242_785602_9BF85F3D 
-X-CRM114-Status: GOOD (  15.94  )
+X-CRM114-CacheID: sfid-20231222_155247_328430_13BE749C 
+X-CRM114-Status: GOOD (  33.66  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -116,123 +101,347 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The kernel will convert all shared memory back to private during kexec.
-The direct mapping page tables will provide information on which memory
-is shared.
+MADT Multiprocessor Wakeup structure version 1 brings support of CPU
+offlining: BIOS provides a reset vector where the CPU has to jump to
+for offlining itself. The new TEST mailbox command can be used to test
+whether the CPU offlined itself which means the BIOS has control over
+the CPU and can online it again via the ACPI MADT wakeup method.
 
-It is extremely important to convert all shared memory. If a page is
-missed, it will cause the second kernel to crash when it accesses it.
+Add CPU offling support for the ACPI MADT wakeup method by implementing
+custom cpu_die(), play_dead() and stop_this_cpu() SMP operations.
 
-Keep track of the number of shared pages. This will allow for
-cross-checking against the shared information in the direct mapping and
-reporting if the shared bit is lost.
+CPU offlining makes is possible to hand over secondary CPUs over kexec,
+not limiting the second kernel to a single CPU.
 
-Include a debugfs interface that allows for the check to be performed at
-any point.
+The change conforms to the approved ACPI spec change proposal. See the
+Link.
 
 Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Link: https://lore.kernel.org/all/13356251.uLZWGnKmhe@kreacher
 ---
- arch/x86/coco/tdx/tdx.c | 69 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
+ arch/x86/include/asm/acpi.h          |   2 +
+ arch/x86/kernel/acpi/Makefile        |   2 +-
+ arch/x86/kernel/acpi/madt_playdead.S |  29 +++++
+ arch/x86/kernel/acpi/madt_wakeup.c   | 184 ++++++++++++++++++++++++++-
+ include/acpi/actbl2.h                |  15 ++-
+ 5 files changed, 228 insertions(+), 4 deletions(-)
+ create mode 100644 arch/x86/kernel/acpi/madt_playdead.S
 
-diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
-index 4397a6b2b04c..8a49484a2917 100644
---- a/arch/x86/coco/tdx/tdx.c
-+++ b/arch/x86/coco/tdx/tdx.c
-@@ -5,6 +5,7 @@
- #define pr_fmt(fmt)     "tdx: " fmt
+diff --git a/arch/x86/include/asm/acpi.h b/arch/x86/include/asm/acpi.h
+index 2625b915ae7f..021cafa214c2 100644
+--- a/arch/x86/include/asm/acpi.h
++++ b/arch/x86/include/asm/acpi.h
+@@ -81,6 +81,8 @@ union acpi_subtable_headers;
+ int __init acpi_parse_mp_wake(union acpi_subtable_headers *header,
+ 			      const unsigned long end);
  
- #include <linux/cpufeature.h>
-+#include <linux/debugfs.h>
- #include <linux/export.h>
- #include <linux/io.h>
- #include <asm/coco.h>
-@@ -38,6 +39,13 @@
- 
- #define TDREPORT_SUBTYPE_0	0
- 
-+static atomic_long_t nr_shared;
++void asm_acpi_mp_play_dead(u64 reset_vector, u64 pgd_pa);
 +
-+static inline bool pte_decrypted(pte_t pte)
+ /*
+  * Check if the CPU can handle C2 and deeper
+  */
+diff --git a/arch/x86/kernel/acpi/Makefile b/arch/x86/kernel/acpi/Makefile
+index 8c7329c88a75..37b1f28846de 100644
+--- a/arch/x86/kernel/acpi/Makefile
++++ b/arch/x86/kernel/acpi/Makefile
+@@ -4,7 +4,7 @@ obj-$(CONFIG_ACPI)			+= boot.o
+ obj-$(CONFIG_ACPI_SLEEP)		+= sleep.o wakeup_$(BITS).o
+ obj-$(CONFIG_ACPI_APEI)			+= apei.o
+ obj-$(CONFIG_ACPI_CPPC_LIB)		+= cppc.o
+-obj-$(CONFIG_X86_ACPI_MADT_WAKEUP)	+= madt_wakeup.o
++obj-$(CONFIG_X86_ACPI_MADT_WAKEUP)	+= madt_wakeup.o madt_playdead.o
+ 
+ ifneq ($(CONFIG_ACPI_PROCESSOR),)
+ obj-y					+= cstate.o
+diff --git a/arch/x86/kernel/acpi/madt_playdead.S b/arch/x86/kernel/acpi/madt_playdead.S
+new file mode 100644
+index 000000000000..e48049959513
+--- /dev/null
++++ b/arch/x86/kernel/acpi/madt_playdead.S
+@@ -0,0 +1,29 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#include <linux/linkage.h>
++#include <asm/nospec-branch.h>
++#include <asm/page_types.h>
++#include <asm/processor-flags.h>
++
++	.text
++	.align PAGE_SIZE
++
++/*
++ * asm_acpi_mp_play_dead() - Hand over control of the CPU to the BIOS
++ *
++ * rdi: Address of the ACPI MADT MPWK ResetVector
++ * rsi: PGD of the identity mapping
++ */
++SYM_FUNC_START(asm_acpi_mp_play_dead)
++	/* Turn off global entries. Following CR3 write will flush them. */
++	movq	%cr4, %rdx
++	andq	$~(X86_CR4_PGE), %rdx
++	movq	%rdx, %cr4
++
++	/* Switch to identity mapping */
++	movq	%rsi, %rax
++	movq	%rax, %cr3
++
++	/* Jump to reset vector */
++	ANNOTATE_RETPOLINE_SAFE
++	jmp	*%rdi
++SYM_FUNC_END(asm_acpi_mp_play_dead)
+diff --git a/arch/x86/kernel/acpi/madt_wakeup.c b/arch/x86/kernel/acpi/madt_wakeup.c
+index 30820f9de5af..9e984e2191ba 100644
+--- a/arch/x86/kernel/acpi/madt_wakeup.c
++++ b/arch/x86/kernel/acpi/madt_wakeup.c
+@@ -1,10 +1,19 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ #include <linux/acpi.h>
+ #include <linux/cpu.h>
++#include <linux/delay.h>
+ #include <linux/io.h>
++#include <linux/kexec.h>
++#include <linux/memblock.h>
++#include <linux/pgtable.h>
++#include <linux/sched/hotplug.h>
+ #include <asm/apic.h>
+ #include <asm/barrier.h>
++#include <asm/init.h>
++#include <asm/intel_pt.h>
++#include <asm/nmi.h>
+ #include <asm/processor.h>
++#include <asm/reboot.h>
+ 
+ /* Physical address of the Multiprocessor Wakeup Structure mailbox */
+ static u64 acpi_mp_wake_mailbox_paddr __ro_after_init;
+@@ -12,6 +21,154 @@ static u64 acpi_mp_wake_mailbox_paddr __ro_after_init;
+ /* Virtual address of the Multiprocessor Wakeup Structure mailbox */
+ static struct acpi_madt_multiproc_wakeup_mailbox *acpi_mp_wake_mailbox __ro_after_init;
+ 
++static u64 acpi_mp_pgd __ro_after_init;
++static u64 acpi_mp_reset_vector_paddr __ro_after_init;
++
++static void acpi_mp_stop_this_cpu(void)
 +{
-+	return cc_mkdec(pte_val(pte)) == pte_val(pte);
++	asm_acpi_mp_play_dead(acpi_mp_reset_vector_paddr, acpi_mp_pgd);
 +}
 +
- /* Called from __tdx_hypercall() for unrecoverable failure */
- noinstr void __noreturn __tdx_hypercall_failed(void)
- {
-@@ -821,6 +829,11 @@ static int tdx_enc_status_change_finish(unsigned long vaddr, int numpages,
- 	if (!enc && !tdx_enc_status_changed(vaddr, numpages, enc))
- 		return -EIO;
- 
-+	if (enc)
-+		atomic_long_sub(numpages, &nr_shared);
-+	else
-+		atomic_long_add(numpages, &nr_shared);
-+
- 	return 0;
- }
- 
-@@ -896,3 +909,59 @@ void __init tdx_early_init(void)
- 
- 	pr_info("Guest detected\n");
- }
-+
-+#ifdef CONFIG_DEBUG_FS
-+static int tdx_shared_memory_show(struct seq_file *m, void *p)
++static void acpi_mp_play_dead(void)
 +{
-+	unsigned long addr, end;
-+	unsigned long found = 0;
++	play_dead_common();
++	asm_acpi_mp_play_dead(acpi_mp_reset_vector_paddr, acpi_mp_pgd);
++}
 +
-+	addr = PAGE_OFFSET;
-+	end  = PAGE_OFFSET + get_max_mapped();
++static void acpi_mp_cpu_die(unsigned int cpu)
++{
++	u32 apicid = per_cpu(x86_cpu_to_apicid, cpu);
++	unsigned long timeout;
 +
-+	while (addr < end) {
-+		unsigned long size;
-+		unsigned int level;
-+		pte_t *pte;
++	/*
++	 * Use TEST mailbox command to prove that BIOS got control over
++	 * the CPU before declaring it dead.
++	 *
++	 * BIOS has to clear 'command' field of the mailbox.
++	 */
++	acpi_mp_wake_mailbox->apic_id = apicid;
++	smp_store_release(&acpi_mp_wake_mailbox->command,
++			  ACPI_MP_WAKE_COMMAND_TEST);
 +
-+		pte = lookup_address(addr, &level);
-+		size = page_level_size(level);
++	/* Don't wait longer than a second. */
++	timeout = USEC_PER_SEC;
++	while (READ_ONCE(acpi_mp_wake_mailbox->command) && --timeout)
++		udelay(1);
 +
-+		if (pte && pte_decrypted(*pte))
-+			found += size / PAGE_SIZE;
++	if (!timeout)
++		pr_err("Failed to hand over CPU %d to BIOS\n", cpu);
++}
 +
-+		addr += size;
++/* The argument is required to match type of x86_mapping_info::alloc_pgt_page */
++static void __init *alloc_pgt_page(void *dummy)
++{
++	return memblock_alloc(PAGE_SIZE, PAGE_SIZE);
++}
 +
-+		cond_resched();
++static void __init free_pgt_page(void *pgt, void *dummy)
++{
++	return memblock_free(pgt, PAGE_SIZE);
++}
++
++/*
++ * Make sure asm_acpi_mp_play_dead() is present in the identity mapping at
++ * the same place as in the kernel page tables. asm_acpi_mp_play_dead() switches
++ * to the identity mapping and the function has be present at the same spot in
++ * the virtual address space before and after switching page tables.
++ */
++static int __init init_transition_pgtable(pgd_t *pgd)
++{
++	pgprot_t prot = PAGE_KERNEL_EXEC_NOENC;
++	unsigned long vaddr, paddr;
++	p4d_t *p4d;
++	pud_t *pud;
++	pmd_t *pmd;
++	pte_t *pte;
++
++	vaddr = (unsigned long)asm_acpi_mp_play_dead;
++	pgd += pgd_index(vaddr);
++	if (!pgd_present(*pgd)) {
++		p4d = (p4d_t *)alloc_pgt_page(NULL);
++		if (!p4d)
++			return -ENOMEM;
++		set_pgd(pgd, __pgd(__pa(p4d) | _KERNPG_TABLE));
++	}
++	p4d = p4d_offset(pgd, vaddr);
++	if (!p4d_present(*p4d)) {
++		pud = (pud_t *)alloc_pgt_page(NULL);
++		if (!pud)
++			return -ENOMEM;
++		set_p4d(p4d, __p4d(__pa(pud) | _KERNPG_TABLE));
++	}
++	pud = pud_offset(p4d, vaddr);
++	if (!pud_present(*pud)) {
++		pmd = (pmd_t *)alloc_pgt_page(NULL);
++		if (!pmd)
++			return -ENOMEM;
++		set_pud(pud, __pud(__pa(pmd) | _KERNPG_TABLE));
++	}
++	pmd = pmd_offset(pud, vaddr);
++	if (!pmd_present(*pmd)) {
++		pte = (pte_t *)alloc_pgt_page(NULL);
++		if (!pte)
++			return -ENOMEM;
++		set_pmd(pmd, __pmd(__pa(pte) | _KERNPG_TABLE));
++	}
++	pte = pte_offset_kernel(pmd, vaddr);
++
++	paddr = __pa(vaddr);
++	set_pte(pte, pfn_pte(paddr >> PAGE_SHIFT, prot));
++
++	return 0;
++}
++
++static int __init acpi_mp_setup_reset(u64 reset_vector)
++{
++	pgd_t *pgd;
++	struct x86_mapping_info info = {
++		.alloc_pgt_page = alloc_pgt_page,
++		.free_pgt_page	= free_pgt_page,
++		.page_flag      = __PAGE_KERNEL_LARGE_EXEC,
++		.kernpg_flag    = _KERNPG_TABLE_NOENC,
++	};
++
++	pgd = alloc_pgt_page(NULL);
++	if (!pgd)
++		return -ENOMEM;
++
++	for (int i = 0; i < nr_pfn_mapped; i++) {
++		unsigned long mstart, mend;
++
++		mstart = pfn_mapped[i].start << PAGE_SHIFT;
++		mend   = pfn_mapped[i].end << PAGE_SHIFT;
++		if (kernel_ident_mapping_init(&info, pgd, mstart, mend)) {
++			kernel_ident_mapping_free(&info, pgd);
++			return -ENOMEM;
++		}
 +	}
 +
-+	seq_printf(m, "Number of shared pages in kernel page tables:  %16lu\n",
-+		   found);
-+	seq_printf(m, "Number of pages accounted as shared:           %16ld\n",
-+		   atomic_long_read(&nr_shared));
++	if (kernel_ident_mapping_init(&info, pgd,
++				      PAGE_ALIGN_DOWN(reset_vector),
++				      PAGE_ALIGN(reset_vector + 1))) {
++		kernel_ident_mapping_free(&info, pgd);
++		return -ENOMEM;
++	}
++
++	if (init_transition_pgtable(pgd)) {
++		kernel_ident_mapping_free(&info, pgd);
++		return -ENOMEM;
++	}
++
++	smp_ops.play_dead = acpi_mp_play_dead;
++	smp_ops.stop_this_cpu = acpi_mp_stop_this_cpu;
++	smp_ops.cpu_die = acpi_mp_cpu_die;
++
++	acpi_mp_reset_vector_paddr = reset_vector;
++	acpi_mp_pgd = __pa(pgd);
++
 +	return 0;
 +}
 +
-+static int tdx_shared_memory_open(struct inode *inode, struct file *file)
-+{
-+	return single_open(file, tdx_shared_memory_show, NULL);
-+}
+ static int acpi_wakeup_cpu(u32 apicid, unsigned long start_ip)
+ {
+ 	if (!acpi_mp_wake_mailbox_paddr) {
+@@ -97,14 +254,37 @@ int __init acpi_parse_mp_wake(union acpi_subtable_headers *header,
+ 	struct acpi_madt_multiproc_wakeup *mp_wake;
+ 
+ 	mp_wake = (struct acpi_madt_multiproc_wakeup *)header;
+-	if (BAD_MADT_ENTRY(mp_wake, end))
 +
-+static const struct file_operations tdx_shared_memory_fops = {
-+	.open           = tdx_shared_memory_open,
-+	.read           = seq_read,
-+	.llseek         = seq_lseek,
-+	.release        = single_release,
++	/*
++	 * Cannot use the standard BAD_MADT_ENTRY() to sanity check the @mp_wake
++	 * entry.  'sizeof (struct acpi_madt_multiproc_wakeup)' can be larger
++	 * than the actual size of the MP wakeup entry in ACPI table because the
++	 * 'reset_vector' is only available in the V1 MP wakeup structure.
++	 */
++	if (!mp_wake)
++		return -EINVAL;
++	if (end - (unsigned long)mp_wake < ACPI_MADT_MP_WAKEUP_SIZE_V0)
++		return -EINVAL;
++	if (mp_wake->header.length < ACPI_MADT_MP_WAKEUP_SIZE_V0)
+ 		return -EINVAL;
+ 
+ 	acpi_table_print_madt_entry(&header->common);
+ 
+ 	acpi_mp_wake_mailbox_paddr = mp_wake->mailbox_address;
+ 
+-	acpi_mp_disable_offlining(mp_wake);
++	if (mp_wake->version >= ACPI_MADT_MP_WAKEUP_VERSION_V1 &&
++	    mp_wake->header.length >= ACPI_MADT_MP_WAKEUP_SIZE_V1) {
++		if (acpi_mp_setup_reset(mp_wake->reset_vector)) {
++			pr_warn("Failed to setup MADT reset vector\n");
++			acpi_mp_disable_offlining(mp_wake);
++		}
++	} else {
++		/*
++		 * CPU offlining requires version 1 of the ACPI MADT wakeup
++		 * structure.
++		 */
++		acpi_mp_disable_offlining(mp_wake);
++	}
+ 
+ 	apic_update_callback(wakeup_secondary_cpu_64, acpi_wakeup_cpu);
+ 
+diff --git a/include/acpi/actbl2.h b/include/acpi/actbl2.h
+index 23b4cfb640fc..8348bf46a648 100644
+--- a/include/acpi/actbl2.h
++++ b/include/acpi/actbl2.h
+@@ -1112,8 +1112,20 @@ struct acpi_madt_multiproc_wakeup {
+ 	u16 version;
+ 	u32 reserved;		/* reserved - must be zero */
+ 	u64 mailbox_address;
++	u64 reset_vector;
+ };
+ 
++/* Values for Version field above */
++
++enum acpi_madt_multiproc_wakeup_version {
++	ACPI_MADT_MP_WAKEUP_VERSION_NONE = 0,
++	ACPI_MADT_MP_WAKEUP_VERSION_V1 = 1,
++	ACPI_MADT_MP_WAKEUP_VERSION_RESERVED = 2, /* 2 and greater are reserved */
 +};
 +
-+static __init int debug_tdx_shared_memory(void)
-+{
-+	if (!cpu_feature_enabled(X86_FEATURE_TDX_GUEST))
-+		return 0;
++#define ACPI_MADT_MP_WAKEUP_SIZE_V0	16
++#define ACPI_MADT_MP_WAKEUP_SIZE_V1	24
 +
-+	debugfs_create_file("tdx_shared_memory", 0400, arch_debugfs_dir,
-+			    NULL, &tdx_shared_memory_fops);
-+	return 0;
-+}
-+fs_initcall(debug_tdx_shared_memory);
-+#endif
+ #define ACPI_MULTIPROC_WAKEUP_MB_OS_SIZE        2032
+ #define ACPI_MULTIPROC_WAKEUP_MB_FIRMWARE_SIZE  2048
+ 
+@@ -1126,7 +1138,8 @@ struct acpi_madt_multiproc_wakeup_mailbox {
+ 	u8 reserved_firmware[ACPI_MULTIPROC_WAKEUP_MB_FIRMWARE_SIZE];	/* reserved for firmware use */
+ };
+ 
+-#define ACPI_MP_WAKE_COMMAND_WAKEUP    1
++#define ACPI_MP_WAKE_COMMAND_WAKEUP	1
++#define ACPI_MP_WAKE_COMMAND_TEST	2
+ 
+ /* 17: CPU Core Interrupt Controller (ACPI 6.5) */
+ 
 -- 
 2.41.0
 
