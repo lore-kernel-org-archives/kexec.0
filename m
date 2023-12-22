@@ -4,71 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C614CC41535
-	for <kexec@archiver.kernel.org>; Fri, 22 Dec 2023 19:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8E5C1C41535
+	for <kexec@archiver.kernel.org>; Fri, 22 Dec 2023 19:52:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=fFFYvgw5GdaEqUz0GS/WOvC4TncVo7Ua2B9CpBH75ZA=; b=cuSm6f6+/o0H5C
-	j6hXaJ2hogjS+fMtHqe41eqpOoANyKHsM3vlQAK5KPMgjARpyREnQokqMYjf3BaOrTEkHXCU26wse
-	PFDTSin0o9PyvNc/7AA1FkMory7qBM7Qx42bK1PvddPuR6IQmBcijrv7GAHP4tX2nnE1dJfaJruBW
-	GHmL/pB8ag8GQOcyiwfHSx/X+rsfAER0t8SEFqszvzGwXgtmpfYa+yg8ceUKv2ihfuPB7K99+0jt7
-	1aOgUysvRxFJjebIMAdLNipPEjP7pHev7MbYP7n9BsQl45STJtT3qdw+USaKJnxqHRkeO2Kn8Oerl
-	R43tEB7DB3g9mQexNFrQ==;
+	List-Owner; bh=A83XlxdnVonB+ajzSwmrJ/aDcmxDxTSmkYr8y7K5tZM=; b=NOxBEdbNzOHMda
+	wKenVwaAW8MPBA0sxGZKzrT6O9FhnVWndASqUdJony7m1sNznqwroPioNEiLB4Rf1Oo7JX+S3uCgM
+	SJuKN628f1OB13nwI5FaR/cVZaxxFkU865Xgver414hchaTPLnMHwbCt7AUKI7N3zaAsbuSUkXEC1
+	9TB5ZUIzveWa6BUAQZBv860z5kN2BOpgrbZpwrK044Mea6lGWWyhncjeAbIA8zoQUPVVb73g/frAd
+	RAjdLYufNEQUo2LdIsRtjW7E+x65G31iqC2qso4YTcltzTIpHAhOWjcAIU0GAwItfeXQ5fGeXoGFu
+	m93Sj82xoT90ANIlguAQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGlLi-006j7j-37;
-	Fri, 22 Dec 2023 19:38:22 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1rGlZ3-006kdh-0Z;
+	Fri, 22 Dec 2023 19:52:09 +0000
+Received: from smtp-fw-52002.amazon.com ([52.119.213.150])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGlLh-006j6V-0l;
-	Fri, 22 Dec 2023 19:38:21 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=qmhUZjf5F0irRMFPH4YUunFpNZODTBv7SKMl/vOJmCU=; b=HuUS6LOpmE56jzmEiKmfRtPd1c
-	Np0mOHtsb2DBM1sPm3NgH6GL+EY1I8nWEGHP3iPwQk+Aw6I1IsZL0gxUlH2KiL1xKMHx1E3/Rgnpa
-	Wlq6wUfSxmsms2c3HBL7W7i57ZxtAnhmmh9rN9VF7X0zU1cJroueesMj9ZjGruWdHn9klajDwjq4d
-	if+XLoh4I0bxdu4zZbCGbxmfD+AHkOTT6iVu3DIaRqgz+z8nk8LE7JBnX+cjJci2B0LLYZrsVT0Lc
-	zohn+FnzuAJKZO4Q9YA0uMD0TNurDNZOKqcZm3t40Jtf3emsfQJ+/ASsWrKoJliiJowLEViK3UFq6
-	pUp+LFIQ==;
-Received: from smtp-fw-9106.amazon.com ([207.171.188.206])
-	by desiato.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGlLd-00FNQJ-26;
-	Fri, 22 Dec 2023 19:38:19 +0000
+	id 1rGlZ0-006kZh-0t;
+	Fri, 22 Dec 2023 19:52:08 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1703273898; x=1734809898;
+  t=1703274726; x=1734810726;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=qmhUZjf5F0irRMFPH4YUunFpNZODTBv7SKMl/vOJmCU=;
-  b=qXh5ACNUHNxR3PVihFTGXpNDg9T8TAgD+P0M3010/RR103MppvPpsEKV
-   SPOYw+vgXIEt23i8AYH0KFfzr3HJP08qlg8QL3LLl3VrbK1iu7aJ/KwS+
-   8UYu5D3YMi5pqpzDC38b1TefYe9496+ymNu+l/2ho810aE8nGLTAWDQm/
-   U=;
+  bh=ZLYCMQzZdYknax/wRIALOVvHrvD35sO3OPXkV3K/85M=;
+  b=RfJ/NO0hqDGmxqMcyh8oWXjCg6Xq/O5ElXQukb5LhBwkgL9VvIkKm/tw
+   5Ulg0KVf3CIQBgmAR7rqTlrXxBinC8g/Mm2nLmECkllmQFRpoN36nisy1
+   8R2zxf290trWIbcCK+7eKOEDOKpr8ZfZ54AfoOfvMxEsQmZuVw89gLpSH
+   s=;
 X-IronPort-AV: E=Sophos;i="6.04,297,1695686400"; 
-   d="scan'208";a="692781574"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-pdx-2a-m6i4x-1197e3af.us-west-2.amazon.com) ([10.25.36.210])
-  by smtp-border-fw-9106.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 19:38:06 +0000
-Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (pdx2-ws-svc-p26-lb5-vlan2.pdx.amazon.com [10.39.38.66])
-	by email-inbound-relay-pdx-2a-m6i4x-1197e3af.us-west-2.amazon.com (Postfix) with ESMTPS id 2C677100395;
-	Fri, 22 Dec 2023 19:38:04 +0000 (UTC)
-Received: from EX19MTAUWA002.ant.amazon.com [10.0.21.151:8114]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.6.30:2525] with esmtp (Farcaster)
- id 118258fa-6e62-4bd3-8f88-fab34a1b9f0a; Fri, 22 Dec 2023 19:38:03 +0000 (UTC)
-X-Farcaster-Flow-ID: 118258fa-6e62-4bd3-8f88-fab34a1b9f0a
+   d="scan'208";a="602627198"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-iad-1d-m6i4x-d8e96288.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-52002.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 19:51:58 +0000
+Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (iad7-ws-svc-p70-lb3-vlan3.iad.amazon.com [10.32.235.38])
+	by email-inbound-relay-iad-1d-m6i4x-d8e96288.us-east-1.amazon.com (Postfix) with ESMTPS id 5710B803B7;
+	Fri, 22 Dec 2023 19:51:51 +0000 (UTC)
+Received: from EX19MTAUWC002.ant.amazon.com [10.0.7.35:35926]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.56.23:2525] with esmtp (Farcaster)
+ id 82a6dd69-7016-4d64-b557-324d614fe9ef; Fri, 22 Dec 2023 19:51:50 +0000 (UTC)
+X-Farcaster-Flow-ID: 82a6dd69-7016-4d64-b557-324d614fe9ef
 Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
+ EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 22 Dec 2023 19:38:02 +0000
+ 15.2.1118.40; Fri, 22 Dec 2023 19:51:49 +0000
 Received: from dev-dsk-graf-1a-5ce218e4.eu-west-1.amazon.com (10.253.83.51) by
  EX19D020UWC004.ant.amazon.com (10.13.138.149) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 22 Dec 2023 19:37:58 +0000
+ 15.2.1118.40; Fri, 22 Dec 2023 19:51:45 +0000
 From: Alexander Graf <graf@amazon.com>
 To: <linux-kernel@vger.kernel.org>
 CC: <linux-trace-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
@@ -85,19 +71,19 @@ CC: <linux-trace-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
 	<anthony.yznaga@oracle.com>, Usama Arif <usama.arif@bytedance.com>, David
  Woodhouse <dwmw@amazon.co.uk>, Benjamin Herrenschmidt
 	<benh@kernel.crashing.org>
-Subject: [PATCH v2 11/17] tracing: Introduce kho serialization
-Date: Fri, 22 Dec 2023 19:36:01 +0000
-Message-ID: <20231222193607.15474-12-graf@amazon.com>
+Subject: [PATCH v2 06/17] kexec: Add config option for KHO
+Date: Fri, 22 Dec 2023 19:51:33 +0000
+Message-ID: <20231222195144.24532-1-graf@amazon.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20231222193607.15474-1-graf@amazon.com>
 References: <20231222193607.15474-1-graf@amazon.com>
 MIME-Version: 1.0
 X-Originating-IP: [10.253.83.51]
-X-ClientProxiedBy: EX19D041UWA004.ant.amazon.com (10.13.139.9) To
+X-ClientProxiedBy: EX19D032UWA002.ant.amazon.com (10.13.139.81) To
  EX19D020UWC004.ant.amazon.com (10.13.138.149)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231222_193818_117108_4D979F52 
-X-CRM114-Status: GOOD (  15.86  )
+X-CRM114-CacheID: sfid-20231222_115206_442859_62394748 
+X-CRM114-Status: GOOD (  13.88  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -114,101 +100,39 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-We want to be able to transfer ftrace state from one kernel to the next.
-To start off with, let's establish all the boiler plate to get a write
-hook when KHO wants to serialize and fill out basic data.
-
-Follow-up patches will fill in serialization of ring buffers and events.
+We have all generic code in place now to support Kexec with KHO. This
+patch adds a config option that depends on architecture support to
+enable KHO support.
 
 Signed-off-by: Alexander Graf <graf@amazon.com>
-
 ---
+ kernel/Kconfig.kexec | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-v1 -> v2:
-
-  - Remove ifdefs
----
- kernel/trace/trace.c | 47 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 199df497db07..6ec31879b4eb 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -32,6 +32,7 @@
- #include <linux/percpu.h>
- #include <linux/splice.h>
- #include <linux/kdebug.h>
-+#include <linux/kexec.h>
- #include <linux/string.h>
- #include <linux/mount.h>
- #include <linux/rwsem.h>
-@@ -866,6 +867,8 @@ static struct tracer		*trace_types __read_mostly;
-  */
- DEFINE_MUTEX(trace_types_lock);
+diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
+index 2fd510256604..909ab28f1341 100644
+--- a/kernel/Kconfig.kexec
++++ b/kernel/Kconfig.kexec
+@@ -91,6 +91,19 @@ config KEXEC_JUMP
+ 	  Jump between original kernel and kexeced kernel and invoke
+ 	  code in physical address mode via KEXEC
  
-+static bool trace_in_kho;
++config KEXEC_KHO
++	bool "kexec handover"
++	depends on ARCH_SUPPORTS_KEXEC_KHO
++	depends on KEXEC
++	select MEMBLOCK_SCRATCH
++	select LIBFDT
++	select CMA
++	help
++	  Allow kexec to hand over state across kernels by generating and
++	  passing additional metadata to the target kernel. This is useful
++	  to keep data or state alive across the kexec. For this to work,
++	  both source and target kernels need to have this option enabled.
 +
- /*
-  * serialize the access of the ring buffer
-  *
-@@ -10560,12 +10563,56 @@ void __init early_trace_init(void)
- 	init_events();
- }
- 
-+static int trace_kho_notifier(struct notifier_block *self,
-+			      unsigned long cmd,
-+			      void *v)
-+{
-+	const char compatible[] = "ftrace-v1";
-+	void *fdt = v;
-+	int err = 0;
-+
-+	switch (cmd) {
-+	case KEXEC_KHO_ABORT:
-+		if (trace_in_kho)
-+			mutex_unlock(&trace_types_lock);
-+		trace_in_kho = false;
-+		return NOTIFY_DONE;
-+	case KEXEC_KHO_DUMP:
-+		/* Handled below */
-+		break;
-+	default:
-+		return NOTIFY_BAD;
-+	}
-+
-+	if (unlikely(tracing_disabled))
-+		return NOTIFY_DONE;
-+
-+	err |= fdt_begin_node(fdt, "ftrace");
-+	err |= fdt_property(fdt, "compatible", compatible, sizeof(compatible));
-+	err |= fdt_end_node(fdt);
-+
-+	if (!err) {
-+		/* Hold all future allocations */
-+		mutex_lock(&trace_types_lock);
-+		trace_in_kho = true;
-+	}
-+
-+	return err ? NOTIFY_BAD : NOTIFY_DONE;
-+}
-+
-+static struct notifier_block trace_kho_nb = {
-+	.notifier_call = trace_kho_notifier,
-+};
-+
- void __init trace_init(void)
- {
- 	trace_event_init();
- 
- 	if (boot_instance_index)
- 		enable_instances();
-+
-+	if (IS_ENABLED(CONFIG_FTRACE_KHO))
-+		register_kho_notifier(&trace_kho_nb);
- }
- 
- __init static void clear_boot_tracer(void)
+ config CRASH_DUMP
+ 	bool "kernel crash dumps"
+ 	depends on ARCH_SUPPORTS_CRASH_DUMP
 -- 
 2.40.1
 
