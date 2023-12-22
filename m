@@ -4,67 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E91E6C41535
-	for <kexec@archiver.kernel.org>; Fri, 22 Dec 2023 13:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 85D17C41535
+	for <kexec@archiver.kernel.org>; Fri, 22 Dec 2023 16:34:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=/F4OCuvtojB1DB1H6NW38Bajo6p/QzIIKNy5QSJRnm4=; b=cfAW26hE2VveB/
-	jH8+ku2wY76oSTbATyE0gUm21XscI0gCRCbu+LGdAgiXFRshXKoZsxJhIg1NAIaFVQ0adJdMEnFUB
-	/EMeWN3gyf+BXNReZaG3gSp/Se529Zf36zy71Wn7Ado/yEDKKvyMwA6WuCXBwl1mOVENCxqw3Xa0k
-	AOSBcV/UB2MTizuoDfE6i5XBQYOwvzZlTCkS4C9qkOy0xAE2uyLxnGqeBg8zFgvknY74a9lPWZirv
-	HqcKJa6mxGHb4OM7lVO+xWeWNl73+JGD7tPf9PKvko8Ro/kgIXagtGRANH0imK56jqwL9ErUWn4om
-	Mv787Zs10QJ3DI6DeRCw==;
+	List-Owner; bh=LFNUT7430/0Xj3Ngiy+QeQqlPfznWhcWoToP1Mv+eqo=; b=hwfwfzpWw5X/Lv
+	jIQXEcJ0drNNFq4Caj8VKvn5P/4fO9pAxRysoQqof/KDcOU+RzdvI7kZkOj0zMbbqnJnko1hGqZNf
+	AHbeXAMB8hSLwGLfz8dkEGLbhAHevgFPZRiCOq4UxUQBSwQY/8XWEntcoP1r06Kc+409qNHjhET9n
+	an3X2OmUkZY16Di7Rql3iwSeLEyHXuS4+Q+3M5upVXdwFUOnM26w2KdPD++2LIP7MRWvZEPamUH0O
+	q5c+fjFSFrMvEpxfRkxdOg1kmMrXROHLTS9DhOD+1Zydes8XEnfcfhSUL+1X0eAWbcFp40ZSmQPnG
+	k8jl7yI6CRSzJXbJMB2w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGfaU-00621Z-2z;
-	Fri, 22 Dec 2023 13:29:14 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1rGiTp-006QLZ-2R;
+	Fri, 22 Dec 2023 16:34:33 +0000
+Received: from mgamail.intel.com ([192.55.52.120])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGfaR-0061zw-2f
+	id 1rGiTl-006QK6-2p
 	for kexec@lists.infradead.org;
-	Fri, 22 Dec 2023 13:29:13 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1703251750;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1AKVs7FXg/jWbWMuTLae6aE+SqB8wGNXZoXLlyCDH7c=;
-	b=ARrdx0k3d09Ba86oflONlmxgAr9nnasS/uCYvF6RFECeCbABTjowpF3sOzc+d1rM9SAplu
-	a0erlErS3TJMg0TOKXud+JWlFSYnEYY54J//nF942dWZhKnDuUGT0uUnR/5PXpMXJe1XNr
-	pRQofaX8uQhF2oneisrmvRZVWFq+qgU=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-85-3J-sf6PDOOaljrRLbWYWug-1; Fri, 22 Dec 2023 08:29:06 -0500
-X-MC-Unique: 3J-sf6PDOOaljrRLbWYWug-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 807558489A8;
-	Fri, 22 Dec 2023 13:29:06 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.38])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id AA44FC15968;
-	Fri, 22 Dec 2023 13:29:04 +0000 (UTC)
-Date: Fri, 22 Dec 2023 21:29:01 +0800
-From: Baoquan He <bhe@redhat.com>
-To: fuqiang wang <fuqiang.wang@easystack.cn>
-Cc: Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] x86/kexec: fix potential cmem->ranges out of bounds
-Message-ID: <ZYWPHSmwK8iG6xUr@MiWiFi-R3L-srv>
-References: <20231222121855.148215-1-fuqiang.wang@easystack.cn>
+	Fri, 22 Dec 2023 16:34:31 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703262869; x=1734798869;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Nwu0jTUTyUVExiakxdbtIQfJuL2c3K4kO9Pr5Ymd8sQ=;
+  b=fO+SlFyuw72KMKXLr1jBPOOFt1KrQ92h2oI63KQbvLW1X+jun1ZjkNHi
+   szX8UNjeO8IT8Tpy42j6fNJuX0Wa4YXkvkyasIVj81PPFYptSaOhislU0
+   i0QKyZB2qKYaXp8uyOYNpCAkIGSnfRt6+TQpo6xSk7suLe8B+r+foTZt0
+   dMUJvwxf036t6St0dOxwi2P6gQ/QUGYddtkCJbKykVK6pslRmyJB0eFfv
+   ncvC0TGlqofvcl+xKRCCzAvD/bRH3mbkMnHu8aI1i+ntHvNaJiSnoRDQh
+   ZL6ec6B0MdpmazGNb9u4GAtnw5YD09vwbVbD8Rz1O3F0YVHp2XyJgm4DR
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="395024982"
+X-IronPort-AV: E=Sophos;i="6.04,297,1695711600"; 
+   d="scan'208";a="395024982"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 08:34:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="777082152"
+X-IronPort-AV: E=Sophos;i="6.04,297,1695711600"; 
+   d="scan'208";a="777082152"
+Received: from hassanfa-mobl.ger.corp.intel.com (HELO box.shutemov.name) ([10.252.33.171])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 08:34:23 -0800
+Received: by box.shutemov.name (Postfix, from userid 1000)
+	id EC2FB10945B; Fri, 22 Dec 2023 19:34:20 +0300 (+03)
+Date: Fri, 22 Dec 2023 19:34:20 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Elena Reshetova <elena.reshetova@intel.com>,
+	Jun Nakajima <jun.nakajima@intel.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	"Kalra, Ashish" <ashish.kalra@amd.com>,
+	Sean Christopherson <seanjc@google.com>,
+	"Huang, Kai" <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>,
+	kexec@lists.infradead.org, linux-coco@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv4 14/14] x86/acpi: Add support for CPU offlining for ACPI
+ MADT wakeup method
+Message-ID: <20231222163420.4mu5kmznfmsave6k@box.shutemov.name>
+References: <20231205004510.27164-1-kirill.shutemov@linux.intel.com>
+ <20231205004510.27164-15-kirill.shutemov@linux.intel.com>
+ <877clfmcpy.ffs@tglx>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20231222121855.148215-1-fuqiang.wang@easystack.cn>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+In-Reply-To: <877clfmcpy.ffs@tglx>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231222_052911_935171_CE0170B1 
-X-CRM114-Status: GOOD (  24.39  )
+X-CRM114-CacheID: sfid-20231222_083429_928568_5781E50F 
+X-CRM114-Status: GOOD (  12.01  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,100 +99,23 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 12/22/23 at 08:18pm, fuqiang wang wrote:
-> In memmap_exclude_ranges(), there will exclude elfheader from
-                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      elfheader will be excluded from crashk_res. OR
-      it will exclude elfheader from crashk_res.
-
-> crashk_res. In the current x86 architecture code, the elfheader is
-> always allocated at crashk_res.start. It seems that there won't be a
-> split a new range. But it depends on the allocation position of
- ~~~~~~~~~~~~~~~~~~
-  It seems that there won't be a new split range.
-> elfheader in crashk_res. To avoid potential out of bounds in future, add
-> a extra slot.
+On Fri, Dec 15, 2023 at 09:29:13PM +0100, Thomas Gleixner wrote:
+> So this waits and then does nothing if the wait fails. What's the point?
 > 
-> The similar issue also exists in fill_up_crash_elf_data(). The range to
-> be excluded is [0, 1M], start (0) is special and will not appear in the
-> middle of existing cmem->ranges[]. But in order to lest the low 1M could
-                                         ~~~~~~~~~~~~~~~~
-                                          in case
-> be changed in the future, add a extra slot too.
+> ...
+> <SNIP 170 lines of pagetable muck>
 > 
-> Previously discussed link:
-> [1] https://lore.kernel.org/kexec/ZXk2oBf%2FT1Ul6o0c@MiWiFi-R3L-srv/
-> [2] https://lore.kernel.org/kexec/273284e8-7680-4f5f-8065-c5d780987e59@easystack.cn/
-> [3] https://lore.kernel.org/kexec/ZYQ6O%2F57sHAPxTHm@MiWiFi-R3L-srv/
-> 
-> Signed-off-by: fuqiang wang <fuqiang.wang@easystack.cn>
-> ---
->  arch/x86/kernel/crash.c | 21 +++++++++++++++++++--
->  1 file changed, 19 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-> index c92d88680dbf..97d33a6fc4fb 100644
-> --- a/arch/x86/kernel/crash.c
-> +++ b/arch/x86/kernel/crash.c
-> @@ -149,8 +149,18 @@ static struct crash_mem *fill_up_crash_elf_data(void)
->  	/*
->  	 * Exclusion of crash region and/or crashk_low_res may cause
->  	 * another range split. So add extra two slots here.
-> +	 *
-> +	 * Exclusion of low 1M may not cause another range split, because the
-> +	 * range of exclude is [0, 1M] and the condition for splitting a new
-> +	 * region is that the start, end parameters are both in a certain
-> +	 * existing region in cmem and cannot be equal to existing region's
-> +	 * start or end. Obviously, the start of [0, 1M] cannot meet this
-> +	 * condition.
-> +	 *
-> +	 * But in order to lest the low 1M could be changed in the future,
-> +	 * (e.g. [stare, 1M]), add a extra slot.
+> Do we really need this specific hackery or is there some similar
+> identity mapping muck which can be generalized?
 
-Sometime, too much is as bad as too little. I feel below words are
-enough to state three regions are gonna be excluded, and may cause
-another split (may not cause). The code comment plus commit log can help
-people know why they are needed.
+I've addressed all your feedback, but this gave me pause. Looks like none
+of kernel_ident_mapping_init() users frees memory on failure.
 
-  	 * Exclusion of low1M, crashk_res and/or crashk_low_res may cause
-  	 * another range split. So add extra three slots here.
+Is it okay to get this part as is and I will follow up with patchset that
+fixes memory handling for all kernel_ident_mapping_init() users?
 
->  	 */
-> -	nr_ranges += 2;
-> +	nr_ranges += 3;
->  	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
->  	if (!cmem)
->  		return NULL;
-> @@ -282,9 +292,16 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
->  	struct crash_memmap_data cmd;
->  	struct crash_mem *cmem;
->  
-> -	cmem = vzalloc(struct_size(cmem, ranges, 1));
-> +	/*
-> +	 * In the current x86 architecture code, the elfheader is always
-> +	 * allocated at crashk_res.start. But it depends on the allocation
-> +	 * position of elfheader in crashk_res. To avoid potential out of
-> +	 * bounds in future, add a extra slot.
-> +	 */
-
-Ditto.
-
- +	/*
- +	 * Elfheader gonna be excluded from crashk_res, to avoid potential
- +	 * out of bounds, add one extra slot.
- +	 */
-
-> +	cmem = vzalloc(struct_size(cmem, ranges, 2));
->  	if (!cmem)
->  		return -ENOMEM;
-> +	cmem->max_nr_ranges = 2;
->  
->  	memset(&cmd, 0, sizeof(struct crash_memmap_data));
->  	cmd.params = params;
-> -- 
-> 2.42.0
-> 
-
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
 
 _______________________________________________
 kexec mailing list
