@@ -4,59 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CA514C4706F
-	for <kexec@archiver.kernel.org>; Fri, 22 Dec 2023 21:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DDE0FC46CD2
+	for <kexec@archiver.kernel.org>; Fri, 22 Dec 2023 23:52:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Date:Subject:Message-Id:References:
-	In-Reply-To:Cc:To:From:MIME-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=t1bb18j8eK9xRux+4b1Y7xCHDDX482AuXKLvib8vOnE=; b=brlAdA14WaEAoX
-	htMJ1zXL2mMCZ/o8XqsImEZ2Pmy9PoofTqox7JV+1jYbB91mAilk1AgGY4PyqRrHD3+/Zp0+VGiex
-	iBagPrDbVI91K/UO3pBjomr1jUN/BvTrfovApGW0xaAgmF2ea+LlByd7zs9BUws/k6qQXVCspgCfP
-	DpCa/3UyvQhzfJceNm1gUhWmPGLcaKLFV4v0GHTyyWxD3DcHPzVbSTq64oop9/AY3Y2YC6f9QNwQe
-	Glte/uuQyTDWECSGVH6sMmZvXl0cMwxZpuZNe0CHKgOMtGxnm9cvbav7BldpnG2gj9FQ9bQ3BMPYh
-	ax977bqsO4ZFNQPqS+3w==;
+	List-Owner; bh=bvA/VGn6RXt0+UkQpEc4Y7w3GoCpVEfUXJa06IAdw3w=; b=r5aYgDs2Ibr7aW
+	GhoOL1P6Othp/EfMQFV4iq2mjZ2hQxmNC7IOFmX+HkBS1Huyy+2c/rn6CSuVO/oyMpsirKWXK9tOt
+	KHXqyiOdkXUSGBuyqnJtywUeaO2FNGIN0cdRFoy+BYRRBgvOGtfSX+4OzdcqB85mROctZKv2JqVwa
+	S4Swb8MXW7WAArWIsflkcXChRr6MO2/0vu8Pf3zFJK3uG3tcc5lT+IzuBpj+E1vl2RqO3PvtgwQJs
+	cZXguJlWUu8e+QuiMNMaTFSqSOajjNlMwwD25RjMdz+W0BaG9LXpQ8IB3JJTjp02tPUQuQysUkDNE
+	v5vs5vk7PMgTIPwb/egQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGmw3-006rZq-2a;
-	Fri, 22 Dec 2023 21:19:59 +0000
-Received: from ams.source.kernel.org ([145.40.68.75])
+	id 1rGpJf-0072ot-1P;
+	Fri, 22 Dec 2023 23:52:31 +0000
+Received: from mgamail.intel.com ([192.55.52.120])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGmw0-006rVr-1l;
-	Fri, 22 Dec 2023 21:19:58 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by ams.source.kernel.org (Postfix) with ESMTP id 25F55B80BA0;
-	Fri, 22 Dec 2023 21:19:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8469C433C8;
-	Fri, 22 Dec 2023 21:19:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703279983;
-	bh=85pem+bV3h4CTSEJsl8gxNpUqeC+ByEZF8tHZajdLdo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=XutJyryH1C0yuKZA/mta5BFslea1nPHuuMEMIqTexQjedrgggkrdf3eqN2kD6EkgU
-	 3jCx87FzTjHItInuySR3YJOOZmFV211W9WBPfOQXj+lHVaF9uXE6yR6kBTdYnjJhdQ
-	 s70fgyCI5FDyEx/7pzbczFpZNRK/qYjTXh+G6TNTSIAAXIHxfpWMzIAO4LYqjrX9U5
-	 wAjkBSNhgkiJ/W8etslilyY1mQKWxdEWarTXXTaBT+uPKmD129ajAHNB4wLfI2NAKS
-	 isigYPWU3YdtSbDmSciHfVtXZ1A1wrIOZH52LLSxoazUgCso3tswSPt13z5HfEGnjQ
-	 qfE7JAi8wYz6Q==
-Received: (nullmailer pid 2942328 invoked by uid 1000);
-	Fri, 22 Dec 2023 21:19:39 -0000
+	id 1rGpJc-0072mS-1O
+	for kexec@lists.infradead.org;
+	Fri, 22 Dec 2023 23:52:29 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703289148; x=1734825148;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=ZmHTzPhpj3spFr7sD+uYe+dYLZez9U51K7ihV5uRElk=;
+  b=M1A3ifBdAYRgveAUrqQHyVKkzNGMLExhSHJLd3uDvnq5kaCzHDQ6HUjO
+   qv7BUWqjBpcKK6tZcuopmlBuN2Rxrm3Mq77B+REzLhsLUtj84BLobKj8V
+   u/Pe1MPrxZK7yiSuU6xtjEtJHj3dH4tlWSuOTJ8QSMfmMYGtRCRthatGn
+   p0NAUqjp0YDYnR/p2Z5YKFROi4c6hpM8/ehaUHods3hy1cz7YMMe06jXH
+   pjqvV48SYvFABfWecA8v/oxjMST+LahcDYC9Vuz1o19cydsT6zFfnYqnf
+   8iebEAcRw+UrwkH2q7qLGUHfkhw+X6pwgSMSK8hSAmJGdJyHkVOKFqxum
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="395063281"
+X-IronPort-AV: E=Sophos;i="6.04,297,1695711600"; 
+   d="scan'208";a="395063281"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 15:52:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="900622983"
+X-IronPort-AV: E=Sophos;i="6.04,297,1695711600"; 
+   d="scan'208";a="900622983"
+Received: from jeroenke-mobl.ger.corp.intel.com (HELO box.shutemov.name) ([10.249.35.180])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 15:52:14 -0800
+Received: by box.shutemov.name (Postfix, from userid 1000)
+	id E1CBA10A465; Sat, 23 Dec 2023 02:52:11 +0300 (+03)
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Elena Reshetova <elena.reshetova@intel.com>,
+	Jun Nakajima <jun.nakajima@intel.com>,
+	Rick Edgecombe  <rick.p.edgecombe@intel.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	"Kalra, Ashish" <ashish.kalra@amd.com>,
+	Sean Christopherson <seanjc@google.com>,
+	"Huang, Kai" <kai.huang@intel.com>,
+	Baoquan He <bhe@redhat.com>,
+	kexec@lists.infradead.org,
+	linux-coco@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCHv5 02/16] x86/apic: Mark acpi_mp_wake_* variables as __ro_after_init
+Date: Sat, 23 Dec 2023 02:51:54 +0300
+Message-ID: <20231222235209.32143-3-kirill.shutemov@linux.intel.com>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20231222235209.32143-1-kirill.shutemov@linux.intel.com>
+References: <20231222235209.32143-1-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: Alexander Graf <graf@amazon.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Tom Lendacky <thomas.lendacky@amd.com>, Usama Arif <usama.arif@bytedance.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, David Woodhouse <dwmw@amazon.co.uk>, Andrew Morton <akpm@linux-foundation.org>, madvenka@linux.microsoft.com, Ashish Kalra <ashish.kalra@amd.com>, Eric Biederman <ebiederm@xmission.com>, linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>, kexec@lists.infradead.org, Steven Rostedt <rostedt@goodmis.org>, pbonzini@redhat.com, Anthony Yznaga <anthony.yznaga@oracle.com>, arnd@arndb.de, linux-doc@vger.kernel.org, linux-mm@kvack.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-trace-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, Rob Herring <robh+dt@kernel.org>, Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, James Gowans <jgowans@amazon.com>, x86@kernel.org, linux-arm-kernel@lists.infradead.org
-In-Reply-To: <20231222195144.24532-12-graf@amazon.com>
-References: <20231222193607.15474-1-graf@amazon.com>
- <20231222195144.24532-1-graf@amazon.com>
- <20231222195144.24532-12-graf@amazon.com>
-Message-Id: <170327997978.2942294.14458926896132199704.robh@kernel.org>
-Subject: Re: [PATCH v2 17/17] devicetree: Add bindings for ftrace KHO
-Date: Fri, 22 Dec 2023 15:19:39 -0600
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231222_131956_878138_BA8B34F8 
-X-CRM114-Status: GOOD (  15.57  )
+X-CRM114-CacheID: sfid-20231222_155228_490539_7FBE69BF 
+X-CRM114-Status: UNSURE (   9.82  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -73,63 +102,34 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+acpi_mp_wake_mailbox_paddr and acpi_mp_wake_mailbox initialized once
+during ACPI MADT init and never changed.
 
-On Fri, 22 Dec 2023 19:51:44 +0000, Alexander Graf wrote:
-> With ftrace in KHO, we are creating an ABI between old kernel and new
-> kernel about the state that they transfer. To ensure that we document
-> that state and catch any breaking change, let's add its schema to the
-> common devicetree bindings. This way, we can quickly reason about the
-> state that gets passed.
-> 
-> Signed-off-by: Alexander Graf <graf@amazon.com>
-> ---
->  .../bindings/kho/ftrace/ftrace-array.yaml     | 46 +++++++++++++++
->  .../bindings/kho/ftrace/ftrace-cpu.yaml       | 56 +++++++++++++++++++
->  .../bindings/kho/ftrace/ftrace.yaml           | 48 ++++++++++++++++
->  3 files changed, 150 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/kho/ftrace/ftrace-array.yaml
->  create mode 100644 Documentation/devicetree/bindings/kho/ftrace/ftrace-cpu.yaml
->  create mode 100644 Documentation/devicetree/bindings/kho/ftrace/ftrace.yaml
-> 
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Acked-by: Kai Huang <kai.huang@intel.com>
+---
+ arch/x86/kernel/acpi/madt_wakeup.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
-
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/kho/ftrace/ftrace-array.yaml:43:111: [warning] line too long (117 > 110 characters) (line-length)
-./Documentation/devicetree/bindings/kho/ftrace/ftrace-cpu.yaml:53:111: [warning] line too long (117 > 110 characters) (line-length)
-./Documentation/devicetree/bindings/kho/ftrace/ftrace.yaml:45:111: [warning] line too long (117 > 110 characters) (line-length)
-
-dtschema/dtc warnings/errors:
-WARNING: Documentation/devicetree/bindings/kho/ftrace/ftrace-array.example.dts:29.25-39: Value 0x0000000101000000 truncated to 0x01000000
-WARNING: Documentation/devicetree/bindings/kho/ftrace/ftrace-array.example.dts:29.48-62: Value 0x0000000101000100 truncated to 0x01000100
-WARNING: Documentation/devicetree/bindings/kho/ftrace/ftrace-array.example.dts:29.73-87: Value 0x0000000101000038 truncated to 0x01000038
-WARNING: Documentation/devicetree/bindings/kho/ftrace/ftrace-array.example.dts:29.96-110: Value 0x0000000101002000 truncated to 0x01002000
-WARNING: Documentation/devicetree/bindings/kho/ftrace/ftrace-cpu.example.dts:29.25-39: Value 0x0000000101000000 truncated to 0x01000000
-WARNING: Documentation/devicetree/bindings/kho/ftrace/ftrace-cpu.example.dts:29.48-62: Value 0x0000000101000100 truncated to 0x01000100
-WARNING: Documentation/devicetree/bindings/kho/ftrace/ftrace-cpu.example.dts:29.73-87: Value 0x0000000101000038 truncated to 0x01000038
-WARNING: Documentation/devicetree/bindings/kho/ftrace/ftrace-cpu.example.dts:29.96-110: Value 0x0000000101002000 truncated to 0x01002000
-WARNING: Documentation/devicetree/bindings/kho/ftrace/ftrace.example.dts:29.25-39: Value 0x0000000101000000 truncated to 0x01000000
-WARNING: Documentation/devicetree/bindings/kho/ftrace/ftrace.example.dts:29.48-62: Value 0x0000000101000100 truncated to 0x01000100
-WARNING: Documentation/devicetree/bindings/kho/ftrace/ftrace.example.dts:29.73-87: Value 0x0000000101000038 truncated to 0x01000038
-WARNING: Documentation/devicetree/bindings/kho/ftrace/ftrace.example.dts:29.96-110: Value 0x0000000101002000 truncated to 0x01002000
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20231222195144.24532-12-graf@amazon.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+diff --git a/arch/x86/kernel/acpi/madt_wakeup.c b/arch/x86/kernel/acpi/madt_wakeup.c
+index 7f164d38bd0b..cf79ea6f3007 100644
+--- a/arch/x86/kernel/acpi/madt_wakeup.c
++++ b/arch/x86/kernel/acpi/madt_wakeup.c
+@@ -6,10 +6,10 @@
+ #include <asm/processor.h>
+ 
+ /* Physical address of the Multiprocessor Wakeup Structure mailbox */
+-static u64 acpi_mp_wake_mailbox_paddr;
++static u64 acpi_mp_wake_mailbox_paddr __ro_after_init;
+ 
+ /* Virtual address of the Multiprocessor Wakeup Structure mailbox */
+-static struct acpi_madt_multiproc_wakeup_mailbox *acpi_mp_wake_mailbox;
++static struct acpi_madt_multiproc_wakeup_mailbox *acpi_mp_wake_mailbox __ro_after_init;
+ 
+ static int acpi_wakeup_cpu(u32 apicid, unsigned long start_ip)
+ {
+-- 
+2.41.0
 
 
 _______________________________________________
