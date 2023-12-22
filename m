@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C0762C47073
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B1672C47072
 	for <kexec@archiver.kernel.org>; Fri, 22 Dec 2023 20:47:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
@@ -12,49 +12,49 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=A83XlxdnVonB+ajzSwmrJ/aDcmxDxTSmkYr8y7K5tZM=; b=xK/ZuyEcNu41QK
-	y2h6BrY+BM/RwHHNFl9v4niApIzIYZYidCQIRzZJW6+AJYt/S2y15o1M2WGBgojfCGT7vA/6apMqy
-	VyXoqBAT74fEExrpDi/97lRhJR29JzELV8CNi0PXJAIWIl3gtuXEfj4zCwKiUoH/Bs/5Rh1AZVkd+
-	xKrYIyE9X36GMg9r2OjI5iGZxEPdwgE+BvcJXrWLx+XDliYpWTZh8BfBRv4Oy31uHVcNpcGg0ULrZ
-	E8Bnc7EiWOylq3+Cw6t0gLzM1fnXCYxKbPLYgQbgfD0kVZ/nvbAPIznTppySTUhQYtdJFZL6YeMrv
-	68ZqY73zkI/GOyOp8B4g==;
+	List-Owner; bh=JYCvcQQosBrm2wOlpe+fbQVnii5Dvo7pGPMckeSwMpk=; b=3dQwC44nJeHfV5
+	2zbxiXIDq/i1g67imvTOxQByRv4u0YaZ7i/NehttpCpvpgCPSSPjI/x+F1ixTa/zXY7u92kXKQ2M+
+	dLnQcvXbaTJXC0PJChknMKyKLngXANVQojBgBlTe5TdGPo1aQPibnX47R1eyOHXHJydtVMo08KVBE
+	V0o/csEJzSabjmG08Id8WjxEqPkv9nUfWw9QlSF7TyeQrqTZ5uxODxIUhQ5gjVDi2Z58llqjEGLTg
+	caBd5beDxO2/nxTqGp9P9LEqABcFqesQE0kTmQWMNR1rB8xppPQrbq1Rc5ML2ESaMmTDnJYoYIB0K
+	PCF0LQaa2wNkenI7Ab+Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGmQM-006poz-0D;
+	id 1rGmQM-006pp5-1a;
 	Fri, 22 Dec 2023 20:47:14 +0000
-Received: from smtp-fw-52003.amazon.com ([52.119.213.152])
+Received: from smtp-fw-80008.amazon.com ([99.78.197.219])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGlKu-006iUr-20;
-	Fri, 22 Dec 2023 19:37:35 +0000
+	id 1rGlLQ-006ipa-0m;
+	Fri, 22 Dec 2023 19:38:08 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1703273852; x=1734809852;
+  t=1703273884; x=1734809884;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=ZLYCMQzZdYknax/wRIALOVvHrvD35sO3OPXkV3K/85M=;
-  b=QAAmel78WlJ8DEf//6CTx7/t/5cM4CG3F2J+FtrpD0JY2phyGxxP/VZU
-   gaQC6dq2UE2Dv4If/9rOCqJ7XZUNZp/0OrffIbpskqncjjWYOup2aHo7M
-   GfPrC3+b04gA7RzTqBwYj+5I5SfkkM+HncfiZsqcl/YClOjqAciiCVvv6
-   0=;
+  bh=GaYoJtOeVSzgmYS5gukWExN0RDseJvcoWD78p448UjE=;
+  b=ETnOgEAsYXGrkeSpedEkyZcaPmidFsacwn9nHugtKoORR49D7595eMN7
+   dKnLvffivWZ+znL8+gawlQLWFpAotkxqe2zeXlFuZGFd7D4WP4897rU+W
+   5qM6bPfgeHmdmpX+Fx2WpVn0HKC4INF10icQ6tiURCnM8swm0x8PMqhtC
+   U=;
 X-IronPort-AV: E=Sophos;i="6.04,297,1695686400"; 
-   d="scan'208";a="627319050"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-iad-1a-m6i4x-b5bd57cf.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-52003.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 19:37:28 +0000
-Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (iad7-ws-svc-p70-lb3-vlan3.iad.amazon.com [10.32.235.38])
-	by email-inbound-relay-iad-1a-m6i4x-b5bd57cf.us-east-1.amazon.com (Postfix) with ESMTPS id C66E4499DC;
-	Fri, 22 Dec 2023 19:37:21 +0000 (UTC)
-Received: from EX19MTAUWB001.ant.amazon.com [10.0.21.151:42367]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.15.218:2525] with esmtp (Farcaster)
- id 7d43c3c0-a068-40c5-899c-569b1b9ac52f; Fri, 22 Dec 2023 19:37:20 +0000 (UTC)
-X-Farcaster-Flow-ID: 7d43c3c0-a068-40c5-899c-569b1b9ac52f
+   d="scan'208";a="53450946"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-pdx-2b-m6i4x-cadc3fbd.us-west-2.amazon.com) ([10.25.36.214])
+  by smtp-border-fw-80008.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 19:37:56 +0000
+Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (pdx2-ws-svc-p26-lb5-vlan2.pdx.amazon.com [10.39.38.66])
+	by email-inbound-relay-pdx-2b-m6i4x-cadc3fbd.us-west-2.amazon.com (Postfix) with ESMTPS id 78634A0ABC;
+	Fri, 22 Dec 2023 19:37:54 +0000 (UTC)
+Received: from EX19MTAUWC001.ant.amazon.com [10.0.7.35:14564]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.56.23:2525] with esmtp (Farcaster)
+ id 78760084-28fe-498e-84c2-ddc497dcf85c; Fri, 22 Dec 2023 19:37:54 +0000 (UTC)
+X-Farcaster-Flow-ID: 78760084-28fe-498e-84c2-ddc497dcf85c
 Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
+ EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 22 Dec 2023 19:37:20 +0000
+ 15.2.1118.40; Fri, 22 Dec 2023 19:37:54 +0000
 Received: from dev-dsk-graf-1a-5ce218e4.eu-west-1.amazon.com (10.253.83.51) by
  EX19D020UWC004.ant.amazon.com (10.13.138.149) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 22 Dec 2023 19:37:16 +0000
+ 15.2.1118.40; Fri, 22 Dec 2023 19:37:50 +0000
 From: Alexander Graf <graf@amazon.com>
 To: <linux-kernel@vger.kernel.org>
 CC: <linux-trace-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
@@ -71,19 +71,19 @@ CC: <linux-trace-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
 	<anthony.yznaga@oracle.com>, Usama Arif <usama.arif@bytedance.com>, David
  Woodhouse <dwmw@amazon.co.uk>, Benjamin Herrenschmidt
 	<benh@kernel.crashing.org>
-Subject: [PATCH v2 06/17] kexec: Add config option for KHO
-Date: Fri, 22 Dec 2023 19:35:56 +0000
-Message-ID: <20231222193607.15474-7-graf@amazon.com>
+Subject: [PATCH v2 09/17] x86: Add KHO support
+Date: Fri, 22 Dec 2023 19:35:59 +0000
+Message-ID: <20231222193607.15474-10-graf@amazon.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20231222193607.15474-1-graf@amazon.com>
 References: <20231222193607.15474-1-graf@amazon.com>
 MIME-Version: 1.0
 X-Originating-IP: [10.253.83.51]
-X-ClientProxiedBy: EX19D037UWB001.ant.amazon.com (10.13.138.123) To
+X-ClientProxiedBy: EX19D041UWA004.ant.amazon.com (10.13.139.9) To
  EX19D020UWC004.ant.amazon.com (10.13.138.149)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231222_113732_819656_F3C19660 
-X-CRM114-Status: GOOD (  13.86  )
+X-CRM114-CacheID: sfid-20231222_113804_406705_3F39D390 
+X-CRM114-Status: GOOD (  31.17  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,39 +100,376 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-We have all generic code in place now to support Kexec with KHO. This
-patch adds a config option that depends on architecture support to
-enable KHO support.
+We now have all bits in place to support KHO kexecs. This patch adds
+awareness of KHO in the kexec file as well as boot path for x86 and
+adds the respective kconfig option to the architecture so that it can
+use KHO successfully.
+
+In addition, it enlightens it decompression code with KHO so that its
+KASLR location finder only considers memory regions that are not already
+occupied by KHO memory.
 
 Signed-off-by: Alexander Graf <graf@amazon.com>
----
- kernel/Kconfig.kexec | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
 
-diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
-index 2fd510256604..909ab28f1341 100644
---- a/kernel/Kconfig.kexec
-+++ b/kernel/Kconfig.kexec
-@@ -91,6 +91,19 @@ config KEXEC_JUMP
- 	  Jump between original kernel and kexeced kernel and invoke
- 	  code in physical address mode via KEXEC
+---
+
+v1 -> v2:
+
+  - Change kconfig option to ARCH_SUPPORTS_KEXEC_KHO
+  - s/kho_reserve_mem/kho_reserve_previous_mem/g
+  - s/kho_reserve/kho_reserve_scratch/g
+---
+ arch/x86/Kconfig                      |  3 ++
+ arch/x86/boot/compressed/kaslr.c      | 55 +++++++++++++++++++++++++++
+ arch/x86/include/uapi/asm/bootparam.h | 15 +++++++-
+ arch/x86/kernel/e820.c                |  9 +++++
+ arch/x86/kernel/kexec-bzimage64.c     | 39 +++++++++++++++++++
+ arch/x86/kernel/setup.c               | 46 ++++++++++++++++++++++
+ arch/x86/mm/init_32.c                 |  7 ++++
+ arch/x86/mm/init_64.c                 |  7 ++++
+ 8 files changed, 180 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 3762f41bb092..9aa31b3dcebc 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2094,6 +2094,9 @@ config ARCH_SUPPORTS_KEXEC_BZIMAGE_VERIFY_SIG
+ config ARCH_SUPPORTS_KEXEC_JUMP
+ 	def_bool y
  
-+config KEXEC_KHO
-+	bool "kexec handover"
-+	depends on ARCH_SUPPORTS_KEXEC_KHO
-+	depends on KEXEC
-+	select MEMBLOCK_SCRATCH
-+	select LIBFDT
-+	select CMA
-+	help
-+	  Allow kexec to hand over state across kernels by generating and
-+	  passing additional metadata to the target kernel. This is useful
-+	  to keep data or state alive across the kexec. For this to work,
-+	  both source and target kernels need to have this option enabled.
++config ARCH_SUPPORTS_KEXEC_KHO
++	def_bool y
 +
- config CRASH_DUMP
- 	bool "kernel crash dumps"
- 	depends on ARCH_SUPPORTS_CRASH_DUMP
+ config ARCH_SUPPORTS_CRASH_DUMP
+ 	def_bool X86_64 || (X86_32 && HIGHMEM)
+ 
+diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
+index dec961c6d16a..93ea292e4c18 100644
+--- a/arch/x86/boot/compressed/kaslr.c
++++ b/arch/x86/boot/compressed/kaslr.c
+@@ -29,6 +29,7 @@
+ #include <linux/uts.h>
+ #include <linux/utsname.h>
+ #include <linux/ctype.h>
++#include <uapi/linux/kexec.h>
+ #include <generated/utsversion.h>
+ #include <generated/utsrelease.h>
+ 
+@@ -472,6 +473,60 @@ static bool mem_avoid_overlap(struct mem_vector *img,
+ 			}
+ 		}
+ 
++#ifdef CONFIG_KEXEC_KHO
++		if (ptr->type == SETUP_KEXEC_KHO) {
++			struct kho_data *kho = (struct kho_data *)ptr->data;
++			struct kho_mem *mems = (void *)kho->mem_cache_addr;
++			int nr_mems = kho->mem_cache_size / sizeof(*mems);
++			int i;
++
++			/* Avoid the mem cache */
++			avoid = (struct mem_vector) {
++				.start = kho->mem_cache_addr,
++				.size = kho->mem_cache_size,
++			};
++
++			if (mem_overlaps(img, &avoid) && (avoid.start < earliest)) {
++				*overlap = avoid;
++				earliest = overlap->start;
++				is_overlapping = true;
++			}
++
++			/* And the KHO DT */
++			avoid = (struct mem_vector) {
++				.start = kho->dt_addr,
++				.size = kho->dt_size,
++			};
++
++			if (mem_overlaps(img, &avoid) && (avoid.start < earliest)) {
++				*overlap = avoid;
++				earliest = overlap->start;
++				is_overlapping = true;
++			}
++
++			/* As well as any other KHO memory reservations */
++			for (i = 0; i < nr_mems; i++) {
++				avoid = (struct mem_vector) {
++					.start = mems[i].addr,
++					.size = mems[i].len,
++				};
++
++				/*
++				 * This mem starts after our current break.
++				 * The array is sorted, so we're done.
++				 */
++				if (avoid.start >= earliest)
++					break;
++
++				if (mem_overlaps(img, &avoid)) {
++					*overlap = avoid;
++					earliest = overlap->start;
++					is_overlapping = true;
++				}
++			}
++		}
++#endif
++
+ 		ptr = (struct setup_data *)(unsigned long)ptr->next;
+ 	}
+ 
+diff --git a/arch/x86/include/uapi/asm/bootparam.h b/arch/x86/include/uapi/asm/bootparam.h
+index 01d19fc22346..013af38a9673 100644
+--- a/arch/x86/include/uapi/asm/bootparam.h
++++ b/arch/x86/include/uapi/asm/bootparam.h
+@@ -13,7 +13,8 @@
+ #define SETUP_CC_BLOB			7
+ #define SETUP_IMA			8
+ #define SETUP_RNG_SEED			9
+-#define SETUP_ENUM_MAX			SETUP_RNG_SEED
++#define SETUP_KEXEC_KHO		10
++#define SETUP_ENUM_MAX			SETUP_KEXEC_KHO
+ 
+ #define SETUP_INDIRECT			(1<<31)
+ #define SETUP_TYPE_MAX			(SETUP_ENUM_MAX | SETUP_INDIRECT)
+@@ -181,6 +182,18 @@ struct ima_setup_data {
+ 	__u64 size;
+ } __attribute__((packed));
+ 
++/*
++ * Locations of kexec handover metadata
++ */
++struct kho_data {
++	__u64 dt_addr;
++	__u64 dt_size;
++	__u64 scratch_addr;
++	__u64 scratch_size;
++	__u64 mem_cache_addr;
++	__u64 mem_cache_size;
++} __attribute__((packed));
++
+ /* The so-called "zeropage" */
+ struct boot_params {
+ 	struct screen_info screen_info;			/* 0x000 */
+diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+index fb8cf953380d..c891b83f5b1c 100644
+--- a/arch/x86/kernel/e820.c
++++ b/arch/x86/kernel/e820.c
+@@ -1341,6 +1341,15 @@ void __init e820__memblock_setup(void)
+ 			continue;
+ 
+ 		memblock_add(entry->addr, entry->size);
++
++		/*
++		 * At this point with KHO we only allocate from scratch memory
++		 * and only from memory below ISA_END_ADDRESS. Make sure that
++		 * when we add memory for the eligible range, we add it as
++		 * scratch memory so that we can resize the memblocks array.
++		 */
++		if (is_kho_boot() && (end <= ISA_END_ADDRESS))
++			memblock_mark_scratch(entry->addr, end);
+ 	}
+ 
+ 	/* Throw away partial pages: */
+diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+index a61c12c01270..0cb8d0650a02 100644
+--- a/arch/x86/kernel/kexec-bzimage64.c
++++ b/arch/x86/kernel/kexec-bzimage64.c
+@@ -15,6 +15,7 @@
+ #include <linux/slab.h>
+ #include <linux/kexec.h>
+ #include <linux/kernel.h>
++#include <linux/libfdt.h>
+ #include <linux/mm.h>
+ #include <linux/efi.h>
+ #include <linux/random.h>
+@@ -233,6 +234,33 @@ setup_ima_state(const struct kimage *image, struct boot_params *params,
+ #endif /* CONFIG_IMA_KEXEC */
+ }
+ 
++static void setup_kho(const struct kimage *image, struct boot_params *params,
++		       unsigned long params_load_addr,
++		       unsigned int setup_data_offset)
++{
++#ifdef CONFIG_KEXEC_KHO
++	struct setup_data *sd = (void *)params + setup_data_offset;
++	struct kho_data *kho = (void *)sd + sizeof(*sd);
++
++	sd->type = SETUP_KEXEC_KHO;
++	sd->len = sizeof(struct kho_data);
++
++	/* Only add if we have all KHO images in place */
++	if (!image->kho.dt.buffer || !image->kho.mem_cache.buffer)
++		return;
++
++	/* Add setup data */
++	kho->dt_addr = image->kho.dt.mem;
++	kho->dt_size = image->kho.dt.bufsz;
++	kho->scratch_addr = kho_scratch_phys;
++	kho->scratch_size = kho_scratch_len;
++	kho->mem_cache_addr = image->kho.mem_cache.mem;
++	kho->mem_cache_size = image->kho.mem_cache.bufsz;
++	sd->next = params->hdr.setup_data;
++	params->hdr.setup_data = params_load_addr + setup_data_offset;
++#endif /* CONFIG_KEXEC_KHO */
++}
++
+ static int
+ setup_boot_parameters(struct kimage *image, struct boot_params *params,
+ 		      unsigned long params_load_addr,
+@@ -305,6 +333,13 @@ setup_boot_parameters(struct kimage *image, struct boot_params *params,
+ 				     sizeof(struct ima_setup_data);
+ 	}
+ 
++	if (IS_ENABLED(CONFIG_KEXEC_KHO)) {
++		/* Setup space to store preservation metadata */
++		setup_kho(image, params, params_load_addr, setup_data_offset);
++		setup_data_offset += sizeof(struct setup_data) +
++				     sizeof(struct kho_data);
++	}
++
+ 	/* Setup RNG seed */
+ 	setup_rng_seed(params, params_load_addr, setup_data_offset);
+ 
+@@ -470,6 +505,10 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+ 		kbuf.bufsz += sizeof(struct setup_data) +
+ 			      sizeof(struct ima_setup_data);
+ 
++	if (IS_ENABLED(CONFIG_KEXEC_KHO))
++		kbuf.bufsz += sizeof(struct setup_data) +
++			      sizeof(struct kho_data);
++
+ 	params = kzalloc(kbuf.bufsz, GFP_KERNEL);
+ 	if (!params)
+ 		return ERR_PTR(-ENOMEM);
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 1526747bedf2..bd21f9a601a2 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -382,6 +382,29 @@ int __init ima_get_kexec_buffer(void **addr, size_t *size)
+ }
+ #endif
+ 
++static void __init add_kho(u64 phys_addr, u32 data_len)
++{
++#ifdef CONFIG_KEXEC_KHO
++	struct kho_data *kho;
++	u64 addr = phys_addr + sizeof(struct setup_data);
++	u64 size = data_len - sizeof(struct setup_data);
++
++	kho = early_memremap(addr, size);
++	if (!kho) {
++		pr_warn("setup: failed to memremap kho data (0x%llx, 0x%llx)\n",
++			 addr, size);
++		return;
++	}
++
++	kho_populate(kho->dt_addr, kho->scratch_addr, kho->scratch_size,
++		     kho->mem_cache_addr, kho->mem_cache_size);
++
++	early_memunmap(kho, size);
++#else
++	pr_warn("Passed KHO data, but CONFIG_KEXEC_KHO not set. Ignoring.\n");
++#endif
++}
++
+ static void __init parse_setup_data(void)
+ {
+ 	struct setup_data *data;
+@@ -410,6 +433,9 @@ static void __init parse_setup_data(void)
+ 		case SETUP_IMA:
+ 			add_early_ima_buffer(pa_data);
+ 			break;
++		case SETUP_KEXEC_KHO:
++			add_kho(pa_data, data_len);
++			break;
+ 		case SETUP_RNG_SEED:
+ 			data = early_memremap(pa_data, data_len);
+ 			add_bootloader_randomness(data->data, data->len);
+@@ -989,8 +1015,26 @@ void __init setup_arch(char **cmdline_p)
+ 	cleanup_highmap();
+ 
+ 	memblock_set_current_limit(ISA_END_ADDRESS);
++
+ 	e820__memblock_setup();
+ 
++	/*
++	 * We can resize memblocks at this point, let's dump all KHO
++	 * reservations in and switch from scratch-only to normal allocations
++	 */
++	kho_reserve_previous_mem();
++
++	/* Allocations now skip scratch mem, return low 1M to the pool */
++	if (is_kho_boot()) {
++		u64 i;
++		phys_addr_t base, end;
++
++		__for_each_mem_range(i, &memblock.memory, NULL, NUMA_NO_NODE,
++				     MEMBLOCK_SCRATCH, &base, &end, NULL)
++			if (end <= ISA_END_ADDRESS)
++				memblock_clear_scratch(base, end - base);
++	}
++
+ 	/*
+ 	 * Needs to run after memblock setup because it needs the physical
+ 	 * memory size.
+@@ -1106,6 +1150,8 @@ void __init setup_arch(char **cmdline_p)
+ 	 */
+ 	arch_reserve_crashkernel();
+ 
++	kho_reserve_scratch();
++
+ 	memblock_find_dma_reserve();
+ 
+ 	if (!early_xdbc_setup_hardware())
+diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
+index b63403d7179d..6c3810afed04 100644
+--- a/arch/x86/mm/init_32.c
++++ b/arch/x86/mm/init_32.c
+@@ -20,6 +20,7 @@
+ #include <linux/smp.h>
+ #include <linux/init.h>
+ #include <linux/highmem.h>
++#include <linux/kexec.h>
+ #include <linux/pagemap.h>
+ #include <linux/pci.h>
+ #include <linux/pfn.h>
+@@ -738,6 +739,12 @@ void __init mem_init(void)
+ 	after_bootmem = 1;
+ 	x86_init.hyper.init_after_bootmem();
+ 
++	/*
++	 * Now that all KHO pages are marked as reserved, let's flip them back
++	 * to normal pages with accurate refcount.
++	 */
++	kho_populate_refcount();
++
+ 	/*
+ 	 * Check boundaries twice: Some fundamental inconsistencies can
+ 	 * be detected at build time already.
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index a190aae8ceaf..3ce1a4767610 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -20,6 +20,7 @@
+ #include <linux/smp.h>
+ #include <linux/init.h>
+ #include <linux/initrd.h>
++#include <linux/kexec.h>
+ #include <linux/pagemap.h>
+ #include <linux/memblock.h>
+ #include <linux/proc_fs.h>
+@@ -1339,6 +1340,12 @@ void __init mem_init(void)
+ 	after_bootmem = 1;
+ 	x86_init.hyper.init_after_bootmem();
+ 
++	/*
++	 * Now that all KHO pages are marked as reserved, let's flip them back
++	 * to normal pages with accurate refcount.
++	 */
++	kho_populate_refcount();
++
+ 	/*
+ 	 * Must be done after boot memory is put on freelist, because here we
+ 	 * might set fields in deferred struct pages that have not yet been
 -- 
 2.40.1
 
