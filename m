@@ -4,60 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 65A05C41535
-	for <kexec@archiver.kernel.org>; Fri, 22 Dec 2023 11:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 569D3C41535
+	for <kexec@archiver.kernel.org>; Fri, 22 Dec 2023 12:19:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=7kpRktqyXu5NXcYKt1qS4yUQ+wg9diZ/a89DHLKlUC4=; b=Qqgwb5OV9In6AW
-	ao8OQCawauvOprB2J2Vrq0mAZ/pnHkRDBqH55kqF7ocmLCDS1Ze00RT8skNPDSaM46MMo6nPa+zuO
-	+67js6VDsaxjHxAEE7Hq/lCilCoF3ijPPCxXlOt3WpQxFpAzNsljKic4mjMCZiZ/SG/ekMyj75g25
-	ipS+YIXXRHf2uR+IxBTTbw5AyyHi07T4hvRqTtyujFlX7XNm+plnM/W9tFs7zW8W4eOVN24hj8GKD
-	xCfL3vJss9wzzybO9DtLt/2c6dmO9R4ONRc/Sxhr+V3uj9kwH6YLbh+ChJ/wIz2PH9bUMCIomcWur
-	SNAVbzmRdlAWPLQupHag==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=tUEQlDM7ZMsMGmMYFj85op081JN13l+tRWtl8MKSxGk=; b=JqmuNfVfhNX3j3
+	KmLVlPMktXPrL1XkXRu/hh8faX4WXGjixBegzNxEpj1MlYlKjlnKEUPWHFDD+7NrhkrmRS+iK+13K
+	IOt7ITN/fuIyCpj6D5FHrRfxBmGvJ5H/+nA6Rl1v5iaxyKjLIT1M9e+jPkFzZ4JhsGkZ9Elu/oYqz
+	RyWdLt3dXsMhICib2G2Z4eCCOQoGhVohkZcq9r95vprHZ+Qe+o3bDRisnsrPNMHAZ3Jh7QkbY8it9
+	dAeert6Zh629E4TqX3lq53k2LbHeuS4nsMbYYA9YAZisd1sXjYIFJTzJGIvC7FCOBdSnXuU0rnyoY
+	N6xV/6T6kh0xUJaAw7YA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGe3Z-005qjA-2M;
-	Fri, 22 Dec 2023 11:51:09 +0000
-Received: from mail-m92237.xmail.ntesmail.com ([103.126.92.237])
+	id 1rGeUm-005uds-2v;
+	Fri, 22 Dec 2023 12:19:16 +0000
+Received: from mail-m12818.netease.com ([103.209.128.18])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGe3W-005qfb-0r
+	id 1rGeUh-005udM-2L
 	for kexec@lists.infradead.org;
-	Fri, 22 Dec 2023 11:51:08 +0000
-Received: from [10.9.0.94] (unknown [211.103.144.18])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id AC02A4C0275;
-	Fri, 22 Dec 2023 19:41:36 +0800 (CST)
-Message-ID: <ba124f2b-3292-4c5d-b5f6-b078ce289838@easystack.cn>
-Date: Fri, 22 Dec 2023 19:41:36 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] x86/kexec: Fix potential out of bounds in
- crash_setup_memmap_entries()
-Content-Language: en-US
-To: Baoquan He <bhe@redhat.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
- Yuntao Wang <ytcoode@gmail.com>, kexec@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20231220055733.100325-1-fuqiang.wang@easystack.cn>
- <20231220055733.100325-2-fuqiang.wang@easystack.cn>
- <ZYQ6O/57sHAPxTHm@MiWiFi-R3L-srv>
+	Fri, 22 Dec 2023 12:19:13 +0000
+Received: from fedora.. (unknown [211.103.144.18])
+	by smtp.qiye.163.com (Hmail) with ESMTPA id 8979C4C02B1;
+	Fri, 22 Dec 2023 20:18:59 +0800 (CST)
 From: fuqiang wang <fuqiang.wang@easystack.cn>
-In-Reply-To: <ZYQ6O/57sHAPxTHm@MiWiFi-R3L-srv>
+To: Baoquan He <bhe@redhat.com>,
+	Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>
+Cc: kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] x86/kexec: fix potential cmem->ranges out of bounds
+Date: Fri, 22 Dec 2023 20:18:53 +0800
+Message-ID: <20231222121855.148215-1-fuqiang.wang@easystack.cn>
+X-Mailer: git-send-email 2.42.0
+MIME-Version: 1.0
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVkaHh1IVk1CGR9PGRoYTU1NHlUZERMWGhIXJBQOD1
+	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVkZThkaVkIYHh0YGUxOSxlPTFUZERMWGhIXJBQOD1
 	lXWRgSC1lBWUlKSlVKS0hVSk9PVUpDWVdZFhoPEhUdFFlBWU9LSFVKTU9JTE5VSktLVUpCS0tZBg
 	++
-X-HM-Tid: 0a8c9154b5f7022ekunmac02a4c0275
+X-HM-Tid: 0a8c9176eee0022ekunm8979c4c02b1
 X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NhQ6HBw4LzczNShCEkgpHkIt
-	OhhPCgJVSlVKTEtISU9OSUJMTU9DVTMWGhIXVR0OChIaFRxVDBoVHDseGggCCA8aGBBVGBVFWVdZ
-	EgtZQVlJSkpVSktIVUpPT1VKQ1lXWQgBWUFPQkhPNwY+
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PiI6EQw5Hzc5OSg2LygOFTgu
+	TBMwChFVSlVKTEtISU9MTk9LTkJLVTMWGhIXVR0OChIaFRxVDBoVHDseGggCCA8aGBBVGBVFWVdZ
+	EgtZQVlJSkpVSktIVUpPT1VKQ1lXWQgBWUFITkxKNwY+
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231222_035106_511543_26480548 
-X-CRM114-Status: GOOD (  21.55  )
+X-CRM114-CacheID: sfid-20231222_041911_998133_CFF64E41 
+X-CRM114-Status: GOOD (  13.55  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -69,71 +64,80 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-5ZyoIDIwMjMvMTIvMjEgMjE6MTQsIEJhb3F1YW4gSGUg5YaZ6YGTOgoKPiBPbiAxMi8yMC8yMyBh
-dCAwMTo1N3BtLCBmdXFpYW5nIHdhbmcgd3JvdGU6Cj4+IEluIG1lbW1hcF9leGNsdWRlX3Jhbmdl
-cygpLCB0aGVyZSB3aWxsIGV4Y2x1ZGUgZWxmaGVhZGVyIGZyb20KPj4gY3Jhc2hrX3Jlcy4gSW4g
-dGhlIGN1cnJlbnQgeDg2IGFyY2hpdGVjdHVyZSBjb2RlLCB0aGUgZWxmaGVhZGVyIGlzCj4+IGFs
-d2F5cyBhbGxvY2F0ZWQgYXQgY3Jhc2hrX3Jlcy5zdGFydC4gSXQgc2VlbXMgdGhhdCB0aGVyZSB3
-b24ndCBiZSBhCj4+IHNwbGl0IGEgbmV3IHJhbmdlLiBCdXQgaXQgZGVwZW5kcyBvbiB0aGUgYWxs
-b2NhdGlvbiBwb3NpdGlvbiBvZgo+PiBlbGZoZWFkZXIgaW4gY3Jhc2hrX3Jlcy4gVG8gYXZvaWQg
-cG90ZW50aWFsIG91dCBvZiBib3VuZHMgaW4gZnV0dXJlLCBTZXQKPj4gdGhlIGFycmF5IHNpemUg
-dG8gMi4KPiBJZiBzbywgSSB3b3VsZCBzdWdnZXN0IHRvIGFkZCBleHRyYSBzbG90IGZvciBsb3cg
-MU0gdG9vIGluCj4gZmlsbF91cF9jcmFzaF9lbGZfZGF0YSgpIGxlc3QgdGhlIGxvdyAxTSBjb3Vs
-ZCBiZSBjaGFuZ2VkIGluIHRoZSBmdXR1cmUsCj4gZS5nIFtzdGFydCwgMU1dLgoKCkhpIEJhb3F1
-YW4KClRoaXMgc2VlbXMgdG8gYmUgYmV0dGVyIGZvciBmdXR1cmUgbWFpbnRlbmFuY2UuIFRoYW5r
-IHlvdSBmb3IgeW91ciBzdWdnZXN0aW9uLgoKPj4gQnV0IHNpbWlsYXIgaXNzdWUgd2lsbCBub3Qg
-ZXhpc3QgaW4gZmlsbF91cF9jcmFzaF9lbGZfZGF0YSgpLiBCZWNhdXNlCj4+IHRoZSByYW5nZSB0
-byBiZSBleGNsdWRlZCBpcyBbMCwgMU1dLCBzdGFydCAoMCkgaXMgc3BlY2lhbCBhbmQgd2lsbCBu
-b3QKPj4gYXBwZWFyIGluIHRoZSBtaWRkbGUgb2YgZXhpc3RpbmcgY21lbS0+cmFuZ2VzW10uIEkg
-YWRkZWQgYSBjb21tZW50IHRvCj4+IGV4cGxhaW4gaXQuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IGZ1
-cWlhbmcgd2FuZyA8ZnVxaWFuZy53YW5nQGVhc3lzdGFjay5jbj4KPj4gLS0tCj4+ICAgYXJjaC94
-ODYva2VybmVsL2NyYXNoLmMgfCAyMCArKysrKysrKysrKysrKy0tLS0tLQo+PiAgIDEgZmlsZSBj
-aGFuZ2VkLCAxNCBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQo+Pgo+PiBkaWZmIC0tZ2l0
-IGEvYXJjaC94ODYva2VybmVsL2NyYXNoLmMgYi9hcmNoL3g4Ni9rZXJuZWwvY3Jhc2guYwo+PiBp
-bmRleCBjOTJkODg2ODBkYmYuLjFjMTVkMDg4NGM5MCAxMDA2NDQKPj4gLS0tIGEvYXJjaC94ODYv
-a2VybmVsL2NyYXNoLmMKPj4gKysrIGIvYXJjaC94ODYva2VybmVsL2NyYXNoLmMKPj4gQEAgLTE0
-OSw2ICsxNDksMTMgQEAgc3RhdGljIHN0cnVjdCBjcmFzaF9tZW0gKmZpbGxfdXBfY3Jhc2hfZWxm
-X2RhdGEodm9pZCkKPj4gICAJLyoKPj4gICAJICogRXhjbHVzaW9uIG9mIGNyYXNoIHJlZ2lvbiBh
-bmQvb3IgY3Jhc2hrX2xvd19yZXMgbWF5IGNhdXNlCj4+ICAgCSAqIGFub3RoZXIgcmFuZ2Ugc3Bs
-aXQuIFNvIGFkZCBleHRyYSB0d28gc2xvdHMgaGVyZS4KPj4gKwkgKgo+PiArCSAqIEV4Y2x1c2lv
-biBvZiBsb3cgMU0gbWF5IG5vdCBjYXVzZSBhbm90aGVyIHJhbmdlIHNwbGl0LCBiZWNhdXNlIHRo
-ZQo+PiArCSAqIHJhbmdlIG9mIGV4Y2x1ZGUgaXMgWzAsIDFNXSBhbmQgdGhlIGNvbmRpdGlvbiBm
-b3Igc3BsaXR0aW5nIGEgbmV3Cj4+ICsJICogcmVnaW9uIGlzIHRoYXQgdGhlIHN0YXJ0LCBlbmQg
-cGFyYW1ldGVycyBhcmUgYm90aCBpbiBhIGNlcnRhaW4KPj4gKwkgKiBleGlzdGluZyByZWdpb24g
-aW4gY21lbSBhbmQgY2Fubm90IGJlIGVxdWFsIHRvIGV4aXN0aW5nIHJlZ2lvbidzCj4+ICsJICog
-c3RhcnQgb3IgZW5kLiBPYnZpb3VzbHksIHRoZSBzdGFydCBvZiBbMCwgMU1dIGNhbm5vdCBtZWV0
-IHRoaXMKPj4gKwkgKiBjb25kaXRpb24uCj4+ICAgCSAqLwo+PiAgIAlucl9yYW5nZXMgKz0gMjsK
-Pj4gICAJY21lbSA9IHZ6YWxsb2Moc3RydWN0X3NpemUoY21lbSwgcmFuZ2VzLCBucl9yYW5nZXMp
-KTsKPj4gQEAgLTI4Miw5ICsyODksMTUgQEAgaW50IGNyYXNoX3NldHVwX21lbW1hcF9lbnRyaWVz
-KHN0cnVjdCBraW1hZ2UgKmltYWdlLCBzdHJ1Y3QgYm9vdF9wYXJhbXMgKnBhcmFtcykKPj4gICAJ
-c3RydWN0IGNyYXNoX21lbW1hcF9kYXRhIGNtZDsKPj4gICAJc3RydWN0IGNyYXNoX21lbSAqY21l
-bTsKPj4gICAKPj4gLQljbWVtID0gdnphbGxvYyhzdHJ1Y3Rfc2l6ZShjbWVtLCByYW5nZXMsIDEp
-KTsKPj4gKwljbWVtID0gdnphbGxvYyhzdHJ1Y3Rfc2l6ZShjbWVtLCByYW5nZXMsIDIpKTsKPj4g
-ICAJaWYgKCFjbWVtKQo+PiAgIAkJcmV0dXJuIC1FTk9NRU07Cj4+ICsJY21lbS0+bWF4X25yX3Jh
-bmdlcyA9IDI7Cj4+ICsKPj4gKwkvKiBFeGNsdWRlIHNvbWUgcmFuZ2VzIGZyb20gY3Jhc2hrX3Jl
-cyBhbmQgYWRkIHJlc3QgdG8gbWVtbWFwICovCj4+ICsJcmV0ID0gbWVtbWFwX2V4Y2x1ZGVfcmFu
-Z2VzKGltYWdlLCBjbWVtLCBjcmFzaGtfcmVzLnN0YXJ0LCBjcmFzaGtfcmVzLmVuZCk7Cj4+ICsJ
-aWYgKHJldCkKPj4gKwkJZ290byBvdXQ7Cj4+ICAgCj4+ICAgCW1lbXNldCgmY21kLCAwLCBzaXpl
-b2Yoc3RydWN0IGNyYXNoX21lbW1hcF9kYXRhKSk7Cj4+ICAgCWNtZC5wYXJhbXMgPSBwYXJhbXM7
-Cj4+IEBAIC0zMjAsMTEgKzMzMyw2IEBAIGludCBjcmFzaF9zZXR1cF9tZW1tYXBfZW50cmllcyhz
-dHJ1Y3Qga2ltYWdlICppbWFnZSwgc3RydWN0IGJvb3RfcGFyYW1zICpwYXJhbXMpCj4+ICAgCQlh
-ZGRfZTgyMF9lbnRyeShwYXJhbXMsICZlaSk7Cj4+ICAgCX0KPj4gICAKPj4gLQkvKiBFeGNsdWRl
-IHNvbWUgcmFuZ2VzIGZyb20gY3Jhc2hrX3JlcyBhbmQgYWRkIHJlc3QgdG8gbWVtbWFwICovCj4+
-IC0JcmV0ID0gbWVtbWFwX2V4Y2x1ZGVfcmFuZ2VzKGltYWdlLCBjbWVtLCBjcmFzaGtfcmVzLnN0
-YXJ0LCBjcmFzaGtfcmVzLmVuZCk7Cj4+IC0JaWYgKHJldCkKPj4gLQkJZ290byBvdXQ7Cj4gQW5k
-IHlvdSBkaWRuJ3QgbWVudGlvbiBtb3ZpbmcgYWJvdmUgY29kZSBibG9jayB1cCBpbiBsb2cuIEkg
-d291bGQKPiBzdWdnZXN0IGtlZXBpbmcgaXQgYXMgaXMgYmVjYXVzZSBpdCBsb29rcyBtb3JlIHJl
-YXNvbmFibGUgdG8gYmUgYWRqYWNlbnQKPiB0byB0aGUgZm9sbG93aW5nIGNtZW0tPnJhbmdlc1td
-IGhhbmRsaW5nLgoKWWVzLCBiYW9xdWFuLCBrZWVwaW5nIGl0IGFzIGl0IGlzIG1heSBiZSBtb3Jl
-IGNvaGVyZW50Lkkgd2lsbCBwb3N0IGEgbmV3IHBhdGNowqBsYXRlci4KClRoYW5rcwpmdXFpYW5n
-Cgo+PiAtCj4+ICAgCWZvciAoaSA9IDA7IGkgPCBjbWVtLT5ucl9yYW5nZXM7IGkrKykgewo+PiAg
-IAkJZWkuc2l6ZSA9IGNtZW0tPnJhbmdlc1tpXS5lbmQgLSBjbWVtLT5yYW5nZXNbaV0uc3RhcnQg
-KyAxOwo+PiAgIAo+PiAtLSAKPj4gMi40Mi4wCj4+CgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5m
-cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tl
-eGVjCg==
+In memmap_exclude_ranges(), there will exclude elfheader from
+crashk_res. In the current x86 architecture code, the elfheader is
+always allocated at crashk_res.start. It seems that there won't be a
+split a new range. But it depends on the allocation position of
+elfheader in crashk_res. To avoid potential out of bounds in future, add
+a extra slot.
+
+The similar issue also exists in fill_up_crash_elf_data(). The range to
+be excluded is [0, 1M], start (0) is special and will not appear in the
+middle of existing cmem->ranges[]. But in order to lest the low 1M could
+be changed in the future, add a extra slot too.
+
+Previously discussed link:
+[1] https://lore.kernel.org/kexec/ZXk2oBf%2FT1Ul6o0c@MiWiFi-R3L-srv/
+[2] https://lore.kernel.org/kexec/273284e8-7680-4f5f-8065-c5d780987e59@easystack.cn/
+[3] https://lore.kernel.org/kexec/ZYQ6O%2F57sHAPxTHm@MiWiFi-R3L-srv/
+
+Signed-off-by: fuqiang wang <fuqiang.wang@easystack.cn>
+---
+ arch/x86/kernel/crash.c | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index c92d88680dbf..97d33a6fc4fb 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -149,8 +149,18 @@ static struct crash_mem *fill_up_crash_elf_data(void)
+ 	/*
+ 	 * Exclusion of crash region and/or crashk_low_res may cause
+ 	 * another range split. So add extra two slots here.
++	 *
++	 * Exclusion of low 1M may not cause another range split, because the
++	 * range of exclude is [0, 1M] and the condition for splitting a new
++	 * region is that the start, end parameters are both in a certain
++	 * existing region in cmem and cannot be equal to existing region's
++	 * start or end. Obviously, the start of [0, 1M] cannot meet this
++	 * condition.
++	 *
++	 * But in order to lest the low 1M could be changed in the future,
++	 * (e.g. [stare, 1M]), add a extra slot.
+ 	 */
+-	nr_ranges += 2;
++	nr_ranges += 3;
+ 	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
+ 	if (!cmem)
+ 		return NULL;
+@@ -282,9 +292,16 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
+ 	struct crash_memmap_data cmd;
+ 	struct crash_mem *cmem;
+ 
+-	cmem = vzalloc(struct_size(cmem, ranges, 1));
++	/*
++	 * In the current x86 architecture code, the elfheader is always
++	 * allocated at crashk_res.start. But it depends on the allocation
++	 * position of elfheader in crashk_res. To avoid potential out of
++	 * bounds in future, add a extra slot.
++	 */
++	cmem = vzalloc(struct_size(cmem, ranges, 2));
+ 	if (!cmem)
+ 		return -ENOMEM;
++	cmem->max_nr_ranges = 2;
+ 
+ 	memset(&cmd, 0, sizeof(struct crash_memmap_data));
+ 	cmd.params = params;
+-- 
+2.42.0
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
