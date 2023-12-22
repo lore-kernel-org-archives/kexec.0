@@ -4,57 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B95B3C41535
-	for <kexec@archiver.kernel.org>; Fri, 22 Dec 2023 19:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 812B8C4706C
+	for <kexec@archiver.kernel.org>; Fri, 22 Dec 2023 19:53:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=1v4U4PxDAkhTV1zvWi1KBq58YxvtmjKLX6XTxoIJ9ZU=; b=q5ICVpU1WrIbsI
-	nFjZngvCpgb5abuQifIzJmbjkSjiFf19hYwoAia3fgYMz4GmBIt/ITouZJDGJFS4pePsDaS59tbyh
-	/8rVFPpTcz4MSJdbi7YqoVeHvLcrl6uqJZc+/XzQiwXPAg/2ezktAATX9mlFjc0Xt5t7IpU3h4Mtz
-	NLitrH1y+X89ZjRJMWFc3Mj9db3cO2fOyQsdriwgOZ2Wd+d5dAltuICeCZYyKkb5dkDO6v9a0h67B
-	WXsQMhxH/7vCeNm3iTRLB/VNgfUGnSR1BIzrNADiNQt69mC5BsCw8Lbr+gDATv3Lk52XX8UX/IEvJ
-	xCYXHbgYxVAmC/3KWWag==;
+	List-Owner; bh=LnCKcFpt1icJCI+58DsWjKi6UDvT3tChyNO8TbYK+Tk=; b=CGBkgxKotJROzK
+	vlS87JLVKq3rnreyatBRsaDiLoqjrDJt9KciuSdsxr8LZwnGGecJ6UXblR8CsDKm1v54U8CbxFAVk
+	d1bboSlV9fJ1s2kFB4dKbDPUBfPWFJ4tHGHdDA+1MIqff9OSaKF2e9EwCR22fPcNx172KEZFL6C88
+	qi0QEGjZ0eA+frhCutCcMDJFCsU4dBhKj47DEuRBAVwsW88z1GOG07d2K1udbyu/+EsRa4lcIjA1g
+	Bk9G4UVpUJA8HKwsknJ/+FgTukEM/LXYsc2XgxOWHNqObAzEwjHiu8qNYxW0tuGIXBnWUlu4QPaoF
+	J9Q2HOvj1ChDnYBU8ixA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGlae-006lod-2g;
-	Fri, 22 Dec 2023 19:53:48 +0000
-Received: from smtp-fw-9105.amazon.com ([207.171.188.204])
+	id 1rGlaj-006lsg-2K;
+	Fri, 22 Dec 2023 19:53:53 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGlaZ-006ljh-0B;
-	Fri, 22 Dec 2023 19:53:47 +0000
+	id 1rGlai-006lrP-2C;
+	Fri, 22 Dec 2023 19:53:52 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=K22H13Upw8ZJvq6V1e5pgkkFku3zAKlZ1ZPbskJJqpo=; b=dNMTykfrYuqu9FitmygJeTEoYO
+	5cnfZhAQHXMbQWDNZeRTOHWOZWnOMUw3QExnz1fRXvp5tPx1C0vfZbaKNAU+OazljHXoeohYzXyn8
+	BoOqzYyQ1652Tkny2BMaWp2P0NbTo225CrQ6JMbNlisQJbIA55YPuq6E79R8yyjc3TMzVuN03CfCs
+	DrnvvNaeY90dedHyQWA0fmZgegPiKRuBJg0oCvcOcnJAqTRbjiqSbpWDCZQZvFRLqAxxQTADRzAY3
+	5OH5aovYUEzRWXGTBAHa5lbhybgya086NAuDLsECPd1GHQsqs1RtSa2OFMktrbi081tvalxL4WWTG
+	3eo3mOWw==;
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29])
+	by desiato.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
+	id 1rGlaf-00FNbr-0A;
+	Fri, 22 Dec 2023 19:53:51 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1703274824; x=1734810824;
+  t=1703274829; x=1734810829;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=V7RkoctXcKrPHqjafH3kK9YvW0BnbS/G0GKRcf3+doU=;
-  b=TPTOQNRaCECE6Kjd8dFr5GKv4yVAPY1hC1qIQhiCNQbljfTgbIj+XFRj
-   CTzDwNbjoJqtTTKqg5n1tJ53VZtZ1K1WenNilG3+QgQfz50bpNZffJMNm
-   Id7XQepzigXlmTf4ygiDtnhUgTpaCtMv58RfKfsQTeODfGeeacbFX5+7s
-   4=;
+  bh=K22H13Upw8ZJvq6V1e5pgkkFku3zAKlZ1ZPbskJJqpo=;
+  b=Qw9xexZzeQRqqR/Lc87YkFYc+ZsqgLcrmrtjaoiifI2pDLDgcnLTSOdh
+   W2hIbuBJmDHMeBYGp7hmfQr0d9K2dQsuCOXv10OYlIt2w/z96UcXogEmf
+   6Qo2W2/8xFYkmP2rxPFaRqsUJ5CJpIScT5tcPHyVChRGG1Qcc0iM6Vw/H
+   Y=;
 X-IronPort-AV: E=Sophos;i="6.04,297,1695686400"; 
-   d="scan'208";a="693396640"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-iad-1d-m6i4x-153b24bc.us-east-1.amazon.com) ([10.25.36.210])
-  by smtp-border-fw-9105.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 19:53:40 +0000
+   d="scan'208";a="385308754"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-iad-1a-m6i4x-bbc6e425.us-east-1.amazon.com) ([10.25.36.214])
+  by smtp-border-fw-9102.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 19:53:45 +0000
 Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (iad7-ws-svc-p70-lb3-vlan3.iad.amazon.com [10.32.235.38])
-	by email-inbound-relay-iad-1d-m6i4x-153b24bc.us-east-1.amazon.com (Postfix) with ESMTPS id 72469C1DD1;
-	Fri, 22 Dec 2023 19:53:31 +0000 (UTC)
-Received: from EX19MTAUWB001.ant.amazon.com [10.0.7.35:12400]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.27.188:2525] with esmtp (Farcaster)
- id dfbf3b6e-c104-498b-b8dd-3bacfde49b32; Fri, 22 Dec 2023 19:53:30 +0000 (UTC)
-X-Farcaster-Flow-ID: dfbf3b6e-c104-498b-b8dd-3bacfde49b32
+	by email-inbound-relay-iad-1a-m6i4x-bbc6e425.us-east-1.amazon.com (Postfix) with ESMTPS id 3C35E80CB5;
+	Fri, 22 Dec 2023 19:53:34 +0000 (UTC)
+Received: from EX19MTAUWC002.ant.amazon.com [10.0.7.35:50263]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.56.23:2525] with esmtp (Farcaster)
+ id d873e908-4dd5-450d-9721-5ebc91d6108f; Fri, 22 Dec 2023 19:53:34 +0000 (UTC)
+X-Farcaster-Flow-ID: d873e908-4dd5-450d-9721-5ebc91d6108f
 Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
+ EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 22 Dec 2023 19:53:30 +0000
+ 15.2.1118.40; Fri, 22 Dec 2023 19:53:34 +0000
 Received: from dev-dsk-graf-1a-5ce218e4.eu-west-1.amazon.com (10.253.83.51) by
  EX19D020UWC004.ant.amazon.com (10.13.138.149) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 22 Dec 2023 19:53:26 +0000
+ 15.2.1118.40; Fri, 22 Dec 2023 19:53:30 +0000
 From: Alexander Graf <graf@amazon.com>
 To: <linux-kernel@vger.kernel.org>
 CC: <linux-trace-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
@@ -71,9 +85,9 @@ CC: <linux-trace-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
 	<anthony.yznaga@oracle.com>, Usama Arif <usama.arif@bytedance.com>, David
  Woodhouse <dwmw@amazon.co.uk>, Benjamin Herrenschmidt
 	<benh@kernel.crashing.org>
-Subject: [PATCH v2 15/17] tracing: Recover trace events from kexec handover
-Date: Fri, 22 Dec 2023 19:51:42 +0000
-Message-ID: <20231222195144.24532-10-graf@amazon.com>
+Subject: [PATCH v2 16/17] tracing: Add config option for kexec handover
+Date: Fri, 22 Dec 2023 19:51:43 +0000
+Message-ID: <20231222195144.24532-11-graf@amazon.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20231222195144.24532-1-graf@amazon.com>
 References: <20231222193607.15474-1-graf@amazon.com>
@@ -83,8 +97,8 @@ X-Originating-IP: [10.253.83.51]
 X-ClientProxiedBy: EX19D035UWB003.ant.amazon.com (10.13.138.85) To
  EX19D020UWC004.ant.amazon.com (10.13.138.149)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231222_115343_183996_7D1A91EA 
-X-CRM114-Status: GOOD (  28.36  )
+X-CRM114-CacheID: sfid-20231222_195349_747185_68A01CE8 
+X-CRM114-Status: GOOD (  13.59  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -101,11 +115,9 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-This patch implements all logic necessary to match a new trace event
-that we add against preserved trace events from kho. If we find a match,
-we give the new trace event the old event's identifier. That way, trace
-read-outs are able to make sense of buffer contents again because the
-parsing code for events looks at the same identifiers.
+Now that all bits are in place to allow ftrace to pass its trace data
+into the next kernel on kexec, let's give users a kconfig option to
+enable the functionality.
 
 Signed-off-by: Alexander Graf <graf@amazon.com>
 
@@ -113,204 +125,36 @@ Signed-off-by: Alexander Graf <graf@amazon.com>
 
 v1 -> v2:
 
-  - make kho_get_fdt() const
-  - Get events as array from a property, use fingerprint instead of
-    names to identify events
-  - Remove ifdefs
+  - Select crc32
 ---
- kernel/trace/trace_output.c | 158 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 156 insertions(+), 2 deletions(-)
+ kernel/trace/Kconfig | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index 7d8815352e20..937002a204e1 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -24,6 +24,8 @@ DECLARE_RWSEM(trace_event_sem);
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index 61c541c36596..418a5ae11aac 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -1169,6 +1169,20 @@ config HIST_TRIGGERS_DEBUG
  
- static struct hlist_head event_hash[EVENT_HASHSIZE] __read_mostly;
+           If unsure, say N.
  
-+static bool trace_is_kho_event(int type);
++config FTRACE_KHO
++	bool "Ftrace Kexec handover support"
++	depends on KEXEC_KHO
++	select CRC32
++	help
++          Enable support for ftrace to pass metadata across kexec so the new
++	  kernel continues to use the previous kernel's trace buffers.
 +
- enum print_line_t trace_print_bputs_msg_only(struct trace_iterator *iter)
- {
- 	struct trace_seq *s = &iter->seq;
-@@ -784,7 +786,7 @@ static DEFINE_IDA(trace_event_ida);
++	  This can be useful when debugging kexec performance or correctness
++	  issues: The new kernel can dump the old kernel's trace buffer which
++	  contains all events until reboot.
++
++	  If unsure, say N.
++
+ source "kernel/trace/rv/Kconfig"
  
- static void free_trace_event_type(int type)
- {
--	if (type >= __TRACE_LAST_TYPE)
-+	if (type >= __TRACE_LAST_TYPE && !trace_is_kho_event(type))
- 		ida_free(&trace_event_ida, type);
- }
- 
-@@ -810,6 +812,156 @@ void trace_event_read_unlock(void)
- 	up_read(&trace_event_sem);
- }
- 
-+
-+/**
-+ * trace_kho_get_map - Return the KHO event map
-+ * @pmap: Pointer to a trace map array. Will be filled on success.
-+ * @plen: Pointer to the length of the map. Will be filled on success.
-+ * @unallocated: True if the event does not have an ID yet
-+ *
-+ * Event types are semi-dynamically generated. To ensure that
-+ * their identifiers match before and after kexec with KHO,
-+ * we store an event map in the KHO DT. Whenever we need the
-+ * map, this function provides it.
-+ *
-+ * The first time we request a map, it also walks through it and
-+ * reserves all identifiers so later event registration has find their
-+ * identifier already reserved.
-+ */
-+static int trace_kho_get_map(const struct trace_event_map **pmap, int *plen,
-+			     bool unallocated)
-+{
-+	static const struct trace_event_map *event_map;
-+	static int event_map_len;
-+	static bool event_map_reserved;
-+	const struct trace_event_map *map = NULL;
-+	const void *fdt = kho_get_fdt();
-+	const char *path = "/ftrace";
-+	int off, err, len = 0;
-+	int i;
-+
-+	if (!IS_ENABLED(CONFIG_FTRACE_KHO) || !fdt)
-+		return -EINVAL;
-+
-+	if (event_map) {
-+		map = event_map;
-+		len = event_map_len;
-+	}
-+
-+	if (!map) {
-+		off = fdt_path_offset(fdt, path);
-+
-+		if (off < 0) {
-+			pr_debug("Could not find '%s' in DT", path);
-+			return -EINVAL;
-+		}
-+
-+		err = fdt_node_check_compatible(fdt, off, "ftrace-v1");
-+		if (err) {
-+			pr_warn("Node '%s' has invalid compatible", path);
-+			return -EINVAL;
-+		}
-+
-+		map = fdt_getprop(fdt, off, "events", &len);
-+		if (!map)
-+			return -EINVAL;
-+
-+		event_map = map;
-+		event_map_len = len;
-+	}
-+
-+	if (unallocated && !event_map_reserved) {
-+		/*
-+		 * Reserve all IDs in our IDA. We only have a working IDA later
-+		 * in boot, so restrict it to when we allocate a dynamic type id
-+		 * for an event.
-+		 */
-+		for (i = 0; i < len; i += sizeof(*map)) {
-+			const struct trace_event_map *imap = (void *)map + i;
-+
-+			if (imap->type < __TRACE_LAST_TYPE)
-+				continue;
-+			if (ida_alloc_range(&trace_event_ida, imap->type, imap->type,
-+					    GFP_KERNEL) != imap->type) {
-+				pr_warn("Unable to reserve id %d", imap->type);
-+				return -EINVAL;
-+			}
-+		}
-+
-+		event_map_reserved = true;
-+	}
-+
-+	*pmap = map;
-+	*plen = len;
-+
-+	return 0;
-+}
-+
-+/**
-+ * trace_is_kho_event - returns true if the event type is KHO reserved
-+ * @event: the event type to enumerate
-+ *
-+ * With KHO, we reserve all previous kernel's trace event types in the
-+ * KHO DT. Then, when we allocate a type, we just reuse the previous
-+ * kernel's value. However, that means we have to keep these type identifiers
-+ * reserved across the lifetime of the system, because we may get a new event
-+ * that matches the old kernel's event fingerprint. This function is a small
-+ * helper that allows us to check whether a type ID is in use by KHO.
-+ */
-+static bool trace_is_kho_event(int type)
-+{
-+	const struct trace_event_map *map = NULL;
-+	int len, i;
-+
-+	if (trace_kho_get_map(&map, &len, false))
-+		return false;
-+
-+	if (!map)
-+		return false;
-+
-+	for (i = 0; i < len; i += sizeof(*map), map++)
-+		if (map->type == type)
-+			return true;
-+
-+	return false;
-+}
-+
-+/**
-+ * trace_kho_fill_event_type - restore event type info from KHO
-+ * @event: the event to enumerate
-+ *
-+ * Event types are semi-dynamically generated. To ensure that
-+ * their identifiers match before and after kexec with KHO,
-+ * let's match up unique fingerprint - either their predetermined
-+ * type or their crc32 value - and fill in the respective type
-+ * information if we booted with KHO.
-+ */
-+static bool trace_kho_fill_event_type(struct trace_event *event)
-+{
-+	const struct trace_event_map *map = NULL;
-+	int len = 0, i;
-+	u32 crc32;
-+
-+	if (trace_kho_get_map(&map, &len, !event->type))
-+		return false;
-+
-+	crc32 = event2fp(event);
-+
-+	for (i = 0; i < len; i += sizeof(*map), map++) {
-+		if (map->crc32 == crc32) {
-+			if (!map->type)
-+				return false;
-+
-+			event->type = map->type;
-+			return true;
-+		}
-+	}
-+
-+	pr_debug("Could not find event");
-+
-+	return false;
-+}
-+
- /**
-  * register_trace_event - register output for an event type
-  * @event: the event type to register
-@@ -838,7 +990,9 @@ int register_trace_event(struct trace_event *event)
- 	if (WARN_ON(!event->funcs))
- 		goto out;
- 
--	if (!event->type) {
-+	if (trace_kho_fill_event_type(event)) {
-+		pr_debug("Recovered id=%d", event->type);
-+	} else if (!event->type) {
- 		event->type = alloc_trace_event_type();
- 		if (!event->type)
- 			goto out;
+ endif # FTRACE
 -- 
 2.40.1
 
