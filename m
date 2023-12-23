@@ -4,102 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3FC01C46CD2
-	for <kexec@archiver.kernel.org>; Fri, 22 Dec 2023 23:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AE7ECC3DA6E
+	for <kexec@archiver.kernel.org>; Sat, 23 Dec 2023 04:55:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=Bt22gkelGroVSCpoNqsXOH2hBFQ6N9T50IBKlatp174=; b=aeKYuin/rxp7wW
-	FQrDNxuoI5AjNOQ2K29bC5npxyJkXbJxWAhSpqmFt4kEUWK1RAYo5Y5MVqQtmzvmaudT4BcSSgmvw
-	+f6IsuvYXV1YN3dIkrfRdlDXJ7Q9nbZz7IIQgq7ayRhJ6VZITHw4YIDprZSxarznpy/ZEjANC+EMF
-	Bl+awk2EakwGQP8ckv+UwAYwsKS9kGwhfbIqkSAwHK349XMRgwoVSrS0zKklBiYAmYs3ip/Yd967U
-	R52YcAg6CJfQdIMh3mxYDKQ7YUn6pPY1bFu8lmS8ruEGsc+EU6Yj68b2tNsWsoW3tdxoC1oALAWJL
-	w81Zn+V3mqO3fPYXu4Rw==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Subject:Cc:To:
+	From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=iJwoM4ES8mDWKd0WXjJK+2nn0X4gk6lB+/UT4fVgmpw=; b=RTCAo+A2WFVFxU
+	PG3EnzIYrsO4SHtbgeEKwbTragDB+AbfFB6g/i1nzOaZeliI5XUDYhrMrQqN1jKL/bShO+u3EGvsy
+	vAnkn0QatwPotP7BIU+RdTfVbmfPEM5EycMLVOQ/uHJYjrRta3PLEytnbNQzzCQsMZc0V1v3kAmPz
+	6RbBMJeQZX1lxmo/HSBJr6VyW/bO6E+jKmAxIXC2CdJWTIKV7W6PW397TGGLMubsevxIFws/YS0K+
+	cCxKc2Wop+o0iCixQ0jnp3DQNEnsI0+b3fLLabtEZZgt92ey2bx1lFj69MzytvhX3HhsyDgfXV/Nb
+	/U4vFBJ34O9FM6BNgMeQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGpK3-0073Fw-1x;
-	Fri, 22 Dec 2023 23:52:55 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1rGu2o-007Ntk-2K;
+	Sat, 23 Dec 2023 04:55:26 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGpK0-0073C2-2I
-	for kexec@bombadil.infradead.org;
-	Fri, 22 Dec 2023 23:52:52 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:MIME-Version
-	:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-Type:Content-ID:Content-Description;
-	bh=91ymazoo0RKRu9k17Ba4s4AasV5hBx6Nfj64CPYL1NU=; b=T5f4TsPBhK99VRjESFpOOCqxS9
-	BV1ZvVtjtlRQjDFZjd3e2Y6csaA3TWL9tK+aA+tv+6AUQc0/Px7i9zwfPVKkOIQMtzAIO2m7D313u
-	FCnUuIlo0bjZ9zvOSFK4x8ydjpQfiSQXXk0anXleIpnoo4VcQzXWdmyXxes9qPCd6wmYYH5M47CtT
-	2mjc6Rfrnomq4QMT2AVdfv6kWcDsrkkrroSDEpvVE497gHrzkVVGGq9ik4ATNvfmThBvra9Mp9/YY
-	ChPpbi3xS7Mk9vfNX4XZXrJpsrJxYZOOgV+lLUItECxGukyhQQbyL0uMJxG8i6ISZFqM/Q7M66HeZ
-	XfsXxoSQ==;
-Received: from mgamail.intel.com ([192.198.163.10])
-	by desiato.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rGpJv-00FQML-15
+	id 1rGu2l-007NtH-0g
 	for kexec@lists.infradead.org;
-	Fri, 22 Dec 2023 23:52:51 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703289167; x=1734825167;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=H0KNXcx7kYiuLNhk2lubKN7E5oHJBEIlL2/mP4OOsUg=;
-  b=Q9XTIFJtNUKxxfpD3SgBQXJsPUfXqAymNWlUcGw/9n4RbcIySalJHkZt
-   m0XMbA6q+XvPend6wCyqviBu3rx7iORLnRDEF5WZ0JiZNrdpb3notRVyW
-   cfNsKirRXpYJRRWyf3ToGzc8DG2lGVq/e6RUuv1dpb61Vp26rLtIBdzDW
-   tnbPuWmtA+YYiAlUeaXkk6meoEXmf2JVyxlKwnuMfBk/+nBhCVm4DrQmZ
-   Fyd8jUL+gbLjuVCNPS0FIHHPauKc1yvjhhiZVqftlSPj7sNLW1HhaAjI1
-   8IR98H0quto6jueBLjOAian9/kup2I/F160YFH5NuC5La74+APgPGnRW2
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="3414390"
-X-IronPort-AV: E=Sophos;i="6.04,297,1695711600"; 
-   d="scan'208";a="3414390"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 15:52:34 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="726961507"
-X-IronPort-AV: E=Sophos;i="6.04,297,1695711600"; 
-   d="scan'208";a="726961507"
-Received: from jeroenke-mobl.ger.corp.intel.com (HELO box.shutemov.name) ([10.249.35.180])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 15:52:29 -0800
-Received: by box.shutemov.name (Postfix, from userid 1000)
-	id 7502410A4E1; Sat, 23 Dec 2023 02:52:12 +0300 (+03)
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Elena Reshetova <elena.reshetova@intel.com>,
-	Jun Nakajima <jun.nakajima@intel.com>,
-	Rick Edgecombe  <rick.p.edgecombe@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	"Kalra, Ashish" <ashish.kalra@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	"Huang, Kai" <kai.huang@intel.com>,
-	Baoquan He <bhe@redhat.com>,
-	kexec@lists.infradead.org,
-	linux-coco@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv5 15/16] x86/mm: Introduce kernel_ident_mapping_free()
-Date: Sat, 23 Dec 2023 02:52:07 +0300
-Message-ID: <20231222235209.32143-16-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20231222235209.32143-1-kirill.shutemov@linux.intel.com>
-References: <20231222235209.32143-1-kirill.shutemov@linux.intel.com>
+	Sat, 23 Dec 2023 04:55:24 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1703307318;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=5SoVEASJs5tNI3P8IvtKEX7RdqCt8eLRKS+s8poE6oE=;
+	b=GhdNQZsy3IbGg5s+MR9mkxxVFLb1j1xi9r5JfsTbK4E9wd2d7X+fouGa+TzjhfWAKYVI2w
+	8GoZQbnAiludW7fX5uyc0feXdfpLoNL/zufazvof0Q5zt1dpfLBpuKqBKn0rc81yoL8qIH
+	pFzy7juhkGiFJYYLVT/l1Rf3ZUgAi6c=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-675-AL-UgaBqM1-_9aRctpnXJA-1; Fri, 22 Dec 2023 23:55:14 -0500
+X-MC-Unique: AL-UgaBqM1-_9aRctpnXJA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 31EF5101A52A;
+	Sat, 23 Dec 2023 04:55:14 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.38])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 824B240C6EB9;
+	Sat, 23 Dec 2023 04:55:13 +0000 (UTC)
+Date: Sat, 23 Dec 2023 12:55:10 +0800
+From: Baoquan He <bhe@redhat.com>
+To: airlied@redhat.com
+Cc: dri-devel@lists.freedesktop.org, dakr@redhat.com,
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: OOM in kdump kernel caused by commit b5bad8c16b9b
+Message-ID: <ZYZoLp9NVCZTchLF@MiWiFi-R3L-srv>
 MIME-Version: 1.0
+Content-Disposition: inline
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231222_235249_101069_57EC56EB 
-X-CRM114-Status: GOOD (  15.09  )
+X-CRM114-CacheID: sfid-20231222_205523_350154_6ED53AB8 
+X-CRM114-Status: GOOD (  10.65  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -116,125 +78,66 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The helper complements kernel_ident_mapping_init(): it frees the
-identity mapping that was previously allocated. It will be used in the
-error path to free a partially allocated mapping or if the mapping is no
-longer needed.
+Hi David,
 
-The caller provides a struct x86_mapping_info with the free_pgd_page()
-callback hooked up and the pgd_t to free.
+Recently, Redhat CKI reported a kdump kernel bootup failure caused by
+OOM. After bisect, it only happened after commit b5bad8c16b9b
+("nouveau/gsp: move to 535.113.01"). Reverting the commit can avoid the
+OOM, kdump kernel can boot up successfully. 
 
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
----
- arch/x86/include/asm/init.h |  3 ++
- arch/x86/mm/ident_map.c     | 73 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 76 insertions(+)
+From debugging, we can see that about extra 100M memory will be costed
+when commit b5bad8c16b9b applied on the hpe machine with 2G memory.
+Do you know if there's room to improve that to reduce the extra memory
+cost?
 
-diff --git a/arch/x86/include/asm/init.h b/arch/x86/include/asm/init.h
-index cc9ccf61b6bd..14d72727d7ee 100644
---- a/arch/x86/include/asm/init.h
-+++ b/arch/x86/include/asm/init.h
-@@ -6,6 +6,7 @@
- 
- struct x86_mapping_info {
- 	void *(*alloc_pgt_page)(void *); /* allocate buf for page table */
-+	void (*free_pgt_page)(void *, void *); /* free buf for page table */
- 	void *context;			 /* context for alloc_pgt_page */
- 	unsigned long page_flag;	 /* page flag for PMD or PUD entry */
- 	unsigned long offset;		 /* ident mapping offset */
-@@ -16,4 +17,6 @@ struct x86_mapping_info {
- int kernel_ident_mapping_init(struct x86_mapping_info *info, pgd_t *pgd_page,
- 				unsigned long pstart, unsigned long pend);
- 
-+void kernel_ident_mapping_free(struct x86_mapping_info *info, pgd_t *pgd);
-+
- #endif /* _ASM_X86_INIT_H */
-diff --git a/arch/x86/mm/ident_map.c b/arch/x86/mm/ident_map.c
-index 968d7005f4a7..3996af7b4abf 100644
---- a/arch/x86/mm/ident_map.c
-+++ b/arch/x86/mm/ident_map.c
-@@ -4,6 +4,79 @@
-  * included by both the compressed kernel and the regular kernel.
-  */
- 
-+static void free_pte(struct x86_mapping_info *info, pmd_t *pmd)
-+{
-+	pte_t *pte = pte_offset_kernel(pmd, 0);
-+
-+	info->free_pgt_page(pte, info->context);
-+}
-+
-+static void free_pmd(struct x86_mapping_info *info, pud_t *pud)
-+{
-+	pmd_t *pmd = pmd_offset(pud, 0);
-+	int i;
-+
-+	for (i = 0; i < PTRS_PER_PMD; i++) {
-+		if (!pmd_present(pmd[i]))
-+			continue;
-+
-+		if (pmd_leaf(pmd[i]))
-+			continue;
-+
-+		free_pte(info, &pmd[i]);
-+	}
-+
-+	info->free_pgt_page(pmd, info->context);
-+}
-+
-+static void free_pud(struct x86_mapping_info *info, p4d_t *p4d)
-+{
-+	pud_t *pud = pud_offset(p4d, 0);
-+	int i;
-+
-+	for (i = 0; i < PTRS_PER_PUD; i++) {
-+		if (!pud_present(pud[i]))
-+			continue;
-+
-+		if (pud_leaf(pud[i]))
-+			continue;
-+
-+		free_pmd(info, &pud[i]);
-+	}
-+
-+	info->free_pgt_page(pud, info->context);
-+}
-+
-+static void free_p4d(struct x86_mapping_info *info, pgd_t *pgd)
-+{
-+	p4d_t *p4d = p4d_offset(pgd, 0);
-+	int i;
-+
-+	for (i = 0; i < PTRS_PER_P4D; i++) {
-+		if (!p4d_present(p4d[i]))
-+			continue;
-+
-+		free_pud(info, &p4d[i]);
-+	}
-+
-+	if (pgtable_l5_enabled())
-+		info->free_pgt_page(pgd, info->context);
-+}
-+
-+void kernel_ident_mapping_free(struct x86_mapping_info *info, pgd_t *pgd)
-+{
-+	int i;
-+
-+	for (i = 0; i < PTRS_PER_PGD; i++) {
-+		if (!pgd_present(pgd[i]))
-+			continue;
-+
-+		free_p4d(info, &pgd[i]);
-+	}
-+
-+	info->free_pgt_page(pgd, info->context);
-+}
-+
- static void ident_pmd_init(struct x86_mapping_info *info, pmd_t *pmd_page,
- 			   unsigned long addr, unsigned long end)
- {
--- 
-2.41.0
+I have opened a fedora bug to track this OOM, and copy the bug
+description here for reference in case someone may not access the bug
+easily.
+
+Bug 2253165 - kdump kernel failed to boot up because a big memory chunk is reserved
+https://bugzilla.redhat.com/show_bug.cgi?id=2253165
+------------------------------------------------------------
+CKI reported a failure on beaker machine hp-z210-01.ml3.eng.bos.redhat.com, please see below CKI reports:
+https://datawarehouse.cki-project.org/kcidb/tests/10508330
+
+In that failure, crashkernel=256M and succeeded to reserve in 1st kernel. However, in
+kdump kernel it failed to boot up when it started to run init process. I set crashkernel=320M to make kdump kernel boot up successfully and vmcore dumping succeeded too.
+
+After adding "rd.memdebug=4 memblock=debug" to kdump kernel cmdline, it appears to have a big chunk of reserved memory in memblock of about 122M. I don't know where it comes from. I doubt firmware stole that chunk from system memory to cause the kdump kernel having oom.
+
+
+[Tue Dec  5 22:32:38 2023] DMI: Hewlett-Packard HP Z210 Workstation/1587h, BIOS J51 v01.20 09/16/2011
+[Tue Dec  5 22:32:38 2023] tsc: Fast TSC calibration using PIT
+[Tue Dec  5 22:32:38 2023] tsc: Detected 3092.940 MHz processor
+[Tue Dec  5 22:32:38 2023] e820: update [mem 0x00000000-0x00000fff] usable ==> reserved
+[Tue Dec  5 22:32:38 2023] e820: remove [mem 0x000a0000-0x000fffff] usable
+[Tue Dec  5 22:32:38 2023] last_pfn = 0x61000 max_arch_pfn = 0x400000000
+[Tue Dec  5 22:32:38 2023] MTRR map: 4 entries (3 fixed + 1 variable; max 23), built from 10 variable MTRRs
+[Tue Dec  5 22:32:38 2023] x86/PAT: Configuration [0-7]: WB  WC  UC- UC  WB  WP  UC- WT
+[Tue Dec  5 22:32:38 2023] x2apic: enabled by BIOS, switching to x2apic ops
+[Tue Dec  5 22:32:38 2023] found SMP MP-table at [mem 0x000f4b80-0x000f4b8f]
+[Tue Dec  5 22:32:38 2023] memblock_reserve: [0x00000000000f4b80-0x00000000000f4b8f] smp_scan_config+0xca/0x150
+[Tue Dec  5 22:32:38 2023] memblock_reserve: [0x00000000000f4b90-0x00000000000f4e4b] smp_scan_config+0x13a/0x150
+[Tue Dec  5 22:32:38 2023] memblock_reserve: [0x000000005f600000-0x000000005f610fff] setup_arch+0xd84/0xf10
+[Tue Dec  5 22:32:38 2023] memblock_add: [0x0000000000001000-0x000000000008f7ff] e820__memblock_setup+0x73/0xb0
+[Tue Dec  5 22:32:38 2023] memblock_add: [0x000000004d0e00b0-0x0000000060ff81cf] e820__memblock_setup+0x73/0xb0
+[Tue Dec  5 22:32:38 2023] memblock_add: [0x0000000060ff81d0-0x0000000060ff81ff] e820__memblock_setup+0x73/0xb0
+[Tue Dec  5 22:32:38 2023] memblock_add: [0x0000000060ff8200-0x0000000060ffffff] e820__memblock_setup+0x73/0xb0
+[Tue Dec  5 22:32:38 2023] MEMBLOCK configuration:
+[Tue Dec  5 22:32:38 2023]  memory size = 0x0000000013fae750 reserved size = 0x0000000007b7cc50
+[Tue Dec  5 22:32:38 2023]  memory.cnt  = 0x2
+[Tue Dec  5 22:32:38 2023]  memory[0x0] [0x0000000000001000-0x000000000008efff], 0x000000000008e000 bytes flags: 0x0
+[Tue Dec  5 22:32:38 2023]  memory[0x1] [0x000000004d0e1000-0x0000000060ffffff], 0x0000000013f1f000 bytes flags: 0x0
+[Tue Dec  5 22:32:38 2023]  reserved.cnt  = 0x5
+[Tue Dec  5 22:32:38 2023]  reserved[0x0]       [0x0000000000000000-0x000000000000ffff], 0x0000000000010000 bytes flags: 0x0
+[Tue Dec  5 22:32:38 2023]  reserved[0x1]       [0x000000000008f400-0x00000000000fffff], 0x0000000000070c00 bytes flags: 0x0
+[Tue Dec  5 22:32:38 2023]  reserved[0x2]       [0x0000000057b16000-0x000000005f610fff], 0x0000000007afb000 bytes flags: 0x0
+[Tue Dec  5 22:32:38 2023]  reserved[0x3]       [0x0000000060ff81d0-0x0000000060ff821f], 0x0000000000000050 bytes flags: 0x0
+[Tue Dec  5 22:32:38 2023]  reserved[0x4]       [0x0000000060ffe000-0x0000000060ffefff], 0x0000000000001000 bytes flags: 0x0
+----------------------------------------------------
+
+Thanks
+Baoquan
 
 
 _______________________________________________
