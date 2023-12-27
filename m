@@ -4,87 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CD7CBC46CD3
-	for <kexec@archiver.kernel.org>; Wed, 27 Dec 2023 02:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 461FDC46CD4
+	for <kexec@archiver.kernel.org>; Wed, 27 Dec 2023 19:53:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=t7xQmzcuTuFQeG34WQr2Ju0QUKk2dYyGqE6r82/LpPY=; b=RzVW7Spv4ZHD+j
-	YCqb3EGsqo4nlpU5HufQtqvhKPQfT0xutKbFoemvlKmb6gXmlwPcmjHzpfHnONZpc8EedLjpEilEo
-	a1rI0UrrSOj0eT1uRlb/GN2gjwws+B10SGlOiQJropGT5VTRDpJfT5Axz6FoVJ5GBcJ5Db5dFxHQo
-	6yRE6WIwTtwQCvACuDObqK4dZCPWgl5qMVwi3tHIsrKj75S9vchtxuW6HKZXxClXKs8FidC9fpZdP
-	7s3UzW1Z4M59KRQD5QRAlM9bQp/hn6SZfR+5F5KA0HbYlZvMAxr1TAP9fnp8XiDhcjFm0GXToAspW
-	WnpW/Lels1DEE4nvT0cg==;
+	List-Owner; bh=X7kohJ9SfzOsnmuEZRcqh6z5e6GY9vXWRarP+C5TVFw=; b=MXruryIQ8gj3r+
+	3RqlIxigVPVSyr1UayhVpAYHav8zqpjiAtPkhDVL4sCXog4OnHduQIXiOBt8dRhThhZ0gEk7rLGt6
+	VA32wKbziHIeYpgCkXo3/NMx7DqCn6H5KCSnTXRE1+gkRxQBlNg2ps0vBw35zbdsxh8oTqeiHXGoJ
+	pfTznpMWtzqWxvRqEcH97LwkGq27cBrZ7O2u6+1YZ03vIFkFnoaaAO9sYCJZNIKYZt4Y7oPWHmlLK
+	A/KQEK9RK2WlkGAtRNaUHFFyFRaXnc3/CyZY4R7iJ/PGUiDaHYaC3nn7sUA5rtxWPuY2M9H+GXODX
+	QgxOuRTcP1yUFokCH04w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rIJrs-00DqI9-0a;
-	Wed, 27 Dec 2023 02:42:00 +0000
-Received: from mail-pl1-x636.google.com ([2607:f8b0:4864:20::636])
+	id 1rIZyC-00FPU2-0N;
+	Wed, 27 Dec 2023 19:53:36 +0000
+Received: from mgamail.intel.com ([198.175.65.12])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rIJrp-00DqHQ-0X
+	id 1rIZy9-00FPSJ-17
 	for kexec@lists.infradead.org;
-	Wed, 27 Dec 2023 02:41:58 +0000
-Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-1d3fc184b6dso17504085ad.2
-        for <kexec@lists.infradead.org>; Tue, 26 Dec 2023 18:41:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703644915; x=1704249715; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MT7htYeDjY4vTdy1fPJWLnQt0GHG3z7MAu24V6teBIw=;
-        b=QADQwwv2XOCe3murPV6kgBIyXuDBn08GC86feA231OSkahjFE9hOJ+b+GNW3k0FrSX
-         tYGQk8WexCEvw5X5sJCskpBL7Dq6T62cs0rnwoifDYTGjl9HP4qrjaJWfT3xlptJk0Gf
-         xJeFOQLwhKUJ66/N0wotSkz5dwgRzRwxxrVS0L5PriXRcagvyYHhJQR86N1stqnZY3uF
-         cyLrF+JkNWDef2pr/eyKhi74A5WJN6TwrkmzqBpQQz4qfP3bItLJZ/Qx5HWapwb40Q7q
-         J8llg+XV/XQX1Fzht+Mbb199x9LbpdUZtIuVSAaqLEqMZ5Mb29XJBMmVayJ08NMhDWzf
-         f1qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703644915; x=1704249715;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MT7htYeDjY4vTdy1fPJWLnQt0GHG3z7MAu24V6teBIw=;
-        b=pZXzYK3GOP2rqcBNyRatrvP0SypLtzU0djOsvqeINiq189jkIWwQLhckYadUyAs1Fp
-         hmMYk6n3hMLdL29BdDDqH5lOF9mXqP2uk2SfIiZXSbCOM/yLpPeQtWD4Fr60kqYkG8zz
-         VnmlhOuFpyS6QltAjTYHHKftwtJGxZI9GkS3lxKY8tRy6Tamn6EK9DzwyuB6FIX4/83o
-         V9qY8UqtniO0UoSVBAZaHKL32O+BRu+zNr4/DqD3xcqF/EnhnTgpuZapEFTB1HRlZcuJ
-         UeSojsJ0S56WgXKwNaoJgpdfuSUPiDVImVEYWqHrNggOctV/ODfF6yG6qdGtXMp0FDm9
-         39qA==
-X-Gm-Message-State: AOJu0YxYT+k8DgGKVJmESVISQ1jQiZ4EKHFPx+M3/WEhJetfgVnMXZY5
-	A0YPM1EVgMoTKnr+rMjqUw==
-X-Google-Smtp-Source: AGHT+IHCsge0Pwx3Fk+jrn3t8Mdnc4E5lcxUmO+ET7NbuD+U2d5OqeN9CRJcKSbmZQ7LgIFhpLQ4VQ==
-X-Received: by 2002:a17:902:d584:b0:1d0:6ffd:8367 with SMTP id k4-20020a170902d58400b001d06ffd8367mr2747235plh.114.1703644915441;
-        Tue, 26 Dec 2023 18:41:55 -0800 (PST)
-Received: from piliu.users.ipa.redhat.com ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id jj20-20020a170903049400b001c61073b076sm10775062plb.144.2023.12.26.18.41.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Dec 2023 18:41:54 -0800 (PST)
-From: Pingfan Liu <kernelfans@gmail.com>
-To: linuxppc-dev@lists.ozlabs.org
-Cc: Pingfan Liu <piliu@redhat.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Wed, 27 Dec 2023 19:53:35 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703706813; x=1735242813;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=haSiWioFdYEaX5edVIPAkdNi0T7Z1JIzVo0tNJKrw5k=;
+  b=iEm6MhGa05Wr5H1up2VAeHmwhAA/yEkC3GBww9XhT0x46FfTegU1I06n
+   WESkh/gyglkKLApEyU///qgJsvB0EkcbGmhIqxbPpn2wC6f03Q7WuVXic
+   GHJ0iwsu6FleBfh5fxxkkum5KKfdPkhdR16KVQr6igwURHzOoHKxyK2m7
+   NV9XU+HLdwq1tz3kkI31TLG1d0p+lmS2fGgLiFJ55Z0V+skvlXc3bKeL/
+   OR9spFEK+c1i2bumx6AMUGVl/+YbXgVWGSKAIQRC9hSSw1X9JaQLfLW4V
+   yTi9tY/7z0wVL9SyjzMtPS3BfAqX59ZDqAcp7b7RPKNQZpliLSwH0USe0
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="3781400"
+X-IronPort-AV: E=Sophos;i="6.04,310,1695711600"; 
+   d="scan'208";a="3781400"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2023 11:53:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="844246204"
+X-IronPort-AV: E=Sophos;i="6.04,310,1695711600"; 
+   d="scan'208";a="844246204"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by fmsmga008.fm.intel.com with ESMTP; 27 Dec 2023 11:53:27 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rIZy1-000FiJ-0C;
+	Wed, 27 Dec 2023 19:53:25 +0000
+Date: Thu, 28 Dec 2023 03:52:53 +0800
+From: kernel test robot <lkp@intel.com>
+To: Pingfan Liu <kernelfans@gmail.com>, linuxppc-dev@lists.ozlabs.org
+Cc: oe-kbuild-all@lists.linux.dev, Baoquan He <bhe@redhat.com>,
+	Pingfan Liu <piliu@redhat.com>, kexec@lists.infradead.org,
 	Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-	Wen Xiong <wenxiong@us.ibm.com>,
-	Baoquan He <bhe@redhat.com>,
-	Ming Lei <ming.lei@redhat.com>,
+	Ming Lei <ming.lei@redhat.com>, Nicholas Piggin <npiggin@gmail.com>,
 	Sourabh Jain <sourabhjain@linux.ibm.com>,
 	Hari Bathini <hbathini@linux.ibm.com>,
-	kexec@lists.infradead.org
-Subject: [PATCHv10 3/3] powerpc/smp: Allow hole in paca_ptrs to accommodate boot_cpu
-Date: Wed, 27 Dec 2023 10:41:47 +0800
-Message-Id: <20231227024147.12485-1-kernelfans@gmail.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20231227023934.12299-1-kernelfans@gmail.com>
-References: <20231227023934.12299-1-kernelfans@gmail.com>
+	Wen Xiong <wenxiong@us.ibm.com>
+Subject: Re: [PATCHv10 2/3] powerpc/kernel: Extend arrays' size to make room
+ for a hole in cpu_possible_mask
+Message-ID: <202312280350.GpyKSrB6-lkp@intel.com>
+References: <20231227024126.12424-1-kernelfans@gmail.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20231227024126.12424-1-kernelfans@gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231226_184157_201584_98F8AF8B 
-X-CRM114-Status: GOOD (  19.42  )
+X-CRM114-CacheID: sfid-20231227_115333_445976_0BA77869 
+X-CRM114-Status: GOOD (  14.42  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -101,150 +91,135 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Pingfan Liu <piliu@redhat.com>
+Hi Pingfan,
 
-This patch always forces the first core onlined due to some subsystem
-needs cpu0. After core0, a hole may follow, then comes the crashed core.
+kernel test robot noticed the following build errors:
 
-Signed-off-by: Pingfan Liu <piliu@redhat.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
-Cc: Wen Xiong <wenxiong@us.ibm.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Ming Lei <ming.lei@redhat.com>
-Cc: Sourabh Jain <sourabhjain@linux.ibm.com>
-Cc: Hari Bathini <hbathini@linux.ibm.com>
-Cc: kexec@lists.infradead.org
-To: linuxppc-dev@lists.ozlabs.org
----
- arch/powerpc/include/asm/smp.h     |  1 +
- arch/powerpc/kernel/paca.c         |  7 +++++--
- arch/powerpc/kernel/prom.c         |  6 ++++++
- arch/powerpc/kernel/setup-common.c | 24 ++++++++++++++++++++----
- 4 files changed, 32 insertions(+), 6 deletions(-)
+[auto build test ERROR on powerpc/next]
+[also build test ERROR on powerpc/fixes linus/master v6.7-rc7 next-20231222]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-diff --git a/arch/powerpc/include/asm/smp.h b/arch/powerpc/include/asm/smp.h
-index aaaa576d0e15..f01c7891b0d7 100644
---- a/arch/powerpc/include/asm/smp.h
-+++ b/arch/powerpc/include/asm/smp.h
-@@ -27,6 +27,7 @@
- 
- extern int boot_cpuid;
- extern int boot_cpu_hwid; /* PPC64 only */
-+extern int threads_in_core;
- extern int spinning_secondaries;
- extern u32 *cpu_to_phys_id;
- extern bool coregroup_enabled;
-diff --git a/arch/powerpc/kernel/paca.c b/arch/powerpc/kernel/paca.c
-index 840c74dd17d6..1fe0fd2a6021 100644
---- a/arch/powerpc/kernel/paca.c
-+++ b/arch/powerpc/kernel/paca.c
-@@ -242,9 +242,12 @@ static int __initdata paca_struct_size;
- 
- void __init allocate_paca_ptrs(void)
- {
--	paca_last_cpu_num = nr_cpu_ids;
-+	unsigned int cnt;
- 
--	paca_ptrs_size = sizeof(struct paca_struct *) * paca_last_cpu_num;
-+	/* paca_ptrs should be big enough to hold boot cpu */
-+	cnt = max((unsigned int)ALIGN(boot_cpuid + 1, threads_in_core), nr_cpu_ids);
-+	paca_last_cpu_num = cnt;
-+	paca_ptrs_size = sizeof(struct paca_struct *) * cnt;
- 	paca_ptrs = memblock_alloc_raw(paca_ptrs_size, SMP_CACHE_BYTES);
- 	if (!paca_ptrs)
- 		panic("Failed to allocate %d bytes for paca pointers\n",
-diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
-index 0b5878c3125b..e1a671156941 100644
---- a/arch/powerpc/kernel/prom.c
-+++ b/arch/powerpc/kernel/prom.c
-@@ -371,9 +371,15 @@ static int __init early_init_dt_scan_cpus(unsigned long node,
- 	DBG("boot cpu: logical %d physical %d\n", found,
- 	    be32_to_cpu(intserv[found_thread]));
- 	boot_cpuid = found;
-+	/* This forces all threads in a core to be onlined */
-+	set_nr_cpu_ids(ALIGN(nr_cpu_ids, nthreads));
-+	/* Core 0 is always onlined and assure enough room for boot core */
-+	if (nthreads -1 < boot_cpuid && nr_cpu_ids < 2 * nthreads)
-+		set_nr_cpu_ids(2 * nthreads);
- 
- 	if (IS_ENABLED(CONFIG_PPC64))
- 		boot_cpu_hwid = be32_to_cpu(intserv[found_thread]);
-+	threads_in_core = nthreads;
- 
- 	/*
- 	 * PAPR defines "logical" PVR values for cpus that
-diff --git a/arch/powerpc/kernel/setup-common.c b/arch/powerpc/kernel/setup-common.c
-index f9f5f313abf0..b70474e1b5fe 100644
---- a/arch/powerpc/kernel/setup-common.c
-+++ b/arch/powerpc/kernel/setup-common.c
-@@ -86,6 +86,7 @@ EXPORT_SYMBOL(machine_id);
- 
- int boot_cpuid = -1;
- EXPORT_SYMBOL_GPL(boot_cpuid);
-+int __initdata threads_in_core = 1;
- 
- #ifdef CONFIG_PPC64
- int boot_cpu_hwid = -1;
-@@ -448,8 +449,9 @@ u32 *cpu_to_phys_id = NULL;
- void __init smp_setup_cpu_maps(void)
- {
- 	struct device_node *dn;
--	int cpu = 0;
-+	int cpu_onlined = 0, cpu = 0;
- 	int nthreads = 1;
-+	bool bootcpu_covered = false;
- 
- 	DBG("smp_setup_cpu_maps()\n");
- 
-@@ -484,7 +486,19 @@ void __init smp_setup_cpu_maps(void)
- 
- 		nthreads = len / sizeof(int);
- 
--		for (j = 0; j < nthreads && cpu < nr_cpu_ids; j++) {
-+		if (!bootcpu_covered) {
-+			if (cpu == ALIGN_DOWN(boot_cpuid, nthreads)) {
-+				bootcpu_covered = true;
-+				goto scan;
-+
-+			/* Reserve the last online slot for boot core */
-+			} else if (cpu >= nr_cpu_ids - nthreads && !bootcpu_covered) {
-+				cpu += nthreads;
-+				continue;
-+			}
-+		}
-+scan:
-+		for (j = 0; j < nthreads && cpu_onlined < nr_cpu_ids; j++) {
- 			bool avail;
- 
- 			DBG("    thread %d -> cpu %d (hard id %d)\n",
-@@ -499,9 +513,10 @@ void __init smp_setup_cpu_maps(void)
- 			set_cpu_possible(cpu, true);
- 			cpu_to_phys_id[cpu] = be32_to_cpu(intserv[j]);
- 			cpu++;
-+			cpu_onlined++;
- 		}
- 
--		if (cpu >= nr_cpu_ids) {
-+		if (cpu_onlined >= nr_cpu_ids) {
- 			of_node_put(dn);
- 			break;
- 		}
-@@ -547,7 +562,8 @@ void __init smp_setup_cpu_maps(void)
- 			printk(KERN_INFO "Partition configured for %d cpus.\n",
- 			       maxcpus);
- 
--		for (cpu = 0; cpu < maxcpus; cpu++)
-+		/* Bits below #cpu have been set */
-+		for (; cpu < maxcpus; cpu++)
- 			set_cpu_possible(cpu, true);
- 	out:
- 		of_node_put(dn);
+url:    https://github.com/intel-lab-lkp/linux/commits/Pingfan-Liu/powerpc-kernel-Remove-check-on-paca_ptrs_size/20231227-104412
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git next
+patch link:    https://lore.kernel.org/r/20231227024126.12424-1-kernelfans%40gmail.com
+patch subject: [PATCHv10 2/3] powerpc/kernel: Extend arrays' size to make room for a hole in cpu_possible_mask
+config: powerpc-iss476-smp_defconfig (https://download.01.org/0day-ci/archive/20231228/202312280350.GpyKSrB6-lkp@intel.com/config)
+compiler: powerpc-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231228/202312280350.GpyKSrB6-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202312280350.GpyKSrB6-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   powerpc-linux-ld: arch/powerpc/kernel/setup-common.o: in function `smp_setup_cpu_maps':
+>> arch/powerpc/kernel/setup-common.c:440:(.init.text+0x6a): undefined reference to `paca_last_cpu_num'
+>> powerpc-linux-ld: arch/powerpc/kernel/setup-common.c:440:(.init.text+0x72): undefined reference to `paca_last_cpu_num'
+
+Kconfig warnings: (for reference only)
+   WARNING: unmet direct dependencies detected for HOTPLUG_CPU
+   Depends on [n]: SMP [=y] && (PPC_PSERIES [=n] || PPC_PMAC [=n] || PPC_POWERNV [=n] || FSL_SOC_BOOKE [=n])
+   Selected by [y]:
+   - PM_SLEEP_SMP [=y] && SMP [=y] && (ARCH_SUSPEND_POSSIBLE [=y] || ARCH_HIBERNATION_POSSIBLE [=y]) && PM_SLEEP [=y]
+
+
+vim +440 arch/powerpc/kernel/setup-common.c
+
+   413	
+   414	/**
+   415	 * setup_cpu_maps - initialize the following cpu maps:
+   416	 *                  cpu_possible_mask
+   417	 *                  cpu_present_mask
+   418	 *
+   419	 * Having the possible map set up early allows us to restrict allocations
+   420	 * of things like irqstacks to nr_cpu_ids rather than NR_CPUS.
+   421	 *
+   422	 * We do not initialize the online map here; cpus set their own bits in
+   423	 * cpu_online_mask as they come up.
+   424	 *
+   425	 * This function is valid only for Open Firmware systems.  finish_device_tree
+   426	 * must be called before using this.
+   427	 *
+   428	 * While we're here, we may as well set the "physical" cpu ids in the paca.
+   429	 *
+   430	 * NOTE: This must match the parsing done in early_init_dt_scan_cpus.
+   431	 */
+   432	void __init smp_setup_cpu_maps(void)
+   433	{
+   434		struct device_node *dn;
+   435		int cpu = 0;
+   436		int nthreads = 1;
+   437	
+   438		DBG("smp_setup_cpu_maps()\n");
+   439	
+ > 440		cpu_to_phys_id = memblock_alloc(paca_last_cpu_num * sizeof(u32),
+   441						__alignof__(u32));
+   442		if (!cpu_to_phys_id)
+   443			panic("%s: Failed to allocate %zu bytes align=0x%zx\n",
+   444			      __func__, nr_cpu_ids * sizeof(u32), __alignof__(u32));
+   445	
+   446		for_each_node_by_type(dn, "cpu") {
+   447			const __be32 *intserv;
+   448			__be32 cpu_be;
+   449			int j, len;
+   450	
+   451			DBG("  * %pOF...\n", dn);
+   452	
+   453			intserv = of_get_property(dn, "ibm,ppc-interrupt-server#s",
+   454					&len);
+   455			if (intserv) {
+   456				DBG("    ibm,ppc-interrupt-server#s -> %lu threads\n",
+   457				    (len / sizeof(int)));
+   458			} else {
+   459				DBG("    no ibm,ppc-interrupt-server#s -> 1 thread\n");
+   460				intserv = of_get_property(dn, "reg", &len);
+   461				if (!intserv) {
+   462					cpu_be = cpu_to_be32(cpu);
+   463					/* XXX: what is this? uninitialized?? */
+   464					intserv = &cpu_be;	/* assume logical == phys */
+   465					len = 4;
+   466				}
+   467			}
+   468	
+   469			nthreads = len / sizeof(int);
+   470	
+   471			for (j = 0; j < nthreads && cpu < nr_cpu_ids; j++) {
+   472				bool avail;
+   473	
+   474				DBG("    thread %d -> cpu %d (hard id %d)\n",
+   475				    j, cpu, be32_to_cpu(intserv[j]));
+   476	
+   477				avail = of_device_is_available(dn);
+   478				if (!avail)
+   479					avail = !of_property_match_string(dn,
+   480							"enable-method", "spin-table");
+   481	
+   482				set_cpu_present(cpu, avail);
+   483				set_cpu_possible(cpu, true);
+   484				cpu_to_phys_id[cpu] = be32_to_cpu(intserv[j]);
+   485				cpu++;
+   486			}
+   487	
+   488			if (cpu >= nr_cpu_ids) {
+   489				of_node_put(dn);
+   490				break;
+   491			}
+   492		}
+   493	
+   494		/* If no SMT supported, nthreads is forced to 1 */
+   495		if (!cpu_has_feature(CPU_FTR_SMT)) {
+   496			DBG("  SMT disabled ! nthreads forced to 1\n");
+   497			nthreads = 1;
+   498		}
+   499	
+
 -- 
-2.31.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
 _______________________________________________
 kexec mailing list
