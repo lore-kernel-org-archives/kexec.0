@@ -4,91 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9644CC47074
-	for <kexec@archiver.kernel.org>; Tue,  2 Jan 2024 15:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8F28CC46CD2
+	for <kexec@archiver.kernel.org>; Tue,  2 Jan 2024 19:58:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=ZtJwGZSBz9X04R5JUTiZTGGiqZj9dZpIniPxsbAYlf0=; b=NKc1WOjMuqnHxt
-	kWIm3B5e+jAduGSRxxNSOGdqrKgDobfD1OfOUoFqQmXuNqImdLK5tmHewyqQ3TjbeBOcftPAMs4+q
-	bqiEB+GzgchhsnCh0/StcNdzt83fwLcHUV78KmnBC7DvC+sDW1JDq0do9bPdJ7fYcCWadzfOBoJyL
-	k1llW6WYWM2HlWxOzTjAaQNkkr/OR0kpxfpOClpPlNjF7azCjhDO7aDwYBQq+ohuO4Ti2olVHcCRf
-	83J6YrM4/uv2M16dZEOUmfdtRR9boDpA4yOptWKNWo0sTT2gVDcK1Jy3qy7Ay2/JRExQ/tJjVyboF
-	/xhIO8gn4dm/FRpeEq2A==;
+	List-Owner; bh=AEn6fvAv87UC1KEJX1n8/o4u23bBdD8K26vE2F/zEKg=; b=lcshIeGBDkOfr1
+	jX5l/7Zs22a32SMHuK/sRq4fbbKJr2ffx0t2ENIHGF/Bg4/AL0ePxwS/vl7wRXBK31qFU7TMbzuKz
+	hgJcz8A/UEJIj7TpHSm1iALs2vxl4cu635KQaITDRVOsWqDMkmvJGHpyVZOIj/mJB/JL9awb1w9nU
+	2hzC6R0Wi0X4gqNiiJTk9tqMa5Ln6xrBZHpHKwiDZzVSXqMirhgbsA61gWEYWxQWTyRAo2h8p/PYc
+	87jjd0+gOI78MkyB3jWcGUue/HTZxhh10geIslZvFzOO6PSw42QV61uE6XMfENkcM5m9TErnq3MGr
+	GgsVPlEpKvKtoir9XnSQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rKgZj-008MnX-2T;
-	Tue, 02 Jan 2024 15:21:03 +0000
-Received: from mail-pj1-x102f.google.com ([2607:f8b0:4864:20::102f])
-	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rKgZf-008MmI-32
-	for kexec@lists.infradead.org;
-	Tue, 02 Jan 2024 15:21:02 +0000
-Received: by mail-pj1-x102f.google.com with SMTP id 98e67ed59e1d1-28bc870c540so7341023a91.2
-        for <kexec@lists.infradead.org>; Tue, 02 Jan 2024 07:20:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704208859; x=1704813659; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AC8zZpW88JATTyPu75m9EIR8gbeNaY6Wy3+vSQqo4pc=;
-        b=eOLQSWnn8WTXz+dnQ02y0wznByBbWZmqqcR+Gt5TGbEE75eUf8LL47e4SRBwoYOukd
-         FYTaes6gcTQ4jVsUpUtFNArr87xckrqAvxjFkQ/VXaOYwJvz/mDG41blTmQB2+SbyU4a
-         Qyg1nISk4jE940OBSFUosH1AfeD8jcBfPrLIDLhh5zvGGZJW2RmjSsrd8mWwkJomUc/x
-         gPfZICFlTT7aO29dl/R2+PKRcD3O8zmWTYaeFu55VobDStFy5ASGEmvWsjg8lK69FZQr
-         S391gu21inJtemb8o8OmZq/DKUvzo8fRPfod+wRAWXLX3lPQLYyFASjqw2obnJZcCYVr
-         Efgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704208859; x=1704813659;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AC8zZpW88JATTyPu75m9EIR8gbeNaY6Wy3+vSQqo4pc=;
-        b=YioWLoLNZhylORce2nosirkl4hsVWU0HaiMFcMaFx6/CwX+S1W0WPCFlzO6tWw3BD/
-         RnBlYPLXbc3ZBbujiM0GV9VWaO39JbAwerJBG54VqkvGoxDtnOgfEtd6GxrCpTqBEsO/
-         /butE5fXRJhk7RhBEWAl/KIh8/5cy74Pcz3DM3ZIWki6lZ+gHPiqvnBBcMC89naMdHeI
-         eDeBRxpfdo0Q4vSyXO4UhBf5+3exuTXysLngTKt850ewY6w/wnAn17C6KxpItIV11Cnv
-         ptbFA7N4gj8hope8Ft1kEnXOMwv5G5gD3o0tttxFSilw4jI0sTct+DgqGpn+/vqHUk74
-         taBQ==
-X-Gm-Message-State: AOJu0Yxm1KAcriyRd+Qz6jvVkaCv60vvqZ+GumTm0flupqz2rbfYViJ9
-	JnV2HiaYEqZK6TSnzjx98FY=
-X-Google-Smtp-Source: AGHT+IFM4gcGnxZgIt3nx6IqoNlCeiNV7/WpfyDiCmnxC7Me+8kboX3wHN6544VVey8RQv1Hn6uBvQ==
-X-Received: by 2002:a17:90a:6fe3:b0:28c:5391:7683 with SMTP id e90-20020a17090a6fe300b0028c53917683mr6307876pjk.65.1704208858728;
-        Tue, 02 Jan 2024 07:20:58 -0800 (PST)
-Received: from code.. ([144.202.108.46])
-        by smtp.gmail.com with ESMTPSA id fh16-20020a17090b035000b0028bf79ad453sm22365618pjb.21.2024.01.02.07.20.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jan 2024 07:20:58 -0800 (PST)
-From: Yuntao Wang <ytcoode@gmail.com>
-To: bhe@redhat.com
-Cc: akpm@linux-foundation.org,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	dyoung@redhat.com,
-	hbathini@linux.ibm.com,
-	hpa@zytor.com,
-	kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	mingo@redhat.com,
-	seanjc@google.com,
-	tglx@linutronix.de,
-	tiwai@suse.de,
-	vgoyal@redhat.com,
-	x86@kernel.org,
-	ytcoode@gmail.com
-Subject: Re: [PATCH] crash_core: optimize crash_exclude_mem_range()
-Date: Tue,  2 Jan 2024 23:20:46 +0800
-Message-ID: <20240102152046.111961-1-ytcoode@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <ZY/wtvltzGR0CokV@MiWiFi-R3L-srv>
-References: <ZY/wtvltzGR0CokV@MiWiFi-R3L-srv>
+	id 1rKku0-008suU-2c;
+	Tue, 02 Jan 2024 19:58:16 +0000
+Received: from linux.microsoft.com ([13.77.154.182])
+	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
+	id 1rKkty-008stn-1l;
+	Tue, 02 Jan 2024 19:58:15 +0000
+Received: from skinsburskii. (c-73-239-240-195.hsd1.wa.comcast.net [73.239.240.195])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 2C6DD20B3CC1;
+	Tue,  2 Jan 2024 11:58:13 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2C6DD20B3CC1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1704225493;
+	bh=2UaDwV/oGm+Epqzq+iuoXLl1XYKs/iiOjHPSgAf4WNI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sf+h60AikfAoNDWIfOQf+gp/7n62YjqR91jk021dI0v+1a8M9a0OEjS7fQlNbGHtT
+	 ipeSl4ZqBYQjVEH3GZlLaVHYTWm8e6nUV0SEqCtKnbq135a3/00oHsQNKX3wd4Z7BD
+	 ICaDdMQVBMMzyyO3sadV/R66AVE4C1KSJe3ErDtk=
+Date: Sun, 31 Dec 2023 19:33:01 -0800
+From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+To: Alexander Graf <graf@amazon.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-mm@kvack.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org,
+	linux-doc@vger.kernel.org, x86@kernel.org,
+	Eric Biederman <ebiederm@xmission.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Ashish Kalra <ashish.kalra@amd.com>,
+	James Gowans <jgowans@amazon.com>, arnd@arndb.de,
+	pbonzini@redhat.com, madvenka@linux.microsoft.com,
+	Anthony Yznaga <anthony.yznaga@oracle.com>,
+	Usama Arif <usama.arif@bytedance.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH v2 04/17] kexec: Add KHO parsing support
+Message-ID: <20240101033301.GA765@skinsburskii.>
+References: <20231222193607.15474-1-graf@amazon.com>
+ <20231222193607.15474-5-graf@amazon.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20231222193607.15474-5-graf@amazon.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240102_072059_980174_3CA596CB 
-X-CRM114-Status: GOOD (  24.30  )
+X-CRM114-CacheID: sfid-20240102_115814_632749_74529233 
+X-CRM114-Status: GOOD (  19.42  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -105,78 +85,84 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Sat, 30 Dec 2023 18:28:06 +0800, Baoquan He <bhe@redhat.com> wrote:
+On Fri, Dec 22, 2023 at 07:35:54PM +0000, Alexander Graf wrote:
+> +/**
+> + * kho_reserve_previous_mem - Adds all memory reservations into memblocks
+> + * and moves us out of the scratch only phase. Must be called after page tables
+> + * are initialized and memblock_allow_resize().
+> + */
+> +void __init kho_reserve_previous_mem(void)
+> +{
+> +	void *mem_virt = __va(mem_phys);
+> +	int off, err;
+> +
+> +	if (!handover_phys || !mem_phys)
+> +		return;
+> +
+> +	/*
+> +	 * We reached here because we are running inside a working linear map
+> +	 * that allows us to resize memblocks dynamically. Use the chance and
+> +	 * populate the global fdt pointer
+> +	 */
+> +	fdt = __va(handover_phys);
+> +
+> +	off = fdt_path_offset(fdt, "/");
+> +	if (off < 0) {
+> +		fdt = NULL;
+> +		return;
+> +	}
+> +
+> +	err = fdt_node_check_compatible(fdt, off, "kho-v1");
+> +	if (err) {
+> +		pr_warn("KHO has invalid compatible, disabling.");
 
-> On 12/29/23 at 12:10pm, Andrew Morton wrote:
-> > On Wed, 20 Dec 2023 00:34:18 +0800 Yuntao Wang <ytcoode@gmail.com> wrote:
-> > 
-> > > Because memory ranges in mem->ranges are stored in ascending order, when we
-> > > detect `p_end < start`, we can break the for loop early, as the subsequent
-> > > memory ranges must also be outside the range we are looking for.
-> > > 
-> > > Signed-off-by: Yuntao Wang <ytcoode@gmail.com>
-> > > ---
-> > > Hi Andrew,
-> > > 
-> > > Patch "[PATCH 2/2] crash_core: fix out-of-bounds access check in
-> > > crash_exclude_mem_range()" can be ignored, use this patch instead.
-> > > 
-> > 
-> > Some reviewer input on this would be helpful please?
-> 
-> 
-> I suggested this in below discussion thread:
-> https://lore.kernel.org/all/ZYEOshALGbDKwSdc@MiWiFi-R3L-srv/T/#u
-> 
-> So it would be good if squashing this into patch 3 of another patch
-> thread you are asking:
-> [PATCH 3/3] crash_core: fix and simplify the logic of crash_exclude_mem_range()
->
+It looks like KHO preserved regions won't be reserved in this case.
+Should KHO DT state be destroyed here to prevent KHO memory regions
+reuse upon rollback?
 
-Hi all,
+> +
+> +void __init kho_populate(phys_addr_t handover_dt_phys, phys_addr_t scratch_phys,
+> +			 u64 scratch_len, phys_addr_t mem_cache_phys,
+> +			 u64 mem_cache_len)
+> +{
+> +	void *handover_dt;
+> +
+> +	/* Determine the real size of the DT */
+> +	handover_dt = early_memremap(handover_dt_phys, sizeof(struct fdt_header));
+> +	if (!handover_dt) {
+> +		pr_warn("setup: failed to memremap kexec FDT (0x%llx)\n", handover_dt_phys);
+> +		return;
+> +	}
+> +
+> +	if (fdt_check_header(handover_dt)) {
+> +		pr_warn("setup: kexec handover FDT is invalid (0x%llx)\n", handover_dt_phys);
+> +		early_memunmap(handover_dt, PAGE_SIZE);
+> +		return;
+> +	}
+> +
+> +	handover_len = fdt_totalsize(handover_dt);
+> +	handover_phys = handover_dt_phys;
+> +
+> +	/* Reserve the DT so we can still access it in late boot */
+> +	memblock_reserve(handover_phys, handover_len);
+> +
+> +	/* Reserve the mem cache so we can still access it later */
+> +	memblock_reserve(mem_cache_phys, mem_cache_len);
+> +
+> +	/*
+> +	 * We pass a safe contiguous block of memory to use for early boot purporses from
+> +	 * the previous kernel so that we can resize the memblock array as needed.
+> +	 */
+> +	memblock_add(scratch_phys, scratch_len);
+> +
+> +	if (WARN_ON(memblock_mark_scratch(scratch_phys, scratch_len))) {
+> +		pr_err("Kexec failed to mark the scratch region. Disabling KHO.");
+> +		handover_len = 0;
+> +		handover_phys = 0;
 
-I've squashed this patch into the patch:
+Same question here: doesn't all the KHO state gets invalid in case of any
+restoration error?
 
-[PATCH 3/3] crash_core: fix and simplify the logic of crash_exclude_mem_range()
-
-The link to the new patch is:
-
-https://lore.kernel.org/lkml/20240102144905.110047-1-ytcoode@gmail.com/t/#m255d0d26148f2b384f6b7ab77eb38edf3f1bc0df
-
-> And I would suggest withdrawing Yuntao's below patch on your
-> mm-nonmm-unstable branch.
-> 
-> 961c69e9f1bf x86/crash: fix potential cmem->ranges array overflow
-> 
-> Becase there's better one to fix the potential oob from fuqiang,
-> although fuqiang need improve his patch log.
-> 
-> [PATCH v3] x86/kexec: fix potential cmem->ranges out of bounds
-> https://lore.kernel.org/all/20231222121855.148215-1-fuqiang.wang@easystack.cn/T/#u
->
-
-I'm okay with that.
-
-> > 
-> > > --- a/kernel/crash_core.c
-> > > +++ b/kernel/crash_core.c
-> > > @@ -575,9 +575,12 @@ int crash_exclude_mem_range(struct crash_mem *mem,
-> > >  		p_start = mstart;
-> > >  		p_end = mend;
-> > >  
-> > > -		if (p_start > end || p_end < start)
-> > > +		if (p_start > end)
-> > >  			continue;
-> > >  
-> > > +		if (p_end < start)
-> > > +			break;
-> > > +
-> > >  		/* Truncate any area outside of range */
-> > >  		if (p_start < start)
-> > >  			p_start = start;
-> > > -- 
-> > > 2.43.0
-> > 
 
 _______________________________________________
 kexec mailing list
