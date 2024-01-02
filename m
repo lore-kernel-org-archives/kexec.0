@@ -4,60 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D4E8DC47074
-	for <kexec@archiver.kernel.org>; Tue,  2 Jan 2024 15:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9644CC47074
+	for <kexec@archiver.kernel.org>; Tue,  2 Jan 2024 15:21:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=phHSsY/9prIpcKpC2XtWeNswELZABZvmAo4nl7daLYY=; b=BtHGU2+P6jHnjM
-	/n1UwRR8nz/BsdQ5GbzhUVXBZHFUQRx1vhTR1FbeR752GV2AcO7JK8KFyG9jrLacLDWUI3p6G8LPR
-	zlWpgG4KDkkyfbijaOJ2u1s5U2jDphY+8JT+9M+HNOrGNJ8WOmQyTwp4csTTQ5XEVwQWrHa/phsjW
-	CI1tc/zpAH5oEfPzyx1fXDVB62xsIFoAa+9QmFzeh6rMwoW/C1u4ONwxp5G1WZfbTqqUeurS/SESM
-	eMHJKT4FDqZRWe2ouqfAMJgPCaAfVxLylverY8dVKpd/0VyZSvxuDBLVECOcxkp1mSlc/B8JwBY3S
-	FrRN4ppc7VxDGoFjSfKg==;
+	List-Owner; bh=ZtJwGZSBz9X04R5JUTiZTGGiqZj9dZpIniPxsbAYlf0=; b=NKc1WOjMuqnHxt
+	kWIm3B5e+jAduGSRxxNSOGdqrKgDobfD1OfOUoFqQmXuNqImdLK5tmHewyqQ3TjbeBOcftPAMs4+q
+	bqiEB+GzgchhsnCh0/StcNdzt83fwLcHUV78KmnBC7DvC+sDW1JDq0do9bPdJ7fYcCWadzfOBoJyL
+	k1llW6WYWM2HlWxOzTjAaQNkkr/OR0kpxfpOClpPlNjF7azCjhDO7aDwYBQq+ohuO4Ti2olVHcCRf
+	83J6YrM4/uv2M16dZEOUmfdtRR9boDpA4yOptWKNWo0sTT2gVDcK1Jy3qy7Ay2/JRExQ/tJjVyboF
+	/xhIO8gn4dm/FRpeEq2A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rKgZD-008Md0-2K;
-	Tue, 02 Jan 2024 15:20:31 +0000
-Received: from dfw.source.kernel.org ([139.178.84.217])
+	id 1rKgZj-008MnX-2T;
+	Tue, 02 Jan 2024 15:21:03 +0000
+Received: from mail-pj1-x102f.google.com ([2607:f8b0:4864:20::102f])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rKgZA-008Mb5-02;
-	Tue, 02 Jan 2024 15:20:30 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id 1AEF061170;
-	Tue,  2 Jan 2024 15:20:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 335A1C433C8;
-	Tue,  2 Jan 2024 15:20:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704208826;
-	bh=28yPedgGByxBs/XllHPUgTPObBuags0avxhjHUIO2lA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SqEPk9zNaSyGDVA+YezzLsKj3ZNQGZ0SC4yCM9VyBETW2lskULwf3YW1bzCtNQIfP
-	 6uXhHnR+VyjNxAdfsAuGy3PHqdk6b8MxmTW8LYv8wBb4ItzWZw49ksPEkR06n89PFp
-	 2SHwc5dxr4TpgSfLoEJwYJVg/H6eXbQixr64Xmfg+I5UB0X4IH3NAAjmjbwdHFlysM
-	 UpyPsK4q/fnx9eBausPSz+cLglyeXqhW6ZWKNvjm1TKrQumi+l1lHl2hw3OUh/RrfO
-	 moE9dADO9rGte6dRtTv4Lf6g34Xmghec8dAzDY6uXDe6/E/fPOAc7PHu2mFtiS2u5m
-	 S8IIs3i6VEKvg==
-Received: (nullmailer pid 2861879 invoked by uid 1000);
-	Tue, 02 Jan 2024 15:20:23 -0000
-Date: Tue, 2 Jan 2024 08:20:23 -0700
-From: Rob Herring <robh@kernel.org>
-To: Alexander Graf <graf@amazon.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-doc@vger.kernel.org, x86@kernel.org, Eric Biederman <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, Andrew Morton <akpm@linux-foundation.org>, Mark Rutland <mark.rutland@arm.com>, Tom Lendacky <thomas.lendacky@amd.com>, Ashish Kalra <ashish.kalra@amd.com>, James Gowans <jgowans@amazon.com>, Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, arnd@arndb.de, pbonzini@redhat.com, madvenka@linux.microsoft.com, Anthony Yznaga <anthony.yznaga@oracle.com>, Usama Arif <usama.arif@bytedance.com>, David Woodhouse <dwmw@amazon.co.uk>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v2 17/17] devicetree: Add bindings for ftrace KHO
-Message-ID: <20240102152023.GA2821956-robh@kernel.org>
-References: <20231222193607.15474-1-graf@amazon.com>
- <20231222195144.24532-1-graf@amazon.com>
- <20231222195144.24532-12-graf@amazon.com>
+	id 1rKgZf-008MmI-32
+	for kexec@lists.infradead.org;
+	Tue, 02 Jan 2024 15:21:02 +0000
+Received: by mail-pj1-x102f.google.com with SMTP id 98e67ed59e1d1-28bc870c540so7341023a91.2
+        for <kexec@lists.infradead.org>; Tue, 02 Jan 2024 07:20:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704208859; x=1704813659; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AC8zZpW88JATTyPu75m9EIR8gbeNaY6Wy3+vSQqo4pc=;
+        b=eOLQSWnn8WTXz+dnQ02y0wznByBbWZmqqcR+Gt5TGbEE75eUf8LL47e4SRBwoYOukd
+         FYTaes6gcTQ4jVsUpUtFNArr87xckrqAvxjFkQ/VXaOYwJvz/mDG41blTmQB2+SbyU4a
+         Qyg1nISk4jE940OBSFUosH1AfeD8jcBfPrLIDLhh5zvGGZJW2RmjSsrd8mWwkJomUc/x
+         gPfZICFlTT7aO29dl/R2+PKRcD3O8zmWTYaeFu55VobDStFy5ASGEmvWsjg8lK69FZQr
+         S391gu21inJtemb8o8OmZq/DKUvzo8fRPfod+wRAWXLX3lPQLYyFASjqw2obnJZcCYVr
+         Efgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704208859; x=1704813659;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AC8zZpW88JATTyPu75m9EIR8gbeNaY6Wy3+vSQqo4pc=;
+        b=YioWLoLNZhylORce2nosirkl4hsVWU0HaiMFcMaFx6/CwX+S1W0WPCFlzO6tWw3BD/
+         RnBlYPLXbc3ZBbujiM0GV9VWaO39JbAwerJBG54VqkvGoxDtnOgfEtd6GxrCpTqBEsO/
+         /butE5fXRJhk7RhBEWAl/KIh8/5cy74Pcz3DM3ZIWki6lZ+gHPiqvnBBcMC89naMdHeI
+         eDeBRxpfdo0Q4vSyXO4UhBf5+3exuTXysLngTKt850ewY6w/wnAn17C6KxpItIV11Cnv
+         ptbFA7N4gj8hope8Ft1kEnXOMwv5G5gD3o0tttxFSilw4jI0sTct+DgqGpn+/vqHUk74
+         taBQ==
+X-Gm-Message-State: AOJu0Yxm1KAcriyRd+Qz6jvVkaCv60vvqZ+GumTm0flupqz2rbfYViJ9
+	JnV2HiaYEqZK6TSnzjx98FY=
+X-Google-Smtp-Source: AGHT+IFM4gcGnxZgIt3nx6IqoNlCeiNV7/WpfyDiCmnxC7Me+8kboX3wHN6544VVey8RQv1Hn6uBvQ==
+X-Received: by 2002:a17:90a:6fe3:b0:28c:5391:7683 with SMTP id e90-20020a17090a6fe300b0028c53917683mr6307876pjk.65.1704208858728;
+        Tue, 02 Jan 2024 07:20:58 -0800 (PST)
+Received: from code.. ([144.202.108.46])
+        by smtp.gmail.com with ESMTPSA id fh16-20020a17090b035000b0028bf79ad453sm22365618pjb.21.2024.01.02.07.20.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jan 2024 07:20:58 -0800 (PST)
+From: Yuntao Wang <ytcoode@gmail.com>
+To: bhe@redhat.com
+Cc: akpm@linux-foundation.org,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	dyoung@redhat.com,
+	hbathini@linux.ibm.com,
+	hpa@zytor.com,
+	kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	mingo@redhat.com,
+	seanjc@google.com,
+	tglx@linutronix.de,
+	tiwai@suse.de,
+	vgoyal@redhat.com,
+	x86@kernel.org,
+	ytcoode@gmail.com
+Subject: Re: [PATCH] crash_core: optimize crash_exclude_mem_range()
+Date: Tue,  2 Jan 2024 23:20:46 +0800
+Message-ID: <20240102152046.111961-1-ytcoode@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <ZY/wtvltzGR0CokV@MiWiFi-R3L-srv>
+References: <ZY/wtvltzGR0CokV@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20231222195144.24532-12-graf@amazon.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240102_072028_141252_BA13131F 
-X-CRM114-Status: GOOD (  30.52  )
+X-CRM114-CacheID: sfid-20240102_072059_980174_3CA596CB 
+X-CRM114-Status: GOOD (  24.30  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,239 +105,78 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Dec 22, 2023 at 07:51:44PM +0000, Alexander Graf wrote:
-> With ftrace in KHO, we are creating an ABI between old kernel and new
-> kernel about the state that they transfer. To ensure that we document
-> that state and catch any breaking change, let's add its schema to the
-> common devicetree bindings. This way, we can quickly reason about the
-> state that gets passed.
+On Sat, 30 Dec 2023 18:28:06 +0800, Baoquan He <bhe@redhat.com> wrote:
 
-Why so much data in DT rather than putting all this information into 
-memory in your own data structure and DT just has a single property 
-pointing to that? That's what is done with every other blob of data 
-passed by kexec.
-
-> 
-> Signed-off-by: Alexander Graf <graf@amazon.com>
-> ---
->  .../bindings/kho/ftrace/ftrace-array.yaml     | 46 +++++++++++++++
->  .../bindings/kho/ftrace/ftrace-cpu.yaml       | 56 +++++++++++++++++++
->  .../bindings/kho/ftrace/ftrace.yaml           | 48 ++++++++++++++++
->  3 files changed, 150 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/kho/ftrace/ftrace-array.yaml
->  create mode 100644 Documentation/devicetree/bindings/kho/ftrace/ftrace-cpu.yaml
->  create mode 100644 Documentation/devicetree/bindings/kho/ftrace/ftrace.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/kho/ftrace/ftrace-array.yaml b/Documentation/devicetree/bindings/kho/ftrace/ftrace-array.yaml
-> new file mode 100644
-> index 000000000000..9960fefc292d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/kho/ftrace/ftrace-array.yaml
-> @@ -0,0 +1,46 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/kho/ftrace/ftrace-array.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Ftrace trace array
-> +
-> +maintainers:
-> +  - Alexander Graf <graf@amazon.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - ftrace,array-v1
-> +
-> +  trace_flags:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      Bitmap of all the trace flags that were enabled in the trace array at the
-> +      point of serialization.
-> +
-> +# Subnodes will be of type "ftrace,cpu-v1", one each per CPU
-
-This can be expressed as a schema.
-
-> +additionalProperties: true
-> +
-> +required:
-> +  - compatible
-> +  - trace_flags
-> +
-> +examples:
-> +  - |
-> +    ftrace {
-> +        compatible = "ftrace-v1";
-> +        events = <1 1 2 2 3 3>;
-> +
-> +        global_trace {
-> +          compatible = "ftrace,array-v1";
-> +          trace_flags = < 0x3354601 >;
-> +
-> +          cpu0 {
-> +            compatible = "ftrace,cpu-v1";
-> +            cpu = < 0x00 >;
-> +            mem = < 0x101000000ULL 0x38ULL 0x101000100ULL 0x1000ULL 0x101000038ULL 0x38ULL 0x101002000ULL 0x1000ULL>;
-> +          };
-> +        };
-> +      };
-> diff --git a/Documentation/devicetree/bindings/kho/ftrace/ftrace-cpu.yaml b/Documentation/devicetree/bindings/kho/ftrace/ftrace-cpu.yaml
-> new file mode 100644
-> index 000000000000..58c715e93f37
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/kho/ftrace/ftrace-cpu.yaml
-> @@ -0,0 +1,56 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/kho/ftrace/ftrace-cpu.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Ftrace per-CPU ring buffer contents
-> +
-> +maintainers:
-> +  - Alexander Graf <graf@amazon.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - ftrace,cpu-v1
-> +
-> +  cpu:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-
-'cpu' is already a defined property of type 'phandle'. While we can have 
-multiple types for a given property name, best practice is to avoid 
-that. The normal way to refer to a CPU would be a phandle to the CPU 
-node, but I can see that might not make sense here.
-
-"CPU numbers" on arm64 are 64-bit values as well as they are the 
-CPU's MPIDR value. 
-
-> +    description:
-> +      CPU number of the CPU that this ring buffer belonged to when it was
-> +      serialized.
-> +
-> +  mem:
-
-Too vague. Make the property name indicate what's in the memory.
-
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    description:
-> +      Array of { u64 phys_addr, u64 len } elements that describe a list of ring
-> +      buffer pages. Each page consists of two elements. The first element
-> +      describes the location of the struct buffer_page that contains metadata
-> +      for a given ring buffer page, such as the ring's head indicator. The
-> +      second element points to the ring buffer data page which contains the raw
-> +      trace data.
-> +
-> +additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - cpu
-> +  - mem
-> +
-> +examples:
-> +  - |
-> +    ftrace {
-> +        compatible = "ftrace-v1";
-> +        events = <1 1 2 2 3 3>;
-> +
-> +        global_trace {
-> +          compatible = "ftrace,array-v1";
-> +          trace_flags = < 0x3354601 >;
-> +
-> +          cpu0 {
-> +            compatible = "ftrace,cpu-v1";
-> +            cpu = < 0x00 >;
-> +            mem = < 0x101000000ULL 0x38ULL 0x101000100ULL 0x1000ULL 0x101000038ULL 0x38ULL 0x101002000ULL 0x1000ULL>;
-> +          };
-> +        };
-> +      };
-> diff --git a/Documentation/devicetree/bindings/kho/ftrace/ftrace.yaml b/Documentation/devicetree/bindings/kho/ftrace/ftrace.yaml
-> new file mode 100644
-> index 000000000000..b87a64843af3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/kho/ftrace/ftrace.yaml
-> @@ -0,0 +1,48 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/kho/ftrace/ftrace.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Ftrace core data
-> +
-> +maintainers:
-> +  - Alexander Graf <graf@amazon.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - ftrace-v1
-> +
-> +  events:
-
-Again, too vague.
-
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    description:
-> +      Array of { u32 crc, u32 type } elements. Each element contains a unique
-> +      identifier for an event, followed by the identifier that this event had
-> +      in the previous kernel's trace buffers.
-> +
-> +# Other child nodes will be of type "ftrace,array-v1". Each of which describe
-> +# a trace buffer
-> +additionalProperties: true
-> +
-> +required:
-> +  - compatible
-> +  - events
-> +
-> +examples:
-> +  - |
-> +    ftrace {
-
-This should go under /chosen. Show that here. Start the example with 
-'/{' to do that and not add the usual boilerplate we add when extracting 
-the examples.
-
-Also, we don't need 3 examples. Just do 1 complete example here.
-
-
-> +        compatible = "ftrace-v1";
-> +        events = <1 1 2 2 3 3>;
-> +
-> +        global_trace {
-> +          compatible = "ftrace,array-v1";
-> +          trace_flags = < 0x3354601 >;
-> +
-> +          cpu0 {
-> +            compatible = "ftrace,cpu-v1";
-> +            cpu = < 0x00 >;
-> +            mem = < 0x101000000ULL 0x38ULL 0x101000100ULL 0x1000ULL 0x101000038ULL 0x38ULL 0x101002000ULL 0x1000ULL>;
-> +          };
-> +        };
-> +      };
-> -- 
-> 2.40.1
+> On 12/29/23 at 12:10pm, Andrew Morton wrote:
+> > On Wed, 20 Dec 2023 00:34:18 +0800 Yuntao Wang <ytcoode@gmail.com> wrote:
+> > 
+> > > Because memory ranges in mem->ranges are stored in ascending order, when we
+> > > detect `p_end < start`, we can break the for loop early, as the subsequent
+> > > memory ranges must also be outside the range we are looking for.
+> > > 
+> > > Signed-off-by: Yuntao Wang <ytcoode@gmail.com>
+> > > ---
+> > > Hi Andrew,
+> > > 
+> > > Patch "[PATCH 2/2] crash_core: fix out-of-bounds access check in
+> > > crash_exclude_mem_range()" can be ignored, use this patch instead.
+> > > 
+> > 
+> > Some reviewer input on this would be helpful please?
 > 
 > 
+> I suggested this in below discussion thread:
+> https://lore.kernel.org/all/ZYEOshALGbDKwSdc@MiWiFi-R3L-srv/T/#u
 > 
+> So it would be good if squashing this into patch 3 of another patch
+> thread you are asking:
+> [PATCH 3/3] crash_core: fix and simplify the logic of crash_exclude_mem_range()
+>
+
+Hi all,
+
+I've squashed this patch into the patch:
+
+[PATCH 3/3] crash_core: fix and simplify the logic of crash_exclude_mem_range()
+
+The link to the new patch is:
+
+https://lore.kernel.org/lkml/20240102144905.110047-1-ytcoode@gmail.com/t/#m255d0d26148f2b384f6b7ab77eb38edf3f1bc0df
+
+> And I would suggest withdrawing Yuntao's below patch on your
+> mm-nonmm-unstable branch.
 > 
-> Amazon Development Center Germany GmbH
-> Krausenstr. 38
-> 10117 Berlin
-> Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-> Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-> Sitz: Berlin
-> Ust-ID: DE 289 237 879
+> 961c69e9f1bf x86/crash: fix potential cmem->ranges array overflow
 > 
+> Becase there's better one to fix the potential oob from fuqiang,
+> although fuqiang need improve his patch log.
 > 
-> 
+> [PATCH v3] x86/kexec: fix potential cmem->ranges out of bounds
+> https://lore.kernel.org/all/20231222121855.148215-1-fuqiang.wang@easystack.cn/T/#u
+>
+
+I'm okay with that.
+
+> > 
+> > > --- a/kernel/crash_core.c
+> > > +++ b/kernel/crash_core.c
+> > > @@ -575,9 +575,12 @@ int crash_exclude_mem_range(struct crash_mem *mem,
+> > >  		p_start = mstart;
+> > >  		p_end = mend;
+> > >  
+> > > -		if (p_start > end || p_end < start)
+> > > +		if (p_start > end)
+> > >  			continue;
+> > >  
+> > > +		if (p_end < start)
+> > > +			break;
+> > > +
+> > >  		/* Truncate any area outside of range */
+> > >  		if (p_start < start)
+> > >  			p_start = start;
+> > > -- 
+> > > 2.43.0
+> > 
 
 _______________________________________________
 kexec mailing list
