@@ -4,77 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5440DC46CD2
-	for <kexec@archiver.kernel.org>; Tue,  2 Jan 2024 08:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E04DDC46CD2
+	for <kexec@archiver.kernel.org>; Tue,  2 Jan 2024 14:49:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=LPu6j07kDras0U2BN0MwLXEEJjxX+wnVGwLMigv/PVQ=; b=f3vZjsvxKMxdRA
-	w6HIiqnIY8bp3J0pQ36OHdNSGQsGnWv35m0L9NX3Jyh7W2RHwlPitNcCfh1tbtNXAcDggTlykjhTS
-	zB/wCgFfV+oDBP+v965guFkzmu0NJbgjUMBuv9jIMcDbW8QCUePo44iMv6tV+5b23Tqdv4wE6Y6XS
-	bWGGsykHPhL2s5GzFEJLvgF4YaZKNTMHdTiEGHFlx72d5uYzL0O1bGXuMesFl9+xZDNniBZsIbC6w
-	c0V/+BhE9r0JwIQ6ZdjW+bMF6z/9ah8Kb0AZSteAEBq+fYGHeCvjNkHSjW4R4Fqtj0JoqMh+azGyU
-	22Yw4p2EJTb9zh24sKPg==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=4JGvaoj4Hbw6YbaCGDeCN13W99Mj+eKujMJqjHA8l/o=; b=CPl0TkVFXflqNt
+	iEP3LYZlNZ67p/a54L4KkSC96okHyHGmBUif8vPHSe+RD1+8LlFwT3f5YgMEcKASnrZwnkF58NCNU
+	bj4El0bfaMQfkErt1aU0uVOgvDXhtF5RRGYQpvfIhYiwoEOrax0NrSD0lrDFPmMwjjh8SQBNnnma5
+	/mlC7rl9HTPHNAigb4OfJxOCF4r4cskBmlf/4qWNUXE2V9LwFc7DHvTtc+ZFTO7AU8jT2W42/j1jk
+	bz4Rysg5FnnvMthHYkbp7jTT+v7hGPg14/XpmW+bNmG4kwJU9hk4Dti74kZcu8ZusqMN6QqVyMWXq
+	KxAS6tklz2YoyLYt3lrg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rKaLA-007Mew-0l;
-	Tue, 02 Jan 2024 08:41:36 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1rKg5Z-008Hps-35;
+	Tue, 02 Jan 2024 14:49:53 +0000
+Received: from mail-pj1-x102e.google.com ([2607:f8b0:4864:20::102e])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rKaL4-007MeQ-2z
+	id 1rKg5W-008Hon-1j
 	for kexec@lists.infradead.org;
-	Tue, 02 Jan 2024 08:41:33 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704184886;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9deNeZJNUQtUZJSaXTSS5TWxhTaiDOSx9nA+IbokTkw=;
-	b=JSz+CKa1SMpYiK2DT1syCeZwpHGJiGYt/5r9WN9HVTPWAGgpyUC26vaU51SIuAijIDN39F
-	hhRLmTy0q2AFstmJUAX4GneZGtkIFBVlQo69lE12OiK+aEBgeeuK8wd5my7XyjDx3YUoFw
-	/EDOSLMWWw7SEgSEGFZWyXddpdY4tXU=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-633-v1563Ci_PTOWBkrNbLVl9Q-1; Tue, 02 Jan 2024 03:41:23 -0500
-X-MC-Unique: v1563Ci_PTOWBkrNbLVl9Q-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 42B8A80BEC1;
-	Tue,  2 Jan 2024 08:41:22 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.129])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 796031121306;
-	Tue,  2 Jan 2024 08:41:20 +0000 (UTC)
-Date: Tue, 2 Jan 2024 16:41:17 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Yuntao Wang <ytcoode@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, bp@alien8.de,
-	dave.hansen@linux.intel.com, dyoung@redhat.com,
-	eric.devolder@oracle.com, hbathini@linux.ibm.com, hpa@zytor.com,
-	kexec@lists.infradead.org, lijiang@redhat.com,
-	linux-kernel@vger.kernel.org, mingo@redhat.com, seanjc@google.com,
-	sourabhjain@linux.ibm.com, tglx@linutronix.de, tiwai@suse.de,
-	vgoyal@redhat.com, x86@kernel.org
-Subject: Re: [PATCH 3/3] crash_core: fix and simplify the logic of
- crash_exclude_mem_range()
-Message-ID: <ZZPMLextp0n3lwbD@MiWiFi-R3L-srv>
-References: <ZXxtfpXpuFXLd+ge@MiWiFi-R3L-srv>
- <20231216015410.188924-1-ytcoode@gmail.com>
- <ZX0Z+IyaAX9lNSok@MiWiFi-R3L-srv>
- <20231229121052.cac37914c7a051b829fcf933@linux-foundation.org>
- <ZY/uBJmpG14Ogvet@MiWiFi-R3L-srv>
+	Tue, 02 Jan 2024 14:49:51 +0000
+Received: by mail-pj1-x102e.google.com with SMTP id 98e67ed59e1d1-28bfdf3cd12so3683524a91.3
+        for <kexec@lists.infradead.org>; Tue, 02 Jan 2024 06:49:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704206988; x=1704811788; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YDhrdw2EFatZsZwpVBL+5yckJoyULeS7zHGr7sK85zc=;
+        b=DsMq4Riza4VAcOcUdPj5CyK+pNU2TRbTQxR+a/jSJr7NL4pkyBwksfFZgyfOGGC1wz
+         gN0m1b94ny/NZO1oTZraCWkMHE/Nyq99eG2LIblXBMIRX6AssmJvMMXekYRm0gsafP5F
+         xnNWAkhQAFFrZQT4dZWozwNzB0+/y60SxKGfejupmGBOtG5F2ucAqucGaZt+0rShQo/D
+         1aDVUDtIUvRPdDkVxO7XsLOhcqKT96t1mjN7gQciAuHRgehfIMWKWVXu2kirowJYBQpF
+         DhIKfGSbY1xBwbSWgrgMb9GzFM7MqqmezqfXejUmWJG4kYQBzxbPXVQ+dlUoDmsOjxsS
+         Ne+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704206988; x=1704811788;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YDhrdw2EFatZsZwpVBL+5yckJoyULeS7zHGr7sK85zc=;
+        b=mqUrX3M3k4dQ9/B34+D3B4o1MLzz9kXq2qMYgCRbYFovJ2Ev2PZFUqUXeBk6B9jiLH
+         acf4TOfvZyVOlXsCn8+fN3ew6QTwP6H22ZIf96h7or+sj2DV5YVSILRC3XRGMU9Jc8Ry
+         RlsDH7b0wXIx++CT73FEWLUnC1IX5AWwmcpBnCcsGp0VifqGuZ7AbUZBKr9nu36gyTlP
+         T8QKcl7/vGprtsC1x68OvfPhQJ4FZJne1JVolbrC22C2YEJI2G2LwyLGdWWjK83E4SbL
+         cGpbPKkIvrZ8l2g3lVPQ1hMk08UDCszGZml0fWSxn+j5POiPV9jk1RQMQqQTuM0qiNnH
+         Xw1Q==
+X-Gm-Message-State: AOJu0YzEdNLxjPGc//poG5m2thDGq2/9tgYtgOacZMwZ13wO8LqY3aKU
+	LpPrDWKKbMZ0GNpaB6soeDY=
+X-Google-Smtp-Source: AGHT+IGzJFyW9a5iYIIvP/E1B6Aq5OU4Dd2tRSLGwh0HbPDRNg3iINd607/Z9goxsovbYD0ClJHHwQ==
+X-Received: by 2002:a17:90a:4708:b0:28b:be23:67a6 with SMTP id h8-20020a17090a470800b0028bbe2367a6mr5269342pjg.80.1704206988582;
+        Tue, 02 Jan 2024 06:49:48 -0800 (PST)
+Received: from code.. ([144.202.108.46])
+        by smtp.gmail.com with ESMTPSA id 19-20020a17090a005300b0028be216595csm25836878pjb.4.2024.01.02.06.49.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jan 2024 06:49:48 -0800 (PST)
+From: Yuntao Wang <ytcoode@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org,
+	x86@kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Baoquan He <bhe@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>,
+	Hari Bathini <hbathini@linux.ibm.com>,
+	Sourabh Jain <sourabhjain@linux.ibm.com>,
+	Takashi Iwai <tiwai@suse.de>,
+	Yuntao Wang <ytcoode@gmail.com>
+Subject: [PATCH v2 0/3] crash: Some cleanups and fixes
+Date: Tue,  2 Jan 2024 22:49:02 +0800
+Message-ID: <20240102144905.110047-1-ytcoode@gmail.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <ZY/uBJmpG14Ogvet@MiWiFi-R3L-srv>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240102_004131_042353_F42BE57B 
-X-CRM114-Status: GOOD (  30.82  )
+X-CRM114-CacheID: sfid-20240102_064950_572856_96595EA1 
+X-CRM114-Status: GOOD (  11.60  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,60 +102,32 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Yuntao,
+This patchset includes two cleanups and one fix.
 
-On 12/30/23 at 06:16pm, Baoquan He wrote:
-> On 12/29/23 at 12:10pm, Andrew Morton wrote:
-> > On Sat, 16 Dec 2023 11:31:04 +0800 Baoquan He <bhe@redhat.com> wrote:
-> > 
-> > > > > Imagine we have a crashkernel region 256M reserved under 4G, say [2G, 2G+256M].
-> > > > > Then after excluding the 256M from a region, it should stop. But now, this patch
-> > > > > will make it continue scanning. Not sure if it's all in my mind.
-> > > > 
-> > > > Hi Baoquan,
-> > > > 
-> > > > Thank you for such a detailed reply. Now I finally understand why the code is
-> > > > written this way.
-> > > > 
-> > > > However, if we can guarantee its correctness, wouldn't it be better to use the
-> > > > generic region removing logic? At least it is more concise and clear, and other
-> > > > people reading this code for the first time wouldn't get confused like me.
-> > > > 
-> > > > As for your concern about the while loop, I think it wouldn't affect performance
-> > > > much because the total number of loops is small.
-> > > 
-> > > Well, see below kexec-tools commit, you wouldn't say that. And when you
-> > > understand the code, you will feel a little uncomfortable about the
-> > > sustaining useless scanning. At least, we should stop scanning after
-> > > needed exluding is done.
-> > > 
-> > > Or, we may need add a generic region removing function so that it
-> > > can be shared, e.g e820 memory region removing, memblock region removing.
-> > > Otherwise, I can't see why a specific region excluding need a generic 
-> > > region removing function.
-> > 
-> > So where do we now stand on this patchset?
-> 
-> The patch 1 and 2 are good clean up. The patch 3 plus below one, the
-> entire is a good code improvement patch.
-> 
-> [PATCH] crash_core: optimize crash_exclude_mem_range()
-> https://lore.kernel.org/all/20231219163418.108591-1-ytcoode@gmail.com/T/#u
+v1 -> v2:
+  Patch 1 and 2 have no changes.
 
-Can you repost this patchset with some updating, e.g adding ack in patch
-1 and 2, and squash below patch into patch 3? This will be easier for
-patch merging.
+  Patch 3 has no functional changes. I just squashed the following patch
+  into it based on Baoquan's suggestion, to make it easier to merge.
 
-[PATCH] crash_core: optimize crash_exclude_mem_range()
-https://lore.kernel.org/all/20231219163418.108591-1-ytcoode@gmail.com/T/#u
+  [PATCH] crash_core: optimize crash_exclude_mem_range()
+  https://lore.kernel.org/all/20231219163418.108591-1-ytcoode@gmail.com/T/#u
 
-And, you may need to drop below patchset since patch 2 conflicts with
-this patchset, and patch 1 is conflicting with fuqiang's patch.
+  The link to the v1 version of this patchset is:
+  https://lore.kernel.org/lkml/ZZPMLextp0n3lwbD@MiWiFi-R3L-srv/t/#m4d20eee5aee48a1daf0a754b5570afb4b5d4fa03
 
-[PATCH 0/2] crash: fix potential cmem->ranges array overflow
+Yuntao Wang (3):
+  x86/crash: remove the unused image parameter from
+    prepare_elf_headers()
+  x86/crash: use SZ_1M macro instead of hardcoded value
+  crash_core: fix and simplify the logic of crash_exclude_mem_range()
 
-Thanks
-Baoquan
+ arch/x86/kernel/crash.c | 12 +++----
+ kernel/crash_core.c     | 80 +++++++++++++++--------------------------
+ 2 files changed, 35 insertions(+), 57 deletions(-)
+
+-- 
+2.43.0
 
 
 _______________________________________________
