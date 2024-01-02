@@ -4,91 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3FDE2C46CD2
-	for <kexec@archiver.kernel.org>; Tue,  2 Jan 2024 14:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 90EE9C47074
+	for <kexec@archiver.kernel.org>; Tue,  2 Jan 2024 14:53:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=j+v7LxkZQK264wzC77lRVBJTpc5CnGhmm9WIsDlSvYo=; b=PNZeGuEuk+CaXZ
-	aYPqScOQtxHFmNLo7TBa5rQ3X8gR0/A6OGBrHXlVJ4XLLdt4qfSYxydOB3raFrxF3P7mQE0nnT33z
-	gW7MisYqtb8+YJTumXratdVzuxfOHc+eITRiZ946g+QkESH29jJmkrqGYFm+lgoOxjRUUUo8U+sKd
-	V1ehqo/O06tUHVv8aEvpChAyevNycqVZvprZs23EZZH3LDLq18sPeLHuEsL1TFBZu7v6Evq0XSzRT
-	GFp4sI1+gukEgLS7q17fsjROaY5iJdc1f0L6YQ4sh+PIVu/ynpZxrPAXBYQiahifIufEhksmtWhtS
-	BW1erMjDZwY8hBryAyOg==;
+	List-Owner; bh=J/Wv4Cj+ssozdxQ2GKDmn3OPnqxbdVDPdfay2wQeJlo=; b=eeghMrXbxbIhi8
+	0ApfD+77oqjQnDodwyQnUb7oQWM4G9xtpi+sStrUYDBCfNYfz5L1LxtwOFjsJl7sO9jB7Vcmog+dJ
+	v4V0zfgTi5FLKX2MsRRc2wIQ5CvODQkbpCXJ8fI6vAD2wtxWHvFZF8umduureM79AQnlneJ3FA4jP
+	igBaeXW+vuM1i3JVUcCNSBLuJCigYO0Q56VBFYF9OMLvhVCxDTwe3jFl2u0g7XqFjrGeT/XZ+mOUT
+	+8Er1PusA6P0eO/ooNm2d4NPNd2vmTxTp0CtQ83SZlWcPHwOl7O4xb8J+8vkxbX1j2/RcsKDlCWrY
+	1hsJL9dfEPzN6P2g7wlQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rKg6D-008I40-1t;
-	Tue, 02 Jan 2024 14:50:33 +0000
-Received: from mail-pg1-x52c.google.com ([2607:f8b0:4864:20::52c])
+	id 1rKg91-008IX5-2b;
+	Tue, 02 Jan 2024 14:53:27 +0000
+Received: from ams.source.kernel.org ([2604:1380:4601:e00::1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rKg6A-008I1i-1K
-	for kexec@lists.infradead.org;
-	Tue, 02 Jan 2024 14:50:32 +0000
-Received: by mail-pg1-x52c.google.com with SMTP id 41be03b00d2f7-53fbf2c42bfso6802787a12.3
-        for <kexec@lists.infradead.org>; Tue, 02 Jan 2024 06:50:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704207027; x=1704811827; darn=lists.infradead.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LCgO/9ttUPkNH7K3G/yJnpUY2imlxWqPy44q0o7/7cg=;
-        b=lmBGHFk+0mh5CShORmulm3d4J8JRtk8RJlQyvcydMMC8wYF2SsFM1KZyHcf5sEHWTs
-         FIDH+2iSzXSqmPF1ZhBNqXNznOKClWJOmW/+Q027jTH6gOiTKIILKcwUXKUcZbDaipLs
-         MemNoM4z9BfzeVLtihuw0+wkqeJEZEXsWrlaJleoLW0+aWqkOEyqgdpvKTNJqcY70lR3
-         tzV1eDkNiKu7Xrh1SLNKxjM1uFmz3huH9f1lDaDfN8J5anRRC81Npfq1WsLZ4/AI9BSR
-         BGE/1iIEjvXW1QwF+2/Fef8UfjPMJbUSZg4X2+PTe/Ta5eDpIiAMGzTgQs7HGwEcbzts
-         tTRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704207027; x=1704811827;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LCgO/9ttUPkNH7K3G/yJnpUY2imlxWqPy44q0o7/7cg=;
-        b=EDEWehZReaq8PD3eDAOixuZ2HaYzndwBKTCnwljHvOegHuTZBcrK53xvb6ajrMRGjK
-         Ih9ItNm9hXBi8s2j1b3EmVUsuxIuAXRfjwr8g+7DPGiYPRfPHmzF5tR5aw7c0OyQv1aD
-         WzBikwM3glURHgboKCBa+Z1HNUdM9YCSTCeawisvd+uIFOxUrtjGqjYOfdYyTvD1e0wu
-         VVl2y95zI4OJKJoFFM86B01J4RWCO7Rn19OaOTPPLumqYcpFErhChKYQGquGJgGgq9/7
-         6RqntH25D5BYQVy9NFfsyIRo3e+ht54ml2bJE5Y2LinZT+osL4rd9Sd2uk1UruVS212B
-         3tUQ==
-X-Gm-Message-State: AOJu0YwNrc+uu3pxIBwSu6XwP0oSgKCRMxodBUxyG855piNcxMuHLobf
-	7q66/o92JJ50IIdxnxMDiEs=
-X-Google-Smtp-Source: AGHT+IEp/OYVuT1KyjbMk8HhRA8LrmsYNrUwPzBctDSGWxhQxggYuqj7FbqKq9gKzAV7mA4P8VLVlA==
-X-Received: by 2002:a17:90b:4b52:b0:28b:e79e:f8d9 with SMTP id mi18-20020a17090b4b5200b0028be79ef8d9mr8228754pjb.84.1704207027515;
-        Tue, 02 Jan 2024 06:50:27 -0800 (PST)
-Received: from code.. ([144.202.108.46])
-        by smtp.gmail.com with ESMTPSA id 19-20020a17090a005300b0028be216595csm25836878pjb.4.2024.01.02.06.50.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jan 2024 06:50:27 -0800 (PST)
-From: Yuntao Wang <ytcoode@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org,
-	x86@kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>,
-	Hari Bathini <hbathini@linux.ibm.com>,
-	Sourabh Jain <sourabhjain@linux.ibm.com>,
-	Takashi Iwai <tiwai@suse.de>,
-	Yuntao Wang <ytcoode@gmail.com>
-Subject: [PATCH v2 3/3] crash_core: fix and simplify the logic of crash_exclude_mem_range()
-Date: Tue,  2 Jan 2024 22:49:05 +0800
-Message-ID: <20240102144905.110047-4-ytcoode@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240102144905.110047-1-ytcoode@gmail.com>
-References: <20240102144905.110047-1-ytcoode@gmail.com>
+	id 1rKg8z-008IVS-0u;
+	Tue, 02 Jan 2024 14:53:26 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by ams.source.kernel.org (Postfix) with ESMTP id E3C08B80DDA;
+	Tue,  2 Jan 2024 14:53:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A473EC433C8;
+	Tue,  2 Jan 2024 14:53:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704207201;
+	bh=33py32HipQADVMip2QWDvskvo4ArE+O9uBBmaumLfiY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=U9Kot7xBJ+tffPDF2Uq3v1XI+nGy2eUAWOpn4y8nL9vnMOUEOx1xZ74j/PwQFV2xk
+	 HdZwBzfSSAIKpG5mlPQTWHhmfa4u4U2m3eeXCDACaCDk21Q+axko7rhR5gjZO1kLrL
+	 0WVp/stC/NEtPgZTE6om7EWBaDttRk8HLkCyqebdjKBXWvOae431bqSrBteisYnq7/
+	 05cL3O/gmcD8jwlHnaT/z8SsUR0jUWX5izW1RoFOiBPJfVa4VUK4v8c7ehYwF8BAbx
+	 p3tFIucCeWupZ8yhu6Xo0CIH8eiG5mivO3ccyPepCNRFfggRU3QqSsJ2Ex679D2BXT
+	 JFMQGgB3FeYpw==
+Received: (nullmailer pid 2821843 invoked by uid 1000);
+	Tue, 02 Jan 2024 14:53:17 -0000
+Date: Tue, 2 Jan 2024 07:53:17 -0700
+From: Rob Herring <robh@kernel.org>
+To: Alexander Graf <graf@amazon.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-doc@vger.kernel.org, x86@kernel.org, Eric Biederman <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, Andrew Morton <akpm@linux-foundation.org>, Mark Rutland <mark.rutland@arm.com>, Tom Lendacky <thomas.lendacky@amd.com>, Ashish Kalra <ashish.kalra@amd.com>, James Gowans <jgowans@amazon.com>, Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, arnd@arndb.de, pbonzini@redhat.com, madvenka@linux.microsoft.com, Anthony Yznaga <anthony.yznaga@oracle.com>, Usama Arif <usama.arif@bytedance.com>, David Woodhouse <dwmw@amazon.co.uk>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH v2 17/17] devicetree: Add bindings for ftrace KHO
+Message-ID: <20240102145317.GA2815776-robh@kernel.org>
+References: <20231222193607.15474-1-graf@amazon.com>
+ <20231222195144.24532-1-graf@amazon.com>
+ <20231222195144.24532-12-graf@amazon.com>
+ <39a33f9b-0290-428d-ab1f-f90856cdb31d@kernel.org>
+ <34e78a84-a29d-4b01-a860-cac3959f6cb6@amazon.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <34e78a84-a29d-4b01-a860-cac3959f6cb6@amazon.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240102_065030_448174_F2CAF3EB 
-X-CRM114-Status: GOOD (  22.14  )
+X-CRM114-CacheID: sfid-20240102_065325_488598_63BB9CEC 
+X-CRM114-Status: GOOD (  25.43  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -105,140 +76,40 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The purpose of crash_exclude_mem_range() is to remove all memory ranges
-that overlap with [mstart-mend]. However, the current logic only removes
-the first overlapping memory range.
+On Sun, Dec 24, 2023 at 12:20:17AM +0100, Alexander Graf wrote:
+> Hi Krzysztof!
+> 
+> Thanks a lot for the fast review!
+> 
+> On 23.12.23 15:30, Krzysztof Kozlowski wrote:
+> > On 22/12/2023 20:51, Alexander Graf wrote:
+> > > With ftrace in KHO, we are creating an ABI between old kernel and new
+> > > kernel about the state that they transfer. To ensure that we document
+> > > that state and catch any breaking change, let's add its schema to the
+> > > common devicetree bindings. This way, we can quickly reason about the
+> > > state that gets passed.
+> > Please use scripts/get_maintainers.pl to get a list of necessary people
+> > and lists to CC (and consider --no-git-fallback argument). It might
+> > happen, that command when run on an older kernel, gives you outdated
+> > entries. Therefore please be sure you base your patches on recent Linux
+> > kernel.
 
-Commit a2e9a95d2190 ("kexec: Improve & fix crash_exclude_mem_range() to
-handle overlapping ranges") attempted to address this issue, but it did not
-fix all error cases.
+[...]
 
-Let's fix and simplify the logic of crash_exclude_mem_range().
+> > 
+> > > +            mem = < 0x101000000ULL 0x38ULL 0x101000100ULL 0x1000ULL 0x101000038ULL 0x38ULL 0x101002000ULL 0x1000ULL>;
+> > ? Do you see any of such syntax in DTS?
+> 
+> 
+> I was trying to make it easy to reason to readers about 64bit numbers - and
+> then potentially extend dtc to consume that new syntax. KHO DTs are
+> native/little endian, so dtc already has some difficulties interpreting it
+> which I'll need to fix up with patches to it eventually :). I'll change it
+> to something that looks more 32bit'y for now.
 
-Signed-off-by: Yuntao Wang <ytcoode@gmail.com>
----
- kernel/crash_core.c | 80 ++++++++++++++++-----------------------------
- 1 file changed, 29 insertions(+), 51 deletions(-)
+"/bits/ 64 <0x0 ...>" is what you are looking for.
 
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index efe87d501c8c..c51d0a54296b 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -565,9 +565,8 @@ int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_map,
- int crash_exclude_mem_range(struct crash_mem *mem,
- 			    unsigned long long mstart, unsigned long long mend)
- {
--	int i, j;
-+	int i;
- 	unsigned long long start, end, p_start, p_end;
--	struct range temp_range = {0, 0};
- 
- 	for (i = 0; i < mem->nr_ranges; i++) {
- 		start = mem->ranges[i].start;
-@@ -575,72 +574,51 @@ int crash_exclude_mem_range(struct crash_mem *mem,
- 		p_start = mstart;
- 		p_end = mend;
- 
--		if (mstart > end || mend < start)
-+		if (p_start > end)
- 			continue;
- 
-+		/*
-+		 * Because the memory ranges in mem->ranges are stored in
-+		 * ascending order, when we detect `p_end < start`, we can
-+		 * immediately exit the for loop, as the subsequent memory
-+		 * ranges will definitely be outside the range we are looking
-+		 * for.
-+		 */
-+		if (p_end < start)
-+			break;
-+
- 		/* Truncate any area outside of range */
--		if (mstart < start)
-+		if (p_start < start)
- 			p_start = start;
--		if (mend > end)
-+		if (p_end > end)
- 			p_end = end;
- 
- 		/* Found completely overlapping range */
- 		if (p_start == start && p_end == end) {
--			mem->ranges[i].start = 0;
--			mem->ranges[i].end = 0;
--			if (i < mem->nr_ranges - 1) {
--				/* Shift rest of the ranges to left */
--				for (j = i; j < mem->nr_ranges - 1; j++) {
--					mem->ranges[j].start =
--						mem->ranges[j+1].start;
--					mem->ranges[j].end =
--							mem->ranges[j+1].end;
--				}
--
--				/*
--				 * Continue to check if there are another overlapping ranges
--				 * from the current position because of shifting the above
--				 * mem ranges.
--				 */
--				i--;
--				mem->nr_ranges--;
--				continue;
--			}
-+			memmove(&mem->ranges[i], &mem->ranges[i + 1],
-+				(mem->nr_ranges - (i + 1)) * sizeof(mem->ranges[i]));
-+			i--;
- 			mem->nr_ranges--;
--			return 0;
--		}
--
--		if (p_start > start && p_end < end) {
-+		} else if (p_start > start && p_end < end) {
- 			/* Split original range */
-+			if (mem->nr_ranges >= mem->max_nr_ranges)
-+				return -ENOMEM;
-+
-+			memmove(&mem->ranges[i + 2], &mem->ranges[i + 1],
-+				(mem->nr_ranges - (i + 1)) * sizeof(mem->ranges[i]));
-+
- 			mem->ranges[i].end = p_start - 1;
--			temp_range.start = p_end + 1;
--			temp_range.end = end;
-+			mem->ranges[i + 1].start = p_end + 1;
-+			mem->ranges[i + 1].end = end;
-+
-+			i++;
-+			mem->nr_ranges++;
- 		} else if (p_start != start)
- 			mem->ranges[i].end = p_start - 1;
- 		else
- 			mem->ranges[i].start = p_end + 1;
--		break;
--	}
--
--	/* If a split happened, add the split to array */
--	if (!temp_range.end)
--		return 0;
--
--	/* Split happened */
--	if (i == mem->max_nr_ranges - 1)
--		return -ENOMEM;
--
--	/* Location where new range should go */
--	j = i + 1;
--	if (j < mem->nr_ranges) {
--		/* Move over all ranges one slot towards the end */
--		for (i = mem->nr_ranges - 1; i >= j; i--)
--			mem->ranges[i + 1] = mem->ranges[i];
- 	}
- 
--	mem->ranges[j].start = temp_range.start;
--	mem->ranges[j].end = temp_range.end;
--	mem->nr_ranges++;
- 	return 0;
- }
- 
--- 
-2.43.0
-
+Rob
 
 _______________________________________________
 kexec mailing list
