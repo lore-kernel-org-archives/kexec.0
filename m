@@ -4,100 +4,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D9B77C47DAF
-	for <kexec@archiver.kernel.org>; Fri, 12 Jan 2024 15:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id ED680C47DA2
+	for <kexec@archiver.kernel.org>; Fri, 12 Jan 2024 15:58:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Content-Transfer-Encoding:Content-Type:Reply-To:List-Subscribe:List-Help:
+	List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References:
+	Message-Id:MIME-Version:Subject:Date:From:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=0Uv39d6Gk+g+E4wi64P9MrOsiKpET+Cuh7TuNGc+gdU=; b=t1x3/ujxdq261v
-	pv0ld9q19TOajFWGpXK9Xj5sy7OQD/iPNHNJQauf552SamPuibbn695Yj5YFUW8VCwrKHBe08TRtO
-	OM19Bmw/gFlSW0AVaQgGJq3y4Z8n9701n923YDfb6wacGtnHmzIwrveS72wTax0YB6lfD3S8CzHSd
-	t+k3DleCiX1UA4lD7gV6pQyffuTDgJeLB7K8wZcOQPV+3hQQAF6EcFzydiPWGLFuREtT86gKtT7gH
-	p6xajcYyQ2OwrEaRgvWil2IUwTliFza6sVbivMV7accTK0yheZ0E7uT4dAXx7Egm6tnEHVnHX1d+3
-	oFWhX5HzUhMatAxb1pkg==;
+	List-Owner; bh=m5948zQONqyjfwHNhuZ4SqEN5LU7y0UsA+GsRcNSilA=; b=INEWX6GReX7mPI
+	vdrBHXmCkMqAWBY4hoIeGo6MFqK0vhvf6oZkUuGvqEobVObrHkqX7kdVVuC2uk8g6VHvqn3hMhQx3
+	Z3tLB7+QKhOkTx5rx6V6JK1NkT4I6k9Kqb7bwup7saCUTPjaJvoHEC7fw1QRPGFpf5I5CnFsP6hsz
+	VrXipeUlLmbxQ2TfVeF7TkGEpG3uhwhy7gDCbe64erXM/hIH29Br6HiLEpZMVvpmfjCHywS8i7vFI
+	SdfN4RQ89JGnaBSLKnkxllcHcHdk6tG2odapXx18rBN6RgBcD+B1wPgWH7aq6cUNnMbVOziLg2vNa
+	w99qtdlomZ2Z1s3Rkxhw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rOJvr-003E7Z-0V;
-	Fri, 12 Jan 2024 15:58:55 +0000
-Received: from smtp-out1.suse.de ([195.135.223.130])
+	id 1rOJvs-003E8V-1G;
+	Fri, 12 Jan 2024 15:58:56 +0000
+Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rBXip-00FBt1-29
+	id 1rLPF9-00EQQz-06
 	for kexec@lists.infradead.org;
-	Fri, 08 Dec 2023 10:04:41 +0000
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 511202212B;
-	Fri,  8 Dec 2023 10:04:32 +0000 (UTC)
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 11D8012FF7;
-	Fri,  8 Dec 2023 10:04:32 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id +t5LATDqcmVNHgAAD6G6ig
-	(envelope-from <mhocko@suse.com>); Fri, 08 Dec 2023 10:04:32 +0000
-Date: Fri, 8 Dec 2023 11:04:27 +0100
-From: Michal Hocko <mhocko@suse.com>
-To: Baoquan He <bhe@redhat.com>
-Cc: Philipp Rudo <prudo@redhat.com>, Donald Dutile <ddutile@redhat.com>,
-	Jiri Bohac <jbohac@suse.cz>, Pingfan Liu <piliu@redhat.com>,
-	Tao Liu <ltao@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	David Hildenbrand <dhildenb@redhat.com>
-Subject: Re: [PATCH 0/4] kdump: crashkernel reservation from CMA
-Message-ID: <ZXLqK_Shia2CFqnH@tiehlicka>
-References: <20231201165113.43211a48@rotkaeppchen>
- <ZWoQ1k2AikSiMjys@tiehlicka>
- <20231206120805.4fdcb8ab@rotkaeppchen>
- <ZXB7_rbC0GAkIp7p@tiehlicka>
- <ZXCRF-bvm8ijXxr4@tiehlicka>
- <ZXFIsZ+0GmUZMFk3@MiWiFi-R3L-srv>
- <ZXGIeAgCcatUDa2h@tiehlicka>
- <20231207121314.50b8e4c4@rotkaeppchen>
- <ZXGyANwELvFKpysH@tiehlicka>
- <ZXJ3m4fPZXJnj29z@MiWiFi-R3L-srv>
+	Thu, 04 Jan 2024 15:02:50 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 4DA5E6182E;
+	Thu,  4 Jan 2024 15:02:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 78ED9C433BC;
+	Thu,  4 Jan 2024 15:02:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704380565;
+	bh=76OiXqny0I5FAtIEkgtQeFpTLfwhsiR4xIiHIe8GjjQ=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=LIsXFBB97dNIR6T+s1NkUbkQvnDWu7qABrhOgeDu4bURrQDFmDdugT/qe4EalTSXu
+	 foMcISTUIzWUV2FsxqWR1/HcpEplm7HfB+jUds0jiUTauTvG5IYtPr118enbkNy//L
+	 LFf6v5RD0cdCDG0ufbeqK6gWoIeRVvS6QyOrGCw4R2mCGoy47FNkMz6gYhS/b5Y0+m
+	 ot3EoYiVFIL2qudYErJyOEgzNfmRAlUAf56EQItn48xgKhPwmtpZMwfJqoM5DKXJVz
+	 IscBJDMf7i7nUO0yXPINQmK3xz6AsF9cQGM42mn9cyRbQcJDA5xeoloOVlLR8npHNG
+	 jTTgU6jxW/t6w==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F230C47073;
+	Thu,  4 Jan 2024 15:02:45 +0000 (UTC)
+From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
+Date: Thu, 04 Jan 2024 16:02:25 +0100
+Subject: [PATCH v2 04/10] timekeeping: Remove the now superfluous sentinel
+ elements from ctl_table array
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <ZXJ3m4fPZXJnj29z@MiWiFi-R3L-srv>
-X-Spamd-Result: default: False [15.00 / 50.00];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_SPF_FAIL(1.00)[-all];
-	 ARC_NA(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 DMARC_POLICY_QUARANTINE(1.50)[suse.com : No valid SPF, No valid DKIM,quarantine];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_SEVEN(0.00)[11];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 R_DKIM_NA(2.20)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%];
-	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from]
-X-Spamd-Bar: +++++++++++++++
-Authentication-Results: smtp-out1.suse.de;
-	dkim=none;
-	dmarc=fail reason="No valid SPF, No valid DKIM" header.from=suse.com (policy=quarantine);
-	spf=fail (smtp-out1.suse.de: domain of mhocko@suse.com does not designate 2a07:de40:b281:104:10:150:64:97 as permitted sender) smtp.mailfrom=mhocko@suse.com
-X-Rspamd-Server: rspamd1
-X-Rspamd-Queue-Id: 511202212B
-X-Spam: Yes
+Message-Id: <20240104-jag-sysctl_remove_empty_elem_kernel-v2-4-836cc04e00ec@samsung.com>
+References: <20240104-jag-sysctl_remove_empty_elem_kernel-v2-0-836cc04e00ec@samsung.com>
+In-Reply-To: <20240104-jag-sysctl_remove_empty_elem_kernel-v2-0-836cc04e00ec@samsung.com>
+To: Luis Chamberlain <mcgrof@kernel.org>, willy@infradead.org, 
+ josh@joshtriplett.org, Kees Cook <keescook@chromium.org>, 
+ Eric Biederman <ebiederm@xmission.com>, Iurii Zaikin <yzaikin@google.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Thomas Gleixner <tglx@linutronix.de>, John Stultz <jstultz@google.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Andy Lutomirski <luto@amacapital.net>, 
+ Will Drewry <wad@chromium.org>, Ingo Molnar <mingo@redhat.com>, 
+ Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+ Vincent Guittot <vincent.guittot@linaro.org>, 
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+ Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+ Daniel Bristot de Oliveira <bristot@redhat.com>, 
+ Valentin Schneider <vschneid@redhat.com>, Petr Mladek <pmladek@suse.com>, 
+ John Ogness <john.ogness@linutronix.de>, 
+ Sergey Senozhatsky <senozhatsky@chromium.org>, 
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, 
+ Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Balbir Singh <bsingharora@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, 
+ John Fastabend <john.fastabend@gmail.com>, 
+ Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
+ linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ bpf@vger.kernel.org, Joel Granados <j.granados@samsung.com>
+X-Mailer: b4 0.13-dev-86aa5
+X-Developer-Signature: v=1; a=openpgp-sha256; l=864; i=j.granados@samsung.com;
+ h=from:subject:message-id; bh=rOgjyk+y2sTTf7UpdfCg7T7N07f0Drf2bm8cuUCjmf0=;
+ b=owEB7QES/pANAwAKAbqXzVK3lkFPAcsmYgBllsiQeefs10L9U9C6E9ObjWbvyDIljOI9DQ+SH
+ mJVo12IrSyJAbMEAAEKAB0WIQSuRwlXJeYxJc7LJ5C6l81St5ZBTwUCZZbIkAAKCRC6l81St5ZB
+ T7OtDACWjrpqcR5DbGc48ai3Fu0II5BMzsCkwdkvgpsLPPoXZJd8Skx95KGSKIeQnsNc11MPKkq
+ L1YS1lrX1fMo+5Vs8mHNUwYne2u3EDkcY+jaVW68W6LhkpYNrhlh/9+3S/5Q1T7y7v4o4PQqUHS
+ 4h4ybQ/0wIK3nsbGeZWFsccqSN66LDB/3YFHZraXHOEugCtIz8c4L1GnRaVfg8qKTPaGGmzbPxi
+ jXEE1jiI4BgsFViTAbgHKntquCgG19U5eFsXfIoKre11wGggdq8JT9UidiPajbH6E2FI/JIUQxv
+ 6EfjtOoF8+BTsnLuSPSN2Og7sGF+M5WFX0rRKGautby6LT9Kf2f2x03U4Sdiou6vV7fyVniWVVe
+ Va8vDlewMZo+ksIJl1jrxvBc9dTEJwaNpIh4KLjFAQkQBb2fIW/YkUSXRo6ZuRSgFBEzYVgVM41
+ pcpVje8m1dgYFE0mTmV5L0MChWeCvmR89eUA8+W82cRb5gFlFO3QmHkXVUPdbPI70btPI=
+X-Developer-Key: i=j.granados@samsung.com; a=openpgp;
+ fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
+X-Endpoint-Received: by B4 Relay for j.granados@samsung.com/default with auth_id=70
+X-Original-From: Joel Granados <j.granados@samsung.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20231208_020439_877925_C7593711 
-X-CRM114-Status: GOOD (  37.04  )
+X-CRM114-CacheID: sfid-20240104_070247_163226_0D8CB61D 
+X-CRM114-Status: GOOD (  13.26  )
 X-Mailman-Approved-At: Fri, 12 Jan 2024 07:58:47 -0800
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -110,114 +114,43 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: j.granados@samsung.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri 08-12-23 09:55:39, Baoquan He wrote:
-> On 12/07/23 at 12:52pm, Michal Hocko wrote:
-> > On Thu 07-12-23 12:13:14, Philipp Rudo wrote:
-[...]
-> > > Thing is that users don't only want to reduce the memory usage but also
-> > > the downtime of kdump. In the end I'm afraid that "simply waiting" will
-> > > make things unnecessarily more complex without really solving any issue.
-> > 
-> > I am not sure I see the added complexity. Something as simple as
-> > __crash_kexec:
-> > 	if (crashk_cma_cnt) 
-> > 		mdelay(TIMEOUT)
-> > 
-> > should do the trick.
-> 
-> I would say please don't do this. kdump jumping is a very quick
-> behavirou after corruption, usually in several seconds. I can't see any
-> meaningful stuff with the delay of one minute or several minutes.
+From: Joel Granados <j.granados@samsung.com>
 
-Well, I've been told that DMA should complete within seconds after
-controller is programmed (if that was much more then short term pinning
-is not really appropriate because that would block memory movability for
-way too long and therefore result in failures). This is something we can
-tune for.
+This commit comes at the tail end of a greater effort to remove the
+empty elements at the end of the ctl_table arrays (sentinels) which
+will reduce the overall build time size of the kernel and run time
+memory bloat by ~64 bytes per sentinel (further information Link :
+https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
 
-But if that sounds like a completely wrong approach then I think an
-alternative would be to live with potential inflight DMAs just avoid
-using that memory by the kdump kernel before the DMA controllers (PCI
-bus) is reinitialized by the kdump kernel. That should happen early in
-the boot process IIRC and the CMA backed memory could be added after
-that moment. We already do have means so defer memory initialization
-so an extension shouldn't be hard to do. It will be a slightly more involved
-patch touching core MM which we have tried to avoid so far. Does that
-sound like something acceptable?
+Remove sentinel element from time_sysctl
 
-[...]
+Signed-off-by: Joel Granados <j.granados@samsung.com>
+---
+ kernel/time/timer.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-> > The thing we should keep in mind is that the memory sitting aside is not
-> > used in majority of time. Crashes (luckily/hopefully) do not happen very
-> > often. And I can really see why people are reluctant to waste it. Every
-> > MB of memory has an operational price tag on it. And let's just be
-> > really honest, a simple reboot without a crash dump is very likely
-> > a cheaper option than wasting a productive memory as long as the issue
-> > happens very seldom.
-> 
-> All the time, I have never heard people don't want to "waste" the
-> memory. E.g, for more than 90% of system on x86, 256M is enough. The
-> rare exceptions will be noted once recognized and documented in product
-> release.
-> 
-> And ,cma is not silver bullet, see this oom issue caused by i40e and its
-> fix , your crashkernel=1G,cma won't help either.
-> 
-> [v1,0/3] Reducing memory usage of i40e for kdump
-> https://patchwork.ozlabs.org/project/intel-wired-lan/cover/20210304025543.334912-1-coxu@redhat.com/
-> 
-> ======Abstrcted from above cover letter==========================
-> After reducing the allocation of tx/rx/arg/asq ring buffers to the
-> minimum, the memory consumption is significantly reduced,
->     - x86_64: 85.1MB to 1.2MB 
->     - POWER9: 15368.5MB to 20.8MB
-> ==================================================================
+diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+index 63a8ce7177dd..475826ad78df 100644
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -260,7 +260,6 @@ static struct ctl_table timer_sysctl[] = {
+ 		.extra1		= SYSCTL_ZERO,
+ 		.extra2		= SYSCTL_ONE,
+ 	},
+-	{}
+ };
+ 
+ static int __init timer_sysctl_init(void)
 
-Nice to see memory consumption reduction fixes. But, honestly this
-should happen regardless of kdump. CMA backed kdump is not to
-workaround excessive kernel memory consumers. It seems I am failing to
-get the message through :( but I do not know how else to express that the
-pressure on reducing the wasted memory is real. It is not important
-whether 256MB is enough for everybody. Even that would grow to non
-trivial cost in data centers with many machines.
-
-> And say more about it. This is not the first time of attempt to make use
-> of ,cma area for crashkernel=. In redhat, at least 5 people have tried
-> to add this, finally we gave up after long discussion and investigation.
-> This year, one kernel developer in our team raised this again with a
-> very long mail after his own analysis, we told him the discussion and
-> trying we have done in the past.
-
-This is really hard to comment on without any references to those
-discussions. From this particular email thread I have a perception that
-you guys focus much more on correctness provability than feasibility. If
-we applied the same approach universally then many other features
-couldn't have been merged. E.g. kexec for reasons you have mentioned in
-the email thread.
-
-Anyway, thanks for pointing to regular DMA via gup case which we were
-obviously not aware of. I personally have considered this to be a
-marginal problem comparing to RDMA which is unpredictable wrt timing.
-But we believe that this could be worked around. Now it would be really
-valuable if we knew somebody has _tried_ that and it turned out not
-working because of XYZ reasons.  That would be a solid base to
-re-evaluate and think of different approaches.
-
-Look, this will be your call as maintainers in the end. If you are
-decided then fair enough. We might end up trying this feature downstream
-and maybe come back in the future with an experience which we currently
-do not have. But it seems we are not alone seeing the existing state is
-insufficient (http://lkml.kernel.org/r/20230719224821.GC3528218@google.com).
-
-Thanks!
 -- 
-Michal Hocko
-SUSE Labs
+2.30.2
+
 
 _______________________________________________
 kexec mailing list
