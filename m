@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CF158C47DB3
-	for <kexec@archiver.kernel.org>; Fri, 12 Jan 2024 15:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3FC8CC47DB4
+	for <kexec@archiver.kernel.org>; Fri, 12 Jan 2024 15:58:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:Reply-To:List-Subscribe:List-Help:
 	List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References:
 	Message-Id:MIME-Version:Subject:Date:From:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=sUcIfUOAoLK7hZ1f0PMyUl4PLNvbeeJBIc5iAkrk6WM=; b=suDifSC8ay4zK1
-	auwtU9k8ZUGpohuijH1EXSJ9V7tgYCDbmuoCwugHUpYTcYhOUIL66UPI8o46ATy+NHWvhGqlWyHoZ
-	4p+byvr5XkxwbnO/u91SHqr1Y+bGeVwrA3HvDdH+4hH23sV1TgSxEkPK4kExBqaI8Au6OUckqY0iU
-	Gb5fRTzBsEH3gvtlFCyV873j/BR0wEC8ipKktyZ0JdRQU4tRRLG7cEgplIR78d9Qw9SMof+OqvF0x
-	13biriGPPRAr4RmDaL91N390PrsnXpNngxk7ARQtxP7hG0ATtGu+84cXuBO49/HPb+8WSG37DZAPB
-	BfbwN2CCVAU3TwyjacTw==;
+	List-Owner; bh=Ha9atcS3zbiuzRaZmtc/imeARhCtqbLuRL/FZTc1t1w=; b=QkXyWk8i0/Nykx
+	MKL6DEcsd841Bw2i++p++3JH/4yQ+7AQZPhbQmZNhf4rIHXCFh9qhy8OwuoqddGgIjLdUfih0SPSc
+	m3VdtkGcSJEcZdpW8j5dXdQ2d9ulekc+njzd+VGYjL7cWF9IkfIbYNJRx2Vzu88vsLvq+rz1P/VC7
+	DmVSf/XixZ1SIc1dYAqyHkTWafFNYuuekzWaI0xMund3ArDIMLytRkeEscKpQxIqVyIaR3DYBDmh5
+	uxjFeA68e2q+al6hqcI3WJuKBCBicO55XrvUMlxalIYPnxwnCWL048fKQHf0HT8SQldyi53vMKmOW
+	Y3IpxAnH4oPXdLMM2Jdw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rOJvs-003E9D-33;
-	Fri, 12 Jan 2024 15:58:56 +0000
+	id 1rOJvt-003E9x-1y;
+	Fri, 12 Jan 2024 15:58:57 +0000
 Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rLPF9-00EQRs-1I
+	id 1rLPF9-00EQRQ-0j
 	for kexec@lists.infradead.org;
 	Thu, 04 Jan 2024 15:02:50 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id A180761826;
+	by dfw.source.kernel.org (Postfix) with ESMTP id 8A15B61811;
 	Thu,  4 Jan 2024 15:02:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A6A70C433CC;
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 92CFCC4AF5D;
 	Thu,  4 Jan 2024 15:02:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1704380565;
-	bh=DvcxIFzA2XKWMKETjpH2TO0c5m9+WASjBlILvRYUVnU=;
+	bh=rztlto8eEbJ+Snp+e1X4/9BzW9/7AlNu0SuQr3dKr6Y=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=R5dFM2GTj0y/e0TfLXbOFis9tsZ8LdQf2psrDfsPoG3V0DKb4X/g0IWVNUcSwDUX6
-	 gaFDoNqkdzd3GYjsponjmJ/d02IbSvnpnzmdvtPwXK37bmkHgSK4LX6ka7APrOJLlj
-	 TPXIXaTE1YLT6Vaopl+3aWysNwm8mmBtCyXRnIY0Bb/VrSDGAKc4MbqvfIUkyDcm81
-	 Mmre/vwyV7z1t76I2rbnRJSdMoZEk2fLnAu+ZT//0gb3OPplDUz+2P3IA0lwzGOfEr
-	 bQGFEaZ7IQLgn9YpxRadyyVEF3uU+auA5WkMqKsL7h1HYxchQo6r9A2P5AZRrb1tP1
-	 YEB8J2IWNyb7g==
+	b=rJosMr+ehRG/C2guKa2lmEkTDfQWd5W3U8g4xdyzMBtPGAGdQ7oygvRVw4wbnDsZu
+	 JNrnyz6Dj4Gu6JGXLwUspUakqNyqgz9W4Ccv12H6B3OKBRctIO+0f78d3X1j1i3lNw
+	 WCr2OvgIh036faAKWZ194es1Mutt698yFao/RVeMwiIxmMGbdf952Fh8w6Evj4KPVO
+	 lTuJ9dFErNeMw0BNsU2RTSwEJrCwh6XpmUOuTS2ckb1FFr5SRuwceBkM+5dgxuIc3V
+	 I0fOOcrPU/9c14wJHoAkkwvdcYpasKSPKgRwvVDBE7rWPyhe/lPWCee6EcPHfT/ytf
+	 VQJg3rP96OqHw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D9A1C47074;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F24C47079;
 	Thu,  4 Jan 2024 15:02:45 +0000 (UTC)
 From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
-Date: Thu, 04 Jan 2024 16:02:27 +0100
-Subject: [PATCH v2 06/10] scheduler: Remove the now superfluous sentinel
+Date: Thu, 04 Jan 2024 16:02:26 +0100
+Subject: [PATCH v2 05/10] seccomp: Remove the now superfluous sentinel
  elements from ctl_table array
 MIME-Version: 1.0
-Message-Id: <20240104-jag-sysctl_remove_empty_elem_kernel-v2-6-836cc04e00ec@samsung.com>
+Message-Id: <20240104-jag-sysctl_remove_empty_elem_kernel-v2-5-836cc04e00ec@samsung.com>
 References: <20240104-jag-sysctl_remove_empty_elem_kernel-v2-0-836cc04e00ec@samsung.com>
 In-Reply-To: <20240104-jag-sysctl_remove_empty_elem_kernel-v2-0-836cc04e00ec@samsung.com>
 To: Luis Chamberlain <mcgrof@kernel.org>, willy@infradead.org, 
@@ -84,25 +84,24 @@ Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
  linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
  bpf@vger.kernel.org, Joel Granados <j.granados@samsung.com>
 X-Mailer: b4 0.13-dev-86aa5
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3002;
- i=j.granados@samsung.com; h=from:subject:message-id;
- bh=Xa7JcmuwlJTq/SA5ehycdcY7bcWSGAbQacdTyMWnUTk=;
- b=owEB7QES/pANAwAKAbqXzVK3lkFPAcsmYgBllsiQbIczHWbA4zQWXlEme0igfFkoWIsxmXPBc
- CUCAXAJAquJAbMEAAEKAB0WIQSuRwlXJeYxJc7LJ5C6l81St5ZBTwUCZZbIkAAKCRC6l81St5ZB
- T+sFC/4z8OHS2Jhpxg/muIoqFJFCx92BwSioQWQgxJqUOKKdgfweslcLr/dIkxHa1s1yhWlu79H
- FrbQZs7tWs4EeLTuz/0ucBuBUEL03XSk1slxTJzlU6Yxf5Wt6SnErVBEGmRMzqDz9HFfqizNRhm
- rKnkOIsjlFq5NmsVoISr4mL98mhBW3bTKRN/WwjS3esxVfzIjegH928NqKvvo6gyYsL+OLuas/J
- EK551LdSTfSpr7PdtnCxVUpvyLOJb94MJKLr9DzZhPlVRU3mO0LQLoBmJmyUkTWZAEQ1HEETxQx
- UzT+ncJf5C9wWRGEGhaRgXksWdblHKqBn7K+mufKwYWfB039x02ctFPeZY8Zc8E1HQxdrCsdKIc
- w+GFYqcrdOkoJwkm1waSCdCnHjc232iIKWr088ReNk4aSRknHtzf8v5K3yWaoyDMur8u8CZ/vuU
- K3OxAL4Yy0KSBRglb1nKHWv7LdlJZzQioOTDk8JpXzATWG6xbI4Y9g3UmcVRewIIsEgjc=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=933; i=j.granados@samsung.com;
+ h=from:subject:message-id; bh=z6EeWSeb/wAILeyqvWIX8FMlRbwGB4xwjlfltNsIiys=;
+ b=owEB7QES/pANAwAKAbqXzVK3lkFPAcsmYgBllsiQF0oBNt6LJkb+zVY5GGJCeSKg2G1eOlNY/
+ U9hMugX/3qJAbMEAAEKAB0WIQSuRwlXJeYxJc7LJ5C6l81St5ZBTwUCZZbIkAAKCRC6l81St5ZB
+ T7e6DACU+v+qIRdOgR0Vmu/bybMMTZLCFfSEqP2vKHZSh37Ah76SyGQpohwFYIlyBeOBBnPNVyJ
+ w8p0UWOfIBTtC+RGTtt2n0ijQHCmzEUBwd2OS+8KyEGACtGvfQ/HTz0ohTLF+dkeSuN36ne0Pc/
+ 5e7X+WCLZT9/SrcD0xsDhmm1eBnRUVHbBwQVfRVipKlX1xm3KrnZmSfeC5RrFvx0C5HJrJeJ/lA
+ /hKTvsd4Lz3IMWylzkkAgqXGSjXjftqgJUEkAHGjptsRIAFAOuOvPq/UN6RctFRocbfHGq4y2is
+ jGLLoDYRoLk43HuSXfJlB2y+a4pRp77W8ZH2uzwJkinqJpEMfHIHKB4zlq/sXgYIpyt0m7FMEK+
+ diaryq9MeBCXKGs6k1+XLcyj/vWSI1KAYrB2xLVuKd2dsT+dFwovPvTkPayLoVRQusHMPEWXJAg
+ /b49Ubys+BjHCNculOLNQoH4Nm+SfvkyVDsf6IrMme51A2DKU3QkWmvfzwebLsO9PnjAE=
 X-Developer-Key: i=j.granados@samsung.com; a=openpgp;
  fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
 X-Endpoint-Received: by B4 Relay for j.granados@samsung.com/default with auth_id=70
 X-Original-From: Joel Granados <j.granados@samsung.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240104_070247_531932_AFA01B17 
-X-CRM114-Status: GOOD (  13.58  )
+X-CRM114-CacheID: sfid-20240104_070247_350350_3448F149 
+X-CRM114-Status: GOOD (  13.57  )
 X-Mailman-Approved-At: Fri, 12 Jan 2024 07:58:48 -0800
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -129,91 +128,26 @@ will reduce the overall build time size of the kernel and run time
 memory bloat by ~64 bytes per sentinel (further information Link :
 https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
 
-rm sentinel element from ctl_table arrays
+Remove sentinel element from seccomp_sysctl_table.
 
-Acked-by: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Acked-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Joel Granados <j.granados@samsung.com>
 ---
- kernel/sched/autogroup.c | 1 -
- kernel/sched/core.c      | 1 -
- kernel/sched/deadline.c  | 1 -
- kernel/sched/fair.c      | 1 -
- kernel/sched/rt.c        | 1 -
- kernel/sched/topology.c  | 1 -
- 6 files changed, 6 deletions(-)
+ kernel/seccomp.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/kernel/sched/autogroup.c b/kernel/sched/autogroup.c
-index 991fc9002535..db68a964e34e 100644
---- a/kernel/sched/autogroup.c
-+++ b/kernel/sched/autogroup.c
-@@ -19,7 +19,6 @@ static struct ctl_table sched_autogroup_sysctls[] = {
- 		.extra1         = SYSCTL_ZERO,
- 		.extra2         = SYSCTL_ONE,
+diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+index 255999ba9190..b727b4351c1b 100644
+--- a/kernel/seccomp.c
++++ b/kernel/seccomp.c
+@@ -2445,7 +2445,6 @@ static struct ctl_table seccomp_sysctl_table[] = {
+ 		.mode		= 0644,
+ 		.proc_handler	= seccomp_actions_logged_handler,
  	},
--	{}
+-	{ }
  };
  
- static void __init sched_autogroup_sysctl_init(void)
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index a708d225c28e..5631d0ec161b 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -4708,7 +4708,6 @@ static struct ctl_table sched_core_sysctls[] = {
- 		.extra2		= SYSCTL_FOUR,
- 	},
- #endif /* CONFIG_NUMA_BALANCING */
--	{}
- };
- static int __init sched_core_sysctl_init(void)
- {
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index b28114478b82..58cf9defc3b9 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -43,7 +43,6 @@ static struct ctl_table sched_dl_sysctls[] = {
- 		.proc_handler   = proc_douintvec_minmax,
- 		.extra2         = (void *)&sysctl_sched_dl_period_max,
- 	},
--	{}
- };
- 
- static int __init sched_dl_sysctl_init(void)
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index d7a3c63a2171..8f5f016ebc46 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -157,7 +157,6 @@ static struct ctl_table sched_fair_sysctls[] = {
- 		.extra1		= SYSCTL_ZERO,
- 	},
- #endif /* CONFIG_NUMA_BALANCING */
--	{}
- };
- 
- static int __init sched_fair_sysctl_init(void)
-diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index 6aaf0a3d6081..350f4e8b3b2f 100644
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -56,7 +56,6 @@ static struct ctl_table sched_rt_sysctls[] = {
- 		.mode           = 0644,
- 		.proc_handler   = sched_rr_handler,
- 	},
--	{}
- };
- 
- static int __init sched_rt_sysctl_init(void)
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index 10d1391e7416..e3a354173005 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -322,7 +322,6 @@ static struct ctl_table sched_energy_aware_sysctls[] = {
- 		.extra1         = SYSCTL_ZERO,
- 		.extra2         = SYSCTL_ONE,
- 	},
--	{}
- };
- 
- static int __init sched_energy_aware_sysctl_init(void)
+ static int __init seccomp_sysctl_init(void)
 
 -- 
 2.30.2
