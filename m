@@ -4,60 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8AC41C3DA6E
-	for <kexec@archiver.kernel.org>; Fri,  5 Jan 2024 20:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0C19AC3DA6E
+	for <kexec@archiver.kernel.org>; Sat,  6 Jan 2024 01:00:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=eTzshlFpwRiezRtDaTkZPrsbBUsucMCyT9qRaG5DRFs=; b=TkL/CUBj9K2ClV
-	fEa/Y9HKOGk4Ka27uyQyRYJhhPNdThQHl/wPsnSNgc0jJUFl/HC+FfCvts+T2LM1cQThJE9NzcHFa
-	MWSlNcYH4ZsTeMnRZuh2A0EXadoD9nr4vUdV5m2AMu3m/jHiwbjgFZHWAT9npuCdmsjtKLd+AKUHr
-	hlvCmUVs81z9REReXvadcneX+iz6DJLbAbIQ/PY/8pTVclvVXAdE65b6DhmjY8JyV/5vE+HvzEtQ9
-	o7F24Ls1HXjyy9WQSvsNe0iYTXJoi4AvhyybPg/XTUUu45sa0s0HBjNBKtj7+U9UJRHfu080+2rn7
-	TiVC43PLBumXZv1aJehw==;
+	List-Owner; bh=51V/21kuiH1dEaA0j8ZuL2F78vnvaglCmWk3w2BDY7Y=; b=g6vcJJSdSklxmN
+	VwXPCOD3AylH4V8dSmBodsKNGTEdqH4kSHqoExjtyO6QixAJNOnh7UX1WueSsrXVgs6Y4gQv0qRXD
+	pN1qXGqqnq6TxSYc6I4isKpMK3eIKvL2hKQA8QA0y6BU4UqrwBAbunBojYH3xO2s8buv6cm1FrcI4
+	F3o8roht/gh/EpJe6aUFVSEP/0LUkxS89IKzqNqKFFyS4a7fwt3iB69wpsv7KO0Mwtk+Tfq9NgRO/
+	XXgt+pdGbGn36/hy244o91/MmEeC+KEilQce/GMQd4gyVLKQl33qWcK34p/V38bL2uXOaKeRgy5EL
+	uulFLre04AhaWrTHb/Hg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rLqiT-000BDa-2K;
-	Fri, 05 Jan 2024 20:22:53 +0000
-Received: from linux.microsoft.com ([13.77.154.182])
-	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rLqiN-000BCx-13
+	id 1rLv2p-000VLV-1i;
+	Sat, 06 Jan 2024 01:00:11 +0000
+Received: from mgamail.intel.com ([134.134.136.31])
+	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
+	id 1rLv2i-000VJo-1l
 	for kexec@lists.infradead.org;
-	Fri, 05 Jan 2024 20:22:51 +0000
-Received: from [192.168.86.69] (unknown [50.46.228.62])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 0968720B3CC1;
-	Fri,  5 Jan 2024 12:22:46 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0968720B3CC1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1704486166;
-	bh=uupHtXOGbKP6pvAq6/w2tyZfb+L+q+LE1ch/I/GE/70=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=tQNowT04HbArObQ3peUEUEOKkDMc0s3FoxoKxS4ISkevJRH0Iy+UhqczHEg+RfWSY
-	 rUSRqmCd/ti7qFEeDLK9pELS6EKrp/EqMQm+C18n+dXKaRgciJu947U4BgdujhK2Cx
-	 4qU4falIoGAnqnn5VglN4W+umn7ldrqbz0pkLxMs=
-Message-ID: <db16303d-44b7-45d2-b844-cf4d7fe89647@linux.microsoft.com>
-Date: Fri, 5 Jan 2024 12:22:45 -0800
+	Sat, 06 Jan 2024 01:00:05 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1704502804; x=1736038804;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=bSsYNHPqPBPvIfJLFuPRmb0GQmnn1/patfbIJCmnLTQ=;
+  b=PnSl9B87p3YzK7JEgbRi9n73URPIn7CwUPQLazXGF8MfsvEJ98l6VPxs
+   QGYBed3T8SnFfMEgfFNc2VJSXpIhXyOaV+rx0EMmr/WDVNit/PBMvjIw8
+   lRNwkQF7k4ogu31zfrY72mIedGCyhKnALV/XQqfdL+QhVK6vCk/KWrAWA
+   BwiuKJnE4wlQK1sblaY6Jm4TrnfQCYTucMA9NqqvGFP7evAtp8m5W9xhc
+   dUyiSyF7JRfcRp3T0BRBD/sHvInqz2ihCfhv18TPNfsC8K7rRYpOuobc5
+   AbeiES0dKsH9mNGPxP4ikEzSs2UGo26KEiY8W/sCapyQ7mt++Q0LFIOoH
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10944"; a="461918824"
+X-IronPort-AV: E=Sophos;i="6.04,335,1695711600"; 
+   d="scan'208";a="461918824"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 16:59:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10944"; a="871366157"
+X-IronPort-AV: E=Sophos;i="6.04,335,1695711600"; 
+   d="scan'208";a="871366157"
+Received: from mflierl-xps15.amr.corp.intel.com (HELO box.shutemov.name) ([10.252.36.84])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2024 16:59:03 -0800
+Received: by box.shutemov.name (Postfix, from userid 1000)
+	id 49F5C10A57B; Sat,  6 Jan 2024 03:59:01 +0300 (+03)
+Date: Sat, 6 Jan 2024 03:59:01 +0300
+From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
+To: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc: "tglx@linutronix.de" <tglx@linutronix.de>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"x86@kernel.org" <x86@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+	"Reshetova, Elena" <elena.reshetova@intel.com>,
+	"Nakajima, Jun" <jun.nakajima@intel.com>,
+	"rafael@kernel.org" <rafael@kernel.org>,
+	"peterz@infradead.org" <peterz@infradead.org>,
+	"Huang, Kai" <kai.huang@intel.com>,
+	"sathyanarayanan.kuppuswamy@linux.intel.com" <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	"Hunter, Adrian" <adrian.hunter@intel.com>,
+	"thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+	"ashish.kalra@amd.com" <ashish.kalra@amd.com>,
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
+	"seanjc@google.com" <seanjc@google.com>,
+	"bhe@redhat.com" <bhe@redhat.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCHv5 10/16] x86/tdx: Convert shared memory back to private
+ on kexec
+Message-ID: <20240106005901.jpdxd544ddih6nw7@box.shutemov.name>
+References: <20231222235209.32143-1-kirill.shutemov@linux.intel.com>
+ <20231222235209.32143-11-kirill.shutemov@linux.intel.com>
+ <063a42bfe538710931fca183a8d28c8a3d011608.camel@intel.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 7/7] ima: measure kexec load and exec events as
- critical data
-Content-Language: en-US
-To: Mimi Zohar <zohar@linux.ibm.com>, roberto.sassu@huaweicloud.com,
- roberto.sassu@huawei.com, eric.snowberg@oracle.com, stefanb@linux.ibm.com,
- ebiederm@xmission.com, noodles@fb.com, bauermann@kolabnow.com,
- linux-integrity@vger.kernel.org, kexec@lists.infradead.org
-Cc: code@tyhicks.com, nramas@linux.microsoft.com, paul@paul-moore.com
-References: <20231216010729.2904751-1-tusharsu@linux.microsoft.com>
- <20231216010729.2904751-8-tusharsu@linux.microsoft.com>
- <0c98853722d57472d451e7838d4b1176665de1c0.camel@linux.ibm.com>
-From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-In-Reply-To: <0c98853722d57472d451e7838d4b1176665de1c0.camel@linux.ibm.com>
+Content-Disposition: inline
+In-Reply-To: <063a42bfe538710931fca183a8d28c8a3d011608.camel@intel.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240105_122247_409622_0350EEC6 
-X-CRM114-Status: GOOD (  19.24  )
+X-CRM114-CacheID: sfid-20240105_170004_649947_9B08C231 
+X-CRM114-Status: GOOD (  15.43  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -69,132 +97,63 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On Fri, Jan 05, 2024 at 07:38:48PM +0000, Edgecombe, Rick P wrote:
+> The break apart looks good.
+> =
 
+> On Sat, 2023-12-23 at 02:52 +0300, Kirill A. Shutemov wrote:
+> > +=A0=A0=A0=A0=A0=A0=A0while (addr < end) {
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0unsigned long size;
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0unsigned int level;
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0pte_t *pte;
+> > +
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0pte =3D lookup_address(ad=
+dr, &level);
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0size =3D page_level_size(=
+level);
+> > +
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0if (pte && pte_decrypted(=
+*pte)) {
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0i=
+nt pages =3D size / PAGE_SIZE;
+> > +
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0/*
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 =
+* Touching memory with shared bit set
+> > triggers implicit
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 =
+* conversion to shared.
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 *
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 =
+* Make sure nobody touches the shared range
+> > from
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 =
+* now on.
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 =
+*/
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0s=
+et_pte(pte, __pte(0));
+> =
 
-On 12/20/23 12:41, Mimi Zohar wrote:
-> On Fri, 2023-12-15 at 17:07 -0800, Tushar Sugandhi wrote:
->> There could be a potential mismatch between IMA measurements and TPM PCR
->> quotes caused by the indeterminate interval between kexec 'load' and
->> 'execute'.  Memory allocated at kexec 'load' for IMA log buffer may run
->> out. It can lead to missing events in the IMA log after a soft reboot to
->> the new Kernel, resulting in TPM PCR quotes mismatch and remote
->> attestation failures.
->>
->> Define two new IMA events, 'kexec_load' and 'kexec_execute', to be
->> measured as critical data at kexec 'load' and 'execute' respectively.
->>
->> These events serve as markers in the IMA log to verify the IMA events are
->> captured between kexec 'load' and 'execute' window.  The presence of a
->> 'kexec_load' event in between the last two 'boot_aggregate' events in the
->> IMA log implies this is a kexec soft reboot, and not a cold-boot. And the
->> absence of 'kexec_execute' event after kexec soft reboot implies missing
->> events in that window which results in inconsistency with TPM PCR quotes,
->> necessitating a cold boot for further successful remote attestation.
->>
->> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
->> ---
->>   security/integrity/ima/ima_kexec.c | 23 ++++++++++++++++++++++-
->>   1 file changed, 22 insertions(+), 1 deletion(-)
->>
->> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
->> index 063da9c834a0..47da41a66dcc 100644
->> --- a/security/integrity/ima/ima_kexec.c
->> +++ b/security/integrity/ima/ima_kexec.c
->> @@ -17,6 +17,8 @@
->>   #include "ima.h"
->>   
->>   #ifdef CONFIG_IMA_KEXEC
->> +#define IMA_KEXEC_EVENT_LEN 128
->> +
->>   struct seq_file ima_kexec_file;
->>   static void *ima_kexec_buffer;
->>   static size_t kexec_segment_size;
->> @@ -33,6 +35,8 @@ void ima_free_kexec_file_buf(struct seq_file *sf)
->>   
->>   static int ima_alloc_kexec_file_buf(size_t segment_size)
->>   {
->> +	char ima_kexec_event[IMA_KEXEC_EVENT_LEN];
->> +
->>   	/*
->>   	 * kexec 'load' may be called multiple times.
->>   	 * Free and realloc the buffer only if the segment_size is
->> @@ -42,7 +46,7 @@ static int ima_alloc_kexec_file_buf(size_t segment_size)
->>   	    ima_kexec_file.size == segment_size &&
->>   	    ima_kexec_file.read_pos == 0 &&
->>   	    ima_kexec_file.count == sizeof(struct ima_kexec_hdr))
->> -		return 0;
->> +		goto out;
->>   
->>   	ima_free_kexec_file_buf(&ima_kexec_file);
->>   
->> @@ -55,6 +59,13 @@ static int ima_alloc_kexec_file_buf(size_t segment_size)
->>   	ima_kexec_file.read_pos = 0;
->>   	ima_kexec_file.count = sizeof(struct ima_kexec_hdr);	/* reserved space */
->>   
->> +out:
->> +	scnprintf(ima_kexec_event, IMA_KEXEC_EVENT_LEN,
->> +		  "kexec_segment_size=%lu;", segment_size);
->> +
->> +	ima_measure_critical_data("ima_kexec", "kexec_load", ima_kexec_event,
->> +				  strlen(ima_kexec_event), false, NULL, 0);
->> +
->>   	return 0;
->>   }
->>   
->> @@ -179,6 +190,7 @@ void ima_add_kexec_buffer(struct kimage *image)
->>   static int ima_update_kexec_buffer(struct notifier_block *self,
->>   				   unsigned long action, void *data)
->>   {
->> +	char ima_kexec_event[IMA_KEXEC_EVENT_LEN];
->>   	void *buf = NULL;
->>   	size_t buf_size;
->>   	bool resume = false;
->> @@ -194,6 +206,15 @@ static int ima_update_kexec_buffer(struct notifier_block *self,
->>   		return ret;
->>   	}
->>   
->> +	buf_size = ima_get_binary_runtime_size();
->> +	scnprintf(ima_kexec_event, IMA_KEXEC_EVENT_LEN,
->> +		  "kexec_segment_size=%lu;ima_binary_runtime_size=%lu;",
->> +		  kexec_segment_size, buf_size);
->> +
->> +	ima_measure_critical_data("ima_kexec", "kexec_execute",
->> +				  ima_kexec_event, strlen(ima_kexec_event),
->> +				  false, NULL, 0);
->> +
-> 
-> Please consider including the number of measurement records as well.
-Will do. I think that would be valuable information.
+> Does this need a full shootdown at this point, at least in the crash
+> case? A local flush for the non-crash case might be nice too.
 
-Per my understanding, I will have to use the function
-ima_show_measurements_count() or ima_show_htable_value() to get the
-number of measurement records value[1]. So I will have to expose that
-function from "ima_fs.c" to "ima_kexec.c". Hope that's ok.
+See __flush_tlb_all() after the loop.
 
-[1] 
-https://elixir.bootlin.com/linux/latest/sourcesecurity/integrity/ima/ima_fs.c 
+> Also, probably a barrier() between set_pte() and
+> tdx_enc_status_changed().
 
+But why? There's no concurrency at this point. Interrupts are disabled and
+only one CPU is active. Nobody can touch the memory relevant for the PTE.
 
-static ssize_t ima_show_measurements_count(struct file *filp,
-                                          char __user *buf,
-                                          size_t count, loff_t *ppos)
-{
-         return ima_show_htable_value(buf, count, ppos, &ima_htable.len);
+-- =
 
-}
-
-
-~Tushar
-> 
->>   	ima_measurements_suspend();
->>   
->>   	ret = ima_dump_measurement_list(&buf_size, &buf,
-> 
+  Kiryl Shutsemau / Kirill A. Shutemov
 
 _______________________________________________
 kexec mailing list
