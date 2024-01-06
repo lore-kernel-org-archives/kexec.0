@@ -4,77 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CCB49C46CD2
-	for <kexec@archiver.kernel.org>; Sat,  6 Jan 2024 14:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0CDFFC46CD2
+	for <kexec@archiver.kernel.org>; Sat,  6 Jan 2024 23:28:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=n51aPXu0Zp9tyRu/CQdnRNA0jOkeoPEHJA88WOmxKDM=; b=XxOVIQ3swbmLla
-	1DxT+7aHGdAlJGH/EMA4qL2hsraIBUoKkv0M8ec+J4lI1b0ZTTlGyTAgIxbAE68e5tMfkpx2RVIUc
-	tpKpeoUYNdWg+vTk07iRyABpmRjoVcB/5TNg4+PL6RjW1Czu7qtp6DDn/ZjN63e8Ooh5Ejbv1cfrS
-	60CPC9NqD87Mv9RZFwLOdwHf0P2Npbkr5yRpV9e/vIZOBGW8HiOgz9TJH4JP8BW/vMjmRdAY/iQ0p
-	4PD2U9oXnzsOhn8W+k7YIZe2gZiYjESgWNgdPDZVvpZOSSyBKfQBsencdOSTfL+8/oWkVt1AQ92LW
-	mvBWqvKoHTq66SV/VGaQ==;
+	List-Owner; bh=ZF9PEbY4u/zYwCNb1z/vxClx5NKKcA3jgXa7JS7Msvs=; b=UuNpEQc1S68lpx
+	BEy9TaANaxpN7AXeKfB1LWfn02UPlP5R1ES0U6dW0XujAzkO0iURJlEJqCMPnWj191xjf+5B+st1+
+	am1vulOn4V2EspWQ7g7H2drCUUXqoI5lEQjcigH9CYMOgozaq1B1Oo9bCfXHfqnUL+N/Ldcbzpktw
+	m3R24DnYzN+Vl2na1n1D67tKxatlhZjFOtnbp1s+oaixU559ElF4WfLXaywbZDJpWFwiysKw0yWs1
+	MUucRI+GbSUu66FZZ7+pdY7c0VBlLJJAMBVMHltRL+nGge0Sga/DjT2YUZZrlj/PGxvKSj7Vx6BB+
+	XhzsgRGy0MRC8ZJ/PxKg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rM89H-001TX0-2P;
-	Sat, 06 Jan 2024 14:59:43 +0000
-Received: from mgamail.intel.com ([134.134.136.31])
+	id 1rMG5J-0022A1-1x;
+	Sat, 06 Jan 2024 23:28:09 +0000
+Received: from mail-oi1-x230.google.com ([2607:f8b0:4864:20::230])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rM89C-001TWQ-1C;
-	Sat, 06 Jan 2024 14:59:40 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704553178; x=1736089178;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=L+NhauzROGdh6WMc7Chr9nsrwmmGekgWgJHHxIaCxsU=;
-  b=gJV4rqSaJEnnh+KB16U5VYcgZ/n8mqmGBPNxALu18F0PqBruPKgFDzwN
-   DjfHeZ77Go/pv8KmifsXdjRMZxy0Rh1MSoaSAIVomhE1Pn07EQpS69E7r
-   fU75CfLquw5fVOiYz6ZUxMbGXkviu9I3RHpOM/7DIiGroEaw8X9WHu/9M
-   A5CV5ZxxWcv8zjjza3W8mY7tlm5VekHgXKtPgj+nZZdA312MrJZHBD3ia
-   3fvAiXlYVc9/5KqvKJkHYCC9odM/euOZr8nFhPhVq9qczLXb1tKcKCgFu
-   PliUc3QVTEwQejC/eUtwqlNA+EcI2lFph47Q9zcqF1VSqvP8P0+8JFdFK
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10945"; a="461960319"
-X-IronPort-AV: E=Sophos;i="6.04,337,1695711600"; 
-   d="scan'208";a="461960319"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2024 06:59:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10945"; a="815204441"
-X-IronPort-AV: E=Sophos;i="6.04,337,1695711600"; 
-   d="scan'208";a="815204441"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga001.jf.intel.com with ESMTP; 06 Jan 2024 06:58:58 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rM88W-0002bg-1Z;
-	Sat, 06 Jan 2024 14:58:56 +0000
-Date: Sat, 6 Jan 2024 22:58:54 +0800
-From: kernel test robot <lkp@intel.com>
-To: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	akpm@linux-foundation.org, kexec@lists.infradead.org,
-	hbathini@linux.ibm.com, arnd@arndb.de, ignat@cloudflare.com,
-	eric_devolder@yahoo.com, viro@zeniv.linux.org.uk,
-	ebiederm@xmission.com, x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-	Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH 1/5] kexec_core: move kdump related codes from
- crash_core.c to kexec_core.c
-Message-ID: <202401062212.LXqinfjE-lkp@intel.com>
-References: <20240105103305.557273-2-bhe@redhat.com>
+	id 1rMG5F-00229c-27
+	for kexec@lists.infradead.org;
+	Sat, 06 Jan 2024 23:28:08 +0000
+Received: by mail-oi1-x230.google.com with SMTP id 5614622812f47-3bbd1fab171so691935b6e.1
+        for <kexec@lists.infradead.org>; Sat, 06 Jan 2024 15:28:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1704583684; x=1705188484; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=p9JaYs/iBuW3+vvOlsyG26SMcgbIMGOxrh4TLTzxUyo=;
+        b=Q9p6igoP78hDdnUKqsEHH+m0sVSp0tu3VENeydah+AQdocHRUgHAIpkZgdXENk2bOk
+         2uYoe5Mo5C419sr6ZrOA3reI9HOrOvj39oLkjp2vYzG6/d0bbeBbRQWgG3+l7xLes7lu
+         Qc2emuv71k2CA0ZxIPRARe9NLbb+93FO3HXNvu+TxVTEbz/CA3+XAjhJl5dndaNzvGE2
+         Jpj2Coidr1WiMk0PmlRqxDOrca/rSHwIfkeEJ2IZuiPP5e4YeAhTca2A6eTkcHcoKBJj
+         9mIMVunRr1Ohhiu2Ku17x+bt7HooCkfo6S1ACUFY61ukquUpbNxKQ71w3xbK2JjXIc84
+         F2YQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704583684; x=1705188484;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=p9JaYs/iBuW3+vvOlsyG26SMcgbIMGOxrh4TLTzxUyo=;
+        b=E8mhXpWJ8vVgK7bHbA11CvxN++t4fr3tHT9cjGhAgZWbkCQ8XWEXX/5zzfA98Gw/cQ
+         fce3anySWzYpRyv3Qbjh6dOzB3nFBg53MrEuOiuJH+60NB+1o1lNVh12bcrQfBigJ1jb
+         2UT4oZQjv44+8YneLznos6SfnXazRk9medSr3cJgaU+RbdecVO8HybQaMXzSbiD4lU+4
+         viOvvLer0HTnK+8Ja5Ooe01RBYM7cnCagDRieqc2ac5atVLp6Vi0tSme4q2COwcH1aCj
+         lA45PW1huxGMcDGCRLfKdrhbLESAYNMmU4IxSRD+UMaFwmgq5irYc4CYEmkYAP49p0+1
+         sOrQ==
+X-Gm-Message-State: AOJu0Yzb0WtN3e/WueBBkZC9xcx7OZYszZwLvZ1Pi5+tt9gYyYzKSsbU
+	3V3YTvciMkNWS/hBQcu9atVSoShyMHfHP22hFDNBEhgzQjtO
+X-Google-Smtp-Source: AGHT+IE8SjipfKR+0SQZ9dpU9mjuiSISCRe1xTExjHHcaZCgkam8SzLVmGJ2K6giadt5HwjBOBvSvjl3a5cJdDtmNdE=
+X-Received: by 2002:a54:440a:0:b0:3bb:be11:c1a6 with SMTP id
+ k10-20020a54440a000000b003bbbe11c1a6mr1078693oiw.104.1704583683794; Sat, 06
+ Jan 2024 15:28:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20240105103305.557273-2-bhe@redhat.com>
+References: <6c0c32d5-e636-2a0e-5bdf-538c904ceea3@linux.microsoft.com>
+ <8bff2bf1a4629aacec7b6311d77f233cb75b2f8a.camel@linux.ibm.com>
+ <CAHC9VhRm9Tzz3C-VTdXS4s1_-kPQQ6RXMt8JGCS4jorJ0VURyQ@mail.gmail.com>
+ <CAHC9VhSJ7MKNM7nMXR3xE-cNMrYB4AT+B76wzF1cKy2JM9tBrA@mail.gmail.com>
+ <1b6853e8354af7033e6d87e77cfb175526753c38.camel@linux.ibm.com>
+ <CAHC9VhSnDQ-d9dh_icqNyhpT+cTGQOqGh8+cbN3QzF_qPehvaA@mail.gmail.com>
+ <28c4136d0fe360a7fcf6a6547120dc244be0edc3.camel@linux.ibm.com>
+ <CAHC9VhTykrsXTuWfRe3rzg2SMbzynvgwXmxVpN5T0cfY7YrkwA@mail.gmail.com>
+ <d5e2358a0a7aaf4455b1f479483b312e98aa07d5.camel@linux.ibm.com>
+ <CAHC9VhRNLzbW++rW3Hep+3yyJZRRvZ4h7LuKcSbRRn-wqh-PAQ@mail.gmail.com> <d9975a7949ca49f404adc981e942f42b6f19d022.camel@linux.ibm.com>
+In-Reply-To: <d9975a7949ca49f404adc981e942f42b6f19d022.camel@linux.ibm.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Sat, 6 Jan 2024 18:27:52 -0500
+Message-ID: <CAHC9VhRd5Qi_NZJMOfHC6jTr_dn0mNFGhy18ff2YgtjQo+38dQ@mail.gmail.com>
+Subject: Re: [RFC V2] IMA Log Snapshotting Design Proposal
+To: Mimi Zohar <zohar@linux.ibm.com>
+Cc: Tushar Sugandhi <tusharsu@linux.microsoft.com>, linux-integrity@vger.kernel.org, 
+	peterhuewe@gmx.de, Jarkko Sakkinen <jarkko@kernel.org>, jgg@ziepe.ca, 
+	Ken Goldman <kgold@linux.ibm.com>, bhe@redhat.com, vgoyal@redhat.com, 
+	Dave Young <dyoung@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, jmorris@namei.org, 
+	serge@hallyn.com, James Bottomley <James.Bottomley@hansenpartnership.com>, 
+	linux-security-module@vger.kernel.org, 
+	Tyler Hicks <tyhicks@linux.microsoft.com>, 
+	Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, 
+	Sush Shringarputale <sushring@linux.microsoft.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240106_065938_476561_A59A5B7A 
-X-CRM114-Status: GOOD (  14.57  )
+X-CRM114-CacheID: sfid-20240106_152806_544243_A3F27D72 
+X-CRM114-Status: GOOD (  35.27  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -86,275 +99,75 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Baoquan,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on linus/master]
-[also build test ERROR on v6.7-rc8]
-[cannot apply to powerpc/next powerpc/fixes tip/x86/core arm64/for-next/core next-20240105]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Baoquan-He/kexec_core-move-kdump-related-codes-from-crash_core-c-to-kexec_core-c/20240105-223735
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20240105103305.557273-2-bhe%40redhat.com
-patch subject: [PATCH 1/5] kexec_core: move kdump related codes from crash_core.c to kexec_core.c
-config: i386-allmodconfig (https://download.01.org/0day-ci/archive/20240106/202401062212.LXqinfjE-lkp@intel.com/config)
-compiler: ClangBuiltLinux clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240106/202401062212.LXqinfjE-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401062212.LXqinfjE-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> arch/x86/kernel/crash.c:154:17: error: invalid application of 'sizeof' to an incomplete type 'struct crash_mem'
-     154 |         cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
-         |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/overflow.h:293:9: note: expanded from macro 'struct_size'
-     293 |                 sizeof(*(p)) + flex_array_size(p, member, count),       \
-         |                       ^~~~~~
-   arch/x86/kernel/crash.c:140:15: note: forward declaration of 'struct crash_mem'
-     140 | static struct crash_mem *fill_up_crash_elf_data(void)
-         |               ^
->> arch/x86/kernel/crash.c:154:17: error: incomplete definition of type 'struct crash_mem'
-     154 |         cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
-         |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/overflow.h:293:18: note: expanded from macro 'struct_size'
-     293 |                 sizeof(*(p)) + flex_array_size(p, member, count),       \
-         |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/overflow.h:277:24: note: expanded from macro 'flex_array_size'
-     277 |                 (count) * sizeof(*(p)->member) + __must_be_array((p)->member),  \
-         |                                   ~~~^
-   arch/x86/kernel/crash.c:140:15: note: forward declaration of 'struct crash_mem'
-     140 | static struct crash_mem *fill_up_crash_elf_data(void)
-         |               ^
->> arch/x86/kernel/crash.c:154:17: error: incomplete definition of type 'struct crash_mem'
-     154 |         cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
-         |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/overflow.h:293:18: note: expanded from macro 'struct_size'
-     293 |                 sizeof(*(p)) + flex_array_size(p, member, count),       \
-         |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/overflow.h:277:55: note: expanded from macro 'flex_array_size'
-     277 |                 (count) * sizeof(*(p)->member) + __must_be_array((p)->member),  \
-         |                                                  ~~~~~~~~~~~~~~~~~~~^~~~~~~~~
-   include/linux/compiler.h:228:59: note: expanded from macro '__must_be_array'
-     228 | #define __must_be_array(a)      BUILD_BUG_ON_ZERO(__same_type((a), &(a)[0]))
-         |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
-   include/linux/compiler_types.h:376:63: note: expanded from macro '__same_type'
-     376 | #define __same_type(a, b) __builtin_types_compatible_p(typeof(a), typeof(b))
-         |                                                               ^
-   include/linux/build_bug.h:16:62: note: expanded from macro 'BUILD_BUG_ON_ZERO'
-      16 | #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
-         |                                                              ^
-   arch/x86/kernel/crash.c:140:15: note: forward declaration of 'struct crash_mem'
-     140 | static struct crash_mem *fill_up_crash_elf_data(void)
-         |               ^
->> arch/x86/kernel/crash.c:154:17: error: incomplete definition of type 'struct crash_mem'
-     154 |         cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
-         |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/overflow.h:293:18: note: expanded from macro 'struct_size'
-     293 |                 sizeof(*(p)) + flex_array_size(p, member, count),       \
-         |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/overflow.h:278:30: note: expanded from macro 'flex_array_size'
-     278 |                 size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
-         |                                         ~~~^
-   arch/x86/kernel/crash.c:140:15: note: forward declaration of 'struct crash_mem'
-     140 | static struct crash_mem *fill_up_crash_elf_data(void)
-         |               ^
->> arch/x86/kernel/crash.c:154:17: error: incomplete definition of type 'struct crash_mem'
-     154 |         cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
-         |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/overflow.h:293:18: note: expanded from macro 'struct_size'
-     293 |                 sizeof(*(p)) + flex_array_size(p, member, count),       \
-         |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/overflow.h:278:61: note: expanded from macro 'flex_array_size'
-     278 |                 size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
-         |                                                        ~~~~~~~~~~~~~~~~~~~^~~~~~~~~
-   include/linux/compiler.h:228:59: note: expanded from macro '__must_be_array'
-     228 | #define __must_be_array(a)      BUILD_BUG_ON_ZERO(__same_type((a), &(a)[0]))
-         |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
-   include/linux/compiler_types.h:376:63: note: expanded from macro '__same_type'
-     376 | #define __same_type(a, b) __builtin_types_compatible_p(typeof(a), typeof(b))
-         |                                                               ^
-   include/linux/build_bug.h:16:62: note: expanded from macro 'BUILD_BUG_ON_ZERO'
-      16 | #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
-         |                                                              ^
-   arch/x86/kernel/crash.c:140:15: note: forward declaration of 'struct crash_mem'
-     140 | static struct crash_mem *fill_up_crash_elf_data(void)
-         |               ^
-   arch/x86/kernel/crash.c:158:6: error: incomplete definition of type 'struct crash_mem'
-     158 |         cmem->max_nr_ranges = nr_ranges;
-         |         ~~~~^
-   arch/x86/kernel/crash.c:140:15: note: forward declaration of 'struct crash_mem'
-     140 | static struct crash_mem *fill_up_crash_elf_data(void)
-         |               ^
-   arch/x86/kernel/crash.c:159:6: error: incomplete definition of type 'struct crash_mem'
-     159 |         cmem->nr_ranges = 0;
-         |         ~~~~^
-   arch/x86/kernel/crash.c:140:15: note: forward declaration of 'struct crash_mem'
-     140 | static struct crash_mem *fill_up_crash_elf_data(void)
-         |               ^
->> arch/x86/kernel/crash.c:173:8: error: call to undeclared function 'crash_exclude_mem_range'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     173 |         ret = crash_exclude_mem_range(cmem, 0, (1<<20)-1);
-         |               ^
-   arch/x86/kernel/crash.c:193:6: error: incomplete definition of type 'struct crash_mem'
-     193 |         cmem->ranges[cmem->nr_ranges].start = res->start;
-         |         ~~~~^
-   arch/x86/kernel/crash.c:140:15: note: forward declaration of 'struct crash_mem'
-     140 | static struct crash_mem *fill_up_crash_elf_data(void)
-         |               ^
-   arch/x86/kernel/crash.c:193:19: error: incomplete definition of type 'struct crash_mem'
-     193 |         cmem->ranges[cmem->nr_ranges].start = res->start;
-         |                      ~~~~^
-   arch/x86/kernel/crash.c:140:15: note: forward declaration of 'struct crash_mem'
-     140 | static struct crash_mem *fill_up_crash_elf_data(void)
-         |               ^
-   arch/x86/kernel/crash.c:194:6: error: incomplete definition of type 'struct crash_mem'
-     194 |         cmem->ranges[cmem->nr_ranges].end = res->end;
-         |         ~~~~^
-   arch/x86/kernel/crash.c:140:15: note: forward declaration of 'struct crash_mem'
-     140 | static struct crash_mem *fill_up_crash_elf_data(void)
-         |               ^
-   arch/x86/kernel/crash.c:194:19: error: incomplete definition of type 'struct crash_mem'
-     194 |         cmem->ranges[cmem->nr_ranges].end = res->end;
-         |                      ~~~~^
-   arch/x86/kernel/crash.c:140:15: note: forward declaration of 'struct crash_mem'
-     140 | static struct crash_mem *fill_up_crash_elf_data(void)
-         |               ^
-   arch/x86/kernel/crash.c:195:6: error: incomplete definition of type 'struct crash_mem'
-     195 |         cmem->nr_ranges++;
-         |         ~~~~^
-   arch/x86/kernel/crash.c:140:15: note: forward declaration of 'struct crash_mem'
-     140 | static struct crash_mem *fill_up_crash_elf_data(void)
-         |               ^
-   arch/x86/kernel/crash.c:221:23: error: incomplete definition of type 'struct crash_mem'
-     221 |         *nr_mem_ranges = cmem->nr_ranges;
-         |                          ~~~~^
-   arch/x86/kernel/crash.c:140:15: note: forward declaration of 'struct crash_mem'
-     140 | static struct crash_mem *fill_up_crash_elf_data(void)
-         |               ^
->> arch/x86/kernel/crash.c:224:9: error: call to undeclared function 'crash_prepare_elf64_headers'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     224 |         ret =  crash_prepare_elf64_headers(cmem, IS_ENABLED(CONFIG_X86_64), addr, sz);
-         |                ^
-   arch/x86/kernel/crash.c:224:9: note: did you mean 'prepare_elf_headers'?
-   arch/x86/kernel/crash.c:201:12: note: 'prepare_elf_headers' declared here
-     201 | static int prepare_elf_headers(struct kimage *image, void **addr,
-         |            ^
-   15 errors generated.
-
-
-vim +154 arch/x86/kernel/crash.c
-
-dd5f726076cc76 Vivek Goyal         2014-08-08  138  
-dd5f726076cc76 Vivek Goyal         2014-08-08  139  /* Gather all the required information to prepare elf headers for ram regions */
-8d5f894a3108ac AKASHI Takahiro     2018-04-13 @140  static struct crash_mem *fill_up_crash_elf_data(void)
-dd5f726076cc76 Vivek Goyal         2014-08-08  141  {
-dd5f726076cc76 Vivek Goyal         2014-08-08  142  	unsigned int nr_ranges = 0;
-8d5f894a3108ac AKASHI Takahiro     2018-04-13  143  	struct crash_mem *cmem;
-dd5f726076cc76 Vivek Goyal         2014-08-08  144  
-9eff303725da65 Borislav Petkov     2019-11-14  145  	walk_system_ram_res(0, -1, &nr_ranges, get_nr_ram_ranges_callback);
-8d5f894a3108ac AKASHI Takahiro     2018-04-13  146  	if (!nr_ranges)
-8d5f894a3108ac AKASHI Takahiro     2018-04-13  147  		return NULL;
-dd5f726076cc76 Vivek Goyal         2014-08-08  148  
-8d5f894a3108ac AKASHI Takahiro     2018-04-13  149  	/*
-8d5f894a3108ac AKASHI Takahiro     2018-04-13  150  	 * Exclusion of crash region and/or crashk_low_res may cause
-8d5f894a3108ac AKASHI Takahiro     2018-04-13  151  	 * another range split. So add extra two slots here.
-8d5f894a3108ac AKASHI Takahiro     2018-04-13  152  	 */
-8d5f894a3108ac AKASHI Takahiro     2018-04-13  153  	nr_ranges += 2;
-4df4309587e18a Gustavo A. R. Silva 2019-04-03 @154  	cmem = vzalloc(struct_size(cmem, ranges, nr_ranges));
-8d5f894a3108ac AKASHI Takahiro     2018-04-13  155  	if (!cmem)
-8d5f894a3108ac AKASHI Takahiro     2018-04-13  156  		return NULL;
-dd5f726076cc76 Vivek Goyal         2014-08-08  157  
-8d5f894a3108ac AKASHI Takahiro     2018-04-13  158  	cmem->max_nr_ranges = nr_ranges;
-8d5f894a3108ac AKASHI Takahiro     2018-04-13  159  	cmem->nr_ranges = 0;
-dd5f726076cc76 Vivek Goyal         2014-08-08  160  
-8d5f894a3108ac AKASHI Takahiro     2018-04-13  161  	return cmem;
-dd5f726076cc76 Vivek Goyal         2014-08-08  162  }
-dd5f726076cc76 Vivek Goyal         2014-08-08  163  
-dd5f726076cc76 Vivek Goyal         2014-08-08  164  /*
-dd5f726076cc76 Vivek Goyal         2014-08-08  165   * Look for any unwanted ranges between mstart, mend and remove them. This
-8d5f894a3108ac AKASHI Takahiro     2018-04-13  166   * might lead to split and split ranges are put in cmem->ranges[] array
-dd5f726076cc76 Vivek Goyal         2014-08-08  167   */
-8d5f894a3108ac AKASHI Takahiro     2018-04-13  168  static int elf_header_exclude_ranges(struct crash_mem *cmem)
-dd5f726076cc76 Vivek Goyal         2014-08-08  169  {
-dd5f726076cc76 Vivek Goyal         2014-08-08  170  	int ret = 0;
-dd5f726076cc76 Vivek Goyal         2014-08-08  171  
-7c321eb2b843bf Lianbo Jiang        2019-11-08  172  	/* Exclude the low 1M because it is always reserved */
-a3e1c3bb24e2ff Lianbo Jiang        2020-08-04 @173  	ret = crash_exclude_mem_range(cmem, 0, (1<<20)-1);
-7c321eb2b843bf Lianbo Jiang        2019-11-08  174  	if (ret)
-7c321eb2b843bf Lianbo Jiang        2019-11-08  175  		return ret;
-7c321eb2b843bf Lianbo Jiang        2019-11-08  176  
-dd5f726076cc76 Vivek Goyal         2014-08-08  177  	/* Exclude crashkernel region */
-babac4a84a8884 AKASHI Takahiro     2018-04-13  178  	ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
-dd5f726076cc76 Vivek Goyal         2014-08-08  179  	if (ret)
-dd5f726076cc76 Vivek Goyal         2014-08-08  180  		return ret;
-dd5f726076cc76 Vivek Goyal         2014-08-08  181  
-9eff303725da65 Borislav Petkov     2019-11-14  182  	if (crashk_low_res.end)
-babac4a84a8884 AKASHI Takahiro     2018-04-13  183  		ret = crash_exclude_mem_range(cmem, crashk_low_res.start,
-babac4a84a8884 AKASHI Takahiro     2018-04-13  184  					      crashk_low_res.end);
-dd5f726076cc76 Vivek Goyal         2014-08-08  185  
-dd5f726076cc76 Vivek Goyal         2014-08-08  186  	return ret;
-dd5f726076cc76 Vivek Goyal         2014-08-08  187  }
-dd5f726076cc76 Vivek Goyal         2014-08-08  188  
-1d2e733b13b450 Tom Lendacky        2017-10-20  189  static int prepare_elf64_ram_headers_callback(struct resource *res, void *arg)
-dd5f726076cc76 Vivek Goyal         2014-08-08  190  {
-8d5f894a3108ac AKASHI Takahiro     2018-04-13  191  	struct crash_mem *cmem = arg;
-dd5f726076cc76 Vivek Goyal         2014-08-08  192  
-cbe6601617302b AKASHI Takahiro     2018-04-13  193  	cmem->ranges[cmem->nr_ranges].start = res->start;
-cbe6601617302b AKASHI Takahiro     2018-04-13  194  	cmem->ranges[cmem->nr_ranges].end = res->end;
-cbe6601617302b AKASHI Takahiro     2018-04-13  195  	cmem->nr_ranges++;
-dd5f726076cc76 Vivek Goyal         2014-08-08  196  
-cbe6601617302b AKASHI Takahiro     2018-04-13  197  	return 0;
-dd5f726076cc76 Vivek Goyal         2014-08-08  198  }
-dd5f726076cc76 Vivek Goyal         2014-08-08  199  
-dd5f726076cc76 Vivek Goyal         2014-08-08  200  /* Prepare elf headers. Return addr and size */
-dd5f726076cc76 Vivek Goyal         2014-08-08  201  static int prepare_elf_headers(struct kimage *image, void **addr,
-ea53ad9cf73b6b Eric DeVolder       2023-08-14  202  					unsigned long *sz, unsigned long *nr_mem_ranges)
-dd5f726076cc76 Vivek Goyal         2014-08-08  203  {
-8d5f894a3108ac AKASHI Takahiro     2018-04-13  204  	struct crash_mem *cmem;
-7c321eb2b843bf Lianbo Jiang        2019-11-08  205  	int ret;
-dd5f726076cc76 Vivek Goyal         2014-08-08  206  
-8d5f894a3108ac AKASHI Takahiro     2018-04-13  207  	cmem = fill_up_crash_elf_data();
-8d5f894a3108ac AKASHI Takahiro     2018-04-13  208  	if (!cmem)
-dd5f726076cc76 Vivek Goyal         2014-08-08  209  		return -ENOMEM;
-dd5f726076cc76 Vivek Goyal         2014-08-08  210  
-9eff303725da65 Borislav Petkov     2019-11-14  211  	ret = walk_system_ram_res(0, -1, cmem, prepare_elf64_ram_headers_callback);
-cbe6601617302b AKASHI Takahiro     2018-04-13  212  	if (ret)
-cbe6601617302b AKASHI Takahiro     2018-04-13  213  		goto out;
-cbe6601617302b AKASHI Takahiro     2018-04-13  214  
-cbe6601617302b AKASHI Takahiro     2018-04-13  215  	/* Exclude unwanted mem ranges */
-8d5f894a3108ac AKASHI Takahiro     2018-04-13  216  	ret = elf_header_exclude_ranges(cmem);
-cbe6601617302b AKASHI Takahiro     2018-04-13  217  	if (ret)
-cbe6601617302b AKASHI Takahiro     2018-04-13  218  		goto out;
-cbe6601617302b AKASHI Takahiro     2018-04-13  219  
-ea53ad9cf73b6b Eric DeVolder       2023-08-14  220  	/* Return the computed number of memory ranges, for hotplug usage */
-ea53ad9cf73b6b Eric DeVolder       2023-08-14  221  	*nr_mem_ranges = cmem->nr_ranges;
-ea53ad9cf73b6b Eric DeVolder       2023-08-14  222  
-dd5f726076cc76 Vivek Goyal         2014-08-08  223  	/* By default prepare 64bit headers */
-9eff303725da65 Borislav Petkov     2019-11-14 @224  	ret =  crash_prepare_elf64_headers(cmem, IS_ENABLED(CONFIG_X86_64), addr, sz);
-cbe6601617302b AKASHI Takahiro     2018-04-13  225  
-cbe6601617302b AKASHI Takahiro     2018-04-13  226  out:
-8d5f894a3108ac AKASHI Takahiro     2018-04-13  227  	vfree(cmem);
-dd5f726076cc76 Vivek Goyal         2014-08-08  228  	return ret;
-dd5f726076cc76 Vivek Goyal         2014-08-08  229  }
-ea53ad9cf73b6b Eric DeVolder       2023-08-14  230  #endif
-dd5f726076cc76 Vivek Goyal         2014-08-08  231  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVHVlLCBOb3YgMjgsIDIwMjMgYXQgOTowN+KAr1BNIE1pbWkgWm9oYXIgPHpvaGFyQGxpbnV4
+LmlibS5jb20+IHdyb3RlOgo+IE9uIFR1ZSwgMjAyMy0xMS0yOCBhdCAyMDowNiAtMDUwMCwgUGF1
+bCBNb29yZSB3cm90ZToKPiA+IE9uIFR1ZSwgTm92IDI4LCAyMDIzIGF0IDc6MDnigK9BTSBNaW1p
+IFpvaGFyIDx6b2hhckBsaW51eC5pYm0uY29tPiB3cm90ZToKPiA+ID4gT24gTW9uLCAyMDIzLTEx
+LTI3IGF0IDE3OjE2IC0wNTAwLCBQYXVsIE1vb3JlIHdyb3RlOgo+ID4gPiA+IE9uIE1vbiwgTm92
+IDI3LCAyMDIzIGF0IDEyOjA44oCvUE0gTWltaSBab2hhciA8em9oYXJAbGludXguaWJtLmNvbT4g
+d3JvdGU6Cj4gPiA+ID4gPiBPbiBXZWQsIDIwMjMtMTEtMjIgYXQgMDk6MjIgLTA1MDAsIFBhdWwg
+TW9vcmUgd3JvdGU6CgouLi4KCj4gPiA+ID4gPiBCZWZvcmUgZGVmaW5pbmcgYSBuZXcgY3JpdGlj
+YWwtZGF0YSByZWNvcmQsIHdlIG5lZWQgdG8gZGVjaWRlIHdoZXRoZXIKPiA+ID4gPiA+IGl0IGlz
+IHJlYWxseSBuZWNlc3Nhcnkgb3IgaWYgaXQgaXMgcmVkdW5kYW50LiAgSWYgd2UgZGVmaW5lIGEg
+bmV3Cj4gPiA+ID4gPiAiY3JpdGljYWwtZGF0YSIgcmVjb3JkLCBjYW4gaXQgYmUgZGVmaW5lZCBz
+dWNoIHRoYXQgaXQgZG9lc24ndCByZXF1aXJlCj4gPiA+ID4gPiBwYXVzaW5nIGV4dGVuZGluZyB0
+aGUgbWVhc3VyZW1lbnQgbGlzdD8gIEZvciBleGFtcGxlLCBhIG5ldyBzaW1wbGUKPiA+ID4gPiA+
+IHZpc3VhbCBjcml0aWNhbC1kYXRhIHJlY29yZCBjb3VsZCBjb250YWluIHRoZSBudW1iZXIgb2Yg
+cmVjb3JkcyAoZS5nLgo+ID4gPiA+ID4gPHNlY3VyaXR5ZnM+L2ltYS9ydW50aW1lX21lYXN1cmVt
+ZW50c19jb3VudCkgdXAgdG8gdGhhdCBwb2ludC4KPiA+ID4gPgo+ID4gPiA+IFdoYXQgaWYgdGhl
+IHNuYXBzaG90X2FnZ3JlZ2F0ZSB3YXMgYSBoYXNoIG9mIHRoZSBtZWFzdXJlbWVudCBsb2cKPiA+
+ID4gPiBzdGFydGluZyB3aXRoIGVpdGhlciB0aGUgYm9vdF9hZ2dyZWdhdGUgb3IgdGhlIGxhdGVz
+dAo+ID4gPiA+IHNuYXBzaG90X2FnZ3JlZ2F0ZSBhbmQgZW5kaW5nIG9uIHRoZSByZWNvcmQgYmVm
+b3JlIHRoZSBuZXcKPiA+ID4gPiBzbmFwc2hvdF9hZ2dyZWdhdGU/ICBUaGUgcGVyZm9ybWFuY2Ug
+aW1wYWN0IGF0IHNuYXBzaG90IHRpbWUgc2hvdWxkIGJlCj4gPiA+ID4gbWluaW1hbCBhcyB0aGUg
+aGFzaCBjYW4gYmUgaW5jcmVtZW50YWxseSB1cGRhdGVkIGFzIG5ldyByZWNvcmRzIGFyZQo+ID4g
+PiA+IGFkZGVkIHRvIHRoZSBtZWFzdXJlbWVudCBsaXN0LiAgV2hpbGUgdGhlIGhhc2ggd291bGRu
+J3QgY2FwdHVyZSB0aGUKPiA+ID4gPiBUUE0gc3RhdGUsIGl0IHdvdWxkIGFsbG93IHNvbWUgY3J1
+ZGUgdmVyaWZpY2F0aW9uIHdoZW4gcmVhc3NlbWJsaW5nCj4gPiA+ID4gdGhlIGxvZy4gIElmIG9u
+ZSBjb3VsZCBiZWFyIHRoZSBjb3N0IG9mIGEgVFBNIHNpZ25pbmcgb3BlcmF0aW9uLCB0aGUKPiA+
+ID4gPiBsb2cgZGlnZXN0IGNvdWxkIGJlIHNpZ25lZCBieSB0aGUgVFBNLgo+ID4gPgo+ID4gPiBP
+dGhlciBjcml0aWNhbCBkYXRhIGlzIGNhbGN1bGF0ZWQsIGJlZm9yZSBjYWxsaW5nCj4gPiA+IGlt
+YV9tZWFzdXJlX2NyaXRpY2FsX2RhdGEoKSwgd2hpY2ggYWRkcyB0aGUgcmVjb3JkIHRvIHRoZSBt
+ZWFzdXJlbWVudAo+ID4gPiBsaXN0IGFuZCBleHRlbmRzIHRoZSBUUE0gUENSLgo+ID4gPgo+ID4g
+PiBTaWduaW5nIHRoZSBoYXNoIHNob3VsZG4ndCBiZSBhbiBpc3N1ZSBpZiBpdCBiZWhhdmVzIGxp
+a2Ugb3RoZXIKPiA+ID4gY3JpdGljYWwgZGF0YS4KPiA+ID4KPiA+ID4gSW4gYWRkaXRpb24gdG8g
+dGhlIGhhc2gsIGNvbnNpZGVyIGluY2x1ZGluZyBvdGhlciBpbmZvcm1hdGlvbiBpbiB0aGUKPiA+
+ID4gbmV3IGNyaXRpY2FsIGRhdGEgcmVjb3JkIChlLmcuIHRvdGFsIG51bWJlciBvZiBtZWFzdXJl
+bWVudCByZWNvcmRzLCB0aGUKPiA+ID4gbnVtYmVyIG9mIG1lYXN1cmVtZW50cyBpbmNsdWRlZCBp
+biB0aGUgaGFzaCwgdGhlIG51bWJlciBvZiB0aW1lcyB0aGUKPiA+ID4gbWVhc3VyZW1lbnQgbGlz
+dCB3YXMgdHJpbW1lZCwgZXRjKS4KPiA+Cj4gPiBJdCB3b3VsZCBiZSBuaWNlIGlmIHlvdSBjb3Vs
+ZCBwcm92aWRlIGFuIGV4cGxpY2l0IGxpc3Qgb2Ygd2hhdCB5b3UKPiA+IHdvdWxkIHdhbnQgaGFz
+aGVkIGludG8gYSBzbmFwc2hvdF9hZ2dyZWdhdGUgcmVjb3JkOyB0aGUgYWJvdmUgaXMKPiA+IGNs
+b3NlLCBidXQgaXQgaXMgc3RpbGwgYSBsaXR0bGUgaGFuZC13YXZ5LiAgSSdtIGp1c3QgdHJ5aW5n
+IHRvIHJlZHVjZQo+ID4gdGhlIGJhY2stbi1mb3J0aCA6KQo+Cj4gV2hhdCBpcyBiZWluZyBkZWZp
+bmVkIGhlcmUgaXMgdGhlIGZpcnN0IElNQSBjcml0aWNhbC1kYXRhIHJlY29yZCwgd2hpY2gKPiBy
+ZWFsbHkgcmVxdWlyZXMgc29tZSB0aG91Z2h0LgoKTXkgdGhpbmtpbmcgaGFzIGFsd2F5cyBiZWVu
+IHRoYXQgdGFraW5nIGEgaGFzaCBvZiB0aGUgY3VycmVudAptZWFzdXJlbWVudCBsb2cgdXAgdG8g
+dGhlIHNuYXBzaG90IHBvaW50IHdvdWxkIGJlIGEgbmljZQpzbmFwc2hvdF9hZ2dyZWdhdGUgbWVh
+c3VyZW1lbnQsIGJ1dCBJJ20gbm90IGhlYXZpbHkgaW52ZXN0ZWQgaW4gdGhhdC4KVG8gbWUgaXQg
+aXMgbW9yZSBpbXBvcnRhbnQgdGhhdCB3ZSBmaW5kIHNvbWV0aGluZyB3ZSBjYW4gYWxsIGFncmVl
+IG9uLApwZXJoYXBzIHJlbHVjdGFudGx5LCBzbyB3ZSBjYW4gbW92ZSBmb3J3YXJkIHdpdGggYSBz
+b2x1dGlvbi4KCj4gRm9yIGVhc2Ugb2YgcmV2aWV3LCB0aGlzIG5ldyBjcml0aWNhbC0KPiBkYXRh
+IHJlY29yZCBzaG91bGQgYmUgYSBzZXBhcmF0ZSBwYXRjaCBzZXQgZnJvbSB0cmltbWluZyB0aGUK
+PiBtZWFzdXJlbWVudCBsaXN0LgoKSSBzZWUgdGhlIHR3byBhcyBsaW5rZWQsIGJ1dCBpZiB5b3Ug
+cHJlZmVyIHRoZW0gYXMgc2VwYXJhdGUgdGhlbiBzbyBiZQppdC4gIE9uY2UgYWdhaW4sIHRoZSBp
+bXBvcnRhbnQgcGFydCBpcyB0byBtb3ZlIGZvcndhcmQgd2l0aCBhCnNvbHV0aW9uLCBJJ20gbm90
+IG92ZXJseSBib3RoZXJlZCBpZiBpdCBhcnJpdmVzIGluIG11bHRpcGxlIHBpZWNlcwppbnN0ZWFk
+IG9mIG9uZS4KCj4gQXMgSSdtIHN1cmUgeW91J3JlIGF3YXJlLCBTRWxpbnV4IGRlZmluZXMgdHdv
+IGNyaXRpY2FsLWRhdGEgcmVjb3Jkcy4KPiBGcm9tIHNlY3VyaXR5L3NlbGludXgvaW1hLmM6Cj4K
+PiAgICAgICAgIGltYV9tZWFzdXJlX2NyaXRpY2FsX2RhdGEoInNlbGludXgiLCAic2VsaW51eC1z
+dGF0ZSIsCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0YXRlX3N0ciwgc3Ry
+bGVuKHN0YXRlX3N0ciksIGZhbHNlLAo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBOVUxMLCAwKTsKPgo+ICAgICAgICAgaW1hX21lYXN1cmVfY3JpdGljYWxfZGF0YSgic2VsaW51
+eCIsICJzZWxpbnV4LXBvbGljeS1oYXNoIiwKPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgcG9saWN5LCBwb2xpY3lfbGVuLCB0cnVlLAo+ICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICBOVUxMLCAwKTsKClllcCwgYnV0IHRoZXJlIGlzIGZhciBtb3JlIHRvIHRoaXMg
+dGhhbiBTRUxpbnV4LgoKLS0gCnBhdWwtbW9vcmUuY29tCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMu
+aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2tleGVjCg==
