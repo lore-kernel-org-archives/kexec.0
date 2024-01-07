@@ -4,68 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A29C0C47073
-	for <kexec@archiver.kernel.org>; Sun,  7 Jan 2024 14:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A68D2C47074
+	for <kexec@archiver.kernel.org>; Sun,  7 Jan 2024 17:01:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	List-Archive:List-Unsubscribe:List-Id:Mime-Version:References:In-Reply-To:
 	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=sceSGwqhMHxZzbuQrNbtnP9ucrRlnYZcH3yg1j8kmKM=; b=KvMt7zqArLlqte
-	5j1G1/vMJ/IrJeVJ/S50QLH5euqakD8ohHAF/YLcPTnCIBnPZhp/eTAdWs8vK+mN7NmST8/ga0em7
-	r0WjXKAr99pivLe6bqv+F3H13jLFNlKG3uilky3GMoCDmNuM2q6AvlESLOKIPadYCyMm7mTrr+s0q
-	592RHI9iyQlzY3x8NmFhnXj/hlDPUZFs/Iq2Bou+GXu8rvaqCb2+rzmMEEyi/KMBNTCibSnHLA89U
-	glmLgOrisvXL5mtuH6il8HsNX993ShJsMv8AqAgAc2+6NboWdEpQSkyZbRo0Z1pPjQkcKsxRLET9Y
-	QjdVtFfrlUS8VxZR9dKA==;
+	List-Owner; bh=V+z9srn7fPOi0sClkK9EvXPYUHZTUJ8kJXfWv8sRK/Y=; b=AM4tq7iYfq9YXO
+	m7ZBCsRAU6p2iEPlecPTRTDQcBc2Uj1OUUn5KCPuGK8nYHC+YkbTse9rNkIezbXnDQlfXfE4w1lWz
+	aT6D+eQS40Sk/l7dWXRSc1p3P+n6h4HdJWTwxPyVXShO92RLR+HW8uh3D8kyyRkaRDxcaLUVGp8mW
+	roiKfzHbOAcWbl+0kddrAKvQ5lmd8B3PEPqzcZ8BUYrBLMne3/8W0YWXAuT35T4hlgpWbbOnR7Ehc
+	fzvWYIxBctKB0eShexYxoBJYLrRL+K7kKYTG9grebqQn/YBZtsVSgmWScVxyM1JYfKLJ5QyQG+Fvn
+	sDIyaIG94EsGzTN7TZTw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rMU5x-0037w5-12;
-	Sun, 07 Jan 2024 14:25:45 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1rMWX0-003I7g-2s;
+	Sun, 07 Jan 2024 17:01:50 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rMU5t-0037vk-2j
+	id 1rMWWw-003I7L-2c
 	for kexec@lists.infradead.org;
-	Sun, 07 Jan 2024 14:25:43 +0000
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4079C30G020480;
-	Sun, 7 Jan 2024 14:24:54 GMT
+	Sun, 07 Jan 2024 17:01:48 +0000
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 407BnaCi012763;
+	Sun, 7 Jan 2024 17:01:19 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
  from : to : cc : date : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=ZRfiwG5Yw33z5TVnkwGssgOxx1K3/6gOiJQr5AOTx5g=;
- b=Y0x1HsFvRPTWKNkDlqXVr+ZUkfVKrGosLcJ90jDlVldOH8zHCvaIJgO47zNVybYgeWOi
- N/eaNwpn8LAuyKvqadmW2QN/mQkkCOAx5SoM5nuPAYaEMsvJEgfuILadby178NxPxkQA
- EWSgsjvNWE5VmW74MiNPNGNAJ2dfiuUvXwX/7mv/n9AdrU8jfJ1xHekaLF5o6gqgozTt
- lPXlba4t4L6eDEXatcvHthqmZCHOHIbclaMJrYXbyOz/mqp8JpHuzZJq1eSk9T3Yc/Rs
- B/GfxrgIBb2A5Usi8XVtVVaiqBUXXTN69LSC0hYCi2xoD6PbG1fzjW/x3d8nae3durgh fA== 
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vf5qguuft-1
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=JdzK4j7V+xX4W5wyHQ6osyAhS5UW/i3kbG+NHgNXvR0=;
+ b=bRi0eS9sk8WtSCEkzg5Z/rof3inGi8WGbmRkmyMqnY75NnLdpLEpnLG0Dfw9yRiR+Gu1
+ JghvJD3KGEzRyeU/oQz6E8vLN6KbNBP/62zOXPfHaihd1UhWFDxYM19+8DfH/m3Hi9rS
+ El+eyuZAwFuWlNHINQKWSZpSp5SKTOzC9K3igCJGQBBQcDyLXHoKOxzyM6flSft4+Jxg
+ NoDYoG9QCjzwtxg2hhQPBtJ2+hlgKPfFf4axprSoD38xtHvdjSHyElKJvgndhR5Yrwqf
+ bRlPwZvRrjnIzVdY+AfQSdOfHhORJrF5Zr/N2Fy6XVd0Zv/gXUNt4cLDF2xkDaVVVMgT +g== 
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vf1qea9h8-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 07 Jan 2024 14:24:53 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 407B25HT000906;
-	Sun, 7 Jan 2024 14:24:52 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vfkdjtfd5-1
+	Sun, 07 Jan 2024 17:01:18 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 407EOnnG004395;
+	Sun, 7 Jan 2024 17:00:49 GMT
+Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vfjpkb8wg-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 07 Jan 2024 14:24:52 +0000
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 407EOp6m58065270
+	Sun, 07 Jan 2024 17:00:49 +0000
+Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
+	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 407H0m6q45220304
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 7 Jan 2024 14:24:52 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DAF7A58043;
-	Sun,  7 Jan 2024 14:24:51 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2EF8D5805D;
-	Sun,  7 Jan 2024 14:24:51 +0000 (GMT)
+	Sun, 7 Jan 2024 17:00:48 GMT
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 872725805C;
+	Sun,  7 Jan 2024 17:00:48 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4865958059;
+	Sun,  7 Jan 2024 17:00:47 +0000 (GMT)
 Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.61.155.63])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Sun,  7 Jan 2024 14:24:51 +0000 (GMT)
-Message-ID: <ddd990a0faeb79260709b973b2b959a89e6c65bc.camel@linux.ibm.com>
-Subject: Re: [PATCH v3 7/7] ima: measure kexec load and exec events as
- critical data
+	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Sun,  7 Jan 2024 17:00:47 +0000 (GMT)
+Message-ID: <3e8cb0bd77a2b73613b19febb2b3121ef0ea8255.camel@linux.ibm.com>
+Subject: Re: [PATCH v3 6/7] ima: configure memory to log events between
+ kexec load and execute
 From: Mimi Zohar <zohar@linux.ibm.com>
 To: Tushar Sugandhi <tusharsu@linux.microsoft.com>,
         roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
@@ -73,29 +73,28 @@ To: Tushar Sugandhi <tusharsu@linux.microsoft.com>,
         noodles@fb.com, bauermann@kolabnow.com,
         linux-integrity@vger.kernel.org, kexec@lists.infradead.org
 Cc: code@tyhicks.com, nramas@linux.microsoft.com, paul@paul-moore.com
-Date: Sun, 07 Jan 2024 09:24:50 -0500
-In-Reply-To: <db16303d-44b7-45d2-b844-cf4d7fe89647@linux.microsoft.com>
+Date: Sun, 07 Jan 2024 12:00:46 -0500
+In-Reply-To: <b78bbf3f-da39-47a6-aac3-581c8d2827a0@linux.microsoft.com>
 References: <20231216010729.2904751-1-tusharsu@linux.microsoft.com>
-	 <20231216010729.2904751-8-tusharsu@linux.microsoft.com>
-	 <0c98853722d57472d451e7838d4b1176665de1c0.camel@linux.ibm.com>
-	 <db16303d-44b7-45d2-b844-cf4d7fe89647@linux.microsoft.com>
+	 <20231216010729.2904751-7-tusharsu@linux.microsoft.com>
+	 <fbe6aa7577875b23a9913a39f858f06f1d2aa903.camel@linux.ibm.com>
+	 <b78bbf3f-da39-47a6-aac3-581c8d2827a0@linux.microsoft.com>
 X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
+Mime-Version: 1.0
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Dq5VjJts3chRTDZ1p1GsYWvkdlOmXqFq
-X-Proofpoint-ORIG-GUID: Dq5VjJts3chRTDZ1p1GsYWvkdlOmXqFq
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
-MIME-Version: 1.0
+X-Proofpoint-GUID: Qj3133W2qu8rtemmqXE5vzPkxvhg9UQQ
+X-Proofpoint-ORIG-GUID: Qj3133W2qu8rtemmqXE5vzPkxvhg9UQQ
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-07_08,2024-01-05_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
- adultscore=0 priorityscore=1501 spamscore=0 lowpriorityscore=0
- impostorscore=0 phishscore=0 clxscore=1015 bulkscore=0 suspectscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401070069
+ definitions=2024-01-07_10,2024-01-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ priorityscore=1501 impostorscore=0 mlxlogscore=581 bulkscore=0
+ adultscore=0 malwarescore=0 phishscore=0 spamscore=0 mlxscore=0
+ lowpriorityscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2311290000 definitions=main-2401070080
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240107_062542_244956_9B0B6A6A 
-X-CRM114-Status: GOOD (  19.97  )
+X-CRM114-CacheID: sfid-20240107_090147_089626_C182C8DF 
+X-CRM114-Status: GOOD (  24.13  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -112,47 +111,56 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, 2024-01-05 at 12:22 -0800, Tushar Sugandhi wrote:
-> >> @@ -194,6 +206,15 @@ static int ima_update_kexec_buffer(struct notifier_block *self,
-> >>              return ret;
-> >>      }
-> >>   
-> >> +    buf_size = ima_get_binary_runtime_size();
-> >> +    scnprintf(ima_kexec_event, IMA_KEXEC_EVENT_LEN,
-> >> +              "kexec_segment_size=%lu;ima_binary_runtime_size=%lu;",
-> >> +              kexec_segment_size, buf_size);
+On Fri, 2024-01-05 at 12:20 -0800, Tushar Sugandhi wrote:
+> >> diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
+> >> index 60a511c6b583..8792b7aab768 100644
+> >> --- a/security/integrity/ima/Kconfig
+> >> +++ b/security/integrity/ima/Kconfig
+> >> @@ -338,3 +338,12 @@ config IMA_DISABLE_HTABLE
+> >>      default n
+> >>      help
+> >>         This option disables htable to allow measurement of duplicate records.
 > >> +
-> >> +    ima_measure_critical_data("ima_kexec", "kexec_execute",
-> >> +                              ima_kexec_event, strlen(ima_kexec_event),
-> >> +                              false, NULL, 0);
-> >> +
+> >> +config IMA_KEXEC_EXTRA_MEMORY_KB
+> >> +    int
+> >> +    depends on IMA && IMA_KEXEC
+> >> +    default 64
 > > 
-> > Please consider including the number of measurement records as well.
-> Will do. I think that would be valuable information.
+> > Since this isn't optional, the default should remain as a half page.
+> > Since a page is architecture specific, the default will need to be arch
+> >   specific
+> > 
+> It was a feedback from Stefan in the V2 of this series to convert it 
+> from number of PAGES to KB.[1]
 > 
-> Per my understanding, I will have to use the function
-> ima_show_measurements_count() or ima_show_htable_value() to get the
-> number of measurement records value[1]. So I will have to expose that
-> function from "ima_fs.c" to "ima_kexec.c". Hope that's ok.
+> But I can revert it to number of pages again.
 > 
-> [1] 
-> https://elixir.bootlin.com/linux/latest/sourcesecurity/integrity/ima/ima_fs.c 
+> Also, making the default value as a fraction (1/2 page) feels weird for 
+> a CONFIG variable.
 > 
-> 
-> static ssize_t ima_show_measurements_count(struct file *filp,
->                                           char __user *buf,
->                                           size_t count, loff_t *ppos)
-> {
->          return ima_show_htable_value(buf, count, ppos, &ima_htable.len);
+> Is it ok to make the default value as one page rather than half page?
 
-I don't see a need to expose this function.  ima_htable is defined in ima.h. 
-You can read the ima_htable.len directly, as ima_show_htable_value does.
+The point is not whether the extra memory is specified in terms of pages or KB. 
+For backwards compatibility the existing default should be the same as
+previously.  This means the default needs to be architecture specific.b
+ 
+$ uname -m; getconf PAGESIZE
+x86_64
+4096
+ 
+$ uname -m; getconf PAGESIZE 
+ppc64le
+65536
+
+For example:
+
+default 32 if PPC_64K_PAGES
+default 2 
 
 -- 
 thanks,
- 
+
 Mimi
- 
 
 
 
