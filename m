@@ -4,62 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 51BDBC4706C
-	for <kexec@archiver.kernel.org>; Fri, 12 Jan 2024 17:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CDBEFC4706C
+	for <kexec@archiver.kernel.org>; Fri, 12 Jan 2024 18:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
 	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
 	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
 	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=bgmPoRv9JCakF+39wHnFMILkRj5Uo9kPr8YMjQRAZL8=; b=Y4UvYLGbhIdkz5
-	djQ2xIdGEBg+C1CNA/93RpbunZrmj6m8vHPxWV8HhOboLSomsoTq7jASNBHgPBxgxXsdl4EgaC3XT
-	4vnrPSJtEOGOrkaJROAhqHnOIok3v27f+21Vb8mJ1TXsxL9Q70s4UhqgT8LNrfF3sW+s/319AZEnL
-	b9IkxeAH2LXI6kUYuAxp6reDUJTx4DQ0r2tv8PqTnh/UNMxBi7HmDjkYEOZq/rZImOw/GgGVLeB5n
-	saJgPNI1lRypKHyPsj1EDfdwLJgPZncboe90Sq0fSPnKsswbboFL3UPMg10wfHDoKVHJRkTZDLlNY
-	yBAn5oJstOnm4EU8ehbQ==;
+	List-Owner; bh=Be2J0sMXzcxSzzsRqB8gQk73h41SkQayc1GFHEm2fws=; b=Cf0ZkgPjGvfwu6
+	odzIuavfo7r/EG8XKeg5ROy9pwspwubyOpsmVEvaEBb22b+C57sjP55TyP8/P+aTARZbJ4eO6A5wF
+	kXfR/HX0sKm2pmfT2ZyvlCJykivAY+lcWpF3egOeuQn8BYi7zU/tO93dXR20wOcHdETVSZiS02LI4
+	nAkVTEGyNY2d3V13DWJwmfZtpJRnMz/G3+iIITugGhBdaAdQfCj/K2OTZkNcjz3zuDORZX1xNN3Uo
+	P1OkAAw8wg61woIJmlpQF6mOk+FMHPkyJIitdaW02fZzuybvHc++Y5EnNoFCiNk3QE2lt1XYDvOxN
+	YeJ5RwRFMzh9PEvrYY/w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rOLIT-003T5i-2D;
-	Fri, 12 Jan 2024 17:26:21 +0000
+	id 1rOMC9-003b3n-1o;
+	Fri, 12 Jan 2024 18:23:53 +0000
 Received: from linux.microsoft.com ([13.77.154.182])
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rOLIR-003T4Z-1B
+	id 1rOMC6-003b3L-0q
 	for kexec@lists.infradead.org;
-	Fri, 12 Jan 2024 17:26:20 +0000
+	Fri, 12 Jan 2024 18:23:51 +0000
 Received: from [192.168.86.69] (unknown [50.46.228.62])
-	by linux.microsoft.com (Postfix) with ESMTPSA id DC05820B3CE1;
-	Fri, 12 Jan 2024 09:26:15 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DC05820B3CE1
+	by linux.microsoft.com (Postfix) with ESMTPSA id 1C41020B3CDE;
+	Fri, 12 Jan 2024 10:23:48 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1C41020B3CDE
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1705080376;
-	bh=KbxatyazcGOb5nVqjoWrzE226sOvTe/q3xt20G4j/YQ=;
+	s=default; t=1705083828;
+	bh=gpxTcvKnkoBsHVJNPTQQphS77esyYUMo75E4RxbL2x4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=NNjnAYa7dcmhzXN7wy7JcWFS/2uApgDBtTWnXOtv+Q8Hxtkf8v3wL+QrK6p7iHJYR
-	 68TBJoI8PALpcCVnvowTMykrVzELltaSIcSUp632A8ZSmvs3ji1xUZJNPgHB0FbyGJ
-	 LeMkB9++4X88Gfj4MeZh/KIH2yv/V9uNaTdCIpE0=
-Message-ID: <30910120-2a44-46fd-b8d3-c7bff38b6269@linux.microsoft.com>
-Date: Fri, 12 Jan 2024 09:26:15 -0800
+	b=Z94CzjSnbTd/Zr7L4YugLYetotrKcRgm4vMmsgdyzJS+6gyjvHChRAdvNWv12x68H
+	 E10T9asTjMJtM8CiQv12PDU4V150aFF9ygovIuXsc8Tuj0exOkQd/7U2jWw1jt9cOQ
+	 H+1l9j6GtA9taAh8vy4bpYbcTwm2p6RdbxyEIXK8=
+Message-ID: <a09613f2-0d9f-41a3-b78d-b1b1fd35614c@linux.microsoft.com>
+Date: Fri, 12 Jan 2024 10:23:47 -0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/7] ima: kexec: move ima log copy from kexec load to
- execute
+Subject: Re: [PATCH v3 6/7] ima: configure memory to log events between kexec
+ load and execute
 Content-Language: en-US
-To: Mimi Zohar <zohar@linux.ibm.com>, roberto.sassu@huaweicloud.com,
- roberto.sassu@huawei.com, eric.snowberg@oracle.com, stefanb@linux.ibm.com,
- ebiederm@xmission.com, noodles@fb.com, bauermann@kolabnow.com,
- linux-integrity@vger.kernel.org, kexec@lists.infradead.org
+To: Mimi Zohar <zohar@linux.ibm.com>, Stefan Berger <stefanb@linux.ibm.com>,
+ roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+ eric.snowberg@oracle.com, ebiederm@xmission.com, noodles@fb.com,
+ bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
+ kexec@lists.infradead.org
 Cc: code@tyhicks.com, nramas@linux.microsoft.com, paul@paul-moore.com
 References: <20231216010729.2904751-1-tusharsu@linux.microsoft.com>
- <20231216010729.2904751-3-tusharsu@linux.microsoft.com>
- <b01df40e800ab387d43adcbb7f643bcd9f172cbb.camel@linux.ibm.com>
- <c2ec280f-4789-4654-a7b4-7a9534476173@linux.microsoft.com>
- <8f5deffb34c9a948a20e63eae44a1e3343e2ffe4.camel@linux.ibm.com>
+ <20231216010729.2904751-7-tusharsu@linux.microsoft.com>
+ <fbe6aa7577875b23a9913a39f858f06f1d2aa903.camel@linux.ibm.com>
+ <b78bbf3f-da39-47a6-aac3-581c8d2827a0@linux.microsoft.com>
+ <3e8cb0bd77a2b73613b19febb2b3121ef0ea8255.camel@linux.ibm.com>
+ <0df62e0e-a9d5-434c-866c-936cafeed480@linux.microsoft.com>
+ <a7c5feb3-b9ef-45c1-bd1c-2bf0e4b7d0c5@linux.ibm.com>
+ <af09bb62-a637-4e30-884a-9ce1a5bf030c@linux.microsoft.com>
+ <6acf82dcefd349941b05ff2a3b7e4bf651dc4429.camel@linux.ibm.com>
 From: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-In-Reply-To: <8f5deffb34c9a948a20e63eae44a1e3343e2ffe4.camel@linux.ibm.com>
+In-Reply-To: <6acf82dcefd349941b05ff2a3b7e4bf651dc4429.camel@linux.ibm.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240112_092619_435838_EF468DE3 
-X-CRM114-Status: GOOD (  15.47  )
+X-CRM114-CacheID: sfid-20240112_102350_325262_3BFE6C7B 
+X-CRM114-Status: GOOD (  11.28  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,57 +83,31 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 
 
-On 1/12/24 09:06, Mimi Zohar wrote:
+On 1/12/24 09:44, Mimi Zohar wrote:
+> On Thu, 2024-01-11 at 12:52 -0800, Tushar Sugandhi wrote:
+> [...]
+>> If we go with the KBs approach -
+>>
+>> half-a-page translates to different KBs on different architectures.
+>> And setting the right default value in KBs which would translate to
+>> the desired half-a-page, on a given arch, inside the Kconfig seems
+>> fragile (as I mentioned in the context of Option A in my previous
+>> response.
 > 
->>>> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
->>>> index f989f5f1933b..bf758fd5062c 100644
->>>> --- a/kernel/kexec_file.c
->>>> +++ b/kernel/kexec_file.c
->>>> @@ -734,6 +734,14 @@ static int kexec_calculate_store_digests(struct kimage *image)
->>>>    		if (ksegment->kbuf == pi->purgatory_buf)
->>>>    			continue;
->>>>    
->>>> +		/*
->>>> +		 * Skip the segment if ima_segment_index is set and matches
->>>> +		 * the current index
->>>> +		 */
->>>> +		if (image->is_ima_segment_index_set &&
->>>> +		    i == image->ima_segment_index)
->>>> +			continue;
->>> With this change, the IMA segment is not included in the digest
->>> calculation, nor should it be included in the digest verification.
->>> However, I'm not seeing the matching code change in the digest
->>> verification.
->>>
->> Fair question.
->>
->> But I don't think anything else needs to be done here.
->>
->> The way kexec_calculate_store_digests() and verify_sha256_digest()
->> are implemented, it already skips verification of the segments if
->> the segment is not part of 'purgatory_sha_regions'.
->>
->> In kexec_calculate_store_digests(), my change is to 'continue' when the
->> segment is the IMA segment when the function is going through all the
->> segments in a for loop [1].
->>
->> Therefore in kexec_calculate_store_digests() -
->>    - crypto_shash_update() is not called for IMA segment [1].
->>    - sha_regions[j] is not updated with IMA segment  [1].
->>    - This 'sha_regions' variable later becomes 'purgatory_sha_regions'
->>      in kexec_calculate_store_digests  [1].
->>    - and verify_sha256_digest() only verifies 'purgatory_sha_regions'[2].
->>
->>    Since IMA segment is not part of the 'purgatory_sha_regions', it is
->>    not included in the verification as part of verify_sha256_digest().
->>
->>> Please make ignoring the IMA segment a separate patch.
->>>
->> Sure. Will do.
-> Thank you for the explanation.  Please include in the patch description a
-> statement about the "sha_regions" not including the IMA segment, so nothing is
-> needed on the verify side.
-Definitely.  Will do.
+> How about setting the default value to 0, indicating not to change the current
+> half page default.  Any other value would be KBs, as Stefan suggested.
+> 
+Thanks.
+That's way more elegant than the other alternatives.
+It's definitely doable in KConfig and handle the default in code 
+appropriately.
+
+It may cause some confusion in the documentation of the config param.
+But it would be a wording issue, and we can work on it.
+
+Thanks for the suggestion.  I like it honestly.
+
+~Tushar
 
 _______________________________________________
 kexec mailing list
