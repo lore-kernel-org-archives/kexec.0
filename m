@@ -4,155 +4,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id F07E1C47DA2
-	for <kexec@archiver.kernel.org>; Fri, 12 Jan 2024 15:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2DC59C4706C
+	for <kexec@archiver.kernel.org>; Fri, 12 Jan 2024 17:08:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	List-Subscribe:List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:
-	References:In-Reply-To:MIME-Version:Message-ID:Subject:CC:To:From:Date:
-	Reply-To:Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date
-	:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=qiCD1f8cwi5fuNdIUkHFX80Q69aaC4v5UvVpu+jH1pQ=; b=GfPI6sdAiNtNfwHpnFJBB7BW4C
-	2+IGOj2dtXTVYWbgCf0sun+5WdoWIbSYGrMW0ABvy5OA1fevTzBdqvQVMNVBA4NbsbT0qgI9XMu58
-	x/Fwf9UIE3Et9WKpR35cF6xGXlTqW43vg5Hm6BhG1kg5pSKuzFh+HcO/wTRppYQwISGkqTwNEMBsQ
-	M29TFW2NzGOvxJ1/aXiDSaUD6ov80Y3h+9PiMkHj91EXJvUfoPY6UWwxZY3mOL7WjIpiCAVOjbzT+
-	L5n4I6OjMsFqGRcVJ1n7/ytdInTeXXyskW20o2Ugyru0/yRRU4/OUcw+EHu9QJvzuj3UXTTBp/TVO
-	oUs1KLpQ==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:Mime-Version:References:In-Reply-To:
+	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=DBVz+91QeEyfaieL4ORJlUh6RHkD0tOy4vvHJmMIeSw=; b=MZpRfuScH4LkB1
+	9cf1abbV9pcMokeSJv48VAQB7eZ7Io20FxDpG/fPRHwSoCCIAOaPZOhPNt/tD67Kdx9EYLc40tJH0
+	dFEUzDPriwFT98UeH+eiPw+reX/BX4sSV752rjIYgPua520OMfzbT+hI6vY28nJxIqLm0XF3Pzt8k
+	lT12XPg50KeugP6rK9Lum8c7u2IBuhOYoMJTztXb33THIXk24vxJV3dkShTHaQwCTTW6Mc4fpDDFr
+	o7BMB9OdVHT7f/AD9vc1PTnfo/ltrHDWX2x0Q2r5OKPF1RNzJHqT56N2fiMkRQ2ElT7jH/KXBNU/v
+	jDEnubiqh2+BV+QvFlCA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rOJw2-003EKD-2P;
-	Fri, 12 Jan 2024 15:59:06 +0000
-Received: from mailout2.w1.samsung.com ([210.118.77.12])
+	id 1rOL0q-003PQ5-1m;
+	Fri, 12 Jan 2024 17:08:08 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rLPZ7-00EUBG-1L
+	id 1rOL0n-003POw-2v
 	for kexec@lists.infradead.org;
-	Thu, 04 Jan 2024 15:23:30 +0000
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20240104152317euoutp02af64ea5d44089fbf76814de916d80a0e~nLjblY91G0383403834euoutp02S;
-	Thu,  4 Jan 2024 15:23:17 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20240104152317euoutp02af64ea5d44089fbf76814de916d80a0e~nLjblY91G0383403834euoutp02S
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1704381797;
-	bh=JalEKYMkjsneZ1f8omw/O0M8dMeqvgrqvomUY87Fhfg=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=t8OW53/bBoW8L9GkkTvvZs4nFJoit0t32xAeCuyCdhzm1xAwgLcS4i+QWCwdYR751
-	 uKMHMPmL5vl+T13dMvzs0JbHPIPONUmbj2fR7/shSJjCihhOnUxf+2BsbU5u+eRnWB
-	 tCGKFybp2cf3kUnCH+qV1xVYfB6EOQwcBXv3BBDg=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20240104152317eucas1p19950f0b8746d6f6c732a2653a49e0a67~nLjbVXSBN1357313573eucas1p1J;
-	Thu,  4 Jan 2024 15:23:17 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-	eusmges1new.samsung.com (EUCPMTA) with SMTP id D1.15.09539.46DC6956; Thu,  4
-	Jan 2024 15:23:16 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20240104152316eucas1p15614f44c3e210a165983df57e9014009~nLja2BBXo1074810748eucas1p17;
-	Thu,  4 Jan 2024 15:23:16 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240104152316eusmtrp27b5ba330034b29d296ed9522af8c9794~nLja06KbN2376823768eusmtrp2M;
-	Thu,  4 Jan 2024 15:23:16 +0000 (GMT)
-X-AuditID: cbfec7f2-515ff70000002543-5e-6596cd646407
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms1.samsung.com (EUCPMTA) with SMTP id D0.E3.09146.46DC6956; Thu,  4
-	Jan 2024 15:23:16 +0000 (GMT)
-Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240104152316eusmtip1a81f893d56955799d8aa2aa6593eae90~nLjaj-tQO0636206362eusmtip1-;
-	Thu,  4 Jan 2024 15:23:16 +0000 (GMT)
-Received: from localhost (106.210.248.231) by CAMSVWEXC02.scsc.local
-	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-	Thu, 4 Jan 2024 15:23:15 +0000
-Date: Thu, 4 Jan 2024 16:23:11 +0100
-From: Joel Granados <j.granados@samsung.com>
-To: Matthew Wilcox <willy@infradead.org>
-CC: Luis Chamberlain <mcgrof@kernel.org>, <josh@joshtriplett.org>, Kees Cook
-	<keescook@chromium.org>, Eric Biederman <ebiederm@xmission.com>, Iurii
-	Zaikin <yzaikin@google.com>, Steven Rostedt <rostedt@goodmis.org>, Masami
-	Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas
-	Gleixner <tglx@linutronix.de>, John Stultz <jstultz@google.com>, Stephen
-	Boyd <sboyd@kernel.org>, Andy Lutomirski <luto@amacapital.net>, Will Drewry
-	<wad@chromium.org>, Ingo Molnar <mingo@redhat.com>, Peter Zijlstra
-	<peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
-	<vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Daniel
-	Bristot de Oliveira <bristot@redhat.com>, Valentin Schneider
-	<vschneid@redhat.com>, Petr Mladek <pmladek@suse.com>, John Ogness
-	<john.ogness@linutronix.de>, Sergey Senozhatsky <senozhatsky@chromium.org>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Anil S Keshavamurthy
-	<anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>,
-	Balbir Singh <bsingharora@gmail.com>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend
-	<john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, Martin
-	KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, Yonghong Song
-	<yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, Stanislav Fomichev
-	<sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
-	<linux-fsdevel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<bpf@vger.kernel.org>
-Subject: Re: [PATCH v2 00/10] sysctl: Remove sentinel elements from kernel
- dir
-Message-ID: <20240104152311.f62uxcnimol5qwxx@localhost>
-MIME-Version: 1.0
-In-Reply-To: <ZZbJRiN8ENV/FoTV@casper.infradead.org>
-X-Originating-IP: [106.210.248.231]
-X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
-	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
-X-Brightmail-Tracker: H4sIAAAAAAAAA2VTazBcZxjud87ZcxZds5bwRTpjZkOmFTSRhK8XnaTVyZlp0shM+yP5kdrG
-	GTTsiqWk1RmbirpUY8LSIKxL3NYlNkuo6yg2CEoIJYmUsF0rS12KitXdHG0z03/P+zzv873P
-	8+Pj4oJmypEbLI5gwsWiECFpSdR1bfS7B/RlMAdqdV5obTMbR42/TxBoZWOCQssdGhINTY+Q
-	KFMnI1CO7h6FCvP/xFHOQByBZlJrcbRdF0ehdk0rhS7Xl2KobjgPoI70LJOgkKDnd2tI9Oiq
-	nED3kkNRY+8qhrQtKRhqau4m0P2fckjUUd1HIGVlLAfdHB3EUEViGQeNpc4AlGaYBaiwZB8a
-	alNgSJm+RSFNShuGtqdXOagl4QmGjA9qCDS0ridQY00BiTQlWyS6rZLjKKHDlLC2c41CE0nb
-	FNpcN915oqzjoOKGj4960JPzWwRdkVsB6OzYQYJWl/2K0Q1Zjyg6rmWcohWqSPp2qStd2KTD
-	6KSxIZwe1/vQqvJEkn74oImkDf39FJ0fK8fp1II24Gd/1vLdACYk+Esm/M33/C2DRlpWQJjB
-	KlqxsMyJBVWWScCCC/mHoXawhpMELLkCfimAldX9O8MKgD/f2CTZYRnAyRSdaeC+sMxNO5nd
-	An4JgPoch393rhdMk6ygBnBTv9uMCb4zHPnx1gue5LvBgfmHuPkdO/7rcF7taaZxfg0PXqv/
-	3Ixt+X5w+E4zYcY8vjdUFxkBi21g9/WnBLsfDct0JcD8DM7fA0uMXDNtYUrW1P39Tsq9cEnr
-	z3b8BvaoxzFzSshfsIIVRUrACr6wdqZ1B9vCOY2aYvFrcLshb8eQBmCrcZFiByWAxbJVjN16
-	B8YNP6XYa8fg8x+iWGgNx57ZsDGt4bW6TJyleTAhXsAa90Hl43kiFezNeqlY1kvFsv4rxtJu
-	UNG4RP6P3g+L8/U4i31gVdUCoQBUOXBgIqWhgYz0oJiJ8pCKQqWR4kCP85JQFTD9ql6jZqke
-	3Jj7w6MdYFzQDpxN5qlbyl+AIyGWiBmhHa+6Ko0R8AJEl75iwiWfhUeGMNJ2sIdLCB14LgFO
-	jIAfKIpgLjBMGBP+j4pxLRxjsSh1srvTB13D23M96QNMsFeS59XkA187+oY807r49TRtvjJ7
-	3jXurxP7XeSqXK2xJ/7OqNdxv3apQrKr1Cj3HA+8uy60mu2ydr45ZRt9atHakusq4/jFjJZ7
-	vJVxQt2ZGmJf/UXRR7LVCzZ9HKvEcq3LzOHxty2Go0NqrW1PxvtPFTQHGdw6E1Xnags6Hfo+
-	FZ7SZ2EL7u2jdssXA0YCj6zu+s7rVbfTl+y7f6uXZeMx4yMjYWcMst7MyeDsy55HWk4vGjbu
-	43m7F4nqCApFOE58kluZcebKgkjtHXPl4qH+tW993pCMtZ07+tj3QzcoD9QeEvUvvQ8WDKEn
-	vcUJwcfOpgoJaZDooCseLhX9DXoa/GDQBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA2VTe0xTVxz23Ht7b0FIKuC8dHNulTiHrrbldTqK2UbirpKBWcyW6DatcANk
-	lJI+jDzUwpgpBTeUxyaCFhBRW3mDMhiyrsAYD6EdyFMRBCyvBXwAQ2DtmmUm++873+/7vt/v
-	d3IOE3UZwtnMyGgFLYsWR3FwR6xtrWX4vbCObJrXNe4GF1cuobDuySAGny0PEvCpsQWHprEe
-	HP5gScRgrqWdgIX5L1CYey8Zg+Pp1Shcr0kmoKHlLgGT7lxHYM0fVwA0ZuZYC1opfPlbOQ6H
-	v8/CYHuqBNa1PUfgZMM5BNb/3IpB80+5ODSWdmBQd0vFgEX3uxGoT7nBgH3p4wBmzE0AWFi8
-	A5oatQjUZa4SsOVcIwLXx54zYIN6BIFrveUYNC1NY7CuvACHLcWrOKysyEKh2midsLppkYCD
-	mnUCrixZ+4zoahjwWm3wB1zq4cwqRukv6wF1SdWNUVU3+hGqNmeYoJIbBghKW6GkKq97UoX1
-	FoTS9JlQamA6gKq4mYJTQ731ODXX2UlQ+aoslEovaAQHXzvMFcmkSgX9VoRUrgjgHOFDAZcv
-	hFyBt5DL9/L78n2BD2fPXlEYHRV5gpbt2XuMG3F1fQmLmdl4cvbsNwwV0DtqAJNJsrzJqbFt
-	GuDIdGEVATL1vhnVAAcr/wZZ/qyHYceu5MteDW4XzQPS0DyK2g9VgHz0YPYfFcbyIHt+LMNt
-	GGftJu/NDKG2Dm6sneRMlcCmR1nlzuTy+SbExruygsnKWcomd2b5kVVX14A9sxeQy81NhL2w
-	iWy9+BizYZR1gpxYSGXYvCjrdbJ4jWmjHawL1Lem4fZltpMLk8fsM58in65OgHTgmvNKUM4r
-	QTn/BdlpT7JvzYL8j95FXsufRu04gCwp+RPTAuImcKOVckm4RM7nysUSuTI6nBsqlVQA69Ou
-	aV6uvAMuT81zDQBhAgPwsDpHy3RdgI1FS6NpjptzaUkG7eIcJo6No2XSozJlFC03AB/rHZ5H
-	2ZtDpdZ/Eq04yvfl+fC9fYU8H6GvF2eL8/4YtdiFFS5W0F/TdAwt+9eHMB3YKkTfGPgicKF6
-	5vZJk+jt4n1bk4qkXvFTO7a+8yT+I4fY2aCAd5PIWPzjTdWfhVtOTbVppJOb42I+SVAf6jpn
-	qV3MYgcyhZ5NrR1a+PluP2OeB9tJ43TAkPkX3z8v+9HwhtSzvHjjdp7guI/yixSRQ58AnS84
-	Ejkqdqv+zl2btNJSOpC2JeiQkHTqzB574H885HZDyPyBDRn9v5i/DakZjavifppWh48pLrgT
-	A/2u2cG0MESvzjzofua0Z79upD7PXNv81c6gh6FDjzlzF1R3NfDim7uutA63ByTeEpgWOs2j
-	OlGCaGPCfkk8MIuWeB/2eKyAicPbuk8nninzV1f8PvGrOweTR4j5nqhMLv4bnkmcD28EAAA=
-X-CMS-MailID: 20240104152316eucas1p15614f44c3e210a165983df57e9014009
-X-Msg-Generator: CA
-X-RootMTR: 20240104150558eucas1p2cfaa2a4ea3933e8dfbf1bc94fb9e6ff5
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20240104150558eucas1p2cfaa2a4ea3933e8dfbf1bc94fb9e6ff5
-References: <20240104-jag-sysctl_remove_empty_elem_kernel-v2-0-836cc04e00ec@samsung.com>
-	<CGME20240104150558eucas1p2cfaa2a4ea3933e8dfbf1bc94fb9e6ff5@eucas1p2.samsung.com>
-	<ZZbJRiN8ENV/FoTV@casper.infradead.org>
+	Fri, 12 Jan 2024 17:08:07 +0000
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40CGWfZO005929;
+	Fri, 12 Jan 2024 17:07:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=nvfHbUX3NdOOF0RM1HqCVKhl+3u+WtwkaHpacqrG54Y=;
+ b=M7eyb8MX3klM9CYxA8pMbfMCqHuamzkhadDe+PyEVLcC5hwoPqgP1LSQBAW/d66M1vqS
+ qlD370OmfqWp56qeijRQ7F3AXsfz8pZJzACB1uBXN3eXEC3knCXSAWByi7VyVvVFf0Tf
+ vJ+zw3robUrfzKtQK+kzTRYfSA254SDXrWZgWuK5UijSFRGSpx9P6A4PTtQIP6+r0bm1
+ nUYMmzGnAfkke4nrVunQlxTUm+FyGSPSlbWcDEWZ8Vlh7EPATSZrz2d9EdFoUC5H8pfa
+ EEjIY6foFet0a3r53nO/wZ+M+UiG0JuIrPmAECetb0wM2eTW+vR7LVIgAdSeK8xzhm2I rg== 
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vk91q0tum-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 12 Jan 2024 17:07:35 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40CFZIEC022787;
+	Fri, 12 Jan 2024 17:06:44 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vfhk03ene-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 12 Jan 2024 17:06:44 +0000
+Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40CH6iAp57737632
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 12 Jan 2024 17:06:44 GMT
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0AA3B58059;
+	Fri, 12 Jan 2024 17:06:44 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DDA7458058;
+	Fri, 12 Jan 2024 17:06:42 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.61.149.108])
+	by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 12 Jan 2024 17:06:42 +0000 (GMT)
+Message-ID: <8f5deffb34c9a948a20e63eae44a1e3343e2ffe4.camel@linux.ibm.com>
+Subject: Re: [PATCH v3 2/7] ima: kexec: move ima log copy from kexec load to
+ execute
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Tushar Sugandhi <tusharsu@linux.microsoft.com>,
+        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+        eric.snowberg@oracle.com, stefanb@linux.ibm.com, ebiederm@xmission.com,
+        noodles@fb.com, bauermann@kolabnow.com,
+        linux-integrity@vger.kernel.org, kexec@lists.infradead.org
+Cc: code@tyhicks.com, nramas@linux.microsoft.com, paul@paul-moore.com
+Date: Fri, 12 Jan 2024 12:06:42 -0500
+In-Reply-To: <c2ec280f-4789-4654-a7b4-7a9534476173@linux.microsoft.com>
+References: <20231216010729.2904751-1-tusharsu@linux.microsoft.com>
+	 <20231216010729.2904751-3-tusharsu@linux.microsoft.com>
+	 <b01df40e800ab387d43adcbb7f643bcd9f172cbb.camel@linux.ibm.com>
+	 <c2ec280f-4789-4654-a7b4-7a9534476173@linux.microsoft.com>
+X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
+Mime-Version: 1.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: DeISoDk6VTOGzzhmLGE0CHqvdeq2xQVG
+X-Proofpoint-GUID: DeISoDk6VTOGzzhmLGE0CHqvdeq2xQVG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-12_08,2024-01-12_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
+ clxscore=1015 mlxscore=0 spamscore=0 phishscore=0 lowpriorityscore=0
+ bulkscore=0 priorityscore=1501 suspectscore=0 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2401120135
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240104_072326_913846_5B0B8F26 
-X-CRM114-Status: GOOD (  17.20  )
-X-Mailman-Approved-At: Fri, 12 Jan 2024 07:58:47 -0800
+X-CRM114-CacheID: sfid-20240112_090806_271782_4AB41670 
+X-CRM114-Status: GOOD (  37.77  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -164,70 +106,97 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============7700398737949321035=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
---===============7700398737949321035==
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="jzrq2uleinvzsb23"
-Content-Disposition: inline
+Hi Tushar,
 
---jzrq2uleinvzsb23
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > This patch moves the ima_dump_measurement_list() call from kexec load
+> > to exec, but doesn't register the reboot notifier in this patch.  I
+> > don't see how it is possible with just the previous and this patch
+> > applied that the measurement list is carried across kexec.
+> Ah. That's a good catch.
+> I was only checking if I can boot into the Kernel for testing 
+> bisect-safe readiness for each patch.  I will ensure the move of 
+> ima_dump_measurement_list() and registering the reboot notifier at 
+> execute stays an atomic operation in a single patch.
 
-On Thu, Jan 04, 2024 at 03:05:42PM +0000, Matthew Wilcox wrote:
-> On Thu, Jan 04, 2024 at 04:02:21PM +0100, Joel Granados via B4 Relay wrot=
-e:
-> > From: Joel Granados <j.granados@samsung.com>
-> >=20
-> > What?
->=20
-> The reason I wanted you to do the sentinel removal before the split was
-> so that there weren't two rounds of patches.  Ironically, because you
-> refused to do it that way, not only are there two rounds of patches, but
-> I'm being cc'd on all of them, so I get all the $%*^ emails twice.
->=20
-> Please at least stop cc'ing me.
-Will do
+Thanks!
 
---=20
+> >> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> >> index f989f5f1933b..bf758fd5062c 100644
+> >> --- a/kernel/kexec_file.c
+> >> +++ b/kernel/kexec_file.c
+> >> @@ -734,6 +734,14 @@ static int kexec_calculate_store_digests(struct kimage *image)
+> >>   		if (ksegment->kbuf == pi->purgatory_buf)
+> >>   			continue;
+> >>   
+> >> +		/*
+> >> +		 * Skip the segment if ima_segment_index is set and matches
+> >> +		 * the current index
+> >> +		 */
+> >> +		if (image->is_ima_segment_index_set &&
+> >> +		    i == image->ima_segment_index)
+> >> +			continue;
+> > 
+> > With this change, the IMA segment is not included in the digest
+> > calculation, nor should it be included in the digest verification.
+> > However, I'm not seeing the matching code change in the digest
+> > verification.
+> > 
+> Fair question.
+> 
+> But I don't think anything else needs to be done here.
+> 
+> The way kexec_calculate_store_digests() and verify_sha256_digest()
+> are implemented, it already skips verification of the segments if
+> the segment is not part of 'purgatory_sha_regions'.
+> 
+> In kexec_calculate_store_digests(), my change is to 'continue' when the
+> segment is the IMA segment when the function is going through all the
+> segments in a for loop [1].
+> 
+> Therefore in kexec_calculate_store_digests() -
+>   - crypto_shash_update() is not called for IMA segment [1].
+>   - sha_regions[j] is not updated with IMA segment  [1].
+>   - This 'sha_regions' variable later becomes 'purgatory_sha_regions'
+>     in kexec_calculate_store_digests  [1].
+>   - and verify_sha256_digest() only verifies 'purgatory_sha_regions'[2].
+> 
+>   Since IMA segment is not part of the 'purgatory_sha_regions', it is
+>   not included in the verification as part of verify_sha256_digest().
+> 
+> > Please make ignoring the IMA segment a separate patch.
+> > 
+> Sure. Will do.
 
-Joel Granados
+Thank you for the explanation.  Please include in the patch description a
+statement about the "sha_regions" not including the IMA segment, so nothing is
+needed on the verify side.
 
---jzrq2uleinvzsb23
-Content-Type: application/pgp-signature; name="signature.asc"
+> 
+> >>   		ret = crypto_shash_update(desc, ksegment->kbuf,
+> >>   					  ksegment->bufsz);
+> >>   		if (ret)
+> ...
+> ...
+> ...
+> >> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+> >> index c29db699c996..49a6047dd8eb 100644
+> > 
+> > Suspending and resuming extending the measurement list should be a
+> > separate patch as well, with its own patch description.
+> > 
+> Sure. Will do.
 
------BEGIN PGP SIGNATURE-----
+Thanks!
 
-iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmWWzV4ACgkQupfNUreW
-QU8FhwwAiNDNSaoaB/pGcA4KJtPoMdEJm9tL4XsYkZf24rQJXWitgrDdtcgoZo65
-VMARclf+GYvEvKwbnBJTK3mvcW4sHq0QoAGQy8AtQuo8dFk2K+n4XvvyKuWRlPRF
-hgE2MsdpbWNSFaKPYw5o6MYcjDmxkusvPifKASX/NANB16gjAWtjHqLfhRN+uXA7
-Hsxg3zQwr0sN+/7apAHCWO5X1A4RLpBoT9tjPnqPCKWCeya9HMpQfIwfRs9qIiM3
-NQsVAtLT8f5e969fRNEzDvPF2m/bV3ecyxTL/mEOd7TP2H0pL/8FkPw55aWMSt0q
-XxavHxTdl1Qo7oPVQMUckL9j58Nc5oDzPevLjGi0wZEpFcuQWRskWSZf7nTh0wEj
-cGU7UYjwF9ZRvp4axwPkIMQ1aanxXZ+KOh6GwORsCpHpnjzDKdBG273k5Lo7GB7j
-KpdO+fxc94k33h0uCV46v8YhAKy3WGnioX0EMwmOjhQiMnGU3cpVLedXpBJUmxFk
-57Osrz7P
-=hr38
------END PGP SIGNATURE-----
+Mimi
 
---jzrq2uleinvzsb23--
-
-
---===============7700398737949321035==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============7700398737949321035==--
-
