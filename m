@@ -4,94 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3F722C3DA79
-	for <kexec@archiver.kernel.org>; Mon, 15 Jan 2024 13:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 505E2C3DA79
+	for <kexec@archiver.kernel.org>; Mon, 15 Jan 2024 13:28:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
 	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:CC:To:Subject:
 	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=V5LovT7+VGosvagB61FB15jaM3w+hkf8pUInMPgVMlk=; b=aIRhAwVrQfZRZV
-	7UQmqWmQRD0UaIcIdPKcgeYD2qaixSG2n7yE3pVypymJwR+o2L8qGFpreOD33MethkHMPRvsif+Xa
-	yG8zeA1noPnWonOVMf9ImJymkCPlbfFFt0MeKhjvhuG1Vczvv7DlOv0SzajRdsIWDvmgH3Ry50+yC
-	soLVWDjcIHhFZQQ2vK8KQtfImHo4WhDwcfHouA/Xe4MLgFBdJGvL40gHWXLDJCOa47/CsbpDspmEn
-	GiDWFQRO3AIHUmoDj7zDU10CA4IiyF291EIZdqAyxFqbuKEwwx4RtMIkNj4lN6muyvkZaK8rA82xx
-	8cLLxk+V/qXYJx3wnyrw==;
+	List-Owner; bh=4BAprSXyRJty3k6ryah8Ln0mwI35r9YYbi8Uubs5N2U=; b=HVdWbzM+eFkNJ5
+	6wz/g/e9URStDY5ZkR3EDIg36x0qsHPp2QQgBG6R2Xn4dAEjONU7mVhkqbd/aXeO/dgva49JtF/O3
+	q+JVfzmNMJEXUuBdz6PzU0ptPObK4/yp7hdgb4i2L/NUs9svfY3hWoskdPAy8azLHyP5t/TAwU36L
+	U4cfTdYyxW7xTBv3EU8iMSZrLz6yusSoZJG+jSrmQkwuOVbt0mw7twZ3RUpIMzWc83rpzLYd9CXJr
+	3cLZ+9aK064gCPrrbqoPE77XhC2CVtTYPKDzgskmtUIzlwNlvWYn2aTDttX8ojp7vfTfC4GKgRrzS
+	OhRSTeMrzzxXAXcwIH+A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rPMsY-00938K-1m;
-	Mon, 15 Jan 2024 13:19:50 +0000
-Received: from mail-wm1-x333.google.com ([2a00:1450:4864:20::333])
+	id 1rPN0Y-0094ef-2x;
+	Mon, 15 Jan 2024 13:28:06 +0000
+Received: from smtp-fw-9105.amazon.com ([207.171.188.204])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rPMsU-00937I-1o
-	for kexec@lists.infradead.org;
-	Mon, 15 Jan 2024 13:19:48 +0000
-Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-40d6b4e2945so100362835e9.0
-        for <kexec@lists.infradead.org>; Mon, 15 Jan 2024 05:19:46 -0800 (PST)
+	id 1rPN0W-0094do-09;
+	Mon, 15 Jan 2024 13:28:05 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1705324785; x=1705929585; darn=lists.infradead.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Q0v/N0kXAbnUMy0XtXE3gHSioK80yxhIhWRK0FxbIKw=;
-        b=DcOgyWGAjM3sdimbpiNe3Giy3LNmR9gL8JDvaUUWOkrFXgQaYT7ipHnl8Vo2tc9313
-         09LIF7iRutRBconLBrQg/EZymKU9gQE0Hwzgug4cv9u0HOAPP72W+9AHcRMomZ7mWVP5
-         ZlE8Lut/tsLhuE919FJLjgJJ8u9xAg6gWoIozx12GYaom+84D3piXcQDLAuUjsNe+KKh
-         zk7GTuCICKJA227l8qAT6o53HxmQZ9J86kvM4TY903pd3U6Z4mn7W6lAcdh/FnG22XA6
-         ZaXeDp9XvX6QZP/eZlr2RkXEIdnpdw7i8Y/rrqf7NxoGr4xkq+zMRfWyYS4MJqpIeZ9n
-         MLHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705324785; x=1705929585;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q0v/N0kXAbnUMy0XtXE3gHSioK80yxhIhWRK0FxbIKw=;
-        b=rh7mac79mcVek4hDTwv8llHHc/cOp7pUDnioWB+yNruRhIKD/3AAPM+zFE+go5xZjD
-         qlmPWWJrYQVCjpW77qr2BDcaOclGit75Sr8qdlSg2zLJizvRkYRUjkSko56WvNm6aaFv
-         lnG0z4Tbq3PJ4jL/4DesW05ThtIHMXop93zG+TsWApZ5CZ7IxZ6z7zzpOUbGPBWkN9lB
-         aRSkVCrvNdD2gEEUMgCcEC1RVm8yj5tVepfPfChfihWhtIskB6rS91LFf4YBoL3WJmKa
-         SuScT12/sf1Gx7UgaKGG0vlLDJGaRCek3rjGMyrikxdWYOsDRz3KPw5T5emdRsI3T6Lq
-         AvMA==
-X-Gm-Message-State: AOJu0YycV7LWQKjXpSLcQKC4JZK4fsWceemA4QvtCAmjRBWiT+GI0FYD
-	UO1H4pzwSdtX1GttfqmeM28WHOZhhfIb5w==
-X-Google-Smtp-Source: AGHT+IEmfou+SJJzbucaZzJYGOu0aKAR3E1mpvl8rhNlPReIy38XcB//GKFyZHBfkSGj9VIw/SMfNQ==
-X-Received: by 2002:a05:600c:295:b0:40e:5f22:3d1b with SMTP id 21-20020a05600c029500b0040e5f223d1bmr1871631wmk.72.1705324785015;
-        Mon, 15 Jan 2024 05:19:45 -0800 (PST)
-Received: from ?IPV6:2a10:bac0:b000:7588:7285:c2ff:fedd:7e3a? ([2a10:bac0:b000:7588:7285:c2ff:fedd:7e3a])
-        by smtp.gmail.com with ESMTPSA id v4-20020a05600c470400b0040e5945307esm16032865wmo.40.2024.01.15.05.19.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jan 2024 05:19:44 -0800 (PST)
-Message-ID: <fa1e3873-6218-461b-85fa-1ff353380532@suse.com>
-Date: Mon, 15 Jan 2024 15:19:43 +0200
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1705325284; x=1736861284;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=CRE66M5NAo6zqtyZQM3AWAf6gOvFh/lPcxTLxUzKJu0=;
+  b=kAKZvyXeBKPfQKPc1sCGVs3njxLBshcOwigB8aCWSlc4fSIv2BholQAb
+   CUK6hdatZYZ7f7+0YK3IJIZcR2vVt8g0aTPwV7NTkD2ZPfnXU92cKq/O5
+   EgIS9NBvIRHOtxUTNVYJYlfI3kSGXlxp+8QDWJJXhJb4ck2xQlY4L6NNZ
+   I=;
+X-IronPort-AV: E=Sophos;i="6.04,196,1695686400"; 
+   d="scan'208";a="697876050"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-iad-1d-m6i4x-00fceed5.us-east-1.amazon.com) ([10.25.36.210])
+  by smtp-border-fw-9105.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jan 2024 13:27:52 +0000
+Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (iad7-ws-svc-p70-lb3-vlan3.iad.amazon.com [10.32.235.38])
+	by email-inbound-relay-iad-1d-m6i4x-00fceed5.us-east-1.amazon.com (Postfix) with ESMTPS id 18BD5A0A25;
+	Mon, 15 Jan 2024 13:27:44 +0000 (UTC)
+Received: from EX19MTAUWC002.ant.amazon.com [10.0.7.35:24915]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.61.210:2525] with esmtp (Farcaster)
+ id 00e71d69-8a91-48a6-b14b-66e164da46e8; Mon, 15 Jan 2024 13:27:44 +0000 (UTC)
+X-Farcaster-Flow-ID: 00e71d69-8a91-48a6-b14b-66e164da46e8
+Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
+ EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Mon, 15 Jan 2024 13:27:43 +0000
+Received: from [0.0.0.0] (10.253.83.51) by EX19D020UWC004.ant.amazon.com
+ (10.13.138.149) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 15 Jan
+ 2024 13:27:34 +0000
+Message-ID: <64047065-41a1-4235-b600-bf3530c76722@amazon.com>
+Date: Mon, 15 Jan 2024 14:27:30 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv5 16/16] x86/acpi: Add support for CPU offlining for ACPI
- MADT wakeup method
+Subject: Re: [PATCH v2 04/17] kexec: Add KHO parsing support
 Content-Language: en-US
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
- Elena Reshetova <elena.reshetova@intel.com>,
- Jun Nakajima <jun.nakajima@intel.com>,
- Rick Edgecombe <rick.p.edgecombe@intel.com>,
- Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish"
- <ashish.kalra@amd.com>, Sean Christopherson <seanjc@google.com>,
- "Huang, Kai" <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>,
- kexec@lists.infradead.org, linux-coco@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20231222235209.32143-1-kirill.shutemov@linux.intel.com>
- <20231222235209.32143-17-kirill.shutemov@linux.intel.com>
-From: Nikolay Borisov <nik.borisov@suse.com>
-In-Reply-To: <20231222235209.32143-17-kirill.shutemov@linux.intel.com>
+To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-mm@kvack.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <kexec@lists.infradead.org>,
+	<linux-doc@vger.kernel.org>, <x86@kernel.org>, Eric Biederman
+	<ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski
+	<luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring
+	<robh+dt@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Andrew Morton
+	<akpm@linux-foundation.org>, Mark Rutland <mark.rutland@arm.com>, "Tom
+ Lendacky" <thomas.lendacky@amd.com>, Ashish Kalra <ashish.kalra@amd.com>,
+	James Gowans <jgowans@amazon.com>, <arnd@arndb.de>, <pbonzini@redhat.com>,
+	<madvenka@linux.microsoft.com>, Anthony Yznaga <anthony.yznaga@oracle.com>,
+	Usama Arif <usama.arif@bytedance.com>, David Woodhouse <dwmw@amazon.co.uk>,
+	Benjamin Herrenschmidt <benh@kernel.crashing.org>
+References: <20231222193607.15474-1-graf@amazon.com>
+ <20231222193607.15474-5-graf@amazon.com> <20240101033301.GA765@skinsburskii.>
+From: Alexander Graf <graf@amazon.com>
+In-Reply-To: <20240101033301.GA765@skinsburskii.>
+X-Originating-IP: [10.253.83.51]
+X-ClientProxiedBy: EX19D041UWB004.ant.amazon.com (10.13.139.143) To
+ EX19D020UWC004.ant.amazon.com (10.13.138.149)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240115_051946_621098_8150B557 
-X-CRM114-Status: GOOD (  22.86  )
+X-CRM114-CacheID: sfid-20240115_052804_150489_2250C753 
+X-CRM114-Status: GOOD (  19.76  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -103,71 +96,117 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-CgpPbiAyMy4xMi4yMyDQsy4gMTo1MiDRhy4sIEtpcmlsbCBBLiBTaHV0ZW1vdiB3cm90ZToKPiBN
-QURUIE11bHRpcHJvY2Vzc29yIFdha2V1cCBzdHJ1Y3R1cmUgdmVyc2lvbiAxIGJyaW5ncyBzdXBw
-b3J0IG9mIENQVQo+IG9mZmxpbmluZzogQklPUyBwcm92aWRlcyBhIHJlc2V0IHZlY3RvciB3aGVy
-ZSB0aGUgQ1BVIGhhcyB0byBqdW1wIHRvCj4gZm9yIG9mZmxpbmluZyBpdHNlbGYuIFRoZSBuZXcg
-VEVTVCBtYWlsYm94IGNvbW1hbmQgY2FuIGJlIHVzZWQgdG8gdGVzdAo+IHdoZXRoZXIgdGhlIENQ
-VSBvZmZsaW5lZCBpdHNlbGYgd2hpY2ggbWVhbnMgdGhlIEJJT1MgaGFzIGNvbnRyb2wgb3Zlcgo+
-IHRoZSBDUFUgYW5kIGNhbiBvbmxpbmUgaXQgYWdhaW4gdmlhIHRoZSBBQ1BJIE1BRFQgd2FrZXVw
-IG1ldGhvZC4KPiAKPiBBZGQgQ1BVIG9mZmxpbmcgc3VwcG9ydCBmb3IgdGhlIEFDUEkgTUFEVCB3
-YWtldXAgbWV0aG9kIGJ5IGltcGxlbWVudGluZwo+IGN1c3RvbSBjcHVfZGllKCksIHBsYXlfZGVh
-ZCgpIGFuZCBzdG9wX3RoaXNfY3B1KCkgU01QIG9wZXJhdGlvbnMuCj4gCj4gQ1BVIG9mZmxpbmlu
-ZyBtYWtlcyBpcyBwb3NzaWJsZSB0byBoYW5kIG92ZXIgc2Vjb25kYXJ5IENQVXMgb3ZlciBrZXhl
-YywKPiBub3QgbGltaXRpbmcgdGhlIHNlY29uZCBrZXJuZWwgdG8gYSBzaW5nbGUgQ1BVLgo+IAo+
-IFRoZSBjaGFuZ2UgY29uZm9ybXMgdG8gdGhlIGFwcHJvdmVkIEFDUEkgc3BlYyBjaGFuZ2UgcHJv
-cG9zYWwuIFNlZSB0aGUKPiBMaW5rLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEtpcmlsbCBBLiBTaHV0
-ZW1vdiA8a2lyaWxsLnNodXRlbW92QGxpbnV4LmludGVsLmNvbT4KPiBMaW5rOiBodHRwczovL2xv
-cmUua2VybmVsLm9yZy9hbGwvMTMzNTYyNTEudUxaV0duS21oZUBrcmVhY2hlcgo+IC0tLQo+ICAg
-YXJjaC94ODYvaW5jbHVkZS9hc20vYWNwaS5oICAgICAgICAgIHwgICAyICsKPiAgIGFyY2gveDg2
-L2tlcm5lbC9hY3BpL01ha2VmaWxlICAgICAgICB8ICAgMiArLQo+ICAgYXJjaC94ODYva2VybmVs
-L2FjcGkvbWFkdF9wbGF5ZGVhZC5TIHwgIDI5ICsrKysrCj4gICBhcmNoL3g4Ni9rZXJuZWwvYWNw
-aS9tYWR0X3dha2V1cC5jICAgfCAxODQgKysrKysrKysrKysrKysrKysrKysrKysrKystCj4gICBp
-bmNsdWRlL2FjcGkvYWN0YmwyLmggICAgICAgICAgICAgICAgfCAgMTUgKystCj4gICA1IGZpbGVz
-IGNoYW5nZWQsIDIyOCBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQo+ICAgY3JlYXRlIG1v
-ZGUgMTAwNjQ0IGFyY2gveDg2L2tlcm5lbC9hY3BpL21hZHRfcGxheWRlYWQuUwo+IAo+IGRpZmYg
-LS1naXQgYS9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9hY3BpLmggYi9hcmNoL3g4Ni9pbmNsdWRlL2Fz
-bS9hY3BpLmgKPiBpbmRleCAyNjI1YjkxNWFlN2YuLjAyMWNhZmEyMTRjMiAxMDA2NDQKPiAtLS0g
-YS9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9hY3BpLmgKPiArKysgYi9hcmNoL3g4Ni9pbmNsdWRlL2Fz
-bS9hY3BpLmgKPiBAQCAtODEsNiArODEsOCBAQCB1bmlvbiBhY3BpX3N1YnRhYmxlX2hlYWRlcnM7
-Cj4gICBpbnQgX19pbml0IGFjcGlfcGFyc2VfbXBfd2FrZSh1bmlvbiBhY3BpX3N1YnRhYmxlX2hl
-YWRlcnMgKmhlYWRlciwKPiAgIAkJCSAgICAgIGNvbnN0IHVuc2lnbmVkIGxvbmcgZW5kKTsKPiAg
-IAo+ICt2b2lkIGFzbV9hY3BpX21wX3BsYXlfZGVhZCh1NjQgcmVzZXRfdmVjdG9yLCB1NjQgcGdk
-X3BhKTsKPiArCj4gICAvKgo+ICAgICogQ2hlY2sgaWYgdGhlIENQVSBjYW4gaGFuZGxlIEMyIGFu
-ZCBkZWVwZXIKPiAgICAqLwo+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9rZXJuZWwvYWNwaS9NYWtl
-ZmlsZSBiL2FyY2gveDg2L2tlcm5lbC9hY3BpL01ha2VmaWxlCj4gaW5kZXggOGM3MzI5Yzg4YTc1
-Li4zN2IxZjI4ODQ2ZGUgMTAwNjQ0Cj4gLS0tIGEvYXJjaC94ODYva2VybmVsL2FjcGkvTWFrZWZp
-bGUKPiArKysgYi9hcmNoL3g4Ni9rZXJuZWwvYWNwaS9NYWtlZmlsZQo+IEBAIC00LDcgKzQsNyBA
-QCBvYmotJChDT05GSUdfQUNQSSkJCQkrPSBib290Lm8KPiAgIG9iai0kKENPTkZJR19BQ1BJX1NM
-RUVQKQkJKz0gc2xlZXAubyB3YWtldXBfJChCSVRTKS5vCj4gICBvYmotJChDT05GSUdfQUNQSV9B
-UEVJKQkJCSs9IGFwZWkubwo+ICAgb2JqLSQoQ09ORklHX0FDUElfQ1BQQ19MSUIpCQkrPSBjcHBj
-Lm8KPiAtb2JqLSQoQ09ORklHX1g4Nl9BQ1BJX01BRFRfV0FLRVVQKQkrPSBtYWR0X3dha2V1cC5v
-Cj4gK29iai0kKENPTkZJR19YODZfQUNQSV9NQURUX1dBS0VVUCkJKz0gbWFkdF93YWtldXAubyBt
-YWR0X3BsYXlkZWFkLm8KPiAgIAo+ICAgaWZuZXEgKCQoQ09ORklHX0FDUElfUFJPQ0VTU09SKSwp
-Cj4gICBvYmoteQkJCQkJKz0gY3N0YXRlLm8KPiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYva2VybmVs
-L2FjcGkvbWFkdF9wbGF5ZGVhZC5TIGIvYXJjaC94ODYva2VybmVsL2FjcGkvbWFkdF9wbGF5ZGVh
-ZC5TCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLmU0ODA0OTk1
-OTUxMwo+IC0tLSAvZGV2L251bGwKPiArKysgYi9hcmNoL3g4Ni9rZXJuZWwvYWNwaS9tYWR0X3Bs
-YXlkZWFkLlMKPiBAQCAtMCwwICsxLDI5IEBACj4gKy8qIFNQRFgtTGljZW5zZS1JZGVudGlmaWVy
-OiBHUEwtMi4wICovCj4gKyNpbmNsdWRlIDxsaW51eC9saW5rYWdlLmg+Cj4gKyNpbmNsdWRlIDxh
-c20vbm9zcGVjLWJyYW5jaC5oPgo+ICsjaW5jbHVkZSA8YXNtL3BhZ2VfdHlwZXMuaD4KPiArI2lu
-Y2x1ZGUgPGFzbS9wcm9jZXNzb3ItZmxhZ3MuaD4KPiArCj4gKwkudGV4dAo+ICsJLmFsaWduIFBB
-R0VfU0laRQo+ICsKPiArLyoKPiArICogYXNtX2FjcGlfbXBfcGxheV9kZWFkKCkgLSBIYW5kIG92
-ZXIgY29udHJvbCBvZiB0aGUgQ1BVIHRvIHRoZSBCSU9TCj4gKyAqCj4gKyAqIHJkaTogQWRkcmVz
-cyBvZiB0aGUgQUNQSSBNQURUIE1QV0sgUmVzZXRWZWN0b3IKPiArICogcnNpOiBQR0Qgb2YgdGhl
-IGlkZW50aXR5IG1hcHBpbmcKPiArICovCj4gK1NZTV9GVU5DX1NUQVJUKGFzbV9hY3BpX21wX3Bs
-YXlfZGVhZCkKPiArCS8qIFR1cm4gb2ZmIGdsb2JhbCBlbnRyaWVzLiBGb2xsb3dpbmcgQ1IzIHdy
-aXRlIHdpbGwgZmx1c2ggdGhlbS4gKi8KPiArCW1vdnEJJWNyNCwgJXJkeAo+ICsJYW5kcQkkfihY
-ODZfQ1I0X1BHRSksICVyZHgKPiArCW1vdnEJJXJkeCwgJWNyNAo+ICsKPiArCS8qIFN3aXRjaCB0
-byBpZGVudGl0eSBtYXBwaW5nICovCj4gKwltb3ZxCSVyc2ksICVyYXgKPiArCW1vdnEJJXJheCwg
-JWNyMwoKbml0OiBDYW4ndCB5b3UgbW92ZSBkaXJlY3RseSB0byBjcjMKCj4gKwo+ICsJLyogSnVt
-cCB0byByZXNldCB2ZWN0b3IgKi8KPiArCUFOTk9UQVRFX1JFVFBPTElORV9TQUZFCj4gKwlqbXAJ
-KiVyZGkKPiArU1lNX0ZVTkNfRU5EKGFzbV9hY3BpX21wX3BsYXlfZGVhZCkKCjxzbmlwPgoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGlu
-ZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+
+On 01.01.24 04:33, Stanislav Kinsburskii wrote:
+> On Fri, Dec 22, 2023 at 07:35:54PM +0000, Alexander Graf wrote:
+>> +/**
+>> + * kho_reserve_previous_mem - Adds all memory reservations into memblocks
+>> + * and moves us out of the scratch only phase. Must be called after page tables
+>> + * are initialized and memblock_allow_resize().
+>> + */
+>> +void __init kho_reserve_previous_mem(void)
+>> +{
+>> +     void *mem_virt = __va(mem_phys);
+>> +     int off, err;
+>> +
+>> +     if (!handover_phys || !mem_phys)
+>> +             return;
+>> +
+>> +     /*
+>> +      * We reached here because we are running inside a working linear map
+>> +      * that allows us to resize memblocks dynamically. Use the chance and
+>> +      * populate the global fdt pointer
+>> +      */
+>> +     fdt = __va(handover_phys);
+>> +
+>> +     off = fdt_path_offset(fdt, "/");
+>> +     if (off < 0) {
+>> +             fdt = NULL;
+>> +             return;
+>> +     }
+>> +
+>> +     err = fdt_node_check_compatible(fdt, off, "kho-v1");
+>> +     if (err) {
+>> +             pr_warn("KHO has invalid compatible, disabling.");
+> It looks like KHO preserved regions won't be reserved in this case.
+> Should KHO DT state be destroyed here to prevent KHO memory regions
+> reuse upon rollback?
+
+
+Good catch. I'll set fdt to NULL in that case in v3.
+
+
+>
+>> +
+>> +void __init kho_populate(phys_addr_t handover_dt_phys, phys_addr_t scratch_phys,
+>> +                      u64 scratch_len, phys_addr_t mem_cache_phys,
+>> +                      u64 mem_cache_len)
+>> +{
+>> +     void *handover_dt;
+>> +
+>> +     /* Determine the real size of the DT */
+>> +     handover_dt = early_memremap(handover_dt_phys, sizeof(struct fdt_header));
+>> +     if (!handover_dt) {
+>> +             pr_warn("setup: failed to memremap kexec FDT (0x%llx)\n", handover_dt_phys);
+>> +             return;
+>> +     }
+>> +
+>> +     if (fdt_check_header(handover_dt)) {
+>> +             pr_warn("setup: kexec handover FDT is invalid (0x%llx)\n", handover_dt_phys);
+>> +             early_memunmap(handover_dt, PAGE_SIZE);
+>> +             return;
+>> +     }
+>> +
+>> +     handover_len = fdt_totalsize(handover_dt);
+>> +     handover_phys = handover_dt_phys;
+>> +
+>> +     /* Reserve the DT so we can still access it in late boot */
+>> +     memblock_reserve(handover_phys, handover_len);
+>> +
+>> +     /* Reserve the mem cache so we can still access it later */
+>> +     memblock_reserve(mem_cache_phys, mem_cache_len);
+>> +
+>> +     /*
+>> +      * We pass a safe contiguous block of memory to use for early boot purporses from
+>> +      * the previous kernel so that we can resize the memblock array as needed.
+>> +      */
+>> +     memblock_add(scratch_phys, scratch_len);
+>> +
+>> +     if (WARN_ON(memblock_mark_scratch(scratch_phys, scratch_len))) {
+>> +             pr_err("Kexec failed to mark the scratch region. Disabling KHO.");
+>> +             handover_len = 0;
+>> +             handover_phys = 0;
+> Same question here: doesn't all the KHO state gets invalid in case of any
+> restoration error?
+
+
+It does, which is what the error case here does, no? Or are you 
+referring to the fact that we're not unrolling the memblock 
+reservations? If we can't mark the scratch region, I'd rather leave 
+everything else alone. It means the scratch region is in a hole, which 
+should never happen.
+
+
+Alex
+
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
