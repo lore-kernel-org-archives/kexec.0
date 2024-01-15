@@ -4,81 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B25D4C4706C
-	for <kexec@archiver.kernel.org>; Sat, 13 Jan 2024 21:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 68DFDC3DA79
+	for <kexec@archiver.kernel.org>; Mon, 15 Jan 2024 09:17:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=ATDMyyB0Wgkz0Llt8lxvSKGq+tb5AQNv4pYkQE4G/pM=; b=1sCdSr1JpVY6da
-	a+9UxCXKMLDdu6sKcZDDkA5cwOmHrUTW8kCDyUkho3ZuMWR/LPmSTVEIAq//Sef+lkkQpYuHN16+m
-	waYXX4AalNa5UzeeMvMVyN1UAFBqsof1HMGesYqSe34MevHZnIomz/y6pag0/t3UZAtUfpAUzXWyX
-	wzMAqfvuLvCWG82GnzQ34IIONuak/ZSjqqXuJGO6OIYy3GZJNh1ptXQdBBaKlsfl5WoJyyKDKrzO0
-	OWe9In/K07tF9grP48OR1Qhd9DnnNt4ySQ6kmdc9LB46LsZ1ZforR4RJA0krXER87un5V3932Cg4O
-	0GDnE97fhyJ4RSJZyAYQ==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Subject:To:From:Date:
+	Message-ID:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From
+	:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=vyFMdlzXfwMqSfNh9fiW95dWIO1pPZvO9RU3TRsypvI=; b=2GMU/ZdJELTs2z
+	oByr/8r/0mstxmv9avTW3Sa+wVV/MfvHEgjYU9on44VRHOgu39GPc1MRzqiwsEmWvPEr+mqw9ussu
+	cuUixvNF6pMDI4j4fZ3UEs9ZmAopnh/EGxgpnhhrAGSeI3VMytKNXtqSCkoIYLtL/byHXPKD9eOAg
+	cza+T96GTjkxtwFZoVeW3cAuFMeX+82pDvT3W4+caxTH9opiKFpeOZvWFoxjU1H17Zw7NcXlSIItF
+	B4CXDH7DT8jWQLBKUISRKkfd955DOHc1gR090+j81pK2Z7JUinswByLWDo/GYDe7W9HR+n1n/irH7
+	6POPj34KTmxur2sVy/kQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rOlnP-005kae-3C;
-	Sat, 13 Jan 2024 21:44:03 +0000
-Received: from mgamail.intel.com ([192.55.52.43])
+	id 1rPJ6O-008ODp-2Z;
+	Mon, 15 Jan 2024 09:17:52 +0000
+Received: from mail.integratradelink.pl ([217.61.97.192])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rOlnM-005kZb-0l
+	id 1rPJ6K-008OCQ-1Q
 	for kexec@lists.infradead.org;
-	Sat, 13 Jan 2024 21:44:02 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705182240; x=1736718240;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=bBcS14m9y6v0leXUixwYnMiFcxzv1qlwb01Nb1b8Cq0=;
-  b=b1pHCASFvMrp+zt5vfau7K8h/r07jpzytjM+xeAz9VlbQbXBdU0DVuWW
-   UHQPChHSTBzvx+vCw5loVQyUFD47hGBVuzQaJtNUw42qN6ZOxv0Rln1mL
-   4VwVEQDgK+lOPvdmM/Kd835t6xdk4H0aCJIvYeMLX9kxX6ty2DWzONXmR
-   7pQ3egOHfglBRy84Hlbj81U49oHWrXb8DSRxBKlN1fDFrSzr1mq6Qwalo
-   8acgcFZNFSAmoGf1RDTpqUYbT6ElcQu2HMBEivl3vzKfm7dkP6oOkNsvg
-   enskiZgJUyGX1TdTgp36pCun036DEdFhQAqe6JzDNQY9aZNNffud2eqNZ
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10952"; a="485575129"
-X-IronPort-AV: E=Sophos;i="6.04,192,1695711600"; 
-   d="scan'208";a="485575129"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2024 13:43:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10952"; a="783404768"
-X-IronPort-AV: E=Sophos;i="6.04,192,1695711600"; 
-   d="scan'208";a="783404768"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga002.jf.intel.com with ESMTP; 13 Jan 2024 13:43:51 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rOlnB-000Avo-0b;
-	Sat, 13 Jan 2024 21:43:49 +0000
-Date: Sun, 14 Jan 2024 05:43:09 +0800
-From: kernel test robot <lkp@intel.com>
-To: Coiby Xu <coxu@redhat.com>, kexec@lists.infradead.org
-Cc: oe-kbuild-all@lists.linux.dev, Ondrej Kozina <okozina@redhat.com>,
-	Milan Broz <gmazyland@gmail.com>,
-	Thomas Staudt <tstaudt@de.ibm.com>,
-	Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
-	Kairui Song <ryncsn@gmail.com>, dm-devel@redhat.com,
-	Jan Pazdziora <jpazdziora@redhat.com>,
-	Pingfan Liu <kernelfans@gmail.com>, Baoquan He <bhe@redhat.com>,
-	Dave Young <dyoung@redhat.com>, linux-kernel@vger.kernel.org,
-	x86@kernel.org, Dave Hansen <dave.hansen@intel.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>,
-	Eric Biederman <ebiederm@xmission.com>
-Subject: Re: [PATCH v2 2/5] crash_dump: save the dm crypt key temporarily
-Message-ID: <202401140506.JQu60mgM-lkp@intel.com>
-References: <20240110071522.1308935-3-coxu@redhat.com>
+	Mon, 15 Jan 2024 09:17:50 +0000
+Received: by mail.integratradelink.pl (Postfix, from userid 1002)
+	id C915E83C59; Mon, 15 Jan 2024 10:16:18 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=integratradelink.pl;
+	s=mail; t=1705310180;
+	bh=+Nq8tO042bAt/j3//Q5cgHUOyegNlwMUiuy68BIYBsE=;
+	h=Date:From:To:Subject:From;
+	b=gP5QO9sfLgqcnQ9L31s883l4r0hK4pb2/thIQ3tpTt6UZAQwBw/46RjUNIcgKM5Zg
+	 Ky2FGs6IyM6kZogKvnp7AO1Z51cB7sWMyl4DOD9fxo+N8Jmy25+wRTc9PwFhuojchQ
+	 UlRXuIIxFaf1pbHAICAaynXsZm/cFQtsJUAIwT0K+F2KPd5xzvDTzn3LMw1OnJfO4p
+	 inTbitEs/bvxq5lf1MwzRtz+e11D6HiWeugkp1ScmDBXvbgGAgZonAVBgvAsy28gJ3
+	 Z4/0eRpdCT063wx3oCedI1QKwxT/B+7NFG0cF7sPyj7iBDleY7lEnMeJ7BLaNugupv
+	 s0col9YmThQpw==
+Received: by mail.integratradelink.pl for <kexec@lists.infradead.org>; Mon, 15 Jan 2024 09:15:44 GMT
+Message-ID: <20240115084501-0.1.2x.bw3l.0.j82c4kn3ad@integratradelink.pl>
+Date: Mon, 15 Jan 2024 09:15:44 GMT
+From: "Karol Winiarski" <karol.winiarski@integratradelink.pl>
+To: <kexec@lists.infradead.org>
+Subject: =?UTF-8?Q?S=C5=82owa_kluczowe_do_wypozycjonowania_?=
+X-Mailer: mail.integratradelink.pl
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20240110071522.1308935-3-coxu@redhat.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240113_134400_349955_8BBBFBE6 
-X-CRM114-Status: GOOD (  11.75  )
+X-CRM114-CacheID: sfid-20240115_011749_223362_E7879EE1 
+X-CRM114-Status: UNSURE (   2.06  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,58 +62,19 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Coiby,
-
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on tip/x86/core]
-[also build test WARNING on v6.7]
-[cannot apply to linus/master next-20240112]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Coiby-Xu/kexec_file-allow-to-place-kexec_buf-randomly/20240110-151859
-base:   tip/x86/core
-patch link:    https://lore.kernel.org/r/20240110071522.1308935-3-coxu%40redhat.com
-patch subject: [PATCH v2 2/5] crash_dump: save the dm crypt key temporarily
-config: x86_64-randconfig-123-20240114 (https://download.01.org/0day-ci/archive/20240114/202401140506.JQu60mgM-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240114/202401140506.JQu60mgM-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401140506.JQu60mgM-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
->> kernel/crash_dump_dm_crypt.c:8:6: sparse: sparse: symbol 'wipe_dm_crypt_key' was not declared. Should it be static?
-   kernel/crash_dump_dm_crypt.c: note: in included file (through include/linux/mmzone.h, include/linux/gfp.h, include/linux/mm.h, ...):
-   include/linux/page-flags.h:242:46: sparse: sparse: self-comparison always evaluates to false
-
-vim +/wipe_dm_crypt_key +8 kernel/crash_dump_dm_crypt.c
-
-     7	
-   > 8	void wipe_dm_crypt_key(void)
-     9	{
-    10		if (dm_crypt_key) {
-    11			memset(dm_crypt_key, 0, dm_crypt_key_size * sizeof(u8));
-    12			kfree(dm_crypt_key);
-    13			dm_crypt_key = NULL;
-    14		}
-    15	}
-    16	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+RHppZcWEIGRvYnJ5LAoKemFwb3puYcWCZW0gc2nEmSB6IFBhxYRzdHdhIG9mZXJ0xIUgaSB6IHBy
+enlqZW1ub8WbY2nEhSBwcnp5em5hasSZLCDFvGUgcHJ6eWNpxIVnYSB1d2FnxJkgaSB6YWNoxJlj
+YSBkbyBkYWxzenljaCByb3ptw7N3LiAKClBvbXnFm2xhxYJlbSwgxbxlIG1vxbxlIG3Ds2fFgmJ5
+bSBtaWXEhyBzd8OzaiB3a8WCYWQgdyBQYcWEc3R3YSByb3p3w7NqIGkgcG9tw7NjIGRvdHJ6ZcSH
+IHogdMSFIG9mZXJ0xIUgZG8gd2nEmWtzemVnbyBncm9uYSBvZGJpb3Jjw7N3LiBQb3p5Y2pvbnVq
+xJkgc3Ryb255IHd3dywgZHppxJlraSBjemVtdSBnZW5lcnVqxIUgxZt3aWV0bnkgcnVjaCB3IHNp
+ZWNpLgoKTW/FvGVteSBwb3Jvem1hd2lhxIcgdyBuYWpibGnFvHN6eW0gY3phc2llPwoKClBvemRy
+YXdpYW0gc2VyZGVjem5pZQpLYXJvbCBXaW5pYXJza2kKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5p
+bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
+a2V4ZWMK
