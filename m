@@ -4,76 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DE85DC4706C
-	for <kexec@archiver.kernel.org>; Tue, 16 Jan 2024 10:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1CDD6C4706C
+	for <kexec@archiver.kernel.org>; Tue, 16 Jan 2024 10:41:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
 	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
 	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
 	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=MIlKSLLUdZppahVlZzQwgR2fXq1Acnrw9559OrCO+aI=; b=Ijn+zLrHiOq/sX
-	HLMrl4+/Bg3Xt/j/XUIreJr0x26aCT0x4GBDXeO+DmAJtQKF6LIdahaB+ADIAnuL11l9UImEijhHj
-	i/2oatKhNHX3qWS1PluVhn5WD5XXbL6xcKJEYKIWgBYS5tdfhKo0MjxiNjvEYjcQLlRjYkCFZZ9Jq
-	uQ97dlitVqO6sdoRKcD22OdP7YXzsl285m0tNVs88k2DzheFU2lvspcALDMG1bDhlf+vNMwQ3sRv7
-	trvDLwO+vUzWvgUrXEMMqefWSiE318h8lpklej6UKX5HtElq4URmkjaZhzxcXdlPT+SAGrJwwjnWI
-	/1ycC8avwvTat2NBvFzg==;
+	List-Owner; bh=c4P33a3+tqeVYcn1Z9Playngpp4VollftqQIq7XyY/0=; b=RfRWhDdc3C+lU8
+	9Kh8DbD/9izcbrDB+2R/B/rj04GaJSfc1uCZB6foWPMM3W8iLWdUC7HAgTNqdGa0eRs0vL22gpxCz
+	p9lhKABVLbl6c7d88UPJRMAvdcsnNvqJoLhEuENnFTHdziLqWEkkCuCY5A6EATrl6Pdx5rYewpZDD
+	xrt394SlqT306j04w+R2xufR/IBv8VPMSbaubW8C7u4gKp63nWkyfZhTHIlKKAv++khWSUk1PRTQ3
+	7rnPFnjauVxWe6KDtxy9KrbwUzSm8jpYrlMQPS6cWTmJ0K7YlJme+uxUU3LKiOoN5JYt8T+v9wcyh
+	pQO/vfBX1PZZQOgyxwpQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rPgqc-00BgtU-1I;
-	Tue, 16 Jan 2024 10:39:10 +0000
+	id 1rPgsT-00Bh2L-0H;
+	Tue, 16 Jan 2024 10:41:05 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rPgqY-00Bgrf-0p
+	id 1rPgsP-00Bh1y-1F
 	for kexec@lists.infradead.org;
-	Tue, 16 Jan 2024 10:39:08 +0000
+	Tue, 16 Jan 2024 10:41:03 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705401541;
+	s=mimecast20190719; t=1705401660;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=8Ce2hXgqBBuget7dshE6ixcdocflUQ2pKys9ztMfJ8g=;
-	b=fzWcoyiAO4CI/ScHPJXXbwQJO0Hsa6I/fkmW3SthhEY2ry3G9GwdV7CQ8eh5Ubo7NL64i0
-	ikNlD40h++thFW9acX87uPhersyX3wpEPRb9Xb6uqOQR4VIoGcr+5BIVWAe173QQnpGltc
-	txjwTlBJ8Gw8ByN5QxzlJmmkA6NdhNU=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=sZtjRks1jMUiOwoNBHIst311kojRryEzQSKGDYst7ZE=;
+	b=S/VtpXOpQjl7wzhKuGMq1bBQufnLtqfZ6fkX71OdW/1VnnLQIsvNtgp8KSWyk0Nt6Uo03z
+	oJn1wGAPBn6IOooqdTb6lXtNpGkkI/+I73bSGUmZroACAQJ+DIJnJvpAgzYSmiEu0hkZtx
+	SeilLYYNLnHYboMrdmjGCJsMqZTqrC8=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-590-x3cx8ioKPSS6UmvaBoLdYg-1; Tue, 16 Jan 2024 05:37:15 -0500
-X-MC-Unique: x3cx8ioKPSS6UmvaBoLdYg-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a2e66e65f6aso26806966b.2
-        for <kexec@lists.infradead.org>; Tue, 16 Jan 2024 02:37:14 -0800 (PST)
+ us-mta-27-0XeGXuElNBKXnG2tEY9CKA-1; Tue, 16 Jan 2024 05:40:56 -0500
+X-MC-Unique: 0XeGXuElNBKXnG2tEY9CKA-1
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-337b6fad301so266633f8f.2
+        for <kexec@lists.infradead.org>; Tue, 16 Jan 2024 02:40:56 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705401432; x=1706006232;
+        d=1e100.net; s=20230601; t=1705401655; x=1706006455;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8Ce2hXgqBBuget7dshE6ixcdocflUQ2pKys9ztMfJ8g=;
-        b=gfW5XDHO2G03aAm2I2ElN+YDvWTnhyDEYKuDTk0WjCM+Crr+BlsTxC/0c9Ly7zJN5D
-         P2wi/NFeJn/5FvjqeckR5EM6Cp81TkbYs23qcjA3c/abvpSx2ZaXWzqB81Un6FHQMYNa
-         LtUxGgysXuNeHUcaKJCatjRcfrbHTY3thG9uAZ2lyegrk5qnEbe2f7p4x6Jhbpyngkqp
-         fvoDwe+bY0AIvVVOIXxScCq3PB1JR91c0NKa14nwZuaFECYbf+mrJCOUKY6J5DDJJUj0
-         YOofGfbA42nJCIJEYfuOWkWnckfFwrkgME5KSpCVhPNY2O8POGGBYMY2KaosPZ8HJ6kd
-         oQ1Q==
-X-Gm-Message-State: AOJu0YykLJpB//9rHj31yMi5l+IqU5mVyslmXclOvI9OIQlQDTDyCWVR
-	uIvqttfvANbMB8Az+6scOv4TemfCKkFdJSIPKspV0ibD0e/6DxMrL6qKdTBu9ze7fWvwoSR+mBC
-	tQCC6S116RRa1Oz+5d7ULqpFJ6EE=
-X-Received: by 2002:a17:907:a643:b0:a2d:58c9:f8f4 with SMTP id vu3-20020a170907a64300b00a2d58c9f8f4mr2570276ejc.95.1705401432649;
-        Tue, 16 Jan 2024 02:37:12 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHh7P8NJZrq6VaklVqXkN+++OL0DafouD5yOZU0+6IIHwyycUPd02qTbxImPcCxYH5787HyqA==
-X-Received: by 2002:a17:907:a643:b0:a2d:58c9:f8f4 with SMTP id vu3-20020a170907a64300b00a2d58c9f8f4mr2570259ejc.95.1705401432309;
-        Tue, 16 Jan 2024 02:37:12 -0800 (PST)
+        bh=sZtjRks1jMUiOwoNBHIst311kojRryEzQSKGDYst7ZE=;
+        b=tF9d+Mj8uH8bJvG7snsPC1zBe9F+OF/Z7dcaXnR2kWpjcZ78fyuMHbH2kDsmAq1IYe
+         yp+CSHU+ERoY8jEqd9mvOmgx+Rz/maM1IDS1fXzYeCFumSoQKcENnyoM03xSJwXexXQF
+         ZpbWCAUxhwR3Dx0aCuOghbctOIv9MMc06kCj1PkIwg0wOlQI+NlMLDff3EURTHHMRIiX
+         3fVo1qwzehOpc/orNldDFcpZixaswk5GjOQo1MZfiJYdLH+4Qk6pdq48KscLxTMlUH3+
+         2U0JVoUaLtgcmOCIIxBKLzTb4I4DAYGcEYB+/uyc93uZ6kVrDuWtGN4OjDS/Zb8Dw7Yt
+         8Zuw==
+X-Gm-Message-State: AOJu0YyBuviXph4ncOOFxelS967Phox2GW+0Rsd7ZvpqhmwnN846AVey
+	XNS+X6c+xAW8BxaCgoilBo9yq/gzJUAGcpJ6t2DeS4Rnkq1NoDLbRDMhfoRDyAeAkm4CZpf6gRI
+	WGhhLWArhNSCEfwX9sFfdWJiXN1E=
+X-Received: by 2002:a5d:4a0a:0:b0:337:57da:4253 with SMTP id m10-20020a5d4a0a000000b0033757da4253mr2144322wrq.152.1705401655595;
+        Tue, 16 Jan 2024 02:40:55 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH/vNPo/ZR7dZ4Kn7fMyT1bR4Jj/yY2bFAMMD1Mhdzofs85Y7jrGM66bN02adUE/MbwfCB/Ow==
+X-Received: by 2002:a5d:4a0a:0:b0:337:57da:4253 with SMTP id m10-20020a5d4a0a000000b0033757da4253mr2144309wrq.152.1705401655299;
+        Tue, 16 Jan 2024 02:40:55 -0800 (PST)
 Received: from [192.168.50.107] ([83.240.63.96])
-        by smtp.gmail.com with ESMTPSA id a1-20020a170906190100b00a2689e28445sm6333594eje.106.2024.01.16.02.37.11
+        by smtp.gmail.com with ESMTPSA id m6-20020adffa06000000b00336c6b77584sm14253486wrr.91.2024.01.16.02.40.54
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Jan 2024 02:37:11 -0800 (PST)
-Message-ID: <1edc32f2-858b-4afa-a883-2632be6d909e@redhat.com>
-Date: Tue, 16 Jan 2024 11:37:10 +0100
+        Tue, 16 Jan 2024 02:40:54 -0800 (PST)
+Message-ID: <750d9e17-d8b8-44c0-ba47-74a686333a01@redhat.com>
+Date: Tue, 16 Jan 2024 11:40:53 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/5] Support kdump with LUKS encryption by reusing LUKS
- volume key
+Subject: Re: [PATCH v2 2/5] crash_dump: save the dm crypt key temporarily
 To: Coiby Xu <coxu@redhat.com>, kexec@lists.infradead.org
 Cc: Milan Broz <gmazyland@gmail.com>, Thomas Staudt <tstaudt@de.ibm.com>,
  =?UTF-8?Q?Daniel_P_=2E_Berrang=C3=A9?= <berrange@redhat.com>,
@@ -81,8 +80,10 @@ Cc: Milan Broz <gmazyland@gmail.com>, Thomas Staudt <tstaudt@de.ibm.com>,
  Jan Pazdziora <jpazdziora@redhat.com>, Pingfan Liu <kernelfans@gmail.com>,
  Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
  linux-kernel@vger.kernel.org, x86@kernel.org,
- Dave Hansen <dave.hansen@intel.com>, Vitaly Kuznetsov <vkuznets@redhat.com>
+ Dave Hansen <dave.hansen@intel.com>, Vitaly Kuznetsov <vkuznets@redhat.com>,
+ Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>
 References: <20240110071522.1308935-1-coxu@redhat.com>
+ <20240110071522.1308935-3-coxu@redhat.com>
 From: Ondrej Kozina <okozina@redhat.com>
 Autocrypt: addr=okozina@redhat.com; keydata=
  xsFNBGGg1gYBEADpTn8FgSaeBI8YJYs2dMqUD8nI/DkA1+UImIuISZx+agczCJzcFuE7u8BK
@@ -127,13 +128,13 @@ Autocrypt: addr=okozina@redhat.com; keydata=
  p6l3x7b9kO8dMwhnUAhjiIhkCA1+cY/HjHUTcSROG8/q4nhenxIgQc3cAsQ6iLO24RlXU15P
  qxDEePjhSYAPLdpO2V6kWV/5GL0dBvi9MGp5MN6ox8ShFkE1xMh+pJgmHcjJq2MHeH7uqyYQ
  eJndz3q+QBWrUkUOIrwY6NbsZJECBHQd/wxYE/y9gO5qNdfVAS7UUwcc4S5WUM2bNb8klQ==
-In-Reply-To: <20240110071522.1308935-1-coxu@redhat.com>
+In-Reply-To: <20240110071522.1308935-3-coxu@redhat.com>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240116_023906_384298_3E5E0D5E 
-X-CRM114-Status: GOOD (  30.82  )
+X-CRM114-CacheID: sfid-20240116_024101_569388_23332F69 
+X-CRM114-Status: GOOD (  26.92  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -150,90 +151,256 @@ Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Coiby,
-
-I've started working on a patchset for systemd utility. I have one 
-question/suggestion:
-
 On 10/01/2024 08:15, Coiby Xu wrote:
-> LUKS is the standard for Linux disk encryption. Many users choose LUKS
-> and in some use cases like Confidential VM it's mandated. With kdump
-> enabled, when the 1st kernel crashes, the system could boot into the
-> kdump/crash kernel and dump the memory image i.e. /proc/vmcore to a
-> specified target. Currently, when dumping vmcore to a LUKS
-> encrypted device, there are two problems,
+> User space is supposed to write the key description to
+> /sys/kernel/crash_dm_crypt_key so the kernel will read the key and save
+> a temporary copy for later user. User space has 2 minutes at maximum to
+> load the kdump initrd before the key gets wiped. And after kdump
+> retrieves the key, the key will be wiped immediately.
 > 
->   - Kdump kernel may not be able to decrypt the LUKS partition. For some
->     machines, a system administrator may not have a chance to enter the
->     password to decrypt the device in kdump initramfs after the 1st kernel
->     crashes; For cloud confidential VMs, depending on the policy the
->     kdump kernel may not be able to unseal the key with TPM and the
->     console virtual keyboard is untrusted
+> Signed-off-by: Coiby Xu <coxu@redhat.com>
+> ---
+>   include/linux/crash_core.h   |   7 +-
+>   include/linux/kexec.h        |   4 ++
+>   kernel/Makefile              |   2 +-
+>   kernel/crash_dump_dm_crypt.c | 121 +++++++++++++++++++++++++++++++++++
+>   kernel/ksysfs.c              |  23 ++++++-
+>   5 files changed, 153 insertions(+), 4 deletions(-)
+>   create mode 100644 kernel/crash_dump_dm_crypt.c
 > 
->   - LUKS2 by default use the memory-hard Argon2 key derivation function
->     which is quite memory-consuming compared to the limited memory reserved
->     for kdump. Take Fedora example, by default, only 256M is reserved for
->     systems having memory between 4G-64G. With LUKS enabled, ~1300M needs
->     to be reserved for kdump. Note if the memory reserved for kdump can't
->     be used by 1st kernel i.e. an user sees ~1300M memory missing in the
->     1st kernel.
+> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+> index 5126a4fecb44..7078eda6418d 100644
+> --- a/include/linux/crash_core.h
+> +++ b/include/linux/crash_core.h
+> @@ -125,6 +125,12 @@ static inline void __init reserve_crashkernel_generic(char *cmdline,
+>   {}
+>   #endif
 >   
-> Besides users (at least for Fedora) usually expect kdump to work out of
-> the box i.e. no manual password input is needed. And it doesn't make
-> sense to derivate the key again in kdump kernel which seems to be
-> redundant work.
-> 
-> This patch set addresses the above issues by reusing the LUKS volume key
-> in kdump kernel with the help of cryptsetup's new APIs
-> (--link-vk-to-keyring/--volume-key-keyring). Here is the life cycle of
-> this kdump copy of LUKS volume key,
-> 
->   1. After the 1st kernel loads the initramfs during boot, systemd
->      use an user-input passphrase or TPM-sealed key to de-crypt the LUKS
->      volume key and then save the volume key to specified keyring
->      (using the --link-vk-to-keyring API) and the key will expire within
->      specified time.
-> 
->   2.  A user space tool (kdump initramfs builder) writes the key description to
->      /sys/kernel/crash_dm_crypt_key to inform the 1st kernel to save a
->      temporary copy of the volume key while building the kdump initramfs
+> +struct kimage;
+> +
+> +int crash_sysfs_dm_crypt_key_write(const char *key_des, size_t count);
+> +int crash_pass_temp_dm_crypt_key(void **addr, unsigned long *sz);
+> +int crash_load_dm_crypt_key(struct kimage *image);
+> +
+>   /* Alignment required for elf header segment */
+>   #define ELF_CORE_HEADER_ALIGN   4096
+>   
+> @@ -140,7 +146,6 @@ extern int crash_exclude_mem_range(struct crash_mem *mem,
+>   extern int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_map,
+>   				       void **addr, unsigned long *sz);
+>   
+> -struct kimage;
+>   struct kexec_segment;
+>   
+>   #define KEXEC_CRASH_HP_NONE			0
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index 6f4626490ebf..bf7ab1e927ef 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -366,6 +366,10 @@ struct kimage {
+>   	void *elf_headers;
+>   	unsigned long elf_headers_sz;
+>   	unsigned long elf_load_addr;
+> +
+> +	/* dm crypt key buffer */
+> +	unsigned long dm_crypt_key_addr;
+> +	unsigned long dm_crypt_key_sz;
+>   };
+>   
+>   /* kexec interface functions */
+> diff --git a/kernel/Makefile b/kernel/Makefile
+> index 3947122d618b..48859bf63db5 100644
+> --- a/kernel/Makefile
+> +++ b/kernel/Makefile
+> @@ -119,7 +119,7 @@ obj-$(CONFIG_PERF_EVENTS) += events/
+>   
+>   obj-$(CONFIG_USER_RETURN_NOTIFIER) += user-return-notifier.o
+>   obj-$(CONFIG_PADATA) += padata.o
+> -obj-$(CONFIG_CRASH_DUMP) += crash_dump.o
+> +obj-$(CONFIG_CRASH_DUMP) += crash_dump.o crash_dump_dm_crypt.o
+>   obj-$(CONFIG_JUMP_LABEL) += jump_label.o
+>   obj-$(CONFIG_CONTEXT_TRACKING) += context_tracking.o
+>   obj-$(CONFIG_TORTURE_TEST) += torture.o
+> diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
+> new file mode 100644
+> index 000000000000..3a0b0b773598
+> --- /dev/null
+> +++ b/kernel/crash_dump_dm_crypt.c
+> @@ -0,0 +1,121 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +#include <keys/user-type.h>
+> +#include <linux/crash_dump.h>
+> +
+> +static u8 *dm_crypt_key;
+> +static unsigned int dm_crypt_key_size;
+> +
+> +void wipe_dm_crypt_key(void)
+> +{
+> +	if (dm_crypt_key) {
+> +		memset(dm_crypt_key, 0, dm_crypt_key_size * sizeof(u8));
+> +		kfree(dm_crypt_key);
+> +		dm_crypt_key = NULL;
+> +	}
+> +}
+> +
+> +static void _wipe_dm_crypt_key(struct work_struct *dummy)
+> +{
+> +	wipe_dm_crypt_key();
+> +}
+> +
+> +static DECLARE_DELAYED_WORK(wipe_dm_crypt_key_work, _wipe_dm_crypt_key);
+> +
+> +static unsigned __read_mostly wipe_key_delay = 120; /* 2 mins */
+> +
+> +static int crash_save_temp_dm_crypt_key(const char *key_desc, size_t count)
+> +{
+> +	const struct user_key_payload *ukp;
+> +	struct key *key;
+> +
+> +	if (dm_crypt_key) {
+> +		memset(dm_crypt_key, 0, dm_crypt_key_size * sizeof(u8));
+> +		kfree(dm_crypt_key);
+> +	}
+> +
+> +	pr_debug("Requesting key %s", key_desc);
+> +	key = request_key(&key_type_user, key_desc, NULL);
 
-So this volume key copy cached by systemd utility in 1st kernel does not 
-have to be readable from userspace.
+If we don't read the key copy form userspace (my reply to top level 
+message) you could use key_type_logon here.
 
-> 
->   3. The kexec_file_load syscall saves the temporary copy of the volume
->      key to kdump reserved memory and wipe the copy.
-> 
->   4. When the 1st kernel crashes and the kdump initramfs is booted, the kdump
->      initramfs asks the kdump kernel to create a user key using the
->      key stored in kdump reserved memory by writing the key
->      description to /sys/kernel/crash_dm_crypt_key. Then the LUKS
->      encrypted devide is unlocked with libcryptsetup's
->      --volume-key-keyring API.
-
-Unlike here where it has to readable from uspace so that libcryptsetup 
-can verify the volume key.
-
-Is it correct?
-O.
-
-> 
->   5. The system gets rebooted to the 1st kernel after dumping vmcore to
->      the LUKS encrypted device is finished
-> 
-> After libcryptsetup saving the LUKS volume key to specified keyring,
-> whoever takes this should be responsible for the safety of this copy
-> of key. This key will be saved in the memory area exclusively reserved
-> for kdump where even the 1st kernel has no direct access. And further
-> more, two additional protections are added,
->   - save the copy randomly in kdump reserved memory as suggested by Jan
->   - clear the _PAGE_PRESENT flag of the page that stores the copy as
->     suggested by Pingfan
-> 
-> This patch set only supports x86. There will be patches to support other
-> architectures once this patch set gets merged.
-> 
+> +
+> +	if (IS_ERR(key)) {
+> +		pr_debug("No such key %s", key_desc);
+> +		return PTR_ERR(key);
+> +	}
+> +
+> +	ukp = user_key_payload_locked(key);
+> +	if (!ukp)
+> +		return -EKEYREVOKED;
+> +
+> +	dm_crypt_key = kmalloc(ukp->datalen, GFP_KERNEL);
+> +	if (!dm_crypt_key)
+> +		return -ENOMEM;
+> +	memcpy(dm_crypt_key, ukp->data, ukp->datalen);
+> +	dm_crypt_key_size = ukp->datalen;
+> +	pr_debug("dm crypt key (size=%u): %8ph\n", dm_crypt_key_size, dm_crypt_key);
+> +	schedule_delayed_work(&wipe_dm_crypt_key_work,
+> +			      round_jiffies_relative(wipe_key_delay * HZ));
+> +	return 0;
+> +}
+> +
+> +int crash_sysfs_dm_crypt_key_write(const char *key_desc, size_t count)
+> +{
+> +	if (!is_kdump_kernel())
+> +		return crash_save_temp_dm_crypt_key(key_desc, count);
+> +	return -EINVAL;
+> +}
+> +EXPORT_SYMBOL(crash_sysfs_dm_crypt_key_write);
+> +
+> +int crash_pass_temp_dm_crypt_key(void **addr, unsigned long *sz)
+> +{
+> +	unsigned long dm_crypt_key_sz;
+> +	unsigned char *buf;
+> +	unsigned int *size_ptr;
+> +
+> +	if (!dm_crypt_key)
+> +		return -EINVAL;
+> +
+> +	dm_crypt_key_sz = sizeof(unsigned int) + dm_crypt_key_size * sizeof(u8);
+> +
+> +	buf = vzalloc(dm_crypt_key_sz);
+> +	if (!buf)
+> +		return -ENOMEM;
+> +
+> +	size_ptr = (unsigned int *)buf;
+> +	memcpy(size_ptr, &dm_crypt_key_size, sizeof(unsigned int));
+> +	memcpy(size_ptr + 1, dm_crypt_key, dm_crypt_key_size * sizeof(u8));
+> +	*addr = buf;
+> +	*sz = dm_crypt_key_sz;
+> +	wipe_dm_crypt_key();
+> +	return 0;
+> +}
+> +
+> +int crash_load_dm_crypt_key(struct kimage *image)
+> +{
+> +	int ret;
+> +	struct kexec_buf kbuf = {
+> +		.image = image,
+> +		.buf_min = 0,
+> +		.buf_max = ULONG_MAX,
+> +		.top_down = false,
+> +		.random = true,
+> +	};
+> +
+> +	image->dm_crypt_key_addr = 0;
+> +	ret = crash_pass_temp_dm_crypt_key(&kbuf.buffer, &kbuf.bufsz);
+> +	if (ret)
+> +		return ret;
+> +
+> +	kbuf.memsz = kbuf.bufsz;
+> +	kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
+> +	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+> +	ret = kexec_add_buffer(&kbuf);
+> +	if (ret) {
+> +		vfree((void *)kbuf.buffer);
+> +		return ret;
+> +	}
+> +	image->dm_crypt_key_addr = kbuf.mem;
+> +	image->dm_crypt_key_sz = kbuf.bufsz;
+> +	pr_debug("Loaded dm crypt key at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+> +		 image->dm_crypt_key_addr, kbuf.bufsz, kbuf.bufsz);
+> +
+> +	return ret;
+> +}
+> diff --git a/kernel/ksysfs.c b/kernel/ksysfs.c
+> index 1d4bc493b2f4..f3bb6bc6a604 100644
+> --- a/kernel/ksysfs.c
+> +++ b/kernel/ksysfs.c
+> @@ -165,16 +165,34 @@ static ssize_t vmcoreinfo_show(struct kobject *kobj,
+>   }
+>   KERNEL_ATTR_RO(vmcoreinfo);
+>   
+> +static ssize_t crash_dm_crypt_key_show(struct kobject *kobj,
+> +					  struct kobj_attribute *attr,
+> +					  char *buf)
+> +{
+> +	return 0;
+> +}
+> +
+> +static ssize_t crash_dm_crypt_key_store(struct kobject *kobj,
+> +					struct kobj_attribute *attr,
+> +					   const char *buf, size_t count)
+> +{
+> +	int ret;
+> +
+> +	ret = crash_sysfs_dm_crypt_key_write(buf, count);
+> +	return ret < 0 ? ret : count;
+> +}
+> +KERNEL_ATTR_RW(crash_dm_crypt_key);
+> +
+>   #ifdef CONFIG_CRASH_HOTPLUG
+>   static ssize_t crash_elfcorehdr_size_show(struct kobject *kobj,
+> -			       struct kobj_attribute *attr, char *buf)
+> +					  struct kobj_attribute *attr,
+> +					  char *buf)
+>   {
+>   	unsigned int sz = crash_get_elfcorehdr_size();
+>   
+>   	return sysfs_emit(buf, "%u\n", sz);
+>   }
+>   KERNEL_ATTR_RO(crash_elfcorehdr_size);
+> -
+>   #endif
+>   
+>   #endif /* CONFIG_CRASH_CORE */
+> @@ -267,6 +285,7 @@ static struct attribute * kernel_attrs[] = {
+>   #endif
+>   #ifdef CONFIG_CRASH_CORE
+>   	&vmcoreinfo_attr.attr,
+> +	&crash_dm_crypt_key_attr.attr,
+>   #ifdef CONFIG_CRASH_HOTPLUG
+>   	&crash_elfcorehdr_size_attr.attr,
+>   #endif
 
 
 _______________________________________________
