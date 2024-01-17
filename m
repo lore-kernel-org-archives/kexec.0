@@ -4,131 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AA562C47077
-	for <kexec@archiver.kernel.org>; Wed, 17 Jan 2024 01:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C9A11C47422
+	for <kexec@archiver.kernel.org>; Wed, 17 Jan 2024 07:45:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
 	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:Cc:To:
-	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=CI+OH7ySh5IlSgot/Jy+gDUUyaGelwgw47VuhLOh+BA=; b=eXLWWG2A0+mzJb3jRxjU0B86Hj
-	60OpuUNhXvx/rAMduOB523GGjHONiXyHyp5ufgXnzVMSJvLj5wMhbeEcibxLj/Rilno5Iug6OqUUw
-	ag7Y16CK/4cHjt8uF3l9x9yTw4vH2fn1GFssJRZO8E8G00kEUGSnqjkQ3poyOizgUFpIA47Nf1VS7
-	QetBRNSxMW/jbUfSfrbK4SqJ6XWKU5B/UAnDi/A9COrhC17Dx2ZSDJh+kdo0mdNmsXx5SnRwIKwsF
-	9vms67wM2byXRj1Xo+F0UTDfR+TWqIRKXbAFtcj4LwZ7J1tbHM0OGz4d9YtXhKGXkLjFE8onpr1Kx
-	ccmiF1ww==;
+	bh=/KGiD6s+OCYVQwkxiDTcEnohHpVVIZ1YlPylDNDB7VA=; b=K0B4wBxRZZqyhKDga3bDc0Jo3g
+	tUNkNsP4PiEsRBk6wKvJCWb7sozpkcGPrQnAT/sbPTqlMbfKED6MQG2x7EoX7YXZ5VhNH7j38nP+S
+	3Ow5V/LmOdgTDiHZ995xn3Dxp04bvXyxPt5wfuXCynWytX29pBxeDFOSBY3N4zUQzmkXBga86u/2f
+	nmxyJht81JnIaqgosjxh8aUJ8uP6hVv69k8cTIuO6GXsqWfwAWi4qiGpfW/rjneoCuY6t+ZKwuZ/3
+	FtgfLpTB2cWbSJPcausgJ2b4IsDReXZ8GyrHGK5F4dw+KNPRvFms2McIApMEm6YqSCw0ujIOWpmge
+	PGgr1hBg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rPunf-00E9yI-3D;
-	Wed, 17 Jan 2024 01:33:04 +0000
-Received: from mail-co1nam11on20700.outbound.protection.outlook.com ([2a01:111:f403:2416::700] helo=NAM11-CO1-obe.outbound.protection.outlook.com)
+	id 1rQ0c3-00EjsJ-28;
+	Wed, 17 Jan 2024 07:45:27 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rPund-00E9w3-0E
+	id 1rQ0c0-00EjqM-1L
 	for kexec@lists.infradead.org;
-	Wed, 17 Jan 2024 01:33:02 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Wiu160ebeNKMSucKnZ+D0lEEfbLgQdVp+nBdsZrj00LAKUqBbq1NeI9BwX4DAmDpYEn8b0v8VGLxU2ga+YOx0TluNXC2Ceu49xJmcyaxlFIVhCWAQSaFLioe2I3EEpjEmRhyFJDxqL2K3igzZNUh0HFeAF/RizqBr12eUm/Xve69DdMF1AnyiCACmUM96xE8wPycXzJN/0cBTudN0Qb2n8kHFdwe/NWQ56fT29IjOCcPjO3fYaYJ00v1qKIG8cFskV5NE0/d16o8dVRTfeouHN1WSOennADZyxwzfedd7FKeUN/6LqXvTeDqw54pVM7nl4nBKDiHW16TCiAE++rpug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tH0anJh1R879Ix+StffiSajUYE+k0JMPw4ZoNoc7ZCQ=;
- b=C/ajlvrbb1MzFbs9mKtiXfVgFzHVR3n0Lz2Wsv/nxArVTP5K9/5IUZRK6PhC6XNBlCQN76WJbzTwE7/ltE8aF7dyecddIgp6fVztUBxxCBJ2krsmxYL/MYmyGgwbmtDofBMNAVypgHlu7U2bRKSS+jlht1aTVFcoLCTpFiUA2yQaXdgAeY4BAdyA06rBRTPlGkvwW+/F1Tu8utmz3DiFANlvcUnz3P18A9QwiW4EK8qSlIEYDTOuI7Xnkm5bKiLMpuNm3bUO0Ss4j521L6Qcgj+SLVWAAdW7DL0n5cxltM0zMe+MN6I0sHOzIfzxa146Olx5S1g1cvRLOnGMotAz+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=amperemail.onmicrosoft.com; dkim=pass
- header.d=amperemail.onmicrosoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amperemail.onmicrosoft.com; s=selector1-amperemail-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tH0anJh1R879Ix+StffiSajUYE+k0JMPw4ZoNoc7ZCQ=;
- b=30n2s0uo7f16Sk9TSsR6o+4A32JBBEa5Qd6umhXH4BzgcaYIvvR7qr3RdPtBoWH81FlLDrUwYMtufAyKY6Mk7y8HEQShC4h3/23mnoCA8M9m2B6XTpShQkdA2IIg0SzAe1frdj7bhxaAlXJD6hgjd2EhbRT3cKKxiNkbVrTwLVs=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amperemail.onmicrosoft.com;
-Received: from PH0PR01MB7975.prod.exchangelabs.com (2603:10b6:510:26d::15) by
- PH0PR01MB8045.prod.exchangelabs.com (2603:10b6:510:284::19) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7181.17; Wed, 17 Jan 2024 01:32:45 +0000
-Received: from PH0PR01MB7975.prod.exchangelabs.com ([fe80::91c:92f:45a5:e68a])
- by PH0PR01MB7975.prod.exchangelabs.com ([fe80::91c:92f:45a5:e68a%6]) with
- mapi id 15.20.7159.020; Wed, 17 Jan 2024 01:32:45 +0000
-Message-ID: <2414bcf0-d7d6-485e-ba68-8d13a28da8b5@amperemail.onmicrosoft.com>
-Date: Wed, 17 Jan 2024 09:32:35 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] crash_core: export vmemmap when CONFIG_SPARSEMEM_VMEMMAP
- is enabled
-To: Baoquan He <bhe@redhat.com>, Huang Shijie
- <shijie@os.amperecomputing.com>, akpm@linux-foundation.org
-Cc: vgoyal@redhat.com, dyoung@redhat.com, kexec@lists.infradead.org,
- linux-kernel@vger.kernel.org, patches@amperecomputing.com
-References: <20231127020727.25296-1-shijie@os.amperecomputing.com>
- <ZYO7MvpT9yWWfjO7@MiWiFi-R3L-srv>
-From: Shijie Huang <shijie@amperemail.onmicrosoft.com>
-In-Reply-To: <ZYO7MvpT9yWWfjO7@MiWiFi-R3L-srv>
-X-ClientProxiedBy: CH2PR05CA0002.namprd05.prod.outlook.com (2603:10b6:610::15)
- To PH0PR01MB7975.prod.exchangelabs.com (2603:10b6:510:26d::15)
+	Wed, 17 Jan 2024 07:45:26 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1705477520;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GQKf1TFOIk3jRZgYrerpttWoKccvQIBg6Et3VqW5w6c=;
+	b=Ibdjjsky8FgSI9mPougBBHnA+uVd0edA49QeEIR4WkTumsspujWJ1r8rUcHlTL3lRIneCm
+	pVOLbVyBmK3QjD99dsj0CPT/0e4peNOihuR9WRNdirLN66TOfbbaFLmRmP5uruG2ACymvM
+	YrJoypUzr0pEuo5D2qXrf89sJwGFzdA=
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
+ [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-226-eBEaHoRgMxaE-NJl5KU2fw-1; Wed, 17 Jan 2024 02:45:19 -0500
+X-MC-Unique: eBEaHoRgMxaE-NJl5KU2fw-1
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-1d4931d651aso111540965ad.2
+        for <kexec@lists.infradead.org>; Tue, 16 Jan 2024 23:45:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705477518; x=1706082318;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GQKf1TFOIk3jRZgYrerpttWoKccvQIBg6Et3VqW5w6c=;
+        b=h2FJSw8ZwG7i9fPMEOeeIX7tviWLtfZFv+YC7xio4K3PTLJhqvaxusZfBnfp9S6/Jr
+         VJpkYoiqmmeSN2f7jMc1CXr3AY6vxp2rOPN2VGyx2JyV+9HUwPGOH5yppiaJxfMp9ltX
+         QdLVywlPv+w+kC6X2uJNQ2NxVOkNSA3twRiQn755a50OJBb2EkszCIsErYIp3PHQwDm1
+         MRCoZbzha6P6HdOWdV7uLDi712hgX0XMG1xeBIzf+QNZ6d3rZWhzXfdwsXPAEPky48xX
+         eOGeQNBVdvcB80gONCABdWm3WsgUP9k1TfSItheA7zDefnSTTebLl77WuwYM2m1TscaT
+         NJnw==
+X-Gm-Message-State: AOJu0YxyK3NTNIfno736xKuRPp2gAutjB9BfOH0iEArWZjkyleGFJl9c
+	8loooHIQLubuQqZAUkCH6R42aRkB7fi4w2xgHZYEr9S0F83PBfSddqjcZiwi+iL4E64TO5/6s4Y
+	3pQTdJ9KfHpbFhwpSFUyK33CV/3V2
+X-Received: by 2002:a17:902:d489:b0:1d5:f223:a27a with SMTP id c9-20020a170902d48900b001d5f223a27amr1978810plg.39.1705477518136;
+        Tue, 16 Jan 2024 23:45:18 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFhEoP2YVi7iCc6R39IopraMkPNMLCAp9KZ0Dbsx8C4gLDT2Oz18uI3tNeXVMGc70+YfqFMaA==
+X-Received: by 2002:a17:902:d489:b0:1d5:f223:a27a with SMTP id c9-20020a170902d48900b001d5f223a27amr1978803plg.39.1705477517899;
+        Tue, 16 Jan 2024 23:45:17 -0800 (PST)
+Received: from localhost ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id t12-20020a170902bc4c00b001d6f5ac1ad4sm207349plz.43.2024.01.16.23.45.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jan 2024 23:45:17 -0800 (PST)
+Date: Wed, 17 Jan 2024 15:39:50 +0800
+From: Coiby Xu <coxu@redhat.com>
+To: Ondrej Kozina <okozina@redhat.com>
+Cc: kexec@lists.infradead.org, Milan Broz <gmazyland@gmail.com>, 
+	Thomas Staudt <tstaudt@de.ibm.com>, Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>, 
+	Kairui Song <ryncsn@gmail.com>, dm-devel@redhat.com, Jan Pazdziora <jpazdziora@redhat.com>, 
+	Pingfan Liu <kernelfans@gmail.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, Dave Hansen <dave.hansen@intel.com>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, 
+	Eric Biederman <ebiederm@xmission.com>
+Subject: Re: Re: [PATCH v2 2/5] crash_dump: save the dm crypt key temporarily
+Message-ID: <isgawrvqwuyaitkxgikkcgw3g5mxt3x3tubgpsy2kqos3t4nwr@soy5s6ypm6nt>
+References: <20240110071522.1308935-1-coxu@redhat.com>
+ <20240110071522.1308935-3-coxu@redhat.com>
+ <750d9e17-d8b8-44c0-ba47-74a686333a01@redhat.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR01MB7975:EE_|PH0PR01MB8045:EE_
-X-MS-Office365-Filtering-Correlation-Id: a87b8ef0-84b1-4202-3c90-08dc16fc3497
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: g708WxKdPYpHSNPVbhBEPOdL3AdG45FHyIFIFPKQMm66vvgTstmSi4BRYzDtHc8LnlRoSopSBk0G8RNFcyIWvUYzeZJ6lzh71dZ5UvvumIvJDP2x8cMtXOkeW4SQ7EJh60GNB7lrT5En8+iTunkedihVvvEFsRarWv8kj0F9u+hweSuG19O/lQ1bNU7czwXHC4R2GEQij0qFxaEC/Q7kwCd+lM3sBPIYEIJQKUX9tiNsrt4VYa5GuP2xIdhhsBKN8sLxkvKyDhQivcS4txX+GjhzcE7bVgA1CAS+IvchoX0B0ufPEZ98LCh6IIxhRM9T4mUHKFQgIU89jtQcUg8+KCYFXcCd/7IdOUB9m2df/8gQ+811BBxBkaP1gO6vLaRcQiPsxwyD/0dZaFqAKb4mv49glVKiVOSiaZGCfjMfWu8knwfGTEUDEm0eZ3Uvd4VzK6QO2RH3zMLc/2IQk9a+WTgOWeu2eqHcvpp9VctUmBE6GMg3YqK2us9DbUhIPdJTpg1nbnIgasN3+3etIaoUL5boHxAsPm5IeZXf05EgAzSNebMOR9LJgOrditRn4V4lGS+KtULtHHgsJJYCceDg1bxKXE09X9T19YBePOXzQ0wtF/C9EfiUaQytAP9IeiZ4
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR01MB7975.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(396003)(376002)(136003)(39850400004)(366004)(230922051799003)(186009)(64100799003)(1800799012)(451199024)(31686004)(2906002)(6666004)(478600001)(5660300002)(8936002)(4744005)(6506007)(4326008)(2616005)(110136005)(26005)(6486002)(42882007)(66476007)(66556008)(31696002)(8676002)(6512007)(107886003)(38100700002)(41300700001)(66946007)(316002)(83170400001)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SnJmcTNXSEtwdW9SaFo1Nmkrbktud1RXakJiazBPL1dhTzdvT2ZULzZQZDdv?=
- =?utf-8?B?S0cxSkF0RVJVM1NjSVBNdzQyNDA0RGx6SjNWOHMrZ0V0TlZmWHRMT1loN2hR?=
- =?utf-8?B?aklzSEtLK0ZXNHdCT1JGV0xJS1RCblgrckR6dmpNYXVNeEQ1eE9jNm9vWFNt?=
- =?utf-8?B?THRiNTBlR1NoLzA0ek5keUt3U1VkZStsVitBdEpZUTF3dTI4TS9LRUg5REJK?=
- =?utf-8?B?THUyTHZINjNMRVllYWpIQVI2enlUdHYwblIvdUpaS1Fxbll1bVNkdTdXNGk1?=
- =?utf-8?B?NXFSRmszQ3Zna3MxMVZYUDk5YlBhZzNrSVMwN0RpVHRINTRSS1JJeDBLMUx5?=
- =?utf-8?B?THJLUUpFSHZ1VE8yOXhOTzVhR1ZqaENjZzI1dXduVDlFTWE3NWVVaUtIakd6?=
- =?utf-8?B?TVBYWVFoZzl3LzljZVl2WUZIZ3pTblJZMmh1aHJqaVR5RkNjc3FGRUd6STZ5?=
- =?utf-8?B?NnFMYlRJMmxlTTFsaVptMU5jYnEwaWlOcTYxdUsvUDlVY1MyYy9NWmtGdnNO?=
- =?utf-8?B?UmNvRzU3NCs5TGhYWGpOWnRrc2h1QnREZ3dxMHNQbkNOL0JYNVlMRWJqa0Iz?=
- =?utf-8?B?K0pISzVmNVUyVHkvRXdhZEVlNUlkNVkrN05CNUNmQUE5T1RZdy9HQzlHUlcv?=
- =?utf-8?B?VUQrVmFLSHBHVUZENGQvRTlxM25DWEFZN04vcFNKUmJVaXowa0dtN2Z5cW9v?=
- =?utf-8?B?VCtteXl6eTBoVXE2OGNpM3hYbXJvVVQvbU5hTzgrNWR6U1kzL29IZllNTFk5?=
- =?utf-8?B?OWNxRUZMTndwUi8vVCtxcDNhSlluUEt3Z0I3NFpuOWZJNlR6MEZiZ2sxYmpy?=
- =?utf-8?B?UFJQZVNFcyszKy9VRTNFOGR4WHdudFhrM216WjIxNERxek8vMms1VGhNQmhw?=
- =?utf-8?B?VHo3bmVJTGUyY3d4Vlk5NEJ3SVNtd3Azb0FzQXVCYmJBczRVcXR6NEpQTjk3?=
- =?utf-8?B?bTJxOWZzVy9JTjVJT2s1aG93WkZpL3dSN1FhQzh6YjErSU4xRGZFQmJjOE03?=
- =?utf-8?B?ZVNBS1pRODgvQ2swZWkwQUYxcEg3ZFlhUTh5NlhpK0t1bU5vdDR2czB2Y1R6?=
- =?utf-8?B?Y1B6NzlvbVdYbXJHblNXOU1iWUFkNWxITDByaDZBQmpVZzNDYkhJNTFLZkhw?=
- =?utf-8?B?UG1xQnZnWVRpaVV3d1d6RkVtQnlQL0llQ1JVcyt5Wm9Wbmw1VHlCcEVwZzFR?=
- =?utf-8?B?TWw5WC9jQk5FU0VLWmloYXNyRVZ3S2luWVdjUVFXc0x2ek5FOFViVUxlTDdF?=
- =?utf-8?B?eUJYa05Ka24zajc1cERsd0JDZzBtcCsxQVk2ckRaZGltOERvMEd6NTgzNlli?=
- =?utf-8?B?TVpsVjFzNmxGV0owTERVbXVzQUc0Q05ZMmNPR1Fqem1KN3NMUkl3WXBkb0JC?=
- =?utf-8?B?WXJ1WCtadzBUK0JOMldCc0xFVlR2YUZMNlJJSW5XdzR4WXU5bVlIek5wcTFZ?=
- =?utf-8?B?NVhTTFVjSmpsVzlQMlFzVXhGS3dVT0c4VUFYaEdmWUU5cE9WUFBTelc5b1hx?=
- =?utf-8?B?eG9XaG9ndTExREtPUk5HaWpqVm56Y3FOSFlBVjdQUDFEcUswWTc1eDBKVkNu?=
- =?utf-8?B?b2dXbldEYmhkVVVuZURENTdqNVEyd1V0ZGFVakptOW5vU01uTFpraG9lcW9Q?=
- =?utf-8?B?UDQ3UXJKWW1IQ2xHYUhuWXVwbUN5VzNxUXRWRzB0QTNrbEgwdS9yWnppaUQ4?=
- =?utf-8?B?YzFvU25xOGxUZzJBSmN1eFJrSVhWRlBPWUZMdFA2OFNPMCs2T3RqKzAyN0hO?=
- =?utf-8?B?WVYwRmg0dUN1TDVLdWdqMFduTGJHZ2IyNHhnTGJ3Q3pjcHFkZ2FjUnk4NkVY?=
- =?utf-8?B?K242N0Z2N2F4aWE4ZkFGMkhxQTQ0Wks3THdXUG5kOXZ3TVFRaCtOVjZGUThK?=
- =?utf-8?B?SHEzTFFUWi80M2tZZDhhSE9wV0lkd21wN0ozU1grVm9ldkx2ZTh2NUl1NjZY?=
- =?utf-8?B?VzlIMFNIbnl1ZGt0TEQzNGFZYk45NDZDUXd4S0YzVXBkOTZLVXpJR2ppa3Ja?=
- =?utf-8?B?eGJ2OTNjUG9CSUpGOFQwVVFxRXprZ3FEZXVKYmdOa01PblpYdGVPL2VPb09F?=
- =?utf-8?B?TUhmVFZVdGNPemlYRzUvYUhsZDlpaENya2lFa1ZzelZxTUQyVmxOeXlpaStB?=
- =?utf-8?B?UGVQK3JrOTNlVXpoTHlKbitVWlBZYzBqOTJRWkhGazFWVVZPQjcrN0wva01v?=
- =?utf-8?Q?zrlW/SX0qsbjbS6S9ViO1o0=3D?=
-X-OriginatorOrg: amperemail.onmicrosoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a87b8ef0-84b1-4202-3c90-08dc16fc3497
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR01MB7975.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2024 01:32:45.3653
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +0/ikr0z0PWK78m/QhaPpFOA0XrSCrO2DbDL5ne3pnkh0HGNKyZl+VnivdLyHeigZ7wCz0U/vizeZS+zyOYS0CpVUwAeNV2g3zkp+Ev9eY4apqca1k8PSmdRRHoXnbL0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR01MB8045
+In-Reply-To: <750d9e17-d8b8-44c0-ba47-74a686333a01@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240116_173301_146065_A0FA92B9 
-X-CRM114-Status: UNSURE (   9.89  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20240116_234524_527001_81712653 
+X-CRM114-Status: GOOD (  16.24  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -140,25 +101,131 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-SGkgQW5kcmV3LAoK5ZyoIDIwMjMvMTIvMjEgMTI6MTIsIEJhb3F1YW4gSGUg5YaZ6YGTOgo+IE9u
-IDExLzI3LzIzIGF0IDEwOjA3YW0sIEh1YW5nIFNoaWppZSB3cm90ZToKPj4gSW4gbWVtb3J5X21v
-ZGVsLmgsIGlmIENPTkZJR19TUEFSU0VNRU1fVk1FTU1BUCBpcyBjb25maWdlZCwKPj4ga2VybmVs
-IHdpbGwgdXNlIHZtZW1tYXAgdG8gZG8gdGhlIF9fcGZuX3RvX3BhZ2UvcGFnZV90b19wZm4sCj4+
-IGFuZCBrZXJuZWwgd2lsbCBub3QgdXNlIHRoZSAiY2xhc3NpYyBzcGFyc2UiIHRvIGRvIHRoZQo+
-PiBfX3Bmbl90b19wYWdlL3BhZ2VfdG9fcGZuLgo+Pgo+PiBTbyBleHBvcnQgdGhlIHZtZW1tYXAg
-d2hlbiBDT05GSUdfU1BBUlNFTUVNX1ZNRU1NQVAgaXMgY29uZmlnZWQuCj4+IFRoaXMgbWFrZXMg
-dGhlIHVzZXIgYXBwbGljYXRpb25zIChjcmFzaCwgZXRjKSBnZXQgZmFzdGVyCj4+IHBmbl90b19w
-YWdlL3BhZ2VfdG9fcGZuIG9wZXJhdGlvbnMgdG9vLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBIdWFu
-ZyBTaGlqaWUgPHNoaWppZUBvcy5hbXBlcmVjb21wdXRpbmcuY29tPgo+PiAtLS0KPj4gICBrZXJu
-ZWwvY3Jhc2hfY29yZS5jIHwgMyArKysKPj4gICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25z
-KCspCj4gQWNrIHRoaXMgb25lIGFzIGl0J3MgbmVlZGVkIGJ5IGNyYXNoIHV0aWxpdHkgcGF0Y2hl
-cy4KPgo+IEFja2VkLWJ5OiBCYW9xdWFuIEhlIDxiaGVAcmVkaGF0LmNvbT4KCkNvdWxkIHlvdSBw
-bGVhc2UgbWVyZ2UgdGhpcyBwYXRjaD8KCgpUaGFua3MKCkh1YW5nIFNoaWppZQoKCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlz
-dAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
-aWxtYW4vbGlzdGluZm8va2V4ZWMK
+On Tue, Jan 16, 2024 at 11:40:53AM +0100, Ondrej Kozina wrote:
+>On 10/01/2024 08:15, Coiby Xu wrote:
+>>User space is supposed to write the key description to
+>>/sys/kernel/crash_dm_crypt_key so the kernel will read the key and save
+>>a temporary copy for later user. User space has 2 minutes at maximum to
+>>load the kdump initrd before the key gets wiped. And after kdump
+>>retrieves the key, the key will be wiped immediately.
+>>
+>>Signed-off-by: Coiby Xu <coxu@redhat.com>
+>>---
+>>  include/linux/crash_core.h   |   7 +-
+>>  include/linux/kexec.h        |   4 ++
+>>  kernel/Makefile              |   2 +-
+>>  kernel/crash_dump_dm_crypt.c | 121 +++++++++++++++++++++++++++++++++++
+>>  kernel/ksysfs.c              |  23 ++++++-
+>>  5 files changed, 153 insertions(+), 4 deletions(-)
+>>  create mode 100644 kernel/crash_dump_dm_crypt.c
+>>
+>>diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+>>index 5126a4fecb44..7078eda6418d 100644
+>>--- a/include/linux/crash_core.h
+>>+++ b/include/linux/crash_core.h
+>>@@ -125,6 +125,12 @@ static inline void __init reserve_crashkernel_generic(char *cmdline,
+>>  {}
+>>  #endif
+>>+struct kimage;
+>>+
+>>+int crash_sysfs_dm_crypt_key_write(const char *key_des, size_t count);
+>>+int crash_pass_temp_dm_crypt_key(void **addr, unsigned long *sz);
+>>+int crash_load_dm_crypt_key(struct kimage *image);
+>>+
+>>  /* Alignment required for elf header segment */
+>>  #define ELF_CORE_HEADER_ALIGN   4096
+>>@@ -140,7 +146,6 @@ extern int crash_exclude_mem_range(struct crash_mem *mem,
+>>  extern int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_map,
+>>  				       void **addr, unsigned long *sz);
+>>-struct kimage;
+>>  struct kexec_segment;
+>>  #define KEXEC_CRASH_HP_NONE			0
+>>diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+>>index 6f4626490ebf..bf7ab1e927ef 100644
+>>--- a/include/linux/kexec.h
+>>+++ b/include/linux/kexec.h
+>>@@ -366,6 +366,10 @@ struct kimage {
+>>  	void *elf_headers;
+>>  	unsigned long elf_headers_sz;
+>>  	unsigned long elf_load_addr;
+>>+
+>>+	/* dm crypt key buffer */
+>>+	unsigned long dm_crypt_key_addr;
+>>+	unsigned long dm_crypt_key_sz;
+>>  };
+>>  /* kexec interface functions */
+>>diff --git a/kernel/Makefile b/kernel/Makefile
+>>index 3947122d618b..48859bf63db5 100644
+>>--- a/kernel/Makefile
+>>+++ b/kernel/Makefile
+>>@@ -119,7 +119,7 @@ obj-$(CONFIG_PERF_EVENTS) += events/
+>>  obj-$(CONFIG_USER_RETURN_NOTIFIER) += user-return-notifier.o
+>>  obj-$(CONFIG_PADATA) += padata.o
+>>-obj-$(CONFIG_CRASH_DUMP) += crash_dump.o
+>>+obj-$(CONFIG_CRASH_DUMP) += crash_dump.o crash_dump_dm_crypt.o
+>>  obj-$(CONFIG_JUMP_LABEL) += jump_label.o
+>>  obj-$(CONFIG_CONTEXT_TRACKING) += context_tracking.o
+>>  obj-$(CONFIG_TORTURE_TEST) += torture.o
+>>diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
+>>new file mode 100644
+>>index 000000000000..3a0b0b773598
+>>--- /dev/null
+>>+++ b/kernel/crash_dump_dm_crypt.c
+>>@@ -0,0 +1,121 @@
+>>+// SPDX-License-Identifier: GPL-2.0-only
+>>+#include <keys/user-type.h>
+>>+#include <linux/crash_dump.h>
+>>+
+>>+static u8 *dm_crypt_key;
+>>+static unsigned int dm_crypt_key_size;
+>>+
+>>+void wipe_dm_crypt_key(void)
+>>+{
+>>+	if (dm_crypt_key) {
+>>+		memset(dm_crypt_key, 0, dm_crypt_key_size * sizeof(u8));
+>>+		kfree(dm_crypt_key);
+>>+		dm_crypt_key = NULL;
+>>+	}
+>>+}
+>>+
+>>+static void _wipe_dm_crypt_key(struct work_struct *dummy)
+>>+{
+>>+	wipe_dm_crypt_key();
+>>+}
+>>+
+>>+static DECLARE_DELAYED_WORK(wipe_dm_crypt_key_work, _wipe_dm_crypt_key);
+>>+
+>>+static unsigned __read_mostly wipe_key_delay = 120; /* 2 mins */
+>>+
+>>+static int crash_save_temp_dm_crypt_key(const char *key_desc, size_t count)
+>>+{
+>>+	const struct user_key_payload *ukp;
+>>+	struct key *key;
+>>+
+>>+	if (dm_crypt_key) {
+>>+		memset(dm_crypt_key, 0, dm_crypt_key_size * sizeof(u8));
+>>+		kfree(dm_crypt_key);
+>>+	}
+>>+
+>>+	pr_debug("Requesting key %s", key_desc);
+>>+	key = request_key(&key_type_user, key_desc, NULL);
+>
+>If we don't read the key copy form userspace (my reply to top level 
+>message) you could use key_type_logon here.
+
+I'll use key_type_logon, thanks!
+
+-- 
+Best regards,
+Coiby
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
