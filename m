@@ -4,64 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id ACB9EC47DA2
-	for <kexec@archiver.kernel.org>; Wed, 17 Jan 2024 13:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 62569C47DA2
+	for <kexec@archiver.kernel.org>; Wed, 17 Jan 2024 14:02:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
 	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
 	List-Unsubscribe:List-Id:In-Reply-To:From:References:CC:To:Subject:
 	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=0gylESk/ie0eZmBJnra0YRGE60NGx/y3RNgFMBrEP3Y=; b=gTDnzbDBdyaM0+
-	uauYHUB8oh5azQ2r2KZtRREneE7xJODBfyES2OGkV6bCaunhBK3JyJlNBOMBanGpktqMZzHRW7Stc
-	tGtG11aSBoFC358EZaepXXpSSAoKBHop3HesdYlEo/TKhY8P+BXuc4wMrgSZ/GJ3YI/WE69qMjCv4
-	608MRuzbNie+Azx5fa6GBuRGzKSEzAT+EF4Q/m//ZP5WVaiBsQH6xf2vBRNe3xcR31uAuQf6K2kOn
-	Q+RSQ+tTUAvCKouHCcRpE/SODXX3RawejBDp3udnlDlgSsnDbcS6qXw1xTXr+3wzvzsLy+oAQav+P
-	Euo47DcsBZLHGPiiNDhw==;
+	List-Owner; bh=4D0F+9ynHnmAjyVbytuvyAxSn7GVMmbd3cJS8ObpJMM=; b=p+b7raf2GMuaKw
+	RAPKUqDkZ06sPTf0DAAb2073CFU82I/pwD8WRRwLQXFM5rG3MubMMDtWZikeCY5ucibMSiZ8/TAsx
+	EkDP8w9wclbsdUKkrXI2DJTNfUyMnxnG4p5cH1c3PkQ3TB4sGeh3y17MGJaq+H6lI99TowmsZXEgL
+	h/dLl1f8hSQWuPlFBbpBxd/dacgjOLKnr7GLNntBIYSKdP73njbLPNd2AZ/Zjlfgt2rRDgNcwEKry
+	dBmHOcTPDk72JLId4BhfqgakHwVx64UFBn1OLYI6EsJDjMA3JJl/ia7p+XTbnqhNO1ayOe8cox8he
+	EEgi/RvRuOfhLNOfWp0Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rQ6Q1-00Gmmo-2G;
-	Wed, 17 Jan 2024 13:57:25 +0000
-Received: from smtp-fw-80008.amazon.com ([99.78.197.219])
+	id 1rQ6Uh-00Gpek-0H;
+	Wed, 17 Jan 2024 14:02:15 +0000
+Received: from smtp-fw-52005.amazon.com ([52.119.213.156])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rQ6Pu-00Gmg8-26;
-	Wed, 17 Jan 2024 13:57:20 +0000
+	id 1rQ6Ud-00Gpbb-2O;
+	Wed, 17 Jan 2024 14:02:13 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1705499838; x=1737035838;
+  t=1705500132; x=1737036132;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=sCbAsogEL9M6bXyV8ZRDEEuZUfshks5aG+BxCQOa/NY=;
-  b=GlAwotCO7W5yqmNNZDUj4ifYZdgNipwYUMBF7bsZD2wdZ4FEFgjIU1j1
-   H4BQ2S3d5UiyuUg+g88MNImKWAIIiyCrydo2ESIwYieLl+y8akFMcF1KZ
-   GV6AweS2HHP4n191jdCB6YURV+bRQDRhUL6QVLPy9RBq6TXaw2EEYn7I1
-   8=;
+  bh=R+N96ZQEAfDbhmqKJeIs5t/qX5hk250eLM+kCzB/5uc=;
+  b=KlZTLou0+ajh67c00LzgCQeWS+rw/YSjYUZjjyhRNfX4EFMynOBoFCMy
+   KkmkZuPKjxC10SMDDkCNbV677ZhjcbfQqEx7rnHPmPOp+btgBPq/JA41N
+   pwgbIVHqst6SH7zoMC2vbMRXQ3M5MW+MJVt9PiP8Kpi3W00K86OpytKYg
+   0=;
 X-IronPort-AV: E=Sophos;i="6.05,200,1701129600"; 
-   d="scan'208";a="58966275"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-iad-1d-m6i4x-d7759ebe.us-east-1.amazon.com) ([10.25.36.214])
-  by smtp-border-fw-80008.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 13:57:09 +0000
+   d="scan'208";a="628159042"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-iad-1e-m6i4x-6e7a78d7.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 14:02:08 +0000
 Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (iad7-ws-svc-p70-lb3-vlan2.iad.amazon.com [10.32.235.34])
-	by email-inbound-relay-iad-1d-m6i4x-d7759ebe.us-east-1.amazon.com (Postfix) with ESMTPS id 8F1104A462;
-	Wed, 17 Jan 2024 13:57:01 +0000 (UTC)
-Received: from EX19MTAUWB001.ant.amazon.com [10.0.38.20:22279]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.23.164:2525] with esmtp (Farcaster)
- id 7447900b-b2ad-45a7-833b-230f16a2e7a7; Wed, 17 Jan 2024 13:57:00 +0000 (UTC)
-X-Farcaster-Flow-ID: 7447900b-b2ad-45a7-833b-230f16a2e7a7
+	by email-inbound-relay-iad-1e-m6i4x-6e7a78d7.us-east-1.amazon.com (Postfix) with ESMTPS id 6DBC280774;
+	Wed, 17 Jan 2024 14:02:00 +0000 (UTC)
+Received: from EX19MTAUWC002.ant.amazon.com [10.0.7.35:42529]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.41.57:2525] with esmtp (Farcaster)
+ id e65f03f2-b86e-47d1-8655-6702971ecda1; Wed, 17 Jan 2024 14:01:59 +0000 (UTC)
+X-Farcaster-Flow-ID: e65f03f2-b86e-47d1-8655-6702971ecda1
 Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
+ EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 17 Jan 2024 13:57:00 +0000
+ 15.2.1118.40; Wed, 17 Jan 2024 14:01:59 +0000
 Received: from [0.0.0.0] (10.253.83.51) by EX19D020UWC004.ant.amazon.com
  (10.13.138.149) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 17 Jan
- 2024 13:56:54 +0000
-Message-ID: <48241e64-953d-4aeb-b4cf-f7eb0e1bffbe@amazon.com>
-Date: Wed, 17 Jan 2024 14:56:52 +0100
+ 2024 14:01:53 +0000
+Message-ID: <c96203ba-a5b2-4765-9d30-0f4e66c82cd7@amazon.com>
+Date: Wed, 17 Jan 2024 15:01:51 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 17/17] devicetree: Add bindings for ftrace KHO
+Subject: Re: [PATCH v2 07/17] kexec: Add documentation for KHO
 Content-Language: en-US
-To: Rob Herring <robh@kernel.org>
+To: Rob Herring <robh+dt@kernel.org>
 CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
 	<linux-mm@kvack.org>, <devicetree@vger.kernel.org>,
 	<linux-arm-kernel@lists.infradead.org>, <kexec@lists.infradead.org>,
@@ -78,16 +78,16 @@ CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
 	<benh@kernel.crashing.org>
 References: <20231222193607.15474-1-graf@amazon.com>
  <20231222195144.24532-1-graf@amazon.com>
- <20231222195144.24532-12-graf@amazon.com>
- <20240102152023.GA2821956-robh@kernel.org>
+ <20231222195144.24532-2-graf@amazon.com>
+ <CAL_JsqJSYgq7BJnSxwKebEX8e9tL-FG74rT+eLJ4e32kKZC30g@mail.gmail.com>
 From: Alexander Graf <graf@amazon.com>
-In-Reply-To: <20240102152023.GA2821956-robh@kernel.org>
+In-Reply-To: <CAL_JsqJSYgq7BJnSxwKebEX8e9tL-FG74rT+eLJ4e32kKZC30g@mail.gmail.com>
 X-Originating-IP: [10.253.83.51]
-X-ClientProxiedBy: EX19D044UWA002.ant.amazon.com (10.13.139.11) To
+X-ClientProxiedBy: EX19D035UWB001.ant.amazon.com (10.13.138.33) To
  EX19D020UWC004.ant.amazon.com (10.13.138.149)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240117_055718_763035_EDEE90BA 
-X-CRM114-Status: GOOD (  36.21  )
+X-CRM114-CacheID: sfid-20240117_060211_947298_42E18240 
+X-CRM114-Status: GOOD (  38.26  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,287 +99,101 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hey Rob,
-
-Thanks a lot for taking the time to review!
-
-On 02.01.24 16:20, Rob Herring wrote:
-> On Fri, Dec 22, 2023 at 07:51:44PM +0000, Alexander Graf wrote:
->> With ftrace in KHO, we are creating an ABI between old kernel and new
->> kernel about the state that they transfer. To ensure that we document
->> that state and catch any breaking change, let's add its schema to the
->> common devicetree bindings. This way, we can quickly reason about the
->> state that gets passed.
-> Why so much data in DT rather than putting all this information into
-> memory in your own data structure and DT just has a single property
-> pointing to that? That's what is done with every other blob of data
-> passed by kexec.
-
-
-This is our own data structure for KHO that just happens to again 
-contain a DT structure. The reason is simple: I want a unified, 
-versioned, introspectable data format that is cross platform so you 
-don't need to touch every architecture specific boot passing logic every 
-time you want to add a tiny piece of data.
-
-
->
->> Signed-off-by: Alexander Graf <graf@amazon.com>
->> ---
->>   .../bindings/kho/ftrace/ftrace-array.yaml     | 46 +++++++++++++++
->>   .../bindings/kho/ftrace/ftrace-cpu.yaml       | 56 +++++++++++++++++++
->>   .../bindings/kho/ftrace/ftrace.yaml           | 48 ++++++++++++++++
->>   3 files changed, 150 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/kho/ftrace/ftrace-array.yaml
->>   create mode 100644 Documentation/devicetree/bindings/kho/ftrace/ftrace-cpu.yaml
->>   create mode 100644 Documentation/devicetree/bindings/kho/ftrace/ftrace.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/kho/ftrace/ftrace-array.yaml b/Documentation/devicetree/bindings/kho/ftrace/ftrace-array.yaml
->> new file mode 100644
->> index 000000000000..9960fefc292d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/kho/ftrace/ftrace-array.yaml
->> @@ -0,0 +1,46 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/kho/ftrace/ftrace-array.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Ftrace trace array
->> +
->> +maintainers:
->> +  - Alexander Graf <graf@amazon.com>
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - ftrace,array-v1
->> +
->> +  trace_flags:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description:
->> +      Bitmap of all the trace flags that were enabled in the trace array at the
->> +      point of serialization.
->> +
->> +# Subnodes will be of type "ftrace,cpu-v1", one each per CPU
-> This can be expressed as a schema.
-
-
-Could you please give me a few more hints here? I'm not sure I understand how :)
-
-
->
->> +additionalProperties: true
->> +
->> +required:
->> +  - compatible
->> +  - trace_flags
->> +
->> +examples:
->> +  - |
->> +    ftrace {
->> +        compatible = "ftrace-v1";
->> +        events = <1 1 2 2 3 3>;
->> +
->> +        global_trace {
->> +          compatible = "ftrace,array-v1";
->> +          trace_flags = < 0x3354601 >;
->> +
->> +          cpu0 {
->> +            compatible = "ftrace,cpu-v1";
->> +            cpu = < 0x00 >;
->> +            mem = < 0x101000000ULL 0x38ULL 0x101000100ULL 0x1000ULL 0x101000038ULL 0x38ULL 0x101002000ULL 0x1000ULL>;
->> +          };
->> +        };
->> +      };
->> diff --git a/Documentation/devicetree/bindings/kho/ftrace/ftrace-cpu.yaml b/Documentation/devicetree/bindings/kho/ftrace/ftrace-cpu.yaml
->> new file mode 100644
->> index 000000000000..58c715e93f37
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/kho/ftrace/ftrace-cpu.yaml
->> @@ -0,0 +1,56 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/kho/ftrace/ftrace-cpu.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Ftrace per-CPU ring buffer contents
->> +
->> +maintainers:
->> +  - Alexander Graf <graf@amazon.com>
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - ftrace,cpu-v1
->> +
->> +  cpu:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
-> 'cpu' is already a defined property of type 'phandle'. While we can have
-> multiple types for a given property name, best practice is to avoid
-> that. The normal way to refer to a CPU would be a phandle to the CPU
-> node, but I can see that might not make sense here.
->
-> "CPU numbers" on arm64 are 64-bit values as well as they are the
-> CPU's MPIDR value.
-
-
-Here we're looking at the Linux internal CPU numbering which I believe 
-does not have to use the MIDR value?
-
-
->
->> +    description:
->> +      CPU number of the CPU that this ring buffer belonged to when it was
->> +      serialized.
->> +
->> +  mem:
-> Too vague. Make the property name indicate what's in the memory.
-
-
-"mem" is a generic property for every node in the KHO DT that contains a 
-<u64 phys_start, u64 size> array that describes memory to pass over. I 
-use it in generic code so that we don't need to do memory reservations 
-individually per node. That means I can't change the name here.
-
-
->
->> +    $ref: /schemas/types.yaml#/definitions/uint32-array
->> +    description:
->> +      Array of { u64 phys_addr, u64 len } elements that describe a list of ring
->> +      buffer pages. Each page consists of two elements. The first element
->> +      describes the location of the struct buffer_page that contains metadata
->> +      for a given ring buffer page, such as the ring's head indicator. The
->> +      second element points to the ring buffer data page which contains the raw
->> +      trace data.
->> +
->> +additionalProperties: false
->> +
->> +required:
->> +  - compatible
->> +  - cpu
->> +  - mem
->> +
->> +examples:
->> +  - |
->> +    ftrace {
->> +        compatible = "ftrace-v1";
->> +        events = <1 1 2 2 3 3>;
->> +
->> +        global_trace {
->> +          compatible = "ftrace,array-v1";
->> +          trace_flags = < 0x3354601 >;
->> +
->> +          cpu0 {
->> +            compatible = "ftrace,cpu-v1";
->> +            cpu = < 0x00 >;
->> +            mem = < 0x101000000ULL 0x38ULL 0x101000100ULL 0x1000ULL 0x101000038ULL 0x38ULL 0x101002000ULL 0x1000ULL>;
->> +          };
->> +        };
->> +      };
->> diff --git a/Documentation/devicetree/bindings/kho/ftrace/ftrace.yaml b/Documentation/devicetree/bindings/kho/ftrace/ftrace.yaml
->> new file mode 100644
->> index 000000000000..b87a64843af3
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/kho/ftrace/ftrace.yaml
->> @@ -0,0 +1,48 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/kho/ftrace/ftrace.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Ftrace core data
->> +
->> +maintainers:
->> +  - Alexander Graf <graf@amazon.com>
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - ftrace-v1
->> +
->> +  events:
-> Again, too vague.
->
->> +    $ref: /schemas/types.yaml#/definitions/uint32-array
->> +    description:
->> +      Array of { u32 crc, u32 type } elements. Each element contains a unique
->> +      identifier for an event, followed by the identifier that this event had
->> +      in the previous kernel's trace buffers.
->> +
->> +# Other child nodes will be of type "ftrace,array-v1". Each of which describe
->> +# a trace buffer
->> +additionalProperties: true
->> +
->> +required:
->> +  - compatible
->> +  - events
->> +
->> +examples:
->> +  - |
->> +    ftrace {
-> This should go under /chosen. Show that here. Start the example with
-
-
-It can't go under /chosen because x86 doesn't have /chosen :). This is 
-not a device DT, it's a KHO DT.
-
-
-> '/{' to do that and not add the usual boilerplate we add when extracting
-> the examples.
-
-
-What exact difference does /{ and ftrace { make?
-
-
->
-> Also, we don't need 3 examples. Just do 1 complete example here.
-
-
-Great idea :)
-
-
->
->
->> +        compatible = "ftrace-v1";
->> +        events = <1 1 2 2 3 3>;
->> +
->> +        global_trace {
->> +          compatible = "ftrace,array-v1";
->> +          trace_flags = < 0x3354601 >;
->> +
->> +          cpu0 {
->> +            compatible = "ftrace,cpu-v1";
->> +            cpu = < 0x00 >;
->> +            mem = < 0x101000000ULL 0x38ULL 0x101000100ULL 0x1000ULL 0x101000038ULL 0x38ULL 0x101002000ULL 0x1000ULL>;
->> +          };
->> +        };
->> +      };
->> --
->> 2.40.1
->>
-
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+Ck9uIDAzLjAxLjI0IDE5OjQ4LCBSb2IgSGVycmluZyB3cm90ZToKPgo+IE9uIEZyaSwgRGVjIDIy
+LCAyMDIzIGF0IDEyOjUy4oCvUE0gQWxleGFuZGVyIEdyYWYgPGdyYWZAYW1hem9uLmNvbT4gd3Jv
+dGU6Cj4+IFdpdGggS0hPIGluIHBsYWNlLCBsZXQncyBhZGQgZG9jdW1lbnRhdGlvbiB0aGF0IGRl
+c2NyaWJlcyB3aGF0IGl0IGlzIGFuZAo+PiBob3cgdG8gdXNlIGl0Lgo+Pgo+PiBTaWduZWQtb2Zm
+LWJ5OiBBbGV4YW5kZXIgR3JhZiA8Z3JhZkBhbWF6b24uY29tPgo+PiAtLS0KPj4gICBEb2N1bWVu
+dGF0aW9uL2toby9jb25jZXB0cy5yc3QgICB8IDg4ICsrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrCj4+ICAgRG9jdW1lbnRhdGlvbi9raG8vaW5kZXgucnN0ICAgICAgfCAxOSArKysrKysr
+Cj4+ICAgRG9jdW1lbnRhdGlvbi9raG8vdXNhZ2UucnN0ICAgICAgfCA1NyArKysrKysrKysrKysr
+KysrKysrKysKPj4gICBEb2N1bWVudGF0aW9uL3N1YnN5c3RlbS1hcGlzLnJzdCB8ICAxICsKPj4g
+ICA0IGZpbGVzIGNoYW5nZWQsIDE2NSBpbnNlcnRpb25zKCspCj4+ICAgY3JlYXRlIG1vZGUgMTAw
+NjQ0IERvY3VtZW50YXRpb24va2hvL2NvbmNlcHRzLnJzdAo+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0
+NCBEb2N1bWVudGF0aW9uL2toby9pbmRleC5yc3QKPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9j
+dW1lbnRhdGlvbi9raG8vdXNhZ2UucnN0Cj4+Cj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9u
+L2toby9jb25jZXB0cy5yc3QgYi9Eb2N1bWVudGF0aW9uL2toby9jb25jZXB0cy5yc3QKPj4gbmV3
+IGZpbGUgbW9kZSAxMDA2NDQKPj4gaW5kZXggMDAwMDAwMDAwMDAwLi44ZTRmZThjNTc4NjUKPj4g
+LS0tIC9kZXYvbnVsbAo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2toby9jb25jZXB0cy5yc3QKPj4g
+QEAgLTAsMCArMSw4OCBAQAo+PiArLi4gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAt
+b3ItbGF0ZXIKPj4gKwo+PiArPT09PT09PT09PT09PT09PT09PT09PT0KPj4gK0tleGVjIEhhbmRv
+dmVyIENvbmNlcHRzCj4+ICs9PT09PT09PT09PT09PT09PT09PT09PQo+PiArCj4+ICtLZXhlYyBI
+YW5kT3ZlciAoS0hPKSBpcyBhIG1lY2hhbmlzbSB0aGF0IGFsbG93cyBMaW51eCB0byBwcmVzZXJ2
+ZSBzdGF0ZSAtCj4+ICthcmJpdHJhcnkgcHJvcGVydGllcyBhcyB3ZWxsIGFzIG1lbW9yeSBsb2Nh
+dGlvbnMgLSBhY3Jvc3Mga2V4ZWMuCj4+ICsKPj4gK0l0IGludHJvZHVjZXMgbXVsdGlwbGUgY29u
+Y2VwdHM6Cj4+ICsKPj4gK0tITyBEZXZpY2UgVHJlZQo+PiArLS0tLS0tLS0tLS0tLS0tCj4+ICsK
+Pj4gK0V2ZXJ5IEtITyBrZXhlYyBjYXJyaWVzIGEgS0hPIHNwZWNpZmljIGZsYXR0ZW5lZCBkZXZp
+Y2UgdHJlZSBibG9iIHRoYXQKPj4gK2Rlc2NyaWJlcyB0aGUgc3RhdGUgb2YgdGhlIHN5c3RlbS4g
+RGV2aWNlIGRyaXZlcnMgY2FuIHJlZ2lzdGVyIHRvIEtITyB0bwo+PiArc2VyaWFsaXplIHRoZWly
+IHN0YXRlIGJlZm9yZSBrZXhlYy4gQWZ0ZXIgS0hPLCBkZXZpY2UgZHJpdmVycyBjYW4gcmVhZAo+
+PiArdGhlIGRldmljZSB0cmVlIGFuZCBleHRyYWN0IHByZXZpb3VzIHN0YXRlLgo+IEhvdyBkb2Vz
+IHRoaXMgd29yayB3aXRoIGtleGVjIHdoZW4gdGhlcmUgaXMgYWxzbyB0aGUgRkRUIGZvciB0aGUg
+aC93Pwo+IFRoZSBoL3cgRkRUIGhhcyBhIC9jaG9zZW4gcHJvcGVydHkgcG9pbnRpbmcgdG8gdGhp
+cyBGRFQgYmxvYj8KCgpZZXAsIGV4YWN0bHkuCgoKPgo+PiArCj4+ICtLSE8gb25seSB1c2VzIHRo
+ZSBmZHQgY29udGFpbmVyIGZvcm1hdCBhbmQgbGliZmR0IGxpYnJhcnksIGJ1dCBkb2VzIG5vdAo+
+PiArYWRoZXJlIHRvIHRoZSBzYW1lIHByb3BlcnR5IHNlbWFudGljcyB0aGF0IG5vcm1hbCBkZXZp
+Y2UgdHJlZXMgZG86IFByb3BlcnRpZXMKPj4gK2FyZSBwYXNzZWQgaW4gbmF0aXZlIGVuZGlhbm5l
+c3MgYW5kIHN0YW5kYXJkaXplZCBwcm9wZXJ0aWVzIGxpa2UgYGByZWdzYGAgYW5kCj4+ICtgYHJh
+bmdlc2BgIGRvIG5vdCBleGlzdCwgaGVuY2UgdGhlcmUgYXJlIG5vIGBgIy4uLi1jZWxsc2BgIHBy
+b3BlcnRpZXMuCj4gSSB0aGluayBuYXRpdmUgZW5kaWFubmVzcyBpcyBhc2tpbmcgZm9yIHRyb3Vi
+bGUuIGxpYmZkdCB3b3VsZCBuZWVkCj4gZGlmZmVyZW50IHN3YXAgZnVuY3Rpb25zIGhlcmUgdGhh
+biBlbHNld2hlcmUgaW4gdGhlIGtlcm5lbCBmb3IgZXhhbXBsZQo+IHdoaWNoIHdvdWxkbid0IGV2
+ZW4gd29yay4gU28geW91IGFyZSBqdXN0IGNyb3NzaW5nIHlvdXIgZmluZ2VycyB0aGF0Cj4geW91
+IGFyZW4ndCB1c2luZyBhbnkgbGliZmR0IGZ1bmN0aW9ucyB0aGF0IHN3YXAuIEFuZCB3aGVuIEkg
+c3luYwo+IGR0Yy9saWJmZHQgYW5kIHRoYXQgY2hhbmdlcywgSSBtaWdodCBicmVhayB5b3UuCj4K
+PiBBbHNvLCBpZiB5b3Ugd2FudCB0byBkdW1wIHRoZSBGRFQgYW5kIGRvIGEgZHRjIERUQi0+RFRT
+IHBhc3MsIGl0IGlzCj4gbm90IGdvaW5nIHRvIGJlIHRvbyByZWFkYWJsZSBnaXZlbiB0aGF0IG91
+dHB1dHMgc3dhcHBlZCAzMi1iaXQgdmFsdWVzCj4gZm9yIGFueXRoaW5nIHRoYXQncyBhIDQgYnl0
+ZSBtdWx0aXBsZS4KCgpZZWFoLCBidXQgYmlnIGVuZGlhbiB0aGVzZSBkYXlzIGlzIGp1c3QgYSBj
+b21wbGV0ZSB3YXN0ZSBvZiBicmFpbiBhbmQgCmNwdSBjeWNsZXMgOikuIEFuZCB5ZXMsIEkgZG9u
+J3QgcmVhbGx5IHdhbnQgdG8gdXNlIGFueSBsaWJmZHQgaGVscGVyIApmdW5jdGlvbnMgdG8gcmVh
+ZCBkYXRhLiBJIHVzZSBpdCBvbmx5IHRvIGdpdmUgbWUgdGhlIHJhdyBkYXRhIGFuZCB0YWtlIApp
+dCBmcm9tIHRoZXJlLgoKCj4KPj4gKwo+PiArS0hPIGludHJvZHVjZXMgYSBuZXcgY29uY2VwdCB0
+byBpdHMgZGV2aWNlIHRyZWU6IGBgbWVtYGAgcHJvcGVydGllcy4gQQo+PiArYGBtZW1gYCBwcm9w
+ZXJ0eSBjYW4gaW5zaWRlIGFueSBzdWJub2RlIGluIHRoZSBkZXZpY2UgdHJlZS4gV2hlbiBwcmVz
+ZW50LAo+PiAraXQgY29udGFpbnMgYW4gYXJyYXkgb2YgcGh5c2ljYWwgbWVtb3J5IHJhbmdlcyB0
+aGF0IHRoZSBuZXcga2VybmVsIG11c3QgbWFyawo+PiArYXMgcmVzZXJ2ZWQgb24gYm9vdC4gSXQg
+aXMgcmVjb21tZW5kZWQsIGJ1dCBub3QgcmVxdWlyZWQsIHRvIG1ha2UgdGhlc2UgcmFuZ2VzCj4+
+ICthcyBwaHlzaWNhbGx5IGNvbnRpZ3VvdXMgYXMgcG9zc2libGUgdG8gcmVkdWNlIHRoZSBudW1i
+ZXIgb2YgYXJyYXkgZWxlbWVudHMgOjoKPj4gKwo+PiArICAgIHN0cnVjdCBraG9fbWVtIHsKPj4g
+KyAgICAgICAgICAgIF9fdTY0IGFkZHI7Cj4+ICsgICAgICAgICAgICBfX3U2NCBsZW47Cj4+ICsg
+ICAgfTsKPj4gKwo+PiArQWZ0ZXIgYm9vdCwgZHJpdmVycyBjYW4gY2FsbCB0aGUga2hvIHN1YnN5
+c3RlbSB0byB0cmFuc2ZlciBvd25lcnNoaXAgb2YgbWVtb3J5Cj4+ICt0aGF0IHdhcyByZXNlcnZl
+ZCB2aWEgYSBgYG1lbWBgIHByb3BlcnR5IHRvIHRoZW1zZWx2ZXMgdG8gY29udGludWUgdXNpbmcg
+bWVtb3J5Cj4+ICtmcm9tIHRoZSBwcmV2aW91cyBleGVjdXRpb24uCj4+ICsKPj4gK1RoZSBLSE8g
+ZGV2aWNlIHRyZWUgZm9sbG93cyB0aGUgaW4tTGludXggc2NoZW1hIHJlcXVpcmVtZW50cy4gQW55
+IGVsZW1lbnQgaW4KPj4gK3RoZSBkZXZpY2UgdHJlZSBpcyBkb2N1bWVudGVkIHZpYSBkZXZpY2Ug
+dHJlZSBzY2hlbWEgeWFtbHMgdGhhdCBleHBsYWluIHdoYXQKPj4gK2RhdGEgZ2V0cyB0cmFuc2Zl
+cnJlZC4KPiBJZiB0aGlzIGlzIGFsbCBzZXBhcmF0ZSwgdGhlbiBJIHRoaW5rIHRoZSBzY2hlbWFz
+IHNob3VsZCBiZSB0b28uIEFuZAo+IHRoZW4gZnJvbSBteSAoRFQgbWFpbnRhaW5lcikgcGVyc3Bl
+Y3RpdmUsIHlvdSBjYW4gZG8gd2hhdGV2ZXIgeW91IHdhbnQKPiBoZXJlIChsaWtlIEZJVCBpbWFn
+ZXMpLiBUaGUgZHRzY2hlbWEgdG9vbHMgYXJlIHByZXR0eSBtdWNoIG9ubHkgZ2VhcmVkCj4gZm9y
+ICJub3JtYWwiIERUcy4gQSBjb3VwbGUgb2YgcHJvYmxlbXMgY29tZSB0byBtaW5kLiBZb3UgY2Fu
+J3QgZXhjbHVkZQo+IG9yIGNoYW5nZSBzdGFuZGFyZCBwcm9wZXJ0aWVzLiBUaGUgZGVjb2Rpbmcg
+b2YgdGhlIERUQiB0byBydW4KPiB2YWxpZGF0aW9uIGFzc3VtZXMgYmlnIGVuZGlhbi4gV2UgY291
+bGQgcHJvYmFibHkgc3BsaXQgdGhpbmdzIHVwIGEKPiBiaXQsIGJ1dCB5b3UgbWF5IGJlIGJldHRl
+ciBvZmYganVzdCB1c2luZyBqc29uc2NoZW1hIGRpcmVjdGx5LiBJJ20gbm90Cj4gZXZlbiBzdXJl
+IHJ1bm5pbmcgdmFsaWRhdGlvbiBoZXJlIHdvdWxkIHRoYXQgdmFsdWFibGUuIFlvdSBoYXZlIDEK
+PiBzb3VyY2Ugb2YgY29kZSBnZW5lcmF0aW5nIHRoZSBEVCBhbmQgMSBjb25zdW1lci4gWWVzLCB0
+aGVyZSdzCj4gZGlmZmVyZW50IGtlcm5lbCB2ZXJzaW9ucyB0byBkZWFsIHdpdGgsIGJ1dCBpdCdz
+IG5vdCAxMDBzIG9mIHBlb3BsZQo+IGNyZWF0aW5nIDEwMDBzIG9mIERUcyB3aXRoIDEwMHMgb2Yg
+bm9kZXMuCj4KPiBZb3UgbWlnaHQgbG9vayBhdCB0aGUgbmV0bGluayBzdHVmZiB3aGljaCBpcyB1
+c2luZyBpdHMgb3duIHlhbWwgc3ludGF4Cj4gdG8gZ2VuZXJhdGUgY29kZSBhbmQganNvbnNjaGVt
+YSBpcyB1c2VkIHRvIHZhbGlkYXRlIHRoZSB5YW1sLgoKCkknbSBjdXJyZW50bHkgYSBsb3QgbW9y
+ZSBpbnRlcmVzdGVkIGluIHRoZSBkb2N1bWVudGF0aW9uIGFzcGVjdCB0aGFuIGluIAp0aGUgdmFs
+aWRhdGlvbiwgeWVhaC4gU28gSSB0aGluayBmb3IgdjMsIEknbGwganVzdCB0aHJvdyB0aGUgc2No
+ZW1hcyAKaW50byB0aGUgRG9jdW1lbnRhdGlvbi9raG8gZGlyZWN0b3J5IHdpdGhvdXQgYW55IHZh
+bGlkYXRpb24uIFdlIGNhbiAKd29ycnkgYWJvdXQgdGhhdCBsYXRlciA6KQoKVGhhbmtzIGEgbG90
+IGFnYWluIGZvciB0aGUgcmV2aWV3IQoKCkFsZXgKCgoKCgpBbWF6b24gRGV2ZWxvcG1lbnQgQ2Vu
+dGVyIEdlcm1hbnkgR21iSApLcmF1c2Vuc3RyLiAzOAoxMDExNyBCZXJsaW4KR2VzY2hhZWZ0c2Z1
+ZWhydW5nOiBDaHJpc3RpYW4gU2NobGFlZ2VyLCBKb25hdGhhbiBXZWlzcwpFaW5nZXRyYWdlbiBh
+bSBBbXRzZ2VyaWNodCBDaGFybG90dGVuYnVyZyB1bnRlciBIUkIgMTQ5MTczIEIKU2l0ejogQmVy
+bGluClVzdC1JRDogREUgMjg5IDIzNyA4NzkKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFk
+ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVj
+Cg==
