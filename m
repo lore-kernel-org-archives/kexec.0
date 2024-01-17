@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 24400C47DA2
-	for <kexec@archiver.kernel.org>; Wed, 17 Jan 2024 14:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C7307C47258
+	for <kexec@archiver.kernel.org>; Wed, 17 Jan 2024 14:50:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=k6S4BB82PlDnoeuKlUFv87SBUVmN0yieT5tVQOBbK00=; b=C1j/e1T/q9bFtj
-	pY+NRr5aH4Pb9dUYxMgvjomg211aVIiexBqgu1eIO1tg/0z1Y0jtwdJ8MhIuYienY0XxMnsdk5RsZ
-	Tz3XkFUW4HYwqRrvSlbBsgQHaD6CTn4kcFL9YKIcsZKLGKngKWBEjkELkzB31aLFzwi/8l1MQT8tG
-	RohxEf+adHm6E8gb/6FyIV9EtwDBgYaB9rDd/86WS0oqc+8/i3QHvOHx3kJCuNefvOpnz6wnv9LDF
-	xieciBmC+gYArjVWk13x3AgLUqfkglqP20sToKbp6laOl4vgOXzLJ2jDyUmb2mPLRDwBxRKFmxVcH
-	U1VD+ybUmwVfUlpzeSDw==;
+	List-Owner; bh=cXW74ueo2KHKVlNFOZcQQaOg/Uf+zP3GrID3gfOPUnE=; b=ClXmz2AjkMrDVd
+	WlqHzjm1PP5XqKYjgLGpugN+MNygcBoqrj7oleeQFc+MxrVxrWp0QiPi8nW6HFUZFErx9IA/yIq3A
+	9zmmdgxjVnPA7O0zYWFQNlGUw00YPnd2YDPBQtUsYpkOUuORHoma+173aJAsNtUg4VbhOpkSKGjDc
+	1SFxDQPg+RDz2aWId1CpDCjkmUcHMswa0BgxpxPnKLJtbtUFAYJ6lWa3gsyp7zVzDWq1YibQRfnFd
+	zOi0Qw1x8tBgmR7G45ZeyAmOzPwpUkLZ6fIMfJmZeRK3utPgu+08Ooy/hJSX0f5nBH5YnKgISQwGg
+	qIS9cKdg+vgHxft2sJfg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rQ7Eq-00HItc-1Q;
-	Wed, 17 Jan 2024 14:49:56 +0000
-Received: from smtp-fw-9105.amazon.com ([207.171.188.204])
+	id 1rQ7FC-00HJFM-1m;
+	Wed, 17 Jan 2024 14:50:18 +0000
+Received: from smtp-fw-80009.amazon.com ([99.78.197.220])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rQ7Eb-00HIgJ-29;
-	Wed, 17 Jan 2024 14:49:47 +0000
+	id 1rQ7F3-00HJ5R-3B;
+	Wed, 17 Jan 2024 14:50:13 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1705502982; x=1737038982;
+  t=1705503009; x=1737039009;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=WcVog45f46p3s3gDbP7vrMgrPqenvpHhXFzZO0RsFqI=;
-  b=TDce96Ge2yFKjlLZgNtSIhhn/MbkjGtjQY+9jLRyYnsd1pIIFDc2XFzk
-   mZtO6b2N9td3EXuxY5EK3A9oTPqPar5+FVb0ClFEk4YKPo9Q84Byfp6SH
-   Pbv8Bg1NxGkOE/OsGSLOyHqAkYtdhVQD4pA8DkaZL/TIyw2FyV/tAWrIp
-   M=;
+  bh=tPlYmxW2bD4g5p/4BZUhVQG9FE6x6xhR8RJRJRx13Io=;
+  b=K+FiteS7sq0Axzs5LSNGxs64Fg5Blh2kIJc0a5Vx/ec2rl0IoQbuTWki
+   gD2JeqzBuWOB299B01p3LjsZoRtian6HOT+KqRv6Azawa/qXNx5q7LNEy
+   OFx/AIxBMu/uG5SnB0fA0f5Bt+xEMCqUfyp3HDTIdoGenViGBj29iTFtz
+   o=;
 X-IronPort-AV: E=Sophos;i="6.05,200,1701129600"; 
-   d="scan'208";a="698396286"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-iad-1a-m6i4x-96feee09.us-east-1.amazon.com) ([10.25.36.210])
-  by smtp-border-fw-9105.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 14:49:39 +0000
-Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (iad7-ws-svc-p70-lb3-vlan2.iad.amazon.com [10.32.235.34])
-	by email-inbound-relay-iad-1a-m6i4x-96feee09.us-east-1.amazon.com (Postfix) with ESMTPS id CB3FA4AE6A;
-	Wed, 17 Jan 2024 14:49:30 +0000 (UTC)
-Received: from EX19MTAUWA002.ant.amazon.com [10.0.21.151:17180]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.24.5:2525] with esmtp (Farcaster)
- id 93f1ace7-96cf-46da-ac0b-e013a95b297a; Wed, 17 Jan 2024 14:49:29 +0000 (UTC)
-X-Farcaster-Flow-ID: 93f1ace7-96cf-46da-ac0b-e013a95b297a
+   d="scan'208";a="58930648"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-pdx-2a-m6i4x-21d8d9f4.us-west-2.amazon.com) ([10.25.36.210])
+  by smtp-border-fw-80009.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 14:50:08 +0000
+Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (pdx2-ws-svc-p26-lb5-vlan2.pdx.amazon.com [10.39.38.66])
+	by email-inbound-relay-pdx-2a-m6i4x-21d8d9f4.us-west-2.amazon.com (Postfix) with ESMTPS id 1DF7988A4B;
+	Wed, 17 Jan 2024 14:50:07 +0000 (UTC)
+Received: from EX19MTAUWC001.ant.amazon.com [10.0.21.151:3171]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.0.206:2525] with esmtp (Farcaster)
+ id b53c9c00-2d51-410c-8d2a-13bacadca1c2; Wed, 17 Jan 2024 14:50:06 +0000 (UTC)
+X-Farcaster-Flow-ID: b53c9c00-2d51-410c-8d2a-13bacadca1c2
 Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
+ EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 17 Jan 2024 14:49:29 +0000
+ 15.2.1118.40; Wed, 17 Jan 2024 14:50:06 +0000
 Received: from dev-dsk-graf-1a-5ce218e4.eu-west-1.amazon.com (10.253.83.51) by
  EX19D020UWC004.ant.amazon.com (10.13.138.149) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 17 Jan 2024 14:49:24 +0000
+ 15.2.1118.40; Wed, 17 Jan 2024 14:50:02 +0000
 From: Alexander Graf <graf@amazon.com>
 To: <linux-kernel@vger.kernel.org>
 CC: <linux-trace-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
@@ -71,19 +71,19 @@ CC: <linux-trace-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
 	Usama Arif <usama.arif@bytedance.com>, David Woodhouse <dwmw@amazon.co.uk>,
 	Benjamin Herrenschmidt <benh@kernel.crashing.org>, Rob Herring
 	<robh+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 13/17] tracing: Recover trace buffers from kexec handover
-Date: Wed, 17 Jan 2024 14:47:00 +0000
-Message-ID: <20240117144704.602-14-graf@amazon.com>
+Subject: [PATCH v3 17/17] Documentation: KHO: Add ftrace bindings
+Date: Wed, 17 Jan 2024 14:47:04 +0000
+Message-ID: <20240117144704.602-18-graf@amazon.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240117144704.602-1-graf@amazon.com>
 References: <20240117144704.602-1-graf@amazon.com>
 MIME-Version: 1.0
 X-Originating-IP: [10.253.83.51]
-X-ClientProxiedBy: EX19D032UWB004.ant.amazon.com (10.13.139.136) To
+X-ClientProxiedBy: EX19D041UWB004.ant.amazon.com (10.13.139.143) To
  EX19D020UWC004.ant.amazon.com (10.13.138.149)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240117_064941_792497_E281AF96 
-X-CRM114-Status: GOOD (  31.39  )
+X-CRM114-CacheID: sfid-20240117_065010_097539_8F3C189C 
+X-CRM114-Status: GOOD (  27.11  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,373 +100,207 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-When kexec handover is in place, we now know the location of all
-previous buffers for ftrace rings. With this patch applied, ftrace
-reassembles any new trace buffer that carries the same name as a
-previous one with the same data pages that the previous buffer had.
+We introduced KHO into Linux: A framework that allows Linux to pass
+metadata and memory across kexec from Linux to Linux. KHO reuses fdt
+as file format and shares a lot of the same properties of firmware-to-
+Linux boot formats: It needs a stable, documented ABI that allows for
+forward and backward compatibility as well as versioning.
 
-That way, a buffer that we had in place before kexec becomes readable
-after kexec again as soon as it gets initialized with the same name.
+As first user of KHO, we introduced ftrace which can now preserve
+trace contents across kexec, so you can use the post-kexec kernel to
+read traces from the pre-kexec kernel.
+
+This patch adds ftrace schemas similar to "device" device tree ones to
+a new kho bindings directory. This allows us to force contributors to
+document the data that moves across KHO kexecs and catch breaking change
+during review.
 
 Signed-off-by: Alexander Graf <graf@amazon.com>
 
 ---
 
-v1 -> v2:
+v2 -> v3:
 
-  - Move from names to fdt offsets. That way, trace.c can find the trace
-    array offset and then the ring buffer code only needs to read out
-    its per-CPU data. That way it can stay oblivient to its name.
-  - Make kho_get_fdt() const
-  - Remove ifdefs
+  - Fix make dt_binding_check
+  - Add descriptions for each object
+  - s/trace_flags/trace-flags/
+  - s/global_trace/global-trace/
+  - Make all additionalProperties false
+  - Change subject to reflect subsysten (dt-bindings)
+  - Fix indentation
+  - Remove superfluous examples
+  - Convert to 64bit syntax
+  - Move to kho directory
 ---
- include/linux/ring_buffer.h |  15 ++--
- kernel/trace/ring_buffer.c  | 171 ++++++++++++++++++++++++++++++++++--
- kernel/trace/trace.c        |  32 ++++++-
- 3 files changed, 206 insertions(+), 12 deletions(-)
+ .../kho/bindings/ftrace/ftrace-array.yaml     | 38 ++++++++++++
+ .../kho/bindings/ftrace/ftrace-cpu.yaml       | 43 +++++++++++++
+ Documentation/kho/bindings/ftrace/ftrace.yaml | 62 +++++++++++++++++++
+ 3 files changed, 143 insertions(+)
+ create mode 100644 Documentation/kho/bindings/ftrace/ftrace-array.yaml
+ create mode 100644 Documentation/kho/bindings/ftrace/ftrace-cpu.yaml
+ create mode 100644 Documentation/kho/bindings/ftrace/ftrace.yaml
 
-diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-index 1c5eb33f0cb5..f6d6ce441890 100644
---- a/include/linux/ring_buffer.h
-+++ b/include/linux/ring_buffer.h
-@@ -84,20 +84,23 @@ void ring_buffer_discard_commit(struct trace_buffer *buffer,
- /*
-  * size is in bytes for each per CPU buffer.
-  */
--struct trace_buffer *
--__ring_buffer_alloc(unsigned long size, unsigned flags, struct lock_class_key *key);
-+struct trace_buffer *__ring_buffer_alloc(unsigned long size, unsigned flags,
-+					 struct lock_class_key *key,
-+					 int tr_off);
- 
- /*
-  * Because the ring buffer is generic, if other users of the ring buffer get
-  * traced by ftrace, it can produce lockdep warnings. We need to keep each
-  * ring buffer's lock class separate.
-  */
--#define ring_buffer_alloc(size, flags)			\
--({							\
--	static struct lock_class_key __key;		\
--	__ring_buffer_alloc((size), (flags), &__key);	\
-+#define ring_buffer_alloc_kho(size, flags, tr_off)		\
-+({								\
-+	static struct lock_class_key __key;			\
-+	__ring_buffer_alloc((size), (flags), &__key, tr_off);	\
- })
- 
-+#define ring_buffer_alloc(size, flags) ring_buffer_alloc_kho(size, flags, 0)
+diff --git a/Documentation/kho/bindings/ftrace/ftrace-array.yaml b/Documentation/kho/bindings/ftrace/ftrace-array.yaml
+new file mode 100644
+index 000000000000..aa0007595b95
+--- /dev/null
++++ b/Documentation/kho/bindings/ftrace/ftrace-array.yaml
+@@ -0,0 +1,38 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/kho/ftrace/ftrace-array.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- int ring_buffer_wait(struct trace_buffer *buffer, int cpu, int full);
- __poll_t ring_buffer_poll_wait(struct trace_buffer *buffer, int cpu,
- 			  struct file *filp, poll_table *poll_table, int full);
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 33b41013cda9..49da2e54126b 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -558,6 +558,7 @@ struct trace_buffer {
- 
- 	struct rb_irq_work		irq_work;
- 	bool				time_stamp_abs;
-+	int				tr_off;
- };
- 
- struct ring_buffer_iter {
-@@ -574,6 +575,15 @@ struct ring_buffer_iter {
- 	int				missed_events;
- };
- 
-+struct rb_kho_cpu {
-+	const struct kho_mem *mem;
-+	uint32_t nr_mems;
-+};
++title: Ftrace trace array
 +
-+static int rb_kho_replace_buffers(struct ring_buffer_per_cpu *cpu_buffer,
-+				     struct rb_kho_cpu *kho);
-+static int rb_kho_read_cpu(int tr_off, int cpu, struct rb_kho_cpu *kho);
++maintainers:
++  - Alexander Graf <graf@amazon.com>
 +
- #ifdef RB_TIME_32
- 
- /*
-@@ -1768,12 +1778,15 @@ static void rb_free_cpu_buffer(struct ring_buffer_per_cpu *cpu_buffer)
-  * drop data when the tail hits the head.
-  */
- struct trace_buffer *__ring_buffer_alloc(unsigned long size, unsigned flags,
--					struct lock_class_key *key)
-+					 struct lock_class_key *key,
-+					 int tr_off)
- {
-+	int cpu = raw_smp_processor_id();
-+	struct rb_kho_cpu kho = {};
- 	struct trace_buffer *buffer;
-+	bool use_kho = false;
- 	long nr_pages;
- 	int bsize;
--	int cpu;
- 	int ret;
- 
- 	/* keep it in its own cache line */
-@@ -1786,9 +1799,16 @@ struct trace_buffer *__ring_buffer_alloc(unsigned long size, unsigned flags,
- 		goto fail_free_buffer;
- 
- 	nr_pages = DIV_ROUND_UP(size, BUF_PAGE_SIZE);
-+	if (!rb_kho_read_cpu(tr_off, cpu, &kho) && kho.nr_mems > 4) {
-+		nr_pages = kho.nr_mems / 2;
-+		use_kho = true;
-+		pr_debug("Using kho on CPU [%03d]", cpu);
-+	}
++description: |
++  Ftrace can create and expose multiple different trace instances, see
++  https://docs.kernel.org/trace/ftrace.html#instances. Each instance is
++  backed by a single trace array which contains all information about where
++  the corresponding trace buffers are located and how they are configured.
 +
- 	buffer->flags = flags;
- 	buffer->clock = trace_clock_local;
- 	buffer->reader_lock_key = key;
-+	buffer->tr_off = tr_off;
- 
- 	init_irq_work(&buffer->irq_work.work, rb_wake_up_waiters);
- 	init_waitqueue_head(&buffer->irq_work.waiters);
-@@ -1805,12 +1825,14 @@ struct trace_buffer *__ring_buffer_alloc(unsigned long size, unsigned flags,
- 	if (!buffer->buffers)
- 		goto fail_free_cpumask;
- 
--	cpu = raw_smp_processor_id();
- 	cpumask_set_cpu(cpu, buffer->cpumask);
- 	buffer->buffers[cpu] = rb_allocate_cpu_buffer(buffer, nr_pages, cpu);
- 	if (!buffer->buffers[cpu])
- 		goto fail_free_buffers;
- 
-+	if (use_kho && rb_kho_replace_buffers(buffer->buffers[cpu], &kho))
-+		pr_warn("Could not revive all previous trace data");
++properties:
++  compatible:
++    enum:
++      - ftrace,array-v1
 +
- 	ret = cpuhp_state_add_instance(CPUHP_TRACE_RB_PREPARE, &buffer->node);
- 	if (ret < 0)
- 		goto fail_free_buffers;
-@@ -5824,7 +5846,9 @@ EXPORT_SYMBOL_GPL(ring_buffer_read_page);
-  */
- int trace_rb_cpu_prepare(unsigned int cpu, struct hlist_node *node)
- {
-+	struct rb_kho_cpu kho = {};
- 	struct trace_buffer *buffer;
-+	bool use_kho = false;
- 	long nr_pages_same;
- 	int cpu_i;
- 	unsigned long nr_pages;
-@@ -5848,6 +5872,12 @@ int trace_rb_cpu_prepare(unsigned int cpu, struct hlist_node *node)
- 	/* allocate minimum pages, user can later expand it */
- 	if (!nr_pages_same)
- 		nr_pages = 2;
++  trace-flags:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      Bitmap of all the trace flags that were enabled in the trace array at the
++      point of serialization.
 +
-+	if (!rb_kho_read_cpu(buffer->tr_off, cpu, &kho) && kho.nr_mems > 4) {
-+		nr_pages = kho.nr_mems / 2;
-+		use_kho = true;
-+	}
++patternProperties:
++  cpu[0-9a-f]*:
++    $ref: ftrace-cpu.yaml#
++    description: Trace buffer location for each CPU
 +
- 	buffer->buffers[cpu] =
- 		rb_allocate_cpu_buffer(buffer, nr_pages, cpu);
- 	if (!buffer->buffers[cpu]) {
-@@ -5855,13 +5885,143 @@ int trace_rb_cpu_prepare(unsigned int cpu, struct hlist_node *node)
- 		     cpu);
- 		return -ENOMEM;
- 	}
++required:
++  - compatible
++  - trace-flags
 +
-+	if (use_kho && rb_kho_replace_buffers(buffer->buffers[cpu], &kho))
-+		pr_warn("Could not revive all previous trace data");
++additionalProperties: false
+diff --git a/Documentation/kho/bindings/ftrace/ftrace-cpu.yaml b/Documentation/kho/bindings/ftrace/ftrace-cpu.yaml
+new file mode 100644
+index 000000000000..95dec1c94fc3
+--- /dev/null
++++ b/Documentation/kho/bindings/ftrace/ftrace-cpu.yaml
+@@ -0,0 +1,43 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/kho/ftrace/ftrace-cpu.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 	smp_wmb();
- 	cpumask_set_cpu(cpu, buffer->cpumask);
- 	return 0;
- }
- 
--#ifdef CONFIG_FTRACE_KHO
--static int rb_kho_write_cpu(void *fdt, struct trace_buffer *buffer, int cpu)
-+static int rb_kho_replace_buffers(struct ring_buffer_per_cpu *cpu_buffer,
-+				     struct rb_kho_cpu *kho)
-+{
-+	bool first_loop = true;
-+	struct list_head *tmp;
-+	int err = 0;
-+	int i = 0;
++title: Ftrace per-CPU ring buffer contents
 +
-+	if (!IS_ENABLED(CONFIG_FTRACE_KHO))
-+		return -EINVAL;
++maintainers:
++  - Alexander Graf <graf@amazon.com>
 +
-+	if (kho->nr_mems != cpu_buffer->nr_pages * 2)
-+		return -EINVAL;
++description: |
++  An ftrace trace array contains a ring buffers for each CPU. This
++  object describes the buffers of such a single CPU. It describes which
++  CPU it was used in and which memory was backing the ring buffer.
 +
-+	for (tmp = rb_list_head(cpu_buffer->pages);
-+	     tmp != rb_list_head(cpu_buffer->pages) || first_loop;
-+	     tmp = rb_list_head(tmp->next), first_loop = false) {
-+		struct buffer_page *bpage = (struct buffer_page *)tmp;
-+		const struct kho_mem *mem_bpage = &kho->mem[i++];
-+		const struct kho_mem *mem_page = &kho->mem[i++];
-+		const uint64_t rb_page_head = 1;
-+		struct buffer_page *old_bpage;
-+		void *old_page;
++properties:
++  compatible:
++    enum:
++      - ftrace,cpu-v1
 +
-+		old_bpage = __va(mem_bpage->addr);
-+		if (!bpage)
-+			goto out;
++  cpu:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      CPU number of the CPU that this ring buffer belonged to when it was
++      serialized.
 +
-+		if ((ulong)old_bpage->list.next & rb_page_head) {
-+			struct list_head *new_lhead;
-+			struct buffer_page *new_head;
++  mem:
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    description: |
++      Array of { u64 phys_addr, u64 len } elements that describe a list of ring
++      buffer pages. Each page consists of two elements. The first element
++      describes the location of the struct buffer_page that contains metadata
++      for a given ring buffer page, such as the ring's head indicator. The
++      second element points to the ring buffer data page which contains the raw
++      trace data.
 +
-+			new_lhead = rb_list_head(bpage->list.next);
-+			new_head = (struct buffer_page *)new_lhead;
++required:
++  - compatible
++  - cpu
++  - mem
 +
-+			/* Assume the buffer is completely full */
-+			cpu_buffer->tail_page = bpage;
-+			cpu_buffer->commit_page = bpage;
-+			/* Set the head pointers to what they were before */
-+			cpu_buffer->head_page->list.prev->next = (struct list_head *)
-+				((ulong)cpu_buffer->head_page->list.prev->next & ~rb_page_head);
-+			cpu_buffer->head_page = new_head;
-+			bpage->list.next = (struct list_head *)((ulong)new_lhead | rb_page_head);
-+		}
++additionalProperties: false
+diff --git a/Documentation/kho/bindings/ftrace/ftrace.yaml b/Documentation/kho/bindings/ftrace/ftrace.yaml
+new file mode 100644
+index 000000000000..4a7308be8dbf
+--- /dev/null
++++ b/Documentation/kho/bindings/ftrace/ftrace.yaml
+@@ -0,0 +1,62 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/kho/ftrace/ftrace.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+		if (rb_page_entries(old_bpage) || rb_page_write(old_bpage)) {
-+			/*
-+			 * We want to recycle the pre-kho page, it contains
-+			 * trace data. To do so, we unreserve it and swap the
-+			 * current data page with the pre-kho one
-+			 */
-+			old_page = kho_claim_mem(mem_page);
++title: Ftrace core data
 +
-+			/* Recycle the old page, it contains data */
-+			free_page((ulong)bpage->page);
-+			bpage->page = old_page;
++maintainers:
++  - Alexander Graf <graf@amazon.com>
 +
-+			bpage->write = old_bpage->write;
-+			bpage->entries = old_bpage->entries;
-+			bpage->real_end = old_bpage->real_end;
++description: |
++  Ftrace can serialize its current trace buffers across kexec through KHO.
++  For each instance, it preserves the backing ring buffers. It also
++  preserves event ID associations. The post-KHO kernel can then consume
++  these bits to reassemble trace data (not configuration!) for each trace
++  instance and that way expose pre-KHO traces in post-KHO ftrace files.
 +
-+			local_inc(&cpu_buffer->pages_touched);
-+		} else {
-+			kho_return_mem(mem_page);
-+		}
++properties:
++  compatible:
++    enum:
++      - ftrace-v1
 +
-+		kho_return_mem(mem_bpage);
-+	}
++  events:
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    description:
++      Array of { u32 crc, u32 type } elements. Each element contains a unique
++      identifier for an event, followed by the identifier that this event had
++      in the previous kernel's trace buffers.
 +
-+out:
-+	return err;
-+}
++# Every subnode has to be a trace array
++patternProperties:
++  ^(?!compatible|events)$:
++    $ref: ftrace-array.yaml#
++    description: Trace array description for each trace instance
 +
-+static int rb_kho_read_cpu(int tr_off, int cpu, struct rb_kho_cpu *kho)
-+{
-+	const void *fdt = kho_get_fdt();
-+	int mem_len;
-+	int err = 0;
-+	char *path;
-+	int off;
++required:
++  - compatible
++  - events
 +
-+	if (!IS_ENABLED(CONFIG_FTRACE_KHO))
-+		return -EINVAL;
++additionalProperties: true
 +
-+	if (!tr_off || !fdt || !kho)
-+		return -EINVAL;
++examples:
++  - |
++    ftrace {
++      compatible = "ftrace-v1";
++      events = < 1 1 2 2 3 3 >;
 +
-+	path = kasprintf(GFP_KERNEL, "cpu%x", cpu);
-+	if (!path)
-+		return -ENOMEM;
++      global-trace {
++        compatible = "ftrace,array-v1";
++        trace-flags = < 0x3354601 >;
 +
-+	pr_debug("Trying to revive trace cpu '%s'", path);
-+
-+	off = fdt_subnode_offset(fdt, tr_off, path);
-+	if (off < 0) {
-+		pr_debug("Could not find '%s' in DT", path);
-+		err = -ENOENT;
-+		goto out;
-+	}
-+
-+	err = fdt_node_check_compatible(fdt, off, "ftrace,cpu-v1");
-+	if (err) {
-+		pr_warn("Node '%s' has invalid compatible", path);
-+		err = -EINVAL;
-+		goto out;
-+	}
-+
-+	kho->mem = fdt_getprop(fdt, off, "mem", &mem_len);
-+	if (!kho->mem) {
-+		pr_warn("Node '%s' has invalid mem property", path);
-+		err = -EINVAL;
-+		goto out;
-+	}
-+
-+	kho->nr_mems = mem_len / sizeof(*kho->mem);
-+
-+	/* Should follow "bpage 0, page 0, bpage 1, page 1, ..." pattern */
-+	if ((kho->nr_mems & 1)) {
-+		err = -EINVAL;
-+		goto out;
-+	}
-+
-+out:
-+	kfree(path);
-+	return err;
-+}
-+
-+static int __maybe_unused rb_kho_write_cpu(void *fdt, struct trace_buffer *buffer, int cpu)
- {
- 	int i = 0;
- 	int err = 0;
-@@ -5921,6 +6081,7 @@ static int rb_kho_write_cpu(void *fdt, struct trace_buffer *buffer, int cpu)
- 	return err;
- }
- 
-+#ifdef CONFIG_FTRACE_KHO
- int ring_buffer_kho_write(void *fdt, struct trace_buffer *buffer)
- {
- 	int err, i;
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 9505a929a726..a5d7f5b4c19f 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -9362,16 +9362,46 @@ static struct dentry *trace_instance_dir;
- static void
- init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer);
- 
-+static int trace_kho_off_tr(struct trace_array *tr)
-+{
-+	const char *name = tr->name ? tr->name : "global_trace";
-+	const void *fdt = kho_get_fdt();
-+	char *path;
-+	int off;
-+
-+	if (!IS_ENABLED(CONFIG_FTRACE_KHO))
-+		return 0;
-+
-+	if (!fdt)
-+		return 0;
-+
-+	path = kasprintf(GFP_KERNEL, "/ftrace/%s", name);
-+	if (!path)
-+		return -ENOMEM;
-+
-+	pr_debug("Trying to revive trace buffer '%s'", path);
-+
-+	off = fdt_path_offset(fdt, path);
-+	if (off < 0) {
-+		pr_debug("Could not find '%s' in DT", path);
-+		off = 0;
-+	}
-+
-+	kfree(path);
-+	return off;
-+}
-+
- static int
- allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int size)
- {
-+	int tr_off = trace_kho_off_tr(tr);
- 	enum ring_buffer_flags rb_flags;
- 
- 	rb_flags = tr->trace_flags & TRACE_ITER_OVERWRITE ? RB_FL_OVERWRITE : 0;
- 
- 	buf->tr = tr;
- 
--	buf->buffer = ring_buffer_alloc(size, rb_flags);
-+	buf->buffer = ring_buffer_alloc_kho(size, rb_flags, tr_off);
- 	if (!buf->buffer)
- 		return -ENOMEM;
- 
++        cpu0 {
++          compatible = "ftrace,cpu-v1";
++          cpu = < 0x00 >;
++          mem = /bits/ 64 < 0x101000000 0x38
++	                    0x101000100 0x1000
++	                    0x101000038 0x38
++	                    0x101002000 0x1000 >;
++        };
++      };
++    };
 -- 
 2.40.1
 
