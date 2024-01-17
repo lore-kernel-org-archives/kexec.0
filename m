@@ -4,57 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id F3582C47DA2
-	for <kexec@archiver.kernel.org>; Wed, 17 Jan 2024 14:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4C160C47DA2
+	for <kexec@archiver.kernel.org>; Wed, 17 Jan 2024 14:48:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=2XE8VcgaHlByHWn6edq1AqptNfYRLgJe58wLuVTfCY0=; b=t9Cw4eKUFPMVT6
-	/cOgFRrAOuKh7rGyxEROBJuSKR41vYyaDB6Mrb6RKEIq4gduOz5sZINop6sgp1+tKKvbny7QJjkaH
-	y4Y0KND7Yyn0yAz8XJzLIv7Q53EKeoijJ82BqDyvgxBqftbyjK/L+/jbBqb890wB+KEM7Ng00oE3R
-	ga4vN6qKMA3Iij1FMIIV9ttqCbwoAr1ejkHf7UtexOE/uAkNAj0NFaFHTSsZ2/TIvhfwvnAfPWFQt
-	jfaPShmWrgSvBfBtOaONIohd6pU+SLaN9HBZuHv01migequsItsqt19PbiorlwiGsKNi5DbkzXbVE
-	dvAjcY/JxDKq7Uue8ITg==;
+	List-Owner; bh=caxPSGws9Hpb54pOVWHeLzue/3r/b1Z1dQoRkzB3C7E=; b=J+/RpC2NqYOjhs
+	Mf1oSTlprQIl1pJb6Lc9UGyAJvIzPQfHZVzQhQm/ASD8OEoRCRsneKBMvKPIeS36rmhJqHsLKgrIZ
+	yV0W1dKyZGVo/bIZQxHjfKpgz+Ky0/8SkovgQxnWlcip/kFxPJFgsNvgTr+Pf7wLGNsd8RQtb0vuo
+	Bdc/B3PGq3QO8OUEQL/xkUw3ufjH8xxa5hcZ5Vw+2D3Ib9NDLh498xfv0to/K+r9bjGCIuOI9ksLa
+	WjDJEYLghNOCFvWtcYN4RTVhG274g0o/ViIvdbiBAzVqSWz7ks90YVf14KVDTuGZDLOCmBuSRN0n3
+	vup3zx9FyX2aXc8tBZ5g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rQ7Dh-00HHvr-1O;
-	Wed, 17 Jan 2024 14:48:45 +0000
-Received: from smtp-fw-9106.amazon.com ([207.171.188.206])
+	id 1rQ7Dk-00HHyU-1U;
+	Wed, 17 Jan 2024 14:48:48 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rQ7DT-00HHm0-1G;
-	Wed, 17 Jan 2024 14:48:34 +0000
+	id 1rQ7Dd-00HHsq-2r;
+	Wed, 17 Jan 2024 14:48:44 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+	:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=5KRHAMu9yU5dNg0w2SWnmdVf58WPdmNSqcv1epJi1fM=; b=gUeeXbL8LMnw0HK+HBVLdupDlu
+	Kw6a+6E99zd9fT5fIEseOfuQVyo5dcT7rc8BBbHyFfup/dl5qj1GiknnL2f+QMpjr5mn7n5L7WpVJ
+	rmMjHOh4MByoXef4Q91/K63c1IIWyPs/CBqRR3mr/b/Cjfa1J4GZ2YKAWyISnoZKgW8LHNXsxQ813
+	kb+WCiudm1feUSiREuRtQmQNbWUYdx1hWeoK/GzGGDWEKqI3YkFB083KduqEkL+h7MSts7i+GrqbI
+	Wa8s7gg7SJPXJ1vsCXTYyuAeA5X8NB8JxansjLQhtyymvtaISr/uoWHGKDPDZxDftTjLtte4BbEs0
+	ijUw9SRw==;
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25])
+	by desiato.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rQ7Da-00000000V8s-1vgs;
+	Wed, 17 Jan 2024 14:48:40 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1705502912; x=1737038912;
+  t=1705502918; x=1737038918;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=d6zY75UaUomPQ5EhDGeFWm39K87gMNJwzqvhZ/SkIvI=;
-  b=d6pico9CYjUTkMi7mPwvid9zpE0XzUdex0M1Gc9wtfetVk+hHK2LJGAL
-   PMQQ9gZH1t9KiPBDCC/JNQkfEPAHEnMIruaSmjz4uEMZnjrvOX2gpS/BW
-   PxPEKnX7eXZIWH4YTkC++If8NEIvuQUfhaiNesBkukQlf3OAFAvGInGvB
-   E=;
+  bh=5KRHAMu9yU5dNg0w2SWnmdVf58WPdmNSqcv1epJi1fM=;
+  b=nClp9L1GH7/c9iweYMjfYX5BCsolsJjDOJQ3SyPlpl8p9Cb9U/gIxolr
+   nTluzwBfwLJya6DeP0tsDR6ahFfQJ7zNUNSQtq3HuZM8eueCtyjmBjP29
+   eUbu3f9HClnpBLpLT0egmDVQTBVdRRAKnDTT0jhMYW/oFxd3tNYNE50YR
+   Q=;
 X-IronPort-AV: E=Sophos;i="6.05,200,1701129600"; 
-   d="scan'208";a="697788568"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-iad-1a-m6i4x-366646a6.us-east-1.amazon.com) ([10.25.36.210])
-  by smtp-border-fw-9106.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 14:48:22 +0000
+   d="scan'208";a="374981621"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-iad-1e-m6i4x-0aba4706.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-2101.iad2.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2024 14:48:34 +0000
 Received: from smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev (iad7-ws-svc-p70-lb3-vlan2.iad.amazon.com [10.32.235.34])
-	by email-inbound-relay-iad-1a-m6i4x-366646a6.us-east-1.amazon.com (Postfix) with ESMTPS id 37BC9A0A9E;
-	Wed, 17 Jan 2024 14:48:18 +0000 (UTC)
-Received: from EX19MTAUWA002.ant.amazon.com [10.0.21.151:26746]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.60.181:2525] with esmtp (Farcaster)
- id c922b8c6-218f-4e2e-bfa4-5cd050b28dc6; Wed, 17 Jan 2024 14:48:17 +0000 (UTC)
-X-Farcaster-Flow-ID: c922b8c6-218f-4e2e-bfa4-5cd050b28dc6
+	by email-inbound-relay-iad-1e-m6i4x-0aba4706.us-east-1.amazon.com (Postfix) with ESMTPS id D2FBCA25EE;
+	Wed, 17 Jan 2024 14:48:26 +0000 (UTC)
+Received: from EX19MTAUWC002.ant.amazon.com [10.0.7.35:54739]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.24.5:2525] with esmtp (Farcaster)
+ id 5dc96f43-86b0-43d4-b0c2-0f3115bf0b25; Wed, 17 Jan 2024 14:48:26 +0000 (UTC)
+X-Farcaster-Flow-ID: 5dc96f43-86b0-43d4-b0c2-0f3115bf0b25
 Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
+ EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 17 Jan 2024 14:48:17 +0000
+ 15.2.1118.40; Wed, 17 Jan 2024 14:48:25 +0000
 Received: from dev-dsk-graf-1a-5ce218e4.eu-west-1.amazon.com (10.253.83.51) by
  EX19D020UWC004.ant.amazon.com (10.13.138.149) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 17 Jan 2024 14:48:13 +0000
+ 15.2.1118.40; Wed, 17 Jan 2024 14:48:21 +0000
 From: Alexander Graf <graf@amazon.com>
 To: <linux-kernel@vger.kernel.org>
 CC: <linux-trace-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
@@ -71,9 +85,9 @@ CC: <linux-trace-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
 	Usama Arif <usama.arif@bytedance.com>, David Woodhouse <dwmw@amazon.co.uk>,
 	Benjamin Herrenschmidt <benh@kernel.crashing.org>, Rob Herring
 	<robh+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 06/17] kexec: Add config option for KHO
-Date: Wed, 17 Jan 2024 14:46:53 +0000
-Message-ID: <20240117144704.602-7-graf@amazon.com>
+Subject: [PATCH v3 08/17] arm64: Add KHO support
+Date: Wed, 17 Jan 2024 14:46:55 +0000
+Message-ID: <20240117144704.602-9-graf@amazon.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240117144704.602-1-graf@amazon.com>
 References: <20240117144704.602-1-graf@amazon.com>
@@ -82,8 +96,8 @@ X-Originating-IP: [10.253.83.51]
 X-ClientProxiedBy: EX19D040UWA004.ant.amazon.com (10.13.139.93) To
  EX19D020UWC004.ant.amazon.com (10.13.138.149)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240117_064831_489006_F8D076DC 
-X-CRM114-Status: GOOD (  14.71  )
+X-CRM114-CacheID: sfid-20240117_144838_847220_520BFA60 
+X-CRM114-Status: GOOD (  21.89  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,39 +114,212 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-We have all generic code in place now to support Kexec with KHO. This
-patch adds a config option that depends on architecture support to
-enable KHO support.
+We now have all bits in place to support KHO kexecs. This patch adds
+awareness of KHO in the kexec file as well as boot path for arm64 and
+adds the respective kconfig option to the architecture so that it can
+use KHO successfully.
 
 Signed-off-by: Alexander Graf <graf@amazon.com>
----
- kernel/Kconfig.kexec | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
 
-diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
-index 946dffa048b7..6fb5a6ae9697 100644
---- a/kernel/Kconfig.kexec
-+++ b/kernel/Kconfig.kexec
-@@ -93,6 +93,19 @@ config KEXEC_JUMP
- 	  Jump between original kernel and kexeced kernel and invoke
- 	  code in physical address mode via KEXEC
+---
+
+v1 -> v2:
+
+  - test bot warning fix
+  - Change kconfig option to ARCH_SUPPORTS_KEXEC_KHO
+  - s/kho_reserve_mem/kho_reserve_previous_mem/g
+  - s/kho_reserve/kho_reserve_scratch/g
+  - Remove / reduce ifdefs for kho fdt code
+---
+ arch/arm64/Kconfig        |  3 +++
+ arch/arm64/kernel/setup.c |  2 ++
+ arch/arm64/mm/init.c      |  8 ++++++
+ drivers/of/fdt.c          | 39 ++++++++++++++++++++++++++++
+ drivers/of/kexec.c        | 54 +++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 106 insertions(+)
+
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 8f6cf1221b6a..44d8923d9db4 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -1496,6 +1496,9 @@ config ARCH_SUPPORTS_KEXEC_IMAGE_VERIFY_SIG
+ config ARCH_DEFAULT_KEXEC_IMAGE_VERIFY_SIG
+ 	def_bool y
  
-+config KEXEC_KHO
-+	bool "kexec handover"
-+	depends on ARCH_SUPPORTS_KEXEC_KHO
-+	depends on KEXEC
-+	select MEMBLOCK_SCRATCH
-+	select LIBFDT
-+	select CMA
-+	help
-+	  Allow kexec to hand over state across kernels by generating and
-+	  passing additional metadata to the target kernel. This is useful
-+	  to keep data or state alive across the kexec. For this to work,
-+	  both source and target kernels need to have this option enabled.
++config ARCH_SUPPORTS_KEXEC_KHO
++	def_bool y
 +
- config CRASH_DUMP
- 	bool "kernel crash dumps"
- 	depends on ARCH_SUPPORTS_CRASH_DUMP
+ config ARCH_SUPPORTS_CRASH_DUMP
+ 	def_bool y
+ 
+diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+index 417a8a86b2db..9aa05b84d202 100644
+--- a/arch/arm64/kernel/setup.c
++++ b/arch/arm64/kernel/setup.c
+@@ -346,6 +346,8 @@ void __init __no_sanitize_address setup_arch(char **cmdline_p)
+ 
+ 	paging_init();
+ 
++	kho_reserve_previous_mem();
++
+ 	acpi_table_upgrade();
+ 
+ 	/* Parse the ACPI tables for possible boot-time configuration */
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 74c1db8ce271..1a8fc91509af 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -358,6 +358,8 @@ void __init bootmem_init(void)
+ 	 */
+ 	arch_reserve_crashkernel();
+ 
++	kho_reserve_scratch();
++
+ 	memblock_dump_all();
+ }
+ 
+@@ -386,6 +388,12 @@ void __init mem_init(void)
+ 	/* this will put all unused low memory onto the freelists */
+ 	memblock_free_all();
+ 
++	/*
++	 * Now that all KHO pages are marked as reserved, let's flip them back
++	 * to normal pages with accurate refcount.
++	 */
++	kho_populate_refcount();
++
+ 	/*
+ 	 * Check boundaries twice: Some fundamental inconsistencies can be
+ 	 * detected at build time already.
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index bf502ba8da95..f9b9a36fb722 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -1006,6 +1006,42 @@ void __init early_init_dt_check_for_usable_mem_range(void)
+ 		memblock_add(rgn[i].base, rgn[i].size);
+ }
+ 
++/**
++ * early_init_dt_check_kho - Decode info required for kexec handover from DT
++ */
++static void __init early_init_dt_check_kho(void)
++{
++	unsigned long node = chosen_node_offset;
++	u64 kho_start, scratch_start, scratch_size, mem_start, mem_size;
++	const __be32 *p;
++	int l;
++
++	if (!IS_ENABLED(CONFIG_KEXEC_KHO) || (long)node < 0)
++		return;
++
++	p = of_get_flat_dt_prop(node, "linux,kho-dt", &l);
++	if (l != (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32))
++		return;
++
++	kho_start = dt_mem_next_cell(dt_root_addr_cells, &p);
++
++	p = of_get_flat_dt_prop(node, "linux,kho-scratch", &l);
++	if (l != (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32))
++		return;
++
++	scratch_start = dt_mem_next_cell(dt_root_addr_cells, &p);
++	scratch_size = dt_mem_next_cell(dt_root_addr_cells, &p);
++
++	p = of_get_flat_dt_prop(node, "linux,kho-mem", &l);
++	if (l != (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32))
++		return;
++
++	mem_start = dt_mem_next_cell(dt_root_addr_cells, &p);
++	mem_size = dt_mem_next_cell(dt_root_addr_cells, &p);
++
++	kho_populate(kho_start, scratch_start, scratch_size, mem_start, mem_size);
++}
++
+ #ifdef CONFIG_SERIAL_EARLYCON
+ 
+ int __init early_init_dt_scan_chosen_stdout(void)
+@@ -1304,6 +1340,9 @@ void __init early_init_dt_scan_nodes(void)
+ 
+ 	/* Handle linux,usable-memory-range property */
+ 	early_init_dt_check_for_usable_mem_range();
++
++	/* Handle kexec handover */
++	early_init_dt_check_kho();
+ }
+ 
+ bool __init early_init_dt_scan(void *params)
+diff --git a/drivers/of/kexec.c b/drivers/of/kexec.c
+index 68278340cecf..59070b09ad45 100644
+--- a/drivers/of/kexec.c
++++ b/drivers/of/kexec.c
+@@ -264,6 +264,55 @@ static inline int setup_ima_buffer(const struct kimage *image, void *fdt,
+ }
+ #endif /* CONFIG_IMA_KEXEC */
+ 
++static int kho_add_chosen(const struct kimage *image, void *fdt, int chosen_node)
++{
++	void *dt = NULL;
++	phys_addr_t dt_mem = 0;
++	phys_addr_t dt_len = 0;
++	phys_addr_t scratch_mem = 0;
++	phys_addr_t scratch_len = 0;
++	void *mem_cache = NULL;
++	phys_addr_t mem_cache_mem = 0;
++	phys_addr_t mem_cache_len = 0;
++	int ret = 0;
++
++#ifdef CONFIG_KEXEC_KHO
++	dt = image->kho.dt.buffer;
++	dt_mem = image->kho.dt.mem;
++	dt_len = image->kho.dt.bufsz;
++
++	scratch_mem = kho_scratch_phys;
++	scratch_len = kho_scratch_len;
++
++	mem_cache = image->kho.mem_cache.buffer;
++	mem_cache_mem = image->kho.mem_cache.mem;
++	mem_cache_len = image->kho.mem_cache.bufsz;
++#endif
++
++	if (!dt || !mem_cache)
++		goto out;
++
++	pr_debug("Adding kho metadata to DT");
++
++	ret = fdt_appendprop_addrrange(fdt, 0, chosen_node, "linux,kho-dt",
++				       dt_mem, dt_len);
++	if (ret)
++		goto out;
++
++	ret = fdt_appendprop_addrrange(fdt, 0, chosen_node, "linux,kho-scratch",
++				       scratch_mem, scratch_len);
++	if (ret)
++		goto out;
++
++	ret = fdt_appendprop_addrrange(fdt, 0, chosen_node, "linux,kho-mem",
++				       mem_cache_mem, mem_cache_len);
++	if (ret)
++		goto out;
++
++out:
++	return ret;
++}
++
+ /*
+  * of_kexec_alloc_and_setup_fdt - Alloc and setup a new Flattened Device Tree
+  *
+@@ -412,6 +461,11 @@ void *of_kexec_alloc_and_setup_fdt(const struct kimage *image,
+ 		}
+ 	}
+ 
++	/* Add kho metadata if this is a KHO image */
++	ret = kho_add_chosen(image, fdt, chosen_node);
++	if (ret)
++		goto out;
++
+ 	/* add bootargs */
+ 	if (cmdline) {
+ 		ret = fdt_setprop_string(fdt, chosen_node, "bootargs", cmdline);
 -- 
 2.40.1
 
