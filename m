@@ -4,78 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 92A50C4725D
-	for <kexec@archiver.kernel.org>; Fri, 19 Jan 2024 14:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3829EC47DAF
+	for <kexec@archiver.kernel.org>; Fri, 19 Jan 2024 14:55:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=m/X0tYI04icLsaYIeAELHQy4WlvOOSipLe8hWJBViyU=; b=owAvGhjYmZEMzQ
-	nQM24eWNW7ZpNw6Dr8BwXdbuMNvuBVPB72k3/wc78p9cEeMxz3rAAGl8i7Sj4B961v9Q2P0LKLIa2
-	a0UpYdpGe7winssdxw5+Wd6FLEscAL+3cjzyHO6qNFeZPTxJyMZhKhPEjJVLNe75a62BCpPCwv9bX
-	5MSsldAdGJixveTPB5axtnezpilJE8Pv8DjrNtbgAs26nHFrRIG/CgTf30FMGhzXYZnKHIsRkwXJT
-	FNHwI4A/XrUbL0LtAqZ89wSKixVqGUU1cGNNlgGTwpkqCS5h336S2LUim2DNiF/wzTCCPS2EpH8Mq
-	2a/5Nr9LR8GnmY5KK47A==;
+	List-Owner; bh=/NsnjEiIeFc43yhCbHoDYe/br59fR2vHXJDsOuuNrtw=; b=CypqkhoITQNMMC
+	9TLoJ1z/rULeDvQ3Qh2QpYmjiabKtEPzBKOy9NFSqPOM5nTqiH2OwX57uYoOqlin2Y/ceOdOAvbxw
+	WcLCZBHu3pIJkTEFgx0/mfTekPfxSAXrQ2EVpvi8VSR299JtSSpYYtiWZs7o9eRuUYspGEroqb4um
+	L5w0mYweZ5e4i23IFSIw+4dRrLOEL7E6PcKqkdlGLxMkXmklfNhhhNTB3EJqMb38FgH6NM5aGs75L
+	NsbnHfqtse5ZCf+NnYld83o2BRIH3goKHbh20DgGMs23sDYDYko+OCfIAKggvWt+CNkVJ0m4Vkgo+
+	xpaqnxfyrb1Vl3yKcVHA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rQqGt-005ugD-33;
-	Fri, 19 Jan 2024 14:55:03 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rQqGk-005uWA-0C
-	for kexec@bombadil.infradead.org;
-	Fri, 19 Jan 2024 14:54:54 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-type
-	:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=jDvYJxBJvZegSwo4Kk9zAYMdDY4WlX7FhACBVJ8AwnU=; b=CzEBAOFW13qp4KHc8tiUTZOfgP
-	X9NmIUmw1EOvaCs1dA/WyqGCotIqcpCwt8VcFnARDJTkKmlfORMWjBp1jiaKIldEntJIWV8hPNZIe
-	h9mD5b9fK9WklDVwjBlSxsoAlRa0bn9brTBbqBxn3z6CIURtVhoNxmIoIHkExcCo9cueLCpRAYIwE
-	YHQDiefQLf6DUJ/fEzUmlPDnzQW1EQU6jl/6Esgi5k/DnIr1MyzvFjyHC0CCQfBbKPu6nD4bRZQ+Z
-	ChTXtGVZC4/CdjpGBGMIafew3Fx1P1AzDUp551fivZsvNH3isHjPX/LVhveBaWIpmogBfPBWVZaeC
-	SKNwNtfg==;
+	id 1rQqH9-005uvK-26;
+	Fri, 19 Jan 2024 14:55:19 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
-	by desiato.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rQqGa-00000001cUk-3eAW
+	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
+	id 1rQqGy-005ujF-0k
 	for kexec@lists.infradead.org;
-	Fri, 19 Jan 2024 14:54:52 +0000
+	Fri, 19 Jan 2024 14:55:14 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705676083;
+	s=mimecast20190719; t=1705676106;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=jDvYJxBJvZegSwo4Kk9zAYMdDY4WlX7FhACBVJ8AwnU=;
-	b=ORzIrdUDBWYLF9AqgtgaMPMQ9Yhp3mVzOU1mE7ijFBU4mEE6PX5aOme9tVYAg5Siolf+DC
-	lOttDUw+hps91o/Bqvzr0KQDw3kBflN2GN/O2/0KbeEmIBUzTfg1NjtKnpIFeQxGHJjTbU
-	2XML8XKPwkIvPhJDfCnfmlPNsYUcK04=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705676083;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jDvYJxBJvZegSwo4Kk9zAYMdDY4WlX7FhACBVJ8AwnU=;
-	b=ORzIrdUDBWYLF9AqgtgaMPMQ9Yhp3mVzOU1mE7ijFBU4mEE6PX5aOme9tVYAg5Siolf+DC
-	lOttDUw+hps91o/Bqvzr0KQDw3kBflN2GN/O2/0KbeEmIBUzTfg1NjtKnpIFeQxGHJjTbU
-	2XML8XKPwkIvPhJDfCnfmlPNsYUcK04=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-648-osoDulHkOveZzpDk9NGWvg-1; Fri, 19 Jan 2024 09:54:38 -0500
-X-MC-Unique: osoDulHkOveZzpDk9NGWvg-1
+	bh=mXutH6nMiiYvXWsHK3Zzjdb+v7CRXJKap85iSD6yYuk=;
+	b=hA4R7Ik9uVbYSLrxm88n7drW9s+LaVUAC9VhqzKBelo2DOXHqhpSTQb/d1DbbTECSlXnWa
+	Z6G4uYVUpFko19CVYF+ibeW14Rs0pnoGrzlDHFW1StJyd/8ltVwENTXRQ1k3QxDMplQeO0
+	tNrc5Pax0IS8pOlwRojMkEsv3Gin6Ho=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-158-srDGVP4bO42I1nCXCEQh-w-1; Fri,
+ 19 Jan 2024 09:53:40 -0500
+X-MC-Unique: srDGVP4bO42I1nCXCEQh-w-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 12C54868A02;
-	Fri, 19 Jan 2024 14:54:37 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E88D729AA385;
+	Fri, 19 Jan 2024 14:53:39 +0000 (UTC)
 Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.116.4])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id DBA8251D5;
-	Fri, 19 Jan 2024 14:54:30 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 4F8A05012;
+	Fri, 19 Jan 2024 14:53:33 +0000 (UTC)
 From: Baoquan He <bhe@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: kexec@lists.infradead.org,
@@ -93,17 +68,16 @@ Cc: kexec@lists.infradead.org,
 	piliu@redhat.com,
 	viro@zeniv.linux.org.uk,
 	Baoquan He <bhe@redhat.com>
-Subject: [PATCH v2 14/14] loongarch, crash: wrap crash dumping code into crash related ifdefs
-Date: Fri, 19 Jan 2024 22:52:41 +0800
-Message-ID: <20240119145241.769622-15-bhe@redhat.com>
+Subject: [PATCH v2 06/14] x86, crash: wrap crash dumping code into crash related ifdefs
+Date: Fri, 19 Jan 2024 22:52:33 +0800
+Message-ID: <20240119145241.769622-7-bhe@redhat.com>
 In-Reply-To: <20240119145241.769622-1-bhe@redhat.com>
 References: <20240119145241.769622-1-bhe@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240119_145446_428310_D149C64B 
-X-CRM114-Status: UNSURE (   9.49  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20240119_065508_513761_6B5399AB 
+X-CRM114-Status: GOOD (  17.10  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -122,53 +96,217 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 Now crash codes under kernel/ folder has been split out from kexec
 code, crash dumping can be separated from kexec reboot in config
-items on loongarch with some adjustments.
+items on x86 with some adjustments.
 
-Here wrap up crash dumping codes with CONFIG_CRASH_DUMP ifdeffery, and
-use IS_ENABLED(CONFIG_CRASH_RESERVE) check to decide if compiling
-in the crashkernel reservation code.
+Here, also change some ifdefs or IS_ENABLED() check to more appropriate
+ones, e,g
+ - #ifdef CONFIG_KEXEC_CORE -> #ifdef CONFIG_CRASH_DUMP
+ - (!IS_ENABLED(CONFIG_KEXEC_CORE)) - > (!IS_ENABLED(CONFIG_CRASH_RESERVE))
 
 Signed-off-by: Baoquan He <bhe@redhat.com>
 ---
- arch/loongarch/kernel/setup.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/x86/kernel/Makefile           | 4 ++--
+ arch/x86/kernel/cpu/mshyperv.c     | 4 ++++
+ arch/x86/kernel/kexec-bzimage64.c  | 4 ++++
+ arch/x86/kernel/kvm.c              | 4 ++--
+ arch/x86/kernel/machine_kexec_64.c | 3 +++
+ arch/x86/kernel/reboot.c           | 2 +-
+ arch/x86/kernel/setup.c            | 2 +-
+ arch/x86/kernel/smp.c              | 2 +-
+ arch/x86/xen/enlighten_hvm.c       | 4 ++++
+ 9 files changed, 22 insertions(+), 7 deletions(-)
 
-diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-index d183a745fb85..61f88dd97947 100644
---- a/arch/loongarch/kernel/setup.c
-+++ b/arch/loongarch/kernel/setup.c
-@@ -258,11 +258,13 @@ static void __init arch_reserve_vmcore(void)
- 
- static void __init arch_parse_crashkernel(void)
- {
--#ifdef CONFIG_KEXEC
- 	int ret;
- 	unsigned long long total_mem;
- 	unsigned long long crash_base, crash_size;
- 
-+	if (!IS_ENABLED(CONFIG_CRASH_RESERVE))
-+		return;
-+
- 	total_mem = memblock_phys_mem_size();
- 	ret = parse_crashkernel(boot_command_line, total_mem,
- 				&crash_size, &crash_base,
-@@ -283,7 +285,6 @@ static void __init arch_parse_crashkernel(void)
- 
- 	crashk_res.start = crash_base;
- 	crashk_res.end	 = crash_base + crash_size - 1;
--#endif
+diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+index 913d4022131e..3668b1edef2d 100644
+--- a/arch/x86/kernel/Makefile
++++ b/arch/x86/kernel/Makefile
+@@ -100,9 +100,9 @@ obj-$(CONFIG_TRACING)		+= trace.o
+ obj-$(CONFIG_RETHOOK)		+= rethook.o
+ obj-$(CONFIG_VMCORE_INFO)	+= vmcore_info_$(BITS).o
+ obj-$(CONFIG_KEXEC_CORE)	+= machine_kexec_$(BITS).o
+-obj-$(CONFIG_KEXEC_CORE)	+= relocate_kernel_$(BITS).o crash.o
++obj-$(CONFIG_KEXEC_CORE)	+= relocate_kernel_$(BITS).o
+ obj-$(CONFIG_KEXEC_FILE)	+= kexec-bzimage64.o
+-obj-$(CONFIG_CRASH_DUMP)	+= crash_dump_$(BITS).o
++obj-$(CONFIG_CRASH_DUMP)	+= crash_dump_$(BITS).o crash.o
+ obj-y				+= kprobes/
+ obj-$(CONFIG_MODULES)		+= module.o
+ obj-$(CONFIG_X86_32)		+= doublefault_32.o
+diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+index 01fa06dd06b6..f8163a59026b 100644
+--- a/arch/x86/kernel/cpu/mshyperv.c
++++ b/arch/x86/kernel/cpu/mshyperv.c
+@@ -210,6 +210,7 @@ static void hv_machine_shutdown(void)
+ 		hyperv_cleanup();
  }
  
- static void __init fdt_setup(void)
-@@ -468,7 +469,7 @@ static void __init resource_init(void)
- 		request_resource(res, &bss_resource);
++#ifdef CONFIG_CRASH_DUMP
+ static void hv_machine_crash_shutdown(struct pt_regs *regs)
+ {
+ 	if (hv_crash_handler)
+@@ -221,6 +222,7 @@ static void hv_machine_crash_shutdown(struct pt_regs *regs)
+ 	/* Disable the hypercall page when there is only 1 active CPU. */
+ 	hyperv_cleanup();
+ }
++#endif
+ #endif /* CONFIG_KEXEC_CORE */
+ #endif /* CONFIG_HYPERV */
+ 
+@@ -497,7 +499,9 @@ static void __init ms_hyperv_init_platform(void)
+ 
+ #if IS_ENABLED(CONFIG_HYPERV) && defined(CONFIG_KEXEC_CORE)
+ 	machine_ops.shutdown = hv_machine_shutdown;
++#ifdef CONFIG_CRASH_DUMP
+ 	machine_ops.crash_shutdown = hv_machine_crash_shutdown;
++#endif
+ #endif
+ 	if (ms_hyperv.features & HV_ACCESS_TSC_INVARIANT) {
+ 		/*
+diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+index 2a422e00ed4b..b55737b83a84 100644
+--- a/arch/x86/kernel/kexec-bzimage64.c
++++ b/arch/x86/kernel/kexec-bzimage64.c
+@@ -263,11 +263,13 @@ setup_boot_parameters(struct kimage *image, struct boot_params *params,
+ 	memset(&params->hd0_info, 0, sizeof(params->hd0_info));
+ 	memset(&params->hd1_info, 0, sizeof(params->hd1_info));
+ 
++#ifdef CONFIG_CRASH_DUMP
+ 	if (image->type == KEXEC_TYPE_CRASH) {
+ 		ret = crash_setup_memmap_entries(image, params);
+ 		if (ret)
+ 			return ret;
+ 	} else
++#endif
+ 		setup_e820_entries(params);
+ 
+ 	nr_e820_entries = params->e820_entries;
+@@ -433,12 +435,14 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+ 		return ERR_PTR(-EINVAL);
  	}
  
--#ifdef CONFIG_KEXEC
-+#ifdef CONFIG_CRASH_RESERVE
- 	if (crashk_res.start < crashk_res.end) {
- 		insert_resource(&iomem_resource, &crashk_res);
- 		pr_info("Reserving %ldMB of memory at %ldMB for crashkernel\n",
++#ifdef CONFIG_CRASH_DUMP
+ 	/* Allocate and load backup region */
+ 	if (image->type == KEXEC_TYPE_CRASH) {
+ 		ret = crash_load_segments(image);
+ 		if (ret)
+ 			return ERR_PTR(ret);
+ 	}
++#endif
+ 
+ 	/*
+ 	 * Load purgatory. For 64bit entry point, purgatory  code can be
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index dfe9945b9bec..acfc2d3183bc 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -769,7 +769,7 @@ static struct notifier_block kvm_pv_reboot_nb = {
+  * won't be valid. In cases like kexec, in which you install a new kernel, this
+  * means a random memory location will be kept being written.
+  */
+-#ifdef CONFIG_KEXEC_CORE
++#ifdef CONFIG_CRASH_DUMP
+ static void kvm_crash_shutdown(struct pt_regs *regs)
+ {
+ 	kvm_guest_cpu_offline(true);
+@@ -852,7 +852,7 @@ static void __init kvm_guest_init(void)
+ 	kvm_guest_cpu_init();
+ #endif
+ 
+-#ifdef CONFIG_KEXEC_CORE
++#ifdef CONFIG_CRASH_DUMP
+ 	machine_ops.crash_shutdown = kvm_crash_shutdown;
+ #endif
+ 
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index bc0a5348b4a6..b180d8e497c3 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -508,6 +508,8 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
+ }
+ #endif /* CONFIG_KEXEC_FILE */
+ 
++#ifdef CONFIG_CRASH_DUMP
++
+ static int
+ kexec_mark_range(unsigned long start, unsigned long end, bool protect)
+ {
+@@ -552,6 +554,7 @@ void arch_kexec_unprotect_crashkres(void)
+ {
+ 	kexec_mark_crashkres(false);
+ }
++#endif
+ 
+ /*
+  * During a traditional boot under SME, SME will encrypt the kernel,
+diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+index 830425e6d38e..1287b0d5962f 100644
+--- a/arch/x86/kernel/reboot.c
++++ b/arch/x86/kernel/reboot.c
+@@ -796,7 +796,7 @@ struct machine_ops machine_ops __ro_after_init = {
+ 	.emergency_restart = native_machine_emergency_restart,
+ 	.restart = native_machine_restart,
+ 	.halt = native_machine_halt,
+-#ifdef CONFIG_KEXEC_CORE
++#ifdef CONFIG_CRASH_DUMP
+ 	.crash_shutdown = native_machine_crash_shutdown,
+ #endif
+ };
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 84201071dfac..899d839a2954 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -471,7 +471,7 @@ static void __init arch_reserve_crashkernel(void)
+ 	bool high = false;
+ 	int ret;
+ 
+-	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
++	if (!IS_ENABLED(CONFIG_CRASH_RESERVE))
+ 		return;
+ 
+ 	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
+diff --git a/arch/x86/kernel/smp.c b/arch/x86/kernel/smp.c
+index 96a771f9f930..52c3823b7211 100644
+--- a/arch/x86/kernel/smp.c
++++ b/arch/x86/kernel/smp.c
+@@ -282,7 +282,7 @@ struct smp_ops smp_ops = {
+ 	.smp_cpus_done		= native_smp_cpus_done,
+ 
+ 	.stop_other_cpus	= native_stop_other_cpus,
+-#if defined(CONFIG_KEXEC_CORE)
++#if defined(CONFIG_CRASH_DUMP)
+ 	.crash_stop_other_cpus	= kdump_nmi_shootdown_cpus,
+ #endif
+ 	.smp_send_reschedule	= native_smp_send_reschedule,
+diff --git a/arch/x86/xen/enlighten_hvm.c b/arch/x86/xen/enlighten_hvm.c
+index 3f8c34707c50..09e3db7ff990 100644
+--- a/arch/x86/xen/enlighten_hvm.c
++++ b/arch/x86/xen/enlighten_hvm.c
+@@ -149,12 +149,14 @@ static void xen_hvm_shutdown(void)
+ 		xen_reboot(SHUTDOWN_soft_reset);
+ }
+ 
++#ifdef CONFIG_CRASH_DUMP
+ static void xen_hvm_crash_shutdown(struct pt_regs *regs)
+ {
+ 	native_machine_crash_shutdown(regs);
+ 	xen_reboot(SHUTDOWN_soft_reset);
+ }
+ #endif
++#endif
+ 
+ static int xen_cpu_up_prepare_hvm(unsigned int cpu)
+ {
+@@ -236,8 +238,10 @@ static void __init xen_hvm_guest_init(void)
+ 
+ #ifdef CONFIG_KEXEC_CORE
+ 	machine_ops.shutdown = xen_hvm_shutdown;
++#ifdef CONFIG_CRASH_DUMP
+ 	machine_ops.crash_shutdown = xen_hvm_crash_shutdown;
+ #endif
++#endif
+ }
+ 
+ static __init int xen_parse_nopv(char *arg)
 -- 
 2.41.0
 
