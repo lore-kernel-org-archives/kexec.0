@@ -4,91 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 25EEDC4707B
-	for <kexec@archiver.kernel.org>; Thu, 18 Jan 2024 15:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B1322C4725D
+	for <kexec@archiver.kernel.org>; Fri, 19 Jan 2024 14:53:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=/7x5LoC+lP8aDBfjNRqMZvNGk5ii6K6vQ/O5QROHwzg=; b=hURreLD0axrsCD
-	bv648N2qXIaavXzf/zAhJCs9Uv+o37abr9wGEviijgpQD4YMd2//8GQ2NIrD9japg+e/T9mk/mqI8
-	xaRArlgWeZ9rL5YMGUKin70avumScMnHOBKa5kGuq7+pfh//M2t84s42p+4JyoNRytMJzmO3dCQAZ
-	GWXnsMtFDBoFabNZCD5Y7dN0K2T6A/UmponemftKKkCP8I/hMmtkqvOblrb92you/KjR5zDTI7Oji
-	gJ5P5llS1DyEQLtpg4keu1xVaMbWBVbZVIEz1/iR/kUkjdR/TwK5jLju2q5Gj8Luc6y8be/1k1/Fn
-	6q8O8vwBlv3sefiY34dw==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=hjSaR6uqg7IsopsmNAMlsGVUC42OQgTG+9Z2q+BUddE=; b=SoUJFo3IxQ9cOo
+	82oDL795uZezRzMRfPy6G0/EyHgZkSy3XpYNCZNXH1o3lg8V/FpR6LKrNThcalOwHRom5qk/pAJGb
+	CFEkVYmAtnN/pyLDfjlUEjqgvg76JRhRUT2d9w1uIJTFbb/n0mMgVRL8Cr+eRRrb9IKKHSQQqlMar
+	48Mu5hHMWDxAN0hYUk6ldHUxYBDFBrQ0YaRqyTbPM25JLoe42y6BC9JC1JSzEdvw3HV9wkPnM9UMD
+	vou5IM7zlwjsU+4ehheh/vijZyoZvZ/qtZXFDA/gREj82COpYdva5H1NAODVyh0QCELnRatglVb4+
+	wKVJ+qd/KxRsCY2i651g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rQU98-0034Bt-0k;
-	Thu, 18 Jan 2024 15:17:34 +0000
-Received: from mgamail.intel.com ([134.134.136.100])
+	id 1rQqF1-005tFl-2T;
+	Fri, 19 Jan 2024 14:53:07 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rQU93-00349s-0M;
-	Thu, 18 Jan 2024 15:17:30 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705591049; x=1737127049;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+kFrRhjHpv40nvSzG/vyhe0ms38QkgFWWNV2IL9QDBA=;
-  b=hb+bApsU7OftD90cqpsJZF2UNQTy53rMGGPzd0Rjx0c2C7c4GRxaufOY
-   nVFJw0lhJSP3U0p99r9muSDFSBFnF0RA8hKKCxH6Paqo4mddcgqpprnBq
-   wawDuAjSA5etnDj7we/fj/obtzKM7/doVd07E/jY61IckV1Vdn8vvJ21l
-   JZs/PxBEpfk4jayI8rbUdiWicGagZLUS3SW8s3/awF2h9Op0YRhuxkqLu
-   H62NiGZIGjONrTjgKL0jU0toz2vtJJqi1d5XWaq351m5GVUtTU9KvUW+g
-   hpXsjlx2HBaqY2DDpyLx8medeWvZtAGQBvnCyJnvALawYISuj2Yq/NTtk
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="466852648"
-X-IronPort-AV: E=Sophos;i="6.05,203,1701158400"; 
-   d="scan'208";a="466852648"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2024 07:17:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="784826988"
-X-IronPort-AV: E=Sophos;i="6.05,203,1701158400"; 
-   d="scan'208";a="784826988"
-Received: from lkp-server01.sh.intel.com (HELO 961aaaa5b03c) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 18 Jan 2024 07:17:20 -0800
-Received: from kbuild by 961aaaa5b03c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rQU8r-000356-1C;
-	Thu, 18 Jan 2024 15:17:17 +0000
-Date: Thu, 18 Jan 2024 23:16:17 +0800
-From: kernel test robot <lkp@intel.com>
-To: Alexander Graf <graf@amazon.com>, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-trace-kernel@vger.kernel.org,
-	linux-mm@kvack.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org,
-	linux-doc@vger.kernel.org, x86@kernel.org,
-	Eric Biederman <ebiederm@xmission.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Ashish Kalra <ashish.kalra@amd.com>,
-	James Gowans <jgowans@amazon.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	arnd@arndb.de, pbonzini@redhat.com, madvenka@linux.microsoft.com,
-	Anthony Yznaga <anthony.yznaga@oracle.com>,
-	Usama Arif <usama.arif@bytedance.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v3 13/17] tracing: Recover trace buffers from kexec
- handover
-Message-ID: <202401182318.vEGddOt1-lkp@intel.com>
-References: <20240117144704.602-14-graf@amazon.com>
+	id 1rQqEw-005tCw-2I
+	for kexec@lists.infradead.org;
+	Fri, 19 Jan 2024 14:53:05 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1705675977;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=a7b5wka3jZpJDrQA4DTDzEctwPm/eZO0QdaDBfGD0Sk=;
+	b=ge88FbvpbKwuxXPX7aegNouVPnGzDM+33csKcWsGUAVObVDbYeddYw5LVRRuWFrRfckeiE
+	B/1M83TKwAmpo12iplP3a6gvNrlkV4kulYJFTmLSPECwJbhSBLkOllMVTWbJ5d1dZXU4cm
+	6uo9IA37H2Kzr5LrKT3o9tEg/IRr9yY=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-553-y_u4cXE2P_WuQzhDc2Y6SA-1; Fri,
+ 19 Jan 2024 09:52:53 -0500
+X-MC-Unique: y_u4cXE2P_WuQzhDc2Y6SA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CF48C3C2A1DC;
+	Fri, 19 Jan 2024 14:52:52 +0000 (UTC)
+Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.116.4])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 528F451D5;
+	Fri, 19 Jan 2024 14:52:44 +0000 (UTC)
+From: Baoquan He <bhe@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: kexec@lists.infradead.org,
+	x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	akpm@linux-foundation.org,
+	ebiederm@xmission.com,
+	hbathini@linux.ibm.com,
+	piliu@redhat.com,
+	viro@zeniv.linux.org.uk,
+	Baoquan He <bhe@redhat.com>
+Subject: [PATCH v2 00/14] Split crash out from kexec and clean up related config items
+Date: Fri, 19 Jan 2024 22:52:27 +0800
+Message-ID: <20240119145241.769622-1-bhe@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20240117144704.602-14-graf@amazon.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240118_071729_191547_2178697B 
-X-CRM114-Status: GOOD (  18.35  )
+X-CRM114-CacheID: sfid-20240119_065302_991453_C91FE1F6 
+X-CRM114-Status: GOOD (  14.02  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -105,120 +91,243 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Alexander,
+Motivation:
+=============
+Previously, LKP reported a building error. When investigating, it can't
+be resolved reasonablly with the present messy kdump config items.
 
-kernel test robot noticed the following build warnings:
+ https://lore.kernel.org/oe-kbuild-all/202312182200.Ka7MzifQ-lkp@intel.com/
 
-[auto build test WARNING on linus/master]
-[cannot apply to tip/x86/core arm64/for-next/core akpm-mm/mm-everything v6.7 next-20240118]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+The kdump (crash dumping) related config items could causes confusions:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Alexander-Graf/mm-memblock-Add-support-for-scratch-memory/20240117-225136
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20240117144704.602-14-graf%40amazon.com
-patch subject: [PATCH v3 13/17] tracing: Recover trace buffers from kexec handover
-config: i386-randconfig-061-20240118 (https://download.01.org/0day-ci/archive/20240118/202401182318.vEGddOt1-lkp@intel.com/config)
-compiler: ClangBuiltLinux clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240118/202401182318.vEGddOt1-lkp@intel.com/reproduce)
+Firstly,
+---
+CRASH_CORE enables codes including
+ - crashkernel reservation;
+ - elfcorehdr updating;
+ - vmcoreinfo exporting;
+ - crash hotplug handling;
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401182318.vEGddOt1-lkp@intel.com/
+Now fadump of powerpc, kcore dynamic debugging and kdump all selects
+CRASH_CORE, while fadump
+ - fadump needs crashkernel parsing, vmcoreinfo exporting, and accessing
+   global variable 'elfcorehdr_addr';
+ - kcore only needs vmcoreinfo exporting;
+ - kdump needs all of the current kernel/crash_core.c.
 
-sparse warnings: (new ones prefixed by >>)
-   kernel/trace/ring_buffer.c:1105:32: sparse: sparse: incorrect type in return expression (different base types) @@     expected restricted __poll_t @@     got int @@
-   kernel/trace/ring_buffer.c:1105:32: sparse:     expected restricted __poll_t
-   kernel/trace/ring_buffer.c:1105:32: sparse:     got int
-   kernel/trace/ring_buffer.c:4955:9: sparse: sparse: context imbalance in 'ring_buffer_peek' - different lock contexts for basic block
-   kernel/trace/ring_buffer.c:5041:9: sparse: sparse: context imbalance in 'ring_buffer_consume' - different lock contexts for basic block
-   kernel/trace/ring_buffer.c:5421:17: sparse: sparse: context imbalance in 'ring_buffer_empty' - different lock contexts for basic block
-   kernel/trace/ring_buffer.c:5451:9: sparse: sparse: context imbalance in 'ring_buffer_empty_cpu' - different lock contexts for basic block
->> kernel/trace/ring_buffer.c:5937:82: sparse: sparse: non size-preserving integer to pointer cast
-   kernel/trace/ring_buffer.c:5939:84: sparse: sparse: non size-preserving integer to pointer cast
+So only enabling PROC_CORE or FA_DUMP will enable CRASH_CORE, this
+mislead people that we enable crash dumping, actual it's not.
 
-vim +5937 kernel/trace/ring_buffer.c
+Secondly,
+---
+It's not reasonable to allow KEXEC_CORE select CRASH_CORE.
 
-  5896	
-  5897	static int rb_kho_replace_buffers(struct ring_buffer_per_cpu *cpu_buffer,
-  5898					     struct rb_kho_cpu *kho)
-  5899	{
-  5900		bool first_loop = true;
-  5901		struct list_head *tmp;
-  5902		int err = 0;
-  5903		int i = 0;
-  5904	
-  5905		if (!IS_ENABLED(CONFIG_FTRACE_KHO))
-  5906			return -EINVAL;
-  5907	
-  5908		if (kho->nr_mems != cpu_buffer->nr_pages * 2)
-  5909			return -EINVAL;
-  5910	
-  5911		for (tmp = rb_list_head(cpu_buffer->pages);
-  5912		     tmp != rb_list_head(cpu_buffer->pages) || first_loop;
-  5913		     tmp = rb_list_head(tmp->next), first_loop = false) {
-  5914			struct buffer_page *bpage = (struct buffer_page *)tmp;
-  5915			const struct kho_mem *mem_bpage = &kho->mem[i++];
-  5916			const struct kho_mem *mem_page = &kho->mem[i++];
-  5917			const uint64_t rb_page_head = 1;
-  5918			struct buffer_page *old_bpage;
-  5919			void *old_page;
-  5920	
-  5921			old_bpage = __va(mem_bpage->addr);
-  5922			if (!bpage)
-  5923				goto out;
-  5924	
-  5925			if ((ulong)old_bpage->list.next & rb_page_head) {
-  5926				struct list_head *new_lhead;
-  5927				struct buffer_page *new_head;
-  5928	
-  5929				new_lhead = rb_list_head(bpage->list.next);
-  5930				new_head = (struct buffer_page *)new_lhead;
-  5931	
-  5932				/* Assume the buffer is completely full */
-  5933				cpu_buffer->tail_page = bpage;
-  5934				cpu_buffer->commit_page = bpage;
-  5935				/* Set the head pointers to what they were before */
-  5936				cpu_buffer->head_page->list.prev->next = (struct list_head *)
-> 5937					((ulong)cpu_buffer->head_page->list.prev->next & ~rb_page_head);
-  5938				cpu_buffer->head_page = new_head;
-  5939				bpage->list.next = (struct list_head *)((ulong)new_lhead | rb_page_head);
-  5940			}
-  5941	
-  5942			if (rb_page_entries(old_bpage) || rb_page_write(old_bpage)) {
-  5943				/*
-  5944				 * We want to recycle the pre-kho page, it contains
-  5945				 * trace data. To do so, we unreserve it and swap the
-  5946				 * current data page with the pre-kho one
-  5947				 */
-  5948				old_page = kho_claim_mem(mem_page);
-  5949	
-  5950				/* Recycle the old page, it contains data */
-  5951				free_page((ulong)bpage->page);
-  5952				bpage->page = old_page;
-  5953	
-  5954				bpage->write = old_bpage->write;
-  5955				bpage->entries = old_bpage->entries;
-  5956				bpage->real_end = old_bpage->real_end;
-  5957	
-  5958				local_inc(&cpu_buffer->pages_touched);
-  5959			} else {
-  5960				kho_return_mem(mem_page);
-  5961			}
-  5962	
-  5963			kho_return_mem(mem_bpage);
-  5964		}
-  5965	
-  5966	out:
-  5967		return err;
-  5968	}
-  5969	
+Because KEXEC_CORE enables codes which allocate control pages, copy
+kexec/kdump segments, and prepare for switching. These codes are
+shared by both kexec reboot and kdump. We could want kexec reboot,
+but disable kdump. In that case, CRASH_CORE should not be selected.
+
+ --------------------
+ CONFIG_CRASH_CORE=y
+ CONFIG_KEXEC_CORE=y
+ CONFIG_KEXEC=y
+ CONFIG_KEXEC_FILE=y
+    ---------------------
+
+Thirdly,
+---
+It's not reasonable to allow CRASH_DUMP select KEXEC_CORE.
+
+That could make KEXEC_CORE, CRASH_DUMP are enabled independently from
+KEXEC or KEXEC_FILE. However, w/o KEXEC or KEXEC_FILE, the KEXEC_CORE
+code built in doesn't make any sense because no kernel loading or
+switching will happen to utilize the KEXEC_CORE code.
+ ---------------------
+ CONFIG_CRASH_CORE=y 
+ CONFIG_KEXEC_CORE=y 
+ CONFIG_CRASH_DUMP=y
+ ---------------------
+
+In this case, what is worse, on arch sh and arm, KEXEC relies on MMU,
+while CRASH_DUMP can still be enabled when !MMU, then compiling error is
+seen as the lkp test robot reported in above link.
+
+ ------arch/sh/Kconfig------
+ config ARCH_SUPPORTS_KEXEC
+         def_bool MMU
+
+ config ARCH_SUPPORTS_CRASH_DUMP
+         def_bool BROKEN_ON_SMP
+ ---------------------------
+
+Changes:
+===========
+1, split out crash_reserve.c from crash_core.c;
+2, split out vmcore_infoc. from crash_core.c;
+3, move crash related codes in kexec_core.c into crash_core.c;
+4, remove dependency of FA_DUMP on CRASH_DUMP;
+5, clean up kdump related config items;
+6, wrap up crash codes in crash related ifdefs on all 9 arch-es
+   which support crash dumping;
+
+Achievement:
+===========
+With above changes, I can rearrange the config item logic as below (the right
+item depends on or is selected by the left item):
+
+    PROC_KCORE -----------> VMCORE_INFO
+
+               |----------> VMCORE_INFO
+    FA_DUMP----|
+               |----------> CRASH_RESERVE
+
+                                                    ---->VMCORE_INFO
+                                                   /
+                                                   |---->CRASH_RESERVE
+    KEXEC      --|                                /|
+                 |--> KEXEC_CORE--> CRASH_DUMP-->/-|---->PROC_VMCORE
+    KEXEC_FILE --|                               \ |
+                                                   \---->CRASH_HOTPLUG
+
+
+    KEXEC      --|
+                 |--> KEXEC_CORE (for kexec reboot only)
+    KEXEC_FILE --|
+
+Test
+========
+On all 8 architectures, including x86_64, arm64, s390x, sh, arm, mips,
+riscv, loongarch, I did below three cases of config item setting and
+building all passed. Let me take configs on x86_64 as exampmle here:
+
+(1) Both CONFIG_KEXEC and KEXEC_FILE is unset, then all kexec/kdump
+items are unset automatically:
+# Kexec and crash features
+# CONFIG_KEXEC is not set
+# CONFIG_KEXEC_FILE is not set
+# end of Kexec and crash features
+
+(2) set CONFIG_KEXEC_FILE and 'make olddefconfig':
+---------------
+# Kexec and crash features
+CONFIG_CRASH_RESERVE=y
+CONFIG_VMCORE_INFO=y
+CONFIG_KEXEC_CORE=y
+CONFIG_KEXEC_FILE=y
+CONFIG_CRASH_DUMP=y
+CONFIG_CRASH_HOTPLUG=y
+CONFIG_CRASH_MAX_MEMORY_RANGES=8192
+# end of Kexec and crash features
+---------------
+
+(3) unset CONFIG_CRASH_DUMP in case 2 and execute 'make olddefconfig':
+------------------------
+# Kexec and crash features
+CONFIG_KEXEC_CORE=y
+CONFIG_KEXEC_FILE=y
+# end of Kexec and crash features
+------------------------
+
+Note:
+For ppc, it needs investigation to make clear how to split out crash
+code in arch folder. Hope Hari and Pingfan can help have a look, see if
+it's doable. Now, I make it either have both kexec and crash enabled, or
+disable both of them altogether.
+
+Baoquan He (14):
+  kexec: split crashkernel reservation code out from crash_core.c
+  crash: split vmcoreinfo exporting code out from crash_core.c
+  crash: remove dependency of FA_DUMP on CRASH_DUMP
+  crash: split crash dumping code out from kexec_core.c
+  crash: clean up kdump related config items
+  x86, crash: wrap crash dumping code into crash related ifdefs
+  arm64, crash: wrap crash dumping code into crash related ifdefs
+  ppc, crash: enforce KEXEC and KEXEC_FILE to select CRASH_DUMP
+  s390, crash: wrap crash dumping code into crash related ifdefs
+  sh, crash: wrap crash dumping code into crash related ifdefs
+  arm, crash: wrap crash dumping code into crash related ifdefs
+  mips, crash: wrap crash dumping code into crash related ifdefs
+  riscv, crash: wrap crash dumping code into crash related ifdefs
+  loongarch, crash: wrap crash dumping code into crash related ifdefs
+
+ arch/arm/kernel/setup.c                       |   7 +-
+ arch/arm64/Kconfig                            |   2 +-
+ .../asm/{crash_core.h => crash_reserve.h}     |   4 +-
+ arch/arm64/include/asm/kexec.h                |   2 +-
+ arch/arm64/kernel/Makefile                    |   2 +-
+ arch/arm64/kernel/machine_kexec.c             |   2 +-
+ arch/arm64/kernel/machine_kexec_file.c        |  10 +-
+ .../kernel/{crash_core.c => vmcore_info.c}    |   2 +-
+ arch/loongarch/kernel/setup.c                 |   7 +-
+ arch/mips/kernel/setup.c                      |  17 +-
+ arch/powerpc/Kconfig                          |   9 +-
+ arch/powerpc/kernel/setup-common.c            |   2 +-
+ arch/powerpc/mm/nohash/kaslr_booke.c          |   4 +-
+ arch/powerpc/platforms/powernv/opal-core.c    |   2 +-
+ arch/riscv/Kconfig                            |   2 +-
+ .../asm/{crash_core.h => crash_reserve.h}     |   4 +-
+ arch/riscv/kernel/Makefile                    |   2 +-
+ arch/riscv/kernel/elf_kexec.c                 |   9 +-
+ .../kernel/{crash_core.c => vmcore_info.c}    |   2 +-
+ arch/riscv/mm/init.c                          |   2 +-
+ arch/s390/kernel/kexec_elf.c                  |   2 +
+ arch/s390/kernel/kexec_image.c                |   2 +
+ arch/s390/kernel/machine_kexec_file.c         |  10 +
+ arch/sh/kernel/machine_kexec.c                |   3 +
+ arch/sh/kernel/setup.c                        |   2 +-
+ arch/x86/Kconfig                              |   2 +-
+ .../asm/{crash_core.h => crash_reserve.h}     |   6 +-
+ arch/x86/kernel/Makefile                      |   6 +-
+ arch/x86/kernel/cpu/mshyperv.c                |   4 +
+ arch/x86/kernel/kexec-bzimage64.c             |   4 +
+ arch/x86/kernel/kvm.c                         |   4 +-
+ arch/x86/kernel/machine_kexec_64.c            |   3 +
+ arch/x86/kernel/reboot.c                      |   2 +-
+ arch/x86/kernel/setup.c                       |   2 +-
+ arch/x86/kernel/smp.c                         |   2 +-
+ .../{crash_core_32.c => vmcore_info_32.c}     |   2 +-
+ .../{crash_core_64.c => vmcore_info_64.c}     |   2 +-
+ arch/x86/xen/enlighten_hvm.c                  |   4 +
+ drivers/base/cpu.c                            |   6 +-
+ drivers/firmware/qemu_fw_cfg.c                |  14 +-
+ fs/proc/Kconfig                               |   2 +-
+ fs/proc/kcore.c                               |   2 +-
+ include/linux/buildid.h                       |   2 +-
+ include/linux/crash_core.h                    | 152 ++--
+ include/linux/crash_reserve.h                 |  48 ++
+ include/linux/kexec.h                         |  47 +-
+ include/linux/vmcore_info.h                   |  81 ++
+ init/initramfs.c                              |   2 +-
+ kernel/Kconfig.kexec                          |  12 +-
+ kernel/Makefile                               |   5 +-
+ kernel/crash_core.c                           | 764 +++++-------------
+ kernel/crash_reserve.c                        | 464 +++++++++++
+ kernel/{crash_dump.c => elfcorehdr.c}         |   0
+ kernel/kexec.c                                |  11 +-
+ kernel/kexec_core.c                           | 250 +-----
+ kernel/kexec_file.c                           |  13 +-
+ kernel/kexec_internal.h                       |   2 +
+ kernel/ksysfs.c                               |  10 +-
+ kernel/printk/printk.c                        |   4 +-
+ kernel/vmcore_info.c                          | 233 ++++++
+ lib/buildid.c                                 |   2 +-
+ 61 files changed, 1233 insertions(+), 1048 deletions(-)
+ rename arch/arm64/include/asm/{crash_core.h => crash_reserve.h} (81%)
+ rename arch/arm64/kernel/{crash_core.c => vmcore_info.c} (97%)
+ rename arch/riscv/include/asm/{crash_core.h => crash_reserve.h} (78%)
+ rename arch/riscv/kernel/{crash_core.c => vmcore_info.c} (96%)
+ rename arch/x86/include/asm/{crash_core.h => crash_reserve.h} (92%)
+ rename arch/x86/kernel/{crash_core_32.c => vmcore_info_32.c} (90%)
+ rename arch/x86/kernel/{crash_core_64.c => vmcore_info_64.c} (94%)
+ create mode 100644 include/linux/crash_reserve.h
+ create mode 100644 include/linux/vmcore_info.h
+ create mode 100644 kernel/crash_reserve.c
+ rename kernel/{crash_dump.c => elfcorehdr.c} (100%)
+ create mode 100644 kernel/vmcore_info.c
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.41.0
+
 
 _______________________________________________
 kexec mailing list
