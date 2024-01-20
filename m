@@ -4,61 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 82AE3C48285
-	for <kexec@archiver.kernel.org>; Sat, 20 Jan 2024 21:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A1EFDC47DDB
+	for <kexec@archiver.kernel.org>; Sat, 20 Jan 2024 21:10:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References:Date:
 	Message-Id:From:Subject:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=ucHKDw/GXBkJrD40ET//2KADzmcfz+WN7WLNyy41dYI=; b=PjyX5fUZHdRImW
-	6M7NdtkL2GhwYRVxOrt5GwnuwZVT4Hb+0Pifv4sZOocO4Ez4pTXNUTHzEK99zIGqLxDqZFCxxgzOl
-	UwzgAKJSaoSTYvxcrIB1j90Shr/NgXNDTSfmUsWhXZHStYKHJJemKWmEdiqa4xfdFQYnGvRSXYjbv
-	NMMJEkDVWuEHCiU1vLXdfPJpDABx9k2hOIuYkRFSbYOofrpkWt8eZdm7VVoTewCp/UdjaNay21dgx
-	ycxoMJxU1W4YQ9n5z3iP2AwMiDJMg2WhWpgsyk8Y4CH2IDiarya/9UDRrOY0vI+pPAkzqri2VF1R7
-	zyPkxnY1wzpofObW0+QA==;
+	List-Owner; bh=AO1/QTgy16nDlAyh6oUXQnzeixqymRWcTZeK8r1u9QM=; b=CRAaKceUVM1qsv
+	OuEOSf5/9yA+QkJ6f+VUlKmUfK4DCcxILRYuCgVzISAYg20VI7q9OI4prarh5kKNQVipKtAXj5c4l
+	imXBYlSZn+6wfWaPLbIg9W5pgWvY/BGfB20aum/vK4iwD63HwwRgNf8vQesvfs97KZG1EKjOOO56z
+	lbaT3PqRfsx0KTU9vmDniEnO0XnJyGFnY6GY+eQ/+FLVb0TJz7rmaV6Rb3FYSzbiob9kns4WRdGTG
+	agu+HlcNMEArSplhJXP7aePc6CIwJTlW4E6GN/rC4hm87gJ5rdD1VNl/axTK3U/har7Bq6n8xyZCd
+	SQkMxPUERv/jgRX3Ri/Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rRIbN-008OMR-0u;
-	Sat, 20 Jan 2024 21:10:05 +0000
+	id 1rRIbQ-008OPB-1J;
+	Sat, 20 Jan 2024 21:10:08 +0000
 Received: from ams.source.kernel.org ([2604:1380:4601:e00::1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rRIbH-008OEe-3D;
-	Sat, 20 Jan 2024 21:10:01 +0000
+	id 1rRIbI-008OFK-2f;
+	Sat, 20 Jan 2024 21:10:03 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by ams.source.kernel.org (Postfix) with ESMTP id 83CD9B80944;
-	Sat, 20 Jan 2024 21:09:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3417AC43330;
-	Sat, 20 Jan 2024 21:09:58 +0000 (UTC)
+	by ams.source.kernel.org (Postfix) with ESMTP id 68D25B8093B;
+	Sat, 20 Jan 2024 21:09:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 16022C43399;
+	Sat, 20 Jan 2024 21:09:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705784998;
-	bh=Mh4+2rjEl/tfirk6ZrJJo/+D3Z21pmSdnoQgsLi3+Hc=;
+	s=k20201202; t=1705784999;
+	bh=Ak11chN7WclRj25UANXp4k7/EzZxe8YnZ7/DdCdJ/Eo=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=gBabWffUhXIzoKs5sudLgHP01fwVoOZ8G8XJppwrSIIqTXd2XYdNBCXywvJDVmaR0
-	 VQwuvGapishRyDTmmjTM7bUqzXJpyjK1h9SC1IaTrGptzQuCxjz7cLGSVqLdkBWQRC
-	 u+x7wG5sj4K1RWc1aYbazrFCRwmJWgCgVz0cT4BIYB4v4S9b6GrU/rO9S/reHa6wof
-	 N4QLgOaSg5v+YyptWT1v0cTgFIuK8vPMo5HUtXA80XG+dGvgSS6WLvRIwqNAUwD8ZI
-	 dyzIoechWjSaFhyqfCz2xhvbCtFX2PGS9rCj03lLMuj84C855CJQHmfdu7ymB7dMmg
-	 9WOYs+ahTvD2Q==
+	b=IkVsrhLG/8fIWEIS1jEMWek7Zvt5oHhH4iIiHcFrYKDuct84cFWNZbyPVw7aE5USn
+	 EdxvcG4HNDlt83k333dnvaOcO2tidVEdbhq0CJFxJ93Prs3gEH/p58Qy+GRyl8MbIG
+	 meRvcghCnLWoHc45/tNBHxbTKecNuou/KLSqasbtSvlo31zpH/vwXMEceiLwTJ5m7a
+	 YjChVCAqCod2OXw7UwGW23JceU1AUwebt/FMs3NKZ8hUGwmQQ5/Zq5DoX5UetCZ7iJ
+	 PdCbAB2zls/W0Ay7Xq8My+r1A2H2Yz4w3lrzw3EiKKtObnuVW7ravh/Ls8/tlKFzw/
+	 65jpJECS34fYQ==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 23795D8C970;
-	Sat, 20 Jan 2024 21:09:58 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0468BD8C96C;
+	Sat, 20 Jan 2024 21:09:59 +0000 (UTC)
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 1/2] resource: add walk_system_ram_res_rev()
+Subject: Re: [PATCH v4 0/7] kexec_file: print out debugging message if required
 From: patchwork-bot+linux-riscv@kernel.org
-Message-Id: <170578499814.24348.4213715182572913470.git-patchwork-notify@kernel.org>
-Date: Sat, 20 Jan 2024 21:09:58 +0000
-References: <ZVTA6z/06cLnWKUz@MiWiFi-R3L-srv>
-In-Reply-To: <ZVTA6z/06cLnWKUz@MiWiFi-R3L-srv>
+Message-Id: <170578499901.24348.12653685452300606867.git-patchwork-notify@kernel.org>
+Date: Sat, 20 Jan 2024 21:09:59 +0000
+References: <20231213055747.61826-1-bhe@redhat.com>
+In-Reply-To: <20231213055747.61826-1-bhe@redhat.com>
 To: Baoquan He <bhe@redhat.com>
 Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- kexec@lists.infradead.org, x86@kernel.org, linux-parisc@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
- akpm@linux-foundation.org, ebiederm@xmission.com, takahiro.akashi@linaro.org
+ kexec@lists.infradead.org, x86@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+ linux-parisc@vger.kernel.org, akpm@linux-foundation.org, joe@perches.com,
+ nathan@kernel.org, conor@kernel.org
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240120_131000_207617_455A03CC 
-X-CRM114-Status: UNSURE (   8.82  )
+X-CRM114-CacheID: sfid-20240120_131001_015772_A0D84921 
+X-CRM114-Status: UNSURE (   7.64  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -78,23 +79,35 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 Hello:
 
-This patch was applied to riscv/linux.git (fixes)
+This series was applied to riscv/linux.git (fixes)
 by Andrew Morton <akpm@linux-foundation.org>:
 
-On Wed, 15 Nov 2023 21:00:27 +0800 you wrote:
-> This function, being a variant of walk_system_ram_res() introduced in
-> commit 8c86e70acead ("resource: provide new functions to walk through
-> resources"), walks through a list of all the resources of System RAM
-> in reversed order, i.e., from higher to lower.
+On Wed, 13 Dec 2023 13:57:40 +0800 you wrote:
+> Currently, specifying '-d' on kexec command will print a lot of debugging
+> informationabout kexec/kdump loading with kexec_load interface.
 > 
-> It will be used in kexec_file code to load kernel, initrd etc when
-> preparing kexec reboot.
+> However, kexec_file_load prints nothing even though '-d' is specified.
+> It's very inconvenient to debug or analyze the kexec/kdump loading when
+> something wrong happened with kexec/kdump itself or develper want to
+> check the kexec/kdump loading.
 > 
 > [...]
 
 Here is the summary with links:
-  - [v2,1/2] resource: add walk_system_ram_res_rev()
-    https://git.kernel.org/riscv/c/7acf164b259d
+  - [v4,1/7] kexec_file: add kexec_file flag to control debug printing
+    (no matching commit)
+  - [v4,2/7] kexec_file: print out debugging message if required
+    (no matching commit)
+  - [v4,3/7] kexec_file, x86: print out debugging message if required
+    (no matching commit)
+  - [v4,4/7] kexec_file, arm64: print out debugging message if required
+    (no matching commit)
+  - [v4,5/7] kexec_file, ricv: print out debugging message if required
+    https://git.kernel.org/riscv/c/eb7622d908a0
+  - [v4,6/7] kexec_file, power: print out debugging message if required
+    (no matching commit)
+  - [v4,7/7] kexec_file, parisc: print out debugging message if required
+    (no matching commit)
 
 You are awesome, thank you!
 -- 
