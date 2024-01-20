@@ -4,76 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DF36BC47258
-	for <kexec@archiver.kernel.org>; Sat, 20 Jan 2024 13:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E9884C47DAF
+	for <kexec@archiver.kernel.org>; Sat, 20 Jan 2024 21:10:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References:Date:
+	Message-Id:From:Subject:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=RkjregzUk/rmSdmzemvc5sYotaY/0OxRi/X1bekczuo=; b=Fac9xj+9VkT6oY
-	Ga0NGrgy08zpmj1RaijTlkk462/ZU+IDQrtjyHwIcU429+Kt9pu83dYYXEqmNBZAyhkMxXkwUP2lO
-	3FtM2c3cqo2zL+BB6FNbjVUKtvhqCEUvBmiHK4+npsds3XoZ7Wfrooaj/1ZlnSL33KwbMVTQuSxqH
-	GCyVElHXmnyYA0aH+9cRepMFmCgugFLfrfDAO+H3ypL1fW1Bc5aF+x545YfE8hKAFfBYQwAgr4sGo
-	KHKO+O0h6vn5yYsyG357hZgjt6/7Xx9FbJcCbmJCwvZ9Nt5ZfhNCM6B3KT33Uwc75z92K7r2SBto5
-	U01dl+wsBVQA9zbN8wiQ==;
+	List-Owner; bh=bmElkJUM6JIMB4TUnnqKX9HOM9hFsYK2g6oKgtkLLk0=; b=LT0Sm6mkaw4xmR
+	7NI5vrDr/VaYIoy+ZuXP1D4HTpIL6QCBXDxoP5OhpfJuQ1YIb3Jh/Cxw3cKl0/I+djk/fcjLBlGhS
+	WZ4FTcNkHWHVNalBtNrPDnAEEFYLJPLULJzcvhoaHgOtk03rTbld6lrq4m7fki9ahygYJNVUx3wbO
+	rRQypfJQTEYEhnzfCnhfQMclWYXfkm1M1iJrb+ZXuRCmulM0ghZWWbChqUJKhue/rqy/s/BBgsZfK
+	THhYnn3bpjRYDycY+BehgGIDd/CE5mCyTy1fohyHNsjZceZYshAHi2aduwnFfc7zko54QH7Xa8s5R
+	kwk4TvEf058/6dlF6zrQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rRBs3-007wkL-15;
-	Sat, 20 Jan 2024 13:58:51 +0000
-Received: from mgamail.intel.com ([198.175.65.12])
+	id 1rRIbC-008OAT-34;
+	Sat, 20 Jan 2024 21:09:54 +0000
+Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rRBrx-007wjl-1f;
-	Sat, 20 Jan 2024 13:58:50 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705759126; x=1737295126;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=D7c3vMf9ccSBFZdgQbSr1dRX1CxiKZpITQQp7zG1YTU=;
-  b=A4EsLcXFptu9zt9cMF8vIbGgPveudmdkyPUvuLx3o/5b6NUIzc+jWzYR
-   x7IAbs8mSt9GHXouObLiXJfqQaE5kIHiIQbdrS+C4hnbZ9j0+h04A2liq
-   za5s2k9MmzI6jueH6NJqpFPoPFc3WbThl5oME0Emv1ix6MNJLZynQj3eU
-   D2Q8C/vMH5Kc8TV1yZ2nnctWOKgz3Eo4ug8cPC5l3hFz9xoMB3ojRzQtg
-   qmOrNFhFdn0pfPLhtGX10zZdcWxJ6SzWRRdWAp3lXxI9Bgubq9E7aJxN3
-   q7YVpReXa4Xchnpqc8GAGsbxpo/1j07mUzHYAzw9ftagfB47uMDjwQZNR
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10959"; a="8314736"
-X-IronPort-AV: E=Sophos;i="6.05,208,1701158400"; 
-   d="scan'208";a="8314736"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2024 05:58:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,208,1701158400"; 
-   d="scan'208";a="834696"
-Received: from lkp-server01.sh.intel.com (HELO 961aaaa5b03c) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 20 Jan 2024 05:58:40 -0800
-Received: from kbuild by 961aaaa5b03c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rRBrq-00058A-04;
-	Sat, 20 Jan 2024 13:58:38 +0000
-Date: Sat, 20 Jan 2024 21:58:16 +0800
-From: kernel test robot <lkp@intel.com>
-To: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, kexec@lists.infradead.org,
-	x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-riscv@lists.infradead.org, loongarch@lists.linux.dev,
-	akpm@linux-foundation.org, ebiederm@xmission.com,
-	hbathini@linux.ibm.com, piliu@redhat.com, viro@zeniv.linux.org.uk,
-	Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v2 11/14] arm, crash: wrap crash dumping code into crash
- related ifdefs
-Message-ID: <202401202159.9a6W0aOH-lkp@intel.com>
-References: <20240119145241.769622-12-bhe@redhat.com>
+	id 1rRIb8-008O90-1Z;
+	Sat, 20 Jan 2024 21:09:51 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 1769F60C24;
+	Sat, 20 Jan 2024 21:09:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D89D9C43141;
+	Sat, 20 Jan 2024 21:09:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705784988;
+	bh=2UTuaFwcqkRBRMR5A80pWR7ePvnb57nQBapA7qClW9g=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=GCFgON7je9PmSZ4JWW4H7qhf2jXKJufA9RJF+aDPsUTPyFRTwt8720JgNMYl1nQOx
+	 5z96haFqCw4cJpkp/avsXwPOKPdGDhbXj2SmyVhUYirkdEWnRHr87oAbbTzbU2lToI
+	 XVGVCKWCtTJrgSY9ixOL95af/XN2w43U589ETZIDlAN7m5HYoAGz86IeUTqr7ON/B+
+	 SqUIGruWhHRoCJ3gX7h5s2NQCBRKIHV8+a7D51Uy6QB2F1x7hQECHLOdB+4mPO2C60
+	 jbnIPDaQPRrqq91pz4HFZIDD7ULmwvSv70Uq+YKiq4r8sUWZetzmMK1BBqbX1hUZZm
+	 OUJDHPoC6B8Ug==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C48C5D8C96C;
+	Sat, 20 Jan 2024 21:09:48 +0000 (UTC)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20240119145241.769622-12-bhe@redhat.com>
+Subject: Re: [PATCH 1/2] riscv, crash: don't export some symbols when CONFIG_MMU=n
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: <170578498880.24348.17790461588886369808.git-patchwork-notify@kernel.org>
+Date: Sat, 20 Jan 2024 21:09:48 +0000
+References: <ZW03ODUKGGhP1ZGU@MiWiFi-R3L-srv>
+In-Reply-To: <ZW03ODUKGGhP1ZGU@MiWiFi-R3L-srv>
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-riscv@lists.infradead.org, rdunlap@infradead.org,
+ sfr@canb.auug.org.au, akpm@linux-foundation.org, ignat@cloudflare.com,
+ linux-next@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kexec@lists.infradead.org, eric_devolder@yahoo.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240120_055845_651905_E93445E1 
-X-CRM114-Status: GOOD (  19.70  )
+X-CRM114-CacheID: sfid-20240120_130950_572658_555C1F65 
+X-CRM114-Status: UNSURE (   5.77  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,126 +76,35 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Baoquan,
+Hello:
 
-kernel test robot noticed the following build errors:
+This series was applied to riscv/linux.git (fixes)
+by Andrew Morton <akpm@linux-foundation.org>:
 
-[auto build test ERROR on linus/master]
-[cannot apply to tip/x86/core arm64/for-next/core powerpc/next powerpc/fixes v6.7 next-20240119]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+On Mon, 4 Dec 2023 10:19:36 +0800 you wrote:
+> When dropping select of KEXEC and dependency on ARCH_SUPPORTS_KEXEC
+> from CRASH_DUMP, compiling error is reported when below config items are
+> set:
+> -----------------------
+> CONFIG_CRASH_CORE=y
+> CONFIG_KEXEC_CORE=y
+> CONFIG_CRASH_DUMP=y
+> ......
+> 
+> [...]
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Baoquan-He/kexec-split-crashkernel-reservation-code-out-from-crash_core-c/20240119-225820
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20240119145241.769622-12-bhe%40redhat.com
-patch subject: [PATCH v2 11/14] arm, crash: wrap crash dumping code into crash related ifdefs
-config: arm-allnoconfig (https://download.01.org/0day-ci/archive/20240120/202401202159.9a6W0aOH-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240120/202401202159.9a6W0aOH-lkp@intel.com/reproduce)
+Here is the summary with links:
+  - [1/2] riscv, crash: don't export some symbols when CONFIG_MMU=n
+    https://git.kernel.org/riscv/c/c41bd2514184
+  - [2/2] riscv, kexec: fix dependency of two items
+    (no matching commit)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401202159.9a6W0aOH-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   arch/arm/kernel/setup.c: In function 'reserve_crashkernel':
->> arch/arm/kernel/setup.c:1036:63: error: 'SECTION_SIZE' undeclared (first use in this function); did you mean 'SECTIONS_SHIFT'?
-    1036 |                 start = memblock_phys_alloc_range(crash_size, SECTION_SIZE,
-         |                                                               ^~~~~~~~~~~~
-         |                                                               SECTIONS_SHIFT
-   arch/arm/kernel/setup.c:1036:63: note: each undeclared identifier is reported only once for each function it appears in
-   In file included from arch/arm/include/asm/efi.h:12,
-                    from arch/arm/kernel/setup.c:37:
-   arch/arm/include/asm/fixmap.h: At top level:
-   arch/arm/include/asm/fixmap.h:39:35: warning: '__end_of_fixed_addresses' defined but not used [-Wunused-const-variable=]
-      39 | static const enum fixed_addresses __end_of_fixed_addresses =
-         |                                   ^~~~~~~~~~~~~~~~~~~~~~~~
-
-
-vim +1036 arch/arm/kernel/setup.c
-
-3c57fb43c8fcbe Mika Westerberg 2010-05-10   995  
-3c57fb43c8fcbe Mika Westerberg 2010-05-10   996  /**
-3c57fb43c8fcbe Mika Westerberg 2010-05-10   997   * reserve_crashkernel() - reserves memory are for crash kernel
-3c57fb43c8fcbe Mika Westerberg 2010-05-10   998   *
-3c57fb43c8fcbe Mika Westerberg 2010-05-10   999   * This function reserves memory area given in "crashkernel=" kernel command
-3c57fb43c8fcbe Mika Westerberg 2010-05-10  1000   * line parameter. The memory reserved is used by a dump capture kernel when
-3c57fb43c8fcbe Mika Westerberg 2010-05-10  1001   * primary kernel is crashing.
-3c57fb43c8fcbe Mika Westerberg 2010-05-10  1002   */
-3c57fb43c8fcbe Mika Westerberg 2010-05-10  1003  static void __init reserve_crashkernel(void)
-3c57fb43c8fcbe Mika Westerberg 2010-05-10  1004  {
-3c57fb43c8fcbe Mika Westerberg 2010-05-10  1005  	unsigned long long crash_size, crash_base;
-3c57fb43c8fcbe Mika Westerberg 2010-05-10  1006  	unsigned long long total_mem;
-3c57fb43c8fcbe Mika Westerberg 2010-05-10  1007  	int ret;
-3c57fb43c8fcbe Mika Westerberg 2010-05-10  1008  
-8f460484669cba Baoquan He      2024-01-19  1009  	if (!IS_ENABLED(CONFIG_CRASH_RESERVE))
-8f460484669cba Baoquan He      2024-01-19  1010  		return;
-8f460484669cba Baoquan He      2024-01-19  1011  
-3c57fb43c8fcbe Mika Westerberg 2010-05-10  1012  	total_mem = get_total_mem();
-3c57fb43c8fcbe Mika Westerberg 2010-05-10  1013  	ret = parse_crashkernel(boot_command_line, total_mem,
-a9e1a3d84e4a0e Baoquan He      2023-09-14  1014  				&crash_size, &crash_base,
-a9e1a3d84e4a0e Baoquan He      2023-09-14  1015  				NULL, NULL);
-9d17f337230642 Austin Kim      2022-04-01  1016  	/* invalid value specified or crashkernel=0 */
-9d17f337230642 Austin Kim      2022-04-01  1017  	if (ret || !crash_size)
-3c57fb43c8fcbe Mika Westerberg 2010-05-10  1018  		return;
-3c57fb43c8fcbe Mika Westerberg 2010-05-10  1019  
-61603016e2122b Russell King    2016-03-14  1020  	if (crash_base <= 0) {
-d0506a2395eb07 Russell King    2016-04-01  1021  		unsigned long long crash_max = idmap_to_phys((u32)~0);
-67556d7a851c20 Russell King    2017-07-19  1022  		unsigned long long lowmem_max = __pa(high_memory - 1) + 1;
-67556d7a851c20 Russell King    2017-07-19  1023  		if (crash_max > lowmem_max)
-67556d7a851c20 Russell King    2017-07-19  1024  			crash_max = lowmem_max;
-a7259df7670240 Mike Rapoport   2021-09-02  1025  
-a7259df7670240 Mike Rapoport   2021-09-02  1026  		crash_base = memblock_phys_alloc_range(crash_size, CRASH_ALIGN,
-a7259df7670240 Mike Rapoport   2021-09-02  1027  						       CRASH_ALIGN, crash_max);
-61603016e2122b Russell King    2016-03-14  1028  		if (!crash_base) {
-61603016e2122b Russell King    2016-03-14  1029  			pr_err("crashkernel reservation failed - No suitable area found.\n");
-61603016e2122b Russell King    2016-03-14  1030  			return;
-61603016e2122b Russell King    2016-03-14  1031  		}
-61603016e2122b Russell King    2016-03-14  1032  	} else {
-a7259df7670240 Mike Rapoport   2021-09-02  1033  		unsigned long long crash_max = crash_base + crash_size;
-61603016e2122b Russell King    2016-03-14  1034  		unsigned long long start;
-61603016e2122b Russell King    2016-03-14  1035  
-a7259df7670240 Mike Rapoport   2021-09-02 @1036  		start = memblock_phys_alloc_range(crash_size, SECTION_SIZE,
-a7259df7670240 Mike Rapoport   2021-09-02  1037  						  crash_base, crash_max);
-a7259df7670240 Mike Rapoport   2021-09-02  1038  		if (!start) {
-61603016e2122b Russell King    2016-03-14  1039  			pr_err("crashkernel reservation failed - memory is in use.\n");
-61603016e2122b Russell King    2016-03-14  1040  			return;
-61603016e2122b Russell King    2016-03-14  1041  		}
-61603016e2122b Russell King    2016-03-14  1042  	}
-61603016e2122b Russell King    2016-03-14  1043  
-1b0f6681fcbc0e Olof Johansson  2013-12-05  1044  	pr_info("Reserving %ldMB of memory at %ldMB for crashkernel (System RAM: %ldMB)\n",
-3c57fb43c8fcbe Mika Westerberg 2010-05-10  1045  		(unsigned long)(crash_size >> 20),
-3c57fb43c8fcbe Mika Westerberg 2010-05-10  1046  		(unsigned long)(crash_base >> 20),
-3c57fb43c8fcbe Mika Westerberg 2010-05-10  1047  		(unsigned long)(total_mem >> 20));
-3c57fb43c8fcbe Mika Westerberg 2010-05-10  1048  
-f7f0b7dc720f81 Russell King    2016-08-02  1049  	/* The crashk resource must always be located in normal mem */
-3c57fb43c8fcbe Mika Westerberg 2010-05-10  1050  	crashk_res.start = crash_base;
-3c57fb43c8fcbe Mika Westerberg 2010-05-10  1051  	crashk_res.end = crash_base + crash_size - 1;
-3c57fb43c8fcbe Mika Westerberg 2010-05-10  1052  	insert_resource(&iomem_resource, &crashk_res);
-f7f0b7dc720f81 Russell King    2016-08-02  1053  
-f7f0b7dc720f81 Russell King    2016-08-02  1054  	if (arm_has_idmap_alias()) {
-f7f0b7dc720f81 Russell King    2016-08-02  1055  		/*
-f7f0b7dc720f81 Russell King    2016-08-02  1056  		 * If we have a special RAM alias for use at boot, we
-f7f0b7dc720f81 Russell King    2016-08-02  1057  		 * need to advertise to kexec tools where the alias is.
-f7f0b7dc720f81 Russell King    2016-08-02  1058  		 */
-f7f0b7dc720f81 Russell King    2016-08-02  1059  		static struct resource crashk_boot_res = {
-f7f0b7dc720f81 Russell King    2016-08-02  1060  			.name = "Crash kernel (boot alias)",
-f7f0b7dc720f81 Russell King    2016-08-02  1061  			.flags = IORESOURCE_BUSY | IORESOURCE_MEM,
-f7f0b7dc720f81 Russell King    2016-08-02  1062  		};
-f7f0b7dc720f81 Russell King    2016-08-02  1063  
-f7f0b7dc720f81 Russell King    2016-08-02  1064  		crashk_boot_res.start = phys_to_idmap(crash_base);
-f7f0b7dc720f81 Russell King    2016-08-02  1065  		crashk_boot_res.end = crashk_boot_res.start + crash_size - 1;
-f7f0b7dc720f81 Russell King    2016-08-02  1066  		insert_resource(&iomem_resource, &crashk_boot_res);
-f7f0b7dc720f81 Russell King    2016-08-02  1067  	}
-3c57fb43c8fcbe Mika Westerberg 2010-05-10  1068  }
-3c57fb43c8fcbe Mika Westerberg 2010-05-10  1069  
-
+You are awesome, thank you!
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
 
 _______________________________________________
 kexec mailing list
