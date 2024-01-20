@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 94C12C47DAF
-	for <kexec@archiver.kernel.org>; Sat, 20 Jan 2024 21:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 82AE3C48285
+	for <kexec@archiver.kernel.org>; Sat, 20 Jan 2024 21:10:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References:Date:
 	Message-Id:From:Subject:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=/xxb7lSLuvP7YGviN/yE28UaiT0Ou/hhXO2WwE+pSXU=; b=kh9m1qi8prqCOV
-	7HALXcvJLWe9sqg1ZQoTyB9uJMx4IXwNEHqGsjmtg0o+0wh7CL9WHQLJ89Qxozv4T4M3l+ilZ2Jfb
-	gFXTADWJ+Ce6l93KuFGXvsgJhTnDo/3VRC6ZL25USwM8/s1N2mFWHDOtT+rO0btsNHpyxJATE0gq5
-	7X8QnM2uSPeBRrlodqpSKUZcd9h2w2ViIIk32c2l1onYNz6qh8Og3vguk0eBdGWMYwZ6mio0sXiap
-	cF1ZMXH4rhqU72kbP52cmiU1ZOmZS9SJlY4W2WhaK1ydAfNRSneoUAv4Y0Q58pVHbYhoOOShCU1cY
-	laxx/Fe5+7KPcxFkW2kw==;
+	List-Owner; bh=ucHKDw/GXBkJrD40ET//2KADzmcfz+WN7WLNyy41dYI=; b=PjyX5fUZHdRImW
+	6M7NdtkL2GhwYRVxOrt5GwnuwZVT4Hb+0Pifv4sZOocO4Ez4pTXNUTHzEK99zIGqLxDqZFCxxgzOl
+	UwzgAKJSaoSTYvxcrIB1j90Shr/NgXNDTSfmUsWhXZHStYKHJJemKWmEdiqa4xfdFQYnGvRSXYjbv
+	NMMJEkDVWuEHCiU1vLXdfPJpDABx9k2hOIuYkRFSbYOofrpkWt8eZdm7VVoTewCp/UdjaNay21dgx
+	ycxoMJxU1W4YQ9n5z3iP2AwMiDJMg2WhWpgsyk8Y4CH2IDiarya/9UDRrOY0vI+pPAkzqri2VF1R7
+	zyPkxnY1wzpofObW0+QA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rRIbK-008OKD-2C;
-	Sat, 20 Jan 2024 21:10:02 +0000
-Received: from ams.source.kernel.org ([145.40.68.75])
+	id 1rRIbN-008OMR-0u;
+	Sat, 20 Jan 2024 21:10:05 +0000
+Received: from ams.source.kernel.org ([2604:1380:4601:e00::1])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rRIbH-008OEP-10;
+	id 1rRIbH-008OEe-3D;
 	Sat, 20 Jan 2024 21:10:01 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by ams.source.kernel.org (Postfix) with ESMTP id DE988B80943;
-	Sat, 20 Jan 2024 21:09:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8EF1CC433F1;
-	Sat, 20 Jan 2024 21:09:57 +0000 (UTC)
+	by ams.source.kernel.org (Postfix) with ESMTP id 83CD9B80944;
+	Sat, 20 Jan 2024 21:09:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3417AC43330;
+	Sat, 20 Jan 2024 21:09:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705784997;
-	bh=fjX1QcNSUSDtg3zN9eJIvh1kheAnttohq2CojBDtXqM=;
+	s=k20201202; t=1705784998;
+	bh=Mh4+2rjEl/tfirk6ZrJJo/+D3Z21pmSdnoQgsLi3+Hc=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=f5fgAd8lGmVqY/67XbUSO4Qk0dRCUMvtUJD6k/fd5iG2uct6gv2xMQ3OHM1WYZ8U2
-	 ngc78M3hIIoMXED9Rhlsx50MT1WXbiTtNG6ah5EKBwBMud8j+kcgE1H0x+0FnmqSGT
-	 BBTDD9MuDisjsB7prVtq2FzT7FYcqsURHqxqgW0uE6WwNcJg/7ykZhWW1w3xibUlyP
-	 wX703TQTb8qu6a0/EiiGati/ykJT0BM8pyB94IT1As1Rm6DeIeWHsSDdmfkdUHpJ+M
-	 Y4G5OILFVDaAC74ogXv0ePOSln8yYvcsMgVHnWJJUfV+xzzSdGzo674sw/Es00ID6Y
-	 cufuVhFU3QLqg==
+	b=gBabWffUhXIzoKs5sudLgHP01fwVoOZ8G8XJppwrSIIqTXd2XYdNBCXywvJDVmaR0
+	 VQwuvGapishRyDTmmjTM7bUqzXJpyjK1h9SC1IaTrGptzQuCxjz7cLGSVqLdkBWQRC
+	 u+x7wG5sj4K1RWc1aYbazrFCRwmJWgCgVz0cT4BIYB4v4S9b6GrU/rO9S/reHa6wof
+	 N4QLgOaSg5v+YyptWT1v0cTgFIuK8vPMo5HUtXA80XG+dGvgSS6WLvRIwqNAUwD8ZI
+	 dyzIoechWjSaFhyqfCz2xhvbCtFX2PGS9rCj03lLMuj84C855CJQHmfdu7ymB7dMmg
+	 9WOYs+ahTvD2Q==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 7D333D8C970;
-	Sat, 20 Jan 2024 21:09:57 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 23795D8C970;
+	Sat, 20 Jan 2024 21:09:58 +0000 (UTC)
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/2] kexec_file: Load kernel at top of system RAM if required
+Subject: Re: [PATCH v2 1/2] resource: add walk_system_ram_res_rev()
 From: patchwork-bot+linux-riscv@kernel.org
-Message-Id: <170578499750.24348.2518240009884006018.git-patchwork-notify@kernel.org>
-Date: Sat, 20 Jan 2024 21:09:57 +0000
-References: <20231114091658.228030-1-bhe@redhat.com>
-In-Reply-To: <20231114091658.228030-1-bhe@redhat.com>
+Message-Id: <170578499814.24348.4213715182572913470.git-patchwork-notify@kernel.org>
+Date: Sat, 20 Jan 2024 21:09:58 +0000
+References: <ZVTA6z/06cLnWKUz@MiWiFi-R3L-srv>
+In-Reply-To: <ZVTA6z/06cLnWKUz@MiWiFi-R3L-srv>
 To: Baoquan He <bhe@redhat.com>
 Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
  kexec@lists.infradead.org, x86@kernel.org, linux-parisc@vger.kernel.org,
  linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
  akpm@linux-foundation.org, ebiederm@xmission.com, takahiro.akashi@linaro.org
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240120_130959_501174_D6E1A8FE 
-X-CRM114-Status: UNSURE (   8.58  )
+X-CRM114-CacheID: sfid-20240120_131000_207617_455A03CC 
+X-CRM114-Status: UNSURE (   8.82  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -78,28 +78,23 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 Hello:
 
-This series was applied to riscv/linux.git (fixes)
+This patch was applied to riscv/linux.git (fixes)
 by Andrew Morton <akpm@linux-foundation.org>:
 
-On Tue, 14 Nov 2023 17:16:56 +0800 you wrote:
-> Justification:
-> ==============
-> Kexec_load interface has been doing top down searching and loading
-> kernel/initrd/purgtory etc to prepare for kexec reboot. In that way,
-> the benefits are that it avoids to consume and fragment limited low
-> memory which satisfy DMA buffer allocation and big chunk of continuous
-> memory during system init; and avoids to stir with BIOS/FW reserved
-> or occupied areas, or corner case handling/work around/quirk occupied
-> areas when doing system init. By the way, the top-down searching and
-> loading of kexec-ed kernel is done in user space utility code.
+On Wed, 15 Nov 2023 21:00:27 +0800 you wrote:
+> This function, being a variant of walk_system_ram_res() introduced in
+> commit 8c86e70acead ("resource: provide new functions to walk through
+> resources"), walks through a list of all the resources of System RAM
+> in reversed order, i.e., from higher to lower.
+> 
+> It will be used in kexec_file code to load kernel, initrd etc when
+> preparing kexec reboot.
 > 
 > [...]
 
 Here is the summary with links:
-  - [1/2] resource: add walk_system_ram_res_rev()
-    (no matching commit)
-  - [2/2] kexec_file: Load kernel at top of system RAM if required
-    https://git.kernel.org/riscv/c/b3ba234171cd
+  - [v2,1/2] resource: add walk_system_ram_res_rev()
+    https://git.kernel.org/riscv/c/7acf164b259d
 
 You are awesome, thank you!
 -- 
