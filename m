@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E9884C47DAF
-	for <kexec@archiver.kernel.org>; Sat, 20 Jan 2024 21:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 94C12C47DAF
+	for <kexec@archiver.kernel.org>; Sat, 20 Jan 2024 21:10:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References:Date:
 	Message-Id:From:Subject:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=bmElkJUM6JIMB4TUnnqKX9HOM9hFsYK2g6oKgtkLLk0=; b=LT0Sm6mkaw4xmR
-	7NI5vrDr/VaYIoy+ZuXP1D4HTpIL6QCBXDxoP5OhpfJuQ1YIb3Jh/Cxw3cKl0/I+djk/fcjLBlGhS
-	WZ4FTcNkHWHVNalBtNrPDnAEEFYLJPLULJzcvhoaHgOtk03rTbld6lrq4m7fki9ahygYJNVUx3wbO
-	rRQypfJQTEYEhnzfCnhfQMclWYXfkm1M1iJrb+ZXuRCmulM0ghZWWbChqUJKhue/rqy/s/BBgsZfK
-	THhYnn3bpjRYDycY+BehgGIDd/CE5mCyTy1fohyHNsjZceZYshAHi2aduwnFfc7zko54QH7Xa8s5R
-	kwk4TvEf058/6dlF6zrQ==;
+	List-Owner; bh=/xxb7lSLuvP7YGviN/yE28UaiT0Ou/hhXO2WwE+pSXU=; b=kh9m1qi8prqCOV
+	7HALXcvJLWe9sqg1ZQoTyB9uJMx4IXwNEHqGsjmtg0o+0wh7CL9WHQLJ89Qxozv4T4M3l+ilZ2Jfb
+	gFXTADWJ+Ce6l93KuFGXvsgJhTnDo/3VRC6ZL25USwM8/s1N2mFWHDOtT+rO0btsNHpyxJATE0gq5
+	7X8QnM2uSPeBRrlodqpSKUZcd9h2w2ViIIk32c2l1onYNz6qh8Og3vguk0eBdGWMYwZ6mio0sXiap
+	cF1ZMXH4rhqU72kbP52cmiU1ZOmZS9SJlY4W2WhaK1ydAfNRSneoUAv4Y0Q58pVHbYhoOOShCU1cY
+	laxx/Fe5+7KPcxFkW2kw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rRIbC-008OAT-34;
-	Sat, 20 Jan 2024 21:09:54 +0000
-Received: from dfw.source.kernel.org ([139.178.84.217])
+	id 1rRIbK-008OKD-2C;
+	Sat, 20 Jan 2024 21:10:02 +0000
+Received: from ams.source.kernel.org ([145.40.68.75])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rRIb8-008O90-1Z;
-	Sat, 20 Jan 2024 21:09:51 +0000
+	id 1rRIbH-008OEP-10;
+	Sat, 20 Jan 2024 21:10:01 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id 1769F60C24;
-	Sat, 20 Jan 2024 21:09:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D89D9C43141;
-	Sat, 20 Jan 2024 21:09:48 +0000 (UTC)
+	by ams.source.kernel.org (Postfix) with ESMTP id DE988B80943;
+	Sat, 20 Jan 2024 21:09:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8EF1CC433F1;
+	Sat, 20 Jan 2024 21:09:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705784988;
-	bh=2UTuaFwcqkRBRMR5A80pWR7ePvnb57nQBapA7qClW9g=;
+	s=k20201202; t=1705784997;
+	bh=fjX1QcNSUSDtg3zN9eJIvh1kheAnttohq2CojBDtXqM=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=GCFgON7je9PmSZ4JWW4H7qhf2jXKJufA9RJF+aDPsUTPyFRTwt8720JgNMYl1nQOx
-	 5z96haFqCw4cJpkp/avsXwPOKPdGDhbXj2SmyVhUYirkdEWnRHr87oAbbTzbU2lToI
-	 XVGVCKWCtTJrgSY9ixOL95af/XN2w43U589ETZIDlAN7m5HYoAGz86IeUTqr7ON/B+
-	 SqUIGruWhHRoCJ3gX7h5s2NQCBRKIHV8+a7D51Uy6QB2F1x7hQECHLOdB+4mPO2C60
-	 jbnIPDaQPRrqq91pz4HFZIDD7ULmwvSv70Uq+YKiq4r8sUWZetzmMK1BBqbX1hUZZm
-	 OUJDHPoC6B8Ug==
+	b=f5fgAd8lGmVqY/67XbUSO4Qk0dRCUMvtUJD6k/fd5iG2uct6gv2xMQ3OHM1WYZ8U2
+	 ngc78M3hIIoMXED9Rhlsx50MT1WXbiTtNG6ah5EKBwBMud8j+kcgE1H0x+0FnmqSGT
+	 BBTDD9MuDisjsB7prVtq2FzT7FYcqsURHqxqgW0uE6WwNcJg/7ykZhWW1w3xibUlyP
+	 wX703TQTb8qu6a0/EiiGati/ykJT0BM8pyB94IT1As1Rm6DeIeWHsSDdmfkdUHpJ+M
+	 Y4G5OILFVDaAC74ogXv0ePOSln8yYvcsMgVHnWJJUfV+xzzSdGzo674sw/Es00ID6Y
+	 cufuVhFU3QLqg==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C48C5D8C96C;
-	Sat, 20 Jan 2024 21:09:48 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 7D333D8C970;
+	Sat, 20 Jan 2024 21:09:57 +0000 (UTC)
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/2] riscv, crash: don't export some symbols when CONFIG_MMU=n
+Subject: Re: [PATCH 0/2] kexec_file: Load kernel at top of system RAM if required
 From: patchwork-bot+linux-riscv@kernel.org
-Message-Id: <170578498880.24348.17790461588886369808.git-patchwork-notify@kernel.org>
-Date: Sat, 20 Jan 2024 21:09:48 +0000
-References: <ZW03ODUKGGhP1ZGU@MiWiFi-R3L-srv>
-In-Reply-To: <ZW03ODUKGGhP1ZGU@MiWiFi-R3L-srv>
+Message-Id: <170578499750.24348.2518240009884006018.git-patchwork-notify@kernel.org>
+Date: Sat, 20 Jan 2024 21:09:57 +0000
+References: <20231114091658.228030-1-bhe@redhat.com>
+In-Reply-To: <20231114091658.228030-1-bhe@redhat.com>
 To: Baoquan He <bhe@redhat.com>
-Cc: linux-riscv@lists.infradead.org, rdunlap@infradead.org,
- sfr@canb.auug.org.au, akpm@linux-foundation.org, ignat@cloudflare.com,
- linux-next@vger.kernel.org, linux-kernel@vger.kernel.org,
- kexec@lists.infradead.org, eric_devolder@yahoo.com
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ kexec@lists.infradead.org, x86@kernel.org, linux-parisc@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+ akpm@linux-foundation.org, ebiederm@xmission.com, takahiro.akashi@linaro.org
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240120_130950_572658_555C1F65 
-X-CRM114-Status: UNSURE (   5.77  )
+X-CRM114-CacheID: sfid-20240120_130959_501174_D6E1A8FE 
+X-CRM114-Status: UNSURE (   8.58  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -81,23 +81,25 @@ Hello:
 This series was applied to riscv/linux.git (fixes)
 by Andrew Morton <akpm@linux-foundation.org>:
 
-On Mon, 4 Dec 2023 10:19:36 +0800 you wrote:
-> When dropping select of KEXEC and dependency on ARCH_SUPPORTS_KEXEC
-> from CRASH_DUMP, compiling error is reported when below config items are
-> set:
-> -----------------------
-> CONFIG_CRASH_CORE=y
-> CONFIG_KEXEC_CORE=y
-> CONFIG_CRASH_DUMP=y
-> ......
+On Tue, 14 Nov 2023 17:16:56 +0800 you wrote:
+> Justification:
+> ==============
+> Kexec_load interface has been doing top down searching and loading
+> kernel/initrd/purgtory etc to prepare for kexec reboot. In that way,
+> the benefits are that it avoids to consume and fragment limited low
+> memory which satisfy DMA buffer allocation and big chunk of continuous
+> memory during system init; and avoids to stir with BIOS/FW reserved
+> or occupied areas, or corner case handling/work around/quirk occupied
+> areas when doing system init. By the way, the top-down searching and
+> loading of kexec-ed kernel is done in user space utility code.
 > 
 > [...]
 
 Here is the summary with links:
-  - [1/2] riscv, crash: don't export some symbols when CONFIG_MMU=n
-    https://git.kernel.org/riscv/c/c41bd2514184
-  - [2/2] riscv, kexec: fix dependency of two items
+  - [1/2] resource: add walk_system_ram_res_rev()
     (no matching commit)
+  - [2/2] kexec_file: Load kernel at top of system RAM if required
+    https://git.kernel.org/riscv/c/b3ba234171cd
 
 You are awesome, thank you!
 -- 
