@@ -4,62 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A1EFDC47DDB
-	for <kexec@archiver.kernel.org>; Sat, 20 Jan 2024 21:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 88CBFC47258
+	for <kexec@archiver.kernel.org>; Sat, 20 Jan 2024 22:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References:Date:
 	Message-Id:From:Subject:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=AO1/QTgy16nDlAyh6oUXQnzeixqymRWcTZeK8r1u9QM=; b=CRAaKceUVM1qsv
-	OuEOSf5/9yA+QkJ6f+VUlKmUfK4DCcxILRYuCgVzISAYg20VI7q9OI4prarh5kKNQVipKtAXj5c4l
-	imXBYlSZn+6wfWaPLbIg9W5pgWvY/BGfB20aum/vK4iwD63HwwRgNf8vQesvfs97KZG1EKjOOO56z
-	lbaT3PqRfsx0KTU9vmDniEnO0XnJyGFnY6GY+eQ/+FLVb0TJz7rmaV6Rb3FYSzbiob9kns4WRdGTG
-	agu+HlcNMEArSplhJXP7aePc6CIwJTlW4E6GN/rC4hm87gJ5rdD1VNl/axTK3U/har7Bq6n8xyZCd
-	SQkMxPUERv/jgRX3Ri/Q==;
+	List-Owner; bh=htRIeWVBaBVKAGgznLzyO94JMJe210g5rmHVnb5MoIo=; b=FLRLE+u9kjn1AK
+	1Z6Ug6J+SVlc+4r3+hpVh9sjdt15v3lma4zw2TeKtNmIB57QLUMXKcwOMno2akdFw3b0mKvk++iBZ
+	D9Cx5zekIJnIsl440k1ET3Cj2BoEeTnZtjnUte5HosfYqAL+iKp4/qUElEhpqZWSVpGMo7tl/OuRb
+	/vAFu+sJ4NDvF8UUFLv44epreO6Sx83tsBz10TkTIHS9Q3JaZgLyDlHSjzdEgYsaDExoL6RjjnzkU
+	yB52IlVnbpJpcM0PaCmzcmOgpwzxGjzbJGHnEe/ncjAZvCGTgxyiWADPvtc9aQJDLPK/Azr0CBvaf
+	yvmlIfG9WOf+JSmh3SUA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.96 #2 (Red Hat Linux))
-	id 1rRIbQ-008OPB-1J;
-	Sat, 20 Jan 2024 21:10:08 +0000
-Received: from ams.source.kernel.org ([2604:1380:4601:e00::1])
+	id 1rRJdv-008VJ0-2L;
+	Sat, 20 Jan 2024 22:16:47 +0000
+Received: from ams.source.kernel.org ([145.40.68.75])
 	by bombadil.infradead.org with esmtps (Exim 4.96 #2 (Red Hat Linux))
-	id 1rRIbI-008OFK-2f;
-	Sat, 20 Jan 2024 21:10:03 +0000
+	id 1rRIbF-008ODI-39;
+	Sat, 20 Jan 2024 21:09:59 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by ams.source.kernel.org (Postfix) with ESMTP id 68D25B8093B;
-	Sat, 20 Jan 2024 21:09:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 16022C43399;
-	Sat, 20 Jan 2024 21:09:59 +0000 (UTC)
+	by ams.source.kernel.org (Postfix) with ESMTP id 9656DB801B8;
+	Sat, 20 Jan 2024 21:09:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 46711C43601;
+	Sat, 20 Jan 2024 21:09:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705784999;
-	bh=Ak11chN7WclRj25UANXp4k7/EzZxe8YnZ7/DdCdJ/Eo=;
+	s=k20201202; t=1705784996;
+	bh=M7g5eRyDPxCySbVq6qDMpJN6lmzZYx8poGv+sF2twdY=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=IkVsrhLG/8fIWEIS1jEMWek7Zvt5oHhH4iIiHcFrYKDuct84cFWNZbyPVw7aE5USn
-	 EdxvcG4HNDlt83k333dnvaOcO2tidVEdbhq0CJFxJ93Prs3gEH/p58Qy+GRyl8MbIG
-	 meRvcghCnLWoHc45/tNBHxbTKecNuou/KLSqasbtSvlo31zpH/vwXMEceiLwTJ5m7a
-	 YjChVCAqCod2OXw7UwGW23JceU1AUwebt/FMs3NKZ8hUGwmQQ5/Zq5DoX5UetCZ7iJ
-	 PdCbAB2zls/W0Ay7Xq8My+r1A2H2Yz4w3lrzw3EiKKtObnuVW7ravh/Ls8/tlKFzw/
-	 65jpJECS34fYQ==
+	b=KbmoeAq7o7z84/lro+jEKm1k97jjrEPcVrACcDrYuLRy9Kepw5VBWZrC2wJxF6fuH
+	 PW7SfU7Frq6lq7u1MDRxrasoF4gu1E1+tGwyHKlfb23T8CvY27FhMBUVLdIQURQjZm
+	 TME1+Nh7DgfUkJdAsotvo6Ifk0SKEU6aBcd3MR33o1jGwt+90HguzQ/40bkIov21X2
+	 if9wnzOWEZ8tvlAmKNrcP/dSqnu9Cxx5gHjMTGQiQ42QM79wr3k0Gy1ev8sOroM4MG
+	 iq0uAD6C40c1E84s5qKqFoqo2AtGwThoOMyFSclSGQthE4LlXigIyHTYu1T8IvDXPE
+	 lyUifJs78Drdg==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0468BD8C96C;
-	Sat, 20 Jan 2024 21:09:59 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 363D3D8C970;
+	Sat, 20 Jan 2024 21:09:56 +0000 (UTC)
 MIME-Version: 1.0
-Subject: Re: [PATCH v4 0/7] kexec_file: print out debugging message if required
+Subject: Re: [PATCH] riscv, kexec: fix the ifdeffery for AFLAGS_kexec_relocate.o
 From: patchwork-bot+linux-riscv@kernel.org
-Message-Id: <170578499901.24348.12653685452300606867.git-patchwork-notify@kernel.org>
-Date: Sat, 20 Jan 2024 21:09:59 +0000
-References: <20231213055747.61826-1-bhe@redhat.com>
-In-Reply-To: <20231213055747.61826-1-bhe@redhat.com>
+Message-Id: <170578499621.24348.1106516858388911395.git-patchwork-notify@kernel.org>
+Date: Sat, 20 Jan 2024 21:09:56 +0000
+References: <20231201062538.27240-1-bhe@redhat.com>
+In-Reply-To: <20231201062538.27240-1-bhe@redhat.com>
 To: Baoquan He <bhe@redhat.com>
 Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- kexec@lists.infradead.org, x86@kernel.org,
- linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
- linux-parisc@vger.kernel.org, akpm@linux-foundation.org, joe@perches.com,
- nathan@kernel.org, conor@kernel.org
+ kexec@lists.infradead.org, mick@ics.forth.gr, changbin.du@intel.com,
+ paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240120_131001_015772_A0D84921 
-X-CRM114-Status: UNSURE (   7.64  )
+X-CRM114-CacheID: sfid-20240120_130958_180068_796F2FB7 
+X-CRM114-Status: UNSURE (   9.46  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -79,35 +77,24 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 Hello:
 
-This series was applied to riscv/linux.git (fixes)
+This patch was applied to riscv/linux.git (fixes)
 by Andrew Morton <akpm@linux-foundation.org>:
 
-On Wed, 13 Dec 2023 13:57:40 +0800 you wrote:
-> Currently, specifying '-d' on kexec command will print a lot of debugging
-> informationabout kexec/kdump loading with kexec_load interface.
+On Fri,  1 Dec 2023 14:25:38 +0800 you wrote:
+> This was introduced in commit fba8a8674f68 ("RISC-V: Add kexec
+> support").
 > 
-> However, kexec_file_load prints nothing even though '-d' is specified.
-> It's very inconvenient to debug or analyze the kexec/kdump loading when
-> something wrong happened with kexec/kdump itself or develper want to
-> check the kexec/kdump loading.
+> It should work on CONFIG_KEXEC_CORE, but not CONFIG_KEXEC only, since
+> we could set CONFIG_KEXEC_FILE=y and CONFIG_KEXEC=N, or only set
+> CONFIG_CRASH_DUMP=y and disable both CONFIG_KEXEC and CONFIG_KEXEC_FILE.
+> In these cases, the AFLAGS won't take effect with the current ifdeffery
+> for AFLAGS_kexec_relocate.o.
 > 
 > [...]
 
 Here is the summary with links:
-  - [v4,1/7] kexec_file: add kexec_file flag to control debug printing
-    (no matching commit)
-  - [v4,2/7] kexec_file: print out debugging message if required
-    (no matching commit)
-  - [v4,3/7] kexec_file, x86: print out debugging message if required
-    (no matching commit)
-  - [v4,4/7] kexec_file, arm64: print out debugging message if required
-    (no matching commit)
-  - [v4,5/7] kexec_file, ricv: print out debugging message if required
-    https://git.kernel.org/riscv/c/eb7622d908a0
-  - [v4,6/7] kexec_file, power: print out debugging message if required
-    (no matching commit)
-  - [v4,7/7] kexec_file, parisc: print out debugging message if required
-    (no matching commit)
+  - riscv, kexec: fix the ifdeffery for AFLAGS_kexec_relocate.o
+    https://git.kernel.org/riscv/c/d53a154cdc54
 
 You are awesome, thank you!
 -- 
