@@ -4,78 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D3AFEC46CD2
-	for <kexec@archiver.kernel.org>; Sat, 27 Jan 2024 19:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C2829C46CD2
+	for <kexec@archiver.kernel.org>; Sun, 28 Jan 2024 01:28:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=xz2evq8UD46/GOYsQHODO7lPb+Mlymfz0T9ZaG+Qbc4=; b=UKHzvHetAb03Sb
-	XD7FZk83OpMZ9PxrxusSIWf/jshmdfRkj8M3Rr1lXQKUTLZrujTEl8HD3yh1DFjT3Rm7bDO5/6oqQ
-	u+1pJWLQwtKWej9jbKdTk7hNOWgu4VwjqhYS2huxHnz1Pw2AN9GOZ3OdVC6fUbmUHOsUnFjdor3cD
-	u3gHbmCJ7nRDsdmNnvGbhuEmVV4rRxp5/JGzWEtLurR1GoixpIebJWBuLqwZ2OKELvuzoupxnI5Us
-	5kzKC+asl9V3D7/iVX777aNVtUPWDrtatwjFYte9K/XBkHWDrDVS7BGpyS7cP+zMt6LZOs9MQ0yoG
-	zSGASsKGM/ZMNPuvxWiQ==;
+	List-Owner; bh=SNKfr+uMA0Y4b6zz4q0aE8/c8ClD91rjzlOYWBEME9c=; b=gs87QIRk3FE4OV
+	TVOcFs7dORaSLAbLVE0tbfIqKqsSkg6DmgrzANwk2yk0nTuKwtm56L27YdODkrdIe42BF10pRTAis
+	WBJI6mMnfQtDoqYQHHQRYX1sQH4vEvDpm54H6ufSxyJ5JDwfm/IJER/8IdUXcVFSJIMlBofqMBq18
+	MCTDHf5I/C4/AhgJ9tPte6ImcS0G8Uag41lElZn0qeWLFege9deqoRLUExs43wjTD3OzmvQmSQ4U2
+	DW0r3qSyUbagELhBgan+Z6VAsehiy3UJIcofoItZXakjT89h306wsWpjpwI3QJUbi7ElddGoxZ2yZ
+	NJHLHTLdhQwkMdnM59nA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rToT3-000000086Jt-33Nq;
-	Sat, 27 Jan 2024 19:35:53 +0000
-Received: from mgamail.intel.com ([198.175.65.10])
+	id 1rTtyQ-00000008XOk-1qP1;
+	Sun, 28 Jan 2024 01:28:38 +0000
+Received: from mail-wm1-x335.google.com ([2a00:1450:4864:20::335])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rToT1-000000086Iv-0pD5
-	for kexec@lists.infradead.org;
-	Sat, 27 Jan 2024 19:35:52 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706384151; x=1737920151;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=JsNjDeEosD68W82IVuf9LcDq0mJQmIvRYnUGnYlOl5o=;
-  b=B1me1+mxXKhu9draozd1weUV4odf2U0FvHBaoNLFl52tyRjfQjui45Br
-   K8uxWKiutLWBiyQs0rXIQH7/XTTA/ZpJCci51EJe1dPmF0adykmjmod1c
-   Zgp+QL9gKhr5+5H/ztUM9tQaw3GASOj8jldx3so86LdJjpmNkk1pOE+Ki
-   pk4/D7i4z34M1TeKcjhKp1Xu5sh5XxEeOhTzqFa94wTFTtCpVPc962FWQ
-   0vVKdE/WRT6T8zqYow3i0Fw0v73GT/z4XkFr3oznZWIA4j6+KHqFJHD5X
-   P8tGUDN6VGOZB5MeeSqnY0j3zsaOEiJRkqsRiw/bDs2o4bG5uJQjUQ8H5
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10966"; a="16071602"
-X-IronPort-AV: E=Sophos;i="6.05,220,1701158400"; 
-   d="scan'208";a="16071602"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2024 11:35:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10966"; a="787430462"
-X-IronPort-AV: E=Sophos;i="6.05,220,1701158400"; 
-   d="scan'208";a="787430462"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga002.jf.intel.com with ESMTP; 27 Jan 2024 11:35:42 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 21D451F1; Sat, 27 Jan 2024 21:35:41 +0200 (EET)
-Date: Sat, 27 Jan 2024 21:35:41 +0200
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Elena Reshetova <elena.reshetova@intel.com>, 
-	Jun Nakajima <jun.nakajima@intel.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish" <ashish.kalra@amd.com>, 
-	Sean Christopherson <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>, 
-	kexec@lists.infradead.org, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv6 16/16] x86/acpi: Add support for CPU offlining for ACPI
- MADT wakeup method
-Message-ID: <vfk7v6ywaclyydshucnnuvsyg6e6sntyzimgqgjc7ye77z2ukr@lk4e3wz4ap3y>
-References: <20240124125557.493675-1-kirill.shutemov@linux.intel.com>
- <20240124125557.493675-17-kirill.shutemov@linux.intel.com>
- <4aa2c961-a0dc-45dc-b996-57c8468660df@linux.intel.com>
+	id 1rTtyN-00000008XNk-09JL;
+	Sun, 28 Jan 2024 01:28:36 +0000
+Received: by mail-wm1-x335.google.com with SMTP id 5b1f17b1804b1-40e86a9fc4bso26116695e9.2;
+        Sat, 27 Jan 2024 17:28:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706405311; x=1707010111; darn=lists.infradead.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oUXUIxIBKb7yXVS8ERVW4fwa4sKRyx0T69mWwoqQkWg=;
+        b=RECg+THo0Le+e/2Bx3tVVGcuXDH+LmTokESV6748hAvFMIrhEc9Wq3KERHxklf8y9h
+         QOvDqpijESggIXpJgqMRRAiXJAkBJXjR1SOnA60mak8VL6nqMcWNq8jd6n0lDzAIQhbh
+         pPGUo5D3rqOBWWBfBf7yTbLAs6S1RhyPXe/i8lFpOhBSQP3Pinf6lUHN2C/a8G7LYSIA
+         1XJzxUqGhwZy6PBabLWWbhyMQpfYYZaQSAQzl6o3JG0YgmDsBVO+N2s/6edhO6iJ3jgt
+         hmaU4FmuGc81SqcPnFyP7aNdP7gwOG4dIDOgISaOkzRwV7I6cBb3aKIPktiZYSg+YYwn
+         +RZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706405311; x=1707010111;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oUXUIxIBKb7yXVS8ERVW4fwa4sKRyx0T69mWwoqQkWg=;
+        b=OaVR/hbIREVpIyOFULxHfM7Y1X4dQxx87gnkpIPfytPp1QR6eICYCeunBcdc6i2hVj
+         15mQ9w7axAIyZcixb1Nm5b74xZQuL5JmGBqx6c9CXA/Ze+lTdl7KlrOq5a2QyGb5Odli
+         7BANNGZiPgLJssML2Ra6H+U0KE3Nmft7OmqJwcA5JGpmznBHvfdddUuvUzaa0C6adVeb
+         xXlGcPJFGpCQqpb+DSsnDVMt6+PaKbEbLBxt+hjLEd90mcw9PMpTria5qBizCXyB5GQc
+         wBuDeTzPLcEHInvyg+By0AyA10R2ZekIIeJWtjzbwsixMomnAnhX6SwNoav3AMLGPKHi
+         DWvw==
+X-Gm-Message-State: AOJu0Yw+gCNIQvbsQ2GGsziVGceKyxm/2MCQ/xFvhNkUncCGlujCIqd2
+	PQYLO9eYvA4l4oaZhHLC1oQGi+r31MMxuh4v1BG6U4SB7J/JMGaN
+X-Google-Smtp-Source: AGHT+IHept3nMUj4LCYzYJiT9LNHHbS9INXuvww5u4glPmCjjXCtKxmvIBnhSwXHbRZoEWgm1HAkmA==
+X-Received: by 2002:a05:600c:1396:b0:40e:a569:3555 with SMTP id u22-20020a05600c139600b0040ea5693555mr2037091wmf.35.1706405310998;
+        Sat, 27 Jan 2024 17:28:30 -0800 (PST)
+Received: from ?IPV6:2001:678:a5c:1204:db7b:6df3:1a86:f66a? (soda.int.kasm.eu. [2001:678:a5c:1204:db7b:6df3:1a86:f66a])
+        by smtp.gmail.com with ESMTPSA id p6-20020a05600c1d8600b0040ee76ae773sm4537228wms.19.2024.01.27.17.28.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 27 Jan 2024 17:28:30 -0800 (PST)
+Message-ID: <0b14826b-9373-4458-919d-1da2a62d4226@gmail.com>
+Date: Sun, 28 Jan 2024 02:28:28 +0100
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4aa2c961-a0dc-45dc-b996-57c8468660df@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH linux-next v3 01/14] kexec: split crashkernel reservation
+ code out from crash_core.c
+Content-Language: en-US, sv-SE
+To: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
+Cc: kexec@lists.infradead.org, x86@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+ linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+ loongarch@lists.linux.dev, akpm@linux-foundation.org, ebiederm@xmission.com,
+ hbathini@linux.ibm.com, piliu@redhat.com, viro@zeniv.linux.org.uk
+References: <20240124051254.67105-1-bhe@redhat.com>
+ <20240124051254.67105-2-bhe@redhat.com>
+From: Klara Modin <klarasmodin@gmail.com>
+In-Reply-To: <20240124051254.67105-2-bhe@redhat.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240127_113551_343000_2AE63D74 
-X-CRM114-Status: GOOD (  11.53  )
+X-CRM114-CacheID: sfid-20240127_172835_118961_FB77F842 
+X-CRM114-Status: UNSURE (   8.28  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,26 +94,41 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Jan 26, 2024 at 12:03:14PM -0800, Kuppuswamy Sathyanarayanan wrote:
-> > +	/* Don't wait longer than a second. */
-> > +	timeout = USEC_PER_SEC;
-> > +	while (READ_ONCE(acpi_mp_wake_mailbox->command) && --timeout)
-> > +		udelay(1);
-> > +
-> > +	if (!timeout)
-> Nit: IMO, since you are dumping failure error message (not timeout
-> message), you can use non zero acpi_mp_wake_mailbox->command
-> check. But it is up to you.
+Hi,
 
-I think my version is pretty idiomatic. The same pattern used in other
-places. For instance, test_nmi_ipi().
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+On 2024-01-24 06:12, Baoquan He wrote:
+> And also add config item CRASH_RESERVE to control its enabling of the
+> codes. And update config items which has relationship with crashkernel
+> reservation.
+> 
+> And also change ifdeffery from CONFIG_CRASH_CORE to CONFIG_CRASH_RESERVE
+> when those scopes are only crashkernel reservation related.
+
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 502986237cb6..a9243e0948a3 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -2106,7 +2106,7 @@ config ARCH_SUPPORTS_CRASH_HOTPLUG
+>   	def_bool y
+>   
+>   config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
+> -	def_bool CRASH_CORE
+> +	def_bool CRASH_RESEERVE
+>   
+>   config PHYSICAL_START
+>   	hex "Physical address where the kernel is loaded" if (EXPERT || CRASH_DUMP)
+
+CRASH_RESEERVE is probably a typo and should be CRASH_RESERVE (with the 
+former ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION isn't defined in my 
+.config and `crashkernel=...` parameter has no effect).
+
+Kind regards,
+Klara Modin
 
 _______________________________________________
 kexec mailing list
