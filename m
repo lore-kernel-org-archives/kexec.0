@@ -4,143 +4,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DF712C47422
-	for <kexec@archiver.kernel.org>; Mon, 29 Jan 2024 13:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D03A1C47422
+	for <kexec@archiver.kernel.org>; Mon, 29 Jan 2024 13:44:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:Cc:To:
-	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=hUE/UlY854N1OOCBIPrSDPK1pU+DdjAZtySZFRVwhXg=; b=nGigC6zdmXqC8e63anTpMjO/LQ
-	FBvxUf0iHIZdyGB8VWR50vHa+aaCm+Kny7W4zZtBvReSrtWIK7Erh/WJuDe7lkx1j5FMuZTw8k4il
-	CM9TFsRxWnn2sUzEnByUBeUiRV1ijR8MKWmqLiEbUBMf/BMFodk/ycFLH1J/4adjnlLw76VrhKDYn
-	oDejThBqVdBiBdtYmbiWoK3IPpqdxIaireK0lhbbsALiy6r8y/pbggJYdYBDfc/vvOB9xqiIbdGA4
-	vxyfw3qPge3ez6yLvd8S5AxPN2jmi1/0xV+8aLf1lhNI7M2Egw+acoialx9UrlzWxVcy6x3DK36pU
-	An2Q+Wlg==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=dd2Raeba1OsA7BEM2IOY1DFup1L2JXzPApfLspho+TM=; b=dp+iSCYI50akeJ
+	1513jCzRlskHLtyShTKz36TzPM3tp5+3aeq9XET043+lxQLfHiDQcDF58mZvTQeZlWoM6nh9z5q98
+	ilwAhE/J19ApxB4bfcYBIxt+NTWExW3iH/0p0gXq3UClEHXcNHChlQ+aEQileDrqPgdLpqq+5A16E
+	4QAvNDX2u/3CK8Rzh7vqj5sXjb7Ls1EDJ98NDCOQV1SfXhuHPsqoaWA9oTA9aRSWLO9grawA1olYE
+	avbsT8HgH9o+3EdC/DhoTpSvs5c10FAuA9EtCCCQn9oG6nkN3KN7CUv60r3a+OOYHPLzE2sYlu8mY
+	uR4c2yYCH27fVbz1C4Ug==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rUROY-0000000Cn9M-452y;
-	Mon, 29 Jan 2024 13:09:51 +0000
-Received: from mail-mw2nam10on20601.outbound.protection.outlook.com ([2a01:111:f403:2412::601] helo=NAM10-MW2-obe.outbound.protection.outlook.com)
+	id 1rURvo-0000000CuwW-0ji5;
+	Mon, 29 Jan 2024 13:44:12 +0000
+Received: from mgamail.intel.com ([198.175.65.10])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rUROV-0000000Cn7s-45id
+	id 1rURvk-0000000CuvJ-3JRk
 	for kexec@lists.infradead.org;
-	Mon, 29 Jan 2024 13:09:49 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PJNEpSQPx90bmkyVcAtJFijP+PhwMUAW/L4Kf/h/5J6gfURhayesELagopbk9ZLhwUrt7J8oO/W8NF6qqAIYpT4sM7OiWlk7tXJFYrOqjSpT4S7gbVFGZVyFGkofDsswhIkbWyLir3fjqf3cVmTBz7kd0NTqzYWiTzFYTyLnR5GO+M30ZeWimc2QeN6NjrmQREKLhKgvkvqMnvoWOiwAreiHB0P88QS/95QFySH1BQztPQ51NwWOoxKwUT1actBqOAYAwwScqNKVxfHM0LycN/QXxX88OospE3XwLAZFE5JjhtROwiWEB2he3nsi1XnCiTll711u7Rid5cLbVq8/rg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2E3qvqhVy9WZ5LzVzZp5S7u/jA5uXOAptXRzJoyTBcU=;
- b=KjMpkLH8U41++aQ4AjOwGdGnxW4pb8S/fa5eBQGiSSiby7256rwpYEhbGRObjoA/4pKk18GdWSnL8zaCF0E84LHSv6GrYkjTs1biBffbpE6AsgcruSut4K+uSMh2oSptwOeqOXMCBhpESCs9wctHEGWhPi8i7Hu40rWF3a5p4m8FNqRK7Of4/Q/V0YuvN82gw7p5eEwmiXBChNdwMJJRVb1DG9YRMaULUWdW7GmG7Ir9IBdkOWr7RoBbX+QHw5+icSJBGG+Nx3ygdPHcq7C/UDYULS9SQKnB+NghHQW7xpFzShbl9o8U0Vmtgk1rsunHAeKH6MbqhSkyXMNdXlS7UA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2E3qvqhVy9WZ5LzVzZp5S7u/jA5uXOAptXRzJoyTBcU=;
- b=M308gwvbVR9mDn/JuM9SQBFxvJ5AnCZhnx1GqoRtT77w1Zlpazvyai0u4kV/M7Ze1u91ATqfBCaiZvYgK1xpdfOndGp6buoOULrkui0OLh9MehQVy69ilhfMhGWFfQ1UL0Dla+lzUo6mDAxNSM5aQPhxVkM65IjljAOWnYkRFG0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from SN6PR12MB2767.namprd12.prod.outlook.com (2603:10b6:805:75::23)
- by SA3PR12MB9158.namprd12.prod.outlook.com (2603:10b6:806:380::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.26; Mon, 29 Jan
- 2024 13:09:39 +0000
-Received: from SN6PR12MB2767.namprd12.prod.outlook.com
- ([fe80::afdf:5f2a:ead9:622]) by SN6PR12MB2767.namprd12.prod.outlook.com
- ([fe80::afdf:5f2a:ead9:622%6]) with mapi id 15.20.7228.029; Mon, 29 Jan 2024
- 13:09:39 +0000
-Message-ID: <fad515ec-aba3-4f48-b8be-ebc6640899e3@amd.com>
-Date: Mon, 29 Jan 2024 07:09:37 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv6 10/16] x86/tdx: Convert shared memory back to private on
- kexec
-Content-Language: en-US
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
- Elena Reshetova <elena.reshetova@intel.com>,
- Jun Nakajima <jun.nakajima@intel.com>,
- Rick Edgecombe <rick.p.edgecombe@intel.com>,
- Tom Lendacky <thomas.lendacky@amd.com>,
- Sean Christopherson <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>,
- Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org,
- linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+	Mon, 29 Jan 2024 13:44:10 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706535849; x=1738071849;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=S8kbVyjQ+Xxyq/e0oWsbM2LE48Ugi1oJFP+DJtdQZK8=;
+  b=iHfhM6o7zald2zEQ7qbej7k16Ri/FpNhtr10X59U2FyHkMtY4o0gfXWl
+   XEM2Nt6/jJWHqlzzyw+Gh4932QZGVDLDcbKLWdcJPgfTZ/5pfrkCWQBTP
+   k8iLDKPPjuMkKW6BFl7r2iFFSew2nRHwJl7q8OZfFHFJnq5tcwwmO5Np2
+   uHF4clJuPv1b3gdCSw6D+wxG1J8A1441a2yc6imWGLlrAwa95mh3/qlhk
+   WdGBEaTkhLvbo2LRN7gQ/vJpg4RUlihPSodRhpscuVLVihhce5MLw9FUC
+   V4/s+MLQwZD7twhGhv3fUvPvAL9XKUc/JNVBBiEDc03nWwv1ehzSXgwYr
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="16311022"
+X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
+   d="scan'208";a="16311022"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2024 05:44:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10967"; a="931093593"
+X-IronPort-AV: E=Sophos;i="6.05,227,1701158400"; 
+   d="scan'208";a="931093593"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 29 Jan 2024 05:44:01 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 992EC53C; Mon, 29 Jan 2024 15:34:26 +0200 (EET)
+Date: Mon, 29 Jan 2024 15:34:26 +0200
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: "Kalra, Ashish" <ashish.kalra@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, 
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Elena Reshetova <elena.reshetova@intel.com>, 
+	Jun Nakajima <jun.nakajima@intel.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>, Sean Christopherson <seanjc@google.com>, 
+	"Huang, Kai" <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, 
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv6 10/16] x86/tdx: Convert shared memory back to private
+ on kexec
+Message-ID: <ao36mdmctptya2r25v3lvuocjbhllum2upmskxjcjtt3c7o3ii@nsghte2cnmkx>
 References: <20240124125557.493675-1-kirill.shutemov@linux.intel.com>
  <20240124125557.493675-11-kirill.shutemov@linux.intel.com>
  <f0677a02-72ea-49e8-9499-18eca6b5e8d7@amd.com>
  <r5logoyy46fztohkm6bjobomsrst2izbs2nsts4fegii2uswca@fovizly7y5ju>
-From: "Kalra, Ashish" <ashish.kalra@amd.com>
-In-Reply-To: <r5logoyy46fztohkm6bjobomsrst2izbs2nsts4fegii2uswca@fovizly7y5ju>
-X-ClientProxiedBy: SN6PR08CA0003.namprd08.prod.outlook.com
- (2603:10b6:805:66::16) To SN6PR12MB2767.namprd12.prod.outlook.com
- (2603:10b6:805:75::23)
+ <fad515ec-aba3-4f48-b8be-ebc6640899e3@amd.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN6PR12MB2767:EE_|SA3PR12MB9158:EE_
-X-MS-Office365-Filtering-Correlation-Id: da58bf17-4f0d-47fe-7335-08dc20cb8cc8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: x4h0NJ5tuzWG2bGaE/5NSFbffS+NGv9M5hHIWFf5RX8WNLC+oUc3XhGYb/k1wwzYdjEyUqSesl7KS6TkuGp1jbuOhtmU5M76uqgjztsonkCH7t7828Zrk275gZlmlt35kckB80cxuHd3RcNAvHhDMluc/kn7rgFdNLdN/l19lNzJ0xdtB7jJFnrmTqzx2drwsvOIySWkTrumrCGlTbK9/PJ0hlPcjf24bxUgZZLrNCMB4XDBHSjgAFAA/7l4xpCVUZh6GdzToE9msVOIDlquROgEF7jNLdqnQXH0nnngT7qUgY27UghQ0VnYXGkZVb6oRC85QA2nOKV86V2u8S31Qth0SdqUbF58AyQ/vgd7rnR3gYbOKWU5V3QNsVI0+rDLzutMvckm/04f/3lI15E4SJYMfNgrbchHm5b18oSRuqPAR4NOsDHKZumvRiqc4TQW8NWJVzXY07LbqkogRLeWV+A2G6urp5mGUTGip9+wNqA2nP3MNfrC5p26UflBDLvMI7VToutrLLDovsHoI3DXn6p+qi5bRlASp7kKybg6ncuawUbcalGfllYHVX1T50FjMwdfSHYB70Qt9gedJEN6dTuBSYCowrpcyGQNjjCZLBfV0IqFvmvcB/+0haEmZx2n8vBg4H2l7mUjm7jarAeYXQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2767.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(346002)(376002)(396003)(366004)(136003)(230922051799003)(451199024)(64100799003)(186009)(1800799012)(2616005)(41300700001)(31686004)(26005)(6916009)(316002)(54906003)(36756003)(6512007)(478600001)(53546011)(6506007)(6486002)(83380400001)(66476007)(38100700002)(66556008)(31696002)(5660300002)(7416002)(2906002)(66946007)(86362001)(8936002)(8676002)(4326008)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?QVRPK3lTeHIxVGNiQThHWmtIM2Qva0w5MldQT3FIcGVRWDIrYTBXYStjaVJk?=
- =?utf-8?B?ZllyK2J5MmFkWFh4azBtVUJTdzV3a3NWVUxZRVZNdkhxaUxxKytubUJPMTJz?=
- =?utf-8?B?RVphQ0tuSmdpaWVtTjhUc08xRUo0aDdoT09XeXI2VGxnMkZUNXZlZkpSR1lS?=
- =?utf-8?B?NEEvd0NFRjd1ZFJDQWJZQnU2YTBpNHpPNUdiVkY0YzFqak5rWkV4b3U1Tlhq?=
- =?utf-8?B?VVo5dlJXY1RhK1JYbWFKc0FaZDlGS3EzRkRqZ05RQnFycXZTL0VqcndWUldt?=
- =?utf-8?B?a21sSGNXTTBxTitodjFWQjdidVhrVzMxYXZLaXl0bG1pZ0FBbFRqaEZleFpa?=
- =?utf-8?B?eGViOXZtRDBmQlkzVG9vb3J3YkFod211cUVEN0ltMTJrbE1HTS9aN2FPSFg5?=
- =?utf-8?B?MFNjLzBTODhkYkgxTlZBN3dSR3JSSlJRWENOQjhrVTQ4cnJLYUIxSTZXOVNm?=
- =?utf-8?B?VE9qa2FtbWwvdGhSY3ZTc3Zrb3h2Mk93YUZQdlc5M2VlaGlkajA5ZEpJdjAz?=
- =?utf-8?B?OEg5TE1nWDJwUzZla3p1amtObG1KTFFRSUxMSmdjMjBZMGVYK0tyYTN1QXRh?=
- =?utf-8?B?MGhSMlFYY3piTS83M2xRZ2ZFWkRsc1RXZTYxRnA5Wk1JeTd2bFU5UVZPYzdS?=
- =?utf-8?B?VU5telN0eEptWFBobnArMTVFTitYWXdadFJyUE1HMmRnK2tWNGdTUkN1VlhT?=
- =?utf-8?B?Vm1TSDFrVHo4eG5JVEhTcUM2NCtNbDBma2RKNER5eTdGa3VMTlFsMjFwZUt4?=
- =?utf-8?B?djFDbTRtR01xMGFqcTVwNUdNUjVWRWNBMHdmbXFYdHpLSlVub1lmU2gxclhW?=
- =?utf-8?B?T29ONzJuTmZRYTdUcTJGdGxGQ0NsNUh1OGF6dXd2cjI2NVAwQ1hQSkYybWI3?=
- =?utf-8?B?OVJRUHF5WWRtTm50ak9yVXBkWWFkSkxCMjU1cXNqQ01HY2tqNUdvaElnYThy?=
- =?utf-8?B?MW9EZ1RIT0p0cVZhZW83R2VHb2lVaWpVVURuTmdOalFyc3YveTVvWndWdnVw?=
- =?utf-8?B?MUxQYVFEejFpUWdzMHV0US90ZU9HOFMxMG5aS0VjNlpkYVVsVkVXOHFFR3Vu?=
- =?utf-8?B?OUoxMEdRL2I3Vjk3NzVXeU1rVHFQY0kvYVRZWFdka3ZXMVpxV0NxYkxWYVpn?=
- =?utf-8?B?Uk14bjlnSyswb1NaNnpEbnNtWSsveXdPcEFwQkFEdU15RW51YlNsejFsTmxV?=
- =?utf-8?B?a2R0TnpLNEV4MjZSZVI0TVhVa1J6N1hRb1FmUktRQjNreVdrVEpuYXBSbFg2?=
- =?utf-8?B?UG1hblRyQmdIcTdUeE01L1R1SFdLUWQwM0hqKzZvWFNHakswWmRzRjBET2x1?=
- =?utf-8?B?cWllc2prKzVzVCszWEIxVVBIemJpQW4wUy9paUtsMW5ZQUZyNjlETXR5Y2s4?=
- =?utf-8?B?T0hpMkRUUFZvYmxBbUFFc0FSR0graUJxdnJZeUdOQTRxVUZiYmM0YUVVNmJv?=
- =?utf-8?B?dStob3kvajRKNWV3eENIbU5xeDR0RlRVM3FPanRvaEFwcFpnL0FtTVNTc0tO?=
- =?utf-8?B?aExEczVlNDYySmpDZDVEdk9LWlFVWmtRWldKNWFMeXlRNUxsVWppZit2QlAx?=
- =?utf-8?B?VW1TRjB0cWQ5V3dPZkIwaER6OHJ4Zjl1YUlJRGY1QzN1c05yK09hTzlWd2tZ?=
- =?utf-8?B?dWp6bCtzamhiREtMM05mMEp4aUlFT25RMmN2amI5TFRBcDVrTHdyS2JMZUdH?=
- =?utf-8?B?bnlXSWIyR1h3R2UvRjVKV2RRRndKUWp0dk1seXExa0JqQTNHeVBCZWJFR2Fs?=
- =?utf-8?B?YmtnTGNTS295NFRhRTIzK1hNYmpiTEhKSmQ4bUZEdGhtUndHdjlsVlVEbUVa?=
- =?utf-8?B?ZjhyYTlleXY3cmZWeHdrSmlqSVgzM2JXdVNHV1ZzTkVwYUlnQjFuS1ByWnpu?=
- =?utf-8?B?QnZDV3h6Um5kTHd1U3I1SVFwZ0hpdEtmSFAyZ1VyQjBHSS91azBxV3ljL01C?=
- =?utf-8?B?aUNQS2F5NHp5a2xSMHpiSXBGUHdaZFEvM3JiNHYwZ1lQbk9EdHYvL2VUcVU4?=
- =?utf-8?B?ZU5kVE9IN1o1bmUxOXgwQjJSZ3lEK3gxNnpkR054SC85R0RUK1BVRlhhbUdu?=
- =?utf-8?B?VDdtTkxmSitrK2VaVis4R2tYUkV1Q3RYQldQK2NESUw4VnVZekJ4dmZxdjFW?=
- =?utf-8?Q?q1HRFvLQ0QkV3BnmPtgj6YpjA?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: da58bf17-4f0d-47fe-7335-08dc20cb8cc8
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2767.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2024 13:09:39.3309
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CEc2VcGq8DyXMhcSBVXCfx/3Ib++azGCp1Hbxc+zqLydNpq8OQ9dwARlV9IKerFxoO3817Z44OR9ZvkIjEE3cQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB9158
+Content-Disposition: inline
+In-Reply-To: <fad515ec-aba3-4f48-b8be-ebc6640899e3@amd.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240129_050948_402697_E1ED9B30 
-X-CRM114-Status: GOOD (  16.10  )
+X-CRM114-CacheID: sfid-20240129_054408_946424_E8EB2B82 
+X-CRM114-Status: GOOD (  23.20  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -152,60 +90,59 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hello Kirill,
+On Mon, Jan 29, 2024 at 07:09:37AM -0600, Kalra, Ashish wrote:
+> Hello Kirill,
+> 
+> On 1/29/2024 4:36 AM, Kirill A. Shutemov wrote:
+> > On Mon, Jan 29, 2024 at 04:24:09AM -0600, Kalra, Ashish wrote:
+> > > In case of SNP and crash/kdump case, we need to prevent the boot_ghcb being
+> > > converted to shared (in snp_kexec_unshare_mem()) as the boot_ghcb is
+> > > required to handle all I/O for disabling IO-APIC/lapic, hpet, etc., as the
+> > > enc_kexec_unshare_mem() callback is invoked before the apics, hpet, etc. are
+> > > disabled.
+> > > 
+> > > Is there any reason why enc_kexec_unshare_mem() callback is invoked in crash
+> > > case before the IO-APIC/lapic, hpet, etc. are shutdown/disabled ?
+> > Not really. Either way works for TDX. I've tested the patch below. Is it
+> > what you want?
+> > 
+> > diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> > index 6585a5f2c2ba..3001f4857ed7 100644
+> > --- a/arch/x86/kernel/crash.c
+> > +++ b/arch/x86/kernel/crash.c
+> > @@ -107,11 +107,6 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
+> >   	crash_smp_send_stop();
+> > -	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT)) {
+> > -		x86_platform.guest.enc_kexec_stop_conversion(true);
+> > -		x86_platform.guest.enc_kexec_unshare_mem();
+> > -	}
+> > -
+> >   	cpu_emergency_disable_virtualization();
+> >   	/*
+> > @@ -129,6 +124,12 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
+> >   #ifdef CONFIG_HPET_TIMER
+> >   	hpet_disable();
+> >   #endif
+> > +
+> > +	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT)) {
+> > +		x86_platform.guest.enc_kexec_stop_conversion(true);
+> > +		x86_platform.guest.enc_kexec_unshare_mem();
+> > +	}
+> > +
+> >   	crash_save_cpu(regs, safe_smp_processor_id());
+> >   }
+> 
+> Yes, this will work for SNP.
 
-On 1/29/2024 4:36 AM, Kirill A. Shutemov wrote:
-> On Mon, Jan 29, 2024 at 04:24:09AM -0600, Kalra, Ashish wrote:
->> In case of SNP and crash/kdump case, we need to prevent the boot_ghcb being
->> converted to shared (in snp_kexec_unshare_mem()) as the boot_ghcb is
->> required to handle all I/O for disabling IO-APIC/lapic, hpet, etc., as the
->> enc_kexec_unshare_mem() callback is invoked before the apics, hpet, etc. are
->> disabled.
->>
->> Is there any reason why enc_kexec_unshare_mem() callback is invoked in crash
->> case before the IO-APIC/lapic, hpet, etc. are shutdown/disabled ?
-> Not really. Either way works for TDX. I've tested the patch below. Is it
-> what you want?
->
-> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-> index 6585a5f2c2ba..3001f4857ed7 100644
-> --- a/arch/x86/kernel/crash.c
-> +++ b/arch/x86/kernel/crash.c
-> @@ -107,11 +107,6 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
->   
->   	crash_smp_send_stop();
->   
-> -	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT)) {
-> -		x86_platform.guest.enc_kexec_stop_conversion(true);
-> -		x86_platform.guest.enc_kexec_unshare_mem();
-> -	}
-> -
->   	cpu_emergency_disable_virtualization();
->   
->   	/*
-> @@ -129,6 +124,12 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
->   #ifdef CONFIG_HPET_TIMER
->   	hpet_disable();
->   #endif
-> +
-> +	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT)) {
-> +		x86_platform.guest.enc_kexec_stop_conversion(true);
-> +		x86_platform.guest.enc_kexec_unshare_mem();
-> +	}
-> +
->   	crash_save_cpu(regs, safe_smp_processor_id());
->   }
->   
+Okay, good. Will include the change into the next version of the patchset.
 
-Yes, this will work for SNP.
-
-Thanks, Ashish
-
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
 
 _______________________________________________
 kexec mailing list
