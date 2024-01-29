@@ -4,70 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 42CEEC47422
-	for <kexec@archiver.kernel.org>; Mon, 29 Jan 2024 07:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 88BEAC47422
+	for <kexec@archiver.kernel.org>; Mon, 29 Jan 2024 10:24:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
 	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=Z+ayNgeswuuatl6J6YoAq3Zdo2GD4Uvw/szvH7rFus0=; b=MTyu/iNN1YzQi8
-	UZ4qBiNDsF+z1joPfndGQpKNThuT7sUh/tNrItca6pM1V/D7OXqhTUyVVExGVg97/rfORrNMCakSB
-	kBHB5nj//t3O7VoksoKf9r0L06/wCOzIL0PW03VNQlfzPkMknquPOcPq4nqdm/qZz+2ceLyapqets
-	+CGbtHx+Isj7vQ802fWkY9adG6Skvw2mbKBSgmvPAY/pl6KCFAVwf0c0nmnKZJ9U0NXvIJLK1M80v
-	XMuAyL1kcaQmDUdKXUbVJ7SGb/vi//gDTfDTMfUKI1Llj4Xc65w/lh+Pg/33y1pqdq8YTa+/RJ/wB
-	LHDPc3GE97Q8Nyvy1ksg==;
+	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:Cc:To:
+	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=RMSr/osSId6jNsUXzhYk9L1R4R9Es9ExN4gCpHwg45g=; b=IDlHgu+muOhyGqvEeg+U6txtn2
+	DtefIOQucreG//4m3FV6BCWG6Uh/LBtvxxrXRNMR5lnoaCgTqHqf5+zyLLADpHFxwMQzwKR9OqQgT
+	FKW3SM8Hxaw4bgUS16shfpqhBOjUtJ0xxh/UX1gKo96hNKR3er0jt9Mz71fE1CMoYBPhWZbpkX3Zb
+	xGQhoASaj1Z/bbijrFJQJT762bwKfSvYWB8ZFyucSvmrbUSTr/CnZ3bMdbyxYV+2btdF2onVMzJ1j
+	0+CDJXuQdxRqzNa/nJPA17xHR8pU0WAdzzQPN6rEpuM8m0lG5/JAYT2FNc7GMIMyFLl9E5wSoU8wS
+	Lx+0q34Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rULyI-0000000BbfK-2s8O;
-	Mon, 29 Jan 2024 07:22:22 +0000
-Received: from mail-wm1-x336.google.com ([2a00:1450:4864:20::336])
+	id 1rUOoQ-0000000CCri-0n6B;
+	Mon, 29 Jan 2024 10:24:22 +0000
+Received: from mail-bn8nam11on20600.outbound.protection.outlook.com ([2a01:111:f400:7eae::600] helo=NAM11-BN8-obe.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rULyE-0000000BbeI-3g08
+	id 1rUOoN-0000000CCqe-2kGl
 	for kexec@lists.infradead.org;
-	Mon, 29 Jan 2024 07:22:21 +0000
-Received: by mail-wm1-x336.google.com with SMTP id 5b1f17b1804b1-40ef6c471d5so4944355e9.0
-        for <kexec@lists.infradead.org>; Sun, 28 Jan 2024 23:22:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1706512936; x=1707117736; darn=lists.infradead.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LrgnZOGulcP9tuVmCHC1ajU+ERsd9Badipl3nQjKaNo=;
-        b=TWxJcNDS+2PQQRXyjko+uHWG3TypfUoEqsCDh3Av3b7NxtDaajPoPPsTARZycap9uK
-         Oq+V2pN0kold8xUdSNpAw+yDnkrMXGeIdB3EeH3GHRxLoVlh+S+98g4idxOCrmSyX7q5
-         pyXr8Q5UL/pLviRxK5xM0oHO5C9450oHXK+bIwGL8afQ6s63jt9Z/v/Toezq07VxHyg3
-         VIkHB+2tk/ofd16CuDvTAeLXbuzXi27JCOQsKOwyGWNrlyDW54QqvTjyhRvRUdPdbyg+
-         dS6DLeIoPt9TkHMmO6v+d5dlzGTnO89Bgpv8wpfZyai1npRm9Y5KrfDh90MrjpFJKe8B
-         FwIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706512936; x=1707117736;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LrgnZOGulcP9tuVmCHC1ajU+ERsd9Badipl3nQjKaNo=;
-        b=CdMk4Dw89a9RLohk/3Og6ytMxf72RuYrcM2BxKnW78/Vv6FwDdte/lBx4SzOmvKNUP
-         GB2MF7kWIdoeV8u+2r3g1H5Y5RVqv54pPWehOChJXXEck8g5CJGnh/zIeGjIOByxxFNP
-         xDYl7u2w3AMa2sb8rOx8mCooEB6mYlUeNiLjmzFkk6wYfsUR86HXzkhv1Le31wdSBSMR
-         BhDW48+I2svp0K2cuiPLtOt7/yfTaBWCWgEpGT7Cjjin95E+wCtKnmvC3k6LrH8pdRTs
-         J6kBCJW0ikGVciF7aResMqZ1x72ba2iahXbXiZJr4u7LRGHX9+FSKuT+xd3A+zAqybhA
-         SCmQ==
-X-Gm-Message-State: AOJu0Yzd4WrKEUL3ZDdlN7yN2/U7X149sf0+7XAUxutUmS6ER+HLlRov
-	DEMKm3Cn+MXDpMrK3AeRd4aisd5nEg6eTCU424wqSF9Jeow8lpbPwDVJv8BzJXs=
-X-Google-Smtp-Source: AGHT+IHZDgIWhUn6PpGqUdNjpy0qgdACWGR/C6o14VWBOR70fiJGdJK2I9E3loxNce3mWT4UwH+kIg==
-X-Received: by 2002:a05:600c:4f50:b0:40e:93b4:25ef with SMTP id m16-20020a05600c4f5000b0040e93b425efmr5101615wmq.26.1706512935752;
-        Sun, 28 Jan 2024 23:22:15 -0800 (PST)
-Received: from ?IPV6:2a10:bac0:b000:7588:cd6b:e8a3:8a4d:4601? ([2a10:bac0:b000:7588:cd6b:e8a3:8a4d:4601])
-        by smtp.gmail.com with ESMTPSA id s18-20020a5d69d2000000b003393457afc2sm7224289wrw.95.2024.01.28.23.22.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 28 Jan 2024 23:22:15 -0800 (PST)
-Message-ID: <fed13d3d-c87c-4e5c-9451-779200c35a1c@suse.com>
-Date: Mon, 29 Jan 2024 09:22:13 +0200
-MIME-Version: 1.0
+	Mon, 29 Jan 2024 10:24:20 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VDmrWSm8M3z2ZiifH6BKFRlWsoOhsBV6O2eoz+J7qHKFxh99hTugyND06nkZhQ1tFwYeS3CUlB7uJI/50hUpxdddWRGKTv6WZpywVnRj++5wV9eh5796t1vhqEvVMYWanKSMEvjL9j2Ei6VxzupJ7ViRy2km4zFwdqMMkWptBkDnM9F22Fcieyl+vauKyIR/CFqRQOinaVGATBJkADIsMihW6nQdVtp2kAiU9raM1nPaVkqVPszp+pxhyyrOHBGjQ0rZyNuc9hl+5SPiMOFDLaT8/rs+UOkjRg7A3C6fKMVptwlKmfmbAsNDnOiEQM/3ZmPgUd/ReP44xVXiUzkcYw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XLmLwIRFyS4h5qcwgaRTxQL8kTZbjgMle00XB/ZGvoM=;
+ b=VQuGAoFrVx6mMN9ppmKSOFNzZKBWHB9ClyO2o8JlXHx+9VVS4XIZE4UFj2JcVGEADizQ0KFvJffAiv71ba5wtfMGnJrKIzlkhXoCG1e89s5++gjHbNQIRHIaKCQBpubGwlY3h042fA12Upt6ciZ+teDyKQ0bmoZqrFw6ed/rC3uur1TtuV1V1No/lou19SHkTgZrT0twrJMIGdAZnDUaj1uGoUoH7p6vubr7gljaXsBFwyfl7W8xjMmHcW6+7YBEchl6wcHcpFsBAZ+2XdMmArSC7ye23rTwqQcElgf1FIOs76bpzzcYq4MK9IAdAkiwBaP4OXghuGLgbdMde05mzQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XLmLwIRFyS4h5qcwgaRTxQL8kTZbjgMle00XB/ZGvoM=;
+ b=jIjw8Njt8+A5R52/WLRcUsRZWV/Ms/h3+OoOpVoaJx1GYZj3A8QEgWycpmgbDD+m1OSutRf8zlLxfvZ3bRrjlkqK0eRn73HkLaD5qAWx5f2cbHQdr27vajPE3OXX4UUO5T+z2nrJBn5ZG8n5dJlhwJ6JCUvvbdKOt/fXM6yzudc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from SN6PR12MB2767.namprd12.prod.outlook.com (2603:10b6:805:75::23)
+ by DM4PR12MB7648.namprd12.prod.outlook.com (2603:10b6:8:104::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.32; Mon, 29 Jan
+ 2024 10:24:12 +0000
+Received: from SN6PR12MB2767.namprd12.prod.outlook.com
+ ([fe80::afdf:5f2a:ead9:622]) by SN6PR12MB2767.namprd12.prod.outlook.com
+ ([fe80::afdf:5f2a:ead9:622%6]) with mapi id 15.20.7228.029; Mon, 29 Jan 2024
+ 10:24:12 +0000
+Message-ID: <f0677a02-72ea-49e8-9499-18eca6b5e8d7@amd.com>
+Date: Mon, 29 Jan 2024 04:24:09 -0600
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv6 09/16] x86/mm: Adding callbacks to prepare encrypted
- memory for kexec
+Subject: Re: [PATCHv6 10/16] x86/tdx: Convert shared memory back to private on
+ kexec
 Content-Language: en-US
 To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
  Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
@@ -80,18 +69,77 @@ Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
  Elena Reshetova <elena.reshetova@intel.com>,
  Jun Nakajima <jun.nakajima@intel.com>,
  Rick Edgecombe <rick.p.edgecombe@intel.com>,
- Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish"
- <ashish.kalra@amd.com>, Sean Christopherson <seanjc@google.com>,
- "Huang, Kai" <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>,
- kexec@lists.infradead.org, linux-coco@lists.linux.dev,
- linux-kernel@vger.kernel.org
+ Tom Lendacky <thomas.lendacky@amd.com>,
+ Sean Christopherson <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>,
+ Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org,
+ linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
 References: <20240124125557.493675-1-kirill.shutemov@linux.intel.com>
- <20240124125557.493675-10-kirill.shutemov@linux.intel.com>
-From: Nikolay Borisov <nik.borisov@suse.com>
-In-Reply-To: <20240124125557.493675-10-kirill.shutemov@linux.intel.com>
+ <20240124125557.493675-11-kirill.shutemov@linux.intel.com>
+From: "Kalra, Ashish" <ashish.kalra@amd.com>
+In-Reply-To: <20240124125557.493675-11-kirill.shutemov@linux.intel.com>
+X-ClientProxiedBy: DM6PR02CA0167.namprd02.prod.outlook.com
+ (2603:10b6:5:332::34) To SN6PR12MB2767.namprd12.prod.outlook.com
+ (2603:10b6:805:75::23)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN6PR12MB2767:EE_|DM4PR12MB7648:EE_
+X-MS-Office365-Filtering-Correlation-Id: f49f9a85-3874-45e1-f9c6-08dc20b46fbf
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: r3nVBqxFZjKd0b7cO1HFpbf/KEk1hlr1Pj1eTzE0QhOZQ1e4kCdRncQnYFlWil3eF0I0P913duq4JkC/F2WwLSHXq22hE+GUOc7HlUCUuhzo/fHg2oCbd0XoGPPs5zt348PghlskIICC0mJVPhDuILieuuJJjkHY3PDcEdKjvEKoZPqTcaP5BXvVSt+yPFOAv2/kTzO2S8x+jy8rdYwq6enOS0L63luE9yAaFCHdkMEwRSVAuHvy3tyYJ6gEIfJkec9HnCBxTSb5aPbuPsgO3WrZgJ0HYQMXz3m5NaBiNZFqv5VHE0KuyFr07BoIs4OeojnPaICNnAWF3F2LwNwWfu26h9WWd80+nQ/QRtliG4CC9GAcYGKKN9SqrjFLNdOsJhlnl99yd3A0RfLMll4EY/GOHUdL0jnRqk5IMXryYIu5LnVV62mQf38ORdDs/6G6ox2ECysdchPJjdPBaCVoLfxGuhL2MS0f/lQcKZqbaZNVhfqrw82zsUH/0eKOT2zYi/xlrVvQfhK0V+oxE2KgP4aIpgocsorTYgzJ/xayAuwy3iJm/iMJXq2NSqb5oZT+uPIQp0VMdp/UHxdndHDdjRHjVeepo6ces2PLwTg1bdLOwLLOgFSq9gASL3rh3DXp1vhn3YQfW1WGYTV/35Qhag==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2767.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(376002)(396003)(39860400002)(366004)(346002)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(41300700001)(2906002)(7416002)(5660300002)(36756003)(31696002)(66946007)(66556008)(54906003)(66476007)(316002)(110136005)(86362001)(6512007)(83380400001)(2616005)(6506007)(26005)(478600001)(6486002)(6666004)(53546011)(4326008)(8936002)(8676002)(38100700002)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UkNyc25oNHBNTUVLZzk1Q1hIeVhuQm85cDZZcVpsTjl4K0ZiVGh2eXA0UUhx?=
+ =?utf-8?B?a2U0WDg4VkJCNWdWNDh5MkhWbkNqV0FteVFubTFzVDcrelp5T2h1T0ZrOFZo?=
+ =?utf-8?B?dVNQTm9MQ3Y2eWNLYjBYWGVqaFY2c2pKZ2N0Qi9NYy81RDNlSnRYclRmcnQw?=
+ =?utf-8?B?RmtjbnJIVjJoWmZ5U3dpV3cwZU5tbDM3MTVrYlpSeHpJYTc2MGp3Uis5eEhv?=
+ =?utf-8?B?ZG1ORTVjd3Vra1BSdGhqWEZyL1JQVnNjdGFhSzdpRzQxV1V1MFJtNi9OUWpD?=
+ =?utf-8?B?TzhtRlgyM0ZFM2J6aitaZEFRSWNMc1M1V0N4d1cvUm41R0IyOHcvYjhiVVZo?=
+ =?utf-8?B?VFMwWkdKN09GVW94RGh0bm5LYStacURyY0dPZnRCOUhicUl1b2hVU1VCY2dI?=
+ =?utf-8?B?enA4RkJ1YVVpQlcxd1NRM1VvL3lxRk84SFpIMHRVQkRMVEVOWno4NXprVFF6?=
+ =?utf-8?B?aWpHbU5kdFU3a1dpVU5XVGVQdVZPQm9LWEpjd2JuczcyVnpkc1N6Q1RYVEJX?=
+ =?utf-8?B?czVuVG9RZ09LcXZEVW5CRkJkOGdUMmUrcFlnU2N5OFZrVStwRUVVaStzSW9r?=
+ =?utf-8?B?SlJrdjVqb280dHNzMEtIUFdLaVRUSGJiWWdrRXRXM2pNTExvZUhwZzBvRHFo?=
+ =?utf-8?B?MUF6K09KRmYxNmVYTlU2Yll3WXNNR3NMRW5CaEl0RjlsQWpoNWVkNVYrN00x?=
+ =?utf-8?B?anZFMUM4OStIRXlQUHZYMlAxSTdWYWFYNWttVlpNcDZ3bHJtWFQzUnhGYVV4?=
+ =?utf-8?B?ZHFaWUhhajRzaUpWNEp4UUZCcEVwLzRDTWFQU1UxTVlOZDRCVmRoMlVMckZs?=
+ =?utf-8?B?c2I4bS8rUithenJmUDRNTGZpVmFzZ1RRV2hVYTNFMVFsUEFnbHZWZnRLN0c3?=
+ =?utf-8?B?NjYxWEtuTStEYkZDekRGN2ZlRlFZcGpUalZKcnBZY0Z0THJ6bHk2UnhHa2pn?=
+ =?utf-8?B?bTlZWm94SHRZNDliTXp3OEk2UXE2VHFMOG1SV0JjVVpqbS96c2hkYzcrVVJw?=
+ =?utf-8?B?THV4T2J1T1lkUEVXOG1qZk9mUG12MFJxZVFBUzl1bytaMzhPNHEvTFY3WlNY?=
+ =?utf-8?B?dFJianF6WGVsaTd5c3kvM21XL0RnTEtIK1I4Wk8vTTNXdWtvSmVsNTR0MGpP?=
+ =?utf-8?B?Yk5mQlVFb0hRNWducWJOY1UvNGRrMlI1eHA0Z0pVWmhxd2l6ak5SVG1JanJG?=
+ =?utf-8?B?MkJlWTAvZVp3SlY5bFVuRmx6eTJiMzdwSTE2QWp2SmVsaGcwcVVFMUxHcHll?=
+ =?utf-8?B?a1ROWjVJRVdJVXJXbW5LYXE2YW8vQ0pGTUZ3cjVabzB0Y01pZFlVVFAreEkv?=
+ =?utf-8?B?bGU1THNyenNFU2pkakl1Z2hMVUpsaG1iWnlCTHNGVm5xc3B5bVRJRkNoT3Z1?=
+ =?utf-8?B?aHlPb1ZNckJ5cjNDTFFYM1Q4eElEMDlSYUZwTHN6d25LZ1FjODBIY3Bha0wr?=
+ =?utf-8?B?TXJ0cGk4Lzk1N2VXR1dOTVY2bE5iMzNmeEx6azVjQS8wWXdFUEtpOTNSL21Z?=
+ =?utf-8?B?bHd1MVl0bk1pOE5xREtTdzVxdUp1ZER2TlE2R1QvN1RMbVk1VnRjSU0zMzBk?=
+ =?utf-8?B?Q0c3a0hqMFdvWmZUYjU4YU1TdlN0UVEwZFpMdnRxWDVocTEvR2ZBZE5Yb3lV?=
+ =?utf-8?B?ZG5QU1ZuWnhqSGNOSDZqdUNwRmlJOHZKb3pKKzBFaFlkWVRkUTUyYjArYnlQ?=
+ =?utf-8?B?MldvSjN1MEJXY3lFT2lOQUNXRUFlclI2V1MrWnJtK0Z3WC8xNnRhNnpoTnRT?=
+ =?utf-8?B?YnhiYlhhS1dldlU1VXlHbkdiU3g1VGo5QU1ybUtpUnhDYmhVaDhSQ2JkaHF0?=
+ =?utf-8?B?Vit1MWkwYXRhMit4TFVBWHRCQnFTMjFNdjJQRVNLdFhXY0psL1BqT1NRR3RF?=
+ =?utf-8?B?Z0dJMkY5SHR1bmQ0OXFqVHJHTGo3V0V0a1FkaEZCbktxWkp0Z0UwdXVMSEhS?=
+ =?utf-8?B?SVIvNXBieUl6SE1yZGJ1UnJVcUZNVVludlB2VVZvcGRiZkFneTlyUjdZTi9O?=
+ =?utf-8?B?ZGRWb1ZTbEI2NWhMUStmcVp1TG95b29zd2VyajliQ21pUTBxSCtBNjZQU3Rr?=
+ =?utf-8?B?WUlvV29JclBOQ09GbGRNeWNuRVA1L2RTL0hZaVdKWkJOMVRMYkYxMExKcTc0?=
+ =?utf-8?Q?ajPBz/FiCb32sNpAtMIh8svid?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f49f9a85-3874-45e1-f9c6-08dc20b46fbf
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2767.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2024 10:24:12.2543
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: z8irIUsZn7sFimv+8Th+afqmRNlkr8CdDAqVGhicpaSO1UcAGpzAKRUFoPxoUZSfV8QZp7urGmKwTO7L7BcLcw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7648
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240128_232218_962465_0DAD2546 
-X-CRM114-Status: GOOD (  10.29  )
+X-CRM114-CacheID: sfid-20240129_022419_734892_267086E8 
+X-CRM114-Status: GOOD (  24.91  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -103,27 +151,145 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-CgpPbiAyNC4wMS4yNCDQsy4gMTQ6NTUg0YcuLCBLaXJpbGwgQS4gU2h1dGVtb3Ygd3JvdGU6Cj4g
-QU1EIFNFViBhbmQgSW50ZWwgVERYIGd1ZXN0cyBhbGxvY2F0ZSBzaGFyZWQgYnVmZmVycyBmb3Ig
-cGVyZm9ybWluZyBJL08uCj4gVGhpcyBpcyBkb25lIGJ5IGFsbG9jYXRpbmcgcGFnZXMgbm9ybWFs
-bHkgZnJvbSB0aGUgYnVkZHkgYWxsb2NhdG9yIGFuZAo+IHRoZW4gY29udmVydGluZyB0aGVtIHRv
-IHNoYXJlZCB1c2luZyBzZXRfbWVtb3J5X2RlY3J5cHRlZCgpLgo+IAo+IE9uIGtleGVjLCB0aGUg
-c2Vjb25kIGtlcm5lbCBpcyB1bmF3YXJlIG9mIHdoaWNoIG1lbW9yeSBoYXMgYmVlbgo+IGNvbnZl
-cnRlZCBpbiB0aGlzIG1hbm5lci4gSXQgb25seSBzZWVzIEU4MjBfVFlQRV9SQU0uIEFjY2Vzc2lu
-ZyBzaGFyZWQKPiBtZW1vcnkgYXMgcHJpdmF0ZSBpcyBmYXRhbC4KPiAKPiBUaGVyZWZvcmUsIHRo
-ZSBtZW1vcnkgc3RhdGUgbXVzdCBiZSByZXNldCB0byBpdHMgb3JpZ2luYWwgc3RhdGUgYmVmb3Jl
-Cj4gc3RhcnRpbmcgdGhlIG5ldyBrZXJuZWwgd2l0aCBrZXhlYy4KPiAKPiBUaGUgcHJvY2VzcyBv
-ZiBjb252ZXJ0aW5nIHNoYXJlZCBtZW1vcnkgYmFjayB0byBwcml2YXRlIG9jY3VycyBpbiB0d28K
-PiBzdGVwczoKPiAKPiAtIGVuY19rZXhlY19zdG9wX2NvbnZlcnNpb24oKSBzdG9wcyBuZXcgY29u
-dmVyc2lvbnMuCj4gCj4gLSBlbmNfa2V4ZWNfdW5zaGFyZV9tZW0oKSB1bnNoYXJlcyBhbGwgZXhp
-c3Rpbmcgc2hhcmVkIG1lbW9yeSwgcmV2ZXJ0aW5nCj4gICAgaXQgYmFjayB0byBwcml2YXRlLgo+
-IAo+IFNpZ25lZC1vZmYtYnk6IEtpcmlsbCBBLiBTaHV0ZW1vdiA8a2lyaWxsLnNodXRlbW92QGxp
-bnV4LmludGVsLmNvbT4KClJldmlld2VkLWJ5OiBOaWtvbGF5IEJvcmlzb3YgPG5pay5ib3Jpc292
-QHN1c2UuY29tPgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Hello Kirill,
+
+On 1/24/2024 6:55 AM, Kirill A. Shutemov wrote:
+> TDX guests allocate shared buffers to perform I/O. It is done by
+> allocating pages normally from the buddy allocator and converting them
+> to shared with set_memory_decrypted().
+>
+> The second kernel has no idea what memory is converted this way. It only
+> sees E820_TYPE_RAM.
+>
+> Accessing shared memory via private mapping is fatal. It leads to
+> unrecoverable TD exit.
+>
+> On kexec walk direct mapping and convert all shared memory back to
+> private. It makes all RAM private again and second kernel may use it
+> normally.
+>
+> The conversion occurs in two steps: stopping new conversions and
+> unsharing all memory. In the case of normal kexec, the stopping of
+> conversions takes place while scheduling is still functioning. This
+> allows for waiting until any ongoing conversions are finished. The
+> second step is carried out when all CPUs except one are inactive and
+> interrupts are disabled. This prevents any conflicts with code that may
+> access shared memory.
+>
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Reviewed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+> ---
+>   arch/x86/coco/tdx/tdx.c | 124 +++++++++++++++++++++++++++++++++++++++-
+>   1 file changed, 122 insertions(+), 2 deletions(-)
+<snip>
+> +static void tdx_kexec_stop_conversion(bool crash)
+> +{
+> +	/* Stop new private<->shared conversions */
+> +	conversion_allowed = false;
+> +
+> +	/*
+> +	 * Make sure conversion_allowed is cleared before checking
+> +	 * conversions_in_progress.
+> +	 */
+> +	barrier();
+> +
+> +	/*
+> +	 * Crash kernel reaches here with interrupts disabled: can't wait for
+> +	 * conversions to finish.
+> +	 *
+> +	 * If race happened, just report and proceed.
+> +	 */
+> +	if (!crash) {
+> +		unsigned long timeout;
+> +
+> +		/*
+> +		 * Wait for in-flight conversions to complete.
+> +		 *
+> +		 * Do not wait more than 30 seconds.
+> +		 */
+> +		timeout = 30 * USEC_PER_SEC;
+> +		while (atomic_read(&conversions_in_progress) && timeout--)
+> +			udelay(1);
+> +	}
+> +
+> +	if (atomic_read(&conversions_in_progress))
+> +		pr_warn("Failed to finish shared<->private conversions\n");
+> +}
+> +
+> +static void tdx_kexec_unshare_mem(void)
+> +{
+> +	unsigned long addr, end;
+> +	long found = 0, shared;
+> +
+> +	/*
+> +	 * Walk direct mapping and convert all shared memory back to private,
+> +	 */
+> +
+> +	addr = PAGE_OFFSET;
+> +	end  = PAGE_OFFSET + get_max_mapped();
+> +
+> +	while (addr < end) {
+> +		unsigned long size;
+> +		unsigned int level;
+> +		pte_t *pte;
+> +
+> +		pte = lookup_address(addr, &level);
+> +		size = page_level_size(level);
+> +
+> +		if (pte && pte_decrypted(*pte)) {
+> +			int pages = size / PAGE_SIZE;
+> +
+> +			/*
+> +			 * Touching memory with shared bit set triggers implicit
+> +			 * conversion to shared.
+> +			 *
+> +			 * Make sure nobody touches the shared range from
+> +			 * now on.
+> +			 */
+> +			set_pte(pte, __pte(0));
+> +
+> +			if (!tdx_enc_status_changed(addr, pages, true)) {
+> +				pr_err("Failed to unshare range %#lx-%#lx\n",
+> +				       addr, addr + size);
+> +			}
+> +
+> +			found += pages;
+> +		}
+> +
+> +		addr += size;
+> +	}
+> +
+> +	__flush_tlb_all();
+> +
+> +	shared = atomic_long_read(&nr_shared);
+> +	if (shared != found) {
+> +		pr_err("shared page accounting is off\n");
+> +		pr_err("nr_shared = %ld, nr_found = %ld\n", shared, found);
+> +	}
+> +}
+In case of SNP and crash/kdump case, we need to prevent the boot_ghcb 
+being converted to shared (in snp_kexec_unshare_mem()) as the boot_ghcb 
+is required to handle all I/O for disabling IO-APIC/lapic, hpet, etc., 
+as the enc_kexec_unshare_mem() callback is invoked before the apics, 
+hpet, etc. are disabled.
+
+Is there any reason why enc_kexec_unshare_mem() callback is invoked in 
+crash case before the IO-APIC/lapic, hpet, etc. are shutdown/disabled ?
+
+In case of kexec, enc_kexec_unshare_mem() callback is invoked after the 
+IO-APIC/lapic, hpet, iommu, etc. have already been disabled/shutdown, 
+hence, this callback can transition all guest shared memory (including 
+boot_ghcb) back to private.
+
+Thanks, Ashish
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
