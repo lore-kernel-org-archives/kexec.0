@@ -4,81 +4,117 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AE9C9C47DB3
-	for <kexec@archiver.kernel.org>; Mon, 29 Jan 2024 16:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0A64EC47DB3
+	for <kexec@archiver.kernel.org>; Mon, 29 Jan 2024 18:27:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:References:
+	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=l1c9X/Ws+gqe/CUqX7D7BS7goyQU7l9YlKg9ld78RhM=; b=vggJ0O48SoGegl
-	41GC0fjDMN79EiTmwHzm6DSQKXjZreE4JdSKOzAnozdirBGSBUIZRYeKfzFJd/b7fQS375SRvmsLA
-	5FgYRrlyJY0kO4oZZeIU7UgjT/nJ9ZDm152o8NpLS3+jDDORbel9aRlXBkY+nQ6ltvixVigLPq5sF
-	Y6SC/f3Abd8f1J0O7kqV+yw3JknU7EpyrWz/8WUuaPcLt3+SxICguwQf7aE/kbTYFfWMJZ07/JOd4
-	VZ2p8jQOE4kXKfCarPSN1aw2c0+Lx+zBKWgbrbdnGc7eoKwRrsUVn6LzXr0vqonDKupA1V/bSnB14
-	nmGhYyFLfSAZBzetEOZQ==;
+	List-Owner; bh=Xd5lEynbtYWYnfzG8FtUDUo5OWxMquIN7s25/MJ1MU4=; b=r24aAZSxZh3J6Y
+	053FaoIYx1vzgDaVt+spUcp+XAAXOlBpXCKsmky/tC1f8VepeKui4x83J//bpZgk1mRfd/1qEwKHX
+	4+jVGd2eQ/cLwzzqqX1/nHHP28KiUe92T2H+IoV4PNEm/iFVr7mpc0XCyq3CbBBnQdm/TTqUHK3pR
+	aaJUB7iLPlgM0qrdw9UeBtHUQ0wrffg6lgGZ9pqOkqp9dr3Cx/Y5h9RocxKY8uW0UEe0XwMkhiCiJ
+	p+BP97OCTy2xA1Rp+Dwu6AzOBMyNYU5vvWAXWeBtxJeWhO7ndLf4FcvuRTBjznfdE8HNVtE/t0E9E
+	6iVCGR0c/N/YFZsm+qhA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rUUd3-0000000DXjY-3hG9;
-	Mon, 29 Jan 2024 16:37:01 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1rUWML-0000000Dvlr-0AMF;
+	Mon, 29 Jan 2024 18:27:53 +0000
+Received: from mail-dm6nam04olkn20800.outbound.protection.outlook.com ([2a01:111:f403:2c09::800] helo=NAM04-DM6-obe.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rUUcy-0000000DXfZ-26jC
-	for kexec@lists.infradead.org;
-	Mon, 29 Jan 2024 16:36:59 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706546214;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Cnxc7g1CCZMSmgVTOsS1bbzZVy9L35+UTayMqPPm28A=;
-	b=HeO1FtEEuTCBN5zNh1586mHW8eKHSmtZnxDuBl8mnrkviX65c807e7oZ27LM8nRcPApKKn
-	/SVFONLQ4pIC9+mJrP67yuEevXLnlZyFZEg9Pe32VVfF75EONcKxIm4KlOHVKABEU5AgUv
-	Df8TGPgHTFcqNQ6rw+46+zubuWc36mA=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-177-_GUyyg5UMA6WJBcMu_5Zvw-1; Mon, 29 Jan 2024 11:34:57 -0500
-X-MC-Unique: _GUyyg5UMA6WJBcMu_5Zvw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2C98D85A599;
-	Mon, 29 Jan 2024 16:34:56 +0000 (UTC)
-Received: from rotkaeppchen (unknown [10.39.193.97])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id B18E41C060AF;
-	Mon, 29 Jan 2024 16:34:51 +0000 (UTC)
-Date: Mon, 29 Jan 2024 17:34:50 +0100
-From: Philipp Rudo <prudo@redhat.com>
-To: Alexander Graf <graf@amazon.com>
-Cc: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
- <linux-mm@kvack.org>, <devicetree@vger.kernel.org>,
- <linux-arm-kernel@lists.infradead.org>, <kexec@lists.infradead.org>,
- <linux-doc@vger.kernel.org>, <x86@kernel.org>, Eric Biederman
- <ebiederm@xmission.com>, "H . Peter Anvin" <hpa@zytor.com>, Andy Lutomirski
- <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Steven Rostedt
- <rostedt@goodmis.org>, Andrew Morton <akpm@linux-foundation.org>, Mark
- Rutland <mark.rutland@arm.com>, "Tom Lendacky" <thomas.lendacky@amd.com>,
- Ashish Kalra <ashish.kalra@amd.com>, James Gowans <jgowans@amazon.com>,
- Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>, <arnd@arndb.de>,
- <pbonzini@redhat.com>, <madvenka@linux.microsoft.com>, Anthony Yznaga
- <anthony.yznaga@oracle.com>, Usama Arif <usama.arif@bytedance.com>, David
- Woodhouse <dwmw@amazon.co.uk>, Benjamin Herrenschmidt
- <benh@kernel.crashing.org>, Rob Herring <robh+dt@kernel.org>, Krzysztof
- Kozlowski <krzk@kernel.org>, linux-integrity@vger.kernel.org
-Subject: Re: [PATCH v3 00/17] kexec: Allow preservation of ftrace buffers
-Message-ID: <20240129173450.038e46b7@rotkaeppchen>
-In-Reply-To: <20240117144704.602-1-graf@amazon.com>
-References: <20240117144704.602-1-graf@amazon.com>
-Organization: Red Hat inc.
+	id 1rUWMH-0000000DvkY-3MBp;
+	Mon, 29 Jan 2024 18:27:51 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jlNT64FGOOyOBoszz9N5Ac93N4hKdLp8ezxw4nxu+anvMKOaLvvExZauuaBc47zAjMcOtHZBKiykEEnVIKHaz6WNK61AKLeYZxINqXnSr5KRhTjTuEK9bHdXghN59G/DfgWjx39YO0a3u6IZ+Ih/N0sRo/Z+sVdQGWQoF7N+fhPtvHG6NCzG0vzjkb77cymtc+PZQ+RVsiN+ZDVESQvEtHOh4SNIh1gEz/6U1ClD9MgxpkcHg2v3afQJPfp5txfEhl+nzqiD0oCVuItlzFKSyqYuj1QXZtyFimf/LYJXYHadnA6X4yYimySeZseFe9vBMx/fcY5P93DUKU8I1xzh1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LjMxWwuPQtMm7C9T4IqjJnUlv/VPPfxAPRGeKmPQz9s=;
+ b=ggf6TzH9vXrbpybsDKAmvWd4BKQ8QwCgbiBcv27OYDrjGmgbnS8kp1rWC3fsmWpc6imRDggE93TpivcU5lVnly8JiyMm5ug2dk8hI9Mtpt7XMc9a9jHqIjSIR15UOssM128V0ZlmK5KPXITYZwobNnk0KictkdT93WBHkOjK4RlBaiewIvhwR2ZB8qBDH3CgNNJduEBN87zfrbz8L0Iy6Y1Twn5nSAMh+pOZdU5swTpzAz8SDqWb24qzdt+7t7yC59eaMJdovC0PP/yjWGZz2VQ0c9i5kAh+EkKOuST98xTknYE6tn367L8jhrkG7DUEEqr/fkcuq8La2FDVChetag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LjMxWwuPQtMm7C9T4IqjJnUlv/VPPfxAPRGeKmPQz9s=;
+ b=hlS3WfGN88q3XUjwUXn1ymDbF/O/kyjexWKP8fdzBo80MEGekqC78rJYKys3mlXwoS8cdJ4Q6VH2H6VmKyCvNbSu1eT3VxPnqH2XDVXrY9wZYWr7sz4ZOnpr6LBEcAgqJA8H/sPLyWdj6smmQoDq2UxN6PFAnSnWKxdMHiY5SNJ7tNV2Pxd6eObM+g6gbc50g64LlHQGmDy8sDNht6Xfhg8Z9A94GZAxX2mjBSBqFbPJXRyUvhquts5K4EYAsJPEoSnjTZv6gmcQcFSJx066IHGq3ZC9mOowp3BVAz8my4bblT0i8IDCzImUC3ipUtw5K88Rjb4ML/M6HhIn+BAGvg==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by SJ2PR02MB9341.namprd02.prod.outlook.com (2603:10b6:a03:4cb::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.24; Mon, 29 Jan
+ 2024 18:27:44 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::67a9:f3c0:f57b:86dd]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::67a9:f3c0:f57b:86dd%5]) with mapi id 15.20.7228.029; Mon, 29 Jan 2024
+ 18:27:44 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Baoquan He <bhe@redhat.com>, "kexec@lists.infradead.org"
+	<kexec@lists.infradead.org>, "akpm@linux-foundation.org"
+	<akpm@linux-foundation.org>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"x86@kernel.org" <x86@kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linuxppc-dev@lists.ozlabs.org"
+	<linuxppc-dev@lists.ozlabs.org>, "linux-s390@vger.kernel.org"
+	<linux-s390@vger.kernel.org>, "nathan@kernel.org" <nathan@kernel.org>
+Subject: RE: [PATCH linux-next 1/3] x86, crash: don't nest CONFIG_CRASH_DUMP
+ ifdef inside CONFIG_KEXEC_CODE ifdef scope
+Thread-Topic: [PATCH linux-next 1/3] x86, crash: don't nest CONFIG_CRASH_DUMP
+ ifdef inside CONFIG_KEXEC_CODE ifdef scope
+Thread-Index: AQHaUronjJlmGLvjNUqyTXz++ApJcbDxGaMg
+Date: Mon, 29 Jan 2024 18:27:43 +0000
+Message-ID: <SN6PR02MB41571397201804BD486C6148D47E2@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20240129135033.157195-1-bhe@redhat.com>
+In-Reply-To: <20240129135033.157195-1-bhe@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-tmn: [CPkbIpZavqPDb2Hf7oilxwsHApVfhc0K]
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SJ2PR02MB9341:EE_
+x-ms-office365-filtering-correlation-id: 1f0f8b42-44a2-4e82-cc0f-08dc20f7fc2e
+x-ms-exchange-slblob-mailprops: yzXCV5TiOCq5Z3EDOs7Daa/bauyyHrFwBpmHh+e35t913RSS8m4pszjD/We3Xl80buzZlM1XcoLMLCX3Bl2QOOQNNNHXyYztpg78Jlo0qMAvBzbQbS8wZ1wMGx8y+pxWGbyZH+FNTg/msqnNzqSZODReTRBvLFENeq5NTglyo0AEg7oECUo0wVJuF3173QNHV/fJ8JyHCdP6Xm+6YeyFVTVtHmjOZi2zEAGhZyAuGLI7BA+dR9bIEq0UWSsq/SykMa3MeQ26hcymR2+9F+gK3ARkJMZ1oO/VirbnPuoRtEuMUXG7nv0l1wySTKDwPmZyf0w+VHJln++2wb5W0NVPG8ptDZtXLn/KBfVLZPV6ZbYpYwI1e8X+69mkuPoOceAKh62yquRS2gaU0gBQ507RbCYM0/WHYECsh7SskRpW8RHgc63pHGPoHt6/IkHIdJTQZEDisEb+JmU9R0vJp4C1q736q1v6Q4jl2biEhHfxp073ZKAAoZYeNKatmJ27S+C2cBJfXIN49TGa7Iaov+IkYMs7U6XW2Vjixjuh4jqKDcG6AupYDqJJ7BJ593dbXTOilwjEuxZVKM03qRTt5tOH7eapcN/e1Fwp5UoLK+xCoStTr+ymsQ8k3QSEFIvRv6ULWSq8BfLGpcNy7i5HxRCVJ6OKr4pDtpV6+RmznDUWsYfEi/gBnlNqn0CTx58FRDzOyuU7rgI7Jzl7cw35JUQkXosOyzdlt4NutBP//GNEoif6n8c6UOGoc6sFr5ZtC44i2F8OkFtuqt61y9ZndnqwFlK3jpyip+rCndEKahOBK74cu0CGo4YeSSdgW4b6OXKjxQh450Xug2OBY+h71Xrdc4CJXUXuRzCOjram8HS3lbj3yvqK5CXD5XZN2M/o+Rsvqm09Sv2FrJg=
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: fBu7hcaA+NdMNh6mjBwwyqyHB6KoOv6BoPv+JLvJ/PQqkojVF3vVwCTk9s90ubcVhYA1m/0l6hHtyKRroE0ESDTpqkvvrlL2wWZJrKJh+lRDym5nS94n6rX+7NpPM9HXXLSCRlywPherMoIyOY/vGRO/6ZaJtpEilmmgY6bkYPelxZVRZMbDIiCckN8Ie0K735yTO69e6sci/HjM0/CwrbXnKDAP+pCDTtrDarlmAwLmZIkEknoPfWlLoY3FVqQFXVMRgZSnnzOYJdLQFtmcmykAkPnbTdUsbkPrcDBZOAeILumWoxwQaNFLBY9SpO6h46RQRk4m/43Marv2mmGaxNRWav5m5Wx7+7LBe9+9JLrtCgKntv+BB4nymcQ90ihvySzMGnMN6IKh3pn0ztiuN0TD9mvIaHd9Ys1EQnlUCtO751RHx6qZtBTHLQKtcOBxsmJnFWkhvqYwwkh25YCxDkB/0+cYFQ/4CKKTnv8qKxoH2zLiq3/IKh+wSmoJrJmziOlRB60b27nu0DAi8413R0skbVuDBCeCth8SJTdPBsSWqO8/3yjLi/4/eJJEL/20QnNMFyMo45yHrKPhg8Sdc9dFC83BUj/VNmU+NbIIMGMqn9N8sJYhy0hNKgeSi5CLxHBn9IKnyDRN/xdd52arVw==
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?dIeZuifxIMxxVG54PLpVHugirvrswqLMSCv44bBBUL5Bv2JgEs3id+qJdS1G?=
+ =?us-ascii?Q?hzEkkrrRtz3/8JOA9huQMet/glgQYx8bXH3HB/59xBlTmZcotMGCMd4vo1MA?=
+ =?us-ascii?Q?ypgGtCkuoJPRWM8BiE3iYQocw9HfGEYQ6T5BOlr54y0/7cpSxmwL/eBL/DHS?=
+ =?us-ascii?Q?5XE9Nw8v/Azl7hNNQn6eyN79DBnR097mmtt/sf2lS9S1diQXtwSH7DxN3o6R?=
+ =?us-ascii?Q?a5wKHM/ArpeFpyB63FOP2Iw+kqhA6OaJxZQUBvtCumrkAIsu0hwp2LgyCi9m?=
+ =?us-ascii?Q?0+W/Vw3ZaVngbNHOOyibUuR2n98Wzq2pfBoPMk/1RXBNVUBFW9E5x7mJDsPO?=
+ =?us-ascii?Q?f9oJcGdYenfj1JtkGPe5h5AkM8Og50OjS90LEN+OhiRjLxzgANfbcyzHzqu0?=
+ =?us-ascii?Q?IbCSwrAtDCrdEYDTh41ruLvsTWhwudVn/qKiTlzlxpke3ewDb+Fso7m4At0h?=
+ =?us-ascii?Q?B+m8Ztac8FZz9TBiMKQI5jycKY1jjlEI00IQ7AT1GD2TjCAqmPLPwAmWSfzT?=
+ =?us-ascii?Q?NLKWwJe1t9FkRKktqr52qwgTrR3VwiXcJ288eV5kOKgvGRJX/SviMLTci3S5?=
+ =?us-ascii?Q?E9+8vAXtN/f8xpbJU42qcx4KLq/GINHUMmRmmzIZBLY45Or0Gl7+iohIKKmL?=
+ =?us-ascii?Q?JNRqDT5zINF77PhqD5RUfgVJsMwLQ2n4DMyE5ToPj04rqrvfaqksC2sj2LSn?=
+ =?us-ascii?Q?/2pRg7LbU7rWgmC3BVdgqUnOh9+Ce8ojjkqfLdDhGznLPxZS/LjrJQi3koZB?=
+ =?us-ascii?Q?UPUKH6lZyxi8tXbUcCzx7TmqsD46cBJOJyMJeOT+QVo5X2TrkYD5fnC9mfJL?=
+ =?us-ascii?Q?/3EL7PIeefCBgERkpunJp3+uQbiYP89GhE+7q0kTcd81NMQmPMjwBXi1Fd4s?=
+ =?us-ascii?Q?2s19Df3rYibJoQZBp9IkzwVOQkyQlgzCXtyGaBpieVf+osBTjE9vzmPvzmJk?=
+ =?us-ascii?Q?YemM+PWjoDARs0F4yRDzyBeS4EFqXy7IJoQ6BdcnwOJCW8ry9m1tP1SOJHRC?=
+ =?us-ascii?Q?Q+nuprDkqSA1VtGHttooALZioTmlDHcEQkh0BhrO35e4Np60P38XXUJuABnA?=
+ =?us-ascii?Q?ytkK2QycQRYBIcbxWYjFc9l8fX+a7XWxpRWS4EouCLlXz4YgBVeFhauGRctq?=
+ =?us-ascii?Q?8YZphCQOciv4E8nupslPpDnUUcu96DjPMY2Nfd5BCxReCTBD5kLNcpD4T2Xm?=
+ =?us-ascii?Q?vVJWpdfyCFnCxH4KpbetqvF3AYgt1/b+xaoRAQ=3D=3D?=
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1f0f8b42-44a2-4e82-cc0f-08dc20f7fc2e
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jan 2024 18:27:43.9438
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR02MB9341
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240129_083657_096500_52DD35CE 
-X-CRM114-Status: GOOD (  64.56  )
+X-CRM114-CacheID: sfid-20240129_102749_892297_80B13F7F 
+X-CRM114-Status: GOOD (  22.74  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -95,305 +131,157 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Alex,
+From: Baoquan He <bhe@redhat.com> Sent: Monday, January 29, 2024 5:51 AM
+> 
+> Michael pointed out that the #ifdef CONFIG_CRASH_DUMP is nested inside
+> arch/x86/xen/enlighten_hvm.c.
 
-adding linux-integrity as there are some synergies with IMA_KEXEC (in case we
-get KHO to work).
+Did some words get left out in the above sentence?  It mentions the Xen
+case, but not the Hyper-V case.  I'm not sure what you intended.
 
-Fist of all I believe that having a generic framework to pass information from
-one kernel to the other across kexec would be a good thing. But I'm afraid that
-you are ignoring some fundamental problems which makes it extremely hard, if
-not impossible, to reliably transfer the kernel's state from one kernel to the
-other.
+> 
+> Although the nesting works well too since CONFIG_CRASH_DUMP has
+> dependency on CONFIG_KEXEC_CORE, it may cause confuse because there
 
-One thing I don't understand is how reusing the scratch area is working. Sure
-you pass it's location via the dt/boot_params but I don't see any code that
-makes it a CMA region. So IIUC the scratch area won't be available for the 2nd
-kernel. Which is probably for the better as IIUC the 2nd kernel gets loaded and
-runs inside that area and I don't believe the CMA design ever considered that
-the kernel image could be included in a CMA area.
+s/confusion/confuse/
 
-Staying at reusing the scratch area. One thing that is broken for sure is that
-you reuse the scratch area without ever checking the kho_scratch parameter of
-the 2nd kernel's command line. Remember, with kexec you are dealing with two
-different kernels with two different command lines. Meaning you can only reuse
-the scratch area if the requested size in the 2nd kernel is identical to the
-one of the 1st kernel. In all other cases you need to adjust the scratch area's
-size or reserve a new one.
+> are places where it's not nested, and people may think it need be nested
 
-This directly leads to the next problem. In kho_reserve_previous_mem you are
-reusing the different memory regions wherever the 1st kernel allocated them.
-But that also means you are handing over the 1st kernel's memory
-fragmentation to the 2nd kernel and you do that extremely early during boot.
-Which means that users who need to allocate large continuous physical memory,
-like the scratch area or the crashkernel memory, will have increasing chance to
-not find a suitable area. Which IMHO is unacceptable.
+s/need be/needs to be/
 
-Finally, and that's the big elephant in the room, is your lax handling of the
-unstable kernel internal ABI. Remember, you are dealing with two different
-kernels, that also means two different source levels and two different configs.
-So only because both the 1st and 2nd kernel have a e.g. struct buffer_page
-doesn't means that they have the same struct buffer_page. But that's what your
-code implicitly assumes. For KHO ever to make it upstream you need to make sure
-that both kernels are "speaking the same language".
+> even though it doesn't have to.
+> 
+> Fix that by moving  CONFIG_CRASH_DUMP ifdeffery of codes out of
+> CONFIG_KEXEC_CODE ifdeffery scope.
+> 
+> And also fix a building error Nathan reported as below by replacing
+> CONFIG_KEXEC_CORE ifdef with CONFIG_VMCORE_INFO ifdef.
+> 
+> ====
+> $ curl -LSso .config https://git.alpinelinux.org/aports/plain/community/linux-edge/config-edge.x86_64 
+> $ make -skj"$(nproc)" ARCH=x86_64 CROSS_COMPILE=x86_64-linux-
+> olddefconfig all
+> ...
+> x86_64-linux-ld: arch/x86/xen/mmu_pv.o: in function
+> `paddr_vmcoreinfo_note':
+> mmu_pv.c:(.text+0x3af3): undefined reference to `vmcoreinfo_note'
+> ====
+> 
+> Link: https://lore.kernel.org/all/SN6PR02MB4157931105FA68D72E3D3DB8D47B2@SN6PR02MB4157.namprd02.prod.outlook.com/T/#u
+> Link: https://lore.kernel.org/all/20240126045551.GA126645@dev-arch.thelio-3990X/T/#u
+> Signed-off-by: Baoquan He <bhe@redhat.com>
 
-Personally I see two possible solutions:
+Modulo the commit message nits, LGTM.
 
-1) You introduce a stable intermediate format for every subsystem similar to
-what IMA_KEXEC does. This should work for simple types like struct buffer_page
-but for complex ones like struct vfio_device that's basically impossible.
+Reviewed-by: Michael Kelley <mhklinux@outlook.com>
 
-2) You also hand over the ABI version for every given type (basically just a
-hash over all fields including all the dependencies). So the 2nd kernel can
-verify that the data handed over is in a format it can handle and if not bail
-out with a descriptive error message rather than reading garbage. Plus side is
-that once such a system is in place you can reuse it to automatically resolve
-all dependencies so you no longer need to manually store the buffer_page and
-its buffer_data_page separately.
-Down side is that traversing the debuginfo (including the ones from modules) is
-not a simple task and I expect that such a system will be way more complex than
-the rest of KHO. In addition there are some cases that the versioning won't be
-able to capture. For example if a type contains a "void *"-field. Then although
-the definition of the type is identical in both kernels the field can be cast
-to different types when used. An other problem will be function pointers which
-you first need to resolve in the 1st kernel and then map to the identical
-function in the 2nd kernel. This will become particularly "fun" when the
-function is part of a module that isn't loaded at the time when you try to
-recreate the kernel's state.
-
-So to summarize, while it would be nice to have a generic framework like KHO to
-pass data from one kernel to the other via kexec there are good reasons why it
-doesn't exist, yet.
-
-Thanks
-Philipp
-
-
-On Wed, 17 Jan 2024 14:46:47 +0000
-Alexander Graf <graf@amazon.com> wrote:
-
-> Kexec today considers itself purely a boot loader: When we enter the new
-> kernel, any state the previous kernel left behind is irrelevant and the
-> new kernel reinitializes the system.
+> ---
+>  arch/x86/kernel/cpu/mshyperv.c | 10 ++++++----
+>  arch/x86/kernel/reboot.c       |  2 +-
+>  arch/x86/xen/enlighten_hvm.c   |  4 ++--
+>  arch/x86/xen/mmu_pv.c          |  2 +-
+>  4 files changed, 10 insertions(+), 8 deletions(-)
 > 
-> However, there are use cases where this mode of operation is not what we
-> actually want. In virtualization hosts for example, we want to use kexec
-> to update the host kernel while virtual machine memory stays untouched.
-> When we add device assignment to the mix, we also need to ensure that
-> IOMMU and VFIO states are untouched. If we add PCIe peer to peer DMA, we
-> need to do the same for the PCI subsystem. If we want to kexec while an
-> SEV-SNP enabled virtual machine is running, we need to preserve the VM
-> context pages and physical memory. See James' and my Linux Plumbers
-> Conference 2023 presentation for details:
+> diff --git a/arch/x86/kernel/cpu/mshyperv.c
+> b/arch/x86/kernel/cpu/mshyperv.c
+> index f8163a59026b..2e8cd5a4ae85 100644
+> --- a/arch/x86/kernel/cpu/mshyperv.c
+> +++ b/arch/x86/kernel/cpu/mshyperv.c
+> @@ -209,6 +209,7 @@ static void hv_machine_shutdown(void)
+>  	if (kexec_in_progress)
+>  		hyperv_cleanup();
+>  }
+> +#endif /* CONFIG_KEXEC_CORE */
 > 
->   https://lpc.events/event/17/contributions/1485/
+>  #ifdef CONFIG_CRASH_DUMP
+>  static void hv_machine_crash_shutdown(struct pt_regs *regs)
+> @@ -222,8 +223,7 @@ static void hv_machine_crash_shutdown(struct
+> pt_regs *regs)
+>  	/* Disable the hypercall page when there is only 1 active CPU. */
+>  	hyperv_cleanup();
+>  }
+> -#endif
+> -#endif /* CONFIG_KEXEC_CORE */
+> +#endif /* CONFIG_CRASH_DUMP */
+>  #endif /* CONFIG_HYPERV */
 > 
-> To start us on the journey to support all the use cases above, this
-> patch implements basic infrastructure to allow hand over of kernel state
-> across kexec (Kexec HandOver, aka KHO). As example target, we use ftrace:
-> With this patch set applied, you can read ftrace records from the
-> pre-kexec environment in your post-kexec one. This creates a very powerful
-> debugging and performance analysis tool for kexec. It's also slightly
-> easier to reason about than full blown VFIO state preservation.
+>  static uint32_t  __init ms_hyperv_platform(void)
+> @@ -497,9 +497,11 @@ static void __init ms_hyperv_init_platform(void)
+>  	no_timer_check = 1;
+>  #endif
 > 
-> == Alternatives ==
+> -#if IS_ENABLED(CONFIG_HYPERV) && defined(CONFIG_KEXEC_CORE)
+> +#if IS_ENABLED(CONFIG_HYPERV)
+> +#if defined(CONFIG_KEXEC_CORE)
+>  	machine_ops.shutdown = hv_machine_shutdown;
+> -#ifdef CONFIG_CRASH_DUMP
+> +#endif
+> +#if defined(CONFIG_CRASH_DUMP)
+>  	machine_ops.crash_shutdown = hv_machine_crash_shutdown;
+>  #endif
+>  #endif
+> diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+> index 1287b0d5962f..f3130f762784 100644
+> --- a/arch/x86/kernel/reboot.c
+> +++ b/arch/x86/kernel/reboot.c
+> @@ -826,7 +826,7 @@ void machine_halt(void)
+>  	machine_ops.halt();
+>  }
 > 
-> There are alternative approaches to (parts of) the problems above:
+> -#ifdef CONFIG_KEXEC_CORE
+> +#ifdef CONFIG_CRASH_DUMP
+>  void machine_crash_shutdown(struct pt_regs *regs)
+>  {
+>  	machine_ops.crash_shutdown(regs);
+> diff --git a/arch/x86/xen/enlighten_hvm.c b/arch/x86/xen/enlighten_hvm.c
+> index 09e3db7ff990..0b367c1e086d 100644
+> --- a/arch/x86/xen/enlighten_hvm.c
+> +++ b/arch/x86/xen/enlighten_hvm.c
+> @@ -148,6 +148,7 @@ static void xen_hvm_shutdown(void)
+>  	if (kexec_in_progress)
+>  		xen_reboot(SHUTDOWN_soft_reset);
+>  }
+> +#endif
 > 
->   * Memory Pools [1] - preallocated persistent memory region + allocator
->   * PRMEM [2] - resizable persistent memory regions with fixed metadata
->                 pointer on the kernel command line + allocator
->   * Pkernfs [3] - preallocated file system for in-kernel data with fixed
->                   address location on the kernel command line
->   * PKRAM [4] - handover of user space pages using a fixed metadata page
->                 specified via command line
+>  #ifdef CONFIG_CRASH_DUMP
+>  static void xen_hvm_crash_shutdown(struct pt_regs *regs)
+> @@ -156,7 +157,6 @@ static void xen_hvm_crash_shutdown(struct pt_regs
+> *regs)
+>  	xen_reboot(SHUTDOWN_soft_reset);
+>  }
+>  #endif
+> -#endif
 > 
-> All of the approaches above fundamentally have the same problem: They
-> require the administrator to explicitly carve out a physical memory
-> location because they have no mechanism outside of the kernel command
-> line to pass data (including memory reservations) between kexec'ing
-> kernels.
+>  static int xen_cpu_up_prepare_hvm(unsigned int cpu)
+>  {
+> @@ -238,10 +238,10 @@ static void __init xen_hvm_guest_init(void)
 > 
-> KHO provides that base foundation. We will determine later whether we
-> still need any of the approaches above for fast bulk memory handover of for
-> example IOMMU page tables. But IMHO they would all be users of KHO, with
-> KHO providing the foundational primitive to pass metadata and bulk memory
-> reservations as well as provide easy versioning for data.
+>  #ifdef CONFIG_KEXEC_CORE
+>  	machine_ops.shutdown = xen_hvm_shutdown;
+> +#endif
+>  #ifdef CONFIG_CRASH_DUMP
+>  	machine_ops.crash_shutdown = xen_hvm_crash_shutdown;
+>  #endif
+> -#endif
+>  }
 > 
-> == Overview ==
+>  static __init int xen_parse_nopv(char *arg)
+> diff --git a/arch/x86/xen/mmu_pv.c b/arch/x86/xen/mmu_pv.c
+> index 218773cfb009..e21974f2cf2d 100644
+> --- a/arch/x86/xen/mmu_pv.c
+> +++ b/arch/x86/xen/mmu_pv.c
+> @@ -2520,7 +2520,7 @@ int xen_remap_pfn(struct vm_area_struct *vma,
+> unsigned long addr,
+>  }
+>  EXPORT_SYMBOL_GPL(xen_remap_pfn);
 > 
-> We introduce a metadata file that the kernels pass between each other. How
-> they pass it is architecture specific. The file's format is a Flattened
-> Device Tree (fdt) which has a generator and parser already included in
-> Linux. When the root user enables KHO through /sys/kernel/kho/active, the
-> kernel invokes callbacks to every driver that supports KHO to serialize
-> its state. When the actual kexec happens, the fdt is part of the image
-> set that we boot into. In addition, we keep a "scratch region" available
-> for kexec: A physically contiguous memory region that is guaranteed to
-> not have any memory that KHO would preserve.  The new kernel bootstraps
-> itself using the scratch region and sets all handed over memory as in use.
-> When drivers initialize that support KHO, they introspect the fdt and
-> recover their state from it. This includes memory reservations, where the
-> driver can either discard or claim reservations.
-> 
-> == Limitations ==
-> 
-> I currently only implemented file based kexec. The kernel interfaces
-> in the patch set are already in place to support user space kexec as well,
-> but I have not implemented it yet inside kexec tools.
-> 
-> == How to Use ==
-> 
-> To use the code, please boot the kernel with the "kho_scratch=" command
-> line parameter set: "kho_scratch=512M". KHO requires a scratch region.
-> 
-> Make sure to fill ftrace with contents that you want to observe after
-> kexec.  Then, before you invoke file based "kexec -l", activate KHO:
-> 
->   # echo 1 > /sys/kernel/kho/active
->   # kexec -l Image --initrd=initrd -s
->   # kexec -e
-> 
-> The new kernel will boot up and contain the previous kernel's trace
-> buffers in /sys/kernel/debug/tracing/trace.
-> 
-> == Changelog ==
-> 
-> v1 -> v2:
->   - Removed: tracing: Introduce names for ring buffers
->   - Removed: tracing: Introduce names for events
->   - New: kexec: Add config option for KHO
->   - New: kexec: Add documentation for KHO
->   - New: tracing: Initialize fields before registering
->   - New: devicetree: Add bindings for ftrace KHO
->   - test bot warning fixes
->   - Change kconfig option to ARCH_SUPPORTS_KEXEC_KHO
->   - s/kho_reserve_mem/kho_reserve_previous_mem/g
->   - s/kho_reserve/kho_reserve_scratch/g
->   - Remove / reduce ifdefs
->   - Select crc32
->   - Leave anything that requires a name in trace.c to keep buffers
->     unnamed entities
->   - Put events as array into a property, use fingerprint instead of
->     names to identify them
->   - Reduce footprint without CONFIG_FTRACE_KHO
->   - s/kho_reserve_mem/kho_reserve_previous_mem/g
->   - make kho_get_fdt() const
->   - Add stubs for return_mem and claim_mem
->   - make kho_get_fdt() const
->   - Get events as array from a property, use fingerprint instead of
->     names to identify events
->   - Change kconfig option to ARCH_SUPPORTS_KEXEC_KHO
->   - s/kho_reserve_mem/kho_reserve_previous_mem/g
->   - s/kho_reserve/kho_reserve_scratch/g
->   - Leave the node generation code that needs to know the name in
->     trace.c so that ring buffers can stay anonymous
->   - s/kho_reserve/kho_reserve_scratch/g
->   - Move kho enums out of ifdef
->   - Move from names to fdt offsets. That way, trace.c can find the trace
->     array offset and then the ring buffer code only needs to read out
->     its per-CPU data. That way it can stay oblivient to its name.
->   - Make kho_get_fdt() const
-> 
-> v2 -> v3:
-> 
->   - Fix make dt_binding_check
->   - Add descriptions for each object
->   - s/trace_flags/trace-flags/
->   - s/global_trace/global-trace/
->   - Make all additionalProperties false
->   - Change subject to reflect subsysten (dt-bindings)
->   - Fix indentation
->   - Remove superfluous examples
->   - Convert to 64bit syntax
->   - Move to kho directory
->   - s/"global_trace"/"global-trace"/
->   - s/"global_trace"/"global-trace"/
->   - s/"trace_flags"/"trace-flags"/
->   - Fix wording
->   - Add Documentation to MAINTAINERS file
->   - Remove kho reference on read error
->   - Move handover_dt unmap up
->   - s/reserve_scratch_mem/mark_phys_as_cma/
->   - Remove ifdeffery
->   - Remove superfluous comment
-> 
-> Alexander Graf (17):
->   mm,memblock: Add support for scratch memory
->   memblock: Declare scratch memory as CMA
->   kexec: Add Kexec HandOver (KHO) generation helpers
->   kexec: Add KHO parsing support
->   kexec: Add KHO support to kexec file loads
->   kexec: Add config option for KHO
->   kexec: Add documentation for KHO
->   arm64: Add KHO support
->   x86: Add KHO support
->   tracing: Initialize fields before registering
->   tracing: Introduce kho serialization
->   tracing: Add kho serialization of trace buffers
->   tracing: Recover trace buffers from kexec handover
->   tracing: Add kho serialization of trace events
->   tracing: Recover trace events from kexec handover
->   tracing: Add config option for kexec handover
->   Documentation: KHO: Add ftrace bindings
-> 
->  Documentation/ABI/testing/sysfs-firmware-kho  |   9 +
->  Documentation/ABI/testing/sysfs-kernel-kho    |  53 ++
->  .../admin-guide/kernel-parameters.txt         |  10 +
->  .../kho/bindings/ftrace/ftrace-array.yaml     |  38 ++
->  .../kho/bindings/ftrace/ftrace-cpu.yaml       |  43 ++
->  Documentation/kho/bindings/ftrace/ftrace.yaml |  62 +++
->  Documentation/kho/concepts.rst                |  88 +++
->  Documentation/kho/index.rst                   |  19 +
->  Documentation/kho/usage.rst                   |  57 ++
->  Documentation/subsystem-apis.rst              |   1 +
->  MAINTAINERS                                   |   3 +
->  arch/arm64/Kconfig                            |   3 +
->  arch/arm64/kernel/setup.c                     |   2 +
->  arch/arm64/mm/init.c                          |   8 +
->  arch/x86/Kconfig                              |   3 +
->  arch/x86/boot/compressed/kaslr.c              |  55 ++
->  arch/x86/include/uapi/asm/bootparam.h         |  15 +-
->  arch/x86/kernel/e820.c                        |   9 +
->  arch/x86/kernel/kexec-bzimage64.c             |  39 ++
->  arch/x86/kernel/setup.c                       |  46 ++
->  arch/x86/mm/init_32.c                         |   7 +
->  arch/x86/mm/init_64.c                         |   7 +
->  drivers/of/fdt.c                              |  39 ++
->  drivers/of/kexec.c                            |  54 ++
->  include/linux/kexec.h                         |  58 ++
->  include/linux/memblock.h                      |  19 +
->  include/linux/ring_buffer.h                   |  17 +-
->  include/linux/trace_events.h                  |   1 +
->  include/uapi/linux/kexec.h                    |   6 +
->  kernel/Kconfig.kexec                          |  13 +
->  kernel/Makefile                               |   2 +
->  kernel/kexec_file.c                           |  41 ++
->  kernel/kexec_kho_in.c                         | 298 ++++++++++
->  kernel/kexec_kho_out.c                        | 526 ++++++++++++++++++
->  kernel/trace/Kconfig                          |  14 +
->  kernel/trace/ring_buffer.c                    | 243 +++++++-
->  kernel/trace/trace.c                          |  96 +++-
->  kernel/trace/trace_events.c                   |  14 +-
->  kernel/trace/trace_events_synth.c             |  14 +-
->  kernel/trace/trace_events_user.c              |   4 +
->  kernel/trace/trace_output.c                   | 247 +++++++-
->  kernel/trace/trace_output.h                   |   5 +
->  kernel/trace/trace_probe.c                    |   4 +
->  mm/Kconfig                                    |   4 +
->  mm/memblock.c                                 |  79 ++-
->  45 files changed, 2351 insertions(+), 24 deletions(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-firmware-kho
->  create mode 100644 Documentation/ABI/testing/sysfs-kernel-kho
->  create mode 100644 Documentation/kho/bindings/ftrace/ftrace-array.yaml
->  create mode 100644 Documentation/kho/bindings/ftrace/ftrace-cpu.yaml
->  create mode 100644 Documentation/kho/bindings/ftrace/ftrace.yaml
->  create mode 100644 Documentation/kho/concepts.rst
->  create mode 100644 Documentation/kho/index.rst
->  create mode 100644 Documentation/kho/usage.rst
->  create mode 100644 kernel/kexec_kho_in.c
->  create mode 100644 kernel/kexec_kho_out.c
-> 
+> -#ifdef CONFIG_KEXEC_CORE
+> +#ifdef CONFIG_VMCORE_INFO
+>  phys_addr_t paddr_vmcoreinfo_note(void)
+>  {
+>  	if (xen_pv_domain())
+> --
+> 2.41.0
 
 
 _______________________________________________
