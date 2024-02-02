@@ -4,103 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 94370C47258
-	for <kexec@archiver.kernel.org>; Fri,  2 Feb 2024 05:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0F72BC47258
+	for <kexec@archiver.kernel.org>; Fri,  2 Feb 2024 08:42:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:Cc:To:
-	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=oNttCSG4mj96UcW28uzprrh0nWVF9V/l++8xrzbf/Hg=; b=C/ZGj8ct8dFx8rDcYcPjS11Rt3
-	Q/RPEqGzxOc33qQvGqNYK7YgxbRFYYtMr3IAnqoqeqisxwW1Deu8FFsQAEAw7H6iwtQ44TLOtojsZ
-	IYgxlEAsHc9fmCg8vVdK1o8cQYN6jr4xEo/eBMYclFOBeRdQNGpjnYf8SVz8hvsJMt/ENGDZds/IO
-	SQwGT7Y/+fZ64PEsDKxj9Nsmw09fIC6vu2gTorelxgnjFVozSc9SgB+/UZezJrKNeYXIzRFMLNPUu
-	D/vR6XN/qLRx+N/IRqNi0qcSSv95ugg1K8t0WPS2pgdfI1aXLxoXncEt8kPb45qN44Vs0nqiVsumX
-	dtfT4U3A==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=JmxAOhY2pYJiWLu0wqinazqr2nDEOM+7df6GWo95zp8=; b=iPPW0KH/mdnJOs
+	MW2mMv5KEUXBPbkJAREL0ZA/X9TY/N1iKajbTxcRr+O5YPweLmm363vOnGwCphfIBM1sjMp99JUnG
+	a+8MRRRQZd0RfckLv9iWY2zfhrqh0tuTOMT5ESZmRe2C++/6fB3kfUAQrjo+qGhp7fPUIKCxV5KuW
+	t14KzxZY+CUvfK8eUDMJZYxZCqXbsF/aMUKM0wRzrnVWec/Bu8OxDKy+t9iovjVgVIbCXGlNgcIwr
+	mo89pIYRr/SqlLrtwxKfTaQbdptuU5uIRjlub+1Jw5pDUJbX0QGInxK/ScC3vHVM3zMiNibZAFwFT
+	KpEVu1gdlzhaDdsYMx+Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rVm2a-0000000AHnq-3BhN;
-	Fri, 02 Feb 2024 05:24:40 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1rVp7t-0000000Ankv-0BV1;
+	Fri, 02 Feb 2024 08:42:21 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rVm2Y-0000000AHmm-0Sjz;
-	Fri, 02 Feb 2024 05:24:40 +0000
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4124f8L7017387;
-	Fri, 2 Feb 2024 05:24:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=PDV06LOquyZ2c07ivE0vzxZrSRl419YEOX13JRF/udo=;
- b=nPh+kCvNsnHIYDXWB0+2FRPhHygYiddpgBYz2W2SHiiN1BkFek2qQw4ycvxxYI/qpDU6
- yTcyNuf7kUwLL+dKocLOKD9Ekbesc3adySbvz8eZZZo2Z5ceyoprZbKlKsbp/pRs/L+u
- LoKmlG+vz37L6dQuBT680kuK7Hzw1dKKzpiIQ6ikpbCbLP8uFBLpJtSeBEj0PCvygnUT
- 4NR2nL56TsuRsPlaZ56kvvRxLE4E+QskziTz+cZzPuCgZxD21oHVw4P/IY05CitLKyF1
- eg9L8IxFl1XG9YTFEBQGzk6a4uzOmaa08XYF8RC/ZKiXNITRfrHPMBQBXQuNWjRLHcyu Mw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w0sev0xb0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 Feb 2024 05:24:26 +0000
-Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4124w2OJ002776;
-	Fri, 2 Feb 2024 05:23:50 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w0sev0wt4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 Feb 2024 05:23:50 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41240aMF011292;
-	Fri, 2 Feb 2024 05:23:31 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vwecm0xbv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 Feb 2024 05:23:31 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4125NTcC43254138
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 2 Feb 2024 05:23:29 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 755912004B;
-	Fri,  2 Feb 2024 05:23:29 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A5C9420040;
-	Fri,  2 Feb 2024 05:23:25 +0000 (GMT)
-Received: from [9.43.64.13] (unknown [9.43.64.13])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri,  2 Feb 2024 05:23:25 +0000 (GMT)
-Message-ID: <9101bb07-70f1-476c-bec9-ec67e9899744@linux.ibm.com>
-Date: Fri, 2 Feb 2024 10:53:23 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 00/14] Split crash out from kexec and clean up related
- config items
-To: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
-Cc: kexec@lists.infradead.org, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-        loongarch@lists.linux.dev, akpm@linux-foundation.org,
-        ebiederm@xmission.com, piliu@redhat.com, viro@zeniv.linux.org.uk
-References: <20240119145241.769622-1-bhe@redhat.com>
-Content-Language: en-US
-From: Hari Bathini <hbathini@linux.ibm.com>
-In-Reply-To: <20240119145241.769622-1-bhe@redhat.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: RAVJ1hGQlGX9e6U_JEK40a_2LBSb9TD_
-X-Proofpoint-ORIG-GUID: tOhKLrcRaLdeupwFUmZ3kDNGA-MwGyC-
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	id 1rVp7p-0000000Anje-42R3
+	for kexec@lists.infradead.org;
+	Fri, 02 Feb 2024 08:42:19 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 66D4362306;
+	Fri,  2 Feb 2024 08:42:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E902C43390;
+	Fri,  2 Feb 2024 08:42:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706863337;
+	bh=0wcKGTYVMX/a+PxYdBc2ncRniLKVKD5k+Z3j7EYRH5A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JR43nUvL3Gkwkh8lODl37QJFZIWJNxAJNQxmsAsDsTMQmycsxtogYIXiNqgr+7WzR
+	 tUJla797Cggn6r/GqEVv9g+46mSNYkbjsNo6dtdtL+JzDlsENoJTitz4cXVCAKVkla
+	 iXoLfS7Y6il9mDXoP6j5XCl67aIso5JyTotsOCoCFU9yS93H/OVbrWFiyWqaG1lZ6n
+	 9C0TbT2mr0MkhJTPOfe2s8yexA2bDGYr8EwB9fL6MxeloDAnnWl1BLtItxU6U07cfg
+	 Do9N8Z0Zbb5oBPWDgTPl8u7uqLyyuqWcLVLPh+HTeiiYZBWO6qqHgbNlZB9ukPLcxT
+	 MHETfq6vpi/tw==
+Date: Fri, 2 Feb 2024 09:42:14 +0100
+From: Simon Horman <horms@kernel.org>
+To: michel@michel-slm.name
+Cc: kexec@lists.infradead.org, Michel Lind <salimma@fedoraproject.org>
+Subject: Re: [PATCH] Fix building on x86_64 with binutils 2.41
+Message-ID: <20240202084214.GI530335@kernel.org>
+References: <20240130-fix-binutils-2-41-v1-1-99ee0fcfb5ce@michel-slm.name>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-01_10,2024-01-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- spamscore=0 clxscore=1011 malwarescore=0 suspectscore=0 priorityscore=1501
- mlxscore=0 mlxlogscore=999 phishscore=0 lowpriorityscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2402020037
+Content-Disposition: inline
+In-Reply-To: <20240130-fix-binutils-2-41-v1-1-99ee0fcfb5ce@michel-slm.name>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240201_212438_427528_1E4C20BC 
-X-CRM114-Status: GOOD (  27.49  )
+X-CRM114-CacheID: sfid-20240202_004218_060733_272EB970 
+X-CRM114-Status: GOOD (  10.66  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -112,171 +66,33 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Baoquan,
+On Tue, Jan 30, 2024 at 04:14:31AM -0600, Michel Lind via B4 Relay wrote:
+> From: Michel Lind <salimma@fedoraproject.org>
+> 
+> Newer versions of the GNU assembler (observed with binutils 2.41) will
+> complain about the ".arch i386" in files assembled with "as --64",
+> with the message "Error: 64bit mode not supported on 'i386'".
+> 
+> Fix by moving ".arch i386" below the relevant ".code32" directive, so
+> that the assembler is no longer expecting 64-bit instructions to be used
+> by the time that the ".arch i386" directive is encountered.
+> 
+> Based on similar iPXE fix:
+> https://github.com/ipxe/ipxe/commit/6ca597eee
+> 
+> Signed-off-by: Michel Lind <michel@michel-slm.name>
 
-On 19/01/24 8:22 pm, Baoquan He wrote:
-> Motivation:
-> =============
-> Previously, LKP reported a building error. When investigating, it can't
-> be resolved reasonablly with the present messy kdump config items.
-> 
->   https://lore.kernel.org/oe-kbuild-all/202312182200.Ka7MzifQ-lkp@intel.com/
-> 
-> The kdump (crash dumping) related config items could causes confusions:
-> 
-> Firstly,
-> ---
-> CRASH_CORE enables codes including
->   - crashkernel reservation;
->   - elfcorehdr updating;
->   - vmcoreinfo exporting;
->   - crash hotplug handling;
-> 
-> Now fadump of powerpc, kcore dynamic debugging and kdump all selects
-> CRASH_CORE, while fadump
->   - fadump needs crashkernel parsing, vmcoreinfo exporting, and accessing
->     global variable 'elfcorehdr_addr';
->   - kcore only needs vmcoreinfo exporting;
->   - kdump needs all of the current kernel/crash_core.c.
-> 
-> So only enabling PROC_CORE or FA_DUMP will enable CRASH_CORE, this
-> mislead people that we enable crash dumping, actual it's not.
-> 
-> Secondly,
-> ---
-> It's not reasonable to allow KEXEC_CORE select CRASH_CORE.
-> 
-> Because KEXEC_CORE enables codes which allocate control pages, copy
-> kexec/kdump segments, and prepare for switching. These codes are
-> shared by both kexec reboot and kdump. We could want kexec reboot,
-> but disable kdump. In that case, CRASH_CORE should not be selected.
-> 
->   --------------------
->   CONFIG_CRASH_CORE=y
->   CONFIG_KEXEC_CORE=y
->   CONFIG_KEXEC=y
->   CONFIG_KEXEC_FILE=y
->      ---------------------
-> 
-> Thirdly,
-> ---
-> It's not reasonable to allow CRASH_DUMP select KEXEC_CORE.
-> 
-> That could make KEXEC_CORE, CRASH_DUMP are enabled independently from
-> KEXEC or KEXEC_FILE. However, w/o KEXEC or KEXEC_FILE, the KEXEC_CORE
-> code built in doesn't make any sense because no kernel loading or
-> switching will happen to utilize the KEXEC_CORE code.
->   ---------------------
->   CONFIG_CRASH_CORE=y
->   CONFIG_KEXEC_CORE=y
->   CONFIG_CRASH_DUMP=y
->   ---------------------
-> 
-> In this case, what is worse, on arch sh and arm, KEXEC relies on MMU,
-> while CRASH_DUMP can still be enabled when !MMU, then compiling error is
-> seen as the lkp test robot reported in above link.
-> 
->   ------arch/sh/Kconfig------
->   config ARCH_SUPPORTS_KEXEC
->           def_bool MMU
-> 
->   config ARCH_SUPPORTS_CRASH_DUMP
->           def_bool BROKEN_ON_SMP
->   ---------------------------
-> 
-> Changes:
-> ===========
-> 1, split out crash_reserve.c from crash_core.c;
-> 2, split out vmcore_infoc. from crash_core.c;
-> 3, move crash related codes in kexec_core.c into crash_core.c;
-> 4, remove dependency of FA_DUMP on CRASH_DUMP;
-> 5, clean up kdump related config items;
-> 6, wrap up crash codes in crash related ifdefs on all 9 arch-es
->     which support crash dumping;
-> 
-> Achievement:
-> ===========
-> With above changes, I can rearrange the config item logic as below (the right
-> item depends on or is selected by the left item):
-> 
->      PROC_KCORE -----------> VMCORE_INFO
-> 
->                 |----------> VMCORE_INFO
->      FA_DUMP----|
->                 |----------> CRASH_RESERVE
+Thanks Michael,
 
-FA_DUMP also needs PROC_VMCORE (CRASH_DUMP by dependency, I guess).
-So, the FA_DUMP related changes here will need a relook..
+applied.
 
-
->                                                      ---->VMCORE_INFO
->                                                     /
->                                                     |---->CRASH_RESERVE
->      KEXEC      --|                                /|
->                   |--> KEXEC_CORE--> CRASH_DUMP-->/-|---->PROC_VMCORE
->      KEXEC_FILE --|                               \ |
->                                                     \---->CRASH_HOTPLUG
-> 
-> 
->      KEXEC      --|
->                   |--> KEXEC_CORE (for kexec reboot only)
->      KEXEC_FILE --|
-> 
-> Test
-> ========
-> On all 8 architectures, including x86_64, arm64, s390x, sh, arm, mips,
-> riscv, loongarch, I did below three cases of config item setting and
-> building all passed. Let me take configs on x86_64 as exampmle here:
-> 
-> (1) Both CONFIG_KEXEC and KEXEC_FILE is unset, then all kexec/kdump
-> items are unset automatically:
-> # Kexec and crash features
-> # CONFIG_KEXEC is not set
-> # CONFIG_KEXEC_FILE is not set
-> # end of Kexec and crash features
-> 
-> (2) set CONFIG_KEXEC_FILE and 'make olddefconfig':
-> ---------------
-> # Kexec and crash features
-> CONFIG_CRASH_RESERVE=y
-> CONFIG_VMCORE_INFO=y
-> CONFIG_KEXEC_CORE=y
-> CONFIG_KEXEC_FILE=y
-> CONFIG_CRASH_DUMP=y
-> CONFIG_CRASH_HOTPLUG=y
-> CONFIG_CRASH_MAX_MEMORY_RANGES=8192
-> # end of Kexec and crash features
-> ---------------
-> 
-> (3) unset CONFIG_CRASH_DUMP in case 2 and execute 'make olddefconfig':
-> ------------------------
-> # Kexec and crash features
-> CONFIG_KEXEC_CORE=y
-> CONFIG_KEXEC_FILE=y
-> # end of Kexec and crash features
-> ------------------------
-> 
-> Note:
-> For ppc, it needs investigation to make clear how to split out crash
-> code in arch folder.
-
-On powerpc, both kdump and fadump need PROC_VMCORE & CRASH_DUMP.
-Hope that clears things. So, patch 3/14 breaks things for FA_DUMP..
-
-> Hope Hari and Pingfan can help have a look, see if
-> it's doable. Now, I make it either have both kexec and crash enabled, or
-> disable both of them altogether.
-
-
-Sure. I will take a closer look...
-
-Thanks
-Hari
+- Fix building on x86_64 with binutils 2.41
+  https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=328de8e00e29
 
 _______________________________________________
 kexec mailing list
