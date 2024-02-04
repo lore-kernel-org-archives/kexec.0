@@ -4,60 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 70032C48295
-	for <kexec@archiver.kernel.org>; Sat,  3 Feb 2024 00:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 95BC0C4828D
+	for <kexec@archiver.kernel.org>; Sun,  4 Feb 2024 03:26:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=19WGLlt7NlnXwB8oaTNIPatnC/wCy60hIAB04NbmKRE=; b=b+y0dSYJfMl96y
-	nYsHCf2iT7FzvVmDZ1+HlTFY8693VDtGt/cedLBDkHwCnOzz9avp5/lUTi324WhQtEFUsvEX6dGlR
-	lOYWxPeVyIxXIpwsWhWPSApbONmGrqNTdw1utXIkQe1dkpwqfiN81mA25eBW6nMUzfVEbbYZaN5wU
-	VKKPZGZdarIUQb10FITuAWUcqK47r5bCKkts8Afvb8fFf0Zn2gCDTQjgachUJtFEA/crOmw1B3q9S
-	7AQHaNBeAOdTrowuCidf4LwGXp/uxfFfg9G3jDphh1TcRuNfjfveu/zESJjNwh4IQtN3jNA4mP9NN
-	+Lulf4VqhbX+XJUQCY9g==;
+	List-Owner; bh=BIxy2QeG2v19+EWvKkP5vnBvmxRUXUa7ZnEYNIxo3R4=; b=25+S6DYGPyX6O7
+	S0beCxZddDfKHJEKE1vCr9/kgzdIYiJBRZWipCFDHKP4ZoIQCoRAiOyPLtxwGmG6cDuQiMCjuHxsv
+	ndRaeRR2GtI+4dVoCWQwCuHE2nRp+os041qh/7UqbiG9CBqmBJbA/uKkpHAbse/XgFQsilMVgfwwn
+	EPgEWffQDD3OvNHgxlhJCcS+qQM0WhwM14UCMc5Mk+CwLRks9df+AREFu6iT7Q5FF4260D1dv7uj1
+	0346gZptEIRnX8Aa+7PwTXg7TpbgNXzGdYjljDw+tM/xInIdH7tIhgS/uddhrC1Y3hi+ShNY3TAXI
+	UnRV7d2ME5KJyz/M4oJQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rW3iZ-0000000Dv6T-0sg2;
-	Sat, 03 Feb 2024 00:17:11 +0000
-Received: from sin.source.kernel.org ([145.40.73.55])
+	id 1rWT9N-000000002t3-20BK;
+	Sun, 04 Feb 2024 03:26:33 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rW3iW-0000000Dv5h-2FGX;
-	Sat, 03 Feb 2024 00:17:10 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sin.source.kernel.org (Postfix) with ESMTP id CD3C5CE0BBB;
-	Sat,  3 Feb 2024 00:17:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 871F1C433C7;
-	Sat,  3 Feb 2024 00:17:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706919426;
-	bh=nZQsPsqNPYYXxX4K2h4eMz+56hYUx5rcVPocfkID7bk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gkVh8rmg3XviEeH3EY8bNCfbVigkIJj9WT2Y5KnRTScNgFbnoBjbSnmABJOB8o0io
-	 mle8q4VPcWx5E4fVoDLFYjRvAdiCEJRkEWoAxi3c+t8YJ0GgPGX0blFma9D8oM+vMy
-	 +/WTnug5E9DkyMJWlO5gdxHhfudehvYjgPAX1bsuSjY9GnE0lMDk1NXw412a+Gri4Q
-	 kWZYV8TCESgMZkahnRzmA4QUPoLpe8C9oWKbwT+Z6U1f1Iyy+BRIi2lsk3xqut/Ea9
-	 Py6mRhFWBOW7bvDMCYT+/HRuh3J00fp8dhNhpGr4He7WW0gEl7LuJwSiP/tLNIScJu
-	 Mc1GnRfYytVPg==
-Date: Fri, 2 Feb 2024 17:17:03 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Baoquan He <bhe@redhat.com>
-Cc: kexec@lists.infradead.org, akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
+	id 1rWT9H-000000002rM-3wHj
+	for kexec@lists.infradead.org;
+	Sun, 04 Feb 2024 03:26:30 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1707017181;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eysYxb9qJ6RxmbOxjXjjrpSobYnMDkjTn7GmoY0o3W4=;
+	b=My6IunYp1gj/brtBTlliNRuvd3mj17Q/2g0TDqy8M0Nb7ACC7h6eSFtBstxMwLLIHFJOJ7
+	rZTjSSxdgMMh62Fdy1Am3j74jw3S7u4aDOLEpjh6iZzc5sg3FrIWr0yNfR7kJyeaotWO4r
+	DLZCU+HjbN9uk26nCGuBHJmyp5orOaU=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-220-x_mqoEOfNmSyHGbxxMyZPQ-1; Sat,
+ 03 Feb 2024 22:26:17 -0500
+X-MC-Unique: x_mqoEOfNmSyHGbxxMyZPQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D9FBD1C0514F;
+	Sun,  4 Feb 2024 03:26:16 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.13])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id ED10F2026F95;
+	Sun,  4 Feb 2024 03:26:15 +0000 (UTC)
+Date: Sun, 4 Feb 2024 11:26:12 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Hari Bathini <hbathini@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, x86@kernel.org,
 	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org, mhklinux@outlook.com
-Subject: Re: [PATCH linux-next 1/3] x86, crash: don't nest CONFIG_CRASH_DUMP
- ifdef inside CONFIG_KEXEC_CODE ifdef scope
-Message-ID: <20240203001703.GA3735093@dev-arch.thelio-3990X>
-References: <20240129135033.157195-1-bhe@redhat.com>
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+	loongarch@lists.linux.dev, akpm@linux-foundation.org,
+	ebiederm@xmission.com, piliu@redhat.com, viro@zeniv.linux.org.uk
+Subject: Re: [PATCH v2 00/14] Split crash out from kexec and clean up related
+ config items
+Message-ID: <Zb8D1ASrgX0qVm9z@MiWiFi-R3L-srv>
+References: <20240119145241.769622-1-bhe@redhat.com>
+ <9101bb07-70f1-476c-bec9-ec67e9899744@linux.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20240129135033.157195-1-bhe@redhat.com>
+In-Reply-To: <9101bb07-70f1-476c-bec9-ec67e9899744@linux.ibm.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240202_161708_942406_041230F0 
-X-CRM114-Status: GOOD (  23.36  )
+X-CRM114-CacheID: sfid-20240203_192628_117973_1EC2DDF5 
+X-CRM114-Status: GOOD (  37.60  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,143 +87,232 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-This series resolves the build issues I was seeing. Please feel free to
-carry
+On 02/02/24 at 10:53am, Hari Bathini wrote:
+> Hi Baoquan,
+> 
+> On 19/01/24 8:22 pm, Baoquan He wrote:
+> > Motivation:
+> > =============
+> > Previously, LKP reported a building error. When investigating, it can't
+> > be resolved reasonablly with the present messy kdump config items.
+> > 
+> >   https://lore.kernel.org/oe-kbuild-all/202312182200.Ka7MzifQ-lkp@intel.com/
+> > 
+> > The kdump (crash dumping) related config items could causes confusions:
+> > 
+> > Firstly,
+> > ---
+> > CRASH_CORE enables codes including
+> >   - crashkernel reservation;
+> >   - elfcorehdr updating;
+> >   - vmcoreinfo exporting;
+> >   - crash hotplug handling;
+> > 
+> > Now fadump of powerpc, kcore dynamic debugging and kdump all selects
+> > CRASH_CORE, while fadump
+> >   - fadump needs crashkernel parsing, vmcoreinfo exporting, and accessing
+> >     global variable 'elfcorehdr_addr';
+> >   - kcore only needs vmcoreinfo exporting;
+> >   - kdump needs all of the current kernel/crash_core.c.
+> > 
+> > So only enabling PROC_CORE or FA_DUMP will enable CRASH_CORE, this
+> > mislead people that we enable crash dumping, actual it's not.
+> > 
+> > Secondly,
+> > ---
+> > It's not reasonable to allow KEXEC_CORE select CRASH_CORE.
+> > 
+> > Because KEXEC_CORE enables codes which allocate control pages, copy
+> > kexec/kdump segments, and prepare for switching. These codes are
+> > shared by both kexec reboot and kdump. We could want kexec reboot,
+> > but disable kdump. In that case, CRASH_CORE should not be selected.
+> > 
+> >   --------------------
+> >   CONFIG_CRASH_CORE=y
+> >   CONFIG_KEXEC_CORE=y
+> >   CONFIG_KEXEC=y
+> >   CONFIG_KEXEC_FILE=y
+> >      ---------------------
+> > 
+> > Thirdly,
+> > ---
+> > It's not reasonable to allow CRASH_DUMP select KEXEC_CORE.
+> > 
+> > That could make KEXEC_CORE, CRASH_DUMP are enabled independently from
+> > KEXEC or KEXEC_FILE. However, w/o KEXEC or KEXEC_FILE, the KEXEC_CORE
+> > code built in doesn't make any sense because no kernel loading or
+> > switching will happen to utilize the KEXEC_CORE code.
+> >   ---------------------
+> >   CONFIG_CRASH_CORE=y
+> >   CONFIG_KEXEC_CORE=y
+> >   CONFIG_CRASH_DUMP=y
+> >   ---------------------
+> > 
+> > In this case, what is worse, on arch sh and arm, KEXEC relies on MMU,
+> > while CRASH_DUMP can still be enabled when !MMU, then compiling error is
+> > seen as the lkp test robot reported in above link.
+> > 
+> >   ------arch/sh/Kconfig------
+> >   config ARCH_SUPPORTS_KEXEC
+> >           def_bool MMU
+> > 
+> >   config ARCH_SUPPORTS_CRASH_DUMP
+> >           def_bool BROKEN_ON_SMP
+> >   ---------------------------
+> > 
+> > Changes:
+> > ===========
+> > 1, split out crash_reserve.c from crash_core.c;
+> > 2, split out vmcore_infoc. from crash_core.c;
+> > 3, move crash related codes in kexec_core.c into crash_core.c;
+> > 4, remove dependency of FA_DUMP on CRASH_DUMP;
+> > 5, clean up kdump related config items;
+> > 6, wrap up crash codes in crash related ifdefs on all 9 arch-es
+> >     which support crash dumping;
+> > 
+> > Achievement:
+> > ===========
+> > With above changes, I can rearrange the config item logic as below (the right
+> > item depends on or is selected by the left item):
+> > 
+> >      PROC_KCORE -----------> VMCORE_INFO
+> > 
+> >                 |----------> VMCORE_INFO
+> >      FA_DUMP----|
+> >                 |----------> CRASH_RESERVE
+> 
+> FA_DUMP also needs PROC_VMCORE (CRASH_DUMP by dependency, I guess).
+> So, the FA_DUMP related changes here will need a relook..
 
-  Tested-by: Nathan Chancellor <nathan@kernel.org> # build
+Thanks for checking this.
 
-forward if there are any more revisions without drastic changes.
+So FA_DUMP needs vmcoreinfo exporting, crashkernel reservation,
+/proc/vmcore. Then it's easy to adjust the kernel config item of FA_DUMP
+to make it select CRASH_DUMP. Except of this, do you have concern about
+the current code and Kconfig refactorying?
 
-On Mon, Jan 29, 2024 at 09:50:31PM +0800, Baoquan He wrote:
-> Michael pointed out that the #ifdef CONFIG_CRASH_DUMP is nested inside
-> arch/x86/xen/enlighten_hvm.c.
+
+                           ---->VMCORE_INFO
+                         /|
+FA_DUMP--> CRASH_DUMP-->/-|---->CRASH_RESERVE
+                        \ |
+                          \---->PROC_VMCORE
+
+
 > 
-> Although the nesting works well too since CONFIG_CRASH_DUMP has
-> dependency on CONFIG_KEXEC_CORE, it may cause confuse because there
-> are places where it's not nested, and people may think it need be nested
-> even though it doesn't have to.
 > 
-> Fix that by moving  CONFIG_CRASH_DUMP ifdeffery of codes out of
-> CONFIG_KEXEC_CODE ifdeffery scope.
+> >                                                      ---->VMCORE_INFO
+> >                                                     /
+> >                                                     |---->CRASH_RESERVE
+> >      KEXEC      --|                                /|
+> >                   |--> KEXEC_CORE--> CRASH_DUMP-->/-|---->PROC_VMCORE
+> >      KEXEC_FILE --|                               \ |
+> >                                                     \---->CRASH_HOTPLUG
+> > 
+> > 
+> >      KEXEC      --|
+> >                   |--> KEXEC_CORE (for kexec reboot only)
+> >      KEXEC_FILE --|
+> > 
+> > Test
+> > ========
+> > On all 8 architectures, including x86_64, arm64, s390x, sh, arm, mips,
+> > riscv, loongarch, I did below three cases of config item setting and
+> > building all passed. Let me take configs on x86_64 as exampmle here:
+> > 
+> > (1) Both CONFIG_KEXEC and KEXEC_FILE is unset, then all kexec/kdump
+> > items are unset automatically:
+> > # Kexec and crash features
+> > # CONFIG_KEXEC is not set
+> > # CONFIG_KEXEC_FILE is not set
+> > # end of Kexec and crash features
+> > 
+> > (2) set CONFIG_KEXEC_FILE and 'make olddefconfig':
+> > ---------------
+> > # Kexec and crash features
+> > CONFIG_CRASH_RESERVE=y
+> > CONFIG_VMCORE_INFO=y
+> > CONFIG_KEXEC_CORE=y
+> > CONFIG_KEXEC_FILE=y
+> > CONFIG_CRASH_DUMP=y
+> > CONFIG_CRASH_HOTPLUG=y
+> > CONFIG_CRASH_MAX_MEMORY_RANGES=8192
+> > # end of Kexec and crash features
+> > ---------------
+> > 
+> > (3) unset CONFIG_CRASH_DUMP in case 2 and execute 'make olddefconfig':
+> > ------------------------
+> > # Kexec and crash features
+> > CONFIG_KEXEC_CORE=y
+> > CONFIG_KEXEC_FILE=y
+> > # end of Kexec and crash features
+> > ------------------------
+> > 
+> > Note:
+> > For ppc, it needs investigation to make clear how to split out crash
+> > code in arch folder.
 > 
-> And also fix a building error Nathan reported as below by replacing
-> CONFIG_KEXEC_CORE ifdef with CONFIG_VMCORE_INFO ifdef.
+> On powerpc, both kdump and fadump need PROC_VMCORE & CRASH_DUMP.
+> Hope that clears things. So, patch 3/14 breaks things for FA_DUMP..
+
+I see it now. We can easily fix that with below patch. What do you
+think?
+
+By the way, do you have chance to help test these on powerpc system?
+I can find ppc64le machine, while I don't know how to operate to test
+fadump.
+
+From fa8e6c3930d4f22f2b3768399c5bf0523c17adde Mon Sep 17 00:00:00 2001
+From: Baoquan He <bhe@redhat.com>
+Date: Sun, 4 Feb 2024 11:06:54 +0800
+Subject: [PATCH] power/fadump: make FA_DUMP select CRASH_DUMP
+Content-type: text/plain
+
+FA_DUMP which is similar with kdump needs vmcoreinfo exporting,
+crashkernel reservation and /proc/vmcore file . After refactoring crash
+related codes and Kconfig items, make FA_DUMP select CRASH_DUMP. Now
+the dependency layout is like below:
+
+                           ---->VMCORE_INFO
+                         /|
+FA_DUMP--> CRASH_DUMP-->/-|---->CRASH_RESERVE
+                        \ |
+                          \---->PROC_VMCORE
+
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+ arch/powerpc/Kconfig | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index f182fb354bef..d5d4c890f010 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -695,8 +695,7 @@ config ARCH_SELECTS_CRASH_DUMP
+ config FA_DUMP
+ 	bool "Firmware-assisted dump"
+ 	depends on PPC64 && (PPC_RTAS || PPC_POWERNV)
+-	select VMCORE_INFO
+-	select CRASH_RESERVE
++	select CRASH_DUMP
+ 	help
+ 	  A robust mechanism to get reliable kernel crash dump with
+ 	  assistance from firmware. This approach does not use kexec,
+-- 
+2.41.0
+
+
 > 
-> ====
-> $ curl -LSso .config https://git.alpinelinux.org/aports/plain/community/linux-edge/config-edge.x86_64
-> $ make -skj"$(nproc)" ARCH=x86_64 CROSS_COMPILE=x86_64-linux- olddefconfig all
-> ...
-> x86_64-linux-ld: arch/x86/xen/mmu_pv.o: in function `paddr_vmcoreinfo_note':
-> mmu_pv.c:(.text+0x3af3): undefined reference to `vmcoreinfo_note'
-> ====
+> > Hope Hari and Pingfan can help have a look, see if
+> > it's doable. Now, I make it either have both kexec and crash enabled, or
+> > disable both of them altogether.
 > 
-> Link: https://lore.kernel.org/all/SN6PR02MB4157931105FA68D72E3D3DB8D47B2@SN6PR02MB4157.namprd02.prod.outlook.com/T/#u
-> Link: https://lore.kernel.org/all/20240126045551.GA126645@dev-arch.thelio-3990X/T/#u
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> ---
->  arch/x86/kernel/cpu/mshyperv.c | 10 ++++++----
->  arch/x86/kernel/reboot.c       |  2 +-
->  arch/x86/xen/enlighten_hvm.c   |  4 ++--
->  arch/x86/xen/mmu_pv.c          |  2 +-
->  4 files changed, 10 insertions(+), 8 deletions(-)
 > 
-> diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-> index f8163a59026b..2e8cd5a4ae85 100644
-> --- a/arch/x86/kernel/cpu/mshyperv.c
-> +++ b/arch/x86/kernel/cpu/mshyperv.c
-> @@ -209,6 +209,7 @@ static void hv_machine_shutdown(void)
->  	if (kexec_in_progress)
->  		hyperv_cleanup();
->  }
-> +#endif /* CONFIG_KEXEC_CORE */
->  
->  #ifdef CONFIG_CRASH_DUMP
->  static void hv_machine_crash_shutdown(struct pt_regs *regs)
-> @@ -222,8 +223,7 @@ static void hv_machine_crash_shutdown(struct pt_regs *regs)
->  	/* Disable the hypercall page when there is only 1 active CPU. */
->  	hyperv_cleanup();
->  }
-> -#endif
-> -#endif /* CONFIG_KEXEC_CORE */
-> +#endif /* CONFIG_CRASH_DUMP */
->  #endif /* CONFIG_HYPERV */
->  
->  static uint32_t  __init ms_hyperv_platform(void)
-> @@ -497,9 +497,11 @@ static void __init ms_hyperv_init_platform(void)
->  	no_timer_check = 1;
->  #endif
->  
-> -#if IS_ENABLED(CONFIG_HYPERV) && defined(CONFIG_KEXEC_CORE)
-> +#if IS_ENABLED(CONFIG_HYPERV)
-> +#if defined(CONFIG_KEXEC_CORE)
->  	machine_ops.shutdown = hv_machine_shutdown;
-> -#ifdef CONFIG_CRASH_DUMP
-> +#endif
-> +#if defined(CONFIG_CRASH_DUMP)
->  	machine_ops.crash_shutdown = hv_machine_crash_shutdown;
->  #endif
->  #endif
-> diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-> index 1287b0d5962f..f3130f762784 100644
-> --- a/arch/x86/kernel/reboot.c
-> +++ b/arch/x86/kernel/reboot.c
-> @@ -826,7 +826,7 @@ void machine_halt(void)
->  	machine_ops.halt();
->  }
->  
-> -#ifdef CONFIG_KEXEC_CORE
-> +#ifdef CONFIG_CRASH_DUMP
->  void machine_crash_shutdown(struct pt_regs *regs)
->  {
->  	machine_ops.crash_shutdown(regs);
-> diff --git a/arch/x86/xen/enlighten_hvm.c b/arch/x86/xen/enlighten_hvm.c
-> index 09e3db7ff990..0b367c1e086d 100644
-> --- a/arch/x86/xen/enlighten_hvm.c
-> +++ b/arch/x86/xen/enlighten_hvm.c
-> @@ -148,6 +148,7 @@ static void xen_hvm_shutdown(void)
->  	if (kexec_in_progress)
->  		xen_reboot(SHUTDOWN_soft_reset);
->  }
-> +#endif
->  
->  #ifdef CONFIG_CRASH_DUMP
->  static void xen_hvm_crash_shutdown(struct pt_regs *regs)
-> @@ -156,7 +157,6 @@ static void xen_hvm_crash_shutdown(struct pt_regs *regs)
->  	xen_reboot(SHUTDOWN_soft_reset);
->  }
->  #endif
-> -#endif
->  
->  static int xen_cpu_up_prepare_hvm(unsigned int cpu)
->  {
-> @@ -238,10 +238,10 @@ static void __init xen_hvm_guest_init(void)
->  
->  #ifdef CONFIG_KEXEC_CORE
->  	machine_ops.shutdown = xen_hvm_shutdown;
-> +#endif
->  #ifdef CONFIG_CRASH_DUMP
->  	machine_ops.crash_shutdown = xen_hvm_crash_shutdown;
->  #endif
-> -#endif
->  }
->  
->  static __init int xen_parse_nopv(char *arg)
-> diff --git a/arch/x86/xen/mmu_pv.c b/arch/x86/xen/mmu_pv.c
-> index 218773cfb009..e21974f2cf2d 100644
-> --- a/arch/x86/xen/mmu_pv.c
-> +++ b/arch/x86/xen/mmu_pv.c
-> @@ -2520,7 +2520,7 @@ int xen_remap_pfn(struct vm_area_struct *vma, unsigned long addr,
->  }
->  EXPORT_SYMBOL_GPL(xen_remap_pfn);
->  
-> -#ifdef CONFIG_KEXEC_CORE
-> +#ifdef CONFIG_VMCORE_INFO
->  phys_addr_t paddr_vmcoreinfo_note(void)
->  {
->  	if (xen_pv_domain())
-> -- 
-> 2.41.0
-> 
+> Sure. I will take a closer look...
+
+Thanks a lot. Please feel free to post patches to make that, or I can do
+it with your support or suggestion.
+
 
 _______________________________________________
 kexec mailing list
