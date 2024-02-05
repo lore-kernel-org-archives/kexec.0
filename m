@@ -4,56 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id F2D5EC48295
-	for <kexec@archiver.kernel.org>; Mon,  5 Feb 2024 12:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9ED85C48298
+	for <kexec@archiver.kernel.org>; Mon,  5 Feb 2024 12:04:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=cAWFjOjg1M+ZLZSIGzkEguvqE5Cy5QUxo8OoGoEB8QM=; b=GMLuX3ZbILO0Bp
-	D/w256yxoaLbtXcZFxlG6nPcEtKvVbld4r/lLBrUCoZtk1g0aON8gx9/+/OYO437dbwddOvxzPRBs
-	cNPvb28sFTmMf5P6fA2SphOm1gs2wr50M/p1HsEIMu085xjiRrOgVxQ69OK2nxzsFAOa92zkjrIwD
-	v1C4pzg0U8baNNTk1A8SSgGELBt4a87p+G2NNBqRs9ASLlbBDgxjpf2sKLObuIl3x+KnyT5DhGf1J
-	RztJW6U8SC230BfKPiCd0GENlBQstv4zuEAhwlXev31tDDarS1ua0HrgpQrxdiLBsX0IkoNhVjMaH
-	Y7QSVCO5jDp0DJ7MZMiw==;
+	List-Owner; bh=WGsU1MQZQRKhqxYopx1VYdRTJrzMfebrKvWypOY4dBw=; b=FclJ2i9F9VNUH9
+	3ZQx5ebAxuCnVVGauOjt2IfoWmEE4FzP9TOfsR9LFmf0WEUdbkMaEs/U539YiJhaf3aTB/w6+4ESK
+	gQKOUR2cd3AoigrM4fzZs0EiF20kE3yHY44X8xGKeuvu+2qbqL8jLHFZXNmbBW3QBwW9aRen8tvgK
+	KJhfpmuUuuH3OoyKX1MYq6s+IEcjqZ2kWXkhfKfLEwiwXN0P1rgm4oQadRKZnrTOQ0DQ1K71LcaVR
+	EJgNA+UvR2yjYHVRTVx7vW5+oS61Fsk7XuUxHuOXE06r4Ai7mdyUS5FP60JC1A90WSE0ass1SAgN+
+	2cydGO8Dcfvqek3yJa2g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rWxiK-000000036j7-1TcI;
-	Mon, 05 Feb 2024 12:04:40 +0000
-Received: from smtp-fw-9105.amazon.com ([207.171.188.204])
+	id 1rWxiL-000000036k1-15pi;
+	Mon, 05 Feb 2024 12:04:41 +0000
+Received: from smtp-fw-52004.amazon.com ([52.119.213.154])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rWxiH-000000036gx-3Qdj
+	id 1rWxiH-000000036gt-3jFE
 	for kexec@lists.infradead.org;
-	Mon, 05 Feb 2024 12:04:38 +0000
+	Mon, 05 Feb 2024 12:04:39 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1707134677; x=1738670677;
+  t=1707134678; x=1738670678;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=TxdyyN106bvAzVLll6ZOpOdKPjlViDjzUv1y30GOivQ=;
-  b=sFIvUIFnEdWpiGkI1/UsWXOpLkXU7g6RWfMHFzM76ktFLYAe5QI6w2Fi
-   6mcZnU57oKZT743TY0ZMC9YMhTdblsjs7hhFUA7oUPtqUjYTAKNxzeA6s
-   qGCgqzw1LBLsDIQHm/y/YieML54Osl2cdhLcK1eOZgIsKGApWvc0cxDV0
-   4=;
+  bh=R61AUSOacFWGGPMbVgCPWnIrJ1KmkLbm3r8EEWKzIHg=;
+  b=NHUEOT1l8blsUu0OOW4WtIE0a0UfsMyoeqWD2ILbjwx2aRsilVBvuSx0
+   L3HTkEgdenVgGg0JInc0R6IvuYVXY+raoDEmt5lE/1HkHx0kdmberI1lH
+   fyJafdVsV4P/H+vgUS6hHYkNDj+gESSjp5gDsWvlwrLRPeC/DtdeMlk2g
+   Y=;
 X-IronPort-AV: E=Sophos;i="6.05,245,1701129600"; 
-   d="scan'208";a="702759804"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-9105.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 12:04:26 +0000
-Received: from EX19MTAEUC001.ant.amazon.com [10.0.10.100:58296]
+   d="scan'208";a="182633292"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
+  by smtp-border-fw-52004.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 12:04:31 +0000
+Received: from EX19MTAEUA001.ant.amazon.com [10.0.43.254:29990]
  by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.14.129:2525] with esmtp (Farcaster)
- id e132c2ad-2d34-4ccb-890d-621a7e0c08cd; Mon, 5 Feb 2024 12:04:25 +0000 (UTC)
-X-Farcaster-Flow-ID: e132c2ad-2d34-4ccb-890d-621a7e0c08cd
+ id 479437ca-efef-4c96-b04c-24208e90e4af; Mon, 5 Feb 2024 12:04:30 +0000 (UTC)
+X-Farcaster-Flow-ID: 479437ca-efef-4c96-b04c-24208e90e4af
 Received: from EX19D014EUC004.ant.amazon.com (10.252.51.182) by
- EX19MTAEUC001.ant.amazon.com (10.252.51.155) with Microsoft SMTP Server
+ EX19MTAEUA001.ant.amazon.com (10.252.50.192) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Mon, 5 Feb 2024 12:04:23 +0000
+ 15.2.1118.40; Mon, 5 Feb 2024 12:04:29 +0000
 Received: from dev-dsk-jgowans-1a-a3faec1f.eu-west-1.amazon.com
  (172.19.112.191) by EX19D014EUC004.ant.amazon.com (10.252.51.182) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 5 Feb
- 2024 12:04:17 +0000
+ 2024 12:04:23 +0000
 From: James Gowans <jgowans@amazon.com>
 To: <linux-kernel@vger.kernel.org>
 CC: Eric Biederman <ebiederm@xmission.com>, <kexec@lists.infradead.org>,
@@ -68,9 +68,9 @@ CC: Eric Biederman <ebiederm@xmission.com>, <kexec@lists.infradead.org>,
 	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
 	<madvenka@linux.microsoft.com>, <steven.sistare@oracle.com>,
 	<yuleixzhang@tencent.com>
-Subject: [RFC 09/18] intel-iommu: Use pkernfs for root/context pgtable pages
-Date: Mon, 5 Feb 2024 12:01:54 +0000
-Message-ID: <20240205120203.60312-10-jgowans@amazon.com>
+Subject: [RFC 10/18] iommu/intel: zap context table entries on kexec
+Date: Mon, 5 Feb 2024 12:01:55 +0000
+Message-ID: <20240205120203.60312-11-jgowans@amazon.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240205120203.60312-1-jgowans@amazon.com>
 References: <20240205120203.60312-1-jgowans@amazon.com>
@@ -79,8 +79,8 @@ X-Originating-IP: [172.19.112.191]
 X-ClientProxiedBy: EX19D041UWA001.ant.amazon.com (10.13.139.124) To
  EX19D014EUC004.ant.amazon.com (10.252.51.182)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240205_040437_924135_D4164674 
-X-CRM114-Status: GOOD (  20.55  )
+X-CRM114-CacheID: sfid-20240205_040438_112287_40AE629B 
+X-CRM114-Status: GOOD (  17.96  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,113 +97,110 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The previous commits were preparation for using pkernfs memory for IOMMU
-pgtables: a file in the filesystem is available and an allocator to
-allocate 4-KiB pages from that file is available.
+In the next commit the IOMMU shutdown function will be modified to not
+actually shut down the IOMMU when doing a kexec. To prevent leaving DMA
+mappings for non-persistent devices around during kexec we add a
+function to the kexec flow which iterates though all IOMMU domains and
+zaps the context entries for the devices belonging to those domain.
 
-Now use those to actually use pkernfs memory for root and context
-pgtable pages. If pkernfs is enabled then a "region" (physical and
-virtual memory chunk) is fetch from pkernfs and used to drive the
-allocator. Should this rather just be a pointer to a pkernfs inode? That
-abstraction seems leaky but without having the ability to store struct
-files at this point it's probably the more accurate.
-
-The freeing still needs to be hooked into the allocator...
+A list of domains for the IOMMU is added and maintained.
 ---
- drivers/iommu/intel/iommu.c | 24 ++++++++++++++++++++----
+ drivers/iommu/intel/dmar.c  |  1 +
+ drivers/iommu/intel/iommu.c | 34 ++++++++++++++++++++++++++++++----
  drivers/iommu/intel/iommu.h |  2 ++
- 2 files changed, 22 insertions(+), 4 deletions(-)
+ 3 files changed, 33 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
+index 23cb80d62a9a..00f69f40a4ac 100644
+--- a/drivers/iommu/intel/dmar.c
++++ b/drivers/iommu/intel/dmar.c
+@@ -1097,6 +1097,7 @@ static int alloc_iommu(struct dmar_drhd_unit *drhd)
+ 	iommu->segment = drhd->segment;
+ 
+ 	iommu->node = NUMA_NO_NODE;
++	INIT_LIST_HEAD(&iommu->domains);
+ 
+ 	ver = readl(iommu->reg + DMAR_VER_REG);
+ 	pr_info("%s: reg_base_addr %llx ver %d:%d cap %llx ecap %llx\n",
 diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index 744e4e6b8d72..2dd3f055dbce 100644
+index 2dd3f055dbce..315c6b7f901c 100644
 --- a/drivers/iommu/intel/iommu.c
 +++ b/drivers/iommu/intel/iommu.c
-@@ -19,6 +19,7 @@
- #include <linux/memory.h>
- #include <linux/pci.h>
- #include <linux/pci-ats.h>
-+#include <linux/pkernfs.h>
- #include <linux/spinlock.h>
- #include <linux/syscore_ops.h>
- #include <linux/tboot.h>
-@@ -28,6 +29,7 @@
- #include "../dma-iommu.h"
- #include "../irq_remapping.h"
- #include "../iommu-sva.h"
-+#include "../pgtable_alloc.h"
- #include "pasid.h"
- #include "cap_audit.h"
- #include "perfmon.h"
-@@ -617,7 +619,12 @@ struct context_entry *iommu_context_addr(struct intel_iommu *iommu, u8 bus,
- 		if (!alloc)
- 			return NULL;
+@@ -1831,6 +1831,7 @@ static int domain_attach_iommu(struct dmar_domain *domain,
+ 		goto err_clear;
+ 	}
+ 	domain_update_iommu_cap(domain);
++	list_add(&domain->domains, &iommu->domains);
  
--		context = alloc_pgtable_page(iommu->node, GFP_ATOMIC);
-+		if (pkernfs_enabled())
-+			iommu_alloc_page_from_region(
-+				&iommu->pkernfs_region,
-+				(void **) &context, NULL);
-+		else
-+			context = alloc_pgtable_page(iommu->node, GFP_ATOMIC);
- 		if (!context)
- 			return NULL;
+ 	spin_unlock(&iommu->lock);
+ 	return 0;
+@@ -3608,6 +3609,33 @@ static void intel_disable_iommus(void)
+ 		iommu_disable_translation(iommu);
+ }
  
-@@ -1190,7 +1197,15 @@ static int iommu_alloc_root_entry(struct intel_iommu *iommu)
- {
- 	struct root_entry *root;
- 
--	root = alloc_pgtable_page(iommu->node, GFP_ATOMIC);
-+	if (pkernfs_enabled()) {
-+		pkernfs_alloc_iommu_root_pgtables(&iommu->pkernfs_region);
-+		root = pgtable_get_root_page(
-+				&iommu->pkernfs_region,
-+				liveupdate);
-+	} else {
-+		root = alloc_pgtable_page(iommu->node, GFP_ATOMIC);
-+	}
++void zap_context_table_entries(struct intel_iommu *iommu)
++{
++	struct context_entry *context;
++	struct dmar_domain *domain;
++	struct device_domain_info *device;
++	int bus, devfn;
++	u16 did_old;
 +
- 	if (!root) {
- 		pr_err("Allocating root entry for %s failed\n",
- 			iommu->name);
-@@ -2790,7 +2805,7 @@ static int __init init_dmars(void)
++	list_for_each_entry(domain, &iommu->domains, domains) {
++		list_for_each_entry(device, &domain->devices, link) {
++			context = iommu_context_addr(iommu, device->bus, device->devfn, 0);
++			if (!context || !context_present(context))
++				continue;
++			context_domain_id(context);
++			context_clear_entry(context);
++			__iommu_flush_cache(iommu, context, sizeof(*context));
++			iommu->flush.flush_context(iommu,
++						   did_old,
++						   (((u16)bus) << 8) | devfn,
++						   DMA_CCMD_MASK_NOBIT,
++						   DMA_CCMD_DEVICE_INVL);
++			iommu->flush.flush_iotlb(iommu,	did_old, 0, 0,
++						 DMA_TLB_DSI_FLUSH);
++		}
++	}
++}
++
+ void intel_iommu_shutdown(void)
+ {
+ 	struct dmar_drhd_unit *drhd;
+@@ -3620,10 +3648,8 @@ void intel_iommu_shutdown(void)
  
- 		init_translation_status(iommu);
+ 	/* Disable PMRs explicitly here. */
+ 	for_each_iommu(iommu, drhd)
+-		iommu_disable_protect_mem_regions(iommu);
+-
+-	/* Make sure the IOMMUs are switched off */
+-	intel_disable_iommus();
++		zap_context_table_entries(iommu);
++	return
  
--		if (translation_pre_enabled(iommu) && !is_kdump_kernel()) {
-+		if (translation_pre_enabled(iommu) && !is_kdump_kernel() && !liveupdate) {
- 			iommu_disable_translation(iommu);
- 			clear_translation_pre_enabled(iommu);
- 			pr_warn("Translation was enabled for %s but we are not in kdump mode\n",
-@@ -2806,7 +2821,8 @@ static int __init init_dmars(void)
- 		if (ret)
- 			goto free_iommu;
- 
--		if (translation_pre_enabled(iommu)) {
-+		/* For the live update case restore pgtables, don't copy */
-+		if (translation_pre_enabled(iommu) && !liveupdate) {
- 			pr_info("Translation already enabled - trying to copy translation structures\n");
- 
- 			ret = copy_translation_tables(iommu);
+ 	up_write(&dmar_global_lock);
+ }
 diff --git a/drivers/iommu/intel/iommu.h b/drivers/iommu/intel/iommu.h
-index e6a3e7065616..a2338e398ba3 100644
+index a2338e398ba3..4a2f163a86f3 100644
 --- a/drivers/iommu/intel/iommu.h
 +++ b/drivers/iommu/intel/iommu.h
-@@ -22,6 +22,7 @@
- #include <linux/bitfield.h>
- #include <linux/xarray.h>
- #include <linux/perf_event.h>
-+#include <linux/pkernfs.h>
+@@ -600,6 +600,7 @@ struct dmar_domain {
+ 	spinlock_t lock;		/* Protect device tracking lists */
+ 	struct list_head devices;	/* all devices' list */
+ 	struct list_head dev_pasids;	/* all attached pasids */
++	struct list_head domains;	/* all struct dmar_domains on this IOMMU */
  
- #include <asm/cacheflush.h>
- #include <asm/iommu.h>
-@@ -672,6 +673,7 @@ struct intel_iommu {
- 	unsigned long	*copied_tables; /* bitmap of copied tables */
- 	spinlock_t	lock; /* protect context, domain ids */
- 	struct root_entry *root_entry; /* virtual address */
-+	struct pkernfs_region pkernfs_region;
+ 	struct dma_pte	*pgd;		/* virtual address */
+ 	int		gaw;		/* max guest address width */
+@@ -700,6 +701,7 @@ struct intel_iommu {
+ 	void *perf_statistic;
  
- 	struct iommu_flush flush;
- #endif
+ 	struct iommu_pmu *pmu;
++	struct list_head domains;	/* all struct dmar_domains on this IOMMU */
+ };
+ 
+ /* PCI domain-device relationship */
 -- 
 2.40.1
 
