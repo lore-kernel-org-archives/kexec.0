@@ -4,97 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0EB4DC4828D
-	for <kexec@archiver.kernel.org>; Mon,  5 Feb 2024 23:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 99D83C48286
+	for <kexec@archiver.kernel.org>; Tue,  6 Feb 2024 08:17:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=nMR+YF7bGI54f8xSTBnkRlkuFWV5thtvtW9o59sp9fo=; b=EEVQn7bAlUYdA7
-	0hL42VhfO08cEHUxCYuDa2NSDnM+icTzrL+4zeaolaAW6z9pLlVNp+LB3fvmnxHd40j8bQjnDgKBX
-	wnmQ8BMdF62ht9tpakOoJSVjDF8BMeuKI2TiP3peYzXw35ASq1FmeGudh8mH/nunAndXnsIRCGzTX
-	X1t+thQsuflmgINcvmbQRFf7xZsaU5khj3pqdZ4YC6rXNuBQEUok0AQZ/2QE2+ej5K0vxV/Pks+z1
-	qH0hy9eKeJw62jgwJULBwvrBIWdfEKSB60859lLHqhlUJNN+ofTn8j6yWFsA5iTID7mB4439aHQkT
-	qrzHzuZIWz6EQerkumAQ==;
+	List-Owner; bh=CwEfve0a7HSxy5LKf+eN+lh0s60iGwbVtheLZGxZEaA=; b=ZUvvX8PUwGc0up
+	uyZB4tJ+x9D2t5+Av9eBZQqMKaL2wT4/2Pwfdrxagzjgd9KbUDiAsYaXbqW/KBC4Izq2ZOyawfucw
+	iVWsEvWEvEHWgyV2f7M1ggYms+iDuj2dGRdukbBYsymtgUujLdEDO5ib573m49paSZ6mEYBZmGzlZ
+	78jGxdWQD3u6t7/xkwEIHmbN4A2LjKZ6RUdwE3HJpGQCjDDUIAtp2PrwQb+BzGRNzjS/Bjdhtwhwt
+	WW+Nm+Z+MiqSmJOJApapiw1gsSXhP/Ht2Cn1oFuRJxcBBA877jyyt4Rh+GslRa5oOQp6q52FroCa7
+	4H0RHJAyfWfMk7aGpdgw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rX8UH-00000005ZMj-0Kmo;
-	Mon, 05 Feb 2024 23:34:53 +0000
-Received: from mail-pg1-x529.google.com ([2607:f8b0:4864:20::529])
+	id 1rXGeM-00000006PKP-4A8S;
+	Tue, 06 Feb 2024 08:17:50 +0000
+Received: from metis.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::104])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rX8UF-00000005ZLL-0lpI
+	id 1rXGeJ-00000006PJ8-3DdZ
 	for kexec@lists.infradead.org;
-	Mon, 05 Feb 2024 23:34:52 +0000
-Received: by mail-pg1-x529.google.com with SMTP id 41be03b00d2f7-53fbf2c42bfso4154189a12.3
-        for <kexec@lists.infradead.org>; Mon, 05 Feb 2024 15:34:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1707176089; x=1707780889; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gtL3jvJTvpjem+XLSIljDmdaRNW3JxGajKR4+xmGq/g=;
-        b=dkV4n/ttLqk8mIEjGjrPX8zsaTBQVafqPtc+o4yoO1yoauf9maOO/73xb+O8O0vdD+
-         NDvSX8H20rhZFAxmGQmU415eJnqZ1VCxczewfxPUIlsl7XA6ING6D8qdbKX6mtBYLdAY
-         xGUJ7K0kPZ7IqNJVc41txOJOapEVwfL9e4K5TQvUAW+RQNZ0rzCWcsjF5Jf8qNoL3+8l
-         nU1kkBKLZaL/brBul4vDpLEOXeV62O8z/34iZV2Z+E73eauc5LjsyBQaXBpcwghddxGt
-         2cV8EyAuf1H7GT3YV6xMfoa3ibz74c/HmzGv6ox+rNXWC2nzUQWK3MkjJKit0+NYMl57
-         6hag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707176089; x=1707780889;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gtL3jvJTvpjem+XLSIljDmdaRNW3JxGajKR4+xmGq/g=;
-        b=UGfxwSApmXIaI9ffrnMy26/FjtUXS/eQDdgzsLIqa5LR4n1PqzBfjVaDNZvKYnu/Dq
-         6CMf4mPK1DtVe0URh/3Ourxx69gen1zbKpcbl11fXTLfvCxKTNFhdA9v39ur/vv9JWM3
-         6XZLBul4YSXL00uHM0iYbmBIblAMrV9n9WPH23vJIFiy3RYIvgFcx1rj8H8QNzKQWvaY
-         2mOSPhTlngVNTtnbj7EL5tTyg4lws8WesnWuEHlW9XB47k46uEqRvFMZH2WVbOchR4FD
-         Orb+gQv+2LWFDvLtaDw/Tcoh2cSRsfJYwhudZicxIH6fqdzJE00rV8Or32qdmb1dhn1Q
-         bfhQ==
-X-Gm-Message-State: AOJu0Yy8EfEEefIM01lIzSxS2erzBiJf1sqt9nti60jviyyRt+wv9LIp
-	Gq9m5tgUXzBybX/tiSoBC6lPr8TYmLX8EPNvbluRKDo3XMoScNCQuCDIkm62XTc=
-X-Google-Smtp-Source: AGHT+IERWsgnVzcArUkK0ONx3MiZk4r16tHisF/C0B+IjOUSmMRlRCaxDntU0A4X2gmwb0jbKeI/4g==
-X-Received: by 2002:a05:6a20:5a23:b0:19c:6994:8913 with SMTP id jz35-20020a056a205a2300b0019c69948913mr18604pzb.7.1707176089472;
-        Mon, 05 Feb 2024 15:34:49 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCV0CEkV2IfB4OmDyzaC+v8m2BH8FR7RhAj08DN4ZCHOpokDj9NS3wCXNVRfk7DG1CgufYqK8wHCWHs/PTSMiUjOuQSYNN6ZB+aTscx7+cznoZDT8F2Z+x8Fq3mxFfB9Q2jg/LH2Xu5A+NenLIQoUHD99PduRSLqa/iSmtJqGUFocP6eazRhZvFPA9oDPPOrGfymNqdHw0h/nxszHDIMLLBz29NGLa3hIDKXa0S4z53eR2lqqcuHECKUht7VhUHfbFimSw7QRk7cn4BKB3os4xsrqwiVMkY7NRCwcGUSArF2DNAxABXpngViCgO/vzS6NOCH8aVzjxa+p7AcjKWz6oTuWjyOTrBZ8G63OPDI6g9B3Y9ih4iHTfBED1X+kcrAoyJpINXQ5q4bBt5dYYppH+8WNNuWMz2CNZCklGzQk9dJuoE2ItM4zSqmfovYw3ID101Lnd3kUjofr8ibkxgD8K3q6WDRUDbueTuqDCvzRQDSW98rcWllaXDIoFd2YDIC4WD/pL8BWmhBnN8pJ6k6aTgCMvz90BDChV469mYLup57WhnQyVmsE3Qc8hAeKEEGLeNjV2ax1UH2rK7sI8BbI4uqpLjJUj6kEP6G3Awmmm0ngNCcknaIUFOysIxxB9aT2a3JhYMHnRxYt1Ck/1I805Fl85lKwmRr4/1P9deiddme4xe2eCvJLYL3JVcbTYiI3Vs+wFW6KG3VQaHK+PxspiH1JWWW2QHFdaRaiqgAgi3xQs8I
-Received: from dread.disaster.area (pa49-181-38-249.pa.nsw.optusnet.com.au. [49.181.38.249])
-        by smtp.gmail.com with ESMTPSA id k18-20020a170902c41200b001d8f12b0009sm423859plk.293.2024.02.05.15.34.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 15:34:48 -0800 (PST)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-	(envelope-from <david@fromorbit.com>)
-	id 1rX8UA-002agH-2H;
-	Tue, 06 Feb 2024 10:34:46 +1100
-Date: Tue, 6 Feb 2024 10:34:46 +1100
-From: Dave Chinner <david@fromorbit.com>
-To: James Gowans <jgowans@amazon.com>
-Cc: linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>,
-	kexec@lists.infradead.org, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, iommu@lists.linux.dev,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	Alexander Graf <graf@amazon.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	"Jan H . Schoenherr" <jschoenh@amazon.de>,
-	Usama Arif <usama.arif@bytedance.com>,
-	Anthony Yznaga <anthony.yznaga@oracle.com>,
+	Tue, 06 Feb 2024 08:17:49 +0000
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1rXGeE-0002Xs-AM; Tue, 06 Feb 2024 09:17:42 +0100
+Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ore@pengutronix.de>)
+	id 1rXGe9-004mrs-2o; Tue, 06 Feb 2024 09:17:37 +0100
+Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1rXGe8-00EA9b-38;
+	Tue, 06 Feb 2024 09:17:36 +0100
+Date: Tue, 6 Feb 2024 09:17:36 +0100
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Alexander Graf <graf@amazon.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-mm@kvack.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org,
+	linux-doc@vger.kernel.org, x86@kernel.org,
+	Eric Biederman <ebiederm@xmission.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Ashish Kalra <ashish.kalra@amd.com>,
+	James Gowans <jgowans@amazon.com>,
 	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	madvenka@linux.microsoft.com, steven.sistare@oracle.com,
-	yuleixzhang@tencent.com
-Subject: Re: [RFC 05/18] pkernfs: add file mmap callback
-Message-ID: <ZcFwlu9+LQQWWOz4@dread.disaster.area>
-References: <20240205120203.60312-1-jgowans@amazon.com>
- <20240205120203.60312-6-jgowans@amazon.com>
+	arnd@arndb.de, pbonzini@redhat.com, madvenka@linux.microsoft.com,
+	Anthony Yznaga <anthony.yznaga@oracle.com>,
+	Usama Arif <usama.arif@bytedance.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v3 00/17] kexec: Allow preservation of ftrace buffers
+Message-ID: <ZcHrIJ7lxpbkm5sc@pengutronix.de>
+References: <20240117144704.602-1-graf@amazon.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20240205120203.60312-6-jgowans@amazon.com>
+In-Reply-To: <20240117144704.602-1-graf@amazon.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: kexec@lists.infradead.org
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240205_153451_253501_4E499283 
-X-CRM114-Status: GOOD (  12.40  )
+X-CRM114-CacheID: sfid-20240206_001747_967503_5EF564AD 
+X-CRM114-Status: GOOD (  45.96  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -111,24 +99,122 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Feb 05, 2024 at 12:01:50PM +0000, James Gowans wrote:
-> Make the file data useable to userspace by adding mmap. That's all that
-> QEMU needs for guest RAM, so that's all be bother implementing for now.
+Hi Alexander,
+
+Nice work!
+
+On Wed, Jan 17, 2024 at 02:46:47PM +0000, Alexander Graf wrote:
+> Kexec today considers itself purely a boot loader: When we enter the new
+> kernel, any state the previous kernel left behind is irrelevant and the
+> new kernel reinitializes the system.
 > 
-> When mmaping the file the VMA is marked as PFNMAP to indicate that there
-> are no struct pages for the memory in this VMA. Remap_pfn_range() is
-> used to actually populate the page tables. All PTEs are pre-faulted into
-> the pgtables at mmap time so that the pgtables are useable when this
-> virtual address range is given to VFIO's MAP_DMA.
+> However, there are use cases where this mode of operation is not what we
+> actually want. In virtualization hosts for example, we want to use kexec
+> to update the host kernel while virtual machine memory stays untouched.
+> When we add device assignment to the mix, we also need to ensure that
+> IOMMU and VFIO states are untouched. If we add PCIe peer to peer DMA, we
+> need to do the same for the PCI subsystem. If we want to kexec while an
+> SEV-SNP enabled virtual machine is running, we need to preserve the VM
+> context pages and physical memory. See James' and my Linux Plumbers
+> Conference 2023 presentation for details:
+> 
+>   https://lpc.events/event/17/contributions/1485/
+> 
+> To start us on the journey to support all the use cases above, this
+> patch implements basic infrastructure to allow hand over of kernel state
+> across kexec (Kexec HandOver, aka KHO). As example target, we use ftrace:
+> With this patch set applied, you can read ftrace records from the
+> pre-kexec environment in your post-kexec one. This creates a very powerful
+> debugging and performance analysis tool for kexec. It's also slightly
+> easier to reason about than full blown VFIO state preservation.
+> 
+> == Alternatives ==
+> 
+> There are alternative approaches to (parts of) the problems above:
+> 
+>   * Memory Pools [1] - preallocated persistent memory region + allocator
+>   * PRMEM [2] - resizable persistent memory regions with fixed metadata
+>                 pointer on the kernel command line + allocator
+>   * Pkernfs [3] - preallocated file system for in-kernel data with fixed
+>                   address location on the kernel command line
+>   * PKRAM [4] - handover of user space pages using a fixed metadata page
+>                 specified via command line
+> 
+> All of the approaches above fundamentally have the same problem: They
+> require the administrator to explicitly carve out a physical memory
+> location because they have no mechanism outside of the kernel command
+> line to pass data (including memory reservations) between kexec'ing
+> kernels.
+> 
+> KHO provides that base foundation. We will determine later whether we
+> still need any of the approaches above for fast bulk memory handover of for
+> example IOMMU page tables. But IMHO they would all be users of KHO, with
+> KHO providing the foundational primitive to pass metadata and bulk memory
+> reservations as well as provide easy versioning for data.
+> 
+> == Overview ==
+> 
+> We introduce a metadata file that the kernels pass between each other. How
+> they pass it is architecture specific. The file's format is a Flattened
+> Device Tree (fdt) which has a generator and parser already included in
+> Linux. When the root user enables KHO through /sys/kernel/kho/active, the
+> kernel invokes callbacks to every driver that supports KHO to serialize
+> its state. When the actual kexec happens, the fdt is part of the image
+> set that we boot into. In addition, we keep a "scratch region" available
+> for kexec: A physically contiguous memory region that is guaranteed to
+> not have any memory that KHO would preserve.  The new kernel bootstraps
+> itself using the scratch region and sets all handed over memory as in use.
+> When drivers initialize that support KHO, they introspect the fdt and
+> recover their state from it. This includes memory reservations, where the
+> driver can either discard or claim reservations.
+> 
+> == Limitations ==
+> 
+> I currently only implemented file based kexec. The kernel interfaces
+> in the patch set are already in place to support user space kexec as well,
+> but I have not implemented it yet inside kexec tools.
+> 
+> == How to Use ==
+> 
+> To use the code, please boot the kernel with the "kho_scratch=" command
+> line parameter set: "kho_scratch=512M". KHO requires a scratch region.
+> 
+> Make sure to fill ftrace with contents that you want to observe after
+> kexec.  Then, before you invoke file based "kexec -l", activate KHO:
+> 
+>   # echo 1 > /sys/kernel/kho/active
+>   # kexec -l Image --initrd=initrd -s
+>   # kexec -e
+> 
+> The new kernel will boot up and contain the previous kernel's trace
+> buffers in /sys/kernel/debug/tracing/trace.
 
-And so what happens when this file is truncated whilst it is mmap()d
-by an application? Ain't that just a great big UAF waiting to be
-exploited?
+Assuming:
+- we wont to start tracing as early as possible, before rootfs
+  or initrd would be able to configure it.
+- traces are stored on a different device, not RAM. For example NVMEM.
+- Location of NVMEM is different for different board types, but
+  bootloader is able to give the right configuration to the kernel.
 
--Dave.
+What would be the best, acceptable for mainline, way to provide this
+kind of configuration? At least part of this information do not
+describes devices or device states, this would not fit in to devicetree
+universe. Amount of possible information would not fit in to bootconfig
+too.
+
+Other more or less overlapping use case I have in mind is a netbootable
+embedded system with a requirement to boot as fast as possible. Since
+bootloader already established a link and got all needed ip
+configuration, it would be able to hand over etherent controller and ip
+configuration states. Wille be the KHO the way to go for this use case?
+
+Regards,
+Oleksij
 -- 
-Dave Chinner
-david@fromorbit.com
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
 _______________________________________________
 kexec mailing list
