@@ -4,68 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 77B6DC48260
-	for <kexec@archiver.kernel.org>; Sat, 10 Feb 2024 04:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1A74DC4829B
+	for <kexec@archiver.kernel.org>; Mon, 12 Feb 2024 08:44:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Message-ID:Subject:Cc:To:Date:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=lNQcqWvzdgUzYrHlK1ukAZJ1VUsoEx3y0O64VdvcQ9A=; b=jKMsK8I8GB3s9a
-	eEJ1lYs0/oCYhEjWBGHBFSrKGEwtOJ/zL8towb3cAdjuwpvChJLtZFPCLPvxVnCNcBF5y/HoMy11N
-	n1GmC+AOFMLv6EAqKCa3sU2y2MuQwYMEp0LmAjp8mDo7l1dAWePv36mbjN2ef7m9fQJ4qGGjGhvPY
-	6VEeJf/dO6/S3RqyYltVM9nipOz5SXR+CbG4ngVhjxD0CaBalxeN2TPBiVRQubG5ramCwhj2n+f+/
-	mngKm7hMYTONeQuX3YkdZyx9gxormuHGrEFnT3FChstc9qSVJzZ41Mm2W9OZAaT6Xni8mkBJC/7vZ
-	7tXViqGm2gakZeAnij3A==;
+	List-Owner; bh=T4cUOY5Z2S68YE/Dmt/ZNQKSbdkxiO4qHX5F9FjySv8=; b=KJMD4JRXXTT0c8
+	WwQxtTT7TYMQUYmgFq/i1Y/g4o00VRpzkhucYm3Xasj8EKWH/5WxhZppjR51rbUWnktjeP1DHH3+y
+	K2iuHWSznu6LUpNbOz2ju5Ew62nNgEk8fuauRKTzsfJX9n39V59r9wQ/LsRHJei1VkyNrBQ5LVoPv
+	u6815Fp8sh+fZOxaGtlasl62ZmtKi9dBVSorK0JFKQhEXNQMA0HwgUcoQDakSpMq2/HSIpPa+icll
+	thHXFb3xUYFKIV+yymGFtWbsOSaTpGjvnddjqnNAzwIsddjsNAr9waTi+ctB5r2pwOukxkdhVQeOs
+	zDAQ6aoKLbWBDH1cz7Zw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rYfM5-00000001DRB-0ZHy;
-	Sat, 10 Feb 2024 04:52:45 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1rZRvK-00000004eT9-3F4X;
+	Mon, 12 Feb 2024 08:44:22 +0000
+Received: from mail-wm1-x32c.google.com ([2a00:1450:4864:20::32c])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rYfM3-00000001DQi-0LtA
+	id 1rZRvH-00000004eSR-1aXu
 	for kexec@lists.infradead.org;
-	Sat, 10 Feb 2024 04:52:44 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1707540762;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Dr2blnizYNbzYeHmXAd3S8ONSINWlTab6ZkCItA7o0c=;
-	b=Q2flFpHWefQ4M2cuW+OLK8Bq/ziZ4wHO+wjlZzgy8I049ATByvJFYxjW/B67VCoeMIXeJT
-	JRcHxjrqdEcknw2/R4YuRtugR+jT4OhDVkHjbNqtJTK8Zu0w1y1uFSywY+VKVM+zSQhNHO
-	54oTfCY1DcRWMSiZSF3OVxJALznHneQ=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-55-hwSivvsfMH-pKZX2U5rqqw-1; Fri, 09 Feb 2024 23:52:38 -0500
-X-MC-Unique: hwSivvsfMH-pKZX2U5rqqw-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6F09D185A788;
-	Sat, 10 Feb 2024 04:52:37 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.9])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 95DA2492BC7;
-	Sat, 10 Feb 2024 04:52:36 +0000 (UTC)
-Date: Sat, 10 Feb 2024 12:52:33 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Hari Bathini <hbathini@linux.ibm.com>
-Cc: bpf@vger.kernel.org, Kexec-ml <kexec@lists.infradead.org>,
-	akpm@linux-foundation.org, Daniel Borkmann <daniel@iogearbox.net>,
+	Mon, 12 Feb 2024 08:44:20 +0000
+Received: by mail-wm1-x32c.google.com with SMTP id 5b1f17b1804b1-410ca9e851bso4954555e9.3
+        for <kexec@lists.infradead.org>; Mon, 12 Feb 2024 00:44:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707727453; x=1708332253; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LK/7MVtgjnhy5jN+N9y1+ro6J0YP7MUdBH0qcdZQKPE=;
+        b=mWNfR6WWod4IptBg2KJ2cp/kasm49s6pLU0HybaNKU4Lx+qWcjPzVAklWayynV+o2T
+         IJdG24F7lQDv+8Gr/9v7tVJjxkVqEcEJYj0Wq+iL0zxrVHudjeaBNWrz3HLn1tqI1+0O
+         MsUdqyojX046G5y9bs9dhhgtMgD+5a9pbetM5DTWUygZrremqlqiIadKe4owveXJ7Jps
+         aHwgiBNKJ9PPEbhZtL6y9NOU+clsuyyHELbr2GrrFEMl4JpPbawk/SLFsV2a57auSuxE
+         5Lcr3Sjap61qWs0byykVC0K+48hD3pEWXKF5789bgwPO59rLvAqvgBxmBmIAqAzdD85A
+         PSZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707727453; x=1708332253;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LK/7MVtgjnhy5jN+N9y1+ro6J0YP7MUdBH0qcdZQKPE=;
+        b=XQiJZtdmTD/NjUisyLeCv69VYLSzqRHLVxktsFex2iEZfZtYhLG6PRhum5j33kkQpd
+         1dBmx2JC2eVZH/9lkC5YCRVjWqxgxYjAfjt49kCWsE1ntJ5DQ5IElSPaDcp3108sgceF
+         QzMGAEB6GWLd+ytm4P1VMQX0p3hqlxYfOD0j8Z28k/iM1qaW5XwI5eNn5MQfFPWW/zNj
+         gtVAMoFfRlvLJjjG3YJBPx8+bmUemvRLvYTlym7TfKydijAWfX4BekAXiw6VkZQA82nX
+         0/lCuHVoct1hrPE0prKHm7sGpDSZNAZO1dnz9bM7KMxEmingBQ/lIY7V8PpMWMglt3UZ
+         xZpg==
+X-Gm-Message-State: AOJu0YwnOk436aBYLXW2j93zSTaN0x2aDgp0BCjWR2wxTMnm2HUXxJaR
+	B/S3qrWXZlU5EbihSLjuQfBs55nCxypK5ILz34D2p0d8Rqagnve3
+X-Google-Smtp-Source: AGHT+IHcgWyTIRk2/s69vNuoTEzWZ7SFLhl0GNuRLIzRhxaYQASimFCJsRDo/BgmOO4HZWOvB9e+aQ==
+X-Received: by 2002:a05:600c:3555:b0:410:61ce:f5c3 with SMTP id i21-20020a05600c355500b0041061cef5c3mr4944459wmq.19.1707727453055;
+        Mon, 12 Feb 2024 00:44:13 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWNzEsaHWl853SGIKgGisI7Lu5+D0WtUkTKgMogbKNkxzYqbjtC9qXdjgDrJQHzd8wX4J3TZ09EDmFB4ljXKLNpcH1/aG7W5GENEJD6ojRgdS2Nt/vdrlQpQFmmsXJn4Fq6+1eToKyJxbw9yovaf8tFnKGE4LXvPJb6eqaln3mEzsTsJyNy18e9WSsnhi64MUSBRGWj465JE5aZcgg=
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id q18-20020a7bce92000000b00410c04e5455sm3365842wmj.20.2024.02.12.00.44.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Feb 2024 00:44:12 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Mon, 12 Feb 2024 09:44:11 +0100
+To: Baoquan He <bhe@redhat.com>
+Cc: Stanislav Fomichev <sdf@google.com>,
+	Hari Bathini <hbathini@linux.ibm.com>, bpf@vger.kernel.org,
+	Kexec-ml <kexec@lists.infradead.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
 	Alexei Starovoitov <ast@kernel.org>
 Subject: Re: [PATCH linux-next] bpf: fix warning for crash_kexec
-Message-ID: <ZccBEYcrt3ZsduWZ@MiWiFi-R3L-srv>
+Message-ID: <ZcnaW5hB8y3da3bI@krava>
 References: <20240209123520.778599-1-hbathini@linux.ibm.com>
+ <ZcZ6myvln-v0Y98S@google.com>
+ <ZccAyalp+NyKQoGp@MiWiFi-R3L-srv>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20240209123520.778599-1-hbathini@linux.ibm.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
+In-Reply-To: <ZccAyalp+NyKQoGp@MiWiFi-R3L-srv>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240209_205243_218779_5593DD02 
-X-CRM114-Status: GOOD (  13.05  )
+X-CRM114-CacheID: sfid-20240212_004419_439067_CB9E717E 
+X-CRM114-Status: GOOD (  14.77  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,43 +98,33 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 02/09/24 at 06:05pm, Hari Bathini wrote:
-> With [1], CONFIG_KEXEC & !CONFIG_CRASH_DUMP is supported but that led
-> to the below warning:
+On Sat, Feb 10, 2024 at 12:51:21PM +0800, Baoquan He wrote:
+> On 02/09/24 at 11:18am, Stanislav Fomichev wrote:
+> > On 02/09, Hari Bathini wrote:
+> > > With [1], CONFIG_KEXEC & !CONFIG_CRASH_DUMP is supported but that led
+> > > to the below warning:
+> > > 
+> > >   "WARN: resolve_btfids: unresolved symbol crash_kexec"
+> > > 
+> > > Fix it by using the appropriate #ifdef.
+> > 
+> > Same question here: how did you find this particular kconfig option
+> > (CONFIG_CRASH_DUMP) to use? Looking at the code, crash_kexec is defined
+> > in kernel/kexec_core.c and it's gated by CONFIG_KEXEC_CORE. So the
+> > existing ifdef seems correct?
 > 
->   "WARN: resolve_btfids: unresolved symbol crash_kexec"
-> 
-> Fix it by using the appropriate #ifdef.
-> 
-> [1] https://lore.kernel.org/all/20240124051254.67105-1-bhe@redhat.com/
-> 
-> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-> ---
+> This patch is based on the latest next tree, I have made some changes to
+> split the crash code from kexec_core.c. If you check next/master branch,
+> crash_kexec is not in kernel/keec_core.c any more.
 
-Good catch, thanks for fixing it.
+makes sense, it should have fixes tag:
 
-Acked-by: Baoquan He <bhe@redhat.com>
+Fixes: 29fd9ae62910 ("crash: split crash dumping code out from kexec_core.c")
 
->  kernel/bpf/helpers.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-> index 4db1c658254c..e408d1115e26 100644
-> --- a/kernel/bpf/helpers.c
-> +++ b/kernel/bpf/helpers.c
-> @@ -2545,7 +2545,7 @@ __bpf_kfunc void bpf_throw(u64 cookie)
->  __bpf_kfunc_end_defs();
->  
->  BTF_KFUNCS_START(generic_btf_ids)
-> -#ifdef CONFIG_KEXEC_CORE
-> +#ifdef CONFIG_CRASH_DUMP
->  BTF_ID_FLAGS(func, crash_kexec, KF_DESTRUCTIVE)
->  #endif
->  BTF_ID_FLAGS(func, bpf_obj_new_impl, KF_ACQUIRE | KF_RET_NULL)
-> -- 
-> 2.43.0
-> 
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
+thanks,
+jirka
 
 _______________________________________________
 kexec mailing list
