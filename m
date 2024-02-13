@@ -4,53 +4,102 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 589BAC4829A
-	for <kexec@archiver.kernel.org>; Tue, 13 Feb 2024 09:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 80A1FC4829A
+	for <kexec@archiver.kernel.org>; Tue, 13 Feb 2024 11:32:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Subject:To:From:Date:
-	Message-ID:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From
-	:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=nJjg67EbZsxLb8Ph8Ue/RvaeM3R7keg7hJncsNG2Vss=; b=FoRqUJjd+9Wnhh
-	mabgAiA4q68mMX8V/izpHUnf/Y+UxJCLtJATnORTIQtgQRmH0e5FnJ6xr68sC/jvBFq59J5/iCliV
-	jNAHF0j/fQnjvxzTnfYFDTLg//a1g1OKEN8vomMk0Sk+P4atYwLzNcjbPOs6AM4g9ZG6Sp84cOYP5
-	Ih36hBb9298aZCStbK1ko4SOTnL0Dxg87wM7cShmujaB/rhX+NizlFwSnMqywVG243Vqdcz8fKsim
-	vRG00jzmrc3hYQpTdDoZAoFuRdRMe2ffr9zkmtEMmJYO1mr3Uq3iMtd60G+7H2XrvLTAtCzzffo/I
-	0PXiCw9yLt390J+nGFwA==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=JQ7wFdwxJQjpygkTPphyLHTSAG0vQj88PkkGZDeR1vs=; b=ecl58I/l14Y6sw
+	mi2NKTNnUwpJy5DlSv0HkBB1HqFFCKQJz3ABBULHpeWhCK7TK+zcnHIhytMjRdkwdx3h9QoYlvUQw
+	wQRjVmiVSJnXFAOQ0Kvm7FSFcYpBhATTJ8bjy0pdXsBV8m5iMWDLE+wjXUMfVr9G1IK36a2JjovGx
+	yIo+4SxtzRD0rusFs50usO8htDnqrfohlf4J05eA9j5ohdmHoWQySs/RfF3tx9l4aT9PiiTdDXNcg
+	YMTYdOVTsNQUupGpoSpGcZCiiDoO3rQfYK0NbQ5Mfut4dBFvj/0lMdBfqw+2bHQ/5sHD/h0PQ+/4m
+	S27W+v/gQGtuKUtPsEsQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rZokI-00000008XrD-3ufj;
-	Tue, 13 Feb 2024 09:06:30 +0000
-Received: from [162.19.155.126] (helo=mail.commercesolutions.pl)
+	id 1rZr1H-000000091jx-10lB;
+	Tue, 13 Feb 2024 11:32:11 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rZokC-00000008XnH-1Xp3
+	id 1rZr1E-000000091iF-1o0p
 	for kexec@lists.infradead.org;
-	Tue, 13 Feb 2024 09:06:27 +0000
-Received: by mail.commercesolutions.pl (Postfix, from userid 1002)
-	id 4EBDB24381; Tue, 13 Feb 2024 09:06:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=commercesolutions.pl;
-	s=mail; t=1707815178;
-	bh=PcMncQpBfIZCnTOfZJY5G1G+gaLn4c9QPfFvoXrE4rA=;
-	h=Date:From:To:Subject:From;
-	b=oyURhA1paTBVFgwGBDFGu8+m0tUZ/bS1WoFr7iaXi5p/bwEFN2fyol/FDDrx76g93
-	 zMABKy5HLYeC6OWYFI1D3XWcQTpD5IcuW+tlfjZKDopLh4uBjdv4XnQXH7lI1dG4WO
-	 NSW0NRRTx04gFg/nErK4mrY6vRpWH27qbi7vAIeJd22TttOCgWgRtFiI2wIo7nIXCA
-	 8IX4OP3Wlhu6VKZ6U4t16gS7Q9RoP2UcBv0kt0lyLqikQPZ5LpsF3thd9aFyU/qgvQ
-	 gehT8/xBt/z7v1et+0XEuFf2sQ1KqY2YEKamLVVsuhoS/oXMAVf/ZzW7yjQDJ5fVyg
-	 804LY7ewQc9NA==
-Received: by mail.commercesolutions.pl for <kexec@lists.infradead.org>; Tue, 13 Feb 2024 09:05:27 GMT
-Message-ID: <20240213074500-0.1.bl.2kd08.0.k7h8up7k5o@commercesolutions.pl>
-Date: Tue, 13 Feb 2024 09:05:27 GMT
-From: "Kamil Tralewski" <kamil.tralewski@commercesolutions.pl>
-To: <kexec@lists.infradead.org>
-Subject: =?UTF-8?Q?S=C5=82owa_kluczowe_do_wypozycjonowania?=
-X-Mailer: mail.commercesolutions.pl
+	Tue, 13 Feb 2024 11:32:09 +0000
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41DAChBR021621;
+	Tue, 13 Feb 2024 11:32:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=v5eOYAD3vQP8tXuNI25ANhkOk62PwdiviuqOYCZc6mQ=;
+ b=Lj4/MCUvuhNWcOPh0pIi4/RCRMxPR5LstQKK1Xk7lsOpna/V76PklQsOBN/fAOKH6GCT
+ ZTITRv/OyoCBurvMgsrvbCPSF8MylqcUStPEDsmpYfAmoqPweFuizGp2P1P9WxjzbZjD
+ uPjz5tIZ6t5TyQ/e3NXz0RMkiOn3e+XIYgVsb4vrQWsH+FgvCBM7uFFnou8AQGKY/iVL
+ TwL9SKy2EM/g2U2T01pUKQOGFuTZCYyQpGXJzvfOr6t7caXDAvBtF+mrjpGg1ieHXNTF
+ gi1J1WIrc+uw3mWNbm+JQMcwPDolYj351Djagf+rdfy3skCw+zUUXtVxaYGw+EJAoDxc 2A== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w86fk2692-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 Feb 2024 11:32:00 +0000
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41DACunT022210;
+	Tue, 13 Feb 2024 11:32:00 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3w86fk268m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 Feb 2024 11:31:59 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41D8GO13024908;
+	Tue, 13 Feb 2024 11:31:59 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3w6mfp70wt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 Feb 2024 11:31:59 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41DBVs1X50528648
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 13 Feb 2024 11:31:56 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EDD002004F;
+	Tue, 13 Feb 2024 11:31:53 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 595B920040;
+	Tue, 13 Feb 2024 11:31:51 +0000 (GMT)
+Received: from li-bd3f974c-2712-11b2-a85c-df1cec4d728e.in.ibm.com (unknown [9.203.115.195])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 13 Feb 2024 11:31:51 +0000 (GMT)
+From: Hari Bathini <hbathini@linux.ibm.com>
+To: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Kexec-ml <kexec@lists.infradead.org>
+Cc: lkml <linux-kernel@vger.kernel.org>, Michael Ellerman <mpe@ellerman.id.au>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH linux-next 0/3] powerpc/kexec: split CONFIG_CRASH_DUMP out from CONFIG_KEXEC_CORE
+Date: Tue, 13 Feb 2024 17:01:46 +0530
+Message-ID: <20240213113150.1148276-1-hbathini@linux.ibm.com>
+X-Mailer: git-send-email 2.43.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: P542-OlHxRQZS5TxbV4z1B4EOhaNplWn
+X-Proofpoint-GUID: vmkQYWnnC_uZN7NssJOsJjBR1KcZDomN
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-13_06,2024-02-12_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=921
+ phishscore=0 impostorscore=0 suspectscore=0 adultscore=0 bulkscore=0
+ clxscore=1015 spamscore=0 malwarescore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2402130091
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240213_010625_160672_1A4B2568 
-X-CRM114-Status: UNSURE (   1.07  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20240213_033208_606130_AA35506F 
+X-CRM114-Status: GOOD (  14.56  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -62,18 +111,46 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-RHppZcWEIGRvYnJ5LAoKemFwb3puYcWCZW0gc2nEmSB6IFBhxYRzdHdhIG9mZXJ0xIUgaSB6IHBy
-enlqZW1ub8WbY2nEhSBwcnp5em5hasSZLCDFvGUgcHJ6eWNpxIVnYSB1d2FnxJkgaSB6YWNoxJlj
-YSBkbyBkYWxzenljaCByb3ptw7N3LiAKClBvbXnFm2xhxYJlbSwgxbxlIG1vxbxlIG3Ds2fFgmJ5
-bSBtaWXEhyBzd8OzaiB3a8WCYWQgdyBQYcWEc3R3YSByb3p3w7NqIGkgcG9tw7NjIGRvdHJ6ZcSH
-IHogdMSFIG9mZXJ0xIUgZG8gd2nEmWtzemVnbyBncm9uYSBvZGJpb3Jjw7N3LiBQb3p5Y2pvbnVq
-xJkgc3Ryb255IHd3dywgZHppxJlraSBjemVtdSBnZW5lcnVqxIUgxZt3aWV0bnkgcnVjaCB3IHNp
-ZWNpLgoKTW/FvGVteSBwb3Jvem1hd2lhxIcgdyBuYWpibGnFvHN6eW0gY3phc2llPwoKUG96ZHJh
-d2lhbQpLYW1pbCBUcmFsZXdza2kKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3Jn
-Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+This patch series is a follow-up to [1] based on discussions at [2]
+about additional work needed to get it working on powerpc.
+
+The first patch in the series makes struct crash_mem available with or
+without CONFIG_CRASH_DUMP enabled. The next patch moves kdump specific
+code for kexec_file_load syscall under CONFIG_CRASH_DUMP and the last
+patch splits other kdump specific code under CONFIG_CRASH_DUMP and
+removes dependency with CONFIG_CRASH_DUMP for CONFIG_KEXEC_CORE.
+
+[1] https://lore.kernel.org/all/20240124051254.67105-1-bhe@redhat.com/
+[2] https://lore.kernel.org/all/9101bb07-70f1-476c-bec9-ec67e9899744@linux.ibm.com/
+
+
+Hari Bathini (3):
+  kexec/kdump: make struct crash_mem available without CONFIG_CRASH_DUMP
+  powerpc/kexec: split CONFIG_KEXEC_FILE and CONFIG_CRASH_DUMP
+  powerpc/kdump: Split KEXEC_CORE and CRASH_DUMP dependency
+
+ arch/powerpc/Kconfig               |   9 +-
+ arch/powerpc/include/asm/kexec.h   |  98 +++++------
+ arch/powerpc/kernel/prom.c         |   2 +-
+ arch/powerpc/kernel/setup-common.c |   2 +-
+ arch/powerpc/kernel/smp.c          |   4 +-
+ arch/powerpc/kexec/Makefile        |   3 +-
+ arch/powerpc/kexec/core.c          |   4 +
+ arch/powerpc/kexec/elf_64.c        |   4 +-
+ arch/powerpc/kexec/file_load_64.c  | 269 +++++++++++++++--------------
+ include/linux/crash_core.h         |  12 +-
+ 10 files changed, 208 insertions(+), 199 deletions(-)
+
+-- 
+2.43.0
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
