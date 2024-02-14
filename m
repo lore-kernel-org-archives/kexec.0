@@ -4,59 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3A2D5C48BEB
-	for <kexec@archiver.kernel.org>; Wed, 14 Feb 2024 22:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 59B3DC48BC3
+	for <kexec@archiver.kernel.org>; Wed, 14 Feb 2024 22:32:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=NoFYenC3CxuC74sw5JVN5UO1h5w3PF45NNnpa09ubRk=; b=TxOZ326WM63ILk
-	8s9u9vNmL6TmaBJQSDuGImLZj0b8Cheu4zfancRQrBx1yk2Zdp6EIRUjOkFmHUPLE7X089WfofSqJ
-	cEbAzZTHyCgJDxt0ZnvmuZonURfPA6DVOV5jbns6nBdU3RjB/RRTbiKXcs3fhYNsAaoMteGgU4Wqp
-	UZkyycxn6WzmlYGjN+KKoGI4KDK0qcUwEIYaNUgtyNGX65AuxIkr0pMu5WFcvM85GobdiC364K/wi
-	ZsrQU22S18+E1a9eIi99vmHfqMTkhRxFKnL6Erg9ONKfHnnl930/VmGeKf3/zopcW/zzfxSbwUzcb
-	364o21h7raLOKdBID/2A==;
+	List-Owner; bh=Ebk1iOWgIwGhp5jl6gGQeXqbsPn7yYVyz8RrpBqr2qY=; b=R1u7qYYnWJ4V29
+	P3CbG0O4nftUuLxcwcj46stfL6aCYe9lTr1Lt3XL3dtjIq7Wc3Rah+ko4xm85sYT2Vux2fzGWAkLe
+	vxQMPe9FAXd0YQfGy9LCq4Smld/535l3DJGcMH5rqM/u7MNgjZr25q4nUEhcf8aeqUPHTw0vHlmVo
+	+v0++jJf0zzCkT57fxfKh6ZKh6hF2UtehkUyP4M2qf59a+Tcr0O6IaJB9DqNZOoLSNDdZ0Ae7/xEY
+	Z24sp/8oS6n4YIDa9diB7uBpaEzY3XBlH4RPDo1qLyibmKJUHCeNt2FqcmFjagpFsPVc3Y23U5XIF
+	oeWd0BpEMMLWLjw6PbAg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1raNnW-0000000EQWs-2o81;
-	Wed, 14 Feb 2024 22:32:10 +0000
+	id 1raNnb-0000000EQZc-30cp;
+	Wed, 14 Feb 2024 22:32:15 +0000
 Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1raNnN-0000000EQNm-0zZf
+	id 1raNnQ-0000000EQRb-1nCh
 	for kexec@lists.infradead.org;
-	Wed, 14 Feb 2024 22:32:06 +0000
+	Wed, 14 Feb 2024 22:32:12 +0000
 Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41ELicod015490;
-	Wed, 14 Feb 2024 22:31:38 GMT
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41ELjEIc016762;
+	Wed, 14 Feb 2024 22:31:41 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2023-11-20;
- bh=gXRwIVrmLnsEI+SIy8umjRWfPejqq8Dn2F0xGyqXM64=;
- b=fldVXPf/gSy+z8K9nZ6HhKET/nuCcIzAeAtNahH+bSrVbAUoeCJQDejyIw6aHDabCTDN
- HqsvFUZACB1EYnNAwQa4WKMZI5IDiQIg2OsmtOEmq5grlqM/Uf/CfpV3eClKk9GyANZq
- BJxe1l3UVtWwQLpUSjUttyWMFd0/+jseHGHWPsEr1CFDCxBysrUM+cZBWYan4QzaKl+r
- jIKMi/6AvPT5kvCpomHmXVKfpzno1aPIhf679qAr72j+6iz6FTcGWa8lNvlMFhyTfx1d
- xY5DzNHlmweODg/PB1JvEzsr7UJiQRI4GEXrkNOXWfH7lmO82djlShESD04isPe0IGWj VQ== 
+ content-transfer-encoding; s=corp-2023-11-20;
+ bh=ATn3HkYJssGD7djLMnpTO0tdYThQiujVdeSPIAAzyW8=;
+ b=BJGiJEYAksPB4jODMAcdHmvL9bn9h4aYTv5LWBP4JZ1xn9jOnX5ReJ87EzI3m7lvaR32
+ WhfzKIAgre+F3eTgfOOkHP9uz9E0CfJTPIv3Xcx2Lk10FwYRlSh0IBqBWYRZsgkD8z3u
+ +24NXhctXjVU0z+8XZ8NgLTY9OKzulRJtnhWjszvOjhlZAfVtngjjBeQ5VFS4qTj0WK4
+ B4AGnVDnZcXMTvH7VM7U7brVOG+qKulJaQeA2ek3Nuk81up8WO+r+473iB3BOPINsMyC
+ kXPB/yDt6qOoT8RSAej2hDTbkvqlJbkxn/9k4gtPy6M+ufbJ5muThkxuYTvK85xxHDLQ Rw== 
 Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3w92s70gv5-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3w92s70gv7-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 14 Feb 2024 22:31:37 +0000
+	Wed, 14 Feb 2024 22:31:41 +0000
 Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 41EL92D6000609;
-	Wed, 14 Feb 2024 22:31:36 GMT
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 41ELHTHo000489;
+	Wed, 14 Feb 2024 22:31:39 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3w5yk9n77t-1
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3w5yk9n7a3-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Wed, 14 Feb 2024 22:31:36 +0000
+	Wed, 14 Feb 2024 22:31:39 +0000
 Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41EMVTV4004281;
-	Wed, 14 Feb 2024 22:31:35 GMT
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41EMVTVA004281;
+	Wed, 14 Feb 2024 22:31:38 GMT
 Received: from bur-virt-x6-2-100.us.oracle.com (bur-virt-x6-2-100.us.oracle.com [10.153.92.40])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3w5yk9n72r-6
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3w5yk9n72r-9
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Wed, 14 Feb 2024 22:31:35 +0000
+	Wed, 14 Feb 2024 22:31:38 +0000
 From: Ross Philipson <ross.philipson@oracle.com>
 To: linux-kernel@vger.kernel.org, x86@kernel.org,
         linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
@@ -70,9 +70,9 @@ Cc: ross.philipson@oracle.com, dpsmith@apertussolutions.com,
         nivedita@alum.mit.edu, herbert@gondor.apana.org.au,
         davem@davemloft.net, kanth.ghatraju@oracle.com,
         trenchboot-devel@googlegroups.com
-Subject: [PATCH v8 05/15] x86: Secure Launch main header file
-Date: Wed, 14 Feb 2024 14:18:37 -0800
-Message-Id: <20240214221847.2066632-6-ross.philipson@oracle.com>
+Subject: [PATCH v8 08/15] x86: Secure Launch kernel late boot stub
+Date: Wed, 14 Feb 2024 14:18:40 -0800
+Message-Id: <20240214221847.2066632-9-ross.philipson@oracle.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20240214221847.2066632-1-ross.philipson@oracle.com>
 References: <20240214221847.2066632-1-ross.philipson@oracle.com>
@@ -84,11 +84,11 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 p
  bulkscore=0 spamscore=0 malwarescore=0 adultscore=0 suspectscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
  definitions=main-2402140170
-X-Proofpoint-GUID: nJc5X1rYTUgEbrcw6RfxCZ7y0rNAhlKi
-X-Proofpoint-ORIG-GUID: nJc5X1rYTUgEbrcw6RfxCZ7y0rNAhlKi
+X-Proofpoint-GUID: ru87IA30n4wyfs4TWzUfZz_DEHrPZRLL
+X-Proofpoint-ORIG-GUID: ru87IA30n4wyfs4TWzUfZz_DEHrPZRLL
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240214_143201_333723_1841EBAA 
-X-CRM114-Status: GOOD (  23.30  )
+X-CRM114-CacheID: sfid-20240214_143204_594971_1F459299 
+X-CRM114-Status: GOOD (  44.78  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,269 +100,620 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-SW50cm9kdWNlIHRoZSBtYWluIFNlY3VyZSBMYXVuY2ggaGVhZGVyIGZpbGUgdXNlZCBpbiB0aGUg
-ZWFybHkgU0wgc3R1YgphbmQgdGhlIGVhcmx5IHNldHVwIGNvZGUuCgpTaWduZWQtb2ZmLWJ5OiBS
-b3NzIFBoaWxpcHNvbiA8cm9zcy5waGlsaXBzb25Ab3JhY2xlLmNvbT4KLS0tCiBpbmNsdWRlL2xp
-bnV4L3NsYXVuY2guaCB8IDU0MiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrCiAxIGZpbGUgY2hhbmdlZCwgNTQyIGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0
-NCBpbmNsdWRlL2xpbnV4L3NsYXVuY2guaAoKZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvc2xh
-dW5jaC5oIGIvaW5jbHVkZS9saW51eC9zbGF1bmNoLmgKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5k
-ZXggMDAwMDAwMDAwMDAwLi5kYTI5ODhlMzJhZGEKLS0tIC9kZXYvbnVsbAorKysgYi9pbmNsdWRl
-L2xpbnV4L3NsYXVuY2guaApAQCAtMCwwICsxLDU0MiBAQAorLyogU1BEWC1MaWNlbnNlLUlkZW50
-aWZpZXI6IEdQTC0yLjAgKi8KKy8qCisgKiBNYWluIFNlY3VyZSBMYXVuY2ggaGVhZGVyIGZpbGUu
-CisgKgorICogQ29weXJpZ2h0IChjKSAyMDIyLCBPcmFjbGUgYW5kL29yIGl0cyBhZmZpbGlhdGVz
-LgorICovCisKKyNpZm5kZWYgX0xJTlVYX1NMQVVOQ0hfSAorI2RlZmluZSBfTElOVVhfU0xBVU5D
-SF9ICisKKy8qCisgKiBTZWN1cmUgTGF1bmNoIERlZmluZWQgU3RhdGUgRmxhZ3MKKyAqLworI2Rl
-ZmluZSBTTF9GTEFHX0FDVElWRQkJMHgwMDAwMDAwMQorI2RlZmluZSBTTF9GTEFHX0FSQ0hfU0tJ
-TklUCTB4MDAwMDAwMDIKKyNkZWZpbmUgU0xfRkxBR19BUkNIX1RYVAkweDAwMDAwMDA0CisKKy8q
-CisgKiBTZWN1cmUgTGF1bmNoIENQVSBUeXBlCisgKi8KKyNkZWZpbmUgU0xfQ1BVX0FNRAkxCisj
-ZGVmaW5lIFNMX0NQVV9JTlRFTAkyCisKKyNpZiBJU19FTkFCTEVEKENPTkZJR19TRUNVUkVfTEFV
-TkNIKQorCisjZGVmaW5lIF9fU0wzMl9DUwkweDAwMDgKKyNkZWZpbmUgX19TTDMyX0RTCTB4MDAx
-MAorCisvKgorICogSW50ZWwgU2FmZXIgTW9kZSBFeHRlbnNpb25zIChTTVgpCisgKgorICogSW50
-ZWwgU01YIHByb3ZpZGVzIGEgcHJvZ3JhbW1pbmcgaW50ZXJmYWNlIHRvIGVzdGFibGlzaCBhIE1l
-YXN1cmVkIExhdW5jaGVkCisgKiBFbnZpcm9ubWVudCAoTUxFKS4gVGhlIG1lYXN1cmVtZW50IGFu
-ZCBwcm90ZWN0aW9uIG1lY2hhbmlzbXMgc3VwcG9ydGVkIGJ5IHRoZQorICogY2FwYWJpbGl0aWVz
-IG9mIGFuIEludGVsIFRydXN0ZWQgRXhlY3V0aW9uIFRlY2hub2xvZ3kgKFRYVCkgcGxhdGZvcm0u
-IFNNWCBpcworICogdGhlIHByb2Nlc3NvcuKAmXMgcHJvZ3JhbW1pbmcgaW50ZXJmYWNlIGluIGFu
-IEludGVsIFRYVCBwbGF0Zm9ybS4KKyAqCisgKiBTZWUgSW50ZWwgU0RNIFZvbHVtZSAyIC0gNi4x
-ICJTYWZlciBNb2RlIEV4dGVuc2lvbnMgUmVmZXJlbmNlIgorICovCisKKy8qCisgKiBTTVggR0VU
-U0VDIExlYWYgRnVuY3Rpb25zCisgKi8KKyNkZWZpbmUgU01YX1g4Nl9HRVRTRUNfU0VYSVQJNQor
-I2RlZmluZSBTTVhfWDg2X0dFVFNFQ19TTUNUUkwJNworI2RlZmluZSBTTVhfWDg2X0dFVFNFQ19X
-QUtFVVAJOAorCisvKgorICogSW50ZWwgVHJ1c3RlZCBFeGVjdXRpb24gVGVjaG5vbG9neSBNTUlP
-IFJlZ2lzdGVycyBCYW5rcworICovCisjZGVmaW5lIFRYVF9QVUJfQ09ORklHX1JFR1NfQkFTRQkw
-eGZlZDMwMDAwCisjZGVmaW5lIFRYVF9QUklWX0NPTkZJR19SRUdTX0JBU0UJMHhmZWQyMDAwMAor
-I2RlZmluZSBUWFRfTlJfQ09ORklHX1BBR0VTICAgICAoKFRYVF9QVUJfQ09ORklHX1JFR1NfQkFT
-RSAtIFwKKwkJCQkgIFRYVF9QUklWX0NPTkZJR19SRUdTX0JBU0UpID4+IFBBR0VfU0hJRlQpCisK
-Ky8qCisgKiBJbnRlbCBUcnVzdGVkIEV4ZWN1dGlvbiBUZWNobm9sb2d5IChUWFQpIFJlZ2lzdGVy
-cworICovCisjZGVmaW5lIFRYVF9DUl9TVFMJCQkweDAwMDAKKyNkZWZpbmUgVFhUX0NSX0VTVFMJ
-CQkweDAwMDgKKyNkZWZpbmUgVFhUX0NSX0VSUk9SQ09ERQkJMHgwMDMwCisjZGVmaW5lIFRYVF9D
-Ul9DTURfUkVTRVQJCTB4MDAzOAorI2RlZmluZSBUWFRfQ1JfQ01EX0NMT1NFX1BSSVZBVEUJMHgw
-MDQ4CisjZGVmaW5lIFRYVF9DUl9ESURWSUQJCQkweDAxMTAKKyNkZWZpbmUgVFhUX0NSX1ZFUl9F
-TUlGCQkJMHgwMjAwCisjZGVmaW5lIFRYVF9DUl9DTURfVU5MT0NLX01FTV9DT05GSUcJMHgwMjE4
-CisjZGVmaW5lIFRYVF9DUl9TSU5JVF9CQVNFCQkweDAyNzAKKyNkZWZpbmUgVFhUX0NSX1NJTklU
-X1NJWkUJCTB4MDI3OAorI2RlZmluZSBUWFRfQ1JfTUxFX0pPSU4JCQkweDAyOTAKKyNkZWZpbmUg
-VFhUX0NSX0hFQVBfQkFTRQkJMHgwMzAwCisjZGVmaW5lIFRYVF9DUl9IRUFQX1NJWkUJCTB4MDMw
-OAorI2RlZmluZSBUWFRfQ1JfU0NSQVRDSFBBRAkJMHgwMzc4CisjZGVmaW5lIFRYVF9DUl9DTURf
-T1BFTl9MT0NBTElUWTEJMHgwMzgwCisjZGVmaW5lIFRYVF9DUl9DTURfQ0xPU0VfTE9DQUxJVFkx
-CTB4MDM4OAorI2RlZmluZSBUWFRfQ1JfQ01EX09QRU5fTE9DQUxJVFkyCTB4MDM5MAorI2RlZmlu
-ZSBUWFRfQ1JfQ01EX0NMT1NFX0xPQ0FMSVRZMgkweDAzOTgKKyNkZWZpbmUgVFhUX0NSX0NNRF9T
-RUNSRVRTCQkweDA4ZTAKKyNkZWZpbmUgVFhUX0NSX0NNRF9OT19TRUNSRVRTCQkweDA4ZTgKKyNk
-ZWZpbmUgVFhUX0NSX0UyU1RTCQkJMHgwOGYwCisKKy8qIFRYVCBkZWZhdWx0IHJlZ2lzdGVyIHZh
-bHVlICovCisjZGVmaW5lIFRYVF9SRUdWQUxVRV9PTkUJCTB4MVVMTAorCisvKiBUWFRDUl9TVFMg
-c3RhdHVzIGJpdHMgKi8KKyNkZWZpbmUgVFhUX1NFTlRFUl9ET05FX1NUUwkJQklUKDApCisjZGVm
-aW5lIFRYVF9TRVhJVF9ET05FX1NUUwkJQklUKDEpCisKKy8qCisgKiBTSU5JVC9NTEUgQ2FwYWJp
-bGl0aWVzIEZpZWxkIEJpdCBEZWZpbml0aW9ucworICovCisjZGVmaW5lIFRYVF9TSU5JVF9NTEVf
-Q0FQX1dBS0VfR0VUU0VDCTAKKyNkZWZpbmUgVFhUX1NJTklUX01MRV9DQVBfV0FLRV9NT05JVE9S
-CTEKKworLyoKKyAqIE9TL01MRSBTZWN1cmUgTGF1bmNoIFNwZWNpZmljIERlZmluaXRpb25zCisg
-Ki8KKyNkZWZpbmUgVFhUX09TX01MRV9TVFJVQ1RfVkVSU0lPTgkxCisjZGVmaW5lIFRYVF9PU19N
-TEVfTUFYX1ZBUklBQkxFX01UUlJTCTMyCisKKy8qCisgKiBUWFQgSGVhcCBUYWJsZSBFbnVtZXJh
-dGlvbgorICovCisjZGVmaW5lIFRYVF9CSU9TX0RBVEFfVEFCTEUJCTEKKyNkZWZpbmUgVFhUX09T
-X01MRV9EQVRBX1RBQkxFCQkyCisjZGVmaW5lIFRYVF9PU19TSU5JVF9EQVRBX1RBQkxFCQkzCisj
-ZGVmaW5lIFRYVF9TSU5JVF9NTEVfREFUQV9UQUJMRQk0CisjZGVmaW5lIFRYVF9TSU5JVF9UQUJM
-RV9NQVgJCVRYVF9TSU5JVF9NTEVfREFUQV9UQUJMRQorCisvKgorICogU2VjdXJlIExhdW5jaCBE
-ZWZpbmVkIEVycm9yIENvZGVzIHVzZWQgaW4gTUxFLWluaXRpYXRlZCBUWFQgcmVzZXRzLgorICoK
-KyAqIFRYVCBTcGVjaWZpY2F0aW9uCisgKiBBcHBlbmRpeCBJIEFDTSBFcnJvciBDb2RlcworICov
-CisjZGVmaW5lIFNMX0VSUk9SX0dFTkVSSUMJCTB4YzAwMDgwMDEKKyNkZWZpbmUgU0xfRVJST1Jf
-VFBNX0lOSVQJCTB4YzAwMDgwMDIKKyNkZWZpbmUgU0xfRVJST1JfVFBNX0lOVkFMSURfTE9HMjAJ
-MHhjMDAwODAwMworI2RlZmluZSBTTF9FUlJPUl9UUE1fTE9HR0lOR19GQUlMRUQJMHhjMDAwODAw
-NAorI2RlZmluZSBTTF9FUlJPUl9SRUdJT05fU1RSQURETEVfNEdCCTB4YzAwMDgwMDUKKyNkZWZp
-bmUgU0xfRVJST1JfVFBNX0VYVEVORAkJMHhjMDAwODAwNgorI2RlZmluZSBTTF9FUlJPUl9NVFJS
-X0lOVl9WQ05UCQkweGMwMDA4MDA3CisjZGVmaW5lIFNMX0VSUk9SX01UUlJfSU5WX0RFRl9UWVBF
-CTB4YzAwMDgwMDgKKyNkZWZpbmUgU0xfRVJST1JfTVRSUl9JTlZfQkFTRQkJMHhjMDAwODAwOQor
-I2RlZmluZSBTTF9FUlJPUl9NVFJSX0lOVl9NQVNLCQkweGMwMDA4MDBhCisjZGVmaW5lIFNMX0VS
-Uk9SX01TUl9JTlZfTUlTQ19FTgkweGMwMDA4MDBiCisjZGVmaW5lIFNMX0VSUk9SX0lOVl9BUF9J
-TlRFUlJVUFQJMHhjMDAwODAwYworI2RlZmluZSBTTF9FUlJPUl9JTlRFR0VSX09WRVJGTE9XCTB4
-YzAwMDgwMGQKKyNkZWZpbmUgU0xfRVJST1JfSEVBUF9XQUxLCQkweGMwMDA4MDBlCisjZGVmaW5l
-IFNMX0VSUk9SX0hFQVBfTUFQCQkweGMwMDA4MDBmCisjZGVmaW5lIFNMX0VSUk9SX1JFR0lPTl9B
-Qk9WRV80R0IJMHhjMDAwODAxMAorI2RlZmluZSBTTF9FUlJPUl9IRUFQX0lOVkFMSURfRE1BUgkw
-eGMwMDA4MDExCisjZGVmaW5lIFNMX0VSUk9SX0hFQVBfRE1BUl9TSVpFCQkweGMwMDA4MDEyCisj
-ZGVmaW5lIFNMX0VSUk9SX0hFQVBfRE1BUl9NQVAJCTB4YzAwMDgwMTMKKyNkZWZpbmUgU0xfRVJS
-T1JfSElfUE1SX0JBU0UJCTB4YzAwMDgwMTQKKyNkZWZpbmUgU0xfRVJST1JfSElfUE1SX1NJWkUJ
-CTB4YzAwMDgwMTUKKyNkZWZpbmUgU0xfRVJST1JfTE9fUE1SX0JBU0UJCTB4YzAwMDgwMTYKKyNk
-ZWZpbmUgU0xfRVJST1JfTE9fUE1SX01MRQkJMHhjMDAwODAxNworI2RlZmluZSBTTF9FUlJPUl9J
-TklUUkRfVE9PX0JJRwkJMHhjMDAwODAxOAorI2RlZmluZSBTTF9FUlJPUl9IRUFQX1pFUk9fT0ZG
-U0VUCTB4YzAwMDgwMTkKKyNkZWZpbmUgU0xfRVJST1JfV0FLRV9CTE9DS19UT09fU01BTEwJMHhj
-MDAwODAxYQorI2RlZmluZSBTTF9FUlJPUl9NTEVfQlVGRkVSX09WRVJMQVAJMHhjMDAwODAxYgor
-I2RlZmluZSBTTF9FUlJPUl9CVUZGRVJfQkVZT05EX1BNUgkweGMwMDA4MDFjCisjZGVmaW5lIFNM
-X0VSUk9SX09TX1NJTklUX0JBRF9WRVJTSU9OCTB4YzAwMDgwMWQKKyNkZWZpbmUgU0xfRVJST1Jf
-RVZFTlRMT0dfTUFQCQkweGMwMDA4MDFlCisjZGVmaW5lIFNMX0VSUk9SX1RQTV9OVU1CRVJfQUxH
-UwkweGMwMDA4MDFmCisjZGVmaW5lIFNMX0VSUk9SX1RQTV9VTktOT1dOX0RJR0VTVAkweGMwMDA4
-MDIwCisjZGVmaW5lIFNMX0VSUk9SX1RQTV9JTlZBTElEX0VWRU5UCTB4YzAwMDgwMjEKKyNkZWZp
-bmUgU0xfRVJST1JfSU5WQUxJRF9TTFJUCQkweGMwMDA4MDIyCisjZGVmaW5lIFNMX0VSUk9SX1NM
-UlRfTUlTU0lOR19FTlRSWQkweGMwMDA4MDIzCisjZGVmaW5lIFNMX0VSUk9SX1NMUlRfTUFQCQkw
-eGMwMDA4MDI0CisKKy8qCisgKiBTZWN1cmUgTGF1bmNoIERlZmluZWQgTGltaXRzCisgKi8KKyNk
-ZWZpbmUgVFhUX01BWF9DUFVTCQk1MTIKKyNkZWZpbmUgVFhUX0JPT1RfU1RBQ0tfU0laRQkxMjgK
-KworLyoKKyAqIFNlY3VyZSBMYXVuY2ggZXZlbnQgbG9nIGVudHJ5IHR5cGUuIFRoZSBUWFQgc3Bl
-Y2lmaWNhdGlvbiBkZWZpbmVzIHRoZQorICogYmFzZSBldmVudCB2YWx1ZSBhcyAweDQwMCBmb3Ig
-RFJUTSB2YWx1ZXMuCisgKi8KKyNkZWZpbmUgVFhUX0VWVFlQRV9CQVNFCQkJMHg0MDAKKyNkZWZp
-bmUgVFhUX0VWVFlQRV9TTEFVTkNICQkoVFhUX0VWVFlQRV9CQVNFICsgMHgxMDIpCisjZGVmaW5l
-IFRYVF9FVlRZUEVfU0xBVU5DSF9TVEFSVAkoVFhUX0VWVFlQRV9CQVNFICsgMHgxMDMpCisjZGVm
-aW5lIFRYVF9FVlRZUEVfU0xBVU5DSF9FTkQJCShUWFRfRVZUWVBFX0JBU0UgKyAweDEwNCkKKwor
-LyoKKyAqIE1lYXN1cmVkIExhdW5jaCBQQ1JzCisgKi8KKyNkZWZpbmUgU0xfREVGX0RMTUVfREVU
-QUlMX1BDUjE3CTE3CisjZGVmaW5lIFNMX0RFRl9ETE1FX0FVVEhPUklUWV9QQ1IxOAkxOAorI2Rl
-ZmluZSBTTF9BTFRfRExNRV9BVVRIT1JJVFlfUENSMTkJMTkKKyNkZWZpbmUgU0xfQUxUX0RMTUVf
-REVUQUlMX1BDUjIwCTIwCisKKy8qCisgKiBNTEUgc2NyYXRjaCBhcmVhIG9mZnNldHMKKyAqLwor
-I2RlZmluZSBTTF9TQ1JBVENIX0FQX0VCWAkJMAorI2RlZmluZSBTTF9TQ1JBVENIX0FQX0pNUF9P
-RkZTRVQJNAorI2RlZmluZSBTTF9TQ1JBVENIX0FQX1NUQUNLU19PRkZTRVQJOAorCisjaWZuZGVm
-IF9fQVNTRU1CTFlfXworCisjaW5jbHVkZSA8bGludXgvaW8uaD4KKyNpbmNsdWRlIDxsaW51eC90
-cG0uaD4KKyNpbmNsdWRlIDxsaW51eC90cG1fZXZlbnRsb2cuaD4KKworLyoKKyAqIFNlY3VyZSBM
-YXVuY2ggQVAgc3RhY2sgYW5kIG1vbml0b3IgYmxvY2sKKyAqLworc3RydWN0IHNsX2FwX3N0YWNr
-X2FuZF9tb25pdG9yIHsKKwl1MzIgbW9uaXRvcjsKKwl1MzIgY2FjaGVfcGFkWzE1XTsKKwl1MzIg
-c3RhY2tfcGFkWzE1XTsKKwl1MzIgYXBpY2lkOworfSBfX3BhY2tlZDsKKworLyoKKyAqIFNlY3Vy
-ZSBMYXVuY2ggQVAgd2FrZXVwIGluZm9ybWF0aW9uIGZldGNoZWQgaW4gU01QIGJvb3QgY29kZS4K
-KyAqLworc3RydWN0IHNsX2FwX3dha2VfaW5mbyB7CisJdTMyIGFwX3dha2VfYmxvY2s7CisJdTMy
-IGFwX3dha2VfYmxvY2tfc2l6ZTsKKwl1MzIgYXBfam1wX29mZnNldDsKKwl1MzIgYXBfc3RhY2tz
-X29mZnNldDsKK307CisKKy8qCisgKiBUWFQgaGVhcCBleHRlbmRlZCBkYXRhIGVsZW1lbnRzLgor
-ICovCitzdHJ1Y3QgdHh0X2hlYXBfZXh0X2RhdGFfZWxlbWVudCB7CisJdTMyIHR5cGU7CisJdTMy
-IHNpemU7CisJLyogRGF0YSAqLworfSBfX3BhY2tlZDsKKworI2RlZmluZSBUWFRfSEVBUF9FWFRE
-QVRBX1RZUEVfRU5ECQkJMAorCitzdHJ1Y3QgdHh0X2hlYXBfZW5kX2VsZW1lbnQgeworCXUzMiB0
-eXBlOworCXUzMiBzaXplOworfSBfX3BhY2tlZDsKKworI2RlZmluZSBUWFRfSEVBUF9FWFREQVRB
-X1RZUEVfVFBNX0VWRU5UX0xPR19QVFIJCTUKKworc3RydWN0IHR4dF9oZWFwX2V2ZW50X2xvZ19l
-bGVtZW50IHsKKwl1NjQgZXZlbnRfbG9nX3BoeXNfYWRkcjsKK30gX19wYWNrZWQ7CisKKyNkZWZp
-bmUgVFhUX0hFQVBfRVhUREFUQV9UWVBFX0VWRU5UX0xPR19QT0lOVEVSMl8xCTgKKworc3RydWN0
-IHR4dF9oZWFwX2V2ZW50X2xvZ19wb2ludGVyMl8xX2VsZW1lbnQgeworCXU2NCBwaHlzX2FkZHI7
-CisJdTMyIGFsbG9jYXRlZF9ldmVudF9jb250YWluZXJfc2l6ZTsKKwl1MzIgZmlyc3RfcmVjb3Jk
-X29mZnNldDsKKwl1MzIgbmV4dF9yZWNvcmRfb2Zmc2V0OworfSBfX3BhY2tlZDsKKworLyoKKyAq
-IFNlY3VyZSBMYXVuY2ggZGVmaW5lZCBPUy9NTEUgVFhUIEhlYXAgdGFibGUKKyAqLworc3RydWN0
-IHR4dF9vc19tbGVfZGF0YSB7CisJdTMyIHZlcnNpb247CisJdTMyIGJvb3RfcGFyYW1zX2FkZHI7
-CisJdTY0IHNscnQ7CisJdTY0IHR4dF9pbmZvOworCXUzMiBhcF93YWtlX2Jsb2NrOworCXUzMiBh
-cF93YWtlX2Jsb2NrX3NpemU7CisJdTggbWxlX3NjcmF0Y2hbNjRdOworfSBfX3BhY2tlZDsKKwor
-LyoKKyAqIFRYVCBzcGVjaWZpY2F0aW9uIGRlZmluZWQgQklPUyBkYXRhIFRYVCBIZWFwIHRhYmxl
-CisgKi8KK3N0cnVjdCB0eHRfYmlvc19kYXRhIHsKKwl1MzIgdmVyc2lvbjsgLyogQ3VycmVudGx5
-IDUgZm9yIFRQTSAxLjIgYW5kIDYgZm9yIFRQTSAyLjAgKi8KKwl1MzIgYmlvc19zaW5pdF9zaXpl
-OworCXU2NCByZXNlcnZlZDE7CisJdTY0IHJlc2VydmVkMjsKKwl1MzIgbnVtX2xvZ2ljYWxfcHJv
-Y3M7CisJLyogVmVyc2lvbnMgPj0gNSB3aXRoIHVwZGF0ZXMgaW4gdmVyc2lvbiA2ICovCisJdTMy
-IHNpbml0X2ZsYWdzOworCXUzMiBtbGVfZmxhZ3M7CisJLyogVmVyc2lvbnMgPj0gNCAqLworCS8q
-IEV4dCBEYXRhIEVsZW1lbnRzICovCit9IF9fcGFja2VkOworCisvKgorICogVFhUIHNwZWNpZmlj
-YXRpb24gZGVmaW5lZCBPUy9TSU5JVCBUWFQgSGVhcCB0YWJsZQorICovCitzdHJ1Y3QgdHh0X29z
-X3Npbml0X2RhdGEgeworCXUzMiB2ZXJzaW9uOyAvKiBDdXJyZW50bHkgNiBmb3IgVFBNIDEuMiBh
-bmQgNyBmb3IgVFBNIDIuMCAqLworCXUzMiBmbGFnczsKKwl1NjQgbWxlX3B0YWI7CisJdTY0IG1s
-ZV9zaXplOworCXU2NCBtbGVfaGRyX2Jhc2U7CisJdTY0IHZ0ZF9wbXJfbG9fYmFzZTsKKwl1NjQg
-dnRkX3Btcl9sb19zaXplOworCXU2NCB2dGRfcG1yX2hpX2Jhc2U7CisJdTY0IHZ0ZF9wbXJfaGlf
-c2l6ZTsKKwl1NjQgbGNwX3BvX2Jhc2U7CisJdTY0IGxjcF9wb19zaXplOworCXUzMiBjYXBhYmls
-aXRpZXM7CisJLyogVmVyc2lvbiA9IDUgKi8KKwl1NjQgZWZpX3JzZHRfcHRyOworCS8qIFZlcnNp
-b25zID49IDYgKi8KKwkvKiBFeHQgRGF0YSBFbGVtZW50cyAqLworfSBfX3BhY2tlZDsKKworLyoK
-KyAqIFRYVCBzcGVjaWZpY2F0aW9uIGRlZmluZWQgU0lOSVQvTUxFIFRYVCBIZWFwIHRhYmxlCisg
-Ki8KK3N0cnVjdCB0eHRfc2luaXRfbWxlX2RhdGEgeworCXUzMiB2ZXJzaW9uOyAgICAgICAgICAg
-ICAvKiBDdXJyZW50IHZhbHVlcyBhcmUgNiB0aHJvdWdoIDkgKi8KKwkvKiBWZXJzaW9ucyA8PSA4
-ICovCisJdTggYmlvc19hY21faWRbMjBdOworCXUzMiBlZHhfc2VudGVyX2ZsYWdzOworCXU2NCBt
-c2VnX3ZhbGlkOworCXU4IHNpbml0X2hhc2hbMjBdOworCXU4IG1sZV9oYXNoWzIwXTsKKwl1OCBz
-dG1faGFzaFsyMF07CisJdTggbGNwX3BvbGljeV9oYXNoWzIwXTsKKwl1MzIgbGNwX3BvbGljeV9j
-b250cm9sOworCS8qIFZlcnNpb25zID49IDcgKi8KKwl1MzIgcmxwX3dha2V1cF9hZGRyOworCXUz
-MiByZXNlcnZlZDsKKwl1MzIgbnVtX29mX3Npbml0X21kcnM7CisJdTMyIHNpbml0X21kcnNfdGFi
-bGVfb2Zmc2V0OworCXUzMiBzaW5pdF92dGRfZG1hcl90YWJsZV9zaXplOworCXUzMiBzaW5pdF92
-dGRfZG1hcl90YWJsZV9vZmZzZXQ7CisJLyogVmVyc2lvbnMgPj0gOCAqLworCXUzMiBwcm9jZXNz
-b3Jfc2NydG1fc3RhdHVzOworCS8qIFZlcnNpb25zID49IDkgKi8KKwkvKiBFeHQgRGF0YSBFbGVt
-ZW50cyAqLworfSBfX3BhY2tlZDsKKworLyoKKyAqIFRYVCBkYXRhIHJlcG9ydGluZyBzdHJ1Y3R1
-cmUgZm9yIG1lbW9yeSB0eXBlcworICovCitzdHJ1Y3QgdHh0X3Npbml0X21lbW9yeV9kZXNjcmlw
-dG9yX3JlY29yZCB7CisJdTY0IGFkZHJlc3M7CisJdTY0IGxlbmd0aDsKKwl1OCB0eXBlOworCXU4
-IHJlc2VydmVkWzddOworfSBfX3BhY2tlZDsKKworLyoKKyAqIFRYVCBkYXRhIHN0cnVjdHVyZSB1
-c2VkIGJ5IGEgcmVzcG9uc2l2ZSBsb2NhbCBwcm9jZXNzb3IgKFJMUCkgdG8gc3RhcnQKKyAqIGV4
-ZWN1dGlvbiBpbiByZXNwb25zZSB0byBhIEdFVFNFQ1tXQUtFVVBdLgorICovCitzdHJ1Y3Qgc214
-X3JscF9tbGVfam9pbiB7CisJdTMyIHJscF9nZHRfbGltaXQ7CisJdTMyIHJscF9nZHRfYmFzZTsK
-Kwl1MzIgcmxwX3NlZ19zZWw7ICAgICAvKiBjcyAoZHMsIGVzLCBzcyBhcmUgc2VnX3NlbCs4KSAq
-LworCXUzMiBybHBfZW50cnlfcG9pbnQ7IC8qIHBoeXMgYWRkciAqLworfSBfX3BhY2tlZDsKKwor
-LyoKKyAqIFRQTSBldmVudCBsb2cgc3RydWN0dXJlcyBkZWZpbmVkIGluIGJvdGggdGhlIFRYVCBz
-cGVjaWZpY2F0aW9uIGFuZAorICogdGhlIFRDRyBkb2N1bWVudGF0aW9uLgorICovCisjZGVmaW5l
-IFRQTTEyX0VWVExPR19TSUdOQVRVUkUgIlRYVCBFdmVudCBDb250YWluZXIiCisKK3N0cnVjdCB0
-cG0xMl9ldmVudF9sb2dfaGVhZGVyIHsKKwljaGFyIHNpZ25hdHVyZVsyMF07CisJY2hhciByZXNl
-cnZlZFsxMl07CisJdTggY29udGFpbmVyX3Zlcl9tYWpvcjsKKwl1OCBjb250YWluZXJfdmVyX21p
-bm9yOworCXU4IHBjcl9ldmVudF92ZXJfbWFqb3I7CisJdTggcGNyX2V2ZW50X3Zlcl9taW5vcjsK
-Kwl1MzIgY29udGFpbmVyX3NpemU7CisJdTMyIHBjcl9ldmVudHNfb2Zmc2V0OworCXUzMiBuZXh0
-X2V2ZW50X29mZnNldDsKKwkvKiBQQ1JFdmVudHNbXSAqLworfSBfX3BhY2tlZDsKKworLyoKKyAq
-IEZ1bmN0aW9ucyB0byBleHRyYWN0IGRhdGEgZnJvbSB0aGUgSW50ZWwgVFhUIEhlYXAgTWVtb3J5
-LiBUaGUgbGF5b3V0CisgKiBvZiB0aGUgaGVhcCBpcyBhcyBmb2xsb3dzOgorICogICstLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tKworICogIHwgU2l6ZSBCaW9zIERhdGEgdGFibGUgKHU2NCkg
-fAorICogICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tKworICogIHwgQmlvcyBEYXRhIHRh
-YmxlICAgICAgICAgICAgfAorICogICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tKworICog
-IHwgU2l6ZSBPUyBNTEUgdGFibGUgKHU2NCkgICAgfAorICogICstLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tKworICogIHwgT1MgTUxFIHRhYmxlICAgICAgICAgICAgICAgfAorICogICstLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0gKworICogIHwgU2l6ZSBPUyBTSU5JVCB0YWJsZSAodTY0
-KSAgfAorICogICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tKworICogIHwgT1MgU0lOSVQg
-dGFibGUgICAgICAgICAgICAgfAorICogICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tKwor
-ICogIHwgU2l6ZSBTSU5JVCBNTEUgdGFibGUgKHU2NCkgfAorICogICstLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tKworICogIHwgU0lOSVQgTUxFIHRhYmxlICAgICAgICAgICAgfAorICogICst
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tKworICoKKyAqICBOT1RFOiB0aGUgdGFibGUgc2l6
-ZSBmaWVsZHMgaW5jbHVkZSB0aGUgOCBieXRlIHNpemUgZmllbGQgaXRzZWxmLgorICovCitzdGF0
-aWMgaW5saW5lIHU2NCB0eHRfYmlvc19kYXRhX3NpemUodm9pZCAqaGVhcCkKK3sKKwlyZXR1cm4g
-KigodTY0ICopaGVhcCk7Cit9CisKK3N0YXRpYyBpbmxpbmUgdm9pZCAqdHh0X2Jpb3NfZGF0YV9z
-dGFydCh2b2lkICpoZWFwKQoreworCXJldHVybiBoZWFwICsgc2l6ZW9mKHU2NCk7Cit9CisKK3N0
-YXRpYyBpbmxpbmUgdTY0IHR4dF9vc19tbGVfZGF0YV9zaXplKHZvaWQgKmhlYXApCit7CisJcmV0
-dXJuICooKHU2NCAqKShoZWFwICsgdHh0X2Jpb3NfZGF0YV9zaXplKGhlYXApKSk7Cit9CisKK3N0
-YXRpYyBpbmxpbmUgdm9pZCAqdHh0X29zX21sZV9kYXRhX3N0YXJ0KHZvaWQgKmhlYXApCit7CisJ
-cmV0dXJuIGhlYXAgKyB0eHRfYmlvc19kYXRhX3NpemUoaGVhcCkgKyBzaXplb2YodTY0KTsKK30K
-Kworc3RhdGljIGlubGluZSB1NjQgdHh0X29zX3Npbml0X2RhdGFfc2l6ZSh2b2lkICpoZWFwKQor
-eworCXJldHVybiAqKCh1NjQgKikoaGVhcCArIHR4dF9iaW9zX2RhdGFfc2l6ZShoZWFwKSArCisJ
-CQl0eHRfb3NfbWxlX2RhdGFfc2l6ZShoZWFwKSkpOworfQorCitzdGF0aWMgaW5saW5lIHZvaWQg
-KnR4dF9vc19zaW5pdF9kYXRhX3N0YXJ0KHZvaWQgKmhlYXApCit7CisJcmV0dXJuIGhlYXAgKyB0
-eHRfYmlvc19kYXRhX3NpemUoaGVhcCkgKworCQl0eHRfb3NfbWxlX2RhdGFfc2l6ZShoZWFwKSAr
-IHNpemVvZih1NjQpOworfQorCitzdGF0aWMgaW5saW5lIHU2NCB0eHRfc2luaXRfbWxlX2RhdGFf
-c2l6ZSh2b2lkICpoZWFwKQoreworCXJldHVybiAqKCh1NjQgKikoaGVhcCArIHR4dF9iaW9zX2Rh
-dGFfc2l6ZShoZWFwKSArCisJCQl0eHRfb3NfbWxlX2RhdGFfc2l6ZShoZWFwKSArCisJCQl0eHRf
-b3Nfc2luaXRfZGF0YV9zaXplKGhlYXApKSk7Cit9CisKK3N0YXRpYyBpbmxpbmUgdm9pZCAqdHh0
-X3Npbml0X21sZV9kYXRhX3N0YXJ0KHZvaWQgKmhlYXApCit7CisJcmV0dXJuIGhlYXAgKyB0eHRf
-Ymlvc19kYXRhX3NpemUoaGVhcCkgKworCQl0eHRfb3NfbWxlX2RhdGFfc2l6ZShoZWFwKSArCisJ
-CXR4dF9vc19zaW5pdF9kYXRhX3NpemUoaGVhcCkgKyBzaXplb2YodTY0KTsKK30KKworLyoKKyAq
-IFRQTSBldmVudCBsb2dnaW5nIGZ1bmN0aW9ucy4KKyAqLworc3RhdGljIGlubGluZSBzdHJ1Y3Qg
-dHh0X2hlYXBfZXZlbnRfbG9nX3BvaW50ZXIyXzFfZWxlbWVudCoKK3RwbTIwX2ZpbmRfbG9nMl8x
-X2VsZW1lbnQoc3RydWN0IHR4dF9vc19zaW5pdF9kYXRhICpvc19zaW5pdF9kYXRhKQoreworCXN0
-cnVjdCB0eHRfaGVhcF9leHRfZGF0YV9lbGVtZW50ICpleHRfZWxlbTsKKworCS8qIFRoZSBleHRl
-bmRlZCBlbGVtZW50IGFycmF5IGFzIGF0IHRoZSBlbmQgb2YgdGhpcyB0YWJsZSAqLworCWV4dF9l
-bGVtID0gKHN0cnVjdCB0eHRfaGVhcF9leHRfZGF0YV9lbGVtZW50ICopCisJCSgodTggKilvc19z
-aW5pdF9kYXRhICsgc2l6ZW9mKHN0cnVjdCB0eHRfb3Nfc2luaXRfZGF0YSkpOworCisJd2hpbGUg
-KGV4dF9lbGVtLT50eXBlICE9IFRYVF9IRUFQX0VYVERBVEFfVFlQRV9FTkQpIHsKKwkJaWYgKGV4
-dF9lbGVtLT50eXBlID09CisJCSAgICBUWFRfSEVBUF9FWFREQVRBX1RZUEVfRVZFTlRfTE9HX1BP
-SU5URVIyXzEpIHsKKwkJCXJldHVybiAoc3RydWN0IHR4dF9oZWFwX2V2ZW50X2xvZ19wb2ludGVy
-Ml8xX2VsZW1lbnQgKikKKwkJCQkoKHU4ICopZXh0X2VsZW0gKworCQkJCQlzaXplb2Yoc3RydWN0
-IHR4dF9oZWFwX2V4dF9kYXRhX2VsZW1lbnQpKTsKKwkJfQorCQlleHRfZWxlbSA9CisJCQkoc3Ry
-dWN0IHR4dF9oZWFwX2V4dF9kYXRhX2VsZW1lbnQgKikKKwkJCSgodTggKilleHRfZWxlbSArIGV4
-dF9lbGVtLT5zaXplKTsKKwl9CisKKwlyZXR1cm4gTlVMTDsKK30KKworc3RhdGljIGlubGluZSBp
-bnQgdHBtMTJfbG9nX2V2ZW50KHZvaWQgKmV2dGxvZ19iYXNlLCB1MzIgZXZ0bG9nX3NpemUsCisJ
-CQkJICB1MzIgZXZlbnRfc2l6ZSwgdm9pZCAqZXZlbnQpCit7CisJc3RydWN0IHRwbTEyX2V2ZW50
-X2xvZ19oZWFkZXIgKmV2dGxvZyA9CisJCShzdHJ1Y3QgdHBtMTJfZXZlbnRfbG9nX2hlYWRlciAq
-KWV2dGxvZ19iYXNlOworCisJaWYgKG1lbWNtcChldnRsb2ctPnNpZ25hdHVyZSwgVFBNMTJfRVZU
-TE9HX1NJR05BVFVSRSwKKwkJICAgc2l6ZW9mKFRQTTEyX0VWVExPR19TSUdOQVRVUkUpKSkKKwkJ
-cmV0dXJuIC1FSU5WQUw7CisKKwlpZiAoZXZ0bG9nLT5jb250YWluZXJfc2l6ZSA+IGV2dGxvZ19z
-aXplKQorCQlyZXR1cm4gLUVJTlZBTDsKKworCWlmIChldnRsb2ctPm5leHRfZXZlbnRfb2Zmc2V0
-ICsgZXZlbnRfc2l6ZSA+IGV2dGxvZy0+Y29udGFpbmVyX3NpemUpCisJCXJldHVybiAtRTJCSUc7
-CisKKwltZW1jcHkoZXZ0bG9nX2Jhc2UgKyBldnRsb2ctPm5leHRfZXZlbnRfb2Zmc2V0LCBldmVu
-dCwgZXZlbnRfc2l6ZSk7CisJZXZ0bG9nLT5uZXh0X2V2ZW50X29mZnNldCArPSBldmVudF9zaXpl
-OworCisJcmV0dXJuIDA7Cit9CisKK3N0YXRpYyBpbmxpbmUgaW50IHRwbTIwX2xvZ19ldmVudChz
-dHJ1Y3QgdHh0X2hlYXBfZXZlbnRfbG9nX3BvaW50ZXIyXzFfZWxlbWVudCAqZWxlbSwKKwkJCQkg
-IHZvaWQgKmV2dGxvZ19iYXNlLCB1MzIgZXZ0bG9nX3NpemUsCisJCQkJICB1MzIgZXZlbnRfc2l6
-ZSwgdm9pZCAqZXZlbnQpCit7CisJc3RydWN0IHRjZ19wY3JfZXZlbnQgKmhlYWRlciA9CisJCShz
-dHJ1Y3QgdGNnX3Bjcl9ldmVudCAqKWV2dGxvZ19iYXNlOworCisJLyogSGFzIHRvIGJlIGF0IGxl
-YXN0IGJpZyBlbm91Z2ggZm9yIHRoZSBzaWduYXR1cmUgKi8KKwlpZiAoaGVhZGVyLT5ldmVudF9z
-aXplIDwgc2l6ZW9mKFRDR19TUEVDSURfU0lHKSkKKwkJcmV0dXJuIC1FSU5WQUw7CisKKwlpZiAo
-bWVtY21wKCh1OCAqKWhlYWRlciArIHNpemVvZihzdHJ1Y3QgdGNnX3Bjcl9ldmVudCksCisJCSAg
-IFRDR19TUEVDSURfU0lHLCBzaXplb2YoVENHX1NQRUNJRF9TSUcpKSkKKwkJcmV0dXJuIC1FSU5W
-QUw7CisKKwlpZiAoZWxlbS0+YWxsb2NhdGVkX2V2ZW50X2NvbnRhaW5lcl9zaXplID4gZXZ0bG9n
-X3NpemUpCisJCXJldHVybiAtRUlOVkFMOworCisJaWYgKGVsZW0tPm5leHRfcmVjb3JkX29mZnNl
-dCArIGV2ZW50X3NpemUgPgorCSAgICBlbGVtLT5hbGxvY2F0ZWRfZXZlbnRfY29udGFpbmVyX3Np
-emUpCisJCXJldHVybiAtRTJCSUc7CisKKwltZW1jcHkoZXZ0bG9nX2Jhc2UgKyBlbGVtLT5uZXh0
-X3JlY29yZF9vZmZzZXQsIGV2ZW50LCBldmVudF9zaXplKTsKKwllbGVtLT5uZXh0X3JlY29yZF9v
-ZmZzZXQgKz0gZXZlbnRfc2l6ZTsKKworCXJldHVybiAwOworfQorCisvKgorICogRXh0ZXJuYWwg
-ZnVuY3Rpb25zIGF2YWxhaWxhYmxlIGluIG1haW5saW5lIGtlcm5lbC4KKyAqLwordm9pZCBzbGF1
-bmNoX3NldHVwX3R4dCh2b2lkKTsKK3ZvaWQgc2xhdW5jaF9maXh1cF9qdW1wX3ZlY3Rvcih2b2lk
-KTsKK3UzMiBzbGF1bmNoX2dldF9mbGFncyh2b2lkKTsKK3N0cnVjdCBzbF9hcF93YWtlX2luZm8g
-KnNsYXVuY2hfZ2V0X2FwX3dha2VfaW5mbyh2b2lkKTsKK3N0cnVjdCBhY3BpX3RhYmxlX2hlYWRl
-ciAqc2xhdW5jaF9nZXRfZG1hcl90YWJsZShzdHJ1Y3QgYWNwaV90YWJsZV9oZWFkZXIgKmRtYXIp
-Owordm9pZCBfX25vcmV0dXJuIHNsYXVuY2hfdHh0X3Jlc2V0KHZvaWQgX19pb21lbSAqdHh0LAor
-CQkJCQkgY29uc3QgY2hhciAqbXNnLCB1NjQgZXJyb3IpOworZXh0ZXJuIHZvaWQgc2xhdW5jaF9m
-aW5hbGl6ZShpbnQgZG9fc2V4aXQpOworCisjZW5kaWYgLyogIV9fQVNTRU1CTFkgKi8KKworI2Vs
-c2UKKworc3RhdGljIGlubGluZSB2b2lkIHNsYXVuY2hfc2V0dXBfdHh0KHZvaWQpCit7Cit9CisK
-K3N0YXRpYyBpbmxpbmUgdm9pZCBzbGF1bmNoX2ZpeHVwX2p1bXBfdmVjdG9yKHZvaWQpCit7Cit9
-CisKK3N0YXRpYyBpbmxpbmUgdTMyIHNsYXVuY2hfZ2V0X2ZsYWdzKHZvaWQpCit7CisJcmV0dXJu
-IDA7Cit9CisKK3N0YXRpYyBpbmxpbmUgc3RydWN0IGFjcGlfdGFibGVfaGVhZGVyICpzbGF1bmNo
-X2dldF9kbWFyX3RhYmxlKHN0cnVjdCBhY3BpX3RhYmxlX2hlYWRlciAqZG1hcikKK3sKKwlyZXR1
-cm4gZG1hcjsKK30KKworc3RhdGljIGlubGluZSB2b2lkIHNsYXVuY2hfZmluYWxpemUoaW50IGRv
-X3NleGl0KQoreworfQorCisjZW5kaWYgLyogIUlTX0VOQUJMRUQoQ09ORklHX1NFQ1VSRV9MQVVO
-Q0gpICovCisKKyNlbmRpZiAvKiBfTElOVVhfU0xBVU5DSF9IICovCi0tIAoyLjM5LjMKCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5n
-IGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+The routine slaunch_setup is called out of the x86 specific setup_arch()
+routine during early kernel boot. After determining what platform is
+present, various operations specific to that platform occur. This
+includes finalizing setting for the platform late launch and verifying
+that memory protections are in place.
+
+For TXT, this code also reserves the original compressed kernel setup
+area where the APs were left looping so that this memory cannot be used.
+
+Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
+---
+ arch/x86/kernel/Makefile   |   1 +
+ arch/x86/kernel/setup.c    |   3 +
+ arch/x86/kernel/slaunch.c  | 525 +++++++++++++++++++++++++++++++++++++
+ drivers/iommu/intel/dmar.c |   4 +
+ 4 files changed, 533 insertions(+)
+ create mode 100644 arch/x86/kernel/slaunch.c
+
+diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+index 0000325ab98f..5848ea310175 100644
+--- a/arch/x86/kernel/Makefile
++++ b/arch/x86/kernel/Makefile
+@@ -74,6 +74,7 @@ obj-$(CONFIG_X86_32)		+= tls.o
+ obj-$(CONFIG_IA32_EMULATION)	+= tls.o
+ obj-y				+= step.o
+ obj-$(CONFIG_INTEL_TXT)		+= tboot.o
++obj-$(CONFIG_SECURE_LAUNCH)	+= slaunch.o
+ obj-$(CONFIG_ISA_DMA_API)	+= i8237.o
+ obj-y				+= stacktrace.o
+ obj-y				+= cpu/
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 84201071dfac..69a2a6cdaa72 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -21,6 +21,7 @@
+ #include <linux/root_dev.h>
+ #include <linux/hugetlb.h>
+ #include <linux/tboot.h>
++#include <linux/slaunch.h>
+ #include <linux/usb/xhci-dbgp.h>
+ #include <linux/static_call.h>
+ #include <linux/swiotlb.h>
+@@ -935,6 +936,8 @@ void __init setup_arch(char **cmdline_p)
+ 	early_gart_iommu_check();
+ #endif
+ 
++	slaunch_setup_txt();
++
+ 	/*
+ 	 * partially used pages are not usable - thus
+ 	 * we are rounding upwards:
+diff --git a/arch/x86/kernel/slaunch.c b/arch/x86/kernel/slaunch.c
+new file mode 100644
+index 000000000000..1fae323e8d1b
+--- /dev/null
++++ b/arch/x86/kernel/slaunch.c
+@@ -0,0 +1,525 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Secure Launch late validation/setup and finalization support.
++ *
++ * Copyright (c) 2022, Oracle and/or its affiliates.
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/linkage.h>
++#include <linux/mm.h>
++#include <linux/io.h>
++#include <linux/uaccess.h>
++#include <linux/security.h>
++#include <linux/memblock.h>
++#include <asm/segment.h>
++#include <asm/sections.h>
++#include <asm/tlbflush.h>
++#include <asm/e820/api.h>
++#include <asm/setup.h>
++#include <asm/realmode.h>
++#include <linux/slr_table.h>
++#include <linux/slaunch.h>
++
++static u32 sl_flags __ro_after_init;
++static struct sl_ap_wake_info ap_wake_info __ro_after_init;
++static u64 evtlog_addr __ro_after_init;
++static u32 evtlog_size __ro_after_init;
++static u64 vtd_pmr_lo_size __ro_after_init;
++
++/* This should be plenty of room */
++static u8 txt_dmar[PAGE_SIZE] __aligned(16);
++
++/*
++ * Get the Secure Launch flags that indicate what kind of launch is being done.
++ * E.g. a TXT launch is in progress or no Secure Launch is happening.
++ */
++u32 slaunch_get_flags(void)
++{
++	return sl_flags;
++}
++
++/*
++ * Return the AP wakeup information used in the SMP boot code to start up
++ * the APs that are parked using MONITOR/MWAIT.
++ */
++struct sl_ap_wake_info *slaunch_get_ap_wake_info(void)
++{
++	return &ap_wake_info;
++}
++
++/*
++ * On Intel platforms, TXT passes a safe copy of the DMAR ACPI table to the
++ * DRTM. The DRTM is supposed to use this instead of the one found in the
++ * ACPI tables.
++ */
++struct acpi_table_header *slaunch_get_dmar_table(struct acpi_table_header *dmar)
++{
++	/* The DMAR is only stashed and provided via TXT on Intel systems */
++	if (memcmp(txt_dmar, "DMAR", 4))
++		return dmar;
++
++	return (struct acpi_table_header *)(txt_dmar);
++}
++
++/*
++ * If running within a TXT established DRTM, this is the proper way to reset
++ * the system if a failure occurs or a security issue is found.
++ */
++void __noreturn slaunch_txt_reset(void __iomem *txt,
++				  const char *msg, u64 error)
++{
++	u64 one = 1, val;
++
++	pr_err("%s", msg);
++
++	/*
++	 * This performs a TXT reset with a sticky error code. The reads of
++	 * TXT_CR_E2STS act as barriers.
++	 */
++	memcpy_toio(txt + TXT_CR_ERRORCODE, &error, sizeof(error));
++	memcpy_fromio(&val, txt + TXT_CR_E2STS, sizeof(val));
++	memcpy_toio(txt + TXT_CR_CMD_NO_SECRETS, &one, sizeof(one));
++	memcpy_fromio(&val, txt + TXT_CR_E2STS, sizeof(val));
++	memcpy_toio(txt + TXT_CR_CMD_UNLOCK_MEM_CONFIG, &one, sizeof(one));
++	memcpy_fromio(&val, txt + TXT_CR_E2STS, sizeof(val));
++	memcpy_toio(txt + TXT_CR_CMD_RESET, &one, sizeof(one));
++
++	for ( ; ; )
++		asm volatile ("hlt");
++
++	unreachable();
++}
++
++/*
++ * The TXT heap is too big to map all at once with early_ioremap
++ * so it is done a table at a time.
++ */
++static void __init *txt_early_get_heap_table(void __iomem *txt, u32 type,
++					     u32 bytes)
++{
++	u64 base, size, offset = 0;
++	void *heap;
++	int i;
++
++	if (type > TXT_SINIT_TABLE_MAX)
++		slaunch_txt_reset(txt, "Error invalid table type for early heap walk\n",
++				  SL_ERROR_HEAP_WALK);
++
++	memcpy_fromio(&base, txt + TXT_CR_HEAP_BASE, sizeof(base));
++	memcpy_fromio(&size, txt + TXT_CR_HEAP_SIZE, sizeof(size));
++
++	/* Iterate over heap tables looking for table of "type" */
++	for (i = 0; i < type; i++) {
++		base += offset;
++		heap = early_memremap(base, sizeof(u64));
++		if (!heap)
++			slaunch_txt_reset(txt, "Error early_memremap of heap for heap walk\n",
++					  SL_ERROR_HEAP_MAP);
++
++		offset = *((u64 *)heap);
++
++		/*
++		 * After the first iteration, any offset of zero is invalid and
++		 * implies the TXT heap is corrupted.
++		 */
++		if (!offset)
++			slaunch_txt_reset(txt, "Error invalid 0 offset in heap walk\n",
++					  SL_ERROR_HEAP_ZERO_OFFSET);
++
++		early_memunmap(heap, sizeof(u64));
++	}
++
++	/* Skip the size field at the head of each table */
++	base += sizeof(u64);
++	heap = early_memremap(base, bytes);
++	if (!heap)
++		slaunch_txt_reset(txt, "Error early_memremap of heap section\n",
++				  SL_ERROR_HEAP_MAP);
++
++	return heap;
++}
++
++static void __init txt_early_put_heap_table(void *addr, unsigned long size)
++{
++	early_memunmap(addr, size);
++}
++
++/*
++ * TXT uses a special set of VTd registers to protect all of memory from DMA
++ * until the IOMMU can be programmed to protect memory. There is the low
++ * memory PMR that can protect all memory up to 4G. The high memory PRM can
++ * be setup to protect all memory beyond 4Gb. Validate that these values cover
++ * what is expected.
++ */
++static void __init slaunch_verify_pmrs(void __iomem *txt)
++{
++	struct txt_os_sinit_data *os_sinit_data;
++	u32 field_offset, err = 0;
++	const char *errmsg = "";
++	unsigned long last_pfn;
++
++	field_offset = offsetof(struct txt_os_sinit_data, lcp_po_base);
++	os_sinit_data = txt_early_get_heap_table(txt, TXT_OS_SINIT_DATA_TABLE,
++						 field_offset);
++
++	/* Save a copy */
++	vtd_pmr_lo_size = os_sinit_data->vtd_pmr_lo_size;
++
++	last_pfn = e820__end_of_ram_pfn();
++
++	/*
++	 * First make sure the hi PMR covers all memory above 4G. In the
++	 * unlikely case where there is < 4G on the system, the hi PMR will
++	 * not be set.
++	 */
++	if (os_sinit_data->vtd_pmr_hi_base != 0x0ULL) {
++		if (os_sinit_data->vtd_pmr_hi_base != 0x100000000ULL) {
++			err = SL_ERROR_HI_PMR_BASE;
++			errmsg =  "Error hi PMR base\n";
++			goto out;
++		}
++
++		if (PFN_PHYS(last_pfn) > os_sinit_data->vtd_pmr_hi_base +
++		    os_sinit_data->vtd_pmr_hi_size) {
++			err = SL_ERROR_HI_PMR_SIZE;
++			errmsg = "Error hi PMR size\n";
++			goto out;
++		}
++	}
++
++	/*
++	 * Lo PMR base should always be 0. This was already checked in
++	 * early stub.
++	 */
++
++	/*
++	 * Check that if the kernel was loaded below 4G, that it is protected
++	 * by the lo PMR. Note this is the decompressed kernel. The ACM would
++	 * have ensured the compressed kernel (the MLE image) was protected.
++	 */
++	if (__pa_symbol(_end) < 0x100000000ULL && __pa_symbol(_end) > os_sinit_data->vtd_pmr_lo_size) {
++		err = SL_ERROR_LO_PMR_MLE;
++		errmsg = "Error lo PMR does not cover MLE kernel\n";
++	}
++
++	/*
++	 * Other regions of interest like boot param, AP wake block, cmdline
++	 * already checked for PMR coverage in the early stub code.
++	 */
++
++out:
++	txt_early_put_heap_table(os_sinit_data, field_offset);
++
++	if (err)
++		slaunch_txt_reset(txt, errmsg, err);
++}
++
++static void __init slaunch_txt_reserve_range(u64 base, u64 size)
++{
++	int type;
++
++	type = e820__get_entry_type(base, base + size - 1);
++	if (type == E820_TYPE_RAM) {
++		pr_info("memblock reserve base: %llx size: %llx\n", base, size);
++		memblock_reserve(base, size);
++	}
++}
++
++/*
++ * For Intel, certain regions of memory must be marked as reserved by putting
++ * them on the memblock reserved list if they are not already e820 reserved.
++ * This includes:
++ *  - The TXT HEAP
++ *  - The ACM area
++ *  - The TXT private register bank
++ *  - The MDR list sent to the MLE by the ACM (see TXT specification)
++ *  (Normally the above are properly reserved by firmware but if it was not
++ *  done, reserve them now)
++ *  - The AP wake block
++ *  - TPM log external to the TXT heap
++ *
++ * Also if the low PMR doesn't cover all memory < 4G, any RAM regions above
++ * the low PMR must be reserved too.
++ */
++static void __init slaunch_txt_reserve(void __iomem *txt)
++{
++	struct txt_sinit_memory_descriptor_record *mdr;
++	struct txt_sinit_mle_data *sinit_mle_data;
++	u64 base, size, heap_base, heap_size;
++	u32 mdrnum, mdroffset, mdrslen;
++	u32 field_offset, i;
++	void *mdrs;
++
++	base = TXT_PRIV_CONFIG_REGS_BASE;
++	size = TXT_PUB_CONFIG_REGS_BASE - TXT_PRIV_CONFIG_REGS_BASE;
++	slaunch_txt_reserve_range(base, size);
++
++	memcpy_fromio(&heap_base, txt + TXT_CR_HEAP_BASE, sizeof(heap_base));
++	memcpy_fromio(&heap_size, txt + TXT_CR_HEAP_SIZE, sizeof(heap_size));
++	slaunch_txt_reserve_range(heap_base, heap_size);
++
++	memcpy_fromio(&base, txt + TXT_CR_SINIT_BASE, sizeof(base));
++	memcpy_fromio(&size, txt + TXT_CR_SINIT_SIZE, sizeof(size));
++	slaunch_txt_reserve_range(base, size);
++
++	field_offset = offsetof(struct txt_sinit_mle_data,
++				sinit_vtd_dmar_table_size);
++	sinit_mle_data = txt_early_get_heap_table(txt, TXT_SINIT_MLE_DATA_TABLE,
++						  field_offset);
++
++	mdrnum = sinit_mle_data->num_of_sinit_mdrs;
++	mdroffset = sinit_mle_data->sinit_mdrs_table_offset;
++
++	txt_early_put_heap_table(sinit_mle_data, field_offset);
++
++	if (!mdrnum)
++		goto nomdr;
++
++	mdrslen = mdrnum * sizeof(struct txt_sinit_memory_descriptor_record);
++
++	mdrs = txt_early_get_heap_table(txt, TXT_SINIT_MLE_DATA_TABLE,
++					mdroffset + mdrslen - 8);
++
++	mdr = mdrs + mdroffset - 8;
++
++	for (i = 0; i < mdrnum; i++, mdr++) {
++		/* Spec says some entries can have length 0, ignore them */
++		if (mdr->type > 0 && mdr->length > 0)
++			slaunch_txt_reserve_range(mdr->address, mdr->length);
++	}
++
++	txt_early_put_heap_table(mdrs, mdroffset + mdrslen - 8);
++
++nomdr:
++	slaunch_txt_reserve_range(ap_wake_info.ap_wake_block,
++				  ap_wake_info.ap_wake_block_size);
++
++	/*
++	 * Earlier checks ensured that the event log was properly situated
++	 * either inside the TXT heap or outside. This is a check to see if the
++	 * event log needs to be reserved. If it is in the TXT heap, it is
++	 * already reserved.
++	 */
++	if (evtlog_addr < heap_base || evtlog_addr > (heap_base + heap_size))
++		slaunch_txt_reserve_range(evtlog_addr, evtlog_size);
++
++	for (i = 0; i < e820_table->nr_entries; i++) {
++		base = e820_table->entries[i].addr;
++		size = e820_table->entries[i].size;
++		if (base >= vtd_pmr_lo_size && base < 0x100000000ULL)
++			slaunch_txt_reserve_range(base, size);
++		else if (base < vtd_pmr_lo_size && base + size > vtd_pmr_lo_size)
++			slaunch_txt_reserve_range(vtd_pmr_lo_size,
++						  base + size - vtd_pmr_lo_size);
++	}
++}
++
++/*
++ * TXT stashes a safe copy of the DMAR ACPI table to prevent tampering.
++ * It is stored in the TXT heap. Fetch it from there and make it available
++ * to the IOMMU driver.
++ */
++static void __init slaunch_copy_dmar_table(void __iomem *txt)
++{
++	struct txt_sinit_mle_data *sinit_mle_data;
++	u32 field_offset, dmar_size, dmar_offset;
++	void *dmar;
++
++	field_offset = offsetof(struct txt_sinit_mle_data,
++				processor_scrtm_status);
++	sinit_mle_data = txt_early_get_heap_table(txt, TXT_SINIT_MLE_DATA_TABLE,
++						  field_offset);
++
++	dmar_size = sinit_mle_data->sinit_vtd_dmar_table_size;
++	dmar_offset = sinit_mle_data->sinit_vtd_dmar_table_offset;
++
++	txt_early_put_heap_table(sinit_mle_data, field_offset);
++
++	if (!dmar_size || !dmar_offset)
++		slaunch_txt_reset(txt, "Error invalid DMAR table values\n",
++				  SL_ERROR_HEAP_INVALID_DMAR);
++
++	if (unlikely(dmar_size > PAGE_SIZE))
++		slaunch_txt_reset(txt, "Error DMAR too big to store\n",
++				  SL_ERROR_HEAP_DMAR_SIZE);
++
++	dmar = txt_early_get_heap_table(txt, TXT_SINIT_MLE_DATA_TABLE,
++					dmar_offset + dmar_size - 8);
++	if (!dmar)
++		slaunch_txt_reset(txt, "Error early_ioremap of DMAR\n",
++				  SL_ERROR_HEAP_DMAR_MAP);
++
++	memcpy(txt_dmar, dmar + dmar_offset - 8, dmar_size);
++
++	txt_early_put_heap_table(dmar, dmar_offset + dmar_size - 8);
++}
++
++/*
++ * The location of the safe AP wake code block is stored in the TXT heap.
++ * Fetch needed values here in the early init code for later use in SMP
++ * startup.
++ *
++ * Also get the TPM event log values are in the SLRT and have to be fetched.
++ * They will be put on the memblock reserve list later.
++ */
++static void __init slaunch_fetch_values(void __iomem *txt)
++{
++	struct txt_os_mle_data *os_mle_data;
++	struct slr_entry_log_info *log_info;
++	u8 *jmp_offset, *stacks_offset;
++	struct slr_table *slrt;
++	u32 size;
++
++	os_mle_data = txt_early_get_heap_table(txt, TXT_OS_MLE_DATA_TABLE,
++					       sizeof(*os_mle_data));
++
++	ap_wake_info.ap_wake_block = os_mle_data->ap_wake_block;
++	ap_wake_info.ap_wake_block_size = os_mle_data->ap_wake_block_size;
++
++	jmp_offset = os_mle_data->mle_scratch + SL_SCRATCH_AP_JMP_OFFSET;
++	ap_wake_info.ap_jmp_offset = *((u32 *)jmp_offset);
++
++	stacks_offset = os_mle_data->mle_scratch + SL_SCRATCH_AP_STACKS_OFFSET;
++	ap_wake_info.ap_stacks_offset = *((u32 *)stacks_offset);
++
++	slrt = (struct slr_table *)early_memremap(os_mle_data->slrt, sizeof(*slrt));
++	if (!slrt)
++		slaunch_txt_reset(txt, "Error early_memremap of SLRT failed\n",
++				  SL_ERROR_SLRT_MAP);
++
++	size = slrt->size;
++	early_memunmap(slrt, sizeof(*slrt));
++
++	slrt = (struct slr_table *)early_memremap(os_mle_data->slrt, size);
++	if (!slrt)
++		slaunch_txt_reset(txt, "Error early_memremap of SLRT failed\n",
++				  SL_ERROR_SLRT_MAP);
++
++	log_info = (struct slr_entry_log_info *)slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_LOG_INFO);
++
++	if (!log_info)
++		slaunch_txt_reset(txt, "SLRT missing logging info entry\n",
++				  SL_ERROR_SLRT_MISSING_ENTRY);
++
++	evtlog_addr = log_info->addr;
++	evtlog_size = log_info->size;
++
++	early_memunmap(slrt, size);
++
++	txt_early_put_heap_table(os_mle_data, sizeof(*os_mle_data));
++}
++
++/*
++ * Called to fix the long jump address for the waiting APs to vector to
++ * the correct startup location in the Secure Launch stub in the rmpiggy.
++ */
++void __init slaunch_fixup_jump_vector(void)
++{
++	struct sl_ap_wake_info *ap_wake_info;
++	u32 *ap_jmp_ptr;
++
++	if ((slaunch_get_flags() & (SL_FLAG_ACTIVE|SL_FLAG_ARCH_TXT)) !=
++	    (SL_FLAG_ACTIVE | SL_FLAG_ARCH_TXT))
++		return;
++
++	ap_wake_info = slaunch_get_ap_wake_info();
++
++	ap_jmp_ptr = (u32 *)__va(ap_wake_info->ap_wake_block +
++				 ap_wake_info->ap_jmp_offset);
++
++	*ap_jmp_ptr = real_mode_header->sl_trampoline_start32;
++
++	pr_info("TXT AP startup vector address updated\n");
++}
++
++/*
++ * Intel TXT specific late stub setup and validation called from within
++ * x86 specific setup_arch().
++ */
++void __init slaunch_setup_txt(void)
++{
++	u64 one = TXT_REGVALUE_ONE, val;
++	void __iomem *txt;
++
++	if (!boot_cpu_has(X86_FEATURE_SMX))
++		return;
++
++	/*
++	 * If booted through secure launch entry point, the loadflags
++	 * option will be set.
++	 */
++	if (!(boot_params.hdr.loadflags & SLAUNCH_FLAG))
++		return;
++
++	/*
++	 * See if SENTER was done by reading the status register in the
++	 * public space. If the public register space cannot be read, TXT may
++	 * be disabled.
++	 */
++	txt = early_ioremap(TXT_PUB_CONFIG_REGS_BASE,
++			    TXT_NR_CONFIG_PAGES * PAGE_SIZE);
++	if (!txt)
++		panic("Error early_ioremap in TXT setup failed\n");
++
++	memcpy_fromio(&val, txt + TXT_CR_STS, sizeof(val));
++	early_iounmap(txt, TXT_NR_CONFIG_PAGES * PAGE_SIZE);
++
++	/* SENTER should have been done */
++	if (!(val & TXT_SENTER_DONE_STS))
++		panic("Error TXT.STS SENTER_DONE not set\n");
++
++	/* SEXIT should have been cleared */
++	if (val & TXT_SEXIT_DONE_STS)
++		panic("Error TXT.STS SEXIT_DONE set\n");
++
++	/* Now we want to use the private register space */
++	txt = early_ioremap(TXT_PRIV_CONFIG_REGS_BASE,
++			    TXT_NR_CONFIG_PAGES * PAGE_SIZE);
++	if (!txt) {
++		/* This is really bad, no where to go from here */
++		panic("Error early_ioremap of TXT priv registers\n");
++	}
++
++	/*
++	 * Try to read the Intel VID from the TXT private registers to see if
++	 * TXT measured launch happened properly and the private space is
++	 * available.
++	 */
++	memcpy_fromio(&val, txt + TXT_CR_DIDVID, sizeof(val));
++	if ((val & 0xffff) != 0x8086) {
++		/*
++		 * Can't do a proper TXT reset since it appears something is
++		 * wrong even though SENTER happened and it should be in SMX
++		 * mode.
++		 */
++		panic("Invalid TXT vendor ID, not in SMX mode\n");
++	}
++
++	/* Set flags so subsequent code knows the status of the launch */
++	sl_flags |= (SL_FLAG_ACTIVE | SL_FLAG_ARCH_TXT);
++
++	/*
++	 * Reading the proper DIDVID from the private register space means we
++	 * are in SMX mode and private registers are open for read/write.
++	 */
++
++	/* On Intel, have to handle TPM localities via TXT */
++	memcpy_toio(txt + TXT_CR_CMD_SECRETS, &one, sizeof(one));
++	memcpy_fromio(&val, txt + TXT_CR_E2STS, sizeof(val));
++	memcpy_toio(txt + TXT_CR_CMD_OPEN_LOCALITY1, &one, sizeof(one));
++	memcpy_fromio(&val, txt + TXT_CR_E2STS, sizeof(val));
++
++	slaunch_fetch_values(txt);
++
++	slaunch_verify_pmrs(txt);
++
++	slaunch_txt_reserve(txt);
++
++	slaunch_copy_dmar_table(txt);
++
++	early_iounmap(txt, TXT_NR_CONFIG_PAGES * PAGE_SIZE);
++
++	pr_info("Intel TXT setup complete\n");
++}
+diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
+index 23cb80d62a9a..1eb0746b0c59 100644
+--- a/drivers/iommu/intel/dmar.c
++++ b/drivers/iommu/intel/dmar.c
+@@ -28,6 +28,7 @@
+ #include <linux/iommu.h>
+ #include <linux/numa.h>
+ #include <linux/limits.h>
++#include <linux/slaunch.h>
+ #include <asm/irq_remapping.h>
+ 
+ #include "iommu.h"
+@@ -660,6 +661,9 @@ parse_dmar_table(void)
+ 	 */
+ 	dmar_tbl = tboot_get_dmar_table(dmar_tbl);
+ 
++	/* If Secure Launch is active, it has similar logic */
++	dmar_tbl = slaunch_get_dmar_table(dmar_tbl);
++
+ 	dmar = (struct acpi_table_dmar *)dmar_tbl;
+ 	if (!dmar)
+ 		return -ENODEV;
+-- 
+2.39.3
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
