@@ -4,81 +4,112 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 945C4C48BF6
-	for <kexec@archiver.kernel.org>; Sat, 17 Feb 2024 07:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EE9AFC48BC3
+	for <kexec@archiver.kernel.org>; Sat, 17 Feb 2024 08:16:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=GEfELvXewLIxizHfC+XrGSh/eIXB0TFBSlUGUML4Co8=; b=rZE+Xn/DgVjeaF
-	wSltU7v/VlSUdEuCu3Iz59dhcXKHaDOpL1+SvdbnGlsg2LersIULmlv4KgMbhuUY7Xor4l1gGZjRQ
-	iqY1ck0JY5HEx8/iRViqH25exntTgVe8UIlpuLo1KhVRJGnn7g+umLG9NFPvYgoosQNz2l9rKNDnq
-	77qXMghzM6XJnerSwWh3ZzC5ZpIii0ZCt/b5PTYIX/a/++K/iCAX1tEk9vCBUYw8ujVuFQ0drOaRd
-	2WwtNoZap76I/RE+7WzlKgRUkWkX2IMsHbi1iSORJ1aBrtrPRy4NN2CxQ10NSTuJAqJQk8yRoYMAQ
-	5knAki8aCP2S6yN7jQgQ==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=I+PI+lQpTaZysMpZRaLeRiyGcN4p5IE71rz5oO1bNFI=; b=MhzImyLrNSpcOl
+	IPawPy7ou0GifsPd6yeSZzsgt/e4MFvolzDlZ4H8W3UrZBL8MHlQTywmv0WU2mBa0LxPju1nMPIvD
+	Pr8GE6ifhKNxKP4mO/40o1mY0/VurhUhlSuE9I3sVzaT0MJ0Qadc1DvzlN1QxCdAeXfbbBNx1WbI0
+	joGYXpkslbKpCNv/fqtbi65efZ/AtRlNrzFHsFkmCbDVmBROJZdPMbeLgMAH0L4ewI4Oavhbe9NhA
+	F8MFW7q7soAYv7ww0+B9iaBBGhDpffmPisJdOCYDPXEZ5WQVCYtlJdCFBUk7nOUCA/J3s3RMb1Fzd
+	/AXsFEvr/o6549Zb4aCA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rbFX9-00000004qx5-3Y7e;
-	Sat, 17 Feb 2024 07:54:51 +0000
-Received: from mgamail.intel.com ([192.198.163.12])
+	id 1rbFrc-00000004t5F-0Gtk;
+	Sat, 17 Feb 2024 08:16:00 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rbFX7-00000004quX-0sEg
+	id 1rbFrY-00000004t45-3xMr
 	for kexec@lists.infradead.org;
-	Sat, 17 Feb 2024 07:54:50 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708156489; x=1739692489;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Wzz5SmshZSlav/lHAXs6G/IAqLV2Qmvclb48zyontW8=;
-  b=SANhR4AtcMALD0B+vBs4lF5Kp1Ott9xO3OA4lBa+maorL1Qwp/QpeOGu
-   MOpGo0ZVNoorPsJTK7WOZzjcB+rQY63cEJrQsfcI5+N5AQ+pSbH7KDJnW
-   RVFJQg195kU6TIsI3g4Yh/141Y9ALMvAnC6vf5h8lvAqRNLcSec51TNaP
-   17+KwiBAu/Kw8FOEXWwLNQX+gxcFyiviKqh++PCozG8bjhD/JKqTKD4zy
-   0XUJTPO6W/HAsQdXxZveCFMRRuV7tNoGsFttlZQg9rbH40LunPu2mmrpU
-   y0Z2a+Lubfktc6ummCqpzz71P8qS/Rih7wGXu6BIbMubaSO+g7U1uMnTS
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10986"; a="6066338"
-X-IronPort-AV: E=Sophos;i="6.06,165,1705392000"; 
-   d="scan'208";a="6066338"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 23:54:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,165,1705392000"; 
-   d="scan'208";a="4017642"
-Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
-  by fmviesa010.fm.intel.com with ESMTP; 16 Feb 2024 23:54:31 -0800
-Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rbFWn-0001w0-02;
-	Sat, 17 Feb 2024 07:54:29 +0000
-Date: Sat, 17 Feb 2024 15:53:29 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ross Philipson <ross.philipson@oracle.com>,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
-	linux-efi@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, ross.philipson@oracle.com,
-	dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
-	ardb@kernel.org, mjg59@srcf.ucam.org,
-	James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
-	jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
-	nivedita@alum.mit.edu, herbert@gondor.apana.org.au,
-	davem@davemloft.net, kanth.ghatraju@oracle.com,
-	trenchboot-devel@googlegroups.com
-Subject: Re: [PATCH v8 14/15] x86: Secure Launch late initcall platform module
-Message-ID: <202402171536.dNnLrhB1-lkp@intel.com>
-References: <20240214221847.2066632-15-ross.philipson@oracle.com>
+	Sat, 17 Feb 2024 08:15:58 +0000
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41H8AXQ2024708;
+	Sat, 17 Feb 2024 08:15:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=FG/9V9OU75SSg/Er3PIp/Sp09XO+in9g3VDldKaHKPA=;
+ b=Twp+M3cbwXzy6hyim8rYh+RsDwb+c6nXhvcAkVp3Tpvp+sFF+k415+gBhdNbFKxWyXgu
+ sYG8P/zBAlRdLgkYLylWgdGUzoH6DA6BneKqITJyqSn7ii8k04RwlW/AaE/B5NnET9+/
+ nUHl3LwRsL8zuzzc4mNwkmYnQiTFglIyEfYquyyWM3ES2Ha5tjoFj+K6VsLhPtYdCE72
+ l44sDG2uTIZZcY9vVFrCsOm318pBj2fSK1D8hEzaGp0qvre4Dl8Z+dzgPesw0p+tkHvP
+ utYhOBKoChg7sFm/bvrW6Q/wZZbSO+FGHpQHgGH1UaUZy8IKqAN/0EeqznJZe0TBtAtV 3w== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wardu8hbu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 17 Feb 2024 08:15:16 +0000
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41H8AZdm025367;
+	Sat, 17 Feb 2024 08:15:16 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wardu8haw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 17 Feb 2024 08:15:15 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41H7C7bt004297;
+	Sat, 17 Feb 2024 08:15:14 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3w6kv10ytt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 17 Feb 2024 08:15:14 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41H8F8iw23986766
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 17 Feb 2024 08:15:10 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9E07E2004E;
+	Sat, 17 Feb 2024 08:15:08 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7CDDE20040;
+	Sat, 17 Feb 2024 08:14:57 +0000 (GMT)
+Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.ibm.com.com (unknown [9.61.135.227])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Sat, 17 Feb 2024 08:14:57 +0000 (GMT)
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+To: linuxppc-dev@ozlabs.org
+Cc: Sourabh Jain <sourabhjain@linux.ibm.com>, Akhil Raj <lf32.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
+        Baoquan He <bhe@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dave Young <dyoung@redhat.com>, David Hildenbrand <david@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Laurent Dufour <laurent.dufour@fr.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mimi Zohar <zohar@linux.ibm.com>, Naveen N Rao <naveen@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Valentin Schneider <vschneid@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org,
+        x86@kernel.org
+Subject: [PATCH v16 0/5] powerpc/crash: Kernel handling of CPU and memory hotplug
+Date: Sat, 17 Feb 2024 13:44:47 +0530
+Message-ID: <20240217081452.164571-1-sourabhjain@linux.ibm.com>
+X-Mailer: git-send-email 2.43.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: UQO9HG6kBmrUV9yfl2VMVf86hc_UEty4
+X-Proofpoint-ORIG-GUID: jvM0pisxdV79z642znyeqh7S-LGm-DuQ
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20240214221847.2066632-15-ross.philipson@oracle.com>
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-17_04,2024-02-16_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ phishscore=0 mlxlogscore=999 clxscore=1015 lowpriorityscore=0 mlxscore=0
+ bulkscore=0 suspectscore=0 impostorscore=0 priorityscore=1501 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2402170064
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240216_235449_267353_23F61DCC 
-X-CRM114-Status: GOOD (  11.13  )
+X-CRM114-CacheID: sfid-20240217_001557_002626_4690A307 
+X-CRM114-Status: GOOD (  37.41  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -95,67 +126,226 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Ross,
+Commit 247262756121 ("crash: add generic infrastructure for crash
+hotplug support") added a generic infrastructure that allows
+architectures to selectively update the kdump image component during CPU
+or memory add/remove events within the kernel itself.
 
-kernel test robot noticed the following build errors:
+This patch series adds crash hotplug handler for PowerPC and enable
+support to update the kdump image on CPU/Memory add/remove events.
 
-[auto build test ERROR on char-misc/char-misc-testing]
-[also build test ERROR on char-misc/char-misc-next char-misc/char-misc-linus herbert-cryptodev-2.6/master herbert-crypto-2.6/master linus/master v6.8-rc4 next-20240216]
-[cannot apply to tip/x86/core]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Among the 5 patches in this series, the first two patches make changes
+to the generic crash hotplug handler to assist PowerPC in adding support
+for this feature. The last three patches add support for this feature.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ross-Philipson/x86-boot-Place-kernel_info-at-a-fixed-offset/20240215-064712
-base:   char-misc/char-misc-testing
-patch link:    https://lore.kernel.org/r/20240214221847.2066632-15-ross.philipson%40oracle.com
-patch subject: [PATCH v8 14/15] x86: Secure Launch late initcall platform module
-config: x86_64-randconfig-r061-20240216 (https://download.01.org/0day-ci/archive/20240217/202402171536.dNnLrhB1-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240217/202402171536.dNnLrhB1-lkp@intel.com/reproduce)
+The following section outlines the problem addressed by this patch
+series, along with the current solution, its shortcomings, and the
+proposed resolution.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202402171536.dNnLrhB1-lkp@intel.com/
+Problem:
+========
+Due to CPU/Memory hotplug or online/offline events the elfcorehdr
+(which describes the CPUs and memory of the crashed kernel) and FDT
+(Flattened Device Tree) of kdump image becomes outdated. Consequently,
+attempting dump collection with an outdated elfcorehdr or FDT can lead
+to failed or inaccurate dump collection.
 
-All errors (new ones prefixed by >>):
+Going forward CPU hotplug or online/offline events are referred as
+CPU/Memory add/remove events.
 
-   arch/x86/kernel/slmodule.c: In function 'slaunch_pcr_extend':
->> arch/x86/kernel/slmodule.c:471:14: error: implicit declaration of function 'tpm_preferred_locality' [-Werror=implicit-function-declaration]
-     471 |         if (!tpm_preferred_locality(tpm, 2))
-         |              ^~~~~~~~~~~~~~~~~~~~~~
-   cc1: some warnings being treated as errors
+Existing solution and its shortcoming:
+======================================
+The current solution to address the above issue involves monitoring the
+CPU/memory add/remove events in userspace using udev rules and whenever
+there are changes in CPU and memory resources, the entire kdump image
+is loaded again. The kdump image includes kernel, initrd, elfcorehdr,
+FDT, purgatory. Given that only elfcorehdr and FDT get outdated due to
+CPU/Memory add/remove events, reloading the entire kdump image is
+inefficient. More importantly, kdump remains inactive for a substantial
+amount of time until the kdump reload completes.
 
+Proposed solution:
+==================
+Instead of initiating a full kdump image reload from userspace on
+CPU/Memory hotplug and online/offline events, the proposed solution aims
+to update only the necessary kdump image component within the kernel
+itself.
 
-vim +/tpm_preferred_locality +471 arch/x86/kernel/slmodule.c
+Git tree for testing:
+=====================
+Git tree rebased on top of v6.8-rc4:
+https://github.com/sourabhjains/linux/tree/kdump-in-kernel-crash-update-v16
 
-   461	
-   462	static void slaunch_pcr_extend(void __iomem *txt)
-   463	{
-   464		struct tpm_chip *tpm;
-   465	
-   466		tpm = tpm_default_chip();
-   467		if (!tpm)
-   468			slaunch_txt_reset(txt, "Could not get default TPM chip\n",
-   469					  SL_ERROR_TPM_INIT);
-   470	
- > 471		if (!tpm_preferred_locality(tpm, 2))
-   472			slaunch_txt_reset(txt, "Could not set TPM chip locality 2\n",
-   473					  SL_ERROR_TPM_INIT);
-   474	
-   475		if (evtlog20)
-   476			slaunch_tpm20_extend(tpm, txt);
-   477		else
-   478			slaunch_tpm12_extend(tpm, txt);
-   479	
-   480		tpm_preferred_locality(tpm, 0);
-   481	}
-   482	
+To realize this feature, the kdump udev rule must be updated. On RHEL,
+add the following two lines at the top of the
+"/usr/lib/udev/rules.d/98-kexec.rules" file.
+
+SUBSYSTEM=="cpu", ATTRS{crash_hotplug}=="1", GOTO="kdump_reload_end"
+SUBSYSTEM=="memory", ATTRS{crash_hotplug}=="1", GOTO="kdump_reload_end"
+
+With the above change to the kdump udev rule, kdump reload is avoided
+during CPU/Memory add/remove events if this feature is enabled in the
+kernel.
+
+Note: only kexec_file_load syscall will work. For kexec_load minor changes
+are required in kexec tool.
+
+Changelog:
+----------
+v16:
+  - Remove the unused #define `crash_hotplug_cpu_support`
+    and `crash_hotplug_memory_support` in `arch/x86/include/asm/kexec.h`.
+  - Document why two kexec flag bits are used in
+    `arch_crash_hotplug_memory_support` (x86).
+  - Use a switch case to handle different hotplug operations
+    in `arch_crash_handle_hotplug_event` for PowerPC.
+  - Fix a typo in 4/5.
+
+v15:
+  - Remove the patch that adds a new kexec flag for FDT update.
+  - Introduce a generic kexec flag bit to share hotplug support
+    intent between the kexec tool and the kernel for the kexec_load
+    syscall. (2/5)
+  - Introduce an architecture-specific handler to process the kexec
+    flag for crash hotplug support. (2/5)
+  - Rename the @update_elfcorehdr member of the struct kimage to
+    @hotplug_support. (2/5)
+  - Use a common function to advertise hotplug support for both CPU
+    and Memory. (2/5)
+
+v14:
+  - Fix build warnings by including necessary header files
+  - Rebase to v6.7-rc5
+
+v13:
+  - Fix a build warning, take ranges.c out of CONFIG_KEXEC_FILE
+  - Rebase to v6.7-rc4
+
+v12:
+  - A patch to add new kexec flags to support this feature on kexec_load
+    system call
+  - Change in the way this feature is advertise to userspace for both
+    kexec_load syscall
+  - Rebase to v6.6-rc7
+
+v11:
+  - Rebase to v6.4-rc6
+  - The patch that introduced CONFIG_CRASH_HOTPLUG for PowerPC has been
+    removed. The config is now part of common configuration:
+    https://lore.kernel.org/all/87ilbpflsk.fsf@mail.lhotse/
+
+v10:
+  - Drop the patch that adds fdt_index attribute to struct kimage_arch
+    Find the fdt segment index when needed.
+  - Added more details into commits messages.
+  - Rebased onto 6.3.0-rc5
+
+v9:
+  - Removed patch to prepare elfcorehdr crash notes for possible CPUs.
+    The patch is moved to generic patch series that introduces generic
+    infrastructure for in kernel crash update.
+  - Removed patch to pass the hotplug action type to the arch crash
+    hotplug handler function. The generic patch series has introduced
+    the hotplug action type in kimage struct.
+  - Add detail commit message for better understanding.
+
+v8:
+  - Restrict fdt_index initialization to machine_kexec_post_load
+    it work for both kexec_load and kexec_file_load.[3/8] Laurent Dufour
+
+  - Updated the logic to find the number of offline core. [6/8]
+
+  - Changed the logic to find the elfcore program header to accommodate
+    future memory ranges due memory hotplug events. [8/8]
+
+v7
+  - added a new config to configure this feature
+  - pass hotplug action type to arch specific handler
+
+v6
+  - Added crash memory hotplug support
+
+v5:
+  - Replace COFNIG_CRASH_HOTPLUG with CONFIG_HOTPLUG_CPU.
+  - Move fdt segment identification for kexec_load case to load path
+    instead of crash hotplug handler
+  - Keep new attribute defined under kimage_arch to track FDT segment
+    under CONFIG_HOTPLUG_CPU config.
+
+v4:
+  - Update the logic to find the additional space needed for hotadd CPUs
+    post kexec load. Refer "[RFC v4 PATCH 4/5] powerpc/crash hp: add crash
+    hotplug support for kexec_file_load" patch to know more about the
+    change.
+  - Fix a couple of typo.
+  - Replace pr_err to pr_info_once to warn user about memory hotplug
+    support.
+  - In crash hotplug handle exit the for loop if FDT segment is found.
+
+v3
+  - Move fdt_index and fdt_index_vaild variables to kimage_arch struct.
+  - Rebase patche on top of
+    https://lore.kernel.org/lkml/20220303162725.49640-1-eric.devolder@oracle.com/
+  - Fixed warning reported by checpatch script
+
+v2:
+  - Use generic hotplug handler introduced by
+    https://lore.kernel.org/lkml/20220209195706.51522-1-eric.devolder@oracle.com/
+    a significant change from v1.
+
+Cc: Akhil Raj <lf32.dev@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Borislav Petkov (AMD) <bp@alien8.de>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Hari Bathini <hbathini@linux.ibm.com>
+Cc: Laurent Dufour <laurent.dufour@fr.ibm.com>
+Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Mimi Zohar <zohar@linux.ibm.com>
+Cc: Naveen N Rao <naveen@kernel.org>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Valentin Schneider <vschneid@redhat.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: kexec@lists.infradead.org
+Cc: x86@kernel.org
+
+Sourabh Jain (5):
+  crash: forward memory_notify arg to arch crash hotplug handler
+  crash: add a new kexec flag for hotplug support
+  powerpc/kexec: turn some static helper functions public
+  powerpc: add crash CPU hotplug support
+  powerpc: add crash memory hotplug support
+
+ arch/powerpc/Kconfig                    |   4 +
+ arch/powerpc/include/asm/kexec.h        |  15 +
+ arch/powerpc/include/asm/kexec_ranges.h |   1 +
+ arch/powerpc/kexec/Makefile             |   4 +-
+ arch/powerpc/kexec/core_64.c            | 362 ++++++++++++++++++++++++
+ arch/powerpc/kexec/elf_64.c             |  12 +-
+ arch/powerpc/kexec/file_load_64.c       | 211 ++++----------
+ arch/powerpc/kexec/ranges.c             |  85 ++++++
+ arch/x86/include/asm/kexec.h            |  13 +-
+ arch/x86/kernel/crash.c                 |  31 +-
+ drivers/base/cpu.c                      |   2 +-
+ drivers/base/memory.c                   |   2 +-
+ include/linux/kexec.h                   |  29 +-
+ include/uapi/linux/kexec.h              |   1 +
+ kernel/crash_core.c                     |  25 +-
+ kernel/kexec.c                          |   4 +-
+ kernel/kexec_file.c                     |   5 +
+ 17 files changed, 589 insertions(+), 217 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
 
 _______________________________________________
 kexec mailing list
