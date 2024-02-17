@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C27B9C48BF6
-	for <kexec@archiver.kernel.org>; Sat, 17 Feb 2024 07:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 945C4C48BF6
+	for <kexec@archiver.kernel.org>; Sat, 17 Feb 2024 07:54:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=6u6ymxAd8Q+vi9/i0LdMajJLrRTN0PbdL+emkxEYxRk=; b=NSKpEj8U3AiP5R
-	pBs8mFCEILTlvc9XXlYr1OOG2xV3BG3Hea9BGYdkFgnq8xX9T5fCvkjskG/3e7SpgRKMfvn07MMLp
-	8dZtAohxyEK4R04W61QZ1ih/alj469W6irCt7NG+EEJta5PdL9GCmqXDNCK1nAGqx9goHifvOfASB
-	xI8k4JtfhznxsI4qF+4hAhQ2zgsQhWKHGhq1ppv3XQ/gay9wvCMM+5Rhh4cLOIs1ekXjXs/SrKzL4
-	IsHn8vp9TQtRELt4yMyJpCLWrTklCiSsuHJCsop7bSkRPrS3Mta1xBbDDmVHTGymH12tFImf1H700
-	GnjXEvZkNPRrhrZf72nA==;
+	List-Owner; bh=GEfELvXewLIxizHfC+XrGSh/eIXB0TFBSlUGUML4Co8=; b=rZE+Xn/DgVjeaF
+	wSltU7v/VlSUdEuCu3Iz59dhcXKHaDOpL1+SvdbnGlsg2LersIULmlv4KgMbhuUY7Xor4l1gGZjRQ
+	iqY1ck0JY5HEx8/iRViqH25exntTgVe8UIlpuLo1KhVRJGnn7g+umLG9NFPvYgoosQNz2l9rKNDnq
+	77qXMghzM6XJnerSwWh3ZzC5ZpIii0ZCt/b5PTYIX/a/++K/iCAX1tEk9vCBUYw8ujVuFQ0drOaRd
+	2WwtNoZap76I/RE+7WzlKgRUkWkX2IMsHbi1iSORJ1aBrtrPRy4NN2CxQ10NSTuJAqJQk8yRoYMAQ
+	5knAki8aCP2S6yN7jQgQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rbFBa-00000004p9O-25QC;
-	Sat, 17 Feb 2024 07:32:34 +0000
-Received: from mgamail.intel.com ([198.175.65.16])
+	id 1rbFX9-00000004qx5-3Y7e;
+	Sat, 17 Feb 2024 07:54:51 +0000
+Received: from mgamail.intel.com ([192.198.163.12])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rbFBW-00000004p87-3AWm
+	id 1rbFX7-00000004quX-0sEg
 	for kexec@lists.infradead.org;
-	Sat, 17 Feb 2024 07:32:32 +0000
+	Sat, 17 Feb 2024 07:54:50 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708155151; x=1739691151;
+  t=1708156489; x=1739692489;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=ccjuSqOZPclsskdcJMYR2Q3/YUCIG6fCIeDpqvIsxfk=;
-  b=RWrQPBIsuwiOs2gnoIAfHWiBtIpg65xljGqPrdqZHnv188pHsRUmBfPF
-   MjCmgRqO4CtFDV8YUQE3IqnwQAQfDNDdTrnq/1K37uJBb8tBcGt/VQ3Be
-   qwIUF2/fD/d5XUtJNa0R43MlbfsmH1js7+upPQeE8DlHIdjTpW7bZ7yC8
-   WqarxkpzFe6/HlvmuYLLfLtKwKHqHwgFub0XurSQEvj0tMdf4K7K8o4hr
-   XoV3lj92U1LSaH5eRY4j9yC6hEHUvWDzVWSF1Llu63AA/2+kGqyX8Wmku
-   7GSllFVpudx2nX/haq1t4K5sGqPOcdlthvYlc4Clh3inCXuSSlfV/hxNp
+  bh=Wzz5SmshZSlav/lHAXs6G/IAqLV2Qmvclb48zyontW8=;
+  b=SANhR4AtcMALD0B+vBs4lF5Kp1Ott9xO3OA4lBa+maorL1Qwp/QpeOGu
+   MOpGo0ZVNoorPsJTK7WOZzjcB+rQY63cEJrQsfcI5+N5AQ+pSbH7KDJnW
+   RVFJQg195kU6TIsI3g4Yh/141Y9ALMvAnC6vf5h8lvAqRNLcSec51TNaP
+   17+KwiBAu/Kw8FOEXWwLNQX+gxcFyiviKqh++PCozG8bjhD/JKqTKD4zy
+   0XUJTPO6W/HAsQdXxZveCFMRRuV7tNoGsFttlZQg9rbH40LunPu2mmrpU
+   y0Z2a+Lubfktc6ummCqpzz71P8qS/Rih7wGXu6BIbMubaSO+g7U1uMnTS
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10986"; a="2433568"
+X-IronPort-AV: E=McAfee;i="6600,9927,10986"; a="6066338"
 X-IronPort-AV: E=Sophos;i="6.06,165,1705392000"; 
-   d="scan'208";a="2433568"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 23:32:29 -0800
+   d="scan'208";a="6066338"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 23:54:37 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,165,1705392000"; 
-   d="scan'208";a="8656739"
+   d="scan'208";a="4017642"
 Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
-  by fmviesa004.fm.intel.com with ESMTP; 16 Feb 2024 23:32:23 -0800
+  by fmviesa010.fm.intel.com with ESMTP; 16 Feb 2024 23:54:31 -0800
 Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1rbFBN-0001vY-01;
-	Sat, 17 Feb 2024 07:32:21 +0000
-Date: Sat, 17 Feb 2024 15:31:26 +0800
+	id 1rbFWn-0001w0-02;
+	Sat, 17 Feb 2024 07:54:29 +0000
+Date: Sat, 17 Feb 2024 15:53:29 +0800
 From: kernel test robot <lkp@intel.com>
 To: Ross Philipson <ross.philipson@oracle.com>,
 	linux-kernel@vger.kernel.org, x86@kernel.org,
@@ -70,16 +70,15 @@ Cc: oe-kbuild-all@lists.linux.dev, ross.philipson@oracle.com,
 	nivedita@alum.mit.edu, herbert@gondor.apana.org.au,
 	davem@davemloft.net, kanth.ghatraju@oracle.com,
 	trenchboot-devel@googlegroups.com
-Subject: Re: [PATCH v8 15/15] x86: EFI stub DRTM launch support for Secure
- Launch
-Message-ID: <202402171503.kLhNHtkM-lkp@intel.com>
-References: <20240214221847.2066632-16-ross.philipson@oracle.com>
+Subject: Re: [PATCH v8 14/15] x86: Secure Launch late initcall platform module
+Message-ID: <202402171536.dNnLrhB1-lkp@intel.com>
+References: <20240214221847.2066632-15-ross.philipson@oracle.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20240214221847.2066632-16-ross.philipson@oracle.com>
+In-Reply-To: <20240214221847.2066632-15-ross.philipson@oracle.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240216_233230_901360_81FB41DB 
-X-CRM114-Status: GOOD (  11.46  )
+X-CRM114-CacheID: sfid-20240216_235449_267353_23F61DCC 
+X-CRM114-Status: GOOD (  11.13  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -109,79 +108,50 @@ https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
 url:    https://github.com/intel-lab-lkp/linux/commits/Ross-Philipson/x86-boot-Place-kernel_info-at-a-fixed-offset/20240215-064712
 base:   char-misc/char-misc-testing
-patch link:    https://lore.kernel.org/r/20240214221847.2066632-16-ross.philipson%40oracle.com
-patch subject: [PATCH v8 15/15] x86: EFI stub DRTM launch support for Secure Launch
-config: i386-randconfig-052-20240215 (https://download.01.org/0day-ci/archive/20240217/202402171503.kLhNHtkM-lkp@intel.com/config)
-compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240217/202402171503.kLhNHtkM-lkp@intel.com/reproduce)
+patch link:    https://lore.kernel.org/r/20240214221847.2066632-15-ross.philipson%40oracle.com
+patch subject: [PATCH v8 14/15] x86: Secure Launch late initcall platform module
+config: x86_64-randconfig-r061-20240216 (https://download.01.org/0day-ci/archive/20240217/202402171536.dNnLrhB1-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240217/202402171536.dNnLrhB1-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202402171503.kLhNHtkM-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202402171536.dNnLrhB1-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
->> drivers/firmware/efi/libstub/x86-stub.c:862:18: error: invalid input size for constraint 'a'
-     862 |                       : : "a" (dlinfo->dl_handler), "D" (&dlinfo->bl_context));
-         |                                ^
-   1 error generated.
+   arch/x86/kernel/slmodule.c: In function 'slaunch_pcr_extend':
+>> arch/x86/kernel/slmodule.c:471:14: error: implicit declaration of function 'tpm_preferred_locality' [-Werror=implicit-function-declaration]
+     471 |         if (!tpm_preferred_locality(tpm, 2))
+         |              ^~~~~~~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
 
 
-vim +/a +862 drivers/firmware/efi/libstub/x86-stub.c
+vim +/tpm_preferred_locality +471 arch/x86/kernel/slmodule.c
 
-   813	
-   814	static void efi_secure_launch(struct boot_params *boot_params)
-   815	{
-   816		struct slr_entry_uefi_config *uefi_config;
-   817		struct slr_uefi_cfg_entry *uefi_entry;
-   818		struct slr_entry_dl_info *dlinfo;
-   819		efi_guid_t guid = SLR_TABLE_GUID;
-   820		struct slr_table *slrt;
-   821		u64 memmap_hi;
-   822		void *table;
-   823		u8 buf[64] = {0};
-   824	
-   825		table = get_efi_config_table(guid);
-   826	
-   827		/*
-   828		 * The presence of this table indicated a Secure Launch
-   829		 * is being requested.
-   830		 */
-   831		if (!table)
-   832			return;
-   833	
-   834		slrt = (struct slr_table *)table;
-   835	
-   836		if (slrt->magic != SLR_TABLE_MAGIC)
-   837			return;
-   838	
-   839		/* Add config information to measure the UEFI memory map */
-   840		uefi_config = (struct slr_entry_uefi_config *)buf;
-   841		uefi_config->hdr.tag = SLR_ENTRY_UEFI_CONFIG;
-   842		uefi_config->hdr.size = sizeof(*uefi_config) + sizeof(*uefi_entry);
-   843		uefi_config->revision = SLR_UEFI_CONFIG_REVISION;
-   844		uefi_config->nr_entries = 1;
-   845		uefi_entry = (struct slr_uefi_cfg_entry *)(buf + sizeof(*uefi_config));
-   846		uefi_entry->pcr = 18;
-   847		uefi_entry->cfg = boot_params->efi_info.efi_memmap;
-   848		memmap_hi = boot_params->efi_info.efi_memmap_hi;
-   849		uefi_entry->cfg |= memmap_hi << 32;
-   850		uefi_entry->size = boot_params->efi_info.efi_memmap_size;
-   851		memcpy(&uefi_entry->evt_info[0], "Measured UEFI memory map",
-   852			strlen("Measured UEFI memory map"));
-   853	
-   854		if (slr_add_entry(slrt, (struct slr_entry_hdr *)uefi_config))
-   855			return;
-   856	
-   857		/* Jump through DL stub to initiate Secure Launch */
-   858		dlinfo = (struct slr_entry_dl_info *)
-   859			slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_DL_INFO);
-   860	
-   861		asm volatile ("jmp *%%rax"
- > 862			      : : "a" (dlinfo->dl_handler), "D" (&dlinfo->bl_context));
-   863	}
-   864	
+   461	
+   462	static void slaunch_pcr_extend(void __iomem *txt)
+   463	{
+   464		struct tpm_chip *tpm;
+   465	
+   466		tpm = tpm_default_chip();
+   467		if (!tpm)
+   468			slaunch_txt_reset(txt, "Could not get default TPM chip\n",
+   469					  SL_ERROR_TPM_INIT);
+   470	
+ > 471		if (!tpm_preferred_locality(tpm, 2))
+   472			slaunch_txt_reset(txt, "Could not set TPM chip locality 2\n",
+   473					  SL_ERROR_TPM_INIT);
+   474	
+   475		if (evtlog20)
+   476			slaunch_tpm20_extend(tpm, txt);
+   477		else
+   478			slaunch_tpm12_extend(tpm, txt);
+   479	
+   480		tpm_preferred_locality(tpm, 0);
+   481	}
+   482	
 
 -- 
 0-DAY CI Kernel Test Service
