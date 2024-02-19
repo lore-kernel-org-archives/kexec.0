@@ -4,65 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 27992C48BC3
-	for <kexec@archiver.kernel.org>; Mon, 19 Feb 2024 09:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4A0A3C54764
+	for <kexec@archiver.kernel.org>; Mon, 19 Feb 2024 10:08:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Message-ID:MIME-Version:References:
-	In-Reply-To:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=P7C+a+r7tMtAPFmQhV/hvKfTYogh4gPPPQSEgbos56g=; b=tiZQoI16IeAQm8
-	8Z8Umxykaz/S/V/HGyPpks73G8dhcT0Vdbxwn5pHOjaqT0Vy5fIyYebmLLhD1zij2rrPrB/NKmsiY
-	2helEORnY/VNmp+xWmC7M/tbBT4i9rhUs72IoEX0QHS/OnwgiZxwYyfePV7TyPDTrFBs1JbgSqkv1
-	luQd46pZvPKEJecPpLnur88KVhSJUXqk6bLKmIrp7hpCalmGKosBSdnOMv8TjYykteaVYYcqFWWat
-	HJgqs7P8tg4hadoa0qSHYhDVGlm9RpXVGZDaA7twsKunU3yxg/1ZEuufsJ7LdpBmZXw0abAmEiCjJ
-	PEX7JLuCheN4JNLf/Nig==;
+	List-Owner; bh=/E3HvWQGAhs8g3rgSAUYEtVpi4wGLGvgcL6NxTEogzs=; b=dgCrg1fdUdzRDG
+	++O8AhLlP6piOtb62wwfWPyZCzxcTb42nC9OMSZk8DN30BmAOfbiTm75cnubvqaNgr03uHL0et6yA
+	/XEfxDRaEz2bpKZT2glrg788KPjG6puaL0oM246C/NagI9Xnc7tKO5gWXNxX+fssCOL2ewbpPn8og
+	aDbJpWx10NDVLG8E64PzNEcIXtoEA3j+9LRLEypNMEcSPKLigBYdPLV5AYylDqo2idZOkCPAro31j
+	ToE1pIRzJT+PweM2FtWUX/ejNfAiJHTJ5F+3awU7bhD/26MJJFmjMavrWcpVZ3jFEZ2eKU3fpn9dp
+	Ab9gMKswR4yMNK5fn/EA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rbzvv-00000009oMt-2kj8;
-	Mon, 19 Feb 2024 09:27:31 +0000
-Received: from m16.mail.163.com ([220.197.31.3])
-	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rbzvs-00000009oLw-1As5
+	id 1rc0Zg-00000009xwd-3O6X;
+	Mon, 19 Feb 2024 10:08:36 +0000
+Received: from mgamail.intel.com ([198.175.65.17])
+	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rc0Ze-00000009xw1-1G5U
 	for kexec@lists.infradead.org;
-	Mon, 19 Feb 2024 09:27:29 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=LdXQA66iqTewnXLGYwkQx7fMCWVbVDbz/y8KNE5FnZ8=; b=J
-	SXS+H9s7HHL/vHOzHbkgpxpTndollX4wJaIePQzXjHrOK/O3ld2roYZnMocy8QXS
-	LEAoXT8P5gm0llaNzuVV05uVodz6+uEwdiXkp9v/L4oVsW4Z7G8ec+QlxSsBnH6w
-	QiRXMHBkdd2BUMO+pwBFRA8LsWPhHJcmKbbX0wTL9M=
-Received: from gaoshanliukou$163.com ( [60.24.209.108] ) by
- ajax-webmail-wmsvr-40-114 (Coremail) ; Mon, 19 Feb 2024 17:26:55 +0800
- (CST)
-X-Originating-IP: [60.24.209.108]
-Date: Mon, 19 Feb 2024 17:26:55 +0800 (CST)
-From: "yang.zhang" <gaoshanliukou@163.com>
-To: "Baoquan He" <bhe@redhat.com>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>, kexec@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, "yang.zhang" <yang.zhang@hexintek.com>, 
-	akpm@linux-foundation.org
-Subject: Re:Re: [PATCH] kexec: should use uchunk for user buffer increasing
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20230109(dcb5de15)
- Copyright (c) 2002-2024 www.mailtech.cn 163com
-In-Reply-To: <ZdK/Hsy1TMB8PlJs@MiWiFi-R3L-srv>
-References: <20240130101802.23850-1-gaoshanliukou@163.com>
- <Zb8+8qmn5SV4LKFd@MiWiFi-R3L-srv>
- <871q9r3xl6.fsf@email.froward.int.ebiederm.org>
- <2a207ca2.1e87.18dbf17ee10.Coremail.gaoshanliukou@163.com>
- <ZdK/Hsy1TMB8PlJs@MiWiFi-R3L-srv>
-X-NTES-SC: AL_Qu2bCv+Yu0Aq4yGRY+kXnEYQh+k3XcK4u/0u2YFVP5E0oyTL8z0ARUdJIVL69+GMNS2NiCCzaBpn5cJBXZNDc7oAhva9lGIG43yCV0QCwDB7
+	Mon, 19 Feb 2024 10:08:35 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708337314; x=1739873314;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=TR8HS0OFrh9aNH4iX7ntd6fP5lH5BPlQhF5iDC7RPM0=;
+  b=b9rCvui9mMy3/SUy3MOYbOSpqNp/hPSLsEPrvaNQnXFH5sEDsnh1z//t
+   1tZpfg5Seb8IXmCJtjjBHQtXsHkzS7iRzddBNrX4zjnLVkoCX5O+j8sKx
+   P0DucdqSjl5lBQe6fxqaux/zS2mTJLiB/fxZ6bN3boKv9oFuK94HmBH1M
+   eW4CIcrzkDizeHaJ7iv5wWhzUpGME8Tqg4xHXXPwysSEx9y3gUk/MKL8a
+   wYGbYcTwgGac87JX/qVLTEolgp10wOSSvge9NOlLXJQNMzWC7g7DWd5Xn
+   34pC4NA+hXWae6XaFVUYjje6EK93dLlPAi5GRnXOVlqBMXrRFs2gRndD3
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="2532838"
+X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
+   d="scan'208";a="2532838"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2024 02:08:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10988"; a="936268601"
+X-IronPort-AV: E=Sophos;i="6.06,170,1705392000"; 
+   d="scan'208";a="936268601"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 19 Feb 2024 02:08:27 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 96E9B34B; Mon, 19 Feb 2024 12:08:26 +0200 (EET)
+Date: Mon, 19 Feb 2024 12:08:26 +0200
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, 
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Elena Reshetova <elena.reshetova@intel.com>, 
+	Jun Nakajima <jun.nakajima@intel.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish" <ashish.kalra@amd.com>, 
+	Sean Christopherson <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>, kexec@lists.infradead.org, 
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv7 01/16] x86/acpi: Extract ACPI MADT wakeup code into a
+ separate file
+Message-ID: <a2cmua3qhbmhgzdxl5mszuvatnkyf4nwxjciurguhgbulrhin4@gvswvfats5er>
+References: <20240212104448.2589568-1-kirill.shutemov@linux.intel.com>
+ <20240212104448.2589568-2-kirill.shutemov@linux.intel.com>
+ <ZdLc61QMLu3L0Eqv@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-Message-ID: <23cb32ca.9195.18dc0b09810.Coremail.gaoshanliukou@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: _____wD3ny_fHtNl5B7kAA--.18548W
-X-CM-SenderInfo: pjdr2x5dqox3xnrxqiywtou0bp/xtbBZQKF8mV4H1oUZwAGs9
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Disposition: inline
+In-Reply-To: <ZdLc61QMLu3L0Eqv@MiWiFi-R3L-srv>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240219_012728_722744_4E01A723 
-X-CRM114-Status: GOOD (  15.86  )
+X-CRM114-CacheID: sfid-20240219_020834_436810_7E6E9C90 
+X-CRM114-Status: GOOD (  17.10  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,116 +93,66 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On Mon, Feb 19, 2024 at 12:45:31PM +0800, Baoquan He wrote:
+> Do we need add the entry printing for ACPI_MADT_TYPE_MULTIPROC_WAKEUP
+> now in acpi_table_print_madt_entry()? Surely it's not related to this
+> patch.
 
+Good catch. See patch below. Does it look okay?
 
+> FWIW, 
+> 
+> Reviewed-by: Baoquan He <bhe@redhat.com>
 
+Thanks!
 
+From 23b7f9856a3d6b91c702def1e03872a60ae07d0e Mon Sep 17 00:00:00 2001
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Date: Mon, 19 Feb 2024 11:58:19 +0200
+Subject: [PATCH] ACPI: tables: Print MULTIPROC_WAKEUP when MADT is parse
 
-Thanks, i would post v2 patch.
-Could you please provide the email address for andrew.
+When MADT is parsed, print MULTIPROC_WAKEUP information:
 
+ACPI: MP Wakeup (version[1], mailbox[0x7fffd000], reset[0x7fffe068])
 
+This debug information will be very helpful during bring up.
 
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+---
+ drivers/acpi/tables.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
+diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
+index b07f7d091d13..c59a3617bca7 100644
+--- a/drivers/acpi/tables.c
++++ b/drivers/acpi/tables.c
+@@ -198,6 +198,20 @@ void acpi_table_print_madt_entry(struct acpi_subtable_header *header)
+ 		}
+ 		break;
+ 
++	case ACPI_MADT_TYPE_MULTIPROC_WAKEUP:
++		{
++			struct acpi_madt_multiproc_wakeup *p =
++				(struct acpi_madt_multiproc_wakeup *)header;
++			u64 reset_vector = 0;
++
++			if (p->version >= ACPI_MADT_MP_WAKEUP_VERSION_V1)
++				reset_vector = p->reset_vector;
++
++			pr_debug("MP Wakeup (version[%d], mailbox[%#llx], reset[%#llx])\n",
++				 p->version, p->mailbox_address, reset_vector);
++		}
++		break;
++
+ 	case ACPI_MADT_TYPE_CORE_PIC:
+ 		{
+ 			struct acpi_madt_core_pic *p = (struct acpi_madt_core_pic *)header;
+-- 
+2.43.0
 
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
 
-
-
-
-At 2024-02-19 10:38:22, "Baoquan He" <bhe@redhat.com> wrote:
->On 02/19/24 at 10:00am, yang.zhang wrote:
->> 
->> 
->> 
->> Thanks for your replies.
->> Do you have plans to merge the improving code for clarity, or just keep them unchanged.
->
->You need post v2 to change those two places as Eric has demonstrated.
->Please CC Andrew when you post.
->
->> 
->> At 2024-02-05 20:27:33, "Eric W. Biederman" <ebiederm@xmission.com> wrote:
->> >Baoquan He <bhe@redhat.com> writes:
->> >
->> >> On 01/30/24 at 06:18pm, yang.zhang wrote:
->> >>> From: "yang.zhang" <yang.zhang@hexintek.com>
->> >>> 
->> >>> Because of alignment requirement in kexec-tools, there is
->> >>> no problem for user buffer increasing when loading segments.
->> >>> But when coping, the step is uchunk, so we should use uchunk
->> >>> not mchunk.
->> >>
->> >> In theory, ubytes is <= mbytes. So uchunk is always <= mchunk. If ubytes
->> >> is exhausted, while there's still remaining mbytes, then uchunk is 0,
->> >> there's still mchunk stepping forward. If I understand it correctly,
->> >> this is a good catch. Not sure if Eric has comment on this to confirm.
->> >
->> >As far as I can read the code the proposed change is a noop.
->> >
->> >I agree it is more correct to not advance the pointers we read from,
->> >but since we never read from them after that point it does not
->> >matter.
->> >
->> >>
->> >> static int kimage_load_normal_segment(struct kimage *image,
->> >>                                          struct kexec_segment *segment)
->> >> {
->> >> ......
->> >>
->> >>                 ptr += maddr & ~PAGE_MASK;
->> >>                 mchunk = min_t(size_t, mbytes,
->> >>                                 PAGE_SIZE - (maddr & ~PAGE_MASK));
->> >>                 uchunk = min(ubytes, mchunk);
->> >> ......}
->> >
->> >If we are going to improve the code for clarity.  We probably
->> >want to do something like:
->> >
->> >diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
->> >index d08fc7b5db97..1a8b8ce6bf15 100644
->> >--- a/kernel/kexec_core.c
->> >+++ b/kernel/kexec_core.c
->> >@@ -800,22 +800,24 @@ static int kimage_load_normal_segment(struct kimage *image,
->> >                                PAGE_SIZE - (maddr & ~PAGE_MASK));
->> >                uchunk = min(ubytes, mchunk);
->> > 
->> >-               /* For file based kexec, source pages are in kernel memory */
->> >-               if (image->file_mode)
->> >-                       memcpy(ptr, kbuf, uchunk);
->> >-               else
->> >-                       result = copy_from_user(ptr, buf, uchunk);
->> >+               if (uchunk) {
->> >+                       /* For file based kexec, source pages are in kernel memory */
->> >+                       if (image->file_mode)
->> >+                               memcpy(ptr, kbuf, uchunk);
->> >+                       else
->> >+                               result = copy_from_user(ptr, buf, uchunk);
->> >+                       ubytes -= uchunk;
->> >+                       if (image->file_mode)
->> >+                               kbuf += uchunk;
->> >+                       else
->> >+                               buf += uchunk;
->> >+               }
->> >                kunmap_local(ptr);
->> >                if (result) {
->> >                        result = -EFAULT;
->> >                        goto out;
->> >                }
->> >-               ubytes -= uchunk;
->> >                maddr  += mchunk;
->> >-               if (image->file_mode)
->> >-                       kbuf += mchunk;
->> >-               else
->> >-                       buf += mchunk;
->> >                mbytes -= mchunk;
->> > 
->> >                cond_resched();
->> >
->> >And make it exceedingly clear that all of the copying and the rest
->> >only happens before uchunk goes to zero.  Otherwise we are relying
->> >on a lot of operations becoming noops when uchunk goes to zero.
->> >
->> >Eric
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
