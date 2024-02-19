@@ -4,82 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 86C43C48BC3
-	for <kexec@archiver.kernel.org>; Sat, 17 Feb 2024 20:07:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CEE17C48BC4
+	for <kexec@archiver.kernel.org>; Mon, 19 Feb 2024 02:00:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Message-ID:MIME-Version:References:
+	In-Reply-To:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=9x+Gkpag6O5zDYwau/nvQlfFsxowNzCkToFABGfnyIg=; b=dYszwBVdLdBBmQ
-	6Dolu3e1v2xf6ZgKwVbXUz4YrIB5KbkaObij7FPUq6yl/lF5Yeq2E02rqGhT73oO+RWUTBlKvqAxw
-	KjgfZ6aAf0cP6PycZpNWFDWiuUZrHZrMzzXI5+ucgc/nmwNbhjjVOx0dBnurekMLJm1Q1FfDi1IaP
-	pdXKt7DlTMTuat99Kqr71c7gEtH8gWuwrwrR1u238XXA6HKFoupl3cBSuUPaSqC3rnBXU9VDWH8tl
-	q2msBYFdKlL4LxTIGK1/2Mj6fHDJMiaj4eajQfqMlH7L/UxheASlrmrgkcdnRoOfMskG9D6mc0iSQ
-	Kb5q0aQYG7+n8RA9KjEw==;
+	List-Owner; bh=Yxvr/V/8tYJ28kqZh79MYJV/2uCWnGCKtcvrMiKt6KE=; b=aZPyjScoSQ9r9u
+	ApRKUvsoqdf91ZCfjlTMU+59s2zP6FrvBazaRqEWIoquk9F2OkaPvwu7hvU5N/MZcF4xG/hJTdHxx
+	J1xiRKcMRmMSxQxntaHYlSTF+7CaD/MuCRhUZtJ7nCRTJzP+4sC6XtUShoHnaw5zt3OFdPN6M1BY0
+	4rgwNQhOeVnyzCNR1lV5E6NdRBj2e2/0IvUV3oUh1dzQUQcCU+WgkO6yQmcAm5e415VUItk5sCCP0
+	VthVq1KdgfntpPNFhbIqjaroYeIPc7tuIEoZZSqCAcYzq+KhmndDqdwTYusVrQuRhOpI6DuCAVUOv
+	nLdK8scg2kuusH5CraDA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rbQyQ-00000006IIZ-12Zy;
-	Sat, 17 Feb 2024 20:07:46 +0000
-Received: from mgamail.intel.com ([198.175.65.20])
-	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rbQyN-00000006IHc-2bTb
+	id 1rbsxg-00000008op4-1Xv3;
+	Mon, 19 Feb 2024 02:00:52 +0000
+Received: from m16.mail.163.com ([220.197.31.4])
+	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rbsxb-00000008on7-2SuV
 	for kexec@lists.infradead.org;
-	Sat, 17 Feb 2024 20:07:45 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708200463; x=1739736463;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/69HW9NzBJsJX+iI5iUdtA0unbwpwPW5fq7scXx+J5o=;
-  b=GyA46ypf6fjGU7tKf+nHsMqMJtfs5SsBNX048tSFXptSeMc5kQkQUyjk
-   haf3ZPn4El1R9cVLYyvVpS5t4MVWmZBe7pKe1UTCvtAg4TTkV+Xje5IfC
-   1cSS6hZEiLC/UbWWeaXmo4qG3nMEJCJHKYiO2ugWO5b3n8UvFa65pVKcR
-   TJCl2GTC4nmcbpMkABPnYHi4QfS1bPhyZfMnYeeoUvduKteRSzBKYq9hc
-   RmsOBx0GqxZaLxnYAz/m1yx3RLoqlqswlRKMgh/tcSMWJBWdYlfmYTN76
-   t1WNBr+NaFt7K2TqCxoqUmYG5mkyy3kMYcF5G+Ggb3KM5pTbx2bGkv2zV
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10987"; a="2180183"
-X-IronPort-AV: E=Sophos;i="6.06,167,1705392000"; 
-   d="scan'208";a="2180183"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2024 12:07:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,167,1705392000"; 
-   d="scan'208";a="8727084"
-Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
-  by fmviesa003.fm.intel.com with ESMTP; 17 Feb 2024 12:07:35 -0800
-Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rbQyC-0002Te-24;
-	Sat, 17 Feb 2024 20:07:32 +0000
-Date: Sun, 18 Feb 2024 04:06:36 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ross Philipson <ross.philipson@oracle.com>,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
-	linux-efi@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, ross.philipson@oracle.com,
-	dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
-	ardb@kernel.org, mjg59@srcf.ucam.org,
-	James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
-	jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
-	nivedita@alum.mit.edu, herbert@gondor.apana.org.au,
-	davem@davemloft.net, kanth.ghatraju@oracle.com,
-	trenchboot-devel@googlegroups.com
-Subject: Re: [PATCH v8 15/15] x86: EFI stub DRTM launch support for Secure
- Launch
-Message-ID: <202402180324.a3PqEegg-lkp@intel.com>
-References: <20240214221847.2066632-16-ross.philipson@oracle.com>
+	Mon, 19 Feb 2024 02:00:49 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=/LIr/n4Me0c+pWUjj1O4glgEqVVux4ELuAgUnDnG7WY=; b=n
+	d+NYiE9MRWavblELTgECINM4SreUUr12x+sT7ZPwPuefCg9hafPq1lVHdl2aRVWL
+	26rvKLFMsk6NDk1NYKmKyl2Ag+JZDJo9AR9R9IIWqKSi3lM6epxUMmqzrJTcUOup
+	YEFOf4O8oRKRjq5c9WuZXKtyhXPshfnYPF8qO1tHDU=
+Received: from gaoshanliukou$163.com ( [60.24.209.108] ) by
+ ajax-webmail-wmsvr-40-126 (Coremail) ; Mon, 19 Feb 2024 10:00:33 +0800
+ (CST)
+X-Originating-IP: [60.24.209.108]
+Date: Mon, 19 Feb 2024 10:00:33 +0800 (CST)
+From: "yang.zhang" <gaoshanliukou@163.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: "Baoquan He" <bhe@redhat.com>, kexec@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, "yang.zhang" <yang.zhang@hexintek.com>
+Subject: Re:Re: [PATCH] kexec: should use uchunk for user buffer increasing
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20230109(dcb5de15)
+ Copyright (c) 2002-2024 www.mailtech.cn 163com
+In-Reply-To: <871q9r3xl6.fsf@email.froward.int.ebiederm.org>
+References: <20240130101802.23850-1-gaoshanliukou@163.com>
+ <Zb8+8qmn5SV4LKFd@MiWiFi-R3L-srv>
+ <871q9r3xl6.fsf@email.froward.int.ebiederm.org>
+X-NTES-SC: AL_Qu2bCv+bt0go5SCbYukXnEYQh+k3XcK4u/0u2YFVP5E0lSTx0wURfH5gB3X34camBz60sRmISxV12Ol9UJl0XYbn5/hBo+Ki1kLwmlHoKHWT
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20240214221847.2066632-16-ross.philipson@oracle.com>
+Message-ID: <2a207ca2.1e87.18dbf17ee10.Coremail.gaoshanliukou@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: _____wB39JNBttJl4+HBAA--.24654W
+X-CM-SenderInfo: pjdr2x5dqox3xnrxqiywtou0bp/xtbBZQKF8mV4H1oUZwADs4
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240217_120743_724488_2A7C67EB 
-X-CRM114-Status: GOOD (  11.06  )
+X-CRM114-CacheID: sfid-20240218_180047_986103_1FFAEF21 
+X-CRM114-Status: GOOD (  14.42  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -96,98 +76,105 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Ross,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on char-misc/char-misc-testing]
-[also build test ERROR on char-misc/char-misc-next char-misc/char-misc-linus herbert-cryptodev-2.6/master herbert-crypto-2.6/master linus/master v6.8-rc4 next-20240216]
-[cannot apply to tip/x86/core]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Ross-Philipson/x86-boot-Place-kernel_info-at-a-fixed-offset/20240215-064712
-base:   char-misc/char-misc-testing
-patch link:    https://lore.kernel.org/r/20240214221847.2066632-16-ross.philipson%40oracle.com
-patch subject: [PATCH v8 15/15] x86: EFI stub DRTM launch support for Secure Launch
-config: i386-allmodconfig (https://download.01.org/0day-ci/archive/20240218/202402180324.a3PqEegg-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240218/202402180324.a3PqEegg-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202402180324.a3PqEegg-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In function 'efi_secure_launch',
-       inlined from 'efi_stub_entry' at drivers/firmware/efi/libstub/x86-stub.c:990:2:
->> drivers/firmware/efi/libstub/x86-stub.c:861:9: error: inconsistent operand constraints in an 'asm'
-     861 |         asm volatile ("jmp *%%rax"
-         |         ^~~
 
 
-vim +/asm +861 drivers/firmware/efi/libstub/x86-stub.c
 
-   813	
-   814	static void efi_secure_launch(struct boot_params *boot_params)
-   815	{
-   816		struct slr_entry_uefi_config *uefi_config;
-   817		struct slr_uefi_cfg_entry *uefi_entry;
-   818		struct slr_entry_dl_info *dlinfo;
-   819		efi_guid_t guid = SLR_TABLE_GUID;
-   820		struct slr_table *slrt;
-   821		u64 memmap_hi;
-   822		void *table;
-   823		u8 buf[64] = {0};
-   824	
-   825		table = get_efi_config_table(guid);
-   826	
-   827		/*
-   828		 * The presence of this table indicated a Secure Launch
-   829		 * is being requested.
-   830		 */
-   831		if (!table)
-   832			return;
-   833	
-   834		slrt = (struct slr_table *)table;
-   835	
-   836		if (slrt->magic != SLR_TABLE_MAGIC)
-   837			return;
-   838	
-   839		/* Add config information to measure the UEFI memory map */
-   840		uefi_config = (struct slr_entry_uefi_config *)buf;
-   841		uefi_config->hdr.tag = SLR_ENTRY_UEFI_CONFIG;
-   842		uefi_config->hdr.size = sizeof(*uefi_config) + sizeof(*uefi_entry);
-   843		uefi_config->revision = SLR_UEFI_CONFIG_REVISION;
-   844		uefi_config->nr_entries = 1;
-   845		uefi_entry = (struct slr_uefi_cfg_entry *)(buf + sizeof(*uefi_config));
-   846		uefi_entry->pcr = 18;
-   847		uefi_entry->cfg = boot_params->efi_info.efi_memmap;
-   848		memmap_hi = boot_params->efi_info.efi_memmap_hi;
-   849		uefi_entry->cfg |= memmap_hi << 32;
-   850		uefi_entry->size = boot_params->efi_info.efi_memmap_size;
-   851		memcpy(&uefi_entry->evt_info[0], "Measured UEFI memory map",
-   852			strlen("Measured UEFI memory map"));
-   853	
-   854		if (slr_add_entry(slrt, (struct slr_entry_hdr *)uefi_config))
-   855			return;
-   856	
-   857		/* Jump through DL stub to initiate Secure Launch */
-   858		dlinfo = (struct slr_entry_dl_info *)
-   859			slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_DL_INFO);
-   860	
- > 861		asm volatile ("jmp *%%rax"
-   862			      : : "a" (dlinfo->dl_handler), "D" (&dlinfo->bl_context));
-   863	}
-   864	
+Thanks for your replies.
+Do you have plans to merge the improving code for clarity, or just keep them unchanged.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
+
+
+
+
+
+
+
+
+
+
+At 2024-02-05 20:27:33, "Eric W. Biederman" <ebiederm@xmission.com> wrote:
+>Baoquan He <bhe@redhat.com> writes:
+>
+>> On 01/30/24 at 06:18pm, yang.zhang wrote:
+>>> From: "yang.zhang" <yang.zhang@hexintek.com>
+>>> 
+>>> Because of alignment requirement in kexec-tools, there is
+>>> no problem for user buffer increasing when loading segments.
+>>> But when coping, the step is uchunk, so we should use uchunk
+>>> not mchunk.
+>>
+>> In theory, ubytes is <= mbytes. So uchunk is always <= mchunk. If ubytes
+>> is exhausted, while there's still remaining mbytes, then uchunk is 0,
+>> there's still mchunk stepping forward. If I understand it correctly,
+>> this is a good catch. Not sure if Eric has comment on this to confirm.
+>
+>As far as I can read the code the proposed change is a noop.
+>
+>I agree it is more correct to not advance the pointers we read from,
+>but since we never read from them after that point it does not
+>matter.
+>
+>>
+>> static int kimage_load_normal_segment(struct kimage *image,
+>>                                          struct kexec_segment *segment)
+>> {
+>> ......
+>>
+>>                 ptr += maddr & ~PAGE_MASK;
+>>                 mchunk = min_t(size_t, mbytes,
+>>                                 PAGE_SIZE - (maddr & ~PAGE_MASK));
+>>                 uchunk = min(ubytes, mchunk);
+>> ......}
+>
+>If we are going to improve the code for clarity.  We probably
+>want to do something like:
+>
+>diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+>index d08fc7b5db97..1a8b8ce6bf15 100644
+>--- a/kernel/kexec_core.c
+>+++ b/kernel/kexec_core.c
+>@@ -800,22 +800,24 @@ static int kimage_load_normal_segment(struct kimage *image,
+>                                PAGE_SIZE - (maddr & ~PAGE_MASK));
+>                uchunk = min(ubytes, mchunk);
+> 
+>-               /* For file based kexec, source pages are in kernel memory */
+>-               if (image->file_mode)
+>-                       memcpy(ptr, kbuf, uchunk);
+>-               else
+>-                       result = copy_from_user(ptr, buf, uchunk);
+>+               if (uchunk) {
+>+                       /* For file based kexec, source pages are in kernel memory */
+>+                       if (image->file_mode)
+>+                               memcpy(ptr, kbuf, uchunk);
+>+                       else
+>+                               result = copy_from_user(ptr, buf, uchunk);
+>+                       ubytes -= uchunk;
+>+                       if (image->file_mode)
+>+                               kbuf += uchunk;
+>+                       else
+>+                               buf += uchunk;
+>+               }
+>                kunmap_local(ptr);
+>                if (result) {
+>                        result = -EFAULT;
+>                        goto out;
+>                }
+>-               ubytes -= uchunk;
+>                maddr  += mchunk;
+>-               if (image->file_mode)
+>-                       kbuf += mchunk;
+>-               else
+>-                       buf += mchunk;
+>                mbytes -= mchunk;
+> 
+>                cond_resched();
+>
+>And make it exceedingly clear that all of the copying and the rest
+>only happens before uchunk goes to zero.  Otherwise we are relying
+>on a lot of operations becoming noops when uchunk goes to zero.
+>
+>Eric
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
