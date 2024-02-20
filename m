@@ -4,79 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C0249C48BC3
-	for <kexec@archiver.kernel.org>; Tue, 20 Feb 2024 12:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B20DDC5475B
+	for <kexec@archiver.kernel.org>; Tue, 20 Feb 2024 13:50:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=a7g8EZOiU5pdUFRjyxGrZ6BDgW9ZmaO4tUSLlaxcmFk=; b=gnX7tmqG8VtIEc
-	1as8oSDQlSIRyD1h4J1foHZguLs9HiVI/Ky4XNG/sv2iP2lGb5QWlusy4tU4CmVAizoaqFnETn8Lz
-	/yPJGMa3RvNNyI217lt1AyZmA0+EtOwojSSqKmy2m5bFD9u8r3P37oByU5qtJGFU/dZOTn+DhSrDj
-	YpzFOM19YlwcE2ZCubzylf0m/kFMJ3I+2Ye1UCiiB8SkVQAAZOG1Mx1DpKb/uHlUu2G3J6Ewg9AH2
-	0BGkDZiahaEG0ulsl3b5PeBZuAmMqUFNdkz8YQi2YMWAoP7CLYLFseUMIOU7QRw20goOW9v9IN4tg
-	8hUtJ8uvDcnKfTC2aOWA==;
+	List-Owner; bh=2ap1Mgdg6V19FxjgvMQ9QCnwPdPpl++Ca+zYxNwBMHM=; b=BJp45lkJFMnc3O
+	gQf5F4c3P7OAcG4tzxqICJASFtvDwCw8a+1ucgBpTXNpHtxYjSDgvJgRSuJJDJWuAjzYk5LTQ+9WT
+	HCW5/nXbYXRJzQ1xLIRUJSogimjX8kY4ThCgV+ltUxUmrFEfQcwchud2pg98sfBi4aOCa250E96Ii
+	cS/VhIoa9yHhXCrLeE9/3LLrwpeFaVpgWmDkz29kwMITVE3XZhv6WidUZ0Izghek9ddfEgw9JznmF
+	hUb+8AJ69mi42Mz2wu5uy4y86iME8E90zsHAy6au/ooDigW/vtHDy/k/J85E2QQVZSZjEvI/CW43l
+	l23qhfSVlzTckKClb5rg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rcPRy-0000000Ejoj-07Jj;
-	Tue, 20 Feb 2024 12:42:18 +0000
-Received: from mgamail.intel.com ([198.175.65.21])
+	id 1rcQW8-0000000EyY5-0KSd;
+	Tue, 20 Feb 2024 13:50:40 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rcPRu-0000000Ejnk-1jV5
+	id 1rcQW5-0000000EyXF-2bvt
 	for kexec@lists.infradead.org;
-	Tue, 20 Feb 2024 12:42:15 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708432935; x=1739968935;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WQEMa0Zg8JWL+HJp+aoQ8wXzZKQIdgVqIXMBI4Y1QIA=;
-  b=CH2Yxxp9UmlrMSnHTt14q9EoRV4l6sinp69o3irLXzgG4eiqB+qtjb8g
-   kMDfS6OgqDQl5x1hLLHMFwbWbvM3Y1ztDherEUPK6RWagtHujxdyEAb+G
-   D4ur1XvUhSiRcBskzIZN7GKUzu2izUpe6G+9Q9rbbklRltfGIkXODGnre
-   3Gi3pSJ+V6lXpvyhV0LKlSS29Slbib7jaEnCJiO0dxLNTKoy4LMRA9Z1S
-   HcEriOQ4kpqy9/wITZN7+agLiAzvNzxGSOBOFGvLCm94Nmb8c9sy+/U/Y
-   w4ePTNpdj1puFU9tgMvpDNtAevaZgEcXHmW2AcVLEO2ObyfQMaGE0WhOS
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10989"; a="2436853"
-X-IronPort-AV: E=Sophos;i="6.06,172,1705392000"; 
-   d="scan'208";a="2436853"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2024 04:42:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10989"; a="936448498"
-X-IronPort-AV: E=Sophos;i="6.06,172,1705392000"; 
-   d="scan'208";a="936448498"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 20 Feb 2024 04:42:06 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 20702305; Tue, 20 Feb 2024 14:42:05 +0200 (EET)
-Date: Tue, 20 Feb 2024 14:42:05 +0200
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Ashish Kalra <Ashish.Kalra@amd.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, luto@kernel.org, x86@kernel.org, ardb@kernel.org, hpa@zytor.com, 
-	linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, rafael@kernel.org, 
-	peterz@infradead.org, adrian.hunter@intel.com, 
-	sathyanarayanan.kuppuswamy@linux.intel.com, elena.reshetova@intel.com, jun.nakajima@intel.com, 
-	rick.p.edgecombe@intel.com, thomas.lendacky@amd.com, seanjc@google.com, kai.huang@intel.com, 
-	bhe@redhat.com, kexec@lists.infradead.org, linux-coco@lists.linux.dev, 
-	anisinha@redhat.com, michael.roth@amd.com, bdas@redhat.com, vkuznets@redhat.com, 
-	dionnaglaze@google.com, jroedel@suse.de, ashwin.kamat@broadcom.com
-Subject: Re: [PATCH 1/2] x86/mm: Do not zap PMD entry mapping unaccepted
- memory table during kdump.
-Message-ID: <ictdanmnsdn4qnzg42ett6om4r6qzypmxdc5spjwa2g5gz2s7p@drh7hoqdj4sc>
-References: <20240212104448.2589568-1-kirill.shutemov@linux.intel.com>
- <cover.1708390906.git.ashish.kalra@amd.com>
- <a0bf771e1472eb1a6a241acd2e16c98ab8ac9253.1708390906.git.ashish.kalra@amd.com>
+	Tue, 20 Feb 2024 13:50:38 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708437036;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GAc6rry3Nc1ghTKhHNX98UJdceAOZ+259mLdb94DPrE=;
+	b=Qrzm067kLWDhKC8o16hwbcIVFHyS31MJiBcsK9Cgf7hIOqXvXoabuyU17u3m7NTIia6RTE
+	nKoeycSgqC5nnDh3lZN8KcVp6ZbeE65bihV5NIXEPB+D6rtdQ+GGsVZHXJiSaOGTNPWQDI
+	pehkMTJ2H3zKuEuGXxmFtSKlUcEat6I=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-635-wGfgPk9mM22_nJxY97dI-w-1; Tue, 20 Feb 2024 08:50:32 -0500
+X-MC-Unique: wGfgPk9mM22_nJxY97dI-w-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2B54D185A782;
+	Tue, 20 Feb 2024 13:50:32 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.2])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id C3E25C185C3;
+	Tue, 20 Feb 2024 13:50:29 +0000 (UTC)
+Date: Tue, 20 Feb 2024 21:50:26 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Hari Bathini <hbathini@linux.ibm.com>
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+	Kexec-ml <kexec@lists.infradead.org>,
+	lkml <linux-kernel@vger.kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Sourabh Jain <sourabhjain@linux.ibm.com>,
+	Dave Young <dyoung@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: Re: [PATCH linux-next 1/3] kexec/kdump: make struct crash_mem
+ available without CONFIG_CRASH_DUMP
+Message-ID: <ZdSuIjknfxg22VSF@MiWiFi-R3L-srv>
+References: <20240213113150.1148276-1-hbathini@linux.ibm.com>
+ <20240213113150.1148276-2-hbathini@linux.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <a0bf771e1472eb1a6a241acd2e16c98ab8ac9253.1708390906.git.ashish.kalra@amd.com>
+In-Reply-To: <20240213113150.1148276-2-hbathini@linux.ibm.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240220_044214_550917_4D4D9E9D 
-X-CRM114-Status: GOOD (  19.97  )
+X-CRM114-CacheID: sfid-20240220_055037_769651_C79F91EE 
+X-CRM114-Status: GOOD (  19.18  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -93,48 +92,60 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Feb 20, 2024 at 01:18:29AM +0000, Ashish Kalra wrote:
-> From: Ashish Kalra <ashish.kalra@amd.com>
+On 02/13/24 at 05:01pm, Hari Bathini wrote:
+> struct crash_mem defined under include/linux/crash_core.h represents
+> a list of memory ranges. While it is used to represent memory ranges
+
+From its name, it's not only representing memory ranges, it's
+representing crash memory ranges. Except of this, the whole series looks
+good to me. Thanks for the effort.
+
+> for kdump kernel, it can also be used for other kind of memory ranges.
+> In fact, KEXEC_FILE_LOAD syscall in powerpc uses this structure to
+> represent reserved memory ranges and exclude memory ranges needed to
+> find the right memory regions to load kexec kernel. So, make the
+> definition of crash_mem structure available for !CONFIG_CRASH_DUMP
+> case too.
 > 
-> During crashkernel boot only pre-allocated crash memory is presented as
-> E820_TYPE_RAM. This can cause PMD entry mapping unaccepted memory table
-> to be zapped during phys_pmd_init() as SNP/TDX guest use E820_TYPE_ACPI
-> to store the unaccepted memory table and pass it between the kernels on
-> kexec/kdump.
-> 
-> E820_TYPE_ACPI covers not only ACPI data, but also EFI tables and might
-> be required by kernel to function properly.
-> 
-> The problem was discovered during debugging kdump for SNP guest. The
-> unaccepted memory table stored with E820_TYPE_ACPI and passed between
-> the kernels on kdump was getting zapped as the PMD entry mapping this
-> is above the E820_TYPE_RAM range for the reserved crashkernel memory.
-> 
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
 > ---
->  arch/x86/mm/init_64.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  include/linux/crash_core.h | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
 > 
-> diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-> index a0dffaca6d2b..207c6dddde0c 100644
-> --- a/arch/x86/mm/init_64.c
-> +++ b/arch/x86/mm/init_64.c
-> @@ -524,7 +524,9 @@ phys_pmd_init(pmd_t *pmd_page, unsigned long paddr, unsigned long paddr_end,
->  			    !e820__mapped_any(paddr & PMD_MASK, paddr_next,
->  					     E820_TYPE_RAM) &&
->  			    !e820__mapped_any(paddr & PMD_MASK, paddr_next,
-> -					     E820_TYPE_RESERVED_KERN))
-> +					     E820_TYPE_RESERVED_KERN) &&
-> +			    !e820__mapped_any(paddr & PMD_MASK, paddr_next,
-> +					     E820_TYPE_ACPI))
->  				set_pmd_init(pmd, __pmd(0), init);
->  			continue;
+> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+> index 23270b16e1db..d33352c2e386 100644
+> --- a/include/linux/crash_core.h
+> +++ b/include/linux/crash_core.h
+> @@ -8,6 +8,12 @@
+>  
+>  struct kimage;
+>  
+> +struct crash_mem {
+> +	unsigned int max_nr_ranges;
+> +	unsigned int nr_ranges;
+> +	struct range ranges[] __counted_by(max_nr_ranges);
+> +};
+> +
+>  #ifdef CONFIG_CRASH_DUMP
+>  
+>  int crash_shrink_memory(unsigned long new_size);
+> @@ -51,12 +57,6 @@ static inline unsigned int crash_get_elfcorehdr_size(void) { return 0; }
+>  /* Alignment required for elf header segment */
+>  #define ELF_CORE_HEADER_ALIGN   4096
+>  
+> -struct crash_mem {
+> -	unsigned int max_nr_ranges;
+> -	unsigned int nr_ranges;
+> -	struct range ranges[] __counted_by(max_nr_ranges);
+> -};
+> -
+>  extern int crash_exclude_mem_range(struct crash_mem *mem,
+>  				   unsigned long long mstart,
+>  				   unsigned long long mend);
+> -- 
+> 2.43.0
+> 
 
-Why do you single out phys_pmd_init()? I think it has to be addressed for
-all page table levels as we do for E820_TYPE_RAM and E820_TYPE_RESERVED_KERN.
-
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
 
 _______________________________________________
 kexec mailing list
