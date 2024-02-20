@@ -4,113 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 61401C48BC3
-	for <kexec@archiver.kernel.org>; Tue, 20 Feb 2024 01:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 12593C48BC3
+	for <kexec@archiver.kernel.org>; Tue, 20 Feb 2024 02:11:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=GtPK9lCojwZEE1vQi6HzyDNJJALoxnCXxbMClfIJMBs=; b=vkU/SXz6XliJPh
-	SeYUvrkDftwzp5nQjfjDFG6YDFlYIi4WvMsy93CrF2gLAqS5jaIMvxjd5UKl4uwQdToHo58+sE8d9
-	ibPNVZLFnhu3FxWcgpXc2Rys0wdKtCJeyRLKrnFNdN4ybFGMSlf+snS1Ng4N/vPDKgGkcG5/sLTpg
-	zdlbF4BvfStgQUbbWOFZZj9WZf2aowBENy8r+yTrWXYKAVA8y36BdKl4pmg866rkdHhNg50gRgfBL
-	NJAcRUE1tmshVSb7aKYhMTJ7ZiFOD1oV/XojhbTys1kr2f30b9Ni8vlV2GdoqPeHj67TKUF7xA5HG
-	oQPsJPmGi9VMz3sRmVNw==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=EcYb1RFEKi4HMMzaxlt33uCMZqc83mmFhCjSEo/EFP8=; b=e7gmDrv/TbE7Xp
+	vmN6srPuea4hYZ8gpZ7LAIBysAaovtEVxa14ibvEvwvUI/WyYjo/9YaXtMej8E8ZA/GaRrwM+C/ET
+	rjXarwwhU0kw7SDgC3TMjZ1ddsuPL5rtgU8kJKzPV4ISL5PtRrRmp+TeLRvsqmIw49FjJEMty5K3Z
+	vwPwbDML2ihG3HmC5YZoOZzIG3ttCn43YsoXywjWXImz2i4RWd3+OjEI2lCwOgq9PKK1ccRMRpsAJ
+	nvSpxcJQMMxnXANftzkPGpHVRPN7cF6qYPPLqyjxNnJEWqmeA4fRVXPrgTnbJ/OkoPe8C6VWCgWUv
+	UgDTJJQ78G3oGfYs/MzA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rcEmw-0000000CjHc-0AjY;
-	Tue, 20 Feb 2024 01:19:14 +0000
-Received: from mail-bn8nam11on20600.outbound.protection.outlook.com ([2a01:111:f403:2414::600] helo=NAM11-BN8-obe.outbound.protection.outlook.com)
-	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rcEms-0000000CjFm-3p3G
+	id 1rcFbs-0000000CpYu-2FgR;
+	Tue, 20 Feb 2024 02:11:52 +0000
+Received: from m16.mail.163.com ([220.197.31.3])
+	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rcFbn-0000000CpY2-3BdQ
 	for kexec@lists.infradead.org;
-	Tue, 20 Feb 2024 01:19:12 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SEDQ1k4X/Zsxc2N77NkqUI2nRiGRPePeF1XPmOqjSrgy+PYr0henzyY6RALpkUio8uFz2KSbKP91/DFlc8+OybbrkpxYxqfnJ6RXcMBCPcT0BnbdK6wO7MXBlkxnNYF2OOM3lnyQ73qBUFRp6zF9R6tvUwRSlj1h0XbL3a89TsH5cwONhIi8dMJg7bPAsXijlerlJCE1GDuYdeInIDxlBxJQjcdWpXH59uQyNcLBEqm1v3pUdJutVk8eXm5axDpF0aAp7k4O2GJBxFP0bDb8lr0MfyILQ4I4l+6vVjEL6DhV/zUv7MK/VpxqfO/lpN6zlnOdxIsljUNeVaEy044L9Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XB4Nx3rwK/uKgFuYwWZG1OClyg+bRhRdDPqDCLZHR34=;
- b=a1Z6JresquvoRO2YfOtAdJWcxb2aK3h8ddpatJZcoM+AW45IeTPA+j7jOhqyxMblfZoVR1lQdV9RdNuNbn7zomR2aTYsE87Bb+Q/GrlKjF9zaAFVBqseMP63v0YDwiYYTtiLsxh8LvLlptJd5BdsLssKThsmk2nw3VVV43eBG6GYUZ+OKC9ig4P2gbPVlNcj5QEt6p5ZC/6WXcIREuUGU7uSK9Hid7VTG6xn5BSQ7PCRf5XkrXHZyRY6PaIFYkxX25ZJ8DKdHFkCSpzUAIo6ExyHJhdqwBW/ekoO/Z0JKOg3frZ6+ljbfDb4Fn0M7bdBSMeROyg3IGKYMNKnqKX8ww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linutronix.de smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XB4Nx3rwK/uKgFuYwWZG1OClyg+bRhRdDPqDCLZHR34=;
- b=f2qHSqxXIaahzO2u7xhNYAMerg4GoW54YCeK1iBPrZwkAq0eLu2r6B5NPF02omeyw1Kd0mbgPEX8Zeeu8k5m6odhUHn+g8N2errCCPZyszloS4oPIb9ozrOqNYK9P6aTjDp4n0HOO8udUrlq9+MwoN50+UU7pkMR6wmptoW3JjU=
-Received: from MWH0EPF00056D11.namprd21.prod.outlook.com
- (2603:10b6:30f:fff2:0:1:0:14) by BL1PR12MB5288.namprd12.prod.outlook.com
- (2603:10b6:208:314::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.19; Tue, 20 Feb
- 2024 01:19:00 +0000
-Received: from CO1PEPF000044F8.namprd21.prod.outlook.com
- (2a01:111:f403:f807::1) by MWH0EPF00056D11.outlook.office365.com
- (2603:1036:d20::b) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7339.5 via Frontend
- Transport; Tue, 20 Feb 2024 01:19:00 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1PEPF000044F8.mail.protection.outlook.com (10.167.241.198) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7339.0 via Frontend Transport; Tue, 20 Feb 2024 01:19:00 +0000
-Received: from ethanolx7e2ehost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 19 Feb
- 2024 19:18:58 -0600
-From: Ashish Kalra <Ashish.Kalra@amd.com>
-To: <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <luto@kernel.org>, <x86@kernel.org>
-CC: <ardb@kernel.org>, <hpa@zytor.com>, <linux-efi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <rafael@kernel.org>, <peterz@infradead.org>,
-	<adrian.hunter@intel.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	<elena.reshetova@intel.com>, <jun.nakajima@intel.com>,
-	<rick.p.edgecombe@intel.com>, <thomas.lendacky@amd.com>, <seanjc@google.com>,
-	<kai.huang@intel.com>, <bhe@redhat.com>, <kexec@lists.infradead.org>,
-	<linux-coco@lists.linux.dev>, <kirill.shutemov@linux.intel.com>,
-	<anisinha@redhat.com>, <michael.roth@amd.com>, <bdas@redhat.com>,
-	<vkuznets@redhat.com>, <dionnaglaze@google.com>, <jroedel@suse.de>,
-	<ashwin.kamat@broadcom.com>
-Subject: [PATCH 2/2] x86/snp: Convert shared memory back to private on kexec
-Date: Tue, 20 Feb 2024 01:18:48 +0000
-Message-ID: <aa633d7439885da7e54c41db07d65f8e177bcf51.1708390906.git.ashish.kalra@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1708390906.git.ashish.kalra@amd.com>
-References: <20240212104448.2589568-1-kirill.shutemov@linux.intel.com> <cover.1708390906.git.ashish.kalra@amd.com>
+	Tue, 20 Feb 2024 02:11:50 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=hfqV3
+	prgl2YOJl/pulYljFe3VTVS7nYpmcsCfsx02Kg=; b=hk9ERh2Bu9lud3FFYD15Y
+	2yRLx2UcqL6yNR6bKtcs0gIA9xbROdx4gadQeaTff2PwcpVPlDZnOMyDmA+1sLKg
+	yVAeIasTI+9SRJJPk5D/qmqgJUFiiKmbMrLShH5Lazs16kHRYnJjNjGo+7ZONsKf
+	Gk8RfZnEuFxNHV0eyxpw8Y=
+Received: from yangzhang2020.localdomain (unknown [60.24.209.108])
+	by gzga-smtp-mta-g1-2 (Coremail) with SMTP id _____wDn9_o7CtRlEnztDA--.4655S2;
+	Tue, 20 Feb 2024 10:11:08 +0800 (CST)
+From: "yang.zhang" <gaoshanliukou@163.com>
+To: ebiederm@xmission.com
+Cc: kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	bhe@redhat.com,
+	akpm@linux-foundation.org,
+	"yang.zhang" <yang.zhang@hexintek.com>
+Subject: [PATCH v2] kexec: copy only happens before uchunk goes to zero
+Date: Tue, 20 Feb 2024 10:11:06 +0800
+Message-Id: <20240220021106.694-1-gaoshanliukou@163.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000044F8:EE_|BL1PR12MB5288:EE_
-X-MS-Office365-Filtering-Correlation-Id: 16ade043-d54d-45b1-0637-08dc31b1eb4d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: U1XM5z/jNuIQmuXneSORjRuMmg7bkoyPuvRSbjrtj9AptpmaKjQeo+nC4KNHWScEjhQhMTkAw8JQhxJ7wJXxIfCUebbOEKE1g3y/XksLcbO3Myi05KmJwKZNZa3qTOPgKEwHO26hpQQBAdXdgVYUuwpFjWCkCQcrs0BXKA+9Ek2sRugLA7Env98VPb6TbOM68RGWigytR3/KAibPM4XyUx6Y/wBVxFjDPlh9O8DMXRt3OobDIq3PU3wBpA+JyiRMoF3k+l3Jj41Qdf6SDymTmo9dPCtvYne42YnbXnc3kg9pvho1qcpFAZU2UYRgEYtsPuMgO8VVr6ttQUL1CPoy1HllTPt23R33c3Api8nelZ3WU7FZQuyz5Ab0KABpzO46tDZv53uqqQ1wXTdNX1izIWS9h0yczou0xPj3qQs2lKjDw7W1DUfn2I7y/9+RCcArmmNN7Bu5R4GUIfNuhl4azlWU6bwTVePAbjGRPEZclK63QGWQYMZ6fOdudm2nrU9qFzD45dSStsTa21Ll7xfjhMNdihNmUgKrVmD7XJt+uXTdBijdOUzcG+cCFJ+4c0iBOeYOrEoShD68/WWEF+ESnAFYVCn10bbrDvjY07JvCNUqUd7MyVEKuu6D75YwAwgQm0RtH+9FNwXDvZd7aWpU6w==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(46966006)(40470700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2024 01:19:00.5027
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 16ade043-d54d-45b1-0637-08dc31b1eb4d
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1PEPF000044F8.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5288
+X-CM-TRANSID: _____wDn9_o7CtRlEnztDA--.4655S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7ur4xtr4UArykCw17GF1DAwb_yoW8KFWDp3
+	9xGr10grWrJr9rXrn7tF98C3yfJ3s7GrWru3yUCF95KrnI93Wvq34F93Wj93yUKryFkrn5
+	Jw4qkFyaga4UX37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jv1v3UUUUU=
+X-Originating-IP: [60.24.209.108]
+X-CM-SenderInfo: pjdr2x5dqox3xnrxqiywtou0bp/xtbBZRyK8mV4H46InwAAsa
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240219_171911_035681_E4A13BB0 
-X-CRM114-Status: GOOD (  26.95  )
+X-CRM114-CacheID: sfid-20240219_181148_254725_D369C51E 
+X-CRM114-Status: UNSURE (   8.87  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -127,406 +75,100 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Ashish Kalra <ashish.kalra@amd.com>
+From: "yang.zhang" <yang.zhang@hexintek.com>
 
-SNP guests allocate shared buffers to perform I/O. It is done by
-allocating pages normally from the buddy allocator and converting them
-to shared with set_memory_decrypted().
+When load segments, all of the copying and the rest
+only happens before uchunk goes to zero.
 
-The second kernel has no idea what memory is converted this way. It only
-sees E820_TYPE_RAM.
+Signed-off-by: yang.zhang <yang.zhang@hexintek.com>
 
-Accessing shared memory via private mapping will cause unrecoverable RMP
-page-faults.
-
-On kexec walk direct mapping and convert all shared memory back to
-private. It makes all RAM private again and second kernel may use it
-normally. Additionally for SNP guests convert all bss decrypted section
-pages back to private and switch back ROM regions to shared so that
-their revalidation does not fail during kexec kernel boot.
-
-The conversion occurs in two steps: stopping new conversions and
-unsharing all memory. In the case of normal kexec, the stopping of
-conversions takes place while scheduling is still functioning. This
-allows for waiting until any ongoing conversions are finished. The
-second step is carried out when all CPUs except one are inactive and
-interrupts are disabled. This prevents any conflicts with code that may
-access shared memory.
-
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
 ---
- arch/x86/include/asm/probe_roms.h |   1 +
- arch/x86/include/asm/sev.h        |   8 ++
- arch/x86/kernel/probe_roms.c      |  16 +++
- arch/x86/kernel/sev.c             | 211 ++++++++++++++++++++++++++++++
- arch/x86/mm/mem_encrypt_amd.c     |  18 ++-
- 5 files changed, 253 insertions(+), 1 deletion(-)
+v1 -> v2:
+- Only copy before uchunk goes to zero
 
-diff --git a/arch/x86/include/asm/probe_roms.h b/arch/x86/include/asm/probe_roms.h
-index 1c7f3815bbd6..d50b67dbff33 100644
---- a/arch/x86/include/asm/probe_roms.h
-+++ b/arch/x86/include/asm/probe_roms.h
-@@ -6,4 +6,5 @@ struct pci_dev;
- extern void __iomem *pci_map_biosrom(struct pci_dev *pdev);
- extern void pci_unmap_biosrom(void __iomem *rom);
- extern size_t pci_biosrom_size(struct pci_dev *pdev);
-+extern void snp_kexec_unprep_rom_memory(void);
- #endif
-diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-index 5b4a1ce3d368..dd236d7e9407 100644
---- a/arch/x86/include/asm/sev.h
-+++ b/arch/x86/include/asm/sev.h
-@@ -81,6 +81,10 @@ extern void vc_no_ghcb(void);
- extern void vc_boot_ghcb(void);
- extern bool handle_vc_boot_ghcb(struct pt_regs *regs);
+V1: https://lore.kernel.org/lkml/20240130101802.23850-1-gaoshanliukou@163.com/
+---
+ kernel/kexec_core.c | 44 ++++++++++++++++++++++++--------------------
+ 1 file changed, 24 insertions(+), 20 deletions(-)
+
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index d08fc7b5db97..2fc3d0e3715a 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -800,22 +800,24 @@ static int kimage_load_normal_segment(struct kimage *image,
+ 				PAGE_SIZE - (maddr & ~PAGE_MASK));
+ 		uchunk = min(ubytes, mchunk);
  
-+extern atomic_t conversions_in_progress;
-+extern bool conversion_allowed;
-+extern unsigned long pg_level_to_pfn(int level, pte_t *kpte, pgprot_t *ret_prot);
-+
- /* PVALIDATE return codes */
- #define PVALIDATE_FAIL_SIZEMISMATCH	6
- 
-@@ -213,6 +217,8 @@ int snp_issue_guest_request(u64 exit_code, struct snp_req_data *input, struct sn
- void snp_accept_memory(phys_addr_t start, phys_addr_t end);
- u64 snp_get_unsupported_features(u64 status);
- u64 sev_get_status(void);
-+void snp_kexec_unshare_mem(void);
-+void snp_kexec_stop_conversion(bool crash);
- #else
- static inline void sev_es_ist_enter(struct pt_regs *regs) { }
- static inline void sev_es_ist_exit(void) { }
-@@ -241,6 +247,8 @@ static inline int snp_issue_guest_request(u64 exit_code, struct snp_req_data *in
- static inline void snp_accept_memory(phys_addr_t start, phys_addr_t end) { }
- static inline u64 snp_get_unsupported_features(u64 status) { return 0; }
- static inline u64 sev_get_status(void) { return 0; }
-+void snp_kexec_unshare_mem(void) {}
-+static void snp_kexec_stop_conversion(bool crash) {}
- #endif
- 
- #endif
-diff --git a/arch/x86/kernel/probe_roms.c b/arch/x86/kernel/probe_roms.c
-index 319fef37d9dc..457f1e5c8d00 100644
---- a/arch/x86/kernel/probe_roms.c
-+++ b/arch/x86/kernel/probe_roms.c
-@@ -177,6 +177,22 @@ size_t pci_biosrom_size(struct pci_dev *pdev)
- }
- EXPORT_SYMBOL(pci_biosrom_size);
- 
-+void snp_kexec_unprep_rom_memory(void)
-+{
-+	unsigned long vaddr, npages, sz;
-+
-+	/*
-+	 * Switch back ROM regions to shared so that their validation
-+	 * does not fail during kexec kernel boot.
-+	 */
-+	vaddr = (unsigned long)__va(video_rom_resource.start);
-+	sz = (system_rom_resource.end + 1) - video_rom_resource.start;
-+	npages = PAGE_ALIGN(sz) >> PAGE_SHIFT;
-+
-+	snp_set_memory_shared(vaddr, npages);
-+}
-+EXPORT_SYMBOL(snp_kexec_unprep_rom_memory);
-+
- #define ROMSIGNATURE 0xaa55
- 
- static int __init romsignature(const unsigned char *rom)
-diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
-index c67285824e82..765ab83129eb 100644
---- a/arch/x86/kernel/sev.c
-+++ b/arch/x86/kernel/sev.c
-@@ -23,6 +23,9 @@
- #include <linux/platform_device.h>
- #include <linux/io.h>
- #include <linux/psp-sev.h>
-+#include <linux/pagewalk.h>
-+#include <linux/cacheflush.h>
-+#include <linux/delay.h>
- #include <uapi/linux/sev-guest.h>
- 
- #include <asm/cpu_entry_area.h>
-@@ -40,6 +43,7 @@
- #include <asm/apic.h>
- #include <asm/cpuid.h>
- #include <asm/cmdline.h>
-+#include <asm/probe_roms.h>
- 
- #define DR7_RESET_VALUE        0x400
- 
-@@ -71,6 +75,13 @@ static struct ghcb *boot_ghcb __section(".data");
- /* Bitmap of SEV features supported by the hypervisor */
- static u64 sev_hv_features __ro_after_init;
- 
-+/* Last address to be switched to private during kexec */
-+static unsigned long last_address_shd_kexec;
-+
-+static bool crash_requested;
-+atomic_t conversions_in_progress;
-+bool conversion_allowed = true;
-+
- /* #VC handler runtime per-CPU data */
- struct sev_es_runtime_data {
- 	struct ghcb ghcb_page;
-@@ -906,6 +917,206 @@ void snp_accept_memory(phys_addr_t start, phys_addr_t end)
- 	set_pages_state(vaddr, npages, SNP_PAGE_STATE_PRIVATE);
- }
- 
-+static inline bool pte_decrypted(pte_t pte)
-+{
-+	return cc_mkdec(pte_val(pte)) == pte_val(pte);
-+}
-+
-+static int set_pte_enc(pte_t *kpte, int level, void *va)
-+{
-+	pgprot_t old_prot, new_prot;
-+	unsigned long pfn, pa, size;
-+	pte_t new_pte;
-+
-+	pfn = pg_level_to_pfn(level, kpte, &old_prot);
-+	if (!pfn)
-+		return 0;
-+
-+	new_prot = old_prot;
-+	pgprot_val(new_prot) |= _PAGE_ENC;
-+	pa = pfn << PAGE_SHIFT;
-+	size = page_level_size(level);
-+
-+	/*
-+	 * Change the physical page attribute from C=0 to C=1. Flush the
-+	 * caches to ensure that data gets accessed with the correct C-bit.
-+	 */
-+	clflush_cache_range(va, size);
-+
-+	/* Change the page encryption mask. */
-+	new_pte = pfn_pte(pfn, new_prot);
-+	set_pte_atomic(kpte, new_pte);
-+
-+	return 1;
-+}
-+
-+static int unshare_pte(pte_t *pte, unsigned long addr, int pages, int level)
-+{
-+	struct sev_es_runtime_data *data;
-+	struct ghcb *ghcb;
-+
-+	data = this_cpu_read(runtime_data);
-+	ghcb = &data->ghcb_page;
-+
-+	/*
-+	 * check for GHCB for being part of a PMD range.
-+	 */
-+	if ((unsigned long)ghcb >= addr &&
-+	    (unsigned long)ghcb <= (addr + (pages * PAGE_SIZE))) {
-+		/*
-+		 * setup last address to be made private so that this GHCB
-+		 * is made private at the end of unshared loop so that RMP
-+		 * does not possibly getting PSMASHed from using the
-+		 * MSR protocol.
-+		 */
-+		pr_debug("setting boot_ghcb to NULL for this cpu ghcb\n");
-+		last_address_shd_kexec = addr;
-+		return 1;
-+	}
-+	if (!set_pte_enc(pte, level, (void *)addr))
-+		return 0;
-+	snp_set_memory_private(addr, pages);
-+
-+	return 1;
-+}
-+
-+static void unshare_all_memory(bool unmap)
-+{
-+	unsigned long addr, end;
-+
-+	/*
-+	 * Walk direct mapping and convert all shared memory back to private,
-+	 */
-+
-+	addr = PAGE_OFFSET;
-+	end  = PAGE_OFFSET + get_max_mapped();
-+
-+	while (addr < end) {
-+		unsigned long size;
-+		unsigned int level;
-+		pte_t *pte;
-+
-+		pte = lookup_address(addr, &level);
-+		size = page_level_size(level);
-+
-+		/*
-+		 * pte_none() check is required to skip physical memory holes in direct mapped.
-+		 */
-+		if (pte && pte_decrypted(*pte) && !pte_none(*pte)) {
-+			int pages = size / PAGE_SIZE;
-+
-+			if (!unshare_pte(pte, addr, pages, level)) {
-+				pr_err("Failed to unshare range %#lx-%#lx\n",
-+				       addr, addr + size);
-+			}
-+
+-		/* For file based kexec, source pages are in kernel memory */
+-		if (image->file_mode)
+-			memcpy(ptr, kbuf, uchunk);
+-		else
+-			result = copy_from_user(ptr, buf, uchunk);
++		if (uchunk) {
++			/* For file based kexec, source pages are in kernel memory */
++			if (image->file_mode)
++				memcpy(ptr, kbuf, uchunk);
++			else
++				result = copy_from_user(ptr, buf, uchunk);
++			ubytes -= uchunk;
++			if (image->file_mode)
++				kbuf += uchunk;
++			else
++				buf += uchunk;
 +		}
-+
-+		addr += size;
-+	}
-+	__flush_tlb_all();
-+
-+}
-+
-+static void unshare_all_bss_decrypted_memory(void)
-+{
-+	unsigned long vaddr, vaddr_end;
-+	unsigned long size;
-+	unsigned int level;
-+	unsigned int npages;
-+	pte_t *pte;
-+
-+	vaddr = (unsigned long)__start_bss_decrypted;
-+	vaddr_end = (unsigned long)__start_bss_decrypted_unused;
-+	npages = (vaddr_end - vaddr) >> PAGE_SHIFT;
-+	for (; vaddr < vaddr_end; vaddr += PAGE_SIZE) {
-+		pte = lookup_address(vaddr, &level);
-+		if (!pte || !pte_decrypted(*pte) || pte_none(*pte))
-+			continue;
-+
-+		size = page_level_size(level);
-+		set_pte_enc(pte, level, (void *)vaddr);
-+	}
-+	vaddr = (unsigned long)__start_bss_decrypted;
-+	snp_set_memory_private(vaddr, npages);
-+}
-+
-+void snp_kexec_stop_conversion(bool crash)
-+{
-+	/* Stop new private<->shared conversions */
-+	conversion_allowed = false;
-+	crash_requested = crash;
-+
-+	/*
-+	 * Make sure conversion_allowed is cleared before checking
-+	 * conversions_in_progress.
-+	 */
-+	barrier();
-+
-+	/*
-+	 * Crash kernel reaches here with interrupts disabled: can't wait for
-+	 * conversions to finish.
-+	 *
-+	 * If race happened, just report and proceed.
-+	 */
-+	if (!crash) {
-+		unsigned long timeout;
-+
-+		/*
-+		 * Wait for in-flight conversions to complete.
-+		 *
-+		 * Do not wait more than 30 seconds.
-+		 */
-+		timeout = 30 * USEC_PER_SEC;
-+		while (atomic_read(&conversions_in_progress) && timeout--)
-+			udelay(1);
-+	}
-+
-+	if (atomic_read(&conversions_in_progress))
-+		pr_warn("Failed to finish shared<->private conversions\n");
-+}
-+
-+void snp_kexec_unshare_mem(void)
-+{
-+	if (!cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
-+		return;
-+
-+	/*
-+	 * Switch back any specific memory regions such as option
-+	 * ROM regions back to shared so that (re)validation does
-+	 * not fail when kexec kernel boots.
-+	 */
-+	snp_kexec_unprep_rom_memory();
-+
-+	unshare_all_memory(true);
-+
-+	unshare_all_bss_decrypted_memory();
-+
-+	if (last_address_shd_kexec) {
-+		unsigned long size;
-+		unsigned int level;
-+		pte_t *pte;
-+
-+		/*
-+		 * Switch to using the MSR protocol to change this cpu's
-+		 * GHCB to private.
-+		 */
-+		boot_ghcb = NULL;
-+		/*
-+		 * All the per-cpu GHCBs have been switched back to private,
-+		 * so can't do any more GHCB calls to the hypervisor beyond
-+		 * this point till the kexec kernel starts running.
-+		 */
-+		sev_cfg.ghcbs_initialized = false;
-+
-+		pr_debug("boot ghcb 0x%lx\n", last_address_shd_kexec);
-+		pte = lookup_address(last_address_shd_kexec, &level);
-+		size = page_level_size(level);
-+		set_pte_enc(pte, level, (void *)last_address_shd_kexec);
-+		snp_set_memory_private(last_address_shd_kexec, (size / PAGE_SIZE));
-+	}
-+}
-+
- static int snp_set_vmsa(void *va, bool vmsa)
- {
- 	u64 attrs;
-diff --git a/arch/x86/mm/mem_encrypt_amd.c b/arch/x86/mm/mem_encrypt_amd.c
-index d314e577836d..87b6475358ad 100644
---- a/arch/x86/mm/mem_encrypt_amd.c
-+++ b/arch/x86/mm/mem_encrypt_amd.c
-@@ -214,7 +214,7 @@ void __init sme_map_bootdata(char *real_mode_data)
- 	__sme_early_map_unmap_mem(__va(cmdline_paddr), COMMAND_LINE_SIZE, true);
- }
+ 		kunmap_local(ptr);
+ 		if (result) {
+ 			result = -EFAULT;
+ 			goto out;
+ 		}
+-		ubytes -= uchunk;
+ 		maddr  += mchunk;
+-		if (image->file_mode)
+-			kbuf += mchunk;
+-		else
+-			buf += mchunk;
+ 		mbytes -= mchunk;
  
--static unsigned long pg_level_to_pfn(int level, pte_t *kpte, pgprot_t *ret_prot)
-+unsigned long pg_level_to_pfn(int level, pte_t *kpte, pgprot_t *ret_prot)
- {
- 	unsigned long pfn = 0;
- 	pgprot_t prot;
-@@ -285,6 +285,17 @@ static void enc_dec_hypercall(unsigned long vaddr, unsigned long size, bool enc)
+ 		cond_resched();
+@@ -866,11 +868,18 @@ static int kimage_load_crash_segment(struct kimage *image,
+ 			memset(ptr + uchunk, 0, mchunk - uchunk);
+ 		}
  
- static int amd_enc_status_change_prepare(unsigned long vaddr, int npages, bool enc)
- {
-+	atomic_inc(&conversions_in_progress);
-+
-+	/*
-+	 * Check after bumping conversions_in_progress to serialize
-+	 * against snp_kexec_stop_conversion().
-+	 */
-+	if (!conversion_allowed) {
-+		atomic_dec(&conversions_in_progress);
-+		return -EBUSY;
-+	}
-+
- 	/*
- 	 * To maintain the security guarantees of SEV-SNP guests, make sure
- 	 * to invalidate the memory before encryption attribute is cleared.
-@@ -308,6 +319,8 @@ static int amd_enc_status_change_finish(unsigned long vaddr, int npages, bool en
- 	if (!cc_platform_has(CC_ATTR_HOST_MEM_ENCRYPT))
- 		enc_dec_hypercall(vaddr, npages << PAGE_SHIFT, enc);
+-		/* For file based kexec, source pages are in kernel memory */
+-		if (image->file_mode)
+-			memcpy(ptr, kbuf, uchunk);
+-		else
+-			result = copy_from_user(ptr, buf, uchunk);
++		if (uchunk) {
++			/* For file based kexec, source pages are in kernel memory */
++			if (image->file_mode)
++				memcpy(ptr, kbuf, uchunk);
++			else
++				result = copy_from_user(ptr, buf, uchunk);
++			ubytes -= uchunk;
++			if (image->file_mode)
++				kbuf += uchunk;
++			else
++				buf += uchunk;
++		}
+ 		kexec_flush_icache_page(page);
+ 		kunmap_local(ptr);
+ 		arch_kexec_pre_free_pages(page_address(page), 1);
+@@ -878,12 +887,7 @@ static int kimage_load_crash_segment(struct kimage *image,
+ 			result = -EFAULT;
+ 			goto out;
+ 		}
+-		ubytes -= uchunk;
+ 		maddr  += mchunk;
+-		if (image->file_mode)
+-			kbuf += mchunk;
+-		else
+-			buf += mchunk;
+ 		mbytes -= mchunk;
  
-+	atomic_dec(&conversions_in_progress);
-+
- 	return 0;
- }
- 
-@@ -468,6 +481,9 @@ void __init sme_early_init(void)
- 	x86_platform.guest.enc_tlb_flush_required    = amd_enc_tlb_flush_required;
- 	x86_platform.guest.enc_cache_flush_required  = amd_enc_cache_flush_required;
- 
-+	x86_platform.guest.enc_kexec_stop_conversion = snp_kexec_stop_conversion;
-+	x86_platform.guest.enc_kexec_unshare_mem     = snp_kexec_unshare_mem;
-+
- 	/*
- 	 * AMD-SEV-ES intercepts the RDMSR to read the X2APIC ID in the
- 	 * parallel bringup low level code. That raises #VC which cannot be
+ 		cond_resched();
 -- 
-2.34.1
+2.25.1
 
 
 _______________________________________________
