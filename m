@@ -4,94 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5F6A5C48BC3
-	for <kexec@archiver.kernel.org>; Wed, 21 Feb 2024 00:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 33296C48BC3
+	for <kexec@archiver.kernel.org>; Wed, 21 Feb 2024 02:37:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Mime-Version:References:In-Reply-To:
-	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=LgHFrzPypDg7ihSQ9PIHINXGWR8sjY6ReEtkNy3WQ5Q=; b=A6W1asH/DxK4vK
-	tMNQsI/DWnExhJw7KaJ1PiIii47PQ/Eg3gCy1kxcqrzjr0b25hyKQymVDliPon/jhJNip/F04XDrp
-	5lj1YA1CF9BMXhnJGt6Uj6LTx17OjRbK6AlmV16gJ8FOLhfkBg+KcaiJ7nCA0ChT7tO+PIsyszlU8
-	6kZStFwoVBJlV8/i2LFrTMeJGPJxKP3x51TKHiM0ZyhlELJU4F1LMy4sGxgWabZrOxcRERgJB/O0p
-	Mp9lvWTEz45w+8awmXj5Sc9fJLBMmHdTnBANS5A7Pvv+2VxgvMixVqN6AmMGqyjLN4Jha8NxLz1Mr
-	bzds957k4qHtgb+sSPQw==;
+	List-Owner; bh=5Zoar1Q3sToX8MbOzh7/J7AIFu5gl6l98JvPnn8qzKk=; b=HZU4BnGgSCkEwc
+	f7RsMQeWv7zNCcNMWzakNqhgnT7loREHIM9ssovhzKZRev0LqRYlQN0zS+lBfENqByOVLAiAViwEc
+	A/7Cglvy6FmSEwV6esf8L/1p/L9r5cq5qDMDHKHl58liwcckzbdhwPVl6z00S6E8n6Sj5ZOcytq16
+	fnbd5hw0qCuDZCD35ebJDzyeEO3Lq4u5+OICYPGpSl5LD80th5BBM2a2Vkj9H6c4Gh2KehBOT1ZCo
+	AQZn9o8TEb/MkLjv0Tu4PyyahmpFte1slRFn+nQa05wXoziBM6oLDPh8V6+hNFbjl1/s+o9xY3uFf
+	26gySGoEKIwGz+PrCq8Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rcaHe-0000000GbOA-3Xwu;
-	Wed, 21 Feb 2024 00:16:22 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1rccUS-0000000GtKT-26kB;
+	Wed, 21 Feb 2024 02:37:44 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rcaHb-0000000GbNl-3MRQ
+	id 1rccUO-0000000GtJ8-1wyj
 	for kexec@lists.infradead.org;
-	Wed, 21 Feb 2024 00:16:21 +0000
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41KNgEFN000566;
-	Wed, 21 Feb 2024 00:15:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=rcO+TJMdPCMC8NOIaeSY5fHZCNuyMF1SpOl1n2oAYHU=;
- b=PchX5T0x3WtTcbzPkveDc5yYR2+ayBnsgGyF36NsR/uoakSpuCBoM9WVV6an3mvM4V8X
- O/28ETw1+ZSEovVUFm+05itejzzzZG0dvTdVrmookvm9v+HmprEXQPWcx2CAslUavaZn
- D/dKl5uUnn1XvieUMjZxVC9Kdaza6Z0GY9lI3/LyYs2Ux4ebJavP6LKDTUmgH6MTcjoa
- 9Ny5KxjBrixE/4UZQg8nzxTnG0GcXlpczLXsMqvph5hsk9gQVYWxgRGPPeREeQIMR2eS
- PwrI4qBm6/Pd/hmlnlpJ2hjPNycHcuT3gXPLUxjAoDUab1LQ9YOtH4xfRp+c6JT5zCmo tQ== 
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wd569hbpr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 Feb 2024 00:15:40 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41KNKo0r017265;
-	Wed, 21 Feb 2024 00:15:39 GMT
-Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wb8mmbgp5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 Feb 2024 00:15:39 +0000
-Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
-	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41L0FbnL18285244
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 21 Feb 2024 00:15:39 GMT
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 506935805F;
-	Wed, 21 Feb 2024 00:15:37 +0000 (GMT)
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 114595805C;
-	Wed, 21 Feb 2024 00:15:36 +0000 (GMT)
-Received: from li-5cd3c5cc-21f9-11b2-a85c-a4381f30c2f3.ibm.com (unknown [9.61.5.81])
-	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 21 Feb 2024 00:15:35 +0000 (GMT)
-Message-ID: <e4c7084d434d1d6176e38b705c26f604c9513dc4.camel@linux.ibm.com>
-Subject: Re: [PATCH v5 0/8] ima: kexec: measure events between kexec load
- and execute
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Tushar Sugandhi <tusharsu@linux.microsoft.com>,
-        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-        eric.snowberg@oracle.com, stefanb@linux.ibm.com, ebiederm@xmission.com,
-        noodles@fb.com, bauermann@kolabnow.com,
-        linux-integrity@vger.kernel.org, kexec@lists.infradead.org
-Cc: code@tyhicks.com, nramas@linux.microsoft.com, paul@paul-moore.com
-Date: Tue, 20 Feb 2024 19:15:35 -0500
-In-Reply-To: <20240214153827.1087657-1-tusharsu@linux.microsoft.com>
-References: <20240214153827.1087657-1-tusharsu@linux.microsoft.com>
-X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
-Mime-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: cOdVztsAt7ht06BFwqSiNxRLHclnmyy0
-X-Proofpoint-ORIG-GUID: cOdVztsAt7ht06BFwqSiNxRLHclnmyy0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-20_06,2024-02-20_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
- phishscore=0 spamscore=0 lowpriorityscore=0 bulkscore=0 impostorscore=0
- priorityscore=1501 mlxlogscore=999 suspectscore=0 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2402210000
+	Wed, 21 Feb 2024 02:37:41 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708483059;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GIMDrzpnacEme9gLjUpWeDhxio/wVIn1riqvLCd96I4=;
+	b=YNS1kJkqh/TO0rmb/hZ0tbCOyCxfV3KG0QmP/uxBy3MpNxJVAOTcXEf+py9EjT/rKJdYFu
+	vgWONN1CqJSWm601DvP/JQkrtCX27vIrHGVn75XKZ/VSBqtFkLpZpdkTiJbLKfnjWws5hN
+	QzPMix+LPxSu2fO1uuxlFtD1X5FJI44=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-102-Yf2dw5QQPkmYmsDRr--p_Q-1; Tue,
+ 20 Feb 2024 21:37:35 -0500
+X-MC-Unique: Yf2dw5QQPkmYmsDRr--p_Q-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 875453C40B56;
+	Wed, 21 Feb 2024 02:37:34 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.2])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7AC77492BD7;
+	Wed, 21 Feb 2024 02:37:32 +0000 (UTC)
+Date: Wed, 21 Feb 2024 10:37:29 +0800
+From: Baoquan He <bhe@redhat.com>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Elena Reshetova <elena.reshetova@intel.com>,
+	Jun Nakajima <jun.nakajima@intel.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	"Kalra, Ashish" <ashish.kalra@amd.com>,
+	Sean Christopherson <seanjc@google.com>,
+	"Huang, Kai" <kai.huang@intel.com>, kexec@lists.infradead.org,
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv7 07/16] x86/mm: Return correct level from
+ lookup_address() if pte is none
+Message-ID: <ZdVh6efExdt687YY@MiWiFi-R3L-srv>
+References: <20240212104448.2589568-1-kirill.shutemov@linux.intel.com>
+ <20240212104448.2589568-8-kirill.shutemov@linux.intel.com>
+ <ZdLjQCaxhOnR+GzX@MiWiFi-R3L-srv>
+ <zhbhgq27kjrhkdgbxomjykjez2i4hckguvmxyptvfvoftue5ca@zowl5qbl6psl>
+ <ZdR+JzfHjES3zytp@MiWiFi-R3L-srv>
+ <ic4v3q4muffjq2jhlkk3k4lg5xxvjwlw22hctzubl5573euzu2@er3m7ztog2a6>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <ic4v3q4muffjq2jhlkk3k4lg5xxvjwlw22hctzubl5573euzu2@er3m7ztog2a6>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240220_161619_994709_ACCAF078 
-X-CRM114-Status: GOOD (  34.29  )
+X-CRM114-CacheID: sfid-20240220_183740_602534_B8A9C248 
+X-CRM114-Status: GOOD (  29.30  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -108,77 +100,90 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, 2024-02-14 at 07:38 -0800, Tushar Sugandhi wrote:
-> The current Kernel behavior is IMA measurements snapshot is taken at
-> kexec 'load' and not at kexec 'execute'.  IMA log is then carried
-> over to the new Kernel after kexec 'execute'.
+On 02/20/24 at 02:36pm, Kirill A. Shutemov wrote:
+> On Tue, Feb 20, 2024 at 06:25:43PM +0800, Baoquan He wrote:
+> > > I am not sure what part of the comment you see doesn't reflect the
+> > > behaviour. From my PoV, changed code matches the comment closer that
+> > > original.
+> > 
+> > Oh, I didn't make it clear. I mean update the code comment for
+> > lookup_address(), and add code comment for lookup_address_in_pgd() to
+> > mention the level thing. Maybe it's a chance to do that.
+> > 
+> > ===1>
+> > *
+> >  * Lookup the page table entry for a virtual address. Return a pointer
+> >  * to the entry and the level of the mapping.
+> >  *
+> >  * Note: We return pud and pmd either when the entry is marked large
+> >                    ~~~~~~~~~~~ seems we return p4d too
+> >  * or when the present bit is not set. Otherwise we would return a
+> >  * pointer to a nonexisting mapping.
+> >               ~~~~~~~~~~~~~~~ NULL?
+> >  */                          
+> > pte_t *lookup_address(unsigned long address, unsigned int *level)
+> > {
+> >         return lookup_address_in_pgd(pgd_offset_k(address), address, level);
+> > }
+> > EXPORT_SYMBOL_GPL(lookup_address);
+> > ===
+> > 
+> > ===2>
+> > /*
+> >  * Lookup the page table entry for a virtual address in a specific pgd.
+> >  * Return a pointer to the entry and the level of the mapping.
+> >    ~~ also could return NULL if it's none entry. And do we need to
+> > mention the level thing?
+> >  */
+> > pte_t *lookup_address_in_pgd(pgd_t *pgd, unsigned long address,
+> >                              unsigned int *level)
+> > ...
+> > }
+> > 
+> 
+> What about this fixup:
 
-'Kernel' should not be capitalized since it isn't a proper name.  'Linux' would
-be capitalized (e.g. The Linux kernel).
+Some nitpicks.
+> 
+> diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+> index 3612e3167147..425ff6e192e6 100644
+> --- a/arch/x86/mm/pat/set_memory.c
+> +++ b/arch/x86/mm/pat/set_memory.c
+> @@ -657,7 +657,8 @@ static inline pgprot_t verify_rwx(pgprot_t old, pgprot_t new, unsigned long star
+>  
+>  /*
+>   * Lookup the page table entry for a virtual address in a specific pgd.
+> - * Return a pointer to the entry and the level of the mapping.
+> + * Return a pointer to the entry and the level of the mapping (or NULL if
+> + * the entry is none) and level of the entry.
+                       ^ this right parenthesis may need be moved to the end.
 
--> "The IMA measurement list is copied at kexec 'load', not kexec 'execute',
-before being carried over to the new kexec'ed kernel.
 
-Mimi
+=======
+ * Return a pointer to the entry and the level of the mapping (or NULL if
+ * the entry is none and level of the entry).
+=======
 
+>   */
+>  pte_t *lookup_address_in_pgd(pgd_t *pgd, unsigned long address,
+>  			     unsigned int *level)
+> @@ -704,9 +705,8 @@ pte_t *lookup_address_in_pgd(pgd_t *pgd, unsigned long address,
+>   * Lookup the page table entry for a virtual address. Return a pointer
+>   * to the entry and the level of the mapping.
+>   *
+> - * Note: We return pud and pmd either when the entry is marked large
+> - * or when the present bit is not set. Otherwise we would return a
+> - * pointer to a nonexisting mapping.
+> + * Note: the function returns p4d, pud and pmd either when the entry is marked
+                                          ~~~
+                                           ^ s/and/or/
+> + * large or when the present bit is not set. Otherwise it returns NULL.
+>   */
+>  pte_t *lookup_address(unsigned long address, unsigned int *level)
+>  {
+> -- 
+>   Kiryl Shutsemau / Kirill A. Shutemov
 > 
-> New events can be measured during/after the IMA log snapshot at kexec 
-> 'load' and before the system boots to the new Kernel.  In this scenario,
-> the TPM PCRs are extended with these events, but they are not carried
-> over to the new Kernel after kexec soft reboot since the snapshot is
-> already taken.  This results in mismatch between TPM PCR quotes and the
-> actual IMA measurements list after kexec soft reboot, which in turn
-> results in remote attestation failure.
-> 
-> To solve this problem - 
->  - allocate the necessary buffer at kexec 'load' time,
->  - populate the buffer with the IMA measurements at kexec 'execute' time, 
->  - and measure two new IMA events 'kexec_load' and 'kexec_execute' as
->    critical data to help detect missing events after kexec soft reboot.
-> 
-> The solution details include:
->  - refactoring the existing code to allocate a buffer to hold IMA
->    measurements at kexec 'load', and dump the measurements at kexec
->    'execute'
-> 
->  - IMA functionality to suspend and resume measurements as needed during
->    buffer copy at kexec 'execute',
-> 
->  - kexec functionality for mapping the segments from the current Kernel
->    to the subsequent one, 
-> 
->  - necessary changes to the kexec_file_load syscall, enabling it to call
->    the ima functions,
-> 
->  - registering a reboot notifier which gets called during kexec 
->    'execute',
-> 
->  - introducing a new Kconfig option to configure the extra memory to be
->    allocated for passing IMA log from the current Kernel to the next,
->    
->  - introducing two new events to be measured by IMA during kexec, to
->    help diagnose if the IMA log was copied fully or partially, from the
->    current Kernel to the next,
-> 
->  - excluding IMA segment while calculating and storing digest in function
->    kexec_calculate_store_digests(), since IMA segment can be modified
->    after the digest is computed during kexec 'load'.  This will ensure
->    that the segment is not added to the 'purgatory_sha_regions', and thus
->    not verified by verify_sha256_digest().
-> 
-> The changes proposed in this series ensure the integrity of the IMA
-> measurements is preserved across kexec soft reboots, thus significantly
-> improving the security of the Kernel post kexec soft reboots.
-> 
-> There were previous attempts to fix this issue [1], [2], [3].  But they
-> were not merged into the mainline Kernel.
-> 
-> We took inspiration from the past work [1] and [2] while working on this
-> patch series.
-> 
-> V4 of this series is available here[6] for reference.
-> 
-
 
 
 _______________________________________________
