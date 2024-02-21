@@ -4,83 +4,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2DC08C48BC3
-	for <kexec@archiver.kernel.org>; Wed, 21 Feb 2024 14:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 872E8C5478A
+	for <kexec@archiver.kernel.org>; Wed, 21 Feb 2024 17:30:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=v1zDj5SUJo23gntL2kY4pSOXy8VNgYV18pWdvUCovAY=; b=g6bnvESbInOVHG
-	JElo9QrxlABWGuXUIjLwQSmByppi4cVXoGy2/kUTxFLyRu+dpHfnQ8/MteEo5Xfgc4eNqF9tmAUMc
-	5fZ58SjDH03v2J1qI1UjlM7ytktYbREyoqo5fUeL/Bo4rsxcTzROlBGV8YwKBI3TDIfYnLjrtdRjd
-	5389w47vi/KZ6DwdtG5PdUc2SIGsyZrPwSduGKhL5i2cnm0gYFGPl/RGVrtey4Bxhqr0TxyXHLHnd
-	HvR4h73PZmJCl0cLkleuYV0OZ84wFodYU5NKQaM9ZyLL6tk6tUyXITQNKPqqBFwRTgGdVkGuHnFn5
-	+0d/lX1bHJ96ceQGst/g==;
+	List-Owner; bh=xJQVkLQNze33ksagwRSxpP9tQF3C2BamuDmG4IfFqcQ=; b=p52r9HjvdmHnAG
+	YKgQctgiNyq8MMEjZigbnAyG7Ac5qvts4KjGeJxZpsnwA5/PyWSNX3A3FdbrqPM5LRazuOGuewInP
+	OAqgsBoyEn8Il4ybaGb42RQ9s1k42ksmqcC1ZPdnG8OjA9gu1Fvo4m7snTZER0SZGmkVS2xnxCp0C
+	E/KrjgtbQEvBmdS3U5FcgK1cDflkTJ3OI7uXb8s27ufat08tzU1e6k3sYa4kI0wl30t5UFTqvVsA+
+	T/NybaUGGbI1FWS5cejcVmbIk1Jm+kViN3SFK6odKWAG7YKtSL2L9/19C85Jr8YK0A/9qfRDwiqkw
+	MTuSPk3wcb0UaJMP8zvA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rcnNp-00000001E80-2ulC;
-	Wed, 21 Feb 2024 14:15:37 +0000
-Received: from mgamail.intel.com ([198.175.65.14])
+	id 1rcqQF-00000001vnH-1CbX;
+	Wed, 21 Feb 2024 17:30:19 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rcnNn-00000001E7f-2Sr3
-	for kexec@lists.infradead.org;
-	Wed, 21 Feb 2024 14:15:36 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708524935; x=1740060935;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/vYbdGx/biRaDTrw8g8KGes/oIyLAhiiHJyRW4pxB+Y=;
-  b=VPXtFVidG4r9Y5CbLjcT0sa4EciJp80M4xlmtN9Sfpm6dlS9VukC/R1e
-   wm/KRvWXBRlq0C0/J8QWyzVlZKNirM7jQv3pk0k6GYmmCCWFUoy+ucLuX
-   w+0r74KRDbIhvXRW4z3ULuh142BDQnimSP3W6ooCQk5088p0UQ2MRUt1o
-   h4OBl7LjY+1Ilw5hRIUhnZhTJ9TSr2npyqW8VAp+rdm4Lq8iOcMbW3GLL
-   bd+EaFcc2abYWyV5znk9wgQZ2G/R8B/PUTF83o9CNEjzxmAus4NLS7xQi
-   tKHFp8skMup+WUCNDocMQ63QEevtUo77iZky3aCzaYNXnlK8yAO3WDU30
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10990"; a="6500411"
-X-IronPort-AV: E=Sophos;i="6.06,175,1705392000"; 
-   d="scan'208";a="6500411"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2024 06:15:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10990"; a="936650868"
-X-IronPort-AV: E=Sophos;i="6.06,175,1705392000"; 
-   d="scan'208";a="936650868"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 21 Feb 2024 06:15:28 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id CEA572AB; Wed, 21 Feb 2024 16:15:27 +0200 (EET)
-Date: Wed, 21 Feb 2024 16:15:27 +0200
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Baoquan He <bhe@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, 
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Elena Reshetova <elena.reshetova@intel.com>, 
-	Jun Nakajima <jun.nakajima@intel.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish" <ashish.kalra@amd.com>, 
-	Sean Christopherson <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>, kexec@lists.infradead.org, 
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv7 07/16] x86/mm: Return correct level from
- lookup_address() if pte is none
-Message-ID: <p34d7e5r3gkcj2xl5jycyldvpkmcllmhzioaqcmseeugl3eq73@plk43dd4luzu>
-References: <20240212104448.2589568-1-kirill.shutemov@linux.intel.com>
- <20240212104448.2589568-8-kirill.shutemov@linux.intel.com>
- <ZdLjQCaxhOnR+GzX@MiWiFi-R3L-srv>
- <zhbhgq27kjrhkdgbxomjykjez2i4hckguvmxyptvfvoftue5ca@zowl5qbl6psl>
- <ZdR+JzfHjES3zytp@MiWiFi-R3L-srv>
- <ic4v3q4muffjq2jhlkk3k4lg5xxvjwlw22hctzubl5573euzu2@er3m7ztog2a6>
- <ZdVh6efExdt687YY@MiWiFi-R3L-srv>
+	id 1rcqQC-00000001vmV-2Veo;
+	Wed, 21 Feb 2024 17:30:18 +0000
+Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41LHQErZ018984;
+	Wed, 21 Feb 2024 17:30:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=ssDlj8Gj906RYJ+kd7oHUcLMb8QUhPVR1jtt/Kk46L0=;
+ b=Vq1c/uTzgV94liau2prJfYP3wX3LLcqlfNu4V4iDZSGwWMOxReQAZOU6EP3ae7swxkNo
+ ZBUONDmTYaq9aczD+0IvfuyuhoHePSP+T1ikLrEdHa7Iz1ieGl+VbZy9Sk4dn1WxxrJV
+ ak2SWFp7NB9qUSi4VKGc/FurNKZVjQQXlukC4vbiM8lq++nVTnfWh9GP20kbU3cg9Km2
+ QuWAQTp107chup3qGIkNguPIMpt4b3D1OlQDY6RRPEqXGe3DiGhqyZvwmDgy70bjto3t
+ J1JxZw4adxZO4iMzU7La/qrzj2nodgJhn++K2ZfU+XMo+/tcZ20/LcFjZlfA5MTUoMPe AQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wdmjc1ypq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 Feb 2024 17:30:03 +0000
+Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41LHQCCx018881;
+	Wed, 21 Feb 2024 17:30:02 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wdmjc1ynu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 Feb 2024 17:30:02 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41LGpAjb003596;
+	Wed, 21 Feb 2024 17:30:01 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wb74trwc4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 Feb 2024 17:30:01 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41LHTw9Q27918916
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 21 Feb 2024 17:30:00 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E387B20040;
+	Wed, 21 Feb 2024 17:29:57 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CAA8D20043;
+	Wed, 21 Feb 2024 17:29:49 +0000 (GMT)
+Received: from [9.61.61.120] (unknown [9.61.61.120])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 21 Feb 2024 17:29:49 +0000 (GMT)
+Message-ID: <e1bd53c6-ad9a-46d5-9f49-ecdd64d98f61@linux.ibm.com>
+Date: Wed, 21 Feb 2024 22:59:47 +0530
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <ZdVh6efExdt687YY@MiWiFi-R3L-srv>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 01/14] kexec: split crashkernel reservation code out
+ from crash_core.c
+To: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
+Cc: linux-s390@vger.kernel.org, piliu@redhat.com, linux-sh@vger.kernel.org,
+        x86@kernel.org, kexec@lists.infradead.org, linux-mips@vger.kernel.org,
+        ebiederm@xmission.com, loongarch@lists.linux.dev,
+        hbathini@linux.ibm.com, linux-riscv@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, akpm@linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, viro@zeniv.linux.org.uk
+References: <20240119145241.769622-1-bhe@redhat.com>
+ <20240119145241.769622-2-bhe@redhat.com>
+Content-Language: en-US
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+In-Reply-To: <20240119145241.769622-2-bhe@redhat.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 1X7jDKhl1zUKRy2B_adMLzM9iC8HO1cV
+X-Proofpoint-ORIG-GUID: Uw2D97QjE83VJR5woF4jbJ6EWAOoQuw_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-21_04,2024-02-21_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ priorityscore=1501 suspectscore=0 mlxlogscore=999 bulkscore=0 phishscore=0
+ mlxscore=0 clxscore=1011 lowpriorityscore=0 adultscore=0 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2402210135
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240221_061535_682328_FF6DCD12 
-X-CRM114-Status: GOOD (  19.43  )
+X-CRM114-CacheID: sfid-20240221_093016_902475_2E8960DE 
+X-CRM114-Status: GOOD (  24.46  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -92,52 +112,162 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Feb 21, 2024 at 10:37:29AM +0800, Baoquan He wrote:
-> > diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-> > index 3612e3167147..425ff6e192e6 100644
-> > --- a/arch/x86/mm/pat/set_memory.c
-> > +++ b/arch/x86/mm/pat/set_memory.c
-> > @@ -657,7 +657,8 @@ static inline pgprot_t verify_rwx(pgprot_t old, pgprot_t new, unsigned long star
-> >  
-> >  /*
-> >   * Lookup the page table entry for a virtual address in a specific pgd.
-> > - * Return a pointer to the entry and the level of the mapping.
-> > + * Return a pointer to the entry and the level of the mapping (or NULL if
-> > + * the entry is none) and level of the entry.
->                        ^ this right parenthesis may need be moved to the end.
-> 
-> 
-> =======
->  * Return a pointer to the entry and the level of the mapping (or NULL if
->  * the entry is none and level of the entry).
-> =======
+Hello Baoquan,
 
-Emm.. I like my variant more. We return level regardless if the entry none
-or not. I don't see a reason to repeat it twice.
+Thank you for reorganizing the kexec and kdump code with a well-defined
+configuration structure.
 
-> >   */
-> >  pte_t *lookup_address_in_pgd(pgd_t *pgd, unsigned long address,
-> >  			     unsigned int *level)
-> > @@ -704,9 +705,8 @@ pte_t *lookup_address_in_pgd(pgd_t *pgd, unsigned long address,
-> >   * Lookup the page table entry for a virtual address. Return a pointer
-> >   * to the entry and the level of the mapping.
-> >   *
-> > - * Note: We return pud and pmd either when the entry is marked large
-> > - * or when the present bit is not set. Otherwise we would return a
-> > - * pointer to a nonexisting mapping.
-> > + * Note: the function returns p4d, pud and pmd either when the entry is marked
->                                           ~~~
->                                            ^ s/and/or/
+While reviewing the patch series, I noticed a few typos.
 
-Fair enough.
+On 19/01/24 20:22, Baoquan He wrote:
+> Both kdump and fa_dump of ppc rely on crashkernel reservation. Move the
+> relevant codes into separate files:
+> crash_reserve.c, include/linux/crash_reserve.h.
+>
+> And also add config item CRASH_RESERVE to control its enabling of the
+> codes. And update config items which has relationship with crashkernel
+> reservation.
+>
+> And also change ifdeffery from CONFIG_CRASH_CORE to CONFIG_CRASH_RESERVE
+> when those scopes are only crashkernel reservation related.
+>
+> And also rename arch/XXX/include/asm/{crash_core.h => crash_reserve.h}
+> on arm64, x86 and risc-v because those architectures' crash_core.h
+> is only related to crashkernel reservation.
+>
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> ---
+>   arch/arm64/Kconfig                            |   2 +-
+>   .../asm/{crash_core.h => crash_reserve.h}     |   4 +-
+>   arch/powerpc/Kconfig                          |   1 +
+>   arch/powerpc/mm/nohash/kaslr_booke.c          |   4 +-
+>   arch/riscv/Kconfig                            |   2 +-
+>   .../asm/{crash_core.h => crash_reserve.h}     |   4 +-
+>   arch/x86/Kconfig                              |   2 +-
+>   .../asm/{crash_core.h => crash_reserve.h}     |   6 +-
+>   include/linux/crash_core.h                    |  40 --
+>   include/linux/crash_reserve.h                 |  48 ++
+>   include/linux/kexec.h                         |   1 +
+>   kernel/Kconfig.kexec                          |   5 +-
+>   kernel/Makefile                               |   1 +
+>   kernel/crash_core.c                           | 438 -----------------
+>   kernel/crash_reserve.c                        | 464 ++++++++++++++++++
+>   15 files changed, 531 insertions(+), 491 deletions(-)
+>   rename arch/arm64/include/asm/{crash_core.h => crash_reserve.h} (81%)
+>   rename arch/riscv/include/asm/{crash_core.h => crash_reserve.h} (78%)
+>   rename arch/x86/include/asm/{crash_core.h => crash_reserve.h} (92%)
+>   create mode 100644 include/linux/crash_reserve.h
+>   create mode 100644 kernel/crash_reserve.c
+>
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index ea01a2c43efa..d96bc3c67ec6 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -1501,7 +1501,7 @@ config ARCH_SUPPORTS_CRASH_DUMP
+>   	def_bool y
+>   
+>   config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
+> -	def_bool CRASH_CORE
+> +	def_bool CRASH_RESERVE
+>   
+>   config TRANS_TABLE
+>   	def_bool y
+> diff --git a/arch/arm64/include/asm/crash_core.h b/arch/arm64/include/asm/crash_reserve.h
+> similarity index 81%
+> rename from arch/arm64/include/asm/crash_core.h
+> rename to arch/arm64/include/asm/crash_reserve.h
+> index 9f5c8d339f44..4afe027a4e7b 100644
+> --- a/arch/arm64/include/asm/crash_core.h
+> +++ b/arch/arm64/include/asm/crash_reserve.h
+> @@ -1,6 +1,6 @@
+>   /* SPDX-License-Identifier: GPL-2.0-only */
+> -#ifndef _ARM64_CRASH_CORE_H
+> -#define _ARM64_CRASH_CORE_H
+> +#ifndef _ARM64_CRASH_RESERVE_H
+> +#define _ARM64_CRASH_RESERVE_H
+>   
+>   /* Current arm64 boot protocol requires 2MB alignment */
+>   #define CRASH_ALIGN                     SZ_2M
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index 414b978b8010..6aeab95f0edd 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -691,6 +691,7 @@ config FA_DUMP
+>   	bool "Firmware-assisted dump"
+>   	depends on PPC64 && (PPC_RTAS || PPC_POWERNV)
+>   	select CRASH_CORE
+> +	select CRASH_RESERVE
+>   	select CRASH_DUMP
+>   	help
+>   	  A robust mechanism to get reliable kernel crash dump with
+> diff --git a/arch/powerpc/mm/nohash/kaslr_booke.c b/arch/powerpc/mm/nohash/kaslr_booke.c
+> index b4f2786a7d2b..cdff129abb14 100644
+> --- a/arch/powerpc/mm/nohash/kaslr_booke.c
+> +++ b/arch/powerpc/mm/nohash/kaslr_booke.c
+> @@ -13,7 +13,7 @@
+>   #include <linux/delay.h>
+>   #include <linux/memblock.h>
+>   #include <linux/libfdt.h>
+> -#include <linux/crash_core.h>
+> +#include <linux/crash_reserve.h>
+>   #include <linux/of.h>
+>   #include <linux/of_fdt.h>
+>   #include <asm/cacheflush.h>
+> @@ -173,7 +173,7 @@ static __init bool overlaps_region(const void *fdt, u32 start,
+>   
+>   static void __init get_crash_kernel(void *fdt, unsigned long size)
+>   {
+> -#ifdef CONFIG_CRASH_CORE
+> +#ifdef CONFIG_CRASH_RESERVE
+>   	unsigned long long crash_size, crash_base;
+>   	int ret;
+>   
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index b549499eb363..37a438c23deb 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -712,7 +712,7 @@ config ARCH_SUPPORTS_CRASH_DUMP
+>   	def_bool y
+>   
+>   config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
+> -	def_bool CRASH_CORE
+> +	def_bool CRASH_RESERVE
+>   
+>   config COMPAT
+>   	bool "Kernel support for 32-bit U-mode"
+> diff --git a/arch/riscv/include/asm/crash_core.h b/arch/riscv/include/asm/crash_reserve.h
+> similarity index 78%
+> rename from arch/riscv/include/asm/crash_core.h
+> rename to arch/riscv/include/asm/crash_reserve.h
+> index e1874b23feaf..013962e63587 100644
+> --- a/arch/riscv/include/asm/crash_core.h
+> +++ b/arch/riscv/include/asm/crash_reserve.h
+> @@ -1,6 +1,6 @@
+>   /* SPDX-License-Identifier: GPL-2.0-only */
+> -#ifndef _RISCV_CRASH_CORE_H
+> -#define _RISCV_CRASH_CORE_H
+> +#ifndef _RISCV_CRASH_RESERVE_H
+> +#define _RISCV_CRASH_RESERVE_H
+>   
+>   #define CRASH_ALIGN			PMD_SIZE
+>   
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 5edec175b9bf..71417c5b228c 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -2106,7 +2106,7 @@ config ARCH_SUPPORTS_CRASH_HOTPLUG
+>   	def_bool y
+>   
+>   config ARCH_HAS_GENERIC_CRASHKERNEL_RESERVATION
+> -	def_bool CRASH_CORE
+> +	def_bool CRASH_RESEERVE
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+%s/CRASH_RESEERVE/CRASH_RESERVE? - Sourabh
 
 _______________________________________________
 kexec mailing list
