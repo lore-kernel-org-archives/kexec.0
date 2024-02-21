@@ -4,141 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id F1ACEC48BC3
-	for <kexec@archiver.kernel.org>; Tue, 20 Feb 2024 19:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9A7D6C48BC4
+	for <kexec@archiver.kernel.org>; Wed, 21 Feb 2024 00:13:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:Cc:To:
-	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=rA4n6AiZzzMi2cf4kOsTPiBRLo4r61J8QF4twhXIIaE=; b=fb2gEqMfMMGVigh+FHpL/aV7l7
-	0CSY27/tK+QrpIIRODOfo3ysSMUTjX9oTIhNRyndPVs8kcEe+nLs1JjA+qQ5Be2BO3E5noicaZ3We
-	GLv1CSJhI0pQRE4aRPsrtzW0NPBtu/Xc8z4xie0bJ0eULtHNGC552Zvb94zB7UVnpaVOkd++J9zkG
-	Z1ppGDXS9VKXf+5VfFJ8LH2RT9a/RMaezkCziMFujSv9O9QkZr0WsMTar4eZ4KrpLKCSdyor8y4k4
-	PJX7Bracsjmtd3O0E6M47oX79iPNlw/SKIayNWY2Q2h7RbYYELZeX6vdW2PHeSoM3usX9I1ruiC02
-	1oz89L7g==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:Mime-Version:References:In-Reply-To:
+	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=bgM4+dxWK57WLwjG/wNvCXpEcz+w6j3QaiybXPBwbpY=; b=Ob6i2drUeT9xLk
+	+9w6OtTW603iCwqjXaO+Vnrc/iEgrBr7yixtQ5rzmdIdjCmuUxPh002k2JTsG3wysR6bO3URPkz/D
+	3unWXDdr0a2ynBs71i8vLDi1cCmgOmFYPmlxCVfF84t0TN4t0zY+Jwv+r5mdV0MPqU9DJF+ahk3//
+	14M20w7l+voFdpbAtQiyEI8+BZRPfOaitc4OBFp+RJapjQZucYZEgB5MKtKDxbzbYH1u86/7EKAi7
+	30Ld6jWiccV48XgqVLuwSD/wkUvdIETEY+n7g725ZB0L8UUjpjWjo65l52mQzl82cMxzY7XuVLLxe
+	Kd9YC1UBTBdGvQmpfKBw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rcVV1-0000000Ftne-3VDh;
-	Tue, 20 Feb 2024 19:09:51 +0000
-Received: from mail-bn8nam11on20600.outbound.protection.outlook.com ([2a01:111:f403:2414::600] helo=NAM11-BN8-obe.outbound.protection.outlook.com)
+	id 1rcaEp-0000000Gb5O-1fH7;
+	Wed, 21 Feb 2024 00:13:27 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rcVUx-0000000FtkV-3LrC
+	id 1rcaEl-0000000Gb4m-3baQ
 	for kexec@lists.infradead.org;
-	Tue, 20 Feb 2024 19:09:49 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ONdr0biyzddykYZDghS1WQHk837ADsyJp5l5Hqy46F/vjTklgt97WQf05sVcTvOqcZokEyzRwFeDU5J9q23Zqp+DXMtD/PKkz4dxLdMBO4xWg9e6/CAZ32It6UM6detT0jYWPcoNFQ5XZROiFHZsQCj+EmaTCULKZ0zTFXgSxDuzpjNePyWAmvXRisM0DkXmV9jzfXdn5UAP2iV0N2pZmqRyXQ3Y49tzXeFTFVqgalMUsEBLAsozMH9ajPPRjHNModqq8bu1hEJtbzKSn0DQ3GpJv3872zhbxWD8La1ml6Pegcjaf5mHTy7+KYs1I9XO4lZnTMlNLlKdMWSXzJYopg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gelVehWMHiBg1MgbQlhCxB/yBfSxG/zn2lh33iBLVmU=;
- b=juZ3cKYH5nc4Bf7wL3r7i8mQ5WODbWtv3vSIj/PCRw/1L4py67A+oR2xu6OlFnwrDVNOWweN2RsRfUS15MnvLE6FUtQU/Q35/Hja0mTrYxkffWvi5RaX70QoFavUSIbWIg48lQpol2xq5DUWLZG96rk+eCP0WvLdNMf67tlOpPr+MXjxspQHucagTuhYO9iw8ulLurgdzxKUIageyl3kMN+n9falY+LxGjO9eqOoHIFxVIa39Uqps+rIF72U2vTBiv0airI8dX8ufUsZyicX0KO/QX2gHUrOm5QfyBpjK1PN+v1P47AWJ0YgfP6PzHaM7utMI8LZkXd3cneb5sif7w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gelVehWMHiBg1MgbQlhCxB/yBfSxG/zn2lh33iBLVmU=;
- b=QlX6fLE5uRH/eT+QfL+l+DjW9gAZScVSxxorav/HoVJFr7tRKwwOzb9aNjMs/PjXmutwxJUURv4w2OjHImyuykvdMAfzSZaMtb6va/GWca+gRpB+CG+l3C70L4Oq16ytxQyxclSX7mH/YAzbtmXpDTFULAFoCe9UdPZfAu2cu4I=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from SN6PR12MB2767.namprd12.prod.outlook.com (2603:10b6:805:75::23)
- by SA0PR12MB4429.namprd12.prod.outlook.com (2603:10b6:806:73::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.19; Tue, 20 Feb
- 2024 19:09:42 +0000
-Received: from SN6PR12MB2767.namprd12.prod.outlook.com
- ([fe80::9eec:d188:63a6:1c61]) by SN6PR12MB2767.namprd12.prod.outlook.com
- ([fe80::9eec:d188:63a6:1c61%6]) with mapi id 15.20.7316.018; Tue, 20 Feb 2024
- 19:09:41 +0000
-Message-ID: <cd80d0bf-f28f-45ab-974e-79d50f35764f@amd.com>
-Date: Tue, 20 Feb 2024 13:09:37 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] x86/mm: Do not zap PMD entry mapping unaccepted
- memory table during kdump.
-Content-Language: en-US
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, luto@kernel.org, x86@kernel.org,
- ardb@kernel.org, hpa@zytor.com, linux-efi@vger.kernel.org,
- linux-kernel@vger.kernel.org, rafael@kernel.org, peterz@infradead.org,
- adrian.hunter@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com,
- elena.reshetova@intel.com, jun.nakajima@intel.com,
- rick.p.edgecombe@intel.com, thomas.lendacky@amd.com, seanjc@google.com,
- kai.huang@intel.com, bhe@redhat.com, kexec@lists.infradead.org,
- linux-coco@lists.linux.dev, anisinha@redhat.com, michael.roth@amd.com,
- bdas@redhat.com, vkuznets@redhat.com, dionnaglaze@google.com,
- jroedel@suse.de, ashwin.kamat@broadcom.com
-References: <20240212104448.2589568-1-kirill.shutemov@linux.intel.com>
- <cover.1708390906.git.ashish.kalra@amd.com>
- <a0bf771e1472eb1a6a241acd2e16c98ab8ac9253.1708390906.git.ashish.kalra@amd.com>
- <ictdanmnsdn4qnzg42ett6om4r6qzypmxdc5spjwa2g5gz2s7p@drh7hoqdj4sc>
-From: "Kalra, Ashish" <ashish.kalra@amd.com>
-In-Reply-To: <ictdanmnsdn4qnzg42ett6om4r6qzypmxdc5spjwa2g5gz2s7p@drh7hoqdj4sc>
-X-ClientProxiedBy: DM6PR21CA0006.namprd21.prod.outlook.com
- (2603:10b6:5:174::16) To SN6PR12MB2767.namprd12.prod.outlook.com
- (2603:10b6:805:75::23)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN6PR12MB2767:EE_|SA0PR12MB4429:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3c540ca8-ff72-4c8d-64cd-08dc32477dfb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Y6j1aYU2xO4SpAOgtKRNWmPtI983K8G0gJVev0sB6hLpVQ4eAl3FUta+EdvyFHlIV+OOfEiV9VbSSErfFvRS6oTSWnJmMafXE5Yxq+f8ukc4yvkCPseIgRoUp+RBmrE9h2GkbenEG8EcmIqpIa8ZD7NqR8VyiEPucpxo/RR7P00D5Eemhuo5Hh7FhuMZA4y8qVR2uSa7d5+C+OaqGruYvTi5ARM6ZdRqTEo9Uo3jqjxPb0CfATUIcRuzB9Xl9qrpKnedjP3vpqMDNwS49IQIMUTrBnB6A2G5Sfs5DHbKtKXetTDdQzCLDwIXea4RvBcX96KhQv/5twsmT9NQXJ6j3qzzi9yKzbLI43B4GllhKKoEJkf+CQbthMXy9/4YPgT9s7NdkDDC55eqQ3tDK23/s6DHvtLPXaq0ErlLEgYQ6JL1GOfTpWav7c4mNGoNiiZnVmbZXIoaCdmVCM3zrqxzt/nDRO8Z247uMkMqw3tOa2Wt04xnSVu9NXRLdrUm9O+Wp5/gHGbmEAG3FF/4+akxz3dyJxhWE4G9n4P2gvAygIU=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2767.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Um9uaW9peDUyTGcrdVl4RG9Nc0VDZytYMmNzaFR5MFIxSGdFVU5tcjl3YkJ1?=
- =?utf-8?B?Uk1DenVZaFcxZnRSdjc2Qk9MdnNJbzdVYmJQeTU0dFhjeWZEdUpBb1k1Ykt3?=
- =?utf-8?B?V0VoUDArQXBITlBsd2Y4Z3JVVUlEOGFiQkFCaVhsTVQvSXE1azh6cEZ4ajdB?=
- =?utf-8?B?dSszOFV3cllURUIyUDZGcnlTMUo5bnB5VHVNUVZNSmVyL1hETmhScUpOaXRV?=
- =?utf-8?B?U0NtUTdKMnJDbXA0bVZGK3Ava09WR1UySjdDelRDWjF4Lzc1V2hUbFNVMXVR?=
- =?utf-8?B?VXRFRXdKVkZoS3FsNjFpdTZ3dFBtb3BLNDU0TFJ2clBwMVcvd081WVpiMmZs?=
- =?utf-8?B?Q3hHTyt1eW56QUlhbzhpMiszMWVzcEwxQzJKTFNLWk8yck40UEdzcWFOMGJr?=
- =?utf-8?B?SW91MitXbVV6ZlNxYjlGMTU4ZEdNS05GWlB2QnVGUmltTmc3Q1VGWVE1L3h3?=
- =?utf-8?B?aS95azJQQUxIZzdKQ3g4VGRLeEFjNnk1Tk9IaTJSV0ZpMHBicmM0WVFuSnBo?=
- =?utf-8?B?WkNKbGZyNVpjWWpSMDJ6dFh5eXBBb3EzazFnaXIrMEJuejkxVzMzMnBTNCsv?=
- =?utf-8?B?djZzaHV1UmwyQTZSb2JLNUZvOHVlTkJkc3EzNmxITEFXRXhidmcyMmlmd1Rk?=
- =?utf-8?B?THBqN1Ztb0NWWVFwdFp6QkdZT3prZUJxVTREUkx5b1dvNloxQm50clJWY0dK?=
- =?utf-8?B?UHdPS2F3TTNJdllLeEhXUVNZRTJRMjVqSVZaNzhCSVBhUUpLeDV4Zk5YZnlo?=
- =?utf-8?B?RHNJdEhZTU0xNXNrUnlsRDhDVTdvamlaNlluSkZXSDBTQXdvZUVuZ0tGTDJl?=
- =?utf-8?B?dVE2ZUhYYzRhSHJMTHMxUTBNYjROREMwc0EwVXN5S1RrTmJOMmI5VXVFNHRV?=
- =?utf-8?B?WkdHT0c3WC9aN2J1THo1clR0OWgyWkt3ZzNHUGNYejdtVEk1UW84ZkVpcEFP?=
- =?utf-8?B?UUNqbDZlVFVWYUs4VEhZZWVRUzB4M2x3Mko5M1lRVHF0eHF5MU5IUmpsK3Ir?=
- =?utf-8?B?N055NlVmalFKRmZ2MGxxN21vdTJIOG5VbkdUQXJrR0tmWlZkUTBkdk5yRlNP?=
- =?utf-8?B?NWVtR1U0anRETWtNdHI3Z2U4TUtwTEkrZ2l0aTlTcWM3RHIwSDVXeVFQSjRK?=
- =?utf-8?B?VVZVSkdZbDYwN3hkNkNDUjJBbytrQjJOTHgrVk8zR3dwOTFmL2VWRy84cXR1?=
- =?utf-8?B?eEtDZndlWmNLVnBaTkx2RkN1dXd5Y0hkY1ZmamxxR1Q3ZE5OdEhXbHFpemJP?=
- =?utf-8?B?OFdBZHkwZExBZU9iWXh6ZXFtampQZG5sRURuczBGN1A2YWFFdlM4ZElsSytu?=
- =?utf-8?B?cGdRZzRmSXlKamZ2SXlWdXNwMmxBT3dJcDloMzRWaFUrTkdjemJSVE5mc3Vv?=
- =?utf-8?B?N005RWR4NnpwSk5UUGs3WVpZQVpEVzJyQml0VFlraWp5eWIxbFhwdEcwanFX?=
- =?utf-8?B?aWVISUlRcXArQ1FpS2FYMENWQkRWNHp0a29mRU5ub28vVGQ2aTBXYnBlcVBY?=
- =?utf-8?B?ejdVZ2R3czJOOFErcUtyNCt5M3QrRWRSTElQV2c3dFl2R3pISmpvTFo0MkxD?=
- =?utf-8?B?NG5iUHo1Zi9rN1hKaGpwOVJ3dkcyMCtKZmkweDlJQXRtY1lMcUs0ZU82TG9k?=
- =?utf-8?B?WnNKSjVybkVHeHA2cWtFZ2dYYXhJOTcyUFRBWUx4ZG5oWmJoejF0ZEJMYW5F?=
- =?utf-8?B?bGxtNUJkSTJTSmV3WHZTSjRyTmV6NVcyRlhQUUhDcnI1ZG9DYUNTZ0ROSVRz?=
- =?utf-8?B?TFNJN1MyM3dpdzRpdEcrbnA5aVpVS3pkMC80UmVoQ2YwSGhOZWU2b2M0ZzlR?=
- =?utf-8?B?WG5rd01zQVZyTmFiQlZKU1QzczZrUVZyU2d5VDltRGUxUThyRkhQK3RKR3RX?=
- =?utf-8?B?cFlkb09iWVVsaFNXclhiZGh0aEtmYmVSVmlIaFlFTnRqckcxMjBucE01b0Fv?=
- =?utf-8?B?c1JiSkV6T0VkVFYzN0xINndFMUd5NmdrTGFJODdNS21Oei9Pb2JUbWZlSUIy?=
- =?utf-8?B?dzNtREIyeDF6T2tueTBjS25haXR0ZnZtVWJ1cVpVSWxWNjBhQzVxbVJIQmJD?=
- =?utf-8?B?M0w1SVdvQzZzYWRxdmhIRU5mS0lOZUhrV0lSUkg5d09qTzE1RTdGSzRUeHoz?=
- =?utf-8?Q?3qOD/oSv1fJ3EulYRxR1IpD+T?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3c540ca8-ff72-4c8d-64cd-08dc32477dfb
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2767.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2024 19:09:41.8952
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NfXesa3yprvcV+qLkD+demF/zZWZinF288e9gcbrd6F2u2QhmrKCXZCpZSuUvLgduOyMzE2+GfIHFjeFFvqRFw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4429
+	Wed, 21 Feb 2024 00:13:25 +0000
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41KNqDbK007078;
+	Wed, 21 Feb 2024 00:12:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=Yp/ZBXJPhPBj81TuSs1DSf3ZiDcGpEJbzWdV7Z50Mt8=;
+ b=iT1xpO0ok+eNl9nNnfyEIswZwFKC178wuVz+q2/MQctTzV5kAKIPe3N7nTDCtTr+MSOC
+ 9oKN6sIi/7FmC8PxghceLuxs9dlcjxRQGCv+Lz80MuWnnymSm4hakxxJjNVYa3RC1loS
+ aH//Vek5dnmv3gJpNvkR74JaUu/LwTk1DahWEvJ7ziOBsQt3g69wxIoH+xUb05W5Z4xV
+ uBmuqc6HT23hUwC5a++Lp+pXTlpV1EUHqJXkQC4BXGz532Yyv747d/zqndgteICqWUwy
+ IsWCrPsIigY4c2MasdsqdwrZ0Y3+2qg+C+2mgCqYoss5H800D0S7wGay1ClFMzlzJitd zg== 
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wd64krf0e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 Feb 2024 00:12:46 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41KLV13u003671;
+	Wed, 21 Feb 2024 00:12:45 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wb74tkytc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 Feb 2024 00:12:45 +0000
+Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41L0CgHU29164194
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 21 Feb 2024 00:12:45 GMT
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A9E0D5805D;
+	Wed, 21 Feb 2024 00:12:42 +0000 (GMT)
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E34B758056;
+	Wed, 21 Feb 2024 00:12:41 +0000 (GMT)
+Received: from li-5cd3c5cc-21f9-11b2-a85c-a4381f30c2f3.ibm.com (unknown [9.61.5.81])
+	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 21 Feb 2024 00:12:41 +0000 (GMT)
+Message-ID: <844e1af9a5d0414d4b972c8c947b7f821a776d71.camel@linux.ibm.com>
+Subject: Re: [PATCH v5 1/8] ima: define and call ima_alloc_kexec_file_buf
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Tushar Sugandhi <tusharsu@linux.microsoft.com>,
+        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+        eric.snowberg@oracle.com, stefanb@linux.ibm.com, ebiederm@xmission.com,
+        noodles@fb.com, bauermann@kolabnow.com,
+        linux-integrity@vger.kernel.org, kexec@lists.infradead.org
+Cc: code@tyhicks.com, nramas@linux.microsoft.com, paul@paul-moore.com
+Date: Tue, 20 Feb 2024 19:12:41 -0500
+In-Reply-To: <20240214153827.1087657-2-tusharsu@linux.microsoft.com>
+References: <20240214153827.1087657-1-tusharsu@linux.microsoft.com>
+	 <20240214153827.1087657-2-tusharsu@linux.microsoft.com>
+X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
+Mime-Version: 1.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: FSG5EdwaC9Ae5Em-jYhFQUOgWHylOBTl
+X-Proofpoint-ORIG-GUID: FSG5EdwaC9Ae5Em-jYhFQUOgWHylOBTl
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-20_06,2024-02-20_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
+ clxscore=1011 priorityscore=1501 phishscore=0 mlxlogscore=999
+ impostorscore=0 bulkscore=0 spamscore=0 lowpriorityscore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2402210000
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240220_110947_854788_88CE2207 
-X-CRM114-Status: GOOD (  15.59  )
+X-CRM114-CacheID: sfid-20240220_161324_167756_3D64311A 
+X-CRM114-Status: GOOD (  45.57  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -150,60 +103,239 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Kirill,
+On Wed, 2024-02-14 at 07:38 -0800, Tushar Sugandhi wrote:
+> Carrying the IMA measurement list across kexec requires allocating a
+> buffer and copying the measurement records.  Separate allocating the
+> buffer and copying the measurement records into separate functions in
+> order to allocate the buffer at kexec 'load' and copy the measurements
+> at kexec 'execute'.
+> 
+> This patch includes the following changes:
+>  - Refactor ima_dump_measurement_list() to move the memory allocation
+>    to a separate function ima_alloc_kexec_file_buf() which allocates
+>    buffer of size 'kexec_segment_size' at kexec 'load'.
+>  - Make the local variable ima_kexec_file in ima_dump_measurement_list()
+>    as local static to the file, so that it can be accessed from 
+>    ima_alloc_kexec_file_buf().
+>  - Make necessary changes to the function ima_add_kexec_buffer() to call
+>    the above two functions.
+> 
+> Suggested-by: Stefan Berger <stefanb@linux.ibm.com>
+> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> ---
+>  security/integrity/ima/ima_kexec.c | 107 +++++++++++++++++++++--------
+>  1 file changed, 78 insertions(+), 29 deletions(-)
+> 
+> diff --git a/security/integrity/ima/ima_kexec.c
+> b/security/integrity/ima/ima_kexec.c
+> index dadc1d138118..a9cb5e882e2e 100644
+> --- a/security/integrity/ima/ima_kexec.c
+> +++ b/security/integrity/ima/ima_kexec.c
+> @@ -15,62 +15,98 @@
+>  #include "ima.h"
+>  
+>  #ifdef CONFIG_IMA_KEXEC
+> +static struct seq_file ima_kexec_file;
+> +
+> +static void ima_reset_kexec_file(struct seq_file *sf)
+> +{
+> +	sf->buf = NULL;
+> +	sf->size = 0;
+> +	sf->read_pos = 0;
+> +	sf->count = 0;
+> +}
+> +
+> +static void ima_free_kexec_file_buf(struct seq_file *sf)
+> +{
+> +	vfree(sf->buf);
+> +	ima_reset_kexec_file(sf);
+> +}
+> +
+> +static int ima_alloc_kexec_file_buf(size_t segment_size)
+> +{
+> +	/*
+> +	 * kexec 'load' may be called multiple times.
+> +	 * Free and realloc the buffer only if the segment_size is
+> +	 * changed from the previous kexec 'load' call.
+> +	 */
+> +	if (ima_kexec_file.buf &&
+> +	    ima_kexec_file.size == segment_size &&
+> +	    ima_kexec_file.read_pos == 0 &&
+> +	    ima_kexec_file.count == sizeof(struct ima_kexec_hdr))
+> +		return 0;
 
-On 2/20/2024 6:42 AM, Kirill A. Shutemov wrote:
-> On Tue, Feb 20, 2024 at 01:18:29AM +0000, Ashish Kalra wrote:
->> From: Ashish Kalra <ashish.kalra@amd.com>
->>
->> During crashkernel boot only pre-allocated crash memory is presented as
->> E820_TYPE_RAM. This can cause PMD entry mapping unaccepted memory table
->> to be zapped during phys_pmd_init() as SNP/TDX guest use E820_TYPE_ACPI
->> to store the unaccepted memory table and pass it between the kernels on
->> kexec/kdump.
->>
->> E820_TYPE_ACPI covers not only ACPI data, but also EFI tables and might
->> be required by kernel to function properly.
->>
->> The problem was discovered during debugging kdump for SNP guest. The
->> unaccepted memory table stored with E820_TYPE_ACPI and passed between
->> the kernels on kdump was getting zapped as the PMD entry mapping this
->> is above the E820_TYPE_RAM range for the reserved crashkernel memory.
->>
->> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
->> ---
->>   arch/x86/mm/init_64.c | 4 +++-
->>   1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
->> index a0dffaca6d2b..207c6dddde0c 100644
->> --- a/arch/x86/mm/init_64.c
->> +++ b/arch/x86/mm/init_64.c
->> @@ -524,7 +524,9 @@ phys_pmd_init(pmd_t *pmd_page, unsigned long paddr, unsigned long paddr_end,
->>   			    !e820__mapped_any(paddr & PMD_MASK, paddr_next,
->>   					     E820_TYPE_RAM) &&
->>   			    !e820__mapped_any(paddr & PMD_MASK, paddr_next,
->> -					     E820_TYPE_RESERVED_KERN))
->> +					     E820_TYPE_RESERVED_KERN) &&
->> +			    !e820__mapped_any(paddr & PMD_MASK, paddr_next,
->> +					     E820_TYPE_ACPI))
->>   				set_pmd_init(pmd, __pmd(0), init);
->>   			continue;
-> Why do you single out phys_pmd_init()? I think it has to be addressed for
-> all page table levels as we do for E820_TYPE_RAM and E820_TYPE_RESERVED_KERN.
+ima_kexec_file.size will be initialized to zero.  No need to test anything other
+than the segment size.
 
-I believe i only discovered the issue with PMDe's (phys_pmd_init()) 
-because of the crashkernel reserved memory size and the E820_TYPE_ACPI 
-physical memory range mapping on my test system, but you are right this 
-fix needs to be done for all page table levels and i will add also the 
-fix in phys_pte_init(), phys_pud_init() and phys_p4d_init().
+> +
+> +	ima_free_kexec_file_buf(&ima_kexec_file);
 
-Thanks, Ashish
+The first time ima_free_kexec_file_buf() is called the memory has not been
+allocated.  Test that the memory has been allocated before freeing it.  Since
+there's no other ima_free_kexec_file_buf() caller, there's no need to clear the
+other fields as they will be set below.
+
+> +
+> +	/* segment size can't change between kexec load and execute */
+> +	ima_kexec_file.buf = vmalloc(segment_size);
+> +	if (!ima_kexec_file.buf)
+> +		return -ENOMEM;
+> +
+> +	ima_kexec_file.size = segment_size;
+> +	ima_kexec_file.read_pos = 0;
+
+static variables are initialized to zero.  No need to set it here.
+
+> +	ima_kexec_file.count = sizeof(struct ima_kexec_hdr);	/* reserved
+> space */
+> +
+> +	return 0;
+> +}
+> +
+>  static int ima_dump_measurement_list(unsigned long *buffer_size, void
+> **buffer,
+>  				     unsigned long segment_size)
+>  {
+>  	struct ima_queue_entry *qe;
+> -	struct seq_file file;
+>  	struct ima_kexec_hdr khdr;
+> -	int ret = 0;
+>  
+> -	/* segment size can't change between kexec load and execute */
+> -	file.buf = vmalloc(segment_size);
+> -	if (!file.buf) {
+> -		ret = -ENOMEM;
+> -		goto out;
+> +	if (!ima_kexec_file.buf) {
+> +		*buffer_size = 0;
+> +		*buffer = NULL;
+> +		pr_err("%s: Kexec file buf not allocated\n", __func__);
+> +		return -EINVAL;
+>  	}
+>  
+> -	file.size = segment_size;
+> -	file.read_pos = 0;
+> -	file.count = sizeof(khdr);	/* reserved space */
+> -
+>  	memset(&khdr, 0, sizeof(khdr));
+>  	khdr.version = 1;
+> +
+> +	/* Copy as many IMA measurements list records as possible */
+>  	list_for_each_entry_rcu(qe, &ima_measurements, later) {
+> -		if (file.count < file.size) {
+> +		if (ima_kexec_file.count < ima_kexec_file.size) {
+
+With an extra half page memory allocated, there should be enough memory for a
+few extra records as a result of the kexec load.  Subsequent patches are going
+to change this assumption.  This test doesn't ensure there is enough memory for
+the entire measurement record.  Call get_binary_runtime_size() to get the record
+size to ensure there is enough memory for the entire record.
+
+>  			khdr.count++;
+> -			ima_measurements_show(&file, qe);
+> +			ima_measurements_show(&ima_kexec_file, qe);
+>  		} else {
+> -			ret = -EINVAL;
+> +			pr_err("%s: IMA log file is too big for Kexec buf\n",
+> +			       __func__);
+
+This message and the one above should probably be pr_debug().  There's a new
+error message after the call to ima_dump_measurement_list().
+
+>  			break;
+>  		}
+>  	}
+>  
+> -	if (ret < 0)
+> -		goto out;
+> -
+
+Removing these lines is in for "copying as many measurements as possible". That
+change isn't mentioned in the patch description.
+
+>  	/*
+>  	 * fill in reserved space with some buffer details
+>  	 * (eg. version, buffer size, number of measurements)
+>  	 */
+> -	khdr.buffer_size = file.count;
+> +	khdr.buffer_size = ima_kexec_file.count;
+>  	if (ima_canonical_fmt) {
+>  		khdr.version = cpu_to_le16(khdr.version);
+>  		khdr.count = cpu_to_le64(khdr.count);
+>  		khdr.buffer_size = cpu_to_le64(khdr.buffer_size);
+>  	}
+> -	memcpy(file.buf, &khdr, sizeof(khdr));
+> +	memcpy(ima_kexec_file.buf, &khdr, sizeof(khdr));
+>  
+>  	print_hex_dump_debug("ima dump: ", DUMP_PREFIX_NONE, 16, 1,
+> -			     file.buf, file.count < 100 ? file.count : 100,
+> +			     ima_kexec_file.buf, ima_kexec_file.count < 100 ?
+> +			     ima_kexec_file.count : 100,
+>  			     true);
+>  
+> -	*buffer_size = file.count;
+> -	*buffer = file.buf;
+> -out:
+> -	if (ret == -EINVAL)
+> -		vfree(file.buf);
+> -	return ret;
+> +	*buffer_size = ima_kexec_file.count;
+> +	*buffer = ima_kexec_file.buf;
+> +
+> +	return 0;
+>  }
+>  
+>  /*
+> @@ -108,13 +144,20 @@ void ima_add_kexec_buffer(struct kimage *image)
+>  		return;
+>  	}
+>  
+> -	ima_dump_measurement_list(&kexec_buffer_size, &kexec_buffer,
+> -				  kexec_segment_size);
+> -	if (!kexec_buffer) {
+> +	ret = ima_alloc_kexec_file_buf(kexec_segment_size);
+> +	if (ret < 0) {
+>  		pr_err("Not enough memory for the kexec measurement buffer.\n");
+>  		return;
+>  	}
+>  
+> +	ret = ima_dump_measurement_list(&kexec_buffer_size, &kexec_buffer,
+> +					kexec_segment_size);
+> +	if (ret < 0) {
+> +		pr_err("%s: Failed to dump IMA measurements. Error:%d.\n",
+> +		       __func__, ret);
+
+Please remove "__func__" from the error message.
+
+> +		return;
+> +	}
+> +
+>  	kbuf.buffer = kexec_buffer;
+>  	kbuf.bufsz = kexec_buffer_size;
+>  	kbuf.memsz = kexec_segment_size;
+> @@ -129,6 +172,12 @@ void ima_add_kexec_buffer(struct kimage *image)
+>  	image->ima_buffer_size = kexec_segment_size;
+>  	image->ima_buffer = kexec_buffer;
+>  
+> +	/*
+> +	 * kexec owns kexec_buffer after kexec_add_buffer() is called
+> +	 * and it will vfree() that buffer.
+> +	 */
+> +	ima_reset_kexec_file(&ima_kexec_file);
+> +
+>  	kexec_dprintk("kexec measurement buffer for the loaded kernel at
+> 0x%lx.\n",
+>  		      kbuf.mem);
+>  }
+
+thanks,
+
+Mimi
 
 
 _______________________________________________
