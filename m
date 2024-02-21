@@ -4,76 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8BB13C48BF6
-	for <kexec@archiver.kernel.org>; Wed, 21 Feb 2024 13:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2DC08C48BC3
+	for <kexec@archiver.kernel.org>; Wed, 21 Feb 2024 14:15:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=5GMGfY8Y6wgzJszELH1idaXrbYsfl6Cw2B5Kermnoo8=; b=bfGK5UDp9+gQwG
-	IIgMmpiqaDm4DZ3cZH/krjL6hEZxcfgVsjziYhl1ijHokrjUvpcA039J3/9vkrHdHY/AWaHrYjhG4
-	zPQruRfNRFmGmYnI9Ljd8Ekl8NvokbcBJ/kDsamyXRDN9jj23ONNwB5upSgnVWw9KRUmnYcRRBCUW
-	mkkvl8YMjye2IJhfUS374RhZJhil6T2Zp1JGEVVyse8QUgBPig3tkTRrwwLtxwY2eoxbqRwJDnfFs
-	GMdwa7aILOATUMu/VReX4MF/3QQYP5UqMw16BIZm1ogb7aqguquAT9UYXXSDFgokNt9RztUjMDa8B
-	SJiTMW/YzJ8H1aD92fIA==;
+	List-Owner; bh=v1zDj5SUJo23gntL2kY4pSOXy8VNgYV18pWdvUCovAY=; b=g6bnvESbInOVHG
+	JElo9QrxlABWGuXUIjLwQSmByppi4cVXoGy2/kUTxFLyRu+dpHfnQ8/MteEo5Xfgc4eNqF9tmAUMc
+	5fZ58SjDH03v2J1qI1UjlM7ytktYbREyoqo5fUeL/Bo4rsxcTzROlBGV8YwKBI3TDIfYnLjrtdRjd
+	5389w47vi/KZ6DwdtG5PdUc2SIGsyZrPwSduGKhL5i2cnm0gYFGPl/RGVrtey4Bxhqr0TxyXHLHnd
+	HvR4h73PZmJCl0cLkleuYV0OZ84wFodYU5NKQaM9ZyLL6tk6tUyXITQNKPqqBFwRTgGdVkGuHnFn5
+	+0d/lX1bHJ96ceQGst/g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rcmtV-000000017SJ-2IJN;
-	Wed, 21 Feb 2024 13:44:17 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1rcnNp-00000001E80-2ulC;
+	Wed, 21 Feb 2024 14:15:37 +0000
+Received: from mgamail.intel.com ([198.175.65.14])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rcmtS-000000017Qa-3A42
+	id 1rcnNn-00000001E7f-2Sr3
 	for kexec@lists.infradead.org;
-	Wed, 21 Feb 2024 13:44:16 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708523052;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kjg3ALQw4zFfCtoxrqU3mC8VARBMiLwWXwoSwpKkxVk=;
-	b=WWA+wJgnLDUk370kmYH/LehaT5Ve7heAzmR4VSiu2MrpVJh8BmRE2z/UFKzKRiaOfZgGtD
-	A/fOipeYFFzCZGG08IJSMpx57l2knMjOJF0GsqISk6o0vLD1LvuCY7T8cIa5CPRlYZkjeH
-	oeEW8XEwxGs2SJZzs2Yr9i27QBSchLo=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-583-viBCBzv1MZWeE0zNlD0FTQ-1; Wed, 21 Feb 2024 08:44:09 -0500
-X-MC-Unique: viBCBzv1MZWeE0zNlD0FTQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1712C867943;
-	Wed, 21 Feb 2024 13:44:08 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.2])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 21A5F2166B36;
-	Wed, 21 Feb 2024 13:44:06 +0000 (UTC)
-Date: Wed, 21 Feb 2024 21:44:04 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Hari Bathini <hbathini@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org, piliu@redhat.com, linux-sh@vger.kernel.org,
-	x86@kernel.org, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-	ebiederm@xmission.com, loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	akpm@linux-foundation.org, linux-arm-kernel@lists.infradead.org,
-	viro@zeniv.linux.org.uk
-Subject: Re: [PATCH v2 00/14] Split crash out from kexec and clean up related
- config items
-Message-ID: <ZdX+JMKsQWheE0B0@MiWiFi-R3L-srv>
-References: <20240119145241.769622-1-bhe@redhat.com>
- <9101bb07-70f1-476c-bec9-ec67e9899744@linux.ibm.com>
- <Zb8D1ASrgX0qVm9z@MiWiFi-R3L-srv>
- <559f2595-1477-4ef0-80e4-85ae8b426de7@linux.ibm.com>
+	Wed, 21 Feb 2024 14:15:36 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708524935; x=1740060935;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/vYbdGx/biRaDTrw8g8KGes/oIyLAhiiHJyRW4pxB+Y=;
+  b=VPXtFVidG4r9Y5CbLjcT0sa4EciJp80M4xlmtN9Sfpm6dlS9VukC/R1e
+   wm/KRvWXBRlq0C0/J8QWyzVlZKNirM7jQv3pk0k6GYmmCCWFUoy+ucLuX
+   w+0r74KRDbIhvXRW4z3ULuh142BDQnimSP3W6ooCQk5088p0UQ2MRUt1o
+   h4OBl7LjY+1Ilw5hRIUhnZhTJ9TSr2npyqW8VAp+rdm4Lq8iOcMbW3GLL
+   bd+EaFcc2abYWyV5znk9wgQZ2G/R8B/PUTF83o9CNEjzxmAus4NLS7xQi
+   tKHFp8skMup+WUCNDocMQ63QEevtUo77iZky3aCzaYNXnlK8yAO3WDU30
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10990"; a="6500411"
+X-IronPort-AV: E=Sophos;i="6.06,175,1705392000"; 
+   d="scan'208";a="6500411"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2024 06:15:33 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10990"; a="936650868"
+X-IronPort-AV: E=Sophos;i="6.06,175,1705392000"; 
+   d="scan'208";a="936650868"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 21 Feb 2024 06:15:28 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id CEA572AB; Wed, 21 Feb 2024 16:15:27 +0200 (EET)
+Date: Wed, 21 Feb 2024 16:15:27 +0200
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, 
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Elena Reshetova <elena.reshetova@intel.com>, 
+	Jun Nakajima <jun.nakajima@intel.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish" <ashish.kalra@amd.com>, 
+	Sean Christopherson <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>, kexec@lists.infradead.org, 
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv7 07/16] x86/mm: Return correct level from
+ lookup_address() if pte is none
+Message-ID: <p34d7e5r3gkcj2xl5jycyldvpkmcllmhzioaqcmseeugl3eq73@plk43dd4luzu>
+References: <20240212104448.2589568-1-kirill.shutemov@linux.intel.com>
+ <20240212104448.2589568-8-kirill.shutemov@linux.intel.com>
+ <ZdLjQCaxhOnR+GzX@MiWiFi-R3L-srv>
+ <zhbhgq27kjrhkdgbxomjykjez2i4hckguvmxyptvfvoftue5ca@zowl5qbl6psl>
+ <ZdR+JzfHjES3zytp@MiWiFi-R3L-srv>
+ <ic4v3q4muffjq2jhlkk3k4lg5xxvjwlw22hctzubl5573euzu2@er3m7ztog2a6>
+ <ZdVh6efExdt687YY@MiWiFi-R3L-srv>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <559f2595-1477-4ef0-80e4-85ae8b426de7@linux.ibm.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
+In-Reply-To: <ZdVh6efExdt687YY@MiWiFi-R3L-srv>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240221_054414_900914_62D86242 
-X-CRM114-Status: GOOD (  18.99  )
+X-CRM114-CacheID: sfid-20240221_061535_682328_FF6DCD12 
+X-CRM114-Status: GOOD (  19.43  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -90,33 +97,47 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 02/21/24 at 11:15am, Hari Bathini wrote:
-> Hi Baoquan,
+On Wed, Feb 21, 2024 at 10:37:29AM +0800, Baoquan He wrote:
+> > diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+> > index 3612e3167147..425ff6e192e6 100644
+> > --- a/arch/x86/mm/pat/set_memory.c
+> > +++ b/arch/x86/mm/pat/set_memory.c
+> > @@ -657,7 +657,8 @@ static inline pgprot_t verify_rwx(pgprot_t old, pgprot_t new, unsigned long star
+> >  
+> >  /*
+> >   * Lookup the page table entry for a virtual address in a specific pgd.
+> > - * Return a pointer to the entry and the level of the mapping.
+> > + * Return a pointer to the entry and the level of the mapping (or NULL if
+> > + * the entry is none) and level of the entry.
+>                        ^ this right parenthesis may need be moved to the end.
 > 
-> On 04/02/24 8:56 am, Baoquan He wrote:
-> > > > Hope Hari and Pingfan can help have a look, see if
-> > > > it's doable. Now, I make it either have both kexec and crash enabled, or
-> > > > disable both of them altogether.
-> > > 
-> > > Sure. I will take a closer look...
-> > Thanks a lot. Please feel free to post patches to make that, or I can do
-> > it with your support or suggestion.
 > 
-> Tested your changes and on top of these changes, came up with the below
-> changes to get it working for powerpc:
-> 
-> 
-> https://lore.kernel.org/all/20240213113150.1148276-1-hbathini@linux.ibm.com/
-> 
-> Please take a look.
+> =======
+>  * Return a pointer to the entry and the level of the mapping (or NULL if
+>  * the entry is none and level of the entry).
+> =======
 
-I added a comment to the patch 1 consulting if the "struct crash_mem" is
-appropriate to cover other cases except of kdump memory regions. I am
-wondering if its name need be adjusted, or other kind of memory you
-mentioned can use other structures or create a new one.
+Emm.. I like my variant more. We return level regardless if the entry none
+or not. I don't see a reason to repeat it twice.
 
-If it's has to be done like that, it's fine. 
+> >   */
+> >  pte_t *lookup_address_in_pgd(pgd_t *pgd, unsigned long address,
+> >  			     unsigned int *level)
+> > @@ -704,9 +705,8 @@ pte_t *lookup_address_in_pgd(pgd_t *pgd, unsigned long address,
+> >   * Lookup the page table entry for a virtual address. Return a pointer
+> >   * to the entry and the level of the mapping.
+> >   *
+> > - * Note: We return pud and pmd either when the entry is marked large
+> > - * or when the present bit is not set. Otherwise we would return a
+> > - * pointer to a nonexisting mapping.
+> > + * Note: the function returns p4d, pud and pmd either when the entry is marked
+>                                           ~~~
+>                                            ^ s/and/or/
 
+Fair enough.
+
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
 
 _______________________________________________
 kexec mailing list
