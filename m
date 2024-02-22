@@ -4,77 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3F3EEC48BEB
-	for <kexec@archiver.kernel.org>; Wed, 21 Feb 2024 23:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B99A1C48BF6
+	for <kexec@archiver.kernel.org>; Thu, 22 Feb 2024 01:48:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Mime-Version:References:In-Reply-To:
+	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=fIHdS3KppgW9vF7LdwDx7q6aDmc69ZVVTHhdEUrq/2A=; b=sBokdhf7Lfh/nF
-	Rei+0rOydeneLC4r1bO4oaOpPjYGkg4AMIZNkoCVokMK3q/zdW0kR9utOLn20a0u04USC2k8wGp2n
-	pCJ+ZeDoG9+pPdEyFNzy+Uaj7srsafU+Shf5GtrsoxPr5upidMsBmvsGbeRrylF+rxtZmowU4jhF9
-	woM8/PcBeht4UVblAykWck2AcAwXuUxztEUvJK7k7J29bfzU+SdFMRxQLQmSWqHvVFKVZNCHrk3I9
-	s211TIteziLQwxLYNFyY1xoan/lI+i7lIRt2MbiX8HRhiEzbQOY1mkuamfzMJiEXWURrdNaeAHj0S
-	09/5ERwm6DNLFufSOGVQ==;
+	List-Owner; bh=rQEdPjvDuweUfhBXAcK0CMiy6rmvAQrWbpJ/W+pgS9Q=; b=EP0E+LML2DbVkZ
+	dxdgwTFI8qUXcSJv7por13YYqMIGKJ0OmI+Uin8in4rNnK1sNvtzLxB/ysJORhDXwUxURyS9L6L4q
+	4sMmiWCkZH3OV49Tkzx2Xnc29nJLgv2PHGuVBtz6R+eufUJcJSZSfOPh1Nr9morjHrLbn7Qmm2ciy
+	pM7XDertOD7ED+tXL8m+kUirNaFEwIZFX6qRP6TQ+pHobIVG+x3Tbe2xk20EYyBVvPVaBhCFuo16L
+	qp0FrzvIen5glhLZ7f1FIQuCv87M4a12j/n5YctdoR5MXTOz3L+fYiaX4uV5gGhO6S8Y+u4a0uwWh
+	Us4xjf1x4lwQ1quignIg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rcvww-00000002tJt-3CCX;
-	Wed, 21 Feb 2024 23:24:26 +0000
-Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
+	id 1rcyCO-00000003BgX-2lFX;
+	Thu, 22 Feb 2024 01:48:32 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rcvwt-00000002tJ8-3Wro
+	id 1rcyCK-00000003BeX-3Dgs
 	for kexec@lists.infradead.org;
-	Wed, 21 Feb 2024 23:24:25 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id 80A9B61519
-	for <kexec@lists.infradead.org>; Wed, 21 Feb 2024 23:24:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F993C433A6
-	for <kexec@lists.infradead.org>; Wed, 21 Feb 2024 23:24:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708557862;
-	bh=o0pBvdU+JHgT39C/oZ43v61yIgxOBybqfEpddDffT+s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Uo6j9C+3yRULLuhfUameeJdnFArY/DJQDmDNfb1NtvgSUoJu5xf4jfx3Gzy+QWSD9
-	 /Ki6xXWWXFKWco2i+oBjemS298yxFH2zmONSAJcVKpgnn5ASa+vrnmQIpFxASzABp+
-	 xoSQLSGYl7MTRjNIb7yQfurBY6V9FXK8ivBg1ovDs85Q1KUONIJVWj5xmY8Ur8JYYU
-	 fZHc/w3kaVNWAkptQF2laAOVKKd9frUPsRF+EkoYYE7i6AHxoYzxa8iLUf660a9KUD
-	 GjhfnDzRtt2+7CtEkm91mWF+v2OU9tMK+ATcehpGg8SBuGV4NPe2dcC3yYgKO2TTcg
-	 nGOx4pK29xnCA==
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2d2509c66daso25066001fa.3
-        for <kexec@lists.infradead.org>; Wed, 21 Feb 2024 15:24:22 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVeNp0P4xamI+RDt9sWCq97AVocoR4+0Z/py9N3QiCV+uP70vzPiX0YcmncjB1o841LvPeRvbaqS9Xb2rwzAUicb4+cXiW6gB8E
-X-Gm-Message-State: AOJu0Yw6Ivi+K5ttNhENs5pf5zq76ElNB77ZQHPNLbGYKnGsr0cLKoCj
-	2pDEbcCwnRMZGW1wH8bqDvx2pbkrQHAS49g/60S/UbX2KHnIG5ztNUEbwmGpgDcil4Ro2dS/MiH
-	st0wks33E2sTSHL1JsWzb6y5G0TA=
-X-Google-Smtp-Source: AGHT+IEFjS3UH7erXEZ4kbkF96yuQm9TlfZ1AWhPucU81wH0eazr9XKjePangSR6zBzRuAu+rhDmfGqI9zl7A6Q+3YI=
-X-Received: by 2002:a2e:b8c8:0:b0:2d0:c77c:b1ca with SMTP id
- s8-20020a2eb8c8000000b002d0c77cb1camr14950388ljp.49.1708557860236; Wed, 21
- Feb 2024 15:24:20 -0800 (PST)
-MIME-Version: 1.0
-References: <20240214221847.2066632-1-ross.philipson@oracle.com>
- <20240214221847.2066632-16-ross.philipson@oracle.com> <CAMj1kXF3k_c4Wn9GU+NC_+_aYfDpAzAUnfR=A4L_T+re1H3G=w@mail.gmail.com>
- <dc53f100-062b-47ae-abc8-5414ce8d041c@oracle.com> <C98F883A-31D5-4F67-97FF-4AEFAADDDC74@zytor.com>
-In-Reply-To: <C98F883A-31D5-4F67-97FF-4AEFAADDDC74@zytor.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 22 Feb 2024 00:24:06 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXFYVbCd3EaweseNndhmOwdbzEmvB1vjWk2rmTBxAoPCxg@mail.gmail.com>
-Message-ID: <CAMj1kXFYVbCd3EaweseNndhmOwdbzEmvB1vjWk2rmTBxAoPCxg@mail.gmail.com>
-Subject: Re: [PATCH v8 15/15] x86: EFI stub DRTM launch support for Secure Launch
-To: "H. Peter Anvin" <hpa@zytor.com>, Kees Cook <keescook@chromium.org>
-Cc: ross.philipson@oracle.com, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, kexec@lists.infradead.org, 
-	linux-efi@vger.kernel.org, dpsmith@apertussolutions.com, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, 
-	mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de, 
-	jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net, nivedita@alum.mit.edu, 
-	herbert@gondor.apana.org.au, davem@davemloft.net, kanth.ghatraju@oracle.com, 
-	trenchboot-devel@googlegroups.com
+	Thu, 22 Feb 2024 01:48:31 +0000
+Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41M1Gqpu032151;
+	Thu, 22 Feb 2024 01:47:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=Xju1T3kaNJcv/xymaE79FVk7EEUpQgcxMygpLqc5hiQ=;
+ b=lOsqQd871/XHyFCq/3AYDUCQLFeZ68JF4SheP0+DoBm7M6eGUhDG4NOeDig788geIvxy
+ RZVNn2O/ApaNbzADveMOScf+2bBMQw47Kc2on+8XULRM2OYZt0DC8eXfK/sk/Tb5UG5X
+ 8Ij6kCczahKNQQlGYcVtH/QTBkvA3W00ZVbCBUu8Xcf7Is3TdI/HsHKOb0NFxoL/xOab
+ OUZiginNh3yOJhxNAbRl7P2iQkc7Pfkx5QtTP23FWuH5YG4Syaxl+UlPWQZzA/9Fq13a
+ GVK18XkE0ICvadycrzrdU+53vHYi/a5ITMN/DfHyKJ5C3E/XeluA6MLJuY1CkGP9/v75 TA== 
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wdurehc53-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 Feb 2024 01:47:57 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41M0KTpf014343;
+	Thu, 22 Feb 2024 01:47:57 GMT
+Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wb9u2tmm8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 Feb 2024 01:47:57 +0000
+Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
+	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41M1ls9I5637104
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 22 Feb 2024 01:47:56 GMT
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5708358043;
+	Thu, 22 Feb 2024 01:47:54 +0000 (GMT)
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 22BDB58065;
+	Thu, 22 Feb 2024 01:47:53 +0000 (GMT)
+Received: from li-5cd3c5cc-21f9-11b2-a85c-a4381f30c2f3.ibm.com (unknown [9.61.133.105])
+	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 22 Feb 2024 01:47:52 +0000 (GMT)
+Message-ID: <fa85d215803c380ea06669703b9f101e8ec64fb4.camel@linux.ibm.com>
+Subject: Re: [PATCH v5 5/8] ima: kexec: move IMA log copy from kexec load to
+ execute
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Tushar Sugandhi <tusharsu@linux.microsoft.com>,
+        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+        eric.snowberg@oracle.com, stefanb@linux.ibm.com, ebiederm@xmission.com,
+        noodles@fb.com, bauermann@kolabnow.com,
+        linux-integrity@vger.kernel.org, kexec@lists.infradead.org
+Cc: code@tyhicks.com, nramas@linux.microsoft.com, paul@paul-moore.com
+Date: Wed, 21 Feb 2024 20:47:52 -0500
+In-Reply-To: <20240214153827.1087657-6-tusharsu@linux.microsoft.com>
+References: <20240214153827.1087657-1-tusharsu@linux.microsoft.com>
+	 <20240214153827.1087657-6-tusharsu@linux.microsoft.com>
+X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
+Mime-Version: 1.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: qZCeno6HZx8Ym3DQSAKJ6eaxIZn_0uJA
+X-Proofpoint-GUID: qZCeno6HZx8Ym3DQSAKJ6eaxIZn_0uJA
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-21_10,2024-02-21_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxlogscore=999 priorityscore=1501
+ adultscore=0 bulkscore=0 suspectscore=0 mlxscore=0 malwarescore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2402220012
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240221_152423_988844_B02A47D5 
-X-CRM114-Status: GOOD (  23.57  )
+X-CRM114-CacheID: sfid-20240221_174829_166299_7319987A 
+X-CRM114-Status: GOOD (  16.20  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,81 +109,47 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, 21 Feb 2024 at 21:37, H. Peter Anvin <hpa@zytor.com> wrote:
->
-> On February 21, 2024 12:17:30 PM PST, ross.philipson@oracle.com wrote:
-> >On 2/15/24 1:01 AM, Ard Biesheuvel wrote:
-> >> On Wed, 14 Feb 2024 at 23:32, Ross Philipson <ross.philipson@oracle.com> wrote:
-> >>>
-> >>> This support allows the DRTM launch to be initiated after an EFI stub
-> >>> launch of the Linux kernel is done. This is accomplished by providing
-> >>> a handler to jump to when a Secure Launch is in progress. This has to be
-> >>> called after the EFI stub does Exit Boot Services.
-> >>>
-> >>> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
-> >>> ---
-> >>>   drivers/firmware/efi/libstub/x86-stub.c | 55 +++++++++++++++++++++++++
-> >>>   1 file changed, 55 insertions(+)
-> >>>
-> >>> diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-> >>> index 0d510c9a06a4..4df2cf539194 100644
-> >>> --- a/drivers/firmware/efi/libstub/x86-stub.c
-> >>> +++ b/drivers/firmware/efi/libstub/x86-stub.c
-> >>> @@ -9,6 +9,7 @@
-> >>>   #include <linux/efi.h>
-> >>>   #include <linux/pci.h>
-> >>>   #include <linux/stddef.h>
-> >>> +#include <linux/slr_table.h>
-> >>>
-> >>>   #include <asm/efi.h>
-> >>>   #include <asm/e820/types.h>
-> >>> @@ -810,6 +811,57 @@ static efi_status_t efi_decompress_kernel(unsigned long *kernel_entry)
-> >>>          return EFI_SUCCESS;
-> >>>   }
-> >>>
-> >>> +static void efi_secure_launch(struct boot_params *boot_params)
-> >>> +{
-> >>> +       struct slr_entry_uefi_config *uefi_config;
-> >>> +       struct slr_uefi_cfg_entry *uefi_entry;
-> >>> +       struct slr_entry_dl_info *dlinfo;
-> >>> +       efi_guid_t guid = SLR_TABLE_GUID;
-> >>> +       struct slr_table *slrt;
-> >>> +       u64 memmap_hi;
-> >>> +       void *table;
-> >>> +       u8 buf[64] = {0};
-> >>> +
-> >>
-> >> If you add a flex array to slr_entry_uefi_config as I suggested in
-> >> response to the other patch, we could simplify this substantially
-> >
-> >I feel like there is some reason why we did not use flex arrays. We were talking and we seem to remember we used to use them and someone asked us to remove them. We are still looking into it. But if we can go back to them, I will take all the changes you recommended here.
-> >
->
-> Linux kernel code doesn't use VLAs because of the limited stack size, and VLAs or alloca() makes stack size tracking impossible. Although this technically speaking runs in a different environment, it is easier to enforce the constraint globally.
 
-Flex array != VLA
+> @@ -195,7 +181,34 @@ void ima_add_kexec_buffer(struct kimage *image)
+>  static int ima_update_kexec_buffer(struct notifier_block *self,
+>  				   unsigned long action, void *data)
+>  {
+> -	return NOTIFY_OK;
+> +	void *buf = NULL;
+> +	size_t buf_size;
+> +	int ret = NOTIFY_OK;
+> +
+> +	if (!kexec_in_progress) {
+> +		pr_info("%s: No kexec in progress.\n", __func__);
+> +		return ret;
+> +	}
+> +
+> +	if (!ima_kexec_buffer) {
+> +		pr_err("%s: Kexec buffer not set.\n", __func__);
+> +		return ret;
+> +	}
 
-VLAs were phased out because of this reason (and VLAISs [VLAs in
-structs] were phased out before that because they are a GNU extension
-and not supported by Clang)
+pr_ messages should already be prefixed with the module name.  There shouldn't
+be a need to include the function name as well.
 
-Today, VLAs are not supported anywhere in the kernel.
+> +	ret = ima_dump_measurement_list(&buf_size, &buf,
+> +					kexec_segment_size);
+> +
+> +	if (!buf) {
+> +		pr_err("%s: Dump measurements failed. Error:%d\n",
+> +		       __func__, ret);
+> +		goto out;
+> +	}
+> +	memcpy(ima_kexec_buffer, buf, buf_size);
+> +out:
+> +	kimage_unmap_segment(ima_kexec_buffer);
+> +	ima_kexec_buffer = NULL;
+> +
+> +	return ret;
+>  }
+>  
+>  struct notifier_block update_buffer_nb = {
 
-Flex arrays are widely used in the kernel. A flex array is a trailing
-array of unspecified size in a struct that makes the entire *type*
-have a variable size. But that does not make them VLAs (or VLAISs) - a
-VLA is a stack allocated *variable* whose size is based on a function
-parameter.
-
-Instances of types containing flex arrays can be allocated statically,
-or dynamically on the heap. This is common practice in the kernel, and
-even supported by instrumentation to help the compiler track the
-runtime size and flag overruns. We are even in the process of adding
-compiler support to annotate struct members as carrying the number of
-elements in an associated flex arrays, to improve the coverage of the
-instrumentation.
-
-I am not asking for a VLA here, only a flex array.
 
 _______________________________________________
 kexec mailing list
