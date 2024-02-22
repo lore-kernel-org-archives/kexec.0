@@ -4,134 +4,106 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 84EAEC48BF8
-	for <kexec@archiver.kernel.org>; Thu, 22 Feb 2024 12:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 98590C48BF8
+	for <kexec@archiver.kernel.org>; Thu, 22 Feb 2024 13:58:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
-	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=C+9E1dutxzzC6NJhCQe+zSJmsmD+qO9jy3pyl4/uL1Q=; b=w418hVXD6y3pYi
-	Nc3yMmy5kcu6dmdYZX2K6nbTTmiMJtTgT7rxqffsgRUkibAwlENYlKCUtpNxeJIQQlHu6JgOWJW8/
-	nIw759WXK5Ye7MOU1ulQ3CwXIBfpee3GEAyN9AB5imwL/FK/npCruYyzSk58Hr9LLx9DwxGSMtH9G
-	4SIbpyC257kHZ7DG08b7O9L5pLyGlZHzmCxyov64/vrvuv2UpirjCRUyNLs9BxS+Gi1/o4yvEWwit
-	m0LC07jTPXKD61ecU2ednIcosCi9GCZJyRsDiw8IXN/uDdLmU24g816sw5xdGIRUgkSw+SxRLN5hc
-	s3Ka/gAK6KEXRK1oE1Tw==;
+	List-Owner; bh=sQ9ie28Axfr2B85StHuWk5AkF/GADL514ihXEWkbIFg=; b=0xaYeXAcGQ/ZRW
+	3/eHUUWg2gqK5rdvmY3enhxQe77AKdEzOAu7LnMGGzKpWsojsMoHPpJqA9HOmYFQJj1ZQq0yiSW/W
+	KJo6u7y8rTp19LPiwN8k8StQcD2ACagUaNeN6a/zlahl201gCN2n/j022oE46aTiI/G4RE75Qq86Y
+	tNBNzu87NToWqihf9QVrt8C0lr2PXXJ76wrLzFu9BUiicibO7LnYkgsc0i0rkc4G4YZiBHoYHXiYY
+	HEUYJtRIHhRpHk8slcA5c+h29Oz34ho8fKGl/qPb5x6CfEhsRVz3UPE0yfbNoE7Y7sDiKKu1aej2S
+	gj8vy8X9zQe0KABgRhiQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rd8E6-00000004qBf-1T3C;
-	Thu, 22 Feb 2024 12:30:58 +0000
-Received: from mail-ed1-x52e.google.com ([2a00:1450:4864:20::52e])
+	id 1rd9aL-000000058fx-2mzm;
+	Thu, 22 Feb 2024 13:58:01 +0000
+Received: from sender3-of-o59.zoho.com ([136.143.184.59])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rd8E2-00000004q9w-3Lo6
+	id 1rd9aJ-000000058eg-1tnF
 	for kexec@lists.infradead.org;
-	Thu, 22 Feb 2024 12:30:56 +0000
-Received: by mail-ed1-x52e.google.com with SMTP id 4fb4d7f45d1cf-5645efb2942so1348104a12.1
-        for <kexec@lists.infradead.org>; Thu, 22 Feb 2024 04:30:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1708605052; x=1709209852; darn=lists.infradead.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=rtMJTU0KaK69D2gKtHaxXyryfBE+awWVy+sf0VRiX1M=;
-        b=jVn6zrcBCD0Z5s7Te5PP8n5nF2rJp1yGIVNYuWu9nUeWXqWwFHFJxdJD6e8UaYVUHj
-         +63ur9Ap8THcC6+fMZ6WoAszFE8mIdd4TR1p7gG/QU+jKJ5f2Fd33fKw8n9Pfvuq87JO
-         JjA5m/w9zyL5reEewPrSGJ5J5d0lSIh2vCAi8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708605052; x=1709209852;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rtMJTU0KaK69D2gKtHaxXyryfBE+awWVy+sf0VRiX1M=;
-        b=fkiuZm6gIAl2LfivJxZL+m3e7TOD9+QUYm/PHwgyJt4lXU5Ez619J9KpWFiIsAKmGn
-         aWU71BqkT+5+P8N3E5B7iuCw/DQnGGKBFzPJQEkDeEIYfIrOK/qc+fhQwqiL9wEcgGfz
-         XBbaxct8Hu958lCRzBT3oHXBAClhB+a88d3xx4fvjyoezMBG8J+ia7m3XO2/qAQ6R4Mq
-         vUML3uk1E27SnPGxegUgWAL0TrN6F//LOsQJu0px7T8oAxpBOM4FAy6cZJAjO4mMk4hr
-         9fNJkLe3+ClXV58Pa1qegJrG21N8lYMTE7iXhYL4q/yN0r1R9NWKmxWDu0rRuAlfaAtJ
-         AEGw==
-X-Forwarded-Encrypted: i=1; AJvYcCUj0nLr/lpJ9i9YVYvIIQDwpDWAIpUdGOadCoCtsFI1KBW1EgZrMvyJ9LS7IBhkIn5OmglNZ8pKQYy51DDptVicsAqGVQVpROia
-X-Gm-Message-State: AOJu0YwO8npVNzpWnqKg8HpbT4QDiweK+/MlCsufHtcpe0sQLtUGdr2i
-	GfldjAuNnqfcn4RPToreO3Cj46wuJocUJbrOFeTKfmCAJbZFIh7fpZ/Fxrsl0q8=
-X-Google-Smtp-Source: AGHT+IFPuQzpowOl3k/GPdUR9TfMIP5AhN9fSjb+vcvG0GakAp/U3UXOgAHES4kjT6cIQFre3AyF/w==
-X-Received: by 2002:a17:906:2b0e:b0:a3e:8bd8:b711 with SMTP id a14-20020a1709062b0e00b00a3e8bd8b711mr1842289ejg.37.1708605052106;
-        Thu, 22 Feb 2024 04:30:52 -0800 (PST)
-Received: from [10.80.67.149] (default-46-102-197-194.interdsl.co.uk. [46.102.197.194])
-        by smtp.gmail.com with ESMTPSA id cw4-20020a170907160400b00a3e45fa1c77sm5071178ejd.55.2024.02.22.04.30.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Feb 2024 04:30:51 -0800 (PST)
-Message-ID: <1a8e69a7-89eb-4d36-94d6-0da662d8b72f@citrix.com>
-Date: Thu, 22 Feb 2024 12:30:50 +0000
+	Thu, 22 Feb 2024 13:58:00 +0000
+ARC-Seal: i=1; a=rsa-sha256; t=1708610250; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=cHub6epmobdZVnGj8YMH2ybbVIPn7E0HfOR+Za7lnnjBbrMuXJ+YEsJdAa4yyHu8wV7uqL7+CCwUa7/1yEq6cYYaAfxff7NrUxMfOy/X6nWJSI4lKnFT5v0+JlHFAMu70jnmpttDZm8BJSfb6HVV+hnLZaBrCvDDIJdBHHoL0W4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1708610250; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=Y83exyPy9st5PBYw7nPtC9FL3Mvmc5XFbN033jciyfA=; 
+	b=mRQ1I4xyfS8mqOGqs6LTsADo6PTaYzdju5mZdfdKCC5GNWmuX26HSRvJwpGkD4HwLOAOzrGpF16FIR1xukVSbX5HeqPCsswG0qsKc1qSxF9y9qcR4Ieq+Snf9VyUhMgRanFnlDGB8Et4LIyrZjKhPTtNNjTN4uiQAF0qYnic80g=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=apertussolutions.com;
+	spf=pass  smtp.mailfrom=dpsmith@apertussolutions.com;
+	dmarc=pass header.from=<dpsmith@apertussolutions.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1708610250;
+	s=zoho; d=apertussolutions.com; i=dpsmith@apertussolutions.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=Y83exyPy9st5PBYw7nPtC9FL3Mvmc5XFbN033jciyfA=;
+	b=kdQUKRiXO+b/CGWjER4qU7sfdtjxiVPhauuppMpzjmEhCQb+e2ebgYuCH4SYCORG
+	yOdZIgVgEhYKX3Th24MomoturmlwITCXXn0iEGgB2wo0db6N+zQKfTNYr83kDBR4Hge
+	+ZzuP4pfQwTBLoQd3VMTB4+Dk+kIOQq4KOsZbmCM=
+Received: from [10.10.1.138] (static-72-81-132-2.bltmmd.fios.verizon.net [72.81.132.2]) by mx.zohomail.com
+	with SMTPS id 1708610247838305.8350062521944; Thu, 22 Feb 2024 05:57:27 -0800 (PST)
+Message-ID: <c5bd3ee4-4bf1-4e9a-8e5d-12ee8e195d3d@apertussolutions.com>
+Date: Thu, 22 Feb 2024 08:57:24 -0500
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 06/15] x86: Add early SHA support for Secure Launch
- early measurements
-Content-Language: en-GB
+Subject: Re: [PATCH v8 14/15] x86: Secure Launch late initcall platform module
+Content-Language: en-US
 To: Ard Biesheuvel <ardb@kernel.org>,
- Andrew Cooper <andrew.cooper3@citrix.com>
-Cc: Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+ Ross Philipson <ross.philipson@oracle.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+ linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
  linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
- linux-efi@vger.kernel.org, dpsmith@apertussolutions.com, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
+ linux-efi@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
  mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
  peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
  nivedita@alum.mit.edu, herbert@gondor.apana.org.au, davem@davemloft.net,
- kanth.ghatraju@oracle.com, trenchboot-devel@googlegroups.com,
- Eric Biggers <ebiggers@kernel.org>
+ kanth.ghatraju@oracle.com, trenchboot-devel@googlegroups.com
 References: <20240214221847.2066632-1-ross.philipson@oracle.com>
- <20240214221847.2066632-7-ross.philipson@oracle.com>
- <CAMj1kXEmMBY_jc0uM5UgZbuZ3-C7NPKzg5AScaunyu9XzLgzZA@mail.gmail.com>
- <98ad92bb-ef17-4c15-88ba-252db2a2e738@citrix.com>
- <CAMj1kXFTu+bV2kQhAyu15hrYai20NcBLb4Zu8XG2Y-XjL0f+rw@mail.gmail.com>
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
- 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
- 6+ahAA==
-In-Reply-To: <CAMj1kXFTu+bV2kQhAyu15hrYai20NcBLb4Zu8XG2Y-XjL0f+rw@mail.gmail.com>
+ <20240214221847.2066632-15-ross.philipson@oracle.com>
+ <CAMj1kXHXt6z94JCM2C5rLz-n9nGA46bb1eMbqcP5e7K9+NzPSg@mail.gmail.com>
+From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
+Autocrypt: addr=dpsmith@apertussolutions.com; keydata=
+ xsJuBFYrueARCACPWL3r2bCSI6TrkIE/aRzj4ksFYPzLkJbWLZGBRlv7HQLvs6i/K4y/b4fs
+ JDq5eL4e9BdfdnZm/b+K+Gweyc0Px2poDWwKVTFFRgxKWq9R7McwNnvuZ4nyXJBVn7PTEn/Z
+ G7D08iZg94ZsnUdeXfgYdJrqmdiWA6iX9u84ARHUtb0K4r5WpLUMcQ8PVmnv1vVrs/3Wy/Rb
+ foxebZNWxgUiSx+d02e3Ad0aEIur1SYXXv71mqKwyi/40CBSHq2jk9eF6zmEhaoFi5+MMMgX
+ X0i+fcBkvmT0N88W4yCtHhHQds+RDbTPLGm8NBVJb7R5zbJmuQX7ADBVuNYIU8hx3dF3AQCm
+ 601w0oZJ0jGOV1vXQgHqZYJGHg5wuImhzhZJCRESIwf+PJxik7TJOgBicko1hUVOxJBZxoe0
+ x+/SO6tn+s8wKlR1Yxy8gYN9ZRqV2I83JsWZbBXMG1kLzV0SAfk/wq0PAppA1VzrQ3JqXg7T
+ MZ3tFgxvxkYqUP11tO2vrgys+InkZAfjBVMjqXWHokyQPpihUaW0a8mr40w9Qui6DoJj7+Gg
+ DtDWDZ7Zcn2hoyrypuht88rUuh1JuGYD434Q6qwQjUDlY+4lgrUxKdMD8R7JJWt38MNlTWvy
+ rMVscvZUNc7gxcmnFUn41NPSKqzp4DDRbmf37Iz/fL7i01y7IGFTXaYaF3nEACyIUTr/xxi+
+ MD1FVtEtJncZNkRn7WBcVFGKMAf+NEeaeQdGYQ6mGgk++i/vJZxkrC/a9ZXme7BhWRP485U5
+ sXpFoGjdpMn4VlC7TFk2qsnJi3yF0pXCKVRy1ukEls8o+4PF2JiKrtkCrWCimB6jxGPIG3lk
+ 3SuKVS/din3RHz+7Sr1lXWFcGYDENmPd/jTwr1A1FiHrSj+u21hnJEHi8eTa9029F1KRfocp
+ ig+k0zUEKmFPDabpanI323O5Tahsy7hwf2WOQwTDLvQ+eqQu40wbb6NocmCNFjtRhNZWGKJS
+ b5GrGDGu/No5U6w73adighEuNcCSNBsLyUe48CE0uTO7eAL6Vd+2k28ezi6XY4Y0mgASJslb
+ NwW54LzSSM0uRGFuaWVsIFAuIFNtaXRoIDxkcHNtaXRoQGFwZXJ0dXNzb2x1dGlvbnMuY29t
+ PsJ6BBMRCAAiBQJWK7ngAhsjBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRBTc6WbYpR8
+ KrQ9AP94+xjtFfJ8gj5c7PVx06Zv9rcmFUqQspZ5wSEkvxOuQQEAg6qEsPYegI7iByLVzNEg
+ 7B7fUG7pqWIfMqFwFghYhQzOwU0EViu54BAIAL6MXXNlrJ5tRUf+KMBtVz1LJQZRt/uxWrCb
+ T06nZjnbp2UcceuYNbISOVHGXTzu38r55YzpkEA8eURQf+5hjtvlrOiHxvpD+Z6WcpV6rrMB
+ kcAKWiZTQihW2HoGgVB3gwG9dCh+n0X5OzliAMiGK2a5iqnIZi3o0SeW6aME94bSkTkuj6/7
+ OmH9KAzK8UnlhfkoMg3tXW8L6/5CGn2VyrjbB/rcrbIR4mCQ+yCUlocuOjFCJhBd10AG1IcX
+ OXUa/ux+/OAV9S5mkr5Fh3kQxYCTcTRt8RY7+of9RGBk10txi94dXiU2SjPbassvagvu/hEi
+ twNHms8rpkSJIeeq0/cAAwUH/jV3tXpaYubwcL2tkk5ggL9Do+/Yo2WPzXmbp8vDiJPCvSJW
+ rz2NrYkd/RoX+42DGqjfu8Y04F9XehN1zZAFmCDUqBMa4tEJ7kOT1FKJTqzNVcgeKNBGcT7q
+ 27+wsqbAerM4A0X/F/ctjYcKwNtXck1Bmd/T8kiw2IgyeOC+cjyTOSwKJr2gCwZXGi5g+2V8
+ NhJ8n72ISPnOh5KCMoAJXmCF+SYaJ6hIIFARmnuessCIGw4ylCRIU/TiXK94soilx5aCqb1z
+ ke943EIUts9CmFAHt8cNPYOPRd20pPu4VFNBuT4fv9Ys0iv0XGCEP+sos7/pgJ3gV3pCOric
+ p15jV4PCYQQYEQgACQUCViu54AIbDAAKCRBTc6WbYpR8Khu7AP9NJrBUn94C/3PeNbtQlEGZ
+ NV46Mx5HF0P27lH3sFpNrwD/dVdZ5PCnHQYBZ287ZxVfVr4Zuxjo5yJbRjT93Hl0vMY=
+In-Reply-To: <CAMj1kXHXt6z94JCM2C5rLz-n9nGA46bb1eMbqcP5e7K9+NzPSg@mail.gmail.com>
+X-ZohoMailClient: External
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240222_043055_205975_B5BE8F32 
-X-CRM114-Status: GOOD (  30.56  )
+X-CRM114-CacheID: sfid-20240222_055759_613148_E4833E66 
+X-CRM114-Status: GOOD (  20.69  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -143,91 +115,88 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-T24gMjIvMDIvMjAyNCA5OjM0IGFtLCBBcmQgQmllc2hldXZlbCB3cm90ZToKPiBPbiBUaHUsIDIy
-IEZlYiAyMDI0IGF0IDA0OjA1LCBBbmRyZXcgQ29vcGVyIDxhbmRyZXcuY29vcGVyM0BjaXRyaXgu
-Y29tPiB3cm90ZToKPj4gT24gMTUvMDIvMjAyNCA4OjE3IGFtLCBBcmQgQmllc2hldXZlbCB3cm90
-ZToKPj4+IE9uIFdlZCwgMTQgRmViIDIwMjQgYXQgMjM6MzEsIFJvc3MgUGhpbGlwc29uIDxyb3Nz
-LnBoaWxpcHNvbkBvcmFjbGUuY29tPiB3cm90ZToKPj4+PiBGcm9tOiAiRGFuaWVsIFAuIFNtaXRo
-IiA8ZHBzbWl0aEBhcGVydHVzc29sdXRpb25zLmNvbT4KPj4+Pgo+Pj4+IFRoZSBTSEEgYWxnb3Jp
-dGhtcyBhcmUgbmVjZXNzYXJ5IHRvIG1lYXN1cmUgY29uZmlndXJhdGlvbiBpbmZvcm1hdGlvbiBp
-bnRvCj4+Pj4gdGhlIFRQTSBhcyBlYXJseSBhcyBwb3NzaWJsZSBiZWZvcmUgdXNpbmcgdGhlIHZh
-bHVlcy4gVGhpcyBpbXBsZW1lbnRhdGlvbgo+Pj4+IHVzZXMgdGhlIGVzdGFibGlzaGVkIGFwcHJv
-YWNoIG9mICNpbmNsdWRpbmcgdGhlIFNIQSBsaWJyYXJpZXMgZGlyZWN0bHkgaW4KPj4+PiB0aGUg
-Y29kZSBzaW5jZSB0aGUgY29tcHJlc3NlZCBrZXJuZWwgaXMgbm90IHVuY29tcHJlc3NlZCBhdCB0
-aGlzIHBvaW50Lgo+Pj4+Cj4+Pj4gVGhlIFNIQSBjb2RlIGhlcmUgaGFzIGl0cyBvcmlnaW5zIGlu
-IHRoZSBjb2RlIGZyb20gdGhlIG1haW4ga2VybmVsOgo+Pj4+Cj4+Pj4gY29tbWl0IGM0ZDViOWZm
-YTMxZiAoImNyeXB0bzogc2hhMSAtIGltcGxlbWVudCBiYXNlIGxheWVyIGZvciBTSEEtMSIpCj4+
-Pj4KPj4+PiBBIG1vZGlmaWVkIHZlcnNpb24gb2YgdGhpcyBjb2RlIHdhcyBpbnRyb2R1Y2VkIHRv
-IHRoZSBsaWIvY3J5cHRvL3NoYTEuYwo+Pj4+IHRvIGJyaW5nIGl0IGluIGxpbmUgd2l0aCB0aGUg
-c2hhMjU2IGNvZGUgYW5kIGFsbG93IGl0IHRvIGJlIHB1bGxlZCBpbnRvIHRoZQo+Pj4+IHNldHVw
-IGtlcm5lbCBpbiB0aGUgc2FtZSBtYW5uZXIgYXMgc2hhMjU2IGlzLgo+Pj4+Cj4+Pj4gU2lnbmVk
-LW9mZi1ieTogRGFuaWVsIFAuIFNtaXRoIDxkcHNtaXRoQGFwZXJ0dXNzb2x1dGlvbnMuY29tPgo+
-Pj4+IFNpZ25lZC1vZmYtYnk6IFJvc3MgUGhpbGlwc29uIDxyb3NzLnBoaWxpcHNvbkBvcmFjbGUu
-Y29tPgo+Pj4gV2UgaGF2ZSBoYWQgc29tZSBkaXNjdXNzaW9ucyBhYm91dCB0aGlzLCBhbmQgeW91
-IHJlYWxseSBuZWVkIHRvCj4+PiBjYXB0dXJlIHRoZSBqdXN0aWZpY2F0aW9uIGluIHRoZSBjb21t
-aXQgbG9nIGZvciBpbnRyb2R1Y2luZyBuZXcgY29kZQo+Pj4gdGhhdCBpbXBsZW1lbnRzIGFuIG9i
-c29sZXRlIGFuZCBicm9rZW4gaGFzaGluZyBhbGdvcml0aG0uCj4+Pgo+Pj4gU0hBLTEgaXMgYnJv
-a2VuIGFuZCBzaG91bGQgbm8gbG9uZ2VyIGJlIHVzZWQgZm9yIGFueXRoaW5nLiBJbnRyb2R1Y2lu
-Zwo+Pj4gbmV3IHN1cHBvcnQgZm9yIGEgaGlnaGx5IGNvbXBsZXggYm9vdCBzZWN1cml0eSBmZWF0
-dXJlLCBhbmQgdGhlbgo+Pj4gcmVseWluZyBvbiBTSEEtMSBpbiB0aGUgaW1wbGVtZW50YXRpb24g
-bWFrZXMgdGhpcyB3aG9sZSBlZmZvcnQgc2VlbQo+Pj4gYWxtb3N0IGZ1dGlsZSwgKnVubGVzcyog
-eW91IHByb3ZpZGUgc29tZSByb2NrIHNvbGlkIHJlYXNvbnMgaGVyZSB3aHkKPj4+IHRoaXMgaXMg
-c3RpbGwgc2FmZS4KPj4+Cj4+PiBJZiB0aGUgdXBzaG90IHdvdWxkIGJlIHRoYXQgc29tZSBwZW9w
-bGUgYXJlIHN0dWNrIHdpdGggU0hBLTEgc28gdGhleQo+Pj4gd29uJ3QgYmUgYWJsZSB0byB1c2Ug
-dGhpcyBmZWF0dXJlLCB0aGVuIEknbSBub3QgY29udmluY2VkIHdlIHNob3VsZAo+Pj4gb2JzZXNz
-IG92ZXIgdGhhdC4KPj4gVG8gYmUgYWJzb2x1dGVseSBjcnlzdGFsIGNsZWFyIGhlcmUuCj4+Cj4+
-IFRoZSBjaG9pY2Ugb2YgaGFzaCBhbGdvcml0aG0ocykgYXJlIGRldGVybWluZWQgYnkgdGhlIE9F
-TSBhbmQgdGhlCj4+IHBsYXRmb3JtLCBub3QgYnkgTGludXguCj4+Cj4+IEZhaWxpbmcgdG8gKGF0
-IGxlYXN0KSBjYXAgYSBQQ1IgaW4gYSBiYW5rIHdoaWNoIHRoZSBPRU0vcGxhdGZvcm0gbGVmdAo+
-PiBhY3RpdmUgaXMgYSBzZWN1cml0eSB2dWxuZXJhYmlsaXR5LiAgSXQgcGVybWl0cyB0aGUgdW5z
-ZWFsaW5nIG9mIHNlY3JldHMKPj4gaWYgYW4gYXR0YWNrZXIgY2FuIHJlcGxheSBhIGdvb2Qgc2V0
-IG9mIG1lYXN1cmVtZW50cyBpbnRvIGFuIHVudXNlZCBiYW5rLgo+Pgo+PiBUaGUgb25seSB3YXkg
-dG8gZ2V0IHJpZCBvZiB0aGUgcmVxdWlyZW1lbnQgZm9yIFNIQS0xIGhlcmUgaXMgdG8gbG9iYnkK
-Pj4gdGhlIElIVnMvT0VNcywgb3IgcGVyaGFwcyB0aGUgVENHLCB0byBwcm9kdWNlL3NwZWMgYSBw
-bGF0Zm9ybSB3aGVyZSB0aGUKPj4gU0hBLTEgYmFua3MgY2FuIGJlIGRpc2FibGVkLiAgVGhlcmUg
-YXJlIG5vIGtub3duIHN1Y2ggcGxhdGZvcm1zIGluIHRoZQo+PiBtYXJrZXQgdG9kYXksIHRvIHRo
-ZSBiZXN0IG9mIG91ciBrbm93bGVkZ2UuCj4+Cj4gT0ssIHNvIG1haW5saW5lIExpbnV4IGRvZXMg
-bm90IHN1cHBvcnQgc2VjdXJlIGxhdW5jaCBhdCBhbGwgdG9kYXkuIEF0Cj4gdGhpcyBwb2ludCwg
-d2UgbmVlZCB0byBkZWNpZGUgd2hldGhlciBvciBub3QgdG9tb3Jyb3cncyBtYWlubGluZSBMaW51
-eAo+IHdpbGwgc3VwcG9ydCBzZWN1cmUgbGF1bmNoIHdpdGggU0hBMSBvciB3aXRob3V0LCByaWdo
-dD8KCkknZCBhcmd1ZSB0aGF0J3MgYSBzbGlnaHRseSB1bmZhaXIgY2hhcmFjdGVyaXNhdGlvbi4K
-CldlIHdhbnQgdG9tb3Jyb3cncyBtYWlubGluZSB0byBzdXBwb3J0IFNlY3VyZSBMYXVuY2guwqAg
-V2hhdCB0aGF0IGVudGFpbHMKdW5kZXIgdGhlIGhvb2QgaXMgbGFyZ2VseSBvdXRzaWRlIG9mIHRo
-ZSBjb250cm9sIG9mIHRoZSBlbmQgdXNlci4KCj4gQW5kIHRoZSBwb2ludCB5b3UgYXJlIG1ha2lu
-ZyBoZXJlIGlzIHRoYXQgd2UgbmVlZCBTSEEtMSBub3Qgb25seSB0byBhKQo+IHN1cHBvcnQgc3lz
-dGVtcyB0aGF0IGFyZSBvbiBUUE0gMS4yIGFuZCBzdXBwb3J0IG5vdGhpbmcgZWxzZSwgYnV0IGFs
-c28KPiB0byBiKSBlbnN1cmUgdGhhdCBjcnlwdG8gYWdpbGUgVFBNIDIuMCB3aXRoIGJvdGggU0hB
-LTEgYW5kIFNIQS0yNTYKPiBlbmFibGVkIGNhbiBiZSBzdXBwb3J0ZWQgaW4gYSBzYWZlIG1hbm5l
-ciwgd2hpY2ggd291bGQgaW52b2x2ZQo+IG1lYXN1cmluZyBzb21lIHRlcm1pbmF0aW5nIGV2ZW50
-IGludG8gdGhlIFNIQS0xIFBDUnMgdG8gZW5zdXJlIHRoZXkKPiBhcmUgbm90IGxlZnQgaW4gYSBk
-YW5nbGluZyBzdGF0ZSB0aGF0IG1pZ2h0IGFsbG93IGFuIGFkdmVyc2FyeSB0bwo+IHRyaWNrIHRo
-ZSBUUE0gaW50byB1bnNlYWxpbmcgYSBzZWNyZXQgdGhhdCBpdCBzaG91bGRuJ3QuCgpZZXMuwqAg
-QWxzbyBjKSBiZWNhdXNlIGlmIHRoZSBlbmQgdXNlciB3YW50cyB0byB1c2UgU0hBLTEsIHRoZXkg
-c2hvdWxkIGJlCmFibGUgdG8uCgo+IFNvIGNhbiB3ZSBzdXBwb3J0IGIpIHdpdGhvdXQgYSksIGFu
-ZCBpZiBzbywgZG9lcyBtZWFzdXJpbmcgYW4KPiBhcmJpdHJhcnkgZHVtbXkgZXZlbnQgaW50byBh
-IFBDUiB0aGF0IGlzIG9ubHkgbWVhbnQgdG8ga2VlcCBzZWFsZWQKPiBmb3JldmVyIHJlYWxseSBy
-ZXF1aXJlIGEgU0hBLTEgaW1wbGVtZW50YXRpb24sIG9yIGNvdWxkIHdlIGp1c3QgdXNlIGFuCj4g
-YXJiaXRyYXJ5IChub3QgZXZlbiByYW5kb20pIHNlcXVlbmNlIG9mIDE2MCBiaXRzIGFuZCB1c2Ug
-dGhhdCBpbnN0ZWFkPwoKYSkgYW5kIGIpIGFyZSBpbiBwcmluY2lwbGUgaW5kZXBlbmRlbnQsIGJ1
-dCB3ZSBjYW5ub3Qgc3VwcG9ydCBiKSB3aXRob3V0ClNIQS0xLgoKVG8gY2FwIGEgUENSLCB0aGUg
-ZXZlbnQgbG9nIHN0aWxsIG5lZWRzIHRvIGJlIGtlcHQgYWNjdXJhdGUsIGFuZCB0aGF0J3MKYXQg
-bGVhc3Qgb25lIFNIQS0xIGNhbGN1bGF0aW9uLsKgIElmIHlvdSB3ZXJlIHRvIHNpbXBseSBleHRl
-bmQgYSBkdW1teQp2YWx1ZSwgdGhlIHN5c3RlbSBob3BlZnVsbHkgZmFpbHMgc2FmZSwgYnV0IHRo
-ZSB1c2VyIGdldHMgInNvbWV0aGluZwp3ZW50IHdyb25nLCB5b3UncmUgb24geW91ciBvd24iLCBy
-YXRoZXIgdGhhbiAid2UgaW50ZW50aW9uYWxseSBibG9ja2VkCnRoZSB1c2Ugb2YgU0hBLTEsIGV2
-ZXJ5dGhpbmcgaXMgZ29vZCIuCgpBbmQgZnJhbmtseSwgeW91IG5lZWQgU0hBLTEganVzdCB0byBy
-ZWFkIHRoZSBldmVudCBsb2csIGlmIGFueSBjb21wb25lbnQKKGluY2x1ZGluZyBUWFQgaXRzZWxm
-KSB3cm90ZSBhIFNIQS0xIGVudHJ5IGludG8gaXQuCgoKVG8gYmUgYmx1bnQuwqAgU0hBLTEgc3Vw
-cG9ydCBpcyBub3QgdmlhYmx5IG9wdGlvbmFsIHRvZGF5IGFzIGZhciBhcwpTZWN1cmUgTGF1bmNo
-IGlzIGNvbmNlcm5lZC7CoCBJZiB0aGVyZSdzIGEgc3VpdGFibGUgS2NvbmZpZyBzeW1ib2wgdG8g
-dXNlCmZvciBwZW9wbGUgd2hvIHdhbnQgYSBjb21wbGV0ZWx5IFNIQS0xLWxlc3Mga2VybmVsLCB0
-aGVuIHdlIGNhbiBtYWtlClNlY3VyZSBMYXVuY2ggZGVwZW5kIG9uIHRoYXQgdW50aWwgc3VjaCB0
-aW1lIGFzIHRoZSBoYXJkd2FyZSBlY29zeXN0ZW0KaGFzIGNhdWdodCB1cC4KCn5BbmRyZXcKCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxp
-bmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
-b3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On 2/15/24 03:40, Ard Biesheuvel wrote:
+> On Wed, 14 Feb 2024 at 23:32, Ross Philipson <ross.philipson@oracle.com> wrote:
+>>
+>> From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
+>>
+>> The Secure Launch platform module is a late init module. During the
+>> init call, the TPM event log is read and measurements taken in the
+>> early boot stub code are located. These measurements are extended
+>> into the TPM PCRs using the mainline TPM kernel driver.
+>>
+>> The platform module also registers the securityfs nodes to allow
+>> access to TXT register fields on Intel along with the fetching of
+>> and writing events to the late launch TPM log.
+>>
+>> Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
+>> Signed-off-by: garnetgrimm <grimmg@ainfosec.com>
+>> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
+> 
+> There is an awful amount of code that executes between the point where
+> the measurements are taken and the point where they are loaded into
+> the PCRs. All of this code could subvert the boot flow and hide this
+> fact, by replacing the actual taken measurement values with the known
+> 'blessed' ones that will unseal the keys and/or phone home to do a
+> successful remote attestation.
+
+To set context, in general the motivation to employ an RTM, Static or 
+Dynamic, integrity solution is to enable external platform validation, 
+aka attestation. These trust chains are constructed from the principle 
+of measure and execute that rely on the presence of a RoT for Storage 
+(RTS) and a RoT for Reporting (RTR). Under the TCG architecture adopted 
+by x86 vendors and now recently by Arm, those roles are fulfilled by the 
+TPM. With this context, lets layout the assumptive trusts being made here,
+   1. The CPU GETSEC instruction functions correctly
+   2. The IOMMU, and by extension the PMRs, functions correctly
+   2. The ACM authentication process functions correctly
+   3. The ACM functions correctly
+   4. The TPM interactions function correctly
+   5. The TPM functions correctly
+
+With this basis, let's explore your assertion here. The assertion breaks 
+down into two scenarios. The first is that the at-rest kernel binary is 
+corrupt, unintentionally (bug) or maliciously, either of which does not 
+matter for the situation. For the sake of simplicity, corruption of the 
+Linux kernel during loading or before the DRTM Event is considered an 
+equivalent to corruption of the kernel at-rest. The second is that the 
+kernel binary was corrupted in memory at some point after the DRTM event 
+occurs.
+
+For both scenarios, the ACM will correctly configure the IOMMU PMRs to 
+ensure the kernel can no longer be tampered with in memory. After which, 
+the ACM will then accurately measure the kernel (bzImage) and safely 
+store the measurement in the TPM.
+
+In the first scenario, the TPM will accurately report the kernel 
+measurement in the attestation. The attestation authority will be able 
+to detect if an invalid kernel was started and can take whatever 
+remediation actions it may employ.
+
+In the second scenario, any attempt to corrupt the binary after the ACM 
+has configured the IOMMU PMR will fail.
+
+
+> At the very least, this should be documented somewhere. And if at all
+> possible, it should also be documented why this is ok, and to what
+> extent it limits the provided guarantees compared to a true D-RTM boot
+> where the early boot code measures straight into the TPMs before
+> proceeding.
+
+I can add a rendition of the above into the existing section of the 
+documentation patch that already discusses separation of the measurement 
+from the TPM recording code. As to the limits it incurs on the DRTM 
+integrity, as explained above, I submit there are none.
+
+v/r,
+dps
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
