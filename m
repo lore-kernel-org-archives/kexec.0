@@ -4,80 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 798B5C48BF8
-	for <kexec@archiver.kernel.org>; Thu, 22 Feb 2024 10:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EDD57C48BEB
+	for <kexec@archiver.kernel.org>; Thu, 22 Feb 2024 11:01:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=40C+O+uUkZmPuz1hixdGAe26V/iBHT3tBFcidCMuzeY=; b=B/Dw2+rHi5dcGI
-	LzyQnXmZBQbZVwATFbOeluJwwCLyLaEJSsBe1xEfVqwtNAn09jFUfXVYDRZ5Y3VxlO7/PH20O8Ud5
-	JAjs6rYBG6UGYO0aLd/SC4IugQ62iMltjAoTQDbKMOxBj366lSorYxkFyK8+VrdGL9PZS8JR1/x3t
-	N7h0Uacyz6sEnzz1vXAj5WkTTu5m8hQLcrvFbjcXZnG5SfMfyqy2aFv4E/BoftDMRzclTDhTZHeil
-	UXCJQKKp0ImdflKcgUOvmQTsjZsei8s+Mhbfjd74hl/PYUeu7UwRpHGNjsVzhHiFG2jpgY6fJZU3F
-	5BsOOfUwQUZlsJCE6DUA==;
+	List-Owner; bh=k2BtSDMYwVO3G4zzyrMhhBV/fp6BIjoqRUNF0derj4E=; b=arcW78RwaijApR
+	yeYaUwWhhTQzEZbUtJ3Xv9xpxyE6zeUHNLk5zuYm9Dtl5Fq4UnAjse4tMwGUfSBy4vA3pN43nkMNG
+	r2Dr5jIJS4yQTaQ+050cj7dnKXoWu+83SodlEfjaS1T7aIxXLnv6V2qujVGWygqOXKwTpycdrk6Ri
+	eElze9wXbU8/5AncbholCjPeeUSv2AgWypWHbm5lIfmlCjjhl/K0WAOu+PVKYmI6hKhBXscEpIxjQ
+	+LgCP29VPBzCQo6WLodl3RrSGR35baThMDoW/+wstqDLhsMtxD1uUqJeOpuxVJ5M8eQeXCjNWDJMx
+	gV/7sOQvABpDE4xF+93A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rd6em-00000004XqI-1KdZ;
-	Thu, 22 Feb 2024 10:50:24 +0000
-Received: from mgamail.intel.com ([192.198.163.10])
+	id 1rd6pu-00000004Zzu-2SZJ;
+	Thu, 22 Feb 2024 11:01:54 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rd6ej-00000004XpB-17l8
+	id 1rd6ps-00000004Zyv-0orf
 	for kexec@lists.infradead.org;
-	Thu, 22 Feb 2024 10:50:22 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708599021; x=1740135021;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=MlCX4WJP2SCKY4u/hH+Za0aayaGTr+j+qDw+YgB04Vc=;
-  b=SPWqyZAh5fwmniuFaxYiRDyTcApicoq1q44bFHOA4a79LOD5ttYIbkeC
-   DR94rmCclp/ruRL8d7Il1DoXHRvFJw2sgwnza3vOy87iY2FwUoC77jPtU
-   5wTRsQRkyrv76EdefRk6Y5ZVSUQm5GdAaPRfDec7KQnV6ZB9R+03+Cb0R
-   oTb+1lds/2RSzm/mQrXXOG0iJuaKYgfexWvLWwZIkB+s7jYE/9b5VZkam
-   8HCgLgAjleTC5n3KMgb85YVZqPmV5V45vePxmp1RXIBaMvrKbh+XWCVQc
-   qPHyIYVklgxN8g0QyFzhXrQz3eW0v8R5tCMTv/F1cwk+p2aFwNhLPKCcK
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="14232497"
-X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
-   d="scan'208";a="14232497"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 02:50:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="936832910"
-X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
-   d="scan'208";a="936832910"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 22 Feb 2024 02:50:13 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id EB8B42AB; Thu, 22 Feb 2024 12:50:11 +0200 (EET)
-Date: Thu, 22 Feb 2024 12:50:11 +0200
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Ashish Kalra <Ashish.Kalra@amd.com>, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, luto@kernel.org, 
-	x86@kernel.org, ardb@kernel.org, hpa@zytor.com, linux-efi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rafael@kernel.org, peterz@infradead.org, adrian.hunter@intel.com, 
-	sathyanarayanan.kuppuswamy@linux.intel.com, elena.reshetova@intel.com, jun.nakajima@intel.com, 
-	rick.p.edgecombe@intel.com, seanjc@google.com, kai.huang@intel.com, bhe@redhat.com, 
-	kexec@lists.infradead.org, linux-coco@lists.linux.dev, anisinha@redhat.com, 
-	michael.roth@amd.com, bdas@redhat.com, vkuznets@redhat.com, dionnaglaze@google.com, 
-	jroedel@suse.de, ashwin.kamat@broadcom.com
-Subject: Re: [PATCH 2/2] x86/snp: Convert shared memory back to private on
- kexec
-Message-ID: <amk4ozai3l65d6ef3k2rsnapaislbvlwpfx7p35tqqhesmc4w7@5vmi52a3qv3o>
+	Thu, 22 Feb 2024 11:01:53 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708599711;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VFwcHVEtiDhTvRigoTq212XHeG8ky/6AjwT+KI1KNaQ=;
+	b=FB0ulYTQNFlguGoSzBBdHDHlMbDZ/fWOMfUHgo5BrDz8oAwtUXjrAdaEEcLTsN9XvJvRMt
+	RkyKYbckri1SIkY1nfA3hcNzU3VO6RSZr6UuE0BiB7YkJfK/IE4cXIOsj+7eibAklfBmuU
+	4XPJ4ab83ufeeoBF8LS+4i0SmjEKnK8=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-375-OcOjjzq9PGa9bb85kAn-jA-1; Thu,
+ 22 Feb 2024 06:01:46 -0500
+X-MC-Unique: OcOjjzq9PGa9bb85kAn-jA-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 26A20386A0A0;
+	Thu, 22 Feb 2024 11:01:45 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.2])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 73904492BD7;
+	Thu, 22 Feb 2024 11:01:44 +0000 (UTC)
+Date: Thu, 22 Feb 2024 19:01:41 +0800
+From: Baoquan He <bhe@redhat.com>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Elena Reshetova <elena.reshetova@intel.com>,
+	Jun Nakajima <jun.nakajima@intel.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	"Kalra, Ashish" <ashish.kalra@amd.com>,
+	Sean Christopherson <seanjc@google.com>,
+	"Huang, Kai" <kai.huang@intel.com>, kexec@lists.infradead.org,
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv7 07/16] x86/mm: Return correct level from
+ lookup_address() if pte is none
+Message-ID: <ZdcplT8Xb5eevu/9@MiWiFi-R3L-srv>
 References: <20240212104448.2589568-1-kirill.shutemov@linux.intel.com>
- <cover.1708390906.git.ashish.kalra@amd.com>
- <aa633d7439885da7e54c41db07d65f8e177bcf51.1708390906.git.ashish.kalra@amd.com>
- <97a7d69f-03e1-4ecc-a0ce-10bfe148509c@amd.com>
+ <20240212104448.2589568-8-kirill.shutemov@linux.intel.com>
+ <ZdLjQCaxhOnR+GzX@MiWiFi-R3L-srv>
+ <zhbhgq27kjrhkdgbxomjykjez2i4hckguvmxyptvfvoftue5ca@zowl5qbl6psl>
+ <ZdR+JzfHjES3zytp@MiWiFi-R3L-srv>
+ <ic4v3q4muffjq2jhlkk3k4lg5xxvjwlw22hctzubl5573euzu2@er3m7ztog2a6>
+ <ZdVh6efExdt687YY@MiWiFi-R3L-srv>
+ <p34d7e5r3gkcj2xl5jycyldvpkmcllmhzioaqcmseeugl3eq73@plk43dd4luzu>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <97a7d69f-03e1-4ecc-a0ce-10bfe148509c@amd.com>
+In-Reply-To: <p34d7e5r3gkcj2xl5jycyldvpkmcllmhzioaqcmseeugl3eq73@plk43dd4luzu>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240222_025021_351150_B3B504D0 
-X-CRM114-Status: GOOD (  14.50  )
+X-CRM114-CacheID: sfid-20240222_030152_348569_F5846BF7 
+X-CRM114-Status: GOOD (  16.74  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,41 +102,39 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Feb 21, 2024 at 02:35:13PM -0600, Tom Lendacky wrote:
-> > @@ -906,6 +917,206 @@ void snp_accept_memory(phys_addr_t start, phys_addr_t end)
-> >   	set_pages_state(vaddr, npages, SNP_PAGE_STATE_PRIVATE);
-> >   }
-> > +static inline bool pte_decrypted(pte_t pte)
-> > +{
-> > +	return cc_mkdec(pte_val(pte)) == pte_val(pte);
-> > +}
-> > +
+On 02/21/24 at 04:15pm, Kirill A. Shutemov wrote:
+> On Wed, Feb 21, 2024 at 10:37:29AM +0800, Baoquan He wrote:
+> > > diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+> > > index 3612e3167147..425ff6e192e6 100644
+> > > --- a/arch/x86/mm/pat/set_memory.c
+> > > +++ b/arch/x86/mm/pat/set_memory.c
+> > > @@ -657,7 +657,8 @@ static inline pgprot_t verify_rwx(pgprot_t old, pgprot_t new, unsigned long star
+> > >  
+> > >  /*
+> > >   * Lookup the page table entry for a virtual address in a specific pgd.
+> > > - * Return a pointer to the entry and the level of the mapping.
+> > > + * Return a pointer to the entry and the level of the mapping (or NULL if
+> > > + * the entry is none) and level of the entry.
+> >                        ^ this right parenthesis may need be moved to the end.
+> > 
+> > 
+> > =======
+> >  * Return a pointer to the entry and the level of the mapping (or NULL if
+> >  * the entry is none and level of the entry).
+> > =======
 > 
-> This is duplicated in TDX code, arch/x86/coco/tdx/tdx.c, looks like
-> something that can go in a header file, maybe mem_encrypt.h.
-> 
+> Emm.. I like my variant more. We return level regardless if the entry none
+> or not. I don't see a reason to repeat it twice.
 
-I think <asm/pgtable.h> is a better fit.
 
-> > +void snp_kexec_stop_conversion(bool crash)
-> > +{
-> > +	/* Stop new private<->shared conversions */
-> > +	conversion_allowed = false;
-> > +	crash_requested = crash;
-> > +
-> > +	/*
-> > +	 * Make sure conversion_allowed is cleared before checking
-> > +	 * conversions_in_progress.
-> > +	 */
-> > +	barrier();
-> 
-> This should be smp_wmb().
-> 
+ * Lookup the page table entry for a virtual address in a specific pgd.
+ * Return a pointer to the entry and the level of the mapping (or NULL if
+ * the entry is none) and level of the entry.
 
-Why?
+Hmm, I am confused. Why do we need to stress the level of the mapping
+and level of the entry? Wondering what is the difference. I must miss
+something.
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
 
 _______________________________________________
 kexec mailing list
