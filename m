@@ -4,132 +4,118 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3C1ADC48BF6
-	for <kexec@archiver.kernel.org>; Thu, 22 Feb 2024 03:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9BF2EC48BEB
+	for <kexec@archiver.kernel.org>; Thu, 22 Feb 2024 03:35:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
-	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=/3EhSOXVNcNX2Vv/2bHYVt0gyiNrhjZ05gKmUZd2sbE=; b=pCcIsx05kPISH2
-	gTBcQijj+BaZ+2aZgwoe2xa8EIQykiapzT+PRZB8rlVDhhyPLrRYIpsiqFBAYiDQgqAqTVm3/w8QC
-	zKVAR6tZgmn+/ThT/Gz6w7G8VuikxohJkqE8pnAkyTTlZAwrSkyR8n60S1gTSJPlYgdvH6hrTm52D
-	JlOwcdg+BXpcx40cFjLeUB3wqAXOZyZSXZTvMQoKj5eCpZDx0w3sVHUrX8dynWCzc9v7EOW76mcU2
-	u21r4Ws+lL2A3J4idqaiidOU4UmQLWL5zYThCjmCDMQGOVWy5HnGqqu21dDYHL3DNiwRrhZlIxgCB
-	fvz64MB8oAlceuatBrIw==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:Cc:To:
+	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=6I96KUrcdrJPR0mgEbQZFedJio4+fP5HsyIf49uwBsQ=; b=iJA3F4BqRmVpdMrRZAqePSOwtM
+	UTt7ihk3oZhbJQGCjy5okRr5QVZWS1KtytKaku9nkLtGtbO7N1cBpomFNAn576LKjqx6Px9n/WqtQ
+	xSlMzw9LqhrfpbBC2l52qcShgf0B/O/RT3GeEHBL5TB/7+sTY6qR7i4VLgqTmJrmvmWMynpN1Dib1
+	7XiCH0Wifnrbnvp7LkyJ80MI78RWP7TncaXxlML3UYT/6x8ibO6kCJDHLyNROs2TofcWrv4zEpS6n
+	YyITb8bBGWtCXNrRaKjIWeT1itCbOhHuHCk+gXqqN7nqKl3Ci4TyhhfMGA0KOo3s9amPyD8djN4DM
+	dqW3rRkA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rczOV-00000003K2i-0HKB;
-	Thu, 22 Feb 2024 03:05:07 +0000
-Received: from mail-wr1-x429.google.com ([2a00:1450:4864:20::429])
+	id 1rczrf-00000003Ogr-0Upj;
+	Thu, 22 Feb 2024 03:35:15 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rczON-00000003Jv7-0ahS
+	id 1rczrc-00000003OgI-0Zmx
 	for kexec@lists.infradead.org;
-	Thu, 22 Feb 2024 03:05:00 +0000
-Received: by mail-wr1-x429.google.com with SMTP id ffacd0b85a97d-33d7b8f563eso1109528f8f.0
-        for <kexec@lists.infradead.org>; Wed, 21 Feb 2024 19:04:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1708571097; x=1709175897; darn=lists.infradead.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oMwUqFBmwZni3nYHGsNufQX82jUOTPamTsIFOmXTch4=;
-        b=gr2gZxAbPd2DrXSTEtb5rfwm39N6z1FF0QJh0y92vd/LnJ6FDH+CQ+lQyWfsBgerPA
-         r9LTt1AUMdFkMENDDcWcDEZ8mZbn3hpifl4INIXVWeccEGE76Y/1qlWRlzZo6jdgWoH1
-         bcbzZ0+uKNO0cAzmOxO7MOc4N/xR2PvkrCYUM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708571097; x=1709175897;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oMwUqFBmwZni3nYHGsNufQX82jUOTPamTsIFOmXTch4=;
-        b=J17+0fhoP/0JAmqyAf9RdnnDu3xEl/0iWoYF149xpVoTB8dD4o+K27w5CFgHPfHU5L
-         xR0rfGrzwO17Ugc7XN8KLdtmkv0VPNcUDHo2ugucWNXBpJMGDUQJTNvFs1uySjuPF5Tt
-         gYmsyNZUr5pvz7HS+mxDQvo0lNvhNLls8ZRe5YFipWPJc4vWqi+1qzhUvIeNS7l3pUqg
-         Bu70CU4Yt03O2EWeA14MXlXBHhGrWfmmb/R51M6Su6Up6R6dS5WxVYUh8hqIxH/pgWfF
-         Q0Z4Cz/Y6c+WIPUkKawCKruXzxvw6Wq7/I/kqjz92R+CGbV4Ei2selFQiq3DGmqIDWAM
-         NdSw==
-X-Forwarded-Encrypted: i=1; AJvYcCWkYrRW6SK7mDUXily04AnczduwbDm8yh/8QYGB9OwmuCXoqaxDEKvt7qG63mtgwCUU9Q8BoN4fEmakMCXwOzv8IsTOomi/qXaI
-X-Gm-Message-State: AOJu0Ywz2C5KXiIWo13r8PPH18NBWNk1GZfTn2+mQejEqJc77FeBaH7t
-	F7M7QfjZkBB8nzLRqJpeGxevCYZYrAnVcoJr4VhHincEwDL/SpkvUkxYU/DDTRI=
-X-Google-Smtp-Source: AGHT+IEz8G6fU4K+3yNmLXt/7u9L6x1bnOwXtDSfi1M9hATKx/IGbEkXRTuSr1VDr3aYclkncYlvnQ==
-X-Received: by 2002:a05:6000:1f0f:b0:33d:5e19:e1f1 with SMTP id bv15-20020a0560001f0f00b0033d5e19e1f1mr7547885wrb.12.1708571097017;
-        Wed, 21 Feb 2024 19:04:57 -0800 (PST)
-Received: from [192.168.1.10] (host-92-3-248-192.as13285.net. [92.3.248.192])
-        by smtp.gmail.com with ESMTPSA id h7-20020a056000000700b0033ce214a97csm18626037wrx.17.2024.02.21.19.04.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 Feb 2024 19:04:56 -0800 (PST)
-Message-ID: <98ad92bb-ef17-4c15-88ba-252db2a2e738@citrix.com>
-Date: Thu, 22 Feb 2024 03:04:55 +0000
-MIME-Version: 1.0
+	Thu, 22 Feb 2024 03:35:13 +0000
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 41M3Cxqq015714;
+	Thu, 22 Feb 2024 03:34:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=s2wLYwb7IVVAyx3UrAln6L+QDJrnwV8GoaGxtKbSdzk=;
+ b=jh5AY5zYtXS7537wfD7dyOqWj5ftqOobarZnlfruDdFPJu5sw9yjN8ASFnoM5qrlq+s+
+ a+ANviOsBzHQK3rzP5NsccuS28V7WlWpaYw3hicGwUwdIqRitjyP+EBQGb6luG38lxUJ
+ Xd+/jJ49VqMunTq/rQa059reQxo0lr/mnuhcIA3C9134ZXxfivGHGxXafZ61Jb+wcSPd
+ IUi3Lt2bHArGpfvaWlNAQYzyNP+wD+ZR7AXlQCCPGTzlQSacRDUpu3VlJvFdnpTeM1MH
+ 1aVM40NIrfyzSZqslmiyLJfcBWQWJk/3ZpYUD+gCoxMdTg+yYK2T8qYlsGM285hA/VOi 9A== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wdx5q0d9c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 Feb 2024 03:34:40 +0000
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 41M3ExEL021039;
+	Thu, 22 Feb 2024 03:34:38 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wdx5q0cyk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 Feb 2024 03:34:38 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 41M2jfLw017257;
+	Thu, 22 Feb 2024 03:31:55 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wb8mmkfm7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 Feb 2024 03:31:55 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 41M3VnCV16908984
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 22 Feb 2024 03:31:51 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id ACCC620040;
+	Thu, 22 Feb 2024 03:31:49 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8452520043;
+	Thu, 22 Feb 2024 03:31:38 +0000 (GMT)
+Received: from [9.61.79.25] (unknown [9.61.79.25])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 22 Feb 2024 03:31:38 +0000 (GMT)
+Message-ID: <8af4b0ec-9e0c-4023-ab66-98bb8e9f914d@linux.ibm.com>
+Date: Thu, 22 Feb 2024 09:01:36 +0530
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 06/15] x86: Add early SHA support for Secure Launch
- early measurements
-Content-Language: en-GB
-To: Ard Biesheuvel <ardb@kernel.org>,
- Ross Philipson <ross.philipson@oracle.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
- linux-efi@vger.kernel.org, dpsmith@apertussolutions.com, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
- mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
- peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
- nivedita@alum.mit.edu, herbert@gondor.apana.org.au, davem@davemloft.net,
- kanth.ghatraju@oracle.com, trenchboot-devel@googlegroups.com,
- Eric Biggers <ebiggers@kernel.org>
-References: <20240214221847.2066632-1-ross.philipson@oracle.com>
- <20240214221847.2066632-7-ross.philipson@oracle.com>
- <CAMj1kXEmMBY_jc0uM5UgZbuZ3-C7NPKzg5AScaunyu9XzLgzZA@mail.gmail.com>
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
- 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
- 6+ahAA==
-In-Reply-To: <CAMj1kXEmMBY_jc0uM5UgZbuZ3-C7NPKzg5AScaunyu9XzLgzZA@mail.gmail.com>
+Subject: Re: [PATCH v16 2/5] crash: add a new kexec flag for hotplug support
+Content-Language: en-US
+To: Baoquan He <bhe@redhat.com>
+Cc: Akhil Raj <lf32.dev@gmail.com>, Andrew Morton
+ <akpm@linux-foundation.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
+        Baoquan He <bhe@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dave Young <dyoung@redhat.com>, David Hildenbrand <david@redhat.com>,
+        Eric DeVolder <eric.devolder@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxppc-dev@ozlabs.org, Hari Bathini <hbathini@linux.ibm.com>,
+        Laurent Dufour <laurent.dufour@fr.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mimi Zohar <zohar@linux.ibm.com>, Naveen N Rao <naveen@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Valentin Schneider <vschneid@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org,
+        x86@kernel.org
+References: <20240217081452.164571-1-sourabhjain@linux.ibm.com>
+ <20240217081452.164571-3-sourabhjain@linux.ibm.com>
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+In-Reply-To: <20240217081452.164571-3-sourabhjain@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: pd_VZXyMw6afFLbANNBoVDyzxmKIjbuR
+X-Proofpoint-GUID: VcA-Dhb2VriYUA6DQIwvWa1mgvxlh7eW
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-22_01,2024-02-21_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 bulkscore=0
+ mlxscore=0 phishscore=0 suspectscore=0 clxscore=1015 spamscore=0
+ priorityscore=1501 impostorscore=0 malwarescore=0 adultscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2402220025
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240221_190459_601280_862B8C26 
-X-CRM114-Status: GOOD (  20.72  )
+X-CRM114-CacheID: sfid-20240221_193512_330930_39D5D994 
+X-CRM114-Status: GOOD (  47.03  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -141,51 +127,324 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-T24gMTUvMDIvMjAyNCA4OjE3IGFtLCBBcmQgQmllc2hldXZlbCB3cm90ZToKPiBPbiBXZWQsIDE0
-IEZlYiAyMDI0IGF0IDIzOjMxLCBSb3NzIFBoaWxpcHNvbiA8cm9zcy5waGlsaXBzb25Ab3JhY2xl
-LmNvbT4gd3JvdGU6Cj4+IEZyb206ICJEYW5pZWwgUC4gU21pdGgiIDxkcHNtaXRoQGFwZXJ0dXNz
-b2x1dGlvbnMuY29tPgo+Pgo+PiBUaGUgU0hBIGFsZ29yaXRobXMgYXJlIG5lY2Vzc2FyeSB0byBt
-ZWFzdXJlIGNvbmZpZ3VyYXRpb24gaW5mb3JtYXRpb24gaW50bwo+PiB0aGUgVFBNIGFzIGVhcmx5
-IGFzIHBvc3NpYmxlIGJlZm9yZSB1c2luZyB0aGUgdmFsdWVzLiBUaGlzIGltcGxlbWVudGF0aW9u
-Cj4+IHVzZXMgdGhlIGVzdGFibGlzaGVkIGFwcHJvYWNoIG9mICNpbmNsdWRpbmcgdGhlIFNIQSBs
-aWJyYXJpZXMgZGlyZWN0bHkgaW4KPj4gdGhlIGNvZGUgc2luY2UgdGhlIGNvbXByZXNzZWQga2Vy
-bmVsIGlzIG5vdCB1bmNvbXByZXNzZWQgYXQgdGhpcyBwb2ludC4KPj4KPj4gVGhlIFNIQSBjb2Rl
-IGhlcmUgaGFzIGl0cyBvcmlnaW5zIGluIHRoZSBjb2RlIGZyb20gdGhlIG1haW4ga2VybmVsOgo+
-Pgo+PiBjb21taXQgYzRkNWI5ZmZhMzFmICgiY3J5cHRvOiBzaGExIC0gaW1wbGVtZW50IGJhc2Ug
-bGF5ZXIgZm9yIFNIQS0xIikKPj4KPj4gQSBtb2RpZmllZCB2ZXJzaW9uIG9mIHRoaXMgY29kZSB3
-YXMgaW50cm9kdWNlZCB0byB0aGUgbGliL2NyeXB0by9zaGExLmMKPj4gdG8gYnJpbmcgaXQgaW4g
-bGluZSB3aXRoIHRoZSBzaGEyNTYgY29kZSBhbmQgYWxsb3cgaXQgdG8gYmUgcHVsbGVkIGludG8g
-dGhlCj4+IHNldHVwIGtlcm5lbCBpbiB0aGUgc2FtZSBtYW5uZXIgYXMgc2hhMjU2IGlzLgo+Pgo+
-PiBTaWduZWQtb2ZmLWJ5OiBEYW5pZWwgUC4gU21pdGggPGRwc21pdGhAYXBlcnR1c3NvbHV0aW9u
-cy5jb20+Cj4+IFNpZ25lZC1vZmYtYnk6IFJvc3MgUGhpbGlwc29uIDxyb3NzLnBoaWxpcHNvbkBv
-cmFjbGUuY29tPgo+IFdlIGhhdmUgaGFkIHNvbWUgZGlzY3Vzc2lvbnMgYWJvdXQgdGhpcywgYW5k
-IHlvdSByZWFsbHkgbmVlZCB0bwo+IGNhcHR1cmUgdGhlIGp1c3RpZmljYXRpb24gaW4gdGhlIGNv
-bW1pdCBsb2cgZm9yIGludHJvZHVjaW5nIG5ldyBjb2RlCj4gdGhhdCBpbXBsZW1lbnRzIGFuIG9i
-c29sZXRlIGFuZCBicm9rZW4gaGFzaGluZyBhbGdvcml0aG0uCj4KPiBTSEEtMSBpcyBicm9rZW4g
-YW5kIHNob3VsZCBubyBsb25nZXIgYmUgdXNlZCBmb3IgYW55dGhpbmcuIEludHJvZHVjaW5nCj4g
-bmV3IHN1cHBvcnQgZm9yIGEgaGlnaGx5IGNvbXBsZXggYm9vdCBzZWN1cml0eSBmZWF0dXJlLCBh
-bmQgdGhlbgo+IHJlbHlpbmcgb24gU0hBLTEgaW4gdGhlIGltcGxlbWVudGF0aW9uIG1ha2VzIHRo
-aXMgd2hvbGUgZWZmb3J0IHNlZW0KPiBhbG1vc3QgZnV0aWxlLCAqdW5sZXNzKiB5b3UgcHJvdmlk
-ZSBzb21lIHJvY2sgc29saWQgcmVhc29ucyBoZXJlIHdoeQo+IHRoaXMgaXMgc3RpbGwgc2FmZS4K
-Pgo+IElmIHRoZSB1cHNob3Qgd291bGQgYmUgdGhhdCBzb21lIHBlb3BsZSBhcmUgc3R1Y2sgd2l0
-aCBTSEEtMSBzbyB0aGV5Cj4gd29uJ3QgYmUgYWJsZSB0byB1c2UgdGhpcyBmZWF0dXJlLCB0aGVu
-IEknbSBub3QgY29udmluY2VkIHdlIHNob3VsZAo+IG9ic2VzcyBvdmVyIHRoYXQuCgpUbyBiZSBh
-YnNvbHV0ZWx5IGNyeXN0YWwgY2xlYXIgaGVyZS4KClRoZSBjaG9pY2Ugb2YgaGFzaCBhbGdvcml0
-aG0ocykgYXJlIGRldGVybWluZWQgYnkgdGhlIE9FTSBhbmQgdGhlCnBsYXRmb3JtLCBub3QgYnkg
-TGludXguCgpGYWlsaW5nIHRvIChhdCBsZWFzdCkgY2FwIGEgUENSIGluIGEgYmFuayB3aGljaCB0
-aGUgT0VNL3BsYXRmb3JtIGxlZnQKYWN0aXZlIGlzIGEgc2VjdXJpdHkgdnVsbmVyYWJpbGl0eS7C
-oCBJdCBwZXJtaXRzIHRoZSB1bnNlYWxpbmcgb2Ygc2VjcmV0cwppZiBhbiBhdHRhY2tlciBjYW4g
-cmVwbGF5IGEgZ29vZCBzZXQgb2YgbWVhc3VyZW1lbnRzIGludG8gYW4gdW51c2VkIGJhbmsuCgpU
-aGUgb25seSB3YXkgdG8gZ2V0IHJpZCBvZiB0aGUgcmVxdWlyZW1lbnQgZm9yIFNIQS0xIGhlcmUg
-aXMgdG8gbG9iYnkKdGhlIElIVnMvT0VNcywgb3IgcGVyaGFwcyB0aGUgVENHLCB0byBwcm9kdWNl
-L3NwZWMgYSBwbGF0Zm9ybSB3aGVyZSB0aGUKU0hBLTEgYmFua3MgY2FuIGJlIGRpc2FibGVkLsKg
-IFRoZXJlIGFyZSBubyBrbm93biBzdWNoIHBsYXRmb3JtcyBpbiB0aGUKbWFya2V0IHRvZGF5LCB0
-byB0aGUgYmVzdCBvZiBvdXIga25vd2xlZGdlLgoKfkFuZHJldwoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxp
-c3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9rZXhlYwo=
+Hello Baoquan,
+
+There are a lot of code movements introduced by your patch series, 
+'Split crash out from kexec and clean up related config items.'
+
+https://lore.kernel.org/all/20240221125752.36fbfe9c307496313198b60f@linux-foundation.org/
+
+Do you want me to rebase this patch series on top of the above patch series?
+
+
+Thanks,
+Sourabh Jain
+
+On 17/02/24 13:44, Sourabh Jain wrote:
+> Commit a72bbec70da2 ("crash: hotplug support for kexec_load()")
+> introduced a new kexec flag, `KEXEC_UPDATE_ELFCOREHDR`. Kexec tool uses
+> this flag to indicate to the kernel that it is safe to modify the
+> elfcorehdr of the kdump image loaded using the kexec_load system call.
+>
+> However, it is possible that architectures may need to update kexec
+> segments other then elfcorehdr. For example, FDT (Flatten Device Tree)
+> on PowerPC. Introducing a new kexec flag for every new kexec segment
+> may not be a good solution. Hence, a generic kexec flag bit,
+> `KEXEC_CRASH_HOTPLUG_SUPPORT`, is introduced to share the CPU/Memory
+> hotplug support intent between the kexec tool and the kernel for the
+> kexec_load system call.
+>
+> Now, if the kexec tool sends KEXEC_CRASH_HOTPLUG_SUPPORT kexec flag to
+> the kernel, it indicates to the kernel that all the required kexec
+> segment is skipped from SHA calculation and it is safe to update kdump
+> image loaded using the kexec_load syscall.
+>
+> While loading the kdump image using the kexec_load syscall, the
+> @update_elfcorehdr member of struct kimage is set if the kexec tool
+> sends the KEXEC_UPDATE_ELFCOREHDR kexec flag. This member is later used
+> to determine whether it is safe to update elfcorehdr on hotplug events.
+> However, with the introduction of the KEXEC_CRASH_HOTPLUG_SUPPORT kexec
+> flag, the kexec tool could mark all the required kexec segments on an
+> architecture as safe to update. So rename the @update_elfcorehdr to
+> @hotplug_support. If @hotplug_support is set, the kernel can safely
+> update all the required kexec segments of the kdump image during
+> CPU/Memory hotplug events.
+>
+> Introduce an architecture-specific function to process kexec flags for
+> determining hotplug support. Set the @hotplug_support member of struct
+> kimage for both kexec_load and kexec_file_load system calls. This
+> simplifies kernel checks to identify hotplug support for the currently
+> loaded kdump image by just examining the value of @hotplug_support.
+>
+> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+> Cc: Akhil Raj <lf32.dev@gmail.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Borislav Petkov (AMD) <bp@alien8.de>
+> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Eric DeVolder <eric.devolder@oracle.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Hari Bathini <hbathini@linux.ibm.com>
+> Cc: Laurent Dufour <laurent.dufour@fr.ibm.com>
+> Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Mimi Zohar <zohar@linux.ibm.com>
+> Cc: Naveen N Rao <naveen@kernel.org>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Valentin Schneider <vschneid@redhat.com>
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> Cc: kexec@lists.infradead.org
+> Cc: x86@kernel.org
+> ---
+>   arch/x86/include/asm/kexec.h | 11 ++---------
+>   arch/x86/kernel/crash.c      | 28 +++++++++++++++++-----------
+>   drivers/base/cpu.c           |  2 +-
+>   drivers/base/memory.c        |  2 +-
+>   include/linux/kexec.h        | 27 +++++++++++++++++----------
+>   include/uapi/linux/kexec.h   |  1 +
+>   kernel/crash_core.c          | 11 ++++-------
+>   kernel/kexec.c               |  4 ++--
+>   kernel/kexec_file.c          |  5 +++++
+>   9 files changed, 50 insertions(+), 41 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+> index 9bb6607e864e..8be622e82ba8 100644
+> --- a/arch/x86/include/asm/kexec.h
+> +++ b/arch/x86/include/asm/kexec.h
+> @@ -211,15 +211,8 @@ extern void kdump_nmi_shootdown_cpus(void);
+>   void arch_crash_handle_hotplug_event(struct kimage *image, void *arg);
+>   #define arch_crash_handle_hotplug_event arch_crash_handle_hotplug_event
+>   
+> -#ifdef CONFIG_HOTPLUG_CPU
+> -int arch_crash_hotplug_cpu_support(void);
+> -#define crash_hotplug_cpu_support arch_crash_hotplug_cpu_support
+> -#endif
+> -
+> -#ifdef CONFIG_MEMORY_HOTPLUG
+> -int arch_crash_hotplug_memory_support(void);
+> -#define crash_hotplug_memory_support arch_crash_hotplug_memory_support
+> -#endif
+> +int arch_crash_hotplug_support(struct kimage *image, unsigned long kexec_flags);
+> +#define arch_crash_hotplug_support arch_crash_hotplug_support
+>   
+>   unsigned int arch_crash_get_elfcorehdr_size(void);
+>   #define crash_get_elfcorehdr_size arch_crash_get_elfcorehdr_size
+> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> index 44744e9c68ec..7072aaee2ea0 100644
+> --- a/arch/x86/kernel/crash.c
+> +++ b/arch/x86/kernel/crash.c
+> @@ -398,20 +398,26 @@ int crash_load_segments(struct kimage *image)
+>   #undef pr_fmt
+>   #define pr_fmt(fmt) "crash hp: " fmt
+>   
+> -/* These functions provide the value for the sysfs crash_hotplug nodes */
+> -#ifdef CONFIG_HOTPLUG_CPU
+> -int arch_crash_hotplug_cpu_support(void)
+> +int arch_crash_hotplug_support(struct kimage *image, unsigned long kexec_flags)
+>   {
+> -	return crash_check_update_elfcorehdr();
+> -}
+> -#endif
+>   
+> -#ifdef CONFIG_MEMORY_HOTPLUG
+> -int arch_crash_hotplug_memory_support(void)
+> -{
+> -	return crash_check_update_elfcorehdr();
+> -}
+> +#ifdef CONFIG_KEXEC_FILE
+> +	if (image->file_mode)
+> +		return 1;
+>   #endif
+> +	/*
+> +	 * Initially, crash hotplug support for kexec_load was added
+> +	 * with the KEXEC_UPDATE_ELFCOREHDR flag. Later, this
+> +	 * functionality was expanded to accommodate multiple kexec
+> +	 * segment updates, leading to the introduction of the
+> +	 * KEXEC_CRASH_HOTPLUG_SUPPORT kexec flag bit. Consequently,
+> +	 * when the kexec tool sends either of these flags, it indicates
+> +	 * that the required kexec segment (elfcorehdr) is excluded from
+> +	 * the SHA calculation.
+> +	 */
+> +	return (kexec_flags & KEXEC_UPDATE_ELFCOREHDR ||
+> +		kexec_flags & KEXEC_CRASH_HOTPLUG_SUPPORT);
+> +}
+>   
+>   unsigned int arch_crash_get_elfcorehdr_size(void)
+>   {
+> diff --git a/drivers/base/cpu.c b/drivers/base/cpu.c
+> index 47de0f140ba6..24eb52607151 100644
+> --- a/drivers/base/cpu.c
+> +++ b/drivers/base/cpu.c
+> @@ -306,7 +306,7 @@ static ssize_t crash_hotplug_show(struct device *dev,
+>   				     struct device_attribute *attr,
+>   				     char *buf)
+>   {
+> -	return sysfs_emit(buf, "%d\n", crash_hotplug_cpu_support());
+> +	return sysfs_emit(buf, "%d\n", crash_check_hotplug_support());
+>   }
+>   static DEVICE_ATTR_ADMIN_RO(crash_hotplug);
+>   #endif
+> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+> index 14f964a7719b..b80be8193970 100644
+> --- a/drivers/base/memory.c
+> +++ b/drivers/base/memory.c
+> @@ -514,7 +514,7 @@ static DEVICE_ATTR_RW(auto_online_blocks);
+>   static ssize_t crash_hotplug_show(struct device *dev,
+>   				       struct device_attribute *attr, char *buf)
+>   {
+> -	return sysfs_emit(buf, "%d\n", crash_hotplug_memory_support());
+> +	return sysfs_emit(buf, "%d\n", crash_check_hotplug_support());
+>   }
+>   static DEVICE_ATTR_RO(crash_hotplug);
+>   #endif
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index 802052d9c64b..175152b99cb7 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -317,8 +317,10 @@ struct kimage {
+>   	/* If set, we are using file mode kexec syscall */
+>   	unsigned int file_mode:1;
+>   #ifdef CONFIG_CRASH_HOTPLUG
+> -	/* If set, allow changes to elfcorehdr of kexec_load'd image */
+> -	unsigned int update_elfcorehdr:1;
+> +	/* If set, it is safe to update kexec segments that are
+> +	 * excluded from SHA calculation.
+> +	 */
+> +	unsigned int hotplug_support:1;
+>   #endif
+>   
+>   #ifdef ARCH_HAS_KIMAGE_ARCH
+> @@ -396,9 +398,10 @@ bool kexec_load_permitted(int kexec_image_type);
+>   
+>   /* List of defined/legal kexec flags */
+>   #ifndef CONFIG_KEXEC_JUMP
+> -#define KEXEC_FLAGS    (KEXEC_ON_CRASH | KEXEC_UPDATE_ELFCOREHDR)
+> +#define KEXEC_FLAGS    (KEXEC_ON_CRASH | KEXEC_UPDATE_ELFCOREHDR | KEXEC_CRASH_HOTPLUG_SUPPORT)
+>   #else
+> -#define KEXEC_FLAGS    (KEXEC_ON_CRASH | KEXEC_PRESERVE_CONTEXT | KEXEC_UPDATE_ELFCOREHDR)
+> +#define KEXEC_FLAGS    (KEXEC_ON_CRASH | KEXEC_PRESERVE_CONTEXT | KEXEC_UPDATE_ELFCOREHDR | \
+> +			KEXEC_CRASH_HOTPLUG_SUPPORT)
+>   #endif
+>   
+>   /* List of defined/legal kexec file flags */
+> @@ -486,14 +489,18 @@ static inline void arch_kexec_pre_free_pages(void *vaddr, unsigned int pages) {
+>   static inline void arch_crash_handle_hotplug_event(struct kimage *image, void *arg) { }
+>   #endif
+>   
+> -int crash_check_update_elfcorehdr(void);
+> +int crash_check_hotplug_support(void);
+>   
+> -#ifndef crash_hotplug_cpu_support
+> -static inline int crash_hotplug_cpu_support(void) { return 0; }
+> -#endif
+> +#ifndef arch_crash_hotplug_support
+> +static inline int arch_crash_hotplug_support(struct kimage *image, unsigned long kexec_flags)
+> +{
+>   
+> -#ifndef crash_hotplug_memory_support
+> -static inline int crash_hotplug_memory_support(void) { return 0; }
+> +#ifdef CONFIG_KEXEC_FILE
+> +	if (image->file_mode)
+> +		return 1;
+> +#endif
+> +	return kexec_flags & KEXEC_CRASH_HOTPLUG_SUPPORT;
+> +}
+>   #endif
+>   
+>   #ifndef crash_get_elfcorehdr_size
+> diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
+> index c17bb096ea68..5ae1741ea8ea 100644
+> --- a/include/uapi/linux/kexec.h
+> +++ b/include/uapi/linux/kexec.h
+> @@ -13,6 +13,7 @@
+>   #define KEXEC_ON_CRASH		0x00000001
+>   #define KEXEC_PRESERVE_CONTEXT	0x00000002
+>   #define KEXEC_UPDATE_ELFCOREHDR	0x00000004
+> +#define KEXEC_CRASH_HOTPLUG_SUPPORT 0x00000008
+>   #define KEXEC_ARCH_MASK		0xffff0000
+>   
+>   /*
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index b692ec5955de..3142884a5a5b 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -886,7 +886,7 @@ static DEFINE_MUTEX(__crash_hotplug_lock);
+>    * It reflects the kernel's ability/permission to update the crash
+>    * elfcorehdr directly.
+>    */
+> -int crash_check_update_elfcorehdr(void)
+> +int crash_check_hotplug_support(void)
+>   {
+>   	int rc = 0;
+>   
+> @@ -898,10 +898,7 @@ int crash_check_update_elfcorehdr(void)
+>   		return 0;
+>   	}
+>   	if (kexec_crash_image) {
+> -		if (kexec_crash_image->file_mode)
+> -			rc = 1;
+> -		else
+> -			rc = kexec_crash_image->update_elfcorehdr;
+> +		rc = kexec_crash_image->hotplug_support;
+>   	}
+>   	/* Release lock now that update complete */
+>   	kexec_unlock();
+> @@ -942,8 +939,8 @@ static void crash_handle_hotplug_event(unsigned int hp_action, unsigned int cpu,
+>   
+>   	image = kexec_crash_image;
+>   
+> -	/* Check that updating elfcorehdr is permitted */
+> -	if (!(image->file_mode || image->update_elfcorehdr))
+> +	/* Check that kexec segments update is permitted */
+> +	if (!image->hotplug_support)
+>   		goto out;
+>   
+>   	if (hp_action == KEXEC_CRASH_HP_ADD_CPU ||
+> diff --git a/kernel/kexec.c b/kernel/kexec.c
+> index 8f35a5a42af8..9dc5b7ed5b73 100644
+> --- a/kernel/kexec.c
+> +++ b/kernel/kexec.c
+> @@ -130,8 +130,8 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
+>   		image->preserve_context = 1;
+>   
+>   #ifdef CONFIG_CRASH_HOTPLUG
+> -	if (flags & KEXEC_UPDATE_ELFCOREHDR)
+> -		image->update_elfcorehdr = 1;
+> +	if ((flags & KEXEC_ON_CRASH) && arch_crash_hotplug_support(image, flags))
+> +		image->hotplug_support = 1;
+>   #endif
+>   
+>   	ret = machine_kexec_prepare(image);
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index bef2f6f2571b..4dddf9264a69 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -373,6 +373,11 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+>   	if (ret)
+>   		goto out;
+>   
+> +#ifdef CONFIG_CRASH_HOTPLUG
+> +	if ((flags & KEXEC_FILE_ON_CRASH) && arch_crash_hotplug_support(image, flags))
+> +		image->hotplug_support = 1;
+> +#endif
+> +
+>   	ret = machine_kexec_prepare(image);
+>   	if (ret)
+>   		goto out;
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
