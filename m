@@ -4,186 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CC464C54798
-	for <kexec@archiver.kernel.org>; Thu, 22 Feb 2024 13:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 51DBAC48BF8
+	for <kexec@archiver.kernel.org>; Thu, 22 Feb 2024 14:04:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:Cc:To:
-	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ckzEZvRpNppMN/8tZ8+7bQDHiVKYtWO6eC2VxRBtldc=; b=Q+V79o2Rsl4v+12ue7xNPp1VIT
-	qdMidLwfxYEEcP82ST2SDNVGolAnvAbFtlPxeRGBCSWru4FpUFGlkoLxUIq4odor0LqAl21Lf+w8I
-	L4g9uuM/6N7rIPUeNINgMjpZsfKvkagY2LQA1prlz0qa80qrmduoroLclt3xRNJ7ZY1WL9azO5cDB
-	RtK0FYOgb3h35tBpcYYNMk071liHD+R+24OoGIQO2maXMWIR4GdRQRRf7SOc6trc1IcL0F4QI8R9m
-	Fs43F/0V5Y1Qdxo53zStRWUrWvJO2pyYR5yMjoBY5OW1p96i3x87u+zo9RSNNF52HBB6bgSnUoLlN
-	g0tu3SKw==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=SPdqvQIcGzQyWHC67oxWzJE0Rjup8wlp1fPHrStVA3g=; b=OCGk03vmyFASRy
+	1Iyu5XGh9oM6lw7bsD2ZO2Wys61LuX4xTmOKqcmOSrV8RcT6qKRvTVLI15rGoUvgcDAcbfL3GDK+V
+	jsnv6kzhju5KQLdv+NBVvi0y7xIdfKGhlrBqsijc2M5Yzcw+2nwqC7XCAHeIYIkLLVACfxx6WExli
+	RR1wo2UA+vE5QXJVzsQ+SXokKAwx50+oX/p4IfKZ5ox+2zgshDsq49uwkZZmtI8xt6q7g1SVA+V/x
+	8acGT+uT5hDDuDu9ryOEqX8bTieivjnZX9GfDzehMqd2RqBmWtvDkb+HJ0dw+nv38+nyCWv+rO6uV
+	07NikV4IIxRJEuUWdoEQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rd9b7-00000005974-24hO;
-	Thu, 22 Feb 2024 13:58:49 +0000
-Received: from mail-co1nam11on20601.outbound.protection.outlook.com ([2a01:111:f403:2416::601] helo=NAM11-CO1-obe.outbound.protection.outlook.com)
+	id 1rd9gm-00000005A9k-2Hgf;
+	Thu, 22 Feb 2024 14:04:40 +0000
+Received: from mgamail.intel.com ([192.198.163.12])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rd9b4-0000000593v-2BWe
+	id 1rd9gj-00000005A93-22u2
 	for kexec@lists.infradead.org;
-	Thu, 22 Feb 2024 13:58:47 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MX8+GLTiaVu3ih6oFwwrnJTfvwlKU7JLiS1ajF4l5Q0eZa6X4oOznpaQgKJtGiVsOIYpzfDighY+CgrSwVCIBxTuitMcuSHb3G/mS4h4UwVLXG5MPCN4UTTrQ7vGNvSul+hMLtWZq8wkMxNEmaVeOXR8LpXUALw4N+YjsMlw1N/QJjMcvprcsBDNLG1yYk9K03Z24kmdDSgmsMZrOEmckpv4Zmzp4Z1OSWp2k+7yyR18Jvl82pcX1rC5aTSAMgYfKvmkqjxdcbLzxICKZPqS9x6fn4e7YZhu10jiMGMOef/cCWQO4ZNcuiosnGfe1QIi45r4QjnMguulEg1yKtt/RQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=76UNAyFAu8qjfnGLlE4QYhRAxCfrTSJzPyxjhNMzfwQ=;
- b=CoXoopxH1q7+ZM9fId4cE8KKNMJNhG/J5Osi/XnpcSoJdFtDG3W6YyHQeqYUS0Df4gmw2tChv0Yu3ILOCHvrwjPaB6ouB6vpCcV1JMPExumNFWCQPe4ahWe8TqEGiT4xctGMydWsSr233oeG7Jq4q/o6Vki6NQ2G7JzEFPKXiF+K3FJJmCU/eiV33dNjhmU89QjkbeCX8Oadpx4D6r0Z1py/CwlhCGX+ivd1/jQNTaVYIiAInp21bEOePxOsYwbqtv02KymJ7smAqBWp2WLa+T9OOYQxlF3QB6x+1T6/+20HH8umEyy+TbXbb70YH+Mt/zV7Umi/C9NVSeSmp+fz2w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=76UNAyFAu8qjfnGLlE4QYhRAxCfrTSJzPyxjhNMzfwQ=;
- b=tiycohjvFPbZvXdAgvRt2NPDYjg8LmuU5tdw7FYcdZkmCynbK3k8/G//g6c6MPfUxLIu+DWhYNU6EQsu1x2T+o86Jj6sJdrJE1aaDxMZraWx2qck+WoS9YpisC8QE3jXT6OOs3f9WTX6NeR03Hw3ziGdQNETxkbqxWSZwx1c99w=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL1PR12MB5732.namprd12.prod.outlook.com (2603:10b6:208:387::17)
- by CH3PR12MB7714.namprd12.prod.outlook.com (2603:10b6:610:14e::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.21; Thu, 22 Feb
- 2024 13:58:27 +0000
-Received: from BL1PR12MB5732.namprd12.prod.outlook.com
- ([fe80::db9b:a5f:5d0a:2a42]) by BL1PR12MB5732.namprd12.prod.outlook.com
- ([fe80::db9b:a5f:5d0a:2a42%4]) with mapi id 15.20.7316.018; Thu, 22 Feb 2024
- 13:58:26 +0000
-Message-ID: <3b7a719b-d7ff-495e-af3f-a419e4b46d96@amd.com>
-Date: Thu, 22 Feb 2024 07:58:21 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] x86/snp: Convert shared memory back to private on
- kexec
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Ashish Kalra <Ashish.Kalra@amd.com>, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
- luto@kernel.org, x86@kernel.org, ardb@kernel.org, hpa@zytor.com,
- linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, rafael@kernel.org,
- peterz@infradead.org, adrian.hunter@intel.com,
- sathyanarayanan.kuppuswamy@linux.intel.com, elena.reshetova@intel.com,
- jun.nakajima@intel.com, rick.p.edgecombe@intel.com, seanjc@google.com,
- kai.huang@intel.com, bhe@redhat.com, kexec@lists.infradead.org,
- linux-coco@lists.linux.dev, anisinha@redhat.com, michael.roth@amd.com,
- bdas@redhat.com, vkuznets@redhat.com, dionnaglaze@google.com,
- jroedel@suse.de, ashwin.kamat@broadcom.com
+	Thu, 22 Feb 2024 14:04:38 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708610678; x=1740146678;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=E75gomph1S/AxYryUcEMcOovIP7yR0F0aFziV9Jmk+c=;
+  b=lmyRUOsvu3nwglbTr1n+iRekZYk1IWVU82q5p4d/DIpgzFM72FL/KAzT
+   TzrOWv/K0Sq/ZgMSRaaDYft6nA81Im9yPMELfgSo8Aje3Q5QXKrLmpJpr
+   4ORn/QjFP8tOpZx0BLIH127t887HRjp7iIIn6WOdzT6Ovhkm6pSMGQYQq
+   jhR7ZVfRFu9NAmN/cJ6W5YqtneacuIpEISZjVMtYXDrzyxpUJPLNWVp5a
+   DiIQ1IAZUhAOZUyTYlhPMz6dCQmC1zjdJvsF8S7s2N6UgDW7E12XIusn4
+   +1vEwdYWpUbqeviDzN7+jyKbZ13aU0RpMX5eN3Wgp27kUkwUBi0GlwehO
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="6613719"
+X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
+   d="scan'208";a="6613719"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 06:04:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="936853749"
+X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
+   d="scan'208";a="936853749"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 22 Feb 2024 06:04:18 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 353C1458; Thu, 22 Feb 2024 16:04:17 +0200 (EET)
+Date: Thu, 22 Feb 2024 16:04:17 +0200
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, 
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Elena Reshetova <elena.reshetova@intel.com>, 
+	Jun Nakajima <jun.nakajima@intel.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish" <ashish.kalra@amd.com>, 
+	Sean Christopherson <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>, kexec@lists.infradead.org, 
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv7 07/16] x86/mm: Return correct level from
+ lookup_address() if pte is none
+Message-ID: <k33hshbceai3tb7qe6id6kx3iqf7kjhlyvdijvmuf6knv32krs@kwo3m7dkn5sm>
 References: <20240212104448.2589568-1-kirill.shutemov@linux.intel.com>
- <cover.1708390906.git.ashish.kalra@amd.com>
- <aa633d7439885da7e54c41db07d65f8e177bcf51.1708390906.git.ashish.kalra@amd.com>
- <97a7d69f-03e1-4ecc-a0ce-10bfe148509c@amd.com>
- <amk4ozai3l65d6ef3k2rsnapaislbvlwpfx7p35tqqhesmc4w7@5vmi52a3qv3o>
-Content-Language: en-US
-From: Tom Lendacky <thomas.lendacky@amd.com>
-Autocrypt: addr=thomas.lendacky@amd.com; keydata=
- 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
- vFkWitqCJg==
-In-Reply-To: <amk4ozai3l65d6ef3k2rsnapaislbvlwpfx7p35tqqhesmc4w7@5vmi52a3qv3o>
-X-ClientProxiedBy: DM6PR07CA0079.namprd07.prod.outlook.com
- (2603:10b6:5:337::12) To BL1PR12MB5732.namprd12.prod.outlook.com
- (2603:10b6:208:387::17)
+ <20240212104448.2589568-8-kirill.shutemov@linux.intel.com>
+ <ZdLjQCaxhOnR+GzX@MiWiFi-R3L-srv>
+ <zhbhgq27kjrhkdgbxomjykjez2i4hckguvmxyptvfvoftue5ca@zowl5qbl6psl>
+ <ZdR+JzfHjES3zytp@MiWiFi-R3L-srv>
+ <ic4v3q4muffjq2jhlkk3k4lg5xxvjwlw22hctzubl5573euzu2@er3m7ztog2a6>
+ <ZdVh6efExdt687YY@MiWiFi-R3L-srv>
+ <p34d7e5r3gkcj2xl5jycyldvpkmcllmhzioaqcmseeugl3eq73@plk43dd4luzu>
+ <ZdcplT8Xb5eevu/9@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5732:EE_|CH3PR12MB7714:EE_
-X-MS-Office365-Filtering-Correlation-Id: 64b5ae32-f6c0-44b9-7ecb-08dc33ae571c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 3QFJL/YN8OvVTf30UBKS90D8gAZ2UINYHs8ZZ2hB1K5OPgZEmDdyc8hFpMK6z29HbpLZamlY9gmkHmvPDDWueQMJTYGTh0N69jEF7fjkhIjraHc+Pbs9pKb02AQU1Kbw2VTLbigz1nTEBrsU++qVtkYfABvKJSOTfJIfs9XHek9JnnzMm8OfPDw8nNpghKyIODY+Wbc1k4AjPMV5DcDVKaS+IVGzbe7x/FupHtMgCT1zTIs0FYYT1slQgnfrYHJdJM0rYKlkZY+jyajIMHrJ4U8n/h5F3bbOyMcdstILfjzmdDkNStw6b/sUB67zuRiJ5e8PsFvM95/8vrwMxyS4tWF2hQ/Y49WZWpWRE9lnoF64PDrr9isyMX+yjY78yhI344H6GEsIlKlgoUjyh6El+freK67djhMLQJTTSrKJJTWlC/HuvO5mw3xb+MooVfEyrvoC0TqU5mmA/ej7eUfonDnO9n/AcTyesoFwoI4WAGKYPapR5UjGnwnmoZZIA4WgrLMxhH3k+1ZdzfjWg5QGXKNkBBMdN3MAd5s6WCDHp08=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5732.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?a1drRG5XVXN1YWsxdGJNcm5qTU1qKy9ET2pHVTFjcTJjZkV0YUF2cUxtc3Zw?=
- =?utf-8?B?YTlRdzEraWpTTWZCTFQxTHZKRDlYaWgzeFJJYisvMFBaYWg1WG8zNnJKWUt6?=
- =?utf-8?B?NndaMm1sTHNqSnBwOUswYlYrMlJZRnBlSUJucUdQdUE4d1k0ZFExN1czNHhN?=
- =?utf-8?B?WGU3NlVhZEFEZk1PUy9Hd1VEQXlidlNpTW91dm5oNSt0VXdqU0Y1SE4vOHp5?=
- =?utf-8?B?cDFBRmlzRGt1cytoblNNdHZDNDAvRWxCMG1VbGtsYXEvaUlydEZjL21jY1h5?=
- =?utf-8?B?N0tNSjRhVCtNN2VYdHB3d1hwNkwrSklIa0lZWXlDenZmT1UvbTk3UnVBN3Rj?=
- =?utf-8?B?QTZtQUtUYVhrbzFFbFlXZ0ZLZlpZNjE5eGw2ZzdGTXYzQ0lPNWJCVVdTZ2xX?=
- =?utf-8?B?RktTZEVCbjRWcGlKYmx1RUdDeWxFQ0o5eHBENTZCSytOaWRwd1czWldVWE94?=
- =?utf-8?B?VmtBMHBFdGg0QWhiZysxS1R1ZTlvT1k3U043ZmJtUm9NZUxwR2VjNWU1ZWFT?=
- =?utf-8?B?aXY0VlRET0dFV0VkWjhGMlN6dEVvN2h1b0YrY05lZzhMSXlaa0l0Nm9SakxY?=
- =?utf-8?B?NGk2OFoyVWtENDhoY0NJNmxuRExLeVhGVGU0RGorQnlZTW1EUEdBRjYweUdE?=
- =?utf-8?B?WjRSRnpGcDkwVTFUdXhGQmNhRVpuSGQyd3JCQXZHZ2FCNVBOWjlmL1czOU1i?=
- =?utf-8?B?QS9KUSswY2xSbmYvVUxCRDkrdFE5V0V4akZlM2lBU2RjbVNhTmlCcGRRTUpy?=
- =?utf-8?B?VDRpTks5MnFoYzBvanU5UVB0RW4xQ25LNTRXT0NFSGY3eG5xTk40VWVLNlpG?=
- =?utf-8?B?UUlZR0hCZDh2c05rUHpvOGMzTkdRRmM0aE4zbUQxVUlaZ0VSUThoSVpJWVJD?=
- =?utf-8?B?bmtRYVBrZzM1bXd5aXd4NnJEdmFwRGtrT09MNmwxc1RWbnFPK3ZTQWU5VXdG?=
- =?utf-8?B?YkJRcnZtTWw4eUlaSUpvTzNKSVgzWTRjdjdqRFBzblBWU3ZMMVFQRTJPaC9S?=
- =?utf-8?B?bk5NU29kTndHN0tMVzdpeDcvYXduR3lhOE5ERkY0MCtienU5WGdXL2xncHJJ?=
- =?utf-8?B?UmoyWTR6RUpyVEJaNjhTTktwUkFQWGpNaTRYdktLVlBEY2lhMDMxRURxZTQ4?=
- =?utf-8?B?ZWVxcURWK0JSeVptUG9tS2JQL01LdUFGZkJzZGp6ZkNJWk1PQ0FKOVZyY2tD?=
- =?utf-8?B?UGNEL05jQ2pxdTVhSUhGZDdNbnROTUhmUnY0d0ZJTU1MR1paNmNjWWd5MDkr?=
- =?utf-8?B?QklJN0dZSzBEVmtVVXVHeDVlSGkxK3lxWmhyeVQ0Q0dYT0xuM0tQT0h2Tnpo?=
- =?utf-8?B?MFU3ZTlpT2dKb3Zaczhiak81dkZJc2pBd0lXVGxXNG5JekJPQ1puS0kwV3Y1?=
- =?utf-8?B?YlBIeHVKWVNVN1psUGJ3dDlxN1lTQlpsSDlVb0dKZWV5aXpodzRDMkFZMWhq?=
- =?utf-8?B?Rzc5bGFFVTA3bG1GVWdoWEVQbHVTTGxvMHkzVURSSnFoUjdSMHVISFhveGZY?=
- =?utf-8?B?UWxiaThrZFBFVEFTTVRQTjFFYUVZdGU3OUVDUWdObU1TRTlaK1lYQXNleDV4?=
- =?utf-8?B?Sktma0tXSmFKbEZLN09xYk83QjVyWlRiWHdEQjI3WEVmZDl0Q3Evem0rdGZu?=
- =?utf-8?B?S0RKRnJmMzR2T2UwYVNQNmVnMmdBWUc5YkhHcDRDYXJPdUpkaDhMQ3RzdUxW?=
- =?utf-8?B?dDloUWppelBadEc5TDBYZjAzSDdVcEd5VFUxdkpaQ2E2RFBFVzFiVXVzTjF5?=
- =?utf-8?B?NUt1QTZYL0VTNkQ1cFZzaE9qVEVmREd0L0R1bVhzVzFFNVk0L0pSd2dJbXhL?=
- =?utf-8?B?V0dVYU5wYnFYU1I2bm82bUxlYjduaGFEbzNneUFmaTFGblRmSzVJVEl6Y0cr?=
- =?utf-8?B?cnBMbjhwVytzc2J2c21jZkkwMTZLTXRtWXFwM1MrUVk3NGhndE1DYmhiamIz?=
- =?utf-8?B?bTV3Nng0aUhoNEtRUThIN0hlMmlLOTZkbEF4NmJoUzlxS1VrSFlyb21TdFY4?=
- =?utf-8?B?MG92TDFHeEV3bzl1bllycTBnS3YvczgyMHZEanV2VWo5eXo5T1NkZVFzb1M1?=
- =?utf-8?B?L09rRldhbWpPY2Y5NWRyRzMvTXRsYWNiajFIV0xOUERnclFER3Z5RHhHOEkw?=
- =?utf-8?Q?8xcz/qW+PJs0gf2MDZ8O4kWEQ?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 64b5ae32-f6c0-44b9-7ecb-08dc33ae571c
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5732.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Feb 2024 13:58:25.9982
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EEgqhHn9kL9ofZHlLHA5ttkhRAjVUEw049Kbjd62BtXuf2kl0GdnE3ThlHL3CJJudUo/gTsuk+fu3eVlKCH8Cw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7714
+Content-Disposition: inline
+In-Reply-To: <ZdcplT8Xb5eevu/9@MiWiFi-R3L-srv>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240222_055846_632283_D99B4D6A 
-X-CRM114-Status: GOOD (  11.71  )
+X-CRM114-CacheID: sfid-20240222_060437_572132_84D6EA50 
+X-CRM114-Status: GOOD (  20.86  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -195,54 +94,53 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2/22/24 04:50, Kirill A. Shutemov wrote:
-> On Wed, Feb 21, 2024 at 02:35:13PM -0600, Tom Lendacky wrote:
->>> @@ -906,6 +917,206 @@ void snp_accept_memory(phys_addr_t start, phys_addr_t end)
->>>    	set_pages_state(vaddr, npages, SNP_PAGE_STATE_PRIVATE);
->>>    }
->>> +static inline bool pte_decrypted(pte_t pte)
->>> +{
->>> +	return cc_mkdec(pte_val(pte)) == pte_val(pte);
->>> +}
->>> +
->>
->> This is duplicated in TDX code, arch/x86/coco/tdx/tdx.c, looks like
->> something that can go in a header file, maybe mem_encrypt.h.
->>
+On Thu, Feb 22, 2024 at 07:01:41PM +0800, Baoquan He wrote:
+> On 02/21/24 at 04:15pm, Kirill A. Shutemov wrote:
+> > On Wed, Feb 21, 2024 at 10:37:29AM +0800, Baoquan He wrote:
+> > > > diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+> > > > index 3612e3167147..425ff6e192e6 100644
+> > > > --- a/arch/x86/mm/pat/set_memory.c
+> > > > +++ b/arch/x86/mm/pat/set_memory.c
+> > > > @@ -657,7 +657,8 @@ static inline pgprot_t verify_rwx(pgprot_t old, pgprot_t new, unsigned long star
+> > > >  
+> > > >  /*
+> > > >   * Lookup the page table entry for a virtual address in a specific pgd.
+> > > > - * Return a pointer to the entry and the level of the mapping.
+> > > > + * Return a pointer to the entry and the level of the mapping (or NULL if
+> > > > + * the entry is none) and level of the entry.
+> > >                        ^ this right parenthesis may need be moved to the end.
+> > > 
+> > > 
+> > > =======
+> > >  * Return a pointer to the entry and the level of the mapping (or NULL if
+> > >  * the entry is none and level of the entry).
+> > > =======
+> > 
+> > Emm.. I like my variant more. We return level regardless if the entry none
+> > or not. I don't see a reason to repeat it twice.
 > 
-> I think <asm/pgtable.h> is a better fit.
 > 
->>> +void snp_kexec_stop_conversion(bool crash)
->>> +{
->>> +	/* Stop new private<->shared conversions */
->>> +	conversion_allowed = false;
->>> +	crash_requested = crash;
->>> +
->>> +	/*
->>> +	 * Make sure conversion_allowed is cleared before checking
->>> +	 * conversions_in_progress.
->>> +	 */
->>> +	barrier();
->>
->> This should be smp_wmb().
->>
+>  * Lookup the page table entry for a virtual address in a specific pgd.
+>  * Return a pointer to the entry and the level of the mapping (or NULL if
+>  * the entry is none) and level of the entry.
 > 
-> Why?
+> Hmm, I am confused. Why do we need to stress the level of the mapping
+> and level of the entry? Wondering what is the difference. I must miss
+> something.
 
-IIUC, this is because conversions_in_progress can be set on another thread 
-and so this needs an smp barrier. In this case, smp_wmb() just ends up 
-being barrier(), but to me it is clearer this way. Just my opinion, though.
+My bad. This is way I meant to write:
 
-Thanks,
-Tom
+ * Lookup the page table entry for a virtual address in a specific pgd.
+ * Return a pointer to the entry (or NULL if the entry does not exist) and
+ * the level of the entry.
 
-
-> 
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
 
 _______________________________________________
 kexec mailing list
