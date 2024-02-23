@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1B426C54E49
-	for <kexec@archiver.kernel.org>; Fri, 23 Feb 2024 10:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5FFB9C54E49
+	for <kexec@archiver.kernel.org>; Fri, 23 Feb 2024 10:34:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:References
 	:In-Reply-To:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=4IYo31/vu+89PjkxaRw18BvGJtWOOJ+6McEGmJOYkRY=; b=WAFrv0zoelzb5I
-	3UHbW100yqbLTDKHIKUOdtj6C56Lvh6Y1C9qXvtcBFkX/7riGBevaSFkxwuaGGXiLu+Siy+RTFori
-	q2eNWIeYaSplGLmc/cLVHLB9umLX0OmJE93SPSoHwr1Mx1w47yAEEpastzZ/+YAiMoeZOGKBL6ON6
-	QKoE5mt8VBe3NoeJMbctpwxgRLHXmaZvKq/ig+ZLB+DxMrv2RvzY8NkbYWi9Z38y3dgbuzSGkkYGy
-	zErMLkg8oPEDdDozL7dV+lQhscRtw/rtU1QwYOQX99MAlFGFdz8xL38egZhs6YB1mJncoE6wOnzbo
-	jBnkGYwwfAKdBJQom1aQ==;
+	List-Owner; bh=PCrNXPBDUvXTg3oU+GGjkbZZBbNtE2nJUQ/J4UICjUk=; b=hNAHVVLD3BUqZ1
+	cboCQYeE8recZhWIpOsTAnvrqzk1vI2zELGnXk0vVuOOm5R4rD/lOQZKN/7oIuR3ajfBn7KrSESF2
+	oPot6O9fySXdMaEjY22V4gqwicSPfsvlfDTaZoWTq1nH/Z6cv70JuDKlM9SfFLJ/9vEGKnqWhVjGV
+	0Ej7a7Q7JZXxkLcl2U4Ip+TqLRbIvhtbQeyRrDLPgi9WSZSIjTY3y5oPDZSKLIwZDTobu3yJijOzb
+	kEKyww4Y7iShFEHONiysEWLAZ4x5vP1q9SPnXY4fPIw+zAdMfN/hB3QMehtHzVzNJY+oqIK01LLFJ
+	DcP/ohtnxTxDbC5uThQA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rdSp7-00000008vl0-1gl4;
-	Fri, 23 Feb 2024 10:30:33 +0000
-Received: from galois.linutronix.de ([193.142.43.55])
+	id 1rdSse-00000008wvf-3Ti9;
+	Fri, 23 Feb 2024 10:34:13 +0000
+Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rdSnB-00000008v6w-08OX
+	id 1rdSpn-00000008vvG-0bmU
 	for kexec@lists.infradead.org;
-	Fri, 23 Feb 2024 10:29:43 +0000
+	Fri, 23 Feb 2024 10:31:41 +0000
 From: Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1708684109;
+	s=2020; t=1708684273;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=rCkSqOHXuNZNZ4qVAhXnw7igAzpOyBDOC7OEqD/cJhc=;
-	b=U11EX3Gs7FK3ddaIS5hLCrLHSqX9h8fgsM12+dEprj9QStdLmwDUXgmjR6ptTQ6s+nm5aC
-	KQp49Cg6YVxaAjH/FggpkbntKzvEAHfW6bH19BZzDvAuGvdzB+03XUxRqSvmR2KFlIjX7S
-	9Gfe8CkA4zwjNMOqiV5srnkr6hVd+9ayY9O3C8Cr80aK7dmjLqlS7hfTJ3Kiz3MKioJmpV
-	BVSQrfb1dVuIo4kNHW7DeWpx9slJcF2TTTOtc0uEfH+u41wdotKzFo8PbmsAjdMlivK7zy
-	kO1sbtUrK1bWMfz5VVUTE1/DrhsAVFxnaShTHZvnWn6cl1vs9bvbTe9exxnfgg==
+	bh=jkLLuHQoX7Qx5Fy5qJpixZOVOxqV9iRWh6D0pLconUY=;
+	b=YiVSVT263F5FBqEISJkPVpVsZcbfVYxujjjgmA68+1aW2JPWI88DfN/lemthMtK9Xk+BYk
+	MgST4jZJNVsyNLdN4eVZOV+0A5SRkDYOTuZBmumyXO8//S4D7zAoBbMHxmutSMB6IyzpKP
+	6cVUOYz1ScR4VuG/JeY+rJdfXl2Qx31iV/xfxnEoxFVON5ouD7AcLPZQ8RKmL+tcbOMWwk
+	sLbKA9+9jJ5h22X1l0RdrMHbw8GbGhf3bivax/n/FQMPz/PCwW6apOB3mN6s/QXtukML1X
+	yEIrYNmzz4LTBTjEwg+YsGUCkssgiC9EjzW1yV3N8Q6Wd5gEgzTwXYlVsO1PxA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1708684109;
+	s=2020e; t=1708684273;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=rCkSqOHXuNZNZ4qVAhXnw7igAzpOyBDOC7OEqD/cJhc=;
-	b=zbZmICswW00KhN+dV6Wcm66nBj+5YEQ3qEg6CAYuhnU5gj+g/sB9sxUv6UKb+ibV6/Tyl+
-	xLqpn93b+a658eBw==
+	bh=jkLLuHQoX7Qx5Fy5qJpixZOVOxqV9iRWh6D0pLconUY=;
+	b=09ZIG2ZHx8YiIlTpa2V0EoiX45d9E+RxpvYkjsbD254Oww6TUCvu2V8tVDb1bx9jIP0dka
+	Sl0WEcqgpr8YkrCg==
 To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Ingo Molnar
  <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
  <dave.hansen@linux.intel.com>, x86@kernel.org
@@ -61,17 +61,17 @@ Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra
  kexec@lists.infradead.org, linux-coco@lists.linux.dev,
  linux-kernel@vger.kernel.org, "Kirill A. Shutemov"
  <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCHv7 13/16] x86/acpi: Do not attempt to bring up secondary
- CPUs in kexec case
-In-Reply-To: <20240212104448.2589568-14-kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCHv7 16/16] x86/acpi: Add support for CPU offlining for
+ ACPI MADT wakeup method
+In-Reply-To: <20240212104448.2589568-17-kirill.shutemov@linux.intel.com>
 References: <20240212104448.2589568-1-kirill.shutemov@linux.intel.com>
- <20240212104448.2589568-14-kirill.shutemov@linux.intel.com>
-Date: Fri, 23 Feb 2024 11:28:28 +0100
-Message-ID: <87msrrcw4z.ffs@tglx>
+ <20240212104448.2589568-17-kirill.shutemov@linux.intel.com>
+Date: Fri, 23 Feb 2024 11:31:12 +0100
+Message-ID: <87jzmvcw0f.ffs@tglx>
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240223_022833_421681_9B91ED68 
-X-CRM114-Status: GOOD (  11.07  )
+X-CRM114-CacheID: sfid-20240223_023115_541608_8269E33E 
+X-CRM114-Status: GOOD (  10.82  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,22 +89,24 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 On Mon, Feb 12 2024 at 12:44, Kirill A. Shutemov wrote:
-> ACPI MADT doesn't allow to offline a CPU after it was onlined. This
-> limits kexec: the second kernel won't be able to use more than one CPU.
+> MADT Multiprocessor Wakeup structure version 1 brings support of CPU
+> offlining: BIOS provides a reset vector where the CPU has to jump to
+> for offlining itself. The new TEST mailbox command can be used to test
+> whether the CPU offlined itself which means the BIOS has control over
+> the CPU and can online it again via the ACPI MADT wakeup method.
 >
-> To prevent a kexec kernel from onlining secondary CPUs invalidate the
-> mailbox address in the ACPI MADT wakeup structure which prevents a
-> kexec kernel to use it.
+> Add CPU offling support for the ACPI MADT wakeup method by implementing
+> custom cpu_die(), play_dead() and stop_this_cpu() SMP operations.
 >
-> This is safe as the booting kernel has the mailbox address cached
-> already and acpi_wakeup_cpu() uses the cached value to bring up the
-> secondary CPUs.
+> CPU offlining makes is possible to hand over secondary CPUs over kexec,
+> not limiting the second kernel to a single CPU.
 >
-> Note: This is a Linux specific convention and not covered by the
->       ACPI specification.
+> The change conforms to the approved ACPI spec change proposal. See the
+> Link.
 >
 > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Reviewed-by: Kai Huang <kai.huang@intel.com>
+> Link: https://lore.kernel.org/all/13356251.uLZWGnKmhe@kreacher
+> Acked-by: Kai Huang <kai.huang@intel.com>
 > Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
 Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
