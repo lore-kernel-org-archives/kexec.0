@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 92471C54798
-	for <kexec@archiver.kernel.org>; Fri, 23 Feb 2024 19:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6E030C54798
+	for <kexec@archiver.kernel.org>; Fri, 23 Feb 2024 19:41:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
 	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=wP0asykdf8aIhXGX/GLXV7RJ7AVm4u3gIZUG7qIseyY=; b=oxELijsl8Ar8AZ
-	Gs0GVtsYGRrLWtQ/qrCEOY3cAhcas42rS8P5UjG6wwAibMoevTA8jtSwhiFAgsVQTO2ia1mHpZcsN
-	VYTFo/5EV5iwFDHpqgVQYuc1m1j69NVG5bck/haJx0Cgy+USCdWrOv6YZCUh0Iyyd76yrjZVXRTL3
-	WL5NShHITXsgN6iLGwgeMzrowmG7SLkDoaiUSltWZrT0u3BpfWdlpQp3/kb+GKqlqga6IXeL/RU/i
-	bP+RVMzwvujrguOB3Xyd68V4DPswWxOP1eHx9Ie1ZSFDJEZCNrm/9p6TLE3u+v9Za+eVAnOjsHcq5
-	Cz7R7fc/7KXypOrdaokQ==;
+	List-Owner; bh=clURhPp7q17e4xj92zgoDC/eWAZPCFGlu38y+ALtOaU=; b=NGumNo4QwbVv6n
+	ijwvQ+pMR3E+lxoj3xmWP/+0StzT/7YLJWa7wVk2NrSeg3JauIINYG2koomvppu3K8iP63FKTAGR2
+	PXYRWywgD3KxKjT8xTC/Eu8W6SbX2KpP9PKoayEX3vZXv8c9xRrQW9OHhpGjchEMxNtx6aVQJ3LSQ
+	rPSYSnNxRliFJTtGkUjthNkFpI5edZBOTW+EuTIUcZP8gpkOZ1Q1Lt2JfuYrocBtnsTt5LhTmANxg
+	fGzIBbCLeEegwHcP7qy+fvw/aq+LU29NcD/n4kIpTFxNCZcnb3+jrVZDKwq1R3d72v9T3u80BZUMr
+	2kz/qTmaX3xt28GujN7Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rdbO6-0000000B1sp-2xVD;
-	Fri, 23 Feb 2024 19:39:14 +0000
-Received: from mgamail.intel.com ([198.175.65.14])
+	id 1rdbQb-0000000B2dC-42JD;
+	Fri, 23 Feb 2024 19:41:49 +0000
+Received: from mgamail.intel.com ([192.198.163.9])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rdbO2-0000000B1rV-3wGJ
+	id 1rdbQZ-0000000B2bm-0wZL
 	for kexec@lists.infradead.org;
-	Fri, 23 Feb 2024 19:39:12 +0000
+	Fri, 23 Feb 2024 19:41:48 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708717151; x=1740253151;
+  t=1708717307; x=1740253307;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=pLrNYUAa8YeswxINnrU38+oxEExh3rDUsw3BEb0+Vvg=;
-  b=GpvYOO3tPcblyrtNO9NQPHoYGWxYfMk43fye6o8cRvlUIhgZVO4LJxzk
-   h0vmUCr3RwXk6DDaMVBWc4KRnJZPkM0MXeqb9K1A24X/D+grB7dQ1BGR9
-   kgpc0n6/sHfQ1+RL2Fw72ksVOUcgh0TkXGBHF1PrzlGLSm1Kq8D8GayvM
-   hgwzQtn0t6v7Qeb1lmV0R0eIxLS+aRdFC4owheBmZzwbP0ZCbk1ENO0Hs
-   2CHwAAI+QT1s6haRhkLC2hxLXEULHwYMdaVr+I7WxSNdEZZPs+bGDaWwJ
-   rV6hjjvdBJbCdUtkzsLqo/Zt7Wx8M225ePQtxWCfk+9/S/SIr14mcxtbr
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10993"; a="6867185"
+  bh=wSyCr10hgEn6syn5sBlpIxD5jTCtsaHF/BkwDgxJQfs=;
+  b=N2aQmo//O/5eBtgaeEA+/b2QsnP/afZ/YVr58VEWw3GGegzn4U942FbU
+   BaBzLMfrBv7qGnpgbF4CSID/sGXCDlXDIcZQ/4TwPyP/T1KkbKiquaUhT
+   rQYqu018mKd6SPFPHcyjzDR2rPDUHgmuyP9p0AG6P13AUzAkxHyhjOMig
+   dGYXgrJUMYSdKlBxnADcouWIG6vEOBvVY+U5w6USDGOL1hGDtpwxW/cxp
+   rXIH66nQi7g4OHBjkaWg4okK+ddjsUuhqMcmGcgxF6EnIzeTkug6t+fy+
+   BZuZY3RFyhzDXAUA82V0WWZ7LkE9Tj4g66NM1gh3MooE1b2WH+VcO9viO
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10993"; a="13750654"
 X-IronPort-AV: E=Sophos;i="6.06,180,1705392000"; 
-   d="scan'208";a="6867185"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 11:39:08 -0800
+   d="scan'208";a="13750654"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 11:41:42 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,180,1705392000"; 
-   d="scan'208";a="36778758"
+   d="scan'208";a="10703891"
 Received: from gtkramer-mobl1.amr.corp.intel.com (HELO [10.209.82.163]) ([10.209.82.163])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 11:39:08 -0800
-Message-ID: <a14bda4a-15ad-4d20-8b60-0ab92b608f2f@intel.com>
-Date: Fri, 23 Feb 2024 11:39:07 -0800
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 11:41:42 -0800
+Message-ID: <90ea0a21-d803-426d-9d73-00bd1a26e73a@intel.com>
+Date: Fri, 23 Feb 2024 11:41:41 -0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv7 10/16] x86/tdx: Convert shared memory back to private on
- kexec
+Subject: Re: [PATCHv7 11/16] x86/mm: Make e820_end_ram_pfn() cover
+ E820_TYPE_ACPI ranges
 Content-Language: en-US
 To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
  Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
@@ -74,7 +74,7 @@ Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
  kexec@lists.infradead.org, linux-coco@lists.linux.dev,
  linux-kernel@vger.kernel.org
 References: <20240212104448.2589568-1-kirill.shutemov@linux.intel.com>
- <20240212104448.2589568-11-kirill.shutemov@linux.intel.com>
+ <20240212104448.2589568-12-kirill.shutemov@linux.intel.com>
 From: Dave Hansen <dave.hansen@intel.com>
 Autocrypt: addr=dave.hansen@intel.com; keydata=
  xsFNBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
@@ -119,10 +119,11 @@ Autocrypt: addr=dave.hansen@intel.com; keydata=
  MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
  hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
  vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <20240212104448.2589568-11-kirill.shutemov@linux.intel.com>
+In-Reply-To: <20240212104448.2589568-12-kirill.shutemov@linux.intel.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240223_113911_088861_6A170A23 
-X-CRM114-Status: GOOD (  10.96  )
+X-CRM114-CacheID: sfid-20240223_114147_381500_27756817 
+X-CRM114-Status: UNSURE (   4.04  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -140,47 +141,12 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 On 2/12/24 02:44, Kirill A. Shutemov wrote:
-> +static void tdx_kexec_stop_conversion(bool crash)
-> +{
-> +	/* Stop new private<->shared conversions */
-> +	conversion_allowed = false;
-> +
-> +	/*
-> +	 * Make sure conversion_allowed is cleared before checking
-> +	 * conversions_in_progress.
-> +	 */
-> +	barrier();
-> +
-> +	/*
-> +	 * Crash kernel reaches here with interrupts disabled: can't wait for
-> +	 * conversions to finish.
-> +	 *
-> +	 * If race happened, just report and proceed.
-> +	 */
-> +	if (!crash) {
-> +		unsigned long timeout;
-> +
-> +		/*
-> +		 * Wait for in-flight conversions to complete.
-> +		 *
-> +		 * Do not wait more than 30 seconds.
-> +		 */
-> +		timeout = 30 * USEC_PER_SEC;
-> +		while (atomic_read(&conversions_in_progress) && timeout--)
-> +			udelay(1);
-> +	}
-> +
-> +	if (atomic_read(&conversions_in_progress))
-> +		pr_warn("Failed to finish shared<->private conversions\n");
-> +}
+> Despite the name, E820_TYPE_ACPI covers not only ACPI data, but also EFI
+> tables and might be required by kernel to function properly.
 
-I'd really prefer we find a way to do this with actual locks, especially
-'conversion_allowed'.
+Lovely.  You learn something new every day.
 
-This is _awfully_ close to being able to be handled by a rwsem where the
-readers are the converters and tdx_kexec_stop_conversion() takes a write.
-
-
+Reviewed-by: Dave Hansen <dave.hansen@intel.com>
 
 _______________________________________________
 kexec mailing list
