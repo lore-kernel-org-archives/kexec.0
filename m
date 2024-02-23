@@ -4,57 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1295BC54E49
-	for <kexec@archiver.kernel.org>; Fri, 23 Feb 2024 19:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 92471C54798
+	for <kexec@archiver.kernel.org>; Fri, 23 Feb 2024 19:39:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
 	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=G3XuKwapCI97BaECHUw1JH+6SfNtFQO7JkGlT4QHos0=; b=jqTZY5P2dmLQLg
-	jwZ4mf2eK2zxb+6x8xHSz+wiyZzxRpicrms5Ir7dTvFYqX7eSzeS2w09jqFQEHsYL1bxHGbV1ZbRG
-	ulNt0smn7Jqte+T16RrN/eK9/alTh2417+zcw9Hk8B137/GSaYPrxQdxOTm3aEL/4Z5vIR6Fb0XYN
-	J0h3qHxGil5udSBmtF5o8j29sZTHAk8OTp3siQGq941VnnH66RJW1BxRBZxxgDLVnZXJKBHsI3l9k
-	9fY7SJ+R6B18hiZfm1AANjbCaNYFNnB/l4aFEnfS8cyaSPev3SWlhpe2tF/tOFZJppokJdUzBpwG1
-	61u1CQ3QDYeZpSr1kopw==;
+	List-Owner; bh=wP0asykdf8aIhXGX/GLXV7RJ7AVm4u3gIZUG7qIseyY=; b=oxELijsl8Ar8AZ
+	Gs0GVtsYGRrLWtQ/qrCEOY3cAhcas42rS8P5UjG6wwAibMoevTA8jtSwhiFAgsVQTO2ia1mHpZcsN
+	VYTFo/5EV5iwFDHpqgVQYuc1m1j69NVG5bck/haJx0Cgy+USCdWrOv6YZCUh0Iyyd76yrjZVXRTL3
+	WL5NShHITXsgN6iLGwgeMzrowmG7SLkDoaiUSltWZrT0u3BpfWdlpQp3/kb+GKqlqga6IXeL/RU/i
+	bP+RVMzwvujrguOB3Xyd68V4DPswWxOP1eHx9Ie1ZSFDJEZCNrm/9p6TLE3u+v9Za+eVAnOjsHcq5
+	Cz7R7fc/7KXypOrdaokQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rdauU-0000000Axea-2ya5;
-	Fri, 23 Feb 2024 19:08:38 +0000
-Received: from mgamail.intel.com ([192.198.163.9])
+	id 1rdbO6-0000000B1sp-2xVD;
+	Fri, 23 Feb 2024 19:39:14 +0000
+Received: from mgamail.intel.com ([198.175.65.14])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rdauC-0000000Axc4-3syR
+	id 1rdbO2-0000000B1rV-3wGJ
 	for kexec@lists.infradead.org;
-	Fri, 23 Feb 2024 19:08:36 +0000
+	Fri, 23 Feb 2024 19:39:12 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708715301; x=1740251301;
+  t=1708717151; x=1740253151;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=7R9RCGEfnv7As+Ov4XdPpDS7BmdZlFCHr3jRKeBO7MA=;
-  b=TVaOOIAU+238cg/9AN1eGMPi+SRQn4iWX7W6uODZXoqBUwtwg8y9LXXe
-   m/pruRBj7CHMAByyy7WAJK02wwdlYkKYQkgHfkGRJ9cUCvmyInu6qpzfm
-   egDXAJ8jq9AiXAHEKd/vJ3aAlGvxcPURxQo+Yh5R0BHCbxsOvv5mCIHJn
-   bmw/zw8wpzrNs9Edn17eu0j4p3Y12uCUey1ndssmRvdO79RkBEd7BLAHx
-   hqMyZkN4CGYMwzkBe4chexQFp5NdT6SZ79DifrP2VYJPuag6RdJ7YAD8r
-   gemqesVwz4XXfBnbf80pfIuhHwQec2h8uzl4iVozSzUI2ag9FANRCsmRt
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10993"; a="13746753"
+  bh=pLrNYUAa8YeswxINnrU38+oxEExh3rDUsw3BEb0+Vvg=;
+  b=GpvYOO3tPcblyrtNO9NQPHoYGWxYfMk43fye6o8cRvlUIhgZVO4LJxzk
+   h0vmUCr3RwXk6DDaMVBWc4KRnJZPkM0MXeqb9K1A24X/D+grB7dQ1BGR9
+   kgpc0n6/sHfQ1+RL2Fw72ksVOUcgh0TkXGBHF1PrzlGLSm1Kq8D8GayvM
+   hgwzQtn0t6v7Qeb1lmV0R0eIxLS+aRdFC4owheBmZzwbP0ZCbk1ENO0Hs
+   2CHwAAI+QT1s6haRhkLC2hxLXEULHwYMdaVr+I7WxSNdEZZPs+bGDaWwJ
+   rV6hjjvdBJbCdUtkzsLqo/Zt7Wx8M225ePQtxWCfk+9/S/SIr14mcxtbr
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10993"; a="6867185"
 X-IronPort-AV: E=Sophos;i="6.06,180,1705392000"; 
-   d="scan'208";a="13746753"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 11:08:20 -0800
+   d="scan'208";a="6867185"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 11:39:08 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,180,1705392000"; 
-   d="scan'208";a="5979122"
+   d="scan'208";a="36778758"
 Received: from gtkramer-mobl1.amr.corp.intel.com (HELO [10.209.82.163]) ([10.209.82.163])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 11:08:20 -0800
-Message-ID: <a69a3d67-7352-4bf4-8766-a55ce97e46bd@intel.com>
-Date: Fri, 23 Feb 2024 11:08:18 -0800
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 11:39:08 -0800
+Message-ID: <a14bda4a-15ad-4d20-8b60-0ab92b608f2f@intel.com>
+Date: Fri, 23 Feb 2024 11:39:07 -0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv7 08/16] x86/tdx: Account shared memory
+Subject: Re: [PATCHv7 10/16] x86/tdx: Convert shared memory back to private on
+ kexec
 Content-Language: en-US
 To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
  Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
@@ -73,7 +74,7 @@ Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
  kexec@lists.infradead.org, linux-coco@lists.linux.dev,
  linux-kernel@vger.kernel.org
 References: <20240212104448.2589568-1-kirill.shutemov@linux.intel.com>
- <20240212104448.2589568-9-kirill.shutemov@linux.intel.com>
+ <20240212104448.2589568-11-kirill.shutemov@linux.intel.com>
 From: Dave Hansen <dave.hansen@intel.com>
 Autocrypt: addr=dave.hansen@intel.com; keydata=
  xsFNBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
@@ -118,10 +119,10 @@ Autocrypt: addr=dave.hansen@intel.com; keydata=
  MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
  hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
  vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <20240212104448.2589568-9-kirill.shutemov@linux.intel.com>
+In-Reply-To: <20240212104448.2589568-11-kirill.shutemov@linux.intel.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240223_110829_466845_3BAF7C06 
-X-CRM114-Status: GOOD (  23.67  )
+X-CRM114-CacheID: sfid-20240223_113911_088861_6A170A23 
+X-CRM114-Status: GOOD (  10.96  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -139,96 +140,47 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 On 2/12/24 02:44, Kirill A. Shutemov wrote:
-> The kernel will convert all shared memory back to private during kexec.
-> The direct mapping page tables will provide information on which memory
-> is shared.
-> 
-> It is extremely important to convert all shared memory. If a page is
-> missed, it will cause the second kernel to crash when it accesses it.
-> 
-> Keep track of the number of shared pages. This will allow for
-> cross-checking against the shared information in the direct mapping and
-> reporting if the shared bit is lost.
-> 
-> Include a debugfs interface that allows for the check to be performed at
-> any point.
-
-When I read this, I thought you were going to do some automatic
-checking.  Could you make it more clear here that it's 100% up to the
-user to figure out if the numbers in debugfs match and whether there's a
-problem?  This would also be a great place to mention that the whole
-thing is racy.
-
-> +static atomic_long_t nr_shared;
-> +
-> +static inline bool pte_decrypted(pte_t pte)
+> +static void tdx_kexec_stop_conversion(bool crash)
 > +{
-> +	return cc_mkdec(pte_val(pte)) == pte_val(pte);
-> +}
-
-Name this pte_is_decrypted(), please.
-
->  /* Called from __tdx_hypercall() for unrecoverable failure */
->  noinstr void __noreturn __tdx_hypercall_failed(void)
->  {
-> @@ -821,6 +829,11 @@ static int tdx_enc_status_change_finish(unsigned long vaddr, int numpages,
->  	if (!enc && !tdx_enc_status_changed(vaddr, numpages, enc))
->  		return -EIO;
->  
-> +	if (enc)
-> +		atomic_long_sub(numpages, &nr_shared);
-> +	else
-> +		atomic_long_add(numpages, &nr_shared);
+> +	/* Stop new private<->shared conversions */
+> +	conversion_allowed = false;
 > +
->  	return 0;
->  }
->  
-> @@ -896,3 +909,59 @@ void __init tdx_early_init(void)
->  
->  	pr_info("Guest detected\n");
->  }
+> +	/*
+> +	 * Make sure conversion_allowed is cleared before checking
+> +	 * conversions_in_progress.
+> +	 */
+> +	barrier();
 > +
-> +#ifdef CONFIG_DEBUG_FS
-> +static int tdx_shared_memory_show(struct seq_file *m, void *p)
-> +{
-> +	unsigned long addr, end;
-> +	unsigned long found = 0;
+> +	/*
+> +	 * Crash kernel reaches here with interrupts disabled: can't wait for
+> +	 * conversions to finish.
+> +	 *
+> +	 * If race happened, just report and proceed.
+> +	 */
+> +	if (!crash) {
+> +		unsigned long timeout;
 > +
-> +	addr = PAGE_OFFSET;
-> +	end  = PAGE_OFFSET + get_max_mapped();
-> +
-> +	while (addr < end) {
-> +		unsigned long size;
-> +		unsigned int level;
-> +		pte_t *pte;
-> +
-> +		pte = lookup_address(addr, &level);
-> +		size = page_level_size(level);
-> +
-> +		if (pte && pte_decrypted(*pte))
-> +			found += size / PAGE_SIZE;
-> +
-> +		addr += size;
-> +
-> +		cond_resched();
+> +		/*
+> +		 * Wait for in-flight conversions to complete.
+> +		 *
+> +		 * Do not wait more than 30 seconds.
+> +		 */
+> +		timeout = 30 * USEC_PER_SEC;
+> +		while (atomic_read(&conversions_in_progress) && timeout--)
+> +			udelay(1);
 > +	}
-
-This is totally racy, right?  Nothing prevents the PTE from
-flip-flopping all over the place.
-
-> +	seq_printf(m, "Number of shared pages in kernel page tables:  %16lu\n",
-> +		   found);
-> +	seq_printf(m, "Number of pages accounted as shared:           %16ld\n",
-> +		   atomic_long_read(&nr_shared));
-> +	return 0;
+> +
+> +	if (atomic_read(&conversions_in_progress))
+> +		pr_warn("Failed to finish shared<->private conversions\n");
 > +}
 
-Ditto with 'nr_shared'.  There's nothing to say that the page table walk
-has anything to do with 'nr_shared' by the time we get down here.
+I'd really prefer we find a way to do this with actual locks, especially
+'conversion_allowed'.
 
-That's not _fatal_ for a debug interface, but the pitfalls need to at
-least be discussed.  Better yet would be to make sure this and the cpa
-code don't stomp on each other.
+This is _awfully_ close to being able to be handled by a rwsem where the
+readers are the converters and tdx_kexec_stop_conversion() takes a write.
+
+
 
 _______________________________________________
 kexec mailing list
