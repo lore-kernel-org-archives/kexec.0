@@ -4,69 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 19DEDC54798
-	for <kexec@archiver.kernel.org>; Fri, 23 Feb 2024 18:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 00F55C5478C
+	for <kexec@archiver.kernel.org>; Fri, 23 Feb 2024 18:59:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
 	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=c5/ibWuX/cnC29ZSCHnQYgcNlXHGUXm4EAdJI1gJmK0=; b=S60UDB8AwGi8M+
-	c3cUUV196C6r7576i9tJ9tAiTOkXsUtpQ0I0ejr3Alp5lFRckm4S1Io2xHyeoGtTLZEBJYgJdpTbZ
-	hU4H0kO5/FQF7n623i1QLxmzJ4Ws2LXq+qCRMr2Lw14KKahd7mRI4u7CgllKoBpkHNI5HCcE2ayOg
-	Z/Ef/8FGWbI7ONtr2eIt+XhYJqpDVDbcmgzlRs8LF7cfE0vY6swEDIJRW+WuNgfBt/JSd4586LDb7
-	CYYy/n3taS5kmcxJjVw0msdTfT54ZTGBO4yF9PZEw/3xQsdg23lqHZw4MbJYfdF+gU459UEpQpaSd
-	MsxNlYEBlyzkmw4N55pw==;
+	List-Owner; bh=goGfSJydgPLa281/vC8dJXx6pI1ipmeQVyq4dK9quGQ=; b=B+HVY5n9g7n0x8
+	IX8EtgcdCkF9C+ya0hWtX823h6Q8BIcMu3uPcaFUUX2WjUz5QZJzy9h9vmJ4jP9Qy2xnw56RUBIkV
+	4nAZ358H84jyR6g+SuiVq+Pf8UfkdKhL/2X7BoznJrqWZtBUYWjZoc1EaAurGJ0ZBuWbgmbk6sMA4
+	OMp+RXb696mg7kgW1+duz9qxwOzg7yvlHZfOktN0bZWDkHtu4t1oY0gNgeyctyAfMSKrMLNxyoiDS
+	s7iKvR50PczBFowlshDxvmpRoU9pYo4M6wf5CPCnn7o7XBvAS90I8+d3sSVUhaUuG0WJNmnaQW+BZ
+	RquHILVeDQ6WhZkFZhyg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rdaYA-0000000Au0v-0KOv;
-	Fri, 23 Feb 2024 18:45:34 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1rdalP-0000000AwZz-2tIr;
+	Fri, 23 Feb 2024 18:59:15 +0000
+Received: from mgamail.intel.com ([192.198.163.9])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rdaXt-0000000Atvu-3t89
-	for kexec@bombadil.infradead.org;
-	Fri, 23 Feb 2024 18:45:21 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=wFnwB5YRlSZvaDCAozTNRB52IOffR785pKoOZZt6WSY=; b=aWiJ19fr2i0ambJ5EHqGXKnOxw
-	PUF/axFdSpae0r9twxsi6IXITkL5YJDFI6bbvRY8cYa73jzCDz7wuHCS1Cr4yCu7J7hhmT/FT43Dj
-	pI8YfLfVP+Kw09znO+RpHaflew2HnEURPS+T9bTCgh6OkVSSKuJwc4/cgO4MAIudREJ+DCUWHB0E7
-	THWL6UVn5jPxUJHPsacw2vmB+nOZ5n4CAO9QVSdZIChsHa3PEKV+uheRg+ssOgJOeui6AlWkdUOAa
-	BATdjT0h+/nx5Qt/iUT17GHhuuxaAf51BDSkqBnRwNqBkKm7X8n7axCr8joWUnyccjSJaMm8vgVON
-	AiTGaRrw==;
-Received: from mgamail.intel.com ([198.175.65.9])
-	by desiato.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rdaXp-000000005iG-0AqQ
+	id 1rdal7-0000000AwUt-3XF8
 	for kexec@lists.infradead.org;
-	Fri, 23 Feb 2024 18:45:16 +0000
+	Fri, 23 Feb 2024 18:59:13 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708713914; x=1740249914;
+  t=1708714738; x=1740250738;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=EN6OSzntjAVnvO08qDvxNABHPZE0rA7qiMlpeC+o+TE=;
-  b=Wm7+uzai4Ml1WdJZMBbg4tOpaGjZGvWQhpKiSVrerS1C5T39FcMH6V+H
-   N0QJqwoXnfLMpTCTB0JZU6YhmZi6S5AIbvPUS7Z2GCwk/5PKu3RfCVGxw
-   Fwim5K1HleNZJyIfc073KqMvhPWmfiT1ELWudNxiFcNes+WXxFi8wItbx
-   WatFB9BWp312kM1EQNGliWO8AOa8GSu7H2JXw5I5ZNaevrGjGgS8Ne9mH
-   sERzxNPJanwCnGr2cijrfYtPStYbIMKD03L13Lx2Khxqs7bzuEJGzyELX
-   v31SzwYVdk/gUkksGezIfBVFy24RmSNDc71kd90D82WN5+iTURQnnK+Tr
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10993"; a="25518958"
+  bh=Kaf0RNBKifZxmQBKJDDuFTaXgO5JnmzMcvf2mBmpSm4=;
+  b=BF0uMPLf+HkVu/aQEDmq38M4KWmCYbtSgDZySEh7xYttDKsXaugdyR5z
+   PuLnRSzdzvhcH2BU6Nc9bTaH8HqCfWJ4HsyrfV4JZyGCzseEt8xkTbLP3
+   8ZRT0ROiVcHcBIT/SAk4ESdzo0Nnp3ILPHVPofSNpIgT7pQLyxm3sYYgi
+   HI7d0lc3ngCrtURxRC1hF6UPN2J1I/gGrpsMoq6waqbLM1wgpQMx3j1xg
+   b+OsCOPbTFPVTE6hs11c9qocntcsedHuIHbc2jotATkAP+00w/gCBV2YM
+   71aMwu3sHphbb7Fed+WuyKHx5WBgEsv8MHS3g6O8RIcM+LvSBBOZdhiUO
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10993"; a="13745709"
 X-IronPort-AV: E=Sophos;i="6.06,180,1705392000"; 
-   d="scan'208";a="25518958"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 10:45:05 -0800
+   d="scan'208";a="13745709"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 10:58:57 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.06,180,1705392000"; 
-   d="scan'208";a="29165824"
+   d="scan'208";a="5977964"
 Received: from gtkramer-mobl1.amr.corp.intel.com (HELO [10.209.82.163]) ([10.209.82.163])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 10:45:04 -0800
-Message-ID: <bb5931cf-d361-419b-9e80-8a5ec03f29d7@intel.com>
-Date: Fri, 23 Feb 2024 10:45:02 -0800
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 10:58:56 -0800
+Message-ID: <b01b4506-eb8e-4070-b318-bad68caf534f@intel.com>
+Date: Fri, 23 Feb 2024 10:58:55 -0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCHv7 07/16] x86/mm: Return correct level from
@@ -90,6 +75,7 @@ Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
  linux-kernel@vger.kernel.org
 References: <20240212104448.2589568-1-kirill.shutemov@linux.intel.com>
  <20240212104448.2589568-8-kirill.shutemov@linux.intel.com>
+ <bb5931cf-d361-419b-9e80-8a5ec03f29d7@intel.com>
 From: Dave Hansen <dave.hansen@intel.com>
 Autocrypt: addr=dave.hansen@intel.com; keydata=
  xsFNBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
@@ -134,10 +120,10 @@ Autocrypt: addr=dave.hansen@intel.com; keydata=
  MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
  hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
  vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <20240212104448.2589568-8-kirill.shutemov@linux.intel.com>
+In-Reply-To: <bb5931cf-d361-419b-9e80-8a5ec03f29d7@intel.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240223_184514_885117_46CD7414 
-X-CRM114-Status: UNSURE (   8.96  )
+X-CRM114-CacheID: sfid-20240223_105858_460958_A3C1F567 
+X-CRM114-Status: UNSURE (   4.42  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -155,42 +141,17 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2/12/24 02:44, Kirill A. Shutemov wrote:
-> lookup_address() only returns correct page table level for the entry if
-> the entry is not none.
+On 2/23/24 10:45, Dave Hansen wrote:
+> 	Always filling out the level allows using lookup_address() to
+> 	iterate over kernel page tables.
 
-Currently, lookup_address() returns two things:
-  1. A "pte_t" (which might be a p[g4um]d_t)
-  2. The 'level' of the page tables where the "pte_t" was found
-     (returned via a pointer)
-
-If no pte_t is found, 'level' is essentially garbage.
-
-> Make the helper to always return correct 'level'. It allows to implement
-> iterator over kernel page tables using lookup_address().
-
-One nit with this description: What's "correct" isn't immediately
-obvious to me.  It wasn't exactly incorrect before.  I think it would be
-better to say:
-
-	Always fill out the level.  For NULL "pte_t"s, fill in the level
-	where the p*d_none() entry was found mirroring the "found"
-	behavior.
+This doesn't parse very well.  How about this instead:
 
 	Always filling out the level allows using lookup_address() to
-	iterate over kernel page tables.
+	precisely skip over holes when walking kernel page tables.
 
-> Add one more entry into enum pg_level to indicate size of VA covered by
-> one PGD entry in 5-level paging mode.
-
-Needs some 'the's:
-
-Add one more entry into enum pg_level to indicate the size of the VA
-covered by one PGD entry in 5-level paging mode.
-
-With that fixed:
-
-Reviewed-by: Dave Hansen <dave.hansen@intel.com>
+I think that more accurately captures what you're doing with it in the
+next patch.
 
 _______________________________________________
 kexec mailing list
