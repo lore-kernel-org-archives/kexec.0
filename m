@@ -4,65 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 799B8C54798
-	for <kexec@archiver.kernel.org>; Wed, 28 Feb 2024 00:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C775DC47DD9
+	for <kexec@archiver.kernel.org>; Wed, 28 Feb 2024 04:51:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-ID:In-Reply-To:
 	References:Message-ID:Date:Subject:CC:To:From:Reply-To:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=Qao2/yn2PxUIXWmEDVKb/8BlI/TZYYAFLsiOLwDtxxI=; b=hE50EsrOsJ5g6d
-	mq7PyLqO519qT7c8NuNpnu9xYUjXqKlJMwzMu0BpxmZN++QeNHD4K+AOWlxegkdhFV1nLtDuK1b4w
-	bw3eZlJTbp9Qx4j440lWXrRDScCfQXNVytyVKlxWSiHTi0Mav8RV9xepFnXUptFspsx4Cmg8Uf3ux
-	12rC8kU7EG9YwzSChkDGesakLBIJg8Z6OXe/7CG51AdjkovNllhy0v4Npw6XisgKBra7KOv+jixPp
-	66TAjAW8tjw0MiEeRPiz9KEuhyywWxUaf8FcaZS3kyluMv+B5eofal1TMEAe2pl23mCY8LdAgGw8A
-	B5ywmfhvxnDcwA4pGtWQ==;
+	List-Owner; bh=QmHcbAQEJ7wWbEDfLtMnLCDNs+W2iBJLL8OhIVb2voE=; b=LkERc1fJ2Ij/mA
+	e0c6rmpnOw71+IQk+PWurmCnrE2mPuDSzcqmkid0nfGdkVUlkT0m5hr3akM4/j+VPnnooB+cuWsbO
+	LZgI7P77JvvEqcphz9IShVE2/858PhIZtX2KwPswt25RvDxtbSoKdFHPFobzj6M7je0vSpfFLtDGh
+	M1P7J2Wavdb9vQ+VBaKRyJffAg0CtjKMTaVpKYG3Dka8ZZbIoiOnQuLkfKYZ6SflbnQerXkf9imLE
+	waUS6nL2IQyiPGuPPX5+XkvQ5DtrmDrF+K0Z8AzZpJvbygeapBpMo78l9illqMgddXkjms8+TND1P
+	9upjlXCjkAP4SV4lU0Ag==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rf7lL-00000007O3F-0W2V;
-	Wed, 28 Feb 2024 00:25:31 +0000
+	id 1rfBv9-000000080D2-0SNW;
+	Wed, 28 Feb 2024 04:51:55 +0000
 Received: from mail-os0jpn01on20601.outbound.protection.outlook.com ([2a01:111:f403:201a::601] helo=JPN01-OS0-obe.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rf7lI-00000007O2b-1BgS
+	id 1rfBv5-000000080Bq-0qE6
 	for kexec@lists.infradead.org;
-	Wed, 28 Feb 2024 00:25:30 +0000
+	Wed, 28 Feb 2024 04:51:53 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KT76YBz9ItUIp5SngQuLCIBAvyTZDPk4ASeLPmOVTILCgqCH7lLQ4YmAa0MmBd5zfjGMdBhDfok4kgxl16VZbvz5OPow1SreBHE65mmxYXCNhP3YUEzid8T74xEDZ1ny4VB+q8woenDgeBawdpRguIOuIH8tKNJ/82VLPlYSABBsSH5WxnJXCzrHDWiWxEPB9DZAYiUPmZ60cCSu4r2pcI5337WFKZMKQZ0yc9ACr1LK4/wr5zKr2emrk1Dnmh3MbEHSCEo23Zq0zyDscrABYLpMUUlCgcbDFr4cK3Vkrg/PULTP7y8CJfLh+rlz3i82c9IyvdRtthhv/PuAdtP4DA==
+ b=kSzbOIO6QyIcfgLm4x7ysQgCBp2AD+bZggVYb271RY/Ey6D2A2/6pb2Xn3ocB6Wgfy7H8SJcRjORLF41B0berxQl3H2AQOZ/QlTeed+pJ26JXlZwBzfdIV+2FeTscy7RPK6/RbrQwOe+BRd1bNPjXYGhVj+c23kUFMP832B8PFwg+kGAgKgSRk/2IfWNOrKwoc+yi9hNznRlUlMg3rmy7UhwKF3xI/YbMZVBg1cABaMWGomoVbZqw8JMPS9MV7Z4xUKIz1TfIhY4fgeJ9cTl8lcJRblxZ73H9loLFfYEHikwZm5XNwnBsuEMQcMvMzrcg1bYgflNRNJvYbsTDipRqw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CqBIYrgd49FfzstfFowBX6hA99YV3wFwo5JRSEEaSAY=;
- b=Y0k+4H3bFgWdopWZ6whhsJJbSnpvq08qy4gAJmENMdWNvCq/1QEcs1EugOB+fIknALuTGwcb3dxOfEqK+ocxAq4gFqhyyZ6wEORw52vBZMEQvv1hL+sWF7771NHQ5Yh4ZA23ZRE5YXtnbZKb0h6FBdBpUo2UgGB8yMux4q+iYMgdWs6GLGjsXS0W5S60sxEJdy2rW1iytP5VVNJmrT8y9PnUMIew9MfuT7hgJFcU3mIzcD54lNKXzodyzo6L8BaCYv3YzHnvCuQfrU4xaBMG0GDLfCkrGyy3n1fe81Pm3R6lt/4LwUiEcyDgrXCVoTYnvYIlAr73YWN/bA0x6UPbNQ==
+ bh=Ad9AsfX0HFgM221FsMeLADLQlWMvgrNm/REbovOYPHA=;
+ b=ld7v1RbX+imbvwcOE4JfWLUJYVpOnZWVgEeAANsv75/siEToTTLcAls6YjBUKOyy0hHTCeyY3KbwA4XYnH4s+DsCbgsRaeqUKcpc5zozweTrZDpmHCc+qCOaQ6vJXSMpotE2Kd4P9sqvjJJgIciz1WsmW0UJ4L45M0/HLgubGSMFNgyatgPqP2UbUzMC+v4jBFYu094bkzbTrTBnGFthzJhCdsvF3mKcFfOa0leMgyMAFU2MAsS3WqrOg5D01VZsyh/9vadOk5lW2rM1xo4urlehiQdAQuoghGF+uumoNkzUJyR8VzwSGe4zWM8G+SriYOvriQJhXeWJtRlWKvQ+2Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nec.com; dmarc=pass action=none header.from=nec.com; dkim=pass
  header.d=nec.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nec.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CqBIYrgd49FfzstfFowBX6hA99YV3wFwo5JRSEEaSAY=;
- b=oNi5UROKuGvZQNpHqA/k8smr0skuujQrly1xVGTLUNVOSXgv5MMEIEnYtARawh5/K4UKF0tD5sTuLnbE0VYa7nZ+ah0+oJ2r2MuKB2K3jKBto011KmNqnwqdJz37EMh2dKBaeQTjuMuT8SelJ10k2ikGZpA1VcHGWqxeTuxbyLGrAZKni8jhxuvfcCcHVFKfnirIYr1Jh/suq68w+J6VaAHzxrI3LQVYak+HE+61JwzPMJHUZj93oBqdxBG+s7nD8QqUByonzRX2fNo5OCByzau9CJ4qY1PAEXjnV09OO4JRLZOAoWtRxKiX229UqGavptZuXtvkgP6AZjBRgWh3aA==
+ bh=Ad9AsfX0HFgM221FsMeLADLQlWMvgrNm/REbovOYPHA=;
+ b=V08aCPYioV/tqB0dH78rR6lKg8Sr15JWTvE3KFgW2BYRbD4bO+zuyg5G8BTNpW2e2p2wzU049kYiZSZ7OtJpA8nZ2m96/9pIPeJ9zghK1af3KTCKraPz5qwTpZN38c0tsAZB0Ygryqxxh3xnPlcJ6EuXYxpJQhQ/CBv6K56zLuK2yS15iUiv8OTX4zpgzEUtIMJh1lTaesyAAGDj6gEqUKWn9kBn0FMMpTO2nNGqN8G1o5fKxZDlo1Ppc/YGqI5qF2Q8NXbnMggP9RDuO16bWHYNYN0MTukvldUlswtEly4doVFw0yebqBor7u+uYKpsi36WEkC6Wwm6NL1QOUUE1A==
 Received: from TYWPR01MB8608.jpnprd01.prod.outlook.com (2603:1096:400:179::5)
- by OS3PR01MB6181.jpnprd01.prod.outlook.com (2603:1096:604:d1::8) with
+ by TYCPR01MB9504.jpnprd01.prod.outlook.com (2603:1096:400:190::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.39; Wed, 28 Feb
- 2024 00:25:05 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.36; Wed, 28 Feb
+ 2024 04:51:28 +0000
 Received: from TYWPR01MB8608.jpnprd01.prod.outlook.com
  ([fe80::cfdc:527a:433e:fac8]) by TYWPR01MB8608.jpnprd01.prod.outlook.com
  ([fe80::cfdc:527a:433e:fac8%4]) with mapi id 15.20.7316.037; Wed, 28 Feb 2024
- 00:25:04 +0000
+ 04:51:28 +0000
 From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
 	<k-hagio-ab@nec.com>
 To: Aditya Gupta <adityag@linux.ibm.com>, "kexec@lists.infradead.org"
 	<kexec@lists.infradead.org>
-CC: Baoquan He <bhe@redhat.com>, Hari Bathini <hbathini@linux.ibm.com>, Mahesh
- J Salgaonkar <mahesh@linux.ibm.com>, Sourabh Jain <sourabhjain@linux.ibm.com>
-Subject: Re: [PATCH] makedumpfile: ppc64: read cur_mmu_type from vmcoreinfo
-Thread-Topic: [PATCH] makedumpfile: ppc64: read cur_mmu_type from vmcoreinfo
-Thread-Index: AQHaZjPZyNvVpPFx+UOPZSe5BC48CbEe7HqA
-Date: Wed, 28 Feb 2024 00:25:04 +0000
-Message-ID: <b57e7684-ccc3-4a7a-bcbf-3ecd9429cbc4@nec.com>
-References: <20240223083913.135091-1-adityag@linux.ibm.com>
-In-Reply-To: <20240223083913.135091-1-adityag@linux.ibm.com>
+CC: Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Hari Bathini
+	<hbathini@linux.ibm.com>, Sourabh Jain <sourabhjain@linux.ibm.com>, Sachin
+ Sant <sachinp@linux.ibm.com>
+Subject: Re: [PATCH] makedumpfile: ppc64: get vmalloc start address from
+ vmcoreinfo
+Thread-Topic: [PATCH] makedumpfile: ppc64: get vmalloc start address from
+ vmcoreinfo
+Thread-Index: AQHaZos3ga/Q+xt9TUOhB+Brjj8HlLEfNnQA
+Date: Wed, 28 Feb 2024 04:51:28 +0000
+Message-ID: <95aef871-94d1-4976-b6bc-c21d7468cdf7@nec.com>
+References: <20240223190342.251365-1-adityag@linux.ibm.com>
+In-Reply-To: <20240223190342.251365-1-adityag@linux.ibm.com>
 Accept-Language: ja-JP, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -70,66 +73,66 @@ X-MS-TNEF-Correlator:
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nec.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYWPR01MB8608:EE_|OS3PR01MB6181:EE_
-x-ms-office365-filtering-correlation-id: b8fa27c1-061d-4f7e-b452-08dc37f3b5d5
+x-ms-traffictypediagnostic: TYWPR01MB8608:EE_|TYCPR01MB9504:EE_
+x-ms-office365-filtering-correlation-id: 99a83205-d3c8-4c52-5abb-08dc3818ecde
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: jo6g+QEgELN+bDXe5RliI+DqS4x1keOiGj3xjQgCXNgnzG+HlASTg6snVenHz6Uuro6SnUUnmxKD2euFqQJmRSMlZ5IHxWue1/cxMzzykKR3JkUcu+arlyGtOxN2lJRM18RcEZ/8xcMCB6esPKzdFTVpNwBKepwVjyHpZuUWvFWilP/LNR3xOr9pHfBhDmXfpau3jOW+HnDpHHKlMzxBB1ncWabwpLHv3VwGZQIF+hefXKbiiJfNa5z5op51vjckTBVRISQ9lruQuI6EXdsmx2G9tmh1zs6NEcMcrnldKOMnvOylmpmDYetzUEwHhdmryZFhJNmtwGTFMrhTPOVY7dPwqzPq6eVs4xkefCK0fJhGsHsFssWxUVX9UAGtdihbzoD5eMO8g+PsL/9xhnydUzeKl6Npi5XBUD6k26lKOEl7m4P8LdPAdHUtotutOF1hqftyl8X4qcO4zWs4Zeg2V1QXiUfKE/lvMhFHYIeKZVIdMK96fLL8PXS2QhDzgS2aheQjVx+2nkVtDGr3cnMvPpo34iGaCdqKDeZAmt8EgtvDAlwEUB9WItVFlurPr6oJMgOCqBWI6riphIUtKDPxmvPWJFxXSYQHPzOc+9Clzw4SZ6HX4Nj2zyGcODJv6Gi6p2EwmwdG1LiYrNGoe9RudYZmvwhXRb6EZTjVkVOLVaFr/znlqQNb7ZcLLA706DZgreakUWtUjl6RzvpYZnhSNw==
+x-microsoft-antispam-message-info: LTkx/zG8cRvyxH1l8zCkJPYSe6YfHH3nQUOM7xjyKBJMTBvSSyprEK778a01FvuRQ1Yc3R1qlL9IMlOSRosns9nl0ndhYkXGWquiSVqmsIsy/yABSmjdtc2GMQg3JBjdBA4La+k/HJNc5P2HTnOCo/cOrLWs07MJqF0qxlLfIDn9Oti/0P0nYuWECaa5C4dqaLDYOf0aZku12Svhhx/jfYo7Y/HnWhkYzzLqZmMBcyRVsuB7ACCG7K3sk2o6SNpGQDz8o5ibeiG7utGlP4LYAAfMmCnKRToCJD1xWqe3zBLivmojED5QXeIzFSlc2stoxMK8/t0x9g4jYA6aua67zEiEJNLUP/zBNkTK57U9svCSAHQMgwVoE9O1Ne083786Fp2JUtkaZyGnNhEQRNFPhqNJ65MA7l5mLFX+fHtyfCkwY90EBAqIYuaodUDAsKQ4Sx4AAKYGjSJ/IZL9UKuYmVsfJiKmlPK1V2+Biy23gzmY/jQLIXie5/zjWlzI9ytisJsav13XBUXcFFb5KkKKSFzTrr+0jLv+SKKtGnz151Fng6dWlpO9CLSSFQ6fpe4rLq5Xxqq6AL4JHYWie3s2ccx1mWYkYRcYTw3UFdnKcnmjE2t5Bff4IUZQTUXgNNXjGNK1bJufPhfEy/gkakLnu3zQuivmwZVpVbuVjAwpzcTLKEmoYmzKXXj+/4HX6Y5jvZqxlUR5yb+xKrwV293pXw==
 x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYWPR01MB8608.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38070700009);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?T3J2NVpqSVBkNStFTGtyQkZVQlVGOEdyZ202cVN2N2FHSDd5RXg3eitqeGpW?=
- =?utf-8?B?RlNVOC9LRUZSengybWptb2hkN1ZhSEJUYkRhM3E2UXBiL3Iyay9iemJMcUpH?=
- =?utf-8?B?MkRnaUZlNnpidnl0Ly9DVmFnTGFjcDlVbW1YbnJmb3dSbldwclducytOeHJs?=
- =?utf-8?B?REU4cXVscDdqeTFmSUJaT2g4akU0Q2MzLzZHeTZoUVd5bXhmM0R5NU15Mm5C?=
- =?utf-8?B?SFRieS8vdHIrV21IRkZLM0NvVmVsR2pLODVvWEVweElnZnBzb3ZiVS9RS3hK?=
- =?utf-8?B?NEJKQllXY2hkdkpZZzRidkRydHR5bmZMd1dFOUF6UkNsZVpsYTNFeVBPWjdq?=
- =?utf-8?B?N2JRTE9Udk1pcjBVMm1ncEdXTmRGQ2daa3dLWnduLzdtbFFMV2RPWWlLNkFQ?=
- =?utf-8?B?NTdmQ0NkK2tHOG9uS05yQllPbnc4QlkrT2VIREppTm9pN2REaDJKWVRzTkZi?=
- =?utf-8?B?U2hYQmVUQWRoMVU5WG93VXRYdUU3TGc1NFl3RDlyRjF5TTJaQ1FWdDQ3aWNl?=
- =?utf-8?B?LzZSMzAyNEhBZ29wSFVxdVRVRlIzNHo5cGtmb1M3b2N5THZBbjNzUm93dUty?=
- =?utf-8?B?WElWUm15ZklBQ0Vadmx3WFkwWmovWnA2NXl3UC9mTzM0WkhFaGlGUEdXU2RD?=
- =?utf-8?B?R0tMLzlweWpmaTRJVFFZTmlQVDQza0dQdlNxMng3RXo4aWkxeXdPdUN2cXE0?=
- =?utf-8?B?eTFUQlg1MysvQndXdXBKcDhzMlBmSWtyMWYzM3R1by94VGVUOU9naEI4TWJu?=
- =?utf-8?B?Z0JrcnFCYnRLWmtPYU9QcXlrMFZ4WUg2ZG15UU9lUzlBZWZrRGFGWk5rY3ZT?=
- =?utf-8?B?Ump0UURHRmRRR1QyOEY1SDhIWk9tOExBeC9mMW1vaDN3WmFMMFN2SlR1a29F?=
- =?utf-8?B?RUhROTgvelNnQlBIZHAvOVlIMGpaUjJpREJiNndVd0VkZ0EyZGM1bktBRFh2?=
- =?utf-8?B?NWIxOU92b2VSTkZ5VlFLa0VNcDZhZktxYTJLZU9TMVZRUnZCeCthb04zUFdM?=
- =?utf-8?B?ZWtrQzl6c1BZTWRuNFQxVTd4NW1sNzNXRHd0QmZUcUUyeTJIcDlEMFFoNHRi?=
- =?utf-8?B?OHdjT2RReGxhNDNyVUVHWEl0WG0wWHpxQ2EvZFhEamNjTk5KTXUzVUZZZlBV?=
- =?utf-8?B?enlNRCtpS1BQeXZBNzlQaDdjT1ZZOElwZXRUU1JnYnM5ZzltVDhoaGFGWm1D?=
- =?utf-8?B?QXprRVBoMTV2SzE0MVBSNU9IZitvNnl6NXAzQnVTai9GSFhqUkgyK1pQWUtn?=
- =?utf-8?B?eGd3VS9RY1RReW5FZkJ3N0puVHc3TVV3N3pGUEFSNmp5TE45bjl3ZVhKU05s?=
- =?utf-8?B?TGJhY09iVG1JbXZnNll1K3pHdC9MeWhqaENlclVxRGxBbUFFWCtUb1pBcnNT?=
- =?utf-8?B?azJSMVR2bnd3QzZIaWNUc2dFVkNMYU1SU28wdDlkZWdnL1p3dkNUUVphMldR?=
- =?utf-8?B?TmZraXdrNTFrRVVMTm5CT2hJTzg1Mkk1V2Zic3ZXUXJ2VEVxTTM0cEpSNzJI?=
- =?utf-8?B?UnlQRm5RMFZKR2trcWFFR0pHUk0zVGJ1eUhYYWNISmJTUFBqQTlwckZSdHlS?=
- =?utf-8?B?VWFNOXpWcjZjQ3I1RjBGNUd3alUyaDlueFJhTmV4a3NENFh4eDBJRW1Wd2RF?=
- =?utf-8?B?RHVac1A0NStscXRVRFRjU1VsUGdMS0Z1N2p2a1Jtc2I5d0lpRktmcnBZT1Jz?=
- =?utf-8?B?a0dlMHlUZmhLVHVKQmdiR0RnaGk5UmF2ZHQyRU5pZSs1d01hV3BQQVdFR1dh?=
- =?utf-8?B?T2dyVHVVc1RlNEx5Wlo0T0VnbktnY2p3U0hmd0o2bFI5d2dGVDk1Z2JyU0wz?=
- =?utf-8?B?TXRkTi9TQVA3Kzd5VUVGT09QWHFqTFJ1ekFsT2owbkFtNExDTFp5NGpsakNz?=
- =?utf-8?B?UVR3cGxYenduSmNWSCttWHFFek9KSW1wMEZOQnBLMDVMbEhTWWpaVTVsUS9h?=
- =?utf-8?B?M1RlMkdudmFQL2tVdzBlVU1KME5Yd252RFRMeU9oeXlTWEdZN2tVb3JNVDhI?=
- =?utf-8?B?dExWYXhrWjA0RjJqTlJ2SnM1TWJnS0Z5OGlOYmwrVmFLWlh4VUE2a3NxQVFj?=
- =?utf-8?B?bUJqcS91Qk9XWUd6KzZlZXBTb3JJT2VXSEgyelFudzA4WWNuNmdpalVrbEto?=
- =?utf-8?Q?hA/RvoNYTht5Euqx1fNwT1hsn?=
-Content-ID: <F3841DB80CCAC74A89B00C0FA8F32F17@jpnprd01.prod.outlook.com>
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?cEV0YktCWWZwWTYvaDFLM2NZYmJZdGRrQVpPMDlJcHkvMkcrSVI4M0NjYXdG?=
+ =?utf-8?B?WVhSOTRGMnBjQ3lHM2c4aS91MjR6eEZQdjFTZ05tMkhmMERZbUMyK2FCUmtC?=
+ =?utf-8?B?Z2czdEUxbU92UytDaE5mYUhXOGVoY0VXQnhXcG14NWlWYktmODh2KzBQdFUy?=
+ =?utf-8?B?TjZYaitEUzAxY1kwMExHcldJYTlvU1ozR2g0RmF3cnM4Q1V4WTMyMXFMQTZW?=
+ =?utf-8?B?WWNSNmRNclM1TEl3MVlZV2ptb2NZUGxqYUxLNzZnamJxTkVkWGI5czJkOW5U?=
+ =?utf-8?B?TjZNVCtQRzEzUk93OW9jTzJkSEk3bEwyT1FoTFJYazdLZ0IvclRPd1hKWVRR?=
+ =?utf-8?B?ZGR5dHNNbkZlN1pNeHd5M2tFZWdIWGFZTHc2T092Q3dyWC9ub0FSRlU5M0Ju?=
+ =?utf-8?B?bDEwMUE5Ylh6NEZGNk4wU2dRc1R1SkNmQmExTTZlcEtQVFlOUTVIa1VtV3d6?=
+ =?utf-8?B?cjk2TWlLTXo1ZTJpQmF6a2QyWjg0dkxVU1UvK2ZCYkc5Yjl6VEI3ZDA3TUcr?=
+ =?utf-8?B?dXFxdXYwWW5Rc05XRFBVUzhHS2oyZzZVNXFHK1RaZzlxWDZwa0dTNGJ6aElK?=
+ =?utf-8?B?TWZORXV6NjlaWmFGbksvdUpTNysyeDVaVys2emoyL055R21iQWVaWWxZWjdt?=
+ =?utf-8?B?U0tFSjFNSmJlLzB3dUxHb1VrM2JWeWhlMi90dVJMd1B3clVVaXVuMXJPRURK?=
+ =?utf-8?B?eW1yZjNzZnZ0cUxQVUtxQUhuYUp5NTVnZUZJWk1iUkM3NjZrVko0cWNocCtN?=
+ =?utf-8?B?MXlZZThMOWRKODRsVkMwaEp2YWlnOGhxL0dWRHdrV2RuUnFEWTE5ZGUyVWVQ?=
+ =?utf-8?B?cHdVaWx5M21EM3FCdm1ZNjY1b1JGdDRYbGN4TUY0YlRGU1RXT3FvL2lYNHZ1?=
+ =?utf-8?B?eG9pcGVqenVxUU9SVnpoTFlaK1ByWWxhYzdsd2xUcEhBdVFCQ0NWamVxSnEz?=
+ =?utf-8?B?RTRRMUZuU2NNN2dKWGlERE9MK0JHWHhvN1VWQXFsVlEvRmw0M0lBQUh6NWs3?=
+ =?utf-8?B?dzVFN2dhZTZkaFRJUlJXcUE5ZjRScE8vWWZXUVEyM3JKY3crWmNJTW5zc0Zt?=
+ =?utf-8?B?eEx1R0ZOaVdDYlR0VnYxTDNBR0s1OVlTNGNERUJWRXFSSFNqeTBqNmU2YVUv?=
+ =?utf-8?B?VnRyNldoZC8xWnlmaFlnNkpYTE9GMTI5TTNrWHl1amp3N2oxSFBDT2puNHRV?=
+ =?utf-8?B?cnNyYWdGMVJSSllmNkNicG9QKzVib0JtODVjNHFmS2l3VWxaMFRmSTZ1b0xt?=
+ =?utf-8?B?dEhDMi9RK0RkVnRhYjJhTGw0cGd0VXlETWVoWmUyYVNiSkFxbnA1bmoraDR1?=
+ =?utf-8?B?bzNXcklwWkI2WlFlWEUzaWQ2WkpXb1JtUVNZaExnbk5SNW5FbmlUMVB4T1hr?=
+ =?utf-8?B?U2ppSjFUODEvL1NZRDh6K0FCaE56azRBSGE0ekRSeEZ0NFI0b3JkNWY2cExF?=
+ =?utf-8?B?dk9KbXNndGI0d2djNUZObVdaYWo4RndNbmRMZlp1MXhkT2MzN2VxQ3l3V0dD?=
+ =?utf-8?B?a1B3cTdNWHlLaTc1dTJWN3ROUzd0azkyOXB1TEE5eW02V2QzYi8vak1qbjhy?=
+ =?utf-8?B?L1dlTGxSb1dPYnFoRlRBamZFc3JVUjVhZGNpdTJWeDdYNkwzT1dmQ29BQysw?=
+ =?utf-8?B?WUEwajMzV1NDYzRFeFRoS09TWGU0Ri9SbkJOWHpuV1RLQkVpbGs2VlAwTCtu?=
+ =?utf-8?B?emdkTURoVDd6SFRvR0FaZlZjNytoL0dOYUJENGVmNGYycExHMzJWQUZwTHA2?=
+ =?utf-8?B?a2hVM0pqYXRyR3lVVE5ZRDArYW00aFpuUjFwa0VDWWhmcWNVeDlZQWpjQU4x?=
+ =?utf-8?B?VDUzVDdVOFR5cDBMWWRuQ09yL0laSnhlY0s3QUt3akVjNnFMUTNMNnh4K21S?=
+ =?utf-8?B?dGNiU3lTS1ZuVFpPNlZ2d1pnRVF0Z1BBMDFrVFY1dHdSdFpIOXVCSTMwZ0FW?=
+ =?utf-8?B?WENqUGt4UkJWU296Nk9adTAzYXJXSDJzVS8yQU45QWNiWTliSTZqTVd3aFQr?=
+ =?utf-8?B?c25HVVdENSs3amZnMTRPNW5pVjZzcVJreVh1RnZtekdVKzJCelJ1c3VRN0RL?=
+ =?utf-8?B?SzJCSm5mbnMreWx1RUdjREZVbDlGOHZKVWV6Tmo5RDJpMllYcllkN2dyMDlI?=
+ =?utf-8?Q?fnxNIY9JpoVDSak8Dxcc3JmjS?=
+Content-ID: <BB660D523BD90A4C83868D71AD949E19@jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
 X-OriginatorOrg: nec.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: TYWPR01MB8608.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b8fa27c1-061d-4f7e-b452-08dc37f3b5d5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Feb 2024 00:25:04.6819
+X-MS-Exchange-CrossTenant-Network-Message-Id: 99a83205-d3c8-4c52-5abb-08dc3818ecde
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Feb 2024 04:51:28.3880
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: e67df547-9d0d-4f4d-9161-51c6ed1f7d11
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: O/NxS1AN7fAdsQJ52kIb0MH5aYZKQowEIgTbv1wAsV69fYOy6MJZXVNw+gTM7XxWp4XlUzvUFRYaXpsxVcyZuA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS3PR01MB6181
+X-MS-Exchange-CrossTenant-userprincipalname: NFmcO1nnZg9F5YJDKLKqi2bkG939raiFrKn94sQHa4BvBjsteVMnh2PXf3Y+ed6CcgrfKqrRPzo6JPVnQeajbg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB9504
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240227_162528_594938_7DF01DC3 
-X-CRM114-Status: GOOD (  27.74  )
+X-CRM114-CacheID: sfid-20240227_205151_634033_FE607C3F 
+X-CRM114-Status: GOOD (  28.72  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -146,132 +149,148 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2024/02/23 17:39, Aditya Gupta wrote:
-> Currently makedumpfile depends on reading the 'cur_cpu_spec' kernel
-> symbol to get the current MMU type on PowerPC64.
+Hi Aditya,
+
+thanks for the patch.
+
+On 2024/02/24 4:03, Aditya Gupta wrote:
+> Below error was noticed when running makedumpfile on linux-next kernel
+> crash (linux-next tag next-20240121):
 > 
-> The disadvantage with this approach was that it depends on bit '0x40'
-> ('MMU_FTR_TYPE_RADIX') being set in 'cur_cpu_spec->mmu_features',
-> which implies kernel developers have to be careful of modifying
-> MMU_FTR_* defines
+>      ...
+>      Checking for memory holes : [100.0 %] | readpage_elf: Attempt to read non-existent page at 0xc000000000000.
+>      [ 17.551718] kdump.sh[404]: readmem: type_addr: 0, addr:c00c000000000000, size:16384
+>      [ 17.551793] kdump.sh[404]: __exclude_unnecessary_pages: Can't read the buffer of struct page.
+>      [ 17.551864] kdump.sh[404]: create_2nd_bitmap: Can't exclude unnecessary pages.
+>      [ 17.562632] kdump.sh[404]: The kernel version is not supported.
+>      [ 17.562708] kdump.sh[404]: The makedumpfile operation may be incomplete.
+>      [ 17.562773] kdump.sh[404]: makedumpfile Failed.
+>      [ 17.564335] kdump[406]: saving vmcore failed, _exitcode:1
 > 
-> Instead a more stable approach was suggested by contributors in
-> https://lore.kernel.org/linuxppc-dev/87v8c3m70t.fsf@mail.lhotse/, to
-> pass information about the MMU type in vmcoreinfo itself, instead of
-> depending on the MMU_FTR_* defines
+> Above error was due to 'vmap_area_list' and 'vmlist' symbols missing
+> from the vmcore.
 > 
-> This was implemented in linux kernel in:
->      commit 36e826b568e4 ("powerpc/vmcore: Add MMU information to vmcoreinfo")
+> 'vmap_area_list' was removed in the linux kernel with below commit:
 > 
-> With this commit, if RADIX_MMU is there in the vmcoreinfo, we prefer it
-> to get current mmu type, instead of 'cur_cpu_spec'.
-> On older kernels, where RADIX_MMU number is not there, makedumpfile will
-> simply fall back to using 'cur_cpu_spec'.
+>      commit 378eb24a0658dd922b29524e0ce35c6c43f56cba
+>           mm/vmalloc: remove vmap_area_list
 > 
-> The earlier defines for 'RADIX_MMU' have been renamed to 'MMU_TYPE_RADIX'
-> which avoids conflict with the vmcoreinfo string 'RADIX_MMU', as well as
-> being more clear about the value 0x40 with a comment about MMU_FTR_TYPE_RADIX
+> Subsequently the commit also introduced 'VMALLOC_START' in vmcoreinfo to
+> get base address of vmalloc area, instead of depending on 'vmap_area_list'
 > 
+> Hence if 'VMALLOC_START' symbol is there in vmcoreinfo:
+>    1. Set vmalloc_start based on 'VMALLOC_START'
+>    2. Don't error if vmap_area_list/vmlist are not defined
+> 
+> Reported-by: Sachin Sant <sachinp@linux.ibm.com>
 > Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
-
-Thanks, applied.
-https://github.com/makedumpfile/makedumpfile/commit/71ac00c8a3464608ac19f7c89d7220073d7374a9
-
-Kazu
-
 > ---
->   arch/ppc64.c   | 15 ++++++++++-----
->   makedumpfile.c |  1 +
->   makedumpfile.h |  9 ++++++---
->   3 files changed, 17 insertions(+), 8 deletions(-)
+>   arch/ppc64.c   | 19 +++++++++++++------
+>   makedumpfile.c |  3 ++-
+>   makedumpfile.h |  6 +++---
+>   3 files changed, 18 insertions(+), 10 deletions(-)
 > 
 > diff --git a/arch/ppc64.c b/arch/ppc64.c
-> index 96c357cb0335..3b4f91981f71 100644
+> index 96c357cb0335..bb62e2cd199a 100644
 > --- a/arch/ppc64.c
 > +++ b/arch/ppc64.c
-> @@ -250,7 +250,7 @@ ppc64_vmalloc_init(void)
->   		/*
->   		 * 64K pagesize
->   		 */
-> -		if (info->cur_mmu_type & RADIX_MMU) {
-> +		if (info->cur_mmu_type & MMU_TYPE_RADIX) {
->   			info->l1_index_size = PTE_INDEX_SIZE_RADIX_64K;
->   			info->l2_index_size = PMD_INDEX_SIZE_RADIX_64K;
->   			info->l3_index_size = PUD_INDEX_SIZE_RADIX_64K;
-> @@ -300,7 +300,7 @@ ppc64_vmalloc_init(void)
->   		/*
->   		 * 4K pagesize
->   		 */
-> -		if (info->cur_mmu_type & RADIX_MMU) {
-> +		if (info->cur_mmu_type & MMU_TYPE_RADIX) {
->   			info->l1_index_size = PTE_INDEX_SIZE_RADIX_4K;
->   			info->l2_index_size = PMD_INDEX_SIZE_RADIX_4K;
->   			info->l3_index_size = PUD_INDEX_SIZE_RADIX_4K;
-> @@ -635,14 +635,19 @@ get_versiondep_info_ppc64()
->   	 * On PowerISA 3.0 based server processors, a kernel can run with
->   	 * radix MMU or standard MMU. Get the current MMU type.
+> @@ -568,7 +568,9 @@ get_machdep_info_ppc64(void)
+>   	/*
+>   	 * Get vmalloc_start value from either vmap_area_list or vmlist.
 >   	 */
-> -	info->cur_mmu_type = STD_MMU;
-> -	if ((SYMBOL(cur_cpu_spec) != NOT_FOUND_SYMBOL)
-> +	info->cur_mmu_type = MMU_TYPE_STD;
-> +
-> +	if (NUMBER(RADIX_MMU) != NOT_FOUND_SYMBOL) {
-> +		if (NUMBER(RADIX_MMU) == 1) {
-> +			info->cur_mmu_type = MMU_TYPE_RADIX;
-> +		}
-> +	} else if ((SYMBOL(cur_cpu_spec) != NOT_FOUND_SYMBOL)
->   	    && (OFFSET(cpu_spec.mmu_features) != NOT_FOUND_STRUCTURE)) {
->   		if (readmem(VADDR, SYMBOL(cur_cpu_spec), &cur_cpu_spec,
->   		    sizeof(cur_cpu_spec))) {
->   			if (readmem(VADDR, cur_cpu_spec + OFFSET(cpu_spec.mmu_features),
->   			    &mmu_features, sizeof(mmu_features)))
-> -				info->cur_mmu_type = mmu_features & RADIX_MMU;
-> +				info->cur_mmu_type = mmu_features & MMU_TYPE_RADIX;
->   		}
+> -	if ((SYMBOL(vmap_area_list) != NOT_FOUND_SYMBOL)
+> +	if (NUMBER(vmalloc_start) != NOT_FOUND_SYMBOL) {
+
+I will fix this NOT_FOUND_SYMBOL to NOT_FOUND_NUMBER when applying, 
+otherwise makedumpfile will fail for a dumpfile without the 
+corresponding kernel patch, correct?
+
+The patch looks good to me except for it.  I will apply this with the 
+kernel version in the commit log after the kernel patch gets merged.
+
+Thanks,
+Kazu
+
+
+> +		vmalloc_start = NUMBER(vmalloc_start);
+> +	} else if ((SYMBOL(vmap_area_list) != NOT_FOUND_SYMBOL)
+>   	    && (OFFSET(vmap_area.va_start) != NOT_FOUND_STRUCTURE)
+>   	    && (OFFSET(vmap_area.list) != NOT_FOUND_STRUCTURE)) {
+>   		if (!readmem(VADDR, SYMBOL(vmap_area_list) + OFFSET(list_head.next),
+> @@ -684,11 +686,16 @@ vaddr_to_paddr_ppc64(unsigned long vaddr)
+>   	if ((SYMBOL(vmap_area_list) == NOT_FOUND_SYMBOL)
+>   	    || (OFFSET(vmap_area.va_start) == NOT_FOUND_STRUCTURE)
+>   	    || (OFFSET(vmap_area.list) == NOT_FOUND_STRUCTURE)) {
+> -		if ((SYMBOL(vmlist) == NOT_FOUND_SYMBOL)
+> -		    || (OFFSET(vm_struct.addr) == NOT_FOUND_STRUCTURE)) {
+> -			ERRMSG("Can't get info for vmalloc translation.\n");
+> -			return NOT_PADDR;
+> -		}
+> +		/*
+> +		 * Don't depend on vmap_area_list/vmlist if vmalloc_start is set in
+> +		 * vmcoreinfo, in that case proceed without error
+> +		 */
+> +		if (NUMBER(vmalloc_start) == NOT_FOUND_NUMBER)
+> +			if ((SYMBOL(vmlist) == NOT_FOUND_SYMBOL)
+> +				|| (OFFSET(vm_struct.addr) == NOT_FOUND_STRUCTURE)) {
+> +				ERRMSG("Can't get info for vmalloc translation.\n");
+> +				return NOT_PADDR;
+> +			}
 >   	}
 >   
+>   	return ppc64_vtop_level4(vaddr);
 > diff --git a/makedumpfile.c b/makedumpfile.c
-> index 3705bdd93deb..1bd7305f49ca 100644
+> index b004b93fecb7..b6c63fad15f3 100644
 > --- a/makedumpfile.c
 > +++ b/makedumpfile.c
-> @@ -2987,6 +2987,7 @@ read_vmcoreinfo(void)
->   #endif
->   
->   	READ_NUMBER("HUGETLB_PAGE_DTOR", HUGETLB_PAGE_DTOR);
-> +	READ_NUMBER("RADIX_MMU", RADIX_MMU);
->   
->   	return TRUE;
->   }
+> @@ -2978,6 +2978,8 @@ read_vmcoreinfo(void)
+>   	READ_NUMBER("PAGE_OFFLINE_MAPCOUNT_VALUE", PAGE_OFFLINE_MAPCOUNT_VALUE);
+>   	READ_NUMBER("phys_base", phys_base);
+>   	READ_NUMBER("KERNEL_IMAGE_SIZE", KERNEL_IMAGE_SIZE);
+> +
+> +	READ_NUMBER_UNSIGNED("VMALLOC_START", vmalloc_start);
+>   #ifdef __aarch64__
+>   	READ_NUMBER("VA_BITS", VA_BITS);
+>   	READ_NUMBER("TCR_EL1_T1SZ", TCR_EL1_T1SZ);
+> @@ -2989,7 +2991,6 @@ read_vmcoreinfo(void)
+>   	READ_NUMBER("VA_BITS", va_bits);
+>   	READ_NUMBER_UNSIGNED("phys_ram_base", phys_ram_base);
+>   	READ_NUMBER_UNSIGNED("PAGE_OFFSET", page_offset);
+> -	READ_NUMBER_UNSIGNED("VMALLOC_START", vmalloc_start);
+>   	READ_NUMBER_UNSIGNED("VMALLOC_END", vmalloc_end);
+>   	READ_NUMBER_UNSIGNED("VMEMMAP_START", vmemmap_start);
+>   	READ_NUMBER_UNSIGNED("VMEMMAP_END", vmemmap_end);
 > diff --git a/makedumpfile.h b/makedumpfile.h
-> index 3ed3ba551d96..a7b344974636 100644
+> index 59c83e1d9df3..4021c5af2a34 100644
 > --- a/makedumpfile.h
 > +++ b/makedumpfile.h
-> @@ -747,12 +747,13 @@ unsigned long get_kvbase_arm64(void);
->   /*
->    * Supported MMU types
+> @@ -541,8 +541,6 @@ do { \
+>    * The value of dependence on machine
 >    */
-> -#define STD_MMU         0x0
-> +#define MMU_TYPE_STD         0x0
->   /*
->    * The flag bit for radix MMU in cpu_spec.mmu_features
-> - * in the kernel. Use the same flag here.
-> + * in the kernel (MMU_FTR_TYPE_RADIX).
-> + * Use the same flag here.
->    */
-> -#define RADIX_MMU       0x40
-> +#define MMU_TYPE_RADIX       0x40
->   
->   
->   #define PGD_MASK_L4		\
-> @@ -2258,6 +2259,8 @@ struct number_table {
->   	unsigned long kernel_link_addr;
->   	unsigned long va_kernel_pa_offset;
->   #endif
+>   #define PAGE_OFFSET		(info->page_offset)
+> -#define VMALLOC_START		(info->vmalloc_start)
+> -#define VMALLOC_END		(info->vmalloc_end)
+>   #define VMEMMAP_START		(info->vmemmap_start)
+>   #define VMEMMAP_END		(info->vmemmap_end)
+>   #define PMASK			(0x7ffffffffffff000UL)
+> @@ -2262,6 +2260,9 @@ struct number_table {
+>   	long    HUGETLB_PAGE_DTOR;
+>   	long	phys_base;
+>   	long	KERNEL_IMAGE_SIZE;
 > +
-> +	unsigned long RADIX_MMU;
->   };
->   
->   struct srcfile_table {
+> +	unsigned long vmalloc_start;
+> +
+>   #ifdef __aarch64__
+>   	long 	VA_BITS;
+>   	long	TCR_EL1_T1SZ;
+> @@ -2272,7 +2273,6 @@ struct number_table {
+>   	long va_bits;
+>   	unsigned long phys_ram_base;
+>   	unsigned long page_offset;
+> -	unsigned long vmalloc_start;
+>   	unsigned long vmalloc_end;
+>   	unsigned long vmemmap_start;
+>   	unsigned long vmemmap_end;
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
