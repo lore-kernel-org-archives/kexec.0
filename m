@@ -4,67 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5BE83C5475B
-	for <kexec@archiver.kernel.org>; Fri,  1 Mar 2024 06:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 77584C5478C
+	for <kexec@archiver.kernel.org>; Fri,  1 Mar 2024 11:12:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=FZ0nzKWMiUX6zZePE425GjhTxatbYKsUK3d6BHn1hcI=; b=gAe3O2/DaL1vgz
-	cUWJNq/veO0CJ9WzSiWE74mRegtM8rMrrezqBUvD18/S/ZvKrqeaot19DsGzEMy4Bokmjuurn2qZ4
-	7pxAHzixpuQclphC5V05+UyndtVJZmX8ym0rZ2i7E3Oo4jsbAtpIr2Aqs79DBobBV9WqP5vUymeQ3
-	LQx1L/IO5Yiw7U1U9JK8QgsZRlcoq3bJ8PfK+VwpuolNyg9xDAKInExlZqgLZybCrlSbW4X80888u
-	BrvuN5lpJ/ys/vZ6qMfN9yZIxL+OY6XkVpm+SNelapMr1zSXYb2yRvukX73VL28finPziSQYmKKJA
-	VgFERvuXyOffwntHHC1A==;
+	List-Owner; bh=5FTzgUFkwib4HwhwKbX9hte7ZwAkGOrxRFsIagCVdRA=; b=KbmzZY9PWND6go
+	nprnp7/BDSO8pZB0HEzWb+xamL2xPWEvfFcbWqOTzmF/9CCSFaJrcHyulxacSjjaE3jFyRF47HnwC
+	owQ5qXdde3pIJXuZ/0qtjCH+gYNlCTXLQ5loeVAdj9Ua6w0AF4s+c7pnoHlZBDK2tEg4wTulXmmiC
+	hCO9LBsRWzH2+zDHsymDgr16lJJDjIBxIgLuL1WjUd3h+RMUfID7VEOKyzDO7RL60Fz4vzCFYevT+
+	XXrOWjXEz0KLFvlKoNqEq5BceXwPmxaaUKiZljymzunCUaaCwTXtl8QfGFDtgDff8VfFl02zQhcM2
+	b88e11+eRvIm6wdxlpdw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rfwlJ-0000000GdEP-3bNQ;
-	Fri, 01 Mar 2024 06:52:53 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1rg0oc-0000000HVQf-0OEv;
+	Fri, 01 Mar 2024 11:12:34 +0000
+Received: from bee.tesarici.cz ([37.205.15.56])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rfwlG-0000000GdCW-41Sd
+	id 1rg0oW-0000000HVII-1oTh
 	for kexec@lists.infradead.org;
-	Fri, 01 Mar 2024 06:52:52 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1709275968;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1hAv7LCsa3iLqGJhJsJviM4n+BZxClj9lSP/nAIPeEE=;
-	b=ZmFeYeafCN5TPui876iOjrQyDomNHY06yTBI4gCX5MdMBIH7/ivIv108GNUYrVtYQLU0q3
-	MEaUIdasntw0fJSXeJuJgV8id17A2aUHXs/HqcfFpu+FnnCrlp8X2ugVrxHyYG7GQV6nx/
-	1dmOz4IxhwRbaMPnBnY0nojTe2WxRCI=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-223-k9AfNMFUM463nT0FJ3bfzg-1; Fri, 01 Mar 2024 01:52:44 -0500
-X-MC-Unique: k9AfNMFUM463nT0FJ3bfzg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	Fri, 01 Mar 2024 11:12:31 +0000
+Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2B95183FC6C;
-	Fri,  1 Mar 2024 06:52:44 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.6])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7D4C21BDB1;
-	Fri,  1 Mar 2024 06:52:42 +0000 (UTC)
-Date: Fri, 1 Mar 2024 14:52:34 +0800
-From: Baoquan He <bhe@redhat.com>
-To: "yang.zhang" <gaoshanliukou@163.com>, akpm@linux-foundation.org
-Cc: ebiederm@xmission.com, linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org, "yang.zhang" <yang.zhang@hexintek.com>
-Subject: Re: [PATCH V3] kexec: copy only happens before uchunk goes to zero
-Message-ID: <ZeF7Muc8WyuQ1bPR@MiWiFi-R3L-srv>
-References: <20240222092119.5602-1-gaoshanliukou@163.com>
+	by bee.tesarici.cz (Postfix) with ESMTPSA id AEAF41C0A52;
+	Fri,  1 Mar 2024 12:12:23 +0100 (CET)
+Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
+	t=1709291543; bh=XSBoTq4bOiHd3evrpzuKLxQ+GPngWacdjSd3NjxyXYA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=A1Xc3mzpSkj+2F0Q4cYvRYPKN3N3f34JUAEo1H+VFC//ZfwOePXof1W0359zO0pYK
+	 qAQJpcnWlHVzewjVyOYWZxLoqBrqVZhTmJDIY/1CWU/dGln+6Q06XQJCC2zC/fVWwM
+	 xc2PKeGkgdig3dnQInjmHcaUCyzL24u3JcYNxMOjCRgRXYnQeWw8/zn2R8F43NERqu
+	 glsEOivimXeyt/nizkmla0bRaax/Pr5q2JfyF71QHExQFMNA00956PS25G1FfVh8pI
+	 aCxNjCPf5bqwcTUDfd7xQaZ2+WWMdhTxIdOCp9hWSBKKpxcY99WHjmOKb+je7UTEAl
+	 xOjH/4Zama8Mg==
+Date: Fri, 1 Mar 2024 12:12:22 +0100
+From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
+To: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+Cc: zohar@linux.ibm.com, roberto.sassu@huaweicloud.com,
+ roberto.sassu@huawei.com, eric.snowberg@oracle.com, stefanb@linux.ibm.com,
+ ebiederm@xmission.com, noodles@fb.com, bauermann@kolabnow.com,
+ linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+ code@tyhicks.com, nramas@linux.microsoft.com, paul@paul-moore.com,
+ bhe@redhat.com
+Subject: Re: [PATCH v5 4/8] ima: kexec: define functions to copy IMA log at
+ soft boot
+Message-ID: <20240301121222.7d03756e@meshulam.tesarici.cz>
+In-Reply-To: <20240214153827.1087657-5-tusharsu@linux.microsoft.com>
+References: <20240214153827.1087657-1-tusharsu@linux.microsoft.com>
+	<20240214153827.1087657-5-tusharsu@linux.microsoft.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20240222092119.5602-1-gaoshanliukou@163.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240229_225251_111316_4B523D9B 
-X-CRM114-Status: GOOD (  20.38  )
+X-CRM114-CacheID: sfid-20240301_031229_284518_0A6A8479 
+X-CRM114-Status: GOOD (  32.53  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,113 +79,142 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-CC Andrew
+On Wed, 14 Feb 2024 07:38:23 -0800
+Tushar Sugandhi <tusharsu@linux.microsoft.com> wrote:
 
-On 02/22/24 at 05:21pm, yang.zhang wrote:
-> From: "yang.zhang" <yang.zhang@hexintek.com>
+> IMA log is copied to the new Kernel during kexec 'load' using 
+> ima_dump_measurement_list().  The log copy at kexec 'load' may result in
+> loss of IMA measurements during kexec soft reboot.  It needs to be copied
+> over during kexec 'execute'.  Setup the needed infrastructure to move the
+> IMA log copy from kexec 'load' to 'execute'. 
 > 
-> When loading segments, ubytes is <= mbytes. When ubytes is exhausted,
-> there could be remaining mbytes. Then in the while loop, the buf pointer
-> advancing with mchunk will causing meaningless reading even though it
-> doesn't harm.
+> Define a new IMA hook ima_update_kexec_buffer() as a stub function.
+> It will be used to call ima_dump_measurement_list() during kexec 
+> 'execute'.   
 > 
-> So let's change to make sure that all of the copying and the rest only
-> happens before uchunk goes to zero.
+> Implement kimage_file_post_load() and ima_kexec_post_load() functions
+> to be invoked after the new Kernel image has been loaded for kexec.
+> ima_kexec_post_load() maps the IMA buffer to a segment in the newly
+> loaded Kernel.  It also registers the reboot notifier_block to trigger
+> ima_update_kexec_buffer() at exec 'execute'.
 > 
-> Acked-by: Baoquan He <bhe@redhat.com>
-> Signed-off-by: yang.zhang <yang.zhang@hexintek.com>
-> 
+> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
 > ---
-> V2 -> V3:
-> - Add more detailed description in the commit message
-> v1 -> v2:
-> - Only copy before uchunk goes to zero
+>  include/linux/ima.h                |  3 ++
+>  kernel/kexec_file.c                |  5 ++++
+>  security/integrity/ima/ima_kexec.c | 46 ++++++++++++++++++++++++++++++
+>  3 files changed, 54 insertions(+)
 > 
-> V1: https://lore.kernel.org/lkml/20240130101802.23850-1-gaoshanliukou@163.com/
-> ---
->  kernel/kexec_core.c | 44 ++++++++++++++++++++++++--------------------
->  1 file changed, 24 insertions(+), 20 deletions(-)
-> 
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index d08fc7b5db97..2fc3d0e3715a 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -800,22 +800,24 @@ static int kimage_load_normal_segment(struct kimage *image,
->  				PAGE_SIZE - (maddr & ~PAGE_MASK));
->  		uchunk = min(ubytes, mchunk);
+> diff --git a/include/linux/ima.h b/include/linux/ima.h
+> index 86b57757c7b1..006db20f852d 100644
+> --- a/include/linux/ima.h
+> +++ b/include/linux/ima.h
+> @@ -49,6 +49,9 @@ static inline void ima_appraise_parse_cmdline(void) {}
 >  
-> -		/* For file based kexec, source pages are in kernel memory */
-> -		if (image->file_mode)
-> -			memcpy(ptr, kbuf, uchunk);
-> -		else
-> -			result = copy_from_user(ptr, buf, uchunk);
-> +		if (uchunk) {
-> +			/* For file based kexec, source pages are in kernel memory */
-> +			if (image->file_mode)
-> +				memcpy(ptr, kbuf, uchunk);
-> +			else
-> +				result = copy_from_user(ptr, buf, uchunk);
-> +			ubytes -= uchunk;
-> +			if (image->file_mode)
-> +				kbuf += uchunk;
-> +			else
-> +				buf += uchunk;
-> +		}
->  		kunmap_local(ptr);
->  		if (result) {
->  			result = -EFAULT;
->  			goto out;
->  		}
-> -		ubytes -= uchunk;
->  		maddr  += mchunk;
-> -		if (image->file_mode)
-> -			kbuf += mchunk;
-> -		else
-> -			buf += mchunk;
->  		mbytes -= mchunk;
+>  #ifdef CONFIG_IMA_KEXEC
+>  extern void ima_add_kexec_buffer(struct kimage *image);
+> +extern void ima_kexec_post_load(struct kimage *image);
+> +#else
+> +static inline void ima_kexec_post_load(struct kimage *image) {}
+>  #endif
 >  
->  		cond_resched();
-> @@ -866,11 +868,18 @@ static int kimage_load_crash_segment(struct kimage *image,
->  			memset(ptr + uchunk, 0, mchunk - uchunk);
->  		}
+>  #else
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index 0e3689bfb0bb..fe59cb7c179d 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -186,6 +186,11 @@ kimage_validate_signature(struct kimage *image)
+>  }
+>  #endif
 >  
-> -		/* For file based kexec, source pages are in kernel memory */
-> -		if (image->file_mode)
-> -			memcpy(ptr, kbuf, uchunk);
-> -		else
-> -			result = copy_from_user(ptr, buf, uchunk);
-> +		if (uchunk) {
-> +			/* For file based kexec, source pages are in kernel memory */
-> +			if (image->file_mode)
-> +				memcpy(ptr, kbuf, uchunk);
-> +			else
-> +				result = copy_from_user(ptr, buf, uchunk);
-> +			ubytes -= uchunk;
-> +			if (image->file_mode)
-> +				kbuf += uchunk;
-> +			else
-> +				buf += uchunk;
-> +		}
->  		kexec_flush_icache_page(page);
->  		kunmap_local(ptr);
->  		arch_kexec_pre_free_pages(page_address(page), 1);
-> @@ -878,12 +887,7 @@ static int kimage_load_crash_segment(struct kimage *image,
->  			result = -EFAULT;
->  			goto out;
->  		}
-> -		ubytes -= uchunk;
->  		maddr  += mchunk;
-> -		if (image->file_mode)
-> -			kbuf += mchunk;
-> -		else
-> -			buf += mchunk;
->  		mbytes -= mchunk;
+> +void kimage_file_post_load(struct kimage *image)
+> +{
+> +	ima_kexec_post_load(image);
+> +}
+> +
+>  /*
+>   * In file mode list of segments is prepared by kernel. Copy relevant
+>   * data from user space, do error checking, prepare segment list
+> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
+> index ccb072617c2d..1d4d6c122d82 100644
+> --- a/security/integrity/ima/ima_kexec.c
+> +++ b/security/integrity/ima/ima_kexec.c
+> @@ -12,10 +12,14 @@
+>  #include <linux/kexec.h>
+>  #include <linux/of.h>
+>  #include <linux/ima.h>
+> +#include <linux/reboot.h>
+> +#include <asm/page.h>
+>  #include "ima.h"
 >  
->  		cond_resched();
-> -- 
-> 2.25.1
-> 
+>  #ifdef CONFIG_IMA_KEXEC
+>  static struct seq_file ima_kexec_file;
+> +static void *ima_kexec_buffer;
+> +static bool ima_kexec_update_registered;
+>  
+>  static void ima_reset_kexec_file(struct seq_file *sf)
+>  {
+> @@ -184,6 +188,48 @@ void ima_add_kexec_buffer(struct kimage *image)
+>  	kexec_dprintk("kexec measurement buffer for the loaded kernel at 0x%lx.\n",
+>  		      kbuf.mem);
+>  }
+> +
+> +/*
+> + * Called during kexec execute so that IMA can update the measurement list.
+> + */
+> +static int ima_update_kexec_buffer(struct notifier_block *self,
+> +				   unsigned long action, void *data)
+> +{
+> +	return NOTIFY_OK;
+> +}
+> +
+> +struct notifier_block update_buffer_nb = {
+> +	.notifier_call = ima_update_kexec_buffer,
+> +};
+> +
+> +/*
+> + * Create a mapping for the source pages that contain the IMA buffer
+> + * so we can update it later.
+> + */
+> +void ima_kexec_post_load(struct kimage *image)
+> +{
+> +	if (ima_kexec_buffer) {
+> +		kimage_unmap_segment(ima_kexec_buffer);
+> +		ima_kexec_buffer = NULL;
+> +	}
+> +
+> +	if (!image->ima_buffer_addr)
+> +		return;
+> +
+> +	ima_kexec_buffer = kimage_map_segment(image,
+> +					      image->ima_buffer_addr,
+> +					      image->ima_buffer_size);
+> +	if (!ima_kexec_buffer) {
+> +		pr_err("%s: Could not map measurements buffer.\n", __func__);
+> +		return;
+> +	}
+> +
+> +	if (!ima_kexec_update_registered) {
+> +		register_reboot_notifier(&update_buffer_nb);
 
+Specifically this means that the notifier is run from kernel_kexec()
+through kernel_restart_prepare(). At that point the kernel is still
+running at full speed, i.e. new IMA measurements can be added to the
+list.
+
+I believe it would be better to add a "kexec late notifier list" which
+would be notified just before kmsg_dump() in kernel_kexec(). Functions
+on that list would be called in a more quiet context, i.e. after other
+CPUs and most devices have been shut down.
+
+I can see that the current proposal does not address passing the IMA
+measurements to a panic kernel, but I'm adding Baoquan nevertheless.
+Would it make sense to implement such a late notifier list for the
+crash kexec case. I know that in general, it is no good idea to run
+more code in a crashed kernel context, but what about self-contained
+things like copying IMA measurements?
+
+Petr T
 
 _______________________________________________
 kexec mailing list
