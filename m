@@ -4,119 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4479CC5478C
-	for <kexec@archiver.kernel.org>; Fri,  1 Mar 2024 05:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5BE83C5475B
+	for <kexec@archiver.kernel.org>; Fri,  1 Mar 2024 06:52:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=646x66tTMdqzaG0fgGOVDYZWLqodwv4vPDoAn9AwrfM=; b=VqYKebzTSVSg1w
-	tmR6PmHB6i42wQhVRxf+ntnXgMKKP8q7TDvfW99aw2rX5Pl6ybhOEk7HeOLuj7pDwcfl3MU6OhwNS
-	m/x2+OHwDDlGR/HG7LGMGRIzXYMT2mVj9E9fNGzrcetlFcsNa/5B3oHyrUsHD6U3gJD8Qn6tYWKfz
-	cVPKhQS37rulvuicXwUHVmGqg23ymuOptZJsaz+MrfbFD6HznABa0KIYuovk7VNKI3GLwylPGlYxC
-	YRc6MfCp4WA7+bNH4PZ3jSbA2tBQgL1NW4VPeWfscBCr/H/B+KkxQCzfuMbSlgqQvlcyhcmbnIVLA
-	SH6/PkTj5JJkn7LhtiHw==;
+	List-Owner; bh=FZ0nzKWMiUX6zZePE425GjhTxatbYKsUK3d6BHn1hcI=; b=gAe3O2/DaL1vgz
+	cUWJNq/veO0CJ9WzSiWE74mRegtM8rMrrezqBUvD18/S/ZvKrqeaot19DsGzEMy4Bokmjuurn2qZ4
+	7pxAHzixpuQclphC5V05+UyndtVJZmX8ym0rZ2i7E3Oo4jsbAtpIr2Aqs79DBobBV9WqP5vUymeQ3
+	LQx1L/IO5Yiw7U1U9JK8QgsZRlcoq3bJ8PfK+VwpuolNyg9xDAKInExlZqgLZybCrlSbW4X80888u
+	BrvuN5lpJ/ys/vZ6qMfN9yZIxL+OY6XkVpm+SNelapMr1zSXYb2yRvukX73VL28finPziSQYmKKJA
+	VgFERvuXyOffwntHHC1A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rfvDq-0000000GOHn-3oC6;
-	Fri, 01 Mar 2024 05:14:14 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1rfwlJ-0000000GdEP-3bNQ;
+	Fri, 01 Mar 2024 06:52:53 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rfvDm-0000000GOGX-2nb8
+	id 1rfwlG-0000000GdCW-41Sd
 	for kexec@lists.infradead.org;
-	Fri, 01 Mar 2024 05:14:12 +0000
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4215954T005398;
-	Fri, 1 Mar 2024 05:13:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=JX6eSvoNUnWfKDMb2h6OWhmreqplk4n9Il8ykxlGp3M=;
- b=AdVATzUmOoNEQ9mLog5p4g38qUeI6Eien0L47fgzj4QriuNnnEFEZQTxucgB7eQwQLgr
- iQHJTms8w1DY+ZBDnj+5yBW3A99a4svPVgqmbV2S/vx/FCoJXSRNIsSTGUG6T4n1FOR6
- W8vggbZLrkso82jkrBnU7AqobqoDU4W1MovSfVDj6QL/ORFKmmZcJjr4AhJ2Gj+tDPPS
- EU7LymATw++X7X+uWuyFlT637Sl+ArpzxGRTWTrEhiZx/15hXKh6evG1tPcJN3CJCfrY
- xjX0Cxq67SfzOrvdUbeUDvZy0krt2y5QwaiynqdXzg6BIJDIg6Td9YJ0h98R6s2hnSQQ fw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wk8m6g34p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 01 Mar 2024 05:13:35 +0000
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42159Pux006313;
-	Fri, 1 Mar 2024 05:13:35 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wk8m6g34f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 01 Mar 2024 05:13:34 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4211hHXl021316;
-	Fri, 1 Mar 2024 05:13:34 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wfuspja0c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 01 Mar 2024 05:13:33 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4215DSUx24117966
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 1 Mar 2024 05:13:30 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 32E972004D;
-	Fri,  1 Mar 2024 05:13:28 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0AF8B20040;
-	Fri,  1 Mar 2024 05:13:20 +0000 (GMT)
-Received: from [9.43.93.212] (unknown [9.43.93.212])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri,  1 Mar 2024 05:13:19 +0000 (GMT)
-Message-ID: <9dd60fea-5b6c-409d-bc55-8e27545b47d4@linux.ibm.com>
-Date: Fri, 1 Mar 2024 10:43:18 +0530
+	Fri, 01 Mar 2024 06:52:52 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1709275968;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1hAv7LCsa3iLqGJhJsJviM4n+BZxClj9lSP/nAIPeEE=;
+	b=ZmFeYeafCN5TPui876iOjrQyDomNHY06yTBI4gCX5MdMBIH7/ivIv108GNUYrVtYQLU0q3
+	MEaUIdasntw0fJSXeJuJgV8id17A2aUHXs/HqcfFpu+FnnCrlp8X2ugVrxHyYG7GQV6nx/
+	1dmOz4IxhwRbaMPnBnY0nojTe2WxRCI=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-223-k9AfNMFUM463nT0FJ3bfzg-1; Fri, 01 Mar 2024 01:52:44 -0500
+X-MC-Unique: k9AfNMFUM463nT0FJ3bfzg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2B95183FC6C;
+	Fri,  1 Mar 2024 06:52:44 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.6])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7D4C21BDB1;
+	Fri,  1 Mar 2024 06:52:42 +0000 (UTC)
+Date: Fri, 1 Mar 2024 14:52:34 +0800
+From: Baoquan He <bhe@redhat.com>
+To: "yang.zhang" <gaoshanliukou@163.com>, akpm@linux-foundation.org
+Cc: ebiederm@xmission.com, linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org, "yang.zhang" <yang.zhang@hexintek.com>
+Subject: Re: [PATCH V3] kexec: copy only happens before uchunk goes to zero
+Message-ID: <ZeF7Muc8WyuQ1bPR@MiWiFi-R3L-srv>
+References: <20240222092119.5602-1-gaoshanliukou@163.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v17 0/6] powerpc/crash: Kernel handling of CPU and memory
- hotplug
-To: Baoquan He <bhe@redhat.com>
-Cc: linuxppc-dev@ozlabs.org, Akhil Raj <lf32.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Boris Ostrovsky
- <boris.ostrovsky@oracle.com>,
-        Christophe Leroy
- <christophe.leroy@csgroup.eu>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dave Young <dyoung@redhat.com>, David Hildenbrand <david@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Laurent Dufour <laurent.dufour@fr.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mimi Zohar <zohar@linux.ibm.com>, Naveen N Rao <naveen@kernel.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Valentin Schneider <vschneid@redhat.com>,
-        Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org,
-        x86@kernel.org
-References: <20240226084118.16310-1-sourabhjain@linux.ibm.com>
- <ZeCL1EsQ/vLojCYs@MiWiFi-R3L-srv>
-Content-Language: en-US
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-In-Reply-To: <ZeCL1EsQ/vLojCYs@MiWiFi-R3L-srv>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 9u_Dv4MsjhfHbNzgxaoNunXKjOOrmFVH
-X-Proofpoint-ORIG-GUID: -CQuMvGu3TPMfEpKcApoepztV5yUUGMh
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-01_02,2024-02-29_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=930
- priorityscore=1501 impostorscore=0 clxscore=1015 malwarescore=0 mlxscore=0
- spamscore=0 bulkscore=0 lowpriorityscore=0 adultscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2403010041
+Content-Disposition: inline
+In-Reply-To: <20240222092119.5602-1-gaoshanliukou@163.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240229_211410_856294_A2CFF4BF 
-X-CRM114-Status: GOOD (  20.37  )
+X-CRM114-CacheID: sfid-20240229_225251_111316_4B523D9B 
+X-CRM114-Status: GOOD (  20.38  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -128,39 +76,118 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hello Baoquan,
+CC Andrew
 
-On 29/02/24 19:21, Baoquan He wrote:
-> Hi Sourabh,
->
-> On 02/26/24 at 02:11pm, Sourabh Jain wrote:
->> Commit 247262756121 ("crash: add generic infrastructure for crash
->> hotplug support") added a generic infrastructure that allows
->> architectures to selectively update the kdump image component during CPU
->> or memory add/remove events within the kernel itself.
->>
->> This patch series adds crash hotplug handler for PowerPC and enable
->> support to update the kdump image on CPU/Memory add/remove events.
->>
->> Among the 5 patches in this series, the first two patches make changes
->> to the generic crash hotplug handler to assist PowerPC in adding support
->> for this feature. The last three patches add support for this feature.
-> The whole series looks good to me. I have acked patch 1 and 2. Leave
-> those three ppc patches to ppc expert to review and approve. Thanks a
-> lot for your great work.
-Thanks for your feedback. I will soon send v18 to fix the two mirror 
-document issues
-and will look forward to PPC maintainers to provide feedback on the rest 
-of the series.
+On 02/22/24 at 05:21pm, yang.zhang wrote:
+> From: "yang.zhang" <yang.zhang@hexintek.com>
+> 
+> When loading segments, ubytes is <= mbytes. When ubytes is exhausted,
+> there could be remaining mbytes. Then in the while loop, the buf pointer
+> advancing with mchunk will causing meaningless reading even though it
+> doesn't harm.
+> 
+> So let's change to make sure that all of the copying and the rest only
+> happens before uchunk goes to zero.
+> 
+> Acked-by: Baoquan He <bhe@redhat.com>
+> Signed-off-by: yang.zhang <yang.zhang@hexintek.com>
+> 
+> ---
+> V2 -> V3:
+> - Add more detailed description in the commit message
+> v1 -> v2:
+> - Only copy before uchunk goes to zero
+> 
+> V1: https://lore.kernel.org/lkml/20240130101802.23850-1-gaoshanliukou@163.com/
+> ---
+>  kernel/kexec_core.c | 44 ++++++++++++++++++++++++--------------------
+>  1 file changed, 24 insertions(+), 20 deletions(-)
+> 
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index d08fc7b5db97..2fc3d0e3715a 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -800,22 +800,24 @@ static int kimage_load_normal_segment(struct kimage *image,
+>  				PAGE_SIZE - (maddr & ~PAGE_MASK));
+>  		uchunk = min(ubytes, mchunk);
+>  
+> -		/* For file based kexec, source pages are in kernel memory */
+> -		if (image->file_mode)
+> -			memcpy(ptr, kbuf, uchunk);
+> -		else
+> -			result = copy_from_user(ptr, buf, uchunk);
+> +		if (uchunk) {
+> +			/* For file based kexec, source pages are in kernel memory */
+> +			if (image->file_mode)
+> +				memcpy(ptr, kbuf, uchunk);
+> +			else
+> +				result = copy_from_user(ptr, buf, uchunk);
+> +			ubytes -= uchunk;
+> +			if (image->file_mode)
+> +				kbuf += uchunk;
+> +			else
+> +				buf += uchunk;
+> +		}
+>  		kunmap_local(ptr);
+>  		if (result) {
+>  			result = -EFAULT;
+>  			goto out;
+>  		}
+> -		ubytes -= uchunk;
+>  		maddr  += mchunk;
+> -		if (image->file_mode)
+> -			kbuf += mchunk;
+> -		else
+> -			buf += mchunk;
+>  		mbytes -= mchunk;
+>  
+>  		cond_resched();
+> @@ -866,11 +868,18 @@ static int kimage_load_crash_segment(struct kimage *image,
+>  			memset(ptr + uchunk, 0, mchunk - uchunk);
+>  		}
+>  
+> -		/* For file based kexec, source pages are in kernel memory */
+> -		if (image->file_mode)
+> -			memcpy(ptr, kbuf, uchunk);
+> -		else
+> -			result = copy_from_user(ptr, buf, uchunk);
+> +		if (uchunk) {
+> +			/* For file based kexec, source pages are in kernel memory */
+> +			if (image->file_mode)
+> +				memcpy(ptr, kbuf, uchunk);
+> +			else
+> +				result = copy_from_user(ptr, buf, uchunk);
+> +			ubytes -= uchunk;
+> +			if (image->file_mode)
+> +				kbuf += uchunk;
+> +			else
+> +				buf += uchunk;
+> +		}
+>  		kexec_flush_icache_page(page);
+>  		kunmap_local(ptr);
+>  		arch_kexec_pre_free_pages(page_address(page), 1);
+> @@ -878,12 +887,7 @@ static int kimage_load_crash_segment(struct kimage *image,
+>  			result = -EFAULT;
+>  			goto out;
+>  		}
+> -		ubytes -= uchunk;
+>  		maddr  += mchunk;
+> -		if (image->file_mode)
+> -			kbuf += mchunk;
+> -		else
+> -			buf += mchunk;
+>  		mbytes -= mchunk;
+>  
+>  		cond_resched();
+> -- 
+> 2.25.1
+> 
 
-Appreciate your support!
-
-- Sourabh
 
 _______________________________________________
 kexec mailing list
