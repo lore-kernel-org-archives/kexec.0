@@ -4,65 +4,116 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 77584C5478C
-	for <kexec@archiver.kernel.org>; Fri,  1 Mar 2024 11:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E1E44C54798
+	for <kexec@archiver.kernel.org>; Sat,  2 Mar 2024 13:18:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=5FTzgUFkwib4HwhwKbX9hte7ZwAkGOrxRFsIagCVdRA=; b=KbmzZY9PWND6go
-	nprnp7/BDSO8pZB0HEzWb+xamL2xPWEvfFcbWqOTzmF/9CCSFaJrcHyulxacSjjaE3jFyRF47HnwC
-	owQ5qXdde3pIJXuZ/0qtjCH+gYNlCTXLQ5loeVAdj9Ua6w0AF4s+c7pnoHlZBDK2tEg4wTulXmmiC
-	hCO9LBsRWzH2+zDHsymDgr16lJJDjIBxIgLuL1WjUd3h+RMUfID7VEOKyzDO7RL60Fz4vzCFYevT+
-	XXrOWjXEz0KLFvlKoNqEq5BceXwPmxaaUKiZljymzunCUaaCwTXtl8QfGFDtgDff8VfFl02zQhcM2
-	b88e11+eRvIm6wdxlpdw==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:Cc:To:Subject:From:MIME-Version:Date:Message-ID:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Owner;
+	bh=37JhmmnveHGudi9mkqoUdb1wK3L99dHYGXI0lTrJ4mU=; b=efD//kKkj+qQ4qXOLGSfKGuqcK
+	j07x9TDkXUcCqa9kq/tDQcySEfXSXnJROnBH/wrjQA6glmveP3BE5L7ILa53+NQkQh4yZrFxNa2gu
+	cwDz9DBnx8QuQA68V+/b+RPrjqZqmrHVpM9RZqF22RQX5lDOwasQv5ethq483s3vjM6eUoxy9N5aR
+	ypLfEOQeNJrmwTzM4vIG4mlxU7fQfYKYD13TexVwBDJBoxEFz2gMo6dzqiREFNMSQZ7bb+RIFg77b
+	UED14tlaSz7iu0JxUBx7NzP/tCcKWe4tsks4kZlqikdrDewa7wtMuYccUFL63axZvtBG2lMzAk5gR
+	u4rTo53g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rg0oc-0000000HVQf-0OEv;
-	Fri, 01 Mar 2024 11:12:34 +0000
-Received: from bee.tesarici.cz ([37.205.15.56])
+	id 1rgPG0-00000003bK5-42qq;
+	Sat, 02 Mar 2024 13:18:28 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rg0oW-0000000HVII-1oTh
+	id 1rgPFw-00000003bIn-3drn
 	for kexec@lists.infradead.org;
-	Fri, 01 Mar 2024 11:12:31 +0000
-Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by bee.tesarici.cz (Postfix) with ESMTPSA id AEAF41C0A52;
-	Fri,  1 Mar 2024 12:12:23 +0100 (CET)
-Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
-	t=1709291543; bh=XSBoTq4bOiHd3evrpzuKLxQ+GPngWacdjSd3NjxyXYA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=A1Xc3mzpSkj+2F0Q4cYvRYPKN3N3f34JUAEo1H+VFC//ZfwOePXof1W0359zO0pYK
-	 qAQJpcnWlHVzewjVyOYWZxLoqBrqVZhTmJDIY/1CWU/dGln+6Q06XQJCC2zC/fVWwM
-	 xc2PKeGkgdig3dnQInjmHcaUCyzL24u3JcYNxMOjCRgRXYnQeWw8/zn2R8F43NERqu
-	 glsEOivimXeyt/nizkmla0bRaax/Pr5q2JfyF71QHExQFMNA00956PS25G1FfVh8pI
-	 aCxNjCPf5bqwcTUDfd7xQaZ2+WWMdhTxIdOCp9hWSBKKpxcY99WHjmOKb+je7UTEAl
-	 xOjH/4Zama8Mg==
-Date: Fri, 1 Mar 2024 12:12:22 +0100
-From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
-To: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-Cc: zohar@linux.ibm.com, roberto.sassu@huaweicloud.com,
- roberto.sassu@huawei.com, eric.snowberg@oracle.com, stefanb@linux.ibm.com,
- ebiederm@xmission.com, noodles@fb.com, bauermann@kolabnow.com,
- linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
- code@tyhicks.com, nramas@linux.microsoft.com, paul@paul-moore.com,
- bhe@redhat.com
-Subject: Re: [PATCH v5 4/8] ima: kexec: define functions to copy IMA log at
- soft boot
-Message-ID: <20240301121222.7d03756e@meshulam.tesarici.cz>
-In-Reply-To: <20240214153827.1087657-5-tusharsu@linux.microsoft.com>
-References: <20240214153827.1087657-1-tusharsu@linux.microsoft.com>
-	<20240214153827.1087657-5-tusharsu@linux.microsoft.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-suse-linux-gnu)
+	Sat, 02 Mar 2024 13:18:26 +0000
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 422ClaRr008588;
+	Sat, 2 Mar 2024 13:17:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : from : subject : to : cc : content-type :
+ content-transfer-encoding; s=pp1;
+ bh=9DLD6Glas6Y6HxLxZTXEVU07JFzQgpJYflIsJE0zmUE=;
+ b=ajRX89AYCo1P+METAPO5SK4BTd8+GMsGABuFZnQDNF2CCCb7QQtpjATr4XQp7WxurBPy
+ kAWaefSWSCnWG7bcYn6Xiv9WzWrC5svhaK3vOiaMdmhg+xy5f+AjMUaSlTjYfAYeQp+W
+ ib+sVswggKjQBIZfokrDVhgaB8hqPs143fu3330vptfDMYGjd/1t7s6P4GrlzqP051ng
+ OXxZtqT8XtK1x/VgKhh4UZPesgfvzaDsPwvOxqYm8ElY2/aiyI/6GJ40I9i6gyFrdUiL
+ XR2NGvnCIpRVpo97wboeYYgNzPjKQdlY1ffvToyDXd9Kllk4YRK0Hvr4TKu418XmxD+L Xw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wm4e38f37-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 02 Mar 2024 13:17:48 +0000
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 422DEKxI008664;
+	Sat, 2 Mar 2024 13:17:47 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wm4e38f2y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 02 Mar 2024 13:17:47 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 422D0Sjl012332;
+	Sat, 2 Mar 2024 13:17:46 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wfwg32dnt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 02 Mar 2024 13:17:46 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 422DHeYA52036072
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 2 Mar 2024 13:17:42 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CE64B20043;
+	Sat,  2 Mar 2024 13:17:40 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 77CCC20040;
+	Sat,  2 Mar 2024 13:17:34 +0000 (GMT)
+Received: from [9.43.41.117] (unknown [9.43.41.117])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Sat,  2 Mar 2024 13:17:34 +0000 (GMT)
+Message-ID: <413699f9-89ad-4aed-b9cb-b12d23cf1999@linux.ibm.com>
+Date: Sat, 2 Mar 2024 18:47:33 +0530
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: Hari Bathini <hbathini@linux.ibm.com>
+Subject: Re: [PATCH v17 1/6] crash: forward memory_notify arg to arch crash
+ hotplug handler
+To: Sourabh Jain <sourabhjain@linux.ibm.com>, linuxppc-dev@ozlabs.org
+Cc: Baoquan He <bhe@redhat.com>, Akhil Raj <lf32.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Boris Ostrovsky
+ <boris.ostrovsky@oracle.com>,
+        Christophe Leroy
+ <christophe.leroy@csgroup.eu>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dave Young <dyoung@redhat.com>, David Hildenbrand <david@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Laurent Dufour <laurent.dufour@fr.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mimi Zohar <zohar@linux.ibm.com>, Naveen N Rao <naveen@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Valentin Schneider <vschneid@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org,
+        x86@kernel.org
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: EAu5Wl1jBIYGFGhqOvEGcj5r7zE9CjXd
+X-Proofpoint-GUID: 0MdsIea0LD4D0GsWmmnzFchqEZmRyJa-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-02_04,2024-03-01_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
+ spamscore=0 malwarescore=0 impostorscore=0 clxscore=1011 mlxscore=0
+ priorityscore=1501 suspectscore=0 mlxlogscore=999 lowpriorityscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2403020115
+X-Bad-Reply: 'Re:' in Subject but no References or In-Reply-To headers
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240301_031229_284518_0A6A8479 
-X-CRM114-Status: GOOD (  32.53  )
+X-CRM114-CacheID: sfid-20240302_051825_042024_9C4F7FBC 
+X-CRM114-Status: GOOD (  29.98  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,147 +125,169 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, 14 Feb 2024 07:38:23 -0800
-Tushar Sugandhi <tusharsu@linux.microsoft.com> wrote:
 
-> IMA log is copied to the new Kernel during kexec 'load' using 
-> ima_dump_measurement_list().  The log copy at kexec 'load' may result in
-> loss of IMA measurements during kexec soft reboot.  It needs to be copied
-> over during kexec 'execute'.  Setup the needed infrastructure to move the
-> IMA log copy from kexec 'load' to 'execute'. 
+
+On 26/02/24 2:11 pm, Sourabh Jain wrote:
+> In the event of memory hotplug or online/offline events, the crash
+> memory hotplug notifier `crash_memhp_notifier()` receives a
+> `memory_notify` object but doesn't forward that object to the
+> generic and architecture-specific crash hotplug handler.
 > 
-> Define a new IMA hook ima_update_kexec_buffer() as a stub function.
-> It will be used to call ima_dump_measurement_list() during kexec 
-> 'execute'.   
+> The `memory_notify` object contains the starting PFN (Page Frame Number)
+> and the number of pages in the hot-removed memory. This information is
+> necessary for architectures like PowerPC to update/recreate the kdump
+> image, specifically `elfcorehdr`.
 > 
-> Implement kimage_file_post_load() and ima_kexec_post_load() functions
-> to be invoked after the new Kernel image has been loaded for kexec.
-> ima_kexec_post_load() maps the IMA buffer to a segment in the newly
-> loaded Kernel.  It also registers the reboot notifier_block to trigger
-> ima_update_kexec_buffer() at exec 'execute'.
+> So update the function signature of `crash_handle_hotplug_event()` and
+> `arch_crash_handle_hotplug_event()` to accept the `memory_notify` object
+> as an argument from crash memory hotplug notifier.
 > 
-> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> Since no such object is available in the case of CPU hotplug event, the
+> crash CPU hotplug notifier `crash_cpuhp_online()` passes NULL to the
+> crash hotplug handler.
+> 
+
+Acked-by: Hari Bathini <hbathini@linux.ibm.com>
+
+> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+> Acked-by: Baoquan He <bhe@redhat.com>
+> Cc: Akhil Raj <lf32.dev@gmail.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+> Cc: Borislav Petkov (AMD) <bp@alien8.de>
+> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Hari Bathini <hbathini@linux.ibm.com>
+> Cc: Laurent Dufour <laurent.dufour@fr.ibm.com>
+> Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Mimi Zohar <zohar@linux.ibm.com>
+> Cc: Naveen N Rao <naveen@kernel.org>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Valentin Schneider <vschneid@redhat.com>
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> Cc: kexec@lists.infradead.org
+> Cc: x86@kernel.org
 > ---
->  include/linux/ima.h                |  3 ++
->  kernel/kexec_file.c                |  5 ++++
->  security/integrity/ima/ima_kexec.c | 46 ++++++++++++++++++++++++++++++
->  3 files changed, 54 insertions(+)
+>   arch/x86/include/asm/kexec.h |  2 +-
+>   arch/x86/kernel/crash.c      |  4 +++-
+>   include/linux/crash_core.h   |  2 +-
+>   kernel/crash_core.c          | 14 +++++++-------
+>   4 files changed, 12 insertions(+), 10 deletions(-)
 > 
-> diff --git a/include/linux/ima.h b/include/linux/ima.h
-> index 86b57757c7b1..006db20f852d 100644
-> --- a/include/linux/ima.h
-> +++ b/include/linux/ima.h
-> @@ -49,6 +49,9 @@ static inline void ima_appraise_parse_cmdline(void) {}
->  
->  #ifdef CONFIG_IMA_KEXEC
->  extern void ima_add_kexec_buffer(struct kimage *image);
-> +extern void ima_kexec_post_load(struct kimage *image);
-> +#else
-> +static inline void ima_kexec_post_load(struct kimage *image) {}
->  #endif
->  
->  #else
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index 0e3689bfb0bb..fe59cb7c179d 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -186,6 +186,11 @@ kimage_validate_signature(struct kimage *image)
->  }
->  #endif
->  
-> +void kimage_file_post_load(struct kimage *image)
-> +{
-> +	ima_kexec_post_load(image);
-> +}
-> +
->  /*
->   * In file mode list of segments is prepared by kernel. Copy relevant
->   * data from user space, do error checking, prepare segment list
-> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-> index ccb072617c2d..1d4d6c122d82 100644
-> --- a/security/integrity/ima/ima_kexec.c
-> +++ b/security/integrity/ima/ima_kexec.c
-> @@ -12,10 +12,14 @@
->  #include <linux/kexec.h>
->  #include <linux/of.h>
->  #include <linux/ima.h>
-> +#include <linux/reboot.h>
-> +#include <asm/page.h>
->  #include "ima.h"
->  
->  #ifdef CONFIG_IMA_KEXEC
->  static struct seq_file ima_kexec_file;
-> +static void *ima_kexec_buffer;
-> +static bool ima_kexec_update_registered;
->  
->  static void ima_reset_kexec_file(struct seq_file *sf)
->  {
-> @@ -184,6 +188,48 @@ void ima_add_kexec_buffer(struct kimage *image)
->  	kexec_dprintk("kexec measurement buffer for the loaded kernel at 0x%lx.\n",
->  		      kbuf.mem);
->  }
-> +
-> +/*
-> + * Called during kexec execute so that IMA can update the measurement list.
-> + */
-> +static int ima_update_kexec_buffer(struct notifier_block *self,
-> +				   unsigned long action, void *data)
-> +{
-> +	return NOTIFY_OK;
-> +}
-> +
-> +struct notifier_block update_buffer_nb = {
-> +	.notifier_call = ima_update_kexec_buffer,
-> +};
-> +
-> +/*
-> + * Create a mapping for the source pages that contain the IMA buffer
-> + * so we can update it later.
-> + */
-> +void ima_kexec_post_load(struct kimage *image)
-> +{
-> +	if (ima_kexec_buffer) {
-> +		kimage_unmap_segment(ima_kexec_buffer);
-> +		ima_kexec_buffer = NULL;
-> +	}
-> +
-> +	if (!image->ima_buffer_addr)
-> +		return;
-> +
-> +	ima_kexec_buffer = kimage_map_segment(image,
-> +					      image->ima_buffer_addr,
-> +					      image->ima_buffer_size);
-> +	if (!ima_kexec_buffer) {
-> +		pr_err("%s: Could not map measurements buffer.\n", __func__);
-> +		return;
-> +	}
-> +
-> +	if (!ima_kexec_update_registered) {
-> +		register_reboot_notifier(&update_buffer_nb);
-
-Specifically this means that the notifier is run from kernel_kexec()
-through kernel_restart_prepare(). At that point the kernel is still
-running at full speed, i.e. new IMA measurements can be added to the
-list.
-
-I believe it would be better to add a "kexec late notifier list" which
-would be notified just before kmsg_dump() in kernel_kexec(). Functions
-on that list would be called in a more quiet context, i.e. after other
-CPUs and most devices have been shut down.
-
-I can see that the current proposal does not address passing the IMA
-measurements to a panic kernel, but I'm adding Baoquan nevertheless.
-Would it make sense to implement such a late notifier list for the
-crash kexec case. I know that in general, it is no good idea to run
-more code in a crashed kernel context, but what about self-contained
-things like copying IMA measurements?
-
-Petr T
+> diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+> index 91ca9a9ee3a2..cb1320ebbc23 100644
+> --- a/arch/x86/include/asm/kexec.h
+> +++ b/arch/x86/include/asm/kexec.h
+> @@ -207,7 +207,7 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image);
+>   extern void kdump_nmi_shootdown_cpus(void);
+>   
+>   #ifdef CONFIG_CRASH_HOTPLUG
+> -void arch_crash_handle_hotplug_event(struct kimage *image);
+> +void arch_crash_handle_hotplug_event(struct kimage *image, void *arg);
+>   #define arch_crash_handle_hotplug_event arch_crash_handle_hotplug_event
+>   
+>   #ifdef CONFIG_HOTPLUG_CPU
+> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> index e74d0c4286c1..2a682fe86352 100644
+> --- a/arch/x86/kernel/crash.c
+> +++ b/arch/x86/kernel/crash.c
+> @@ -432,10 +432,12 @@ unsigned int arch_crash_get_elfcorehdr_size(void)
+>   /**
+>    * arch_crash_handle_hotplug_event() - Handle hotplug elfcorehdr changes
+>    * @image: a pointer to kexec_crash_image
+> + * @arg: struct memory_notify handler for memory hotplug case and
+> + *       NULL for CPU hotplug case.
+>    *
+>    * Prepare the new elfcorehdr and replace the existing elfcorehdr.
+>    */
+> -void arch_crash_handle_hotplug_event(struct kimage *image)
+> +void arch_crash_handle_hotplug_event(struct kimage *image, void *arg)
+>   {
+>   	void *elfbuf = NULL, *old_elfcorehdr;
+>   	unsigned long nr_mem_ranges;
+> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+> index d33352c2e386..647e928efee8 100644
+> --- a/include/linux/crash_core.h
+> +++ b/include/linux/crash_core.h
+> @@ -37,7 +37,7 @@ static inline void arch_kexec_unprotect_crashkres(void) { }
+>   
+>   
+>   #ifndef arch_crash_handle_hotplug_event
+> -static inline void arch_crash_handle_hotplug_event(struct kimage *image) { }
+> +static inline void arch_crash_handle_hotplug_event(struct kimage *image, void *arg) { }
+>   #endif
+>   
+>   int crash_check_update_elfcorehdr(void);
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index 78b5dc7cee3a..70fa8111a9d6 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -534,7 +534,7 @@ int crash_check_update_elfcorehdr(void)
+>    * list of segments it checks (since the elfcorehdr changes and thus
+>    * would require an update to purgatory itself to update the digest).
+>    */
+> -static void crash_handle_hotplug_event(unsigned int hp_action, unsigned int cpu)
+> +static void crash_handle_hotplug_event(unsigned int hp_action, unsigned int cpu, void *arg)
+>   {
+>   	struct kimage *image;
+>   
+> @@ -596,7 +596,7 @@ static void crash_handle_hotplug_event(unsigned int hp_action, unsigned int cpu)
+>   	image->hp_action = hp_action;
+>   
+>   	/* Now invoke arch-specific update handler */
+> -	arch_crash_handle_hotplug_event(image);
+> +	arch_crash_handle_hotplug_event(image, arg);
+>   
+>   	/* No longer handling a hotplug event */
+>   	image->hp_action = KEXEC_CRASH_HP_NONE;
+> @@ -612,17 +612,17 @@ static void crash_handle_hotplug_event(unsigned int hp_action, unsigned int cpu)
+>   	crash_hotplug_unlock();
+>   }
+>   
+> -static int crash_memhp_notifier(struct notifier_block *nb, unsigned long val, void *v)
+> +static int crash_memhp_notifier(struct notifier_block *nb, unsigned long val, void *arg)
+>   {
+>   	switch (val) {
+>   	case MEM_ONLINE:
+>   		crash_handle_hotplug_event(KEXEC_CRASH_HP_ADD_MEMORY,
+> -			KEXEC_CRASH_HP_INVALID_CPU);
+> +			KEXEC_CRASH_HP_INVALID_CPU, arg);
+>   		break;
+>   
+>   	case MEM_OFFLINE:
+>   		crash_handle_hotplug_event(KEXEC_CRASH_HP_REMOVE_MEMORY,
+> -			KEXEC_CRASH_HP_INVALID_CPU);
+> +			KEXEC_CRASH_HP_INVALID_CPU, arg);
+>   		break;
+>   	}
+>   	return NOTIFY_OK;
+> @@ -635,13 +635,13 @@ static struct notifier_block crash_memhp_nb = {
+>   
+>   static int crash_cpuhp_online(unsigned int cpu)
+>   {
+> -	crash_handle_hotplug_event(KEXEC_CRASH_HP_ADD_CPU, cpu);
+> +	crash_handle_hotplug_event(KEXEC_CRASH_HP_ADD_CPU, cpu, NULL);
+>   	return 0;
+>   }
+>   
+>   static int crash_cpuhp_offline(unsigned int cpu)
+>   {
+> -	crash_handle_hotplug_event(KEXEC_CRASH_HP_REMOVE_CPU, cpu);
+> +	crash_handle_hotplug_event(KEXEC_CRASH_HP_REMOVE_CPU, cpu, NULL);
+>   	return 0;
+>   }
+>   
 
 _______________________________________________
 kexec mailing list
