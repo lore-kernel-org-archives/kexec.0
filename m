@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id F30BFC48BF6
-	for <kexec@archiver.kernel.org>; Thu,  7 Mar 2024 08:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 76F8BC54E49
+	for <kexec@archiver.kernel.org>; Thu,  7 Mar 2024 11:09:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=lCQ4ANvKVLyvJGn11rXjyRV6Znw/StUFObWfdV8BK+o=; b=XTfNgqqqeW86dq
-	MmBQuIhWniL7P++MxGk9j2eqr929N5X/VruYgM6pVhvplV46ji0DRJc4kFhLSmFsOnbupAGRPOghm
-	A/4G2z1QWqsVL76gTdx3Ka2Q2JkD9x4cfnDL9ZU/jlFLWKeWUP4BIHxw4ogJV8w/HrDg9K9FhU/u8
-	2NQwY7PASOUTEUZj3n8duG/zXMihjSTE0CbJJW3ejbQ14F4n25yPrODyhaDZfqxUQ2RK5Xb5+4QHs
-	iqh2ejmNj6r6dXblB2Wp0tpcIMw0DlX4FzXqCzpzf5kz2lnvCOPp1PxH9Kyl1QwRV4jZiIHhkq+gl
-	F8LXpc6gLIFBAEuM17sw==;
+	List-Owner; bh=cTw31SwNCQMw8o6IS1IGPcWKvKP5c819qBlpkqKzAKk=; b=vJwA9hXJD0enoX
+	WMhGbKBN+mM6z1O+RAVFFruiGiQ3gTxBzPP/BrYvHDgQkRhAUawWxRnSHeHJp5/Zo7rNS6FAaZuAq
+	PaHh06vpQyQ/0IdSc98EAdA7KX22KhKZiqwIxmLVrhb4eGi4yqZpYTeiS6v7MP72kHwSYRTSVS7rb
+	GO71i+UwLwAG8wboLwq5IN8HlZTVmwl0xYS16Z74zIpXM4qlp8J5AX7Fwfu3ZfzW03e/7E6v62jIi
+	Oal9F956CGUSXN8GkYXxf8MtDsKOUN6aZaFo7FkY432KS7rmG04C298ReUszCUJJhwnoIJsaqpKOz
+	Q2Qguu/iSLPOpTIWcalQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1ri8oK-00000003YZB-1qXE;
-	Thu, 07 Mar 2024 08:09:04 +0000
-Received: from mgamail.intel.com ([192.198.163.10])
+	id 1riBca-00000004Ddt-1iBn;
+	Thu, 07 Mar 2024 11:09:08 +0000
+Received: from mgamail.intel.com ([192.198.163.19])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1ri8oG-00000003YYo-3xTR
+	id 1riBcV-00000004Db7-1ivB
 	for kexec@lists.infradead.org;
-	Thu, 07 Mar 2024 08:09:02 +0000
+	Thu, 07 Mar 2024 11:09:05 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709798941; x=1741334941;
+  t=1709809743; x=1741345743;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=HVF1QL6dIrEmmMOhlW6bZs0Fosep5KDcBrH9OkjV5KQ=;
-  b=S5ZRKskJEhSWZkBj3/xOcYb+TYsgpzoITNyOvQNtE6etlUneMGbqIfzQ
-   93nRqTRlWMWQhBlqmZtgxzglapVkW/lY5TdvKJ0ufpY+J3xyAmB9eQIkW
-   uc3xbN3iwYBQSmK+0zaSP4IGWUmc+y7tIB+WyNyytWq506pd3av5ZEzgG
-   hSxYRzPGQqib6AYZIGWt+RULIJHJyKSrsfJFUT4E2PtVM8FEDXUWl82d4
-   0pg3Vjvjc+XUj+xmF7E4jH0D6ceKyYdd2pZ84TSQaLaySovmf2m/IWeur
-   DMd2PVi32A4Xl+g4gxgrMAMr21IunHCCzaLGFn4WJg+TJslrD0vPTREoz
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11005"; a="15863036"
-X-IronPort-AV: E=Sophos;i="6.06,210,1705392000"; 
-   d="scan'208";a="15863036"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 00:07:55 -0800
+  bh=ouDZ0ujGuKmlj1Z5zELF5CFA2af4msmT0TU1fhL9Md8=;
+  b=fd+Tm6pufPneKu0yS8AJiaIhLaPH1E36+lA8L1NhAPNYnXEnDbXif0fX
+   9H3ukHHhEDByCxL96a+i/9jGLJb1F1kem6v0iOrCs4HeK7q6x2SEtkINT
+   6DH20FOckef7FYDmKkoFxv/Z1zCXoY5XVKdaElIlE03CQp03gyJYY5rz5
+   3a/jplamvxH2j4aroro5m7P9d27hKDqfR2WR7T7ECVfZn1Nc8NpahbEnn
+   7FYQJlTxx5maXP+e4GE9dDDmmF/GgRV84aUGdrCU27Wxi595QBwez9dge
+   Jmif9BgNVBtwhs/rbRsKukFIu3zWYSIY2m+7QoEjHdVsNN0J9CUxoJqST
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11005"; a="4329830"
+X-IronPort-AV: E=Sophos;i="6.06,211,1705392000"; 
+   d="scan'208";a="4329830"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2024 03:09:01 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,210,1705392000"; 
-   d="scan'208";a="41012691"
+X-IronPort-AV: E=Sophos;i="6.06,211,1705392000"; 
+   d="scan'208";a="10057605"
 Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 07 Mar 2024 00:07:50 -0800
+  by orviesa010.jf.intel.com with ESMTP; 07 Mar 2024 03:08:56 -0800
 Received: from kbuild by b21307750695 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1ri8n5-0004yj-2O;
-	Thu, 07 Mar 2024 08:07:47 +0000
-Date: Thu, 7 Mar 2024 16:07:09 +0800
+	id 1riBcK-00056n-2K;
+	Thu, 07 Mar 2024 11:08:52 +0000
+Date: Thu, 7 Mar 2024 19:08:23 +0800
 From: kernel test robot <lkp@intel.com>
 To: Li Zhijian <lizhijian@fujitsu.com>, linux-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, y-goto@fujitsu.com,
+Cc: oe-kbuild-all@lists.linux.dev, y-goto@fujitsu.com,
 	Alison Schofield <alison.schofield@intel.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Linux Memory Management List <linux-mm@kvack.org>,
@@ -73,14 +73,14 @@ Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, y-goto@fujitsu.com,
 	Li Zhijian <lizhijian@fujitsu.com>
 Subject: Re: [PATCH v3 3/7] nvdimm: pmem: assign a parent resource for
  vmemmap region for the fsdax
-Message-ID: <202403071558.83GY9NwT-lkp@intel.com>
+Message-ID: <202403071804.b9EgMxWo-lkp@intel.com>
 References: <20240306102846.1020868-4-lizhijian@fujitsu.com>
 MIME-Version: 1.0
 Content-Disposition: inline
 In-Reply-To: <20240306102846.1020868-4-lizhijian@fujitsu.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240307_000901_039503_1A38D464 
-X-CRM114-Status: GOOD (  16.75  )
+X-CRM114-CacheID: sfid-20240307_030903_706947_D7A4BD77 
+X-CRM114-Status: GOOD (  16.25  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -112,32 +112,22 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Li-Zhijian/mm-memremap-re
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm.git libnvdimm-for-next
 patch link:    https://lore.kernel.org/r/20240306102846.1020868-4-lizhijian%40fujitsu.com
 patch subject: [PATCH v3 3/7] nvdimm: pmem: assign a parent resource for vmemmap region for the fsdax
-config: riscv-defconfig (https://download.01.org/0day-ci/archive/20240307/202403071558.83GY9NwT-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 325f51237252e6dab8e4e1ea1fa7acbb4faee1cd)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240307/202403071558.83GY9NwT-lkp@intel.com/reproduce)
+config: loongarch-allmodconfig (https://download.01.org/0day-ci/archive/20240307/202403071804.b9EgMxWo-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240307/202403071804.b9EgMxWo-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202403071558.83GY9NwT-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202403071804.b9EgMxWo-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
-   In file included from drivers/nvdimm/pmem.c:10:
-   In file included from include/linux/blkdev.h:9:
-   In file included from include/linux/blk_types.h:10:
-   In file included from include/linux/bvec.h:10:
-   In file included from include/linux/highmem.h:8:
-   In file included from include/linux/cacheflush.h:5:
-   In file included from arch/riscv/include/asm/cacheflush.h:9:
-   In file included from include/linux/mm.h:2188:
-   include/linux/vmstat.h:522:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     522 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
->> drivers/nvdimm/pmem.c:501:2: error: call to undeclared function 'pgmap_parent_resource'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+   drivers/nvdimm/pmem.c: In function 'pmem_attach_disk':
+>> drivers/nvdimm/pmem.c:501:9: error: implicit declaration of function 'pgmap_parent_resource' [-Werror=implicit-function-declaration]
      501 |         pgmap_parent_resource(&pmem->pgmap, parent);
-         |         ^
-   1 warning and 1 error generated.
+         |         ^~~~~~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
 
 
 vim +/pgmap_parent_resource +501 drivers/nvdimm/pmem.c
