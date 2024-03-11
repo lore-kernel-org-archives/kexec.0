@@ -4,65 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 283A8C5475B
-	for <kexec@archiver.kernel.org>; Mon, 11 Mar 2024 16:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2C409C5475B
+	for <kexec@archiver.kernel.org>; Mon, 11 Mar 2024 16:18:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=IbbV0Ck8C0/Oz4LYZ6Ev6Lp8FxAWUOMldjcrS39ctPI=; b=xCVAEqG3plp1YS
-	/eolU9nVBx8RtIpLpKZ9Or1RfCMGa4qUl6UqZGX/hfRZigi9EHVKdYi2qbqTrAWx7L5RP0j9VtZGR
-	VmZRTvwqviyoFedFcQY1n9IsYk3H5zdz3rbYULg5JHSAQurJuSMg7nhUC2PANLp2q2BXOjGn7U0nh
-	lJq8DlmRgAyyw0T6xzxWz8bBZf5UlFZD96BcNwpTpIuFjF3ii8+aWfxVULI1g+NZY5fGRPIJHlx3U
-	IUYDmPB6hy8618BUvDN583AGS2KJVCCv3TJksX3kNLQ7GJHyNxifc6ABPBOLVVNkmkF4l5ozmZbjv
-	rdMYTMkhoEg7KlpjPAWA==;
+	List-Owner; bh=RPwH/CAVAY+4pO6bDRTs167vLeGI632bllh+TPID8GE=; b=ETZ3pXbbANiG9f
+	1ZfNIwl4dxknzCCtrmzL/IyBPzq3GzgYFnfO6pzHhBE6PQ+PGytk6gKUbfPCSWOzHTIjMJ9MhMAia
+	N8cjAhctrqq4N2ObS8RRzRpIHTGXY5TiqJZ7Z3c48twOuq2xLG3O+FIaAA3rLFmyHUVe52whOZMAg
+	WNYlQcHxGRgH60jFZmgwHNA7Uncg7QLZj4N6el3lY7hrNEUJm5Cixci0NSlPXGPNbrc7Euhcb6quK
+	CPCfCUH4DyFoVgzoZQ3GOdxNrAeq6EkSIs9SYquJlPoy/3ldBw+NcS7ugOZwjW/RMniLfW9W74bFt
+	lihOubo1xgKvVRCwERNg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rjiLf-00000002GsL-1gqO;
-	Mon, 11 Mar 2024 16:17:59 +0000
-Received: from mail-lf1-f53.google.com ([209.85.167.53])
+	id 1rjiLi-00000002GuO-1qhk;
+	Mon, 11 Mar 2024 16:18:02 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rjiLO-00000002Gd8-1UmF
+	id 1rjiLY-00000002GmY-3e3H
+	for kexec@bombadil.infradead.org;
+	Mon, 11 Mar 2024 16:17:53 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:MIME-Version
+	:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-Type:Content-ID:Content-Description;
+	bh=ImRzpHgQ7+uutfuh8SJRk0DTE4K/6LtArW0nv9lfM+k=; b=fdBJAn6xbVYrFnCriKfvT4txyA
+	UpycMpOdw9fqnBGTd/rwUguC2HTLgzZbTjH6Ill4GbSc5S1VlXXHsWxYEM2q3mxizq/Ek2owCseQ9
+	oaivwPgrR/kJS7DcPrWlvMwkkDVSyN9LolDG2AbjOb1u/oKD+5cNVtHKlFaPV/wmZazVV2YNGXGAu
+	XbI0RFMEnks9hbypJh6L0ZBFOsuMGgukp5EyZuv7tOSSFEInb0IK4YPjas7nUSGbLzoYe3i8ho9pw
+	bPOU3eL9qY/lDNW611Iycul3w0uYZpHvs2Nur1yCyArMzHfgSP8V9hZnkEm38MWueSK8oujcq0bVl
+	2bd/lxYQ==;
+Received: from mail-wr1-x42a.google.com ([2a00:1450:4864:20::42a])
+	by desiato.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rjiLU-000000092wL-2bBE
 	for kexec@lists.infradead.org;
-	Mon, 11 Mar 2024 16:17:49 +0000
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-51323dfce59so2851558e87.3
-        for <kexec@lists.infradead.org>; Mon, 11 Mar 2024 09:17:41 -0700 (PDT)
+	Mon, 11 Mar 2024 16:17:51 +0000
+Received: by mail-wr1-x42a.google.com with SMTP id ffacd0b85a97d-33e99b639e0so525173f8f.0
+        for <kexec@lists.infradead.org>; Mon, 11 Mar 2024 09:17:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1710173859; x=1710778659; darn=lists.infradead.org;
+        d=gmail.com; s=20230601; t=1710173866; x=1710778666; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zGCarDGFCcgtDjI7LZjJSVS0seEYtNWQr2sVWo8KxLA=;
-        b=LhOmN5lsZB7N6V+LfgYYlE0688irJ6zLyZ9VUsZABtKermUPCAp9fv/CO8C6y4ESlE
-         eWwaxNKsAT7yNjnDBUVjjunD6zpiZsw0I144QFB3JoSfKg5GM6XSDWqI3JiUwvvZr+CC
-         AydHECSnJSDgrTmGGDLf07VBb3VnAi2O6BJNltcFhcY6yICFltO/xf/IvmmFvlJHAvoY
-         iWkqh3nbDP7LgV2/5+eN13dFxxToDYd7QWbX7dbnFCC4ZczdrdQLT8lY0guVD872wBMH
-         I8im7NngWnBblQ+R4R/cfMGQH7cNqw5dnD52mmwakqr8d5g72I721C8l8FbmKACdnvBR
-         XnfA==
+        bh=ImRzpHgQ7+uutfuh8SJRk0DTE4K/6LtArW0nv9lfM+k=;
+        b=JgW7Lj0zCP4lWj1vjAGed12D0Y5G0uHvhwcll+G5CRpFTrqkEcYfyVpkvasoP34Zyw
+         uQ6llPedAkLJvDpgCRdxV6RtfA7b9lju6VDK3sG6c7Hk8NKZViYbFCc3yuIoMrtwHXae
+         UECL7Q+fK84xnMdKXgDKaOAtsdDIJ2oTIwXeY6uq4nUwTFP+qhi/wutf0IyIR0qyKEdq
+         zpjMT2MZfuQNvSo4Uogkl7NK5bHmhbpaS1v0cpDjoWgBBitnYQEh7gzsRYU1Rf84mQtJ
+         w6bZ40Agel5juJyd/OI/bY8D6Ql59B86QlhkMOgob2xNUKxJ29pqJyaksgeiIF5+QXYl
+         Hcjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710173859; x=1710778659;
+        d=1e100.net; s=20230601; t=1710173866; x=1710778666;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zGCarDGFCcgtDjI7LZjJSVS0seEYtNWQr2sVWo8KxLA=;
-        b=JmGfUEvypQ89ZNO4b5PbvMDSC81iCOl3OUWb1eRZb1V+UxEgxiUu9eSDccLISFyDAm
-         Fy+muucRgQbbX7Rb9X8THL+OzT3KXCiNrPIlpE51qZ8XVnhoXPZOEKo4ulis682OwiWC
-         sI8z+3nJ+ccg3Yi3D+GEP2TQyvnRQlmDnZRYCPI/kq5NpPYI5+kVWMoJ6XmWVW2rZL4a
-         vBdNNOyEMk9JOfRlqPHdivnDkE9UbOj1csdiJNCowzMTkQ7Dk7FQiv3HGs7MYx0Uynjt
-         PfIXiGUpEYGVOFANubdStAD4kDS/PjeT1iw0I7K6J0SLlArCkv92OBg7qJrCoCQhYwpD
-         mcPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUPe4lKi3DpnH5Ikf/wTxNTh1OAGGZzbVgt4DVlcvhPM+sgYa982Pitjpg4rUe3RMeYItUfOQuhwmSdjk+u0tufjpTDVKx07+v5
-X-Gm-Message-State: AOJu0YyRJibjT7l0v4ayq8X5YktdguQZWb0D7ZiZsiFidO7DHLAK1GKo
-	gWniFG4fN6ouPgyMO9imtP6gsbsrYQNFDQKEx1sn7HhxO+BhD/hsBkJuNRlUt4A=
-X-Google-Smtp-Source: AGHT+IE6XtOKsKp8hms95TDqCZHHhSaLSvqKyZ0PcsiqeEoPEFE6tP731EMdoQVlS080lK8XfsaJxA==
-X-Received: by 2002:ac2:53b6:0:b0:513:af26:8cd0 with SMTP id j22-20020ac253b6000000b00513af268cd0mr1413426lfh.68.1710173859482;
-        Mon, 11 Mar 2024 09:17:39 -0700 (PDT)
+        bh=ImRzpHgQ7+uutfuh8SJRk0DTE4K/6LtArW0nv9lfM+k=;
+        b=PG0sxN9Z3fGtP31UwL6+0qLRZ79FWuEPvDaQi6qAHqLjvjXIILF8TloX8w0oMYRCku
+         U98C67SXJiZzENin+XFEGORs3i9gGW7Sv7kNL3Cbs/x48REColPAqdZuUNTWgsis8Nmb
+         xqcOJMavS7WFzCTy/M9qAxMRqpZxt+ht84AXclF7gp/YLQhQcMV7pxuPyExa2/p/D3ww
+         9BQ0gUkviEMy+34iEHO6WEGnlXvn9tyLwDR8qHPejKdreryK5Y7NCkxVp4OTdjl06aac
+         pn5UQBMmNKlgKhgLsJwaT7z0CX6KyuuoYwQu7Hmv1NDnSpSW39KUOqlTiRGFQRtBOo/G
+         NGbg==
+X-Forwarded-Encrypted: i=1; AJvYcCUuv+BKaK5nyVu0DNhFfVBV/X40vHCWCekFY9dZ5FabvM8WqtonV6lAVf3tSWYR0yS3mfwoRuwTvbBXwXmY/OgsBOGOrNZYjRSx
+X-Gm-Message-State: AOJu0Yyos9Ddgebr2SYsrO4cUb4xUrDyTEXgCrOrZ750uZbvaE9wMw1g
+	TAKLaJUBtmmVX05z//7+9epZhIMhe/gXMRP2B8WXO7qDY9cXP+VQ
+X-Google-Smtp-Source: AGHT+IEG0QdNGOuIWSe9NXJvczTc8p7SlmtsuTs9Nh46GFsp/syoRmIiV9TumgTcGzwe4lIUdTQkcw==
+X-Received: by 2002:a5d:6611:0:b0:33e:5a33:b169 with SMTP id n17-20020a5d6611000000b0033e5a33b169mr4250288wru.28.1710173865721;
+        Mon, 11 Mar 2024 09:17:45 -0700 (PDT)
 Received: from vasant-suse.suse.cz ([2001:9e8:ab47:8200:c3b9:43af:f8e1:76f9])
-        by smtp.gmail.com with ESMTPSA id ba14-20020a0560001c0e00b0033e96fe9479sm2823815wrb.89.2024.03.11.09.17.38
+        by smtp.gmail.com with ESMTPSA id ba14-20020a0560001c0e00b0033e96fe9479sm2823815wrb.89.2024.03.11.09.17.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Mar 2024 09:17:39 -0700 (PDT)
+        Mon, 11 Mar 2024 09:17:45 -0700 (PDT)
 From: Vasant Karasulli <vsntk18@gmail.com>
 To: x86@kernel.org
 Cc: joro@8bytes.org,
@@ -92,16 +107,16 @@ Cc: joro@8bytes.org,
 	virtualization@lists.linux-foundation.org,
 	Joerg Roedel <jroedel@suse.de>,
 	Vasant Karasulli <vkarasulli@suse.de>
-Subject: [PATCH v4 5/9] x86/sev: Park APs on AP Jump Table with GHCB protocol version 2
-Date: Mon, 11 Mar 2024 17:17:23 +0100
-Message-Id: <20240311161727.14916-6-vsntk18@gmail.com>
+Subject: [PATCH v4 9/9] x86/kexec/64: Support kexec under SEV-ES with AP Jump Table Blob
+Date: Mon, 11 Mar 2024 17:17:27 +0100
+Message-Id: <20240311161727.14916-10-vsntk18@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240311161727.14916-1-vsntk18@gmail.com>
 References: <20240311161727.14916-1-vsntk18@gmail.com>
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240311_091742_628627_24AE51F3 
-X-CRM114-Status: GOOD (  23.56  )
+X-CRM114-CacheID: sfid-20240311_161748_827061_404FEA58 
+X-CRM114-Status: GOOD (  15.16  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -120,257 +135,85 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-GHCB protocol version 2 adds the MSR-based AP-reset-hold VMGEXIT which
-does not need a GHCB. Use that to park APs in 16-bit protected mode on
-the AP jump table.
+When the AP jump table blob is installed the kernel can hand over the
+APs from the old to the new kernel. Enable kexec when the AP jump
+table blob has been installed.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Vasant Karasulli <vkarasulli@suse.de>
 ---
- arch/x86/include/asm/realmode.h |  3 ++
- arch/x86/kernel/sev.c           | 55 ++++++++++++++++++---
- arch/x86/realmode/rm/Makefile   | 11 +++--
- arch/x86/realmode/rm/header.S   |  3 ++
- arch/x86/realmode/rm/sev.S      | 85 +++++++++++++++++++++++++++++++++
- 5 files changed, 146 insertions(+), 11 deletions(-)
- create mode 100644 arch/x86/realmode/rm/sev.S
+ arch/x86/include/asm/sev.h         |  2 ++
+ arch/x86/kernel/machine_kexec_64.c |  3 ++-
+ arch/x86/kernel/sev.c              | 15 +++++++++++++++
+ 3 files changed, 19 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/realmode.h b/arch/x86/include/asm/realmode.h
-index bd54a48fe077..b0a2aa9b8366 100644
---- a/arch/x86/include/asm/realmode.h
-+++ b/arch/x86/include/asm/realmode.h
-@@ -23,6 +23,9 @@ struct real_mode_header {
- 	u32	trampoline_header;
- #ifdef CONFIG_AMD_MEM_ENCRYPT
- 	u32	sev_es_trampoline_start;
-+	u32	sev_ap_park;
-+	u32	sev_ap_park_seg;
-+	u32	sev_ap_park_gdt;
+diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+index 2dbd2238325a..26027083a2a9 100644
+--- a/arch/x86/include/asm/sev.h
++++ b/arch/x86/include/asm/sev.h
+@@ -217,6 +217,7 @@ void snp_accept_memory(phys_addr_t start, phys_addr_t end);
+ u64 snp_get_unsupported_features(u64 status);
+ u64 sev_get_status(void);
+ void sev_es_stop_this_cpu(void);
++bool sev_kexec_supported(void);
+ #else
+ static inline void sev_es_ist_enter(struct pt_regs *regs) { }
+ static inline void sev_es_ist_exit(void) { }
+@@ -246,6 +247,7 @@ static inline void snp_accept_memory(phys_addr_t start, phys_addr_t end) { }
+ static inline u64 snp_get_unsupported_features(u64 status) { return 0; }
+ static inline u64 sev_get_status(void) { return 0; }
+ static inline void sev_es_stop_this_cpu(void) { }
++static inline bool sev_kexec_supported(void) { return true; }
  #endif
- #ifdef CONFIG_X86_64
- 	u32	trampoline_start64;
+
+ #endif
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index 3671ea1a5045..6013ba6fc16e 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -28,6 +28,7 @@
+ #include <asm/setup.h>
+ #include <asm/set_memory.h>
+ #include <asm/cpu.h>
++#include <asm/sev.h>
+
+ #ifdef CONFIG_ACPI
+ /*
+@@ -269,7 +270,7 @@ static void load_segments(void)
+
+ static bool machine_kexec_supported(void)
+ {
+-	if (cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT))
++	if (!sev_kexec_supported())
+ 		return false;
+
+ 	return true;
 diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
-index aa114a4f3dfc..08bf897361b9 100644
+index 73477eeb7de2..66e85b82d170 100644
 --- a/arch/x86/kernel/sev.c
 +++ b/arch/x86/kernel/sev.c
-@@ -33,6 +33,7 @@
- #include <asm/fpu/xcr.h>
- #include <asm/processor.h>
- #include <asm/realmode.h>
-+#include <asm/tlbflush.h>
- #include <asm/setup.h>
- #include <asm/traps.h>
- #include <asm/svm.h>
-@@ -1140,8 +1141,9 @@ void __init snp_set_wakeup_secondary_cpu(void)
- void __init sev_es_setup_ap_jump_table_data(void *base, u32 pa)
- {
- 	struct sev_ap_jump_table_header *header;
-+	u64 *ap_jumptable_gdt, *sev_ap_park_gdt;
- 	struct desc_ptr *gdt_descr;
--	u64 *ap_jumptable_gdt;
-+	int idx;
-
- 	header = base;
-
-@@ -1151,9 +1153,16 @@ void __init sev_es_setup_ap_jump_table_data(void *base, u32 pa)
- 	 * real-mode.
- 	 */
- 	ap_jumptable_gdt = (u64 *)(base + header->ap_jumptable_gdt);
--	ap_jumptable_gdt[SEV_APJT_CS16 / 8] = GDT_ENTRY(0x9b, pa, 0xffff);
--	ap_jumptable_gdt[SEV_APJT_DS16 / 8] = GDT_ENTRY(0x93, pa, 0xffff);
--	ap_jumptable_gdt[SEV_RM_DS / 8] = GDT_ENTRY(0x93, 0, 0xffff);
-+	sev_ap_park_gdt  = __va(real_mode_header->sev_ap_park_gdt);
-+
-+	idx = SEV_APJT_CS16 / 8;
-+	ap_jumptable_gdt[idx] = sev_ap_park_gdt[idx] = GDT_ENTRY(0x9b, pa, 0xffff);
-+
-+	idx = SEV_APJT_DS16 / 8;
-+	ap_jumptable_gdt[idx] = sev_ap_park_gdt[idx] = GDT_ENTRY(0x93, pa, 0xffff);
-+
-+	idx = SEV_RM_DS / 8;
-+	ap_jumptable_gdt[idx] = GDT_ENTRY(0x93, 0x0, 0xffff);
-
- 	/* Write correct GDT base address into GDT descriptor */
- 	gdt_descr = (struct desc_ptr *)(base + header->ap_jumptable_gdt);
-@@ -1342,6 +1351,38 @@ void setup_ghcb(void)
- }
-
- #ifdef CONFIG_HOTPLUG_CPU
-+void __noreturn sev_jumptable_ap_park(void)
-+{
-+	local_irq_disable();
-+
-+	write_cr3(real_mode_header->trampoline_pgd);
-+
-+	/* Exiting long mode will fail if CR4.PCIDE is set. */
-+	if (cpu_feature_enabled(X86_FEATURE_PCID))
-+		cr4_clear_bits(X86_CR4_PCIDE);
-+
-+	/*
-+	 * Set all GPRs except EAX, EBX, ECX, and EDX to reset state to prepare
-+	 * for software reset.
-+	 */
-+	asm volatile("xorl	%%r15d, %%r15d\n"
-+		     "xorl	%%r14d, %%r14d\n"
-+		     "xorl	%%r13d, %%r13d\n"
-+		     "xorl	%%r12d, %%r12d\n"
-+		     "xorl	%%r11d, %%r11d\n"
-+		     "xorl	%%r10d, %%r10d\n"
-+		     "xorl	%%r9d,  %%r9d\n"
-+		     "xorl	%%r8d,  %%r8d\n"
-+		     "xorl	%%esi, %%esi\n"
-+		     "xorl	%%edi, %%edi\n"
-+		     "xorl	%%esp, %%esp\n"
-+		     "xorl	%%ebp, %%ebp\n"
-+		     "ljmpl	*%0" : :
-+		     "m" (real_mode_header->sev_ap_park));
-+	unreachable();
-+}
-+STACK_FRAME_NON_STANDARD(sev_jumptable_ap_park);
-+
- static void sev_es_ap_hlt_loop(void)
- {
- 	struct ghcb_state state;
-@@ -1378,8 +1419,10 @@ static void sev_es_play_dead(void)
- 	play_dead_common();
-
- 	/* IRQs now disabled */
--
--	sev_es_ap_hlt_loop();
-+	if (sev_ap_jumptable_blob_installed)
-+		sev_jumptable_ap_park();
-+	else
-+		sev_es_ap_hlt_loop();
-
- 	/*
- 	 * If we get here, the VCPU was woken up again. Jump to CPU
-diff --git a/arch/x86/realmode/rm/Makefile b/arch/x86/realmode/rm/Makefile
-index f614009d3e4e..7fa22159f7d8 100644
---- a/arch/x86/realmode/rm/Makefile
-+++ b/arch/x86/realmode/rm/Makefile
-@@ -28,11 +28,12 @@ wakeup-objs	+= video-vga.o
- wakeup-objs	+= video-vesa.o
- wakeup-objs	+= video-bios.o
-
--realmode-y			+= header.o
--realmode-y			+= trampoline_$(BITS).o
--realmode-y			+= stack.o
--realmode-y			+= reboot.o
--realmode-$(CONFIG_ACPI_SLEEP)	+= $(wakeup-objs)
-+realmode-y				+= header.o
-+realmode-y				+= trampoline_$(BITS).o
-+realmode-y				+= stack.o
-+realmode-y				+= reboot.o
-+realmode-$(CONFIG_ACPI_SLEEP)		+= $(wakeup-objs)
-+realmode-$(CONFIG_AMD_MEM_ENCRYPT)	+= sev.o
-
- targets	+= $(realmode-y)
-
-diff --git a/arch/x86/realmode/rm/header.S b/arch/x86/realmode/rm/header.S
-index 2eb62be6d256..17eae256d443 100644
---- a/arch/x86/realmode/rm/header.S
-+++ b/arch/x86/realmode/rm/header.S
-@@ -22,6 +22,9 @@ SYM_DATA_START(real_mode_header)
- 	.long	pa_trampoline_header
- #ifdef CONFIG_AMD_MEM_ENCRYPT
- 	.long	pa_sev_es_trampoline_start
-+	.long	pa_sev_ap_park_asm
-+	.long	__KERNEL32_CS
-+	.long	pa_sev_ap_park_gdt;
+@@ -1456,6 +1456,21 @@ static void __init sev_es_setup_play_dead(void)
+ static inline void sev_es_setup_play_dead(void) { }
  #endif
- #ifdef CONFIG_X86_64
- 	.long	pa_trampoline_start64
-diff --git a/arch/x86/realmode/rm/sev.S b/arch/x86/realmode/rm/sev.S
-new file mode 100644
-index 000000000000..ae6eea2d53f7
---- /dev/null
-+++ b/arch/x86/realmode/rm/sev.S
-@@ -0,0 +1,85 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#include <linux/linkage.h>
-+#include <asm/segment.h>
-+#include <asm/page_types.h>
-+#include <asm/processor-flags.h>
-+#include <asm/msr-index.h>
-+#include <asm/sev-ap-jumptable.h>
-+#include "realmode.h"
-+
-+	.section ".text32", "ax"
-+	.code32
-+/*
-+ * The following code switches to 16-bit protected mode and sets up the
-+ * execution environment for the AP jump table blob. Then it jumps to the AP
-+ * jump table to park the AP.
-+ *
-+ * The code was copied from reboot.S and modified to fit the SEV-ES requirements
-+ * for AP parking. When this code is entered, all registers except %EAX-%EDX are
-+ * in reset state.
-+ *
-+ * %EAX, %EBX, %ECX, %EDX and EFLAGS are undefined. Only use registers %EAX-%EDX and
-+ * %ESP in this code.
-+ */
-+SYM_CODE_START(sev_ap_park_asm)
-+
-+	/* Switch to trampoline GDT as it is guaranteed < 4 GiB */
-+	movl	$__KERNEL_DS, %eax
-+	movl	%eax, %ds
-+	lgdt	pa_tr_gdt
-+
-+	/* Disable paging to drop us out of long mode */
-+	movl	%cr0, %eax
-+	btcl	$X86_CR0_PG_BIT, %eax
-+	movl	%eax, %cr0
-+
-+	ljmpl	$__KERNEL32_CS, $pa_sev_ap_park_paging_off
-+
-+SYM_INNER_LABEL(sev_ap_park_paging_off, SYM_L_GLOBAL)
-+	/* Clear EFER */
-+	xorl	%eax, %eax
-+	xorl	%edx, %edx
-+	movl	$MSR_EFER, %ecx
-+	wrmsr
-+
-+	/* Clear CR3 */
-+	xorl	%ecx, %ecx
-+	movl	%ecx, %cr3
-+
-+	/* Set up the IDT for real mode. */
-+	lidtl	pa_machine_real_restart_idt
-+
-+	/* Load the GDT with the 16-bit segments for the AP jump table */
-+	lgdtl	pa_sev_ap_park_gdt
-+
-+	/* Setup code and data segments for AP jump table */
-+	movw	$SEV_APJT_DS16, %ax
-+	movw	%ax, %ds
-+	movw	%ax, %ss
-+
-+	/* Jump to the AP jump table into 16 bit protected mode */
-+	ljmpw	$SEV_APJT_CS16, $SEV_APJT_ENTRY
-+SYM_CODE_END(sev_ap_park_asm)
-+
-+	.data
-+	.balign	16
-+SYM_DATA_START(sev_ap_park_gdt)
-+	/* Self-pointer */
-+	.word	sev_ap_park_gdt_end - sev_ap_park_gdt - 1
-+	.long	pa_sev_ap_park_gdt
-+	.word	0
+
++bool sev_kexec_supported(void)
++{
++	if (!cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT))
++		return true;
 +
 +	/*
-+	 * Offset 0x8
-+	 * 32 bit code segment descriptor pointing to AP jump table base
-+	 * Setup at runtime in sev_es_setup_ap_jump_table_data().
++	 * KEXEC with SEV-ES and more than one CPU is only supported
++	 * when the AP jump table is installed.
 +	 */
-+	.quad	0
++	if (num_possible_cpus() > 1)
++		return sev_ap_jumptable_blob_installed;
++	else
++		return true;
++}
 +
-+	/*
-+	 * Offset 0x10
-+	 * 32 bit data segment descriptor pointing to AP jump table base
-+	 * Setup at runtime in sev_es_setup_ap_jump_table_data().
-+	 */
-+	.quad	0
-+SYM_DATA_END_LABEL(sev_ap_park_gdt, SYM_L_GLOBAL, sev_ap_park_gdt_end)
+ static void __init alloc_runtime_data(int cpu)
+ {
+ 	struct sev_es_runtime_data *data;
 --
 2.34.1
 
