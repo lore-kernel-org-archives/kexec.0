@@ -4,182 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DCAE3C54E5D
-	for <kexec@archiver.kernel.org>; Tue, 12 Mar 2024 16:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4B982C54E5D
+	for <kexec@archiver.kernel.org>; Tue, 12 Mar 2024 22:02:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:Cc:To:
-	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=ZcKi9nUa42PAoQ44Eq7zY+al19tHySkD+ambw72G9W8=; b=r0DEGgaZidzhrNpSrviZw8q1Di
-	Wic5DUqe0rW29976BrNxzFP0eP293btX6V6OhYgQ9zdQuvXjhWPBMlNa1pZg+UPY4bu0/IbEaB+fg
-	vuyTg8lTb4Wa1C8LpkqByhLuvpx0qeTr7/hTq/HzkLsaqkPK2llrVJreOCbKrhgnjFI9ABJ5KMuaw
-	kNhV2JRrBqnZ4tfjyrUk6AXd/0XsAimI0CTi34q347YHqHqogpvk+BioPAgZOmOOSf11pCUoJMZwQ
-	lX5iEKUAnfnzYbGgmRbl7vdAO5lzAeHzhIsT7MAR4w5/Vh1pIbzRJFcWU2VZDAn01BANYrMY3AY6B
-	u3Af0p/A==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=ltsWzIKgmq9KGelaYKpZS5YnabVTwDWK79LruASEoWo=; b=x42aJmdvaQJ6hf
+	LBNoEajvlNsB1NpLmxMUnbIrvjexSEfAtTSIgLoqwnvOz6OmlMp1M1f6uZXNxtopjZYXOoBOldQh9
+	CYWj3Al6EmsMpEhHvlSvBaK+j075wQhnO7RCBVE1+xaAkr6CqX/rsi/S4lP0A/fee/gOIrr7OwfiF
+	NRwIItVVbPtyvwBLJto4mdVZoOU48RfTRg0VYv7jKkOAg1ERjLbNRNy8OBvFgwNjGN8TtWJkuFEKm
+	QL+6TZuRc5jk7UgvticDpeoGFZxrIlJ72PoKln5N8f0bydPX0SVrJyad1nlCZCky3k8QIXPFQXfQC
+	i8HAby1iDHqf0h8dDDQw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rk4lS-00000006Y63-0Wo9;
-	Tue, 12 Mar 2024 16:14:06 +0000
-Received: from mail-mw2nam12on20600.outbound.protection.outlook.com ([2a01:111:f403:200a::600] helo=NAM12-MW2-obe.outbound.protection.outlook.com)
+	id 1rkACl-00000007iEn-2Vjh;
+	Tue, 12 Mar 2024 22:02:39 +0000
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rk4lP-00000006Y4c-0pWa
+	id 1rkACf-00000007iBi-1ve6
 	for kexec@lists.infradead.org;
-	Tue, 12 Mar 2024 16:14:04 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YN8XaZiw4fGJjgNsyGe+cX595E2dIVB9Wx+XPNv0nTV0e0kTObsev3WSrdxxPrLYMUrwSaWxsX+6Et/NRmo9t9muGCVzBSSiJ7Qg44ACzDhWUfLnK+ezI8vng831NeIylE6E9e6TL6RIgTm8hQmakHcp5q4ZRGKz4yQJPvJOfPpenSQJ4OXfiKPKv+7I5HXWXozkE42MEOJp71BdsfIGW54N/n187z3OQB2/8HeNDG/HCxlHsYYTA7yIdnZeFwx+t5vlOdp//Z8863igVpwqaG3GgZ7grR/56ycEkC+JqDndzLnNWLpfAotxIBxU82fmxAFU02LaN8M3+AH5GeOTOg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1UZBWPB+3FuoUVV/SGaEt25297ShK6Qk0jQ5YVMT6wM=;
- b=XDxsuEUnHxX706oCVtAcf/22EU8kW8RWvXir+wvGT5PHUioTeSe6sLtriPtIfdXFFRnPKYPq3phZXNLPzBKsYB0Z0Vbs1umPTvB2xNa7xVayReI1EU0CKeErdaLTJJ31/aQGOdHFuqBjnO/0TmtE830Pl58eUuHawS4ywmI3CgvfUqmqli/YOlKQxIhg2Pqk5s9qCRwRGmta0/LDN+EuqrglzanakxZjrdCTWy6X9/iBSKoWYc+Osfs5ey05qu+hgFTX4EPHhG7921o8dyHP631503bCvKMx722Sub2ufi2YbqzgvKI+j8gZ7d9kzWp03y5Rt94EyHHG9DG0Cpal4g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1UZBWPB+3FuoUVV/SGaEt25297ShK6Qk0jQ5YVMT6wM=;
- b=XZdwVpg576ZNJQAOj3xC7uL1cHYGZURcK5D01eT7n0nyx+RqPhgtiAszfiVZsOvBhAGYSWokihRbSGfFgrFzaM3dPz1GQ0DuMMl2QDod0pVljI1+rV3PiLGAFyp88olZcyv83sbcAvhi9fgH/wXK6I59KvY6ljJr1bgPCiT/oAg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL1PR12MB5732.namprd12.prod.outlook.com (2603:10b6:208:387::17)
- by IA0PR12MB9010.namprd12.prod.outlook.com (2603:10b6:208:48e::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.35; Tue, 12 Mar
- 2024 16:13:57 +0000
-Received: from BL1PR12MB5732.namprd12.prod.outlook.com
- ([fe80::4c26:40af:e1fd:849e]) by BL1PR12MB5732.namprd12.prod.outlook.com
- ([fe80::4c26:40af:e1fd:849e%7]) with mapi id 15.20.7362.035; Tue, 12 Mar 2024
- 16:13:57 +0000
-Message-ID: <a82d24f8-d185-47a7-91df-4706658843e5@amd.com>
-Date: Tue, 12 Mar 2024 11:13:54 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/9] x86/sev: KEXEC/KDUMP support for SEV-ES guests
-Content-Language: en-US
-To: Vasant Karasulli <vkarasulli@suse.de>
-Cc: Vasant k <vsntk18@gmail.com>, x86@kernel.org, joro@8bytes.org,
- cfir@google.com, dan.j.williams@intel.com, dave.hansen@linux.intel.com,
- ebiederm@xmission.com, erdemaktas@google.com, hpa@zytor.com,
- jgross@suse.com, jslaby@suse.cz, keescook@chromium.org,
- kexec@lists.infradead.org, kvm@vger.kernel.org, linux-coco@lists.linux.dev,
- linux-kernel@vger.kernel.org, luto@kernel.org, martin.b.radev@gmail.com,
- mhiramat@kernel.org, mstunes@vmware.com, nivedita@alum.mit.edu,
- peterz@infradead.org, rientjes@google.com, seanjc@google.com,
- stable@vger.kernel.org, virtualization@lists.linux-foundation.org
-References: <20240311161727.14916-1-vsntk18@gmail.com>
- <f1ff678d-88fd-4893-b01a-04e1a60670ce@amd.com>
- <CAF2zH5qZKEmECy=9vG4sLmdDt5k7nC=MwjKvJLyVfPyFzt+0hA@mail.gmail.com>
- <c8c88a28-30be-4034-9fe7-9c9de5247c53@amd.com> <ZfBx2ewmB06qQajs@vasant-suse>
-From: Tom Lendacky <thomas.lendacky@amd.com>
-Autocrypt: addr=thomas.lendacky@amd.com; keydata=
- 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
- vFkWitqCJg==
-In-Reply-To: <ZfBx2ewmB06qQajs@vasant-suse>
-X-ClientProxiedBy: SA1P222CA0026.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:806:22c::27) To BL1PR12MB5732.namprd12.prod.outlook.com
- (2603:10b6:208:387::17)
+	Tue, 12 Mar 2024 22:02:35 +0000
+Received: from pps.filterd (m0134421.ppops.net [127.0.0.1])
+	by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42CKsYa2019505;
+	Tue, 12 Mar 2024 22:02:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=pps0720; bh=uxe6i6hGgOKOpq5leYsB3kltqxDst/MLHuGk9MswOl8=;
+ b=IWgrNNoLu+PwkoncOgis8ahHkYiebda1uxWHm4zis4tiTUUZAWJyd46fz0PrczShaIFr
+ Cvcr1MkvjzqLG6bqkX1nYx57MX9DmaHZHemPgA8a1IzG/VPp+Sos7THZBfU6FY8S3qAy
+ muspVoyVa/zoCSw2EiIcQVcnNH+7dHycFoHyjTpqW8Wv8/3iCI7FExo7o3tlRYVq5x0Y
+ DRXxBNguS1e/2XKLyXcqEExTgDeEWeQx+4oqLqWfNZ6JQ7e3pb5bD9Pvc2Bj7w2KmX01
+ elHbZSzdNVbORouhsSBF1Htke4OOI/Gn1SyXN8JYife1N8vUcIXkytaqRUFd3oqZ3BG9 sQ== 
+Received: from p1lg14879.it.hpe.com ([16.230.97.200])
+	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3wtrp4v1ud-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 12 Mar 2024 22:02:29 +0000
+Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by p1lg14879.it.hpe.com (Postfix) with ESMTPS id DCBF113046;
+	Tue, 12 Mar 2024 22:02:20 +0000 (UTC)
+Received: from swahl-home.5wahls.com (unknown [16.231.227.36])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTPS id 9AF0980ACA7;
+	Tue, 12 Mar 2024 22:02:08 +0000 (UTC)
+Date: Tue, 12 Mar 2024 17:02:06 -0500
+From: Steve Wahl <steve.wahl@hpe.com>
+To: Pavin Joseph <me@pavinjoseph.com>, Simon Horman <horms@verge.net.au>,
+        kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>
+Cc: Steve Wahl <steve.wahl@hpe.com>, Eric Hagberg <ehagberg@gmail.com>,
+        dave.hansen@linux.intel.com, regressions@lists.linux.dev,
+        stable@vger.kernel.org
+Subject: Re: [REGRESSION] kexec does firmware reboot in kernel v6.7.6
+Message-ID: <ZfDQ3j6lOf9xgC04@swahl-home.5wahls.com>
+References: <CAJbxNHe3EJ88ABB1aZ8bYZq=a36F0TFST1Fqu4fkugvyU_fjhw@mail.gmail.com>
+ <ZensTNC72DJeaYMo@swahl-home.5wahls.com>
+ <CAJbxNHfPHpbzRwfuFw6j7SxR1OsgBH2VJFPnchBHTtRueJna4A@mail.gmail.com>
+ <ZfBxIykq3LwPq34M@swahl-home.5wahls.com>
+ <42e3e931-2883-4faf-8a15-2d7660120381@pavinjoseph.com>
+Content-Disposition: inline
+In-Reply-To: <42e3e931-2883-4faf-8a15-2d7660120381@pavinjoseph.com>
+X-Proofpoint-GUID: Swfg6-ue_4c6zP5JebHYUhn-0M5yfpKJ
+X-Proofpoint-ORIG-GUID: Swfg6-ue_4c6zP5JebHYUhn-0M5yfpKJ
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5732:EE_|IA0PR12MB9010:EE_
-X-MS-Office365-Filtering-Correlation-Id: a8a6b064-b460-427a-e799-08dc42af6ba8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: BGKESYdxVcQeML7fBVvR0wde25vqrAg21ml8W1H9fu4yrmlriSpfQfGnAfbL4xJqX9YuQIqAj+sVs+idWto7A/uYCk2PxVe6ri6+jagbU2B6oJb3ghnARWQxXi7Ie+kXZPtqYkZS+H5gzlaQtpyQWYQpq9Qe6DsZMSovwvGYLATrbf/SJ+jy19y1XUFyDvM5waUwrjcXmBVGG/syJhHM1MjwfgZGfscbYhS8YGIaiGFeo6LtTqybtmdeTGjHqZ6TIEc85q27sMjXNzUXe4IjAKC12qazzroOG5mVN6WzCdK/IVPyW/wYfjcFcf9j7Wq+FSLD1UCXpOzeH82U4z2Lzv57VFC3iRmoTNl1oY14tO0vpWP6pUQByxa79GH4FdhGKpyiBoicyGQ4FkBpfzerJMmivrt4RPo5fB3PoWYnfG9u7pn0CTBFPXk8MuDWoxL9n22dlsQp682XKdlnzH6YoCWZbFcKKyZUeBARUZwRjYhKyqjFAxG1cb6qxN9my43vU67fO8Oqyk9OrTz30hN8ZKF2aRWCfzNimVYfOHHJqDi5TpYoNPXWmdRkFArg38k4DL2NphJQIq07DbIoQfmyVRgvnEdxnynz5rxSc7nLJMoxU3hy/uC+R6GUN+EgiF8BKSAreAdEahbcmdepZqrX+o6igwqWPFqLyclw8+lI7YQ=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5732.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(376005)(1800799015);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UVFHeUQ3K0NodEZZZkh5MmM2NFVnUFNxczFCK1FCZHZ1QkRLMUNWQklsRmJD?=
- =?utf-8?B?Nm5PeDFCdWV0V3BJd3pBcllldnhZNzFIc2xlSWxoU1V2d3VadUtTRmRzTVRt?=
- =?utf-8?B?dzNKd2NBbEdUNGs1ZWtCOXFhRGhKVzhvMUFOQkJqejRiRm9kZ3hMQk94RDRC?=
- =?utf-8?B?NC9tYUZPV0xTeHRmby9iV0t2QTY5UXNEY1E2dVcvNzE5U2NDYVBSS1lHYXVJ?=
- =?utf-8?B?MEVrVy9rTUNDS0QxTVBCdFUwZW1yRGlobFcxYUxpaHZPOHJUTVZuUDVvYlkw?=
- =?utf-8?B?K0xwNzZBRHBsbDh6SUZRb1UrSTJzRFA4TWx0VzhjVXdXYytHMW5HejE3NTFj?=
- =?utf-8?B?TFZhdC9PNVQ3N2Z3V2sxUXZlYllYM0VDSURid0h2SWo4Sk9XUWlVNWp6Q0VZ?=
- =?utf-8?B?aUx4MU05WTl4YXpsSWROYTRjK3dXVTlKT3lzTnQ4b05XZVZqYVZUZWQ1OHZ6?=
- =?utf-8?B?NlgzZGU5ekxybmxtN3IvY0pWZkMrUHNqeTNqUDBGTjZZUlNVZGh6cSt6YWtD?=
- =?utf-8?B?ZXlQN09jQkFQUjg2MHBpc3hyOGFCeWdwb2pjRlVQZU9lZm0vQlZNampWYUlu?=
- =?utf-8?B?SlNpYlpJRTNtdk42bmNxUmVUMnh3Z0NXR1prQ2doWG5mVUdQaEYxckJkUWMy?=
- =?utf-8?B?MllhMEJaREt1VTJYU0dPZjI3MDcrNkRNZjNRUStHeS9oUGdPaVVYU2VSbTdz?=
- =?utf-8?B?UTFYQW81UncwYWFtV29iODEvNnpyS0p6ejZzOURYVmU5ZmdhQXRXVUJiSVZC?=
- =?utf-8?B?SHVhQ3cxT25Fb28xUGI0TzRwM1lPQVErUzlMU3lMb0RFVW92SjkyYkowdm9W?=
- =?utf-8?B?RXpSQksrQVRkYjdWM202bGdmNlkvQzdkaWtsV3NudURoSmtsUDZnZHlLTkdC?=
- =?utf-8?B?VmcxVFFjMmRLaERoM3gxanYwajVrK0ZTZk1ENndXRFBSRVE3OXRkcklBNHpD?=
- =?utf-8?B?QS94cU5XT2NOUE1GeUEraHVPcUpIOWRlRVp0YzJoak9INlNNMnUzdW85blJJ?=
- =?utf-8?B?TGd1eGtkMWw1NmtEN2xiTkZ0dWNqcGI0WHd1ZmZoWExNeTlPRjZJRGJheHRO?=
- =?utf-8?B?RmdqREtYNFZXb0w5bmV1dHVwaFFOU0VxMHIzM3ZDZUtXSVZpK2FVYTFPMU1Y?=
- =?utf-8?B?WmI0Tnl5S3d2OFFxVVpEU1FacFpMMmVjNHZpSlVmYXRadHI4ck1zOVh4NkRz?=
- =?utf-8?B?cTdLenBib2RkbncxQ1pyS2hwNWhmVHFpbTBWRjFXOENkcHovMHUzbmp3dU9k?=
- =?utf-8?B?eDFGUnNWTlBrc2lXaEplYUJ4cW9sVVhpc2VmYThnck9qRlNqTnZhRHR3Y3dX?=
- =?utf-8?B?QnZCa1d1eStqbU14cWQvTnd6dmpET1NpNW81ajdMZkxMVzlmQ3FjOWQzL2lH?=
- =?utf-8?B?U0E1cWVhWlNjNVhNSkt4OHNyVXFZQm1FWE55Z1ErRENlT0puZWgwM1RlZWtQ?=
- =?utf-8?B?VUZkTzVxNTk2RHFhTnJIMkFIRzRwR2Y2STNBem1yTlJYKzAvTUVVcktZVjkv?=
- =?utf-8?B?NXZMQ0Z3OFRyZDhENllLbms3cFF6dUNiYWNMYzJLaWh5Q29PbERTRTZDNGxt?=
- =?utf-8?B?dGFWS3l4bi9RSFpUeGtQTFB0TFRsQjhvem16ZzV4a2ZVeC94YUhQYjNqbjR2?=
- =?utf-8?B?OTBBZEUyd3pOcC8rUWdCUUdtNlVWNnN5SkVnRmxsV05TUitvbDUvWHQwcWJm?=
- =?utf-8?B?UGFvejhKN2s5WlNRMmgxV3dpdTdvKzhHQi83VTZTa3p3Z05NRjlmME9GK2xF?=
- =?utf-8?B?a3J3b1dmTldhemM2S2Y5eEFOT1AwUW9Pa21FQVhSamNpUDJiRnhpNlhtYzZV?=
- =?utf-8?B?T0tCeXZDdW9ZTmpDSWk4RkhWN1owcUYyQmh6QWhDRTFIcjBDUTFDK1Byamww?=
- =?utf-8?B?TkhxRUtrVzNTQ1NGNXorSml2N1VZUlZRWjJEREt5Rk5kcC90akNFbnhldE1E?=
- =?utf-8?B?S0NRanlzK24zbWJjaHlseUFXdm4wMTlqUTg1TGZiQjZzT0xlVE9ac1BQSWtT?=
- =?utf-8?B?UU9LMjl3dWxSUVdCeWkvak9wbmhFNG9wd01BTmF3enZabEhpZDJSdW5aejlO?=
- =?utf-8?B?Y0tIRDhmQzBwMjE3dTAxaWFQN3Nad2xRdm52Q2hKN1lpREtPaVk0YjZ5T0Rt?=
- =?utf-8?Q?2yxkCr/cmqViQxDeRtKlI+Sz2?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a8a6b064-b460-427a-e799-08dc42af6ba8
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5732.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2024 16:13:57.4319
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: l2DriZNFDIPUYN9//6Dgyn7v8IB2cEhegm7uBVPHpIXJhYwRouJfg/i6mmZKQ6KeJErlM8OKj0VMBRAHUFjdsA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB9010
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-12_13,2024-03-12_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 clxscore=1011 phishscore=0 mlxlogscore=999 spamscore=0
+ bulkscore=0 lowpriorityscore=0 malwarescore=0 priorityscore=1501
+ mlxscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2403120168
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240312_091403_277929_FE4B2500 
-X-CRM114-Status: GOOD (  10.43  )
+X-CRM114-CacheID: sfid-20240312_150233_837899_D2FD08A5 
+X-CRM114-Status: GOOD (  27.70  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -191,32 +97,65 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 3/12/24 10:16, Vasant Karasulli wrote:
-> On Di 12-03-24 09:04:13, Tom Lendacky wrote:
->> On 3/11/24 15:32, Vasant k wrote:
->>> Hi Tom,
->>>
->>>          Right,  it just escaped my mind that the SNP uses the secrets page
->>> to hand over APs to the next stage.  I will correct that in the next
->>
->> Not quite... The MADT table lists the APs and the GHCB AP Create NAE event
->> is used to start the APs.
-> 
-> Alright. So AP Jump Table is not used like in the case of SEV-ES. Thanks,
+[*really* added kexec maintainers this time.]
 
-Right. It can be, but we don't use that method in Linux.
+Full thread starts here:
+https://lore.kernel.org/all/3a1b9909-45ac-4f97-ad68-d16ef1ce99db@pavinjoseph.com/
+
+On Wed, Mar 13, 2024 at 12:12:31AM +0530, Pavin Joseph wrote:
+> On 3/12/24 20:43, Steve Wahl wrote:
+> > But I don't want to introduce a new command line parameter if the
+> > actual problem can be understood and fixed.  The question is how much
+> > time do I have to persue a direct fix before some other action needs
+> > to be taken?
+> 
+> Perhaps the kexec maintainers [0] can be made aware of this and you could
+> coordinate with them on a potential fix?
+> 
+> Currently maintained by
+> P:      Simon Horman
+> M:      horms@verge.net.au
+> L:      kexec@lists.infradead.org
+
+Probably a good idea to add kexec people to the list, so I've added
+them to this email.
+
+Everyone, my recent patch to the kernel that changed identity mapping:
+
+7143c5f4cf2073193 x86/mm/ident_map: Use gbpages only where full GB page should be mapped.
+
+... has broken kexec on a few machines.  The symptom is they do a full
+BIOS reboot instead of a kexec of the new kernel.  Seems to be limited
+to AMD processors, but it's not all AMD processors, probably just some
+characteristic that they happen to share.
+
+The same machines that are broken by my patch, are also broken in
+previous kernels if you add "nogbpages" to the kernel command line
+(which makes the identity map bigger, "nogbpages" doing for all parts
+of the identity map what my patch does only for some parts of it).
+
+I'm still hoping to find a machine I can reproduce this on to try and
+debug it myself.
+
+If any of you have any assistance or advice to offer, it would be most
+welcome!
+
+> I hope the root cause can be fixed instead of patching it over with a flag
+> to suppress the problem, but I don't know how regressions are handled here.
+
+That would be my preference as well.
 
 Thanks,
-Tom
 
-> I will keep the changes in the patch set exclusively for SEV-ES then.
-> 
-> - Vasant
+--> Steve Wahl
+
+-- 
+Steve Wahl, Hewlett Packard Enterprise
 
 _______________________________________________
 kexec mailing list
