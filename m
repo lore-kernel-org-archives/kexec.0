@@ -4,88 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4B982C54E5D
-	for <kexec@archiver.kernel.org>; Tue, 12 Mar 2024 22:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5C422C54E5D
+	for <kexec@archiver.kernel.org>; Wed, 13 Mar 2024 00:48:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:References:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=ltsWzIKgmq9KGelaYKpZS5YnabVTwDWK79LruASEoWo=; b=x42aJmdvaQJ6hf
-	LBNoEajvlNsB1NpLmxMUnbIrvjexSEfAtTSIgLoqwnvOz6OmlMp1M1f6uZXNxtopjZYXOoBOldQh9
-	CYWj3Al6EmsMpEhHvlSvBaK+j075wQhnO7RCBVE1+xaAkr6CqX/rsi/S4lP0A/fee/gOIrr7OwfiF
-	NRwIItVVbPtyvwBLJto4mdVZoOU48RfTRg0VYv7jKkOAg1ERjLbNRNy8OBvFgwNjGN8TtWJkuFEKm
-	QL+6TZuRc5jk7UgvticDpeoGFZxrIlJ72PoKln5N8f0bydPX0SVrJyad1nlCZCky3k8QIXPFQXfQC
-	i8HAby1iDHqf0h8dDDQw==;
+	List-Owner; bh=n/mWq/SwSqVPJrJfZWm9AmysLZY1po3I7hP2pX13ME0=; b=IK3PLy3vy55uYt
+	czF4jvy/3y1M8zatSnviQWb4NYRhxg0qffeFa9WCE03Ldwd+aguqjyRvafqBaxcNIkjqkg1rCjtBS
+	uVyaR2ctWXqYk5e9NVBe1NFkfAfmpYclG7RIx0IDAaIaO7zHkqG82DOdmhiHS97ndgoFJhK1qz59M
+	QyqgBcr2cq5WA4BbpUzpWuk6sG2lmC78bmHKTDsIUP9N+Qoo7Hy3yQRNwg9Zvkm3c0ZiafrDou+Mb
+	JNV6jLKjRHp1DcfjZuhFbvCsmcZP+GcY4zI/Z4Opo5Wu3oXZ7yegl1rZOzJyFluExM7Ze4Hfh2/3W
+	N1fZsFH988cOmfBLsAVg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rkACl-00000007iEn-2Vjh;
-	Tue, 12 Mar 2024 22:02:39 +0000
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86])
+	id 1rkCni-00000008B16-10OW;
+	Wed, 13 Mar 2024 00:48:58 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rkACf-00000007iBi-1ve6
+	id 1rkCne-00000008AzP-0a3q
 	for kexec@lists.infradead.org;
-	Tue, 12 Mar 2024 22:02:35 +0000
-Received: from pps.filterd (m0134421.ppops.net [127.0.0.1])
-	by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42CKsYa2019505;
-	Tue, 12 Mar 2024 22:02:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=pps0720; bh=uxe6i6hGgOKOpq5leYsB3kltqxDst/MLHuGk9MswOl8=;
- b=IWgrNNoLu+PwkoncOgis8ahHkYiebda1uxWHm4zis4tiTUUZAWJyd46fz0PrczShaIFr
- Cvcr1MkvjzqLG6bqkX1nYx57MX9DmaHZHemPgA8a1IzG/VPp+Sos7THZBfU6FY8S3qAy
- muspVoyVa/zoCSw2EiIcQVcnNH+7dHycFoHyjTpqW8Wv8/3iCI7FExo7o3tlRYVq5x0Y
- DRXxBNguS1e/2XKLyXcqEExTgDeEWeQx+4oqLqWfNZ6JQ7e3pb5bD9Pvc2Bj7w2KmX01
- elHbZSzdNVbORouhsSBF1Htke4OOI/Gn1SyXN8JYife1N8vUcIXkytaqRUFd3oqZ3BG9 sQ== 
-Received: from p1lg14879.it.hpe.com ([16.230.97.200])
-	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3wtrp4v1ud-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 12 Mar 2024 22:02:29 +0000
-Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
+	Wed, 13 Mar 2024 00:48:55 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710290931;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=V/I7rfb7fSwv9EVlLwLZyE6cq/I2crR3JWNIky7ODFU=;
+	b=PC9BYsAsDLiDvs1nBmqlFUuek5Fy0A7qVJJZu8I1qKIC9usQxxk2X4YUDT6fLgXXsvYH9U
+	e/rdNtC0qocAtEIFCXxde79tN+yKq61dlWbrpxUzUVS2mE4mWZS+epGuY6gHyAsEJU3CmJ
+	JfvHvMEcxsU4WzNgRO6en9CBEFi5f6Y=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-182-Tx39TiVcPDK1NGuCqWNU_g-1; Tue, 12 Mar 2024 20:48:48 -0400
+X-MC-Unique: Tx39TiVcPDK1NGuCqWNU_g-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by p1lg14879.it.hpe.com (Postfix) with ESMTPS id DCBF113046;
-	Tue, 12 Mar 2024 22:02:20 +0000 (UTC)
-Received: from swahl-home.5wahls.com (unknown [16.231.227.36])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTPS id 9AF0980ACA7;
-	Tue, 12 Mar 2024 22:02:08 +0000 (UTC)
-Date: Tue, 12 Mar 2024 17:02:06 -0500
-From: Steve Wahl <steve.wahl@hpe.com>
-To: Pavin Joseph <me@pavinjoseph.com>, Simon Horman <horms@verge.net.au>,
-        kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>
-Cc: Steve Wahl <steve.wahl@hpe.com>, Eric Hagberg <ehagberg@gmail.com>,
-        dave.hansen@linux.intel.com, regressions@lists.linux.dev,
-        stable@vger.kernel.org
-Subject: Re: [REGRESSION] kexec does firmware reboot in kernel v6.7.6
-Message-ID: <ZfDQ3j6lOf9xgC04@swahl-home.5wahls.com>
-References: <CAJbxNHe3EJ88ABB1aZ8bYZq=a36F0TFST1Fqu4fkugvyU_fjhw@mail.gmail.com>
- <ZensTNC72DJeaYMo@swahl-home.5wahls.com>
- <CAJbxNHfPHpbzRwfuFw6j7SxR1OsgBH2VJFPnchBHTtRueJna4A@mail.gmail.com>
- <ZfBxIykq3LwPq34M@swahl-home.5wahls.com>
- <42e3e931-2883-4faf-8a15-2d7660120381@pavinjoseph.com>
-Content-Disposition: inline
-In-Reply-To: <42e3e931-2883-4faf-8a15-2d7660120381@pavinjoseph.com>
-X-Proofpoint-GUID: Swfg6-ue_4c6zP5JebHYUhn-0M5yfpKJ
-X-Proofpoint-ORIG-GUID: Swfg6-ue_4c6zP5JebHYUhn-0M5yfpKJ
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CAF58800262;
+	Wed, 13 Mar 2024 00:48:47 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.13])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 24F7510E47;
+	Wed, 13 Mar 2024 00:48:46 +0000 (UTC)
+Date: Wed, 13 Mar 2024 08:48:44 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Jiri Slaby <jirislaby@kernel.org>
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	linux-parisc@vger.kernel.org, akpm@linux-foundation.org,
+	joe@perches.com, nathan@kernel.org, conor@kernel.org
+Subject: Re: kexec verbose dumps with 6.8 [was: [PATCH v4 1/7] kexec_file:
+ add kexec_file flag to control debug printing]
+Message-ID: <ZfD37AlznCXJ6P54@MiWiFi-R3L-srv>
+References: <20231213055747.61826-1-bhe@redhat.com>
+ <20231213055747.61826-2-bhe@redhat.com>
+ <4c775fca-5def-4a2d-8437-7130b02722a2@kernel.org>
 MIME-Version: 1.0
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-12_13,2024-03-12_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- suspectscore=0 clxscore=1011 phishscore=0 mlxlogscore=999 spamscore=0
- bulkscore=0 lowpriorityscore=0 malwarescore=0 priorityscore=1501
- mlxscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2403120168
+Content-Disposition: inline
+In-Reply-To: <4c775fca-5def-4a2d-8437-7130b02722a2@kernel.org>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240312_150233_837899_D2FD08A5 
-X-CRM114-Status: GOOD (  27.70  )
+X-CRM114-CacheID: sfid-20240312_174854_269436_AC9DD37B 
+X-CRM114-Status: GOOD (  20.91  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,60 +87,97 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-[*really* added kexec maintainers this time.]
+Hi Jiri,
 
-Full thread starts here:
-https://lore.kernel.org/all/3a1b9909-45ac-4f97-ad68-d16ef1ce99db@pavinjoseph.com/
-
-On Wed, Mar 13, 2024 at 12:12:31AM +0530, Pavin Joseph wrote:
-> On 3/12/24 20:43, Steve Wahl wrote:
-> > But I don't want to introduce a new command line parameter if the
-> > actual problem can be understood and fixed.  The question is how much
-> > time do I have to persue a direct fix before some other action needs
-> > to be taken?
+On 03/12/24 at 10:58am, Jiri Slaby wrote:
+> On 13. 12. 23, 6:57, Baoquan He wrote:
+ ... snip...
+> > --- a/include/linux/kexec.h
+> > +++ b/include/linux/kexec.h
+> ...
+> > @@ -500,6 +500,13 @@ static inline int crash_hotplug_memory_support(void) { return 0; }
+> >   static inline unsigned int crash_get_elfcorehdr_size(void) { return 0; }
+> >   #endif
+> > +extern bool kexec_file_dbg_print;
+> > +
+> > +#define kexec_dprintk(fmt, ...)					\
+> > +	printk("%s" fmt,					\
+> > +	       kexec_file_dbg_print ? KERN_INFO : KERN_DEBUG,	\
+> > +	       ##__VA_ARGS__)
 > 
-> Perhaps the kexec maintainers [0] can be made aware of this and you could
-> coordinate with them on a potential fix?
+> This means you dump it _always_. Only with different levels.
+
+It dumped always too with pr_debug() before, I just add a switch to
+control it's pr_info() or pr_debug().
+
 > 
-> Currently maintained by
-> P:      Simon Horman
-> M:      horms@verge.net.au
-> L:      kexec@lists.infradead.org
+> And without any prefix whatsoever, so people see bloat like this in their
+> log now:
+> [  +0.000001] 0000000000001000-000000000009ffff (1)
+> [  +0.000002] 000000007f96d000-000000007f97efff (3)
+> [  +0.000002] 0000000000800000-0000000000807fff (4)
+> [  +0.000001] 000000000080b000-000000000080bfff (4)
+> [  +0.000002] 0000000000810000-00000000008fffff (4)
+> [  +0.000001] 000000007f97f000-000000007f9fefff (4)
+> [  +0.000001] 000000007ff00000-000000007fffffff (4)
+> [  +0.000002] 0000000000000000-0000000000000fff (2)
 
-Probably a good idea to add kexec people to the list, so I've added
-them to this email.
+On which arch are you seeing this? There should be one line above these
+range printing to tell what they are, like:
 
-Everyone, my recent patch to the kernel that changed identity mapping:
+E820 memmap:
+0000000000000000-000000000009a3ff (1)
+000000000009a400-000000000009ffff (2)
+00000000000e0000-00000000000fffff (2)
+0000000000100000-000000006ff83fff (1)
+000000006ff84000-000000007ac50fff (2)
 
-7143c5f4cf2073193 x86/mm/ident_map: Use gbpages only where full GB page should be mapped.
+> 
+> without actually knowing what that is.
+> 
+> There should be nothing logged if that is not asked for and especially if
+> kexec load went fine, right?
 
-... has broken kexec on a few machines.  The symptom is they do a full
-BIOS reboot instead of a kexec of the new kernel.  Seems to be limited
-to AMD processors, but it's not all AMD processors, probably just some
-characteristic that they happen to share.
+Right. Before this patch, those pr_debug() were already there. You need
+enable them to print out like add '#define DEBUG' in *.c file, or enable
+the dynamic debugging of the file or function. With this patch applied,
+you only need specify '-d' when you execute kexec command with
+kexec_file load interface, like:
 
-The same machines that are broken by my patch, are also broken in
-previous kernels if you add "nogbpages" to the kernel command line
-(which makes the identity map bigger, "nogbpages" doing for all parts
-of the identity map what my patch does only for some parts of it).
+kexec -s -l -d /boot/vmlinuz-xxxx.img --initrd xxx.img --reuse-cmdline
 
-I'm still hoping to find a machine I can reproduce this on to try and
-debug it myself.
+For kexec_file load, it is not logging if not specifying '-d', unless
+you take way to make pr_debug() work in that file.
 
-If any of you have any assistance or advice to offer, it would be most
-welcome!
+> 
+> Can this be redesigned, please?
 
-> I hope the root cause can be fixed instead of patching it over with a flag
-> to suppress the problem, but I don't know how regressions are handled here.
+Sure, after making clear what's going on with this, I will try.
 
-That would be my preference as well.
+> 
+> Actually what was wrong on the pr_debug()s? Can you simply turn them on from
+> the kernel when -d is passed to kexec instead of all this?
 
-Thanks,
+Joe suggested this during v1 reviewing:
+https://lore.kernel.org/all/1e7863ec4e4ab10b84fd0e64f30f8464d2e484a3.camel@perches.com/T/#u
 
---> Steve Wahl
+> 
+> ...
+> > --- a/kernel/kexec_core.c
+> > +++ b/kernel/kexec_core.c
+> > @@ -52,6 +52,8 @@ atomic_t __kexec_lock = ATOMIC_INIT(0);
+> >   /* Flag to indicate we are going to kexec a new kernel */
+> >   bool kexec_in_progress = false;
+> > +bool kexec_file_dbg_print;
+> 
+> Ugh, and a global flag for this?
 
--- 
-Steve Wahl, Hewlett Packard Enterprise
+Yeah, kexec_file_dbg_print records if '-d' is specified when 'kexec'
+command executed. Anything wrong with the global flag?
+
+Thanks
+Baoquan
+
 
 _______________________________________________
 kexec mailing list
