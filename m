@@ -4,110 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DDAD5C5475B
-	for <kexec@archiver.kernel.org>; Thu, 14 Mar 2024 11:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DD877C54E60
+	for <kexec@archiver.kernel.org>; Thu, 14 Mar 2024 13:03:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=aaY4ZPiJ+2lDarBAfk2ZABejKNA/ME71GTbblCiIZTg=; b=L1q7W+dagTCCvy
-	aezvDipJC2t8jsPqu0kS9q6hUR8GwXrr7HP5jA2lJpB7RbHT++w5lfpSDWGudOXd75VdF+xrxn8jG
-	xA5I1Lz/ryoYS9DVuZ8n/74kgLQvBbcr7BRDUluH/VmhQPSviHbXeW6TMIM0fDJdnNudVjnnW9i8u
-	dhBsseNxPXAoUHibmkRglQDKl5EKWZGJ2qV1zQsjNVhHLAxmLeCc989rsL5e7CKQkzPhEMsC6aDHR
-	cPUqllZAfDwkA2ptAg6M8Ac+8JNKEzBXrKahcbE82q0IerIXmN/G/nEL0nV1q/a4PKtcrhum/KtOl
-	u+cA+cH+qUwcTj852BZQ==;
+	List-Owner; bh=1mJkQguAXb1LBi2FMu07vn+DFHhC6HSHUnf5b36YmSc=; b=OhjXXiAQTf1i40
+	eA+/Pe6/88PcvwDgo+GC4ZxKCcWqUIX5MD0y5sy2QISzCfdTDnoKwlK55VxE3rsJlySbvdqFeA46W
+	GF84PFJg9EWLcZQM7Kx61LjGFnioiXw+t98ZrGRGXfIwky10CTU9bRMoZiLOxfgBH/h3gF8n6bLLW
+	BE5FJcLmHN44k8vWWn5hYvSKcTQpNgtulMUk2ynxjWD1NcW+A8vKlkCJM7J90G3J0ciBwGrRgA/wv
+	qOk7p6/YRti+5vtofKRlztw3ZmLjk9dXn7J90vxBwJmrx39aZNGctpFn0PFg+wq6jBeboCX747nQX
+	QyZp0VSZJLprR6PsjTxg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rkjf6-0000000E8g8-2iEm;
-	Thu, 14 Mar 2024 11:54:16 +0000
-Received: from mail-ed1-f46.google.com ([209.85.208.46])
+	id 1rkkjh-0000000ELKD-2k1M;
+	Thu, 14 Mar 2024 13:03:05 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rkjf3-0000000E8eN-3wbk
+	id 1rkkje-0000000ELIl-2tOa
 	for kexec@lists.infradead.org;
-	Thu, 14 Mar 2024 11:54:15 +0000
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5689ebef670so791335a12.1
-        for <kexec@lists.infradead.org>; Thu, 14 Mar 2024 04:54:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710417247; x=1711022047;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XY9AnvArjYT7RETUszjV+RTASINeKdsvUgO5fnPO4HU=;
-        b=vlPmDJSvLvyUJcHKPCmcU0/WtZrUsx7KSuP5zIEPU0z0LGk1LOxLbTxpwdiVZwe8FK
-         UqHVJnSHRgoanQM8/yGFa7+CW7eoM71+lV48r62HCZopkOlM55caEFFJ80CbyUu9HkCW
-         W/FJowLBDQPPH+EcDScJflLdO33Uz4U5F0U78xUlGnig8yAwOtC1sfoUTIf9ZAL2d8b0
-         SYoh85qAAyh/hGrxcP/3ORvfrv4W/+AQv0ueOmIA6x/P7odLWnlpiVlLlIKTrENym4u3
-         C4p8j7kWaL94GRSLSlZa8bWGWVGBAVy2OBt9WpsuGNpFrPhmJ4Q5/FJckBwCpCOMsgpf
-         Q4jQ==
-X-Gm-Message-State: AOJu0YwVEl2xr4GDYBp4wDBFYAHDSGbhcWgMoiUFQMAQAnJjJa+gTFhC
-	O7hr6fB2YbnMg75M4zYW0i32vKYuBGeRBVTUMPB0i4UKiF461AEU
-X-Google-Smtp-Source: AGHT+IEuolq7Y0oiADgiN48/UycSxA8WBrcMiYWoBqWagrXvG4keU/JnB4Puxyckmi7on5ktuSMV0w==
-X-Received: by 2002:a05:6402:b34:b0:568:32cc:f808 with SMTP id bo20-20020a0564020b3400b0056832ccf808mr294291edb.15.1710417246653;
-        Thu, 14 Mar 2024 04:54:06 -0700 (PDT)
-Received: from ?IPV6:2a0b:e7c0:0:107::aaaa:69? ([2a0b:e7c0:0:107::aaaa:69])
-        by smtp.gmail.com with ESMTPSA id t26-20020a056402241a00b005689f73704csm599051eda.38.2024.03.14.04.54.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Mar 2024 04:54:05 -0700 (PDT)
-Message-ID: <5d10552a-1c73-4f35-84be-ce6c1dcd800b@kernel.org>
-Date: Thu, 14 Mar 2024 12:54:05 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+	Thu, 14 Mar 2024 13:03:04 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710421381;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NPly0vMKCUXLoKRkQ6t3RWJ8bsdSfgA8CK9VGL1bM5U=;
+	b=jCqbsGLs/aqOwbdHywnoWnmfVSUHhQY4hvnYlChEFxdf7kHDGw3tTo6nkecDBJW6bVszEi
+	baM/PHAcsw3F13l5vHqRakLtt9vkJZG3yvrLTNDtiYe+5vx52qbADysRnl45L6KY36akU2
+	bCAOdLP5h0wmzzcb90AQhsVEpytzggE=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-46-bR1910l5MtSlwZwXc9xaHA-1; Thu,
+ 14 Mar 2024 09:02:59 -0400
+X-MC-Unique: bR1910l5MtSlwZwXc9xaHA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3539D3C0EAB7;
+	Thu, 14 Mar 2024 13:02:59 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.12])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id B6BDA1C060A4;
+	Thu, 14 Mar 2024 13:02:57 +0000 (UTC)
+Date: Thu, 14 Mar 2024 21:02:54 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Jiri Slaby <jirislaby@kernel.org>
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+	akpm@linux-foundation.org, joe@perches.com, dyoung@redhat.com
 Subject: Re: [PATCH] kexec: fix the unexpected kexec_dprintk() macro
-To: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
-Cc: kexec@lists.infradead.org, akpm@linux-foundation.org, joe@perches.com,
- dyoung@redhat.com
+Message-ID: <ZfL1fvlfcziCVBsP@MiWiFi-R3L-srv>
 References: <20240314103947.717991-1-bhe@redhat.com>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <20240314103947.717991-1-bhe@redhat.com>
+ <5d10552a-1c73-4f35-84be-ce6c1dcd800b@kernel.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <5d10552a-1c73-4f35-84be-ce6c1dcd800b@kernel.org>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240314_045414_026467_4A1A4868 
-X-CRM114-Status: GOOD (  21.73  )
+X-CRM114-CacheID: sfid-20240314_060302_829182_F84C35B1 
+X-CRM114-Status: GOOD (  21.89  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -119,74 +77,79 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 14. 03. 24, 11:39, Baoquan He wrote:
-> Jiri reported that the current kexec_dprintk() always prints out
-> debugging message whenever kexec/kdmmp loading is triggered. That is
-> not wanted. The debugging message is supposed to be printed out when
-> 'kexec -s -d' is specified for kexec/kdump loading.
+On 03/14/24 at 12:54pm, Jiri Slaby wrote:
+> On 14. 03. 24, 11:39, Baoquan He wrote:
+> > Jiri reported that the current kexec_dprintk() always prints out
+> > debugging message whenever kexec/kdmmp loading is triggered. That is
+> > not wanted. The debugging message is supposed to be printed out when
+> > 'kexec -s -d' is specified for kexec/kdump loading.
+> > 
+> > After investigating, the reason is the current kexec_dprintk() takes
+> > printk(KERN_INFO) or printk(KERN_DEBUG) depending on whether '-d' is
+> > specified. However, distros usually have defaulg log level like below:
+> > 
+> >   [~]# cat /proc/sys/kernel/printk
+> >   7	 4	1	7
+> > 
+> > So, even though '-d' is not specified, printk(KERN_DEBUG) also always
+> > prints out. I thought printk(KERN_DEBUG) is equal to pr_debug(), it's
+> > not.
+> > 
+> > Fix it by changing to use pr_info() and pr_debug() instead which are
+> > expected to work.
 > 
-> After investigating, the reason is the current kexec_dprintk() takes
-> printk(KERN_INFO) or printk(KERN_DEBUG) depending on whether '-d' is
-> specified. However, distros usually have defaulg log level like below:
+> Hi,
 > 
->   [~]# cat /proc/sys/kernel/printk
->   7	 4	1	7
+> sow, you'd need both -d, and dyndbg updates. Hence, again my question:
+> ===
+> Actually what was wrong on the pr_debug()s? Can you simply turn them on from
+> the kernel when -d is passed to kexec instead of all this?
+
+I checked code, it's because some codes are shared by both kexec_load and
+kexec_file_load, e.g below function on arm64:
+
+arch/arm64/kernel/machine_kexec.c:machine_kexec_post_load()
+
+"kexec -c -l -d" is for kexec_load debugging message printing, it's all
+done in user space kexec-tools utility. The pr_debug() have been there
+for arm64 developer's debugging if they want to. I don't want to change
+that.
+
+If 'kexec -s -l -d', pr_info() is called to print out. If 'kexec -s -l'
+w/o '-d', or 'kexec -c -l', it's still pr_debug just as before.
+
+> ===
 > 
-> So, even though '-d' is not specified, printk(KERN_DEBUG) also always
-> prints out. I thought printk(KERN_DEBUG) is equal to pr_debug(), it's
-> not.
-> 
-> Fix it by changing to use pr_info() and pr_debug() instead which are
-> expected to work.
+> And yet, it is still missing a prefix :).
 
-Hi,
-
-sow, you'd need both -d, and dyndbg updates. Hence, again my question:
-===
-Actually what was wrong on the pr_debug()s? Can you simply turn them on 
-from the kernel when -d is passed to kexec instead of all this?
-===
-
-And yet, it is still missing a prefix :).
-
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> Reported-by: Jiri Slaby <jirislaby@kernel.org>
-> Closes: https://lore.kernel.org/all/4c775fca-5def-4a2d-8437-7130b02722a2@kernel.org
-> ---
->   include/linux/kexec.h | 11 +++++++----
->   1 file changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index 400cb6c02176..09688e681bf7 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -502,10 +502,13 @@ static inline unsigned int crash_get_elfcorehdr_size(void) { return 0; }
->   
->   extern bool kexec_file_dbg_print;
->   
-> -#define kexec_dprintk(fmt, ...)					\
-> -	printk("%s" fmt,					\
-> -	       kexec_file_dbg_print ? KERN_INFO : KERN_DEBUG,	\
-> -	       ##__VA_ARGS__)
-> +#define kexec_dprintk(fmt, args...)				\
-> +	do {							\
-> +		if (kexec_file_dbg_print)			\
-> +			pr_info(fmt, ##args);			\
-> +		else						\
-> +			pr_debug(fmt, ##args);			\
-> +	} while (0)
->   
->   #else /* !CONFIG_KEXEC_CORE */
->   struct pt_regs;
-
--- 
-js
-suse labs
+It looks like this now, seems no need to add prefix.
+ 
+[  102.609784] kexec_file: kernel: 0000000081fc03e0 kernel_size: 0xccb200
+[  102.617084] PEFILE: Unsigned PE binary
+[  102.753174] ima: kexec measurement buffer for the loaded kernel at 0x71435000.
+[  102.761335] kexec-bzImage64: Loaded purgatory at 0x71430000
+[  102.767571] kexec-bzImage64: Loaded boot_param, command line and misc at 0x7142c000 bufsz=0x1320 memsz=0x2000
+[  102.778650] kexec-bzImage64: Loaded 64bit kernel at 0x6d000000 bufsz=0xcc6200 memsz=0x3c4c000
+[  102.788251] kexec-bzImage64: Loaded initrd at 0x6ac0f000 bufsz=0x23f0175 memsz=0x23f0175
+[  102.797283] kexec-bzImage64: Final command line is: root=/dev/mapper/fedora_lenovo--electron--sr850--01-root ro rd.lvm.lv=fedora_lenovo-electron-sr850-01/root console=ttyS0,115200n81
+[  102.815435] kexec-bzImage64: E820 memmap:
+[  102.819912] kexec-bzImage64: 0000000000000000-000000000003dfff (1)
+[  102.826817] kexec-bzImage64: 000000000003e000-000000000003ffff (2)
+[  103.021435] kexec-bzImage64: 00000000ff000000-00000000ffffffff (2)
+......snip
+[  103.028336] kexec-bzImage64: 0000000100000000-000000403fffffff (1)
+[  103.269194] kexec_file: nr_segments = 5
+[  103.273484] kexec_file: segment[0]: buf=0x00000000898981dd bufsz=0x59e mem=0x71435000 memsz=0x1000
+[  103.283616] kexec_file: segment[1]: buf=0x000000003d8dd363 bufsz=0x4000 mem=0x71430000 memsz=0x5000
+[  103.293748] kexec_file: segment[2]: buf=0x00000000ba27c5ef bufsz=0x1320 mem=0x7142c000 memsz=0x2000
+[  103.303865] kexec_file: segment[3]: buf=0x0000000026acdcf4 bufsz=0xcc6200 mem=0x6d000000 memsz=0x3c4c000
+[  103.333455] kexec_file: segment[4]: buf=0x000000001a7dac7f bufsz=0x23f0175 mem=0x6ac0f000 memsz=0x23f1000
+[  103.356698] kexec_file: kexec_file_load: type:0, start:0x714301a0 head:0x1222da002 flags:0x8
 
 
 _______________________________________________
