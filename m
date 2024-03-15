@@ -4,83 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 34A8CC6FD1F
-	for <kexec@archiver.kernel.org>; Tue, 26 Mar 2024 17:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 585B6C54E67
+	for <kexec@archiver.kernel.org>; Wed, 27 Mar 2024 18:01:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
-	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References:Message-Id
+	:MIME-Version:Subject:Date:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=vIrNmOgMHs7zS08XOX/So6VxizH8TjxiUHMA7plirbQ=; b=mO/u5ghXXBamGJ
-	+/8kxBcNR0rgrOZEcAVA+i0C+FqEAihqD9kcaHhMoe36O8bCavJAOGOxn0dP3J26PCEUQrbjPBlOb
-	iFptJ4rafkYdZP7I0qrTd4uDfSxlkyXj487nOS9c0V98Ka1zuAJprrIrqPFdwaqGEIgkA5Kha7Jq+
-	LH+JtUbLhLg/tD2CJ1ovNCdwvxl67eJtnxv0oJeBmv39g6RVqVMz4kMUAbdHI4uTPpQaVi6N9OcHv
-	xccyj/6j5xCQRjjiYXj0+rxGo8n5/uVvTscEydVW0TjvBecx4IFttgGw302gLnIZ4m10a4TBeG6Mo
-	AEogwTtneWMsTFKmM/fw==;
+	List-Owner; bh=w3rM7duSukOD107jKUcRxh3hPUiINaHKh/TAPhI6OKY=; b=YZxcwxAqQHrI5n
+	4hPiDPlVeEvVGRqIAufo9+jl+6v6CdLfvQtAq5pk9RzzOwyXYOXqRx7HPgJkYUXap0iWtDq4pRPdo
+	DStMGNmx+LNON/CVjv0W6TvBV0HbxFT8ULtXRZDymmp67FUQa5qjEYswJNzCHqbWzQTOvLxdzhWTC
+	Pe1gO1zGicetFrRkMmnBZcXisImIfNyFtcJ0C0LsqpyMw9CLkhfP8OVV1VU8n73GYe36QoWAvTpq+
+	kv/dcstj36LnHPxBExVVBP7VZi/dDUT29pN3y/Ul5DN43WZvHtjQLKVwEx0obUhpk2ZsKZ/yZukIr
+	DqRpRW84fgpznuqdtKCQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rpAzi-00000005p7S-46SZ;
-	Tue, 26 Mar 2024 17:53:54 +0000
-Received: from mgamail.intel.com ([198.175.65.17])
+	id 1rpXb0-0000000ARZk-1Mo4;
+	Wed, 27 Mar 2024 18:01:54 +0000
+Received: from todd.t-8ch.de ([2a01:4f8:c010:41de::1])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rpAzb-00000005p5i-0Woi
-	for kexec@lists.infradead.org;
-	Tue, 26 Mar 2024 17:53:48 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711475627; x=1743011627;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=wU0JE4kouoaua5oyHsX4nd5C2asEXFa3mxPJlgLUrxk=;
-  b=BirKAMP8+SgZ0Uj1MA/Ng0oiHDd/5TJOQTi/Qw/7bJmIux8bonXSmnBb
-   +LzzwelS4qBjN12H3kAMldimwjDSTPjqZeC6aDJyz3qagkcWXmRSDt31X
-   UHYzeOh4vaPuh2Mky9E6fyS8UYjAOM2CpIyT1G7HWC1BlKw8W/cHpE1Xl
-   lUFwZe607EnI1UCiQ0ZFP31ZDi3FjNam4pMAIpccGPXrLlkWHrm83aFFI
-   C258j3n9PW2VrZ/MZ949LDZ5I6D6MQ7JTAUUkJHuaEwQQylQUayO9isHm
-   fnSasi496XlVhiI3rHjzLhvf+74fcbw0dS8Fw4rl2P2CFSd0wxoTzq7KG
-   Q==;
-X-CSE-ConnectionGUID: GPqt5xwERcihzHm7BYlR/w==
-X-CSE-MsgGUID: yIrziHtQSdqj2fJ5ou6QKA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="6651554"
-X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="6651554"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 10:53:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="53500100"
-Received: from pwimalas-mobl.amr.corp.intel.com (HELO [10.251.11.118]) ([10.251.11.118])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 10:53:41 -0700
-Message-ID: <0582b182-3293-43d5-a4be-5e0c6e97f7ff@linux.intel.com>
-Date: Tue, 26 Mar 2024 10:53:39 -0700
+	id 1rlETf-00000001X9o-1OUi;
+	Fri, 15 Mar 2024 20:48:41 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1710535698;
+	bh=oevlPOUTno1lzAS8VyWx7MVuhqnxcH7itmP3/5hwz20=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=OzlCngVZzs14BEfB2dc5J4o4ZKkSQQkWcdhqOSjhZhgkw/Ll2JQ6iAP5cU1U+kVsa
+	 SrPCNtTtm8SHoDqPXiHa4YsznSa7vqTifHCUJbDAIQNi550jyZtghvHYAeHSFkf+H5
+	 CmLMXq4gfmBvTUDddBCzzP8cINqR1mq64EVXhq9A=
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Fri, 15 Mar 2024 21:48:03 +0100
+Subject: [PATCH 05/11] neighbour: constify ctl_table arguments of utility
+ function
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv9 17/17] ACPI: tables: Print MULTIPROC_WAKEUP when MADT is
- parsed
-Content-Language: en-US
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Elena Reshetova <elena.reshetova@intel.com>,
- Jun Nakajima <jun.nakajima@intel.com>,
- Rick Edgecombe <rick.p.edgecombe@intel.com>,
- Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish"
- <ashish.kalra@amd.com>, Sean Christopherson <seanjc@google.com>,
- "Huang, Kai" <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>,
- kexec@lists.infradead.org, linux-coco@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20240325103911.2651793-1-kirill.shutemov@linux.intel.com>
- <20240325103911.2651793-18-kirill.shutemov@linux.intel.com>
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20240325103911.2651793-18-kirill.shutemov@linux.intel.com>
+Message-Id: <20240315-sysctl-const-handler-v1-5-1322ac7cb03d@weissschuh.net>
+References: <20240315-sysctl-const-handler-v1-0-1322ac7cb03d@weissschuh.net>
+In-Reply-To: <20240315-sysctl-const-handler-v1-0-1322ac7cb03d@weissschuh.net>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kees Cook <keescook@chromium.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, Muchun Song <muchun.song@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, David Ahern <dsahern@kernel.org>, Simon Horman <horms@verge.net.au>, Julian Anastasov <ja@ssi.bg>, Pablo Neira Ayuso <pablo@netfilter.org>, Jozsef Kadlecsik <kadlec@netfilter.org>, Florian Westphal <fw@strlen.de>, Luis Chamberlain <mcgrof@kernel.org>, Joel Granados <j.granados@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Phillip Potter <phil@philpotter.co.uk>, Theodore Ts'o <tytso@mit.edu>, "Jason A. Donenfeld" <Jason@zx2c4.com>, Sudip Mukherjee <sudipm.mukherjee@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Atish Patra <atishp@atishpatra.org>, Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Eric Biederman <ebiederm@xmission.com>, Chandan Babu R <chandan.babu@oracle.com>, "Darrick J. Wong" <djwong@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Balbir Singh <bsingharora@gmail.com>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, Petr Mladek <pmladek@suse.com>, John Ogness <john.ogness@linutronix.de>, Sergey Senozhatsky <senozhatsky@chromium.org>, Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Daniel Bristot de Oliveira <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>, Andy Lutomirski <luto@amacapital.net>, Will Drewry <wad@chromium.org>, John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, Roopa Prabhu <roopa@nvidia.com>, Nikolay Aleksandrov <razor@blackwall.org>, Remi Denis-Courmont <courmisch@gmail.com>, Allison Henderson <allison.henderson@oracle.com>, Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, Xin Long <lucien.xin@gmail.com>, Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Trond Myklebust <trond.myklebust@hammerspace.com>, Anna Schumaker <anna@kernel.org>, John Johansen <john.johansen@canonical.com>, Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Alexander Popov <alex.popov@linux.com>
+Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ bpf@vger.kernel.org, linux-mm@kvack.org, netdev@vger.kernel.org, 
+ lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org, 
+ coreteam@netfilter.org, linux-fsdevel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, 
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+ linux-xfs@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, kexec@lists.infradead.org, 
+ bridge@lists.linux.dev, linux-rdma@vger.kernel.org, 
+ rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org, 
+ linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com, 
+ linux-security-module@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1710535695; l=808;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=oevlPOUTno1lzAS8VyWx7MVuhqnxcH7itmP3/5hwz20=;
+ b=nal6nqzlOqju6KoSlkSXv2irkXSIQB1hPxMMvRw5/3x5Pl0PJC8iZv6mLbrbrwrTwJiwMMOTx
+ vrmE29LSkJlAudC9x/ESIVrRSshIpjIXJbLqbScnLDsQB6DzgzZYtRY
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240326_105347_254494_6F82BB5B 
-X-CRM114-Status: GOOD (  14.55  )
+X-CRM114-CacheID: sfid-20240315_134831_779407_A2966E00 
+X-CRM114-Status: GOOD (  14.00  )
+X-Mailman-Approved-At: Wed, 27 Mar 2024 11:01:50 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -92,62 +78,25 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-
-On 3/25/24 3:39 AM, Kirill A. Shutemov wrote:
-> When MADT is parsed, print MULTIPROC_WAKEUP information:
->
-> ACPI: MP Wakeup (version[1], mailbox[0x7fffd000], reset[0x7fffe068])
->
-> This debug information will be very helpful during bring up.
->
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Reviewed-by: Baoquan He <bhe@redhat.com>
-> ---
-
-Looks good to me.
-
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-
->  drivers/acpi/tables.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->
-> diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
-> index b976e5fc3fbc..9e1b01c35070 100644
-> --- a/drivers/acpi/tables.c
-> +++ b/drivers/acpi/tables.c
-> @@ -198,6 +198,20 @@ void acpi_table_print_madt_entry(struct acpi_subtable_header *header)
->  		}
->  		break;
->  
-> +	case ACPI_MADT_TYPE_MULTIPROC_WAKEUP:
-> +		{
-> +			struct acpi_madt_multiproc_wakeup *p =
-> +				(struct acpi_madt_multiproc_wakeup *)header;
-> +			u64 reset_vector = 0;
-> +
-> +			if (p->version >= ACPI_MADT_MP_WAKEUP_VERSION_V1)
-> +				reset_vector = p->reset_vector;
-> +
-> +			pr_debug("MP Wakeup (version[%d], mailbox[%#llx], reset[%#llx])\n",
-> +				 p->version, p->mailbox_address, reset_vector);
-> +		}
-> +		break;
-> +
->  	case ACPI_MADT_TYPE_CORE_PIC:
->  		{
->  			struct acpi_madt_core_pic *p = (struct acpi_madt_core_pic *)header;
-
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SW4gYSBmdXR1cmUgY29tbWl0IHRoZSBwcm9jX2hhbmRsZXJzIHRoZW1zZWx2ZXMgd2lsbCBjaGFu
+Z2UgdG8KImNvbnN0IHN0cnVjdCBjdGxfdGFibGUiLiBBcyBhIHByZXBhcmF0aW9uIGZvciB0aGF0
+IGFkYXB0IHRoZSBpbnRlcm5hbApoZWxwZXIuCgpTaWduZWQtb2ZmLWJ5OiBUaG9tYXMgV2Vpw59z
+Y2h1aCA8bGludXhAd2Vpc3NzY2h1aC5uZXQ+Ci0tLQogbmV0L2NvcmUvbmVpZ2hib3VyLmMgfCAy
+ICstCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkKCmRpZmYg
+LS1naXQgYS9uZXQvY29yZS9uZWlnaGJvdXIuYyBiL25ldC9jb3JlL25laWdoYm91ci5jCmluZGV4
+IDU1MjcxOWMzYmJjMy4uMWZiNzExMDdhY2NmIDEwMDY0NAotLS0gYS9uZXQvY29yZS9uZWlnaGJv
+dXIuYworKysgYi9uZXQvY29yZS9uZWlnaGJvdXIuYwpAQCAtMzU3Myw3ICszNTczLDcgQEAgc3Rh
+dGljIHZvaWQgbmVpZ2hfY29weV9kZmx0X3Bhcm1zKHN0cnVjdCBuZXQgKm5ldCwgc3RydWN0IG5l
+aWdoX3Bhcm1zICpwLAogCXJjdV9yZWFkX3VubG9jaygpOwogfQogCi1zdGF0aWMgdm9pZCBuZWln
+aF9wcm9jX3VwZGF0ZShzdHJ1Y3QgY3RsX3RhYmxlICpjdGwsIGludCB3cml0ZSkKK3N0YXRpYyB2
+b2lkIG5laWdoX3Byb2NfdXBkYXRlKGNvbnN0IHN0cnVjdCBjdGxfdGFibGUgKmN0bCwgaW50IHdy
+aXRlKQogewogCXN0cnVjdCBuZXRfZGV2aWNlICpkZXYgPSBjdGwtPmV4dHJhMTsKIAlzdHJ1Y3Qg
+bmVpZ2hfcGFybXMgKnAgPSBjdGwtPmV4dHJhMjsKCi0tIAoyLjQ0LjAKCgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4
+ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2tleGVjCg==
