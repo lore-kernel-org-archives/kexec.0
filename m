@@ -4,71 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3E950C54E58
-	for <kexec@archiver.kernel.org>; Fri, 15 Mar 2024 08:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5F922C54E60
+	for <kexec@archiver.kernel.org>; Sun, 17 Mar 2024 01:56:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=Z8PfCS/dU4aiVacARhVI3+cA9o83hs933ZS5QRDDS/4=; b=Blxr8S6LjAZdHb
-	b4WOlx7lfgXvSuFODH9UcfVd7NJNlCT16KWFWnEXQxM4OyktMInI3L3ie2mQJeZQIr4QdSYohuhKa
-	q0bLt/3hgD3Ax50YdweIjAfOeqnPvLp2qDejO/haFtoWoCm7yc8gLq3d3g5gMM8YRJe0RbQSodV5q
-	MEE5PaxoeKYuwfalqZ80Mg63XdYDBmy6+gRHPGSg1lZnsW1VwetjxrFdb8nxMji2Ryuui/XFwU413
-	Xw/zgU1x8x/qp4zVGZ9RrKhV4L/76z5xrset7TI4OpPcnNw7+pWGEGaDur+VETkEOcbbiXUXojSUm
-	/fb+w/UNjVW1K5xZtwQA==;
+	Content-Transfer-Encoding:Content-Type:Reply-To:List-Subscribe:List-Help:
+	List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:
+	Subject:To:From:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=Eak3ksxdtsdDYgsTib97HjxA2rKrE67vROaqI1C8IKw=; b=TjlcmNNml5HMoV
+	47OBJ7+V44pKbHUL0HeSrl71torlEWccNW08zeKDSdEw7HMcrU5J5LEAcfObaiQlPYbnXrQ0xuHlL
+	+VS9cz3BDrtKuZj9Y3oXSnLfUWBkLSXJCNl7PjYGSwMrghYpNEWoLpn5daECDbtiDSGLLMcr33SVI
+	D0Hc3JugzYf+X5uByiCxIPwJMaz/79RHjLG7wAlEUDq2SpjeeSCL0wf8neSXOcuUA//cmU8WemZe7
+	3LUHx1pRiV2nJ+P6UJl8E6PRTjN3FufcNtGkRuHBQBcZxycIQlZFMYZrT65c/s0SR7pML0T5EN7gt
+	wzCHHnfM+2HE69sKFPdg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rl3CZ-0000000HDUj-1PdV;
-	Fri, 15 Mar 2024 08:46:07 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1rlflS-00000004EUM-2R6o;
+	Sun, 17 Mar 2024 01:56:42 +0000
+Received: from mx.ukraine.kyiv.exporterswheat.shop ([209.141.59.81])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rl3CV-0000000HDUF-2gG6
+	id 1rlflO-00000004ETv-1UGx
 	for kexec@lists.infradead.org;
-	Fri, 15 Mar 2024 08:46:05 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710492361;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TpSpPLJARIEcIzi8mXnWA3J+rWEcca5w1++qUpIKz1E=;
-	b=WvYrRMa5w1KW5AWWSl8fNUvDPhcnb/ODaGtHzszafcANFrVsvzvmrQ7Hh+POolsGsoMxRZ
-	Pre+biU7QekZdFJsEHPyXFwFCsb/xiJIDsar0LSnGwRlkRPyykQfpl2NZ9w7I1FgL09jEN
-	c/tu0z2FyFqmP0XeHcShCkdgpjT1zGc=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-443-tQQwnvyFMci6E88p4WoZBg-1; Fri,
- 15 Mar 2024 04:45:58 -0400
-X-MC-Unique: tQQwnvyFMci6E88p4WoZBg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	Sun, 17 Mar 2024 01:56:39 +0000
+Received: from ukraine.kyiv.exporterswheat.shop (mx.billing.bakhmut-independently.shop [209.141.32.129])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 015C11C01EB3;
-	Fri, 15 Mar 2024 08:45:58 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.12])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 586A710E4B;
-	Fri, 15 Mar 2024 08:45:57 +0000 (UTC)
-Date: Fri, 15 Mar 2024 16:45:54 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Simon Horman <horms@kernel.org>
-Cc: kexec@lists.infradead.org
-Subject: Re: [PATCH] kexec_file: add kexec_file flag to support debug printing
-Message-ID: <ZfQKwuoVEMtAw67i@MiWiFi-R3L-srv>
-References: <20231114152030.240945-1-bhe@redhat.com>
- <20231127133218.GA3354982@kernel.org>
- <ZfQCxkuFX+Cb7fhQ@MiWiFi-R3L-srv>
- <20240315083914.GA101331@kernel.org>
+	by mx.ukraine.kyiv.exporterswheat.shop (Postfix) with ESMTPSA id E753187B2
+	for <kexec@lists.infradead.org>; Sun, 17 Mar 2024 01:50:15 +0000 (UTC)
+From: "Evan.P" <evan.p000873621@ukraine.kyiv.exporterswheat.shop>
+To: kexec@lists.infradead.org
+Subject: Re: Dear Respectable,Re:I wait for your response!!!!
+Date: 16 Mar 2024 18:49:44 -0700
+Message-ID: <20240316184943.22C82049EFB36B3D@ukraine.kyiv.exporterswheat.shop>
 MIME-Version: 1.0
-In-Reply-To: <20240315083914.GA101331@kernel.org>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Disposition: inline
+X-Bad-Reply: 'Re:' in Subject but no References or In-Reply-To headers
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240315_014603_771881_A33C7943 
-X-CRM114-Status: GOOD (  18.50  )
+X-CRM114-CacheID: sfid-20240316_185638_570065_09DAB4A1 
+X-CRM114-Status: UNSURE (   0.55  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -80,34 +54,34 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: evan.p000873621@ukraine.kyiv-farmer.bakhmutmeat.shop
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 03/15/24 at 09:39am, Simon Horman wrote:
-> On Fri, Mar 15, 2024 at 04:11:50PM +0800, Baoquan He wrote:
-> > On 11/27/23 at 01:32pm, Simon Horman wrote:
-> > > On Tue, Nov 14, 2023 at 11:20:30PM +0800, Baoquan He wrote:
-> > > > This add KEXEC_FILE_DEBUG to kexec_file_flags so that it can be passed
-> > > > to kernel when '-d' is added with kexec_file_load interface. With that
-> > > > flag enabled, kernel can enable the debugging message printing.
-> > > > 
-> > > > Signed-off-by: Baoquan He <bhe@redhat.com>
-> > > 
-> > > Thanks,
-> > > 
-> > > this looks fine to me.
-> > > But perhaps the corresponding Kernel patch should land first?
-> > > Let me know what you think.
-> > 
-> > Ping, the relevant kernel patches landed in mainline kernel, please help
-> > merge this patch.
-> 
-> Thanks, applied.
+Good day,My name is Evan from Ukraine. I have tried to reach you 
+but find it difficult due to internet scarcity here in this town. 
+I am contacting you because I want to come over to you country, I 
+have some funds I plan to invest in your country because I want 
+to relocate my Late Father business due to ongoing war in my 
+country Ukraine and visit your country to set up new investment 
+business you may advice profitable in your area.
 
-Great, thanks a lot.
+I also have some millions of euros i want to invest and 995kg of 
+24carat gold I want to ship to your country and establish gold 
+jewelry manufacturing company. Tell me what it will cost to 
+establish the jewelry manufacturing company, I will offer you 
+good monetary rewards for your guide and cooperation, due to how 
+Russian drone bombards my town frequently, phone network is 
+disrupted because of attacks on network installations, please for 
+fast discussion, you can provide me your WhatsApp/mobile.
++380-974-567-524
+Thanking you as i wait to hear from you soon so we can discuss. 
+Thanks for your care.
 
+Regards,
+Evan.P
 
 _______________________________________________
 kexec mailing list
