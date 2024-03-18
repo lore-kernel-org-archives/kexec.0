@@ -4,102 +4,110 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BFDC5C54E58
-	for <kexec@archiver.kernel.org>; Mon, 18 Mar 2024 06:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D2AA5C54E5D
+	for <kexec@archiver.kernel.org>; Mon, 18 Mar 2024 07:02:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:References:Cc:To:From:
-	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=mcqU6ellfMk75svm1+nQIArCSYo9pfJy58Mpeuum72g=; b=CPrHlOUXJzUKeA96Zm4hMRcjjD
-	1TLhQUeHYxM3Em1x71V0X8rvuo9vLDU8/uhMI1DjoQBX14be2uuNH5qwPeO3/9F0yp9e8dtfAaBLc
-	nUogVhW6yhbfq0NhxKxeOHF+qVhHluSEAIyWGkkVgl+hITpjaqidftBF3eYG85nUbWxLJAacXG6GW
-	vFdWTo0Xl6CDkIyKjXXIz0+XiuSth0a+EfGdTN+dbDtrjeLHzShDaCL1MDqkr5TEOdWIbgiFoIFKe
-	7+vOYTjk6XjDQLmTehac1NeC/PD3TKu9QgNSN5H8Runk6MYBhPjKUJKZvedjg/ni4UP0NCctV6BoS
-	q0E/Jmgw==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=ri+CDXhlR+HvMzRjjken8Wute5RjYNlxDABw/LHy5fo=; b=ImI7ULQokhy2wp
+	3W6fsd4shr77sOGQNh7Y09p5NRwtzVc0aC9a5RpTngafh7wMJ2GRB4hnv/V8+xERcUvB4P9G2XSzx
+	ncnVkLXhnEX4GPyhOG2IxAelemUxh/EEoccRyiKWY3WEWRyYrgrCX2nWrG3GI+CRF9qytYK5O5TFf
+	8japtAorYnqLgyiFeMGE9cT0TdXtKzcvXou2h6Wuy0Ezutyt55RZmIbZMbQkQMCE+lJP0aUC8ZRyg
+	qo25WCLTm42UjAW6PcFCjLdllSQvOHzi6B/KII8yzKd8ftGj4f+l827WLtNHQRsH90tHI5sD6MEOa
+	O+cy9dOBn0srnANttQXA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rm6rZ-00000007WLq-0koY;
-	Mon, 18 Mar 2024 06:52:49 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1rm712-00000007Xfm-0KyS;
+	Mon, 18 Mar 2024 07:02:36 +0000
+Received: from mail-mw2nam10on20601.outbound.protection.outlook.com ([2a01:111:f403:2412::601] helo=NAM10-MW2-obe.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rm6rU-00000007WKm-33YB
+	id 1rm70z-00000007Xeh-1Qxl
 	for kexec@lists.infradead.org;
-	Mon, 18 Mar 2024 06:52:47 +0000
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42HHOPf5031422;
-	Mon, 18 Mar 2024 06:52:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : from : to : cc : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=g3c0T6LTqQBYqI6X/TVyNEpofD8ODNwV/F0V9+oQF8c=;
- b=qU8TM/3wiKS0qBIq12A8t6gUZZgZQCu9fNaijHQfNtLHl7QCHhJ3CAyC7RudmCfl2Ove
- mo51NGPBgYChHvzlcZ89QzbDHjRp+/e9Mv3p9V5Wztc10HojaR85+lC/HqAiqPu8WtUE
- t5PM1uRyReJ2NEZLgB+97dfTDT5yIzl+qlANcFUxCzw5oajDespouHWIOAOT/T7XTPDW
- s2f4ut1f9tfZ5obzduthdUoiYL5eSjPaVoKbICYWaJMo5QpU56OuXl7sQHVhO3te1p7E
- STITVGfqQ0u7stLm2su/jnNF2Uj+fHDwciwxD1KHhI0vBAgOKHyULEGEiLIl054cFfka /w== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ww5pngrh7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 18 Mar 2024 06:52:21 +0000
-Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42I6pWiD006696;
-	Mon, 18 Mar 2024 06:52:21 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ww5pngrgy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 18 Mar 2024 06:52:21 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42I66pNO022186;
-	Mon, 18 Mar 2024 06:52:19 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3wwprnq5vh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 18 Mar 2024 06:52:19 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42I6qFmF47514006
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 18 Mar 2024 06:52:18 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D54E02004B;
-	Mon, 18 Mar 2024 06:52:15 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 474CA20043;
-	Mon, 18 Mar 2024 06:52:14 +0000 (GMT)
-Received: from [9.203.115.195] (unknown [9.203.115.195])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 18 Mar 2024 06:52:13 +0000 (GMT)
-Message-ID: <6a1d94f7-b4bf-4315-b862-4e278abbaa73@linux.ibm.com>
-Date: Mon, 18 Mar 2024 12:22:13 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH linux-next] bpf: fix warning for crash_kexec
-From: Hari Bathini <hbathini@linux.ibm.com>
-To: bpf@vger.kernel.org
-Cc: Kexec-ml <kexec@lists.infradead.org>, Baoquan He <bhe@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20240209123520.778599-1-hbathini@linux.ibm.com>
-Content-Language: en-US
-In-Reply-To: <20240209123520.778599-1-hbathini@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: DdRDyGsOzuXYcWyKrr6fhFgjNClhB0VL
-X-Proofpoint-GUID: hyGP314cwRBepY81eig7QTqFsyOXuCbr
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	Mon, 18 Mar 2024 07:02:35 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cnHIWv4Q6MAH+jhNMJxNDfVz0AAfxPnmTutxaLJtGlVMumabvjER4mGDCayEZ378H9fmw3tgFerFgVTIkQPrUN1UV3O+GpnN+NEPs+6Ca1M/vjc0JZsMPLBpgtASacYaT/JnqZN5/jqEyUgeDv+qkG0il2y4cDoABlcNXOEkBoql3v11a7hs4kdHqBhOx+DQ0pSczt7LXgss8SF6O75P6TKabSZgu6JsIIjIGMt8BxYXLfOAVH4OF17K8OO7ZqFHhZUQWqFyWvEK+YSrChNIPrPFUuqg0+dpQsP9kyfmpSI6vKo4u1TEHtTjN7qhLyDtLq/xlVh+mUSyao9O2dbfww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=56mrR3VbKTJ2uuqcYF9oW4yFNxtRQGEaUr2Zmi/zbvs=;
+ b=DM8AlKjSQtyWKegFB8vzACgeBY0qGtS2xK6kGCQD4f6ybwFcJxhjNfyx/tlB97ARoRgyBqAGmlpR3MyuESNBLysjt2cQoEIfRKBKAxzvJb0aWC72gH6Ke9We+gZLBR31BjFYf5p3qcs5le2Sx21Og4RPGrL3L1q2Sbzw1UAoy6TsVxL1mp/NXHeS/ImeijAMND2ryU5RiLEL8azo1TrHCVGjJizkUpFOfwkL+HMapdg8UbHGBJzrP9luf/c/9mq0eh1tRcFLkL3uPh1rCNp1VRhFBo2GnewX5IGdWdZRMb6vb7T14DgWiiLqWq3ldkMvD/Nmy3tyk7KJiBDSf1pb3Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linutronix.de smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=56mrR3VbKTJ2uuqcYF9oW4yFNxtRQGEaUr2Zmi/zbvs=;
+ b=mal7lKZGwzEo0h6NM+/Eu3Mwer0ot2k/4rGLNpaaNg7K2iO7fJsb/Ni8lKgggmpTAv/BeX9Whu0zq8Hevd1b4SEj+xddt9n9uZmPtVr//vQ+PX84nD9fHu8dYm7WgWpau1/jGGywRgwGD0lsrcAG6m/3ED1Q/R1wJz80n3OKfxw=
+Received: from DM6PR02CA0064.namprd02.prod.outlook.com (2603:10b6:5:177::41)
+ by MW6PR12MB8950.namprd12.prod.outlook.com (2603:10b6:303:24a::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.26; Mon, 18 Mar
+ 2024 07:02:24 +0000
+Received: from DS1PEPF00017098.namprd05.prod.outlook.com
+ (2603:10b6:5:177:cafe::fb) by DM6PR02CA0064.outlook.office365.com
+ (2603:10b6:5:177::41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.27 via Frontend
+ Transport; Mon, 18 Mar 2024 07:02:24 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS1PEPF00017098.mail.protection.outlook.com (10.167.18.102) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7409.10 via Frontend Transport; Mon, 18 Mar 2024 07:02:24 +0000
+Received: from ethanolx7e2ehost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 18 Mar
+ 2024 02:02:23 -0500
+From: Ashish Kalra <Ashish.Kalra@amd.com>
+To: <tglx@linutronix.de>, <mingo@redhat.com>, <dave.hansen@linux.intel.com>
+CC: <rafael@kernel.org>, <peterz@infradead.org>, <adrian.hunter@intel.com>,
+	<sathyanarayanan.kuppuswamy@linux.intel.com>, <elena.reshetova@intel.com>,
+	<jun.nakajima@intel.com>, <rick.p.edgecombe@intel.com>,
+	<thomas.lendacky@amd.com>, <seanjc@google.com>, <michael.roth@amd.com>,
+	<kai.huang@intel.com>, <bhe@redhat.com>, <kexec@lists.infradead.org>,
+	<linux-coco@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+	<kirill.shutemov@linux.intel.com>, <bdas@redhat.com>, <vkuznets@redhat.com>,
+	<dionnaglaze@google.com>, <anisinha@redhat.com>, <jroedel@suse.de>
+Subject: [PATCH v2 0/3] x86/snp: Add kexec support
+Date: Mon, 18 Mar 2024 07:02:13 +0000
+Message-ID: <cover.1710744412.git.ashish.kalra@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240227212452.3228893-1-kirill.shutemov@linux.intel.com>
+References: <20240227212452.3228893-1-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-17_12,2024-03-15_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 adultscore=0 impostorscore=0 mlxlogscore=999 phishscore=0
- mlxscore=0 bulkscore=0 suspectscore=0 clxscore=1011 priorityscore=1501
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403140000 definitions=main-2403180050
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS1PEPF00017098:EE_|MW6PR12MB8950:EE_
+X-MS-Office365-Filtering-Correlation-Id: a9a6d0f1-de41-4b9c-a7c1-08dc47195d69
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: SDttKWe1iHUpuHEM/lKg0XJUNou5k2U2q4qsGmMHPMc5vY8FLBBQ1i3/F19R51/Lhz2KtzYoo37oSjL1788Z+MmshcX9pWz/Qp9B3buMkQ9vHalO02q1lW2NePCR4v5fXsXRcThxR1wZcHZd1XJoYKL9aCVingoCr47omMKhhk3n0ykfwOBxUMaAoccCNReh004likI1wlaDec+s1fqJQZH+uJqKUJBTUDKJ/9iwq2tOhGbVJvOA++Rb1L+yyEROPTprp2/beDBNiTJJI0ZZ+sA276irwCz3Ii0RPfuHk0b/FMr/E+GRmNu6+z96MiXwH+JzYCVzZ4fWhH742YTFyVa5EBwQYmchM8ElrnYhW5zvds7cb9P+Jfx2CKkEw2G/eS8Vs2/zWDzlMnf/wjp2wsD3l3wPEFTiSkau/9INmhRIO0tGN5U2fx43d1WtjieTABb49RBPw5a89PZNZ6oEGApAIlnQflLgXqIDnumky6IYpW4yflG9N1KRaJq0thfelvJgCLZgWVkz8tgeMuxYUxjOTm0Ql7Lfot4SdntclkU7nqabDKEcI+c2uEsUNv4tmCBF2K7KptP//amxGwnKTFVBk0pro+R+gJC+QKljZeL66F1usp2I5soSzv+sU7BlnCqjYieCbUJTr+iFci98jHpFm9ATZMf2p4ieCT9vkNuWS0QH7w8ANbhn2pGSKrFoMF1UA3nYxxamVF3hlVArYlA2ys10mQXC8tYBzRiRhw3GWQ6cdQTKf1rLI6/TD3jP
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(36860700004)(82310400014)(376005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2024 07:02:24.5946
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a9a6d0f1-de41-4b9c-a7c1-08dc47195d69
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DS1PEPF00017098.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8950
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240317_235245_091928_4F2F2D9E 
-X-CRM114-Status: GOOD (  18.22  )
+X-CRM114-CacheID: sfid-20240318_000233_555395_12FF8300 
+X-CRM114-Status: GOOD (  12.26  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -111,41 +119,50 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Just checking on whether this will go via bpf or mm tree?
+From: Ashish Kalra <ashish.kalra@amd.com>
 
-On 09/02/24 6:05 pm, Hari Bathini wrote:
-> With [1], CONFIG_KEXEC & !CONFIG_CRASH_DUMP is supported but that led
-> to the below warning:
-> 
->    "WARN: resolve_btfids: unresolved symbol crash_kexec"
-> 
-> Fix it by using the appropriate #ifdef.
-> 
-> [1] https://lore.kernel.org/all/20240124051254.67105-1-bhe@redhat.com/
-> 
-> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-> ---
->   kernel/bpf/helpers.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-> index 4db1c658254c..e408d1115e26 100644
-> --- a/kernel/bpf/helpers.c
-> +++ b/kernel/bpf/helpers.c
-> @@ -2545,7 +2545,7 @@ __bpf_kfunc void bpf_throw(u64 cookie)
->   __bpf_kfunc_end_defs();
->   
->   BTF_KFUNCS_START(generic_btf_ids)
-> -#ifdef CONFIG_KEXEC_CORE
-> +#ifdef CONFIG_CRASH_DUMP
->   BTF_ID_FLAGS(func, crash_kexec, KF_DESTRUCTIVE)
->   #endif
->   BTF_ID_FLAGS(func, bpf_obj_new_impl, KF_ACQUIRE | KF_RET_NULL)
+The patchset adds bits and pieces to get kexec (and crashkernel) work on
+SNP guest.
+
+v2:
+- address zeroing of unaccepted memory table mappings at all page table levels
+  adding phys_pte_init(), phys_pud_init() and phys_p4d_init().
+- include skip efi_arch_mem_reserve() in case of kexec as part of this 
+  patch set.
+- rename last_address_shd_kexec to a more appropriate 
+  kexec_last_address_to_make_private.
+- remove duplicate code shared with TDX and use common interfaces
+  defined for SNP and TDX for kexec/kdump.
+- remove set_pte_enc() dependency on pg_level_to_pfn() and make the 
+  function simpler.
+- rename unshare_pte() to make_pte_private().
+- clarify and make the comment for using kexec_last_address_to_make_private  
+  more understandable.
+- general cleanup. 
+
+Ashish Kalra (3):
+  efi/x86: skip efi_arch_mem_reserve() in case of kexec.
+  x86/mm: Do not zap page table entries mapping unaccepted memory table
+    during kdump.
+  x86/snp: Convert shared memory back to private on kexec
+
+ arch/x86/include/asm/probe_roms.h |   1 +
+ arch/x86/include/asm/sev.h        |   4 +
+ arch/x86/kernel/probe_roms.c      |  16 +++
+ arch/x86/kernel/sev.c             | 169 ++++++++++++++++++++++++++++++
+ arch/x86/mm/init_64.c             |  16 ++-
+ arch/x86/mm/mem_encrypt_amd.c     |   3 +
+ arch/x86/platform/efi/quirks.c    |  10 ++
+ 7 files changed, 215 insertions(+), 4 deletions(-)
+
+-- 
+2.34.1
+
 
 _______________________________________________
 kexec mailing list
