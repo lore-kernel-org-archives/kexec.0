@@ -4,104 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C7381C54E60
-	for <kexec@archiver.kernel.org>; Tue, 19 Mar 2024 08:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 23FFAC54E60
+	for <kexec@archiver.kernel.org>; Tue, 19 Mar 2024 08:22:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:Cc:To:
-	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=7zIoAUignQ9kcFIDJNWlGISZiwshUwMV8jcjI6DvcUI=; b=Sq9Cp4qa2/qWykbN6UxNFUTKY6
-	B5ehlZI1PLmVoiCQuyn4PpF+RsTIi7vnadM8AhUMvgk2cHn93tyVTk9mMbhq97q3ZRuWoeNF9sHxk
-	AkTU/Qdpe8SnUdSCzkGq3llbNWH2sdoVhkeqvvBgxzm/7YqYgxOae0y6Mk8yt4/690VQrzWJuDeDS
-	T6h5G5aLsnbenf0poLLDhxID/CIMl8s1CYtLPbnoSQUh5JfqIq+6IhHtVLNrzqQGTchXSQJW6zItD
-	v3k0qFS5KW7FmYwNziuTBIqmx8dorV7Uh+NdFKhXiFX4AneOWG251OMLlpSB6iut9Rj0ysjrzxtKN
-	mDSvV3rw==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=72Ex9tPon9DVyKDxIdSmDYKCJLfvseKeNj4XBUFl2CE=; b=THhQ3mmd5Ls0gx
+	pg6xLi/qF2kx1lBlO27yvt6ecOH1ZmLt6fiyn+TvjcEH0ctwtpq9Cl+EvKnw6h3Q8RDJtXIL/eToY
+	NrbQg/C1QEFDg77XIat1zQ8JpMwYKG1z7SxMMB3GCVQx9NsaPqmWvT55j0PeqPBwtm0sqq7hdFfCQ
+	OfAPE5byB+4fEDy7xFJV6CIsZsrRsAxn+XPj7wxxwWIE1a5EOQIPo2bS1OANMsnyskqXzrY9P/UDH
+	qhdUfodXXE7+Ew+aug+UUKy+Ap0VAONDsptdW1JqQ9zl2Wu9OnteB69GG2tONdexjFEfu4fNcAUw7
+	YCJ/of0ziLtJlA3HEREg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rmUUz-0000000Bnmr-3vz8;
-	Tue, 19 Mar 2024 08:07:05 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1rmUje-0000000BsE1-2tSy;
+	Tue, 19 Mar 2024 08:22:14 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rmUUu-0000000BnmE-0Ja0
+	id 1rmUjc-0000000BsCs-07af
 	for kexec@lists.infradead.org;
-	Tue, 19 Mar 2024 08:07:04 +0000
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42J7bw7R024307;
-	Tue, 19 Mar 2024 08:06:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=meKbA1jIgVYCDn8xMsDHn/LQNKxG9n2izLoUIEjV78E=;
- b=K4TObAsRyrsEhn3oCt9VgRg4Lwu1MnfknlHv13k82hmX4DdjqI1RcSbgUc32/iExZ//M
- tNhEAnLa6wAJpPFpxO0hEtxiQGiXtumFIVU1mdAAZwCbs7Oj3QL6sr3JJ4Z16Gcybf53
- Xf9B/hgWiScqdoDmRrfGb8Cx1/YvrB5TM+AqiP2hRzcNY1XsYyAE8WHxgyWMx65NR3Qd
- yqAeky2LapEz+NQM/2WNcKUfyng851R5poYeUupWDWW1Vor4Y/z7B5ggMK3Yij72fAt6
- UZaMwJxdCKsMVLHWQUhZS+ka350JNT7TqRP94tiZNUwOZckFAoZMciygzThNruKJidz1 Aw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wy6frg5v6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Mar 2024 08:06:45 +0000
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42J82ouv010374;
-	Tue, 19 Mar 2024 08:06:44 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3wy6frg5v2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Mar 2024 08:06:44 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42J6NEup019843;
-	Tue, 19 Mar 2024 08:06:43 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3wwqykds7c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Mar 2024 08:06:43 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42J86dsU49676742
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 19 Mar 2024 08:06:42 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E477C2004D;
-	Tue, 19 Mar 2024 08:06:39 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E2C282004B;
-	Tue, 19 Mar 2024 08:06:37 +0000 (GMT)
-Received: from [9.203.115.195] (unknown [9.203.115.195])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 19 Mar 2024 08:06:37 +0000 (GMT)
-Message-ID: <47d1307a-807d-4824-8409-6c9ae30805d1@linux.ibm.com>
-Date: Tue, 19 Mar 2024 13:36:36 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH linux-next] bpf: fix warning for crash_kexec
-To: Yonghong Song <yonghong.song@linux.dev>, bpf@vger.kernel.org
-Cc: Kexec-ml <kexec@lists.infradead.org>, Baoquan He <bhe@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20240209123520.778599-1-hbathini@linux.ibm.com>
- <6a1d94f7-b4bf-4315-b862-4e278abbaa73@linux.ibm.com>
- <4bcdd9cc-6149-490e-b3df-a39346e5035b@linux.dev>
-Content-Language: en-US
-From: Hari Bathini <hbathini@linux.ibm.com>
-In-Reply-To: <4bcdd9cc-6149-490e-b3df-a39346e5035b@linux.dev>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: DypgUhsNYXygQKlVs9k9Id1mRpPBoRFx
-X-Proofpoint-ORIG-GUID: 2oIpGcS0zhF_VPRk3IXaQlAhqTSyO1OO
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	Tue, 19 Mar 2024 08:22:13 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710836530;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hkY5wgPoRSp6GpZtRFAnNPA5yYwNz0E8/5HClF7CgWM=;
+	b=fufRWw2W15ovYRXhVzV4TU1PWqsjruuvh6NIM/JAwx5ftFQHXa+YS8HiXdBDChHfa1LNXM
+	XII6MnkKpZ14LgFjZU7Bp+QFRW58NWxp/XYLGJ9CbY04OO30Ke3ShRbc6YiE2pa0RfYgyU
+	qYd5sZhiF29HiXSYCrKLaSYtdQ4vudo=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-542-hPdVZsinNrKJsRaZj2WF9g-1; Tue,
+ 19 Mar 2024 04:22:05 -0400
+X-MC-Unique: hPdVZsinNrKJsRaZj2WF9g-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A77563C0E442;
+	Tue, 19 Mar 2024 08:22:04 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.12])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 0093B10F53;
+	Tue, 19 Mar 2024 08:22:03 +0000 (UTC)
+Date: Tue, 19 Mar 2024 16:21:56 +0800
+From: Baoquan He <bhe@redhat.com>
+To: "chenhaixiang (A)" <chenhaixiang3@huawei.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+	Louhongxiang <louhongxiang@huawei.com>,
+	"wangbin (A)" <wangbin224@huawei.com>,
+	"Fangchuangchuang(Fcc,Euler)" <fangchuangchuang@huawei.com>
+Subject: Re: Question about Address Range Validation in Crash Kernel
+ Allocation
+Message-ID: <ZflLJA9FGmrRE44x@MiWiFi-R3L-srv>
+References: <464d781a34694cb996560fed0558e635@huawei.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-18_12,2024-03-18_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
- suspectscore=0 malwarescore=0 adultscore=0 spamscore=0 priorityscore=1501
- lowpriorityscore=0 mlxscore=0 bulkscore=0 clxscore=1015 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2403140000
- definitions=main-2403190062
+In-Reply-To: <464d781a34694cb996560fed0558e635@huawei.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240319_010700_531281_3896C834 
-X-CRM114-Status: GOOD (  17.14  )
+X-CRM114-CacheID: sfid-20240319_012212_225172_DC0266A8 
+X-CRM114-Status: GOOD (  38.25  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -113,37 +81,105 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-CgpPbiAxOC8wMy8yNCA5OjQzIHBtLCBZb25naG9uZyBTb25nIHdyb3RlOgo+IAo+IE9uIDMvMTcv
-MjQgMTE6NTIgUE0sIEhhcmkgQmF0aGluaSB3cm90ZToKPj4gSnVzdCBjaGVja2luZyBvbiB3aGV0
-aGVyIHRoaXMgd2lsbCBnbyB2aWEgYnBmIG9yIG1tIHRyZWU/Cj4gCj4gU2VuZGluZyB0byBicGYt
-bmV4dCBzaG91bGQgYmUgb2theS4KPiBDb3VsZCB5b3UgcmVzdWJtaXQgdGhlIHBhdGNoIGFzIENP
-TkZJR19DUkFTSF9EVU1QIHByb2JhYmx5IG5vdAo+IGF2YWlsYWJsZSB0byBicGYtbmV4dCB3aGVu
-IHlvdSBpbml0aWFsbHkgc3VibWl0dGVkIHRoZSBwYXRjaC4KCk9LLiBTZW50IFYyIHdpdGggdGFn
-cyBhZGRlZCBhbmQgY2hhbmdlbG9nIHVwZGF0ZWQ6CgogCmh0dHBzOi8vbG9yZS5rZXJuZWwub3Jn
-L2FsbC8yMDI0MDMxOTA4MDE1Mi4zNjk4Ny0xLWhiYXRoaW5pQGxpbnV4LmlibS5jb20vCgo+IAo+
-Pgo+PiBPbiAwOS8wMi8yNCA2OjA1IHBtLCBIYXJpIEJhdGhpbmkgd3JvdGU6Cj4+PiBXaXRoIFsx
-XSwgQ09ORklHX0tFWEVDICYgIUNPTkZJR19DUkFTSF9EVU1QIGlzIHN1cHBvcnRlZCBidXQgdGhh
-dCBsZWQKPj4+IHRvIHRoZSBiZWxvdyB3YXJuaW5nOgo+Pj4KPj4+IMKgwqAgIldBUk46IHJlc29s
-dmVfYnRmaWRzOiB1bnJlc29sdmVkIHN5bWJvbCBjcmFzaF9rZXhlYyIKPj4+Cj4+PiBGaXggaXQg
-YnkgdXNpbmcgdGhlIGFwcHJvcHJpYXRlICNpZmRlZi4KPj4+Cj4+PiBbMV0gaHR0cHM6Ly9sb3Jl
-Lmtlcm5lbC5vcmcvYWxsLzIwMjQwMTI0MDUxMjU0LjY3MTA1LTEtYmhlQHJlZGhhdC5jb20vCj4+
-Pgo+Pj4gU2lnbmVkLW9mZi1ieTogSGFyaSBCYXRoaW5pIDxoYmF0aGluaUBsaW51eC5pYm0uY29t
-Pgo+Pj4gLS0tCj4+PiDCoCBrZXJuZWwvYnBmL2hlbHBlcnMuYyB8IDIgKy0KPj4+IMKgIDEgZmls
-ZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQo+Pj4KPj4+IGRpZmYgLS1n
-aXQgYS9rZXJuZWwvYnBmL2hlbHBlcnMuYyBiL2tlcm5lbC9icGYvaGVscGVycy5jCj4+PiBpbmRl
-eCA0ZGIxYzY1ODI1NGMuLmU0MDhkMTExNWUyNiAxMDA2NDQKPj4+IC0tLSBhL2tlcm5lbC9icGYv
-aGVscGVycy5jCj4+PiArKysgYi9rZXJuZWwvYnBmL2hlbHBlcnMuYwo+Pj4gQEAgLTI1NDUsNyAr
-MjU0NSw3IEBAIF9fYnBmX2tmdW5jIHZvaWQgYnBmX3Rocm93KHU2NCBjb29raWUpCj4+PiDCoCBf
-X2JwZl9rZnVuY19lbmRfZGVmcygpOwo+Pj4gwqAgwqAgQlRGX0tGVU5DU19TVEFSVChnZW5lcmlj
-X2J0Zl9pZHMpCj4+PiAtI2lmZGVmIENPTkZJR19LRVhFQ19DT1JFCj4+PiArI2lmZGVmIENPTkZJ
-R19DUkFTSF9EVU1QCj4+PiDCoCBCVEZfSURfRkxBR1MoZnVuYywgY3Jhc2hfa2V4ZWMsIEtGX0RF
-U1RSVUNUSVZFKQo+Pj4gwqAgI2VuZGlmCj4+PiDCoCBCVEZfSURfRkxBR1MoZnVuYywgYnBmX29i
-al9uZXdfaW1wbCwgS0ZfQUNRVUlSRSB8IEtGX1JFVF9OVUxMKQo+PgoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVj
-QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9rZXhlYwo=
+On 03/19/24 at 07:24am, chenhaixiang (A) wrote:
+> Thank you for your reply!
+> The kernel version on my machine is kernel-5.10, and the kexec-tools version is kexec-tools-2.0.27. 
+> However, my issue seems to be a bit different. On my machine, I can see the crashkernel memory segment in /proc/iomem. However, for some reason, within the address range allocated for crashkernel, there is also a segment marked as 'Reserved' (I'm not sure who marked it). In this scenario, kexec-tools calculates the CRASH MEMORY RANGES incorrectly.
+> ```
+
+crashkernel region can't be reserved again once it's allocated and
+reserved in memblock. There must be something wrong with the code. You
+can try upstream kernel and kexec-tools to see if it exists too. Since
+you are using an old kernel and could be on a distros, we may not be
+able to cover it. Sorry about that.
+
+If you want to debug to find out the reason, I can help give suggestions.
+
+> cat /proc/iomem
+> 2d4fd058-58ffffff : System RAM
+>   49000000-58ffffff : Crash kernel
+>     53cbd000-53ccffff : Reserved
+> ```
+> I'm not sure if the crashkernel memory segment should not include other markings, and if not supported, whether kexec-tools should raise an error.
+> Thanks
+> Chen Haixiang
+> ----------
+> On 03/19/24 at 9:38qm, Baoquan He wrote:
+> > Hi,
+> > 
+> > On 03/18/24 at 12:00pm, chenhaixiang (A) wrote:
+> > > Dear kexec Community Members,
+> > >
+> > > I encountered an issue while using kexec-tools on my x86_64 machine.
+> > > When there is a segment marked as 'reserved' within the memory range
+> > allocated for the crash kernel in /proc/iomem,the output appears as follows:
+> > > 2d4fd058-60efefff : System RAM
+> > >   2d4fd058-58ffffff : System RAM
+> > >     49000000-58ffffff : Crash kernel
+> > >       53cbd000-53ccffff : Reserved
+> > 
+> > What kernel are you using? the version of kernel, and kexec-tools?
+> > 
+> > If you are testing on the latest mainline kernel, you could meet the issue Dave
+> > have met and fixed in below patch:
+> > 
+> > [PATCH] x86/kexec: do not update E820 kexec table for setup_data
+> > https://lore.kernel.org/all/ZeZ2Kos-OOZNSrmO@darkstar.users.ipa.redhat.com/
+> > T/#u
+> > 
+> > Thanks
+> > Baoquan
+> > 
+> > >
+> > > The crash_memory_range array will encounter incorrect address ranges:
+> > > CRASH MEMORY RANGES
+> > > 000000002d4fd058-0000000048ffffff (0)
+> > > 0000000053cbd000-0000000048ffffff (1)
+> > > 0000000059000000-0000000053ccffff (0)
+> > >
+> > > Read the code, I noticed that the get_crash_memory_ranges() function
+> > invokes exclude_region() to handle the splitting of memory regions, but it seems
+> > unable to properly handle the scenario described above.
+> > > The code logic is as follows:
+> > > ...
+> > > 	if (start < mend && end > mstart) {
+> > > 		if (start != mstart && end != mend) {
+> > > 			/* Split memory region */
+> > > 			crash_memory_range[i].end = start - 1;
+> > > 			temp_region.start = end + 1;
+> > > 			temp_region.end = mend;
+> > > 			temp_region.type = RANGE_RAM;
+> > > 			tidx = i+1;
+> > > 		} else if (start != mstart)
+> > > 			crash_memory_range[i].end = start - 1;
+> > > 		else
+> > > 			crash_memory_range[i].start = end + 1;
+> > > 	}
+> > > ...
+> > > If start < mstart < mend < end, resulting in crash_memory_range[i].end
+> > becoming less than crash_memory_range[i].start, leading to incorrect address
+> > ranges.
+> > > I would like to know if this behavior is reasonable and whether it is necessary to
+> > validate the address ranges for compliance at the end.
+> > >
+> > > Thank you for your time and assistance.
+> > >
+> > > Chen Haixiang
+> > >
+> > > _______________________________________________
+> > > kexec mailing list
+> > > kexec@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/kexec
+> > >
+> 
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
