@@ -4,79 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 05444C54E5D
-	for <kexec@archiver.kernel.org>; Tue, 19 Mar 2024 04:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 59DCBC54E5D
+	for <kexec@archiver.kernel.org>; Tue, 19 Mar 2024 04:13:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=BSHI5p68w3cN7zracLFXvIGLVl/Qrd+l6d+gYBx+w/U=; b=kd9qw/1souLhSY
-	PCkxVfFncVq/FwmGSUfXy+SyxJt/NMbMQFThN6K5+Nk5vKo1kYLx5TinTjH5a+8AkbM+PoN4KbVIS
-	2FgfPEPn9E1mhu/wdr7KcdzlO4m2VjjKiAM+VEZ3C4KJlIy86FzOiQL4iV1rM725d9nh2A6DcA6rq
-	tUSXN5nEeGahMx0NRoxp265hYjczSQh3OZvHtvXZgAVdS+Dvz2MbMdCfhku2DblEfqIRsJ2b0arUB
-	ST9umIAgejj7itLTPnrmzTf8H8gGEiaHKV1Q2HOt32/iXs4yAEh3cV7tKzbohYSBAn9dSQlkNyito
-	AUa8f4r6DHFFViYLiK7g==;
+	List-Owner; bh=BmNNEOFLqQ7jNd/rQc+jKVVNZJ72yUrQvUYN0X18pM0=; b=0GRYEiTnwz60fl
+	zTtZSxvWqbd8nezoKoHSqdGfjF4rMr17Eq4Lm3ZSMtpKQMoWhmc2YjyEd0LDi7jddXxfjby6ip5xl
+	0GmVK30P//kHvwHnvWtS+zHy6qR8/eocCAQPManJKq5Bvx22/uufNkyZrt6yvhIoXDsB+0QoTV9GB
+	Nm//RDs2frzEpJCRqSLs6kA5Cti4KRaclWrWcBuZx4OsqAsApG+lOt/xFjkoPmuZj/peN3ckGzbRG
+	vfEKCAul2f4WyAr/Ewm5lIOa1xLqPbaX4LAj00SzZbYwPe86+nzzfzKCA4+GgTLj1Cozi/tp6kNQ9
+	rlhaJSvejUkP1Sb/eVDw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rmQed-0000000B9FZ-2ML5;
-	Tue, 19 Mar 2024 04:00:47 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1rmQr0-0000000BB9X-1AHO;
+	Tue, 19 Mar 2024 04:13:34 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rmQeZ-0000000B9EL-33md
+	id 1rmQqw-0000000BB8I-2e62
 	for kexec@lists.infradead.org;
-	Tue, 19 Mar 2024 04:00:45 +0000
+	Tue, 19 Mar 2024 04:13:32 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710820837;
+	s=mimecast20190719; t=1710821606;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=VCuT+KF0CFKXEteYACtgcd0bLY6/wFRR3VLA/HmQm5k=;
-	b=H/Iq2sOno03ItU/MY09PkqkLCyPzynjl5AGLiJlmODmxxkGlTC1b/ebROjc+sQA9Ag0fNb
-	xcd/lZmUann4TSUtFz5RTtFCiXunqV52HUji8QzfSynLi7JrEhu7dw9GxX8X5IPplBn57M
-	76f4noz2E3sjVXM7/EG9qm8+82Kfpa8=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=JWG74Dl5bTbuxCti86zPWOGnY2g2FNK26/oHUY3dQ8I=;
+	b=IcjrwVnvr7QPBqohWq1yMKF48oPMmPJecR50VrHIYWb0jIjfRcQvrkrtjYxYlsE5SRgGDj
+	YDj7P8CnY9d4TSSURPgXT3DJ/B8ilbHeeYsPoA9eJjLI8vaLngHWC+yFvj07NmWCe6Svru
+	fOQXJLSgH2/fDipyQG6H1Mm2uxm+EYM=
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com
+ [209.85.166.199]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-608-uhYCHd1lOYC1LAIgkUewmA-1; Tue, 19 Mar 2024 00:00:30 -0400
-X-MC-Unique: uhYCHd1lOYC1LAIgkUewmA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 565D3852002;
-	Tue, 19 Mar 2024 04:00:28 +0000 (UTC)
-Received: from darkstar.users.ipa.redhat.com (unknown [10.72.116.87])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 859973C20;
-	Tue, 19 Mar 2024 04:00:16 +0000 (UTC)
-Date: Tue, 19 Mar 2024 12:00:15 +0800
-From: Dave Young <dyoung@redhat.com>
-To: Ashish Kalra <Ashish.Kalra@amd.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	rafael@kernel.org, peterz@infradead.org, adrian.hunter@intel.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com,
-	elena.reshetova@intel.com, jun.nakajima@intel.com,
-	rick.p.edgecombe@intel.com, thomas.lendacky@amd.com,
-	seanjc@google.com, michael.roth@amd.com, kai.huang@intel.com,
-	bhe@redhat.com, kexec@lists.infradead.org,
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
-	kirill.shutemov@linux.intel.com, bdas@redhat.com,
-	vkuznets@redhat.com, dionnaglaze@google.com, anisinha@redhat.com,
-	jroedel@suse.de, Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: [PATCH v2 1/3] efi/x86: skip efi_arch_mem_reserve() in case of
- kexec.
-Message-ID: <ZfkNzyGl4J1ZxaGj@darkstar.users.ipa.redhat.com>
-References: <20240227212452.3228893-1-kirill.shutemov@linux.intel.com>
- <cover.1710744412.git.ashish.kalra@amd.com>
- <7c2e6ae663da2e5eb41527f0d854f59a56b91ecd.1710744412.git.ashish.kalra@amd.com>
+ us-mta-5-KIiZSSjFNSOwrxDvd9qT-Q-1; Tue, 19 Mar 2024 00:13:25 -0400
+X-MC-Unique: KIiZSSjFNSOwrxDvd9qT-Q-1
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-366929c9109so7225425ab.1
+        for <kexec@lists.infradead.org>; Mon, 18 Mar 2024 21:13:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710821604; x=1711426404;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JWG74Dl5bTbuxCti86zPWOGnY2g2FNK26/oHUY3dQ8I=;
+        b=GiVtFlAjE6R30gx3EdqIS6sFEcHsATFkW0dfyf31nERo3oAX0JaklZdly6NGaesdA5
+         epO/8ctbZpF2QGJF6utIwHI2fiNDBASh9UFlQwyTvtsgwk3CIAX0CHds6mCwDWuwBVkZ
+         wBXNq/1qGV82s69ixcnrgoRdCiezlClU2oUi/o0c4hl5LmDkGiBF1mrlJYbtD1MWsGy9
+         CmSbuYERUe/bMW6uVGZesAKdAdcxwxFzVbHQLW3CmtH9JEp/9WfO4ZyNgtr/f22rODzt
+         mIfqkZNJNxApxNqKufzQ7M4k2EFMBENKGe18G1FazERmAfdmhegbdlW/fph1JW94FCUY
+         z+AQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUrljiTZvUDpVTEzkvx+yB5+y+kMCWAA8u3rOBLeUPQscGkQ3wkXdoRBQ/SLJFa4oSrNWvI/vYZ4Z3XgJ8vIqY5TYhTYksxuGj8
+X-Gm-Message-State: AOJu0Yzjm5XrNKbAHDBT+GskZrfq6ENGiTncOQHEHmVfUxOhhh5FBU3J
+	6r1l5H181/QYiUMzkPOLyCI2UW6ls/qfnqPnpVBuJBQv8HcZ11u7Ps84KJI+xP3j4EzbmB5sCfd
+	CSGuPv/na6tv5uxAJMRsKAZfb0vwjX3VucV7gMuRg8PLeBjmGmg4FovbIyDUrXSbDvcDNPykims
+	Espdf6CenA8AaGj7szFulJFYmXPfhLlt4ZlNdW6Z5a
+X-Received: by 2002:a05:6e02:2197:b0:367:841f:4ea with SMTP id j23-20020a056e02219700b00367841f04eamr1703768ila.3.1710821604468;
+        Mon, 18 Mar 2024 21:13:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGw2yGPDwNdTHpgshZtX42+6Fr/AzzNGxTbh290UoUCFi635TZEchb+9DVQ5qVrlww2086xuAqQekPrqvHq3lE=
+X-Received: by 2002:a05:6e02:2197:b0:367:841f:4ea with SMTP id
+ j23-20020a056e02219700b00367841f04eamr1703755ila.3.1710821604229; Mon, 18 Mar
+ 2024 21:13:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <7c2e6ae663da2e5eb41527f0d854f59a56b91ecd.1710744412.git.ashish.kalra@amd.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+References: <ZeZ2Kos-OOZNSrmO@darkstar.users.ipa.redhat.com>
+In-Reply-To: <ZeZ2Kos-OOZNSrmO@darkstar.users.ipa.redhat.com>
+From: Dave Young <dyoung@redhat.com>
+Date: Tue, 19 Mar 2024 12:13:36 +0800
+Message-ID: <CALu+AoQzrVBjkBjurv_3p9kCe9EfPszcf1Lzo1G5_QQGbv8B+Q@mail.gmail.com>
+Subject: Re: [PATCH] x86/kexec: do not update E820 kexec table for setup_data
+To: x86@kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
+	Baoquan He <bhe@redhat.com>, Eric Biederman <ebiederm@xmission.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240318_210044_640958_4DF03A05 
-X-CRM114-Status: GOOD (  22.71  )
+X-CRM114-CacheID: sfid-20240318_211330_873813_AA6DA1DD 
+X-CRM114-Status: GOOD (  27.90  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -93,86 +99,100 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi,
-
-Added Ard in cc.
-
-On 03/18/24 at 07:02am, Ashish Kalra wrote:
-> From: Ashish Kalra <ashish.kalra@amd.com>
-> 
-> For kexec use case, need to use and stick to the EFI memmap passed
-> from the first kernel via boot-params/setup data, hence,
-> skip efi_arch_mem_reserve() during kexec.
-> 
-> Additionally during SNP guest kexec testing discovered that EFI memmap
-> is corrupted during chained kexec. kexec_enter_virtual_mode() during
-> late init will remap the efi_memmap physical pages allocated in
-> efi_arch_mem_reserve() via memboot & then subsequently cause random
-> EFI memmap corruption once memblock is freed/teared-down.
-> 
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+On Tue, 5 Mar 2024 at 09:32, Dave Young <dyoung@redhat.com> wrote:
+>
+> crashkernel reservation failed on a Thinkpad t440s laptop recently,
+> Actually the memblock reservation succeeded, but later insert_resource()
+> failed.
+>
+> Test step:
+> kexec load ->
+>         kexec reboot ->
+>                 check the crashkernel memory
+>                 dmesg|grep "crashkernel reserved"; saw reserved suceeeded:
+>                 0x00000000d0000000 - 0x00000000da000000
+>                 grep Crash /proc/iomem: got nothing
+>
+> The background story is like below:
+> Currently E820 code reserves setup_data regions for both the current kernel
+> and the kexec kernel, and it will also insert them into resources list.
+> Before the kexec kernel reboot nobody passes the old setup_data, kexec only
+> passes SETUP_EFI and SETUP_IMA if needed.  Thus the old setup data memory
+> are not used at all. But due to old kernel updated the kexec e820 table
+> as well so kexec kernel see them as E820_TYPE_RESERVED_KERN regions, later
+> the old setup_data regions will be inserted into resources list in kexec
+> kernel by e820__reserve_resources().
+>
+> Note, due to no setup_data passed in for those old regions they are not
+> early reserved (by function early_reserve_memory), crashkernel memblock
+> reservation will just regard them as usable memory and it could reserve
+> reserve crashkernel region overlaps with the old setup_data regions.
+>
+> Just like the bug I noticed here, kdump insert_resource failed because
+> e820__reserve_resources added the overlapped chunks in /proc/iomem already.
+>
+> Finally, looking at the code, the old setup_data regions are not used
+> at all as no setup_data passed in by the kexec boot loader. Although
+> something like SETUP_PCI etc could be needed, kexec should pass
+> the info as setup_data so that kexec kernel can take care of them.
+> This should be taken care of in other separate patches if needed.
+>
+> Thus drop the useless buggy code here.
+>
+> Signed-off-by: Dave Young <dyoung@redhat.com>
 > ---
->  arch/x86/platform/efi/quirks.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-> index f0cc00032751..d4562d074371 100644
-> --- a/arch/x86/platform/efi/quirks.c
-> +++ b/arch/x86/platform/efi/quirks.c
-> @@ -258,6 +258,16 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
->  	int num_entries;
->  	void *new;
->  
-> +	/*
-> +	 * For kexec use case, we need to use the EFI memmap passed from the first
-> +	 * kernel via setup data, so we need to skip this.
-> +	 * Additionally kexec_enter_virtual_mode() during late init will remap
-> +	 * the efi_memmap physical pages allocated here via memboot & then
-> +	 * subsequently cause random EFI memmap corruption once memblock is freed.
+>  arch/x86/kernel/e820.c |   16 +---------------
+>  1 file changed, 1 insertion(+), 15 deletions(-)
+>
+> Index: linux/arch/x86/kernel/e820.c
+> ===================================================================
+> --- linux.orig/arch/x86/kernel/e820.c
+> +++ linux/arch/x86/kernel/e820.c
+> @@ -1015,16 +1015,6 @@ void __init e820__reserve_setup_data(voi
+>                 pa_next = data->next;
+>
+>                 e820__range_update(pa_data, sizeof(*data)+data->len, E820_TYPE_RAM, E820_TYPE_RESERVED_KERN);
+> -
+> -               /*
+> -                * SETUP_EFI and SETUP_IMA are supplied by kexec and do not need
+> -                * to be reserved.
+> -                */
+> -               if (data->type != SETUP_EFI && data->type != SETUP_IMA)
+> -                       e820__range_update_kexec(pa_data,
+> -                                                sizeof(*data) + data->len,
+> -                                                E820_TYPE_RAM, E820_TYPE_RESERVED_KERN);
+> -
+>                 if (data->type == SETUP_INDIRECT) {
+>                         len += data->len;
+>                         early_memunmap(data, sizeof(*data));
+> @@ -1036,12 +1026,9 @@ void __init e820__reserve_setup_data(voi
+>
+>                         indirect = (struct setup_indirect *)data->data;
+>
+> -                       if (indirect->type != SETUP_INDIRECT) {
+> +                       if (indirect->type != SETUP_INDIRECT)
+>                                 e820__range_update(indirect->addr, indirect->len,
+>                                                    E820_TYPE_RAM, E820_TYPE_RESERVED_KERN);
+> -                               e820__range_update_kexec(indirect->addr, indirect->len,
+> -                                                        E820_TYPE_RAM, E820_TYPE_RESERVED_KERN);
+> -                       }
+>                 }
+>
+>                 pa_data = pa_next;
+> @@ -1049,7 +1036,6 @@ void __init e820__reserve_setup_data(voi
+>         }
+>
+>         e820__update_table(e820_table);
+> -       e820__update_table(e820_table_kexec);
+>
+>         pr_info("extended physical RAM map:\n");
+>         e820__print_table("reserve setup_data");
+>
 
-Can you elaborate a bit about the corruption, is it reproducible without
-SNP?
+Kindly ping for review.
 
-> +	 */
-> +	if (efi_setup)
-> +		return;
-> +
-
-How about checking the md attribute instead of checking the efi_setup,
-personally I feel it a bit better, something like below:
-
-diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-index f0cc00032751..699332b075bb 100644
---- a/arch/x86/platform/efi/quirks.c
-+++ b/arch/x86/platform/efi/quirks.c
-@@ -255,15 +255,24 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
- 	struct efi_memory_map_data data = { 0 };
- 	struct efi_mem_range mr;
- 	efi_memory_desc_t md;
--	int num_entries;
-+	int num_entries, ret;
- 	void *new;
- 
--	if (efi_mem_desc_lookup(addr, &md) ||
--	    md.type != EFI_BOOT_SERVICES_DATA) {
-+	ret = efi_mem_desc_lookup(addr, &md);
-+	if (ret) {
- 		pr_err("Failed to lookup EFI memory descriptor for %pa\n", &addr);
- 		return;
- 	}
- 
-+	if (md.type != EFI_BOOT_SERVICES_DATA) {
-+		pr_err("Skil reserving non EFI Boot Service Data memory for %pa\n", &addr);
-+		return;
-+	}
-+
-+	/* Kexec copied the efi memmap from the 1st kernel, thus skip the case. */
-+	if (md.attribute & EFI_MEMORY_RUNTIME)
-+		return;
-+
- 	if (addr + size > md.phys_addr + (md.num_pages << EFI_PAGE_SHIFT)) {
- 		pr_err("Region spans EFI memory descriptors, %pa\n", &addr);
- 		return;
+Thanks!
+Dave
 
 
 _______________________________________________
