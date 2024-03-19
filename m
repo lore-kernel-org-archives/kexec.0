@@ -4,72 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C4BA3C54F7B
-	for <kexec@archiver.kernel.org>; Tue, 19 Mar 2024 14:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 448D6C54E71
+	for <kexec@archiver.kernel.org>; Tue, 19 Mar 2024 22:56:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=WxzawlBM8c6yRtbpWimF9EzCDBXDp1VZU0xxo5cb9k0=; b=DzS2l526YdiNml
-	CTCnKe6O+KAOav9sW1522u91a0sGrYsuR2D6zB7aCPeOZkAAHgGV29HpGUkOA3uzYKQ+BuYqneCbL
-	xX8r8AEaYDYySiXCiM+VkUNk6MIyUU9zwTrv3PNGIKg9OJ3MwwQfzUxLneNCu8/4craan4X8/KhKJ
-	zi25dFmDnSlRv9vijdUPzg/PGcA/g/MDrIJH5CGZF0I6QgFaZO//ERJnJ6FgA06/bbEE9KFoVprpe
-	Tfc7BGWAPkQB0pa1zLuPK4TY/DSJjFORk7Y0DZLM1xhD7kaRYvw5WVRou/keeTT8gb+JOSjTvWCpH
-	5R0yTxxM28iMshescIFg==;
+	List-Owner; bh=2+24qq71IAD/PlqTlMQ+dwmQPfYWsMnUIkD80oLf1w0=; b=Is1iLqnaxB9CO3
+	+56Cfsk7QjD5EngZtIosCEdJrASD00DW0abBmbmx09FmBHSmCSeI7o1qUztihbRhGKesUJ80T39ov
+	YMGVEE7VvSecACiLSGt7oyU/BGv6txvC2tMhQRL//WQmhKdhQcZWuTtU3ptC0LopgnqZUBI1cmDL2
+	yKV8u2k+iCYGbTvEZspa8ojh74p6TxsJlyKSc16xQnEcon4oWRl+SKbrsP7D/d2MdWr/kuKoDF/bX
+	st+pMSW28bTCl2Jme1cmpXK7GSEhIgaeqGiZ8/Jiw9ammvCnfT6PP4QwB6CyPjOc78RjwLppzAnIx
+	wAz2PI4byI0KnCkNA/7Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rmagO-0000000D0ak-0tCt;
-	Tue, 19 Mar 2024 14:43:16 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1rmiO4-0000000EXTU-3hJe;
+	Tue, 19 Mar 2024 22:56:52 +0000
+Received: from mail-pf1-x42a.google.com ([2607:f8b0:4864:20::42a])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rmagK-0000000D0Z5-1x2W
+	id 1rmiO1-0000000EXT2-3OFO
 	for kexec@lists.infradead.org;
-	Tue, 19 Mar 2024 14:43:14 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1710859390;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AYG2jnO2I6ZWsEBmX/17X56edUt3t9+JEnjbaIgvlxM=;
-	b=DlPpZgWZkOAGfuNyiICOukoIBgEvIuRML+407KCkEPt17lEI4rwaq6LPj0RGAEXrvdAg6h
-	hbfHwcpwr4pdhBw2c9aTRjfyGluKof0AbfcjuIF392acdwvGXuE5Be749FeBxr0Ek91U2C
-	GvLLwkiozGNPIUSP9hwde7sv4HK8+EQ=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-319-pYKmZs74Ol-tf-UjKmQEjg-1; Tue, 19 Mar 2024 10:43:07 -0400
-X-MC-Unique: pYKmZs74Ol-tf-UjKmQEjg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C465D180A1A3;
-	Tue, 19 Mar 2024 14:43:06 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.12])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 8F24440C6DB7;
-	Tue, 19 Mar 2024 14:43:04 +0000 (UTC)
-Date: Tue, 19 Mar 2024 22:42:39 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Changhui Zhong <czhong@redhat.com>, linux-pci@vger.kernel.org,
-	kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>, chenhuacai@kernel.org,
-	x86@kernel.org
-Subject: Re: [bug report] WARNING: CPU: 0 PID: 1 at kernel/resource.c:834
- __insert_resource+0x84/0x110
-Message-ID: <ZfmkXw6pEBP73Txt@MiWiFi-R3L-srv>
-References: <CAGVVp+U+s692sC8-ioGQ7aP2shhQ6qyGOThVk=L6P4_XovDo5Q@mail.gmail.com>
- <73a510c8-51a0-4a4a-1aa8-7bdcd4cdde22@linux.intel.com>
+	Tue, 19 Mar 2024 22:56:51 +0000
+Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-6e6b54a28ebso5937974b3a.2
+        for <kexec@lists.infradead.org>; Tue, 19 Mar 2024 15:56:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710889009; x=1711493809; darn=lists.infradead.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DvO758sYJ265RgjuIZmeyvFMHfbZZ7P9VeWdx+/M7QM=;
+        b=WbQzbQ7mPnkbRVgKNG3Ar1dp9VuGUVVfFyqp7UG/ByfXQQZQEuWBS0mWyIbbvtiu7o
+         eWzmeV5vpxmfnxeZYVfG5sHy3R+1CLlIatVXyVigRek6NA9UoTQfsB7SlGprdFOyILPj
+         Me2MocffpmcHGonUXHwdULHks1MzebSCsvNJ9IaCTf2oUj2nZKqy5JijIITNsmNcfJs4
+         xqYvJDmLSx7riTCSZmYbk87L+3orZmkJoRO45TiU2NIAvBU5pwH+ZBuix7+DJQsMlhmI
+         J4WkeSlbJItPunpQe57NtBn2hDh81+vpqRydt2twKztspEYMm30CsHa7BD82Gz+okCZq
+         XFGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710889009; x=1711493809;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DvO758sYJ265RgjuIZmeyvFMHfbZZ7P9VeWdx+/M7QM=;
+        b=wqtayvZsfRZMhb7CTyfpDGeFKyHubXfP4pFiwwt9IBT+dT6LZuovwTuBmO8afDj6qp
+         oCu4mUuym9yecE/eYVvElDUKlWxUjKU6lrExrr0tOM9/OP9gu3KtkJutxVIdt5ldbZll
+         WR7PK7m3kcY07z6u4bcaOXEJQmRlbv4jv3yeMQQGau+tjJ/egc3Cu86vVwzXwqQz6Hea
+         P5URyARgPrm+1jF0DFV5OgtlDyuzJt0ZPecHS80HFGmG7Z7mjT+AG35A1NUnLfxVTVxS
+         BFga5KdFrq8H/8vZNABQi4qcGGzeZsZNn459goAUHCPY1qFLWpejQAhWNanTV3Fu4Ayz
+         5Nsw==
+X-Forwarded-Encrypted: i=1; AJvYcCUwHF9B5qfhi5Auj1V9eoK5coa2om3sHtp+x0pmJFHNG6pTWatkIfG/YDEL2AkeTmNEIleFTWOsgfv87QeZXz5EUB5eGvMkduzG
+X-Gm-Message-State: AOJu0YyRGLpWyBEw0ypQd24yBQ2PKk6glVNM/Dkqug9U4TH9foApWWG0
+	sOHUnVNCOJPojtCBt3l8l/W3XX4IY/W2ViZuQ9QpOSDijE4eQ0gITeST0ID5KBpB8VZ52IFgf5e
+	3q8PWJmxrN0bEClmItSpwp8hrWD0=
+X-Google-Smtp-Source: AGHT+IE4DY2oqCVLCQ9+J6jao44dthxa6ZatakgOPWtooqTRmh4LclgtjSwNT28qWOJ1gd5/jy5lxNTaZs8Yt7fbAa4=
+X-Received: by 2002:a05:6a00:9388:b0:6e6:a9ff:b0b2 with SMTP id
+ ka8-20020a056a00938800b006e6a9ffb0b2mr18557347pfb.22.1710889008689; Tue, 19
+ Mar 2024 15:56:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <73a510c8-51a0-4a4a-1aa8-7bdcd4cdde22@linux.intel.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+References: <20240319080152.36987-1-hbathini@linux.ibm.com>
+In-Reply-To: <20240319080152.36987-1-hbathini@linux.ibm.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 19 Mar 2024 15:56:36 -0700
+Message-ID: <CAEf4BzYpbQdjt+QBpbOPWr9tqErOhtMjb8gi_gZewubpUPgWGg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2] bpf: fix warning for crash_kexec
+To: Hari Bathini <hbathini@linux.ibm.com>
+Cc: bpf@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
+	Alexei Starovoitov <ast@kernel.org>, Kexec-ml <kexec@lists.infradead.org>, Baoquan He <bhe@redhat.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Stanislav Fomichev <sdf@google.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240319_074312_605700_FB42AE15 
-X-CRM114-Status: GOOD (  17.07  )
+X-CRM114-CacheID: sfid-20240319_155649_879925_473D26D3 
+X-CRM114-Status: GOOD (  18.07  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,138 +88,41 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 03/19/24 at 01:59pm, Ilpo J=E4rvinen wrote:
-> On Tue, 19 Mar 2024, Changhui Zhong wrote:
-> =
-
-> > Hello,
-> > =
-
-> > found a kernel warning issue at "kernel/resource.c:834
-> > __insert_resource+0x84/0x110" ,please help check,
-> > =
-
-> > repo:https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> > branch: master
-> > commit HEAD:f6cef5f8c37f58a3bc95b3754c3ae98e086631ca
-> > =
-
-> >  [    0.130164] ------------[ cut here ]------------
-> > [    0.130370] WARNING: CPU: 0 PID: 1 at kernel/resource.c:834
-> > __insert_resource+0x84/0x110
-> > [    0.131364] Modules linked in:
-> > [    0.132364] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.8.0+ #1
-> > [    0.133365] Hardware name: Dell Inc. PowerEdge R640/06DKY5, BIOS
-> > 2.15.1 06/15/2022
-> > [    0.134364] RIP: 0010:__insert_resource+0x84/0x110
-> > [    0.135364] Code: d0 4c 39 c1 76 b1 c3 cc cc cc cc 4c 8d 4a 30 48
-> > 8b 52 30 48 85 d2 75 b7 48 89 56 30 49 89 31 48 89 46 28 31 c0 c3 cc
-> > cc cc cc <0f> 0b 48 89 d0 c3 cc cc cc cc 49 89 d2 eb 1a 4d 39 42 08 77
-> > 19 4d
-> > [    0.136363] RSP: 0000:ffffb257400dfe08 EFLAGS: 00010246
-> > [    0.137363] RAX: ffff9e147ffca640 RBX: 0000000000000000 RCX: 0000000=
-026000000
-> > [    0.138363] RDX: ffffffff86c45ee0 RSI: ffffffff86c45ee0 RDI: 0000000=
-026000000
-> > [    0.139363] RBP: ffffffff8684d120 R08: 0000000035ffffff R09: 0000000=
-035ffffff
-> > [    0.140363] R10: 000000002f31646f R11: 0000000059a7ffee R12: fffffff=
-f86c45ee0
-> > [    0.141363] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000=
-000000000
-> > [    0.142363] FS:  0000000000000000(0000) GS:ffff9e1277800000(0000)
-> > knlGS:0000000000000000
-> > [    0.143363] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [    0.144363] CR2: ffff9e1333601000 CR3: 0000000332220001 CR4: 0000000=
-0007706f0
-> > [    0.145363] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000=
-000000000
-> > [    0.146363] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000=
-000000400
-> > [    0.147363] PKRU: 55555554
-> > [    0.148363] Call Trace:
-> > [    0.149364]  <TASK>
-> > [    0.150365]  ? __warn+0x7f/0x130
-> > [    0.151363]  ? __insert_resource+0x84/0x110
-> > [    0.152364]  ? report_bug+0x18a/0x1a0
-> > [    0.153364]  ? handle_bug+0x3c/0x70
-> > [    0.154363]  ? exc_invalid_op+0x14/0x70
-> > [    0.155363]  ? asm_exc_invalid_op+0x16/0x20
-> > [    0.156364]  ? __insert_resource+0x84/0x110
-> > [    0.157364]  ? add_device_randomness+0x75/0xa0
-> > [    0.158363]  insert_resource+0x26/0x50
-> > [    0.159364]  ? __pfx_insert_crashkernel_resources+0x10/0x10
-> > [    0.160363]  insert_crashkernel_resources+0x62/0x70
-> =
-
-> Hi,
-> =
-
-> This seems related to crashkernel stuff, I added a few Ccs related to =
-
-> it.
-> =
-
-> I don't know why you sent this only to linux-pci list as it seems likely =
-
-> to be entirely unrelated to PCI.
-
-Too few info is provided. I guess this is happening on x86_64. Do you
-have the kernel config, and what kernel you are testing? What operation
-are you taking to trigger this?
-
-Below commit could be suspect, but not sure if it's the real criminal.
-
-commit 4a693ce65b186fddc1a73621bd6f941e6e3eca21
-Author: Huacai Chen <chenhuacai@kernel.org>
-Date:   Fri Dec 29 16:02:13 2023 +0800
-
-    kdump: defer the insertion of crashkernel resources
-
-Dave reported a similar one, he did kexec reboot firstly, then in 2nd
-kernel crashkernel reservation will trigger the iomem inserting error.
-
-[PATCH] x86/kexec: do not update E820 kexec table for setup_data
-https://lore.kernel.org/all/ZeZ2Kos-OOZNSrmO@darkstar.users.ipa.redhat.com/=
-T/#u
-
-Can you try Dave's patch firstly? If it doesn't work, try reverting
-above Huacai's patch? it may need manual editing.
-
-
-> =
-
-> -- =
-
->  i.
-> =
-
-> > [    0.161365]  do_one_initcall+0x41/0x300
-> > [    0.162364]  kernel_init_freeable+0x21e/0x320
-> > [    0.163365]  ? __pfx_kernel_init+0x10/0x10
-> > [    0.164364]  kernel_init+0x16/0x1c0
-> > [    0.165364]  ret_from_fork+0x2d/0x50
-> > [    0.166364]  ? __pfx_kernel_init+0x10/0x10
-> > [    0.167363]  ret_from_fork_asm+0x1a/0x30
-> > [    0.168365]  </TASK>
-> > [    0.169363] ---[ end trace 0000000000000000 ]---
-> > =
-
-> > Thanks,
-> > =
-
-> > =
-
-> =
-
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVHVlLCBNYXIgMTksIDIwMjQgYXQgMTowMuKAr0FNIEhhcmkgQmF0aGluaSA8aGJhdGhpbmlA
+bGludXguaWJtLmNvbT4gd3JvdGU6Cj4KPiBXaXRoIFsxXSwgY3Jhc2ggZHVtcCBzcGVjaWZpYyBj
+b2RlIGlzIG1vdmVkIG91dCBvZiBDT05GSUdfS0VYRUNfQ09SRQo+IGFuZCBwbGFjZWQgdW5kZXIg
+Q09ORklHX0NSQVNIX0RVTVAsIHdoZXJlIGl0IGlzIG1vcmUgYXBwcm9wcmlhdGUuCj4gQW5kIHNp
+bmNlIENPTkZJR19LRVhFQyAmICFDT05GSUdfQ1JBU0hfRFVNUCBidWlsZCBvcHRpb24gaXMgc3Vw
+cG9ydGVkCj4gd2l0aCB0aGF0LCBpdCBsZWQgdG8gdGhlIGJlbG93IHdhcm5pbmc6Cj4KPiAgICJX
+QVJOOiByZXNvbHZlX2J0ZmlkczogdW5yZXNvbHZlZCBzeW1ib2wgY3Jhc2hfa2V4ZWMiCj4KPiBG
+aXggaXQgYnkgdXNpbmcgdGhlIGFwcHJvcHJpYXRlICNpZmRlZi4KPgo+IFsxXSBodHRwczovL2xv
+cmUua2VybmVsLm9yZy9hbGwvMjAyNDAxMjQwNTEyNTQuNjcxMDUtMS1iaGVAcmVkaGF0LmNvbS8K
+Pgo+IEFja2VkLWJ5OiBCYW9xdWFuIEhlIDxiaGVAcmVkaGF0LmNvbT4KPiBGaXhlczogMjlmZDlh
+ZTYyOTEwICgiY3Jhc2g6IHNwbGl0IGNyYXNoIGR1bXBpbmcgY29kZSBvdXQgZnJvbSBrZXhlY19j
+b3JlLmMiKQoKSSBkb24ndCB0aGluayBlaXRoZXIgYnBmIG9yIGJwZi1uZXh0IGhhdmUgdGhpcyBj
+b21taXQganVzdCB5ZXQsIHNvCmxhbmRpbmcgaXQgaW4gdGhlIGJwZi9icGYtbmV4dCB0cmVlIGRv
+ZXNuJ3QgbWFrZSBtdWNoIHNlbnNlLiBJdApwcm9iYWJseSB3b3VsZCBiZSBiZXN0IHRvIGxhbmQg
+aXQgdGhyb3VnaCB0aGUgdHJlZSB3aGljaCBkb2VzIHRoZQpDT05GSUdfS0VYRUNfQ09SRSAtPiBD
+T05GSUdfQ1JBU0hfRFVNUCBjaGFuZ2UgaW4ga2VybmVsL01ha2VmaWxlLgoKcHctYm90OiBjcgoK
+PiBBY2tlZC1ieTogSmlyaSBPbHNhIDxqb2xzYUBrZXJuZWwub3JnPgo+IEFja2VkLWJ5OiBTdGFu
+aXNsYXYgRm9taWNoZXYgPHNkZkBnb29nbGUuY29tPgo+IFNpZ25lZC1vZmYtYnk6IEhhcmkgQmF0
+aGluaSA8aGJhdGhpbmlAbGludXguaWJtLmNvbT4KPiAtLS0KPgo+IENoYW5nZXMgaW4gdjI6Cj4g
+KiBVcGRhdGVkIGNoYW5nZWxvZy4KPiAqIEFkZGVkIEZpeGVzIGFuZCBBY2tlZC1ieSB0YWdzLgo+
+Cj4KPiAga2VybmVsL2JwZi9oZWxwZXJzLmMgfCAyICstCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGlu
+c2VydGlvbigrKSwgMSBkZWxldGlvbigtKQo+Cj4gZGlmZiAtLWdpdCBhL2tlcm5lbC9icGYvaGVs
+cGVycy5jIGIva2VybmVsL2JwZi9oZWxwZXJzLmMKPiBpbmRleCBhODk1ODc4NTk1NzEuLjQ0OWI5
+YTVkM2ZlMyAxMDA2NDQKPiAtLS0gYS9rZXJuZWwvYnBmL2hlbHBlcnMuYwo+ICsrKyBiL2tlcm5l
+bC9icGYvaGVscGVycy5jCj4gQEAgLTI1NDgsNyArMjU0OCw3IEBAIF9fYnBmX2tmdW5jIHZvaWQg
+YnBmX3Rocm93KHU2NCBjb29raWUpCj4gIF9fYnBmX2tmdW5jX2VuZF9kZWZzKCk7Cj4KPiAgQlRG
+X0tGVU5DU19TVEFSVChnZW5lcmljX2J0Zl9pZHMpCj4gLSNpZmRlZiBDT05GSUdfS0VYRUNfQ09S
+RQo+ICsjaWZkZWYgQ09ORklHX0NSQVNIX0RVTVAKPiAgQlRGX0lEX0ZMQUdTKGZ1bmMsIGNyYXNo
+X2tleGVjLCBLRl9ERVNUUlVDVElWRSkKPiAgI2VuZGlmCj4gIEJURl9JRF9GTEFHUyhmdW5jLCBi
+cGZfb2JqX25ld19pbXBsLCBLRl9BQ1FVSVJFIHwgS0ZfUkVUX05VTEwpCj4gLS0KPiAyLjQ0LjAK
+PgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMg
+bWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
+ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
