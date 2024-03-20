@@ -4,65 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AF0BFC54E67
-	for <kexec@archiver.kernel.org>; Wed, 20 Mar 2024 13:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 875F4C54E58
+	for <kexec@archiver.kernel.org>; Wed, 20 Mar 2024 13:16:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:CC
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=TKIKWo+dDM5sKDx4xCcSPH49nJ9298DXfrAMIzDL83I=; b=eJY8PCckV5hTSr
-	W+VpaYXsH0icHmnTe9ludGeSW2wFO6K0Pcw7xiIzdskck/Lb5L5omVT9tzcw08AkLXmlsTBfGj2AD
-	GoqcXBgNKxKoz78lgTINsft+R0kVTG9IVvYi4VukUrssTmOtEv8NFnhAvxUPWCcXgwPnl1mSJ6/uj
-	/AT/ZG29CJ+mZtYDaLLADGRgEvRaA0Pb1jnby+VKs4dTk9+BWomHMH9xOvPAr5cWQ2aEbjaM+M3mJ
-	r0aCvqL1Kz9xGVH9V4QzkjV0H9r9AarnGKIHnXqWLha1lsyXYfD5Ko6xTZpejzQH5SJcS5Gxo1agJ
-	oNN5YwT61LtTpC6vk+Ew==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=sBiuBcsaaKDQSsOb9pZg/xhgdxtplUszd+4yxoE5HY0=; b=3ZrSx9EG9Zlcvl
+	RBksvC28LpPgYV6K2OUHmwPJ/HKTHKzuO/VAf80xPoP59pRsGbHikXS7FN7/vXEW6Ww3/YkSGvMZ2
+	AnrOCUQjPnDW1Omh/XA649FQn9ocmk4lPNZO02M3WPcdvxM6swn03RILzCTaUEfn4b97oQ/CG/xDA
+	TjIGFj235vRwjRBEkPpu/CA6deGZGYQ0rNGNroeqzDI2usscLMpwMSCsumdVni2pyk1modXrXr0G3
+	Dz1xp3qP9VQrTCrYTAeCkKDOMPQ+L5ygZ9PLPV0BXSKNNPSA7MvtZOyDSxwtUq6tD+QpF/vpqcSRi
+	jvqHKSE60qhkm9Wac+ZA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rmvkK-0000000HDiz-09kl;
-	Wed, 20 Mar 2024 13:12:44 +0000
-Received: from szxga08-in.huawei.com ([45.249.212.255])
+	id 1rmvnt-0000000HEbu-0ALO;
+	Wed, 20 Mar 2024 13:16:25 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rmvkE-0000000HDdO-18Nj
+	id 1rmvnn-0000000HEaJ-2tgm
 	for kexec@lists.infradead.org;
-	Wed, 20 Mar 2024 13:12:42 +0000
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4V088H34p3z1QB1x;
-	Wed, 20 Mar 2024 21:10:07 +0800 (CST)
-Received: from kwepemd500015.china.huawei.com (unknown [7.221.188.148])
-	by mail.maildlp.com (Postfix) with ESMTPS id 929C314040D;
-	Wed, 20 Mar 2024 21:12:23 +0800 (CST)
-Received: from dggpemm500019.china.huawei.com (7.185.36.180) by
- kwepemd500015.china.huawei.com (7.221.188.148) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Wed, 20 Mar 2024 21:12:23 +0800
-Received: from dggpemm500019.china.huawei.com ([7.185.36.180]) by
- dggpemm500019.china.huawei.com ([7.185.36.180]) with mapi id 15.01.2507.035;
- Wed, 20 Mar 2024 21:12:22 +0800
-From: "chenhaixiang (A)" <chenhaixiang3@huawei.com>
-To: Baoquan He <bhe@redhat.com>
-CC: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Louhongxiang
-	<louhongxiang@huawei.com>, "wangbin (A)" <wangbin224@huawei.com>,
-	"Fangchuangchuang(Fcc,Euler)" <fangchuangchuang@huawei.com>, lihuafei
-	<lihuafei1@huawei.com>, "wanghai (M)" <wanghai38@huawei.com>
-Subject: Re: Question about Address Range Validation in Crash Kernel
- Allocation
-Thread-Topic: Question about Address Range Validation in Crash Kernel
- Allocation
-Thread-Index: Adp6x6r8UJ7kWFB8ScyCJpE0jxq8gQ==
-Date: Wed, 20 Mar 2024 13:12:22 +0000
-Message-ID: <b1c67ea9d8fe4f6f832d9272be177bec@huawei.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.174.177.95]
+	Wed, 20 Mar 2024 13:16:23 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1710940573;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xedtlwQKGSj2FZUSBGp+gGQ1nyxBUFvCh/rAUoEHjUU=;
+	b=WIm/Dp05WBrlaOBBpNhkoxk1QsvXoWbjoJMwPXCShvn65LY3wDWkp0P4kFcv/67pv4gOTA
+	jXT+43FCxWer8sAW4xsgYRLzAb+jEcHAy7EBCsYo/9PjQvyPsCrF+Tret11ubO5EwG1SuB
+	psZicJ6tir2f8cuCin/TxBQWFodPEbU=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-633-55BhU2ZKPseUT4F3QBbX2A-1; Wed,
+ 20 Mar 2024 09:16:09 -0400
+X-MC-Unique: 55BhU2ZKPseUT4F3QBbX2A-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 710C23815EE2;
+	Wed, 20 Mar 2024 13:16:08 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.12])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id F02DB492BD4;
+	Wed, 20 Mar 2024 13:16:06 +0000 (UTC)
+Date: Wed, 20 Mar 2024 21:15:59 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Changhui Zhong <czhong@redhat.com>
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	linux-pci@vger.kernel.org, kexec@lists.infradead.org,
+	Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
+	chenhuacai@kernel.org, x86@kernel.org
+Subject: Re: [bug report] WARNING: CPU: 0 PID: 1 at kernel/resource.c:834
+ __insert_resource+0x84/0x110
+Message-ID: <Zfrhj3rJpZKRSDWn@MiWiFi-R3L-srv>
+References: <CAGVVp+U+s692sC8-ioGQ7aP2shhQ6qyGOThVk=L6P4_XovDo5Q@mail.gmail.com>
+ <73a510c8-51a0-4a4a-1aa8-7bdcd4cdde22@linux.intel.com>
+ <ZfmkXw6pEBP73Txt@MiWiFi-R3L-srv>
+ <CAGVVp+W2eHM5znGhMFb6xWWWUF4FYJ9FrEGVqKm0jWW+YO1cjg@mail.gmail.com>
 MIME-Version: 1.0
-X-Bad-Reply: 'Re:' in Subject but no References or In-Reply-To headers
+Content-Disposition: inline
+In-Reply-To: <CAGVVp+W2eHM5znGhMFb6xWWWUF4FYJ9FrEGVqKm0jWW+YO1cjg@mail.gmail.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240320_061238_704410_C6B643DB 
-X-CRM114-Status: GOOD (  41.11  )
+X-CRM114-CacheID: sfid-20240320_061622_656502_2204A3FE 
+X-CRM114-Status: GOOD (  28.23  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -74,127 +83,97 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-I tested the kernel-6.8 on my machine and found that the crashkernel memory reservation range is consistent with kernel-5.10. However, it's strange that when crashkernel=512M, the kernel still allocates two memory segments for crashkernel, as seen in the logs:
-[    0.022640] crashkernel low memory reserved: 0x49000000 - 0x59000000 (256 MB)
-[    0.022641] crashkernel reserved: 0x000000c01f000000 - 0x000000c03f000000 (512 MB)
-But only one segment is shown in /proc/iomem:
-	c01f000000-c03effffff : Crash kernel
-Moreover, the conflicting address 53cbd000-53ccffff is still reserved by someone else:
-	53cbd000-53ccffff : Reserved
-[    0.029843] e820: update [mem 0x53cbd000-0x53ccffff] usable ==> reserved
-It seems there is a kernel bug here.
-If you need the complete log, I can send it later.
----------
-On 03/19/24 at 4:22pm, Baoquan He wrote:
-> On 03/19/24 at 07:24am, chenhaixiang (A) wrote:
-> > Thank you for your reply!
-> > The kernel version on my machine is kernel-5.10, and the kexec-tools version is
-> kexec-tools-2.0.27.
-> > However, my issue seems to be a bit different. On my machine, I can see the
-> crashkernel memory segment in /proc/iomem. However, for some reason,
-> within the address range allocated for crashkernel, there is also a segment
-> marked as 'Reserved' (I'm not sure who marked it). In this scenario, kexec-tools
-> calculates the CRASH MEMORY RANGES incorrectly.
-> > ```
-> 
-> crashkernel region can't be reserved again once it's allocated and reserved in
-> memblock. There must be something wrong with the code. You can try upstream
-> kernel and kexec-tools to see if it exists too. Since you are using an old kernel and
-> could be on a distros, we may not be able to cover it. Sorry about that.
-> 
-> If you want to debug to find out the reason, I can help give suggestions.
-> 
-> > cat /proc/iomem
-> > 2d4fd058-58ffffff : System RAM
-> >   49000000-58ffffff : Crash kernel
-> >     53cbd000-53ccffff : Reserved
-> > ```
-> > I'm not sure if the crashkernel memory segment should not include other
-> markings, and if not supported, whether kexec-tools should raise an error.
-> > Thanks
-> > Chen Haixiang
-> > ----------
-> > On 03/19/24 at 9:38qm, Baoquan He wrote:
-> > > Hi,
-> > >
-> > > On 03/18/24 at 12:00pm, chenhaixiang (A) wrote:
-> > > > Dear kexec Community Members,
-> > > >
-> > > > I encountered an issue while using kexec-tools on my x86_64 machine.
-> > > > When there is a segment marked as 'reserved' within the memory
-> > > > range
-> > > allocated for the crash kernel in /proc/iomem,the output appears as follows:
-> > > > 2d4fd058-60efefff : System RAM
-> > > >   2d4fd058-58ffffff : System RAM
-> > > >     49000000-58ffffff : Crash kernel
-> > > >       53cbd000-53ccffff : Reserved
-> > >
-> > > What kernel are you using? the version of kernel, and kexec-tools?
-> > >
-> > > If you are testing on the latest mainline kernel, you could meet the
-> > > issue Dave have met and fixed in below patch:
-> > >
-> > > [PATCH] x86/kexec: do not update E820 kexec table for setup_data
-> > > https://lore.kernel.org/all/ZeZ2Kos-OOZNSrmO@darkstar.users.ipa.redh
-> > > at.com/
-> > > T/#u
-> > >
-> > > Thanks
-> > > Baoquan
-> > >
-> > > >
-> > > > The crash_memory_range array will encounter incorrect address ranges:
-> > > > CRASH MEMORY RANGES
-> > > > 000000002d4fd058-0000000048ffffff (0)
-> > > > 0000000053cbd000-0000000048ffffff (1)
-> > > > 0000000059000000-0000000053ccffff (0)
-> > > >
-> > > > Read the code, I noticed that the get_crash_memory_ranges()
-> > > > function
-> > > invokes exclude_region() to handle the splitting of memory regions,
-> > > but it seems unable to properly handle the scenario described above.
-> > > > The code logic is as follows:
-> > > > ...
-> > > > 	if (start < mend && end > mstart) {
-> > > > 		if (start != mstart && end != mend) {
-> > > > 			/* Split memory region */
-> > > > 			crash_memory_range[i].end = start - 1;
-> > > > 			temp_region.start = end + 1;
-> > > > 			temp_region.end = mend;
-> > > > 			temp_region.type = RANGE_RAM;
-> > > > 			tidx = i+1;
-> > > > 		} else if (start != mstart)
-> > > > 			crash_memory_range[i].end = start - 1;
-> > > > 		else
-> > > > 			crash_memory_range[i].start = end + 1;
-> > > > 	}
-> > > > ...
-> > > > If start < mstart < mend < end, resulting in
-> > > > crash_memory_range[i].end
-> > > becoming less than crash_memory_range[i].start, leading to incorrect
-> > > address ranges.
-> > > > I would like to know if this behavior is reasonable and whether it
-> > > > is necessary to
-> > > validate the address ranges for compliance at the end.
-> > > >
-> > > > Thank you for your time and assistance.
-> > > >
-> > > > Chen Haixiang
-> > > >
-> > > > _______________________________________________
-> > > > kexec mailing list
-> > > > kexec@lists.infradead.org
-> > > > http://lists.infradead.org/mailman/listinfo/kexec
-> > > >
-> >
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gMDMvMjAvMjQgYXQgMDU6MDZwbSwgQ2hhbmdodWkgWmhvbmcgd3JvdGU6Cj4gT24gVHVlLCBN
+YXIgMTksIDIwMjQgYXQgMTA6NDPigK9QTSBCYW9xdWFuIEhlIDxiaGVAcmVkaGF0LmNvbT4gd3Jv
+dGU6Cj4gPgo+ID4gT24gMDMvMTkvMjQgYXQgMDE6NTlwbSwgSWxwbyBKw6RydmluZW4gd3JvdGU6
+Cj4gPiA+IE9uIFR1ZSwgMTkgTWFyIDIwMjQsIENoYW5naHVpIFpob25nIHdyb3RlOgo+ID4gPgo+
+ID4gPiA+IEhlbGxvLAo+ID4gPiA+Cj4gPiA+ID4gZm91bmQgYSBrZXJuZWwgd2FybmluZyBpc3N1
+ZSBhdCAia2VybmVsL3Jlc291cmNlLmM6ODM0Cj4gPiA+ID4gX19pbnNlcnRfcmVzb3VyY2UrMHg4
+NC8weDExMCIgLHBsZWFzZSBoZWxwIGNoZWNrLAo+ID4gPiA+Cj4gPiA+ID4gcmVwbzpodHRwczov
+L2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC90b3J2YWxkcy9saW51eC5n
+aXQKPiA+ID4gPiBicmFuY2g6IG1hc3Rlcgo+ID4gPiA+IGNvbW1pdCBIRUFEOmY2Y2VmNWY4YzM3
+ZjU4YTNiYzk1YjM3NTRjM2FlOThlMDg2NjMxY2EKPiA+ID4gPgo+ID4gPiA+ICBbICAgIDAuMTMw
+MTY0XSAtLS0tLS0tLS0tLS1bIGN1dCBoZXJlIF0tLS0tLS0tLS0tLS0KPiA+ID4gPiBbICAgIDAu
+MTMwMzcwXSBXQVJOSU5HOiBDUFU6IDAgUElEOiAxIGF0IGtlcm5lbC9yZXNvdXJjZS5jOjgzNAo+
+ID4gPiA+IF9faW5zZXJ0X3Jlc291cmNlKzB4ODQvMHgxMTAKPiA+ID4gPiBbICAgIDAuMTMxMzY0
+XSBNb2R1bGVzIGxpbmtlZCBpbjoKPiA+ID4gPiBbICAgIDAuMTMyMzY0XSBDUFU6IDAgUElEOiAx
+IENvbW06IHN3YXBwZXIvMCBOb3QgdGFpbnRlZCA2LjguMCsgIzEKPiA+ID4gPiBbICAgIDAuMTMz
+MzY1XSBIYXJkd2FyZSBuYW1lOiBEZWxsIEluYy4gUG93ZXJFZGdlIFI2NDAvMDZES1k1LCBCSU9T
+Cj4gPiA+ID4gMi4xNS4xIDA2LzE1LzIwMjIKPiA+ID4gPiBbICAgIDAuMTM0MzY0XSBSSVA6IDAw
+MTA6X19pbnNlcnRfcmVzb3VyY2UrMHg4NC8weDExMAo+ID4gPiA+IFsgICAgMC4xMzUzNjRdIENv
+ZGU6IGQwIDRjIDM5IGMxIDc2IGIxIGMzIGNjIGNjIGNjIGNjIDRjIDhkIDRhIDMwIDQ4Cj4gPiA+
+ID4gOGIgNTIgMzAgNDggODUgZDIgNzUgYjcgNDggODkgNTYgMzAgNDkgODkgMzEgNDggODkgNDYg
+MjggMzEgYzAgYzMgY2MKPiA+ID4gPiBjYyBjYyBjYyA8MGY+IDBiIDQ4IDg5IGQwIGMzIGNjIGNj
+IGNjIGNjIDQ5IDg5IGQyIGViIDFhIDRkIDM5IDQyIDA4IDc3Cj4gPiA+ID4gMTkgNGQKPiA+ID4g
+PiBbICAgIDAuMTM2MzYzXSBSU1A6IDAwMDA6ZmZmZmIyNTc0MDBkZmUwOCBFRkxBR1M6IDAwMDEw
+MjQ2Cj4gPiA+ID4gWyAgICAwLjEzNzM2M10gUkFYOiBmZmZmOWUxNDdmZmNhNjQwIFJCWDogMDAw
+MDAwMDAwMDAwMDAwMCBSQ1g6IDAwMDAwMDAwMjYwMDAwMDAKPiA+ID4gPiBbICAgIDAuMTM4MzYz
+XSBSRFg6IGZmZmZmZmZmODZjNDVlZTAgUlNJOiBmZmZmZmZmZjg2YzQ1ZWUwIFJESTogMDAwMDAw
+MDAyNjAwMDAwMAo+ID4gPiA+IFsgICAgMC4xMzkzNjNdIFJCUDogZmZmZmZmZmY4Njg0ZDEyMCBS
+MDg6IDAwMDAwMDAwMzVmZmZmZmYgUjA5OiAwMDAwMDAwMDM1ZmZmZmZmCj4gPiA+ID4gWyAgICAw
+LjE0MDM2M10gUjEwOiAwMDAwMDAwMDJmMzE2NDZmIFIxMTogMDAwMDAwMDA1OWE3ZmZlZSBSMTI6
+IGZmZmZmZmZmODZjNDVlZTAKPiA+ID4gPiBbICAgIDAuMTQxMzYzXSBSMTM6IDAwMDAwMDAwMDAw
+MDAwMDAgUjE0OiAwMDAwMDAwMDAwMDAwMDAwIFIxNTogMDAwMDAwMDAwMDAwMDAwMAo+ID4gPiA+
+IFsgICAgMC4xNDIzNjNdIEZTOiAgMDAwMDAwMDAwMDAwMDAwMCgwMDAwKSBHUzpmZmZmOWUxMjc3
+ODAwMDAwKDAwMDApCj4gPiA+ID4ga25sR1M6MDAwMDAwMDAwMDAwMDAwMAo+ID4gPiA+IFsgICAg
+MC4xNDMzNjNdIENTOiAgMDAxMCBEUzogMDAwMCBFUzogMDAwMCBDUjA6IDAwMDAwMDAwODAwNTAw
+MzMKPiA+ID4gPiBbICAgIDAuMTQ0MzYzXSBDUjI6IGZmZmY5ZTEzMzM2MDEwMDAgQ1IzOiAwMDAw
+MDAwMzMyMjIwMDAxIENSNDogMDAwMDAwMDAwMDc3MDZmMAo+ID4gPiA+IFsgICAgMC4xNDUzNjNd
+IERSMDogMDAwMDAwMDAwMDAwMDAwMCBEUjE6IDAwMDAwMDAwMDAwMDAwMDAgRFIyOiAwMDAwMDAw
+MDAwMDAwMDAwCj4gPiA+ID4gWyAgICAwLjE0NjM2M10gRFIzOiAwMDAwMDAwMDAwMDAwMDAwIERS
+NjogMDAwMDAwMDBmZmZlMGZmMCBEUjc6IDAwMDAwMDAwMDAwMDA0MDAKPiA+ID4gPiBbICAgIDAu
+MTQ3MzYzXSBQS1JVOiA1NTU1NTU1NAo+ID4gPiA+IFsgICAgMC4xNDgzNjNdIENhbGwgVHJhY2U6
+Cj4gPiA+ID4gWyAgICAwLjE0OTM2NF0gIDxUQVNLPgo+ID4gPiA+IFsgICAgMC4xNTAzNjVdICA/
+IF9fd2FybisweDdmLzB4MTMwCj4gPiA+ID4gWyAgICAwLjE1MTM2M10gID8gX19pbnNlcnRfcmVz
+b3VyY2UrMHg4NC8weDExMAo+ID4gPiA+IFsgICAgMC4xNTIzNjRdICA/IHJlcG9ydF9idWcrMHgx
+OGEvMHgxYTAKPiA+ID4gPiBbICAgIDAuMTUzMzY0XSAgPyBoYW5kbGVfYnVnKzB4M2MvMHg3MAo+
+ID4gPiA+IFsgICAgMC4xNTQzNjNdICA/IGV4Y19pbnZhbGlkX29wKzB4MTQvMHg3MAo+ID4gPiA+
+IFsgICAgMC4xNTUzNjNdICA/IGFzbV9leGNfaW52YWxpZF9vcCsweDE2LzB4MjAKPiA+ID4gPiBb
+ICAgIDAuMTU2MzY0XSAgPyBfX2luc2VydF9yZXNvdXJjZSsweDg0LzB4MTEwCj4gPiA+ID4gWyAg
+ICAwLjE1NzM2NF0gID8gYWRkX2RldmljZV9yYW5kb21uZXNzKzB4NzUvMHhhMAo+ID4gPiA+IFsg
+ICAgMC4xNTgzNjNdICBpbnNlcnRfcmVzb3VyY2UrMHgyNi8weDUwCj4gPiA+ID4gWyAgICAwLjE1
+OTM2NF0gID8gX19wZnhfaW5zZXJ0X2NyYXNoa2VybmVsX3Jlc291cmNlcysweDEwLzB4MTAKPiA+
+ID4gPiBbICAgIDAuMTYwMzYzXSAgaW5zZXJ0X2NyYXNoa2VybmVsX3Jlc291cmNlcysweDYyLzB4
+NzAKPiA+ID4KPiA+ID4gSGksCj4gPiA+Cj4gPiA+IFRoaXMgc2VlbXMgcmVsYXRlZCB0byBjcmFz
+aGtlcm5lbCBzdHVmZiwgSSBhZGRlZCBhIGZldyBDY3MgcmVsYXRlZCB0bwo+ID4gPiBpdC4KPiA+
+ID4KPiA+ID4gSSBkb24ndCBrbm93IHdoeSB5b3Ugc2VudCB0aGlzIG9ubHkgdG8gbGludXgtcGNp
+IGxpc3QgYXMgaXQgc2VlbXMgbGlrZWx5Cj4gPiA+IHRvIGJlIGVudGlyZWx5IHVucmVsYXRlZCB0
+byBQQ0kuCj4gPgo+ID4gVG9vIGZldyBpbmZvIGlzIHByb3ZpZGVkLiBJIGd1ZXNzIHRoaXMgaXMg
+aGFwcGVuaW5nIG9uIHg4Nl82NC4gRG8geW91Cj4gPiBoYXZlIHRoZSBrZXJuZWwgY29uZmlnLCBh
+bmQgd2hhdCBrZXJuZWwgeW91IGFyZSB0ZXN0aW5nPyBXaGF0IG9wZXJhdGlvbgo+ID4gYXJlIHlv
+dSB0YWtpbmcgdG8gdHJpZ2dlciB0aGlzPwo+IAo+IHllc++8jG15IHNlcnZlciBpcyB4ODZfNjQg
+cGxhdGZvcm3vvIxiYXNlIE9TIGlzIFJIRUw5LjXvvIx0aGUgZGVmYXVsdCBrZXJuZWwKPiBpcyAg
+NS4xNC4wLTQyOC5lbDkueDg2XzY077yMCj4gYW5kIHRoaXMgaXNzdWUgaXMgdHJpZ2dlcmVkIGFm
+dGVyIGNvbXBpbGUgYW5kIGluc3RhbGxlZCB0aGUgdXBzdHJlYW0KPiBrZXJuZWzvvIg2LjguMCvv
+vIl0aGVuIHJlYm9vdCB0aGUgbWFjaGluZS4KPiBJIGRvbid0IGhhdmUgdGhlIGtlcm5lbCBjb25m
+aWcgZmlsZSBub3csIGlmIG5lZWRlZCBJIGNhbiByZWluc3RhbGwgYW5kCj4gY29sbGVjdCBpdO+8
+jAo+IAo+ID4KPiA+IEJlbG93IGNvbW1pdCBjb3VsZCBiZSBzdXNwZWN0LCBidXQgbm90IHN1cmUg
+aWYgaXQncyB0aGUgcmVhbCBjcmltaW5hbC4KPiA+Cj4gPiBjb21taXQgNGE2OTNjZTY1YjE4NmZk
+ZGMxYTczNjIxYmQ2Zjk0MWU2ZTNlY2EyMQo+ID4gQXV0aG9yOiBIdWFjYWkgQ2hlbiA8Y2hlbmh1
+YWNhaUBrZXJuZWwub3JnPgo+ID4gRGF0ZTogICBGcmkgRGVjIDI5IDE2OjAyOjEzIDIwMjMgKzA4
+MDAKPiA+Cj4gPiAgICAga2R1bXA6IGRlZmVyIHRoZSBpbnNlcnRpb24gb2YgY3Jhc2hrZXJuZWwg
+cmVzb3VyY2VzCj4gPgo+ID4gRGF2ZSByZXBvcnRlZCBhIHNpbWlsYXIgb25lLCBoZSBkaWQga2V4
+ZWMgcmVib290IGZpcnN0bHksIHRoZW4gaW4gMm5kCj4gPiBrZXJuZWwgY3Jhc2hrZXJuZWwgcmVz
+ZXJ2YXRpb24gd2lsbCB0cmlnZ2VyIHRoZSBpb21lbSBpbnNlcnRpbmcgZXJyb3IuCj4gPgo+ID4g
+W1BBVENIXSB4ODYva2V4ZWM6IGRvIG5vdCB1cGRhdGUgRTgyMCBrZXhlYyB0YWJsZSBmb3Igc2V0
+dXBfZGF0YQo+ID4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvYWxsL1plWjJLb3MtT09aTlNybU9A
+ZGFya3N0YXIudXNlcnMuaXBhLnJlZGhhdC5jb20vVC8jdQo+ID4KPiA+IENhbiB5b3UgdHJ5IERh
+dmUncyBwYXRjaCBmaXJzdGx5PyBJZiBpdCBkb2Vzbid0IHdvcmssIHRyeSByZXZlcnRpbmcKPiA+
+IGFib3ZlIEh1YWNhaSdzIHBhdGNoPyBpdCBtYXkgbmVlZCBtYW51YWwgZWRpdGluZy4KPiA+Cj4g
+Cj4gSSBkb24ndCBrbm93IGhvdyB0byByZXZlcnQgSHVhY2FpJ3MgcGF0Y2gsIEkgZG9uJ3Qga25v
+dyBtdWNoIGFib3V0IGl0LAo+IHNv77yMSSB0cnkgdG8gYXBwbHkgRGF2ZeKAmHMgcGF0Y2jvvIxi
+dXQgaXQgZmFpbGVk77yaCj4gYGBgCj4gcGF0Y2hpbmcgZmlsZSBhcmNoL3g4Ni9rZXJuZWwvZTgy
+MC5jCj4gSHVuayAjMSBGQUlMRUQgYXQgMTAxNS4KPiBIdW5rICMyIHN1Y2NlZWRlZCBhdCAxMDM4
+IChvZmZzZXQgMiBsaW5lcykuCj4gSHVuayAjMyBzdWNjZWVkZWQgYXQgMTA0OCAob2Zmc2V0IDIg
+bGluZXMpLgo+IDEgb3V0IG9mIDMgaHVua3MgRkFJTEVEIC0tIHNhdmluZyByZWplY3RzIHRvIGZp
+bGUgYXJjaC94ODYva2VybmVsL2U4MjAuYy5yZWoKPiBgYGAKPiBtYXliZSBEYXZlIG5lZWQgdG8g
+d3JpdGUgYSBuZXcgdmVyc2lvbiB0byBmaXggaXQsCgpObywgcGxlYXNlIGdvIGdldCB5b3VyIGNv
+bGxlYWd1ZXMnIGhlbHAuIFRoZXJlIG11c3QgYmUgcGVvcGxlIGFyb3VuZCB5b3UKa25vd2luZyBo
+b3cgdG8gaGFuZGxlIHRoaXMuCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcK
+aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
