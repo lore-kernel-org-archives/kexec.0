@@ -4,107 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 473F8C54E58
-	for <kexec@archiver.kernel.org>; Thu, 21 Mar 2024 14:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0B593C54E58
+	for <kexec@archiver.kernel.org>; Thu, 21 Mar 2024 14:59:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=BfKJp6XRyozaI6tzKZx+XW1hKIt4k/3dwV491vBQebM=; b=VeZeYsDzyoUID9
-	U8VfFcueM09woFRL8mlHzrtX46dM6EDJG1BfWPQQ468zscJoIWUfRGG6ROFx6C5RtmkCZKMNNVWhe
-	zc28anc0ldkz2uKTHQUIT6UVl2EDM4oRjNu0Gy50ez1QtIbgKmvjz4Npf2U4lMKdObqx73qroGZD0
-	SxreAf/pZoUmuvJe5JDEf+/LHs27cQFyuSbQtqgn4gQt52sn4mohiHDZrHhucoOAROwc0uejWE+u8
-	GpKB3MOATAhoyJt+pBgxYSKWbVho/h1AviyjMCP0VF4m6H1mjiuHudrVZm5sRc9rR/pL45fNUEsw3
-	PSIUUfX4WpOI0vAWWKWQ==;
+	List-Owner; bh=Kze3zMIzp3S1dPl425sIgCBhJO16aFmJk44AM7VFIuA=; b=2N3xa6MK79tOhw
+	WgVzH5yZ8jJXD4DpGl7CyCSmxEGV603JWXbOD644danjeGrDmvMGKnmBNyvNSW6s711tBltUgvORu
+	lXTf/kmz44FIcXPdXCSqIchqMxy9Ro1kIhZeFakg0EwAk9pwMLCUoqKPLLwKtrEqbaj4h6HQaMAe6
+	UkfXyikGOkw1Yua2aea8zN1Ix98JUoheMj/buTsxAEFomZ4Z9xRCER2gNBgl/qbjzYdyqMsMuUXoZ
+	qvn+tdzWSn0TMzAusbB39SS+QUJJe0Q8jhIllH7pyZSirRNG/mjSUrYeQy53ihY5AjzeCKfE4I6bs
+	OVkhBcpTV8xkGWu+bKlA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rnJ9d-00000003DfK-2APm;
-	Thu, 21 Mar 2024 14:12:25 +0000
-Received: from sender4-of-o51.zoho.com ([136.143.188.51])
+	id 1rnJso-00000003NIF-1trO;
+	Thu, 21 Mar 2024 14:59:06 +0000
+Received: from mgamail.intel.com ([192.198.163.17])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rnJ9b-00000003DeU-1lyT
+	id 1rnJsk-00000003NFe-2Mwj
 	for kexec@lists.infradead.org;
-	Thu, 21 Mar 2024 14:12:24 +0000
-ARC-Seal: i=1; a=rsa-sha256; t=1711030323; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Xn4nh6v2LLqnzPV2I7j4/ac9rvsbeDIPqr6Bb9xDsPI29uIC/t9HQpXJ99nPXXfo45VKDOhy+8WkMDQegmWk9A/Yk4fsn+kJut7A1EWC7zV54Rlg+6kddWhloP797eIib7otqQekQIhOa0IGOtpXna3ev7tj0/vcX2q2QhF0vA8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1711030323; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=ZFDutfvhklXcK4cqq5JiEfITG/oIyUGfvA9UGjBd4cw=; 
-	b=c4NsVlOQNh/Jv+X5Q89kNTITBp3fJ+WlTxGPYecZe3DxNgn27FJ4xS3KgnOHTWureGFhQA5cB+xQssQR0sWHqrjQT4s+hlV4ksr0pi1cqstFsmyPVp2UF6HyWBediDmw+nEXv4OcqIJYBNamL9hBtIKvZ1CE6gfNgLiziv0f9SI=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=apertussolutions.com;
-	spf=pass  smtp.mailfrom=dpsmith@apertussolutions.com;
-	dmarc=pass header.from=<dpsmith@apertussolutions.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1711030323;
-	s=zoho; d=apertussolutions.com; i=dpsmith@apertussolutions.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=ZFDutfvhklXcK4cqq5JiEfITG/oIyUGfvA9UGjBd4cw=;
-	b=Dxc2Zkqhq1eNTm9uHvdeeGr0h30yHEwUKaWGdtmM9gQOeoP84bftmkFvcmgrcOE0
-	NUmAcOHSzL6x0M/bixt4gL0RewCouR04kxzuJ2SwoS4UYQmS0J9lxGR9lrm+Vp6PVAQ
-	MFzFWznnC0XomEKgsTmJWkXNCfSNeU8VreL7LuiY=
-Received: from [10.10.1.138] (static-72-81-132-2.bltmmd.fios.verizon.net [72.81.132.2]) by mx.zohomail.com
-	with SMTPS id 17110303216563.5761394895970398; Thu, 21 Mar 2024 07:12:01 -0700 (PDT)
-Message-ID: <66cded21-448b-47e1-a94c-aed94cc40dcd@apertussolutions.com>
-Date: Thu, 21 Mar 2024 10:11:57 -0400
+	Thu, 21 Mar 2024 14:59:03 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711033142; x=1742569142;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=7eBq8ekEO6vw2vSin9bneMav1VFWO6ZkBD957BgambQ=;
+  b=nVylfvqbD8TC8HWyJswsKqbAPFO3TC51KuEd9OPPn9kNQ/kB+JjEgSn/
+   3FVpLtsS0LFz8K/0lp0y/sBuNSolDQG3VCXdBwJXYlRufcxgaqHTNhmkp
+   BHq2z7prMvZm4tb4xZz817DX8RuNyhBbxZHqpyWrOY6ElKDvPl4/l1syR
+   CYqvfLsGNa4KJsGfG92Wjiry/0MhfFy+HLlFFe/4DISFbf1wPaYNrKZRR
+   btiCT1G2Mg7IJIbDcCPk21BaB0bHvmyjZGWeCBwuY7PEyOnBKUOYziPfj
+   +WYPVbPrxNDMxT41BKp/KxVoo04PFBnV605jf/pDvJxB9ApNybNrLp6qh
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11020"; a="5879071"
+X-IronPort-AV: E=Sophos;i="6.07,143,1708416000"; 
+   d="scan'208";a="5879071"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2024 07:58:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11020"; a="937065372"
+X-IronPort-AV: E=Sophos;i="6.07,143,1708416000"; 
+   d="scan'208";a="937065372"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 21 Mar 2024 07:58:53 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 7C090791; Thu, 21 Mar 2024 16:58:52 +0200 (EET)
+Date: Thu, 21 Mar 2024 16:58:52 +0200
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Ashish Kalra <Ashish.Kalra@amd.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com, 
+	rafael@kernel.org, peterz@infradead.org, adrian.hunter@intel.com, 
+	sathyanarayanan.kuppuswamy@linux.intel.com, elena.reshetova@intel.com, jun.nakajima@intel.com, 
+	rick.p.edgecombe@intel.com, thomas.lendacky@amd.com, seanjc@google.com, michael.roth@amd.com, 
+	kai.huang@intel.com, bhe@redhat.com, kexec@lists.infradead.org, 
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org, bdas@redhat.com, 
+	vkuznets@redhat.com, dionnaglaze@google.com, anisinha@redhat.com, jroedel@suse.de
+Subject: Re: [PATCH v2 2/3] x86/mm: Do not zap page table entries mapping
+ unaccepted memory table during kdump.
+Message-ID: <opa56dnwlyllrrnlfrhtbavnwmhxxatiuzifvx3bquv5qksidn@v2qxrvvw53jl>
+References: <20240227212452.3228893-1-kirill.shutemov@linux.intel.com>
+ <cover.1710744412.git.ashish.kalra@amd.com>
+ <8e11825bb3e4a7472bf0cb30c72ae013c25ac8c9.1710744412.git.ashish.kalra@amd.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 14/15] x86: Secure Launch late initcall platform module
-Content-Language: en-US
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
- linux-efi@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
- bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
- mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
- peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
- nivedita@alum.mit.edu, herbert@gondor.apana.org.au, davem@davemloft.net,
- kanth.ghatraju@oracle.com, trenchboot-devel@googlegroups.com
-References: <20240214221847.2066632-1-ross.philipson@oracle.com>
- <20240214221847.2066632-15-ross.philipson@oracle.com>
- <CAMj1kXHXt6z94JCM2C5rLz-n9nGA46bb1eMbqcP5e7K9+NzPSg@mail.gmail.com>
- <c5bd3ee4-4bf1-4e9a-8e5d-12ee8e195d3d@apertussolutions.com>
- <CAMj1kXEUdj+==Ud_YWP2FP05St3KDsduzUMsOZzu9LRsLVsLVA@mail.gmail.com>
-From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
-Autocrypt: addr=dpsmith@apertussolutions.com; keydata=
- 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
-In-Reply-To: <CAMj1kXEUdj+==Ud_YWP2FP05St3KDsduzUMsOZzu9LRsLVsLVA@mail.gmail.com>
-X-ZohoMailClient: External
+Content-Disposition: inline
+In-Reply-To: <8e11825bb3e4a7472bf0cb30c72ae013c25ac8c9.1710744412.git.ashish.kalra@amd.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240321_071223_554041_A5067334 
-X-CRM114-Status: GOOD (  30.64  )
+X-CRM114-CacheID: sfid-20240321_075902_652389_2EAA8107 
+X-CRM114-Status: GOOD (  15.57  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -116,123 +86,38 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Ard,
-
-On 2/23/24 04:36, Ard Biesheuvel wrote:
-> On Thu, 22 Feb 2024 at 14:58, Daniel P. Smith
-> <dpsmith@apertussolutions.com> wrote:
->>
->> On 2/15/24 03:40, Ard Biesheuvel wrote:
->>> On Wed, 14 Feb 2024 at 23:32, Ross Philipson <ross.philipson@oracle.com> wrote:
->>>>
->>>> From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
->>>>
->>>> The Secure Launch platform module is a late init module. During the
->>>> init call, the TPM event log is read and measurements taken in the
->>>> early boot stub code are located. These measurements are extended
->>>> into the TPM PCRs using the mainline TPM kernel driver.
->>>>
->>>> The platform module also registers the securityfs nodes to allow
->>>> access to TXT register fields on Intel along with the fetching of
->>>> and writing events to the late launch TPM log.
->>>>
->>>> Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
->>>> Signed-off-by: garnetgrimm <grimmg@ainfosec.com>
->>>> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
->>>
->>> There is an awful amount of code that executes between the point where
->>> the measurements are taken and the point where they are loaded into
->>> the PCRs. All of this code could subvert the boot flow and hide this
->>> fact, by replacing the actual taken measurement values with the known
->>> 'blessed' ones that will unseal the keys and/or phone home to do a
->>> successful remote attestation.
->>
->> To set context, in general the motivation to employ an RTM, Static or
->> Dynamic, integrity solution is to enable external platform validation,
->> aka attestation. These trust chains are constructed from the principle
->> of measure and execute that rely on the presence of a RoT for Storage
->> (RTS) and a RoT for Reporting (RTR). Under the TCG architecture adopted
->> by x86 vendors and now recently by Arm, those roles are fulfilled by the
->> TPM. With this context, lets layout the assumptive trusts being made here,
->>     1. The CPU GETSEC instruction functions correctly
->>     2. The IOMMU, and by extension the PMRs, functions correctly
->>     2. The ACM authentication process functions correctly
->>     3. The ACM functions correctly
->>     4. The TPM interactions function correctly
->>     5. The TPM functions correctly
->>
->> With this basis, let's explore your assertion here. The assertion breaks
->> down into two scenarios. The first is that the at-rest kernel binary is
->> corrupt, unintentionally (bug) or maliciously, either of which does not
->> matter for the situation. For the sake of simplicity, corruption of the
->> Linux kernel during loading or before the DRTM Event is considered an
->> equivalent to corruption of the kernel at-rest. The second is that the
->> kernel binary was corrupted in memory at some point after the DRTM event
->> occurs.
->>
->> For both scenarios, the ACM will correctly configure the IOMMU PMRs to
->> ensure the kernel can no longer be tampered with in memory. After which,
->> the ACM will then accurately measure the kernel (bzImage) and safely
->> store the measurement in the TPM.
->>
->> In the first scenario, the TPM will accurately report the kernel
->> measurement in the attestation. The attestation authority will be able
->> to detect if an invalid kernel was started and can take whatever
->> remediation actions it may employ.
->>
->> In the second scenario, any attempt to corrupt the binary after the ACM
->> has configured the IOMMU PMR will fail.
->>
->>
+On Mon, Mar 18, 2024 at 07:02:45AM +0000, Ashish Kalra wrote:
+> From: Ashish Kalra <ashish.kalra@amd.com>
 > 
-> This protects the memory image from external masters after the
-> measurement has been taken.
-
-It blocks access before the measurement is taken.
-
-> So any external influences in the time window between taking the
-> measurements and loading them into the PCRs are out of scope here, I
-> guess?
-
-Correct, as long as the assumption that the user configured the kernel 
-to program the IOMMU correctly after gaining control. In early versions 
-of this series the correct IOMMU configuration was enforced. This was 
-changed due to objections that the user should be free to configure the 
-system how they see fit, even if it results in an insecure system.
-
-> Maybe it would help (or if I missed it - apologies) to include a
-> threat model here. I suppose physical tampering is out of scope?
-
-I can take a look at what other security capabilities have documented in 
-this area and provide a similar level of explanation.
-
-I would not say physical tampering is out, I would say that it is 
-supported to the degree to which the TPM was designed to mitigate it.
-
->>> At the very least, this should be documented somewhere. And if at all
->>> possible, it should also be documented why this is ok, and to what
->>> extent it limits the provided guarantees compared to a true D-RTM boot
->>> where the early boot code measures straight into the TPMs before
->>> proceeding.
->>
->> I can add a rendition of the above into the existing section of the
->> documentation patch that already discusses separation of the measurement
->> from the TPM recording code. As to the limits it incurs on the DRTM
->> integrity, as explained above, I submit there are none.
->>
+> During crashkernel boot only pre-allocated crash memory is presented as
+> E820_TYPE_RAM. This can cause page table entries mapping unaccepted memory
+> table to be zapped during phys_pte_init(), phys_pmd_init(), phys_pud_init()
+> and phys_p4d_init() as SNP/TDX guest use E820_TYPE_ACPI to store the
+> unaccepted memory table and pass it between the kernels on
+> kexec/kdump.
 > 
-> Thanks for the elaborate explananation. And yes, please document this
-> with the changes.
+> E820_TYPE_ACPI covers not only ACPI data, but also EFI tables and might
+> be required by kernel to function properly.
+> 
+> The problem was discovered during debugging kdump for SNP guest. The
+> unaccepted memory table stored with E820_TYPE_ACPI and passed between
+> the kernels on kdump was getting zapped as the PMD entry mapping this
+> is above the E820_TYPE_RAM range for the reserved crashkernel memory.
+> 
+> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
 
-Ack.
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
-V/r,
-Daniel
+I guess it would be better if I take this patch into my kexec patchset. I
+guess I just got lucky not to step onto the issue.
+
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
 
 _______________________________________________
 kexec mailing list
