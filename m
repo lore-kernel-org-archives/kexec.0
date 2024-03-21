@@ -4,59 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 171F9C54E58
-	for <kexec@archiver.kernel.org>; Thu, 21 Mar 2024 13:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 473F8C54E58
+	for <kexec@archiver.kernel.org>; Thu, 21 Mar 2024 14:12:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
 	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
 	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
 	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=0bQqWnoyVtE8AqLWpxwBmhhqmMIn7NFGqNUpK+UUVTM=; b=e7IaBqvhtfX72n
-	Iqr/vW2CiXgkr/9ZX2y1t3LmV5dmMz0N3WCE/mZXIBzyh+7IhcfEwiPnSAPtiDFJccmDAvaBqkZVb
-	w4pogNrH4HJ+0Cw5BHBw+pAai2Nsblp58a7I77+5zOz/w2mbfv5z64xBc4D+anO52n9yeKuZ0gmmD
-	deOWnDuyiPrHv865xx1wTNAFzqV9QdJ03CTm8X0cCQHtXSSw4LWWS8Esuo2RmQLTsvqXAVRipCTGt
-	Oiltd1me4+psgpqUDUzbDhILSs0oY5wrlscSv6qhdpkYYOW6J4g4Elwi0usYyWkl+xEW3fVXWLHnM
-	IXv63qMfejdXTJLjy/lg==;
+	List-Owner; bh=BfKJp6XRyozaI6tzKZx+XW1hKIt4k/3dwV491vBQebM=; b=VeZeYsDzyoUID9
+	U8VfFcueM09woFRL8mlHzrtX46dM6EDJG1BfWPQQ468zscJoIWUfRGG6ROFx6C5RtmkCZKMNNVWhe
+	zc28anc0ldkz2uKTHQUIT6UVl2EDM4oRjNu0Gy50ez1QtIbgKmvjz4Npf2U4lMKdObqx73qroGZD0
+	SxreAf/pZoUmuvJe5JDEf+/LHs27cQFyuSbQtqgn4gQt52sn4mohiHDZrHhucoOAROwc0uejWE+u8
+	GpKB3MOATAhoyJt+pBgxYSKWbVho/h1AviyjMCP0VF4m6H1mjiuHudrVZm5sRc9rR/pL45fNUEsw3
+	PSIUUfX4WpOI0vAWWKWQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rnIkO-000000039do-1XVw;
-	Thu, 21 Mar 2024 13:46:20 +0000
+	id 1rnJ9d-00000003DfK-2APm;
+	Thu, 21 Mar 2024 14:12:25 +0000
 Received: from sender4-of-o51.zoho.com ([136.143.188.51])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rnIkL-000000039d5-0Em1
+	id 1rnJ9b-00000003DeU-1lyT
 	for kexec@lists.infradead.org;
-	Thu, 21 Mar 2024 13:46:18 +0000
-ARC-Seal: i=1; a=rsa-sha256; t=1711028754; cv=none; 
+	Thu, 21 Mar 2024 14:12:24 +0000
+ARC-Seal: i=1; a=rsa-sha256; t=1711030323; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=CoXqJ3Q8+YqQfYIIFBcz82q3mokSxkvviaxPi4pkUD+LjFal9ccirN+mJk0Nzatpl6IdkL6iOjJDVbSZc+0e5c8r+A/Bw7EDEpffaiThmFmkiTZVTyEuPi+UdaXHn+PkPxj0o7aQ1CUIEqFuu/ahEnLqi3DUbM7Dnu0UlUXEAsI=
+	b=Xn4nh6v2LLqnzPV2I7j4/ac9rvsbeDIPqr6Bb9xDsPI29uIC/t9HQpXJ99nPXXfo45VKDOhy+8WkMDQegmWk9A/Yk4fsn+kJut7A1EWC7zV54Rlg+6kddWhloP797eIib7otqQekQIhOa0IGOtpXna3ev7tj0/vcX2q2QhF0vA8=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1711028754; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=c7mypxhq24TwOwkk7go39gJ4c0j/SRaCVim+D2aCUwM=; 
-	b=VUaIOr1KbJ0KxovSfsJci8oMzSIj/D/jii5gedBAJMtL0tFbNRO0QhKSLxn1xQ6c/71dxXYiNywfjZ30cn3JxAGhGmvEy80xWwROescoqWHU2+TnTbW5odgJ1703JmWyVCUTkrH8kWpEpc8qURhSOaO/nzqD1EUkDbIZg7pePZQ=
+	t=1711030323; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=ZFDutfvhklXcK4cqq5JiEfITG/oIyUGfvA9UGjBd4cw=; 
+	b=c4NsVlOQNh/Jv+X5Q89kNTITBp3fJ+WlTxGPYecZe3DxNgn27FJ4xS3KgnOHTWureGFhQA5cB+xQssQR0sWHqrjQT4s+hlV4ksr0pi1cqstFsmyPVp2UF6HyWBediDmw+nEXv4OcqIJYBNamL9hBtIKvZ1CE6gfNgLiziv0f9SI=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=apertussolutions.com;
 	spf=pass  smtp.mailfrom=dpsmith@apertussolutions.com;
 	dmarc=pass header.from=<dpsmith@apertussolutions.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1711028754;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1711030323;
 	s=zoho; d=apertussolutions.com; i=dpsmith@apertussolutions.com;
 	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=c7mypxhq24TwOwkk7go39gJ4c0j/SRaCVim+D2aCUwM=;
-	b=hdcQaOgQMk0VA4dgzM/w40MGd1Cw5xYr+kL7eHwooHcb4C1CCdE7g+AdeGiHI/EV
-	MyI6C8mt4V1ErCsymDkOr5guRp2Dm9XRioTMj+Ztf/nMVtdYr5vO3is54gGx8Do4uQB
-	BFqlTWRhEaKpAA5tPxXuoQyvGMWQERrnnAN1hTq8=
+	bh=ZFDutfvhklXcK4cqq5JiEfITG/oIyUGfvA9UGjBd4cw=;
+	b=Dxc2Zkqhq1eNTm9uHvdeeGr0h30yHEwUKaWGdtmM9gQOeoP84bftmkFvcmgrcOE0
+	NUmAcOHSzL6x0M/bixt4gL0RewCouR04kxzuJ2SwoS4UYQmS0J9lxGR9lrm+Vp6PVAQ
+	MFzFWznnC0XomEKgsTmJWkXNCfSNeU8VreL7LuiY=
 Received: from [10.10.1.138] (static-72-81-132-2.bltmmd.fios.verizon.net [72.81.132.2]) by mx.zohomail.com
-	with SMTPS id 1711028752479775.6868681111625; Thu, 21 Mar 2024 06:45:52 -0700 (PDT)
-Message-ID: <9d01a6d2-4dd9-4331-8fc9-b01c07cfdbb5@apertussolutions.com>
-Date: Thu, 21 Mar 2024 09:45:48 -0400
+	with SMTPS id 17110303216563.5761394895970398; Thu, 21 Mar 2024 07:12:01 -0700 (PDT)
+Message-ID: <66cded21-448b-47e1-a94c-aed94cc40dcd@apertussolutions.com>
+Date: Thu, 21 Mar 2024 10:11:57 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 01/15] x86/boot: Place kernel_info at a fixed offset
+Subject: Re: [PATCH v8 14/15] x86: Secure Launch late initcall platform module
 Content-Language: en-US
-To: Ard Biesheuvel <ardb@kernel.org>,
- Ross Philipson <ross.philipson@oracle.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
  linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
  linux-efi@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
  bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
@@ -65,8 +64,10 @@ Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
  nivedita@alum.mit.edu, herbert@gondor.apana.org.au, davem@davemloft.net,
  kanth.ghatraju@oracle.com, trenchboot-devel@googlegroups.com
 References: <20240214221847.2066632-1-ross.philipson@oracle.com>
- <20240214221847.2066632-2-ross.philipson@oracle.com>
- <CAMj1kXH3Gvr3vDRLDdXuc0s7ZAQYE6+D7tmCRBjJWwWt2fn4-w@mail.gmail.com>
+ <20240214221847.2066632-15-ross.philipson@oracle.com>
+ <CAMj1kXHXt6z94JCM2C5rLz-n9nGA46bb1eMbqcP5e7K9+NzPSg@mail.gmail.com>
+ <c5bd3ee4-4bf1-4e9a-8e5d-12ee8e195d3d@apertussolutions.com>
+ <CAMj1kXEUdj+==Ud_YWP2FP05St3KDsduzUMsOZzu9LRsLVsLVA@mail.gmail.com>
 From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
 Autocrypt: addr=dpsmith@apertussolutions.com; keydata=
  xsJuBFYrueARCACPWL3r2bCSI6TrkIE/aRzj4ksFYPzLkJbWLZGBRlv7HQLvs6i/K4y/b4fs
@@ -99,11 +100,11 @@ Autocrypt: addr=dpsmith@apertussolutions.com; keydata=
  ke943EIUts9CmFAHt8cNPYOPRd20pPu4VFNBuT4fv9Ys0iv0XGCEP+sos7/pgJ3gV3pCOric
  p15jV4PCYQQYEQgACQUCViu54AIbDAAKCRBTc6WbYpR8Khu7AP9NJrBUn94C/3PeNbtQlEGZ
  NV46Mx5HF0P27lH3sFpNrwD/dVdZ5PCnHQYBZ287ZxVfVr4Zuxjo5yJbRjT93Hl0vMY=
-In-Reply-To: <CAMj1kXH3Gvr3vDRLDdXuc0s7ZAQYE6+D7tmCRBjJWwWt2fn4-w@mail.gmail.com>
+In-Reply-To: <CAMj1kXEUdj+==Ud_YWP2FP05St3KDsduzUMsOZzu9LRsLVsLVA@mail.gmail.com>
 X-ZohoMailClient: External
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240321_064617_328753_6684D0C6 
-X-CRM114-Status: GOOD (  16.34  )
+X-CRM114-CacheID: sfid-20240321_071223_554041_A5067334 
+X-CRM114-Status: GOOD (  30.64  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -120,45 +121,115 @@ Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Ard!
+Hi Ard,
 
-On 2/15/24 02:56, Ard Biesheuvel wrote:
-> On Wed, 14 Feb 2024 at 23:31, Ross Philipson <ross.philipson@oracle.com> wrote:
+On 2/23/24 04:36, Ard Biesheuvel wrote:
+> On Thu, 22 Feb 2024 at 14:58, Daniel P. Smith
+> <dpsmith@apertussolutions.com> wrote:
 >>
->> From: Arvind Sankar <nivedita@alum.mit.edu>
+>> On 2/15/24 03:40, Ard Biesheuvel wrote:
+>>> On Wed, 14 Feb 2024 at 23:32, Ross Philipson <ross.philipson@oracle.com> wrote:
+>>>>
+>>>> From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
+>>>>
+>>>> The Secure Launch platform module is a late init module. During the
+>>>> init call, the TPM event log is read and measurements taken in the
+>>>> early boot stub code are located. These measurements are extended
+>>>> into the TPM PCRs using the mainline TPM kernel driver.
+>>>>
+>>>> The platform module also registers the securityfs nodes to allow
+>>>> access to TXT register fields on Intel along with the fetching of
+>>>> and writing events to the late launch TPM log.
+>>>>
+>>>> Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
+>>>> Signed-off-by: garnetgrimm <grimmg@ainfosec.com>
+>>>> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
+>>>
+>>> There is an awful amount of code that executes between the point where
+>>> the measurements are taken and the point where they are loaded into
+>>> the PCRs. All of this code could subvert the boot flow and hide this
+>>> fact, by replacing the actual taken measurement values with the known
+>>> 'blessed' ones that will unseal the keys and/or phone home to do a
+>>> successful remote attestation.
 >>
->> There are use cases for storing the offset of a symbol in kernel_info.
->> For example, the trenchboot series [0] needs to store the offset of the
->> Measured Launch Environment header in kernel_info.
+>> To set context, in general the motivation to employ an RTM, Static or
+>> Dynamic, integrity solution is to enable external platform validation,
+>> aka attestation. These trust chains are constructed from the principle
+>> of measure and execute that rely on the presence of a RoT for Storage
+>> (RTS) and a RoT for Reporting (RTR). Under the TCG architecture adopted
+>> by x86 vendors and now recently by Arm, those roles are fulfilled by the
+>> TPM. With this context, lets layout the assumptive trusts being made here,
+>>     1. The CPU GETSEC instruction functions correctly
+>>     2. The IOMMU, and by extension the PMRs, functions correctly
+>>     2. The ACM authentication process functions correctly
+>>     3. The ACM functions correctly
+>>     4. The TPM interactions function correctly
+>>     5. The TPM functions correctly
+>>
+>> With this basis, let's explore your assertion here. The assertion breaks
+>> down into two scenarios. The first is that the at-rest kernel binary is
+>> corrupt, unintentionally (bug) or maliciously, either of which does not
+>> matter for the situation. For the sake of simplicity, corruption of the
+>> Linux kernel during loading or before the DRTM Event is considered an
+>> equivalent to corruption of the kernel at-rest. The second is that the
+>> kernel binary was corrupted in memory at some point after the DRTM event
+>> occurs.
+>>
+>> For both scenarios, the ACM will correctly configure the IOMMU PMRs to
+>> ensure the kernel can no longer be tampered with in memory. After which,
+>> the ACM will then accurately measure the kernel (bzImage) and safely
+>> store the measurement in the TPM.
+>>
+>> In the first scenario, the TPM will accurately report the kernel
+>> measurement in the attestation. The attestation authority will be able
+>> to detect if an invalid kernel was started and can take whatever
+>> remediation actions it may employ.
+>>
+>> In the second scenario, any attempt to corrupt the binary after the ACM
+>> has configured the IOMMU PMR will fail.
+>>
 >>
 > 
-> Why? Is this information consumed by the bootloader?
+> This protects the memory image from external masters after the
+> measurement has been taken.
 
-Yes, the bootloader needs a standardized means to find the offset of the 
-MLE header, which communicates a set of meta-data needed by the DCE in 
-order to set up for and start the loaded kernel. Arm will also need to 
-provide a similar metadata structure and alternative entry point (or a 
-complete rewrite of the existing entry point), as the current Arm entry 
-point is in direct conflict with Arm DRTM specification.
+It blocks access before the measurement is taken.
 
-> I'd like to get away from x86 specific hacks for boot code and boot
-> images, so I would like to explore if we can avoid kernel_info, or at
-> least expose it in a generic way. We might just add a 32-bit offset
-> somewhere in the first 64 bytes of the bootable image: this could
-> co-exist with EFI bootable images, and can be implemented on arm64,
-> RISC-V and LoongArch as well.
+> So any external influences in the time window between taking the
+> measurements and loading them into the PCRs are out of scope here, I
+> guess?
 
-With all due respect, I would not refer to boot params and the kern_info 
-extension designed by the x86 maintainers as a hack. It is the 
-well-defined boot protocol for x86, just as Arm has its own boot 
-protocol around Device Tree.
+Correct, as long as the assumption that the user configured the kernel 
+to program the IOMMU correctly after gaining control. In early versions 
+of this series the correct IOMMU configuration was enforced. This was 
+changed due to objections that the user should be free to configure the 
+system how they see fit, even if it results in an insecure system.
 
-We would gladly adopt a cross arch/cross image type, zImage and bzImage, 
-means to embedded meta-data about the kernel that can be discovered by a 
-bootloader. Otherwise, we are relegated to doing a per arch/per image 
-type discovery mechanism. If you have any suggestions that are cross 
-arch/cross image type that we could explore, we would be grateful and 
-willing to investigate how to adopt such a method.
+> Maybe it would help (or if I missed it - apologies) to include a
+> threat model here. I suppose physical tampering is out of scope?
+
+I can take a look at what other security capabilities have documented in 
+this area and provide a similar level of explanation.
+
+I would not say physical tampering is out, I would say that it is 
+supported to the degree to which the TPM was designed to mitigate it.
+
+>>> At the very least, this should be documented somewhere. And if at all
+>>> possible, it should also be documented why this is ok, and to what
+>>> extent it limits the provided guarantees compared to a true D-RTM boot
+>>> where the early boot code measures straight into the TPMs before
+>>> proceeding.
+>>
+>> I can add a rendition of the above into the existing section of the
+>> documentation patch that already discusses separation of the measurement
+>> from the TPM recording code. As to the limits it incurs on the DRTM
+>> integrity, as explained above, I submit there are none.
+>>
+> 
+> Thanks for the elaborate explananation. And yes, please document this
+> with the changes.
+
+Ack.
 
 V/r,
 Daniel
