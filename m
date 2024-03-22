@@ -4,69 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B394EC54E71
-	for <kexec@archiver.kernel.org>; Fri, 22 Mar 2024 14:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 675E4C54E71
+	for <kexec@archiver.kernel.org>; Fri, 22 Mar 2024 21:10:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:References:
-	In-Reply-To:Subject:CC:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=AO4XpQC6GKK8/WqSyfiKkisho4it8W6i3DAvxnNTlfY=; b=HczXBz3UmNjnAA
-	Veze+cvVrEoy0XyxPsMVFsetuJ/8E+d5CRL6T0OlUG4jry7QSBagXkYMs8Su/akJOmCA+4nzCda4P
-	5F7QA4AB6uZNwVdhEKenPU0L7GrPZOvAEwWpwBuaSSbK2np8JZGyLZiKgQGGpDBWANTYeOxFzdzN5
-	6hldThjLIMSRBF4V2+ikk4gqDv05cxdtjUzx88qkGsLufEOMPXq+Y1NsQMVSz35lGkmSeexP2wFfs
-	s/i5btOdDB7PS7mG3MNV3iU5Ar4B4WmNoEHCcoV4App5oe4okRQ6ACX3ct83SR7U4/VSFkn7SWx1D
-	IiWuux5EWnzvu8h/mDew==;
+	List-Owner; bh=gAxCCmNmbRwR/ypQspUmKjtJYnYaXGcCn67P+JoB8/I=; b=TymClSAXb+iaZx
+	rh+hWUGP86Sz4mMbMUD5GhZ+2HapQIlUrgkWs0txexD7q97OEylE04wjGe23bjamuuOD4C+6aU1IH
+	iuBndfjLWpCXWEuWuzjWWdWV9ofZGHTln7j87pv+a8VCpYtHL8M1gzM/nGJFqOF7MexeWwB/lVAJH
+	U0xGxaf3duQNm4kG3BK7umpBevQSDCHqDSu3fnv7sbTNnt+ljwtGX/0eBg/74wK132YdRPKAb5TBR
+	eNbRWsKiUnr1YNNyrEHHBEKwdzuZlX4uIc1/Pv+k4O/zcAAsAHDM6ag1IyXJl0gz4i7siRdq882Qf
+	6d3q794d6790Nms4ABgQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rnfkY-00000007W2y-1dQ1;
-	Fri, 22 Mar 2024 14:20:02 +0000
-Received: from [2607:7c80:54:3::138] (helo=mail.zytor.com)
+	id 1rnm9N-00000008gHg-1wDA;
+	Fri, 22 Mar 2024 21:10:05 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rnfkU-00000007W1y-3fZA
+	id 1rnm9K-00000008gGV-3Wpl
 	for kexec@lists.infradead.org;
-	Fri, 22 Mar 2024 14:20:00 +0000
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 42MEJ2ZV3496390
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Fri, 22 Mar 2024 07:19:03 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 42MEJ2ZV3496390
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024031401; t=1711117149;
-	bh=aB18poa/nAuHxUYgK7CDuG4N2UPsaq85ox+8DKB04kM=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=ZETGE8z3u9I9yJvR5e/CQUJ9GmkJb4wq8snvbhDmH/87Lzwf+k/ZGo1AYaXFYl9nd
-	 uETOnzCevSP6x3/Jys4AjBwWIYxjN9AYiGaZOvlyuMh07rolz2MUbUQq4v4IpcmfbH
-	 XaZ2kjkRbA92EYSzRvO14ZBO4HfRYvjEeGadQEOmjwCnKNtbWI9V4I8BadIyN7/QVt
-	 DeVXQnWkfk815Zq/7e7UNEjKO+YrQ5XnPO0G5EbeTFGaD7lwA438bf/x93wt39mE9f
-	 IPdJFoxWZE023tvibiGtBG/M2k5vMMP30t9IEatLMPA/6G+NKk1Qm1CeXy3mgZtMya
-	 5XnVwvHOIMJMQ==
-Date: Fri, 22 Mar 2024 07:18:58 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: "Daniel P. Smith" <dpsmith@apertussolutions.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Ross Philipson <ross.philipson@oracle.com>
-CC: linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
-        linux-efi@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, mjg59@srcf.ucam.org,
-        James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
-        jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
-        nivedita@alum.mit.edu, herbert@gondor.apana.org.au,
-        davem@davemloft.net, kanth.ghatraju@oracle.com,
-        trenchboot-devel@googlegroups.com
-Subject: Re: [PATCH v8 01/15] x86/boot: Place kernel_info at a fixed offset
-User-Agent: K-9 Mail for Android
-In-Reply-To: <9d01a6d2-4dd9-4331-8fc9-b01c07cfdbb5@apertussolutions.com>
-References: <20240214221847.2066632-1-ross.philipson@oracle.com> <20240214221847.2066632-2-ross.philipson@oracle.com> <CAMj1kXH3Gvr3vDRLDdXuc0s7ZAQYE6+D7tmCRBjJWwWt2fn4-w@mail.gmail.com> <9d01a6d2-4dd9-4331-8fc9-b01c07cfdbb5@apertussolutions.com>
-Message-ID: <32FDA47A-C87F-406F-A0B9-3AA1BB2EBAFB@zytor.com>
+	Fri, 22 Mar 2024 21:10:04 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 7519060ECF;
+	Fri, 22 Mar 2024 21:10:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 764BFC433C7;
+	Fri, 22 Mar 2024 21:10:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711141801;
+	bh=7yATw20Tyd8/PIFRUwUC5V36lD1BhBjeArxyRcGy3wM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cCS0R9PGsO6y58EcOjy6xJj3xos7SxAWn0iHi0k0HIGCnr8I82tcOd97aUndF9UTs
+	 CYRVqsrDipVPHg2JPnO/X1dy+lPuypbfQiFjtbUh5VdiwY2QykWSv+lyEiXEEWDBh4
+	 XYbOT4n0t2A4/1nys7o0cmDsVpM1C6+Nb1LeTNk9Dx7AFm4DoaYEFUUL3Uf46GhPLZ
+	 zEvZtuHARGUkzZYLNItnH66cJ904jthYACR4Hm9/Wfl3+KkTpD5cVQle1y30ffbbU6
+	 u0BJ1Ex/rMXoSoYe0WGIzipE4LYiBMv1iq8l130CFeJdeydedZfUsojB9zjMjOwmr9
+	 JX+0+JbPtw6Sw==
+Date: Fri, 22 Mar 2024 21:09:58 +0000
+From: Simon Horman <horms@kernel.org>
+To: Baoquan He <bhe@redhat.com>
+Cc: kexec@lists.infradead.org
+Subject: Re: [PATCH] util_lib/elf_info.c: fix a warning
+Message-ID: <20240322210958.GC387537@kernel.org>
+References: <20240321073037.823696-1-bhe@redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20240321073037.823696-1-bhe@redhat.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240322_071958_928710_35B30E7B 
-X-CRM114-Status: GOOD (  16.78  )
+X-CRM114-CacheID: sfid-20240322_141002_945167_623E0FD6 
+X-CRM114-Status: UNSURE (   9.07  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -78,45 +67,25 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On March 21, 2024 6:45:48 AM PDT, "Daniel P. Smith" <dpsmith@apertussolutions.com> wrote:
->Hi Ard!
->
->On 2/15/24 02:56, Ard Biesheuvel wrote:
->> On Wed, 14 Feb 2024 at 23:31, Ross Philipson <ross.philipson@oracle.com> wrote:
->>> 
->>> From: Arvind Sankar <nivedita@alum.mit.edu>
->>> 
->>> There are use cases for storing the offset of a symbol in kernel_info.
->>> For example, the trenchboot series [0] needs to store the offset of the
->>> Measured Launch Environment header in kernel_info.
->>> 
->> 
->> Why? Is this information consumed by the bootloader?
->
->Yes, the bootloader needs a standardized means to find the offset of the MLE header, which communicates a set of meta-data needed by the DCE in order to set up for and start the loaded kernel. Arm will also need to provide a similar metadata structure and alternative entry point (or a complete rewrite of the existing entry point), as the current Arm entry point is in direct conflict with Arm DRTM specification.
->
->> I'd like to get away from x86 specific hacks for boot code and boot
->> images, so I would like to explore if we can avoid kernel_info, or at
->> least expose it in a generic way. We might just add a 32-bit offset
->> somewhere in the first 64 bytes of the bootable image: this could
->> co-exist with EFI bootable images, and can be implemented on arm64,
->> RISC-V and LoongArch as well.
->
->With all due respect, I would not refer to boot params and the kern_info extension designed by the x86 maintainers as a hack. It is the well-defined boot protocol for x86, just as Arm has its own boot protocol around Device Tree.
->
->We would gladly adopt a cross arch/cross image type, zImage and bzImage, means to embedded meta-data about the kernel that can be discovered by a bootloader. Otherwise, we are relegated to doing a per arch/per image type discovery mechanism. If you have any suggestions that are cross arch/cross image type that we could explore, we would be grateful and willing to investigate how to adopt such a method.
->
->V/r,
->Daniel
-
-To be fair, the way things are going UEFI, i.e. PE/COFF, is becoming the new standard format. Yes, ELF would have been better, but...
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVGh1LCBNYXIgMjEsIDIwMjQgYXQgMDM6MzA6MzdQTSArMDgwMCwgQmFvcXVhbiBIZSB3cm90
+ZToKPiBUaGVyZSdzIGEgaW5jb3JyZWN0IGFycmF5IG9wZXJhdGlvbiBpbiBmdW5jdGlvbiBzY2Fu
+X3ZtY29yZWluZm8oKSwgaXQKPiB3aWxsIGNhdXNlIGJlbG93IHdhcm5pbmcgbWVzc2FnZS4KPiAK
+PiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+IHV0aWxfbGliL2VsZl9pbmZvLmM6IEluIGZ1bmN0
+aW9uIOKAmHNjYW5fdm1jb3JlaW5mb+KAmToKPiB1dGlsX2xpYi9lbGZfaW5mby5jOjM2MDo0Mzog
+d2FybmluZzogd3JpdGluZyAxIGJ5dGUgaW50byBhIHJlZ2lvbiBvZiBzaXplIDAgWy1Xc3RyaW5n
+b3Atb3ZlcmZsb3c9XQo+ICAgMzYwIHwgICAgICAgICAgICAgICAgICAgICAgICAgdGVtcF9idWZb
+bGVuICsgMV0gPSAnXDAnOwo+ICAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgfn5+fn5+
+fn5+fn5+fn5+fn5+Xn5+fn5+Cj4gdXRpbF9saWIvZWxmX2luZm8uYzozMTk6MTQ6IG5vdGU6IGF0
+IG9mZnNldCAxMDI0IGludG8gZGVzdGluYXRpb24gb2JqZWN0IOKAmHRlbXBfYnVm4oCZIG9mIHNp
+emUgMTAyNAo+ICAgMzE5IHwgICAgICAgICBjaGFyIHRlbXBfYnVmWzEwMjRdOwo+ICAgICAgIHwg
+ICAgICAgICAgICAgIF5+fn5+fn5+Cj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gCj4gRml4IGl0
+IHRvIGF2b2lkIG9vYiBhY2Nlc3Mgb2YgYXJyYXkuCj4gCj4gU2lnbmVkLW9mZi1ieTogQmFvcXVh
+biBIZSA8YmhlQHJlZGhhdC5jb20+CgpUaGFua3MsIGFwcGxpZWQuCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNA
+bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2tleGVjCg==
