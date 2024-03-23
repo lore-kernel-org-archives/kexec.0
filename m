@@ -4,47 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D830AC54E64
-	for <kexec@archiver.kernel.org>; Sat, 23 Mar 2024 00:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4EA6FC47DD9
+	for <kexec@archiver.kernel.org>; Sat, 23 Mar 2024 00:55:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Date:Message-Id:Subject:
-	References:In-Reply-To:Cc:To:From:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=skwasgC+9t7BGcz34Nw3ET0ofc3gTiqqA9q68dq17ZI=; b=D6KRUMMqupN7xz
-	BHHvINTcOMWG4+OqqCUNinfNGmdrVjsoyUOZjp7WcgejzExjuL9Oh3Fw+1TP2E9nPYzZs7FA2Kwmw
-	5e79IHfetFMlvju4ITjiCoqLAFNFqvb/tY9BuY2QcyRUng1uvjOOol+oinoSXLsRXj9JUSeugNZdj
-	TusO+SGeVVVi+w62DfAU0/zryoPydstXqwTaN9c+ncHw29JgXJxsotX5LFevg+HMldi/ejFENKTpH
-	5T4k4rX2pSq23SOpHdkLZINWSe//olPjlQDfgyvH16VHwsTNtuEELynjInbtp4XoJonH6o/bcici0
-	SYd0/wuAMSY0N3fMyC6w==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=+xpiGmkk34oiRngJkZ0qYNMZXzIAcsLTVpQ8tVRv0+8=; b=l1KfoAy0dImsHu
+	uS55Jr4Mw6Z/A9x4yJ7v9SJDZr2fvFFM8At8iBRTkBGGmWUCyqbFnBTEHb9XyldQW3WV8HlxRLgJ1
+	5BM8IWRt0zgUrkhKFi8X9rdX67t3qTsinTA6v4FZG8iOSt4WzYMjNYHxYQb6n6xMGEXutX0J3L+UK
+	Ikhmv8yyqxFwqaX1m1hrczjQIdTBMzPV3Gb17vSlN+Ir3vBE4I4wZ/jpG7OPlMqZ9TfXeBiYao26x
+	aJxR3FySWeUJ5zt7YLG8zlWdx/zyDpaoMOMa9s83hF32st7VcisYXmlLjec8Juo1P2zO332tT6DoT
+	yfOBu3+IhkhzcZyBu9+g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rnpX1-000000094Hz-3Di9;
-	Sat, 23 Mar 2024 00:46:43 +0000
-Received: from mail.ozlabs.org ([2404:9400:2221:ea00::3] helo=gandalf.ozlabs.org)
+	id 1rnpf2-000000095Dq-1oCi;
+	Sat, 23 Mar 2024 00:55:00 +0000
+Received: from gandalf.ozlabs.org ([150.107.74.76])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rnpWx-000000094FL-0ZmM
+	id 1rnpey-000000095D6-21z6
 	for kexec@lists.infradead.org;
-	Sat, 23 Mar 2024 00:46:42 +0000
+	Sat, 23 Mar 2024 00:54:58 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1711155292;
+	bh=Q1ozhTLC0i5nJma6jn4h+gT4TZHIFCymNO4pKD/VVU8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=dNi6vZJwyDbkp/Yq+28o/8e3ySxTXuCaIAF23CBOjAuLdpYRgLxvsLpBzaDkWP4Rs
+	 hp8fOw/pYwhdbLVHk+8fJqd/SyiDurShcrLWhX6OSzhYATgoTJJdG0xeSMw+007lth
+	 k1MQysQalKjGNe8BInC5uh5//nat4zvp2ewODhULn/TJfuy3Kc9O0l8IoE6XXGsfjr
+	 VnKLmVqLxuzKG6hgjlZG3x0DQ1mLGvMclEdBDMJXODu0QgWRQ1dApeyxtQ4HTp/amS
+	 Y7qTl5bS5b3KNJG5jDiF2ovweQi6EihbheQUCRtaNL23qQM6ydiVZjPK55mEiXP+D3
+	 aMpKHOBaVHwjg==
 Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4V1gVx4dkjz4wyf;
-	Sat, 23 Mar 2024 11:46:33 +1100 (AEDT)
-From: Michael Ellerman <patch-notifications@ellerman.id.au>
-To: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Kexec-ml <kexec@lists.infradead.org>, Hari Bathini <hbathini@linux.ibm.com>
-Cc: lkml <linux-kernel@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Baoquan He <bhe@redhat.com>, Sourabh Jain <sourabhjain@linux.ibm.com>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Nicholas Piggin <npiggin@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, Dave Young <dyoung@redhat.com>
-In-Reply-To: <20240226103010.589537-1-hbathini@linux.ibm.com>
-References: <20240226103010.589537-1-hbathini@linux.ibm.com>
-Subject: Re: [PATCH linux-next v2 0/3] powerpc/kexec: split CONFIG_CRASH_DUMP out from CONFIG_KEXEC_CORE
-Message-Id: <171115475789.936455.12230073027482662538.b4-ty@ellerman.id.au>
-Date: Sat, 23 Mar 2024 11:45:57 +1100
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4V1ghX0QzCz4wx5;
+	Sat, 23 Mar 2024 11:54:51 +1100 (AEDT)
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: bhe@redhat.com, christophe.leroy@csgroup.eu, hbathini@linux.ibm.com,
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ kexec@lists.infradead.org
+Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-6.9-2 tag
+Date: Sat, 23 Mar 2024 11:54:50 +1100
+Message-ID: <87zfupix7p.fsf@mail.lhotse>
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240322_174639_404198_531AB1E1 
-X-CRM114-Status: UNSURE (   9.48  )
+X-CRM114-CacheID: sfid-20240322_175456_844547_64ECCBC0 
+X-CRM114-Status: UNSURE (   9.52  )
 X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -62,28 +72,81 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, 26 Feb 2024 16:00:07 +0530, Hari Bathini wrote:
-> This patch series is a follow-up to [1] based on discussions at [2]
-> about additional work needed to get it working on powerpc.
-> 
-> The first patch in the series makes struct crash_mem available with or
-> without CONFIG_CRASH_DUMP enabled. The next patch moves kdump specific
-> code for kexec_file_load syscall under CONFIG_CRASH_DUMP and the last
-> patch splits other kdump specific code under CONFIG_CRASH_DUMP and
-> removes dependency with CONFIG_CRASH_DUMP for CONFIG_KEXEC_CORE.
-> 
-> [...]
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
 
-Applied to powerpc/next.
+Hi Linus,
 
-[1/3] kexec/kdump: make struct crash_mem available without CONFIG_CRASH_DUMP
-      https://git.kernel.org/powerpc/c/56a34d799bfa53064e7b8bd354aacd176aeaecc8
-[2/3] powerpc/kexec: split CONFIG_KEXEC_FILE and CONFIG_CRASH_DUMP
-      https://git.kernel.org/powerpc/c/33f2cc0a2e90f7177c49559b434191b02efd0cd5
-[3/3] powerpc/kdump: Split KEXEC_CORE and CRASH_DUMP dependency
-      https://git.kernel.org/powerpc/c/5c4233cc0920cc90787aafe950b90f6c57a35b88
+Please pull some more powerpc updates for 6.9. These were posted before the
+merge window but had complicated dependencies and/or conflicts with other
+content that has gone into 6.9.
 
 cheers
+
+The following changes since commit 66a27abac311a30edbbb65fe8c41ff1b13876faa:
+
+  Merge tag 'powerpc-6.9-1' of git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux (2024-03-15 17:53:48 -0700)
+
+are available in the git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-6.9-2
+
+for you to fetch changes up to 5c4233cc0920cc90787aafe950b90f6c57a35b88:
+
+  powerpc/kdump: Split KEXEC_CORE and CRASH_DUMP dependency (2024-03-17 13:34:00 +1100)
+
+- ------------------------------------------------------------------
+powerpc updates for 6.9 #2
+
+ - Handle errors in mark_rodata_ro() and mark_initmem_nx().
+
+ - Make struct crash_mem available without CONFIG_CRASH_DUMP.
+
+Thanks to: Christophe Leroy, Hari Bathini.
+
+- ------------------------------------------------------------------
+Christophe Leroy (1):
+      powerpc: Handle error in mark_rodata_ro() and mark_initmem_nx()
+
+Hari Bathini (3):
+      kexec/kdump: make struct crash_mem available without CONFIG_CRASH_DUMP
+      powerpc/kexec: split CONFIG_KEXEC_FILE and CONFIG_CRASH_DUMP
+      powerpc/kdump: Split KEXEC_CORE and CRASH_DUMP dependency
+
+
+ arch/powerpc/Kconfig                 |   9 +-
+ arch/powerpc/include/asm/kexec.h     |  98 +++----
+ arch/powerpc/kernel/prom.c           |   2 +-
+ arch/powerpc/kernel/setup-common.c   |   2 +-
+ arch/powerpc/kernel/smp.c            |   4 +-
+ arch/powerpc/kexec/Makefile          |   3 +-
+ arch/powerpc/kexec/core.c            |   4 +
+ arch/powerpc/kexec/elf_64.c          |   4 +-
+ arch/powerpc/kexec/file_load_64.c    | 269 ++++++++++----------
+ arch/powerpc/mm/book3s32/mmu.c       |   7 +-
+ arch/powerpc/mm/mmu_decl.h           |   8 +-
+ arch/powerpc/mm/nohash/8xx.c         |  33 ++-
+ arch/powerpc/mm/nohash/e500.c        |  10 +-
+ arch/powerpc/mm/pgtable_32.c         |  38 ++-
+ arch/powerpc/platforms/powernv/smp.c |   2 +-
+ include/linux/crash_core.h           |  12 +-
+ 16 files changed, 274 insertions(+), 231 deletions(-)
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEJFGtCPCthwEv2Y/bUevqPMjhpYAFAmX+Jw4ACgkQUevqPMjh
+pYA6WA/+PVlWRRhMWDZ0BEMFKtVMwUlGJWSZGNGqX/5ZV40lcTIsuIruw8C6VY11
+Hq1J+CafM3H7LnqzYwruAYhpBYwb1Oje6IK208XiKH+eUmCzzk+hLfjGdbNbkTOx
+6xBqoV3Hjj+p4H6QRXYkZQihQDHy9IfuBGNtoaTaiVuqg9NOT9PLnVNYaI11uLBP
+qRS08hkORyJEOO/QRjoVXyXdP7pOwl1EbuYYg805BZ9NFlp7j105yT8XjKQ1X5w+
+yF4b2eSV78/Z55dpnBM1GqJqkOSaQjq42PKS+JNSBRpgVDZiLzTdVgWBHY1Q2zho
+H5XH9RHvT789vtGsXxhYqvSOSMsM+LgdZo82ZQuqHDA5djmwoMOVXcb/NkyVZ0o3
+E+glLdWe6X+0B8Fhx2PH4R5j5j1r3/B2Ighf9Qz60rXNCnbUfT8ZJefyUZg6pHMg
+Y/YwdftiqBRnVsK1VSvMrIW3/Sk47QHlM2d7B11R9sVw85zlVwg4FHFXlGtoVpFS
+cWZityzVY10wKcblhHYt0/X0n2eeMhjyZuq9lvgls2zypr1qxJ+x/URVVM4hzbNH
+P+1qvVUp9mHfSmUGqC5OWv/365BhPQy2t7vkK1NYmmfee2r2umHEY9zphu/yysUg
+OQvE+v0F7fETuYg/QTWLlsusEyU0uBCoJOxeB2M6KacrNZfE64A=
+=SfuI
+-----END PGP SIGNATURE-----
 
 _______________________________________________
 kexec mailing list
