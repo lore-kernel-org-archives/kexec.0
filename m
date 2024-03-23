@@ -4,58 +4,108 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4EA6FC47DD9
-	for <kexec@archiver.kernel.org>; Sat, 23 Mar 2024 00:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 971BDC47DD9
+	for <kexec@archiver.kernel.org>; Sat, 23 Mar 2024 01:34:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=+xpiGmkk34oiRngJkZ0qYNMZXzIAcsLTVpQ8tVRv0+8=; b=l1KfoAy0dImsHu
-	uS55Jr4Mw6Z/A9x4yJ7v9SJDZr2fvFFM8At8iBRTkBGGmWUCyqbFnBTEHb9XyldQW3WV8HlxRLgJ1
-	5BM8IWRt0zgUrkhKFi8X9rdX67t3qTsinTA6v4FZG8iOSt4WzYMjNYHxYQb6n6xMGEXutX0J3L+UK
-	Ikhmv8yyqxFwqaX1m1hrczjQIdTBMzPV3Gb17vSlN+Ir3vBE4I4wZ/jpG7OPlMqZ9TfXeBiYao26x
-	aJxR3FySWeUJ5zt7YLG8zlWdx/zyDpaoMOMa9s83hF32st7VcisYXmlLjec8Juo1P2zO332tT6DoT
-	yfOBu3+IhkhzcZyBu9+g==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=H0K0okCBx9QdFngf7wQBIgDJ9mL3r8WdGxd56ZNC39Y=; b=GjraDQurKKERit
+	2R41snsLEz5HRisj0x2hWZRI+goGd+xmTVD9+rUboC+9MzXEiXdgMYd98Ri6u76/JdLpCyMRPzIso
+	NHhCRsT/hW9+60fg9LB2sfS8h2I9DQyDTMBIOcYiNz5Xf1rF6A/MbGt78bTopQqQm5VPVlS/wcQxz
+	4R+rUN6FlRZk2CS4fCR2z7G+uIfLVX3wn0NEjdsLZXzDOM2YBZ94gnRdz1wVnkucDo/VACHArAKrl
+	EL+D8UeF3CCP4zyEnhtQZigXuxFtg//AqgOzR4/4rO+OInnYZdOqPJciwDH8He954rRo8CVpuAlMi
+	vQpMEWktsuNzm8twMThA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rnpf2-000000095Dq-1oCi;
-	Sat, 23 Mar 2024 00:55:00 +0000
-Received: from gandalf.ozlabs.org ([150.107.74.76])
+	id 1rnqGv-000000098pV-1zcZ;
+	Sat, 23 Mar 2024 01:34:09 +0000
+Received: from sender4-of-o51.zoho.com ([136.143.188.51])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rnpey-000000095D6-21z6
+	id 1rnqGs-000000098oo-0cjF
 	for kexec@lists.infradead.org;
-	Sat, 23 Mar 2024 00:54:58 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1711155292;
-	bh=Q1ozhTLC0i5nJma6jn4h+gT4TZHIFCymNO4pKD/VVU8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=dNi6vZJwyDbkp/Yq+28o/8e3ySxTXuCaIAF23CBOjAuLdpYRgLxvsLpBzaDkWP4Rs
-	 hp8fOw/pYwhdbLVHk+8fJqd/SyiDurShcrLWhX6OSzhYATgoTJJdG0xeSMw+007lth
-	 k1MQysQalKjGNe8BInC5uh5//nat4zvp2ewODhULn/TJfuy3Kc9O0l8IoE6XXGsfjr
-	 VnKLmVqLxuzKG6hgjlZG3x0DQ1mLGvMclEdBDMJXODu0QgWRQ1dApeyxtQ4HTp/amS
-	 Y7qTl5bS5b3KNJG5jDiF2ovweQi6EihbheQUCRtaNL23qQM6ydiVZjPK55mEiXP+D3
-	 aMpKHOBaVHwjg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4V1ghX0QzCz4wx5;
-	Sat, 23 Mar 2024 11:54:51 +1100 (AEDT)
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: bhe@redhat.com, christophe.leroy@csgroup.eu, hbathini@linux.ibm.com,
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- kexec@lists.infradead.org
-Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-6.9-2 tag
-Date: Sat, 23 Mar 2024 11:54:50 +1100
-Message-ID: <87zfupix7p.fsf@mail.lhotse>
+	Sat, 23 Mar 2024 01:34:07 +0000
+ARC-Seal: i=1; a=rsa-sha256; t=1711157626; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Y0P/6LGXB6XbnIcWo4Qk8zcdc8Jw+lAadY5AVPmkdkTcjKL1xfq/phucxRZdbbNgfKSheA1gZ2TCgQmpSop9a93QySuKrHzUX9cA/llTHTSpSkXW+MnPVF1RuubNen2kklKjmr1fhdL+1VTSotCBBBygMpSAIKA4weDZR7NPjbo=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1711157626; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=zTwwKIN0GuMJg2NfAmR7tXmcZNVQ9X8RONWejAf+ILA=; 
+	b=KDRxtlHCwaLfbAAuvARZF6Zb1Yd9S4Wk7hw94ajl31mDeFrjtRGKo03f3oU0hbeYXY+Twf6jhUzk66U3KG0HakCt85ulldco9lnwqTycdGJ/nGtzkdpct84+lOyaIr0+1VU+BLWyQm0sidgRu09Q3t6da3gTLqs77MzOejmgKmM=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=apertussolutions.com;
+	spf=pass  smtp.mailfrom=dpsmith@apertussolutions.com;
+	dmarc=pass header.from=<dpsmith@apertussolutions.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1711157626;
+	s=zoho; d=apertussolutions.com; i=dpsmith@apertussolutions.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=zTwwKIN0GuMJg2NfAmR7tXmcZNVQ9X8RONWejAf+ILA=;
+	b=V0YnjjmUHOoqSu0E6ecOozxCpL45ni+sdwedBmm/G4ETjsKhjJ9rjKO5YeE+1DyK
+	8x6FH+Z/xHt3BdkK9FPNXFzVS1wE10LyGtbPUcYy13Uwzinw3iZREXxoO1pIcB+2Gnz
+	gro6z8WYudke6koxfL07M5d2VG3TE55huGqNCVv0=
+Received: from [10.10.1.138] (static-72-81-132-2.bltmmd.fios.verizon.net [72.81.132.2]) by mx.zohomail.com
+	with SMTPS id 1711157624195513.236242023147; Fri, 22 Mar 2024 18:33:44 -0700 (PDT)
+Message-ID: <e52bbf77-4a80-4ebd-88f2-39e9b4063044@apertussolutions.com>
+Date: Fri, 22 Mar 2024 21:33:41 -0400
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 01/15] x86/boot: Place kernel_info at a fixed offset
+Content-Language: en-US
+To: "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Ross Philipson <ross.philipson@oracle.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+ linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
+ linux-efi@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, dave.hansen@linux.intel.com, mjg59@srcf.ucam.org,
+ James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de, jarkko@kernel.org,
+ jgg@ziepe.ca, luto@amacapital.net, nivedita@alum.mit.edu,
+ herbert@gondor.apana.org.au, davem@davemloft.net, kanth.ghatraju@oracle.com,
+ trenchboot-devel@googlegroups.com
+References: <20240214221847.2066632-1-ross.philipson@oracle.com>
+ <20240214221847.2066632-2-ross.philipson@oracle.com>
+ <CAMj1kXH3Gvr3vDRLDdXuc0s7ZAQYE6+D7tmCRBjJWwWt2fn4-w@mail.gmail.com>
+ <9d01a6d2-4dd9-4331-8fc9-b01c07cfdbb5@apertussolutions.com>
+ <32FDA47A-C87F-406F-A0B9-3AA1BB2EBAFB@zytor.com>
+From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
+Autocrypt: addr=dpsmith@apertussolutions.com; keydata=
+ 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
+In-Reply-To: <32FDA47A-C87F-406F-A0B9-3AA1BB2EBAFB@zytor.com>
+X-ZohoMailClient: External
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240322_175456_844547_64ECCBC0 
-X-CRM114-Status: UNSURE (   9.52  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20240322_183406_259193_5882176D 
+X-CRM114-Status: GOOD (  18.75  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -67,86 +117,49 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA256
+On 3/22/24 10:18, H. Peter Anvin wrote:
+> On March 21, 2024 6:45:48 AM PDT, "Daniel P. Smith" <dpsmith@apertussolutions.com> wrote:
+>> Hi Ard!
+>>
+>> On 2/15/24 02:56, Ard Biesheuvel wrote:
+>>> On Wed, 14 Feb 2024 at 23:31, Ross Philipson <ross.philipson@oracle.com> wrote:
+>>>>
+>>>> From: Arvind Sankar <nivedita@alum.mit.edu>
+>>>>
+>>>> There are use cases for storing the offset of a symbol in kernel_info.
+>>>> For example, the trenchboot series [0] needs to store the offset of the
+>>>> Measured Launch Environment header in kernel_info.
+>>>>
+>>>
+>>> Why? Is this information consumed by the bootloader?
+>>
+>> Yes, the bootloader needs a standardized means to find the offset of the MLE header, which communicates a set of meta-data needed by the DCE in order to set up for and start the loaded kernel. Arm will also need to provide a similar metadata structure and alternative entry point (or a complete rewrite of the existing entry point), as the current Arm entry point is in direct conflict with Arm DRTM specification.
+>>
+>>> I'd like to get away from x86 specific hacks for boot code and boot
+>>> images, so I would like to explore if we can avoid kernel_info, or at
+>>> least expose it in a generic way. We might just add a 32-bit offset
+>>> somewhere in the first 64 bytes of the bootable image: this could
+>>> co-exist with EFI bootable images, and can be implemented on arm64,
+>>> RISC-V and LoongArch as well.
+>>
+>> With all due respect, I would not refer to boot params and the kern_info extension designed by the x86 maintainers as a hack. It is the well-defined boot protocol for x86, just as Arm has its own boot protocol around Device Tree.
+>>
+>> We would gladly adopt a cross arch/cross image type, zImage and bzImage, means to embedded meta-data about the kernel that can be discovered by a bootloader. Otherwise, we are relegated to doing a per arch/per image type discovery mechanism. If you have any suggestions that are cross arch/cross image type that we could explore, we would be grateful and willing to investigate how to adopt such a method.
+>>
+>> V/r,
+>> Daniel
+> 
+> To be fair, the way things are going UEFI, i.e. PE/COFF, is becoming the new standard format. Yes, ELF would have been better, but...
 
-Hi Linus,
-
-Please pull some more powerpc updates for 6.9. These were posted before the
-merge window but had complicated dependencies and/or conflicts with other
-content that has gone into 6.9.
-
-cheers
-
-The following changes since commit 66a27abac311a30edbbb65fe8c41ff1b13876faa:
-
-  Merge tag 'powerpc-6.9-1' of git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux (2024-03-15 17:53:48 -0700)
-
-are available in the git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-6.9-2
-
-for you to fetch changes up to 5c4233cc0920cc90787aafe950b90f6c57a35b88:
-
-  powerpc/kdump: Split KEXEC_CORE and CRASH_DUMP dependency (2024-03-17 13:34:00 +1100)
-
-- ------------------------------------------------------------------
-powerpc updates for 6.9 #2
-
- - Handle errors in mark_rodata_ro() and mark_initmem_nx().
-
- - Make struct crash_mem available without CONFIG_CRASH_DUMP.
-
-Thanks to: Christophe Leroy, Hari Bathini.
-
-- ------------------------------------------------------------------
-Christophe Leroy (1):
-      powerpc: Handle error in mark_rodata_ro() and mark_initmem_nx()
-
-Hari Bathini (3):
-      kexec/kdump: make struct crash_mem available without CONFIG_CRASH_DUMP
-      powerpc/kexec: split CONFIG_KEXEC_FILE and CONFIG_CRASH_DUMP
-      powerpc/kdump: Split KEXEC_CORE and CRASH_DUMP dependency
-
-
- arch/powerpc/Kconfig                 |   9 +-
- arch/powerpc/include/asm/kexec.h     |  98 +++----
- arch/powerpc/kernel/prom.c           |   2 +-
- arch/powerpc/kernel/setup-common.c   |   2 +-
- arch/powerpc/kernel/smp.c            |   4 +-
- arch/powerpc/kexec/Makefile          |   3 +-
- arch/powerpc/kexec/core.c            |   4 +
- arch/powerpc/kexec/elf_64.c          |   4 +-
- arch/powerpc/kexec/file_load_64.c    | 269 ++++++++++----------
- arch/powerpc/mm/book3s32/mmu.c       |   7 +-
- arch/powerpc/mm/mmu_decl.h           |   8 +-
- arch/powerpc/mm/nohash/8xx.c         |  33 ++-
- arch/powerpc/mm/nohash/e500.c        |  10 +-
- arch/powerpc/mm/pgtable_32.c         |  38 ++-
- arch/powerpc/platforms/powernv/smp.c |   2 +-
- include/linux/crash_core.h           |  12 +-
- 16 files changed, 274 insertions(+), 231 deletions(-)
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEJFGtCPCthwEv2Y/bUevqPMjhpYAFAmX+Jw4ACgkQUevqPMjh
-pYA6WA/+PVlWRRhMWDZ0BEMFKtVMwUlGJWSZGNGqX/5ZV40lcTIsuIruw8C6VY11
-Hq1J+CafM3H7LnqzYwruAYhpBYwb1Oje6IK208XiKH+eUmCzzk+hLfjGdbNbkTOx
-6xBqoV3Hjj+p4H6QRXYkZQihQDHy9IfuBGNtoaTaiVuqg9NOT9PLnVNYaI11uLBP
-qRS08hkORyJEOO/QRjoVXyXdP7pOwl1EbuYYg805BZ9NFlp7j105yT8XjKQ1X5w+
-yF4b2eSV78/Z55dpnBM1GqJqkOSaQjq42PKS+JNSBRpgVDZiLzTdVgWBHY1Q2zho
-H5XH9RHvT789vtGsXxhYqvSOSMsM+LgdZo82ZQuqHDA5djmwoMOVXcb/NkyVZ0o3
-E+glLdWe6X+0B8Fhx2PH4R5j5j1r3/B2Ighf9Qz60rXNCnbUfT8ZJefyUZg6pHMg
-Y/YwdftiqBRnVsK1VSvMrIW3/Sk47QHlM2d7B11R9sVw85zlVwg4FHFXlGtoVpFS
-cWZityzVY10wKcblhHYt0/X0n2eeMhjyZuq9lvgls2zypr1qxJ+x/URVVM4hzbNH
-P+1qvVUp9mHfSmUGqC5OWv/365BhPQy2t7vkK1NYmmfee2r2umHEY9zphu/yysUg
-OQvE+v0F7fETuYg/QTWLlsusEyU0uBCoJOxeB2M6KacrNZfE64A=
-=SfuI
------END PGP SIGNATURE-----
+Fully agree with the ELF sentiment. We started looking to see if PE/COFF 
+has something similar to a ELF NOTE, but figured maybe this has been 
+solved for other cases. If that is not the case or there are not any 
+suggestions, then we can see what we can devise.
 
 _______________________________________________
 kexec mailing list
