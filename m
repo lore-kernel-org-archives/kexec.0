@@ -4,86 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1879EC6FD1F
-	for <kexec@archiver.kernel.org>; Tue, 26 Mar 2024 15:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 34A8CC6FD1F
+	for <kexec@archiver.kernel.org>; Tue, 26 Mar 2024 17:53:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
+	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=dNrI1vp6QZyI+VC2xzs4RpYj9lpb2uP1UzbIkjeVKow=; b=3KCkqE1+1mEFFn
-	6XKb/aq0G8mq21pJXHXwI2OFednopQ02491HZjKl/zcUQ9tu9zamnH2RTdx19vbzXNQdecmxnSqbj
-	EL++bstKO7nsqf5m4L3thR8GsbFE4Q+n0lDPd+yPW+yM87NKo6gh3LbNnWjI7b+D/8OOWc75zha5G
-	Mhd//XnBU3D9v57fnF4lZ2ly879qHRnXI82rlgnhNKiybo9qy/HdRfGXW67Ga6SqtPzL4VhfJSocO
-	tPEkiyyI+avTOlGV8gZHf57S67oFGWt5i3fHcvrot3N3DVi2teR3nDPxEenzRQ8lDSDzBHH+6x3rW
-	GXL63yeQPIufd/jgPlXQ==;
+	List-Owner; bh=vIrNmOgMHs7zS08XOX/So6VxizH8TjxiUHMA7plirbQ=; b=mO/u5ghXXBamGJ
+	+/8kxBcNR0rgrOZEcAVA+i0C+FqEAihqD9kcaHhMoe36O8bCavJAOGOxn0dP3J26PCEUQrbjPBlOb
+	iFptJ4rafkYdZP7I0qrTd4uDfSxlkyXj487nOS9c0V98Ka1zuAJprrIrqPFdwaqGEIgkA5Kha7Jq+
+	LH+JtUbLhLg/tD2CJ1ovNCdwvxl67eJtnxv0oJeBmv39g6RVqVMz4kMUAbdHI4uTPpQaVi6N9OcHv
+	xccyj/6j5xCQRjjiYXj0+rxGo8n5/uVvTscEydVW0TjvBecx4IFttgGw302gLnIZ4m10a4TBeG6Mo
+	AEogwTtneWMsTFKmM/fw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rp8mt-00000005BAq-1ZZZ;
-	Tue, 26 Mar 2024 15:32:31 +0000
-Received: from mail-qv1-xf30.google.com ([2607:f8b0:4864:20::f30])
+	id 1rpAzi-00000005p7S-46SZ;
+	Tue, 26 Mar 2024 17:53:54 +0000
+Received: from mgamail.intel.com ([198.175.65.17])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rp8mo-00000005B7u-3bL7
+	id 1rpAzb-00000005p5i-0Woi
 	for kexec@lists.infradead.org;
-	Tue, 26 Mar 2024 15:32:29 +0000
-Received: by mail-qv1-xf30.google.com with SMTP id 6a1803df08f44-690d7a8f904so59122046d6.1
-        for <kexec@lists.infradead.org>; Tue, 26 Mar 2024 08:32:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1711467145; x=1712071945; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=O3SHR7HxdotDZ2M8AZNxpUiAzi1WTnbP3eb5Z70DWwE=;
-        b=bYMsaqWCl6KLbgAeQZyHYEZ1bClTj3bH36cr/Vor8NY3puP8zjmSWHydLau7uwaml4
-         +lxAi0d5VicPsAPDM+Q9hQsFqlguOYjwduLeR1CGOSe1y9JK0fug9B8oRqqMYhsOvT3s
-         q/nH2s6Ux7pmIwMcGvwyIrIJV+lBxwEfkPwUgLISCeiREvVSUYpOoGIRW1+1+9G9EPjU
-         KDYGCSzB+Go3nQm6JM8lWokaDHaKLGTok+Ve+PfXJraAlMJoUB3QEq0OOePFfJ8ZJG5+
-         5ZFJf5fw7IVz4iCGly+Uln0Vtuiz8saPVDDSAxQqjrrVuUgJ6kRWynKjFZtUDGoOlnAC
-         ILIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711467145; x=1712071945;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=O3SHR7HxdotDZ2M8AZNxpUiAzi1WTnbP3eb5Z70DWwE=;
-        b=aFoZZnFUb0gQiibt8MF3mDQGQM8sMswpCWoqEwj1s3XyQu+9vCfV18gbAMApGFdZLC
-         YzH7K4DR93HAjHdKEdG1ZAOc/INuXJEHXb+xjTH6mQ5uuyw7q19mOfdQyzYxYKXcbDYs
-         h5Rv/DDtnsMEKqj+S11A1F19USIfKKDAT+Z6pOgJz6VKGIS2pHBdh0/Esxk+MqMbCepY
-         tQHTYF9B4TiOxqMhWcTBNqrxJVTLvbfsGw9aA3WT6Y37fJOEzhtnVTY5RS4wbcpnyYTS
-         eonPu1wQw9jDYEqKpxGt7lcUkF3hoyfI0QAnF7eASpvsfuhJt0uuMJ0CvoO1KhZtSyzs
-         BYog==
-X-Forwarded-Encrypted: i=1; AJvYcCUY5J7b4H3JXCm7UuiowDXkoQUW7WK+ScQvlNL/npazXy8xkgBwe6s6DDHjiwmweO6vSt/VdfSdYn20XjGY6DEXGOtUXN8RWcWK
-X-Gm-Message-State: AOJu0YzNoHar3CloDFiqjkwI0X6GK47x7Hf1zX06wyAjWhbeG2xqomdt
-	k8ZZ4K4hcSGDFtZKQFt6qQWn0JBHYXfH18EAPWfflkbHPv7mJx5I7KApJMvu24s=
-X-Google-Smtp-Source: AGHT+IFb5rsoFzP1zcQcm+tSf+kkK6vnwteEHMmMK0+qzdpITXfqA9F3uCSQSSM/c2javsPnq0SJmA==
-X-Received: by 2002:a05:6214:2249:b0:696:89ae:9f57 with SMTP id c9-20020a056214224900b0069689ae9f57mr2883743qvc.25.1711467144748;
-        Tue, 26 Mar 2024 08:32:24 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
-        by smtp.gmail.com with ESMTPSA id 5-20020a05621420c500b006968303bf73sm3279781qve.94.2024.03.26.08.32.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Mar 2024 08:32:23 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.95)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1rp8ml-003UNx-AR;
-	Tue, 26 Mar 2024 12:32:23 -0300
-Date: Tue, 26 Mar 2024 12:32:23 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: "Margolin, Michael" <mrgolin@amazon.com>
-Cc: Tao Liu <ltao@redhat.com>, Gal Pressman <gal.pressman@linux.dev>,
-	sleybo@amazon.com, leon@kernel.org, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: Re: Implementing .shutdown method for efa module
-Message-ID: <20240326153223.GF8419@ziepe.ca>
-References: <CAO7dBbVNv5NWRN6hXeo5rNEixn-ctmTLLn2KAKhEBYvvR+Du2w@mail.gmail.com>
- <5d81d6d0-5afc-4d0e-8d2b-445d48921511@linux.dev>
- <CAO7dBbXLU5teiYm8VvES7e7m7dUzJQYV9HHLOFKperjwq-NJeA@mail.gmail.com>
- <b6c0bd81-3b8d-465d-a0eb-faa5323a6b05@amazon.com>
+	Tue, 26 Mar 2024 17:53:48 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711475627; x=1743011627;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=wU0JE4kouoaua5oyHsX4nd5C2asEXFa3mxPJlgLUrxk=;
+  b=BirKAMP8+SgZ0Uj1MA/Ng0oiHDd/5TJOQTi/Qw/7bJmIux8bonXSmnBb
+   +LzzwelS4qBjN12H3kAMldimwjDSTPjqZeC6aDJyz3qagkcWXmRSDt31X
+   UHYzeOh4vaPuh2Mky9E6fyS8UYjAOM2CpIyT1G7HWC1BlKw8W/cHpE1Xl
+   lUFwZe607EnI1UCiQ0ZFP31ZDi3FjNam4pMAIpccGPXrLlkWHrm83aFFI
+   C258j3n9PW2VrZ/MZ949LDZ5I6D6MQ7JTAUUkJHuaEwQQylQUayO9isHm
+   fnSasi496XlVhiI3rHjzLhvf+74fcbw0dS8Fw4rl2P2CFSd0wxoTzq7KG
+   Q==;
+X-CSE-ConnectionGUID: GPqt5xwERcihzHm7BYlR/w==
+X-CSE-MsgGUID: yIrziHtQSdqj2fJ5ou6QKA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="6651554"
+X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
+   d="scan'208";a="6651554"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 10:53:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
+   d="scan'208";a="53500100"
+Received: from pwimalas-mobl.amr.corp.intel.com (HELO [10.251.11.118]) ([10.251.11.118])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 10:53:41 -0700
+Message-ID: <0582b182-3293-43d5-a4be-5e0c6e97f7ff@linux.intel.com>
+Date: Tue, 26 Mar 2024 10:53:39 -0700
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <b6c0bd81-3b8d-465d-a0eb-faa5323a6b05@amazon.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv9 17/17] ACPI: tables: Print MULTIPROC_WAKEUP when MADT is
+ parsed
+Content-Language: en-US
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Elena Reshetova <elena.reshetova@intel.com>,
+ Jun Nakajima <jun.nakajima@intel.com>,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>,
+ Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish"
+ <ashish.kalra@amd.com>, Sean Christopherson <seanjc@google.com>,
+ "Huang, Kai" <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>,
+ kexec@lists.infradead.org, linux-coco@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20240325103911.2651793-1-kirill.shutemov@linux.intel.com>
+ <20240325103911.2651793-18-kirill.shutemov@linux.intel.com>
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20240325103911.2651793-18-kirill.shutemov@linux.intel.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240326_083226_985545_F5F93D3C 
-X-CRM114-Status: GOOD (  12.52  )
+X-CRM114-CacheID: sfid-20240326_105347_254494_6F82BB5B 
+X-CRM114-Status: GOOD (  14.55  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,31 +97,55 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Mar 26, 2024 at 02:34:45PM +0200, Margolin, Michael wrote:
-> Hi Tao,
-> 
-> Thanks for bringing this up.
-> 
-> I've unsuccessfully tried to reproduce this kernel panic using production
-> Red Hat 9.3 AMI (5.14.0-362.18.1.el9_3.aarch64).
-> 
-> Are there any related changes in the kernel you are testing?
-> 
-> Anyways we do need to handle shutdown properly, please let know if calling
-> to efa_remove solves your issue.
 
-efa_remove should not be used for shutdown..
+On 3/25/24 3:39 AM, Kirill A. Shutemov wrote:
+> When MADT is parsed, print MULTIPROC_WAKEUP information:
+>
+> ACPI: MP Wakeup (version[1], mailbox[0x7fffd000], reset[0x7fffe068])
+>
+> This debug information will be very helpful during bring up.
+>
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Reviewed-by: Baoquan He <bhe@redhat.com>
+> ---
 
-If you have an iommu in your system (smmuv3 for this ARM64 case) then
-drivers must implement a shutdown handler or you will risk data
-corruption on ARM64 sytems during crash.
+Looks good to me.
 
-The shutdown handler must stop all DMA from the device.
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-If you don't have an iommu then the shutdown handler shouldn't be
-critical.
+>  drivers/acpi/tables.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>
+> diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
+> index b976e5fc3fbc..9e1b01c35070 100644
+> --- a/drivers/acpi/tables.c
+> +++ b/drivers/acpi/tables.c
+> @@ -198,6 +198,20 @@ void acpi_table_print_madt_entry(struct acpi_subtable_header *header)
+>  		}
+>  		break;
+>  
+> +	case ACPI_MADT_TYPE_MULTIPROC_WAKEUP:
+> +		{
+> +			struct acpi_madt_multiproc_wakeup *p =
+> +				(struct acpi_madt_multiproc_wakeup *)header;
+> +			u64 reset_vector = 0;
+> +
+> +			if (p->version >= ACPI_MADT_MP_WAKEUP_VERSION_V1)
+> +				reset_vector = p->reset_vector;
+> +
+> +			pr_debug("MP Wakeup (version[%d], mailbox[%#llx], reset[%#llx])\n",
+> +				 p->version, p->mailbox_address, reset_vector);
+> +		}
+> +		break;
+> +
+>  	case ACPI_MADT_TYPE_CORE_PIC:
+>  		{
+>  			struct acpi_madt_core_pic *p = (struct acpi_madt_core_pic *)header;
 
-Jason
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
+
 
 _______________________________________________
 kexec mailing list
