@@ -4,86 +4,114 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7E650C54E64
-	for <kexec@archiver.kernel.org>; Tue, 26 Mar 2024 01:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CD744C54E58
+	for <kexec@archiver.kernel.org>; Tue, 26 Mar 2024 05:55:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=u8JZgLTmv1G/w/a9Vi9sR2UYE624gKFjda5xUR7GKSk=; b=4fLzcH2qvXAG6s
-	NWf8aGtKQ+KysdkfcYDxnr2dkc8zHW2WD1yxq2lzMxEHv6sw9vwM9VsJ5qOEucSUJ0V6zc3YyR9Qg
-	WX7ucFdY7kebHo5sHZIi1N05I5IncSfcvthQJWO8sd8GFplv8XbIIQPZAZ25GnpezprIp9Oby5F5r
-	yuumew1T91HkGp7bsyJ4hmCb8G+u5dijbXAUftOs0fSW44QawEV4HqKD+tiLKGoB3mAuCjI3Pftq2
-	fatONHia2TWFA2m+Y6Wq//SGeq4WEAI2FrYKvhktjSBBBha8uF1TZc8En364ljEhJEkZYSC+RAcDw
-	1rFjdYI5W+rNiG8uONqg==;
+	List-Owner; bh=zo244+n3+p1qFIHCDDXJrt2EAcZCPYf2slLk179zjq4=; b=Rsypk7MMtht8Mt
+	ZOLeN65hjKhpCDrOQT5q/njgNgiEQNUpt+HpYfHCi7qZxv+N3xFj9jC7tmukNe6WjIM59L0s68fpb
+	1Yd9j0Jz9SPUmHLkk3SelbcmI7MakTvtsnKY8vYIi+YS6cUkgTr39h5B7Bi55PIVc0p0ZaphOHm7w
+	jy6xHz1YEJKoxzdBbqDjFy9mSUFpzehH7+LsB7Fo2ho7AuOyoBiJVP/AQepvvljwi3eLw0VGSAG++
+	94XLQ4J7q3UA0J0+U/mjxOXW9uiVTASfwp1e3BnmSLkgQ6W++QY4Vcxqau8ZCf67xLVO8nrTDAeHU
+	hJwTdGirl+N9JHQDyGWA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rovma-00000002fV2-0QnN;
-	Tue, 26 Mar 2024 01:39:20 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1rozmb-00000003Bt9-0Ufm;
+	Tue, 26 Mar 2024 05:55:37 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rovmW-00000002fUK-0rNi
+	id 1rozmE-00000003Bny-2XJW
 	for kexec@lists.infradead.org;
-	Tue, 26 Mar 2024 01:39:17 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711417153;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WTaD6mudg7VhN+d5uv+mspRcpmC/ctCIgx4dGqOcYps=;
-	b=eeLR3mjNt/8vZD/op0V2xrWfeyHNBoAdyc19DhJvqEMY9+YKNkGhYaWNwNTop33JzO/4zl
-	JO5kr8w7yPr6lkSx8g2c83bBdUCdfsDNA8iyJ0zKUHyq6prQmy1oZ1cnVLBrnzP+SYO3sM
-	4wO27W2lgdk3FRKTEPdxaORubQ8aJdE=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-581-tubJ1ArWPP-UWynZwFCWDw-1; Mon, 25 Mar 2024 21:39:11 -0400
-X-MC-Unique: tubJ1ArWPP-UWynZwFCWDw-1
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-33ecf15c037so3932997f8f.3
-        for <kexec@lists.infradead.org>; Mon, 25 Mar 2024 18:39:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711417150; x=1712021950;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WTaD6mudg7VhN+d5uv+mspRcpmC/ctCIgx4dGqOcYps=;
-        b=VGAiQ6IRqPD6Bd7hG3KZjS5OyXze3NF1pSSD/qvagqxBIX9GC00qheGXredBvx56Sj
-         lxHem8CTArJQMVvqwCPPc7yXpPoLlZ9qBvWAf2o8c4P/E23QgSxtkvGgtO7dDAhbCZKR
-         zaB1s35n+2GDV50KeYsh5VTf7vbMYLOoGE5qxu8DlnudQSBAlzOFoVJ44bTD+ETXHPAN
-         bGwrAiNo4TYzKMuIdP5jdLD8gpXW5zaoGA4Bb6zmA4/U4FeoF9s3o2yGAS8mZZFPZeBV
-         KpQ2itYR2R/3XU8E7wH1ukXttndEVttxvIKCrRdyjdRC/OZ1iwn5xn+OAZWMw8pspfCd
-         5Z8g==
-X-Forwarded-Encrypted: i=1; AJvYcCX0EINtZkVnkRC0vZYGrVhAkj4oUrpc3RPSPuzQemn6+QF4B7XQe1NRc7avZohS/IO1BhCOiTf0+hjxAN9qM+AcFG8n6eacpEql
-X-Gm-Message-State: AOJu0YxO6p0WH++IJyHFSJFrqiLx6w66sqTloYsmtJcOuZwkREJ5D2yn
-	LfQvCfOBMm/avUTVQxumyvCXD68iCp0IksMFVTfwDQ/y6dq5n1mpQRp1HMtctfoiFfVGiYInAs4
-	ULrsZaFJujn8D8K2f0TCc7TXBc7wM0gvsF9K+79wVcTJ0C5YSmVxtB4gaCMw68cygSF23Kbx8vb
-	9iQsxUxNDv+r8ECUsAZwGHGGwDDiWVIGlD
-X-Received: by 2002:a5d:60c9:0:b0:341:865b:65c9 with SMTP id x9-20020a5d60c9000000b00341865b65c9mr7571757wrt.22.1711417150411;
-        Mon, 25 Mar 2024 18:39:10 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHGAVRQvSolwKhN9lxaw7HUOTpaQxkO72OCZv+7YVENFG33vSWYVqDPTA5Pq/1JgP4Gbiom3nqQHbE/DxEgqA8=
-X-Received: by 2002:a5d:60c9:0:b0:341:865b:65c9 with SMTP id
- x9-20020a5d60c9000000b00341865b65c9mr7571746wrt.22.1711417150064; Mon, 25 Mar
- 2024 18:39:10 -0700 (PDT)
+	Tue, 26 Mar 2024 05:55:31 +0000
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42Q5YfeU016258;
+	Tue, 26 Mar 2024 05:54:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=uqiOsbw32rmsY6Gb4eWen7zTY7W98554VJgsw/QA18Q=;
+ b=eVCbeKeCfp/WoMISj+rchINtbWY0z6V2aftCmt5eV86/qRWoKrVfD5QKD8UkbpvsVAch
+ Dxj6PQJ8yQvI0jZa3q4VLOMZV31pyEvNNCrddc1YB0HgOfaQ13sDKhJzirH35vG1CyJC
+ IAwvDNnlBvnG0fjZoGtyaWDvBATANL8fo9AWvdFTCpcPMqxPpTkO3AW029wcuP+s5I9V
+ 7bslTocAJSKhyyYEqNEbkaoDkx6SIp9T54L7GRw2Yprq6O/K7XuNnwSm1OlX7/hQNnJb
+ Vc6mUOhF3pHqbbwvUDqQsFVI1eG8Xt8sGmgwoDXtYA3357cIk99Dd1M/0wp52vgbskTC uQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x3kb10kbu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 26 Mar 2024 05:54:44 +0000
+Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42Q5oVIc012310;
+	Tue, 26 Mar 2024 05:54:43 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x3kb10kbp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 26 Mar 2024 05:54:43 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42Q4spVs016411;
+	Tue, 26 Mar 2024 05:54:42 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x29dtx6yf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 26 Mar 2024 05:54:42 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42Q5sbh823659020
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 26 Mar 2024 05:54:39 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2CCE920040;
+	Tue, 26 Mar 2024 05:54:37 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EB54D2004B;
+	Tue, 26 Mar 2024 05:54:28 +0000 (GMT)
+Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.ibm.com.com (unknown [9.43.19.10])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 26 Mar 2024 05:54:28 +0000 (GMT)
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+To: linuxppc-dev@ozlabs.org
+Cc: Sourabh Jain <sourabhjain@linux.ibm.com>, Baoquan He <bhe@redhat.com>,
+        Hari Bathini <hbathini@linux.ibm.com>, Akhil Raj <lf32.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dave Young <dyoung@redhat.com>, David Hildenbrand <david@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Laurent Dufour <laurent.dufour@fr.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mimi Zohar <zohar@linux.ibm.com>, Naveen N Rao <naveen@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Valentin Schneider <vschneid@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org,
+        x86@kernel.org
+Subject: [PATCH v18 1/6] crash: forward memory_notify arg to arch crash hotplug handler
+Date: Tue, 26 Mar 2024 11:24:08 +0530
+Message-ID: <20240326055413.186534-2-sourabhjain@linux.ibm.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240326055413.186534-1-sourabhjain@linux.ibm.com>
+References: <20240326055413.186534-1-sourabhjain@linux.ibm.com>
 MIME-Version: 1.0
-References: <CAO7dBbVNv5NWRN6hXeo5rNEixn-ctmTLLn2KAKhEBYvvR+Du2w@mail.gmail.com>
- <5d81d6d0-5afc-4d0e-8d2b-445d48921511@linux.dev>
-In-Reply-To: <5d81d6d0-5afc-4d0e-8d2b-445d48921511@linux.dev>
-From: Tao Liu <ltao@redhat.com>
-Date: Tue, 26 Mar 2024 09:38:33 +0800
-Message-ID: <CAO7dBbXLU5teiYm8VvES7e7m7dUzJQYV9HHLOFKperjwq-NJeA@mail.gmail.com>
-Subject: Re: Implementing .shutdown method for efa module
-To: Gal Pressman <gal.pressman@linux.dev>
-Cc: mrgolin@amazon.com, sleybo@amazon.com, jgg@ziepe.ca, leon@kernel.org, 
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-rdma@vger.kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: br9VreehUJ8RUekvF7zHmsvsc296NjXb
+X-Proofpoint-ORIG-GUID: 4-FE7n0vtOa5WV1aK4D4xYLZmw1uzQ_y
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-26_02,2024-03-21_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ priorityscore=1501 lowpriorityscore=0 clxscore=1015 spamscore=0
+ phishscore=0 bulkscore=0 suspectscore=0 malwarescore=0 adultscore=0
+ mlxscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2403210000 definitions=main-2403260037
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240325_183916_349991_A5CAF75D 
-X-CRM114-Status: GOOD (  26.06  )
+X-CRM114-CacheID: sfid-20240325_225514_939274_C5B715C1 
+X-CRM114-Status: GOOD (  24.32  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -95,98 +123,170 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-SGkgR2FsLAoKT24gTW9uLCBNYXIgMjUsIDIwMjQgYXQgNDowNuKAr1BNIEdhbCBQcmVzc21hbiA8
-Z2FsLnByZXNzbWFuQGxpbnV4LmRldj4gd3JvdGU6Cj4KPiBPbiAyNS8wMy8yMDI0IDQ6MTAsIFRh
-byBMaXUgd3JvdGU6Cj4gPiBIaSwKPiA+Cj4gPiBSZWNlbnRseSBJIGV4cGVyaWVuY2VkIGEga2Vy
-bmVsIHBhbmljIHdoaWNoIGlzIHJlbGF0ZWQgdG8gZWZhIG1vZHVsZQo+ID4gd2hlbiB0ZXN0aW5n
-IGtleGVjIC1sICYmIGtleGVjIC1lIHRvIHN3aXRjaCB0byBhIG5ldyBrZXJuZWwgb24gQVdTCj4g
-PiBpNGcuMTZ4bGFyZ2UgaW5zdGFuY2UuCj4gPgo+ID4gSGVyZSBpcyB0aGUgZG1lc2cgbG9nOgo+
-ID4KPiA+IFsgICAgNi4zNzk5MThdIHN5c3RlbWRbMV06IE1vdW50aW5nIEZVU0UgQ29udHJvbCBG
-aWxlIFN5c3RlbS4uLgo+ID4gWyAgICA2LjM4MTk4NF0gc3lzdGVtZFsxXTogTW91bnRpbmcgS2Vy
-bmVsIENvbmZpZ3VyYXRpb24gRmlsZSBTeXN0ZW0uLi4KPiA+IFsgICAgNi4zODM5MThdIHN5c3Rl
-bWRbMV06IFN0YXJ0aW5nIEFwcGx5IEtlcm5lbCBWYXJpYWJsZXMuLi4KPiA+IFsgICAgNi4zODU0
-MzBdIHN5c3RlbWRbMV06IFN0YXJ0ZWQgSm91cm5hbCBTZXJ2aWNlLgo+ID4gWyAgICA2LjM5NDIy
-MV0gQUNQSTogYnVzIHR5cGUgZHJtX2Nvbm5lY3RvciByZWdpc3RlcmVkCj4gPiBbICAgIDYuNDIx
-NDA4XSBzeXN0ZW1kLWpvdXJuYWxkWzEyNjNdOiBSZWNlaXZlZCBjbGllbnQgcmVxdWVzdCB0bwo+
-ID4gZmx1c2ggcnVudGltZSBqb3VybmFsLgo+ID4gWyAgICA3LjI2MjU0M10gZWZhIDAwMDA6MDA6
-MWIuMDogZW5hYmxpbmcgZGV2aWNlICgwMDEwIC0+IDAwMTIpCj4gPiBbICAgIDcuNDMyNDIwXSBl
-ZmEgMDAwMDowMDoxYi4wOiBTZXR1cCBpcnE6MTkxIG5hbWU6ZWZhLW1nbW50QHBjaTowMDAwOjAw
-OjFiLjAKPiA+IFsgICAgNy40MzU1ODFdIGVmYSAwMDAwOjAwOjFiLjAgZWZhXzA6IElCIGRldmlj
-ZSByZWdpc3RlcmVkCj4gPiBbICAgIDcuODg1NTY0XSByYW5kb206IGNybmcgaW5pdCBkb25lCj4g
-PiBbICAgIDguMTM5ODU3XSBYRlMgKG52bWUwbjFwMik6IE1vdW50aW5nIFY1IEZpbGVzeXN0ZW0K
-PiA+IGQ3MDAzZWNjLWRiNmYtNGJmYi1iZjkyLTYwMzc2YjZhNjU2Mwo+ID4gWyAgICA4LjI2NTIz
-M10gWEZTIChudm1lMG4xcDIpOiBFbmRpbmcgY2xlYW4gbW91bnQKPiA+IFsgICAxMC41NTU2MTJd
-IElQdjY6IEFERFJDT05GKE5FVERFVl9DSEFOR0UpOiBldGgwOiBsaW5rIGJlY29tZXMgcmVhZHkK
-PiA+Cj4gPiBSZWQgSGF0IEVudGVycHJpc2UgTGludXggOS40IEJldGEgKFBsb3cpCj4gPiBLZXJu
-ZWwgNS4xNC4wLTQyNS5lbDkuYWFyY2g2NCBvbiBhbiBhYXJjaDY0Cj4gPgo+ID4gaXAtMTAtMC0y
-Ny0yMjYgbG9naW46IFsgICAyOS45NDAzODFdIGtleGVjX2NvcmU6IFN0YXJ0aW5nIG5ldyBrZXJu
-ZWwKPiA+IFsgICAzMC4wNzkyNzldIHBzY2k6IENQVTEga2lsbGVkIChwb2xsZWQgMCBtcykKPiA+
-IFsgICAzMC4xMTkyMjJdIHBzY2k6IENQVTIga2lsbGVkIChwb2xsZWQgMCBtcykKPiA+IFsgICAz
-MC4xOTkyOTNdIHBzY2k6IENQVTMga2lsbGVkIChwb2xsZWQgMCBtcykKPiA+IFsgICAzMC4zMDky
-MTRdIHBzY2k6IENQVTQga2lsbGVkIChwb2xsZWQgMCBtcykKPiA+IFsgICAzMC4zNzkyMjFdIHBz
-Y2k6IENQVTUga2lsbGVkIChwb2xsZWQgMCBtcykKPiA+IFsgICAzMC40MTkyMTBdIHBzY2k6IENQ
-VTYga2lsbGVkIChwb2xsZWQgMCBtcykKPiA+IFsgICAzMC40ODkyMDddIElSUSAxOTE6IG5vIGxv
-bmdlciBhZmZpbmUgdG8gQ1BVNwo+ID4gWyAgIDMwLjQ4OTY2N10gcHNjaTogQ1BVNyBraWxsZWQg
-KHBvbGxlZCAwIG1zKQo+ID4gLi5zbmlwLi4uCj4gPiBbICAgMzMuODQ5MTIzXSBwc2NpOiBDUFU2
-MyBraWxsZWQgKHBvbGxlZCAwIG1zKQo+ID4gWyAgIDMzLjg0OTk0M10gQnllIQo+ID4gWyAgICAw
-LjAwMDAwMF0gQm9vdGluZyBMaW51eCBvbiBwaHlzaWNhbCBDUFUgMHgwMDAwMDAwMDAwIFsweDQx
-M2ZkMGMxXQo+ID4gWyAgICAwLjAwMDAwMF0gTGludXggdmVyc2lvbiA1LjE0LjAtNDE3LmVsOS5h
-YXJjaDY0Cj4gPiAobW9ja2J1aWxkQGFybTY0LTAyNS5idWlsZC5lbmcuYm9zLnJlZGhhdC5jb20p
-IChnY2MgKEdDQykgMTEuNC4xCj4gPiAyMDIzMTIxOCAoUmVkIEhhdCAxMS40LjEtMyksIEdOVSBs
-ZCB2ZXJzaW9uIDIuMzUuMi00Mi5lbDkpICMxIFNNUAo+ID4gUFJFRU1QVF9EWU5BTUlDIFRodSBG
-ZWIgMSAyMToyMzowMyBFU1QgMjAyNAo+ID4gLi4uc25pcC4uLgo+ID4gWyAgICAxLjAxMjY5Ml0g
-RnJlZWluZyB1bnVzZWQga2VybmVsIG1lbW9yeTogNjAxNksKPiA+IFsgICAgMi4zNzA5NDddIENo
-ZWNrZWQgVytYIG1hcHBpbmdzOiBwYXNzZWQsIG5vIFcrWCBwYWdlcyBmb3VuZAo+ID4gWyAgICAy
-LjM3MDk4MF0gUnVuIC9pbml0IGFzIGluaXQgcHJvY2Vzcwo+ID4gWyAgICAyLjM3MDk4Ml0gICB3
-aXRoIGFyZ3VtZW50czoKPiA+IFsgICAgMi4zNzA5ODNdICAgICAvaW5pdAo+ID4gWyAgICAyLjM3
-MDk4NF0gICB3aXRoIGVudmlyb25tZW50Ogo+ID4gWyAgICAyLjM3MDk4NF0gICAgIEhPTUU9Lwo+
-ID4gWyAgICAyLjM3MDk4NV0gICAgIFRFUk09bGludXgKPiA+IFsgICAgMi4zNzMyNTddIEtlcm5l
-bCBwYW5pYyAtIG5vdCBzeW5jaW5nOiBBdHRlbXB0ZWQgdG8ga2lsbCBpbml0IQo+ID4gZXhpdGNv
-ZGU9MHgwMDAwMDAwYgo+ID4gWyAgICAyLjM3MzI1OV0gQ1BVOiAxIFBJRDogMSBDb21tOiBpbml0
-IE5vdCB0YWludGVkIDUuMTQuMC00MTcuZWw5LmFhcmNoNjQgIzEKPiA+IFsgICAgMi4zODIyNDBd
-IEhhcmR3YXJlIG5hbWU6IEFtYXpvbiBFQzIgaTRnLjE2eGxhcmdlLywgQklPUyAxLjAgMTEvMS8y
-MDE4Cj4gPiBbICAgIDIuMzgzODE0XSBDYWxsIHRyYWNlOgo+ID4gWyAgICAyLjM4NDQxMF0gIGR1
-bXBfYmFja3RyYWNlKzB4YTgvMHgxMjAKPiA+IFsgICAgMi4zODUzMThdICBzaG93X3N0YWNrKzB4
-MWMvMHgzMAo+ID4gWyAgICAyLjM4NjEyNF0gIGR1bXBfc3RhY2tfbHZsKzB4NzQvMHg4Ywo+ID4g
-WyAgICAyLjM4NzAxMV0gIGR1bXBfc3RhY2srMHgxNC8weDI0Cj4gPiBbICAgIDIuMzg3ODEwXSAg
-cGFuaWMrMHgxNTgvMHgzNjgKPiA+IFsgICAgMi4zODg1NTNdICBkb19leGl0KzB4M2E4LzB4M2Iw
-Cj4gPiBbICAgIDIuMzg5MzMzXSAgZG9fZ3JvdXBfZXhpdCsweDM4LzB4YTQKPiA+IFsgICAgMi4z
-OTAxOTVdICBnZXRfc2lnbmFsKzB4N2E0LzB4ODEwCj4gPiBbICAgIDIuMzkxMDQ0XSAgZG9fc2ln
-bmFsKzB4MWJjLzB4MjYwCj4gPiBbICAgIDIuMzkxODcwXSAgZG9fbm90aWZ5X3Jlc3VtZSsweDEw
-OC8weDIxMAo+ID4gWyAgICAyLjM5MjgzOV0gIGVsMF9kYSsweDE1NC8weDE2MAo+ID4gWyAgICAy
-LjM5MzYwM10gIGVsMHRfNjRfc3luY19oYW5kbGVyKzB4ZGMvMHgxNTAKPiA+IFsgICAgMi4zOTQ2
-MjhdICBlbDB0XzY0X3N5bmMrMHgxN2MvMHgxODAKPiA+IFsgICAgMi4zOTU1MTNdIFNNUDogc3Rv
-cHBpbmcgc2Vjb25kYXJ5IENQVXMKPiA+IFsgICAgMi4zOTY0ODNdIEtlcm5lbCBPZmZzZXQ6IDB4
-NTg2ZjA0ZTAwMDAwIGZyb20gMHhmZmZmODAwMDA4MDAwMDAwCj4gPiBbICAgIDIuMzk3OTM0XSBQ
-SFlTX09GRlNFVDogMHg0MDAwMDAwMAo+ID4gWyAgICAyLjM5ODc3NF0gQ1BVIGZlYXR1cmVzOiAw
-eDAsMDAwMDAxMDEsNzAwMjAxNDMsMTA0MTdhMGIKPiA+IFsgICAgMi40MDAwNDJdIE1lbW9yeSBM
-aW1pdDogbm9uZQo+ID4gWyAgICAyLjQwMDc4M10gLS0tWyBlbmQgS2VybmVsIHBhbmljIC0gbm90
-IHN5bmNpbmc6IEF0dGVtcHRlZCB0byBraWxsCj4gPiBpbml0ISBleGl0Y29kZT0weDAwMDAwMDBi
-IF0tLS0KPiA+Cj4gPiBJbiB0aGUgZG1lc2cgbG9nLCBJIGZvdW5kICJbICAgMzAuNDg5MjA3XSBJ
-UlEgMTkxOiBubyBsb25nZXIgYWZmaW5lIHRvCj4gPiBDUFU3IiBpcyBzdXNwaWNpb3VzLCB3aGlj
-aCBpcyByZWxhdGVkIHRvIGVmYSBtb2R1bGUuIEFmdGVyIGJsYWNrbGlzdAo+ID4gZWZhIG1vZHVs
-ZSBmcm9tIGF1dG9tYXRpYyBsb2FkaW5nIHdoZW4gYm9vdHVwLCB0aGUga2VybmVsIHBhbmljIGlz
-c3VlCj4gPiBkb2Vzbid0IGFwcGVhciBhZ2Fpbi4KPiA+Cj4gPiBJdCBsb29rcyB0byBtZSBpdCBp
-cyBkdWUgdG8gdGhlIGVmYSBiZWluZyBub3QgcHJvcGVybHkgc2h1dGRvd24gZHVyaW5nCj4gPiBr
-ZXhlYywgc28gdGhlIG9uZ29pbmcgRE1BL2ludGVycnVwdHMgZXRjIG92ZXJ3cml0ZSB0aGUgbWVt
-b3J5IHJhbmdlLgo+ID4KPiA+IFRob3VnaCB0aGUgaXNzdWUgaXMgcmVwcm9kdWNlZCBvbiByaGVs
-J3Mga2VybmVsLCB0aGUgdXBzdHJlYW0ga2VybmVsCj4gPiBbMV0gZG9lc24ndCBoYXZlIHRoZSAu
-c2h1dGRvd24gbWV0aG9kIGltcGxlbWVudGVkIGVpdGhlci4gU2luY2UgSSdtCj4gPiBub3QgdmVy
-eSBmYW1pbGlhciB3aXRoIHRoZSBlZmEgZHJpdmVyLCBjb3VsZCB5b3UgcGxlYXNlIGltcGxlbWVu
-dCB0aGUKPiA+IC5zaHV0ZG93biBtZXRob2QgaW4gZHJpdmVycy9pbmZpbmliYW5kL2h3L2VmYS9l
-ZmFfbWFpbi5jPyBUaGFua3MgaW4KPiA+IGFkdmFuY2UhCj4KPiBEaWQgeW91IHRyeSB0byByZXBy
-b2R1Y2UgaXQgb24gdXBzdHJlYW0ga2VybmVsPwo+ClRoYW5rcyBmb3IgeW91ciBjb21tZW50cyEg
-Tm8gSSBoYXZlbid0LCBJIHdpbGwgZ2l2ZSBpdCBhIHRyeS4KPiA+Cj4gPiBbMV06IGh0dHBzOi8v
-Z2l0aHViLmNvbS90b3J2YWxkcy9saW51eC9ibG9iL21hc3Rlci9kcml2ZXJzL2luZmluaWJhbmQv
-aHcvZWZhL2VmYV9tYWluLmMjTDY3NAo+ID4KPiA+IFRoYW5rcywKPiA+IFRhbyBMaXUKPiA+Cj4K
-PiBUcnkgYXNzaWduaW5nIGVmYV9yZW1vdmUgYXMgdGhlIHNodXRkb3duIGNhbGxiYWNrOgo+ICAg
-ICAuc2h1dGRvd24gPSBlZmFfcmVtb3ZlLAo+Cj4gRG9lcyBpdCBmaXggaXQ/CgpUaGFua3MsIEkg
-d2lsbCBhbHNvIHRyeSB0aGUgY29kZSwgYW5kIEkgd2lsbCBwb3N0IHRoZSB0ZXN0aW5nIHJlc3Vs
-dHMuCgpUaGFua3MsClRhbyBMaXUKCj4KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFk
-Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+In the event of memory hotplug or online/offline events, the crash
+memory hotplug notifier `crash_memhp_notifier()` receives a
+`memory_notify` object but doesn't forward that object to the
+generic and architecture-specific crash hotplug handler.
+
+The `memory_notify` object contains the starting PFN (Page Frame Number)
+and the number of pages in the hot-removed memory. This information is
+necessary for architectures like PowerPC to update/recreate the kdump
+image, specifically `elfcorehdr`.
+
+So update the function signature of `crash_handle_hotplug_event()` and
+`arch_crash_handle_hotplug_event()` to accept the `memory_notify` object
+as an argument from crash memory hotplug notifier.
+
+Since no such object is available in the case of CPU hotplug event, the
+crash CPU hotplug notifier `crash_cpuhp_online()` passes NULL to the
+crash hotplug handler.
+
+Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+Acked-by: Baoquan He <bhe@redhat.com>
+Acked-by: Hari Bathini <hbathini@linux.ibm.com>
+Cc: Akhil Raj <lf32.dev@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+Cc: Borislav Petkov (AMD) <bp@alien8.de>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Laurent Dufour <laurent.dufour@fr.ibm.com>
+Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Mimi Zohar <zohar@linux.ibm.com>
+Cc: Naveen N Rao <naveen@kernel.org>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Valentin Schneider <vschneid@redhat.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: kexec@lists.infradead.org
+Cc: x86@kernel.org
+---
+* No chnages in v18
+
+ arch/x86/include/asm/kexec.h |  2 +-
+ arch/x86/kernel/crash.c      |  4 +++-
+ include/linux/crash_core.h   |  2 +-
+ kernel/crash_core.c          | 14 +++++++-------
+ 4 files changed, 12 insertions(+), 10 deletions(-)
+
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index 91ca9a9ee3a2..cb1320ebbc23 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -207,7 +207,7 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image);
+ extern void kdump_nmi_shootdown_cpus(void);
+ 
+ #ifdef CONFIG_CRASH_HOTPLUG
+-void arch_crash_handle_hotplug_event(struct kimage *image);
++void arch_crash_handle_hotplug_event(struct kimage *image, void *arg);
+ #define arch_crash_handle_hotplug_event arch_crash_handle_hotplug_event
+ 
+ #ifdef CONFIG_HOTPLUG_CPU
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index e74d0c4286c1..2a682fe86352 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -432,10 +432,12 @@ unsigned int arch_crash_get_elfcorehdr_size(void)
+ /**
+  * arch_crash_handle_hotplug_event() - Handle hotplug elfcorehdr changes
+  * @image: a pointer to kexec_crash_image
++ * @arg: struct memory_notify handler for memory hotplug case and
++ *       NULL for CPU hotplug case.
+  *
+  * Prepare the new elfcorehdr and replace the existing elfcorehdr.
+  */
+-void arch_crash_handle_hotplug_event(struct kimage *image)
++void arch_crash_handle_hotplug_event(struct kimage *image, void *arg)
+ {
+ 	void *elfbuf = NULL, *old_elfcorehdr;
+ 	unsigned long nr_mem_ranges;
+diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+index d33352c2e386..647e928efee8 100644
+--- a/include/linux/crash_core.h
++++ b/include/linux/crash_core.h
+@@ -37,7 +37,7 @@ static inline void arch_kexec_unprotect_crashkres(void) { }
+ 
+ 
+ #ifndef arch_crash_handle_hotplug_event
+-static inline void arch_crash_handle_hotplug_event(struct kimage *image) { }
++static inline void arch_crash_handle_hotplug_event(struct kimage *image, void *arg) { }
+ #endif
+ 
+ int crash_check_update_elfcorehdr(void);
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 78b5dc7cee3a..70fa8111a9d6 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -534,7 +534,7 @@ int crash_check_update_elfcorehdr(void)
+  * list of segments it checks (since the elfcorehdr changes and thus
+  * would require an update to purgatory itself to update the digest).
+  */
+-static void crash_handle_hotplug_event(unsigned int hp_action, unsigned int cpu)
++static void crash_handle_hotplug_event(unsigned int hp_action, unsigned int cpu, void *arg)
+ {
+ 	struct kimage *image;
+ 
+@@ -596,7 +596,7 @@ static void crash_handle_hotplug_event(unsigned int hp_action, unsigned int cpu)
+ 	image->hp_action = hp_action;
+ 
+ 	/* Now invoke arch-specific update handler */
+-	arch_crash_handle_hotplug_event(image);
++	arch_crash_handle_hotplug_event(image, arg);
+ 
+ 	/* No longer handling a hotplug event */
+ 	image->hp_action = KEXEC_CRASH_HP_NONE;
+@@ -612,17 +612,17 @@ static void crash_handle_hotplug_event(unsigned int hp_action, unsigned int cpu)
+ 	crash_hotplug_unlock();
+ }
+ 
+-static int crash_memhp_notifier(struct notifier_block *nb, unsigned long val, void *v)
++static int crash_memhp_notifier(struct notifier_block *nb, unsigned long val, void *arg)
+ {
+ 	switch (val) {
+ 	case MEM_ONLINE:
+ 		crash_handle_hotplug_event(KEXEC_CRASH_HP_ADD_MEMORY,
+-			KEXEC_CRASH_HP_INVALID_CPU);
++			KEXEC_CRASH_HP_INVALID_CPU, arg);
+ 		break;
+ 
+ 	case MEM_OFFLINE:
+ 		crash_handle_hotplug_event(KEXEC_CRASH_HP_REMOVE_MEMORY,
+-			KEXEC_CRASH_HP_INVALID_CPU);
++			KEXEC_CRASH_HP_INVALID_CPU, arg);
+ 		break;
+ 	}
+ 	return NOTIFY_OK;
+@@ -635,13 +635,13 @@ static struct notifier_block crash_memhp_nb = {
+ 
+ static int crash_cpuhp_online(unsigned int cpu)
+ {
+-	crash_handle_hotplug_event(KEXEC_CRASH_HP_ADD_CPU, cpu);
++	crash_handle_hotplug_event(KEXEC_CRASH_HP_ADD_CPU, cpu, NULL);
+ 	return 0;
+ }
+ 
+ static int crash_cpuhp_offline(unsigned int cpu)
+ {
+-	crash_handle_hotplug_event(KEXEC_CRASH_HP_REMOVE_CPU, cpu);
++	crash_handle_hotplug_event(KEXEC_CRASH_HP_REMOVE_CPU, cpu, NULL);
+ 	return 0;
+ }
+ 
+-- 
+2.43.0
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
