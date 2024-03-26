@@ -4,114 +4,177 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AE8BFC54E67
-	for <kexec@archiver.kernel.org>; Tue, 26 Mar 2024 05:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0122DCD1280
+	for <kexec@archiver.kernel.org>; Tue, 26 Mar 2024 10:30:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-ID:In-Reply-To:
+	References:Message-ID:Date:Subject:CC:To:From:Reply-To:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=A+TxquCOx8rr9mXSTM9U9GIIutk28g3DkGpQnn48yLg=; b=4g51cBvGAYhuIl
-	6WxDp4N51+DqANTtQ0Yw16lcpmVlEZpKWxHXS8OFAlCdgTSSl/3vt7n5KlVG9sQvb0Yx4d57LF2kG
-	Ohm3cDpcGkcP/JtPhq8gAoECOwl5lBZ6PSNOg5r+OzgvqGmhT8nbkfI57q312+uLqOsjcAlVkrwF5
-	fVFw2/aTbv/TQBWCtd6yCZuoySC5Mpi1uJhFl5fOYhyMoyHaZE+dFf6Yb/4Z85rfQnTI1+a4/RQ38
-	9rjnpGyW+poawZO49iybt+w/Yk9FknGJ7ncDkuZ2seyzD3PbPgzPaNGOnuC/rf4zChLlDsjWSYJrW
-	PgOQNhBlW0Tb316YTTGw==;
+	List-Owner; bh=rIH7QZtIggEsb8xdcpJEEYhS1UQwkZj8vuQ1YmHtgaY=; b=q6pH+qWag1+8Mh
+	OKBkLGXYEs/iQxIlCl0PpMAasGzHV/9VyKwN3EQVE4BopKdpwmOEY7Ds3zSEAYqaq34Za1rRUiq7m
+	xC+0l8svJu71sV47h1VVLxIXTgJCOO5oJiK36kV6NW8zBILQf9F/5jLegol/Z9snrWt1+DTFIE5qR
+	AhyVCa4JpPycHtygycQ8GcX7qRISpHKBXEyJ5KnBTIxzRXA67uwqUW1FuUKDZXahc0xOHg+SxhADi
+	O3qGnkvJv2Ny6onyUhZOeC5r9u8OcsGTTZKfKG5IcrD53DxPxm77CqswH0GAd3CXfY02sorgtglaH
+	wQKfw7hD0QND0o8o/Ukw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1roznH-00000003C8J-1d7G;
-	Tue, 26 Mar 2024 05:56:19 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1rp44l-000000043p3-0x0I;
+	Tue, 26 Mar 2024 10:30:41 +0000
+Received: from mgamail.intel.com ([192.198.163.19])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1roznE-00000003C7c-1T5V
+	id 1rp44c-000000043m2-3ymn
 	for kexec@lists.infradead.org;
-	Tue, 26 Mar 2024 05:56:17 +0000
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42Q5retR025443;
-	Tue, 26 Mar 2024 05:55:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=OrtwPtgnPaq5YVseXK1eUpNBW/Gk7gKRJSeUnRnCqv4=;
- b=mDUF9eCisCEpVfT1zqYBZspgcnBjQuuolO+2lkLwE1ug/PViWaJOZDo+q8W4uQM/vGIQ
- q5Sbwylfm/EOvfFiBaY0SdBqxLEUHz1RxdUsSJ0ExDuHfe+Gr9QKjjijACduxX+H21LW
- FIDF1gZhXxMLAuxxD2GHNZcf6ceKI8UdR8nmtUYVOU2SgDE0OqeazVaBk5oNeUAyiQ/r
- X9DccjmsifaK0tPIoPAqMOBAbjDDBUnaHsy0JCtSraimL5FQ9Ir5WHp+MZ3vO8ByCmZC
- BIDALLxFUbMQ1Nr2vXX+QmA+e/+Nx9oo+LURXxp1KXFC2ToyTAdDhbj2ja1pKb7fJdgJ dA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x3r0nr2vp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 Mar 2024 05:55:58 +0000
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42Q5twDD029386;
-	Tue, 26 Mar 2024 05:55:58 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x3r0nr2v6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 Mar 2024 05:55:57 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42Q34VGr025458;
-	Tue, 26 Mar 2024 05:55:42 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3x2awmnr83-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 Mar 2024 05:55:42 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42Q5tb2u42140004
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 26 Mar 2024 05:55:39 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E4D3E2004B;
-	Tue, 26 Mar 2024 05:55:36 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EAFF920049;
-	Tue, 26 Mar 2024 05:55:28 +0000 (GMT)
-Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.ibm.com.com (unknown [9.43.19.10])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 26 Mar 2024 05:55:28 +0000 (GMT)
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-To: linuxppc-dev@ozlabs.org
-Cc: Sourabh Jain <sourabhjain@linux.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>, Akhil Raj <lf32.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
-        Baoquan He <bhe@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dave Young <dyoung@redhat.com>, David Hildenbrand <david@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Laurent Dufour <laurent.dufour@fr.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mimi Zohar <zohar@linux.ibm.com>, Naveen N Rao <naveen@kernel.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Valentin Schneider <vschneid@redhat.com>,
-        Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org,
-        x86@kernel.org
-Subject: [PATCH v18 6/6] powerpc/crash: add crash memory hotplug support
-Date: Tue, 26 Mar 2024 11:24:13 +0530
-Message-ID: <20240326055413.186534-7-sourabhjain@linux.ibm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240326055413.186534-1-sourabhjain@linux.ibm.com>
-References: <20240326055413.186534-1-sourabhjain@linux.ibm.com>
+	Tue, 26 Mar 2024 10:30:32 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711449031; x=1742985031;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=fr6pay0+hUTzJDFc8DHbr2Ciz7p4NcQtjsZGsV1UkQk=;
+  b=JWi33lWzCus1o8xq1BsFhk97ZTN4cWmFECgZmdrWHwTdKjD97l+AkpMa
+   kjUfyqnDwDvj4J16/FNFE76j9AObk1EvXi6YQ96TNfYWFdOf681AreNBK
+   GDODuXbH7R0eMzanzGUKAI9esOAOcDoJDYreRc6ZFKg7nUGdOJr86hKab
+   FgUxddGebuTavMEEbxv7EOjwmpkr7q7l9VADThEoEQ7XtPOu8BEn6y0TT
+   wifLkQo8QtJo6zPqOjsGKWCLYuf180/90/RGMFK4PNjpcBab1dXPIPtN+
+   MLhZhJENGARpPJ4MK1YYKdWlV/u1j4tBiZeSPDa38FCT8r3COKTXoGXoP
+   w==;
+X-CSE-ConnectionGUID: UnGDfg6kQwWCpJA0VuvMBg==
+X-CSE-MsgGUID: cnSJkCqoQ9+ocwn/Hbi9NQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="6355944"
+X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
+   d="scan'208";a="6355944"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 03:30:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
+   d="scan'208";a="15893845"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 26 Mar 2024 03:30:30 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 26 Mar 2024 03:30:29 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Tue, 26 Mar 2024 03:30:29 -0700
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.41) by
+ edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 26 Mar 2024 03:30:29 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B8P7dfb1Qv6KMbOvtMjbxcacYpHVXBKfGOAteMCsxoPvzKYPasCaqA/Uk0bub63vM1APuSHYLKX9Sy9Yq/9F1gkkYUaJ5q0ybv5kXlJbp+15NED+ohRStTJvGssstpfAgmiuE3LAC3zvHmzzEyWLaeF2UTZU6mCsobUXmwkBXFU0cLqRmPIVd/DMgFyZgZhxosSEdkcBfpthKs8RJ+oH16s7s2mRhQGIx5QO2L4/qAJTvM0VT6zSiVbqgh0/GLtl3cKd0hBs6ekYoJm2JUfM0Q9Xzo6QLDroWB/Cuh3H8a5WXXZySu2dx+rPoolb9t+GK1d0mlo8thSqinSQoH92Fw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fr6pay0+hUTzJDFc8DHbr2Ciz7p4NcQtjsZGsV1UkQk=;
+ b=Rj47aRNdWEk3otxxqZKRSYQz7UHN2N3hXgfT1DwCBZ8r4KpYS6NH908HtZHKu1ZtqJvHtmnqr5hsIjnJXDb8y4MmLrOa+HXSzTyPsDaDtFmX2Ny4NRulcJm/XbqyEMQV/C/0JUnyx0lsWDTxLdGGww60ZRTeVaLtBq4xHS9yv4GktXmHIEltIGq5y3/guE3C/7zuhWAGQ9xtaOrdek7kX1U03cpvhE4WYL/QK77fPuW9D2Liv87N2D/+NrYu5iYZC3HW6MY3e+ejYKqJZMtP/xQxHcbJq5vdigZ4yFcUt08BK7NGxqQNLDtaFavKj6FgemN+h3o99Rm6NrrsFCMk6A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from BL1PR11MB5978.namprd11.prod.outlook.com (2603:10b6:208:385::18)
+ by DM4PR11MB5279.namprd11.prod.outlook.com (2603:10b6:5:38a::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.33; Tue, 26 Mar
+ 2024 10:30:27 +0000
+Received: from BL1PR11MB5978.namprd11.prod.outlook.com
+ ([fe80::ef2c:d500:3461:9b92]) by BL1PR11MB5978.namprd11.prod.outlook.com
+ ([fe80::ef2c:d500:3461:9b92%4]) with mapi id 15.20.7409.031; Tue, 26 Mar 2024
+ 10:30:27 +0000
+From: "Huang, Kai" <kai.huang@intel.com>
+To: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com"
+	<mingo@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "bp@alien8.de"
+	<bp@alien8.de>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>
+CC: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, "Reshetova, Elena"
+	<elena.reshetova@intel.com>, "Nakajima, Jun" <jun.nakajima@intel.com>,
+	"rafael@kernel.org" <rafael@kernel.org>, "peterz@infradead.org"
+	<peterz@infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "sathyanarayanan.kuppuswamy@linux.intel.com"
+	<sathyanarayanan.kuppuswamy@linux.intel.com>, "Hunter, Adrian"
+	<adrian.hunter@intel.com>, "thomas.lendacky@amd.com"
+	<thomas.lendacky@amd.com>, "ashish.kalra@amd.com" <ashish.kalra@amd.com>,
+	"kexec@lists.infradead.org" <kexec@lists.infradead.org>, "seanjc@google.com"
+	<seanjc@google.com>, "bhe@redhat.com" <bhe@redhat.com>,
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>
+Subject: Re: [PATCHv9 08/17] x86/tdx: Account shared memory
+Thread-Topic: [PATCHv9 08/17] x86/tdx: Account shared memory
+Thread-Index: AQHafqDhyTVBuVGp6US8Ih8vYTctVbFJ0/cA
+Date: Tue, 26 Mar 2024 10:30:27 +0000
+Message-ID: <9e30828eaf9e4254d2d994cd11e469cca43314c9.camel@intel.com>
+References: <20240325103911.2651793-1-kirill.shutemov@linux.intel.com>
+	 <20240325103911.2651793-9-kirill.shutemov@linux.intel.com>
+In-Reply-To: <20240325103911.2651793-9-kirill.shutemov@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.50.3 (3.50.3-1.fc39) 
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BL1PR11MB5978:EE_|DM4PR11MB5279:EE_
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: /BOwGrMuC1/4hFNMulu4PosT44AOlK6c7xOfSQjdfN1dbuQ5TwOa+8w1NMPQeV+TxaX49kjXwkjk3o7dzi0zSg/b885ZvWy6AqDOCLabFMgNLhDlNdsKA4SI9TQ7RzPrju8vSa5f7o41cnbA6qDLj84Ol/gUQ6p2rWTGFcnYH022aKNxTt5O46PRgSQ4nFqeNTNku/qSMAOsRC8h7qGOSiaU81N8UKCNKjFZAwnfSumjeTlJmNg4gbwF06IpxX2zftYh6WWmQ+Z2H99XpRytf2XOiYoVYvz/opu/FZgjI0E5SrpDUw+dxtVQ70DxhqS37UYbXoR2u70XwDbcmnd/32Ec9uVJx7sqRG/vURNvuptZXP/iIZ0fPnM3unPmcj3Hxz6wBMXqYdjWNlGzYLiG8v1G6qH2i2qqUodfg/xBg6Rf1bJus7/McdVrESQt00XKNETPkKXeGsr3Cz95KUwINnRnlk4x37r+CJMVo/3pP3PUYWfC4GW5eP9vPPVo8I5pNEh6Uja9338Gz+y7lHeWU9QHxkeSULOqCwPZMR1GNhZxesI0oR6W6KfWDZdLHsSbC1pNf+CaYNC6BCG+apWqXK35t8UQJ604ANdRy0Iqn9F2tWmYe+vetK3ZcrPfkGtbRHgZiifqhf5RAx1jvIZX7ggDeEBSvHXtEF9KHHvQcu0=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR11MB5978.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015)(7416005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?V2ZHcHFjOTFzYk5aVk9Fa1F0RmlnWUwrTW9OSUlJVDN6SGdqL0hGRFNOb1dr?=
+ =?utf-8?B?UUV6ekNwY2x5QVNVa21WNm5nY2pEbGd3Ulp5MFpBZkUwSTIybGRqZ3Nka21s?=
+ =?utf-8?B?bG4zNS9hWEFPZ1UyN1RRSDVPMlJKUURDMDN1aWV2Qys3V2hzNDVoWW5FczB2?=
+ =?utf-8?B?ay9WY2FsV29WeThTOHFPd2RWSldlWDcycitHVUo2NnNNSnJiVkJoRnFVS3VY?=
+ =?utf-8?B?VVU4OC9NbVhwNU9NbVZDZmRYSTY2WmdDOGtjNTlEOGtieWxVSVI0KzlPVG5R?=
+ =?utf-8?B?TWV3Q3BocHpNYThEVmMrb2hla1RRekk4K1JrNlg5V3NFaFRrUWxVdDBPdWdH?=
+ =?utf-8?B?dDJkMnBzYWNaMGh5anNGOXNwTmtLcWRrZGZwbldKdXpBemdZVjhzYWtuSmxr?=
+ =?utf-8?B?TUN4ZU1mSndCUzNrTnlsREd1MW1HbnpnSFhBeFNSSWVNbHpIS3pYWjZnMXFM?=
+ =?utf-8?B?Q1FzZkFJVHBvYXdPOVFXUnFqLzJLVEI2U3ZORUJjN3hOWlZ5bndRcWROcG9r?=
+ =?utf-8?B?WWhCSC9PWW9YM3Z5T05EK0NYY1paM1V5dnVocHlOL3BTaFp4dmplQmdLSURZ?=
+ =?utf-8?B?N013TXgrN09aaVgvcDdsaG5ZVGlFU2U1R1prLy81V2pqRTRGL0xIQUVhbUg5?=
+ =?utf-8?B?MzZZRGdDUFhHTXVuQlM5TFFxcEVJWmkvZmJxeHlpVi9ZNEhWNFQ4WVZlNG94?=
+ =?utf-8?B?ZE1reU5KeVMvVldQNGhPakpZMGFBT1YvcXRKMUMyZXVMYmJnMXlyTjdYRElC?=
+ =?utf-8?B?dG1yV1k5RUtPbDgvcEpva1B4MFRxNGVCSUZxV1RjZ245RDZnc3IxRTRVZTky?=
+ =?utf-8?B?Z1A0MnBUWVpvSzdtRDdYS2lNVVAySGFEQUhaOUJkYmxWRUg5VFNxaytCWXpI?=
+ =?utf-8?B?a1pQaGorODhQVnJsSS9YSU1sYkNIZHVyZVhrSjNwQTBNNDFwUUsrTWtocUxX?=
+ =?utf-8?B?T1IrTXVTdUpTczFIQ3R3Ti8vS1BiVU01NDNzUDhzNWFXc1I2eER6cnVPSjhl?=
+ =?utf-8?B?TE05QVN1M0FOL2VQUlczRVQ5NjJBSFVBZk9sVXRzeDdUT2RPcUd6UWk0M21K?=
+ =?utf-8?B?SnZjV2k3ekh2YWdlM2Era1JlUHYvNWJseFNIS0F3dzF0YndVNGJqMHVYbTJO?=
+ =?utf-8?B?RzFGdUpKU1RNQ2k4WUYzT1RJZ09JSWt0K3JaVDRTcEVTR0xtQ0xRVENCc0F4?=
+ =?utf-8?B?UERvTFJqcDF5TisyVVB0MXQwcnBpMzFDbzJDOENqa3ErK0d0STZPcWVGMncz?=
+ =?utf-8?B?aDZUUW5teldVOTFtZUFCc2o4OTZCamFlZUZneVo5ZU9pYzJDeXVrVmR2SFlj?=
+ =?utf-8?B?MVp3VTVJdEFSZmpqQm9qSUt1QTl4R3NuNGRmU05KVUN6bTRMQUFEWnVWSEF6?=
+ =?utf-8?B?RVUzOVFaOVI1U2NlN3pDVXMvcGZzUE5oVDQrQUxNQ3UyNWRZWnBxQjVjKzdL?=
+ =?utf-8?B?dklvRzJjWUF6K05XU0JSbGpOTm82QXZhOE5PTzl0dUlDTi9tNnNJNCs3c1du?=
+ =?utf-8?B?WXhBcDE3T3VZWjFQSmtSZmNNMzdYU3B1QlluN2FrTUtWYjMza05YUk9kV2Zk?=
+ =?utf-8?B?Ym1WNkQvUVp4VGJJVEhDL2lXN1ZWdnUrc2JrNzhUdGJ6MHRtY2xpOERuSEsv?=
+ =?utf-8?B?RUtiVG8zbHZwdU14bnIxWXdTWGxZc01udXJ6am4wNWxVR3MyV2NMK3pVNjRW?=
+ =?utf-8?B?ZUpzNDZqaVA0UlBIUFcrTkIrNnZ2TFBYV3NzVTRHc2cxZGpJZ0UzbWlxU0o3?=
+ =?utf-8?B?NGVIMDBXOHB0dzlJa1VnVVB1emFTbCtUR0hkM1ByNU0vSFA2L0FVN2JhSlJv?=
+ =?utf-8?B?c3RCeGFHK2hPRDBiQmhSVXJxc3FDUmhVZGZYWnNwaVdXeEwxVUI4Rit2SlFG?=
+ =?utf-8?B?YldIcm91NWl2VUYwU1drMHpRdkVZQmdCT0V4NlZaYTdSL1hraGNRM091dmV3?=
+ =?utf-8?B?dnFldDNqaGQvUFZtU0RmTUQwMnhZcXR0dHNMSndVTC9zVWh3OEdXWjBUb2Vm?=
+ =?utf-8?B?QWxsV2J3dExCcHFuLzZDYkFDMFdubUVjLzNnbUNhSG5lVmlWeDEvYlVPeWNR?=
+ =?utf-8?B?RUUzc21NemY2SVgwUmhoOE1vQVpScEhLTEp4VFV0SjRVeDIxd0FNL3RqRXRv?=
+ =?utf-8?B?THBZdnVPL3ZFcTNYZWJ5ZElZd216UWhBMUZRcVFXckdqMElnYUZjN3lScnBs?=
+ =?utf-8?B?YkE9PQ==?=
+Content-ID: <C9345AD76E84F94387E85F4B9C74CBFA@namprd11.prod.outlook.com>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: cl5gd9WSBdvqAYpdA0dnUGYXjM-J9Iwo
-X-Proofpoint-GUID: 7uB8CTUSHCZyjyfP1sJXUEmBEnlsmezD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-26_02,2024-03-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
- malwarescore=0 spamscore=0 clxscore=1015 lowpriorityscore=0 suspectscore=0
- mlxscore=0 mlxlogscore=999 phishscore=0 bulkscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2403210000
- definitions=main-2403260038
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BL1PR11MB5978.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5d493ae1-900a-4caf-2509-08dc4d7fc110
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Mar 2024 10:30:27.4548
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: RJ7YWIuq5KK63RW+XguJWdv79fQ0JwFDAT1v7qneSdk+Gu9lUVvEhb4vCZxzRgSjuv7PZl7qwhT3IgA/GE+8AA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB5279
+X-OriginatorOrg: intel.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240325_225616_412719_5CBCF56C 
-X-CRM114-Status: GOOD (  44.26  )
+X-CRM114-CacheID: sfid-20240326_033031_092454_C043556A 
+X-CRM114-Status: GOOD (  12.64  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -128,387 +191,23 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Extend the arch crash hotplug handler, as introduced by the patch title
-("powerpc: add crash CPU hotplug support"), to also support memory
-add/remove events.
+On Mon, 2024-03-25 at 12:39 +0200, Kirill A. Shutemov wrote:
+> The kernel will convert all shared memory back to private during kexec.
+> The direct mapping page tables will provide information on which memory
+> is shared.
+> 
+> It is extremely important to convert all shared memory. If a page is
+> missed, it will cause the second kernel to crash when it accesses it.
+> 
+> Keep track of the number of shared pages. This will allow for
+> cross-checking against the shared information in the direct mapping and
+> reporting if the shared bit is lost.
+> 
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> ---
+> 
 
-Elfcorehdr describes the memory of the crash kernel to capture the
-kernel; hence, it needs to be updated if memory resources change due to
-memory add/remove events. Therefore, arch_crash_handle_hotplug_event()
-is updated to recreate the elfcorehdr and replace it with the previous
-one on memory add/remove events.
-
-The memblock list is used to prepare the elfcorehdr. In the case of
-memory hot remove, the memblock list is updated after the arch crash
-hotplug handler is triggered, as depicted in Figure 1. Thus, the
-hot-removed memory is explicitly removed from the crash memory ranges
-to ensure that the memory ranges added to elfcorehdr do not include the
-hot-removed memory.
-
-    Memory remove
-          |
-          v
-    Offline pages
-          |
-          v
- Initiate memory notify call <----> crash hotplug handler
- chain for MEM_OFFLINE event
-          |
-          v
- Update memblock list
-
- 	Figure 1
-
-There are two system calls, `kexec_file_load` and `kexec_load`, used to
-load the kdump image. A few changes have been made to ensure that the
-kernel can safely update the elfcorehdr component of the kdump image for
-both system calls.
-
-For the kexec_file_load syscall, kdump image is prepared in the kernel.
-To support an increasing number of memory regions, the elfcorehdr is
-built with extra buffer space to ensure that it can accommodate
-additional memory ranges in future.
-
-For the kexec_load syscall, the elfcorehdr is updated only if the
-KEXEC_CRASH_HOTPLUG_SUPPORT kexec flag is passed to the kernel by the
-kexec tool. Passing this flag to the kernel indicates that the
-elfcorehdr is built to accommodate additional memory ranges and the
-elfcorehdr segment is not considered for SHA calculation, making it safe
-to update.
-
-The changes related to this feature are kept under the CRASH_HOTPLUG
-config, and it is enabled by default.
-
-Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
-Acked-by: Hari Bathini <hbathini@linux.ibm.com>
-Cc: Akhil Raj <lf32.dev@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Borislav Petkov (AMD) <bp@alien8.de>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Laurent Dufour <laurent.dufour@fr.ibm.com>
-Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Mimi Zohar <zohar@linux.ibm.com>
-Cc: Naveen N Rao <naveen@kernel.org>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Valentin Schneider <vschneid@redhat.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: kexec@lists.infradead.org
-Cc: x86@kernel.org
----
-* No changes in v18.
-
- arch/powerpc/include/asm/kexec.h        |  3 +
- arch/powerpc/include/asm/kexec_ranges.h |  1 +
- arch/powerpc/kexec/crash.c              | 95 ++++++++++++++++++++++++-
- arch/powerpc/kexec/file_load_64.c       | 20 +++++-
- arch/powerpc/kexec/ranges.c             | 85 ++++++++++++++++++++++
- 5 files changed, 202 insertions(+), 2 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
-index e75970351bcd..95a98b390d62 100644
---- a/arch/powerpc/include/asm/kexec.h
-+++ b/arch/powerpc/include/asm/kexec.h
-@@ -141,6 +141,9 @@ void arch_crash_handle_hotplug_event(struct kimage *image, void *arg);
- 
- int arch_crash_hotplug_support(struct kimage *image, unsigned long kexec_flags);
- #define arch_crash_hotplug_support arch_crash_hotplug_support
-+
-+unsigned int arch_crash_get_elfcorehdr_size(void);
-+#define crash_get_elfcorehdr_size arch_crash_get_elfcorehdr_size
- #endif /* CONFIG_CRASH_HOTPLUG */
- 
- extern int crashing_cpu;
-diff --git a/arch/powerpc/include/asm/kexec_ranges.h b/arch/powerpc/include/asm/kexec_ranges.h
-index 8489e844b447..14055896cbcb 100644
---- a/arch/powerpc/include/asm/kexec_ranges.h
-+++ b/arch/powerpc/include/asm/kexec_ranges.h
-@@ -7,6 +7,7 @@
- void sort_memory_ranges(struct crash_mem *mrngs, bool merge);
- struct crash_mem *realloc_mem_ranges(struct crash_mem **mem_ranges);
- int add_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size);
-+int remove_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size);
- int get_exclude_memory_ranges(struct crash_mem **mem_ranges);
- int get_reserved_memory_ranges(struct crash_mem **mem_ranges);
- int get_crash_memory_ranges(struct crash_mem **mem_ranges);
-diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
-index 8938a19af12f..21b193e938a3 100644
---- a/arch/powerpc/kexec/crash.c
-+++ b/arch/powerpc/kexec/crash.c
-@@ -17,6 +17,7 @@
- #include <linux/irq.h>
- #include <linux/types.h>
- #include <linux/libfdt.h>
-+#include <linux/memory.h>
- 
- #include <asm/processor.h>
- #include <asm/machdep.h>
-@@ -25,6 +26,7 @@
- #include <asm/setjmp.h>
- #include <asm/debug.h>
- #include <asm/interrupt.h>
-+#include <asm/kexec_ranges.h>
- 
- /*
-  * The primary CPU waits a while for all secondary CPUs to enter. This is to
-@@ -398,6 +400,94 @@ void default_machine_crash_shutdown(struct pt_regs *regs)
- #undef pr_fmt
- #define pr_fmt(fmt) "crash hp: " fmt
- 
-+/*
-+ * Advertise preferred elfcorehdr size to userspace via
-+ * /sys/kernel/crash_elfcorehdr_size sysfs interface.
-+ */
-+unsigned int arch_crash_get_elfcorehdr_size(void)
-+{
-+	unsigned long phdr_cnt;
-+
-+	/* A program header for possible CPUs + vmcoreinfo */
-+	phdr_cnt = num_possible_cpus() + 1;
-+	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
-+		phdr_cnt += CONFIG_CRASH_MAX_MEMORY_RANGES;
-+
-+	return sizeof(struct elfhdr) + (phdr_cnt * sizeof(Elf64_Phdr));
-+}
-+
-+/**
-+ * update_crash_elfcorehdr() - Recreate the elfcorehdr and replace it with old
-+ *			       elfcorehdr in the kexec segment array.
-+ * @image: the active struct kimage
-+ * @mn: struct memory_notify data handler
-+ */
-+static void update_crash_elfcorehdr(struct kimage *image, struct memory_notify *mn)
-+{
-+	int ret;
-+	struct crash_mem *cmem = NULL;
-+	struct kexec_segment *ksegment;
-+	void *ptr, *mem, *elfbuf = NULL;
-+	unsigned long elfsz, memsz, base_addr, size;
-+
-+	ksegment = &image->segment[image->elfcorehdr_index];
-+	mem = (void *) ksegment->mem;
-+	memsz = ksegment->memsz;
-+
-+	ret = get_crash_memory_ranges(&cmem);
-+	if (ret) {
-+		pr_err("Failed to get crash mem range\n");
-+		return;
-+	}
-+
-+	/*
-+	 * The hot unplugged memory is part of crash memory ranges,
-+	 * remove it here.
-+	 */
-+	if (image->hp_action == KEXEC_CRASH_HP_REMOVE_MEMORY) {
-+		base_addr = PFN_PHYS(mn->start_pfn);
-+		size = mn->nr_pages * PAGE_SIZE;
-+		ret = remove_mem_range(&cmem, base_addr, size);
-+		if (ret) {
-+			pr_err("Failed to remove hot-unplugged memory from crash memory ranges\n");
-+			goto out;
-+		}
-+	}
-+
-+	ret = crash_prepare_elf64_headers(cmem, false, &elfbuf, &elfsz);
-+	if (ret) {
-+		pr_err("Failed to prepare elf header\n");
-+		goto out;
-+	}
-+
-+	/*
-+	 * It is unlikely that kernel hit this because elfcorehdr kexec
-+	 * segment (memsz) is built with addition space to accommodate growing
-+	 * number of crash memory ranges while loading the kdump kernel. It is
-+	 * Just to avoid any unforeseen case.
-+	 */
-+	if (elfsz > memsz) {
-+		pr_err("Updated crash elfcorehdr elfsz %lu > memsz %lu", elfsz, memsz);
-+		goto out;
-+	}
-+
-+	ptr = __va(mem);
-+	if (ptr) {
-+		/* Temporarily invalidate the crash image while it is replaced */
-+		xchg(&kexec_crash_image, NULL);
-+
-+		/* Replace the old elfcorehdr with newly prepared elfcorehdr */
-+		memcpy((void *)ptr, elfbuf, elfsz);
-+
-+		/* The crash image is now valid once again */
-+		xchg(&kexec_crash_image, image);
-+	}
-+out:
-+	kvfree(cmem);
-+	if (elfbuf)
-+		kvfree(elfbuf);
-+}
-+
- /**
-  * get_fdt_index - Loop through the kexec segment array and find
-  *		   the index of the FDT segment.
-@@ -478,6 +568,8 @@ int arch_crash_hotplug_support(struct kimage *image, unsigned long kexec_flags)
-  */
- void arch_crash_handle_hotplug_event(struct kimage *image, void *arg)
- {
-+	struct memory_notify *mn;
-+
- 	switch (image->hp_action) {
- 	case KEXEC_CRASH_HP_REMOVE_CPU:
- 		return;
-@@ -488,7 +580,8 @@ void arch_crash_handle_hotplug_event(struct kimage *image, void *arg)
- 
- 	case KEXEC_CRASH_HP_REMOVE_MEMORY:
- 	case KEXEC_CRASH_HP_ADD_MEMORY:
--		pr_info_once("Crash update is not supported for memory hotplug\n");
-+		mn = (struct memory_notify *)arg;
-+		update_crash_elfcorehdr(image, mn);
- 		return;
- 	default:
- 		pr_warn_once("Unknown hotplug action\n");
-diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
-index 2640a804fcdf..925a69ad2468 100644
---- a/arch/powerpc/kexec/file_load_64.c
-+++ b/arch/powerpc/kexec/file_load_64.c
-@@ -595,6 +595,23 @@ static void update_backup_region_phdr(struct kimage *image, Elf64_Ehdr *ehdr)
- 	}
- }
- 
-+static unsigned int kdump_extra_elfcorehdr_size(struct crash_mem *cmem)
-+{
-+#if defined(CONFIG_CRASH_HOTPLUG) && defined(CONFIG_MEMORY_HOTPLUG)
-+	unsigned int extra_sz = 0;
-+
-+	if (CONFIG_CRASH_MAX_MEMORY_RANGES > (unsigned int)PN_XNUM)
-+		pr_warn("Number of Phdrs %u exceeds max\n", CONFIG_CRASH_MAX_MEMORY_RANGES);
-+	else if (cmem->nr_ranges >= CONFIG_CRASH_MAX_MEMORY_RANGES)
-+		pr_warn("Configured crash mem ranges may not be enough\n");
-+	else
-+		extra_sz = (CONFIG_CRASH_MAX_MEMORY_RANGES - cmem->nr_ranges) * sizeof(Elf64_Phdr);
-+
-+	return extra_sz;
-+#endif
-+	return 0;
-+}
-+
- /**
-  * load_elfcorehdr_segment - Setup crash memory ranges and initialize elfcorehdr
-  *                           segment needed to load kdump kernel.
-@@ -626,7 +643,8 @@ static int load_elfcorehdr_segment(struct kimage *image, struct kexec_buf *kbuf)
- 
- 	kbuf->buffer = headers;
- 	kbuf->mem = KEXEC_BUF_MEM_UNKNOWN;
--	kbuf->bufsz = kbuf->memsz = headers_sz;
-+	kbuf->bufsz = headers_sz;
-+	kbuf->memsz = headers_sz + kdump_extra_elfcorehdr_size(cmem);
- 	kbuf->top_down = false;
- 
- 	ret = kexec_add_buffer(kbuf);
-diff --git a/arch/powerpc/kexec/ranges.c b/arch/powerpc/kexec/ranges.c
-index b1f4267d9b17..3702b0bdab14 100644
---- a/arch/powerpc/kexec/ranges.c
-+++ b/arch/powerpc/kexec/ranges.c
-@@ -620,4 +620,89 @@ int get_crash_memory_ranges(struct crash_mem **mem_ranges)
- 		pr_err("Failed to setup crash memory ranges\n");
- 	return ret;
- }
-+
-+/**
-+ * remove_mem_range - Removes the given memory range from the range list.
-+ * @mem_ranges:    Range list to remove the memory range to.
-+ * @base:          Base address of the range to remove.
-+ * @size:          Size of the memory range to remove.
-+ *
-+ * (Re)allocates memory, if needed.
-+ *
-+ * Returns 0 on success, negative errno on error.
-+ */
-+int remove_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size)
-+{
-+	u64 end;
-+	int ret = 0;
-+	unsigned int i;
-+	u64 mstart, mend;
-+	struct crash_mem *mem_rngs = *mem_ranges;
-+
-+	if (!size)
-+		return 0;
-+
-+	/*
-+	 * Memory range are stored as start and end address, use
-+	 * the same format to do remove operation.
-+	 */
-+	end = base + size - 1;
-+
-+	for (i = 0; i < mem_rngs->nr_ranges; i++) {
-+		mstart = mem_rngs->ranges[i].start;
-+		mend = mem_rngs->ranges[i].end;
-+
-+		/*
-+		 * Memory range to remove is not part of this range entry
-+		 * in the memory range list
-+		 */
-+		if (!(base >= mstart && end <= mend))
-+			continue;
-+
-+		/*
-+		 * Memory range to remove is equivalent to this entry in the
-+		 * memory range list. Remove the range entry from the list.
-+		 */
-+		if (base == mstart && end == mend) {
-+			for (; i < mem_rngs->nr_ranges - 1; i++) {
-+				mem_rngs->ranges[i].start = mem_rngs->ranges[i+1].start;
-+				mem_rngs->ranges[i].end = mem_rngs->ranges[i+1].end;
-+			}
-+			mem_rngs->nr_ranges--;
-+			goto out;
-+		}
-+		/*
-+		 * Start address of the memory range to remove and the
-+		 * current memory range entry in the list is same. Just
-+		 * move the start address of the current memory range
-+		 * entry in the list to end + 1.
-+		 */
-+		else if (base == mstart) {
-+			mem_rngs->ranges[i].start = end + 1;
-+			goto out;
-+		}
-+		/*
-+		 * End address of the memory range to remove and the
-+		 * current memory range entry in the list is same.
-+		 * Just move the end address of the current memory
-+		 * range entry in the list to base - 1.
-+		 */
-+		else if (end == mend)  {
-+			mem_rngs->ranges[i].end = base - 1;
-+			goto out;
-+		}
-+		/*
-+		 * Memory range to remove is not at the edge of current
-+		 * memory range entry. Split the current memory entry into
-+		 * two half.
-+		 */
-+		else {
-+			mem_rngs->ranges[i].end = base - 1;
-+			size = mem_rngs->ranges[i].end - end;
-+			ret = add_mem_range(mem_ranges, end + 1, size);
-+		}
-+	}
-+out:
-+	return ret;
-+}
- #endif /* CONFIG_CRASH_DUMP */
--- 
-2.43.0
-
-
+Reviewed-by: Kai Huang <kai.huang@intel.com>
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
