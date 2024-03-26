@@ -4,74 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B9403C54E67
-	for <kexec@archiver.kernel.org>; Tue, 26 Mar 2024 05:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B5849CD11DB
+	for <kexec@archiver.kernel.org>; Tue, 26 Mar 2024 05:55:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=Al7yA7dCVH4+kfRgJqXRJoR5t+kWj+2jCpsUwoLQ5Qw=; b=124sOoqWiPKJiY
-	L4UyvtvPkxeR5vuxFkBoAQv4xdFq7Pk03stcxaeHrwq+HReVS+qdgt2W4Gb0NUHKgyax76OpTMipC
-	WhqyqTIgnwKvdQICmW1LipqtVRkJHB0Lv0oEkWEhTo7PTZ5/BqP7XffSfkNWZI4PWuLgyeMWND5mL
-	m5OGh3SuU9WfOfkjL7m8naWIGFVtU51sGLzjb8D1aW3AbEX9BWG10/VhCfcRx+ZEQO1m1jRuHvsMF
-	wGLwT+peezkC6D9aVKtZJslqluVMUiC/8eTvQOTko4MpQbo2mG7zAAtRsnBSAS2FcKMFEUqwlRjcD
-	b6vXKWelbfkYIAXKlCXA==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=LKlyv8SU4viaO3fxeYBzplo2jjw3hBSvlYp3qcvYeUE=; b=Gbez6oJAQq8FG4
+	l/F3ev1x1qjJ5ZH6ADZHh6OngG6kJy+KN5nDkqeDvmifo9dKAHwq+BXyxc4Ipn3jK/huSj0QBD7dT
+	ONrj53UShU+8omHBn54+M8UCyTo1wbUPCCZOfvYFERzREqlEsC+8SriJexNZGOLX21msTnkl/AXVX
+	V+GqUW1lAhQ7kfw3pLSAcku3OenlzXu73cBSvOWYDAG7BPlIcTXxC1xVzjzJdTPw7Y2rYAkYyhzNm
+	1MvPIF3Ok6muDfnA/MH8SwlNhxKFJeTOc2YdDZUTofeHEYYgXRQbYjISqLC1zoop7cdFFyCd4Dd8O
+	onUs7MC9X1xvAtYBrq/Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rozma-00000003Bsx-22le;
-	Tue, 26 Mar 2024 05:55:36 +0000
+	id 1rozme-00000003BuY-1QPc;
+	Tue, 26 Mar 2024 05:55:40 +0000
 Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rozmD-00000003Bnu-39U7
+	id 1rozmK-00000003BqQ-09L1
 	for kexec@lists.infradead.org;
-	Tue, 26 Mar 2024 05:55:31 +0000
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42Q1o13H025200;
-	Tue, 26 Mar 2024 05:54:35 GMT
+	Tue, 26 Mar 2024 05:55:38 +0000
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 42Q5retP025443;
+	Tue, 26 Mar 2024 05:55:05 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : content-transfer-encoding : mime-version; s=pp1;
- bh=JdXrYSzx/RXKSx/v2umg0QWpMvebtf4u6jKEEQdEagw=;
- b=EQs/23vbipj+TW759+FJT10bN7S9t+7xzVO/t+xU8/xY+ijARXqOwPoG5BVhaLc4WZY/
- P+Ft1mkU6mcB7E4ZJ5zqxfzPjCK5MDCGMPeFiakiMrrIeATW3tag8Ss0WPeEA3Znu25Y
- JMfyNeW1IPede2GCbg6LjE55aDdyS8HgkITYAE6X+21sM/ioe+GLi9WiLYwB4Rq17ftA
- IQEZkZdNZTLPCK5abaKK9PfFCpjszRMDKVoWwsqlNwOmXoMkv/I2p3oZZhy7+TqPhasp
- 4Uwm8fNowH6gqMgroCP8PoBrVGFxqUqFZGd1hJ81VyOS0eE9qnu4F1Pyq2S8WRC+vY31 Cw== 
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=fQ6jIh5wPIHykA+8c9p+HZt0oaNTrptKhbADAQ5fbXM=;
+ b=Vatjws2gu58cYEu2tktfirOP2BpcATzhfdGvBhUrb3zqGmWsAeH1FKbbv1GGUVeS2Zmu
+ uPED4dki4W9B9ZTJksm70xlTqsxfI+zpfiqzsAIob+iqVCW+n72ig0wbvEw9LkF4Ms5h
+ iUZEEz87Onse52se7reRwJ58B84ES4NmIM2Cybq6TdFVP4aPvKlSqaJN1hQE5P7jrbG3
+ MDy2I9Cv/VMGU3QuILJ60jnef5kYBcOlHlF/vO2TloRqG661So7t+/tY4neL3kMOk2Og
+ sV84C/c4u4/1NqVQBvP3HgHeFNRvI4tqjvAoiiSrA/+JusDQgj3TId1dToZfcWzv6H82 mQ== 
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x3k3j8mu7-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x3r0nr2u2-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 Mar 2024 05:54:34 +0000
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42Q5sXO6008351;
-	Tue, 26 Mar 2024 05:54:33 GMT
+	Tue, 26 Mar 2024 05:55:04 +0000
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 42Q5t4oF028033;
+	Tue, 26 Mar 2024 05:55:04 GMT
 Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x3k3j8mu2-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3x3r0nr2tw-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 Mar 2024 05:54:33 +0000
+	Tue, 26 Mar 2024 05:55:04 +0000
 Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42Q4PDYk011328;
-	Tue, 26 Mar 2024 05:54:32 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x2bmkwg3g-1
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 42Q4hsg6011321;
+	Tue, 26 Mar 2024 05:55:03 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3x2bmkwg55-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 Mar 2024 05:54:32 +0000
+	Tue, 26 Mar 2024 05:55:02 +0000
 Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42Q5sQ3R43581718
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 42Q5svrX34734554
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 26 Mar 2024 05:54:28 GMT
+	Tue, 26 Mar 2024 05:54:59 GMT
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C70B920049;
-	Tue, 26 Mar 2024 05:54:26 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 832A820049;
+	Tue, 26 Mar 2024 05:54:57 +0000 (GMT)
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C81EA20040;
-	Tue, 26 Mar 2024 05:54:17 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 16DE720040;
+	Tue, 26 Mar 2024 05:54:50 +0000 (GMT)
 Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.ibm.com.com (unknown [9.43.19.10])
 	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 26 Mar 2024 05:54:17 +0000 (GMT)
+	Tue, 26 Mar 2024 05:54:49 +0000 (GMT)
 From: Sourabh Jain <sourabhjain@linux.ibm.com>
 To: linuxppc-dev@ozlabs.org
-Cc: Sourabh Jain <sourabhjain@linux.ibm.com>, Akhil Raj <lf32.dev@gmail.com>,
+Cc: Sourabh Jain <sourabhjain@linux.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>, Akhil Raj <lf32.dev@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
         Baoquan He <bhe@redhat.com>, Borislav Petkov <bp@alien8.de>,
@@ -80,7 +82,6 @@ Cc: Sourabh Jain <sourabhjain@linux.ibm.com>, Akhil Raj <lf32.dev@gmail.com>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Dave Young <dyoung@redhat.com>, David Hildenbrand <david@redhat.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hari Bathini <hbathini@linux.ibm.com>,
         Laurent Dufour <laurent.dufour@fr.ibm.com>,
         Mahesh Salgaonkar <mahesh@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
@@ -90,26 +91,27 @@ Cc: Sourabh Jain <sourabhjain@linux.ibm.com>, Akhil Raj <lf32.dev@gmail.com>,
         Valentin Schneider <vschneid@redhat.com>,
         Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org,
         x86@kernel.org
-Subject: [PATCH v18 0/6] powerpc/crash: Kernel handling of CPU and memory hotplug
-Date: Tue, 26 Mar 2024 11:24:07 +0530
-Message-ID: <20240326055413.186534-1-sourabhjain@linux.ibm.com>
+Subject: [PATCH v18 3/6] powerpc/kexec: move *_memory_ranges functions to ranges.c
+Date: Tue, 26 Mar 2024 11:24:10 +0530
+Message-ID: <20240326055413.186534-4-sourabhjain@linux.ibm.com>
 X-Mailer: git-send-email 2.43.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: BKL80nWfb78lPYXII8hnEIWytT1aeuOa
-X-Proofpoint-GUID: 0QJd9GAA2ycKCH2ntCh4RoKVHb8kkcca
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+In-Reply-To: <20240326055413.186534-1-sourabhjain@linux.ibm.com>
+References: <20240326055413.186534-1-sourabhjain@linux.ibm.com>
 MIME-Version: 1.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 5mjuT_q-XHw6XUah16w8nQAslXnp-jcx
+X-Proofpoint-GUID: vjMnB1ZCBVH0f_o58HgYcHAArp1Znn0Q
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-03-26_02,2024-03-21_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
- bulkscore=0 adultscore=0 spamscore=0 phishscore=0 clxscore=1011
- suspectscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2403210000 definitions=main-2403260037
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
+ malwarescore=0 spamscore=0 clxscore=1015 lowpriorityscore=0 suspectscore=0
+ mlxscore=0 mlxlogscore=999 phishscore=0 bulkscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2403210000
+ definitions=main-2403260037
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240325_225514_839489_E844DBDE 
-X-CRM114-Status: GOOD (  40.39  )
+X-CRM114-CacheID: sfid-20240325_225534_277632_2952F24C 
+X-CRM114-Status: GOOD (  34.87  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -126,190 +128,29 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Commit 247262756121 ("crash: add generic infrastructure for crash
-hotplug support") added a generic infrastructure that allows
-architectures to selectively update the kdump image component during CPU
-or memory add/remove events within the kernel itself.
+Move the following functions form kexec/{file_load_64.c => ranges.c} and
+make them public so that components other than KEXEC_FILE can also use
+these functions.
+1. get_exclude_memory_ranges
+2. get_reserved_memory_ranges
+3. get_crash_memory_ranges
+4. get_usable_memory_ranges
 
-This patch series adds crash hotplug handler for PowerPC and enable
-support to update the kdump image on CPU/Memory add/remove events.
+Later in the series get_crash_memory_ranges function is utilized for
+in-kernel updates to kdump image during CPU/Memory hotplug or
+online/offline events for both kexec_load and kexec_file_load syscalls.
 
-Among the 6 patches in this series, the first two patches make changes
-to the generic crash hotplug handler to assist PowerPC in adding support
-for this feature. The last four patches add support for this feature.
+Since the above functions are moved to ranges.c, some of the helper
+functions in ranges.c are no longer required to be public. Mark them as
+static and removed them from kexec_ranges.h header file.
 
-The following section outlines the problem addressed by this patch
-series, along with the current solution, its shortcomings, and the
-proposed resolution.
+Finally, remove the CONFIG_KEXEC_FILE build dependency for range.c
+because it is required for other config, such as CONFIG_CRASH_DUMP.
 
-Problem:
-========
-Due to CPU/Memory hotplug or online/offline events the elfcorehdr
-(which describes the CPUs and memory of the crashed kernel) and FDT
-(Flattened Device Tree) of kdump image becomes outdated. Consequently,
-attempting dump collection with an outdated elfcorehdr or FDT can lead
-to failed or inaccurate dump collection.
+No functional changes are intended.
 
-Going forward CPU hotplug or online/offline events are referred as
-CPU/Memory add/remove events.
-
-Existing solution and its shortcoming:
-======================================
-The current solution to address the above issue involves monitoring the
-CPU/memory add/remove events in userspace using udev rules and whenever
-there are changes in CPU and memory resources, the entire kdump image
-is loaded again. The kdump image includes kernel, initrd, elfcorehdr,
-FDT, purgatory. Given that only elfcorehdr and FDT get outdated due to
-CPU/Memory add/remove events, reloading the entire kdump image is
-inefficient. More importantly, kdump remains inactive for a substantial
-amount of time until the kdump reload completes.
-
-Proposed solution:
-==================
-Instead of initiating a full kdump image reload from userspace on
-CPU/Memory hotplug and online/offline events, the proposed solution aims
-to update only the necessary kdump image component within the kernel
-itself.
-
-Git tree for testing:
-=====================
-https://github.com/sourabhjains/linux/tree/kdump-in-kernel-crash-update-v18
-
-Above tree is rebased on top of powerpc/next branch.
-
-To realize this feature, the kdump udev rule must be updated. On RHEL,
-add the following two lines at the top of the
-"/usr/lib/udev/rules.d/98-kexec.rules" file.
-
-SUBSYSTEM=="cpu", ATTRS{crash_hotplug}=="1", GOTO="kdump_reload_end"
-SUBSYSTEM=="memory", ATTRS{crash_hotplug}=="1", GOTO="kdump_reload_end"
-
-With the above change to the kdump udev rule, kdump reload is avoided
-during CPU/Memory add/remove events if this feature is enabled in the
-kernel.
-
-Note: only kexec_file_load syscall will work. For kexec_load minor changes
-are required in kexec tool.
-
-Changelog:
-----------
-v18: [No functional changes]
-  - Update a comment in 2/6.
-  - Describe the clean-up done on x86 in patch description 2/6.
-  - Fix a minor typo in the patch description of 3/6.
-
-v17: [https://lore.kernel.org/all/20240226084118.16310-1-sourabhjain@linux.ibm.com/]
-  - Rebase the patch series on top linux-next tree and below patch series
-    https://lore.kernel.org/all/20240213113150.1148276-1-hbathini@linux.ibm.com/
-  - Split 0003 patch from v16 into two patches
-       1. Move get_crash_memory_ranges() along with other *_memory_ranges()
-          functions to ranges.c and make them public.
-       2. Make update_cpus_node function public and take this function
-          out of file_load_64.c
-  - Keep arch_crash_hotplug_support in crash.c instead of core_64.c [05/06]
-  - Use CONFIG_CRASH_MAX_MEMORY_RANGES to find extra elfcorehdr size [06/06]
-
-v16: [https://lore.kernel.org/all/20240217081452.164571-1-sourabhjain@linux.ibm.com/]
-  - Remove the unused #define `crash_hotplug_cpu_support`
-    and `crash_hotplug_memory_support` in `arch/x86/include/asm/kexec.h`.
-  - Document why two kexec flag bits are used in
-    `arch_crash_hotplug_memory_support` (x86).
-  - Use a switch case to handle different hotplug operations
-    in `arch_crash_handle_hotplug_event` for PowerPC.
-  - Fix a typo in 4/5.
-
-v15:
-  - Remove the patch that adds a new kexec flag for FDT update.
-  - Introduce a generic kexec flag bit to share hotplug support
-    intent between the kexec tool and the kernel for the kexec_load
-    syscall. (2/5)
-  - Introduce an architecture-specific handler to process the kexec
-    flag for crash hotplug support. (2/5)
-  - Rename the @update_elfcorehdr member of the struct kimage to
-    @hotplug_support. (2/5)
-  - Use a common function to advertise hotplug support for both CPU
-    and Memory. (2/5)
-
-v14:
-  - Fix build warnings by including necessary header files
-  - Rebase to v6.7-rc5
-
-v13:
-  - Fix a build warning, take ranges.c out of CONFIG_KEXEC_FILE
-  - Rebase to v6.7-rc4
-
-v12:
-  - A patch to add new kexec flags to support this feature on kexec_load
-    system call
-  - Change in the way this feature is advertise to userspace for both
-    kexec_load syscall
-  - Rebase to v6.6-rc7
-
-v11:
-  - Rebase to v6.4-rc6
-  - The patch that introduced CONFIG_CRASH_HOTPLUG for PowerPC has been
-    removed. The config is now part of common configuration:
-    https://lore.kernel.org/all/87ilbpflsk.fsf@mail.lhotse/
-
-v10:
-  - Drop the patch that adds fdt_index attribute to struct kimage_arch
-    Find the fdt segment index when needed.
-  - Added more details into commits messages.
-  - Rebased onto 6.3.0-rc5
-
-v9:
-  - Removed patch to prepare elfcorehdr crash notes for possible CPUs.
-    The patch is moved to generic patch series that introduces generic
-    infrastructure for in kernel crash update.
-  - Removed patch to pass the hotplug action type to the arch crash
-    hotplug handler function. The generic patch series has introduced
-    the hotplug action type in kimage struct.
-  - Add detail commit message for better understanding.
-
-v8:
-  - Restrict fdt_index initialization to machine_kexec_post_load
-    it work for both kexec_load and kexec_file_load.[3/8] Laurent Dufour
-
-  - Updated the logic to find the number of offline core. [6/8]
-
-  - Changed the logic to find the elfcore program header to accommodate
-    future memory ranges due memory hotplug events. [8/8]
-
-v7
-  - added a new config to configure this feature
-  - pass hotplug action type to arch specific handler
-
-v6
-  - Added crash memory hotplug support
-
-v5:
-  - Replace COFNIG_CRASH_HOTPLUG with CONFIG_HOTPLUG_CPU.
-  - Move fdt segment identification for kexec_load case to load path
-    instead of crash hotplug handler
-  - Keep new attribute defined under kimage_arch to track FDT segment
-    under CONFIG_HOTPLUG_CPU config.
-
-v4:
-  - Update the logic to find the additional space needed for hotadd CPUs
-    post kexec load. Refer "[RFC v4 PATCH 4/5] powerpc/crash hp: add crash
-    hotplug support for kexec_file_load" patch to know more about the
-    change.
-  - Fix a couple of typo.
-  - Replace pr_err to pr_info_once to warn user about memory hotplug
-    support.
-  - In crash hotplug handle exit the for loop if FDT segment is found.
-
-v3
-  - Move fdt_index and fdt_index_vaild variables to kimage_arch struct.
-  - Rebase patche on top of
-    https://lore.kernel.org/lkml/20220303162725.49640-1-eric.devolder@oracle.com/
-  - Fixed warning reported by checpatch script
-
-v2:
-  - Use generic hotplug handler introduced by
-    https://lore.kernel.org/lkml/20220209195706.51522-1-eric.devolder@oracle.com/
-    a significant change from v1.
-
+Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+Acked-by: Hari Bathini <hbathini@linux.ibm.com>
 Cc: Akhil Raj <lf32.dev@gmail.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
@@ -321,7 +162,6 @@ Cc: Dave Hansen <dave.hansen@linux.intel.com>
 Cc: Dave Young <dyoung@redhat.com>
 Cc: David Hildenbrand <david@redhat.com>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Hari Bathini <hbathini@linux.ibm.com>
 Cc: Laurent Dufour <laurent.dufour@fr.ibm.com>
 Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
 Cc: Michael Ellerman <mpe@ellerman.id.au>
@@ -333,36 +173,594 @@ Cc: Valentin Schneider <vschneid@redhat.com>
 Cc: Vivek Goyal <vgoyal@redhat.com>
 Cc: kexec@lists.infradead.org
 Cc: x86@kernel.org
+---
+Chnages in v18:
+* Fix a typo in the commit message
 
-Sourabh Jain (6):
-  crash: forward memory_notify arg to arch crash hotplug handler
-  crash: add a new kexec flag for hotplug support
-  powerpc/kexec: move *_memory_ranges functions to ranges.c
-  PowerPC/kexec: make the update_cpus_node() function public
-  powerpc/crash: add crash CPU hotplug support
-  powerpc/crash: add crash memory hotplug support
-
- arch/powerpc/Kconfig                    |   4 +
- arch/powerpc/include/asm/kexec.h        |  15 ++
- arch/powerpc/include/asm/kexec_ranges.h |  20 +-
+ arch/powerpc/include/asm/kexec_ranges.h |  19 +-
  arch/powerpc/kexec/Makefile             |   4 +-
- arch/powerpc/kexec/core_64.c            |  91 +++++++
- arch/powerpc/kexec/crash.c              | 196 +++++++++++++++
- arch/powerpc/kexec/elf_64.c             |   3 +-
- arch/powerpc/kexec/file_load_64.c       | 314 +++---------------------
- arch/powerpc/kexec/ranges.c             | 312 ++++++++++++++++++++++-
- arch/x86/include/asm/kexec.h            |  13 +-
- arch/x86/kernel/crash.c                 |  32 ++-
- drivers/base/cpu.c                      |   2 +-
- drivers/base/memory.c                   |   2 +-
- include/linux/crash_core.h              |  15 +-
- include/linux/kexec.h                   |  11 +-
- include/uapi/linux/kexec.h              |   1 +
- kernel/crash_core.c                     |  29 +--
- kernel/kexec.c                          |   4 +-
- kernel/kexec_file.c                     |   5 +
- 19 files changed, 714 insertions(+), 359 deletions(-)
+ arch/powerpc/kexec/file_load_64.c       | 190 --------------------
+ arch/powerpc/kexec/ranges.c             | 227 +++++++++++++++++++++++-
+ 4 files changed, 224 insertions(+), 216 deletions(-)
 
+diff --git a/arch/powerpc/include/asm/kexec_ranges.h b/arch/powerpc/include/asm/kexec_ranges.h
+index f83866a19e87..8489e844b447 100644
+--- a/arch/powerpc/include/asm/kexec_ranges.h
++++ b/arch/powerpc/include/asm/kexec_ranges.h
+@@ -7,19 +7,8 @@
+ void sort_memory_ranges(struct crash_mem *mrngs, bool merge);
+ struct crash_mem *realloc_mem_ranges(struct crash_mem **mem_ranges);
+ int add_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size);
+-int add_tce_mem_ranges(struct crash_mem **mem_ranges);
+-int add_initrd_mem_range(struct crash_mem **mem_ranges);
+-#ifdef CONFIG_PPC_64S_HASH_MMU
+-int add_htab_mem_range(struct crash_mem **mem_ranges);
+-#else
+-static inline int add_htab_mem_range(struct crash_mem **mem_ranges)
+-{
+-	return 0;
+-}
+-#endif
+-int add_kernel_mem_range(struct crash_mem **mem_ranges);
+-int add_rtas_mem_range(struct crash_mem **mem_ranges);
+-int add_opal_mem_range(struct crash_mem **mem_ranges);
+-int add_reserved_mem_ranges(struct crash_mem **mem_ranges);
+-
++int get_exclude_memory_ranges(struct crash_mem **mem_ranges);
++int get_reserved_memory_ranges(struct crash_mem **mem_ranges);
++int get_crash_memory_ranges(struct crash_mem **mem_ranges);
++int get_usable_memory_ranges(struct crash_mem **mem_ranges);
+ #endif /* _ASM_POWERPC_KEXEC_RANGES_H */
+diff --git a/arch/powerpc/kexec/Makefile b/arch/powerpc/kexec/Makefile
+index 8e469c4da3f8..470eb0453e17 100644
+--- a/arch/powerpc/kexec/Makefile
++++ b/arch/powerpc/kexec/Makefile
+@@ -3,11 +3,11 @@
+ # Makefile for the linux kernel.
+ #
+ 
+-obj-y				+= core.o core_$(BITS).o
++obj-y				+= core.o core_$(BITS).o ranges.o
+ 
+ obj-$(CONFIG_PPC32)		+= relocate_32.o
+ 
+-obj-$(CONFIG_KEXEC_FILE)	+= file_load.o ranges.o file_load_$(BITS).o elf_$(BITS).o
++obj-$(CONFIG_KEXEC_FILE)	+= file_load.o file_load_$(BITS).o elf_$(BITS).o
+ obj-$(CONFIG_VMCORE_INFO)	+= vmcore_info.o
+ obj-$(CONFIG_CRASH_DUMP)	+= crash.o
+ 
+diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
+index 1bc65de6174f..6a01f62b8fcf 100644
+--- a/arch/powerpc/kexec/file_load_64.c
++++ b/arch/powerpc/kexec/file_load_64.c
+@@ -47,83 +47,6 @@ const struct kexec_file_ops * const kexec_file_loaders[] = {
+ 	NULL
+ };
+ 
+-/**
+- * get_exclude_memory_ranges - Get exclude memory ranges. This list includes
+- *                             regions like opal/rtas, tce-table, initrd,
+- *                             kernel, htab which should be avoided while
+- *                             setting up kexec load segments.
+- * @mem_ranges:                Range list to add the memory ranges to.
+- *
+- * Returns 0 on success, negative errno on error.
+- */
+-static int get_exclude_memory_ranges(struct crash_mem **mem_ranges)
+-{
+-	int ret;
+-
+-	ret = add_tce_mem_ranges(mem_ranges);
+-	if (ret)
+-		goto out;
+-
+-	ret = add_initrd_mem_range(mem_ranges);
+-	if (ret)
+-		goto out;
+-
+-	ret = add_htab_mem_range(mem_ranges);
+-	if (ret)
+-		goto out;
+-
+-	ret = add_kernel_mem_range(mem_ranges);
+-	if (ret)
+-		goto out;
+-
+-	ret = add_rtas_mem_range(mem_ranges);
+-	if (ret)
+-		goto out;
+-
+-	ret = add_opal_mem_range(mem_ranges);
+-	if (ret)
+-		goto out;
+-
+-	ret = add_reserved_mem_ranges(mem_ranges);
+-	if (ret)
+-		goto out;
+-
+-	/* exclude memory ranges should be sorted for easy lookup */
+-	sort_memory_ranges(*mem_ranges, true);
+-out:
+-	if (ret)
+-		pr_err("Failed to setup exclude memory ranges\n");
+-	return ret;
+-}
+-
+-/**
+- * get_reserved_memory_ranges - Get reserve memory ranges. This list includes
+- *                              memory regions that should be added to the
+- *                              memory reserve map to ensure the region is
+- *                              protected from any mischief.
+- * @mem_ranges:                 Range list to add the memory ranges to.
+- *
+- * Returns 0 on success, negative errno on error.
+- */
+-static int get_reserved_memory_ranges(struct crash_mem **mem_ranges)
+-{
+-	int ret;
+-
+-	ret = add_rtas_mem_range(mem_ranges);
+-	if (ret)
+-		goto out;
+-
+-	ret = add_tce_mem_ranges(mem_ranges);
+-	if (ret)
+-		goto out;
+-
+-	ret = add_reserved_mem_ranges(mem_ranges);
+-out:
+-	if (ret)
+-		pr_err("Failed to setup reserved memory ranges\n");
+-	return ret;
+-}
+-
+ /**
+  * __locate_mem_hole_top_down - Looks top down for a large enough memory hole
+  *                              in the memory regions between buf_min & buf_max
+@@ -322,119 +245,6 @@ static int locate_mem_hole_bottom_up_ppc64(struct kexec_buf *kbuf,
+ }
+ 
+ #ifdef CONFIG_CRASH_DUMP
+-/**
+- * get_usable_memory_ranges - Get usable memory ranges. This list includes
+- *                            regions like crashkernel, opal/rtas & tce-table,
+- *                            that kdump kernel could use.
+- * @mem_ranges:               Range list to add the memory ranges to.
+- *
+- * Returns 0 on success, negative errno on error.
+- */
+-static int get_usable_memory_ranges(struct crash_mem **mem_ranges)
+-{
+-	int ret;
+-
+-	/*
+-	 * Early boot failure observed on guests when low memory (first memory
+-	 * block?) is not added to usable memory. So, add [0, crashk_res.end]
+-	 * instead of [crashk_res.start, crashk_res.end] to workaround it.
+-	 * Also, crashed kernel's memory must be added to reserve map to
+-	 * avoid kdump kernel from using it.
+-	 */
+-	ret = add_mem_range(mem_ranges, 0, crashk_res.end + 1);
+-	if (ret)
+-		goto out;
+-
+-	ret = add_rtas_mem_range(mem_ranges);
+-	if (ret)
+-		goto out;
+-
+-	ret = add_opal_mem_range(mem_ranges);
+-	if (ret)
+-		goto out;
+-
+-	ret = add_tce_mem_ranges(mem_ranges);
+-out:
+-	if (ret)
+-		pr_err("Failed to setup usable memory ranges\n");
+-	return ret;
+-}
+-
+-/**
+- * get_crash_memory_ranges - Get crash memory ranges. This list includes
+- *                           first/crashing kernel's memory regions that
+- *                           would be exported via an elfcore.
+- * @mem_ranges:              Range list to add the memory ranges to.
+- *
+- * Returns 0 on success, negative errno on error.
+- */
+-static int get_crash_memory_ranges(struct crash_mem **mem_ranges)
+-{
+-	phys_addr_t base, end;
+-	struct crash_mem *tmem;
+-	u64 i;
+-	int ret;
+-
+-	for_each_mem_range(i, &base, &end) {
+-		u64 size = end - base;
+-
+-		/* Skip backup memory region, which needs a separate entry */
+-		if (base == BACKUP_SRC_START) {
+-			if (size > BACKUP_SRC_SIZE) {
+-				base = BACKUP_SRC_END + 1;
+-				size -= BACKUP_SRC_SIZE;
+-			} else
+-				continue;
+-		}
+-
+-		ret = add_mem_range(mem_ranges, base, size);
+-		if (ret)
+-			goto out;
+-
+-		/* Try merging adjacent ranges before reallocation attempt */
+-		if ((*mem_ranges)->nr_ranges == (*mem_ranges)->max_nr_ranges)
+-			sort_memory_ranges(*mem_ranges, true);
+-	}
+-
+-	/* Reallocate memory ranges if there is no space to split ranges */
+-	tmem = *mem_ranges;
+-	if (tmem && (tmem->nr_ranges == tmem->max_nr_ranges)) {
+-		tmem = realloc_mem_ranges(mem_ranges);
+-		if (!tmem)
+-			goto out;
+-	}
+-
+-	/* Exclude crashkernel region */
+-	ret = crash_exclude_mem_range(tmem, crashk_res.start, crashk_res.end);
+-	if (ret)
+-		goto out;
+-
+-	/*
+-	 * FIXME: For now, stay in parity with kexec-tools but if RTAS/OPAL
+-	 *        regions are exported to save their context at the time of
+-	 *        crash, they should actually be backed up just like the
+-	 *        first 64K bytes of memory.
+-	 */
+-	ret = add_rtas_mem_range(mem_ranges);
+-	if (ret)
+-		goto out;
+-
+-	ret = add_opal_mem_range(mem_ranges);
+-	if (ret)
+-		goto out;
+-
+-	/* create a separate program header for the backup region */
+-	ret = add_mem_range(mem_ranges, BACKUP_SRC_START, BACKUP_SRC_SIZE);
+-	if (ret)
+-		goto out;
+-
+-	sort_memory_ranges(*mem_ranges, false);
+-out:
+-	if (ret)
+-		pr_err("Failed to setup crash memory ranges\n");
+-	return ret;
+-}
+-
+ /**
+  * check_realloc_usable_mem - Reallocate buffer if it can't accommodate entries
+  * @um_info:                  Usable memory buffer and ranges info.
+diff --git a/arch/powerpc/kexec/ranges.c b/arch/powerpc/kexec/ranges.c
+index 33b780049aaf..b1f4267d9b17 100644
+--- a/arch/powerpc/kexec/ranges.c
++++ b/arch/powerpc/kexec/ranges.c
+@@ -20,9 +20,13 @@
+ #include <linux/kexec.h>
+ #include <linux/of.h>
+ #include <linux/slab.h>
++#include <linux/memblock.h>
++#include <linux/crash_core.h>
+ #include <asm/sections.h>
+ #include <asm/kexec_ranges.h>
++#include <asm/crashdump-ppc64.h>
+ 
++#if defined(CONFIG_KEXEC_FILE) || defined(CONFIG_CRASH_DUMP)
+ /**
+  * get_max_nr_ranges - Get the max no. of ranges crash_mem structure
+  *                     could hold, given the size allocated for it.
+@@ -234,13 +238,16 @@ int add_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size)
+ 	return __add_mem_range(mem_ranges, base, size);
+ }
+ 
++#endif /* CONFIG_KEXEC_FILE || CONFIG_CRASH_DUMP */
++
++#ifdef CONFIG_KEXEC_FILE
+ /**
+  * add_tce_mem_ranges - Adds tce-table range to the given memory ranges list.
+  * @mem_ranges:         Range list to add the memory range(s) to.
+  *
+  * Returns 0 on success, negative errno on error.
+  */
+-int add_tce_mem_ranges(struct crash_mem **mem_ranges)
++static int add_tce_mem_ranges(struct crash_mem **mem_ranges)
+ {
+ 	struct device_node *dn = NULL;
+ 	int ret = 0;
+@@ -279,7 +286,7 @@ int add_tce_mem_ranges(struct crash_mem **mem_ranges)
+  *
+  * Returns 0 on success, negative errno on error.
+  */
+-int add_initrd_mem_range(struct crash_mem **mem_ranges)
++static int add_initrd_mem_range(struct crash_mem **mem_ranges)
+ {
+ 	u64 base, end;
+ 	int ret;
+@@ -296,7 +303,6 @@ int add_initrd_mem_range(struct crash_mem **mem_ranges)
+ 	return ret;
+ }
+ 
+-#ifdef CONFIG_PPC_64S_HASH_MMU
+ /**
+  * add_htab_mem_range - Adds htab range to the given memory ranges list,
+  *                      if it exists
+@@ -304,14 +310,18 @@ int add_initrd_mem_range(struct crash_mem **mem_ranges)
+  *
+  * Returns 0 on success, negative errno on error.
+  */
+-int add_htab_mem_range(struct crash_mem **mem_ranges)
++static int add_htab_mem_range(struct crash_mem **mem_ranges)
+ {
++
++#ifdef CONFIG_PPC_64S_HASH_MMU
+ 	if (!htab_address)
+ 		return 0;
+ 
+ 	return add_mem_range(mem_ranges, __pa(htab_address), htab_size_bytes);
+-}
++#else
++	return 0;
+ #endif
++}
+ 
+ /**
+  * add_kernel_mem_range - Adds kernel text region to the given
+@@ -320,18 +330,20 @@ int add_htab_mem_range(struct crash_mem **mem_ranges)
+  *
+  * Returns 0 on success, negative errno on error.
+  */
+-int add_kernel_mem_range(struct crash_mem **mem_ranges)
++static int add_kernel_mem_range(struct crash_mem **mem_ranges)
+ {
+ 	return add_mem_range(mem_ranges, 0, __pa(_end));
+ }
++#endif /* CONFIG_KEXEC_FILE */
+ 
++#if defined(CONFIG_KEXEC_FILE) || defined(CONFIG_CRASH_DUMP)
+ /**
+  * add_rtas_mem_range - Adds RTAS region to the given memory ranges list.
+  * @mem_ranges:         Range list to add the memory range to.
+  *
+  * Returns 0 on success, negative errno on error.
+  */
+-int add_rtas_mem_range(struct crash_mem **mem_ranges)
++static int add_rtas_mem_range(struct crash_mem **mem_ranges)
+ {
+ 	struct device_node *dn;
+ 	u32 base, size;
+@@ -356,7 +368,7 @@ int add_rtas_mem_range(struct crash_mem **mem_ranges)
+  *
+  * Returns 0 on success, negative errno on error.
+  */
+-int add_opal_mem_range(struct crash_mem **mem_ranges)
++static int add_opal_mem_range(struct crash_mem **mem_ranges)
+ {
+ 	struct device_node *dn;
+ 	u64 base, size;
+@@ -374,7 +386,9 @@ int add_opal_mem_range(struct crash_mem **mem_ranges)
+ 	of_node_put(dn);
+ 	return ret;
+ }
++#endif /* CONFIG_KEXEC_FILE || CONFIG_CRASH_DUMP */
+ 
++#ifdef CONFIG_KEXEC_FILE
+ /**
+  * add_reserved_mem_ranges - Adds "/reserved-ranges" regions exported by f/w
+  *                           to the given memory ranges list.
+@@ -382,7 +396,7 @@ int add_opal_mem_range(struct crash_mem **mem_ranges)
+  *
+  * Returns 0 on success, negative errno on error.
+  */
+-int add_reserved_mem_ranges(struct crash_mem **mem_ranges)
++static int add_reserved_mem_ranges(struct crash_mem **mem_ranges)
+ {
+ 	int n_mem_addr_cells, n_mem_size_cells, i, len, cells, ret = 0;
+ 	struct device_node *root = of_find_node_by_path("/");
+@@ -412,3 +426,198 @@ int add_reserved_mem_ranges(struct crash_mem **mem_ranges)
+ 
+ 	return ret;
+ }
++
++/**
++ * get_reserved_memory_ranges - Get reserve memory ranges. This list includes
++ *                              memory regions that should be added to the
++ *                              memory reserve map to ensure the region is
++ *                              protected from any mischief.
++ * @mem_ranges:                 Range list to add the memory ranges to.
++ *
++ * Returns 0 on success, negative errno on error.
++ */
++int get_reserved_memory_ranges(struct crash_mem **mem_ranges)
++{
++	int ret;
++
++	ret = add_rtas_mem_range(mem_ranges);
++	if (ret)
++		goto out;
++
++	ret = add_tce_mem_ranges(mem_ranges);
++	if (ret)
++		goto out;
++
++	ret = add_reserved_mem_ranges(mem_ranges);
++out:
++	if (ret)
++		pr_err("Failed to setup reserved memory ranges\n");
++	return ret;
++}
++
++/**
++ * get_exclude_memory_ranges - Get exclude memory ranges. This list includes
++ *                             regions like opal/rtas, tce-table, initrd,
++ *                             kernel, htab which should be avoided while
++ *                             setting up kexec load segments.
++ * @mem_ranges:                Range list to add the memory ranges to.
++ *
++ * Returns 0 on success, negative errno on error.
++ */
++int get_exclude_memory_ranges(struct crash_mem **mem_ranges)
++{
++	int ret;
++
++	ret = add_tce_mem_ranges(mem_ranges);
++	if (ret)
++		goto out;
++
++	ret = add_initrd_mem_range(mem_ranges);
++	if (ret)
++		goto out;
++
++	ret = add_htab_mem_range(mem_ranges);
++	if (ret)
++		goto out;
++
++	ret = add_kernel_mem_range(mem_ranges);
++	if (ret)
++		goto out;
++
++	ret = add_rtas_mem_range(mem_ranges);
++	if (ret)
++		goto out;
++
++	ret = add_opal_mem_range(mem_ranges);
++	if (ret)
++		goto out;
++
++	ret = add_reserved_mem_ranges(mem_ranges);
++	if (ret)
++		goto out;
++
++	/* exclude memory ranges should be sorted for easy lookup */
++	sort_memory_ranges(*mem_ranges, true);
++out:
++	if (ret)
++		pr_err("Failed to setup exclude memory ranges\n");
++	return ret;
++}
++
++#ifdef CONFIG_CRASH_DUMP
++/**
++ * get_usable_memory_ranges - Get usable memory ranges. This list includes
++ *                            regions like crashkernel, opal/rtas & tce-table,
++ *                            that kdump kernel could use.
++ * @mem_ranges:               Range list to add the memory ranges to.
++ *
++ * Returns 0 on success, negative errno on error.
++ */
++int get_usable_memory_ranges(struct crash_mem **mem_ranges)
++{
++	int ret;
++
++	/*
++	 * Early boot failure observed on guests when low memory (first memory
++	 * block?) is not added to usable memory. So, add [0, crashk_res.end]
++	 * instead of [crashk_res.start, crashk_res.end] to workaround it.
++	 * Also, crashed kernel's memory must be added to reserve map to
++	 * avoid kdump kernel from using it.
++	 */
++	ret = add_mem_range(mem_ranges, 0, crashk_res.end + 1);
++	if (ret)
++		goto out;
++
++	ret = add_rtas_mem_range(mem_ranges);
++	if (ret)
++		goto out;
++
++	ret = add_opal_mem_range(mem_ranges);
++	if (ret)
++		goto out;
++
++	ret = add_tce_mem_ranges(mem_ranges);
++out:
++	if (ret)
++		pr_err("Failed to setup usable memory ranges\n");
++	return ret;
++}
++#endif /* CONFIG_CRASH_DUMP */
++#endif /* CONFIG_KEXEC_FILE */
++
++#ifdef CONFIG_CRASH_DUMP
++/**
++ * get_crash_memory_ranges - Get crash memory ranges. This list includes
++ *                           first/crashing kernel's memory regions that
++ *                           would be exported via an elfcore.
++ * @mem_ranges:              Range list to add the memory ranges to.
++ *
++ * Returns 0 on success, negative errno on error.
++ */
++int get_crash_memory_ranges(struct crash_mem **mem_ranges)
++{
++	phys_addr_t base, end;
++	struct crash_mem *tmem;
++	u64 i;
++	int ret;
++
++	for_each_mem_range(i, &base, &end) {
++		u64 size = end - base;
++
++		/* Skip backup memory region, which needs a separate entry */
++		if (base == BACKUP_SRC_START) {
++			if (size > BACKUP_SRC_SIZE) {
++				base = BACKUP_SRC_END + 1;
++				size -= BACKUP_SRC_SIZE;
++			} else
++				continue;
++		}
++
++		ret = add_mem_range(mem_ranges, base, size);
++		if (ret)
++			goto out;
++
++		/* Try merging adjacent ranges before reallocation attempt */
++		if ((*mem_ranges)->nr_ranges == (*mem_ranges)->max_nr_ranges)
++			sort_memory_ranges(*mem_ranges, true);
++	}
++
++	/* Reallocate memory ranges if there is no space to split ranges */
++	tmem = *mem_ranges;
++	if (tmem && (tmem->nr_ranges == tmem->max_nr_ranges)) {
++		tmem = realloc_mem_ranges(mem_ranges);
++		if (!tmem)
++			goto out;
++	}
++
++	/* Exclude crashkernel region */
++	ret = crash_exclude_mem_range(tmem, crashk_res.start, crashk_res.end);
++	if (ret)
++		goto out;
++
++	/*
++	 * FIXME: For now, stay in parity with kexec-tools but if RTAS/OPAL
++	 *        regions are exported to save their context at the time of
++	 *        crash, they should actually be backed up just like the
++	 *        first 64K bytes of memory.
++	 */
++	ret = add_rtas_mem_range(mem_ranges);
++	if (ret)
++		goto out;
++
++	ret = add_opal_mem_range(mem_ranges);
++	if (ret)
++		goto out;
++
++	/* create a separate program header for the backup region */
++	ret = add_mem_range(mem_ranges, BACKUP_SRC_START, BACKUP_SRC_SIZE);
++	if (ret)
++		goto out;
++
++	sort_memory_ranges(*mem_ranges, false);
++out:
++	if (ret)
++		pr_err("Failed to setup crash memory ranges\n");
++	return ret;
++}
++#endif /* CONFIG_CRASH_DUMP */
 -- 
 2.43.0
 
