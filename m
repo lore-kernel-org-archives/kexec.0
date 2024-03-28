@@ -4,68 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A6575C47DD9
-	for <kexec@archiver.kernel.org>; Thu, 28 Mar 2024 01:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6F11EC54E64
+	for <kexec@archiver.kernel.org>; Thu, 28 Mar 2024 09:15:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=0c5a9PAQlAXsz8OZGfSSFE1TGdDHeGjguXzV9l38Ze0=; b=SzQGbdSIiahbYU
-	TG5jhm/9CwnAvkpLz56kzD9yr/GZ1Pb8VEBh1Kkk0LrTXEDl2SutpyRYDD0nDWDEOfO/RP8ojF1C4
-	AwiL5dLrPlTTCQq2LLtLRdebKw8DPpNanKfKtI/flTJMEhaR3drR1GMAw6n8DTpJ+64i2X8eCSFMK
-	lOmixhIP8ULI/Oke/qqz7Tri2+yTMvtrciwlq2oQmKdetUMvUxtl0BjStzB8xzS3VfadTYuEad4oD
-	6VkIpejPwG6zTQv7MLqBH+KeYyi1z7lLZgUm7Tq96ky85fKNZZCanl4q5T0ves2k0YpYMPVEAGXL0
-	QB2DvyVUgxGDNTu5vsMA==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Subject:To:From:Date:
+	Message-ID:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From
+	:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=vHB2Cqt9OQPxiN1Ap2WwYqCl4kpc92sLxk9Er1sR7e8=; b=ltm1aMRAgDIjod
+	NEHb0B2dciwkgKd9XQ6895FRIh9sn+htFi0V9jBFebBjeglcz/5r6csvdmjJcej9Q1EST50QMaiiX
+	SL4wo1TMAlTkHHnW52EtNG7wJITlZbhKCZyWKcRVtl9NXLu2O94QXP2YxK6kr1TuUnjZBP/cUHjOE
+	6mq5s+UwirEz6erWvASxDOHazWOgQtOjygwHhCSEWCkvHblOrktwId9zaY0enjHX+nWFyImlXTq2n
+	lgLEMqpWiDIaYBda5QSFQmwnuIDJDSmze4wkkwVOqi5t2ssVsEtGhIY5rd0N4gxDH9uZnLfR9EPcV
+	acLU7895JMDfKhmhqsgQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rpet5-0000000Bzlx-23Iw;
-	Thu, 28 Mar 2024 01:49:03 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1rplrO-0000000DGYx-10z5;
+	Thu, 28 Mar 2024 09:15:46 +0000
+Received: from mail.doueloul.pl ([5.249.155.148])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rpesf-0000000BzRV-0c3U
+	id 1rplrK-0000000DGX7-3HZf
 	for kexec@lists.infradead.org;
-	Thu, 28 Mar 2024 01:48:39 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711590514;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ms3mo6grZ1J92R+XQiZMnioOtLmeHwZYPWNCbExS/N4=;
-	b=UVgeGqt1QBbC1Q/SM+XwvJpKkWWy1U4c3i4dp21u+byKQtPP15YPAHZCNXWO11tWB3KA0j
-	aDsL86R7xVsmMiTsMhAP88W/RpVDasFLveieghVcMf5bEYBEhLhre0JLiIHqXNvHySgnkp
-	VRwSgke2p1aW3a3K3dmQSR+8qUyXnuQ=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-294-lFeLVmLoN8m1AheDhDE6vA-1; Wed,
- 27 Mar 2024 21:48:32 -0400
-X-MC-Unique: lFeLVmLoN8m1AheDhDE6vA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 03AA02803622;
-	Thu, 28 Mar 2024 01:48:32 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.12])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 17290111E3F3;
-	Thu, 28 Mar 2024 01:48:30 +0000 (UTC)
-Date: Thu, 28 Mar 2024 09:48:23 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>,
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] vmcore: replace strncpy with strtomem
-Message-ID: <ZgTMZ1HYheBMDbei@MiWiFi-R3L-srv>
-References: <20240327-strncpy-fs-proc-vmcore-c-v1-1-e025ed08b1b0@google.com>
+	Thu, 28 Mar 2024 09:15:44 +0000
+Received: by mail.doueloul.pl (Postfix, from userid 1002)
+	id A35F582C7D; Thu, 28 Mar 2024 10:15:31 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=doueloul.pl; s=mail;
+	t=1711617338; bh=71KWpZNGbBX3lpBNjlc4VW8HZeD/MBMoafuE3TXDpaY=;
+	h=Date:From:To:Subject:From;
+	b=GKH9TzoFvKXK3er3bXz6BALeKr5xxf30AHOhpxOKL3fikIdJdljHCunACaDhs/16A
+	 HDw73dWvPsy7pixxOSyG96yy9XZBYwasKMnOsbJ2VcCezIBv4zp+uIa7fdyaDn5ZMc
+	 MJa+UTsKhPNlgxFSDgoJ3Z/LFoanIBGeHLfRlYXwC+ERWM24DFBzPjD0i2p9Kwo+1m
+	 A1LOAjCgfDWzw+wBJqbjIxokydJirLNpo+WxyjUooYqtRlU1USyCfo8kxbhXQEtvvg
+	 vZf39F3RP1xK9n/C1uRzFeLyXAAL9XS5T8nYwgI2PlyNkrX37Ejn+kz+NxtYAZ0jyn
+	 Ykme0txuCeQ7A==
+Received: by mail.doueloul.pl for <kexec@lists.infradead.org>; Thu, 28 Mar 2024 09:15:25 GMT
+Message-ID: <20240328084500-0.1.j.12p3.0.a3863nhjw6@doueloul.pl>
+Date: Thu, 28 Mar 2024 09:15:25 GMT
+From: "Dariusz Sulek" <dariusz.sulek@doueloul.pl>
+To: <kexec@lists.infradead.org>
+Subject: Awizacja dostawy
+X-Mailer: mail.doueloul.pl
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20240327-strncpy-fs-proc-vmcore-c-v1-1-e025ed08b1b0@google.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240327_184837_334182_A9EFE117 
-X-CRM114-Status: GOOD (  22.30  )
+X-CRM114-CacheID: sfid-20240328_021543_546967_566C1452 
+X-CRM114-Status: UNSURE (   2.02  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -77,99 +61,22 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 03/27/24 at 09:10pm, Justin Stitt wrote:
-> strncpy() is in the process of being replaced as it is deprecated in
-> some situations [1]. While the specific use of strncpy that this patch
-> targets is not exactly deprecated, the real mission is to rid the kernel
-> of all its uses.
-> 
-> Looking at vmcoredd_header's definition:
-> |	struct vmcoredd_header {
-> |		__u32 n_namesz; /* Name size */
-> |		__u32 n_descsz; /* Content size */
-> |		__u32 n_type;   /* NT_VMCOREDD */
-> |		__u8 name[8];   /* LINUX\0\0\0 */
-> |		__u8 dump_name[VMCOREDD_MAX_NAME_BYTES]; /* Device dump's name */
-> |	};
-> ... we can see that both `name` and `dump_name` are u8s. It seems `name`
-> wants to be NUL-padded (based on the comment above), but for the sake of
-> symmetry lets NUL-pad both of these.
-> 
-> Mark these buffers as __nonstring and use strtomem_pad.
-
-Thanks.
-
-I didn't build, wondering if '__nonstring' has to be set so that
-strtomem_pad() can be used.
-
-Thanks
-Baoquan
-
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
-> Note: build-tested only.
-> 
-> Found with: $ rg "strncpy\("
-> ---
->  fs/proc/vmcore.c            | 5 ++---
->  include/uapi/linux/vmcore.h | 4 ++--
->  2 files changed, 4 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-> index 1fb213f379a5..5d7ecf3b75e8 100644
-> --- a/fs/proc/vmcore.c
-> +++ b/fs/proc/vmcore.c
-> @@ -1370,9 +1370,8 @@ static void vmcoredd_write_header(void *buf, struct vmcoredd_data *data,
->  	vdd_hdr->n_descsz = size + sizeof(vdd_hdr->dump_name);
->  	vdd_hdr->n_type = NT_VMCOREDD;
->  
-> -	strncpy((char *)vdd_hdr->name, VMCOREDD_NOTE_NAME,
-> -		sizeof(vdd_hdr->name));
-> -	memcpy(vdd_hdr->dump_name, data->dump_name, sizeof(vdd_hdr->dump_name));
-> +	strtomem_pad(vdd_hdr->name, VMCOREDD_NOTE_NAME, 0);
-> +	strtomem_pad(vdd_hdr->dump_name, data->dump_name, 0);
-
-
-
->  }
->  
->  /**
-> diff --git a/include/uapi/linux/vmcore.h b/include/uapi/linux/vmcore.h
-> index 3e9da91866ff..7053e2b62fa0 100644
-> --- a/include/uapi/linux/vmcore.h
-> +++ b/include/uapi/linux/vmcore.h
-> @@ -11,8 +11,8 @@ struct vmcoredd_header {
->  	__u32 n_namesz; /* Name size */
->  	__u32 n_descsz; /* Content size */
->  	__u32 n_type;   /* NT_VMCOREDD */
-> -	__u8 name[8];   /* LINUX\0\0\0 */
-> -	__u8 dump_name[VMCOREDD_MAX_NAME_BYTES]; /* Device dump's name */
-> +	__u8 name[8] __nonstring;   /* LINUX\0\0\0 */
-> +	__u8 dump_name[VMCOREDD_MAX_NAME_BYTES] __nonstring; /* Device dump's name */
->  };
->  
->  #endif /* _UAPI_VMCORE_H */
-> 
-> ---
-> base-commit: 928a87efa42302a23bb9554be081a28058495f22
-> change-id: 20240327-strncpy-fs-proc-vmcore-c-b18d761feaef
-> 
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
-> 
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+RHppZcWEIGRvYnJ5LCAKCnBvc2lhZGFteSBuYXJ6xJlkemllIGRvIGF3aXphY2ppIGRvc3Rhdywg
+a3TDs3JlIHNrdXRlY3puaWUgcG9wcmF3aWEgb3JnYW5pemFjasSZIHByYWN5IG1hZ2F6eW51LiAK
+Ck9mZXJvd2FuZSBwcnpleiBuYXMgcm96d2nEhXphbmllIGxpa3dpZHVqZSBrb2xlamtpIGNpxJnF
+vGFyw7N3ZWsgcG9kIG1hZ2F6eW5lbSwgcHJ6ZW5vc2kgb2Jvd2nEhXplayBwcmF3aWTFgm93ZWdv
+IHphYXdpem93YW5pYSBzYW1vY2hvZHUgbmEgZG9zdGF3Y8SZLCBhIHRha8W8ZSBwb3p3YWxhIHNw
+ZWR5dG9yb3dpIG1vbml0b3Jvd2HEhyBuYSBqYWtpbSBldGFwaWUgcm96xYJhZHVua3UgamVzdCBz
+YW1vY2jDs2QuIAoKTmFyesSZZHppZSBwb3NpYWRhIHByemVqcnp5c3R5LCBjYcWCa293aWNpZSBr
+b25maWd1cm93YWxueSBpbnRlcmZlanMsIG1vZ8SFIFBhxYRzdHdvIHRha8W8ZSBza29yenlzdGHE
+hyB6IHdlcnNqaSB0ZXN0b3dlaiBwb2RjemFzIHByb2Nlc3Ugd2Ryb8W8ZW5pYS4KCkN6eSBjaGNp
+ZWxpYnkgUGHFhHN0d28gc3ByYXdkemnEhyBtb8W8bGl3b8WbY2kgbmFzemVnbyByb3p3acSFemFu
+aWE/IAoKClBvemRyYXdpYW0KRGFyaXVzeiBTdWxlawoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmlu
+ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9r
+ZXhlYwo=
