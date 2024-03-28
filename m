@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C783DCD1283
-	for <kexec@archiver.kernel.org>; Thu, 28 Mar 2024 17:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E23DBCD11DD
+	for <kexec@archiver.kernel.org>; Thu, 28 Mar 2024 17:10:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:Reply-To:List-Subscribe:List-Help:
 	List-Post:List-Archive:List-Unsubscribe:List-Id:Cc:To:In-Reply-To:References:
 	Message-Id:MIME-Version:Subject:Date:From:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=1ck3y6EMhe/nxwDpqUImT2BALN2EFm/Fsq6RDGlIU7k=; b=IS3EwDw9DJx6m/
-	VvjVP6JDyPYc5rMhY/0m05sFozbljO40lggGrGyHCepkGBkVZTNBoNR1NkW5rp1cSEnstcMdP2wD3
-	tRrqGYembZ6aInkeNfwM9CZbViMVQnNVbKyk6sjfEz8caCPwR7xIA6hGo1ciHYxerLSIpBGTP7BYr
-	iP6R73LAMNxLz81f4YvR/J21KFCtgdKlcOylAF1J7D+EmhmAihntPnlGliqMMd11aOK/YYKMqNbDP
-	hJofoch9+qtRoAspFMYQ89gMmcXbIEfoOuSpJfLvQJXA8L+czyRhC2uCnN7K5J2O9yQzXbj2nep49
-	wzlDJ52lbPO7G/WJSP8A==;
+	List-Owner; bh=DIetiKxS+Aaml8tSsPOnrjOi5s0L51V0/nOmg+ibfIk=; b=M9qPxWyhFWbEX9
+	BirXAxY4pS4v4oGGLRZMZC1UyY+Ihta2cogS6AEp7bckyO6BQmHLIhZ/6KzeRplx0VZXyGD9Vbc6E
+	IO2ulcHhTGIe6qVYkWPU2ZFIfDuOONny6Nmx+Hc5xGIBmH4rZesNkfrLBNlb5rE9/cGKHtOZ8a/HT
+	gU2nkjJXvBRTVM8UYvB1DdBtGwXJ4t1xyGiE2tfJRQIq9WK3fzH5HCA1UIY4PTwUjTGtXSrsKjBMI
+	X1D6SeyG2vOl42+BgqqPTCzQ9oyh4uNv7rHTem11uKIlHFC9V5bwwzA6mm66WjwqWhKyqKQfDZAuc
+	X59ett2jPhiJ5Ws6Jmfw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rptGl-0000000Evyu-17ie;
-	Thu, 28 Mar 2024 17:10:27 +0000
-Received: from dfw.source.kernel.org ([139.178.84.217])
+	id 1rptGn-0000000Ew0H-2J3M;
+	Thu, 28 Mar 2024 17:10:29 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rprvQ-0000000EZcx-29GE
+	id 1rprvS-0000000EZen-1Ug2
 	for kexec@lists.infradead.org;
-	Thu, 28 Mar 2024 15:44:24 +0000
+	Thu, 28 Mar 2024 15:44:27 +0000
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id C51A5617BC;
-	Thu, 28 Mar 2024 15:44:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7374CC32789;
+	by dfw.source.kernel.org (Postfix) with ESMTP id 2B566617B4;
+	Thu, 28 Mar 2024 15:44:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D555BC32796;
 	Thu, 28 Mar 2024 15:44:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1711640657;
-	bh=Vmrqd4VYI97OX3UoCRBO0aGzHn3DZ65T4UmGRZ9kf5s=;
+	bh=QsSLkxrYhUVqWpP8CUeoYlHeoCpNTEWsJfd/CbMZCLo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=JCVwTnQ+x7gybO4HcOo69NZ4FlqWk4zA3JdUdqZDX0g8e4t5lS1pSfnnOtljB7lbZ
-	 4uZ4qBh3wMZTIjxqZdo7aoKzj5Bc/RliVaWhWz/YuQs2vjfXPG++EeQmgSvos57t5G
-	 3/6W7MS/J8Hw8BkLc24wAWOvIWqmFtlsI5fbgJ/ZAexYRUVqqYPktqArS0OXeWMGMd
-	 W+mSGYs//YQt73CcooHjN2l9P3FQDHg3Hyy7J+P704G5/6cPM1e2PPFiNWF68/s8d2
-	 z8UWN/MkH3D6cfPLZu2PlIKTk3+uGLNVzRsY3kmkUnuDJRJvT5MrnyRtr/RBrGsRGe
-	 IqA9E1nAN97cA==
+	b=bqIkT9A8miIjGRIsO5FxO6WM+mLxihwoAA8t78Xpnj9RD0KbfJ9WdYRma13L6ITC/
+	 XaoGbHF847ihU1FcmetLZSvSXI02qe9Z0AF/oOUsMqpKBBSJYcZYyAY/71rYgf0JQu
+	 EsO12QV5cI8vwYHomFbGv/kh0NuC7m5jaWuoxJVeEy2lObrLGIqVxwJlAqE1Hznb69
+	 8a3NbeQjdODnhyuXC9a7KJv/DcFDoWC/BxwKx47EfmAorORXqEfE9QnUQkRRUHlB8J
+	 t7ivo/j0FASUakZvLtG2XMITF3f8qD7Hcd1FSQzAH8TfR3zaCp5Jz5F0pGe2BUmdWB
+	 DwQhlx/xjNwgQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65602CD1283;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E2ACD128A;
 	Thu, 28 Mar 2024 15:44:17 +0000 (UTC)
 From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
-Date: Thu, 28 Mar 2024 16:44:06 +0100
-Subject: [PATCH v3 05/10] seccomp: Remove the now superfluous sentinel
+Date: Thu, 28 Mar 2024 16:44:10 +0100
+Subject: [PATCH v3 09/10] delayacct: Remove the now superfluous sentinel
  elements from ctl_table array
 MIME-Version: 1.0
-Message-Id: <20240328-jag-sysctl_remove_empty_elem_kernel-v3-5-285d273912fe@samsung.com>
+Message-Id: <20240328-jag-sysctl_remove_empty_elem_kernel-v3-9-285d273912fe@samsung.com>
 References: <20240328-jag-sysctl_remove_empty_elem_kernel-v3-0-285d273912fe@samsung.com>
 In-Reply-To: <20240328-jag-sysctl_remove_empty_elem_kernel-v3-0-285d273912fe@samsung.com>
 To: Luis Chamberlain <mcgrof@kernel.org>, josh@joshtriplett.org, 
@@ -83,27 +83,27 @@ Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
  linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
  bpf@vger.kernel.org, Joel Granados <j.granados@samsung.com>
 X-Mailer: b4 0.13-dev-2d940
-X-Developer-Signature: v=1; a=openpgp-sha256; l=933;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=901;
  i=j.granados@samsung.com; h=from:subject:message-id;
- bh=a55RZNGRyCcB6UX1xGlETtlXB9b6LmLpywnhMBEQ5pU=;
- b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGYFkEsh4Mgom4fbM//0WTCWMwTNRwVc+hUKT
- bWZpFJoow2pAokBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJmBZBLAAoJELqXzVK3
- lkFPn+UL/3RnBt3ZmbhogGz7i5z9kb5DzhirswdhfPwdZKJcT+COv1HuJLrH3qwxMuZZTmz1PA7
- mIeYXNNDG1/pPSZJJ6LgIp7SX+zGrTIF/9dTN/LZWZ14CvacGSErEAPf+4BI3dk5s0wQ4oPPkwx
- wEDzqfAv6Qi8Sx2/8PNIdVIkayEp0VCoR7oYAEH9EPhp2z+mvAo/IIsWE++pFR5w60EZ2yhUXzt
- PbrUIE55/dlkiEkv0uHHNJgBS6IB/a94tRe5C50He/6nfRvpRLt+yNlY+/xQms4LwBseWOtm9Q/
- qStfIDZCT9L9++Ccz4RnqTxPW/+O3DTkc/jenpOYzZdcwsm1rXMh8/6l6h7iEktJA0G2EWfRhR5
- o8Xijj9xK4Z/KTTbtkK9HL7BU555npI0wKswG5B9vAAUIDkC194D9+/XYYLZGUyrwYPF3bQmlLP
- yp+QgLvZs8R5uVRGCsWxhRdttwnfxF2iqNNE3cMVLgOFTkb3p8c5Efs8fHOvcvBHFPm1cJdfPw7
- kY=
+ bh=i6rZdV8sO6keniVz/tdr/tgncwQ879+rgbNywApATf4=;
+ b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGYFkE6p4PaxshghascUKUubW96pCKfCYMXWK
+ /aBSiIGgBYe9IkBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJmBZBOAAoJELqXzVK3
+ lkFPT5QL/jFMK8C8aAUdHmCMTOc9tNhM631bX9/8b8lUvEasqWg0CLuygFHjzAxdGGUi6f2nMno
+ kUA+T74QXcgNWEfjN8VdVP/NO4Hz21SVA+aCZP0vFbtKHAWBkHmYwmnWX0fPlkGMJCrUunVQyKT
+ /67OzmNJMzHHhjA/5fn7WKriT/aSjVsfwMvG4vmTR6pFuRckh3PfzYN490bT09jtp1LM5eUpmG8
+ v+ea5g4zkwWid2odf83OnRVh4vdoUz5SuApM5ocoFDK7fQ6gmTKXpn9+d22D/KNKyXUPTutUE6b
+ B+0o078nrfEIiOgvo4renClDzc1apR/G+d1RNpqmV8CYDBGy1C/udE8mtdW8dL14nv07BW4TQ75
+ 7DrHQJXonF56KDikz3C/7owWHYyRwwWaSoa3lP3hankVdZGw4kpt1l5d4Zc7t/LBDUip5/4gAew
+ VC1fPxiZoxYHw1Y5wWleWrZgF2lyeO69C7f9SD9OUdRUvMTemIC3m7QuHy3ZmGO6//TXewH9oV6
+ tI=
 X-Developer-Key: i=j.granados@samsung.com; a=openpgp;
  fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
 X-Endpoint-Received: by B4 Relay for j.granados@samsung.com/default with
  auth_id=70
 X-Original-From: Joel Granados <j.granados@samsung.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240328_084421_115746_5F12EB4E 
-X-CRM114-Status: GOOD (  13.07  )
+X-CRM114-CacheID: sfid-20240328_084423_204781_7B26FACE 
+X-CRM114-Status: GOOD (  12.75  )
 X-Mailman-Approved-At: Thu, 28 Mar 2024 10:10:25 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -130,26 +130,25 @@ will reduce the overall build time size of the kernel and run time
 memory bloat by ~64 bytes per sentinel (further information Link :
 https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
 
-Remove sentinel element from seccomp_sysctl_table.
+Remove sentinel element from kern_delayacct_table
 
-Acked-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Joel Granados <j.granados@samsung.com>
 ---
- kernel/seccomp.c | 1 -
+ kernel/delayacct.c | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-index aca7b437882e..7ed72723fb8a 100644
---- a/kernel/seccomp.c
-+++ b/kernel/seccomp.c
-@@ -2445,7 +2445,6 @@ static struct ctl_table seccomp_sysctl_table[] = {
- 		.mode		= 0644,
- 		.proc_handler	= seccomp_actions_logged_handler,
+diff --git a/kernel/delayacct.c b/kernel/delayacct.c
+index 6f0c358e73d8..e039b0f99a0b 100644
+--- a/kernel/delayacct.c
++++ b/kernel/delayacct.c
+@@ -74,7 +74,6 @@ static struct ctl_table kern_delayacct_table[] = {
+ 		.extra1         = SYSCTL_ZERO,
+ 		.extra2         = SYSCTL_ONE,
  	},
 -	{ }
  };
  
- static int __init seccomp_sysctl_init(void)
+ static __init int kernel_delayacct_sysctls_init(void)
 
 -- 
 2.43.0
