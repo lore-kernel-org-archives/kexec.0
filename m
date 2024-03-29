@@ -4,73 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id ED367C6FD1F
-	for <kexec@archiver.kernel.org>; Fri, 29 Mar 2024 13:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 74C42CD11DD
+	for <kexec@archiver.kernel.org>; Fri, 29 Mar 2024 15:21:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=dVoDOcwyuW003JC6lfI913m7XgP3/pS+6sK/ueAKL1c=; b=Zjbch6thqjRtTT
-	/uwFPi05iSIktSgUajTxiSPcjbQoD8G2SmBHnwUd17LNBuqHjfXx+qiNDtvXXRqWGf5S6DAW+kWsX
-	+p8qOmiha/tjBc16j3djISd1/zkFeXneRo0zhL87873COHQO1w1I3+66tCJXlwEbjTKFl+vPWSEaO
-	A/RyOC2V8r+rpuL5dy5LCLvofwkBCxf6J9w/razMIXUkl9bx9mROSlCTflT2JtDX+o4USVds5ek6O
-	sihUYLqEiPw9G7R2RXjKwJn1u/BLIsy2CXXaZxYMcgM242Xuc02EHbeFo2tqB7lkwm4t5GIQpyBNB
-	TUpAuUT5BZaC/RFFDhSg==;
+	List-Owner; bh=1wojckPq99NrmaYh4SgaGHaoMBemMhcbq0i8uW3Jj1Y=; b=m7JtURBxDDiqCB
+	M761tuj2V5CZ3pSEozd6rWhCrfX7NxbBEyDLYwYfZ8ILXiystxeoRyW0O1EM7+cY4cttiFU8t1mOh
+	ZK2YfyHm15eXoo6kOtJak/Isbk6gPL2KWbz7EELuenz9lqjrfVbYS7nolU6Ss+2JNYSIX9mLBJRSL
+	XWyC8W+D42CYhFdWXvgWxDMbf/xiup/kY6OaV+XPUwMDbYfZFF+KcTRw+Ki16H0XpXo0oPbLp0eUc
+	NTHbLQRG5Y1awxjbXK/uW2Pi61oRraJBK+mPyBNoqA9JqQ8qE6n2oI1F7n7AKbEN8LgyZTv6/eVoJ
+	xlvXyUwV1IqiCYQQ9o6Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rqCI3-00000000f1X-1HDb;
-	Fri, 29 Mar 2024 13:29:03 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1rqE3B-000000018SS-1bJA;
+	Fri, 29 Mar 2024 15:21:49 +0000
+Received: from mgamail.intel.com ([198.175.65.11])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rqCI0-00000000ezT-3G4L
+	id 1rqE38-000000018R6-2ARj
 	for kexec@lists.infradead.org;
-	Fri, 29 Mar 2024 13:29:02 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711718939;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8vu3HiU58Dw80kabS3QBMxjcxeWQKlJYr1jCBy9fsfY=;
-	b=Aohgnbk372p9YV2VhXoQiqpKHAL9aikVVERTt/ct8PG2B64t9UPIShOfIawsZfY5ssqA3e
-	ntBnqJydWUlL1qiaTRN8T8/sx0EAPqB5JPhJLLPkguU+iiVIrbYlbRBKFmX/s/wVcPY5kv
-	ukaBm/biHOJSeqOCJtgBAHtFhLkhGXU=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-220-8XcBOoJiOU-9eZsH4ZWrrA-1; Fri,
- 29 Mar 2024 09:28:52 -0400
-X-MC-Unique: 8XcBOoJiOU-9eZsH4ZWrrA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 49D2D382613D;
-	Fri, 29 Mar 2024 13:28:43 +0000 (UTC)
-Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.116.12])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 916671C06541;
-	Fri, 29 Mar 2024 13:28:40 +0000 (UTC)
-From: Baoquan He <bhe@redhat.com>
-To: kexec@lists.infradead.org
-Cc: akpm@linux-foundation.org,
-	geert@linux-m68k.org,
-	chenhuacai@kernel.org,
-	Baoquan He <bhe@redhat.com>,
-	corbet@lwn.net
-Subject: [PATCH 2/2] Documentation: kdump: clean up the outdated description
-Date: Fri, 29 Mar 2024 21:28:25 +0800
-Message-ID: <20240329132825.1102459-3-bhe@redhat.com>
-In-Reply-To: <20240329132825.1102459-1-bhe@redhat.com>
-References: <20240329132825.1102459-1-bhe@redhat.com>
+	Fri, 29 Mar 2024 15:21:47 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711725707; x=1743261707;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=xIhz1fc0gd8bUoWk1Yba/XGwSpCgbpumuPmPXecDCog=;
+  b=bcDIdf+I9u8R5fcPT0PRVr5znnS65mXM0BovaElEIRWi8TMYUMYu0iBd
+   Y6gvJu3Hhilar/4aEyPKQQN4VczRUBc8sa0K0cPVU4MTZpRIp3/E9uF9y
+   t2K5HkySvVD/i28Xz47FA8Kx9YiCaPUy6mLpI+NS5wYItdzga+GuKf1+y
+   Evy62oJK6BsIwzpIsAOheJieIRLLdN/7g60gSEQ8Ibz6PSEUxQ3+Xjdy8
+   ag7/rH4W01pEYuyGl++9pVPNXxVYLyv8TxaBN4/jP5ZnDGH1UolafB6Md
+   qhv8gUIxQQ5BrHaimgKbEtsnBZVulItZPZf8SRxQyKFqL24M8bPA8+1G4
+   g==;
+X-CSE-ConnectionGUID: uHpwIEdsSJuDVwxkNzS0Og==
+X-CSE-MsgGUID: EDG9obP5QfShyE2TaTIM6A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11028"; a="17472617"
+X-IronPort-AV: E=Sophos;i="6.07,165,1708416000"; 
+   d="scan'208";a="17472617"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2024 08:21:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,165,1708416000"; 
+   d="scan'208";a="17636665"
+Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.224.7]) ([10.124.224.7])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2024 08:21:36 -0700
+Message-ID: <b94c81ef-50f2-4e66-9533-461791777d10@intel.com>
+Date: Fri, 29 Mar 2024 23:21:32 +0800
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv9 05/17] x86/kexec: Keep CR4.MCE set during kexec for TDX
+ guest
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ Elena Reshetova <elena.reshetova@intel.com>,
+ Jun Nakajima <jun.nakajima@intel.com>,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>,
+ Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish"
+ <ashish.kalra@amd.com>, Sean Christopherson <seanjc@google.com>,
+ "Huang, Kai" <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>,
+ kexec@lists.infradead.org, linux-coco@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20240325103911.2651793-1-kirill.shutemov@linux.intel.com>
+ <20240325103911.2651793-6-kirill.shutemov@linux.intel.com>
+Content-Language: en-US
+From: Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <20240325103911.2651793-6-kirill.shutemov@linux.intel.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240329_062900_925705_035F0137 
-X-CRM114-Status: UNSURE (   8.22  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20240329_082146_637908_91C61174 
+X-CRM114-Status: GOOD (  14.93  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,52 +93,61 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-After commit 443cbaf9e2fd ("crash: split vmcoreinfo exporting code out
-from crash_core.c"), Kconfig item CRASH_CORE has gone away in kernel.
-Items VMCORE_INFO and CRASH_RESERVE are used instead.
+On 3/25/2024 6:38 PM, Kirill A. Shutemov wrote:
+> TDX guests are not allowed to clear CR4.MCE. Attempt to clear it leads
+> to #VE.
 
-So clean up the outdated description about CRASH_CORE and update it
-accordingly.
+Will we consider making it more safe and compatible for future to guard 
+against X86_FEATURE_MCE as well?
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
-Cc: corbet@lwn.net
----
- Documentation/admin-guide/kdump/kdump.rst | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+If in the future, MCE becomes configurable for TD guest, then CR4.MCE 
+might not be fixed1.
 
-diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
-index 0302a93b1d40..5376890adbeb 100644
---- a/Documentation/admin-guide/kdump/kdump.rst
-+++ b/Documentation/admin-guide/kdump/kdump.rst
-@@ -136,10 +136,6 @@ System kernel config options
- 
- 	CONFIG_KEXEC_CORE=y
- 
--   Subsequently, CRASH_CORE is selected by KEXEC_CORE::
--
--	CONFIG_CRASH_CORE=y
--
- 2) Enable "sysfs file system support" in "Filesystem" -> "Pseudo
-    filesystems." This is usually enabled by default::
- 
-@@ -168,6 +164,10 @@ Dump-capture kernel config options (Arch Independent)
- 
- 	CONFIG_CRASH_DUMP=y
- 
-+   And this will select VMCORE_INFO and CRASH_RESERVE::
-+	CONFIG_VMCORE_INFO=y
-+	CONFIG_CRASH_RESERVE=y
-+
- 2) Enable "/proc/vmcore support" under "Filesystems" -> "Pseudo filesystems"::
- 
- 	CONFIG_PROC_VMCORE=y
--- 
-2.41.0
+> Use alternatives to keep the flag during kexec for TDX guests.
+> 
+> The change doesn't affect non-TDX-guest environments.
+> 
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Reviewed-by: Kai Huang <kai.huang@intel.com>
+> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>   arch/x86/kernel/relocate_kernel_64.S | 5 +++++
+>   1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+> index 56cab1bb25f5..e144bcf60cbe 100644
+> --- a/arch/x86/kernel/relocate_kernel_64.S
+> +++ b/arch/x86/kernel/relocate_kernel_64.S
+> @@ -5,6 +5,8 @@
+>    */
+>   
+>   #include <linux/linkage.h>
+> +#include <linux/stringify.h>
+> +#include <asm/alternative.h>
+>   #include <asm/page_types.h>
+>   #include <asm/kexec.h>
+>   #include <asm/processor-flags.h>
+> @@ -145,12 +147,15 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+>   	 * Set cr4 to a known state:
+>   	 *  - physical address extension enabled
+>   	 *  - 5-level paging, if it was enabled before
+> +	 *  - Machine check exception on TDX guest. Clearing MCE is not allowed
+> +	 *    in TDX guests.
+>   	 */
+>   	movl	$X86_CR4_PAE, %eax
+>   	testq	$X86_CR4_LA57, %r13
+>   	jz	1f
+>   	orl	$X86_CR4_LA57, %eax
+>   1:
+> +	ALTERNATIVE "", __stringify(orl $X86_CR4_MCE, %eax), X86_FEATURE_TDX_GUEST
+>   	movq	%rax, %cr4
+>   
+>   	jmp 1f
 
 
 _______________________________________________
