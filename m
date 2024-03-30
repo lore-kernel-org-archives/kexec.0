@@ -4,133 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 94890CD1283
-	for <kexec@archiver.kernel.org>; Fri, 29 Mar 2024 22:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5F79CC6FD1F
+	for <kexec@archiver.kernel.org>; Sat, 30 Mar 2024 14:00:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:Cc:To:
-	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=6hvISlO2+fOcssOJqsCFUi/ZyNxQEG9vDXmYnCs/ffc=; b=lt4rJLW21SeSfad5g23uhULuPu
-	u3ctOLwLaAiamyNLmvB3UXAiVEvSKMpHN7+2oondG2yJ83Dx7GLcf9kzK5ueFjisBkiHsnhGsb8+O
-	yvqM60pZe5Cr3jLEK2vDwaUZBGcjZRS+Ed4B7hDFdwLNaEHgIrCQpJllert1q46p/x/RvNibxKA2P
-	UCzdZyq439JzMfa3O7ChENf2QvhEC1G4iW2mVv5n8vZgKj15PZ8K9HTTThppeKICeDAeU5zqFgEf9
-	OlGMi1vavWp2SRFmMoavsxix5nX+QEv78MQR8ej0MgGOJTPWDWPNfu6OymwmB6uuIK/PADkoEzwiv
-	2KF0TKKg==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=B03jlmLxHIFHm2ZR5nFzVcaaWOd67JLOct+QaXusmso=; b=z9i4UlPt7jvWFP
+	1W3wb4t8v5NCblvyOwh+VTAWNgSqt6qOWgZ9DLka/zihMggA/JAJGjifwXXvpDI19T9KsRHE5kp1k
+	Zaj73LZNHd9C5UKrjcOdKNUgoKRZC5lBSzaUHKiYs55cHSBeUSHzUII4sSaBnCwp89922xKjDL2hO
+	zbieA18DhDPlS3cdJtTwIa0+LStX9H5TkuJL5OlxDW6wAN4cCy/5nC5763Ub+fk6A0ogc2j4L9O9j
+	42xYWLbADepTtauK9W7VdVExmTpucE/YtAyATzwAH4o+zSMlPayhWN54JBwz2ve8GAtKK1HMPcPl5
+	pyB1nwKVAL2HB0dNv09w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rqKuW-00000002BwL-2x1M;
-	Fri, 29 Mar 2024 22:41:20 +0000
-Received: from mail-bn8nam12on20701.outbound.protection.outlook.com ([2a01:111:f403:2418::701] helo=NAM12-BN8-obe.outbound.protection.outlook.com)
+	id 1rqZFb-00000003apx-3cT4;
+	Sat, 30 Mar 2024 14:00:03 +0000
+Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rqKuR-00000002BuG-2PA3
+	id 1rqZFY-00000003aoG-3wWf
 	for kexec@lists.infradead.org;
-	Fri, 29 Mar 2024 22:41:17 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BkkM76oyZTz2Q2LpBR6pBvhemX3+VK0fBLimXRngfvWCLdPfuoYo/vDDc9RbYD4UJCpFX6s1jEACDTyMlHtRFRtONzRJPjfA5pmccOwplO8CEa6s0ovxM9Hl35Er48H48WBDOpZd1uPtQB3DDta7kBsPc3EIceVFUm/Gm1wTOx55QotP37QBX1KD8mX4WMa0LZynfQjnkStLhLnWXcdQwsSPer6kiUjqteQovSGXfh7YMRVKbeMRw21NQro0Qy+gQ/LA6DPgby5/cQICN4eDyYN95UrX4YKucYI2oBsPICG3c8q8kvw9fCtKbZwnr1grISQQtUC1KNVzYdiMagOGFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lm2yVCaf9RoiDruxpEx206c6phucY5FX3RMdmFeXZ9k=;
- b=RDOAGF7+Ik4xDCrKfFjYUaCEgFCp8rPLEoyGEJGfpLOXNIa7YWeEWzZ1VotCI/ZUgTSOVN6QiqcPcDBe5GBx9DmXLKN4YMa19/hFyoPmXJz6oq65UWNMaTUYLl0AXj/clPXTRfxyopcl4hYjwIcO71g4dftgFJvWksN77W1OGtqxvf8pbLNnC0Zgx3QmEOw2m5F4R8LYVLl/bBFar8vjgNGERX4KUT1jJPql2hneEZv8TzpArkgEtYh2C0+YAbEHtbkVjmyx76VGDNFvy3BkIlL1Pl871ZsykDD0NONy0TJd+zaD5o2zx4yCgWb8Y8juLnwrKvehR4dlgdslxCuzqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lm2yVCaf9RoiDruxpEx206c6phucY5FX3RMdmFeXZ9k=;
- b=QMl5bUwlMCq6WdH4tCDHxZVKXNBku4/gXeVQ0tOLa0L6+pc48BPHNHT7qZrod8KvPGtXue3FRb7oTQXlMpourqiZouj8qHTvXYQHCn2cmmywW2ROkv52VRi3CV/u471+HApu4l8pEYs1PhJ1Ycjjvse/PRcpKPKO/VLPR5Dq27w=
-Received: from DS7PR12MB6263.namprd12.prod.outlook.com (2603:10b6:8:95::17) by
- SJ1PR12MB6217.namprd12.prod.outlook.com (2603:10b6:a03:458::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7409.33; Fri, 29 Mar 2024 22:41:02 +0000
-Received: from DS7PR12MB6263.namprd12.prod.outlook.com
- ([fe80::b286:7d11:bee0:2d37]) by DS7PR12MB6263.namprd12.prod.outlook.com
- ([fe80::b286:7d11:bee0:2d37%4]) with mapi id 15.20.7409.039; Fri, 29 Mar 2024
- 22:41:02 +0000
-Message-ID: <8d543a15-af62-4403-b2e0-3b395edfe9e4@amd.com>
-Date: Fri, 29 Mar 2024 17:38:52 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 04/15] x86: Secure Launch Resource Table header file
-To: Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
- linux-efi@vger.kernel.org
-Cc: dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
- bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com, ardb@kernel.org,
- mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
- peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
- nivedita@alum.mit.edu, herbert@gondor.apana.org.au, davem@davemloft.net,
- kanth.ghatraju@oracle.com, trenchboot-devel@googlegroups.com
-References: <20240214221847.2066632-1-ross.philipson@oracle.com>
- <20240214221847.2066632-5-ross.philipson@oracle.com>
-Content-Language: en-US
-From: Kim Phillips <kim.phillips@amd.com>
-Organization: AMD
-In-Reply-To: <20240214221847.2066632-5-ross.philipson@oracle.com>
-X-ClientProxiedBy: SN1PR12CA0079.namprd12.prod.outlook.com
- (2603:10b6:802:21::14) To DS7PR12MB6263.namprd12.prod.outlook.com
- (2603:10b6:8:95::17)
+	Sat, 30 Mar 2024 14:00:02 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 75D9E60B79
+	for <kexec@lists.infradead.org>; Sat, 30 Mar 2024 13:59:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 229CCC433C7
+	for <kexec@lists.infradead.org>; Sat, 30 Mar 2024 13:59:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711807198;
+	bh=FGD97a2BLDJE4wXb5b/jxGrqNvSwEG6LTQPxYP1fNkQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Vl8F1+0G66SuOSa0IW5EuQqh1sHWTEhu8p5uCySHbMMhanIpU9WGcRYZro87GsOi0
+	 fW5I3bHSyNASIs9gHDTHdInBSI17sYC7w4x1lq8xxVwiFWZYRymZziMFeim3AIXwjr
+	 XXTHeokxjMa0FMC23DKWe/UmDaqptQKoehC9kzYD63z+IVVhg1dEB0Y+gZ8AU1Nw0C
+	 1bZR+4Maq9j99bXJDqNKBM34L6MnEwGH+L5efx9d8SzY3ohP+4AuMNBc9UMZQsyokU
+	 yl4hCNk0C74QNCU+LykeGCBfBMqiqvddSRcs1N105u0+Kbh8vg1GRZF3NYuULDIUS7
+	 8zslmdO9is0RA==
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a466e53f8c0so356611766b.1
+        for <kexec@lists.infradead.org>; Sat, 30 Mar 2024 06:59:58 -0700 (PDT)
+X-Gm-Message-State: AOJu0YwMfbyZzA43l0XxQ/n8OT8ppfoe1MZzgytlCuEATUkvYso3n42v
+	8562mPDKDmNxE17fkTIOtTPwf6IeZpLyA5+A/G2zbvIIqE4jYqlfnM84DqO3DGPKr4bN6JxBOyY
+	YGS+sB3PUE/Hg7EkmZjus+Doejvk=
+X-Google-Smtp-Source: AGHT+IHc3m2uZv7lcnXrkX1wRtlEpjeE35rVhJUzINHtpYXXLFAaIbzPIfaS5VBxQZkz1jOW3uw1Ht4ocwxkRM0QZUg=
+X-Received: by 2002:a17:906:48c6:b0:a4e:4bb2:2ab1 with SMTP id
+ d6-20020a17090648c600b00a4e4bb22ab1mr1372473ejt.20.1711807196707; Sat, 30 Mar
+ 2024 06:59:56 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB6263:EE_|SJ1PR12MB6217:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Hkl8K+NUU2xWpYzCX8iWlZCRIWfimJSM5pZ+gyjCjEOSL9P3Rn9yyjmZPpvXl3BxjwRv/Cuh5ARzlvVKIDJQNknQ+d9K98CwpJ6AG1WgKw8W/W1P4HYReUgaauK+aeb3mU2y61lAnHTQ3UutFp9RR5La01iCOkdNx7tX7tHj64Xn2m0lZdu4aahAw7jDi8kiVarGCtHi1SYN93JWcJeGfur9hrKFPBXEq5qyZe2qrUjzW1RBkE0EU1dA20+IEQacqFdX2s9hq/KatEZz5elGbJ2HvS67b239PYcUDEuXxQD7QK3UMILH8ejMlh2k2rRZmnLykNRbEuw7fCSlAT1OwinM80debtnCjVK+99ISveNjFJ0rqFqcc7Z1SKr49EbuiI/pSO2qOrPXjIoMi0LOM38OU4IDG+QzFFHpfVfu85RQg4dvDdMW2HpVnpQzwlwK5OAJhZ/ox3f/OhAizj7rmhbmSY527shjIkG3d6wbLA7LKaUdzB/8JZPGalCjvDkLwH1OmNE8fsgsIy/RSZpf127efi7ROacRLZCh6SJPGWdyuT4UkObzNajAtVe7PDGRWLhPpXCpCYFawvQEJIX0VT3//a/59t0c7N7YZghjEOrjaxif3qE6/rjtvCOKfdwGKU9p5gNTL1MSzSYO/V1ZmMdyRHtgaN+HY7oYjlH9QKA=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6263.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(376005)(1800799015);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WHlDbnV5TnB2SlVNYjVRbUlLRUh0eEVBZkkxMlg5dmMvRDJLRGZ6cXV3Qngr?=
- =?utf-8?B?aWhIdTNkVHUwQThydWlDU081WGd5TUF5U2ZoamVIcWx4UHJxTVJzLzNXd0xw?=
- =?utf-8?B?MmdVUkx4OFJRNW9TUllwOXY1WlZIcDdubEwzWmY5WlZ6WUpOK0RlRE9ocjhD?=
- =?utf-8?B?K0RhWll1eHlLOE0vMVhHNU5pVTlDUkZCK04xemlheFZGbDVONlVodmZvVjg4?=
- =?utf-8?B?UEZRS09TYkUzN0hIL0hidVBjdjV6RWYwZE1oT1VPVGJmd2Q2bGZmaHMzdUlx?=
- =?utf-8?B?V1d2UUxYNzRlTkliMTVqd3B1VldjOGJVTDZxZG5KNC9yUk5KSXFYSGlXSUNH?=
- =?utf-8?B?anFvN21Xam5zYjZqeEZlc2NaQkJZV0hWOTVzT1ZMaUppejdNYlErNWlyM00y?=
- =?utf-8?B?dE9BU0x6dUpycWUxUERQTTA0cEF4bzEwczIyYzFaT05GV3NHS1d3SHo4aExQ?=
- =?utf-8?B?TG5CSkNJTS9URC94YlAxbHRkRW5oSXRpZENrQnJ6V0RrbTBBU0RDSmY4N2dm?=
- =?utf-8?B?RkQwN3dtK3M4V3JYdlFVM2RSdFJja3NEVFQ4ZTMvTFZvMm9KcisxZk83QVJU?=
- =?utf-8?B?b1NQOG5naURkeWNjeFlwaWtObytydytpT0xpMDlZd2V4cnpVNHR0OVlETmtn?=
- =?utf-8?B?TDhETUxicVJSTW1OdUpiQ1BCZ2FMUVczUFhDSW1UeXNZbnR6ZDVBS0NtM0JH?=
- =?utf-8?B?MzFUeGt5SUM2YnRwOXp2WDI2WW93TEdoMytIS1RyN2N1QXk0RitHaWtIZXZw?=
- =?utf-8?B?QTRLcVZzUlFtRG1JSE56VFhjY2dFZEhuUDUvK0pOeC9vYVpVaUN0YTh5Nm9E?=
- =?utf-8?B?RUs5TDQyWTc2RmlDM0NkTks2ZTZIU1ZWMFNER05XOGh0amxYbTRZUjhlWlcy?=
- =?utf-8?B?aWh4eDZlMGNETTRSVFF4dU5BMDJZMW9hdk9NZzhVdDNtck9ncWdGYWNyaDJl?=
- =?utf-8?B?ZXlIY0V0V05ibHBBTnAwOTVNQmFrai9KNDFyUlA5bzhPQ1ptT2UyL3dIUk4w?=
- =?utf-8?B?WWhxa01Mb21pTk5iQ3NvMmxvSHBqald4dng2WXdkTUZEenptUTNVenV6VFVa?=
- =?utf-8?B?M3NkM2RTRS9tTEFEZFVxdHpQMVc5RlpncnhZRnB0SXJNUmlLRTFZQlA3Z1BQ?=
- =?utf-8?B?ZnF3UDN0Um1NR0h2cVZGdWIwUTEvdjkyVEUrSCswL01PdTZWSEhpeG1EKzBt?=
- =?utf-8?B?UGtBY1lhckVQaWhRK0dZSVpuMXlnMmtxSHAyZ0p0bzdyakJHQzlWNjVyalY4?=
- =?utf-8?B?Nk1rUzc2Z0cydFl4elJnOEJreEhKY1dYd2h2R1R1djJzc0FEUVU2U05UYzhM?=
- =?utf-8?B?UG1pKzRiK2RLNHIzbFA1aGJGaDlRanVZZlFIVkViVzZlMWFpcFUvZ0t5UVlO?=
- =?utf-8?B?ZnBwcW1qQ0RRK0tHcTdFQjM2d2t6MWxYajJtYkNjSlQwODFHSWhTcUhwOENP?=
- =?utf-8?B?Q1VGc2VvNWd0cjYwd0p5VXl4bmFsRFBrOTYrellCOG4yWkNrTi9YdkNlVUpp?=
- =?utf-8?B?ZS9Dekp2KzB4ak4rQktURzNpT0FkaC82bFlxK1F1VjV4QTdyajh4Qlp3UGd0?=
- =?utf-8?B?MWIvUEtydWhzS0VBMExSY1AvZDkvYzNyOGVudUNITExPcHI4RERSUHh0RHBT?=
- =?utf-8?B?Y2MvSjBBclFXNnNDZ0g5QjhSRTJTb1gvOUxkRFczRWpMc29iQWF3QzN0Rzcv?=
- =?utf-8?B?OXdFa2N2OEFaOU84eXZMZ1pOTUljM0tpbDJKOWxsR1h1OE1pRWpTeTMxVU42?=
- =?utf-8?B?RmRwRnhydzVCTEl6a2ZIWmxkTzBSUjBnbDRtbXZVSTVKT0crK1huN1dLMTFu?=
- =?utf-8?B?ZEo4UzlaRmErOFRDUVNTWVQybUhGelhhNjdwZTM0c0NGeDF0ZVdBZmgrWDd5?=
- =?utf-8?B?ZnRKNXpsSTR0NkdZZkxPTWRRTmFJRGRyc0oxT1hOVWJpR3hRM0FzSS8vS0Fi?=
- =?utf-8?B?RzJiZ2xCUTM4dmcrWWJ5NG1xZCtTOXRKNVFXWm1GREZGdlJYbkh4M3c2ckk5?=
- =?utf-8?B?MGxIQnJuYXJpbmQ5THFCTjZqUzkyTEtpbjF0K3hvdk5teWVNMXJJbHNoLzdN?=
- =?utf-8?B?ZnFvU0t0YVlnUnJuUzBDVUVWZ3JKWFZGQVFUQVF3NFAyeVlyaEFNRTdxcll4?=
- =?utf-8?Q?zvdhYQzh59VITtzKjJgRMSRq2?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5fcf4d61-e37a-4595-254c-08dc50414fbf
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6263.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Mar 2024 22:41:02.2410
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ilGgkrAbN/QGxCRDsFAVzxGCrnuii09s15bGN/0TY5T4fJ/decyRW+CsMzueQ3DxrQoL7F9fC4wqSyBOwuyPuw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6217
+References: <20240329132825.1102459-1-bhe@redhat.com> <20240329132825.1102459-2-bhe@redhat.com>
+In-Reply-To: <20240329132825.1102459-2-bhe@redhat.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sat, 30 Mar 2024 21:59:45 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H76-FOvcTXB_rW1B1wFthYK6txVtC+brfzk6nwOhar8iQ@mail.gmail.com>
+Message-ID: <CAAhV-H76-FOvcTXB_rW1B1wFthYK6txVtC+brfzk6nwOhar8iQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arch/loongarch: clean up the left code and Kconfig
+ item related to CRASH_CORE
+To: Baoquan He <bhe@redhat.com>
+Cc: kexec@lists.infradead.org, akpm@linux-foundation.org, geert@linux-m68k.org, 
+	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240329_154115_734768_064F3A16 
-X-CRM114-Status: GOOD (  23.07  )
+X-CRM114-CacheID: sfid-20240330_070001_201626_AB718492 
+X-CRM114-Status: GOOD (  14.35  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -142,326 +77,45 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Ross,
-
-On 2/14/24 4:18 PM, Ross Philipson wrote:
-> Introduce the Secure Launch Resource Table which forms the formal
-> interface between the pre and post launch code.
-> 
-> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
-> ---
->   include/linux/slr_table.h | 270 ++++++++++++++++++++++++++++++++++++++
->   1 file changed, 270 insertions(+)
->   create mode 100644 include/linux/slr_table.h
-
-> diff --git a/include/linux/slr_table.h b/include/linux/slr_table.h
-> new file mode 100644
-> index 000000000000..42020988233a
-> --- /dev/null
-> +++ b/include/linux/slr_table.h
-> @@ -0,0 +1,270 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Secure Launch Resource Table
-> + *
-> + * Copyright (c) 2023, Oracle and/or its affiliates.
-> + */
-> +
-> +#ifndef _LINUX_SLR_TABLE_H
-> +#define _LINUX_SLR_TABLE_H
-> +
-> +/* Put this in efi.h if it becomes a standard */
-> +#define SLR_TABLE_GUID				EFI_GUID(0x877a9b2a, 0x0385, 0x45d1, 0xa0, 0x34, 0x9d, 0xac, 0x9c, 0x9e, 0x56, 0x5f)
-> +
-> +/* SLR table header values */
-> +#define SLR_TABLE_MAGIC		0x4452544d
-> +#define SLR_TABLE_REVISION	1
-> +
-> +/* Current revisions for the policy and UEFI config */
-> +#define SLR_POLICY_REVISION		1
-> +#define SLR_UEFI_CONFIG_REVISION	1
-> +
-> +/* SLR defined architectures */
-> +#define SLR_INTEL_TXT		1
-> +#define SLR_AMD_SKINIT		2
-> +
-> +/* SLR defined bootloaders */
-> +#define SLR_BOOTLOADER_INVALID	0
-> +#define SLR_BOOTLOADER_GRUB	1
-> +
-> +/* Log formats */
-> +#define SLR_DRTM_TPM12_LOG	1
-> +#define SLR_DRTM_TPM20_LOG	2
-> +
-> +/* DRTM Policy Entry Flags */
-> +#define SLR_POLICY_FLAG_MEASURED	0x1
-> +#define SLR_POLICY_IMPLICIT_SIZE	0x2
-> +
-> +/* Array Lengths */
-> +#define TPM_EVENT_INFO_LENGTH		32
-> +#define TXT_VARIABLE_MTRRS_LENGTH	32
-> +
-> +/* Tags */
-> +#define SLR_ENTRY_INVALID	0x0000
-> +#define SLR_ENTRY_DL_INFO	0x0001
-> +#define SLR_ENTRY_LOG_INFO	0x0002
-> +#define SLR_ENTRY_ENTRY_POLICY	0x0003
-> +#define SLR_ENTRY_INTEL_INFO	0x0004
-> +#define SLR_ENTRY_AMD_INFO	0x0005
-> +#define SLR_ENTRY_ARM_INFO	0x0006
-> +#define SLR_ENTRY_UEFI_INFO	0x0007
-> +#define SLR_ENTRY_UEFI_CONFIG	0x0008
-> +#define SLR_ENTRY_END		0xffff
-> +
-> +/* Entity Types */
-> +#define SLR_ET_UNSPECIFIED	0x0000
-> +#define SLR_ET_SLRT		0x0001
-> +#define SLR_ET_BOOT_PARAMS	0x0002
-> +#define SLR_ET_SETUP_DATA	0x0003
-> +#define SLR_ET_CMDLINE		0x0004
-> +#define SLR_ET_UEFI_MEMMAP	0x0005
-> +#define SLR_ET_RAMDISK		0x0006
-> +#define SLR_ET_TXT_OS2MLE	0x0010
-> +#define SLR_ET_UNUSED		0xffff
-> +
-> +#ifndef __ASSEMBLY__
-> +
-> +/*
-> + * Primary SLR Table Header
-> + */
-> +struct slr_table {
-> +	u32 magic;
-> +	u16 revision;
-> +	u16 architecture;
-> +	u32 size;
-> +	u32 max_size;
-
-Do these need to have their endianness specified with, e.g., __le32?
-
-> +	/* entries[] */
-
-Instead of the above line, a legit 'entries' can be enabled using:
-
-DECLARE_FLEX_ARRAY(struct slr_entry_hdr, entries);
-
-> +} __packed;
-
-You'd have to move this above struct slr_table which would need it:
-
-> +/*
-> + * Common SLRT Table Header
-> + */
-> +struct slr_entry_hdr {
-> +	u16 tag;
-> +	u16 size;
-> +} __packed;
-> +
-> +/*
-> + * Boot loader context
-> + */
-> +struct slr_bl_context {
-> +	u16 bootloader;
-> +	u16 reserved;
-> +	u64 context;
-> +} __packed;
-> +
-> +/*
-> + * DRTM Dynamic Launch Configuration
-> + */
-> +struct slr_entry_dl_info {
-> +	struct slr_entry_hdr hdr;
-> +	struct slr_bl_context bl_context;
-> +	u64 dl_handler;
-> +	u64 dce_base;
-> +	u32 dce_size;
-> +	u64 dlme_entry;
-> +} __packed;
-> +
-> +/*
-> + * TPM Log Information
-> + */
-> +struct slr_entry_log_info {
-> +	struct slr_entry_hdr hdr;
-> +	u16 format;
-> +	u16 reserved;
-> +	u64 addr;
-> +	u32 size;
-> +} __packed;
-> +
-> +/*
-> + * DRTM Measurement Policy
-> + */
-> +struct slr_entry_policy {
-> +	struct slr_entry_hdr hdr;
-> +	u16 revision;
-> +	u16 nr_entries;
-> +	/* policy_entries[] */
-> +} __packed;
-> +
-> +/*
-> + * DRTM Measurement Entry
-> + */
-> +struct slr_policy_entry {
-> +	u16 pcr;
-> +	u16 entity_type;
-> +	u16 flags;
-> +	u16 reserved;
-> +	u64 entity;
-> +	u64 size;
-> +	char evt_info[TPM_EVENT_INFO_LENGTH];
-> +} __packed;
-> +
-> +/*
-> + * Secure Launch defined MTRR saving structures
-> + */
-> +struct slr_txt_mtrr_pair {
-> +	u64 mtrr_physbase;
-> +	u64 mtrr_physmask;
-> +} __packed;
-> +
-> +struct slr_txt_mtrr_state {
-> +	u64 default_mem_type;
-> +	u64 mtrr_vcnt;
-> +	struct slr_txt_mtrr_pair mtrr_pair[TXT_VARIABLE_MTRRS_LENGTH];
-> +} __packed;
-> +
-> +/*
-> + * Intel TXT Info table
-> + */
-> +struct slr_entry_intel_info {
-> +	struct slr_entry_hdr hdr;
-> +	u64 saved_misc_enable_msr;
-> +	struct slr_txt_mtrr_state saved_bsp_mtrrs;
-> +} __packed;
-> +
-> +/*
-> + * AMD SKINIT Info table
-> + */
-> +struct slr_entry_amd_info {
-> +	struct slr_entry_hdr hdr;
-> +} __packed;
-> +
-> +/*
-> + * ARM DRTM Info table
-> + */
-> +struct slr_entry_arm_info {
-> +	struct slr_entry_hdr hdr;
-> +} __packed;
-
-Shouldn't these three structs be added as part of their
-separate per-vendor enablement patches?
-
-> +struct slr_entry_uefi_config {
-> +	struct slr_entry_hdr hdr;
-> +	u16 revision;
-> +	u16 nr_entries;
-> +	/* uefi_cfg_entries[] */
-> +} __packed;
-> +
-> +struct slr_uefi_cfg_entry {
-> +	u16 pcr;
-> +	u16 reserved;
-> +	u64 cfg; /* address or value */
-> +	u32 size;
-> +	char evt_info[TPM_EVENT_INFO_LENGTH];
-> +} __packed;
-> +
-> +static inline void *slr_end_of_entrys(struct slr_table *table)
-> +{
-> +	return (((void *)table) + table->size);
-> +}
-> +
-> +static inline struct slr_entry_hdr *
-> +slr_next_entry(struct slr_table *table,
-> +	       struct slr_entry_hdr *curr)
-> +{
-> +	struct slr_entry_hdr *next = (struct slr_entry_hdr *)
-> +				((u8 *)curr + curr->size);
-> +
-> +	if ((void *)next >= slr_end_of_entrys(table))
-> +		return NULL;
-> +	if (next->tag == SLR_ENTRY_END)
-> +		return NULL;
-> +
-> +	return next;
-> +}
-> +
-> +static inline struct slr_entry_hdr *
-> +slr_next_entry_by_tag(struct slr_table *table,
-> +		      struct slr_entry_hdr *entry,
-> +		      u16 tag)
-> +{
-> +	if (!entry) /* Start from the beginning */
-> +		entry = (struct slr_entry_hdr *)(((u8 *)table) + sizeof(*table));
-
-Back to the 'entries', the above line can now be made more readable:
-
-entry = table->entries;
-
-That's just one example, this flex array simplification can be made
-in other structs in this series, too.
-
-Cheers,
-
-Kim
-
-> +
-> +	for ( ; ; ) {
-> +		if (entry->tag == tag)
-> +			return entry;
-> +
-> +		entry = slr_next_entry(table, entry);
-> +		if (!entry)
-> +			return NULL;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
-> +static inline int
-> +slr_add_entry(struct slr_table *table,
-> +	      struct slr_entry_hdr *entry)
-> +{
-> +	struct slr_entry_hdr *end;
-> +
-> +	if ((table->size + entry->size) > table->max_size)
-> +		return -1;
-> +
-> +	memcpy((u8 *)table + table->size - sizeof(*end), entry, entry->size);
-> +	table->size += entry->size;
-> +
-> +	end  = (struct slr_entry_hdr *)((u8 *)table + table->size - sizeof(*end));
-> +	end->tag = SLR_ENTRY_END;
-> +	end->size = sizeof(*end);
-> +
-> +	return 0;
-> +}
-> +
-> +static inline void
-> +slr_init_table(struct slr_table *slrt, u16 architecture, u32 max_size)
-> +{
-> +	struct slr_entry_hdr *end;
-> +
-> +	slrt->magic = SLR_TABLE_MAGIC;
-> +	slrt->revision = SLR_TABLE_REVISION;
-> +	slrt->architecture = architecture;
-> +	slrt->size = sizeof(*slrt) + sizeof(*end);
-> +	slrt->max_size = max_size;
-> +	end = (struct slr_entry_hdr *)((u8 *)slrt + sizeof(*slrt));
-> +	end->tag = SLR_ENTRY_END;
-> +	end->size = sizeof(*end);
-> +}
-> +
-> +#endif /* !__ASSEMBLY */
-> +
-> +#endif /* _LINUX_SLR_TABLE_H */
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+UXVldWVkLCB0aGFua3MuCgpIdWFjYWkKCk9uIEZyaSwgTWFyIDI5LCAyMDI0IGF0IDk6MjjigK9Q
+TSBCYW9xdWFuIEhlIDxiaGVAcmVkaGF0LmNvbT4gd3JvdGU6Cj4KPiBJbiBjb21taXQgODVmY2Rl
+NDAyZGIxICgia2V4ZWM6IHNwbGl0IGNyYXNoa2VybmVsIHJlc2VydmF0aW9uIGNvZGUKPiBvdXQg
+ZnJvbSBjcmFzaF9jb3JlLmMiKSwgY3Jhc2hrZXJuZWwgcmVzZXJ2YXRpb24gY29kZSBpcyBzcGxp
+dCBvdXQgZnJvbQo+IGNyYXNoX2NvcmUuYywgYW5kIGFkZCBDUkFTSF9SRVNFUlZFIHRvIGNvbnRy
+b2wgaXQuIEFuZCBhbHNvIHJlbmFtZSBlYWNoCj4gQVJDSCdzIDxhc20vY3Jhc2hfY29yZS5oPiB0
+byA8YXNtL2NyYXNoX3Jlc2VydmUuaD4gYWNjb3JkaW5nbHkuCj4KPiBCdXQgdGhlIHJlbGV2YW50
+IHBhcnQgaW4gbG9vbmdhcmNoIGlzIG1pc3NlZC4gRG8gaXQgbm93Lgo+Cj4gU2lnbmVkLW9mZi1i
+eTogQmFvcXVhbiBIZSA8YmhlQHJlZGhhdC5jb20+Cj4gQ2M6IEh1YWNhaSBDaGVuIDxjaGVuaHVh
+Y2FpQGtlcm5lbC5vcmc+Cj4gQ2M6IFdBTkcgWHVlcnVpIDxrZXJuZWxAeGVuMG4ubmFtZT4KPiBD
+YzogbG9vbmdhcmNoQGxpc3RzLmxpbnV4LmRldgo+IC0tLQo+ICBhcmNoL2xvb25nYXJjaC9LY29u
+ZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAyICstCj4gIGFyY2gv
+bG9vbmdhcmNoL2luY2x1ZGUvYXNtL3tjcmFzaF9jb3JlLmggPT4gY3Jhc2hfcmVzZXJ2ZS5ofSB8
+IDQgKystLQo+ICAyIGZpbGVzIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMo
+LSkKPiAgcmVuYW1lIGFyY2gvbG9vbmdhcmNoL2luY2x1ZGUvYXNtL3tjcmFzaF9jb3JlLmggPT4g
+Y3Jhc2hfcmVzZXJ2ZS5ofSAoNzUlKQo+Cj4gZGlmZiAtLWdpdCBhL2FyY2gvbG9vbmdhcmNoL0tj
+b25maWcgYi9hcmNoL2xvb25nYXJjaC9LY29uZmlnCj4gaW5kZXggYTVmMzAwZWM2ZjI4Li41NGFk
+MDRkYWNkZWUgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9sb29uZ2FyY2gvS2NvbmZpZwo+ICsrKyBiL2Fy
+Y2gvbG9vbmdhcmNoL0tjb25maWcKPiBAQCAtNTk1LDcgKzU5NSw3IEBAIGNvbmZpZyBBUkNIX1NF
+TEVDVFNfQ1JBU0hfRFVNUAo+ICAgICAgICAgc2VsZWN0IFJFTE9DQVRBQkxFCj4KPiAgY29uZmln
+IEFSQ0hfSEFTX0dFTkVSSUNfQ1JBU0hLRVJORUxfUkVTRVJWQVRJT04KPiAtICAgICAgIGRlZl9i
+b29sIENSQVNIX0NPUkUKPiArICAgICAgIGRlZl9ib29sIENSQVNIX1JFU0VSVkUKPgo+ICBjb25m
+aWcgUkVMT0NBVEFCTEUKPiAgICAgICAgIGJvb2wgIlJlbG9jYXRhYmxlIGtlcm5lbCIKPiBkaWZm
+IC0tZ2l0IGEvYXJjaC9sb29uZ2FyY2gvaW5jbHVkZS9hc20vY3Jhc2hfY29yZS5oIGIvYXJjaC9s
+b29uZ2FyY2gvaW5jbHVkZS9hc20vY3Jhc2hfcmVzZXJ2ZS5oCj4gc2ltaWxhcml0eSBpbmRleCA3
+NSUKPiByZW5hbWUgZnJvbSBhcmNoL2xvb25nYXJjaC9pbmNsdWRlL2FzbS9jcmFzaF9jb3JlLmgK
+PiByZW5hbWUgdG8gYXJjaC9sb29uZ2FyY2gvaW5jbHVkZS9hc20vY3Jhc2hfcmVzZXJ2ZS5oCj4g
+aW5kZXggMjE4YmRiZmE1MjdiLi5hMWQ5Yjg0YjFjN2QgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9sb29u
+Z2FyY2gvaW5jbHVkZS9hc20vY3Jhc2hfY29yZS5oCj4gKysrIGIvYXJjaC9sb29uZ2FyY2gvaW5j
+bHVkZS9hc20vY3Jhc2hfcmVzZXJ2ZS5oCj4gQEAgLTEsNiArMSw2IEBACj4gIC8qIFNQRFgtTGlj
+ZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wLW9ubHkgKi8KPiAtI2lmbmRlZiBfTE9PTkdBUkNIX0NS
+QVNIX0NPUkVfSAo+IC0jZGVmaW5lIF9MT09OR0FSQ0hfQ1JBU0hfQ09SRV9ICj4gKyNpZm5kZWYg
+X0xPT05HQVJDSF9DUkFTSF9SRVNFUlZFX0gKPiArI2RlZmluZSBfTE9PTkdBUkNIX0NSQVNIX1JF
+U0VSVkVfSAo+Cj4gICNkZWZpbmUgQ1JBU0hfQUxJR04gICAgICAgICAgICAgICAgICAgIFNaXzJN
+Cj4KPiAtLQo+IDIuNDEuMAo+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
+dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
