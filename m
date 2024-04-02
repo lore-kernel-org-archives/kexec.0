@@ -4,82 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 48FFACD1288
-	for <kexec@archiver.kernel.org>; Mon,  1 Apr 2024 18:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 58CF0CD1284
+	for <kexec@archiver.kernel.org>; Tue,  2 Apr 2024 15:42:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:From:Subject:Message-ID:
-	Mime-Version:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:
-	References:List-Owner; bh=q5A/WY+4HCbfjmEFU2M6xBpprhafLj2w81FU1TQ+J/Q=; b=SMR
-	8CXkdGFsF3jpBxY7/T2QWSfkc5L5y2NeOYGEzjZ0d2JcMNPoNcrCPh8EZ0G9zaEngWTSLWld3CGi9
-	mvJD2EBaZiDj1p6oN2dTcsLiIOfGSC/KjGSTExTUEHfDiG/zEhNgMb2kz/0qyPiL2SPCMXf1KEGQq
-	pimXE0Q0h36H7sLbfB/Hu5nLiC7PKqQgeOWU8eAclmu+zZ145sYjjUFoqIXhpCTqwxlGwqmC+Xrxv
-	VRdNOW4D9DCAw1eIr62jAxPRX7K53gw1zfDtJ4lSurIWQuHbot5DmwcCe2ag5NaRZ5gh5wRmi9Jnu
-	IRdvdys72BpYleph4vVVovpVv0TYIUg==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=rVJt+chHtQ1OfInbYnQCVuXGr9uaHSfoInpxkTNlBiQ=; b=i5z8KQ07BHYfNy
+	fw9IwZBiqEZ23e9jFQyPLvQi2/BasBfG072W1qrCTqS64hj3zd/P+zMcDFBB5T/VPtBxDvCW5ME6d
+	fzEt8Pcm0DAaNuVlXgwgeHTSgl+f7qPbYs+Q3oPtVxMDdsZgw6G+kUf/5dVY7a33zmwqger088uGR
+	jg6vi7XnFYVdBw0xNv9glklrN4uImQGxRyd3ToCjABeXl2rOhNPy3oieisw4Md3I/KhzTeU1oGXpg
+	CK2jDXlk/Kk8TAjgvnOevmFxgAEcsSyk9SKbPsEdo87dhGeaDGytl9VnZET7x5XLyKsohBsFbOesA
+	lg86+0JcuKBB1Sjw6r6Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rrMZe-00000008aMj-3aJF;
-	Mon, 01 Apr 2024 18:40:02 +0000
-Received: from mail-yb1-xb49.google.com ([2607:f8b0:4864:20::b49])
+	id 1rrgHT-0000000BqUt-3RgN;
+	Tue, 02 Apr 2024 15:42:35 +0000
+Received: from mgamail.intel.com ([192.198.163.11])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rrMZb-00000008aLn-2W24
+	id 1rrgHQ-0000000BqS5-41Mn
 	for kexec@lists.infradead.org;
-	Mon, 01 Apr 2024 18:40:01 +0000
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-dc6b2682870so6570513276.0
-        for <kexec@lists.infradead.org>; Mon, 01 Apr 2024 11:39:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711996798; x=1712601598; darn=lists.infradead.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=JgMheuDZ9q8sO5WzCyu4uSNRV4Oc3mqdwzajDlVhWIU=;
-        b=UzTUJ+Oaz3NHmCw6OvTCOT/BLrbTZNUGHrRe03leysIRjaK2BceqjIrrqWdztlndR+
-         hQ7rHEElSSY1zTPEg8HGRSY/3E6UbBvMWx4HlV1OaVgLKjwxgwtC9W+NoSIUcpgyPqqb
-         GZEtDHuTFgT+8MjHHfO2BKjjvXQbTsSN1JNenTtxnD/WZEfW0D35fzd7CeqByKsEEUJK
-         +BaLVeBr7kOTiepeBdYtQncVJoXoga3TTrpd34WvfC6DFk7b6Lzgpe62q6Km5w0wYMtR
-         yGO/4jsC5nUMFWskZXUDtFtcSEu2Usw0mVkuq9d987il9PpDsWjUgFAtNKQUX/H0c2aG
-         mBSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711996798; x=1712601598;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JgMheuDZ9q8sO5WzCyu4uSNRV4Oc3mqdwzajDlVhWIU=;
-        b=VieW1Xsd1QqsMA8u9Iyyr7xxEQCp7GcOU3Qd0rnrg19R9vknxZ/gbpAhQkvFlZLpsv
-         0Q3ziPImqsL2RYhYZgBneam3HJADmk4ZJK+gjc0Ae131zfMn2lQuQVEkoWXZ/f560PbY
-         bbAKdzW5UIkXruEehW4XAk2T1VOQ0NhJHCCkWiO+2aPu66selcKIIHWa61RN3ypE9LlR
-         NBLyWrmeTa8NNEZwwEAg/9spC4gX+kiUdAV/djeuQiumAHqcKYElRGwQjXWusvkXrkPO
-         kfr0E4ozdJtnBn+CCypNNtVEcfA3bdWyti3ebevW/Nbor5AfWS0TdfRHAffgOS55MN/Y
-         t3rA==
-X-Gm-Message-State: AOJu0YwWjrXpskwSsQqDW/LQDkQQ7e/Zz6YWqGGGiijnlojMMTWUO4el
-	SgeYRDbIFA961GVlEVvRAdRPeGoKLaeOhQ9h3GDFhF78XK6OsbOY/ej6Jho4EpxE6pK2Jtqg52l
-	L4a88rWWxHM5o1/mKxeB3FA==
-X-Google-Smtp-Source: AGHT+IHSmFegPY5LrkmIhHmV2aW8Fujix6RmCEZ5xbkPgSlx7/Qdn60CtjV4+JrWRC8OnVdY8bMiErkNetC/FspRww==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:1893:b0:dc6:fec4:1c26 with
- SMTP id cj19-20020a056902189300b00dc6fec41c26mr3327875ybb.1.1711996797754;
- Mon, 01 Apr 2024 11:39:57 -0700 (PDT)
-Date: Mon, 01 Apr 2024 18:39:55 +0000
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAHr/CmYC/42NTQqDMBBGryKz7pQk/VG66j2KCxMnMVAdmUioi
- Hdv6gm6fA++922QSCIleFQbCOWYIk8FzKkCN3RTIIx9YTDKXNXF1JgWmdy8ok84CzvMo2MhdGh
- 109d37akjD2U+C/n4OdKvtvAQ08KyHk9Z/+wf0axRIylzo141Vlv1DMzhTWfHI7T7vn8BS8M/5 cEAAAA=
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1711996796; l=2314;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=2MbhgQj8cVkDP038ndgOY503dVX+Ax4mZCM7tpCQcQA=; b=QK8nLukocBQU9jplQm8cs3ucevtjDWazF2fw9lAMxYf+e9BuLtUEVXrqzKXK3RvJsRteZolGw
- XJfs74WA4giCbUveTWR8xEsOJ1EhMVcg46SafcYUkIELkNIvOLYJBFW
-X-Mailer: b4 0.12.3
-Message-ID: <20240401-strncpy-fs-proc-vmcore-c-v2-1-dd0a73f42635@google.com>
-Subject: [PATCH v2] vmcore: replace strncpy with strscpy_pad
-From: Justin Stitt <justinstitt@google.com>
-To: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	Justin Stitt <justinstitt@google.com>
+	Tue, 02 Apr 2024 15:42:34 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712072553; x=1743608553;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=RZamI5f8/aC7oIQVbalM1Cimf9G3hUXqlyz/JLjpQQQ=;
+  b=Y7gnneORwgOLb3V6D17KlAX9Ta6FXbOg+b+OTQ6tgWf4ZpYVDCOqkF+F
+   QWvcvvbhvomAVm8g0SzCcyvg/sfgkK8vYE0lJ1dbbf2IDc9py7HEKc5sB
+   759o+GuC95FVxou8zUDycC58K62vp1tGzAHPbftUNGZlIENG44RnGLCnY
+   y7cyhIm+LspUcuuQ3Pce/n2p7mkgKXvikLtn0j0ejo5U2+d+hhstcl5g3
+   fjDMxnHOAtqMlvFz4UPBcy9JuJr2dsX6RcvXZk0vj9yEYin1fx+b/Nry2
+   X5zkHT5FnNXTOeWa4YOOE42KI2iaHdSOgdg+zGT7NLZPGOwn5nMaYmCtK
+   Q==;
+X-CSE-ConnectionGUID: QaA1NPTOR7+t28TAUCEyNQ==
+X-CSE-MsgGUID: x+2SZXNRSQWLcSLQMaOo6A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="17870109"
+X-IronPort-AV: E=Sophos;i="6.07,175,1708416000"; 
+   d="scan'208";a="17870109"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 08:42:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="937083654"
+X-IronPort-AV: E=Sophos;i="6.07,175,1708416000"; 
+   d="scan'208";a="937083654"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 02 Apr 2024 08:42:25 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id A10101C5; Tue,  2 Apr 2024 18:42:23 +0300 (EEST)
+Date: Tue, 2 Apr 2024 18:42:23 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Xiaoyao Li <xiaoyao.li@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, 
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Elena Reshetova <elena.reshetova@intel.com>, 
+	Jun Nakajima <jun.nakajima@intel.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish" <ashish.kalra@amd.com>, 
+	Sean Christopherson <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>, 
+	kexec@lists.infradead.org, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv9 05/17] x86/kexec: Keep CR4.MCE set during kexec for TDX
+ guest
+Message-ID: <j4s4n5slt6a234w5o5r4zjmb3xj53odnmwekt6ihotfzotd7ur@ghyvphwcki57>
+References: <20240325103911.2651793-1-kirill.shutemov@linux.intel.com>
+ <20240325103911.2651793-6-kirill.shutemov@linux.intel.com>
+ <b94c81ef-50f2-4e66-9533-461791777d10@intel.com>
+ <dlixf7bld4efdh5goir5nreabkgtcwfbvv2rovjqrvjttplqss@auuqnt4h2llj>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <dlixf7bld4efdh5goir5nreabkgtcwfbvv2rovjqrvjttplqss@auuqnt4h2llj>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240401_113959_905585_68D9A58D 
-X-CRM114-Status: GOOD (  12.80  )
+X-CRM114-CacheID: sfid-20240402_084233_085570_CAA28E1A 
+X-CRM114-Status: GOOD (  21.89  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -96,70 +96,64 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-strncpy() is in the process of being replaced as it is deprecated [1].
-We should move towards safer and less ambiguous string interfaces.
+On Fri, Mar 29, 2024 at 06:48:21PM +0200, Kirill A. Shutemov wrote:
+> On Fri, Mar 29, 2024 at 11:21:32PM +0800, Xiaoyao Li wrote:
+> > On 3/25/2024 6:38 PM, Kirill A. Shutemov wrote:
+> > > TDX guests are not allowed to clear CR4.MCE. Attempt to clear it leads
+> > > to #VE.
+> > 
+> > Will we consider making it more safe and compatible for future to guard
+> > against X86_FEATURE_MCE as well?
+> > 
+> > If in the future, MCE becomes configurable for TD guest, then CR4.MCE might
+> > not be fixed1.
+> 
+> Good point.
+> 
+> I guess we can leave it clear if it was clear. This should be easy
+> enough. But we might want to clear even if was set if clearing is allowed.
+> 
+> It would require some kind of indication that clearing MCE is fine. We
+> don't have such indication yet. Not sure we can reasonably future-proof
+> the code at this point.
+> 
+> But let me think more.
 
-Looking at vmcoredd_header's definition:
-|	struct vmcoredd_header {
-|		__u32 n_namesz; /* Name size */
-|		__u32 n_descsz; /* Content size */
-|		__u32 n_type;   /* NT_VMCOREDD */
-|		__u8 name[8];   /* LINUX\0\0\0 */
-|		__u8 dump_name[VMCOREDD_MAX_NAME_BYTES]; /* Device dump's name */
-|	};
-... we see that @name wants to be NUL-padded.
+I think I will go with the variant below.
 
-We're copying data->dump_name which is defined as:
-|	char dump_name[VMCOREDD_MAX_NAME_BYTES]; /* Unique name of the dump */
-... which shares the same size as vdd_hdr->dump_name. Let's make sure we
-NUL-pad this as well.
-
-Use strscpy_pad() which NUL-terminates and NUL-pads its destination
-buffers. Specifically, use the new 2-argument version of strscpy_pad
-introduced in Commit e6584c3964f2f ("string: Allow 2-argument
-strscpy()").
-
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Changes in v2:
-- don't mark buffers as __nonstring, instead use a string API (thanks Kees)
-- Link to v1: https://lore.kernel.org/r/20240327-strncpy-fs-proc-vmcore-c-v1-1-e025ed08b1b0@google.com
----
-Note: build-tested only.
-
-Found with: $ rg "strncpy\("
----
- fs/proc/vmcore.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index 1fb213f379a5..5d08d4d159d3 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -1370,9 +1370,8 @@ static void vmcoredd_write_header(void *buf, struct vmcoredd_data *data,
- 	vdd_hdr->n_descsz = size + sizeof(vdd_hdr->dump_name);
- 	vdd_hdr->n_type = NT_VMCOREDD;
+diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+index 56cab1bb25f5..8e2037d78a1f 100644
+--- a/arch/x86/kernel/relocate_kernel_64.S
++++ b/arch/x86/kernel/relocate_kernel_64.S
+@@ -5,6 +5,8 @@
+  */
  
--	strncpy((char *)vdd_hdr->name, VMCOREDD_NOTE_NAME,
--		sizeof(vdd_hdr->name));
--	memcpy(vdd_hdr->dump_name, data->dump_name, sizeof(vdd_hdr->dump_name));
-+	strscpy_pad(vdd_hdr->name, VMCOREDD_NOTE_NAME);
-+	strscpy_pad(vdd_hdr->dump_name, data->dump_name);
- }
+ #include <linux/linkage.h>
++#include <linux/stringify.h>
++#include <asm/alternative.h>
+ #include <asm/page_types.h>
+ #include <asm/kexec.h>
+ #include <asm/processor-flags.h>
+@@ -145,11 +147,17 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+ 	 * Set cr4 to a known state:
+ 	 *  - physical address extension enabled
+ 	 *  - 5-level paging, if it was enabled before
++	 *  - Machine check exception on TDX guest, if it was enabled before.
++	 *    Clearing MCE might not allowed in TDX guests, depending on setup.
+ 	 */
+ 	movl	$X86_CR4_PAE, %eax
+ 	testq	$X86_CR4_LA57, %r13
+ 	jz	1f
+ 	orl	$X86_CR4_LA57, %eax
++1:
++	testq	$X86_CR4_MCE, %r13
++	jz	1f
++	ALTERNATIVE "", __stringify(orl $X86_CR4_MCE, %eax), X86_FEATURE_TDX_GUEST
+ 1:
+ 	movq	%rax, %cr4
  
- /**
-
----
-base-commit: 928a87efa42302a23bb9554be081a28058495f22
-change-id: 20240327-strncpy-fs-proc-vmcore-c-b18d761feaef
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
-
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
 
 _______________________________________________
 kexec mailing list
