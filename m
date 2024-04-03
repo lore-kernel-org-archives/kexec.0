@@ -4,82 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 58CF0CD1284
-	for <kexec@archiver.kernel.org>; Tue,  2 Apr 2024 15:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 24CD3CD1288
+	for <kexec@archiver.kernel.org>; Wed,  3 Apr 2024 15:44:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=rVJt+chHtQ1OfInbYnQCVuXGr9uaHSfoInpxkTNlBiQ=; b=i5z8KQ07BHYfNy
-	fw9IwZBiqEZ23e9jFQyPLvQi2/BasBfG072W1qrCTqS64hj3zd/P+zMcDFBB5T/VPtBxDvCW5ME6d
-	fzEt8Pcm0DAaNuVlXgwgeHTSgl+f7qPbYs+Q3oPtVxMDdsZgw6G+kUf/5dVY7a33zmwqger088uGR
-	jg6vi7XnFYVdBw0xNv9glklrN4uImQGxRyd3ToCjABeXl2rOhNPy3oieisw4Md3I/KhzTeU1oGXpg
-	CK2jDXlk/Kk8TAjgvnOevmFxgAEcsSyk9SKbPsEdo87dhGeaDGytl9VnZET7x5XLyKsohBsFbOesA
-	lg86+0JcuKBB1Sjw6r6Q==;
+	List-Owner; bh=gV7NGY7dUhW95E4L/Az2EUb35k0y0WaZ2nCP/2nDBfk=; b=rM6ce7nZHb1N6V
+	sIJ8pIcYmQKMfgIPbRMZqNx7jgDabwPEPz6bIDuJG9Zlxr2oVlIbH1d5LILxRVlkQcWUgoSq/Vvb3
+	ngiiFkLHIcTWEoEwRWeZDniqimICGfy9YFbujPHeMnClkMxFeECC0cMoIJlsEQXhKRxuR3V+lf8MM
+	fNnmQzyOFpGnfkkwPZBmoh1L+GFYXGxXR5Q2WynIbGoOVIxoNzf5SMWi4JuJHcmFerm5m0BjuCSIx
+	JNzg5HlN9nKWkCI4grRUo8ziAI2yzB+3/ITnQCg2dkRybbk74rJUnhdH4BjWeQBaWs6k/KWXJzJoA
+	qRF3pSn+3oH9HlFVAJZA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rrgHT-0000000BqUt-3RgN;
-	Tue, 02 Apr 2024 15:42:35 +0000
-Received: from mgamail.intel.com ([192.198.163.11])
+	id 1rs2mm-0000000GnUY-3uZC;
+	Wed, 03 Apr 2024 15:44:24 +0000
+Received: from mail-ot1-x32a.google.com ([2607:f8b0:4864:20::32a])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rrgHQ-0000000BqS5-41Mn
+	id 1rs2mh-0000000GnSv-2fnr
 	for kexec@lists.infradead.org;
-	Tue, 02 Apr 2024 15:42:34 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712072553; x=1743608553;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=RZamI5f8/aC7oIQVbalM1Cimf9G3hUXqlyz/JLjpQQQ=;
-  b=Y7gnneORwgOLb3V6D17KlAX9Ta6FXbOg+b+OTQ6tgWf4ZpYVDCOqkF+F
-   QWvcvvbhvomAVm8g0SzCcyvg/sfgkK8vYE0lJ1dbbf2IDc9py7HEKc5sB
-   759o+GuC95FVxou8zUDycC58K62vp1tGzAHPbftUNGZlIENG44RnGLCnY
-   y7cyhIm+LspUcuuQ3Pce/n2p7mkgKXvikLtn0j0ejo5U2+d+hhstcl5g3
-   fjDMxnHOAtqMlvFz4UPBcy9JuJr2dsX6RcvXZk0vj9yEYin1fx+b/Nry2
-   X5zkHT5FnNXTOeWa4YOOE42KI2iaHdSOgdg+zGT7NLZPGOwn5nMaYmCtK
-   Q==;
-X-CSE-ConnectionGUID: QaA1NPTOR7+t28TAUCEyNQ==
-X-CSE-MsgGUID: x+2SZXNRSQWLcSLQMaOo6A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="17870109"
-X-IronPort-AV: E=Sophos;i="6.07,175,1708416000"; 
-   d="scan'208";a="17870109"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 08:42:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11032"; a="937083654"
-X-IronPort-AV: E=Sophos;i="6.07,175,1708416000"; 
-   d="scan'208";a="937083654"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 02 Apr 2024 08:42:25 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id A10101C5; Tue,  2 Apr 2024 18:42:23 +0300 (EEST)
-Date: Tue, 2 Apr 2024 18:42:23 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Xiaoyao Li <xiaoyao.li@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, 
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Elena Reshetova <elena.reshetova@intel.com>, 
-	Jun Nakajima <jun.nakajima@intel.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish" <ashish.kalra@amd.com>, 
-	Sean Christopherson <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>, 
-	kexec@lists.infradead.org, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv9 05/17] x86/kexec: Keep CR4.MCE set during kexec for TDX
- guest
-Message-ID: <j4s4n5slt6a234w5o5r4zjmb3xj53odnmwekt6ihotfzotd7ur@ghyvphwcki57>
-References: <20240325103911.2651793-1-kirill.shutemov@linux.intel.com>
- <20240325103911.2651793-6-kirill.shutemov@linux.intel.com>
- <b94c81ef-50f2-4e66-9533-461791777d10@intel.com>
- <dlixf7bld4efdh5goir5nreabkgtcwfbvv2rovjqrvjttplqss@auuqnt4h2llj>
+	Wed, 03 Apr 2024 15:44:21 +0000
+Received: by mail-ot1-x32a.google.com with SMTP id 46e09a7af769-6e9ddea8b3dso315365a34.1
+        for <kexec@lists.infradead.org>; Wed, 03 Apr 2024 08:44:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1712159055; x=1712763855; darn=lists.infradead.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7PVVYuNrAUl36pyd3xeuvzvQvdQgmwGY67VpgOIWSOw=;
+        b=UJBiWR6aIKmtCrQ/5Tv6veTi8kwRYoGidTwfXy/kxMizMi9F/OhYunbr6T6/SdOpGT
+         Nh3ZiOyOPL//h2KSDYbdhbaDMjtvHR2EWyuZL7FEjUvjxwnLBWvxal/F92nL20Uxb+zJ
+         N6RWgMU8kR8/3KdZDy2skT/GziGHGzwzqE+a/GZ/GzKMBnEGFQ1j+WiGTrfzybToLWkX
+         4ADHqc73mJX/oCsR1vnqYdsTLn+DwgOQudv3sJscbaS7spHz84OebzMWJAPpKV3Mmskz
+         9UVVReOzD7zG2aq99RF7wJ7Lum7zMafejvoZQANvMybVJnEADYIYeLjjpbV98g4AjdPl
+         5WNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712159055; x=1712763855;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7PVVYuNrAUl36pyd3xeuvzvQvdQgmwGY67VpgOIWSOw=;
+        b=j3x12B0oM2eWJkiXjaCl8VETMDbOnuRiAvpCQVcCYJxAUY4I53zayI1xlPI8s/tOvW
+         jJBnM3BrJNjIZg9hNCg2DcaKAGcs31Ik/aYzqU6YoNxhi7mBajdkZt5j7nlucPtKdb29
+         sN6LzdWr/ZYKOuGDBSZJdv1uXX6MyodCvlBYlv+IRErShQvPFDKKq5s+oxv0gEl42tOF
+         9gonk343AOttoV4VhxNCdLZOJnBFQ0taOxeXzNdj77+mLUUPMK225naR+Uhhcke5RRDj
+         ZxWiWD6OJZw0Jc3Nnk5UaJ/2ycp5JC7rR+3rTwMiafUuutgFWa88F3/G7F+iu+F3gkV4
+         P9PQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVZmWRNHNjtuEvjuxe+tnW2kqHtBXtliTQc/QcfrAS0VR+030H4HW0dUxiVsRzvNzDSzFJGO34kNzzJtANWIaEezm6qtzOBI/YY
+X-Gm-Message-State: AOJu0Yz4pJO38ePKEhqdnEM1hDrEz32EkfJjD7v7W5yWzaxOAc3es/fA
+	vGUjZZMF0Y6UfE9mZnf5mGjqRjLWF42wR+/3jmeQM82YN+OsdKZLVVXJuEw0lLQ=
+X-Google-Smtp-Source: AGHT+IFZkhbozTXxif0mxmF92PRdOyaPTrbx7gCtN2UwQ51SV5wycjFky/1bPdc61ntu60EA8vaM6A==
+X-Received: by 2002:a9d:6f85:0:b0:6e8:aba7:4b8b with SMTP id h5-20020a9d6f85000000b006e8aba74b8bmr6319870otq.34.1712159055700;
+        Wed, 03 Apr 2024 08:44:15 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
+        by smtp.gmail.com with ESMTPSA id f8-20020a9d5e88000000b006e6e3fdec53sm2673494otl.35.2024.04.03.08.44.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Apr 2024 08:44:15 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1rs2mc-007hKH-2b;
+	Wed, 03 Apr 2024 12:44:14 -0300
+Date: Wed, 3 Apr 2024 12:44:14 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: "Margolin, Michael" <mrgolin@amazon.com>
+Cc: Tao Liu <ltao@redhat.com>, Gal Pressman <gal.pressman@linux.dev>,
+	sleybo@amazon.com, leon@kernel.org, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org
+Subject: Re: Implementing .shutdown method for efa module
+Message-ID: <20240403154414.GD1363414@ziepe.ca>
+References: <CAO7dBbVNv5NWRN6hXeo5rNEixn-ctmTLLn2KAKhEBYvvR+Du2w@mail.gmail.com>
+ <5d81d6d0-5afc-4d0e-8d2b-445d48921511@linux.dev>
+ <CAO7dBbXLU5teiYm8VvES7e7m7dUzJQYV9HHLOFKperjwq-NJeA@mail.gmail.com>
+ <b6c0bd81-3b8d-465d-a0eb-faa5323a6b05@amazon.com>
+ <20240326153223.GF8419@ziepe.ca>
+ <0e7dddff-d7f3-4617-83e6-f255449a282b@amazon.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <dlixf7bld4efdh5goir5nreabkgtcwfbvv2rovjqrvjttplqss@auuqnt4h2llj>
+In-Reply-To: <0e7dddff-d7f3-4617-83e6-f255449a282b@amazon.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240402_084233_085570_CAA28E1A 
-X-CRM114-Status: GOOD (  21.89  )
+X-CRM114-CacheID: sfid-20240403_084419_822292_9F62C0FB 
+X-CRM114-Status: UNSURE (   9.51  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -96,64 +103,20 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Mar 29, 2024 at 06:48:21PM +0200, Kirill A. Shutemov wrote:
-> On Fri, Mar 29, 2024 at 11:21:32PM +0800, Xiaoyao Li wrote:
-> > On 3/25/2024 6:38 PM, Kirill A. Shutemov wrote:
-> > > TDX guests are not allowed to clear CR4.MCE. Attempt to clear it leads
-> > > to #VE.
-> > 
-> > Will we consider making it more safe and compatible for future to guard
-> > against X86_FEATURE_MCE as well?
-> > 
-> > If in the future, MCE becomes configurable for TD guest, then CR4.MCE might
-> > not be fixed1.
+On Mon, Apr 01, 2024 at 04:23:32PM +0300, Margolin, Michael wrote:
+> Jason
 > 
-> Good point.
+> Thanks for your response, efa_remove() is performing reset to the device
+> which should stop all DMA from the device.
 > 
-> I guess we can leave it clear if it was clear. This should be easy
-> enough. But we might want to clear even if was set if clearing is allowed.
-> 
-> It would require some kind of indication that clearing MCE is fine. We
-> don't have such indication yet. Not sure we can reasonably future-proof
-> the code at this point.
-> 
-> But let me think more.
+> Except skipping cleanups that are unnecessary for shutdown flow are there
+> any other reasons to prefer a separate function for shutdown?
 
-I think I will go with the variant below.
+Yes you should skip "cleanups" like removing the IB device and
+otherwise as there is a risk of system hang/deadlock in a shutdown
+handler context.
 
-diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index 56cab1bb25f5..8e2037d78a1f 100644
---- a/arch/x86/kernel/relocate_kernel_64.S
-+++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -5,6 +5,8 @@
-  */
- 
- #include <linux/linkage.h>
-+#include <linux/stringify.h>
-+#include <asm/alternative.h>
- #include <asm/page_types.h>
- #include <asm/kexec.h>
- #include <asm/processor-flags.h>
-@@ -145,11 +147,17 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
- 	 * Set cr4 to a known state:
- 	 *  - physical address extension enabled
- 	 *  - 5-level paging, if it was enabled before
-+	 *  - Machine check exception on TDX guest, if it was enabled before.
-+	 *    Clearing MCE might not allowed in TDX guests, depending on setup.
- 	 */
- 	movl	$X86_CR4_PAE, %eax
- 	testq	$X86_CR4_LA57, %r13
- 	jz	1f
- 	orl	$X86_CR4_LA57, %eax
-+1:
-+	testq	$X86_CR4_MCE, %r13
-+	jz	1f
-+	ALTERNATIVE "", __stringify(orl $X86_CR4_MCE, %eax), X86_FEATURE_TDX_GUEST
- 1:
- 	movq	%rax, %cr4
- 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Jason
 
 _______________________________________________
 kexec mailing list
