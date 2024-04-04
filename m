@@ -4,85 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 749E2CD1288
-	for <kexec@archiver.kernel.org>; Wed,  3 Apr 2024 23:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A8940CD1288
+	for <kexec@archiver.kernel.org>; Thu,  4 Apr 2024 04:08:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=PRAohw4hEapZmG8UZUeS9K94A0PJ/evistjbtL7Se6w=; b=UFZZbkCC3xATdK
-	gzQMyZ655uNOuiCe2GKh3j7ixlD2P7CCht2iTOSxNrZ2NmIMs3M8BKcZ5rWqWZ/Xq8EXK+IOt8HHV
-	UiG7U6VJ+619zp26mh0vyd91KkViqxQtKJd/wGVc3G0EKLBTMd5G/+kG2ZqZiguN2kh+EjJztiPcM
-	eAB216T5cqD5RdktjIG/rUj7Gik/BfxnOODfCSyGk9Xmpx07nWCkQt5VdDexsmnczYBjWXeGq3KzU
-	zjwUka20QPSPMWiqQ+bgM0inHqFfklJ4aS9VLsZs/EK2iyRY9MiZwYxCfNwzpDZMpxaZQ3juO6vEr
-	EIK7q7zD+HQKgihrirjw==;
+	List-Owner; bh=O9SdkJoQ7MdqfK/DYJ1EbiOMKMS7iOvPJ48FTIBN1C0=; b=MnCpFVs9165EB4
+	gi2L+Ifold/2WcFxbY/ZJnut1FH/0Z072OmEG+e73/kVQe/Mpuo9jhRR4QZXouJGAw4nBF0pvw4x8
+	Dn2L9rqpuJQqG87K3GN7Mm41TTTPw1FA3mn70TYNjenksDN66AXpZBGc43vIg82UFtTbGUERz9hW9
+	uJCeR40KQ23FY9JU684nDb00mlbwPaHa9/iZG+C7XWWwuXuhj4xdi3oXBr35Hf0a42+KGHDH9DktP
+	67h/f4B/N64+aIEXX0zSEaNIZO1pTZNwFaD8iFBYHoBKtcYaM/b2ADmWoWqO4GCon/YYHpm4dMSdK
+	sO12Q+H/jRz3HAg1iVyQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rsATG-00000000g3w-0ty1;
-	Wed, 03 Apr 2024 23:56:46 +0000
-Received: from dfw.source.kernel.org ([139.178.84.217])
+	id 1rsEOU-000000019EI-18Sc;
+	Thu, 04 Apr 2024 04:08:06 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rsATA-00000000fzf-2que
+	id 1rsEOR-000000019D9-0w0j
 	for kexec@lists.infradead.org;
-	Wed, 03 Apr 2024 23:56:43 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id DB29E6150B;
-	Wed,  3 Apr 2024 23:56:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3407C43394;
-	Wed,  3 Apr 2024 23:56:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712188599;
-	bh=m8IbDM148A6sz7bWT/CQKnE9AfgQW6cHCi6VsGmG9X8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=t0uM6RPlGuNQ2pvlqrK5sJYW3QIWUD/Ch+blAKlhtyKQCglZyMACwH2YghM8qdYTx
-	 eBPDOQhbls3SLnnU19e+ycW267im0qo3s7DmQrGBThEtcKMITPijTtYT1j6u19QNnf
-	 amG33e6JWYAg2/i6QR7pitO2x0BsQI9uWn5IiKeG944GH9LkfL4L21VdoeIIgHiyBQ
-	 gpoc8t9p9dMFVRKVRDB1eJL2fMFGmILWoJ6R8tS5FM1x1fnZGWHEyoc/jXW7wXeoSu
-	 PNyqc9GIixNFegy1D6HYuzxTwLjegR0bNGA4RUOTulmhCHilEkh1v3G/QSiOKtNKIT
-	 UfoXU+7DHB84Q==
-Date: Wed, 3 Apr 2024 18:56:35 -0500
-From: Eric Biggers <ebiggers@kernel.org>
-To: Andy Lutomirski <luto@kernel.org>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Ross Philipson <ross.philipson@oracle.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	the arch/x86 maintainers <x86@kernel.org>,
-	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	kexec@lists.infradead.org, linux-efi@vger.kernel.org,
-	dpsmith@apertussolutions.com, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Matthew Garrett <mjg59@srcf.ucam.org>,
-	James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
-	jarkko@kernel.org, Jason Gunthorpe <jgg@ziepe.ca>,
-	"luto@amacapital.net" <luto@amacapital.net>,
-	Arvind Sankar <nivedita@alum.mit.edu>,
-	Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net,
-	kanth.ghatraju@oracle.com, trenchboot-devel@googlegroups.com
-Subject: Re: [PATCH v8 06/15] x86: Add early SHA support for Secure Launch
- early measurements
-Message-ID: <20240403235635.GA24248@quark.localdomain>
-References: <CAMj1kXEmMBY_jc0uM5UgZbuZ3-C7NPKzg5AScaunyu9XzLgzZA@mail.gmail.com>
- <98ad92bb-ef17-4c15-88ba-252db2a2e738@citrix.com>
- <CAMj1kXFTu+bV2kQhAyu15hrYai20NcBLb4Zu8XG2Y-XjL0f+rw@mail.gmail.com>
- <1a8e69a7-89eb-4d36-94d6-0da662d8b72f@citrix.com>
- <CAMj1kXEvmGy9RJo4s8tECsFj2dufZ8jBPoJOEtkcGUoj+x2qsw@mail.gmail.com>
- <431a0b3a-47e5-4e61-a7fc-31cdf56f4e4c@citrix.com>
- <20240223175449.GA1112@sol.localdomain>
- <e641e2f1-16cf-4717-8a1f-8afac2644efe@citrix.com>
- <20240223183004.GE1112@sol.localdomain>
- <10db421c-77da-4a1c-a25e-2374a7a2ef79@app.fastmail.com>
+	Thu, 04 Apr 2024 04:08:04 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712203679;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2Tnf/JqmvOIZtBLVJwY7VQErV1KE6NDkwVDWid6kh50=;
+	b=B0dVQptSTzzVXOVtfIvYrZTOmM6Hfoqaj8V3yMAwqIzqEWYeUo5u0fGHtPzKfywpd9bTYw
+	uNz2tMlBT4g4EDV1y6/pcPtd7xDEFwnDzxi21rPbd0+N4toESGlQeTSfJ1e3h7cpWtUx5P
+	sJVStcgsq/hC19o0WCsOIs6A3/QY2TQ=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-604-6qohKH8hNYix2r2mMKHUzQ-1; Thu, 04 Apr 2024 00:07:55 -0400
+X-MC-Unique: 6qohKH8hNYix2r2mMKHUzQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D9445185A782;
+	Thu,  4 Apr 2024 04:07:54 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.50])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id F31448173;
+	Thu,  4 Apr 2024 04:07:53 +0000 (UTC)
+Date: Thu, 4 Apr 2024 12:07:46 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Justin Stitt <justinstitt@google.com>
+Cc: akpm@linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>,
+	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] vmcore: replace strncpy with strscpy_pad
+Message-ID: <Zg4nkkXYySZT6ZdE@MiWiFi-R3L-srv>
+References: <20240401-strncpy-fs-proc-vmcore-c-v2-1-dd0a73f42635@google.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <10db421c-77da-4a1c-a25e-2374a7a2ef79@app.fastmail.com>
+In-Reply-To: <20240401-strncpy-fs-proc-vmcore-c-v2-1-dd0a73f42635@google.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240403_165640_889261_35B5EA47 
-X-CRM114-Status: GOOD (  36.94  )
+X-CRM114-CacheID: sfid-20240403_210803_365980_3190D95A 
+X-CRM114-Status: GOOD (  19.84  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,108 +78,69 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Apr 03, 2024 at 09:32:02AM -0700, Andy Lutomirski wrote:
-> On Fri, Feb 23, 2024, at 10:30 AM, Eric Biggers wrote:
-> > On Fri, Feb 23, 2024 at 06:20:27PM +0000, Andrew Cooper wrote:
-> >> On 23/02/2024 5:54 pm, Eric Biggers wrote:
-> >> > On Fri, Feb 23, 2024 at 04:42:11PM +0000, Andrew Cooper wrote:
-> >> >> Yes, and I agree.=A0 We're not looking to try and force this in with
-> >> >> underhand tactics.
-> >> >>
-> >> >> But a blind "nack to any SHA-1" is similarly damaging in the opposi=
-te
-> >> >> direction.
-> >> >>
-> >> > Well, reviewers have said they'd prefer that SHA-1 not be included a=
-nd given
-> >> > some thoughtful reasons for that.  But also they've given suggestion=
-s on how to
-> >> > make the SHA-1 support more palatable, such as splitting it into a s=
-eparate
-> >> > patch and giving it a proper justification.
-> >> >
-> >> > All suggestions have been ignored.
-> >> =
+On 04/01/24 at 06:39pm, Justin Stitt wrote:
+> strncpy() is in the process of being replaced as it is deprecated [1].
+> We should move towards safer and less ambiguous string interfaces.
+> 
+> Looking at vmcoredd_header's definition:
+> |	struct vmcoredd_header {
+> |		__u32 n_namesz; /* Name size */
+> |		__u32 n_descsz; /* Content size */
+> |		__u32 n_type;   /* NT_VMCOREDD */
+> |		__u8 name[8];   /* LINUX\0\0\0 */
+> |		__u8 dump_name[VMCOREDD_MAX_NAME_BYTES]; /* Device dump's name */
+> |	};
+> ... we see that @name wants to be NUL-padded.
+> 
+> We're copying data->dump_name which is defined as:
+> |	char dump_name[VMCOREDD_MAX_NAME_BYTES]; /* Unique name of the dump */
+> ... which shares the same size as vdd_hdr->dump_name. Let's make sure we
+> NUL-pad this as well.
+> 
+> Use strscpy_pad() which NUL-terminates and NUL-pads its destination
+> buffers. Specifically, use the new 2-argument version of strscpy_pad
+> introduced in Commit e6584c3964f2f ("string: Allow 2-argument
+> strscpy()").
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+> Changes in v2:
+> - don't mark buffers as __nonstring, instead use a string API (thanks Kees)
+> - Link to v1: https://lore.kernel.org/r/20240327-strncpy-fs-proc-vmcore-c-v1-1-e025ed08b1b0@google.com
+> ---
+> Note: build-tested only.
+> 
+> Found with: $ rg "strncpy\("
+> ---
+>  fs/proc/vmcore.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+> index 1fb213f379a5..5d08d4d159d3 100644
+> --- a/fs/proc/vmcore.c
+> +++ b/fs/proc/vmcore.c
+> @@ -1370,9 +1370,8 @@ static void vmcoredd_write_header(void *buf, struct vmcoredd_data *data,
+>  	vdd_hdr->n_descsz = size + sizeof(vdd_hdr->dump_name);
+>  	vdd_hdr->n_type = NT_VMCOREDD;
+>  
+> -	strncpy((char *)vdd_hdr->name, VMCOREDD_NOTE_NAME,
+> -		sizeof(vdd_hdr->name));
+> -	memcpy(vdd_hdr->dump_name, data->dump_name, sizeof(vdd_hdr->dump_name));
+> +	strscpy_pad(vdd_hdr->name, VMCOREDD_NOTE_NAME);
+> +	strscpy_pad(vdd_hdr->dump_name, data->dump_name);
 
-> >> The public record demonstrates otherwise.
-> >> =
+LGTM, thx
 
-> >> But are you saying that you'd be happy if the commit message read
-> >> something more like:
-> >> =
+Acked-by: Baoquan He <bhe@redhat.com>
 
-> >> ---8<---
-> >> For better or worse, Secure Launch needs SHA-1 and SHA-256.
-> >> =
-
-> >> The choice of hashes used lie with the platform firmware, not with
-> >> software, and is often outside of the users control.
-> >> =
-
-> >> Even if we'd prefer to use SHA-256-only, if firmware elected to start =
-us
-> >> with the SHA-1 and SHA-256 backs active, we still need SHA-1 to parse
-> >> the TPM event log thus far, and deliberately cap the SHA-1 PCRs in ord=
-er
-> >> to safely use SHA-256 for everything else.
-> >> ---
-> >
-> > Please take some time to read through the comments that reviewers have =
-left on
-> > previous versions of the patchset.
-> =
-
-> So I went and read through the old comments, and I'm lost.  In brief summ=
-ary:
-> =
-
-> If the hardware+firmware only supports SHA-1, then some reviewers would p=
-refer
-> Linux not to support DRTM.  I personally think this is a bit silly, but i=
-t's
-> not entirely unreasonable.  Maybe it should be a config option?
-> =
-
-> If the hardware+firmware does support SHA-256, then it sounds (to me, rea=
-ding
-> this -- I haven't dug into the right spec pages) that, for optimal securi=
-ty,
-> something still needs to effectively turn SHA-1 *off* at runtime by cappi=
-ng
-> the event log properly.  And that requires computing a SHA-1 hash.  And, =
-to be
-> clear, (a) this is only on systems that already support SHA-256 and that =
-we
-> should support and (b) *not* doing so leaves us potentially more vulnerab=
-le to
-> SHA-1 attacks than doing so.  And no SHA-256-supporting tooling will actu=
-ally
-> be compromised by a SHA-1 compromise if we cap the event log.
-> =
-
-> So is there a way forward?  Just saying "read through the comments" seems=
- like
-> a dead end.
-> =
-
-
-It seems there may be a justification for some form of SHA-1 support in this
-feature.  As I've said, the problem is that it's not explained in the patch=
-set
-itself.  Rather, it just talks about "SHA" and pretends like SHA-1 and SHA-=
-2 are
-basically the same.  In fact, SHA-1 differs drastically from SHA-2 in terms=
- of
-security.  SHA-1 support should be added in a separate patch, with a clearly
-explained rationale *in the patch itself* for the SHA-1 support *specifical=
-ly*.
-
-- Eric
 
 _______________________________________________
 kexec mailing list
