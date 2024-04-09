@@ -4,81 +4,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B8728C67861
-	for <kexec@archiver.kernel.org>; Tue,  9 Apr 2024 15:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D18A2CD128A
+	for <kexec@archiver.kernel.org>; Tue,  9 Apr 2024 20:42:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=tCKkpsTMoQZaVaxBv6/jxZYu7ogRKkpGikfwMa2hsVg=; b=Cp/q6BbjADACKl
-	pOzsYV5uySPY4VqR52L7AjqdJ80R89xcgIWcyPxxAIzU+BRoG8kckfy/PvSiAGBc1RFbK1Q2e+xzJ
-	Ln8jjrIu3O7LbI3tHNllR8wiMOWPR5vNBGJ80//rMJxQy1fJE0L6Ksq7+fiTcY1jR3elL0pMA5snK
-	6yTfNfZd8Rf/33ufWn+IInNYwDb222T4UYCkSJIME3681fbsJiLYLaydTy/4IGzc0SdsrY+F9uT1F
-	Eqi7tab3cUscIkbA/QKMPRkH+3yqhkNS2WVaa0fJngueJyxBmLCCd5YqqEwuCsJ7IoRCS2EY0Qxhy
-	Q4oazcaRhEqtkoonGzKQ==;
+	List-Owner; bh=qORUKxnYNzaM/gDonPx2Q9tgHUSkzT2HufDXZBxonXs=; b=I/gGQL/2Nz0DF8
+	bQ0FLce1e4mg5JrVTZgaL3+PlP3T7WJ90bT7SnEEtpVa3S+kAw8cbH5tILj+VPNxPyJ9SWLZHvNXA
+	p1NFehi4IZrQv8d9cTBOsfGu0EYgPBn0ZTpSIRnvlnTFx1XovzUD6CowR2wISQ6H372rwKfZi0JJs
+	sEb9y1n/6g15op1Pdr14JwW/IJl5rOoSujPwQCbqNzB3wyrfcIhzfcuk+Ig7TqmCcLTXmxG57QSgk
+	CTLSjhM99IJ5IF/IBmtpDAGsncyMJnvNZXFWb1WOkLgfHWMnJl/X/LKISgyDOej+hvuyKo5tPMIF0
+	qwtwn1Wq4TAkLJ6WP36A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1ruDN2-00000002hP0-47cA;
-	Tue, 09 Apr 2024 15:26:49 +0000
-Received: from mgamail.intel.com ([198.175.65.16])
+	id 1ruIIg-00000003lzO-0GnD;
+	Tue, 09 Apr 2024 20:42:38 +0000
+Received: from mail-dm6nam11on20601.outbound.protection.outlook.com ([2a01:111:f403:2415::601] helo=NAM11-DM6-obe.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1ruDMX-00000002hKk-36P2
+	id 1ruIIb-00000003lw6-2aUs
 	for kexec@lists.infradead.org;
-	Tue, 09 Apr 2024 15:26:19 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712676378; x=1744212378;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jzHlRPxbj4n++6c1Y7jC5HhgzBvQwRs0eWR4xEuQY1c=;
-  b=mHfJd6u/jPVE2ZA7awBZLeDSW9Rc4vjsXFMMmOXC+uA7GqaGtiqQ3Q18
-   /BFXwqanuGshhOSmo8Uwxk6Yylzh3nXt0ly3uTiXFdlifnG12FMXt3tSz
-   Fqybde6qU+O8iwSIv52tTeCLrmg+dsMFVDQpXio+8uz28V9pX750fJIrY
-   X2C3iZGldKl9pkGtbXz6dL5tqscPJh3iI2xH3GHrxcpQe8AS1sUh3EKUk
-   QvGruiyrMbu4kwKl0PVt0idY3/BL0k8DrTDiPvEejK2bQWo0dXVSc5Hlt
-   trBktDWRqWik+s/VKeDzJdtF2u1ZLfP1hd1y9vH3SpQPPvyJjWf6s8NRM
-   w==;
-X-CSE-ConnectionGUID: qjPElqJjRSamorIHAMNjgQ==
-X-CSE-MsgGUID: 2tMeZ7R7Qli218mj85vJAw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="8119651"
-X-IronPort-AV: E=Sophos;i="6.07,189,1708416000"; 
-   d="scan'208";a="8119651"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 08:26:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="937093549"
-X-IronPort-AV: E=Sophos;i="6.07,189,1708416000"; 
-   d="scan'208";a="937093549"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 09 Apr 2024 08:26:06 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id BBE70279; Tue,  9 Apr 2024 18:26:05 +0300 (EEST)
-Date: Tue, 9 Apr 2024 18:26:05 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, 
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Elena Reshetova <elena.reshetova@intel.com>, 
-	Jun Nakajima <jun.nakajima@intel.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, Ashish Kalra <ashish.kalra@amd.com>, 
-	Kai Huang <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, 
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv10 05/18] x86/kexec: Keep CR4.MCE set during kexec for
- TDX guest
-Message-ID: <3q6jv3g4tezybmd667mqxio7ty22akxv7okrznmzx3tju2u4qo@2alzjkbgm2lh>
+	Tue, 09 Apr 2024 20:42:36 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NWQrF3r/jIIBDXYzeYxJkU03XS6/EpUx0pIYX6CTTmD89GxkyuI+8sk2PaXycizBZoA8IJCoNcWMGJZcs/MXSvmB+e0OJina6ReFhKjesWyYRxbM3Foewv+mhKFb0fEhHu7ERhRkoOVFiAqGYiApcIp7N6pfrJuR5+ka/i9Sa1SbjfSjT0nTehT/AF0l2ac9C06/s7SQdMy1piBWpYjBhgqyLDLBe9XRncTQ9jlpdejFXJSg+BMNmenP1tOjwYJWvQ93ZszZGyOgVacG/NsfHPw+YwwWcvBAtEAGe6NDeHOzMdt6zcN1U+T2iDuzJdWxzkNYghDJo+oZ6Pac+filzw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=r+VW4y73FrLHpfUH7m6j5ssx1LBS1HYrfuBzPx9FKGc=;
+ b=PKahphnMtefMPdr0jkcLNeSqXMd+Y1s5iqrMRvyY2l9O94UAAGEXzPqexxs0B5wt5hwXxkp21QYXIgF7VKN0KiAIJNKpL50IKs4UyBqghghQC9xlN2ewALN7sOp7m/hoN8S4fogjVx2piNIJLqdpGDYyvEw2eDtPhiX7S7eorwld6itQz4CKwBpHQ0F4s6oIgfmkibfWfm9PAczjsaIH/djSoWiOS9uqOehIJfeClLFRr6AfldZpobViCAXkF1ZUW01XrIBffa126FWPSNAAFHavMEoK9LJymVTHCt1j6ilc/5BxWhJACp+h+sj56tcQItg9pItKll7IShxMEAhLOA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linutronix.de smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=r+VW4y73FrLHpfUH7m6j5ssx1LBS1HYrfuBzPx9FKGc=;
+ b=se/ttn4ju7OMH1BiIV9Ao0ZkjB1c/UA/+Q7+QQ1IQoMZ2MhAH7UkQo+qAms0aQTlnoAe1oA6AEe1q7d9fI8vwu6zlOsICiTl/444iKze9GR/qMttIz4Nu/diyQBF6nNuBZv22iLXGnzvhT0gZh+YaFIni/FqIqa/1bom0OfeapQ=
+Received: from DM6PR07CA0088.namprd07.prod.outlook.com (2603:10b6:5:337::21)
+ by MN0PR12MB6103.namprd12.prod.outlook.com (2603:10b6:208:3c9::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Tue, 9 Apr
+ 2024 20:42:23 +0000
+Received: from CY4PEPF0000E9DA.namprd05.prod.outlook.com
+ (2603:10b6:5:337:cafe::c8) by DM6PR07CA0088.outlook.office365.com
+ (2603:10b6:5:337::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.19 via Frontend
+ Transport; Tue, 9 Apr 2024 20:42:20 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000E9DA.mail.protection.outlook.com (10.167.241.79) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7452.22 via Frontend Transport; Tue, 9 Apr 2024 20:42:20 +0000
+Received: from ethanolx7e2ehost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 9 Apr
+ 2024 15:42:18 -0500
+From: Ashish Kalra <Ashish.Kalra@amd.com>
+To: <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>
+CC: <rafael@kernel.org>, <peterz@infradead.org>, <adrian.hunter@intel.com>,
+	<sathyanarayanan.kuppuswamy@linux.intel.com>, <jun.nakajima@intel.com>,
+	<rick.p.edgecombe@intel.com>, <thomas.lendacky@amd.com>,
+	<michael.roth@amd.com>, <seanjc@google.com>, <kai.huang@intel.com>,
+	<bhe@redhat.com>, <kirill.shutemov@linux.intel.com>, <bdas@redhat.com>,
+	<vkuznets@redhat.com>, <dionnaglaze@google.com>, <anisinha@redhat.com>,
+	<jroedel@suse.de>, <ardb@kernel.org>, <kexec@lists.infradead.org>,
+	<linux-coco@lists.linux.dev>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4 0/4] x86/snp: Add kexec support
+Date: Tue, 9 Apr 2024 20:42:09 +0000
+Message-ID: <cover.1712694667.git.ashish.kalra@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240409113010.465412-1-kirill.shutemov@linux.intel.com>
 References: <20240409113010.465412-1-kirill.shutemov@linux.intel.com>
- <20240409113010.465412-6-kirill.shutemov@linux.intel.com>
- <ZhVPIDDLkjOB96fI@google.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <ZhVPIDDLkjOB96fI@google.com>
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9DA:EE_|MN0PR12MB6103:EE_
+X-MS-Office365-Filtering-Correlation-Id: 96af7323-6e3f-4b0f-0041-08dc58d58d5e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: sClr8Q5fnBHiNR5IX/a9YkScucPTX24toSdXq1oMyl22Uboniqp87fXZRAmJj3YqM6azxEFoIHZ8w2T1iWbZiEZhIfB/eBdd51oNJsF1foEsaTwOCnU7fkx4sZa1V29Tx7hoIDnLvMOL9OQEAWT/H3yrFNB9Q7Xyqf9dwCG1/aMCM7VS5UBAVJcY1d2R4nxhEm9pqwD6XCdEYn22J57M2bk5CJ0GVbIS9LpjCoRgGLGiSUK+nefvOzsg6HjoK5E+4Uq3Q9N7CT6ouV708zlMQ01JScD+qf3xo0tEj6HJ15jbPgK4a679TF/N6cUiFm4CGCFLVWXRo7O75W1oYFG73ZTa9A9yLt4z4+SwyMEnrpwJWFCJSF+QWRAcOFhl0MFGkFaXVv3l8o9xez/eB4lIAnIdPa3G9oigCLmFkGcP8VDK2ZJdaAAVUIyAcqlexkgCtAlZNBRjfKJkQ1M4J7+OajucsUSvssa41EDLcCtEwrfjWT4A14Czn537qVuH2L/TBOVDzYTA4KL5X6XU/ti4b/mYlw1FF8OlhPhyo8Go2m43tPNSoBMk3D/MiJ5Rr93jzFD3yrA8JlNJpTd9ixBUk8TqoYwV8ipjvH6K8CFb1y351JRh7OjnIWx49UBdm3JOG6lpbvDdvV6YUHCADqX1PPK4iIu33roWc0zM+7iOqiPhftasx7Q+o3E/0M0HbrggwKFHSQ8WM7auFHrSX3AFZtuNZo6mS4z6XGC1S7o+Rnqt4574F5CRy878orUYSYsD
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(7416005)(36860700004)(1800799015)(376005)(82310400014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2024 20:42:20.1700
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 96af7323-6e3f-4b0f-0041-08dc58d58d5e
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000E9DA.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6103
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240409_082617_873954_D706D7D7 
-X-CRM114-Status: GOOD (  24.55  )
+X-CRM114-CacheID: sfid-20240409_134233_691675_D49B053C 
+X-CRM114-Status: GOOD (  14.52  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -95,123 +125,65 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Apr 09, 2024 at 07:22:24AM -0700, Sean Christopherson wrote:
-> On Tue, Apr 09, 2024, Kirill A. Shutemov wrote:
-> > Depending on setup, TDX guests might be allowed to clear CR4.MCE.
-> > Attempt to clear it leads to #VE.
-> > 
-> > Use alternatives to keep the flag during kexec for TDX guests.
-> > 
-> > The change doesn't affect non-TDX-guest environments.
-> > 
-> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > ---
-> >  arch/x86/kernel/relocate_kernel_64.S | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> > 
-> > diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-> > index 56cab1bb25f5..8e2037d78a1f 100644
-> > --- a/arch/x86/kernel/relocate_kernel_64.S
-> > +++ b/arch/x86/kernel/relocate_kernel_64.S
-> > @@ -5,6 +5,8 @@
-> >   */
-> >  
-> >  #include <linux/linkage.h>
-> > +#include <linux/stringify.h>
-> > +#include <asm/alternative.h>
-> >  #include <asm/page_types.h>
-> >  #include <asm/kexec.h>
-> >  #include <asm/processor-flags.h>
-> > @@ -145,11 +147,17 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
-> >  	 * Set cr4 to a known state:
-> >  	 *  - physical address extension enabled
-> >  	 *  - 5-level paging, if it was enabled before
-> > +	 *  - Machine check exception on TDX guest, if it was enabled before.
-> > +	 *    Clearing MCE might not allowed in TDX guests, depending on setup.
-> >  	 */
-> >  	movl	$X86_CR4_PAE, %eax
-> >  	testq	$X86_CR4_LA57, %r13
-> >  	jz	1f
-> >  	orl	$X86_CR4_LA57, %eax
-> > +1:
-> > +	testq	$X86_CR4_MCE, %r13
-> > +	jz	1f
-> > +	ALTERNATIVE "", __stringify(orl $X86_CR4_MCE, %eax), X86_FEATURE_TDX_GUEST
-> 
-> The TEST+Jcc+OR sequences are rather odd, and require way more instructions and
-> thus way more copy+paste than is necessary.
-> 
-> 	movl	$X86_CR4_LA57, %eax
-> 	ALTERNATIVE "", __stringify(orl $X86_CR4_MCE, %eax), X86_FEATURE_TDX_GUEST
-> 	andl	%r13d, %eax
-> 	orl	$X86_CR4_PAE, %eax
-> 	movq	%rax, %cr4
-> 
-> Then preserving new bits unconditionally only requires adding the flag to the
-> initial move, and feature-dependent bits only need a single ALTERNATIVE line.
+From: Ashish Kalra <ashish.kalra@amd.com>
 
-Thanks! It is much better.
+The patchset adds bits and pieces to get kexec (and crashkernel) work on
+SNP guest.
 
-> And there's no branches, blazing fast kexec! ;-)
+v4:
+- Rebased to current tip/master.
+- Reviewed-bys from Sathya.
+- Remove snp_kexec_unprep_rom_memory() as it is not needed any more as 
+  SEV-SNP code is not validating the ROM range in probe_roms() anymore.
+- Fix kernel test robot build error/warnings.
 
-kexec/sec STONKS! :D
+v3:
+- Rebased;
+- moved Keep page tables that maps E820_TYPE_ACPI patch to Kirill's tdx
+  guest kexec patch series.
+- checking the md attribute instead of checking the efi_setup for
+  detecting if running under kexec kernel.
+- added new sev_es_enabled() function.
+- skip video memory access in decompressor for SEV-ES/SNP systems to 
+  prevent guest termination as boot stage2 #VC handler does not handle
+  MMIO.
 
-Updated patch is below.
+v2:
+- address zeroing of unaccepted memory table mappings at all page table levels
+  adding phys_pte_init(), phys_pud_init() and phys_p4d_init().
+- include skip efi_arch_mem_reserve() in case of kexec as part of this 
+  patch set.
+- rename last_address_shd_kexec to a more appropriate 
+  kexec_last_address_to_make_private.
+- remove duplicate code shared with TDX and use common interfaces
+  defined for SNP and TDX for kexec/kdump.
+- remove set_pte_enc() dependency on pg_level_to_pfn() and make the 
+  function simpler.
+- rename unshare_pte() to make_pte_private().
+- clarify and make the comment for using kexec_last_address_to_make_private  
+  more understandable.
+- general cleanup. 
 
-From 6be428e3b1c6fb494b2c48ba6a7c133514a0b2b4 Mon Sep 17 00:00:00 2001
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Date: Fri, 10 Feb 2023 12:53:11 +0300
-Subject: [PATCHv10.1 05/18] x86/kexec: Keep CR4.MCE set during kexec for TDX guest
+Ashish Kalra (4):
+  efi/x86: skip efi_arch_mem_reserve() in case of kexec.
+  x86/sev: add sev_es_enabled() function.
+  x86/boot/compressed: Skip Video Memory access in Decompressor for
+    SEV-ES/SNP.
+  x86/snp: Convert shared memory back to private on kexec
 
-Depending on setup, TDX guests might be allowed to clear CR4.MCE.
-Attempt to clear it leads to #VE.
+ arch/x86/boot/compressed/misc.c |   6 +-
+ arch/x86/boot/compressed/misc.h |   1 +
+ arch/x86/boot/compressed/sev.c  |   5 +
+ arch/x86/boot/compressed/sev.h  |   2 +
+ arch/x86/include/asm/sev.h      |   4 +
+ arch/x86/kernel/sev.c           | 161 ++++++++++++++++++++++++++++++++
+ arch/x86/mm/mem_encrypt_amd.c   |   3 +
+ arch/x86/platform/efi/quirks.c  |  20 +++-
+ 8 files changed, 198 insertions(+), 4 deletions(-)
 
-Use alternatives to keep the flag during kexec for TDX guests.
-
-The change doesn't affect non-TDX-guest environments.
-
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
----
- arch/x86/kernel/relocate_kernel_64.S | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index 56cab1bb25f5..90246d544eb1 100644
---- a/arch/x86/kernel/relocate_kernel_64.S
-+++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -5,6 +5,8 @@
-  */
- 
- #include <linux/linkage.h>
-+#include <linux/stringify.h>
-+#include <asm/alternative.h>
- #include <asm/page_types.h>
- #include <asm/kexec.h>
- #include <asm/processor-flags.h>
-@@ -143,14 +145,15 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
- 
- 	/*
- 	 * Set cr4 to a known state:
--	 *  - physical address extension enabled
- 	 *  - 5-level paging, if it was enabled before
-+	 *  - Machine check exception on TDX guest, if it was enabled before.
-+	 *    Clearing MCE might not allowed in TDX guests, depending on setup.
-+	 *  - physical address extension enabled
- 	 */
--	movl	$X86_CR4_PAE, %eax
--	testq	$X86_CR4_LA57, %r13
--	jz	1f
--	orl	$X86_CR4_LA57, %eax
--1:
-+	movl	$X86_CR4_LA57, %eax
-+	ALTERNATIVE "", __stringify(orl $X86_CR4_MCE, %eax), X86_FEATURE_TDX_GUEST
-+	andl	%r13d, %eax
-+	orl	$X86_CR4_PAE, %eax
- 	movq	%rax, %cr4
- 
- 	jmp 1f
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+2.34.1
+
 
 _______________________________________________
 kexec mailing list
