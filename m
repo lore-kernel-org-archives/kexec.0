@@ -4,68 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 767F8C4345F
-	for <kexec@archiver.kernel.org>; Sat, 13 Apr 2024 13:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2C456C4345F
+	for <kexec@archiver.kernel.org>; Sun, 14 Apr 2024 02:54:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=PuxaIO7H0iTXTSUzvlTIVAEzxaw9M5G+Kp6YmuszflU=; b=RUGtF6lqFiNqqL
-	7VaoaDJTf8+msUu/NQcLL6fTBOgggs3J3GNmgVDFrpFuOxjcSmMukhmk2Mwv89FQoMhG1Yf0QbpVI
-	Tl22gHGAVfdlzaiQE0N9xAxPxWxQ/Hvf/KpkRhOu8ZQ0rcrr884ubFg0I/pSjSWlgZFbYQZITIybe
-	liT5TQZkmukThzA+KoGzATycfw6R2pkKQ9MLCccieT/tF1IFmflBDeA7ZBm7G/JhVrgytE9XtoZqZ
-	nOyv9yzHLDr9sjZUKqZG2Gd3Hs6vtTke5+fxKliwq3WZCkOieC7yvezgAYTDiqXn1EQF7r6wrv9CC
-	hVCaKg4JEBe4N89HX2tQ==;
+	List-Owner; bh=lStM6rveBuQLFAvt/JLJI0zL7zAWmo81di1AFZu5KWA=; b=Wn1lWVSaByZrLH
+	yRjTWgs1s1GCiJ1CxrGmNhuGAcT7wkYVOPPfxbELtzgQaEtCKYK3a8Dzzn9hVMtC+5E8ocEqCES8M
+	IS4jgllx3eHjkacawBpAS6eZfJsKm/wyWWdCdGhZNgIZF1x2PdH7apNac0QwjA92OEGI9IltEKR/e
+	bBGuagsaWg6LwM5r3uWuUbEcNXJ6jyUAHnN1HkuwL8rrvjPxFLIgWD9k9cXEMLpm2fj0u0ZLctnsP
+	hkCE6P7zkuAeYHNjcRZJnsGqreqS8dKxi1LidTW2bRgg9k2sVSp66KauVIYaZB6M2JSMGwDC8v2YT
+	H83taARzDBMXx9lRtt4g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rvdtQ-00000003HjE-48NE;
-	Sat, 13 Apr 2024 13:58:09 +0000
+	id 1rvq0g-00000004RLh-2Quy;
+	Sun, 14 Apr 2024 02:54:26 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rvdtM-00000003HgV-3bNW
+	id 1rvq0c-00000004RJx-2vuz
 	for kexec@lists.infradead.org;
-	Sat, 13 Apr 2024 13:58:06 +0000
+	Sun, 14 Apr 2024 02:54:24 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713016673;
+	s=mimecast20190719; t=1713063260;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=04YHOvgyKxIV8EOiQdBH6Pt5NZfGj8+5tbMEaegT57A=;
-	b=IfT4UYcKoLX8l1cR9wxfhp7Mtceln/M4qtdZQ903rRgWu6ycceRemroT5KPZWGpitVHemZ
-	2Y8OJceYTzWpyrMIDjS7t8zBYEqHDjEX7dAKsN2HI8XpraMjuF6Xq6lK+rspOtTKOOeSrn
-	bNT55e+wMZeX63wIeZk0JuMQ5wd9Vh0=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-367-Fal3lT3hP5Gg4KFIdjp1WQ-1; Sat, 13 Apr 2024 09:57:49 -0400
-X-MC-Unique: Fal3lT3hP5Gg4KFIdjp1WQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	bh=OhLPL+Z8mhdNe67IKMsqNtqhIqypjsxI4KpmPg+trm4=;
+	b=Rl6yz7pLX2ATCUcleAHpEKsJWanGW1QPbrPw1ZznghaxbdpABZY06uCWf0VInpJb/WdGgS
+	aAJ8+Yhavt5p+InygWmQfIefh1NxWnRwrcZoqdLqfPH23sNq2gGgpTMCpn2Tz+DSsRa3iQ
+	eUlhUNP4p0wPRwqwdXecGcSpnUhmOC0=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-631-mzn0Pu1aNfCwCNMoXmM7hA-1; Sat,
+ 13 Apr 2024 22:54:18 -0400
+X-MC-Unique: mzn0Pu1aNfCwCNMoXmM7hA-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5E7B6881E60;
-	Sat, 13 Apr 2024 13:57:49 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.50])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id A5E6E1C06701;
-	Sat, 13 Apr 2024 13:57:47 +0000 (UTC)
-Date: Sat, 13 Apr 2024 21:57:40 +0800
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9F0141C05AB5;
+	Sun, 14 Apr 2024 02:54:17 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.11])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id EA896492BC8;
+	Sun, 14 Apr 2024 02:54:16 +0000 (UTC)
+Date: Sun, 14 Apr 2024 10:54:09 +0800
 From: Baoquan He <bhe@redhat.com>
 To: Dave Young <dyoung@redhat.com>
 Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
 	akpm@linux-foundation.org, jirislaby@kernel.org
 Subject: Re: [PATCH v2] kexec: fix the unexpected kexec_dprintk() macro
-Message-ID: <ZhqPVHLzB1Hx2zFo@MiWiFi-R3L-srv>
+Message-ID: <ZhtFUT3Xmab3CqoI@MiWiFi-R3L-srv>
 References: <20240409042238.1240462-1-bhe@redhat.com>
  <CALu+AoRB=kK00ecpboSJxpNqP+ERZaUrS+h-oo+uaXLoYPYT_Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
 In-Reply-To: <CALu+AoRB=kK00ecpboSJxpNqP+ERZaUrS+h-oo+uaXLoYPYT_Q@mail.gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240413_065805_094385_39242E76 
-X-CRM114-Status: GOOD (  30.24  )
+X-CRM114-CacheID: sfid-20240413_195422_931337_B5C17EE9 
+X-CRM114-Status: GOOD (  31.23  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,6 +81,8 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
+
+Hi Dave,
 
 On 04/12/24 at 03:28pm, Dave Young wrote:
 > On Tue, 9 Apr 2024 at 12:23, Baoquan He <bhe@redhat.com> wrote:
@@ -107,19 +109,19 @@ On 04/12/24 at 03:28pm, Dave Young wrote:
 > kernel/crash_reserve.c to include the filename prefix?
 > #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
-OK, thanks for testing and spotting this. 
+When I added pr_fmt() to kernel/crash_reserve.c and tested code, the
+printed boot log about crashkernel reservation is changed as below:
 
-When I tested this patch, I only did test kexec reboot functionality.
-So the line of printing in kernel/crash_core.c is missed. While there
-seems to be no kexec_dprintk() in kernel/crash_reserve.c. Anyway,
-adding pr_fmt() is a good idea for debug printing in that file. I will
-post a standalone patch to add these.
+[  +0.000000] crash_reserve: crashkernel reserved: 0x000000007d000000 - 0x0000000095000000 (384 MB)
 
-> 
-> Otherwise:
-> Reviewed-by: Dave Young <dyoung@redhat.com>
-
-Thanks again.
+When I looked around, I noticed all other lines around don't have the
+module name printed out. Seems it's not appropriate to add one for
+crashkernel alone. And the kexec_dprintk() doesn't exist in
+kernel/crash_reserve.c. Furthermore, the kexec_dprintk() is added to
+enable debugging printing for kexec_file_load when loading kexec/kdump
+kernel. This crashkernel reservation may not be related. Combinbed these
+all, I would suggest not adding pr_fmt() for kernel/crash_reserve.c for
+now, let's add pr_fmt() for kernel/crash_core.c, what do you think?
 
 > 
 > >
