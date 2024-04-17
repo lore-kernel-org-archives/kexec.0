@@ -4,76 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 66BBAC4345F
-	for <kexec@archiver.kernel.org>; Tue, 16 Apr 2024 21:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4C9E2C4345F
+	for <kexec@archiver.kernel.org>; Wed, 17 Apr 2024 03:15:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:Reply-To:List-Subscribe:List-Help:
-	List-Post:List-Archive:List-Unsubscribe:List-Id:Date:From:To:Subject:
-	Content-Description:MIME-Version:Message-ID:Cc:Content-ID:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:
-	References:List-Owner; bh=Taw5sio3GPhCElWu4TVdDzZKnjbhwIx3c9GdTCsy0Hw=; b=rIX
-	QVxP9EoI/n1AFn8C76/kUmhrwkViJret/ZTzeXqrsL1oOUghHDQLFJpdi4dj7DAMbGBznCckEBFE4
-	5q4PCmJyarFf39jdW3m9gWZ7CQIMRS2bB2n3cKUYFoRVBwsICVsLvaHH/6WUSc3hUzxgl+Ob+v6tF
-	ZjBOsIfM0S549NwTOHwOospLA2vbnaPHlCYGQCFl1nwrkBaTe+HwkhUp9f+k1/GC2MGC+7eZLZKJ1
-	RR0byRUgjJNeCrRnU6ITrWZoYzPNknpU00ed3RQAJqWUIVe+VL0bnsaiZeeV4gWCOWm4DELZzdjjO
-	JnNbpu6X9lqGZNVB8JRskm9LQFa9cFQ==;
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=63ZHG78dhckta+znNPC5xZBkFuB2jIOMRx57MXpjp+M=; b=K/t9I8olZnRF+N
+	fIhe2X8Vl6OOgNZqZZ6amLKjgJ2bsLtFxC2qdrIMeuNCdtnYLf3wZJ8Im2yI5LGZQMLmJ3hjYFANq
+	MY0ZX7Ry3GbW2aNQRf9j8cFzj15DaVMMKSNyi9EWFPl7BP9PP/yWGpdQJ29F9GRKHfv+CnpjB6YEh
+	4Uq/pEL0BcB/oXQt5QMpidYQOUSmFHG+4lX4BaleGtCTDndN/gd6WreLcJusOXyExM/DLSphpFrtg
+	ld9AYHOxfl1O496r2w49L6PgY8rn9JswchjbBPGlZbXWuysoVqxmKjWgl69C/1Jo5WpW8XHZDTVVS
+	Ud6n3JaLT2jYg5brQltw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rwqlN-0000000Dxkp-1WBK;
-	Tue, 16 Apr 2024 21:54:49 +0000
-Received: from mail-wm1-x32a.google.com ([2a00:1450:4864:20::32a])
+	id 1rwvlF-0000000EYS2-25m2;
+	Wed, 17 Apr 2024 03:15:01 +0000
+Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rwqlK-0000000DxjK-03yN
+	id 1rwvlB-0000000EYRJ-1xRD
 	for kexec@lists.infradead.org;
-	Tue, 16 Apr 2024 21:54:47 +0000
-Received: by mail-wm1-x32a.google.com with SMTP id 5b1f17b1804b1-41884e96fe0so11458645e9.0
-        for <kexec@lists.infradead.org>; Tue, 16 Apr 2024 14:54:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713304470; x=1713909270; darn=lists.infradead.org;
-        h=reply-to:date:from:to:subject:content-description
-         :content-transfer-encoding:mime-version:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PeJSQjXoeRPXw3p8u9TEscDTfpHxwIvs9oTVQ3qAsQg=;
-        b=AWZlLtCqKfviGOoOrZafPJ6aSPOw6R0QHzFl/5R1k9+ooItRrm8Z5gS/dIQxksgfL5
-         EZJry7/GeaQuLh2ygHqluvVLOU0olBEAR81qpMUMJND+HqTLd3ldskJgDoA3sGfxxGWE
-         hc//hdp/HMxrU+qoHNSQivDTcyc/OCJDT6lP6MHjGYiquU569FjLlwl0xSxH2Afik6k2
-         XVkUawEE//1KsjtWs63PdvfEX/1uk+4uRKcIiuqCChTC0+3I4j0cNrAePdM47foCG6ow
-         y0O3Jiw+V9jKNkwB1C1iPI47XhFc/5xyAb4d0FxGB0UiSjWOZ9nXSRVRHwwvWMU4V+OC
-         RwLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713304470; x=1713909270;
-        h=reply-to:date:from:to:subject:content-description
-         :content-transfer-encoding:mime-version:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PeJSQjXoeRPXw3p8u9TEscDTfpHxwIvs9oTVQ3qAsQg=;
-        b=wZTK8GaF3eTKblDwW2h2fkcsz/0h/x6AeZ5BKh22HHt8ZGEho6wAj1TOhpBZyIKz4F
-         LjmlAc1eiAPKAggk+q1sQY08iRhkqTw2rK34ppFu2Q/ISObgIw/b8Ajyb8wBg+pE+ILg
-         2aG4iHuJcZup8qpX48TDpO2k3fc+z3VyC2U2xw0ZPBxjBc9EJNHXIkDTinTHHdrWk4bO
-         RggtPhYLQBGNmaN+IKFGKFq5v60pjiKYof7LkDRdJFD5po7IIFIItT7rFMWu4CK+ganD
-         OifIGXAslEUlaqqhJGSf/sA+doQFHNNp0F9nYninYLcazL4f48no3yA9cpvVfUZov3cD
-         telQ==
-X-Gm-Message-State: AOJu0Yz/pUDxJMfByL4y3oEmetW+eR/kshsjjbpCaoAdYgfxXs8i6Eb8
-	UdU4cbsOTdH4nlROaOqA1t+MvDk/pruDdf8OXiUlICupJ0EhzNV1ZmUrAyz3+GDMflyn
-X-Google-Smtp-Source: AGHT+IHuqC867ijJjQ5dOe/7oOc/jtFXeA/+0KVUzbDNiU77/gv/q/tMP4JeYuNz4Ca5T/JeG0I3vQ==
-X-Received: by 2002:a05:600c:348f:b0:418:8e61:2092 with SMTP id a15-20020a05600c348f00b004188e612092mr2178146wmq.36.1713304470507;
-        Tue, 16 Apr 2024 14:54:30 -0700 (PDT)
-Received: from [192.168.8.102] ([154.120.104.13])
-        by smtp.gmail.com with ESMTPSA id p7-20020a05600c468700b00418accde252sm207280wmo.30.2024.04.16.14.54.25
-        for <kexec@lists.infradead.org>
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Tue, 16 Apr 2024 14:54:28 -0700 (PDT)
-Message-ID: <661ef394.050a0220.fd229.09a6@mx.google.com>
+	Wed, 17 Apr 2024 03:14:59 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id A5C516125C
+	for <kexec@lists.infradead.org>; Wed, 17 Apr 2024 03:14:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52FF7C113CE
+	for <kexec@lists.infradead.org>; Wed, 17 Apr 2024 03:14:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713323695;
+	bh=GTVTtdoMrTHwBS2kkGpeq8wvd0niAoFCDltH1ZaIvEI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ZlKMHV6od03z3f1c2F1qeIGNVXfvqZFktcOPZct8A+h5P238qor4RGV+7DJybV4JX
+	 5mzDf9umhNNsvvRtm+0BpgIlKrubbUcr72tZqK5AzmzrtzqvKN+Dob1++lMj8P0fZ5
+	 0QTRPcyg3369sva3G5CvB9uBeK5qtPa/QDNi1RvI/X0HjBuhwALneHEKFQfyLMM2IE
+	 6/Gi9R+fixpK0oAFfpEnGKJ9Lpbq8V7omMTB3NWl9GqGy6ESp79yEAhV5wLLPpTKVa
+	 D5DQgCl8U27jdeblIQdgMTcM77MxTP2aGBV8b6Q97qduE+z+UD+TmAHv7XUy7WpesE
+	 WQZqxTg+pGm/w==
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a51beae2f13so583977566b.1
+        for <kexec@lists.infradead.org>; Tue, 16 Apr 2024 20:14:55 -0700 (PDT)
+X-Gm-Message-State: AOJu0YzfoofEuFiDfWcZEnieISQ+1/2hEKmTPBbL2gUwdPIWhsW8VLTr
+	qAfTHIdWd8TGfdLVES1aBJcH7zizZyJ3GY1AYRla9pO8CYTobVV3vaJGhbo2AE1fF/djELeG+RZ
+	FZt1zJhnKpBqUBeitJ66bKUM6Q2M=
+X-Google-Smtp-Source: AGHT+IF1jmsN2RBuY213tAWuSeHyonGmujLDyM8+rcOOXVKi4mc1ctOe5On9JsCQolROZAGoBMzrUUNRDBeRlqaIlk4=
+X-Received: by 2002:a17:906:29cb:b0:a52:61b9:be48 with SMTP id
+ y11-20020a17090629cb00b00a5261b9be48mr5129879eje.35.1713323693797; Tue, 16
+ Apr 2024 20:14:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Description: Mail message body
-Subject: Very Urgent Reply!!!!
-To: kexec@lists.infradead.org
-From: "Dip Paul Enes" <paulenes252@gmail.com>
-Date: Tue, 16 Apr 2024 22:54:06 +0100
+References: <20240329132825.1102459-1-bhe@redhat.com> <20240329132825.1102459-2-bhe@redhat.com>
+ <CAAhV-H76-FOvcTXB_rW1B1wFthYK6txVtC+brfzk6nwOhar8iQ@mail.gmail.com> <ZgggcyeJ1bnkfGOp@MiWiFi-R3L-srv>
+In-Reply-To: <ZgggcyeJ1bnkfGOp@MiWiFi-R3L-srv>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 17 Apr 2024 11:14:47 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5xGDAkF2kjdveKoGd+GwYrmix8_E=YB0i=c98qOGvffw@mail.gmail.com>
+Message-ID: <CAAhV-H5xGDAkF2kjdveKoGd+GwYrmix8_E=YB0i=c98qOGvffw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arch/loongarch: clean up the left code and Kconfig
+ item related to CRASH_CORE
+To: Baoquan He <bhe@redhat.com>
+Cc: kexec@lists.infradead.org, akpm@linux-foundation.org, geert@linux-m68k.org, 
+	WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240416_145446_071227_25216C97 
-X-CRM114-Status: UNSURE (  -4.20  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20240416_201457_614497_A6C47872 
+X-CRM114-Status: GOOD (  23.07  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -85,35 +78,60 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: dipmorgan7@gmail.com
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Attention Sir/Madam,
-
-I hope this message finds you well. I am writing to inform you of some exciting news regarding the delivery of your consignment. Diplomat James Morgan, who has been mandated by our company to ensure the safe and prompt delivery of your consignment, has just arrived in your city.
-
-I am delighted to inform you that Diplomat James Morgan has successfully completed all the necessary procedures and documentation for the swift release and delivery of your consignment. He brings with him years of experience and expertise in handling diplomatic deliveries, and we are confident that he will ensure the successful completion of this important transaction.
-
-Given the significance of the consignment to you, we have arranged for Diplomat James Morgan to personally oversee its delivery to your designated location. His professionalism, attention to detail, and commitment to providing excellent customer service make him the ideal choice for this crucial task.
-
-We understand that you have eagerly been awaiting the arrival of your consignment, and we apologize for any delays or inconveniences you may have experienced during this process. Rest assured that we are doing everything in our power to make sure your consignment arrives in perfect condition and within the shortest possible time frame.
-
-Diplomat James Morgan will contact you directly to arrange a convenient delivery date and time. Please ensure that you are available to receive the consignment or designate a trusted representative who can accept it on your behalf. You may be required to provide valid identification upon delivery, as per standard protocol.
-
-Should you have any questions or concerns, please do not hesitate to reach out to me directly at dipmorgan7@gmail.com. Your satisfaction is our top priority, and we are committed to resolving any issues you may have promptly and effectively.
-
-Thank you for choosing our services for the delivery of your consignment. We appreciate your trust in our company and assure you that we will continue to strive for excellence throughout this process.
-
-Wishing you a seamless delivery experience and a pleasant day ahead.
-
-Warm regards,
-
-Dip James Morgan
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGksIEFuZHJldywKCk9uIFNhdCwgTWFyIDMwLCAyMDI0IGF0IDEwOjI04oCvUE0gQmFvcXVhbiBI
+ZSA8YmhlQHJlZGhhdC5jb20+IHdyb3RlOgo+Cj4gT24gMDMvMzAvMjQgYXQgMDk6NTlwbSwgSHVh
+Y2FpIENoZW4gd3JvdGU6Cj4gPiBRdWV1ZWQsIHRoYW5rcy4KPgo+IFRoYW5rcywgSHVhY2FpLiBX
+aGlsZSBJIG5vdGljZWQgQW5kcmV3IGhhcyBxdWV1ZWQgdGhpcyBwYXRjaHNldCBpbiBoaXMKPiBt
+bS11bnN0YWJsZSBicmFuY2guCklmIEknbSBub3QgbWlzdGFrZW4sIG1tLXVuc3RhYmxlIGlzIHRh
+cmdldCBmb3IgdGhlIG5leHQgNi4xMCwgbm90IGZvcgp0aGUgY3VycmVudCA2LjkuIEJ1dCBJIHRo
+aW5rIHRoaXMgcGF0Y2ggc2hvdWxkIGJlIGEgZml4IGZvciA2LjksIHNvIEkKdGhpbmsgaXQgaXMg
+bW9yZSBzdWl0YWJsZSBpbiB0aGUgbG9vbmdhcmNoLWZpeGVzIGJyYW5jaC4gV2hhdCdzIHlvdXIK
+b3Bpbmlvbj8KClRoZSBzYW1lIHF1ZXN0aW9uIGZvciB0aGlzIHBhdGNoIHdoaWNoIGZpeCBhIGJ1
+aWxkIHdhcm5pbmc6Cmh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xvb25nYXJjaC9DQU5pcTcya0FD
+dCtGZmVZWEp4ZlFwbUdIPXVQcWtEQTBvcHJmbmVidzUyVlNLeW43a1FAbWFpbC5nbWFpbC5jb20v
+VC8jdAoKCkh1YWNhaQoKPgo+ID4KPiA+IEh1YWNhaQo+ID4KPiA+IE9uIEZyaSwgTWFyIDI5LCAy
+MDI0IGF0IDk6MjjigK9QTSBCYW9xdWFuIEhlIDxiaGVAcmVkaGF0LmNvbT4gd3JvdGU6Cj4gPiA+
+Cj4gPiA+IEluIGNvbW1pdCA4NWZjZGU0MDJkYjEgKCJrZXhlYzogc3BsaXQgY3Jhc2hrZXJuZWwg
+cmVzZXJ2YXRpb24gY29kZQo+ID4gPiBvdXQgZnJvbSBjcmFzaF9jb3JlLmMiKSwgY3Jhc2hrZXJu
+ZWwgcmVzZXJ2YXRpb24gY29kZSBpcyBzcGxpdCBvdXQgZnJvbQo+ID4gPiBjcmFzaF9jb3JlLmMs
+IGFuZCBhZGQgQ1JBU0hfUkVTRVJWRSB0byBjb250cm9sIGl0LiBBbmQgYWxzbyByZW5hbWUgZWFj
+aAo+ID4gPiBBUkNIJ3MgPGFzbS9jcmFzaF9jb3JlLmg+IHRvIDxhc20vY3Jhc2hfcmVzZXJ2ZS5o
+PiBhY2NvcmRpbmdseS4KPiA+ID4KPiA+ID4gQnV0IHRoZSByZWxldmFudCBwYXJ0IGluIGxvb25n
+YXJjaCBpcyBtaXNzZWQuIERvIGl0IG5vdy4KPiA+ID4KPiA+ID4gU2lnbmVkLW9mZi1ieTogQmFv
+cXVhbiBIZSA8YmhlQHJlZGhhdC5jb20+Cj4gPiA+IENjOiBIdWFjYWkgQ2hlbiA8Y2hlbmh1YWNh
+aUBrZXJuZWwub3JnPgo+ID4gPiBDYzogV0FORyBYdWVydWkgPGtlcm5lbEB4ZW4wbi5uYW1lPgo+
+ID4gPiBDYzogbG9vbmdhcmNoQGxpc3RzLmxpbnV4LmRldgo+ID4gPiAtLS0KPiA+ID4gIGFyY2gv
+bG9vbmdhcmNoL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8
+IDIgKy0KPiA+ID4gIGFyY2gvbG9vbmdhcmNoL2luY2x1ZGUvYXNtL3tjcmFzaF9jb3JlLmggPT4g
+Y3Jhc2hfcmVzZXJ2ZS5ofSB8IDQgKystLQo+ID4gPiAgMiBmaWxlcyBjaGFuZ2VkLCAzIGluc2Vy
+dGlvbnMoKyksIDMgZGVsZXRpb25zKC0pCj4gPiA+ICByZW5hbWUgYXJjaC9sb29uZ2FyY2gvaW5j
+bHVkZS9hc20ve2NyYXNoX2NvcmUuaCA9PiBjcmFzaF9yZXNlcnZlLmh9ICg3NSUpCj4gPiA+Cj4g
+PiA+IGRpZmYgLS1naXQgYS9hcmNoL2xvb25nYXJjaC9LY29uZmlnIGIvYXJjaC9sb29uZ2FyY2gv
+S2NvbmZpZwo+ID4gPiBpbmRleCBhNWYzMDBlYzZmMjguLjU0YWQwNGRhY2RlZSAxMDA2NDQKPiA+
+ID4gLS0tIGEvYXJjaC9sb29uZ2FyY2gvS2NvbmZpZwo+ID4gPiArKysgYi9hcmNoL2xvb25nYXJj
+aC9LY29uZmlnCj4gPiA+IEBAIC01OTUsNyArNTk1LDcgQEAgY29uZmlnIEFSQ0hfU0VMRUNUU19D
+UkFTSF9EVU1QCj4gPiA+ICAgICAgICAgc2VsZWN0IFJFTE9DQVRBQkxFCj4gPiA+Cj4gPiA+ICBj
+b25maWcgQVJDSF9IQVNfR0VORVJJQ19DUkFTSEtFUk5FTF9SRVNFUlZBVElPTgo+ID4gPiAtICAg
+ICAgIGRlZl9ib29sIENSQVNIX0NPUkUKPiA+ID4gKyAgICAgICBkZWZfYm9vbCBDUkFTSF9SRVNF
+UlZFCj4gPiA+Cj4gPiA+ICBjb25maWcgUkVMT0NBVEFCTEUKPiA+ID4gICAgICAgICBib29sICJS
+ZWxvY2F0YWJsZSBrZXJuZWwiCj4gPiA+IGRpZmYgLS1naXQgYS9hcmNoL2xvb25nYXJjaC9pbmNs
+dWRlL2FzbS9jcmFzaF9jb3JlLmggYi9hcmNoL2xvb25nYXJjaC9pbmNsdWRlL2FzbS9jcmFzaF9y
+ZXNlcnZlLmgKPiA+ID4gc2ltaWxhcml0eSBpbmRleCA3NSUKPiA+ID4gcmVuYW1lIGZyb20gYXJj
+aC9sb29uZ2FyY2gvaW5jbHVkZS9hc20vY3Jhc2hfY29yZS5oCj4gPiA+IHJlbmFtZSB0byBhcmNo
+L2xvb25nYXJjaC9pbmNsdWRlL2FzbS9jcmFzaF9yZXNlcnZlLmgKPiA+ID4gaW5kZXggMjE4YmRi
+ZmE1MjdiLi5hMWQ5Yjg0YjFjN2QgMTAwNjQ0Cj4gPiA+IC0tLSBhL2FyY2gvbG9vbmdhcmNoL2lu
+Y2x1ZGUvYXNtL2NyYXNoX2NvcmUuaAo+ID4gPiArKysgYi9hcmNoL2xvb25nYXJjaC9pbmNsdWRl
+L2FzbS9jcmFzaF9yZXNlcnZlLmgKPiA+ID4gQEAgLTEsNiArMSw2IEBACj4gPiA+ICAvKiBTUERY
+LUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMC1vbmx5ICovCj4gPiA+IC0jaWZuZGVmIF9MT09O
+R0FSQ0hfQ1JBU0hfQ09SRV9ICj4gPiA+IC0jZGVmaW5lIF9MT09OR0FSQ0hfQ1JBU0hfQ09SRV9I
+Cj4gPiA+ICsjaWZuZGVmIF9MT09OR0FSQ0hfQ1JBU0hfUkVTRVJWRV9ICj4gPiA+ICsjZGVmaW5l
+IF9MT09OR0FSQ0hfQ1JBU0hfUkVTRVJWRV9ICj4gPiA+Cj4gPiA+ICAjZGVmaW5lIENSQVNIX0FM
+SUdOICAgICAgICAgICAgICAgICAgICBTWl8yTQo+ID4gPgo+ID4gPiAtLQo+ID4gPiAyLjQxLjAK
+PiA+ID4KPiA+Cj4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
+aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
