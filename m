@@ -4,96 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id F26C9C10F15
-	for <kexec@archiver.kernel.org>; Wed, 24 Apr 2024 20:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 44044C4345F
+	for <kexec@archiver.kernel.org>; Wed, 24 Apr 2024 20:52:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
 	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=C8HAte0Rin8gl2+l5GZ3lrA5doYFkSb9iaazdFoW4Uo=; b=RHb6/iJUg6JzJV
-	PSertTMDEmrC5TylrO/oX8iYR8s2mDUGVoBAQ8H4qbVy6i6t6BPk9XY8tdcN1/nP1b52XIjLV2LQ7
-	Ay0iKlzYZST2T2lOP7EnsBbsPTgh99OuxHBXdjJSL0rulY10+A66QvXPBSMK7i9TP2S2/NsRDSzL3
-	l7MUV8R1ibB4OS9ryFY/w/CZO1p1KI6VFus4WbUc5VYzplJ/xVRzYMQIo4BUNOdYXB1IwFayb6N16
-	h2TZH51esUBm8rJMTfKtsTefHPbPESmtrVM77CoWlsQH4u7eUtk/u2yJdUGbZf0ymrvNnoVa5ijQE
-	WIGQOLNM21r9U9FyLRxg==;
+	List-Owner; bh=PfMewO37zRRWE8jMIHcUS9DW1OaIMDOqfy4xZ6dZXJw=; b=d7hyt8voYwqKM2
+	jvOya2WGYfTj/2XLGX+uFB2OtLbMQacApDahYcsxmm0r21g5R+J3MKEOvEJltv1NjoFVsjFJPz4hq
+	I8LYOU0T2etQmrba5oH21mAuiGYRRBR/eNJB85odY4XJo6M6YbyDsIvUOrUbl5pMqolkwc9KIpfmq
+	LUisq841oEq4wDDkzY9jkr6buA2MQSpLteBTdK34XWBrIrsNx4fWucmXyjzVykiecei4TWYh3c6Ws
+	AoTyhG0yoJbD5DA7dhr1RaBfHZcVphDEOpSeK/c5keT9DkHEmPg51lxvAC0udhTUwrbXnkBdTa0ab
+	JArPMvZV6NrvcHMy7pLA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rzinq-00000005mor-1p7R;
-	Wed, 24 Apr 2024 20:01:14 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1rzjbS-000000060ud-1TMZ;
+	Wed, 24 Apr 2024 20:52:30 +0000
+Received: from sin.source.kernel.org ([145.40.73.55])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rzhrc-00000005X54-1n4n
-	for kexec@bombadil.infradead.org;
-	Wed, 24 Apr 2024 19:01:07 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:Cc:To:Subject:Message-ID:Date:From:In-Reply-To:References:MIME-Version:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=C/9BAtndkfFaumCrUJiPVhEbeA1SDIK0JZwe5FMmllc=; b=BHuOBA8smuB91Ce5UpNL3QhEtC
-	uDFD7m8dcw7W3UGb/begyrK+Bsy/xei5jqiZcdsS4Bz79Tswj+VnhEkHm7ZluljDmtFfwkwGCVbB5
-	VgLFmISZ/uQLJQ7qbb3iT/934GU5/4H6u9L2H3JxXzQSsC5W2UEe+ZR5QaN9v6ZIShnwGbfku7S3K
-	YAP1s3tCWVsgaObVSecO/XWKZjXcmg6f6E72faxCysVlREBLGBfOIzZDehiLvCqb+l8utLkRsoUCM
-	J6IGjmjwuMdTw2ieFbWgJM/LxytOCiW7QFn8ch1QBF8T/IufUdv0mOBHYO5Td6w396/HeMyF8Wd4d
-	Op2rYUDA==;
-Received: from mail-lf1-x12b.google.com ([2a00:1450:4864:20::12b])
-	by desiato.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rzhrG-0000000EVjX-3zOV
+	id 1rzjbP-000000060tX-1kCe
 	for kexec@lists.infradead.org;
-	Wed, 24 Apr 2024 19:00:59 +0000
-Received: by mail-lf1-x12b.google.com with SMTP id 2adb3069b0e04-51bab51e963so180825e87.1
-        for <kexec@lists.infradead.org>; Wed, 24 Apr 2024 12:00:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713985240; x=1714590040; darn=lists.infradead.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C/9BAtndkfFaumCrUJiPVhEbeA1SDIK0JZwe5FMmllc=;
-        b=Q2leoptSf98qAqXzwAZDJZCOf4uPlwzaqFJdYJuTYGGyyrP18keTjEdjG7EAsh0hxy
-         Tf3BaJ/zrPjzn5TfaqdFUAuvg5hGEBAUPvzsNxuwlttYqL35xBkN8WSXG1OuxoNTRR6b
-         4A7D595AocKep1TzGoy9CAcw0Q23MWWjuJ2nIO6FEFS0W5gu2OaFzfN8eiST4uYUJliS
-         F8T9eGBFCsrXgrYrnUK1q0O3N1J0uyR8/346ZzGzonj76Xv4LhdpWc064dYx3ZJEWmEH
-         PFyeVZsR2kIqVvw59ofF7DkYZOPStTtIpLkXfbioqnh7d23ixwbt40DTeSI4KmI/3mKW
-         0CYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713985240; x=1714590040;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=C/9BAtndkfFaumCrUJiPVhEbeA1SDIK0JZwe5FMmllc=;
-        b=f3zncltUD9pKWChFhtP0p2gEUQhFpjxrK1BZm1o0vKu6rMHF+zH3FQbQVzBeTRBq3L
-         xUHfk2CMOC/LAMZ2/YfzWuhow2ZTACAYta/IPsTBVjO+9FNrF1y3P+3CGrMw4yTvOHBV
-         KzH3jioDOIeNsELRiBuolsU4E3MFlmhszS8jMLDciF+NKIh8nAOecoGA6RVgIRBH2w+e
-         hYOKLNWJZjeyYRoW+QxsYfb9ZHzMswMNpulPISEgenatCiYwUbnPYs7teSMUqW7WbSKh
-         LFbU/UViK95TWh4l4HfzgAQM9fWI9Hxjwk+llO/5/2TpMDOcIrrDF8t89kv7jBt1C8bB
-         j1ug==
-X-Forwarded-Encrypted: i=1; AJvYcCUW/2rZYkCrrpYYpWaicMi4kWynVW0BErvL855wZUtYWuTOJXG2lzuORq3Oc1/LQV4rmSa3zX2C1yMs8LDCnId3jBuE9wR3vaGn
-X-Gm-Message-State: AOJu0YyIq4fbpSzQOnA4Pd5mKEYrOmfYn20kVpSMI0AxD24E2/HfpP8K
-	K5WE4IDlCGlsoXZSURDiMY+INLTdmqgxRo0YEXUr4sOSqDKK/nrMltP6bg+hDnH+jvmESQf6nSf
-	HO1WGNwN5O1jU4/uZelAcpwZaWw==
-X-Google-Smtp-Source: AGHT+IGEmd97FetLZJu0mAN91ayBFJQ9xH9F8cfXfx+F3E2f/agJ9cJde+HWlwi4T3gsTOtiOQ41z4M3hWPYLhL845E=
-X-Received: by 2002:a19:e00f:0:b0:51c:10b4:1d01 with SMTP id
- x15-20020a19e00f000000b0051c10b41d01mr1231030lfg.21.1713985239330; Wed, 24
- Apr 2024 12:00:39 -0700 (PDT)
+	Wed, 24 Apr 2024 20:52:29 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sin.source.kernel.org (Postfix) with ESMTP id E6FD1CE1665
+	for <kexec@lists.infradead.org>; Wed, 24 Apr 2024 20:52:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1942FC32781
+	for <kexec@lists.infradead.org>; Wed, 24 Apr 2024 20:52:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713991944;
+	bh=U8vN6+xOk4zyZdpad0pX9zdS4fQ6q9OQDwYM3NEU+dI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=bdOX6C31ndrm0+qVhx83jYqY8oK3lKPL5yadH+mG8ffz2nqDG6FBEFw/dNMlUlOx0
+	 Y76MZ2tSpfI/PlunIZEUjuttngRtLYoor/Jkk+NCqhhAkKqYJILZ36PyEJw66Ercw1
+	 JePD7F0JP9/j1+waJMlAt+TrvZcErX5XwkFgChTclNH7Br6OfeJihaJMFWoi27CcL1
+	 ONV0xL9fSDaQwh+SRK6waU3qMM7deu4llwH/A9Jju4jbWKmnHsdgU90F7J08gZyLTz
+	 9wGBnxHdyobajpPZX6nwdKvnyxiVsCj40JaxbbXrbsO3HyunadrrLejtaVizeDrfeX
+	 oeGOOUygraOUg==
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2d8b194341eso2613721fa.3
+        for <kexec@lists.infradead.org>; Wed, 24 Apr 2024 13:52:24 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUln7jvwYImx0rG1EV7iEjQ8rHjKLbOlfjPHtHxLzIzeSkDM3LT+g5Z2MhW2OdyIMVmFjSueptSymNDo7gLocSokwkqK3UBjbfU
+X-Gm-Message-State: AOJu0Yzb/j73BtpAlvHEmB3RT2m35YQCwUlPCWUIYIFnHRqEdxUaPkNW
+	Dd2pRnsnZvKrbMjDbUv7uTsY5tEFh/xSfdOND3/7RL5BEbYNn9abe2v75KVeQ1tkm2MR7V6RQzC
+	Is30IuvFuRNfVWLthX+NOT/F4E64=
+X-Google-Smtp-Source: AGHT+IFdjbva3NaWtea+JO3rX/Y+cVtJkd5mRpOVE9YOqsXQty/XHSlBB7+pr5gcfEE+ImdpEafECDGHtrmfkfuJYOg=
+X-Received: by 2002:a2e:9d06:0:b0:2d8:6b0c:d91c with SMTP id
+ t6-20020a2e9d06000000b002d86b0cd91cmr1948042lji.47.1713991942394; Wed, 24 Apr
+ 2024 13:52:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20240424155309.1719454-11-ardb+git@google.com>
- <20240424155309.1719454-15-ardb+git@google.com> <CAMzpN2g3E3Pj1wso0rUR5EWrHqTuUePsOWcQGf29wNkMa0+G3w@mail.gmail.com>
- <CAMj1kXE4f7UERE-x4CghW3=wQrvT1b2ODRSX3z6QAoy_wSJjiw@mail.gmail.com>
-In-Reply-To: <CAMj1kXE4f7UERE-x4CghW3=wQrvT1b2ODRSX3z6QAoy_wSJjiw@mail.gmail.com>
-From: Brian Gerst <brgerst@gmail.com>
-Date: Wed, 24 Apr 2024 15:00:27 -0400
-Message-ID: <CAMzpN2iT+j_f4wOWGG4JtQCKyUUe4XCtqAO7Set7cqZw8DsB_g@mail.gmail.com>
-Subject: Re: [RFC PATCH 4/9] x86/purgatory: Avoid absolute reference to GDT
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Arnd Bergmann <arnd@arndb.de>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, 
+References: <20240424155309.1719454-11-ardb+git@google.com> <87bk5yv87h.fsf@email.froward.int.ebiederm.org>
+In-Reply-To: <87bk5yv87h.fsf@email.froward.int.ebiederm.org>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Wed, 24 Apr 2024 22:52:10 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGsmaEiZAOUnn+Eh7-_VP0PHU+=0KoD-SNvqkvcZ1_7FA@mail.gmail.com>
+Message-ID: <CAMj1kXGsmaEiZAOUnn+Eh7-_VP0PHU+=0KoD-SNvqkvcZ1_7FA@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/9] kexec x86 purgatory cleanup
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Arnd Bergmann <arnd@arndb.de>, kexec@lists.infradead.org, 
 	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
 	Kees Cook <keescook@chromium.org>, Bill Wendling <morbo@google.com>, 
 	Justin Stitt <justinstitt@google.com>, Masahiro Yamada <masahiroy@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240424_200055_677339_F03F9064 
-X-CRM114-Status: GOOD (  26.20  )
+X-CRM114-CacheID: sfid-20240424_135227_823761_87225C2F 
+X-CRM114-Status: GOOD (  37.59  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -105,44 +80,108 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-T24gV2VkLCBBcHIgMjQsIDIwMjQgYXQgMTo1M+KAr1BNIEFyZCBCaWVzaGV1dmVsIDxhcmRiQGtl
-cm5lbC5vcmc+IHdyb3RlOgo+Cj4gSGkgQnJpYW4sCj4KPiBUaGFua3MgZm9yIHRha2luZyBhIGxv
-b2suCj4KPiBPbiBXZWQsIDI0IEFwciAyMDI0IGF0IDE5OjM5LCBCcmlhbiBHZXJzdCA8YnJnZXJz
-dEBnbWFpbC5jb20+IHdyb3RlOgo+ID4KPiA+IE9uIFdlZCwgQXByIDI0LCAyMDI0IGF0IDEyOjA2
-4oCvUE0gQXJkIEJpZXNoZXV2ZWwgPGFyZGIrZ2l0QGdvb2dsZS5jb20+IHdyb3RlOgo+ID4gPgo+
-ID4gPiBGcm9tOiBBcmQgQmllc2hldXZlbCA8YXJkYkBrZXJuZWwub3JnPgo+ID4gPgo+ID4gPiBU
-aGUgcHVyZ2F0b3J5IGlzIGFsbW9zdCBlbnRpcmVseSBwb3NpdGlvbiBpbmRlcGVuZGVudCwgd2l0
-aG91dCBhbnkgbmVlZAo+ID4gPiBmb3IgYW55IHJlbG9jYXRpb24gcHJvY2Vzc2luZyBhdCBsb2Fk
-IHRpbWUgZXhjZXB0IGZvciB0aGUgcmVmZXJlbmNlIHRvCj4gPiA+IHRoZSBHRFQgaW4gdGhlIGVu
-dHJ5IGNvZGUuIEdlbmVyYXRlIHRoaXMgcmVmZXJlbmNlIGF0IHJ1bnRpbWUgaW5zdGVhZCwKPiA+
-ID4gdG8gcmVtb3ZlIHRoZSBsYXN0IFJfWDg2XzY0XzY0IHJlbG9jYXRpb24gZnJvbSB0aGlzIGNv
-ZGUuCj4gPiA+Cj4gPiA+IFdoaWxlIHRoZSBHRFQgaXRzZWxmIG5lZWRzIHRvIGJlIHByZXNlcnZl
-ZCBpbiBtZW1vcnkgYXMgbG9uZyBhcyBpdCBpcwo+ID4gPiBsaXZlLCB0aGUgR0RUIGRlc2NyaXB0
-b3IgdGhhdCBpcyB1c2VkIHRvIHByb2dyYW0gdGhlIEdEVCBjYW4gYmUKPiA+ID4gZGlzY2FyZGVk
-IHNvIGl0IGNhbiBiZSBhbGxvY2F0ZWQgb24gdGhlIHN0YWNrLgo+ID4gPgo+ID4gPiBTaWduZWQt
-b2ZmLWJ5OiBBcmQgQmllc2hldXZlbCA8YXJkYkBrZXJuZWwub3JnPgo+ID4gPiAtLS0KPiA+ID4g
-IGFyY2gveDg2L3B1cmdhdG9yeS9lbnRyeTY0LlMgfCAxMCArKysrKysrLS0tCj4gPiA+ICAxIGZp
-bGUgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQo+ID4gPgo+ID4gPiBk
-aWZmIC0tZ2l0IGEvYXJjaC94ODYvcHVyZ2F0b3J5L2VudHJ5NjQuUyBiL2FyY2gveDg2L3B1cmdh
-dG9yeS9lbnRyeTY0LlMKPiA+ID4gaW5kZXggOTkxMzg3N2IwZGJlLi44ODg2NjFkOWRiOWMgMTAw
-NjQ0Cj4gPiA+IC0tLSBhL2FyY2gveDg2L3B1cmdhdG9yeS9lbnRyeTY0LlMKPiA+ID4gKysrIGIv
-YXJjaC94ODYvcHVyZ2F0b3J5L2VudHJ5NjQuUwo+ID4gPiBAQCAtMTYsNyArMTYsMTEgQEAKPiA+
-ID4KPiA+ID4gIFNZTV9DT0RFX1NUQVJUKGVudHJ5NjQpCj4gPiA+ICAgICAgICAgLyogU2V0dXAg
-YSBnZHQgdGhhdCBzaG91bGQgYmUgcHJlc2VydmVkICovCj4gPiA+IC0gICAgICAgbGdkdCBnZHQo
-JXJpcCkKPiA+ID4gKyAgICAgICBsZWFxICAgIGdkdCglcmlwKSwgJXJheAo+ID4gPiArICAgICAg
-IHB1c2hxICAgJXJheAo+ID4gPiArICAgICAgIHB1c2h3ICAgJGdkdF9lbmQgLSBnZHQgLSAxCj4g
-PiA+ICsgICAgICAgbGdkdCAgICAoJXJzcCkKPiA+ID4gKyAgICAgICBhZGRxICAgICQxMCwgJXJz
-cAo+ID4KPiA+IFRoaXMgbWlzYWxpZ25zIHRoZSBzdGFjaywgcHVzaGluZyAxNiBieXRlcyBvbiB0
-aGUgc3RhY2sgYnV0IG9ubHkKPiA+IHJlbW92aW5nIDEwIChkZWNpbWFsKS4KPiA+Cj4KPiBwdXNo
-dyBzdWJ0cmFjdHMgMiBmcm9tIFJTUCBhbmQgc3RvcmVzIGEgd29yZC4gU28gdGhlIHRvdGFsIHNp
-emUgc3RvcmVkCj4gaXMgMTAgZGVjaW1hbCBub3QgMTYuCgpJIGRpZG4ndCBub3RpY2UgdGhlIHB1
-c2h3LCBzaW5jZSBJIGRpZG4ndCB0aGluayBhIDE2LWJpdCBwdXNoIHdhcyBldmVuCnBvc3NpYmxl
-IGluIDY0LWJpdCBtb2RlLiBVbmV4cGVjdGVkLCBidXQgY2xldmVyLgoKCkJyaWFuIEdlcnN0Cgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWls
-aW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On Wed, 24 Apr 2024 at 22:04, Eric W. Biederman <ebiederm@xmission.com> wrote:
+>
+> Ard Biesheuvel <ardb+git@google.com> writes:
+>
+> > From: Ard Biesheuvel <ardb@kernel.org>
+> >
+> > The kexec purgatory is built like a kernel module, i.e., a partially
+> > linked ELF object where each section is allocated and placed
+> > individually, and all relocations need to be fixed up, even place
+> > relative ones.
+> >
+> > This makes sense for kernel modules, which share the address space with
+> > the core kernel, and contain unresolved references that need to be wired
+> > up to symbols in other modules or the kernel itself.
+> >
+> > The purgatory, however, is a fully linked binary without any external
+> > references, or any overlap with the kernel's virtual address space. So
+> > it makes much more sense to create a fully linked ELF executable that
+> > can just be loaded and run anywhere in memory.
+>
+> It does have external references that are resolved when it is loaded.
+>
+
+It doesn't today, and it hasn't for a while, at least since commit
+
+e4160b2e4b02377c67f8ecd05786811598f39acd
+x86/purgatory: Fail the build if purgatory.ro has missing symbols
+
+which forces a build failure on unresolved external references, by
+doing a full link of the purgatory.
+
+> Further it is at least my impression that non-PIC code is more
+> efficient.  PIC typically requires silly things like Global Offset
+> Tables that non-PIC code does not.  At first glance this looks like a
+> code passivization.
+>
+
+Given that the 64-bit purgatory can be loaded in memory that is not
+32-bit addressable, the PIC code is essentially a given, since the
+large code model is much worse (it uses 64-bit immediate for all
+function and variable symbols, and therefore always uses indirect
+calls)
+
+Please refer to
+
+https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=x86/build&id=cba786af84a0f9716204e09f518ce3b7ada8555e
+
+for more details. (Getting pulled into that discussion is how I ended
+up looking into the purgatory in more detail)
+
+> Now at lot of functionality has been stripped out of purgatory so maybe
+> in it's stripped down this make sense, but I want to challenge the
+> notion that this is the obvious thing to do.
+>
+
+The diffstat speaks for itself - on x86, much of the allocation and
+relocation logic can simply be dropped when building the purgatory in
+this manner.
+
+> > The purgatory build on x86 has already switched over to position
+> > independent codegen, which only leaves a handful of absolute references,
+> > which can either be dropped (patch #3) or converted into a RIP-relative
+> > one (patch #4). That leaves a purgatory executable that can run at any
+> > offset in memory with applying any relocations whatsoever.
+>
+> I missed that conversation.  Do you happen to have a pointer?  I would
+> think the 32bit code is where the PIC would be most costly as the 32bit
+> x86 instruction set predates PIC being a common compilation target.
+>
+
+See link above. Note that this none of this is about 32-bit code - the
+purgatory as it exists today never drops out of long mode (and no
+32-bit version appears to exist)
+
+> > Some tweaks are needed to deal with the difference between partially
+> > (ET_REL) and fully (ET_DYN/ET_EXEC) linked ELF objects, but with those
+> > in place, a substantial amount of complicated ELF allocation, placement
+> > and patching/relocation code can simply be dropped.
+>
+> Really?  As I recall it only needed to handle a single allocation type,
+> and there were good reasons (at least when I wrote it) to patch symbols.
+>
+> Again maybe the fact that people have removed 90% of the functionality
+> makes this make sense, but that is not obvious at first glance.
+>
+
+Again, the patches and the diffstat speak for themselves - the linker
+applies all the relocations at build time, and emits all the sections
+into a single ELF segment that can be copied into memory and executed
+directly (modulo poking values into the global variables for the
+sha256 digest and the segment list)
+
+The last patch in the series shows which code we could drop from the
+generic kexec_file_load() implementation once other architectures
+adopt this scheme.
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
