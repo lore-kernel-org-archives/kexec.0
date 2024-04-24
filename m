@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 06B1FC19F4F
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 15B92C25B5F
 	for <kexec@archiver.kernel.org>; Tue, 30 Apr 2024 18:28:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
@@ -12,59 +12,59 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	References:In-Reply-To:MIME-Version:Message-ID:Subject:CC:To:From:Date:
 	Reply-To:Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date
 	:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=tPKoLtDc/m9yOjdZoxPZSFlXcgN+qvqL7V0E13c6qjc=; b=QgrNUFOlSOFaC8eoeGhutyZFIe
-	VqftYi5kMqWtG+T0reTmPE1QRCkudbRtr4oEpij0Et2eXd8gSoVyChajHhEN6suDY1uSFZQlabJhd
-	4EaeBb+oiOmD/xfMa0TAqaj6aKLydBMYEoMt8CLZ1IqM5euUvFe5jbMbUyglgrCXCm2xde/mNrjZS
-	rOUZiaZimgF2KoJ8r6h+kOAhOCvTh4Men+ymAp7GiJq6LWndkekeZQCVtdKSQfc2GivzIy8CFZ+h5
-	MA0Dtq8tljl2ziFqYOZqvcfJ3RgaJgM6RiHIdl9ExQaicOtBQ2lJ1WGHN38yz6PLivq5Wp9H5g8Ag
-	6KLPB1+Q==;
+	bh=oI55kZXfMn922Y0dkJ0tpLFrmMMKwYBAuCP95uaJbSs=; b=gKNY3+gOYz5rQ+2x+gq1tnv27q
+	Xz084JyUgTm43sGOwyIbjPcqU2rWuRyy1zd36PfNlJ3itFzBAUmG+Su/n5C0GFuGIXISOHIRjZMUX
+	/OQKaPdqvBSqAbVHZe7vcZ4c7HIlXAjapxjpQQoFC1uhe3et/kAvoRSR713cmspjIH6hm12okmZxG
+	X+0Vg4W96nn1JHlgJ5QfU+8bUZv4hjrP4K3M+NxB00fZi/b2zdJJQjZ9Dq10q5wttWFsC+FJ2yeGe
+	LlWin+zlO3mU1w7/6Zg+rfkbB8WkP71wpxj4rKVdlkB8v2Ak4M9abgr3z9J9dnY8JA0tsmFgSyt7r
+	gduOv9Tw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s1sDB-00000007ZuZ-0c9r;
-	Tue, 30 Apr 2024 18:28:17 +0000
+	id 1s1sDC-00000007Zum-1jYI;
+	Tue, 30 Apr 2024 18:28:18 +0000
 Received: from mailout2.w1.samsung.com ([210.118.77.12])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rzXFm-000000038Es-3IZ3
+	id 1rzYhX-00000003Rab-0NdP
 	for kexec@lists.infradead.org;
-	Wed, 24 Apr 2024 07:41:21 +0000
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20240424074112euoutp028d29c7710f7c087eee559032f3e46581~JJ2rVDMWA1064410644euoutp02g;
-	Wed, 24 Apr 2024 07:41:12 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20240424074112euoutp028d29c7710f7c087eee559032f3e46581~JJ2rVDMWA1064410644euoutp02g
+	Wed, 24 Apr 2024 09:14:07 +0000
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20240424091353euoutp02a99f231124e7c37c8b8a49a9232b77f9~JLHl1sgmH1862118621euoutp020;
+	Wed, 24 Apr 2024 09:13:53 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20240424091353euoutp02a99f231124e7c37c8b8a49a9232b77f9~JLHl1sgmH1862118621euoutp020
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1713944473;
-	bh=euFLyW2mUNGGgNiXwy0oljlRB8crL8I7b65VqKg3OEE=;
+	s=mail20170921; t=1713950033;
+	bh=kwOToCx5Xooe3aJqkybANNPjfaU/VyfvyRqvIPXQRH4=;
 	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=H9R2Uiqzrt7iYZRpYqEZMkbiPnTuybjRTzu+swHRR1ZJ4BrcX0oY35veJwuuxeUbe
-	 aQNHO5P1fZmCdsoUmq/bALd65Xw085eBa9TR0A393uOoRtf/89Do7uA+lBbj+qgbLT
-	 EkZRQaeydvBr0L76NbpRUCNNIdiNInkF6mPfy4ok=
+	b=aSAwhV0BgLj4HlzR9RkxKUIlKO6mdH+qDlcJnc3WQqvvbUEEu9rE5tdbfzAf3CCKG
+	 LMJ5j7IlxtSxWYK2OgflVwchXJUAt+SEljM12rLnj+ixER6dRPvEAkh5jxiubbM7YU
+	 y+vsHzDfhMaVwDt5VCCH2fjZ1joktXWYCMO6tnok=
 Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20240424074112eucas1p1863d3d7b98e0dbe97dd21ee66730e62b~JJ2rICFNZ0760407604eucas1p1p;
-	Wed, 24 Apr 2024 07:41:12 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-	eusmges1new.samsung.com (EUCPMTA) with SMTP id 1E.7D.09624.897B8266; Wed, 24
-	Apr 2024 08:41:12 +0100 (BST)
+	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20240424091353eucas1p2d064d779024946aee4f8181509c2f5da~JLHlozUYn1487814878eucas1p23;
+	Wed, 24 Apr 2024 09:13:53 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges1new.samsung.com (EUCPMTA) with SMTP id E5.96.09624.05DC8266; Wed, 24
+	Apr 2024 10:13:52 +0100 (BST)
 Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20240424074112eucas1p259a4acc486ca5f8c6cbb4f736f2f984b~JJ2qnrul33139631396eucas1p2L;
-	Wed, 24 Apr 2024 07:41:12 +0000 (GMT)
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20240424091352eucas1p1c0d02929537ba08fee15fd7fd0517813~JLHlALEqg2217522175eucas1p19;
+	Wed, 24 Apr 2024 09:13:52 +0000 (GMT)
 Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
 	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240424074112eusmtrp12bcebea7847b59366df6dd19bb3a048e~JJ2qmXIIM2835628356eusmtrp1k;
-	Wed, 24 Apr 2024 07:41:12 +0000 (GMT)
-X-AuditID: cbfec7f2-bfbff70000002598-08-6628b798d2b4
+	20240424091352eusmtrp1d9ccae9cde2c168d9a3fb3babdbf8d26~JLHk_vwxq2021920219eusmtrp1y;
+	Wed, 24 Apr 2024 09:13:52 +0000 (GMT)
+X-AuditID: cbfec7f2-c11ff70000002598-d2-6628cd50483d
 Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms1.samsung.com (EUCPMTA) with SMTP id BC.B0.08810.797B8266; Wed, 24
-	Apr 2024 08:41:12 +0100 (BST)
+	eusmgms1.samsung.com (EUCPMTA) with SMTP id DE.D4.08810.05DC8266; Wed, 24
+	Apr 2024 10:13:52 +0100 (BST)
 Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
 	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240424074111eusmtip1681f98af2abf64a19d66d0e7ab3c9e0d~JJ2qThM-V2991229912eusmtip1-;
-	Wed, 24 Apr 2024 07:41:11 +0000 (GMT)
+	20240424091352eusmtip1fa4b115f07c557f8f6f3537efb4e8058~JLHktoFeI2178721787eusmtip1L;
+	Wed, 24 Apr 2024 09:13:52 +0000 (GMT)
 Received: from localhost (106.110.32.44) by CAMSVWEXC02.scsc.local
 	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-	Wed, 24 Apr 2024 08:41:11 +0100
-Date: Wed, 24 Apr 2024 09:41:06 +0200
+	Wed, 24 Apr 2024 10:13:51 +0100
+Date: Wed, 24 Apr 2024 09:52:38 +0200
 From: Joel Granados <j.granados@samsung.com>
 To: Konrad Dybcio <konrad.dybcio@linaro.org>
 CC: Luis Chamberlain <mcgrof@kernel.org>, <josh@joshtriplett.org>, Kees Cook
@@ -93,55 +93,54 @@ CC: Luis Chamberlain <mcgrof@kernel.org>, <josh@joshtriplett.org>, Kees Cook
 	<bpf@vger.kernel.org>, <tools@kernel.org>
 Subject: Re: [PATCH v3 00/10] sysctl: Remove sentinel elements from kernel
  dir
-Message-ID: <20240424074106.c3dojqvobepifrut@joelS2.panther.com>
+Message-ID: <20240424075238.g7dwzjt7nqajcdgk@joelS2.panther.com>
 MIME-Version: 1.0
 In-Reply-To: <36a1ea2f-92c2-4183-a892-00c5b48c419b@linaro.org>
 X-Originating-IP: [106.110.32.44]
 X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
 	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
-X-Brightmail-Tracker: H4sIAAAAAAAAA2VTe0xTVxzOuff23sJSdik4T3DBiKJMBWTO5CxOIhsxN3FjbmZLYFu2Ri7g
-	gEJaq25mCTJAqLKhUNHyKhKe5SEtgvJeBxR5lFEYVt4KruMhiDwE5THqxc1k/32/73HyfX8c
-	Pi5sphz4J8WnWIlYFOJEWhPlTUsG12sVLgH7Litc0LMXKTiq+ruPQHNLfRSabdCTyDjyJ4mS
-	x84TKHWsjUJZmQs4Su2IItCjhFs4WiuPopBOX0ehyNt5GCrvzgCoIUm5LqjC0HJzKYkGflUQ
-	qO1iKKpqncdQbGIFgcy18RiqrrlLoK7KVBI1lLQTSF0UwUPZ9zoxVBiXz0OmhEcAJU79BVBW
-	7k5krFdhSJ20QiF9fD2G1kbmeag2dhhDqz2lBDIuThCoqvQGifS5KyTSahQ4MpQ+wFFsw3rX
-	W43PKNQnX6PQsLqch3Lu+Bx2Z4YmVwimML0QMCkRnQRTln8fY+4oBygmqraXYlQaGaPN281k
-	VY9hjNxkxJneiUOMpiCOZPp7qklmymCgmMwIBc4k3KgHx97ys/7Anw05eZqVuHt+Zx20ptGQ
-	4UX02eYX02QESLSRAys+pN+D8pl0TA6s+UI6D8DkOiPJHXMATs0lE9wxC+Biiw68ijRl5+Oc
-	kAtgz83r1L+u+ZKoDUULoLImjmeJELQzrI7Ixi2YpPfCjsn+dczn26/jOIXU4sfpRgHsSOog
-	LB47+hhU9BgpCxbQh2F7SwbGYVt49/roSw9On4VdI1rK8g5Ob4G5q3wLbUV7wiVVN8E13Qbn
-	swY38E+wpaz35VBIL7wBpysXME7whpd+NmyY7OC4vozi8NuwNfESwQUSAaxbfUJxhxrAnPPz
-	G+mDMKp7dCPhBWMGpwlLI0jbQNNjW66oDbxSnoxztADGxgg5906oHpwkEsB25WvTlK9NU/43
-	jaP3QlXVU/J/9B6YkzmBc/gQLC6eJlSAKgCbWZk0NJCVeojZM25SUahUJg50OxEWqgHrH6x1
-	Vf/0Nkgbn3HTAYwPdGDHevjhTfUfwIEQh4lZJ3vB8+UdAUKBv+iHH1lJ2LcSWQgr1YEtfMJp
-	s8DZfysrpANFp9hglg1nJa9UjG/lEIHZ1Q/7ms7ZbM++ag6TFadmRuZsPd72xKcy3LvnmtlH
-	EUOvfEqdc3/zq6N+XgcuD+TrPrw6Mdq/z/hNipjnmuRY6Wagl02nJ/2HG1V+j6NN2xodH9iF
-	jzSbJ++bQ+0lQ0JvW9GopyTJmq9zRMtMbFrtpgnF8Tyv1hmbCvsEh4NKk94GP+JVEx9Y2zJz
-	r73YNZt34oLT+Ged8oCgdxxxSfSXwd06l5KLbZOJCqSl9tR+f/R5u7mrIDh8MYP9On1Xmr/s
-	SPTRsc/Z0f3vhgwp85tDK4u+uKD/KDLFy/eXKwVMn2/8x86/eYwtag7Yn5n1GHl/U/L4J2RT
-	1P6H6hVDl3bX7wNOhDRI5LEbl0hF/wACtOw12wQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA2WTe0xTVxzHdx+992LsdlcQb8AsG8qC4ApFYAcGjMyEXJw4lrlk02xa4fLY
-	oMU+BJdhCnQGSpyo4EZhUOh4WawWtIAwRAZWJiAgreW1gYisA0QnD5k81totM9l/n/P9fn/f
-	/HJyDoFwJjAXIkEgYUQCfqIbtgG9tWYYfev7eo9Yn6eLEFh6VoiApt+HUTC/PIyDJ+0GDPRP
-	GDHwnSUdBUWWLhyoSxcRUHRbjoLJ3CsIWNfLcdBmuIaDjIYqGOgHSiDQnqe0GiohWLmpw8Do
-	qXwUdOUkgaZbCzDIOluPgqmWkzBo/qkTBXeuFmGg/WI3CjQXZCxQfrcPBjXZ1Sxgzp2EwNmH
-	DyCgrnwT9LeqYKDJW8WB4WQrDNYnFligJWsMBmsmHQr6n06joElXhgFD5SoG6mrzEdCjG0dA
-	Vrt11ysdSzgYVqzjYEyjZ4GKxr1h3vRvM6soXVNcA9GFsj6Uvlw9CNONylGclrcM4bSqVkrX
-	VXnS6mYLTCvM/Qg9NB1C157PxugRUzNGP+zpwelSWT5C55a1QlHO+7nBIqFUwrweLxRLQtwO
-	8IAvlxcIuL5+gVzezrc/C/L1d/MODY5hEhOOMiLv0EPc+GXdB8kaMvX+nXOIDDr9sgJyICjS
-	j7pRXo0ooA0EhyyHqKLCLtxubKF080aWnR2pFZMCs4ceQ9TsvBq1H+ogSq/MfJ5CSXeqWVaO
-	2Bgjd1C3Z0asTBBOVs7OF9vyCNnBpsxTJZgt40jupUbOtKI2ZpNhVPcvJbC9dAyiBmtPsezG
-	q1Rnwf3nIYQ8SukX0lm2UoR0pSrXCJvsQIZSy6oB1L7pG9SC+td/OI16svoAyoUclS80KV9o
-	Uv7XZJc9KfOaBf6f7EVVlE4jdg6htNo5VAXh5yEnRipOiksS87hifpJYKojjRguTaiHrC9ff
-	WK5rgIr/eMxtg2ACaoO2WSfvXdL0Qi6oQChg3JzYf61si+WwY/jHvmJEwoMiaSIjboP8rbd4
-	GnHZFC20fheB5CAvwMef5xcQ6OMfGLDTbTM7IjmLzyHj+BLmS4ZJZkT/zsGEg4sMThEvFTj7
-	GfUNQ84drl5yzRx+Ziv9/sjx4YiV8Cl5sCLUHHmuryucXrpmzPn0Zspg/icbhxzKduX+aB42
-	TqaPawP93bsnX6l/1ze16zXRoz1+u6pUf7704aETKY/G1YQ2fJrp/Tgh0aNC/nXI2Im5sN5n
-	jdc528MlxjwTPx1eL/jWsLq7u3L2WDeRlhOdESnaav5hn/uAKT7ivR0VUn4kW1t6t1L7ec5H
-	QccPz+atR7GL245s8VYsemVuzxgw44uj+zsXNqceCN74hUU6c5m4lOD68zs997wsIr1HX0co
-	E4SUxHof3nT9m+C+tDBOpulIzFXdnn3OF8zi5DCDS91o1Ap50Q0Vx/N5nohIzP8b8evTHXYE
-	AAA=
-X-CMS-MailID: 20240424074112eucas1p259a4acc486ca5f8c6cbb4f736f2f984b
+X-Brightmail-Tracker: H4sIAAAAAAAAA2WTe1BUZRjG5zvncM6CLR4Wwk/AHBAZBgE1dPwgISvHjs1UVM5UTqOucgQC
+	FmYXSMUmICRYUUhABgRZIK6LKBeX+wIr10BuEnETUERBUEJcCWXZgIPlTP+97/v8nu993j8+
+	Hi5opEx4niJ/ViwSeluQeoSicaHDzvW29ckdl+87oflXV3BUOTFIoOcLgxSaq28iUffYHyRK
+	mAwhUPJkG4Uy0l7gKLkjjEDjMTdxpFWEUUjVVEOh0LIcDCl6UgGqj0taFmS+aLG5kER3o+MJ
+	1HbeB1W2qjEUEVtKoEfKCxiqqm4h0J2KZBLVX79NIPm1YB2U+WcXhvIjc3VQX8w4QLFPHwKU
+	kW2FumtlGJLHaSjUdKEWQ9oxtQ5SRoxiaKm3kEDdf08RqLIwnURN2RoSFRfF46i98B6OIuqX
+	s95smKfQoFRLoVG5QgdllX+2bzszMq0hmPyr+YC5EtxFMCW5/RhTnnSXYsKUAxQjKwpginNs
+	mIyqSYyR9nXjzMCUM1OUF0kyQ71VJPO0vZ1i0oLjcSYmvRa4Gh/W2+vGensGsuLtLsf0PDp/
+	UQI/pcGpshfhRDA4t14KdHmQ3gWz8xNIKdDjCegcAFsePcS55jmA54qb15Q5ADXSOPK1pSIm
+	EeOEbAAXOyewf6nyxB7ANcUAyruGiBULQW+F0UMjq3aStoUd00PLS3g8o+U6Ml6ywuN0Ax92
+	xHWs8oa0K4zv7aZWGD69DwaHbFoZ82kD2JL4YBXB6VNwdky7iuC0Kcxe4q2MdWkXuCDrIbig
+	5lCdMbxW/wh/LxlYzQnpmXWwvWF8NQKk90NNqRvHGMLHTSUUV5vB1tgoguNjAaxZ+oviGjmA
+	WSFqjKPeg2E9D9YcH8Dw4RmCe1Qf9j0x4HLqw0uKhLVdfBgRLuBoKygfniZiwJakNy5LeuOy
+	pP8u48a2UFb5jPzfeBvMSpvCudoZFhTMEDJA5YENbIDEx52V7BSxP9hLhD6SAJG7/QlfnyKw
+	/L1al5qelYGUx7P2KoDxgApYLpvv35B3AhNC5CtiLYz4LxctTwr4bsLTZ1ix71FxgDcrUQFT
+	HmGxgb/VbTMroN2F/qwXy/qx4tcqxtM1Cca+DDxbJ7jnWXvoYpk25qD1nsBOZdTnjsP2pbFt
+	31uVrE/10m9WzCnXjdineFQd33/++Ca/vBnvI7kDm+00BVc/CSk6bKqWRu96aeswvdQ2Yb6o
+	c9D6oy17y68hlXfLNrv+0t2DTidoZeQX3wlOG77TanP91pmgj3sSg4xveDn4yS7V/NT4qbOb
+	OZ5ZbPJ2aHpVVJDjxu666sYPn/yGp1eYGR117T9bPRvq3mg2Z6z2rjuimx9npBDTqQcm56Xa
+	GTq8YbTW8qtvyKSJy3Y/q60yHeM1hxzKdvjL+75uabloMuaacuddibb6VYnBxl95eZ18lz2q
+	WP+3KlW979/69thuO6fwPJ8OkQUh8RDutMHFEuE/XTuYVtkEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA2WTe0xTVxzHd+69vbewFS+FsRsciTaMGaaFIoVTIh1ZNrkui+EPyTKcQieX
+	xwYta8GgCaY44kqJoUxxUhBaQRBhaHnKc11XBwryEhlPAZ3yTJUhOt5r7ZaZ7L9Pvuf7/Z5f
+	fjmHjXIncXd2vDSZkUslCTzcEevcbB/fE3Z3V4xvU50LfLmWj8LmmVEMPl8ZJeCSuR2H/Y/u
+	4/DH2XQMFsx2EbBY/wKFBT0ZGHysqUPhVn0GAU3tPxPw9M2rCKwfKALQfF5rPdDJ4HqHAYfj
+	2bkY7MpKhM2dywhUnWvA4HTbWQS2tN7G4L2mAhyar9/FYMVPSha88nsfAiszy1lwSPMYwHOW
+	JwAWl3nBfqMOgRXnNwjYftaIwK1HyyzYpppE4OagAYP9f81jsNlwGYftZRs4rKnORWG3YQqF
+	KrN11rpbLwk4qt4i4GRFPQuWNh4M8aEnFjYwurKwEtD5yj6Mri0fRuhG7ThBZ7SNELSuOoWu
+	uepNF7fMIrR6qB+lR+aD6eprmTg9NtiC05buboLWK3NRWnPZCMLcIvj75LKUZGZHnEyRHMw7
+	LIB+fIEI8v38RXzB3sAjQX5Cno94XzSTEH+ckfuIo/hxW88+SmpxTtW01uJK8N02NXBgU6Q/
+	1aTJQ2zMJa8AamRjh11/lzI8v8+yswu1PqjG1cDR6lkE1GyOnrAHagBlzAq0MUa+R2WPTeA2
+	xsndVM/CGKoGbLarlTNzFbYsSt7iUEPTRa88LuRBauwHI2bzcMgQSpnuYe+fBNRwdfarizmk
+	M3U77w/Mxih5nOoyXAA2P0pup8o22TbZgRRTK7oBzD7nTmq5+ME/nEYtbTwBGuCifa1J+1qT
+	9r8mu+xNDW3OIv+TP6BK9fOonYOpqqqnmA4Q14Ark6JIjE1UCPgKSaIiRRrLPyZLrAbW513/
+	20rNTVA4t8g3AYQNTMDTmnx4o6IXuGNSmZThuXJW1z1juJxoyYmTjFwWKU9JYBQmILQuMQd1
+	f/uYzPpXpMmRggBfocA/QOQrFAXs5b3DOZCkknDJWEky8w3DJDHyf3MI28FdiWQronxLzxvf
+	MJ1Uxe8fDmVzG9y+kI8NRFWGz3Ssdn6I+zqmx/d7hkfeQXb3rdYVihpqY9p3mk2iT3dZDrhn
+	72HpXScP8T4+80z8PZ//yftpzpI3N+suVsfOWWIixLoQ4sbRwPTDRVHBAQX6X3tXzc1eoZp5
+	C136taX8BTK1eoLcxnJi8lyL5goH3Es+H+/9ih6simmOFlZ4THv0uJzRRXeUlHt+ebRFm3mn
+	9dJE1kXJocW33L7l/PnZ6dwjM70TDYUPFLlP2criknwx956rZ7gwbdg4HaBPXQpaOxXhPBXk
+	NNita3T+pZy/kFTmtRY6HJnqVNB4SnVpf44qbHX78sPrizxMEScReKNyheRvqkITNnMEAAA=
+X-CMS-MailID: 20240424091352eucas1p1c0d02929537ba08fee15fd7fd0517813
 X-Msg-Generator: CA
 X-RootMTR: 20240422142758eucas1p26e94cf6fbbbc99b27e941a172e8a4e41
 X-EPHeader: CA
@@ -151,8 +150,8 @@ References: <20240328-jag-sysctl_remove_empty_elem_kernel-v3-0-285d273912fe@sams
 	<CGME20240422142758eucas1p26e94cf6fbbbc99b27e941a172e8a4e41@eucas1p2.samsung.com>
 	<36a1ea2f-92c2-4183-a892-00c5b48c419b@linaro.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240424_004119_440963_32631AA4 
-X-CRM114-Status: GOOD (  21.78  )
+X-CRM114-CacheID: sfid-20240424_021403_948749_3DE20C95 
+X-CRM114-Status: GOOD (  22.70  )
 X-Mailman-Approved-At: Tue, 30 Apr 2024 11:28:14 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -165,16 +164,16 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============2990033085378651172=="
+Content-Type: multipart/mixed; boundary="===============0254615334073105102=="
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
---===============2990033085378651172==
+--===============0254615334073105102==
 Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="3ox4bgvwus4z6gtg"
+	protocol="application/pgp-signature"; boundary="c3mjqeq3spx6dpjw"
 Content-Disposition: inline
 
---3ox4bgvwus4z6gtg
+--c3mjqeq3spx6dpjw
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -199,9 +198,11 @@ On Mon, Apr 22, 2024 at 04:27:47PM +0200, Konrad Dybcio wrote:
 > the tree history now) on next-20240422
 >=20
 > Please drop it (again, I'm only talking about this empty cover letter).
-I see it. Will remove it from sysctl-next
+Here do you mean revert? or do you mean force-push without the cover
+letter commit?
 
-Thx for pointing it out.
+I did the later, but if the former is necessary I can always go back to
+the old HEAD, add a revert commit and then push that.
 
 Best
 
@@ -215,28 +216,28 @@ mit/?h=3Dsysctl-next&id=3Dec04a7fa09ddedc1d6c8b86ae281897256c7fdf0
 
 Joel Granados
 
---3ox4bgvwus4z6gtg
+--c3mjqeq3spx6dpjw
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmYot5IACgkQupfNUreW
-QU9JLgv/Xk/varStEW5HfSJDViPIf/SWclVUTpImKj1IK/P76DyvjPdXaekBKiYf
-iwRRN/qqbvDCYp9Hu3nOT5Pp6+kRDKIsMAhz0S+74V6N6kmYo+zuomJ6B5xYE5v/
-lBK2Pecvdic/IhnaYYJrr0kfNFfDpFNnZLEkI+Ao+u9Qho5sXoQqMzB0gdhGNBsA
-sg3tHBk72GQoBtnXD0vAgLe1a3nMIX58N5U8If5nMIY24dk5WDqk4uF+VeKuWoql
-bgEeNHnxrgX+7o65CXUKl3Y5P2r35p4lZ26nSKxUcy9rxCVluyqvcjOWKegC2RHc
-BsPdxqlq+sCS+Jl8GvV9RodvW+TseL8sYbm78PuhrBLmME46zyw8hMOIe9KTQGKz
-PL13bLzLyQ3kHjVyngfEnrobUBJWTO0wSEroqttx/GoKMeFBBubPV9DFnlYmt8qN
-+q1wOQc7/yuDYZHNo272pNOPnLogsjiXUihpXna2l3vN3L8QPb7v52yQHToJeDiK
-RZTL83Ww
-=o7gc
+iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmYoukYACgkQupfNUreW
+QU9vQAv+Lne9ZN0yGMA1Mmfcb0fp2lW2SntP3+HHJYiKmz98mwTHJrsNLqgRg9Sp
+18WTHY2ZF0t/6poR3F6+6ScGSdk9IjzwNzyLJeaH9iGQq8xU7PcIdcvgvXp5GWnw
+PeDW28bZ74r2vGa9sDRmzqEHmJ6zxGAsIRopraO5iCjsX/xZQILsbj3McgnQ1Mf8
+usn7eJbiUgpWPfc6Xp4oylK/5vZYwkds3ktFT0bCOO+QoP3bIS6xVkRBDS7K9cJS
+0yPRvkmICkjOL11n4PYKeev+5NHxAUbFwrD3HJ8bKkDIN0GQCsd98nucM2q32fcA
+aQnsxdnHVPeCf42ZSZWEpm3GtTqXJuBespmD78k3DqQMOElbGs3XWck0/17kTNRo
+3k53VVirXDs7xWx8KtGPt17sQLTjoR5ETNbS6OO+XLmZvzA8XHDvVLUVOKGvHcSC
+pXvKil3C7em0Yuea0ioAKeNRBr8SRsGXD6VazvCUX6eSAeYWVopJscUJY7c5FWuS
+wDWSrhNX
+=iaui
 -----END PGP SIGNATURE-----
 
---3ox4bgvwus4z6gtg--
+--c3mjqeq3spx6dpjw--
 
 
---===============2990033085378651172==
+--===============0254615334073105102==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -247,5 +248,5 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---===============2990033085378651172==--
+--===============0254615334073105102==--
 
