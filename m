@@ -4,8 +4,8 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5E9A5C4345F
-	for <kexec@archiver.kernel.org>; Wed, 24 Apr 2024 15:54:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F231BC4345F
+	for <kexec@archiver.kernel.org>; Wed, 24 Apr 2024 15:54:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
@@ -13,66 +13,66 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	References:Mime-Version:In-Reply-To:Date:Reply-To:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
 	:Resent-Message-ID:List-Owner;
-	bh=cHBKi1/e8v0Rvfeg4cvIMaE1lKOSwa7ux4QatNRVuo0=; b=FQRYoKnoOFixbVR4DMEdPSglzP
-	wt1goV95YY4bhoM9Psxhh31B2I9f0N7GUWA8o7cC1vbQHJ1v872GlxBXejYMjZ2jlS71QL5jKUET3
-	dMNyVC4OrVO4XvHr1Jia7zvE/ryKXMfn/tSIS2oCy94m0j/GI4RfELW+1mgRszr2RpDpJs2Vg90Mp
-	Wj8GYbgjM4LJCcAZ8W/OSlr19c08IQvvFvEgiwnc2t6XrugzD6YtCnVZ9doLvsUvh5x72gy02NFpD
-	BOO16HWFCYJhC9bOdxRgK8KD9wUWetNSICS3H9dCgODcj6j43rES1kOGMT1QcG7F8bjimKP96er58
-	u3c/PARg==;
+	bh=bQscPp0QfDIqv/DisCDUcbh3wE3wFA361qpi0Vbhl3Y=; b=uyPB93zP79GH8PMq1W+4W5ymVZ
+	wMNgXGEbxIcNeHKpof6L3AWb6JIPGorID1YwlSHvZ2Wuz1THHXt4WPnSm7T9nkl7v63CHcBmGwowk
+	4dBWx96dvTSFe2sH13P6rUbEFPJ2MSqUsdb2Sp1i8ba0xPe/QsSTPirsujGbka0mxW0wiusU15+eA
+	cpICrseiwtdk1G9HOCIoWoRFCyPSeTRocDO6y/qkgU3HrGUvNK1POkKkHbCcVUClTFOGHLs4HvMQw
+	dqx8aDPAeRZswAT7UoRKBJV6FpXRwnVOiN447ahqzCysiHDxCMLJsjMBtL4iO4NelxTghirfdqexK
+	qQicNY2A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rzewe-00000004qFw-2tlq;
-	Wed, 24 Apr 2024 15:54:04 +0000
-Received: from mail-wm1-x349.google.com ([2a00:1450:4864:20::349])
+	id 1rzewi-00000004qIF-06i2;
+	Wed, 24 Apr 2024 15:54:08 +0000
+Received: from mail-wr1-x449.google.com ([2a00:1450:4864:20::449])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rzewV-00000004q3q-0N7z
+	id 1rzewV-00000004q5n-31Hs
 	for kexec@lists.infradead.org;
-	Wed, 24 Apr 2024 15:53:59 +0000
-Received: by mail-wm1-x349.google.com with SMTP id 5b1f17b1804b1-41ab7cdccd2so11123175e9.1
-        for <kexec@lists.infradead.org>; Wed, 24 Apr 2024 08:53:52 -0700 (PDT)
+	Wed, 24 Apr 2024 15:54:02 +0000
+Received: by mail-wr1-x449.google.com with SMTP id ffacd0b85a97d-343f5059c5fso4592029f8f.2
+        for <kexec@lists.infradead.org>; Wed, 24 Apr 2024 08:53:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713974031; x=1714578831; darn=lists.infradead.org;
+        d=google.com; s=20230601; t=1713974033; x=1714578833; darn=lists.infradead.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vceqt7TifCou1HPRPnwqXwiyHcq6CY32UQFrKskdP68=;
-        b=pjgVyfCac4CQl0oLccSztjyaLR/iOE+5MO8T+l8qJHy5RN2aTg2gLZtaVaWWbeHvbn
-         hqlYcmVYbuu2rWhEYJ83hSFzro1gRbt3mnl4iy+FkskkCC+He8LNiH0AhDNUyWu6Ll49
-         EqW10FhYv5J75UuXOd9VFd/EENwtaNO4Ds5EUZXYUzRH5dKjo620dR7F5oTxoFErXaIz
-         jz4ncFBZ6zLmCx/hCJ9gpSE6FaTAj63CpxufDZ2uXbHRdFKdNQ2XiRSHVKYfYw6xl3VK
-         J8OOzdCmAmLdAA/Ky2M8ZyI6lo4ahSfrmr8f+Xnq4CjFgvhwQIiiEQm0NBShvgXN+fQd
-         cQnQ==
+        bh=vx6XnSqF1Kz2IsX9yxzKAYxIyEUUs8kiNXLrQoQM9lM=;
+        b=HFTg4NKW96W+V18WogbAOhFwVVTavaJV5oNHcYsjT0VNxkInbSFVUxLwiLJqj5y4nk
+         0FYVCbJsGmuwh3LtZbsIhA4JL6NiLxuKIBVFYFR7AyMJMS+YmfmnyvUAX1FpSR10J2o4
+         4apuqvfMCs/BP4ATYGfdT4fHf3AXfX2x9JbdyyJYwPkD/IOAu1YrLdGQkbBkXKVA+93Z
+         SSs2erW99WIOnyQupQufH2LE4gG82QLIl+mK+c3l89WwTaGBEr9Z3jdvRwQk3VNyusZ1
+         U4yNzIR5rGm7+Da6R/ZtTAoGQp67wieQhgRYtgLxhjC5lP/zEHZUYGxRdJb30N5wNXVm
+         ywrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713974031; x=1714578831;
+        d=1e100.net; s=20230601; t=1713974033; x=1714578833;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vceqt7TifCou1HPRPnwqXwiyHcq6CY32UQFrKskdP68=;
-        b=bUnKG0HaSPBxurUGtNnprVfYDL8JITQ+kQ64VsbjkSmHk0sVrcs8m9KSl15To53kwt
-         56+Ow63TFmJZHnR8cz2G7SggjwFriWTlWUv7vmFg7A/ak0AM3KqWwB9M27iuPbG/FJeR
-         QlaArRwa0aKzesDX9F52r2Vs8jN5AWh2FlVFBFnbNwSz54d98X73aST9TEN/WU5bwWFJ
-         J3M0RFRZGU6CzdFyrgzncHWQ+ng+SEsqpiEjUHYJwQAeQVuelZctbiKoXgSO5Oc0EWPD
-         QhSydVHAOolmcDBX6Zt/LbqOTThvwH8pwpsjrTZrAVK/Fz7eBrUl7090i8aZr6TvXZl+
-         3trQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUvKOGd+WxEZG93v/OsyFzhGAf53MjoI/cumVaVNKx01+/O8iGO1gbhgxxXHb3N+EvmivCHdUsfzegYPFx0E7HLe0GkGFtfw+PE
-X-Gm-Message-State: AOJu0YwuZmQZ1vkutzlwOSw3XMVohf/CjkX7kvYpAIPx79NsG+KBz3s3
-	GU4je1tyW+qgPvc1zgmvdzVFjaqZDaQ98Gu4u5SG78YTGgg00sgix4jtjdtynFJTcqdoAA==
-X-Google-Smtp-Source: AGHT+IEgIce6FPBXR6zGeN4ZV5e/jTyyGjrZ6o4ezBolJ8kjLZr2gRR3t4yw5Tk8N83KwMIeS+t+nCjf
+        bh=vx6XnSqF1Kz2IsX9yxzKAYxIyEUUs8kiNXLrQoQM9lM=;
+        b=cP3VDiT2iR+objq8F8rMIjpvJsogZvq3l7dz/i1VoFSDsIR9KmSCGHzbQAYlu+qt/w
+         82rEvdODmQoDQ36EOwulH1iP8YBGcENGuTLH2PDv4CfNMA1oNt99nnCqeK41JPBHogxj
+         auxWL9vXJq3c9864S2+xY3JynDmFYwZG++YlHAPe6Uf4awdFjmA6UdAz1MueG/RsVbdT
+         95cKrPulP7gVYAliDw+F6SizbVFfArgBnp2ZcSRbN9AlIzLMlfdFxquk9GLfmWsakEX2
+         PpKgvYol8DKK/0U23xara4ptZgZ3l9Coqw0T2LMw3T3KckcFVJLNj8u9lZbUmmOq3J5A
+         V9Uw==
+X-Forwarded-Encrypted: i=1; AJvYcCUpehhpUNKPFg/R1ZqlZZKXMPeTG9LTrHq2pPr+wU2BQlQaNuEDy62cqTUYrFnf89rCOdPsPjIPYlfvlKC5cnRD3LMhnTOYOMdc
+X-Gm-Message-State: AOJu0YwpwldwljaFc8XoGMBz189lMModhdPTxmUZS72Ex1VA+NrlBs2F
+	11nUnSw9PfziJrvKZ1MltlW2vPTYgWbI8vgsbq+ZJtwlKWqBN5niE9v+CpxOCak1vylw2w==
+X-Google-Smtp-Source: AGHT+IEAw+x687kZdSsqQxNNZ4oSNk26SZm4X/GaIroPEpe6v9Zhf+oDF0wkctwNqpKcENKbKDTRHVrO
 X-Received: from palermo.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:118a])
- (user=ardb job=sendgmr) by 2002:adf:fb01:0:b0:33d:5804:7f6e with SMTP id
- c1-20020adffb01000000b0033d58047f6emr11165wrr.4.1713974031332; Wed, 24 Apr
- 2024 08:53:51 -0700 (PDT)
-Date: Wed, 24 Apr 2024 17:53:18 +0200
+ (user=ardb job=sendgmr) by 2002:a5d:44c8:0:b0:346:aee6:d2a6 with SMTP id
+ z8-20020a5d44c8000000b00346aee6d2a6mr9419wrr.12.1713974033489; Wed, 24 Apr
+ 2024 08:53:53 -0700 (PDT)
+Date: Wed, 24 Apr 2024 17:53:19 +0200
 In-Reply-To: <20240424155309.1719454-11-ardb+git@google.com>
 Mime-Version: 1.0
 References: <20240424155309.1719454-11-ardb+git@google.com>
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2357; i=ardb@kernel.org;
- h=from:subject; bh=oIYWiPazWt0a3ZXKk6EjdN5wcBfWVZ3Z+EicqDLij6o=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIU1T651wYZulH1f2qRa5GSoKb76+01Bdt6Vp4d3Zn+a3e
- suc8HLvKGVhEONgkBVTZBGY/ffdztMTpWqdZ8nCzGFlAhnCwMUpABO5fIyR4Wli15yznFPOrDh7
- WuK76io2sVyftOqDHJVuKmpSQuwT0xkZXs8/diLx6dm55mrHZe6/zJixP2mzo7iHFvchmVUzvhd sYAMA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=9229; i=ardb@kernel.org;
+ h=from:subject; bh=wGoJfBQak6AeMag7lP1HCofCwaJfihP0rQ/I/VLLrnA=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIU1T6/3kbMFIkdytJRcLLnhwKgmJRLhvjv6xOEXKvPFu7
+ m5H1p8dpSwMYhwMsmKKLAKz/77beXqiVK3zLFmYOaxMIEMYuDgFYCL9qQz/fdY6Xk4zZ8s+E5Gv
+ uZIpRtH/uO/cxuP8y56UiHZFhsw7xchwSnCKeMZt8XMRBhKenxY+nleZP6Vl31HVuZF/Tky6v9m HGQA=
 X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
-Message-ID: <20240424155309.1719454-19-ardb+git@google.com>
-Subject: [RFC PATCH 8/9] x86/purgatory: Simplify references to regs array
+Message-ID: <20240424155309.1719454-20-ardb+git@google.com>
+Subject: [RFC PATCH 9/9] kexec: Drop support for partially linked purgatory executables
 From: Ard Biesheuvel <ardb+git@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
@@ -81,8 +81,8 @@ Cc: x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.
 	Kees Cook <keescook@chromium.org>, Bill Wendling <morbo@google.com>, 
 	Justin Stitt <justinstitt@google.com>, Masahiro Yamada <masahiroy@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240424_085355_634478_59952EA8 
-X-CRM114-Status: GOOD (  10.89  )
+X-CRM114-CacheID: sfid-20240424_085356_240546_9FA81B72 
+X-CRM114-Status: GOOD (  23.55  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -101,101 +101,317 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-Use a single symbol reference and offset addressing to load the contents
-of the register file from memory, instead of using a symbol reference
-for each, which results in larger code and more ELF overhead. While at
-it, rename the individual labels with an .L prefix so they are omitted
-from the ELF symbol table.
+Remove the handling of purgatories that are allocated, loaded and
+relocated as individual ELF sections, which requires a lot of
+post-processing on the part of the kexec loader. This has been
+superseded by the use of fully linked PIE executables, which do not
+require such post-processing.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/x86/purgatory/entry64.S | 67 ++++++++++----------
- 1 file changed, 34 insertions(+), 33 deletions(-)
+ kernel/kexec_file.c | 271 +-------------------
+ 1 file changed, 14 insertions(+), 257 deletions(-)
 
-diff --git a/arch/x86/purgatory/entry64.S b/arch/x86/purgatory/entry64.S
-index 3d09781d4f9a..56487fb7fa1d 100644
---- a/arch/x86/purgatory/entry64.S
-+++ b/arch/x86/purgatory/entry64.S
-@@ -37,45 +37,46 @@ SYM_CODE_START(entry64)
- new_cs_exit:
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 6379f8dfc29f..782a1247558c 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -808,228 +808,31 @@ static int kexec_calculate_store_digests(struct kimage *image)
  
- 	/* Load the registers */
--	movq	rax(%rip), %rax
--	movq	rbx(%rip), %rbx
--	movq	rcx(%rip), %rcx
--	movq	rdx(%rip), %rdx
--	movq	rsi(%rip), %rsi
--	movq	rdi(%rip), %rdi
--	movq	rbp(%rip), %rbp
--	movq	r8(%rip), %r8
--	movq	r9(%rip), %r9
--	movq	r10(%rip), %r10
--	movq	r11(%rip), %r11
--	movq	r12(%rip), %r12
--	movq	r13(%rip), %r13
--	movq	r14(%rip), %r14
--	movq	r15(%rip), %r15
-+	leaq	entry64_regs(%rip), %r15
-+	movq	0x00(%r15), %rax
-+	movq	0x08(%r15), %rcx
-+	movq	0x10(%r15), %rdx
-+	movq	0x18(%r15), %rbx
-+	movq	0x20(%r15), %rbp
-+	movq	0x28(%r15), %rsi
-+	movq	0x30(%r15), %rdi
-+	movq	0x38(%r15), %r8
-+	movq	0x40(%r15), %r9
-+	movq	0x48(%r15), %r10
-+	movq	0x50(%r15), %r11
-+	movq	0x58(%r15), %r12
-+	movq	0x60(%r15), %r13
-+	movq	0x68(%r15), %r14
-+	movq	0x70(%r15), %r15
+ #ifdef CONFIG_ARCH_SUPPORTS_KEXEC_PURGATORY
+ /*
+- * kexec_purgatory_setup_kbuf - prepare buffer to load purgatory.
+- * @pi:		Purgatory to be loaded.
+- * @kbuf:	Buffer to setup.
+- *
+- * Allocates the memory needed for the buffer. Caller is responsible to free
+- * the memory after use.
+- *
+- * Return: 0 on success, negative errno on error.
+- */
+-static int kexec_purgatory_setup_kbuf(struct purgatory_info *pi,
+-				      struct kexec_buf *kbuf)
+-{
+-	const Elf_Shdr *sechdrs;
+-	unsigned long bss_align;
+-	unsigned long bss_sz;
+-	unsigned long align;
+-	int i, ret;
+-
+-	sechdrs = (void *)pi->ehdr + pi->ehdr->e_shoff;
+-	kbuf->buf_align = bss_align = 1;
+-	kbuf->bufsz = bss_sz = 0;
+-
+-	for (i = 0; i < pi->ehdr->e_shnum; i++) {
+-		if (!(sechdrs[i].sh_flags & SHF_ALLOC))
+-			continue;
+-
+-		align = sechdrs[i].sh_addralign;
+-		if (sechdrs[i].sh_type != SHT_NOBITS) {
+-			if (kbuf->buf_align < align)
+-				kbuf->buf_align = align;
+-			kbuf->bufsz = ALIGN(kbuf->bufsz, align);
+-			kbuf->bufsz += sechdrs[i].sh_size;
+-		} else {
+-			if (bss_align < align)
+-				bss_align = align;
+-			bss_sz = ALIGN(bss_sz, align);
+-			bss_sz += sechdrs[i].sh_size;
+-		}
+-	}
+-	kbuf->bufsz = ALIGN(kbuf->bufsz, bss_align);
+-	kbuf->memsz = kbuf->bufsz + bss_sz;
+-	if (kbuf->buf_align < bss_align)
+-		kbuf->buf_align = bss_align;
+-
+-	kbuf->buffer = vzalloc(kbuf->bufsz);
+-	if (!kbuf->buffer)
+-		return -ENOMEM;
+-	pi->purgatory_buf = kbuf->buffer;
+-
+-	ret = kexec_add_buffer(kbuf);
+-	if (ret)
+-		goto out;
+-
+-	return 0;
+-out:
+-	vfree(pi->purgatory_buf);
+-	pi->purgatory_buf = NULL;
+-	return ret;
+-}
+-
+-/*
+- * kexec_purgatory_setup_sechdrs - prepares the pi->sechdrs buffer.
+- * @pi:		Purgatory to be loaded.
+- * @kbuf:	Buffer prepared to store purgatory.
+- *
+- * Allocates the memory needed for the buffer. Caller is responsible to free
+- * the memory after use.
+- *
+- * Return: 0 on success, negative errno on error.
+- */
+-static int kexec_purgatory_setup_sechdrs(struct purgatory_info *pi,
+-					 struct kexec_buf *kbuf)
+-{
+-	unsigned long bss_addr;
+-	unsigned long offset;
+-	size_t sechdrs_size;
+-	Elf_Shdr *sechdrs;
+-	int i;
+-
+-	/*
+-	 * The section headers in kexec_purgatory are read-only. In order to
+-	 * have them modifiable make a temporary copy.
+-	 */
+-	sechdrs_size = array_size(sizeof(Elf_Shdr), pi->ehdr->e_shnum);
+-	sechdrs = vzalloc(sechdrs_size);
+-	if (!sechdrs)
+-		return -ENOMEM;
+-	memcpy(sechdrs, (void *)pi->ehdr + pi->ehdr->e_shoff, sechdrs_size);
+-	pi->sechdrs = sechdrs;
+-
+-	offset = 0;
+-	bss_addr = kbuf->mem + kbuf->bufsz;
+-	kbuf->image->start = pi->ehdr->e_entry;
+-
+-	for (i = 0; i < pi->ehdr->e_shnum; i++) {
+-		unsigned long align;
+-		void *src, *dst;
+-
+-		if (!(sechdrs[i].sh_flags & SHF_ALLOC))
+-			continue;
+-
+-		align = sechdrs[i].sh_addralign;
+-		if (sechdrs[i].sh_type == SHT_NOBITS) {
+-			bss_addr = ALIGN(bss_addr, align);
+-			sechdrs[i].sh_addr = bss_addr;
+-			bss_addr += sechdrs[i].sh_size;
+-			continue;
+-		}
+-
+-		offset = ALIGN(offset, align);
+-
+-		/*
+-		 * Check if the segment contains the entry point, if so,
+-		 * calculate the value of image->start based on it.
+-		 * If the compiler has produced more than one .text section
+-		 * (Eg: .text.hot), they are generally after the main .text
+-		 * section, and they shall not be used to calculate
+-		 * image->start. So do not re-calculate image->start if it
+-		 * is not set to the initial value, and warn the user so they
+-		 * have a chance to fix their purgatory's linker script.
+-		 */
+-		if (sechdrs[i].sh_flags & SHF_EXECINSTR &&
+-		    pi->ehdr->e_entry >= sechdrs[i].sh_addr &&
+-		    pi->ehdr->e_entry < (sechdrs[i].sh_addr
+-					 + sechdrs[i].sh_size) &&
+-		    !WARN_ON(kbuf->image->start != pi->ehdr->e_entry)) {
+-			kbuf->image->start -= sechdrs[i].sh_addr;
+-			kbuf->image->start += kbuf->mem + offset;
+-		}
+-
+-		src = (void *)pi->ehdr + sechdrs[i].sh_offset;
+-		dst = pi->purgatory_buf + offset;
+-		memcpy(dst, src, sechdrs[i].sh_size);
+-
+-		sechdrs[i].sh_addr = kbuf->mem + offset;
+-		sechdrs[i].sh_offset = offset;
+-		offset += sechdrs[i].sh_size;
+-	}
+-
+-	return 0;
+-}
+-
+-static int kexec_apply_relocations(struct kimage *image)
+-{
+-	int i, ret;
+-	struct purgatory_info *pi = &image->purgatory_info;
+-	const Elf_Shdr *sechdrs;
+-
+-	sechdrs = (void *)pi->ehdr + pi->ehdr->e_shoff;
+-
+-	for (i = 0; i < pi->ehdr->e_shnum; i++) {
+-		const Elf_Shdr *relsec;
+-		const Elf_Shdr *symtab;
+-		Elf_Shdr *section;
+-
+-		relsec = sechdrs + i;
+-
+-		if (relsec->sh_type != SHT_RELA &&
+-		    relsec->sh_type != SHT_REL)
+-			continue;
+-
+-		/*
+-		 * For section of type SHT_RELA/SHT_REL,
+-		 * ->sh_link contains section header index of associated
+-		 * symbol table. And ->sh_info contains section header
+-		 * index of section to which relocations apply.
+-		 */
+-		if (relsec->sh_info >= pi->ehdr->e_shnum ||
+-		    relsec->sh_link >= pi->ehdr->e_shnum)
+-			return -ENOEXEC;
+-
+-		section = pi->sechdrs + relsec->sh_info;
+-		symtab = sechdrs + relsec->sh_link;
+-
+-		if (!(section->sh_flags & SHF_ALLOC))
+-			continue;
+-
+-		/*
+-		 * symtab->sh_link contain section header index of associated
+-		 * string table.
+-		 */
+-		if (symtab->sh_link >= pi->ehdr->e_shnum)
+-			/* Invalid section number? */
+-			continue;
+-
+-		/*
+-		 * Respective architecture needs to provide support for applying
+-		 * relocations of type SHT_RELA/SHT_REL.
+-		 */
+-		if (relsec->sh_type == SHT_RELA)
+-			ret = arch_kexec_apply_relocations_add(pi, section,
+-							       relsec, symtab);
+-		else if (relsec->sh_type == SHT_REL)
+-			ret = arch_kexec_apply_relocations(pi, section,
+-							   relsec, symtab);
+-		if (ret)
+-			return ret;
+-	}
+-
+-	return 0;
+-}
+-
+-/*
+- * kexec_load_purgatory_pie - Load the position independent purgatory object.
+- * @pi:		Purgatory info struct.
++ * kexec_load_purgatory - Load and relocate the purgatory object.
++ * @image:	Image to add the purgatory to.
+  * @kbuf:	Memory parameters to use.
+  *
+- * Load a purgatory PIE executable. This is a fully linked executable
+- * consisting of a single PT_LOAD segment that does not require any relocation
+- * processing.
++ * Allocates the memory needed for image->purgatory_info.sechdrs and
++ * image->purgatory_info.purgatory_buf/kbuf->buffer. Caller is responsible
++ * to free the memory after use.
+  *
+  * Return: 0 on success, negative errno on error.
+  */
+-static int kexec_load_purgatory_pie(struct purgatory_info *pi,
+-				    struct kexec_buf *kbuf)
++int kexec_load_purgatory(struct kimage *image, struct kexec_buf *kbuf)
+ {
+-	const Elf_Phdr *phdr = (void *)pi->ehdr + pi->ehdr->e_phoff;
++	struct purgatory_info *pi = &image->purgatory_info;
++	const Elf_Phdr *phdr;
+ 	int ret;
  
- 	/* Jump to the new code... */
--	jmpq	*rip(%rip)
-+	jmpq	*.Lrip(%rip)
- SYM_CODE_END(entry64)
++	if (kexec_purgatory_size <= 0)
++		return -EINVAL;
++
++	pi->ehdr = (const Elf_Ehdr *)kexec_purgatory;
+ 	if (pi->ehdr->e_phnum != 1)
+ 		return -EINVAL;
  
- 	.section ".rodata"
--	.balign 4
-+	.balign	8
- SYM_DATA_START(entry64_regs)
--rax:	.quad 0x0
--rcx:	.quad 0x0
--rdx:	.quad 0x0
--rbx:	.quad 0x0
--rbp:	.quad 0x0
--rsi:	.quad 0x0
--rdi:	.quad 0x0
--r8:	.quad 0x0
--r9:	.quad 0x0
--r10:	.quad 0x0
--r11:	.quad 0x0
--r12:	.quad 0x0
--r13:	.quad 0x0
--r14:	.quad 0x0
--r15:	.quad 0x0
--rip:	.quad 0x0
-+.Lrax:	.quad	0x0
-+.Lrcx:	.quad	0x0
-+.Lrdx:	.quad	0x0
-+.Lrbx:	.quad	0x0
-+.Lrbp:	.quad	0x0
-+.Lrsi:	.quad	0x0
-+.Lrdi:	.quad	0x0
-+.Lr8:	.quad	0x0
-+.Lr9:	.quad	0x0
-+.Lr10:	.quad	0x0
-+.Lr11:	.quad	0x0
-+.Lr12:	.quad	0x0
-+.Lr13:	.quad	0x0
-+.Lr14:	.quad	0x0
-+.Lr15:	.quad	0x0
-+.Lrip:	.quad	0x0
- SYM_DATA_END(entry64_regs)
++	phdr = (void *)pi->ehdr + pi->ehdr->e_phoff;
++
+ 	kbuf->bufsz = phdr->p_filesz;
+ 	kbuf->memsz = phdr->p_memsz;
+ 	kbuf->buf_align = phdr->p_align;
+@@ -1066,52 +869,6 @@ static int kexec_load_purgatory_pie(struct purgatory_info *pi,
+ 	return ret;
+ }
  
- 	/* GDT */
+-/*
+- * kexec_load_purgatory - Load and relocate the purgatory object.
+- * @image:	Image to add the purgatory to.
+- * @kbuf:	Memory parameters to use.
+- *
+- * Allocates the memory needed for image->purgatory_info.sechdrs and
+- * image->purgatory_info.purgatory_buf/kbuf->buffer. Caller is responsible
+- * to free the memory after use.
+- *
+- * Return: 0 on success, negative errno on error.
+- */
+-int kexec_load_purgatory(struct kimage *image, struct kexec_buf *kbuf)
+-{
+-	struct purgatory_info *pi = &image->purgatory_info;
+-	int ret;
+-
+-	if (kexec_purgatory_size <= 0)
+-		return -EINVAL;
+-
+-	pi->ehdr = (const Elf_Ehdr *)kexec_purgatory;
+-
+-	if (pi->ehdr->e_type != ET_REL)
+-		return kexec_load_purgatory_pie(pi, kbuf);
+-
+-	ret = kexec_purgatory_setup_kbuf(pi, kbuf);
+-	if (ret)
+-		return ret;
+-
+-	ret = kexec_purgatory_setup_sechdrs(pi, kbuf);
+-	if (ret)
+-		goto out_free_kbuf;
+-
+-	ret = kexec_apply_relocations(image);
+-	if (ret)
+-		goto out;
+-
+-	return 0;
+-out:
+-	vfree(pi->sechdrs);
+-	pi->sechdrs = NULL;
+-out_free_kbuf:
+-	vfree(pi->purgatory_buf);
+-	pi->purgatory_buf = NULL;
+-	return ret;
+-}
+-
+ /*
+  * kexec_purgatory_find_symbol - find a symbol in the purgatory
+  * @pi:		Purgatory to search in.
 -- 
 2.44.0.769.g3c40516874-goog
 
