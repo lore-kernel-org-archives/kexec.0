@@ -4,8 +4,8 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5F607C07E8E
-	for <kexec@archiver.kernel.org>; Wed, 24 Apr 2024 15:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A6267C4345F
+	for <kexec@archiver.kernel.org>; Wed, 24 Apr 2024 15:53:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
@@ -13,66 +13,66 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	References:Mime-Version:In-Reply-To:Date:Reply-To:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
 	:Resent-Message-ID:List-Owner;
-	bh=cN8DzSWxDp4lrzjTA2PRmHdtEy4AAgjccGTeaODihe0=; b=mLBHqnzBWjcdlsIRzjcX0VassD
-	lw8NHjicB8Yzm4CTogrR9oihdxXPpGjwTP5BQUf+Q/Xdrug79Q/evYxmsw1rLvxl7bickecKCHRgm
-	IjOyynl7R+MI6QIc4Vfj6iozTqIsOWXql36+txRXiUjry03nOxyrjWlB3152no/XIQ3Kjh2ofo0R1
-	JWpCAOOYN7tp04oGDtzXfte98sGDabDFMDiHQI9LU6QtobFid0LzYS04YbYKBQp7z6HNcghvu9Hqi
-	40/b61Z88O3yvXDxPG4i7w5bOxTqMEGl6rQb0+uYsI9XM6rbVc+aTA6mEoq7AbJSkQib2D40C/Bnz
-	NOoq+GIw==;
+	bh=J2O36+1+Q6NlU4dRixk3J/NvfKipcqokkw8IEvQhhEI=; b=aFwRDH3+FKnXAnzE/f5vRjLHDL
+	14VA+V42WDrxaVEdN+3TYaLrb43cnUt50ozdM3HU2vMseDYrk/0yFV3xcZh4V5n4cbpxVwsubGjha
+	wx9IwxfSlHetEnNHJ0TegKqgd3gF9mZRqaXZT0P3yP3Ic7Y+hw6SNLwq6ad6CLWSqL3W11ruWjhRT
+	sfkqHT93ApUItkqLlYoceCBO43mYW3QTFMtQ393YFUABSePzP4Mmd1uakB6aPiVhZ0Jhwp+d+zhsC
+	ibffAAE1ubtE3aYmSbKaaqA9zj5n1wOHoKDJi/VjGoRJvScLFZtv7MA00m7InMtZ3WKOjh5CY7E9n
+	c+x1J9fQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rzewN-00000004pzu-3Vln;
-	Wed, 24 Apr 2024 15:53:47 +0000
-Received: from mail-yb1-xb49.google.com ([2607:f8b0:4864:20::b49])
+	id 1rzewP-00000004q1d-454a;
+	Wed, 24 Apr 2024 15:53:49 +0000
+Received: from mail-wr1-x44a.google.com ([2a00:1450:4864:20::44a])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rzewJ-00000004pv4-2Rpv
+	id 1rzewM-00000004pxC-0aNR
 	for kexec@lists.infradead.org;
-	Wed, 24 Apr 2024 15:53:45 +0000
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-de4645bee83so26556276.3
-        for <kexec@lists.infradead.org>; Wed, 24 Apr 2024 08:53:42 -0700 (PDT)
+	Wed, 24 Apr 2024 15:53:47 +0000
+Received: by mail-wr1-x44a.google.com with SMTP id ffacd0b85a97d-343e46df264so4671289f8f.1
+        for <kexec@lists.infradead.org>; Wed, 24 Apr 2024 08:53:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1713974022; x=1714578822; darn=lists.infradead.org;
+        d=google.com; s=20230601; t=1713974024; x=1714578824; darn=lists.infradead.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=I1uZvGOJrDJyNyZbDNRiP2qZHG8ZyjcmYdwIIxk4UA4=;
-        b=Ax3BM0oPTUqeAPwv73UAiixkb4mXZQ8fsTZoZrJ6mc9RKGMpa4VvwsFVQq3RThU4wY
-         MKYG20vTXtR/TmM3gXW6GLiIi8tvdqiCjstXwYgi8g49nIf0985crHDFUE20E6zhCkZL
-         TqfRgXYoKKMwW4dYiPwF6wzh5YqcKM66dka9tQJ4F/thDtSFFfkHRa41N6o/GxFrh/0b
-         ITXasbX/qN9xicZJPitnTtxUaGpD48zAtnsZijrU1rJq1x2V84RN5aoWUXLwFfzk+yIM
-         +OIi5B2TnNcGQT6dO6ROSO3T9o2NkDx0THAGHBUuU7r87HashTZTvG9l0KAAC8qn08RH
-         0oyQ==
+        bh=jjdGmdFWunSakeQxhcxmHXUAnMO8coypY8ElDRJZN3Y=;
+        b=mWmsKGN6SylhnOZp389J4x98etpgSebshv3rXE8+1hA+EC2jMClpNFsvHfoKANBArk
+         R8llgi0X9tgxJkT2jrtzGo9jBbGoQku+QUNCSqTE5SW+3PTiliM9p2qIelu7LSyhQY5U
+         OBrnICucsuRIMLz+R+RjEnxRheh8SpJwAhElUwbFqm3hBQBCoYARPAREFV9oa0MH8AVp
+         bfXvslcpr+bL6D5UTS0oXu/XuDr2GpnGY65+t2fi5RvnVsO5wYx+6WIvZh5S862oHUL9
+         NWe3ZsgwekfXS6A08xRkjU040A5VJJKQ/1AgJHnf6u/ldVfmgf32bAxBCQOS0P2iIWE/
+         uhtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713974022; x=1714578822;
+        d=1e100.net; s=20230601; t=1713974024; x=1714578824;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I1uZvGOJrDJyNyZbDNRiP2qZHG8ZyjcmYdwIIxk4UA4=;
-        b=lf2G17voU+8LBEPc47tm6V6osk+SmazbA8CcVjqkZHysCPH0zRefPjrFH+53YPU+FZ
-         SzXVUZEpI0AKn3vkuFk3Cacs7168DjgYK1IfuDmFf76I+mh1hK78OCoIiZm3Pz7/EW1Q
-         EuqcHmLwuMyjp4Sor2wy36jvSa2WImussHg7Ijfzn7wyTePUUMTP3ZDyahZmNBjwM93t
-         dHoSihQhLL78Ku/5j6tiqFKIiPo5uuibCAjQOu9ihPmfIke1ZLrG1i+eG7DXIxSrZ4GE
-         pBZs0rWjKzHN2Z6QFJpCR9cGqLZE93w3GyOwHE8fZp0T74IbBxQ1tMePWBQKHO6XQSvF
-         /mlw==
-X-Forwarded-Encrypted: i=1; AJvYcCWAj3dg0Y6gE+BRPHlytujJX5qqTAqpNLNpOyKmNPxKjsyzbHbihzntg67+2ZPoCk09jHX+pOkthZ38znaBDu2qURtckReQCGqu
-X-Gm-Message-State: AOJu0YwkrtS9dHS1zx01J3AuvRK9W27hZOrc/MA+Med9ZFdlXRwionpM
-	MUFF3m15bs+pjX8rkBYaAaraNwihNsTHSwEFfR1GWdNxXkn0MsdtP+njO66Jq1HzKfV4bw==
-X-Google-Smtp-Source: AGHT+IFEGGFxfMnQooqXA71tEBTY29NX0MUA7pIaduK0k76YjwQ4bXrhWlZuNWvOPSLJ1YLTC5jr9V+A
+        bh=jjdGmdFWunSakeQxhcxmHXUAnMO8coypY8ElDRJZN3Y=;
+        b=cpO9PvGzVyNizkiNzvdgZ9NqogzVMVonBgyvrgX7e6bAL7RHyJBWR78ov6Pzcqk14A
+         3tymKlBm9JClu81YPyaSAYFJ+7J5jpgDaEb206pwcR2WyySPeRsclIuLfAn/+Y2ZsGh1
+         vEGsuriJ1lq2Q+ZDAOXEldOEO2Idx0YJtkUFV2uEF8TwdHT1dhdGwhmFH2Q+FTZjB3/p
+         X0HhK/n0kaNnzG7jAfQdaIiMLPVzQanR/V0p/o/zkK+MFYgVoruCqfVZqsr0MAZY0YJG
+         ZpoHqg3ERpnRMFyyHMKHTtN/FnyOtdVhAk6hESWv8cnHcbyafylh9XH6UzMcp5z+wS9T
+         dRIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVf046oePA0lqnBLE52XKe+0FIhu0dsmlccsOL2wDajgE5NVGWc87D8+i0+QZCnE3YWU+ytjWeqrG8Regrh80SFAZn9H71lytza
+X-Gm-Message-State: AOJu0YyaT8DiNjbpfZ+YIH58ufWOlGnR0U5nejvfBDDXsqZUb5I64s/k
+	mkatwHtPXVp2huH1/ZTNJPEMssaGAc2ePUrOe+2EPppP1sLZAyN8bNF8b3sPmfp8sWAYYg==
+X-Google-Smtp-Source: AGHT+IEn5r/4qBnC8xtfim3xmOpYM/A60T3wlnxZ2weMiVXGxLyNbc4Y6I4sKkBsnHH/JjZQDh3D0l4v
 X-Received: from palermo.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:118a])
- (user=ardb job=sendgmr) by 2002:a05:6902:120b:b0:de4:67d9:a2c6 with SMTP id
- s11-20020a056902120b00b00de467d9a2c6mr203644ybu.2.1713974022222; Wed, 24 Apr
- 2024 08:53:42 -0700 (PDT)
-Date: Wed, 24 Apr 2024 17:53:14 +0200
+ (user=ardb job=sendgmr) by 2002:a5d:50ce:0:b0:343:c41b:3e37 with SMTP id
+ f14-20020a5d50ce000000b00343c41b3e37mr9280wrt.10.1713974024525; Wed, 24 Apr
+ 2024 08:53:44 -0700 (PDT)
+Date: Wed, 24 Apr 2024 17:53:15 +0200
 In-Reply-To: <20240424155309.1719454-11-ardb+git@google.com>
 Mime-Version: 1.0
 References: <20240424155309.1719454-11-ardb+git@google.com>
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1348; i=ardb@kernel.org;
- h=from:subject; bh=XNDtlXNqERbrKnet8kKgoeintaNkpRS0TQFFAtyMk8M=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIU1T69WP2+KSbU965hyyfHHbMubHPOZrK1Ia1xxZZPv4e
- ocgr9GmjlIWBjEOBlkxRRaB2X/f7Tw9UarWeZYszBxWJpAhDFycAjCRgzGMDDOOXfadUMz1Y5e7
- 1Eej2e0P/GS3/Nw2R0dVO2trpJaVz3SG//FvfZ746Kprbm2vkwqLLn3/d4XNfJnneuvDPfcZZ/1 4xAQA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1495; i=ardb@kernel.org;
+ h=from:subject; bh=2RmgWaHe6lR2Ojq2O13NtFX0a3tx2m9Gxd1ampluXaw=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIU1T63V+yN3dj+1yefbxClw7U8dWc36DtjWPV4Vvk3hy4
+ rIoFtWOUhYGMQ4GWTFFFoHZf9/tPD1RqtZ5lizMHFYmkCEMXJwCMJF/Hxj+J1tPOL1Z+ZCU+OHW
+ BUX5N72YqiKDmRXT9jrfLt2yzGyvPiPDKSv2rLCc1k8cUhqBbEFmB59k3/r8QWv9dnsRi6jqRUW 8AA==
 X-Mailer: git-send-email 2.44.0.769.g3c40516874-goog
-Message-ID: <20240424155309.1719454-15-ardb+git@google.com>
-Subject: [RFC PATCH 4/9] x86/purgatory: Avoid absolute reference to GDT
+Message-ID: <20240424155309.1719454-16-ardb+git@google.com>
+Subject: [RFC PATCH 5/9] x86/purgatory: Simplify GDT and drop data segment
 From: Ard Biesheuvel <ardb+git@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
@@ -81,8 +81,8 @@ Cc: x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.
 	Kees Cook <keescook@chromium.org>, Bill Wendling <morbo@google.com>, 
 	Justin Stitt <justinstitt@google.com>, Masahiro Yamada <masahiroy@kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240424_085343_813291_77B8B64B 
-X-CRM114-Status: GOOD (  12.68  )
+X-CRM114-CacheID: sfid-20240424_085346_265893_6F4CCB63 
+X-CRM114-Status: GOOD (  11.16  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -101,48 +101,55 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-The purgatory is almost entirely position independent, without any need
-for any relocation processing at load time except for the reference to
-the GDT in the entry code. Generate this reference at runtime instead,
-to remove the last R_X86_64_64 relocation from this code.
-
-While the GDT itself needs to be preserved in memory as long as it is
-live, the GDT descriptor that is used to program the GDT can be
-discarded so it can be allocated on the stack.
+Data segment selectors are ignored in long mode so there is no point in
+programming them. So clear them instead. This only leaves the code
+segment entry in the GDT, which can be moved up a slot now that the
+second slot is no longer used as the GDT descriptor.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/x86/purgatory/entry64.S | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ arch/x86/purgatory/entry64.S | 13 +++----------
+ 1 file changed, 3 insertions(+), 10 deletions(-)
 
 diff --git a/arch/x86/purgatory/entry64.S b/arch/x86/purgatory/entry64.S
-index 9913877b0dbe..888661d9db9c 100644
+index 888661d9db9c..3d09781d4f9a 100644
 --- a/arch/x86/purgatory/entry64.S
 +++ b/arch/x86/purgatory/entry64.S
-@@ -16,7 +16,11 @@
- 
- SYM_CODE_START(entry64)
- 	/* Setup a gdt that should be preserved */
--	lgdt gdt(%rip)
-+	leaq	gdt(%rip), %rax
-+	pushq	%rax
-+	pushw	$gdt_end - gdt - 1
-+	lgdt	(%rsp)
-+	addq	$10, %rsp
+@@ -23,14 +23,14 @@ SYM_CODE_START(entry64)
+ 	addq	$10, %rsp
  
  	/* load the data segments */
- 	movl    $0x18, %eax     /* data segment */
-@@ -83,8 +87,8 @@ SYM_DATA_START_LOCAL(gdt)
- 	 * 0x08 unused
- 	 * so use them as gdt ptr
- 	 */
--	.word gdt_end - gdt - 1
--	.quad gdt
-+	.word 0
-+	.quad 0
- 	.word 0, 0, 0
+-	movl    $0x18, %eax     /* data segment */
++	xorl    %eax, %eax     /* data segment */
+ 	movl    %eax, %ds
+ 	movl    %eax, %es
+ 	movl    %eax, %ss
+ 	movl    %eax, %fs
+ 	movl    %eax, %gs
  
- 	/* 0x10 4GB flat code segment */
+-	pushq   $0x10 /* CS */
++	pushq   $0x8 /* CS */
+ 	leaq    new_cs_exit(%rip), %rax
+ 	pushq   %rax
+ 	lretq
+@@ -84,16 +84,9 @@ SYM_DATA_END(entry64_regs)
+ SYM_DATA_START_LOCAL(gdt)
+ 	/*
+ 	 * 0x00 unusable segment
+-	 * 0x08 unused
+-	 * so use them as gdt ptr
+ 	 */
+-	.word 0
+ 	.quad 0
+-	.word 0, 0, 0
+ 
+-	/* 0x10 4GB flat code segment */
++	/* 0x8 4GB flat code segment */
+ 	.word 0xFFFF, 0x0000, 0x9A00, 0x00AF
+-
+-	/* 0x18 4GB flat data segment */
+-	.word 0xFFFF, 0x0000, 0x9200, 0x00CF
+ SYM_DATA_END_LABEL(gdt, SYM_L_LOCAL, gdt_end)
 -- 
 2.44.0.769.g3c40516874-goog
 
