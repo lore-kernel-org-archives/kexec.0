@@ -4,59 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 817AAC4345F
-	for <kexec@archiver.kernel.org>; Tue, 23 Apr 2024 21:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3D61EC4345F
+	for <kexec@archiver.kernel.org>; Wed, 24 Apr 2024 02:21:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	List-Subscribe:List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:
-	MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:
-	Reply-To:Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date
-	:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=6sNn+42HL6Q3kXs+ERDIYvYu+MKsOG7ww16PPL21FK4=; b=hBG5lavgRE3e1oQpGMtFVj3IFC
-	k7QYJ0K/7lRElUh39pbE5ubKqYaRT3pX+0WU8cdLX2K0VWm5xEx1O+5VSOwHg6jFvG0w+qme2S4Up
-	I89IUCo0Ft9mwSrj1fhCdh2GVd2rUnhmDKYpWwbkdnJmn/hw/mGhJohULRIp8lL0ki3xZBkJISz4r
-	CjLRrs8rNb7+hDnvBMwve7uNEymPKP1s72bM3vjogQTk0mMS8xZe3/ZFwQ5CvXxMCbPok+NXge9kT
-	v00H6iN9+zGeYrVKi+tEjgkXpvCWedR8CdoDT2VwCQyYorkT+Mza0PhIBLd4cavI0VfEUiJFw3mNo
-	9TYaZH4A==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:To
+	:From:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=lR6HlwrnOalxkbmJSzZ6Bqoi3Go8WP4OJv/NsvxyORw=; b=AXcVQ1U5N4NwU9
+	+I89q6lx4uvATQwuiTignI9jU4N6F7h4I3mXf+DFq2YTQsZOcdvVjIGIhYqwEhSdcqL5KxrbeXUiV
+	twbnJOlg8wZZ3PF2edvE3wvbxu2pw29yj1QpejTwD5MVE/YcOjZvYGJHZY/VJNbNODa02od4mpzCs
+	+kY/q2T+w4ndtxiGG6VyEmKWEY1XX5SagvlWpdg1KeLy372UMrxEvLh1Lo0FTYJ3ukvlGEeLRYOyE
+	VrrHS6NctW9sxabc1VNnrNU1pFi3I0N00RA2dn4X79DC1n6kpcTTDUEb/a3F5PfsSO9iEgs+fDR7w
+	evYqm9sK60hDlIheSsIA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rzNse-00000001b5k-0b7Q;
-	Tue, 23 Apr 2024 21:40:48 +0000
-Received: from gandalf.ozlabs.org ([150.107.74.76])
+	id 1rzSFr-00000002Aj4-1rJZ;
+	Wed, 24 Apr 2024 02:21:03 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rzNsa-00000001b3c-28BZ
+	id 1rzSFl-00000002AgB-2h6j
 	for kexec@lists.infradead.org;
-	Tue, 23 Apr 2024 21:40:46 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1713908427;
-	bh=wHYxct6asNImlbeupPEFHpTTxlZt2liy9+CRSPwAYVg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=hV+LMIhLeShhLbbuSeOQACQUCwvMaCJajbPMaBmdA1nt+3efGfvv5XCRRWY8QMgMH
-	 h/z9n6gMxzzNDZk+vrohsItjtT7IdFrtiItiPC4IcPOSVZc6jjCalCsQaBei0LSK9Z
-	 6EsFkhmhhCIRVO5HUYy410IA1L/+j4HxWmloflDGyobq4t6fKkPuzHU9rEO5H2rset
-	 dffwhCAjvSs5MXtDNrt9jsUyaFa11FtPz4Ck2IGwisQx2GLust2FpoThSHcYuQX0N8
-	 FvC+wALA+kYwqHw9gL+JbvVpQPdaXVS1hhX/Cvc53h6ClgrTN94djyP+NRM/J7s+iT
-	 8/j9cFPP+S9gg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VPFsQ4vX0z4wc5;
-	Wed, 24 Apr 2024 07:40:26 +1000 (AEST)
-Date: Wed, 24 Apr 2024 07:40:23 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Linux Next Mailing List <linux-next@vger.kernel.org>, linuxppc-dev
- <linuxppc-dev@lists.ozlabs.org>, kexec@lists.infradead.org,
- sourabhjain@linux.ibm.com, bhe@redhat.com
-Subject: Re: Please add powerpc topic/kdump-hotplug branch to linux-next
-Message-ID: <20240424074023.43932cca@canb.auug.org.au>
-In-Reply-To: <87bk60ji79.fsf@mail.lhotse>
-References: <87bk60ji79.fsf@mail.lhotse>
+	Wed, 24 Apr 2024 02:21:01 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713925254;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=1LyeIxCCGUt+I5uSBdtXZjz+D9O46gAeCiyKIMOQngc=;
+	b=U4y+FywdU4QFNF4PDooqDlnif1bIkEc7keAEx6bm5S4YUEzN8J1Bs/mxQsLosSeNP2t7Yu
+	4p4tIzNc1G0hufWjPDF1sZ1KnQ8dyLwUf9s0/3JXFRA/UzUagJxLyWzbHAV8NSu/k2kCu5
+	WLUjNxkrJII5jDIOrrgrFVYddOYS3T0=
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
+ [209.85.210.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-562-RYpt-d7OO6KwxBUcCh6VQA-1; Tue, 23 Apr 2024 22:20:52 -0400
+X-MC-Unique: RYpt-d7OO6KwxBUcCh6VQA-1
+Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-6efef492e79so7725073b3a.1
+        for <kexec@lists.infradead.org>; Tue, 23 Apr 2024 19:20:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713925251; x=1714530051;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1LyeIxCCGUt+I5uSBdtXZjz+D9O46gAeCiyKIMOQngc=;
+        b=d2/pQq1eReinRLlatsIb0y1rZH1NnlLYaL0qJISFVjt4JpZ4UD2lYP530W6GlWi9Fj
+         7kn2KHPCpjkvZ185ue4UGTNk7fRJifeuNwrZ8HGL9S3hIrhFfIbOas3tj8SvbWrqhJvH
+         Ja3fWGHiFABCjMmDlUFjeXEB10GgTam+YWf/wo8AgdwNXts4yKj+L1qZdJhiF1VtFbh/
+         AIo0Ku/iu7YTvJOkchXbU7FQBVd4ttzCI3XVY6o3AXJzLH9NWicObd1tc9pyurE9bDTo
+         Bgey5nuU3C79lbTCnJI14g9dkVwipKg15WprlHRTPyjC+ZvBLo6WkCUF76wOUcU3k7u3
+         k0CA==
+X-Gm-Message-State: AOJu0YzHXXgE2k29U/YC5uTvFpqpPZcGrFUTdP+Uuw/Fi8ie6FLwLEu3
+	vMoL3UwNA0+ThBnZRWpjS32iZmVYabmxSr8kclB7w3cMsNsl7gKy33f2e+L8KSVxr3WylqcBemV
+	nKSXgzYNJBoqQVbZOCbugYg6m8FJYaoPb67A4pOXXgr4fmcypqw3r1B2x6H6nqM6HzJmMt989xU
+	b2cVFhwN9G94X8ntV9c7pzaSnPwR7sDoPG/NgjDYmj9g==
+X-Received: by 2002:a05:6a20:5b14:b0:1aa:58d9:18fa with SMTP id kl20-20020a056a205b1400b001aa58d918famr1023438pzb.48.1713925250443;
+        Tue, 23 Apr 2024 19:20:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFK5NccKyNYT4w6z9u9k5887FQOPQozCUqJkIdNrGqQs0crrtmummSerAmP05FqANzlFcF25w==
+X-Received: by 2002:a05:6a20:5b14:b0:1aa:58d9:18fa with SMTP id kl20-20020a056a205b1400b001aa58d918famr1023421pzb.48.1713925249565;
+        Tue, 23 Apr 2024 19:20:49 -0700 (PDT)
+Received: from localhost ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id t1-20020a17090aae0100b002a2d8d34009sm11846164pjq.27.2024.04.23.19.20.48
+        for <kexec@lists.infradead.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Apr 2024 19:20:49 -0700 (PDT)
+From: Coiby Xu <coxu@redhat.com>
+To: kexec@lists.infradead.org
+Subject: [PATCH makedumpfile] Make sbindir configurable
+Date: Wed, 24 Apr 2024 10:20:47 +0800
+Message-ID: <20240424022047.13325-1-coxu@redhat.com>
+X-Mailer: git-send-email 2.44.0
 MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240423_144044_712463_D946BB5A 
-X-CRM114-Status: GOOD (  16.74  )
+X-CRM114-CacheID: sfid-20240423_192058_017155_8FFEAA1C 
+X-CRM114-Status: UNSURE (   7.78  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -68,90 +92,50 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============2899494768465646461=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
---===============2899494768465646461==
-Content-Type: multipart/signed; boundary="Sig_/ATeAZrrv2EJbPtCU7.6+XEM";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Fedora is going unify bin and sbin and /usr/sbin directory will become a
+symlink to bin [1]. So make sbindir configurable to support this case.
 
---Sig_/ATeAZrrv2EJbPtCU7.6+XEM
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+[1] https://fedoraproject.org/wiki/Changes/Unify_bin_and_sbin
 
-Hi Michael,
+Signed-off-by: Coiby Xu <coxu@redhat.com>
+---
+ Makefile | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-On Tue, 23 Apr 2024 23:56:42 +1000 Michael Ellerman <mpe@ellerman.id.au> wr=
-ote:
->
-\> Can you please add the topic/kdump-hotplug branch of the powerpc tree to
-> linux-next. It contains a series that touches generic kexec code as well
-> as x86 and powerpc code.
->=20
-> The hope is to have to get it merged for v6.10, so it should go along
-> with the powerpc next branch in the merge order.
->=20
-> https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git/log/?h=
-=3Dtopic/kdump-hotplug
+diff --git a/Makefile b/Makefile
+index 55c9c7a..0cd2b03 100644
+--- a/Makefile
++++ b/Makefile
+@@ -101,6 +101,8 @@ LINK_TEST_PROG="int main() { return 0; }"
+ LIBS := $(LIBS) $(call try-run,\
+ 	echo $(LINK_TEST_PROG) | $(CC) -o "$$TMP" -x c - -lebl,-lebl,)
+ 
++sbindir ?= /usr/sbin
++
+ all: makedumpfile
+ 
+ $(OBJ_PART): $(SRC_PART)
+@@ -126,8 +128,8 @@ clean:
+ 	rm -f $(OBJ) $(OBJ_PART) $(OBJ_ARCH) makedumpfile makedumpfile.8 makedumpfile.conf.5
+ 
+ install:
+-	install -m 755 -d ${DESTDIR}/usr/sbin ${DESTDIR}/usr/share/man/man5 ${DESTDIR}/usr/share/man/man8
+-	install -m 755 -t ${DESTDIR}/usr/sbin makedumpfile $(VPATH)makedumpfile-R.pl
++	install -m 755 -d ${DESTDIR}/${sbindir} ${DESTDIR}/usr/share/man/man5 ${DESTDIR}/usr/share/man/man8
++	install -m 755 -t ${DESTDIR}/${sbindir} makedumpfile $(VPATH)makedumpfile-R.pl
+ 	install -m 644 -t ${DESTDIR}/usr/share/man/man8 makedumpfile.8
+ 	install -m 644 -t ${DESTDIR}/usr/share/man/man5 makedumpfile.conf.5
+ 	mkdir -p ${DESTDIR}/usr/share/makedumpfile/eppic_scripts
+-- 
+2.44.0
 
-Added from today.
-
-Thanks for adding your subsystem tree as a participant of linux-next.  As
-you may know, this is not a judgement of your code.  The purpose of
-linux-next is for integration testing and to lower the impact of
-conflicts between subsystems in the next merge window.=20
-
-You will need to ensure that the patches/commits in your tree/series have
-been:
-     * submitted under GPL v2 (or later) and include the Contributor's
-        Signed-off-by,
-     * posted to the relevant mailing list,
-     * reviewed by you (or another maintainer of your subsystem tree),
-     * successfully unit tested, and=20
-     * destined for the current or next Linux merge window.
-
-Basically, this should be just what you would send to Linus (or ask him
-to fetch).  It is allowed to be rebased if you deem it necessary.
-
---=20
-Cheers,
-Stephen Rothwell=20
-sfr@canb.auug.org.au
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/ATeAZrrv2EJbPtCU7.6+XEM
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmYoKscACgkQAVBC80lX
-0Gyc/QgAoeBb/nq8jS4FDhTR1whXCAYnYtDtBfITZ+rhVw+j8iIMfMNpdjWIuHKp
-EmcHHvC6tkE3aFbNIALtDH3oHVmGD9GNJBnkWvJxefymoLOGxaNH44ld2o+lX3WJ
-chIyEnZzqcf7hO+CdtobArpLdPkrfRX7FU+yIsNCCdJYYhzPcdUvnvBE7ZJgZHGB
-sgrCoMjOEMDfQO3ZYUw7AYbZiZt5imEq/UH0pIf6CK5qXfnrtc9iXA0GoA1/Pg14
-aF+B1RX24/4Tk+lkvnOsT/YGk7bFzhodDuQvnMUb5Ht13MbyQZQj4749q2BUg5L8
-DVcqvB/sysHxdGcFJjM0dQKNjpf3Zw==
-=IxtL
------END PGP SIGNATURE-----
-
---Sig_/ATeAZrrv2EJbPtCU7.6+XEM--
-
-
---===============2899494768465646461==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============2899494768465646461==--
-
