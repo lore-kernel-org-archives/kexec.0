@@ -4,113 +4,160 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 79370C19F4E
-	for <kexec@archiver.kernel.org>; Fri, 26 Apr 2024 07:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F17ACC4345F
+	for <kexec@archiver.kernel.org>; Fri, 26 Apr 2024 08:02:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:Cc
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=AMACioBaztL5f0Mg3EAbal9aZd0EMtO+/+8yKtWMrBI=; b=L3KnHe58i+WL5K
-	u9YVRe5gkBkMd4KPiil3A+ExN+MyEWFJ24H9YeRYL3jvlHy0oA5P8++QWMbj6k9WHf8+bmc08ZuvD
-	/H0HVGKjx9w8SCYRfroWFogbmBGFhoJhPxNY93Ki3bHcgPM3zDYUceJLPJRQXziXb2DVv/07fzANn
-	kKju/J/3ESNOhQbem85uGUT+ReYbV0aH3ZSHUZpO6vGH4lQxy2rzhl4ar3wLWgLA4F1+POBYOctOt
-	c5rFKCrj8Drz4bokKxpoiUTl2oLlhYn72yuQJyTt2xJ6XHDrCA8huS5aGxAP07ZePU0wHSojF4ufr
-	DfaU6bw3kxGjTYGhzwdA==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-ID:In-Reply-To:
+	References:Message-ID:Date:Subject:CC:To:From:Reply-To:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=HAsWnUELPWQ4qtK+5ihY5/tEdtGKfxFS27DIzHFEIkc=; b=frZJ8h3ik7dEib
+	pyvuXEaouL0opJ2+dSasUyh1Sa4Q/3DqGUCrtsPsHFb1R/boAmUIPxM/FogfTgdx9PuQUvpuLXHNw
+	gAM9CVpKW2UBWLDpqspyLzMREK3r9bfIz/9MoC1xNO+aByooiGLcA2y1dftLIYvI+nrU2CpqCfs0q
+	EZ0rXaLuAxKSSDzVzWo38JGBnMj9XblAfC5BQxy4E1uUkOPC/AHe0mhPgyX3Vr9CLFLlLsAcvSxRD
+	tY5VvMNdSVROxMFBT2vFCeSMlKCDqskEgxEQ6/RsG/93bBgxtANoFauJyIJw72HJQf/QMSx/ysv8e
+	uce3GFd2HhFa/Z12cI/A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s0Fow-0000000BQwg-3Gwe;
-	Fri, 26 Apr 2024 07:16:34 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1s0GX9-0000000BZjt-0gzq;
+	Fri, 26 Apr 2024 08:02:15 +0000
+Received: from mail-tycjpn01on20600.outbound.protection.outlook.com ([2a01:111:f403:2019::600] helo=JPN01-TYC-obe.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s0El6-0000000BFSQ-1W1j
+	id 1s0GX5-0000000BZhr-39QU
 	for kexec@lists.infradead.org;
-	Fri, 26 Apr 2024 06:08:33 +0000
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43Q5rTeP028076;
-	Fri, 26 Apr 2024 06:07:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : content-transfer-encoding : mime-version; s=pp1;
- bh=fFSSZ611Z8M7Ngb7WXS3anhH1rS9XKgh5OFMP3cLz00=;
- b=CuHD9uHAzPADr85OLn2PwoaUpcLtmtlN4d/NgG6Tr2sic9MTCIJQBlo19d2SKhPwynBA
- LWk9EJIeS08jdarz57eZVnQvpNVrC/WhmoIo1a51Uq5gt0L9cCmAd78gODmTupFLF4H/
- MmaCJZF7ddqWy5Di11K3OpTRRkXGP4/+14gD7y82nuLseT3yzTUnxrKn5RyeJfPKRWXr
- CUIznRgtEmJZPbpkpE7okQCDBZLpkHScl6lLpRyGzdftDNc5Kuj+kdngFmXMdRbRw0jK
- jC6BR/QIu5ebg/kvFaIYPztpIWjo29zcDLn6R4W98qd0/nogXFMvu1YomzPnYrhBWWTV jA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xr6gdg17w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Apr 2024 06:07:54 +0000
-Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43Q67rQw019212;
-	Fri, 26 Apr 2024 06:07:53 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xr6gdg17r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Apr 2024 06:07:53 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43Q5h1J7023043;
-	Fri, 26 Apr 2024 06:07:52 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xms1pe43x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Apr 2024 06:07:52 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43Q67j7449283472
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 26 Apr 2024 06:07:48 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 09AEE20063;
-	Fri, 26 Apr 2024 06:07:45 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 41AE020043;
-	Fri, 26 Apr 2024 06:07:35 +0000 (GMT)
-Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.ibm.com.com (unknown [9.43.111.8])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 26 Apr 2024 06:07:34 +0000 (GMT)
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-To: linuxppc-dev@ozlabs.org
-Cc: Sourabh Jain <sourabhjain@linux.ibm.com>, Akhil Raj <lf32.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
-        Baoquan He <bhe@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dave Young <dyoung@redhat.com>, David Hildenbrand <david@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Laurent Dufour <laurent.dufour@fr.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mimi Zohar <zohar@linux.ibm.com>, Naveen N Rao <naveen@kernel.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Valentin Schneider <vschneid@redhat.com>,
-        Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org,
-        x86@kernel.org
-Subject: [PATCH v19 0/6]powerpc/crash: Kernel handling of CPU and memory hotplug
-Date: Fri, 26 Apr 2024 11:37:22 +0530
-Message-ID: <20240426060728.559753-1-sourabhjain@linux.ibm.com>
-X-Mailer: git-send-email 2.44.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 7GnngNK8BYvmmQNGpEh98MkAGkLT-Iol
-X-Proofpoint-GUID: _aEcm7z3aY8u6vYotTKZxpjCq5en2RbZ
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	Fri, 26 Apr 2024 08:02:13 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NkVQ9721+HtfYS0aHJJJT3qyNdr7583g5TOlfnHMA6vM1MUz+/Hi2v5dX/JQIB+FYqb4khcpP1uCsA7+xgZIwL1iI9EdrX7k6GmSnJW5prUFpsu1Pgsz2tDp5wH1kziwQgkJ2eas+Rft7AQdYK5uYrbljSxoLdvYHR1+rBg+96bzA0GeJUc06nuF5dhdEG7NlK4WWN75hMg945y5/zVFPjU3wAN8QCPS7tQk8UkvlB0owL7f1l++JgKPe1sSErDywjCMq1C1FkHM2KtIVwdKYO6nvz9e12bJiBGeJ6yILyJkIwOaRXmLOixKlL8Ajp+fDUvwdZjJKdkGP1+69wg25g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Nf+Z1+scYmyiz7H5rgLRZbvjSu0vRe0+QlYGrrokO/k=;
+ b=KZ4OODz+sRxIqLfJkN0ZqDrNXF90SsUwKagpKK02CJfqoOw/96yXWsvfsy/gXy99X7NXpnUdMUxuCYtTS1fYHPHWLumwfg/hMHU6miGetUb+enjsej2/4y0yN/Vm+ldaQsB1jKZ/ue72uHD0gwY3KxNasEaHBlldRs0YOEBoudyjSud30QdJk2BA0luufBt69h6vFzL1a3R+KUYKRdFqz0MmkIpRIAKUdcecq1UCnsD39OLiwBYiyWkfq2jrfUkUY4xjqYSSGKlUjfjidazI5Zaes0PYysHeUVPvKG/HyAemF9dNu3O/qndn2hiseSj85R17RZzOY0+uZnVQ/2WpFQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nec.com; dmarc=pass action=none header.from=nec.com; dkim=pass
+ header.d=nec.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nec.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Nf+Z1+scYmyiz7H5rgLRZbvjSu0vRe0+QlYGrrokO/k=;
+ b=XKRS9GU72T3ybQgohZJsILPSDYzfFpxGNz4Hhlufcuki+kLMthV7bKVFHBDyJR3UmcH6gvR9lNK9LEppvtREIAI2Tgc2yelYo2t/WvXZ2vAVypE9/LB6g0KrT3yabYFVVNMAOdVJDk9Yo+MvhxjOIa5bLsQ8tYdkuAAyB9376oekilHRau8XLIfh0h6/0GYXZCNjtsSQg9sW3vL1DHQhncxlSlEUsSK6mNCqzLFOzlTuOQTMXp87ruAEdLV0snq/zjMqoKAt/5AI1mliIaLdAu69eFh+2M32trsfHuSz26IdTGF5U7b8xf4Q3OrwcC6yqAIgHwg+TvZHbtMYusd11Q==
+Received: from TYCPR01MB10963.jpnprd01.prod.outlook.com
+ (2603:1096:400:3a5::14) by TYVPR01MB10702.jpnprd01.prod.outlook.com
+ (2603:1096:400:2af::5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.22; Fri, 26 Apr
+ 2024 08:01:54 +0000
+Received: from TYCPR01MB10963.jpnprd01.prod.outlook.com
+ ([fe80::7245:8970:3fcf:1f6b]) by TYCPR01MB10963.jpnprd01.prod.outlook.com
+ ([fe80::7245:8970:3fcf:1f6b%6]) with mapi id 15.20.7519.021; Fri, 26 Apr 2024
+ 08:01:54 +0000
+From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
+	<k-hagio-ab@nec.com>
+To: Coiby Xu <coxu@redhat.com>, "kexec@lists.infradead.org"
+	<kexec@lists.infradead.org>
+CC: =?utf-8?B?WUFNQVpBS0kgTUFTQU1JVFNVKOWxseW0juOAgOecn+WFiSk=?=
+	<yamazaki-msmt@nec.com>
+Subject: Re: [PATCH makedumpfile] Make sbindir configurable
+Thread-Topic: [PATCH makedumpfile] Make sbindir configurable
+Thread-Index: AQHale4jyRefM1ax8Uq9mo+kIQ+A6rF6NCOA
+Date: Fri, 26 Apr 2024 08:01:54 +0000
+Message-ID: <f362963f-1e38-437b-a7fd-28070bd10c2f@nec.com>
+References: <20240424022047.13325-1-coxu@redhat.com>
+In-Reply-To: <20240424022047.13325-1-coxu@redhat.com>
+Accept-Language: ja-JP, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nec.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYCPR01MB10963:EE_|TYVPR01MB10702:EE_
+x-ms-office365-filtering-correlation-id: 9c5d4c10-8b97-42ce-73a8-08dc65c72377
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230031|1800799015|376005|366007|38070700009;
+x-microsoft-antispam-message-info: =?utf-8?B?clpGWGRrK3dNbWdHRFFxTjA5ZkJEWHJrem00T2FNanhXbEVWQ2VIbzR1aXpr?=
+ =?utf-8?B?b0k0MDU2SExzcFkva0FQcnRGL3p1clF5SmpTcU9DZXVyR0VqR3pTTVBOcGFR?=
+ =?utf-8?B?c2lGT0FOL1R4b0xXeG10c0RtSkV2ZTB6SWlJT2U5Sm5zMExwenFGMXdMRU4x?=
+ =?utf-8?B?SlJyRVRYZFlQK29QY2ViaWoySW9RaXRkWTYyS2xqSHVoaHdnYVp2L21hc3Nl?=
+ =?utf-8?B?cFNkZnhRbmE3S05qS1lJYi92blQ0UHNmZVBROCthQ2hacWNQbFpxR08wZTdC?=
+ =?utf-8?B?R1V4VHRCMUZxR0lvY2lzdnN2THl0NnE4cGZIekpnZHMwNUhoZzBUaHBPemFM?=
+ =?utf-8?B?eEJNYTF1aDJXeUlqU3ErcldiN2Fwb3dYVWZTd3gvYUVZMnRTTFFmM3hwSm5H?=
+ =?utf-8?B?clpUUHNrdStrOE53aUlZSmhFbUYzV2hQa3BOd0RlM2IzQnA3QTI3UEdubnZu?=
+ =?utf-8?B?dytmSVNmK3ZHRHd4bzJZblNCbjhlYjgzbFg3akdOUmZyNjRnUlRKbDhGZ2ZV?=
+ =?utf-8?B?azlkbW5FL0R2UzJJZktNalJ2aTI4MldNQ0RVVFc1MkNPdWoxQUdHTVZpRTFO?=
+ =?utf-8?B?bTMzZ21TT0tlTHE4VG9KempqbmdHMHlqaUgwZXl2UXZwU2JkZFZYcjVnL3JJ?=
+ =?utf-8?B?ZmdCVXRvUDl3RW1BR0lhZUxuVjJGNEtWNEVBd2E2dEFQcWpRYVNHNUFpeVhm?=
+ =?utf-8?B?UzJhZEltNUZrdlRYRXJNTnljTmRYQlBqY0NDV3lQS2wwaHJUSmIxR3N6aXI1?=
+ =?utf-8?B?ZlZyLzdpTFJCeTRxbk82bktQSVFWdUhETzVKMkdZQmNIK0JldmdFZEVMd0ds?=
+ =?utf-8?B?ZDEzSGE2UG5ISUsvck5RNEN6dWRwVzBjc2NnYlV5cEFDU0g5VWYxVGJkSXQr?=
+ =?utf-8?B?b2ZzMkRzL0thdnV2RUd6YjRpZ2I0VGtSVjlwRUdSWGwxMzdadW1abTJuSzBm?=
+ =?utf-8?B?STVEc2ZGOVNlczlzZDV2bWVGY21xcXZZVEhGV01XZlA3MU1ZNThMcTFjSlRs?=
+ =?utf-8?B?bS9rZXVWTnVwL1BzamU2RUxFTXF5bmpDWnJvajErRmxCb0V3Y1J3QUZSblBu?=
+ =?utf-8?B?Lzd3YXdxcVpNL3pJWm5nNkZiMUdlTVBiWUF4d3YzRjVsRkpMT2NzcTM3MVc4?=
+ =?utf-8?B?UjBtL0w0alpHTlV3RDduZVF4ZWs3VVFYU3FBbWkyQTdZWnZXS0JTMWN1VFpM?=
+ =?utf-8?B?WEZEaFBWRlZyc2V3cDZxQjV1WE0wNmtXdWNta0V2Znd2VnJrTTR4ZmxZazIx?=
+ =?utf-8?B?K0hJcHV6dkZQMWhMTkFDLzJTQjhsWGU3WTg5OGtFcFZ6MUVQSGIvWWM0RWRv?=
+ =?utf-8?B?WDJITGZydHVqS29rZkJ6ZFlMZS9iS2tCK2dOV2RkS0hZOG1JNTNBMERiVWNw?=
+ =?utf-8?B?WmJJU0dxWkk1YlM5VS9wR0VabTloQzdaSmVrelRQbDZTb3dzM0U2SzJMakVE?=
+ =?utf-8?B?VGVwRUozOTJhSkZsVlFCRFovSTBodUdnY0dLUWpqRkNLSitIY21kUHhUSkt1?=
+ =?utf-8?B?KzVmRVRZNE01R1NhanFzblIzVzJXTUpKRmpKS3VRa0Y1NkQ4MTVCVnR4a3hp?=
+ =?utf-8?B?UGxQVkUxZk9WRTdqcWYzdnRSeTZXanRweE5paisxeEErVjVhK1gxL0VtUVJo?=
+ =?utf-8?B?dmNWNjlaZHFxcHYwbkRhVFFQdFBEdU5OY3k2a3FlbVNSM05hd3pTOTROemQy?=
+ =?utf-8?B?bDJmSlQxVmh1YjRpaUFsN2J5MTlKNlNYZzdBVHYrbFFOcFNKSU1HTzhRPT0=?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB10963.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?M2YrWTFzejhEcy90K2dFZERKbUhYaHFsY1FmdE9aUGhqSHpZMWQwZndjVk1R?=
+ =?utf-8?B?SHRKNnI3RzgrdGJhZ2JDb1kyRFBsdlZVWVVOYjJWSTAzcW1hSzVwNEV1ajhN?=
+ =?utf-8?B?SjQvY1dORXBpOFVTWnV1WGVQMzd4WUFrTWlRVC9VYm9QZWVrMUxMTHRoSEFZ?=
+ =?utf-8?B?Y0ZlNWpaSHd6SlVHR1FzM3p2eFg3dS8xVzNJQmUveDZhUVhQWFpHUUVIZGNa?=
+ =?utf-8?B?U0Y4aFBkVFNGd1dtTUN6enlnRkJqUFhMaCt6K3VwbjVONUlCMEEvclJ4Z2h2?=
+ =?utf-8?B?TWZaWnl4UXFaSStFSUE0cWdLTkZRWnhjUy8xaldqUTRiajdkb0EvRHFJRzgx?=
+ =?utf-8?B?WHY0UG40WWpYeGwvb3A1Uk11ZEFVSy93K0Z5TUZnaHNEV2JoY0lhaHhVczU5?=
+ =?utf-8?B?V0dzQUNVc3ZtY25zNjdKeDErVVlwS2F4ZWd1UUxEVUZ0VnZOdXpoRDZMZEVN?=
+ =?utf-8?B?dzNxRzVvcCtqall6Rmd3d1VVYk9SR05TcDFHSVcrVWE1TzJycDJzb2dPTXhp?=
+ =?utf-8?B?LzU1b2N3V3M3eUVnWnc3d2dodFN1RVFuSWFCcnNZQThLdllad01jY3pRLzFk?=
+ =?utf-8?B?RlkwMHZFRmVJR013TTdweS9ZdmYxOWFjTWhhNnBSQm81NCtkVWN5U3g5TlQ2?=
+ =?utf-8?B?NEhRc1kxc3RqU3h4QUF2QWdCb1F4SkphZjcwRW9PVElVRWlWci9EeWhpWWs1?=
+ =?utf-8?B?dHh3Y3JmNm1IYUIyRk1GTGJZTG1lZGYxNDVHSXRrWlMvazN5dVRNa0N1L3lQ?=
+ =?utf-8?B?MjFDS2swN2wrUFlDOVJhWDZJM1pIb01venlZT1Z1T0ZwaWQ1LzQ5QlRqOVVw?=
+ =?utf-8?B?Ykh5YTBvWUlqeFgxNTRDRWxYazRxM0djbVRtYk8rdmlwRGhtQXlYajZ3aEk0?=
+ =?utf-8?B?alorTHo1NVpVME5UTnZrQUdDY3dXY2paeU4wbUhneTh4RlgzSGR4V3FCUVY4?=
+ =?utf-8?B?NmhKcC9pckNYVE93ZEdtVTJyZXVDYkhJa0pXMklWUWdxRVhFQTVTU0kwdDdu?=
+ =?utf-8?B?NWR0bHFENC9tMzBDakYxZ09KYyt4elpJdStsaFN2M0pXOWUzWk5selZyYjZ6?=
+ =?utf-8?B?cGpXazdpVFhpNDF1dTdncUcvdWZkcnVSMDRSVnUyZXJNTWFFTDNVL2R2Sm9x?=
+ =?utf-8?B?Tyt2V3JQZ004MWcrZVZoQldKeC8xQllMVCsrTnRvYS9PN1l0YkY2Zzh6aC8r?=
+ =?utf-8?B?SllyYlFzRXl1ajlmeGZicHNCbHNvU1BzQmJqNFk1UjNCOTBjelJUVjRmaXFD?=
+ =?utf-8?B?bGdPdFk1cXBFL1lJOWdrcFRhcXlidm50aitIQ3l5MmhjNlNmdXMxR3BBK21x?=
+ =?utf-8?B?L3dtY00vVTBXUGNXUDRrTjVieHdWcUc1ekRhSjNXREw1eDBvVEtpVDJNM0lu?=
+ =?utf-8?B?VHZwcTJuK21kWVNzM2tBd3lUU2cwbmFHVkZFWXczeTFHdGhaeXpIa0hBTVlw?=
+ =?utf-8?B?MHVFblBIQUs0SFY2ZXhpYlY4MGlJRHVVcE9pMmIwYTRic1hPaGxQWDNTYzNU?=
+ =?utf-8?B?K1RYeFlzK0ExMlJUb2FkT3RxVVdBRHBGZVc4V28wbWt4VDg4TEU2NFZ5ckhE?=
+ =?utf-8?B?UjBBbWY5TnVCbXpvNzVZeTg4QjYyZXA3c1g2Z1pCeXRhVzRoOGVhVzJnVTlV?=
+ =?utf-8?B?UnpCZlhaZTB0YWVoWEpSWi8xMDlvemJRZ0FtaDdVa01ZMFZHdEkwLzcyQTZI?=
+ =?utf-8?B?dXREUEsxYmZIazFSNG9MNVpiWmxFTGczVE41Yk43eWhNM3QvRGtEZVVzaE9q?=
+ =?utf-8?B?Y2JmbXZIVE9FZ0N5MHkvdmVuUis2Ri95SU1VY21VUnN1NENpeVdlUGdPaklR?=
+ =?utf-8?B?WjVCcm5EcWlzT2F1dXNUTGl1dm53dnZGbTEzaHJkQ0dOT2tNb29iU0dlMWtQ?=
+ =?utf-8?B?azR1NkhKTkRIVDNFV1VDcFRpSjIwb25kT2Y5QzdTSTQydEdraE9Icnp2QVk0?=
+ =?utf-8?B?SStaM2NYK0E5a1Y0WFNRTkpqQjdYTzN3Wmc2TUcwY2JNc25mUStiVU5EaG53?=
+ =?utf-8?B?TkM2WStaZ3BXcnlaVmx3N1BFTS9BaDh3cHlHMjlXcjFtNFNNZUNpTUR4YXhs?=
+ =?utf-8?B?QjNoRHlNKzUyNUtUMDMyVkhxQnRENWZPRkYwUGtxcnQ5dTBDTXF4Z09haW8r?=
+ =?utf-8?Q?9KwZkyKzXGrf6dXcRI6+9JHCI?=
+Content-ID: <2E463C303B7F634B8A41DB979E6E09E8@jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-26_06,2024-04-25_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- bulkscore=0 mlxlogscore=999 priorityscore=1501 clxscore=1011
- lowpriorityscore=0 adultscore=0 phishscore=0 malwarescore=0 mlxscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404260035
+X-OriginatorOrg: nec.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB10963.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9c5d4c10-8b97-42ce-73a8-08dc65c72377
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Apr 2024 08:01:54.7076
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: e67df547-9d0d-4f4d-9161-51c6ed1f7d11
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fDQD/k7rkMo7lqPotBIsbA5Kdh2jrvh/5WsXNVUi+VeLtCDkRTu754zfAflbX2gakJbI2O/AMi8KiWeaQIleKw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYVPR01MB10702
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240425_230832_432709_C3AFB8E6 
-X-CRM114-Status: GOOD (  40.37  )
+X-CRM114-CacheID: sfid-20240426_010212_109101_4FD51E01 
+X-CRM114-Status: GOOD (  13.19  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -127,254 +174,48 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Commit 247262756121 ("crash: add generic infrastructure for crash
-hotplug support") added a generic infrastructure that allows
-architectures to selectively update the kdump image component during CPU
-or memory add/remove events within the kernel itself.
+On 2024/04/24 11:20, Coiby Xu wrote:
+> Fedora is going unify bin and sbin and /usr/sbin directory will become a
+> symlink to bin [1]. So make sbindir configurable to support this case.
+> 
+> [1] https://fedoraproject.org/wiki/Changes/Unify_bin_and_sbin
+> 
+> Signed-off-by: Coiby Xu <coxu@redhat.com>
 
-This patch series adds crash hotplug handler for PowerPC and enable
-support to update the kdump image on CPU/Memory add/remove events.
+Thank you for the patch, but sorry, we will be back on May 7 and then 
+start to work on patches etc., so please wait for a while.
 
-Among the 6 patches in this series, the first two patches make changes
-to the generic crash hotplug handler to assist PowerPC in adding support
-for this feature. The last four patches add support for this feature.
+Thanks,
+Kazu
 
-The following section outlines the problem addressed by this patch
-series, along with the current solution, its shortcomings, and the
-proposed resolution.
-
-Problem:
-========
-Due to CPU/Memory hotplug or online/offline events the elfcorehdr
-(which describes the CPUs and memory of the crashed kernel) and FDT
-(Flattened Device Tree) of kdump image becomes outdated. Consequently,
-attempting dump collection with an outdated elfcorehdr or FDT can lead
-to failed or inaccurate dump collection.
-
-Going forward CPU hotplug or online/offline events are referred as
-CPU/Memory add/remove events.
-
-Existing solution and its shortcoming:
-======================================
-The current solution to address the above issue involves monitoring the
-CPU/memory add/remove events in userspace using udev rules and whenever
-there are changes in CPU and memory resources, the entire kdump image
-is loaded again. The kdump image includes kernel, initrd, elfcorehdr,
-FDT, purgatory. Given that only elfcorehdr and FDT get outdated due to
-CPU/Memory add/remove events, reloading the entire kdump image is
-inefficient. More importantly, kdump remains inactive for a substantial
-amount of time until the kdump reload completes.
-
-Proposed solution:
-==================
-Instead of initiating a full kdump image reload from userspace on
-CPU/Memory hotplug and online/offline events, the proposed solution aims
-to update only the necessary kdump image component within the kernel
-itself.
-
-Git tree for testing:
-=====================
-https://github.com/sourabhjains/linux/tree/kdump-in-kernel-crash-update-v19
-
-Above tree is rebased on top of v6.9-rc5 branch.
-
-To realize this feature, the kdump udev rule must be updated. On RHEL,
-add the following two lines at the top of the
-"/usr/lib/udev/rules.d/98-kexec.rules" file.
-
-SUBSYSTEM=="cpu", ATTRS{crash_hotplug}=="1", GOTO="kdump_reload_end"
-SUBSYSTEM=="memory", ATTRS{crash_hotplug}=="1", GOTO="kdump_reload_end"
-
-With the above change to the kdump udev rule, kdump reload is avoided
-during CPU/Memory add/remove events if this feature is enabled in the
-kernel.
-
-Note: only kexec_file_load syscall will work. For kexec_load minor changes
-are required in kexec tool.
-
-Changelog:
-----------
-v19:
-  - Fix a build warning, remove NULL check before freeing memory. 6/6
-    Reported by kernel test robot <lkp@intel.com>
-  - Rebase it to 6.9-rc5
-
-v18: [No functional changes]
-  - https://lore.kernel.org/all/20240326055413.186534-1-sourabhjain@linux.ibm.com/
-  - Update a comment in 2/6.
-  - Describe the clean-up done on x86 in patch description 2/6.
-  - Fix a minor typo in the patch description of 3/6.
-
-v17: [https://lore.kernel.org/all/20240226084118.16310-1-sourabhjain@linux.ibm.com/]
-  - Rebase the patch series on top linux-next tree and below patch series
-    https://lore.kernel.org/all/20240213113150.1148276-1-hbathini@linux.ibm.com/
-  - Split 0003 patch from v16 into two patches
-       1. Move get_crash_memory_ranges() along with other *_memory_ranges()
-          functions to ranges.c and make them public.
-       2. Make update_cpus_node function public and take this function
-          out of file_load_64.c
-  - Keep arch_crash_hotplug_support in crash.c instead of core_64.c [05/06]
-  - Use CONFIG_CRASH_MAX_MEMORY_RANGES to find extra elfcorehdr size [06/06]
-
-v16: [https://lore.kernel.org/all/20240217081452.164571-1-sourabhjain@linux.ibm.com/]
-  - Remove the unused #define `crash_hotplug_cpu_support`
-    and `crash_hotplug_memory_support` in `arch/x86/include/asm/kexec.h`.
-  - Document why two kexec flag bits are used in
-    `arch_crash_hotplug_memory_support` (x86).
-  - Use a switch case to handle different hotplug operations
-    in `arch_crash_handle_hotplug_event` for PowerPC.
-  - Fix a typo in 4/5.
-
-v15:
-  - Remove the patch that adds a new kexec flag for FDT update.
-  - Introduce a generic kexec flag bit to share hotplug support
-    intent between the kexec tool and the kernel for the kexec_load
-    syscall. (2/5)
-  - Introduce an architecture-specific handler to process the kexec
-    flag for crash hotplug support. (2/5)
-  - Rename the @update_elfcorehdr member of the struct kimage to
-    @hotplug_support. (2/5)
-  - Use a common function to advertise hotplug support for both CPU
-    and Memory. (2/5)
-
-v14:
-  - Fix build warnings by including necessary header files
-  - Rebase to v6.7-rc5
-
-v13:
-  - Fix a build warning, take ranges.c out of CONFIG_KEXEC_FILE
-  - Rebase to v6.7-rc4
-
-v12:
-  - A patch to add new kexec flags to support this feature on kexec_load
-    system call
-  - Change in the way this feature is advertise to userspace for both
-    kexec_load syscall
-  - Rebase to v6.6-rc7
-
-v11:
-  - Rebase to v6.4-rc6
-  - The patch that introduced CONFIG_CRASH_HOTPLUG for PowerPC has been
-    removed. The config is now part of common configuration:
-    https://lore.kernel.org/all/87ilbpflsk.fsf@mail.lhotse/
-
-v10:
-  - Drop the patch that adds fdt_index attribute to struct kimage_arch
-    Find the fdt segment index when needed.
-  - Added more details into commits messages.
-  - Rebased onto 6.3.0-rc5
-
-v9:
-  - Removed patch to prepare elfcorehdr crash notes for possible CPUs.
-    The patch is moved to generic patch series that introduces generic
-    infrastructure for in kernel crash update.
-  - Removed patch to pass the hotplug action type to the arch crash
-    hotplug handler function. The generic patch series has introduced
-    the hotplug action type in kimage struct.
-  - Add detail commit message for better understanding.
-
-v8:
-  - Restrict fdt_index initialization to machine_kexec_post_load
-    it work for both kexec_load and kexec_file_load.[3/8] Laurent Dufour
-
-  - Updated the logic to find the number of offline core. [6/8]
-
-  - Changed the logic to find the elfcore program header to accommodate
-    future memory ranges due memory hotplug events. [8/8]
-
-v7
-  - added a new config to configure this feature
-  - pass hotplug action type to arch specific handler
-
-v6
-  - Added crash memory hotplug support
-
-v5:
-  - Replace COFNIG_CRASH_HOTPLUG with CONFIG_HOTPLUG_CPU.
-  - Move fdt segment identification for kexec_load case to load path
-    instead of crash hotplug handler
-  - Keep new attribute defined under kimage_arch to track FDT segment
-    under CONFIG_HOTPLUG_CPU config.
-
-v4:
-  - Update the logic to find the additional space needed for hotadd CPUs
-    post kexec load. Refer "[RFC v4 PATCH 4/5] powerpc/crash hp: add crash
-    hotplug support for kexec_file_load" patch to know more about the
-    change.
-  - Fix a couple of typo.
-  - Replace pr_err to pr_info_once to warn user about memory hotplug
-    support.
-  - In crash hotplug handle exit the for loop if FDT segment is found.
-
-v3
-  - Move fdt_index and fdt_index_vaild variables to kimage_arch struct.
-  - Rebase patche on top of
-    https://lore.kernel.org/lkml/20220303162725.49640-1-eric.devolder@oracle.com/
-  - Fixed warning reported by checpatch script
-
-v2:
-  - Use generic hotplug handler introduced by
-    https://lore.kernel.org/lkml/20220209195706.51522-1-eric.devolder@oracle.com/
-    a significant change from v1.
-
-Cc: Akhil Raj <lf32.dev@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Borislav Petkov (AMD) <bp@alien8.de>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Hari Bathini <hbathini@linux.ibm.com>
-Cc: Laurent Dufour <laurent.dufour@fr.ibm.com>
-Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Mimi Zohar <zohar@linux.ibm.com>
-Cc: Naveen N Rao <naveen@kernel.org>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Valentin Schneider <vschneid@redhat.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: kexec@lists.infradead.org
-Cc: x86@kernel.org
-
-Sourabh Jain (6):
-  crash: forward memory_notify arg to arch crash hotplug handler
-  crash: add a new kexec flag for hotplug support
-  powerpc/kexec: move *_memory_ranges functions to ranges.c
-  PowerPC/kexec: make the update_cpus_node() function public
-  powerpc/crash: add crash CPU hotplug support
-  powerpc/crash: add crash memory hotplug support
-
- arch/powerpc/Kconfig                    |   4 +
- arch/powerpc/include/asm/kexec.h        |  15 ++
- arch/powerpc/include/asm/kexec_ranges.h |  20 +-
- arch/powerpc/kexec/Makefile             |   4 +-
- arch/powerpc/kexec/core_64.c            |  91 +++++++
- arch/powerpc/kexec/crash.c              | 195 +++++++++++++++
- arch/powerpc/kexec/elf_64.c             |   3 +-
- arch/powerpc/kexec/file_load_64.c       | 314 +++---------------------
- arch/powerpc/kexec/ranges.c             | 312 ++++++++++++++++++++++-
- arch/x86/include/asm/kexec.h            |  13 +-
- arch/x86/kernel/crash.c                 |  32 ++-
- drivers/base/cpu.c                      |   2 +-
- drivers/base/memory.c                   |   2 +-
- include/linux/crash_core.h              |  15 +-
- include/linux/kexec.h                   |  11 +-
- include/uapi/linux/kexec.h              |   1 +
- kernel/crash_core.c                     |  29 +--
- kernel/kexec.c                          |   4 +-
- kernel/kexec_file.c                     |   5 +
- 19 files changed, 713 insertions(+), 359 deletions(-)
-
--- 
-2.44.0
-
-
+> ---
+>   Makefile | 6 ++++--
+>   1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Makefile b/Makefile
+> index 55c9c7a..0cd2b03 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -101,6 +101,8 @@ LINK_TEST_PROG="int main() { return 0; }"
+>   LIBS := $(LIBS) $(call try-run,\
+>   	echo $(LINK_TEST_PROG) | $(CC) -o "$$TMP" -x c - -lebl,-lebl,)
+>   
+> +sbindir ?= /usr/sbin
+> +
+>   all: makedumpfile
+>   
+>   $(OBJ_PART): $(SRC_PART)
+> @@ -126,8 +128,8 @@ clean:
+>   	rm -f $(OBJ) $(OBJ_PART) $(OBJ_ARCH) makedumpfile makedumpfile.8 makedumpfile.conf.5
+>   
+>   install:
+> -	install -m 755 -d ${DESTDIR}/usr/sbin ${DESTDIR}/usr/share/man/man5 ${DESTDIR}/usr/share/man/man8
+> -	install -m 755 -t ${DESTDIR}/usr/sbin makedumpfile $(VPATH)makedumpfile-R.pl
+> +	install -m 755 -d ${DESTDIR}/${sbindir} ${DESTDIR}/usr/share/man/man5 ${DESTDIR}/usr/share/man/man8
+> +	install -m 755 -t ${DESTDIR}/${sbindir} makedumpfile $(VPATH)makedumpfile-R.pl
+>   	install -m 644 -t ${DESTDIR}/usr/share/man/man8 makedumpfile.8
+>   	install -m 644 -t ${DESTDIR}/usr/share/man/man5 makedumpfile.conf.5
+>   	mkdir -p ${DESTDIR}/usr/share/makedumpfile/eppic_scripts
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
