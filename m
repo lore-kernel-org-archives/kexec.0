@@ -4,134 +4,131 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CB8E7C4345F
-	for <kexec@archiver.kernel.org>; Fri, 26 Apr 2024 00:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C9EC6C4345F
+	for <kexec@archiver.kernel.org>; Fri, 26 Apr 2024 06:08:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
+	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=KaKgYaSE+FmKPkJ9JRQmrTe+NvX8YAFSy3X+th3e2kM=; b=gaCLVW26Uc/Li5
-	Kyo+q91ZZpjWWKPwb/F8ugcYR+HknI5drbI/IYc82FHD9P0aFLOdZPEMR852zP5k85wC4zVu2H0NU
-	3mM5AtsLj25ggf4J8q0xCbrRJXxYRPqTt3J+8vQktJPxrYfTm+rvSaD3EmvDpiWPPFpj7VeQuxIak
-	PeFsP/Y/R51IISDOjbXYb7fYTKVl7+/N8NrOER7uwmSDyp3xm+nad3ry7QvS07NJujRhZo1wXjxrk
-	vskr/Cy5IHb68YIujVDFK9q/Dshe+JiVM6BQa2J51kXVi7oxpXPWcbZ1P9i5J3EzZyIS7ar7PegLQ
-	waUTU+gIUa2Q5E+p0Euw==;
+	List-Owner; bh=10dRvQZoL3zB1D/Lt8CoRzmlSwQmbG0JcCjYFzmvPFg=; b=STZISrX5Cyd+Hv
+	WpxSx2i4S2vz98PSQUB7X5SBiaKdKsS5ZzwNapxbAuIQ8pR4xk9xvxXF0RFsVnoXBNwagvSi9hThm
+	b2LC3gwNRmP9d8mEc0to67tKTaXD/eqe5/84HAjQsglPI8jJmwXgszjYYSi2fZ8lnZxpMUmDov+GW
+	m9hQv1Pj/h/9kJmt7H6DYeaybwO03cCLOLdMLkZ/0krXGchnugQo+p+Ay3Q/E+Cz/uItEWFGNJn1e
+	NPNXzr6HyBWSru0gwNkKiWzgzurhaG0wsowYy8YHkbtyR6UV/sdUU/aLPH8ocq8F0nrqGYu8WvD9l
+	fgaZ5tvB9Sbs652zIFtg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s09gp-0000000AjhF-1ybJ;
-	Fri, 26 Apr 2024 00:43:47 +0000
-Received: from mail-dm6nam10on20615.outbound.protection.outlook.com ([2a01:111:f400:7e88::615] helo=NAM10-DM6-obe.outbound.protection.outlook.com)
+	id 1s0ElS-0000000BFZY-3oYD;
+	Fri, 26 Apr 2024 06:08:54 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s09gm-0000000Ajg3-1OVa
+	id 1s0ElR-0000000BFYe-2onS
+	for kexec@bombadil.infradead.org;
+	Fri, 26 Apr 2024 06:08:53 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:MIME-Version
+	:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-Type:Content-ID:Content-Description;
+	bh=bfBaZTg/l44VwTtHdGryt8ZFGjiRPBw8Tc3sZ2Nmsmw=; b=oLhTt723gITjQMK/lsY59M/R59
+	ZmoNJVEdcm/QgnGiMqqVWwwHcKP1WR02OnCDkQBYS6aXAwLWtJbq+EPgEQMEn2Zdiq40CUbCj02mh
+	ieTt3IwtavGc1GKfcDkRb4xVv+4XtunyKuDWzcVSveNhRFghqTzJQb5MJOfSwPy5jA9aUKTP0hIH3
+	34Y/H0brMhFLmE+VNmzUm+UKtmD1DjGg0KJezFxnlhYd6oZVCvpwn7teotLYjqO0SHtLRtt69DlDZ
+	w9Glwlu+GVg4tWcpWoQIDMbonHqumOhPiOh9exMQGa90zmam0jaq91KXshI16G3wTTYVvBlQ3b1of
+	vlrlaxnw==;
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	by desiato.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s0ElM-0000000FDdQ-3pFz
 	for kexec@lists.infradead.org;
-	Fri, 26 Apr 2024 00:43:45 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Hp5fqPdJWSfUIqU6+u3B1CPCGjOwZjJD81M1mk7jSwiY5t0g9GlE7ViOwp2LECpPg8/HKEVEu5gjQivy1lF+Yhbyouxio67oiHGPH5YnuyXSbGHeKnO6IchTvM8VbtVekk+dUq9hBGQOuy1gL5KT62nUvGGagv6C5KaYYth4E5L9Mr7oaipA15uFdVeTvsdvkfL9CYHs10+um9SNApciuS1+v2wRMpSybRByrn3vMmom4ofKCwGH7jQawlXVF7xyu9WfXJUdLB6Zqm0fMwu2cL7iKXUfr9hQMMBYznyC70zCKMOEvGlVEkgCEfsQ+WiIQANZgo4y/dAghF+RNAwlXQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=USJ1ki66vZ9TpK4RSxeLHCiQ7qg0of77UYFjZwKWt4c=;
- b=XmM406psX5kQNAvyDzMef09wiO1qPqs1EQj6qWRFP7usaiEGqRzsgSEICH3ImID/uzjr+/l20Tv+95wbdd+uKLW0LF1vln9cOMKuNfE2bXK9acqiuhSiJKJ+hmWwAuZb0MVlx9C2PTp3hdq+flDELWDwFGL6nJGyAJbmbAqj7GxiJC4MBivuXj+sYJXHwWSC/B4d5L8SVQhHHQTk9rhDvUik3xLIgbxiodz44YV+gRF802vm62+tg+x6HdOdEsbMV+KzxS8KkA4lfTqxOcHcVTdtrH1Hn9QixBY2Bb4wu54KzJ7XadP0dw8w8laVh8LnIteqTWcGSY2UJ5JQpJyjbg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linutronix.de smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=USJ1ki66vZ9TpK4RSxeLHCiQ7qg0of77UYFjZwKWt4c=;
- b=ibITmCSF1oKlc4/F0uVw3e2/OzIPznhZMqOaWIwcZ8i7U52hRbAm9vT+dlKPpWyAlSfrQhsNOQCrwY9BCyQgm5LYkzeIPwwOxkFuwGDP+BrU1a7o7GMkQODE6A+nkz4v1BqBx/oTT4lm0+9ySbIjn2B/NHeJpQn21AsNr6tgq2w=
-Received: from BY5PR04CA0003.namprd04.prod.outlook.com (2603:10b6:a03:1d0::13)
- by PH0PR12MB7983.namprd12.prod.outlook.com (2603:10b6:510:28e::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.46; Fri, 26 Apr
- 2024 00:43:34 +0000
-Received: from SJ5PEPF000001CD.namprd05.prod.outlook.com
- (2603:10b6:a03:1d0:cafe::db) by BY5PR04CA0003.outlook.office365.com
- (2603:10b6:a03:1d0::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.26 via Frontend
- Transport; Fri, 26 Apr 2024 00:43:34 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ5PEPF000001CD.mail.protection.outlook.com (10.167.242.42) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7519.19 via Frontend Transport; Fri, 26 Apr 2024 00:43:34 +0000
-Received: from ethanolx7e2ehost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 25 Apr
- 2024 19:43:32 -0500
-From: Ashish Kalra <Ashish.Kalra@amd.com>
-To: <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
-	<jbohac@suse.cz>, <dyoung@redhat.com>, <luto@kernel.org>
-CC: <rafael@kernel.org>, <peterz@infradead.org>, <adrian.hunter@intel.com>,
-	<sathyanarayanan.kuppuswamy@linux.intel.com>, <jun.nakajima@intel.com>,
-	<rick.p.edgecombe@intel.com>, <thomas.lendacky@amd.com>,
-	<michael.roth@amd.com>, <seanjc@google.com>, <kai.huang@intel.com>,
-	<bhe@redhat.com>, <kirill.shutemov@linux.intel.com>, <jroedel@suse.de>,
-	<ardb@kernel.org>, <kevinloughlin@google.com>, <kexec@lists.infradead.org>,
-	<linux-coco@lists.linux.dev>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 2/2] x86/sev: Add callback to apply RMP table fixups for kexec
-Date: Fri, 26 Apr 2024 00:43:18 +0000
-Message-ID: <df6e995ff88565262c2c7c69964883ff8aa6fc30.1714090302.git.ashish.kalra@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1714090302.git.ashish.kalra@amd.com>
-References: <cover.1714090302.git.ashish.kalra@amd.com>
+	Fri, 26 Apr 2024 06:08:51 +0000
+Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43Q61xw0023438;
+	Fri, 26 Apr 2024 06:08:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=bfBaZTg/l44VwTtHdGryt8ZFGjiRPBw8Tc3sZ2Nmsmw=;
+ b=I0jSXTEwUurkiWSqGnaTGnUMWoyyRYlmKf9RJdcEDp3z6GNn8QzQt9WDxfv22hZo4mGZ
+ dZwxnwoPtfherGL9+k1pVP07raWJ3sHWptJkN+wJTOSXrahbuhuq3PwFrPW+o8rXINVh
+ lpsIn7fefj6ctmZXI2toYFtE69Jh4WnvuutASKfJ2ERFDE+KMy3Ao7mZoBtkaLzYj8Bd
+ tCZAMc3jdAb8rNowfanzNna0YuSGNb+aesBFhIWRRxOJuVd3IZzqDZIHNGOJok3y2lT9
+ GigW/VfViIfGua2Fz1wMgaHnzW2/HwQWeHZTLBPNzqAXdRDR3KFms9XCX9gjep9Yov/u pA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xr6mqg0kj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 26 Apr 2024 06:08:14 +0000
+Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43Q68DgR001154;
+	Fri, 26 Apr 2024 06:08:13 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xr6mqg0kf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 26 Apr 2024 06:08:13 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43Q468rC028315;
+	Fri, 26 Apr 2024 06:08:12 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xmtr2wnan-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 26 Apr 2024 06:08:12 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43Q687iX14483714
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 26 Apr 2024 06:08:09 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5D2F02004F;
+	Fri, 26 Apr 2024 06:08:07 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1F82420063;
+	Fri, 26 Apr 2024 06:07:58 +0000 (GMT)
+Received: from li-4f5ba44c-27d4-11b2-a85c-a08f5b49eada.ibm.com.com (unknown [9.43.111.8])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 26 Apr 2024 06:07:57 +0000 (GMT)
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+To: linuxppc-dev@ozlabs.org
+Cc: Sourabh Jain <sourabhjain@linux.ibm.com>, Baoquan He <bhe@redhat.com>,
+        Hari Bathini <hbathini@linux.ibm.com>, Akhil Raj <lf32.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dave Young <dyoung@redhat.com>, David Hildenbrand <david@redhat.com>,
+        Eric DeVolder <eric.devolder@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Laurent Dufour <laurent.dufour@fr.ibm.com>,
+        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mimi Zohar <zohar@linux.ibm.com>, Naveen N Rao <naveen@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Valentin Schneider <vschneid@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org,
+        x86@kernel.org
+Subject: [PATCH v19 2/6] crash: add a new kexec flag for hotplug support
+Date: Fri, 26 Apr 2024 11:37:24 +0530
+Message-ID: <20240426060728.559753-3-sourabhjain@linux.ibm.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240426060728.559753-1-sourabhjain@linux.ibm.com>
+References: <20240426060728.559753-1-sourabhjain@linux.ibm.com>
 MIME-Version: 1.0
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001CD:EE_|PH0PR12MB7983:EE_
-X-MS-Office365-Filtering-Correlation-Id: ef97083d-794d-4c5b-eb8c-08dc6589e726
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?n7CdzFclEZw6WJo+EVa1t3r1uwBFn057izOvrsaFRx/2zFbd+e82qLQuppgr?=
- =?us-ascii?Q?eg+fuiq6frynPzMjUK9eiO+xsVyEIsa8HAmqhfJB6EwqZdt8KYS+mBzH5bLf?=
- =?us-ascii?Q?jcvhQraswSCM6wtaNr/quZzNg0WZ5EQrlg6HNjXtH6PgLQJRvMIFRO4fy77O?=
- =?us-ascii?Q?eIfbMUlJ2bR7n4SXshWSWhsfwnVtuuSUkA01Ag6Snd34k4pY3FwAUAkciMT0?=
- =?us-ascii?Q?bN6RAxhSGQyzsbDNgiJjg/3nvM+R81cyRjfMgTDgZz4/3xAGe09mT1cnPi/V?=
- =?us-ascii?Q?I45fJnGqY+3GYJTzlTQJC8kPzkrJfdmCEwW9wDZ5UfWJMTl/Gn9ytdoIOBVn?=
- =?us-ascii?Q?4oKrSYbHrGAOnT6d7i4S9yubRrVqwj2FRzJXQLsfF62j27jFSO27Ncz9NtDW?=
- =?us-ascii?Q?OoGKFG4h4Uo/OtixMeCfhX/THDxmspEnhRek2linPOgLOUl40gbl9jN0mOeg?=
- =?us-ascii?Q?GRmSPmodkm3NENCLyyV03GQgIBDap01iBXuUmrLGEaMXt+lPDg5Zd3tXWTYa?=
- =?us-ascii?Q?mccs/1d0c6daPpLA2cyCQPsyHZogYcrVkc8frsFf6Cgf7hoF5d3MGusJvKLW?=
- =?us-ascii?Q?gsfQU6i527CoA0v9mBgWYR3Kduc/FEKpqKrsllLAJ/ra0cvqaQ9TbrB0wldb?=
- =?us-ascii?Q?YtrP4GTAYiUjc/zUL6teunTciWANmTLXVKvO/dQcm7vA7QVNXbeXdJVC2IIl?=
- =?us-ascii?Q?UTRBnAWbSjkb0S/DsqJPAsTU3FuWC9sEc8/dQ3yVZaPC4Datfe5J6HY069VM?=
- =?us-ascii?Q?M9i2JKtPMwgfPNejuzsYW5H1zI0Hl7AK7QhsjLOyTyZ+BY9aPqSEhNQN2L8P?=
- =?us-ascii?Q?TsmGe7bRZ3sdt9hgL6DZuyEw8WtSKA33MmvTH0FEGB7tGRcI13DQhqa1xKcj?=
- =?us-ascii?Q?BCkKO/VF+N2JIjIO5DxlEQxcsk+3UH5QWrkHb8zcv0wbGhEWGfDXi44VrtCu?=
- =?us-ascii?Q?1H1+iCLzRQJDopU4x1+YNEOHZIicDEyGxaWwspiLFHRlCTHFWqggZuxEtxfY?=
- =?us-ascii?Q?ecvx1zAvbmwxNrH2+akQ90kjZKBJjHjzj0C8o6L9A9kjDqThVRelvBM996zj?=
- =?us-ascii?Q?Z95q8N4fScUKc9cikbRzw7QqBE8lCBxlttcX8qblicEEMvi7H5Kn8N7x0lyc?=
- =?us-ascii?Q?yMgDngMgVwN1Px1e5TkydJS/73KiORUEmoKFwYreRntcD63Nns5EbVMLcYJO?=
- =?us-ascii?Q?vkT7XHEMoYTBsoofV1oTIK1PJLENfPHf7iTJApBZRj+fx4MAwkJLsD/P83eM?=
- =?us-ascii?Q?U4gbQj+CL6EW22mRBY9ANdYkBBqQaJS83nHyoEHAOH6IUMf4zW21aHufacXG?=
- =?us-ascii?Q?uLNx344xBpzQPU61nmXJuPGUf48AadDmT1RIbOiGPAEkwLJX0VniFUqXnj8U?=
- =?us-ascii?Q?i2jIZU4knd26lf0R6Pyq71BU4iiJ?=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(376005)(82310400014)(1800799015)(7416005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Apr 2024 00:43:34.1530
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ef97083d-794d-4c5b-eb8c-08dc6589e726
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: SJ5PEPF000001CD.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7983
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: lzTbJ6nSvwdgthWSvw6tPbTiNVShKLPZ
+X-Proofpoint-ORIG-GUID: HJm-K4pOChsNr2jh2czhNi-rfoC8lF70
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-04-26_06,2024-04-25_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 mlxscore=0 bulkscore=0 suspectscore=0 spamscore=0
+ impostorscore=0 malwarescore=0 adultscore=0 phishscore=0 clxscore=1011
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404260035
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240425_174344_628798_97E0E188 
-X-CRM114-Status: GOOD (  18.45  )
+X-CRM114-CacheID: sfid-20240426_070849_929039_AAFBC2C3 
+X-CRM114-Status: GOOD (  35.47  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -148,192 +145,318 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Ashish Kalra <ashish.kalra@amd.com>
+Commit a72bbec70da2 ("crash: hotplug support for kexec_load()")
+introduced a new kexec flag, `KEXEC_UPDATE_ELFCOREHDR`. Kexec tool uses
+this flag to indicate to the kernel that it is safe to modify the
+elfcorehdr of the kdump image loaded using the kexec_load system call.
 
-Handle cases where the RMP table placement in the BIOS is
-not 2M aligned and then the kexec kernel could try to allocate
-from within that chunk and that causes a fatal RMP fault.
+However, it is possible that architectures may need to update kexec
+segments other then elfcorehdr. For example, FDT (Flatten Device Tree)
+on PowerPC. Introducing a new kexec flag for every new kexec segment
+may not be a good solution. Hence, a generic kexec flag bit,
+`KEXEC_CRASH_HOTPLUG_SUPPORT`, is introduced to share the CPU/Memory
+hotplug support intent between the kexec tool and the kernel for the
+kexec_load system call.
 
-The kexec failure is illustrated below from the kernel logs:
+Now we have two kexec flags that enables crash hotplug support for
+kexec_load system call. First is KEXEC_UPDATE_ELFCOREHDR (only used in
+x86), and second is KEXEC_CRASH_HOTPLUG_SUPPORT (for all architectures).
 
-[    0.000000] SEV-SNP: RMP table physical range [0x0000007ffe800000 - 0x000000807f0fffff]
-[    0.000000] BIOS-provided physical RAM map:
-[    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000008efff] usable
-[    0.000000] BIOS-e820: [mem 0x000000000008f000-0x000000000008ffff] ACPI NVS
-[    0.000000] BIOS-e820: [mem 0x0000000000090000-0x000000000009ffff] usable
-[    0.000000] BIOS-e820: [mem 0x0000000000100000-0x000000005a14afff] usable
-[    0.000000] BIOS-e820: [mem 0x000000005a14b000-0x000000005a34afff] reserved
-[    0.000000] BIOS-e820: [mem 0x000000005a34b000-0x0000000067acefff] usable
-[    0.000000] BIOS-e820: [mem 0x0000000067acf000-0x000000006dfcefff] reserved
-[    0.000000] BIOS-e820: [mem 0x000000006dfcf000-0x000000006edfefff] ACPI NVS
-[    0.000000] BIOS-e820: [mem 0x000000006edff000-0x000000006effefff] ACPI data
-[    0.000000] BIOS-e820: [mem 0x000000006efff000-0x000000006effffff] usable
-[    0.000000] BIOS-e820: [mem 0x000000006f000000-0x000000006f00afff] ACPI NVS
-[    0.000000] BIOS-e820: [mem 0x000000006f00b000-0x000000006fffffff] usable
-[    0.000000] BIOS-e820: [mem 0x0000000070000000-0x000000008fffffff] reserved
-[    0.000000] BIOS-e820: [mem 0x00000000aa000000-0x00000000aaffffff] reserved
-[    0.000000] BIOS-e820: [mem 0x00000000c5000000-0x00000000c5ffffff] reserved
-[    0.000000] BIOS-e820: [mem 0x00000000e0000000-0x00000000e0ffffff] reserved
-[    0.000000] BIOS-e820: [mem 0x00000000fd000000-0x00000000ffffffff] reserved
-[    0.000000] BIOS-e820: [mem 0x0000000100000000-0x000000407fcfffff] usable
-[    0.000000] BIOS-e820: [mem 0x000000407fd00000-0x000000407fffffff] reserved
-[    0.000000] BIOS-e820: [mem 0x0000004080000000-0x0000007ffe7fffff] usable
-[    0.000000] BIOS-e820: [mem 0x0000007ffe800000-0x000000807f0fffff] reserved
-[    0.000000] BIOS-e820: [mem 0x000000807f100000-0x000000807f1fefff] usable
+To simplify the process of finding and reporting the crash hotplug
+support the following changes are introduced.
 
-As seen here in the e820 memory map, the end range of RMP table is not aligned to
-2MB and not reserved and usable as RAM.
+1. Define arch specific function to process the kexec flags and
+   determine crash hotplug support
 
-Subsequently, kexec -s (KEXEC_FILE_LOAD syscall) loads it's purgatory code and
-boot_param, command line and other setup data into this RAM region as seen in the
-kexec logs below, which leads to fatal RMP fault during kexec boot.
+2. Rename the @update_elfcorehdr member of struct kimage to
+   @hotplug_support and populate it for both kexec_load and
+   kexec_file_load syscalls, because architecture can update more than
+   one kexec segment
 
-[  173.113085] Loaded purgatory at 0x807f1fa000
-[  173.113099] Loaded boot_param, command line and misc at 0x807f1f8000 bufsz=0x1350 memsz=0x2000
-[  173.113107] Loaded 64bit kernel at 0x7ffae00000 bufsz=0xd06200 memsz=0x3894000
-[  173.113291] Loaded initrd at 0x7ff6c89000 bufsz=0x4176014 memsz=0x4176014
-[  173.113296] E820 memmap:
-[  173.113298] 0000000000000000-000000000008efff (1)
-[  173.113300] 000000000008f000-000000000008ffff (4)
-[  173.113302] 0000000000090000-000000000009ffff (1)
-[  173.113303] 0000000000100000-000000005a14afff (1)
-[  173.113305] 000000005a14b000-000000005a34afff (2)
-[  173.113306] 000000005a34b000-0000000067acefff (1)
-[  173.113308] 0000000067acf000-000000006dfcefff (2)
-[  173.113309] 000000006dfcf000-000000006edfefff (4)
-[  173.113311] 000000006edff000-000000006effefff (3)
-[  173.113312] 000000006efff000-000000006effffff (1)
-[  173.113314] 000000006f000000-000000006f00afff (4)
-[  173.113315] 000000006f00b000-000000006fffffff (1)
-[  173.113317] 0000000070000000-000000008fffffff (2)
-[  173.113318] 00000000aa000000-00000000aaffffff (2)
-[  173.113319] 00000000c5000000-00000000c5ffffff (2)
-[  173.113321] 00000000e0000000-00000000e0ffffff (2)
-[  173.113322] 00000000fd000000-00000000ffffffff (2)
-[  173.113324] 0000000100000000-000000407fcfffff (1)
-[  173.113325] 000000407fd00000-000000407fffffff (2)
-[  173.113327] 0000004080000000-0000007ffe7fffff (1)
-[  173.113328] 0000007ffe800000-000000807f0fffff (2)
-[  173.113330] 000000807f100000-000000807f1fefff (1)
-[  173.113331] 000000807f1ff000-000000807fffffff (2)
-[  173.690528] nr_segments = 4
-[  173.690533] segment[0]: buf=0x00000000e626d1a2 bufsz=0x4000 mem=0x807f1fa000 memsz=0x5000
-[  173.690546] segment[1]: buf=0x0000000029c67bd6 bufsz=0x1350 mem=0x807f1f8000 memsz=0x2000
-[  173.690552] segment[2]: buf=0x0000000045c60183 bufsz=0xd06200 mem=0x7ffae00000 memsz=0x3894000
-[  173.697994] segment[3]: buf=0x000000006e54f08d bufsz=0x4176014 mem=0x7ff6c89000 memsz=0x4177000
-[  173.708672] kexec_file_load: type:0, start:0x807f1fa150 head:0x1184d0002 flags:0x0
+3. Let generic function crash_check_hotplug_support report hotplug
+   support for loaded kdump image based on value of @hotplug_support
 
-Check if RMP table start & end physical range in e820 tables
-are not aligned to 2MB and in that case map this range to reserved in all
-the three e820 tables.
+To bring the x86 crash hotplug support in line with the above points,
+the following changes have been made:
 
-Fixes: c3b86e61b756 ("x86/cpufeatures: Enable/unmask SEV-SNP CPU feature")
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+- Introduce the arch_crash_hotplug_support function to process kexec
+  flags and determine crash hotplug support
+
+- Remove the arch_crash_hotplug_[cpu|memory]_support functions
+
+Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+Acked-by: Baoquan He <bhe@redhat.com>
+Acked-by: Hari Bathini <hbathini@linux.ibm.com>
+Cc: Akhil Raj <lf32.dev@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+Cc: Borislav Petkov (AMD) <bp@alien8.de>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Eric DeVolder <eric.devolder@oracle.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Laurent Dufour <laurent.dufour@fr.ibm.com>
+Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Mimi Zohar <zohar@linux.ibm.com>
+Cc: Naveen N Rao <naveen@kernel.org>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Valentin Schneider <vschneid@redhat.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: kexec@lists.infradead.org
+Cc: x86@kernel.org
 ---
- arch/x86/include/asm/sev.h |  2 ++
- arch/x86/mm/mem_encrypt.c  | 13 ++++++++++++
- arch/x86/virt/svm/sev.c    | 42 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 57 insertions(+)
 
-diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-index 7f57382afee4..24300927a476 100644
---- a/arch/x86/include/asm/sev.h
-+++ b/arch/x86/include/asm/sev.h
-@@ -269,6 +269,7 @@ int rmp_make_private(u64 pfn, u64 gpa, enum pg_level level, u32 asid, bool immut
- int rmp_make_shared(u64 pfn, enum pg_level level);
- void snp_leak_pages(u64 pfn, unsigned int npages);
- void kdump_sev_callback(void);
-+void snp_rmptable_e820_fixup(void);
- #else
- static inline bool snp_probe_rmptable_info(void) { return false; }
- static inline int snp_lookup_rmpentry(u64 pfn, bool *assigned, int *level) { return -ENODEV; }
-@@ -282,6 +283,7 @@ static inline int rmp_make_private(u64 pfn, u64 gpa, enum pg_level level, u32 as
- static inline int rmp_make_shared(u64 pfn, enum pg_level level) { return -ENODEV; }
- static inline void snp_leak_pages(u64 pfn, unsigned int npages) {}
- static inline void kdump_sev_callback(void) { }
-+static inline void snp_rmptable_e820_fixup(void) {}
- #endif
+* No changes in v19.
+
+ arch/x86/include/asm/kexec.h | 11 ++---------
+ arch/x86/kernel/crash.c      | 28 +++++++++++++++++-----------
+ drivers/base/cpu.c           |  2 +-
+ drivers/base/memory.c        |  2 +-
+ include/linux/crash_core.h   | 13 ++++++-------
+ include/linux/kexec.h        | 11 +++++++----
+ include/uapi/linux/kexec.h   |  1 +
+ kernel/crash_core.c          | 15 ++++++---------
+ kernel/kexec.c               |  4 ++--
+ kernel/kexec_file.c          |  5 +++++
+ 10 files changed, 48 insertions(+), 44 deletions(-)
+
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index cb1320ebbc23..ae5482a2f0ca 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -210,15 +210,8 @@ extern void kdump_nmi_shootdown_cpus(void);
+ void arch_crash_handle_hotplug_event(struct kimage *image, void *arg);
+ #define arch_crash_handle_hotplug_event arch_crash_handle_hotplug_event
  
- #endif
-diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-index 6f3b3e028718..d88c942dd311 100644
---- a/arch/x86/mm/mem_encrypt.c
-+++ b/arch/x86/mm/mem_encrypt.c
-@@ -102,6 +102,19 @@ void __init mem_encrypt_setup_arch(void)
- 	phys_addr_t total_mem = memblock_phys_mem_size();
- 	unsigned long size;
+-#ifdef CONFIG_HOTPLUG_CPU
+-int arch_crash_hotplug_cpu_support(void);
+-#define crash_hotplug_cpu_support arch_crash_hotplug_cpu_support
+-#endif
+-
+-#ifdef CONFIG_MEMORY_HOTPLUG
+-int arch_crash_hotplug_memory_support(void);
+-#define crash_hotplug_memory_support arch_crash_hotplug_memory_support
+-#endif
++int arch_crash_hotplug_support(struct kimage *image, unsigned long kexec_flags);
++#define arch_crash_hotplug_support arch_crash_hotplug_support
  
+ unsigned int arch_crash_get_elfcorehdr_size(void);
+ #define crash_get_elfcorehdr_size arch_crash_get_elfcorehdr_size
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index 2a682fe86352..f06501445cd9 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -402,20 +402,26 @@ int crash_load_segments(struct kimage *image)
+ #undef pr_fmt
+ #define pr_fmt(fmt) "crash hp: " fmt
+ 
+-/* These functions provide the value for the sysfs crash_hotplug nodes */
+-#ifdef CONFIG_HOTPLUG_CPU
+-int arch_crash_hotplug_cpu_support(void)
++int arch_crash_hotplug_support(struct kimage *image, unsigned long kexec_flags)
+ {
+-	return crash_check_update_elfcorehdr();
+-}
+-#endif
+ 
+-#ifdef CONFIG_MEMORY_HOTPLUG
+-int arch_crash_hotplug_memory_support(void)
+-{
+-	return crash_check_update_elfcorehdr();
+-}
++#ifdef CONFIG_KEXEC_FILE
++	if (image->file_mode)
++		return 1;
+ #endif
 +	/*
-+	 * Invoke callback to do RMP table fixups which needs to be called
-+	 * during setup_arch() after the e820 tables have been setup
-+	 * in e820__memory_setup() and this function is appropriate to
-+	 * invoke the callback to apply any memory encryption platform specific
-+	 * quirks. The callback to do RMP table fixups cannot be invoked from
-+	 * snp_init() as snp_init() is called from sme_enable() in
-+	 * startup_64() which is before setup_arch() and e820 tables
-+	 * have still not been setup.
++	 * Initially, crash hotplug support for kexec_load was added
++	 * with the KEXEC_UPDATE_ELFCOREHDR flag. Later, this
++	 * functionality was expanded to accommodate multiple kexec
++	 * segment updates, leading to the introduction of the
++	 * KEXEC_CRASH_HOTPLUG_SUPPORT kexec flag bit. Consequently,
++	 * when the kexec tool sends either of these flags, it indicates
++	 * that the required kexec segment (elfcorehdr) is excluded from
++	 * the SHA calculation.
 +	 */
-+	if (cc_platform_has(CC_ATTR_HOST_SEV_SNP))
-+		snp_rmptable_e820_fixup();
-+
- 	if (!cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
- 		return;
++	return (kexec_flags & KEXEC_UPDATE_ELFCOREHDR ||
++		kexec_flags & KEXEC_CRASH_HOTPLUG_SUPPORT);
++}
  
-diff --git a/arch/x86/virt/svm/sev.c b/arch/x86/virt/svm/sev.c
-index ab0e8448bb6e..1b4b99b26bec 100644
---- a/arch/x86/virt/svm/sev.c
-+++ b/arch/x86/virt/svm/sev.c
-@@ -163,6 +163,48 @@ bool snp_probe_rmptable_info(void)
- 	return true;
+ unsigned int arch_crash_get_elfcorehdr_size(void)
+ {
+diff --git a/drivers/base/cpu.c b/drivers/base/cpu.c
+index 56fba44ba391..c61ecb0c2ae2 100644
+--- a/drivers/base/cpu.c
++++ b/drivers/base/cpu.c
+@@ -306,7 +306,7 @@ static ssize_t crash_hotplug_show(struct device *dev,
+ 				     struct device_attribute *attr,
+ 				     char *buf)
+ {
+-	return sysfs_emit(buf, "%d\n", crash_hotplug_cpu_support());
++	return sysfs_emit(buf, "%d\n", crash_check_hotplug_support());
  }
+ static DEVICE_ATTR_ADMIN_RO(crash_hotplug);
+ #endif
+diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+index c0436f46cfb7..67858eeb92ed 100644
+--- a/drivers/base/memory.c
++++ b/drivers/base/memory.c
+@@ -535,7 +535,7 @@ static DEVICE_ATTR_RW(auto_online_blocks);
+ static ssize_t crash_hotplug_show(struct device *dev,
+ 				       struct device_attribute *attr, char *buf)
+ {
+-	return sysfs_emit(buf, "%d\n", crash_hotplug_memory_support());
++	return sysfs_emit(buf, "%d\n", crash_check_hotplug_support());
+ }
+ static DEVICE_ATTR_RO(crash_hotplug);
+ #endif
+diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+index 647e928efee8..44305336314e 100644
+--- a/include/linux/crash_core.h
++++ b/include/linux/crash_core.h
+@@ -40,14 +40,13 @@ static inline void arch_kexec_unprotect_crashkres(void) { }
+ static inline void arch_crash_handle_hotplug_event(struct kimage *image, void *arg) { }
+ #endif
  
-+static void __init __snp_e820_tables_fixup(u64 pa)
+-int crash_check_update_elfcorehdr(void);
++int crash_check_hotplug_support(void);
+ 
+-#ifndef crash_hotplug_cpu_support
+-static inline int crash_hotplug_cpu_support(void) { return 0; }
+-#endif
+-
+-#ifndef crash_hotplug_memory_support
+-static inline int crash_hotplug_memory_support(void) { return 0; }
++#ifndef arch_crash_hotplug_support
++static inline int arch_crash_hotplug_support(struct kimage *image, unsigned long kexec_flags)
 +{
-+	if (IS_ALIGNED(pa, PMD_SIZE))
-+		return;
-+
-+	/*
-+	 * Check if RMP table start and end physical range
-+	 * in e820_tables are not aligned to 2MB and in that case map
-+	 * this range in all the three e820 tables to be reserved.
-+	 * The e820_table needs to be updated as it is converted to
-+	 * kernel memory resources and used by KEXEC_FILE_LOAD syscall
-+	 * to load kexec segments. The e820_table_firmware needs to be
-+	 * updated as it is exposed to sysfs and used by KEXEC_LOAD
-+	 * syscall to load kexec segments and e820_table_kexec needs
-+	 * to be updated as it passed to kexec-ed kernel.
++	return 0;
++}
+ #endif
+ 
+ #ifndef crash_get_elfcorehdr_size
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 060835bb82d5..5b93a5767413 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -319,8 +319,10 @@ struct kimage {
+ 	/* If set, we are using file mode kexec syscall */
+ 	unsigned int file_mode:1;
+ #ifdef CONFIG_CRASH_HOTPLUG
+-	/* If set, allow changes to elfcorehdr of kexec_load'd image */
+-	unsigned int update_elfcorehdr:1;
++	/* If set, it is safe to update kexec segments that are
++	 * excluded from SHA calculation.
 +	 */
-+	pa = ALIGN_DOWN(pa, PMD_SIZE);
-+	if (e820__mapped_any(pa, pa + PMD_SIZE, E820_TYPE_RAM)) {
-+		pr_info("Reserving start/end of RMP table on a 2MB boundary [0x%016llx]\n", pa);
-+		e820__range_update(pa, PMD_SIZE, E820_TYPE_RAM, E820_TYPE_RESERVED);
-+		e820__range_update_table(e820_table_kexec, pa, PMD_SIZE, E820_TYPE_RAM, E820_TYPE_RESERVED);
-+		e820__range_update_table(e820_table_firmware, pa, PMD_SIZE, E820_TYPE_RAM, E820_TYPE_RESERVED);
-+	}
-+}
-+
-+/*
-+ * Callback to do any RMP table fixups, needs to be called
-+ * after e820__memory_setup(), after the e820 tables are
-+ * setup/populated and before e820__reserve_resources(), before
-+ * the e820 map has been converted to the standard Linux memory
-+ * resources and e820 map is no longer used and modifying it
-+ * has no effect. Handle cases where the RMP table placement in
-+ * the BIOS is not 2M aligned and then the kexec kernel could
-+ * try to allocate from within that chunk and that causes a
-+ * fatal RMP fault.
-+ */
-+void __init snp_rmptable_e820_fixup(void)
-+{
-+	__snp_e820_tables_fixup(probed_rmp_base);
-+	__snp_e820_tables_fixup(probed_rmp_base + probed_rmp_size);
-+}
-+
++	unsigned int hotplug_support:1;
+ #endif
+ 
+ #ifdef ARCH_HAS_KIMAGE_ARCH
+@@ -391,9 +393,10 @@ bool kexec_load_permitted(int kexec_image_type);
+ 
+ /* List of defined/legal kexec flags */
+ #ifndef CONFIG_KEXEC_JUMP
+-#define KEXEC_FLAGS    (KEXEC_ON_CRASH | KEXEC_UPDATE_ELFCOREHDR)
++#define KEXEC_FLAGS    (KEXEC_ON_CRASH | KEXEC_UPDATE_ELFCOREHDR | KEXEC_CRASH_HOTPLUG_SUPPORT)
+ #else
+-#define KEXEC_FLAGS    (KEXEC_ON_CRASH | KEXEC_PRESERVE_CONTEXT | KEXEC_UPDATE_ELFCOREHDR)
++#define KEXEC_FLAGS    (KEXEC_ON_CRASH | KEXEC_PRESERVE_CONTEXT | KEXEC_UPDATE_ELFCOREHDR | \
++			KEXEC_CRASH_HOTPLUG_SUPPORT)
+ #endif
+ 
+ /* List of defined/legal kexec file flags */
+diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
+index c17bb096ea68..5ae1741ea8ea 100644
+--- a/include/uapi/linux/kexec.h
++++ b/include/uapi/linux/kexec.h
+@@ -13,6 +13,7 @@
+ #define KEXEC_ON_CRASH		0x00000001
+ #define KEXEC_PRESERVE_CONTEXT	0x00000002
+ #define KEXEC_UPDATE_ELFCOREHDR	0x00000004
++#define KEXEC_CRASH_HOTPLUG_SUPPORT 0x00000008
+ #define KEXEC_ARCH_MASK		0xffff0000
+ 
  /*
-  * Do the necessary preparations which are verified by the firmware as
-  * described in the SNP_INIT_EX firmware command description in the SNP
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 70fa8111a9d6..394db3ebe835 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -493,10 +493,10 @@ static DEFINE_MUTEX(__crash_hotplug_lock);
+ 
+ /*
+  * This routine utilized when the crash_hotplug sysfs node is read.
+- * It reflects the kernel's ability/permission to update the crash
+- * elfcorehdr directly.
++ * It reflects the kernel's ability/permission to update the kdump
++ * image directly.
+  */
+-int crash_check_update_elfcorehdr(void)
++int crash_check_hotplug_support(void)
+ {
+ 	int rc = 0;
+ 
+@@ -508,10 +508,7 @@ int crash_check_update_elfcorehdr(void)
+ 		return 0;
+ 	}
+ 	if (kexec_crash_image) {
+-		if (kexec_crash_image->file_mode)
+-			rc = 1;
+-		else
+-			rc = kexec_crash_image->update_elfcorehdr;
++		rc = kexec_crash_image->hotplug_support;
+ 	}
+ 	/* Release lock now that update complete */
+ 	kexec_unlock();
+@@ -552,8 +549,8 @@ static void crash_handle_hotplug_event(unsigned int hp_action, unsigned int cpu,
+ 
+ 	image = kexec_crash_image;
+ 
+-	/* Check that updating elfcorehdr is permitted */
+-	if (!(image->file_mode || image->update_elfcorehdr))
++	/* Check that kexec segments update is permitted */
++	if (!image->hotplug_support)
+ 		goto out;
+ 
+ 	if (hp_action == KEXEC_CRASH_HP_ADD_CPU ||
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index bab542fc1463..a6b3f96bb50c 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -135,8 +135,8 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
+ 		image->preserve_context = 1;
+ 
+ #ifdef CONFIG_CRASH_HOTPLUG
+-	if (flags & KEXEC_UPDATE_ELFCOREHDR)
+-		image->update_elfcorehdr = 1;
++	if ((flags & KEXEC_ON_CRASH) && arch_crash_hotplug_support(image, flags))
++		image->hotplug_support = 1;
+ #endif
+ 
+ 	ret = machine_kexec_prepare(image);
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 2d1db05fbf04..3d64290d24c9 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -376,6 +376,11 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+ 	if (ret)
+ 		goto out;
+ 
++#ifdef CONFIG_CRASH_HOTPLUG
++	if ((flags & KEXEC_FILE_ON_CRASH) && arch_crash_hotplug_support(image, flags))
++		image->hotplug_support = 1;
++#endif
++
+ 	ret = machine_kexec_prepare(image);
+ 	if (ret)
+ 		goto out;
 -- 
-2.34.1
+2.44.0
 
 
 _______________________________________________
