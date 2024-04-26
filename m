@@ -4,62 +4,132 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 47A8BC4345F
-	for <kexec@archiver.kernel.org>; Thu, 25 Apr 2024 20:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F3508C4345F
+	for <kexec@archiver.kernel.org>; Fri, 26 Apr 2024 00:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=CaE5Gn86iwB/5WyUZ/MwQxdaRTEKuwwpM9UrFEdo/OU=; b=AINbl6kED/WbqX
-	RGjdqMnYHWRW2kCPz/fZxn5mJ+3N1LmB+t4AOGg/H+GwQ8oFvgHNu2PeBxFxQNhAuOhvs0zgn4jsM
-	1g2DqCVeLbIHKEtj3AVzVhtMcXxPNrZk9oYlMflzK9Bm5oxz088A8LJkIp/rnk6yLYa2lbMBFrhLz
-	GWtHG6plFsGzxYB3cxA7bNlINBeZsboR+DWmE7vU+5nllUALabfLhceePgm0v8PIoQ88mO18dpb/w
-	XEZ0uW88E9ZvOmQzqoY466gJeOi0yZPi1KAqZcYb+8z8IBDZeXPUgdp/sdAdeWzCy5tapKXTNNP9K
-	z+/7EmOXpJkev0iQBpfA==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:CC
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=Ir348DN+oy/3Tv7pKBUjSO1ZB/S0aVWzCDI5pEY+H0E=; b=voSGz4RiyfMOVp
+	H58Dri4nxI1j7U+w9gF0aIIYLqmRy3PKInmMo+xG5/aeXunw5kbvq0ileIvgnX9xBl6utJTLKw+p0
+	LYH2shhSi5D/e22IDkj5p/V+w9Og5tbRbsEXipfmVPHxZsd5r5lm3h0OK7On4qLe8UsF35le7cHc1
+	5f4+CadmHqrU8YFK0R0rFjkDeo7QbzQ45NnfBCbtbodzQ092WocT7T+t+ya185mnxwDURUU6d8px+
+	zKilEC2PrRQ87L0wkR7wZ3+YbP42lw1xMPmEeOaXAa6C6FJefKoif3g3CYrpGNDGKD7Nk0KTfXMWa
+	PRN+f+8+xtxWqRE3Nlmg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s05o5-0000000A6Ok-47An;
-	Thu, 25 Apr 2024 20:35:01 +0000
-Received: from todd.t-8ch.de ([159.69.126.157])
+	id 1s09fC-0000000AjJP-34QV;
+	Fri, 26 Apr 2024 00:42:06 +0000
+Received: from mail-dm6nam12on20601.outbound.protection.outlook.com ([2a01:111:f403:2417::601] helo=NAM12-DM6-obe.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s05o2-0000000A6MS-0eLy;
-	Thu, 25 Apr 2024 20:34:59 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1714077293;
-	bh=bZqtcMhFx7TDPaIgrLqyfpl0/OfmMPAKopBgZDQprIg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z+gqGa8PD+3BrRxF+Exe+s/+n1FrcsSYPFeQUrvoT2UUvEiGsEXMDYuXjYQJDYiRJ
-	 9/0fJxtI2lDBLEHhkegO15rObvRhgIuWQMhE+D085PPIsVKHmI/z9Zz6qr7xUxUgOg
-	 gdOVIytSYg1zquf83mxdxD8VyvGj7mHBMGjmlG8k=
-Date: Thu, 25 Apr 2024 22:34:52 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Joel Granados <j.granados@samsung.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Kees Cook <keescook@chromium.org>, Eric Dumazet <edumazet@google.com>, 
-	Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-mm@kvack.org, linux-security-module@vger.kernel.org, 
-	bpf@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	netfilter-devel@vger.kernel.org, coreteam@netfilter.org, kexec@lists.infradead.org, 
-	linux-hardening@vger.kernel.org, bridge@lists.linux.dev, lvs-devel@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com
-Subject: Re: [PATCH v3 00/11] sysctl: treewide: constify ctl_table argument
- of sysctl handlers
-Message-ID: <d11f875e-4fb5-46dd-a412-84818208c575@t-8ch.de>
-References: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
- <CGME20240425031241eucas1p1fb0790e0d03ccbe4fca2b5f6da83d6db@eucas1p1.samsung.com>
- <20240424201234.3cc2b509@kernel.org>
- <20240425110412.2n5d27smecfncsfa@joelS2.panther.com>
+	id 1s09f9-0000000AjIW-0HU7
+	for kexec@lists.infradead.org;
+	Fri, 26 Apr 2024 00:42:04 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RuWRaiPn6X+0shma7N45/TJBUgnPCysL14HV3a6yTcRcx3S3y63mLQXcdRfxNwvr5slgYghTs0ZN27JLXnooFAQKsDU3qOZ/FOt5Sme9yNJ0QZ1qGqa3HsJ0rWa/AwGBdR0gfSYYFJtYiZSOX3NtUnVLJarBWYE2sItYnZySddbJINu2jOybtEnxtFwqOQ3yC3Xi8sOHD1RCriBKxNka1o3oLZJNRKp5VOllJOdyP2sbajLxVz0Rv4kYBVePJLh8njK/2b836jfNa8ryWE0WEvtbxHgOg7qYPca8SNLYSHB2ucM3UrIZUTYH4pYXw+Ejd85MHa5nHlVMZeyUsBlQjQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UpU7htbXKHEicSll8vMt/Ky9+2XNMdFtksbXyhgnOAo=;
+ b=DX9hAQyoRwmcEWLvHwbHOgH57N5q4PI+rsfzuKLQZCyEMvuwcCDG7uMjLSE0WJgJxDy7bXnfD1YwIuoi95LIHUtI4pkjrNqhKXUZG01wQ8CDW10j1A61eDE8BqmEFnSHCx6Fjg9tBT3KQ6BhOt0/IE6pjGImRLgWM/f8yXeyHEN3Z+vrRR8s3OpSJTsRhmc7oMlbbivIuQjuE1FY3vsC2KStx8kI6+HZBqu1rTusCF4u1h5m1CkmPvEAHo6XxHneyQt2tlvnACSRFNiZIgkcSwkCNPlrScQ6OKddhLtlMr9UATcj1dphbc0a7csIoK7v2ypw8ocgHbnY9i9K8aShYQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linutronix.de smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UpU7htbXKHEicSll8vMt/Ky9+2XNMdFtksbXyhgnOAo=;
+ b=2NKrcsy/WIL9zco2gYGF23BLRwRM8JBFFYEIDMKgua/RMjhdgbfU5OyBAOq49Z8yPyktclnaOU5mVQe7sQL3pJrCrqC5cZqo1ox9ADKuqMSHHo24rfpBU/vhTow+fD3Tv8Jpdme5MHDev9mYF/YpJBJ8T2sbpJoAiBt36nYxWH8=
+Received: from BN9PR03CA0251.namprd03.prod.outlook.com (2603:10b6:408:ff::16)
+ by MW4PR12MB6922.namprd12.prod.outlook.com (2603:10b6:303:207::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Fri, 26 Apr
+ 2024 00:41:49 +0000
+Received: from BN3PEPF0000B06A.namprd21.prod.outlook.com
+ (2603:10b6:408:ff:cafe::27) by BN9PR03CA0251.outlook.office365.com
+ (2603:10b6:408:ff::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.24 via Frontend
+ Transport; Fri, 26 Apr 2024 00:41:49 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN3PEPF0000B06A.mail.protection.outlook.com (10.167.243.69) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7519.0 via Frontend Transport; Fri, 26 Apr 2024 00:41:49 +0000
+Received: from ethanolx7e2ehost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 25 Apr
+ 2024 19:41:48 -0500
+From: Ashish Kalra <Ashish.Kalra@amd.com>
+To: <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
+	<jbohac@suse.cz>, <dyoung@redhat.com>, <luto@kernel.org>
+CC: <rafael@kernel.org>, <peterz@infradead.org>, <adrian.hunter@intel.com>,
+	<sathyanarayanan.kuppuswamy@linux.intel.com>, <jun.nakajima@intel.com>,
+	<rick.p.edgecombe@intel.com>, <thomas.lendacky@amd.com>,
+	<michael.roth@amd.com>, <seanjc@google.com>, <kai.huang@intel.com>,
+	<bhe@redhat.com>, <kirill.shutemov@linux.intel.com>, <jroedel@suse.de>,
+	<ardb@kernel.org>, <kevinloughlin@google.com>, <kexec@lists.infradead.org>,
+	<linux-coco@lists.linux.dev>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 0/2] Apply RMP table fixups for kexec.
+Date: Fri, 26 Apr 2024 00:41:38 +0000
+Message-ID: <cover.1714090302.git.ashish.kalra@amd.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20240425110412.2n5d27smecfncsfa@joelS2.panther.com>
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B06A:EE_|MW4PR12MB6922:EE_
+X-MS-Office365-Filtering-Correlation-Id: de07bcb7-156b-47e5-4342-08dc6589a886
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?N4g9XoQbdg/LpudsylvG7BiT2S5k/7hQMkZRwWQXBFYsevOkg7Cvl5fC+97a?=
+ =?us-ascii?Q?FPz+FisSR0u7V5RDPChfy+dCqQEfmeL6minX83gUtTF3ir7VfhReB8DcHnmY?=
+ =?us-ascii?Q?oSQw938jVui9GrEre1H09liv7HjYNysDmYdS4BJ1hnlbMkGPkLqqPYcqw9b6?=
+ =?us-ascii?Q?VG7Nfrv1XQH53lG2NncXkc2XkCMwpNQpuusDqywYNmz0SBACKbctRrZg+ovl?=
+ =?us-ascii?Q?ExVK2RHiSr8PvlvrVP0ygkKQnwMQPZZ1Mvotlozgec9veJKkKKw3rjHLoziz?=
+ =?us-ascii?Q?ht3TUaJq4Pq6JrsSlkIWvT5Ok5w9eHfPlvkBLLPIKdgEGekHjq+gP8yiTX5+?=
+ =?us-ascii?Q?Aq9gxXuwlpZd7Rtb+27m1n0ILgZSowQqCHnEinpJ17/NNAucR4l6YTLd6305?=
+ =?us-ascii?Q?OwBDiPsso6Xrj6OjOcvbqSDYk0WDWRUUiL+F1pefbW6UQkcEkQPmeUUkkUsC?=
+ =?us-ascii?Q?WahxqyFXCPacCYWFtQBAsOZX0kXtJgNHHjT0LTw6M+U1548lBxmAxxjpf1zh?=
+ =?us-ascii?Q?FdtbJuZWauRgpq4aTR3IxCsLcpQ0flrNG8ogI7bNbzu79wB9EBMhiAi5+IpE?=
+ =?us-ascii?Q?kA/1BfKcQfw1gZh11wwGTEJa3jFpQuZPTVPz+s7C8u6Un/bYX9nORtTXh9Is?=
+ =?us-ascii?Q?ewqt2PrJrn4lUb2ZfFCvNcxis55dHmLv/PZ1ou0M9ivIIUg0FMR8ACxKOb/u?=
+ =?us-ascii?Q?uHRbUUpFA2RYga8T9SwP8Lyj01WR5AEqxYhNC1XHBiR3QHlDBthbD22NVhyS?=
+ =?us-ascii?Q?WwGevn6sXFeJn7EpowpNCACWdH93Mz3cd+XIieCubnpftN/glMvnbsDhITeX?=
+ =?us-ascii?Q?G0bA+oJHzQtHuHJL2dDD0M8N2LTHHvMoK8Ic5ltJ2lgSl2imLmRjvcAU4lzR?=
+ =?us-ascii?Q?iQegqIX/HwX1eg4JvLN5IWDBl+IrKZ42XHSyA6P24WPrQl09OkhZuT51sBzB?=
+ =?us-ascii?Q?BVLEssGmkVOl/1QxuHifV7ZVSH568m0qsC/Fz/cxhPTZBfxCKD/Nzorj98Uf?=
+ =?us-ascii?Q?zHgBQ3CeNOaDahUwJNpAbD1SKqmRext/oG1rG1n5OLvv7P26mH7HREVsPNDm?=
+ =?us-ascii?Q?YnzhnpTxSI5S/AMC3V2jbn2HjTJ1mV981PRayk6hGd0i9lDOlH5ovEFejpQ9?=
+ =?us-ascii?Q?eFbZtgfIwBiOKeJhOF7/M9CHpk5yWciHiQxcszR/gkgsPBPWU+Uj2G2yAOWa?=
+ =?us-ascii?Q?gTjYhKYSWbKaaAUaKBD5yqz1AMXrMmieD5G9UK+jaSDHOpBQY0JzY8nhF499?=
+ =?us-ascii?Q?Tn8vTanLz2ig9feQOAbVwVC9DUP8rZZEwNcwubkP+XIMpz49gd0Uw+eOHmLq?=
+ =?us-ascii?Q?p5a7HDfPaD8waUFQnKVfi2TdtqvZWXDvKWZC+rJCbU86ANr10I6VQAxP3avb?=
+ =?us-ascii?Q?e2U+KGcZw/ACaXKdBNPxh4IfkZDQ?=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(82310400014)(1800799015)(376005)(7416005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Apr 2024 00:41:49.1282
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: de07bcb7-156b-47e5-4342-08dc6589a886
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN3PEPF0000B06A.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6922
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240425_133458_371508_8511D0DD 
-X-CRM114-Status: GOOD (  27.68  )
+X-CRM114-CacheID: sfid-20240425_174203_135381_E88EB678 
+X-CRM114-Status: GOOD (  13.61  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -71,64 +141,64 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-SGkgSm9lbCwKCk9uIDIwMjQtMDQtMjUgMTM6MDQ6MTIrMDAwMCwgSm9lbCBHcmFuYWRvcyB3cm90
-ZToKPiBPbiBXZWQsIEFwciAyNCwgMjAyNCBhdCAwODoxMjozNFBNIC0wNzAwLCBKYWt1YiBLaWNp
-bnNraSB3cm90ZToKPiA+IE9uIFR1ZSwgMjMgQXByIDIwMjQgMDk6NTQ6MzUgKzAyMDAgVGhvbWFz
-IFdlacOfc2NodWggd3JvdGU6Cj4gPiA+IFRoZSBzZXJpZXMgd2FzIHNwbGl0IGZyb20gbXkgbGFy
-Z2VyIHNlcmllcyBzeXNjdGwtY29uc3Qgc2VyaWVzIFswXS4KPiA+ID4gSXQgb25seSBmb2N1c3Nl
-cyBvbiB0aGUgcHJvY19oYW5kbGVycyBidXQgaXMgYW4gaW1wb3J0YW50IHN0ZXAgdG8gYmUKPiA+
-ID4gYWJsZSB0byBtb3ZlIGFsbCBzdGF0aWMgZGVmaW5pdGlvbnMgb2YgY3RsX3RhYmxlIGludG8g
-LnJvZGF0YS4KPiA+IAo+ID4gU3BsaXQgdGhpcyBwZXIgc3Vic3lzdGVtLCBwbGVhc2UuCj4gSXQg
-aXMgdHJpY2t5IHRvIGRvIHRoYXQgYmVjYXVzZSBpdCBjaGFuZ2VzIHRoZSBmaXJzdCBhcmd1bWVu
-dCAoY3RsKikgdG8KPiBjb25zdCBpbiB0aGUgcHJvY19oYW5kbGVyIGZ1bmN0aW9uIHR5cGUgZGVm
-aW5lZCBpbiBzeXNjbHQuaDoKPiAiCj4gLXR5cGVkZWYgaW50IHByb2NfaGFuZGxlcihzdHJ1Y3Qg
-Y3RsX3RhYmxlICpjdGwsIGludCB3cml0ZSwgdm9pZCAqYnVmZmVyLAo+ICt0eXBlZGVmIGludCBw
-cm9jX2hhbmRsZXIoY29uc3Qgc3RydWN0IGN0bF90YWJsZSAqY3RsLCBpbnQgd3JpdGUsIHZvaWQg
-KmJ1ZmZlciwKPiAgICAgICAgICAgICAgICAgc2l6ZV90ICpsZW5wLCBsb2ZmX3QgKnBwb3MpOwo+
-ICIKPiBUaGlzIG1lYW5zIHRoYXQgYWxsIHRoZSBwcm9jX2hhbmRsZXJzIG5lZWQgdG8gY2hhbmdl
-IGF0IHRoZSBzYW1lIHRpbWUuCj4gCj4gSG93ZXZlciwgdGhlcmUgaXMgYW4gYWx0ZXJuYXRpdmUg
-d2F5IHRvIGRvIHRoaXMgdGhhdCBhbGxvd3MgY2h1bmtpbmcuIFdlCj4gZmlyc3QgZGVmaW5lIHRo
-ZSBwcm9jX2hhbmRsZXIgYXMgYSB2b2lkIHBvaW50ZXIgKGNhc3RpbmcgaXQgd2hlcmUgaXQgaXMK
-PiBiZWluZyB1c2VkKSBbMV0uIFRoZW4gd2UgY291bGQgZG8gdGhlIGNvbnN0aWZpY2F0aW9uIGJ5
-IHN1YnN5c3RlbSAobGlrZQo+IEpha3ViIHByb3Bvc2VzKS4gRmluYWxseSB3ZSBjYW4gInJldmVy
-dCB0aGUgdm9pZCBwb2ludGVyIGNoYW5nZSBzbyB3ZQo+IGRvbid0IGhhdmUgb25lIHNpemUgZml0
-IGFsbCBwb2ludGVyIGFzIG91ciBwcm9jX2hhbmRsZXIgWzJdLgo+IAo+IEhlcmUgYXJlIHNvbWUg
-Y29tbWVudHMgYWJvdXQgdGhlIGFsdGVybmF0aXZlOgo+IDEuIFdlIHdvdWxkIG5lZWQgdG8gbWFr
-ZSB0aGUgZmlyc3QgYXJndW1lbnQgY29uc3QgaW4gYWxsIHRoZSBkZXJpdmVkCj4gICAgcHJvY19o
-YW5kbGVycyBbM10gCj4gMi4gVGhlcmUgd291bGQgYmUgbm8gdW5kZWZpbmVkIGJlaGF2aW9yIGZv
-ciB0d28gcmVhc29uczoKPiAgICAyLjEuIFRoZXJlIGlzIG5vIGNhc2Ugd2hlcmUgd2UgY2hhbmdl
-IHRoZSBmaXJzdCBhcmd1bWVudC4gV2Uga25vdwo+ICAgICAgICAgdGhpcyBiZWNhdXNlIHRoZXJl
-IGFyZSBubyBjb21waWxlIGVycm9ycyBhZnRlciB3ZSBtYWtlIGl0IGNvbnN0Lgo+ICAgIDIuMi4g
-V2Ugd291bGQgYWx3YXlzIGdvIGZyb20gbm9uLWNvbnN0IHRvIGNvbnN0LiBUaGlzIGlzIHRoZSBj
-YXNlCj4gICAgICAgICBiZWNhdXNlIGFsbCB0aGUgc3R1ZmYgdGhhdCBpcyB1bmNoYW5nZWQgaW4g
-bm9uLWNvbnN0Lgo+IDMuIElmIHRoZSBpZGVhIHN0aWNrcywgaXQgc2hvdWxkIGdvIGludG8gbWFp
-bmxpbmUgYXMgb25lIHBhdGNoc2V0LiBJCj4gICAgd291bGQgbm90IGxpa2UgdG8gaGF2ZSBhIHZv
-aWQqIHByb2NfaGFuZGxlciBpbiBhIGtlcm5lbCByZWxlYXNlLgo+IDQuIEkgdGhpbmsgdGhpcyBp
-cyBhICJ3aW4vd2luIiBzb2x1dGlvbiB3ZXJlIHRoZSBjb25zdGlmaWNhdGlvbiBnb2VzCj4gICAg
-dGhyb3VnaCBhbmQgaXQgaXMgZGl2aWRlZCBpbiBzdWNoIGEgd2F5IHRoYXQgaXQgaXMgcmV2aWV3
-YWJsZS4KPiAKPiBJIHdvdWxkIHJlYWxseSBsaWtlIHRvIGhlYXIgd2hhdCBwcGwgdGhpbmsgYWJv
-dXQgdGhpcyAiaGVyZXRpYyIKPiBhbHRlcm5hdGl2ZS4gQFRob21hcywgQEx1aXMsIEBLZWVzIEBK
-YWt1Yj8KClRoYW5rcyBmb3IgdGhhdCBhbHRlcm5hdGl2ZSwgSSdtIG5vdCBhIGJpZyBmYW4gdGhv
-dWdoLgoKQmVzaWRlcyB0aGUgd29ua3kgc3ludGF4LCBDb250cm9sIEZsb3cgSW50ZWdyaXR5IHNo
-b3VsZCB0cmFwIG9uCnRoaXMgY29uc3RydWN0LiBGdW5jdGlvbnMgYXJlIGNhbGxlZCB0aHJvdWdo
-IGRpZmZlcmVudCBwb2ludGVycyB0aGFuCnRoZWlyIGFjdHVhbCB0eXBlcyB3aGljaCBpcyBleGFj
-dGx5IHdoYXQgQ0ZJIGlzIG1lYW50IHRvIHByZXZlbnQuCgpNYXliZSBwZW9wbGUgZmluZCBpdCBl
-YXNpZXIgdG8gcmV2aWV3IHdoZW4gdXNpbmcKIi0td29yZC1kaWZmIiBhbmQvb3IgIi1VMCIgd2l0
-aCBnaXQgZGlmZi9zaG93LgpUaGVyZSBpcyByZWFsbHkgbm90aGluZyBnb2luZyBhbiBiZXNpZGVz
-IGFkZGluZyBhIGZldyAiY29uc3Qicy4KCkJ1dCBpZiB0aGUgY29uc2Vuc3VzIHByZWZlcnMgdGhp
-cyBzb2x1dGlvbiwgSSdsbCBiZSBoYXBweSB0byBhZG9wdCBpdC4KCj4gWzFdIGh0dHBzOi8vZ2l0
-Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L2pvZWwuZ3JhbmFkb3MvbGludXgu
-Z2l0L2NvbW1pdC8/aD1qYWcvY29uc3RmeV90cmVld2lkZV9hbHRlcm5hdGl2ZSZpZD00YTM4MzUw
-M2IxZWE2NTBkNGUxMmMxZjU4Mzg5NzRlODc5ZjVhYTZmCj4gWzJdIGh0dHBzOi8vZ2l0Lmtlcm5l
-bC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L2pvZWwuZ3JhbmFkb3MvbGludXguZ2l0L2Nv
-bW1pdC8/aD1qYWcvY29uc3RmeV90cmVld2lkZV9hbHRlcm5hdGl2ZSZpZD1hM2JlNjU5NzNkMjdl
-YzI5MzNiOWU4MWUxYmVjNjBiZTNhOWI0NjBkCj4gWzNdIHByb2NfZG9zdHJpbmcsIHByb2NfZG9i
-b29sLCBwcm9jX2RvaW50dmVjLi4uLgoKClRob21hcwoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmlu
-ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9r
-ZXhlYwo=
+From: Ashish Kalra <ashish.kalra@amd.com>
+
+Handle cases where the RMP table placement in the BIOS is
+not 2M aligned and then the kexec kernel could try to allocate
+from within that chunk and that causes a fatal RMP fault.
+
+Check if RMP table start & end physical range in e820 tables
+are not aligned to 2MB and in that case map this range to reserved
+in all the three e820 tables.
+
+The callback to apply these RMP table fixups needs to be called
+after the e820 tables are setup/populated and before the e820 map
+has been converted to the standard Linux memory resources and e820 map
+is no longer used and modifying it has no effect.
+
+v3:
+- Added new e820__range_update_table() helper and updated all
+  internal and external modifiers of e820_table_kexec and 
+  e820_table_firmware to call this new helper function.
+- Updated and restructured the commit message for patch 2/2 to
+  explain the issue in detail.
+- Added, merged and cleaned up inline comments in patch 2/2.
+- Added new __snp_e820_tables_fixup() function to be avoid
+  duplication of code for fixing both RMP table start and end
+  physical ranges.
+
+v2:
+- Remove overriding e820__memory_setup_default() to invoke
+  snp_rmptable_e820_fixup() to apply the RMP table fixups.
+- This callback snp_rmptable_e820_fixup() is now invoked
+  after e820__memory_setup() and before e820__reserve_resources().
+- Expose e820 API interfaces to update e820_table_kexec and
+  e820_table_firmware externally.
+- snp_rmptable_e820_fixup() now calls these new external API
+  interfaces to update e820_table_kexec and e820_table_firmware.
+
+Ashish Kalra (2):
+  x86/e820: Expose API to update e820 kexec and firmware tables
+    externally.
+  x86/sev: Add callback to apply RMP table fixups for kexec
+
+ arch/x86/include/asm/e820/api.h |  2 ++
+ arch/x86/include/asm/sev.h      |  2 ++
+ arch/x86/kernel/e820.c          |  6 ++---
+ arch/x86/mm/mem_encrypt.c       | 13 ++++++++++
+ arch/x86/virt/svm/sev.c         | 42 +++++++++++++++++++++++++++++++++
+ 5 files changed, 62 insertions(+), 3 deletions(-)
+
+-- 
+2.34.1
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
