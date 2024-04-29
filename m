@@ -4,112 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2AA05C4345F
-	for <kexec@archiver.kernel.org>; Mon, 29 Apr 2024 09:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B2980C4345F
+	for <kexec@archiver.kernel.org>; Mon, 29 Apr 2024 13:18:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=817fX718DKzIyUWCSuT4lj1bqvfk646SvTzPEXoTBEg=; b=suzuUDXQZfMJGT
-	Dp0/0qDUcohxLFBPiQcUgrEVOOulLr8dCkeDqwYUwGRARtGcYzy+/LFvPpV5pVSyPCdvOdc/bIiIg
-	Lrww5xVPKvzqrgol+b1j0P+mBZD8IaJz5yG6wM3slSy42jDuAz8HNv+d1vlA7mM2AH/rh81/89/u+
-	KPo0eUzu2/BlEhHs2JorDHkK6J+jO6vylJtKoQawIOtW6kC79xTmAln9JPLsIBnurQDX8SiTfdx74
-	ET9RG8HXMMvudnInrSv5VNGuV9UjtKseDPkqdNjaeNOV5UKVtewZzALhIh++ls8JeAgqGBCNHD5G2
-	/YZwsxGANS4IaxZ9xl2g==;
+	List-Owner; bh=EO78eeJLgXCQAWihce23cXTHtLXwheLapfvWUnb44cA=; b=jC/MzMpISF53pL
+	Zq40JjhHXWJT2aYJcXkZLWm6d4dbWBjl7ZmGaJOhX7sqNJ3srZXI5h19Vimx3mYwWkX76dMrCiBZy
+	OrDsfgHvVRg5S+tw2hURo/cEiE2e0mDHiQa3vJIr37k16mfecan0Ykdmsgus7p5z/XbV8dDCFq1vm
+	l2VtZc7GmBOg55qyrMIwLpjgB6v7UpAbvqbCDeZQoXOF4vBccHL8FieRenfCcsmuJwSW8MHqD0l9G
+	55t3LvNxeZoEIl+zqowXWqs+woM25pl+WIAgV8VTpfAVRguw4hpQVj6OXDs/TVl2ZXSiWk0pZxByj
+	bjN3tQAx/VVCFnioDwxA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s1NcU-00000002A8x-1Tb6;
-	Mon, 29 Apr 2024 09:48:22 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1s1Qte-00000002tou-1LsX;
+	Mon, 29 Apr 2024 13:18:18 +0000
+Received: from mgamail.intel.com ([198.175.65.17])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s1NcQ-00000002A4R-1sCS;
-	Mon, 29 Apr 2024 09:48:19 +0000
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43T9WcRr023175;
-	Mon, 29 Apr 2024 09:47:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=pp1;
- bh=Kn2/uMMJ4m7IZDO8WlgsPqO7vUsAlVouDdMvBgTuG6Q=;
- b=Kg9UUvOfIY+q0ndE7ZECmZZUdA61ZCkJRFtD9wLCjYzo6fe8LGiqgmj/OaQd5I/iEeGT
- h1W12UFRvhBs0Ojrxq2EVahg4SwzhBVbMh+nl7Xnt0KphpPc+1K4uJnLB1ltR+O9/J8Y
- xH2aBPNbeoLf7rIVjTmAK85pN4JRaPC9PScCooRYa7ChiJY29YfixJaL//aFd9303wQR
- GZQxdsEVeB2nF62y0IT3RUjuxSeOIjIAGLlEpPQHiihzSala+ltUzs1I4eJF+yCxcsu9
- xwGFkZf6AwHS79UZe7yymFDc9jL+Zte2Za8lJWgzOlYfHYZrwUSEHHijG4bCs204Im4A kw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xt90jg0v6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Apr 2024 09:47:55 +0000
-Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43T9ltmx016519;
-	Mon, 29 Apr 2024 09:47:55 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xt90jg0v5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Apr 2024 09:47:54 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43T7DaXf001450;
-	Mon, 29 Apr 2024 09:47:53 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xsbptppem-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 29 Apr 2024 09:47:53 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43T9loYx26542522
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 29 Apr 2024 09:47:52 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0556520040;
-	Mon, 29 Apr 2024 09:47:50 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B4E6220043;
-	Mon, 29 Apr 2024 09:47:48 +0000 (GMT)
-Received: from osiris (unknown [9.171.12.101])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 29 Apr 2024 09:47:48 +0000 (GMT)
-Date: Mon, 29 Apr 2024 11:47:47 +0200
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Luis Chamberlain <mcgrof@kernel.org>,
-        Joel Granados <j.granados@samsung.com>,
-        Kees Cook <keescook@chromium.org>, Eric Dumazet <edumazet@google.com>,
-        Dave Chinner <david@fromorbit.com>, linux-fsdevel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-mm@kvack.org,
-        linux-security-module@vger.kernel.org, bpf@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-xfs@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        kexec@lists.infradead.org, linux-hardening@vger.kernel.org,
-        bridge@lists.linux.dev, lvs-devel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
-        linux-sctp@vger.kernel.org, linux-nfs@vger.kernel.org,
-        apparmor@lists.ubuntu.com
-Subject: Re: [PATCH v3 11/11] sysctl: treewide: constify the ctl_table
- argument of handlers
-Message-ID: <20240429094747.29046-G-hca@linux.ibm.com>
-References: <20240423-sysctl-const-handler-v3-0-e0beccb836e2@weissschuh.net>
- <20240423-sysctl-const-handler-v3-11-e0beccb836e2@weissschuh.net>
+	id 1s1Qtb-00000002ta9-1LYR
+	for kexec@lists.infradead.org;
+	Mon, 29 Apr 2024 13:18:16 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714396696; x=1745932696;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=vvnS47Dpfc2lPtfocF2xFFI42fQVbBcxzt1unzaD04A=;
+  b=TYyaWYzI5dBIohU+lk/g2fPDNBspU0sWA5ZUV3/N+bg59/i0qfU+oMuD
+   OYORDIMnEOy4VD6T+Gk99ZdcRMKrCUw2t3g01gIlWN93eNalxGkkVUXAG
+   n6lO4L1XfxtJ+nufQSkRd4X75/wPRCdS787jxamNNYrqfCiMqTY10GM2R
+   ZoiXJIxNB+SxuvIrSTAdN6ek/VgZ63XNy6e7uXJC6GmTA8U7DFGDNQX0f
+   5AaUsjC/XE83IvIvs777YeWyJX1uY6AUCE46zFAF11Pb9l5/HJvW5n9re
+   ETc6QBdFcoqudKlc982ssf+kvy2brOnNP/2QBvfkWMqBPZshv1kIB1K7a
+   g==;
+X-CSE-ConnectionGUID: 5y9S06A0Qrap15c6q6kTaA==
+X-CSE-MsgGUID: 27DYRamqT6GbDzPjjyev+g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11057"; a="10167085"
+X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
+   d="scan'208";a="10167085"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 06:17:45 -0700
+X-CSE-ConnectionGUID: 8NOiztBIRTaSIwyN+FuNlw==
+X-CSE-MsgGUID: pfLor2xfQQiqFaB6fEhbAw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
+   d="scan'208";a="26069268"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa009.fm.intel.com with ESMTP; 29 Apr 2024 06:17:39 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 71239179; Mon, 29 Apr 2024 16:17:38 +0300 (EEST)
+Date: Mon, 29 Apr 2024 16:17:38 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Sean Christopherson <seanjc@google.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Elena Reshetova <elena.reshetova@intel.com>, 
+	Jun Nakajima <jun.nakajima@intel.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>, Ashish Kalra <ashish.kalra@amd.com>, 
+	Kai Huang <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, 
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv10 05/18] x86/kexec: Keep CR4.MCE set during kexec for
+ TDX guest
+Message-ID: <e35yxpa2xdynm7focg6k4u2bjzojn24bmeaszh2jz52e4szc5f@6mgtrdnkewhe>
+References: <20240409113010.465412-1-kirill.shutemov@linux.intel.com>
+ <20240409113010.465412-6-kirill.shutemov@linux.intel.com>
+ <ZhVPIDDLkjOB96fI@google.com>
+ <3q6jv3g4tezybmd667mqxio7ty22akxv7okrznmzx3tju2u4qo@2alzjkbgm2lh>
+ <20240428171111.GKZi6DLy_ZwuZsZdFq@fat_crate.local>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20240423-sysctl-const-handler-v3-11-e0beccb836e2@weissschuh.net>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: dsJabyKjD5wmo-a4UVf9qexuuOQkOoCK
-X-Proofpoint-GUID: 7SlQVN0HjcUbQBl5eVSaH1VEy2oE_0-m
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-04-29_07,2024-04-26_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 mlxlogscore=999 adultscore=0 malwarescore=0 priorityscore=1501
- impostorscore=0 suspectscore=0 clxscore=1011 mlxscore=0 spamscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404290061
+In-Reply-To: <20240428171111.GKZi6DLy_ZwuZsZdFq@fat_crate.local>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240429_024818_503138_840D0667 
-X-CRM114-Status: GOOD (  21.31  )
+X-CRM114-CacheID: sfid-20240429_061815_438671_0B4D3BE6 
+X-CRM114-Status: GOOD (  23.90  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -121,60 +93,87 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Apr 23, 2024 at 09:54:46AM +0200, Thomas Wei=DFschuh wrote:
-> Adapt the proc_hander function signature to make it clear that handlers
-> are not supposed to modify their ctl_table argument.
-> =
+On Sun, Apr 28, 2024 at 07:11:11PM +0200, Borislav Petkov wrote:
+> On Tue, Apr 09, 2024 at 06:26:05PM +0300, Kirill A. Shutemov wrote:
+> > From 6be428e3b1c6fb494b2c48ba6a7c133514a0b2b4 Mon Sep 17 00:00:00 2001
+> > From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+> > Date: Fri, 10 Feb 2023 12:53:11 +0300
+> > Subject: [PATCHv10.1 05/18] x86/kexec: Keep CR4.MCE set during kexec for TDX guest
+> > 
+> > Depending on setup, TDX guests might be allowed to clear CR4.MCE.
+> > Attempt to clear it leads to #VE.
+> > 
+> > Use alternatives to keep the flag during kexec for TDX guests.
+> > 
+> > The change doesn't affect non-TDX-guest environments.
+> 
+> This is all fine and dandy but nothing explains *why* TDX needs this
+> special dance.
+> 
+> Why can't TDX do the usual CR4.MCE diddling like the normal kernel
+> during init and needs to do that here immediately?
 
-> This is a prerequisite to moving the static ctl_table structs into
-> rodata.
-> By migrating all handlers at once a lengthy transition can be avoided.
-> =
+As I mentioned above, clearing CR4.MCE triggers #VE. It is quirk of the
+platform.
 
-> The patch was mostly generated by coccinelle with the following script:
-> =
+There's plan to allow it in newer TDX modules, but kernel still has to
+assume we cannot touch it in TDX guest case.
 
->     @@
->     identifier func, ctl, write, buffer, lenp, ppos;
->     @@
-> =
+> > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> > ---
+> >  arch/x86/kernel/relocate_kernel_64.S | 15 +++++++++------
+> >  1 file changed, 9 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+> > index 56cab1bb25f5..90246d544eb1 100644
+> > --- a/arch/x86/kernel/relocate_kernel_64.S
+> > +++ b/arch/x86/kernel/relocate_kernel_64.S
+> > @@ -5,6 +5,8 @@
+> >   */
+> >  
+> >  #include <linux/linkage.h>
+> > +#include <linux/stringify.h>
+> > +#include <asm/alternative.h>
+> >  #include <asm/page_types.h>
+> >  #include <asm/kexec.h>
+> >  #include <asm/processor-flags.h>
+> > @@ -143,14 +145,15 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+> >  
+> >  	/*
+> >  	 * Set cr4 to a known state:
+> > -	 *  - physical address extension enabled
+> >  	 *  - 5-level paging, if it was enabled before
+> > +	 *  - Machine check exception on TDX guest, if it was enabled before.
+> > +	 *    Clearing MCE might not allowed in TDX guests, depending on setup.
+> 
+> 			 ... might not be allowed ...
+> 
 
->     int func(
->     - struct ctl_table *ctl,
->     + const struct ctl_table *ctl,
->       int write, void *buffer, size_t *lenp, loff_t *ppos)
->     { ... }
-> =
+Oopsie. Thanks.
 
-> In addition to the scripted changes some other changes are done:
-> =
+> > +	 *  - physical address extension enabled
+> >  	 */
+> > -	movl	$X86_CR4_PAE, %eax
+> > -	testq	$X86_CR4_LA57, %r13
+> > -	jz	1f
+> > -	orl	$X86_CR4_LA57, %eax
+> > -1:
+> > +	movl	$X86_CR4_LA57, %eax
+> > +	ALTERNATIVE "", __stringify(orl $X86_CR4_MCE, %eax), X86_FEATURE_TDX_GUEST
+> > +	andl	%r13d, %eax
+> 
+> %r13 needs a comment here that it contains %cr4 read above in
+> relocate_kernel()
 
-> * the typedef proc_handler is adapted
-> =
+Okay.
 
-> * the prototypes of non-static handler are adapted
-> =
-
-> * kernel/seccomp.c:{read,write}_actions_logged() and
->   kernel/watchdog.c:proc_watchdog_common() are adapted as they need to
->   adapted together with the handlers for type-consistency reasons
-> =
-
-> Signed-off-by: Thomas Wei=DFschuh <linux@weissschuh.net>
-
-...
-
->  arch/s390/appldata/appldata_base.c        | 10 ++---
->  arch/s390/kernel/debug.c                  |  2 +-
->  arch/s390/kernel/topology.c               |  2 +-
->  arch/s390/mm/cmm.c                        |  6 +--
-
-Acked-by: Heiko Carstens <hca@linux.ibm.com> # s390
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
 
 _______________________________________________
 kexec mailing list
