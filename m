@@ -4,73 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 16E49C04FFE
-	for <kexec@archiver.kernel.org>; Mon, 29 Apr 2024 15:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A39B0C10F16
+	for <kexec@archiver.kernel.org>; Tue, 30 Apr 2024 12:58:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=qwdgHSqH7Bf06EfxPe52ddJBAqwkFpig5fWMHFi6yW4=; b=xqE4w1LqvAcJc1
-	6zxLGaIFtc/aqXAdC/a3llUnJmCwoAaezitMnjsenxV5QV1oEdbq3p8UzL67wWbva4qCBws60Fgzg
-	EFDcC1d8TIhTiM5VNFjtSPucYJ18fyzWdtRe0UV9+48ECsRI/vO5ojxUo4X3oDUTAH0WifJm/4Vgb
-	q7Q9twExjf2RpggQLEUJ8QN5MT6xZa3yE5b0CIJ6lFNyCeTBcKq8hpGQ9cBsxD4PeUv5Zh56Ybu1D
-	MvCG4+IqRpQbalwG8oH21K4a35VOpvL8a+TpnCSgxS2SxQhW47Y0hHp2tLuVVQ0RRbmoeMUev72W/
-	oOWuWzp42V+I5dz9f6wQ==;
+	List-Owner; bh=uG1/5tnXPUXS/ku2h0ZmSzIoFk9+UFnatytyaq3Km9U=; b=PW3KZMUMsNLDCA
+	l0fnfqCbh9ki73ooFBWMx5ZcjksXVvSxV935ovruxbVvIOiwTmBHzJ2J+Q/V6WGkRRIoKzC9A3hKa
+	oJRgVwwT8rVKb4Hw94Lmck5OO32OVsnpolgmjLA0TZCE82iDZOjIq/5BYvG5w5wHm1ovAMBSCpCm4
+	0rZR9vZ6hN+23h9cTEwGfwsHZyfXpBWYA2MrDcyAm1MA2YYUmWCQlcEsRoYgFoiMn8IoUSzAaDJjU
+	/x/z6Zh8+TgiX2JzOMqKF8ZCo4tOQ+QqVQ3KcoWpPUdmqmaGeFbZThi2CdXkFu847H6CetBrhC1UZ
+	a1daucnE91W0cPsAbGTA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s1Sku-00000003ML9-2AEw;
-	Mon, 29 Apr 2024 15:17:24 +0000
-Received: from mgamail.intel.com ([198.175.65.17])
+	id 1s1n4M-00000006Q6x-0Y2f;
+	Tue, 30 Apr 2024 12:58:51 +0000
+Received: from mail.alien8.de ([2a01:4f9:3051:3f93::2])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s1Skr-00000003MIj-1MgQ
+	id 1s1n4G-00000006Q1I-3hNk
 	for kexec@lists.infradead.org;
-	Mon, 29 Apr 2024 15:17:22 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714403842; x=1745939842;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=MlSlRGaYiem3SuUQO4BAsBy3xzf+/yW9MMNWdq/F60Y=;
-  b=LbISdxnSrmWPCv4ZuDaEPbUtejCg5JXzFijVLYfTmqsbnoMKRTl5RnZO
-   rTIMfa8b7AHGAAJkKTtWmY/vrQ+Ys40ZaHYnZOf8WNeTv9M5mHmSvpDFq
-   gatYl13jq4RwjKpx1Hy189jUrzzFLYGQeff5s/E7RgfR898CjzZRYKD4H
-   DO1BPRdjEEVdjlHYGvX4RAKhWMNzo9Dqx1qfMznTsZDYkwj4ggn46vA/W
-   gi7tSnSd+PoVOWxtes1e8veLSPLLykyffU/abSuTQHBatMy7lpHfG2FzM
-   ha9BiSd5sSVQIR17T/giyR/ieK/jKjjNhtYDOv9SBCVdlcBlrUnib+1ux
-   Q==;
-X-CSE-ConnectionGUID: jPioD44aStWpun/v2nNpGA==
-X-CSE-MsgGUID: zIvXNz8yS6CuI3jOUqeX9Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11059"; a="10187903"
-X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
-   d="scan'208";a="10187903"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2024 08:17:01 -0700
-X-CSE-ConnectionGUID: 3l6VczyNSXi1e+hlJ02smw==
-X-CSE-MsgGUID: sLGm4kwkThqjbQ/IHUUlBQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,239,1708416000"; 
-   d="scan'208";a="26098655"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa009.fm.intel.com with ESMTP; 29 Apr 2024 08:16:56 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id D0D851A0; Mon, 29 Apr 2024 18:16:54 +0300 (EEST)
-Date: Mon, 29 Apr 2024 18:16:54 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Sean Christopherson <seanjc@google.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Elena Reshetova <elena.reshetova@intel.com>, 
-	Jun Nakajima <jun.nakajima@intel.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, Ashish Kalra <ashish.kalra@amd.com>, 
-	Kai Huang <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, 
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+	Tue, 30 Apr 2024 12:58:47 +0000
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id BD00D40E00B2;
+	Tue, 30 Apr 2024 12:58:13 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id ZV3pt-UnzM2i; Tue, 30 Apr 2024 12:58:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1714481890; bh=JIpGJ222f6DlJRq4eDp7EoEORpRjHOTnZ9jXZzNPKUg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=k0hz+6YiJrTAJEVtCM44lX+k6fS0nhtBTM7sNoVHfqYqDltk9uRgnk05/peANK4Xw
+	 DY34QJaWudiQm121U/c2t8W9sEFjrtGuAllZvb9yd6NnZOvydLsGezVRgEZ8WKtd0J
+	 AlUwp1g0Vpq9x5deLTXx8qHmrAyEMVQQki1fARM4o3YIuhF4f5RTgZBmkk/h7utIgs
+	 ERZvpCAJpzbElAae/y10YkkGASFA94BjvJO2TbYLWwKOtCtsWy3CnZe/uian3x3y63
+	 /rLaLb4RnEs0KNL9O/1vJWSbEETl3egE9GeE6s1cncuMM8FAk+Q/8S1b+9fKt8gabi
+	 iPQoSYgmOWupQU8E2vUFZTj6ztwyzt6qcC58Gp6nkowShdJRbvLwEGNt+qgufoxC2V
+	 BSJ34iFpEpqUkQ5PJf/nCNAVbzs++JNLutcdMVAiA7Mw5wg9P9T4e62l/5sr/nQ7rJ
+	 ucRyNe40IPf7uvX55ZYNdyn8DAYJeau5s/qCxKUsc+f0N25+8lPKxZ/vnRWTbd22yQ
+	 VdzC5qJ2io5JiDh8EQUR2OORscxfnjDuiQzyRdm4abg8tl/ULDMf5o13YZnYRwBifr
+	 22oeZvMnpDmhujKIXyfkN+AXuWCT77avEaGABW3EQqG1WbUIKnCZjlU+nAdu+UqTML
+	 sFmaxBKupr32m8kBpVxTKI88=
+Received: from zn.tnic (pd953020b.dip0.t-ipconnect.de [217.83.2.11])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5CE0740E016B;
+	Tue, 30 Apr 2024 12:57:50 +0000 (UTC)
+Date: Tue, 30 Apr 2024 14:57:44 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Elena Reshetova <elena.reshetova@intel.com>,
+	Jun Nakajima <jun.nakajima@intel.com>,
+	Rick Edgecombe <rick.p.edgecombe@intel.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Ashish Kalra <ashish.kalra@amd.com>,
+	Kai Huang <kai.huang@intel.com>, Baoquan He <bhe@redhat.com>,
+	kexec@lists.infradead.org, linux-coco@lists.linux.dev,
+	linux-kernel@vger.kernel.org
 Subject: Re: [PATCHv10 05/18] x86/kexec: Keep CR4.MCE set during kexec for
  TDX guest
-Message-ID: <yh7wbdce5o35l4nkrkml3jp7tyzvzxwnfji2vmvnvaczsl6gdr@6qnwpw7g76a3>
+Message-ID: <20240430125744.GQZjDqyM3k_peEw-bc@fat_crate.local>
 References: <20240409113010.465412-1-kirill.shutemov@linux.intel.com>
  <20240409113010.465412-6-kirill.shutemov@linux.intel.com>
  <ZhVPIDDLkjOB96fI@google.com>
@@ -78,12 +85,14 @@ References: <20240409113010.465412-1-kirill.shutemov@linux.intel.com>
  <20240428171111.GKZi6DLy_ZwuZsZdFq@fat_crate.local>
  <e35yxpa2xdynm7focg6k4u2bjzojn24bmeaszh2jz52e4szc5f@6mgtrdnkewhe>
  <20240429144454.GHZi-yZkD0boKk5N17@fat_crate.local>
+ <yh7wbdce5o35l4nkrkml3jp7tyzvzxwnfji2vmvnvaczsl6gdr@6qnwpw7g76a3>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20240429144454.GHZi-yZkD0boKk5N17@fat_crate.local>
+In-Reply-To: <yh7wbdce5o35l4nkrkml3jp7tyzvzxwnfji2vmvnvaczsl6gdr@6qnwpw7g76a3>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240429_081721_441364_72B0D395 
-X-CRM114-Status: GOOD (  15.93  )
+X-CRM114-CacheID: sfid-20240430_055845_396616_6C6128C0 
+X-CRM114-Status: UNSURE (   8.07  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,38 +109,29 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Apr 29, 2024 at 04:45:08PM +0200, Borislav Petkov wrote:
-> On Mon, Apr 29, 2024 at 04:17:38PM +0300, Kirill A. Shutemov wrote:
-> > As I mentioned above, clearing CR4.MCE triggers #VE. It is quirk of the
-> > platform.
-> 
-> You mean when identity_mapped() runs as part of a kexec-ed kernel, it
-> might clear CR4.MCE and that would trigger the #VE?
+On Mon, Apr 29, 2024 at 06:16:54PM +0300, Kirill A. Shutemov wrote:
+> Yes, that's what happens in current upstream.
 
-Yes, that's what happens in current upstream.
+Let's rewrite that commit message then:
 
-> So, if that is correct, you basically want to *preserve* the CR4.MCE
-> setting across kexec?
+"TDX guests run with MCA enabled (CR4.MCE=1b) from the very start. If
+that bit is cleared during CR4 register reprogramming during boot or
+kexec flows, a #VE exception will be raised which the guest kernel
+cannot handle that early.
 
-Yes.
+Therefore, make sure the CR4.MCE setting is preserved over kexec too and
+avoid raising any #VEs."
 
-> But then __mcheck_cpu_init_generic() will go and set it
-> unconditionally.
+without that bit about TDX guests might be allowed to clear CR4.MCE
+which is only confusing and unnecessary.
 
-__mcheck_cpu_init_generic() will not change anything in this case as the
-bit is already set. Everything is hunky-dory.
-
-> So what exactly is the correct flow here?
-
-TDX guest has CR4.MCE set from time 0 and it has to stay this way all the
-time including kexec flow.
-
-We have already modified early boot code to preserve CR4.MCE. See
-77a512e35db7 ("x86/boot: Avoid #VE during boot for TDX platforms").
-The patch extends it to kexec flow.
+Thx.
 
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
 
 _______________________________________________
 kexec mailing list
