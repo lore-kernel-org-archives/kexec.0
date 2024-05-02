@@ -4,82 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 71FB6C4345F
-	for <kexec@archiver.kernel.org>; Thu,  2 May 2024 12:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A5741C4345F
+	for <kexec@archiver.kernel.org>; Thu,  2 May 2024 12:20:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:CC:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:References
+	:In-Reply-To:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=JyLW7D9/QLa1FLJL8vNKfj2mN7o561VGOpYvm4Y5XVw=; b=MLY16NCZC/3UxA
-	YVRbmRY/S8k1COhcSQL4kwEwhZpvJ4j+6XLavPbKYye00fNFeC8wRfHGSydUGIXE3bFjesg0acN7v
-	5EilSFMgEpQb9qClXeQCZM1hARK8DBE+cjiagRFvsYCgM+wnsq4R1B27L9DR01LwREILFt8muSS66
-	fsLOWAdXFJGAeFjPPuvFd3f7MOanaJQGW5dg1SgcvRMo9lPdsQsTkCK5tfcb2+IvK+hmlId5DhEuS
-	fOaC3lrQzeL1LprB+9Z0JuPeOHIA9LHJOFGFSNQBO6+5WpK1KOR30FZz77CVUp22Gxy8cbz3HubrY
-	49pCf/FI6AP/oYx4QY+w==;
+	List-Owner; bh=nimeTXRqvTM5ocw8rOPOFa/Haqbx+QOXXLygbPlo8lM=; b=OfKLWnDwutxXQ9
+	ZXL2x1EvO351RmAO4EqnCtJthNzL1A6nyB+CPzojIkR1oeSBJMcuMzloMSnbvWrykN/ls6GFPvBtI
+	S6P6FV6SyEsL2v2wLgWK4WGWWdzuVHPotynYMR9TU8guKiRsm2iEFsuenmVX41D2na2eDwsqwT0Of
+	dYiQ5mlunodmSMtp2g8C8DqUrkOfoYh7nfO5vvMoSdmypFa+W8/LulZJi1OZksxBZ7i2xSfbyPVjj
+	SUUGa1xzSyvj5GLQJLu/a0lwxmUPA/X1IL3u81toakWv+4eXVNnZYrnymgeDhpiKzLYcG3ULWnY7J
+	2RfxCiGtKfL2smyGLfcw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s2V7w-0000000Caav-2oAB;
-	Thu, 02 May 2024 12:01:28 +0000
-Received: from smtp-fw-80006.amazon.com ([99.78.197.217])
+	id 1s2VPz-0000000Cd7B-19HD;
+	Thu, 02 May 2024 12:20:07 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s2V7t-0000000CaZn-0EWX
+	id 1s2VPw-0000000Cd6A-1dsc
 	for kexec@lists.infradead.org;
-	Thu, 02 May 2024 12:01:26 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1714651285; x=1746187285;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=e7tDSC9p8oy5ChHErHE1oCbmu4OKOhTaSgDmPzR2GlY=;
-  b=iIvl2MO8TlO9Bf6rfMl1PnBtmqwZJoDf6p3aCix+APLWo47/l5yPv1kb
-   Cz//2EYoRILnIlSxHB4qODTa6A4nENvkAXnoj2C46dEcTR9/Ta5V3Fkqu
-   Nljht7IyA1bcRCuF96MNpOuL7TCXGULN8+NEXqJPQe3J2TsRlmo9Hn+l5
-   A=;
-X-IronPort-AV: E=Sophos;i="6.07,247,1708387200"; 
-   d="scan'208";a="292197737"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2024 12:01:18 +0000
-Received: from EX19MTAUWB001.ant.amazon.com [10.0.38.20:1724]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.23.7:2525] with esmtp (Farcaster)
- id 74eaa98e-3cdf-42c3-987a-590178113d5b; Thu, 2 May 2024 12:01:17 +0000 (UTC)
-X-Farcaster-Flow-ID: 74eaa98e-3cdf-42c3-987a-590178113d5b
-Received: from EX19D020UWC004.ant.amazon.com (10.13.138.149) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Thu, 2 May 2024 12:01:16 +0000
-Received: from [0.0.0.0] (10.253.83.51) by EX19D020UWC004.ant.amazon.com
- (10.13.138.149) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Thu, 2 May
- 2024 12:01:11 +0000
-Message-ID: <26b3b3b5-548d-4ebd-9d21-19580a41e799@amazon.com>
-Date: Thu, 2 May 2024 14:01:08 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+	Thu, 02 May 2024 12:20:05 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1714652402;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=j0ouXWVXMSsia+jkf8WQfP89YFxtqAKEOm2AuOhT3gc=;
+	b=GlPGQ1UYpeY7jUmR0caiGG2ZHVF1SCzJZvCm4GrdNb1VfsW+mMsoKWwjR6Zd/RS9o/JkCf
+	H5wKQudzr51MIY0yMKT4GjV18Jun6oZKBha4H7zOZUa0p0faDBLH/lpC/m7reKDdc1mo/4
+	CymusQd9B2qg19nS0JQJ0w08L1MGuJY=
+Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
+ [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-544--r5t2xbcPVyLHg6REkuqqA-1; Thu, 02 May 2024 08:18:13 -0400
+X-MC-Unique: -r5t2xbcPVyLHg6REkuqqA-1
+Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2d87b880861so68363741fa.1
+        for <kexec@lists.infradead.org>; Thu, 02 May 2024 05:18:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714652292; x=1715257092;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=j0ouXWVXMSsia+jkf8WQfP89YFxtqAKEOm2AuOhT3gc=;
+        b=GGJvm+M1k46Oix7H0pGfesUyGtDMD+GxNxd+gh7XiHbTu6kTbiY8B/K9rnSM8fu9Uk
+         tYLPnkXaNP5+x2Ab9SI/2ogGvppYG0oGT6IAD+ooTzjZV3z3pKH4RMmIOrETaOE1k/ZP
+         3j+hb7y27tGTN5aRc7XFYmw2MYLLeLxUyCOH2Ti/3vFi7QsdTgmdFk163cHIL83Tt+a0
+         jXEeXfxLo5Kk0xBJzVjGD8S/ZnlEqnK/HnP8Ebk5m/i3KJyJLncfstUVi+iYbRxrGlUs
+         S29T5GHS/GBlwoK+kR6HV+P+2XaMwV8hYEsxgm5QA2BAAlaHchC+qB1QSBa0yl0B+wIP
+         AUgw==
+X-Forwarded-Encrypted: i=1; AJvYcCVQiXC6u/GnYwzgQr8zKCgj+UxmozVeZs/bkUSGngxV47BFo2iKOAArgsXbV3P19ozuXiV8DJnJKApxbKWMSoO9mw7svob7VKH/
+X-Gm-Message-State: AOJu0Yx69tq1tcQo0wc4Xc4JEoCViM7s3DrPsfdPc3BRrVRVLNpLNBns
+	YZWF8RtX6G21XYnrBfawxLzNQGlXm/KTHqAkNjD+YwwWWAWkYtlKY+vZ7mj90ioHmgQwkJE3H/x
+	u+Rkoeqi0GpzCRJZfWblFqePX37fzBhigtyFYlN7985TSQzEQPlcZvc9yeA==
+X-Received: by 2002:a05:651c:54b:b0:2df:8ce6:96ae with SMTP id q11-20020a05651c054b00b002df8ce696aemr1459346ljp.7.1714652291922;
+        Thu, 02 May 2024 05:18:11 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHHLEzhel3J+Iky5AXISUEMehzZpROpO7wE4GfujUAp2fZWvLcpFCcbsttf2lwNUdXPb4hkug==
+X-Received: by 2002:a05:651c:54b:b0:2df:8ce6:96ae with SMTP id q11-20020a05651c054b00b002df8ce696aemr1459319ljp.7.1714652291458;
+        Thu, 02 May 2024 05:18:11 -0700 (PDT)
+Received: from fedora (g2.ign.cz. [91.219.240.8])
+        by smtp.gmail.com with ESMTPSA id s20-20020a05600c45d400b0041bde8ddce9sm5535635wmo.36.2024.05.02.05.18.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 May 2024 05:18:10 -0700 (PDT)
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
+To: Alexander Graf <graf@amazon.com>, Ashish Kalra <Ashish.Kalra@amd.com>,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org
+Cc: rafael@kernel.org, peterz@infradead.org, adrian.hunter@intel.com,
+ sathyanarayanan.kuppuswamy@linux.intel.com, jun.nakajima@intel.com,
+ rick.p.edgecombe@intel.com, thomas.lendacky@amd.com, michael.roth@amd.com,
+ seanjc@google.com, kai.huang@intel.com, bhe@redhat.com,
+ kirill.shutemov@linux.intel.com, bdas@redhat.com, dionnaglaze@google.com,
+ anisinha@redhat.com, jroedel@suse.de, ardb@kernel.org,
+ kexec@lists.infradead.org, linux-coco@lists.linux.dev,
+ linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v4 0/4] x86/snp: Add kexec support
-To: Ashish Kalra <Ashish.Kalra@amd.com>, <tglx@linutronix.de>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>
-CC: <rafael@kernel.org>, <peterz@infradead.org>, <adrian.hunter@intel.com>,
-	<sathyanarayanan.kuppuswamy@linux.intel.com>, <jun.nakajima@intel.com>,
-	<rick.p.edgecombe@intel.com>, <thomas.lendacky@amd.com>,
-	<michael.roth@amd.com>, <seanjc@google.com>, <kai.huang@intel.com>,
-	<bhe@redhat.com>, <kirill.shutemov@linux.intel.com>, <bdas@redhat.com>,
-	<vkuznets@redhat.com>, <dionnaglaze@google.com>, <anisinha@redhat.com>,
-	<jroedel@suse.de>, <ardb@kernel.org>, <kexec@lists.infradead.org>,
-	<linux-coco@lists.linux.dev>, <linux-kernel@vger.kernel.org>
+In-Reply-To: <26b3b3b5-548d-4ebd-9d21-19580a41e799@amazon.com>
 References: <20240409113010.465412-1-kirill.shutemov@linux.intel.com>
  <cover.1712694667.git.ashish.kalra@amd.com>
-Content-Language: en-US
-From: Alexander Graf <graf@amazon.com>
-In-Reply-To: <cover.1712694667.git.ashish.kalra@amd.com>
-X-Originating-IP: [10.253.83.51]
-X-ClientProxiedBy: EX19D035UWB002.ant.amazon.com (10.13.138.97) To
- EX19D020UWC004.ant.amazon.com (10.13.138.149)
+ <26b3b3b5-548d-4ebd-9d21-19580a41e799@amazon.com>
+Date: Thu, 02 May 2024 14:18:09 +0200
+Message-ID: <87msp8mmpq.fsf@redhat.com>
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240502_050125_192574_3D33666D 
-X-CRM114-Status: GOOD (  13.61  )
+X-CRM114-CacheID: sfid-20240502_052004_599820_D4E2413E 
+X-CRM114-Status: GOOD (  18.86  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,50 +103,48 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hey Ashish,
+Alexander Graf <graf@amazon.com> writes:
 
-On 09.04.24 22:42, Ashish Kalra wrote:
-> From: Ashish Kalra <ashish.kalra@amd.com>
+> Hey Ashish,
 >
-> The patchset adds bits and pieces to get kexec (and crashkernel) work on
-> SNP guest.
+> On 09.04.24 22:42, Ashish Kalra wrote:
+>> From: Ashish Kalra <ashish.kalra@amd.com>
+>>
+>> The patchset adds bits and pieces to get kexec (and crashkernel) work on
+>> SNP guest.
+>
+>
+> With this patch set (and similar for the TDX one), you enable the 
+> typical kdump case, which is great!
+>
+> However, if a user is running with direct kernel boot - which is very 
+> typical in SEV-SNP setup, especially for Kata Containers and similar - 
+> the initial launch measurement is a natural indicator of the target 
+> environment. Kexec basically allows them to completely bypass that: You 
+> would be able to run a completely different environment than the one you 
+> measure through the launch digest. I'm not sure it's a good idea to even 
+> allow that by default in CoCo environments - at least not if the kernel 
+> is locked down.
 
+Isn't it the same when we just allow loading kernel modules? I'm sure
+you can also achieve a 'completely different environment' with that :-)
+With SecureBoot / lockdown we normally require modules to pass signature
+check, I guess we can employ the same mechanism for kexec. I.e. in
+lockdown, we require signature check on the kexec-ed kernel. Also, it
+may make sense to check initramfs too (with direct kernel boot it's also
+part of launch measurements, right?) and there's UKI for that already).
 
-With this patch set (and similar for the TDX one), you enable the 
-typical kdump case, which is great!
+Personally, I believe that if we simply forbid kexec for CoCo in
+lockdown mode, the feature will become mostly useless in 'full stack'
+(which boot through firmware) production envrironments.
 
-However, if a user is running with direct kernel boot - which is very 
-typical in SEV-SNP setup, especially for Kata Containers and similar - 
-the initial launch measurement is a natural indicator of the target 
-environment. Kexec basically allows them to completely bypass that: You 
-would be able to run a completely different environment than the one you 
-measure through the launch digest. I'm not sure it's a good idea to even 
-allow that by default in CoCo environments - at least not if the kernel 
-is locked down.
-
-Do you have any plans to build a CoCo native kexec where you allow a VM 
-to create a new VM context with a guest provided seed? The new context 
-could rerun all of the attestation and so enable users to generate a new 
-launch digest. If you then atomically swap into the new context, it 
-would in turn enable them to natively "kexec" into a completely new VM 
-context including measurements.
-
-I understand that an SVSM + TPM implementation may help to some extent 
-here by integrating with IMA and adding the new kernel into the IMA log. 
-But that quickly becomes very convoluted (hence difficult to assess 
-correctness for) and the same measurement question arises just one level 
-up then: How do you update your SVSM while maintaining a full 
-measurement and trust chain?
-
-
-Thanks,
-
-Alex
+-- 
+Vitaly
 
 
 _______________________________________________
