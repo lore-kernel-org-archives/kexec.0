@@ -4,69 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 22344C10F1A
-	for <kexec@archiver.kernel.org>; Thu,  9 May 2024 03:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 670CBC10F1A
+	for <kexec@archiver.kernel.org>; Thu,  9 May 2024 06:32:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=RO7h0UiZoc3/FYHnJVZsqI0y00V0sqo16Ds3ewqahaQ=; b=u7HYb74/zWHEij
-	wUoWMyDckvRANpq1FjS2HIFyfMnP/6sQEjYvjCRqmqWyxnXnqZ+hK1DWnO9Lxt5RdyZUiBXjfBX2O
-	E9eA9iJT4aDO8h9aBnU6xReX/J2kQfF88Azq3ajkbsJ0eH/ycG7a4XMWTBsQTgw+uZaN07ZIfbtnu
-	LW8poE7XcLmB+VxW2Da85lRCvVanxbWhD/K/ppPXSqbEOEDZifNDtv56wetW2SLdTJd7QNuvkGpIs
-	aYRwu2vYkgJ8nz2sF64PXpVuF9lw0yEyc5UWatYn1AuNqQWcW6Ohr3ceeBbGZtJ8ervS8r4ShrVbC
-	XiKcSNnNFuLmJu21aihg==;
+	List-Owner; bh=akU92prjjCHN8AXZwLwIIZsCf9ECpOIAyrA4T4QVwCQ=; b=x1Y4NkrOIFeqJI
+	3SfDYw1mr7R7feymr1UExxu+ME16z7z9KRo1Vw+DTkppRvSBdxMeDUkac6+BigmK+aD41XKCkvzUR
+	s7DlcY5kV2VERJEENuEcCiwB/sySm2RN4q58b0jF4E/S8ry2iu6yHY/H5scxV1bgqF4PrBGpltMqE
+	4CYl9kMGqlFXQENOzi108g7EVSVwktxlHi1HXY4n3lOcnlvSNxmUAR+AIt5FB78hiSbXSzgFwLy5N
+	nlspEM77Hzd7IzmrE/rgpnt4V07LF0Qt9QudI7fIhpHVWZld106mUoQcBWzz04RUYg57AOxIYN3pT
+	8Mj/KWHM7/9iQcMTvVDA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s4uqH-00000000F7Y-2H6Y;
-	Thu, 09 May 2024 03:53:13 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1s4xKB-00000000Zrs-20x3;
+	Thu, 09 May 2024 06:32:15 +0000
+Received: from bee.tesarici.cz ([2a03:3b40:fe:2d4::1])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s4uqE-00000000F5a-0bHc
+	id 1s4xK8-00000000ZqZ-0rSh
 	for kexec@lists.infradead.org;
-	Thu, 09 May 2024 03:53:12 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715226785;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aCcmKp6zmQN78GXbnv+RsBfflPl7otSTmRS2SgT3gkA=;
-	b=Soah4PO8i390gOpRXL69KObMYETstGC+xmJzrgO2w+RKMwKqNAE+GpeWUaHeuYgxSkGNGv
-	FwWtC4IJjLlGauaws5wfrfh3aOSJvbuIiUWUB6zyQJ16VCE/G1eN286bL8y3EmQLeNena7
-	lRpyq9NMisba9qb3LswHDwXm11QGrfc=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-274-W7pSZSILNT2NU-yL1iRcpg-1; Wed, 08 May 2024 23:53:02 -0400
-X-MC-Unique: W7pSZSILNT2NU-yL1iRcpg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	Thu, 09 May 2024 06:32:14 +0000
+Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 00FEC800053;
-	Thu,  9 May 2024 03:53:02 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.17])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id A6EBE1005B83;
-	Thu,  9 May 2024 03:52:59 +0000 (UTC)
-Date: Thu, 9 May 2024 11:52:56 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Rik van Riel <riel@surriel.com>
-Cc: akpm@linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>,
-	Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	kernel-team@meta.com
-Subject: Re: [PATCH] fs/proc: fix softlockup in __read_vmcore
-Message-ID: <ZjxImBiQ+niK1PEw@MiWiFi-R3L-srv>
-References: <20240507091858.36ff767f@imladris.surriel.com>
+	by bee.tesarici.cz (Postfix) with ESMTPSA id 954C91C3C9C;
+	Thu,  9 May 2024 08:32:06 +0200 (CEST)
+Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
+	t=1715236326; bh=efG3zK0vKcyGk9qTSSHOK3oDZCuzuyL7s8iDujt9W14=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fsiaFvaeIO1yoIVjC02r2h5+4oCgd528m2/Elrx/HYZ37kkBOwxe0mkftqoNlyOaT
+	 lsdmomHOLQHvZPX0gS+mlnbBqBcOMAkgplAa0ZpF9fymben+E8wq8i8XAKuWf/NVtm
+	 iyPftgTGY4b1FGSCb78qp+lgSjFUXL5fb2VyL/iJrSVDG1GUB1DAIhIWCVVgwvTC14
+	 BbYekJIBPMIxBQod5+lcYEk7HH0rbp4UOQuXYKJx9QNAIwC81r+2ktNqLRWD0XO9Ow
+	 9uLheolhMl40dFK2v6KrpGhtsvE71/9tSHuNIMVL3oiQL36ISC9mbwaAFbbKJqaIjI
+	 Gjysq3ffjrYPg==
+Date: Thu, 9 May 2024 08:32:05 +0200
+From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
+To: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+Cc: zohar@linux.ibm.com, roberto.sassu@huaweicloud.com,
+ roberto.sassu@huawei.com, eric.snowberg@oracle.com, stefanb@linux.ibm.com,
+ ebiederm@xmission.com, noodles@fb.com, bauermann@kolabnow.com,
+ linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+ code@tyhicks.com, nramas@linux.microsoft.com, paul@paul-moore.com
+Subject: Re: [PATCH v5 5/8] ima: kexec: move IMA log copy from kexec load to
+ execute
+Message-ID: <20240509083205.17d53ccb@meshulam.tesarici.cz>
+In-Reply-To: <20240214153827.1087657-6-tusharsu@linux.microsoft.com>
+References: <20240214153827.1087657-1-tusharsu@linux.microsoft.com>
+	<20240214153827.1087657-6-tusharsu@linux.microsoft.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20240507091858.36ff767f@imladris.surriel.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240508_205310_280957_8B0A5B29 
-X-CRM114-Status: GOOD (  19.78  )
+X-CRM114-CacheID: sfid-20240508_233212_590745_02C00533 
+X-CRM114-Status: GOOD (  22.84  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -83,56 +78,89 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi,
+On Wed, 14 Feb 2024 07:38:24 -0800
+Tushar Sugandhi <tusharsu@linux.microsoft.com> wrote:
 
-On 05/07/24 at 09:18am, Rik van Riel wrote:
-> While taking a kernel core dump with makedumpfile on a larger system,
-> softlockup messages often appear.
+> ima_dump_measurement_list() is called during kexec 'load', which may
+> result in loss of IMA measurements during kexec soft reboot.  It needs
+> to be called during kexec 'execute'.
 > 
-> While softlockup warnings can be harmless, they can also interfere
-> with things like RCU freeing memory, which can be problematic when
-> the kdump kexec image is configured with as little memory as possible.
+> This patch includes the following changes:
+>  - Call kimage_file_post_load() from kexec_file_load() syscall only for
+>    kexec soft reboot scenarios and not for KEXEC_FILE_ON_CRASH.  It will
+>    map the IMA segment, and register reboot notifier for the function
+>    ima_update_kexec_buffer() which would copy the IMA log at kexec soft
+>    reboot.
+>  - Make kexec_segment_size variable local static to the file, for it to be
+>    accessible both during kexec 'load' and 'execute'.
+>  - Move ima_dump_measurement_list() call from ima_add_kexec_buffer()
+>    to ima_update_kexec_buffer().
+>  - Remove ima_reset_kexec_file() call from ima_add_kexec_buffer(), now
+>    that the buffer is being copied at kexec 'execute', and resetting the
+>    file at kexec 'load' will corrupt the buffer.
 > 
-> Avoid the softlockup, and give things like work items and RCU a
-> chance to do their thing during __read_vmcore by adding a cond_resched.
-
-Thanks for fixing this.
-
-By the way, is it easy to reproduce? And should we add some trace of the
-softlockup into log so that people can search for it and confirm when
-encountering it?
-
-Thanks
-Baoquan
-
+> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
 > ---
->  fs/proc/vmcore.c | 2 ++
->  1 file changed, 2 insertions(+)
+>  kernel/kexec_file.c                |  3 ++
+>  security/integrity/ima/ima_kexec.c | 45 +++++++++++++++++++-----------
+>  2 files changed, 32 insertions(+), 16 deletions(-)
 > 
-> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-> index 1fb213f379a5..d06607a1f137 100644
-> --- a/fs/proc/vmcore.c
-> +++ b/fs/proc/vmcore.c
-> @@ -383,6 +383,8 @@ static ssize_t __read_vmcore(struct iov_iter *iter, loff_t *fpos)
->  		/* leave now if filled buffer already */
->  		if (!iov_iter_count(iter))
->  			return acc;
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index fe59cb7c179d..2d5df320c34f 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -410,6 +410,9 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+>  
+>  	kimage_terminate(image);
+>  
+> +	if (!(flags & KEXEC_FILE_ON_CRASH))
+> +		kimage_file_post_load(image);
 > +
-> +		cond_resched();
+>  	ret = machine_kexec_post_load(image);
+>  	if (ret)
+>  		goto out;
+> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
+> index 1d4d6c122d82..98fc9b9782a2 100644
+> --- a/security/integrity/ima/ima_kexec.c
+> +++ b/security/integrity/ima/ima_kexec.c
+> @@ -19,6 +19,7 @@
+>  #ifdef CONFIG_IMA_KEXEC
+>  static struct seq_file ima_kexec_file;
+>  static void *ima_kexec_buffer;
+> +static size_t kexec_segment_size;
+>  static bool ima_kexec_update_registered;
+>  
+>  static void ima_reset_kexec_file(struct seq_file *sf)
+> @@ -129,7 +130,6 @@ void ima_add_kexec_buffer(struct kimage *image)
+>  	/* use more understandable variable names than defined in kbuf */
+>  	void *kexec_buffer = NULL;
+>  	size_t kexec_buffer_size;
+> -	size_t kexec_segment_size;
+>  	int ret;
+>  
+>  	/*
+> @@ -154,14 +154,6 @@ void ima_add_kexec_buffer(struct kimage *image)
+>  		return;
 >  	}
 >  
->  	list_for_each_entry(m, &vmcore_list, list) {
-> -- 
-> 2.42.0
-> 
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
+> -	ret = ima_dump_measurement_list(&kexec_buffer_size, &kexec_buffer,
+> -					kexec_segment_size);
+> -	if (ret < 0) {
+> -		pr_err("%s: Failed to dump IMA measurements. Error:%d.\n",
+> -		       __func__, ret);
+> -		return;
+> -	}
+> -
 
+After removing these lines...
+
+>  	kbuf.buffer = kexec_buffer;
+>  	kbuf.bufsz = kexec_buffer_size;
+                     ^^^^^^^^^^^^^^^^^
+
+... kexec_buffer_size is uninitialized here.
+
+Petr T
 
 _______________________________________________
 kexec mailing list
