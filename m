@@ -4,64 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 02322C25B74
-	for <kexec@archiver.kernel.org>; Sat, 18 May 2024 08:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6361CC25B75
+	for <kexec@archiver.kernel.org>; Mon, 20 May 2024 01:20:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=6jr7YjrYPQiJL6fd9z9XCwplcBxkymhHBgpPlLoj138=; b=kS1HcnKnXM5lbO
-	5GSn2dzMUYxeiLM8KwTgW01Sht6qaeYDG7E02fd0r/cBQ3UAldPb1X7JtR077kwGhOiPFw6JPb91K
-	kFqO/wr6GaSdym4x+8e64xfG3Q5MpMhEHxZo59PvjOw62NVFJ46N7BQXhGJjlXVQZrGineaLoZz1N
-	VPxUA4r5MIR2TRN3bhwhYuc38GegyD+bYxoPs/cOnrZpmrQ91W07TRHvitmWmTjug/vQ6tFvAv/XA
-	IyvIWG+qasILPv3F4MU32DDucMJhWmtPMLTzwhQEoaYy1bi4BABLjx2yXsTu6mx8Y7OHW/CLREYby
-	EZhwXoQnLaPGfN74rD/A==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=GR4Tj+IV4RUB7PSHIi50rnI522CRnldjqeotpDUYVPQ=; b=z4iyKiiaS8lkVH
+	tXvhLe9SEkYXm8zntWWvJSMFnvEdqTjT5joN7RKHUVdFIkDSKMx62dD8nf9zDO2o00g964HryYbiL
+	bSYutEyfExu6VCng6ukhMuJwCG3lYDrf4q5EokSD0vs7c4mOdiBYyfamjKs1189UJFssE1K2PPEnS
+	GnghOBwdvaX0dmmuPk99r5kq7pqh0oKOoYfYeWZchkOvgt2w12sZw451VBJdxNNIiNKPgqDIDHdKL
+	FAONo5G2IzsJfZASOZIyvNFLPhNvU5MWB4GaHSn5Zy5s0GXa2sfAOC0pqpo3GpkTOc1hWI43QhFCd
+	OdpQoEKaFaGWBlXQsSDg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s8FVI-00000009m6a-2SbN;
-	Sat, 18 May 2024 08:33:20 +0000
-Received: from sin.source.kernel.org ([2604:1380:40e1:4800::1])
+	id 1s8rhf-0000000D7er-0IsI;
+	Mon, 20 May 2024 01:20:39 +0000
+Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s8FVE-00000009m5X-2vpP
+	id 1s8rhc-0000000D7ee-1mPs
+	for kexec@bombadil.infradead.org;
+	Mon, 20 May 2024 01:20:36 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:In-Reply-To:References;
+	bh=Z1jgas71lHhATo5JR3KYxPGA7j9X5GNG9gDR7NH5Nf4=; b=KlucSqD5ynQf08CEd8Z9sBWL3S
+	61/5sH63VqBBhmtut8d7bEWZsgWGl7qdQBG1Y1xt23rKwkoD+MY7LbMxnOc/YOCyu942qjplSpkm2
+	m2qgENGrrMp7wAYT6rA/DOFMMf5Vpo8wpsV9TwQM7FehPcKmBvu4WeGDD94X9yeg+Wk8mMSs+HktH
+	8sm56VUT41OaHbXqB786e/GixpWF7LKuZ49wg1/nkPHhFhh+2zvO4xh/KV4RKpgbQwUNbb/p7E0iU
+	bKUqHeamntoqy/tpM3f4u1Yn0sOc9sUzF4tfUhopQbfE6TGkO4FK66/2WKpgj5sUE++b+v7vLXD/k
+	ERBMsw6A==;
+Received: from mail.loongson.cn ([114.242.206.163])
+	by casper.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s8rhW-0000000FWlY-26Rc
 	for kexec@lists.infradead.org;
-	Sat, 18 May 2024 08:33:18 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sin.source.kernel.org (Postfix) with ESMTP id 24C20CE0907;
-	Sat, 18 May 2024 08:33:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DC25C113CC;
-	Sat, 18 May 2024 08:33:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716021190;
-	bh=h19VpEyilEFTF1lf+DKL1kYP9Gd7gJ32jBch2kcKtIY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q21WQ6+0oPDgv89jbWbS9SkEg7ju69rK7+lZtXBMIwdj4YzFxX5CWt5B1itTwaQ3W
-	 d8E7pZ1qlO6MnfGr3lwA9Ew1Fh3OIFxtq4rPKmGdhYKY18aUgxXKAMWRDjC3JgMwgs
-	 KPMgOENcKnqrAcu6vBK05Kpt5iaAp7XuMZTDZBXaAsHhRsxGpe9CyvptikswatSD5S
-	 9f87Y/ejRw5KamVaYRi8wgOlyShQtyZx0uoPZRRlpmiG5sRfTDJLzfs4CGLDZl22BA
-	 MxGow5B8/AZ5e83HRNQ5Xu+rLB/tqdfF1/CgMFSfFw+bl3hA+Zr+ZjILFu0BgPlIao
-	 NOyWz5jHpjiTA==
-Date: Sat, 18 May 2024 09:33:04 +0100
-From: Simon Horman <horms@kernel.org>
-To: Dave Young <dyoung@redhat.com>
-Cc: Song Shuai <songshuaishuai@tinylab.org>, mick@ics.forth.gr,
-	lizhengyu3@huawei.com, liaochang1@huawei.com,
-	xianting.tian@linux.alibaba.com, guoren@kernel.org,
-	huanyi.xj@alibaba-inc.com, yixun.lan@gmail.com,
-	kexec@lists.infradead.org, hursand@fedoraproject.org
-Subject: Re: [PATCH 0/7] Kexec-tools: Improve RISC-V port
-Message-ID: <20240518083304.GD475595@kernel.org>
-References: <20230915035013.1582679-1-songshuaishuai@tinylab.org>
- <20230920115634.GG224399@kernel.org>
- <DA84A55096BADE15+594e239a-ff6a-368f-ae92-b6cfebbf8dc0@tinylab.org>
- <CALu+AoSr+an7Ps-jhcSbvrq4E4FnqkiNZVH-2BhV_3=B+oDcFQ@mail.gmail.com>
+	Mon, 20 May 2024 01:20:34 +0000
+Received: from loongson.cn (unknown [10.180.133.93])
+	by gateway (Coremail) with SMTP id _____8Axz+tTpUpmdHIAAA--.2709S3;
+	Mon, 20 May 2024 09:20:20 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.180.133.93])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxqsZSpUpmJzMBAA--.4236S2;
+	Mon, 20 May 2024 09:20:19 +0800 (CST)
+From: Hongchen Zhang <zhanghongchen@loongson.cn>
+To: kexec@lists.infradead.org
+Cc: horms@kernel.org,
+	chenhuacai@loongson.cn,
+	Hongchen Zhang <zhanghongchen@loongson.cn>,
+	Ming Wang <wangming01@loongson.cn>
+Subject: [PATCH] LoongArch: fix kernel image size error
+Date: Mon, 20 May 2024 09:20:16 +0800
+Message-Id: <20240520012016.6898-1-zhanghongchen@loongson.cn>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CALu+AoSr+an7Ps-jhcSbvrq4E4FnqkiNZVH-2BhV_3=B+oDcFQ@mail.gmail.com>
+X-CM-TRANSID: AQAAf8CxqsZSpUpmJzMBAA--.4236S2
+X-CM-SenderInfo: x2kd0w5krqwupkhqwqxorr0wxvrqhubq/1tbiAQABB2ZHSWwB-AASss
+X-Coremail-Antispam: 1Uk129KBj93XoWxWF4ktr1xWF45JrW5Cr4DGFX_yoW5GFW3pw
+	17CF1Fqr4rJwnxAr47tas09ws5J3s7W3WaqFsFkryfCrsFgryUX3yrZasrZF4Utw40grn0
+	grn5X34F9a1kJabCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UWHqcUUUUU=
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240518_013317_162808_65E22165 
-X-CRM114-Status: GOOD (  29.54  )
+X-CRM114-CacheID: sfid-20240520_022031_255196_F01081F2 
+X-CRM114-Status: GOOD (  10.23  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -73,56 +91,89 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-T24gU2F0LCBNYXkgMTgsIDIwMjQgYXQgMTE6Mzk6MThBTSArMDgwMCwgRGF2ZSBZb3VuZyB3cm90
-ZToKPiBPbiBXZWQsIDExIE9jdCAyMDIzIGF0IDEzOjI0LCBTb25nIFNodWFpIDxzb25nc2h1YWlz
-aHVhaUB0aW55bGFiLm9yZz4gd3JvdGU6Cj4gPgo+ID4KPiA+Cj4gPiDlnKggMjAyMy85LzIwIDE5
-OjU2LCBTaW1vbiBIb3JtYW4g5YaZ6YGTOgo+ID4gPiBPbiBGcmksIFNlcCAxNSwgMjAyMyBhdCAx
-MTo1MDowNkFNICswODAwLCBTb25nIFNodWFpIHdyb3RlOgo+ID4gPj4gSGksCj4gPiA+Pgo+ID4g
-Pj4gVGhpcyBzZXJpZXMgaXMgY3JlYXRlZCB0byBpbXByb3ZlIFJJU0MtViBwb3J0IG9mIGtleGVj
-LXRvb2xzLAo+ID4gPj4gYW5kIGlzIGJhc2VkIG9uIHRoZSBob3Jtcy9rZXhlYy10b29sczpidWls
-ZC10ZXN0LXJpc2N2LXYyIGJyYW5jaC4KPiA+ID4KPiA+ID4gSW4gbXkgbWluZCB0aGUgYmlnIHF1
-ZXN0aW9uIGlzIGhvdyB0byBtb3ZlIFJJU0MtViBzdXBwb3J0Cj4gPiA+IGZyb20gdGhhdCBicmFu
-Y2gsIHRvIGJlaW5nIG1lcmdlZCBpbnRvIG1haW4uCj4gPiA+Cj4gPiA+IElJUkMgdGhlcmUgd2Vy
-ZSBzb21lIGlzc3VlcyB0aGF0IG5lZWRlZCB0byBiZSBhZGRyZXNzZWQuCj4gPiA+IFBlcmhhcHMg
-dGhleSBhcmUgYWxsIGFkZHJlc3NlZCBieSB0aGlzIHNlcmllcywgYW5kIHdpdGgKPiA+ID4gc29t
-ZSBhcHByb3ByaWF0ZSBzcXVhc2hpbmcgd2UgY2FuIG1vdmUgZm9yd2FyZHMgd2l0aCBhIHNlcmll
-cwo+ID4gPiBiYXNlZCBvbiBtYWluPwo+ID4KPiA+IEhpLCBTaW1vbiBhbmQgTmljazoKPiA+Cj4g
-PiBJIHNxdWFzaGVkIHRoZSBmaXJzdCBmb3VyIHBhdGNoZXMgYXMgYSAiUklTQy1WOiBTb21lIGZp
-eGVzIGZvciByaXNjdgo+ID4gcG9ydCIgcGF0Y2ggYW5kIHRoZW4gdG9vayB0aGUgaG9ybXMvbWFp
-biBhcyB0aGUgYmFzZSB0byBjb2xsZWN0IHRoZSAyCj4gPiBwYXRjaGVzIGZyb20gaG9ybXMvYnVp
-bGQtdGVzdC1yaXNjdi12MiBicmFuY2ggYW5kIHRoaXMgc2VyaWVzIHRvZ290aGVyLgo+ID4gVGhl
-c2UgYXJlIHRoZSBHaXRodWIgbGluayBhbmQgYWxsIGNvbW1pdHMgZm9yIFJJU0MtVi4KPiA+Cj4g
-PiBodHRwczovL2dpdGh1Yi5jb20vc3VnYXJmaWxsZXQva2V4ZWMtdG9vbHMvY29tbWl0cy9tYWlu
-X3J2Cj4gPgo+ID4gNWRjMTMzZSBSSVNDLVY6IFN1cHBvcnQgbG9hZGluZyBJbWFnZSBiaW5hcnkg
-ZmlsZQo+ID4gYjA0MmY2ZCBSSVNDLVY6IFNlcGFyYXRlIGVsZl9yaXNjdl9maW5kX3BiYXNlIG91
-dAo+ID4gOGYzNDRjNyBSSVNDLVY6IEVuYWJsZSBrZXhlY19maWxlX2xvYWQgc3lzY2FsbAo+ID4g
-N2Q0Yjk4MiBSSVNDLVY6IFNvbWUgZml4ZXMgZm9yIHJpc2N2IHBvcnQKPiA+IDMyMDVjMWMgbG9j
-YWw6IFJJU0MtVjogZGlzdHJpYnV0ZSBwdXJnYXRvcnkvcmlzY3YvTWFrZWZpbGUKPiA+IDU0Zjlk
-YWYgUklTQy1WOiBBZGQgc3VwcG9ydCBmb3IgcmlzY3Yga2V4ZWMva2R1bXAgb24ga2V4ZWMtdG9v
-bHMKPiA+Cj4gPiBTaW5jZSBJIGRpZG4ndCBmb3VuZCB0aGUgaXNzdWVzL2ZpeGVzIGFzIE5pY2sg
-bWVudGlvbmVkIHdpdGggdGhlc2UKPiA+IGNvbW1pdHMsIEkgcHJlZmVyIHRvIG1lcmdlIHRoZW0g
-aW50byBob3Jtcy9tYWluIGFuZCBsZXQgbW9yZSBrZXhlYy9rZHVtcAo+ID4gdXNlcnMgdG8gaGVs
-cCBpbXByb3ZlL2ZpeHVwIFJJU0MtViBwb3J0Lgo+IAo+IEhpLCAgSSBub3RpY2VkIGFub3RoZXIg
-cHIgZm9yIEZlZG9yYSBrZXhlYy10b29sczoKPiBodHRwczovL3NyYy5mZWRvcmFwcm9qZWN0Lm9y
-Zy9ycG1zL2tleGVjLXRvb2xzL3B1bGwtcmVxdWVzdC8yNAo+IAo+IEl0IGlzIGJhZCB0byB0YWtl
-IGl0IGFzIEZlZG9yYSBvbmx5LCAgIEkgd291bGQgc3VnZ2VzdCBwb3N0aW5nIGFsbCB0aGUKPiBy
-ZWZyZXNoZWQgcGF0Y2hlcyB0b2dldGhlciBoZXJlIGFnYWluIGZvciByZXZpZXcuCj4gCj4gSWYg
-bm8gZW5vdWdoIHJldmlld2VycyBjYW4gcmV2aWV3IHRoZW0gbXkgYW5vdGhlciBzdWdnZXN0aW9u
-IGlzIHRvCj4gZHJvcCB0aGUga2V4ZWNfbG9hZCBzdXBwb3J0IGNvZGUgZm9yIHRoZSB0aW1lIGJl
-aW5nLCBhbmQgb25seSBlbmFibGUKPiB0aGUga2V4ZWNfZmlsZV9sb2FkIHN1cHBvcnQgY29kZSBp
-biBrZXhlYy10b29scywgYW5kIEkgYXNzdW1lIGJlbG93Cj4ga2VybmVsIGNvbW1pdCBtYWtlIHRo
-ZSBrZXhlY19maWxlX2xvYWQga2VybmVsIHBpZWNlIG9mIHdvcmsgZG9uZS4KPiBUaGVuIGl0IHdp
-bGwgYmUgZWFzaWVyIHRvIHJldmlldyBhbmQgbWFrZSBzb21ldGhpbmcgd29ya2luZyBhdCBsZWFz
-dC4KPiBjb21taXQgNjI2MTU4NmUwYzkxZGIxNGMzNGY4OTRmNGJjNDhmMjMwMGNmZjFkNAo+IEF1
-dGhvcjogTGlhbyBDaGFuZyA8bGlhb2NoYW5nMUBodWF3ZWkuY29tPgo+IERhdGU6ICAgRnJpIEFw
-ciA4IDE4OjA5OjExIDIwMjIgKzA4MDAKPiAKPiAgICAgUklTQy1WOiBBZGQga2V4ZWNfZmlsZSBz
-dXBwb3J0CgpIaSwKCkkgd291bGQgZ2xhZGx5IHRha2UgYSBwYXRjaHNldCBmb3Iga2V4ZWMtdG9v
-bHMgdGhhdCBhZGRzIFJJU0MtViBzdXBwb3J0IGluCmEgY29oZXJlbnQgbWFubmVyLgoKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcg
-bGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
-L21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Use kernel_size instead of kernel image size is wrong, we should get
+the kernel image size from loongarch image header.
+
+Signed-off-by: Ming Wang <wangming01@loongson.cn>
+Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
+---
+ kexec/arch/loongarch/kexec-elf-loongarch.c | 28 ++++++++++++++++++----
+ 1 file changed, 24 insertions(+), 4 deletions(-)
+
+diff --git a/kexec/arch/loongarch/kexec-elf-loongarch.c b/kexec/arch/loongarch/kexec-elf-loongarch.c
+index 45387ca77cc2..c87f02282980 100644
+--- a/kexec/arch/loongarch/kexec-elf-loongarch.c
++++ b/kexec/arch/loongarch/kexec-elf-loongarch.c
+@@ -54,6 +54,7 @@ int elf_loongarch_load(int argc, char **argv, const char *kernel_buf,
+ 	unsigned long kernel_segment;
+ 	struct mem_ehdr ehdr;
+ 	int result;
++	int i;
+ 
+ 	result = build_elf_exec_info(kernel_buf, kernel_size, &ehdr, 0);
+ 
+@@ -62,6 +63,26 @@ int elf_loongarch_load(int argc, char **argv, const char *kernel_buf,
+ 		goto exit;
+ 	}
+ 
++	/* Find and process the loongarch image header. */
++	for (i = 0; i < ehdr.e_phnum; i++) {
++		struct mem_phdr *phdr = &ehdr.e_phdr[i];
++
++		if (phdr->p_type != PT_LOAD)
++			continue;
++
++		header = (const struct loongarch_image_header *)(
++			kernel_buf + phdr->p_offset);
++
++		if (!loongarch_process_image_header(header))
++			break;
++	}
++
++	if (i == ehdr.e_phnum) {
++		dbgprintf("%s: Valid loongarch image header not found\n", __func__);
++		result = EFAILED;
++		goto exit;
++	}
++
+ 	kernel_segment = loongarch_locate_kernel_segment(info);
+ 
+ 	if (kernel_segment == ULONG_MAX) {
+@@ -72,13 +93,12 @@ int elf_loongarch_load(int argc, char **argv, const char *kernel_buf,
+ 
+ 	dbgprintf("%s: kernel_segment: %016lx\n", __func__, kernel_segment);
+ 	dbgprintf("%s: image_size:     %016lx\n", __func__,
+-		kernel_size);
++		 loongarch_mem.image_size);
+ 	dbgprintf("%s: text_offset:    %016lx\n", __func__,
+ 		loongarch_mem.text_offset);
+ 	dbgprintf("%s: phys_offset:    %016lx\n", __func__,
+ 		loongarch_mem.phys_offset);
+-	dbgprintf("%s: PE format:      %s\n", __func__,
+-		(loongarch_header_check_pe_sig(header) ? "yes" : "no"));
++	dbgprintf("%s: PE format:      no\n", __func__);
+ 
+ 	/* create and initialize elf core header segment */
+ 	if (info->kexec_flags & KEXEC_ON_CRASH) {
+@@ -108,7 +128,7 @@ int elf_loongarch_load(int argc, char **argv, const char *kernel_buf,
+ 	}
+ 
+ 	/* load additional data */
+-	result = loongarch_load_other_segments(info, kernel_segment + kernel_size);
++	result = loongarch_load_other_segments(info, kernel_segment + loongarch_mem.image_size);
+ 
+ exit:
+ 	free_elf_info(&ehdr);
+-- 
+2.33.0
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
