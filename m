@@ -4,83 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CD075C25B79
-	for <kexec@archiver.kernel.org>; Mon, 20 May 2024 01:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 264C1C04FFE
+	for <kexec@archiver.kernel.org>; Mon, 20 May 2024 06:17:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=NIvlQxj3n9DT8rxb/Bw/EoXsXonkXg0Jzt7PNWgrMiM=; b=mnTZOzYo7JlCUp
-	2J05pCms2GvAlQAoHZx/QGroHB/M6nR6NVhcic3ni+TNn1pmsV14yFQQDUzTJjMdXRnJ6aydIFpZJ
-	T1kJWUPSwThYXobuV/WjRrpV8I492O3za0kjFiuIDURjmYtaG5tn+m7nu7S5YB9feUKYdP0J6Iw4J
-	xWK9mfYDFU10PhA5Fuxwz9LPThA9i84P7lTR+eWVhuxDg1ZVv7PsNEmhMoO72JRJFNWarrGKLbfm/
-	JGR+DgMUGzQLZHhag0DBad8ErzCMXTRCT8xjzQslCZo2KLpcCY5eIfroqH3y4NVqQLwGTCXCpeM+w
-	bw/5cWG+OOP92nyJ48AQ==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=rQhWG2l2qDsjoqqHbJL7+wgHqeJ5h3n2NZd4Gk2dRgA=; b=uar3D9BNy0/QH3
+	7cP4j/0gCI+gsHpHRLzCHSJm2HAZf/JcV0x/soKB2MvQz5grkDVOETZwouCthYz9RRpAYr5xteYBL
+	FtcuVsGMzDTjTUCJE2GXMvpTOjhyQ6PqACiSigv9EFRUZ6FADk4r+iO5IsAz3PihF8KQgW+UQMk8b
+	zxs0yt736XmgPLNTvNlFtulXR0xSmKQbgwpIinzmRIlWzYJHMt5gOtAhciMkpjykqC5fd/sRGOUdX
+	SODSyahgqZ0SXqgC1uzMvn57yGM3J/+3ek8+qU3fEeEl3mK3ph440rHA/uCqKutIyYgsVUJG2kE0G
+	+9ec8MgE7zEy5Bjdw7/A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s8s6R-0000000D9ve-0phg;
-	Mon, 20 May 2024 01:46:15 +0000
-Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+	id 1s8wKi-0000000Ddlt-1yKn;
+	Mon, 20 May 2024 06:17:16 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s8s6O-0000000D9vL-3X3x
-	for kexec@bombadil.infradead.org;
-	Mon, 20 May 2024 01:46:12 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:MIME-Version
-	:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:In-Reply-To:References;
-	bh=BIBVc3ldENVIQ8m2OEu1/lU4Ofy6GLG0SuYOF4/i5r0=; b=KmVIGa+VxITcAk03NQ6gErR8Oa
-	oaLbMENUySLW30ggdAaAijwbMQcmNsO/0CtzS8jwvD4ZjqLE642x9phKBpL7fgpbejLJMhDgJ3XBx
-	zQ4WRZCrz2MCMo0bxns0kyLPziDooqtK4o21D0tV6vrYN3Y7rfvOm9zSgZEDKzj5NC5pzGvHQD0yf
-	Xch/ZLT2kDPNLlN9FdQ9Fg5Cv0VJ3fI4suvHVaXsCxNDtlZENkhUZrs/+Phd/ZBlStWUc+C0WA8Na
-	glwb//lDK0fdzRKid1wpcDEEqipvjScu3hR553hojw8xlXNmgWkVdHbuysrrOl0PoCCGZZx1xuFAm
-	kBMmdf/Q==;
-Received: from mail.loongson.cn ([114.242.206.163])
-	by desiato.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s8s6H-00000006MXH-3zac
+	id 1s8wKe-0000000Ddgh-1DpR
 	for kexec@lists.infradead.org;
-	Mon, 20 May 2024 01:46:10 +0000
-Received: from loongson.cn (unknown [10.180.128.250])
-	by gateway (Coremail) with SMTP id _____8AxDOtUq0pmanYAAA--.437S3;
-	Mon, 20 May 2024 09:45:56 +0800 (CST)
-Received: from crazy.crazy.loongson.org (unknown [10.180.128.250])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxDMdRq0pmPzgBAA--.4338S2;
-	Mon, 20 May 2024 09:45:53 +0800 (CST)
-From: Ming Wang <wangming01@loongson.cn>
-To: kexec@lists.infradead.org
-Cc: horms@kernel.org,
-	chenhuacai@loongson.cn,
-	gaojuxin@loongson.cn
-Subject: [PATCH] kexec: loongarch: fix load command line segment error
-Date: Mon, 20 May 2024 09:45:53 +0800
-Message-Id: <20240520014553.3787578-1-wangming01@loongson.cn>
-X-Mailer: git-send-email 2.39.2
+	Mon, 20 May 2024 06:17:15 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716185814;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=q31sDE/zOMOC9EHzt6I6xPHg9+oaIupdXfLzTJ+v32I=;
+	b=ZDzSH60vQ3PBXNXcx5s8+Y/8/cNWYtIDRAUAahEcRNP9bfernqIc0d9aAKkyw8tTP70HRB
+	+ATWo9dZ+8EoNlCJNrqzaIuyTZ86XS7+UFxLQdYZvYkpFcg5t4w4nqLxZRJcRmTtlbEu9k
+	JnV5E4GNvesif9AzBaFaI4O19r83F8Q=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-620-vZXOS9U_NI-BI7y0BRnSCA-1; Mon, 20 May 2024 02:16:48 -0400
+X-MC-Unique: vZXOS9U_NI-BI7y0BRnSCA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D0A4D800169;
+	Mon, 20 May 2024 06:16:47 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.65])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id DC6071054824;
+	Mon, 20 May 2024 06:16:46 +0000 (UTC)
+Date: Mon, 20 May 2024 14:16:43 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Coiby Xu <coxu@redhat.com>
+Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
+	Milan Broz <gmazyland@gmail.com>,
+	Thomas Staudt <tstaudt@de.ibm.com>,
+	Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
+	Kairui Song <ryncsn@gmail.com>,
+	Jan Pazdziora <jpazdziora@redhat.com>,
+	Pingfan Liu <kernelfans@gmail.com>, Dave Young <dyoung@redhat.com>,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	Dave Hansen <dave.hansen@intel.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Eric Biederman <ebiederm@xmission.com>
+Subject: Re: [PATCH v3 1/7] kexec_file: allow to place kexec_buf randomly
+Message-ID: <ZkrqkzJlW2RZkmH9@MiWiFi-R3L-srv>
+References: <20240425100434.198925-1-coxu@redhat.com>
+ <20240425100434.198925-2-coxu@redhat.com>
 MIME-Version: 1.0
-X-CM-TRANSID: AQAAf8AxDMdRq0pmPzgBAA--.4338S2
-X-CM-SenderInfo: 5zdqwzxlqjiio6or00hjvr0hdfq/1tbiAQADEmZJWxEC+wACsO
-X-Coremail-Antispam: 1Uk129KBj93XoWrKr17WF4UKrykCF1xKr4Utrc_yoW8JF4Upr
-	y7AryDJw4rGrnFyrykJa4ruw4kX3s3G3sFqayIyry8JFsrJ3WSqF4fXa4DXF1vkw4YyF4I
-	grsxta4jqFWkZwcCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	Gr0_Gr1UM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6x
-	kI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v2
-	6r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2
-	Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
-	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMI
-	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
-	14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
-	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07U_-B_U
-	UUUU=
+Content-Disposition: inline
+In-Reply-To: <20240425100434.198925-2-coxu@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240520_024608_499763_A818A11A 
-X-CRM114-Status: UNSURE (   8.13  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20240519_231712_467881_AF6FD858 
+X-CRM114-Status: GOOD (  23.81  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,36 +91,96 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-When kernel cmdline reserved multiple crash kernel segments, like:
-"crashkernel=4G,high crashkernel=256M,low".
-Cmdline segment may be loaded in locations larger than 4G of memory.
-So the parameter 'buf_max' of add_buffer function should be
-'hole_max'.
+On 04/25/24 at 06:04pm, Coiby Xu wrote:
+> Currently, kexec_buf is placed in order which means for the same
+> machine, the info in the kexec_buf is always located at the same
+> position each time the machine is booted. This may cause a risk for
+> sensitive information like LUKS volume key. Now struct kexec_buf has a
+> new field random which indicates it's supposed to be placed in a random
+> position.
 
-Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
-Signed-off-by: Ming Wang <wangming01@loongson.cn>
----
- kexec/arch/loongarch/kexec-loongarch.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Do you want to randomize the key's position for both kdump and kexec
+rebooting? Assume you only want to do that for kdump. If so, we may need
+to make that more specific in code.
 
-diff --git a/kexec/arch/loongarch/kexec-loongarch.c b/kexec/arch/loongarch/kexec-loongarch.c
-index f00027c..ac75030 100644
---- a/kexec/arch/loongarch/kexec-loongarch.c
-+++ b/kexec/arch/loongarch/kexec-loongarch.c
-@@ -337,7 +337,7 @@ int loongarch_load_other_segments(struct kexec_info *info, unsigned long hole_mi
- 	cmdline[sizeof(cmdline) - 1] = 0;
- 	add_buffer(info, cmdline, sizeof(cmdline), sizeof(cmdline),
- 		sizeof(void *), _ALIGN_UP(hole_min, getpagesize()),
--		0xffffffff, 1);
-+		hole_max, 1);
- 
- 	dbgprintf("%s:%d: command_line: %s\n", __func__, __LINE__, cmdline);
- 
-
-base-commit: 2a3e54e9f734ce08dee20b4ff1bdd5037f1b0193
-prerequisite-patch-id: 773329268ca8ca42f7b6aeafce0e83aceb75888d
--- 
-2.39.2
+> 
+> Suggested-by: Jan Pazdziora <jpazdziora@redhat.com>
+> Signed-off-by: Coiby Xu <coxu@redhat.com>
+> ---
+>  include/linux/kexec.h |  2 ++
+>  kernel/kexec_file.c   | 15 +++++++++++++++
+>  2 files changed, 17 insertions(+)
+> 
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index 060835bb82d5..fc1e20d565d5 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -171,6 +171,7 @@ int kexec_image_post_load_cleanup_default(struct kimage *image);
+>   * @buf_min:	The buffer can't be placed below this address.
+>   * @buf_max:	The buffer can't be placed above this address.
+>   * @top_down:	Allocate from top of memory.
+> + * @random:	Place the buffer at a random position.
+>   */
+>  struct kexec_buf {
+>  	struct kimage *image;
+> @@ -182,6 +183,7 @@ struct kexec_buf {
+>  	unsigned long buf_min;
+>  	unsigned long buf_max;
+>  	bool top_down;
+> +	bool random;
+>  };
+>  
+>  int kexec_load_purgatory(struct kimage *image, struct kexec_buf *kbuf);
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index 2d1db05fbf04..e0630fe30d43 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/elfcore.h>
+>  #include <linux/kernel.h>
+>  #include <linux/kernel_read_file.h>
+> +#include <linux/prandom.h>
+>  #include <linux/syscalls.h>
+>  #include <linux/vmalloc.h>
+>  #include "kexec_internal.h"
+> @@ -432,6 +433,16 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+>  	return ret;
+>  }
+>  
+> +static unsigned long kexec_random_start(unsigned long start, unsigned long end)
+> +{
+> +	unsigned long temp_start;
+> +	unsigned short i;
+> +
+> +	get_random_bytes(&i, sizeof(unsigned short));
+> +	temp_start = start + (end - start) / USHRT_MAX * i;
+> +	return temp_start;
+> +}
+> +
+>  static int locate_mem_hole_top_down(unsigned long start, unsigned long end,
+>  				    struct kexec_buf *kbuf)
+>  {
+> @@ -440,6 +451,8 @@ static int locate_mem_hole_top_down(unsigned long start, unsigned long end,
+>  
+>  	temp_end = min(end, kbuf->buf_max);
+>  	temp_start = temp_end - kbuf->memsz + 1;
+> +	if (kbuf->random)
+> +		temp_start = kexec_random_start(temp_start, temp_end);
+>  
+>  	do {
+>  		/* align down start */
+> @@ -477,6 +490,8 @@ static int locate_mem_hole_bottom_up(unsigned long start, unsigned long end,
+>  	unsigned long temp_start, temp_end;
+>  
+>  	temp_start = max(start, kbuf->buf_min);
+> +	if (kbuf->random)
+> +		temp_start = kexec_random_start(temp_start, end);
+>  
+>  	do {
+>  		temp_start = ALIGN(temp_start, kbuf->buf_align);
+> -- 
+> 2.44.0
+> 
 
 
 _______________________________________________
