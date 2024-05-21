@@ -4,70 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 44806C25B77
-	for <kexec@archiver.kernel.org>; Tue, 21 May 2024 01:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CF02FC25B77
+	for <kexec@archiver.kernel.org>; Tue, 21 May 2024 02:00:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
 	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
 	List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:Message-ID:
 	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=wb9QM2xUGBzznZjX1YMmrK62S4VGU1EhNZATi0aG5CI=; b=aD1WGaF4W92PlYWv89ANoKFYM3
-	Dj+uuLXiHx2xKtQw0fhtN64dGEfvGO2pQr78FienO9IYrDpfQmNx7iHFjsMHInezYOxSH0jxxwLqw
-	rmY4+4F2DDBRmPwCDinJ7RYLuMxDOWXFXpdY1b9rYTCeFMU7hlIuhcij6j8Q3xoNSzJ3n4uGWh7P4
-	t77cL0rENLv66H5WUp6o7o8Q0AepViSnOfj6gpQY6TI6CfoySVMuFQtNwNLqK1rY+PT0gnCBu+quA
-	AFTEcE/QNiJTvWgTt0Ysk4/2OJjgMvLIS1vGBw/efY6MrNkJwi4OykakgCehC1V0KowREpL9kqaM+
-	EJ/2qvHA==;
+	bh=zze88UcStTeovTKDwVM5JP2qxAmitN/VbmZZ5w0qYAE=; b=XTQ8IV9rIF81jlctUC4xRtxCJ2
+	XOZCrz0XUALNT7igtC1uUgr0ysEc4uvqvH+o+a4PnXHmipD2kWf6FHcbshEq3eM+EvRdffIQ6bxwq
+	KcZbgQEEf/dSEshtBtGWWSeeCsWku72jxrRcIgQw75TL4nAPoG4lhv0qLBUH7XCGKW+AjojQEPAwF
+	Mfm3NijjuhwuvsiKYrcp/670r48zSVv11vjtE8TxnRcgPwOw1mKW98bPfHBG9St56TpM9hjl1fAXJ
+	R8qyjCPnuWR8mWkOOQfa+67aXbfUUGX52X9KPx9GEUqGmR7TlSs5cGXkM+tqbqO9MaXSRZmQxNeKG
+	JNkqmtbQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s9EZi-0000000G0tC-1t7W;
-	Tue, 21 May 2024 01:45:58 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1s9EoC-0000000G20l-4BQK;
+	Tue, 21 May 2024 02:00:57 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s9EZd-0000000G0sL-1V9f
+	id 1s9Eo9-0000000G1zj-0zWg
 	for kexec@lists.infradead.org;
-	Tue, 21 May 2024 01:45:55 +0000
+	Tue, 21 May 2024 02:00:55 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716255949;
+	s=mimecast20190719; t=1716256851;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=HlCkg0tP4Cpfzk2bC4YEhkvWskQ1DD1aHNtJblqbcpg=;
-	b=MECzBY100HCXpvfi13TJm642zigzC9OV3e+BHKDW5yhuYP/SbB8QXH+nP3YoEaaBAPFuJX
-	PD4DKbIFJTLrfYNhLUmdmGHKZlbX9NreZMcDvaPIwKrF1N5Nr4ekTmKipMRlbiLrq2vWOe
-	59vOAYZeGsv3zQzgEBYKLgo9Pnb37TE=
-Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
- [209.85.215.198]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=5UjzgLZqQ1A3A/STroNQKIAanlssx47OVX19tlPyfkk=;
+	b=ROtjQResrv+TnQaWViN/QlRdp2IRh8aReu96cKDkPDomIXNzrica7x7th1GRBRQMOwonNt
+	MkEzAFZe1wc5PwHPGKNv6H6D2gaHj/3JiizeIBReqjtEZmZ8RMvL+9ZMWDZ60gY5x9g8a3
+	NMiANG643DQQ04L2TyEAdPghWDyLrj0=
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com
+ [209.85.210.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-257-HftU9EnhO4GS9iw-GoeOpA-1; Mon, 20 May 2024 21:45:47 -0400
-X-MC-Unique: HftU9EnhO4GS9iw-GoeOpA-1
-Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-66957d4e293so2065034a12.2
-        for <kexec@lists.infradead.org>; Mon, 20 May 2024 18:45:47 -0700 (PDT)
+ us-mta-648-1rsNRzJjPuGTrQ9b5EWizA-1; Mon, 20 May 2024 22:00:48 -0400
+X-MC-Unique: 1rsNRzJjPuGTrQ9b5EWizA-1
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-6f454878591so7309703b3a.0
+        for <kexec@lists.infradead.org>; Mon, 20 May 2024 19:00:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716255947; x=1716860747;
+        d=1e100.net; s=20230601; t=1716256847; x=1716861647;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HlCkg0tP4Cpfzk2bC4YEhkvWskQ1DD1aHNtJblqbcpg=;
-        b=bUf/3Z3LjOrupbe56bHBcIKWHoDdaaVLn7deKBuQh8R4jBYlSAOp+ZBBSfDTImc0cX
-         tlkLWec/iYifSEp014tnvZu5KYoW3Gc+D5Omi+T6IBzdeXQMRzBj8QMSR+1CIe7s9qW8
-         AcWkwJdYaeaiEg51tOsAza5DBzQ6uvuPGAmX7vYG5AxfPbCVOqVaB1fhZITAncujQCPW
-         bAzS0wIzZW/LIS2PmfbG57PU7eOx/3emIV0LBUrQ4AHPHIXUUgC7DbIizw4hVMSXISY9
-         MdPHqNIvNHxkSGod1KaDuPy8OaK9nLEO2X4T6HJ+QDIBneCzYjhOOzhYH8qU3vouTNuP
-         hOyQ==
-X-Gm-Message-State: AOJu0YxDT/8g1uATLwIYR2oZzzdX78yH4h5ZvWOndMs9PoMn9x7Iz1tN
-	CYyVQiUVWnk7U178EsuvutBBIEIJHDHclVYjXtoz1ykZe4mUF5S5kVb+GHpmD03TNIvtQQC0KV1
-	xC31EYZUyFtmRDfUlti7c0I7OwlHlEaAq+VUYK4qCrspXJeg7nmWjmBwGgg==
-X-Received: by 2002:a17:903:1208:b0:1ea:bc:53ac with SMTP id d9443c01a7336-1ef44161e5bmr341628885ad.44.1716255946444;
-        Mon, 20 May 2024 18:45:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGN5g1E6nTlKOP21DL9Yzz2/p0qfOZR9sXI4bI9iM65GYg3ScXNcnblgsFIFUW7eoYcrmNjhw==
-X-Received: by 2002:a17:903:1208:b0:1ea:bc:53ac with SMTP id d9443c01a7336-1ef44161e5bmr341628485ad.44.1716255945389;
-        Mon, 20 May 2024 18:45:45 -0700 (PDT)
+        bh=5UjzgLZqQ1A3A/STroNQKIAanlssx47OVX19tlPyfkk=;
+        b=j87ZUvThSut7+p7jfikHuIp7RNvll+pSO/o7S8JjUIZRV00xzI57Z+0N0mcV6iuSEB
+         j/1cqNGooRRAWuLzD4Nj2xD/rrsat5xi+h4XHe4najjvx+fiVkD6zoVqoI6rT99iOdLM
+         3v6XVz4GiiMFSwIXYeYtm1ufpv43aIt7JDAh0e258EP4lR/eAWeTpN49fpzNoQSvfrdV
+         ByxxYH+NMXgfMNvieOV78yRPu9+lvrMvvdTjITIfbciB8OqP5LT3ufcaCcvOrxsY7h4m
+         u/rCI5BYhqibdq3D/aakQ5G/e7/+RL77WU4cPTopE7/zfLIBki8cM2h2RWwqvYhktnFO
+         nb5A==
+X-Gm-Message-State: AOJu0YwjRlxgmXRP2WGAd3EVygwbN6bQD7BV+DH/A+8w2ntnlZyjHo0b
+	ydXR4KnKy/hoKMek6n4Zj/bKC3/UYjtfQ4km8hNKACFK6znymdKxknEeMbzf8MMbL/Ku3KSb7Vp
+	kgDp4Hc5+aPuM80wOcQR4EbtNV8LsTrnNNRlEhVqj/mSHPeZxLmAAnSZmDQ==
+X-Received: by 2002:a05:6a00:c93:b0:6f3:ea4b:d235 with SMTP id d2e1a72fcca58-6f4e01b91eamr37168632b3a.0.1716256846928;
+        Mon, 20 May 2024 19:00:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGh7HhBHnJNneyIw7ihYF0Kt+meuvDu1Ef/rXN+B35MEGXdllcXI7mvKKuXqDyPl0gxaXLFSQ==
+X-Received: by 2002:a05:6a00:c93:b0:6f3:ea4b:d235 with SMTP id d2e1a72fcca58-6f4e01b91eamr37168566b3a.0.1716256846045;
+        Mon, 20 May 2024 19:00:46 -0700 (PDT)
 Received: from localhost ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f30c391ac9sm4521795ad.37.2024.05.20.18.45.44
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-634103f67f3sm19982062a12.62.2024.05.20.19.00.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 May 2024 18:45:44 -0700 (PDT)
-Date: Tue, 21 May 2024 09:43:17 +0800
+        Mon, 20 May 2024 19:00:45 -0700 (PDT)
+Date: Tue, 21 May 2024 09:58:36 +0800
 From: Coiby Xu <coxu@redhat.com>
 To: Baoquan He <bhe@redhat.com>
 Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>, 
@@ -75,20 +75,21 @@ Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
 	Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>, Kairui Song <ryncsn@gmail.com>, 
 	Jan Pazdziora <jpazdziora@redhat.com>, Pingfan Liu <kernelfans@gmail.com>, 
 	Dave Young <dyoung@redhat.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Dave Hansen <dave.hansen@intel.com>, Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH v3 0/7] Support kdump with LUKS encryption by reusing
- LUKS volume keys
-Message-ID: <iwx2noaevjat4uzqvagmrwgxgxj3rufanut4gnjte33thx2bdr@r3fhtf45sgrv>
+	Dave Hansen <dave.hansen@intel.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
+	Eric Biederman <ebiederm@xmission.com>
+Subject: Re: [PATCH v3 1/7] kexec_file: allow to place kexec_buf randomly
+Message-ID: <y5ogivx7qbdm6u37t5o6na4jewn6qofzrbibnsneoqlwns63y5@eg62cytuvwql>
 References: <20240425100434.198925-1-coxu@redhat.com>
- <ZkrrIf1P6rx3WhjM@MiWiFi-R3L-srv>
+ <20240425100434.198925-2-coxu@redhat.com>
+ <ZkrqkzJlW2RZkmH9@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-In-Reply-To: <ZkrrIf1P6rx3WhjM@MiWiFi-R3L-srv>
+In-Reply-To: <ZkrqkzJlW2RZkmH9@MiWiFi-R3L-srv>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240520_184553_503021_445A688D 
-X-CRM114-Status: GOOD (  12.13  )
+X-CRM114-CacheID: sfid-20240520_190053_747888_653A58A0 
+X-CRM114-Status: GOOD (  14.57  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -105,21 +106,36 @@ Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, May 20, 2024 at 02:18:09PM +0800, Baoquan He wrote:
->Please don't add dm-devel@redhat.com in the public list because it's a
->internal mailing list or aliase. And I got error when replying.
+On Mon, May 20, 2024 at 02:16:43PM +0800, Baoquan He wrote:
+>On 04/25/24 at 06:04pm, Coiby Xu wrote:
+>> Currently, kexec_buf is placed in order which means for the same
+>> machine, the info in the kexec_buf is always located at the same
+>> position each time the machine is booted. This may cause a risk for
+>> sensitive information like LUKS volume key. Now struct kexec_buf has a
+>> new field random which indicates it's supposed to be placed in a random
+>> position.
+>
+>Do you want to randomize the key's position for both kdump and kexec
+>rebooting? Assume you only want to do that for kdump. If so, we may need
+>to make that more specific in code.
 
-Thanks for the reminder! Actually it's a public mailing list and you
-can find all emails publicly listed on [1]. I did some research and it
-seems we should email to dm-devel@lists.linux.dev instead. Quoting [2],
-> To post a message to all the list members (who were subscribed with
-> mail delivery enabled as of 2023.10.20), send email to
-> dm-devel@lists.linux.dev.  You can no longer subscribe to
-> dm-devel@redhat.com, to subscribe to dm-devel@lists.linux.dev please
-> send email to dm-devel+subscribe@lists.linux.dev.
+Thanks for the suggestion! Currently, no one has requested this feature
+for kexec reboot so yes, I only have kdump in mind. But kdump depends
+on kexec thus I'm not sure how we can make it kdump specfic. Do you have
+a further suggestion?
 
-[1] https://lore.kernel.org/dm-devel/
-[2] https://listman.redhat.com/mailman/listinfo/dm-devel
+
+>diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+>index 060835bb82d5..fc1e20d565d5 100644
+>--- a/include/linux/kexec.h
+>+++ b/include/linux/kexec.h
+>@@ -171,6 +171,7 @@ int kexec_image_post_load_cleanup_default(struct kimage *image);
+>  * @buf_min:	The buffer can't be placed below this address.
+>  * @buf_max:	The buffer can't be placed above this address.
+>  * @top_down:	Allocate from top of memory.
+>+ * @random:	Place the buffer at a random position.
+
+How about a comment here saying this is currently only used by kdump.
 
 -- 
 Best regards,
