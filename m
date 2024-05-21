@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1CA6BC25B77
-	for <kexec@archiver.kernel.org>; Tue, 21 May 2024 03:14:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B80CFC25B77
+	for <kexec@archiver.kernel.org>; Tue, 21 May 2024 03:20:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=OHruZkwA0R3WP3IIlTHT4f5MAX9HPFFADAnKm3aeuFg=; b=qmvv9Q3yxahstD
-	/QQzFH92+L/JnV3GJ/7RmuwhJ+xrA6Xd57xz0Gk7/NHd7XrAIm9DA5yowYWXkaaa0CSqB5qdfK402
-	qexqjOW349uLlT00Vn1pdJVBCps0C+H97ZVZRWlh1sZ88HBvg0kuUC7T3hiyA7FHdkh5YfYLqB8uC
-	POlmGFE1T1oxxWBfCLmilS3u/rWU6LIqe8ioJhpt7DFDpX+UA576LDB1dmDOZ12uL7ed46XKxQ3HC
-	t294SuDWnZQXkf2BAIeA+aky94adwZKa/PgrzFYWhCCY5QAaIrb+sF3cbmy5KDPGLNERIygbmBNLo
-	we/YnQzIanxHMjGvqE3A==;
+	List-Owner; bh=O6RDPDdDq/fD2GkvkakoumErRyrVFmJiehwvISX03h8=; b=HJVqDOknyQmfDE
+	lo3lmZZUnjnhBVtOONje4NhVUahKNJB0rUpE9Boa/6sWlr+tWFq6MninQPZUKuwgyyP74bWugK1Bo
+	6fU4Ck2HAY/rGhfL9PMc+MBeZ0pTiuPF5n5+A0qDmKDQnI9+gw8qWvrTRzC2k4w5B9zflVqVakk0Z
+	JQAiEGcjV5wVt+IfRE3w/13HgmZTajEAQQuTyNgq7J/JzeZOOHMgILeNNOo9jPWQ1BSwMw6oDECZy
+	LeS9a2MAKfmG/qSNX5nX7It4KGnYcsKyUA6vJuoDraRRbFxONoMnHcMYqkbeXSr8EYSZYXLEeNohu
+	Z0BVT23cuFcGA/B8G3Xw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s9Fwr-0000000G9pj-4A8R;
-	Tue, 21 May 2024 03:13:57 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1s9G2u-0000000GAyG-0ExA;
+	Tue, 21 May 2024 03:20:12 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1s9Fwp-0000000G9o3-0kq2
+	id 1s9G2p-0000000GAvr-2xBg
 	for kexec@lists.infradead.org;
-	Tue, 21 May 2024 03:13:56 +0000
+	Tue, 21 May 2024 03:20:10 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716261232;
+	s=mimecast20190719; t=1716261605;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3/HzK1apeoYY0DujLj2rbx8MJd+TQtas5Uof0p135Ck=;
-	b=fqyeBLLdodfxF+36YUaBadgc+f2BskO2Jm9HeWTAPh6uv0ZDSvNnXIVL2lb6rjMF7CSUC6
-	v/48xVYk9mMqDIceL8v7/FiKeQ5AYHnofjbjkU7TWL7hkem+Mwb6JHZ6NaD48qnGdL9nKR
-	WKvYKqzunJd4ioDRgNMOL0GIgKBMlkg=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-141-ugmp0PizN2unNesMjqUHGA-1; Mon, 20 May 2024 23:13:48 -0400
-X-MC-Unique: ugmp0PizN2unNesMjqUHGA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	bh=hOmz1H0+MMWbfr1lFiKOcLjgn2XgwhPLxYAWmTnPe74=;
+	b=J/jFYeyR1Byj5ZFdSZFjc4vX8LXsOXNCK2eBNgrDKdwdb1xddgDByfT5guELN+FLLdhTZA
+	34XwsUDZxOxOvZ7bEecV3ViquwhZX1N4zx1TJh12a/euvDUQ6cS6cyGwlS45PQ8FzC0sC/
+	pCPKyn+tYvJvLVDLQqXRct6HWsorutc=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-622-32LAG1HHPKSOFakPszE3fw-1; Mon,
+ 20 May 2024 23:20:02 -0400
+X-MC-Unique: 32LAG1HHPKSOFakPszE3fw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2FE3C101A54F;
-	Tue, 21 May 2024 03:13:48 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B3EB129AA393;
+	Tue, 21 May 2024 03:20:01 +0000 (UTC)
 Received: from localhost (unknown [10.72.116.65])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 28DF440C6EB7;
-	Tue, 21 May 2024 03:13:46 +0000 (UTC)
-Date: Tue, 21 May 2024 11:13:43 +0800
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id C29E45618;
+	Tue, 21 May 2024 03:20:00 +0000 (UTC)
+Date: Tue, 21 May 2024 11:19:57 +0800
 From: Baoquan He <bhe@redhat.com>
 To: Coiby Xu <coxu@redhat.com>
 Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
@@ -62,21 +62,20 @@ Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
 	Pingfan Liu <kernelfans@gmail.com>, Dave Young <dyoung@redhat.com>,
 	linux-kernel@vger.kernel.org, x86@kernel.org,
 	Dave Hansen <dave.hansen@intel.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Eric Biederman <ebiederm@xmission.com>
-Subject: Re: [PATCH v3 1/7] kexec_file: allow to place kexec_buf randomly
-Message-ID: <ZkwRZxGw2dWStd1C@MiWiFi-R3L-srv>
+	Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH v3 0/7] Support kdump with LUKS encryption by reusing
+ LUKS volume keys
+Message-ID: <ZkwS3UNmjTkK2HeY@MiWiFi-R3L-srv>
 References: <20240425100434.198925-1-coxu@redhat.com>
- <20240425100434.198925-2-coxu@redhat.com>
- <ZkrqkzJlW2RZkmH9@MiWiFi-R3L-srv>
- <y5ogivx7qbdm6u37t5o6na4jewn6qofzrbibnsneoqlwns63y5@eg62cytuvwql>
+ <ZkrrIf1P6rx3WhjM@MiWiFi-R3L-srv>
+ <iwx2noaevjat4uzqvagmrwgxgxj3rufanut4gnjte33thx2bdr@r3fhtf45sgrv>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <y5ogivx7qbdm6u37t5o6na4jewn6qofzrbibnsneoqlwns63y5@eg62cytuvwql>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+In-Reply-To: <iwx2noaevjat4uzqvagmrwgxgxj3rufanut4gnjte33thx2bdr@r3fhtf45sgrv>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240520_201355_330008_CABD1137 
-X-CRM114-Status: GOOD (  25.12  )
+X-CRM114-CacheID: sfid-20240520_202007_863074_964D4E16 
+X-CRM114-Status: GOOD (  18.40  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -93,55 +92,36 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 05/21/24 at 09:58am, Coiby Xu wrote:
-> On Mon, May 20, 2024 at 02:16:43PM +0800, Baoquan He wrote:
-> > On 04/25/24 at 06:04pm, Coiby Xu wrote:
-> > > Currently, kexec_buf is placed in order which means for the same
-> > > machine, the info in the kexec_buf is always located at the same
-> > > position each time the machine is booted. This may cause a risk for
-> > > sensitive information like LUKS volume key. Now struct kexec_buf has a
-> > > new field random which indicates it's supposed to be placed in a random
-> > > position.
-> > 
-> > Do you want to randomize the key's position for both kdump and kexec
-> > rebooting? Assume you only want to do that for kdump. If so, we may need
-> > to make that more specific in code.
+On 05/21/24 at 09:43am, Coiby Xu wrote:
+> On Mon, May 20, 2024 at 02:18:09PM +0800, Baoquan He wrote:
+> > Please don't add dm-devel@redhat.com in the public list because it's a
+> > internal mailing list or aliase. And I got error when replying.
 > 
-> Thanks for the suggestion! Currently, no one has requested this feature
-> for kexec reboot so yes, I only have kdump in mind. But kdump depends
-> on kexec thus I'm not sure how we can make it kdump specfic. Do you have
-> a further suggestion?
+> Thanks for the reminder! Actually it's a public mailing list and you
+> can find all emails publicly listed on [1]. I did some research and it
+> seems we should email to dm-devel@lists.linux.dev instead. Quoting [2],
 
-I remember you said kexec reboot doesn't need the key passed from 1st
-kernel to 2nd kernel because the 2nd kernel will calculate one during
-boot.
+I always got this when replying to your patch. Maybe you registered
+before.
 
-kbuf has the information, the similar handling has been in
-kernel/kexec_file.c:
+msmtp: recipient address dm-devel@redhat.com not accepted by the server
+msmtp: server message: 550 5.1.1 <dm-devel@redhat.com>: Recipient address rejected: User unknown in local
+recipient table
 
-#ifdef CONFIG_CRASH_DUMP
-        if (kbuf->image->type == KEXEC_TYPE_CRASH)
-                ....;
-#endif
 
+> > To post a message to all the list members (who were subscribed with
+> > mail delivery enabled as of 2023.10.20), send email to
+> > dm-devel@lists.linux.dev.  You can no longer subscribe to
+> > dm-devel@redhat.com, to subscribe to dm-devel@lists.linux.dev please
+> > send email to dm-devel+subscribe@lists.linux.dev.
 > 
+> [1] https://lore.kernel.org/dm-devel/
+> [2] https://listman.redhat.com/mailman/listinfo/dm-devel
 > 
-> > diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> > index 060835bb82d5..fc1e20d565d5 100644
-> > --- a/include/linux/kexec.h
-> > +++ b/include/linux/kexec.h
-> > @@ -171,6 +171,7 @@ int kexec_image_post_load_cleanup_default(struct kimage *image);
-> >  * @buf_min:	The buffer can't be placed below this address.
-> >  * @buf_max:	The buffer can't be placed above this address.
-> >  * @top_down:	Allocate from top of memory.
-> > + * @random:	Place the buffer at a random position.
+> -- 
+> Best regards,
+> Coiby
 > 
-> How about a comment here saying this is currently only used by kdump.
-
-No, it's not good. Please don't do this, let code tell it.
-
-By the way, can you rebase this series on the latest v6.9 and resend? I
-rebase my code and can't apply your patchset.
 
 
 _______________________________________________
