@@ -4,71 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8F5AEC25B75
-	for <kexec@archiver.kernel.org>; Thu, 23 May 2024 05:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A0482C25B75
+	for <kexec@archiver.kernel.org>; Thu, 23 May 2024 05:05:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=1zW1VYP4874NAxMlkpR2riJadADIiCLQKvKXzdXt49g=; b=zvG+DQhYzXMy7X
-	yti3ofIvhuCNHB/j0jDE1uBBb1rvYaYLxaDAa7Q636om6gqZCJTD87/k4BqW7vyO9esSrqFGWbw3u
-	6FMlRvKghbIu0aDF8Ro/a+n6j4g0PsH4R6jJ2SHl6mjCZqmRkiQTPOd+TJO8YtFOaCRzTAqBOeVpU
-	XKd/5KW9zlkftA8QoKlwe4p+uTw9GMM91+rDU4b5Lqw/oFZOSIyoQLPy0wAgNdLSebASUuA7Pd00u
-	D2O5ZQrgc2+5pDIsXwb69r6n/KX/HN0j780cR7GngRIM7b9Y3FKqUyrNMmWufesZHfoddh9yMlM9m
-	p+rBKIZMz+aXiTpjC2+Q==;
+	List-Owner; bh=ZpDEe2XmcrLaxfYIaHGZpINnk1Nxqh0Z/jXatBLt24k=; b=RcTfnQJXQq7dWI
+	tq364Ftl6m40y4Q8W0ZONxs2jw5rO8QS5yKZwXH3IPJoLJvmnY93TGjzu3rATMQ/jeW1k8E6dXYAu
+	vbo/4eJiZtT/yQQ81B5U1TEU+/PdwfvToJTNXE3tjepddpNYXSWIs+RILjDCVw1/SkKXDDz+WYipp
+	iF1TvKnhoUaodO4XLeByn7GqoOtJEwHIeJWRWDE0y7pR83Hb7bYUlxBUxuXgRUYa8puYfaofrDbmK
+	DSyyXZpWq7006z6UiTPqjRGG4sAgwDfafeWx2ArmnLrLtbVc1yJ8vxU5CNV4u5+d5Dsdaa3d2fGxE
+	zovD2+yLZPjHU1OIc3CQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sA0du-0000000541p-0MW5;
-	Thu, 23 May 2024 05:05:30 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1sA0dz-00000005462-0vqj;
+	Thu, 23 May 2024 05:05:35 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sA0dp-000000053xS-2ND2
+	id 1sA0du-0000000541b-1Au1
 	for kexec@lists.infradead.org;
-	Thu, 23 May 2024 05:05:27 +0000
+	Thu, 23 May 2024 05:05:33 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716440724;
+	s=mimecast20190719; t=1716440729;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=iXqG8tM8YcaI9rGWt1KJ0lfMUtcaUoa1T7IYtFP1N5A=;
-	b=YgqolL8fi/zwKwhe1zJQfLFZNDWzAjVR8+Y0xho0VKhFw+C5wZ5RSY3Ky2HFLk04JtNlfo
-	v/OOe9GTlOKMdqXPtgxqez4fF3G3+af8GG7u2wJcslTCBsflQMC5UwdK1W/6W1513PnyXb
-	MxaH9WauBCVegO91MVrXpiJ5OQie4vM=
-Received: from mail-ot1-f70.google.com (mail-ot1-f70.google.com
- [209.85.210.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=rgyDYqAPwEwrwLxe8ILuedZgvx3RZsbJnZUXSZSXc28=;
+	b=hFhXi41MIUQEDNGNJms88sxjnOzbWZTICFxambfljiKYVjdkpvs84F9v1RTkRaR9QRw+Iq
+	02inUoiQuViScEJbLXdUJR10XKR4QzCHUUgdjxRZpOpDx70cO47bof0oTKIsU3PtULNF5h
+	c431tenwUoJ6rvsSqFDD5sjp/ci4j9I=
+Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
+ [209.85.215.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-497-Af3DTSY1NlO3vpUxmhOV0g-1; Thu, 23 May 2024 01:05:21 -0400
-X-MC-Unique: Af3DTSY1NlO3vpUxmhOV0g-1
-Received: by mail-ot1-f70.google.com with SMTP id 46e09a7af769-6f10ce0beb8so779062a34.2
-        for <kexec@lists.infradead.org>; Wed, 22 May 2024 22:05:21 -0700 (PDT)
+ us-mta-274-zA6s897PML-GUP0-pcO-gg-1; Thu, 23 May 2024 01:05:28 -0400
+X-MC-Unique: zA6s897PML-GUP0-pcO-gg-1
+Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-61cb5628620so672953a12.3
+        for <kexec@lists.infradead.org>; Wed, 22 May 2024 22:05:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716440720; x=1717045520;
+        d=1e100.net; s=20230601; t=1716440726; x=1717045526;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=iXqG8tM8YcaI9rGWt1KJ0lfMUtcaUoa1T7IYtFP1N5A=;
-        b=m2/Y8pK3orYL47erPin+LR8TYZk+qliZdP2XTXLPK68zQSy2xMbDLWlqrStaQXRT/c
-         kejlRYAAAkOVFd4yYjXeTpLVCA5g3cCDK6muuHo7G42IYc8mIE+2H9UKsfUVHm5OLHfP
-         1VWd5eBjjf0ZQayPlVHxMDvzVmn0BWEru1yEjU7gbNnBHMClhWgZT+nrPj2v11fEAXLM
-         1jx3wmWQ3DSotTnn9FniKoVkSWRutz66SQJG2fmi7A9xyjzXAdU3ZCBdDbwRVNeO+o1I
-         elprWWsswI6pS5oMAb+bzLRRP8RCLTStWj9zGGm2dYBb5FF2HJxbq6Qe/5HrPq94T1vR
-         TvrA==
-X-Gm-Message-State: AOJu0YyNWnzAwyubZ7IKSuNlIaKNzGi+/P0FL9vO/8Jl4AtXjxGiHmZt
-	JHhgDskl7KfyPlWCZjzgxDED/OcdSdk33Tb7ZD5EcA91CjXdkiLvNe9Hk7IKq9xHGQAlv8ZCZTO
-	ZS05Sw0nkN+y0NOtCEoLFD+OWcl8+eqO4olHB1BypXIf3GVwMznyjZE+JeKG1K8LlUd8g1hl8p4
-	bTuOCDAPRq/efqFXHniferK9zF331AvlFSkbscJiNtvPjn
-X-Received: by 2002:a05:6830:10cd:b0:6f0:bf65:9c42 with SMTP id 46e09a7af769-6f666f7914bmr3888035a34.15.1716440719484;
-        Wed, 22 May 2024 22:05:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEWQA1xavODDuyHNmo2P3AvBsnEdbuteghicukf23qUMHJD1rGUHnEt8+t2eLKuyEOwcoEKaA==
-X-Received: by 2002:a05:6830:10cd:b0:6f0:bf65:9c42 with SMTP id 46e09a7af769-6f666f7914bmr3888000a34.15.1716440718826;
-        Wed, 22 May 2024 22:05:18 -0700 (PDT)
+        bh=rgyDYqAPwEwrwLxe8ILuedZgvx3RZsbJnZUXSZSXc28=;
+        b=AyN+heS0pzCXMDDYkcdRd6aV4XXPz18vHY78rEWQ63omT+3YcV/MWnLsKqmLNK/LFz
+         PvZO2aliaUKZ+FJuWj+LyLLOE1j3ZhC5kr2pZXx+ttm8BWlj5+4DEpXrlNkeZy4SmjET
+         7YbdL8CffYyBelUrCDk3114SP+GfQ6DYAM4S0/6ZhHHvNoXxwogLtuRY7NFGQArMbBUi
+         mBYuoxx9pqxe6o4C678tRBjnvm5/++gq2etWQycioVqFY0XTGS8XAO1zBvucCa+TZYma
+         qJ1yL+BiNzp6yrUE6z2VXC1k7BPzXjzwqQgdqcwDY4hzv7ycz29d9EyHejLXB7kV5aUg
+         x8Cw==
+X-Gm-Message-State: AOJu0YwE2UYd0K5OIEHcu2IEnV+haufBYzvpmyXkHxUp9TQ7efXJ146b
+	Sm1kplibtZQwKxFAhQ7Mrps+zpa8E6Pl2uDNS+5jmXQhzLyhscVYznSwfgkH0ibEuLO5axjwNhd
+	ZApsk7kgB3vMaKovktY2+1E8Runv+SSPYZNSPz8Q9XpjnkxR67PehF/ieexxXo9aeTZ+k6ly09O
+	WYtxjbk3tMi+VF9xtGvbZMd2kCuYXUWQpF77s4AmtZapQI
+X-Received: by 2002:a05:6a21:2792:b0:1b1:ea57:d6ac with SMTP id adf61e73a8af0-1b1f8a749c2mr3773809637.51.1716440725602;
+        Wed, 22 May 2024 22:05:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHPjibNNUlzkGUbJC55LkT4ayzeyD3K0jDKK0WT1v3T+lpkRCBTbOfygRm48CKMedkbGJzihQ==
+X-Received: by 2002:a05:6a21:2792:b0:1b1:ea57:d6ac with SMTP id adf61e73a8af0-1b1f8a749c2mr3773771637.51.1716440724853;
+        Wed, 22 May 2024 22:05:24 -0700 (PDT)
 Received: from localhost ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-63a917264d6sm20539102a12.73.2024.05.22.22.05.17
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0c036272sm247051165ad.188.2024.05.22.22.05.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 May 2024 22:05:18 -0700 (PDT)
+        Wed, 22 May 2024 22:05:24 -0700 (PDT)
 From: Coiby Xu <coxu@redhat.com>
 To: kexec@lists.infradead.org
 Cc: Ondrej Kozina <okozina@redhat.com>,
@@ -89,9 +89,9 @@ Cc: Ondrej Kozina <okozina@redhat.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>,
 	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH v4 6/7] x86/crash: pass dm crypt keys to kdump kernel
-Date: Thu, 23 May 2024 13:04:47 +0800
-Message-ID: <20240523050451.788754-7-coxu@redhat.com>
+Subject: [PATCH v4 7/7] x86/crash: make the page that stores the dm crypt keys inaccessible
+Date: Thu, 23 May 2024 13:04:48 +0800
+Message-ID: <20240523050451.788754-8-coxu@redhat.com>
 X-Mailer: git-send-email 2.45.0
 In-Reply-To: <20240523050451.788754-1-coxu@redhat.com>
 References: <20240523050451.788754-1-coxu@redhat.com>
@@ -99,8 +99,8 @@ MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240522_220525_716799_708D1157 
-X-CRM114-Status: GOOD (  15.17  )
+X-CRM114-CacheID: sfid-20240522_220530_558990_C59D0104 
+X-CRM114-Status: GOOD (  12.00  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -117,74 +117,54 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-1st kernel will build up the kernel command parameter dmcryptkeys as
-similar to elfcorehdr to pass the memory address of the stored info of
-dm crypt key to kdump kernel.
+This adds an addition layer of protection for the saved copy of dm
+crypt key. Trying to access the saved copy will cause page fault.
 
+Suggested-by: Pingfan Liu <kernelfans@gmail.com>
 Signed-off-by: Coiby Xu <coxu@redhat.com>
 ---
- arch/x86/kernel/crash.c           | 15 ++++++++++++++-
- arch/x86/kernel/kexec-bzimage64.c |  7 +++++++
- 2 files changed, 21 insertions(+), 1 deletion(-)
+ arch/x86/kernel/machine_kexec_64.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index f06501445cd9..74b3844ae53c 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -266,6 +266,7 @@ static int memmap_exclude_ranges(struct kimage *image, struct crash_mem *cmem,
- 				 unsigned long long mend)
- {
- 	unsigned long start, end;
-+	int r;
- 
- 	cmem->ranges[0].start = mstart;
- 	cmem->ranges[0].end = mend;
-@@ -274,7 +275,19 @@ static int memmap_exclude_ranges(struct kimage *image, struct crash_mem *cmem,
- 	/* Exclude elf header region */
- 	start = image->elf_load_addr;
- 	end = start + image->elf_headers_sz - 1;
--	return crash_exclude_mem_range(cmem, start, end);
-+	r = crash_exclude_mem_range(cmem, start, end);
-+
-+	if (r)
-+		return r;
-+
-+	/* Exclude dm crypt keys region */
-+	if (image->dm_crypt_keys_addr) {
-+		start = image->dm_crypt_keys_addr;
-+		end = start + image->dm_crypt_keys_sz - 1;
-+		return crash_exclude_mem_range(cmem, start, end);
-+	}
-+
-+	return r;
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index b180d8e497c3..fc0a80f4254e 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -545,13 +545,34 @@ static void kexec_mark_crashkres(bool protect)
+ 	kexec_mark_range(control, crashk_res.end, protect);
  }
  
- /* Prepare memory map for crash dump kernel */
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index 68530fad05f7..9c94428927bd 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -76,6 +76,10 @@ static int setup_cmdline(struct kimage *image, struct boot_params *params,
- 	if (image->type == KEXEC_TYPE_CRASH) {
- 		len = sprintf(cmdline_ptr,
- 			"elfcorehdr=0x%lx ", image->elf_load_addr);
++static void kexec_mark_dm_crypt_keys(bool protect)
++{
++	unsigned long start_paddr, end_paddr;
++	unsigned int nr_pages;
 +
-+		if (image->dm_crypt_keys_addr != 0)
-+			len += sprintf(cmdline_ptr + len,
-+					"dmcryptkeys=0x%lx ", image->dm_crypt_keys_addr);
- 	}
- 	memcpy(cmdline_ptr + len, cmdline, cmdline_len);
- 	cmdline_len += len;
-@@ -441,6 +445,9 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
- 		ret = crash_load_segments(image);
- 		if (ret)
- 			return ERR_PTR(ret);
-+		ret = crash_load_dm_crypt_keys(image);
-+		if (ret)
-+			pr_debug("Either no dm crypt key or error to retrieve the dm crypt key\n");
- 	}
- #endif
++	if (kexec_crash_image->dm_crypt_keys_addr) {
++		start_paddr = kexec_crash_image->dm_crypt_keys_addr;
++		end_paddr = start_paddr + kexec_crash_image->dm_crypt_keys_sz - 1;
++		nr_pages = (PAGE_ALIGN(end_paddr) - PAGE_ALIGN_DOWN(start_paddr))/PAGE_SIZE;
++		if (protect)
++			set_memory_np((unsigned long)phys_to_virt(start_paddr), nr_pages);
++		else
++			__set_memory_prot(
++				(unsigned long)phys_to_virt(start_paddr),
++				nr_pages,
++				__pgprot(_PAGE_PRESENT | _PAGE_NX | _PAGE_RW));
++	}
++}
++
+ void arch_kexec_protect_crashkres(void)
+ {
+ 	kexec_mark_crashkres(true);
++	kexec_mark_dm_crypt_keys(true);
+ }
  
+ void arch_kexec_unprotect_crashkres(void)
+ {
++	kexec_mark_dm_crypt_keys(false);
+ 	kexec_mark_crashkres(false);
+ }
+ #endif
 -- 
 2.45.0
 
