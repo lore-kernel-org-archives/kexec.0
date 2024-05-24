@@ -4,45 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 37FB7C25B79
-	for <kexec@archiver.kernel.org>; Thu, 23 May 2024 07:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5F7A4C25B74
+	for <kexec@archiver.kernel.org>; Fri, 24 May 2024 03:18:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=WKMnC6cm/Ivq1xXNAEMUXVqkpLciWzMVloq6UFegb3M=; b=g52qjT/l/rkEq8
-	nXkv9v2CmMRz/uCT04TtePIk+W+7+EdYUu4W7PRIr9kCnjvL3MbT1jSAZQC8JHSUgs0Ph5bcUtBTW
-	WeIfQMrEUCfkpayC40mgnZmnU1LvUqcJGyzYfT2sMJSesMJNL0DrgtHoVUusf0c1i5sGYjPf+Wbww
-	hOWksUeAWFRHy7hgzJXuuQ+dscsoXsYpSSzdFgzyfWgtDYE/2jwrRa5H0Lwr3VzZkaoef4sxlWfio
-	xPmHysR8Iig5O9heh51PNk5uglf1aPt8DdUVEDefEnZyAWhRIr9nSb7OOE+7I3G3DrJHis+JwKu06
-	sIJCX7rvjgUr6L6OAaYQ==;
+	List-Owner; bh=JomYTzhwcBnQF5DNGPLSvv9Bh+SEqrhxfW0d8M941Iw=; b=sAfAnEDrOLVbKn
+	9bJiaQGnOoeCbG5QORddnJDLIe91JGaTdEhCm4X/5r0ytxtddpNRC+QIt+vlXeiXv6X3sLtGwWIez
+	xkPUFR7GPZc0ZAw9IbmZ8HvwwF54S19hzXTmJ+2x3JyR9luR5qoleRRmRFXmWtgOORVNkNxPxeZI1
+	w+ZhB7KV5EWZMGoRRvS9Ws3js38ehepSdI6eCw+GUsZwwZlekeV93dFsaeKRqLNcUeVRB71PfO9DZ
+	XI+SfBMQn1WgfdyrpGr84Pcc4KArwP4F8c5LvwUL0kgamhkrU1CnlLW2NXvQsG86Ibvdp2ZT1T2OS
+	aKRiKP443bSfN1fDW8AA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sA2lK-00000005Jrf-0462;
-	Thu, 23 May 2024 07:21:18 +0000
-Received: from dfw.source.kernel.org ([139.178.84.217])
+	id 1sALSB-00000007ulB-42ra;
+	Fri, 24 May 2024 03:18:47 +0000
+Received: from mgamail.intel.com ([198.175.65.17])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sA2lG-00000005Jqv-1RoU
+	id 1sALS7-00000007ukA-2mU5
 	for kexec@lists.infradead.org;
-	Thu, 23 May 2024 07:21:16 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id 25BB562C8F;
-	Thu, 23 May 2024 07:21:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1569AC2BD10;
-	Thu, 23 May 2024 07:21:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1716448871;
-	bh=Y7gZu5bqG/ecW5fDqIWGY+8x/ZkP3+KZzibwYtNBZxQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iT//pMv+kpdtHILAxQt4By4QWfUoOE7Kw84GrAc+sMjN5bCCHBP1VgLWpL5QQQtXp
-	 /GdzONRctkqgv1HeBpsq+KBXBakCwMVdeQ603tYbAOjJ16XxFn1wEbzaBDgGsBTPkd
-	 NjunMpvXLvdMbHIIWkbo9SHydjY0dUr2Jo/Lgv1s=
-Date: Thu, 23 May 2024 09:21:08 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Coiby Xu <coxu@redhat.com>
-Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
+	Fri, 24 May 2024 03:18:45 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1716520724; x=1748056724;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=CmwkT08Wml58wAZ0fufhXC4LR6Vf2WvUoVrYuKBhHUY=;
+  b=Zp/+us2/v1QnbytPgEErk6PUo1TMzCUh3FJzrMOm8JvdHUG82fMmDV/X
+   k6QRAIMiwnsX20/01NGysQkFUyd8gPhv7/dNkGze72vQMP7104wg9QoTB
+   gAxOX/sbdViZrcyZ4DdKIuDdj6XuOeS0ewEHdKOsc8C1aIT4zVsIUhCUe
+   jVGeFEaPcCSrQYsoRTujFOW9tetUz2iPQGwKDsVt6CqKWOF5yWIZYWp7b
+   QYKqx+m5Mzds03PH9QSvNb6zxpmY9WzW8Prxg8++7Ezb3W2oAou2+jPKs
+   CJaAzaNbGwZDqMPWwQ/+x9cI0M11IU8wWZe7RDq1SEU0GEZ51mfFem+8a
+   Q==;
+X-CSE-ConnectionGUID: dnjtIh/zROWeqy4qEHjYDA==
+X-CSE-MsgGUID: WjjgHBvdTbaO53MAob1mVA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11081"; a="12997738"
+X-IronPort-AV: E=Sophos;i="6.08,184,1712646000"; 
+   d="scan'208";a="12997738"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2024 20:18:14 -0700
+X-CSE-ConnectionGUID: 8rBYzwWGRWyGrPd9329P8w==
+X-CSE-MsgGUID: dyWvMqt8QVSPk+xJ1pnCjA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,184,1712646000"; 
+   d="scan'208";a="34487139"
+Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
+  by orviesa007.jf.intel.com with ESMTP; 23 May 2024 20:18:08 -0700
+Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sALRH-0003ml-0P;
+	Fri, 24 May 2024 03:17:55 +0000
+Date: Fri, 24 May 2024 11:17:08 +0800
+From: kernel test robot <lkp@intel.com>
+To: Coiby Xu <coxu@redhat.com>, kexec@lists.infradead.org
+Cc: oe-kbuild-all@lists.linux.dev, Ondrej Kozina <okozina@redhat.com>,
 	Milan Broz <gmazyland@gmail.com>,
 	Thomas Staudt <tstaudt@de.ibm.com>,
 	Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
@@ -52,20 +71,17 @@ Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
 	Dave Young <dyoung@redhat.com>, linux-kernel@vger.kernel.org,
 	x86@kernel.org, Dave Hansen <dave.hansen@intel.com>,
 	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>, Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_byb" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH v4 2/7] crash_dump: make dm crypt keys persist for the
- kdump kernel
-Message-ID: <2024052334-protegee-cheating-5934@gregkh>
-References: <20240523050451.788754-1-coxu@redhat.com>
- <20240523050451.788754-3-coxu@redhat.com>
+	Vivek Goyal <vgoyal@redhat.com>,
+	Eric Biederman <ebiederm@xmission.com>
+Subject: Re: [PATCH v4 3/7] crash_dump: store dm keys in kdump reserved memory
+Message-ID: <202405241012.KlmCbp77-lkp@intel.com>
+References: <20240523050451.788754-4-coxu@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20240523050451.788754-3-coxu@redhat.com>
+In-Reply-To: <20240523050451.788754-4-coxu@redhat.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240523_002114_624989_1E964731 
-X-CRM114-Status: GOOD (  32.38  )
+X-CRM114-CacheID: sfid-20240523_201843_782884_404957D0 
+X-CRM114-Status: GOOD (  15.67  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,261 +98,139 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, May 23, 2024 at 01:04:43PM +0800, Coiby Xu wrote:
-> A sysfs /sys/kernel/crash_dm_crypt_keys is provided for user space to make
-> the dm crypt keys persist for the kdump kernel. User space can send the
-> following commands,
-> - "init KEY_NUM"
->   Initialize needed structures
-> - "record KEY_DESC"
->   Record a key description. The key must be a logon key.
+Hi Coiby,
 
-"logon"?  What is that?
+kernel test robot noticed the following build errors:
 
-> 
-> User space can also read this API to learn about current state.
+[auto build test ERROR on de7e71ef8bed222dd144d8878091ecb6d5dfd208]
 
-But you don't document it in Documentation/ABI/ so we don't know if this
-really is the case, and no one will know how to use it :(
+url:    https://github.com/intel-lab-lkp/linux/commits/Coiby-Xu/kexec_file-allow-to-place-kexec_buf-randomly/20240523-130727
+base:   de7e71ef8bed222dd144d8878091ecb6d5dfd208
+patch link:    https://lore.kernel.org/r/20240523050451.788754-4-coxu%40redhat.com
+patch subject: [PATCH v4 3/7] crash_dump: store dm keys in kdump reserved memory
+config: arm-allmodconfig (https://download.01.org/0day-ci/archive/20240524/202405241012.KlmCbp77-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240524/202405241012.KlmCbp77-lkp@intel.com/reproduce)
 
-> Signed-off-by: Coiby Xu <coxu@redhat.com>
-> ---
->  include/linux/crash_core.h   |   5 +-
->  kernel/Kconfig.kexec         |   8 +++
->  kernel/Makefile              |   1 +
->  kernel/crash_dump_dm_crypt.c | 113 +++++++++++++++++++++++++++++++++++
->  kernel/ksysfs.c              |  22 +++++++
->  5 files changed, 148 insertions(+), 1 deletion(-)
->  create mode 100644 kernel/crash_dump_dm_crypt.c
-> 
-> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-> index 44305336314e..6bff1c24efa3 100644
-> --- a/include/linux/crash_core.h
-> +++ b/include/linux/crash_core.h
-> @@ -34,7 +34,10 @@ static inline void arch_kexec_protect_crashkres(void) { }
->  static inline void arch_kexec_unprotect_crashkres(void) { }
->  #endif
->  
-> -
-> +#ifdef CONFIG_CRASH_DM_CRYPT
-> +int crash_sysfs_dm_crypt_keys_read(char *buf);
-> +int crash_sysfs_dm_crypt_keys_write(const char *buf, size_t count);
-> +#endif
->  
->  #ifndef arch_crash_handle_hotplug_event
->  static inline void arch_crash_handle_hotplug_event(struct kimage *image, void *arg) { }
-> diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
-> index 6c34e63c88ff..88525ad1c80a 100644
-> --- a/kernel/Kconfig.kexec
-> +++ b/kernel/Kconfig.kexec
-> @@ -116,6 +116,14 @@ config CRASH_DUMP
->  	  For s390, this option also enables zfcpdump.
->  	  See also <file:Documentation/arch/s390/zfcpdump.rst>
->  
-> +config CRASH_DM_CRYPT
-> +	bool "Support saving crash dump to dm-crypt encrypted volume"
-> +	depends on CRASH_DUMP
-> +	help
-> +	  With this option enabled, user space can intereact with
-> +	  /sys/kernel/crash_dm_crypt_keys to make the dm crypt keys
-> +	  persistent for the crash dump kernel.
-> +
->  config CRASH_HOTPLUG
->  	bool "Update the crash elfcorehdr on system configuration changes"
->  	default y
-> diff --git a/kernel/Makefile b/kernel/Makefile
-> index 3c13240dfc9f..f2e5b3e86d12 100644
-> --- a/kernel/Makefile
-> +++ b/kernel/Makefile
-> @@ -72,6 +72,7 @@ obj-$(CONFIG_VMCORE_INFO) += vmcore_info.o elfcorehdr.o
->  obj-$(CONFIG_CRASH_RESERVE) += crash_reserve.o
->  obj-$(CONFIG_KEXEC_CORE) += kexec_core.o
->  obj-$(CONFIG_CRASH_DUMP) += crash_core.o
-> +obj-$(CONFIG_CRASH_DM_CRYPT) += crash_dump_dm_crypt.o
->  obj-$(CONFIG_KEXEC) += kexec.o
->  obj-$(CONFIG_KEXEC_FILE) += kexec_file.o
->  obj-$(CONFIG_KEXEC_ELF) += kexec_elf.o
-> diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
-> new file mode 100644
-> index 000000000000..78809189084a
-> --- /dev/null
-> +++ b/kernel/crash_dump_dm_crypt.c
-> @@ -0,0 +1,113 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +#include <keys/user-type.h>
-> +#include <linux/crash_dump.h>
-> +
-> +#define KEY_NUM_MAX 128
-> +#define KEY_SIZE_MAX 256
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405241012.KlmCbp77-lkp@intel.com/
 
-Why these values?
+All errors (new ones prefixed by >>):
 
-> +
-> +// The key scription has the format: cryptsetup:UUID 11+36+1(NULL)=48
-> +#define KEY_DESC_LEN 48
-> +
-> +static char *STATE_STR[] = {"fresh", "initialized", "recorded", "loaded"};
-> +static enum STATE_ENUM {
-> +	FRESH = 0,
-> +	INITIALIZED,
-> +	RECORDED,
-> +	LOADED,
-> +} state;
-
-How are you going to keep these enums synced up with the string values?
-
-> +
-> +static unsigned int key_count;
-> +static size_t keys_header_size;
-> +
-> +struct dm_crypt_key {
-> +	unsigned int key_size;
-> +	char key_desc[KEY_DESC_LEN];
-> +	u8 data[KEY_SIZE_MAX];
-> +};
-> +
-> +static struct keys_header {
-> +	unsigned int key_count;
-> +	struct dm_crypt_key keys[] __counted_by(key_count);
-> +} *keys_header;
-> +
-> +static size_t get_keys_header_size(struct keys_header *keys_header,
-> +				   size_t key_count)
-> +{
-> +	return struct_size(keys_header, keys, key_count);
-> +}
-> +
-> +static int init(const char *buf)
-> +{
-> +	unsigned int total_keys;
-> +	char dummy[5];
-
-Why 5?
-
-> +
-> +	if (sscanf(buf, "%4s %u", dummy, &total_keys) != 2)
-
-Didn't you just overflow dummy now?
-
-> +		return -EINVAL;
-> +
-> +	if (key_count > KEY_NUM_MAX) {
-> +		pr_err("Exceed the maximum number of keys (KEY_NUM_MAX=%u)\n",
-> +		       KEY_NUM_MAX);
-
-Do not let userspace spam the kernel log directly if it sends it invalid
-data.
-
-> +		return -EINVAL;
-> +	}
-> +
-> +	keys_header_size = get_keys_header_size(keys_header, total_keys);
-> +	key_count = 0;
-> +
-> +	keys_header = kzalloc(keys_header_size, GFP_KERNEL);
-> +	if (!keys_header)
-> +		return -ENOMEM;
-> +
-> +	keys_header->key_count = total_keys;
-> +	state = INITIALIZED;
-> +	return 0;
-> +}
-> +
-> +static int record_key_desc(const char *buf, struct dm_crypt_key *dm_key)
-> +{
-> +	char key_desc[KEY_DESC_LEN];
-> +	char dummy[7];
-> +
-> +	if (state != INITIALIZED)
-> +		pr_err("Please send the cmd 'init <KEY_NUM>' first\n");
-
-Again, don't let userspace spam the log.
-
-> +
-> +	if (sscanf(buf, "%6s %s", dummy, key_desc) != 2)
-> +		return -EINVAL;
-> +
-> +	if (key_count >= keys_header->key_count) {
-> +		pr_warn("Already have %u keys", key_count);
-> +		return -EINVAL;
-> +	}
-> +
-> +	strscpy(dm_key->key_desc, key_desc, KEY_DESC_LEN);
-> +	pr_debug("Key%d (%s) recorded\n", key_count, dm_key->key_desc);
-> +	key_count++;
-> +
-> +	if (key_count == keys_header->key_count)
-> +		state = RECORDED;
-> +
-> +	return 0;
-> +}
-> +
-> +static int process_cmd(const char *buf, size_t count)
-> +{
-> +	if (strncmp(buf, "init ", 5) == 0)
-> +		return init(buf);
-> +	else if (strncmp(buf, "record ", 7) == 0)
-> +		return record_key_desc(buf, &keys_header->keys[key_count]);
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +int crash_sysfs_dm_crypt_keys_write(const char *buf, size_t count)
-> +{
-> +	if (!is_kdump_kernel())
-> +		return process_cmd(buf, count);
-> +	return -EINVAL;
-> +}
-> +EXPORT_SYMBOL(crash_sysfs_dm_crypt_keys_write);
-
-EXPORT_SYMBOL_GPL() as you are dealing with a sysfs api?
+   kernel/crash_dump_dm_crypt.c: In function 'crash_load_dm_crypt_keys':
+>> kernel/crash_dump_dm_crypt.c:158:16: error: variable 'kbuf' has initializer but incomplete type
+     158 |         struct kexec_buf kbuf = {
+         |                ^~~~~~~~~
+>> kernel/crash_dump_dm_crypt.c:159:18: error: 'struct kexec_buf' has no member named 'image'
+     159 |                 .image = image,
+         |                  ^~~~~
+   kernel/crash_dump_dm_crypt.c:159:26: warning: excess elements in struct initializer
+     159 |                 .image = image,
+         |                          ^~~~~
+   kernel/crash_dump_dm_crypt.c:159:26: note: (near initialization for 'kbuf')
+>> kernel/crash_dump_dm_crypt.c:160:18: error: 'struct kexec_buf' has no member named 'buf_min'
+     160 |                 .buf_min = 0,
+         |                  ^~~~~~~
+   kernel/crash_dump_dm_crypt.c:160:28: warning: excess elements in struct initializer
+     160 |                 .buf_min = 0,
+         |                            ^
+   kernel/crash_dump_dm_crypt.c:160:28: note: (near initialization for 'kbuf')
+>> kernel/crash_dump_dm_crypt.c:161:18: error: 'struct kexec_buf' has no member named 'buf_max'
+     161 |                 .buf_max = ULONG_MAX,
+         |                  ^~~~~~~
+   In file included from include/linux/limits.h:7,
+                    from include/linux/thread_info.h:12,
+                    from include/asm-generic/preempt.h:5,
+                    from ./arch/arm/include/generated/asm/preempt.h:1,
+                    from include/linux/preempt.h:79,
+                    from include/linux/rcupdate.h:27,
+                    from include/linux/rbtree.h:24,
+                    from include/linux/key.h:15,
+                    from kernel/crash_dump_dm_crypt.c:2:
+   include/vdso/limits.h:13:25: warning: excess elements in struct initializer
+      13 | #define ULONG_MAX       (~0UL)
+         |                         ^
+   kernel/crash_dump_dm_crypt.c:161:28: note: in expansion of macro 'ULONG_MAX'
+     161 |                 .buf_max = ULONG_MAX,
+         |                            ^~~~~~~~~
+   include/vdso/limits.h:13:25: note: (near initialization for 'kbuf')
+      13 | #define ULONG_MAX       (~0UL)
+         |                         ^
+   kernel/crash_dump_dm_crypt.c:161:28: note: in expansion of macro 'ULONG_MAX'
+     161 |                 .buf_max = ULONG_MAX,
+         |                            ^~~~~~~~~
+>> kernel/crash_dump_dm_crypt.c:162:18: error: 'struct kexec_buf' has no member named 'top_down'
+     162 |                 .top_down = false,
+         |                  ^~~~~~~~
+   kernel/crash_dump_dm_crypt.c:162:29: warning: excess elements in struct initializer
+     162 |                 .top_down = false,
+         |                             ^~~~~
+   kernel/crash_dump_dm_crypt.c:162:29: note: (near initialization for 'kbuf')
+>> kernel/crash_dump_dm_crypt.c:163:18: error: 'struct kexec_buf' has no member named 'random'
+     163 |                 .random = true,
+         |                  ^~~~~~
+   kernel/crash_dump_dm_crypt.c:163:27: warning: excess elements in struct initializer
+     163 |                 .random = true,
+         |                           ^~~~
+   kernel/crash_dump_dm_crypt.c:163:27: note: (near initialization for 'kbuf')
+>> kernel/crash_dump_dm_crypt.c:158:26: error: storage size of 'kbuf' isn't known
+     158 |         struct kexec_buf kbuf = {
+         |                          ^~~~
+>> kernel/crash_dump_dm_crypt.c:187:20: error: 'KEXEC_BUF_MEM_UNKNOWN' undeclared (first use in this function)
+     187 |         kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+         |                    ^~~~~~~~~~~~~~~~~~~~~
+   kernel/crash_dump_dm_crypt.c:187:20: note: each undeclared identifier is reported only once for each function it appears in
+>> kernel/crash_dump_dm_crypt.c:188:13: error: implicit declaration of function 'kexec_add_buffer' [-Werror=implicit-function-declaration]
+     188 |         r = kexec_add_buffer(&kbuf);
+         |             ^~~~~~~~~~~~~~~~
+   kernel/crash_dump_dm_crypt.c:158:26: warning: unused variable 'kbuf' [-Wunused-variable]
+     158 |         struct kexec_buf kbuf = {
+         |                          ^~~~
+   cc1: some warnings being treated as errors
 
 
-> +
-> +int crash_sysfs_dm_crypt_keys_read(char *buf)
-> +{
-> +	return sprintf(buf, "%s\n", STATE_STR[state]);
+vim +/kbuf +158 kernel/crash_dump_dm_crypt.c
 
-sysfs_emit() please.
+   155	
+   156	int crash_load_dm_crypt_keys(struct kimage *image)
+   157	{
+ > 158		struct kexec_buf kbuf = {
+ > 159			.image = image,
+ > 160			.buf_min = 0,
+ > 161			.buf_max = ULONG_MAX,
+ > 162			.top_down = false,
+ > 163			.random = true,
+   164		};
+   165	
+   166		int r;
+   167	
+   168		if (state == FRESH)
+   169			return 0;
+   170	
+   171		if (key_count != keys_header->key_count) {
+   172			pr_err("Only record %u keys (%u in total)\n", key_count,
+   173			       keys_header->key_count);
+   174			return -EINVAL;
+   175		}
+   176	
+   177		image->dm_crypt_keys_addr = 0;
+   178		r = build_keys_header();
+   179		if (r)
+   180			return r;
+   181	
+   182		kbuf.buffer = keys_header;
+   183		kbuf.bufsz = keys_header_size;
+   184	
+   185		kbuf.memsz = kbuf.bufsz;
+   186		kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
+ > 187		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+ > 188		r = kexec_add_buffer(&kbuf);
 
-> +}
-> +EXPORT_SYMBOL(crash_sysfs_dm_crypt_keys_read);
-
-Again, EXPORT_SYMBOL_GPL()?
-
-> diff --git a/kernel/ksysfs.c b/kernel/ksysfs.c
-> index 07fb5987b42b..2ba4dcbf5816 100644
-> --- a/kernel/ksysfs.c
-> +++ b/kernel/ksysfs.c
-> @@ -167,6 +167,25 @@ static ssize_t vmcoreinfo_show(struct kobject *kobj,
->  }
->  KERNEL_ATTR_RO(vmcoreinfo);
->  
-> +#ifdef CONFIG_CRASH_DM_CRYPT
-> +static ssize_t crash_dm_crypt_keys_show(struct kobject *kobj,
-> +					struct kobj_attribute *attr, char *buf)
-> +{
-> +	return crash_sysfs_dm_crypt_keys_read(buf);
-> +}
-> +
-> +static ssize_t crash_dm_crypt_keys_store(struct kobject *kobj,
-> +					 struct kobj_attribute *attr,
-> +					 const char *buf, size_t count)
-> +{
-> +	int ret;
-> +
-> +	ret = crash_sysfs_dm_crypt_keys_write(buf, count);
-> +	return ret < 0 ? ret : count;
-
-Personally, I hate ? : lines, just write it out, the compiler is the
-same and this way it is much more readable:
-	if (ret < 0)
-		return ret;
-	return count;
-
-thanks,
-
-greg k-h
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
 _______________________________________________
 kexec mailing list
