@@ -4,84 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5F7A4C25B74
-	for <kexec@archiver.kernel.org>; Fri, 24 May 2024 03:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id F4054C25B74
+	for <kexec@archiver.kernel.org>; Fri, 24 May 2024 07:25:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=JomYTzhwcBnQF5DNGPLSvv9Bh+SEqrhxfW0d8M941Iw=; b=sAfAnEDrOLVbKn
-	9bJiaQGnOoeCbG5QORddnJDLIe91JGaTdEhCm4X/5r0ytxtddpNRC+QIt+vlXeiXv6X3sLtGwWIez
-	xkPUFR7GPZc0ZAw9IbmZ8HvwwF54S19hzXTmJ+2x3JyR9luR5qoleRRmRFXmWtgOORVNkNxPxeZI1
-	w+ZhB7KV5EWZMGoRRvS9Ws3js38ehepSdI6eCw+GUsZwwZlekeV93dFsaeKRqLNcUeVRB71PfO9DZ
-	XI+SfBMQn1WgfdyrpGr84Pcc4KArwP4F8c5LvwUL0kgamhkrU1CnlLW2NXvQsG86Ibvdp2ZT1T2OS
-	aKRiKP443bSfN1fDW8AA==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=AL2vMdvUUtteJma+CdRcBUrYD+MvabKEfaMMqTzfEfQ=; b=bxceOG/27nYdmg76RFvFCw0WnP
+	yrDczaEnqLGamY89q3E0wXOnhIx7hN4cLZIU+wTO3tlf9JwabQg1nhzg5gFJN6SQ7X4jbUfBI4XAw
+	ci2wwfM1IK52xmqDBTwV2ZBy3wHZEW+rLSi3/q4Mgy4HoRHgD/qX4BViuURxlN8jhVNtTrH6EVT5V
+	9DYq22ibGt2u6QievVMl3jgwhDe3rblmBBHm+WbexXbX3JlPXmYthgObyimdIgMgQ3qIuERsXHPUp
+	d76MxToQcoQQRmjbERuQAopNgqG1v8xIqJ2fSY20uDXwLyuk9hOE74mYkJhmb8qTNBshdwciukGbK
+	TD2LCIDg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sALSB-00000007ulB-42ra;
-	Fri, 24 May 2024 03:18:47 +0000
-Received: from mgamail.intel.com ([198.175.65.17])
+	id 1sAPJO-00000008GFx-0vBk;
+	Fri, 24 May 2024 07:25:58 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sALS7-00000007ukA-2mU5
+	id 1sAPJL-00000008GDF-3Ih8
 	for kexec@lists.infradead.org;
-	Fri, 24 May 2024 03:18:45 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716520724; x=1748056724;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=CmwkT08Wml58wAZ0fufhXC4LR6Vf2WvUoVrYuKBhHUY=;
-  b=Zp/+us2/v1QnbytPgEErk6PUo1TMzCUh3FJzrMOm8JvdHUG82fMmDV/X
-   k6QRAIMiwnsX20/01NGysQkFUyd8gPhv7/dNkGze72vQMP7104wg9QoTB
-   gAxOX/sbdViZrcyZ4DdKIuDdj6XuOeS0ewEHdKOsc8C1aIT4zVsIUhCUe
-   jVGeFEaPcCSrQYsoRTujFOW9tetUz2iPQGwKDsVt6CqKWOF5yWIZYWp7b
-   QYKqx+m5Mzds03PH9QSvNb6zxpmY9WzW8Prxg8++7Ezb3W2oAou2+jPKs
-   CJaAzaNbGwZDqMPWwQ/+x9cI0M11IU8wWZe7RDq1SEU0GEZ51mfFem+8a
-   Q==;
-X-CSE-ConnectionGUID: dnjtIh/zROWeqy4qEHjYDA==
-X-CSE-MsgGUID: WjjgHBvdTbaO53MAob1mVA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11081"; a="12997738"
-X-IronPort-AV: E=Sophos;i="6.08,184,1712646000"; 
-   d="scan'208";a="12997738"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2024 20:18:14 -0700
-X-CSE-ConnectionGUID: 8rBYzwWGRWyGrPd9329P8w==
-X-CSE-MsgGUID: dyWvMqt8QVSPk+xJ1pnCjA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,184,1712646000"; 
-   d="scan'208";a="34487139"
-Received: from unknown (HELO 0610945e7d16) ([10.239.97.151])
-  by orviesa007.jf.intel.com with ESMTP; 23 May 2024 20:18:08 -0700
-Received: from kbuild by 0610945e7d16 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sALRH-0003ml-0P;
-	Fri, 24 May 2024 03:17:55 +0000
-Date: Fri, 24 May 2024 11:17:08 +0800
-From: kernel test robot <lkp@intel.com>
-To: Coiby Xu <coxu@redhat.com>, kexec@lists.infradead.org
-Cc: oe-kbuild-all@lists.linux.dev, Ondrej Kozina <okozina@redhat.com>,
-	Milan Broz <gmazyland@gmail.com>,
-	Thomas Staudt <tstaudt@de.ibm.com>,
-	Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
-	Kairui Song <ryncsn@gmail.com>,
-	Jan Pazdziora <jpazdziora@redhat.com>,
-	Pingfan Liu <kernelfans@gmail.com>, Baoquan He <bhe@redhat.com>,
-	Dave Young <dyoung@redhat.com>, linux-kernel@vger.kernel.org,
-	x86@kernel.org, Dave Hansen <dave.hansen@intel.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>,
+	Fri, 24 May 2024 07:25:57 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1716535553;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PzoNctDwu2m6AmJa5cOCmGwkuh/QFbymJSnZ7SGPShc=;
+	b=E1os7uMtDVLvlfMmtio3Bxzdg76DDUa3k79zj6J+I0LrDfUKVVZ+IkTc+fvnBS6GaBfzgU
+	/b5A4gmthzkDtUZjxu1KHqsvRFk4VcwRUNru/vUQNB7lBA7ZNFKK7683yHVexY4p7tPI0s
+	gaAFfAWvLkC3yXxX2sPCS0rbhubYxGA=
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
+ [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-516-7hV0RZXIOb-mPP8OWIO8ng-1; Fri, 24 May 2024 03:25:48 -0400
+X-MC-Unique: 7hV0RZXIOb-mPP8OWIO8ng-1
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2bf5ba94169so792811a91.0
+        for <kexec@lists.infradead.org>; Fri, 24 May 2024 00:25:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716535548; x=1717140348;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PzoNctDwu2m6AmJa5cOCmGwkuh/QFbymJSnZ7SGPShc=;
+        b=qbt82nC5TxOudJDbXb9am0KP2ERJ3PgPhHhBa/smgZXehH+VGUWvbnNoCNW+QFgP+S
+         XtyH6RGreD99DrX5KHwTXpHTUnm4vTMSoRi9xL1hhL9st1feqAoytqTSLW1keJN40cqe
+         THDy9vFd7COKh3v2a8Tlr6Emug0+uPwlOu6r9kps7cd9tnojuLI9+8SNDRiDjiqO3ut+
+         tlpqXqyoKvjQOaZJsUr5ELavxqIXxqpEzx4+eoM3rc79N0uXVJozvDy75MDBMT3rO6y1
+         IHuLPGWkyRdPcpPwfBk35hOHnYoinIKeevLID/7Lz5safCDXEtzPJKq8Pu5CaHU/xAky
+         GnLA==
+X-Gm-Message-State: AOJu0YxnjhoPWLw0kicIzutuW7Zra1bu3/F1LNlbLeFjKVsmTX4+w/KI
+	eKaKzKqtQZdTVRvEmrvNZmKdiyq211a7nW6ELA1S4gys5S/QqiL9KW/u5cq3PxMxvrdYV4X66lp
+	RFy14PzKjunaRxop4QKReyql5Ahqvcoy0iQVf/xAWKVhhq1/239eQEdq1uA==
+X-Received: by 2002:a17:90b:3110:b0:2bd:d680:3c8a with SMTP id 98e67ed59e1d1-2bf5e139562mr1478926a91.5.1716535547491;
+        Fri, 24 May 2024 00:25:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG0Oel1WZj5nAuJTGDSIq3qNp4/LOi5MgmRKqKyhKbREm4bXAiRorKX9Z+oY2dV58dic8Rx4w==
+X-Received: by 2002:a17:90b:3110:b0:2bd:d680:3c8a with SMTP id 98e67ed59e1d1-2bf5e139562mr1478897a91.5.1716535546660;
+        Fri, 24 May 2024 00:25:46 -0700 (PDT)
+Received: from localhost ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2bdda14e538sm2655538a91.49.2024.05.24.00.25.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 May 2024 00:25:45 -0700 (PDT)
+Date: Fri, 24 May 2024 15:22:17 +0800
+From: Coiby Xu <coxu@redhat.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>, 
+	Milan Broz <gmazyland@gmail.com>, Thomas Staudt <tstaudt@de.ibm.com>, 
+	Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>, Kairui Song <ryncsn@gmail.com>, 
+	Jan Pazdziora <jpazdziora@redhat.com>, Pingfan Liu <kernelfans@gmail.com>, 
+	Dave Young <dyoung@redhat.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Dave Hansen <dave.hansen@intel.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
 	Eric Biederman <ebiederm@xmission.com>
-Subject: Re: [PATCH v4 3/7] crash_dump: store dm keys in kdump reserved memory
-Message-ID: <202405241012.KlmCbp77-lkp@intel.com>
-References: <20240523050451.788754-4-coxu@redhat.com>
+Subject: Re: [PATCH v3 1/7] kexec_file: allow to place kexec_buf randomly
+Message-ID: <nfe3elcoihbt2g55upa3y5r3bfapngh6yudicyhjqcjczzgswo@cb6h4fl5vi6p>
+References: <20240425100434.198925-1-coxu@redhat.com>
+ <20240425100434.198925-2-coxu@redhat.com>
+ <ZkrqkzJlW2RZkmH9@MiWiFi-R3L-srv>
+ <y5ogivx7qbdm6u37t5o6na4jewn6qofzrbibnsneoqlwns63y5@eg62cytuvwql>
+ <ZkwRZxGw2dWStd1C@MiWiFi-R3L-srv>
 MIME-Version: 1.0
+In-Reply-To: <ZkwRZxGw2dWStd1C@MiWiFi-R3L-srv>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Disposition: inline
-In-Reply-To: <20240523050451.788754-4-coxu@redhat.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240523_201843_782884_404957D0 
-X-CRM114-Status: GOOD (  15.67  )
+X-CRM114-CacheID: sfid-20240524_002555_923713_E883F048 
+X-CRM114-Status: GOOD (  24.35  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -93,144 +103,71 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Coiby,
+On Tue, May 21, 2024 at 11:13:43AM +0800, Baoquan He wrote:
+>On 05/21/24 at 09:58am, Coiby Xu wrote:
+>> On Mon, May 20, 2024 at 02:16:43PM +0800, Baoquan He wrote:
+>> > On 04/25/24 at 06:04pm, Coiby Xu wrote:
+>> > > Currently, kexec_buf is placed in order which means for the same
+>> > > machine, the info in the kexec_buf is always located at the same
+>> > > position each time the machine is booted. This may cause a risk for
+>> > > sensitive information like LUKS volume key. Now struct kexec_buf has a
+>> > > new field random which indicates it's supposed to be placed in a random
+>> > > position.
+>> >
+>> > Do you want to randomize the key's position for both kdump and kexec
+>> > rebooting? Assume you only want to do that for kdump. If so, we may need
+>> > to make that more specific in code.
+>>
+>> Thanks for the suggestion! Currently, no one has requested this feature
+>> for kexec reboot so yes, I only have kdump in mind. But kdump depends
+>> on kexec thus I'm not sure how we can make it kdump specfic. Do you have
+>> a further suggestion?
+>
+>I remember you said kexec reboot doesn't need the key passed from 1st
+>kernel to 2nd kernel because the 2nd kernel will calculate one during
+>boot.
+>
+>kbuf has the information, the similar handling has been in
+>kernel/kexec_file.c:
+>
+>#ifdef CONFIG_CRASH_DUMP
+>        if (kbuf->image->type == KEXEC_TYPE_CRASH)
+>                ....;
+>#endif
 
-kernel test robot noticed the following build errors:
+Thanks for the suggestion! I'll wrap related code inside
+CONFIG_CRASH_DUMP.
 
-[auto build test ERROR on de7e71ef8bed222dd144d8878091ecb6d5dfd208]
+>
+>> > diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+>> > index 060835bb82d5..fc1e20d565d5 100644
+>> > --- a/include/linux/kexec.h
+>> > +++ b/include/linux/kexec.h
+>> > @@ -171,6 +171,7 @@ int kexec_image_post_load_cleanup_default(struct kimage *image);
+>> >  * @buf_min:	The buffer can't be placed below this address.
+>> >  * @buf_max:	The buffer can't be placed above this address.
+>> >  * @top_down:	Allocate from top of memory.
+>> > + * @random:	Place the buffer at a random position.
+>>
+>> How about a comment here saying this is currently only used by kdump.
+>
+>No, it's not good. Please don't do this, let code tell it.
+>
+>By the way, can you rebase this series on the latest v6.9 and resend? I
+>rebase my code and can't apply your patchset.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Coiby-Xu/kexec_file-allow-to-place-kexec_buf-randomly/20240523-130727
-base:   de7e71ef8bed222dd144d8878091ecb6d5dfd208
-patch link:    https://lore.kernel.org/r/20240523050451.788754-4-coxu%40redhat.com
-patch subject: [PATCH v4 3/7] crash_dump: store dm keys in kdump reserved memory
-config: arm-allmodconfig (https://download.01.org/0day-ci/archive/20240524/202405241012.KlmCbp77-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240524/202405241012.KlmCbp77-lkp@intel.com/reproduce)
+Sure, v4 was sent.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405241012.KlmCbp77-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   kernel/crash_dump_dm_crypt.c: In function 'crash_load_dm_crypt_keys':
->> kernel/crash_dump_dm_crypt.c:158:16: error: variable 'kbuf' has initializer but incomplete type
-     158 |         struct kexec_buf kbuf = {
-         |                ^~~~~~~~~
->> kernel/crash_dump_dm_crypt.c:159:18: error: 'struct kexec_buf' has no member named 'image'
-     159 |                 .image = image,
-         |                  ^~~~~
-   kernel/crash_dump_dm_crypt.c:159:26: warning: excess elements in struct initializer
-     159 |                 .image = image,
-         |                          ^~~~~
-   kernel/crash_dump_dm_crypt.c:159:26: note: (near initialization for 'kbuf')
->> kernel/crash_dump_dm_crypt.c:160:18: error: 'struct kexec_buf' has no member named 'buf_min'
-     160 |                 .buf_min = 0,
-         |                  ^~~~~~~
-   kernel/crash_dump_dm_crypt.c:160:28: warning: excess elements in struct initializer
-     160 |                 .buf_min = 0,
-         |                            ^
-   kernel/crash_dump_dm_crypt.c:160:28: note: (near initialization for 'kbuf')
->> kernel/crash_dump_dm_crypt.c:161:18: error: 'struct kexec_buf' has no member named 'buf_max'
-     161 |                 .buf_max = ULONG_MAX,
-         |                  ^~~~~~~
-   In file included from include/linux/limits.h:7,
-                    from include/linux/thread_info.h:12,
-                    from include/asm-generic/preempt.h:5,
-                    from ./arch/arm/include/generated/asm/preempt.h:1,
-                    from include/linux/preempt.h:79,
-                    from include/linux/rcupdate.h:27,
-                    from include/linux/rbtree.h:24,
-                    from include/linux/key.h:15,
-                    from kernel/crash_dump_dm_crypt.c:2:
-   include/vdso/limits.h:13:25: warning: excess elements in struct initializer
-      13 | #define ULONG_MAX       (~0UL)
-         |                         ^
-   kernel/crash_dump_dm_crypt.c:161:28: note: in expansion of macro 'ULONG_MAX'
-     161 |                 .buf_max = ULONG_MAX,
-         |                            ^~~~~~~~~
-   include/vdso/limits.h:13:25: note: (near initialization for 'kbuf')
-      13 | #define ULONG_MAX       (~0UL)
-         |                         ^
-   kernel/crash_dump_dm_crypt.c:161:28: note: in expansion of macro 'ULONG_MAX'
-     161 |                 .buf_max = ULONG_MAX,
-         |                            ^~~~~~~~~
->> kernel/crash_dump_dm_crypt.c:162:18: error: 'struct kexec_buf' has no member named 'top_down'
-     162 |                 .top_down = false,
-         |                  ^~~~~~~~
-   kernel/crash_dump_dm_crypt.c:162:29: warning: excess elements in struct initializer
-     162 |                 .top_down = false,
-         |                             ^~~~~
-   kernel/crash_dump_dm_crypt.c:162:29: note: (near initialization for 'kbuf')
->> kernel/crash_dump_dm_crypt.c:163:18: error: 'struct kexec_buf' has no member named 'random'
-     163 |                 .random = true,
-         |                  ^~~~~~
-   kernel/crash_dump_dm_crypt.c:163:27: warning: excess elements in struct initializer
-     163 |                 .random = true,
-         |                           ^~~~
-   kernel/crash_dump_dm_crypt.c:163:27: note: (near initialization for 'kbuf')
->> kernel/crash_dump_dm_crypt.c:158:26: error: storage size of 'kbuf' isn't known
-     158 |         struct kexec_buf kbuf = {
-         |                          ^~~~
->> kernel/crash_dump_dm_crypt.c:187:20: error: 'KEXEC_BUF_MEM_UNKNOWN' undeclared (first use in this function)
-     187 |         kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-         |                    ^~~~~~~~~~~~~~~~~~~~~
-   kernel/crash_dump_dm_crypt.c:187:20: note: each undeclared identifier is reported only once for each function it appears in
->> kernel/crash_dump_dm_crypt.c:188:13: error: implicit declaration of function 'kexec_add_buffer' [-Werror=implicit-function-declaration]
-     188 |         r = kexec_add_buffer(&kbuf);
-         |             ^~~~~~~~~~~~~~~~
-   kernel/crash_dump_dm_crypt.c:158:26: warning: unused variable 'kbuf' [-Wunused-variable]
-     158 |         struct kexec_buf kbuf = {
-         |                          ^~~~
-   cc1: some warnings being treated as errors
-
-
-vim +/kbuf +158 kernel/crash_dump_dm_crypt.c
-
-   155	
-   156	int crash_load_dm_crypt_keys(struct kimage *image)
-   157	{
- > 158		struct kexec_buf kbuf = {
- > 159			.image = image,
- > 160			.buf_min = 0,
- > 161			.buf_max = ULONG_MAX,
- > 162			.top_down = false,
- > 163			.random = true,
-   164		};
-   165	
-   166		int r;
-   167	
-   168		if (state == FRESH)
-   169			return 0;
-   170	
-   171		if (key_count != keys_header->key_count) {
-   172			pr_err("Only record %u keys (%u in total)\n", key_count,
-   173			       keys_header->key_count);
-   174			return -EINVAL;
-   175		}
-   176	
-   177		image->dm_crypt_keys_addr = 0;
-   178		r = build_keys_header();
-   179		if (r)
-   180			return r;
-   181	
-   182		kbuf.buffer = keys_header;
-   183		kbuf.bufsz = keys_header_size;
-   184	
-   185		kbuf.memsz = kbuf.bufsz;
-   186		kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
- > 187		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
- > 188		r = kexec_add_buffer(&kbuf);
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Best regards,
+Coiby
+
 
 _______________________________________________
 kexec mailing list
