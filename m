@@ -4,95 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id A4C84C25B78
-	for <kexec@archiver.kernel.org>; Sat, 25 May 2024 09:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B3A1AC25B75
+	for <kexec@archiver.kernel.org>; Sun, 26 May 2024 21:21:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=kY6rFOQWtlGQsTr8z7fawMUcM9QgiSg++UJizSQW+NY=; b=4/0IKgYVVvLbV58wZlxr6MDuqo
-	YdPUU8GQiEiifk16MOteLrfMs7FxDW0I/beAHlrvR3eT0T4GzuKTzjMr8rqBkp/+N8jI3+DI/bkQd
-	kmnI8fiMosyBF+78Bs3mJTad/b4E4SroHCmKnzTGlBfXEWVl4vAvnRLrAcmylnxaMjz1IvtiEv1PT
-	HZ1f+iZk/wbi3R/H2hvCmHwLjMjFqlPSj8MSDJj+/OTDzgAc21aJUJA4YFUr5sl0hD64VvgN9A6ve
-	4EjU9CIdlS2V9G9O+MYIG+KwhtS3/U2iXUN65JrnrMCBAiVtyf1sxcXct1PKRzPLlNU++3I7rDSy8
-	KeY6zm9g==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=SVO/UEaZvqoceZ7oE8Uu/66sELEYVcjyFWXLxyEKdxY=; b=O/EOlRJC/zaLsS
+	57tsrgCTm6r0ZuVEoPTsgW6dYEnMx5c8CzAN9alDFzzhUwZ4lRb8msDnn/fgs8oLru1TK5n0zZsgL
+	EvSIgbx1AeiaEXdoj8nKCOXpIvpT3o6scXCpNmbePtbLrV70JxviKQqMl4DhgteDP2U2OhHHkOeOW
+	FBSWwkn4ocOIg6Fze3pLEsN511yblDhYejTiUON7OzwsKHOYSo/3yg7cLvNsnfo+ZXIVJeWYdjMTb
+	TXYAKWowPh0gUMGQUaFGlZlkdVV11PGGfCxJAzfhCGe9aKPlvexohxA5tgmPwW+4QibEy7ssNQLYx
+	Vv2DWnkx7+8jjKLf3tiw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sAnZV-0000000Ag95-1znq;
-	Sat, 25 May 2024 09:20:13 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1sBLJM-0000000DHck-1p2N;
+	Sun, 26 May 2024 21:21:48 +0000
+Received: from mail-wm1-x32a.google.com ([2a00:1450:4864:20::32a])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sAnZP-0000000Ag8I-2jve
+	id 1sBLJG-0000000DHbo-3qCZ
 	for kexec@lists.infradead.org;
-	Sat, 25 May 2024 09:20:09 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1716628805;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eASqbe6YEnizYGq/4R2maOLvkAhSwYCyttDAYwLxidw=;
-	b=MSno1z+etbyydBNUq3h/pHThN1KC9AxUYz5g8ut3nRyP8CQhJi1T87JfOrlVpkDRzkawzK
-	jEeGK4t0RPZIRHOU14nDvqPneFC5/7h4LgGONYY/8Imzpd1ckt1wxJXG0ImtXQPbrzrGwG
-	c+gyeAGs9epV5eLs2aXetaQ0NQoRpOU=
-Received: from mail-ot1-f70.google.com (mail-ot1-f70.google.com
- [209.85.210.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-184-7G00jGKlPkSgfm_xJejIdg-1; Sat, 25 May 2024 05:20:03 -0400
-X-MC-Unique: 7G00jGKlPkSgfm_xJejIdg-1
-Received: by mail-ot1-f70.google.com with SMTP id 46e09a7af769-6f105fabe43so3221599a34.0
-        for <kexec@lists.infradead.org>; Sat, 25 May 2024 02:20:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716628802; x=1717233602;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	Sun, 26 May 2024 21:21:44 +0000
+Received: by mail-wm1-x32a.google.com with SMTP id 5b1f17b1804b1-4210c9d1df6so13522635e9.2
+        for <kexec@lists.infradead.org>; Sun, 26 May 2024 14:21:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1716758497; x=1717363297; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=eASqbe6YEnizYGq/4R2maOLvkAhSwYCyttDAYwLxidw=;
-        b=e+IcsJkPhKixCMDRzQNGOL4J2BJw6qCVugFKe8p6MYblmBmq2qUtG317zperlp5nLH
-         HRH1KRf1pIQWaNKdGRJnyrvyYeh/aOA/6pe6aA07MMenwxWXoJOKGPyQiOplAQ9sftxv
-         MQuv2wkm9siOV9Un6pt3z5fLB75tWJqbY4v6HIvhh8V3fEesP5M8ZkOdc/MDhbTg6swZ
-         ziqS9WKPRq/yTWb9ud11xOqfSOwWl1TC7OdWO/QrY++QjDTjnkQTM/AC8IEHFTkkN0aO
-         wFn8WqZgePXp9ZNkGuGQmgAgiCve3z+84fHXiy52kUn/Dr3lftPzB2TBWWtISGR4qwFM
-         F/5w==
-X-Gm-Message-State: AOJu0Yzpk/ZBsh10KxzxvvdOMZ3SwDay6/Cr3nIVRqq0pfFu8OnYwzlD
-	5gCKb3llB9vfd6sg4prtuRdZK9e9gX/LdUiL8WBZ/2YpCEe8ERX+qCRvbhVH5xuZIdvqlAHodRa
-	LKODzIz+DrWFfjL3AXLpKIx0n4voEdv1SJrkoPlAMBhZPoQjMmlf+83kiRQ==
-X-Received: by 2002:a05:6870:e256:b0:24e:e931:8f1f with SMTP id 586e51a60fabf-24eeabe4ba2mr2693908fac.33.1716628802276;
-        Sat, 25 May 2024 02:20:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHzgl+mXOrooOjhH2kofClUmgOiLg6jxvqb743JJExXOnyiKvQ1laCvo2ODxkHeVivV9qCPSQ==
-X-Received: by 2002:a05:6870:e256:b0:24e:e931:8f1f with SMTP id 586e51a60fabf-24eeabe4ba2mr2693887fac.33.1716628801735;
-        Sat, 25 May 2024 02:20:01 -0700 (PDT)
-Received: from localhost ([2409:8924:81b:1d01:5bbd:6e70:ff5b:4ece])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f8fcbeb5dfsm2160624b3a.123.2024.05.25.02.20.00
+        bh=FrZS6a+2WmF7PbI/Eek9PooMML2FIBwy4rVSyH7zOdU=;
+        b=obVIwBEzcDCwOvt/QzG1ou5AAeSxeZ4MCKG4SajiipdHjor1mo6AjZH0oCv1PlBO2I
+         ItP7Aw108YbTbcHHa4FZn1oDK+zM2w5A2aWTtFCQ9mMH7DkqGI2psPd7+d7KHjkKVdw+
+         XnNZM/XEIycvybfO1skUCNI1fDVV6TruyNEIwEMpOIw1PgQyVOojbEIaznl08dzMM1ci
+         KlxykTYHm9Phd3cKYmt0Ac/bSbjwCs7NpCOQckFuAFrN2ZNPQA2E279sCcTtWn5lyFJ8
+         wBuhgAAqdmcqLionoYmqbSfklRZMUyrvEVHeexPsAJe1jbo/DjN39W6efYSxwHjgtYQC
+         ElOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716758497; x=1717363297;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FrZS6a+2WmF7PbI/Eek9PooMML2FIBwy4rVSyH7zOdU=;
+        b=poFkb8f/DWA5A0p0p6wsMCePF4pFRdx+JZjj7OHMPELZPJti5ksiS+3z3AQEhlqLSW
+         4vL3sxy3pDTbR/Ehgt5FJWsSYBrFVhGQnG9cWadbD8riX1LCpMVS3+I2oubNVPIP2ABA
+         oZh0ZEAPeG87VVHr3KM8OKvNineSkdn1ELIrZYIxUet/vvU6pSbc+jKEa6vinRY3ZfnK
+         hDz+PQB7THGO0RI44eoeYIQ/YO5G2jjdAEbUnqDi/NW6YGJ3gUB6/PNRCDFvPuSpHUSV
+         OQkI4FdnwV7GFITPIUDENTTwMOjwgi9JvmxSPDk3X3B6ZI0ldkBrVExdyIdZ4kbn0CUP
+         M9gg==
+X-Forwarded-Encrypted: i=1; AJvYcCU5wxhxEys/GymM79FPwT0zHi2Zq86XIXm+/8nB4WmrkbTav3bGkElDYH938nMeg5lAeiGVpAZNabFaEWDk8tjB1IICJVjXfUeL
+X-Gm-Message-State: AOJu0YzCnsKLKep/YpxW2kj4uoWMgWEhdfjQUaJcI06OmVlV4stiMO29
+	cE6BH0uYBXStcs2BPgSOMmlM0NCXUqxlMZtVrJQze3pejJBKUqGTQx+0jUwL5wUuB5m8VtyV+Ef
+	qQ1I=
+X-Google-Smtp-Source: AGHT+IHW4ae7lxNWn2WaLCNzfX0cTLfvfU9RcG3UisSM/eMD5CFFw81oCKu+GmqWICgbek/bKosQUg==
+X-Received: by 2002:a05:600c:6a93:b0:41b:f359:2b53 with SMTP id 5b1f17b1804b1-42108a14eaemr57525155e9.37.1716758497510;
+        Sun, 26 May 2024 14:21:37 -0700 (PDT)
+Received: from fedora.fritz.box (aftr-62-216-208-100.dynamic.mnet-online.de. [62.216.208.100])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-421089ccf32sm87534245e9.48.2024.05.26.14.21.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 May 2024 02:20:01 -0700 (PDT)
-Date: Sat, 25 May 2024 15:57:20 +0800
-From: Coiby Xu <coxu@redhat.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>, 
-	Milan Broz <gmazyland@gmail.com>, Thomas Staudt <tstaudt@de.ibm.com>, 
-	Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>, Kairui Song <ryncsn@gmail.com>, 
-	Jan Pazdziora <jpazdziora@redhat.com>, Pingfan Liu <kernelfans@gmail.com>, Baoquan He <bhe@redhat.com>, 
-	Dave Young <dyoung@redhat.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Dave Hansen <dave.hansen@intel.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
-	Vivek Goyal <vgoyal@redhat.com>, Kees Cook <keescook@chromium.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_byb" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH v4 2/7] crash_dump: make dm crypt keys persist for the
- kdump kernel
-Message-ID: <tybsp5qrjf25mlj5zrzfg5lhzykmz4ztzrmqv4tntbfypca5oa@2zfjjdxblvft>
-References: <20240523050451.788754-1-coxu@redhat.com>
- <20240523050451.788754-3-coxu@redhat.com>
- <2024052334-protegee-cheating-5934@gregkh>
+        Sun, 26 May 2024 14:21:37 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: thorsten.blum@toblux.com
+Cc: amir73il@gmail.com,
+	bhe@redhat.com,
+	clm@fb.com,
+	dhowells@redhat.com,
+	dsterba@suse.com,
+	dyoung@redhat.com,
+	jlayton@kernel.org,
+	josef@toxicpanda.com,
+	kexec@lists.infradead.org,
+	linux-btrfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-unionfs@vger.kernel.org,
+	miklos@szeredi.hu,
+	netfs@lists.linux.dev,
+	vgoyal@redhat.com
+Subject: [RESEND PATCH 2/4] fscache: Remove duplicate included header
+Date: Sun, 26 May 2024 23:21:09 +0200
+Message-ID: <20240526212108.1462-2-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.45.1
+In-Reply-To: <20240502212631.110175-2-thorsten.blum@toblux.com>
+References: <20240502212631.110175-2-thorsten.blum@toblux.com>
 MIME-Version: 1.0
-In-Reply-To: <2024052334-protegee-cheating-5934@gregkh>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240525_022007_802553_F3C78EE4 
-X-CRM114-Status: GOOD (  40.22  )
+X-CRM114-CacheID: sfid-20240526_142143_022805_7C69EB06 
+X-CRM114-Status: UNSURE (   7.92  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,268 +104,32 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Greg,
+Remove duplicate included header file linux/uio.h
 
-Thanks for taking time to carefully review this patch!
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+ fs/netfs/fscache_io.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-On Thu, May 23, 2024 at 09:21:08AM +0200, Greg KH wrote:
->On Thu, May 23, 2024 at 01:04:43PM +0800, Coiby Xu wrote:
->> A sysfs /sys/kernel/crash_dm_crypt_keys is provided for user space to make
->> the dm crypt keys persist for the kdump kernel. User space can send the
->> following commands,
->> - "init KEY_NUM"
->>   Initialize needed structures
->> - "record KEY_DESC"
->>   Record a key description. The key must be a logon key.
->
->"logon"?  What is that?
-
-Thanks for raising this question. A logon key is similar to a user key
-but the payload can't be read by user space. I'll document this info and
-also refer users to security/keys/core.rst for details.
-
->
->>
->> User space can also read this API to learn about current state.
->
->But you don't document it in Documentation/ABI/ so we don't know if this
->really is the case, and no one will know how to use it :(
-
-Thanks for bringing this to my attention! A new version will include
-Documentation/ABI/testing/crash_dm_crypt_keys to have all the details. 
-
->
->> Signed-off-by: Coiby Xu <coxu@redhat.com>
->> ---
->>  include/linux/crash_core.h   |   5 +-
->>  kernel/Kconfig.kexec         |   8 +++
->>  kernel/Makefile              |   1 +
->>  kernel/crash_dump_dm_crypt.c | 113 +++++++++++++++++++++++++++++++++++
->>  kernel/ksysfs.c              |  22 +++++++
->>  5 files changed, 148 insertions(+), 1 deletion(-)
->>  create mode 100644 kernel/crash_dump_dm_crypt.c
->>
-[...]
->> diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
->> new file mode 100644
->> index 000000000000..78809189084a
->> --- /dev/null
->> +++ b/kernel/crash_dump_dm_crypt.c
->> @@ -0,0 +1,113 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +#include <keys/user-type.h>
->> +#include <linux/crash_dump.h>
->> +
->> +#define KEY_NUM_MAX 128
->> +#define KEY_SIZE_MAX 256
->
->Why these values?
-
-For KEY_NUM_MAX, I assume the maximum number of LUKS encrypted volumes to
-unlock is 128. 
-
-For KEY_SIZE_MAX, according to /proc/crypto and "cryptsetup benchmark",
-the maximum key size is 64 bytes. So I assume 256 should be enough in
-near future.
-
-Thanks for raising the question which makes realize it's better to
-include the assumptions in the commit message for domain experts to
-examine!
-
->
->> +
->> +// The key scription has the format: cryptsetup:UUID 11+36+1(NULL)=48
->> +#define KEY_DESC_LEN 48
->> +
->> +static char *STATE_STR[] = {"fresh", "initialized", "recorded", "loaded"};
->> +static enum STATE_ENUM {
->> +	FRESH = 0,
->> +	INITIALIZED,
->> +	RECORDED,
->> +	LOADED,
->> +} state;
->
->How are you going to keep these enums synced up with the string values?
-
-Thanks to prompt me to come up with a more reliable way! I should have
-used the emums to index the array,
-
-static const char *STATE_STR[] = {
-     [FRESH] = "fresh",
-     [INITIALIZED] = "initialized",
-     [RECORDED] = "recorded",
-     [LOADED] = "loaded"
-};
-
->
->> +
->> +static unsigned int key_count;
->> +static size_t keys_header_size;
->> +
->> +struct dm_crypt_key {
->> +	unsigned int key_size;
->> +	char key_desc[KEY_DESC_LEN];
->> +	u8 data[KEY_SIZE_MAX];
->> +};
->> +
->> +static struct keys_header {
->> +	unsigned int key_count;
->> +	struct dm_crypt_key keys[] __counted_by(key_count);
->> +} *keys_header;
->> +
->> +static size_t get_keys_header_size(struct keys_header *keys_header,
->> +				   size_t key_count)
->> +{
->> +	return struct_size(keys_header, keys, key_count);
->> +}
->> +
->> +static int init(const char *buf)
->> +{
->> +	unsigned int total_keys;
->> +	char dummy[5];
->
->Why 5?
-
-Oh, I had len("init")+1(NULL) in mind when wrote 5. In retrospect, 5
-is not necessary. And in fact there is no need to define this dummy
-variable in the first place as explained in the next comment.
-
->
->> +
->> +	if (sscanf(buf, "%4s %u", dummy, &total_keys) != 2)
->
->Didn't you just overflow dummy now?
-
-Correct me if I'm wrong, but using the width specifier i.e. "%4s" won't
-overflow dummy, right? Anyways, I think a better way is to simply use
-sscanf(buf, "init %u",..)
-instead thus no need for this dummy variable.
-
->
->> +		return -EINVAL;
->> +
->> +	if (key_count > KEY_NUM_MAX) {
->> +		pr_err("Exceed the maximum number of keys (KEY_NUM_MAX=%u)\n",
->> +		       KEY_NUM_MAX);
->
->Do not let userspace spam the kernel log directly if it sends it invalid
->data.
-
-Thanks for pointing out my oversight. I'll simply return -EINVAL in next
-version.
-
->
->> +		return -EINVAL;
->> +	}
->> +
->> +	keys_header_size = get_keys_header_size(keys_header, total_keys);
->> +	key_count = 0;
->> +
->> +	keys_header = kzalloc(keys_header_size, GFP_KERNEL);
->> +	if (!keys_header)
->> +		return -ENOMEM;
->> +
->> +	keys_header->key_count = total_keys;
->> +	state = INITIALIZED;
->> +	return 0;
->> +}
->> +
->> +static int record_key_desc(const char *buf, struct dm_crypt_key *dm_key)
->> +{
->> +	char key_desc[KEY_DESC_LEN];
->> +	char dummy[7];
->> +
->> +	if (state != INITIALIZED)
->> +		pr_err("Please send the cmd 'init <KEY_NUM>' first\n");
->
->Again, don't let userspace spam the log.
-
-I'll fix this issue in next version. Thank you again!
-
->
->> +
->> +	if (sscanf(buf, "%6s %s", dummy, key_desc) != 2)
-
-Oh, key_desc could be overflowed here if there is a malicious user. I'll
-have a check on the length of buf in next version.
-
-
-[...]
->> +EXPORT_SYMBOL(crash_sysfs_dm_crypt_keys_write);
->
->EXPORT_SYMBOL_GPL() as you are dealing with a sysfs api?
-
->
->> +int crash_sysfs_dm_crypt_keys_read(char *buf)
->> +{
->> +	return sprintf(buf, "%s\n", STATE_STR[state]);
->
->sysfs_emit() please.
-
-This will be fixed, thanks!
-
->
->> +}
->> +EXPORT_SYMBOL(crash_sysfs_dm_crypt_keys_read);
->
->Again, EXPORT_SYMBOL_GPL()?
-
-I'll replace two occurrences of EXPORT_SYMBOL with EXPORT_SYMBOL_GPL,
-thanks!
-
->
->> diff --git a/kernel/ksysfs.c b/kernel/ksysfs.c
->> index 07fb5987b42b..2ba4dcbf5816 100644
->> --- a/kernel/ksysfs.c
->> +++ b/kernel/ksysfs.c
->> @@ -167,6 +167,25 @@ static ssize_t vmcoreinfo_show(struct kobject *kobj,
->>  }
->>  KERNEL_ATTR_RO(vmcoreinfo);
->>
->> +#ifdef CONFIG_CRASH_DM_CRYPT
->> +static ssize_t crash_dm_crypt_keys_show(struct kobject *kobj,
->> +					struct kobj_attribute *attr, char *buf)
->> +{
->> +	return crash_sysfs_dm_crypt_keys_read(buf);
->> +}
->> +
->> +static ssize_t crash_dm_crypt_keys_store(struct kobject *kobj,
->> +					 struct kobj_attribute *attr,
->> +					 const char *buf, size_t count)
->> +{
->> +	int ret;
->> +
->> +	ret = crash_sysfs_dm_crypt_keys_write(buf, count);
->> +	return ret < 0 ? ret : count;
->
->Personally, I hate ? : lines, just write it out, the compiler is the
->same and this way it is much more readable:
->	if (ret < 0)
->		return ret;
->	return count;
-
-Thanks for suggesting more readable code! I'll apply it to next version!
-
-
->
->thanks,
->
->greg k-h
->
->_______________________________________________
->kexec mailing list
->kexec@lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/kexec
->
-
+diff --git a/fs/netfs/fscache_io.c b/fs/netfs/fscache_io.c
+index 38637e5c9b57..b1722a82c03d 100644
+--- a/fs/netfs/fscache_io.c
++++ b/fs/netfs/fscache_io.c
+@@ -9,7 +9,6 @@
+ #include <linux/uio.h>
+ #include <linux/bvec.h>
+ #include <linux/slab.h>
+-#include <linux/uio.h>
+ #include "internal.h"
+ 
+ /**
 -- 
-Best regards,
-Coiby
+2.45.1
 
 
 _______________________________________________
