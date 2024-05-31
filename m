@@ -4,91 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DEDB2C25B75
-	for <kexec@archiver.kernel.org>; Fri, 31 May 2024 09:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id AA3E0C25B75
+	for <kexec@archiver.kernel.org>; Fri, 31 May 2024 11:09:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:Message-ID:
-	Subject:Cc:To:Date:From:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=Vlr8vwhm/kwvwmgWlq2KOPuuuw+5c+IK/MS4ZMrKgRk=; b=0V4fnMeaNJeT3MJ/cxiegtKELI
-	gzCd6clkQ35IpgkNn6q+QW2bDVJ68KIQGU6g87Hx8KaTYtl2umShhts7sNapKA7E1WJ0VXY8EclSU
-	jwPSbhmhz63GgNhbf9eZnsBjA/XpaQDsvkWw+FhuWTmaOQHdaBWJPkCXziUOzBO7lr332L2TR1m0c
-	P+JFDASGQY4WdFMezoXOGE7mriFLgu2QWsSTsOuiw7QfDdZ6Wlfo7e7BnkPxQoChs1WReF0y1p6+I
-	9eBpZLNMteAu6+ORhAuhqwHc6XN7CMlduO95Og5lxBM5OxXLlmIrRAdre6eJxA7LnH2YDy9jigwyh
-	Ikulqjxg==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=uq/ZnbwGBcJDGTfMiFXP7m/WwXhStwtx/WZWg2kH8WI=; b=DpReSA4eHmg/i6
+	2GtYWDF9cNdfCQQMzK7u+xTsD2VIxFlkRhsWGLZGmaLqOXgcl/sWGCSQpNyRJs4pCybkhJyriA+ne
+	Xw8EDYkQq56HtAvjx5d6W/iAz2SF9i/wkkxmH5rOJeSYLcIFuDgQm8brO5AZIqtIg3fIkfe31V4Bv
+	Rlm+qEa5e4UFqcjrcaazJP+ibSDMimcPnTTwjZ8kqkwqfae94UPZcMiqWxWrl2g1K0ULen/NDmsHo
+	/oelbMcD7VgKmMfYH+q5iye9Ow0gu9wE49FXqAaeZL60UEaXbSj2n4u8cuze6hrZka6ubPRCnJDKw
+	IrEpIS//5YNtGz9xkWpA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sCyK1-00000009l5v-0LiR;
-	Fri, 31 May 2024 09:13:13 +0000
-Received: from mail-lf1-x12c.google.com ([2a00:1450:4864:20::12c])
+	id 1sD08r-0000000A1SP-1xOn;
+	Fri, 31 May 2024 11:09:49 +0000
+Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sCyJy-00000009l1V-3kgg
+	id 1sD08n-0000000A1Rk-2ySW
 	for kexec@lists.infradead.org;
-	Fri, 31 May 2024 09:13:12 +0000
-Received: by mail-lf1-x12c.google.com with SMTP id 2adb3069b0e04-52b88740a93so539894e87.3
-        for <kexec@lists.infradead.org>; Fri, 31 May 2024 02:12:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717146769; x=1717751569; darn=lists.infradead.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=W6ZMuJgM1aDgO1ril1JnfzUqrJFWz+LSUP19WZBqGNc=;
-        b=YOhKC9/RkTueR7H3fCKoHI5RGu/vZXyFV5A6xOVSqUjKukHqWN4d6tzQCWu+VDXEvj
-         3EFThlXW+uXG4EZgCTx2XajSQwhE+3kT5uC4l7PzriAUD+YcXF2nrrKoaJ2z2nVa8kjt
-         8fcpOxzG1n1ZQxlHqSgO9p2y0INARzn1OJu7aP1DJkmcNI2VIibtDDeV/W3jjhoSPmdV
-         KW7KV10FkMzWkug2XCKWscEZhdTMWoiKfucMJHRnMgnnaSQJaQK6BiqNTh9/0QDS7Ww2
-         OFQKkufZzTjtu2+dA0fYHDXBVAU+wcZA+fc1gk6WVbbnWoeYbwNXir1reyjCgHnlhfbG
-         SV+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717146769; x=1717751569;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W6ZMuJgM1aDgO1ril1JnfzUqrJFWz+LSUP19WZBqGNc=;
-        b=mkqkPCizEyVxqGTCHdMRI4Yc1zSJQ/FzPrtcgVw9s5M5Dt1s4ielN4pt1zJiDh2uDl
-         cRqKxl1VzHR/wBzfVSsAgKEN7wjtrGoycAtIKMD0Q3MQ5XwakDueMSrb9r0UuoKrNUjn
-         EY/xi1lugE+kBKY5zxRo8UZu2dKTkjEQW/S6Hb4Z2jxldC7GN3QrbLzw5/N4G/mkPKg2
-         u4KfJHX/CLzqiizKu4mDkKkADhdG07XH1Tc4/Ndjzc/zHzVA4fphycVdW6imF1Hv5uei
-         K8RcF8E3Zqc9Cv45fRR1EGWP7my85i2v/uz9/RxO+eVSzK/RFfUVksVLfgdPt90CUndY
-         r8Eg==
-X-Forwarded-Encrypted: i=1; AJvYcCWJg//YQfflreyO/wAfgsdgaXAPmzY9bSuBCVasTH3vu/p87E505Pk1pfWNzivGclx76oZUfqw+y8kS1qoaDH6j28xCaUD4zMGs
-X-Gm-Message-State: AOJu0YyWO4nRciaQEKl41BysBxxf0lbzcU9mx8470LUaYnqCskFMIhNd
-	5NEdlLdcFK7sQw3cQGXkzQCBJ6KpiWwxQTOm2z1bSBFmxkxVTQrM
-X-Google-Smtp-Source: AGHT+IFU63l+mNBTUO22AXnMzH2w8LowDky00tObDxv/S9Yj6cn06SKwZt89GnylvhKlh4U8CcqWNw==
-X-Received: by 2002:ac2:5a4c:0:b0:519:6a93:ed3a with SMTP id 2adb3069b0e04-52b89573bc9mr834468e87.23.1717146768652;
-        Fri, 31 May 2024 02:12:48 -0700 (PDT)
-Received: from localhost.localdomain (95.59.159.20.dynamic.telecom.kz. [95.59.159.20])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-52b84d8724fsm261626e87.230.2024.05.31.02.12.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 May 2024 02:12:48 -0700 (PDT)
-From: Alexander Kuleshov <kuleshovmail@gmail.com>
-X-Google-Original-From: Alexander Kuleshov <alex@localhost.localdomain>
-Date: Fri, 31 May 2024 14:12:42 +0500
-To: Ashish Kalra <Ashish.Kalra@amd.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, rafael@kernel.org, hpa@zytor.com, 
-	peterz@infradead.org, adrian.hunter@intel.com, 
-	sathyanarayanan.kuppuswamy@linux.intel.com, jun.nakajima@intel.com, rick.p.edgecombe@intel.com, 
-	thomas.lendacky@amd.com, michael.roth@amd.com, seanjc@google.com, kai.huang@intel.com, 
-	bhe@redhat.com, kirill.shutemov@linux.intel.com, bdas@redhat.com, 
-	vkuznets@redhat.com, dionnaglaze@google.com, anisinha@redhat.com, jroedel@suse.de, 
-	ardb@kernel.org, kexec@lists.infradead.org, linux-coco@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 1/3] efi/x86: Fix EFI memory map corruption with kexec
-Message-ID: <eihdindv6akbn7oohmious6cany3ezjqflefd74wmkl2nllseu@izczd5vs6vj7>
-X-Operating-System: Linux
-X-Date: Fri May 31 01:22:55 PM +05 2024
-References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
- <cover.1717111180.git.ashish.kalra@amd.com>
- <f4be03b8488665f56a1e5c6e6459f447352dfcf5.1717111180.git.ashish.kalra@amd.com>
+	Fri, 31 May 2024 11:09:47 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id EB82E62C2B
+	for <kexec@lists.infradead.org>; Fri, 31 May 2024 11:09:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AEB2C4AF15
+	for <kexec@lists.infradead.org>; Fri, 31 May 2024 11:09:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717153784;
+	bh=HgtvQmhgEpL9Xbp5+KHJ6NjcuOEi7zDCX0BlPKTFvGc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=XTtk227mDgN9yrTK1sYIJdBwb13rZdzdiDLQf1D1lV6VYjqnNY8eoiBsb5xvjoB/k
+	 /hIe2wFsOGiTyBQSpe7LkY9o/uOJDA1Fe8LpPya6oap4IbUOcELLVBwc42sWifhHOT
+	 Yl1E907W46n5nq72q+ICSOIdWoDXNJQGOK/ynRwyU2GJfl/PLHN0aOKMK+uNNpyHa9
+	 NOFdoSVDpfpeLc5z4bV7IPCP0bm3MA2GtZqgDg3SIyjCl8yt98/ElPRJZmMU+Dxdlm
+	 S/4XoJab0vBmKRwrh2D/jXcFNGLbfx8t9ZV8b/3e1UfCkCNFd12w3AIJerl79WF6Ii
+	 ycAJwno/aDHiQ==
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2e95a75a90eso20059961fa.2
+        for <kexec@lists.infradead.org>; Fri, 31 May 2024 04:09:43 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWzqtJX5X6xYEVTE7+D/qEQ6tpmeo0Ns97Jb4bEgfXHqORysCwRuiROeof+hcSWnY+vOvJPWmzZshvuIzHBt58cxZ72tKBYh1TD
+X-Gm-Message-State: AOJu0YzJPTeYZq8Pgyh9iPfboM5NyYG3B59/yAHp9Aq6lGnGvsuBAQOG
+	rQO0KoOUEsGSGFiOeZ76zbzRAy6V2zvdHJ+L4q9mvAnVIed837aNE9fsMgJiVr+L7/03m+PeuYW
+	95f9QbFatTTbYIHH9p3qvSsd0knw=
+X-Google-Smtp-Source: AGHT+IGTzAQXJboCZrE7ub+CPIwBrd4fT/qOP7BamuTNTLnHwWnsj6M7s6s5d6esPM1ooNMpIhnA2f1RjvhbZEhwwrw=
+X-Received: by 2002:a2e:8695:0:b0:2e9:6265:9926 with SMTP id
+ 38308e7fff4ca-2ea951ddd1emr10496851fa.49.1717153782170; Fri, 31 May 2024
+ 04:09:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <f4be03b8488665f56a1e5c6e6459f447352dfcf5.1717111180.git.ashish.kalra@amd.com>
+References: <20240531010331.134441-1-ross.philipson@oracle.com> <20240531010331.134441-20-ross.philipson@oracle.com>
+In-Reply-To: <20240531010331.134441-20-ross.philipson@oracle.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Fri, 31 May 2024 13:09:30 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGC7a5+5at7T7M_mxBNWjqnuM4QGydG4ZEbu63y6fri3g@mail.gmail.com>
+Message-ID: <CAMj1kXGC7a5+5at7T7M_mxBNWjqnuM4QGydG4ZEbu63y6fri3g@mail.gmail.com>
+Subject: Re: [PATCH v9 19/19] x86: EFI stub DRTM launch support for Secure Launch
+To: Ross Philipson <ross.philipson@oracle.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
+	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, kexec@lists.infradead.org, 
+	linux-efi@vger.kernel.org, iommu@lists.linux-foundation.org, 
+	dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com, mjg59@srcf.ucam.org, 
+	James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de, jarkko@kernel.org, 
+	jgg@ziepe.ca, luto@amacapital.net, nivedita@alum.mit.edu, 
+	herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net, 
+	ebiederm@xmission.com, dwmw2@infradead.org, baolu.lu@linux.intel.com, 
+	kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com, 
+	trenchboot-devel@googlegroups.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240531_021310_956048_24D3DEFC 
-X-CRM114-Status: UNSURE (   5.40  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20240531_040945_891004_0E629087 
+X-CRM114-Status: GOOD (  32.29  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,16 +87,189 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 30.05.2024 23:36, Ashish Kalra wrote:
->From: Ashish Kalra <ashish.kalra@amd.com>
->+	 * but it is not neccasery for kexec, as there are no boot services in
+On Fri, 31 May 2024 at 03:32, Ross Philipson <ross.philipson@oracle.com> wrote:
+>
+> This support allows the DRTM launch to be initiated after an EFI stub
+> launch of the Linux kernel is done. This is accomplished by providing
+> a handler to jump to when a Secure Launch is in progress. This has to be
+> called after the EFI stub does Exit Boot Services.
+>
+> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
 
-A typo in necessary
+Just some minor remarks below. The overall approach in this patch
+looks fine now.
+
+
+> ---
+>  drivers/firmware/efi/libstub/x86-stub.c | 98 +++++++++++++++++++++++++
+>  1 file changed, 98 insertions(+)
+>
+> diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
+> index d5a8182cf2e1..a1143d006202 100644
+> --- a/drivers/firmware/efi/libstub/x86-stub.c
+> +++ b/drivers/firmware/efi/libstub/x86-stub.c
+> @@ -9,6 +9,8 @@
+>  #include <linux/efi.h>
+>  #include <linux/pci.h>
+>  #include <linux/stddef.h>
+> +#include <linux/slr_table.h>
+> +#include <linux/slaunch.h>
+>
+>  #include <asm/efi.h>
+>  #include <asm/e820/types.h>
+> @@ -830,6 +832,97 @@ static efi_status_t efi_decompress_kernel(unsigned long *kernel_entry)
+>         return efi_adjust_memory_range_protection(addr, kernel_text_size);
+>  }
+>
+> +#if (IS_ENABLED(CONFIG_SECURE_LAUNCH))
+
+IS_ENABLED() is mostly used for C conditionals not CPP ones.
+
+It would be nice if this #if could be dropped, and replaced with ... (see below)
+
+
+> +static bool efi_secure_launch_update_boot_params(struct slr_table *slrt,
+> +                                                struct boot_params *boot_params)
+> +{
+> +       struct slr_entry_intel_info *txt_info;
+> +       struct slr_entry_policy *policy;
+> +       struct txt_os_mle_data *os_mle;
+> +       bool updated = false;
+> +       int i;
+> +
+> +       txt_info = slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_INTEL_INFO);
+> +       if (!txt_info)
+> +               return false;
+> +
+> +       os_mle = txt_os_mle_data_start((void *)txt_info->txt_heap);
+> +       if (!os_mle)
+> +               return false;
+> +
+> +       os_mle->boot_params_addr = (u32)(u64)boot_params;
+> +
+
+Why is this safe?
+
+> +       policy = slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_ENTRY_POLICY);
+> +       if (!policy)
+> +               return false;
+> +
+> +       for (i = 0; i < policy->nr_entries; i++) {
+> +               if (policy->policy_entries[i].entity_type == SLR_ET_BOOT_PARAMS) {
+> +                       policy->policy_entries[i].entity = (u64)boot_params;
+> +                       updated = true;
+> +                       break;
+> +               }
+> +       }
+> +
+> +       /*
+> +        * If this is a PE entry into EFI stub the mocked up boot params will
+> +        * be missing some of the setup header data needed for the second stage
+> +        * of the Secure Launch boot.
+> +        */
+> +       if (image) {
+> +               struct setup_header *hdr = (struct setup_header *)((u8 *)image->image_base + 0x1f1);
+
+Could we use something other than a bare 0x1f1 constant here? struct
+boot_params has a struct setup_header at the correct offset, so with
+some casting of offsetof() use, we can make this look a lot more self
+explanatory.
+
+
+> +               u64 cmdline_ptr, hi_val;
+> +
+> +               boot_params->hdr.setup_sects = hdr->setup_sects;
+> +               boot_params->hdr.syssize = hdr->syssize;
+> +               boot_params->hdr.version = hdr->version;
+> +               boot_params->hdr.loadflags = hdr->loadflags;
+> +               boot_params->hdr.kernel_alignment = hdr->kernel_alignment;
+> +               boot_params->hdr.min_alignment = hdr->min_alignment;
+> +               boot_params->hdr.xloadflags = hdr->xloadflags;
+> +               boot_params->hdr.init_size = hdr->init_size;
+> +               boot_params->hdr.kernel_info_offset = hdr->kernel_info_offset;
+> +               hi_val = boot_params->ext_cmd_line_ptr;
+
+We have efi_set_u64_split() for this.
+
+> +               cmdline_ptr = boot_params->hdr.cmd_line_ptr | hi_val << 32;
+> +               boot_params->hdr.cmdline_size = strlen((const char *)cmdline_ptr);;
+> +       }
+> +
+> +       return updated;
+> +}
+> +
+> +static void efi_secure_launch(struct boot_params *boot_params)
+> +{
+> +       struct slr_entry_dl_info *dlinfo;
+> +       efi_guid_t guid = SLR_TABLE_GUID;
+> +       dl_handler_func handler_callback;
+> +       struct slr_table *slrt;
+> +
+
+... a C conditional here, e.g.,
+
+if (!IS_ENABLED(CONFIG_SECURE_LAUNCH))
+    return;
+
+The difference is that all the code will get compile test coverage
+every time, instead of only in configs that enable
+CONFIG_SECURE_LAUNCH.
+
+This significantly reduces the risk that your stuff will get broken
+inadvertently.
+
+> +       /*
+> +        * The presence of this table indicated a Secure Launch
+> +        * is being requested.
+> +        */
+> +       slrt = (struct slr_table *)get_efi_config_table(guid);
+> +       if (!slrt || slrt->magic != SLR_TABLE_MAGIC)
+> +               return;
+> +
+> +       /*
+> +        * Since the EFI stub library creates its own boot_params on entry, the
+> +        * SLRT and TXT heap have to be updated with this version.
+> +        */
+> +       if (!efi_secure_launch_update_boot_params(slrt, boot_params))
+> +               return;
+> +
+> +       /* Jump through DL stub to initiate Secure Launch */
+> +       dlinfo = slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_DL_INFO);
+> +
+> +       handler_callback = (dl_handler_func)dlinfo->dl_handler;
+> +
+> +       handler_callback(&dlinfo->bl_context);
+> +
+> +       unreachable();
+> +}
+> +#endif
+> +
+>  static void __noreturn enter_kernel(unsigned long kernel_addr,
+>                                     struct boot_params *boot_params)
+>  {
+> @@ -957,6 +1050,11 @@ void __noreturn efi_stub_entry(efi_handle_t handle,
+>                 goto fail;
+>         }
+>
+> +#if (IS_ENABLED(CONFIG_SECURE_LAUNCH))
+
+... and drop this #if as well.
+
+> +       /* If a Secure Launch is in progress, this never returns */
+> +       efi_secure_launch(boot_params);
+> +#endif
+> +
+>         /*
+>          * Call the SEV init code while still running with the firmware's
+>          * GDT/IDT, so #VC exceptions will be handled by EFI.
+> --
+> 2.39.3
+>
 
 _______________________________________________
 kexec mailing list
