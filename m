@@ -4,7 +4,7 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 15C48C27C50
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 32A26C41513
 	for <kexec@archiver.kernel.org>; Fri, 31 May 2024 01:32:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
@@ -12,52 +12,52 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=0Ipcw2PfBO6QidTQEH0B6U586BwL5PeyoICA9K7aOn4=; b=gfOQrHJcfYd8uT
-	aE0M/OMr5JNbJ+2z534VwbToE+pox7C51obZOf3yWf14kAzds+D3wZChOVlW7U06HeJ0ZYwtfCJVf
-	4xEdF/zVqD/+2TxX4p2bQK6iqPNje2zl5VIJR1+NgFSPljN5MiAyelAi3U8CfLWPcTBpQXnGQJpmK
-	NU9pr0A+BSxqbwFrVnM87DpBLt52ZbqndFqDns+/A+rxUE98JW/RaTl70zZ9sfOdmJVjqTa0yiIvi
-	NuOtXxzBQApw0VMnVdcCjggCjFc+1oAxzBqyn8pR6GGzb11X6R/4os9AWifIUtSCzbGTO+CzbD4mG
-	kOm+GWV7G2yeootShpgw==;
+	List-Owner; bh=cXIqlCJUvnF5UyfMJjET5ikTyf8dMMHxLDI6Gg211Ng=; b=aUH56CfmxTKP0B
+	ECMvAI1FUyXtfCVK8enCnwU+UjfmzO3lPipXRywNoRg3GkDPQmyOjuTVIQ5HOFfwmf9IwrKLtu7OT
+	XyvAYyaASkvD0zbdCyI7fGJC5euux4YHOvqxyYpn3gRTZrLkXzGxKxhZyHFuh+r8fhVYU7n7rIboW
+	8ozPHWCKC/OLsY3OWsktO2PxiDUNybvuXqzJP0TzSLcr5HsVbR3GXpQSUchiEaN+GT3qxsqH0yxcD
+	I60ixb4amIJZLQi+W2SPXtbkdZSIKv4t/+YgM/9NoltKQo6o9O2hlSC1Blm5GapiDxnNwKSc0LYrE
+	Gb4QNtUtuV9DjZ1LvKcw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sCr7v-00000008uCc-3LNG;
-	Fri, 31 May 2024 01:32:15 +0000
+	id 1sCr7u-00000008uCE-3QBX;
+	Fri, 31 May 2024 01:32:14 +0000
 Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sCr7n-00000008u7M-392G
+	id 1sCr7n-00000008u7I-1wMO
 	for kexec@lists.infradead.org;
 	Fri, 31 May 2024 01:32:09 +0000
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44UFKs1r005709;
-	Fri, 31 May 2024 01:30:45 GMT
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44UFWoL8004475;
+	Fri, 31 May 2024 01:30:33 GMT
 DKIM-Signature: =?UTF-8?Q?v=3D1;_a=3Drsa-sha256;_c=3Drelaxed/relaxed;_d=3Doracle.com;_h?=
  =?UTF-8?Q?=3Dcc:content-transfer-encoding:date:from:in-reply-to:message-i?=
  =?UTF-8?Q?d:mime-version:references:subject:to;_s=3Dcorp-2023-11-20;_bh?=
- =?UTF-8?Q?=3Db0H5I9sHgAENEpDn81p8fJ8RmbIshVA+f7CH478xUKI=3D;_b=3DHVIrbtuk?=
- =?UTF-8?Q?yJCPOjkl+7UjRYF1Oe0F8rHOvge6lGu/o7Sy23+CGjAb4Yvk8PSMs2+uiZaM_LN?=
- =?UTF-8?Q?aKsSDEfUgYfsvw6g4GCMmrY9ZqZr0m6SNab1k1/kwr6QZ72UJzlh1iwrOVR76x2?=
- =?UTF-8?Q?1DW_VpNxnrIsxqFzGmPLppZpfV67NuasehvJBhaYS2D+n1HkkhlAZGtD/E82M2L?=
- =?UTF-8?Q?49Kz1679e_X8/zqCwBtfQpKONGsN3ztkUEVs5fNFLIEwCwSW4ye+vdHiHg8Yiaw?=
- =?UTF-8?Q?VvTeZsAdtn41egx_zM+N7BZ5Fpk9790+JeHRAsojPOIej2PU5osqghmKLJrORli?=
- =?UTF-8?Q?/4nBi+btZItNL7lCfTiF4_pg=3D=3D_?=
+ =?UTF-8?Q?=3DBnh/jsO288oZNYgrOSrsCN18bQgzJILZGG0JJNquEks=3D;_b=3DSxzRZqoD?=
+ =?UTF-8?Q?dK+C8FI/jYKkFxIcLhQoDbCEImjcBGhBqPfHkcuiLg7TcfGFH7I6rd4K9Rf6_gC?=
+ =?UTF-8?Q?F6RvNqQPGIfFqUBTqUklxM20JN2gpjMDiG29loQZhl7fapn1W6pe9pkg0tkItK2?=
+ =?UTF-8?Q?qSA_QbffNt3uyHAQ4BffNXP3acoJvdmSDkkB2lltEYd3mT5svdJK8QvYe9pUTxN?=
+ =?UTF-8?Q?BRcNDn4vh_JjMDFD/uy6f/UqnNvEnJqCKtOvHBLWSAKiV0bGK0GrSbV1DIe5iA+?=
+ =?UTF-8?Q?u1jf/73aoLt8bR4_Xd/QUa/J9Mk2x3oGxH8+iOlN7k2P9kYp65pHyO5F2/8k36t?=
+ =?UTF-8?Q?IqZcgyz6LKJx7Fr9NrpRy_CQ=3D=3D_?=
 Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3yb8g4a7eg-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3yb8hga6yx-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 31 May 2024 01:30:44 +0000
+	Fri, 31 May 2024 01:30:32 +0000
 Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44V0m0HU016324;
-	Fri, 31 May 2024 01:30:44 GMT
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44UNM60s016223;
+	Fri, 31 May 2024 01:30:32 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3yc50t97fc-1
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3yc50t9761-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 31 May 2024 01:30:43 +0000
+	Fri, 31 May 2024 01:30:32 +0000
 Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44V1SKNM027418;
-	Fri, 31 May 2024 01:30:42 GMT
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44V1SKNG027418;
+	Fri, 31 May 2024 01:30:31 GMT
 Received: from bur-virt-x6-2-100.us.oracle.com (bur-virt-x6-2-100.us.oracle.com [10.153.92.40])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3yc50t96yw-5
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3yc50t96yw-2
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 31 May 2024 01:30:42 +0000
+	Fri, 31 May 2024 01:30:31 +0000
 From: Ross Philipson <ross.philipson@oracle.com>
 To: linux-kernel@vger.kernel.org, x86@kernel.org,
         linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
@@ -73,9 +73,9 @@ Cc: ross.philipson@oracle.com, dpsmith@apertussolutions.com,
         dwmw2@infradead.org, baolu.lu@linux.intel.com,
         kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
         trenchboot-devel@googlegroups.com
-Subject: [PATCH v9 04/19] x86: Secure Launch Resource Table header file
-Date: Thu, 30 May 2024 18:03:16 -0700
-Message-Id: <20240531010331.134441-5-ross.philipson@oracle.com>
+Subject: [PATCH v9 01/19] x86/boot: Place kernel_info at a fixed offset
+Date: Thu, 30 May 2024 18:03:13 -0700
+Message-Id: <20240531010331.134441-2-ross.philipson@oracle.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20240531010331.134441-1-ross.philipson@oracle.com>
 References: <20240531010331.134441-1-ross.philipson@oracle.com>
@@ -87,11 +87,11 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamsc
  adultscore=0 phishscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
  definitions=main-2405310010
-X-Proofpoint-GUID: yKgVCtSYmEthFQel0R85P0H2d3gpIo1h
-X-Proofpoint-ORIG-GUID: yKgVCtSYmEthFQel0R85P0H2d3gpIo1h
+X-Proofpoint-GUID: rX4yWGFJ9rCFi-fOgEnlV90dOeJugfo9
+X-Proofpoint-ORIG-GUID: rX4yWGFJ9rCFi-fOgEnlV90dOeJugfo9
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240530_183207_870346_9F369C58 
-X-CRM114-Status: GOOD (  16.59  )
+X-CRM114-CacheID: sfid-20240530_183207_516291_126013B3 
+X-CRM114-Status: GOOD (  20.84  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -108,292 +108,126 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Introduce the Secure Launch Resource Table which forms the formal
-interface between the pre and post launch code.
+From: Arvind Sankar <nivedita@alum.mit.edu>
 
+There are use cases for storing the offset of a symbol in kernel_info.
+For example, the trenchboot series [0] needs to store the offset of the
+Measured Launch Environment header in kernel_info.
+
+Since commit (note: commit ID from tip/master)
+
+commit 527afc212231 ("x86/boot: Check that there are no run-time relocations")
+
+run-time relocations are not allowed in the compressed kernel, so simply
+using the symbol in kernel_info, as
+
+	.long	symbol
+
+will cause a linker error because this is not position-independent.
+
+With kernel_info being a separate object file and in a different section
+from startup_32, there is no way to calculate the offset of a symbol
+from the start of the image in a position-independent way.
+
+To enable such use cases, put kernel_info into its own section which is
+placed at a predetermined offset (KERNEL_INFO_OFFSET) via the linker
+script. This will allow calculating the symbol offset in a
+position-independent way, by adding the offset from the start of
+kernel_info to KERNEL_INFO_OFFSET.
+
+Ensure that kernel_info is aligned, and use the SYM_DATA.* macros
+instead of bare labels. This stores the size of the kernel_info
+structure in the ELF symbol table.
+
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Cc: Ross Philipson <ross.philipson@oracle.com>
 Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
 ---
- include/linux/slr_table.h | 271 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 271 insertions(+)
- create mode 100644 include/linux/slr_table.h
+ arch/x86/boot/compressed/kernel_info.S | 19 +++++++++++++++----
+ arch/x86/boot/compressed/kernel_info.h | 12 ++++++++++++
+ arch/x86/boot/compressed/vmlinux.lds.S |  6 ++++++
+ 3 files changed, 33 insertions(+), 4 deletions(-)
+ create mode 100644 arch/x86/boot/compressed/kernel_info.h
 
-diff --git a/include/linux/slr_table.h b/include/linux/slr_table.h
+diff --git a/arch/x86/boot/compressed/kernel_info.S b/arch/x86/boot/compressed/kernel_info.S
+index f818ee8fba38..c18f07181dd5 100644
+--- a/arch/x86/boot/compressed/kernel_info.S
++++ b/arch/x86/boot/compressed/kernel_info.S
+@@ -1,12 +1,23 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ 
++#include <linux/linkage.h>
+ #include <asm/bootparam.h>
++#include "kernel_info.h"
+ 
+-	.section ".rodata.kernel_info", "a"
++/*
++ * If a field needs to hold the offset of a symbol from the start
++ * of the image, use the macro below, eg
++ *	.long	rva(symbol)
++ * This will avoid creating run-time relocations, which are not
++ * allowed in the compressed kernel.
++ */
++
++#define rva(X) (((X) - kernel_info) + KERNEL_INFO_OFFSET)
+ 
+-	.global kernel_info
++	.section ".rodata.kernel_info", "a"
+ 
+-kernel_info:
++	.balign	16
++SYM_DATA_START(kernel_info)
+ 	/* Header, Linux top (structure). */
+ 	.ascii	"LToP"
+ 	/* Size. */
+@@ -19,4 +30,4 @@ kernel_info:
+ 
+ kernel_info_var_len_data:
+ 	/* Empty for time being... */
+-kernel_info_end:
++SYM_DATA_END_LABEL(kernel_info, SYM_L_LOCAL, kernel_info_end)
+diff --git a/arch/x86/boot/compressed/kernel_info.h b/arch/x86/boot/compressed/kernel_info.h
 new file mode 100644
-index 000000000000..213d8ac16f0f
+index 000000000000..c127f84aec63
 --- /dev/null
-+++ b/include/linux/slr_table.h
-@@ -0,0 +1,271 @@
++++ b/arch/x86/boot/compressed/kernel_info.h
+@@ -0,0 +1,12 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Secure Launch Resource Table
-+ *
-+ * Copyright (c) 2024, Oracle and/or its affiliates.
-+ */
 +
-+#ifndef _LINUX_SLR_TABLE_H
-+#define _LINUX_SLR_TABLE_H
++#ifndef BOOT_COMPRESSED_KERNEL_INFO_H
++#define BOOT_COMPRESSED_KERNEL_INFO_H
 +
-+/* Put this in efi.h if it becomes a standard */
-+#define SLR_TABLE_GUID				EFI_GUID(0x877a9b2a, 0x0385, 0x45d1, 0xa0, 0x34, 0x9d, 0xac, 0x9c, 0x9e, 0x56, 0x5f)
++#ifdef CONFIG_X86_64
++#define KERNEL_INFO_OFFSET 0x500
++#else /* 32-bit */
++#define KERNEL_INFO_OFFSET 0x100
++#endif
 +
-+/* SLR table header values */
-+#define SLR_TABLE_MAGIC		0x4452544d
-+#define SLR_TABLE_REVISION	1
-+
-+/* Current revisions for the policy and UEFI config */
-+#define SLR_POLICY_REVISION		1
-+#define SLR_UEFI_CONFIG_REVISION	1
-+
-+/* SLR defined architectures */
-+#define SLR_INTEL_TXT		1
-+#define SLR_AMD_SKINIT		2
-+
-+/* SLR defined bootloaders */
-+#define SLR_BOOTLOADER_INVALID	0
-+#define SLR_BOOTLOADER_GRUB	1
-+
-+/* Log formats */
-+#define SLR_DRTM_TPM12_LOG	1
-+#define SLR_DRTM_TPM20_LOG	2
-+
-+/* DRTM Policy Entry Flags */
-+#define SLR_POLICY_FLAG_MEASURED	0x1
-+#define SLR_POLICY_IMPLICIT_SIZE	0x2
-+
-+/* Array Lengths */
-+#define TPM_EVENT_INFO_LENGTH		32
-+#define TXT_VARIABLE_MTRRS_LENGTH	32
-+
-+/* Tags */
-+#define SLR_ENTRY_INVALID	0x0000
-+#define SLR_ENTRY_DL_INFO	0x0001
-+#define SLR_ENTRY_LOG_INFO	0x0002
-+#define SLR_ENTRY_ENTRY_POLICY	0x0003
-+#define SLR_ENTRY_INTEL_INFO	0x0004
-+#define SLR_ENTRY_AMD_INFO	0x0005
-+#define SLR_ENTRY_ARM_INFO	0x0006
-+#define SLR_ENTRY_UEFI_INFO	0x0007
-+#define SLR_ENTRY_UEFI_CONFIG	0x0008
-+#define SLR_ENTRY_END		0xffff
-+
-+/* Entity Types */
-+#define SLR_ET_UNSPECIFIED	0x0000
-+#define SLR_ET_SLRT		0x0001
-+#define SLR_ET_BOOT_PARAMS	0x0002
-+#define SLR_ET_SETUP_DATA	0x0003
-+#define SLR_ET_CMDLINE		0x0004
-+#define SLR_ET_UEFI_MEMMAP	0x0005
-+#define SLR_ET_RAMDISK		0x0006
-+#define SLR_ET_TXT_OS2MLE	0x0010
-+#define SLR_ET_UNUSED		0xffff
-+
-+#ifndef __ASSEMBLY__
-+
-+/*
-+ * Primary Secure Launch Resource Table Header
-+ */
-+struct slr_table {
-+	u32 magic;
-+	u16 revision;
-+	u16 architecture;
-+	u32 size;
-+	u32 max_size;
-+	/* table entries */
-+} __packed;
-+
-+/*
-+ * Common SLRT Table Header
-+ */
-+struct slr_entry_hdr {
-+	u16 tag;
-+	u16 size;
-+} __packed;
-+
-+/*
-+ * Boot loader context
-+ */
-+struct slr_bl_context {
-+	u16 bootloader;
-+	u16 reserved[3];
-+	u64 context;
-+} __packed;
-+
-+/*
-+ * Dynamic Launch Callback Function type
-+ */
-+typedef void (*dl_handler_func)(struct slr_bl_context *bl_context);
-+
-+/*
-+ * DRTM Dynamic Launch Configuration
-+ */
-+struct slr_entry_dl_info {
-+	struct slr_entry_hdr hdr;
-+	u32 dce_size;
-+	u64 dce_base;
-+	u64 dlme_size;
-+	u64 dlme_base;
-+	u64 dlme_entry;
-+	struct slr_bl_context bl_context;
-+	u64 dl_handler;
-+} __packed;
-+
-+/*
-+ * TPM Log Information
-+ */
-+struct slr_entry_log_info {
-+	struct slr_entry_hdr hdr;
-+	u16 format;
-+	u16 reserved[3];
-+	u32 size;
-+	u64 addr;
-+} __packed;
-+
-+/*
-+ * DRTM Measurement Entry
-+ */
-+struct slr_policy_entry {
-+	u16 pcr;
-+	u16 entity_type;
-+	u16 flags;
-+	u16 reserved;
-+	u64 size;
-+	u64 entity;
-+	char evt_info[TPM_EVENT_INFO_LENGTH];
-+} __packed;
-+
-+/*
-+ * DRTM Measurement Policy
-+ */
-+struct slr_entry_policy {
-+	struct slr_entry_hdr hdr;
-+	u16 revision;
-+	u16 nr_entries;
-+	struct slr_policy_entry policy_entries[];
-+} __packed;
-+
-+/*
-+ * Secure Launch defined MTRR saving structures
-+ */
-+struct slr_txt_mtrr_pair {
-+	u64 mtrr_physbase;
-+	u64 mtrr_physmask;
-+} __packed;
-+
-+struct slr_txt_mtrr_state {
-+	u64 default_mem_type;
-+	u64 mtrr_vcnt;
-+	struct slr_txt_mtrr_pair mtrr_pair[TXT_VARIABLE_MTRRS_LENGTH];
-+} __packed;
-+
-+/*
-+ * Intel TXT Info table
-+ */
-+struct slr_entry_intel_info {
-+	struct slr_entry_hdr hdr;
-+	u16 reserved[2];
-+	u64 txt_heap;
-+	u64 saved_misc_enable_msr;
-+	struct slr_txt_mtrr_state saved_bsp_mtrrs;
-+} __packed;
-+
-+/*
-+ * UEFI config measurement entry
-+ */
-+struct slr_uefi_cfg_entry {
-+	u16 pcr;
-+	u16 reserved;
-+	u32 size;
-+	u64 cfg; /* address or value */
-+	char evt_info[TPM_EVENT_INFO_LENGTH];
-+} __packed;
-+
-+/*
-+ * UEFI config measurements
-+ */
-+struct slr_entry_uefi_config {
-+	struct slr_entry_hdr hdr;
-+	u16 revision;
-+	u16 nr_entries;
-+	struct slr_uefi_cfg_entry uefi_cfg_entries[];
-+} __packed;
-+
-+static inline void *slr_end_of_entries(struct slr_table *table)
-+{
-+	return (void *)table + table->size;
-+}
-+
-+static inline void *
-+slr_next_entry(struct slr_table *table,
-+	       struct slr_entry_hdr *curr)
-+{
-+	struct slr_entry_hdr *next = (struct slr_entry_hdr *)
-+				((u8 *)curr + curr->size);
-+
-+	if ((void *)next >= slr_end_of_entries(table))
-+		return NULL;
-+	if (next->tag == SLR_ENTRY_END)
-+		return NULL;
-+
-+	return next;
-+}
-+
-+static inline void *
-+slr_next_entry_by_tag(struct slr_table *table,
-+		      struct slr_entry_hdr *entry,
-+		      u16 tag)
-+{
-+	if (!entry) /* Start from the beginning */
-+		entry = (struct slr_entry_hdr *)(((u8 *)table) + sizeof(*table));
-+
-+	for ( ; ; ) {
-+		if (entry->tag == tag)
-+			return entry;
-+
-+		entry = slr_next_entry(table, entry);
-+		if (!entry)
-+			return NULL;
++#endif /* BOOT_COMPRESSED_KERNEL_INFO_H */
+diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+index 083ec6d7722a..718c52f3f1e6 100644
+--- a/arch/x86/boot/compressed/vmlinux.lds.S
++++ b/arch/x86/boot/compressed/vmlinux.lds.S
+@@ -7,6 +7,7 @@ OUTPUT_FORMAT(CONFIG_OUTPUT_FORMAT)
+ 
+ #include <asm/cache.h>
+ #include <asm/page_types.h>
++#include "kernel_info.h"
+ 
+ #ifdef CONFIG_X86_64
+ OUTPUT_ARCH(i386:x86-64)
+@@ -27,6 +28,11 @@ SECTIONS
+ 		HEAD_TEXT
+ 		_ehead = . ;
+ 	}
++	.rodata.kernel_info KERNEL_INFO_OFFSET : {
++		*(.rodata.kernel_info)
 +	}
++	ASSERT(ABSOLUTE(kernel_info) == KERNEL_INFO_OFFSET, "kernel_info at bad address!")
 +
-+	return NULL;
-+}
-+
-+static inline int
-+slr_add_entry(struct slr_table *table,
-+	      struct slr_entry_hdr *entry)
-+{
-+	struct slr_entry_hdr *end;
-+
-+	if ((table->size + entry->size) > table->max_size)
-+		return -1;
-+
-+	memcpy((u8 *)table + table->size - sizeof(*end), entry, entry->size);
-+	table->size += entry->size;
-+
-+	end  = (struct slr_entry_hdr *)((u8 *)table + table->size - sizeof(*end));
-+	end->tag = SLR_ENTRY_END;
-+	end->size = sizeof(*end);
-+
-+	return 0;
-+}
-+
-+static inline void
-+slr_init_table(struct slr_table *slrt, u16 architecture, u32 max_size)
-+{
-+	struct slr_entry_hdr *end;
-+
-+	slrt->magic = SLR_TABLE_MAGIC;
-+	slrt->revision = SLR_TABLE_REVISION;
-+	slrt->architecture = architecture;
-+	slrt->size = sizeof(*slrt) + sizeof(*end);
-+	slrt->max_size = max_size;
-+	end = (struct slr_entry_hdr *)((u8 *)slrt + sizeof(*slrt));
-+	end->tag = SLR_ENTRY_END;
-+	end->size = sizeof(*end);
-+}
-+
-+#endif /* !__ASSEMBLY */
-+
-+#endif /* _LINUX_SLR_TABLE_H */
+ 	.rodata..compressed : {
+ 		*(.rodata..compressed)
+ 	}
 -- 
 2.39.3
 
