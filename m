@@ -4,60 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 98991C25B76
-	for <kexec@archiver.kernel.org>; Fri, 31 May 2024 01:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 61E71C25B74
+	for <kexec@archiver.kernel.org>; Fri, 31 May 2024 01:33:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=beEHLvUzogEZMzfKRRXEWZZRxa6z7ZWm2TJ8rvavaWs=; b=GrHfYb52Lk+QsR
-	A3P743JLzEyGd/lzzkOIqMGUDKK34phcvAjJp4x8QeI0bJ676EHjdOpufH7XliPAXeFpzi+GAvv8v
-	V26nnAFZWpmqqgvfRrEd9RujbsWxoOotH4CVnnibOHvIbGuNJXnOWeaFAMGw0izZ8OoqwOxJEKnvn
-	KuDqakkW1LXXwX0oHOWu5SfjVPLfKZ7WdsstvWzJ1nZ11jgFFUlF/Re08vi7QayjZ4ckBoNsBGmQS
-	/XXLDXCIMC/DYZTOXyJshVqLXIKOkefk13Nh05LCjxq3UJ92CtN6ufR99Bg52Vhigw2YSkZAh4YKx
-	wVHoaTRJQSFvMMW/BO/A==;
+	List-Owner; bh=6DnKnlCuLBqVbUIrD8IEhypyfwWgy+n7gNoG7abv/k8=; b=2QAMhxLB3/jDI2
+	DcICzNmYhIi25HpUux+FTvc/nmIZj9vqGTOwLpptaBWPcjcLDqLc6g/tsiv5tPUq0GYpKzZ9WwlNM
+	Lb2zAfOJVilUsKZORqjCyzrLmLUq5AkozF55qKhA++Y3zzQ/RuTRb40+EotuaiLk7a/9Z1QbB0Wkw
+	ZYv5NcMhMnVfNtLQMQwV9LPp3+8vg8rE4IbI7degWvg4E6KNClwF7aySIk4AAL7sY46HxUwzoTVsz
+	QKTObAnmAjnppWVpGePXj12lXT8WgGCdhNS2SNaWngR2Qfsvnww/1IuyOVdfBl99vWgsWz12VUV+H
+	EPrAKtuu2vBZQ/k0nNCQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sCr8b-00000008ubl-21AW;
-	Fri, 31 May 2024 01:32:57 +0000
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
+	id 1sCr8e-00000008ue2-1w1w;
+	Fri, 31 May 2024 01:33:00 +0000
+Received: from desiato.infradead.org ([2001:8b0:10b:1:d65d:64ff:fe57:4e05])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sCr8K-00000008uQB-1OTW
+	id 1sCr8V-00000008uWK-1FsU
+	for kexec@bombadil.infradead.org;
+	Fri, 31 May 2024 01:32:51 +0000
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:MIME-Version
+	:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-Type:Content-ID:Content-Description;
+	bh=VTRcjWiMdtIkocYfDj+qafZlBmDr3DrOlPmCW6LWk+8=; b=XTX2pYb2Z36AyHRsjjyIzD/plW
+	phZy6VTF77vVuFrJOH9yiOK9eM34dCkgboPdA2+EJBjYdkNXCmEeQryW5lBHWZrLuZ95i9xzBINw+
+	huIdct1wHiExylvzwL+w1uqVbFX9kK9hvF/MuZsak6YHuw5pHWkgqwSHeQJJGZctokFpX6D1CAO2W
+	22DyLflfTa4hgvQYFgoZM9jENZcD0nvuCbheay9iE/4x0mhzfkYUsViXpR04MEpngqnjzUMsC/kci
+	XCSBTrigZ6zjXgfiCWd9u3NYiAlpePfz8MlWvhLqzCLc43WT6ngWlMvZ/ZbixtxVwV2MvJRFuqEZ/
+	gjmkfp0Q==;
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
+	by desiato.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sCr8O-0000000EiCI-3hVc
 	for kexec@lists.infradead.org;
-	Fri, 31 May 2024 01:32:50 +0000
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44UFVBn8018561;
-	Fri, 31 May 2024 01:31:35 GMT
+	Fri, 31 May 2024 01:32:49 +0000
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44UFUkdL019783;
+	Fri, 31 May 2024 01:31:16 GMT
 DKIM-Signature: =?UTF-8?Q?v=3D1;_a=3Drsa-sha256;_c=3Drelaxed/relaxed;_d=3Doracle.com;_h?=
  =?UTF-8?Q?=3Dcc:content-transfer-encoding:date:from:in-reply-to:message-i?=
  =?UTF-8?Q?d:mime-version:references:subject:to;_s=3Dcorp-2023-11-20;_bh?=
- =?UTF-8?Q?=3Db5NDsXm+3HZ1IU6nSFDdzN4zSa40CUJq8u61Rm7TCIY=3D;_b=3Dnc3CSmrt?=
- =?UTF-8?Q?TNEmHQ5iTiFg1/2ZsGQNOkCGS6+QtWba7anGqOq6ahkBAnR3p1HY5dkuaHqa_Kv?=
- =?UTF-8?Q?tNB7vstlOBv9JPeJ5x9gPSvjTZ1z80IF6nd9bAaqDjvQClmRcKJLEEub71QiVQP?=
- =?UTF-8?Q?dDC_2RmooWYVwR37gqgrWwHeJVi0Xk5qwv2Lb30D+79LHHlII6th2WsCoXX0Bxv?=
- =?UTF-8?Q?PFAYR8ejy_Uh7/vh0RXqjj6WVUMyeuZkbcMa4SGMIQYzRPyKSZI+iyI2AQVWuLn?=
- =?UTF-8?Q?hnYM7WVtFj0V6xQ_fGEYs8s6D6tkbE2PFZwp+u0ZVHKPlcBuNuKzkGX2R6bHyU/?=
- =?UTF-8?Q?FqNlZYep7Nnft2emYPRcs_LA=3D=3D_?=
+ =?UTF-8?Q?=3DVTRcjWiMdtIkocYfDj+qafZlBmDr3DrOlPmCW6LWk+8=3D;_b=3DiI/GlbKF?=
+ =?UTF-8?Q?gzwyNjntWd2V7fFW2V0BWZj6KR+wIhqU1ZKxNMtPj0vv+qVzbnZULeKeN9Rl_mB?=
+ =?UTF-8?Q?mYg1xZwkCtlXXNBBTNqoCt00blPri3APNFrf3mPGwM+yudDB81aIeQM0FtS0hcR?=
+ =?UTF-8?Q?hIw_P77vqODr5ym9hfiGBoYDMyCo01f2yRgPyE4ko8xyUvXgrsZ+FcJGOQLCn/I?=
+ =?UTF-8?Q?guQ12wXmo_NGiTQLQrkQGn9Tyl8mcGMvSo46FtXuTI4ohoD7S4aXaHDlI4c8BGZ?=
+ =?UTF-8?Q?AMwo7vqq1Qd0Y7B_dT83rL+PzEQecd4rrbgJuEwWHMlHIfuyunoBFttTw8DuR1a?=
+ =?UTF-8?Q?QyWvJs8p2glSNbaYCWmMi_Ng=3D=3D_?=
 Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3yb8j8a3es-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3yb8g9tc8q-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 31 May 2024 01:31:34 +0000
+	Fri, 31 May 2024 01:31:16 +0000
 Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44V0m0Hk016324;
-	Fri, 31 May 2024 01:31:33 GMT
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44UNZUeE016232;
+	Fri, 31 May 2024 01:31:15 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3yc50t9842-1
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3yc50t97yw-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 31 May 2024 01:31:33 +0000
+	Fri, 31 May 2024 01:31:15 +0000
 Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44V1SKNm027418;
-	Fri, 31 May 2024 01:31:32 GMT
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44V1SKNc027418;
+	Fri, 31 May 2024 01:31:14 GMT
 Received: from bur-virt-x6-2-100.us.oracle.com (bur-virt-x6-2-100.us.oracle.com [10.153.92.40])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3yc50t96yw-18
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3yc50t96yw-13
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 31 May 2024 01:31:32 +0000
+	Fri, 31 May 2024 01:31:14 +0000
 From: Ross Philipson <ross.philipson@oracle.com>
 To: linux-kernel@vger.kernel.org, x86@kernel.org,
         linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
@@ -73,9 +88,9 @@ Cc: ross.philipson@oracle.com, dpsmith@apertussolutions.com,
         dwmw2@infradead.org, baolu.lu@linux.intel.com,
         kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
         trenchboot-devel@googlegroups.com
-Subject: [PATCH v9 17/19] tpm: Add sysfs interface to allow setting and querying the preferred locality
-Date: Thu, 30 May 2024 18:03:29 -0700
-Message-Id: <20240531010331.134441-18-ross.philipson@oracle.com>
+Subject: [PATCH v9 12/19] reboot: Secure Launch SEXIT support on reboot paths
+Date: Thu, 30 May 2024 18:03:24 -0700
+Message-Id: <20240531010331.134441-13-ross.philipson@oracle.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20240531010331.134441-1-ross.philipson@oracle.com>
 References: <20240531010331.134441-1-ross.philipson@oracle.com>
@@ -87,11 +102,11 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamsc
  adultscore=0 phishscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
  definitions=main-2405310010
-X-Proofpoint-ORIG-GUID: ej6ynCvmicW4fYM626_JXYWy6934H7pR
-X-Proofpoint-GUID: ej6ynCvmicW4fYM626_JXYWy6934H7pR
+X-Proofpoint-GUID: Nd163jMZw4UVfc6zriImZ4AYhUZFCaOA
+X-Proofpoint-ORIG-GUID: Nd163jMZw4UVfc6zriImZ4AYhUZFCaOA
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240530_183247_042127_1782DEBD 
-X-CRM114-Status: GOOD (  12.06  )
+X-CRM114-CacheID: sfid-20240531_023246_098287_E762989D 
+X-CRM114-Status: GOOD (  13.69  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -108,68 +123,69 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Expose a sysfs interface to allow user mode to set and query the preferred
-locality for the TPM chip.
+If the MLE kernel is being powered off, rebooted or halted,
+then SEXIT must be called. Note that the SEXIT GETSEC leaf
+can only be called after a machine_shutdown() has been done on
+these paths. The machine_shutdown() is not called on a few paths
+like when poweroff action does not have a poweroff callback (into
+ACPI code) or when an emergency reset is done. In these cases,
+just the TXT registers are finalized but SEXIT is skipped.
 
 Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
 ---
- drivers/char/tpm/tpm-sysfs.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ arch/x86/kernel/reboot.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/char/tpm/tpm-sysfs.c b/drivers/char/tpm/tpm-sysfs.c
-index 94231f052ea7..5f4a966a4599 100644
---- a/drivers/char/tpm/tpm-sysfs.c
-+++ b/drivers/char/tpm/tpm-sysfs.c
-@@ -324,6 +324,34 @@ static ssize_t null_name_show(struct device *dev, struct device_attribute *attr,
- static DEVICE_ATTR_RO(null_name);
- #endif
+diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+index f3130f762784..66060fdb0822 100644
+--- a/arch/x86/kernel/reboot.c
++++ b/arch/x86/kernel/reboot.c
+@@ -12,6 +12,7 @@
+ #include <linux/delay.h>
+ #include <linux/objtool.h>
+ #include <linux/pgtable.h>
++#include <linux/slaunch.h>
+ #include <acpi/reboot.h>
+ #include <asm/io.h>
+ #include <asm/apic.h>
+@@ -766,6 +767,7 @@ static void native_machine_restart(char *__unused)
  
-+static ssize_t preferred_locality_show(struct device *dev,
-+				       struct device_attribute *attr, char *buf)
-+{
-+	struct tpm_chip *chip = to_tpm_chip(dev);
-+
-+	return sprintf(buf, "%d\n", chip->pref_locality);
-+}
-+
-+static ssize_t preferred_locality_store(struct device *dev, struct device_attribute *attr,
-+					const char *buf, size_t count)
-+{
-+	struct tpm_chip *chip = to_tpm_chip(dev);
-+	unsigned int locality;
-+
-+	if (kstrtouint(buf, 0, &locality))
-+		return -ERANGE;
-+
-+	if (locality >= TPM_MAX_LOCALITY)
-+		return -ERANGE;
-+
-+	if (tpm_chip_preferred_locality(chip, (int)locality))
-+		return count;
-+	else
-+		return 0;
-+}
-+
-+static DEVICE_ATTR_RW(preferred_locality);
-+
- static struct attribute *tpm1_dev_attrs[] = {
- 	&dev_attr_pubek.attr,
- 	&dev_attr_pcrs.attr,
-@@ -336,6 +364,7 @@ static struct attribute *tpm1_dev_attrs[] = {
- 	&dev_attr_durations.attr,
- 	&dev_attr_timeouts.attr,
- 	&dev_attr_tpm_version_major.attr,
-+	&dev_attr_preferred_locality.attr,
- 	NULL,
- };
+ 	if (!reboot_force)
+ 		machine_shutdown();
++	slaunch_finalize(!reboot_force);
+ 	__machine_emergency_restart(0);
+ }
  
-@@ -344,6 +373,7 @@ static struct attribute *tpm2_dev_attrs[] = {
- #ifdef CONFIG_TCG_TPM2_HMAC
- 	&dev_attr_null_name.attr,
- #endif
-+	&dev_attr_preferred_locality.attr,
- 	NULL
- };
+@@ -776,6 +778,9 @@ static void native_machine_halt(void)
+ 
+ 	tboot_shutdown(TB_SHUTDOWN_HALT);
+ 
++	/* SEXIT done after machine_shutdown() to meet TXT requirements */
++	slaunch_finalize(1);
++
+ 	stop_this_cpu(NULL);
+ }
+ 
+@@ -784,8 +789,12 @@ static void native_machine_power_off(void)
+ 	if (kernel_can_power_off()) {
+ 		if (!reboot_force)
+ 			machine_shutdown();
++		slaunch_finalize(!reboot_force);
+ 		do_kernel_power_off();
++	} else {
++		slaunch_finalize(0);
+ 	}
++
+ 	/* A fallback in case there is no PM info available */
+ 	tboot_shutdown(TB_SHUTDOWN_HALT);
+ }
+@@ -813,6 +822,7 @@ void machine_shutdown(void)
+ 
+ void machine_emergency_restart(void)
+ {
++	slaunch_finalize(0);
+ 	__machine_emergency_restart(1);
+ }
  
 -- 
 2.39.3
