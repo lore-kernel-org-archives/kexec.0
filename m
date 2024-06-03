@@ -4,82 +4,166 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DB8DEC25B75
-	for <kexec@archiver.kernel.org>; Mon,  3 Jun 2024 08:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 17AEFC25B75
+	for <kexec@archiver.kernel.org>; Mon,  3 Jun 2024 13:22:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=b/LXVvJdrST2LC5D2CLa/ykM5pISteHzBd9lO5qHR5I=; b=oBQ+AQrlpgdjzH
-	cFmxn4/gMGP48VoQAI50Y/jUWfWAlm0O2D+G9oXGSABgHVQmB6pOVX4piQvBcNFH0m7ppX2PLbltY
-	bYkZH6JYZ1P0QqEAfp1iOHlG3dk0iQEQ4IFbR9GTIjfEBAfrL5Yz+bSt3fPeYB72SoGPBEztCivfV
-	GbIyfII+b5RfKNLFoXYHLgg7OjVpJITmuP2Ej4+N+dV1WvItN3KsvVVchdQxwZ9bERrPCvqzIgyYO
-	Vdo2kyiZWGH2nSP2L6Uw8fXsP7SnQpQfgT3eplvxzovyjqeAT3uqyIXUWuhTe3sqkP376D0VUjZb8
-	u8FlzzHi4trhIhEluc0w==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:Cc:To:
+	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=WjSMfnfOKBA2Dom9t8DXwnvy4jrBfiwQBUVKOIE0lCM=; b=KhOxdHuZFwlPDLybL1j4EoAPoN
+	cF1cW9pK4aLF+U6s55jRc8azsbZCt18VBvhTp3Qtvvp5o7c8nUu7fMk38wofxu9mGjaMr+6BLtpjY
+	pPLa4IcIa++hqDd0cNymANN7F8JIp2K6PYU5njsrn9vER4JKdpM77IA/KTWf3nOzfXLfX0rA48GD3
+	vbKOftUevxDWyGRBuSKIGX4rJnoYThxLQ/bUOo2SetXrDpLS1HdcajnYP6uelXFETrjJ8uHHFzV+1
+	juE1rlYo8/GIv7xJoFX4uxbnPcrmdj1fO2BJG8KH0917yCXDfUzM8FWsZAGSIsSSFCeDiz6NQDv8N
+	ULQhhXDQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sE3Va-0000000G7FN-1Tw1;
-	Mon, 03 Jun 2024 08:57:38 +0000
-Received: from mail.alien8.de ([65.109.113.108])
+	id 1sE7dt-0000000GswA-3ekl;
+	Mon, 03 Jun 2024 13:22:29 +0000
+Received: from mail-bn8nam12on20601.outbound.protection.outlook.com ([2a01:111:f403:2418::601] helo=NAM12-BN8-obe.outbound.protection.outlook.com)
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sE3VW-0000000G7Ej-2L3r
+	id 1sE7dq-0000000Gsvk-2Ay7
 	for kexec@lists.infradead.org;
-	Mon, 03 Jun 2024 08:57:36 +0000
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id B12D740E016C;
-	Mon,  3 Jun 2024 08:57:32 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id zGAmA0O46_9c; Mon,  3 Jun 2024 08:57:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1717405048; bh=GyBQ5SXnE1RzW/N5I1Wn7zbXD9oRCwC1eq8lbd2HzJc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OSF1zqIMZVCcb5JWqcBkvdQBKDcF8chNTLMxdhEAiOY4ySKNJNLQ9RqqlLVP3rB1Y
-	 i73YmyTaods7SbGN+8Bm6CmqaY8k0JhbTkzRM7uGXPelTEnebJs1QuKxyQHN+6W9rf
-	 NBjYJbIfcUVjLy86usbrP/7AoSHnm1f0La1hSmGkd+RXLe6RJ92zZrFlOef61GtoNc
-	 Rw00r9Kl//pRs/+oe6g2pNUMpvhNdQpScx+te13P3HxaBNCivgATJXF0IH0P8lSQlh
-	 pDZo+vSO4M0rJ+2xAGuyqXfnqrNQvq5guxYmFxB2ySRF2d1Jr0vi4788leWC1oD9Kg
-	 oKc32uNDI5BrGLt5o0ODqf/UIpLl+KFrqVc5B2tjgsz46TqyJMgem2jLH2LXIGLd4z
-	 Q4KoFIZwba1FlH+oQMPxkOMLJcIIwzVAtx4vHMgbMutzMdmmplybQRlrUG3zGJEQXV
-	 oab/aNxmcuwC8kXIm4AldDB7joUD4dRARB+JO4mVhhGXa8jUf6uaNmSt+1g6G28nr6
-	 7xC/76tW/mgC6YtHRGYTPsLiuBapXQPl+fE4o0YaOiuZq534g67uiSonOn8rP9FkTH
-	 6lEgHJBpg/AJPT6Y9Z/Lu11qJpu2fnKLhC72PuljWLNFnNL/ZvJZqu5weQseS7JCSD
-	 ddjvZWAoA//i0aWENHpI5/xA=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B210A40E00C9;
-	Mon,  3 Jun 2024 08:56:59 +0000 (UTC)
-Date: Mon, 3 Jun 2024 10:56:54 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Ashish Kalra <Ashish.Kalra@amd.com>, Mike Rapoport <rppt@kernel.org>
-Cc: tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, rafael@kernel.org, hpa@zytor.com,
-	peterz@infradead.org, adrian.hunter@intel.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com, jun.nakajima@intel.com,
-	rick.p.edgecombe@intel.com, thomas.lendacky@amd.com,
-	michael.roth@amd.com, seanjc@google.com, kai.huang@intel.com,
-	bhe@redhat.com, kirill.shutemov@linux.intel.com, bdas@redhat.com,
-	vkuznets@redhat.com, dionnaglaze@google.com, anisinha@redhat.com,
-	jroedel@suse.de, ardb@kernel.org, kexec@lists.infradead.org,
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+	Mon, 03 Jun 2024 13:22:27 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=S5de58JP0Z607J58SZllKw40mKNdI+ejL9/gGQc+hW9pUfLoHmpBU3UUi3vJQbx+FmsvdC50GNTXGiyXEvpk1ihLtkcMBFLGEaT/ErzY6ulcCPbP4dwTlmvc/5GL3vB3W0Ft3I/1sn7AZrRZJVEua0OQZS7gnw5ICU1iCQC9kQtuhqQheReLRYb5QZg2jUZtCpNlYoyfnj/ym6QOX5OxZV+j0BQ+bzATwybLAqVQgxLNU+PksaadmVGGCOsSSUgUAn2ncpClMk/wWm4jHtsBNglcjdEX+LKhog4yTxpA6KCaVMy18u8PIsJumKY97ZYgowqBYxPrcvKLG+R/WZw+YA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zZz+0qfucC3nmXbva/Uio85a91kFwbaaJgUYbpskoiQ=;
+ b=edPCB0gYJHub/zIZ3nnK/pDY/DMKPRXe5YhWoyLcSttIGSMDZXCj+/Xy4SaLfR/jEVEUJSf9n6WpCkrNwDE+w5dZv/g4YC/5TNjLk3XYT7YZLWAkQ7IcdYYX/QH2YSdyFDsOQNPSz9lV1NxdcIUoHphUZ9N62R7r30JDoc/r1+30imyGBzBiZz6Fy1zJCquhsLSWROCM/q4LMM5QCn72XvZ/bOcvNp215Zp+A4FkmbZqV3DcSwoYknQpQzbOvmOSu41blY8cHyFrC0xAY8Y/Cru6kV4/aeVy0m6kL6n8N7l+QAoZTWE8/2JHeGAUQ+UXHopgIsL+sPCqQs/Ez1CG8A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zZz+0qfucC3nmXbva/Uio85a91kFwbaaJgUYbpskoiQ=;
+ b=359Uva2SL6NePRwfeXePMrZGYzU3yvbDaAD3opW/s9/VucXQse2pOovc9HhH/BqCcsEiqhkI75bIGfP65O95COzIxyXmglQ1VCUWZsgRGRrVLjoP+wXHs+drQv1LFSz/Ptze5YPDvrsMmCOyx1O9DxyEWwGSzFgaeB7Wb8uxX/0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from SN6PR12MB2767.namprd12.prod.outlook.com (2603:10b6:805:75::23)
+ by SJ2PR12MB9161.namprd12.prod.outlook.com (2603:10b6:a03:566::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.22; Mon, 3 Jun
+ 2024 13:07:01 +0000
+Received: from SN6PR12MB2767.namprd12.prod.outlook.com
+ ([fe80::e441:89a7:4dd:dce7]) by SN6PR12MB2767.namprd12.prod.outlook.com
+ ([fe80::e441:89a7:4dd:dce7%5]) with mapi id 15.20.7633.021; Mon, 3 Jun 2024
+ 13:07:01 +0000
+Message-ID: <8e3dfc15-f609-4839-85c7-1cc8cefd7acc@amd.com>
+Date: Mon, 3 Jun 2024 08:06:56 -0500
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v7 1/3] efi/x86: Fix EFI memory map corruption with kexec
-Message-ID: <20240603085654.GBZl2FVjPd-gagt-UA@fat_crate.local>
+Content-Language: en-US
+To: Borislav Petkov <bp@alien8.de>, Mike Rapoport <rppt@kernel.org>
+Cc: tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+ x86@kernel.org, rafael@kernel.org, hpa@zytor.com, peterz@infradead.org,
+ adrian.hunter@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com,
+ jun.nakajima@intel.com, rick.p.edgecombe@intel.com, thomas.lendacky@amd.com,
+ michael.roth@amd.com, seanjc@google.com, kai.huang@intel.com,
+ bhe@redhat.com, kirill.shutemov@linux.intel.com, bdas@redhat.com,
+ vkuznets@redhat.com, dionnaglaze@google.com, anisinha@redhat.com,
+ jroedel@suse.de, ardb@kernel.org, kexec@lists.infradead.org,
+ linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
 References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
  <cover.1717111180.git.ashish.kalra@amd.com>
  <f4be03b8488665f56a1e5c6e6459f447352dfcf5.1717111180.git.ashish.kalra@amd.com>
+ <20240603085654.GBZl2FVjPd-gagt-UA@fat_crate.local>
+From: "Kalra, Ashish" <ashish.kalra@amd.com>
+In-Reply-To: <20240603085654.GBZl2FVjPd-gagt-UA@fat_crate.local>
+X-ClientProxiedBy: DM6PR07CA0057.namprd07.prod.outlook.com
+ (2603:10b6:5:74::34) To SN6PR12MB2767.namprd12.prod.outlook.com
+ (2603:10b6:805:75::23)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <f4be03b8488665f56a1e5c6e6459f447352dfcf5.1717111180.git.ashish.kalra@amd.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN6PR12MB2767:EE_|SJ2PR12MB9161:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7de18f8e-e8db-4b14-d3ea-08dc83ce0e84
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|376005|7416005|366007;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?VnRoTzJDMWdCUzA2d3FxaE43VzNjZjhlYlh5bHNOUllPaXFEYTVuWFhsbWg4?=
+ =?utf-8?B?Z0VGS2tERk94c2VmczdrMlpydmFxb3A2VFMyN1htMW5paU41SHNKRTEzQzc0?=
+ =?utf-8?B?cjI2M3ZSNU85THFvdXEvcWljL0V5N05UUGRuVzdndVBzK2VJazNWd2t0ZmZ1?=
+ =?utf-8?B?Wk1LM0dDVi94QmhZWm5pKzRLVDdnNVpUVVZIdkJkVjdlL0ltc1VYZFpNbzVu?=
+ =?utf-8?B?L0FJcVA4WFljN0FsZVFydUdENWg3R0sxMDcxOXo5dUxRb0x0TFl5M3pzUmNh?=
+ =?utf-8?B?eHUwV2d3ZzBHNlBMVUw1L0JiUmoxRTB5WnFhMjNHanNlOTJzLzNBSDR1VTkz?=
+ =?utf-8?B?VkZaVnMxWkFOdXBWVFJxR25XOHBWZG9CVzhBeDVkRjR6K01oZ0xocWE5MFdi?=
+ =?utf-8?B?UVRIZTRDbVE2M1l1a1EvbC9Ua0Y4WTc2WVhBb1dnSWowMXpqTDkrMHUyQ2dv?=
+ =?utf-8?B?ZmxtYWhhOElvdmk2MmQ2NTBHWEZiMU96bVJvZXl6aXFXaW5HTytvNisyUVQ5?=
+ =?utf-8?B?Q25CRmtnalJ5Sy9Yb25OR0YrWUFpQXF2Wk5tZVZqdlRYMkd0aU1ET0c4VG9m?=
+ =?utf-8?B?ZldLSmVTc2lHUG9PU2NuYUtuQ0dLaEdXVDZmYXJkZFlzNVkzN0VFQXRzZWZH?=
+ =?utf-8?B?bmxjVE9zQ0cwam9ubHNZK2VoRnU0aEMyU0Y4c01XZ1lkM25ObmVkSi94T0py?=
+ =?utf-8?B?UHRhNlFubFFVZWhjTHpTWUxoQjFzby9yZlBya2N4S0Z4Vng4ZjM0ZXJkOW9S?=
+ =?utf-8?B?RUZqWXkrODd2OGlNRWFaODRDVkVRVkhvdkZqQ0ZKT3VUOHQ1cHM2RGJCU2Jr?=
+ =?utf-8?B?SUo3OVUxdlVxNU9IZGpxNVFkRUgyNzZ2Y3lnTlJYVUFRVWdNUGVQZWNWdytw?=
+ =?utf-8?B?L3J3UUhsWm45TjQrc05sWk1FOUJ0clA3bmtjZTZnKzFGaW1QOG9XQTR0TlBt?=
+ =?utf-8?B?eXRxaE11UnhwWHRTamk0cTdjY1NWUDU3THUrcDRRWTJXTUVXekRidW9uVldB?=
+ =?utf-8?B?cHBPYkI4RDZURUpITlZFWnppY0JCU1NjL1A3Sk9IcEcwLytCdzZFWlIwSUp4?=
+ =?utf-8?B?TFR5R3o2S0xoVzRSQkp5cDA4T0IyeTNhUkRZdWdhaWQrUHZWNmFPSncxdGJ3?=
+ =?utf-8?B?cmR3VmlKNEwwak9JSlFoeEx5bWZWclhNbG9Gb25vYXllQ1YxSVFCOGVpbDM4?=
+ =?utf-8?B?L2pPWWtQbUFSUm91RHZMd2oxYjE0ZlZKeDVFMmdBa0F0WXNmNGZ3NWxqQlNo?=
+ =?utf-8?B?QUNoYUJNdElpWjIxWjBlZVN5dmd2MmRGUXliZ1NqQnhod0R6OUhjS3NOZUtx?=
+ =?utf-8?B?VzVPOXgxbnI3a3BhZHlqYVZZRjdkWlBGTGFYRWNTZlRSUy9ITm8wLzI0YzR4?=
+ =?utf-8?B?L2Q5UFFnNEh1ekJkT1EvQmpPVWQrdnZiZXZIbnNkMkNnR1h6RUl0NGJsOHA3?=
+ =?utf-8?B?TGVlcmx2L2x4eExDZ0M3Rkh0c1U1RldvY3ArQUVMRVhaY1g4TGFzVWpnNW5E?=
+ =?utf-8?B?Y05yR0lvUkVRVThWTzhUVllXTk1xa0UwamIyTHNGNmRjRjdDQ3E3RUtQZGo1?=
+ =?utf-8?B?b1UvUkF5L0hzR0M3OUcrdG1wY09yS3JnUUUwQXJuV0M1aWZLLy8xSmdDVGVw?=
+ =?utf-8?B?Vkpidmk4aEp1ekVFQXFJVzU1UXpMaXFHNFNZeDhSU3Z1aVRFdlo5NHlCaWhD?=
+ =?utf-8?B?SUZTL3lidFVhNXRVREtDM1RqWVdVVlkrbkJvQmtrSWMvclZpUWV6Q1hRPT0=?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2767.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(7416005)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NlFqUFNCNWd5a0JZN2Fnb3poRjlXdzdCVy9ZMmhUeWE1MUZZMjQwN2puWEZE?=
+ =?utf-8?B?aU9pNmI3d1JLb0VWN0hhank2U0wwaVc1NlhCNENFa2tBUEhHS29JTG1QSEFE?=
+ =?utf-8?B?aFRNelJleDl3ZnFuU0xhK1gwazRZT3kwOXhWRjRNdHEvMVNKdG1SNUh0cDhn?=
+ =?utf-8?B?QXFtWTF5cWhzc0t0cE1UeFkrNC8zT1JvamRuSG1WeWVpY2F5eTcwZW0xZXhD?=
+ =?utf-8?B?RytsNjJlVXlYK2w2MVVzeENoeVEzOXhIR245QTJpczlhNEtWS056OGhrdWlq?=
+ =?utf-8?B?SkNtVEZHbmluZE9LZUhCYmZTby9rSXRUdUZxaW9QWnNWM1g3c0xzODQ0TjQw?=
+ =?utf-8?B?VHdUMUE2SXZocllaaXZ0SzF4QWVqSWtuUzNGTjU3Y3ZEY1Iwd0JyOHBiMW9o?=
+ =?utf-8?B?RXJpL1hmWlJZdzV2U3dTTC9SeGRiSkY2VGVKSjc5WTlBeVFIMDhLZ05RU2d2?=
+ =?utf-8?B?L0lwbVRVWTF4K0VtQmVaNXZFSXd6aU1mQnE4cUlWMTR2TG1IbTN3K1lJVnE4?=
+ =?utf-8?B?NFJ3eVFKdGdIWlF4NjFldHc4S0ZDNWpmTTVWZGRkVFF6a2V5dzlHLzc3MDF3?=
+ =?utf-8?B?clk1SThZbGxQbTN2WmFkcStwc0FVaWIvWWxrcnE5TkJ2MUFBTXhHNzhrTWFn?=
+ =?utf-8?B?YW9sT05nSnJZeW4yTmxHYkNsZkFUZTRydHpkbXFYRzlZem83dG5DTHpZZ3Ex?=
+ =?utf-8?B?Z0g2czE0NVQyVnFOUkFyVDR1aGFXM1dnbkhJWHA5SXh2Ylk5bGhicGx2VWFN?=
+ =?utf-8?B?YlY4TmIxbEhkbkJxL25FdWxyK2wwZUZzVTJyelc0TTJYRjNzc3VXRWdDRXRG?=
+ =?utf-8?B?aXpoaVJockR0WXI3cHFoa0d1M0hrUFpOS2k0WjBBOHViL2kxbGpUTXlvTFRq?=
+ =?utf-8?B?MkRyREVtRGtYM1I1WWpaaCtnVE9UMjlySTV6UEJFOE5YMU5aL1NKMWhucmtY?=
+ =?utf-8?B?UWlLVlZaVWNKUmhiR2M5NDBJMmNBelI0VUVIdm8wMCtjYk9kMTV0RElFTUYx?=
+ =?utf-8?B?ZytiR3FnTTNEVXk0ekd2L0lwd2lRUWdNTDFVWlFCQnRDRmUvUWhZVHhuOWVX?=
+ =?utf-8?B?TWQ3cE9ERVFPalU5RlhYRytvcm5OajJFaHBXR0dvcU81SXo3Y1ZaM2dNbWtt?=
+ =?utf-8?B?UUtMUDlvN2Q4VFhjSVpwQ1VpcGE1SHJUMzdEQ0RHaGVuQTQyNXIwbVFRcmlv?=
+ =?utf-8?B?Ry9RRUhEeFJSeGh3RG0wU0ZiMG0ycWZwSkM2dDhOR3E2SzUza0pWM25YdDh3?=
+ =?utf-8?B?OGMwVDVjaFVrRFFuVzFhcG5PY2hQQ3RjMzFTb3Awc2NpWHVFUzFucnFEVUpl?=
+ =?utf-8?B?Y01XS3FsbERUY2RPMEdWQUFwK3hTQ0lWdHBhcmVtSXVtZFRxcmIvVVY1NjFp?=
+ =?utf-8?B?WHViaXl3OHBnelJyeDBVaG5zY1NJNUpaL2o1azNSWjRqVlgvY3NVUm9VMlhU?=
+ =?utf-8?B?a2N2a2pIYWxsZ3RZaVZSSWdIOTRWSlE3QldpY0FCQkkyaXFSUmJjZk9aelpq?=
+ =?utf-8?B?SElnWU1pSTBObVdTSGxJTm1Pa3R0b3QyOGIyUXBHemViMjk4M3Y2ZVNtY3JH?=
+ =?utf-8?B?QVZUMStCMnRtRTVmb1dRNFpuWXBQMmNOWkw1dDl6WEZwTkg3eTJrZVNNMTFV?=
+ =?utf-8?B?bUhCdk1IWmowYWRvQmpUS3QrUTRSVWpSUHRqNW8zdk1aOSthWXZreGV2TzBu?=
+ =?utf-8?B?alI5U2haL3ZuaVpnL0d4dnlpWi9FaHhWZXVmQnRVbGF4QXl5bWY1LzFnT3Na?=
+ =?utf-8?B?NmU3MlpyQmJIWmZ5TmxpM1FoUGZSN21BMHFFc09tajhnVXEvOFMyZHBvT1BE?=
+ =?utf-8?B?bnNwUGhObG41RlB1bVFFQ0Nqci91WjgvbnRleVcwN25HRjNQRmVEcUVoeDds?=
+ =?utf-8?B?TW1uL0ZhQXJ0T20yTHBlcnZmeGE3T2hwcytHNlpKeDlGc2V1SkROdFlkV1Na?=
+ =?utf-8?B?WWZDcG5EU2hkN2hTRGdMZkI4MzZMMmtTdmxiRTRrak1KTWpXYkJlc3B0L0V0?=
+ =?utf-8?B?MkZwTm1LTGxNQTZmTmlyZHdETUEvYzFia1B4dkM3WEZ0TkUxL3FhdXV2dzBs?=
+ =?utf-8?B?dXNlSVFZK3ZGN2ZEM3NhMWlTVGxkU1Y3NmZ2K2lTSXVObnc2T0JtVWE1a0Zz?=
+ =?utf-8?Q?HgIsAtWPrmj96SPAUtp7cMyqN?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7de18f8e-e8db-4b14-d3ea-08dc83ce0e84
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2767.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2024 13:07:01.1599
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CaOIGH8srzmzEn8UcX3eNYrL2S4y9sk/v5hFRfcLeHCpJnaX5KaCwcS071N++V4yA6BdzCOyWY+njREDapCYiQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9161
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240603_015734_770972_AF660C50 
-X-CRM114-Status: GOOD (  14.58  )
+X-CRM114-CacheID: sfid-20240603_062226_574063_4F0DC74C 
+X-CRM114-Status: GOOD (  10.46  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,94 +175,50 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, May 30, 2024 at 11:36:55PM +0000, Ashish Kalra wrote:
-> From: Ashish Kalra <ashish.kalra@amd.com>
-> 
-> With SNP guest kexec observe the following efi memmap corruption :
-> 
-> [    0.000000] efi: EFI v2.7 by EDK II
-> [    0.000000] efi: SMBIOS=0x7e33f000 SMBIOS 3.0=0x7e33d000 ACPI=0x7e57e000 ACPI 2.0=0x7e57e014 MEMATTR=0x7cc3c018 Unaccepted=0x7c09e018
-> [    0.000000] efi: [Firmware Bug]: Invalid EFI memory map entries:
-> [    0.000000] efi: mem03: [type=269370880|attr=0x0e42100e42180e41] range=[0x0486200e41038c18-0x200e898a0eee713ac17] (invalid)
-> [    0.000000] efi: mem04: [type=12336|attr=0x0e410686300e4105] range=[0x100e420000000176-0x8c290f26248d200e175] (invalid)
-> [    0.000000] efi: mem06: [type=1124304408|attr=0x000030b400000028] range=[0x0e51300e45280e77-0xb44ed2142f460c1e76] (invalid)
-> [    0.000000] efi: mem08: [type=68|attr=0x300e540583280e41] range=[0x0000011affff3cd8-0x486200e54b38c0bcd7] (invalid)
-> [    0.000000] efi: mem10: [type=1107529240|attr=0x0e42280e41300e41] range=[0x300e41058c280e42-0x38010ae54c5c328ee41] (invalid)
-> [    0.000000] efi: mem11: [type=189335566|attr=0x048d200e42038e18] range=[0x0000318c00000048-0xe42029228ce4200047] (invalid)
-> [    0.000000] efi: mem12: [type=239142534|attr=0x0000002400000b4b] range=[0x0e41380e0a7d700e-0x80f26238f22bfe500d] (invalid)
-> [    0.000000] efi: mem14: [type=239207055|attr=0x0e41300e43380e0a] range=[0x8c280e42048d200e-0xc70b028f2f27cc0a00d] (invalid)
-> [    0.000000] efi: mem15: [type=239210510|attr=0x00080e660b47080e] range=[0x0000324c0000001c-0xa78028634ce490001b] (invalid)
-> [    0.000000] efi: mem16: [type=4294848528|attr=0x0000329400000014] range=[0x0e410286100e4100-0x80f252036a218f20ff] (invalid)
-> [    0.000000] efi: mem19: [type=2250772033|attr=0x42180e42200e4328] range=[0x41280e0ab9020683-0xe0e538c28b39e62682] (invalid)
-> [    0.000000] efi: mem20: [type=16|   |  |  |  |  |  |  |  |  |   |WB|  |WC|  ] range=[0x00000008ffff4438-0xffff44340090333c437] (invalid)
-> [    0.000000] efi: mem22: [Reserved    |attr=0x000000c1ffff4420] range=[0xffff442400003398-0x1033a04240003f397] (invalid)
-> [    0.000000] efi: mem23: [type=1141080856|attr=0x080e41100e43180e] range=[0x280e66300e4b280e-0x440dc5ee7141f4c080d] (invalid)
-> [    0.000000] efi: mem25: [Reserved    |attr=0x0000000affff44a0] range=[0xffff44a400003428-0x1034304a400013427] (invalid)
-> [    0.000000] efi: mem28: [type=16|   |  |  |  |  |  |  |  |  |   |WB|  |WC|  ] range=[0x0000000affff4488-0xffff448400b034bc487] (invalid)
-> [    0.000000] efi: mem30: [Reserved    |attr=0x0000000affff4470] range=[0xffff447400003518-0x10352047400013517] (invalid)
-> [    0.000000] efi: mem33: [type=16|   |  |  |  |  |  |  |  |  |   |WB|  |WC|  ] range=[0x0000000affff4458-0xffff445400b035ac457] (invalid)
-> [    0.000000] efi: mem35: [type=269372416|attr=0x0e42100e42180e41] range=[0x0486200e44038c18-0x200e8b8a0eee823ac17] (invalid)
-> [    0.000000] efi: mem37: [type=2351435330|attr=0x0e42100e42180e42] range=[0x470783380e410686-0x2002b2a041c2141e685] (invalid)
-> [    0.000000] efi: mem38: [type=1093668417|attr=0x100e420000000270] range=[0x42100e42180e4220-0xfff366a4e421b78c21f] (invalid)
-> [    0.000000] efi: mem39: [type=76357646|attr=0x180e42200e42280e] range=[0x0e410686300e4105-0x4130f251a0710ae5104] (invalid)
-> [    0.000000] efi: mem40: [type=940444268|attr=0x0e42200e42280e41] range=[0x180e42200e42280e-0x300fc71c300b4f2480d] (invalid)
-> [    0.000000] efi: mem41: [MMIO        |attr=0x8c280e42048d200e] range=[0xffff479400003728-0x42138e0c87820292727] (invalid)
-> [    0.000000] efi: mem42: [type=1191674680|attr=0x0000004c0000000b] range=[0x300e41380e0a0246-0x470b0f26238f22b8245] (invalid)
-> [    0.000000] efi: mem43: [type=2010|attr=0x0301f00e4d078338] range=[0x45038e180e42028f-0xe4556bf118f282528e] (invalid)
-> [    0.000000] efi: mem44: [type=1109921345|attr=0x300e44000000006c] range=[0x44080e42100e4218-0xfff39254e42138ac217] (invalid)
-> ...
-> 
-> This EFI memap corruption is happening with efi_arch_mem_reserve() invocation in case of kexec boot.
-> 
-> ( efi_arch_mem_reserve() is invoked with the following call-stack: )
-> 
-> [    0.310010]  efi_arch_mem_reserve+0xb1/0x220
-> [    0.311382]  efi_mem_reserve+0x36/0x60
-> [    0.311973]  efi_bgrt_init+0x17d/0x1a0
-> [    0.313265]  acpi_parse_bgrt+0x12/0x20
-> [    0.313858]  acpi_table_parse+0x77/0xd0
-> [    0.314463]  acpi_boot_init+0x362/0x630
-> [    0.315069]  setup_arch+0xa88/0xf80
-> [    0.315629]  start_kernel+0x68/0xa90
-> [    0.316194]  x86_64_start_reservations+0x1c/0x30
-> [    0.316921]  x86_64_start_kernel+0xbf/0x110
-> [    0.317582]  common_startup_64+0x13e/0x141
-> 
-> efi_arch_mem_reserve() calls efi_memmap_alloc() to allocate memory for
-> EFI memory map and due to early allocation it uses memblock allocation.
-> 
-> Later during boot, efi_enter_virtual_mode() calls kexec_enter_virtual_mode()
-> in case of a kexec-ed kernel boot.
-> 
-> This function kexec_enter_virtual_mode() installs the new EFI memory map by
-> calling efi_memmap_init_late() which remaps the efi_memmap physically allocated
-> in efi_arch_mem_reserve(), but this remapping is still using memblock allocation.
-> 
-> Subsequently, when memblock is freed later in boot flow, this remapped
-> efi_memmap will have random corruption (similar to a use-after-free scenario).
-> 
-> The corrupted EFI memory map is then passed to the next kexec-ed kernel
-> which causes a panic when trying to use the corrupted EFI memory map.
+On 6/3/2024 3:56 AM, Borislav Petkov wrote
 
-This sounds fishy: memblock allocated memory is not freed later in the
-boot - it remains reserved. Only free memory is freed from memblock to
-the buddy allocator.
+>> EFI memory map and due to early allocation it uses memblock allocation.
+>>
+>> Later during boot, efi_enter_virtual_mode() calls kexec_enter_virtual_mode()
+>> in case of a kexec-ed kernel boot.
+>>
+>> This function kexec_enter_virtual_mode() installs the new EFI memory map by
+>> calling efi_memmap_init_late() which remaps the efi_memmap physically allocated
+>> in efi_arch_mem_reserve(), but this remapping is still using memblock allocation.
+>>
+>> Subsequently, when memblock is freed later in boot flow, this remapped
+>> efi_memmap will have random corruption (similar to a use-after-free scenario).
+>>
+>> The corrupted EFI memory map is then passed to the next kexec-ed kernel
+>> which causes a panic when trying to use the corrupted EFI memory map.
+> This sounds fishy: memblock allocated memory is not freed later in the
+> boot - it remains reserved. Only free memory is freed from memblock to
+> the buddy allocator.
+>
+> Or is the problem that memblock-allocated memory cannot be memremapped
+> because *raisins*?
 
-Or is the problem that memblock-allocated memory cannot be memremapped
-because *raisins*?
+This is what seems to be happening:
 
-Mike?
+efi_arch_mem_reserve() calls efi_memmap_alloc() to allocate memory for
+EFI memory map and due to early allocation it uses memblock allocation.
 
--- 
-Regards/Gruss,
-    Boris.
+And later efi_enter_virtual_mode() calls kexec_enter_virtual_mode()
+in case of a kexec-ed kernel boot.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+This function kexec_enter_virtual_mode() installs the new EFI memory map by
+calling efi_memmap_init_late() which does memremap() on memblock-allocated memory.
+
+Thanks, Ashish
+
+>
+> Mike?
+>
 
 _______________________________________________
 kexec mailing list
