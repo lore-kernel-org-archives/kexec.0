@@ -4,92 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 43F3DC25B76
-	for <kexec@archiver.kernel.org>; Mon,  3 Jun 2024 08:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id DB8DEC25B75
+	for <kexec@archiver.kernel.org>; Mon,  3 Jun 2024 08:57:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=QHYLlKSRQToKn603G/4FlX+fnXNmsJpn0u53er+/0Ks=; b=tYFxa26y/LiYZh
-	ePKqsWEbK/37UBbcq9Bg1khGKMQO1ui/raykEK8Kf4C1ABiYJ2O3dIFyat2zrsoXy4DgWGNpmUf01
-	KglzPwsUgp6apFhA7bCziCYHJvAwLXZ5rreprO8wsZbhvQorjxMZ5gUODzvtdyT6I/GdholqBvu4k
-	jfuDg3agDznG8Et1A/Gce5XzKs72ilptIQefsZ1JGaNiVGhE4Zp0ano47FeSyM96vCsC9wDb1LZLY
-	bWx4nOGMbGB2+io6ZTByFhPo3UcJZVb6v/fgj69MCskfl701CvlZcdDDNvSAx7hNe9tCCQwdqLVyA
-	ZjAJHHs/hEOdgooE+WVA==;
+	List-Owner; bh=b/LXVvJdrST2LC5D2CLa/ykM5pISteHzBd9lO5qHR5I=; b=oBQ+AQrlpgdjzH
+	cFmxn4/gMGP48VoQAI50Y/jUWfWAlm0O2D+G9oXGSABgHVQmB6pOVX4piQvBcNFH0m7ppX2PLbltY
+	bYkZH6JYZ1P0QqEAfp1iOHlG3dk0iQEQ4IFbR9GTIjfEBAfrL5Yz+bSt3fPeYB72SoGPBEztCivfV
+	GbIyfII+b5RfKNLFoXYHLgg7OjVpJITmuP2Ej4+N+dV1WvItN3KsvVVchdQxwZ9bERrPCvqzIgyYO
+	Vdo2kyiZWGH2nSP2L6Uw8fXsP7SnQpQfgT3eplvxzovyjqeAT3uqyIXUWuhTe3sqkP376D0VUjZb8
+	u8FlzzHi4trhIhEluc0w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sE3Ee-0000000G4dZ-3kZr;
-	Mon, 03 Jun 2024 08:40:08 +0000
-Received: from mail.alien8.de ([2a01:4f9:3051:3f93::2])
+	id 1sE3Va-0000000G7FN-1Tw1;
+	Mon, 03 Jun 2024 08:57:38 +0000
+Received: from mail.alien8.de ([65.109.113.108])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sE3Eb-0000000G4cd-1LYm
+	id 1sE3VW-0000000G7Ej-2L3r
 	for kexec@lists.infradead.org;
-	Mon, 03 Jun 2024 08:40:07 +0000
+	Mon, 03 Jun 2024 08:57:36 +0000
 Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id BCCDB40E0176;
-	Mon,  3 Jun 2024 08:40:03 +0000 (UTC)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id B12D740E016C;
+	Mon,  3 Jun 2024 08:57:32 +0000 (UTC)
 X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
 Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
 	header.d=alien8.de
 Received: from mail.alien8.de ([127.0.0.1])
 	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id NaOQH7nJ-Lsa; Mon,  3 Jun 2024 08:40:00 +0000 (UTC)
+	with ESMTP id zGAmA0O46_9c; Mon,  3 Jun 2024 08:57:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1717403999; bh=EOQSXaPODkDHM7VjIgumTPn4fUWhW0OISBcc5f5uwf8=;
+	t=1717405048; bh=GyBQ5SXnE1RzW/N5I1Wn7zbXD9oRCwC1eq8lbd2HzJc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hlyJZUhOM5L/0fr7gI4M49zSnf9pySr1xNLlxUn5xkCo2v/KR1abmWweu4eKySSOR
-	 Ddkrz51/6ck9sJKXv2KJ82JJM5E3rbokzSoAiN9zFc13Segfnjtm7uJ0UzCBpRPLZX
-	 XvO8FDnIXMuqtOF9YoUIPk4jpJG3sYTqai0fW7GmmggZ3SQYtMMTg5Afxc03yCpdcM
-	 /hWCWvzkpT0Emis2MSqsDf14Qc6eRiuikyEF71hYPfJgYvtJ5zc+/ngnAthIakGohD
-	 vfTsbSzCohMb1reYEJj4NGFvo2R9jeN+92FQ/Vmmd3fdq9GhksZDFP58zTI6rqdk8K
-	 UmRgn/KUJlsPlGo6JnkuLY+aEIFb2vKNg9vcoIP+fb/wEY2ZDYiVjIRKDQ2S+pCGVH
-	 tZpqg+iaLWdhSwagcJV3lWZb9waRWJtkWmCxz2HYnLIrOOgjkg8EB+BegCXdPlWycG
-	 ejxKyLFAeLN2YuKpFyB+MnNSZfSDAhaBT+k6V+TZmX9G8ZUOHWSCSKQAS07oqIBcUd
-	 7bJmBJVETY8dRat62n1ZSUo65yvHlI2WVl8AId0w0kbsrekIItlWnoToHh3nKvTjRP
-	 1GI55x8Yyi3iq4dQtwZREUu57fQHyR6bz3BKIYNlrAXwRoqv1ZWjFw12xQ3zN7KuIA
-	 H6x3+IwzZ7iJGr6GHScdaDsE=
+	b=OSF1zqIMZVCcb5JWqcBkvdQBKDcF8chNTLMxdhEAiOY4ySKNJNLQ9RqqlLVP3rB1Y
+	 i73YmyTaods7SbGN+8Bm6CmqaY8k0JhbTkzRM7uGXPelTEnebJs1QuKxyQHN+6W9rf
+	 NBjYJbIfcUVjLy86usbrP/7AoSHnm1f0La1hSmGkd+RXLe6RJ92zZrFlOef61GtoNc
+	 Rw00r9Kl//pRs/+oe6g2pNUMpvhNdQpScx+te13P3HxaBNCivgATJXF0IH0P8lSQlh
+	 pDZo+vSO4M0rJ+2xAGuyqXfnqrNQvq5guxYmFxB2ySRF2d1Jr0vi4788leWC1oD9Kg
+	 oKc32uNDI5BrGLt5o0ODqf/UIpLl+KFrqVc5B2tjgsz46TqyJMgem2jLH2LXIGLd4z
+	 Q4KoFIZwba1FlH+oQMPxkOMLJcIIwzVAtx4vHMgbMutzMdmmplybQRlrUG3zGJEQXV
+	 oab/aNxmcuwC8kXIm4AldDB7joUD4dRARB+JO4mVhhGXa8jUf6uaNmSt+1g6G28nr6
+	 7xC/76tW/mgC6YtHRGYTPsLiuBapXQPl+fE4o0YaOiuZq534g67uiSonOn8rP9FkTH
+	 6lEgHJBpg/AJPT6Y9Z/Lu11qJpu2fnKLhC72PuljWLNFnNL/ZvJZqu5weQseS7JCSD
+	 ddjvZWAoA//i0aWENHpI5/xA=
 Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
 	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9F37A40E0081;
-	Mon,  3 Jun 2024 08:39:32 +0000 (UTC)
-Date: Mon, 3 Jun 2024 10:39:30 +0200
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B210A40E00C9;
+	Mon,  3 Jun 2024 08:56:59 +0000 (UTC)
+Date: Mon, 3 Jun 2024 10:56:54 +0200
 From: Borislav Petkov <bp@alien8.de>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Elena Reshetova <elena.reshetova@intel.com>,
-	Jun Nakajima <jun.nakajima@intel.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	"Kalra, Ashish" <ashish.kalra@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	"Huang, Kai" <kai.huang@intel.com>,
-	Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>, kexec@lists.infradead.org,
-	linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Tao Liu <ltao@redhat.com>
-Subject: Re: [PATCHv11 18/19] x86/acpi: Add support for CPU offlining for
- ACPI MADT wakeup method
-Message-ID: <20240603083930.GNZl2BQk2lQ8WtcE4o@fat_crate.local>
+To: Ashish Kalra <Ashish.Kalra@amd.com>, Mike Rapoport <rppt@kernel.org>
+Cc: tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+	x86@kernel.org, rafael@kernel.org, hpa@zytor.com,
+	peterz@infradead.org, adrian.hunter@intel.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com, jun.nakajima@intel.com,
+	rick.p.edgecombe@intel.com, thomas.lendacky@amd.com,
+	michael.roth@amd.com, seanjc@google.com, kai.huang@intel.com,
+	bhe@redhat.com, kirill.shutemov@linux.intel.com, bdas@redhat.com,
+	vkuznets@redhat.com, dionnaglaze@google.com, anisinha@redhat.com,
+	jroedel@suse.de, ardb@kernel.org, kexec@lists.infradead.org,
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 1/3] efi/x86: Fix EFI memory map corruption with kexec
+Message-ID: <20240603085654.GBZl2FVjPd-gagt-UA@fat_crate.local>
 References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
- <20240528095522.509667-19-kirill.shutemov@linux.intel.com>
+ <cover.1717111180.git.ashish.kalra@amd.com>
+ <f4be03b8488665f56a1e5c6e6459f447352dfcf5.1717111180.git.ashish.kalra@amd.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20240528095522.509667-19-kirill.shutemov@linux.intel.com>
+In-Reply-To: <f4be03b8488665f56a1e5c6e6459f447352dfcf5.1717111180.git.ashish.kalra@amd.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240603_014005_842875_758B9509 
-X-CRM114-Status: GOOD (  20.12  )
+X-CRM114-CacheID: sfid-20240603_015734_770972_AF660C50 
+X-CRM114-Status: GOOD (  14.58  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -106,90 +96,83 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, May 28, 2024 at 12:55:21PM +0300, Kirill A. Shutemov wrote:
-> MADT Multiprocessor Wakeup structure version 1 brings support of CPU
-
-s/of /for /
-
-> offlining: BIOS provides a reset vector where the CPU has to jump to
-> for offlining itself. The new TEST mailbox command can be used to test
-> whether the CPU offlined itself which means the BIOS has control over
-> the CPU and can online it again via the ACPI MADT wakeup method.
+On Thu, May 30, 2024 at 11:36:55PM +0000, Ashish Kalra wrote:
+> From: Ashish Kalra <ashish.kalra@amd.com>
 > 
-> Add CPU offling support for the ACPI MADT wakeup method by implementing
-
-Unknown word [offling] in commit message.
-
-Please introduce a spellchecker into your patch creation workflow.
-
-> custom cpu_die(), play_dead() and stop_this_cpu() SMP operations.
+> With SNP guest kexec observe the following efi memmap corruption :
 > 
-> CPU offlining makes is possible to hand over secondary CPUs over kexec,
+> [    0.000000] efi: EFI v2.7 by EDK II
+> [    0.000000] efi: SMBIOS=0x7e33f000 SMBIOS 3.0=0x7e33d000 ACPI=0x7e57e000 ACPI 2.0=0x7e57e014 MEMATTR=0x7cc3c018 Unaccepted=0x7c09e018
+> [    0.000000] efi: [Firmware Bug]: Invalid EFI memory map entries:
+> [    0.000000] efi: mem03: [type=269370880|attr=0x0e42100e42180e41] range=[0x0486200e41038c18-0x200e898a0eee713ac17] (invalid)
+> [    0.000000] efi: mem04: [type=12336|attr=0x0e410686300e4105] range=[0x100e420000000176-0x8c290f26248d200e175] (invalid)
+> [    0.000000] efi: mem06: [type=1124304408|attr=0x000030b400000028] range=[0x0e51300e45280e77-0xb44ed2142f460c1e76] (invalid)
+> [    0.000000] efi: mem08: [type=68|attr=0x300e540583280e41] range=[0x0000011affff3cd8-0x486200e54b38c0bcd7] (invalid)
+> [    0.000000] efi: mem10: [type=1107529240|attr=0x0e42280e41300e41] range=[0x300e41058c280e42-0x38010ae54c5c328ee41] (invalid)
+> [    0.000000] efi: mem11: [type=189335566|attr=0x048d200e42038e18] range=[0x0000318c00000048-0xe42029228ce4200047] (invalid)
+> [    0.000000] efi: mem12: [type=239142534|attr=0x0000002400000b4b] range=[0x0e41380e0a7d700e-0x80f26238f22bfe500d] (invalid)
+> [    0.000000] efi: mem14: [type=239207055|attr=0x0e41300e43380e0a] range=[0x8c280e42048d200e-0xc70b028f2f27cc0a00d] (invalid)
+> [    0.000000] efi: mem15: [type=239210510|attr=0x00080e660b47080e] range=[0x0000324c0000001c-0xa78028634ce490001b] (invalid)
+> [    0.000000] efi: mem16: [type=4294848528|attr=0x0000329400000014] range=[0x0e410286100e4100-0x80f252036a218f20ff] (invalid)
+> [    0.000000] efi: mem19: [type=2250772033|attr=0x42180e42200e4328] range=[0x41280e0ab9020683-0xe0e538c28b39e62682] (invalid)
+> [    0.000000] efi: mem20: [type=16|   |  |  |  |  |  |  |  |  |   |WB|  |WC|  ] range=[0x00000008ffff4438-0xffff44340090333c437] (invalid)
+> [    0.000000] efi: mem22: [Reserved    |attr=0x000000c1ffff4420] range=[0xffff442400003398-0x1033a04240003f397] (invalid)
+> [    0.000000] efi: mem23: [type=1141080856|attr=0x080e41100e43180e] range=[0x280e66300e4b280e-0x440dc5ee7141f4c080d] (invalid)
+> [    0.000000] efi: mem25: [Reserved    |attr=0x0000000affff44a0] range=[0xffff44a400003428-0x1034304a400013427] (invalid)
+> [    0.000000] efi: mem28: [type=16|   |  |  |  |  |  |  |  |  |   |WB|  |WC|  ] range=[0x0000000affff4488-0xffff448400b034bc487] (invalid)
+> [    0.000000] efi: mem30: [Reserved    |attr=0x0000000affff4470] range=[0xffff447400003518-0x10352047400013517] (invalid)
+> [    0.000000] efi: mem33: [type=16|   |  |  |  |  |  |  |  |  |   |WB|  |WC|  ] range=[0x0000000affff4458-0xffff445400b035ac457] (invalid)
+> [    0.000000] efi: mem35: [type=269372416|attr=0x0e42100e42180e41] range=[0x0486200e44038c18-0x200e8b8a0eee823ac17] (invalid)
+> [    0.000000] efi: mem37: [type=2351435330|attr=0x0e42100e42180e42] range=[0x470783380e410686-0x2002b2a041c2141e685] (invalid)
+> [    0.000000] efi: mem38: [type=1093668417|attr=0x100e420000000270] range=[0x42100e42180e4220-0xfff366a4e421b78c21f] (invalid)
+> [    0.000000] efi: mem39: [type=76357646|attr=0x180e42200e42280e] range=[0x0e410686300e4105-0x4130f251a0710ae5104] (invalid)
+> [    0.000000] efi: mem40: [type=940444268|attr=0x0e42200e42280e41] range=[0x180e42200e42280e-0x300fc71c300b4f2480d] (invalid)
+> [    0.000000] efi: mem41: [MMIO        |attr=0x8c280e42048d200e] range=[0xffff479400003728-0x42138e0c87820292727] (invalid)
+> [    0.000000] efi: mem42: [type=1191674680|attr=0x0000004c0000000b] range=[0x300e41380e0a0246-0x470b0f26238f22b8245] (invalid)
+> [    0.000000] efi: mem43: [type=2010|attr=0x0301f00e4d078338] range=[0x45038e180e42028f-0xe4556bf118f282528e] (invalid)
+> [    0.000000] efi: mem44: [type=1109921345|attr=0x300e44000000006c] range=[0x44080e42100e4218-0xfff39254e42138ac217] (invalid)
+> ...
+> 
+> This EFI memap corruption is happening with efi_arch_mem_reserve() invocation in case of kexec boot.
+> 
+> ( efi_arch_mem_reserve() is invoked with the following call-stack: )
+> 
+> [    0.310010]  efi_arch_mem_reserve+0xb1/0x220
+> [    0.311382]  efi_mem_reserve+0x36/0x60
+> [    0.311973]  efi_bgrt_init+0x17d/0x1a0
+> [    0.313265]  acpi_parse_bgrt+0x12/0x20
+> [    0.313858]  acpi_table_parse+0x77/0xd0
+> [    0.314463]  acpi_boot_init+0x362/0x630
+> [    0.315069]  setup_arch+0xa88/0xf80
+> [    0.315629]  start_kernel+0x68/0xa90
+> [    0.316194]  x86_64_start_reservations+0x1c/0x30
+> [    0.316921]  x86_64_start_kernel+0xbf/0x110
+> [    0.317582]  common_startup_64+0x13e/0x141
+> 
+> efi_arch_mem_reserve() calls efi_memmap_alloc() to allocate memory for
+> EFI memory map and due to early allocation it uses memblock allocation.
+> 
+> Later during boot, efi_enter_virtual_mode() calls kexec_enter_virtual_mode()
+> in case of a kexec-ed kernel boot.
+> 
+> This function kexec_enter_virtual_mode() installs the new EFI memory map by
+> calling efi_memmap_init_late() which remaps the efi_memmap physically allocated
+> in efi_arch_mem_reserve(), but this remapping is still using memblock allocation.
+> 
+> Subsequently, when memblock is freed later in boot flow, this remapped
+> efi_memmap will have random corruption (similar to a use-after-free scenario).
+> 
+> The corrupted EFI memory map is then passed to the next kexec-ed kernel
+> which causes a panic when trying to use the corrupted EFI memory map.
 
-s/is /it /
+This sounds fishy: memblock allocated memory is not freed later in the
+boot - it remains reserved. Only free memory is freed from memblock to
+the buddy allocator.
 
-> not limiting the second kernel to a single CPU.
+Or is the problem that memblock-allocated memory cannot be memremapped
+because *raisins*?
 
-...
-
-> +/*
-> + * Make sure asm_acpi_mp_play_dead() is present in the identity mapping at
-> + * the same place as in the kernel page tables. asm_acpi_mp_play_dead() switches
-> + * to the identity mapping and the function has be present at the same spot in
-> + * the virtual address space before and after switching page tables.
-> + */
-> +static int __init init_transition_pgtable(pgd_t *pgd)
-
-This looks like a generic helper which should be in set_memory.c. And
-looking at that file, there's populate_pgd() which does pretty much the
-same thing, if I squint real hard.
-
-Let's tone down the duplication.
-
-> +{
-> +	pgprot_t prot = PAGE_KERNEL_EXEC_NOENC;
-> +	unsigned long vaddr, paddr;
-> +	p4d_t *p4d;
-> +	pud_t *pud;
-> +	pmd_t *pmd;
-> +	pte_t *pte;
-> +
-> +	vaddr = (unsigned long)asm_acpi_mp_play_dead;
-> +	pgd += pgd_index(vaddr);
-> +	if (!pgd_present(*pgd)) {
-> +		p4d = (p4d_t *)alloc_pgt_page(NULL);
-> +		if (!p4d)
-> +			return -ENOMEM;
-> +		set_pgd(pgd, __pgd(__pa(p4d) | _KERNPG_TABLE));
-> +	}
-> +	p4d = p4d_offset(pgd, vaddr);
-> +	if (!p4d_present(*p4d)) {
-> +		pud = (pud_t *)alloc_pgt_page(NULL);
-> +		if (!pud)
-> +			return -ENOMEM;
-> +		set_p4d(p4d, __p4d(__pa(pud) | _KERNPG_TABLE));
-> +	}
-> +	pud = pud_offset(p4d, vaddr);
-> +	if (!pud_present(*pud)) {
-> +		pmd = (pmd_t *)alloc_pgt_page(NULL);
-> +		if (!pmd)
-> +			return -ENOMEM;
-> +		set_pud(pud, __pud(__pa(pmd) | _KERNPG_TABLE));
-> +	}
-> +	pmd = pmd_offset(pud, vaddr);
-> +	if (!pmd_present(*pmd)) {
-> +		pte = (pte_t *)alloc_pgt_page(NULL);
-> +		if (!pte)
-> +			return -ENOMEM;
-> +		set_pmd(pmd, __pmd(__pa(pte) | _KERNPG_TABLE));
-> +	}
-> +	pte = pte_offset_kernel(pmd, vaddr);
-> +
-> +	paddr = __pa(vaddr);
-> +	set_pte(pte, pfn_pte(paddr >> PAGE_SHIFT, prot));
-> +
-> +	return 0;
-> +}
+Mike?
 
 -- 
 Regards/Gruss,
