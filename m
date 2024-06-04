@@ -4,89 +4,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 37EB0C25B78
-	for <kexec@archiver.kernel.org>; Tue,  4 Jun 2024 15:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2C21FC25B78
+	for <kexec@archiver.kernel.org>; Tue,  4 Jun 2024 15:33:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=yaQUNXkmxxyp61UPE2AxOPCfSWOrbjgMeI/6Eq+ko30=; b=Bgj7gA1FowJgO/
-	gPJ+DRTDj4i7/ZQ9qwtlD9OP1Q3giQBWRxRL1AON7QdVaapS/7pEyqmr2Ck2NrxvDxiOczj/lDAuo
-	38Yj7rG9p7FCnhtQIPSR6DKms8M7dAqYeAA2vkkJ5nSjs5eZhy7Q32WIup8jrDDdnTmxm+LPUoDCU
-	+wL1s9klPS5omLnQCAROcQ4+SoepeNK4otFGkAmbPsXzMwQCTdxfpt8EzMY7q8WMi2E6/tF2CuT39
-	5FoI8xh96r4yVQtKDglMxvLhRetdo78KQL90SKlm+dpKiDAOdR4IycNGVomnQc40KGlNNKV2iYDsZ
-	96T/To4wWudUNLEjR3EA==;
+	List-Owner; bh=jTuWKChCESSN40LihVPEc8BSTO46/e6Y4wqlsLkVoDs=; b=H0AHLyAncWWl2G
+	JEntIQXLa7VogmeCzJX7skazJFN0P5/twCXs6Kn+lnw5XcdgICrXd46EjF78jis53OeY6OmvrAls1
+	WdqkaZGuEAiT+paN4TpZDVpoJQ66hkX6qcVr/Rfio+0hcuSzPFBokfN7TALRZtX3aTKUxgoYsukT9
+	AJwjgBTlVTeuEs9QAQXXpemEiVK1sOcA2Y6oQ86HGmmTLX1yvYeydBeG7NpJwlkjWlkQWwI3RWKmL
+	g6Z/CkLPsnklIclPe/2DITiSNgrbbasxA7t4X3WX7J904aKlTLYwqt6UC4Njf48q4ZgVEobPgciBs
+	E6ylqaQ053yNmHa07VIQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sEVyn-00000002td0-1L5x;
-	Tue, 04 Jun 2024 15:21:41 +0000
-Received: from mgamail.intel.com ([192.198.163.19])
+	id 1sEW9j-00000002wSb-2tfH;
+	Tue, 04 Jun 2024 15:32:59 +0000
+Received: from mgamail.intel.com ([192.198.163.17])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sEVyj-00000002tc0-33YS
+	id 1sEW9f-00000002wQN-1T57
 	for kexec@lists.infradead.org;
-	Tue, 04 Jun 2024 15:21:39 +0000
+	Tue, 04 Jun 2024 15:32:57 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717514497; x=1749050497;
+  t=1717515175; x=1749051175;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=E+b2QUNEozOByn7XosVfo22ORgGbyZc8ikuTipiKM4k=;
-  b=VTl0YdhyiN+HE9zGf+8GXVe5e4Fb1sjgnQx6AtCYoEsYvvvucf1HkxDL
-   CgI4NJz2doJT4GkeleOqrddKEHusA2oUuknvhUTa461pMNoTEvMQWDvgV
-   WvhYJmb5/v2aTQw9X1kF61Wl7FK/5YTI35+68OhUdRA9ymNv2CChP30py
-   OHWK7Lgm9mMqHmZkrYWVNY8yka68tZJ5/ti+E+GrXNiL2tnEk6ZkbwDSd
-   f5WJmWgvYO474reXxfZOlrJE5CE92e3x/mAkAj2oHr6yXJssequzszEnL
-   +q5BROyTq7vl8IeWQHqmmNJXBgSB6lBE9dEkD0orT6y+uS+XZ+0WT27e+
+  bh=J3T38p4+VBwHGHp1c1CCtvuA9p7YL8sLSDhZFZphLPY=;
+  b=QbggursMTbp97knEPIsC/2IPrgVGnxZN7xP4+xcMKTlWuRgRlEfaWaje
+   hL6Gyj62rY4p4Ppa6JxnoR3Cinhg3InEb9C9nWtKMrTov7MN9aZPOjmTx
+   L8iMETl6fq+8UwxGx5kNDdUoAOLCLDP/lVyY1hfUjOu6hk2drL5MXZgRJ
+   4Ffy70GB/YfYyeb4uS417txJO7/jB7qKJtNkqReiLCggELGunOKyU5QlM
+   QqZPI5Zts+9B+cd3J6KpjfzX3CgFQEY0jq5/ueFAFCoPIpR9lUq3BdvoL
+   9/Nx7ZVjqQB8+BUOg6wZ0kmTJIeF9/KFmWOiN3SmzO+nPMtwAri1S8C1x
    A==;
-X-CSE-ConnectionGUID: rCZTyqo0RKuRld1AI5oGrg==
-X-CSE-MsgGUID: dG2d/Pp/SOmHyu9ccUZgVg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11093"; a="13876550"
+X-CSE-ConnectionGUID: 10863EQ2RNuaddb0cmCNaA==
+X-CSE-MsgGUID: UtMKjFdcTFyWl7JN69yukA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11093"; a="13950190"
 X-IronPort-AV: E=Sophos;i="6.08,214,1712646000"; 
-   d="scan'208";a="13876550"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 08:21:35 -0700
-X-CSE-ConnectionGUID: 80QFIjp6QEKsJylgelC6zA==
-X-CSE-MsgGUID: hyN/V+NqSJm6vfhx7CCozg==
+   d="scan'208";a="13950190"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 08:32:51 -0700
+X-CSE-ConnectionGUID: oiWsV40YQ3upwnBy4jBHSA==
+X-CSE-MsgGUID: vSlLFQjkSbWE+7x+vrrshQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,214,1712646000"; 
-   d="scan'208";a="37214950"
+   d="scan'208";a="41715766"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa010.jf.intel.com with ESMTP; 04 Jun 2024 08:21:28 -0700
+  by fmviesa005.fm.intel.com with ESMTP; 04 Jun 2024 08:32:46 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id A67F32DC; Tue, 04 Jun 2024 18:21:27 +0300 (EEST)
-Date: Tue, 4 Jun 2024 18:21:27 +0300
+	id 783202DC; Tue, 04 Jun 2024 18:32:44 +0300 (EEST)
+Date: Tue, 4 Jun 2024 18:32:44 +0300
 From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>, 
-	Nikolay Borisov <nik.borisov@suse.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, 
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Elena Reshetova <elena.reshetova@intel.com>, 
-	Jun Nakajima <jun.nakajima@intel.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish" <ashish.kalra@amd.com>, 
-	Sean Christopherson <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>, 
-	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
-	kexec@lists.infradead.org, linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv11 05/19] x86/relocate_kernel: Use named labels for less
- confusion
-Message-ID: <ehttxqgg7zhbgty5m5uxkduj3xf7soonrzfu4rfw7hccqgdydl@afki66pnree5>
-References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
- <20240528095522.509667-6-kirill.shutemov@linux.intel.com>
- <1e1d1aea-7346-4022-9f5f-402d171adfda@suse.com>
- <t3zx4f6ynru7qp4oel4syza2alcuxz7q7hxqgf2lxusgobnsnh@vtnecqrsxci5>
- <748d3b70-60b4-44e0-bd81-9117f1ab699d@zytor.com>
- <20240604091503.GQZl7bF14qTSAjqUhN@fat_crate.local>
+Cc: adrian.hunter@intel.com, ardb@kernel.org, ashish.kalra@amd.com, 
+	bhe@redhat.com, dave.hansen@linux.intel.com, elena.reshetova@intel.com, 
+	haiyangz@microsoft.com, hpa@zytor.com, jun.nakajima@intel.com, kai.huang@intel.com, 
+	kexec@lists.infradead.org, kys@microsoft.com, linux-acpi@vger.kernel.org, 
+	linux-coco@lists.linux.dev, linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	ltao@redhat.com, mingo@redhat.com, peterz@infradead.org, rafael@kernel.org, 
+	rick.p.edgecombe@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com, seanjc@google.com, 
+	tglx@linutronix.de, thomas.lendacky@amd.com, x86@kernel.org
+Subject: Re: [PATCHv11.1 11/19] x86/tdx: Convert shared memory back to
+ private on kexec
+Message-ID: <noym2bqgxqcyhhdzoax7gvdfzhh7rtw7cv236fhzpqh3wqf76e@2jj733skv7y4>
+References: <20240531151442.GMZlnpYkDCRlg1_YS0@fat_crate.local>
+ <20240602142303.3263551-1-kirill.shutemov@linux.intel.com>
+ <20240603083754.GAZl2A4uXvVB5w4l9u@fat_crate.local>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20240604091503.GQZl7bF14qTSAjqUhN@fat_crate.local>
+In-Reply-To: <20240603083754.GAZl2A4uXvVB5w4l9u@fat_crate.local>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240604_082137_821900_E6E1FF95 
-X-CRM114-Status: GOOD (  22.88  )
+X-CRM114-CacheID: sfid-20240604_083255_405832_BFA125C2 
+X-CRM114-Status: GOOD (  13.56  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -103,96 +95,45 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Jun 04, 2024 at 11:15:03AM +0200, Borislav Petkov wrote:
-> On Mon, Jun 03, 2024 at 05:24:00PM -0700, H. Peter Anvin wrote:
-> > Trying one more time; sorry (again) if someone receives this in duplicate.
-> > 
-> > > > > 
-> > > > > diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-> > > > > index 56cab1bb25f5..085eef5c3904 100644
-> > > > > --- a/arch/x86/kernel/relocate_kernel_64.S
-> > > > > +++ b/arch/x86/kernel/relocate_kernel_64.S
-> > > > > @@ -148,9 +148,10 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
-> > > > >    	 */
-> > > > >    	movl	$X86_CR4_PAE, %eax
-> > > > >    	testq	$X86_CR4_LA57, %r13
-> > > > > -	jz	1f
-> > > > > +	jz	.Lno_la57
-> > > > >    	orl	$X86_CR4_LA57, %eax
-> > > > > -1:
-> > > > > +.Lno_la57:
-> > > > > +
-> > > > >    	movq	%rax, %cr4
-> > 
-> > If we are cleaning up this code... the above can simply be:
-> > 
-> > 	andl $(X86_CR4_PAE | X86_CR4_LA54), %r13
-> > 	movq %r13, %cr4
-> > 
-> > %r13 is dead afterwards, and the PAE bit *will* be set in %r13 anyway.
+On Mon, Jun 03, 2024 at 10:37:54AM +0200, Borislav Petkov wrote:
+> On Sun, Jun 02, 2024 at 05:23:03PM +0300, Kirill A. Shutemov wrote:
+> > +			/*
+> > +			 * The only thing one can do at this point on failure
+> > +			 * is panic. It is reasonable to proceed.
 > 
-> Yeah, with a proper comment. The testing of bits is not really needed.
+> It makes even less sense now: panic() means "all stops and we die" and
+> you say it is reasonable to proceed.
+> 
+> I'm confused.
 
-I think it is better fit the next patch.
+Right.
 
-What about this?
+What about the comment below?
 
-From b45fe48092abad2612c2bafbb199e4de80c99545 Mon Sep 17 00:00:00 2001
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Date: Fri, 10 Feb 2023 12:53:11 +0300
-Subject: [PATCHv11.1 06/19] x86/kexec: Keep CR4.MCE set during kexec for TDX guest
+			/*
+			 * One possible reason for the failure is if kexec raced
+			 * with memory conversion. In this case shared bit in
+			 * page table got set (or not cleared) during
+			 * shared<->private conversion, but the page is actually
+			 * private. So this failure is not going to affect the
+			 * kexec'ed kernel.
+			 *
+			 * The only thing one can do at this point on failure
+			 * at this point is panic. In absence of better options,
+			 * it is reasonable to proceed, hoping the failure is a
+			 * benign shared bit mismatch due to the race.
+			 *
+			 * Also, even if the failure is real and the page cannot
+			 * be touched as private, the kdump kernel will boot
+			 * fine as it uses pre-reserved memory. What happens
+			 * next depends on what the dumping process does and
+			 * there's a reasonable chance to produce useful dump
+			 * on crash.
+			 *
+			 * Regardless, the print leaves a trace in the log to
+			 * give a clue for debug.
+			 */
 
-TDX guests run with MCA enabled (CR4.MCE=1b) from the very start. If
-that bit is cleared during CR4 register reprogramming during boot or
-kexec flows, a #VE exception will be raised which the guest kernel
-cannot handle it.
-
-Therefore, make sure the CR4.MCE setting is preserved over kexec too and
-avoid raising any #VEs.
-
-The change doesn't affect non-TDX-guest environments.
-
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
----
- arch/x86/kernel/relocate_kernel_64.S | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
-
-diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index 085eef5c3904..9c2cf70c5f54 100644
---- a/arch/x86/kernel/relocate_kernel_64.S
-+++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -5,6 +5,8 @@
-  */
- 
- #include <linux/linkage.h>
-+#include <linux/stringify.h>
-+#include <asm/alternative.h>
- #include <asm/page_types.h>
- #include <asm/kexec.h>
- #include <asm/processor-flags.h>
-@@ -145,14 +147,15 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
- 	 * Set cr4 to a known state:
- 	 *  - physical address extension enabled
- 	 *  - 5-level paging, if it was enabled before
-+	 *  - Machine check exception on TDX guest, if it was enabled before.
-+	 *    Clearing MCE might not be allowed in TDX guests, depending on setup.
-+	 *
-+	 * Use R13 that contains the original CR4 value, read in relocate_kernel().
-+	 * PAE is always set in the original CR4.
- 	 */
--	movl	$X86_CR4_PAE, %eax
--	testq	$X86_CR4_LA57, %r13
--	jz	.Lno_la57
--	orl	$X86_CR4_LA57, %eax
--.Lno_la57:
--
--	movq	%rax, %cr4
-+	andl	$(X86_CR4_PAE | X86_CR4_LA57), %r13d
-+	ALTERNATIVE "", __stringify(orl $X86_CR4_MCE, %r13d), X86_FEATURE_TDX_GUEST
-+	movq	%r13, %cr4
- 
- 	jmp 1f
- 1:
 -- 
   Kiryl Shutsemau / Kirill A. Shutemov
 
