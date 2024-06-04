@@ -4,78 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6ADC2C25B78
-	for <kexec@archiver.kernel.org>; Tue,  4 Jun 2024 15:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8BAA4C25B78
+	for <kexec@archiver.kernel.org>; Tue,  4 Jun 2024 16:08:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
 	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=EEFnB85jJ6rV/EGaHFQyxmivRsFLrXVV5ATI8CyWM4I=; b=CrQ0UnGSQzU1YA
-	43sTemGQzwIQzGA5GmKfhp0SnT9mZP0izbnorLx2pqhsL0xHlTpu3lnl7AOeJQrHezjKfocGYDTIK
-	4PW6hk5wmINFMftYVjir19GUaNG7KuVUHcwxmmOMYw+CZqsLhS7+oHM/hyQkQGAQ0egh2SX5ImsYg
-	pELCFJ1bH9mIC35Xu6jqUbeQJdon5vEH7nqiu8a+DhRCBBLvmGRwl1i6HKadSaMrC0C5S4ZlK3HHJ
-	yiCHC06TDRVPoFU8hHzz28RPc9aUbd2xaKdOSy4wZp0rLriR2kIdsckxT3IChj5XIv1u+FhpyFukQ
-	GeKRnZaaL8EoBVA+k4Xw==;
+	List-Owner; bh=xX7XpHLYzMO9coDwUKI+CR9PI8uHNnJLkt5iq2H4e8w=; b=kFSpo/uZsyAdAj
+	S7dJ0QFMxbkRnjRIR1+g5qL4QSyaW66yebPGJnzoHFheHKzSsc54fO1mK1riO5tXyK3klPBfHo3uP
+	YFI8uP7eS8h5Kfm7sXhNNmzk2pJ1JeJsFef0+dky+BHGC3CIwZv/EUzFkKu1y4gv6o1jrXdNWBnfU
+	KntB+qFk78LalowRi4CzLyPrObZM/S/9kFu8mPWcYi6MxThcgxf8Qgdjh8yK2cbFI+bXFSq3lN5Qj
+	m5WyKBzO7/EDoQ6hw2QQMSZnz+AD3JlfFAO+oOUrw5LvK+S5gYcrc1xXpn+z51xoLO8zB3WjZTBoe
+	QzfgeSzyf9bbJbZuyQQA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sEWNp-00000002z4T-07Ov;
-	Tue, 04 Jun 2024 15:47:33 +0000
-Received: from mgamail.intel.com ([192.198.163.19])
+	id 1sEWiB-000000034Qd-0cDs;
+	Tue, 04 Jun 2024 16:08:35 +0000
+Received: from mgamail.intel.com ([198.175.65.19])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sEWNi-00000002z0q-3iHN
+	id 1sEWi8-000000034O5-0Alg
 	for kexec@lists.infradead.org;
-	Tue, 04 Jun 2024 15:47:30 +0000
+	Tue, 04 Jun 2024 16:08:33 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717516047; x=1749052047;
+  t=1717517312; x=1749053312;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=Id5s0PIaCRkCPJFLJmSoHhlSb8MaiixVnBKq2JDaGHw=;
-  b=TW0OWvl/71j3SNT5lHoK/sPlGxYunKAl92aYRI+nTgHQiJ9cIUl0ihS5
-   50W2E6u7mjR6zU/jf0R1/rqFzj0ewla67ONT8SmAlyTdhzJ289hV7hScr
-   YYQ/21ImVFjqP85z/2l1HFIhH0zCPzc3XNS+4BbrCjVcBaTk/R9+CPM2z
-   4G43a2JP6uZ5wEu5tSUVbovqWSXNpvQ8qxJd+twk9U9TMCz3+jJ50ul2T
-   V7w2sglKNZdEDVfJqGo/3eIzVYTHL2p9mhnO8v5AC1gBmgx9N0YsBkfuy
-   ZDKjtIBnrirSriij/mvMFpypwzpkZFMUjfJ2qG76KWI9U7ex/T8RNlLD/
-   Q==;
-X-CSE-ConnectionGUID: /CGzm5FITv6Q5MO9uDQePA==
-X-CSE-MsgGUID: YSClIIQNRW2CTuvc/NQ5ww==
-X-IronPort-AV: E=McAfee;i="6600,9927,11093"; a="13880600"
+  bh=XSjy6YxFesdMOR6JzoV48NYYd8/0S1BEVnZIXtD3nK0=;
+  b=mzoetDE73xgGrUIJDQKlsz8y2haWODuVWK1lDlyuk99l63qxzI/KwEgm
+   lD5bDfc/Yb2cJ+VjO41E5Mv680dyPkVsjXDYfkhd3JoCWUwjpo9i5O90D
+   IA8LzN8YmLyZkkbnSH6bTDKzWIRl32NPBiNA1LxjhoacUqXuL+MEzoIu+
+   iPK8AjRIB7Hdq8WfVFWNN9ueUcPEekCo2JmVe81FyaDcj/n/L3SchUhi+
+   tXHzHWlEjQ9Tje86FLP45L4BY+BUUuMoAxFUCi7zdOf66vRW/JnXX8Xc3
+   hyrch0f9sEM2XJUmLOnXDmKZ11cUFFtJ+oTHDGNOMHC/lO+uhXTvJZpnJ
+   g==;
+X-CSE-ConnectionGUID: dVsMKll4SJepaT6ZCgTovA==
+X-CSE-MsgGUID: FaeH7jeIT5+3YQLJkdLbqQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11093"; a="13918270"
 X-IronPort-AV: E=Sophos;i="6.08,214,1712646000"; 
-   d="scan'208";a="13880600"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 08:47:25 -0700
-X-CSE-ConnectionGUID: QXdAuQZmT2GFwoVISydTzw==
-X-CSE-MsgGUID: X8E8y0NZTz2TgIvJMAAlKw==
+   d="scan'208";a="13918270"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 09:08:29 -0700
+X-CSE-ConnectionGUID: z2GB6NqfTPOjmfKsW00vug==
+X-CSE-MsgGUID: UUAir5M0R0KfDhtDtVquyg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,214,1712646000"; 
-   d="scan'208";a="37354255"
+   d="scan'208";a="42225128"
 Received: from cdpresto-mobl2.amr.corp.intel.com.amr.corp.intel.com (HELO [10.125.108.218]) ([10.125.108.218])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 08:47:23 -0700
-Message-ID: <78d33a31-0ef2-417b-a240-b2880b64518e@intel.com>
-Date: Tue, 4 Jun 2024 08:47:22 -0700
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 09:08:26 -0700
+Message-ID: <6fd2c15b-5bd9-4e7e-8da0-4ca2c89b38f9@intel.com>
+Date: Tue, 4 Jun 2024 09:08:25 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv11.1 11/19] x86/tdx: Convert shared memory back to private
- on kexec
+Subject: Re: [PATCHv11 09/19] x86/tdx: Account shared memory
 To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Borislav Petkov <bp@alien8.de>
-Cc: adrian.hunter@intel.com, ardb@kernel.org, ashish.kalra@amd.com,
- bhe@redhat.com, dave.hansen@linux.intel.com, elena.reshetova@intel.com,
- haiyangz@microsoft.com, hpa@zytor.com, jun.nakajima@intel.com,
- kai.huang@intel.com, kexec@lists.infradead.org, kys@microsoft.com,
- linux-acpi@vger.kernel.org, linux-coco@lists.linux.dev,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, ltao@redhat.com,
- mingo@redhat.com, peterz@infradead.org, rafael@kernel.org,
- rick.p.edgecombe@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com,
- seanjc@google.com, tglx@linutronix.de, thomas.lendacky@amd.com,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
  x86@kernel.org
-References: <20240531151442.GMZlnpYkDCRlg1_YS0@fat_crate.local>
- <20240602142303.3263551-1-kirill.shutemov@linux.intel.com>
- <20240603083754.GAZl2A4uXvVB5w4l9u@fat_crate.local>
- <noym2bqgxqcyhhdzoax7gvdfzhh7rtw7cv236fhzpqh3wqf76e@2jj733skv7y4>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ Elena Reshetova <elena.reshetova@intel.com>,
+ Jun Nakajima <jun.nakajima@intel.com>,
+ Rick Edgecombe <rick.p.edgecombe@intel.com>,
+ Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish"
+ <ashish.kalra@amd.com>, Sean Christopherson <seanjc@google.com>,
+ "Huang, Kai" <kai.huang@intel.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Baoquan He <bhe@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, kexec@lists.infradead.org,
+ linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Tao Liu <ltao@redhat.com>
+References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
+ <20240528095522.509667-10-kirill.shutemov@linux.intel.com>
 From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
 Autocrypt: addr=dave.hansen@intel.com; keydata=
@@ -121,10 +126,11 @@ Autocrypt: addr=dave.hansen@intel.com; keydata=
  MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
  hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
  vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <noym2bqgxqcyhhdzoax7gvdfzhh7rtw7cv236fhzpqh3wqf76e@2jj733skv7y4>
+In-Reply-To: <20240528095522.509667-10-kirill.shutemov@linux.intel.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240604_084726_993724_33611D95 
-X-CRM114-Status: GOOD (  14.15  )
+X-CRM114-CacheID: sfid-20240604_090832_173656_F9D2B265 
+X-CRM114-Status: UNSURE (   9.63  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -141,49 +147,30 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 6/4/24 08:32, Kirill A. Shutemov wrote:
-> What about the comment below?
-> 
-> 			/*
-> 			 * One possible reason for the failure is if kexec raced
-> 			 * with memory conversion. In this case shared bit in
-> 			 * page table got set (or not cleared) during
-> 			 * shared<->private conversion, but the page is actually
-> 			 * private. So this failure is not going to affect the
-> 			 * kexec'ed kernel.
-> 			 *
-> 			 * The only thing one can do at this point on failure
-> 			 * at this point is panic. In absence of better options,
-> 			 * it is reasonable to proceed, hoping the failure is a
-> 			 * benign shared bit mismatch due to the race.
-> 			 *
-> 			 * Also, even if the failure is real and the page cannot
-> 			 * be touched as private, the kdump kernel will boot
-> 			 * fine as it uses pre-reserved memory. What happens
-> 			 * next depends on what the dumping process does and
-> 			 * there's a reasonable chance to produce useful dump
-> 			 * on crash.
-> 			 *
-> 			 * Regardless, the print leaves a trace in the log to
-> 			 * give a clue for debug.
-> 			 */
+On 5/28/24 02:55, Kirill A. Shutemov wrote:
+> Keep track of the number of shared pages. This will allow for 
+> cross-checking against the shared information in the direct mapping
+> and reporting if the shared bit is lost.
 
-It's rambling too much for my taste.
+It's probably also worth mentioning that conversions are slow and
+relatively rare and even though a global atomic isn't really scalable,
+it also isn't worth doing anything fancier.
+> diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
+> index 26fa47db5782..979891e97d83 100644
+> --- a/arch/x86/coco/tdx/tdx.c
+> +++ b/arch/x86/coco/tdx/tdx.c
+> @@ -38,6 +38,8 @@
+>  
+>  #define TDREPORT_SUBTYPE_0	0
+>  
+> +static atomic_long_t nr_shared;
 
-Let's boil this down to what matters:
+Doesn't this technically need to be:
 
- 1. Failures to change encryption status here can lead a future kernel
-    to touch shared memory with a private mapping
- 2. That causes an immediate unrecoverable guest shutdown (right?)
- 3. kdump kernels should not be affected since they have their own
-    memory ranges and its encryption status is not being tweawked here
- 4. The pr_err() may help make some sense out of #2 when it happens
+	static atomic_long_t nr_shared = ATOMIC_LONG_INIT(0);
 
-I'm not sure the reason behind the failed conversion is important here.
-
-I wouldn't mention panic().
-
-We don't need to opine about what the next kernel might or might not do.
+?  I thought we had some architectures where the 0 logical value wasn't
+actually all 0's.
 
 _______________________________________________
 kexec mailing list
