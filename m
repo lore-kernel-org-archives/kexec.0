@@ -4,79 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B7381C25B78
-	for <kexec@archiver.kernel.org>; Tue,  4 Jun 2024 13:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 37EB0C25B78
+	for <kexec@archiver.kernel.org>; Tue,  4 Jun 2024 15:21:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=O5FN1ZzKpvmXUmb2Ey+6VBvwGbeMn0Aw+1Txs3tFGec=; b=R0He4s3sUVzIUm
-	7+u7ZOEaxshWOpUk+Zrb9B2m5v3pmigRNY3RyotyNyRRwsAN7ZUDKa71HQxuT9j3XMbgFc/te6KZx
-	ZAbab8vsqZVTptgZfIMqN4GXc5oZXd1h6yU7L01uuHL1VfEUaCPYcqhF65KhgEYZm367zqAmdN1qs
-	gTNkPnDp7b0QeUm36sgAz9LcXX3RyS2RVSDbcm1yxHIXEdPlu5LLsj0YKNIxGqEyiUCSUgTk1b6T3
-	mUSfByCo2eyYlanPY05RFXeG1GJuQ2fzk8MNnPIMdzujcNDiu9GYn+nu2SgjWenN+hNvY3PzFFBo/
-	tDrLDGxaKh7SrFG2SkBg==;
+	List-Owner; bh=yaQUNXkmxxyp61UPE2AxOPCfSWOrbjgMeI/6Eq+ko30=; b=Bgj7gA1FowJgO/
+	gPJ+DRTDj4i7/ZQ9qwtlD9OP1Q3giQBWRxRL1AON7QdVaapS/7pEyqmr2Ck2NrxvDxiOczj/lDAuo
+	38Yj7rG9p7FCnhtQIPSR6DKms8M7dAqYeAA2vkkJ5nSjs5eZhy7Q32WIup8jrDDdnTmxm+LPUoDCU
+	+wL1s9klPS5omLnQCAROcQ4+SoepeNK4otFGkAmbPsXzMwQCTdxfpt8EzMY7q8WMi2E6/tF2CuT39
+	5FoI8xh96r4yVQtKDglMxvLhRetdo78KQL90SKlm+dpKiDAOdR4IycNGVomnQc40KGlNNKV2iYDsZ
+	96T/To4wWudUNLEjR3EA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sEUcb-00000002aI4-0Fr4;
-	Tue, 04 Jun 2024 13:54:41 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1sEVyn-00000002td0-1L5x;
+	Tue, 04 Jun 2024 15:21:41 +0000
+Received: from mgamail.intel.com ([192.198.163.19])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sEUcX-00000002aGi-2CDP
+	id 1sEVyj-00000002tc0-33YS
 	for kexec@lists.infradead.org;
-	Tue, 04 Jun 2024 13:54:38 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717509276;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4zKKZvS6BOZCnR19TBgVvw0oiH1zc+KtZmMFFr2lKZA=;
-	b=CeoakvcRSVJoWPI3+kLN+FJkfQfCqG2VPySQt+2fyKNXYmwpePDFxUEfRv4KXJ48IEzcGd
-	9KdsnY4K0cBFEKxhfzeN9DEEc/bzGS2YKeX/7JAXU/iKnONvw7o0xi/HLSkTutNII4Ux67
-	Oz3HmfWLpM7sm48Rd+R/NcmZuPND+iE=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-515-Jq0fwLYpNsmRMH9Gzwu6bQ-1; Tue,
- 04 Jun 2024 09:54:32 -0400
-X-MC-Unique: Jq0fwLYpNsmRMH9Gzwu6bQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7931429ABA03;
-	Tue,  4 Jun 2024 13:54:30 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.9])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 6E9683C54;
-	Tue,  4 Jun 2024 13:54:29 +0000 (UTC)
-Date: Tue, 4 Jun 2024 21:54:26 +0800
-From: Baoquan He <bhe@redhat.com>
-To: kernel test robot <lkp@intel.com>
-Cc: Coiby Xu <coxu@redhat.com>, kexec@lists.infradead.org,
-	oe-kbuild-all@lists.linux.dev, Ondrej Kozina <okozina@redhat.com>,
-	Milan Broz <gmazyland@gmail.com>,
-	Thomas Staudt <tstaudt@de.ibm.com>,
-	Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
-	Kairui Song <ryncsn@gmail.com>,
-	Jan Pazdziora <jpazdziora@redhat.com>,
-	Pingfan Liu <kernelfans@gmail.com>, Dave Young <dyoung@redhat.com>,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	Dave Hansen <dave.hansen@intel.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>,
-	Eric Biederman <ebiederm@xmission.com>
-Subject: Re: [PATCH v4 3/7] crash_dump: store dm keys in kdump reserved memory
-Message-ID: <Zl8ckh7FBErY3Oh6@MiWiFi-R3L-srv>
-References: <20240523050451.788754-4-coxu@redhat.com>
- <202405241012.KlmCbp77-lkp@intel.com>
+	Tue, 04 Jun 2024 15:21:39 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717514497; x=1749050497;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=E+b2QUNEozOByn7XosVfo22ORgGbyZc8ikuTipiKM4k=;
+  b=VTl0YdhyiN+HE9zGf+8GXVe5e4Fb1sjgnQx6AtCYoEsYvvvucf1HkxDL
+   CgI4NJz2doJT4GkeleOqrddKEHusA2oUuknvhUTa461pMNoTEvMQWDvgV
+   WvhYJmb5/v2aTQw9X1kF61Wl7FK/5YTI35+68OhUdRA9ymNv2CChP30py
+   OHWK7Lgm9mMqHmZkrYWVNY8yka68tZJ5/ti+E+GrXNiL2tnEk6ZkbwDSd
+   f5WJmWgvYO474reXxfZOlrJE5CE92e3x/mAkAj2oHr6yXJssequzszEnL
+   +q5BROyTq7vl8IeWQHqmmNJXBgSB6lBE9dEkD0orT6y+uS+XZ+0WT27e+
+   A==;
+X-CSE-ConnectionGUID: rCZTyqo0RKuRld1AI5oGrg==
+X-CSE-MsgGUID: dG2d/Pp/SOmHyu9ccUZgVg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11093"; a="13876550"
+X-IronPort-AV: E=Sophos;i="6.08,214,1712646000"; 
+   d="scan'208";a="13876550"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2024 08:21:35 -0700
+X-CSE-ConnectionGUID: 80QFIjp6QEKsJylgelC6zA==
+X-CSE-MsgGUID: hyN/V+NqSJm6vfhx7CCozg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,214,1712646000"; 
+   d="scan'208";a="37214950"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa010.jf.intel.com with ESMTP; 04 Jun 2024 08:21:28 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id A67F32DC; Tue, 04 Jun 2024 18:21:27 +0300 (EEST)
+Date: Tue, 4 Jun 2024 18:21:27 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>, 
+	Nikolay Borisov <nik.borisov@suse.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, 
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Elena Reshetova <elena.reshetova@intel.com>, 
+	Jun Nakajima <jun.nakajima@intel.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish" <ashish.kalra@amd.com>, 
+	Sean Christopherson <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>, 
+	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
+	kexec@lists.infradead.org, linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv11 05/19] x86/relocate_kernel: Use named labels for less
+ confusion
+Message-ID: <ehttxqgg7zhbgty5m5uxkduj3xf7soonrzfu4rfw7hccqgdydl@afki66pnree5>
+References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
+ <20240528095522.509667-6-kirill.shutemov@linux.intel.com>
+ <1e1d1aea-7346-4022-9f5f-402d171adfda@suse.com>
+ <t3zx4f6ynru7qp4oel4syza2alcuxz7q7hxqgf2lxusgobnsnh@vtnecqrsxci5>
+ <748d3b70-60b4-44e0-bd81-9117f1ab699d@zytor.com>
+ <20240604091503.GQZl7bF14qTSAjqUhN@fat_crate.local>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <202405241012.KlmCbp77-lkp@intel.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+In-Reply-To: <20240604091503.GQZl7bF14qTSAjqUhN@fat_crate.local>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240604_065437_663452_8F1213E5 
-X-CRM114-Status: GOOD (  23.70  )
+X-CRM114-CacheID: sfid-20240604_082137_821900_E6E1FF95 
+X-CRM114-Status: GOOD (  22.88  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -93,148 +103,98 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Coiby,
+On Tue, Jun 04, 2024 at 11:15:03AM +0200, Borislav Petkov wrote:
+> On Mon, Jun 03, 2024 at 05:24:00PM -0700, H. Peter Anvin wrote:
+> > Trying one more time; sorry (again) if someone receives this in duplicate.
+> > 
+> > > > > 
+> > > > > diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+> > > > > index 56cab1bb25f5..085eef5c3904 100644
+> > > > > --- a/arch/x86/kernel/relocate_kernel_64.S
+> > > > > +++ b/arch/x86/kernel/relocate_kernel_64.S
+> > > > > @@ -148,9 +148,10 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+> > > > >    	 */
+> > > > >    	movl	$X86_CR4_PAE, %eax
+> > > > >    	testq	$X86_CR4_LA57, %r13
+> > > > > -	jz	1f
+> > > > > +	jz	.Lno_la57
+> > > > >    	orl	$X86_CR4_LA57, %eax
+> > > > > -1:
+> > > > > +.Lno_la57:
+> > > > > +
+> > > > >    	movq	%rax, %cr4
+> > 
+> > If we are cleaning up this code... the above can simply be:
+> > 
+> > 	andl $(X86_CR4_PAE | X86_CR4_LA54), %r13
+> > 	movq %r13, %cr4
+> > 
+> > %r13 is dead afterwards, and the PAE bit *will* be set in %r13 anyway.
+> 
+> Yeah, with a proper comment. The testing of bits is not really needed.
 
-On 05/24/24 at 11:17am, kernel test robot wrote:
-> Hi Coiby,
-> 
-> kernel test robot noticed the following build errors:
-> 
-> [auto build test ERROR on de7e71ef8bed222dd144d8878091ecb6d5dfd208]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Coiby-Xu/kexec_file-allow-to-place-kexec_buf-randomly/20240523-130727
-> base:   de7e71ef8bed222dd144d8878091ecb6d5dfd208
-> patch link:    https://lore.kernel.org/r/20240523050451.788754-4-coxu%40redhat.com
-> patch subject: [PATCH v4 3/7] crash_dump: store dm keys in kdump reserved memory
-> config: arm-allmodconfig (https://download.01.org/0day-ci/archive/20240524/202405241012.KlmCbp77-lkp@intel.com/config)
-> compiler: arm-linux-gnueabi-gcc (GCC) 13.2.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240524/202405241012.KlmCbp77-lkp@intel.com/reproduce)
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202405241012.KlmCbp77-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>):
+I think it is better fit the next patch.
 
-Please respond to lkp report sooner, otherwise the reproducer link could
-be unavailable.
+What about this?
 
-> 
->    kernel/crash_dump_dm_crypt.c: In function 'crash_load_dm_crypt_keys':
-> >> kernel/crash_dump_dm_crypt.c:158:16: error: variable 'kbuf' has initializer but incomplete type
->      158 |         struct kexec_buf kbuf = {
->          |                ^~~~~~~~~
-> >> kernel/crash_dump_dm_crypt.c:159:18: error: 'struct kexec_buf' has no member named 'image'
->      159 |                 .image = image,
->          |                  ^~~~~
->    kernel/crash_dump_dm_crypt.c:159:26: warning: excess elements in struct initializer
->      159 |                 .image = image,
->          |                          ^~~~~
->    kernel/crash_dump_dm_crypt.c:159:26: note: (near initialization for 'kbuf')
-> >> kernel/crash_dump_dm_crypt.c:160:18: error: 'struct kexec_buf' has no member named 'buf_min'
->      160 |                 .buf_min = 0,
->          |                  ^~~~~~~
->    kernel/crash_dump_dm_crypt.c:160:28: warning: excess elements in struct initializer
->      160 |                 .buf_min = 0,
->          |                            ^
->    kernel/crash_dump_dm_crypt.c:160:28: note: (near initialization for 'kbuf')
-> >> kernel/crash_dump_dm_crypt.c:161:18: error: 'struct kexec_buf' has no member named 'buf_max'
->      161 |                 .buf_max = ULONG_MAX,
->          |                  ^~~~~~~
->    In file included from include/linux/limits.h:7,
->                     from include/linux/thread_info.h:12,
->                     from include/asm-generic/preempt.h:5,
->                     from ./arch/arm/include/generated/asm/preempt.h:1,
->                     from include/linux/preempt.h:79,
->                     from include/linux/rcupdate.h:27,
->                     from include/linux/rbtree.h:24,
->                     from include/linux/key.h:15,
->                     from kernel/crash_dump_dm_crypt.c:2:
->    include/vdso/limits.h:13:25: warning: excess elements in struct initializer
->       13 | #define ULONG_MAX       (~0UL)
->          |                         ^
->    kernel/crash_dump_dm_crypt.c:161:28: note: in expansion of macro 'ULONG_MAX'
->      161 |                 .buf_max = ULONG_MAX,
->          |                            ^~~~~~~~~
->    include/vdso/limits.h:13:25: note: (near initialization for 'kbuf')
->       13 | #define ULONG_MAX       (~0UL)
->          |                         ^
->    kernel/crash_dump_dm_crypt.c:161:28: note: in expansion of macro 'ULONG_MAX'
->      161 |                 .buf_max = ULONG_MAX,
->          |                            ^~~~~~~~~
-> >> kernel/crash_dump_dm_crypt.c:162:18: error: 'struct kexec_buf' has no member named 'top_down'
->      162 |                 .top_down = false,
->          |                  ^~~~~~~~
->    kernel/crash_dump_dm_crypt.c:162:29: warning: excess elements in struct initializer
->      162 |                 .top_down = false,
->          |                             ^~~~~
->    kernel/crash_dump_dm_crypt.c:162:29: note: (near initialization for 'kbuf')
-> >> kernel/crash_dump_dm_crypt.c:163:18: error: 'struct kexec_buf' has no member named 'random'
->      163 |                 .random = true,
->          |                  ^~~~~~
->    kernel/crash_dump_dm_crypt.c:163:27: warning: excess elements in struct initializer
->      163 |                 .random = true,
->          |                           ^~~~
->    kernel/crash_dump_dm_crypt.c:163:27: note: (near initialization for 'kbuf')
-> >> kernel/crash_dump_dm_crypt.c:158:26: error: storage size of 'kbuf' isn't known
->      158 |         struct kexec_buf kbuf = {
->          |                          ^~~~
-> >> kernel/crash_dump_dm_crypt.c:187:20: error: 'KEXEC_BUF_MEM_UNKNOWN' undeclared (first use in this function)
->      187 |         kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
->          |                    ^~~~~~~~~~~~~~~~~~~~~
->    kernel/crash_dump_dm_crypt.c:187:20: note: each undeclared identifier is reported only once for each function it appears in
-> >> kernel/crash_dump_dm_crypt.c:188:13: error: implicit declaration of function 'kexec_add_buffer' [-Werror=implicit-function-declaration]
->      188 |         r = kexec_add_buffer(&kbuf);
->          |             ^~~~~~~~~~~~~~~~
->    kernel/crash_dump_dm_crypt.c:158:26: warning: unused variable 'kbuf' [-Wunused-variable]
->      158 |         struct kexec_buf kbuf = {
->          |                          ^~~~
->    cc1: some warnings being treated as errors
-> 
-> 
-> vim +/kbuf +158 kernel/crash_dump_dm_crypt.c
-> 
->    155	
->    156	int crash_load_dm_crypt_keys(struct kimage *image)
->    157	{
->  > 158		struct kexec_buf kbuf = {
->  > 159			.image = image,
->  > 160			.buf_min = 0,
->  > 161			.buf_max = ULONG_MAX,
->  > 162			.top_down = false,
->  > 163			.random = true,
->    164		};
->    165	
->    166		int r;
->    167	
->    168		if (state == FRESH)
->    169			return 0;
->    170	
->    171		if (key_count != keys_header->key_count) {
->    172			pr_err("Only record %u keys (%u in total)\n", key_count,
->    173			       keys_header->key_count);
->    174			return -EINVAL;
->    175		}
->    176	
->    177		image->dm_crypt_keys_addr = 0;
->    178		r = build_keys_header();
->    179		if (r)
->    180			return r;
->    181	
->    182		kbuf.buffer = keys_header;
->    183		kbuf.bufsz = keys_header_size;
->    184	
->    185		kbuf.memsz = kbuf.bufsz;
->    186		kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
->  > 187		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
->  > 188		r = kexec_add_buffer(&kbuf);
-> 
-> -- 
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
-> 
+From b45fe48092abad2612c2bafbb199e4de80c99545 Mon Sep 17 00:00:00 2001
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Date: Fri, 10 Feb 2023 12:53:11 +0300
+Subject: [PATCHv11.1 06/19] x86/kexec: Keep CR4.MCE set during kexec for TDX guest
 
+TDX guests run with MCA enabled (CR4.MCE=1b) from the very start. If
+that bit is cleared during CR4 register reprogramming during boot or
+kexec flows, a #VE exception will be raised which the guest kernel
+cannot handle it.
+
+Therefore, make sure the CR4.MCE setting is preserved over kexec too and
+avoid raising any #VEs.
+
+The change doesn't affect non-TDX-guest environments.
+
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+---
+ arch/x86/kernel/relocate_kernel_64.S | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
+
+diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+index 085eef5c3904..9c2cf70c5f54 100644
+--- a/arch/x86/kernel/relocate_kernel_64.S
++++ b/arch/x86/kernel/relocate_kernel_64.S
+@@ -5,6 +5,8 @@
+  */
+ 
+ #include <linux/linkage.h>
++#include <linux/stringify.h>
++#include <asm/alternative.h>
+ #include <asm/page_types.h>
+ #include <asm/kexec.h>
+ #include <asm/processor-flags.h>
+@@ -145,14 +147,15 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+ 	 * Set cr4 to a known state:
+ 	 *  - physical address extension enabled
+ 	 *  - 5-level paging, if it was enabled before
++	 *  - Machine check exception on TDX guest, if it was enabled before.
++	 *    Clearing MCE might not be allowed in TDX guests, depending on setup.
++	 *
++	 * Use R13 that contains the original CR4 value, read in relocate_kernel().
++	 * PAE is always set in the original CR4.
+ 	 */
+-	movl	$X86_CR4_PAE, %eax
+-	testq	$X86_CR4_LA57, %r13
+-	jz	.Lno_la57
+-	orl	$X86_CR4_LA57, %eax
+-.Lno_la57:
+-
+-	movq	%rax, %cr4
++	andl	$(X86_CR4_PAE | X86_CR4_LA57), %r13d
++	ALTERNATIVE "", __stringify(orl $X86_CR4_MCE, %r13d), X86_FEATURE_TDX_GUEST
++	movq	%r13, %cr4
+ 
+ 	jmp 1f
+ 1:
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
 
 _______________________________________________
 kexec mailing list
