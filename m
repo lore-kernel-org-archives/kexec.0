@@ -4,96 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1CBA8C25B78
-	for <kexec@archiver.kernel.org>; Tue,  4 Jun 2024 11:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 45290C27C54
+	for <kexec@archiver.kernel.org>; Tue,  4 Jun 2024 13:53:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=xpmlVc+hylG3c+cW6DggcatGCg0vddDfdN8VCNfpZiU=; b=eZW0Yi2hgMKTPC
-	cu1bmQCXWb6v0NXI1KEn79Ups7GhyhgkyMmAv5faVLBvDUY8YaV/5iVbAgJwN0sV+g9LuJzBEArji
-	ynLThAA09LFIhQh6N4GEH5rrTwHdqGPBskMTAH5IjNnpVeyA1bzPZYJ8l77vWrUen8fn6qkr9g7tl
-	F6f0qs2eocc7ur2gzUubHnPBvnEHvi4bR2U4LFGj30yeQlJN8F+q4WGBw2kpz8JF72wCdsIqR+xlF
-	fFYTed5VXwelgZ6KfLArAIXJVSFVyMevbHTEWcoFxuIpvl3lygnrqvkwn3/Lv44HKQ8cwTlSw6fyY
-	N3pkPnTEV+5kMuWxviZQ==;
+	List-Owner; bh=yar8OLzFlNC5EzAu2YHOrUgjr7SSFROg0WPJQEoUIY4=; b=a5gWFpuqR1pOW9
+	/VjYFs4FZEwLOElZwPemCPsmmxN55dEHCR0TqHt41ql5X7rQmG05cZJf3lnXtvgFOBOdcltxMqw3c
+	IPdJoRDS6xlZLCWmqfTrUjXJqt3MfDZQpR7S6zrkPJaLg102v4rAi4GdlUNdPFCunaN4HNu+zwKwI
+	2fymIwFCZbG8ik+FC1GhIksev7fyQFb0RIdBiddf+PQaDa5E3+92vM53w8C14WgIuDGNHNDLUcKrk
+	SZwxnU7yNusfR+VCEh+yH3IgE1mDJYvKwdHb0Q08VX8UZjGyhGI31pIwbjjnI2eprAMjGMGTOtcqj
+	laOMnipPZa+2wR4V6BZg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sES2z-000000025nB-2Vfo;
-	Tue, 04 Jun 2024 11:09:45 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1sEUb6-00000002Zwq-3Icr;
+	Tue, 04 Jun 2024 13:53:08 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sES2x-000000025mP-2m5C
+	id 1sEUb5-00000002Zvj-061A
 	for kexec@lists.infradead.org;
-	Tue, 04 Jun 2024 11:09:45 +0000
+	Tue, 04 Jun 2024 13:53:08 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717499382;
+	s=mimecast20190719; t=1717509185;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=g1CYcVwVGdFbPFSwugJtb1aKEbbUUrRo/R593DHF02Q=;
-	b=GnN7QcixDSI6aZ7wbjCtOL4S9AnM/K0N4lwt5mwkWhBGDpcTtFr6x3ZJEDFX4giyhGBp96
-	6/NYCoqsCW2gXNFya+5km/Q1Bui/6k43bb6p+kQ8LTbM0wHW08mjhaJkFby2zK+Ro0hU3w
-	SkfJOioNVjuk+g1JUpTQS39v5nslWhM=
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com
- [209.85.166.199]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=R0VxfhH1OEgJBZVeakcTEgY15FfwsO+wwN+9uT42qak=;
+	b=ZKGtHWvvV/uWDS+3po8ibtIma09Pj+g92mtzv2QgT5IrHZZ5dAQpnANLCe/fXdvrJQVfZb
+	cIs0tZhKVWqutDBWSUK0Q5jCfENvCuOjHxlHbxn9x9jjd9atXruMtuaA+BC4PpBARhRrKF
+	py3LzNqg2ln/I8PKKrMydFxughK3w7A=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-645-OwJMhXK1NzulBSa1cXwd1w-1; Tue, 04 Jun 2024 07:09:41 -0400
-X-MC-Unique: OwJMhXK1NzulBSa1cXwd1w-1
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-374a8187062so1815975ab.2
-        for <kexec@lists.infradead.org>; Tue, 04 Jun 2024 04:09:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717499380; x=1718104180;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=g1CYcVwVGdFbPFSwugJtb1aKEbbUUrRo/R593DHF02Q=;
-        b=fkKkgB2eitfxN+AooNNDk2yFWq1PE9q5Lm3eD1w08advq/H6hJ9C/30GE4WEMuiDE+
-         F1IrZnJgfe5ClidV2o4PtnYEvhUKI4nRhXdd3/aL1m2uLDlZIM6XEFPVVBJTrOBkxN8D
-         QF75UJgxwFtXDC7avfyoE7il4HTKmmFgdwqGOmy+arB4IvRgnklZMelZMyvxYwHYnIFQ
-         frNq0CXprRAdUW7WhlZYSEnd32cfuuJyjspplUHldzeLsVIfkY3R4WBaIWnfAq9fHDGu
-         95DGPeSgFL4e0HN4hOjyl9REUbqOZspB7cukT0V73T0XHmS8RA7nHYjOYuLS5yVKs2li
-         gEuA==
-X-Forwarded-Encrypted: i=1; AJvYcCX5cwuiBd82B4fPr302SUMe9sTmIIH4hZcx3lnNe+9MWBuLZqODwdnsyQGvmlr1JTWkjhGT8tP785pFEbntg0ByFgdyktFyW7BM
-X-Gm-Message-State: AOJu0YyTdqPy4eaHwSo1n/QD8ylyTXqdpCVjGhvfETa4LQJQ6QvYRP4X
-	RuJ3BJD0+w/QKEr6Z2X//WLlY+a/kI5CZLNDt0kSOGDCNAKfovDPtwl694nr1Sw3uo7CegWWarj
-	ASivO4srxfzL/od9vJmb4XP42PscqShGtfzaPGKIXXoL2XDVCW5vy9fX8Tre2NBoB+Lw+lPx47k
-	7nbjwpxr3rR4MuMxrMwYQcEEumh9jln86d
-X-Received: by 2002:a05:6e02:1e08:b0:374:85bb:7592 with SMTP id e9e14a558f8ab-3748b8f5126mr139248275ab.0.1717499380484;
-        Tue, 04 Jun 2024 04:09:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFst0U81Ttgn3X/ZFD/HP/TlZoB/pgBQKLugq4Ox4uYNFUHLID+6ovlnSkl6nuMD6Uc/ffi7a31slBzFXhlhUw=
-X-Received: by 2002:a05:6e02:1e08:b0:374:85bb:7592 with SMTP id
- e9e14a558f8ab-3748b8f5126mr139247745ab.0.1717499379997; Tue, 04 Jun 2024
- 04:09:39 -0700 (PDT)
+ us-mta-298-GvTqAB9lMauck_M8KHLNIg-1; Tue, 04 Jun 2024 09:53:01 -0400
+X-MC-Unique: GvTqAB9lMauck_M8KHLNIg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D423B85A5B6;
+	Tue,  4 Jun 2024 13:53:00 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.9])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 9C0212166B35;
+	Tue,  4 Jun 2024 13:52:59 +0000 (UTC)
+Date: Tue, 4 Jun 2024 21:52:56 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Coiby Xu <coxu@redhat.com>
+Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
+	Milan Broz <gmazyland@gmail.com>,
+	Thomas Staudt <tstaudt@de.ibm.com>,
+	Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
+	Kairui Song <ryncsn@gmail.com>,
+	Jan Pazdziora <jpazdziora@redhat.com>,
+	Pingfan Liu <kernelfans@gmail.com>, Dave Young <dyoung@redhat.com>,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	Dave Hansen <dave.hansen@intel.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v4 4/7] crash_dump: reuse saved dm crypt keys for
+ CPU/memory hot-plugging
+Message-ID: <Zl8cOOv9gVzdkU0f@MiWiFi-R3L-srv>
+References: <20240523050451.788754-1-coxu@redhat.com>
+ <20240523050451.788754-5-coxu@redhat.com>
 MIME-Version: 1.0
-References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
- <cover.1717111180.git.ashish.kalra@amd.com> <f4be03b8488665f56a1e5c6e6459f447352dfcf5.1717111180.git.ashish.kalra@amd.com>
- <20240603085654.GBZl2FVjPd-gagt-UA@fat_crate.local> <8e3dfc15-f609-4839-85c7-1cc8cefd7acc@amd.com>
- <Zl3HfiQ6oHdTdOdA@kernel.org> <1ef36309-8d7f-447b-a54a-3cdafeccca64@amd.com>
- <20240603144639.GCZl3XTwmFHwi-KUZW@fat_crate.local> <Zl3hwYL2GDiyUfGo@kernel.org>
- <CALu+AoSnA4323QbQG7wrNptosz7tfEfztsE1=o6G=FaLbQ_tKQ@mail.gmail.com> <20240604094358.GBZl7h3otTCYJ5rkkt@fat_crate.local>
-In-Reply-To: <20240604094358.GBZl7h3otTCYJ5rkkt@fat_crate.local>
-From: Dave Young <dyoung@redhat.com>
-Date: Tue, 4 Jun 2024 19:09:56 +0800
-Message-ID: <CALu+AoS=-=PbMRxC-1rpfSTPpMOmM5BGRBjLhDwgOC3=4C71ng@mail.gmail.com>
-Subject: Re: [PATCH v7 1/3] efi/x86: Fix EFI memory map corruption with kexec
-To: Borislav Petkov <bp@alien8.de>
-Cc: Mike Rapoport <rppt@kernel.org>, "Kalra, Ashish" <ashish.kalra@amd.com>, tglx@linutronix.de, 
-	mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org, 
-	rafael@kernel.org, hpa@zytor.com, peterz@infradead.org, 
-	adrian.hunter@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com, 
-	jun.nakajima@intel.com, rick.p.edgecombe@intel.com, thomas.lendacky@amd.com, 
-	michael.roth@amd.com, seanjc@google.com, kai.huang@intel.com, bhe@redhat.com, 
-	kirill.shutemov@linux.intel.com, bdas@redhat.com, vkuznets@redhat.com, 
-	dionnaglaze@google.com, anisinha@redhat.com, jroedel@suse.de, ardb@kernel.org, 
-	kexec@lists.infradead.org, linux-coco@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+Content-Disposition: inline
+In-Reply-To: <20240523050451.788754-5-coxu@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240604_040943_798307_ADA87C11 
-X-CRM114-Status: GOOD (  15.92  )
+X-CRM114-CacheID: sfid-20240604_065307_160802_FF8EFFA6 
+X-CRM114-Status: GOOD (  23.77  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -110,37 +92,99 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, 4 Jun 2024 at 17:44, Borislav Petkov <bp@alien8.de> wrote:
->
-> On Tue, Jun 04, 2024 at 09:23:58AM +0800, Dave Young wrote:
-> > kexec_in_progress is only for checking if this is in a reboot (kexec) code path.
-> > But eif_mem_reserve is only called during the boot time so checking
-> > kexec_in_progress is meaningless here.
-> > current_kernel_is_booted_via_kexec != is_rebooting_with_kexec
->
-> That's exactly what I wanna check: whether this is a kexec-ed kernel. Or
-> is there a better helper for that?
+On 05/23/24 at 01:04pm, Coiby Xu wrote:
+> When there is CPU/memory hot-plugging, the kdump kernel image and initrd
+> will be reloaded. The user space can write the "reuse" command to
+> /sys/kernel/crash_dm_crypt_key so the stored keys can be re-saved again.
+> 
+> Note currently only x86 (commit ea53ad9cf73b ("x86/crash: add x86 crash
+> hotplug support")) and ppc (WIP) supports the new infrastructure
+> (commit 247262756121 ("crash: add generic infrastructure for crash
+> hotplug support")). If the new infrastructure get extended to all arches,
+> this patch can be dropped.
 
-No general way to check if it is a kexec-ed kernel or not,  for x86
-one can check the efi_setup as Ashish's original patch did, as the
-kexec booted kernel (efi boot) will have efi setup_data passed in.
+I am confused, what is the new infrastructure? And why this patch can be
+dropped if 'the new infrastructure' is extended to all arches.
 
-Otherwise there is a type_of_loader field for x86 boot protocol,
-kexec-tools is 0x0D, the kexec_file_load also uses this.  But adding
-the type_of_loader was only added in kexec-tools code when Yinghai
-worked on the kexec-tools bzImage64 load, so older kexec-tools will
-not set this field.  Anyway the in-kernel kexec_file_load code for x86
-added 0x0D as loader type from the beginning.
+> 
+> Signed-off-by: Coiby Xu <coxu@redhat.com>
+> ---
+>  kernel/crash_dump_dm_crypt.c | 30 ++++++++++++++++++++++++++----
+>  1 file changed, 26 insertions(+), 4 deletions(-)
+> 
+> diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
+> index 89fec768fba8..b4dc881cc867 100644
+> --- a/kernel/crash_dump_dm_crypt.c
+> +++ b/kernel/crash_dump_dm_crypt.c
+> @@ -10,12 +10,13 @@
+>  // The key scription has the format: cryptsetup:UUID 11+36+1(NULL)=48
+>  #define KEY_DESC_LEN 48
+>  
+> -static char *STATE_STR[] = {"fresh", "initialized", "recorded", "loaded"};
+> +static char *STATE_STR[] = {"fresh", "initialized", "recorded", "loaded", "reuse"};
+>  static enum STATE_ENUM {
+>  	FRESH = 0,
+>  	INITIALIZED,
+>  	RECORDED,
+>  	LOADED,
+> +	REUSE,
+>  } state;
+>  
+>  static unsigned int key_count;
+> @@ -90,12 +91,31 @@ static int record_key_desc(const char *buf, struct dm_crypt_key *dm_key)
+>  	return 0;
+>  }
+>  
+> +static void get_keys_from_kdump_reserved_memory(void)
+> +{
+> +	struct keys_header *keys_header_loaded;
+> +
+> +	arch_kexec_unprotect_crashkres();
+> +
+> +	keys_header_loaded = kmap_local_page(pfn_to_page(
+> +		kexec_crash_image->dm_crypt_keys_addr >> PAGE_SHIFT));
+> +
+> +	memcpy(keys_header, keys_header_loaded, keys_header_size);
+> +	kunmap_local(keys_header_loaded);
+> +	state = RECORDED;
+> +}
+> +
+>  static int process_cmd(const char *buf, size_t count)
+>  {
+>  	if (strncmp(buf, "init ", 5) == 0)
+>  		return init(buf);
+>  	else if (strncmp(buf, "record ", 7) == 0)
+>  		return record_key_desc(buf, &keys_header->keys[key_count]);
+> +	else if (!strcmp(buf, "reuse")) {
+> +		state = REUSE;
+> +		get_keys_from_kdump_reserved_memory();
+> +		return 0;
+> +	}
+>  
+>  	return -EINVAL;
+>  }
+> @@ -175,9 +195,11 @@ int crash_load_dm_crypt_keys(struct kimage *image)
+>  	}
+>  
+>  	image->dm_crypt_keys_addr = 0;
+> -	r = build_keys_header();
+> -	if (r)
+> -		return r;
+> +	if (state != REUSE) {
+> +		r = build_keys_header();
+> +		if (r)
+> +			return r;
 
-Anyway there is not such a helper for all cases.
+Is the logic here wrong? Isn't it we return when it's REUSE. If not
+REUSE, we need build_keys_header(), then add buffer?
 
->
-> --
-> Regards/Gruss,
->     Boris.
->
-> https://people.kernel.org/tglx/notes-about-netiquette
->
+> +	}
+>  
+>  	kbuf.buffer = keys_header;
+>  	kbuf.bufsz = keys_header_size;
+> -- 
+> 2.45.0
+> 
 
 
 _______________________________________________
