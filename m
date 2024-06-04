@@ -4,95 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 441C1C25B75
-	for <kexec@archiver.kernel.org>; Tue,  4 Jun 2024 01:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D1B27C25B7E
+	for <kexec@archiver.kernel.org>; Tue,  4 Jun 2024 07:41:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=72Lk31L25CgZoOdHPGshFuAIgwAoBq3YEUJ7EErlmFw=; b=NUaQLT2tmN4z4b
-	dWhGk9AIq80G2LOmNCuZDBliGc/pY1ahGf5vgRMmYca0r421rUXwfgVZKxWKy8BufEJSzzL0YfQYs
-	3riz3Chfxbrl31zimnr+0jecVxbTNBYWO1TJP8WtHK/lFXRGMYtCI81GnyruNxejBmqYpeUPSL7IA
-	4sOvf0xaFrQ6MATfTLe8rEh9TySnj5ol97nGgIpqi+bV7TfPrlUaG61jxdjbIdf77CePK1qVb7Z98
-	Q2ZvAny6VRZjEBc3Jb/feOS2Swe8T5vmOt0sX5FFsatvv6u7HuOJvkgHJkzBtbYzcrE4doG+Ih0Ni
-	Hz8hWH5afqOadzOhfnrA==;
+	List-Owner; bh=qlwkEET9dZYu7bzgb6RjrqAyn8Tq4UFmF59NKXAEReQ=; b=VUJeJeIvKLtB+/
+	qXcHMGB+EKfpVctk6DNbcZQaoO9/qOPsvaog0UaxDjLlbPYindfXhv9DXAE41agc4BAfrtGXpVfR3
+	hKW3B4zEQOEYwpDZwqBUDUXJN8BVemTnM2V6XD66FU36ObKVFXhvFSNN1CA3Q4I4D7Dwe4b3yAv6f
+	wg7kJMOR3uVzbzGcEZaSTGFyKJ5PXs8rjQC9+UODEt3jpUUtSgb+QvxzY2IKnKhKKPWFakS+2IqU2
+	zA3ECdKWRXb0AzclVkm4vxmoMklgAjD0jjVB8eTsNERJ2xvIWFGlDP2xE9Dw5/jlpKHDFr4yFWx0Q
+	VX6qiqTjrZ97OKUm2uSA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sEIty-00000000oG9-0Rbe;
-	Tue, 04 Jun 2024 01:23:50 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1sEOnp-00000001YMW-2D91;
+	Tue, 04 Jun 2024 07:41:53 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sEItu-00000000oEo-34Oi
+	id 1sEOnm-00000001YJD-2ZWI
 	for kexec@lists.infradead.org;
-	Tue, 04 Jun 2024 01:23:49 +0000
+	Tue, 04 Jun 2024 07:41:52 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717464224;
+	s=mimecast20190719; t=1717486905;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=S2uM4DFyGxLz048gnN/tqwhjQvWlr4twzxXFxXx0Uho=;
-	b=WuS9/Q6IYgg30Ef/CFxjRfn6Df8OSNZisEuOP/YXJbTJLNKPgK6A2ILub2N0ZJ7VYVDk5a
-	ULbemf27QBEvjmCh4pccxGDm+XChUlmg2tLh0Om7yTjAP4JcX6o9rvTvwNfzyV2iOuWcnB
-	EhWG4hdb8aha9vvL/b/JwSMb+6eejAk=
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com
- [209.85.166.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-182-Qe7XhFllNkWnybm3Rb5t6Q-1; Mon, 03 Jun 2024 21:23:40 -0400
-X-MC-Unique: Qe7XhFllNkWnybm3Rb5t6Q-1
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-374907a1f84so5814735ab.0
-        for <kexec@lists.infradead.org>; Mon, 03 Jun 2024 18:23:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717464220; x=1718069020;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=S2uM4DFyGxLz048gnN/tqwhjQvWlr4twzxXFxXx0Uho=;
-        b=nZnq0OPbl5y3GL70t5+mp55Lo4AHbFMQcIz+E0RlYABUs9Ex6wlPwXhoZlJOYF3bMh
-         6c/Df08Ov4RzvTz/QTShzU0Xt4L04WrByZFk0X58R8Z5buYsFoQX0DeHaQdg/M57OdGF
-         KAoruIqXR/+fYCbNfIBGa1L04YzLq3FTAFnE2rq+CNs+MFJaXPGAIXXkwBzkslolCzEr
-         pPymQ04ZftDg68+2o+o6y5SaTlPrL41vRX01AQwek6DpbLhKuuYhtEbAq2YhYTuYEgAl
-         UiHKvF6dLe18WO92pQMfmRSZN3nszBy9FMdTi/RGYqO7yAPhmDzssPGOX5IA8T+m0H6r
-         HOTA==
-X-Forwarded-Encrypted: i=1; AJvYcCW3fF+vd7XJ6u+dReGGu0phcB6epUzzNBheEpXYYT18/KzBXsWBseqY/qUSJDXBn3RSb2wKKcEhwPGYQ2oBy6tc0Zs3zHXEvcjN
-X-Gm-Message-State: AOJu0YzpNtY1w6OoPTSD4sbpmhLKgxwQw8ORK0EIHWWH28P686RGun+Y
-	+K08TLKvVbcIrqxQvB5TDOArRvjagsgvRJ1CZvBZOsKGk0SATN5hyrCiqa5JGLFkZkQEqxEZLx2
-	66szDzGGIqhM1kDw+CQEJ7RdS4LAlUfU52yGUkyOWXQtSKMTCbk1ne+G1Mk9pSiV+QlevuWDMVC
-	IaNx9mqStVonMJ0wvgw3QzrSdLjFk1YwJl
-X-Received: by 2002:a05:6e02:12cf:b0:36d:cb9d:cc9e with SMTP id e9e14a558f8ab-3748b9cfee7mr107650525ab.2.1717464220134;
-        Mon, 03 Jun 2024 18:23:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHg3MFJebi0AMEiF/DB64qHywmC9po1Ki163doJb0ZzhuVzWAmCpVqYYvMl/8ZsNk38RNQy2ClsQBbegQbN6zk=
-X-Received: by 2002:a05:6e02:12cf:b0:36d:cb9d:cc9e with SMTP id
- e9e14a558f8ab-3748b9cfee7mr107650315ab.2.1717464219826; Mon, 03 Jun 2024
- 18:23:39 -0700 (PDT)
+	bh=TsMImdYFRkA+pOndLmWX7p9H2qEq17QcVQSCTLk4QM0=;
+	b=IAV4EQnUNrbhpU9Xij5UDy2gDj5PSXPBxQjzJ6ZTxXGnTK015GfAXPFzR4ix7zBmJEljdx
+	2XSmEj3gsagW+NpOIKc1OoEfsTPMUz/qQht9SSjTRAbC4h6PRjXM6vPL0ikBofbTkmlJMq
+	5kwmJicJf0zPJZPz3Iu1T+8eOAo40vM=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-515-SJikkqORMAqbpA2TenS47Q-1; Tue,
+ 04 Jun 2024 03:41:40 -0400
+X-MC-Unique: SJikkqORMAqbpA2TenS47Q-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 007853806620;
+	Tue,  4 Jun 2024 07:41:40 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.9])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id B30C4492EE6;
+	Tue,  4 Jun 2024 07:41:38 +0000 (UTC)
+Date: Tue, 4 Jun 2024 15:41:35 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Coiby Xu <coxu@redhat.com>
+Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
+	Milan Broz <gmazyland@gmail.com>,
+	Thomas Staudt <tstaudt@de.ibm.com>,
+	Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
+	Kairui Song <ryncsn@gmail.com>,
+	Jan Pazdziora <jpazdziora@redhat.com>,
+	Pingfan Liu <kernelfans@gmail.com>, Dave Young <dyoung@redhat.com>,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	Dave Hansen <dave.hansen@intel.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Eric Biederman <ebiederm@xmission.com>
+Subject: Re: [PATCH v4 1/7] kexec_file: allow to place kexec_buf randomly
+Message-ID: <Zl7FLw+YrFN/blA+@MiWiFi-R3L-srv>
+References: <20240523050451.788754-1-coxu@redhat.com>
+ <20240523050451.788754-2-coxu@redhat.com>
 MIME-Version: 1.0
-References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
- <cover.1717111180.git.ashish.kalra@amd.com> <f4be03b8488665f56a1e5c6e6459f447352dfcf5.1717111180.git.ashish.kalra@amd.com>
- <20240603085654.GBZl2FVjPd-gagt-UA@fat_crate.local> <8e3dfc15-f609-4839-85c7-1cc8cefd7acc@amd.com>
- <Zl3HfiQ6oHdTdOdA@kernel.org> <1ef36309-8d7f-447b-a54a-3cdafeccca64@amd.com>
- <20240603144639.GCZl3XTwmFHwi-KUZW@fat_crate.local> <Zl3hwYL2GDiyUfGo@kernel.org>
-In-Reply-To: <Zl3hwYL2GDiyUfGo@kernel.org>
-From: Dave Young <dyoung@redhat.com>
-Date: Tue, 4 Jun 2024 09:23:58 +0800
-Message-ID: <CALu+AoSnA4323QbQG7wrNptosz7tfEfztsE1=o6G=FaLbQ_tKQ@mail.gmail.com>
-Subject: Re: [PATCH v7 1/3] efi/x86: Fix EFI memory map corruption with kexec
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>, "Kalra, Ashish" <ashish.kalra@amd.com>, tglx@linutronix.de, 
-	mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org, 
-	rafael@kernel.org, hpa@zytor.com, peterz@infradead.org, 
-	adrian.hunter@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com, 
-	jun.nakajima@intel.com, rick.p.edgecombe@intel.com, thomas.lendacky@amd.com, 
-	michael.roth@amd.com, seanjc@google.com, kai.huang@intel.com, bhe@redhat.com, 
-	kirill.shutemov@linux.intel.com, bdas@redhat.com, vkuznets@redhat.com, 
-	dionnaglaze@google.com, anisinha@redhat.com, jroedel@suse.de, ardb@kernel.org, 
-	kexec@lists.infradead.org, linux-coco@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+Content-Disposition: inline
+In-Reply-To: <20240523050451.788754-2-coxu@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240603_182346_872535_BAF9A28F 
-X-CRM114-Status: GOOD (  19.70  )
+X-CRM114-CacheID: sfid-20240604_004150_759941_0A792E7C 
+X-CRM114-Status: GOOD (  23.39  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -109,41 +91,95 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, 3 Jun 2024 at 23:33, Mike Rapoport <rppt@kernel.org> wrote:
->
-> On Mon, Jun 03, 2024 at 04:46:39PM +0200, Borislav Petkov wrote:
-> > On Mon, Jun 03, 2024 at 09:01:49AM -0500, Kalra, Ashish wrote:
-> > > If we skip efi_arch_mem_reserve() (which should probably be anyway skipped
-> > > for kexec case), then for kexec boot, EFI memmap is memremapped in the same
-> > > virtual address as the first kernel and not the allocated memblock address.
-> >
-> > Are you saying that we should simply do
-> >
-> > diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-> > index fdf07dd6f459..410cb0743289 100644
-> > --- a/drivers/firmware/efi/efi.c
-> > +++ b/drivers/firmware/efi/efi.c
-> > @@ -577,6 +577,9 @@ void __init efi_mem_reserve(phys_addr_t addr, u64 size)
-> >       if (WARN_ON_ONCE(efi_enabled(EFI_PARAVIRT)))
-> >               return;
-> >
-> > +     if (kexec_in_progress)
-> > +             return;
-> > +
+On 05/23/24 at 01:04pm, Coiby Xu wrote:
+> Currently, kexec_buf is placed in order which means for the same
+> machine, the info in the kexec_buf is always located at the same
+> position each time the machine is booted. This may cause a risk for
+> sensitive information like LUKS volume key. Now struct kexec_buf has a
+> new field random which indicates it's supposed to be placed in a random
+> position.
+> 
+> Suggested-by: Jan Pazdziora <jpazdziora@redhat.com>
+> Signed-off-by: Coiby Xu <coxu@redhat.com>
+> ---
+>  include/linux/kexec.h |  2 ++
+>  kernel/kexec_file.c   | 15 +++++++++++++++
+>  2 files changed, 17 insertions(+)
+> 
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index f0e9f8eda7a3..cc81b8a903ab 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -171,6 +171,7 @@ int kexec_image_post_load_cleanup_default(struct kimage *image);
+>   * @buf_min:	The buffer can't be placed below this address.
+>   * @buf_max:	The buffer can't be placed above this address.
+>   * @top_down:	Allocate from top of memory.
+> + * @random:	Place the buffer at a random position.
+>   */
+>  struct kexec_buf {
+>  	struct kimage *image;
+> @@ -182,6 +183,7 @@ struct kexec_buf {
+>  	unsigned long buf_min;
+>  	unsigned long buf_max;
+>  	bool top_down;
+> +	bool random;
+>  };
+>  
+>  int kexec_load_purgatory(struct kimage *image, struct kexec_buf *kbuf);
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index 3d64290d24c9..06b77f9ac4cc 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/elfcore.h>
+>  #include <linux/kernel.h>
+>  #include <linux/kernel_read_file.h>
+> +#include <linux/prandom.h>
+>  #include <linux/syscalls.h>
+>  #include <linux/vmalloc.h>
+>  #include "kexec_internal.h"
+> @@ -437,6 +438,16 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+>  	return ret;
+>  }
+>  
+> +static unsigned long kexec_random_start(unsigned long start, unsigned long end)
+> +{
+> +	unsigned long temp_start;
+> +	unsigned short i;
+> +
+> +	get_random_bytes(&i, sizeof(unsigned short));
+> +	temp_start = start + (end - start) / USHRT_MAX * i;
+> +	return temp_start;
+> +}
+> +
+>  static int locate_mem_hole_top_down(unsigned long start, unsigned long end,
+>  				    struct kexec_buf *kbuf)
+>  {
+> @@ -445,6 +456,8 @@ static int locate_mem_hole_top_down(unsigned long start, unsigned long end,
+>  
+>  	temp_end = min(end, kbuf->buf_max);
+>  	temp_start = temp_end - kbuf->memsz + 1;
+> +	if (kbuf->random)
+> +		temp_start = kexec_random_start(temp_start, temp_end);
 
-kexec_in_progress is only for checking if this is in a reboot (kexec) code path.
-But eif_mem_reserve is only called during the boot time so checking
-kexec_in_progress is meaningless here.
-current_kernel_is_booted_via_kexec != is_rebooting_with_kexec
+As we discussed before, this need be limited in kdump scope, seems v4
+doesn't include the change.
 
-The code change below in the patch looks good to me, but I'm not sure
-what caused the memory corruption, it indeed worth some more digging,
-maybe SEV/SNP related.
-+       if (md.attribute & EFI_MEMORY_RUNTIME)
-+               return;
-
-Thanks
-Dave
+>  
+>  	do {
+>  		/* align down start */
+> @@ -482,6 +495,8 @@ static int locate_mem_hole_bottom_up(unsigned long start, unsigned long end,
+>  	unsigned long temp_start, temp_end;
+>  
+>  	temp_start = max(start, kbuf->buf_min);
+> +	if (kbuf->random)
+> +		temp_start = kexec_random_start(temp_start, end);
+>  
+>  	do {
+>  		temp_start = ALIGN(temp_start, kbuf->buf_align);
+> -- 
+> 2.45.0
+> 
 
 
 _______________________________________________
