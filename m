@@ -4,91 +4,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 43C18C27C53
-	for <kexec@archiver.kernel.org>; Wed,  5 Jun 2024 11:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 0B251C25B76
+	for <kexec@archiver.kernel.org>; Wed,  5 Jun 2024 12:21:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=fxCOegVY+DMSF8c+qxB2iQy4eZvDXmOOL8u/yg4Bnmw=; b=FWM1TxWE68YMFk
-	wSrnRRWGdZRKADJ45tdBqhGosqB3f7enURrChsyY8kx3gL0ha8ihO/wpXRScKf9d0OdzDddBjFceC
-	rdpob7FfO+Rym+FNE0N1LgqXZDBHzfMKYZWAZZT2iP9KbZtzgbLBJuSwN1IQpcFR1YOxAeXsV1LIL
-	MtWoGhNAM41hFwWVoXSPYdRRGph8h9p5Z2WQ4+TN9lMIL2gRsQfZjhaK2ebjRERvuyUltHUcdAld6
-	5h8kMpDB4rkYeiHn9y0WUWiklrI67ulDbBVvvmDSJATryQN+CzfoNZ5gp+eDPYzuUzsscVUH6bjrc
-	HQz3iDdZWF1Cr64D3Jtg==;
+	List-Owner; bh=+WeCiSe659XXwj5U5x6EYOXehn9wKwS7GdFZ/z7JgwQ=; b=VwnGmEcFyUUotC
+	V9nvBoCJv6TdKCb0UhKFd3wIfefwfqOXxHUQeQPUV7VyV6KpIPtjd4ep9PKdK5/T1eJKx6fHp7JuT
+	xUXVHZUbGLTYvdALSNysrZ9hOlOmRiClGcOikLitHoprINNHdiMYJcD7q2eN9b4zg5xYf6ufw6gLF
+	RorlPayB7bx5PqPPY+su8fruWlOFhqg2fYeJT/ZuXD8t4cGPIc3KkITQfgzXbiMSsyl3gfhKpxexu
+	ctdFF5rqxJjbTrvCMO8Fd1QSCi9lyo5TdLJAyS5TocRhoVez/s/cBR54pQkIanGuqHDWVs4uWBf7t
+	BQBf++OF9/bPJ/KDuxCQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sEoch-00000005gEl-3znI;
-	Wed, 05 Jun 2024 11:16:07 +0000
-Received: from mail.alien8.de ([65.109.113.108])
+	id 1sEpeN-00000005xoZ-22yB;
+	Wed, 05 Jun 2024 12:21:55 +0000
+Received: from mgamail.intel.com ([192.198.163.19])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sEoce-00000005gCC-2c45
+	id 1sEpeJ-00000005xlu-3rsM
 	for kexec@lists.infradead.org;
-	Wed, 05 Jun 2024 11:16:06 +0000
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 5CC1E40E0191;
-	Wed,  5 Jun 2024 11:16:02 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 2MM_uH0b_vZ5; Wed,  5 Jun 2024 11:15:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1717586158; bh=MyNP/8A3mneC0TU0vkHmFz9QbD6ZPJz2lnq7g0nJwME=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=asNtDGm0aWrqbbyqfz8gB/pIkAwBrS0jW1fszHDBAAE73YTZ1RXmITordyLpNuAhX
-	 tUz7P7b7vWLs+JLMUA35+eo4pHvEJXdcODIEuYvYcNEAP7586+vjckHFwuDboH1ljM
-	 OE5XYQzs1qvsg5G4qWvi5TqHshLp5wFVV/fBxmdsChG0uOrJSWAxt17BAD+0TRbTWy
-	 ye+MDYoA+c3o8gUTX9RQqa19pNy62l6UKhx+TT1AWuKyorUWYwmnhHQ5sCDFTyxMpV
-	 UQwfYaQTey+ui3KYvP+gHOXsKX/n2Nc62GvrjxlA2Y+DEqRE9zk+iPtEZTBnI6SSIt
-	 ZGQFLFMOp6qDBWAadS70VF9O8UUJIlmRQ1lFlZybAyEYnhkd5CBWvrtSI3nAHZ/gzm
-	 4Sr/r0cb7UGb/VMo/3bBRtYjavnG1zO6gfSR02K9obmsBgFXoUSziNzeTJJNRER5aX
-	 Py1DQa6A1lYwmXiw6mFSSky198TDK0p7NWndsTKW9JDo9+RkmCerytU3W94k7rDZQg
-	 IxoiUgrhUHgJDTBSiMzkXxnNyGUSU0v723hRw990dEOJUGPu4JYGi8mta1rgJ6FzXn
-	 4FkfWdMKfAdj5xWNC3fq9Nyno77B4x1ZMMiPutVhTMC5YVy+u5Pk78y9vfPKQ+jSUK
-	 xiThwe6cbzf+amDt7WH8S3Ys=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2559440E016E;
-	Wed,  5 Jun 2024 11:15:29 +0000 (UTC)
-Date: Wed, 5 Jun 2024 13:15:27 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Dave Young <dyoung@redhat.com>, Mike Rapoport <rppt@kernel.org>,
-	"Kalra, Ashish" <ashish.kalra@amd.com>, tglx@linutronix.de,
-	mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org,
-	rafael@kernel.org, hpa@zytor.com, peterz@infradead.org,
-	adrian.hunter@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com,
-	jun.nakajima@intel.com, rick.p.edgecombe@intel.com,
-	thomas.lendacky@amd.com, michael.roth@amd.com, seanjc@google.com,
-	kai.huang@intel.com, bhe@redhat.com,
-	kirill.shutemov@linux.intel.com, bdas@redhat.com,
-	vkuznets@redhat.com, dionnaglaze@google.com, anisinha@redhat.com,
-	jroedel@suse.de, kexec@lists.infradead.org,
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 1/3] efi/x86: Fix EFI memory map corruption with kexec
-Message-ID: <20240605111527.GEZmBIzwpsrai31qWT@fat_crate.local>
-References: <1ef36309-8d7f-447b-a54a-3cdafeccca64@amd.com>
- <20240603144639.GCZl3XTwmFHwi-KUZW@fat_crate.local>
- <Zl3hwYL2GDiyUfGo@kernel.org>
- <CALu+AoSnA4323QbQG7wrNptosz7tfEfztsE1=o6G=FaLbQ_tKQ@mail.gmail.com>
- <20240604094358.GBZl7h3otTCYJ5rkkt@fat_crate.local>
- <CALu+AoS=-=PbMRxC-1rpfSTPpMOmM5BGRBjLhDwgOC3=4C71ng@mail.gmail.com>
- <20240604180212.GHZl9WpAfNVERTjMqw@fat_crate.local>
- <CALu+AoRqNmsWXi+HXYNYTY=pXJ3sLTLKyXNeJz9EoxEsHzFdQA@mail.gmail.com>
- <20240605074257.GAZmAXAbkc5TGVds5u@fat_crate.local>
- <CAMj1kXFweoskB_qnUFA1b+QXWhjovwMfpM00cGb9KMcm4Zr7EA@mail.gmail.com>
+	Wed, 05 Jun 2024 12:21:53 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1717590112; x=1749126112;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=UHHCuXxgr4YI01SKxX+c/bFPiTRBKJKPTARrf8CN9LM=;
+  b=kjfbDQ1uh0JBK5ZsDI1MjXmv4q22vbkC7BFNN3vxJSjEduuo4RdcWjRE
+   WZSFgA32clb2QeY1ow7KDxZbobDm8D9zY2w5/BXy4HrZJg9qdPbujwhMe
+   E879oljGRZdxHu9UZdzsCuGI/Hzi46T9bJyV23y3LBMk24wHiEciMdjGr
+   zgBzVZew1ecmAGdiGHoDKIXzBC8nrCjIUMCr+DodheLdSnLZzT0PUAL9m
+   7e5MI1+BX38Dhz3+rUoYN4YdFdHllUr3AVjvizwMzUUWc8bpu51qdrTRx
+   4iUoC4pssZcVeMMxtE2oJumZ7xNNunj4lbIrVWZnC7shVMoUd5Pbfmknb
+   g==;
+X-CSE-ConnectionGUID: ofb42qNqRxecUZIAYmFDKw==
+X-CSE-MsgGUID: Yef0TEJ0Qyu/AaZeg4viYQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11093"; a="13998769"
+X-IronPort-AV: E=Sophos;i="6.08,216,1712646000"; 
+   d="scan'208";a="13998769"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2024 05:21:49 -0700
+X-CSE-ConnectionGUID: CApkPYYZQBC0yiDEy7bMSw==
+X-CSE-MsgGUID: 1fIP69SpRjaarDLU3PYGpA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,216,1712646000"; 
+   d="scan'208";a="68714614"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa001.fm.intel.com with ESMTP; 05 Jun 2024 05:21:43 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 5E1A81B6; Wed, 05 Jun 2024 15:21:42 +0300 (EEST)
+Date: Wed, 5 Jun 2024 15:21:42 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@intel.com>, adrian.hunter@intel.com, 
+	ardb@kernel.org, ashish.kalra@amd.com, bhe@redhat.com, 
+	dave.hansen@linux.intel.com, elena.reshetova@intel.com, haiyangz@microsoft.com, hpa@zytor.com, 
+	jun.nakajima@intel.com, kai.huang@intel.com, kexec@lists.infradead.org, 
+	kys@microsoft.com, linux-acpi@vger.kernel.org, linux-coco@lists.linux.dev, 
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, ltao@redhat.com, mingo@redhat.com, 
+	peterz@infradead.org, rafael@kernel.org, rick.p.edgecombe@intel.com, 
+	sathyanarayanan.kuppuswamy@linux.intel.com, seanjc@google.com, tglx@linutronix.de, thomas.lendacky@amd.com, 
+	x86@kernel.org
+Subject: Re: [PATCHv11.1 11/19] x86/tdx: Convert shared memory back to
+ private on kexec
+Message-ID: <alkew673cceojzmhsp3wj43yv76cek5ydh2iosfcphuv6ro26q@pj6whxcoetht>
+References: <20240531151442.GMZlnpYkDCRlg1_YS0@fat_crate.local>
+ <20240602142303.3263551-1-kirill.shutemov@linux.intel.com>
+ <20240603083754.GAZl2A4uXvVB5w4l9u@fat_crate.local>
+ <noym2bqgxqcyhhdzoax7gvdfzhh7rtw7cv236fhzpqh3wqf76e@2jj733skv7y4>
+ <78d33a31-0ef2-417b-a240-b2880b64518e@intel.com>
+ <u3hg3fqc2nxsjtfugjmmzlahwriyqlebnkxrbzgrxlkj6l3k36@yd3yudglgevi>
+ <20240604180554.GIZl9XgscEI3PUvR-W@fat_crate.local>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CAMj1kXFweoskB_qnUFA1b+QXWhjovwMfpM00cGb9KMcm4Zr7EA@mail.gmail.com>
+In-Reply-To: <20240604180554.GIZl9XgscEI3PUvR-W@fat_crate.local>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240605_041605_245314_60A82B4C 
-X-CRM114-Status: GOOD (  19.22  )
+X-CRM114-CacheID: sfid-20240605_052152_021181_BC0919DF 
+X-CRM114-Status: GOOD (  16.35  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -105,49 +100,52 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Jun 05, 2024 at 10:17:22AM +0200, Ard Biesheuvel wrote:
-> I'd argue for the opposite: ideally, the difference between the first
-> boot and not-the-first-boot should be abstracted away by the
-> 'bootloader' side of kexec as much as possible, so that the tricky
-> early startup code doesn't have to be riddled with different code
-> paths depending on !kexec vs kexec.
+On Tue, Jun 04, 2024 at 08:05:54PM +0200, Borislav Petkov wrote:
+> On Tue, Jun 04, 2024 at 07:14:00PM +0300, Kirill A. Shutemov wrote:
+> > 			/*
+> > 			 * If tdx_enc_status_changed() fails, it leaves memory
+> > 			 * in an unknown state. If the memory remains shared,
+> > 			 * it can result in an unrecoverable guest shutdown on
+> > 			 * the first accessed through a private mapping.
+> 
+> "access"
 
-Well, off and on we end up needing to be able to ask whether the current
-kernel is kexec-ed. So you need to be able to access that aspect in
-kernel code - not in the bootloader. Perhaps read it from the
-bootloader, sure.
+Okay.
 
-But see my other mail from just now - it might end up not needing it
-after all and I'd prefer if we never ever have to ask that question but
-just from staring at EFI code it reminded me that we do need to ask that
-question already:
+> So this sentence above can go too, right?
 
-        if (efi_setup)
-                kexec_enter_virtual_mode();
-        else
-                __efi_enter_virtual_mode();
+I don't think so.
 
-*exactly* because of EFI and that virtual_map call nonsense of allowing
-it only once.
+> Because that comment is in tdx_kexec_finish() and we're basically going
+> off to kexec. So can a guest even access it through a private mapping?
+> We're shutting down so nothing is running anymore...
 
-And we check efi_setup here because that works. But you can't use that
-globally. And so on...
+This kernel can't. But the next kernel can.
 
-> TDX is a good case in point here: rather than add more conditionals,
-> I'd urge to remove them so the TDX startup code doesn't have to care
-> about the difference at all. If there is anything special that needs
-> to be done, it belongs in the kexec implementation of the previous
-> kernel.
+If a page can be accessed via private mapping is determined by the
+presence in Secure EPT. This state persist across kexec.
 
-Sure, but reality is not as easy sometimes.
+> > 			 * The kdump kernel boot is not impacted as it uses
+> > 			 * a pre-reserved memory range that is always private.
+> > 			 * However, gathering crash information could lead to
+> > 			 * a crash if it accesses unconverted memory through
+> > 			 * a private mapping.
+> 
+> When does the kexec kernel even get such a private mapping? It is not
+> even up yet...
 
-Thx.
+Crash kernel provides access to this memory via /proc/vmcore. Crash kernel
+will assume all memory there is private.
+
+> > 			 * pr_err() may assist in understanding such crashes.
+> 
+> "Print error info in order to leave bread crumbs for debugging." is what
+> I'd say.
+
+Okay.
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+  Kiryl Shutsemau / Kirill A. Shutemov
 
 _______________________________________________
 kexec mailing list
