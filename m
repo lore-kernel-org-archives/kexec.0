@@ -4,80 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CC351C25B76
-	for <kexec@archiver.kernel.org>; Wed,  5 Jun 2024 08:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 86292C27C53
+	for <kexec@archiver.kernel.org>; Wed,  5 Jun 2024 11:09:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=zwPFfzex12dUveUIi90MFfvhR4lPtXdrkj+wPhjqRso=; b=oSFOAaGTAypNSQ
-	kJvloq2dHnxbbFTcGkVdGa3Ki5Stc01R2sw7UEErReLtU8DSv7AeD+QQql2KzTHxeggdkE9tlUmEy
-	zuRBgWsz5V5XOrljR5m52r+9O2mFmdLawB9LSNbfN4PK0CRbHLEsRx4IogxgSmxiSlGtS+T0LDfp/
-	h5RX2Ixf/V33AeZh4cyc4mTujODOni/ODeGsDrBIdTdChQWc3kOrGcIUrzpffvWJyiMWKWaDW/bt+
-	dgWb1mzsgxml8dO61KsHZU/4mUZdpnBG7Dj4BzbRnWlbDeUVq85nP64mX8rh4E5OEUbrzeVT+R+Yw
-	Vct2U+w7UsjIn87eTQJA==;
+	List-Owner; bh=ZSlMuMdl9gD+XyKOIW241bdTKg5gj037qyxm76yjoyI=; b=OH36n/6e9I3LdX
+	DoyRL+jqrcwhNNHewMlFzvwapF3FaK9zFydQmjHn4ikST2GXnQuapWBstiQZsgplIEjs9J0B7oj6B
+	nMTFJE8ymgnLn7CGfXOQZOmzWakr1taD16NBCt97p+J5HCun9BcD4P0L9vZLVoutXSaVobAr8xsZl
+	08+E2C0zOvY8DyQ12QkN3uRzDWvswgNrmlU9/tKwJVrMExhLa/9W+j3+cVZh+GCZhWjCJRx3w0upy
+	n+hVyKGXPdypfwuNFQJj7fLYaXh5njBsjcp22FHLFCCstpCmGvThTbqPtcB/cSVxuyTe+lcTQ/Rsm
+	GAvdW5KWhEBnNs+K8xpA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sElue-00000005BDK-1znH;
-	Wed, 05 Jun 2024 08:22:28 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1sEoWi-00000005euh-0A9y;
+	Wed, 05 Jun 2024 11:09:56 +0000
+Received: from mail.alien8.de ([2a01:4f9:3051:3f93::2])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sElub-00000005BBp-0VZW
+	id 1sEoWd-00000005es6-2BHO
 	for kexec@lists.infradead.org;
-	Wed, 05 Jun 2024 08:22:26 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717575742;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BN2s5RkmRwWRATVy8iKU5IoEWdjTC3uEaBsPoMrm1Tw=;
-	b=Q0Ud0WsLgjsPrTS2PCD10LJd3dEs83/A7bYn0DpA/Az2sZ6E8RqlIud4T7v1y53FoW6iHi
-	A7FFKXZLNenr3sD+uVeN2gtWdbgddaS/Jiycq6I7S8ve8pkw2DTooYCnRomsbfaAyiSiYu
-	uqaY9CJFXWEYDCEWlA8luK85dJ7jOVM=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-633-VB7HM_AlMjizRozuDTrOFQ-1; Wed, 05 Jun 2024 04:22:17 -0400
-X-MC-Unique: VB7HM_AlMjizRozuDTrOFQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	Wed, 05 Jun 2024 11:09:53 +0000
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id E13B640E0176;
+	Wed,  5 Jun 2024 11:09:45 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id iJf5bq__s4gN; Wed,  5 Jun 2024 11:09:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1717585781; bh=u8G7LlOZuSGdMErqsnXyAGVosfE3DwlKRA2nP23l5K8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aWYDBVHBUclEEG1gDdbe+IdXFSR610ZcoZ15fdD8wx7IG52P3H1YvEhtTtsD9nONn
+	 EgachKPplm43FJBaLMC5cc6CvfKV8MA6SbwzeUu688pecrXXCwz7NgHD2A/vpnmyDI
+	 RyJkAcnNA1Bcw8f8SHu++1GS8A9sSmpx7KeGtYLbr9WzqlMvWymSdqGrctv/FnXRUI
+	 /v4rEcLYOYGvvAJI8FsNk9w9gkIU13OJMJIrqITMCtL4fQMOJdLywG351jw+GburS3
+	 bBcRign7gnvOvXogKGlvpwebk/wxjW+WltpUQFOHnmWjW7jokjkP0FCJ6m/EvuLDTe
+	 BbqVHmANcg2kg0cCHJdFwMhlxCE6azl8xwW2RkRPsTxwRItOuqsMhQDYruReg6HJyR
+	 6sUhmNdlZGoCqckVBNJY7ipHisko8EqoNU/rhHcBqsr6g313/KLk9HxSbdYRTdPm8l
+	 QEZSleJvDkkR2JwNGSKsLLkuvNMWSJaGpvKCmbqrVHmzI08iJxzauhUwV4ccvI/Zqr
+	 hfGKSO2De6TDGnPBS6+11FvEK0QNVZDFIWT6waY8YUuOVx+tr/qnezVh6BEbypjMNU
+	 E1DdG2C1jyw2gnmyh3zRSpfjkQ0ZIaHNe1mOzFZIIGKdj2pZQ1JRAAcBC7k+puZ9nn
+	 A1smz3yi1mW/YVlSH/e7KPoI=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0112F101A520;
-	Wed,  5 Jun 2024 08:22:17 +0000 (UTC)
-Received: from localhost (unknown [10.72.116.93])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 10CF6202A438;
-	Wed,  5 Jun 2024 08:22:15 +0000 (UTC)
-Date: Wed, 5 Jun 2024 16:22:12 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Coiby Xu <coxu@redhat.com>
-Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
-	Milan Broz <gmazyland@gmail.com>,
-	Thomas Staudt <tstaudt@de.ibm.com>,
-	Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
-	Kairui Song <ryncsn@gmail.com>,
-	Jan Pazdziora <jpazdziora@redhat.com>,
-	Pingfan Liu <kernelfans@gmail.com>, Dave Young <dyoung@redhat.com>,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	Dave Hansen <dave.hansen@intel.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>, Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_byb" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH v4 2/7] crash_dump: make dm crypt keys persist for the
- kdump kernel
-Message-ID: <ZmAgNIXXa32Bv/Of@MiWiFi-R3L-srv>
-References: <20240523050451.788754-1-coxu@redhat.com>
- <20240523050451.788754-3-coxu@redhat.com>
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5225D40E016A;
+	Wed,  5 Jun 2024 11:09:11 +0000 (UTC)
+Date: Wed, 5 Jun 2024 13:09:04 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Dave Young <dyoung@redhat.com>, ardb@kernel.org,
+	dan.j.williams@intel.com
+Cc: "Kalra, Ashish" <ashish.kalra@amd.com>, Mike Rapoport <rppt@kernel.org>,
+	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+	x86@kernel.org, rafael@kernel.org, hpa@zytor.com,
+	peterz@infradead.org, adrian.hunter@intel.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com, jun.nakajima@intel.com,
+	rick.p.edgecombe@intel.com, thomas.lendacky@amd.com,
+	michael.roth@amd.com, seanjc@google.com, kai.huang@intel.com,
+	bhe@redhat.com, kirill.shutemov@linux.intel.com, bdas@redhat.com,
+	vkuznets@redhat.com, dionnaglaze@google.com, anisinha@redhat.com,
+	jroedel@suse.de, kexec@lists.infradead.org,
+	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 1/3] efi/x86: Fix EFI memory map corruption with kexec
+Message-ID: <20240605110904.GWZmBHUHSqCJVQYajF@fat_crate.local>
+References: <7eb4ca99-679c-4f23-9562-a39b966c28a0@amd.com>
+ <20240603165747.GGZl32C9yrmXJ4nhPT@fat_crate.local>
+ <2343889c-887a-49ce-86df-343737d70d37@amd.com>
+ <20240603171231.GJZl35f-BHvU2Pk3lb@fat_crate.local>
+ <ff28e3ea-c492-4db6-8781-abaec6320756@amd.com>
+ <CALu+AoQBXv-y43sx6E28UBVeVHUzRkWEzFxK6jsS5NpN2ho3YQ@mail.gmail.com>
+ <CALu+AoTY2Xxs_vUzCyfsxtk-ov2mzJhzyTbbA9MYeeVkmKTMsw@mail.gmail.com>
+ <CALu+AoSESmasAHqWdCGgQNbsTXfwbfhERBkaqSeaX881zqKtFg@mail.gmail.com>
+ <41e085b8-2b45-40ab-9a6f-f4ad975a0b06@amd.com>
+ <CALu+AoQ2jNjb+5MZfFtpT_Y=2gJRWwqEeWTpQkwNt0-U5fpO_w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20240523050451.788754-3-coxu@redhat.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
+In-Reply-To: <CALu+AoQ2jNjb+5MZfFtpT_Y=2gJRWwqEeWTpQkwNt0-U5fpO_w@mail.gmail.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240605_012225_372478_39D96B7B 
-X-CRM114-Status: GOOD (  16.03  )
+X-CRM114-CacheID: sfid-20240605_040951_735477_770EDBBD 
+X-CRM114-Status: GOOD (  11.22  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,77 +105,58 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 05/23/24 at 01:04pm, Coiby Xu wrote:
-.....
-> diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
-> new file mode 100644
-> index 000000000000..78809189084a
-> --- /dev/null
-> +++ b/kernel/crash_dump_dm_crypt.c
-> @@ -0,0 +1,113 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +#include <keys/user-type.h>
-> +#include <linux/crash_dump.h>
-> +
-> +#define KEY_NUM_MAX 128
-> +#define KEY_SIZE_MAX 256
-> +
-> +// The key scription has the format: cryptsetup:UUID 11+36+1(NULL)=48
-> +#define KEY_DESC_LEN 48
-> +
-> +static char *STATE_STR[] = {"fresh", "initialized", "recorded", "loaded"};
-> +static enum STATE_ENUM {
-> +	FRESH = 0,
-> +	INITIALIZED,
-> +	RECORDED,
-> +	LOADED,
-> +} state;
-> +
-> +static unsigned int key_count;
-> +static size_t keys_header_size;
+Moving Ard and Dan to To:
 
-These two global variables seems not so necessary. Please see comment at
-below.
+On Wed, Jun 05, 2024 at 10:28:18AM +0800, Dave Young wrote:
+> Ok, thanks!  I think the right way is creating two patches,  one to
+> remove the __efi_memmap_free,
 
-> +
-> +struct dm_crypt_key {
-> +	unsigned int key_size;
-> +	char key_desc[KEY_DESC_LEN];
-> +	u8 data[KEY_SIZE_MAX];
-> +};
-> +
-> +static struct keys_header {
-> +	unsigned int key_count;
-                     ~~~~~~~~
-                     This is the max number a system have from init();
-You can add one field member to record how many key slots have been
-used.
-> +	struct dm_crypt_key keys[] __counted_by(key_count);
-> +} *keys_header;
+Yap, that 
 
-Maybe we can rearrange the keys_header like below, the name may not be
-very appropriate though.
+  f0ef6523475f ("efi: Fix efi_memmap_alloc() leaks")
 
-static struct keys_header {
-	unsigned int max_key_slots;
-	unsigned int used_key_slots;
-	struct dm_crypt_key keys[] __counted_by(key_count);
-} *keys_header;
+needs revisiting.
 
->
+So AFAIU, the flow is this:
 
-> +
-> +static size_t get_keys_header_size(struct keys_header *keys_header,
-> +				   size_t key_count)
-> +{
-> +	return struct_size(keys_header, keys, key_count);
-> +}
+In a kexec-ed kernel:
 
-I personally don't think get_keys_header_size is so necessary. If we
-have to keep it, may be we can remove the global variable
-keys_header_size, we can call get_keys_header_size() and use local
-variable to record the value instead.
+1. efi_arch_mem_reserve() gets called by bgrt, erst, mokvar... whatever
+   to hold on to boot services regions for longer otherwise EFI
+   "implementations" explode.
 
+2. On same kexec-ed kernel, we call into kexec_enter_virtual_mode()
+   because it needs to get the runtime services regions from the first
+   kernel
+
+3. As part of that call, it'll do
+   efi_memmap_init_late->__efi_memmap_init():
+
+        if (efi.memmap.flags & (EFI_MEMMAP_MEMBLOCK | EFI_MEMMAP_SLAB))
+                __efi_memmap_free(efi.memmap.phys_map,
+
+and the memory which got allocated in step 1 is gone, thus reverting
+what efi_arch_mem_reserve() is trying to fix.
+
+IOW, we need a
+
+	EFI_MEMMAP_DO_NOT_TOUCH_MY_MEMORY
+
+flag which'll stop this from happening. But I'd prefer it if Ard decides
+what the right thing to do here is.
+
+> another is  skip efi_arch_mem_reserve when the EFI_MEMORY_RUNTIME bit
+> was set already.
+
+Can that even happen?
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
 
 _______________________________________________
 kexec mailing list
