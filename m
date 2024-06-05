@@ -4,82 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E892CC25B76
-	for <kexec@archiver.kernel.org>; Wed,  5 Jun 2024 08:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CC351C25B76
+	for <kexec@archiver.kernel.org>; Wed,  5 Jun 2024 08:22:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=e7UfBIxnqJxCR5Z31iS5jPQ6HKaNoRDKICddSdOVnUU=; b=kR5+oC5Dcw2aqK
-	4l/SfZeT1BACLxVfW+/uIBq9XhV9GImK448S1qbRZRKFddx/wipJ3SUguFNzy2ac+/by1Tt61Sran
-	43j8u2CdvmjD1LsCG6UjCLwhNlE4/R7p49iy2t63Au5zcOx9l84YYNse4VtIXCiF/bSgOBMm0Aops
-	NDL9UrXqt/Cv8y1wvfzfE2tCTsg/Ouwcr8Ph98XSeW6ZTTinJXEBZXXMHrBW9rBS933oT8hF+1Rni
-	wL2KfVG/XTxzIjPGbFwXS/ghowlCTTgfxDEZMVcvS9wgf7rJ6RNw1bszlZUf+HwR8rEN/GmXdwQ8F
-	U1P+vSmIho9zeIe+SpuQ==;
+	List-Owner; bh=zwPFfzex12dUveUIi90MFfvhR4lPtXdrkj+wPhjqRso=; b=oSFOAaGTAypNSQ
+	kJvloq2dHnxbbFTcGkVdGa3Ki5Stc01R2sw7UEErReLtU8DSv7AeD+QQql2KzTHxeggdkE9tlUmEy
+	zuRBgWsz5V5XOrljR5m52r+9O2mFmdLawB9LSNbfN4PK0CRbHLEsRx4IogxgSmxiSlGtS+T0LDfp/
+	h5RX2Ixf/V33AeZh4cyc4mTujODOni/ODeGsDrBIdTdChQWc3kOrGcIUrzpffvWJyiMWKWaDW/bt+
+	dgWb1mzsgxml8dO61KsHZU/4mUZdpnBG7Dj4BzbRnWlbDeUVq85nP64mX8rh4E5OEUbrzeVT+R+Yw
+	Vct2U+w7UsjIn87eTQJA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sElq0-0000000594Q-3x5c;
-	Wed, 05 Jun 2024 08:17:40 +0000
-Received: from sin.source.kernel.org ([2604:1380:40e1:4800::1])
+	id 1sElue-00000005BDK-1znH;
+	Wed, 05 Jun 2024 08:22:28 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sElpx-0000000592H-1n0z
+	id 1sElub-00000005BBp-0VZW
 	for kexec@lists.infradead.org;
-	Wed, 05 Jun 2024 08:17:38 +0000
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sin.source.kernel.org (Postfix) with ESMTP id 9C019CE124A
-	for <kexec@lists.infradead.org>; Wed,  5 Jun 2024 08:17:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9F8FC3277B
-	for <kexec@lists.infradead.org>; Wed,  5 Jun 2024 08:17:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717575454;
-	bh=SyrCABOxfzWFSovPG3pWSF6TsrdkmMeE5mrN2ab0BuI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=rWdluTXPbEFbLoMzAVsyPEa4VUNMNilDbm4uy+TGZYH8V1jS7yoNN4d93+g1Rob9g
-	 N/Y2HwvJkT7VEfg+hc63kTu+Yz2nheDnkkfu6a7chArO5ngy3g7IdqyMKmWJfMxH4t
-	 edldOrl1DwDGHRlhL3B7ehu6bJi2qay76ONDPTZ/KKGIxY909Abn8u4JbssRo+Zt7t
-	 Ww3+bgiCuOBWgSVuJ+K9Th1az6IAWSec+p5wH0d+c4+AzXxlrNnSxgYmc7WP7Ddt/f
-	 Fq9hFPSwqUM83rpb2k6rLbzv5Fx1wNqirmSLW9ZkyK4vjAL5XaSUjau1IrFSZKn7q8
-	 zpVKw0J5Dd9hA==
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2e96f29884dso21288361fa.0
-        for <kexec@lists.infradead.org>; Wed, 05 Jun 2024 01:17:34 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUUwNI1bxIg0bvyzf37FIag4z3khmGRrnS0b80HjFYIbi0leNZDt9R5EA0Ph7MUtUBwg16m+RHBWwdF1pYFQMnQtpN8AoM2ZhEv
-X-Gm-Message-State: AOJu0YzaOcet4kvXJ8HNbNRky2VhAuGlZwQCJ1XF/Wsj2BQi7+nYlIf6
-	aCM/cgNj+Z+YP8gkWzhkqGLQJw6qpdCmQ2fHfp3rk4mkYBLZd8G304Uw/NHA4FQ3elgadt/aEOn
-	+rCO7bQKNyKnecxIgneBwpwslLrQ=
-X-Google-Smtp-Source: AGHT+IGlZ8B/8qUP04+W16z855ba/YXAp1EIwaPL434uTzFqdW4tr39B39lzlfhSYchjCrvswDx/zghAaOFUls5LZKc=
-X-Received: by 2002:a2e:a173:0:b0:2e1:e33d:67f6 with SMTP id
- 38308e7fff4ca-2eac79e9d52mr8409391fa.28.1717575453266; Wed, 05 Jun 2024
- 01:17:33 -0700 (PDT)
+	Wed, 05 Jun 2024 08:22:26 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717575742;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BN2s5RkmRwWRATVy8iKU5IoEWdjTC3uEaBsPoMrm1Tw=;
+	b=Q0Ud0WsLgjsPrTS2PCD10LJd3dEs83/A7bYn0DpA/Az2sZ6E8RqlIud4T7v1y53FoW6iHi
+	A7FFKXZLNenr3sD+uVeN2gtWdbgddaS/Jiycq6I7S8ve8pkw2DTooYCnRomsbfaAyiSiYu
+	uqaY9CJFXWEYDCEWlA8luK85dJ7jOVM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-633-VB7HM_AlMjizRozuDTrOFQ-1; Wed, 05 Jun 2024 04:22:17 -0400
+X-MC-Unique: VB7HM_AlMjizRozuDTrOFQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0112F101A520;
+	Wed,  5 Jun 2024 08:22:17 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.93])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 10CF6202A438;
+	Wed,  5 Jun 2024 08:22:15 +0000 (UTC)
+Date: Wed, 5 Jun 2024 16:22:12 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Coiby Xu <coxu@redhat.com>
+Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
+	Milan Broz <gmazyland@gmail.com>,
+	Thomas Staudt <tstaudt@de.ibm.com>,
+	Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
+	Kairui Song <ryncsn@gmail.com>,
+	Jan Pazdziora <jpazdziora@redhat.com>,
+	Pingfan Liu <kernelfans@gmail.com>, Dave Young <dyoung@redhat.com>,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	Dave Hansen <dave.hansen@intel.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Vivek Goyal <vgoyal@redhat.com>, Kees Cook <keescook@chromium.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_byb" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH v4 2/7] crash_dump: make dm crypt keys persist for the
+ kdump kernel
+Message-ID: <ZmAgNIXXa32Bv/Of@MiWiFi-R3L-srv>
+References: <20240523050451.788754-1-coxu@redhat.com>
+ <20240523050451.788754-3-coxu@redhat.com>
 MIME-Version: 1.0
-References: <8e3dfc15-f609-4839-85c7-1cc8cefd7acc@amd.com> <Zl3HfiQ6oHdTdOdA@kernel.org>
- <1ef36309-8d7f-447b-a54a-3cdafeccca64@amd.com> <20240603144639.GCZl3XTwmFHwi-KUZW@fat_crate.local>
- <Zl3hwYL2GDiyUfGo@kernel.org> <CALu+AoSnA4323QbQG7wrNptosz7tfEfztsE1=o6G=FaLbQ_tKQ@mail.gmail.com>
- <20240604094358.GBZl7h3otTCYJ5rkkt@fat_crate.local> <CALu+AoS=-=PbMRxC-1rpfSTPpMOmM5BGRBjLhDwgOC3=4C71ng@mail.gmail.com>
- <20240604180212.GHZl9WpAfNVERTjMqw@fat_crate.local> <CALu+AoRqNmsWXi+HXYNYTY=pXJ3sLTLKyXNeJz9EoxEsHzFdQA@mail.gmail.com>
- <20240605074257.GAZmAXAbkc5TGVds5u@fat_crate.local>
-In-Reply-To: <20240605074257.GAZmAXAbkc5TGVds5u@fat_crate.local>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Wed, 5 Jun 2024 10:17:22 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFweoskB_qnUFA1b+QXWhjovwMfpM00cGb9KMcm4Zr7EA@mail.gmail.com>
-Message-ID: <CAMj1kXFweoskB_qnUFA1b+QXWhjovwMfpM00cGb9KMcm4Zr7EA@mail.gmail.com>
-Subject: Re: [PATCH v7 1/3] efi/x86: Fix EFI memory map corruption with kexec
-To: Borislav Petkov <bp@alien8.de>
-Cc: Dave Young <dyoung@redhat.com>, Mike Rapoport <rppt@kernel.org>, 
-	"Kalra, Ashish" <ashish.kalra@amd.com>, tglx@linutronix.de, mingo@redhat.com, 
-	dave.hansen@linux.intel.com, x86@kernel.org, rafael@kernel.org, hpa@zytor.com, 
-	peterz@infradead.org, adrian.hunter@intel.com, 
-	sathyanarayanan.kuppuswamy@linux.intel.com, jun.nakajima@intel.com, 
-	rick.p.edgecombe@intel.com, thomas.lendacky@amd.com, michael.roth@amd.com, 
-	seanjc@google.com, kai.huang@intel.com, bhe@redhat.com, 
-	kirill.shutemov@linux.intel.com, bdas@redhat.com, vkuznets@redhat.com, 
-	dionnaglaze@google.com, anisinha@redhat.com, jroedel@suse.de, 
-	kexec@lists.infradead.org, linux-coco@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
+Content-Disposition: inline
+In-Reply-To: <20240523050451.788754-3-coxu@redhat.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240605_011737_828279_182431CF 
-X-CRM114-Status: GOOD (  19.86  )
+X-CRM114-CacheID: sfid-20240605_012225_372478_39D96B7B 
+X-CRM114-Status: GOOD (  16.03  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -96,36 +94,77 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, 5 Jun 2024 at 09:43, Borislav Petkov <bp@alien8.de> wrote:
->
-> On Wed, Jun 05, 2024 at 10:53:44AM +0800, Dave Young wrote:
-> > It's something good to have but not must for the time being,  also no
-> > idea how to save the status across boot, for EFI boot case probably a
-> > EFI var can be used;
->
-> Yes.
->
-> > but how can it be cleared in case of physical boot.  Otherwise
-> > probably injecting some kernel parameters, anyway this needs more
-> > thinking.
->
-> Yeah, this'll need proper analysis whether we can even do that reliably.
->
-> We need to increment it only on the kexec reboot paths and clear it on
-> the normal reboot paths.
+On 05/23/24 at 01:04pm, Coiby Xu wrote:
+.....
+> diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
+> new file mode 100644
+> index 000000000000..78809189084a
+> --- /dev/null
+> +++ b/kernel/crash_dump_dm_crypt.c
+> @@ -0,0 +1,113 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +#include <keys/user-type.h>
+> +#include <linux/crash_dump.h>
+> +
+> +#define KEY_NUM_MAX 128
+> +#define KEY_SIZE_MAX 256
+> +
+> +// The key scription has the format: cryptsetup:UUID 11+36+1(NULL)=48
+> +#define KEY_DESC_LEN 48
+> +
+> +static char *STATE_STR[] = {"fresh", "initialized", "recorded", "loaded"};
+> +static enum STATE_ENUM {
+> +	FRESH = 0,
+> +	INITIALIZED,
+> +	RECORDED,
+> +	LOADED,
+> +} state;
+> +
+> +static unsigned int key_count;
+> +static size_t keys_header_size;
+
+These two global variables seems not so necessary. Please see comment at
+below.
+
+> +
+> +struct dm_crypt_key {
+> +	unsigned int key_size;
+> +	char key_desc[KEY_DESC_LEN];
+> +	u8 data[KEY_SIZE_MAX];
+> +};
+> +
+> +static struct keys_header {
+> +	unsigned int key_count;
+                     ~~~~~~~~
+                     This is the max number a system have from init();
+You can add one field member to record how many key slots have been
+used.
+> +	struct dm_crypt_key keys[] __counted_by(key_count);
+> +} *keys_header;
+
+Maybe we can rearrange the keys_header like below, the name may not be
+very appropriate though.
+
+static struct keys_header {
+	unsigned int max_key_slots;
+	unsigned int used_key_slots;
+	struct dm_crypt_key keys[] __counted_by(key_count);
+} *keys_header;
+
 >
 
-I'd argue for the opposite: ideally, the difference between the first
-boot and not-the-first-boot should be abstracted away by the
-'bootloader' side of kexec as much as possible, so that the tricky
-early startup code doesn't have to be riddled with different code
-paths depending on !kexec vs kexec.
+> +
+> +static size_t get_keys_header_size(struct keys_header *keys_header,
+> +				   size_t key_count)
+> +{
+> +	return struct_size(keys_header, keys, key_count);
+> +}
 
-TDX is a good case in point here: rather than add more conditionals,
-I'd urge to remove them so the TDX startup code doesn't have to care
-about the difference at all. If there is anything special that needs
-to be done, it belongs in the kexec implementation of the previous
-kernel.
+I personally don't think get_keys_header_size is so necessary. If we
+have to keep it, may be we can remove the global variable
+keys_header_size, we can call get_keys_header_size() and use local
+variable to record the value instead.
+
 
 _______________________________________________
 kexec mailing list
