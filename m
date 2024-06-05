@@ -4,68 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3EBB0C25B78
-	for <kexec@archiver.kernel.org>; Wed,  5 Jun 2024 01:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B8239C25B78
+	for <kexec@archiver.kernel.org>; Wed,  5 Jun 2024 01:58:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
 	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=S0zZuWTuLdnjY6pijfcVdoR+7ZwrECqC6H1J3iIC09c=; b=GFM4VHdbvep/Nb
-	eohFV8ai5qv5OaR26uGK0dZ4LqxU36Ta23OsTpUC9ikzjh/RCg7tR9SfJPdLveBLajKD1GU3hofdu
-	5P+giA+IeH5+MPltAS99/t/zu6WDhjzsKlzZKCUNcKH6vUWsBzXxGi+Fa2xeJToXElrZh2vOeO7uY
-	uDSedMeiZHMq3/nOgz8OLYmBqN85Vl4W3u6jfR2IelYgw8MqjTH4b015BCclTxgKGhYoMrsYuDDYG
-	Mdu5KLjCKVeERXSbtgOtT/esk0Z/TKgFheuiXDzqyP1RrzJnSFQROahUfg1tDUvfarEfxdOhSBG4c
-	m78na0A8A1eBNE2GOgiA==;
+	List-Owner; bh=V4/aMe9c+lnBeshKV+TL/RPwmgmhLh+Jq9dg+TSUvFs=; b=RzqQe5RIta5Bwh
+	5Y9E0QNeR2y57EY1kKS+Eo4K/k/EmhmZzkljtfsnYDozZm1IOT2/fwjzoZElWsHzgDAiGTr3Se66G
+	zjqa8Juqc7ZIBDEeAkLkvdE3BasNz7A8oGZTB6T++y2YdYKtoy+cljEM+ELgZGcFGa3wBpuUYh7B1
+	Ls5xutGRlTTg+2Lw6P/cMW1b3ruw9oKd3QlKoM23PcZDu/oaPN4hz+k+U6FPznwkGMvPqEOCAJqiB
+	2eaPEnXdtuN5U91246UPvwMJeukL3Y/vRN0eYwKcG/EfJVVp1+Xk+qYaazbvU3WFm32K4A+SfU3WY
+	7kIFLAC5Nc0B0JGnCPMQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sEfoj-00000004PLh-3oHv;
-	Wed, 05 Jun 2024 01:51:57 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1sEfvM-00000004Pqw-2Q9b;
+	Wed, 05 Jun 2024 01:58:48 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sEfog-00000004PKl-2LeM
+	id 1sEfvJ-00000004Pps-2Z0b
 	for kexec@lists.infradead.org;
-	Wed, 05 Jun 2024 01:51:55 +0000
+	Wed, 05 Jun 2024 01:58:46 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717552312;
+	s=mimecast20190719; t=1717552723;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=upN2cK+0+gJo/KqGs9LW3KxpT5YmqhfYJXwjAOS8ygY=;
-	b=a+Lcyx/I2P8p74c2D9o7b82KEv5XBRDqn2zMo8IkgjS1aYACQA+xPokIsRnN8Ccvo7/4Eq
-	B7/u8+02ZKGacUCkCGucznqtZAmrCD5Dn+GREQg559oz3WmXVgMPwxCeEDMkwLNSEBOUuB
-	AbVJNVgEggj3UsoffVGTzHhXwMLXXqo=
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
- [209.85.166.198]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=bDq7LAUeG1zx3wFqxyw1+1sNdwa7aIwSKaoX8NuYSHg=;
+	b=XeGlqOrQhT0xoBx3VybHSAnA5MVeJmKlKQe91TyQlcvPpLE9tfaCXJYPyIDap3vuTddH1C
+	87W+4EdKBr5MP1fay/T0GN1bMdWfN/as4itQi4jVfjqBNWg1NPSk848OhBLuMrivLaP2FE
+	blbzGN+2p0myhBhf574D0/tKgQQq+7Q=
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
+ [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-671-ixtL-AvfNi-_5_sh9718MA-1; Tue, 04 Jun 2024 21:51:51 -0400
-X-MC-Unique: ixtL-AvfNi-_5_sh9718MA-1
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-374ae11e9deso2558655ab.1
-        for <kexec@lists.infradead.org>; Tue, 04 Jun 2024 18:51:51 -0700 (PDT)
+ us-mta-426-6niBqC-bP-mpzlITR-a5sQ-1; Tue, 04 Jun 2024 21:58:40 -0400
+X-MC-Unique: 6niBqC-bP-mpzlITR-a5sQ-1
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2bdfe86f8b6so1074475a91.1
+        for <kexec@lists.infradead.org>; Tue, 04 Jun 2024 18:58:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717552310; x=1718157110;
+        d=1e100.net; s=20230601; t=1717552719; x=1718157519;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=upN2cK+0+gJo/KqGs9LW3KxpT5YmqhfYJXwjAOS8ygY=;
-        b=JS/Ier/lgj/mHQQGT8wiF36PF2LV5w6rcfz5lpD8tcxAMzNiIkP+uXjQInU8yRzwNq
-         sxnQipKdmB1jbBRIuxcowm72GLW3KkBx5zyE3JOop+7lyQR0c1ZNl/KCUQ8wg5TMW1VG
-         55Zyr39gbvCuSS+AqptSRxAWluHWyGork/vsv+ogeaMn2KBaVRnU146C0LNlbuGSS3pZ
-         qPDIdV/394UOE+YyCpkZIrQsXvqlzUy5WCRFgYDvVxTrHO88U3QqGcPob7of9nsmZ8D3
-         VueGT0KQ8ukvXEEkurDphIn1sSTWuwoPaXCj4s6RWdOsA5xDe6RkNhbxmxGRq/U5Clwv
-         WR+g==
-X-Forwarded-Encrypted: i=1; AJvYcCVJ0d15HVEX6wM8hmiRTvpuGbmgMFFiMgi1k+I5VQ7J707PTaXZIgAIk5pOA0F0jA31zdl4IZXud/beZyqfdMN84g7T5KKiiT6t
-X-Gm-Message-State: AOJu0YxcrrSw1wtPMIGkKl6rO7RYfww80jEBECCqMtmt91783IKzzb48
-	bLcqLDX9/bK0xOZUUBJwSh2BDR6nrhF8ydDlin2usgqKZN92k7+euCsMJm/BaboXHpA0S0t8v+W
-	JNmi9uvpCX2RCro+xuXG+HeHSEBzpk829zJLqK529Zmw7YEUC0ZpaU+tUJla+6N101jUgskyEzz
-	uM8ASYqwVGgtrPOxb2Z0qDelXdsp/BZO/b
-X-Received: by 2002:a92:cda2:0:b0:374:aedb:1607 with SMTP id e9e14a558f8ab-374b1e108e4mr11917235ab.0.1717552310603;
-        Tue, 04 Jun 2024 18:51:50 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFoAvumzWTEo5FkJ6C3OMbCpE5l3j5iU8XrNVp3YfRyiPEFNZA2Dhz1INdK+vIULCPwAJeNIpjtYyclX4eHIb4=
-X-Received: by 2002:a92:cda2:0:b0:374:aedb:1607 with SMTP id
- e9e14a558f8ab-374b1e108e4mr11916935ab.0.1717552310203; Tue, 04 Jun 2024
- 18:51:50 -0700 (PDT)
+        bh=bDq7LAUeG1zx3wFqxyw1+1sNdwa7aIwSKaoX8NuYSHg=;
+        b=uIgPvfy6xkiAmRP+nVQv1tpeOCmC7FREmgVEq539PyBb/9XjMl4x3mUSXLavYg41S1
+         pU39aKN9qj1V+xxBdo1HH8RNP+hjPAd7ckTqRo7LMnULWR6EEXpN/bniBWMWSse44YLS
+         94Hy+jYnFgfkgbrLBMj4G+u02GBhGT5JlS0z/SgkEQXxyxnG46OdehNYht/KW0MJDPau
+         v/+frD6241PhYdFnMqL6IB5I6Lmcxi1pZuc65ZT/sWADJoT3LloZ212KwRqKMaXzK6CZ
+         qnHJVKIeswlw/MG4PMj16VxlOZ4QDxEybPYskFU+pRdE4NZodTaryK5Tqu8gFQvJeflQ
+         kXFw==
+X-Forwarded-Encrypted: i=1; AJvYcCV91g2mEW6YE1neaJkvELYJ9y73pmNuViq+SzgCaFNlb0lRrGv+aAz2XtWLiGmVuvJKH6dylRTw9FXDl3Jmf8pjbsL2RKB/cK9t
+X-Gm-Message-State: AOJu0YyIVEc0UcWzHTUGtJBJJcd6FUT0hhyZL+OuHS10ombDQHQeaaNh
+	7pMls0GwHSG1SqdRtHuiCftM56Ei+/YCUOuGCr5Q632cA2gQSc/OLkv6sPe14PTrKB769hIWOjn
+	JfDSTSr0WyFNnA4vKxrXbB+CpxeB4Earq5yBkBam+eww8t2mUhMYdyGj7Akyy/b4V8an+87jwgE
+	xTzaijsx73JgjfAHWBbMFzVHEERJNM4FOC
+X-Received: by 2002:a17:90b:484e:b0:2bd:76ee:48c2 with SMTP id 98e67ed59e1d1-2c27da2df29mr1268700a91.0.1717552719022;
+        Tue, 04 Jun 2024 18:58:39 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGxFVHjC8YnYbmOndJJgwEmwIfgEgBgMUDA8Tq6Gici14Z5tLZpocEb/9zJxsxUZ9G0QoldR1eiR4+UpxuGzgo=
+X-Received: by 2002:a17:90b:484e:b0:2bd:76ee:48c2 with SMTP id
+ 98e67ed59e1d1-2c27da2df29mr1268665a91.0.1717552718628; Tue, 04 Jun 2024
+ 18:58:38 -0700 (PDT)
 MIME-Version: 1.0
 References: <f4be03b8488665f56a1e5c6e6459f447352dfcf5.1717111180.git.ashish.kalra@amd.com>
  <20240603085654.GBZl2FVjPd-gagt-UA@fat_crate.local> <8e3dfc15-f609-4839-85c7-1cc8cefd7acc@amd.com>
@@ -74,10 +74,11 @@ References: <f4be03b8488665f56a1e5c6e6459f447352dfcf5.1717111180.git.ashish.kalr
  <7eb4ca99-679c-4f23-9562-a39b966c28a0@amd.com> <20240603165747.GGZl32C9yrmXJ4nhPT@fat_crate.local>
  <2343889c-887a-49ce-86df-343737d70d37@amd.com> <20240603171231.GJZl35f-BHvU2Pk3lb@fat_crate.local>
  <ff28e3ea-c492-4db6-8781-abaec6320756@amd.com> <CALu+AoQBXv-y43sx6E28UBVeVHUzRkWEzFxK6jsS5NpN2ho3YQ@mail.gmail.com>
-In-Reply-To: <CALu+AoQBXv-y43sx6E28UBVeVHUzRkWEzFxK6jsS5NpN2ho3YQ@mail.gmail.com>
+ <CALu+AoTY2Xxs_vUzCyfsxtk-ov2mzJhzyTbbA9MYeeVkmKTMsw@mail.gmail.com>
+In-Reply-To: <CALu+AoTY2Xxs_vUzCyfsxtk-ov2mzJhzyTbbA9MYeeVkmKTMsw@mail.gmail.com>
 From: Dave Young <dyoung@redhat.com>
-Date: Wed, 5 Jun 2024 09:52:09 +0800
-Message-ID: <CALu+AoTY2Xxs_vUzCyfsxtk-ov2mzJhzyTbbA9MYeeVkmKTMsw@mail.gmail.com>
+Date: Wed, 5 Jun 2024 09:58:56 +0800
+Message-ID: <CALu+AoSESmasAHqWdCGgQNbsTXfwbfhERBkaqSeaX881zqKtFg@mail.gmail.com>
 Subject: Re: [PATCH v7 1/3] efi/x86: Fix EFI memory map corruption with kexec
 To: "Kalra, Ashish" <ashish.kalra@amd.com>
 Cc: Borislav Petkov <bp@alien8.de>, Mike Rapoport <rppt@kernel.org>, tglx@linutronix.de, mingo@redhat.com, 
@@ -93,8 +94,8 @@ Cc: Borislav Petkov <bp@alien8.de>, Mike Rapoport <rppt@kernel.org>, tglx@linutr
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240604_185154_696427_BD7C446D 
-X-CRM114-Status: GOOD (  10.00  )
+X-CRM114-CacheID: sfid-20240604_185845_746506_28946EBC 
+X-CRM114-Status: GOOD (  14.16  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -111,28 +112,33 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-> >         ...
-> >         if (efi.memmap.flags & (EFI_MEMMAP_MEMBLOCK | EFI_MEMMAP_SLAB)) {
-> >                 __efi_memmap_free(efi.memmap.phys_map,
-> >                                 efi.memmap.desc_size * efi.memmap.nr_map, efi.memmap.flags);
-> >         }
+On Wed, 5 Jun 2024 at 09:52, Dave Young <dyoung@redhat.com> wrote:
 >
-> From your debugging the memmap should not be freed.  This piece of
-> code was added in below commit,  added Dan Williams in cc list:
-> commit f0ef6523475f18ccd213e22ee593dfd131a2c5ea
-> Author: Dan Williams <dan.j.williams@intel.com>
-> Date:   Mon Jan 13 18:22:44 2020 +0100
+> > >         ...
+> > >         if (efi.memmap.flags & (EFI_MEMMAP_MEMBLOCK | EFI_MEMMAP_SLAB)) {
+> > >                 __efi_memmap_free(efi.memmap.phys_map,
+> > >                                 efi.memmap.desc_size * efi.memmap.nr_map, efi.memmap.flags);
+> > >         }
+> >
+> > From your debugging the memmap should not be freed.  This piece of
+> > code was added in below commit,  added Dan Williams in cc list:
+> > commit f0ef6523475f18ccd213e22ee593dfd131a2c5ea
+> > Author: Dan Williams <dan.j.williams@intel.com>
+> > Date:   Mon Jan 13 18:22:44 2020 +0100
+> >
+> >     efi: Fix efi_memmap_alloc() leaks
+> >
+> >     With efi_fake_memmap() and efi_arch_mem_reserve() the efi table may be
+> >     updated and replaced multiple times. When that happens a previous
+> >     dynamically allocated efi memory map can be garbage collected. Use the
+> >     new EFI_MEMMAP_{SLAB,MEMBLOCK} flags to detect when a dynamically
+> >     allocated memory map is being replaced.
+> >
 >
->     efi: Fix efi_memmap_alloc() leaks
->
->     With efi_fake_memmap() and efi_arch_mem_reserve() the efi table may be
->     updated and replaced multiple times. When that happens a previous
->     dynamically allocated efi memory map can be garbage collected. Use the
->     new EFI_MEMMAP_{SLAB,MEMBLOCK} flags to detect when a dynamically
->     allocated memory map is being replaced.
->
+> Dan, probably those regions should be freed only for "fake" memmap?
 
-Dan, probably those regions should be freed only for "fake" memmap?
+Ashish, can you comment out the __efi_memmap_free see if it works for
+you just confirm about the behavior.
 
 
 _______________________________________________
