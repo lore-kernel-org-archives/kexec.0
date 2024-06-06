@@ -4,80 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8A73BC25B75
-	for <kexec@archiver.kernel.org>; Thu,  6 Jun 2024 03:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 87A82C25B75
+	for <kexec@archiver.kernel.org>; Thu,  6 Jun 2024 06:03:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:References:To:From:Subject:
+	Cc:Message-Id:Date:Mime-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=JR+OWCAW1U4zZwnmyx77j4auzeq/2JnunrzwfQVlaRM=; b=tjTGPZmSkRy8xD
-	NDh3UvbW44U/SA7IRK8wa43RsU2j8XUpxSyC4K3YQuAqgeGyhfhS/hpb5BeBQAnc1EmbR/BYHqmzo
-	f7yaAsNl1Ehz0ucQAOCgp7xDw1gw2CHA+KikOZPirBNPPoPflhgTyVj5J/pSZk2bj3K+1QXepy0FR
-	+wSxNtt8bbDYzKWZFgD4vN+1L7L6dwUHXSAMkzb01QK+65wzEMeD9THUT17V8eN/bGicN27kX5aRh
-	bElLyy1q7YHQsaMsL8FdfA7mtSoQlwfvy1kVpzQOuG/xSX/2TLkwoZLIjF6n+wkcIDoQI7hnON29T
-	MEuAJ0DEHTWszxpomJiA==;
+	List-Owner; bh=3/K1meMueLgex+AXzuBlGZaTf0G/Gv09HRZLOHxKIWM=; b=NG+Y2J/Pn+7Nqy
+	QwAg+DhD6ychGgylURrMTYSkVPleTbRLFGlYOObF+O1p5i+oC7o2rD1upDM9aPWqRJ7BtfaVeinL4
+	XzdHw1U0oXl2ODY3LWOlBjPbBu6kA5eCsOhrLVG1oaSAGuq6zw0GDEa2HYwzmPY6YLDWrH6AAa88c
+	kpmKw4h2RtizMEdwfz2mvPtS5cHZkqZITiY2t2IxKAzYlUxL22urPxB0v1pJfT46qXHAgDmDIRD3K
+	P1cfPsICc+aXa4K49Fjg0BaFS1ZJFaZ+yGaA+tNxt8KXmNAx1VQEqglRhLa1S4GWc555SbgGyNqA1
+	CZ9PnLFmPQcaR9wSOOhA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sF3XS-00000008DDX-3SFk;
-	Thu, 06 Jun 2024 03:11:42 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1sF6Du-00000008T2B-21PD;
+	Thu, 06 Jun 2024 06:03:42 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sF3XO-00000008DCa-3sdG
+	id 1sF6Dr-00000008T1A-164w
 	for kexec@lists.infradead.org;
-	Thu, 06 Jun 2024 03:11:40 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717643497;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HaH59veb3gdb6Nle+VT8H76NeiKE5kPsBGNNkDgKop8=;
-	b=c2oBhrEiq+0w5pXW9nm8mEL39uHwzeAHi7roELroxYjQsFsybJSdixjkucOS7AMfNuMJiU
-	jH6kKQKtcjX1/olO2sU0O8v5d3kAF6LqFbBVY5Auxq4DDKjKGN8cOnf4tvzjAzIbpRes2S
-	6CVUGtPb/ePYwzVA/Mn9jaMM0xfJb0w=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-495-kezD0FAoPNayyhfCPlTgHA-1; Wed, 05 Jun 2024 23:11:35 -0400
-X-MC-Unique: kezD0FAoPNayyhfCPlTgHA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A280F101A520;
-	Thu,  6 Jun 2024 03:11:34 +0000 (UTC)
-Received: from localhost (unknown [10.72.113.20])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id A0B5537D6;
-	Thu,  6 Jun 2024 03:11:33 +0000 (UTC)
-Date: Thu, 6 Jun 2024 11:11:30 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Coiby Xu <coxu@redhat.com>
-Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
-	Milan Broz <gmazyland@gmail.com>,
-	Thomas Staudt <tstaudt@de.ibm.com>,
-	Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
-	Kairui Song <ryncsn@gmail.com>,
-	Jan Pazdziora <jpazdziora@redhat.com>,
-	Pingfan Liu <kernelfans@gmail.com>, Dave Young <dyoung@redhat.com>,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	Dave Hansen <dave.hansen@intel.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>, Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_byb" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH v4 2/7] crash_dump: make dm crypt keys persist for the
- kdump kernel
-Message-ID: <ZmEo4rw8Yhu7tspb@MiWiFi-R3L-srv>
-References: <20240523050451.788754-1-coxu@redhat.com>
- <20240523050451.788754-3-coxu@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20240523050451.788754-3-coxu@redhat.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+	Thu, 06 Jun 2024 06:03:41 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 8C031614C0;
+	Thu,  6 Jun 2024 06:03:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9185C2BD10;
+	Thu,  6 Jun 2024 06:02:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717653768;
+	bh=+N73ZoMcTU2eT6S1zwH3KuWbb697R2JF/05UDlnStFg=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=ZmLynZHbI6+wxCoH1qsyPjAEaqVNs7ObvEwVHIw3vJZfJHIwRxJfcf9FU3FL6NEEi
+	 g9yD4HLhAw0LoywOGsYjq7bj/p6fVvb66y+JJBELnB9P9WEGYvqEaCXlDEachSbGHA
+	 FRaf5sPKiic7EiwGrHG5hgacpnqiYn4ByHic1mk3NhtPrm61IpuUiVVO4X4U7s04ud
+	 GWGcjFMk85/3uLd6E8wEDOs9t3QNJ7LCJGI6cZyTTZ7CLOmIbPrLmc0PYZ3FpQL6R4
+	 mmbSZBbf9uHeBP9BxtYYUfhCFOxhy9eo/RtlsfNXBCA7SAb0aoSLB7LZDYGzuDJ59Y
+	 n/Am9dYvkU9Kg==
+Mime-Version: 1.0
+Date: Thu, 06 Jun 2024 09:02:39 +0300
+Message-Id: <D1SPFVXS6FOG.IQQB3INFYEF2@kernel.org>
+Cc: <dpsmith@apertussolutions.com>, <tglx@linutronix.de>,
+ <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
+ <dave.hansen@linux.intel.com>, <ardb@kernel.org>, <mjg59@srcf.ucam.org>,
+ <James.Bottomley@hansenpartnership.com>, <peterhuewe@gmx.de>,
+ <jgg@ziepe.ca>, <luto@amacapital.net>, <nivedita@alum.mit.edu>,
+ <herbert@gondor.apana.org.au>, <davem@davemloft.net>, <corbet@lwn.net>,
+ <ebiederm@xmission.com>, <dwmw2@infradead.org>, <baolu.lu@linux.intel.com>,
+ <kanth.ghatraju@oracle.com>, <andrew.cooper3@citrix.com>,
+ <trenchboot-devel@googlegroups.com>
+Subject: Re: [PATCH v9 04/19] x86: Secure Launch Resource Table header file
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: <ross.philipson@oracle.com>, <linux-kernel@vger.kernel.org>,
+ <x86@kernel.org>, <linux-integrity@vger.kernel.org>,
+ <linux-doc@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+ <kexec@lists.infradead.org>, <linux-efi@vger.kernel.org>,
+ <iommu@lists.linux-foundation.org>
+X-Mailer: aerc 0.17.0
+References: <20240531010331.134441-1-ross.philipson@oracle.com>
+ <20240531010331.134441-5-ross.philipson@oracle.com>
+ <D1RFWFIJEYWL.2FC7V79321264@kernel.org>
+ <1eca8cb1-4b3b-402b-993b-53de7c810016@oracle.com>
+ <D1RLBMTUKRFN.34KQXEFZTBA08@kernel.org>
+ <249a9b27-c18d-4377-8b51-9bc610b53a8b@oracle.com>
+ <D1RNKV4JIE5L.1LNG82UAC916M@kernel.org>
+ <f66de08f-4905-48d6-8bcf-5b1ab847492f@oracle.com>
+ <D1RSB1PB5XGS.2X032M0E1VMJW@kernel.org>
+ <a865a25c-336e-47de-9718-de4cb957e6c2@oracle.com>
+In-Reply-To: <a865a25c-336e-47de-9718-de4cb957e6c2@oracle.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240605_201139_127691_050A4336 
-X-CRM114-Status: GOOD (  31.80  )
+X-CRM114-CacheID: sfid-20240605_230339_552592_1E1EB4D7 
+X-CRM114-Status: GOOD (  12.71  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -94,168 +92,42 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 05/23/24 at 01:04pm, Coiby Xu wrote:
-> A sysfs /sys/kernel/crash_dm_crypt_keys is provided for user space to make
-> the dm crypt keys persist for the kdump kernel. User space can send the
-> following commands,
-> - "init KEY_NUM"
->   Initialize needed structures
-> - "record KEY_DESC"
->   Record a key description. The key must be a logon key.
+On Wed Jun 5, 2024 at 10:03 PM EEST,  wrote:
+> So I did not mean to imply that DRTM support on various 
+> platforms/architectures has a short expiration date. In fact we are 
+> actively working on DRTM support through the TrenchBoot project on 
+> several platforms/architectures. Just a quick rundown here:
+>
+> Intel: Plenty of Intel platforms are vPro with TXT. It is really just 
+> the lower end systems that don't have it available (like Core i3). And 
+> my guess was wrong about x86s. You can find the spec on the page in the 
+> following link. There is an entire subsection on SMX support on x86s and 
+> the changes to the various GETSEC instruction leaves that were made to 
+> make it work there (see 3.15).
+>
+> https://www.intel.com/content/www/us/en/developer/articles/technical/envisioning-future-simplified-architecture.html
 
-This patch highly lack document to describe what it's doing. For
-example, how you will manipulate the /sys/kernel/crash_dm_crypt_keys to
-initialize, record the keys, can you give examples how you opeate on
-them?
+Happend to bump into same PDF specification and exactly the seeked
+information is "3.15 SMX Changes". So just write this down to some
+patch that starts adding SMX things.
 
-> 
-> User space can also read this API to learn about current state.
-> 
-> Signed-off-by: Coiby Xu <coxu@redhat.com>
-> ---
->  include/linux/crash_core.h   |   5 +-
->  kernel/Kconfig.kexec         |   8 +++
->  kernel/Makefile              |   1 +
->  kernel/crash_dump_dm_crypt.c | 113 +++++++++++++++++++++++++++++++++++
->  kernel/ksysfs.c              |  22 +++++++
->  5 files changed, 148 insertions(+), 1 deletion(-)
->  create mode 100644 kernel/crash_dump_dm_crypt.c
-> 
-> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-> index 44305336314e..6bff1c24efa3 100644
-> --- a/include/linux/crash_core.h
-> +++ b/include/linux/crash_core.h
-> @@ -34,7 +34,10 @@ static inline void arch_kexec_protect_crashkres(void) { }
->  static inline void arch_kexec_unprotect_crashkres(void) { }
->  #endif
->  
-> -
-> +#ifdef CONFIG_CRASH_DM_CRYPT
-> +int crash_sysfs_dm_crypt_keys_read(char *buf);
-> +int crash_sysfs_dm_crypt_keys_write(const char *buf, size_t count);
-> +#endif
->  
->  #ifndef arch_crash_handle_hotplug_event
->  static inline void arch_crash_handle_hotplug_event(struct kimage *image, void *arg) { }
-> diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
-> index 6c34e63c88ff..88525ad1c80a 100644
-> --- a/kernel/Kconfig.kexec
-> +++ b/kernel/Kconfig.kexec
-> @@ -116,6 +116,14 @@ config CRASH_DUMP
->  	  For s390, this option also enables zfcpdump.
->  	  See also <file:Documentation/arch/s390/zfcpdump.rst>
->  
-> +config CRASH_DM_CRYPT
-> +	bool "Support saving crash dump to dm-crypt encrypted volume"
-> +	depends on CRASH_DUMP
+Link: https://cdrdv2.intel.com/v1/dl/getContent/776648
 
-Do we need add dependency on some security features, e.g KEYS?
-The current code will enable the CRASH_DM_CRYPT regardless of the
-existence of LUKS disk at all.
+So link and document, and other stuff above is not relevant from
+upstream context, only potential maintenance burden :-)
 
-> +	help
-> +	  With this option enabled, user space can intereact with
-> +	  /sys/kernel/crash_dm_crypt_keys to make the dm crypt keys
-> +	  persistent for the crash dump kernel.
-> +
->  config CRASH_HOTPLUG
->  	bool "Update the crash elfcorehdr on system configuration changes"
->  	default y
-> diff --git a/kernel/Makefile b/kernel/Makefile
-> index 3c13240dfc9f..f2e5b3e86d12 100644
-> --- a/kernel/Makefile
-> +++ b/kernel/Makefile
-> @@ -72,6 +72,7 @@ obj-$(CONFIG_VMCORE_INFO) += vmcore_info.o elfcorehdr.o
->  obj-$(CONFIG_CRASH_RESERVE) += crash_reserve.o
->  obj-$(CONFIG_KEXEC_CORE) += kexec_core.o
->  obj-$(CONFIG_CRASH_DUMP) += crash_core.o
-> +obj-$(CONFIG_CRASH_DM_CRYPT) += crash_dump_dm_crypt.o
->  obj-$(CONFIG_KEXEC) += kexec.o
->  obj-$(CONFIG_KEXEC_FILE) += kexec_file.o
->  obj-$(CONFIG_KEXEC_ELF) += kexec_elf.o
-> diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
-> new file mode 100644
-> index 000000000000..78809189084a
-> --- /dev/null
-> +++ b/kernel/crash_dump_dm_crypt.c
-> @@ -0,0 +1,113 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +#include <keys/user-type.h>
-> +#include <linux/crash_dump.h>
-> +
-> +#define KEY_NUM_MAX 128
-> +#define KEY_SIZE_MAX 256
-> +
-> +// The key scription has the format: cryptsetup:UUID 11+36+1(NULL)=48
-> +#define KEY_DESC_LEN 48
-> +
-> +static char *STATE_STR[] = {"fresh", "initialized", "recorded", "loaded"};
-> +static enum STATE_ENUM {
-> +	FRESH = 0,
-> +	INITIALIZED,
-> +	RECORDED,
-> +	LOADED,
-> +} state;
-> +
-> +static unsigned int key_count;
-> +static size_t keys_header_size;
-> +
-> +struct dm_crypt_key {
-> +	unsigned int key_size;
-> +	char key_desc[KEY_DESC_LEN];
-> +	u8 data[KEY_SIZE_MAX];
-> +};
-> +
-> +static struct keys_header {
-> +	unsigned int key_count;
-> +	struct dm_crypt_key keys[] __counted_by(key_count);
-> +} *keys_header;
-> +
-> +static size_t get_keys_header_size(struct keys_header *keys_header,
-> +				   size_t key_count)
-> +{
-> +	return struct_size(keys_header, keys, key_count);
-> +}
-> +
-> +static int init(const char *buf)
-> +{
-> +	unsigned int total_keys;
-> +	char dummy[5];
-> +
-> +	if (sscanf(buf, "%4s %u", dummy, &total_keys) != 2)
-> +		return -EINVAL;
+For any architectures dig a similar fact:
 
-This is what I wondered and tried to find a document to get why. Can we
-search in the current system and deduce how many keys we can could use
-for kdump kernel? Or we have to retrieve and pass it from user space?
+1. Is not dead.
+2. Will be there also in future.
 
-> +
-> +	if (key_count > KEY_NUM_MAX) {
-> +		pr_err("Exceed the maximum number of keys (KEY_NUM_MAX=%u)\n",
-> +		       KEY_NUM_MAX);
-> +		return -EINVAL;
-> +	}
+Make any architecture existentially relevant for and not too much
+coloring in the text that is easy to check.
 
-Why chekcing key_count in init()? Don't you need to check
-total_keys instead? Clearly you don't do a boundary test for total_keys,
-otherwise it will trigger issue.
+It is nearing 5k lines so you should be really good with measured
+facts too (not just launch) :-)
 
-> +
-> +	keys_header_size = get_keys_header_size(keys_header, total_keys);
-> +	key_count = 0;
-> +
-> +	keys_header = kzalloc(keys_header_size, GFP_KERNEL);
-> +	if (!keys_header)
-> +		return -ENOMEM;
-> +
-> +	keys_header->key_count = total_keys;
-> +	state = INITIALIZED;
-> +	return 0;
-> +}
-
-Please add more code comments, kernel-doc for your code, we can't assume
-people reading these codes know the entire matter.
-
+BR, Jarkko
 
 _______________________________________________
 kexec mailing list
