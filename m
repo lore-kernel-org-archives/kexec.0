@@ -4,70 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C21E2C27C53
-	for <kexec@archiver.kernel.org>; Fri,  7 Jun 2024 12:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7EAFBC27C55
+	for <kexec@archiver.kernel.org>; Fri,  7 Jun 2024 12:28:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
 	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
 	List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:Message-ID:
 	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=N/3eCoZjg7mu8R6Bq5pSmqZNIvQz/fiHmbLODIdsQAo=; b=DAE0UsAxIQje8NS3cHQPS4hfNZ
-	nlL8sqwPamEo4aETstar8UL/SOyWghtY6ZHCWLhG487BIK67OaqcHv7qUjD4qCCqt2xXWNljtamqi
-	oxAYZZSwVHcbV5AHeK4PlghWJIBWnsO6mY9ihW13MAP9nN4Na/c7YKEKaPhr0svo52ZQWTvFosoHk
-	cEACuGALUD280JB01FyW5XVCss/05A+3mcTYCkEOz4ZOCwk4y5c5KJI7xvNj9cMPgANbA4RysfJdq
-	gO3nPbgDNcCnjiR8uesSDzm0iuuP29gk8LkRhbJKJstX0pei2BExBXrbMk/nXlEi12tBRmj5JBFb0
-	w+FY9FXw==;
+	bh=4Z6NsSZTkB8+aa3byigi8hKTHcpiUDoFhCwvSyQEOvA=; b=xWy9uFWIIb3wBwRnEouDl79nQO
+	FhYONE5MxfmpbE0be+zigVPte74YXl1HuYGpqWPrPgyrH4SvRdVt8VQrsawvRerIh5B0X2uAyhW6p
+	SR+43SzIHQYr0HKTIps01t/QwHbhwAqzRYTIDqfdkn7vdpT7nT8ZGzuYAF2KtUAHO2/9QFv/V7qII
+	0LfAWMz+8XLF2ZJReA3UNH75wwFAQgqJVPUdmTT06jZxm1Vl/z3MpNjsbqWy+o3QrsZbR1Mhb6IZe
+	F21UsHmDqBC3EK4hmbwDzdXY6xXicb1drNbFQkuxOZhH3oAd4d8Svqd+MHvmDwT5Uw4ZWqLGMRmfi
+	f63LLF7A==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sFYhk-0000000DvPs-0WwG;
-	Fri, 07 Jun 2024 12:28:24 +0000
+	id 1sFYhv-0000000DvVE-0YWC;
+	Fri, 07 Jun 2024 12:28:35 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sFYhh-0000000DvO7-2qVX
+	id 1sFYhs-0000000DvSl-10Xg
 	for kexec@lists.infradead.org;
-	Fri, 07 Jun 2024 12:28:23 +0000
+	Fri, 07 Jun 2024 12:28:33 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717763300;
+	s=mimecast20190719; t=1717763310;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=FypPKgT3pJsp6KviCFXO/ORbTvZxCPQ2jaD/DLtQnPQ=;
-	b=jLBoj+/i+CxUyGxtkgZj99hKUjhQGqTNSLM9nKIujnA/kspmvkSiMedz1YB+YRrNwI4Brp
-	9TW0WloS52xusRvuMcAlRwo3R+yLwwtLRETrkxgOtXAQYIZ737d9vMu2epuch3B64PxDss
-	rN8qE7KYVzFLGCVObzYfomsDq4xi9MM=
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
- [209.85.210.199]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=He3juNVz7+g3hFu6GqowX6vOVAQdnb+Nrnrk3E6C7kg=;
+	b=AO+G4K1TKz2gK0R0pqtOFBQX6onHl98wIbPyiRfhHVxxkyFNhUIYy3IoUNP9/mGxz82KKj
+	WSmR/Xs2s7evk/LbG+hk2n+E5u9XPiXkGtFhSQil/6GsE74C/WbqLq+0sKhCLORHuotMZx
+	h01a/uArvEpTyBGNoLBYyM/Wh0OWQzI=
+Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
+ [209.85.215.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-345-wi2ogzEEMsatid_bKoBGHw-1; Fri, 07 Jun 2024 08:28:19 -0400
-X-MC-Unique: wi2ogzEEMsatid_bKoBGHw-1
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-6fb22ecd976so1413938b3a.1
-        for <kexec@lists.infradead.org>; Fri, 07 Jun 2024 05:28:19 -0700 (PDT)
+ us-mta-547-ufgq7E4bM965eexWWnl1Og-1; Fri, 07 Jun 2024 08:28:29 -0400
+X-MC-Unique: ufgq7E4bM965eexWWnl1Og-1
+Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-68197de746fso1984743a12.2
+        for <kexec@lists.infradead.org>; Fri, 07 Jun 2024 05:28:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717763298; x=1718368098;
+        d=1e100.net; s=20230601; t=1717763308; x=1718368108;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FypPKgT3pJsp6KviCFXO/ORbTvZxCPQ2jaD/DLtQnPQ=;
-        b=ecKMFnJ5WdlBj4+oTC9do9ZIXvo16dPdiSBTdqb8x3HXcupb1OgBcxCJhxeiUDD+uK
-         Q8YMNj1UudQY57um4GNpCrP4dUnqwOlOM5R+tEX5DIULC1jzbtZdbi7WFdyiNNR7UVH8
-         iCTzovQE4x2Dv+E1gcaHDRT2F0BEQ6ESS9/WK9ByuMNfP/fmNXn5YqDWpqaABKDjPQML
-         nCeYyl8lpdpkXt9oBMLKuDdnXOgYENGwY3laBF+YiwoWC65/sLK1hcPO6dYSQLIFwPJw
-         UWGA7+fNelsOZEu5y4DVgLVpiBCeaAkT32BOAM0bgUrsPhatD/ZfecvvU/OjVQP+7P9I
-         MfrA==
-X-Gm-Message-State: AOJu0Yxgs9mVt3GBYbeia4M0nbUAWhU0nkmR4wa4ycMUt9cKihUg+YW6
-	8SHD13eOnncHR5GdUzFRmkItet9pz1jzKB7+9i3jPlq0zQ6fOnroIitwJJZMT5m2w3pb8taApmo
-	BCu3s1dfU1XgwQRfUgu/F3j66AE0hMYaQplsjRuEII36fD3eKJx3X+ymIlw==
-X-Received: by 2002:a05:6a00:23c2:b0:6ed:825b:30c0 with SMTP id d2e1a72fcca58-703f88de73amr7817550b3a.15.1717763297899;
-        Fri, 07 Jun 2024 05:28:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFqa9G1P1Nfp6M4MFxgwat4T28EeXX617ZqUou6xSlSloKgK/kupjGqVmTHU4L88C/jIn2KRQ==
-X-Received: by 2002:a05:6a00:23c2:b0:6ed:825b:30c0 with SMTP id d2e1a72fcca58-703f88de73amr7817489b3a.15.1717763297022;
-        Fri, 07 Jun 2024 05:28:17 -0700 (PDT)
+        bh=He3juNVz7+g3hFu6GqowX6vOVAQdnb+Nrnrk3E6C7kg=;
+        b=di3sXtj7NoRhbYmZFqfVDi5ylIvQLc+w61Qce9r1DEC7O4FI1azOt0mGoTbmyA4PVZ
+         rGu//pGEFjVLjpz+koK7E04fAXMcH0/JhyOBh2rFaQ1/OVttnwSMfDDNWc7yHx3Pz2Wd
+         4xsPhpsVpUaOyFV4s1j+UXvyHNUwrpz2CM2Zesfe9B+0HXg0n/ekTJBlDDGTu/UciOUR
+         GtlRuDTw4Jkr75BG/3fJxQYGs83todWnKM6Lw1nAJfUZJU9HHRfgu70h0D0ts2d/qG9z
+         tpVVVai3oojGODfujYDpFR365lW74ABZELpEkot0nnzVS1ybX64hOxG0BYFC325vijw8
+         nGtQ==
+X-Gm-Message-State: AOJu0YxEb/2vade6XCnInko+Cx82sJBk2yTKE/QqpNMYBxbiKlX8iHn/
+	dlaC8xhillsgHwKggqd55V/Andvc7TDdFzTa/CclzqoKYlon22Gcar42PuE7Um3XAAKjBHPNyh5
+	2kmLiA7wFlG5/nqxvcgFgI2f2kmOfah0HadgjYaVrrykAuPU/n/Ubd7Jg2w==
+X-Received: by 2002:a05:6a20:5509:b0:1b2:b688:8823 with SMTP id adf61e73a8af0-1b2f9ccbbf4mr2067792637.54.1717763307804;
+        Fri, 07 Jun 2024 05:28:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH+eTCa/N3Ta5x54zKKmmxUaASggmCvFDY6W9QdUswmmuERq2DgCNCpJ0Fqi3DwJXnyUNChUg==
+X-Received: by 2002:a05:6a20:5509:b0:1b2:b688:8823 with SMTP id adf61e73a8af0-1b2f9ccbbf4mr2067761637.54.1717763307117;
+        Fri, 07 Jun 2024 05:28:27 -0700 (PDT)
 Received: from localhost ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-703fd3a3a87sm2486990b3a.82.2024.06.07.05.28.15
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-703fd530d25sm2478986b3a.213.2024.06.07.05.28.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Jun 2024 05:28:16 -0700 (PDT)
-Date: Fri, 7 Jun 2024 20:27:07 +0800
+        Fri, 07 Jun 2024 05:28:26 -0700 (PDT)
+Date: Fri, 7 Jun 2024 20:27:15 +0800
 From: Coiby Xu <coxu@redhat.com>
 To: Baoquan He <bhe@redhat.com>
 Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>, 
@@ -81,18 +81,18 @@ Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
 	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_byb" <linux-hardening@vger.kernel.org>
 Subject: Re: [PATCH v4 2/7] crash_dump: make dm crypt keys persist for the
  kdump kernel
-Message-ID: <epa3mtnac3ekyoq7zykyjnhu3i27mivbtlkss6mbjyaa3kmhof@qwbfshfbtei4>
+Message-ID: <5gj3rxxf7tgolj72mxwnbjirxrlx3pezvqcegyiuenwr55njoo@6dg2toxu6vah>
 References: <20240523050451.788754-1-coxu@redhat.com>
  <20240523050451.788754-3-coxu@redhat.com>
- <Zl7Vd3BqxDXdMHkL@MiWiFi-R3L-srv>
+ <ZmAgNIXXa32Bv/Of@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-In-Reply-To: <Zl7Vd3BqxDXdMHkL@MiWiFi-R3L-srv>
+In-Reply-To: <ZmAgNIXXa32Bv/Of@MiWiFi-R3L-srv>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240607_052821_863067_B0B404DE 
-X-CRM114-Status: GOOD (  21.88  )
+X-CRM114-CacheID: sfid-20240607_052832_403986_8F6D9687 
+X-CRM114-Status: GOOD (  18.72  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -109,69 +109,82 @@ Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Jun 04, 2024 at 04:51:03PM +0800, Baoquan He wrote:
->Hi Coiby,
-
-Hi Baoquan,
-
->
+On Wed, Jun 05, 2024 at 04:22:12PM +0800, Baoquan He wrote:
 >On 05/23/24 at 01:04pm, Coiby Xu wrote:
->> A sysfs /sys/kernel/crash_dm_crypt_keys is provided for user space to make
->> the dm crypt keys persist for the kdump kernel. User space can send the
->> following commands,
->> - "init KEY_NUM"
->>   Initialize needed structures
->> - "record KEY_DESC"
->>   Record a key description. The key must be a logon key.
->>
->> User space can also read this API to learn about current state.
->
->From the subject, can I think the luks keys will persist forever? or
->only for a while? 
-
-Yes, you are right. The keys need to stay in kdump reserved memory.
-
-> If need and can only keep it for a while, can you
->mention it and tell why and how it will be used. Because you add a lot
->of codes, but only simply mention the sysfs, that doesn't make sense.
-
-Thanks for raising the concern! I've added
-Documentation/ABI/testing/crash_dm_crypt_keys and copy some text in the
-cover letter to this patch in v5. 
-
->
->>
->> Signed-off-by: Coiby Xu <coxu@redhat.com>
->> ---
->>  include/linux/crash_core.h   |   5 +-
->>  kernel/Kconfig.kexec         |   8 +++
->>  kernel/Makefile              |   1 +
->>  kernel/crash_dump_dm_crypt.c | 113 +++++++++++++++++++++++++++++++++++
->>  kernel/ksysfs.c              |  22 +++++++
->>  5 files changed, 148 insertions(+), 1 deletion(-)
->>  create mode 100644 kernel/crash_dump_dm_crypt.c
->>
->> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
->> index 44305336314e..6bff1c24efa3 100644
->> --- a/include/linux/crash_core.h
->> +++ b/include/linux/crash_core.h
->> @@ -34,7 +34,10 @@ static inline void arch_kexec_protect_crashkres(void) { }
->>  static inline void arch_kexec_unprotect_crashkres(void) { }
->>  #endif
+>.....
+>> diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
+>> new file mode 100644
+>> index 000000000000..78809189084a
+>> --- /dev/null
+>> +++ b/kernel/crash_dump_dm_crypt.c
+>> @@ -0,0 +1,113 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
 [...]
->> +static int init(const char *buf)
->              ~~~~ A more interesting name with more description?
+>> +
+>> +static unsigned int key_count;
+>> +static size_t keys_header_size;
+>
+>These two global variables seems not so necessary. Please see comment at
+>below.
 
-Thanks for the suggestion! I've added some comments for this function
-in v5. But I can't come up with a better name after looking at current
-kernel code. You are welcome to suggest any better name:)
+Thanks for the comment! But I think it's better to keep these two static
+variables for reasons as will be explained later. 
 
->> +static int process_cmd(const char *buf, size_t count)
->                                                  ~~~~
->If nobody use the count, why do you add it?
+>
+>> +
+>> +struct dm_crypt_key {
+>> +	unsigned int key_size;
+>> +	char key_desc[KEY_DESC_LEN];
+>> +	u8 data[KEY_SIZE_MAX];
+>> +};
+>> +
+>> +static struct keys_header {
+>> +	unsigned int key_count;
+>                     ~~~~~~~~
+>                     This is the max number a system have from init();
+>You can add one field member to record how many key slots have been
+>used.
+>> +	struct dm_crypt_key keys[] __counted_by(key_count);
+>> +} *keys_header;
+>
+>Maybe we can rearrange the keys_header like below, the name may not be
+>very appropriate though.
+>
+>static struct keys_header {
+>	unsigned int max_key_slots;
+>	unsigned int used_key_slots;
+>	struct dm_crypt_key keys[] __counted_by(key_count);
+>} *keys_header;
 
-Good catch! Yes, this is no need to use count in v4. But v5 now needs it to avoid
-buffer overflow.
+Thanks for the suggestion! Since 1) KEY_NUM_MAX already defines the
+maximum number of dm crypt keys 2) we only need to let the kdump kernel
+now how many keys are saved, so I simply use total_keys instead of
+key_count in struct keys_header in v5,
+
+static struct keys_header {
+	unsigned int total_keys;
+	struct dm_crypt_key keys[] __counted_by(total_keys);
+} *keys_header;
+
+Hopefully this renaming will improve code readability.
+
+>
+>>
+>
+>> +
+>> +static size_t get_keys_header_size(struct keys_header *keys_header,
+>> +				   size_t key_count)
+>> +{
+>> +	return struct_size(keys_header, keys, key_count);
+>> +}
+>
+>I personally don't think get_keys_header_size is so necessary. If we
+>have to keep it, may be we can remove the global variable
+>keys_header_size, we can call get_keys_header_size() and use local
+>variable to record the value instead.
+
+Thanks for the suggestion! But the kdump kernel also need to call
+get_keys_header_size in later patches. 
 
 -- 
 Best regards,
