@@ -4,65 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7296FC25B76
-	for <kexec@archiver.kernel.org>; Sat,  8 Jun 2024 04:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9D994C25B76
+	for <kexec@archiver.kernel.org>; Sat,  8 Jun 2024 09:10:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=/LVZGDK5vKth0Eal97j7YdfpZc2y3grMRxle2lznmAA=; b=LLkyr16/AyE4/4
-	mD6U31+b0ssYm5NW3wqh5L3yc0dd7p8xWAYJ3f38yjndq2T1xPcfPvZs1hCMAvwRtoRgxAxfZQ93b
-	grLBBuZbjBZZ9FYkvtETqcorM2cst277c4fFlL7IPTPripBxfACPIapVpvqG48TyH7fRAZAun6tmW
-	0gJFPaQaiOa0DKLporvnKEgrbpFN58FuQKD7S89RomXkhjcMQGA9GMh/OJJSGTWIqHdrJ6Rtig39J
-	4cNdg0nc5f8SelJsD//wiPGmiMjPj4joEeLtnRAMkxER25SLqPis6KJo4RErZM28T0/UTmOUnVO+s
-	Ny/MTTqTZroTGcaHLJVQ==;
+	List-Owner; bh=whNv9xJwU9NVXF27kuiY5NACeMcbg9YbbjcUQRFsYms=; b=RsgKM6MOp9xBtc
+	h0K+dqxNUvDC/sc491ALitMxPxKB5yBRL5NMJ97KAmQB4UhemF7PWGybEssXaT2VkwUua4PF7+yGJ
+	+b3miHKrlqNn/bo6+Q/WcqMcvUWIx5khGt78IrtKrfO2CDzfalUR8FF6Cf4XhGNd2HBCWKoL+h9JN
+	58C/YO/Y8dF1/YYzYN5ENVSVERusjNJSH3+YmYbdseYiH0m75u5Kfj6YRoY9j1T2dX1br7bkI+e9v
+	EWNoGVSznCgDDxrcoyGRpFrZswdxd/24A+wu1gn2uOpnCUWWON3jYBnDVEtcs2wHXN0ojHvvr3u2q
+	sOu52WvdtNxXOM8wbHqQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sFncn-0000000GVny-3BRR;
-	Sat, 08 Jun 2024 04:24:17 +0000
-Received: from mgamail.intel.com ([198.175.65.12])
+	id 1sFs5b-0000000H3rh-0uGV;
+	Sat, 08 Jun 2024 09:10:19 +0000
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sFncj-0000000GVZe-2JiU
+	id 1sFs5Y-0000000H3rF-2iN0
 	for kexec@lists.infradead.org;
-	Sat, 08 Jun 2024 04:24:15 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717820654; x=1749356654;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=djyCoxwdB02mJxnU8dMa7DQUh1mSR9t7kFne7+MeAtI=;
-  b=eVW+0AmZ27WphoKqmGubqYoUXtizQsPGeM6nErxxDCBtcjkmbONQtaIJ
-   t4TDy7110mH19gwrFowcasUxQBeuLhA6mKUZ7BQTgoTctSlnmC7/a05ZX
-   MUvCpQ5/Oy98OuFQQf/4bAKhWr/VGogEakRHrq5nn6CO4vGVG/jCEzgUX
-   rwBaJUbyO93Dw1B/c3GKMStkdQk39q1viu6IPo5wBawTSqU0Mku3XNl+2
-   2suLDvKYchp/FBxITruULfeCllW/5pU/I8Y0Oem8JRMsGFOcGcmhvLGFF
-   UPXDwWqT0+gNcrL8WKvfw+AOlHj+cYoOq2NK+ecMErBFWjmYmIn+BRuBx
-   Q==;
-X-CSE-ConnectionGUID: 2sCMbZlITOSTW0Yp2u4XRA==
-X-CSE-MsgGUID: fazZa8nNQwmiQZzd+WxaNg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11096"; a="25970572"
-X-IronPort-AV: E=Sophos;i="6.08,222,1712646000"; 
-   d="scan'208";a="25970572"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 21:24:10 -0700
-X-CSE-ConnectionGUID: NhCpHC2VTRGsG4BYleMG/Q==
-X-CSE-MsgGUID: fnTx+2CBTLaD5CD5MbJziA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,222,1712646000"; 
-   d="scan'208";a="43456635"
-Received: from lkp-server01.sh.intel.com (HELO 472b94a103a1) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 07 Jun 2024 21:24:06 -0700
-Received: from kbuild by 472b94a103a1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sFncZ-0000yp-0Y;
-	Sat, 08 Jun 2024 04:24:03 +0000
-Date: Sat, 8 Jun 2024 12:23:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Coiby Xu <coxu@redhat.com>, kexec@lists.infradead.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Ondrej Kozina <okozina@redhat.com>,
+	Sat, 08 Jun 2024 09:10:18 +0000
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id D7C5261B30;
+	Sat,  8 Jun 2024 09:10:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 032E4C2BD11;
+	Sat,  8 Jun 2024 09:10:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1717837815;
+	bh=utttnpxD3Vn/S5byJWZgpeDZt/SzOHLjqWI3OIi4toM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mFDtjtana84RBlxgu/8qJvWZQizKKzQC8bgzRqSwXiqFDxbgiW9fQF4f6tkiuZJU2
+	 oHpU4l7t+elhjfrIY/UDPtdB7C5zOcNfceY/42wxrpujLUrdWIUr+d7wx/sNpVjx7L
+	 ooI9wFXQXX2xxutbBvNtLjyvDp7NqY16+9ruWn9c=
+Date: Sat, 8 Jun 2024 11:10:11 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Coiby Xu <coxu@redhat.com>
+Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
 	Milan Broz <gmazyland@gmail.com>,
 	Thomas Staudt <tstaudt@de.ibm.com>,
 	Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
@@ -71,17 +51,19 @@ Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
 	Pingfan Liu <kernelfans@gmail.com>, Baoquan He <bhe@redhat.com>,
 	Dave Young <dyoung@redhat.com>, linux-kernel@vger.kernel.org,
 	x86@kernel.org, Dave Hansen <dave.hansen@intel.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>, Greg KH <greg@kroah.com>,
-	Eric Biederman <ebiederm@xmission.com>
-Subject: Re: [PATCH v5 1/7] kexec_file: allow to place kexec_buf randomly
-Message-ID: <202406081214.kNbwlJWP-lkp@intel.com>
-References: <20240607122622.167228-2-coxu@redhat.com>
+	Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH v4 0/7] Support kdump with LUKS encryption by reusing
+ LUKS volume keys
+Message-ID: <2024060833-facsimile-confident-f540@gregkh>
+References: <20240607122622.167228-1-coxu@redhat.com>
+ <26jkoqavu54xo4ctbpxfibhdlbc5kezu2kkyl5fbb7r6oizvo4@cmq5yaeszfqq>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20240607122622.167228-2-coxu@redhat.com>
+In-Reply-To: <26jkoqavu54xo4ctbpxfibhdlbc5kezu2kkyl5fbb7r6oizvo4@cmq5yaeszfqq>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240607_212413_772147_FA811630 
-X-CRM114-Status: GOOD (  11.88  )
+X-CRM114-CacheID: sfid-20240608_021016_862101_368B213B 
+X-CRM114-Status: UNSURE (   7.28  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -98,79 +80,17 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Coiby,
+On Sat, Jun 08, 2024 at 09:26:43AM +0800, Coiby Xu wrote:
+> The subject prefix should be "[PATCH v5 0/7]". I'm sorry if it causes
+> any confusion.
 
-kernel test robot noticed the following build errors:
+It will probably break our tools (b4) that want to look this up, so you
+might want to fix that for the next version you send out, given that
+this one has some 0-day bot issues.
 
-[auto build test ERROR on 8a92980606e3585d72d510a03b59906e96755b8a]
+thanks,
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Coiby-Xu/kexec_file-allow-to-place-kexec_buf-randomly/20240607-203154
-base:   8a92980606e3585d72d510a03b59906e96755b8a
-patch link:    https://lore.kernel.org/r/20240607122622.167228-2-coxu%40redhat.com
-patch subject: [PATCH v5 1/7] kexec_file: allow to place kexec_buf randomly
-config: x86_64-kexec (https://download.01.org/0day-ci/archive/20240608/202406081214.kNbwlJWP-lkp@intel.com/config)
-compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240608/202406081214.kNbwlJWP-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202406081214.kNbwlJWP-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> kernel/kexec_file.c:504:12: error: no member named 'random' in 'struct kexec_buf'
-     504 |         if (kbuf->random)
-         |             ~~~~  ^
->> kernel/kexec_file.c:505:16: error: call to undeclared function 'kexec_random_start'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     505 |                 temp_start = kexec_random_start(temp_start, end);
-         |                              ^
-   2 errors generated.
-
-
-vim +504 kernel/kexec_file.c
-
-   496	
-   497	static int locate_mem_hole_bottom_up(unsigned long start, unsigned long end,
-   498					     struct kexec_buf *kbuf)
-   499	{
-   500		struct kimage *image = kbuf->image;
-   501		unsigned long temp_start, temp_end;
-   502	
-   503		temp_start = max(start, kbuf->buf_min);
- > 504		if (kbuf->random)
- > 505			temp_start = kexec_random_start(temp_start, end);
-   506	
-   507		do {
-   508			temp_start = ALIGN(temp_start, kbuf->buf_align);
-   509			temp_end = temp_start + kbuf->memsz - 1;
-   510	
-   511			if (temp_end > end || temp_end > kbuf->buf_max)
-   512				return 0;
-   513			/*
-   514			 * Make sure this does not conflict with any of existing
-   515			 * segments
-   516			 */
-   517			if (kimage_is_destination_range(image, temp_start, temp_end)) {
-   518				temp_start = temp_start + PAGE_SIZE;
-   519				continue;
-   520			}
-   521	
-   522			/* We found a suitable memory range */
-   523			break;
-   524		} while (1);
-   525	
-   526		/* If we are here, we found a suitable memory range */
-   527		kbuf->mem = temp_start;
-   528	
-   529		/* Success, stop navigating through remaining System RAM ranges */
-   530		return 1;
-   531	}
-   532	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+greg k-h
 
 _______________________________________________
 kexec mailing list
