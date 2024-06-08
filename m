@@ -4,84 +4,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 9CE28C27C53
-	for <kexec@archiver.kernel.org>; Fri,  7 Jun 2024 15:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4E7F3C27C53
+	for <kexec@archiver.kernel.org>; Sat,  8 Jun 2024 01:31:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=0NEGL0TlbHj9yLleXgDvMGUYw1ztluYikpusnZ+XjQw=; b=L3/zvf8+1fLpkc
-	Kz2IV3h5XLzndHWcOlHiFjZ5/V9MZptWDTIL4Eo5EXaEdLVt0zJdANmTzUhlswaOc3kT1kU4FDvSP
-	KvIEdfvqguGIzxNMPPtkO3Prs0m2eeUQFwfv4vpmYSLbDRKC/f60FY8fbOpapvpnu5kN1RKGLOwiY
-	sb4ncYRtiVLHtdReuFGBORDX0fSvJ/DgDmG64OE3rsNfqxfiaPpTfhQjp0vJEzYkyKcP65HLqlWEn
-	j9fDmSuigasBNRjBunlKvSX0aaxPToxW4nQq1R+6w6w1Pjd27s4Kh2SpLHqXErbPuoFiJvJkhigVJ
-	LOuq0Ndb5DlBuwyFn2tg==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=MUoU0IZSAuKQLwgARkTz0d5vZDkLfMVGVIcTobBEzns=; b=zBhM4DPjRmOK488Bh5yicG/+ma
+	ZGCywLMHtv2mKP9dIL7jQ7Cxew/eUgp7O03XDn0zaBZRwGpXnCZCOiynGF4Ly0dLfSY0NAqw9LF9I
+	PjGO3OASgcC1QaqAbP5WzS76fCfKatqiHhDS7GcCHqmYLMdHWFWKe6UnTsoC30ftpM3IpEIbCbzt/
+	FTY6FfPMpFGIk52/dhR3usN4Wc+L9Bj+Zmm+WpwBIKHTZcXJ7Q25ESl3FawF92yKOeolYQkrcb2K1
+	S15D+T0KsMDSSV/+75D2ZEpeA/gmvWPy625MVM1cNNOVLQMU8ckaWyCat4rgvvADifbNesNqsnM1O
+	L64cF6Ug==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sFbIg-0000000EeVv-1ZNH;
-	Fri, 07 Jun 2024 15:14:42 +0000
-Received: from mgamail.intel.com ([198.175.65.10])
+	id 1sFkvu-0000000GDBK-0kiU;
+	Sat, 08 Jun 2024 01:31:50 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sFbIc-0000000EeTp-1E6P
+	id 1sFkvr-0000000GDAp-14Re
 	for kexec@lists.infradead.org;
-	Fri, 07 Jun 2024 15:14:39 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1717773279; x=1749309279;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=XXq1CUm0YM3BcuboGgGpWREXpzYqe98jsob87/Kz8JM=;
-  b=bHI1LNM0aLvAZNJZBxa5SrlImp3PtusQMJeuWejoC/Z2z2VzUjTeQ1no
-   V6zN4XTNtc5/pRqdqrQS9IvfAbs8q6u1wKkn/ohR5p+wsFCGGIYn93YxZ
-   3w6/UD/Km9eriux1oQrJE2bUMiLzokIu/JggjX0u2NRHPDdyrulRqXwlT
-   jJ1cKLpp6rFmfvuo1AyLcun6e6ud98YNyUHOQRrBmRzuktEhEC96eIPFq
-   SAGn68hzjNEBpWN3/bLvojxCTy2Dr1FDwtredHAfDtOMhF4XcFa2odPSb
-   C00ucSzlJtKusW2fqPIoeMSWmDReMjIogu0fwrPUYPwTWj/e+KzreM7Dg
-   Q==;
-X-CSE-ConnectionGUID: DkmeIw75QbWWHQzM22tEAA==
-X-CSE-MsgGUID: 1USoW/+8RfqSdcmp5T6HdA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11096"; a="31994420"
-X-IronPort-AV: E=Sophos;i="6.08,221,1712646000"; 
-   d="scan'208";a="31994420"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2024 08:14:36 -0700
-X-CSE-ConnectionGUID: 1DJWudwORySimsNrY6/5dg==
-X-CSE-MsgGUID: AMPzl3/PTV+d/VteOjVbvw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,221,1712646000"; 
-   d="scan'208";a="38470479"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa009.fm.intel.com with ESMTP; 07 Jun 2024 08:14:29 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 8D1922DC; Fri, 07 Jun 2024 18:14:28 +0300 (EEST)
-Date: Fri, 7 Jun 2024 18:14:28 +0300
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Elena Reshetova <elena.reshetova@intel.com>, 
-	Jun Nakajima <jun.nakajima@intel.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish" <ashish.kalra@amd.com>, 
-	Sean Christopherson <seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, 
-	kexec@lists.infradead.org, linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org, Tao Liu <ltao@redhat.com>
-Subject: Re: [PATCHv11 18/19] x86/acpi: Add support for CPU offlining for
- ACPI MADT wakeup method
-Message-ID: <icu4yecqfwhmbexupo4zzei4lbe5sgavsfkm27jd6t6gyjynul@c2wap3jhtik7>
-References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
- <20240528095522.509667-19-kirill.shutemov@linux.intel.com>
- <20240603083930.GNZl2BQk2lQ8WtcE4o@fat_crate.local>
+	Sat, 08 Jun 2024 01:31:48 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1717810305;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8Il+x7mPxkybxlGmp96omLuhvnPqHbzJs6J/7vrJ884=;
+	b=A2P2V+GYgflQt5XyVE4MHaHFdVoHI3WHTGHnvGogjOYqI+bxzTiJmrkYSLYa3vMNYwdq/0
+	bl8yglHEmHTUT32OdcMvRYrE30vocGEA0KXg2XLtYfrnv3UD8iX8ODUD2agBu6yBbkAXad
+	uCc96eYAyDs8mnexhNUqrd/XetbApdY=
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com
+ [209.85.210.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-653-u2dRL_DVPUuN8PZ-2ae6aQ-1; Fri, 07 Jun 2024 21:30:38 -0400
+X-MC-Unique: u2dRL_DVPUuN8PZ-2ae6aQ-1
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-704231a9953so358084b3a.0
+        for <kexec@lists.infradead.org>; Fri, 07 Jun 2024 18:30:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717810237; x=1718415037;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8Il+x7mPxkybxlGmp96omLuhvnPqHbzJs6J/7vrJ884=;
+        b=ok2eHug4g79AV73b1Tuco3aoy2F+0LsnkaltKUrFhaQRAyXLyG8Eytgz7j5cH9I5Nw
+         tnIuOlB4PybUUuOkLHWMQru4gSfoQzN/kIZH5pcpgPUQQ7z4tR5Op3bxjitp+FwiZ6CX
+         AceCxvDT5SqruHG9qf52gmQnzCanBECPnUT+FtyNbUOLyyBAEfU2cSEqo55Rto8F4ZCv
+         R96kwjE69PMJmQcLhcoB4ck53yC0fC1xb1kM1ZOiLQdCxr/83H3s4SrDtvGVcxnoANPK
+         WkKhjNxnBdZxpSXVvNckklZoFw2CeG5rs+IRkLBlI2AtIE4Pufsxm1TMeVzuFriiBm9u
+         ZVRQ==
+X-Gm-Message-State: AOJu0YwwikNs19U2M0kX3a4wq7bWLDt1YlztbbB6r5597abJ7X04JLqV
+	VJQhKYGOh9Ph+8Wifhd4rLUnGJcoSVE3Wj2VQmlzvt/9BrpM6kjbcTxNWP/bFOD7HcYmE8lU0Gq
+	+nAAJaWdf9PKROBibszSkmBAO9IpEFIB1wLF1f3QYsCnZ9qogbRmpZzea23inH9OzDATrh1W0eG
+	bEjaOBWAr+/9Q3UbriU4fSAMN4u1Ld3mFmzsYJai/C5ZnL
+X-Received: by 2002:a05:6a00:2e9c:b0:6ea:bf1c:9dfd with SMTP id d2e1a72fcca58-7040c737a8bmr4548049b3a.27.1717810235943;
+        Fri, 07 Jun 2024 18:30:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHf18qDxBKvh63AOJgteBoZ+l1rs1vBq/RxFyokdqBxSXDxTeJ/VWO2OgmN/pBacP7VyFcMzA==
+X-Received: by 2002:a05:6a00:2e9c:b0:6ea:bf1c:9dfd with SMTP id d2e1a72fcca58-7040c737a8bmr4548005b3a.27.1717810235042;
+        Fri, 07 Jun 2024 18:30:35 -0700 (PDT)
+Received: from localhost ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70423a7f217sm251223b3a.206.2024.06.07.18.30.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Jun 2024 18:30:34 -0700 (PDT)
+Date: Sat, 8 Jun 2024 09:26:43 +0800
+From: Coiby Xu <coxu@redhat.com>
+To: kexec@lists.infradead.org
+Cc: Ondrej Kozina <okozina@redhat.com>, Milan Broz <gmazyland@gmail.com>, 
+	Thomas Staudt <tstaudt@de.ibm.com>, Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>, 
+	Kairui Song <ryncsn@gmail.com>, Jan Pazdziora <jpazdziora@redhat.com>, 
+	Pingfan Liu <kernelfans@gmail.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, Dave Hansen <dave.hansen@intel.com>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>, Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v4 0/7] Support kdump with LUKS encryption by reusing
+ LUKS volume keys
+Message-ID: <26jkoqavu54xo4ctbpxfibhdlbc5kezu2kkyl5fbb7r6oizvo4@cmq5yaeszfqq>
+References: <20240607122622.167228-1-coxu@redhat.com>
 MIME-Version: 1.0
+In-Reply-To: <20240607122622.167228-1-coxu@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Disposition: inline
-In-Reply-To: <20240603083930.GNZl2BQk2lQ8WtcE4o@fat_crate.local>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240607_081438_448898_375C2C1A 
-X-CRM114-Status: GOOD (  41.68  )
+X-CRM114-CacheID: sfid-20240607_183147_383590_20DF02F3 
+X-CRM114-Status: GOOD (  41.19  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -93,360 +100,190 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Mon, Jun 03, 2024 at 10:39:30AM +0200, Borislav Petkov wrote:
-> > +/*
-> > + * Make sure asm_acpi_mp_play_dead() is present in the identity mapping at
-> > + * the same place as in the kernel page tables. asm_acpi_mp_play_dead() switches
-> > + * to the identity mapping and the function has be present at the same spot in
-> > + * the virtual address space before and after switching page tables.
-> > + */
-> > +static int __init init_transition_pgtable(pgd_t *pgd)
-> 
-> This looks like a generic helper which should be in set_memory.c. And
-> looking at that file, there's populate_pgd() which does pretty much the
-> same thing, if I squint real hard.
-> 
-> Let's tone down the duplication.
+The subject prefix should be "[PATCH v5 0/7]". I'm sorry if it causes
+any confusion.
 
-Okay, there is a function called kernel_map_pages_in_pgd() in set_memory.c
-that does what we need here.
+On Fri, Jun 07, 2024 at 08:26:10PM +0800, Coiby Xu wrote:
+>LUKS is the standard for Linux disk encryption. Many users choose LUKS
+>and in some use cases like Confidential VM it's mandated. With kdump
+>enabled, when the 1st kernel crashes, the system could boot into the
+>kdump/crash kernel and dump the memory image i.e. /proc/vmcore to a
+>specified target. Currently, when dumping vmcore to a LUKS
+>encrypted device, there are two problems,
+>
+> - Kdump kernel may not be able to decrypt the LUKS partition. For some
+>   machines, a system administrator may not have a chance to enter the
+>   password to decrypt the device in kdump initramfs after the 1st kernel
+>   crashes; For cloud confidential VMs, depending on the policy the
+>   kdump kernel may not be able to unseal the keys with TPM and the
+>   console virtual keyboard is untrusted.
+>
+> - LUKS2 by default use the memory-hard Argon2 key derivation function
+>   which is quite memory-consuming compared to the limited memory reserved
+>   for kdump. Take Fedora example, by default, only 256M is reserved for
+>   systems having memory between 4G-64G. With LUKS enabled, ~1300M needs
+>   to be reserved for kdump. Note if the memory reserved for kdump can't
+>   be used by 1st kernel i.e. an user sees ~1300M memory missing in the
+>   1st kernel.
+>
+>Besides users (at least for Fedora) usually expect kdump to work out of
+>the box i.e. no manual password input is needed. And it doesn't make
+>sense to derivate the keys again in kdump kernel which seems to be
+>redundant work.
+>
+>This patch set addresses the above issues by make the LUKS volume keys
+>persistent for kdump kernel with the help of cryptsetup's new APIs
+>(--link-vk-to-keyring/--volume-key-keyring). Here is the life cycle of
+>this kdump copy of LUKS volume keys,
+>
+> 1. After the 1st kernel loads the initramfs during boot, systemd
+>    use an user-input passphrase or TPM-sealed key to de-crypt the LUKS
+>    volume keys and then save the volume keys to specified keyring
+>    (using the --link-vk-to-keyring API) and the key will expire within
+>    specified time.
+>
+> 2. A user space tool (kdump initramfs builder) writes a key description to
+>    /sys/kernel/crash_dm_crypt_keys to inform the 1st kernel to record the
+>    key while building the kdump initramfs
+>
+> 3. The kexec_file_load syscall read the volume keys by recorded key
+>    descriptions and then save them key to kdump reserved memory and wipe the
+>    copy.
+>
+> 4. When the 1st kernel crashes and the kdump initramfs is booted, the kdump
+>    initramfs asks the kdump kernel to create a user key using the key stored in
+>    kdump reserved memory by writing to to /sys/kernel/crash_dm_crypt_keys. Then
+>    the LUKS encrypted devide is unlocked with libcryptsetup's
+>    --volume-key-keyring API.
+>
+> 5. The system gets rebooted to the 1st kernel after dumping vmcore to
+>    the LUKS encrypted device is finished
+>
+>After libcryptsetup saving the LUKS volume keys to specified keyring,
+>whoever takes this should be responsible for the safety of these copies
+>of keys. The keys will be saved in the memory area exclusively reserved
+>for kdump where even the 1st kernel has no direct access. And further
+>more, two additional protections are added,
+> - save the copy randomly in kdump reserved memory as suggested by Jan
+> - clear the _PAGE_PRESENT flag of the page that stores the copy as
+>   suggested by Pingfan
+>
+>This patch set only supports x86. There will be patches to support other
+>architectures once this patch set gets merged.
+>
+>v5
+> - Baoquan
+>   - limit the feature of placing kexec_buf randomly to kdump (CONFIG_CRASH_DUMP)
+>   - add documentation for added sysfs API
+>   - allow to re-send init command to support the case of user switching to
+>     a different LUKS-encrypted target
+>   - make CONFIG_CRASH_DM_CRYPT depends on CONFIG_DM_CRYPT
+>   - check if the number of keys exceed KEY_NUM_MAX
+>   - rename (struct keys_header).key_count as (struct
+>     keys_header).total_keys to improve code readiblity
+>   - improve commit message
+>   - fix the failure of calling crash_exclude_mem_range (there is a split
+>     of mem_range)
+>   - use ret instead of r as return code
+>
+> - Greg
+>   - add documentation for added sysfs API
+>   - avoid spamming kernel logs
+>   - fix a buffer overflow issue
+>   - keep the state enums synced up with the string values
+>   - use sysfs_emit other than sprintf
+>   - explain KEY_NUM_MAX and KEY_SIZE_MAX
+>   - s/EXPORT_SYMBOL_GPL/EXPORT_SYMBOL/g
+>   - improve code readability
+>
+> - Rebase onto latest Linus tree
+>
+>
+>v4
+>- rebase onto latest Linus tree so Baoquan can apply the patches for
+>  code review
+>- fix kernel test robot warnings
+>
+>v3
+> - Support CPU/memory hot-plugging [Baoquan]
+> - Don't save the keys temporarily to simplify the implementation [Baoquan]
+> - Support multiple LUKS encrypted volumes
+> - Read logon key instead of user key to improve security [Ondrej]
+> - A kernel config option CRASH_DM_CRYPT for this feature (disabled by default)
+> - Fix warnings found by kernel test robot
+> - Rebase the code onto 6.9.0-rc5+
+>
+>v2
+> - work together with libscryptsetup's --link-vk-to-keyring/--volume-key-keyring APIs [Milan and Ondrej]
+> - add the case where console virtual keyboard is untrusted for confidential VM
+> - use dm_crypt_key instead of LUKS volume key [Milan and Eric]
+> - fix some code format issues
+> - don't move "struct kexec_segment" declaration
+> - Rebase the code onto latest Linus tree (6.7.0)
+>
+>v1
+> - "Put the luks key handling related to crash_dump out into a separate
+>   file kernel/crash_dump_luks.c" [Baoquan]
+> - Put the generic luks handling code before the x86 specific code to
+>   make it easier for other arches to follow suit [Baoquan]
+> - Use phys_to_virt instead of "pfn -> page -> vaddr" [Dave Hansen]
+> - Drop the RFC prefix [Dave Young]
+> - Rebase the code onto latest Linus tree (6.4.0-rc4)
+>
+>RFC v2
+> - libcryptsetup interacts with the kernel via sysfs instead of "hacking"
+>   dm-crypt
+>   - to save a kdump copy of the LUKS volume key in 1st kernel
+>   - to add a logon key using the copy for libcryptsetup in kdump kernel [Milan]
+>   - to avoid the incorrect usage of LUKS master key in dm-crypt [Milan]
+> - save the kdump copy of LUKS volume key randomly [Jan]
+> - mark the kdump copy inaccessible [Pingfan]
+> - Miscellaneous
+>   - explain when operations related to the LUKS volume key happen [Jan]
+>   - s/master key/volume key/g
+>   - use crash_ instead of kexec_ as function prefix
+>   - fix commit subject prefixes e.g. "x86, kdump" to x86/crash
+>
+>Coiby Xu (7):
+>  kexec_file: allow to place kexec_buf randomly
+>  crash_dump: make dm crypt keys persist for the kdump kernel
+>  crash_dump: store dm crypt keys in kdump reserved memory
+>  crash_dump: reuse saved dm crypt keys for CPU/memory hot-plugging
+>  crash_dump: retrieve dm crypt keys in kdump kernel
+>  x86/crash: pass dm crypt keys to kdump kernel
+>  x86/crash: make the page that stores the dm crypt keys inaccessible
+>
+> Documentation/ABI/testing/crash_dm_crypt_keys |  35 ++
+> arch/x86/kernel/crash.c                       |  20 +-
+> arch/x86/kernel/kexec-bzimage64.c             |   7 +
+> arch/x86/kernel/machine_kexec_64.c            |  22 ++
+> include/linux/crash_core.h                    |   9 +-
+> include/linux/crash_dump.h                    |   2 +
+> include/linux/kexec.h                         |   8 +
+> kernel/Kconfig.kexec                          |   9 +
+> kernel/Makefile                               |   1 +
+> kernel/crash_dump_dm_crypt.c                  | 338 ++++++++++++++++++
+> kernel/kexec_file.c                           |  21 ++
+> kernel/ksysfs.c                               |  24 ++
+> 12 files changed, 493 insertions(+), 3 deletions(-)
+> create mode 100644 Documentation/ABI/testing/crash_dm_crypt_keys
+> create mode 100644 kernel/crash_dump_dm_crypt.c
+>
+>
+>base-commit: 8a92980606e3585d72d510a03b59906e96755b8a
+>-- 
+>2.45.1
+>
 
-I tried to use it, but encountered a few issues:
-
-- The code in set_memory.c allocates memory using the buddy allocator,
-  which is not yet ready. We can work around this limitation by delaying
-  the initialization of offlining until later, using a separate
-  early_initcall();
-
-- I noticed a complaint that the allocation is being done from an atomic
-  context: a spinlock called cpa_lock is taken when populate_pgd()
-  allocates memory.
-
-  I am not sure why this was not noticed before. kernel_map_pages_in_pgd()
-  has only been used in EFI mapping initialization so far, so maybe it is
-  somehow special, I don't know.
-
-  I was able to address this issue by switching cpa_lock to a mutex.
-  However, this solution will only work if the callers for set_memory
-  interfaces are not called from an atomic context. I need to verify if
-  this is the case.
-
-- The function __flush_tlb_all() in kernel_(un)map_pages_in_pgd() must be
-  called with preemption disabled. Once again, I am unsure why this has
-  not caused issues in the EFI case.
-
-- I discovered a bug in kernel_ident_mapping_free() when it is used on a
-  machine with 5-level paging. I will submit a proper patch to fix this
-  issue.
-
-The fixup is below.
-
-Any comments?
-
-diff --git a/arch/x86/kernel/acpi/madt_wakeup.c b/arch/x86/kernel/acpi/madt_wakeup.c
-index 6cfe762be28b..fbbfe78f7f27 100644
---- a/arch/x86/kernel/acpi/madt_wakeup.c
-+++ b/arch/x86/kernel/acpi/madt_wakeup.c
-@@ -59,82 +59,55 @@ static void acpi_mp_cpu_die(unsigned int cpu)
- 		pr_err("Failed to hand over CPU %d to BIOS\n", cpu);
- }
- 
-+static void acpi_mp_disable_offlining(struct acpi_madt_multiproc_wakeup *mp_wake)
-+{
-+	cpu_hotplug_disable_offlining();
-+
-+	/*
-+	 * ACPI MADT doesn't allow to offline a CPU after it was onlined. This
-+	 * limits kexec: the second kernel won't be able to use more than one CPU.
-+	 *
-+	 * To prevent a kexec kernel from onlining secondary CPUs invalidate the
-+	 * mailbox address in the ACPI MADT wakeup structure which prevents a
-+	 * kexec kernel to use it.
-+	 *
-+	 * This is safe as the booting kernel has the mailbox address cached
-+	 * already and acpi_wakeup_cpu() uses the cached value to bring up the
-+	 * secondary CPUs.
-+	 *
-+	 * Note: This is a Linux specific convention and not covered by the
-+	 *       ACPI specification.
-+	 */
-+	mp_wake->mailbox_address = 0;
-+}
-+
- /* The argument is required to match type of x86_mapping_info::alloc_pgt_page */
- static void __init *alloc_pgt_page(void *dummy)
- {
--	return memblock_alloc(PAGE_SIZE, PAGE_SIZE);
-+	return (void *)get_zeroed_page(GFP_KERNEL);
- }
- 
- static void __init free_pgt_page(void *pgt, void *dummy)
- {
--	return memblock_free(pgt, PAGE_SIZE);
-+	return free_page((unsigned long)pgt);
- }
- 
--/*
-- * Make sure asm_acpi_mp_play_dead() is present in the identity mapping at
-- * the same place as in the kernel page tables. asm_acpi_mp_play_dead() switches
-- * to the identity mapping and the function has be present at the same spot in
-- * the virtual address space before and after switching page tables.
-- */
--static int __init init_transition_pgtable(pgd_t *pgd)
--{
--	pgprot_t prot = PAGE_KERNEL_EXEC_NOENC;
--	unsigned long vaddr, paddr;
--	p4d_t *p4d;
--	pud_t *pud;
--	pmd_t *pmd;
--	pte_t *pte;
--
--	vaddr = (unsigned long)asm_acpi_mp_play_dead;
--	pgd += pgd_index(vaddr);
--	if (!pgd_present(*pgd)) {
--		p4d = (p4d_t *)alloc_pgt_page(NULL);
--		if (!p4d)
--			return -ENOMEM;
--		set_pgd(pgd, __pgd(__pa(p4d) | _KERNPG_TABLE));
--	}
--	p4d = p4d_offset(pgd, vaddr);
--	if (!p4d_present(*p4d)) {
--		pud = (pud_t *)alloc_pgt_page(NULL);
--		if (!pud)
--			return -ENOMEM;
--		set_p4d(p4d, __p4d(__pa(pud) | _KERNPG_TABLE));
--	}
--	pud = pud_offset(p4d, vaddr);
--	if (!pud_present(*pud)) {
--		pmd = (pmd_t *)alloc_pgt_page(NULL);
--		if (!pmd)
--			return -ENOMEM;
--		set_pud(pud, __pud(__pa(pmd) | _KERNPG_TABLE));
--	}
--	pmd = pmd_offset(pud, vaddr);
--	if (!pmd_present(*pmd)) {
--		pte = (pte_t *)alloc_pgt_page(NULL);
--		if (!pte)
--			return -ENOMEM;
--		set_pmd(pmd, __pmd(__pa(pte) | _KERNPG_TABLE));
--	}
--	pte = pte_offset_kernel(pmd, vaddr);
--
--	paddr = __pa(vaddr);
--	set_pte(pte, pfn_pte(paddr >> PAGE_SHIFT, prot));
--
--	return 0;
--}
--
--static int __init acpi_mp_setup_reset(u64 reset_vector)
-+static int __init acpi_mp_setup_reset(union acpi_subtable_headers *header,
-+			      const unsigned long end)
- {
-+	struct acpi_madt_multiproc_wakeup *mp_wake;
- 	struct x86_mapping_info info = {
- 		.alloc_pgt_page = alloc_pgt_page,
- 		.free_pgt_page	= free_pgt_page,
- 		.page_flag      = __PAGE_KERNEL_LARGE_EXEC,
--		.kernpg_flag    = _KERNPG_TABLE_NOENC,
-+		.kernpg_flag    = _KERNPG_TABLE,
- 	};
-+	unsigned long vaddr, pfn;
- 	pgd_t *pgd;
- 
- 	pgd = alloc_pgt_page(NULL);
- 	if (!pgd)
--		return -ENOMEM;
-+		goto err;
- 
- 	for (int i = 0; i < nr_pfn_mapped; i++) {
- 		unsigned long mstart, mend;
-@@ -143,30 +116,45 @@ static int __init acpi_mp_setup_reset(u64 reset_vector)
- 		mend   = pfn_mapped[i].end << PAGE_SHIFT;
- 		if (kernel_ident_mapping_init(&info, pgd, mstart, mend)) {
- 			kernel_ident_mapping_free(&info, pgd);
--			return -ENOMEM;
-+			goto err;
- 		}
- 	}
- 
- 	if (kernel_ident_mapping_init(&info, pgd,
--				      PAGE_ALIGN_DOWN(reset_vector),
--				      PAGE_ALIGN(reset_vector + 1))) {
-+				      PAGE_ALIGN_DOWN(acpi_mp_reset_vector_paddr),
-+				      PAGE_ALIGN(acpi_mp_reset_vector_paddr + 1))) {
- 		kernel_ident_mapping_free(&info, pgd);
--		return -ENOMEM;
-+		goto err;
- 	}
- 
--	if (init_transition_pgtable(pgd)) {
-+	/*
-+	 * Make sure asm_acpi_mp_play_dead() is present in the identity mapping
-+	 * at the same place as in the kernel page tables.
-+	 *
-+	 * asm_acpi_mp_play_dead() switches to the identity mapping and the
-+	 * function has be present at the same spot in the virtual address space
-+	 * before and after switching page tables.
-+	 */
-+	vaddr = (unsigned long)asm_acpi_mp_play_dead;
-+	pfn = __pa(vaddr) >> PAGE_SHIFT;
-+	if (kernel_map_pages_in_pgd(pgd, pfn, vaddr, 1, _KERNPG_TABLE)) {
- 		kernel_ident_mapping_free(&info, pgd);
--		return -ENOMEM;
-+		goto err;
- 	}
- 
- 	smp_ops.play_dead = acpi_mp_play_dead;
- 	smp_ops.stop_this_cpu = acpi_mp_stop_this_cpu;
- 	smp_ops.cpu_die = acpi_mp_cpu_die;
- 
--	acpi_mp_reset_vector_paddr = reset_vector;
- 	acpi_mp_pgd = __pa(pgd);
- 
- 	return 0;
-+err:
-+	pr_warn("Failed to setup MADT reset vector\n");
-+	mp_wake = (struct acpi_madt_multiproc_wakeup *)header;
-+	acpi_mp_disable_offlining(mp_wake);
-+	return -ENOMEM;
-+
- }
- 
- static int acpi_wakeup_cpu(u32 apicid, unsigned long start_ip)
-@@ -226,28 +214,6 @@ static int acpi_wakeup_cpu(u32 apicid, unsigned long start_ip)
- 	return 0;
- }
- 
--static void acpi_mp_disable_offlining(struct acpi_madt_multiproc_wakeup *mp_wake)
--{
--	cpu_hotplug_disable_offlining();
--
--	/*
--	 * ACPI MADT doesn't allow to offline a CPU after it was onlined. This
--	 * limits kexec: the second kernel won't be able to use more than one CPU.
--	 *
--	 * To prevent a kexec kernel from onlining secondary CPUs invalidate the
--	 * mailbox address in the ACPI MADT wakeup structure which prevents a
--	 * kexec kernel to use it.
--	 *
--	 * This is safe as the booting kernel has the mailbox address cached
--	 * already and acpi_wakeup_cpu() uses the cached value to bring up the
--	 * secondary CPUs.
--	 *
--	 * Note: This is a Linux specific convention and not covered by the
--	 *       ACPI specification.
--	 */
--	mp_wake->mailbox_address = 0;
--}
--
- int __init acpi_parse_mp_wake(union acpi_subtable_headers *header,
- 			      const unsigned long end)
- {
-@@ -274,10 +240,7 @@ int __init acpi_parse_mp_wake(union acpi_subtable_headers *header,
- 
- 	if (mp_wake->version >= ACPI_MADT_MP_WAKEUP_VERSION_V1 &&
- 	    mp_wake->header.length >= ACPI_MADT_MP_WAKEUP_SIZE_V1) {
--		if (acpi_mp_setup_reset(mp_wake->reset_vector)) {
--			pr_warn("Failed to setup MADT reset vector\n");
--			acpi_mp_disable_offlining(mp_wake);
--		}
-+		acpi_mp_reset_vector_paddr = mp_wake->reset_vector;
- 	} else {
- 		/*
- 		 * CPU offlining requires version 1 of the ACPI MADT wakeup
-@@ -290,3 +253,13 @@ int __init acpi_parse_mp_wake(union acpi_subtable_headers *header,
- 
- 	return 0;
- }
-+
-+static int __init acpi_mp_offline_init(void)
-+{
-+	if (!acpi_mp_reset_vector_paddr)
-+		return 0;
-+
-+	return acpi_table_parse_madt(ACPI_MADT_TYPE_MULTIPROC_WAKEUP,
-+				     acpi_mp_setup_reset, 1);
-+}
-+early_initcall(acpi_mp_offline_init);
-diff --git a/arch/x86/mm/ident_map.c b/arch/x86/mm/ident_map.c
-index 3996af7b4abf..c45127265f2f 100644
---- a/arch/x86/mm/ident_map.c
-+++ b/arch/x86/mm/ident_map.c
-@@ -60,7 +60,7 @@ static void free_p4d(struct x86_mapping_info *info, pgd_t *pgd)
- 	}
- 
- 	if (pgtable_l5_enabled())
--		info->free_pgt_page(pgd, info->context);
-+		info->free_pgt_page(p4d, info->context);
- }
- 
- void kernel_ident_mapping_free(struct x86_mapping_info *info, pgd_t *pgd)
-diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index 443a97e515c0..72715674f492 100644
---- a/arch/x86/mm/pat/set_memory.c
-+++ b/arch/x86/mm/pat/set_memory.c
-@@ -69,7 +69,7 @@ static const int cpa_warn_level = CPA_PROTECT;
-  * entries change the page attribute in parallel to some other cpu
-  * splitting a large page entry along with changing the attribute.
-  */
--static DEFINE_SPINLOCK(cpa_lock);
-+static DEFINE_MUTEX(cpa_lock);
- 
- #define CPA_FLUSHTLB 1
- #define CPA_ARRAY 2
-@@ -1186,10 +1186,10 @@ static int split_large_page(struct cpa_data *cpa, pte_t *kpte,
- 	struct page *base;
- 
- 	if (!debug_pagealloc_enabled())
--		spin_unlock(&cpa_lock);
-+		mutex_unlock(&cpa_lock);
- 	base = alloc_pages(GFP_KERNEL, 0);
- 	if (!debug_pagealloc_enabled())
--		spin_lock(&cpa_lock);
-+		mutex_lock(&cpa_lock);
- 	if (!base)
- 		return -ENOMEM;
- 
-@@ -1804,10 +1804,10 @@ static int __change_page_attr_set_clr(struct cpa_data *cpa, int primary)
- 			cpa->numpages = 1;
- 
- 		if (!debug_pagealloc_enabled())
--			spin_lock(&cpa_lock);
-+			mutex_lock(&cpa_lock);
- 		ret = __change_page_attr(cpa, primary);
- 		if (!debug_pagealloc_enabled())
--			spin_unlock(&cpa_lock);
-+			mutex_unlock(&cpa_lock);
- 		if (ret)
- 			goto out;
- 
-@@ -2516,7 +2516,9 @@ int __init kernel_map_pages_in_pgd(pgd_t *pgd, u64 pfn, unsigned long address,
- 	cpa.mask_set = __pgprot(_PAGE_PRESENT | page_flags);
- 
- 	retval = __change_page_attr_set_clr(&cpa, 1);
-+	preempt_disable();
- 	__flush_tlb_all();
-+	preempt_enable();
- 
- out:
- 	return retval;
-@@ -2551,7 +2553,9 @@ int __init kernel_unmap_pages_in_pgd(pgd_t *pgd, unsigned long address,
- 	WARN_ONCE(num_online_cpus() > 1, "Don't call after initializing SMP");
- 
- 	retval = __change_page_attr_set_clr(&cpa, 1);
-+	preempt_disable();
- 	__flush_tlb_all();
-+	preempt_enable();
- 
- 	return retval;
- }
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+Best regards,
+Coiby
+
 
 _______________________________________________
 kexec mailing list
