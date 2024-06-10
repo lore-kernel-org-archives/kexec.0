@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3B924C27C53
-	for <kexec@archiver.kernel.org>; Mon, 10 Jun 2024 01:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7BD83C27C53
+	for <kexec@archiver.kernel.org>; Mon, 10 Jun 2024 02:00:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=2x33fdJ8m9rNAsxaVZmQuzEoxiRKU8OegisX1YRdi+w=; b=je8JHAkJa9IQje
-	Yplvks2hetZdw28WE7gl7bentAi5r02e63mzpT2dJW32raTWodSAs9C+WzOQfKJ+f/gBCzYrZK+uD
-	h080LXolruYGtQA74YvBLe1BdVl0Og81v+cCRMnTnXdKW7QWwFGkrV6Uq5w9AHK6e1wzTTJXAjOo4
-	WfYHBgML9f+ilHFiuRiWY1cI43JazjvTC4N26WEZmssuBlSj70RCqXs/BbhQaqP10msGxqI7iv2PQ
-	nxivbu77Pw+UZRbmCg3cFg7cFsvBfp0jwNRr6JkodnOkYfHOT98xxrtiD6HEVWZgUssvXc40gWJyx
-	5cizzzY7JcUt06/0nu6w==;
+	List-Owner; bh=pZTXwxPe27B3Tn0gERtBQ3zi0wvM8zzInUM/r+1S1hc=; b=lT81pfb2LJmnPp
+	gp9/PVL7jt+5CZKovRQbicPXl5oFKzvxFv1x3v+eJ0J+YAbWAVDlmBDXTtySCqHWxsXg0pIsvYBmH
+	cEq4U6WLXvysjGru0ngRxqCp3taI0yDxYj356FZuxzd7u3KNxz5FV6ztMZNSFG3/36w1BU/7elqbR
+	DzSz4rsG0pzxoauLCSQlWiISIQTysbHw5TIABHd4OB2684kb+ph2I1kIWnOFCtO5Bam7BnxfXNrm+
+	eCy44xjUwjKRbvUs64uyoP1WNPjetq9BQQTGKNOHUUI3NDPJjBcrpHd96T19qAPX9Pv02thGuHxiG
+	rPM29lM+ZtJRUL2vAtBw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sGTgw-00000003YJL-0PBW;
-	Mon, 10 Jun 2024 01:19:22 +0000
+	id 1sGUKY-00000003ajI-49Tl;
+	Mon, 10 Jun 2024 02:00:18 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sGTgp-00000003YIW-3DLY
+	id 1sGUKW-00000003aiv-1jSV
 	for kexec@lists.infradead.org;
-	Mon, 10 Jun 2024 01:19:17 +0000
+	Mon, 10 Jun 2024 02:00:17 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717982352;
+	s=mimecast20190719; t=1717984814;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=8uqVpGiW41LdDIPZDGk2krTR1nMbUR1Dbs/h7+D4MIY=;
-	b=UYQFDrNGqZ2BTpqxuoo86K4fyz8h7TSdRslHJBUhPxBTdky6K82rCSgTDQ/BdEsrppk5IV
-	QWo1nq/5R1nt2YBKqsdttrhzrPgM3IoGcwUFHnnx0sDvtRuw7Zxkl6rfyabUYL4sSeIisB
-	KhhhIaNFG5F65uYXNeu2Nl5lL3n7FiE=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-389-OYqCyoXeOyS0ZDmtYLfsgg-1; Sun,
- 09 Jun 2024 21:19:04 -0400
-X-MC-Unique: OYqCyoXeOyS0ZDmtYLfsgg-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	bh=aOO4GVvcO0xxLYThv3Qu7QqLhlBUXRK/6CUBfcNRt6Y=;
+	b=LGy2wb64h1F78ziEBLYogCwV4Bf9o6pr8jRJ4UiF7IEhzAjTbLNQH3I68oV6RyMwYuQfbf
+	eT4t8802JECYwEPLo96VHxTMPk7dPBHyPv9JFytgiw/0b9HbK04xKVr0oLpqteHDOLQEP+
+	RNos7VFur3ULf67CMtyijLzbHmcY2ew=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-371-YTJnEZSHN1GUcLYIlQdWmg-1; Sun, 09 Jun 2024 22:00:10 -0400
+X-MC-Unique: YTJnEZSHN1GUcLYIlQdWmg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F0954195608B;
-	Mon, 10 Jun 2024 01:19:01 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D2CC085A5B5;
+	Mon, 10 Jun 2024 02:00:09 +0000 (UTC)
 Received: from localhost (unknown [10.72.113.124])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C3D5630000C3;
-	Mon, 10 Jun 2024 01:18:58 +0000 (UTC)
-Date: Mon, 10 Jun 2024 09:18:53 +0800
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 97CCF175ED;
+	Mon, 10 Jun 2024 02:00:07 +0000 (UTC)
+Date: Mon, 10 Jun 2024 10:00:05 +0800
 From: Baoquan He <bhe@redhat.com>
 To: Coiby Xu <coxu@redhat.com>
 Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
@@ -69,18 +68,18 @@ Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
 	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_byb" <linux-hardening@vger.kernel.org>
 Subject: Re: [PATCH v4 2/7] crash_dump: make dm crypt keys persist for the
  kdump kernel
-Message-ID: <ZmZUfWKovZLkXpJn@MiWiFi-R3L-srv>
+Message-ID: <ZmZeJVa/kpyfZ47g@MiWiFi-R3L-srv>
 References: <20240523050451.788754-1-coxu@redhat.com>
  <20240523050451.788754-3-coxu@redhat.com>
- <ZmAgNIXXa32Bv/Of@MiWiFi-R3L-srv>
- <5gj3rxxf7tgolj72mxwnbjirxrlx3pezvqcegyiuenwr55njoo@6dg2toxu6vah>
+ <Zl7Vd3BqxDXdMHkL@MiWiFi-R3L-srv>
+ <epa3mtnac3ekyoq7zykyjnhu3i27mivbtlkss6mbjyaa3kmhof@qwbfshfbtei4>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <5gj3rxxf7tgolj72mxwnbjirxrlx3pezvqcegyiuenwr55njoo@6dg2toxu6vah>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+In-Reply-To: <epa3mtnac3ekyoq7zykyjnhu3i27mivbtlkss6mbjyaa3kmhof@qwbfshfbtei4>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240609_181915_909851_88A98987 
-X-CRM114-Status: GOOD (  28.57  )
+X-CRM114-CacheID: sfid-20240609_190016_643179_42DB00A7 
+X-CRM114-Status: GOOD (  36.73  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -98,95 +97,90 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 On 06/07/24 at 08:27pm, Coiby Xu wrote:
-> On Wed, Jun 05, 2024 at 04:22:12PM +0800, Baoquan He wrote:
+> On Tue, Jun 04, 2024 at 04:51:03PM +0800, Baoquan He wrote:
+> > Hi Coiby,
+> 
+> Hi Baoquan,
+> 
+> > 
 > > On 05/23/24 at 01:04pm, Coiby Xu wrote:
-> > .....
-> > > diff --git a/kernel/crash_dump_dm_crypt.c b/kernel/crash_dump_dm_crypt.c
-> > > new file mode 100644
-> > > index 000000000000..78809189084a
-> > > --- /dev/null
-> > > +++ b/kernel/crash_dump_dm_crypt.c
-> > > @@ -0,0 +1,113 @@
-> > > +// SPDX-License-Identifier: GPL-2.0-only
-> [...]
-> > > +
-> > > +static unsigned int key_count;
-> > > +static size_t keys_header_size;
+> > > A sysfs /sys/kernel/crash_dm_crypt_keys is provided for user space to make
+> > > the dm crypt keys persist for the kdump kernel. User space can send the
+> > > following commands,
+> > > - "init KEY_NUM"
+> > >   Initialize needed structures
+> > > - "record KEY_DESC"
+> > >   Record a key description. The key must be a logon key.
+> > > 
+> > > User space can also read this API to learn about current state.
 > > 
-> > These two global variables seems not so necessary. Please see comment at
-> > below.
+> > From the subject, can I think the luks keys will persist forever? or
+> > only for a while?
 > 
-> Thanks for the comment! But I think it's better to keep these two static
-> variables for reasons as will be explained later.
-> 
-> > 
-> > > +
-> > > +struct dm_crypt_key {
-> > > +	unsigned int key_size;
-> > > +	char key_desc[KEY_DESC_LEN];
-> > > +	u8 data[KEY_SIZE_MAX];
-> > > +};
-> > > +
-> > > +static struct keys_header {
-> > > +	unsigned int key_count;
-> >                     ~~~~~~~~
-> >                     This is the max number a system have from init();
-> > You can add one field member to record how many key slots have been
-> > used.
-> > > +	struct dm_crypt_key keys[] __counted_by(key_count);
-> > > +} *keys_header;
-> > 
-> > Maybe we can rearrange the keys_header like below, the name may not be
-> > very appropriate though.
-> > 
-> > static struct keys_header {
-> > 	unsigned int max_key_slots;
-> > 	unsigned int used_key_slots;
-> > 	struct dm_crypt_key keys[] __counted_by(key_count);
-> > } *keys_header;
-> 
-> Thanks for the suggestion! Since 1) KEY_NUM_MAX already defines the
-> maximum number of dm crypt keys 2) we only need to let the kdump kernel
-> now how many keys are saved, so I simply use total_keys instead of
-> key_count in struct keys_header in v5,
-> 
-> static struct keys_header {
-> 	unsigned int total_keys;
-> 	struct dm_crypt_key keys[] __counted_by(total_keys);
-> } *keys_header;
-> 
-> Hopefully this renaming will improve code readability.
+> Yes, you are right. The keys need to stay in kdump reserved memory.
 
-If you add key_count into keys_header, then kdump kernel will know how
-many keys are really saved and need be retrieved. What's your concern
-when you have to put key_count outside and take it as a global variable?
+Hmm, there are two different concepts we may need differentiate. From
+security keys's point of view, the keys need be stored for a while so
+that kdump loading take action to get it, that's done through sysfs;
+Froom kdump's point of view, the keys need be stored forever till kdump
+kernel use it. I can't see what you are referring to from the subject,
+esepcially you stress the newly added sysfs
+/sys/kernel/crash_dm_crypt_keys.
 
+> 
+> > If need and can only keep it for a while, can you
+> > mention it and tell why and how it will be used. Because you add a lot
+> > of codes, but only simply mention the sysfs, that doesn't make sense.
+> 
+> Thanks for raising the concern! I've added
+> Documentation/ABI/testing/crash_dm_crypt_keys and copy some text in the
+> cover letter to this patch in v5.
 > 
 > > 
 > > > 
-> > 
-> > > +
-> > > +static size_t get_keys_header_size(struct keys_header *keys_header,
-> > > +				   size_t key_count)
-> > > +{
-> > > +	return struct_size(keys_header, keys, key_count);
-> > > +}
-> > 
-> > I personally don't think get_keys_header_size is so necessary. If we
-> > have to keep it, may be we can remove the global variable
-> > keys_header_size, we can call get_keys_header_size() and use local
-> > variable to record the value instead.
+> > > Signed-off-by: Coiby Xu <coxu@redhat.com>
+> > > ---
+> > >  include/linux/crash_core.h   |   5 +-
+> > >  kernel/Kconfig.kexec         |   8 +++
+> > >  kernel/Makefile              |   1 +
+> > >  kernel/crash_dump_dm_crypt.c | 113 +++++++++++++++++++++++++++++++++++
+> > >  kernel/ksysfs.c              |  22 +++++++
+> > >  5 files changed, 148 insertions(+), 1 deletion(-)
+> > >  create mode 100644 kernel/crash_dump_dm_crypt.c
+> > > 
+> > > diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+> > > index 44305336314e..6bff1c24efa3 100644
+> > > --- a/include/linux/crash_core.h
+> > > +++ b/include/linux/crash_core.h
+> > > @@ -34,7 +34,10 @@ static inline void arch_kexec_protect_crashkres(void) { }
+> > >  static inline void arch_kexec_unprotect_crashkres(void) { }
+> > >  #endif
+> [...]
+> > > +static int init(const char *buf)
+> >              ~~~~ A more interesting name with more description?
 > 
-> Thanks for the suggestion! But the kdump kernel also need to call
-> get_keys_header_size in later patches.
+> Thanks for the suggestion! I've added some comments for this function
+> in v5. But I can't come up with a better name after looking at current
+> kernel code. You are welcome to suggest any better name:)
 
-If so, you can remove keys_header_size now. You can define local
-variable to take the newly calculated value. keys_header_size seems not
-so necesary.
+Usually init() is for the whole driver module. Your init() here only
+receive the passed total keys number, and allocate the key_header, how
+can you simply name it init()? If you call it init_keys_header(), I
+would think it's much more meaningful.
 
-By the way, you don't need to rush to post v5. When people review
-patches, agreement need be reached after discussion. Then next version
-can be posted.
+> 
+> > > +static int process_cmd(const char *buf, size_t count)
+> >                                                  ~~~~
+> > If nobody use the count, why do you add it?
+> 
+> Good catch! Yes, this is no need to use count in v4. But v5 now needs it to avoid
+> buffer overflow.
+
+OK, did you add code comment telling what 'count' stands for?
+
+And the name 'process_cmd()' is also ambiguous. We may need avoid this
+kind of name, e.g process_cmd, do_things, handle_stuff. Can you add a
+more specific name?
 
 
 _______________________________________________
