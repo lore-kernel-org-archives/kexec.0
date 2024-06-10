@@ -4,65 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4AFAAC27C5E
-	for <kexec@archiver.kernel.org>; Mon, 10 Jun 2024 10:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 64161C27C55
+	for <kexec@archiver.kernel.org>; Mon, 10 Jun 2024 10:21:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=SVjxG1RChiTGWU50AmH3wlROxMa1h2H0Sclru9B5mQw=; b=cdLINz5JrfGSpI
-	D5Ywd1cyB+tnjE1vLy9Z697U+zZba35YBcpI/hUAeEDr40KF/WDhYT6RTOkr7pf6EuHE3taJLMuLd
-	MdiYSqGCUKxPGv97tBQ6NOqgRXxxQbatnfAHu69XP0slIHZk7Pym356GoKjC2OaOEAAFGzxo6VEv4
-	EfEDz4nGYYcnpschkDkEgTLcTZii/8NPfSvWASoKk1QhHQ5EXaOR3QX1mt3adsv2aqf0S0pH5uOvE
-	yTqrdma2Ntu9aEs3jnNorW6OKj11KU2cJPbjzklK6nTUwGLN2INxWAb4kYTVPirlCC8neYVURlUoj
-	NRd5AniLuBq1iEf/iSWg==;
+	List-Owner; bh=gn5DqhIE4xR5QBkxRRhpcOXObvREqd5D7yYTFup13CA=; b=wteQONHZGJnZQp
+	zqEoR9p58xAxB679hhcBaN7w471mb8ESEyvp+DofYBRYzI27sAJAqSV6PckXf+1n3rmS4hmSDLh62
+	4FuFRF/iHXol0CRLiV94CFGnrdU4/wset5IvthKlG9Nsr7+IUiIJ6eju6N/yxTnYtQUQgqBngjsfB
+	UopLkl+Cd7LoXOs+Lc0BbAgC76Cs4HTOCqynK4NMTMxCZ09LuQy6urM9RP620juKWwzIK9v12qVsg
+	c9E/diYd1c199Nw4xBElLBjoABrSoXd3k8DomE2UQDMrbdsZKno+gicj1ZqsvU6v0dg7cA5BgQ6CM
+	OMkFousrrVfPejjZ6GMQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sGcA0-00000004cb5-2dcT;
-	Mon, 10 Jun 2024 10:21:56 +0000
-Received: from mail-ed1-x536.google.com ([2a00:1450:4864:20::536])
+	id 1sGcA2-00000004ccL-0NiA;
+	Mon, 10 Jun 2024 10:21:58 +0000
+Received: from mail-ej1-x62f.google.com ([2a00:1450:4864:20::62f])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sGc9n-00000004cQJ-2rYy
+	id 1sGc9q-00000004cRy-0ciY
 	for kexec@lists.infradead.org;
-	Mon, 10 Jun 2024 10:21:48 +0000
-Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-57c73a3b3d7so1658590a12.1
-        for <kexec@lists.infradead.org>; Mon, 10 Jun 2024 03:21:43 -0700 (PDT)
+	Mon, 10 Jun 2024 10:21:49 +0000
+Received: by mail-ej1-x62f.google.com with SMTP id a640c23a62f3a-a63359aaacaso646533166b.1
+        for <kexec@lists.infradead.org>; Mon, 10 Jun 2024 03:21:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718014902; x=1718619702; darn=lists.infradead.org;
+        d=gmail.com; s=20230601; t=1718014904; x=1718619704; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Tjh976F+w5dkctaCwhyVJIF3AZpvtw+7R+eeFp89bGc=;
-        b=GBEmZTsohfTenfDfmcCipYyno2oOjX+gEbeX5u3SrexeYvNrgMjpJVo0z538OTi0t3
-         jflEhjZBq3C1EbLS/KWbRmTw/WwDY/1fo9HnAvZIuxSn5t7teaT0vvm6D5w/UyAflH1e
-         5wku8K5iymLbifVKR1VTnJwe9MKFaFmzcFvlqCPkN+/dqtOPu0u1jX8p0eXPGaYgqunA
-         yL/qUhzMH0ZW5iHWEkky/aL7y+hs5cVmeMgfX5Gj10ARjg5dQqms/U+H7FI/G+yOwnfS
-         WlFjBtUNnnh3SWPbruAecAUm3fz52IF/bCYsG3A0JnRVIZyekr9sEzi5Mi96on4hmvmK
-         MN/A==
+        bh=BdG6ACuG1uJUkfwp3EsaLBLMvj3TgqNuoQIAGjhnFXs=;
+        b=Cp5ZTz0V1J0otRXx/jYjNrk/ZNDgwkayZjnpHnfpn4fuF1x7hgqfPu0vapbnZe1+GV
+         oHORWKI0WdqxOdhI6KrvtMz8JuSJtLlKAcJBAFWg9UQWfi6fqNAvKL2JYOZIteEwKZ+y
+         dHcQzcIsxsM7glkVPQQy9QZRz83iPT2S8D1XkKTo/9kQ4lIIlTVUFnLCLUniwTSVWbpU
+         UChgGBjhaEJN6ixRTmp9fJZXW6rR5PXyKGgNYT7vHgC15FS8w6SYcv6LffyjM5BDvnJW
+         hWTY2l2/oFSh1KodM1HWlkjuvIrlNp+gRAqijmSSrU1spfU2vlSkWu7MwgNYmRV6vnuj
+         fOoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718014902; x=1718619702;
+        d=1e100.net; s=20230601; t=1718014904; x=1718619704;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Tjh976F+w5dkctaCwhyVJIF3AZpvtw+7R+eeFp89bGc=;
-        b=AwDHuvIM9pFG32kVZkZwEP+48kTDmj9CGFNzKYCgCjWBc0jnWDdsnUS82jqRGWcWKY
-         afBIulv0JC4n+tslLUDeE7Kp6oKmMU4aEuirTobLLizgMCf8FwqgvfU+x57B27+XhPhT
-         nt20rAzVw0aMMk0JxQo9bo//GWLk1WKdo5phS9/20Ih2hn+hJJPeCyhgep494EBMKPMu
-         ErNf02ZsDQ1ysfgT2euLWMTDKGfTPIdTMBm21hw1D1x/DhAPRH8Ub8iZaFPVWFnaehGC
-         DwhGE4gYnEo+G3K/6ytKIRbYv+EJyOgGHOQ2+fg+kEcGwdUHkk63qQ00OVDRjSyTJxR6
-         rT2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVcdDF2d3mxWflJYoDfdiMEpXf6O4gKvH6YqAAua7iqlCGN7fCXP9aR3VM6QhBX38ReJA0v5NK0JCdncMMvTWJbGhcooDGMYGrL
-X-Gm-Message-State: AOJu0YyWCBvE0oZuTlgayEbaZKz+46/g9TpjCb20BzwQzNPYSxzsvQxC
-	Xplb4+ZLTWSzYoIvnZO1jt7RoJA+EMLocmxAgzV/Hhqq21hUjW1Z
-X-Google-Smtp-Source: AGHT+IEHe6hQkeUB13VRsNS95Hd5J4lzAWr+VF1fStw/ZH7jO5g8M7PodQMj2dQ17+7klWDhdygebg==
-X-Received: by 2002:a17:906:6a0a:b0:a6f:1d19:c0b1 with SMTP id a640c23a62f3a-a6f1d19c496mr194718166b.18.1718014902187;
-        Mon, 10 Jun 2024 03:21:42 -0700 (PDT)
+        bh=BdG6ACuG1uJUkfwp3EsaLBLMvj3TgqNuoQIAGjhnFXs=;
+        b=Q6O1lNYvqKIoe/Y7z6ai/T+Wt2Sqy4/vjK9B+rX8S7K59AGdfpbN1aGI115MyuOjX6
+         FSEaYjToFxFKMcq6SdCDepr2rkuRAL7hO0E/SBK8o44cZEYnj1SjC/yMgtGxeaJY7xvA
+         VZFXdZDpuIVNgOj8nPnzoDqFrY5NTJe2rzupiPzlr6pOay5gsakaeOFvf2TIzinZPX73
+         EZnPDp2tVZx+E/UumTRV2kN9UUF/D7umQB9we9CA8tL/5MpD4DCum4Dji/xM1gpkn2SP
+         i8E1MXmu3B4OPXjpsSfSF1IYcKnMX6rJLaDk3123B/itIMH6HI6ZbKDEABoOe9drHPHK
+         5OsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVXqOrc7JxNoDOdCCyHmbWv14eHWcyZ2247N6PincHfvnp+ASFrs+YS78Uf8qgx8/7vZ+tmcSAplQDReJRKHqFrn6YQ4Yc1LlxB
+X-Gm-Message-State: AOJu0YyB3KBiT435aD5fQVt8eJc8lroqprI65giRKkoGDTdA4RW5ePUm
+	s6U3tANTie+5Bu8/OWHXM8mJNn+FpXrdjBDx1UA03VWQ8PHzqWeB
+X-Google-Smtp-Source: AGHT+IG+5xSdjmTwqQbKCwcV+YEwd87sFYBvU+bVS0NNITGRecW7wGay6Ao5a2CebEX1GwPUmPMrcw==
+X-Received: by 2002:a17:907:9486:b0:a6f:1798:bf80 with SMTP id a640c23a62f3a-a6f1798bfabmr270645066b.52.1718014904098;
+        Mon, 10 Jun 2024 03:21:44 -0700 (PDT)
 Received: from vasant-suse.fritz.box ([2001:9e8:ab68:af00:6f43:17ee:43bd:e0a9])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f0d7b35d5sm290887766b.192.2024.06.10.03.21.40
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f0d7b35d5sm290887766b.192.2024.06.10.03.21.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Jun 2024 03:21:41 -0700 (PDT)
+        Mon, 10 Jun 2024 03:21:43 -0700 (PDT)
 From: vsntk18@gmail.com
 To: vsntk18@gmail.com
 Cc: x86@kernel.org,
@@ -96,16 +96,16 @@ Cc: x86@kernel.org,
 	thomas.lendacky@amd.com,
 	virtualization@lists.linux-foundation.org,
 	vkarasulli@suse.de
-Subject: [PATCH v6 09/10] x86/kexec/64: Support kexec under SEV-ES with AP Jump Table Blob
-Date: Mon, 10 Jun 2024 12:21:12 +0200
-Message-Id: <20240610102113.20969-10-vsntk18@gmail.com>
+Subject: [PATCH v6 10/10] x86/sev: Exclude AP jump table related code for SEV-SNP guests
+Date: Mon, 10 Jun 2024 12:21:13 +0200
+Message-Id: <20240610102113.20969-11-vsntk18@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240610102113.20969-1-vsntk18@gmail.com>
 References: <20240610102113.20969-1-vsntk18@gmail.com>
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240610_032143_945145_15C2CFA2 
-X-CRM114-Status: GOOD (  15.28  )
+X-CRM114-CacheID: sfid-20240610_032146_899601_B064DB24 
+X-CRM114-Status: GOOD (  14.08  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -122,87 +122,58 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Vasant Karasulli <vkarasulli@suse.de>
 
-When the AP jump table blob is installed the kernel can hand over the
-APs from the old to the new kernel. Enable kexec when the AP jump
-table blob has been installed.
+Unlike SEV-ES, AP jump table technique is not used in SEV-SNP
+when transitioning from one layer of code to another
+(e.g. when going from UEFI to the OS).
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Vasant Karasulli <vkarasulli@suse.de>
 ---
- arch/x86/include/asm/sev.h         |  2 ++
- arch/x86/kernel/machine_kexec_64.c |  3 ++-
- arch/x86/kernel/sev.c              | 15 +++++++++++++++
- 3 files changed, 19 insertions(+), 1 deletion(-)
+ arch/x86/kernel/sev.c    | 6 +++++-
+ arch/x86/realmode/init.c | 5 +++--
+ 2 files changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-index 6f681ced6594..e557eadb0ec9 100644
---- a/arch/x86/include/asm/sev.h
-+++ b/arch/x86/include/asm/sev.h
-@@ -233,6 +233,7 @@ u64 snp_get_unsupported_features(u64 status);
- u64 sev_get_status(void);
- void sev_show_status(void);
- void sev_es_stop_this_cpu(void);
-+bool sev_kexec_supported(void);
- #else
- static inline void sev_es_ist_enter(struct pt_regs *regs) { }
- static inline void sev_es_ist_exit(void) { }
-@@ -263,6 +264,7 @@ static inline u64 snp_get_unsupported_features(u64 status) { return 0; }
- static inline u64 sev_get_status(void) { return 0; }
- static inline void sev_show_status(void) { }
- static inline void sev_es_stop_this_cpu(void) { }
-+static inline bool sev_kexec_supported(void) { return true; }
- #endif
- 
- #ifdef CONFIG_KVM_AMD_SEV
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index 1dfb47df5c01..43f5f7e48cbc 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -28,6 +28,7 @@
- #include <asm/setup.h>
- #include <asm/set_memory.h>
- #include <asm/cpu.h>
-+#include <asm/sev.h>
- 
- #ifdef CONFIG_ACPI
- /*
-@@ -269,7 +270,7 @@ static void load_segments(void)
- 
- static bool machine_kexec_supported(void)
- {
--	if (cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT))
-+	if (!sev_kexec_supported())
- 		return false;
- 
- 	return true;
 diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
-index 30ede17b5a04..e64320507da2 100644
+index e64320507da2..a9cf74512269 100644
 --- a/arch/x86/kernel/sev.c
 +++ b/arch/x86/kernel/sev.c
-@@ -1463,6 +1463,21 @@ static void __init sev_es_setup_play_dead(void)
- static inline void sev_es_setup_play_dead(void) { }
- #endif
- 
-+bool sev_kexec_supported(void)
-+{
-+	if (!cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT))
-+		return true;
-+
-+	/*
-+	 * KEXEC with SEV-ES and more than one CPU is only supported
-+	 * when the AP jump table is installed.
-+	 */
-+	if (num_possible_cpus() > 1)
-+		return sev_ap_jumptable_blob_installed;
-+	else
-+		return true;
-+}
-+
- static void __init alloc_runtime_data(int cpu)
+@@ -1392,7 +1392,8 @@ STACK_FRAME_NON_STANDARD(sev_jumptable_ap_park);
+ void sev_es_stop_this_cpu(void)
  {
- 	struct sev_es_runtime_data *data;
+ 	if (!(cc_vendor == CC_VENDOR_AMD) ||
+-	    !cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT))
++	    !cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT) ||
++	     cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
+ 		return;
+ 
+ 	/* Only park in the AP jump table when the code has been installed */
+@@ -1468,6 +1469,9 @@ bool sev_kexec_supported(void)
+ 	if (!cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT))
+ 		return true;
+ 
++	if (cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
++		return false;
++
+ 	/*
+ 	 * KEXEC with SEV-ES and more than one CPU is only supported
+ 	 * when the AP jump table is installed.
+diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
+index f9bc444a3064..ed798939be5d 100644
+--- a/arch/x86/realmode/init.c
++++ b/arch/x86/realmode/init.c
+@@ -80,8 +80,9 @@ static void __init sme_sev_setup_real_mode(struct trampoline_header *th)
+ 		 */
+ 		th->start = (u64) secondary_startup_64_no_verify;
+ 
+-		if (sev_es_setup_ap_jump_table(real_mode_header))
+-			panic("Failed to get/update SEV-ES AP Jump Table");
++		if (!cc_platform_has(CC_ATTR_GUEST_SEV_SNP))
++			if (sev_es_setup_ap_jump_table(real_mode_header))
++				panic("Failed to get/update SEV-ES AP Jump Table");
+ 	}
+ #endif
+ }
 -- 
 2.34.1
 
