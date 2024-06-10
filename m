@@ -4,65 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id AED37C27C55
-	for <kexec@archiver.kernel.org>; Mon, 10 Jun 2024 10:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4AFAAC27C5E
+	for <kexec@archiver.kernel.org>; Mon, 10 Jun 2024 10:21:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
 	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=iv41gsPoNqVfoHFdOfR7GAr7RNe0KvYExo3sTVgAzlg=; b=jsF0RxLShpLGon
-	WRvAbxlCTvPZz4GqxZuMLBvMMhc8a8Rpfr5nVNHqZIL+m/eaaeeHyiLKDkLgrHN19bDhjXtAMgHvJ
-	YH3m1Y0czR4u+mb7KKTlaQLjCM6+H7xyRy1TpsZTD23zoZdYbLABoUK4Bl45rP0onqhcRoOEp+7w5
-	mD2MuGMn798qr9asiwmpRQzAHsA5lT8HhwDGH9sUHMUzb/ZoQaEnEu8O9inZkVDRM9MJBthkBl38X
-	+uIbBu7MZ7iS4yWft1no025CuQYw73GbANZe6/RR5xs6rTYgMWo4qGz9iqpq598/bpHB/jkgp+ORq
-	2fyMSyKBMNPZXlV+4eEw==;
+	List-Owner; bh=SVjxG1RChiTGWU50AmH3wlROxMa1h2H0Sclru9B5mQw=; b=cdLINz5JrfGSpI
+	D5Ywd1cyB+tnjE1vLy9Z697U+zZba35YBcpI/hUAeEDr40KF/WDhYT6RTOkr7pf6EuHE3taJLMuLd
+	MdiYSqGCUKxPGv97tBQ6NOqgRXxxQbatnfAHu69XP0slIHZk7Pym356GoKjC2OaOEAAFGzxo6VEv4
+	EfEDz4nGYYcnpschkDkEgTLcTZii/8NPfSvWASoKk1QhHQ5EXaOR3QX1mt3adsv2aqf0S0pH5uOvE
+	yTqrdma2Ntu9aEs3jnNorW6OKj11KU2cJPbjzklK6nTUwGLN2INxWAb4kYTVPirlCC8neYVURlUoj
+	NRd5AniLuBq1iEf/iSWg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sGc9x-00000004cZ2-3GSj;
-	Mon, 10 Jun 2024 10:21:53 +0000
-Received: from mail-ej1-x634.google.com ([2a00:1450:4864:20::634])
+	id 1sGcA0-00000004cb5-2dcT;
+	Mon, 10 Jun 2024 10:21:56 +0000
+Received: from mail-ed1-x536.google.com ([2a00:1450:4864:20::536])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sGc9l-00000004cOF-3mjW
+	id 1sGc9n-00000004cQJ-2rYy
 	for kexec@lists.infradead.org;
-	Mon, 10 Jun 2024 10:21:46 +0000
-Received: by mail-ej1-x634.google.com with SMTP id a640c23a62f3a-a6f177b78dcso121953866b.1
-        for <kexec@lists.infradead.org>; Mon, 10 Jun 2024 03:21:41 -0700 (PDT)
+	Mon, 10 Jun 2024 10:21:48 +0000
+Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-57c73a3b3d7so1658590a12.1
+        for <kexec@lists.infradead.org>; Mon, 10 Jun 2024 03:21:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718014900; x=1718619700; darn=lists.infradead.org;
+        d=gmail.com; s=20230601; t=1718014902; x=1718619702; darn=lists.infradead.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1h9f1jusJiCVXI0HUFRIPuyM0FJ2eMb2RD0DEq0ZSug=;
-        b=HUDO+y5Rq+xL+/gh9vZjcaEjn3/QzaaIKLu4y/2TgKHdiDyZeNh6iFqzKMnSIPFbf5
-         Lezs6eud33YVpkVNsrcuu1Y62yg8nrL/ptOH6B6F34RmTYDHFMZrpFJ92D0fSpXartFg
-         7+2VSOT44v/u8mrUB0Grq5/7B/BzcFuFS2zt7Sh5vXsTPXyPqoVznQPEuogYdBuIJovr
-         0k7qI2YXnImJTD/lLPFv/M/8pxN20iW+/OjXtHOlJSO1hLry0sTqmqHm7b7y6fdD/72s
-         b3IoEtRUJVTgsNa+A5AE04+XmICpkHrOFhWXtifXcyzJ37BlphGD06p6oB1KbxAVoeHK
-         NhcA==
+        bh=Tjh976F+w5dkctaCwhyVJIF3AZpvtw+7R+eeFp89bGc=;
+        b=GBEmZTsohfTenfDfmcCipYyno2oOjX+gEbeX5u3SrexeYvNrgMjpJVo0z538OTi0t3
+         jflEhjZBq3C1EbLS/KWbRmTw/WwDY/1fo9HnAvZIuxSn5t7teaT0vvm6D5w/UyAflH1e
+         5wku8K5iymLbifVKR1VTnJwe9MKFaFmzcFvlqCPkN+/dqtOPu0u1jX8p0eXPGaYgqunA
+         yL/qUhzMH0ZW5iHWEkky/aL7y+hs5cVmeMgfX5Gj10ARjg5dQqms/U+H7FI/G+yOwnfS
+         WlFjBtUNnnh3SWPbruAecAUm3fz52IF/bCYsG3A0JnRVIZyekr9sEzi5Mi96on4hmvmK
+         MN/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718014900; x=1718619700;
+        d=1e100.net; s=20230601; t=1718014902; x=1718619702;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1h9f1jusJiCVXI0HUFRIPuyM0FJ2eMb2RD0DEq0ZSug=;
-        b=lQzIM0nkhalNuwu2+OjUTgV9Y//TJ0ZBTMUoUanLzIE0Czc1kS16R0UVBCH6YsAHaH
-         wbrPGgITjDriSjRCna3i2LFh+vqP7uez8fBcKBa2X/MLkK4VnmEjVX21fPovbIx0re04
-         D+M55/s+Tt0BUzfK3AApdKzFg4Y7CoE1fJbRRhz4GUHRWz2FUzgImlN5h7MNqZevtw4a
-         3vUfNbRdXkOLJabsIeawbCrisvH1HMncAxS7fXt9om4A/zyMdxYjRkXcMFARFEJBZ0z0
-         e6yjrpdt9q7xE1swq/RJGAr+KOAX8lOGIf78O9nelm9Bzo8gwqKxjAp/JSv3MHb+W8td
-         ZoZg==
-X-Forwarded-Encrypted: i=1; AJvYcCWUTX3wowclvYSsAPSNhtkciJD5iL2+Qkl7V+aUWLp4yoc6Pc21Ek+/+622l+eLEC3qITrhSQbqkI4IljBlDDhm/umDvPnqLZMy
-X-Gm-Message-State: AOJu0Yww04wOmxFbZkhJ4iqREX12v8FpHd5iVvstniTGnGlhOYwfBBxf
-	JIOeei3r36gOSMLAW4PYn2acY1yMqO/mat0QjOAfXUNhc3STaV3r
-X-Google-Smtp-Source: AGHT+IFJiw9+hjS8AaCE8xUhReVnHEw0PrrFH9cPzv9TZmB9phDv2ggpsMiBf14CXAFGLO+4Z9OVRQ==
-X-Received: by 2002:a17:906:fe07:b0:a6d:b66f:7b21 with SMTP id a640c23a62f3a-a6db66f7e7emr709355566b.54.1718014899942;
-        Mon, 10 Jun 2024 03:21:39 -0700 (PDT)
+        bh=Tjh976F+w5dkctaCwhyVJIF3AZpvtw+7R+eeFp89bGc=;
+        b=AwDHuvIM9pFG32kVZkZwEP+48kTDmj9CGFNzKYCgCjWBc0jnWDdsnUS82jqRGWcWKY
+         afBIulv0JC4n+tslLUDeE7Kp6oKmMU4aEuirTobLLizgMCf8FwqgvfU+x57B27+XhPhT
+         nt20rAzVw0aMMk0JxQo9bo//GWLk1WKdo5phS9/20Ih2hn+hJJPeCyhgep494EBMKPMu
+         ErNf02ZsDQ1ysfgT2euLWMTDKGfTPIdTMBm21hw1D1x/DhAPRH8Ub8iZaFPVWFnaehGC
+         DwhGE4gYnEo+G3K/6ytKIRbYv+EJyOgGHOQ2+fg+kEcGwdUHkk63qQ00OVDRjSyTJxR6
+         rT2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVcdDF2d3mxWflJYoDfdiMEpXf6O4gKvH6YqAAua7iqlCGN7fCXP9aR3VM6QhBX38ReJA0v5NK0JCdncMMvTWJbGhcooDGMYGrL
+X-Gm-Message-State: AOJu0YyWCBvE0oZuTlgayEbaZKz+46/g9TpjCb20BzwQzNPYSxzsvQxC
+	Xplb4+ZLTWSzYoIvnZO1jt7RoJA+EMLocmxAgzV/Hhqq21hUjW1Z
+X-Google-Smtp-Source: AGHT+IEHe6hQkeUB13VRsNS95Hd5J4lzAWr+VF1fStw/ZH7jO5g8M7PodQMj2dQ17+7klWDhdygebg==
+X-Received: by 2002:a17:906:6a0a:b0:a6f:1d19:c0b1 with SMTP id a640c23a62f3a-a6f1d19c496mr194718166b.18.1718014902187;
+        Mon, 10 Jun 2024 03:21:42 -0700 (PDT)
 Received: from vasant-suse.fritz.box ([2001:9e8:ab68:af00:6f43:17ee:43bd:e0a9])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f0d7b35d5sm290887766b.192.2024.06.10.03.21.37
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f0d7b35d5sm290887766b.192.2024.06.10.03.21.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Jun 2024 03:21:39 -0700 (PDT)
+        Mon, 10 Jun 2024 03:21:41 -0700 (PDT)
 From: vsntk18@gmail.com
 To: vsntk18@gmail.com
 Cc: x86@kernel.org,
@@ -96,16 +96,16 @@ Cc: x86@kernel.org,
 	thomas.lendacky@amd.com,
 	virtualization@lists.linux-foundation.org,
 	vkarasulli@suse.de
-Subject: [PATCH v6 08/10] x86/sev: Handle CLFLUSH MMIO events
-Date: Mon, 10 Jun 2024 12:21:11 +0200
-Message-Id: <20240610102113.20969-9-vsntk18@gmail.com>
+Subject: [PATCH v6 09/10] x86/kexec/64: Support kexec under SEV-ES with AP Jump Table Blob
+Date: Mon, 10 Jun 2024 12:21:12 +0200
+Message-Id: <20240610102113.20969-10-vsntk18@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240610102113.20969-1-vsntk18@gmail.com>
 References: <20240610102113.20969-1-vsntk18@gmail.com>
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240610_032142_414193_02618FF3 
-X-CRM114-Status: GOOD (  12.30  )
+X-CRM114-CacheID: sfid-20240610_032143_945145_15C2CFA2 
+X-CRM114-Status: GOOD (  15.28  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -124,62 +124,85 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Handle CLFLUSH instruction to MMIO memory in the #VC handler. The
-instruction is ignored by the handler, as the Hypervisor is
-responsible for cache management of emulated MMIO memory.
+When the AP jump table blob is installed the kernel can hand over the
+APs from the old to the new kernel. Enable kexec when the AP jump
+table blob has been installed.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Vasant Karasulli <vkarasulli@suse.de>
 ---
- arch/x86/include/asm/insn-eval.h | 1 +
- arch/x86/kernel/sev-shared.c     | 3 +++
- arch/x86/lib/insn-eval-shared.c  | 7 +++++++
- 3 files changed, 11 insertions(+)
+ arch/x86/include/asm/sev.h         |  2 ++
+ arch/x86/kernel/machine_kexec_64.c |  3 ++-
+ arch/x86/kernel/sev.c              | 15 +++++++++++++++
+ 3 files changed, 19 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/insn-eval.h b/arch/x86/include/asm/insn-eval.h
-index 54368a43abf6..3bcea641913a 100644
---- a/arch/x86/include/asm/insn-eval.h
-+++ b/arch/x86/include/asm/insn-eval.h
-@@ -40,6 +40,7 @@ enum insn_mmio_type {
- 	INSN_MMIO_READ_ZERO_EXTEND,
- 	INSN_MMIO_READ_SIGN_EXTEND,
- 	INSN_MMIO_MOVS,
-+	INSN_MMIO_IGNORE,
- };
+diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+index 6f681ced6594..e557eadb0ec9 100644
+--- a/arch/x86/include/asm/sev.h
++++ b/arch/x86/include/asm/sev.h
+@@ -233,6 +233,7 @@ u64 snp_get_unsupported_features(u64 status);
+ u64 sev_get_status(void);
+ void sev_show_status(void);
+ void sev_es_stop_this_cpu(void);
++bool sev_kexec_supported(void);
+ #else
+ static inline void sev_es_ist_enter(struct pt_regs *regs) { }
+ static inline void sev_es_ist_exit(void) { }
+@@ -263,6 +264,7 @@ static inline u64 snp_get_unsupported_features(u64 status) { return 0; }
+ static inline u64 sev_get_status(void) { return 0; }
+ static inline void sev_show_status(void) { }
+ static inline void sev_es_stop_this_cpu(void) { }
++static inline bool sev_kexec_supported(void) { return true; }
+ #endif
  
- enum insn_mmio_type insn_decode_mmio(struct insn *insn, int *bytes);
-diff --git a/arch/x86/kernel/sev-shared.c b/arch/x86/kernel/sev-shared.c
-index 1b25a6cacec7..2a963ad84f10 100644
---- a/arch/x86/kernel/sev-shared.c
-+++ b/arch/x86/kernel/sev-shared.c
-@@ -1171,6 +1171,9 @@ static enum es_result vc_handle_mmio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
- 	if (mmio == INSN_MMIO_DECODE_FAILED)
- 		return ES_DECODE_FAILED;
+ #ifdef CONFIG_KVM_AMD_SEV
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index 1dfb47df5c01..43f5f7e48cbc 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -28,6 +28,7 @@
+ #include <asm/setup.h>
+ #include <asm/set_memory.h>
+ #include <asm/cpu.h>
++#include <asm/sev.h>
  
-+	if (mmio == INSN_MMIO_IGNORE)
-+		return ES_OK;
+ #ifdef CONFIG_ACPI
+ /*
+@@ -269,7 +270,7 @@ static void load_segments(void)
+ 
+ static bool machine_kexec_supported(void)
+ {
+-	if (cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT))
++	if (!sev_kexec_supported())
+ 		return false;
+ 
+ 	return true;
+diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
+index 30ede17b5a04..e64320507da2 100644
+--- a/arch/x86/kernel/sev.c
++++ b/arch/x86/kernel/sev.c
+@@ -1463,6 +1463,21 @@ static void __init sev_es_setup_play_dead(void)
+ static inline void sev_es_setup_play_dead(void) { }
+ #endif
+ 
++bool sev_kexec_supported(void)
++{
++	if (!cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT))
++		return true;
 +
- 	if (mmio != INSN_MMIO_WRITE_IMM && mmio != INSN_MMIO_MOVS) {
- 		reg_data = insn_get_modrm_reg_ptr(insn, ctxt->regs);
- 		if (!reg_data)
-diff --git a/arch/x86/lib/insn-eval-shared.c b/arch/x86/lib/insn-eval-shared.c
-index 02acdc2921ff..27fd347d84ae 100644
---- a/arch/x86/lib/insn-eval-shared.c
-+++ b/arch/x86/lib/insn-eval-shared.c
-@@ -906,6 +906,13 @@ enum insn_mmio_type insn_decode_mmio(struct insn *insn, int *bytes)
- 				*bytes = 2;
- 			type = INSN_MMIO_READ_SIGN_EXTEND;
- 			break;
-+		case 0xae: /* CLFLUSH */
-+			/*
-+			 * Ignore CLFLUSHes - those go to emulated MMIO anyway and the
-+			 * hypervisor is responsible for cache management.
-+			 */
-+			type = INSN_MMIO_IGNORE;
-+			break;
- 		}
- 		break;
- 	}
++	/*
++	 * KEXEC with SEV-ES and more than one CPU is only supported
++	 * when the AP jump table is installed.
++	 */
++	if (num_possible_cpus() > 1)
++		return sev_ap_jumptable_blob_installed;
++	else
++		return true;
++}
++
+ static void __init alloc_runtime_data(int cpu)
+ {
+ 	struct sev_es_runtime_data *data;
 -- 
 2.34.1
 
