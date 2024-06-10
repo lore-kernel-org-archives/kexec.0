@@ -4,160 +4,109 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id BE16EC27C53
-	for <kexec@archiver.kernel.org>; Wed, 19 Jun 2024 05:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 18851C27C79
+	for <kexec@archiver.kernel.org>; Wed, 19 Jun 2024 07:17:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-ID:In-Reply-To:
-	References:Message-ID:Date:Subject:To:From:Reply-To:Cc:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=6A4jbt9T4VH1GlFaZes7d7OSiMvIiyBEpmlpi64Vi94=; b=v6VexK1jXisasn
-	jzRo/1v2d/Dw7CxOsQuoxEBdNpgTscxaYXrVNsnJEuVgrjZ5TCerQRWVBUhpD78MS/x5fsanhE7g4
-	dmoZzLcXDLN6mGlrl4QfxLkuzJxXd8j5OCFqXMPrWrSjOSLxkW7m67X2uWLKEoXYV8l4HGCbbRHSe
-	vCoCc3OKGpQRQaUDH5z7mvn9w3v7u6CealIwhDP8KH8bPsVzDnZv3iFkcFiKuN7nHPYwBNER0qB0d
-	lixLHwPS9lG4K9Uk7LA1jyLT2GJWosMgEZQNSqrEf5Bh8suCpT21zbFzKL6dvKoEFX9H++BTZIQ2d
-	vhSuKXlwyi3FaMCtArzQ==;
+	List-Owner; bh=bL/oDtsBvRTMInS1ti8KKrPuUCtRQFybj6zsibEiQTs=; b=bVrRhXBrYCaPlg
+	tl/4hjjtnjTpjowXQcCgYqOhcjX51G/kePphFLhzBgPnTQ4KQ2UXU0mURI6DXVRxSVhfZ59uGSdex
+	yvE13tYqC07Mo322mqC7TLB3gQzsvi2NvP7B6ORAUgOqsg7M5Vtl6bCMb2icuPdW5MtifsmbJUkGm
+	Fj9F50Ln84p23FsOjIPUXZ7o7AjA86IN81bUtEyla/qizyZa0qgmgTtbWPYRWGYpfEXVdSCx3awCD
+	8+08vS9SIq8+BmbOWwlM6Z1i+6JlcqHR7LPwQv9UqlZC3Ci2Op0doA9M9CCXr08oOOL6obbc5e5Yv
+	7d13gaRbhgTD4zhLCrIA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sJo8J-0000000HY5a-0Cgc;
-	Wed, 19 Jun 2024 05:45:23 +0000
-Received: from mail-os0jpn01on2060b.outbound.protection.outlook.com ([2a01:111:f403:201a::60b] helo=JPN01-OS0-obe.outbound.protection.outlook.com)
+	id 1sJpZ1-00000000A4K-2Fzd;
+	Wed, 19 Jun 2024 07:17:03 +0000
+Received: from mail-ed1-x536.google.com ([2a00:1450:4864:20::536])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sJo8D-0000000HY4K-34Cc
+	id 1sGc9k-00000004cN2-1v7j
 	for kexec@lists.infradead.org;
-	Wed, 19 Jun 2024 05:45:20 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Z5shLIvLBAi8S1wsGouEkDCPBkLA9SCVnKYAWgmMKSQpZysXODIFB98HvQOxDnAtqsF50gXnah8n8Nf+OYt6z6nB78xhRyIGnfFE/67Hc38B4UZYgJCTYG6FYv9jFd1EpDHpvyBYWGXAo9MoYbniYGjJGx4izLmek/TOpSowkRZ2uvwbfZwMv37BXyt+i4XqgNm9j+XnUJYVG8xbJviLa2cxHL/2iODM3aJReYUjUlA5Bd9dkDx+piYRHjuR4jzPIRexjc/rtuXo+iGXac83lwnJRR/m/H5tztmp4V+jptmHmqO6w7XTsDk9Il5l49wy+i6XLQo4MKNunuUsLsJd4A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=W3KNCI7FR+VzYoSsDbBlxXJeExoX0EjZqJP/xnZij0Y=;
- b=axWWwLBUThXAuP4BoCcNVrVhG7hFX/43DSYwtHvSd1Fay+z/j7g3VqXbpvARQr/968aoB1dHYYRh8MqyOLuDyBZOXLbKyjuZAr2aYlf63SJcMAtyCzx9fH2Hss3OPIfA2OrQdfVblq3xf6SxWS52So4tOlDqY2USqcB9G8F5jh1iBSDcOwihQKPXi0ElSBTgDtjx+vcEI/ENqZRPeRr2JdDhZeix7qUqtDS9dgrVWMq3Xf2KlKk62Fz/Sa2WBs+xVj4h092/+9bmt3rYEZJndGy0fVpzXSvMSWIudoClFvGYt3eDtSv1edHMTBzLETqAasraTdYqyWiRDy36teqmOg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nec.com; dmarc=pass action=none header.from=nec.com; dkim=pass
- header.d=nec.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nec.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=W3KNCI7FR+VzYoSsDbBlxXJeExoX0EjZqJP/xnZij0Y=;
- b=EKJVvl4TqPtIiKpDQzH4uIaA4wvLeaHhQEtcUySBukeVpUf47yWm/mBwHTSZ6ih4Zu6IYw5TBS5XhyWOOdmmqSvv1ElBoDg9qyAfYCfLevogY5ql2MogUryrLQd0RWpJq08jCL3yBXhnX6VkzwY7D4E2MWPNJrekNYktUxClQ4L12jgAF975eSSY0YmUW/oEBSf2NggHoNA5B/wdV5xeNKyYNHXfv7MBAgQwdu+Hv+EzN5Iha3PAEu3Y8hDdpZdndutRNM9tT7hKQ4tFHwu/8o27A1HlDBJC+6osZvgPhGS2KgXnETZ8OA/1nSMnW80JA/OwqHRQROXShFn4GTi6kQ==
-Received: from TYCPR01MB10963.jpnprd01.prod.outlook.com
- (2603:1096:400:3a5::14) by TYRPR01MB12174.jpnprd01.prod.outlook.com
- (2603:1096:405:fe::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.31; Wed, 19 Jun
- 2024 05:44:57 +0000
-Received: from TYCPR01MB10963.jpnprd01.prod.outlook.com
- ([fe80::f07d:6a76:a936:693c]) by TYCPR01MB10963.jpnprd01.prod.outlook.com
- ([fe80::f07d:6a76:a936:693c%6]) with mapi id 15.20.7698.017; Wed, 19 Jun 2024
- 05:44:56 +0000
-From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
-	<k-hagio-ab@nec.com>
-To: Prasad Koya <prasad@arista.com>, "kexec@lists.infradead.org"
-	<kexec@lists.infradead.org>
-Subject: Re: enhance makedumpfile to dump process list from vmcore
-Thread-Topic: enhance makedumpfile to dump process list from vmcore
-Thread-Index: AQHat3OxBhfopx9m/0u6PfIbFFqPhrHOqJSA
-Date: Wed, 19 Jun 2024 05:44:56 +0000
-Message-ID: <56a5a42d-a2cd-4988-853f-49df60813ecb@nec.com>
-References: <CAKh1g55PTX=tXoiQB8sKiZ1T+bBnCE4W67fFi5G8zEfh-nKq2g@mail.gmail.com>
-In-Reply-To: <CAKh1g55PTX=tXoiQB8sKiZ1T+bBnCE4W67fFi5G8zEfh-nKq2g@mail.gmail.com>
-Accept-Language: ja-JP, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nec.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYCPR01MB10963:EE_|TYRPR01MB12174:EE_
-x-ms-office365-filtering-correlation-id: 1500dd00-12fc-4ae5-ab0e-08dc9022f394
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230037|1800799021|366013|376011|38070700015;
-x-microsoft-antispam-message-info: =?utf-8?B?TWpPYXpIMFJVSU9kSWNtTXJteUJIZkZ1SWpWQWMwdTkxY1BQT3hKbzdHbG5J?=
- =?utf-8?B?OHZ5aG9ra2pNbGExVDU5RmxsVjFpR241V0xkYjRIdjJmSWtUWnNNNXdGS0lp?=
- =?utf-8?B?QXJsZFlaQkI4em9GMVdraFIrRVlkOSt3SDBEVmYrNzJWZjhYYnJOS2Y4NGV2?=
- =?utf-8?B?Nmk1U2tGaTc2bWh5WjRLL0I5NUk1OXRuRGZlUmFCNW82eld4QW1EOGhvRm5U?=
- =?utf-8?B?QUFuMXJmQitoRG1FeWFyQlpJdlYxU1NQdkd0S2dUb1FSWFB2dGZ1dnV3UlhB?=
- =?utf-8?B?N3RlNkFtckFmUDRkbG9UeG1SMGtuYkNCVGVJL0tQd0U3ZDNPNDhqWjYwaU5s?=
- =?utf-8?B?bjV6N2JwRWtlR3dmVDlPbThmb083UHBqeTVFd2hMekxnVVJ0QzF6dzVyOVZG?=
- =?utf-8?B?RkxmS2RyMU04RXJoc2wrUWNRODM4L2ZHdzZGNHVKM1FCa2xqeEU2MXBjYm9w?=
- =?utf-8?B?L3JqU01iSDFRaEo0QWRFaU5LWDRGMVozeHE5Zk1CV01XVmYyd2sxdnhINUw5?=
- =?utf-8?B?a1lBaXBFMmUyWFhkbVk4NXc0dmkzMnVMQWRPY0NmR0FFR09OamhDT3NmSTJu?=
- =?utf-8?B?czJRaWs3R0lOY2VzVEV1OFdzeEZDSXcrZUNndGp2aWZBN3dBd1oyeGJjb3BZ?=
- =?utf-8?B?SjhqNm1TamR5bFgxTXpCMFloeHJ2OHFMZ1haUzZvK2x4akZ6RG40NW9ZczlL?=
- =?utf-8?B?S1pQSk1XdHBiS3dyNHZFNmVIKzJ0YjU2VlM5SzI1ZzFhRFd2c3oxYnFwMlFa?=
- =?utf-8?B?dmNpSE56R1IwMVU3eEUxNTBnQlhmZlpYZUduZGdNWGlzakRwOXQyYXV3L2J1?=
- =?utf-8?B?TkUzZ0lTSzhnQWI2ZWZCLzBac2tuQWtXUGpJbnRabDdUMjE1aTBvVGtrSCtN?=
- =?utf-8?B?RU1OTU1xQUt4NElBeWt1MXpCaXJOWTF2bTFYVHl5UVMxLzMwSVpSSkVQQnJa?=
- =?utf-8?B?WTdMVFIwL1BVTlUrR1lYVVNQM3c4SzFiMWVFTWRqVXVnazVxd3BqR0R2enJZ?=
- =?utf-8?B?NEJWZUNqSjZzVmlFRjNIaXZmUkZaK2o2WGFaUVNrUVlPU2tBUkdQKzNzWHZt?=
- =?utf-8?B?Y3NjR1Nia0xuSFNnT1A1NnVrQUxCMXp4VXU4Y0J0N2RjMmg0bUtXWDlEbGVU?=
- =?utf-8?B?QzAxS2pybmZFK1I0RTZnT0F5b0pvRmFvbUdYMzlOLzNmV3M1QjlEcXk4cklD?=
- =?utf-8?B?L21Jb0l6TStpODRHbHUxTHBhYW5tOTZ0TDNxa0NIS1ZCWTBrVXlHdm9ON054?=
- =?utf-8?B?cnJ6QzE4VlREek5BZDlvcmEvVE13TkZlZHhwY3FvUGJzNFFJTHRPU2o2cGVs?=
- =?utf-8?B?T0lrMys4b3VrUGlodTBWa3BKZmhYeE9GOWxsc0xheVpseXB6d3orNE4rQkFa?=
- =?utf-8?B?THUyajNWRi9UWjluZ1EyMGc2czIwa2xqakpIdFI4UTFVU203eXAyMlRhSTJB?=
- =?utf-8?B?cEQ5Tk0ySTU1eWgrL0E1U1VxbVJjcldqMzhCQWV6YW5JcFZuK0JGeitYOVg3?=
- =?utf-8?B?NDF5YnRIeXpFa2NUYkl1V2llYlE2d3hGUUZmRThVUCswVDQzM2pzMlNrTDhR?=
- =?utf-8?B?U2ZjOXpLZ2FPcGZKVmZub3NqdjE2QTZrT2Roa3lXL1VJbXowcENGMlorSHBH?=
- =?utf-8?B?aWtqT1lHMGZJZXZrMGxQZ3p0UDJqOFI4T0FtM1lYWXhrV1JLS3czU2w2enE4?=
- =?utf-8?B?cTNtbmpIQmZyR20yOXdjY0RiWXZhZTk2Ly9jdFQ1dEJGVWovUmxHL3dIb1do?=
- =?utf-8?B?aFVRYjJrclBLckNGSHpQTWRsT3hsVVY0d3JHRGdRQktlZmFGMVh3L1hLSzcy?=
- =?utf-8?Q?UCUaQRZcAW3PizxPgchd8cAqw4hJErpoZCvN8=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB10963.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(1800799021)(366013)(376011)(38070700015);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?d3VxVTNBN0MzSG1TOFEzVVFnU3g5R3o4SE1jUllwdHlYWjVzbkZ4VXFoSlls?=
- =?utf-8?B?RmdxRUFiZE55a1pETFNFTjNRUHFJR3pEaldiQ0ZDQ1BaUGY0YUtnOHBPaldm?=
- =?utf-8?B?azFHWjUyOG5RdkdyeVdTVHA0OWU0aGZES1FBYXFMa2ZOL0NWT3JjMHkrY1ho?=
- =?utf-8?B?ZlBhZUVJRDcrWmdwWFUvUHl6aWI4bldWQ3RJSjJBZ3Z5alo3aTRKa2ZyeHJs?=
- =?utf-8?B?Q1J0aFRPdHRITDFtcGFYeE50UHBPNUZ2eGdMaE10cGJ4a3VkMTI2WjZDM3NG?=
- =?utf-8?B?NnNFMGt1U3JoVEpyN01zZ1BaV3lGcHgyMEdzYU1QQkoySDFwM0RFQllYbmhi?=
- =?utf-8?B?V1BQUzNoQi9oNGEwZHZKc3NHT2swVHZrZEpWdVlsSTB6M0Q1YVR4NXpxU1lZ?=
- =?utf-8?B?UXdRY2k2b254SWxuYVV3bXBCVzNEZmVmeUNHL29GSmY1dVRXa1FwMVRDSFZs?=
- =?utf-8?B?d2puWDF3NzRtM29lbmhLSFlLQ1JjS2I2dkRISDBjMG5yNmhHT0M1K1VhZ1Jq?=
- =?utf-8?B?R1FycnF5WUd5eXZIdVpGeUVVNWlMdzlBbDlWWnZFOW9OU3pZU3ZlWTYzYjJR?=
- =?utf-8?B?Y0JseXcvWHA3OFZML1VXQ0I1bklFZXV0N0tkVTRLcUxhOHRGN3JyRjBZMjRU?=
- =?utf-8?B?eUpoWGxxSzNLME1WSWMvS1o5d3J5elJpa1FtTzBMM2NzbzdwZFd2cHE2Z3dW?=
- =?utf-8?B?anBEMWJ1NS9VeFZFeW9hQzBUZ3J3SjF4eGdwQWJaYVNPVWFuTVNuSng0TFJF?=
- =?utf-8?B?VDVCSHU1WURVd0IwM0YyZC9PQXJDVW5WYmZkcnNUMFU2Tk5LZUo4MmdtZVRF?=
- =?utf-8?B?R0R4MmJZb1pnMlpnbERjQng5YnE3S3NRSlJpWW52a1hmMkpaVmFvejl6Szdx?=
- =?utf-8?B?em4zMFVFZWFOOGs2bmdtVFJyazB4T0w4WUxZZCsxUzl5WnRrQzNZV0pNdXdF?=
- =?utf-8?B?ejdHOVQ0Q2hLWWc2TmprTDNrQWJTRUg0NVRKbERsc2NHKzM3cDRKbkxnUjZ6?=
- =?utf-8?B?dmdUQUR3Q251NUdEZjhmMmhwSjRuNVI3RlU3L0F2SnZYYmVzMEJZN3QvNTNJ?=
- =?utf-8?B?M2Z2enBnTG5kOWhHdm5oWG9LTzNvZlFyTWFOc2EyaEJFOUNSWGpBTldVeWw2?=
- =?utf-8?B?cEZjVEEreDEvdGRiZzUxLzh3UVB2b3ZtTHNXd1BJTHRmcS9DSFlGb0E5VnFu?=
- =?utf-8?B?VVJ3M3EyMW5NOEJSZXV1TXVrWjc0cHR5SUI5WGowM0ErWm9MN0pUUzBKME14?=
- =?utf-8?B?VkJ6SnphOUVRY2dTNktmMitER214NUJ1Z3BxWStzamxmVWYyUEo2WUlBWS9L?=
- =?utf-8?B?cGluZUlZaCtkNHo0eFZNbjFNUmVpbHhHaC9RcnE0U3p2RWw1OU9GRzA1ZWdE?=
- =?utf-8?B?V1dvNEZNNG1JUDI5UGpjWjNDODhjbGlKVWpOSjNoUDVlMkFmdFVWa3NmSWpy?=
- =?utf-8?B?RHhabnFOa2t5VExaUy9JTmJMeW0wU3M0QktNSGZqZjMxaW93Y3BlN2l6cFl3?=
- =?utf-8?B?VE9LMWJndE90dnkzWXRFS1lxWHFVNmUyQ21Xbyt6akpKSWhlYVJmMDZOSW1G?=
- =?utf-8?B?SUZ1S2xHUkFIdFFRVlVqVXRZb2s4OTYxcUhxenpmZGlibEU4dnJ2RExGWCtU?=
- =?utf-8?B?dGZHUS8zTmhZN3lyd01semZKRVdPbnExemxBajRSQ3dsaXpxZzQyUjVhSG1K?=
- =?utf-8?B?amlJYVpTSGJZb3dTSU05bWxhdjNiSE9DbkpXMWIvMjZZeDBTS1doUDQvOXNz?=
- =?utf-8?B?TXZuVUxJYlJkWXpEZEUydS9XN3YwQjNBZHlhT3E5RmpvTm4zYzZNdGIrRExx?=
- =?utf-8?B?R013THdRWGJXZ2RseTM5M1dRYzlFbGNjQk9NT1VHQ1B1VGt4SE43TU5ndFhx?=
- =?utf-8?B?MWxPdTVNajRmclg5cEgvN3ZwemVTS3h4ZVRGRDVpQ3MzSmZ5Mk9FZTFGVVI0?=
- =?utf-8?B?Skt3Z01QVk1yMDhIU243aXhRTWY3VUNseXJYeGhxZFR4aG5nelpXL0lJM1E5?=
- =?utf-8?B?Zkw2SXpKVElBL0pDWDAybE9aL09RcEZ2TXppb3Vxakx2MmVxYzZLNWN5Wngx?=
- =?utf-8?B?SzlxZG9hclNRSi9TdmdiUmQ4Z2xRb3RvcTZqYWdlMmc2UHJwZEMwamYrUjlT?=
- =?utf-8?Q?oJ46O85smVx+XQCYMADNAELEB?=
-Content-ID: <E1698710DAD92F42845E313304C17F01@jpnprd01.prod.outlook.com>
+	Mon, 10 Jun 2024 10:22:00 +0000
+Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-57c681dd692so2528071a12.3
+        for <kexec@lists.infradead.org>; Mon, 10 Jun 2024 03:21:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718014898; x=1718619698; darn=lists.infradead.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FhQ9T3Wywir0USGpWxQpYeImzihjNh7TUY3drGRnZXc=;
+        b=TO/aTnYn11wFSkvAUJ3LuvLDbyYKlrHnK0GHIK7Hzwlh2Bjvx9YrSAQIibQBFyBlN/
+         kSv5+cRGWKyYNqLZx91zu7iKmEuacEzbsIpo2SJJaQvY4OsMZRKg6/oUV7/4JPusYIOs
+         a+9s5YVINw/MGCeskMUFdBz1Z+s1NjkkpgA6LDKR1yCktpjA/+Zw1YhaZUCUeIA3VN0E
+         B22QlUHXlzSslL67cckZoTj9UnlD6l4e7a33F8xwCH3ybgU09WkbEQutbzGvJo/KXJ2K
+         ovsWyOYrRg7DO+zxUc79k6KfqcT5Lb4znEvYJMbi0pUPL/js2XUOY0uDpJDh+wAPsysO
+         Du0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718014898; x=1718619698;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FhQ9T3Wywir0USGpWxQpYeImzihjNh7TUY3drGRnZXc=;
+        b=M7IUCaMziXjrfpYWK86yZ5ZXEt7yAqZtPqDF8DqcdkzNIn2IfzVJ/hxB+Rcnx520+C
+         gXAlW3yndVxzkq4T64ATgzIeKq6InhSbQQdqn+7LMEQa+e7/lOO7XDvTKrL40jQvpOs6
+         tpPCn5olZvv/Xk/ddr2nKgq9VClC8hXhF3M+DZKHdHOqQMDIdODs39dUEz1xEcia0oYR
+         QExZ+LceV4uVnO+k15JQctX+J2Iz0ha4NKK1sMvELoHbFkfGE8f5nv1eMdhONWYeEmBA
+         9LpW8acsmofiNSn3iBFq/GJCUrTpfoh/Ia4ApStBR8xsQ0dV/bdP9+bgAmgcGoNowSlF
+         mjMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV2TDpKixcLSAykn0qvvOf2XmGaAf0JaoqiOac9MyRDanErjzqXWaXiUj0Pi1aifgFrR+8zL/c1fKVuOYPRDGBb4t8KQctVxfwn
+X-Gm-Message-State: AOJu0Yxnmc4ls0C/vysSPyC4N0VHFwyPuMJWMoprtOw08/HX2lY4wpkj
+	EBfblsQ4/5Ac9rWuZtY55kA2gk2MISPYuCQwZwBSwzu6e+a17fbc
+X-Google-Smtp-Source: AGHT+IEC7buEzSgSKuRzMocipAwtmYI7qcoD94M1iU+tXj6kQhvKC0CrJzV7+3SGMBOzslOR7wfV7A==
+X-Received: by 2002:a17:907:a43:b0:a6f:2203:93cd with SMTP id a640c23a62f3a-a6f2203a1bfmr124749766b.11.1718014897583;
+        Mon, 10 Jun 2024 03:21:37 -0700 (PDT)
+Received: from vasant-suse.fritz.box ([2001:9e8:ab68:af00:6f43:17ee:43bd:e0a9])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a6f0d7b35d5sm290887766b.192.2024.06.10.03.21.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Jun 2024 03:21:36 -0700 (PDT)
+From: vsntk18@gmail.com
+To: vsntk18@gmail.com
+Cc: x86@kernel.org,
+	Borislav.Petkov@amd.com,
+	Dhaval.Giani@amd.com,
+	ashish.kalra@amd.com,
+	cfir@google.com,
+	dan.j.williams@intel.com,
+	dave.hansen@linux.intel.com,
+	ebiederm@xmission.com,
+	erdemaktas@google.com,
+	hpa@zytor.com,
+	jgross@suse.com,
+	jroedel@suse.de,
+	jslaby@suse.cz,
+	keescook@chromium.org,
+	kexec@lists.infradead.org,
+	kvm@vger.kernel.org,
+	linux-coco@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	luto@kernel.org,
+	martin.b.radev@gmail.com,
+	mhiramat@kernel.org,
+	michael.roth@amd.com,
+	mstunes@vmware.com,
+	nivedita@alum.mit.edu,
+	peterz@infradead.org,
+	rientjes@google.com,
+	seanjc@google.com,
+	stable@vger.kernel.org,
+	thomas.lendacky@amd.com,
+	virtualization@lists.linux-foundation.org,
+	vkarasulli@suse.de
+Subject: [PATCH v6 07/10] x86/sev: Add MMIO handling support to boot/compressed/ code
+Date: Mon, 10 Jun 2024 12:21:10 +0200
+Message-Id: <20240610102113.20969-8-vsntk18@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240610102113.20969-1-vsntk18@gmail.com>
+References: <20240610102113.20969-1-vsntk18@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nec.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB10963.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1500dd00-12fc-4ae5-ab0e-08dc9022f394
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jun 2024 05:44:56.9082
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: e67df547-9d0d-4f4d-9161-51c6ed1f7d11
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +qWqIJFLYQyMD4ddC0h5qFNMnJEYgUwJ9HR46gY55/Ng2AXZGqEcmthk7gSu+OFXgIt6ID7wO5aKFpxG+bX5Ww==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYRPR01MB12174
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240618_224518_027168_34E517C4 
-X-CRM114-Status: GOOD (  18.65  )
+X-CRM114-CacheID: sfid-20240610_032141_126314_4AB980B8 
+X-CRM114-Status: GOOD (  33.70  )
+X-Mailman-Approved-At: Wed, 19 Jun 2024 00:17:02 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -174,44 +123,2403 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 2024/06/06 3:10, Prasad Koya wrote:
-> Hi
-> 
-> We use makedumpfile to read the dmesg buffer from the vmcore. We are
-> working on adding a feature to makedumpfile to extract the "process
-> list" from /proc/vmcore. Our main use case is to save the processes
-> that were running at the time of kernel crash to a file on the
-> permanent storage from the kdump kernel. We intend to read a handful
-> of useful data for each running task: pid, parent pid, real parent
-> pid, priority, nice value, RSS, VM size, command, utime, stime, OOM
-> score.
-> 
-> Process list from vmcore can probably be read using crash utility, but
-> in our embedded system using makedumpfile to do that job makes sense
-> for us.
-> 
-> If such an option is useful for the general users of makedumpfile,
-> we'd like to get more inputs and contribute to this feature.
+From: Joerg Roedel <jroedel@suse.de>
 
-Hi Prasad,
+Move the code for MMIO handling in the #VC handler to sev-shared.c so
+that it can be used in the decompressor code. The decompressor needs
+to handle MMIO events for writing to the VGA framebuffer.
 
-thank you for sharing the idea.  But sorry, currently we are not 
-interested in implementing such a big function in makedumpfile.
+When the kernel is booted via UEFI the VGA console is not enabled that
+early, but a kexec boot will enable it and the decompressor needs MMIO
+support to write to the frame buffer.
 
-The dmesg buffer is the most important information to be able to 
-determine the cause of a crash only with it, so the --dump-dmesg option 
-was implemented in makedumpfile first once upon a time.  But now we have 
-handier vmcore-dmesg command in kexec-tools, so we don't intend to add 
-other functions to makedumpfile than making a dumpfile.
+This also requires to share some code from lib/insn-eval.c. Since
+insn-eval.c can't be included into the decompressor code directly,
+move the relevant parts into lib/insn-eval-shared.c and include that
+file.
 
-I'm not sure whether these are doable, but I would suggest a few ideas 
-instead:
-- make e.g. vmcore-process-list command like vmcore-dmesg.
-- use panic notifier to dump process list to the dmesg buffer before 
-kdump, and use vmcore-dmesg to get it.
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Vasant Karasulli <vkarasulli@suse.de>
+---
+ arch/x86/boot/compressed/sev.c  |  45 +-
+ arch/x86/kernel/sev-shared.c    | 196 +++++++
+ arch/x86/kernel/sev.c           | 195 -------
+ arch/x86/lib/insn-eval-shared.c | 914 ++++++++++++++++++++++++++++++++
+ arch/x86/lib/insn-eval.c        | 911 +------------------------------
+ 5 files changed, 1140 insertions(+), 1121 deletions(-)
+ create mode 100644 arch/x86/lib/insn-eval-shared.c
 
-Thanks,
-Kazu
+diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
+index 0457a9d7e515..be930fb9f7b8 100644
+--- a/arch/x86/boot/compressed/sev.c
++++ b/arch/x86/boot/compressed/sev.c
+@@ -29,25 +29,6 @@
+ static struct ghcb boot_ghcb_page __aligned(PAGE_SIZE);
+ struct ghcb *boot_ghcb;
+ 
+-/*
+- * Copy a version of this function here - insn-eval.c can't be used in
+- * pre-decompression code.
+- */
+-static bool insn_has_rep_prefix(struct insn *insn)
+-{
+-	insn_byte_t p;
+-	int i;
+-
+-	insn_get_prefixes(insn);
+-
+-	for_each_insn_prefix(insn, i, p) {
+-		if (p == 0xf2 || p == 0xf3)
+-			return true;
+-	}
+-
+-	return false;
+-}
+-
+ /*
+  * Only a dummy for insn_get_seg_base() - Early boot-code is 64bit only and
+  * doesn't use segments.
+@@ -57,6 +38,16 @@ static unsigned long insn_get_seg_base(struct pt_regs *regs, int seg_reg_idx)
+ 	return 0UL;
+ }
+ 
++static int get_seg_base_limit(struct insn *insn, struct pt_regs *regs,
++			      int regoff, unsigned long *base,
++			      unsigned long *limit)
++{
++	if (base)
++		*base = 0ULL;
++	if (limit)
++		*limit = ~0ULL;
++}
++
+ static inline u64 sev_es_rd_ghcb_msr(void)
+ {
+ 	struct msr m;
+@@ -104,6 +95,14 @@ static enum es_result vc_read_mem(struct es_em_ctxt *ctxt,
+ 	return ES_OK;
+ }
+ 
++static enum es_result vc_slow_virt_to_phys(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
++					   unsigned long vaddr, phys_addr_t *paddr)
++{
++	*paddr = (phys_addr_t)vaddr;
++
++	return ES_OK;
++}
++
+ static enum es_result vc_ioio_check(struct es_em_ctxt *ctxt, u16 port, size_t size)
+ {
+ 	return ES_OK;
+@@ -122,9 +121,14 @@ static bool fault_in_kernel_space(unsigned long address)
+ 
+ #define __BOOT_COMPRESSED
+ 
++#undef WARN_ONCE
++#define WARN_ONCE(condition, format...)
++
+ /* Basic instruction decoding support needed */
++#include <asm/insn-eval.h>
+ #include "../../lib/inat.c"
+ #include "../../lib/insn.c"
++#include "../../lib/insn-eval-shared.c"
+ 
+ /* Include code for early handlers */
+ #include "../../kernel/sev-shared.c"
+@@ -323,6 +327,9 @@ void do_boot_stage2_vc(struct pt_regs *regs, unsigned long exit_code)
+ 	case SVM_EXIT_CPUID:
+ 		result = vc_handle_cpuid(boot_ghcb, &ctxt);
+ 		break;
++	case SVM_EXIT_NPF:
++		result = vc_handle_mmio(boot_ghcb, &ctxt);
++		break;
+ 	default:
+ 		result = ES_UNSUPPORTED;
+ 		break;
+diff --git a/arch/x86/kernel/sev-shared.c b/arch/x86/kernel/sev-shared.c
+index f63262a9c2a5..1b25a6cacec7 100644
+--- a/arch/x86/kernel/sev-shared.c
++++ b/arch/x86/kernel/sev-shared.c
+@@ -1043,6 +1043,202 @@ static enum es_result vc_handle_rdtsc(struct ghcb *ghcb,
+ 	return ES_OK;
+ }
+ 
++static long *vc_insn_get_rm(struct es_em_ctxt *ctxt)
++{
++	long *reg_array;
++	int offset;
++
++	reg_array = (long *)ctxt->regs;
++	offset    = insn_get_modrm_rm_off(&ctxt->insn, ctxt->regs);
++
++	if (offset < 0)
++		return NULL;
++
++	offset /= sizeof(long);
++
++	return reg_array + offset;
++}
++
++static enum es_result vc_do_mmio(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
++				 unsigned int bytes, bool read)
++{
++	u64 exit_code, exit_info_1, exit_info_2;
++	unsigned long ghcb_pa = __pa(ghcb);
++	enum es_result res;
++	phys_addr_t paddr;
++	void __user *ref;
++
++	ref = insn_get_addr_ref(&ctxt->insn, ctxt->regs);
++	if (ref == (void __user *)-1L)
++		return ES_UNSUPPORTED;
++
++	exit_code = read ? SVM_VMGEXIT_MMIO_READ : SVM_VMGEXIT_MMIO_WRITE;
++
++	res = vc_slow_virt_to_phys(ghcb, ctxt, (unsigned long)ref, &paddr);
++	if (res != ES_OK) {
++		if (res == ES_EXCEPTION && !read)
++			ctxt->fi.error_code |= X86_PF_WRITE;
++
++		return res;
++	}
++
++	exit_info_1 = paddr;
++	/* Can never be greater than 8 */
++	exit_info_2 = bytes;
++
++	ghcb_set_sw_scratch(ghcb, ghcb_pa + offsetof(struct ghcb, shared_buffer));
++
++	return sev_es_ghcb_hv_call(ghcb, ctxt, exit_code, exit_info_1, exit_info_2);
++}
++
++/*
++ * The MOVS instruction has two memory operands, which raises the
++ * problem that it is not known whether the access to the source or the
++ * destination caused the #VC exception (and hence whether an MMIO read
++ * or write operation needs to be emulated).
++ *
++ * Instead of playing games with walking page-tables and trying to guess
++ * whether the source or destination is an MMIO range, split the move
++ * into two operations, a read and a write with only one memory operand.
++ * This will cause a nested #VC exception on the MMIO address which can
++ * then be handled.
++ *
++ * This implementation has the benefit that it also supports MOVS where
++ * source _and_ destination are MMIO regions.
++ *
++ * It will slow MOVS on MMIO down a lot, but in SEV-ES guests it is a
++ * rare operation. If it turns out to be a performance problem the split
++ * operations can be moved to memcpy_fromio() and memcpy_toio().
++ */
++static enum es_result vc_handle_mmio_movs(struct es_em_ctxt *ctxt,
++					  unsigned int bytes)
++{
++	unsigned long ds_base, es_base;
++	unsigned char *src, *dst;
++	unsigned char buffer[8];
++	enum es_result ret;
++	bool rep;
++	int off;
++
++	ds_base = insn_get_seg_base(ctxt->regs, INAT_SEG_REG_DS);
++	es_base = insn_get_seg_base(ctxt->regs, INAT_SEG_REG_ES);
++
++	if (ds_base == -1L || es_base == -1L) {
++		ctxt->fi.vector = X86_TRAP_GP;
++		ctxt->fi.error_code = 0;
++		return ES_EXCEPTION;
++	}
++
++	src = ds_base + (unsigned char *)ctxt->regs->si;
++	dst = es_base + (unsigned char *)ctxt->regs->di;
++
++	ret = vc_read_mem(ctxt, src, buffer, bytes);
++	if (ret != ES_OK)
++		return ret;
++
++	ret = vc_write_mem(ctxt, dst, buffer, bytes);
++	if (ret != ES_OK)
++		return ret;
++
++	if (ctxt->regs->flags & X86_EFLAGS_DF)
++		off = -bytes;
++	else
++		off =  bytes;
++
++	ctxt->regs->si += off;
++	ctxt->regs->di += off;
++
++	rep = insn_has_rep_prefix(&ctxt->insn);
++	if (rep)
++		ctxt->regs->cx -= 1;
++
++	if (!rep || ctxt->regs->cx == 0)
++		return ES_OK;
++	else
++		return ES_RETRY;
++}
++
++static enum es_result vc_handle_mmio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
++{
++	struct insn *insn = &ctxt->insn;
++	enum insn_mmio_type mmio;
++	unsigned int bytes = 0;
++	enum es_result ret;
++	u8 sign_byte;
++	long *reg_data;
++
++	mmio = insn_decode_mmio(insn, &bytes);
++	if (mmio == INSN_MMIO_DECODE_FAILED)
++		return ES_DECODE_FAILED;
++
++	if (mmio != INSN_MMIO_WRITE_IMM && mmio != INSN_MMIO_MOVS) {
++		reg_data = insn_get_modrm_reg_ptr(insn, ctxt->regs);
++		if (!reg_data)
++			return ES_DECODE_FAILED;
++	}
++
++	if (user_mode(ctxt->regs))
++		return ES_UNSUPPORTED;
++
++	switch (mmio) {
++	case INSN_MMIO_WRITE:
++		memcpy(ghcb->shared_buffer, reg_data, bytes);
++		ret = vc_do_mmio(ghcb, ctxt, bytes, false);
++		break;
++	case INSN_MMIO_WRITE_IMM:
++		memcpy(ghcb->shared_buffer, insn->immediate1.bytes, bytes);
++		ret = vc_do_mmio(ghcb, ctxt, bytes, false);
++		break;
++	case INSN_MMIO_READ:
++		ret = vc_do_mmio(ghcb, ctxt, bytes, true);
++		if (ret)
++			break;
++
++		/* Zero-extend for 32-bit operation */
++		if (bytes == 4)
++			*reg_data = 0;
++
++		memcpy(reg_data, ghcb->shared_buffer, bytes);
++		break;
++	case INSN_MMIO_READ_ZERO_EXTEND:
++		ret = vc_do_mmio(ghcb, ctxt, bytes, true);
++		if (ret)
++			break;
++
++		/* Zero extend based on operand size */
++		memset(reg_data, 0, insn->opnd_bytes);
++		memcpy(reg_data, ghcb->shared_buffer, bytes);
++		break;
++	case INSN_MMIO_READ_SIGN_EXTEND:
++		ret = vc_do_mmio(ghcb, ctxt, bytes, true);
++		if (ret)
++			break;
++
++		if (bytes == 1) {
++			u8 *val = (u8 *)ghcb->shared_buffer;
++
++			sign_byte = (*val & 0x80) ? 0xff : 0x00;
++		} else {
++			u16 *val = (u16 *)ghcb->shared_buffer;
++
++			sign_byte = (*val & 0x8000) ? 0xff : 0x00;
++		}
++
++		/* Sign extend based on operand size */
++		memset(reg_data, sign_byte, insn->opnd_bytes);
++		memcpy(reg_data, ghcb->shared_buffer, bytes);
++		break;
++	case INSN_MMIO_MOVS:
++		ret = vc_handle_mmio_movs(ctxt, bytes);
++		break;
++	default:
++		ret = ES_UNSUPPORTED;
++		break;
++	}
++
++	return ret;
++}
++
+ struct cc_setup_data {
+ 	struct setup_data header;
+ 	u32 cc_blob_address;
+diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
+index 8d3cc5cd7e11..30ede17b5a04 100644
+--- a/arch/x86/kernel/sev.c
++++ b/arch/x86/kernel/sev.c
+@@ -1546,201 +1546,6 @@ static void __init vc_early_forward_exception(struct es_em_ctxt *ctxt)
+ 	do_early_exception(ctxt->regs, trapnr);
+ }
+ 
+-static long *vc_insn_get_rm(struct es_em_ctxt *ctxt)
+-{
+-	long *reg_array;
+-	int offset;
+-
+-	reg_array = (long *)ctxt->regs;
+-	offset    = insn_get_modrm_rm_off(&ctxt->insn, ctxt->regs);
+-
+-	if (offset < 0)
+-		return NULL;
+-
+-	offset /= sizeof(long);
+-
+-	return reg_array + offset;
+-}
+-static enum es_result vc_do_mmio(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
+-				 unsigned int bytes, bool read)
+-{
+-	u64 exit_code, exit_info_1, exit_info_2;
+-	unsigned long ghcb_pa = __pa(ghcb);
+-	enum es_result res;
+-	phys_addr_t paddr;
+-	void __user *ref;
+-
+-	ref = insn_get_addr_ref(&ctxt->insn, ctxt->regs);
+-	if (ref == (void __user *)-1L)
+-		return ES_UNSUPPORTED;
+-
+-	exit_code = read ? SVM_VMGEXIT_MMIO_READ : SVM_VMGEXIT_MMIO_WRITE;
+-
+-	res = vc_slow_virt_to_phys(ghcb, ctxt, (unsigned long)ref, &paddr);
+-	if (res != ES_OK) {
+-		if (res == ES_EXCEPTION && !read)
+-			ctxt->fi.error_code |= X86_PF_WRITE;
+-
+-		return res;
+-	}
+-
+-	exit_info_1 = paddr;
+-	/* Can never be greater than 8 */
+-	exit_info_2 = bytes;
+-
+-	ghcb_set_sw_scratch(ghcb, ghcb_pa + offsetof(struct ghcb, shared_buffer));
+-
+-	return sev_es_ghcb_hv_call(ghcb, ctxt, exit_code, exit_info_1, exit_info_2);
+-}
+-
+-/*
+- * The MOVS instruction has two memory operands, which raises the
+- * problem that it is not known whether the access to the source or the
+- * destination caused the #VC exception (and hence whether an MMIO read
+- * or write operation needs to be emulated).
+- *
+- * Instead of playing games with walking page-tables and trying to guess
+- * whether the source or destination is an MMIO range, split the move
+- * into two operations, a read and a write with only one memory operand.
+- * This will cause a nested #VC exception on the MMIO address which can
+- * then be handled.
+- *
+- * This implementation has the benefit that it also supports MOVS where
+- * source _and_ destination are MMIO regions.
+- *
+- * It will slow MOVS on MMIO down a lot, but in SEV-ES guests it is a
+- * rare operation. If it turns out to be a performance problem the split
+- * operations can be moved to memcpy_fromio() and memcpy_toio().
+- */
+-static enum es_result vc_handle_mmio_movs(struct es_em_ctxt *ctxt,
+-					  unsigned int bytes)
+-{
+-	unsigned long ds_base, es_base;
+-	unsigned char *src, *dst;
+-	unsigned char buffer[8];
+-	enum es_result ret;
+-	bool rep;
+-	int off;
+-
+-	ds_base = insn_get_seg_base(ctxt->regs, INAT_SEG_REG_DS);
+-	es_base = insn_get_seg_base(ctxt->regs, INAT_SEG_REG_ES);
+-
+-	if (ds_base == -1L || es_base == -1L) {
+-		ctxt->fi.vector = X86_TRAP_GP;
+-		ctxt->fi.error_code = 0;
+-		return ES_EXCEPTION;
+-	}
+-
+-	src = ds_base + (unsigned char *)ctxt->regs->si;
+-	dst = es_base + (unsigned char *)ctxt->regs->di;
+-
+-	ret = vc_read_mem(ctxt, src, buffer, bytes);
+-	if (ret != ES_OK)
+-		return ret;
+-
+-	ret = vc_write_mem(ctxt, dst, buffer, bytes);
+-	if (ret != ES_OK)
+-		return ret;
+-
+-	if (ctxt->regs->flags & X86_EFLAGS_DF)
+-		off = -bytes;
+-	else
+-		off =  bytes;
+-
+-	ctxt->regs->si += off;
+-	ctxt->regs->di += off;
+-
+-	rep = insn_has_rep_prefix(&ctxt->insn);
+-	if (rep)
+-		ctxt->regs->cx -= 1;
+-
+-	if (!rep || ctxt->regs->cx == 0)
+-		return ES_OK;
+-	else
+-		return ES_RETRY;
+-}
+-
+-static enum es_result vc_handle_mmio(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
+-{
+-	struct insn *insn = &ctxt->insn;
+-	enum insn_mmio_type mmio;
+-	unsigned int bytes = 0;
+-	enum es_result ret;
+-	u8 sign_byte;
+-	long *reg_data;
+-
+-	mmio = insn_decode_mmio(insn, &bytes);
+-	if (mmio == INSN_MMIO_DECODE_FAILED)
+-		return ES_DECODE_FAILED;
+-
+-	if (mmio != INSN_MMIO_WRITE_IMM && mmio != INSN_MMIO_MOVS) {
+-		reg_data = insn_get_modrm_reg_ptr(insn, ctxt->regs);
+-		if (!reg_data)
+-			return ES_DECODE_FAILED;
+-	}
+-
+-	if (user_mode(ctxt->regs))
+-		return ES_UNSUPPORTED;
+-
+-	switch (mmio) {
+-	case INSN_MMIO_WRITE:
+-		memcpy(ghcb->shared_buffer, reg_data, bytes);
+-		ret = vc_do_mmio(ghcb, ctxt, bytes, false);
+-		break;
+-	case INSN_MMIO_WRITE_IMM:
+-		memcpy(ghcb->shared_buffer, insn->immediate1.bytes, bytes);
+-		ret = vc_do_mmio(ghcb, ctxt, bytes, false);
+-		break;
+-	case INSN_MMIO_READ:
+-		ret = vc_do_mmio(ghcb, ctxt, bytes, true);
+-		if (ret)
+-			break;
+-
+-		/* Zero-extend for 32-bit operation */
+-		if (bytes == 4)
+-			*reg_data = 0;
+-
+-		memcpy(reg_data, ghcb->shared_buffer, bytes);
+-		break;
+-	case INSN_MMIO_READ_ZERO_EXTEND:
+-		ret = vc_do_mmio(ghcb, ctxt, bytes, true);
+-		if (ret)
+-			break;
+-
+-		/* Zero extend based on operand size */
+-		memset(reg_data, 0, insn->opnd_bytes);
+-		memcpy(reg_data, ghcb->shared_buffer, bytes);
+-		break;
+-	case INSN_MMIO_READ_SIGN_EXTEND:
+-		ret = vc_do_mmio(ghcb, ctxt, bytes, true);
+-		if (ret)
+-			break;
+-
+-		if (bytes == 1) {
+-			u8 *val = (u8 *)ghcb->shared_buffer;
+-
+-			sign_byte = (*val & 0x80) ? 0xff : 0x00;
+-		} else {
+-			u16 *val = (u16 *)ghcb->shared_buffer;
+-
+-			sign_byte = (*val & 0x8000) ? 0xff : 0x00;
+-		}
+-
+-		/* Sign extend based on operand size */
+-		memset(reg_data, sign_byte, insn->opnd_bytes);
+-		memcpy(reg_data, ghcb->shared_buffer, bytes);
+-		break;
+-	case INSN_MMIO_MOVS:
+-		ret = vc_handle_mmio_movs(ctxt, bytes);
+-		break;
+-	default:
+-		ret = ES_UNSUPPORTED;
+-		break;
+-	}
+-
+-	return ret;
+-}
+-
+ static enum es_result vc_handle_dr7_write(struct ghcb *ghcb,
+ 					  struct es_em_ctxt *ctxt)
+ {
+diff --git a/arch/x86/lib/insn-eval-shared.c b/arch/x86/lib/insn-eval-shared.c
+new file mode 100644
+index 000000000000..02acdc2921ff
+--- /dev/null
++++ b/arch/x86/lib/insn-eval-shared.c
+@@ -0,0 +1,914 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * AMD Memory Encryption Support
++ *
++ * Copyright (C) 2019 SUSE
++ *
++ * Author: Joerg Roedel <jroedel@suse.de>
++ */
++
++enum reg_type {
++	REG_TYPE_RM = 0,
++	REG_TYPE_REG,
++	REG_TYPE_INDEX,
++	REG_TYPE_BASE,
++};
++
++/**
++ * is_string_insn() - Determine if instruction is a string instruction
++ * @insn:	Instruction containing the opcode to inspect
++ *
++ * Returns:
++ *
++ * true if the instruction, determined by the opcode, is any of the
++ * string instructions as defined in the Intel Software Development manual.
++ * False otherwise.
++ */
++static bool is_string_insn(struct insn *insn)
++{
++	/* All string instructions have a 1-byte opcode. */
++	if (insn->opcode.nbytes != 1)
++		return false;
++
++	switch (insn->opcode.bytes[0]) {
++	case 0x6c ... 0x6f:	/* INS, OUTS */
++	case 0xa4 ... 0xa7:	/* MOVS, CMPS */
++	case 0xaa ... 0xaf:	/* STOS, LODS, SCAS */
++		return true;
++	default:
++		return false;
++	}
++}
++
++/**
++ * insn_has_rep_prefix() - Determine if instruction has a REP prefix
++ * @insn:	Instruction containing the prefix to inspect
++ *
++ * Returns:
++ *
++ * true if the instruction has a REP prefix, false if not.
++ */
++bool insn_has_rep_prefix(struct insn *insn)
++{
++	insn_byte_t p;
++	int i;
++
++	insn_get_prefixes(insn);
++
++	for_each_insn_prefix(insn, i, p) {
++		if (p == 0xf2 || p == 0xf3)
++			return true;
++	}
++
++	return false;
++}
++
++static const int pt_regoff[] = {
++	offsetof(struct pt_regs, ax),
++	offsetof(struct pt_regs, cx),
++	offsetof(struct pt_regs, dx),
++	offsetof(struct pt_regs, bx),
++	offsetof(struct pt_regs, sp),
++	offsetof(struct pt_regs, bp),
++	offsetof(struct pt_regs, si),
++	offsetof(struct pt_regs, di),
++#ifdef CONFIG_X86_64
++	offsetof(struct pt_regs, r8),
++	offsetof(struct pt_regs, r9),
++	offsetof(struct pt_regs, r10),
++	offsetof(struct pt_regs, r11),
++	offsetof(struct pt_regs, r12),
++	offsetof(struct pt_regs, r13),
++	offsetof(struct pt_regs, r14),
++	offsetof(struct pt_regs, r15),
++#else
++	offsetof(struct pt_regs, ds),
++	offsetof(struct pt_regs, es),
++	offsetof(struct pt_regs, fs),
++	offsetof(struct pt_regs, gs),
++#endif
++};
++
++int pt_regs_offset(struct pt_regs *regs, int regno)
++{
++	if ((unsigned int)regno < ARRAY_SIZE(pt_regoff))
++		return pt_regoff[regno];
++	return -EDOM;
++}
++
++static int get_regno(struct insn *insn, enum reg_type type)
++{
++	int nr_registers = ARRAY_SIZE(pt_regoff);
++	int regno = 0;
++
++	/*
++	 * Don't possibly decode a 32-bit instructions as
++	 * reading a 64-bit-only register.
++	 */
++	if (IS_ENABLED(CONFIG_X86_64) && !insn->x86_64)
++		nr_registers -= 8;
++
++	switch (type) {
++	case REG_TYPE_RM:
++		regno = X86_MODRM_RM(insn->modrm.value);
++
++		/*
++		 * ModRM.mod == 0 and ModRM.rm == 5 means a 32-bit displacement
++		 * follows the ModRM byte.
++		 */
++		if (!X86_MODRM_MOD(insn->modrm.value) && regno == 5)
++			return -EDOM;
++
++		if (X86_REX_B(insn->rex_prefix.value))
++			regno += 8;
++		break;
++
++	case REG_TYPE_REG:
++		regno = X86_MODRM_REG(insn->modrm.value);
++
++		if (X86_REX_R(insn->rex_prefix.value))
++			regno += 8;
++		break;
++
++	case REG_TYPE_INDEX:
++		regno = X86_SIB_INDEX(insn->sib.value);
++		if (X86_REX_X(insn->rex_prefix.value))
++			regno += 8;
++
++		/*
++		 * If ModRM.mod != 3 and SIB.index = 4 the scale*index
++		 * portion of the address computation is null. This is
++		 * true only if REX.X is 0. In such a case, the SIB index
++		 * is used in the address computation.
++		 */
++		if (X86_MODRM_MOD(insn->modrm.value) != 3 && regno == 4)
++			return -EDOM;
++		break;
++
++	case REG_TYPE_BASE:
++		regno = X86_SIB_BASE(insn->sib.value);
++		/*
++		 * If ModRM.mod is 0 and SIB.base == 5, the base of the
++		 * register-indirect addressing is 0. In this case, a
++		 * 32-bit displacement follows the SIB byte.
++		 */
++		if (!X86_MODRM_MOD(insn->modrm.value) && regno == 5)
++			return -EDOM;
++
++		if (X86_REX_B(insn->rex_prefix.value))
++			regno += 8;
++		break;
++
++	default:
++		return -EINVAL;
++	}
++
++	if (regno >= nr_registers) {
++		WARN_ONCE(1, "decoded an instruction with an invalid register");
++		return -EINVAL;
++	}
++	return regno;
++}
++
++static int get_reg_offset(struct insn *insn, struct pt_regs *regs,
++			  enum reg_type type)
++{
++	int regno = get_regno(insn, type);
++
++	if (regno < 0)
++		return regno;
++
++	return pt_regs_offset(regs, regno);
++}
++
++/**
++ * get_reg_offset_16() - Obtain offset of register indicated by instruction
++ * @insn:	Instruction containing ModRM byte
++ * @regs:	Register values as seen when entering kernel mode
++ * @offs1:	Offset of the first operand register
++ * @offs2:	Offset of the second operand register, if applicable
++ *
++ * Obtain the offset, in pt_regs, of the registers indicated by the ModRM byte
++ * in @insn. This function is to be used with 16-bit address encodings. The
++ * @offs1 and @offs2 will be written with the offset of the two registers
++ * indicated by the instruction. In cases where any of the registers is not
++ * referenced by the instruction, the value will be set to -EDOM.
++ *
++ * Returns:
++ *
++ * 0 on success, -EINVAL on error.
++ */
++static int get_reg_offset_16(struct insn *insn, struct pt_regs *regs,
++			     int *offs1, int *offs2)
++{
++	/*
++	 * 16-bit addressing can use one or two registers. Specifics of
++	 * encodings are given in Table 2-1. "16-Bit Addressing Forms with the
++	 * ModR/M Byte" of the Intel Software Development Manual.
++	 */
++	static const int regoff1[] = {
++		offsetof(struct pt_regs, bx),
++		offsetof(struct pt_regs, bx),
++		offsetof(struct pt_regs, bp),
++		offsetof(struct pt_regs, bp),
++		offsetof(struct pt_regs, si),
++		offsetof(struct pt_regs, di),
++		offsetof(struct pt_regs, bp),
++		offsetof(struct pt_regs, bx),
++	};
++
++	static const int regoff2[] = {
++		offsetof(struct pt_regs, si),
++		offsetof(struct pt_regs, di),
++		offsetof(struct pt_regs, si),
++		offsetof(struct pt_regs, di),
++		-EDOM,
++		-EDOM,
++		-EDOM,
++		-EDOM,
++	};
++
++	if (!offs1 || !offs2)
++		return -EINVAL;
++
++	/* Operand is a register, use the generic function. */
++	if (X86_MODRM_MOD(insn->modrm.value) == 3) {
++		*offs1 = insn_get_modrm_rm_off(insn, regs);
++		*offs2 = -EDOM;
++		return 0;
++	}
++
++	*offs1 = regoff1[X86_MODRM_RM(insn->modrm.value)];
++	*offs2 = regoff2[X86_MODRM_RM(insn->modrm.value)];
++
++	/*
++	 * If ModRM.mod is 0 and ModRM.rm is 110b, then we use displacement-
++	 * only addressing. This means that no registers are involved in
++	 * computing the effective address. Thus, ensure that the first
++	 * register offset is invalid. The second register offset is already
++	 * invalid under the aforementioned conditions.
++	 */
++	if ((X86_MODRM_MOD(insn->modrm.value) == 0) &&
++	    (X86_MODRM_RM(insn->modrm.value) == 6))
++		*offs1 = -EDOM;
++
++	return 0;
++}
++
++/**
++ * insn_get_modrm_rm_off() - Obtain register in r/m part of the ModRM byte
++ * @insn:	Instruction containing the ModRM byte
++ * @regs:	Register values as seen when entering kernel mode
++ *
++ * Returns:
++ *
++ * The register indicated by the r/m part of the ModRM byte. The
++ * register is obtained as an offset from the base of pt_regs. In specific
++ * cases, the returned value can be -EDOM to indicate that the particular value
++ * of ModRM does not refer to a register and shall be ignored.
++ */
++int insn_get_modrm_rm_off(struct insn *insn, struct pt_regs *regs)
++{
++	return get_reg_offset(insn, regs, REG_TYPE_RM);
++}
++
++/**
++ * insn_get_modrm_reg_off() - Obtain register in reg part of the ModRM byte
++ * @insn:	Instruction containing the ModRM byte
++ * @regs:	Register values as seen when entering kernel mode
++ *
++ * Returns:
++ *
++ * The register indicated by the reg part of the ModRM byte. The
++ * register is obtained as an offset from the base of pt_regs.
++ */
++int insn_get_modrm_reg_off(struct insn *insn, struct pt_regs *regs)
++{
++	return get_reg_offset(insn, regs, REG_TYPE_REG);
++}
++
++/**
++ * insn_get_modrm_reg_ptr() - Obtain register pointer based on ModRM byte
++ * @insn:	Instruction containing the ModRM byte
++ * @regs:	Register values as seen when entering kernel mode
++ *
++ * Returns:
++ *
++ * The register indicated by the reg part of the ModRM byte.
++ * The register is obtained as a pointer within pt_regs.
++ */
++unsigned long *insn_get_modrm_reg_ptr(struct insn *insn, struct pt_regs *regs)
++{
++	int offset;
++
++	offset = insn_get_modrm_reg_off(insn, regs);
++	if (offset < 0)
++		return NULL;
++	return (void *)regs + offset;
++}
++
++/**
++ * get_eff_addr_reg() - Obtain effective address from register operand
++ * @insn:	Instruction. Must be valid.
++ * @regs:	Register values as seen when entering kernel mode
++ * @regoff:	Obtained operand offset, in pt_regs, with the effective address
++ * @eff_addr:	Obtained effective address
++ *
++ * Obtain the effective address stored in the register operand as indicated by
++ * the ModRM byte. This function is to be used only with register addressing
++ * (i.e.,  ModRM.mod is 3). The effective address is saved in @eff_addr. The
++ * register operand, as an offset from the base of pt_regs, is saved in @regoff;
++ * such offset can then be used to resolve the segment associated with the
++ * operand. This function can be used with any of the supported address sizes
++ * in x86.
++ *
++ * Returns:
++ *
++ * 0 on success. @eff_addr will have the effective address stored in the
++ * operand indicated by ModRM. @regoff will have such operand as an offset from
++ * the base of pt_regs.
++ *
++ * -EINVAL on error.
++ */
++static int get_eff_addr_reg(struct insn *insn, struct pt_regs *regs,
++			    int *regoff, long *eff_addr)
++{
++	int ret;
++
++	ret = insn_get_modrm(insn);
++	if (ret)
++		return ret;
++
++	if (X86_MODRM_MOD(insn->modrm.value) != 3)
++		return -EINVAL;
++
++	*regoff = get_reg_offset(insn, regs, REG_TYPE_RM);
++	if (*regoff < 0)
++		return -EINVAL;
++
++	/* Ignore bytes that are outside the address size. */
++	if (insn->addr_bytes == 2)
++		*eff_addr = regs_get_register(regs, *regoff) & 0xffff;
++	else if (insn->addr_bytes == 4)
++		*eff_addr = regs_get_register(regs, *regoff) & 0xffffffff;
++	else /* 64-bit address */
++		*eff_addr = regs_get_register(regs, *regoff);
++
++	return 0;
++}
++
++/**
++ * get_eff_addr_modrm() - Obtain referenced effective address via ModRM
++ * @insn:	Instruction. Must be valid.
++ * @regs:	Register values as seen when entering kernel mode
++ * @regoff:	Obtained operand offset, in pt_regs, associated with segment
++ * @eff_addr:	Obtained effective address
++ *
++ * Obtain the effective address referenced by the ModRM byte of @insn. After
++ * identifying the registers involved in the register-indirect memory reference,
++ * its value is obtained from the operands in @regs. The computed address is
++ * stored @eff_addr. Also, the register operand that indicates the associated
++ * segment is stored in @regoff, this parameter can later be used to determine
++ * such segment.
++ *
++ * Returns:
++ *
++ * 0 on success. @eff_addr will have the referenced effective address. @regoff
++ * will have a register, as an offset from the base of pt_regs, that can be used
++ * to resolve the associated segment.
++ *
++ * -EINVAL on error.
++ */
++static int get_eff_addr_modrm(struct insn *insn, struct pt_regs *regs,
++			      int *regoff, long *eff_addr)
++{
++	long tmp;
++	int ret;
++
++	if (insn->addr_bytes != 8 && insn->addr_bytes != 4)
++		return -EINVAL;
++
++	ret = insn_get_modrm(insn);
++	if (ret)
++		return ret;
++
++	if (X86_MODRM_MOD(insn->modrm.value) > 2)
++		return -EINVAL;
++
++	*regoff = get_reg_offset(insn, regs, REG_TYPE_RM);
++
++	/*
++	 * -EDOM means that we must ignore the address_offset. In such a case,
++	 * in 64-bit mode the effective address relative to the rIP of the
++	 * following instruction.
++	 */
++	if (*regoff == -EDOM) {
++		if (any_64bit_mode(regs))
++			tmp = regs->ip + insn->length;
++		else
++			tmp = 0;
++	} else if (*regoff < 0) {
++		return -EINVAL;
++	} else {
++		tmp = regs_get_register(regs, *regoff);
++	}
++
++	if (insn->addr_bytes == 4) {
++		int addr32 = (int)(tmp & 0xffffffff) + insn->displacement.value;
++
++		*eff_addr = addr32 & 0xffffffff;
++	} else {
++		*eff_addr = tmp + insn->displacement.value;
++	}
++
++	return 0;
++}
++
++/**
++ * get_eff_addr_modrm_16() - Obtain referenced effective address via ModRM
++ * @insn:	Instruction. Must be valid.
++ * @regs:	Register values as seen when entering kernel mode
++ * @regoff:	Obtained operand offset, in pt_regs, associated with segment
++ * @eff_addr:	Obtained effective address
++ *
++ * Obtain the 16-bit effective address referenced by the ModRM byte of @insn.
++ * After identifying the registers involved in the register-indirect memory
++ * reference, its value is obtained from the operands in @regs. The computed
++ * address is stored @eff_addr. Also, the register operand that indicates
++ * the associated segment is stored in @regoff, this parameter can later be used
++ * to determine such segment.
++ *
++ * Returns:
++ *
++ * 0 on success. @eff_addr will have the referenced effective address. @regoff
++ * will have a register, as an offset from the base of pt_regs, that can be used
++ * to resolve the associated segment.
++ *
++ * -EINVAL on error.
++ */
++static int get_eff_addr_modrm_16(struct insn *insn, struct pt_regs *regs,
++				 int *regoff, short *eff_addr)
++{
++	int addr_offset1, addr_offset2, ret;
++	short addr1 = 0, addr2 = 0, displacement;
++
++	if (insn->addr_bytes != 2)
++		return -EINVAL;
++
++	insn_get_modrm(insn);
++
++	if (!insn->modrm.nbytes)
++		return -EINVAL;
++
++	if (X86_MODRM_MOD(insn->modrm.value) > 2)
++		return -EINVAL;
++
++	ret = get_reg_offset_16(insn, regs, &addr_offset1, &addr_offset2);
++	if (ret < 0)
++		return -EINVAL;
++
++	/*
++	 * Don't fail on invalid offset values. They might be invalid because
++	 * they cannot be used for this particular value of ModRM. Instead, use
++	 * them in the computation only if they contain a valid value.
++	 */
++	if (addr_offset1 != -EDOM)
++		addr1 = regs_get_register(regs, addr_offset1) & 0xffff;
++
++	if (addr_offset2 != -EDOM)
++		addr2 = regs_get_register(regs, addr_offset2) & 0xffff;
++
++	displacement = insn->displacement.value & 0xffff;
++	*eff_addr = addr1 + addr2 + displacement;
++
++	/*
++	 * The first operand register could indicate to use of either SS or DS
++	 * registers to obtain the segment selector.  The second operand
++	 * register can only indicate the use of DS. Thus, the first operand
++	 * will be used to obtain the segment selector.
++	 */
++	*regoff = addr_offset1;
++
++	return 0;
++}
++
++/**
++ * get_eff_addr_sib() - Obtain referenced effective address via SIB
++ * @insn:	Instruction. Must be valid.
++ * @regs:	Register values as seen when entering kernel mode
++ * @base_offset: Obtained operand offset, in pt_regs, associated with segment
++ * @eff_addr:	Obtained effective address
++ *
++ * Obtain the effective address referenced by the SIB byte of @insn. After
++ * identifying the registers involved in the indexed, register-indirect memory
++ * reference, its value is obtained from the operands in @regs. The computed
++ * address is stored @eff_addr. Also, the register operand that indicates the
++ * associated segment is stored in @base_offset; this parameter can later be
++ * used to determine such segment.
++ *
++ * Returns:
++ *
++ * 0 on success. @eff_addr will have the referenced effective address.
++ * @base_offset will have a register, as an offset from the base of pt_regs,
++ * that can be used to resolve the associated segment.
++ *
++ * Negative value on error.
++ */
++static int get_eff_addr_sib(struct insn *insn, struct pt_regs *regs,
++			    int *base_offset, long *eff_addr)
++{
++	long base, indx;
++	int indx_offset;
++	int ret;
++
++	if (insn->addr_bytes != 8 && insn->addr_bytes != 4)
++		return -EINVAL;
++
++	ret = insn_get_modrm(insn);
++	if (ret)
++		return ret;
++
++	if (!insn->modrm.nbytes)
++		return -EINVAL;
++
++	if (X86_MODRM_MOD(insn->modrm.value) > 2)
++		return -EINVAL;
++
++	ret = insn_get_sib(insn);
++	if (ret)
++		return ret;
++
++	if (!insn->sib.nbytes)
++		return -EINVAL;
++
++	*base_offset = get_reg_offset(insn, regs, REG_TYPE_BASE);
++	indx_offset = get_reg_offset(insn, regs, REG_TYPE_INDEX);
++
++	/*
++	 * Negative values in the base and index offset means an error when
++	 * decoding the SIB byte. Except -EDOM, which means that the registers
++	 * should not be used in the address computation.
++	 */
++	if (*base_offset == -EDOM)
++		base = 0;
++	else if (*base_offset < 0)
++		return -EINVAL;
++	else
++		base = regs_get_register(regs, *base_offset);
++
++	if (indx_offset == -EDOM)
++		indx = 0;
++	else if (indx_offset < 0)
++		return -EINVAL;
++	else
++		indx = regs_get_register(regs, indx_offset);
++
++	if (insn->addr_bytes == 4) {
++		int addr32, base32, idx32;
++
++		base32 = base & 0xffffffff;
++		idx32 = indx & 0xffffffff;
++
++		addr32 = base32 + idx32 * (1 << X86_SIB_SCALE(insn->sib.value));
++		addr32 += insn->displacement.value;
++
++		*eff_addr = addr32 & 0xffffffff;
++	} else {
++		*eff_addr = base + indx * (1 << X86_SIB_SCALE(insn->sib.value));
++		*eff_addr += insn->displacement.value;
++	}
++
++	return 0;
++}
++
++/**
++ * get_addr_ref_16() - Obtain the 16-bit address referred by instruction
++ * @insn:	Instruction containing ModRM byte and displacement
++ * @regs:	Register values as seen when entering kernel mode
++ *
++ * This function is to be used with 16-bit address encodings. Obtain the memory
++ * address referred by the instruction's ModRM and displacement bytes. Also, the
++ * segment used as base is determined by either any segment override prefixes in
++ * @insn or the default segment of the registers involved in the address
++ * computation. In protected mode, segment limits are enforced.
++ *
++ * Returns:
++ *
++ * Linear address referenced by the instruction operands on success.
++ *
++ * -1L on error.
++ */
++static void __user *get_addr_ref_16(struct insn *insn, struct pt_regs *regs)
++{
++	unsigned long linear_addr = -1L, seg_base, seg_limit;
++	int ret, regoff;
++	short eff_addr;
++	long tmp;
++
++	if (insn_get_displacement(insn))
++		goto out;
++
++	if (insn->addr_bytes != 2)
++		goto out;
++
++	if (X86_MODRM_MOD(insn->modrm.value) == 3) {
++		ret = get_eff_addr_reg(insn, regs, &regoff, &tmp);
++		if (ret)
++			goto out;
++
++		eff_addr = tmp;
++	} else {
++		ret = get_eff_addr_modrm_16(insn, regs, &regoff, &eff_addr);
++		if (ret)
++			goto out;
++	}
++
++	ret = get_seg_base_limit(insn, regs, regoff, &seg_base, &seg_limit);
++	if (ret)
++		goto out;
++
++	/*
++	 * Before computing the linear address, make sure the effective address
++	 * is within the limits of the segment. In virtual-8086 mode, segment
++	 * limits are not enforced. In such a case, the segment limit is -1L to
++	 * reflect this fact.
++	 */
++	if ((unsigned long)(eff_addr & 0xffff) > seg_limit)
++		goto out;
++
++	linear_addr = (unsigned long)(eff_addr & 0xffff) + seg_base;
++
++	/* Limit linear address to 20 bits */
++	if (v8086_mode(regs))
++		linear_addr &= 0xfffff;
++
++out:
++	return (void __user *)linear_addr;
++}
++
++/**
++ * get_addr_ref_32() - Obtain a 32-bit linear address
++ * @insn:	Instruction with ModRM, SIB bytes and displacement
++ * @regs:	Register values as seen when entering kernel mode
++ *
++ * This function is to be used with 32-bit address encodings to obtain the
++ * linear memory address referred by the instruction's ModRM, SIB,
++ * displacement bytes and segment base address, as applicable. If in protected
++ * mode, segment limits are enforced.
++ *
++ * Returns:
++ *
++ * Linear address referenced by instruction and registers on success.
++ *
++ * -1L on error.
++ */
++static void __user *get_addr_ref_32(struct insn *insn, struct pt_regs *regs)
++{
++	unsigned long linear_addr = -1L, seg_base, seg_limit;
++	int eff_addr, regoff;
++	long tmp;
++	int ret;
++
++	if (insn->addr_bytes != 4)
++		goto out;
++
++	if (X86_MODRM_MOD(insn->modrm.value) == 3) {
++		ret = get_eff_addr_reg(insn, regs, &regoff, &tmp);
++		if (ret)
++			goto out;
++
++		eff_addr = tmp;
++
++	} else {
++		if (insn->sib.nbytes) {
++			ret = get_eff_addr_sib(insn, regs, &regoff, &tmp);
++			if (ret)
++				goto out;
++
++			eff_addr = tmp;
++		} else {
++			ret = get_eff_addr_modrm(insn, regs, &regoff, &tmp);
++			if (ret)
++				goto out;
++
++			eff_addr = tmp;
++		}
++	}
++
++	ret = get_seg_base_limit(insn, regs, regoff, &seg_base, &seg_limit);
++	if (ret)
++		goto out;
++
++	/*
++	 * In protected mode, before computing the linear address, make sure
++	 * the effective address is within the limits of the segment.
++	 * 32-bit addresses can be used in long and virtual-8086 modes if an
++	 * address override prefix is used. In such cases, segment limits are
++	 * not enforced. When in virtual-8086 mode, the segment limit is -1L
++	 * to reflect this situation.
++	 *
++	 * After computed, the effective address is treated as an unsigned
++	 * quantity.
++	 */
++	if (!any_64bit_mode(regs) && ((unsigned int)eff_addr > seg_limit))
++		goto out;
++
++	/*
++	 * Even though 32-bit address encodings are allowed in virtual-8086
++	 * mode, the address range is still limited to [0x-0xffff].
++	 */
++	if (v8086_mode(regs) && (eff_addr & ~0xffff))
++		goto out;
++
++	/*
++	 * Data type long could be 64 bits in size. Ensure that our 32-bit
++	 * effective address is not sign-extended when computing the linear
++	 * address.
++	 */
++	linear_addr = (unsigned long)(eff_addr & 0xffffffff) + seg_base;
++
++	/* Limit linear address to 20 bits */
++	if (v8086_mode(regs))
++		linear_addr &= 0xfffff;
++
++out:
++	return (void __user *)linear_addr;
++}
++
++/**
++ * get_addr_ref_64() - Obtain a 64-bit linear address
++ * @insn:	Instruction struct with ModRM and SIB bytes and displacement
++ * @regs:	Structure with register values as seen when entering kernel mode
++ *
++ * This function is to be used with 64-bit address encodings to obtain the
++ * linear memory address referred by the instruction's ModRM, SIB,
++ * displacement bytes and segment base address, as applicable.
++ *
++ * Returns:
++ *
++ * Linear address referenced by instruction and registers on success.
++ *
++ * -1L on error.
++ */
++#ifndef CONFIG_X86_64
++static void __user *get_addr_ref_64(struct insn *insn, struct pt_regs *regs)
++{
++	return (void __user *)-1L;
++}
++#else
++static void __user *get_addr_ref_64(struct insn *insn, struct pt_regs *regs)
++{
++	unsigned long linear_addr = -1L, seg_base;
++	int regoff, ret;
++	long eff_addr;
++
++	if (insn->addr_bytes != 8)
++		goto out;
++
++	if (X86_MODRM_MOD(insn->modrm.value) == 3) {
++		ret = get_eff_addr_reg(insn, regs, &regoff, &eff_addr);
++		if (ret)
++			goto out;
++
++	} else {
++		if (insn->sib.nbytes) {
++			ret = get_eff_addr_sib(insn, regs, &regoff, &eff_addr);
++			if (ret)
++				goto out;
++		} else {
++			ret = get_eff_addr_modrm(insn, regs, &regoff, &eff_addr);
++			if (ret)
++				goto out;
++		}
++
++	}
++
++	ret = get_seg_base_limit(insn, regs, regoff, &seg_base, NULL);
++	if (ret)
++		goto out;
++
++	linear_addr = (unsigned long)eff_addr + seg_base;
++
++out:
++	return (void __user *)linear_addr;
++}
++#endif /* CONFIG_X86_64 */
++
++/**
++ * insn_get_addr_ref() - Obtain the linear address referred by instruction
++ * @insn:	Instruction structure containing ModRM byte and displacement
++ * @regs:	Structure with register values as seen when entering kernel mode
++ *
++ * Obtain the linear address referred by the instruction's ModRM, SIB and
++ * displacement bytes, and segment base, as applicable. In protected mode,
++ * segment limits are enforced.
++ *
++ * Returns:
++ *
++ * Linear address referenced by instruction and registers on success.
++ *
++ * -1L on error.
++ */
++void __user *insn_get_addr_ref(struct insn *insn, struct pt_regs *regs)
++{
++	if (!insn || !regs)
++		return (void __user *)-1L;
++
++	if (insn_get_opcode(insn))
++		return (void __user *)-1L;
++
++	switch (insn->addr_bytes) {
++	case 2:
++		return get_addr_ref_16(insn, regs);
++	case 4:
++		return get_addr_ref_32(insn, regs);
++	case 8:
++		return get_addr_ref_64(insn, regs);
++	default:
++		return (void __user *)-1L;
++	}
++}
++
++/**
++ * insn_decode_mmio() - Decode a MMIO instruction
++ * @insn:	Structure to store decoded instruction
++ * @bytes:	Returns size of memory operand
++ *
++ * Decodes instruction that used for Memory-mapped I/O.
++ *
++ * Returns:
++ *
++ * Type of the instruction. Size of the memory operand is stored in
++ * @bytes. If decode failed, INSN_MMIO_DECODE_FAILED returned.
++ */
++enum insn_mmio_type insn_decode_mmio(struct insn *insn, int *bytes)
++{
++	enum insn_mmio_type type = INSN_MMIO_DECODE_FAILED;
++
++	*bytes = 0;
++
++	if (insn_get_opcode(insn))
++		return INSN_MMIO_DECODE_FAILED;
++
++	switch (insn->opcode.bytes[0]) {
++	case 0x88: /* MOV m8,r8 */
++		*bytes = 1;
++		fallthrough;
++	case 0x89: /* MOV m16/m32/m64, r16/m32/m64 */
++		if (!*bytes)
++			*bytes = insn->opnd_bytes;
++		type = INSN_MMIO_WRITE;
++		break;
++
++	case 0xc6: /* MOV m8, imm8 */
++		*bytes = 1;
++		fallthrough;
++	case 0xc7: /* MOV m16/m32/m64, imm16/imm32/imm64 */
++		if (!*bytes)
++			*bytes = insn->opnd_bytes;
++		type = INSN_MMIO_WRITE_IMM;
++		break;
++
++	case 0x8a: /* MOV r8, m8 */
++		*bytes = 1;
++		fallthrough;
++	case 0x8b: /* MOV r16/r32/r64, m16/m32/m64 */
++		if (!*bytes)
++			*bytes = insn->opnd_bytes;
++		type = INSN_MMIO_READ;
++		break;
++
++	case 0xa4: /* MOVS m8, m8 */
++		*bytes = 1;
++		fallthrough;
++	case 0xa5: /* MOVS m16/m32/m64, m16/m32/m64 */
++		if (!*bytes)
++			*bytes = insn->opnd_bytes;
++		type = INSN_MMIO_MOVS;
++		break;
++
++	case 0x0f: /* Two-byte instruction */
++		switch (insn->opcode.bytes[1]) {
++		case 0xb6: /* MOVZX r16/r32/r64, m8 */
++			*bytes = 1;
++			fallthrough;
++		case 0xb7: /* MOVZX r32/r64, m16 */
++			if (!*bytes)
++				*bytes = 2;
++			type = INSN_MMIO_READ_ZERO_EXTEND;
++			break;
++
++		case 0xbe: /* MOVSX r16/r32/r64, m8 */
++			*bytes = 1;
++			fallthrough;
++		case 0xbf: /* MOVSX r32/r64, m16 */
++			if (!*bytes)
++				*bytes = 2;
++			type = INSN_MMIO_READ_SIGN_EXTEND;
++			break;
++		}
++		break;
++	}
++
++	return type;
++}
+diff --git a/arch/x86/lib/insn-eval.c b/arch/x86/lib/insn-eval.c
+index 98631c0e7a11..8dea8c181637 100644
+--- a/arch/x86/lib/insn-eval.c
++++ b/arch/x86/lib/insn-eval.c
+@@ -17,62 +17,10 @@
+ 
+ #undef pr_fmt
+ #define pr_fmt(fmt) "insn: " fmt
+-
+-enum reg_type {
+-	REG_TYPE_RM = 0,
+-	REG_TYPE_REG,
+-	REG_TYPE_INDEX,
+-	REG_TYPE_BASE,
+-};
+-
+-/**
+- * is_string_insn() - Determine if instruction is a string instruction
+- * @insn:	Instruction containing the opcode to inspect
+- *
+- * Returns:
+- *
+- * true if the instruction, determined by the opcode, is any of the
+- * string instructions as defined in the Intel Software Development manual.
+- * False otherwise.
+- */
+-static bool is_string_insn(struct insn *insn)
+-{
+-	/* All string instructions have a 1-byte opcode. */
+-	if (insn->opcode.nbytes != 1)
+-		return false;
+-
+-	switch (insn->opcode.bytes[0]) {
+-	case 0x6c ... 0x6f:	/* INS, OUTS */
+-	case 0xa4 ... 0xa7:	/* MOVS, CMPS */
+-	case 0xaa ... 0xaf:	/* STOS, LODS, SCAS */
+-		return true;
+-	default:
+-		return false;
+-	}
+-}
+-
+-/**
+- * insn_has_rep_prefix() - Determine if instruction has a REP prefix
+- * @insn:	Instruction containing the prefix to inspect
+- *
+- * Returns:
+- *
+- * true if the instruction has a REP prefix, false if not.
+- */
+-bool insn_has_rep_prefix(struct insn *insn)
+-{
+-	insn_byte_t p;
+-	int i;
+-
+-	insn_get_prefixes(insn);
+-
+-	for_each_insn_prefix(insn, i, p) {
+-		if (p == 0xf2 || p == 0xf3)
+-			return true;
+-	}
+-
+-	return false;
+-}
++static int get_seg_base_limit(struct insn *insn, struct pt_regs *regs,
++			      int regoff, unsigned long *base,
++			      unsigned long *limit);
++#include "insn-eval-shared.c"
+ 
+ /**
+  * get_seg_reg_override_idx() - obtain segment register override index
+@@ -411,199 +359,6 @@ static short get_segment_selector(struct pt_regs *regs, int seg_reg_idx)
+ #endif /* CONFIG_X86_64 */
+ }
+ 
+-static const int pt_regoff[] = {
+-	offsetof(struct pt_regs, ax),
+-	offsetof(struct pt_regs, cx),
+-	offsetof(struct pt_regs, dx),
+-	offsetof(struct pt_regs, bx),
+-	offsetof(struct pt_regs, sp),
+-	offsetof(struct pt_regs, bp),
+-	offsetof(struct pt_regs, si),
+-	offsetof(struct pt_regs, di),
+-#ifdef CONFIG_X86_64
+-	offsetof(struct pt_regs, r8),
+-	offsetof(struct pt_regs, r9),
+-	offsetof(struct pt_regs, r10),
+-	offsetof(struct pt_regs, r11),
+-	offsetof(struct pt_regs, r12),
+-	offsetof(struct pt_regs, r13),
+-	offsetof(struct pt_regs, r14),
+-	offsetof(struct pt_regs, r15),
+-#else
+-	offsetof(struct pt_regs, ds),
+-	offsetof(struct pt_regs, es),
+-	offsetof(struct pt_regs, fs),
+-	offsetof(struct pt_regs, gs),
+-#endif
+-};
+-
+-int pt_regs_offset(struct pt_regs *regs, int regno)
+-{
+-	if ((unsigned)regno < ARRAY_SIZE(pt_regoff))
+-		return pt_regoff[regno];
+-	return -EDOM;
+-}
+-
+-static int get_regno(struct insn *insn, enum reg_type type)
+-{
+-	int nr_registers = ARRAY_SIZE(pt_regoff);
+-	int regno = 0;
+-
+-	/*
+-	 * Don't possibly decode a 32-bit instructions as
+-	 * reading a 64-bit-only register.
+-	 */
+-	if (IS_ENABLED(CONFIG_X86_64) && !insn->x86_64)
+-		nr_registers -= 8;
+-
+-	switch (type) {
+-	case REG_TYPE_RM:
+-		regno = X86_MODRM_RM(insn->modrm.value);
+-
+-		/*
+-		 * ModRM.mod == 0 and ModRM.rm == 5 means a 32-bit displacement
+-		 * follows the ModRM byte.
+-		 */
+-		if (!X86_MODRM_MOD(insn->modrm.value) && regno == 5)
+-			return -EDOM;
+-
+-		if (X86_REX_B(insn->rex_prefix.value))
+-			regno += 8;
+-		break;
+-
+-	case REG_TYPE_REG:
+-		regno = X86_MODRM_REG(insn->modrm.value);
+-
+-		if (X86_REX_R(insn->rex_prefix.value))
+-			regno += 8;
+-		break;
+-
+-	case REG_TYPE_INDEX:
+-		regno = X86_SIB_INDEX(insn->sib.value);
+-		if (X86_REX_X(insn->rex_prefix.value))
+-			regno += 8;
+-
+-		/*
+-		 * If ModRM.mod != 3 and SIB.index = 4 the scale*index
+-		 * portion of the address computation is null. This is
+-		 * true only if REX.X is 0. In such a case, the SIB index
+-		 * is used in the address computation.
+-		 */
+-		if (X86_MODRM_MOD(insn->modrm.value) != 3 && regno == 4)
+-			return -EDOM;
+-		break;
+-
+-	case REG_TYPE_BASE:
+-		regno = X86_SIB_BASE(insn->sib.value);
+-		/*
+-		 * If ModRM.mod is 0 and SIB.base == 5, the base of the
+-		 * register-indirect addressing is 0. In this case, a
+-		 * 32-bit displacement follows the SIB byte.
+-		 */
+-		if (!X86_MODRM_MOD(insn->modrm.value) && regno == 5)
+-			return -EDOM;
+-
+-		if (X86_REX_B(insn->rex_prefix.value))
+-			regno += 8;
+-		break;
+-
+-	default:
+-		pr_err_ratelimited("invalid register type: %d\n", type);
+-		return -EINVAL;
+-	}
+-
+-	if (regno >= nr_registers) {
+-		WARN_ONCE(1, "decoded an instruction with an invalid register");
+-		return -EINVAL;
+-	}
+-	return regno;
+-}
+-
+-static int get_reg_offset(struct insn *insn, struct pt_regs *regs,
+-			  enum reg_type type)
+-{
+-	int regno = get_regno(insn, type);
+-
+-	if (regno < 0)
+-		return regno;
+-
+-	return pt_regs_offset(regs, regno);
+-}
+-
+-/**
+- * get_reg_offset_16() - Obtain offset of register indicated by instruction
+- * @insn:	Instruction containing ModRM byte
+- * @regs:	Register values as seen when entering kernel mode
+- * @offs1:	Offset of the first operand register
+- * @offs2:	Offset of the second operand register, if applicable
+- *
+- * Obtain the offset, in pt_regs, of the registers indicated by the ModRM byte
+- * in @insn. This function is to be used with 16-bit address encodings. The
+- * @offs1 and @offs2 will be written with the offset of the two registers
+- * indicated by the instruction. In cases where any of the registers is not
+- * referenced by the instruction, the value will be set to -EDOM.
+- *
+- * Returns:
+- *
+- * 0 on success, -EINVAL on error.
+- */
+-static int get_reg_offset_16(struct insn *insn, struct pt_regs *regs,
+-			     int *offs1, int *offs2)
+-{
+-	/*
+-	 * 16-bit addressing can use one or two registers. Specifics of
+-	 * encodings are given in Table 2-1. "16-Bit Addressing Forms with the
+-	 * ModR/M Byte" of the Intel Software Development Manual.
+-	 */
+-	static const int regoff1[] = {
+-		offsetof(struct pt_regs, bx),
+-		offsetof(struct pt_regs, bx),
+-		offsetof(struct pt_regs, bp),
+-		offsetof(struct pt_regs, bp),
+-		offsetof(struct pt_regs, si),
+-		offsetof(struct pt_regs, di),
+-		offsetof(struct pt_regs, bp),
+-		offsetof(struct pt_regs, bx),
+-	};
+-
+-	static const int regoff2[] = {
+-		offsetof(struct pt_regs, si),
+-		offsetof(struct pt_regs, di),
+-		offsetof(struct pt_regs, si),
+-		offsetof(struct pt_regs, di),
+-		-EDOM,
+-		-EDOM,
+-		-EDOM,
+-		-EDOM,
+-	};
+-
+-	if (!offs1 || !offs2)
+-		return -EINVAL;
+-
+-	/* Operand is a register, use the generic function. */
+-	if (X86_MODRM_MOD(insn->modrm.value) == 3) {
+-		*offs1 = insn_get_modrm_rm_off(insn, regs);
+-		*offs2 = -EDOM;
+-		return 0;
+-	}
+-
+-	*offs1 = regoff1[X86_MODRM_RM(insn->modrm.value)];
+-	*offs2 = regoff2[X86_MODRM_RM(insn->modrm.value)];
+-
+-	/*
+-	 * If ModRM.mod is 0 and ModRM.rm is 110b, then we use displacement-
+-	 * only addressing. This means that no registers are involved in
+-	 * computing the effective address. Thus, ensure that the first
+-	 * register offset is invalid. The second register offset is already
+-	 * invalid under the aforementioned conditions.
+-	 */
+-	if ((X86_MODRM_MOD(insn->modrm.value) == 0) &&
+-	    (X86_MODRM_RM(insn->modrm.value) == 6))
+-		*offs1 = -EDOM;
+-
+-	return 0;
+-}
+-
+ /**
+  * get_desc() - Obtain contents of a segment descriptor
+  * @out:	Segment descriptor contents on success
+@@ -840,58 +595,6 @@ int insn_get_code_seg_params(struct pt_regs *regs)
+ 	}
+ }
+ 
+-/**
+- * insn_get_modrm_rm_off() - Obtain register in r/m part of the ModRM byte
+- * @insn:	Instruction containing the ModRM byte
+- * @regs:	Register values as seen when entering kernel mode
+- *
+- * Returns:
+- *
+- * The register indicated by the r/m part of the ModRM byte. The
+- * register is obtained as an offset from the base of pt_regs. In specific
+- * cases, the returned value can be -EDOM to indicate that the particular value
+- * of ModRM does not refer to a register and shall be ignored.
+- */
+-int insn_get_modrm_rm_off(struct insn *insn, struct pt_regs *regs)
+-{
+-	return get_reg_offset(insn, regs, REG_TYPE_RM);
+-}
+-
+-/**
+- * insn_get_modrm_reg_off() - Obtain register in reg part of the ModRM byte
+- * @insn:	Instruction containing the ModRM byte
+- * @regs:	Register values as seen when entering kernel mode
+- *
+- * Returns:
+- *
+- * The register indicated by the reg part of the ModRM byte. The
+- * register is obtained as an offset from the base of pt_regs.
+- */
+-int insn_get_modrm_reg_off(struct insn *insn, struct pt_regs *regs)
+-{
+-	return get_reg_offset(insn, regs, REG_TYPE_REG);
+-}
+-
+-/**
+- * insn_get_modrm_reg_ptr() - Obtain register pointer based on ModRM byte
+- * @insn:	Instruction containing the ModRM byte
+- * @regs:	Register values as seen when entering kernel mode
+- *
+- * Returns:
+- *
+- * The register indicated by the reg part of the ModRM byte.
+- * The register is obtained as a pointer within pt_regs.
+- */
+-unsigned long *insn_get_modrm_reg_ptr(struct insn *insn, struct pt_regs *regs)
+-{
+-	int offset;
+-
+-	offset = insn_get_modrm_reg_off(insn, regs);
+-	if (offset < 0)
+-		return NULL;
+-	return (void *)regs + offset;
+-}
+-
+ /**
+  * get_seg_base_limit() - obtain base address and limit of a segment
+  * @insn:	Instruction. Must be valid.
+@@ -940,528 +643,6 @@ static int get_seg_base_limit(struct insn *insn, struct pt_regs *regs,
+ 	return 0;
+ }
+ 
+-/**
+- * get_eff_addr_reg() - Obtain effective address from register operand
+- * @insn:	Instruction. Must be valid.
+- * @regs:	Register values as seen when entering kernel mode
+- * @regoff:	Obtained operand offset, in pt_regs, with the effective address
+- * @eff_addr:	Obtained effective address
+- *
+- * Obtain the effective address stored in the register operand as indicated by
+- * the ModRM byte. This function is to be used only with register addressing
+- * (i.e.,  ModRM.mod is 3). The effective address is saved in @eff_addr. The
+- * register operand, as an offset from the base of pt_regs, is saved in @regoff;
+- * such offset can then be used to resolve the segment associated with the
+- * operand. This function can be used with any of the supported address sizes
+- * in x86.
+- *
+- * Returns:
+- *
+- * 0 on success. @eff_addr will have the effective address stored in the
+- * operand indicated by ModRM. @regoff will have such operand as an offset from
+- * the base of pt_regs.
+- *
+- * -EINVAL on error.
+- */
+-static int get_eff_addr_reg(struct insn *insn, struct pt_regs *regs,
+-			    int *regoff, long *eff_addr)
+-{
+-	int ret;
+-
+-	ret = insn_get_modrm(insn);
+-	if (ret)
+-		return ret;
+-
+-	if (X86_MODRM_MOD(insn->modrm.value) != 3)
+-		return -EINVAL;
+-
+-	*regoff = get_reg_offset(insn, regs, REG_TYPE_RM);
+-	if (*regoff < 0)
+-		return -EINVAL;
+-
+-	/* Ignore bytes that are outside the address size. */
+-	if (insn->addr_bytes == 2)
+-		*eff_addr = regs_get_register(regs, *regoff) & 0xffff;
+-	else if (insn->addr_bytes == 4)
+-		*eff_addr = regs_get_register(regs, *regoff) & 0xffffffff;
+-	else /* 64-bit address */
+-		*eff_addr = regs_get_register(regs, *regoff);
+-
+-	return 0;
+-}
+-
+-/**
+- * get_eff_addr_modrm() - Obtain referenced effective address via ModRM
+- * @insn:	Instruction. Must be valid.
+- * @regs:	Register values as seen when entering kernel mode
+- * @regoff:	Obtained operand offset, in pt_regs, associated with segment
+- * @eff_addr:	Obtained effective address
+- *
+- * Obtain the effective address referenced by the ModRM byte of @insn. After
+- * identifying the registers involved in the register-indirect memory reference,
+- * its value is obtained from the operands in @regs. The computed address is
+- * stored @eff_addr. Also, the register operand that indicates the associated
+- * segment is stored in @regoff, this parameter can later be used to determine
+- * such segment.
+- *
+- * Returns:
+- *
+- * 0 on success. @eff_addr will have the referenced effective address. @regoff
+- * will have a register, as an offset from the base of pt_regs, that can be used
+- * to resolve the associated segment.
+- *
+- * -EINVAL on error.
+- */
+-static int get_eff_addr_modrm(struct insn *insn, struct pt_regs *regs,
+-			      int *regoff, long *eff_addr)
+-{
+-	long tmp;
+-	int ret;
+-
+-	if (insn->addr_bytes != 8 && insn->addr_bytes != 4)
+-		return -EINVAL;
+-
+-	ret = insn_get_modrm(insn);
+-	if (ret)
+-		return ret;
+-
+-	if (X86_MODRM_MOD(insn->modrm.value) > 2)
+-		return -EINVAL;
+-
+-	*regoff = get_reg_offset(insn, regs, REG_TYPE_RM);
+-
+-	/*
+-	 * -EDOM means that we must ignore the address_offset. In such a case,
+-	 * in 64-bit mode the effective address relative to the rIP of the
+-	 * following instruction.
+-	 */
+-	if (*regoff == -EDOM) {
+-		if (any_64bit_mode(regs))
+-			tmp = regs->ip + insn->length;
+-		else
+-			tmp = 0;
+-	} else if (*regoff < 0) {
+-		return -EINVAL;
+-	} else {
+-		tmp = regs_get_register(regs, *regoff);
+-	}
+-
+-	if (insn->addr_bytes == 4) {
+-		int addr32 = (int)(tmp & 0xffffffff) + insn->displacement.value;
+-
+-		*eff_addr = addr32 & 0xffffffff;
+-	} else {
+-		*eff_addr = tmp + insn->displacement.value;
+-	}
+-
+-	return 0;
+-}
+-
+-/**
+- * get_eff_addr_modrm_16() - Obtain referenced effective address via ModRM
+- * @insn:	Instruction. Must be valid.
+- * @regs:	Register values as seen when entering kernel mode
+- * @regoff:	Obtained operand offset, in pt_regs, associated with segment
+- * @eff_addr:	Obtained effective address
+- *
+- * Obtain the 16-bit effective address referenced by the ModRM byte of @insn.
+- * After identifying the registers involved in the register-indirect memory
+- * reference, its value is obtained from the operands in @regs. The computed
+- * address is stored @eff_addr. Also, the register operand that indicates
+- * the associated segment is stored in @regoff, this parameter can later be used
+- * to determine such segment.
+- *
+- * Returns:
+- *
+- * 0 on success. @eff_addr will have the referenced effective address. @regoff
+- * will have a register, as an offset from the base of pt_regs, that can be used
+- * to resolve the associated segment.
+- *
+- * -EINVAL on error.
+- */
+-static int get_eff_addr_modrm_16(struct insn *insn, struct pt_regs *regs,
+-				 int *regoff, short *eff_addr)
+-{
+-	int addr_offset1, addr_offset2, ret;
+-	short addr1 = 0, addr2 = 0, displacement;
+-
+-	if (insn->addr_bytes != 2)
+-		return -EINVAL;
+-
+-	insn_get_modrm(insn);
+-
+-	if (!insn->modrm.nbytes)
+-		return -EINVAL;
+-
+-	if (X86_MODRM_MOD(insn->modrm.value) > 2)
+-		return -EINVAL;
+-
+-	ret = get_reg_offset_16(insn, regs, &addr_offset1, &addr_offset2);
+-	if (ret < 0)
+-		return -EINVAL;
+-
+-	/*
+-	 * Don't fail on invalid offset values. They might be invalid because
+-	 * they cannot be used for this particular value of ModRM. Instead, use
+-	 * them in the computation only if they contain a valid value.
+-	 */
+-	if (addr_offset1 != -EDOM)
+-		addr1 = regs_get_register(regs, addr_offset1) & 0xffff;
+-
+-	if (addr_offset2 != -EDOM)
+-		addr2 = regs_get_register(regs, addr_offset2) & 0xffff;
+-
+-	displacement = insn->displacement.value & 0xffff;
+-	*eff_addr = addr1 + addr2 + displacement;
+-
+-	/*
+-	 * The first operand register could indicate to use of either SS or DS
+-	 * registers to obtain the segment selector.  The second operand
+-	 * register can only indicate the use of DS. Thus, the first operand
+-	 * will be used to obtain the segment selector.
+-	 */
+-	*regoff = addr_offset1;
+-
+-	return 0;
+-}
+-
+-/**
+- * get_eff_addr_sib() - Obtain referenced effective address via SIB
+- * @insn:	Instruction. Must be valid.
+- * @regs:	Register values as seen when entering kernel mode
+- * @base_offset: Obtained operand offset, in pt_regs, associated with segment
+- * @eff_addr:	Obtained effective address
+- *
+- * Obtain the effective address referenced by the SIB byte of @insn. After
+- * identifying the registers involved in the indexed, register-indirect memory
+- * reference, its value is obtained from the operands in @regs. The computed
+- * address is stored @eff_addr. Also, the register operand that indicates the
+- * associated segment is stored in @base_offset; this parameter can later be
+- * used to determine such segment.
+- *
+- * Returns:
+- *
+- * 0 on success. @eff_addr will have the referenced effective address.
+- * @base_offset will have a register, as an offset from the base of pt_regs,
+- * that can be used to resolve the associated segment.
+- *
+- * Negative value on error.
+- */
+-static int get_eff_addr_sib(struct insn *insn, struct pt_regs *regs,
+-			    int *base_offset, long *eff_addr)
+-{
+-	long base, indx;
+-	int indx_offset;
+-	int ret;
+-
+-	if (insn->addr_bytes != 8 && insn->addr_bytes != 4)
+-		return -EINVAL;
+-
+-	ret = insn_get_modrm(insn);
+-	if (ret)
+-		return ret;
+-
+-	if (!insn->modrm.nbytes)
+-		return -EINVAL;
+-
+-	if (X86_MODRM_MOD(insn->modrm.value) > 2)
+-		return -EINVAL;
+-
+-	ret = insn_get_sib(insn);
+-	if (ret)
+-		return ret;
+-
+-	if (!insn->sib.nbytes)
+-		return -EINVAL;
+-
+-	*base_offset = get_reg_offset(insn, regs, REG_TYPE_BASE);
+-	indx_offset = get_reg_offset(insn, regs, REG_TYPE_INDEX);
+-
+-	/*
+-	 * Negative values in the base and index offset means an error when
+-	 * decoding the SIB byte. Except -EDOM, which means that the registers
+-	 * should not be used in the address computation.
+-	 */
+-	if (*base_offset == -EDOM)
+-		base = 0;
+-	else if (*base_offset < 0)
+-		return -EINVAL;
+-	else
+-		base = regs_get_register(regs, *base_offset);
+-
+-	if (indx_offset == -EDOM)
+-		indx = 0;
+-	else if (indx_offset < 0)
+-		return -EINVAL;
+-	else
+-		indx = regs_get_register(regs, indx_offset);
+-
+-	if (insn->addr_bytes == 4) {
+-		int addr32, base32, idx32;
+-
+-		base32 = base & 0xffffffff;
+-		idx32 = indx & 0xffffffff;
+-
+-		addr32 = base32 + idx32 * (1 << X86_SIB_SCALE(insn->sib.value));
+-		addr32 += insn->displacement.value;
+-
+-		*eff_addr = addr32 & 0xffffffff;
+-	} else {
+-		*eff_addr = base + indx * (1 << X86_SIB_SCALE(insn->sib.value));
+-		*eff_addr += insn->displacement.value;
+-	}
+-
+-	return 0;
+-}
+-
+-/**
+- * get_addr_ref_16() - Obtain the 16-bit address referred by instruction
+- * @insn:	Instruction containing ModRM byte and displacement
+- * @regs:	Register values as seen when entering kernel mode
+- *
+- * This function is to be used with 16-bit address encodings. Obtain the memory
+- * address referred by the instruction's ModRM and displacement bytes. Also, the
+- * segment used as base is determined by either any segment override prefixes in
+- * @insn or the default segment of the registers involved in the address
+- * computation. In protected mode, segment limits are enforced.
+- *
+- * Returns:
+- *
+- * Linear address referenced by the instruction operands on success.
+- *
+- * -1L on error.
+- */
+-static void __user *get_addr_ref_16(struct insn *insn, struct pt_regs *regs)
+-{
+-	unsigned long linear_addr = -1L, seg_base, seg_limit;
+-	int ret, regoff;
+-	short eff_addr;
+-	long tmp;
+-
+-	if (insn_get_displacement(insn))
+-		goto out;
+-
+-	if (insn->addr_bytes != 2)
+-		goto out;
+-
+-	if (X86_MODRM_MOD(insn->modrm.value) == 3) {
+-		ret = get_eff_addr_reg(insn, regs, &regoff, &tmp);
+-		if (ret)
+-			goto out;
+-
+-		eff_addr = tmp;
+-	} else {
+-		ret = get_eff_addr_modrm_16(insn, regs, &regoff, &eff_addr);
+-		if (ret)
+-			goto out;
+-	}
+-
+-	ret = get_seg_base_limit(insn, regs, regoff, &seg_base, &seg_limit);
+-	if (ret)
+-		goto out;
+-
+-	/*
+-	 * Before computing the linear address, make sure the effective address
+-	 * is within the limits of the segment. In virtual-8086 mode, segment
+-	 * limits are not enforced. In such a case, the segment limit is -1L to
+-	 * reflect this fact.
+-	 */
+-	if ((unsigned long)(eff_addr & 0xffff) > seg_limit)
+-		goto out;
+-
+-	linear_addr = (unsigned long)(eff_addr & 0xffff) + seg_base;
+-
+-	/* Limit linear address to 20 bits */
+-	if (v8086_mode(regs))
+-		linear_addr &= 0xfffff;
+-
+-out:
+-	return (void __user *)linear_addr;
+-}
+-
+-/**
+- * get_addr_ref_32() - Obtain a 32-bit linear address
+- * @insn:	Instruction with ModRM, SIB bytes and displacement
+- * @regs:	Register values as seen when entering kernel mode
+- *
+- * This function is to be used with 32-bit address encodings to obtain the
+- * linear memory address referred by the instruction's ModRM, SIB,
+- * displacement bytes and segment base address, as applicable. If in protected
+- * mode, segment limits are enforced.
+- *
+- * Returns:
+- *
+- * Linear address referenced by instruction and registers on success.
+- *
+- * -1L on error.
+- */
+-static void __user *get_addr_ref_32(struct insn *insn, struct pt_regs *regs)
+-{
+-	unsigned long linear_addr = -1L, seg_base, seg_limit;
+-	int eff_addr, regoff;
+-	long tmp;
+-	int ret;
+-
+-	if (insn->addr_bytes != 4)
+-		goto out;
+-
+-	if (X86_MODRM_MOD(insn->modrm.value) == 3) {
+-		ret = get_eff_addr_reg(insn, regs, &regoff, &tmp);
+-		if (ret)
+-			goto out;
+-
+-		eff_addr = tmp;
+-
+-	} else {
+-		if (insn->sib.nbytes) {
+-			ret = get_eff_addr_sib(insn, regs, &regoff, &tmp);
+-			if (ret)
+-				goto out;
+-
+-			eff_addr = tmp;
+-		} else {
+-			ret = get_eff_addr_modrm(insn, regs, &regoff, &tmp);
+-			if (ret)
+-				goto out;
+-
+-			eff_addr = tmp;
+-		}
+-	}
+-
+-	ret = get_seg_base_limit(insn, regs, regoff, &seg_base, &seg_limit);
+-	if (ret)
+-		goto out;
+-
+-	/*
+-	 * In protected mode, before computing the linear address, make sure
+-	 * the effective address is within the limits of the segment.
+-	 * 32-bit addresses can be used in long and virtual-8086 modes if an
+-	 * address override prefix is used. In such cases, segment limits are
+-	 * not enforced. When in virtual-8086 mode, the segment limit is -1L
+-	 * to reflect this situation.
+-	 *
+-	 * After computed, the effective address is treated as an unsigned
+-	 * quantity.
+-	 */
+-	if (!any_64bit_mode(regs) && ((unsigned int)eff_addr > seg_limit))
+-		goto out;
+-
+-	/*
+-	 * Even though 32-bit address encodings are allowed in virtual-8086
+-	 * mode, the address range is still limited to [0x-0xffff].
+-	 */
+-	if (v8086_mode(regs) && (eff_addr & ~0xffff))
+-		goto out;
+-
+-	/*
+-	 * Data type long could be 64 bits in size. Ensure that our 32-bit
+-	 * effective address is not sign-extended when computing the linear
+-	 * address.
+-	 */
+-	linear_addr = (unsigned long)(eff_addr & 0xffffffff) + seg_base;
+-
+-	/* Limit linear address to 20 bits */
+-	if (v8086_mode(regs))
+-		linear_addr &= 0xfffff;
+-
+-out:
+-	return (void __user *)linear_addr;
+-}
+-
+-/**
+- * get_addr_ref_64() - Obtain a 64-bit linear address
+- * @insn:	Instruction struct with ModRM and SIB bytes and displacement
+- * @regs:	Structure with register values as seen when entering kernel mode
+- *
+- * This function is to be used with 64-bit address encodings to obtain the
+- * linear memory address referred by the instruction's ModRM, SIB,
+- * displacement bytes and segment base address, as applicable.
+- *
+- * Returns:
+- *
+- * Linear address referenced by instruction and registers on success.
+- *
+- * -1L on error.
+- */
+-#ifndef CONFIG_X86_64
+-static void __user *get_addr_ref_64(struct insn *insn, struct pt_regs *regs)
+-{
+-	return (void __user *)-1L;
+-}
+-#else
+-static void __user *get_addr_ref_64(struct insn *insn, struct pt_regs *regs)
+-{
+-	unsigned long linear_addr = -1L, seg_base;
+-	int regoff, ret;
+-	long eff_addr;
+-
+-	if (insn->addr_bytes != 8)
+-		goto out;
+-
+-	if (X86_MODRM_MOD(insn->modrm.value) == 3) {
+-		ret = get_eff_addr_reg(insn, regs, &regoff, &eff_addr);
+-		if (ret)
+-			goto out;
+-
+-	} else {
+-		if (insn->sib.nbytes) {
+-			ret = get_eff_addr_sib(insn, regs, &regoff, &eff_addr);
+-			if (ret)
+-				goto out;
+-		} else {
+-			ret = get_eff_addr_modrm(insn, regs, &regoff, &eff_addr);
+-			if (ret)
+-				goto out;
+-		}
+-
+-	}
+-
+-	ret = get_seg_base_limit(insn, regs, regoff, &seg_base, NULL);
+-	if (ret)
+-		goto out;
+-
+-	linear_addr = (unsigned long)eff_addr + seg_base;
+-
+-out:
+-	return (void __user *)linear_addr;
+-}
+-#endif /* CONFIG_X86_64 */
+-
+-/**
+- * insn_get_addr_ref() - Obtain the linear address referred by instruction
+- * @insn:	Instruction structure containing ModRM byte and displacement
+- * @regs:	Structure with register values as seen when entering kernel mode
+- *
+- * Obtain the linear address referred by the instruction's ModRM, SIB and
+- * displacement bytes, and segment base, as applicable. In protected mode,
+- * segment limits are enforced.
+- *
+- * Returns:
+- *
+- * Linear address referenced by instruction and registers on success.
+- *
+- * -1L on error.
+- */
+-void __user *insn_get_addr_ref(struct insn *insn, struct pt_regs *regs)
+-{
+-	if (!insn || !regs)
+-		return (void __user *)-1L;
+-
+-	if (insn_get_opcode(insn))
+-		return (void __user *)-1L;
+-
+-	switch (insn->addr_bytes) {
+-	case 2:
+-		return get_addr_ref_16(insn, regs);
+-	case 4:
+-		return get_addr_ref_32(insn, regs);
+-	case 8:
+-		return get_addr_ref_64(insn, regs);
+-	default:
+-		return (void __user *)-1L;
+-	}
+-}
+-
+ int insn_get_effective_ip(struct pt_regs *regs, unsigned long *ip)
+ {
+ 	unsigned long seg_base = 0;
+@@ -1584,87 +765,3 @@ bool insn_decode_from_regs(struct insn *insn, struct pt_regs *regs,
+ 
+ 	return true;
+ }
+-
+-/**
+- * insn_decode_mmio() - Decode a MMIO instruction
+- * @insn:	Structure to store decoded instruction
+- * @bytes:	Returns size of memory operand
+- *
+- * Decodes instruction that used for Memory-mapped I/O.
+- *
+- * Returns:
+- *
+- * Type of the instruction. Size of the memory operand is stored in
+- * @bytes. If decode failed, INSN_MMIO_DECODE_FAILED returned.
+- */
+-enum insn_mmio_type insn_decode_mmio(struct insn *insn, int *bytes)
+-{
+-	enum insn_mmio_type type = INSN_MMIO_DECODE_FAILED;
+-
+-	*bytes = 0;
+-
+-	if (insn_get_opcode(insn))
+-		return INSN_MMIO_DECODE_FAILED;
+-
+-	switch (insn->opcode.bytes[0]) {
+-	case 0x88: /* MOV m8,r8 */
+-		*bytes = 1;
+-		fallthrough;
+-	case 0x89: /* MOV m16/m32/m64, r16/m32/m64 */
+-		if (!*bytes)
+-			*bytes = insn->opnd_bytes;
+-		type = INSN_MMIO_WRITE;
+-		break;
+-
+-	case 0xc6: /* MOV m8, imm8 */
+-		*bytes = 1;
+-		fallthrough;
+-	case 0xc7: /* MOV m16/m32/m64, imm16/imm32/imm64 */
+-		if (!*bytes)
+-			*bytes = insn->opnd_bytes;
+-		type = INSN_MMIO_WRITE_IMM;
+-		break;
+-
+-	case 0x8a: /* MOV r8, m8 */
+-		*bytes = 1;
+-		fallthrough;
+-	case 0x8b: /* MOV r16/r32/r64, m16/m32/m64 */
+-		if (!*bytes)
+-			*bytes = insn->opnd_bytes;
+-		type = INSN_MMIO_READ;
+-		break;
+-
+-	case 0xa4: /* MOVS m8, m8 */
+-		*bytes = 1;
+-		fallthrough;
+-	case 0xa5: /* MOVS m16/m32/m64, m16/m32/m64 */
+-		if (!*bytes)
+-			*bytes = insn->opnd_bytes;
+-		type = INSN_MMIO_MOVS;
+-		break;
+-
+-	case 0x0f: /* Two-byte instruction */
+-		switch (insn->opcode.bytes[1]) {
+-		case 0xb6: /* MOVZX r16/r32/r64, m8 */
+-			*bytes = 1;
+-			fallthrough;
+-		case 0xb7: /* MOVZX r32/r64, m16 */
+-			if (!*bytes)
+-				*bytes = 2;
+-			type = INSN_MMIO_READ_ZERO_EXTEND;
+-			break;
+-
+-		case 0xbe: /* MOVSX r16/r32/r64, m8 */
+-			*bytes = 1;
+-			fallthrough;
+-		case 0xbf: /* MOVSX r32/r64, m16 */
+-			if (!*bytes)
+-				*bytes = 2;
+-			type = INSN_MMIO_READ_SIGN_EXTEND;
+-			break;
+-		}
+-		break;
+-	}
+-
+-	return type;
+-}
+-- 
+2.34.1
+
+
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
