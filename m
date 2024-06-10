@@ -4,82 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7BD83C27C53
-	for <kexec@archiver.kernel.org>; Mon, 10 Jun 2024 02:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 80A51C27C5E
+	for <kexec@archiver.kernel.org>; Mon, 10 Jun 2024 09:14:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=pZTXwxPe27B3Tn0gERtBQ3zi0wvM8zzInUM/r+1S1hc=; b=lT81pfb2LJmnPp
-	gp9/PVL7jt+5CZKovRQbicPXl5oFKzvxFv1x3v+eJ0J+YAbWAVDlmBDXTtySCqHWxsXg0pIsvYBmH
-	cEq4U6WLXvysjGru0ngRxqCp3taI0yDxYj356FZuxzd7u3KNxz5FV6ztMZNSFG3/36w1BU/7elqbR
-	DzSz4rsG0pzxoauLCSQlWiISIQTysbHw5TIABHd4OB2684kb+ph2I1kIWnOFCtO5Bam7BnxfXNrm+
-	eCy44xjUwjKRbvUs64uyoP1WNPjetq9BQQTGKNOHUUI3NDPJjBcrpHd96T19qAPX9Pv02thGuHxiG
-	rPM29lM+ZtJRUL2vAtBw==;
+	List-Owner; bh=rWaoahlhBJ7ETLBfG0O8AzXBlG8UMR+zsujJFBK90f8=; b=SLK+970kmLDx/W
+	934m4SjIhmOs0kjaIFa4a7CGTDn5xSLZ0tF8tcswVxk78MPUysXslvvKLshIjfKibPIFpfY+CTU5w
+	EWhl8zNSNpyT1AjjuF10ccssSj7AM+tVBrAmJynQNJhTogCdEutDSCpo+8L62G7vCG0TZ2Sz+fILO
+	3Pq1xX0IssGVsUxMJZ1KAawj3L1WEsavYf249dheoFBUTZbBE4jQI3JxNFukCNJ9akY9P9KyaLSkG
+	a1DHXIgDmvGWOC+VNUUQl6Gc70OkhYNpBedVjIb+D8n/DLnRaOC/LkNeLXtGqlktLMIAL+ujwBqw1
+	kcOomb4TiywF8rhWOqLA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sGUKY-00000003ajI-49Tl;
-	Mon, 10 Jun 2024 02:00:18 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1sGb6w-00000004Q8F-43r9;
+	Mon, 10 Jun 2024 09:14:42 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sGUKW-00000003aiv-1jSV
+	id 1sGb6t-00000004Q7T-3YjW
 	for kexec@lists.infradead.org;
-	Mon, 10 Jun 2024 02:00:17 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717984814;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aOO4GVvcO0xxLYThv3Qu7QqLhlBUXRK/6CUBfcNRt6Y=;
-	b=LGy2wb64h1F78ziEBLYogCwV4Bf9o6pr8jRJ4UiF7IEhzAjTbLNQH3I68oV6RyMwYuQfbf
-	eT4t8802JECYwEPLo96VHxTMPk7dPBHyPv9JFytgiw/0b9HbK04xKVr0oLpqteHDOLQEP+
-	RNos7VFur3ULf67CMtyijLzbHmcY2ew=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-371-YTJnEZSHN1GUcLYIlQdWmg-1; Sun, 09 Jun 2024 22:00:10 -0400
-X-MC-Unique: YTJnEZSHN1GUcLYIlQdWmg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D2CC085A5B5;
-	Mon, 10 Jun 2024 02:00:09 +0000 (UTC)
-Received: from localhost (unknown [10.72.113.124])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 97CCF175ED;
-	Mon, 10 Jun 2024 02:00:07 +0000 (UTC)
-Date: Mon, 10 Jun 2024 10:00:05 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Coiby Xu <coxu@redhat.com>
-Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>,
-	Milan Broz <gmazyland@gmail.com>,
-	Thomas Staudt <tstaudt@de.ibm.com>,
-	Daniel P =?iso-8859-1?Q?=2E_Berrang=E9?= <berrange@redhat.com>,
-	Kairui Song <ryncsn@gmail.com>,
-	Jan Pazdziora <jpazdziora@redhat.com>,
-	Pingfan Liu <kernelfans@gmail.com>, Dave Young <dyoung@redhat.com>,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	Dave Hansen <dave.hansen@intel.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Vivek Goyal <vgoyal@redhat.com>, Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	"open list:KERNEL HARDENING (not covered by other areas):Keyword:b__counted_byb" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH v4 2/7] crash_dump: make dm crypt keys persist for the
- kdump kernel
-Message-ID: <ZmZeJVa/kpyfZ47g@MiWiFi-R3L-srv>
-References: <20240523050451.788754-1-coxu@redhat.com>
- <20240523050451.788754-3-coxu@redhat.com>
- <Zl7Vd3BqxDXdMHkL@MiWiFi-R3L-srv>
- <epa3mtnac3ekyoq7zykyjnhu3i27mivbtlkss6mbjyaa3kmhof@qwbfshfbtei4>
+	Mon, 10 Jun 2024 09:14:41 +0000
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45A8wd9o018275
+	for <kexec@lists.infradead.org>; Mon, 10 Jun 2024 09:14:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=pp1; bh=4
+	Ul7CiJP4J/2JTX/Km1kQPXBgq2JbBfbSeeX39SonYo=; b=kP8hnZMcK38k3xqsV
+	ErncF0xPB1EMgZK5yG6IjDEdLxUwav60ULt+xsNHzCmtTFzLrx1P57WF9DXBw0Ll
+	6lUhk6+UJSqV+6NgrbcsRrpmBPZXQuKazJ5Ry6H0wFJIZewwE4+o1qPHBWdMhuon
+	fsUhr+ZvQdWhjbR8Ev+cRl85Zg3HqBNxPJw64FTLzU+Jia59kuto7lH3M1mPygQs
+	IbWOnYZgm3aq5cNjVrSXey2WC5lxcLGcmyYrCdKzmfyUcFLn0a+SzAi20GOJ/vIq
+	u86/meRrk4cA2f5Ppw86k92my7CVMX15Uy9l1+dBFRpStqoX9lfTniw0uEhjVusT
+	QsHSQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ynxerr14t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+	for <kexec@lists.infradead.org>; Mon, 10 Jun 2024 09:14:37 +0000 (GMT)
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45A9Ea1r011188
+	for <kexec@lists.infradead.org>; Mon, 10 Jun 2024 09:14:36 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ynxerr14q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Jun 2024 09:14:36 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45A7GIIZ003886;
+	Mon, 10 Jun 2024 08:52:27 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yn2mpej4e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 10 Jun 2024 08:52:27 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45A8qLGt24445630
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 10 Jun 2024 08:52:24 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CE2602004D;
+	Mon, 10 Jun 2024 08:52:21 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BAF8E2004B;
+	Mon, 10 Jun 2024 08:52:20 +0000 (GMT)
+Received: from [9.203.115.195] (unknown [9.203.115.195])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 10 Jun 2024 08:52:20 +0000 (GMT)
+Message-ID: <2373f9fb-5601-4a58-894d-8f9ca84d8834@linux.ibm.com>
+Date: Mon, 10 Jun 2024 14:22:19 +0530
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <epa3mtnac3ekyoq7zykyjnhu3i27mivbtlkss6mbjyaa3kmhof@qwbfshfbtei4>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] kexec_load: Use new kexec flag for hotplug support
+To: Sourabh Jain <sourabhjain@linux.ibm.com>, kexec@lists.infradead.org
+Cc: Aditya Gupta <adityag@linux.ibm.com>, Baoquan He <bhe@redhat.com>,
+        Coiby Xu <coxu@redhat.com>, Mahesh Salgaonkar <mahesh@linux.ibm.com>
+References: <20240522131353.198327-1-sourabhjain@linux.ibm.com>
+Content-Language: en-US
+From: Hari Bathini <hbathini@linux.ibm.com>
+In-Reply-To: <20240522131353.198327-1-sourabhjain@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: lfIsitxDdS1SS8foieDwaw5o6QiNqAK3
+X-Proofpoint-ORIG-GUID: qFls9RgDznbLswGJMoFp1efvWlkUegH3
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-10_02,2024-06-06_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 malwarescore=0
+ priorityscore=1501 suspectscore=0 lowpriorityscore=0 impostorscore=0
+ mlxscore=0 bulkscore=0 mlxlogscore=999 adultscore=0 phishscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406100067
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240609_190016_643179_42DB00A7 
-X-CRM114-Status: GOOD (  36.73  )
+X-CRM114-CacheID: sfid-20240610_021440_287627_725E9AF2 
+X-CRM114-Status: GOOD (  26.31  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -91,97 +108,241 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 06/07/24 at 08:27pm, Coiby Xu wrote:
-> On Tue, Jun 04, 2024 at 04:51:03PM +0800, Baoquan He wrote:
-> > Hi Coiby,
-> 
-> Hi Baoquan,
-> 
-> > 
-> > On 05/23/24 at 01:04pm, Coiby Xu wrote:
-> > > A sysfs /sys/kernel/crash_dm_crypt_keys is provided for user space to make
-> > > the dm crypt keys persist for the kdump kernel. User space can send the
-> > > following commands,
-> > > - "init KEY_NUM"
-> > >   Initialize needed structures
-> > > - "record KEY_DESC"
-> > >   Record a key description. The key must be a logon key.
-> > > 
-> > > User space can also read this API to learn about current state.
-> > 
-> > From the subject, can I think the luks keys will persist forever? or
-> > only for a while?
-> 
-> Yes, you are right. The keys need to stay in kdump reserved memory.
 
-Hmm, there are two different concepts we may need differentiate. From
-security keys's point of view, the keys need be stored for a while so
-that kdump loading take action to get it, that's done through sysfs;
-Froom kdump's point of view, the keys need be stored forever till kdump
-kernel use it. I can't see what you are referring to from the subject,
-esepcially you stress the newly added sysfs
-/sys/kernel/crash_dm_crypt_keys.
 
+On 22/05/24 6:43 pm, Sourabh Jain wrote:
+> Kernel commit 79365026f869 (crash: add a new kexec flag for hotplug
+> support) has introduced a new kexec flag to generalize hotplug support.
+> The newly introduced kexec flags for hotplug allow architectures to
+> exclude all the required kexec segments from SHA calculation so that
+> the kernel can update them on hotplug events. This was not possible
+> earlier with the KEXEC_UPDATE_ELFCOREHDR kexec flags since it was added
+> only for the elfcorehdr segment.
 > 
-> > If need and can only keep it for a while, can you
-> > mention it and tell why and how it will be used. Because you add a lot
-> > of codes, but only simply mention the sysfs, that doesn't make sense.
+> To enable architectures to control the list of kexec segments to exclude
+> when hotplug support is enabled, add a new architecture-specific
+> function named arch_do_exclude_segment. During the SHA calculation, this
+> function gets called to let the architecture decide whether a specific
+> kexec segment should be considered for SHA calculation or not.
 > 
-> Thanks for raising the concern! I've added
-> Documentation/ABI/testing/crash_dm_crypt_keys and copy some text in the
-> cover letter to this patch in v5.
+> Given that the KEXEC_UPDATE_ELFCOREHDR is no longer required and was
+> colliding with the KEXEC_LIVE_UPDATE update flag, it is removed.
 > 
-> > 
-> > > 
-> > > Signed-off-by: Coiby Xu <coxu@redhat.com>
-> > > ---
-> > >  include/linux/crash_core.h   |   5 +-
-> > >  kernel/Kconfig.kexec         |   8 +++
-> > >  kernel/Makefile              |   1 +
-> > >  kernel/crash_dump_dm_crypt.c | 113 +++++++++++++++++++++++++++++++++++
-> > >  kernel/ksysfs.c              |  22 +++++++
-> > >  5 files changed, 148 insertions(+), 1 deletion(-)
-> > >  create mode 100644 kernel/crash_dump_dm_crypt.c
-> > > 
-> > > diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-> > > index 44305336314e..6bff1c24efa3 100644
-> > > --- a/include/linux/crash_core.h
-> > > +++ b/include/linux/crash_core.h
-> > > @@ -34,7 +34,10 @@ static inline void arch_kexec_protect_crashkres(void) { }
-> > >  static inline void arch_kexec_unprotect_crashkres(void) { }
-> > >  #endif
-> [...]
-> > > +static int init(const char *buf)
-> >              ~~~~ A more interesting name with more description?
+> Cc: Aditya Gupta <adityag@linux.ibm.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Coiby Xu <coxu@redhat.com>
+> Cc: Hari Bathini <hbathini@linux.ibm.com>
+> Cc: Mahesh Salgaonkar <mahesh@linux.ibm.com>
+> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+> ---
+>   kexec/arch/arm/kexec-arm.c             |  5 +++++
+>   kexec/arch/arm64/kexec-arm64.c         |  4 ++++
+>   kexec/arch/cris/kexec-cris.c           |  4 ++++
+>   kexec/arch/hppa/kexec-hppa.c           |  5 +++++
+>   kexec/arch/i386/kexec-x86.c            |  8 ++++++++
+>   kexec/arch/ia64/kexec-ia64.c           |  4 ++++
+>   kexec/arch/loongarch/kexec-loongarch.c |  5 +++++
+>   kexec/arch/m68k/kexec-m68k.c           |  5 +++++
+>   kexec/arch/mips/kexec-mips.c           |  4 ++++
+>   kexec/arch/ppc/kexec-ppc.c             |  4 ++++
+>   kexec/arch/ppc64/kexec-ppc64.c         |  5 +++++
+>   kexec/arch/s390/kexec-s390.c           |  5 +++++
+>   kexec/arch/sh/kexec-sh.c               |  5 +++++
+>   kexec/arch/x86_64/kexec-x86_64.c       |  5 +++++
+>   kexec/kexec-syscall.h                  |  2 +-
+>   kexec/kexec.c                          | 14 ++++++++------
+>   kexec/kexec.h                          |  2 ++
+>   17 files changed, 79 insertions(+), 7 deletions(-)
 > 
-> Thanks for the suggestion! I've added some comments for this function
-> in v5. But I can't come up with a better name after looking at current
-> kernel code. You are welcome to suggest any better name:)
+> diff --git a/kexec/arch/arm/kexec-arm.c b/kexec/arch/arm/kexec-arm.c
+> index 49f35b1..34531f9 100644
+> --- a/kexec/arch/arm/kexec-arm.c
+> +++ b/kexec/arch/arm/kexec-arm.c
+> @@ -148,3 +148,8 @@ int have_sysfs_fdt(void)
+>   {
+>   	return !access(SYSFS_FDT, F_OK);
+>   }
+> +
+> +int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
+> +{
+> +	return 0;
+> +}
+> diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+> index 4a67b0d..9d052b0 100644
+> --- a/kexec/arch/arm64/kexec-arm64.c
+> +++ b/kexec/arch/arm64/kexec-arm64.c
+> @@ -1363,3 +1363,7 @@ void arch_reuse_initrd(void)
+>   void arch_update_purgatory(struct kexec_info *UNUSED(info))
+>   {
+>   }
+> +int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
+> +{
+> +	return 0;
+> +}
+> diff --git a/kexec/arch/cris/kexec-cris.c b/kexec/arch/cris/kexec-cris.c
+> index 3b69709..7f09121 100644
+> --- a/kexec/arch/cris/kexec-cris.c
+> +++ b/kexec/arch/cris/kexec-cris.c
+> @@ -109,3 +109,7 @@ unsigned long add_buffer(struct kexec_info *info, const void *buf,
+>                                       buf_min, buf_max, buf_end, 1);
+>   }
+>   
+> +int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
+> +{
+> +	return 0;
+> +}
+> diff --git a/kexec/arch/hppa/kexec-hppa.c b/kexec/arch/hppa/kexec-hppa.c
+> index 77c9739..a64dc3d 100644
+> --- a/kexec/arch/hppa/kexec-hppa.c
+> +++ b/kexec/arch/hppa/kexec-hppa.c
+> @@ -146,3 +146,8 @@ unsigned long virt_to_phys(unsigned long addr)
+>   {
+>   	return addr - phys_offset;
+>   }
+> +
+> +int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
+> +{
+> +	return 0;
+> +}
+> diff --git a/kexec/arch/i386/kexec-x86.c b/kexec/arch/i386/kexec-x86.c
+> index 444cb69..b4947a0 100644
+> --- a/kexec/arch/i386/kexec-x86.c
+> +++ b/kexec/arch/i386/kexec-x86.c
+> @@ -208,3 +208,11 @@ void arch_update_purgatory(struct kexec_info *info)
+>   	elf_rel_set_symbol(&info->rhdr, "panic_kernel",
+>   		&panic_kernel, sizeof(panic_kernel));
+>   }
+> +
+> +int arch_do_exclude_segment(struct kexec_segment *seg_ptr, struct kexec_info *info)
+> +{
+> +	if (info->elfcorehdr == (unsigned long) seg_ptr->mem)
+> +		return 1;
+> +
+> +	return 0;
+> +}
+> diff --git a/kexec/arch/ia64/kexec-ia64.c b/kexec/arch/ia64/kexec-ia64.c
+> index 418d997..8d9c1f3 100644
+> --- a/kexec/arch/ia64/kexec-ia64.c
+> +++ b/kexec/arch/ia64/kexec-ia64.c
+> @@ -245,3 +245,7 @@ void arch_update_purgatory(struct kexec_info *UNUSED(info))
+>   {
+>   }
+>   
+> +int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
+> +{
+> +	return 0;
+> +}
+> diff --git a/kexec/arch/loongarch/kexec-loongarch.c b/kexec/arch/loongarch/kexec-loongarch.c
+> index 32a42d2..9a50ff6 100644
+> --- a/kexec/arch/loongarch/kexec-loongarch.c
+> +++ b/kexec/arch/loongarch/kexec-loongarch.c
+> @@ -378,3 +378,8 @@ unsigned long add_buffer(struct kexec_info *info, const void *buf,
+>   	return add_buffer_phys_virt(info, buf, bufsz, memsz, buf_align,
+>   				    buf_min, buf_max, buf_end, 1);
+>   }
+> +
+> +int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
+> +{
+> +	return 0;
+> +}
+> diff --git a/kexec/arch/m68k/kexec-m68k.c b/kexec/arch/m68k/kexec-m68k.c
+> index cb54927..0c7dbaf 100644
+> --- a/kexec/arch/m68k/kexec-m68k.c
+> +++ b/kexec/arch/m68k/kexec-m68k.c
+> @@ -108,3 +108,8 @@ void add_segment(struct kexec_info *info, const void *buf, size_t bufsz,
+>   {
+>   	add_segment_phys_virt(info, buf, bufsz, base, memsz, 1);
+>   }
+> +
+> +int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
+> +{
+> +	return 0;
+> +}
+> diff --git a/kexec/arch/mips/kexec-mips.c b/kexec/arch/mips/kexec-mips.c
+> index d8cbea8..94224ee 100644
+> --- a/kexec/arch/mips/kexec-mips.c
+> +++ b/kexec/arch/mips/kexec-mips.c
+> @@ -189,3 +189,7 @@ unsigned long add_buffer(struct kexec_info *info, const void *buf,
+>   				    buf_min, buf_max, buf_end, 1);
+>   }
+>   
+> +int arch_do_exclude_segment(const void *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
+> +{
+> +	return 0;
+> +}
+> diff --git a/kexec/arch/ppc/kexec-ppc.c b/kexec/arch/ppc/kexec-ppc.c
+> index 03bec36..c8af870 100644
+> --- a/kexec/arch/ppc/kexec-ppc.c
+> +++ b/kexec/arch/ppc/kexec-ppc.c
+> @@ -966,3 +966,7 @@ void arch_update_purgatory(struct kexec_info *UNUSED(info))
+>   {
+>   }
+>   
+> +int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
+> +{
+> +	return 0;
+> +}
+> diff --git a/kexec/arch/ppc64/kexec-ppc64.c b/kexec/arch/ppc64/kexec-ppc64.c
+> index bd5274c..fb27b6b 100644
+> --- a/kexec/arch/ppc64/kexec-ppc64.c
+> +++ b/kexec/arch/ppc64/kexec-ppc64.c
+> @@ -967,3 +967,8 @@ int arch_compat_trampoline(struct kexec_info *UNUSED(info))
+>   void arch_update_purgatory(struct kexec_info *UNUSED(info))
+>   {
+>   }
+> +
+> +int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
+> +{
+> +	return 0;
+> +}
+> diff --git a/kexec/arch/s390/kexec-s390.c b/kexec/arch/s390/kexec-s390.c
+> index 33ba6b9..0561ee7 100644
+> --- a/kexec/arch/s390/kexec-s390.c
+> +++ b/kexec/arch/s390/kexec-s390.c
+> @@ -267,3 +267,8 @@ int get_crash_kernel_load_range(uint64_t *start, uint64_t *end)
+>   {
+>   	return parse_iomem_single("Crash kernel\n", start, end);
+>   }
+> +
+> +int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
+> +{
+> +	return 0;
+> +}
+> diff --git a/kexec/arch/sh/kexec-sh.c b/kexec/arch/sh/kexec-sh.c
+> index ce341c8..f84c40c 100644
+> --- a/kexec/arch/sh/kexec-sh.c
+> +++ b/kexec/arch/sh/kexec-sh.c
+> @@ -257,3 +257,8 @@ unsigned long add_buffer(struct kexec_info *info, const void *buf,
+>   	return add_buffer_phys_virt(info, buf, bufsz, memsz, buf_align,
+>   				    buf_min, buf_max, buf_end, 1);
+>   }
+> +
+> +int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
+> +{
+> +	return 0;
+> +}
 
-Usually init() is for the whole driver module. Your init() here only
-receive the passed total keys number, and allocate the key_header, how
-can you simply name it init()? If you call it init_keys_header(), I
-would think it's much more meaningful.
+> diff --git a/kexec/arch/x86_64/kexec-x86_64.c b/kexec/arch/x86_64/kexec-x86_64.c
+> index ffd84f0..42af90a 100644
+> --- a/kexec/arch/x86_64/kexec-x86_64.c
+> +++ b/kexec/arch/x86_64/kexec-x86_64.c
+> @@ -188,3 +188,8 @@ void arch_update_purgatory(struct kexec_info *info)
+>   	elf_rel_set_symbol(&info->rhdr, "panic_kernel",
+>   				&panic_kernel, sizeof(panic_kernel));
+>   }
+> +
+> +int arch_do_exclude_segment(struct kexec_segment *UNUSED(seg_ptr), struct kexec_info *UNUSED(info))
+> +{
 
-> 
-> > > +static int process_cmd(const char *buf, size_t count)
-> >                                                  ~~~~
-> > If nobody use the count, why do you add it?
-> 
-> Good catch! Yes, this is no need to use count in v4. But v5 now needs it to avoid
-> buffer overflow.
+This should also be similar to i386, no?
+Except for that, rest looks good..
 
-OK, did you add code comment telling what 'count' stands for?
-
-And the name 'process_cmd()' is also ambiguous. We may need avoid this
-kind of name, e.g process_cmd, do_things, handle_stuff. Can you add a
-more specific name?
-
+Acked-by: Hari Bathini <hbathini@linux.ibm.com>
 
 _______________________________________________
 kexec mailing list
