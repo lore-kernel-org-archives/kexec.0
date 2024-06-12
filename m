@@ -4,77 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 203D2C27C53
-	for <kexec@archiver.kernel.org>; Wed, 12 Jun 2024 12:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B84C2C27C75
+	for <kexec@archiver.kernel.org>; Wed, 12 Jun 2024 23:06:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
+	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=rlOwV0gktFULYGfh1GYIXDvA+JKUKpTY/VNEWZVVvk4=; b=JrDwngV+mcNgiY
-	EMYY9y/C3W1CQ4bR9QlyYJLNVo7bWxOn2BaY4gWZwyPdzVOJnApslgef1qS3jIQZqDfz3UweOavV6
-	hy5kDKhPzeVyihqzi6AdRq/yxrcxxfAyfaSLDPPloi6JruOEP6iVuV436oQA3TshTHAoE+ZKQ0sOK
-	95tcIrrgWc6YBi7WthKNRdape8pgbQwC1XSjWQButVhdq8sgqf1jdBksDVDhWm/qc28EjUJnf7Am8
-	EYKsRhUA+2VMIS6PLC6OgDRQOcdeqizhY3eO0vBnntZdiZ6lzbVskT4zs1D1gSpGuWqNnYQegH7lK
-	EA/9RMzbhtAC2D03c96g==;
+	List-Owner; bh=go6VXI2gQupRf87sCfGHNdoJgXVCLZ+o0df/nmDjkMc=; b=iLY8CDELGNevYG
+	aiO2QARV/PUQthyORql2JhBFIjsnOseCQ52ARyQ8K9m6dzYY3BmbsRnUxSjBFdTxyCrhrILQp46iB
+	bzMhYjFCiSt4cIBuCLeQgN3syUzb1H41NlCso+wJ5yhTG5YxZgXqRbcSXWyRR9i0TQnabbc9No6FF
+	QDtzopE9GOhja1GE5bTGXG7lz7weUT+U+df/iOJ2Ah1NShULgFgY8Df0TibdGoERij9EwxytNBzSu
+	dBJimnogRihtEXke2NVraa6G3fMYSQM/npZ6t38iXimT5CYfPNyyHF92zu1gf6n8TGo+qYojS2S6t
+	LPBJKL7hvGlIj09tZhqQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sHMoC-0000000CXmt-1KFJ;
-	Wed, 12 Jun 2024 12:10:32 +0000
-Received: from mail-wm1-x332.google.com ([2a00:1450:4864:20::332])
+	id 1sHX2r-0000000EQ4q-1h50;
+	Wed, 12 Jun 2024 23:06:21 +0000
+Received: from mail-wm1-x32b.google.com ([2a00:1450:4864:20::32b])
 	by bombadil.infradead.org with esmtps (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sHMo9-0000000CXlS-1lyk
+	id 1sHX2j-0000000EQ3n-3GN9
 	for kexec@lists.infradead.org;
-	Wed, 12 Jun 2024 12:10:30 +0000
-Received: by mail-wm1-x332.google.com with SMTP id 5b1f17b1804b1-42172ab4b60so41617165e9.0
-        for <kexec@lists.infradead.org>; Wed, 12 Jun 2024 05:10:25 -0700 (PDT)
+	Wed, 12 Jun 2024 23:06:16 +0000
+Received: by mail-wm1-x32b.google.com with SMTP id 5b1f17b1804b1-42138eadf64so4415685e9.3
+        for <kexec@lists.infradead.org>; Wed, 12 Jun 2024 16:06:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1718194224; x=1718799024; darn=lists.infradead.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Wl1E6gKaYfsGolM4dsZnb6DX/G/+das4ShQn/qg2O/U=;
-        b=OKgWe2U37/nv+ELDUi+Y6c4FGpnkpDU1A8n4v31VoA2u6zQu5dd4zdSEaNEAXAxHhl
-         zEJ8rIwolkqjCizG8M1JzZkNGIdkmdsvANFn89h7DpqLd5oq1LMuXjtD06nQL3HN9hNP
-         URCS4VMoq95ONk7epxFAWclPLnfpJ+jPT4CDlm3hbjmBntWraMZwNcD7t0d0DF8A032L
-         VOch2GaoyCMKckFJl7KB8yxk5sgWgxi3v0kyv/vJH9RqTKFKc/vOJFemMxBuyDw5z44s
-         6N4Dkv5bu36wzBDIPl1Muex2P0nlG5F6EgHWZkwedBkX6dPKGuKNWCXLrhqUZvtRcIj0
-         yrew==
+        d=citrix.com; s=google; t=1718233569; x=1718838369; darn=lists.infradead.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=nBdu/p+rPedbbedDDyqmAgiBRsCiRDycnW5wqxTyACs=;
+        b=NBh2HnVxke7RKY92EPOwSUDVbZpAPyOD7xaqOO6GRbx2JvHHo6hm3PPtlznoujAN9c
+         cPLw3yEekZGavU12b11lA1RQH7CkyI7QRtGCyUp1EXDQiB+QxlLScOIp7AK7KKuQtvY9
+         FT7EktRi5RoNdnjMfHWMRSDbVb0vwzL6ut9Io=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718194224; x=1718799024;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Wl1E6gKaYfsGolM4dsZnb6DX/G/+das4ShQn/qg2O/U=;
-        b=Nzy7Sh2ZcqqLJOFQ0cpt7QHOoluWQ2pMsChipTXnZBnEvFx+kTIAziUXIo4lYCB3Nn
-         wpV0y0eV9atuCRyJHwjY+NEoMzIOJxLPwVWLnWsRvXKOCVY9WKcgzP4RzCe6YSe+H3eJ
-         Epnv+7ZLwK27nkgxn5yZhWjMEcbpUndgawUmFVGcp7hwFqL+bSfADwgCgHWAT5ogLRZ8
-         0p2HlcbX8JQOYW3CWvlro9HoPQu0ENESsxRShkpRSRkLj5im43inuAGz/RZWFQ/W0K/x
-         pfznx6LHFh7k32KGQUKwT6kwtzZasK8BRraWf/jyBIR43cc+SLykApgetHE0b2sZSwp3
-         c74Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWvPncEPmzt/HHUwAxfLUDtK+JIKQ7BseQyU5BnWUEIzorOKrNTj32Xv+vksCD+DgrQ/SDKEQASTeHZWazklUAPTsAbf62hzTmL
-X-Gm-Message-State: AOJu0Yzk3FA6fkJM6pAxLdnCXf9uvo+fZsgyeHBBis5X8bSHStMMKVd6
-	swMGemnqbOr4eTO2Ve/l2FNomVdGi4fpzFBIxTeLsgdY9bAuw321yr+7fcE2OtE=
-X-Google-Smtp-Source: AGHT+IGGKvFvAX2vsyi3iCxH0IVdZ+RZyQGv87uHYkT/9vnp4Qg0weBEeK0OIcuDUpXL8dTTvAYelw==
-X-Received: by 2002:a05:600c:3108:b0:421:7f23:8c5c with SMTP id 5b1f17b1804b1-422866c0c13mr16496455e9.28.1718194224388;
-        Wed, 12 Jun 2024 05:10:24 -0700 (PDT)
-Received: from ?IPV6:2a10:bac0:b000:7579:7285:c2ff:fedd:7e3a? ([2a10:bac0:b000:7579:7285:c2ff:fedd:7e3a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-35f0c8f5373sm13444819f8f.6.2024.06.12.05.10.22
+        d=1e100.net; s=20230601; t=1718233569; x=1718838369;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nBdu/p+rPedbbedDDyqmAgiBRsCiRDycnW5wqxTyACs=;
+        b=ghVgVis4iuppvQ0UKwB6ay/wv4rytGO65CFg6FDVhj119ZtkH7eZDHixuZEvSEAWyK
+         QWUOjbcvAMwfLkNgFZmW6bMIkDZFxqfsCuOInigZKGw8wD9srFxaAl2kh3czxLyhvCqB
+         p3AKLZhKo58RlJEe9onXDWk81lFWS/d7IBChk44l8PoS3zOsvOO4D00cZzoWu5dc0Dzi
+         rH8Nd6UWHLqGzAqwRZmPWTrfNOpOUjc26j53EsYbj2ogIf7ADvo2v6PzvL+FOR+0XpPO
+         XOuSGaaoe0iyydJEeX0EvKEjnIdsugwfVd4Ko417QemCZx8r7dQ+8Ub9wQ9w//5cFfth
+         sp7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV2ENbrs8zx8dyECK7tX5Q/I/DttaClA52AQVcRwG6P7grwU/qNaF2eeyuv5TjhQbGd/oORKC63p5/In2rU6uIn1qTPvC+Ep0WC
+X-Gm-Message-State: AOJu0YxU+fqvjRNbRiNHb23eYEZ5dCiAcmaLYweO3B9uzlAB2iFKr9Mk
+	7zWWK7FG1S9/Tw9BKiB4EOLGdAy0jfPCI1Pyb9BTP/SAois9fmh7Obxx+UoXJMY=
+X-Google-Smtp-Source: AGHT+IHG+f0o9hNbI+2TQlMCyzttV2QTbaYydAK8N22sR60f8GaXn0G6V6BCroySwbJ4fjWkKL4LsA==
+X-Received: by 2002:a05:600c:45cc:b0:421:21d2:abf5 with SMTP id 5b1f17b1804b1-422865acc67mr27498415e9.31.1718233569336;
+        Wed, 12 Jun 2024 16:06:09 -0700 (PDT)
+Received: from [192.168.1.10] (host-92-26-98-202.as13285.net. [92.26.98.202])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-422f641a64bsm2618385e9.46.2024.06.12.16.06.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Jun 2024 05:10:24 -0700 (PDT)
-Message-ID: <6eb5c1b2-64d2-42fd-81c9-97c1ae65713f@suse.com>
-Date: Wed, 12 Jun 2024 15:10:21 +0300
+        Wed, 12 Jun 2024 16:06:08 -0700 (PDT)
+Message-ID: <addbd29a-66dc-4180-ae45-ef038c2249d1@citrix.com>
+Date: Thu, 13 Jun 2024 00:06:07 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCHv11 05/19] x86/relocate_kernel: Use named labels for less
  confusion
-To: "H. Peter Anvin" <hpa@zytor.com>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>
+Cc: Borislav Petkov <bp@alien8.de>, Nikolay Borisov <nik.borisov@suse.com>,
  Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
  Peter Zijlstra <peterz@infradead.org>,
  Adrian Hunter <adrian.hunter@intel.com>,
  Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
@@ -91,13 +89,61 @@ Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
 References: <20240528095522.509667-1-kirill.shutemov@linux.intel.com>
  <20240528095522.509667-6-kirill.shutemov@linux.intel.com>
  <1e1d1aea-7346-4022-9f5f-402d171adfda@suse.com>
- <5d7dca1e-5889-4440-b3a0-48610f11200e@zytor.com>
-From: Nikolay Borisov <nik.borisov@suse.com>
-Content-Language: en-US
-In-Reply-To: <5d7dca1e-5889-4440-b3a0-48610f11200e@zytor.com>
+ <t3zx4f6ynru7qp4oel4syza2alcuxz7q7hxqgf2lxusgobnsnh@vtnecqrsxci5>
+ <748d3b70-60b4-44e0-bd81-9117f1ab699d@zytor.com>
+ <20240604091503.GQZl7bF14qTSAjqUhN@fat_crate.local>
+ <ehttxqgg7zhbgty5m5uxkduj3xf7soonrzfu4rfw7hccqgdydl@afki66pnree5>
+ <5c8b3ee9-64c2-4ff3-9cca-ba2672b9635e@zytor.com>
+ <nxllu5wfhvfvorxbbt6ll3lc2mr47lw7sduszfawhtryqgtyrd@3qgtci7ocah6>
+Content-Language: en-GB
+From: Andrew Cooper <andrew.cooper3@citrix.com>
+Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
+ 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
+ 6+ahAA==
+In-Reply-To: <nxllu5wfhvfvorxbbt6ll3lc2mr47lw7sduszfawhtryqgtyrd@3qgtci7ocah6>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20240612_051029_482040_8BA92219 
-X-CRM114-Status: GOOD (  10.29  )
+X-CRM114-CacheID: sfid-20240612_160614_005589_FDDDE027 
+X-CRM114-Status: GOOD (  17.77  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -109,36 +155,80 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-CgpPbiAzLjA2LjI0INCzLiAxNzo0MyDRhy4sIEguIFBldGVyIEFudmluIHdyb3RlOgo+IE9uIDUv
-MjkvMjQgMDM6NDcsIE5pa29sYXkgQm9yaXNvdiB3cm90ZToKPj4+Cj4+PiBkaWZmIC0tZ2l0IGEv
-YXJjaC94ODYva2VybmVsL3JlbG9jYXRlX2tlcm5lbF82NC5TIAo+Pj4gYi9hcmNoL3g4Ni9rZXJu
-ZWwvcmVsb2NhdGVfa2VybmVsXzY0LlMKPj4+IGluZGV4IDU2Y2FiMWJiMjVmNS4uMDg1ZWVmNWMz
-OTA0IDEwMDY0NAo+Pj4gLS0tIGEvYXJjaC94ODYva2VybmVsL3JlbG9jYXRlX2tlcm5lbF82NC5T
-Cj4+PiArKysgYi9hcmNoL3g4Ni9rZXJuZWwvcmVsb2NhdGVfa2VybmVsXzY0LlMKPj4+IEBAIC0x
-NDgsOSArMTQ4LDEwIEBAIFNZTV9DT0RFX1NUQVJUX0xPQ0FMX05PQUxJR04oaWRlbnRpdHlfbWFw
-cGVkKQo+Pj4gwqDCoMKgwqDCoMKgICovCj4+PiDCoMKgwqDCoMKgIG1vdmzCoMKgwqAgJFg4Nl9D
-UjRfUEFFLCAlZWF4Cj4+PiDCoMKgwqDCoMKgIHRlc3RxwqDCoMKgICRYODZfQ1I0X0xBNTcsICVy
-MTMKPj4+IC3CoMKgwqAganrCoMKgwqAgMWYKPj4+ICvCoMKgwqAganrCoMKgwqAgLkxub19sYTU3
-Cj4+PiDCoMKgwqDCoMKgIG9ybMKgwqDCoCAkWDg2X0NSNF9MQTU3LCAlZWF4Cj4+PiAtMToKPj4+
-ICsuTG5vX2xhNTc6Cj4+PiArCj4+PiDCoMKgwqDCoMKgIG1vdnHCoMKgwqAgJXJheCwgJWNyNAo+
-Pj4gwqDCoMKgwqDCoCBqbXAgMWYKPj4KPj4gVGhhdCBqbXAgMWYgYmVjb21lcyByZWR1bmRhbnQg
-bm93IGFzIGl0IHNpbXBseSBqdW1wcyAxIGxpbmUgYmVsb3cuCj4+Cj4gCj4gVWguLi4gYW0gSSB0
-aGUgb25seSBwZXJzb24gdG8gbm90aWNlIHRoYXQgQUxMIHRoYXQgaXMgbmVlZGVkIGhlcmUgaXM6
-Cj4gCj4gIMKgwqDCoMKgYW5kbCAkKFg4Nl9DUjRfUEFFfFg4Nl9DUjRfTEE1NyksICVyMTNkCj4g
-IMKgwqDCoMKgbW92cSAlcjEzLCAlcmF4Cj4gCj4gLi4uIHNpbmNlICVyMTMgaXMgZGVhZCBhZnRl
-cndhcmRzLCBhbmQgUEFFICp3aWxsKiBoYXZlIGJlZW4gc2V0IGluICVyMTMgCj4gYWxyZWFkeT8K
-PiAKPiBJIGRvbid0IGJlbGlldmUgdGhhdCB0aGlzIHNwZWNpZmljIGptcCBpcyBhY3R1YWxseSBu
-ZWVkZWQgLS0gdGhlcmUgYXJlIAo+IHNldmVyYWwgbW9yZSBzeW5jaHJvbml6aW5nIGp1bXBzIGxh
-dGVyIC0tIGJ1dCBpdCBkb2Vzbid0IGh1cnQuCj4gCj4gSG93ZXZlciwgaWYgdGhlIGVmZm9ydCBp
-cyBmb3IgaW1wcm92aW5nIHRoZSByZWFkYWJpbGl0eSwgaXQgbWlnaHQgYmUgCj4gd29ydGh3aGls
-ZSB0byBlbmNhcHN1bGF0ZSB0aGUgImptcCAxZjsgMToiIGFzIGEgbWFjcm8sIGUuZy4gIlNZTkNf
-Q09ERSIuCgoKVGhlIHByZWNlZGluZyBtb3ZlIHRvIENSNCBpcyBpdHNlbGYgYSBzZXJpYWxpemlu
-ZyBpbnN0cnVjdGlvbiwgbm8/Cgo+IAo+ICDCoMKgwqDCoC1ocGEKCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0Bs
-aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
-dGluZm8va2V4ZWMK
+On 12/06/2024 10:22 am, Kirill A. Shutemov wrote:
+> On Tue, Jun 11, 2024 at 11:26:17AM -0700, H. Peter Anvin wrote:
+>> On 6/4/24 08:21, Kirill A. Shutemov wrote:
+>>>  From b45fe48092abad2612c2bafbb199e4de80c99545 Mon Sep 17 00:00:00 2001
+>>> From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+>>> Date: Fri, 10 Feb 2023 12:53:11 +0300
+>>> Subject: [PATCHv11.1 06/19] x86/kexec: Keep CR4.MCE set during kexec for TDX guest
+>>>
+>>> TDX guests run with MCA enabled (CR4.MCE=1b) from the very start. If
+>>> that bit is cleared during CR4 register reprogramming during boot or
+>>> kexec flows, a #VE exception will be raised which the guest kernel
+>>> cannot handle it.
+>>>
+>>> Therefore, make sure the CR4.MCE setting is preserved over kexec too and
+>>> avoid raising any #VEs.
+>>>
+>>> The change doesn't affect non-TDX-guest environments.
+>>>
+>>> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+>>> ---
+>>>   arch/x86/kernel/relocate_kernel_64.S | 17 ++++++++++-------
+>>>   1 file changed, 10 insertions(+), 7 deletions(-)
+>>>
+>>> diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+>>> index 085eef5c3904..9c2cf70c5f54 100644
+>>> --- a/arch/x86/kernel/relocate_kernel_64.S
+>>> +++ b/arch/x86/kernel/relocate_kernel_64.S
+>>> @@ -5,6 +5,8 @@
+>>>    */
+>>>   #include <linux/linkage.h>
+>>> +#include <linux/stringify.h>
+>>> +#include <asm/alternative.h>
+>>>   #include <asm/page_types.h>
+>>>   #include <asm/kexec.h>
+>>>   #include <asm/processor-flags.h>
+>>> @@ -145,14 +147,15 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
+>>>   	 * Set cr4 to a known state:
+>>>   	 *  - physical address extension enabled
+>>>   	 *  - 5-level paging, if it was enabled before
+>>> +	 *  - Machine check exception on TDX guest, if it was enabled before.
+>>> +	 *    Clearing MCE might not be allowed in TDX guests, depending on setup.
+>>> +	 *
+>>> +	 * Use R13 that contains the original CR4 value, read in relocate_kernel().
+>>> +	 * PAE is always set in the original CR4.
+>>>   	 */
+>>> -	movl	$X86_CR4_PAE, %eax
+>>> -	testq	$X86_CR4_LA57, %r13
+>>> -	jz	.Lno_la57
+>>> -	orl	$X86_CR4_LA57, %eax
+>>> -.Lno_la57:
+>>> -
+>>> -	movq	%rax, %cr4
+>>> +	andl	$(X86_CR4_PAE | X86_CR4_LA57), %r13d
+>>> +	ALTERNATIVE "", __stringify(orl $X86_CR4_MCE, %r13d), X86_FEATURE_TDX_GUEST
+>>> +	movq	%r13, %cr4
+>> If this is the case, I don't really see a reason to clear MCE per se as I'm
+>> guessing a machine check here will be fatal anyway? It just changes the
+>> method of death.
+> Andrew had a strong opinion on method of death here.
+>
+> https://lore.kernel.org/all/1144340e-dd95-ee3b-dabb-579f9a65b3c7@citrix.com
+
+Not sure if I intended it to come across that strongly, but given a
+choice, the !CR4.MCE death is cleaner because at least you're not
+interpreting garbage and trying to use it as a valid IDT.
+
+~Andrew
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
